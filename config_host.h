@@ -1,3 +1,4 @@
+/* -*- mode: c++; -*- */
 #ifndef __CONFIG_HOST_H__
 #define __CONFIG_HOST_H__
 

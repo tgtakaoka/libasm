@@ -1,3 +1,4 @@
+/* -*- mode: c++; -*- */
 #ifndef __CONFIG_TARGET_H__
 #define __CONFIG_TARGET_H__
 
