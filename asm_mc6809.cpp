@@ -1,7 +1,9 @@
 #include <cctype>
 
-#include "asm_6809.h"
+#include "asm_mc6809.h"
 #include "string_utils.h"
+
+TableMc6809 AsmMc6809::_tableMc6809;
 
 static char regName1stChar(const RegName regName) {
     return (regName == DP) ? 'D' : char(regName);
@@ -29,7 +31,7 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error Asm6809::getOperand16(const char *&in, target::word_t &val) {
+Error AsmMc6809::getOperand16(const char *&in, target::word_t &val) {
     if (getInt16(in, val)) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
@@ -45,7 +47,7 @@ Error Asm6809::getOperand16(const char *&in, target::word_t &val) {
     return UNKNOWN_OPERAND;
 }
 
-host::uint_t Asm6809::regNameLen(RegName regName) {
+host::uint_t AsmMc6809::regNameLen(RegName regName) {
     return regName2ndChar(regName) == 0 ? 1 : 2;
 }
 
@@ -53,7 +55,7 @@ static bool regCharCaseEqual(char c, char regChar) {
     return c == regChar || (isalpha(c) && toupper(c) == regChar);
 }
 
-bool Asm6809::compareRegName(const char *line, RegName regName) {
+bool AsmMc6809::compareRegName(const char *line, RegName regName) {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -72,7 +74,7 @@ static const char *copyWord(const char *line, char *dst, host::int_t max_len) {
     return skipSpace(line);
 }
 
-Error Asm6809::encodeStackOp(const char *line) {
+Error AsmMc6809::encodeStackOp(const char *line) {
     const RegName *table = ((insnCode() & 2) == 0 ? &tableStackS[0] : &tableStackU[0]);
     target::byte_t post = 0;
     while (*line) {
@@ -94,7 +96,7 @@ Error Asm6809::encodeStackOp(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Asm6809::encodeRegisters(const char *line) {
+Error AsmMc6809::encodeRegisters(const char *line) {
     host::int_t regNum;
     constexpr host::uint_t tableLen = sizeof(tableRegNum) / sizeof(tableRegNum[0]);
     if ((regNum = parseRegName(line, tableRegNum, tableLen)) == NONE)
@@ -112,7 +114,7 @@ Error Asm6809::encodeRegisters(const char *line) {
     return setError(OK);
 }
 
-Error Asm6809::encodeRelative(const char *line) {
+Error AsmMc6809::encodeRelative(const char *line) {
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
     const host::uint_t insnLen = (hasPrefixCode() ? 2 : 1) + _oprLen;
@@ -128,7 +130,7 @@ Error Asm6809::encodeRelative(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Asm6809::encodeImmediate(const char *line) {
+Error AsmMc6809::encodeImmediate(const char *line) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     addInsnCode();
     if (_oprLen == 1 || _oprLen == 2) {
@@ -140,7 +142,7 @@ Error Asm6809::encodeImmediate(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Asm6809::encodeDirect(const char *line) {
+Error AsmMc6809::encodeDirect(const char *line) {
     if (*line == '<') line++;
     addInsnCode();
     target::uintptr_t dir;
@@ -149,7 +151,7 @@ Error Asm6809::encodeDirect(const char *line) {
     return setError(OK);
 }
 
-Error Asm6809::encodeExtended(const char *line) {
+Error AsmMc6809::encodeExtended(const char *line) {
     if (*line == '>') line++;
     addInsnCode();
     target::uintptr_t addr;
@@ -158,21 +160,21 @@ Error Asm6809::encodeExtended(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-host::int_t Asm6809::encodeRegNumber(RegName regName, const RegName *table, host::uint_t len) {
+host::int_t AsmMc6809::encodeRegNumber(RegName regName, const RegName *table, host::uint_t len) {
     for (host::uint_t idx = 0; idx < len; idx++) {
         if (table[idx] == regName) return idx;
     }
     return -1;
 }
 
-RegName Asm6809::parseRegName(const char *line, const RegName *table, host::uint_t len) {
+RegName AsmMc6809::parseRegName(const char *line, const RegName *table, host::uint_t len) {
     for (host::uint_t idx = 0; idx < len; idx++) {
         if (compareRegName(line, table[idx])) return table[idx];
     }
     return NONE;
 }
 
-Error Asm6809::encodeIndexed(const char *line) {
+Error AsmMc6809::encodeIndexed(const char *line) {
     addInsnCode();
     const bool indir = (*line == '[');
     RegName base = NONE;
@@ -269,7 +271,7 @@ Error Asm6809::encodeIndexed(const char *line) {
     return setError(OK);
 }
 
-Error Asm6809::determineAddrMode(const char *line, AddrMode &mode) {
+Error AsmMc6809::determineAddrMode(const char *line, AddrMode &mode) {
     switch (*line) {
     case '#': mode = IMMEDIATE; break;
     case '<': mode = DIRECT_PG; break;
@@ -296,14 +298,14 @@ Error Asm6809::determineAddrMode(const char *line, AddrMode &mode) {
     return OK;
 }
 
-Error Asm6809::encode(
+Error AsmMc6809::encode(
     target::uintptr_t addr, const char *line, SymbolTable *symtab) {
     reset(addr, symtab);
     line = skipSpace(line);
     if (!*line) return setError(NO_TEXT);
     line = copyWord(line, _name, sizeof(_name) - 1);
 
-    if (_table6809.search(*this, &_name[0])) return setError(_table6809);
+    if (_tableMc6809.search(*this, &_name[0])) return setError(UNKNOWN_INSTRUCTION);
 
     switch (_addrMode) {
     case INHERENT:
@@ -320,7 +322,7 @@ Error Asm6809::encode(
     }
 
     if (determineAddrMode(line, _addrMode)) return getError();
-    if (_table6809.search(*this, _addrMode)) return setError(_table6809);
+    if (_tableMc6809.search(*this, _addrMode)) return setError(UNKNOWN_INSTRUCTION);
     switch (_addrMode) {
     case IMMEDIATE: return encodeImmediate(line);
     case DIRECT_PG: return encodeDirect(line);

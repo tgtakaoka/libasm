@@ -1,7 +1,9 @@
 #include <cctype>
 
-#include "asm_6309.h"
+#include "asm_hd6309.h"
 #include "string_utils.h"
+
+TableHd6309 AsmHd6309::_tableHd6309;
 
 static const RegName tableBaseReg[4] = { X, Y, U, S };
 static const RegName tableIndexReg[16] = {
@@ -34,7 +36,7 @@ static const char *copyWord(const char *line, char *dst, host::int_t max_len) {
     return skipSpace(line);
 }
 
-Error Asm6309::getOperand32(const char *&in, target::dword_t &val) {
+Error AsmHd6309::getOperand32(const char *&in, target::dword_t &val) {
     if (getUint32(in, val)) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
@@ -50,7 +52,7 @@ Error Asm6309::getOperand32(const char *&in, target::dword_t &val) {
     return UNKNOWN_OPERAND;
 }
 
-Error Asm6309::encodeImmediate(const char *line) {
+Error AsmHd6309::encodeImmediate(const char *line) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     addInsnCode();
     if (_oprLen == 1 || _oprLen == 2) {
@@ -69,7 +71,7 @@ Error Asm6309::encodeImmediate(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Asm6309::encodeIndexed(const char *line) {
+Error AsmHd6309::encodeIndexed(const char *line) {
 //    E_HD6309(if (_mode == IDX)) addInsnCode();
     const bool indir = (*line == '[');
     RegName base = NONE;
@@ -185,7 +187,7 @@ Error Asm6309::encodeIndexed(const char *line) {
     return setError(OK);
 }
 
-Error Asm6309::encodeBitOperation(const char *line) {
+Error AsmHd6309::encodeBitOperation(const char *line) {
     uint8_t post = 0;
     if (compareRegName(line, CC)) {
         line += 2;
@@ -213,7 +215,7 @@ Error Asm6309::encodeBitOperation(const char *line) {
     return encodeDirect(line);
 }
 
-Error Asm6309::encodeImmediatePlus(const char *line) {
+Error AsmHd6309::encodeImmediatePlus(const char *line) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     uint16_t val;
     if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
@@ -226,7 +228,7 @@ Error Asm6309::encodeImmediatePlus(const char *line) {
     case INDEXED: _addrMode = IMM_INDEXED; break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (_table6309.search(*this, _addrMode)) return setError(_table6309);
+    if (_tableHd6309.search(*this, _addrMode)) return setError(UNKNOWN_INSTRUCTION);
     addInsnCode();
     addByte((uint8_t)val);
     switch (_addrMode) {
@@ -237,7 +239,7 @@ Error Asm6309::encodeImmediatePlus(const char *line) {
     }
 }
 
-Error Asm6309::encodeTransferMemory(const char *line) {
+Error AsmHd6309::encodeTransferMemory(const char *line) {
     constexpr host::uint_t baseLen = sizeof(tableTfmBaseReg) / sizeof(tableTfmBaseReg[0]);
     RegName regName;
     if ((regName = parseRegName(line, tableTfmBaseReg, baseLen)) == NONE)
@@ -268,13 +270,13 @@ Error Asm6309::encodeTransferMemory(const char *line) {
     return setError(UNKNOWN_OPERAND);
 }
 
-Error Asm6309::encode(target::uintptr_t addr, const char *line, SymbolTable *symtab) {
+Error AsmHd6309::encode(target::uintptr_t addr, const char *line, SymbolTable *symtab) {
     reset(addr, symtab);
     line = skipSpace(line);
     if (!*line) return setError(NO_TEXT);
     line = copyWord(line, _name, sizeof(_name) - 1);
 
-    if (_table6309.search(*this, _name)) return setError(_table6309);
+    if (_tableHd6309.search(*this, _name)) return setError(UNKNOWN_INSTRUCTION);
 
     switch (_addrMode) {
     case INHERENT:
@@ -299,7 +301,7 @@ Error Asm6309::encode(target::uintptr_t addr, const char *line, SymbolTable *sym
     }
 
     if (determineAddrMode(line, _addrMode)) return getError();
-    if (_table6309.search(*this, _addrMode)) return setError(_table6309);
+    if (_tableHd6309.search(*this, _addrMode)) return setError(UNKNOWN_INSTRUCTION);
     switch (_addrMode) {
     case IMMEDIATE: return encodeImmediate(line);
     case DIRECT_PG: return encodeDirect(line);

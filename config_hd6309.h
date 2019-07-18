@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef __CONFIG_6309_H__
-#define __CONFIG_6309_H__
+#ifndef __CONFIG_HD6309_H__
+#define __CONFIG_HD6309_H__
 
 #include "config_host.h"
 
@@ -20,7 +20,7 @@ enum AddrMode : host::uint_t {
     IMM_INDEXED,
     BIT_OPERATION,
     TRANSFER_MEM,
-    Mode_end_of_6309,
+    Mode_end_of_hd6309,
 };
 
 enum RegName : char {
@@ -44,4 +44,4 @@ enum RegName : char {
 };
 #endif
 
-#endif // __CONFIG_6309_H__
+#endif // __CONFIG_HD6309_H__

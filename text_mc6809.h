@@ -1,5 +1,5 @@
-#ifndef __TEXT_6809_H__
-#define __TEXT_6809_H__
+#ifndef __TEXT_MC6809_H__
+#define __TEXT_MC6809_H__
 
 #include "config_host.h"
 
@@ -143,4 +143,4 @@ static const char TEXT_TSTA[] PROGMEM = "TSTA";
 static const char TEXT_TSTB[] PROGMEM = "TSTB";
 static const char TEXT_TST[] PROGMEM = "TST";
 
-#endif // __TEXT_6809_H__
+#endif // __TEXT_MC6809_H__
