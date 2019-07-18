@@ -34,7 +34,7 @@ protected:
     static host::int_t encodeRegNumber(RegName regName, const RegName *table, host::uint_t len);
     static RegName parseRegName(const char *, const RegName *table, host::uint_t len);
 
-    virtual Error determineAddrMode(const char *line, AddrMode &mode);
+    Error determineAddrMode(const char *line, AddrMode &mode);
     Error getOperand16(const char *&line, target::word_t &val);
     Error encodeStackOp(const char *line);
     Error encodeRegisters(const char *line);
