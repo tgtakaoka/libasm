@@ -1,6 +1,6 @@
-#include "config_6309.h"
+#include "config_hd6309.h"
 #include "insn_entry.h"
-#include "text_6309.h"
+#include "text_hd6309.h"
 
 const InsnEntry table6309_P00[] PROGMEM = {
     P00(0x01, OIM,   3, IMM_DIRECT)

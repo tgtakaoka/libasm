@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef __CONFIG_6809_H__
-#define __CONFIG_6809_H__
+#ifndef __CONFIG_MC6809_H__
+#define __CONFIG_MC6809_H__
 
 #include "config_host.h"
 
@@ -33,4 +33,4 @@ enum RegName : char {
 };
 #endif
 
-#endif // __CONFIG_6809_H__
+#endif // __CONFIG_MC6809_H__

@@ -1,8 +1,10 @@
-#include "config_6809.h"
+#include "config_mc6809.h"
+#include "insn.h"
 #include "insn_entry.h"
-#include "text_6809.h"
+#include "table_mc6809.h"
+#include "text_mc6809.h"
 
-const InsnEntry table6809_P00[] PROGMEM = {
+static const InsnEntry TABLE_P00[] PROGMEM = {
     P00(0x00, NEG,   2, DIRECT_PG)
     P00(0x03, COM,   2, DIRECT_PG)
     P00(0x04, LSR,   2, DIRECT_PG)
@@ -233,7 +235,7 @@ const InsnEntry table6809_P00[] PROGMEM = {
     P00(0xFF, STU,   3, EXTENDED)
 };
 
-const InsnEntry table6809_P10[] PROGMEM = {
+static const InsnEntry TABLE_P10[] PROGMEM = {
     P10(0x21, LBRN,  4, RELATIVE)
     P10(0x22, LBHI,  4, RELATIVE)
     P10(0x23, LBLS,  4, RELATIVE)
@@ -276,7 +278,7 @@ const InsnEntry table6809_P10[] PROGMEM = {
     P10(0xFF, STS,   4, EXTENDED)
 };
 
-const InsnEntry table6809_P11[] PROGMEM = {
+static const InsnEntry TABLE_P11[] PROGMEM = {
     P11(0x3F, SWI3,  2, INHERENT)
     P11(0x83, CMPU,  4, IMMEDIATE)
     P11(0x8C, CMPS,  4, IMMEDIATE)
@@ -287,3 +289,83 @@ const InsnEntry table6809_P11[] PROGMEM = {
     P11(0xB3, CMPU,  4, EXTENDED)
     P11(0xBC, CMPS,  4, EXTENDED)
 };
+
+constexpr host::uindex_t LENGTH_P00 = sizeof(TABLE_P00) / sizeof(TABLE_P00[0]);
+constexpr host::uindex_t LENGTH_P10 = sizeof(TABLE_P10) / sizeof(TABLE_P10[0]);
+constexpr host::uindex_t LENGTH_P11 = sizeof(TABLE_P11) / sizeof(TABLE_P11[0]);
+
+constexpr target::opcode_t PREFIX_P00 = 0x00;
+constexpr target::opcode_t PREFIX_P10 = 0x10;
+constexpr target::opcode_t PREFIX_P11 = 0x11;
+
+static host::index_t searchEntry(
+    const char *name, const InsnEntry *table, host::uindex_t length) {
+    for (host::index_t index = 0; index < length; index++) {
+        if (pgm_strcasecmp(name, table[index].name) == 0)
+            return index;
+    }
+    return -1;
+}
+
+static host::index_t searchEntry(
+    const char *name, AddrMode mode, const InsnEntry *table, host::uindex_t length) {
+    for (host::index_t index = 0; index < length; index++) {
+        const host::uint_t flags = pgm_read_byte(&table[index].flags);
+        const AddrMode m = AddrMode((flags >> mode_shift) & mode_mask);
+        if (mode == m && pgm_strcasecmp(name, table[index].name) == 0)
+            return index;
+    }
+    return -1;
+}
+
+bool InsnTable::isPrefixCode(target::opcode_t opCode) {
+    return opCode == PREFIX_P10 || opCode == PREFIX_P11;
+}
+
+Error TableMc6809::search(Insn &insn, const char *name) const {
+    host::index_t offset;
+    target::opcode_t prefix;
+    const InsnEntry *entry;
+    if ((offset = searchEntry(name, &TABLE_P00[0], LENGTH_P00)) >= 0) {
+        entry = &TABLE_P00[offset];
+        prefix = PREFIX_P00;
+    } else if ((offset = searchEntry(name, &TABLE_P10[0], LENGTH_P10)) >= 0) {
+        entry = &TABLE_P10[offset];
+        prefix = PREFIX_P10;
+    } else if ((offset = searchEntry(name, &TABLE_P11[0], LENGTH_P11)) >= 0) {
+        entry = &TABLE_P11[offset];
+        prefix = PREFIX_P11;
+    } else {
+        return UNKNOWN_INSTRUCTION;
+    }
+
+    insn._insnCode = InsnTable::insnCode(prefix, pgm_read_byte(&entry->opc));
+    const host::uint_t flags = pgm_read_byte(&entry->flags);
+    insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
+    insn._oprLen = (flags & oprLen_mask);
+    return OK;
+}
+
+Error TableMc6809::search(Insn &insn, AddrMode mode) const {
+    const char *name = insn._name;
+    host::index_t offset;
+    target::opcode_t prefix;
+    const InsnEntry *entry;
+    if ((offset = searchEntry(name, mode, &TABLE_P00[0], LENGTH_P00)) >= 0) {
+        entry = &TABLE_P00[offset];
+        prefix = PREFIX_P00;
+    } else if ((offset = searchEntry(name, mode, &TABLE_P10[0], LENGTH_P10)) >= 0) {
+        entry = &TABLE_P10[offset];
+        prefix = PREFIX_P10;
+    } else if ((offset = searchEntry(name, mode, &TABLE_P11[0], LENGTH_P11)) >= 0) {
+        entry = &TABLE_P11[offset];
+        prefix = PREFIX_P11;
+    } else {
+        return UNKNOWN_INSTRUCTION;
+    }
+    insn._insnCode = InsnTable::insnCode(prefix, pgm_read_byte(&entry->opc));
+    const host::uint_t flags = pgm_read_byte(&entry->flags);
+    insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
+    insn._oprLen = (flags & oprLen_mask);
+    return OK;
+}

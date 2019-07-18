@@ -1,5 +1,5 @@
-#ifndef __TEXT_6309_H__
-#define __TEXT_6309_H__
+#ifndef __TEXT_HD6309_H__
+#define __TEXT_HD6309_H__
 
 #include "config_host.h"
 
@@ -88,4 +88,4 @@ static const char TEXT_TSTE[] PROGMEM = "TSTE";
 static const char TEXT_TSTF[] PROGMEM = "TSTF";
 static const char TEXT_TSTW[] PROGMEM = "TSTW";
 
-#endif // __TEXT_6309_H__
+#endif // __TEXT_HD6309_H__

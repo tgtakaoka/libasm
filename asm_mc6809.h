@@ -1,22 +1,20 @@
 /* -*- mode: c++; -*- */
-#ifndef __ASM_6809_H__
-#define __ASM_6809_H__
+#ifndef __ASM_MC6809_H__
+#define __ASM_MC6809_H__
 
-#include "config_6809.h"
+#include "config_mc6809.h"
 #include "insn.h"
-#include "table_6809.h"
+#include "table_mc6809.h"
 
-class Asm6809 : public Insn {
+class AsmMc6809 : public Insn {
 public:
     virtual Error encode(target::uintptr_t addr, const char *line, SymbolTable *symtab);
     bool hasPrefixCode() const {
-        return _table6809.isPrefixCode(_table6809.prefixCode(insnCode()));
+        return _tableMc6809.isPrefixCode(_tableMc6809.prefixCode(insnCode()));
     }
-    AddrMode addrMode() const { return _addrMode; }
 
 protected:
-    static Table6809 _table6809;
-    AddrMode     _addrMode;
+    static TableMc6809 _tableMc6809;
 
     void addByte(target::byte_t val) {
         _bytes[_insnLen++] = val;
@@ -47,4 +45,4 @@ protected:
     virtual Error encodeIndexed(const char *line);
 };
 
-#endif // __ASM_6809_H__
+#endif // __ASM_MC6809_H__

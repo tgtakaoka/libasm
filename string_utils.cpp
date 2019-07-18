@@ -3,7 +3,6 @@
 
 #include "string_utils.h"
 
-#ifdef SUPPORT_DISASM
 #ifdef AVR
 char *outStr(char *out, const __FlashStringHelper *str) {
   strcpy_P(out, reinterpret_cast<const char *>(str));
@@ -93,9 +92,7 @@ char *outInt32(char *out, int32_t i32) {
     *out++ = '-';
     return outUint32(out, -i32);
 }
-#endif /* SUPPORT_DISASM */
 
-#ifdef SUPPORT_ASM
 static uint8_t getHex(const char c) {
     return isdigit(c) ? c - '0' : toupper(c) - 'A' + 10;
 }
@@ -165,4 +162,3 @@ bool getUint32(const char *&in, uint32_t &out) {
     in = p;
     return true;
 }
-#endif /* SUPPORT_ASM */

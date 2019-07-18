@@ -1,16 +1,16 @@
 /* -*- mode: c++; -*- */
-#ifndef __ASM_6309_H__
-#define __ASM_6309_H__
+#ifndef __ASM_HD6309_H__
+#define __ASM_HD6309_H__
 
-#include "config_6309.h"
-#include "asm_6809.h"
-#include "table_6309.h"
+#include "config_hd6309.h"
+#include "asm_mc6809.h"
+#include "table_hd6309.h"
 
-class Asm6309 : public Asm6809 {
+class AsmHd6309 : public AsmMc6809 {
 public:
     Error encode(target::uintptr_t addr, const char *line, SymbolTable *symtab) override;
 protected:
-    static Table6309 _table6309;
+    static TableHd6309 _tableHd6309;
 
     void addDword(target::dword_t val) {
         addWord(target::word_t(val >> 16));
@@ -26,4 +26,4 @@ protected:
     Error encodeTransferMemory(const char *line);
 };
 
-#endif // __ASM_6309_H__
+#endif // __ASM_HD6309_H__

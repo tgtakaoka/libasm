@@ -15,12 +15,15 @@ public:
     host::uint_t oprLen() const { return _oprLen; }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
+    AddrMode addrMode() const { return _addrMode; }
 
 protected:
+    friend class TableMc6809;
     target::uintptr_t _address;
     target::insn_t    _insnCode;
     host::uint_t      _insnLen;
     host::uint_t      _oprLen;
+    AddrMode          _addrMode;
     target::byte_t    _bytes[8];
     char              _name[8];
 
