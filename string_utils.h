@@ -3,7 +3,6 @@
 #define _STRING_UTILS_H__
 
 #include "config_host.h"
-#include "config_target.h"
 
 char *outStr(char *out, const char *str);
 char *outStr(char *out, host::uint_t width, const char *str); /* right adjust */

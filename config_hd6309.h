@@ -4,8 +4,6 @@
 
 #include "config_host.h"
 
-#ifndef TARGET_ENUMS_DEFINED
-#define TARGET_ENUMS_DEFINED
 enum AddrMode : host::uint_t {
     INHERENT,
     DIRECT_PG,
@@ -42,6 +40,8 @@ enum RegName : char {
     V = 'V',
     ZERO = '0',
 };
-#endif
+
+#define TARGET_ENUMS_DEFINED
+#include "config_mc6809.h"
 
 #endif // __CONFIG_HD6309_H__

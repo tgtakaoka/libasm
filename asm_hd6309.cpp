@@ -260,8 +260,8 @@ Error AsmHd6309::encodeTransferMemory(const char *line) {
 
     for (uint8_t mode = 0; mode < sizeof(tableTfmSrcMode); mode++) {
         if (srcMode == tableTfmSrcMode[mode] && dstMode == tableTfmDstMode[mode]) {
-            target::opcode_t prefixCode = InsnTable::prefixCode(insnCode());
-            _insnCode = InsnTable::insnCode(prefixCode, 0x38 + mode);
+            target::opcode_t prefixCode = _tableHd6309.prefixCode(insnCode());
+            _insnCode = _tableHd6309.insnCode(prefixCode, 0x38 + mode);
             addInsnCode();
             addByte(post);
             return setError(OK);

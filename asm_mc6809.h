@@ -24,9 +24,8 @@ protected:
         addByte(target::byte_t(val & 0xff));
     }
     void addInsnCode() {
-        if (hasPrefixCode())
-            addByte(InsnTable::prefixCode(insnCode()));
-        addByte(InsnTable::opCode(insnCode()));
+        if (hasPrefixCode()) addByte(_tableMc6809.prefixCode(insnCode()));
+        addByte(_tableMc6809.opCode(insnCode()));
     }
 
     static bool compareRegName(const char *line, RegName regName);

@@ -4,7 +4,6 @@
 
 #include "error_reporter.h"
 #include "config_host.h"
-#include "config_target.h"
 #include "symbol_table.h"
 
 class Insn : public ErrorReporter {

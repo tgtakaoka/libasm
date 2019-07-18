@@ -3,7 +3,6 @@
 #define __SYMBOL_TABLE_H__
 
 #include "config_host.h"
-#include "config_target.h"
 
 class SymbolTable {
 public:
