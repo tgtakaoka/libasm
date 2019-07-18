@@ -1,6 +1,6 @@
 #include <cctype>
 
-#include "asm6809.h"
+#include "asm_6809.h"
 #include "string_utils.h"
 
 static char regName1stChar(const RegName regName) {
@@ -25,14 +25,13 @@ static const RegName tableRegNum[16] = {
     D, X, Y, U, S, PC, NONE, NONE, A, B, CC, DP, NONE, NONE, NONE, NONE,
 };
 
-static char symbol_buffer[20];
-
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
 Error Asm6809::getOperand16(const char *&in, target::word_t &val) {
     if (getInt16(in, val)) return OK;
+    char symbol_buffer[20];
     host::uint_t idx;
     for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(in[idx]); idx++) {
         symbol_buffer[idx] = in[idx];
@@ -46,7 +45,7 @@ Error Asm6809::getOperand16(const char *&in, target::word_t &val) {
     return UNKNOWN_OPERAND;
 }
 
-static host::uint_t regNameLen(const RegName regName) {
+host::uint_t Asm6809::regNameLen(RegName regName) {
     return regName2ndChar(regName) == 0 ? 1 : 2;
 }
 
@@ -54,7 +53,7 @@ static bool regCharCaseEqual(char c, char regChar) {
     return c == regChar || (isalpha(c) && toupper(c) == regChar);
 }
 
-static bool compareRegName(const char *line, const RegName regName) {
+bool Asm6809::compareRegName(const char *line, RegName regName) {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -95,24 +94,15 @@ Error Asm6809::encodeStackOp(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-static host::int_t encodeRegisterNumber(const char *line, const RegName *table) {
-    for (host::int_t idx = 0; idx < 16; idx++) {
-        const RegName regName = table[idx];
-        if (regName == NONE) continue;
-        if (compareRegName(line, regName))
-            return idx;
-    }
-    return -1;
-}
-
 Error Asm6809::encodeRegisters(const char *line) {
     host::int_t regNum;
-    if ((regNum = encodeRegisterNumber(line, tableRegNum)) < 0)
+    constexpr host::uint_t tableLen = sizeof(tableRegNum) / sizeof(tableRegNum[0]);
+    if ((regNum = parseRegName(line, tableRegNum, tableLen)) == NONE)
         return setError(UNKNOWN_REGISTER);
     line += regNameLen(tableRegNum[regNum]);
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
     target::byte_t post = (regNum << 4);
-    if ((regNum = encodeRegisterNumber(line, tableRegNum)) < 0)
+    if ((regNum = parseRegName(line, tableRegNum, tableLen)) == NONE)
         return setError(UNKNOWN_REGISTER);
     line += regNameLen(tableRegNum[regNum]);
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
@@ -168,30 +158,16 @@ Error Asm6809::encodeExtended(const char *line) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-static host::int_t encodeBaseReg(RegName reg) {
-    for (host::uint_t idx = 0; idx < sizeof(tableBaseReg); idx++) {
-        if (tableBaseReg[idx] == reg) return idx;
+host::int_t Asm6809::encodeRegNumber(RegName regName, const RegName *table, host::uint_t len) {
+    for (host::uint_t idx = 0; idx < len; idx++) {
+        if (table[idx] == regName) return idx;
     }
     return -1;
 }
 
-static host::int_t encodeIndexReg(RegName reg) {
-    for (host::uint_t idx = 0; idx < sizeof(tableIndexReg); idx++) {
-        if (tableIndexReg[idx] == reg) return idx;
-    }
-    return -1;
-}
-
-static RegName parseBaseReg(const char *line) {
-    for (host::uint_t idx = 0; idx < sizeof(tableBaseReg); idx++) {
-        if (compareRegName(line, tableBaseReg[idx])) return tableBaseReg[idx];
-    }
-    return NONE;
-}
-
-static RegName parseIndexReg(const char *line) {
-    for (host::uint_t idx = 0; idx < sizeof(tableIndexReg); idx++) {
-        if (compareRegName(line, tableIndexReg[idx])) return tableIndexReg[idx];
+RegName Asm6809::parseRegName(const char *line, const RegName *table, host::uint_t len) {
+    for (host::uint_t idx = 0; idx < len; idx++) {
+        if (compareRegName(line, table[idx])) return table[idx];
     }
     return NONE;
 }
@@ -203,9 +179,11 @@ Error Asm6809::encodeIndexed(const char *line) {
     RegName index = NONE;
     host::int_t incr = 0;                    // auto decrement/increment
     target::uintptr_t addr;
+    constexpr host::uint_t baseLen = sizeof(tableBaseReg) / sizeof(tableBaseReg[0]);
+    constexpr host::uint_t indexLen = sizeof(tableIndexReg) / sizeof(tableIndexReg[0]);
     if (indir) line++;
     if (*line != ',') {
-        if ((index = parseIndexReg(line)) != NONE) {
+        if ((index = parseRegName(line, tableIndexReg, indexLen)) != NONE) {
             line += regNameLen(index);  // index register
         } else {
             if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
@@ -220,7 +198,7 @@ Error Asm6809::encodeIndexed(const char *line) {
                 incr--;
             }
         }
-        if ((base = parseBaseReg(line)) != NONE || compareRegName(line, PC)) {
+        if ((base = parseRegName(line, tableBaseReg, baseLen)) != NONE || compareRegName(line, PC)) {
             if (base == NONE) base = PC;
             line += regNameLen(base);
         } else setError(UNKNOWN_OPERAND);
@@ -255,7 +233,7 @@ Error Asm6809::encodeIndexed(const char *line) {
         addWord(delta);
         return setError(OK);
     }
-    post = encodeBaseReg(base) << 5;
+    post = encodeRegNumber(base, tableBaseReg, baseLen) << 5;
     if (indir) post |= 0x10;
     if (index == NONE) {              // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
         if (incr == 0) post |= 0x84;
@@ -268,7 +246,7 @@ Error Asm6809::encodeIndexed(const char *line) {
         return setError(OK);
     }
     if (index != OFFSET) {              // R,R
-        post |= encodeIndexReg(index);
+        post |= encodeRegNumber(index, tableIndexReg, indexLen);
         addByte(0x80 | post);
         return setError(OK);
     }
@@ -299,8 +277,9 @@ Error Asm6809::determineAddrMode(const char *line, AddrMode &mode) {
     case '[':
     case ',': mode = INDEXED; break;
     default:
+        constexpr host::uint_t indexLen = sizeof(tableIndexReg) / sizeof(tableIndexReg[0]);
         RegName index;
-        if ((index = parseIndexReg(line)) != NONE) {
+        if ((index = parseRegName(line, tableIndexReg, indexLen)) != NONE) {
             line += regNameLen(index);
             if (*line == ',') {
                 mode = INDEXED;
@@ -317,13 +296,14 @@ Error Asm6809::determineAddrMode(const char *line, AddrMode &mode) {
     return OK;
 }
 
-Error Asm6809::encode(target::uintptr_t addr, const char *line, SymbolTable *symtab) {
+Error Asm6809::encode(
+    target::uintptr_t addr, const char *line, SymbolTable *symtab) {
     reset(addr, symtab);
     line = skipSpace(line);
     if (!*line) return setError(NO_TEXT);
     line = copyWord(line, _name, sizeof(_name) - 1);
 
-    if (InsnTable.search(*this, _name)) return setError(InsnTable);
+    if (_table6809.search(*this, &_name[0])) return setError(_table6809);
 
     switch (_addrMode) {
     case INHERENT:
@@ -340,7 +320,7 @@ Error Asm6809::encode(target::uintptr_t addr, const char *line, SymbolTable *sym
     }
 
     if (determineAddrMode(line, _addrMode)) return getError();
-    if (InsnTable.search(*this, _addrMode)) return setError(InsnTable);
+    if (_table6809.search(*this, _addrMode)) return setError(_table6809);
     switch (_addrMode) {
     case IMMEDIATE: return encodeImmediate(line);
     case DIRECT_PG: return encodeDirect(line);

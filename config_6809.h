@@ -4,7 +4,9 @@
 
 #include "config_host.h"
 
-enum AddrMode6809 : host::uint_t {
+#ifndef TARGET_ENUMS_DEFINED
+#define TARGET_ENUMS_DEFINED
+enum AddrMode : host::uint_t {
     INHERENT,
     DIRECT_PG,
     EXTENDED,
@@ -15,7 +17,7 @@ enum AddrMode6809 : host::uint_t {
     REGISTERS,
 };
 
-enum RegName6809 : char {
+enum RegName : char {
     NONE = 0,
     OFFSET = 'o',
     D = 'D',
@@ -29,5 +31,6 @@ enum RegName6809 : char {
     CC = 'C',
     DP = 'd',
 };
+#endif
 
 #endif // __CONFIG_6809_H__

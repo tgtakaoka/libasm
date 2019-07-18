@@ -1,8 +1,8 @@
 #include "config_6309.h"
-#include "table.h"
+#include "insn_entry.h"
 #include "text_6309.h"
 
-const Opecode table6309_P00[] PROGMEM = {
+const InsnEntry table6309_P00[] PROGMEM = {
     P00(0x01, OIM,   3, IMM_DIRECT)
     P00(0x02, AIM,   3, IMM_DIRECT)
     P00(0x05, EIM,   3, IMM_DIRECT)
@@ -19,7 +19,7 @@ const Opecode table6309_P00[] PROGMEM = {
     P00(0xCD, LDQ,   5, IMMEDIATE)
 };
 
-const Opecode table6309_P10[] PROGMEM = {
+const InsnEntry table6309_P10[] PROGMEM = {
     P10(0x30, ADDR,  3, REGISTERS)
     P10(0x31, ADCR,  3, REGISTERS)
     P10(0x32, SUBR,  3, REGISTERS)
@@ -103,7 +103,7 @@ const Opecode table6309_P10[] PROGMEM = {
     P10(0xFD, STQ,   4, EXTENDED)
 };
 
-const Opecode table6309_P11[] PROGMEM = {
+const InsnEntry table6309_P11[] PROGMEM = {
     P11(0x30, BAND,  4, BIT_OPERATION)
     P11(0x31, BIAND, 4, BIT_OPERATION)
     P11(0x32, BOR,   4, BIT_OPERATION)

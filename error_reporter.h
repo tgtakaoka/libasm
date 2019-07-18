@@ -16,7 +16,7 @@ enum Error : host::uint_t {
     GARBAGE_AT_END,
 };
 
-class ReportError {
+class ErrorReporter {
 public:
     Error getError() const { return _error; }
     bool hasError() const { return !(_error == OK); }
@@ -25,7 +25,7 @@ protected:
         _error = error;
         return error;
     }
-    Error setError(const ReportError &errorReporter) {
+    Error setError(const ErrorReporter &errorReporter) {
         return setError(errorReporter.getError());
     }
     void resetError() {

@@ -1,7 +1,7 @@
 #ifndef __TEXT_6809_H__
 #define __TEXT_6809_H__
 
-#include "string_utils.h"
+#include "config_host.h"
 
 static const char TEXT_ABX[] PROGMEM = "ABX";
 static const char TEXT_ADCA[] PROGMEM = "ADCA";

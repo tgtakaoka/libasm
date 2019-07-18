@@ -4,7 +4,9 @@
 
 #include "config_host.h"
 
-enum AddrMode6309 : host::uint_t {
+#ifndef TARGET_ENUMS_DEFINED
+#define TARGET_ENUMS_DEFINED
+enum AddrMode : host::uint_t {
     INHERENT,
     DIRECT_PG,
     EXTENDED,
@@ -21,7 +23,7 @@ enum AddrMode6309 : host::uint_t {
     Mode_end_of_6309,
 };
 
-enum RegName6309 : char {
+enum RegName : char {
     NONE = 0,
     OFFSET = 'o',
     D = 'D',
@@ -40,5 +42,6 @@ enum RegName6309 : char {
     V = 'V',
     ZERO = '0',
 };
+#endif
 
 #endif // __CONFIG_6309_H__

@@ -14,6 +14,8 @@ namespace target
     typedef std::uint16_t uintptr_t;
     typedef std::int16_t  intptr_t;
     typedef std::int16_t  ptrdiff_t;
+    typedef std::uint8_t  opcode_t;
+    typedef std::uint16_t insn_t;
 } // namespace target
 
-#endif /* __CONFIG_TARGET_H__ */
+#endif // __CONFIG_TARGET_H__

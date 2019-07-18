@@ -1,8 +1,8 @@
 #include "config_6809.h"
-#include "table.h"
+#include "insn_entry.h"
 #include "text_6809.h"
 
-const Opecode table6809_P00[] PROGMEM = {
+const InsnEntry table6809_P00[] PROGMEM = {
     P00(0x00, NEG,   2, DIRECT_PG)
     P00(0x03, COM,   2, DIRECT_PG)
     P00(0x04, LSR,   2, DIRECT_PG)
@@ -233,7 +233,7 @@ const Opecode table6809_P00[] PROGMEM = {
     P00(0xFF, STU,   3, EXTENDED)
 };
 
-const Opecode table6809_P10[] PROGMEM = {
+const InsnEntry table6809_P10[] PROGMEM = {
     P10(0x21, LBRN,  4, RELATIVE)
     P10(0x22, LBHI,  4, RELATIVE)
     P10(0x23, LBLS,  4, RELATIVE)
@@ -276,7 +276,7 @@ const Opecode table6809_P10[] PROGMEM = {
     P10(0xFF, STS,   4, EXTENDED)
 };
 
-const Opecode table6809_P11[] PROGMEM = {
+const InsnEntry table6809_P11[] PROGMEM = {
     P11(0x3F, SWI3,  2, INHERENT)
     P11(0x83, CMPU,  4, IMMEDIATE)
     P11(0x8C, CMPS,  4, IMMEDIATE)

@@ -1,7 +1,7 @@
 #ifndef __TEXT_6309_H__
 #define __TEXT_6309_H__
 
-#include "string_utils.h"
+#include "config_host.h"
 
 static const char TEXT_ADCD[] PROGMEM = "ADCD";
 static const char TEXT_ADCR[] PROGMEM = "ADCR";
