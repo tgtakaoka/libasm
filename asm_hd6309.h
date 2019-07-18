@@ -18,7 +18,6 @@ protected:
     }
 
     Error getOperand32(const char *&line, target::dword_t &val);
-    Error determineAddrMode(const char *line, AddrMode &mode) override;
     Error encodeImmediate(const char *line) override;
     Error encodeIndexed(const char *line) override;
     Error encodeBitOperation(const char *line);
