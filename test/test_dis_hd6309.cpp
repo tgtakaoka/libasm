@@ -1,8 +1,9 @@
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
 
+#include "dis_hd6309.h"
 #include "test_dis_helper.h"
+
+DisHd6309 disassembler;
 
 static void set_up() {
     symtab.reset();
@@ -278,6 +279,7 @@ static void test_direct() {
     TEST(STU,  "<dir22", "$22", 0xDF, 0x22);
     TEST(LDY,  "<dir22", "$22", 0x10, 0x9E, 0x22);
     TEST(LDS,  "<dir90", "$90", 0x10, 0xDE, 0x90);
+    TEST(JMP,  "<dir90", "$90", 0x0E, 0x90);
 
     TEST(OIM,  "#$30,<dir10", "$10", 0x01, 0x30, 0x10);
 }
@@ -325,6 +327,12 @@ static void test_extended() {
     TEST(LDD,  "$9ABC", "", 0xFC, 0x9A, 0xBC);
     TEST(STD,  "$9ABC", "", 0xFD, 0x9A, 0xBC);
     TEST(CMPD, "$9ABC", "", 0x10, 0xB3, 0x9A, 0xBC);
+    TEST(SBCD, "$9ABC", "", 0x10, 0xB2, 0x9A, 0xBC);
+    TEST(ANDD, "$9ABC", "", 0x10, 0xB4, 0x9A, 0xBC);
+    TEST(BITD, "$9ABC", "", 0x10, 0xB5, 0x9A, 0xBC);
+    TEST(EORD, "$9ABC", "", 0x10, 0xB8, 0x9A, 0xBC);
+    TEST(ADCD, "$9ABC", "", 0x10, 0xB9, 0x9A, 0xBC);
+    TEST(ORD,  "$9ABC", "", 0x10, 0xBA, 0x9A, 0xBC);
 
     TEST(CMPX, "$9ABC", "", 0xBC, 0x9A, 0xBC);
     TEST(LDX,  "$9ABC", "", 0xBE, 0x9A, 0xBC);
@@ -345,19 +353,51 @@ static void test_extended() {
     TEST(JMP,  "$1234", "", 0x7E, 0x12, 0x34);
     TEST(JSR,  "$1234", "", 0xBD, 0x12, 0x34);
 
+    TEST(SUBE, "$9ABC", "", 0x11, 0xB0, 0x9A, 0xBC);
+    TEST(ADDE, "$9ABC", "", 0x11, 0xBB, 0x9A, 0xBC);
+    TEST(LDE,  "$9ABC", "", 0x11, 0xB6, 0x9A, 0xBC);
+    TEST(STE,  "$9ABC", "", 0x11, 0xB7, 0x9A, 0xBC);
+    TEST(CMPE, "$9ABC", "", 0x11, 0xB1, 0x9A, 0xBC);
+
+    TEST(SUBF, "$9ABC", "", 0x11, 0xF0, 0x9A, 0xBC);
+    TEST(ADDF, "$9ABC", "", 0x11, 0xFB, 0x9A, 0xBC);
+    TEST(LDF,  "$9ABC", "", 0x11, 0xF6, 0x9A, 0xBC);
+    TEST(STF,  "$9ABC", "", 0x11, 0xF7, 0x9A, 0xBC);
+    TEST(CMPF, "$9ABC", "", 0x11, 0xF1, 0x9A, 0xBC);
+
+    TEST(SUBW, "$9ABC", "", 0x10, 0xB0, 0x9A, 0xBC);
+    TEST(ADDW, "$9ABC", "", 0x10, 0xBB, 0x9A, 0xBC);
+    TEST(LDW,  "$9ABC", "", 0x10, 0xB6, 0x9A, 0xBC);
+    TEST(STW,  "$9ABC", "", 0x10, 0xB7, 0x9A, 0xBC);
+    TEST(CMPW, "$9ABC", "", 0x10, 0xB1, 0x9A, 0xBC);
+
+    TEST(LDQ,  "$9ABC", "", 0x10, 0xFC, 0x9A, 0xBC);
+    TEST(STQ,  "$9ABC", "", 0x10, 0xFD, 0x9A, 0xBC);
+
+    TEST(MULD, "$9ABC", "", 0x11, 0xBF, 0x9A, 0xBC);
+    TEST(DIVD, "$9ABC", "", 0x11, 0xBD, 0x9A, 0xBC);
+    TEST(DIVQ, "$9ABC", "", 0x11, 0xBE, 0x9A, 0xBC);
+
+    TEST(OIM,  "#$30,$9ABC", "", 0x71, 0x30, 0x9A, 0xBC);
+    TEST(AIM,  "#$30,$9ABC", "", 0x72, 0x30, 0x9A, 0xBC);
+    TEST(EIM,  "#$30,$9ABC", "", 0x75, 0x30, 0x9A, 0xBC);
+    TEST(TIM,  "#$30,$9ABC", "", 0x7B, 0x30, 0x9A, 0xBC);
+
     symtab.put(0x0090, "ext0090");
-    symtab.put(0x1234, "ext1234");
     symtab.put(0x9ABC, "ext9ABC");
 
     TEST(NEG,  ">ext0090", "$0090", 0x70, 0x00, 0x90);
-    TEST(LDA,  "ext9ABC", "$9ABC", 0xB6, 0x9A, 0xBC);
+    TEST(LDA,  "ext9ABC", "$9ABC",  0xB6, 0x9A, 0xBC);
     TEST(STB,  ">ext0090", "$0090", 0xF7, 0x00, 0x90);
-    TEST(CMPX, "ext9ABC", "$9ABC", 0xBC, 0x9A, 0xBC);
+    TEST(CMPX, "ext9ABC", "$9ABC",  0xBC, 0x9A, 0xBC);
     TEST(STU,  ">ext0090", "$0090", 0xFF, 0x00, 0x90);
-    TEST(LDY,  "ext9ABC", "$9ABC", 0x10, 0xBE, 0x9A, 0xBC);
+    TEST(LDY,  "ext9ABC", "$9ABC",  0x10, 0xBE, 0x9A, 0xBC);
     TEST(LDS,  ">ext0090", "$0090", 0x10, 0xFE, 0x00, 0x90);
-    TEST(JMP,  "ext9ABC", "$9ABC", 0x7E, 0x9A, 0xBC);
-    TEST(JSR,  ">ext0090", "$0090", 0xBD, 0x00, 0x90);
+    TEST(JMP,  "ext9ABC", "$9ABC",  0x7E, 0x9A, 0xBC);
+    TEST(JSR,  ">ext0090", "$0090", 0xBD, 0x00,  0x90);
+
+    TEST(OIM,  "#$30,ext9ABC", "$9ABC",  0x71, 0x30, 0x9A, 0xBC);
+    TEST(OIM,  "#$30,>ext0090", "$0090", 0x71, 0x30, 0x00, 0x90);
 }
 
 static void test_indexed() {
@@ -841,6 +881,9 @@ static void test_bit_position() {
 }
 
 static void test_illegal() {
+    Insn insn;
+    char operands[40], comments[40];
+
     const uint8_t p00_illegals[] = {
         0x15, 0x1b,
         0x38, 0x3e,
@@ -850,11 +893,11 @@ static void test_illegal() {
         0xc7, 0xcf,
     };
     for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++) {
-        memory.setData(&p00_illegals[idx], 1);
-        insn.decode(memory, nullptr, operands, comments);
+        memory.setBytes(&p00_illegals[idx], 1);
+        disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, p00_illegals[idx]);
-        assert_equals(message, UNKNOWN_OPECODE, insn.getError());
+        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 
     const uint8_t p10_legals[] = {
@@ -878,11 +921,11 @@ static void test_illegal() {
             continue;
         }
         const uint8_t codes[] = { 0x10, (uint8_t)opc };
-        memory.setData(codes, sizeof(codes));
-        insn.decode(memory, nullptr, operands, comments);
+        memory.setBytes(codes, sizeof(codes));
+        disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x10 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_OPECODE, insn.getError());
+        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 
     const uint8_t p11_legals[] = {
@@ -905,11 +948,11 @@ static void test_illegal() {
             continue;
         }
         const uint8_t codes[] = { 0x11, (uint8_t)opc };
-        memory.setData(codes, sizeof(codes));
-        insn.decode(memory, nullptr, operands, comments);
+        memory.setBytes(codes, sizeof(codes));
+        disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x11 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_OPECODE, insn.getError());
+        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 }
 

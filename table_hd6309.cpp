@@ -209,4 +209,10 @@ Error TableHd6309::search(Insn &insn, AddrMode mode) const {
     return searchPages(insn, mode, &PAGES[0], &PAGES[PAGES_LENGTH]);
 }
 
+Error TableHd6309::search(Insn &insn, target::insn_t insnCode) const {
+    if (TableMc6809::search(insn, insnCode) == OK)
+        return OK;
+    return searchPages(insn, insnCode, &PAGES[0], &PAGES[PAGES_LENGTH]);
+}
+
 class TableHd6309 TableHd6309;

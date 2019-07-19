@@ -1,8 +1,8 @@
 
 CXXFLAGS=-Wall -g -O -std=c++17
 
-OBJS_mc6809 = asm_mc6809.o table_mc6809.o
-OBJS_hd6309 = asm_hd6309.o table_hd6309.o
+OBJS_mc6809 = asm_mc6809.o dis_mc6809.o table_mc6809.o string_utils.o
+OBJS_hd6309 = asm_hd6309.o dis_hd6309.o table_hd6309.o string_utils.o
 
 .PHONY: clean-objs clean test
 
@@ -10,6 +10,8 @@ all: $(OBJS_mc6809) $(OBJS_hd6309)
 
 asm_mc6809.o: asm_mc6809.h string_utils.h
 asm_hd6309.o: asm_hd6309.h string_utils.h
+dis_mc6809.o: dis_mc6809.h string_utils.h
+dis_hd6309.o: dis_hd6309.h string_utils.h
 string_utils.o: string_utils.h
 table_mc6809.o: config_mc6809.h entry_mc6809.h insn_table.h text_mc6809.h
 table_hd6309.o: config_hd6309.h entry_mc6809.h text_hd6309.h
