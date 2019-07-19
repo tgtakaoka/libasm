@@ -208,3 +208,5 @@ Error TableHd6309::search(Insn &insn, AddrMode mode) const {
         return OK;
     return searchPages(insn, mode, &PAGES[0], &PAGES[PAGES_LENGTH]);
 }
+
+class TableHd6309 TableHd6309;

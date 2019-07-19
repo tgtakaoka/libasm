@@ -3,8 +3,6 @@
 #include "asm_hd6309.h"
 #include "string_utils.h"
 
-TableHd6309 AsmHd6309::_tableHd6309;
-
 static const RegName TABLE_REGISTERS[] = {
     D, X, Y, U, S, PC, W, V, A, B, CC, DP, ZERO, ZERO, E, F,
 };
@@ -160,7 +158,7 @@ Error AsmHd6309::encodeImmediatePlus(const char *line, Insn &insn) {
     case INDEXED: setAddrMode(insn, IMM_INDEXED); break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (_tableHd6309.search(insn, insn.addrMode()))
+    if (TableHd6309.search(insn, insn.addrMode()))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
     emitByte(insn, (uint8_t)val);
@@ -196,8 +194,8 @@ Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
 
     for (uint8_t mode = 0; mode < sizeof(TABLE_TFM_SRC_MODES); mode++) {
         if (srcMode == TABLE_TFM_SRC_MODES[mode] && dstMode == TABLE_TFM_DST_MODES[mode]) {
-            target::opcode_t prefixCode = _tableHd6309.prefixCode(insn.insnCode());
-            setInsnCode(insn,  _tableHd6309.insnCode(prefixCode, 0x38 + mode));
+            target::opcode_t prefixCode = TableHd6309.prefixCode(insn.insnCode());
+            setInsnCode(insn,  TableHd6309.insnCode(prefixCode, 0x38 + mode));
             emitInsnCode(insn);
             emitByte(insn, post);
             return setError(OK);
@@ -215,7 +213,7 @@ Error AsmHd6309::encode(const char *line, Insn &insn, target::uintptr_t addr, Sy
     while (isidchar(*line)) line++;
     line = skipSpace(line);
 
-    if (_tableHd6309.search(insn, insn.name())) return setError(UNKNOWN_INSTRUCTION);
+    if (TableHd6309.search(insn, insn.name())) return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
     case INHERENT:
@@ -234,7 +232,7 @@ Error AsmHd6309::encode(const char *line, Insn &insn, target::uintptr_t addr, Sy
     }
 
     if (determineAddrMode(line, insn)) return getError();
-    if (_tableHd6309.search(insn, insn.addrMode()))
+    if (TableHd6309.search(insn, insn.addrMode()))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case IMMEDIATE:

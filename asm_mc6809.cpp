@@ -3,8 +3,6 @@
 #include "asm_mc6809.h"
 #include "string_utils.h"
 
-TableMc6809 AsmMc6809::_tableMc6809;
-
 static char regName1stChar(const RegName regName) {
     return (regName == DP) ? 'D' : char(regName);
 }
@@ -16,7 +14,6 @@ static char regName2ndChar(const RegName regName) {
     return 0;
 }
 
-static const char TABLE_CCR_BITS[8] = { 'E', 'F', 'H', 'I', 'N', 'Z', 'V', 'C' };
 static const RegName TABLE_STACK_OP_S[8] = { CC, A, B, DP, X, Y, U, PC };
 static const RegName TABLE_STACK_OP_U[8] = { CC, A, B, DP, X, Y, S, PC };
 
@@ -163,8 +160,8 @@ Error AsmMc6809::encodeRegisters(const char *line, Insn &insn) {
 Error AsmMc6809::encodeRelative(const char *line, Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
-    const target::opcode_t prefix = _tableMc6809.prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (_tableMc6809.isPrefixCode(prefix) ? 2 : 1) + insn.oprLen();
+    const target::opcode_t prefix = TableMc6809.prefixCode(insn.insnCode());
+    const host::uint_t insnLen = (TableMc6809.isPrefixCode(prefix) ? 2 : 1) + insn.oprLen();
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
     emitInsnCode(insn);
@@ -344,7 +341,7 @@ Error AsmMc6809::encode(
     setName(insn, line, endName);
     line = skipSpace(endName);
 
-    if (_tableMc6809.search(insn, insn.name()))
+    if (TableMc6809.search(insn, insn.name()))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -362,7 +359,7 @@ Error AsmMc6809::encode(
     }
 
     if (determineAddrMode(line, insn)) return getError();
-    if (_tableMc6809.search(insn, insn.addrMode()))
+    if (TableMc6809.search(insn, insn.addrMode()))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case IMMEDIATE:
