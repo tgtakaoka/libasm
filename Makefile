@@ -26,7 +26,7 @@ entry_mc6809.h: config_host.h
 error_reporter.h : config_host.h
 insn.h: config_host.h
 insn_table.h: config_host.h
-string_utils.h:
+string_utils.h: config_host.h
 symbol_table.h: config_host.h
 table_mc6809.h: entry_mc6809.h insn_table.h
 table_hd6309.h: table_mc6809.h
