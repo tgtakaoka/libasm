@@ -61,11 +61,12 @@ static void assert_equals(const char *message,
     printf("\n");
 }
 
-char message[40];
 #define ASSERT(addr, line, ...)                                 \
     do {                                                        \
         const target::byte_t expected[] = { __VA_ARGS__ };      \
-        assembler.encode(addr, line, &symtab);                  \
+        Insn insn;                                              \
+        char message[40];                                       \
+        assembler.encode(line, insn, addr, &symtab);            \
         sprintf(message, "%s: %s", __FUNCTION__, line);         \
         assert_equals(message, OK, assembler.getError());       \
         assert_equals(message, expected, sizeof(expected),      \

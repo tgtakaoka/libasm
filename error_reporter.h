@@ -30,4 +30,3 @@ private:
 };
 
 #endif // __ERROR_REPORTER_H__
-
