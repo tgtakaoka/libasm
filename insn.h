@@ -2,7 +2,7 @@
 #ifndef __INSN_H__
 #define __INSN_H__
 
-#include <cstring>
+#include <string.h>
 
 #include "config_host.h"
 

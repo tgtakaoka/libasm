@@ -1,6 +1,7 @@
-#include <cctype>
-#include <cstring>
+#include <ctype.h>
+#include <string.h>
 
+#include "config_host.h"
 #include "string_utils.h"
 
 #ifdef AVR

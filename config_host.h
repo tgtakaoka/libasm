@@ -2,22 +2,22 @@
 #ifndef __CONFIG_HOST_H__
 #define __CONFIG_HOST_H__
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace host
 {
-    typedef std::int_least8_t int_t;
-    typedef std::uint_least8_t uint_t;
-    typedef std::int_fast16_t index_t;
-    typedef std::uint_fast8_t uindex_t;
+    typedef ::int_least8_t  int_t;
+    typedef ::uint_least8_t uint_t;
+    typedef ::int_fast16_t  index_t;
+    typedef ::uint_fast8_t  uindex_t;
 } // namespace host
 
 
 #ifdef AVR
 
 #include <avr/pgmspace.h>
-#define pgm_strcpy(d, s) strcpy_P((d), pgm_read_word(&(s)))
-#define pgm_strcasecmp(n, p) strcasecmp_P((n), pgm_read_word(&(p)))
+#define pgm_strcpy(d, s) strcpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))))
+#define pgm_strcasecmp(n, p) strcasecmp_P((n), reinterpret_cast<const char *>(pgm_read_word(&(p))))
 class __FlashStringHelper;
 char *outStr(char *out, const __FlashStringHelper *str);
 

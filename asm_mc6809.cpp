@@ -1,4 +1,4 @@
-#include <cctype>
+#include <ctype.h>
 
 #include "asm_mc6809.h"
 #include "string_utils.h"

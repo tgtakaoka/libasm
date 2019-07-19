@@ -7,17 +7,17 @@
 
 namespace target
 {
-    typedef std::uint8_t  byte_t;
-    using std::int8_t;
-    using std::uint16_t;
-    using std::uint32_t;
-    using std::int16_t;
-    using std::int32_t;
-    typedef std::uint16_t uintptr_t;
-    typedef std::int16_t  intptr_t;
-    typedef std::int16_t  ptrdiff_t;
-    typedef std::uint8_t  opcode_t;
-    typedef std::uint16_t insn_t;
+    typedef ::uint8_t  byte_t;
+    typedef ::uint16_t uint16_t;
+    typedef ::uint32_t uint32_t;
+    typedef ::int8_t   int8_t;
+    typedef ::int16_t  int16_t;
+    typedef ::int32_t  int32_t;
+    typedef ::uint16_t uintptr_t;
+    typedef ::int16_t  intptr_t;
+    typedef ::int16_t  ptrdiff_t;
+    typedef ::uint8_t  opcode_t;
+    typedef ::uint16_t insn_t;
 } // namespace target
 
 #ifndef MC6809_ENUMS_DEFINED
