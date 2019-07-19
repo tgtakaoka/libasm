@@ -27,6 +27,8 @@ private:
 
     friend class InsnTable;
     friend class Asm;
+    friend class Dis;
+
     void reset(target::uintptr_t addr) {
         _address = addr;
         _insnLen = 0;

@@ -1,3 +1,4 @@
+/* -*- mode: c++; -*- */
 #ifndef __ERROR_MC6809_H__
 #define __ERROR_MC6809_H__
 
@@ -7,6 +8,11 @@
 enum Error : host::uint_t {
     OK = 0,
     INVALID_STATE,
+
+    NO_MEMORY,
+    INTERNAL_ERROR,
+    UNKNOWN_POSTBYTE,
+    ILLEGAL_REGISTER,
 
     NO_TEXT,
     UNKNOWN_INSTRUCTION,

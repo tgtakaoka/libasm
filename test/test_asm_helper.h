@@ -2,9 +2,9 @@
 #ifndef __TEST_ASM_HELPER_H__
 #define __TEST_ASM_HELPER_H__
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#include <cinttypes>
+#include <cstdio>
+#include <cstring>
 #include <map>
 
 #include "error_reporter.h"
@@ -32,14 +32,16 @@ private:
     std::map<const char *, target::uintptr_t, compare_text> _map;
 } symtab;
 
-static void assert_equals(const char *message, const Error expected, const Error actual) {
+static void assert_equals(
+    const char *message, const Error expected, const Error actual) {
     if (expected == actual) return;
     printf("%s: expected Error '%d': actual '%d'\n", message, expected, actual);
 }
 
-static void assert_equals(const char *message,
-                          const target::byte_t expected[], host::uint_t expected_len,
-                          const target::byte_t actual[], host::uint_t actual_len) {
+static void assert_equals(
+    const char *message,
+    const target::byte_t expected[], host::uint_t expected_len,
+    const target::byte_t actual[], host::uint_t actual_len) {
     if (expected_len == actual_len) {
         host::uint_t i;
         for (i = 0; i < expected_len; i++)

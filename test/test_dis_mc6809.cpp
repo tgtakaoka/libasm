@@ -1,8 +1,9 @@
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
 
+#include "dis_mc6809.h"
 #include "test_dis_helper.h"
+
+DisMc6809 disassembler;
 
 static void set_up() {
     symtab.reset();
@@ -605,6 +606,9 @@ static void test_register() {
 }
 
 static void test_illegal() {
+    Insn insn;
+    char operands[40], comments[40];
+
     const uint8_t p00_illegals[] = {
         0x01, 0x02, 0x05, 0x0b,
         0x14, 0x15, 0x18, 0x1b,
@@ -617,11 +621,11 @@ static void test_illegal() {
         0xc7, 0xcd, 0xcf,
     };
     for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++) {
-        memory.setData(&p00_illegals[idx], 1);
-        insn.decode(memory, nullptr, operands, comments);
+        memory.setBytes(&p00_illegals[idx], 1);
+        disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, p00_illegals[idx]);
-        assert_equals(message, UNKNOWN_OPECODE, insn.getError());
+        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 
     const uint8_t p10_legals[] = {
@@ -643,11 +647,11 @@ static void test_illegal() {
             continue;
         }
         const uint8_t codes[] = { 0x10, (uint8_t)opc };
-        memory.setData(codes, sizeof(codes));
-        insn.decode(memory, nullptr, operands, comments);
+        memory.setBytes(codes, sizeof(codes));
+        disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x10 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_OPECODE, insn.getError());
+        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 
     const uint8_t p11_legals[] = {
@@ -664,11 +668,11 @@ static void test_illegal() {
             continue;
         }
         const uint8_t codes[] = { 0x11, (uint8_t)opc };
-        memory.setData(codes, sizeof(codes));
-        insn.decode(memory, nullptr, operands, comments);
+        memory.setBytes(codes, sizeof(codes));
+        disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x11 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_OPECODE, insn.getError());
+        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 }
 
