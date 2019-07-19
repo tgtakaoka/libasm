@@ -5,6 +5,9 @@
 #include "table_mc6809.h"
 
 class TableHd6309 : public TableMc6809 {
+public:
+    Error search(Insn &insn, const char *name) const override;
+    Error search(Insn &insn, AddrMode mode) const override;
 };
 
 #endif // __TABLE_HD6309_H__

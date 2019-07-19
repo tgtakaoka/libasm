@@ -21,7 +21,7 @@ config_hd6309.h: config_host.h
 error_reporter.h : config_host.h
 insn.h: error_reporter.h config_host.h symbol_table.h
 entry_mc6809.h: config_host.h
-string_utils.h: config_host.h
+string_utils.h:
 symbol_table.h: config_host.h
 table.h: config_host.h
 text_mc6809.h: config_host.h

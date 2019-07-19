@@ -97,18 +97,18 @@ Error AsmMc6809::encodeStackOp(const char *line) {
 }
 
 Error AsmMc6809::encodeRegisters(const char *line) {
-    host::int_t regNum;
+    RegName regName;
     constexpr host::uint_t tableLen = sizeof(tableRegNum) / sizeof(tableRegNum[0]);
-    if ((regNum = parseRegName(line, tableRegNum, tableLen)) == NONE)
+    if ((regName = parseRegName(line, tableRegNum, tableLen)) == NONE)
         return setError(UNKNOWN_REGISTER);
-    line += regNameLen(tableRegNum[regNum]);
+    line += regNameLen(regName);
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
-    target::byte_t post = (regNum << 4);
-    if ((regNum = parseRegName(line, tableRegNum, tableLen)) == NONE)
+    target::byte_t post = encodeRegNumber(regName, tableRegNum, tableLen) << 4;
+    if ((regName = parseRegName(line, tableRegNum, tableLen)) == NONE)
         return setError(UNKNOWN_REGISTER);
-    line += regNameLen(tableRegNum[regNum]);
+    line += regNameLen(regName);
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
-    post |= regNum;
+    post |= encodeRegNumber(regName, tableRegNum, tableLen);
     addInsnCode();
     addByte(post);
     return setError(OK);
@@ -305,7 +305,8 @@ Error AsmMc6809::encode(
     if (!*line) return setError(NO_TEXT);
     line = copyWord(line, _name, sizeof(_name) - 1);
 
-    if (_tableMc6809.search(*this, &_name[0])) return setError(UNKNOWN_INSTRUCTION);
+    if (_tableMc6809.search(*this, &_name[0]))
+        return setError(UNKNOWN_INSTRUCTION);
 
     switch (_addrMode) {
     case INHERENT:
@@ -322,7 +323,8 @@ Error AsmMc6809::encode(
     }
 
     if (determineAddrMode(line, _addrMode)) return getError();
-    if (_tableMc6809.search(*this, _addrMode)) return setError(UNKNOWN_INSTRUCTION);
+    if (_tableMc6809.search(*this, _addrMode))
+        return setError(UNKNOWN_INSTRUCTION);
     switch (_addrMode) {
     case IMMEDIATE: return encodeImmediate(line);
     case DIRECT_PG: return encodeDirect(line);

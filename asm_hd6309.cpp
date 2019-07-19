@@ -228,7 +228,8 @@ Error AsmHd6309::encodeImmediatePlus(const char *line) {
     case INDEXED: _addrMode = IMM_INDEXED; break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (_tableHd6309.search(*this, _addrMode)) return setError(UNKNOWN_INSTRUCTION);
+    if (_tableHd6309.search(*this, _addrMode))
+        return setError(UNKNOWN_INSTRUCTION);
     addInsnCode();
     addByte((uint8_t)val);
     switch (_addrMode) {
@@ -288,20 +289,19 @@ Error AsmHd6309::encode(target::uintptr_t addr, const char *line, SymbolTable *s
         return encodeStackOp(line);
     case REGISTERS:
         return encodeRegisters(line);
-//#ifdef SUPPORT_HD6309
     case IMM_DIRECT: case IMM_EXTENDED: case IMM_INDEXED:
         return encodeImmediatePlus(line);
     case BIT_OPERATION:
         return encodeBitOperation(line);
     case TRANSFER_MEM:
         return encodeTransferMemory(line);
-//#endif
     default:
         break;
     }
 
     if (determineAddrMode(line, _addrMode)) return getError();
-    if (_tableHd6309.search(*this, _addrMode)) return setError(UNKNOWN_INSTRUCTION);
+    if (_tableHd6309.search(*this, _addrMode))
+        return setError(UNKNOWN_INSTRUCTION);
     switch (_addrMode) {
     case IMMEDIATE: return encodeImmediate(line);
     case DIRECT_PG: return encodeDirect(line);

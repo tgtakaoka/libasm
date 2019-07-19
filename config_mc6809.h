@@ -3,6 +3,7 @@
 #define __CONFIG_MC6809_H__
 
 #include "config_host.h"
+#include "error_mc6809.h"
 
 namespace target
 {
@@ -18,8 +19,7 @@ namespace target
     typedef std::uint16_t insn_t;
 } // namespace target
 
-#ifndef TARGET_ENUMS_DEFINED
-#define TARGET_ENUMS_DEFINED
+#ifndef MC6809_ENUMS_DEFINED
 enum AddrMode : host::uint_t {
     INHERENT,
     DIRECT_PG,
