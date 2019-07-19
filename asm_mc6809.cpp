@@ -31,7 +31,7 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmMc6809::getOperand16(const char *&in, target::word_t &val) {
+Error AsmMc6809::getOperand16(const char *&in, target::uint16_t &val) {
     if (getInt16(in, val)) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
@@ -67,15 +67,8 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-static const char *copyWord(const char *line, char *dst, host::int_t max_len) {
-    for (host::int_t i = 0; *line && *line != ' ' && i < max_len; i++)
-        *dst++ = *line++;
-    *dst = 0;
-    return skipSpace(line);
-}
-
-Error AsmMc6809::encodeStackOp(const char *line) {
-    const RegName *table = ((insnCode() & 2) == 0 ? &tableStackS[0] : &tableStackU[0]);
+Error AsmMc6809::encodeStackOp(const char *line, Insn &insn) {
+    const RegName *table = ((insn.insnCode() & 2) == 0 ? &tableStackS[0] : &tableStackU[0]);
     target::byte_t post = 0;
     while (*line) {
         host::uint_t bit = 0;
@@ -91,12 +84,12 @@ Error AsmMc6809::encodeStackOp(const char *line) {
         post |= bit;
         if (*line == ',') line++;
     }
-    addInsnCode();
-    addByte(post);
+    emitInsnCode(insn);
+    emitByte(insn, post);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmMc6809::encodeRegisters(const char *line) {
+Error AsmMc6809::encodeRegisters(const char *line, Insn &insn) {
     RegName regName;
     constexpr host::uint_t tableLen = sizeof(tableRegNum) / sizeof(tableRegNum[0]);
     if ((regName = parseRegName(line, tableRegNum, tableLen)) == NONE)
@@ -109,54 +102,54 @@ Error AsmMc6809::encodeRegisters(const char *line) {
     line += regNameLen(regName);
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
     post |= encodeRegNumber(regName, tableRegNum, tableLen);
-    addInsnCode();
-    addByte(post);
+    emitInsnCode(insn);
+    emitByte(insn, post);
     return setError(OK);
 }
 
-Error AsmMc6809::encodeRelative(const char *line) {
+Error AsmMc6809::encodeRelative(const char *line, Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
-    const host::uint_t insnLen = (hasPrefixCode() ? 2 : 1) + _oprLen;
-    const target::uintptr_t base = _address + insnLen;
+    const target::opcode_t prefix = _tableMc6809.prefixCode(insn.insnCode());
+    const host::uint_t insnLen = (_tableMc6809.isPrefixCode(prefix) ? 2 : 1) + insn.oprLen();
+    const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
-    addInsnCode();
-    if (_oprLen == 1) {
+    emitInsnCode(insn);
+    if (insn.oprLen() == 1) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-        addByte(target::byte_t(delta));
+        emitByte(insn, target::byte_t(delta));
     } else {
-        addWord(delta);
+        emitUint16(insn, delta);
     }
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmMc6809::encodeImmediate(const char *line) {
+Error AsmMc6809::encodeImmediate(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
-    addInsnCode();
-    if (_oprLen == 1 || _oprLen == 2) {
-        target::word_t val;
+    emitInsnCode(insn);
+    if (insn.oprLen() == 1 || insn.oprLen() == 2) {
+        target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (_oprLen == 1) addByte(target::byte_t(val));
-        else addWord(val);
+        if (insn.oprLen() == 1) emitByte(insn, target::byte_t(val));
+        else emitUint16(insn, val);
     }
-    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
-}
+    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);}
 
-Error AsmMc6809::encodeDirect(const char *line) {
+Error AsmMc6809::encodeDirect(const char *line, Insn &insn) {
     if (*line == '<') line++;
-    addInsnCode();
+    emitInsnCode(insn);
     target::uintptr_t dir;
     if (getOperand16(line, dir)) return setError(UNKNOWN_OPERAND);
-    addByte(target::byte_t(dir));
+    emitByte(insn, target::byte_t(dir));
     return setError(OK);
 }
 
-Error AsmMc6809::encodeExtended(const char *line) {
+Error AsmMc6809::encodeExtended(const char *line, Insn &insn) {
     if (*line == '>') line++;
-    addInsnCode();
+    emitInsnCode(insn);
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
-    addWord(addr);
+    emitUint16(insn, addr);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
@@ -174,8 +167,8 @@ RegName AsmMc6809::parseRegName(const char *line, const RegName *table, host::ui
     return NONE;
 }
 
-Error AsmMc6809::encodeIndexed(const char *line) {
-    addInsnCode();
+Error AsmMc6809::encodeIndexed(const char *line, Insn &insn) {
+    emitInsnCode(insn);
     const bool indir = (*line == '[');
     RegName base = NONE;
     RegName index = NONE;
@@ -217,22 +210,22 @@ Error AsmMc6809::encodeIndexed(const char *line) {
     target::byte_t post;
     if (base == NONE) {                 // [n16]
         if (index != OFFSET) return setError(UNKNOWN_OPERAND);
-        addByte(0x9F);
-        addWord(addr);
+        emitByte(insn, 0x9F);
+        emitUint16(insn, addr);
         return setError(OK);
     }
     if (base == PC) {                   // n,PC [n,PC]
         if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
         post = indir ? 0x10 : 0;
-        target::ptrdiff_t delta = addr - (_address + _insnLen + 2);
+        target::ptrdiff_t delta = addr - (insn.address() + insn.insnLen() + 2);
         if (delta >= -128 && delta < 128) {
-            addByte(0x8C | post);
-            addByte((uint8_t)delta);
+            emitByte(insn, 0x8C | post);
+            emitByte(insn, (uint8_t)delta);
             return setError(OK);
         }
-        delta = addr - (_address + _insnLen + 3);
-        addByte(0x8D | post);
-        addWord(delta);
+        delta = addr - (insn.address() + insn.insnLen() + 3);
+        emitByte(insn, 0x8D | post);
+        emitUint16(insn, delta);
         return setError(OK);
     }
     post = encodeRegNumber(base, tableBaseReg, baseLen) << 5;
@@ -244,92 +237,97 @@ Error AsmMc6809::encodeIndexed(const char *line) {
         else if (!indir && incr == 1) post |= 0x80;
         else if (!indir && incr == -1) post |= 0x82;
         else return setError(UNKNOWN_OPERAND);
-        addByte(post);
+        emitByte(insn, post);
         return setError(OK);
     }
     if (index != OFFSET) {              // R,R
         post |= encodeRegNumber(index, tableIndexReg, indexLen);
-        addByte(0x80 | post);
+        emitByte(insn, 0x80 | post);
         return setError(OK);
     }
     const target::intptr_t offset = addr;
     if (offset >= -16 && offset < 16 && !indir) { // n5.R
         post |= (offset & 0x1F);
-        addByte(post);
+        emitByte(insn, post);
         return setError(OK);
     }
     if (offset >= -128 && offset < 128) { // n8,R [n8,R]
         post |= 0x88;
-        addByte(post);
-        addByte((uint8_t)offset);
+        emitByte(insn, post);
+        emitByte(insn, (uint8_t)offset);
         return setError(OK);
     }
     // n16,R [n16,R]
     post |= 0x89;
-    addByte(post);
-    addWord(offset);
+    emitByte(insn, post);
+    emitUint16(insn, offset);
     return setError(OK);
 }
 
-Error AsmMc6809::determineAddrMode(const char *line, AddrMode &mode) {
+Error AsmMc6809::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
-    case '#': mode = IMMEDIATE; break;
-    case '<': mode = DIRECT_PG; break;
-    case '>': mode = EXTENDED; break;
+    case '#': setAddrMode(insn, IMMEDIATE); break;
+    case '<': setAddrMode(insn, DIRECT_PG); break;
+    case '>': setAddrMode(insn, EXTENDED); break;
     case '[':
-    case ',': mode = INDEXED; break;
+    case ',': setAddrMode(insn, INDEXED); break;
     default:
         constexpr host::uint_t indexLen = sizeof(tableIndexReg) / sizeof(tableIndexReg[0]);
         RegName index;
         if ((index = parseRegName(line, tableIndexReg, indexLen)) != NONE) {
             line += regNameLen(index);
             if (*line == ',') {
-                mode = INDEXED;
+                setAddrMode(insn, INDEXED);
                 return OK;
             }
             return setError(UNKNOWN_OPERAND);
         }
-        target::word_t val;
+        target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (*line == ',') mode = INDEXED;
-        else mode = val < 0x100 ? DIRECT_PG : EXTENDED;
+        if (*line == ',') setAddrMode(insn, INDEXED);
+        else setAddrMode(insn, val < 0x100 ? DIRECT_PG : EXTENDED);
         break;
     }
     return OK;
 }
 
 Error AsmMc6809::encode(
-    target::uintptr_t addr, const char *line, SymbolTable *symtab) {
-    reset(addr, symtab);
+    const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
+    reset(symtab);
+    resetAddress(insn, addr);
     line = skipSpace(line);
     if (!*line) return setError(NO_TEXT);
-    line = copyWord(line, _name, sizeof(_name) - 1);
+    const char *endName;
+    for (endName = line; isidchar(*endName); endName++)
+        ;
+    setName(insn, line, endName);
+    line = skipSpace(endName);
 
-    if (_tableMc6809.search(*this, &_name[0]))
+    if (_tableMc6809.search(insn, insn.name()))
         return setError(UNKNOWN_INSTRUCTION);
 
-    switch (_addrMode) {
+    switch (insn.addrMode()) {
     case INHERENT:
-        addInsnCode();
+        emitInsnCode(insn);
         return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
     case RELATIVE:
-        return encodeRelative(line);
+        return encodeRelative(line, insn);
     case STACK_OP:
-        return encodeStackOp(line);
+        return encodeStackOp(line, insn);
     case REGISTERS:
-        return encodeRegisters(line);
+        return encodeRegisters(line, insn);
     default:
         break;
     }
 
-    if (determineAddrMode(line, _addrMode)) return getError();
-    if (_tableMc6809.search(*this, _addrMode))
+    if (determineAddrMode(line, insn)) return getError();
+    if (_tableMc6809.search(insn, insn.addrMode()))
         return setError(UNKNOWN_INSTRUCTION);
-    switch (_addrMode) {
-    case IMMEDIATE: return encodeImmediate(line);
-    case DIRECT_PG: return encodeDirect(line);
-    case EXTENDED: return encodeExtended(line);
-    case INDEXED: return encodeIndexed(line);
+    switch (insn.addrMode()) {
+    case IMMEDIATE: return encodeImmediate(line, insn);
+    case DIRECT_PG: return encodeDirect(line, insn);
+    case EXTENDED: return encodeExtended(line, insn);
+    case INDEXED: return encodeIndexed(line, insn);
     default: return setError(UNKNOWN_OPERAND);
     }
 }

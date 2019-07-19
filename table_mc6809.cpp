@@ -329,10 +329,10 @@ Error TableMc6809::searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const EntryMc6809 *entry;
         if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            insn._insnCode = insnCode(page->prefix, pgm_read_byte(&entry->opc));
+            setInsnCode(insn, insnCode(page->prefix, pgm_read_byte(&entry->opc)));
             const host::uint_t flags = pgm_read_byte(&entry->flags);
-            insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
-            insn._oprLen = (flags & oprLen_mask);
+            setAddrMode(insn, AddrMode((flags >> mode_shift) & mode_mask));
+            setOprLen(insn, flags & oprLen_mask);
             return OK;
         }
     }
@@ -342,14 +342,14 @@ Error TableMc6809::searchPages(
 Error TableMc6809::searchPages(
     Insn &insn, AddrMode mode,
     const EntryPage *pages, const EntryPage *end) const {
-    const char *name = insn._name;
+    const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const EntryMc6809 *entry;
         if ((entry = searchEntry(name, mode, page->table, page->end)) != nullptr) {
-            insn._insnCode = insnCode(page->prefix, pgm_read_byte(&entry->opc));
+            setInsnCode(insn, insnCode(page->prefix, pgm_read_byte(&entry->opc)));
             const host::uint_t flags = pgm_read_byte(&entry->flags);
-            insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
-            insn._oprLen = (flags & oprLen_mask);
+            setAddrMode(insn, AddrMode((flags >> mode_shift) & mode_mask));
+            setOprLen(insn, flags & oprLen_mask);
             return OK;
         }
     }

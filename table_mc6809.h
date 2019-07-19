@@ -3,8 +3,9 @@
 #define __TABLE_MC6809_H__
 
 #include "entry_mc6809.h"
+#include "insn_table.h"
 
-class TableMc6809 {
+class TableMc6809 : public InsnTable {
 public:
     virtual Error search(Insn &insn, const char *name) const;
     virtual Error search(Insn &insn, AddrMode mode) const;
