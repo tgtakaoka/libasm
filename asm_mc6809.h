@@ -4,8 +4,8 @@
 
 #include "config_mc6809.h"
 
-#include "error_reporter.h"
 #include "asm.h"
+#include "error_reporter.h"
 #include "insn.h"
 #include "symbol_table.h"
 #include "table_mc6809.h"
@@ -55,18 +55,34 @@ protected:
 
     static bool compareRegName(const char *line, RegName regName);
     static host::uint_t regNameLen(RegName regName);
-    static host::int_t encodeRegNumber(RegName regName, const RegName *table, host::uint_t len);
-    static RegName parseRegName(const char *, const RegName *table, host::uint_t len);
+    static host::int_t encodeRegNumber(RegName regName, const RegName *table, const RegName *end);
+    static RegName parseRegName(const char *, const RegName *table, const RegName *end);
+
+    virtual host::int_t encodeRegister(RegName regName) const;
+    virtual RegName parseRegister(const char *line) const;
+    virtual host::int_t encodeIndexReg(RegName regName) const;
+    virtual RegName parseIndexReg(const char *line) const;
+    virtual host::int_t encodeBaseReg(RegName regName) const;
+    virtual RegName parseBaseReg(const char *line) const;
 
     Error getOperand16(const char *&line, target::uint16_t &val);
     Error determineAddrMode(const char *line, Insn &insn);
     Error encodeStackOp(const char *line, Insn &insn);
     Error encodeRegisters(const char *line, Insn &insn);
     Error encodeRelative(const char *line, Insn &insn);
-    virtual Error encodeImmediate(const char *line, Insn &insn);
-    Error encodeDirect(const char *line, Insn &insn);
-    Error encodeExtended(const char *line, Insn &insn);
-    virtual Error encodeIndexed(const char *line, Insn &insn);
+    Error encodeImmediate(const char *line, Insn &insn);
+    Error encodeDirect(const char *line, Insn &insn, bool emitInsn = true);
+    Error encodeExtended(const char *line, Insn &insn, bool emitInsn = true);
+    Error encodeIndexed(const char *line, Insn &insn, bool emitInsn = true);
+
+    virtual Error encodeImmediateExtra(const char *line, Insn &insn) {
+        return UNKNOWN_OPERAND;
+    }
+    virtual Error encodeIndexedExtra(
+        Insn &insn, RegName index, target::uintptr_t addr, RegName base,
+        host::int_t incr, bool indir) {
+        return UNKNOWN_OPERAND;
+    }
 };
 
 #endif // __ASM_MC6809_H__

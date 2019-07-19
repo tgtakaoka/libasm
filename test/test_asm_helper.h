@@ -61,21 +61,19 @@ static void assert_equals(const char *message,
     printf("\n");
 }
 
-#define ASSERT(addr, line, ...)                                 \
-    do {                                                        \
-        const target::byte_t expected[] = { __VA_ARGS__ };      \
-        Insn insn;                                              \
-        char message[40];                                       \
-        assembler.encode(line, insn, addr, &symtab);            \
-        sprintf(message, "%s: %s", __FUNCTION__, line);         \
-        assert_equals(message, OK, assembler.getError());       \
-        assert_equals(message, expected, sizeof(expected),      \
-                      assembler.bytes(), assembler.insnLen());  \
+#define ASSERT(addr, line, ...)                             \
+    do {                                                    \
+        const target::byte_t expected[] = { __VA_ARGS__ };  \
+        Insn insn;                                          \
+        char message[40];                                   \
+        assembler.encode(line, insn, addr, &symtab);        \
+        sprintf(message, "%s: %s", __FUNCTION__, line);     \
+        assert_equals(message, OK, assembler.getError());   \
+        assert_equals(message, expected, sizeof(expected),  \
+                      insn.bytes(), insn.insnLen());        \
     } while (0)
-#define ATEST(addr, line, ...)                  \
-    ASSERT(addr, line, __VA_ARGS__)
-#define TEST(line, ...)                         \
-    ATEST(0x0000, line, __VA_ARGS__)
+#define ATEST(addr, line, ...) ASSERT(addr, line, __VA_ARGS__)
+#define TEST(line, ...) ATEST(0x0000, line, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test)
 

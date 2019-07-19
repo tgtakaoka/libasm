@@ -2,6 +2,8 @@
 #ifndef __INSN_TABLE_H__
 #define __INSN_TABLE_H__
 
+#include "config_host.h"
+
 class InsnTable {
 protected:
     static void setInsnCode(Insn& insn, target::insn_t insnCode) {

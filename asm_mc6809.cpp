@@ -16,16 +16,70 @@ static char regName2ndChar(const RegName regName) {
     return 0;
 }
 
-static const RegName tableBaseReg[4] = { X, Y, U, S };
-static const RegName tableIndexReg[16] = {
-    NONE, NONE, NONE, NONE, NONE, B, A, NONE, NONE, NONE, NONE, D, NONE, NONE, NONE, NONE,
+static const char TABLE_CCR_BITS[8] = { 'E', 'F', 'H', 'I', 'N', 'Z', 'V', 'C' };
+static const RegName TABLE_STACK_OP_S[8] = { CC, A, B, DP, X, Y, U, PC };
+static const RegName TABLE_STACK_OP_U[8] = { CC, A, B, DP, X, Y, S, PC };
+
+static const RegName TABLE_REGISTERS[] = {
+    D, X, Y, U, S, PC, NONE, NONE, A, B, CC, DP
 };
-static const char tableCCBitName[8] = { 'E', 'F', 'H', 'I', 'N', 'Z', 'V', 'C' };
-static const RegName tableStackS[8] = { CC, A, B, DP, X, Y, U, PC };
-static const RegName tableStackU[8] = { CC, A, B, DP, X, Y, S, PC };
-static const RegName tableRegNum[16] = {
-    D, X, Y, U, S, PC, NONE, NONE, A, B, CC, DP, NONE, NONE, NONE, NONE,
+constexpr host::uindex_t LENGTH_REGISTERS =
+    sizeof(TABLE_REGISTERS) / sizeof(TABLE_REGISTERS[0]);
+
+static const RegName TABLE_INDEX_REGS[] = {
+    NONE, NONE, NONE, NONE, NONE, B, A, NONE, NONE, NONE, NONE, D
 };
+constexpr host::uindex_t LENGTH_INDEXES =
+    sizeof(TABLE_INDEX_REGS) / sizeof(TABLE_INDEX_REGS[0]);
+static const RegName TABLE_BASE_REGS[] = { X, Y, U, S };
+constexpr host::uindex_t LENGTH_BASES =
+    sizeof(TABLE_BASE_REGS) / sizeof(TABLE_BASE_REGS[0]);
+
+host::int_t AsmMc6809::encodeRegNumber(
+    RegName regName, const RegName *table, const RegName *end) {
+    for (const RegName *p = table; p < end; p++) {
+        if (*p == regName) return p - table;
+    }
+    return -1;
+}
+
+RegName AsmMc6809::parseRegName(
+    const char *line, const RegName *table, const RegName *end) {
+    for (const RegName *p = table; p < end; p++) {
+        if (compareRegName(line, *p)) return *p;
+    }
+    return NONE;
+}
+
+host::int_t AsmMc6809::encodeRegister(RegName regName) const {
+    return encodeRegNumber(regName, &TABLE_REGISTERS[0],
+                           &TABLE_REGISTERS[LENGTH_REGISTERS]);
+}
+
+RegName AsmMc6809::parseRegister(const char *line) const {
+    return parseRegName(line, &TABLE_REGISTERS[0],
+                        &TABLE_REGISTERS[LENGTH_REGISTERS]);
+}
+
+host::int_t AsmMc6809::encodeIndexReg(RegName regName) const {
+    return encodeRegNumber(regName, &TABLE_INDEX_REGS[0],
+                           &TABLE_INDEX_REGS[LENGTH_INDEXES]);
+}
+
+RegName AsmMc6809::parseIndexReg(const char *line) const {
+    return parseRegName(line, &TABLE_INDEX_REGS[0],
+                        &TABLE_INDEX_REGS[LENGTH_INDEXES]);
+}
+
+host::int_t AsmMc6809::encodeBaseReg(RegName regName) const {
+    return encodeRegNumber(regName, &TABLE_BASE_REGS[0],
+                           &TABLE_BASE_REGS[LENGTH_BASES]);
+}
+
+RegName AsmMc6809::parseBaseReg(const char *line) const {
+    return parseRegName(line, &TABLE_BASE_REGS[0],
+                        &TABLE_BASE_REGS[LENGTH_BASES]);
+}
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
@@ -68,7 +122,7 @@ static const char *skipSpace(const char *line) {
 }
 
 Error AsmMc6809::encodeStackOp(const char *line, Insn &insn) {
-    const RegName *table = ((insn.insnCode() & 2) == 0 ? &tableStackS[0] : &tableStackU[0]);
+    const RegName *table = ((insn.insnCode() & 2) == 0 ? &TABLE_STACK_OP_S[0] : &TABLE_STACK_OP_U[0]);
     target::byte_t post = 0;
     while (*line) {
         host::uint_t bit = 0;
@@ -91,17 +145,16 @@ Error AsmMc6809::encodeStackOp(const char *line, Insn &insn) {
 
 Error AsmMc6809::encodeRegisters(const char *line, Insn &insn) {
     RegName regName;
-    constexpr host::uint_t tableLen = sizeof(tableRegNum) / sizeof(tableRegNum[0]);
-    if ((regName = parseRegName(line, tableRegNum, tableLen)) == NONE)
+    if ((regName = parseRegister(line)) == NONE)
         return setError(UNKNOWN_REGISTER);
     line += regNameLen(regName);
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
-    target::byte_t post = encodeRegNumber(regName, tableRegNum, tableLen) << 4;
-    if ((regName = parseRegName(line, tableRegNum, tableLen)) == NONE)
+    target::byte_t post = encodeRegister(regName) << 4;
+    if ((regName = parseRegister(line)) == NONE)
         return setError(UNKNOWN_REGISTER);
     line += regNameLen(regName);
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
-    post |= encodeRegNumber(regName, tableRegNum, tableLen);
+    post |= encodeRegister(regName);
     emitInsnCode(insn);
     emitByte(insn, post);
     return setError(OK);
@@ -133,52 +186,39 @@ Error AsmMc6809::encodeImmediate(const char *line, Insn &insn) {
         if (insn.oprLen() == 1) emitByte(insn, target::byte_t(val));
         else emitUint16(insn, val);
     }
-    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);}
+    if (encodeImmediateExtra(line, insn) == OK)
+        return getError();
+    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+}
 
-Error AsmMc6809::encodeDirect(const char *line, Insn &insn) {
+Error AsmMc6809::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
     if (*line == '<') line++;
-    emitInsnCode(insn);
+    if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
     if (getOperand16(line, dir)) return setError(UNKNOWN_OPERAND);
     emitByte(insn, target::byte_t(dir));
     return setError(OK);
 }
 
-Error AsmMc6809::encodeExtended(const char *line, Insn &insn) {
+Error AsmMc6809::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
     if (*line == '>') line++;
-    emitInsnCode(insn);
+    if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
     emitUint16(insn, addr);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-host::int_t AsmMc6809::encodeRegNumber(RegName regName, const RegName *table, host::uint_t len) {
-    for (host::uint_t idx = 0; idx < len; idx++) {
-        if (table[idx] == regName) return idx;
-    }
-    return -1;
-}
-
-RegName AsmMc6809::parseRegName(const char *line, const RegName *table, host::uint_t len) {
-    for (host::uint_t idx = 0; idx < len; idx++) {
-        if (compareRegName(line, table[idx])) return table[idx];
-    }
-    return NONE;
-}
-
-Error AsmMc6809::encodeIndexed(const char *line, Insn &insn) {
-    emitInsnCode(insn);
+Error AsmMc6809::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
+    if (emitInsn) emitInsnCode(insn);
     const bool indir = (*line == '[');
     RegName base = NONE;
     RegName index = NONE;
     host::int_t incr = 0;                    // auto decrement/increment
     target::uintptr_t addr;
-    constexpr host::uint_t baseLen = sizeof(tableBaseReg) / sizeof(tableBaseReg[0]);
-    constexpr host::uint_t indexLen = sizeof(tableIndexReg) / sizeof(tableIndexReg[0]);
     if (indir) line++;
     if (*line != ',') {
-        if ((index = parseRegName(line, tableIndexReg, indexLen)) != NONE) {
+        if ((index = parseIndexReg(line)) != NONE) {
             line += regNameLen(index);  // index register
         } else {
             if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
@@ -193,7 +233,7 @@ Error AsmMc6809::encodeIndexed(const char *line, Insn &insn) {
                 incr--;
             }
         }
-        if ((base = parseRegName(line, tableBaseReg, baseLen)) != NONE || compareRegName(line, PC)) {
+        if ((base = parseBaseReg(line)) != NONE || compareRegName(line, PC)) {
             if (base == NONE) base = PC;
             line += regNameLen(base);
         } else setError(UNKNOWN_OPERAND);
@@ -228,7 +268,9 @@ Error AsmMc6809::encodeIndexed(const char *line, Insn &insn) {
         emitUint16(insn, delta);
         return setError(OK);
     }
-    post = encodeRegNumber(base, tableBaseReg, baseLen) << 5;
+    if (encodeIndexedExtra(insn, index, addr, base, incr, indir) == OK)
+        return getError();
+    post = encodeBaseReg(base) << 5;
     if (indir) post |= 0x10;
     if (index == NONE) {              // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
         if (incr == 0) post |= 0x84;
@@ -241,7 +283,7 @@ Error AsmMc6809::encodeIndexed(const char *line, Insn &insn) {
         return setError(OK);
     }
     if (index != OFFSET) {              // R,R
-        post |= encodeRegNumber(index, tableIndexReg, indexLen);
+        post |= encodeIndexReg(index);
         emitByte(insn, 0x80 | post);
         return setError(OK);
     }
@@ -272,9 +314,8 @@ Error AsmMc6809::determineAddrMode(const char *line, Insn &insn) {
     case '[':
     case ',': setAddrMode(insn, INDEXED); break;
     default:
-        constexpr host::uint_t indexLen = sizeof(tableIndexReg) / sizeof(tableIndexReg[0]);
         RegName index;
-        if ((index = parseRegName(line, tableIndexReg, indexLen)) != NONE) {
+        if ((index = parseIndexReg(line)) != NONE) {
             line += regNameLen(index);
             if (*line == ',') {
                 setAddrMode(insn, INDEXED);
@@ -324,10 +365,14 @@ Error AsmMc6809::encode(
     if (_tableMc6809.search(insn, insn.addrMode()))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
-    case IMMEDIATE: return encodeImmediate(line, insn);
-    case DIRECT_PG: return encodeDirect(line, insn);
-    case EXTENDED: return encodeExtended(line, insn);
-    case INDEXED: return encodeIndexed(line, insn);
+    case IMMEDIATE:
+        return encodeImmediate(line, insn);
+    case DIRECT_PG:
+        return encodeDirect(line, insn);
+    case EXTENDED:
+        return encodeExtended(line, insn);
+    case INDEXED:
+        return encodeIndexed(line, insn);
     default: return setError(UNKNOWN_OPERAND);
     }
 }
