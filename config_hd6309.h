@@ -41,7 +41,7 @@ enum RegName : char {
     ZERO = '0',
 };
 
-#define TARGET_ENUMS_DEFINED
+#define MC6809_ENUMS_DEFINED
 #include "config_mc6809.h"
 
 #endif // __CONFIG_HD6309_H__

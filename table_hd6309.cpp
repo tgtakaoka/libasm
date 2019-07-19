@@ -1,8 +1,10 @@
 #include "config_hd6309.h"
 #include "entry_mc6809.h"
+#include "insn.h"
+#include "table_hd6309.h"
 #include "text_hd6309.h"
 
-const EntryMc6809 table6309_P00[] PROGMEM = {
+const EntryMc6809 TABLE_P00[] PROGMEM = {
     P00(0x01, OIM,   3, IMM_DIRECT)
     P00(0x02, AIM,   3, IMM_DIRECT)
     P00(0x05, EIM,   3, IMM_DIRECT)
@@ -19,7 +21,7 @@ const EntryMc6809 table6309_P00[] PROGMEM = {
     P00(0xCD, LDQ,   5, IMMEDIATE)
 };
 
-const EntryMc6809 table6309_P10[] PROGMEM = {
+const EntryMc6809 TABLE_P10[] PROGMEM = {
     P10(0x30, ADDR,  3, REGISTERS)
     P10(0x31, ADCR,  3, REGISTERS)
     P10(0x32, SUBR,  3, REGISTERS)
@@ -103,7 +105,7 @@ const EntryMc6809 table6309_P10[] PROGMEM = {
     P10(0xFD, STQ,   4, EXTENDED)
 };
 
-const EntryMc6809 table6309_P11[] PROGMEM = {
+const EntryMc6809 TABLE_P11[] PROGMEM = {
     P11(0x30, BAND,  4, BIT_OPERATION)
     P11(0x31, BIAND, 4, BIT_OPERATION)
     P11(0x32, BOR,   4, BIT_OPERATION)
@@ -180,3 +182,29 @@ const EntryMc6809 table6309_P11[] PROGMEM = {
     P11(0xFB, ADDF,  4, EXTENDED)
 };
 
+constexpr host::uindex_t LENGTH_P00 = sizeof(TABLE_P00) / sizeof(TABLE_P00[0]);
+constexpr host::uindex_t LENGTH_P10 = sizeof(TABLE_P10) / sizeof(TABLE_P10[0]);
+constexpr host::uindex_t LENGTH_P11 = sizeof(TABLE_P11) / sizeof(TABLE_P11[0]);
+
+constexpr target::opcode_t PREFIX_P00 = 0x00;
+constexpr target::opcode_t PREFIX_P10 = 0x10;
+constexpr target::opcode_t PREFIX_P11 = 0x11;
+
+static const TableMc6809::EntryPage PAGES[] = {
+    { PREFIX_P00, &TABLE_P00[0], &TABLE_P00[LENGTH_P00] },
+    { PREFIX_P10, &TABLE_P10[0], &TABLE_P10[LENGTH_P10] },
+    { PREFIX_P11, &TABLE_P11[0], &TABLE_P11[LENGTH_P11] },
+};
+constexpr host::uindex_t PAGES_LENGTH = sizeof(PAGES) / sizeof(PAGES[0]);
+
+Error TableHd6309::search(Insn &insn, const char *name) const {
+    if (TableMc6809::search(insn, name) == OK)
+        return OK;
+    return searchPages(insn, name, &PAGES[0], &PAGES[PAGES_LENGTH]);
+}
+
+Error TableHd6309::search(Insn &insn, AddrMode mode) const {
+    if (TableMc6809::search(insn, mode) == OK)
+        return OK;
+    return searchPages(insn, mode, &PAGES[0], &PAGES[PAGES_LENGTH]);
+}

@@ -1,5 +1,4 @@
 #include "config_mc6809.h"
-#include "entry_mc6809.h"
 #include "insn.h"
 #include "table_mc6809.h"
 #include "text_mc6809.h"
@@ -298,74 +297,76 @@ constexpr target::opcode_t PREFIX_P00 = 0x00;
 constexpr target::opcode_t PREFIX_P10 = 0x10;
 constexpr target::opcode_t PREFIX_P11 = 0x11;
 
-static host::index_t searchEntry(
-    const char *name, const EntryMc6809 *table, host::uindex_t length) {
-    for (host::index_t index = 0; index < length; index++) {
-        if (pgm_strcasecmp(name, table[index].name) == 0)
-            return index;
+const EntryMc6809 *TableMc6809::searchEntry(
+    const char *name,
+    const EntryMc6809 *table, const EntryMc6809 *end) {
+    for (const EntryMc6809 *entry = table; entry < end; entry++) {
+        if (pgm_strcasecmp(name, entry->name) == 0)
+            return entry;
     }
-    return -1;
+    return nullptr;
 }
 
-static host::index_t searchEntry(
-    const char *name, AddrMode mode, const EntryMc6809 *table, host::uindex_t length) {
-    for (host::index_t index = 0; index < length; index++) {
-        const host::uint_t flags = pgm_read_byte(&table[index].flags);
+const EntryMc6809 *TableMc6809::searchEntry(
+    const char *name, AddrMode mode,
+    const EntryMc6809 *table, const EntryMc6809 *end) {
+    for (const EntryMc6809 *entry = table; entry < end; entry++) {
+        const host::uint_t flags = pgm_read_byte(&entry->flags);
         const AddrMode m = AddrMode((flags >> mode_shift) & mode_mask);
-        if (mode == m && pgm_strcasecmp(name, table[index].name) == 0)
-            return index;
+        if (mode == m && pgm_strcasecmp(name, entry->name) == 0)
+            return entry;
     }
-    return -1;
+    return nullptr;
 }
 
 bool TableMc6809::isPrefixCode(target::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
-Error TableMc6809::search(Insn &insn, const char *name) const {
-    host::index_t offset;
-    target::opcode_t prefix;
-    const EntryMc6809 *entry;
-    if ((offset = searchEntry(name, &TABLE_P00[0], LENGTH_P00)) >= 0) {
-        entry = &TABLE_P00[offset];
-        prefix = PREFIX_P00;
-    } else if ((offset = searchEntry(name, &TABLE_P10[0], LENGTH_P10)) >= 0) {
-        entry = &TABLE_P10[offset];
-        prefix = PREFIX_P10;
-    } else if ((offset = searchEntry(name, &TABLE_P11[0], LENGTH_P11)) >= 0) {
-        entry = &TABLE_P11[offset];
-        prefix = PREFIX_P11;
-    } else {
-        return UNKNOWN_INSTRUCTION;
+Error TableMc6809::searchPages(
+    Insn &insn, const char *name,
+    const EntryPage *pages, const EntryPage *end) const {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const EntryMc6809 *entry;
+        if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
+            insn._insnCode = insnCode(page->prefix, pgm_read_byte(&entry->opc));
+            const host::uint_t flags = pgm_read_byte(&entry->flags);
+            insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
+            insn._oprLen = (flags & oprLen_mask);
+            return OK;
+        }
     }
+    return UNKNOWN_INSTRUCTION;
+}
 
-    insn._insnCode = insnCode(prefix, pgm_read_byte(&entry->opc));
-    const host::uint_t flags = pgm_read_byte(&entry->flags);
-    insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
-    insn._oprLen = (flags & oprLen_mask);
-    return OK;
+Error TableMc6809::searchPages(
+    Insn &insn, AddrMode mode,
+    const EntryPage *pages, const EntryPage *end) const {
+    const char *name = insn._name;
+    for (const EntryPage *page = pages; page < end; page++) {
+        const EntryMc6809 *entry;
+        if ((entry = searchEntry(name, mode, page->table, page->end)) != nullptr) {
+            insn._insnCode = insnCode(page->prefix, pgm_read_byte(&entry->opc));
+            const host::uint_t flags = pgm_read_byte(&entry->flags);
+            insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
+            insn._oprLen = (flags & oprLen_mask);
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
+static const TableMc6809::EntryPage PAGES[] = {
+    { PREFIX_P00, &TABLE_P00[0], &TABLE_P00[LENGTH_P00] },
+    { PREFIX_P10, &TABLE_P10[0], &TABLE_P10[LENGTH_P10] },
+    { PREFIX_P11, &TABLE_P11[0], &TABLE_P11[LENGTH_P11] },
+};
+constexpr host::uindex_t PAGES_LENGTH = sizeof(PAGES) / sizeof(PAGES[0]);
+
+Error TableMc6809::search(Insn &insn, const char *name) const {
+    return searchPages(insn, name, &PAGES[0], &PAGES[PAGES_LENGTH]);
 }
 
 Error TableMc6809::search(Insn &insn, AddrMode mode) const {
-    const char *name = insn._name;
-    host::index_t offset;
-    target::opcode_t prefix;
-    const EntryMc6809 *entry;
-    if ((offset = searchEntry(name, mode, &TABLE_P00[0], LENGTH_P00)) >= 0) {
-        entry = &TABLE_P00[offset];
-        prefix = PREFIX_P00;
-    } else if ((offset = searchEntry(name, mode, &TABLE_P10[0], LENGTH_P10)) >= 0) {
-        entry = &TABLE_P10[offset];
-        prefix = PREFIX_P10;
-    } else if ((offset = searchEntry(name, mode, &TABLE_P11[0], LENGTH_P11)) >= 0) {
-        entry = &TABLE_P11[offset];
-        prefix = PREFIX_P11;
-    } else {
-        return UNKNOWN_INSTRUCTION;
-    }
-    insn._insnCode = insnCode(prefix, pgm_read_byte(&entry->opc));
-    const host::uint_t flags = pgm_read_byte(&entry->flags);
-    insn._addrMode = AddrMode((flags >> mode_shift) & mode_mask);
-    insn._oprLen = (flags & oprLen_mask);
-    return OK;
+    return searchPages(insn, mode, &PAGES[0], &PAGES[PAGES_LENGTH]);
 }
