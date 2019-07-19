@@ -21,6 +21,10 @@ namespace host
 class __FlashStringHelper;
 char *outStr(char *out, const __FlashStringHelper *str);
 
+#if defined(PC) /* MegaCoreX defined PC for PORTC */
+#undef PC
+#endif
+
 #else  // AVR
 
 #include <string.h>
