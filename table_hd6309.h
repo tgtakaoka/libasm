@@ -10,4 +10,5 @@ public:
     Error search(Insn &insn, AddrMode mode) const override;
 };
 
+extern TableHd6309 TableHd6309;
 #endif // __TABLE_HD6309_H__

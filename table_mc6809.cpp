@@ -319,6 +319,16 @@ const EntryMc6809 *TableMc6809::searchEntry(
     return nullptr;
 }
 
+const EntryMc6809 *TableMc6809::searchEntry(
+    const target::opcode_t opCode,
+    const EntryMc6809 *table, const EntryMc6809 *end) {
+    for (const EntryMc6809 *entry = table; entry < end; entry++) {
+        if (opCode == pgm_read_byte(&entry->opc))
+            return entry;
+    }
+    return nullptr;
+}
+
 bool TableMc6809::isPrefixCode(target::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
@@ -356,6 +366,27 @@ Error TableMc6809::searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
+Error TableMc6809::searchPages(
+    Insn &insn, target::insn_t insnCode,
+    const EntryPage *pages, const EntryPage *end) const {
+    for (const EntryPage *page = pages; page < end; page++) {
+        if (prefixCode(insnCode) != page->prefix) continue;
+        const EntryMc6809 *entry =
+            searchEntry(opCode(insnCode), page->table, page->end);
+        if (entry) {
+            setInsnCode(insn, insnCode);
+            const host::uint_t flags = pgm_read_byte(&entry->flags);
+            setAddrMode(insn, AddrMode((flags >> mode_shift) & mode_mask));
+            setOprLen(insn, flags & oprLen_mask);
+            char name[8];
+            pgm_strcpy(name, entry->name);
+            setName(insn, name);
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
 static const TableMc6809::EntryPage PAGES[] = {
     { PREFIX_P00, &TABLE_P00[0], &TABLE_P00[LENGTH_P00] },
     { PREFIX_P10, &TABLE_P10[0], &TABLE_P10[LENGTH_P10] },
@@ -370,3 +401,9 @@ Error TableMc6809::search(Insn &insn, const char *name) const {
 Error TableMc6809::search(Insn &insn, AddrMode mode) const {
     return searchPages(insn, mode, &PAGES[0], &PAGES[PAGES_LENGTH]);
 }
+
+Error TableMc6809::search(Insn &insn, target::insn_t insnCode) const {
+    return searchPages(insn, insnCode, &PAGES[0], &PAGES[PAGES_LENGTH]);
+}
+
+class TableMc6809 TableMc6809;

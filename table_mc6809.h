@@ -9,6 +9,7 @@ class TableMc6809 : public InsnTable {
 public:
     virtual Error search(Insn &insn, const char *name) const;
     virtual Error search(Insn &insn, AddrMode mode) const;
+    virtual Error search(Insn &insn, target::insn_t insnCode) const;
 
     static target::insn_t insnCode(
         target::opcode_t prefixCode, target::opcode_t opCode) {
@@ -33,11 +34,17 @@ protected:
     static const EntryMc6809 *searchEntry(
         const char *name, AddrMode mode,
         const EntryMc6809 *table, const EntryMc6809 *end);
+    static const EntryMc6809 *searchEntry(
+        target::opcode_t opCode,
+        const EntryMc6809 *table, const EntryMc6809 *end);
 
     Error searchPages(Insn &insn, const char *name,
                       const EntryPage *pages, const EntryPage *end) const;
     Error searchPages(Insn &insn, AddrMode mode,
                       const EntryPage *pages, const EntryPage *end) const;
+    Error searchPages(Insn &insn, target::insn_t insnCode,
+                      const EntryPage *pages, const EntryPage *end) const;
 };
 
+extern TableMc6809 TableMc6809;
 #endif // __TABLE_MC6809_H__

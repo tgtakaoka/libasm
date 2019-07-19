@@ -13,7 +13,6 @@ public:
                  target::uintptr_t addr, SymbolTable *symtab) override;
 
 protected:
-    static TableHd6309 _tableHd6309;
 
     virtual host::int_t encodeRegister(RegName regName) const override;
     virtual RegName parseRegister(const char *line) const override;

@@ -17,7 +17,6 @@ public:
 
 protected:
     SymbolTable  *_symtab;
-    static TableMc6809 _tableMc6809;
 
     void reset(SymbolTable *symtab) {
         _symtab = symtab;
@@ -34,24 +33,11 @@ protected:
     }
 
     void emitInsnCode(Insn &insn) const {
-        const target::opcode_t prefix = _tableMc6809.prefixCode(insn.insnCode());
-        if (_tableMc6809.isPrefixCode(prefix))
+        const target::opcode_t prefix = TableMc6809.prefixCode(insn.insnCode());
+        if (TableMc6809.isPrefixCode(prefix))
             emitByte(insn, prefix);
-        emitByte(insn, _tableMc6809.opCode(insn.insnCode()));
+        emitByte(insn, TableMc6809.opCode(insn.insnCode()));
     }
-#if 0
-    target::opcode_t prefixCode() const {
-        return _tableMc6809.prefixCode(_insn.insnCode());
-    }
-    bool isPrefixCode(target::opcode_t opcode) const {
-        return _tableMc6809.isPrefixCode(opcode);
-    }
-    void addInsnCode() {
-        target::opcode_t prefix = prefixCode();
-        if (hasPrefixCode(prefix)) _insn.addByte(prefix);
-        _insn.addByte(_tableMc6809.opCode(_insn.insnCode()));
-    }
-#endif
 
     static bool compareRegName(const char *line, RegName regName);
     static host::uint_t regNameLen(RegName regName);
