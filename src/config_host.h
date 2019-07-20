@@ -17,6 +17,7 @@ namespace host
 
 #include <avr/pgmspace.h>
 #define pgm_strcpy(d, s) strcpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))))
+#define pgm_strncpy(d, s, n) strcpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))), (n))
 #define pgm_strcasecmp(n, p) strcasecmp_P((n), reinterpret_cast<const char *>(pgm_read_word(&(p))))
 class __FlashStringHelper;
 char *outStr(char *out, const __FlashStringHelper *str);
@@ -33,7 +34,9 @@ char *outStr(char *out, const __FlashStringHelper *str);
 #define pgm_read_word(p) *reinterpret_cast<const uint16_t *>(p)
 #define F(text) (text)
 #define strcpy_P(d, s) strcpy((d), (s))
+#define strncpy_P(d, s, n) strncpy((d), (s), (n))
 #define pgm_strcpy(d, s) strcpy((d), (s))
+#define pgm_strncpy(d, s, n) strncpy((d), (s), (n))
 #define pgm_strcasecmp(n, p) strcasecmp((n), (p))
 
 #endif // AVR
