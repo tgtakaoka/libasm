@@ -136,7 +136,7 @@ Error AsmMc6809::encodeStackOp(const char *line, Insn &insn) {
         if (*line == ',') line++;
     }
     emitInsnCode(insn);
-    emitByte(insn, post);
+    insn.emitByte(post);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
@@ -153,7 +153,7 @@ Error AsmMc6809::encodeRegisters(const char *line, Insn &insn) {
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
     post |= encodeRegister(regName);
     emitInsnCode(insn);
-    emitByte(insn, post);
+    insn.emitByte(post);
     return setError(OK);
 }
 
@@ -167,9 +167,9 @@ Error AsmMc6809::encodeRelative(const char *line, Insn &insn) {
     emitInsnCode(insn);
     if (insn.oprLen() == 1) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-        emitByte(insn, target::byte_t(delta));
+        insn.emitByte(target::byte_t(delta));
     } else {
-        emitUint16(insn, delta);
+        insn.emitUint16(delta);
     }
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
@@ -180,8 +180,8 @@ Error AsmMc6809::encodeImmediate(const char *line, Insn &insn) {
     if (insn.oprLen() == 1 || insn.oprLen() == 2) {
         target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (insn.oprLen() == 1) emitByte(insn, target::byte_t(val));
-        else emitUint16(insn, val);
+        if (insn.oprLen() == 1) insn.emitByte(target::byte_t(val));
+        else insn.emitUint16(val);
     }
     if (encodeImmediateExtra(line, insn) == OK)
         return getError();
@@ -193,7 +193,7 @@ Error AsmMc6809::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
     if (getOperand16(line, dir)) return setError(UNKNOWN_OPERAND);
-    emitByte(insn, target::byte_t(dir));
+    insn.emitByte(target::byte_t(dir));
     return setError(OK);
 }
 
@@ -202,7 +202,7 @@ Error AsmMc6809::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
-    emitUint16(insn, addr);
+    insn.emitUint16(addr);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
@@ -247,8 +247,8 @@ Error AsmMc6809::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     target::byte_t post;
     if (base == NONE) {                 // [n16]
         if (index != OFFSET) return setError(UNKNOWN_OPERAND);
-        emitByte(insn, 0x9F);
-        emitUint16(insn, addr);
+        insn.emitByte(0x9F);
+        insn.emitUint16(addr);
         return setError(OK);
     }
     if (base == PC) {                   // n,PC [n,PC]
@@ -256,13 +256,13 @@ Error AsmMc6809::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
         post = indir ? 0x10 : 0;
         target::ptrdiff_t delta = addr - (insn.address() + insn.insnLen() + 2);
         if (delta >= -128 && delta < 128) {
-            emitByte(insn, 0x8C | post);
-            emitByte(insn, (uint8_t)delta);
+            insn.emitByte(0x8C | post);
+            insn.emitByte((uint8_t)delta);
             return setError(OK);
         }
         delta = addr - (insn.address() + insn.insnLen() + 3);
-        emitByte(insn, 0x8D | post);
-        emitUint16(insn, delta);
+        insn.emitByte(0x8D | post);
+        insn.emitUint16(delta);
         return setError(OK);
     }
     if (encodeIndexedExtra(insn, index, addr, base, incr, indir) == OK)
@@ -276,54 +276,54 @@ Error AsmMc6809::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
         else if (!indir && incr == 1) post |= 0x80;
         else if (!indir && incr == -1) post |= 0x82;
         else return setError(UNKNOWN_OPERAND);
-        emitByte(insn, post);
+        insn.emitByte(post);
         return setError(OK);
     }
     if (index != OFFSET) {              // R,R
         post |= encodeIndexReg(index);
-        emitByte(insn, 0x80 | post);
+        insn.emitByte(0x80 | post);
         return setError(OK);
     }
     const target::intptr_t offset = addr;
     if (offset >= -16 && offset < 16 && !indir) { // n5.R
         post |= (offset & 0x1F);
-        emitByte(insn, post);
+        insn.emitByte(post);
         return setError(OK);
     }
     if (offset >= -128 && offset < 128) { // n8,R [n8,R]
         post |= 0x88;
-        emitByte(insn, post);
-        emitByte(insn, (uint8_t)offset);
+        insn.emitByte(post);
+        insn.emitByte((uint8_t)offset);
         return setError(OK);
     }
     // n16,R [n16,R]
     post |= 0x89;
-    emitByte(insn, post);
-    emitUint16(insn, offset);
+    insn.emitByte(post);
+    insn.emitUint16(offset);
     return setError(OK);
 }
 
 Error AsmMc6809::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
-    case '#': setAddrMode(insn, IMMEDIATE); break;
-    case '<': setAddrMode(insn, DIRECT_PG); break;
-    case '>': setAddrMode(insn, EXTENDED); break;
+    case '#': insn.setAddrMode(IMMEDIATE); break;
+    case '<': insn.setAddrMode(DIRECT_PG); break;
+    case '>': insn.setAddrMode(EXTENDED); break;
     case '[':
-    case ',': setAddrMode(insn, INDEXED); break;
+    case ',': insn.setAddrMode(INDEXED); break;
     default:
         RegName index;
         if ((index = parseIndexReg(line)) != NONE) {
             line += regNameLen(index);
             if (*line == ',') {
-                setAddrMode(insn, INDEXED);
+                insn.setAddrMode(INDEXED);
                 return OK;
             }
             return setError(UNKNOWN_OPERAND);
         }
         target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (*line == ',') setAddrMode(insn, INDEXED);
-        else setAddrMode(insn, val < 0x100 ? DIRECT_PG : EXTENDED);
+        if (*line == ',') insn.setAddrMode(INDEXED);
+        else insn.setAddrMode(val < 0x100 ? DIRECT_PG : EXTENDED);
         break;
     }
     return OK;
@@ -332,13 +332,13 @@ Error AsmMc6809::determineAddrMode(const char *line, Insn &insn) {
 Error AsmMc6809::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(symtab);
-    resetAddress(insn, addr);
+    insn.resetAddress(addr);
     line = skipSpace(line);
     if (!*line) return setError(NO_TEXT);
     const char *endName;
     for (endName = line; isidchar(*endName); endName++)
         ;
-    setName(insn, line, endName);
+    insn.setName(line, endName);
     line = skipSpace(endName);
 
     if (TableMc6809.search(insn, insn.name()))

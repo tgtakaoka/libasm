@@ -4,14 +4,11 @@
 
 #include "config_mc6809.h"
 
-#include "dis.h"
 #include "error_reporter.h"
-#include "insn.h"
 #include "memory.h"
 #include "symbol_table.h"
-#include "table_mc6809.h"
 
-class DisMc6809 : public Dis, public ErrorReporter {
+class DisMc6809 : public ErrorReporter {
 public:
     virtual Error decode(
         Memory &memory, Insn& insn,

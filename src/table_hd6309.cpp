@@ -1,6 +1,5 @@
 #include "config_hd6309.h"
-#include "entry_mc6809.h"
-#include "insn.h"
+
 #include "table_hd6309.h"
 #include "text_hd6309.h"
 

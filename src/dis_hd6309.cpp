@@ -36,7 +36,7 @@ Error DisHd6309::readUint32(Memory &memory, Insn &insn, target::uint32_t &val) {
     val |= (target::uint16_t)memory.readByte() << 8;
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val |= memory.readByte();
-    emitUint32(insn, val);
+    insn.emitUint32(val);
     return OK;
 }
 

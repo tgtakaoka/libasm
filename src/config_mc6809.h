@@ -48,4 +48,6 @@ enum RegName : char {
 };
 #endif
 
+#include "insn_mc6809.h"
+
 #endif // __CONFIG_MC6809_H__
