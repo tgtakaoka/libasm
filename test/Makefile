@@ -1,4 +1,4 @@
-VPATH=..
+VPATH=../src
 CXXFLAGS=-Wall -g -std=c++17 -O -I$(VPATH)
 TESTS=test_asm_mc6809 test_asm_hd6309 test_dis_mc6809 test_dis_hd6309
 OBJS=asm_mc6809.o asm_hd6309.o dis_mc6809.o dis_hd6309.o table_mc6809.o table_hd6309.o string_utils.o
