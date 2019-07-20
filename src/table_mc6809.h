@@ -2,10 +2,10 @@
 #ifndef __TABLE_MC6809_H__
 #define __TABLE_MC6809_H__
 
+#include "config_mc6809.h"
 #include "entry_mc6809.h"
-#include "insn_table.h"
 
-class TableMc6809 : public InsnTable {
+class TableMc6809 {
 public:
     virtual Error search(Insn &insn, const char *name) const;
     virtual Error search(Insn &insn, AddrMode mode) const;
@@ -28,6 +28,7 @@ public:
         const EntryMc6809 *const table;
         const EntryMc6809 *const end;
     };
+
 protected:
     static const EntryMc6809 *searchEntry(
         const char *name, const EntryMc6809 *table, const EntryMc6809 *end);
@@ -47,4 +48,5 @@ protected:
 };
 
 extern TableMc6809 TableMc6809;
+
 #endif // __TABLE_MC6809_H__

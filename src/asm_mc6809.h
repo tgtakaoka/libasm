@@ -4,13 +4,11 @@
 
 #include "config_mc6809.h"
 
-#include "asm.h"
 #include "error_reporter.h"
-#include "insn.h"
 #include "symbol_table.h"
 #include "table_mc6809.h"
 
-class AsmMc6809 : public Asm, public ErrorReporter {
+class AsmMc6809 : public ErrorReporter {
 public:
     virtual Error encode(const char *line, Insn &insn,
                          target::uintptr_t addr, SymbolTable *symtab);
@@ -35,8 +33,8 @@ protected:
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableMc6809.prefixCode(insn.insnCode());
         if (TableMc6809.isPrefixCode(prefix))
-            emitByte(insn, prefix);
-        emitByte(insn, TableMc6809.opCode(insn.insnCode()));
+            insn.emitByte(prefix);
+        insn.emitByte(TableMc6809.opCode(insn.insnCode()));
     }
 
     static bool compareRegName(const char *line, RegName regName);

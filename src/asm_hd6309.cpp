@@ -84,7 +84,7 @@ Error AsmHd6309::encodeImmediateExtra(const char *line, Insn &insn) {
         uint32_t val;
         Error error = getOperand32(line, val);
         if (error == OK) {
-            emitUint32(insn, val);
+            insn.emitUint32(val);
             if (*skipSpace(line)) error = GARBAGE_AT_END;
         }
         setError(error);
@@ -112,8 +112,8 @@ Error AsmHd6309::encodeIndexedExtra(
         return OK;                      // processed/error
     }
     if (indir) post++;
-    emitByte(insn, post);
-    if (index == OFFSET) emitUint16(insn, addr);
+    insn.emitByte(post);
+    if (index == OFFSET) insn.emitUint16(addr);
     return setError(OK);                // processed/ok
 }
 
@@ -141,7 +141,7 @@ Error AsmHd6309::encodeBitOperation(const char *line, Insn &insn) {
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
     post |= pos;
     emitInsnCode(insn);
-    emitByte(insn, post);
+    insn.emitByte(post);
     return encodeDirect(line, insn, /* emitInsn */ false);
 }
 
@@ -153,15 +153,15 @@ Error AsmHd6309::encodeImmediatePlus(const char *line, Insn &insn) {
 
     if (determineAddrMode(line, insn)) return getError();
     switch (insn.addrMode()) {
-    case DIRECT_PG: setAddrMode(insn, IMM_DIRECT); break;
-    case EXTENDED: setAddrMode(insn, IMM_EXTENDED); break;
-    case INDEXED: setAddrMode(insn, IMM_INDEXED); break;
+    case DIRECT_PG: insn.setAddrMode(IMM_DIRECT); break;
+    case EXTENDED: insn.setAddrMode(IMM_EXTENDED); break;
+    case INDEXED: insn.setAddrMode(IMM_INDEXED); break;
     default: return setError(UNKNOWN_OPERAND);
     }
     if (TableHd6309.search(insn, insn.addrMode()))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
-    emitByte(insn, (uint8_t)val);
+    insn.emitByte((uint8_t)val);
     switch (insn.addrMode()) {
     case IMM_DIRECT:
         return encodeDirect(line, insn, /* emitInsn */ false);
@@ -195,9 +195,9 @@ Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
     for (uint8_t mode = 0; mode < sizeof(TABLE_TFM_SRC_MODES); mode++) {
         if (srcMode == TABLE_TFM_SRC_MODES[mode] && dstMode == TABLE_TFM_DST_MODES[mode]) {
             target::opcode_t prefixCode = TableHd6309.prefixCode(insn.insnCode());
-            setInsnCode(insn,  TableHd6309.insnCode(prefixCode, 0x38 + mode));
+            insn.setInsnCode(TableHd6309.insnCode(prefixCode, 0x38 + mode));
             emitInsnCode(insn);
-            emitByte(insn, post);
+            insn.emitByte(post);
             return setError(OK);
         }
     }

@@ -1,5 +1,5 @@
 #include "config_mc6809.h"
-#include "insn.h"
+
 #include "table_mc6809.h"
 #include "text_mc6809.h"
 
@@ -339,10 +339,10 @@ Error TableMc6809::searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const EntryMc6809 *entry;
         if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            setInsnCode(insn, insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(insnCode(page->prefix, pgm_read_byte(&entry->opc)));
             const host::uint_t flags = pgm_read_byte(&entry->flags);
-            setAddrMode(insn, AddrMode((flags >> mode_shift) & mode_mask));
-            setOprLen(insn, flags & oprLen_mask);
+            insn.setAddrMode(AddrMode((flags >> mode_shift) & mode_mask));
+            insn.setOprLen(flags & oprLen_mask);
             return OK;
         }
     }
@@ -356,10 +356,10 @@ Error TableMc6809::searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const EntryMc6809 *entry;
         if ((entry = searchEntry(name, mode, page->table, page->end)) != nullptr) {
-            setInsnCode(insn, insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(insnCode(page->prefix, pgm_read_byte(&entry->opc)));
             const host::uint_t flags = pgm_read_byte(&entry->flags);
-            setAddrMode(insn, AddrMode((flags >> mode_shift) & mode_mask));
-            setOprLen(insn, flags & oprLen_mask);
+            insn.setAddrMode(AddrMode((flags >> mode_shift) & mode_mask));
+            insn.setOprLen(flags & oprLen_mask);
             return OK;
         }
     }
@@ -374,13 +374,13 @@ Error TableMc6809::searchPages(
         const EntryMc6809 *entry =
             searchEntry(opCode(insnCode), page->table, page->end);
         if (entry) {
-            setInsnCode(insn, insnCode);
+            insn.setInsnCode(insnCode);
             const host::uint_t flags = pgm_read_byte(&entry->flags);
-            setAddrMode(insn, AddrMode((flags >> mode_shift) & mode_mask));
-            setOprLen(insn, flags & oprLen_mask);
+            insn.setAddrMode(AddrMode((flags >> mode_shift) & mode_mask));
+            insn.setOprLen(flags & oprLen_mask);
             char name[8];
             pgm_strcpy(name, entry->name);
-            setName(insn, name);
+            insn.setName(name);
             return OK;
         }
     }

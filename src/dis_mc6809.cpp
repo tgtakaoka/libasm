@@ -1,6 +1,7 @@
 #include "dis_mc6809.h"
 
 #include "string_utils.h"
+#include "table_mc6809.h"
 
 static const RegName TABLE_INDEX_REGS[] = {
     NONE, NONE, NONE, NONE, NONE, B, A, NONE, NONE, NONE, NONE, D
@@ -83,7 +84,7 @@ RegName DisMc6809::decodeRegName(target::byte_t regNum) const {
 Error DisMc6809::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
-    emitByte(insn, val);
+    insn.emitByte(val);
     return OK;
 }
 
@@ -92,7 +93,7 @@ Error DisMc6809::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     val = (target::uint16_t)memory.readByte() << 8;
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val |= memory.readByte();
-    emitUint16(insn, val);
+    insn.emitUint16(val);
     return OK;
 }
 
@@ -350,7 +351,7 @@ Error DisMc6809::decodeRegisters(
 Error DisMc6809::decode(
     Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
     reset(symtab);
-    resetAddress(insn, memory.address());
+    insn.resetAddress(memory.address());
     *operands = *comments = 0;
 
     target::opcode_t opCode;
@@ -361,7 +362,7 @@ Error DisMc6809::decode(
         if (readByte(memory, insn, opCode)) return getError();
         insnCode = TableMc6809.insnCode(prefix, opCode);
     }
-    setInsnCode(insn, insnCode);
+    insn.setInsnCode(insnCode);
 
     if (TableMc6809.search(insn, insn.insnCode()))
         return setError(UNKNOWN_INSTRUCTION);
