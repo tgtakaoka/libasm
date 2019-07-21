@@ -62,6 +62,31 @@ static void assert_equals(
     printf("%s: expected '%s': actual '%s'\n", message, expected, actual);
 }
 
+static void assert_equals(
+    const char *message,
+    const target::byte_t expected[], host::uint_t expected_len,
+    const target::byte_t actual[], host::uint_t actual_len) {
+    if (expected_len == actual_len) {
+        host::uint_t i;
+        for (i = 0; i < expected_len; i++)
+            if (expected[i] != actual[i])
+                break;
+        if (i == expected_len)
+            return;
+    }
+    printf("%s: expected ", message);
+    for (host::uint_t i = 0; i < expected_len; i++) {
+        printf(i == 0 ?  "[" : " ");
+        printf("%02" PRIX8, expected[i]);
+    }
+    printf("]: actual ");
+    for (host::uint_t i = 0; i < actual_len; i++) {
+        printf(i == 0 ? "[" : " ");
+        printf("%02" PRIX8, actual[i]);
+    }
+    printf("\n");
+}
+
 #define ASSERT(addr, mnemonic, expected_operands, expected_comments, ...) \
     do {                                                                \
         const uint8_t mnemonic[] = { __VA_ARGS__ };                     \
@@ -76,6 +101,9 @@ static void assert_equals(
         assert_equals(message, #mnemonic, insn.name());                 \
         assert_equals(message, expected_operands, operands);            \
         assert_equals(message, expected_comments, comments);            \
+        assert_equals(message,                                          \
+                      mnemonic, sizeof(mnemonic),                       \
+                      insn.bytes(), insn.insnLen());                    \
     } while (0)
 #define ATEST(addr, mnemonic, opr, com, ...)        \
     ASSERT(addr, mnemonic, opr, com, __VA_ARGS__)
