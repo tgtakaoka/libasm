@@ -11,7 +11,6 @@ enum Error : host::uint_t {
 
     NO_MEMORY,
     INTERNAL_ERROR,
-    UNKNOWN_POSTBYTE,
     ILLEGAL_REGISTER,
 
     NO_TEXT,
