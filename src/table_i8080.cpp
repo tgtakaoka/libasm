@@ -95,12 +95,14 @@ static const EntryI8080 *searchEntry(
     for (const EntryI8080 *entry = table; entry < end; entry++) {
         host::uint_t idx = 0;
         while (name[idx] && idx < sizeof(entry->name)) {
-            const char n = pgm_read_byte(entry->name[idx]);
+            const char n = pgm_read_byte(&entry->name[idx]);
             if (toupper(name[idx]) != n) break;
             idx++;
         }
-        if (name[idx] == 0 && (idx == sizeof(entry->name)))
-            return entry;
+        if (name[idx] == 0) {
+            if (idx == sizeof(entry->name)) return entry;
+            if (pgm_read_byte(&entry->name[idx]) == 0) return entry;
+        }
     }
     return nullptr;
 }
