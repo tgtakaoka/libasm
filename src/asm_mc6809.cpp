@@ -1,7 +1,6 @@
 #include <ctype.h>
 
 #include "asm_mc6809.h"
-#include "string_utils.h"
 
 static char regName1stChar(const RegName regName) {
     return (regName == DP) ? 'D' : char(regName);
@@ -82,8 +81,40 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
+static Error getHex16(const char *&in, target::uint16_t &val) {
+    const char *p = in;
+    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
+    val = 0;
+    while (isxdigit(*p)) {
+        val <<= 4;
+        val += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
+        p++;
+    }
+    in = p;
+    return OK;
+}
+
+static Error getInt16(const char *&in, target::uint16_t &val) {
+    const char *p = in;
+    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
+    if (!isdigit(*p)) return UNKNOWN_OPERAND;
+    val = 0;
+    while (isdigit(*p)) {
+        val *= 10;
+        val += *p - '0';
+        p++;
+    }
+    in = p;
+    if (sign == '-') val = -(target::int16_t)val;
+    return OK;
+}
+
 Error AsmMc6809::getOperand16(const char *&in, target::uint16_t &val) {
-    if (getInt16(in, val)) return OK;
+    if (*in == '$') {
+        in++;
+        return getHex16(in, val);
+    }
+    if (getInt16(in, val) == OK) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
     for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(in[idx]); idx++) {

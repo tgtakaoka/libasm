@@ -1,7 +1,6 @@
 #include <ctype.h>
 
 #include "asm_hd6309.h"
-#include "string_utils.h"
 
 static const RegName TABLE_REGISTERS[] = {
     D, X, Y, U, S, PC, W, V, A, B, CC, DP, ZERO, ZERO, E, F,
@@ -63,8 +62,40 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
+static Error getHex32(const char *&in, target::uint32_t &val) {
+    const char *p = in;
+    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
+    val = 0;
+    while (isxdigit(*p)) {
+        val <<= 4;
+        val += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
+        p++;
+    }
+    in = p;
+    return OK;
+}
+
+static Error getInt32(const char *&in, target::uint32_t &val) {
+    const char *p = in;
+    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
+    if (!isdigit(*p)) return UNKNOWN_OPERAND;
+    val = 0;
+    while (isdigit(*p)) {
+        val *= 10;
+        val += *p - '0';
+        p++;
+    }
+    in = p;
+    if (sign == '-') val = -(target::int32_t)val;
+    return OK;
+}
+
 Error AsmHd6309::getOperand32(const char *&in, target::uint32_t &val) const {
-    if (getUint32(in, val)) return OK;
+    if (*in == '$') {
+        in++;
+        return getHex32(in, val);
+    }
+    if (getInt32(in, val) == OK) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
     for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(in[idx]); idx++) {
