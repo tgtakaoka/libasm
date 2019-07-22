@@ -9,8 +9,8 @@ OBJS_i8080 = dis_i8080.o table_i8080.o
 
 all: $(OBJS_mc6809) $(OBJS_hd6309) $(OBJS_i8080)
 
-asm_mc6809.o: asm_mc6809.h string_utils.h
-asm_hd6309.o: asm_hd6309.h string_utils.h
+asm_mc6809.o: asm_mc6809.h
+asm_hd6309.o: asm_hd6309.h
 dis_mc6809.o: dis_mc6809.h string_utils.h table_mc6809.h
 dis_hd6309.o: dis_hd6309.h string_utils.h table_hd6309.h
 dis_i8080.o: dis_i8080.h string_utils.h table_i8080.h

@@ -15,7 +15,4 @@ char *outHex32(char *out, uint32_t u32);
 char *outUint32(char *out, uint32_t u32);
 char *outInt32(char *out, int32_t i32);
 
-bool getInt16(const char *&in, uint16_t &out);
-bool getUint32(const char *&in, uint32_t &out);
-
 #endif
