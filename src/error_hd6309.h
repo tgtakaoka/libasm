@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef __ERROR_MC6809_H__
-#define __ERROR_MC6809_H__
+#ifndef __ERROR_HD6309_H__
+#define __ERROR_HD6309_H__
 
 #include "config_host.h"
 
@@ -23,4 +23,4 @@ enum Error : host::uint_t {
     GARBAGE_AT_END,
 };
 
-#endif // __ERROR_MC6809_H__
+#endif // __ERROR_HD6309_H__

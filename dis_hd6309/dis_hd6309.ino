@@ -2,7 +2,7 @@
 
 #include "dis_hd6309.h"
 
-DisHd6309 disassembler;
+DisHd6309 disassembler(HD6309);
 
 class LineMemory : public Memory {
 public:
@@ -42,7 +42,7 @@ private:
 };
 
 void printHex8(uint8_t val) {
-  if (val < 0x10) Serial.print('0');  
+  if (val < 0x10) Serial.print('0');
   Serial.print(val, HEX);
 }
 

@@ -1,9 +1,9 @@
 #include <cstdio>
 
-#include "dis_mc6809.h"
+#include "dis_hd6309.h"
 #include "test_dis_helper.h"
 
-DisMc6809 disassembler;
+DisHd6309 disassembler(MC6809);
 
 static void set_up() {
     symtab.reset();
