@@ -2,57 +2,6 @@
 
 #include "asm_hd6309.h"
 
-static const RegName TABLE_REGISTERS[] = {
-    D, X, Y, U, S, PC, W, V, A, B, CC, DP, ZERO, ZERO, E, F,
-};
-constexpr host::uindex_t LENGTH_REGISTERS =
-    sizeof(TABLE_REGISTERS) / sizeof(TABLE_REGISTERS[0]);
-
-static const RegName TABLE_INDEX_REGS[] = {
-    NONE, NONE, NONE, NONE, NONE, B, A, E, NONE, NONE, F, D, NONE, NONE, W
-};
-constexpr host::uindex_t LENGTH_INDEXES =
-    sizeof(TABLE_INDEX_REGS) / sizeof(TABLE_INDEX_REGS[0]);
-static const RegName TABLE_BASE_REGS[] = { X, Y, U, S, W };
-constexpr host::uindex_t LENGTH_BASES =
-    sizeof(TABLE_BASE_REGS) / sizeof(TABLE_BASE_REGS[0]);
-
-static const RegName TABLE_TFM_REGS[] = { D, X, Y, U, S };
-constexpr host::uindex_t LENGTH_TFM_REGS =
-    sizeof(TABLE_TFM_REGS) / sizeof(TABLE_TFM_REGS[0]);
-static const char TABLE_TFM_SRC_MODES[4] = { '+', '-', '+',   0 };
-static const char TABLE_TFM_DST_MODES[4] = { '+', '-',   0, '+' };
-
-host::int_t AsmHd6309::encodeRegister(RegName regName) const {
-    return encodeRegNumber(regName, &TABLE_REGISTERS[0],
-                           &TABLE_REGISTERS[LENGTH_REGISTERS]);
-}
-
-RegName AsmHd6309::parseRegister(const char *line) const {
-    return parseRegName(line, &TABLE_REGISTERS[0],
-                        &TABLE_REGISTERS[LENGTH_REGISTERS]);
-}
-
-host::int_t AsmHd6309::encodeIndexReg(RegName regName) const {
-    return encodeRegNumber(regName, &TABLE_INDEX_REGS[0],
-                           &TABLE_INDEX_REGS[LENGTH_INDEXES]);
-}
-
-RegName AsmHd6309::parseIndexReg(const char *line) const {
-    return parseRegName(line, &TABLE_INDEX_REGS[0],
-                        &TABLE_INDEX_REGS[LENGTH_INDEXES]);
-}
-
-host::int_t AsmHd6309::encodeBaseReg(RegName regName) const {
-    return encodeRegNumber(regName, &TABLE_BASE_REGS[0],
-                           &TABLE_BASE_REGS[LENGTH_BASES]);
-}
-
-RegName AsmHd6309::parseBaseReg(const char *line) const {
-    return parseRegName(line, &TABLE_BASE_REGS[0],
-                        &TABLE_BASE_REGS[LENGTH_BASES]);
-}
-
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
@@ -60,6 +9,19 @@ static bool isidchar(const char c) {
 static const char *skipSpace(const char *line) {
     while (*line == ' ') line++;
     return line;
+}
+
+static Error getHex16(const char *&in, target::uint16_t &val) {
+    const char *p = in;
+    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
+    val = 0;
+    while (isxdigit(*p)) {
+        val <<= 4;
+        val += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
+        p++;
+    }
+    in = p;
+    return OK;
 }
 
 static Error getHex32(const char *&in, target::uint32_t &val) {
@@ -72,6 +34,21 @@ static Error getHex32(const char *&in, target::uint32_t &val) {
         p++;
     }
     in = p;
+    return OK;
+}
+
+static Error getInt16(const char *&in, target::uint16_t &val) {
+    const char *p = in;
+    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
+    if (!isdigit(*p)) return UNKNOWN_OPERAND;
+    val = 0;
+    while (isdigit(*p)) {
+        val *= 10;
+        val += *p - '0';
+        p++;
+    }
+    in = p;
+    if (sign == '-') val = -(target::int16_t)val;
     return OK;
 }
 
@@ -88,6 +65,26 @@ static Error getInt32(const char *&in, target::uint32_t &val) {
     in = p;
     if (sign == '-') val = -(target::int32_t)val;
     return OK;
+}
+
+Error AsmHd6309::getOperand16(const char *&in, target::uint16_t &val) const {
+    if (*in == '$') {
+        in++;
+        return getHex16(in, val);
+    }
+    if (getInt16(in, val) == OK) return OK;
+    char symbol_buffer[20];
+    host::uint_t idx;
+    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(in[idx]); idx++) {
+        symbol_buffer[idx] = in[idx];
+    }
+    symbol_buffer[idx] = 0;
+    if (hasSymbol(symbol_buffer)) {
+        val = lookup(symbol_buffer);
+        in += idx;
+        return OK;
+    }
+    return UNKNOWN_OPERAND;
 }
 
 Error AsmHd6309::getOperand32(const char *&in, target::uint32_t &val) const {
@@ -110,57 +107,211 @@ Error AsmHd6309::getOperand32(const char *&in, target::uint32_t &val) const {
     return UNKNOWN_OPERAND;
 }
 
-Error AsmHd6309::encodeImmediateExtra(const char *line, Insn &insn) {
-    if (insn.oprLen() == 4) {
-        uint32_t val;
-        Error error = getOperand32(line, val);
-        if (error == OK) {
-            insn.emitUint32(val);
-            if (*skipSpace(line)) error = GARBAGE_AT_END;
+Error AsmHd6309::encodeStackOp(const char *line, Insn &insn) {
+    target::byte_t post = 0;
+    while (*line) {
+        host::uint_t bit = 0;
+        for (host::uint_t index = 0, mask = 0x01; index < 8; index++, mask <<= 1) {
+            const RegName regName = Registers::getStackReg(index, insn.insnCode());
+            if (Registers::compareRegName(line, regName)) {
+                line += Registers::regNameLen(regName);
+                bit = mask;
+                break;
+            }
         }
-        setError(error);
-        return OK;                      // processed
+        if (bit == 0) return setError(UNKNOWN_REGISTER);
+        post |= bit;
+        if (*line == ',') line++;
     }
-    return UNKNOWN_OPERAND;             // bypassed
+    emitInsnCode(insn);
+    insn.emitByte(post);
+    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmHd6309::encodeIndexedExtra(
-    Insn &insn, RegName index, target::uintptr_t addr,
-    RegName base, host::int_t incr, bool indir) {
-    if (base != W) return UNKNOWN_OPERAND; // bypass
-
-    if (index != NONE && index != OFFSET) {
-        return setError(UNKNOWN_OPERAND);
-        return OK;                      // processed/error
-    }
-    target::byte_t post;
-    if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
-    else if (incr == 0) post = 0x8F;    // ,W [,W]
-    else if (incr == 2) post = 0xCF;    // ,W++ [,W++]
-    else if (incr == -2) post = 0xEF;   // ,--W [,--W]
-    else {
-        setError(UNKNOWN_OPERAND);
-        return OK;                      // processed/error
-    }
-    if (indir) post++;
+Error AsmHd6309::encodeRegisters(const char *line, Insn &insn) {
+    RegName regName;
+    if ((regName = _regs.parseDataReg(line)) == NONE)
+        return setError(UNKNOWN_REGISTER);
+    line += Registers::regNameLen(regName);
+    if (*line++ != ',') return setError(UNKNOWN_OPERAND);
+    target::byte_t post = _regs.encodeDataReg(regName) << 4;
+    if ((regName = _regs.parseDataReg(line)) == NONE)
+        return setError(UNKNOWN_REGISTER);
+    line += Registers::regNameLen(regName);
+    if (*skipSpace(line)) return setError(GARBAGE_AT_END);
+    post |= _regs.encodeDataReg(regName);
+    emitInsnCode(insn);
     insn.emitByte(post);
-    if (index == OFFSET) insn.emitUint16(addr);
-    return setError(OK);                // processed/ok
+    return setError(OK);
+}
+
+Error AsmHd6309::encodeRelative(const char *line, Insn &insn) {
+    target::uintptr_t addr;
+    if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
+    const target::opcode_t prefix = InsnTable.prefixCode(insn.insnCode());
+    const host::uint_t insnLen = (InsnTable.isPrefixCode(prefix) ? 2 : 1) + insn.oprLen();
+    const target::uintptr_t base = insn.address() + insnLen;
+    const target::ptrdiff_t delta = addr - base;
+    emitInsnCode(insn);
+    if (insn.oprLen() == 1) {
+        if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
+        insn.emitByte(target::byte_t(delta));
+    } else {
+        insn.emitUint16(delta);
+    }
+    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+}
+
+Error AsmHd6309::encodeImmediate(const char *line, Insn &insn) {
+    if (*line++ != '#') return setError(UNKNOWN_OPERAND);
+    emitInsnCode(insn);
+    if (insn.oprLen() == 1 || insn.oprLen() == 2) {
+        target::uint16_t val;
+        if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
+        if (insn.oprLen() == 1) insn.emitByte(target::byte_t(val));
+        else insn.emitUint16(val);
+    } else if (_regs.isHd6309() && insn.oprLen() == 4) {
+        uint32_t val;
+        if (getOperand32(line, val)) return setError(UNKNOWN_OPERAND);
+        insn.emitUint32(val);
+    } else {
+        return setError(UNKNOWN_OPERAND);
+    }
+    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+}
+
+Error AsmHd6309::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
+    if (*line == '<') line++;
+    if (emitInsn) emitInsnCode(insn);
+    target::uintptr_t dir;
+    if (getOperand16(line, dir)) return setError(UNKNOWN_OPERAND);
+    insn.emitByte(target::byte_t(dir));
+    return setError(OK);
+}
+
+Error AsmHd6309::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
+    if (*line == '>') line++;
+    if (emitInsn) emitInsnCode(insn);
+    target::uintptr_t addr;
+    if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
+    insn.emitUint16(addr);
+    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+}
+
+Error AsmHd6309::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
+    if (emitInsn) emitInsnCode(insn);
+    const bool indir = (*line == '[');
+    RegName base = NONE;
+    RegName index = NONE;
+    host::int_t incr = 0;                    // auto decrement/increment
+    target::uintptr_t addr;
+    if (indir) line++;
+    if (*line != ',') {
+        if ((index = _regs.parseIndexReg(line)) != NONE) {
+            line += Registers::regNameLen(index);  // index register
+        } else {
+            if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
+            index = OFFSET;             // index is in addr
+        }
+    }
+    if (*line == ',') {
+        line++;
+        if (index == NONE) {
+            while (*line == '-') {
+                line++;
+                incr--;
+            }
+        }
+        if ((base = _regs.parseBaseReg(line)) != NONE
+            || Registers::compareRegName(line, PC)) {
+            if (base == NONE) base = PC;
+            line += Registers::regNameLen(base);
+        } else setError(UNKNOWN_OPERAND);
+        if (index == NONE && incr == 0) {
+            while (*line == '+') {
+                line++;
+                incr++;
+            }
+        }
+    }
+    if (indir && *line++ != ']') return setError(UNKNOWN_OPERAND);
+    if (*skipSpace(line)) return setError(GARBAGE_AT_END);
+
+    target::byte_t post;
+    if (base == NONE) {                 // [n16]
+        if (index != OFFSET) return setError(UNKNOWN_OPERAND);
+        insn.emitByte(0x9F);
+        insn.emitUint16(addr);
+        return setError(OK);
+    }
+    if (base == PC) {                   // n,PC [n,PC]
+        if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
+        post = indir ? 0x10 : 0;
+        target::ptrdiff_t delta = addr - (insn.address() + insn.insnLen() + 2);
+        if (delta >= -128 && delta < 128) {
+            insn.emitByte(0x8C | post);
+            insn.emitByte((uint8_t)delta);
+            return setError(OK);
+        }
+        delta = addr - (insn.address() + insn.insnLen() + 3);
+        insn.emitByte(0x8D | post);
+        insn.emitUint16(delta);
+        return setError(OK);
+    }
+    if (_regs.isHd6309() && base == W) {
+        target::byte_t post;
+        if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
+        else if (incr == 0) post = 0x8F;    // ,W [,W]
+        else if (incr == 2) post = 0xCF;    // ,W++ [,W++]
+        else if (incr == -2) post = 0xEF;   // ,--W [,--W]
+        else return setError(UNKNOWN_OPERAND);
+        if (indir) post++;
+        insn.emitByte(post);
+        if (index == OFFSET) insn.emitUint16(addr);
+        return setError(OK);
+    }
+
+    post = _regs.encodeBaseReg(base) << 5;
+    if (indir) post |= 0x10;
+    if (index == NONE) {              // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
+        if (incr == 0) post |= 0x84;
+        else if (incr == 2) post |= 0x81;
+        else if (incr == -2) post |= 0x83;
+        else if (!indir && incr == 1) post |= 0x80;
+        else if (!indir && incr == -1) post |= 0x82;
+        else return setError(UNKNOWN_OPERAND);
+        insn.emitByte(post);
+        return setError(OK);
+    }
+    if (index != OFFSET) {              // R,R
+        post |= _regs.encodeIndexReg(index);
+        insn.emitByte(0x80 | post);
+        return setError(OK);
+    }
+    const target::intptr_t offset = addr;
+    if (offset >= -16 && offset < 16 && !indir) { // n5.R
+        post |= (offset & 0x1F);
+        insn.emitByte(post);
+        return setError(OK);
+    }
+    if (offset >= -128 && offset < 128) { // n8,R [n8,R]
+        post |= 0x88;
+        insn.emitByte(post);
+        insn.emitByte((uint8_t)offset);
+        return setError(OK);
+    }
+    // n16,R [n16,R]
+    post |= 0x89;
+    insn.emitByte(post);
+    insn.emitUint16(offset);
+    return setError(OK);
 }
 
 Error AsmHd6309::encodeBitOperation(const char *line, Insn &insn) {
-    uint8_t post = 0;
-    if (compareRegName(line, CC)) {
-        line += 2;
-    } else if (compareRegName(line, A)) {
-        post |= 0x40;
-        line += 1;
-    } else if (compareRegName(line, B)) {
-        post |= 0x80;
-        line += 1;
-    } else {
-        return setError(UNKNOWN_REGISTER);
-    }
+    const RegName regName = Registers::parseBitOpReg(line);
+    if (regName == NONE) return setError(UNKNOWN_REGISTER);
+    line += Registers::regNameLen(regName);
+    uint8_t post = Registers::encodeBitOpReg(regName) << 6;
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
     uint16_t pos;
     if (getOperand16(line, pos)) return setError(UNKNOWN_OPERAND);
@@ -189,7 +340,7 @@ Error AsmHd6309::encodeImmediatePlus(const char *line, Insn &insn) {
     case INDEXED: insn.setAddrMode(IMM_INDEXED); break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (TableHd6309.search(insn, insn.addrMode()))
+    if (InsnTable.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
     insn.emitByte((uint8_t)val);
@@ -205,28 +356,28 @@ Error AsmHd6309::encodeImmediatePlus(const char *line, Insn &insn) {
 }
 
 Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
-    constexpr const RegName *END_TFM_REGS = &TABLE_TFM_REGS[LENGTH_TFM_REGS];
-    RegName regName = parseRegName(line, &TABLE_TFM_REGS[0], END_TFM_REGS);
+    RegName regName = Registers::parseTfmBaseReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
-    line += regNameLen(regName);
+    line += Registers::regNameLen(regName);
     char srcMode = 0;
     if (*line == '+' || *line == '-') srcMode = *line++;
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
-    target::opcode_t post =
-        encodeRegNumber(regName, TABLE_TFM_REGS, END_TFM_REGS) << 4;
+    target::opcode_t post = Registers::encodeTfmBaseReg(regName) << 4;
 
-    regName = parseRegName(line, TABLE_TFM_REGS, END_TFM_REGS);
+    regName = Registers::parseTfmBaseReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
-    line += regNameLen(regName);
+    line += Registers::regNameLen(regName);
     char dstMode = 0;
     if (*line == '+' || *line == '-') dstMode = *line++;
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
-    post |= encodeRegNumber(regName, TABLE_TFM_REGS, END_TFM_REGS);
+    post |= Registers::encodeTfmBaseReg(regName);
 
-    for (uint8_t mode = 0; mode < sizeof(TABLE_TFM_SRC_MODES); mode++) {
-        if (srcMode == TABLE_TFM_SRC_MODES[mode] && dstMode == TABLE_TFM_DST_MODES[mode]) {
-            target::opcode_t prefixCode = TableHd6309.prefixCode(insn.insnCode());
-            insn.setInsnCode(TableHd6309.insnCode(prefixCode, 0x38 + mode));
+    for (uint8_t mode = 0; mode < 4; mode++) {
+        if (srcMode == Registers::tfmSrcModeChar(mode)
+            && dstMode == Registers::tfmDstModeChar(mode)) {
+            const target::opcode_t prefixCode =
+                InsnTable::prefixCode(insn.insnCode());
+            insn.setInsnCode(InsnTable::insnCode(prefixCode, 0x38 + mode));
             emitInsnCode(insn);
             insn.emitByte(post);
             return setError(OK);
@@ -235,24 +386,62 @@ Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
     return setError(UNKNOWN_OPERAND);
 }
 
-#include <stdio.h>
-Error AsmHd6309::encode(const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
-    if (AsmMc6809::encode(line, insn, addr, symtab) == OK)
-        return setError(OK);
+Error AsmHd6309::determineAddrMode(const char *line, Insn &insn) {
+    switch (*line) {
+    case '#': insn.setAddrMode(IMMEDIATE); break;
+    case '<': insn.setAddrMode(DIRECT_PG); break;
+    case '>': insn.setAddrMode(EXTENDED); break;
+    case '[':
+    case ',': insn.setAddrMode(INDEXED); break;
+    default:
+        RegName index;
+        if ((index = _regs.parseIndexReg(line)) != NONE) {
+            line += Registers::regNameLen(index);
+            if (*line == ',') {
+                insn.setAddrMode(INDEXED);
+                return OK;
+            }
+            return setError(UNKNOWN_OPERAND);
+        }
+        target::uint16_t val;
+        if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
+        if (*line == ',') insn.setAddrMode(INDEXED);
+        else insn.setAddrMode(val < 0x100 ? DIRECT_PG : EXTENDED);
+        break;
+    }
+    return OK;
+}
+
+Error AsmHd6309::encode(
+    const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
+    reset(symtab);
+    insn.resetAddress(addr);
     line = skipSpace(line);
     if (!*line) return setError(NO_TEXT);
-    while (isidchar(*line)) line++;
-    line = skipSpace(line);
+    const char *endName;
+    for (endName = line; isidchar(*endName); endName++)
+        ;
+    insn.setName(line, endName);
+    line = skipSpace(endName);
 
-    if (TableHd6309.search(insn, insn.name())) return setError(UNKNOWN_INSTRUCTION);
+    if (InsnTable.searchName(insn))
+        return setError(UNKNOWN_INSTRUCTION);
+    if (insn.mcuMode() == HD6309 && _regs.isMc6809())
+        return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
     case INHERENT:
         emitInsnCode(insn);
         return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    case RELATIVE:
+        return encodeRelative(line, insn);
+    case STACK_OP:
+        return encodeStackOp(line, insn);
     case REGISTERS:
         return encodeRegisters(line, insn);
-    case IMM_DIRECT: case IMM_EXTENDED: case IMM_INDEXED:
+    case IMM_DIRECT:
+    case IMM_EXTENDED:
+    case IMM_INDEXED:
         return encodeImmediatePlus(line, insn);
     case BIT_OPERATION:
         return encodeBitOperation(line, insn);
@@ -263,7 +452,7 @@ Error AsmHd6309::encode(const char *line, Insn &insn, target::uintptr_t addr, Sy
     }
 
     if (determineAddrMode(line, insn)) return getError();
-    if (TableHd6309.search(insn, insn.addrMode()))
+    if (InsnTable.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case IMMEDIATE:

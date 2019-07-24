@@ -2,15 +2,27 @@
 #ifndef __TABLE_HD6309_H__
 #define __TABLE_HD6309_H__
 
-#include "table_mc6809.h"
+#include "config_hd6309.h"
 
-class TableHd6309 : public TableMc6809 {
+class InsnTable {
 public:
-    Error search(Insn &insn, const char *name) const override;
-    Error search(Insn &insn, AddrMode mode) const override;
-    Error search(Insn &insn, target::insn_t insnCode) const override;
+    Error searchName(Insn &insn) const;
+    Error searchNameAndAddrMode(Insn &insn) const;
+    Error searchInsnCode(Insn &insn) const;
+
+    static target::insn_t insnCode(
+        target::opcode_t prefixCode, target::opcode_t opCode) {
+        return (target::insn_t(prefixCode) << 8 | opCode);
+    }
+    static target::opcode_t prefixCode(target::insn_t insnCode) {
+        return target::opcode_t(insnCode >> 8);
+    }
+    static target::opcode_t opCode(target::insn_t insnCode) {
+        return target::opcode_t(insnCode & 0xff);
+    }
+    static bool isPrefixCode(target::opcode_t opCode);
 };
 
-extern TableHd6309 TableHd6309;
+extern InsnTable InsnTable;
 
 #endif // __TABLE_HD6309_H__
