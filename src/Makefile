@@ -2,7 +2,8 @@ CXXFLAGS=-Wall -g -O -std=c++17
 
 OBJS_hd6309 = asm_hd6309.o dis_hd6309.o registers_hd6309.o table_hd6309.o \
 	string_utils.o
-OBJS_i8080 = asm_i8080.o dis_i8080.o table_i8080.o string_utils.o
+OBJS_i8080 =  asm_i8080.o  dis_i8080.o  registers_i8080.o  table_i8080.o \
+	string_utils.o
 
 .PHONY: clean-objs clean test
 
