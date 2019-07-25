@@ -38,20 +38,7 @@ enum InsnFormat : host::uint_t {
     VECTOR_NO,                  // **VV_V***: 0~7
 };
 
-enum RegName : char {
-    NONE = 0,
-    B = 'B',
-    C = 'C',
-    D = 'D',
-    E = 'E',
-    H = 'H',
-    L = 'L',
-    M = 'M',
-    A = 'A',
-    SP = 'S',
-    PSW = 'P',
-};
-
 #include "insn_i8080.h"
+#include "registers_i8080.h"
 
 #endif // __CONFIG_I8080_H__

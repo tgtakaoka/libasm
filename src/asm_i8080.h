@@ -30,8 +30,9 @@ protected:
         return _symtab ? _symtab->lookup(symbol) : 0;
     }
 
-    const char *encodePointerReg(
-        const char *line, Insn &insn, const RegName *table, const RegName *end);
+    const char *encodePointerReg(const char *line, Insn &insn);
+    const char *encodeStackReg(const char *line, Insn &insn);
+    const char *encodeIndexReg(const char *line, Insn &insn);
     const char *encodeDataReg(const char *line, Insn &insn);
     const char *encodeDataDataReg(const char *line, Insn &insn);
     const char *encodeVectorNo(const char *line, Insn &insn);

@@ -6,7 +6,7 @@
 #include "table_i8080.h"
 #include "text_i8080.h"
 
-static const EntryI8080 TABLE_I8080[] PROGMEM = {
+static const Entry TABLE_I8080[] PROGMEM = {
     E(0x00, TEXT_NOP,  INHERENT,     NO_FORMAT)
     E(0x01, TEXT_LXI,  IMMEDIATE_16, POINTER_REG)
     E(0x09, TEXT_DAD,  INHERENT,     POINTER_REG)
@@ -89,10 +89,10 @@ static const EntryI8080 TABLE_I8080[] PROGMEM = {
 constexpr host::uindex_t LENGTH_I8080 =
     sizeof(TABLE_I8080) / sizeof(TABLE_I8080[0]);
 
-static const EntryI8080 *searchEntry(
+static const Entry *searchEntry(
     const char *name,
-    const EntryI8080 *table, const EntryI8080 *end) {
-    for (const EntryI8080 *entry = table; entry < end; entry++) {
+    const Entry *table, const Entry *end) {
+    for (const Entry *entry = table; entry < end; entry++) {
         host::uint_t idx = 0;
         while (name[idx] && idx < sizeof(entry->name)) {
             const char n = pgm_read_byte(&entry->name[idx]);
@@ -107,12 +107,12 @@ static const EntryI8080 *searchEntry(
     return nullptr;
 }
 
-static const EntryI8080 *searchEntry(
+static const Entry *searchEntry(
     const target::insn_t insnCode,
-    const EntryI8080 *table, const EntryI8080 *end) {
-    for (const EntryI8080 *entry = table; entry < end; entry++) {
+    const Entry *table, const Entry *end) {
+    for (const Entry *entry = table; entry < end; entry++) {
         target::insn_t i = insnCode;
-        const InsnFormat iformat = InsnFormat(_iformat(pgm_read_byte(&entry->flags)));
+        const InsnFormat iformat = _insnFormat(pgm_read_byte(&entry->flags));
         switch (iformat) {
         case INDEX_REG: i &= ~0x10; break;
         case POINTER_REG:
@@ -129,8 +129,9 @@ static const EntryI8080 *searchEntry(
     return nullptr;
 }
 
-Error TableI8080::search(Insn &insn, const char *name) const {
-    const EntryI8080 *entry =
+Error InsnTable::searchName(Insn &insn) const {
+    const char *name = insn.name();
+    const Entry *entry =
         searchEntry(name, &TABLE_I8080[0], &TABLE_I8080[LENGTH_I8080]);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_byte(&entry->insnCode));
@@ -139,17 +140,17 @@ Error TableI8080::search(Insn &insn, const char *name) const {
     return OK;
 }
 
-Error TableI8080::search(Insn &insn, target::insn_t insnCode) const {
-    const EntryI8080 *entry =
+Error InsnTable::searchInsnCode(Insn &insn) const {
+    const target::insn_t insnCode = insn.insnCode();
+    const Entry *entry =
         searchEntry(insnCode, &TABLE_I8080[0], &TABLE_I8080[LENGTH_I8080]);
     if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(insnCode);
     insn.setFlags(pgm_read_byte(&entry->flags));
     char name[5];
-    pgm_strncpy(name, entry->name, sizeof(EntryI8080::name));
+    pgm_strncpy(name, entry->name, sizeof(Entry::name));
     name[4] = 0;
     insn.setName(name);
     return OK;
 }
 
-class TableI8080 TableI8080;
+class InsnTable InsnTable;

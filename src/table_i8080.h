@@ -2,13 +2,13 @@
 #ifndef __TABLE_I8080_H__
 #define __TABLE_I8080_H__
 
-#include "insn_i8080.h"
+#include "config_i8080.h"
 
-class TableI8080 {
+class InsnTable {
 public:
-    Error search(Insn &insn, const char *name) const;
-    Error search(Insn &insn, target::insn_t insnCode) const;
+    Error searchName(Insn &insn) const;
+    Error searchInsnCode(Insn &insn) const;
 };
 
-extern TableI8080 TableI8080;
+extern InsnTable InsnTable;
 #endif // __TABLE_I8080_H__
