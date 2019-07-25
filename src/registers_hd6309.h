@@ -1,3 +1,4 @@
+/* -*- mode: c++; -*- */
 #ifndef __REGISTER_HD6309_H__
 #define __REGISTER_HD6309_H__
 
@@ -61,8 +62,6 @@ public:
 private:
     McuMode _mcuMode;
 
-    static host::int_t encodeRegNumber(
-        RegName regName, const RegName *tabel, const RegName *end);
     static RegName parseRegName(
         const char *line, const RegName *tabel, const RegName *end);
 };
