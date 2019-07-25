@@ -4,7 +4,6 @@
 
 #include <string.h>
 
-#include "config_i8080.h"
 #include "entry_i8080.h"
 
 class Insn {
@@ -14,8 +13,8 @@ public:
     host::uint_t insnLen() const { return _insnLen; }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
-    AddrMode addrMode() const { return AddrMode(_amode(_flags)); }
-    InsnFormat insnFormat() const { return InsnFormat(_iformat(_flags)); }
+    AddrMode addrMode() const { return _addrMode(_flags); }
+    InsnFormat insnFormat() const { return _insnFormat(_flags); }
 
     void resetAddress(target::uintptr_t addr) {
         _address = addr;

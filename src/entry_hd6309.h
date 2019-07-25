@@ -1,3 +1,4 @@
+/* -*- mode: c++; -*- */
 #ifndef __ENTRY_HD6309_H__
 #define __ENTRY_HD6309_H__
 
@@ -25,9 +26,9 @@ static inline AddrMode _addrMode(host::uint_t flags) {
                     & Entry::addrMode_mask);
 }
 
-#define _flags(_oprLen, _mcuMode, _addrMode)                    \
-    ((_mcuMode == MC6809 ? 0 : Entry::hd6309_flag)        \
-     | (host::uint_t(_addrMode) << Entry::addrMode_shift) \
+#define _flags(_oprLen, _mcuMode, _addrMode)                \
+    ((_mcuMode == MC6809 ? 0 : Entry::hd6309_flag)          \
+     | (host::uint_t(_addrMode) << Entry::addrMode_shift)   \
      | (_oprLen))
 #define P00(_opc, _name, _len, _mcu, _mode)                 \
     { _opc,  _flags(_len - 1, _mcu, _mode), TEXT_##_name },

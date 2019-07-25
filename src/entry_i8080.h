@@ -1,23 +1,30 @@
+/* -*- mode: c++; -*- */
 #ifndef __ENTRY_I8080_H__
 #define __ENTRY_I8080_H__
 
-#include "config_host.h"
+#include "config_i8080.h"
 
-struct EntryI8080 {
+struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
     const char name[4];
+
+    static constexpr host::uint_t insnFormat_shift = 4;
+    static constexpr host::uint_t insnFormat_mask = 0x7;
+    static constexpr host::uint_t addrMode_mask = 0x07;
+    static constexpr host::uint_t name_max = sizeof(Entry::name);
+
 };
 
-static constexpr host::uint_t iformat_shift = 4;
-static constexpr host::uint_t iformat_mask = 0x7;
-static constexpr host::uint_t amode_mask = 0x07;
-static constexpr host::uint_t name_max = sizeof(EntryI8080::name);
+static inline InsnFormat _insnFormat(host::uint_t flags) {
+    return InsnFormat((flags >> Entry::insnFormat_shift) & Entry::insnFormat_mask);
+}
+static inline AddrMode _addrMode(host::uint_t flags) {
+    return AddrMode(flags & Entry::addrMode_mask);
+}
 
 #define _flags(_amode, _iformat) \
-    ((host::uint_t(_iformat) << iformat_shift) | (_amode))
-#define _amode(_flags) ((_flags) & amode_mask)
-#define _iformat(_flags) (((_flags) >> iformat_shift) & iformat_mask)
+    ((host::uint_t(_iformat) << Entry::insnFormat_shift) | (_amode))
 #define E(_opc, _name, _amode, _iformat)            \
      { _opc, _flags(_amode, _iformat), { _name } },
 

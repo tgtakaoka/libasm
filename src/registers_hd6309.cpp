@@ -82,7 +82,7 @@ char *Registers::outCCRBits(char *out, target::byte_t val) {
     return out;
 }
 
-host::int_t Registers::encodeRegNumber(
+static host::int_t encodeRegNumber(
     RegName regName, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         if (pgm_read_byte(p) == regName) return p - table;
@@ -97,6 +97,12 @@ RegName Registers::parseRegName(
         if (compareRegName(line, regName)) return regName;
     }
     return NONE;
+}
+
+static RegName decodeRegNumber(
+    host::uint_t regNum, const RegName *table, const RegName *end) {
+    const RegName *entry = &table[regNum];
+    return entry < end ? RegName(pgm_read_byte(entry)) : NONE;
 }
 
 RegName Registers::getStackReg(host::uint_t bit, target::insn_t insnCode) {
@@ -158,36 +164,27 @@ host::int_t Registers::encodeTfmBaseReg(RegName regName) {
 }
 
 RegName Registers::decodeIndexReg(target::byte_t regNum) const {
-    const host::uint_t num = isMc6809() 
-        ? ARRAY_SIZE(MC6809_INDEX_REGS) : ARRAY_SIZE(HD6309_INDEX_REGS);
-    if (regNum >= num) return NONE;
-    const RegName *table = isMc6809()
-        ? &MC6809_INDEX_REGS[0] : &HD6309_INDEX_REGS[0];
-    return RegName(pgm_read_byte(&table[regNum]));
+    return isMc6809()
+        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_INDEX_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_INDEX_REGS));
 }
 
 RegName Registers::decodeBaseReg(target::byte_t regNum) const {
-    if (regNum >= ARRAY_SIZE(MC6809_BASE_REGS)) return NONE;
-    return RegName(pgm_read_byte(&MC6809_BASE_REGS[regNum]));
+    return decodeRegNumber(regNum, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 RegName Registers::decodeRegName(target::byte_t regNum) const {
-    const host::uint_t num = isMc6809()
-        ? ARRAY_SIZE(MC6809_DATA_REGS) : ARRAY_SIZE(HD6309_DATA_REGS);
-    if (regNum >= num) return NONE;
-    const RegName *table = isMc6809()
-        ? &MC6809_DATA_REGS[0] : &HD6309_DATA_REGS[0];
-    return RegName(pgm_read_byte(&table[regNum]));
+    return isMc6809()
+        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS));
 }
 
 RegName Registers::decodeBitOpReg(target::byte_t regNum) {
-    if (regNum >= ARRAY_SIZE(BIT_OP_REGS)) return NONE;
-    return RegName(pgm_read_byte(&BIT_OP_REGS[regNum]));
+    return decodeRegNumber(regNum, ARRAY_RANGE(BIT_OP_REGS));
 }
 
 RegName Registers::decodeTfmBaseReg(target::byte_t regNum) {
-    if (regNum >= ARRAY_SIZE(TFM_BASE_REGS)) return NONE;
-    return RegName(pgm_read_byte(&TFM_BASE_REGS[regNum]));
+    return decodeRegNumber(regNum, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
 char Registers::tfmSrcModeChar(host::uint_t mode) {

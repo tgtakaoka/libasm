@@ -2,54 +2,8 @@
 
 #include "asm_i8080.h"
 
-static const RegName TABLE_POINTERS[] = { B, D, H, SP };
-static constexpr host::uint_t LENGTH_POINTERS =
-    sizeof(TABLE_POINTERS) / sizeof(TABLE_POINTERS[0]);
-static const RegName TABLE_STACK_REGS[] = { B, D, H, PSW };
-static constexpr host::uint_t LENGTH_STACK_REGS =
-    sizeof(TABLE_STACK_REGS) / sizeof(TABLE_STACK_REGS[0]);
-static const RegName TABLE_INDEX_REGS[] = { B, D };
-static constexpr host::uint_t LENGTH_INDEX_REGS =
-    sizeof(TABLE_INDEX_REGS) / sizeof(TABLE_INDEX_REGS[0]);
-static const RegName TABLE_DATA_REGS[] = { B, C, D, E, H, L, M, A };
-static constexpr host::uint_t LENGTH_DATA_REGS =
-    sizeof(TABLE_DATA_REGS) / sizeof(TABLE_DATA_REGS[0]);
-
-static char regName1stChar(const RegName regName) {
-    return char(regName);
-}
-
-static char regName2ndChar(const RegName regName) {
-    if (regName == SP) return 'P';
-    if (regName == PSW) return 'S';
-    return 0;
-}
-
-static char regName3rdChar(const RegName regName) {
-    if (regName == PSW) return 'W';
-    return 0;
-}
-
-static host::uint_t regNameLen(RegName regName) {
-    if (regName3rdChar(regName)) return 3;
-    return regName2ndChar(regName) == 0 ? 1 : 2;
-}
-
-static bool regCharCaseEqual(char c, char regChar) {
-    return c == regChar || (isalpha(c) && toupper(c) == regChar);
-}
-
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
-}
-
-static bool compareRegName(const char *line, RegName regName) {
-    if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
-    const char r2 = regName2ndChar(regName);
-    if (r2 && !regCharCaseEqual(*line++, r2)) return false;
-    const char r3 = regName3rdChar(regName);
-    if (r3 && !regCharCaseEqual(*line++, r3)) return false;
-    return !isidchar(*line);
 }
 
 static Error getInt16(const char *&in, target::uint16_t &val) {
@@ -122,41 +76,48 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-static RegName parseRegName(
-    const char *line, const RegName *table, const RegName *end) {
-    for (const RegName *entry = table; entry < end; entry++) {
-        if (compareRegName(line, *entry)) return *entry;
-    }
-    return NONE;
-}
-
-static host::int_t encodeRegNumber(
-    const RegName regName, const RegName *table, const RegName *end) {
-    for (host::int_t num = 0; table < end; num++, table++) {
-        if (regName == *table) return num;
-    }
-    return -1;
-}
-
-const char *AsmI8080::encodePointerReg(
-    const char *line, Insn &insn, const RegName *table, const RegName *end) {
-    const RegName regName = parseRegName(line, table, end);
-    const host::int_t num = encodeRegNumber(regName, table, end);
+const char *AsmI8080::encodePointerReg(const char *line, Insn &insn) {
+    const RegName regName = Registers::parsePointerReg(line);
+    const host::int_t num = Registers::encodePointerReg(regName);
     if (num < 0) {
         setError(UNKNOWN_REGISTER);
     } else {
         insn.setInsnCode(insn.insnCode() | (num << 4));
-        line += regNameLen(regName);
+        line += Registers::regNameLen(regName);
+        setError(OK);
+    }
+    return line;
+}
+
+const char *AsmI8080::encodeStackReg(const char *line, Insn &insn) {
+    const RegName regName = Registers::parseStackReg(line);
+    const host::int_t num = Registers::encodeStackReg(regName);
+    if (num < 0) {
+        setError(UNKNOWN_REGISTER);
+    } else {
+        insn.setInsnCode(insn.insnCode() | (num << 4));
+        line += Registers::regNameLen(regName);
+        setError(OK);
+    }
+    return line;
+}
+
+const char *AsmI8080::encodeIndexReg(const char *line, Insn &insn) {
+    const RegName regName = Registers::parseIndexReg(line);
+    const host::int_t num = Registers::encodeIndexReg(regName);
+    if (num < 0) {
+        setError(UNKNOWN_REGISTER);
+    } else {
+        insn.setInsnCode(insn.insnCode() | (num << 4));
+        line += Registers::regNameLen(regName);
         setError(OK);
     }
     return line;
 }
 
 const char *AsmI8080::encodeDataReg(const char *line, Insn &insn) {
-    const RegName regName = parseRegName(
-        line, &TABLE_DATA_REGS[0], &TABLE_DATA_REGS[LENGTH_DATA_REGS]);
-    const host::int_t num = encodeRegNumber(
-        regName, &TABLE_DATA_REGS[0], &TABLE_DATA_REGS[LENGTH_DATA_REGS]);
+    const RegName regName = Registers::parseDataReg(line);
+    const host::int_t num = Registers::encodeDataReg(regName);
     if (num < 0) {
         setError(UNKNOWN_REGISTER);
     } else {
@@ -164,36 +125,32 @@ const char *AsmI8080::encodeDataReg(const char *line, Insn &insn) {
             insn.setInsnCode(insn.insnCode() | (num << 3));
         if (insn.insnFormat() == LOW_DATA_REG)
             insn.setInsnCode(insn.insnCode() | num);
-        line += regNameLen(regName);
+        line += Registers::regNameLen(regName);
         setError(OK);
     }
     return line;
 }
 
 const char *AsmI8080::encodeDataDataReg(const char *line, Insn &insn) {
-    const RegName dstReg = parseRegName(
-        line, &TABLE_DATA_REGS[0], &TABLE_DATA_REGS[LENGTH_DATA_REGS]);
+    const RegName dstReg = Registers::parseDataReg(line);
     if (dstReg == NONE) {
         setError(UNKNOWN_REGISTER);
         return line;
     }
-    line += regNameLen(dstReg);
+    line += Registers::regNameLen(dstReg);
     if (*line++ != ',') {
         setError(UNKNOWN_OPERAND);
         return --line;
     }
-    const RegName srcReg = parseRegName(
-        line, &TABLE_DATA_REGS[0], &TABLE_DATA_REGS[LENGTH_DATA_REGS]);
+    const RegName srcReg = Registers::parseDataReg(line);
     if (srcReg == NONE) {
         setError(UNKNOWN_REGISTER);
         return line;
     }
-    line += regNameLen(srcReg);
+    line += Registers::regNameLen(srcReg);
 
-    const host::uint_t dstNum = encodeRegNumber(
-        dstReg, &TABLE_DATA_REGS[0], &TABLE_DATA_REGS[LENGTH_DATA_REGS]);
-    const host::uint_t srcNum = encodeRegNumber(
-        srcReg, &TABLE_DATA_REGS[0], &TABLE_DATA_REGS[LENGTH_DATA_REGS]);
+    const host::uint_t dstNum = Registers::encodeDataReg(dstReg);
+    const host::uint_t srcNum = Registers::encodeDataReg(srcReg);
     insn.setInsnCode(insn.insnCode() | (dstNum << 3) | srcNum);
 
     setError(OK);
@@ -251,7 +208,7 @@ Error AsmI8080::encode(
     insn.setName(line, endName);
     line = skipSpace(endName);
 
-    if (TableI8080.search(insn, insn.name()))
+    if (InsnTable.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.insnFormat()) {
@@ -259,19 +216,13 @@ Error AsmI8080::encode(
         setError(OK);
         break;
     case POINTER_REG:
-        line = encodePointerReg(
-            line, insn,
-            &TABLE_POINTERS[0], &TABLE_POINTERS[LENGTH_POINTERS]);
+        line = encodePointerReg(line, insn);
         break;
     case STACK_REG:
-        line = encodePointerReg(
-            line, insn,
-            &TABLE_STACK_REGS[0], &TABLE_STACK_REGS[LENGTH_STACK_REGS]);
+        line = encodeStackReg(line, insn);
         break;
     case INDEX_REG:
-        line = encodePointerReg(
-            line, insn,
-            &TABLE_INDEX_REGS[0], &TABLE_INDEX_REGS[LENGTH_INDEX_REGS]);
+        line = encodeIndexReg(line, insn);
         break;
     case DATA_REG:
     case LOW_DATA_REG:
