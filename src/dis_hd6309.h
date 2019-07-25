@@ -5,6 +5,7 @@
 #include "config_hd6309.h"
 
 #include "error_reporter.h"
+#include "insn_hd6309.h"
 #include "memory.h"
 #include "registers_hd6309.h"
 #include "symbol_table.h"

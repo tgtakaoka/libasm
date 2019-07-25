@@ -3,6 +3,7 @@
 #define __TABLE_HD6309_H__
 
 #include "config_hd6309.h"
+#include "insn_hd6309.h"
 
 class InsnTable {
 public:

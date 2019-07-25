@@ -3,6 +3,7 @@
 #define __TABLE_I8080_H__
 
 #include "config_i8080.h"
+#include "insn_i8080.h"
 
 class InsnTable {
 public:
