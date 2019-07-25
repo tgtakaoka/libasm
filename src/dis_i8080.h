@@ -5,6 +5,7 @@
 #include "config_i8080.h"
 
 #include "error_reporter.h"
+#include "insn_i8080.h"
 #include "memory.h"
 #include "symbol_table.h"
 

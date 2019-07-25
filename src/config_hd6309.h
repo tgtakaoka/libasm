@@ -42,7 +42,6 @@ enum AddrMode : host::uint_t {
     TRANSFER_MEM,
 };
 
-#include "insn_hd6309.h"
 #include "registers_hd6309.h"
 
 #endif // __CONFIG_HD6309_H__
