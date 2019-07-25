@@ -3,7 +3,7 @@
 #include "string_utils.h"
 #include "table_i8080.h"
 
-char *DisI8080::outOpr8Hex(char *out, target::byte_t val) const {
+static char *outOpr8Hex(char *out, target::byte_t val) {
     if (val >= 0xA0) *out++ = '0';
     out = outHex8(out, val);
     *out++ = 'H';
@@ -11,7 +11,7 @@ char *DisI8080::outOpr8Hex(char *out, target::byte_t val) const {
     return out;
 }
 
-char *DisI8080::outOpr16Hex(char *out, target::uint16_t val) const {
+static char *outOpr16Hex(char *out, target::uint16_t val) {
     if (val >= 0xA000) *out++ = '0';
     out = outHex16(out, val);
     *out++ = 'H';
