@@ -101,14 +101,34 @@ static void test_move_immediate() {
     TEST(LXI,  "D,1234H",  "4660" ,  0x11, 0x34, 0x12);
     TEST(LXI,  "H,0BEEFH", "-16657", 0x21, 0xEF, 0xBE);
     TEST(LXI,  "SP,6789H", "26505",  0x31, 0x89, 0x67);
+
+    symtab.put(0xBEEF, "BEEF");
+    symtab.put(0x1234, "label1234");
+    symtab.put(0x6789, "label6789");
+
+    TEST(LXI,  "B,BEEF",       "0BEEFH", 0x01, 0xEF, 0xBE);
+    TEST(LXI,  "D,label1234",  "1234H" , 0x11, 0x34, 0x12);
+    TEST(LXI,  "H,BEEF",       "0BEEFH", 0x21, 0xEF, 0xBE);
+    TEST(LXI,  "SP,label6789", "6789H",  0x31, 0x89, 0x67);
 }
 
 static void test_move_direct() {
-    TEST(STA, "9ABCH",  "", 0x32, 0xBC, 0x9A);
+    TEST(STA, "9ABCH", "", 0x32, 0xBC, 0x9A);
     TEST(LDA, "1234H", "", 0x3A, 0x34, 0x12);
 
     TEST(SHLD, "0ABCDH", "", 0x22, 0xCD, 0xAB);
-    TEST(LHLD, "5678H", "",  0x2A, 0x78, 0x56);
+    TEST(LHLD, "5678H",  "",  0x2A, 0x78, 0x56);
+
+    symtab.put(0x1234, "label1234");
+    symtab.put(0x5678, "label5678");
+    symtab.put(0x9ABC, "label9ABC");
+    symtab.put(0xABCD, "ABCD");
+
+    TEST(STA, "label9ABC", "9ABCH", 0x32, 0xBC, 0x9A);
+    TEST(LDA, "label1234", "1234H", 0x3A, 0x34, 0x12);
+
+    TEST(SHLD, "ABCD",      "0ABCDH", 0x22, 0xCD, 0xAB);
+    TEST(LHLD, "label5678", "5678H",  0x2A, 0x78, 0x56);
 }
 
 static void test_stack_op() {
@@ -157,6 +177,11 @@ static void test_jump_call() {
     TEST(RPE, "",  "", 0xE8);
     TEST(RP,  "",  "", 0xF0);
     TEST(RM,  "",  "", 0xF8);
+
+    symtab.put(0x1234, "label1234");
+
+    TEST(JMP, "label1234", "1234H", 0xC3, 0x34, 0x12);
+    TEST(CC,  "label1234", "1234H", 0xDC, 0x34, 0x12);
 }
 
 static void test_incr_decr() {
@@ -186,15 +211,6 @@ static void test_incr_decr() {
     TEST(DCX,  "D",   "", 0x1B);
     TEST(DCX,  "H",   "", 0x2B);
     TEST(DCX,  "SP",  "", 0x3B);
-
-    TEST(RST,  "0",   "", 0xC7);
-    TEST(RST,  "1",   "", 0xCF);
-    TEST(RST,  "2",   "", 0xD7);
-    TEST(RST,  "3",   "", 0xDF);
-    TEST(RST,  "4",   "", 0xE7);
-    TEST(RST,  "5",   "", 0xEF);
-    TEST(RST,  "6",   "", 0xF7);
-    TEST(RST,  "7",   "", 0xFF);
 }
 
 static void test_alu_register() {
@@ -270,26 +286,10 @@ static void test_alu_register() {
     TEST(CMP, "M", "", 0xBE);
     TEST(CMP, "A", "", 0xBF);
 
-    TEST(RLC, "", "", 0x07);
-    TEST(RRC, "", "", 0x0F);
-    TEST(RAL, "", "", 0x17);
-    TEST(RAR, "", "", 0x1F);
-
-    TEST(DAA, "", "", 0x27);
-    TEST(CMA, "", "", 0x2F);
-    TEST(STC, "", "", 0x37);
-    TEST(CMC, "", "", 0x3F);
-
     TEST(DAD,  "B",  "", 0x09);
     TEST(DAD,  "D",  "", 0x19);
     TEST(DAD,  "H",  "", 0x29);
     TEST(DAD,  "SP", "", 0x39);
-
-    TEST(DI,   "",   "", 0xF3);
-    TEST(EI,   "",   "", 0xFB);
-
-    TEST(NOP,  "",   "", 0x00);
-    TEST(HLT,  "",   "", 0x76);
 }
 
 static void test_alu_immediate() {
@@ -310,62 +310,95 @@ static void test_io() {
     TEST(IN,  "0F0H", "", 0xDB, 0xF0);
 }
 
-// 00 xxx 000 NOP*
-// 00 pp0 001 LXI
-// 00 pp1 001 DAD
-// 00 0p0 010 STAX
-// 00 100 010 SHLD
-// 00 110 010 STA
-// 00 0p1 010 LDAX
-// 00 101 010 LHLD
-// 00 111 010 LDA
-// 00 pp0 011 INX
-// 00 pp1 011 DCX
-// 00 ddd 100 INR
-// 00 ddd 101 DCR
-// 00 ddd 110 MVI
-// 00 0xx 111 Rxx
-// 00 1xx 111 xxx
+static void test_inherent() {
+    TEST(DI,  "",  "", 0xF3);
+    TEST(EI,  "",  "", 0xFB);
 
-// 01 ddd sss MOV
+    TEST(NOP, "",  "", 0x00);
+    TEST(HLT, "",  "", 0x76);
+
+    TEST(RLC, "", "", 0x07);
+    TEST(RRC, "", "", 0x0F);
+    TEST(RAL, "", "", 0x17);
+    TEST(RAR, "", "", 0x1F);
+
+    TEST(DAA, "", "", 0x27);
+    TEST(CMA, "", "", 0x2F);
+    TEST(STC, "", "", 0x37);
+    TEST(CMC, "", "", 0x3F);
+}
+
+static void test_restart() {
+    TEST(RST,  "0",   "", 0xC7);
+    TEST(RST,  "1",   "", 0xCF);
+    TEST(RST,  "2",   "", 0xD7);
+    TEST(RST,  "3",   "", 0xDF);
+    TEST(RST,  "4",   "", 0xE7);
+    TEST(RST,  "5",   "", 0xEF);
+    TEST(RST,  "6",   "", 0xF7);
+    TEST(RST,  "7",   "", 0xFF);
+}
+
+// 00 xxx 000 NOP*
+// 00 pp0 001 LXI p
+// 00 pp1 001 DAD p
+// 00 0p0 010 STAX B/D
+// 00 0p1 010 LDAX B/D
+// 00 100 010 SHLD nnnn
+// 00 101 010 LHLD nnnn
+// 00 110 010 STA nnnn
+// 00 111 010 LDA nnnn
+// 00 pp0 011 INX p
+// 00 pp1 011 DCX p
+// 00 rrr 100 INR r
+// 00 rrr 101 DCR r
+// 00 rrr 110 MVI nn
+// 00 000 111 RLC
+// 00 001 111 RRC
+// 00 010 111 RAL
+// 00 011 111 RAR
+// 00 100 111 DAA
+// 00 101 111 CMA
+// 00 110 111 STC
+// 00 111 111 CMC
+
+// 01 rrr sss MOV r,r
 // 01 110 110 HLT (MOV M,M)
 
-// 10 000 sss ADD
-// 10 001 sss ADC
-// 10 010 sss SUB
-// 10 011 sss SBB
-// 10 100 sss ANA
-// 10 101 sss XRA
-// 10 110 sss ORA
-// 10 111 sss CMP
+// 10 000 sss ADD r
+// 10 001 sss ADC r
+// 10 010 sss SUB r
+// 10 011 sss SBB r
+// 10 100 sss ANA r
+// 10 101 sss XRA r
+// 10 110 sss ORA r
+// 10 111 sss CMP r
 
-// 11 ccc 000 Rxx
-// 11 pp0 001 POP
-// 11 001 001 RET
-// 11 010 001 RET*
+// 11 ccc 000 Rccc
+// 11 pp0 001 POP p
+// 11 0x1 001 RET*
 // 11 101 001 PCHL
 // 11 111 001 SPHL
-// 11 ccc 010 Jcc
-// 11 000 011 JMP
-// 11 001 011 JMP*
-// 11 010 011 OUT
-// 11 011 011 IN
+// 11 ccc 010 Jccc
+// 11 00x 011 JMP* nnnn
+// 11 010 011 OUT nn
+// 11 011 011 IN  nn
 // 11 100 011 XTHL
 // 11 101 011 XCHG
 // 11 110 011 DI
 // 11 111 011 EI
-// 11 ccc 100 Cxx
+// 11 ccc 100 Cxxx
 // 11 pp0 101 PUSH
-// 11 xx1 101 CALL*
-// 11 000 110 ADI
-// 11 001 110 ACI
-// 11 010 110 SUI
-// 11 011 110 SBI
-// 11 100 110 ANI
-// 11 101 110 XRI
-// 11 110 110 ORI
-// 11 111 110 CPI
-// 11 aaa 111 RST
+// 11 xx1 101 CALL* nnnn
+// 11 000 110 ADI nn
+// 11 001 110 ACI nn
+// 11 010 110 SUI nn
+// 11 011 110 SBI nn
+// 11 100 110 ANI nn
+// 11 101 110 XRI nn
+// 11 110 110 ORI nn
+// 11 111 110 CPI nn
+// 11 aaa 111 RST aaa
 
 static void test_illegal() {
     Insn insn;
@@ -402,6 +435,8 @@ int main(int argc, char **argv) {
     RUN_TEST(test_alu_register);
     RUN_TEST(test_alu_immediate);
     RUN_TEST(test_io);
+    RUN_TEST(test_restart);
+    RUN_TEST(test_inherent);
     RUN_TEST(test_illegal);
     return 0;
 }

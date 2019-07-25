@@ -81,10 +81,10 @@ static void test_move_inherent() {
     TEST("MOV A,M", 0x7E);
     TEST("MOV A,A", 0x7F);
 
-    TEST("STAX B",   0x02);
-    TEST("STAX D",   0x12);
-    TEST("LDAX B",   0x0A);
-    TEST("LDAX D",   0x1A);
+    TEST("STAX B",  0x02);
+    TEST("STAX D",  0x12);
+    TEST("LDAX B",  0x0A);
+    TEST("LDAX D",  0x1A);
 }
 
 static void test_move_immediate() {
@@ -101,6 +101,15 @@ static void test_move_immediate() {
     TEST("LXI D,1234H",  0x11, 0x34, 0x12);
     TEST("LXI H,-16657", 0x21, 0xEF, 0xBE);
     TEST("LXI SP,6789H", 0x31, 0x89, 0x67);
+
+    symtab.put(0x1234, "label1234");
+    symtab.put(0x6789, "label6789");
+    symtab.put(0xBEEF, "BEEF");
+
+    TEST("LXI B,BEEF",       0x01, 0xEF, 0xBE);
+    TEST("LXI D,label1234",  0x11, 0x34, 0x12);
+    TEST("LXI H,BEEF",       0x21, 0xEF, 0xBE);
+    TEST("LXI SP,label6789", 0x31, 0x89, 0x67);
 }
 
 static void test_move_direct() {
@@ -109,6 +118,17 @@ static void test_move_direct() {
 
     TEST("SHLD 0ABCDH", 0x22, 0xCD, 0xAB);
     TEST("LHLD 5678H",  0x2A, 0x78, 0x56);
+
+    symtab.put(0x1234, "label1234");
+    symtab.put(0x5678, "label5678");
+    symtab.put(0x9ABC, "label9ABC");
+    symtab.put(0xABCD, "ABCD");
+
+    TEST("STA label9ABC",  0x32, 0xBC, 0x9A);
+    TEST("LDA label1234",  0x3A, 0x34, 0x12);
+
+    TEST("SHLD ABCD",      0x22, 0xCD, 0xAB);
+    TEST("LHLD label5678", 0x2A, 0x78, 0x56);
 }
 
 static void test_stack_op() {
@@ -157,6 +177,11 @@ static void test_jump_call() {
     TEST("RPE", 0xE8);
     TEST("RP",  0xF0);
     TEST("RM",  0xF8);
+
+    symtab.put(0x1234, "label1234");
+
+    TEST("JMP label1234", 0xC3, 0x34, 0x12);
+    TEST("CC  label1234", 0xDC, 0x34, 0x12);
 }
 
 static void test_incr_decr() {
