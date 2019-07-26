@@ -23,15 +23,12 @@ private:
         resetError();
     }
 
-    Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
-    Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
-
     const char *lookup(uint16_t addr) const {
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 
-    char *outOpr8Hex(char *out, target::byte_t val) const;
-    char *outOpr16Hex(char *out, target::uint16_t val) const;
+    Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
+    Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
 
     Error decodeImmediate8(
         Memory &memory, Insn &insn, char *operands, char *comments);

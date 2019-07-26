@@ -1,8 +1,6 @@
 #ifndef __TEXT_I8080__
 #define __TEXT_I8080__
 
-#include "config_host.h"
-
 #define TEXT_ACI  'A', 'C', 'I', 0
 #define TEXT_ADC  'A', 'D', 'C', 0
 #define TEXT_ADD  'A', 'D', 'D', 0
