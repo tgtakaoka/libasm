@@ -474,17 +474,6 @@ static const Entry *searchEntry(
 }
 
 static const Entry *searchEntry(
-    const char *name, AddrMode addrMode,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (addrMode == _addrMode(pgm_read_byte(&entry->flags))
-            && pgm_strcasecmp(name, entry->name) == 0)
-            return entry;
-    }
-    return nullptr;
-}
-
-static const Entry *searchEntry(
     const target::opcode_t opCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
@@ -492,10 +481,6 @@ static const Entry *searchEntry(
             return entry;
     }
     return nullptr;
-}
-
-bool InsnTable::isPrefixCode(target::opcode_t opCode) {
-    return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
 struct EntryPage {
@@ -520,11 +505,14 @@ static Error searchPages(
 static Error searchPages(
     Insn &insn, const char *name, AddrMode addrMode, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry;
-        if ((entry = searchEntry(name, addrMode, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(InsnTable::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
-            insn.setFlags(pgm_read_byte(&entry->flags));
-            return OK;
+        for (const Entry *entry = page->table; entry < page->end
+                 && (entry = searchEntry(name, entry, page->end)) != nullptr; entry++) {
+            const host::uint_t flags = pgm_read_byte(&entry->flags);
+            if (_addrMode(flags) == addrMode) {
+                insn.setInsnCode(InsnTable::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+                insn.setFlags(flags);
+                return OK;
+            }
         }
     }
     return UNKNOWN_INSTRUCTION;
@@ -548,27 +536,32 @@ static Error searchPages(
 }
 
 #define ARRAY_END(array) &(array)[(sizeof(array) / sizeof(array[0]))]
+#define ARRAY_RANGE(array) &array[0], ARRAY_END(array)
 
-static const EntryPage TABLE_PAGES[] = {
+static const EntryPage PAGES[] = {
     { PREFIX_P00, &TABLE_P00[0], ARRAY_END(TABLE_P00) },
     { PREFIX_P10, &TABLE_P10[0], ARRAY_END(TABLE_P10) },
     { PREFIX_P11, &TABLE_P11[0], ARRAY_END(TABLE_P11) },
 };
 
+bool InsnTable::isPrefixCode(target::opcode_t opCode) {
+    return opCode == PREFIX_P10 || opCode == PREFIX_P11;
+}
+
 Error InsnTable::searchName(Insn &insn) const {
-    if (searchPages(insn, insn.name(), &TABLE_PAGES[0], ARRAY_END(TABLE_PAGES)) == OK)
+    if (searchPages(insn, insn.name(), ARRAY_RANGE(PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 Error InsnTable::searchNameAndAddrMode(Insn &insn) const {
-    if (searchPages(insn, insn.name(), insn.addrMode(), &TABLE_PAGES[0], ARRAY_END(TABLE_PAGES)) == OK)
+    if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 Error InsnTable::searchInsnCode(Insn &insn) const {
-    if (searchPages(insn, insn.insnCode(), &TABLE_PAGES[0], ARRAY_END(TABLE_PAGES)) == OK)
+    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
