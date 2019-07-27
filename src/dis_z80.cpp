@@ -43,54 +43,77 @@ static char *outPtrName(char *out, RegName regName) {
     return out;
 }
 
+static char *outReg8Name(char *out, RegName regName) {
+    return (regName == NONE) ? outPtrName(out, HL)
+        : Registers::outRegName(out, regName);
+}
+
 Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
-    case AF_REG:
-        operands = Registers::outRegName(operands, AF);
+    case A_REG:
+        operands = Registers::outRegName(operands, A);
+        break;
+    case REG8:
+        if (insn.insnFormat() == DST_FMT
+            || insn.insnFormat() == DST_SRC_FMT) {
+            operands = outReg8Name(
+                operands, Registers::decodeDataReg((opc >> 3) & 7));
+        } else if (insn.insnFormat() == SRC_FMT) {
+            operands = outReg8Name(
+                operands, Registers::decodeDataReg(opc & 7));
+        } else return setError(INTERNAL_ERROR);
+        break;
+    case IR_REG:
+        operands = Registers::outRegName(
+            operands, Registers::decodeIrReg(opc >> 3 & 1));
+        break;
+    case BC_REG:
+        operands = Registers::outRegName(operands, BC);
+        break;
+    case DE_REG:
+        operands = Registers::outRegName(operands, DE);
         break;
     case HL_REG:
         operands = Registers::outRegName(operands, HL);
         break;
-    case BC_PTR:
-        operands = outPtrName(
-            operands, Registers::decodeIndexReg((opc >> 4) & 1));
+    case AF_REG:
+        operands = Registers::outRegName(operands, AF);
         break;
-    case A_REG:
-        operands = Registers::outRegName(operands, A);
+    case SP_REG:
+        operands = Registers::outRegName(operands, SP);
         break;
     case REG16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
-    case REG8:
-        if (insn.insnFormat() == DST_FMT
-            || insn.insnFormat() == DST_SRC_FMT) {
-            operands = Registers::outRegName(
-                operands, Registers::decodeDataReg((opc >> 3) & 7));
-        } else if (insn.insnFormat() == SRC_FMT) {
-            operands = Registers::outRegName(
-                operands, Registers::decodeDataReg(opc & 7));
-        } else return setError(INTERNAL_ERROR);
-        break;
-    case CC8:
-        operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
-        break;
     case STK16:
         operands = Registers::outRegName(
             operands, Registers::decodeStackReg((opc >> 4 & 3)));
         break;
+    case IX_REG:
+        operands = Registers::outRegName(
+            operands, InsnTable::decodeIndexReg(insn.insnCode()));
+        break;
+    case CC8:
+        operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
+        break;
+    case C_PTR:
+        operands = outPtrName(operands, C);
+        break;
+    case BC_PTR:
+        operands = outPtrName(
+            operands, Registers::decodeIndexReg((opc >> 4) & 1));
+        break;
     case HL_PTR:
         operands = outPtrName(operands, HL);
-        break;
-    case SP_REG:
-        operands = Registers::outRegName(operands, SP);
         break;
     case SP_PTR:
         operands = outPtrName(operands, SP);
         break;
-    case DE_REG:
-        operands = Registers::outRegName(operands, DE);
+    case IX_PTR:
+        operands = outPtrName(
+            operands, InsnTable::decodeIndexReg(insn.insnCode()));
         break;
     case VEC_NO:
         operands = outOpr8Hex(operands, opc & 0x38);
@@ -98,26 +121,11 @@ Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
     case BIT_NO:
         operands = outInt16(operands, (opc >> 3) & 7);
         break;
-    case C_PTR:
-        operands = outPtrName(operands, C);
-        break;
-    case IMM_01:
-        operands = outInt16(operands, (opc >> 4) & 1);
-        break;
-    case IMM_2:
-        operands = outInt16(operands, 2);
-        break;
-    case IR_REG:
-        operands = Registers::outRegName(
-            operands, Registers::decodeIrReg(opc >> 3 & 1));
-        break;
-    case IX_REG:
-        operands = Registers::outRegName(
-            operands, InsnTable::decodeIndexReg(insn.insnCode()));
-        break;
-    case IX_PTR:
-        operands = outPtrName(
-            operands, InsnTable::decodeIndexReg(insn.insnCode()));
+    case IMM_NO:
+        if ((opc & ~0x20) == 0x46) *operands++ = '0';
+        else if ((opc & ~0x20) == 0x56) *operands++ = '1';
+        else if ((opc & ~0x20) == 0x5E) *operands++ = '2';
+        *operands = 0;
         break;
     default:
         break;
@@ -127,12 +135,36 @@ Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
         *operands++ = ',';
 
     switch (insn.rightFormat()) {
+    case A_REG:
+        operands = Registers::outRegName(operands, A);
+        break;
+    case REG8:
+        if (insn.insnFormat() == DST_FMT) {
+            operands = outReg8Name(
+                operands, Registers::decodeDataReg((opc >> 3) & 7));
+        } else if (insn.insnFormat() == SRC_FMT
+                   || insn.insnFormat() == DST_SRC_FMT) {
+            operands = outReg8Name(
+                operands, Registers::decodeDataReg(opc & 7));
+        } else return setError(INTERNAL_ERROR);
+        break;
+    case IR_REG:
+        operands = Registers::outRegName(
+            operands, Registers::decodeIrReg(opc >> 3 & 1));
+        break;
     case AFPREG:
         operands = Registers::outRegName(operands, AFP);
+        break;
+    case HL_REG:
+        operands = Registers::outRegName(operands, HL);
         break;
     case REG16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
+        break;
+    case IX_REG:
+        operands = Registers::outRegName(
+            operands, InsnTable::decodeIndexReg(insn.insnCode()));
         break;
     case REG16X:
         operands = Registers::outRegName(
@@ -140,36 +172,12 @@ Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
                 (opc >> 4) & 3,
                 InsnTable::decodeIndexReg(insn.insnCode())));
         break;
-    case A_REG:
-        operands = Registers::outRegName(operands, A);
+    case C_PTR:
+        operands = outPtrName(operands, C);
         break;
     case BC_PTR:
         operands = outPtrName(
             operands, Registers::decodeIndexReg((opc >> 4) & 1));
-        break;
-    case REG8:
-        if (insn.insnFormat() == DST_FMT) {
-            operands = Registers::outRegName(
-                operands, Registers::decodeDataReg((opc >> 3) & 7));
-        } else if (insn.insnFormat() == SRC_FMT
-                   || insn.insnFormat() == DST_SRC_FMT) {
-            operands = Registers::outRegName(
-                operands, Registers::decodeDataReg(opc & 7));
-        } else return setError(INTERNAL_ERROR);
-        break;
-    case HL_REG:
-        operands = Registers::outRegName(operands, HL);
-        break;
-    case C_PTR:
-        operands = outPtrName(operands, C);
-        break;
-    case IR_REG:
-        operands = Registers::outRegName(
-            operands, Registers::decodeIrReg(opc >> 3 & 1));
-        break;
-    case IX_REG:
-        operands = Registers::outRegName(
-            operands, InsnTable::decodeIndexReg(insn.insnCode()));
         break;
     default:
         break;
@@ -186,7 +194,7 @@ Error DisZ80::decodeImmediate8(
         operands = Registers::outRegName(operands, A);
         break;
     case REG8:
-        operands = Registers::outRegName(
+        operands = outReg8Name(
             operands, Registers::decodeDataReg((opc >> 3) & 7));
         break;
     default:
@@ -250,6 +258,9 @@ Error DisZ80::decodeDirect(
     case CC8:
         operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
         break;
+    case IMM16:
+        operands = outAddr16(operands, comments, addr, lookup(addr), false);
+        break;
     case REG16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
@@ -261,7 +272,7 @@ Error DisZ80::decodeDirect(
     default:
         break;
     }
-    if (insn.leftFormat() != NO_OPR) *operands++ = ',';
+    if (insn.rightFormat() != NO_OPR) *operands++ = ',';
     switch (insn.rightFormat()) {
     case HL_REG:
         operands = Registers::outRegName(operands, HL);
@@ -370,7 +381,7 @@ Error DisZ80::decodeIndexed(
         operands = outIndexOffset(operands, insn.insnCode(), offset);
         break;
     case REG8:
-        operands = Registers::outRegName(
+        operands = outReg8Name(
             operands, Registers::decodeDataReg((opc >> 3) & 7));
         break;
     case A_REG:
@@ -385,7 +396,7 @@ Error DisZ80::decodeIndexed(
         operands = outIndexOffset(operands, insn.insnCode(), offset);
         break;
     case REG8:
-        operands = Registers::outRegName(
+        operands = outReg8Name(
             operands, Registers::decodeDataReg(opc & 7));
         break;
     default:
@@ -417,12 +428,13 @@ Error DisZ80::decodeIndexedBitOp(
 
     const RegName regName = Registers::decodeDataReg(opCode & 7);
     switch (insn.leftFormat()) {
+    case HL_PTR:
+        operands = outIndexOffset(operands, insn.insnCode(), offset);
+        break;
     case REG8:
-        if (regName == M) {
-            operands = outIndexOffset(operands, insn.insnCode(), offset);
-        } else {
-            operands = Registers::outRegName(operands, regName);
-        }
+        operands = (regName == NONE)
+            ? outIndexOffset(operands, insn.insnCode(), offset)
+            : outReg8Name(operands, regName);
         break;
     case BIT_NO:
         operands = outInt16(operands, (opCode >> 3) & 7);
@@ -430,13 +442,14 @@ Error DisZ80::decodeIndexedBitOp(
     default:
         break;
     }
-    if (insn.rightFormat() == REG8) {
-        *operands++ = ',';
-        if (regName == M) {
-            operands = outIndexOffset(operands, insn.insnCode(), offset);
-        } else {
-            operands = Registers::outRegName(operands, regName);
-        }
+    if (insn.rightFormat() != NO_OPR) *operands++ = ',';
+
+    if (insn.rightFormat() == HL_PTR) {
+        operands = outIndexOffset(operands, insn.insnCode(), offset);
+    } else if (insn.rightFormat() == REG8) {
+        operands = (regName == NONE)
+            ? outIndexOffset(operands, insn.insnCode(), offset)
+            : outReg8Name(operands, regName);
     }
     return setError(OK);
 }
@@ -463,7 +476,7 @@ Error DisZ80::decode(
     target::byte_t u8;
     target::uint16_t u16;
     target::byte_t offset;
-    
+
     switch (insn.addrMode()) {
     case INHERENT:
         return decodeInherent(insn, operands, comments);

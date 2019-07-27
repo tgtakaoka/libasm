@@ -7,6 +7,7 @@
 
 class InsnTable {
 public:
+    Error searchName(Insn &insn) const;
     Error searchNameAndOprFormats(
         Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const;
     Error searchInsnCode(Insn &insn) const;
@@ -24,6 +25,7 @@ public:
     static bool isPrefixCode(target::opcode_t opCode);
 
     static RegName decodeIndexReg(target::insn_t insnCode);
+    static void encodePrefixCode(Insn &insn, RegName ixReg);
 };
 
 extern InsnTable InsnTable;

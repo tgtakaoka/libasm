@@ -9,14 +9,15 @@ static const RegName POINTER_REGS[] PROGMEM = { BC, DE, HL, SP };
 static const RegName STACK_REGS[] PROGMEM = { BC, DE, HL, AF };
 static const RegName INDEX_REGS[] PROGMEM = { BC, DE };
 static const RegName IR_REGS[] PROGMEM = { I, R };
-static const RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, M, A };
+static const RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, NONE, A };
+static const RegName NON_DATA_REGS[] PROGMEM = { SP, IX, IY, I, R, AFP };
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
 static bool regCharCaseEqual(char c, char regChar) {
-    return c == regChar || (isalpha(c) && toupper(c) == regChar);
+    return c == regChar || toupper(c) == regChar;
 }
 
 static char regName1stChar(const RegName regName) {
@@ -37,7 +38,6 @@ static char regName1stChar(const RegName regName) {
     case C: return 'C';
     case E: return 'E';
     case L: return 'L';
-    case M: return '(';
     case R: return 'R';
     default: return 0;
     }
@@ -53,21 +53,15 @@ static char regName2ndChar(const RegName regName) {
     case AFP: return 'F';
     case IX: return 'X';
     case IY: return 'Y';
-    case M: return 'H';
     default: return 0;
     }
 }
 
 static char regName3rdChar(const RegName regName) {
     switch (regName) {
-    case M: return 'L';
     case AFP: return '\'';
     default: return 0;
     }
-}
-
-static char regName4thChar(const RegName regName) {
-    return (regName == M) ? ')' : 0;
 }
 
 bool Registers::compareRegName(const char *line, RegName regName) {
@@ -81,7 +75,6 @@ bool Registers::compareRegName(const char *line, RegName regName) {
 
 host::uint_t Registers::regNameLen(RegName regName) {
     switch (regName) {
-    case M: return 4;
     case AFP: return 3;
     case HL:
     case BC:
@@ -100,33 +93,77 @@ char *Registers::outRegName(char *out, const RegName regName) {
     if (r2) {
         *out++ = r2;
         const char r3 = regName3rdChar(regName);
-        if (r3) {
+        if (r3)
             *out++ = r3;
-            const char r4 = regName4thChar(regName);
-            if (r4) *out++ = r4;
-        }
     }
     *out = 0;
     return out;
+}
+
+static const CcName CC8_NAMES[] PROGMEM = {
+    CC_NZ, CC_Z, CC_NC, CC_C, CC_PO, CC_PE, CC_P, CC_M
+};
+
+static bool ccCharCaseEqual(char c, char ccChar) {
+    return c == ccChar || toupper(c) == ccChar;
+}
+
+static char ccName1stChar(const CcName ccName) {
+    if (isupper(ccName)) return ccName;
+    if (ccName == CC_NZ || ccName == CC_NC) return 'N';
+    return 'P';
+}
+
+static char ccName2ndChar(const CcName ccName) {
+    if (isupper(ccName)) return 0;
+    return toupper(ccName);
+}
+
+static host::uint_t ccNameLen(const CcName ccName) {
+    return isupper(ccName) ? 1 : 2;
+}
+
+static char *outCcName(char *out, const CcName ccName) {
+    *out++ = ccName1stChar(ccName);
+    const char c2 = ccName2ndChar(ccName);
+    if (c2) *out++ = c2;
+    *out = 0;
+    return out;
+}
+
+static bool compareCcName(const char *line, CcName ccName) {
+    if (!ccCharCaseEqual(*line++, ccName1stChar(ccName))) return false;
+    const char c2 = ccName2ndChar(ccName);
+    if (c2 && !ccCharCaseEqual(*line++, c2)) return false;
+    return !isalpha(*line);
 }
 
 char *Registers::outCc4Name(char *out, const target::opcode_t cc4) {
-    if ((cc4 & 1) == 0) *out++ = 'N';
-    *out++ = (cc4 & 2) ? 'C' : 'Z';
-    *out = 0;
-    return out;
+    const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc4 & 3]));
+    return outCcName(out, cc);
 }
 
 char *Registers::outCc8Name(char *out, const target::opcode_t cc8) {
-    if (cc8 < 4) return outCc4Name(out, cc8);
-    if (cc8 == 7) *out++ = 'M';
-    else if (cc8 == 6) *out++ = 'P';
-    else {
-        *out++ = 'P';
-        *out++ = (cc8 == 4) ? 'O' : 'E';
+    const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc8 & 7]));
+    return outCcName(out, cc);
+}
+
+static const char *parseCcName(const char *line, target::int8_t &cc, host::uint_t max) {
+    for (cc = 0; cc < max; cc++) {
+        const CcName ccName = CcName(pgm_read_byte(&CC8_NAMES[cc]));
+        if (compareCcName(line, ccName))
+            return line + ccNameLen(ccName);
     }
-    *out = 0;
-    return out;
+    cc = -1;
+    return line;
+}
+
+const char *Registers::parseCc4Name(const char *line, target::int8_t &cc4) {
+    return parseCcName(line, cc4, 4);
+}
+
+const char *Registers::parseCc8Name(const char *line, target::int8_t &cc8) {
+    return parseCcName(line, cc8, 8);
 }
 
 static host::int_t encodeRegNumber(
@@ -152,27 +189,21 @@ static RegName decodeRegNumber(
     return entry < end ? RegName(pgm_read_byte(entry)) : NONE;
 }
 
-RegName Registers::parsePointerReg(const char *line) {
-    return parseRegName(line, ARRAY_RANGE(POINTER_REGS));
-}
-
-RegName Registers::parseStackReg(const char *line) {
+RegName Registers::parseRegister(const char *line) {
+    RegName regName;
+    if ((regName = parseRegName(line, ARRAY_RANGE(NON_DATA_REGS))) != NONE)
+        return regName;
+    if ((regName = parseRegName(line, ARRAY_RANGE(DATA_REGS))) != NONE)
+        return regName;
     return parseRegName(line, ARRAY_RANGE(STACK_REGS));
 }
 
-RegName Registers::parseIndexReg(const char *line) {
-    return parseRegName(line, ARRAY_RANGE(INDEX_REGS));
-}
-
-RegName Registers::parseIrReg(const char *line) {
-    return parseRegName(line, ARRAY_RANGE(IR_REGS));
-}
-
-RegName Registers::parseDataReg(const char *line) {
-    return parseRegName(line, ARRAY_RANGE(DATA_REGS));
-}
-
 host::int_t Registers::encodePointerReg(RegName regName) {
+    return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
+}
+
+host::int_t Registers::encodePointerRegIx(RegName regName, RegName ix) {
+    if (regName == ix) regName = HL;
     return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
 }
 
@@ -189,6 +220,7 @@ host::int_t Registers::encodeIrReg(RegName regName) {
 }
 
 host::int_t Registers::encodeDataReg(RegName regName) {
+    if (regName == HL) regName = NONE;
     return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
 }
 

@@ -19,22 +19,31 @@ enum RegName : char {
     E = 'E',
     H = 'H',
     L = 'L',
-    M = 'M',                            // (HL)
     A = 'A',
     I = 'I',
     R = 'R',
     AFP = 'f',                          // AF'
 };
 
+enum CcName : char {
+    CC_Z = 'Z',
+    CC_NZ = 'z',
+    CC_C = 'C',
+    CC_NC = 'c',
+    CC_PO = 'o',
+    CC_PE = 'e',
+    CC_P = 'P',
+    CC_M = 'M',
+};
+
 class Registers {
 public:
-    static RegName parsePointerReg(const char *line);
-    static RegName parseStackReg(const char *line);
-    static RegName parseIndexReg(const char *line);
-    static RegName parseIrReg(const char *line);
-    static RegName parseDataReg(const char *line);
+    static RegName parseRegister(const char *line);
+    static const char *parseCc4Name(const char *line, target::int8_t &cc);
+    static const char *parseCc8Name(const char *line, target::int8_t &cc);
 
     static host::int_t encodePointerReg(RegName regName);
+    static host::int_t encodePointerRegIx(RegName regName, RegName ix);
     static host::int_t encodeStackReg(RegName regName);
     static host::int_t encodeIndexReg(RegName regName);
     static host::int_t encodeIrReg(RegName regName);
