@@ -130,16 +130,16 @@ Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
     case AFPREG:
         operands = Registers::outRegName(operands, AFP);
         break;
-    case REG16: {
-        const RegName reg = Registers::decodePointerReg((opc >> 4) & 3);
-        if (InsnTable::decodeIndexReg(insn.insnCode()) == NONE || reg != HL) {
-            operands = Registers::outRegName(operands, reg);
-        } else {
-            operands = Registers::outRegName(
-                operands, InsnTable::decodeIndexReg(insn.insnCode()));
-        }
+    case REG16:
+        operands = Registers::outRegName(
+            operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
-    }
+    case REG16X:
+        operands = Registers::outRegName(
+            operands, Registers::decodePointerRegIx(
+                (opc >> 4) & 3,
+                InsnTable::decodeIndexReg(insn.insnCode())));
+        break;
     case A_REG:
         operands = Registers::outRegName(operands, A);
         break;
