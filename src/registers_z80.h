@@ -41,6 +41,8 @@ public:
     static host::int_t encodeDataReg(RegName regName);
 
     static RegName decodePointerReg(target::byte_t regNum);
+    static RegName decodePointerRegIx(
+        target::byte_t regNum, RegName ix);
     static RegName decodeStackReg(target::byte_t regNum);
     static RegName decodeIndexReg(target::byte_t regNum);
     static RegName decodeIrReg(target::byte_t regNum);

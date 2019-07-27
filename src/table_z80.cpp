@@ -122,7 +122,7 @@ static const Entry TABLE_ED[] PROGMEM = {
 static constexpr target::opcode_t PREFIX_ED = 0xED;
 
 static const Entry TABLE_IX[] PROGMEM = {
-    E(0x09, ADD,  PTR_FMT, IX_REG, REG16,  INHERENT)
+    E(0x09, ADD,  PTR_FMT, IX_REG, REG16X, INHERENT)
     E(0x21, LD,   NO_FMT,  IX_REG, IMM16,  IMMEDIATE16)
     E(0x22, LD,   NO_FMT,  ADDR16, IX_REG, DIRECT)
     E(0x2A, LD,   NO_FMT,  IX_REG, ADDR16, DIRECT)
@@ -209,19 +209,6 @@ struct EntryPage {
 };
 
 static Error searchPages(
-    Insn &insn, const char *name, const EntryPage *pages, const EntryPage *end) {
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry;
-        if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(InsnTable::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
-            insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
-            return OK;
-        }
-    }
-    return UNKNOWN_INSTRUCTION;
-}
-
-static Error searchPages(
     Insn &insn, const char *name, OprFormat lop, OprFormat rop,
     const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
@@ -268,23 +255,13 @@ bool InsnTable::isPrefixCode(target::opcode_t opCode) {
         || opCode == PREFIX_IX || opCode == PREFIX_IY;
 }
 
-Error InsnTable::searchName(Insn &insn) const {
-    if (searchPages(insn, insn.name(), ARRAY_RANGE(PAGES)) == OK)
-        return OK;
-    return UNKNOWN_INSTRUCTION;
-}
-
-Error InsnTable::searchNameAndOprMode(Insn &insn) const {
-    if (searchPages(insn, insn.name(), insn.leftFormat(), insn.rightFormat(),
-                    ARRAY_RANGE(PAGES)) == OK)
-        return OK;
-    return UNKNOWN_INSTRUCTION;
+Error InsnTable::searchNameAndOprFormats(
+    Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const {
+    return searchPages(insn, insn.name(), leftOpr, rightOpr, ARRAY_RANGE(PAGES));
 }
 
 Error InsnTable::searchInsnCode(Insn &insn) const {
-    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(PAGES)) == OK)
-        return OK;
-    return UNKNOWN_INSTRUCTION;
+    return searchPages(insn, insn.insnCode(), ARRAY_RANGE(PAGES));
 }
 
 RegName InsnTable::decodeIndexReg(target::insn_t insnCode) {

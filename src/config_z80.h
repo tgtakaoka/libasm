@@ -50,6 +50,7 @@ enum OprFormat : host::uint_t {
     NO_OPR,
     REG8,                               // B/C/D/E/H/L/(HL)/A
     REG16,                              // BC/DE/HL/SP
+    REG16X,                             // BC/DE/IX/SP, BC/DE/IY/SP
     A_REG,                              // A
     HL_REG,                             // HL
     DE_REG,                             // DE

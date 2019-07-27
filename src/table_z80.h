@@ -7,8 +7,8 @@
 
 class InsnTable {
 public:
-    Error searchName(Insn &insn) const;
-    Error searchNameAndOprMode(Insn &insn) const;
+    Error searchNameAndOprFormats(
+        Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const;
     Error searchInsnCode(Insn &insn) const;
 
     static target::insn_t insnCode(

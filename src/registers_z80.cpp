@@ -196,6 +196,12 @@ RegName Registers::decodePointerReg(target::byte_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
 }
 
+RegName Registers::decodePointerRegIx(target::byte_t regNum,
+    RegName ix) {
+    const RegName regName = decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
+    return regName == HL ? ix : regName;
+}
+
 RegName Registers::decodeStackReg(target::byte_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(STACK_REGS));
 }
