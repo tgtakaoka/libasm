@@ -698,8 +698,8 @@ static void test_bitop_indexed() {
 // ED 01 xxx 100 NEG*
 // ED 01 xx0 101 RETN*
 // ED 01 xx1 101 RETI*
-// ED 01 x0R 110 IM 0/1
-// ED 01 x10 110 IM 1*
+// ED 01 x00 110 IM 0
+// ED 01 x10 110 IM 1
 // ED 01 x11 110 IM 2
 // ED 01 00R 111 LD I,A I/R
 // ED 01 01R 111 LD A,I I/R

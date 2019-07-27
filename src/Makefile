@@ -4,7 +4,7 @@ OBJS_hd6309 = asm_hd6309.o dis_hd6309.o registers_hd6309.o table_hd6309.o \
 	string_utils.o
 OBJS_i8080 =  asm_i8080.o  dis_i8080.o  registers_i8080.o  table_i8080.o \
 	string_utils.o
-OBJS_z80 =                 dis_z80.o    registers_z80.o    table_z80.o \
+OBJS_z80 =    asm_z80.o    dis_z80.o    registers_z80.o    table_z80.o \
 	string_utils.o
 
 .PHONY: all clean-objs clean test
@@ -13,6 +13,7 @@ all: $(OBJS_hd6309) $(OBJS_i8080) $(OBJS_z80)
 
 asm_hd6309.o: asm_hd6309.h
 asm_i8080.o:  asm_i8080.h
+asm_z80.o:    asm_z80.h
 dis_hd6309.o: dis_hd6309.h string_utils.h table_hd6309.h
 dis_i8080.o:  dis_i8080.h  string_utils.h table_i8080.h
 dis_z80.o:    dis_z80.h    string_utils.h table_z80.h
@@ -26,6 +27,7 @@ table_z80.o:    config_z80.h    entry_z80.h    insn_z80.h    table_z80.h    text
 
 asm_hd6309.h: config_hd6309.h error_reporter.h symbol_table.h table_hd6309.h
 asm_i8080.h:  config_i8080.h  error_reporter.h symbol_table.h table_i8080.h
+asm_z80.h:    config_z80.h    error_reporter.h symbol_table.h table_z80.h
 config_hd6309.h: config_host.h error_hd6309.h registers_hd6309.h
 config_i8080.h:  config_host.h error_i8080.h  registers_i8080.h
 config_z80.h:    config_host.h error_z80.h    registers_z80.h
@@ -54,6 +56,6 @@ text_i8080.h:  config_host.h
 text_z80.h:    config_host.h
 
 clean-objs:
-	-rm -f $(OBJS_hd6309) $(OBJS_i8080)
+	-rm -f $(OBJS_hd6309) $(OBJS_i8080) $(OBJS_z80)
 
 clean: clean-objs

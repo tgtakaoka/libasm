@@ -35,7 +35,7 @@ enum InsnFormat : host::uint_t {
     NO_FMT,
     PTR_FMT,                            // **PP_****: BC/DE/HL/SP
                                         // **PP_****: BC/DE/HL/AF
-    CC_FMT,                             // ***C_C***: NZ/Z/NC/C
+    CC4_FMT,                            // ***C_C***: NZ/Z/NC/C
     IDX_FMT,                            // ***I_****: BC/DE, 0/1
     IR_FMT,                             // ****_R***: I/R
     DST_FMT,                            // **DD_D***: B/C/D/E/H/L/(HL)/A
@@ -52,8 +52,9 @@ enum OprFormat : host::uint_t {
     REG16,                              // BC/DE/HL/SP
     REG16X,                             // BC/DE/IX/SP, BC/DE/IY/SP
     A_REG,                              // A
-    HL_REG,                             // HL
+    BC_REG,                             // BC
     DE_REG,                             // DE
+    HL_REG,                             // HL
     SP_REG,                             // SP
     IX_REG,                             // IX/IY
     IR_REG,                             // I/R
@@ -72,8 +73,7 @@ enum OprFormat : host::uint_t {
     CC4,                                // Z/NZ/C/NC
     CC8,                                // Z/NZ/C/NC/PO/PE/P/M
     BIT_NO,                             // 0~7
-    IMM_01,                             // 0,1
-    IMM_2,                              // 2
+    IMM_NO,                             // 0,1,2
     VEC_NO,                             // [0123][08]H
     IX_OFF,                             // (IX/IY+nn)
     IX_BIT,                             // DD/FD CB nn xx

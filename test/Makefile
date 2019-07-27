@@ -25,7 +25,7 @@ test_hd6309: test_asm_hd6309 test_dis_hd6309
 test_i8080:  test_asm_i8080  test_dis_i8080
 	./test_dis_i8080
 	./test_asm_i8080
-test_z80:  test_dis_z80
+test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
 

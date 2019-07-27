@@ -9,9 +9,9 @@
 static const Entry TABLE_00[] PROGMEM = {
     E(0x00, NOP,  NO_FMT,  NO_OPR, NO_OPR, INHERENT)
     E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHERENT)
-    E(0x10, DJNZ, NO_FMT,  NO_OPR, IMM16,  RELATIVE)
-    E(0x18, JR,   NO_FMT,  NO_OPR, IMM16,  RELATIVE)
-    E(0x20, JR,   CC_FMT,  CC4,    IMM16,  RELATIVE)
+    E(0x10, DJNZ, NO_FMT,  IMM16,  NO_OPR, RELATIVE)
+    E(0x20, JR,   CC4_FMT, CC4,    IMM16,  RELATIVE)
+    E(0x18, JR,   NO_FMT,  IMM16,  NO_OPR, RELATIVE)
     E(0x01, LD,   PTR_FMT, REG16,  IMM16,  IMMEDIATE16)
     E(0x09, ADD,  PTR_FMT, HL_REG, REG16,  INHERENT)
     E(0x02, LD,   IDX_FMT, BC_PTR, A_REG,  INHERENT)
@@ -47,10 +47,10 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0xC1, POP,  PTR_FMT, STK16,  NO_OPR, INHERENT)
     E(0xC9, RET,  NO_FMT,  NO_OPR, NO_OPR, INHERENT)
     E(0xD9, EXX,  NO_FMT,  NO_OPR, NO_OPR, INHERENT)
-    E(0xE9, JP,   NO_FMT,  HL_PTR, NO_OPR, INHERENT)
     E(0xF9, LD,   NO_FMT,  SP_REG, HL_REG, INHERENT)
     E(0xC2, JP,   DST_FMT, CC8,    IMM16,  DIRECT)
-    E(0xC3, JP,   NO_FMT,  NO_OPR, IMM16,  DIRECT)
+    E(0xC3, JP,   NO_FMT,  IMM16,  NO_OPR, DIRECT)
+    E(0xE9, JP,   NO_FMT,  HL_PTR, NO_OPR, INHERENT)
     E(0xD3, OUT,  NO_FMT,  ADDR8,  A_REG,  IOADDR)
     E(0xDB, IN,   NO_FMT,  A_REG,  ADDR8,  IOADDR)
     E(0xE3, EX,   NO_FMT,  SP_PTR, HL_REG, INHERENT)
@@ -59,7 +59,7 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0xFB, EI,   NO_FMT,  NO_OPR, NO_OPR, INHERENT)
     E(0xC4, CALL, DST_FMT, CC8,    IMM16,  DIRECT)
     E(0xC5, PUSH, PTR_FMT, STK16,  NO_OPR, INHERENT)
-    E(0xCD, CALL, NO_FMT,  NO_OPR, IMM16,  DIRECT)
+    E(0xCD, CALL, NO_FMT,  IMM16,  NO_OPR, DIRECT)
     E(0xC6, ADD,  NO_FMT,  A_REG,  IMM8,   IMMEDIATE8)
     E(0xCE, ADC,  NO_FMT,  A_REG,  IMM8,   IMMEDIATE8)
     E(0xD6, SUB,  NO_FMT,  A_REG,  IMM8,   IMMEDIATE8)
@@ -83,6 +83,16 @@ static const Entry TABLE_CB[] PROGMEM = {
     E(0x40, BIT,  DST_SRC_FMT, BIT_NO, REG8,   INHERENT)
     E(0x80, RES,  DST_SRC_FMT, BIT_NO, REG8,   INHERENT)
     E(0xC0, SET,  DST_SRC_FMT, BIT_NO, REG8,   INHERENT)
+    E(0x06, RLC,  NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x0E, RRC,  NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x16, RL,   NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x1E, RR,   NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x26, SLA,  NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x2E, SRA,  NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x3E, SRL,  NO_FMT,  IX_OFF, NO_OPR, INDEXED_IMMEDIATE8)
+    E(0x46, BIT,  DST_FMT, BIT_NO, IX_OFF, INDEXED_IMMEDIATE8)
+    E(0x86, RES,  DST_FMT, BIT_NO, IX_OFF, INDEXED_IMMEDIATE8)
+    E(0xC6, SET,  DST_FMT, BIT_NO, IX_OFF, INDEXED_IMMEDIATE8)
 };
 static constexpr target::opcode_t PREFIX_CB = 0xCB;
 
@@ -96,8 +106,7 @@ static const Entry TABLE_ED[] PROGMEM = {
     E(0x44, NEG,  NO_FMT,  NO_OPR, NO_OPR, INHERENT)
     E(0x45, RETN, NO_FMT,  NO_OPR, NO_OPR, INHERENT)
     E(0x4D, RETI, NO_FMT,  NO_OPR, NO_OPR, INHERENT)
-    E(0x46, IM,   IDX_FMT, IMM_01, NO_OPR, INHERENT)
-    E(0x5E, IM,   NO_FMT,  IMM_2,  NO_OPR, INHERENT)
+    E(0x46, IM,   DST_FMT, IMM_NO, NO_OPR, INHERENT)
     E(0x47, LD,   IR_FMT,  IR_REG, A_REG,  INHERENT)
     E(0x57, LD,   IR_FMT,  A_REG,  IR_REG, INHERENT)
     E(0x67, RRD,  NO_FMT,  NO_OPR, NO_OPR, INHERENT)
@@ -168,6 +177,23 @@ static const Entry *searchEntry(
     return nullptr;
 }
 
+static bool acceptOprFormat(OprFormat opr, OprFormat table) {
+    if (table == opr) return true;
+    switch (table) {
+    case REG8:   return opr == A_REG || opr == HL_PTR;
+    case REG16:  return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == SP_REG;
+    case REG16X: return opr == BC_REG || opr == DE_REG || opr == IX_REG || opr == SP_REG;
+    case STK16:  return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == AF_REG;
+    case IMM16:
+    case BIT_NO:
+    case IMM_NO:
+    case VEC_NO: return opr == IMM8;
+    case ADDR16: return opr == ADDR8;
+    case CC8:    return opr == CC4;
+    default:     return false;
+    }
+}
+
 static const Entry *searchEntry(
     const char *name, OprFormat leftOpr, OprFormat rightOpr,
     const Entry *table, const Entry *end) {
@@ -175,7 +201,8 @@ static const Entry *searchEntry(
              && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
         const OprFormat lop = _oprFormat(pgm_read_byte(&entry->flags1));
         const OprFormat rop = _oprFormat(pgm_read_byte(&entry->flags2));
-        if (lop == leftOpr && rop == rightOpr) return entry;
+        if (acceptOprFormat(leftOpr, lop) && acceptOprFormat(rightOpr, rop))
+            return entry;
     }
     return nullptr;
 }
@@ -188,7 +215,7 @@ static const Entry *searchEntry(
         const InsnFormat iformat = _insnFormat(pgm_read_byte(&entry->flags1));
         switch (iformat) {
         case PTR_FMT: opc &= ~0x30; break;
-        case CC_FMT:  opc &= ~0x18; break;
+        case CC4_FMT: opc &= ~0x18; break;
         case IDX_FMT: opc &= ~0x10; break;
         case IR_FMT:  opc &= ~0x08; break;
         case DST_FMT: opc &= ~0x38; break;
@@ -207,6 +234,19 @@ struct EntryPage {
     const Entry *const table;
     const Entry *const end;
 };
+
+static Error searchPages(
+    Insn &insn, const char *name, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *entry;
+        if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
+            insn.setInsnCode(InsnTable::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
+}
 
 static Error searchPages(
     Insn &insn, const char *name, OprFormat lop, OprFormat rop,
@@ -255,6 +295,10 @@ bool InsnTable::isPrefixCode(target::opcode_t opCode) {
         || opCode == PREFIX_IX || opCode == PREFIX_IY;
 }
 
+Error InsnTable::searchName(Insn &insn) const {
+    return searchPages(insn, insn.name(), ARRAY_RANGE(PAGES));
+}
+
 Error InsnTable::searchNameAndOprFormats(
     Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const {
     return searchPages(insn, insn.name(), leftOpr, rightOpr, ARRAY_RANGE(PAGES));
@@ -269,6 +313,12 @@ RegName InsnTable::decodeIndexReg(target::insn_t insnCode) {
     if (prefix == PREFIX_IX) return IX;
     if (prefix == PREFIX_IY) return IY;
     return NONE;
+}
+
+void InsnTable::encodePrefixCode(Insn &insn, RegName ixReg) {
+    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+    const target::opcode_t prefix = ixReg == IX ? PREFIX_IX : PREFIX_IY;
+    insn.setInsnCode(InsnTable::insnCode(prefix, opc));
 }
 
 class InsnTable InsnTable;
