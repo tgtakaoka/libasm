@@ -149,11 +149,12 @@ Error AsmHd6309::encodeRelative(const char *line, Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
     const target::opcode_t prefix = InsnTable.prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (InsnTable.isPrefixCode(prefix) ? 2 : 1) + insn.oprLen();
+    const host::uint_t insnLen = (InsnTable.isPrefixCode(prefix) ? 2 : 1)
+        + (insn.addrMode() == RELATIVE8 ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
     emitInsnCode(insn);
-    if (insn.oprLen() == 1) {
+    if (insn.addrMode() == RELATIVE8) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitByte(target::byte_t(delta));
     } else {
@@ -165,12 +166,12 @@ Error AsmHd6309::encodeRelative(const char *line, Insn &insn) {
 Error AsmHd6309::encodeImmediate(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     emitInsnCode(insn);
-    if (insn.oprLen() == 1 || insn.oprLen() == 2) {
+    if (insn.addrMode() == IMMEDIATE8 || insn.addrMode() == IMMEDIATE16) {
         target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (insn.oprLen() == 1) insn.emitByte(target::byte_t(val));
+        if (insn.addrMode() == IMMEDIATE8) insn.emitByte(target::byte_t(val));
         else insn.emitUint16(val);
-    } else if (_regs.isHd6309() && insn.oprLen() == 4) {
+    } else if (_regs.isHd6309() && insn.addrMode() == IMMEDIATE32) {
         uint32_t val;
         if (getOperand32(line, val)) return setError(UNKNOWN_OPERAND);
         insn.emitUint32(val);
@@ -388,7 +389,7 @@ Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
 
 Error AsmHd6309::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
-    case '#': insn.setAddrMode(IMMEDIATE); break;
+    case '#': insn.setAddrMode(IMMEDIATE8); break;
     case '<': insn.setAddrMode(DIRECT_PG); break;
     case '>': insn.setAddrMode(EXTENDED); break;
     case '[':
@@ -433,7 +434,8 @@ Error AsmHd6309::encode(
     case INHERENT:
         emitInsnCode(insn);
         return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
-    case RELATIVE:
+    case RELATIVE8:
+    case RELATIVE16:
         return encodeRelative(line, insn);
     case STACK_OP:
         return encodeStackOp(line, insn);
@@ -455,7 +457,9 @@ Error AsmHd6309::encode(
     if (InsnTable.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
-    case IMMEDIATE:
+    case IMMEDIATE8:
+    case IMMEDIATE16:
+    case IMMEDIATE32:
         return encodeImmediate(line, insn);
     case DIRECT_PG:
         return encodeDirect(line, insn);

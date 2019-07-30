@@ -11,7 +11,6 @@ public:
     target::uintptr_t address() const { return _address; }
     const target::byte_t *bytes() const { return _bytes; }
     host::uint_t insnLen() const { return _insnLen; }
-    host::uint_t oprLen() const { return _oprLen(_flags); }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
     AddrMode addrMode() const { return _addrMode(_flags); }
@@ -28,8 +27,8 @@ public:
         _flags = flags;
     }
     void setAddrMode(AddrMode addrMode) {
-        _flags = (_flags & ~(Entry::addrMode_mask << Entry::addrMode_shift))
-                | ((host::uint_t)addrMode << Entry::addrMode_shift);
+        _flags = (_flags & ~Entry::addrMode_mask)
+            | host::uint_t(addrMode);
     }
     void setName(const char *name, const char *end = nullptr) {
         if (!end) end = name + strlen(name);

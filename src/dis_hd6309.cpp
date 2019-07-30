@@ -208,7 +208,7 @@ Error DisHd6309::decodeIndexed(
 Error DisHd6309::decodeRelative(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::ptrdiff_t delta;
-    if (insn.oprLen() == 1) {
+    if (insn.addrMode() == RELATIVE8) {
         target::byte_t val;
         if (readByte(memory, insn, val)) return getError();
         delta = static_cast<target::int8_t>(val);
@@ -237,7 +237,7 @@ Error DisHd6309::decodeRelative(
 
 Error DisHd6309::decodeImmediate(
     Memory& memory, Insn &insn, char *operands, char *comments) {
-    if (insn.oprLen() == 1) {
+    if (insn.addrMode() == IMMEDIATE8) {
         target::byte_t val;
         if (readByte(memory, insn, val)) return getError();
         *operands++ = '#';
@@ -252,7 +252,7 @@ Error DisHd6309::decodeImmediate(
         } else {
             outInt16(comments, val);
         }
-    } else if (insn.oprLen() == 2) {
+    } else if (insn.addrMode() == IMMEDIATE16) {
         target::uint16_t val;
         if (readUint16(memory, insn, val)) return getError();
         const char *label = lookup(val);
@@ -264,7 +264,7 @@ Error DisHd6309::decodeImmediate(
             outOpr16Hex(operands, val);
             outInt16(comments, val);
         }
-    } else if (_regs.isHd6309() && insn.oprLen() == 4) {
+    } else if (_regs.isHd6309() && insn.addrMode() == IMMEDIATE32) {
         target::uint32_t val;
         if (readUint32(memory, insn, val)) return getError();
         *operands++ = '#';
@@ -404,9 +404,12 @@ Error DisHd6309::decode(
         return decodeExtended(memory, insn, operands, comments);
     case INDEXED:
         return decodeIndexed(memory, insn, operands, comments);
-    case RELATIVE:
+    case RELATIVE8:
+    case RELATIVE16:
         return decodeRelative(memory, insn, operands, comments);
-    case IMMEDIATE:
+    case IMMEDIATE8:
+    case IMMEDIATE16:
+    case IMMEDIATE32:
         return decodeImmediate(memory, insn, operands, comments);
     case STACK_OP:
         return decodeStackOp(memory, insn, operands, comments);
