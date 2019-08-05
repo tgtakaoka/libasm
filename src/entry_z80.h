@@ -25,11 +25,13 @@ static inline OprFormat _oprFormat(host::uint_t flags) {
 static inline AddrMode _addrMode(host::uint_t flags2) {
     return AddrMode(flags2 & Entry::addrMode_mask);
 }
+static constexpr host::uint_t _flags1(OprFormat leftOpr, InsnFormat iformat) {
+    return (host::uint_t(leftOpr) << Entry::oprFormat_shift) | host::uint_t(iformat);
+}
+static constexpr host::uint_t _flags2(OprFormat rightOpr, AddrMode addrMode) {
+    return (host::uint_t(rightOpr) << Entry::oprFormat_shift) | host::uint_t(addrMode);
+}
 
-#define _flags1(_leftOpr, _iformat)                                     \
-    ((host::uint_t(_leftOpr) << Entry::oprFormat_shift) | (_iformat))
-#define _flags2(_rightOpr, _amode)                                      \
-    ((host::uint_t(_rightOpr) << Entry::oprFormat_shift) | (_amode))
 #define E(_opc, _name, _iformat, _leftOpr, _rightOpr, _amode)           \
     { _opc, _flags1(_leftOpr, _iformat), _flags2(_rightOpr, _amode), TEXT_##_name },
 

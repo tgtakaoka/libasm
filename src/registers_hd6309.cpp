@@ -5,29 +5,29 @@
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 #define ARRAY_RANGE(array) &(array)[0], &(array)[ARRAY_SIZE(array)]
 
-static const RegName MC6809_INDEX_REGS[] PROGMEM = {
+static constexpr RegName MC6809_INDEX_REGS[] PROGMEM = {
     NONE, NONE, NONE, NONE, NONE, B, A, NONE, NONE, NONE, NONE, D
 };
-static const RegName HD6309_INDEX_REGS[] PROGMEM = {
+static constexpr RegName HD6309_INDEX_REGS[] PROGMEM = {
     NONE, NONE, NONE, NONE, NONE, B, A, E, NONE, NONE, F, D, NONE, NONE, W
 };
-static const RegName MC6809_BASE_REGS[] PROGMEM = { X, Y, U, S };
-static const RegName HD6309_BASE_REGS[] PROGMEM = { X, Y, U, S, W };
-static const RegName MC6809_DATA_REGS[] PROGMEM = {
+static constexpr RegName MC6809_BASE_REGS[] PROGMEM = { X, Y, U, S };
+static constexpr RegName HD6309_BASE_REGS[] PROGMEM = { X, Y, U, S, W };
+static constexpr RegName MC6809_DATA_REGS[] PROGMEM = {
     D, X, Y, U, S, PC, NONE, NONE, A, B, CC, DP
 };
-static const RegName HD6309_DATA_REGS[] PROGMEM = {
+static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
     D, X, Y, U, S, PC, W, V, A, B, CC, DP, ZERO, ZERO, E, F,
 };
 
-static const RegName STACK_S_REGS[8] PROGMEM = { CC, A, B, DP, X, Y, U, PC };
-static const RegName STACK_U_REGS[8] PROGMEM = { CC, A, B, DP, X, Y, S, PC };
-static const char CCR_BITS[8] PROGMEM = { 'E', 'F', 'H', 'I', 'N', 'Z', 'V', 'C' };
-static const RegName BIT_OP_REGS[] PROGMEM = { CC, A, B, NONE };
+static constexpr RegName STACK_S_REGS[8] PROGMEM = { CC, A, B, DP, X, Y, U, PC };
+static constexpr RegName STACK_U_REGS[8] PROGMEM = { CC, A, B, DP, X, Y, S, PC };
+static constexpr char CCR_BITS[8] PROGMEM = { 'E', 'F', 'H', 'I', 'N', 'Z', 'V', 'C' };
+static constexpr RegName BIT_OP_REGS[] PROGMEM = { CC, A, B, NONE };
 
-static const RegName TFM_BASE_REGS[] PROGMEM = { D, X, Y, U, S };
-static const char TFM_SRC_MODES[4] PROGMEM = { '+', '-', '+',   0 };
-static const char TFM_DST_MODES[4] PROGMEM = { '+', '-',   0, '+' };
+static constexpr RegName TFM_BASE_REGS[] PROGMEM = { D, X, Y, U, S };
+static constexpr char TFM_SRC_MODES[4] PROGMEM = { '+', '-', '+',   0 };
+static constexpr char TFM_DST_MODES[4] PROGMEM = { '+', '-',   0, '+' };
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';

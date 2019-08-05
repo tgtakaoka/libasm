@@ -6,7 +6,7 @@
 #include "table_i8080.h"
 #include "text_i8080.h"
 
-static const Entry TABLE_I8080[] PROGMEM = {
+static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x00, TEXT_NOP,  INHERENT,     NO_FORMAT)
     E(0x01, TEXT_LXI,  IMMEDIATE_16, POINTER_REG)
     E(0x09, TEXT_DAD,  INHERENT,     POINTER_REG)
@@ -86,7 +86,7 @@ static const Entry TABLE_I8080[] PROGMEM = {
     E(0xFE, TEXT_CPI,  IMMEDIATE_8,  NO_FORMAT)
     E(0xC7, TEXT_RST,  INHERENT,     VECTOR_NO)
 };
-constexpr host::uindex_t LENGTH_I8080 =
+static constexpr host::uindex_t LENGTH_I8080 =
     sizeof(TABLE_I8080) / sizeof(TABLE_I8080[0]);
 
 static const Entry *searchEntry(

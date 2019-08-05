@@ -20,9 +20,10 @@ static inline AddrMode _addrMode(host::uint_t flags) {
     return AddrMode(flags & Entry::addrMode_mask);
 }
 
-#define _flags(_mcuMode, _addrMode)                 \
-    ((_mcuMode == MC6809 ? 0 : Entry::hd6309_flag)  \
-     | host::uint_t(_addrMode))
+static constexpr host::uint_t _flags(McuMode mcuMode, AddrMode addrMode) {
+    return (mcuMode == MC6809 ? 0 : Entry::hd6309_flag) | host::uint_t(addrMode);
+}
+
 #define P00(_opc, _name,  _mcu, _mode)              \
     { _opc,  _flags(_mcu, _mode), TEXT_##_name },
 #define P10(_opc, _name, _mcu, _mode)               \

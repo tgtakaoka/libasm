@@ -6,7 +6,7 @@
 #include "table_z80.h"
 #include "text_z80.h"
 
-static const Entry TABLE_00[] PROGMEM = {
+static constexpr Entry TABLE_00[] PROGMEM = {
     E(0x00, NOP,  NO_FMT,  NO_OPR, NO_OPR, INHERENT)
     E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHERENT)
     E(0x10, DJNZ, NO_FMT,  IMM16,  NO_OPR, RELATIVE)
@@ -72,7 +72,7 @@ static const Entry TABLE_00[] PROGMEM = {
 };
 static constexpr target::opcode_t PREFIX_00 = 0x00;
 
-static const Entry TABLE_CB[] PROGMEM = {
+static constexpr Entry TABLE_CB[] PROGMEM = {
     E(0x00, RLC,  SRC_FMT, REG8,   NO_OPR, INHERENT)
     E(0x08, RRC,  SRC_FMT, REG8,   NO_OPR, INHERENT)
     E(0x10, RL,   SRC_FMT, REG8,   NO_OPR, INHERENT)
@@ -96,7 +96,7 @@ static const Entry TABLE_CB[] PROGMEM = {
 };
 static constexpr target::opcode_t PREFIX_CB = 0xCB;
 
-static const Entry TABLE_ED[] PROGMEM = {
+static constexpr Entry TABLE_ED[] PROGMEM = {
     E(0x40, IN,   DST_FMT, REG8,   C_PTR,  INHERENT)
     E(0x41, OUT,  DST_FMT, C_PTR,  REG8,   INHERENT)
     E(0x42, SBC,  PTR_FMT, HL_REG, REG16,  INHERENT)
@@ -130,7 +130,7 @@ static const Entry TABLE_ED[] PROGMEM = {
 };
 static constexpr target::opcode_t PREFIX_ED = 0xED;
 
-static const Entry TABLE_IX[] PROGMEM = {
+static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0x09, ADD,  PTR_FMT, IX_REG, REG16X, INHERENT)
     E(0x21, LD,   NO_FMT,  IX_REG, IMM16,  IMMEDIATE16)
     E(0x22, LD,   NO_FMT,  ADDR16, IX_REG, DIRECT)

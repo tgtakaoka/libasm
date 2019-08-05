@@ -5,10 +5,10 @@
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 #define ARRAY_RANGE(array) &(array)[0], &(array)[ARRAY_SIZE(array)]
 
-static const RegName POINTER_REGS[] PROGMEM = { B, D, H, SP };
-static const RegName STACK_REGS[] PROGMEM = { B, D, H, PSW };
-static const RegName INDEX_REGS[] PROGMEM = { B, D };
-static const RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, M, A };
+static constexpr RegName POINTER_REGS[] PROGMEM = { B, D, H, SP };
+static constexpr RegName STACK_REGS[] PROGMEM = { B, D, H, PSW };
+static constexpr RegName INDEX_REGS[] PROGMEM = { B, D };
+static constexpr RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, M, A };
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';

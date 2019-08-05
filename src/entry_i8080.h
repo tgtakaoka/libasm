@@ -22,9 +22,10 @@ static inline InsnFormat _insnFormat(host::uint_t flags) {
 static inline AddrMode _addrMode(host::uint_t flags) {
     return AddrMode(flags & Entry::addrMode_mask);
 }
+static constexpr host::uint_t _flags(AddrMode addrMode, InsnFormat iformat) {
+  return (host::uint_t(iformat) << Entry::insnFormat_shift) | host::uint_t(addrMode);
+}
 
-#define _flags(_amode, _iformat) \
-    ((host::uint_t(_iformat) << Entry::insnFormat_shift) | (_amode))
 #define E(_opc, _name, _amode, _iformat)            \
      { _opc, _flags(_amode, _iformat), { _name } },
 

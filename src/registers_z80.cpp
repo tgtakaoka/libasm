@@ -5,12 +5,12 @@
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 #define ARRAY_RANGE(array) &(array)[0], &(array)[ARRAY_SIZE(array)]
 
-static const RegName POINTER_REGS[] PROGMEM = { BC, DE, HL, SP };
-static const RegName STACK_REGS[] PROGMEM = { BC, DE, HL, AF };
-static const RegName INDEX_REGS[] PROGMEM = { BC, DE };
-static const RegName IR_REGS[] PROGMEM = { I, R };
-static const RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, NONE, A };
-static const RegName NON_DATA_REGS[] PROGMEM = { SP, IX, IY, I, R, AFP };
+static constexpr RegName POINTER_REGS[] PROGMEM = { BC, DE, HL, SP };
+static constexpr RegName STACK_REGS[] PROGMEM = { BC, DE, HL, AF };
+static constexpr RegName INDEX_REGS[] PROGMEM = { BC, DE };
+static constexpr RegName IR_REGS[] PROGMEM = { I, R };
+static constexpr RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, NONE, A };
+static constexpr RegName NON_DATA_REGS[] PROGMEM = { SP, IX, IY, I, R, AFP };
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
@@ -100,7 +100,7 @@ char *Registers::outRegName(char *out, const RegName regName) {
     return out;
 }
 
-static const CcName CC8_NAMES[] PROGMEM = {
+static constexpr CcName CC8_NAMES[] PROGMEM = {
     CC_NZ, CC_Z, CC_NC, CC_C, CC_PO, CC_PE, CC_P, CC_M
 };
 

@@ -4,7 +4,7 @@
 #include "table_hd6309.h"
 #include "text_hd6309.h"
 
-const Entry TABLE_P00[] PROGMEM = {
+static constexpr Entry TABLE_P00[] PROGMEM = {
     P00(0x00, NEG,   MC6809, DIRECT_PG)
     P00(0x01, OIM,   HD6309, IMM_DIRECT)
     P00(0x02, AIM,   HD6309, IMM_DIRECT)
@@ -249,7 +249,7 @@ const Entry TABLE_P00[] PROGMEM = {
     P00(0xFF, STU,   MC6809, EXTENDED)
 };
 
-const Entry TABLE_P10[] PROGMEM = {
+static constexpr Entry TABLE_P10[] PROGMEM = {
     P10(0x21, LBRN,  MC6809, RELATIVE16)
     P10(0x22, LBHI,  MC6809, RELATIVE16)
     P10(0x23, LBLS,  MC6809, RELATIVE16)
@@ -373,7 +373,7 @@ const Entry TABLE_P10[] PROGMEM = {
     P10(0xFF, STS,   MC6809, EXTENDED)
 };
 
-const Entry TABLE_P11[] PROGMEM = {
+static constexpr Entry TABLE_P11[] PROGMEM = {
     P11(0x30, BAND,  HD6309, BIT_OPERATION)
     P11(0x31, BIAND, HD6309, BIT_OPERATION)
     P11(0x32, BOR,   HD6309, BIT_OPERATION)
@@ -459,9 +459,9 @@ const Entry TABLE_P11[] PROGMEM = {
     P11(0xFB, ADDF,  HD6309, EXTENDED)
 };
 
-constexpr target::opcode_t PREFIX_P00 = 0x00;
-constexpr target::opcode_t PREFIX_P10 = 0x10;
-constexpr target::opcode_t PREFIX_P11 = 0x11;
+static constexpr target::opcode_t PREFIX_P00 = 0x00;
+static constexpr target::opcode_t PREFIX_P10 = 0x10;
+static constexpr target::opcode_t PREFIX_P11 = 0x11;
 
 static const Entry *searchEntry(
     const char *name,
@@ -544,7 +544,7 @@ static Error searchPages(
 #define ARRAY_END(array) &(array)[(sizeof(array) / sizeof(array[0]))]
 #define ARRAY_RANGE(array) &array[0], ARRAY_END(array)
 
-static const EntryPage PAGES[] = {
+static constexpr EntryPage PAGES[] = {
     { PREFIX_P00, &TABLE_P00[0], ARRAY_END(TABLE_P00) },
     { PREFIX_P10, &TABLE_P10[0], ARRAY_END(TABLE_P10) },
     { PREFIX_P11, &TABLE_P11[0], ARRAY_END(TABLE_P11) },
