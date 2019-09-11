@@ -49,6 +49,7 @@ static void test_inherent() {
     TEST(TSTB, "", "", 0x5D);
     TEST(CLRB, "", "", 0x5F);
 
+    // HD6309
     TEST(SEXW,  "", "", 0x14);
     TEST(PSHSW, "", "", 0x10, 0x38);
     TEST(PULSW, "", "", 0x10, 0x39);
@@ -91,9 +92,6 @@ static void test_immediate() {
     TEST(CWAI, "#$EF", "~I", 0x3C, 0xEF);
     TEST(CWAI, "#$00",  "~(E|F|H|I|N|Z|V|C)", 0x3C, 0x00);
 
-    TEST(LDMD,  "#$01", "1", 0x11, 0x3D, 0x01);
-    TEST(BITMD, "#$80", "128", 0x11, 0x3C, 0x80);
-
     TEST(SUBA, "#$90", "144", 0x80, 0x90);
     TEST(CMPA, "#$90", "144", 0x81, 0x90);
     TEST(SBCA, "#$90", "144", 0x82, 0x90);
@@ -120,12 +118,6 @@ static void test_immediate() {
     TEST(ADDD, "#$90A0", "-28512", 0xC3, 0x90, 0xA0);
     TEST(LDD,  "#$90A0", "-28512", 0xCC, 0x90, 0xA0);
     TEST(CMPD, "#$90A0", "-28512", 0x10, 0x83, 0x90, 0xA0);
-    TEST(SBCD, "#$90A0", "-28512", 0x10, 0x82, 0x90, 0xA0);
-    TEST(ANDD, "#$90A0", "-28512", 0x10, 0x84, 0x90, 0xA0);
-    TEST(BITD, "#$90A0", "-28512", 0x10, 0x85, 0x90, 0xA0);
-    TEST(EORD, "#$90A0", "-28512", 0x10, 0x88, 0x90, 0xA0);
-    TEST(ADCD, "#$90A0", "-28512", 0x10, 0x89, 0x90, 0xA0);
-    TEST(ORD,  "#$90A0", "-28512", 0x10, 0x8A, 0x90, 0xA0);
 
     TEST(CMPX, "#$90A0", "-28512", 0x8C, 0x90, 0xA0);
     TEST(LDX,  "#$90A0", "-28512", 0x8E, 0x90, 0xA0);
@@ -138,6 +130,17 @@ static void test_immediate() {
 
     TEST(CMPS, "#$90A0", "-28512", 0x11, 0x8C, 0x90, 0xA0);
     TEST(LDS,  "#$90A0", "-28512", 0x10, 0xCE, 0x90, 0xA0);
+
+    // HD6309
+    TEST(LDMD,  "#$01", "1", 0x11, 0x3D, 0x01);
+    TEST(BITMD, "#$80", "128", 0x11, 0x3C, 0x80);
+
+    TEST(SBCD, "#$90A0", "-28512", 0x10, 0x82, 0x90, 0xA0);
+    TEST(ANDD, "#$90A0", "-28512", 0x10, 0x84, 0x90, 0xA0);
+    TEST(BITD, "#$90A0", "-28512", 0x10, 0x85, 0x90, 0xA0);
+    TEST(EORD, "#$90A0", "-28512", 0x10, 0x88, 0x90, 0xA0);
+    TEST(ADCD, "#$90A0", "-28512", 0x10, 0x89, 0x90, 0xA0);
+    TEST(ORD,  "#$90A0", "-28512", 0x10, 0x8A, 0x90, 0xA0);
 
     TEST(SUBE, "#$90", "144", 0x11, 0x80, 0x90);
     TEST(ADDE, "#$90", "144", 0x11, 0x8B, 0x90);
@@ -212,12 +215,6 @@ static void test_direct() {
     TEST(LDD,  "$90", "", 0xDC, 0x90);
     TEST(STD,  "$90", "", 0xDD, 0x90);
     TEST(CMPD, "$90", "", 0x10, 0x93, 0x90);
-    TEST(SBCD, "$90", "", 0x10, 0x92, 0x90);
-    TEST(ANDD, "$90", "", 0x10, 0x94, 0x90);
-    TEST(BITD, "$90", "", 0x10, 0x95, 0x90);
-    TEST(EORD, "$90", "", 0x10, 0x98, 0x90);
-    TEST(ADCD, "$90", "", 0x10, 0x99, 0x90);
-    TEST(ORD,  "$90", "", 0x10, 0x9A, 0x90);
 
     TEST(CMPX, "$90", "", 0x9C, 0x90);
     TEST(LDX,  "$90", "", 0x9E, 0x90);
@@ -237,6 +234,14 @@ static void test_direct() {
 
     TEST(JMP,  "$10", "", 0x0E, 0x10);
     TEST(JSR,  "$10", "", 0x9D, 0x10);
+
+    // HD6309
+    TEST(SBCD, "$90", "", 0x10, 0x92, 0x90);
+    TEST(ANDD, "$90", "", 0x10, 0x94, 0x90);
+    TEST(BITD, "$90", "", 0x10, 0x95, 0x90);
+    TEST(EORD, "$90", "", 0x10, 0x98, 0x90);
+    TEST(ADCD, "$90", "", 0x10, 0x99, 0x90);
+    TEST(ORD,  "$90", "", 0x10, 0x9A, 0x90);
 
     TEST(SUBE, "$90", "", 0x11, 0x90, 0x90);
     TEST(ADDE, "$90", "", 0x11, 0x9B, 0x90);
@@ -281,9 +286,9 @@ static void test_direct() {
     TEST(LDS,  "<dir90", "$90", 0x10, 0xDE, 0x90);
     TEST(JMP,  "<dir90", "$90", 0x0E, 0x90);
 
+    // HD6309
     TEST(OIM,  "#$30,<dir10", "$10", 0x01, 0x30, 0x10);
 }
-
 
 static void test_extended() {
     TEST(NEG,  "$1234", "", 0x70, 0x12, 0x34);
@@ -327,12 +332,6 @@ static void test_extended() {
     TEST(LDD,  "$9ABC", "", 0xFC, 0x9A, 0xBC);
     TEST(STD,  "$9ABC", "", 0xFD, 0x9A, 0xBC);
     TEST(CMPD, "$9ABC", "", 0x10, 0xB3, 0x9A, 0xBC);
-    TEST(SBCD, "$9ABC", "", 0x10, 0xB2, 0x9A, 0xBC);
-    TEST(ANDD, "$9ABC", "", 0x10, 0xB4, 0x9A, 0xBC);
-    TEST(BITD, "$9ABC", "", 0x10, 0xB5, 0x9A, 0xBC);
-    TEST(EORD, "$9ABC", "", 0x10, 0xB8, 0x9A, 0xBC);
-    TEST(ADCD, "$9ABC", "", 0x10, 0xB9, 0x9A, 0xBC);
-    TEST(ORD,  "$9ABC", "", 0x10, 0xBA, 0x9A, 0xBC);
 
     TEST(CMPX, "$9ABC", "", 0xBC, 0x9A, 0xBC);
     TEST(LDX,  "$9ABC", "", 0xBE, 0x9A, 0xBC);
@@ -352,6 +351,14 @@ static void test_extended() {
 
     TEST(JMP,  "$1234", "", 0x7E, 0x12, 0x34);
     TEST(JSR,  "$1234", "", 0xBD, 0x12, 0x34);
+
+    // HD6309
+    TEST(SBCD, "$9ABC", "", 0x10, 0xB2, 0x9A, 0xBC);
+    TEST(ANDD, "$9ABC", "", 0x10, 0xB4, 0x9A, 0xBC);
+    TEST(BITD, "$9ABC", "", 0x10, 0xB5, 0x9A, 0xBC);
+    TEST(EORD, "$9ABC", "", 0x10, 0xB8, 0x9A, 0xBC);
+    TEST(ADCD, "$9ABC", "", 0x10, 0xB9, 0x9A, 0xBC);
+    TEST(ORD,  "$9ABC", "", 0x10, 0xBA, 0x9A, 0xBC);
 
     TEST(SUBE, "$9ABC", "", 0x11, 0xB0, 0x9A, 0xBC);
     TEST(ADDE, "$9ABC", "", 0x11, 0xBB, 0x9A, 0xBC);
@@ -387,16 +394,17 @@ static void test_extended() {
     symtab.put(0x9ABC, "ext9ABC");
 
     TEST(NEG,  ">ext0090", "$0090", 0x70, 0x00, 0x90);
-    TEST(LDA,  "ext9ABC", "$9ABC",  0xB6, 0x9A, 0xBC);
+    TEST(LDA,  "ext9ABC",  "$9ABC", 0xB6, 0x9A, 0xBC);
     TEST(STB,  ">ext0090", "$0090", 0xF7, 0x00, 0x90);
-    TEST(CMPX, "ext9ABC", "$9ABC",  0xBC, 0x9A, 0xBC);
+    TEST(CMPX, "ext9ABC",  "$9ABC", 0xBC, 0x9A, 0xBC);
     TEST(STU,  ">ext0090", "$0090", 0xFF, 0x00, 0x90);
-    TEST(LDY,  "ext9ABC", "$9ABC",  0x10, 0xBE, 0x9A, 0xBC);
+    TEST(LDY,  "ext9ABC",  "$9ABC", 0x10, 0xBE, 0x9A, 0xBC);
     TEST(LDS,  ">ext0090", "$0090", 0x10, 0xFE, 0x00, 0x90);
-    TEST(JMP,  "ext9ABC", "$9ABC",  0x7E, 0x9A, 0xBC);
-    TEST(JSR,  ">ext0090", "$0090", 0xBD, 0x00,  0x90);
+    TEST(JMP,  "ext9ABC",  "$9ABC", 0x7E, 0x9A, 0xBC);
+    TEST(JSR,  ">ext0090", "$0090", 0xBD, 0x00, 0x90);
 
-    TEST(OIM,  "#$30,ext9ABC", "$9ABC",  0x71, 0x30, 0x9A, 0xBC);
+    // HD6309
+    TEST(OIM,  "#$30,ext9ABC",  "$9ABC", 0x71, 0x30, 0x9A, 0xBC);
     TEST(OIM,  "#$30,>ext0090", "$0090", 0x71, 0x30, 0x00, 0x90);
 }
 
@@ -447,12 +455,6 @@ static void test_indexed() {
     TEST(LDD,  ",S", "", 0xEC, 0xE4);
     TEST(STD,  ",S", "", 0xED, 0xE4);
     TEST(CMPD, ",S", "", 0x10, 0xA3, 0xE4);
-    TEST(SBCD, ",W", "", 0x10, 0xA2, 0x8F);
-    TEST(ANDD, ",W++", "", 0x10, 0xA4, 0xCF);
-    TEST(BITD, ",--W", "", 0x10, 0xA5, 0xEF);
-    TEST(EORD, "[,W]", "", 0x10, 0xA8, 0x90);
-    TEST(ADCD, "[,W++]", "", 0x10, 0xA9, 0xD0);
-    TEST(ORD,  "[,--W]", "", 0x10, 0xAA, 0xF0);
 
     TEST(CMPX, "2,Y", "", 0xAC, 0x22);
     TEST(LDX,  "2,Y", "", 0xAE, 0x22);
@@ -472,6 +474,14 @@ static void test_indexed() {
 
     TEST(JMP,  "[,X]", "", 0x6E, 0x94);
     TEST(JSR,  "[,X++]", "", 0xAD, 0x91);
+
+    // HD6309
+    TEST(SBCD, ",W", "", 0x10, 0xA2, 0x8F);
+    TEST(ANDD, ",W++", "", 0x10, 0xA4, 0xCF);
+    TEST(BITD, ",--W", "", 0x10, 0xA5, 0xEF);
+    TEST(EORD, "[,W]", "", 0x10, 0xA8, 0x90);
+    TEST(ADCD, "[,W++]", "", 0x10, 0xA9, 0xD0);
+    TEST(ORD,  "[,--W]", "", 0x10, 0xAA, 0xF0);
 
     TEST(SUBE, ",X", "", 0x11, 0xA0, 0x84);
     TEST(ADDE, ",X", "", 0x11, 0xAB, 0x84);
@@ -653,6 +663,7 @@ static void test_indexed_mode() {
 
     TEST(LDA, "[$1234]", "", 0xA6, 0x9F, 0x12, 0x34);
 
+    // HD6309
     TEST(LDA, "E,X", "", 0xA6, 0x87);
     TEST(LDA, "F,X", "", 0xA6, 0x8A);
     TEST(LDA, "W,X", "", 0xA6, 0x8E);
@@ -801,6 +812,26 @@ static void test_stack() {
 static void test_register() {
     TEST(EXG, "A,B", "", 0x1E, 0x89);
     TEST(TFR, "X,Y", "", 0x1F, 0x12);
+
+    TEST(TFR, "A,B",  "", 0x1F, 0x89);
+    TEST(TFR, "A,CC", "", 0x1F, 0x8A);
+    TEST(TFR, "A,DP", "", 0x1F, 0x8B);
+    TEST(TFR, "B,A",  "", 0x1F, 0x98);
+    TEST(TFR, "CC,A", "", 0x1F, 0xA8);
+    TEST(TFR, "DP,A", "", 0x1F, 0xB8);
+
+    TEST(TFR, "D,X",  "", 0x1F, 0x01);
+    TEST(TFR, "D,Y",  "", 0x1F, 0x02);
+    TEST(TFR, "D,U",  "", 0x1F, 0x03);
+    TEST(TFR, "D,S",  "", 0x1F, 0x04);
+    TEST(TFR, "D,PC", "", 0x1F, 0x05);
+    TEST(TFR, "X,D",  "", 0x1F, 0x10);
+    TEST(TFR, "Y,D",  "", 0x1F, 0x20);
+    TEST(TFR, "U,D",  "", 0x1F, 0x30);
+    TEST(TFR, "S,D",  "", 0x1F, 0x40);
+    TEST(TFR, "PC,D", "", 0x1F, 0x50);
+
+    // HD6309
     TEST(ADDR, "A,B", "", 0x10, 0x30, 0x89);
     TEST(ADCR, "A,B", "", 0x10, 0x31, 0x89);
     TEST(SUBR, "A,B", "", 0x10, 0x32, 0x89);
@@ -810,33 +841,17 @@ static void test_register() {
     TEST(EORR, "A,B", "", 0x10, 0x36, 0x89);
     TEST(CMPR, "A,B", "", 0x10, 0x37, 0x89);
 
-    TEST(TFR, "A,B",  "", 0x1F, 0x89);
-    TEST(TFR, "A,CC", "", 0x1F, 0x8A);
-    TEST(TFR, "A,DP", "", 0x1F, 0x8B);
     TEST(TFR, "A,0", "",  0x1F, 0x8C);
     TEST(TFR, "A,0", "",  0x1F, 0x8D);
     TEST(TFR, "A,E", "",  0x1F, 0x8E);
     TEST(TFR, "A,F", "",  0x1F, 0x8F);
-    TEST(TFR, "B,A",  "", 0x1F, 0x98);
-    TEST(TFR, "CC,A", "", 0x1F, 0xA8);
-    TEST(TFR, "DP,A", "", 0x1F, 0xB8);
     TEST(TFR, "0,A", "",  0x1F, 0xC8);
     TEST(TFR, "0,A", "",  0x1F, 0xD8);
     TEST(TFR, "E,A", "",  0x1F, 0xE8);
     TEST(TFR, "F,A", "",  0x1F, 0xF8);
 
-    TEST(TFR, "D,X",  "", 0x1F, 0x01);
-    TEST(TFR, "D,Y",  "", 0x1F, 0x02);
-    TEST(TFR, "D,U",  "", 0x1F, 0x03);
-    TEST(TFR, "D,S",  "", 0x1F, 0x04);
-    TEST(TFR, "D,PC", "", 0x1F, 0x05);
     TEST(TFR, "D,W",  "", 0x1F, 0x06);
     TEST(TFR, "D,V",  "", 0x1F, 0x07);
-    TEST(TFR, "X,D",  "", 0x1F, 0x10);
-    TEST(TFR, "Y,D",  "", 0x1F, 0x20);
-    TEST(TFR, "U,D",  "", 0x1F, 0x30);
-    TEST(TFR, "S,D",  "", 0x1F, 0x40);
-    TEST(TFR, "PC,D", "", 0x1F, 0x50);
     TEST(TFR, "W,D",  "", 0x1F, 0x60);
     TEST(TFR, "V,D",  "", 0x1F, 0x70);
 }
@@ -880,10 +895,26 @@ static void test_bit_position() {
     TEST(LDBT, "B,2,4,<dir34",  "$34", 0x11, 0x36, 0x94, 0x34);
 }
 
-static void test_illegal() {
-    Insn insn;
+static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
     char operands[40], comments[40];
+    Insn insn;
+    const uint8_t codes[] = { prefix, opc };
+    if (prefix == 0) {
+        memory.setBytes(&codes[1], 1);
+    } else {
+        memory.setBytes(&codes[0], 2);
+    }
+    disassembler.decode(memory, insn, operands, comments, nullptr);
+    char message[40];
+    if (prefix == 0) {
+        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, opc);
+    } else {
+        sprintf(message, "%s opecode 0x%02x 0x%02" PRIX8, __FUNCTION__, prefix, opc);
+    }
+    assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+}
 
+static void test_illegal() {
     const uint8_t p00_illegals[] = {
         0x15, 0x1b,
         0x38, 0x3e,
@@ -892,13 +923,8 @@ static void test_illegal() {
         0x87, 0x8f,
         0xc7, 0xcf,
     };
-    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++) {
-        memory.setBytes(&p00_illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, comments, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, p00_illegals[idx]);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
+        assert_illegal(p00_illegals[idx]);
 
     const uint8_t p10_legals[] = {
         0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
@@ -914,18 +940,11 @@ static void test_illegal() {
         0xec, 0xed, 0xee, 0xef,
         0xfc, 0xfd, 0xfe, 0xff,
     };
-    uint16_t opc = 0x00;
-    for (uint8_t idx = 0; opc < 0x100; opc++) {
-        if (idx < sizeof(p10_legals) && p10_legals[idx] == opc) {
-            idx++;
-            continue;
-        }
-        const uint8_t codes[] = { 0x10, (uint8_t)opc };
-        memory.setBytes(codes, sizeof(codes));
-        disassembler.decode(memory, insn, operands, comments, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x10 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+    uint8_t idx = 0;
+    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
+            assert_illegal(opc++, 0x10);
+        else idx++;
     }
 
     const uint8_t p11_legals[] = {
@@ -941,18 +960,11 @@ static void test_illegal() {
         0xe0, 0xe1, 0xe6, 0xe7, 0xeb,
         0xf0, 0xf1, 0xf6, 0xf7, 0xfb,
     };
-    opc = 0x00;
-    for (uint8_t idx = 0; opc < 0x100; opc++) {
-        if (idx < sizeof(p11_legals) && p11_legals[idx] == opc) {
-            idx++;
-            continue;
-        }
-        const uint8_t codes[] = { 0x11, (uint8_t)opc };
-        memory.setBytes(codes, sizeof(codes));
-        disassembler.decode(memory, insn, operands, comments, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x11 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+    idx = 0;
+    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
+            assert_illegal(opc++, 0x11);
+        else idx++;
     }
 }
 
@@ -964,7 +976,6 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
-    RUN_TEST(test_illegal);
     RUN_TEST(test_inherent);
     RUN_TEST(test_immediate);
     RUN_TEST(test_direct);
@@ -974,7 +985,9 @@ int main(int argc, char **argv) {
     RUN_TEST(test_relative);
     RUN_TEST(test_stack);
     RUN_TEST(test_register);
+    // HD6309
     RUN_TEST(test_transfer);
     RUN_TEST(test_bit_position);
+    RUN_TEST(test_illegal);
     return 0;
 }

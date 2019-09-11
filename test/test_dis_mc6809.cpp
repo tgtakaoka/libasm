@@ -182,6 +182,7 @@ static void test_direct() {
     TEST(STU,  "<dir22", "$22", 0xDF, 0x22);
     TEST(LDY,  "<dir22", "$22", 0x10, 0x9E, 0x22);
     TEST(LDS,  "<dir90", "$90", 0x10, 0xDE, 0x90);
+    TEST(JMP,  "<dir90", "$90", 0x0E, 0x90);
 }
 
 static void test_extended() {
@@ -247,17 +248,16 @@ static void test_extended() {
     TEST(JSR,  "$1234", "", 0xBD, 0x12, 0x34);
 
     symtab.put(0x0090, "ext0090");
-    symtab.put(0x1234, "ext1234");
     symtab.put(0x9ABC, "ext9ABC");
 
     TEST(NEG,  ">ext0090", "$0090", 0x70, 0x00, 0x90);
-    TEST(LDA,  "ext9ABC", "$9ABC", 0xB6, 0x9A, 0xBC);
+    TEST(LDA,  "ext9ABC",  "$9ABC", 0xB6, 0x9A, 0xBC);
     TEST(STB,  ">ext0090", "$0090", 0xF7, 0x00, 0x90);
-    TEST(CMPX, "ext9ABC", "$9ABC", 0xBC, 0x9A, 0xBC);
+    TEST(CMPX, "ext9ABC",  "$9ABC", 0xBC, 0x9A, 0xBC);
     TEST(STU,  ">ext0090", "$0090", 0xFF, 0x00, 0x90);
-    TEST(LDY,  "ext9ABC", "$9ABC", 0x10, 0xBE, 0x9A, 0xBC);
+    TEST(LDY,  "ext9ABC",  "$9ABC", 0x10, 0xBE, 0x9A, 0xBC);
     TEST(LDS,  ">ext0090", "$0090", 0x10, 0xFE, 0x00, 0x90);
-    TEST(JMP,  "ext9ABC", "$9ABC", 0x7E, 0x9A, 0xBC);
+    TEST(JMP,  "ext9ABC",  "$9ABC", 0x7E, 0x9A, 0xBC);
     TEST(JSR,  ">ext0090", "$0090", 0xBD, 0x00, 0x90);
 }
 
@@ -605,10 +605,26 @@ static void test_register() {
     TEST(TFR, "PC,D", "", 0x1F, 0x50);
 }
 
-static void test_illegal() {
-    Insn insn;
+static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
     char operands[40], comments[40];
+    Insn insn;
+    const uint8_t codes[] = { prefix, opc };
+    if (prefix == 0) {
+        memory.setBytes(&codes[1], 1);
+    } else {
+        memory.setBytes(&codes[0], 2);
+    }
+    disassembler.decode(memory, insn, operands, comments, nullptr);
+    char message[40];
+    if (prefix == 0) {
+        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, opc);
+    } else {
+        sprintf(message, "%s opecode 0x%02x 0x%02" PRIX8, __FUNCTION__, prefix, opc);
+    }
+    assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+}
 
+static void test_illegal() {
     const uint8_t p00_illegals[] = {
         0x01, 0x02, 0x05, 0x0b,
         0x14, 0x15, 0x18, 0x1b,
@@ -620,13 +636,8 @@ static void test_illegal() {
         0x87, 0x8f,
         0xc7, 0xcd, 0xcf,
     };
-    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++) {
-        memory.setBytes(&p00_illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, comments, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, p00_illegals[idx]);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
+        assert_illegal(p00_illegals[idx]);
 
     const uint8_t p10_legals[] = {
         0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
@@ -640,18 +651,11 @@ static void test_illegal() {
         0xee, 0xef,
         0xfe, 0xff,
     };
-    uint16_t opc = 0x00;
-    for (uint8_t idx = 0; opc < 0x100; opc++) {
-        if (idx < sizeof(p10_legals) && p10_legals[idx] == opc) {
-            idx++;
-            continue;
-        }
-        const uint8_t codes[] = { 0x10, (uint8_t)opc };
-        memory.setBytes(codes, sizeof(codes));
-        disassembler.decode(memory, insn, operands, comments, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x10 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+    uint8_t idx = 0;
+    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
+            assert_illegal(opc++, 0x10);
+        else idx++;
     }
 
     const uint8_t p11_legals[] = {
@@ -661,18 +665,11 @@ static void test_illegal() {
         0xa3, 0xac,
         0xb3, 0xbc,
     };
-    opc = 0x00;
-    for (uint8_t idx = 0; opc < 0x100; opc++) {
-        if (idx < sizeof(p11_legals) && p11_legals[idx] == opc) {
-            idx++;
-            continue;
-        }
-        const uint8_t codes[] = { 0x11, (uint8_t)opc };
-        memory.setBytes(codes, sizeof(codes));
-        disassembler.decode(memory, insn, operands, comments, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x11 0x%02" PRIX8, __FUNCTION__, opc);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+    idx = 0;
+    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
+            assert_illegal(opc++, 0x11);
+        else idx++;
     }
 }
 
@@ -684,7 +681,6 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
-    RUN_TEST(test_illegal);
     RUN_TEST(test_inherent);
     RUN_TEST(test_immediate);
     RUN_TEST(test_direct);
@@ -694,5 +690,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_relative);
     RUN_TEST(test_stack);
     RUN_TEST(test_register);
+    RUN_TEST(test_illegal);
     return 0;
 }
