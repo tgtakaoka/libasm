@@ -27,8 +27,7 @@ public:
         _flags = flags;
     }
     void setAddrMode(AddrMode addrMode) {
-        _flags = (_flags & ~Entry::addrMode_mask)
-            | host::uint_t(addrMode);
+        _flags = ::_flags(_mcuMode(_flags), _addrMode(addrMode));
     }
     void setName(const char *name, const char *end = nullptr) {
         if (!end) end = name + strlen(name);
