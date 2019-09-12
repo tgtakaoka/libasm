@@ -13,15 +13,15 @@ struct Entry {
     static constexpr host::uint_t addrMode_mask = 0x1f;
 };
 
-static inline McuMode _mcuMode(host::uint_t flags) {
+static inline McuType _mcuType(host::uint_t flags) {
     return (flags & Entry::hd6309_flag) == 0 ? MC6809 : HD6309;
 }
 static inline AddrMode _addrMode(host::uint_t flags) {
     return AddrMode(flags & Entry::addrMode_mask);
 }
 
-static constexpr host::uint_t _flags(McuMode mcuMode, AddrMode addrMode) {
-    return (mcuMode == MC6809 ? 0 : Entry::hd6309_flag) | host::uint_t(addrMode);
+static constexpr host::uint_t _flags(McuType mcuType, AddrMode addrMode) {
+    return (mcuType == MC6809 ? 0 : Entry::hd6309_flag) | host::uint_t(addrMode);
 }
 
 #define P00(_opc, _name,  _mcu, _mode)              \

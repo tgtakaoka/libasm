@@ -14,7 +14,7 @@ public:
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
     AddrMode addrMode() const { return _addrMode(_flags); }
-    McuMode mcuMode() const { return _mcuMode(_flags); }
+    McuType mcuType() const { return _mcuType(_flags); }
 
     void resetAddress(target::uintptr_t addr) {
         _address = addr;
@@ -27,7 +27,7 @@ public:
         _flags = flags;
     }
     void setAddrMode(AddrMode addrMode) {
-        _flags = ::_flags(_mcuMode(_flags), _addrMode(addrMode));
+        _flags = ::_flags(_mcuType(_flags), _addrMode(addrMode));
     }
     void setName(const char *name, const char *end = nullptr) {
         if (!end) end = name + strlen(name);

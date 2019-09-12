@@ -2,14 +2,14 @@
 
 #include "dis_hd6309.h"
 
-Disassembler disassembler(HD6309);
+Disassembler<HD6309> disassembler;
 
 class LineMemory : public Memory {
 public:
   LineMemory(uint16_t addr, String line) : Memory(addr) {
     line.trim();
     reset(addr);
-    int i = 0, val = 0;
+    size_t i = 0, val = 0;
     while (i < line.length()) {
       const char c = line.charAt(i++);
       if (isWhitespace(c)) {

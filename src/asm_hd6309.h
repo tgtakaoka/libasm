@@ -9,18 +9,14 @@
 #include "symbol_table.h"
 #include "table_hd6309.h"
 
+template<McuType mcuType = HD6309>
 class Assembler : public ErrorReporter {
 public:
-    Assembler(McuMode mcuMode = HD6309)
-        : _regs(mcuMode), _symtab(nullptr) {}
-
     Error encode(const char *line, Insn &insn,
-                         target::uintptr_t addr, SymbolTable *symtab);
-
-    void setMcuMode(McuMode mcuMode) { _regs.setMcuMode(mcuMode); }
+                 target::uintptr_t addr, SymbolTable *symtab);
 
 private:
-    Registers _regs;
+    Registers<mcuType> _regs;
     SymbolTable  *_symtab;
 
     void reset(SymbolTable *symtab) {
@@ -38,10 +34,10 @@ private:
     }
 
     void emitInsnCode(Insn &insn) const {
-        const target::opcode_t prefix = InsnTable::prefixCode(insn.insnCode());
-        if (InsnTable::isPrefixCode(prefix))
+        const target::opcode_t prefix = InsnTableUtils::prefixCode(insn.insnCode());
+        if (InsnTableUtils::isPrefixCode(prefix))
             insn.emitByte(prefix);
-        insn.emitByte(InsnTable::opCode(insn.insnCode()));
+        insn.emitByte(InsnTableUtils::opCode(insn.insnCode()));
     }
 
     Error getOperand16(const char *&line, target::uint16_t &val) const;
@@ -61,5 +57,7 @@ private:
     Error encodeImmediatePlus(const char *line, Insn &insn);
     Error encodeTransferMemory(const char *line, Insn &insn);
 };
+
+#include "asm_hd6309_impl.h"
 
 #endif // __ASM_HD6309_H__

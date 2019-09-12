@@ -1,6 +1,8 @@
-#include <ctype.h>
+/* -*- mode: c++; -*- */
+#ifndef __ASM_HD6309_IMPL_H__
+#define __ASM_HD6309_IMPL_H__
 
-#include "asm_hd6309.h"
+#include <ctype.h>
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
@@ -67,7 +69,8 @@ static Error getInt32(const char *&in, target::uint32_t &val) {
     return OK;
 }
 
-Error Assembler::getOperand16(const char *&in, target::uint16_t &val) const {
+template<McuType mcuType>
+Error Assembler<mcuType>::getOperand16(const char *&in, target::uint16_t &val) const {
     if (*in == '$') {
         in++;
         return getHex16(in, val);
@@ -87,7 +90,8 @@ Error Assembler::getOperand16(const char *&in, target::uint16_t &val) const {
     return UNKNOWN_OPERAND;
 }
 
-Error Assembler::getOperand32(const char *&in, target::uint32_t &val) const {
+template<McuType mcuType>
+Error Assembler<mcuType>::getOperand32(const char *&in, target::uint32_t &val) const {
     if (*in == '$') {
         in++;
         return getHex32(in, val);
@@ -107,14 +111,15 @@ Error Assembler::getOperand32(const char *&in, target::uint32_t &val) const {
     return UNKNOWN_OPERAND;
 }
 
-Error Assembler::encodeStackOp(const char *line, Insn &insn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeStackOp(const char *line, Insn &insn) {
     target::byte_t post = 0;
     while (*line) {
         host::uint_t bit = 0;
         for (host::uint_t index = 0, mask = 0x01; index < 8; index++, mask <<= 1) {
-            const RegName regName = Registers::getStackReg(index, insn.insnCode());
-            if (Registers::compareRegName(line, regName)) {
-                line += Registers::regNameLen(regName);
+            const RegName regName = _regs.getStackReg(index, insn.insnCode());
+            if (_regs.compareRegName(line, regName)) {
+                line += _regs.regNameLen(regName);
                 bit = mask;
                 break;
             }
@@ -128,16 +133,17 @@ Error Assembler::encodeStackOp(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Assembler::encodeRegisters(const char *line, Insn &insn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeRegisters(const char *line, Insn &insn) {
     RegName regName;
     if ((regName = _regs.parseDataReg(line)) == NONE)
         return setError(UNKNOWN_REGISTER);
-    line += Registers::regNameLen(regName);
+    line += _regs.regNameLen(regName);
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
     target::byte_t post = _regs.encodeDataReg(regName) << 4;
     if ((regName = _regs.parseDataReg(line)) == NONE)
         return setError(UNKNOWN_REGISTER);
-    line += Registers::regNameLen(regName);
+    line += _regs.regNameLen(regName);
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
     post |= _regs.encodeDataReg(regName);
     emitInsnCode(insn);
@@ -145,11 +151,12 @@ Error Assembler::encodeRegisters(const char *line, Insn &insn) {
     return setError(OK);
 }
 
-Error Assembler::encodeRelative(const char *line, Insn &insn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeRelative(const char *line, Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
-    const target::opcode_t prefix = InsnTable.prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (InsnTable.isPrefixCode(prefix) ? 2 : 1)
+    const target::opcode_t prefix = InsnTableUtils::prefixCode(insn.insnCode());
+    const host::uint_t insnLen = (InsnTableUtils::isPrefixCode(prefix) ? 2 : 1)
         + (insn.addrMode() == RELATIVE8 ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
@@ -163,7 +170,8 @@ Error Assembler::encodeRelative(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Assembler::encodeImmediate(const char *line, Insn &insn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeImmediate(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     emitInsnCode(insn);
     if (insn.addrMode() == IMMEDIATE8 || insn.addrMode() == IMMEDIATE16) {
@@ -171,7 +179,7 @@ Error Assembler::encodeImmediate(const char *line, Insn &insn) {
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
         if (insn.addrMode() == IMMEDIATE8) insn.emitByte(target::byte_t(val));
         else insn.emitUint16(val);
-    } else if (_regs.isHd6309() && insn.addrMode() == IMMEDIATE32) {
+    } else if (mcuType == HD6309 && insn.addrMode() == IMMEDIATE32) {
         uint32_t val;
         if (getOperand32(line, val)) return setError(UNKNOWN_OPERAND);
         insn.emitUint32(val);
@@ -181,7 +189,8 @@ Error Assembler::encodeImmediate(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Assembler::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
     if (*line == '<') line++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
@@ -190,7 +199,8 @@ Error Assembler::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error Assembler::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
     if (*line == '>') line++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
@@ -199,7 +209,8 @@ Error Assembler::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error Assembler::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     const bool indir = (*line == '[');
     RegName base = NONE;
@@ -209,7 +220,7 @@ Error Assembler::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     if (indir) line++;
     if (*line != ',') {
         if ((index = _regs.parseIndexReg(line)) != NONE) {
-            line += Registers::regNameLen(index);  // index register
+            line += _regs.regNameLen(index);  // index register
         } else {
             if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
             index = OFFSET;             // index is in addr
@@ -224,9 +235,9 @@ Error Assembler::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
             }
         }
         if ((base = _regs.parseBaseReg(line)) != NONE
-            || Registers::compareRegName(line, PC)) {
+            || _regs.compareRegName(line, PC)) {
             if (base == NONE) base = PC;
-            line += Registers::regNameLen(base);
+            line += _regs.regNameLen(base);
         } else setError(UNKNOWN_OPERAND);
         if (index == NONE && incr == 0) {
             while (*line == '+') {
@@ -259,7 +270,7 @@ Error Assembler::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
         insn.emitUint16(delta);
         return setError(OK);
     }
-    if (_regs.isHd6309() && base == W) {
+    if (mcuType == HD6309 && base == W) {
         target::byte_t post;
         if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
         else if (incr == 0) post = 0x8F;    // ,W [,W]
@@ -308,11 +319,12 @@ Error Assembler::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error Assembler::encodeBitOperation(const char *line, Insn &insn) {
-    const RegName regName = Registers::parseBitOpReg(line);
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeBitOperation(const char *line, Insn &insn) {
+    const RegName regName = _regs.parseBitOpReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
-    line += Registers::regNameLen(regName);
-    uint8_t post = Registers::encodeBitOpReg(regName) << 6;
+    line += _regs.regNameLen(regName);
+    uint8_t post = _regs.encodeBitOpReg(regName) << 6;
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
     uint16_t pos;
     if (getOperand16(line, pos)) return setError(UNKNOWN_OPERAND);
@@ -328,7 +340,8 @@ Error Assembler::encodeBitOperation(const char *line, Insn &insn) {
     return encodeDirect(line, insn, /* emitInsn */ false);
 }
 
-Error Assembler::encodeImmediatePlus(const char *line, Insn &insn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeImmediatePlus(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     uint16_t val;
     if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
@@ -341,7 +354,7 @@ Error Assembler::encodeImmediatePlus(const char *line, Insn &insn) {
     case INDEXED: insn.setAddrMode(IMM_INDEXED); break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (InsnTable.searchNameAndAddrMode(insn))
+    if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
     insn.emitByte((uint8_t)val);
@@ -356,29 +369,30 @@ Error Assembler::encodeImmediatePlus(const char *line, Insn &insn) {
     }
 }
 
-Error Assembler::encodeTransferMemory(const char *line, Insn &insn) {
-    RegName regName = Registers::parseTfmBaseReg(line);
+template<McuType mcuType>
+Error Assembler<mcuType>::encodeTransferMemory(const char *line, Insn &insn) {
+    RegName regName = _regs.parseTfmBaseReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
-    line += Registers::regNameLen(regName);
+    line += _regs.regNameLen(regName);
     char srcMode = 0;
     if (*line == '+' || *line == '-') srcMode = *line++;
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
-    target::opcode_t post = Registers::encodeTfmBaseReg(regName) << 4;
+    target::opcode_t post = _regs.encodeTfmBaseReg(regName) << 4;
 
-    regName = Registers::parseTfmBaseReg(line);
+    regName = _regs.parseTfmBaseReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
-    line += Registers::regNameLen(regName);
+    line += _regs.regNameLen(regName);
     char dstMode = 0;
     if (*line == '+' || *line == '-') dstMode = *line++;
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
-    post |= Registers::encodeTfmBaseReg(regName);
+    post |= _regs.encodeTfmBaseReg(regName);
 
     for (uint8_t mode = 0; mode < 4; mode++) {
-        if (srcMode == Registers::tfmSrcModeChar(mode)
-            && dstMode == Registers::tfmDstModeChar(mode)) {
+        if (srcMode == _regs.tfmSrcModeChar(mode)
+            && dstMode == _regs.tfmDstModeChar(mode)) {
             const target::opcode_t prefixCode =
-                InsnTable::prefixCode(insn.insnCode());
-            insn.setInsnCode(InsnTable::insnCode(prefixCode, 0x38 + mode));
+                InsnTableUtils::prefixCode(insn.insnCode());
+            insn.setInsnCode(InsnTableUtils::insnCode(prefixCode, 0x38 + mode));
             emitInsnCode(insn);
             insn.emitByte(post);
             return setError(OK);
@@ -387,7 +401,8 @@ Error Assembler::encodeTransferMemory(const char *line, Insn &insn) {
     return setError(UNKNOWN_OPERAND);
 }
 
-Error Assembler::determineAddrMode(const char *line, Insn &insn) {
+template<McuType mcuType>
+Error Assembler<mcuType>::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
     case '#': insn.setAddrMode(IMMEDIATE8); break;
     case '<': insn.setAddrMode(DIRECT_PG); break;
@@ -397,7 +412,7 @@ Error Assembler::determineAddrMode(const char *line, Insn &insn) {
     default:
         RegName index;
         if ((index = _regs.parseIndexReg(line)) != NONE) {
-            line += Registers::regNameLen(index);
+            line += _regs.regNameLen(index);
             if (*line == ',') {
                 insn.setAddrMode(INDEXED);
                 return OK;
@@ -413,7 +428,8 @@ Error Assembler::determineAddrMode(const char *line, Insn &insn) {
     return OK;
 }
 
-Error Assembler::encode(
+template<McuType mcuType>
+Error Assembler<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(addr);
@@ -425,9 +441,9 @@ Error Assembler::encode(
     insn.setName(line, endName);
     line = skipSpace(endName);
 
-    if (InsnTable.searchName(insn))
+    if (InsnTable<mcuType>::table()->searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.mcuMode() == HD6309 && _regs.isMc6809())
+    if (insn.mcuType() == HD6309 && mcuType == MC6809)
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -441,25 +457,30 @@ Error Assembler::encode(
         return encodeStackOp(line, insn);
     case REGISTERS:
         return encodeRegisters(line, insn);
-    case IMM_DIRECT:
-    case IMM_EXTENDED:
-    case IMM_INDEXED:
-        return encodeImmediatePlus(line, insn);
-    case BIT_OPERATION:
-        return encodeBitOperation(line, insn);
-    case TRANSFER_MEM:
-        return encodeTransferMemory(line, insn);
     default:
+        if (mcuType == HD6309) {
+            switch (insn.addrMode()) {
+            case IMM_DIRECT:
+            case IMM_EXTENDED:
+            case IMM_INDEXED:
+                return encodeImmediatePlus(line, insn);
+            case BIT_OPERATION:
+                return encodeBitOperation(line, insn);
+            case TRANSFER_MEM:
+                return encodeTransferMemory(line, insn);
+            default:
+                break;
+            }
+        }
         break;
     }
 
     if (determineAddrMode(line, insn)) return getError();
-    if (InsnTable.searchNameAndAddrMode(insn))
+    if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case IMMEDIATE8:
     case IMMEDIATE16:
-    case IMMEDIATE32:
         return encodeImmediate(line, insn);
     case DIRECT_PG:
         return encodeDirect(line, insn);
@@ -467,6 +488,13 @@ Error Assembler::encode(
         return encodeExtended(line, insn);
     case INDEXED:
         return encodeIndexed(line, insn);
-    default: return setError(UNKNOWN_OPERAND);
+    default:
+        if (mcuType == HD6309 && insn.addrMode() == IMMEDIATE32) {
+            return encodeImmediate(line, insn);
+        } else {
+            return setError(UNKNOWN_OPERAND);
+        }
     }
 }
+
+#endif // __ASM_HD6309_IMPL_H__

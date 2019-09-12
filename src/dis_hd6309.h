@@ -10,11 +10,9 @@
 #include "registers_hd6309.h"
 #include "symbol_table.h"
 
+template<McuType mcuType = HD6309>
 class Disassembler : public ErrorReporter {
 public:
-    Disassembler(McuMode mcuMode = HD6309)
-        : _regs(mcuMode), _symtab(nullptr) {}
-
     Error decode(
         Memory &memory, Insn& insn,
         char *operands, char *comments, SymbolTable *symtab);
@@ -24,10 +22,8 @@ public:
         char *operands, char *comments, SymbolTable *symtab);
 #endif
 
-    void setMcuMode(McuMode mcuMode) { _regs.setMcuMode(mcuMode); }
-
 private:
-    Registers _regs;
+    Registers<mcuType> _regs;
     SymbolTable *_symtab;
 
     void reset(SymbolTable *symtab) {
@@ -56,5 +52,7 @@ private:
     Error decodeBitOperation(Memory &memory, Insn &insn, char *operands, char *comments);
     Error decodeTransferMemory(Memory &memory, Insn &insn, char *operands, char *comments);
 };
+
+#include "dis_hd6309_impl.h"
 
 #endif // __DIS_HD6309_H__

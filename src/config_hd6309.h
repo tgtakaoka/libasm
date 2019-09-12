@@ -20,7 +20,7 @@ namespace target
     typedef ::uint16_t insn_t;
 } // namespace target
 
-enum McuMode : host::uint_t {
+enum McuType : host::uint_t {
     MC6809,
     HD6309,
 };

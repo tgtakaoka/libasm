@@ -3,7 +3,7 @@
 #include "dis_hd6309.h"
 #include "test_dis_helper.h"
 
-Disassembler disassembler(MC6809);
+Disassembler<MC6809> disassembler;
 
 static void set_up() {
     symtab.reset();
