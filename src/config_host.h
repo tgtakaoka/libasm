@@ -12,6 +12,8 @@ namespace host
     typedef ::uint_fast8_t  uindex_t;
 } // namespace host
 
+#define ARRAY_END(array) &(array)[(sizeof(array) / sizeof(array[0]))]
+#define ARRAY_RANGE(array) &array[0], ARRAY_END(array)
 
 #ifdef AVR
 

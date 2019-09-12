@@ -2,9 +2,6 @@
 
 #include "registers_z80.h"
 
-#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-#define ARRAY_RANGE(array) &(array)[0], &(array)[ARRAY_SIZE(array)]
-
 static constexpr RegName POINTER_REGS[] PROGMEM = { BC, DE, HL, SP };
 static constexpr RegName STACK_REGS[] PROGMEM = { BC, DE, HL, AF };
 static constexpr RegName INDEX_REGS[] PROGMEM = { BC, DE };

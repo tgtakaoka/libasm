@@ -2,9 +2,6 @@
 
 #include "registers_hd6309.h"
 
-#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-#define ARRAY_RANGE(array) &(array)[0], &(array)[ARRAY_SIZE(array)]
-
 static constexpr RegName MC6809_INDEX_REGS[] PROGMEM = {
     NONE, NONE, NONE, NONE, NONE, B, A, NONE, NONE, NONE, NONE, D
 };

@@ -541,9 +541,6 @@ static Error searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-#define ARRAY_END(array) &(array)[(sizeof(array) / sizeof(array[0]))]
-#define ARRAY_RANGE(array) &array[0], ARRAY_END(array)
-
 static constexpr EntryPage PAGES[] = {
     { PREFIX_P00, &TABLE_P00[0], ARRAY_END(TABLE_P00) },
     { PREFIX_P10, &TABLE_P10[0], ARRAY_END(TABLE_P10) },
