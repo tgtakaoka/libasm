@@ -1,4 +1,6 @@
-#include "dis_r65c02.h"
+/* -*- mode: c++; -*- */
+#ifndef __DIS_R65C02_IMPL_H__
+#define __DIS_R65C02_IMPL_H__
 
 #include "string_utils.h"
 #include "table_r65c02.h"
@@ -13,14 +15,16 @@ static char *outOpr16Hex(char *out, target::uint16_t val) {
     return outHex16(out, val);
 }
 
-Error Disassembler::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
+template<McuType mcuType>
+Error Disassembler<mcuType>::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     insn.emitByte(val);
     return OK;
 }
 
-Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
+template<McuType mcuType>
+Error Disassembler<mcuType>::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -29,7 +33,8 @@ Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val
     return OK;
 }
 
-Error Disassembler::decodeImmediate(
+template<McuType mcuType>
+Error Disassembler<mcuType>::decodeImmediate(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     target::byte_t val;
     if (readByte(memory, insn, val)) return getError();
@@ -45,7 +50,8 @@ Error Disassembler::decodeImmediate(
     return setError(OK);
 }
 
-Error Disassembler::decodeAbsolute(
+template<McuType mcuType>
+Error Disassembler<mcuType>::decodeAbsolute(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     const bool indirect = (insn.addrMode() == IDX_ABS_IND
                            || insn.addrMode() == ABS_INDIRECT);
@@ -85,7 +91,8 @@ Error Disassembler::decodeAbsolute(
     return setError(OK);
 }
 
-Error Disassembler::decodeZeroPage(
+template<McuType mcuType>
+Error Disassembler<mcuType>::decodeZeroPage(
     Memory &memory, Insn& insn, char *operands, char *comments) {
     const bool indirect = (insn.addrMode() == INDEXED_IND
                            || insn.addrMode() == INDIRECT_IDX
@@ -131,7 +138,8 @@ Error Disassembler::decodeZeroPage(
     return setError(OK);
 }
 
-Error Disassembler::decodeRelative(
+template<McuType mcuType>
+Error Disassembler<mcuType>::decodeRelative(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::ptrdiff_t delta;
     target::byte_t val;
@@ -156,7 +164,8 @@ Error Disassembler::decodeRelative(
     return setError(OK);
 }
 
-Error Disassembler::decode(
+template<McuType mcuType>
+Error Disassembler<mcuType>::decode(
     Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());
@@ -166,10 +175,10 @@ Error Disassembler::decode(
     if (readByte(memory, insn, opCode)) return getError();
     insn.setInsnCode(opCode);
 
-    if (InsnTable.searchInsnCode(insn))
+    if (InsnTable<mcuType>::table()->searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    if (insn.mcuType() == R65C02 && _mcuType != R65C02)
+    if (insn.mcuType() == R65C02 && mcuType != R65C02)
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -201,3 +210,5 @@ Error Disassembler::decode(
         return setError(INTERNAL_ERROR);
     }
 }
+
+#endif // __DIS_R65C02_IMPL_H__

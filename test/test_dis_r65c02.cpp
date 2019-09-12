@@ -3,7 +3,7 @@
 #include "dis_r65c02.h"
 #include "test_dis_helper.h"
 
-Disassembler disassembler(R65C02);
+Disassembler<R65C02> disassembler;
 
 static void set_up() {
     symtab.reset();

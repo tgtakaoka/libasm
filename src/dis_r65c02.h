@@ -9,19 +9,14 @@
 #include "memory.h"
 #include "symbol_table.h"
 
+template<McuType mcuType = R65C02>
 class Disassembler : public ErrorReporter {
 public:
-    Disassembler(McuType mcuType = R65C02)
-        : _mcuType(mcuType), _symtab(nullptr) {}
-
     Error decode(
         Memory &memory, Insn& insn,
         char *operands, char *comments, SymbolTable *symtab);
 
-    void setMcuType(McuType mcuType) { _mcuType = mcuType; }
-
 private:
-    McuType _mcuType;
     SymbolTable *_symtab;
 
     void reset(SymbolTable *symtab) {
@@ -41,5 +36,7 @@ private:
     Error decodeZeroPage(Memory &memory, Insn &insn, char *operands, char *comments);
     Error decodeRelative(Memory &memory, Insn &insn, char *operands, char *comments);
 };
+
+#include "dis_r65c02_impl.h"
 
 #endif // __DIS_R65C02_H__
