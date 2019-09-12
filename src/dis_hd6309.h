@@ -10,9 +10,9 @@
 #include "registers_hd6309.h"
 #include "symbol_table.h"
 
-class DisHd6309 : public ErrorReporter {
+class Disassembler : public ErrorReporter {
 public:
-    DisHd6309(McuMode mcuMode = HD6309)
+    Disassembler(McuMode mcuMode = HD6309)
         : _regs(mcuMode), _symtab(nullptr) {}
 
     Error decode(

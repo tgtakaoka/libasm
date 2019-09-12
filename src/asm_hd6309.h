@@ -9,9 +9,9 @@
 #include "symbol_table.h"
 #include "table_hd6309.h"
 
-class AsmHd6309 : public ErrorReporter {
+class Assembler : public ErrorReporter {
 public:
-    AsmHd6309(McuMode mcuMode = HD6309)
+    Assembler(McuMode mcuMode = HD6309)
         : _regs(mcuMode), _symtab(nullptr) {}
 
     Error encode(const char *line, Insn &insn,

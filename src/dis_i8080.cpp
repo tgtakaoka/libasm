@@ -19,14 +19,14 @@ static char *outOpr16Hex(char *out, target::uint16_t val) {
     return out;
 }
 
-Error DisI8080::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
+Error Disassembler::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     insn.emitByte(val);
     return OK;
 }
 
-Error DisI8080::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
+Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -35,7 +35,7 @@ Error DisI8080::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     return OK;
 }
 
-Error DisI8080::decodeImmediate8(
+Error Disassembler::decodeImmediate8(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     target::byte_t val;
     if (readByte(memory, insn, val)) return getError();
@@ -45,7 +45,7 @@ Error DisI8080::decodeImmediate8(
     return setError(OK);
 }
 
-Error DisI8080::decodeImmediate16(
+Error Disassembler::decodeImmediate16(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     target::uint16_t val;
     if (readUint16(memory, insn, val)) return getError();
@@ -61,7 +61,7 @@ Error DisI8080::decodeImmediate16(
     return setError(OK);
 }
 
-Error DisI8080::decodeDirect(
+Error Disassembler::decodeDirect(
     Memory &memory, Insn& insn, char *operands, char *comments) {
     target::uintptr_t addr;
     if (readUint16(memory, insn, addr)) return getError();
@@ -75,7 +75,7 @@ Error DisI8080::decodeDirect(
     return setError(OK);
 }
 
-Error DisI8080::decodeIoaddr(
+Error Disassembler::decodeIoaddr(
     Memory &memory, Insn& insn, char *operands, char *comments) {
     target::byte_t ioaddr;
     if (readByte(memory, insn, ioaddr)) return getError();
@@ -83,7 +83,7 @@ Error DisI8080::decodeIoaddr(
     return setError(OK);
 }
 
-Error DisI8080::decode(
+Error Disassembler::decode(
     Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());

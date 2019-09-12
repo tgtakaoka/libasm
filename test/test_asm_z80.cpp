@@ -3,7 +3,7 @@
 #include "asm_z80.h"
 #include "test_asm_helper.h"
 
-AsmZ80 assembler;
+Assembler assembler;
 
 static void set_up() {
     symtab.reset();

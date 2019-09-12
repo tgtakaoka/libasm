@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "dis_z80.h"
+#include "dis_i8080.h"
 
 Disassembler disassembler;
 

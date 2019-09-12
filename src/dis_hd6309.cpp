@@ -18,14 +18,14 @@ static char *outOpr32Hex(char *out, uint32_t val) {
     return outHex32(out, val);
 }
 
-Error DisHd6309::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
+Error Disassembler::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     insn.emitByte(val);
     return OK;
 }
 
-Error DisHd6309::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
+Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = (target::uint16_t)memory.readByte() << 8;
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -34,7 +34,7 @@ Error DisHd6309::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     return OK;
 }
 
-Error DisHd6309::readUint32(Memory &memory, Insn &insn, target::uint32_t &val) {
+Error Disassembler::readUint32(Memory &memory, Insn &insn, target::uint32_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = (target::uint32_t)memory.readByte() << 24;
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -47,7 +47,7 @@ Error DisHd6309::readUint32(Memory &memory, Insn &insn, target::uint32_t &val) {
     return OK;
 }
 
-Error DisHd6309::decodeDirectPage(
+Error Disassembler::decodeDirectPage(
     Memory &memory, Insn& insn, char *operands, char *comments) {
     target::byte_t dir;
     if (readByte(memory, insn, dir)) return getError();
@@ -62,7 +62,7 @@ Error DisHd6309::decodeDirectPage(
     return setError(OK);
 }
 
-Error DisHd6309::decodeExtended(
+Error Disassembler::decodeExtended(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     target::uintptr_t addr;
     if (readUint16(memory, insn, addr)) return getError();
@@ -77,7 +77,7 @@ Error DisHd6309::decodeExtended(
     return setError(OK);
 }
 
-Error DisHd6309::decodeIndexed(
+Error Disassembler::decodeIndexed(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
@@ -205,7 +205,7 @@ Error DisHd6309::decodeIndexed(
     return setError(OK);
 }
 
-Error DisHd6309::decodeRelative(
+Error Disassembler::decodeRelative(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::ptrdiff_t delta;
     if (insn.addrMode() == RELATIVE8) {
@@ -235,7 +235,7 @@ Error DisHd6309::decodeRelative(
     return setError(OK);
 }
 
-Error DisHd6309::decodeImmediate(
+Error Disassembler::decodeImmediate(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     if (insn.addrMode() == IMMEDIATE8) {
         target::byte_t val;
@@ -276,7 +276,7 @@ Error DisHd6309::decodeImmediate(
     return setError(OK);
 }
 
-Error DisHd6309::decodeStackOp(
+Error Disassembler::decodeStackOp(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
@@ -299,7 +299,7 @@ Error DisHd6309::decodeStackOp(
     return setError(OK);
 }
 
-Error DisHd6309::decodeRegisters(
+Error Disassembler::decodeRegisters(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
@@ -312,7 +312,7 @@ Error DisHd6309::decodeRegisters(
     return setError(OK);
 }
 
-Error DisHd6309::decodeImmediatePlus(
+Error Disassembler::decodeImmediatePlus(
     Memory& memory, Insn &insn, char *operands, char *comments) {
     *operands++ = '#';
     target::byte_t val;
@@ -331,7 +331,7 @@ Error DisHd6309::decodeImmediatePlus(
     }
 }
 
-Error DisHd6309::decodeBitOperation(
+Error Disassembler::decodeBitOperation(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
@@ -354,7 +354,7 @@ Error DisHd6309::decodeBitOperation(
     return decodeDirectPage(memory, insn, operands, comments);
 }
 
-Error DisHd6309::decodeTransferMemory(
+Error Disassembler::decodeTransferMemory(
     Memory &memory, Insn &insn, char *operands, char *comments) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
@@ -373,7 +373,7 @@ Error DisHd6309::decodeTransferMemory(
     return setError(OK);
 }
 
-Error DisHd6309::decode(
+Error Disassembler::decode(
     Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());
@@ -431,7 +431,7 @@ Error DisHd6309::decode(
 #if 0
 static const char T_FCB[]   PROGMEM = "FCB";
 
-Error DisHd6309::formConstantBytes(
+Error Disassembler::formConstantBytes(
     Memory &memory, Symtab *symtab, char *operands, char *comments,
     uint8_t len) {
     reset(memory.address(), symtab);

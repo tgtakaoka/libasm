@@ -55,7 +55,7 @@ static Error getInt16(const char *&in, target::uint16_t &val) {
     return OK;
 }
 
-Error AsmZ80::getOperand16(const char *&in, target::uint16_t &val) {
+Error Assembler::getOperand16(const char *&in, target::uint16_t &val) {
     if (getInt16(in, val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
@@ -76,7 +76,7 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t rightOp) {
+Error Assembler::encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t rightOp) {
     target::byte_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
@@ -101,7 +101,7 @@ Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t righ
     return setError(OK);
 }
 
-Error AsmZ80::encodeDirect(
+Error Assembler::encodeDirect(
     Insn &insn, RegName leftReg, RegName rightReg,
     target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
     target::byte_t regNum = 0;
@@ -135,7 +135,7 @@ Error AsmZ80::encodeDirect(
     return setError(OK);
 }
 
-Error AsmZ80::encodeIoaddr(
+Error Assembler::encodeIoaddr(
     Insn &insn, target::uint16_t leftOpr, target::uint16_t rightOpr) {
     emitInsnCode(insn);
     if (insn.leftFormat() == ADDR8)
@@ -145,7 +145,7 @@ Error AsmZ80::encodeIoaddr(
     return setError(OK);
 }
 
-Error AsmZ80::encodeRelative(
+Error Assembler::encodeRelative(
     Insn &insn, target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
     if (insn.insnFormat() == CC4_FMT) {
         insn.setInsnCode(insn.insnCode() | (leftOpr << 3));
@@ -158,7 +158,7 @@ Error AsmZ80::encodeRelative(
     return setError(OK);
 }
 
-Error AsmZ80::encodeIndexed(
+Error Assembler::encodeIndexed(
     Insn &insn, RegName leftReg, RegName rightReg,
     target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
     if (insn.leftFormat() == IX_OFF)
@@ -190,7 +190,7 @@ Error AsmZ80::encodeIndexed(
     return setError(OK);
 }
 
-Error AsmZ80::encodeIndexedImmediate8(
+Error Assembler::encodeIndexedImmediate8(
     Insn &insn, RegName leftReg, RegName rightReg,
     target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
     const target::opcode_t prefixCode = InsnTable::prefixCode(insn.insnCode());
@@ -211,7 +211,7 @@ Error AsmZ80::encodeIndexedImmediate8(
     return setError(OK);
 }
 
-Error AsmZ80::encodeInherent(
+Error Assembler::encodeInherent(
     Insn &insn, RegName leftReg, RegName rightReg, target::uint16_t leftOpr) {
     target::byte_t regNum = 0;
     switch (insn.insnFormat()) {
@@ -296,7 +296,7 @@ Error AsmZ80::encodeInherent(
     return setError(OK);
 }
 
-const char *AsmZ80::parseOperand(
+const char *Assembler::parseOperand(
     const char *line, OprFormat &oprFormat,
     RegName &regName, target::uint16_t &operand) {
     setError(OK);
@@ -388,7 +388,7 @@ const char *AsmZ80::parseOperand(
     return line;
 }
 
-Error AsmZ80::encode(
+Error Assembler::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(addr);

@@ -1,7 +1,7 @@
 #include "asm_hd6309.h"
 #include "test_asm_helper.h"
 
-AsmHd6309 assembler(MC6809);
+Assembler assembler(MC6809);
 
 static void set_up() {
 }

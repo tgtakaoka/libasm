@@ -67,7 +67,7 @@ static Error getInt32(const char *&in, target::uint32_t &val) {
     return OK;
 }
 
-Error AsmHd6309::getOperand16(const char *&in, target::uint16_t &val) const {
+Error Assembler::getOperand16(const char *&in, target::uint16_t &val) const {
     if (*in == '$') {
         in++;
         return getHex16(in, val);
@@ -87,7 +87,7 @@ Error AsmHd6309::getOperand16(const char *&in, target::uint16_t &val) const {
     return UNKNOWN_OPERAND;
 }
 
-Error AsmHd6309::getOperand32(const char *&in, target::uint32_t &val) const {
+Error Assembler::getOperand32(const char *&in, target::uint32_t &val) const {
     if (*in == '$') {
         in++;
         return getHex32(in, val);
@@ -107,7 +107,7 @@ Error AsmHd6309::getOperand32(const char *&in, target::uint32_t &val) const {
     return UNKNOWN_OPERAND;
 }
 
-Error AsmHd6309::encodeStackOp(const char *line, Insn &insn) {
+Error Assembler::encodeStackOp(const char *line, Insn &insn) {
     target::byte_t post = 0;
     while (*line) {
         host::uint_t bit = 0;
@@ -128,7 +128,7 @@ Error AsmHd6309::encodeStackOp(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmHd6309::encodeRegisters(const char *line, Insn &insn) {
+Error Assembler::encodeRegisters(const char *line, Insn &insn) {
     RegName regName;
     if ((regName = _regs.parseDataReg(line)) == NONE)
         return setError(UNKNOWN_REGISTER);
@@ -145,7 +145,7 @@ Error AsmHd6309::encodeRegisters(const char *line, Insn &insn) {
     return setError(OK);
 }
 
-Error AsmHd6309::encodeRelative(const char *line, Insn &insn) {
+Error Assembler::encodeRelative(const char *line, Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
     const target::opcode_t prefix = InsnTable.prefixCode(insn.insnCode());
@@ -163,7 +163,7 @@ Error AsmHd6309::encodeRelative(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmHd6309::encodeImmediate(const char *line, Insn &insn) {
+Error Assembler::encodeImmediate(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     emitInsnCode(insn);
     if (insn.addrMode() == IMMEDIATE8 || insn.addrMode() == IMMEDIATE16) {
@@ -181,7 +181,7 @@ Error AsmHd6309::encodeImmediate(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmHd6309::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
+Error Assembler::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
     if (*line == '<') line++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
@@ -190,7 +190,7 @@ Error AsmHd6309::encodeDirect(const char *line, Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error AsmHd6309::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
+Error Assembler::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
     if (*line == '>') line++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
@@ -199,7 +199,7 @@ Error AsmHd6309::encodeExtended(const char *line, Insn &insn, bool emitInsn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmHd6309::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
+Error Assembler::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     const bool indir = (*line == '[');
     RegName base = NONE;
@@ -308,7 +308,7 @@ Error AsmHd6309::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error AsmHd6309::encodeBitOperation(const char *line, Insn &insn) {
+Error Assembler::encodeBitOperation(const char *line, Insn &insn) {
     const RegName regName = Registers::parseBitOpReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
     line += Registers::regNameLen(regName);
@@ -328,7 +328,7 @@ Error AsmHd6309::encodeBitOperation(const char *line, Insn &insn) {
     return encodeDirect(line, insn, /* emitInsn */ false);
 }
 
-Error AsmHd6309::encodeImmediatePlus(const char *line, Insn &insn) {
+Error Assembler::encodeImmediatePlus(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     uint16_t val;
     if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
@@ -356,7 +356,7 @@ Error AsmHd6309::encodeImmediatePlus(const char *line, Insn &insn) {
     }
 }
 
-Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
+Error Assembler::encodeTransferMemory(const char *line, Insn &insn) {
     RegName regName = Registers::parseTfmBaseReg(line);
     if (regName == NONE) return setError(UNKNOWN_REGISTER);
     line += Registers::regNameLen(regName);
@@ -387,7 +387,7 @@ Error AsmHd6309::encodeTransferMemory(const char *line, Insn &insn) {
     return setError(UNKNOWN_OPERAND);
 }
 
-Error AsmHd6309::determineAddrMode(const char *line, Insn &insn) {
+Error Assembler::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
     case '#': insn.setAddrMode(IMMEDIATE8); break;
     case '<': insn.setAddrMode(DIRECT_PG); break;
@@ -413,7 +413,7 @@ Error AsmHd6309::determineAddrMode(const char *line, Insn &insn) {
     return OK;
 }
 
-Error AsmHd6309::encode(
+Error Assembler::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(addr);

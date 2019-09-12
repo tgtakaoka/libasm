@@ -3,7 +3,7 @@
 #include "asm_i8080.h"
 #include "test_asm_helper.h"
 
-AsmI8080 assembler;
+Assembler assembler;
 
 static void set_up() {
     symtab.reset();

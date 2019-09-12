@@ -19,14 +19,14 @@ static char *outOpr16Hex(char *out, target::uint16_t val) {
     return out;
 }
 
-Error DisZ80::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
+Error Disassembler::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     insn.emitByte(val);
     return OK;
 }
 
-Error DisZ80::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
+Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -48,7 +48,7 @@ static char *outReg8Name(char *out, RegName regName) {
         : Registers::outRegName(out, regName);
 }
 
-Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
+Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
@@ -186,7 +186,7 @@ Error DisZ80::decodeInherent(Insn& insn, char *operands, char *comments) {
     return setError(OK);
 }
 
-Error DisZ80::decodeImmediate8(
+Error Disassembler::decodeImmediate8(
     Insn &insn, char *operands, char *comments, target::byte_t val) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
@@ -206,7 +206,7 @@ Error DisZ80::decodeImmediate8(
     return setError(OK);
 }
 
-Error DisZ80::decodeImmediate16(
+Error Disassembler::decodeImmediate16(
     Insn &insn, char *operands, char *comments, target::uint16_t val) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
@@ -242,7 +242,7 @@ static char *outAddr16(
     return operands;
 }
 
-Error DisZ80::decodeDirect(
+Error Disassembler::decodeDirect(
     Insn &insn, char *operands, char *comments, target::uintptr_t addr) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
@@ -314,7 +314,7 @@ static char *outAddr8(
     return operands;
 }
 
-Error DisZ80::decodeIoaddr(
+Error Disassembler::decodeIoaddr(
     Insn &insn, char *operands, char *comments, target::byte_t ioaddr) {
     switch (insn.leftFormat()) {
     case ADDR8:
@@ -340,7 +340,7 @@ Error DisZ80::decodeIoaddr(
     return setError(OK);
 }
 
-Error DisZ80::decodeRelative(
+Error Disassembler::decodeRelative(
     Insn &insn, char *operands, char *comments, target::int8_t delta) {
     if (insn.leftFormat() == CC4) {
         const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
@@ -373,7 +373,7 @@ static char *outIndexOffset(
     return operands;
 }
 
-Error DisZ80::decodeIndexed(
+Error Disassembler::decodeIndexed(
     Insn &insn, char *operands, char *comments, target::int8_t offset) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
@@ -405,7 +405,7 @@ Error DisZ80::decodeIndexed(
     return setError(OK);
 }
 
-Error DisZ80::decodeIndexedImmediate8(
+Error Disassembler::decodeIndexedImmediate8(
     Insn &insn, char *operands, char *comments, target::int8_t offset,
     target::byte_t val) {
     operands = outIndexOffset(operands, insn.insnCode(), offset);
@@ -415,7 +415,7 @@ Error DisZ80::decodeIndexedImmediate8(
     return setError(OK);
 }
 
-Error DisZ80::decodeIndexedBitOp(
+Error Disassembler::decodeIndexedBitOp(
     Insn &insn, char *operands, char *comments, target::int8_t offset,
     target::opcode_t opCode) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
@@ -454,7 +454,7 @@ Error DisZ80::decodeIndexedBitOp(
     return setError(OK);
 }
 
-Error DisZ80::decode(
+Error Disassembler::decode(
     Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());

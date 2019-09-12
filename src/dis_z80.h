@@ -10,7 +10,7 @@
 #include "registers_z80.h"
 #include "symbol_table.h"
 
-class DisZ80 : public ErrorReporter {
+class Disassembler : public ErrorReporter {
 public:
     Error decode(
         Memory &memory, Insn& insn,

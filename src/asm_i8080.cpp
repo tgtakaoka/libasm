@@ -55,7 +55,7 @@ static Error getInt16(const char *&in, target::uint16_t &val) {
     return OK;
 }
 
-Error AsmI8080::getOperand16(const char *&in, target::uint16_t &val) {
+Error Assembler::getOperand16(const char *&in, target::uint16_t &val) {
     if (getInt16(in, val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
@@ -76,7 +76,7 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-const char *AsmI8080::encodePointerReg(const char *line, Insn &insn) {
+const char *Assembler::encodePointerReg(const char *line, Insn &insn) {
     const RegName regName = Registers::parsePointerReg(line);
     const host::int_t num = Registers::encodePointerReg(regName);
     if (num < 0) {
@@ -89,7 +89,7 @@ const char *AsmI8080::encodePointerReg(const char *line, Insn &insn) {
     return line;
 }
 
-const char *AsmI8080::encodeStackReg(const char *line, Insn &insn) {
+const char *Assembler::encodeStackReg(const char *line, Insn &insn) {
     const RegName regName = Registers::parseStackReg(line);
     const host::int_t num = Registers::encodeStackReg(regName);
     if (num < 0) {
@@ -102,7 +102,7 @@ const char *AsmI8080::encodeStackReg(const char *line, Insn &insn) {
     return line;
 }
 
-const char *AsmI8080::encodeIndexReg(const char *line, Insn &insn) {
+const char *Assembler::encodeIndexReg(const char *line, Insn &insn) {
     const RegName regName = Registers::parseIndexReg(line);
     const host::int_t num = Registers::encodeIndexReg(regName);
     if (num < 0) {
@@ -115,7 +115,7 @@ const char *AsmI8080::encodeIndexReg(const char *line, Insn &insn) {
     return line;
 }
 
-const char *AsmI8080::encodeDataReg(const char *line, Insn &insn) {
+const char *Assembler::encodeDataReg(const char *line, Insn &insn) {
     const RegName regName = Registers::parseDataReg(line);
     const host::int_t num = Registers::encodeDataReg(regName);
     if (num < 0) {
@@ -131,7 +131,7 @@ const char *AsmI8080::encodeDataReg(const char *line, Insn &insn) {
     return line;
 }
 
-const char *AsmI8080::encodeDataDataReg(const char *line, Insn &insn) {
+const char *Assembler::encodeDataDataReg(const char *line, Insn &insn) {
     const RegName dstReg = Registers::parseDataReg(line);
     if (dstReg == NONE) {
         setError(UNKNOWN_REGISTER);
@@ -157,7 +157,7 @@ const char *AsmI8080::encodeDataDataReg(const char *line, Insn &insn) {
     return line;
 }
 
-const char *AsmI8080::encodeVectorNo(const char *line, Insn &insn) {
+const char *Assembler::encodeVectorNo(const char *line, Insn &insn) {
     target::uint16_t vecNo;
     if (getOperand16(line, vecNo) == OK) {
         if (vecNo < 8) {
@@ -170,7 +170,7 @@ const char *AsmI8080::encodeVectorNo(const char *line, Insn &insn) {
     return line;
 }
 
-Error AsmI8080::encodeImmediate(const char *line, Insn &insn) {
+Error Assembler::encodeImmediate(const char *line, Insn &insn) {
     if (insn.insnFormat() != NO_FORMAT && *line++ != ',')
         return setError(UNKNOWN_OPERAND);
     target::uint16_t val;
@@ -182,21 +182,21 @@ Error AsmI8080::encodeImmediate(const char *line, Insn &insn) {
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmI8080::encodeDirect(const char *line, Insn &insn) {
+Error Assembler::encodeDirect(const char *line, Insn &insn) {
     target::uint16_t addr;
     if (getOperand16(line, addr)) return getError();
     insn.emitUint16(addr);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmI8080::encodeIoaddr(const char *line, Insn &insn) {
+Error Assembler::encodeIoaddr(const char *line, Insn &insn) {
     target::uint16_t addr;
     if (getOperand16(line, addr)) return getError();
     insn.emitByte(addr);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
 
-Error AsmI8080::encode(
+Error Assembler::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(addr);
@@ -212,7 +212,7 @@ Error AsmI8080::encode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.insnFormat()) {
-    case INHERENT:
+    case NO_FORMAT:
         setError(OK);
         break;
     case POINTER_REG:

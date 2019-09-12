@@ -8,7 +8,7 @@
 #include "symbol_table.h"
 #include "table_i8080.h"
 
-class AsmI8080 : public ErrorReporter {
+class Assembler : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn,
                  target::uintptr_t addr, SymbolTable *symtab);

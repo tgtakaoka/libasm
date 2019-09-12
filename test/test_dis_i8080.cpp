@@ -3,7 +3,7 @@
 #include "dis_i8080.h"
 #include "test_dis_helper.h"
 
-DisI8080 disassembler;
+Disassembler disassembler;
 
 static void set_up() {
     symtab.reset();
