@@ -3,13 +3,13 @@ CXXFLAGS=-Wall -g -std=c++17 -O -I$(VPATH)
 TESTS= \
 	test_asm_mc6809 test_asm_hd6309 \
 	test_dis_mc6809 test_dis_hd6309 \
-	test_dis_r6502 \
-	test_dis_r65c02 \
+	test_asm_r6502  test_dis_r6502 \
+	test_asm_r65c02 test_dis_r65c02 \
 	test_asm_i8080  test_dis_i8080 \
 	test_asm_z80    test_dis_z80
 OBJS= \
 	registers_hd6309.o table_hd6309.o table_mc6809.o \
-	dis_r65c02.o table_r6502.o table_r65c02.o \
+	table_r6502.o table_r65c02.o \
 	asm_i8080.o  dis_i8080.o  registers_i8080.o  table_i8080.o \
 	asm_z80.o    dis_z80.o    registers_z80.o    table_z80.o \
 	string_utils.o
@@ -29,10 +29,12 @@ test_mc6809: test_asm_mc6809 test_dis_mc6809
 test_hd6309: test_asm_hd6309 test_dis_hd6309
 	./test_dis_hd6309
 	./test_asm_hd6309
-test_r6502: test_dis_r6502
+test_r6502: test_asm_r6502 test_dis_r6502
 	./test_dis_r6502
-test_r65c02: test_dis_r65c02
+	./test_asm_r6502
+test_r65c02: test_asm_r65c02 test_dis_r65c02
 	./test_dis_r65c02
+	./test_asm_r65c02
 test_i8080:  test_asm_i8080  test_dis_i8080
 	./test_dis_i8080
 	./test_asm_i8080
@@ -43,6 +45,10 @@ test_z80: test_asm_z80 test_dis_z80
 test_asm_mc6809: test_asm_mc6809.o registers_hd6309.o table_mc6809.o string_utils.o
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_hd6309: test_asm_hd6309.o registers_hd6309.o table_mc6809.o table_hd6309.o string_utils.o
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_r6502:  test_asm_r6502.o  table_r6502.o string_utils.o
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_r65c02: test_asm_r65c02.o table_r6502.o table_r65c02.o string_utils.o
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_i8080:  test_asm_i8080.o  asm_i8080.o  registers_i8080.o  table_i8080.o  string_utils.o
 	$(CXX) -o $@ $(CXXFLAGS) $^
@@ -63,6 +69,8 @@ test_dis_z80  :  test_dis_z80.o    dis_z80.o    registers_z80.o    table_z80.o  
 
 test_asm_mc6809.o: asm_hd6309.h test_asm_helper.h
 test_asm_hd6309.o: asm_hd6309.h test_asm_helper.h
+test_asm_r6502.o:  asm_r65c02.h test_asm_helper.h
+test_asm_r65c02.o: asm_r65c02.h test_asm_helper.h
 test_asm_i8080.o:  asm_i8080.h  test_asm_helper.h
 test_asm_z80.o:    asm_z80.h    test_asm_helper.h
 test_dis_mc6809.o: dis_hd6309.h test_dis_helper.h

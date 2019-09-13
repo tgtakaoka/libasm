@@ -42,7 +42,7 @@ enum AddrMode : host::uint_t {
 
     // R65C02
     IDX_ABS_IND,                // Indexed Absolute Indirect (abs,X)
-    ZP_RELATIVE,                // Zero Page Relative
+    ZP_RELATIVE,                // Zero Page Relative zp,abs
     ZP_INDIRECT,                // Zero Page Indirect (zp)
 };
 

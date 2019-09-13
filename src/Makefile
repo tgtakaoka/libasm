@@ -29,6 +29,8 @@ table_z80.o:    config_z80.h    entry_z80.h    table_z80.h    text_z80.h
 
 asm_hd6309.h: asm_hd6309_impl.h config_hd6309.h error_reporter.h symbol_table.h table_hd6309.h
 asm_hd6309_impl.h:
+asm_r65c02.h: asm_r65c02_impl.h config_r65c02.h error_reporter.h symbol_table.h table_r65c02.h
+asm_r65c02_impl.h:
 asm_i8080.h:  config_i8080.h  error_reporter.h symbol_table.h table_i8080.h
 asm_z80.h:    config_z80.h    error_reporter.h symbol_table.h table_z80.h
 config_hd6309.h: config_host.h error_hd6309.h registers_hd6309.h

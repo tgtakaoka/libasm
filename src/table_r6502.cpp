@@ -252,4 +252,3 @@ template<>
 const InsnTable<R6502> *InsnTable<R6502>::table() {
     return &R6502Table;
 }
-

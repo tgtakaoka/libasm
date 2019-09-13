@@ -443,7 +443,7 @@ Error Assembler<mcuType>::encode(
 
     if (InsnTable<mcuType>::table()->searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.mcuType() == HD6309 && mcuType == MC6809)
+    if (insn.mcuType() == HD6309 && mcuType != HD6309)
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

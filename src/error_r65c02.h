@@ -16,6 +16,7 @@ enum Error : host::uint_t {
     NO_TEXT,
     UNKNOWN_INSTRUCTION,
     UNKNOWN_OPERAND,
+    OPERAND_NOT_ZP,
     OPERAND_TOO_FAR,
     GARBAGE_AT_END,
 };
