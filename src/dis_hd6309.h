@@ -16,11 +16,6 @@ public:
     Error decode(
         Memory &memory, Insn& insn,
         char *operands, char *comments, SymbolTable *symtab);
-#if 0
-    Error formConstantBytes(
-        Memory &memory, Insn &insn, uint8_t len,
-        char *operands, char *comments, SymbolTable *symtab);
-#endif
 
 private:
     Registers<mcuType> _regs;

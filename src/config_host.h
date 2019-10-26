@@ -8,8 +8,6 @@ namespace host
 {
     typedef ::int_least8_t  int_t;
     typedef ::uint_least8_t uint_t;
-    typedef ::int_fast16_t  index_t;
-    typedef ::uint_fast8_t  uindex_t;
 } // namespace host
 
 #define ARRAY_BEGIN(array) (&(array)[0])
@@ -20,14 +18,10 @@ namespace host
 
 #include <avr/pgmspace.h>
 #define pgm_strcpy(d, s) strcpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))))
-#define pgm_strncpy(d, s, n) strcpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))), (n))
+#define pgm_strncpy(d, s, n) strncpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))), (n))
 #define pgm_strcasecmp(n, p) strcasecmp_P((n), reinterpret_cast<const char *>(pgm_read_word(&(p))))
 class __FlashStringHelper;
 char *outStr(char *out, const __FlashStringHelper *str);
-
-#if defined(PC) /* MegaCoreX defined PC for PORTC */
-#undef PC
-#endif
 
 #else  // AVR
 

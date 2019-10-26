@@ -2,10 +2,18 @@
 
 #include "registers_i8080.h"
 
-static constexpr RegName POINTER_REGS[] PROGMEM = { B, D, H, SP };
-static constexpr RegName STACK_REGS[] PROGMEM = { B, D, H, PSW };
-static constexpr RegName INDEX_REGS[] PROGMEM = { B, D };
-static constexpr RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, M, A };
+static constexpr RegName POINTER_REGS[] PROGMEM = {
+    REG_B, REG_D, REG_H, REG_SP
+};
+static constexpr RegName STACK_REGS[] PROGMEM = {
+    REG_B, REG_D, REG_H, REG_PSW
+};
+static constexpr RegName INDEX_REGS[] PROGMEM = {
+    REG_B, REG_D
+};
+static constexpr RegName DATA_REGS[] PROGMEM = {
+    REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_M, REG_A
+};
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
@@ -20,13 +28,13 @@ static char regName1stChar(const RegName regName) {
 }
 
 static char regName2ndChar(const RegName regName) {
-    if (regName == SP) return 'P';
-    if (regName == PSW) return 'S';
+    if (regName == REG_SP) return 'P';
+    if (regName == REG_PSW) return 'S';
     return 0;
 }
 
 static char regName3rdChar(const RegName regName) {
-    if (regName == PSW) return 'W';
+    if (regName == REG_PSW) return 'W';
     return 0;
 }
 
@@ -70,13 +78,13 @@ RegName Registers::parseRegName(
         const RegName regName = RegName(pgm_read_byte(p));
         if (compareRegName(line, regName)) return regName;
     }
-    return NONE;
+    return REG_UNDEF;
 }
 
 static RegName decodeRegNumber(
     const host::uint_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
-    return entry < end ? RegName(pgm_read_byte(entry)) : NONE;
+    return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
 RegName Registers::parsePointerReg(const char *line) {

@@ -5,17 +5,17 @@
 #include "config_i8080.h"
 
 enum RegName : char {
-    NONE = 0,
-    B = 'B',
-    C = 'C',
-    D = 'D',
-    E = 'E',
-    H = 'H',
-    L = 'L',
-    M = 'M',
-    A = 'A',
-    SP = 'S',
-    PSW = 'P',
+    REG_UNDEF = 0,
+    REG_B = 'B',
+    REG_C = 'C',
+    REG_D = 'D',
+    REG_E = 'E',
+    REG_H = 'H',
+    REG_L = 'L',
+    REG_M = 'M',
+    REG_A = 'A',
+    REG_SP = 'S',
+    REG_PSW = 'P',
 };
 
 class Registers {

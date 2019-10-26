@@ -5,35 +5,35 @@
 #include "config_z80.h"
 
 enum RegName : char {
-    NONE = 0,
-    HL = 'h',
-    BC = 'b',
-    DE = 'd',
-    SP = 's',
-    AF = 'a',
-    IX = 'x',
-    IY = 'y',
-    B = 'B',
-    C = 'C',
-    D = 'D',
-    E = 'E',
-    H = 'H',
-    L = 'L',
-    A = 'A',
-    I = 'I',
-    R = 'R',
-    AFP = 'f',                          // AF'
+    REG_UNDEF = 0,
+    REG_HL = 'h',
+    REG_BC = 'b',
+    REG_DE = 'd',
+    REG_SP = 's',
+    REG_AF = 'a',
+    REG_AFP = 'f',              // AF'
+    REG_IX = 'x',
+    REG_IY = 'y',
+    REG_B = 'B',
+    REG_C = 'C',
+    REG_D = 'D',
+    REG_E = 'E',
+    REG_H = 'H',
+    REG_L = 'L',
+    REG_A = 'A',
+    REG_I = 'I',
+    REG_R = 'R',
 };
 
 enum CcName : char {
-    CC_Z = 'Z',
+    CC_Z  = 'Z',
     CC_NZ = 'z',
-    CC_C = 'C',
+    CC_C  = 'C',
     CC_NC = 'c',
     CC_PO = 'o',
     CC_PE = 'e',
-    CC_P = 'P',
-    CC_M = 'M',
+    CC_P  = 'P',
+    CC_M  = 'M',
 };
 
 class Registers {

@@ -2,12 +2,24 @@
 
 #include "registers_z80.h"
 
-static constexpr RegName POINTER_REGS[] PROGMEM = { BC, DE, HL, SP };
-static constexpr RegName STACK_REGS[] PROGMEM = { BC, DE, HL, AF };
-static constexpr RegName INDEX_REGS[] PROGMEM = { BC, DE };
-static constexpr RegName IR_REGS[] PROGMEM = { I, R };
-static constexpr RegName DATA_REGS[] PROGMEM = { B, C, D, E, H, L, NONE, A };
-static constexpr RegName NON_DATA_REGS[] PROGMEM = { SP, IX, IY, I, R, AFP };
+static constexpr RegName POINTER_REGS[] PROGMEM = {
+    REG_BC, REG_DE, REG_HL, REG_SP
+};
+static constexpr RegName STACK_REGS[] PROGMEM = {
+    REG_BC, REG_DE, REG_HL, REG_AF
+};
+static constexpr RegName INDEX_REGS[] PROGMEM = {
+    REG_BC, REG_DE
+};
+static constexpr RegName IR_REGS[] PROGMEM = {
+    REG_I, REG_R
+};
+static constexpr RegName DATA_REGS[] PROGMEM = {
+    REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_UNDEF, REG_A
+};
+static constexpr RegName NON_DATA_REGS[] PROGMEM = {
+    REG_SP, REG_IX, REG_IY, REG_I, REG_R, REG_AFP
+};
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
@@ -19,44 +31,44 @@ static bool regCharCaseEqual(char c, char regChar) {
 
 static char regName1stChar(const RegName regName) {
     switch (regName) {
-    case HL:
-    case H: return 'H';
-    case BC:
-    case B: return 'B';
-    case DE:
-    case D: return 'D';
-    case SP: return 'S';
-    case AF:
-    case AFP:
-    case A: return 'A';
-    case IX:
-    case IY:
-    case I: return 'I';
-    case C: return 'C';
-    case E: return 'E';
-    case L: return 'L';
-    case R: return 'R';
+    case REG_HL:
+    case REG_H: return 'H';
+    case REG_BC:
+    case REG_B: return 'B';
+    case REG_DE:
+    case REG_D: return 'D';
+    case REG_SP: return 'S';
+    case REG_AF:
+    case REG_AFP:
+    case REG_A: return 'A';
+    case REG_IX:
+    case REG_IY:
+    case REG_I: return 'I';
+    case REG_C: return 'C';
+    case REG_E: return 'E';
+    case REG_L: return 'L';
+    case REG_R: return 'R';
     default: return 0;
     }
 }
 
 static char regName2ndChar(const RegName regName) {
     switch (regName) {
-    case HL: return 'L';
-    case BC: return 'C';
-    case DE: return 'E';
-    case SP: return 'P';
-    case AF:
-    case AFP: return 'F';
-    case IX: return 'X';
-    case IY: return 'Y';
+    case REG_HL: return 'L';
+    case REG_BC: return 'C';
+    case REG_DE: return 'E';
+    case REG_SP: return 'P';
+    case REG_AF:
+    case REG_AFP: return 'F';
+    case REG_IX: return 'X';
+    case REG_IY: return 'Y';
     default: return 0;
     }
 }
 
 static char regName3rdChar(const RegName regName) {
     switch (regName) {
-    case AFP: return '\'';
+    case REG_AFP: return '\'';
     default: return 0;
     }
 }
@@ -72,14 +84,14 @@ bool Registers::compareRegName(const char *line, RegName regName) {
 
 host::uint_t Registers::regNameLen(RegName regName) {
     switch (regName) {
-    case AFP: return 3;
-    case HL:
-    case BC:
-    case DE:
-    case SP:
-    case AF:
-    case IX:
-    case IY: return 2;
+    case REG_AFP: return 3;
+    case REG_HL:
+    case REG_BC:
+    case REG_DE:
+    case REG_SP:
+    case REG_AF:
+    case REG_IX:
+    case REG_IY: return 2;
     default: return 1;
     }
 }
@@ -177,20 +189,20 @@ RegName Registers::parseRegName(
         const RegName regName = RegName(pgm_read_byte(p));
         if (compareRegName(line, regName)) return regName;
     }
-    return NONE;
+    return REG_UNDEF;
 }
 
 static RegName decodeRegNumber(
     const host::uint_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
-    return entry < end ? RegName(pgm_read_byte(entry)) : NONE;
+    return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
 RegName Registers::parseRegister(const char *line) {
     RegName regName;
-    if ((regName = parseRegName(line, ARRAY_RANGE(NON_DATA_REGS))) != NONE)
+    if ((regName = parseRegName(line, ARRAY_RANGE(NON_DATA_REGS))) != REG_UNDEF)
         return regName;
-    if ((regName = parseRegName(line, ARRAY_RANGE(DATA_REGS))) != NONE)
+    if ((regName = parseRegName(line, ARRAY_RANGE(DATA_REGS))) != REG_UNDEF)
         return regName;
     return parseRegName(line, ARRAY_RANGE(STACK_REGS));
 }
@@ -200,7 +212,7 @@ host::int_t Registers::encodePointerReg(RegName regName) {
 }
 
 host::int_t Registers::encodePointerRegIx(RegName regName, RegName ix) {
-    if (regName == ix) regName = HL;
+    if (regName == ix) regName = REG_HL;
     return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
 }
 
@@ -217,7 +229,7 @@ host::int_t Registers::encodeIrReg(RegName regName) {
 }
 
 host::int_t Registers::encodeDataReg(RegName regName) {
-    if (regName == HL) regName = NONE;
+    if (regName == REG_HL) regName = REG_UNDEF;
     return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
 }
 
@@ -228,7 +240,7 @@ RegName Registers::decodePointerReg(target::byte_t regNum) {
 RegName Registers::decodePointerRegIx(target::byte_t regNum,
     RegName ix) {
     const RegName regName = decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
-    return regName == HL ? ix : regName;
+    return regName == REG_HL ? ix : regName;
 }
 
 RegName Registers::decodeStackReg(target::byte_t regNum) {

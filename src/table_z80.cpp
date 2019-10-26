@@ -307,14 +307,14 @@ Error InsnTable::searchInsnCode(Insn &insn) const {
 
 RegName InsnTable::decodeIndexReg(target::insn_t insnCode) {
     const target::opcode_t prefix = prefixCode(insnCode);
-    if (prefix == PREFIX_IX) return IX;
-    if (prefix == PREFIX_IY) return IY;
-    return NONE;
+    if (prefix == PREFIX_IX) return REG_IX;
+    if (prefix == PREFIX_IY) return REG_IY;
+    return REG_UNDEF;
 }
 
 void InsnTable::encodePrefixCode(Insn &insn, RegName ixReg) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
-    const target::opcode_t prefix = ixReg == IX ? PREFIX_IX : PREFIX_IY;
+    const target::opcode_t prefix = ixReg == REG_IX ? PREFIX_IX : PREFIX_IY;
     insn.setInsnCode(InsnTable::insnCode(prefix, opc));
 }
 

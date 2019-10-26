@@ -10,7 +10,7 @@ protected:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
-        const target::opcode_t opCode, const Entry *table, const Entry *end);
+        const target::insn_t insnCode, const Entry *table, const Entry *end);
 
     static Error searchPages(
         Insn &insn, const char *name, const Entry *table, const Entry *end);
@@ -18,7 +18,7 @@ protected:
         Insn &insn, const char *name, AddrMode addrMode,
         const Entry *table, const Entry *end);
     static Error searchPages(
-        Insn &insn, target::opcode_t opCode, const Entry *table, const Entry *end);
+        Insn &insn, target::insn_t insnCode, const Entry *table, const Entry *end);
 };
 
 template<McuType mcuType = R65C02>

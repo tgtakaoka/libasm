@@ -44,7 +44,7 @@ static char *outPtrName(char *out, RegName regName) {
 }
 
 static char *outReg8Name(char *out, RegName regName) {
-    return (regName == NONE) ? outPtrName(out, HL)
+    return (regName == REG_UNDEF) ? outPtrName(out, REG_HL)
         : Registers::outRegName(out, regName);
 }
 
@@ -52,7 +52,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     case REG8:
         if (insn.insnFormat() == DST_FMT
@@ -69,19 +69,19 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
             operands, Registers::decodeIrReg(opc >> 3 & 1));
         break;
     case BC_REG:
-        operands = Registers::outRegName(operands, BC);
+        operands = Registers::outRegName(operands, REG_BC);
         break;
     case DE_REG:
-        operands = Registers::outRegName(operands, DE);
+        operands = Registers::outRegName(operands, REG_DE);
         break;
     case HL_REG:
-        operands = Registers::outRegName(operands, HL);
+        operands = Registers::outRegName(operands, REG_HL);
         break;
     case AF_REG:
-        operands = Registers::outRegName(operands, AF);
+        operands = Registers::outRegName(operands, REG_AF);
         break;
     case SP_REG:
-        operands = Registers::outRegName(operands, SP);
+        operands = Registers::outRegName(operands, REG_SP);
         break;
     case REG16:
         operands = Registers::outRegName(
@@ -99,17 +99,17 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
         operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
         break;
     case C_PTR:
-        operands = outPtrName(operands, C);
+        operands = outPtrName(operands, REG_C);
         break;
     case BC_PTR:
         operands = outPtrName(
             operands, Registers::decodeIndexReg((opc >> 4) & 1));
         break;
     case HL_PTR:
-        operands = outPtrName(operands, HL);
+        operands = outPtrName(operands, REG_HL);
         break;
     case SP_PTR:
-        operands = outPtrName(operands, SP);
+        operands = outPtrName(operands, REG_SP);
         break;
     case IX_PTR:
         operands = outPtrName(
@@ -136,7 +136,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
 
     switch (insn.rightFormat()) {
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     case REG8:
         if (insn.insnFormat() == DST_FMT) {
@@ -153,10 +153,10 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
             operands, Registers::decodeIrReg(opc >> 3 & 1));
         break;
     case AFPREG:
-        operands = Registers::outRegName(operands, AFP);
+        operands = Registers::outRegName(operands, REG_AFP);
         break;
     case HL_REG:
-        operands = Registers::outRegName(operands, HL);
+        operands = Registers::outRegName(operands, REG_HL);
         break;
     case REG16:
         operands = Registers::outRegName(
@@ -173,7 +173,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
                 InsnTable::decodeIndexReg(insn.insnCode())));
         break;
     case C_PTR:
-        operands = outPtrName(operands, C);
+        operands = outPtrName(operands, REG_C);
         break;
     case BC_PTR:
         operands = outPtrName(
@@ -191,7 +191,7 @@ Error Disassembler::decodeImmediate8(
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     case REG8:
         operands = outReg8Name(
@@ -250,10 +250,10 @@ Error Disassembler::decodeDirect(
         operands = outAddr16(operands, comments, addr, lookup(addr));
         break;
     case HL_REG:
-        operands = Registers::outRegName(operands, HL);
+        operands = Registers::outRegName(operands, REG_HL);
         break;
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     case CC8:
         operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
@@ -275,13 +275,13 @@ Error Disassembler::decodeDirect(
     if (insn.rightFormat() != NO_OPR) *operands++ = ',';
     switch (insn.rightFormat()) {
     case HL_REG:
-        operands = Registers::outRegName(operands, HL);
+        operands = Registers::outRegName(operands, REG_HL);
         break;
     case ADDR16:
         operands = outAddr16(operands, comments, addr, lookup(addr));
         break;
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     case IMM16:
         operands = outAddr16(operands, comments, addr, lookup(addr), false);
@@ -321,7 +321,7 @@ Error Disassembler::decodeIoaddr(
         operands = outAddr8(operands, comments, ioaddr, lookup(ioaddr));
         break;
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     default:
         break;
@@ -332,7 +332,7 @@ Error Disassembler::decodeIoaddr(
         operands = outAddr8(operands, comments, ioaddr, lookup(ioaddr));
         break;
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     default:
         break;
@@ -385,7 +385,7 @@ Error Disassembler::decodeIndexed(
             operands, Registers::decodeDataReg((opc >> 3) & 7));
         break;
     case A_REG:
-        operands = Registers::outRegName(operands, A);
+        operands = Registers::outRegName(operands, REG_A);
         break;
     default:
         break;
@@ -432,7 +432,7 @@ Error Disassembler::decodeIndexedBitOp(
         operands = outIndexOffset(operands, insn.insnCode(), offset);
         break;
     case REG8:
-        operands = (regName == NONE)
+        operands = (regName == REG_UNDEF)
             ? outIndexOffset(operands, insn.insnCode(), offset)
             : outReg8Name(operands, regName);
         break;
@@ -447,7 +447,7 @@ Error Disassembler::decodeIndexedBitOp(
     if (insn.rightFormat() == HL_PTR) {
         operands = outIndexOffset(operands, insn.insnCode(), offset);
     } else if (insn.rightFormat() == REG8) {
-        operands = (regName == NONE)
+        operands = (regName == REG_UNDEF)
             ? outIndexOffset(operands, insn.insnCode(), offset)
             : outReg8Name(operands, regName);
     }

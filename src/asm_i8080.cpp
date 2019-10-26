@@ -133,7 +133,7 @@ const char *Assembler::encodeDataReg(const char *line, Insn &insn) {
 
 const char *Assembler::encodeDataDataReg(const char *line, Insn &insn) {
     const RegName dstReg = Registers::parseDataReg(line);
-    if (dstReg == NONE) {
+    if (dstReg == REG_UNDEF) {
         setError(UNKNOWN_REGISTER);
         return line;
     }
@@ -143,7 +143,7 @@ const char *Assembler::encodeDataDataReg(const char *line, Insn &insn) {
         return --line;
     }
     const RegName srcReg = Registers::parseDataReg(line);
-    if (srcReg == NONE) {
+    if (srcReg == REG_UNDEF) {
         setError(UNKNOWN_REGISTER);
         return line;
     }

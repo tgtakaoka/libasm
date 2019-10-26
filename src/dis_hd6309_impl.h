@@ -94,10 +94,10 @@ Error Disassembler<mcuType>::decodeIndexed(
     target::byte_t indir = (post & 0x10);
     const char *label = nullptr;
     target::uintptr_t addr = 0;
-    target::intptr_t offset = 0;
+    target::ptrdiff_t offset = 0;
     host::int_t offSize = 0;
     RegName base = _regs.decodeBaseReg((post >> 5) & 3);
-    RegName index = NONE;
+    RegName index = REG_UNDEF;
     host::int_t incr = 0;
 
     if (mode == 0x84) {
@@ -105,17 +105,17 @@ Error Disassembler<mcuType>::decodeIndexed(
         ;
     } else if (mcuType == HD6309 && (post == 0x8F || post == 0x90)) {
         // ,W [,W]
-        base = W;
+        base = REG_W;
     } else if (mcuType == HD6309 && (post == 0xAF || post == 0xB0)) {
         // n16,W [n16,W]
-        base = W;
+        base = REG_W;
         offSize = 16;
         if (readUint16(memory, insn, addr)) return getError();
         offset = static_cast<target::int16_t>(addr);
     } else if (mcuType == HD6309
                && (post == 0xCF || post == 0xD0 || post == 0xEF || post == 0xF0)) {
         // ,W++ ,--W [,W++] [,--W]
-        base = W;
+        base = REG_W;
         incr = (post < 0xE0) ? 2 : -2;
     } else if ((post & 0x80) == 0) {
         // n5,R
@@ -136,7 +136,7 @@ Error Disassembler<mcuType>::decodeIndexed(
         offSize = 16;
         if (readUint16(memory, insn, addr)) return getError();
         offset = static_cast<target::int16_t>(addr);
-    } else if (_regs.decodeIndexReg(post & 0xf) != NONE) {
+    } else if (_regs.decodeIndexReg(post & 0xf) != REG_UNDEF) {
         // R,R [R,R]
         index = _regs.decodeIndexReg(mode & 0xf);
     } else if (mode == 0x80) {
@@ -152,7 +152,7 @@ Error Disassembler<mcuType>::decodeIndexed(
         incr = (mode == 0x81) ? 2 : -2;
     } else if (mode == 0x8C || mode == 0x8D) {
         // [n8,PC] [n16,PC]
-        base = PC;
+        base = REG_PC;
         offSize = -1;
         if (mode == 0x8C) {
             target::byte_t val;
@@ -167,7 +167,7 @@ Error Disassembler<mcuType>::decodeIndexed(
         label = lookup(addr);
     } else if (post == 0x9F) {
         // [n16]
-        base = NONE;
+        base = REG_UNDEF;
         if (readUint16(memory, insn, addr)) return getError();
         label = lookup(addr);
         offSize = 16;
@@ -317,7 +317,7 @@ Error Disassembler<mcuType>::decodeRegisters(
     if (readByte(memory, insn, post)) return getError();
     const RegName src = _regs.decodeRegName(post >> 4);
     const RegName dst = _regs.decodeRegName(post & 0xf);
-    if (src == NONE || dst == NONE) return setError(ILLEGAL_REGISTER);
+    if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     operands = _regs.outRegName(operands, src);
     *operands++ = ',';
     _regs.outRegName(operands, dst);
@@ -350,7 +350,7 @@ Error Disassembler<mcuType>::decodeBitOperation(
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
-    if (reg == NONE) return setError(ILLEGAL_REGISTER);
+    if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     operands = _regs.outRegName(operands, reg);
     *operands++ = ',';
     const host::uint_t dstBit = (post >> 3) & 0x7;
@@ -376,7 +376,7 @@ Error Disassembler<mcuType>::decodeTransferMemory(
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
     const RegName dst = _regs.decodeTfmBaseReg(post & 0xf);
     const uint8_t mode = insn.insnCode() & 0x3;
-    if (src == NONE || dst == NONE) return setError(ILLEGAL_REGISTER);
+    if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     operands = _regs.outRegName(operands, src);
     const char srcModeChar = _regs.tfmSrcModeChar(mode);
     if (srcModeChar) *operands++ = srcModeChar;

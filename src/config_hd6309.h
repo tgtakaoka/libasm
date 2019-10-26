@@ -14,7 +14,6 @@ namespace target
     typedef ::int16_t  int16_t;
     typedef ::int32_t  int32_t;
     typedef ::uint16_t uintptr_t;
-    typedef ::int16_t  intptr_t;
     typedef ::int16_t  ptrdiff_t;
     typedef ::uint8_t  opcode_t;
     typedef ::uint16_t insn_t;

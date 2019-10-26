@@ -171,9 +171,9 @@ Error Disassembler<mcuType>::decode(
     insn.resetAddress(memory.address());
     *operands = *comments = 0;
 
-    target::opcode_t opCode;
-    if (readByte(memory, insn, opCode)) return getError();
-    insn.setInsnCode(opCode);
+    target::insn_t insnCode;
+    if (readByte(memory, insn, insnCode)) return getError();
+    insn.setInsnCode(insnCode);
 
     if (InsnTable<mcuType>::table()->searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);

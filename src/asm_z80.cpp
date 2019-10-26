@@ -317,7 +317,7 @@ const char *Assembler::parseOperand(
         }
     }
 
-    regName = NONE;
+    regName = REG_UNDEF;
     operand = 0;
     if (*line == 0) {
         oprFormat = NO_OPR;
@@ -325,26 +325,26 @@ const char *Assembler::parseOperand(
     }
 
     regName = Registers::parseRegister(line);
-    if (regName != NONE) {
+    if (regName != REG_UNDEF) {
         line += Registers::regNameLen(regName);
         switch (regName) {
-        case A:   oprFormat = A_REG; break;
-        case BC:  oprFormat = BC_REG; break;
-        case DE:  oprFormat = DE_REG; break;
-        case HL:  oprFormat = HL_REG; break;
-        case SP:  oprFormat = SP_REG; break;
-        case IX:
-        case IY:  oprFormat = IX_REG; break;
-        case I:
-        case R:   oprFormat = IR_REG; break;
-        case AF:  oprFormat = AF_REG; break;
-        case AFP: oprFormat = AFPREG; break;
+        case REG_A:   oprFormat = A_REG; break;
+        case REG_BC:  oprFormat = BC_REG; break;
+        case REG_DE:  oprFormat = DE_REG; break;
+        case REG_HL:  oprFormat = HL_REG; break;
+        case REG_SP:  oprFormat = SP_REG; break;
+        case REG_IX:
+        case REG_IY:  oprFormat = IX_REG; break;
+        case REG_I:
+        case REG_R:   oprFormat = IR_REG; break;
+        case REG_AF:  oprFormat = AF_REG; break;
+        case REG_AFP: oprFormat = AFPREG; break;
         default:  oprFormat = REG8; break;
         }
         return line;
     } else if (*line == '(') {
         regName = Registers::parseRegister(++line);
-        if (regName == NONE) {
+        if (regName == REG_UNDEF) {
             if (getOperand16(line, operand) == OK && *line == ')') {
                 line++;
                 oprFormat = (operand < 0x100) ? ADDR8 : ADDR16;
@@ -355,18 +355,18 @@ const char *Assembler::parseOperand(
         if (*line == ')') {
             line++;
             switch (regName) {
-            case BC:
-            case DE: oprFormat = BC_PTR; break;
-            case HL: oprFormat = HL_PTR; break;
-            case SP: oprFormat = SP_PTR; break;
-            case IX:
-            case IY: oprFormat = IX_PTR; break;
-            case C:  oprFormat = C_PTR; break;
+            case REG_BC:
+            case REG_DE: oprFormat = BC_PTR; break;
+            case REG_HL: oprFormat = HL_PTR; break;
+            case REG_SP: oprFormat = SP_PTR; break;
+            case REG_IX:
+            case REG_IY: oprFormat = IX_PTR; break;
+            case REG_C:  oprFormat = C_PTR; break;
             default: setError(UNKNOWN_OPERAND);
             }
             return line;
         } else if (*line == '+' || *line == '-') {
-            if ((regName == IX || regName == IY)
+            if ((regName == REG_IX || regName == REG_IY)
                 && getOperand16(line, operand) == OK && *line == ')') {
                 line++;
                 const target::int16_t offset = target::int16_t(operand);
@@ -415,7 +415,7 @@ Error Assembler::encode(
         if (getError()) return getError();
     } else {
         rightFormat = NO_OPR;
-        rightReg = NONE;
+        rightReg = REG_UNDEF;
         rightOpr = 0;
     }
 

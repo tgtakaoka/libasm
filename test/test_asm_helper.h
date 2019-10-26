@@ -67,7 +67,7 @@ static void assert_equals(
     do {                                                    \
         const target::byte_t expected[] = { __VA_ARGS__ };  \
         Insn insn;                                          \
-        char message[40];                                   \
+        char message[80];                                   \
         assembler.encode(line, insn, addr, &symtab);        \
         sprintf(message, "%s: %s", __FUNCTION__, line);     \
         assert_equals(message, OK, assembler.getError());   \

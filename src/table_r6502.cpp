@@ -169,10 +169,10 @@ const Entry *InsnTableUtils::searchEntry(
 }
 
 const Entry *InsnTableUtils::searchEntry(
-    const target::opcode_t opCode,
+    const target::insn_t insnCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        if (opCode == pgm_read_byte(&entry->opc))
+        if (insnCode == pgm_read_byte(&entry->insnCode))
             return entry;
     }
     return nullptr;
@@ -182,7 +182,7 @@ Error InsnTableUtils::searchPages(
     Insn &insn, const char *name, const Entry *table, const Entry *end) {
     const Entry *entry = searchEntry(name, table, end);
     if (entry) {
-        insn.setInsnCode(pgm_read_byte(&entry->opc));
+        insn.setInsnCode(pgm_read_byte(&entry->insnCode));
         insn.setFlags(pgm_read_byte(&entry->flags));
         return OK;
     }
@@ -204,7 +204,7 @@ Error InsnTableUtils::searchPages(
              && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
         const host::uint_t flags = pgm_read_byte(&entry->flags);
         if (acceptAddrMode(addrMode, _addrMode(flags))) {
-            insn.setInsnCode(pgm_read_byte(&entry->opc));
+            insn.setInsnCode(pgm_read_byte(&entry->insnCode));
             insn.setFlags(flags);
             return OK;
         }
@@ -213,8 +213,8 @@ Error InsnTableUtils::searchPages(
 }
 
 Error InsnTableUtils::searchPages(
-    Insn &insn, target::opcode_t opCode, const Entry *table, const Entry *end) {
-    const Entry *entry = searchEntry(opCode, table, end);
+    Insn &insn, target::insn_t insnCode, const Entry *table, const Entry *end) {
+    const Entry *entry = searchEntry(insnCode, table, end);
     if (entry) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         char name[8];

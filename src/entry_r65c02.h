@@ -5,7 +5,7 @@
 #include "config_r65c02.h"
 
 struct Entry {
-    const target::opcode_t opc;
+    const target::insn_t insnCode;
     const host::uint_t flags;
     const char *name;
 

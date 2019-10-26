@@ -24,20 +24,20 @@ test: test_mc6809 test_hd6309 \
 	test_i8080 test_z80
 
 test_mc6809: test_asm_mc6809 test_dis_mc6809
-	./test_dis_mc6809
 	./test_asm_mc6809
+	./test_dis_mc6809
 test_hd6309: test_asm_hd6309 test_dis_hd6309
-	./test_dis_hd6309
 	./test_asm_hd6309
+	./test_dis_hd6309
 test_r6502: test_asm_r6502 test_dis_r6502
-	./test_dis_r6502
 	./test_asm_r6502
+	./test_dis_r6502
 test_r65c02: test_asm_r65c02 test_dis_r65c02
-	./test_dis_r65c02
 	./test_asm_r65c02
+	./test_dis_r65c02
 test_i8080:  test_asm_i8080  test_dis_i8080
-	./test_dis_i8080
 	./test_asm_i8080
+	./test_dis_i8080
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80

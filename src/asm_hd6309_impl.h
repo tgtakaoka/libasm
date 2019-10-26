@@ -136,12 +136,12 @@ Error Assembler<mcuType>::encodeStackOp(const char *line, Insn &insn) {
 template<McuType mcuType>
 Error Assembler<mcuType>::encodeRegisters(const char *line, Insn &insn) {
     RegName regName;
-    if ((regName = _regs.parseDataReg(line)) == NONE)
+    if ((regName = _regs.parseDataReg(line)) == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
     line += _regs.regNameLen(regName);
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
     target::byte_t post = _regs.encodeDataReg(regName) << 4;
-    if ((regName = _regs.parseDataReg(line)) == NONE)
+    if ((regName = _regs.parseDataReg(line)) == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
     line += _regs.regNameLen(regName);
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
@@ -213,33 +213,33 @@ template<McuType mcuType>
 Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     const bool indir = (*line == '[');
-    RegName base = NONE;
-    RegName index = NONE;
-    host::int_t incr = 0;                    // auto decrement/increment
+    RegName base = REG_UNDEF;
+    RegName index = REG_UNDEF;
+    host::int_t incr = 0;       // auto decrement/increment
     target::uintptr_t addr;
     if (indir) line++;
     if (*line != ',') {
-        if ((index = _regs.parseIndexReg(line)) != NONE) {
-            line += _regs.regNameLen(index);  // index register
+        if ((index = _regs.parseIndexReg(line)) != REG_UNDEF) {
+            line += _regs.regNameLen(index); // index register
         } else {
             if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
-            index = OFFSET;             // index is in addr
+            index = OFFSET;     // index is in addr
         }
     }
     if (*line == ',') {
         line++;
-        if (index == NONE) {
+        if (index == REG_UNDEF) {
             while (*line == '-') {
                 line++;
                 incr--;
             }
         }
-        if ((base = _regs.parseBaseReg(line)) != NONE
-            || _regs.compareRegName(line, PC)) {
-            if (base == NONE) base = PC;
+        if ((base = _regs.parseBaseReg(line)) != REG_UNDEF
+            || _regs.compareRegName(line, REG_PC)) {
+            if (base == REG_UNDEF) base = REG_PC;
             line += _regs.regNameLen(base);
         } else setError(UNKNOWN_OPERAND);
-        if (index == NONE && incr == 0) {
+        if (index == REG_UNDEF && incr == 0) {
             while (*line == '+') {
                 line++;
                 incr++;
@@ -250,13 +250,13 @@ Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitI
     if (*skipSpace(line)) return setError(GARBAGE_AT_END);
 
     target::byte_t post;
-    if (base == NONE) {                 // [n16]
+    if (base == REG_UNDEF) {    // [n16]
         if (index != OFFSET) return setError(UNKNOWN_OPERAND);
         insn.emitByte(0x9F);
         insn.emitUint16(addr);
         return setError(OK);
     }
-    if (base == PC) {                   // n,PC [n,PC]
+    if (base == REG_PC) {       // n,PC [n,PC]
         if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
         post = indir ? 0x10 : 0;
         target::ptrdiff_t delta = addr - (insn.address() + insn.insnLen() + 2);
@@ -270,7 +270,7 @@ Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitI
         insn.emitUint16(delta);
         return setError(OK);
     }
-    if (mcuType == HD6309 && base == W) {
+    if (mcuType == HD6309 && base == REG_W) {
         target::byte_t post;
         if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
         else if (incr == 0) post = 0x8F;    // ,W [,W]
@@ -285,7 +285,7 @@ Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitI
 
     post = _regs.encodeBaseReg(base) << 5;
     if (indir) post |= 0x10;
-    if (index == NONE) {              // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
+    if (index == REG_UNDEF) { // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
         if (incr == 0) post |= 0x84;
         else if (incr == 2) post |= 0x81;
         else if (incr == -2) post |= 0x83;
@@ -295,12 +295,12 @@ Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitI
         insn.emitByte(post);
         return setError(OK);
     }
-    if (index != OFFSET) {              // R,R
+    if (index != OFFSET) {      // R,R
         post |= _regs.encodeIndexReg(index);
         insn.emitByte(0x80 | post);
         return setError(OK);
     }
-    const target::intptr_t offset = addr;
+    const target::ptrdiff_t offset = addr;
     if (offset >= -16 && offset < 16 && !indir) { // n5.R
         post |= (offset & 0x1F);
         insn.emitByte(post);
@@ -322,7 +322,7 @@ Error Assembler<mcuType>::encodeIndexed(const char *line, Insn &insn, bool emitI
 template<McuType mcuType>
 Error Assembler<mcuType>::encodeBitOperation(const char *line, Insn &insn) {
     const RegName regName = _regs.parseBitOpReg(line);
-    if (regName == NONE) return setError(UNKNOWN_REGISTER);
+    if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     line += _regs.regNameLen(regName);
     uint8_t post = _regs.encodeBitOpReg(regName) << 6;
     if (*line++ != ',') return setError(UNKNOWN_OPERAND);
@@ -372,7 +372,7 @@ Error Assembler<mcuType>::encodeImmediatePlus(const char *line, Insn &insn) {
 template<McuType mcuType>
 Error Assembler<mcuType>::encodeTransferMemory(const char *line, Insn &insn) {
     RegName regName = _regs.parseTfmBaseReg(line);
-    if (regName == NONE) return setError(UNKNOWN_REGISTER);
+    if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     line += _regs.regNameLen(regName);
     char srcMode = 0;
     if (*line == '+' || *line == '-') srcMode = *line++;
@@ -380,7 +380,7 @@ Error Assembler<mcuType>::encodeTransferMemory(const char *line, Insn &insn) {
     target::opcode_t post = _regs.encodeTfmBaseReg(regName) << 4;
 
     regName = _regs.parseTfmBaseReg(line);
-    if (regName == NONE) return setError(UNKNOWN_REGISTER);
+    if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     line += _regs.regNameLen(regName);
     char dstMode = 0;
     if (*line == '+' || *line == '-') dstMode = *line++;
@@ -411,7 +411,7 @@ Error Assembler<mcuType>::determineAddrMode(const char *line, Insn &insn) {
     case ',': insn.setAddrMode(INDEXED); break;
     default:
         RegName index;
-        if ((index = _regs.parseIndexReg(line)) != NONE) {
+        if ((index = _regs.parseIndexReg(line)) != REG_UNDEF) {
             line += _regs.regNameLen(index);
             if (*line == ',') {
                 insn.setAddrMode(INDEXED);
