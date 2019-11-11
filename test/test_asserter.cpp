@@ -22,7 +22,7 @@ void TestAsserter::equals(
         return;
     }
     _fail_count++;
-    printf("%s: expected Error '%d': actual '%d'\n", message, expected, actual);
+    printf("%s: expected '%d': actual '%d'\n", message, expected, actual);
 }
 
 void TestAsserter::equals(
@@ -61,4 +61,14 @@ void TestAsserter::equals(
         printf("%02" PRIX8, actual[i]);
     }
     printf("\n");
+}
+
+void TestAsserter::not_equals(
+    const char *message, const char *expected, const char *actual) {
+    if (strcmp(expected, actual)) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s: not expected '%s': actual '%s'\n", message, expected, actual);
 }

@@ -21,6 +21,8 @@ public:
         const char *message,
         const uint8_t expected[], std::size_t expected_len,
         const uint8_t actual[], std::size_t actual_len);
+    void not_equals(
+        const char *message, const char *expected, const char *actual);
 
 private:
     const char *_test_name;
