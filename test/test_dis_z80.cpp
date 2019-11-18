@@ -1,15 +1,16 @@
-#include <cstdio>
-
 #include "dis_z80.h"
 #include "test_dis_helper.h"
 
+TestAsserter asserter;
+TestMemory memory;
+TestSymtab symtab;
 Disassembler disassembler;
 
 static void set_up() {
-    symtab.reset();
 }
 
 static void tear_down() {
+    symtab.reset();
 }
 
 static void test_move_inherent() {
@@ -763,10 +764,11 @@ static void test_bitop_indexed() {
 // FD 11 HL0 101 PUSH IY
 
 static void run_test(void (*test)(), const char *test_name) {
+    asserter.clear(test_name);
     set_up();
     test();
-    printf("  PASS %s\n", test_name);
     tear_down();
+    asserter.check();
 }
 
 int main(int argc, char **argv) {

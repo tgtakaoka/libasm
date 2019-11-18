@@ -350,14 +350,13 @@ Error Disassembler::decodeRelative(
     const target::uintptr_t addr = insn.address() + 2 + delta;
     const char *label = lookup(addr);
     if (label) {
-        operands = outStr(operands, label);
-        comments = outOpr16Hex(comments, addr);
+        outStr(operands, label);
+        outOpr16Hex(comments, addr);
     } else {
         operands = outOpr16Hex(operands, addr);
         if (delta >= 0) *comments++ = '+';
-        comments = outInt16(comments, delta);
+        outInt16(comments, delta);
     }
-    *operands = *comments = 0;
     return setError(OK);
 }
 

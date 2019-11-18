@@ -1,15 +1,15 @@
-#include <cstdio>
-
 #include "asm_z80.h"
 #include "test_asm_helper.h"
 
+TestAsserter asserter;
+TestSymtab symtab;
 Assembler assembler;
 
 static void set_up() {
-    symtab.reset();
 }
 
 static void tear_down() {
+    symtab.reset();
 }
 
 static void test_move_inherent() {
@@ -610,10 +610,11 @@ static void test_bitop_indexed() {
 }
 
 static void run_test(void (*test)(), const char *test_name) {
+    asserter.clear(test_name);
     set_up();
     test();
-    printf("  PASS %s\n", test_name);
     tear_down();
+    asserter.check();
 }
 
 int main(int argc, char **argv) {

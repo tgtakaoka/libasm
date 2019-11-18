@@ -1,12 +1,15 @@
 #include "asm_hd6309.h"
 #include "test_asm_helper.h"
 
+TestAsserter asserter;
+TestSymtab symtab;
 Assembler<HD6309> assembler;
 
 static void set_up() {
 }
 
 static void tear_down() {
+    symtab.reset();
 }
 
 static void test_inherent() {
@@ -387,7 +390,9 @@ static void test_direct() {
     TEST("TIM #$30,<$1290", 0x0B, 0x30, 0x90);
 
     symtab.put(0x10, "dir10");
+    symtab.put(0x90, "dir90");
     symtab.put(0x1290, "sym1290");
+    symtab.put(0x90A0, "sym90A0");
 
     TEST("NEG  dir10",    0x00, 0x10);
     TEST("LDA  dir10",    0x96, 0x10);
@@ -890,10 +895,11 @@ static void test_bit_position() {
 }
 
 static void run_test(void (*test)(), const char *test_name) {
+    asserter.clear(test_name);
     set_up();
     test();
-    printf("  PASS %s\n", test_name);
     tear_down();
+    asserter.check();
 }
 
 int main(int argc, char **argv) {

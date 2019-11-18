@@ -1,12 +1,15 @@
 #include "asm_hd6309.h"
 #include "test_asm_helper.h"
 
+TestAsserter asserter;
+TestSymtab symtab;
 Assembler<MC6809> assembler;
 
 static void set_up() {
 }
 
 static void tear_down() {
+    symtab.reset();
 }
 
 static void test_inherent() {
@@ -267,6 +270,7 @@ static void test_direct() {
     TEST("JSR <$1290", 0x9D, 0x90);
 
     symtab.put(0x10, "dir10");
+    symtab.put(0x90, "dir90");
     symtab.put(0x1290, "sym1290");
 
     TEST("NEG  dir10",    0x00, 0x10);
@@ -599,10 +603,11 @@ static void test_indexed_mode() {
 }
 
 static void run_test(void (*test)(), const char *test_name) {
+    asserter.clear(test_name);
     set_up();
     test();
-    printf("  PASS %s\n", test_name);
     tear_down();
+    asserter.check();
 }
 
 int main(int argc, char **argv) {

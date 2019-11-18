@@ -1,15 +1,16 @@
-#include <cstdio>
-
 #include "dis_r65c02.h"
 #include "test_dis_helper.h"
 
+TestAsserter asserter;
+TestMemory memory;
+TestSymtab symtab;
 Disassembler<R6502> disassembler;
 
 static void set_up() {
-    symtab.reset();
 }
 
 static void tear_down() {
+    symtab.reset();
 }
 
 static void test_implied() {
@@ -304,15 +305,16 @@ static void test_illegal() {
         disassembler.decode(memory, insn, operands, comments, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);
-        assert_equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+        asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 }
 
 static void run_test(void (*test)(), const char *test_name) {
+    asserter.clear(test_name);
     set_up();
     test();
-    printf("  PASS %s\n", test_name);
     tear_down();
+    asserter.check();
 }
 
 int main(int argc, char **argv) {
