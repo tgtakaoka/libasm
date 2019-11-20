@@ -11,13 +11,13 @@ TESTS= \
 .PHONY: clean clean-obj test \
 	test_mc6809 test_hd6309 \
 	test_r6502 test_r65c02 \
-	test_i8080 test_z80 \
-	test_tms9995
+	test_tms9995 \
+	test_i8080 test_z80
 
 test:   test_mc6809 test_hd6309 \
 	test_r6502 test_r65c02 \
-	test_i8080 test_z80 \
-	test_tms9995
+	test_tms9995 \
+	test_i8080 test_z80
 
 test_mc6809: test_asm_mc6809 test_dis_mc6809
 	./test_asm_mc6809
@@ -44,7 +44,7 @@ test_z80: test_asm_z80 test_dis_z80
 CXXFLAGS    =-Wall -g -std=c++17 -O -I$(VPATH)
 OBJS_common = string_utils.o test_asserter.o
 OBJS_mc6809 = registers_hd6309.o table_mc6809.o
-OBJS_hd6809 = $(OBJS_mc6809) table_hd6309.o
+OBJS_hd6309 = $(OBJS_mc6809) table_hd6309.o
 OBJS_r6502  = table_r6502.o
 OBJS_r65c02 = $(OBJS_r6502) table_r65c02.o
 OBJS_i8080  = registers_i8080.o  table_i8080.o
@@ -66,13 +66,13 @@ test_asm_hd6309: test_asm_hd6309.o $(OBJS_common) $(OBJS_hd6309)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_hd6309: test_dis_hd6309.o $(OBJS_common) $(OBJS_hd6309)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_r6502:  test_asm_r6502.o  $(OBJS_common) $(OBJS_r6502.o)
+test_asm_r6502:  test_asm_r6502.o  $(OBJS_common) $(OBJS_r6502)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_r6502:  test_dis_r6502.o  $(OBJS_common) $(OBJS_r6502.o)
+test_dis_r6502:  test_dis_r6502.o  $(OBJS_common) $(OBJS_r6502)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_r65c02: test_asm_r65c02.o $(OBJS_common) $(OBJS_r65c02.o)
+test_asm_r65c02: test_asm_r65c02.o $(OBJS_common) $(OBJS_r65c02)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_r65c02: test_dis_r65c02.o $(OBJS_common) $(OBJS_r65c02.o)
+test_dis_r65c02: test_dis_r65c02.o $(OBJS_common) $(OBJS_r65c02)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_i8080:  test_asm_i8080.o  $(OBJS_common) asm_i8080.o $(OBJS_i8080)
 	$(CXX) -o $@ $(CXXFLAGS) $^
