@@ -8,12 +8,12 @@ void setup() {
 
 void loop() {
   while (Serial.available()) {
-   String line = Serial.readString();
-   Insn insn;
-   if (assembler.encode(line.c_str(), insn, 0x1000, nullptr)) {
+    String line = Serial.readString();
+    Insn insn;
+    if (assembler.encode(line.c_str(), insn, 0x1000, nullptr)) {
       Serial.print(F("Error "));
       Serial.println(assembler.getError(), DEC);
-   } else {
+    } else {
       Serial.print(insn.address(), HEX);
       Serial.print(':');
       for (int i = 0; i < insn.insnLen(); i++) {
