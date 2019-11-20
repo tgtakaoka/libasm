@@ -19,9 +19,17 @@ public:
         _address = addr;
         _insnLen = 0;
     }
-    void emitUint16(target::uint16_t val) {
-        emitByte(target::byte_t(val >> 8));
-        emitByte(target::byte_t(val & 0xff));
+    void emitInsn() {
+        emitUint16(_insnCode, 0);
+        if (_insnLen == 0) _insnLen = 2;
+    }
+    void emitOperand(target::uint16_t val) {
+        if (_insnLen == 0) _insnLen = 2;
+        readUint16(val);
+    }
+    void readUint16(target::uint16_t val) {
+        emitUint16(val, _insnLen);
+        _insnLen += 2;
     }
     void setInsnCode(target::insn_t insnCode) { _insnCode = insnCode; }
     void setName(const char *name, const char *end = nullptr) {
@@ -41,8 +49,9 @@ private:
     char              _name[5];
     target::byte_t    _bytes[6];
 
-    void emitByte(target::byte_t val) {
-        _bytes[_insnLen++] = val;
+    void emitUint16(target::uint16_t val, host::uint_t pos) {
+        _bytes[pos++] = target::byte_t(val >> 8);
+        _bytes[pos] = target::byte_t(val);
     }
 };
 

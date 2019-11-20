@@ -12,7 +12,11 @@ enum Error : host::uint_t {
     NO_MEMORY,
     INTERNAL_ERROR,
 
+    NO_TEXT,
     UNKNOWN_INSTRUCTION,
+    UNKNOWN_OPERAND,
+    OPERAND_TOO_FAR,
+    GARBAGE_AT_END,
 };
 
 #endif // __ERROR_TMS9995_H__

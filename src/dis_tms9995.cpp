@@ -23,7 +23,7 @@ Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val
     val = (target::uint16_t)memory.readByte() << 8;
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val |= memory.readByte();
-    insn.emitUint16(val);
+    insn.readUint16(val);
     return OK;
 }
 
