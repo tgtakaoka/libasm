@@ -18,14 +18,14 @@ namespace target
 } // namespace target
 
 enum AddrMode : host::uint_t {
-    INHERENT,
-    IMMEDIATE8,
-    IMMEDIATE16,
+    INHR,
+    IMM8,
+    IMM16,
     DIRECT,
-    IOADDR,
-    RELATIVE,
-    INDEXED,
-    INDEXED_IMMEDIATE8,
+    IOADR,
+    REL8,
+    INDX,
+    INDX_IMM8,
 };
 
 enum InsnFormat : host::uint_t {
@@ -45,35 +45,35 @@ enum InsnFormat : host::uint_t {
 
 enum OprFormat : host::uint_t {
     NO_OPR,
-    REG8,                               // B/C/D/E/H/L/(HL)/A
-    REG16,                              // BC/DE/HL/SP
-    REG16X,                             // BC/DE/IX/SP, BC/DE/IY/SP
-    A_REG,                              // A
-    BC_REG,                             // BC
-    DE_REG,                             // DE
-    HL_REG,                             // HL
-    SP_REG,                             // SP
-    IX_REG,                             // IX/IY
-    IR_REG,                             // I/R
-    AF_REG,                             // AF
-    AFPREG,                             // AF'
-    STK16,                              // BC/DE/HL/AF
-    BC_PTR,                             // (BC)/(DE)
-    HL_PTR,                             // (HL)
-    IX_PTR,                             // (IX)/(IY)
-    SP_PTR,                             // (SP)
-    C_PTR,                              // (C)
-    IMM8,                               // nn
-    IMM16,                              // nnnn
-    ADDR8,                              // (nn)
-    ADDR16,                             // (nnnn)
-    CC4,                                // Z/NZ/C/NC
-    CC8,                                // Z/NZ/C/NC/PO/PE/P/M
-    BIT_NO,                             // 0~7
-    IMM_NO,                             // 0,1,2
-    VEC_NO,                             // [0123][08]H
-    IX_OFF,                             // (IX/IY+nn)
-    IX_BIT,                             // DD/FD CB nn xx
+    REG_8,                      // B/C/D/E/H/L/(HL)/A
+    REG_16,                     // BC/DE/HL/SP
+    REG_16X,                    // BC/DE/IX/SP, BC/DE/IY/SP
+    A_REG,                      // A
+    BC_REG,                     // BC
+    DE_REG,                     // DE
+    HL_REG,                     // HL
+    SP_REG,                     // SP
+    IX_REG,                     // IX/IY
+    IR_REG,                     // I/R
+    AF_REG,                     // AF
+    AFPREG,                     // AF'
+    STK_16,                     // BC/DE/HL/AF
+    BC_PTR,                     // (BC)/(DE)
+    HL_PTR,                     // (HL)
+    IX_PTR,                     // (IX)/(IY)
+    SP_PTR,                     // (SP)
+    C_PTR,                      // (C)
+    IMM_8,                      // nn
+    IMM_16,                     // nnnn
+    ADDR_8,                     // (nn)
+    ADDR_16,                    // (nnnn)
+    COND_4,                     // Z/NZ/C/NC
+    COND_8,                     // Z/NZ/C/NC/PO/PE/P/M
+    BIT_NO,                     // 0~7
+    IMM_NO,                     // 0,1,2
+    VEC_NO,                     // [0123][08]H
+    IX_OFF,                     // (IX/IY+nn)
+    IX_BIT,                     // DD/FD CB nn xx
 };
 
 #include "registers_z80.h"

@@ -159,7 +159,7 @@ Error Assembler<mcuType>::parseOperand(
         return setError(OPERAND_NOT_ZP);
     }
     if (indirect && index == 'X' && *line == ')' && *skipSpace(line + 1) == 0) {
-        insn.setAddrMode(INDEXED_IND);
+        insn.setAddrMode(INDX_IND);
         return OK;
     }
     return setError(UNKNOWN_OPERAND);
@@ -187,10 +187,10 @@ Error Assembler<mcuType>::encode(
     case IMPLIED:
         emitInsnCode(insn);
         return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
-    case RELATIVE:
+    case REL8:
         return encodeRelative(line, insn, /* emitInsn */ true);
     default:
-        if (mcuType == R65C02 && insn.addrMode() == ZP_RELATIVE)
+        if (mcuType == R65C02 && insn.addrMode() == ZP_REL8)
             return encodeZeroPageRelative(line, insn);
         break;
     }
@@ -207,7 +207,7 @@ Error Assembler<mcuType>::encode(
     case ZEROPAGE:
     case ZP_IDX_X:
     case ZP_IDX_Y:
-    case INDEXED_IND:
+    case INDX_IND:
     case INDIRECT_IDX:
     case ZP_INDIRECT:
         emitInsnCode(insn);

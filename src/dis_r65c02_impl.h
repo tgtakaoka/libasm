@@ -35,24 +35,22 @@ Error Disassembler<mcuType>::readUint16(Memory &memory, Insn &insn, target::uint
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeImmediate(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
+    Memory& memory, Insn &insn, char *operands) {
     target::byte_t val;
     if (readByte(memory, insn, val)) return getError();
     *operands++ = '#';
     const char *label = lookup(val);
     if (label) {
         outStr(operands, label);
-        outOpr8Hex(comments, val);
     } else {
         outOpr8Hex(operands, val);
-        outInt16(comments, val);
     }
     return setError(OK);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeAbsolute(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
+    Memory& memory, Insn &insn, char *operands) {
     const bool indirect = (insn.addrMode() == IDX_ABS_IND
                            || insn.addrMode() == ABS_INDIRECT);
     char index;
@@ -75,7 +73,6 @@ Error Disassembler<mcuType>::decodeAbsolute(
     if (label) {
         if (addr < 0x100) *operands++ = '>';
         operands = outStr(operands, label);
-        outOpr16Hex(comments, addr);
     } else {
         operands = outOpr16Hex(operands, addr);
     }
@@ -93,14 +90,14 @@ Error Disassembler<mcuType>::decodeAbsolute(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeZeroPage(
-    Memory &memory, Insn& insn, char *operands, char *comments) {
-    const bool indirect = (insn.addrMode() == INDEXED_IND
-                           || insn.addrMode() == INDIRECT_IDX
-                           || insn.addrMode() == ZP_INDIRECT);
+    Memory &memory, Insn& insn, char *operands) {
+    const bool indirect = insn.addrMode() == INDX_IND
+        || insn.addrMode() == INDIRECT_IDX
+        || insn.addrMode() == ZP_INDIRECT;
     char index;
     switch (insn.addrMode()) {
     case ZP_IDX_X:
-    case INDEXED_IND:
+    case INDX_IND:
         index = 'X';
         break;
     case ZP_IDX_Y:
@@ -117,7 +114,6 @@ Error Disassembler<mcuType>::decodeZeroPage(
     const char *label = lookup(zp);
     if (label) {
         operands = outStr(operands, label);
-        outOpr8Hex(comments, zp);
     } else {
         operands = outOpr8Hex(operands, zp);
     }
@@ -131,45 +127,37 @@ Error Disassembler<mcuType>::decodeZeroPage(
         *operands++ = ')';
         *operands = 0;
     }
-    if (insn.addrMode() == ZP_RELATIVE) {
+    if (insn.addrMode() == ZP_REL8) {
         *operands++ = ',';
-        return decodeRelative(memory, insn, operands, comments);
+        return decodeRelative(memory, insn, operands);
     }
     return setError(OK);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeRelative(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::ptrdiff_t delta;
     target::byte_t val;
     if (readByte(memory, insn, val)) return getError();
     delta = static_cast<target::int8_t>(val);
-    const host::uint_t insnLen = (insn.addrMode() == ZP_RELATIVE ? 3 : 2);
+    const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
     const target::uintptr_t addr = insn.address() + insnLen + delta;
     const char *label = lookup(addr);
     if (label) {
         outStr(operands, label);
-        comments = outOpr16Hex(comments, addr);
-        *comments++ = ' '; *comments++ = '(';
-        if (delta >= 0) *comments++ = '+';
-        comments = outInt16(comments, delta);
-        *comments++ = ')';
-        *comments = 0;
     } else {
         outOpr16Hex(operands, addr);
-        if (delta >= 0) *comments++ = '+';
-        outInt16(comments, delta);
     }
     return setError(OK);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decode(
-    Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
+    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());
-    *operands = *comments = 0;
+    *operands = 0;
 
     target::insn_t insnCode;
     if (readByte(memory, insn, insnCode)) return getError();
@@ -189,23 +177,23 @@ Error Disassembler<mcuType>::decode(
         *operands = 0;
         return setError(OK);
     case IMMEDIATE:
-        return decodeImmediate(memory, insn, operands, comments);
+        return decodeImmediate(memory, insn, operands);
     case ABSOLUTE:
     case ABS_IDX_X:
     case ABS_IDX_Y:
     case ABS_INDIRECT:
     case IDX_ABS_IND:
-        return decodeAbsolute(memory, insn, operands, comments);
+        return decodeAbsolute(memory, insn, operands);
     case ZEROPAGE:
     case ZP_IDX_X:
     case ZP_IDX_Y:
-    case INDEXED_IND:
+    case INDX_IND:
     case INDIRECT_IDX:
     case ZP_INDIRECT:
-    case ZP_RELATIVE:
-        return decodeZeroPage(memory, insn, operands, comments);
-    case RELATIVE:
-        return decodeRelative(memory, insn, operands, comments);
+    case ZP_REL8:
+        return decodeZeroPage(memory, insn, operands);
+    case REL8:
+        return decodeRelative(memory, insn, operands);
     default:
         return setError(INTERNAL_ERROR);
     }

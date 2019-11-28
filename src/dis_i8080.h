@@ -12,8 +12,7 @@
 class Disassembler : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn,
-        char *operands, char *comments, SymbolTable *symtab);
+        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     SymbolTable *_symtab;
@@ -30,14 +29,10 @@ private:
     Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
     Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
 
-    Error decodeImmediate8(
-        Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeImmediate16(
-        Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeDirect(
-        Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeIoaddr(
-        Memory &memory, Insn &insn, char *operands, char *comments);
+    Error decodeImmediate8(Memory &memory, Insn &insn, char *operands);
+    Error decodeImmediate16(Memory &memory, Insn &insn, char *operands);
+    Error decodeDirect(Memory &memory, Insn &insn, char *operands);
+    Error decodeIoaddr(Memory &memory, Insn &insn, char *operands);
 };
 
 #endif // __DIS_I8080_H__

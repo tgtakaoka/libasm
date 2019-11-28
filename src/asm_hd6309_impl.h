@@ -163,11 +163,11 @@ Error Assembler<mcuType>::encodeRelative(const char *line, Insn &insn) {
     if (getOperand16(line, addr)) return setError(UNKNOWN_OPERAND);
     const target::opcode_t prefix = InsnTableUtils::prefixCode(insn.insnCode());
     const host::uint_t insnLen = (InsnTableUtils::isPrefixCode(prefix) ? 2 : 1)
-        + (insn.addrMode() == RELATIVE8 ? 1 : 2);
+        + (insn.addrMode() == REL8 ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
     emitInsnCode(insn);
-    if (insn.addrMode() == RELATIVE8) {
+    if (insn.addrMode() == REL8) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitByte(target::byte_t(delta));
     } else {
@@ -180,12 +180,12 @@ template<McuType mcuType>
 Error Assembler<mcuType>::encodeImmediate(const char *line, Insn &insn) {
     if (*line++ != '#') return setError(UNKNOWN_OPERAND);
     emitInsnCode(insn);
-    if (insn.addrMode() == IMMEDIATE8 || insn.addrMode() == IMMEDIATE16) {
+    if (insn.addrMode() == IMM8 || insn.addrMode() == IMM16) {
         target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (insn.addrMode() == IMMEDIATE8) insn.emitByte(target::byte_t(val));
+        if (insn.addrMode() == IMM8) insn.emitByte(target::byte_t(val));
         else insn.emitUint16(val);
-    } else if (mcuType == HD6309 && insn.addrMode() == IMMEDIATE32) {
+    } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
         uint32_t val;
         if (getOperand32(line, val)) return setError(UNKNOWN_OPERAND);
         insn.emitUint32(val);
@@ -355,9 +355,9 @@ Error Assembler<mcuType>::encodeImmediatePlus(const char *line, Insn &insn) {
 
     if (determineAddrMode(line, insn)) return getError();
     switch (insn.addrMode()) {
-    case DIRECT_PG: insn.setAddrMode(IMM_DIRECT); break;
-    case EXTENDED: insn.setAddrMode(IMM_EXTENDED); break;
-    case INDEXED: insn.setAddrMode(IMM_INDEXED); break;
+    case DIRP: insn.setAddrMode(IMMDIR); break;
+    case EXTD: insn.setAddrMode(IMMEXT); break;
+    case INDX: insn.setAddrMode(IMMIDX); break;
     default: return setError(UNKNOWN_OPERAND);
     }
     if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
@@ -365,11 +365,11 @@ Error Assembler<mcuType>::encodeImmediatePlus(const char *line, Insn &insn) {
     emitInsnCode(insn);
     insn.emitByte((uint8_t)val);
     switch (insn.addrMode()) {
-    case IMM_DIRECT:
+    case IMMDIR:
         return encodeDirect(line, insn, /* emitInsn */ false);
-    case IMM_EXTENDED:
+    case IMMEXT:
         return encodeExtended(line, insn, /* emitInsn */ false);
-    case IMM_INDEXED:
+    case IMMIDX:
         return encodeIndexed(line, insn, /* emitInsn */ false);
     default: return setError(UNKNOWN_OPERAND);
     }
@@ -410,25 +410,25 @@ Error Assembler<mcuType>::encodeTransferMemory(const char *line, Insn &insn) {
 template<McuType mcuType>
 Error Assembler<mcuType>::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
-    case '#': insn.setAddrMode(IMMEDIATE8); break;
-    case '<': insn.setAddrMode(DIRECT_PG); break;
-    case '>': insn.setAddrMode(EXTENDED); break;
+    case '#': insn.setAddrMode(IMM8); break;
+    case '<': insn.setAddrMode(DIRP); break;
+    case '>': insn.setAddrMode(EXTD); break;
     case '[':
-    case ',': insn.setAddrMode(INDEXED); break;
+    case ',': insn.setAddrMode(INDX); break;
     default:
         RegName index;
         if ((index = _regs.parseIndexReg(line)) != REG_UNDEF) {
             line += _regs.regNameLen(index);
             if (*line == ',') {
-                insn.setAddrMode(INDEXED);
+                insn.setAddrMode(INDX);
                 return OK;
             }
             return setError(UNKNOWN_OPERAND);
         }
         target::uint16_t val;
         if (getOperand16(line, val)) return setError(UNKNOWN_OPERAND);
-        if (*line == ',') insn.setAddrMode(INDEXED);
-        else insn.setAddrMode(val < 0x100 ? DIRECT_PG : EXTENDED);
+        if (*line == ',') insn.setAddrMode(INDX);
+        else insn.setAddrMode(val < 0x100 ? DIRP : EXTD);
         break;
     }
     return OK;
@@ -453,26 +453,26 @@ Error Assembler<mcuType>::encode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INHERENT:
+    case INHR:
         emitInsnCode(insn);
         return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
-    case RELATIVE8:
-    case RELATIVE16:
+    case REL8:
+    case REL16:
         return encodeRelative(line, insn);
-    case STACK_OP:
+    case STKOP:
         return encodeStackOp(line, insn);
-    case REGISTERS:
+    case REGS:
         return encodeRegisters(line, insn);
     default:
         if (mcuType == HD6309) {
             switch (insn.addrMode()) {
-            case IMM_DIRECT:
-            case IMM_EXTENDED:
-            case IMM_INDEXED:
+            case IMMDIR:
+            case IMMEXT:
+            case IMMIDX:
                 return encodeImmediatePlus(line, insn);
-            case BIT_OPERATION:
+            case BITOP:
                 return encodeBitOperation(line, insn);
-            case TRANSFER_MEM:
+            case TFRM:
                 return encodeTransferMemory(line, insn);
             default:
                 break;
@@ -485,17 +485,17 @@ Error Assembler<mcuType>::encode(
     if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
-    case IMMEDIATE8:
-    case IMMEDIATE16:
+    case IMM8:
+    case IMM16:
         return encodeImmediate(line, insn);
-    case DIRECT_PG:
+    case DIRP:
         return encodeDirect(line, insn);
-    case EXTENDED:
+    case EXTD:
         return encodeExtended(line, insn);
-    case INDEXED:
+    case INDX:
         return encodeIndexed(line, insn);
     default:
-        if (mcuType == HD6309 && insn.addrMode() == IMMEDIATE32) {
+        if (mcuType == HD6309 && insn.addrMode() == IMM32) {
             return encodeImmediate(line, insn);
         } else {
             return setError(UNKNOWN_OPERAND);

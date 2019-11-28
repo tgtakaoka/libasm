@@ -16,11 +16,11 @@ namespace target
 } // namespace target
 
 enum AddrMode : host::uint_t {
-    INHERENT,
-    IMMEDIATE_8,
-    IMMEDIATE_16,
+    INHR,
+    IMM8,
+    IMM16,
     DIRECT,
-    IOADDR,
+    IOADR,
 };
 
 enum InsnFormat : host::uint_t {

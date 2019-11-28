@@ -69,9 +69,9 @@ void loop() {
   while (Serial.available()) {
     String line = Serial.readString();
     LineMemory memory(0x1000, line);
-    char operands[20], comments[20];
+    char operands[20];
     Insn insn;
-    if (disassembler.decode(memory, insn, operands, comments, nullptr)) {
+    if (disassembler.decode(memory, insn, operands, nullptr)) {
       Serial.print(F("Error "));
       Serial.println(disassembler.getError(), DEC);
     } else {
@@ -85,10 +85,6 @@ void loop() {
         Serial.print(F("   "));
       print(insn.name(), 6);
       print(operands, 12);
-      if (*comments) {
-        Serial.print(';');
-        Serial.print(comments);
-      }
       Serial.println();
     }
   }

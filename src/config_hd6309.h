@@ -25,23 +25,23 @@ enum McuType : host::uint_t {
 };
 
 enum AddrMode : host::uint_t {
-    INHERENT,
-    DIRECT_PG,
-    EXTENDED,
-    INDEXED,
-    RELATIVE8,
-    RELATIVE16,
-    IMMEDIATE8,
-    IMMEDIATE16,
-    STACK_OP,
-    REGISTERS,
+    INHR,
+    DIRP,
+    EXTD,
+    INDX,
+    REL8,
+    REL16,
+    IMM8,
+    IMM16,
+    STKOP,
+    REGS,
     // HD6309
-    IMMEDIATE32,
-    IMM_DIRECT,
-    IMM_EXTENDED,
-    IMM_INDEXED,
-    BIT_OPERATION,
-    TRANSFER_MEM,
+    IMM32,
+    IMMDIR,
+    IMMEXT,
+    IMMIDX,
+    BITOP,
+    TFRM,
 };
 
 #include "registers_hd6309.h"

@@ -12,8 +12,7 @@
 class Disassembler : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn,
-        char *operands, char *comments, SymbolTable *symtab);
+        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     SymbolTable *_symtab;
@@ -30,11 +29,9 @@ private:
     Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
 
     Error decodeOperand(
-        Memory &memory, Insn& insn, char *&operands, char *&comments,
-        host::uint_t opr);
-    Error decodeImmediate(
-        Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeRelative(Insn &insn, char *operands, char *comments);
+        Memory &memory, Insn& insn, char *&operands, host::uint_t opr);
+    Error decodeImmediate(Memory &memory, Insn &insn, char *operands);
+    Error decodeRelative(Insn &insn, char *operands);
 };
 
 #endif // __DIS_TMS9995_H__

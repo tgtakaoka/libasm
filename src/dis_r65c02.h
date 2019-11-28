@@ -13,8 +13,7 @@ template<McuType mcuType = R65C02>
 class Disassembler : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn,
-        char *operands, char *comments, SymbolTable *symtab);
+        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     SymbolTable *_symtab;
@@ -31,10 +30,10 @@ private:
     Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
     Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
 
-    Error decodeImmediate(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeAbsolute(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeZeroPage(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeRelative(Memory &memory, Insn &insn, char *operands, char *comments);
+    Error decodeImmediate(Memory &memory, Insn &insn, char *operands);
+    Error decodeAbsolute(Memory &memory, Insn &insn, char *operands);
+    Error decodeZeroPage(Memory &memory, Insn &insn, char *operands);
+    Error decodeRelative(Memory &memory, Insn &insn, char *operands);
 };
 
 #include "dis_r65c02_impl.h"

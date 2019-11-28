@@ -36,39 +36,35 @@ Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val
 }
 
 Error Disassembler::decodeImmediate8(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
+    Memory& memory, Insn &insn, char *operands) {
     target::byte_t val;
     if (readByte(memory, insn, val)) return getError();
     if (insn.insnFormat() != NO_FORMAT) *operands++ = ',';
     outOpr8Hex(operands, val);
-    outInt16(comments, val);
     return setError(OK);
 }
 
 Error Disassembler::decodeImmediate16(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
+    Memory& memory, Insn &insn, char *operands) {
     target::uint16_t val;
     if (readUint16(memory, insn, val)) return getError();
     if (insn.insnFormat() != NO_FORMAT) *operands++ = ',';
     const char *label = lookup(val);
     if (label) {
         outStr(operands, label);
-        outOpr16Hex(comments, val);
     } else {
         outOpr16Hex(operands, val);
-        outInt16(comments, val);
     }
     return setError(OK);
 }
 
 Error Disassembler::decodeDirect(
-    Memory &memory, Insn& insn, char *operands, char *comments) {
+    Memory &memory, Insn& insn, char *operands) {
     target::uintptr_t addr;
     if (readUint16(memory, insn, addr)) return getError();
     const char *label = lookup(addr);
     if (label) {
         outStr(operands, label);
-        outOpr16Hex(comments, addr);
     } else {
         outOpr16Hex(operands, addr);
     }
@@ -76,7 +72,7 @@ Error Disassembler::decodeDirect(
 }
 
 Error Disassembler::decodeIoaddr(
-    Memory &memory, Insn& insn, char *operands, char *comments) {
+    Memory &memory, Insn& insn, char *operands) {
     target::byte_t ioaddr;
     if (readByte(memory, insn, ioaddr)) return getError();
     outOpr8Hex(operands, ioaddr);
@@ -84,10 +80,10 @@ Error Disassembler::decodeIoaddr(
 }
 
 Error Disassembler::decode(
-    Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
+    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());
-    *operands = *comments = 0;
+    *operands = 0;
 
     target::insn_t insnCode;
     if (readByte(memory, insn, insnCode)) return getError();
@@ -124,16 +120,16 @@ Error Disassembler::decode(
     }
 
     switch (insn.addrMode()) {
-    case INHERENT:
+    case INHR:
         return setError(OK);
-    case IMMEDIATE_8:
-        return decodeImmediate8(memory, insn, operands, comments);
-    case IMMEDIATE_16:
-        return decodeImmediate16(memory, insn, operands, comments);
+    case IMM8:
+        return decodeImmediate8(memory, insn, operands);
+    case IMM16:
+        return decodeImmediate16(memory, insn, operands);
     case DIRECT:
-        return decodeDirect(memory, insn, operands, comments);
-    case IOADDR:
-        return decodeIoaddr(memory, insn, operands, comments);
+        return decodeDirect(memory, insn, operands);
+    case IOADR:
+        return decodeIoaddr(memory, insn, operands);
     default:
         return setError(INTERNAL_ERROR);
     }

@@ -14,8 +14,7 @@ template<McuType mcuType = HD6309>
 class Disassembler : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn,
-        char *operands, char *comments, SymbolTable *symtab);
+        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     Registers<mcuType> _regs;
@@ -35,17 +34,17 @@ private:
     Error readUint32(Memory &memory, Insn &insn, target::uint32_t &val);
 
     // MC6809
-    Error decodeDirectPage(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeIndexed(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeExtended(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeRelative(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeImmediate(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeStackOp(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeRegisters(Memory &memory, Insn &insn, char *operands, char *comments);
+    Error decodeDirectPage(Memory &memory, Insn &insn, char *operands);
+    Error decodeIndexed(Memory &memory, Insn &insn, char *operands);
+    Error decodeExtended(Memory &memory, Insn &insn, char *operands);
+    Error decodeRelative(Memory &memory, Insn &insn, char *operands);
+    Error decodeImmediate(Memory &memory, Insn &insn, char *operands);
+    Error decodeStackOp(Memory &memory, Insn &insn, char *operands);
+    Error decodeRegisters(Memory &memory, Insn &insn, char *operands);
     // HD6309
-    Error decodeImmediatePlus(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeBitOperation(Memory &memory, Insn &insn, char *operands, char *comments);
-    Error decodeTransferMemory(Memory &memory, Insn &insn, char *operands, char *comments);
+    Error decodeImmediatePlus(Memory &memory, Insn &insn, char *operands);
+    Error decodeBitOperation(Memory &memory, Insn &insn, char *operands);
+    Error decodeTransferMemory(Memory &memory, Insn &insn, char *operands);
 };
 
 #include "dis_hd6309_impl.h"

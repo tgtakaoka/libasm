@@ -21,7 +21,8 @@ static char *outOpr32Hex(char *out, uint32_t val) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
+Error Disassembler<mcuType>::readByte(
+    Memory &memory, Insn &insn, target::byte_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = memory.readByte();
     insn.emitByte(val);
@@ -29,7 +30,8 @@ Error Disassembler<mcuType>::readByte(Memory &memory, Insn &insn, target::byte_t
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
+Error Disassembler<mcuType>::readUint16(
+    Memory &memory, Insn &insn, target::uint16_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = (target::uint16_t)memory.readByte() << 8;
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -39,7 +41,8 @@ Error Disassembler<mcuType>::readUint16(Memory &memory, Insn &insn, target::uint
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::readUint32(Memory &memory, Insn &insn, target::uint32_t &val) {
+Error Disassembler<mcuType>::readUint32(
+    Memory &memory, Insn &insn, target::uint32_t &val) {
     if (!memory.hasNext()) return setError(NO_MEMORY);
     val = (target::uint32_t)memory.readByte() << 24;
     if (!memory.hasNext()) return setError(NO_MEMORY);
@@ -54,14 +57,13 @@ Error Disassembler<mcuType>::readUint32(Memory &memory, Insn &insn, target::uint
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeDirectPage(
-    Memory &memory, Insn& insn, char *operands, char *comments) {
+    Memory &memory, Insn& insn, char *operands) {
     target::byte_t dir;
     if (readByte(memory, insn, dir)) return getError();
     const char *label = lookup(dir);
     if (label) {
         *operands++ = '<';
         outStr(operands, label);
-        outOpr8Hex(comments, dir);
     } else {
         outOpr8Hex(operands, dir);
     }
@@ -70,14 +72,13 @@ Error Disassembler<mcuType>::decodeDirectPage(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeExtended(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
+    Memory& memory, Insn &insn, char *operands) {
     target::uintptr_t addr;
     if (readUint16(memory, insn, addr)) return getError();
     const char *label = lookup(addr);
     if (label) {
         if (addr < 0x100) *operands++ = '>';
         outStr(operands, label);
-        outOpr16Hex(comments, addr);
     } else {
         outOpr16Hex(operands, addr);
     }
@@ -86,7 +87,7 @@ Error Disassembler<mcuType>::decodeExtended(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeIndexed(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
     const target::byte_t mode = post & 0x8F;
@@ -178,24 +179,14 @@ Error Disassembler<mcuType>::decodeIndexed(
     if (indir) *operands++ = '[';
     if (label) {
         operands = outStr(operands, label);
-        comments = outOpr16Hex(comments, addr);
     } else {
         if (base) {
             if (index) {
                 operands = _regs.outRegName(operands, index);
             } else if (offSize < 0) {
                 operands = outOpr16Hex(operands, addr);
-                comments = outInt16(comments, offset);
             } else {
                 if (offSize != 0) operands = outInt16(operands, offset);
-                switch (offSize) {
-                case 16:
-                    comments = outOpr16Hex(comments, addr); break;
-                case 8:
-                    comments = outOpr8Hex(comments, addr); break;
-                case 5:
-                    break;
-                }
             }
         } else {
             operands = outOpr16Hex(operands, addr);
@@ -209,15 +200,14 @@ Error Disassembler<mcuType>::decodeIndexed(
     }
     if (indir) *operands++ = ']';
     *operands = 0;
-    *comments = 0;
     return setError(OK);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeRelative(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::ptrdiff_t delta;
-    if (insn.addrMode() == RELATIVE8) {
+    if (insn.addrMode() == REL8) {
         target::byte_t val;
         if (readByte(memory, insn, val)) return getError();
         delta = static_cast<target::int8_t>(val);
@@ -230,56 +220,35 @@ Error Disassembler<mcuType>::decodeRelative(
     const char *label = lookup(addr);
     if (label) {
         outStr(operands, label);
-        comments = outOpr16Hex(comments, addr);
-        *comments++ = ' '; *comments++ = '(';
-        if (delta >= 0) *comments++ = '+';
-        comments = outInt16(comments, delta);
-        *comments++ = ')';
-        *comments = 0;
     } else {
         outOpr16Hex(operands, addr);
-        if (delta >= 0) *comments++ = '+';
-        outInt16(comments, delta);
     }
     return setError(OK);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeImmediate(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
-    if (insn.addrMode() == IMMEDIATE8) {
+    Memory& memory, Insn &insn, char *operands) {
+    if (insn.addrMode() == IMM8) {
         target::byte_t val;
         if (readByte(memory, insn, val)) return getError();
         *operands++ = '#';
         outOpr8Hex(operands, val);
-        if (insn.insnCode() == 0x1A) {
-            _regs.outCCRBits(comments, val);
-        } else if (insn.insnCode() == 0x1C || insn.insnCode() == 0x3C) {
-            if (val != 0xFF) {
-                *comments++ = '~';
-                _regs.outCCRBits(comments, ~val);
-            }
-        } else {
-            outInt16(comments, val);
-        }
-    } else if (insn.addrMode() == IMMEDIATE16) {
+    } else if (insn.addrMode() == IMM16) {
         target::uint16_t val;
         if (readUint16(memory, insn, val)) return getError();
         const char *label = lookup(val);
         *operands++ = '#';
         if (label) {
             outStr(operands, label);
-            outOpr16Hex(comments, val);
         } else {
             outOpr16Hex(operands, val);
-            outInt16(comments, val);
         }
-    } else if (mcuType == HD6309 && insn.addrMode() == IMMEDIATE32) {
+    } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
         target::uint32_t val;
         if (readUint32(memory, insn, val)) return getError();
         *operands++ = '#';
         outOpr32Hex(operands, val);
-        outInt32(comments, val);
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
@@ -288,7 +257,7 @@ Error Disassembler<mcuType>::decodeImmediate(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeStackOp(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
     if (post == 0) {
@@ -312,7 +281,7 @@ Error Disassembler<mcuType>::decodeStackOp(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeRegisters(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
     const RegName src = _regs.decodeRegName(post >> 4);
@@ -326,27 +295,23 @@ Error Disassembler<mcuType>::decodeRegisters(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeImmediatePlus(
-    Memory& memory, Insn &insn, char *operands, char *comments) {
+    Memory& memory, Insn &insn, char *operands) {
     *operands++ = '#';
     target::byte_t val;
     if (readByte(memory, insn, val)) return getError();
     operands = outOpr8Hex(operands, val);
     *operands++ = ',';
     switch (insn.addrMode()) {
-    case IMM_DIRECT:
-        return decodeDirectPage(memory, insn, operands, comments);
-    case IMM_EXTENDED:
-        return decodeExtended(memory, insn, operands, comments);
-    case IMM_INDEXED:
-        return decodeIndexed(memory, insn, operands, comments);
-    default:
-        return setError(INTERNAL_ERROR);
+    case IMMDIR:   return decodeDirectPage(memory, insn, operands);
+    case IMMEXT: return decodeExtended(memory, insn, operands);
+    case IMMIDX:  return decodeIndexed(memory, insn, operands);
+    default:           return setError(INTERNAL_ERROR);
     }
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeBitOperation(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
@@ -357,20 +322,13 @@ Error Disassembler<mcuType>::decodeBitOperation(
     operands = outInt16(operands, dstBit);
     *operands++ = ',';
     operands = outInt16(operands, post & 0x7);
-    if (reg == 'C') {
-        comments = _regs.outRegName(comments, reg);
-        *comments++ = '.';
-        comments = _regs.outCCRBits(comments, 1 << dstBit);
-        *comments++ = ' ';
-        *comments = 0;
-    }
     *operands++ = ',';
-    return decodeDirectPage(memory, insn, operands, comments);
+    return decodeDirectPage(memory, insn, operands);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeTransferMemory(
-    Memory &memory, Insn &insn, char *operands, char *comments) {
+    Memory &memory, Insn &insn, char *operands) {
     target::byte_t post;
     if (readByte(memory, insn, post)) return getError();
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
@@ -390,10 +348,10 @@ Error Disassembler<mcuType>::decodeTransferMemory(
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decode(
-    Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
+    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());
-    *operands = *comments = 0;
+    *operands = 0;
 
     target::opcode_t opCode;
     if (readByte(memory, insn, opCode)) return getError();
@@ -412,39 +370,26 @@ Error Disassembler<mcuType>::decode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INHERENT:
-        return setError(OK);
-    case DIRECT_PG:
-        return decodeDirectPage(memory, insn, operands, comments);
-    case EXTENDED:
-        return decodeExtended(memory, insn, operands, comments);
-    case INDEXED:
-        return decodeIndexed(memory, insn, operands, comments);
-    case RELATIVE8:
-    case RELATIVE16:
-        return decodeRelative(memory, insn, operands, comments);
-    case STACK_OP:
-        return decodeStackOp(memory, insn, operands, comments);
-    case REGISTERS:
-        return decodeRegisters(memory, insn, operands, comments);
-    case IMMEDIATE8:
-    case IMMEDIATE16:
-        return decodeImmediate(memory, insn, operands, comments);
+    case INHR:    return setError(OK);
+    case DIRP:   return decodeDirectPage(memory, insn, operands);
+    case EXTD:    return decodeExtended(memory, insn, operands);
+    case INDX:     return decodeIndexed(memory, insn, operands);
+    case REL8:
+    case REL16:  return decodeRelative(memory, insn, operands);
+    case STKOP:    return decodeStackOp(memory, insn, operands);
+    case REGS:   return decodeRegisters(memory, insn, operands);
+    case IMM8:
+    case IMM16: return decodeImmediate(memory, insn, operands);
     default:
         if (mcuType == HD6309) {
             switch (insn.addrMode()) {
-            case IMMEDIATE32:
-                return decodeImmediate(memory, insn, operands, comments);
-            case IMM_DIRECT:
-            case IMM_EXTENDED:
-            case IMM_INDEXED:
-                return decodeImmediatePlus(memory, insn, operands, comments);
-            case BIT_OPERATION:
-                return decodeBitOperation(memory, insn, operands, comments);
-            case TRANSFER_MEM:
-                return decodeTransferMemory(memory, insn, operands, comments);
-            default:
-                break;
+            case IMM32:   return decodeImmediate(memory, insn, operands);
+            case IMMDIR:
+            case IMMEXT:
+            case IMMIDX:   return decodeImmediatePlus(memory, insn, operands);
+            case BITOP: return decodeBitOperation(memory, insn, operands);
+            case TFRM:  return decodeTransferMemory(memory, insn, operands);
+            default:            break;
             }
         }
         return setError(INTERNAL_ERROR);

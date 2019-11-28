@@ -48,13 +48,13 @@ static char *outReg8Name(char *out, RegName regName) {
         : Registers::outRegName(out, regName);
 }
 
-Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
+Error Disassembler::decodeInherent(Insn& insn, char *operands) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
         break;
-    case REG8:
+    case REG_8:
         if (insn.insnFormat() == DST_FMT
             || insn.insnFormat() == DST_SRC_FMT) {
             operands = outReg8Name(
@@ -83,11 +83,11 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
     case SP_REG:
         operands = Registers::outRegName(operands, REG_SP);
         break;
-    case REG16:
+    case REG_16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
-    case STK16:
+    case STK_16:
         operands = Registers::outRegName(
             operands, Registers::decodeStackReg((opc >> 4 & 3)));
         break;
@@ -95,7 +95,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
         operands = Registers::outRegName(
             operands, InsnTable::decodeIndexReg(insn.insnCode()));
         break;
-    case CC8:
+    case COND_8:
         operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
         break;
     case C_PTR:
@@ -138,7 +138,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
         break;
-    case REG8:
+    case REG_8:
         if (insn.insnFormat() == DST_FMT) {
             operands = outReg8Name(
                 operands, Registers::decodeDataReg((opc >> 3) & 7));
@@ -158,7 +158,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
     case HL_REG:
         operands = Registers::outRegName(operands, REG_HL);
         break;
-    case REG16:
+    case REG_16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
@@ -166,7 +166,7 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
         operands = Registers::outRegName(
             operands, InsnTable::decodeIndexReg(insn.insnCode()));
         break;
-    case REG16X:
+    case REG_16X:
         operands = Registers::outRegName(
             operands, Registers::decodePointerRegIx(
                 (opc >> 4) & 3,
@@ -187,13 +187,13 @@ Error Disassembler::decodeInherent(Insn& insn, char *operands, char *comments) {
 }
 
 Error Disassembler::decodeImmediate8(
-    Insn &insn, char *operands, char *comments, target::byte_t val) {
+    Insn &insn, char *operands, target::byte_t val) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
         break;
-    case REG8:
+    case REG_8:
         operands = outReg8Name(
             operands, Registers::decodeDataReg((opc >> 3) & 7));
         break;
@@ -202,15 +202,14 @@ Error Disassembler::decodeImmediate8(
     }
     *operands++ = ',';
     operands = outOpr8Hex(operands, val);
-    comments = outInt16(comments, val);
     return setError(OK);
 }
 
 Error Disassembler::decodeImmediate16(
-    Insn &insn, char *operands, char *comments, target::uint16_t val) {
+    Insn &insn, char *operands, target::uint16_t val) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
-    case REG16:
+    case REG_16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
@@ -223,31 +222,29 @@ Error Disassembler::decodeImmediate16(
     }
     *operands++ = ',';
     operands = outOpr16Hex(operands, val);
-    comments = outInt16(comments, val);
     return setError(OK);
 }
 
 static char *outAddr16(
-    char *operands, char *comments, target::uintptr_t addr, const char *label,
+    char *operands, target::uintptr_t addr, const char *label,
     bool indir = true) {
     if (indir) *operands++ = '(';
     if (label) {
         operands = outStr(operands, label);
-        comments = outOpr16Hex(comments, addr);
     } else {
         operands = outOpr16Hex(operands, addr);
     }
     if (indir) *operands++ = ')';
-    *operands = *comments = 0;
+    *operands = 0;
     return operands;
 }
 
 Error Disassembler::decodeDirect(
-    Insn &insn, char *operands, char *comments, target::uintptr_t addr) {
+    Insn &insn, char *operands, target::uintptr_t addr) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
-    case ADDR16:
-        operands = outAddr16(operands, comments, addr, lookup(addr));
+    case ADDR_16:
+        operands = outAddr16(operands, addr, lookup(addr));
         break;
     case HL_REG:
         operands = Registers::outRegName(operands, REG_HL);
@@ -255,13 +252,13 @@ Error Disassembler::decodeDirect(
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
         break;
-    case CC8:
+    case COND_8:
         operands = Registers::outCc8Name(operands, (opc >> 3) & 7);
         break;
-    case IMM16:
-        operands = outAddr16(operands, comments, addr, lookup(addr), false);
+    case IMM_16:
+        operands = outAddr16(operands, addr, lookup(addr), false);
         break;
-    case REG16:
+    case REG_16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
@@ -277,16 +274,16 @@ Error Disassembler::decodeDirect(
     case HL_REG:
         operands = Registers::outRegName(operands, REG_HL);
         break;
-    case ADDR16:
-        operands = outAddr16(operands, comments, addr, lookup(addr));
+    case ADDR_16:
+        operands = outAddr16(operands, addr, lookup(addr));
         break;
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
         break;
-    case IMM16:
-        operands = outAddr16(operands, comments, addr, lookup(addr), false);
+    case IMM_16:
+        operands = outAddr16(operands, addr, lookup(addr), false);
         break;
-    case REG16:
+    case REG_16:
         operands = Registers::outRegName(
             operands, Registers::decodePointerReg((opc >> 4) & 3));
         break;
@@ -301,24 +298,23 @@ Error Disassembler::decodeDirect(
 }
 
 static char *outAddr8(
-    char *operands, char *comments, target::byte_t addr, const char *label) {
+    char *operands, target::byte_t addr, const char *label) {
     *operands++ = '(';
     if (label) {
         operands = outStr(operands, label);
-        comments = outOpr8Hex(comments, addr);
     } else {
         operands = outOpr8Hex(operands, addr);
     }
     *operands++ = ')';
-    *operands = *comments = 0;
+    *operands = 0;
     return operands;
 }
 
 Error Disassembler::decodeIoaddr(
-    Insn &insn, char *operands, char *comments, target::byte_t ioaddr) {
+    Insn &insn, char *operands, target::byte_t ioaddr) {
     switch (insn.leftFormat()) {
-    case ADDR8:
-        operands = outAddr8(operands, comments, ioaddr, lookup(ioaddr));
+    case ADDR_8:
+        operands = outAddr8(operands, ioaddr, lookup(ioaddr));
         break;
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
@@ -328,8 +324,8 @@ Error Disassembler::decodeIoaddr(
     }
     *operands++ = ',';
     switch (insn.rightFormat()) {
-    case ADDR8:
-        operands = outAddr8(operands, comments, ioaddr, lookup(ioaddr));
+    case ADDR_8:
+        operands = outAddr8(operands, ioaddr, lookup(ioaddr));
         break;
     case A_REG:
         operands = Registers::outRegName(operands, REG_A);
@@ -341,8 +337,8 @@ Error Disassembler::decodeIoaddr(
 }
 
 Error Disassembler::decodeRelative(
-    Insn &insn, char *operands, char *comments, target::int8_t delta) {
-    if (insn.leftFormat() == CC4) {
+    Insn &insn, char *operands, target::int8_t delta) {
+    if (insn.leftFormat() == COND_4) {
         const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
         operands = Registers::outCc4Name(operands, (opc >> 3) & 3);
         *operands++ = ',';
@@ -351,11 +347,8 @@ Error Disassembler::decodeRelative(
     const char *label = lookup(addr);
     if (label) {
         outStr(operands, label);
-        outOpr16Hex(comments, addr);
     } else {
         operands = outOpr16Hex(operands, addr);
-        if (delta >= 0) *comments++ = '+';
-        outInt16(comments, delta);
     }
     return setError(OK);
 }
@@ -373,13 +366,13 @@ static char *outIndexOffset(
 }
 
 Error Disassembler::decodeIndexed(
-    Insn &insn, char *operands, char *comments, target::int8_t offset) {
+    Insn &insn, char *operands, target::int8_t offset) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case IX_OFF:
         operands = outIndexOffset(operands, insn.insnCode(), offset);
         break;
-    case REG8:
+    case REG_8:
         operands = outReg8Name(
             operands, Registers::decodeDataReg((opc >> 3) & 7));
         break;
@@ -394,7 +387,7 @@ Error Disassembler::decodeIndexed(
     case IX_OFF:
         operands = outIndexOffset(operands, insn.insnCode(), offset);
         break;
-    case REG8:
+    case REG_8:
         operands = outReg8Name(
             operands, Registers::decodeDataReg(opc & 7));
         break;
@@ -405,17 +398,16 @@ Error Disassembler::decodeIndexed(
 }
 
 Error Disassembler::decodeIndexedImmediate8(
-    Insn &insn, char *operands, char *comments, target::int8_t offset,
+    Insn &insn, char *operands, target::int8_t offset,
     target::byte_t val) {
     operands = outIndexOffset(operands, insn.insnCode(), offset);
     *operands++ = ',';
     operands = outOpr8Hex(operands, val);
-    comments = outInt16(comments, val);
     return setError(OK);
 }
 
 Error Disassembler::decodeIndexedBitOp(
-    Insn &insn, char *operands, char *comments, target::int8_t offset,
+    Insn &insn, char *operands, target::int8_t offset,
     target::opcode_t opCode) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     Insn ixBit;
@@ -430,7 +422,7 @@ Error Disassembler::decodeIndexedBitOp(
     case HL_PTR:
         operands = outIndexOffset(operands, insn.insnCode(), offset);
         break;
-    case REG8:
+    case REG_8:
         operands = (regName == REG_UNDEF)
             ? outIndexOffset(operands, insn.insnCode(), offset)
             : outReg8Name(operands, regName);
@@ -445,7 +437,7 @@ Error Disassembler::decodeIndexedBitOp(
 
     if (insn.rightFormat() == HL_PTR) {
         operands = outIndexOffset(operands, insn.insnCode(), offset);
-    } else if (insn.rightFormat() == REG8) {
+    } else if (insn.rightFormat() == REG_8) {
         operands = (regName == REG_UNDEF)
             ? outIndexOffset(operands, insn.insnCode(), offset)
             : outReg8Name(operands, regName);
@@ -454,10 +446,10 @@ Error Disassembler::decodeIndexedBitOp(
 }
 
 Error Disassembler::decode(
-    Memory &memory, Insn &insn, char *operands, char *comments, SymbolTable *symtab) {
+    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(symtab);
     insn.resetAddress(memory.address());
-    *operands = *comments = 0;
+    *operands = 0;
 
     target::opcode_t opCode;
     if (readByte(memory, insn, opCode)) return getError();
@@ -477,32 +469,32 @@ Error Disassembler::decode(
     target::byte_t offset;
 
     switch (insn.addrMode()) {
-    case INHERENT:
-        return decodeInherent(insn, operands, comments);
-    case IMMEDIATE8:
+    case INHR:
+        return decodeInherent(insn, operands);
+    case IMM8:
         if (readByte(memory, insn, u8)) return getError();
-        return decodeImmediate8(insn, operands, comments, u8);
-    case IMMEDIATE16:
+        return decodeImmediate8(insn, operands, u8);
+    case IMM16:
         if (readUint16(memory, insn, u16)) return getError();
-        return decodeImmediate16(insn, operands, comments, u16);
+        return decodeImmediate16(insn, operands, u16);
     case DIRECT:
         if (readUint16(memory, insn, u16)) return getError();
-        return decodeDirect(insn, operands, comments, u16);
-    case IOADDR:
+        return decodeDirect(insn, operands, u16);
+    case IOADR:
         if (readByte(memory, insn, u8)) return getError();
-        return decodeIoaddr(insn, operands, comments, u8);
-    case RELATIVE:
+        return decodeIoaddr(insn, operands, u8);
+    case REL8:
         if (readByte(memory, insn, u8)) return getError();
-        return decodeRelative(insn, operands, comments, u8);
-    case INDEXED:
+        return decodeRelative(insn, operands, u8);
+    case INDX:
         if (readByte(memory, insn, u8)) return getError();
-        return decodeIndexed(insn, operands, comments, u8);
-    case INDEXED_IMMEDIATE8:
+        return decodeIndexed(insn, operands, u8);
+    case INDX_IMM8:
         if (readByte(memory, insn, offset)) return getError();
         if (readByte(memory, insn, u8)) return getError();
         if (insn.leftFormat() == IX_BIT)
-            return decodeIndexedBitOp(insn, operands, comments, offset, u8);
-        return decodeIndexedImmediate8(insn, operands, comments, offset, u8);
+            return decodeIndexedBitOp(insn, operands, offset, u8);
+        return decodeIndexedImmediate8(insn, operands, offset, u8);
     default:
         return setError(INTERNAL_ERROR);
     }

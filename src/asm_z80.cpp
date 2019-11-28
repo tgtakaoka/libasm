@@ -94,9 +94,9 @@ Error Assembler::encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t r
     }
     insn.setInsnCode(insn.insnCode() | regNum);
     emitInsnCode(insn);
-    if (insn.addrMode() == IMMEDIATE8)
+    if (insn.addrMode() == IMM8)
         insn.emitByte(rightOp);
-    if (insn.addrMode() == IMMEDIATE16)
+    if (insn.addrMode() == IMM16)
         insn.emitUint16(rightOp);
     return setError(OK);
 }
@@ -107,13 +107,13 @@ Error Assembler::encodeDirect(
     target::byte_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
-        if (insn.leftFormat() == CC8) regNum = leftOpr << 3;
+        if (insn.leftFormat() == COND_8) regNum = leftOpr << 3;
         else return setError(INTERNAL_ERROR);
         break;
     case PTR_FMT:
-        if (insn.leftFormat() == REG16) {
+        if (insn.leftFormat() == REG_16) {
             regNum = Registers::encodePointerReg(leftReg) << 4;
-        } else if (insn.rightFormat() == REG16) {
+        } else if (insn.rightFormat() == REG_16) {
             regNum = Registers::encodePointerReg(rightReg) << 4;
         } else return setError(INTERNAL_ERROR);
         break;
@@ -128,9 +128,9 @@ Error Assembler::encodeDirect(
     }
     insn.setInsnCode(insn.insnCode() | regNum);
     emitInsnCode(insn);
-    if (insn.leftFormat() == ADDR16 || insn.leftFormat() == IMM16)
+    if (insn.leftFormat() == ADDR_16 || insn.leftFormat() == IMM_16)
         insn.emitUint16(leftOpr);
-    if (insn.rightFormat() == ADDR16 || insn.rightFormat() == IMM16)
+    if (insn.rightFormat() == ADDR_16 || insn.rightFormat() == IMM_16)
         insn.emitUint16(rightOpr);
     return setError(OK);
 }
@@ -138,9 +138,9 @@ Error Assembler::encodeDirect(
 Error Assembler::encodeIoaddr(
     Insn &insn, target::uint16_t leftOpr, target::uint16_t rightOpr) {
     emitInsnCode(insn);
-    if (insn.leftFormat() == ADDR8)
+    if (insn.leftFormat() == ADDR_8)
         insn.emitByte(leftOpr);
-    if (insn.rightFormat() == ADDR8)
+    if (insn.rightFormat() == ADDR_8)
         insn.emitByte(rightOpr);
     return setError(OK);
 }
@@ -185,7 +185,7 @@ Error Assembler::encodeIndexed(
         insn.emitByte(leftOpr);
     if (insn.rightFormat() == IX_OFF)
         insn.emitByte(rightOpr);
-    if (insn.rightFormat() == IMM8)
+    if (insn.rightFormat() == IMM_8)
         insn.emitByte(rightOpr);
     return setError(OK);
 }
@@ -222,23 +222,23 @@ Error Assembler::encodeInherent(
             InsnTable::encodePrefixCode(insn, rightReg);
         break;
     case DST_SRC_FMT:
-        if (insn.leftFormat() == REG8 || insn.leftFormat() == HL_PTR) {
+        if (insn.leftFormat() == REG_8 || insn.leftFormat() == HL_PTR) {
             regNum = Registers::encodeDataReg(leftReg);
         } else if (insn.leftFormat() == BIT_NO) {
             if (leftOpr >= 8) return setError(ILLEGAL_OPERAND);
             regNum = leftOpr;
         } else return setError(INTERNAL_ERROR);
         regNum <<= 3;
-        if (insn.rightFormat() == REG8 || insn.rightFormat() == HL_PTR) {
+        if (insn.rightFormat() == REG_8 || insn.rightFormat() == HL_PTR) {
             regNum |= Registers::encodeDataReg(rightReg);
         } else return setError(INTERNAL_ERROR);
         break;
     case DST_FMT:
-        if (insn.leftFormat() == REG8) {
+        if (insn.leftFormat() == REG_8) {
             regNum = Registers::encodeDataReg(leftReg);
-        } else if (insn.rightFormat() == REG8) {
+        } else if (insn.rightFormat() == REG_8) {
             regNum = Registers::encodeDataReg(rightReg);
-        } else if (insn.leftFormat() == CC8) {
+        } else if (insn.leftFormat() == COND_8) {
             regNum = leftOpr;
         } else if (insn.leftFormat() == IMM_NO) {
             if (leftOpr == 0) regNum = 0;
@@ -252,9 +252,9 @@ Error Assembler::encodeInherent(
         regNum <<= 3;
         break;
     case SRC_FMT:
-        if (insn.leftFormat() == REG8) {
+        if (insn.leftFormat() == REG_8) {
             regNum = Registers::encodeDataReg(leftReg);
-        } else if (insn.rightFormat() == REG8) {
+        } else if (insn.rightFormat() == REG_8) {
             regNum = Registers::encodeDataReg(rightReg);
         } else return setError(INTERNAL_ERROR);
         break;
@@ -277,13 +277,13 @@ Error Assembler::encodeInherent(
     case PTR_FMT:
         if (insn.leftFormat() == IX_REG)
             InsnTable::encodePrefixCode(insn, leftReg);
-        if (insn.leftFormat() == STK16) {
+        if (insn.leftFormat() == STK_16) {
             regNum = Registers::encodeStackReg(leftReg);
-        } else if (insn.leftFormat() == REG16) {
+        } else if (insn.leftFormat() == REG_16) {
             regNum = Registers::encodePointerReg(leftReg);
-        } else if (insn.rightFormat() == REG16) {
+        } else if (insn.rightFormat() == REG_16) {
             regNum = Registers::encodePointerReg(rightReg);
-        } else if (insn.rightFormat() == REG16X) {
+        } else if (insn.rightFormat() == REG_16X) {
             regNum = Registers::encodePointerRegIx(rightReg, leftReg);
         } else return setError(INTERNAL_ERROR);
         regNum <<= 4;
@@ -301,17 +301,17 @@ const char *Assembler::parseOperand(
     RegName &regName, target::uint16_t &operand) {
     setError(OK);
 
-    if (oprFormat == CC4 || oprFormat == CC8) {
+    if (oprFormat == COND_4 || oprFormat == COND_8) {
         target::int8_t cc;
         line = Registers::parseCc4Name(line, cc);
         if (cc >= 0) {
-            oprFormat = CC4;
+            oprFormat = COND_4;
             operand = cc;
             return line;
         }
         line = Registers::parseCc8Name(line, cc);
         if (cc >= 0) {
-            oprFormat = CC8;
+            oprFormat = COND_8;
             operand = cc;
             return line;
         }
@@ -339,7 +339,7 @@ const char *Assembler::parseOperand(
         case REG_R:   oprFormat = IR_REG; break;
         case REG_AF:  oprFormat = AF_REG; break;
         case REG_AFP: oprFormat = AFPREG; break;
-        default:  oprFormat = REG8; break;
+        default:  oprFormat = REG_8; break;
         }
         return line;
     } else if (*line == '(') {
@@ -347,7 +347,7 @@ const char *Assembler::parseOperand(
         if (regName == REG_UNDEF) {
             if (getOperand16(line, operand) == OK && *line == ')') {
                 line++;
-                oprFormat = (operand < 0x100) ? ADDR8 : ADDR16;
+                oprFormat = (operand < 0x100) ? ADDR_8 : ADDR_16;
             } else setError(UNKNOWN_OPERAND);
             return line;
         }
@@ -380,8 +380,8 @@ const char *Assembler::parseOperand(
         return line;
     }
     if (getOperand16(line, operand) == OK) {
-        if (operand < 0x100) oprFormat = IMM8;
-        else oprFormat = IMM16;
+        if (operand < 0x100) oprFormat = IMM_8;
+        else oprFormat = IMM_16;
         return line;
     }
     setError(UNKNOWN_OPERAND);
@@ -423,20 +423,20 @@ Error Assembler::encode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INHERENT:
+    case INHR:
         return encodeInherent(insn, leftReg, rightReg, leftOpr);
-    case IMMEDIATE8:
-    case IMMEDIATE16:
+    case IMM8:
+    case IMM16:
         return encodeImmediate(insn, leftReg, rightOpr);
     case DIRECT:
         return encodeDirect(insn, leftReg, rightReg, leftOpr, rightOpr);
-    case IOADDR:
+    case IOADR:
         return encodeIoaddr(insn, leftOpr, rightOpr);
-    case RELATIVE:
+    case REL8:
         return encodeRelative(insn, leftOpr, rightOpr);
-    case INDEXED:
-    case INDEXED_IMMEDIATE8:
-        if (insn.addrMode() == INDEXED || insn.rightFormat() == IMM8) {
+    case INDX:
+    case INDX_IMM8:
+        if (insn.addrMode() == INDX || insn.rightFormat() == IMM_8) {
             return encodeIndexed(insn, leftReg, rightReg, leftOpr, rightOpr);
         } else {
             return encodeIndexedImmediate8(insn, leftReg, rightReg, leftOpr, rightOpr);

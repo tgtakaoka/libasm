@@ -31,14 +31,14 @@ enum AddrMode : host::uint_t {
     ZP_IDX_Y,                   // Zero Page Indexed zp,Y
     ABS_IDX_X,                  // Absolute Indexed abs,X
     ABS_IDX_Y,                  // Absolute Indexed abs,Y
-    RELATIVE,
-    INDEXED_IND,                // Indexed Indirect (zp,X)
+    REL8,
+    INDX_IND,                // Indexed Indirect (zp,X)
     INDIRECT_IDX,               // Indirect Indexed (zp),Y
     ABS_INDIRECT,               // Absolute Indirect (abs)
 
     // R65C02
     IDX_ABS_IND,                // Indexed Absolute Indirect (abs,X)
-    ZP_RELATIVE,                // Zero Page Relative zp,abs
+    ZP_REL8,                // Zero Page Relative zp,abs
     ZP_INDIRECT,                // Zero Page Indirect (zp)
 };
 

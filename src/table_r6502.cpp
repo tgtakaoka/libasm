@@ -132,14 +132,14 @@ static constexpr Entry TABLE[] PROGMEM = {
     E(0x5E, LSR, R6502, ABS_IDX_X)
     E(0x7E, ROR, R6502, ABS_IDX_X)
     E(0x6C, JMP, R6502, ABS_INDIRECT)
-    E(0x01, ORA, R6502, INDEXED_IND)
-    E(0x21, AND, R6502, INDEXED_IND)
-    E(0x41, EOR, R6502, INDEXED_IND)
-    E(0x61, ADC, R6502, INDEXED_IND)
-    E(0x81, STA, R6502, INDEXED_IND)
-    E(0xA1, LDA, R6502, INDEXED_IND)
-    E(0xC1, CMP, R6502, INDEXED_IND)
-    E(0xE1, SBC, R6502, INDEXED_IND)
+    E(0x01, ORA, R6502, INDX_IND)
+    E(0x21, AND, R6502, INDX_IND)
+    E(0x41, EOR, R6502, INDX_IND)
+    E(0x61, ADC, R6502, INDX_IND)
+    E(0x81, STA, R6502, INDX_IND)
+    E(0xA1, LDA, R6502, INDX_IND)
+    E(0xC1, CMP, R6502, INDX_IND)
+    E(0xE1, SBC, R6502, INDX_IND)
     E(0x11, ORA, R6502, INDIRECT_IDX)
     E(0x31, AND, R6502, INDIRECT_IDX)
     E(0x51, EOR, R6502, INDIRECT_IDX)
@@ -148,14 +148,14 @@ static constexpr Entry TABLE[] PROGMEM = {
     E(0xB1, LDA, R6502, INDIRECT_IDX)
     E(0xD1, CMP, R6502, INDIRECT_IDX)
     E(0xF1, SBC, R6502, INDIRECT_IDX)
-    E(0x10, BPL, R6502, RELATIVE)
-    E(0x30, BMI, R6502, RELATIVE)
-    E(0x50, BVC, R6502, RELATIVE)
-    E(0x70, BVS, R6502, RELATIVE)
-    E(0x90, BCC, R6502, RELATIVE)
-    E(0xB0, BCS, R6502, RELATIVE)
-    E(0xD0, BNE, R6502, RELATIVE)
-    E(0xF0, BEQ, R6502, RELATIVE)
+    E(0x10, BPL, R6502, REL8)
+    E(0x30, BMI, R6502, REL8)
+    E(0x50, BVC, R6502, REL8)
+    E(0x70, BVS, R6502, REL8)
+    E(0x90, BCC, R6502, REL8)
+    E(0xB0, BCS, R6502, REL8)
+    E(0xD0, BNE, R6502, REL8)
+    E(0xF0, BEQ, R6502, REL8)
 };
 
 const Entry *InsnTableUtils::searchEntry(
@@ -191,7 +191,7 @@ Error InsnTableUtils::searchPages(
 
 static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
-    if (opr == INDEXED_IND) return table == IDX_ABS_IND;
+    if (opr == INDX_IND) return table == IDX_ABS_IND;
     if (opr == ABS_INDIRECT) return table == ZP_INDIRECT;
     if (opr == ZP_IDX_X) return table == ABS_IDX_X;
     if (opr == ZP_IDX_Y) return table == ABS_IDX_Y;

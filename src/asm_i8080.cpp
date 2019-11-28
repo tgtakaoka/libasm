@@ -175,9 +175,9 @@ Error Assembler::encodeImmediate(const char *line, Insn &insn) {
         return setError(UNKNOWN_OPERAND);
     target::uint16_t val;
     if (getOperand16(line, val)) return getError();
-    if (insn.addrMode() == IMMEDIATE_8)
+    if (insn.addrMode() == IMM8)
         insn.emitByte(val);
-    if (insn.addrMode() == IMMEDIATE_16)
+    if (insn.addrMode() == IMM16)
         insn.emitUint16(val);
     return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }
@@ -241,14 +241,14 @@ Error Assembler::encode(
 
     insn.emitByte(insn.insnCode());
     switch (insn.addrMode()) {
-    case INHERENT:
+    case INHR:
         return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
-    case IMMEDIATE_8:
-    case IMMEDIATE_16:
+    case IMM8:
+    case IMM16:
         return encodeImmediate(line, insn);
     case DIRECT:
         return encodeDirect(line, insn);
-    case IOADDR:
+    case IOADR:
         return encodeIoaddr(line, insn);
     default:
         return setError(UNKNOWN_OPERAND);

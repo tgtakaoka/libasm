@@ -13,8 +13,7 @@
 class Disassembler : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn,
-        char *operands, char *comments, SymbolTable *symtab);
+        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     SymbolTable *_symtab;
@@ -31,28 +30,19 @@ private:
     Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
     Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
 
-    Error decodeOperand(
-        Memory &memory, Insn& insn, char *operands, char *comments);
+    Error decodeOperand(Memory &memory, Insn& insn, char *operands);
 
-    Error decodeInherent(
-        Insn &insn, char *operands, char *comments);
-    Error decodeImmediate8(
-        Insn &insn, char *operands, char *comments, target::byte_t val);
-    Error decodeImmediate16(
-        Insn &insn, char *operands, char *comments, target::uint16_t val);
-    Error decodeDirect(
-        Insn &insn, char *operands, char *comments, target::uintptr_t addr);
-    Error decodeIoaddr(
-        Insn &insn, char *operands, char *comments, target::byte_t ioaddr);
-    Error decodeRelative(
-        Insn &insn, char *operands, char *comments, target::int8_t delta);
-    Error decodeIndexed(
-        Insn &insn, char *operands, char *comments, target::int8_t offset);
+    Error decodeInherent(Insn &insn, char *operands);
+    Error decodeImmediate8(Insn &insn, char *operands, target::byte_t val);
+    Error decodeImmediate16(Insn &insn, char *operands, target::uint16_t val);
+    Error decodeDirect(Insn &insn, char *operands, target::uintptr_t addr);
+    Error decodeIoaddr(Insn &insn, char *operands, target::byte_t ioaddr);
+    Error decodeRelative(Insn &insn, char *operands, target::int8_t delta);
+    Error decodeIndexed(Insn &insn, char *operands, target::int8_t offset);
     Error decodeIndexedImmediate8(
-        Insn &insn, char *operands, char *comments, target::int8_t offset,
-        target::byte_t val);
+        Insn &insn, char *operands, target::int8_t offset, target::byte_t val);
     Error decodeIndexedBitOp(
-        Insn &insn, char *operands, char *comments, target::int8_t offset,
+        Insn &insn, char *operands, target::int8_t offset,
         target::opcode_t opCode);
 };
 
