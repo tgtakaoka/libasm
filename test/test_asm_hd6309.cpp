@@ -94,6 +94,7 @@ static void test_stack() {
     TEST("PSHS Y",  0x34, 0x20);
     TEST("PSHS U",  0x34, 0x40);
     TEST("PSHS PC", 0x34, 0x80);
+    TEST("PSHS D",  0x34, 0x06);
 
     TEST("PULU CC", 0x37, 0x01);
     TEST("PULU A",  0x37, 0x02);
@@ -103,11 +104,14 @@ static void test_stack() {
     TEST("PULU Y",  0x37, 0x20);
     TEST("PULU S",  0x37, 0x40);
     TEST("PULU PC", 0x37, 0x80);
+    TEST("PULU D",  0x37, 0x06);
 
     TEST("PSHS CC,A,B,DP,X,Y,U,PC", 0x34, 0xFF);
     TEST("PULS PC,A,DP,B,X,U,Y,CC", 0x35, 0xFF);
     TEST("PSHU PC,S,Y,X,DP,B,A,CC", 0x36, 0xFF);
     TEST("PULU DP,CC,PC,A,B,S,Y,X", 0x37, 0xFF);
+    TEST("PSHS PC,U,Y,X,DP,D,CC",   0x34, 0xFF);
+    TEST("PULS CC,D,DP,X,U,Y,PC",   0x35, 0xFF);
 
     TEST("PSHS", 0x34, 0x00);
 }

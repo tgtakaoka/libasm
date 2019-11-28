@@ -116,13 +116,19 @@ Error Assembler<mcuType>::encodeStackOp(const char *line, Insn &insn) {
     target::byte_t post = 0;
     while (*line) {
         host::uint_t bit = 0;
+        host::uint_t reg_d_bits = 0;
         for (host::uint_t index = 0, mask = 0x01; index < 8; index++, mask <<= 1) {
             const RegName regName = _regs.getStackReg(index, insn.insnCode());
+            if (regName == REG_A || regName == REG_B) reg_d_bits |= mask;
             if (_regs.compareRegName(line, regName)) {
                 line += _regs.regNameLen(regName);
                 bit = mask;
                 break;
             }
+        }
+        if (bit == 0 && _regs.compareRegName(line, REG_D)) {
+            line += _regs.regNameLen(REG_D);
+            bit = reg_d_bits;
         }
         if (bit == 0) return setError(UNKNOWN_REGISTER);
         post |= bit;
