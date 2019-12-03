@@ -21,9 +21,6 @@ private:
         _symtab = symtab;
         resetError();
     }
-    const char *lookup(target::uintptr_t addr) const {
-        return _symtab ? _symtab->lookup(addr) : nullptr;
-    }
     bool hasSymbol(const char *symbol) const {
         return _symtab && _symtab->hasSymbol(symbol);
     }

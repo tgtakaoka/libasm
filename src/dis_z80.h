@@ -23,7 +23,7 @@ private:
         resetError();
     }
 
-    const char *lookup(uint16_t addr) const {
+    const char *lookup(target::uintptr_t addr) const {
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 

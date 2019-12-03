@@ -82,6 +82,6 @@ text_tms9995.h:config_tms9995.h
 text_z80.h:    config_host.h
 
 clean-objs:
-	-rm -f $(OBJS_hd6309) $(OBJS_r65c02) $(OBJS_i8080) $(OBJS_z80)
+	-rm -f $(OBJS_hd6309) $(OBJS_r65c02) $(OBJS_i8080) $(OBJS_tms9995) $(OBJS_z80)
 
 clean: clean-objs
