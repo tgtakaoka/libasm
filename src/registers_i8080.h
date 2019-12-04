@@ -2,8 +2,6 @@
 #ifndef __REGISTER_I8080_H__
 #define __REGISTER_I8080_H__
 
-#include "config_i8080.h"
-
 enum RegName : char {
     REG_UNDEF = 0,
     REG_B = 'B',

@@ -1,6 +1,6 @@
 #include <ctype.h>
 
-#include "registers_z80.h"
+#include "config_z80.h"
 
 static constexpr RegName POINTER_REGS[] PROGMEM = {
     REG_BC, REG_DE, REG_HL, REG_SP

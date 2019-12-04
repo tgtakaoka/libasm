@@ -2,8 +2,6 @@
 #ifndef __REGISTER_HD6309_H__
 #define __REGISTER_HD6309_H__
 
-#include "config_hd6309.h"
-
 enum RegName : char {
     REG_UNDEF = 0,
     OFFSET = 'o',

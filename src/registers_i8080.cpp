@@ -1,6 +1,6 @@
 #include <ctype.h>
 
-#include "registers_i8080.h"
+#include "config_i8080.h"
 
 static constexpr RegName POINTER_REGS[] PROGMEM = {
     REG_B, REG_D, REG_H, REG_SP

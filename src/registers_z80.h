@@ -2,8 +2,6 @@
 #ifndef __REGISTER_Z80_H__
 #define __REGISTER_Z80_H__
 
-#include "config_z80.h"
-
 enum RegName : char {
     REG_UNDEF = 0,
     REG_HL = 'h',

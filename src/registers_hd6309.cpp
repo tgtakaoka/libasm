@@ -1,6 +1,6 @@
 #include <ctype.h>
 
-#include "registers_hd6309.h"
+#include "config_hd6309.h"
 
 static constexpr RegName STACK_S_REGS[8] PROGMEM = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC
