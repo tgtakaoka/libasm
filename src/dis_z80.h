@@ -27,9 +27,6 @@ private:
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 
-    Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
-    Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
-
     Error decodeOperand(Memory &memory, Insn& insn, char *operands);
 
     Error decodeInherent(Insn &insn, char *operands);

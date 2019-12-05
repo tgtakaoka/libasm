@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "entry_tms9995.h"
+#include "memory.h"
 
 class Insn {
 public:
@@ -19,18 +20,6 @@ public:
         _address = addr;
         _insnLen = 0;
     }
-    void emitInsn() {
-        emitUint16(_insnCode, 0);
-        if (_insnLen == 0) _insnLen = 2;
-    }
-    void emitOperand(target::uint16_t val) {
-        if (_insnLen == 0) _insnLen = 2;
-        readUint16(val);
-    }
-    void readUint16(target::uint16_t val) {
-        emitUint16(val, _insnLen);
-        _insnLen += 2;
-    }
     void setInsnCode(target::insn_t insnCode) { _insnCode = insnCode; }
     void setName(const char *name, const char *end = nullptr) {
         if (!end) end = name + strlen(name);
@@ -40,6 +29,28 @@ public:
         *p = 0;
     }
     void setFlags(host::uint_t flags) { _flags = flags; }
+
+    Error readUint16(Memory &memory, target::uint16_t &val) {
+        if (!memory.hasNext()) return NO_MEMORY;
+        val = (target::uint16_t)memory.readByte() << 8;
+        if (!memory.hasNext()) return NO_MEMORY;
+        val |= memory.readByte();
+        appendUint16(val);
+        return OK;
+    }
+
+    void emitInsn() {
+        emitUint16(_insnCode, 0);
+        if (_insnLen == 0) _insnLen = 2;
+    }
+    void emitOperand(target::uint16_t val) {
+        if (_insnLen == 0) _insnLen = 2;
+        appendUint16(val);
+    }
+    void appendUint16(target::uint16_t val) {
+        emitUint16(val, _insnLen);
+        _insnLen += 2;
+    }
 
 private:
     target::uintptr_t _address;

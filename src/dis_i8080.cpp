@@ -19,26 +19,10 @@ static char *outOpr16Hex(char *out, target::uint16_t val) {
     return out;
 }
 
-Error Disassembler::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = memory.readByte();
-    insn.emitByte(val);
-    return OK;
-}
-
-Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = memory.readByte();
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val |= (target::uint16_t)memory.readByte() << 8;
-    insn.emitUint16(val);
-    return OK;
-}
-
 Error Disassembler::decodeImmediate8(
     Memory& memory, Insn &insn, char *operands) {
     target::byte_t val;
-    if (readByte(memory, insn, val)) return getError();
+    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) *operands++ = ',';
     outOpr8Hex(operands, val);
     return setError(OK);
@@ -47,7 +31,7 @@ Error Disassembler::decodeImmediate8(
 Error Disassembler::decodeImmediate16(
     Memory& memory, Insn &insn, char *operands) {
     target::uint16_t val;
-    if (readUint16(memory, insn, val)) return getError();
+    if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) *operands++ = ',';
     const char *label = lookup(val);
     if (label) {
@@ -61,7 +45,7 @@ Error Disassembler::decodeImmediate16(
 Error Disassembler::decodeDirect(
     Memory &memory, Insn& insn, char *operands) {
     target::uintptr_t addr;
-    if (readUint16(memory, insn, addr)) return getError();
+    if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
     if (label) {
         outStr(operands, label);
@@ -74,7 +58,7 @@ Error Disassembler::decodeDirect(
 Error Disassembler::decodeIoaddr(
     Memory &memory, Insn& insn, char *operands) {
     target::byte_t ioaddr;
-    if (readByte(memory, insn, ioaddr)) return getError();
+    if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
     outOpr8Hex(operands, ioaddr);
     return setError(OK);
 }
@@ -86,7 +70,7 @@ Error Disassembler::decode(
     *operands = 0;
 
     target::insn_t insnCode;
-    if (readByte(memory, insn, insnCode)) return getError();
+    if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
     if (InsnTable.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);

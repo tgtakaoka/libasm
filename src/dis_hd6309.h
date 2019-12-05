@@ -29,10 +29,6 @@ private:
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 
-    Error readByte(Memory &memory, Insn &insn, target::byte_t &val);
-    Error readUint16(Memory &memory, Insn &insn, target::uint16_t &val);
-    Error readUint32(Memory &memory, Insn &insn, target::uint32_t &val);
-
     // MC6809
     Error decodeDirectPage(Memory &memory, Insn &insn, char *operands);
     Error decodeIndexed(Memory &memory, Insn &insn, char *operands);

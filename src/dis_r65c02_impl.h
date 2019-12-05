@@ -16,28 +16,10 @@ static char *outOpr16Hex(char *out, target::uint16_t val) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = memory.readByte();
-    insn.emitByte(val);
-    return OK;
-}
-
-template<McuType mcuType>
-Error Disassembler<mcuType>::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = memory.readByte();
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val |= (target::uint16_t)memory.readByte() << 8;
-    insn.emitUint16(val);
-    return OK;
-}
-
-template<McuType mcuType>
 Error Disassembler<mcuType>::decodeImmediate(
     Memory& memory, Insn &insn, char *operands) {
     target::byte_t val;
-    if (readByte(memory, insn, val)) return getError();
+    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     *operands++ = '#';
     const char *label = lookup(val);
     if (label) {
@@ -67,7 +49,7 @@ Error Disassembler<mcuType>::decodeAbsolute(
         break;
     }
     target::uintptr_t addr;
-    if (readUint16(memory, insn, addr)) return getError();
+    if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (indirect) *operands++ = '(';
     const char *label = lookup(addr);
     if (label) {
@@ -109,7 +91,7 @@ Error Disassembler<mcuType>::decodeZeroPage(
         break;
     }
     target::byte_t zp;
-    if (readByte(memory, insn, zp)) return getError();
+    if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
     if (indirect) *operands++ = '(';
     const char *label = lookup(zp);
     if (label) {
@@ -139,7 +121,7 @@ Error Disassembler<mcuType>::decodeRelative(
     Memory &memory, Insn &insn, char *operands) {
     target::ptrdiff_t delta;
     target::byte_t val;
-    if (readByte(memory, insn, val)) return getError();
+    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     delta = static_cast<target::int8_t>(val);
     const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
     const target::uintptr_t addr = insn.address() + insnLen + delta;
@@ -160,7 +142,7 @@ Error Disassembler<mcuType>::decode(
     *operands = 0;
 
     target::insn_t insnCode;
-    if (readByte(memory, insn, insnCode)) return getError();
+    if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
 
     if (InsnTable<mcuType>::table()->searchInsnCode(insn))

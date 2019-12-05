@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "entry_r65c02.h"
+#include "memory.h"
 
 class Insn {
 public:
@@ -36,6 +37,22 @@ public:
             *p++ = *name++;
         *p = 0;
     }
+
+    Error readByte(Memory &memory, target::byte_t &val) {
+        if (!memory.hasNext()) return NO_MEMORY;
+        val = memory.readByte();
+        emitByte(val);
+        return OK;
+    }
+    Error readUint16(Memory &memory, target::uint16_t &val) {
+        if (!memory.hasNext()) return NO_MEMORY;
+        val = memory.readByte();
+        if (!memory.hasNext()) return NO_MEMORY;
+        val |= (target::uint16_t)memory.readByte() << 8;
+        emitUint16(val);
+        return OK;
+    }
+
     void emitByte(target::byte_t val) {
         _bytes[_insnLen++] = val;
     }

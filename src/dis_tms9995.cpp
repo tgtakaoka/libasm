@@ -18,15 +18,6 @@ static char *outRegister(char *out, const host::uint_t regno) {
     return outUint16(out, regno & 0xf);
 }
 
-Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = (target::uint16_t)memory.readByte() << 8;
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val |= memory.readByte();
-    insn.readUint16(val);
-    return OK;
-}
-
 Error Disassembler::decodeOperand(
     Memory &memory, Insn &insn, char *&operands, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
@@ -34,7 +25,7 @@ Error Disassembler::decodeOperand(
     if (mode == 1 || mode == 3) *operands++ = '*';
     if (mode == 2) {
         target::uint16_t val;
-        if (readUint16(memory, insn, val)) return getError();
+        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         *operands++ = '@';
         const char *label = lookup(val);
         if (label) {
@@ -61,7 +52,7 @@ Error Disassembler::decodeOperand(
 Error Disassembler::decodeImmediate(
     Memory& memory, Insn &insn, char *operands) {
     target::uint16_t val;
-    if (readUint16(memory, insn, val)) return getError();
+    if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     const char *label = lookup(val);
     if (label) {
         outStr(operands, label);
@@ -93,7 +84,7 @@ Error Disassembler::decode(
     *operands = 0;
 
     target::insn_t insnCode;
-    if (readUint16(memory, insn, insnCode)) return getError();
+    if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
     InsnTable.searchInsnCode(insn);
 

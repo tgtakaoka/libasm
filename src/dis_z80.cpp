@@ -19,22 +19,6 @@ static char *outOpr16Hex(char *out, target::uint16_t val) {
     return out;
 }
 
-Error Disassembler::readByte(Memory &memory, Insn &insn, target::byte_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = memory.readByte();
-    insn.emitByte(val);
-    return OK;
-}
-
-Error Disassembler::readUint16(Memory &memory, Insn &insn, target::uint16_t &val) {
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val = memory.readByte();
-    if (!memory.hasNext()) return setError(NO_MEMORY);
-    val |= (target::uint16_t)memory.readByte() << 8;
-    insn.emitUint16(val);
-    return OK;
-}
-
 static char *outPtrName(char *out, RegName regName) {
     *out++ = '(';
     out = Registers::outRegName(out, regName);
@@ -452,11 +436,11 @@ Error Disassembler::decode(
     *operands = 0;
 
     target::opcode_t opCode;
-    if (readByte(memory, insn, opCode)) return getError();
+    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     target::insn_t insnCode = opCode;
     if (InsnTable::isPrefixCode(opCode)) {
         const target::opcode_t prefix = opCode;
-        if (readByte(memory, insn, opCode)) return getError();
+        if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
         insnCode = InsnTable::insnCode(prefix, opCode);
     }
     insn.setInsnCode(insnCode);
@@ -472,26 +456,26 @@ Error Disassembler::decode(
     case INHR:
         return decodeInherent(insn, operands);
     case IMM8:
-        if (readByte(memory, insn, u8)) return getError();
+        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
         return decodeImmediate8(insn, operands, u8);
     case IMM16:
-        if (readUint16(memory, insn, u16)) return getError();
+        if (insn.readUint16(memory, u16)) return setError(NO_MEMORY);
         return decodeImmediate16(insn, operands, u16);
     case DIRECT:
-        if (readUint16(memory, insn, u16)) return getError();
+        if (insn.readUint16(memory, u16)) return setError(NO_MEMORY);
         return decodeDirect(insn, operands, u16);
     case IOADR:
-        if (readByte(memory, insn, u8)) return getError();
+        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
         return decodeIoaddr(insn, operands, u8);
     case REL8:
-        if (readByte(memory, insn, u8)) return getError();
+        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
         return decodeRelative(insn, operands, u8);
     case INDX:
-        if (readByte(memory, insn, u8)) return getError();
+        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
         return decodeIndexed(insn, operands, u8);
     case INDX_IMM8:
-        if (readByte(memory, insn, offset)) return getError();
-        if (readByte(memory, insn, u8)) return getError();
+        if (insn.readByte(memory, offset)) return setError(NO_MEMORY);
+        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
         if (insn.leftFormat() == IX_BIT)
             return decodeIndexedBitOp(insn, operands, offset, u8);
         return decodeIndexedImmediate8(insn, operands, offset, u8);
