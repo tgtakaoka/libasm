@@ -15,9 +15,11 @@ public:
         Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
+    char *_operands;
     SymbolTable *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable *symtab) {
+        *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
     }
@@ -26,10 +28,17 @@ private:
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 
-    Error decodeImmediate8(Memory &memory, Insn &insn, char *operands);
-    Error decodeImmediate16(Memory &memory, Insn &insn, char *operands);
-    Error decodeDirect(Memory &memory, Insn &insn, char *operands);
-    Error decodeIoaddr(Memory &memory, Insn &insn, char *operands);
+    void outChar(char c) { *_operands++ = c; *_operands = 0; }
+    void outText(const char *text);
+    void outOpr8Hex(target::byte_t val);
+    void outOpr16Hex(target::uint16_t val);
+    void outOpr16Int(target::uint16_t val);
+    void outRegister(RegName regName);
+
+    Error decodeImmediate8(Memory &memory, Insn &insn);
+    Error decodeImmediate16(Memory &memory, Insn &insn);
+    Error decodeDirect(Memory &memory, Insn &insn);
+    Error decodeIoaddr(Memory &memory, Insn &insn);
 };
 
 #endif // __DIS_I8080_H__

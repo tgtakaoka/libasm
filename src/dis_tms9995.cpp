@@ -3,85 +3,81 @@
 #include "string_utils.h"
 #include "table_tms9995.h"
 
-static char *outOpr8Hex(char *out, const target::byte_t val) {
-    *out++ = '>';
-    return outHex8(out, val);
+void Disassembler::outText(const char *text) {
+    _operands = outStr(_operands, text);
 }
 
-static char *outOpr16Hex(char *out, const target::uint16_t val) {
-    *out++ = '>';
-    return outHex16(out, val);
+void Disassembler::outOpr8Hex(target::byte_t val) {
+    *_operands++ = '>';
+    _operands = outHex8(_operands, val);
 }
 
-static char *outRegister(char *out, const host::uint_t regno) {
-    *out++ = 'R';
-    return outUint16(out, regno & 0xf);
+void Disassembler::outOpr16Hex(target::uint16_t val) {
+    *_operands++ = '>';
+    _operands = outHex16(_operands, val);
+}
+
+void Disassembler::outOpr16Int(target::uint16_t val) {
+    _operands = outInt16(_operands, val);
+}
+
+void Disassembler::outOpr16Addr(target::uintptr_t addr) {
+    const char *label = lookup(addr);
+    if (label) {
+        outText(label);
+    } else {
+        outOpr16Hex(addr);
+    }
+}
+
+void Disassembler::outRegister(host::uint_t regno) {
+    *_operands++ = 'R';
+    _operands = outUint16(_operands, regno & 0xf);
 }
 
 Error Disassembler::decodeOperand(
-    Memory &memory, Insn &insn, char *&operands, const host::uint_t opr) {
+    Memory &memory, Insn &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
     const host::uint_t mode = (opr >> 4) & 0x3;
-    if (mode == 1 || mode == 3) *operands++ = '*';
+    if (mode == 1 || mode == 3) outChar('*');
     if (mode == 2) {
         target::uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-        *operands++ = '@';
-        const char *label = lookup(val);
-        if (label) {
-            operands = outStr(operands, label);
-        } else {
-            operands = outOpr16Hex(operands, val);
-        }
+        outChar('@');
+        outOpr16Addr(val);
         if (regno) {
-            *operands++ = '(';
-            operands = outRegister(operands, regno);
-            *operands++ = ')';
-            *operands = 0;
+            outChar('(');
+            outRegister(regno);
+            outChar(')');
         }
     } else {
-        operands = outRegister(operands, regno);
-        if (mode == 3) {
-            *operands++ = '+';
-            *operands = 0;
-        }
+        outRegister(regno);
+        if (mode == 3)
+            outChar('+');
     }
     return setError(OK);
 }
 
 Error Disassembler::decodeImmediate(
-    Memory& memory, Insn &insn, char *operands) {
+    Memory& memory, Insn &insn) {
     target::uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    const char *label = lookup(val);
-    if (label) {
-        outStr(operands, label);
-    } else {
-        outOpr16Hex(operands, val);
-    }
+    outOpr16Addr(val);
     return setError(OK);
 }
 
-Error Disassembler::decodeRelative(
-    Insn& insn, char *operands) {
+Error Disassembler::decodeRelative(Insn& insn) {
     target::int16_t delta = (target::int8_t)(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
-    const char *label = lookup(addr);
-    if (label) {
-        operands = outStr(operands, label);
-        *operands = 0;
-    } else {
-        operands = outOpr16Hex(operands, addr);
-    }
+    outOpr16Addr(addr);
     return setError(OK);
 }
 
 Error Disassembler::decode(
     Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
-    reset(symtab);
+    reset(operands, symtab);
     insn.resetAddress(memory.address());
-    *operands = 0;
 
     target::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
@@ -92,63 +88,63 @@ Error Disassembler::decode(
     case INH:
         return setError(OK);
     case IMM:
-        return decodeImmediate(memory, insn, operands);
+        return decodeImmediate(memory, insn);
     case REG:
-        outRegister(operands, insnCode);
+        outRegister(insnCode);
         return setError(OK);
     case REG_IMM:
-        operands = outRegister(operands, insnCode);
-        *operands++ = ',';
-        return decodeImmediate(memory, insn, operands);
+        outRegister(insnCode);
+        outChar(',');
+        return decodeImmediate(memory, insn);
     case CNT_REG: {
-        operands = outRegister(operands, insnCode);
-        *operands++ = ',';
+        outRegister(insnCode);
+        outChar(',');
         const host::uint_t count = (insnCode >> 4) & 0x0f;
-        if (count == 0) outRegister(operands, 0);
-        else outUint16(operands, count);
+        if (count == 0) outRegister(0);
+        else outOpr16Int(count);
         return setError(OK);
     }
     case SRC:
-        return decodeOperand(memory, insn, operands, insnCode);
+        return decodeOperand(memory, insn, insnCode);
     case REG_SRC:
-        if (decodeOperand(memory, insn, operands, insnCode))
+        if (decodeOperand(memory, insn, insnCode))
             return getError();
-        *operands++ = ',';
-        outRegister(operands, insnCode >> 6);
+        outChar(',');
+        outRegister(insnCode >> 6);
         return setError(OK);
     case CNT_SRC:
     case XOP_SRC: {
-        if (decodeOperand(memory, insn, operands, insnCode))
+        if (decodeOperand(memory, insn, insnCode))
             return getError();
-        *operands++ = ',';
+        outChar(',');
         host::uint_t count = (insnCode >> 6) & 0xf;
         if (insn.addrMode() == CNT_SRC && count == 0)
             count = 16;
         const char *label = lookup(count);
         if (label) {
-            operands = outStr(operands, label);
+            outText(label);
         } else {
-            outInt16(operands, count);
+            outOpr16Int(count);
         }
         return setError(OK);
     }
     case DST_SRC: {
-        if (decodeOperand(memory, insn, operands, insnCode))
+        if (decodeOperand(memory, insn, insnCode))
             return getError();
-        *operands++ = ',';
-        decodeOperand(memory, insn, operands, insnCode >> 6);
+        outChar(',');
+        decodeOperand(memory, insn, insnCode >> 6);
         return getError();
     }
     case REL:
-        decodeRelative(insn, operands);
+        decodeRelative(insn);
         return setError(OK);
     case CRU_OFF: {
         const target::int8_t offset = (target::int8_t)(insnCode & 0xff);
         const char *label = lookup(offset);
         if (label) {
-            outStr(operands, label);
+            outText(label);
         } else {
-            outOpr8Hex(operands, offset);
+            outOpr8Hex(offset);
         }
         return setError(OK);
     }
