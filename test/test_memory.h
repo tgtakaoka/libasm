@@ -10,17 +10,36 @@
 
 class TestMemory : public Memory {
 public:
-    TestMemory() : Memory(0) {}
+    TestMemory()
+        : Memory(0),
+          _bytes(nullptr),
+          _words(nullptr)
+    {}
 
-    void setBytes(const target::byte_t *bytes, host::uint_t len) {
+    void setBytes(const target::byte_t *bytes, host::uint_t size) {
         _bytes = bytes;
-        _len = len;
+        _words = nullptr;
+        _size = size;
         _index = 0;
     }
-    bool hasNext() const override { return _index < _len; }
+    // Set big-endian words.
+    void setWords(const target::uint16_t *words, host::uint_t size) {
+        _words = words;
+        _bytes = nullptr;
+        _size = size;
+        _index = 0;
+    }
+    bool hasNext() const override { return _index < _size; }
     void setAddress(target::uintptr_t addr) { _address = addr; }
     char *dump(char *out) {
-        for (host::uint_t idx = 0; idx < _len; idx++) {
+        if (_words) {
+            for (host::uint_t idx = 0; idx < _size; idx += 2) {
+                sprintf(out, "%04" PRIX16 " ", _words[idx / 2]);
+                out += 8;
+            }
+            return out;
+        }
+        for (host::uint_t idx = 0; idx < _size; idx++) {
             sprintf(out, "%02" PRIX8 " ", _bytes[idx]);
             out += 3;
         }
@@ -28,11 +47,19 @@ public:
     }
 
 protected:
-    target::byte_t nextByte() override { return _bytes[_index++]; }
+    target::byte_t nextByte() override {
+        if (_words) {
+            const target::uint16_t word = _words[_index / 2];
+            // Big-endian word. Most significant byte is in lowest address.
+            return (_index++ % 2) == 0 ? (word >> 8) : word;
+        }
+        return _bytes[_index++];
+    }
 
 private:
     const target::byte_t *_bytes;
-    host::uint_t _len;
+    const target::uint16_t *_words;
+    host::uint_t _size;
     host::uint_t _index;
 };
 

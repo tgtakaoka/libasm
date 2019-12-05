@@ -13,13 +13,11 @@ extern TestAsserter asserter;
 extern TestMemory memory;
 extern TestSymtab symtab;
 
-#define ASSERT(addr, mnemonic, expected_operands, ...)          \
+#define ASSERT(addr, mnemonic, expected_operands)               \
     do {                                                        \
-        const uint8_t mnemonic[] = { __VA_ARGS__ };             \
-        memory.setAddress(addr);                                \
-        memory.setBytes(mnemonic, sizeof(mnemonic));            \
         Insn insn;                                              \
         char operands[40], message[40];                         \
+        memory.setAddress(addr);                                \
         disassembler.decode(memory, insn, operands,&symtab);    \
         sprintf(message, "%s: %s: ", __FUNCTION__, #mnemonic);  \
         memory.dump(message + strlen(message));                 \
@@ -30,10 +28,22 @@ extern TestSymtab symtab;
                         mnemonic, sizeof(mnemonic),             \
                         insn.bytes(), insn.insnLen());          \
     } while (0)
-#define ATEST(addr, mnemonic, opr, ...)         \
-    ASSERT(addr, mnemonic, opr, __VA_ARGS__)
+#define ATEST(addr, mnemonic, opr, ...)                 \
+    do {                                                \
+        const uint8_t mnemonic[] = { __VA_ARGS__ };     \
+        memory.setBytes(mnemonic, sizeof(mnemonic));    \
+        ASSERT(addr, mnemonic, opr);                    \
+    } while (0)
+#define AWTEST(addr, mnemonic, opr, ...)                \
+    do {                                                \
+        const uint16_t mnemonic[] = { __VA_ARGS__ };    \
+        memory.setWords(mnemonic, sizeof(mnemonic));    \
+        ASSERT(addr, mnemonic, opr);                    \
+    } while (0)
 #define TEST(mnemonic, opr, ...)                \
-    ASSERT(0x0000, mnemonic, opr, __VA_ARGS__)
+    ATEST(0x0000, mnemonic, opr, __VA_ARGS__)
+#define WTEST(mnemonic, opr, ...)               \
+    AWTEST(0x0000, mnemonic, opr, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test)
 

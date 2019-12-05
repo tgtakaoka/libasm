@@ -10,9 +10,8 @@
 extern TestAsserter asserter;
 extern TestSymtab symtab;
 
-#define ASSERT(addr, line, ...)                                 \
+#define ASSERT(addr, line, expected)                            \
     do {                                                        \
-        const target::byte_t expected[] = { __VA_ARGS__ };      \
         Insn insn;                                              \
         char message[80];                                       \
         assembler.encode(line, insn, addr, &symtab);            \
@@ -21,8 +20,18 @@ extern TestSymtab symtab;
         asserter.equals(message, expected, sizeof(expected),    \
                         insn.bytes(), insn.insnLen());          \
     } while (0)
-#define ATEST(addr, line, ...) ASSERT(addr, line, __VA_ARGS__)
+#define ATEST(addr, line, ...)                              \
+    do {                                                    \
+        const target::byte_t expected[] = { __VA_ARGS__ };  \
+        ASSERT(addr, line, expected);                       \
+    } while (0)
+#define AWTEST(addr, line, ...)                                 \
+    do {                                                        \
+        const target::uint16_t expected[] = { __VA_ARGS__ };    \
+        ASSERT(addr, line, expected);                           \
+    } while (0)
 #define TEST(line, ...) ATEST(0x0000, line, __VA_ARGS__)
+#define WTEST(line, ...) AWTEST(0x0000, line, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test)
 
