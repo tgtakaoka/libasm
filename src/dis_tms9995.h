@@ -15,9 +15,11 @@ public:
         Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
+    char *_operands;
     SymbolTable *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable *symtab) {
+        *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
     }
@@ -26,10 +28,17 @@ private:
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 
-    Error decodeOperand(
-        Memory &memory, Insn& insn, char *&operands, host::uint_t opr);
-    Error decodeImmediate(Memory &memory, Insn &insn, char *operands);
-    Error decodeRelative(Insn &insn, char *operands);
+    void outChar(char c) { *_operands++ = c; *_operands = 0; }
+    void outText(const char *text);
+    void outOpr8Hex(target::byte_t val);
+    void outOpr16Hex(target::uint16_t val);
+    void outOpr16Int(target::uint16_t val);
+    void outOpr16Addr(target::uintptr_t addr);
+    void outRegister(host::uint_t regno);
+
+    Error decodeOperand(Memory &memory, Insn& insn, host::uint_t opr);
+    Error decodeImmediate(Memory &memory, Insn &insn);
+    Error decodeRelative(Insn &insn);
 };
 
 #endif // __DIS_TMS9995_H__

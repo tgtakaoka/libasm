@@ -5,36 +5,41 @@
 #include "string_utils.h"
 #include "table_r65c02.h"
 
-static char *outOpr8Hex(char *out, target::byte_t val) {
-    *out++ = '$';
-    return outHex8(out, val);
-}
-
-static char *outOpr16Hex(char *out, target::uint16_t val) {
-    *out++ = '$';
-    return outHex16(out, val);
+template<McuType mcuType>
+void Disassembler<mcuType>::outText(const char *text) {
+    _operands = outStr(_operands, text);
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeImmediate(
-    Memory& memory, Insn &insn, char *operands) {
+void Disassembler<mcuType>::outOpr8Hex(target::byte_t val) {
+    *_operands++ = '$';
+    _operands = outHex8(_operands, val);
+}
+
+template<McuType mcuType>
+void Disassembler<mcuType>::outOpr16Hex(target::uint16_t val) {
+    *_operands++ = '$';
+    _operands = outHex16(_operands, val);
+}
+
+template<McuType mcuType>
+Error Disassembler<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
     target::byte_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    *operands++ = '#';
+    outChar('#');
     const char *label = lookup(val);
     if (label) {
-        outStr(operands, label);
+        outText(label);
     } else {
-        outOpr8Hex(operands, val);
+        outOpr8Hex(val);
     }
     return setError(OK);
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeAbsolute(
-    Memory& memory, Insn &insn, char *operands) {
-    const bool indirect = (insn.addrMode() == IDX_ABS_IND
-                           || insn.addrMode() == ABS_INDIRECT);
+Error Disassembler<mcuType>::decodeAbsolute(Memory& memory, Insn &insn) {
+    const bool indirect = (insn.addrMode() == IDX_ABS_IND)
+        || (insn.addrMode() == ABS_INDIRECT);
     char index;
     switch (insn.addrMode()) {
     case ABS_IDX_X:
@@ -50,29 +55,24 @@ Error Disassembler<mcuType>::decodeAbsolute(
     }
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    if (indirect) *operands++ = '(';
+    if (indirect) outChar('(');
     const char *label = lookup(addr);
     if (label) {
-        if (addr < 0x100) *operands++ = '>';
-        operands = outStr(operands, label);
+        if (addr < 0x100) outChar('>');
+        outText(label);
     } else {
-        operands = outOpr16Hex(operands, addr);
+        outOpr16Hex(addr);
     }
     if (index) {
-        *operands++ = ',';
-        *operands++ = index;
-        *operands = 0;
+        outChar(',');
+        outChar(index);
     }
-    if (indirect) {
-        *operands++ = ')';
-        *operands = 0;
-    }
+    if (indirect) outChar(')');
     return setError(OK);
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeZeroPage(
-    Memory &memory, Insn& insn, char *operands) {
+Error Disassembler<mcuType>::decodeZeroPage(Memory &memory, Insn& insn) {
     const bool indirect = insn.addrMode() == INDX_IND
         || insn.addrMode() == INDIRECT_IDX
         || insn.addrMode() == ZP_INDIRECT;
@@ -92,33 +92,28 @@ Error Disassembler<mcuType>::decodeZeroPage(
     }
     target::byte_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
-    if (indirect) *operands++ = '(';
+    if (indirect) outChar('(');
     const char *label = lookup(zp);
     if (label) {
-        operands = outStr(operands, label);
+        outText(label);
     } else {
-        operands = outOpr8Hex(operands, zp);
+        outOpr8Hex(zp);
     }
-    if (indirect && index == 'Y') *operands++ = ')';
+    if (indirect && index == 'Y') outChar(')');
     if (index) {
-        *operands++ = ',';
-        *operands++ = index;
-        *operands = 0;
+        outChar(',');
+        outChar(index);
     }
-    if (indirect && index != 'Y') {
-        *operands++ = ')';
-        *operands = 0;
-    }
+    if (indirect && index != 'Y') outChar(')');
     if (insn.addrMode() == ZP_REL8) {
-        *operands++ = ',';
-        return decodeRelative(memory, insn, operands);
+        outChar(',');
+        return decodeRelative(memory, insn);
     }
     return setError(OK);
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeRelative(
-    Memory &memory, Insn &insn, char *operands) {
+Error Disassembler<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
     target::ptrdiff_t delta;
     target::byte_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -127,9 +122,9 @@ Error Disassembler<mcuType>::decodeRelative(
     const target::uintptr_t addr = insn.address() + insnLen + delta;
     const char *label = lookup(addr);
     if (label) {
-        outStr(operands, label);
+        outText(label);
     } else {
-        outOpr16Hex(operands, addr);
+        outOpr16Hex(addr);
     }
     return setError(OK);
 }
@@ -137,9 +132,8 @@ Error Disassembler<mcuType>::decodeRelative(
 template<McuType mcuType>
 Error Disassembler<mcuType>::decode(
     Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
-    reset(symtab);
+    reset(operands, symtab);
     insn.resetAddress(memory.address());
-    *operands = 0;
 
     target::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
@@ -155,17 +149,16 @@ Error Disassembler<mcuType>::decode(
     case IMPLIED:
         return setError(OK);
     case ACCUMULATOR:
-        *operands++ = 'A';
-        *operands = 0;
+        outChar('A');
         return setError(OK);
     case IMMEDIATE:
-        return decodeImmediate(memory, insn, operands);
+        return decodeImmediate(memory, insn);
     case ABSOLUTE:
     case ABS_IDX_X:
     case ABS_IDX_Y:
     case ABS_INDIRECT:
     case IDX_ABS_IND:
-        return decodeAbsolute(memory, insn, operands);
+        return decodeAbsolute(memory, insn);
     case ZEROPAGE:
     case ZP_IDX_X:
     case ZP_IDX_Y:
@@ -173,9 +166,9 @@ Error Disassembler<mcuType>::decode(
     case INDIRECT_IDX:
     case ZP_INDIRECT:
     case ZP_REL8:
-        return decodeZeroPage(memory, insn, operands);
+        return decodeZeroPage(memory, insn);
     case REL8:
-        return decodeRelative(memory, insn, operands);
+        return decodeRelative(memory, insn);
     default:
         return setError(INTERNAL_ERROR);
     }

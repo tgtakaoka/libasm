@@ -16,9 +16,11 @@ public:
         Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
+    char *_operands;
     SymbolTable *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable *symtab) {
+        *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
     }
@@ -27,10 +29,15 @@ private:
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
 
-    Error decodeImmediate(Memory &memory, Insn &insn, char *operands);
-    Error decodeAbsolute(Memory &memory, Insn &insn, char *operands);
-    Error decodeZeroPage(Memory &memory, Insn &insn, char *operands);
-    Error decodeRelative(Memory &memory, Insn &insn, char *operands);
+    void outChar(char c) { *_operands++ = c; *_operands = 0; }
+    void outText(const char *text);
+    void outOpr8Hex(target::byte_t val);
+    void outOpr16Hex(target::uint16_t val);
+
+    Error decodeImmediate(Memory &memory, Insn &insn);
+    Error decodeAbsolute(Memory &memory, Insn &insn);
+    Error decodeZeroPage(Memory &memory, Insn &insn);
+    Error decodeRelative(Memory &memory, Insn &insn);
 };
 
 #include "dis_r65c02_impl.h"
