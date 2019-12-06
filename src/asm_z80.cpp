@@ -6,66 +6,70 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static Error getInt16(const char *&in, target::uint16_t &val) {
-    val = 0;
+Error Assembler::getInt16(target::uint16_t &val) {
+    target::uint16_t v = 0;
     const char *p;
 
-    for (p = in; isxdigit(*p); p++)
+    for (p = _scan; isxdigit(*p); p++)
         ;
-    if (p > in && toupper(*p) == 'H') {
-        for (p = in; isxdigit(*p); p++) {
-            val <<= 4;
-            val += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
+    if (p > _scan && toupper(*p) == 'H') {
+        for (p = _scan; isxdigit(*p); p++) {
+            v <<= 4;
+            v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
         }
-        in = ++p;
+        val = v;
+        _scan = ++p;
         return OK;
     }
 
-    for (p = in; *p >= '0' && *p < '8'; p++)
+    for (p = _scan; *p >= '0' && *p < '8'; p++)
         ;
-    if (p > in && toupper(*p) == 'O') {
-        for (p = in; *p >= '0' && *p < '8'; p++) {
-            val <<= 3;
-            val += *p - '0';
+    if (p > _scan && toupper(*p) == 'O') {
+        for (p = _scan; *p >= '0' && *p < '8'; p++) {
+            v <<= 3;
+            v += *p - '0';
         }
-        in = ++p;
+        val = v;
+        _scan = ++p;
         return OK;
     }
 
-    for (p = in; *p == '0' || *p == '1'; p++)
+    for (p = _scan; *p == '0' || *p == '1'; p++)
         ;
-    if (p > in && toupper(*p) == 'B') {
-        for (p = in; *p == '0' || *p == '1'; p++) {
-            val <<= 1;
-            val += *p - '0';
+    if (p > _scan && toupper(*p) == 'B') {
+        for (p = _scan; *p == '0' || *p == '1'; p++) {
+            v <<= 1;
+            v += *p - '0';
         }
-        in = ++p;
+        val = v;
+        _scan = ++p;
         return OK;
     }
 
-    p = in;
+    p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
     while (isdigit(*p)) {
-        val *= 10;
-        val += *p++ - '0';
+        v *= 10;
+        v += *p++ - '0';
     }
-    in = p;
-    if (sign == '-') val = -(target::int16_t)val;
+    if (sign == '-') v = -(target::int16_t)v;
+    val = v;
+    _scan = p;
     return OK;
 }
 
-Error Assembler::getOperand16(const char *&in, target::uint16_t &val) {
-    if (getInt16(in, val) == OK) return setError(OK);
+Error Assembler::getOperand16(target::uint16_t &val) {
+    if (getInt16(val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(in[idx]); idx++) {
-        symbol_buffer[idx] = in[idx];
+    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {
+        symbol_buffer[idx] = _scan[idx];
     }
     symbol_buffer[idx] = 0;
     if (hasSymbol(symbol_buffer)) {
         val = lookup(symbol_buffer);
-        in += idx;
+        _scan += idx;
         return OK;
     }
     return setError(UNKNOWN_OPERAND);
@@ -296,37 +300,36 @@ Error Assembler::encodeInherent(
     return setError(OK);
 }
 
-const char *Assembler::parseOperand(
-    const char *line, OprFormat &oprFormat,
-    RegName &regName, target::uint16_t &operand) {
+Error Assembler::parseOperand(
+    OprFormat &oprFormat, RegName &regName, target::uint16_t &operand) {
     setError(OK);
 
     if (oprFormat == COND_4 || oprFormat == COND_8) {
-        target::int8_t cc;
-        line = Registers::parseCc4Name(line, cc);
-        if (cc >= 0) {
+        CcName ccName;
+        if ((ccName = Registers::parseCc4Name(_scan)) != CC_UNDEF) {
+            _scan += Registers::ccNameLen(ccName);
             oprFormat = COND_4;
-            operand = cc;
-            return line;
+            operand = Registers::encodeCcName(ccName);
+            return OK;
         }
-        line = Registers::parseCc8Name(line, cc);
-        if (cc >= 0) {
+        if ((ccName = Registers::parseCc8Name(_scan)) != CC_UNDEF) {
+            _scan += Registers::ccNameLen(ccName);
             oprFormat = COND_8;
-            operand = cc;
-            return line;
+            operand = Registers::encodeCcName(ccName);
+            return OK;
         }
     }
 
     regName = REG_UNDEF;
     operand = 0;
-    if (*line == 0) {
+    if (*_scan == 0) {
         oprFormat = NO_OPR;
-        return line;
+        return OK;
     }
 
-    regName = Registers::parseRegister(line);
+    regName = Registers::parseRegister(_scan);
     if (regName != REG_UNDEF) {
-        line += Registers::regNameLen(regName);
+        _scan += Registers::regNameLen(regName);
         switch (regName) {
         case REG_A:   oprFormat = A_REG; break;
         case REG_BC:  oprFormat = BC_REG; break;
@@ -339,21 +342,22 @@ const char *Assembler::parseOperand(
         case REG_R:   oprFormat = IR_REG; break;
         case REG_AF:  oprFormat = AF_REG; break;
         case REG_AFP: oprFormat = AFPREG; break;
-        default:  oprFormat = REG_8; break;
+        default:      oprFormat = REG_8; break;
         }
-        return line;
-    } else if (*line == '(') {
-        regName = Registers::parseRegister(++line);
+        return OK;
+    }
+    if (*_scan == '(') {
+        regName = Registers::parseRegister(++_scan);
         if (regName == REG_UNDEF) {
-            if (getOperand16(line, operand) == OK && *line == ')') {
-                line++;
-                oprFormat = (operand < 0x100) ? ADDR_8 : ADDR_16;
-            } else setError(UNKNOWN_OPERAND);
-            return line;
+            if (getOperand16(operand) || *_scan != ')')
+                return setError(UNKNOWN_OPERAND);
+            _scan++;
+            oprFormat = (operand < 0x100) ? ADDR_8 : ADDR_16;
+            return OK;
         }
-        line += Registers::regNameLen(regName);
-        if (*line == ')') {
-            line++;
+        _scan += Registers::regNameLen(regName);
+        if (*_scan == ')') {
+            _scan++;
             switch (regName) {
             case REG_BC:
             case REG_DE: oprFormat = BC_PTR; break;
@@ -362,43 +366,41 @@ const char *Assembler::parseOperand(
             case REG_IX:
             case REG_IY: oprFormat = IX_PTR; break;
             case REG_C:  oprFormat = C_PTR; break;
-            default: setError(UNKNOWN_OPERAND);
+            default:     return setError(UNKNOWN_OPERAND);
             }
-            return line;
-        } else if (*line == '+' || *line == '-') {
+            return OK;
+        }
+        if (*_scan == '+' || *_scan == '-') {
             if ((regName == REG_IX || regName == REG_IY)
-                && getOperand16(line, operand) == OK && *line == ')') {
-                line++;
+                && getOperand16(operand) == OK && *_scan == ')') {
+                _scan++;
                 const target::int16_t offset = target::int16_t(operand);
                 if (offset >= -128 && offset < 128) {
                     oprFormat = IX_OFF;
-                    return line;
+                    return OK;
                 }
             }
         }
-        setError(UNKNOWN_OPERAND);
-        return line;
+        return setError(UNKNOWN_OPERAND);
     }
-    if (getOperand16(line, operand) == OK) {
+    if (getOperand16(operand) == OK) {
         if (operand < 0x100) oprFormat = IMM_8;
         else oprFormat = IMM_16;
-        return line;
+        return setError(OK);
     }
-    setError(UNKNOWN_OPERAND);
-    return line;
+    return setError(UNKNOWN_OPERAND);
 }
 
 Error Assembler::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
-    reset(symtab);
+    reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
-    line = skipSpace(line);
-    if (!*line) return setError(NO_TEXT);
+    if (!*_scan) return setError(NO_TEXT);
     const char *endName;
-    for (endName = line; isidchar(*endName); endName++)
+    for (endName = _scan; isidchar(*endName); endName++)
         ;
-    insn.setName(line, endName);
-    line = skipSpace(endName);
+    insn.setName(_scan, endName);
+    _scan = skipSpace(endName);
 
     if (InsnTable.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
@@ -407,12 +409,12 @@ Error Assembler::encode(
     OprFormat rightFormat = insn.rightFormat();
     RegName leftReg, rightReg;
     target::uint16_t leftOpr, rightOpr;
-    line = parseOperand(line, leftFormat, leftReg, leftOpr);
-    if (getError()) return getError();
-    if (*line == ',') {
-        line = skipSpace(++line);
-        line = parseOperand(line, rightFormat, rightReg, rightOpr);
-        if (getError()) return getError();
+    if (parseOperand(leftFormat, leftReg, leftOpr))
+        return getError();
+    if (*_scan == ',') {
+        _scan = skipSpace(_scan + 1);
+        if (parseOperand(rightFormat, rightReg, rightOpr))
+            return getError();
     } else {
         rightFormat = NO_OPR;
         rightReg = REG_UNDEF;

@@ -14,9 +14,11 @@ public:
                  target::uintptr_t addr, SymbolTable *symtab);
 
 protected:
+    const char *_scan;
     SymbolTable  *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable *symtab) {
+        _scan = line;
         _symtab = symtab;
         resetError();
     }
@@ -34,10 +36,10 @@ protected:
         insn.emitByte(InsnTable::opCode(insn.insnCode()));
     }
 
-    const char *parseOperand(
-        const char *line, OprFormat &oprFormat, RegName &regName,
-        target::uint16_t &operand);
-    Error getOperand16(const char *&line, target::uint16_t &val);
+    Error parseOperand(
+        OprFormat &oprFormat, RegName &regName, target::uint16_t &operand);
+    Error getInt16(target::uint16_t &val);
+    Error getOperand16(target::uint16_t &val);
 
     Error encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t rightOpr);
     Error encodeInherent(

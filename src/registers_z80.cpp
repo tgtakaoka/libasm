@@ -82,7 +82,7 @@ bool Registers::compareRegName(const char *line, RegName regName) {
     return !isidchar(*line);
 }
 
-host::uint_t Registers::regNameLen(RegName regName) {
+host::uint_t Registers::regNameLen(const RegName regName) {
     switch (regName) {
     case REG_AFP: return 3;
     case REG_HL:
@@ -128,7 +128,7 @@ static char ccName2ndChar(const CcName ccName) {
     return toupper(ccName);
 }
 
-static host::uint_t ccNameLen(const CcName ccName) {
+host::uint_t Registers::ccNameLen(const CcName ccName) {
     return isupper(ccName) ? 1 : 2;
 }
 
@@ -157,22 +157,29 @@ char *Registers::outCc8Name(char *out, const target::opcode_t cc8) {
     return outCcName(out, cc);
 }
 
-static const char *parseCcName(const char *line, target::int8_t &cc, host::uint_t max) {
-    for (cc = 0; cc < max; cc++) {
+static CcName parseCcName(const char *line, host::int_t max) {
+    for (host::int_t cc = 0; cc < max; cc++) {
         const CcName ccName = CcName(pgm_read_byte(&CC8_NAMES[cc]));
         if (compareCcName(line, ccName))
-            return line + ccNameLen(ccName);
+            return ccName;
     }
-    cc = -1;
-    return line;
+    return CC_UNDEF;
 }
 
-const char *Registers::parseCc4Name(const char *line, target::int8_t &cc4) {
-    return parseCcName(line, cc4, 4);
+CcName Registers::parseCc4Name(const char *line) {
+    return parseCcName(line, 4);
 }
 
-const char *Registers::parseCc8Name(const char *line, target::int8_t &cc8) {
-    return parseCcName(line, cc8, 8);
+CcName Registers::parseCc8Name(const char *line) {
+    return parseCcName(line, 8);
+}
+
+host::int_t Registers::encodeCcName(const CcName ccName) {
+    for (host::int_t cc = 0; cc < 8; cc++) {
+        if (CcName(pgm_read_byte(&CC8_NAMES[cc])) == ccName)
+            return cc;
+    }
+    return -1;
 }
 
 static host::int_t encodeRegNumber(

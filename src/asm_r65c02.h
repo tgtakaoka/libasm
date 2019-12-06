@@ -15,9 +15,11 @@ public:
                  target::uintptr_t addr, SymbolTable *symtab);
 
 private:
+    const char *_scan;
     SymbolTable  *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable *symtab) {
+        _scan = line;
         _symtab = symtab;
         resetError();
     }
@@ -32,11 +34,14 @@ private:
         insn.emitByte(insn.insnCode());
     }
 
-    Error getOperand16(const char *&line, target::uint16_t &val) const;
-    Error parseOperand(const char *line, Insn &insn, target::uint16_t &val);
+    Error checkLineEnd();
+    Error getHex16(target::uint16_t &val);
+    Error getInt16(target::uint16_t &val);
+    Error getOperand16(target::uint16_t &val);
+    Error parseOperand(Insn &insn, target::uint16_t &val);
 
-    Error encodeRelative(const char *line, Insn &insn, bool emitInsn);
-    Error encodeZeroPageRelative(const char *line, Insn &insn);
+    Error encodeRelative(Insn &insn, bool emitInsn);
+    Error encodeZeroPageRelative(Insn &insn);
 };
 
 #include "asm_r65c02_impl.h"

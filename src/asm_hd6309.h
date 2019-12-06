@@ -17,9 +17,11 @@ public:
 
 private:
     Registers<mcuType> _regs;
+    const char *_scan;
     SymbolTable  *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable *symtab) {
+        _scan = line;
         _symtab = symtab;
         resetError();
     }
@@ -37,22 +39,27 @@ private:
         insn.emitByte(InsnTableUtils::opCode(insn.insnCode()));
     }
 
-    Error getOperand16(const char *&line, target::uint16_t &val) const;
-    Error getOperand32(const char *&line, target::uint32_t &val) const;
+    Error checkLineEnd();
+    Error getHex16(target::uint16_t &val);
+    Error getHex32(target::uint32_t &val);
+    Error getInt16(target::uint16_t &val);
+    Error getInt32(target::uint32_t &val);
+    Error getOperand16(target::uint16_t &val);
+    Error getOperand32(target::uint32_t &val);
     Error determineAddrMode(const char *line, Insn &insn);
 
     // MC6809
-    Error encodeStackOp(const char *line, Insn &insn);
-    Error encodeRegisters(const char *line, Insn &insn);
-    Error encodeRelative(const char *line, Insn &insn);
-    Error encodeImmediate(const char *line, Insn &insn);
-    Error encodeDirect(const char *line, Insn &insn, bool emitInsn = true);
-    Error encodeExtended(const char *line, Insn &insn, bool emitInsn = true);
-    Error encodeIndexed(const char *line, Insn &insn, bool emitInsn = true);
+    Error encodeStackOp(Insn &insn);
+    Error encodeRegisters(Insn &insn);
+    Error encodeRelative(Insn &insn);
+    Error encodeImmediate(Insn &insn);
+    Error encodeDirect(Insn &insn, bool emitInsn = true);
+    Error encodeExtended(Insn &insn, bool emitInsn = true);
+    Error encodeIndexed(Insn &insn, bool emitInsn = true);
     // HD6309
-    Error encodeBitOperation(const char *line, Insn &insn);
-    Error encodeImmediatePlus(const char *line, Insn &insn);
-    Error encodeTransferMemory(const char *line, Insn &insn);
+    Error encodeBitOperation(Insn &insn);
+    Error encodeImmediatePlus(Insn &insn);
+    Error encodeTransferMemory(Insn &insn);
 };
 
 #include "asm_hd6309_impl.h"
