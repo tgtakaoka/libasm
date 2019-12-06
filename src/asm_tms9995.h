@@ -14,9 +14,11 @@ public:
                  target::uintptr_t addr, SymbolTable *symtab);
 
 protected:
+    const char *_scan;
     SymbolTable  *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable *symtab) {
+        _scan = line;
         _symtab = symtab;
         resetError();
     }
@@ -27,15 +29,19 @@ protected:
         return _symtab ? _symtab->lookup(symbol) : 0;
     }
 
-    Error checkComma(const char *&line);
-    Error getOperand16(const char *&line, target::uint16_t &val);
-    Error encodeImm(const char *&line, Insn &insn, bool emitInsn);
-    Error encodeReg(const char *&line, Insn &insn, bool emitInsn);
-    Error encodeCnt(const char *&line, Insn &insn, bool acceptR0, bool accept16);
-    Error encodeOpr(const char *&line, Insn &insn, bool emitInsn, bool destinationa = false);
-    Error encodeRel(const char *&line, Insn &insn);
-    Error encodeCruOff(const char *&line, Insn &insn);
-    Error encodeIoaddr(const char *line, Insn &insn);
+    Error checkComma();
+    Error getHex16(target::uint16_t &val);
+    Error getInt16(target::uint16_t &val);
+    Error getOperand16(target::uint16_t &val);
+    Error parseRegName(target::byte_t &regno);
+
+    Error encodeImm(Insn &insn, bool emitInsn);
+    Error encodeReg(Insn &insn, bool emitInsn);
+    Error encodeCnt(Insn &insn, bool acceptR0, bool accept16);
+    Error encodeOpr(Insn &insn, bool emitInsn, bool destinationa = false);
+    Error encodeRel(Insn &insn);
+    Error encodeCruOff(Insn &insn);
+    Error encodeIoaddr(Insn &insn);
 };
 
 #endif // __ASM_TMS9995_H__

@@ -24,6 +24,7 @@ enum RegName : char {
 };
 
 enum CcName : char {
+    CC_UNDEF = 0,
     CC_Z  = 'Z',
     CC_NZ = 'z',
     CC_C  = 'C',
@@ -36,10 +37,14 @@ enum CcName : char {
 
 class Registers {
 public:
-    static RegName parseRegister(const char *line);
-    static const char *parseCc4Name(const char *line, target::int8_t &cc);
-    static const char *parseCc8Name(const char *line, target::int8_t &cc);
+    static CcName parseCc4Name(const char *line);
+    static CcName parseCc8Name(const char *line);
+    static bool compareRegName(const char *line, RegName regName);
+    static host::uint_t ccNameLen(const CcName ccName);
+    static host::int_t encodeCcName(CcName ccName);
 
+    static RegName parseRegister(const char *line);
+    static host::uint_t regNameLen(const RegName regName);
     static host::int_t encodePointerReg(RegName regName);
     static host::int_t encodePointerRegIx(RegName regName, RegName ix);
     static host::int_t encodeStackReg(RegName regName);
@@ -54,9 +59,6 @@ public:
     static RegName decodeIndexReg(target::byte_t regNum);
     static RegName decodeIrReg(target::byte_t regNum);
     static RegName decodeDataReg(target::byte_t regNum);
-
-    static bool compareRegName(const char *line, RegName regName);
-    static host::uint_t regNameLen(RegName regName);
 
     static char *outRegName(char *out, const RegName regName);
     static char *outCc4Name(char *out, target::opcode_t cc4);

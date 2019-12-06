@@ -14,9 +14,11 @@ public:
                  target::uintptr_t addr, SymbolTable *symtab);
 
 protected:
+    const char *_scan;
     SymbolTable  *_symtab;
 
-    void reset(SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable *symtab) {
+        _scan = line;
         _symtab = symtab;
         resetError();
     }
@@ -27,17 +29,19 @@ protected:
         return _symtab ? _symtab->lookup(symbol) : 0;
     }
 
-    const char *encodePointerReg(const char *line, Insn &insn);
-    const char *encodeStackReg(const char *line, Insn &insn);
-    const char *encodeIndexReg(const char *line, Insn &insn);
-    const char *encodeDataReg(const char *line, Insn &insn);
-    const char *encodeDataDataReg(const char *line, Insn &insn);
-    const char *encodeVectorNo(const char *line, Insn &insn);
+    Error checkLineEnd();
+    Error getInt16(target::uint16_t &val);
+    Error getOperand16(target::uint16_t &val);
+    Error encodePointerReg(Insn &insn);
+    Error encodeStackReg(Insn &insn);
+    Error encodeIndexReg(Insn &insn);
+    Error encodeDataReg(Insn &insn);
+    Error encodeDataDataReg(Insn &insn);
+    Error encodeVectorNo(Insn &insn);
 
-    Error getOperand16(const char *&line, target::uint16_t &val);
-    Error encodeImmediate(const char *line, Insn &insn);
-    Error encodeDirect(const char *line, Insn &insn);
-    Error encodeIoaddr(const char *line, Insn &insn);
+    Error encodeImmediate(Insn &insn);
+    Error encodeDirect(Insn &insn);
+    Error encodeIoaddr(Insn &insn);
 };
 
 #endif // __ASM_I8080_H__

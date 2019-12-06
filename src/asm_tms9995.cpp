@@ -8,117 +8,117 @@ static bool isIdChar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static Error getHex16(const char *&in, target::uint16_t &val) {
-    const char *p = in;
-    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
-    val = 0;
-    while (isxdigit(*p)) {
-        val <<= 4;
-        val += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
-        p++;
-    }
-    in = p;
-    return OK;
-}
-
-static Error getInt16(const char *&in, target::uint16_t &val) {
-    const char *p = in;
-    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
-    if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    val = 0;
-    while (isdigit(*p)) {
-        val *= 10;
-        val += *p - '0';
-        p++;
-    }
-    in = p;
-    if (sign == '-') val = -(target::int16_t)val;
-    return OK;
-}
-
-Error Assembler::getOperand16(const char *&in, target::uint16_t &val) {
-    if (*in == '>') {
-        in++;
-        return setError(getHex16(in, val));
-    }
-    if (getInt16(in, val) == OK) return setError(OK);
-    char symbol_buffer[20];
-    host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isIdChar(in[idx]); idx++) {
-        symbol_buffer[idx] = in[idx];
-    }
-    symbol_buffer[idx] = 0;
-    if (hasSymbol(symbol_buffer)) {
-        val = lookup(symbol_buffer);
-        in += idx;
-        return setError(OK);
-    }
-    return setError(UNKNOWN_OPERAND);
-}
-
 static const char *skipSpace(const char *line) {
     while (*line == ' ') line++;
     return line;
 }
 
-Error Assembler::checkComma(const char *&line) {
-    line = skipSpace(line);
-    if (*line != ',') return setError(UNKNOWN_OPERAND);
-    line = skipSpace(line + 1);
+Error Assembler::checkComma() {
+    _scan = skipSpace(_scan);
+    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+    _scan = skipSpace(_scan + 1);
     return OK;
 }
 
-#define NO_REG (-1)
-static const char *parseRegName(const char *line, target::int8_t &regno) {
-    if (toupper(*line) == 'R' && isdigit(*++line)) {
-        if (!isIdChar(line[1])) {
-            regno = *line - '0';
-            return skipSpace(line + 1);
-        } else if (*line == '1' && isdigit(line[1]) && !isIdChar(line[2])) {
-            regno = 10 + line[1] - '0';
-            return skipSpace(line + 2);
-        }
+Error Assembler::getHex16(target::uint16_t &val) {
+    const char *p = _scan;
+    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
+    target::uint16_t v = 0;
+    while (isxdigit(*p)) {
+        v <<= 4;
+        v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
+        p++;
     }
-    regno = NO_REG;
-    return line;
+    val = v;
+    _scan = p;
+    return OK;
 }
 
-Error Assembler::encodeImm(const char *&line, Insn &insn, bool emitInsn) {
-    target::uint16_t val;
-    if (getOperand16(line, val)) return getError();
-    if (emitInsn) insn.emitInsn();
-    insn.emitOperand(val);
-    return setError(OK);
+Error Assembler::getInt16(target::uint16_t &val) {
+    const char *p = _scan;
+    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
+    if (!isdigit(*p)) return UNKNOWN_OPERAND;
+    target::int16_t v = 0;
+    while (isdigit(*p)) {
+        v *= 10;
+        v += *p - '0';
+        p++;
+    }
+    if (sign == '-') v = -v;
+    val = (target::uint16_t)v;
+    _scan = p;
+    return OK;
 }
 
-Error Assembler::encodeReg(const char *&line, Insn &insn, bool emitInsn) {
-    target::int8_t regno;
-    line = parseRegName(line, regno);
-    if (regno != NO_REG) {
-        target::uint16_t operand = regno;
-        switch (insn.addrMode()) {
-        case REG:
-        case REG_IMM:
-        case CNT_REG: break;
-        case REG_SRC: operand <<= 6; break;
-        default: return setError(INTERNAL_ERROR);
-        }
-        insn.setInsnCode(insn.insnCode() | operand);
-        if (emitInsn) insn.emitInsn();
+Error Assembler::getOperand16(target::uint16_t &val) {
+    if (*_scan == '>') {
+        _scan++;
+        return setError(getHex16(val));
+    }
+    if (getInt16(val) == OK) return setError(OK);
+    char symbol_buffer[20];
+    host::uint_t idx;
+    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isIdChar(_scan[idx]); idx++) {
+        symbol_buffer[idx] = _scan[idx];
+    }
+    symbol_buffer[idx] = 0;
+    if (hasSymbol(symbol_buffer)) {
+        val = lookup(symbol_buffer);
+        _scan += idx;
         return setError(OK);
     }
     return setError(UNKNOWN_OPERAND);
 }
 
-Error Assembler::encodeCnt(
-    const char *&line, Insn &insn, bool acceptR0, bool accept16) {
+Error Assembler::parseRegName(target::byte_t &regno) {
+    const char *line = _scan;
+    if (toupper(*line) == 'R' && isdigit(*++line)) {
+        if (!isIdChar(line[1])) {
+            regno = *line - '0';
+            _scan = skipSpace(line + 1);
+            return OK;
+        } else if (*line == '1' && isdigit(line[1]) && !isIdChar(line[2])) {
+            if (line[1] >= '6') return UNKNOWN_OPERAND;
+            regno = 10 + line[1] - '0';
+            _scan = skipSpace(line + 2);
+            return OK;
+        }
+    }
+    return UNKNOWN_OPERAND;
+}
+
+Error Assembler::encodeImm(Insn &insn, bool emitInsn) {
+    target::uint16_t val;
+    if (getOperand16(val)) return getError();
+    if (emitInsn) insn.emitInsn();
+    insn.emitOperand(val);
+    return setError(OK);
+}
+
+Error Assembler::encodeReg(Insn &insn, bool emitInsn) {
+    target::byte_t regno;
+    if (parseRegName(regno)) return setError(UNKNOWN_OPERAND);
+    target::uint16_t operand = regno;
+    switch (insn.addrMode()) {
+    case REG:
+    case REG_IMM:
+    case CNT_REG: break;
+    case REG_SRC: operand <<= 6; break;
+    default: return setError(INTERNAL_ERROR);
+    }
+    insn.setInsnCode(insn.insnCode() | operand);
+    if (emitInsn) insn.emitInsn();
+    return setError(OK);
+}
+
+Error Assembler::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     target::uint16_t count;
-    if (acceptR0 && toupper(line[0]) == 'R' && line[1] == '0'
-        && !isIdChar(line[2])) { // R0
-        line += 2;
+    if (acceptR0 && toupper(_scan[0]) == 'R' && _scan[1] == '0'
+        && !isIdChar(_scan[2])) { // R0
+        _scan += 2;
         count = 0;
     } else {
-        if (getOperand16(line, count)) return getError();
+        if (getOperand16(count)) return getError();
         if (count > 16 || (!accept16 && count == 16))
             return setError(UNKNOWN_OPERAND);
         count &= 0xf;
@@ -134,33 +134,29 @@ Error Assembler::encodeCnt(
     return setError(OK);
 }
 
-Error Assembler::encodeOpr(
-    const char *&line, Insn &insn, bool emitInsn, bool destinationa) {
-    target::int8_t regno;
+Error Assembler::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
+    target::byte_t regno;
     target::byte_t mode = 0;
     target::uint16_t val;
-    line = parseRegName(line, regno);
-    if (regno != NO_REG) {
+    if (parseRegName(regno) == OK) {
         mode = 0;
-    } else if (*line == '*') {
-        line++;
+    } else if (*_scan == '*') {
+        _scan++;
         mode = 1;
-        line = parseRegName(line, regno);
-        if (regno == NO_REG) return setError(UNKNOWN_OPERAND);
-        if (*line == '+') {
-            line++;
+        if (parseRegName(regno)) return setError(UNKNOWN_OPERAND);
+        if (*_scan == '+') {
+            _scan++;
             mode = 3;
         }
-    } else if (*line == '@') {
-        line++;
+    } else if (*_scan == '@') {
+        _scan++;
         mode = 2;
-        if (getOperand16(line, val)) return getError();
-        if (*line == '(') {
-            line++;
-            line = parseRegName(line, regno);
-            if (regno == NO_REG || regno == 0 || *line != ')')
+        if (getOperand16(val)) return getError();
+        if (*_scan == '(') {
+            _scan++;
+            if (parseRegName(regno) || regno == 0 || *_scan != ')')
                 return setError(UNKNOWN_OPERAND);
-            line++;
+            _scan++;
         } else {
             regno = 0;
         }
@@ -175,9 +171,9 @@ Error Assembler::encodeOpr(
     return setError(OK);
 }
 
-Error Assembler::encodeRel(const char *&line, Insn &insn) {
+Error Assembler::encodeRel(Insn &insn) {
     target::uintptr_t addr;
-    if (getOperand16(line, addr) || addr % 2 != 0)
+    if (getOperand16(addr) || addr % 2 != 0)
         return setError(UNKNOWN_OPERAND);
     const target::uintptr_t base = insn.address() + 2;
     const target::ptrdiff_t delta = (addr - base) >> 1;
@@ -187,9 +183,9 @@ Error Assembler::encodeRel(const char *&line, Insn &insn) {
     return setError(OK);
 }
 
-Error Assembler::encodeCruOff(const char *&line, Insn &insn) {
+Error Assembler::encodeCruOff(Insn &insn) {
     target::uint16_t val;
-    if (getOperand16(line, val)) return getError();
+    if (getOperand16(val)) return getError();
     target::int16_t offset = (target::int16_t)val;
     if (offset >= 128 || offset < -128) return setError(UNKNOWN_OPERAND);
     insn.setInsnCode(insn.insnCode() | (offset & 0xff));
@@ -199,15 +195,14 @@ Error Assembler::encodeCruOff(const char *&line, Insn &insn) {
 
 Error Assembler::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
-    reset(symtab);
+    reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
-    line = skipSpace(line);
-    if (!*line) return setError(NO_TEXT);
+    if (!*_scan) return setError(NO_TEXT);
     const char *endName;
-    for (endName = line; isIdChar(*endName); endName++)
+    for (endName = _scan; isIdChar(*endName); endName++)
         ;
-    insn.setName(line, endName);
-    line = skipSpace(endName);
+    insn.setName(_scan, endName);
+    _scan = skipSpace(endName);
 
     if (InsnTable.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
@@ -218,53 +213,53 @@ Error Assembler::encode(
         setError(OK);
         break;
     case IMM:
-        encodeImm(line, insn, true);
+        encodeImm(insn, true);
         break;
     case REG:
-        encodeReg(line, insn, true);
+        encodeReg(insn, true);
         break;
     case REG_IMM:
-        if (encodeReg(line, insn, true)) return getError();
-        if (checkComma(line)) return getError();
-        encodeImm(line, insn, false);
+        if (encodeReg(insn, true)) return getError();
+        if (checkComma()) return getError();
+        encodeImm(insn, false);
         break;
     case CNT_REG:
-        if (encodeReg(line, insn, false)) return getError();
-        if (checkComma(line)) return getError();
-        encodeCnt(line, insn, /* R0 */true, /* 16 */false);
+        if (encodeReg(insn, false)) return getError();
+        if (checkComma()) return getError();
+        encodeCnt(insn, /* R0 */true, /* 16 */false);
         break;
     case SRC:
-        encodeOpr(line, insn, true);
+        encodeOpr(insn, true);
         break;
     case CNT_SRC:
-        encodeOpr(line, insn, false);
-        if (checkComma(line)) return getError();
-        encodeCnt(line, insn, /* R0 */false, /* 16 */true);
+        encodeOpr(insn, false);
+        if (checkComma()) return getError();
+        encodeCnt(insn, /* R0 */false, /* 16 */true);
         break;
     case XOP_SRC:
-        encodeOpr(line, insn, false);
-        if (checkComma(line)) return getError();
-        encodeCnt(line, insn, /* R0 */false, /* 16 */false);
+        encodeOpr(insn, false);
+        if (checkComma()) return getError();
+        encodeCnt(insn, /* R0 */false, /* 16 */false);
         break;
     case REG_SRC:
-        encodeOpr(line, insn, false);
-        if (checkComma(line)) return getError();
-        encodeReg(line, insn, true);
+        encodeOpr(insn, false);
+        if (checkComma()) return getError();
+        encodeReg(insn, true);
         break;
     case DST_SRC:
-        encodeOpr(line, insn, false);
-        if (checkComma(line)) return getError();
-        encodeOpr(line, insn, true, true);
+        encodeOpr(insn, false);
+        if (checkComma()) return getError();
+        encodeOpr(insn, true, true);
         break;
     case REL:
-        encodeRel(line, insn);
+        encodeRel(insn);
         break;
     case CRU_OFF:
-        encodeCruOff(line, insn);
+        encodeCruOff(insn);
         break;
     default:
         return setError(INTERNAL_ERROR);
     }
     if (getError()) return getError();
-    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    return *skipSpace(_scan) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }

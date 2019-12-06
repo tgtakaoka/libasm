@@ -6,66 +6,70 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static Error getInt16(const char *&in, target::uint16_t &val) {
-    val = 0;
+Error Assembler::getInt16(target::uint16_t &val) {
+    target::uint16_t v = 0;
     const char *p;
 
-    for (p = in; isxdigit(*p); p++)
+    for (p = _scan; isxdigit(*p); p++)
         ;
-    if (p > in && toupper(*p) == 'H') {
-        for (p = in; isxdigit(*p); p++) {
-            val <<= 4;
-            val += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
+    if (p > _scan && toupper(*p) == 'H') {
+        for (p = _scan; isxdigit(*p); p++) {
+            v <<= 4;
+            v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
         }
-        in = ++p;
+        val = v;
+        _scan = ++p;
         return OK;
     }
 
-    for (p = in; *p >= '0' && *p < '8'; p++)
+    for (p = _scan; *p >= '0' && *p < '8'; p++)
         ;
-    if (p > in && toupper(*p) == 'O') {
-        for (p = in; *p >= '0' && *p < '8'; p++) {
-            val <<= 3;
-            val += *p - '0';
+    if (p > _scan && toupper(*p) == 'O') {
+        for (p = _scan; *p >= '0' && *p < '8'; p++) {
+            v <<= 3;
+            v += *p - '0';
         }
-        in = ++p;
+        val = v;
+        _scan = ++p;
         return OK;
     }
 
-    for (p = in; *p == '0' || *p == '1'; p++)
+    for (p = _scan; *p == '0' || *p == '1'; p++)
         ;
-    if (p > in && toupper(*p) == 'B') {
-        for (p = in; *p == '0' || *p == '1'; p++) {
-            val <<= 1;
-            val += *p - '0';
+    if (p > _scan && toupper(*p) == 'B') {
+        for (p = _scan; *p == '0' || *p == '1'; p++) {
+            v <<= 1;
+            v += *p - '0';
         }
-        in = ++p;
+        val = v;
+        _scan = ++p;
         return OK;
     }
 
-    p = in;
+    p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
     while (isdigit(*p)) {
-        val *= 10;
-        val += *p++ - '0';
+        v *= 10;
+        v += *p++ - '0';
     }
-    in = p;
-    if (sign == '-') val = -(target::int16_t)val;
+    if (sign == '-') v = -(target::int16_t)v;
+    val = v;
+    _scan = p;
     return OK;
 }
 
-Error Assembler::getOperand16(const char *&in, target::uint16_t &val) {
-    if (getInt16(in, val) == OK) return setError(OK);
+Error Assembler::getOperand16(target::uint16_t &val) {
+    if (getInt16(val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(in[idx]); idx++) {
-        symbol_buffer[idx] = in[idx];
+    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {
+        symbol_buffer[idx] = _scan[idx];
     }
     symbol_buffer[idx] = 0;
     if (hasSymbol(symbol_buffer)) {
         val = lookup(symbol_buffer);
-        in += idx;
+        _scan += idx;
         return OK;
     }
     return setError(UNKNOWN_OPERAND);
@@ -76,181 +80,136 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-const char *Assembler::encodePointerReg(const char *line, Insn &insn) {
-    const RegName regName = Registers::parsePointerReg(line);
+Error Assembler::checkLineEnd() {
+    if (*skipSpace(_scan) == 0) return setError(OK);
+    return setError(GARBAGE_AT_END);
+}
+
+Error Assembler::encodePointerReg(Insn &insn) {
+    const RegName regName = Registers::parsePointerReg(_scan);
     const host::int_t num = Registers::encodePointerReg(regName);
-    if (num < 0) {
-        setError(UNKNOWN_REGISTER);
-    } else {
-        insn.setInsnCode(insn.insnCode() | (num << 4));
-        line += Registers::regNameLen(regName);
-        setError(OK);
-    }
-    return line;
+    if (num < 0) return setError(UNKNOWN_REGISTER);
+    insn.setInsnCode(insn.insnCode() | (num << 4));
+    _scan += Registers::regNameLen(regName);
+    return setError(OK);
 }
 
-const char *Assembler::encodeStackReg(const char *line, Insn &insn) {
-    const RegName regName = Registers::parseStackReg(line);
+Error Assembler::encodeStackReg(Insn &insn) {
+    const RegName regName = Registers::parseStackReg(_scan);
     const host::int_t num = Registers::encodeStackReg(regName);
-    if (num < 0) {
-        setError(UNKNOWN_REGISTER);
-    } else {
-        insn.setInsnCode(insn.insnCode() | (num << 4));
-        line += Registers::regNameLen(regName);
-        setError(OK);
-    }
-    return line;
+    if (num < 0) return setError(UNKNOWN_REGISTER);
+    insn.setInsnCode(insn.insnCode() | (num << 4));
+    _scan += Registers::regNameLen(regName);
+    return setError(OK);
 }
 
-const char *Assembler::encodeIndexReg(const char *line, Insn &insn) {
-    const RegName regName = Registers::parseIndexReg(line);
+Error Assembler::encodeIndexReg(Insn &insn) {
+    const RegName regName = Registers::parseIndexReg(_scan);
     const host::int_t num = Registers::encodeIndexReg(regName);
-    if (num < 0) {
-        setError(UNKNOWN_REGISTER);
-    } else {
-        insn.setInsnCode(insn.insnCode() | (num << 4));
-        line += Registers::regNameLen(regName);
-        setError(OK);
-    }
-    return line;
+    if (num < 0) return setError(UNKNOWN_REGISTER);
+    insn.setInsnCode(insn.insnCode() | (num << 4));
+    _scan += Registers::regNameLen(regName);
+    return setError(OK);
 }
 
-const char *Assembler::encodeDataReg(const char *line, Insn &insn) {
-    const RegName regName = Registers::parseDataReg(line);
+Error Assembler::encodeDataReg(Insn &insn) {
+    const RegName regName = Registers::parseDataReg(_scan);
     const host::int_t num = Registers::encodeDataReg(regName);
-    if (num < 0) {
-        setError(UNKNOWN_REGISTER);
-    } else {
-        if (insn.insnFormat() == DATA_REG)
-            insn.setInsnCode(insn.insnCode() | (num << 3));
-        if (insn.insnFormat() == LOW_DATA_REG)
-            insn.setInsnCode(insn.insnCode() | num);
-        line += Registers::regNameLen(regName);
-        setError(OK);
-    }
-    return line;
+    if (num < 0) return setError(UNKNOWN_REGISTER);
+    if (insn.insnFormat() == DATA_REG)
+        insn.setInsnCode(insn.insnCode() | (num << 3));
+    if (insn.insnFormat() == LOW_DATA_REG)
+        insn.setInsnCode(insn.insnCode() | num);
+    _scan += Registers::regNameLen(regName);
+    return setError(OK);
 }
 
-const char *Assembler::encodeDataDataReg(const char *line, Insn &insn) {
-    const RegName dstReg = Registers::parseDataReg(line);
-    if (dstReg == REG_UNDEF) {
-        setError(UNKNOWN_REGISTER);
-        return line;
-    }
-    line += Registers::regNameLen(dstReg);
-    if (*line++ != ',') {
-        setError(UNKNOWN_OPERAND);
-        return --line;
-    }
-    const RegName srcReg = Registers::parseDataReg(line);
-    if (srcReg == REG_UNDEF) {
-        setError(UNKNOWN_REGISTER);
-        return line;
-    }
-    line += Registers::regNameLen(srcReg);
+Error Assembler::encodeDataDataReg(Insn &insn) {
+    const RegName dstReg = Registers::parseDataReg(_scan);
+    if (dstReg == REG_UNDEF)
+        return setError(UNKNOWN_REGISTER);
+    _scan += Registers::regNameLen(dstReg);
+    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+    const RegName srcReg = Registers::parseDataReg(++_scan);
+    if (srcReg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
+    _scan += Registers::regNameLen(srcReg);
 
     const host::uint_t dstNum = Registers::encodeDataReg(dstReg);
     const host::uint_t srcNum = Registers::encodeDataReg(srcReg);
     insn.setInsnCode(insn.insnCode() | (dstNum << 3) | srcNum);
-
-    setError(OK);
-    return line;
+    return setError(OK);
 }
 
-const char *Assembler::encodeVectorNo(const char *line, Insn &insn) {
+Error Assembler::encodeVectorNo(Insn &insn) {
     target::uint16_t vecNo;
-    if (getOperand16(line, vecNo) == OK) {
-        if (vecNo < 8) {
-            insn.setInsnCode(insn.insnCode() | (vecNo << 3));
-            setError(OK);
-        } else {
-            setError(UNKNOWN_OPERAND);
-        }
+    if (getOperand16(vecNo) == OK && vecNo < 8) {
+        insn.setInsnCode(insn.insnCode() | (vecNo << 3));
+        return setError(OK);
     }
-    return line;
+    return setError(UNKNOWN_OPERAND);
 }
 
-Error Assembler::encodeImmediate(const char *line, Insn &insn) {
-    if (insn.insnFormat() != NO_FORMAT && *line++ != ',')
+Error Assembler::encodeImmediate(Insn &insn) {
+    if (insn.insnFormat() != NO_FORMAT && *_scan++ != ',')
         return setError(UNKNOWN_OPERAND);
     target::uint16_t val;
-    if (getOperand16(line, val)) return getError();
+    if (getOperand16(val)) return getError();
     if (insn.addrMode() == IMM8)
         insn.emitByte(val);
     if (insn.addrMode() == IMM16)
         insn.emitUint16(val);
-    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    return checkLineEnd();
 }
 
-Error Assembler::encodeDirect(const char *line, Insn &insn) {
+Error Assembler::encodeDirect(Insn &insn) {
     target::uint16_t addr;
-    if (getOperand16(line, addr)) return getError();
+    if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
-    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    return checkLineEnd();
 }
 
-Error Assembler::encodeIoaddr(const char *line, Insn &insn) {
+Error Assembler::encodeIoaddr(Insn &insn) {
     target::uint16_t addr;
-    if (getOperand16(line, addr)) return getError();
+    if (getOperand16(addr)) return getError();
     insn.emitByte(addr);
-    return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    return checkLineEnd();
 }
 
 Error Assembler::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
-    reset(symtab);
+    reset(line, symtab);
     insn.resetAddress(addr);
-    line = skipSpace(line);
-    if (!*line) return setError(NO_TEXT);
+    _scan = skipSpace(_scan);
+    if (!*_scan) return setError(NO_TEXT);
     const char *endName;
-    for (endName = line; isidchar(*endName); endName++)
+    for (endName = _scan; isidchar(*endName); endName++)
         ;
-    insn.setName(line, endName);
-    line = skipSpace(endName);
+    insn.setName(_scan, endName);
+    _scan = skipSpace(endName);
 
     if (InsnTable.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.insnFormat()) {
-    case NO_FORMAT:
-        setError(OK);
-        break;
-    case POINTER_REG:
-        line = encodePointerReg(line, insn);
-        break;
-    case STACK_REG:
-        line = encodeStackReg(line, insn);
-        break;
-    case INDEX_REG:
-        line = encodeIndexReg(line, insn);
-        break;
+    case NO_FORMAT:     setError(OK); break;
+    case POINTER_REG:   encodePointerReg(insn); break;
+    case STACK_REG:     encodeStackReg(insn); break;
+    case INDEX_REG:     encodeIndexReg(insn); break;
     case DATA_REG:
-    case LOW_DATA_REG:
-        line = encodeDataReg(line, insn);
-        break;
-    case DATA_DATA_REG:
-        line = encodeDataDataReg(line, insn);
-        break;
-    case VECTOR_NO:
-        line = encodeVectorNo(line, insn);
-        break;
-    default:
-        break;
+    case LOW_DATA_REG:  encodeDataReg(insn); break;
+    case DATA_DATA_REG: encodeDataDataReg(insn); break;
+    case VECTOR_NO:     encodeVectorNo(insn); break;
+    default: break;
     }
     if (getError()) return getError();
 
     insn.emitByte(insn.insnCode());
     switch (insn.addrMode()) {
-    case INHR:
-        return *skipSpace(line) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    case INHR:   return checkLineEnd();
     case IMM8:
-    case IMM16:
-        return encodeImmediate(line, insn);
-    case DIRECT:
-        return encodeDirect(line, insn);
-    case IOADR:
-        return encodeIoaddr(line, insn);
-    default:
-        return setError(UNKNOWN_OPERAND);
+    case IMM16:  return encodeImmediate(insn);
+    case DIRECT: return encodeDirect(insn);
+    case IOADR:  return encodeIoaddr(insn);
+    default:     return setError(UNKNOWN_OPERAND);
     }
 }
