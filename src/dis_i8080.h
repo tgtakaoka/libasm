@@ -30,9 +30,9 @@ private:
 
     void outChar(char c) { *_operands++ = c; *_operands = 0; }
     void outText(const char *text);
-    void outOpr8Hex(target::byte_t val);
-    void outOpr16Hex(target::uint16_t val);
-    void outOpr16Int(target::uint16_t val);
+    void outOpr8Hex(uint8_t val);
+    void outOpr16Hex(uint16_t val);
+    void outOpr16Int(uint16_t val);
     void outRegister(RegName regName);
 
     Error decodeImmediate8(Memory &memory, Insn &insn);

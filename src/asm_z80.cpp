@@ -6,8 +6,8 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error Assembler::getInt16(target::uint16_t &val) {
-    target::uint16_t v = 0;
+Error Assembler::getInt16(uint16_t &val) {
+    uint16_t v = 0;
     const char *p;
 
     for (p = _scan; isxdigit(*p); p++)
@@ -53,13 +53,13 @@ Error Assembler::getInt16(target::uint16_t &val) {
         v *= 10;
         v += *p++ - '0';
     }
-    if (sign == '-') v = -(target::int16_t)v;
+    if (sign == '-') v = -(int16_t)v;
     val = v;
     _scan = p;
     return OK;
 }
 
-Error Assembler::getOperand16(target::uint16_t &val) {
+Error Assembler::getOperand16(uint16_t &val) {
     if (getInt16(val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
@@ -80,8 +80,8 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-Error Assembler::encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t rightOp) {
-    target::byte_t regNum = 0;
+Error Assembler::encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOp) {
+    uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
         regNum = Registers::encodeDataReg(leftReg) << 3;
@@ -108,7 +108,7 @@ Error Assembler::encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t r
 Error Assembler::encodeDirect(
     Insn &insn, RegName leftReg, RegName rightReg,
     target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
-    target::byte_t regNum = 0;
+    uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
         if (insn.leftFormat() == COND_8) regNum = leftOpr << 3;
@@ -140,7 +140,7 @@ Error Assembler::encodeDirect(
 }
 
 Error Assembler::encodeIoaddr(
-    Insn &insn, target::uint16_t leftOpr, target::uint16_t rightOpr) {
+    Insn &insn, uint16_t leftOpr, uint16_t rightOpr) {
     emitInsnCode(insn);
     if (insn.leftFormat() == ADDR_8)
         insn.emitByte(leftOpr);
@@ -158,7 +158,7 @@ Error Assembler::encodeRelative(
     const target::ptrdiff_t delta = leftOpr - insn.address() - 2;
     if (delta < -128 || delta >= 128) return setError(ILLEGAL_OPERAND);
     emitInsnCode(insn);
-    insn.emitByte(target::byte_t(delta));
+    insn.emitByte(uint8_t(delta));
     return setError(OK);
 }
 
@@ -170,7 +170,7 @@ Error Assembler::encodeIndexed(
     if (insn.rightFormat() == IX_OFF)
         InsnTable::encodePrefixCode(insn, rightReg);
 
-    target::byte_t regNum = 0;
+    uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case NO_FMT:
         break;
@@ -216,8 +216,8 @@ Error Assembler::encodeIndexedImmediate8(
 }
 
 Error Assembler::encodeInherent(
-    Insn &insn, RegName leftReg, RegName rightReg, target::uint16_t leftOpr) {
-    target::byte_t regNum = 0;
+    Insn &insn, RegName leftReg, RegName rightReg, uint16_t leftOpr) {
+    uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case NO_FMT:
         if (insn.leftFormat() == IX_REG || insn.leftFormat() == IX_PTR)
@@ -301,7 +301,7 @@ Error Assembler::encodeInherent(
 }
 
 Error Assembler::parseOperand(
-    OprFormat &oprFormat, RegName &regName, target::uint16_t &operand) {
+    OprFormat &oprFormat, RegName &regName, uint16_t &operand) {
     setError(OK);
 
     if (oprFormat == COND_4 || oprFormat == COND_8) {
@@ -374,7 +374,7 @@ Error Assembler::parseOperand(
             if ((regName == REG_IX || regName == REG_IY)
                 && getOperand16(operand) == OK && *_scan == ')') {
                 _scan++;
-                const target::int16_t offset = target::int16_t(operand);
+                const int16_t offset = int16_t(operand);
                 if (offset >= -128 && offset < 128) {
                     oprFormat = IX_OFF;
                     return OK;
@@ -408,7 +408,7 @@ Error Assembler::encode(
     OprFormat leftFormat = insn.leftFormat();
     OprFormat rightFormat = insn.rightFormat();
     RegName leftReg, rightReg;
-    target::uint16_t leftOpr, rightOpr;
+    uint16_t leftOpr, rightOpr;
     if (parseOperand(leftFormat, leftReg, leftOpr))
         return getError();
     if (*_scan == ',') {

@@ -30,10 +30,10 @@ protected:
     }
 
     Error checkComma();
-    Error getHex16(target::uint16_t &val);
-    Error getInt16(target::uint16_t &val);
-    Error getOperand16(target::uint16_t &val);
-    Error parseRegName(target::byte_t &regno);
+    Error getHex16(uint16_t &val);
+    Error getInt16(uint16_t &val);
+    Error getOperand16(uint16_t &val);
+    Error parseRegName(uint8_t &regno);
 
     Error encodeImm(Insn &insn, bool emitInsn);
     Error encodeReg(Insn &insn, bool emitInsn);

@@ -10,7 +10,7 @@
 class Insn {
 public:
     target::uintptr_t address() const { return _address; }
-    const target::byte_t *bytes() const { return _bytes; }
+    const uint8_t *bytes() const { return _bytes; }
     host::uint_t insnLen() const { return _insnLen; }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
@@ -30,9 +30,9 @@ public:
     }
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    Error readUint16(Memory &memory, target::uint16_t &val) {
+    Error readUint16(Memory &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
-        val = (target::uint16_t)memory.readByte() << 8;
+        val = (uint16_t)memory.readByte() << 8;
         if (!memory.hasNext()) return NO_MEMORY;
         val |= memory.readByte();
         appendUint16(val);
@@ -43,11 +43,11 @@ public:
         emitUint16(_insnCode, 0);
         if (_insnLen == 0) _insnLen = 2;
     }
-    void emitOperand(target::uint16_t val) {
+    void emitOperand(uint16_t val) {
         if (_insnLen == 0) _insnLen = 2;
         appendUint16(val);
     }
-    void appendUint16(target::uint16_t val) {
+    void appendUint16(uint16_t val) {
         emitUint16(val, _insnLen);
         _insnLen += 2;
     }
@@ -58,11 +58,11 @@ private:
     host::uint_t      _insnLen;
     host::uint_t      _flags;
     char              _name[5];
-    target::byte_t    _bytes[6];
+    uint8_t    _bytes[6];
 
-    void emitUint16(target::uint16_t val, host::uint_t pos) {
-        _bytes[pos++] = target::byte_t(val >> 8);
-        _bytes[pos] = target::byte_t(val);
+    void emitUint16(uint16_t val, host::uint_t pos) {
+        _bytes[pos++] = uint8_t(val >> 8);
+        _bytes[pos] = uint8_t(val);
     }
 };
 

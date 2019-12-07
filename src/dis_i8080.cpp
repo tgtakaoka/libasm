@@ -7,7 +7,7 @@ void Disassembler::outText(const char *text) {
     _operands = outStr(_operands, text);
 }
 
-void Disassembler::outOpr8Hex(target::byte_t val) {
+void Disassembler::outOpr8Hex(uint8_t val) {
     char *out = _operands;
     if (val >= 0xA0) *out++ = '0';
     out = outHex8(out, val);
@@ -15,7 +15,7 @@ void Disassembler::outOpr8Hex(target::byte_t val) {
     *(_operands = out) = 0;
 }
 
-void Disassembler::outOpr16Hex(target::uint16_t val) {
+void Disassembler::outOpr16Hex(uint16_t val) {
     char *out = _operands;
     if (val >= 0xA000) *out++ = '0';
     out = outHex16(out, val);
@@ -23,7 +23,7 @@ void Disassembler::outOpr16Hex(target::uint16_t val) {
     *(_operands = out) = 0;
 }
 
-void Disassembler::outOpr16Int(target::uint16_t val) {
+void Disassembler::outOpr16Int(uint16_t val) {
     _operands = outInt16(_operands, val);
 }
 
@@ -32,7 +32,7 @@ void Disassembler::outRegister(RegName regName) {
 }
 
 Error Disassembler::decodeImmediate8(Memory& memory, Insn &insn) {
-    target::byte_t val;
+    uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) outChar(',');
     outOpr8Hex(val);
@@ -40,7 +40,7 @@ Error Disassembler::decodeImmediate8(Memory& memory, Insn &insn) {
 }
 
 Error Disassembler::decodeImmediate16(Memory& memory, Insn &insn) {
-    target::uint16_t val;
+    uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) outChar(',');
     const char *label = lookup(val);
@@ -65,7 +65,7 @@ Error Disassembler::decodeDirect(Memory &memory, Insn& insn) {
 }
 
 Error Disassembler::decodeIoaddr(Memory &memory, Insn& insn) {
-    target::byte_t ioaddr;
+    uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
     outOpr8Hex(ioaddr);
     return setError(OK);

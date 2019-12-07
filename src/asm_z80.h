@@ -37,26 +37,26 @@ protected:
     }
 
     Error parseOperand(
-        OprFormat &oprFormat, RegName &regName, target::uint16_t &operand);
-    Error getInt16(target::uint16_t &val);
-    Error getOperand16(target::uint16_t &val);
+        OprFormat &oprFormat, RegName &regName, uint16_t &operand);
+    Error getInt16(uint16_t &val);
+    Error getOperand16(uint16_t &val);
 
-    Error encodeImmediate(Insn &insn, RegName leftReg, target::uint16_t rightOpr);
+    Error encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOpr);
     Error encodeInherent(
-        Insn &insn, RegName leftReg, RegName rightReg, target::uint16_t leftOpr);
+        Insn &insn, RegName leftReg, RegName rightReg, uint16_t leftOpr);
     Error encodeDirect(
         Insn &insn, RegName leftReg, RegName rightReg,
         target::uintptr_t leftOpr, target::uintptr_t rightOpr);
     Error encodeIoaddr(
-        Insn &insn, target::uint16_t leftOpr, target::uint16_t rightOpr);
+        Insn &insn, uint16_t leftOpr, uint16_t rightOpr);
     Error encodeRelative(
         Insn &insn, target::uintptr_t leftOpr, target::uintptr_t rightOpr);
     Error encodeIndexed(
         Insn &insn, RegName leftReg, RegName rightReg,
-        target::uint16_t leftOpr, target::uint16_t rightOpr);
+        uint16_t leftOpr, uint16_t rightOpr);
     Error encodeIndexedImmediate8(
         Insn &insn, RegName leftReg, RegName rightReg,
-        target::uint16_t leftOpr, target::uint16_t rightOpr);
+        uint16_t leftOpr, uint16_t rightOpr);
 };
 
 #endif // __ASM_Z80_H__

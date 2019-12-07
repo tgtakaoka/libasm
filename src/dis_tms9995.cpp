@@ -7,17 +7,17 @@ void Disassembler::outText(const char *text) {
     _operands = outStr(_operands, text);
 }
 
-void Disassembler::outOpr8Hex(target::byte_t val) {
+void Disassembler::outOpr8Hex(uint8_t val) {
     *_operands++ = '>';
     _operands = outHex8(_operands, val);
 }
 
-void Disassembler::outOpr16Hex(target::uint16_t val) {
+void Disassembler::outOpr16Hex(uint16_t val) {
     *_operands++ = '>';
     _operands = outHex16(_operands, val);
 }
 
-void Disassembler::outOpr16Int(target::uint16_t val) {
+void Disassembler::outOpr16Int(uint16_t val) {
     _operands = outInt16(_operands, val);
 }
 
@@ -41,7 +41,7 @@ Error Disassembler::decodeOperand(
     const host::uint_t mode = (opr >> 4) & 0x3;
     if (mode == 1 || mode == 3) outChar('*');
     if (mode == 2) {
-        target::uint16_t val;
+        uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         outChar('@');
         outOpr16Addr(val);
@@ -60,14 +60,14 @@ Error Disassembler::decodeOperand(
 
 Error Disassembler::decodeImmediate(
     Memory& memory, Insn &insn) {
-    target::uint16_t val;
+    uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     outOpr16Addr(val);
     return setError(OK);
 }
 
 Error Disassembler::decodeRelative(Insn& insn) {
-    target::int16_t delta = (target::int8_t)(insn.insnCode() & 0xff);
+    int16_t delta = (int8_t)(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
     outOpr16Addr(addr);
@@ -139,7 +139,7 @@ Error Disassembler::decode(
         decodeRelative(insn);
         return setError(OK);
     case CRU_OFF: {
-        const target::int8_t offset = (target::int8_t)(insnCode & 0xff);
+        const int8_t offset = (int8_t)(insnCode & 0xff);
         const char *label = lookup(offset);
         if (label) {
             outText(label);

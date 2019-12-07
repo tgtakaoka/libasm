@@ -28,16 +28,16 @@ public:
     static host::int_t encodeIndexReg(RegName regName);
     static host::int_t encodeDataReg(RegName regName);
 
-    static RegName decodePointerReg(target::byte_t regNum);
-    static RegName decodeStackReg(target::byte_t regNum);
-    static RegName decodeIndexReg(target::byte_t regNum);
-    static RegName decodeDataReg(target::byte_t regNum);
+    static RegName decodePointerReg(uint8_t regNum);
+    static RegName decodeStackReg(uint8_t regNum);
+    static RegName decodeIndexReg(uint8_t regNum);
+    static RegName decodeDataReg(uint8_t regNum);
 
     static bool compareRegName(const char *line, RegName regName);
     static host::uint_t regNameLen(RegName regName);
 
     static char *outRegName(char *out, const RegName regName);
-    static char *outCCRBits(char *out, target::byte_t val);
+    static char *outCCRBits(char *out, uint8_t val);
 
 private:
     static RegName parseRegName(

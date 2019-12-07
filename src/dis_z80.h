@@ -31,12 +31,12 @@ private:
 
     void outChar(char c) { *_operands++ = c; *_operands = 0; }
     void outText(const char *text);
-    void outOpr8Hex(target::byte_t val);
-    void outOpr16Hex(target::uint16_t val);
-    void outOpr16Int(target::int16_t val);
-    void outOpr8Addr(target::byte_t addr);
+    void outOpr8Hex(uint8_t val);
+    void outOpr16Hex(uint16_t val);
+    void outOpr16Int(int16_t val);
+    void outOpr8Addr(uint8_t addr);
     void outOpr16Addr(target::uintptr_t addr, bool indir = true);
-    void outIndexOffset(target::insn_t insnCode, target::int8_t offset);
+    void outIndexOffset(target::insn_t insnCode, int8_t offset);
     void outRegister(RegName regName);
     void outPointer(RegName regName);
     void outDataRegister(RegName regName);
@@ -45,15 +45,15 @@ private:
     Error decodeOperand(Memory &memory, Insn& insn);
 
     Error decodeInherent(Insn &insn);
-    Error decodeImmediate8(Insn &insn, target::byte_t val);
-    Error decodeImmediate16(Insn &insn, target::uint16_t val);
+    Error decodeImmediate8(Insn &insn, uint8_t val);
+    Error decodeImmediate16(Insn &insn, uint16_t val);
     Error decodeDirect(Insn &insn, target::uintptr_t addr);
-    Error decodeIoaddr(Insn &insn, target::byte_t ioaddr);
-    Error decodeRelative(Insn &insn, target::int8_t delta);
-    Error decodeIndexed(Insn &insn, target::int8_t offset);
+    Error decodeIoaddr(Insn &insn, uint8_t ioaddr);
+    Error decodeRelative(Insn &insn, int8_t delta);
+    Error decodeIndexed(Insn &insn, int8_t offset);
     Error decodeIndexedImmediate8(
-        Insn &insn, target::int8_t offset, target::byte_t val);
-    Error decodeIndexedBitOp(Insn &insn, target::int8_t offset,
+        Insn &insn, int8_t offset, uint8_t val);
+    Error decodeIndexedBitOp(Insn &insn, int8_t offset,
         target::opcode_t opCode);
 };
 

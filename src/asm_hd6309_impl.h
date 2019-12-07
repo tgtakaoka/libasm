@@ -20,10 +20,10 @@ Error Assembler<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getHex16(target::uint16_t &val) {
+Error Assembler<mcuType>::getHex16(uint16_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
-    target::uint16_t v = 0;
+    uint16_t v = 0;
     while (isxdigit(*p)) {
         v <<= 4;
         v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
@@ -35,10 +35,10 @@ Error Assembler<mcuType>::getHex16(target::uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getHex32(target::uint32_t &val) {
+Error Assembler<mcuType>::getHex32(uint32_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
-    target::uint32_t v = 0;
+    uint32_t v = 0;
     while (isxdigit(*p)) {
         v <<= 4;
         v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
@@ -50,41 +50,41 @@ Error Assembler<mcuType>::getHex32(target::uint32_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getInt16(target::uint16_t &val) {
+Error Assembler<mcuType>::getInt16(uint16_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    target::uint16_t v = 0;
+    uint16_t v = 0;
     while (isdigit(*p)) {
         v *= 10;
         v += *p - '0';
         p++;
     }
-    if (sign == '-') v = -(target::int16_t)v;
+    if (sign == '-') v = -(int16_t)v;
     val = v;
     _scan = p;
     return OK;
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getInt32(target::uint32_t &val) {
+Error Assembler<mcuType>::getInt32(uint32_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    target::uint32_t v = 0;
+    uint32_t v = 0;
     while (isdigit(*p)) {
         v *= 10;
         v += *p - '0';
         p++;
     }
-    if (sign == '-') v = -(target::int32_t)v;
+    if (sign == '-') v = -(int32_t)v;
     val = v;
     _scan = p;
     return OK;
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getOperand16(target::uint16_t &val) {
+Error Assembler<mcuType>::getOperand16(uint16_t &val) {
     if (*_scan == '$') {
         _scan++;
         return getHex16(val);
@@ -105,7 +105,7 @@ Error Assembler<mcuType>::getOperand16(target::uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getOperand32(target::uint32_t &val) {
+Error Assembler<mcuType>::getOperand32(uint32_t &val) {
     if (*_scan == '$') {
         _scan++;
         return getHex32(val);
@@ -127,7 +127,7 @@ Error Assembler<mcuType>::getOperand32(target::uint32_t &val) {
 
 template<McuType mcuType>
 Error Assembler<mcuType>::encodeStackOp(Insn &insn) {
-    target::byte_t post = 0;
+    uint8_t post = 0;
     const char *line = _scan;
     while (*line) {
         host::uint_t bit = 0;
@@ -163,7 +163,7 @@ Error Assembler<mcuType>::encodeRegisters(Insn &insn) {
     _scan += _regs.regNameLen(regName);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
-    target::byte_t post = _regs.encodeDataReg(regName) << 4;
+    uint8_t post = _regs.encodeDataReg(regName) << 4;
     if ((regName = _regs.parseDataReg(_scan)) == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
@@ -186,7 +186,7 @@ Error Assembler<mcuType>::encodeRelative(Insn &insn) {
     emitInsnCode(insn);
     if (insn.addrMode() == REL8) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-        insn.emitByte(target::byte_t(delta));
+        insn.emitByte(uint8_t(delta));
     } else {
         insn.emitUint16(delta);
     }
@@ -199,9 +199,9 @@ Error Assembler<mcuType>::encodeImmediate(Insn &insn) {
     _scan++;
     emitInsnCode(insn);
     if (insn.addrMode() == IMM8 || insn.addrMode() == IMM16) {
-        target::uint16_t val;
+        uint16_t val;
         if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
-        if (insn.addrMode() == IMM8) insn.emitByte(target::byte_t(val));
+        if (insn.addrMode() == IMM8) insn.emitByte(uint8_t(val));
         else insn.emitUint16(val);
     } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
         uint32_t val;
@@ -219,7 +219,7 @@ Error Assembler<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
     if (getOperand16(dir)) return setError(UNKNOWN_OPERAND);
-    insn.emitByte(target::byte_t(dir));
+    insn.emitByte(uint8_t(dir));
     return checkLineEnd();
 }
 
@@ -276,7 +276,7 @@ Error Assembler<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     }
     if (checkLineEnd()) return setError(GARBAGE_AT_END);
 
-    target::byte_t post;
+    uint8_t post;
     if (base == REG_UNDEF) {    // [n16]
         if (index != OFFSET) return setError(UNKNOWN_OPERAND);
         insn.emitByte(0x9F);
@@ -298,7 +298,7 @@ Error Assembler<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         return setError(OK);
     }
     if (mcuType == HD6309 && base == REG_W) {
-        target::byte_t post;
+        uint8_t post;
         if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
         else if (incr == 0) post = 0x8F;    // ,W [,W]
         else if (incr == 2) post = 0xCF;    // ,W++ [,W++]
@@ -449,7 +449,7 @@ Error Assembler<mcuType>::determineAddrMode(const char *line, Insn &insn) {
             }
             return setError(UNKNOWN_OPERAND);
         }
-        target::uint16_t val;
+        uint16_t val;
         const char *scan = _scan;
         _scan = line;
         if (getOperand16(val)) return setError(UNKNOWN_OPERAND);

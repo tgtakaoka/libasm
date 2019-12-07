@@ -63,7 +63,7 @@ char *RegistersUtils::outRegName(char *out, const RegName regName) {
     return out;
 }
 
-char *RegistersUtils::outCCRBits(char *out, target::byte_t val) {
+char *RegistersUtils::outCCRBits(char *out, uint8_t val) {
     host::int_t n = 0;
     for (host::uint_t mask = 0x80, i = 0; i < 8; mask >>= 1, i++) {
         if (val & mask) {
@@ -123,11 +123,11 @@ host::int_t RegistersUtils::encodeTfmBaseReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
-RegName RegistersUtils::decodeBitOpReg(target::byte_t regNum) {
+RegName RegistersUtils::decodeBitOpReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(BIT_OP_REGS));
 }
 
-RegName RegistersUtils::decodeTfmBaseReg(target::byte_t regNum) {
+RegName RegistersUtils::decodeTfmBaseReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(TFM_BASE_REGS));
 }
 

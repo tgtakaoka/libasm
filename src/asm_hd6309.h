@@ -40,12 +40,12 @@ private:
     }
 
     Error checkLineEnd();
-    Error getHex16(target::uint16_t &val);
-    Error getHex32(target::uint32_t &val);
-    Error getInt16(target::uint16_t &val);
-    Error getInt32(target::uint32_t &val);
-    Error getOperand16(target::uint16_t &val);
-    Error getOperand32(target::uint32_t &val);
+    Error getHex16(uint16_t &val);
+    Error getHex32(uint32_t &val);
+    Error getInt16(uint16_t &val);
+    Error getInt32(uint32_t &val);
+    Error getOperand16(uint16_t &val);
+    Error getOperand32(uint32_t &val);
     Error determineAddrMode(const char *line, Insn &insn);
 
     // MC6809

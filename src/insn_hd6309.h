@@ -10,7 +10,7 @@
 class Insn {
 public:
     target::uintptr_t address() const { return _address; }
-    const target::byte_t *bytes() const { return _bytes; }
+    const uint8_t *bytes() const { return _bytes; }
     host::uint_t insnLen() const { return _insnLen; }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
@@ -38,43 +38,43 @@ public:
         *p = 0;
     }
 
-    Error readByte(Memory &memory, target::byte_t &val) {
+    Error readByte(Memory &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         emitByte(val);
         return OK;
     }
-    Error readUint16(Memory &memory, target::uint16_t &val) {
+    Error readUint16(Memory &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
-        val = (target::uint16_t)memory.readByte() << 8;
+        val = (uint16_t)memory.readByte() << 8;
         if (!memory.hasNext()) return NO_MEMORY;
         val |= memory.readByte();
         emitUint16(val);
         return OK;
     }
-    Error readUint32(Memory &memory, target::uint32_t &val) {
+    Error readUint32(Memory &memory, uint32_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
-        val = (target::uint32_t)memory.readByte() << 24;
+        val = (uint32_t)memory.readByte() << 24;
         if (!memory.hasNext()) return NO_MEMORY;
-        val |= (target::uint32_t)memory.readByte() << 16;
+        val |= (uint32_t)memory.readByte() << 16;
         if (!memory.hasNext()) return NO_MEMORY;
-        val |= (target::uint16_t)memory.readByte() << 8;
+        val |= (uint16_t)memory.readByte() << 8;
         if (!memory.hasNext()) return NO_MEMORY;
         val |= memory.readByte();
         emitUint32(val);
         return OK;
     }
 
-    void emitByte(target::byte_t val) {
+    void emitByte(uint8_t val) {
         _bytes[_insnLen++] = val;
     }
-    void emitUint16(target::uint16_t val) {
-        emitByte(target::byte_t(val >> 8));
-        emitByte(target::byte_t(val & 0xff));
+    void emitUint16(uint16_t val) {
+        emitByte(uint8_t(val >> 8));
+        emitByte(uint8_t(val & 0xff));
     }
-    void emitUint32(target::uint32_t val) {
-        emitUint16(target::uint16_t(val >> 16));
-        emitUint16(target::uint16_t(val & 0xffff));
+    void emitUint32(uint32_t val) {
+        emitUint16(uint16_t(val >> 16));
+        emitUint16(uint16_t(val & 0xffff));
     }
 
 private:
@@ -82,7 +82,7 @@ private:
     target::insn_t    _insnCode;
     host::uint_t      _insnLen;
     host::uint_t      _flags;
-    target::byte_t    _bytes[8];
+    uint8_t    _bytes[8];
     char              _name[6];
 };
 

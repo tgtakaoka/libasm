@@ -52,13 +52,13 @@ public:
     static host::int_t encodeIrReg(RegName regName);
     static host::int_t encodeDataReg(RegName regName);
 
-    static RegName decodePointerReg(target::byte_t regNum);
+    static RegName decodePointerReg(uint8_t regNum);
     static RegName decodePointerRegIx(
-        target::byte_t regNum, RegName ix);
-    static RegName decodeStackReg(target::byte_t regNum);
-    static RegName decodeIndexReg(target::byte_t regNum);
-    static RegName decodeIrReg(target::byte_t regNum);
-    static RegName decodeDataReg(target::byte_t regNum);
+        uint8_t regNum, RegName ix);
+    static RegName decodeStackReg(uint8_t regNum);
+    static RegName decodeIndexReg(uint8_t regNum);
+    static RegName decodeIrReg(uint8_t regNum);
+    static RegName decodeDataReg(uint8_t regNum);
 
     static char *outRegName(char *out, const RegName regName);
     static char *outCc4Name(char *out, target::opcode_t cc4);

@@ -7,13 +7,9 @@
 
 namespace target
 {
-    typedef ::uint8_t  byte_t;
-    typedef ::uint16_t uint16_t;
-    typedef ::int8_t   int8_t;
-    typedef ::int16_t  int16_t;
-    typedef ::uint16_t uintptr_t;
-    typedef ::int16_t  ptrdiff_t;
-    typedef ::uint8_t  insn_t;
+    typedef uint16_t uintptr_t;
+    typedef int16_t  ptrdiff_t;
+    typedef uint8_t  insn_t;
 } // namespace target
 
 enum McuType : host::uint_t {

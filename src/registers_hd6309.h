@@ -25,7 +25,7 @@ enum RegName : char {
 class RegistersUtils {
 public:
     static char *outRegName(char *out, const RegName regName);
-    static char *outCCRBits(char *out, target::byte_t val);
+    static char *outCCRBits(char *out, uint8_t val);
 
     static RegName getStackReg(host::uint_t bit, target::insn_t insnCode);
     static bool compareRegName(const char *line, RegName regName);
@@ -36,8 +36,8 @@ public:
 
     static RegName parseTfmBaseReg(const char *line);
     static host::int_t encodeTfmBaseReg(RegName regName);
-    static RegName decodeBitOpReg(target::byte_t regNum);
-    static RegName decodeTfmBaseReg(target::byte_t regNum);
+    static RegName decodeBitOpReg(uint8_t regNum);
+    static RegName decodeTfmBaseReg(uint8_t regNum);
     static char tfmSrcModeChar(host::uint_t mode);
     static char tfmDstModeChar(host::uint_t mode);
 
@@ -92,13 +92,13 @@ public:
     host::int_t encodeDataReg(RegName regName) const {
         return encodeRegNumber(regName, _dataRegisters.begin(), _dataRegisters.end());
     }
-    RegName decodeIndexReg(target::byte_t regNum) const {
+    RegName decodeIndexReg(uint8_t regNum) const {
         return decodeRegNumber(regNum, _indexRegisters.begin(), _indexRegisters.end());
     }
-    RegName decodeBaseReg(target::byte_t regNum) const {
+    RegName decodeBaseReg(uint8_t regNum) const {
         return decodeRegNumber(regNum, _baseRegisters.begin(), _baseRegisters.end());
     }
-    RegName decodeRegName(target::byte_t regNum) const {
+    RegName decodeRegName(uint8_t regNum) const {
         return decodeRegNumber(regNum, _dataRegisters.begin(), _dataRegisters.end());
     }
 

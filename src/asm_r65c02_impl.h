@@ -20,10 +20,10 @@ Error Assembler<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getHex16(target::uint16_t &val) {
+Error Assembler<mcuType>::getHex16(uint16_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
-    target::uint16_t v = 0;
+    uint16_t v = 0;
     while (isxdigit(*p)) {
         v <<= 4;
         v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
@@ -35,24 +35,24 @@ Error Assembler<mcuType>::getHex16(target::uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getInt16(target::uint16_t &val) {
+Error Assembler<mcuType>::getInt16(uint16_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    target::uint16_t v = 0;
+    uint16_t v = 0;
     while (isdigit(*p)) {
         v *= 10;
         v += *p - '0';
         p++;
     }
-    if (sign == '-') v = -(target::int16_t)v;
+    if (sign == '-') v = -(int16_t)v;
     val = v;
     _scan = p;
     return OK;
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getOperand16(target::uint16_t &val) {
+Error Assembler<mcuType>::getOperand16(uint16_t &val) {
     if (*_scan == '$') {
         _scan++;
         return getHex16(val);
@@ -80,14 +80,14 @@ Error Assembler<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     const target::ptrdiff_t delta = addr - base;
     if (emitInsn) emitInsnCode(insn);
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-    insn.emitByte(target::byte_t(delta));
+    insn.emitByte(uint8_t(delta));
     return checkLineEnd();
 }
 
 template<McuType mcuType>
 Error Assembler<mcuType>::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
-    target::uint16_t zp;
+    uint16_t zp;
     if (getOperand16(zp) || *_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     emitInsnCode(insn);
@@ -96,7 +96,7 @@ Error Assembler<mcuType>::encodeZeroPageRelative(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::parseOperand(Insn &insn, target::uint16_t &val) {
+Error Assembler<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     char c = toupper(*_scan);
     if (c == '#') {
         _scan++;
@@ -202,7 +202,7 @@ Error Assembler<mcuType>::encode(
         break;
     }
 
-    target::uint16_t val;
+    uint16_t val;
     if (parseOperand(insn, val)) return getError();
     if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);

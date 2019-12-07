@@ -7,7 +7,7 @@ void Disassembler::outText(const char *text) {
     _operands = outStr(_operands, text);
 }
 
-void Disassembler::outOpr8Hex(target::byte_t val) {
+void Disassembler::outOpr8Hex(uint8_t val) {
     char *out = _operands;
     if (val >= 0xA0) *out++ = '0';
     out = outHex8(out, val);
@@ -15,7 +15,7 @@ void Disassembler::outOpr8Hex(target::byte_t val) {
     *(_operands = out) = 0;
 }
 
-void Disassembler::outOpr16Hex(target::uint16_t val) {
+void Disassembler::outOpr16Hex(uint16_t val) {
     char *out = _operands;
     if (val >= 0xA000) *out++ = '0';
     out = outHex16(out, val);
@@ -23,7 +23,7 @@ void Disassembler::outOpr16Hex(target::uint16_t val) {
     *(_operands = out) = 0;
 }
 
-void Disassembler::outOpr16Int(target::int16_t val) {
+void Disassembler::outOpr16Int(int16_t val) {
     _operands = outInt16(_operands, val);
 }
 
@@ -38,7 +38,7 @@ void Disassembler::outOpr16Addr(target::uintptr_t addr, bool indir) {
     if (indir) outChar(')');
 }
 
-void Disassembler::outOpr8Addr(target::byte_t addr) {
+void Disassembler::outOpr8Addr(uint8_t addr) {
     outChar('(');
     const char *label = lookup(addr);
     if (label) {
@@ -50,7 +50,7 @@ void Disassembler::outOpr8Addr(target::byte_t addr) {
 }
 
 void Disassembler::outIndexOffset(
-    target::insn_t insnCode, target::int8_t offset) {
+    target::insn_t insnCode, int8_t offset) {
     outChar('(');
     outRegister(InsnTable::decodeIndexReg(insnCode));
     if (offset >= 0) outChar('+');
@@ -209,7 +209,7 @@ Error Disassembler::decodeInherent(Insn& insn) {
     return setError(OK);
 }
 
-Error Disassembler::decodeImmediate8(Insn &insn, target::byte_t val) {
+Error Disassembler::decodeImmediate8(Insn &insn, uint8_t val) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
@@ -226,7 +226,7 @@ Error Disassembler::decodeImmediate8(Insn &insn, target::byte_t val) {
     return setError(OK);
 }
 
-Error Disassembler::decodeImmediate16(Insn &insn, target::uint16_t val) {
+Error Disassembler::decodeImmediate16(Insn &insn, uint16_t val) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case REG_16:
@@ -296,7 +296,7 @@ Error Disassembler::decodeDirect(Insn &insn, target::uintptr_t addr) {
     return setError(OK);
 }
 
-Error Disassembler::decodeIoaddr(Insn &insn, target::byte_t ioaddr) {
+Error Disassembler::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
     switch (insn.leftFormat()) {
     case ADDR_8:
         outOpr8Addr(ioaddr);
@@ -321,7 +321,7 @@ Error Disassembler::decodeIoaddr(Insn &insn, target::byte_t ioaddr) {
     return setError(OK);
 }
 
-Error Disassembler::decodeRelative(Insn &insn, target::int8_t delta) {
+Error Disassembler::decodeRelative(Insn &insn, int8_t delta) {
     if (insn.leftFormat() == COND_4) {
         const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
         outConditionName((opc >> 3) & 3, false);
@@ -332,7 +332,7 @@ Error Disassembler::decodeRelative(Insn &insn, target::int8_t delta) {
     return setError(OK);
 }
 
-Error Disassembler::decodeIndexed(Insn &insn, target::int8_t offset) {
+Error Disassembler::decodeIndexed(Insn &insn, int8_t offset) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case IX_OFF:
@@ -362,7 +362,7 @@ Error Disassembler::decodeIndexed(Insn &insn, target::int8_t offset) {
 }
 
 Error Disassembler::decodeIndexedImmediate8(
-    Insn &insn, target::int8_t offset, target::byte_t val) {
+    Insn &insn, int8_t offset, uint8_t val) {
     outIndexOffset(insn.insnCode(), offset);
     outChar(',');
     outOpr8Hex(val);
@@ -370,7 +370,7 @@ Error Disassembler::decodeIndexedImmediate8(
 }
 
 Error Disassembler::decodeIndexedBitOp(
-    Insn &insn, target::int8_t offset, target::opcode_t opCode) {
+    Insn &insn, int8_t offset, target::opcode_t opCode) {
     const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
     Insn ixBit;
     ixBit.resetAddress(insn.address());
@@ -429,9 +429,9 @@ Error Disassembler::decode(
     if (InsnTable.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    target::byte_t u8;
-    target::uint16_t u16;
-    target::byte_t offset;
+    uint8_t u8;
+    uint16_t u16;
+    uint8_t offset;
 
     switch (insn.addrMode()) {
     case INHR:

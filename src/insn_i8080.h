@@ -10,7 +10,7 @@
 class Insn {
 public:
     target::uintptr_t address() const { return _address; }
-    const target::byte_t *bytes() const { return _bytes; }
+    const uint8_t *bytes() const { return _bytes; }
     host::uint_t insnLen() const { return _insnLen; }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
@@ -31,27 +31,27 @@ public:
     }
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    Error readByte(Memory &memory, target::byte_t &val) {
+    Error readByte(Memory &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         emitByte(val);
         return OK;
     }
-    Error readUint16(Memory &memory, target::uint16_t &val) {
+    Error readUint16(Memory &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         if (!memory.hasNext()) return NO_MEMORY;
-        val |= (target::uint16_t)memory.readByte() << 8;
+        val |= (uint16_t)memory.readByte() << 8;
         emitUint16(val);
         return OK;
     }
 
-    void emitByte(target::byte_t val) {
+    void emitByte(uint8_t val) {
         _bytes[_insnLen++] = val;
     }
-    void emitUint16(target::uint16_t val) {
-        emitByte(target::byte_t(val & 0xff));
-        emitByte(target::byte_t(val >> 8));
+    void emitUint16(uint16_t val) {
+        emitByte(uint8_t(val & 0xff));
+        emitByte(uint8_t(val >> 8));
     }
 
 private:
@@ -60,7 +60,7 @@ private:
     host::uint_t      _insnLen;
     host::uint_t      _flags;
     char              _name[5];
-    target::byte_t    _bytes[3];
+    uint8_t    _bytes[3];
 };
 
 #endif // __INSN_I8080_H__

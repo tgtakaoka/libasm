@@ -20,14 +20,14 @@ extern TestSymtab symtab;
         asserter.equals(message, expected, sizeof(expected),    \
                         insn.bytes(), insn.insnLen());          \
     } while (0)
-#define ATEST(addr, line, ...)                              \
-    do {                                                    \
-        const target::byte_t expected[] = { __VA_ARGS__ };  \
-        ASSERT(addr, line, expected);                       \
+#define ATEST(addr, line, ...)                      \
+    do {                                            \
+        const uint8_t expected[] = { __VA_ARGS__ }; \
+        ASSERT(addr, line, expected);               \
     } while (0)
 #define AWTEST(addr, line, ...)                                 \
     do {                                                        \
-        const target::uint16_t expected[] = { __VA_ARGS__ };    \
+        const uint16_t expected[] = { __VA_ARGS__ };    \
         ASSERT(addr, line, expected);                           \
     } while (0)
 #define TEST(line, ...) ATEST(0x0000, line, __VA_ARGS__)

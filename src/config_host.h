@@ -6,8 +6,8 @@
 
 namespace host
 {
-    typedef ::int_least8_t  int_t;
-    typedef ::uint_least8_t uint_t;
+    typedef int_least8_t  int_t;
+    typedef uint_least8_t uint_t;
 } // namespace host
 
 #define ARRAY_BEGIN(array) (&(array)[0])

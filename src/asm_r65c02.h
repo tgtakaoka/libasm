@@ -35,10 +35,10 @@ private:
     }
 
     Error checkLineEnd();
-    Error getHex16(target::uint16_t &val);
-    Error getInt16(target::uint16_t &val);
-    Error getOperand16(target::uint16_t &val);
-    Error parseOperand(Insn &insn, target::uint16_t &val);
+    Error getHex16(uint16_t &val);
+    Error getInt16(uint16_t &val);
+    Error getOperand16(uint16_t &val);
+    Error parseOperand(Insn &insn, uint16_t &val);
 
     Error encodeRelative(Insn &insn, bool emitInsn);
     Error encodeZeroPageRelative(Insn &insn);

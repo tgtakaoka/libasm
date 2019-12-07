@@ -16,14 +16,14 @@ public:
           _words(nullptr)
     {}
 
-    void setBytes(const target::byte_t *bytes, host::uint_t size) {
+    void setBytes(const uint8_t *bytes, host::uint_t size) {
         _bytes = bytes;
         _words = nullptr;
         _size = size;
         _index = 0;
     }
     // Set big-endian words.
-    void setWords(const target::uint16_t *words, host::uint_t size) {
+    void setWords(const uint16_t *words, host::uint_t size) {
         _words = words;
         _bytes = nullptr;
         _size = size;
@@ -47,9 +47,9 @@ public:
     }
 
 protected:
-    target::byte_t nextByte() override {
+    uint8_t nextByte() override {
         if (_words) {
-            const target::uint16_t word = _words[_index / 2];
+            const uint16_t word = _words[_index / 2];
             // Big-endian word. Most significant byte is in lowest address.
             return (_index++ % 2) == 0 ? (word >> 8) : word;
         }
@@ -57,8 +57,8 @@ protected:
     }
 
 private:
-    const target::byte_t *_bytes;
-    const target::uint16_t *_words;
+    const uint8_t *_bytes;
+    const uint16_t *_words;
     host::uint_t _size;
     host::uint_t _index;
 };

@@ -119,18 +119,18 @@ host::int_t Registers::encodeDataReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
 }
 
-RegName Registers::decodePointerReg(target::byte_t regNum) {
+RegName Registers::decodePointerReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
 }
 
-RegName Registers::decodeStackReg(target::byte_t regNum) {
+RegName Registers::decodeStackReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(STACK_REGS));
 }
 
-RegName Registers::decodeIndexReg(target::byte_t regNum) {
+RegName Registers::decodeIndexReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(INDEX_REGS));
 }
 
-RegName Registers::decodeDataReg(target::byte_t regNum) {
+RegName Registers::decodeDataReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(DATA_REGS));
 }

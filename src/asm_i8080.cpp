@@ -6,8 +6,8 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error Assembler::getInt16(target::uint16_t &val) {
-    target::uint16_t v = 0;
+Error Assembler::getInt16(uint16_t &val) {
+    uint16_t v = 0;
     const char *p;
 
     for (p = _scan; isxdigit(*p); p++)
@@ -53,13 +53,13 @@ Error Assembler::getInt16(target::uint16_t &val) {
         v *= 10;
         v += *p++ - '0';
     }
-    if (sign == '-') v = -(target::int16_t)v;
+    if (sign == '-') v = -(int16_t)v;
     val = v;
     _scan = p;
     return OK;
 }
 
-Error Assembler::getOperand16(target::uint16_t &val) {
+Error Assembler::getOperand16(uint16_t &val) {
     if (getInt16(val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
@@ -141,7 +141,7 @@ Error Assembler::encodeDataDataReg(Insn &insn) {
 }
 
 Error Assembler::encodeVectorNo(Insn &insn) {
-    target::uint16_t vecNo;
+    uint16_t vecNo;
     if (getOperand16(vecNo) == OK && vecNo < 8) {
         insn.setInsnCode(insn.insnCode() | (vecNo << 3));
         return setError(OK);
@@ -152,7 +152,7 @@ Error Assembler::encodeVectorNo(Insn &insn) {
 Error Assembler::encodeImmediate(Insn &insn) {
     if (insn.insnFormat() != NO_FORMAT && *_scan++ != ',')
         return setError(UNKNOWN_OPERAND);
-    target::uint16_t val;
+    uint16_t val;
     if (getOperand16(val)) return getError();
     if (insn.addrMode() == IMM8)
         insn.emitByte(val);
@@ -162,14 +162,14 @@ Error Assembler::encodeImmediate(Insn &insn) {
 }
 
 Error Assembler::encodeDirect(Insn &insn) {
-    target::uint16_t addr;
+    uint16_t addr;
     if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
 
 Error Assembler::encodeIoaddr(Insn &insn) {
-    target::uint16_t addr;
+    uint16_t addr;
     if (getOperand16(addr)) return getError();
     insn.emitByte(addr);
     return checkLineEnd();

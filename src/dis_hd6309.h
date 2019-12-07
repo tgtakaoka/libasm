@@ -33,10 +33,10 @@ private:
 
     void outChar(char c) { *_operands++ = c; *_operands = 0; }
     void outText(const char *text);
-    void outOpr8Hex(target::byte_t val);
-    void outOpr16Hex(target::uint16_t val);
-    void outOpr32Hex(target::uint32_t val);
-    void outOpr16Int(target::int16_t val);
+    void outOpr8Hex(uint8_t val);
+    void outOpr16Hex(uint16_t val);
+    void outOpr32Hex(uint32_t val);
+    void outOpr16Int(int16_t val);
     void outRegister(RegName regName);
 
     // MC6809

@@ -11,20 +11,20 @@ void Disassembler<mcuType>::outText(const char *text) {
 }
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outOpr8Hex(target::byte_t val) {
+void Disassembler<mcuType>::outOpr8Hex(uint8_t val) {
     *_operands++ = '$';
     _operands = outHex8(_operands, val);
 }
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outOpr16Hex(target::uint16_t val) {
+void Disassembler<mcuType>::outOpr16Hex(uint16_t val) {
     *_operands++ = '$';
     _operands = outHex16(_operands, val);
 }
 
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
-    target::byte_t val;
+    uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     outChar('#');
     const char *label = lookup(val);
@@ -90,7 +90,7 @@ Error Disassembler<mcuType>::decodeZeroPage(Memory &memory, Insn& insn) {
         index = 0;
         break;
     }
-    target::byte_t zp;
+    uint8_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
     if (indirect) outChar('(');
     const char *label = lookup(zp);
@@ -115,9 +115,9 @@ Error Disassembler<mcuType>::decodeZeroPage(Memory &memory, Insn& insn) {
 template<McuType mcuType>
 Error Disassembler<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
     target::ptrdiff_t delta;
-    target::byte_t val;
+    uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    delta = static_cast<target::int8_t>(val);
+    delta = static_cast<int8_t>(val);
     const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
     const target::uintptr_t addr = insn.address() + insnLen + delta;
     const char *label = lookup(addr);
