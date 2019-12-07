@@ -84,6 +84,7 @@ Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
+#ifdef R65C02_ENABLE_BITOPS
 template<McuType mcuType>
 Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
@@ -94,6 +95,7 @@ Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
     insn.emitByte(zp);
     return encodeRelative(insn, /* emitInsn */ false);
 }
+#endif
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
@@ -197,8 +199,10 @@ Error Asm6502<mcuType>::encode(
     case REL8:
         return encodeRelative(insn, /* emitInsn */ true);
     default:
+#ifdef R65C02_ENABLE_BITOPS
         if (mcuType == R65C02 && insn.addrMode() == ZP_REL8)
             return encodeZeroPageRelative(insn);
+#endif
         break;
     }
 

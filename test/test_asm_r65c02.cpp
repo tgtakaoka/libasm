@@ -364,6 +364,7 @@ static void test_relative() {
     ATEST(0x1000, "BRA label1000", 0x80, 0xFE);
 }
 
+#ifdef R65C02_ENABLE_BITOPS
 static void test_bit_manipulation() {
     // R65C02
     TEST("RMB0 $10", 0x07, 0x10);
@@ -419,6 +420,7 @@ static void test_zeropage_relative() {
     ATEST(0x1000, "BBS4 zero10,label1003", 0xCF, 0x10, 0x00);
     ATEST(0x1000, "BBS5 zero10,label1000", 0xDF, 0x10, 0xFD);
 }
+#endif
 
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
@@ -442,7 +444,9 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed_indirect);
     RUN_TEST(test_indirect_indexed);
     RUN_TEST(test_relative);
+#ifdef R65C02_ENABLE_BITOPS
     RUN_TEST(test_bit_manipulation);
     RUN_TEST(test_zeropage_relative);
+#endif
     return 0;
 }

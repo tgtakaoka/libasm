@@ -32,6 +32,7 @@ static constexpr Entry TABLE[] PROGMEM = {
     E(0xD2, CMP, R65C02, ZP_INDIRECT)
     E(0xF2, SBC, R65C02, ZP_INDIRECT)
     E(0x80, BRA, R65C02, REL8)
+#ifdef R65C02_ENABLE_BITOPS
     E(0x07, RMB0, R65C02, ZEROPAGE)
     E(0x17, RMB1, R65C02, ZEROPAGE)
     E(0x27, RMB2, R65C02, ZEROPAGE)
@@ -64,6 +65,7 @@ static constexpr Entry TABLE[] PROGMEM = {
     E(0xDF, BBS5, R65C02, ZP_REL8)
     E(0xEF, BBS6, R65C02, ZP_REL8)
     E(0xFF, BBS7, R65C02, ZP_REL8)
+#endif
 };
 
 template<>

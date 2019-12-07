@@ -105,10 +105,12 @@ Error Dis6502<mcuType>::decodeZeroPage(DisMemory &memory, Insn& insn) {
         outChar(index);
     }
     if (indirect && index != 'Y') outChar(')');
+#ifdef R65C02_ENABLE_BITOPS
     if (insn.addrMode() == ZP_REL8) {
         outChar(',');
         return decodeRelative(memory, insn);
     }
+#endif
     return setError(OK);
 }
 
@@ -118,7 +120,11 @@ Error Dis6502<mcuType>::decodeRelative(DisMemory &memory, Insn &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     delta = static_cast<int8_t>(val);
+#ifdef R65C02_ENABLE_BITOPS
     const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
+#else
+    const host::uint_t insnLen = 2;
+#endif
     const target::uintptr_t addr = insn.address() + insnLen + delta;
     const char *label = lookup(addr);
     if (label) {
@@ -165,7 +171,9 @@ Error Dis6502<mcuType>::decode(
     case INDX_IND:
     case INDIRECT_IDX:
     case ZP_INDIRECT:
+#ifdef R65C02_ENABLE_BITOPS
     case ZP_REL8:
+#endif
         return decodeZeroPage(memory, insn);
     case REL8:
         return decodeRelative(memory, insn);

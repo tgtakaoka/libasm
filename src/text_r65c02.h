@@ -20,6 +20,7 @@ extern const char TEXT_STA[] PROGMEM;
 
 // R65C02 instructions
 
+#ifdef R65C02_ENABLE_BITOPS
 static const char TEXT_BBR0[] PROGMEM = "BBR0";
 static const char TEXT_BBR1[] PROGMEM = "BBR1";
 static const char TEXT_BBR2[] PROGMEM = "BBR2";
@@ -36,11 +37,13 @@ static const char TEXT_BBS4[] PROGMEM = "BBS4";
 static const char TEXT_BBS5[] PROGMEM = "BBS5";
 static const char TEXT_BBS6[] PROGMEM = "BBS6";
 static const char TEXT_BBS7[] PROGMEM = "BBS7";
+#endif
 static const char TEXT_BRA[] PROGMEM = "BRA";
 static const char TEXT_PHX[] PROGMEM = "PHX";
 static const char TEXT_PHY[] PROGMEM = "PHY";
 static const char TEXT_PLX[] PROGMEM = "PLX";
 static const char TEXT_PLY[] PROGMEM = "PLY";
+#ifdef R65C02_ENABLE_BITOPS
 static const char TEXT_RMB0[] PROGMEM = "RMB0";
 static const char TEXT_RMB1[] PROGMEM = "RMB1";
 static const char TEXT_RMB2[] PROGMEM = "RMB2";
@@ -57,6 +60,7 @@ static const char TEXT_SMB4[] PROGMEM = "SMB4";
 static const char TEXT_SMB5[] PROGMEM = "SMB5";
 static const char TEXT_SMB6[] PROGMEM = "SMB6";
 static const char TEXT_SMB7[] PROGMEM = "SMB7";
+#endif
 static const char TEXT_STP[] PROGMEM = "STP";
 static const char TEXT_STZ[] PROGMEM = "STZ";
 static const char TEXT_TRB[] PROGMEM = "TRB";
