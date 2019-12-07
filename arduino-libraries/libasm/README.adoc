@@ -1,0 +1,7 @@
+= libasm library for Arduino IDE =
+
+The libasm library allows for assembling and disassembling supported
+MPU.
+
+More information about this library can be found at
+https://github.com/tgtakaoka/libasm

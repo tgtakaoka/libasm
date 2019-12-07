@@ -1,0 +1,34 @@
+#######################################
+# Syntax Coloring Map libasm
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Assembler	KEYWORD1
+Disassembler	KEYWORD1
+Insn            KEYWORD1
+Memory          KEYWORD1
+Symtab          KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+encode	KEYWORD2 Assembler
+decode	KEYWORD2 Disassembler
+address KEYWORD2 Insn
+insnLen KEYWORD2 Insn
+bytes   KEYWORD2 Insn
+name    KEYWORD2 Insn
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+HD6309	LITERAL1
+MC6809	LITERAL1
+R6502   LITERAL1
+R65C02  LTTERAL1
+
+
