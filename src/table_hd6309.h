@@ -11,7 +11,7 @@ struct EntryPage {
     const Entry *const end;
 };
 
-class InsnTableUtils {
+class TableHd6309Base {
 public:
     static target::insn_t insnCode(
         target::opcode_t prefixCode, target::opcode_t opCode) {
@@ -41,9 +41,9 @@ protected:
 };
 
 template<McuType mcuType = HD6309>
-class InsnTable : public InsnTableUtils {
+class TableHd6309 : public TableHd6309Base {
 public:
-    static const InsnTable<mcuType> *table();
+    static const TableHd6309<mcuType> *table();
 
     Error searchName(Insn &insn) const;
     Error searchNameAndAddrMode(Insn &insn) const;

@@ -4,7 +4,7 @@
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-Disassembler<MC6809> disassembler;
+DisMc6809 disassembler;
 
 static void set_up() {
 }

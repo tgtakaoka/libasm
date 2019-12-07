@@ -47,7 +47,7 @@ TEST_OBJS= \
 TESTS=$(TEST_OBJS:.o=)
 
 OBJS_common = string_utils.o test_asserter.o
-OBJS_mc6809 = table_mc6809.o  registers_hd6309.o
+OBJS_mc6809 = table_mc6809.o  reg_hd6309.o
 OBJS_hd6309 = table_hd6309.o  $(OBJS_mc6809)
 OBJS_r6502  = table_r6502.o
 OBJS_r65c02 = table_r65c02.o  $(OBJS_r6502)

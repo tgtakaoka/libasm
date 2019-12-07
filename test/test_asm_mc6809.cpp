@@ -3,7 +3,7 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-Assembler<MC6809> assembler;
+AsmMc6809 assembler;
 
 static void set_up() {
 }

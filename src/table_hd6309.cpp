@@ -193,8 +193,8 @@ static constexpr EntryPage HD6309_PAGES[] = {
 };
 
 template<>
-Error InsnTable<HD6309>::searchName(Insn &insn) const {
-    if (InsnTable<MC6809>::table()->searchName(insn) == OK)
+Error TableHd6309<HD6309>::searchName(Insn &insn) const {
+    if (TableHd6309<MC6809>::table()->searchName(insn) == OK)
         return OK;
     if (searchPages(insn, insn.name(), ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
@@ -202,8 +202,8 @@ Error InsnTable<HD6309>::searchName(Insn &insn) const {
 }
 
 template<>
-Error InsnTable<HD6309>::searchNameAndAddrMode(Insn &insn) const {
-    if (InsnTable<MC6809>::table()->searchNameAndAddrMode(insn) == OK)
+Error TableHd6309<HD6309>::searchNameAndAddrMode(Insn &insn) const {
+    if (TableHd6309<MC6809>::table()->searchNameAndAddrMode(insn) == OK)
         return OK;
     if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
@@ -211,17 +211,17 @@ Error InsnTable<HD6309>::searchNameAndAddrMode(Insn &insn) const {
 }
 
 template<>
-Error InsnTable<HD6309>::searchInsnCode(Insn &insn) const {
-    if (InsnTable<MC6809>::table()->searchInsnCode(insn) == OK)
+Error TableHd6309<HD6309>::searchInsnCode(Insn &insn) const {
+    if (TableHd6309<MC6809>::table()->searchInsnCode(insn) == OK)
         return OK;
     if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
-static const InsnTable<HD6309> HD6309Table;
+static const TableHd6309<HD6309> HD6309Table;
 
 template<>
-const InsnTable<HD6309> *InsnTable<HD6309>::table() {
+const TableHd6309<HD6309> *TableHd6309<HD6309>::table() {
     return &HD6309Table;
 }

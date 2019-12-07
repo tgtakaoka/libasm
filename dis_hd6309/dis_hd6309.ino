@@ -2,7 +2,7 @@
 
 #include "dis_hd6309.h"
 
-Disassembler<HD6309> disassembler;
+DisHd6309 disassembler;
 
 class LineMemory : public Memory {
   public:

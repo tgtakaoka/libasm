@@ -22,7 +22,7 @@ enum RegName : char {
     REG_ZERO = '0',
 };
 
-class RegistersUtils {
+class RegHd6309Utils {
 public:
     static char *outRegName(char *out, const RegName regName);
     static char *outCCRBits(char *out, uint8_t val);
@@ -56,56 +56,56 @@ private:
     static char regName2ndChar(const RegName);
 };
 
-template<McuType type> struct IndexRegisters {
+template<McuType type> struct IndexRegHd6309 {
     const RegName *begin() const;
     const RegName *end() const;
 };
-template<McuType type> struct BaseRegisters {
+template<McuType type> struct BaseRegHd6309 {
     const RegName *begin() const;
     const RegName *end() const;
 };
-template<McuType type> struct DataRegisters {
+template<McuType type> struct DataRegHd6309 {
     const RegName *begin() const;
     const RegName *end() const;
 };
 
 template<McuType mcuType = HD6309>
-class Registers : public RegistersUtils {
+class RegHd6309 : public RegHd6309Utils {
 public:
-    Registers() : _indexRegisters(), _baseRegisters(), _dataRegisters() {}
+    RegHd6309() : _indexRegHd6309(), _baseRegHd6309(), _dataRegHd6309() {}
 
     RegName parseIndexReg(const char *line) const {
-        return parseRegName(line, _indexRegisters.begin(), _indexRegisters.end());
+        return parseRegName(line, _indexRegHd6309.begin(), _indexRegHd6309.end());
     }
     RegName parseBaseReg(const char *line) const {
-        return parseRegName(line, _baseRegisters.begin(), _baseRegisters.end());
+        return parseRegName(line, _baseRegHd6309.begin(), _baseRegHd6309.end());
     }
     RegName parseDataReg(const char *line) const {
-        return parseRegName(line, _dataRegisters.begin(), _dataRegisters.end());
+        return parseRegName(line, _dataRegHd6309.begin(), _dataRegHd6309.end());
     }
     host::int_t encodeIndexReg(RegName regName) const {
-        return encodeRegNumber(regName, _indexRegisters.begin(), _indexRegisters.end());
+        return encodeRegNumber(regName, _indexRegHd6309.begin(), _indexRegHd6309.end());
     }
     host::int_t encodeBaseReg(RegName regName) const {
-        return encodeRegNumber(regName, _baseRegisters.begin(), _baseRegisters.end());
+        return encodeRegNumber(regName, _baseRegHd6309.begin(), _baseRegHd6309.end());
     }
     host::int_t encodeDataReg(RegName regName) const {
-        return encodeRegNumber(regName, _dataRegisters.begin(), _dataRegisters.end());
+        return encodeRegNumber(regName, _dataRegHd6309.begin(), _dataRegHd6309.end());
     }
     RegName decodeIndexReg(uint8_t regNum) const {
-        return decodeRegNumber(regNum, _indexRegisters.begin(), _indexRegisters.end());
+        return decodeRegNumber(regNum, _indexRegHd6309.begin(), _indexRegHd6309.end());
     }
     RegName decodeBaseReg(uint8_t regNum) const {
-        return decodeRegNumber(regNum, _baseRegisters.begin(), _baseRegisters.end());
+        return decodeRegNumber(regNum, _baseRegHd6309.begin(), _baseRegHd6309.end());
     }
     RegName decodeRegName(uint8_t regNum) const {
-        return decodeRegNumber(regNum, _dataRegisters.begin(), _dataRegisters.end());
+        return decodeRegNumber(regNum, _dataRegHd6309.begin(), _dataRegHd6309.end());
     }
 
 private:
-    const IndexRegisters<mcuType> _indexRegisters;
-    const BaseRegisters<mcuType> _baseRegisters;
-    const DataRegisters<mcuType> _dataRegisters;
+    const IndexRegHd6309<mcuType> _indexRegHd6309;
+    const BaseRegHd6309<mcuType> _baseRegHd6309;
+    const DataRegHd6309<mcuType> _dataRegHd6309;
 };
 
 #endif // __REGISTER_HD6309_H__

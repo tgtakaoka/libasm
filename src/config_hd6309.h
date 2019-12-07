@@ -39,6 +39,6 @@ enum AddrMode : host::uint_t {
     TFRM,
 };
 
-#include "registers_hd6309.h"
+#include "reg_hd6309.h"
 
 #endif // __CONFIG_HD6309_H__

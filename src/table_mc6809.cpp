@@ -294,11 +294,11 @@ static constexpr target::opcode_t PREFIX_P00 = 0x00;
 static constexpr target::opcode_t PREFIX_P10 = 0x10;
 static constexpr target::opcode_t PREFIX_P11 = 0x11;
 
-bool InsnTableUtils::isPrefixCode(target::opcode_t opCode) {
+bool TableHd6309Base::isPrefixCode(target::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
-const Entry *InsnTableUtils::searchEntry(
+const Entry *TableHd6309Base::searchEntry(
     const char *name,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
@@ -308,7 +308,7 @@ const Entry *InsnTableUtils::searchEntry(
     return nullptr;
 }
 
-const Entry *InsnTableUtils::searchEntry(
+const Entry *TableHd6309Base::searchEntry(
     const target::opcode_t opCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
@@ -318,7 +318,7 @@ const Entry *InsnTableUtils::searchEntry(
     return nullptr;
 }
 
-Error InsnTableUtils::searchPages(
+Error TableHd6309Base::searchPages(
     Insn &insn, const char *name, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
@@ -337,7 +337,7 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-Error InsnTableUtils::searchPages(
+Error TableHd6309Base::searchPages(
     Insn &insn, const char *name, AddrMode addrMode, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         for (const Entry *entry = page->table; entry < page->end
@@ -353,10 +353,10 @@ Error InsnTableUtils::searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error InsnTableUtils::searchPages(
+Error TableHd6309Base::searchPages(
     Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
-        if (InsnTableUtils::prefixCode(insnCode) != page->prefix) continue;
+        if (TableHd6309Base::prefixCode(insnCode) != page->prefix) continue;
         const Entry *entry = searchEntry(opCode(insnCode), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags));
@@ -376,29 +376,29 @@ static constexpr EntryPage MC6809_PAGES[] = {
 };
 
 template<>
-Error InsnTable<MC6809>::searchName(Insn &insn) const {
+Error TableHd6309<MC6809>::searchName(Insn &insn) const {
     if (searchPages(insn, insn.name(), ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 template<>
-Error InsnTable<MC6809>::searchNameAndAddrMode(Insn &insn) const {
+Error TableHd6309<MC6809>::searchNameAndAddrMode(Insn &insn) const {
     if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 template<>
-Error InsnTable<MC6809>::searchInsnCode(Insn &insn) const {
+Error TableHd6309<MC6809>::searchInsnCode(Insn &insn) const {
     if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
-static const InsnTable<MC6809> MC6809Table;
+static const TableHd6309<MC6809> MC6809Table;
 
 template<>
-const InsnTable<MC6809> *InsnTable<MC6809>::table() {
+const TableHd6309<MC6809> *TableHd6309<MC6809>::table() {
     return &MC6809Table;
 }

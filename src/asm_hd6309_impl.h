@@ -14,13 +14,13 @@ static const char *skipSpace(const char *line) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::checkLineEnd() {
+Error Asm09<mcuType>::checkLineEnd() {
     if (*skipSpace(_scan) == 0) return setError(OK);
     return setError(GARBAGE_AT_END);
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getHex16(uint16_t &val) {
+Error Asm09<mcuType>::getHex16(uint16_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint16_t v = 0;
@@ -35,7 +35,7 @@ Error Assembler<mcuType>::getHex16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getHex32(uint32_t &val) {
+Error Asm09<mcuType>::getHex32(uint32_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint32_t v = 0;
@@ -50,7 +50,7 @@ Error Assembler<mcuType>::getHex32(uint32_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getInt16(uint16_t &val) {
+Error Asm09<mcuType>::getInt16(uint16_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
@@ -67,7 +67,7 @@ Error Assembler<mcuType>::getInt16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getInt32(uint32_t &val) {
+Error Asm09<mcuType>::getInt32(uint32_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
@@ -84,7 +84,7 @@ Error Assembler<mcuType>::getInt32(uint32_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getOperand16(uint16_t &val) {
+Error Asm09<mcuType>::getOperand16(uint16_t &val) {
     if (*_scan == '$') {
         _scan++;
         return getHex16(val);
@@ -105,7 +105,7 @@ Error Assembler<mcuType>::getOperand16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getOperand32(uint32_t &val) {
+Error Asm09<mcuType>::getOperand32(uint32_t &val) {
     if (*_scan == '$') {
         _scan++;
         return getHex32(val);
@@ -126,7 +126,7 @@ Error Assembler<mcuType>::getOperand32(uint32_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeStackOp(Insn &insn) {
+Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
     const char *line = _scan;
     while (*line) {
@@ -156,7 +156,7 @@ Error Assembler<mcuType>::encodeStackOp(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeRegisters(Insn &insn) {
+Error Asm09<mcuType>::encodeRegisters(Insn &insn) {
     RegName regName;
     if ((regName = _regs.parseDataReg(_scan)) == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
@@ -175,11 +175,11 @@ Error Assembler<mcuType>::encodeRegisters(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeRelative(Insn &insn) {
+Error Asm09<mcuType>::encodeRelative(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
-    const target::opcode_t prefix = InsnTableUtils::prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (InsnTableUtils::isPrefixCode(prefix) ? 2 : 1)
+    const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
+    const host::uint_t insnLen = (TableHd6309Base::isPrefixCode(prefix) ? 2 : 1)
         + (insn.addrMode() == REL8 ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
@@ -194,7 +194,7 @@ Error Assembler<mcuType>::encodeRelative(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeImmediate(Insn &insn) {
+Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     emitInsnCode(insn);
@@ -214,7 +214,7 @@ Error Assembler<mcuType>::encodeImmediate(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
+Error Asm09<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
     if (*_scan == '<') _scan++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
@@ -224,7 +224,7 @@ Error Assembler<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
+Error Asm09<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
     if (*_scan == '>') _scan++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
@@ -234,7 +234,7 @@ Error Assembler<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
+Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     const bool indir = (*_scan == '[');
     RegName base = REG_UNDEF;
@@ -347,7 +347,7 @@ Error Assembler<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeBitOperation(Insn &insn) {
+Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
     const RegName regName = _regs.parseBitOpReg(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
@@ -371,7 +371,7 @@ Error Assembler<mcuType>::encodeBitOperation(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeImmediatePlus(Insn &insn) {
+Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     uint16_t val;
@@ -386,7 +386,7 @@ Error Assembler<mcuType>::encodeImmediatePlus(Insn &insn) {
     case INDX: insn.setAddrMode(IMMIDX); break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
+    if (TableHd6309<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
     insn.emitByte((uint8_t)val);
@@ -399,7 +399,7 @@ Error Assembler<mcuType>::encodeImmediatePlus(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeTransferMemory(Insn &insn) {
+Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
     RegName regName = _regs.parseTfmBaseReg(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
@@ -421,8 +421,8 @@ Error Assembler<mcuType>::encodeTransferMemory(Insn &insn) {
         if (srcMode == _regs.tfmSrcModeChar(mode)
             && dstMode == _regs.tfmDstModeChar(mode)) {
             const target::opcode_t prefixCode =
-                InsnTableUtils::prefixCode(insn.insnCode());
-            insn.setInsnCode(InsnTableUtils::insnCode(prefixCode, 0x38 + mode));
+                TableHd6309Base::prefixCode(insn.insnCode());
+            insn.setInsnCode(TableHd6309Base::insnCode(prefixCode, 0x38 + mode));
             emitInsnCode(insn);
             insn.emitByte(post);
             return setError(OK);
@@ -432,7 +432,7 @@ Error Assembler<mcuType>::encodeTransferMemory(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::determineAddrMode(const char *line, Insn &insn) {
+Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
     case '#': insn.setAddrMode(IMM8); break;
     case '<': insn.setAddrMode(DIRP); break;
@@ -462,7 +462,7 @@ Error Assembler<mcuType>::determineAddrMode(const char *line, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encode(
+Error Asm09<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
@@ -473,7 +473,7 @@ Error Assembler<mcuType>::encode(
     insn.setName(_scan, endName);
     _scan = skipSpace(endName);
 
-    if (InsnTable<mcuType>::table()->searchName(insn))
+    if (TableHd6309<mcuType>::table()->searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.mcuType() == HD6309 && mcuType != HD6309)
         return setError(UNKNOWN_INSTRUCTION);
@@ -499,7 +499,7 @@ Error Assembler<mcuType>::encode(
     }
 
     if (determineAddrMode(_scan, insn)) return getError();
-    if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
+    if (TableHd6309<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case IMM8:

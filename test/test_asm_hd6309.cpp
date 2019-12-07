@@ -3,7 +3,7 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-Assembler<HD6309> assembler;
+AsmHd6309 assembler;
 
 static void set_up() {
 }

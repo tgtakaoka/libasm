@@ -7,17 +7,17 @@
 #include "error_reporter.h"
 #include "insn_hd6309.h"
 #include "memory.h"
-#include "registers_hd6309.h"
+#include "reg_hd6309.h"
 #include "symbol_table.h"
 
-template<McuType mcuType = HD6309>
-class Disassembler : public ErrorReporter {
+template<McuType mcuType>
+class Dis09 : public ErrorReporter {
 public:
     Error decode(
         Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
-    Registers<mcuType> _regs;
+    RegHd6309<mcuType> _regs;
     char *_operands;
     SymbolTable *_symtab;
 
@@ -54,5 +54,8 @@ private:
 };
 
 #include "dis_hd6309_impl.h"
+
+typedef Dis09<MC6809> DisMc6809;
+typedef Dis09<HD6309> DisHd6309;
 
 #endif // __DIS_HD6309_H__

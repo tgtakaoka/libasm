@@ -1,6 +1,6 @@
 #include "asm_hd6309.h"
 
-Assembler<MC6809> assembler;
+AsmMc6809 assembler;
 
 void setup() {
   Serial.begin(115200);

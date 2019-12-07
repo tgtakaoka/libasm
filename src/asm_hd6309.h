@@ -5,18 +5,18 @@
 #include "config_hd6309.h"
 
 #include "error_reporter.h"
-#include "registers_hd6309.h"
+#include "reg_hd6309.h"
 #include "symbol_table.h"
 #include "table_hd6309.h"
 
-template<McuType mcuType = HD6309>
-class Assembler : public ErrorReporter {
+template<McuType mcuType>
+class Asm09 : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn,
                  target::uintptr_t addr, SymbolTable *symtab);
 
 private:
-    Registers<mcuType> _regs;
+    RegHd6309<mcuType> _regs;
     const char *_scan;
     SymbolTable  *_symtab;
 
@@ -33,10 +33,10 @@ private:
     }
 
     void emitInsnCode(Insn &insn) const {
-        const target::opcode_t prefix = InsnTableUtils::prefixCode(insn.insnCode());
-        if (InsnTableUtils::isPrefixCode(prefix))
+        const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
+        if (TableHd6309Base::isPrefixCode(prefix))
             insn.emitByte(prefix);
-        insn.emitByte(InsnTableUtils::opCode(insn.insnCode()));
+        insn.emitByte(TableHd6309Base::opCode(insn.insnCode()));
     }
 
     Error checkLineEnd();
@@ -63,5 +63,8 @@ private:
 };
 
 #include "asm_hd6309_impl.h"
+
+typedef Asm09<MC6809> AsmMc6809;
+typedef Asm09<HD6309> AsmHd6309;
 
 #endif // __ASM_HD6309_H__

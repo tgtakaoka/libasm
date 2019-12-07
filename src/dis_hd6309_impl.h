@@ -6,40 +6,40 @@
 #include "table_hd6309.h"
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outText(const char *text) {
+void Dis09<mcuType>::outText(const char *text) {
     _operands = outStr(_operands, text);
 }
 
 template<McuType mcuType>
-void  Disassembler<mcuType>::outOpr8Hex(uint8_t val) {
+void  Dis09<mcuType>::outOpr8Hex(uint8_t val) {
     *_operands++ = '$';
     _operands = outHex8(_operands, val);
 }
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outOpr16Hex(uint16_t val) {
+void Dis09<mcuType>::outOpr16Hex(uint16_t val) {
     *_operands++ = '$';
     _operands = outHex16(_operands, val);
 }
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outOpr32Hex(uint32_t val) {
+void Dis09<mcuType>::outOpr32Hex(uint32_t val) {
     *_operands++ = '$';
     _operands = outHex32(_operands, val);
 }
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outOpr16Int(int16_t val) {
+void Dis09<mcuType>::outOpr16Int(int16_t val) {
     _operands = outInt16(_operands, val);
 }
 
 template<McuType mcuType>
-void Disassembler<mcuType>::outRegister(RegName regName) {
+void Dis09<mcuType>::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeDirectPage(Memory &memory, Insn& insn) {
+Error Dis09<mcuType>::decodeDirectPage(Memory &memory, Insn& insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     const char *label = lookup(dir);
@@ -53,7 +53,7 @@ Error Disassembler<mcuType>::decodeDirectPage(Memory &memory, Insn& insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeExtended(Memory& memory, Insn &insn) {
+Error Dis09<mcuType>::decodeExtended(Memory& memory, Insn &insn) {
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
@@ -67,7 +67,7 @@ Error Disassembler<mcuType>::decodeExtended(Memory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeIndexed(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeIndexed(Memory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const uint8_t mode = post & 0x8F;
@@ -183,7 +183,7 @@ Error Disassembler<mcuType>::decodeIndexed(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
     target::ptrdiff_t delta;
     if (insn.addrMode() == REL8) {
         uint8_t val;
@@ -205,7 +205,7 @@ Error Disassembler<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
+Error Dis09<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
     outChar('#');
     if (insn.addrMode() == IMM8) {
         uint8_t val;
@@ -231,7 +231,7 @@ Error Disassembler<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeStackOp(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeStackOp(Memory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     if (post == 0) {
@@ -252,7 +252,7 @@ Error Disassembler<mcuType>::decodeStackOp(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeRegisters(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeRegisters(Memory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeRegName(post >> 4);
@@ -265,7 +265,7 @@ Error Disassembler<mcuType>::decodeRegisters(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeImmediatePlus(Memory& memory, Insn &insn) {
+Error Dis09<mcuType>::decodeImmediatePlus(Memory& memory, Insn &insn) {
     outChar('#');
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -280,7 +280,7 @@ Error Disassembler<mcuType>::decodeImmediatePlus(Memory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeBitOperation(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeBitOperation(Memory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
@@ -295,7 +295,7 @@ Error Disassembler<mcuType>::decodeBitOperation(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decodeTransferMemory(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeTransferMemory(Memory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
@@ -313,7 +313,7 @@ Error Disassembler<mcuType>::decodeTransferMemory(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Disassembler<mcuType>::decode(
+Error Dis09<mcuType>::decode(
     Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
@@ -321,14 +321,14 @@ Error Disassembler<mcuType>::decode(
     target::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     target::insn_t insnCode = opCode;
-    if (InsnTableUtils::isPrefixCode(opCode)) {
+    if (TableHd6309Base::isPrefixCode(opCode)) {
         const target::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        insnCode = InsnTableUtils::insnCode(prefix, opCode);
+        insnCode = TableHd6309Base::insnCode(prefix, opCode);
     }
     insn.setInsnCode(insnCode);
 
-    if (InsnTable<mcuType>::table()->searchInsnCode(insn))
+    if (TableHd6309<mcuType>::table()->searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     if (insn.mcuType() == HD6309 && mcuType == MC6809)

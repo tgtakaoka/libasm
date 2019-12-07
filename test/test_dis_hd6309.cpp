@@ -4,7 +4,7 @@
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-Disassembler<HD6309> disassembler;
+DisHd6309 disassembler;
 
 static void set_up() {
 }

@@ -1,6 +1,6 @@
 #include "asm_hd6309.h"
 
-Assembler<HD6309> assembler;
+AsmHd6309 assembler;
 
 void setup() {
   Serial.begin(115200);
