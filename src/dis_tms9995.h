@@ -9,7 +9,7 @@
 #include "memory.h"
 #include "symbol_table.h"
 
-class Disassembler : public ErrorReporter {
+class DisTms9995 : public ErrorReporter {
 public:
     Error decode(
         Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);

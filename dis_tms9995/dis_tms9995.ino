@@ -2,7 +2,7 @@
 
 #include "dis_tms9995.h"
 
-Disassembler disassembler;
+DisTms9995 disassembler;
 
 class LineMemory : public Memory {
   public:

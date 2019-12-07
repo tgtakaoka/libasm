@@ -13,14 +13,14 @@ static const char *skipSpace(const char *line) {
     return line;
 }
 
-Error Assembler::checkComma() {
+Error AsmTms9995::checkComma() {
     _scan = skipSpace(_scan);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan = skipSpace(_scan + 1);
     return OK;
 }
 
-Error Assembler::getHex16(uint16_t &val) {
+Error AsmTms9995::getHex16(uint16_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint16_t v = 0;
@@ -34,7 +34,7 @@ Error Assembler::getHex16(uint16_t &val) {
     return OK;
 }
 
-Error Assembler::getInt16(uint16_t &val) {
+Error AsmTms9995::getInt16(uint16_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
@@ -50,7 +50,7 @@ Error Assembler::getInt16(uint16_t &val) {
     return OK;
 }
 
-Error Assembler::getOperand16(uint16_t &val) {
+Error AsmTms9995::getOperand16(uint16_t &val) {
     if (*_scan == '>') {
         _scan++;
         return setError(getHex16(val));
@@ -70,7 +70,7 @@ Error Assembler::getOperand16(uint16_t &val) {
     return setError(UNKNOWN_OPERAND);
 }
 
-Error Assembler::parseRegName(uint8_t &regno) {
+Error AsmTms9995::parseRegName(uint8_t &regno) {
     const char *line = _scan;
     if (toupper(*line) == 'R' && isdigit(*++line)) {
         if (!isIdChar(line[1])) {
@@ -87,7 +87,7 @@ Error Assembler::parseRegName(uint8_t &regno) {
     return UNKNOWN_OPERAND;
 }
 
-Error Assembler::encodeImm(Insn &insn, bool emitInsn) {
+Error AsmTms9995::encodeImm(Insn &insn, bool emitInsn) {
     uint16_t val;
     if (getOperand16(val)) return getError();
     if (emitInsn) insn.emitInsn();
@@ -95,7 +95,7 @@ Error Assembler::encodeImm(Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error Assembler::encodeReg(Insn &insn, bool emitInsn) {
+Error AsmTms9995::encodeReg(Insn &insn, bool emitInsn) {
     uint8_t regno;
     if (parseRegName(regno)) return setError(UNKNOWN_OPERAND);
     uint16_t operand = regno;
@@ -111,7 +111,7 @@ Error Assembler::encodeReg(Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error Assembler::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
+Error AsmTms9995::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     uint16_t count;
     if (acceptR0 && toupper(_scan[0]) == 'R' && _scan[1] == '0'
         && !isIdChar(_scan[2])) { // R0
@@ -134,7 +134,7 @@ Error Assembler::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     return setError(OK);
 }
 
-Error Assembler::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
+Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     uint8_t regno;
     uint8_t mode = 0;
     uint16_t val;
@@ -171,7 +171,7 @@ Error Assembler::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     return setError(OK);
 }
 
-Error Assembler::encodeRel(Insn &insn) {
+Error AsmTms9995::encodeRel(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr) || addr % 2 != 0)
         return setError(UNKNOWN_OPERAND);
@@ -183,7 +183,7 @@ Error Assembler::encodeRel(Insn &insn) {
     return setError(OK);
 }
 
-Error Assembler::encodeCruOff(Insn &insn) {
+Error AsmTms9995::encodeCruOff(Insn &insn) {
     uint16_t val;
     if (getOperand16(val)) return getError();
     int16_t offset = (int16_t)val;
@@ -193,7 +193,7 @@ Error Assembler::encodeCruOff(Insn &insn) {
     return setError(OK);
 }
 
-Error Assembler::encode(
+Error AsmTms9995::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
@@ -204,7 +204,7 @@ Error Assembler::encode(
     insn.setName(_scan, endName);
     _scan = skipSpace(endName);
 
-    if (InsnTable.searchName(insn))
+    if (TableTms9995.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

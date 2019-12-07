@@ -129,7 +129,7 @@ static const Entry *searchEntry(
     return nullptr;
 }
 
-Error InsnTable::searchName(Insn &insn) const {
+Error TableTms9995::searchName(Insn &insn) const {
     const char *name = insn.name();
     const Entry *entry = searchEntry(name, ARRAY_RANGE(TABLE_TMS9995));
     if (!entry) return UNKNOWN_INSTRUCTION;
@@ -139,7 +139,7 @@ Error InsnTable::searchName(Insn &insn) const {
     return OK;
 }
 
-void InsnTable::searchInsnCode(Insn &insn) const {
+void TableTms9995::searchInsnCode(Insn &insn) const {
     const target::insn_t insnCode = insn.insnCode();
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_TMS9995));
     if (!entry)                 // Macro Instruction Detection
@@ -151,4 +151,4 @@ void InsnTable::searchInsnCode(Insn &insn) const {
     insn.setFlags(pgm_read_byte(&entry->flags));
 }
 
-class InsnTable InsnTable;
+class TableTms9995 TableTms9995;

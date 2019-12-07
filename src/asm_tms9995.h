@@ -8,7 +8,7 @@
 #include "symbol_table.h"
 #include "table_tms9995.h"
 
-class Assembler : public ErrorReporter {
+class AsmTms9995 : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn,
                  target::uintptr_t addr, SymbolTable *symtab);

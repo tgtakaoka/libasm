@@ -3,7 +3,7 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-Assembler assembler;
+AsmTms9995 assembler;
 
 static void set_up() {
 }

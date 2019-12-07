@@ -1,6 +1,6 @@
 #include "asm_tms9995.h"
 
-Assembler assembler;
+AsmTms9995 assembler;
 
 void setup() {
   Serial.begin(115200);

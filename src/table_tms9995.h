@@ -5,11 +5,11 @@
 #include "config_tms9995.h"
 #include "insn_tms9995.h"
 
-class InsnTable {
+class TableTms9995 {
 public:
     Error searchName(Insn &insn) const;
     void searchInsnCode(Insn &insn) const;
 };
 
-extern InsnTable InsnTable;
+extern TableTms9995 TableTms9995;
 #endif // __TABLE_TMS9995_H__

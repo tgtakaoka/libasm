@@ -3,25 +3,25 @@
 #include "string_utils.h"
 #include "table_tms9995.h"
 
-void Disassembler::outText(const char *text) {
+void DisTms9995::outText(const char *text) {
     _operands = outStr(_operands, text);
 }
 
-void Disassembler::outOpr8Hex(uint8_t val) {
+void DisTms9995::outOpr8Hex(uint8_t val) {
     *_operands++ = '>';
     _operands = outHex8(_operands, val);
 }
 
-void Disassembler::outOpr16Hex(uint16_t val) {
+void DisTms9995::outOpr16Hex(uint16_t val) {
     *_operands++ = '>';
     _operands = outHex16(_operands, val);
 }
 
-void Disassembler::outOpr16Int(uint16_t val) {
+void DisTms9995::outOpr16Int(uint16_t val) {
     _operands = outInt16(_operands, val);
 }
 
-void Disassembler::outOpr16Addr(target::uintptr_t addr) {
+void DisTms9995::outOpr16Addr(target::uintptr_t addr) {
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -30,12 +30,12 @@ void Disassembler::outOpr16Addr(target::uintptr_t addr) {
     }
 }
 
-void Disassembler::outRegister(host::uint_t regno) {
+void DisTms9995::outRegister(host::uint_t regno) {
     *_operands++ = 'R';
     _operands = outUint16(_operands, regno & 0xf);
 }
 
-Error Disassembler::decodeOperand(
+Error DisTms9995::decodeOperand(
     Memory &memory, Insn &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
     const host::uint_t mode = (opr >> 4) & 0x3;
@@ -58,7 +58,7 @@ Error Disassembler::decodeOperand(
     return setError(OK);
 }
 
-Error Disassembler::decodeImmediate(
+Error DisTms9995::decodeImmediate(
     Memory& memory, Insn &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
@@ -66,7 +66,7 @@ Error Disassembler::decodeImmediate(
     return setError(OK);
 }
 
-Error Disassembler::decodeRelative(Insn& insn) {
+Error DisTms9995::decodeRelative(Insn& insn) {
     int16_t delta = (int8_t)(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
@@ -74,7 +74,7 @@ Error Disassembler::decodeRelative(Insn& insn) {
     return setError(OK);
 }
 
-Error Disassembler::decode(
+Error DisTms9995::decode(
     Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
@@ -82,7 +82,7 @@ Error Disassembler::decode(
     target::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
-    InsnTable.searchInsnCode(insn);
+    TableTms9995.searchInsnCode(insn);
 
     switch (insn.addrMode()) {
     case INH:
