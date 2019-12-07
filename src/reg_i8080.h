@@ -16,7 +16,7 @@ enum RegName : char {
     REG_PSW = 'P',
 };
 
-class Registers {
+class RegI8080 {
 public:
     static RegName parsePointerReg(const char *line);
     static RegName parseStackReg(const char *line);

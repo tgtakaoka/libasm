@@ -127,7 +127,7 @@ static const Entry *searchEntry(
     return nullptr;
 }
 
-Error InsnTable::searchName(Insn &insn) const {
+Error TableI8080::searchName(Insn &insn) const {
     const char *name = insn.name();
     const Entry *entry = searchEntry(name, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
@@ -137,7 +137,7 @@ Error InsnTable::searchName(Insn &insn) const {
     return OK;
 }
 
-Error InsnTable::searchInsnCode(Insn &insn) const {
+Error TableI8080::searchInsnCode(Insn &insn) const {
     const target::insn_t insnCode = insn.insnCode();
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
@@ -149,4 +149,4 @@ Error InsnTable::searchInsnCode(Insn &insn) const {
     return OK;
 }
 
-class InsnTable InsnTable;
+class TableI8080 TableI8080;

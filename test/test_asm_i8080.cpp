@@ -3,7 +3,7 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-Assembler assembler;
+AsmI8080 assembler;
 
 static void set_up() {
 }

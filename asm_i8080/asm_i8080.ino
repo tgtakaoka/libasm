@@ -1,6 +1,6 @@
 #include "asm_i8080.h"
 
-Assembler assembler;
+AsmI8080 assembler;
 
 void setup() {
   Serial.begin(115200);

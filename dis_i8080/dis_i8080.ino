@@ -2,7 +2,7 @@
 
 #include "dis_i8080.h"
 
-Disassembler disassembler;
+DisI8080 disassembler;
 
 class LineMemory : public Memory {
   public:

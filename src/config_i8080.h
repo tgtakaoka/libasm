@@ -31,6 +31,6 @@ enum InsnFormat : host::uint_t {
     VECTOR_NO,                  // **VV_V***: 0~7
 };
 
-#include "registers_i8080.h"
+#include "reg_i8080.h"
 
 #endif // __CONFIG_I8080_H__
