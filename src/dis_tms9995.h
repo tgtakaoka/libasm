@@ -6,13 +6,13 @@
 
 #include "error_reporter.h"
 #include "insn_tms9995.h"
-#include "memory.h"
+#include "dis_memory.h"
 #include "symbol_table.h"
 
 class DisTms9995 : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     char *_operands;
@@ -36,8 +36,8 @@ private:
     void outOpr16Addr(target::uintptr_t addr);
     void outRegister(host::uint_t regno);
 
-    Error decodeOperand(Memory &memory, Insn& insn, host::uint_t opr);
-    Error decodeImmediate(Memory &memory, Insn &insn);
+    Error decodeOperand(DisMemory &memory, Insn& insn, host::uint_t opr);
+    Error decodeImmediate(DisMemory &memory, Insn &insn);
     Error decodeRelative(Insn &insn);
 };
 

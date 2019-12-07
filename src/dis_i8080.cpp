@@ -31,7 +31,7 @@ void DisI8080::outRegister(RegName regName) {
     _operands = RegI8080::outRegName(_operands, regName);
 }
 
-Error DisI8080::decodeImmediate8(Memory& memory, Insn &insn) {
+Error DisI8080::decodeImmediate8(DisMemory& memory, Insn &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) outChar(',');
@@ -39,7 +39,7 @@ Error DisI8080::decodeImmediate8(Memory& memory, Insn &insn) {
     return setError(OK);
 }
 
-Error DisI8080::decodeImmediate16(Memory& memory, Insn &insn) {
+Error DisI8080::decodeImmediate16(DisMemory& memory, Insn &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) outChar(',');
@@ -52,7 +52,7 @@ Error DisI8080::decodeImmediate16(Memory& memory, Insn &insn) {
     return setError(OK);
 }
 
-Error DisI8080::decodeDirect(Memory &memory, Insn& insn) {
+Error DisI8080::decodeDirect(DisMemory &memory, Insn& insn) {
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
@@ -64,7 +64,7 @@ Error DisI8080::decodeDirect(Memory &memory, Insn& insn) {
     return setError(OK);
 }
 
-Error DisI8080::decodeIoaddr(Memory &memory, Insn& insn) {
+Error DisI8080::decodeIoaddr(DisMemory &memory, Insn& insn) {
     uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
     outOpr8Hex(ioaddr);
@@ -72,7 +72,7 @@ Error DisI8080::decodeIoaddr(Memory &memory, Insn& insn) {
 }
 
 Error DisI8080::decode(
-    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

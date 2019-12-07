@@ -7,7 +7,7 @@
 #######################################
 
 Insn            KEYWORD1        libasm
-Memory          KEYWORD1        libasm
+DisMemory          KEYWORD1        libasm
 Symtab          KEYWORD1        libasm
 Error           KEYWORD1        libasm
 AsmMc6809	KEYWORD1        libasm

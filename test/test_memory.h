@@ -2,16 +2,16 @@
 #ifndef __TEST_MEMORY_H__
 #define __TEST_MEMORY_H__
 
-#include "memory.h"
+#include "dis_memory.h"
 
 #include <cinttypes>
 #include <cstdint>
 #include <cstdio>
 
-class TestMemory : public Memory {
+class TestMemory : public DisMemory {
 public:
     TestMemory()
-        : Memory(0),
+        : DisMemory(0),
           _bytes(nullptr),
           _words(nullptr)
     {}

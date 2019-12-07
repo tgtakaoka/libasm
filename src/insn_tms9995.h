@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "entry_tms9995.h"
-#include "memory.h"
+#include "dis_memory.h"
 
 class Insn {
 public:
@@ -30,7 +30,7 @@ public:
     }
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    Error readUint16(Memory &memory, uint16_t &val) {
+    Error readUint16(DisMemory &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = (uint16_t)memory.readByte() << 8;
         if (!memory.hasNext()) return NO_MEMORY;

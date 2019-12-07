@@ -6,7 +6,7 @@
 
 #include "error_reporter.h"
 #include "insn_hd6309.h"
-#include "memory.h"
+#include "dis_memory.h"
 #include "reg_hd6309.h"
 #include "symbol_table.h"
 
@@ -14,7 +14,7 @@ template<McuType mcuType>
 class Dis09 : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     RegHd6309<mcuType> _regs;
@@ -40,17 +40,17 @@ private:
     void outRegister(RegName regName);
 
     // MC6809
-    Error decodeDirectPage(Memory &memory, Insn &insn);
-    Error decodeIndexed(Memory &memory, Insn &insn);
-    Error decodeExtended(Memory &memory, Insn &insn);
-    Error decodeRelative(Memory &memory, Insn &insn);
-    Error decodeImmediate(Memory &memory, Insn &insn);
-    Error decodeStackOp(Memory &memory, Insn &insn);
-    Error decodeRegisters(Memory &memory, Insn &insn);
+    Error decodeDirectPage(DisMemory &memory, Insn &insn);
+    Error decodeIndexed(DisMemory &memory, Insn &insn);
+    Error decodeExtended(DisMemory &memory, Insn &insn);
+    Error decodeRelative(DisMemory &memory, Insn &insn);
+    Error decodeImmediate(DisMemory &memory, Insn &insn);
+    Error decodeStackOp(DisMemory &memory, Insn &insn);
+    Error decodeRegisters(DisMemory &memory, Insn &insn);
     // HD6309
-    Error decodeImmediatePlus(Memory &memory, Insn &insn);
-    Error decodeBitOperation(Memory &memory, Insn &insn);
-    Error decodeTransferMemory(Memory &memory, Insn &insn);
+    Error decodeImmediatePlus(DisMemory &memory, Insn &insn);
+    Error decodeBitOperation(DisMemory &memory, Insn &insn);
+    Error decodeTransferMemory(DisMemory &memory, Insn &insn);
 };
 
 #include "dis_hd6309_impl.h"

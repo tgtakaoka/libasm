@@ -1,8 +1,8 @@
 /* -*- mode: c++; -*- */
-#ifndef __MEMORY_H__
-#define __MEMORY_H__
+#ifndef __DIS_MEMORY_H__
+#define __DIS_MEMORY_H__
 
-class Memory {
+class DisMemory {
 public:
     virtual bool hasNext() const = 0;
     target::uintptr_t address() const { return _address; }
@@ -15,7 +15,7 @@ public:
 protected:
     target::uintptr_t _address;
 
-    Memory(target::uintptr_t address) : _address(address) {}
+    DisMemory(target::uintptr_t address) : _address(address) {}
     virtual uint8_t nextByte() = 0;
 };
 

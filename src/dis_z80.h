@@ -6,14 +6,14 @@
 
 #include "error_reporter.h"
 #include "insn_z80.h"
-#include "memory.h"
+#include "dis_memory.h"
 #include "reg_z80.h"
 #include "symbol_table.h"
 
 class DisZ80 : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     char *_operands;
@@ -42,7 +42,7 @@ private:
     void outDataRegister(RegName regName);
     void outConditionName(target::opcode_t cc, bool cc8 = true);
 
-    Error decodeOperand(Memory &memory, Insn& insn);
+    Error decodeOperand(DisMemory &memory, Insn& insn);
 
     Error decodeInherent(Insn &insn);
     Error decodeImmediate8(Insn &insn, uint8_t val);

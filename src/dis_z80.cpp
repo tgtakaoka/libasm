@@ -412,7 +412,7 @@ Error DisZ80::decodeIndexedBitOp(
 }
 
 Error DisZ80::decode(
-    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

@@ -39,7 +39,7 @@ void Dis09<mcuType>::outRegister(RegName regName) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeDirectPage(Memory &memory, Insn& insn) {
+Error Dis09<mcuType>::decodeDirectPage(DisMemory &memory, Insn& insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     const char *label = lookup(dir);
@@ -53,7 +53,7 @@ Error Dis09<mcuType>::decodeDirectPage(Memory &memory, Insn& insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeExtended(Memory& memory, Insn &insn) {
+Error Dis09<mcuType>::decodeExtended(DisMemory& memory, Insn &insn) {
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
@@ -67,7 +67,7 @@ Error Dis09<mcuType>::decodeExtended(Memory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeIndexed(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeIndexed(DisMemory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const uint8_t mode = post & 0x8F;
@@ -183,7 +183,7 @@ Error Dis09<mcuType>::decodeIndexed(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeRelative(DisMemory &memory, Insn &insn) {
     target::ptrdiff_t delta;
     if (insn.addrMode() == REL8) {
         uint8_t val;
@@ -205,7 +205,7 @@ Error Dis09<mcuType>::decodeRelative(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
+Error Dis09<mcuType>::decodeImmediate(DisMemory& memory, Insn &insn) {
     outChar('#');
     if (insn.addrMode() == IMM8) {
         uint8_t val;
@@ -231,7 +231,7 @@ Error Dis09<mcuType>::decodeImmediate(Memory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeStackOp(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeStackOp(DisMemory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     if (post == 0) {
@@ -252,7 +252,7 @@ Error Dis09<mcuType>::decodeStackOp(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeRegisters(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeRegisters(DisMemory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeRegName(post >> 4);
@@ -265,7 +265,7 @@ Error Dis09<mcuType>::decodeRegisters(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeImmediatePlus(Memory& memory, Insn &insn) {
+Error Dis09<mcuType>::decodeImmediatePlus(DisMemory& memory, Insn &insn) {
     outChar('#');
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -280,7 +280,7 @@ Error Dis09<mcuType>::decodeImmediatePlus(Memory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeBitOperation(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeBitOperation(DisMemory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
@@ -295,7 +295,7 @@ Error Dis09<mcuType>::decodeBitOperation(Memory &memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis09<mcuType>::decodeTransferMemory(Memory &memory, Insn &insn) {
+Error Dis09<mcuType>::decodeTransferMemory(DisMemory &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
@@ -314,7 +314,7 @@ Error Dis09<mcuType>::decodeTransferMemory(Memory &memory, Insn &insn) {
 
 template<McuType mcuType>
 Error Dis09<mcuType>::decode(
-    Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

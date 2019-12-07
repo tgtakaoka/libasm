@@ -6,13 +6,13 @@
 
 #include "error_reporter.h"
 #include "insn_i8080.h"
-#include "memory.h"
+#include "dis_memory.h"
 #include "symbol_table.h"
 
 class DisI8080 : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     char *_operands;
@@ -35,10 +35,10 @@ private:
     void outOpr16Int(uint16_t val);
     void outRegister(RegName regName);
 
-    Error decodeImmediate8(Memory &memory, Insn &insn);
-    Error decodeImmediate16(Memory &memory, Insn &insn);
-    Error decodeDirect(Memory &memory, Insn &insn);
-    Error decodeIoaddr(Memory &memory, Insn &insn);
+    Error decodeImmediate8(DisMemory &memory, Insn &insn);
+    Error decodeImmediate16(DisMemory &memory, Insn &insn);
+    Error decodeDirect(DisMemory &memory, Insn &insn);
+    Error decodeIoaddr(DisMemory &memory, Insn &insn);
 };
 
 #endif // __DIS_I8080_H__

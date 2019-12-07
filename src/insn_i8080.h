@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "entry_i8080.h"
-#include "memory.h"
+#include "dis_memory.h"
 
 class Insn {
 public:
@@ -31,13 +31,13 @@ public:
     }
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    Error readByte(Memory &memory, uint8_t &val) {
+    Error readByte(DisMemory &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         emitByte(val);
         return OK;
     }
-    Error readUint16(Memory &memory, uint16_t &val) {
+    Error readUint16(DisMemory &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         if (!memory.hasNext()) return NO_MEMORY;

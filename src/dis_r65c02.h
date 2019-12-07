@@ -6,14 +6,14 @@
 
 #include "error_reporter.h"
 #include "insn_r65c02.h"
-#include "memory.h"
+#include "dis_memory.h"
 #include "symbol_table.h"
 
 template<McuType mcuType>
 class Dis6502 : public ErrorReporter {
 public:
     Error decode(
-        Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
 
 private:
     char *_operands;
@@ -34,10 +34,10 @@ private:
     void outOpr8Hex(uint8_t val);
     void outOpr16Hex(uint16_t val);
 
-    Error decodeImmediate(Memory &memory, Insn &insn);
-    Error decodeAbsolute(Memory &memory, Insn &insn);
-    Error decodeZeroPage(Memory &memory, Insn &insn);
-    Error decodeRelative(Memory &memory, Insn &insn);
+    Error decodeImmediate(DisMemory &memory, Insn &insn);
+    Error decodeAbsolute(DisMemory &memory, Insn &insn);
+    Error decodeZeroPage(DisMemory &memory, Insn &insn);
+    Error decodeRelative(DisMemory &memory, Insn &insn);
 };
 
 #include "dis_r65c02_impl.h"
