@@ -6,17 +6,30 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Assembler	KEYWORD1
-Disassembler	KEYWORD1
-Insn            KEYWORD1
-Memory          KEYWORD1
-Symtab          KEYWORD1
+Insn            KEYWORD1        libasm
+Memory          KEYWORD1        libasm
+Symtab          KEYWORD1        libasm
+Error           KEYWORD1        libasm
+AsmMc6809	KEYWORD1        libasm
+DisMc6809	KEYWORD1        libasm
+AsmHd6309	KEYWORD1        libasm
+DisHd6309	KEYWORD1        libasm
+AsmI8080	KEYWORD1        libasm
+DisI8080        KEYWORD1        libasm
+AsmZ80          KEYWORD1        libasm
+DisZ80          KEYWORD1        libasm
+AsmR6502	KEYWORD1        libasm
+DisR6502	KEYWORD1        libasm
+AsmR65c02	KEYWORD1        libasm
+DisR65c02	KEYWORD1        libasm
+AsmTms9995	KEYWORD1        libasm
+DisTms9995	KEYWORD1        libasm
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-encode	KEYWORD2 Assembler
-decode	KEYWORD2 Disassembler
+encode	KEYWORD2 Asm
+decode	KEYWORD2 Dis
 address KEYWORD2 Insn
 insnLen KEYWORD2 Insn
 bytes   KEYWORD2 Insn
@@ -26,9 +39,6 @@ name    KEYWORD2 Insn
 #######################################
 # Constants (LITERAL1)
 #######################################
-HD6309	LITERAL1
-MC6809	LITERAL1
-R6502   LITERAL1
-R65C02  LTTERAL1
+
 
 
