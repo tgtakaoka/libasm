@@ -14,13 +14,13 @@ static const char *skipSpace(const char *line) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::checkLineEnd() {
+Error Asm6502<mcuType>::checkLineEnd() {
     if (*skipSpace(_scan) == 0) return setError(OK);
     return setError(GARBAGE_AT_END);
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getHex16(uint16_t &val) {
+Error Asm6502<mcuType>::getHex16(uint16_t &val) {
     const char *p = _scan;
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint16_t v = 0;
@@ -35,7 +35,7 @@ Error Assembler<mcuType>::getHex16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getInt16(uint16_t &val) {
+Error Asm6502<mcuType>::getInt16(uint16_t &val) {
     const char *p = _scan;
     const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
     if (!isdigit(*p)) return UNKNOWN_OPERAND;
@@ -52,7 +52,7 @@ Error Assembler<mcuType>::getInt16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::getOperand16(uint16_t &val) {
+Error Asm6502<mcuType>::getOperand16(uint16_t &val) {
     if (*_scan == '$') {
         _scan++;
         return getHex16(val);
@@ -73,7 +73,7 @@ Error Assembler<mcuType>::getOperand16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
+Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
@@ -85,7 +85,7 @@ Error Assembler<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encodeZeroPageRelative(Insn &insn) {
+Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
     uint16_t zp;
     if (getOperand16(zp) || *_scan != ',') return setError(UNKNOWN_OPERAND);
@@ -96,7 +96,7 @@ Error Assembler<mcuType>::encodeZeroPageRelative(Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
+Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     char c = toupper(*_scan);
     if (c == '#') {
         _scan++;
@@ -174,7 +174,7 @@ Error Assembler<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Assembler<mcuType>::encode(
+Error Asm6502<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
@@ -185,7 +185,7 @@ Error Assembler<mcuType>::encode(
     insn.setName(_scan, endName);
     _scan = skipSpace(endName);
 
-    if (InsnTable<mcuType>::table()->searchName(insn))
+    if (TableR65c02<mcuType>::table()->searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.mcuType() == R65C02 && mcuType != R65C02)
         return setError(UNKNOWN_INSTRUCTION);
@@ -204,7 +204,7 @@ Error Assembler<mcuType>::encode(
 
     uint16_t val;
     if (parseOperand(insn, val)) return getError();
-    if (InsnTable<mcuType>::table()->searchNameAndAddrMode(insn))
+    if (TableR65c02<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case ACCUMULATOR:

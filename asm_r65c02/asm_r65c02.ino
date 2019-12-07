@@ -1,6 +1,6 @@
 #include "asm_r65c02.h"
 
-Assembler<R65C02> assembler;
+AsmR65c02 assembler;
 
 void setup() {
   Serial.begin(115200);

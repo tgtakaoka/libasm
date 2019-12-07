@@ -3,7 +3,7 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-Assembler<R65C02> assembler;
+AsmR65c02 assembler;
 
 static void set_up() {
 }

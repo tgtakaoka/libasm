@@ -4,7 +4,7 @@
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-Disassembler<R65C02> disassembler;
+DisR65c02 disassembler;
 
 static void set_up() {
 }

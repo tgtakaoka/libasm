@@ -8,8 +8,8 @@
 #include "symbol_table.h"
 #include "table_r65c02.h"
 
-template<McuType mcuType = R65C02>
-class Assembler : public ErrorReporter {
+template<McuType mcuType>
+class Asm6502 : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn,
                  target::uintptr_t addr, SymbolTable *symtab);
@@ -45,5 +45,8 @@ private:
 };
 
 #include "asm_r65c02_impl.h"
+
+typedef Asm6502<R6502> AsmR6502;
+typedef Asm6502<R65C02> AsmR65c02;
 
 #endif // __ASM_R65C02_H__

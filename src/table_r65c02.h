@@ -5,7 +5,7 @@
 #include "config_r65c02.h"
 #include "insn_r65c02.h"
 
-class InsnTableUtils {
+class TableR65c02Base {
 protected:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
@@ -22,9 +22,9 @@ protected:
 };
 
 template<McuType mcuType = R65C02>
-class InsnTable : public InsnTableUtils {
+class TableR65c02 : public TableR65c02Base {
 public:
-    static const InsnTable<mcuType> *table();
+    static const TableR65c02<mcuType> *table();
     
     Error searchName(Insn &insn) const;
     Error searchNameAndAddrMode(Insn &insn) const;

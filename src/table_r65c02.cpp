@@ -67,8 +67,8 @@ static constexpr Entry TABLE[] PROGMEM = {
 };
 
 template<>
-Error InsnTable<R65C02>::searchName(Insn &insn) const {
-    if (InsnTable<R6502>::table()->searchName(insn) == OK)
+Error TableR65c02<R65C02>::searchName(Insn &insn) const {
+    if (TableR65c02<R6502>::table()->searchName(insn) == OK)
         return OK;
     if (searchPages(insn, insn.name(), ARRAY_RANGE(TABLE)) == OK)
         return OK;
@@ -76,8 +76,8 @@ Error InsnTable<R65C02>::searchName(Insn &insn) const {
 }
 
 template<>
-Error InsnTable<R65C02>::searchNameAndAddrMode(Insn &insn) const {
-    if (InsnTable<R6502>::table()->searchNameAndAddrMode(insn) == OK)
+Error TableR65c02<R65C02>::searchNameAndAddrMode(Insn &insn) const {
+    if (TableR65c02<R6502>::table()->searchNameAndAddrMode(insn) == OK)
         return OK;
     if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(TABLE)) == OK)
         return OK;
@@ -85,17 +85,17 @@ Error InsnTable<R65C02>::searchNameAndAddrMode(Insn &insn) const {
 }
 
 template<>
-Error InsnTable<R65C02>::searchInsnCode(Insn &insn) const {
-    if (InsnTable<R6502>::table()->searchInsnCode(insn) == OK)
+Error TableR65c02<R65C02>::searchInsnCode(Insn &insn) const {
+    if (TableR65c02<R6502>::table()->searchInsnCode(insn) == OK)
         return OK;
     if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(TABLE)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
-static const InsnTable<R65C02> R65C02Table;
+static const TableR65c02<R65C02> R65C02Table;
 
 template<>
-const InsnTable<R65C02> *InsnTable<R65C02>::table() {
+const TableR65c02<R65C02> *TableR65c02<R65C02>::table() {
     return &R65C02Table;
 }

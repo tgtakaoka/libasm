@@ -9,8 +9,8 @@
 #include "memory.h"
 #include "symbol_table.h"
 
-template<McuType mcuType = R65C02>
-class Disassembler : public ErrorReporter {
+template<McuType mcuType>
+class Dis6502 : public ErrorReporter {
 public:
     Error decode(
         Memory &memory, Insn& insn, char *operands, SymbolTable *symtab);
@@ -41,5 +41,8 @@ private:
 };
 
 #include "dis_r65c02_impl.h"
+
+typedef Dis6502<R6502> DisR6502;
+typedef Dis6502<R65C02> DisR65c02;
 
 #endif // __DIS_R65C02_H__

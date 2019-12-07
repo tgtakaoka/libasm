@@ -2,7 +2,7 @@
 
 #include "dis_r65c02.h"
 
-Disassembler<R65C02> disassembler;
+DisR65c02 disassembler;
 
 class LineMemory : public Memory {
   public:
