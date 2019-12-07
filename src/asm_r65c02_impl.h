@@ -20,8 +20,7 @@ Error Asm6502<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::getHex16(uint16_t &val) {
-    const char *p = _scan;
+Error Asm6502<mcuType>::getHex16(uint16_t &val, const char *p) {
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint16_t v = 0;
     while (isxdigit(*p)) {
@@ -53,10 +52,8 @@ Error Asm6502<mcuType>::getInt16(uint16_t &val) {
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand16(uint16_t &val) {
-    if (*_scan == '$') {
-        _scan++;
-        return getHex16(val);
-    }
+    if (*_scan == '$')
+        return getHex16(val, _scan + 1);
     if (getInt16(val) == OK) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
@@ -186,12 +183,12 @@ Error Asm6502<mcuType>::encode(
     for (endName = _scan; isidchar(*endName); endName++)
         ;
     insn.setName(_scan, endName);
-    _scan = skipSpace(endName);
 
     if (TableR65c02<mcuType>::table()->searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.mcuType() == R65C02 && mcuType != R65C02)
         return setError(UNKNOWN_INSTRUCTION);
+    _scan = skipSpace(endName);
 
     switch (insn.addrMode()) {
     case IMPLIED:

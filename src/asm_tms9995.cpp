@@ -20,8 +20,7 @@ Error AsmTms9995::checkComma() {
     return OK;
 }
 
-Error AsmTms9995::getHex16(uint16_t &val) {
-    const char *p = _scan;
+Error AsmTms9995::getHex16(uint16_t &val, const char *p) {
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint16_t v = 0;
     while (isxdigit(*p)) {
@@ -51,10 +50,8 @@ Error AsmTms9995::getInt16(uint16_t &val) {
 }
 
 Error AsmTms9995::getOperand16(uint16_t &val) {
-    if (*_scan == '>') {
-        _scan++;
-        return setError(getHex16(val));
-    }
+    if (*_scan == '>')
+        return setError(getHex16(val, _scan + 1));
     if (getInt16(val) == OK) return setError(OK);
     char symbol_buffer[20];
     host::uint_t idx;
@@ -203,10 +200,10 @@ Error AsmTms9995::encode(
     for (endName = _scan; isIdChar(*endName); endName++)
         ;
     insn.setName(_scan, endName);
-    _scan = skipSpace(endName);
 
     if (TableTms9995.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
+    _scan = skipSpace(endName);
 
     switch (insn.addrMode()) {
     case INH:

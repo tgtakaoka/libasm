@@ -3,10 +3,6 @@
 #include "string_utils.h"
 #include "table_z80.h"
 
-void DisZ80::outText(const char *text) {
-    _operands = outStr(_operands, text);
-}
-
 void DisZ80::outOpr8Hex(uint8_t val) {
     char *out = _operands;
     if (val >= 0xA0) *out++ = '0';
@@ -28,34 +24,37 @@ void DisZ80::outOpr16Int(int16_t val) {
 }
 
 void DisZ80::outOpr16Addr(target::uintptr_t addr, bool indir) {
-    if (indir) outChar('(');
+    if (indir) *_operands++ = '(';
     const char *label = lookup(addr);
     if (label) {
         outText(label);
     } else {
         outOpr16Hex(addr);
     }
-    if (indir) outChar(')');
+    if (indir) *_operands++ = ')';
+    *_operands = 0;
 }
 
 void DisZ80::outOpr8Addr(uint8_t addr) {
-    outChar('(');
+    *_operands++ = '(';
     const char *label = lookup(addr);
     if (label) {
         outText(label);
     } else {
         outOpr8Hex(addr);
     }
-    outChar(')');
+    *_operands++ = ')';
+    *_operands = 0;
 }
 
 void DisZ80::outIndexOffset(
     target::insn_t insnCode, int8_t offset) {
-    outChar('(');
+    *_operands++ = '(';
     outRegister(TableZ80::decodeIndexReg(insnCode));
-    if (offset >= 0) outChar('+');
+    if (offset >= 0) *_operands++ = '+';
     outOpr16Int(offset);
-    outChar(')');
+    *_operands++ = ')';
+    *_operands = 0;
 }
 
 void DisZ80::outRegister(RegName regName) {
@@ -152,16 +151,17 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outOpr16Int((opc >> 3) & 7);
         break;
     case IMM_NO:
-        if ((opc & ~0x20) == 0x46) outChar('0');
-        else if ((opc & ~0x20) == 0x56) outChar('1');
-        else if ((opc & ~0x20) == 0x5E) outChar('2');
+        if ((opc & ~0x20) == 0x46) *_operands++ = '0';
+        else if ((opc & ~0x20) == 0x56) *_operands++ = '1';
+        else if ((opc & ~0x20) == 0x5E) *_operands++ = '2';
+        *_operands = 0;
         break;
     default:
         break;
     }
 
     if (insn.leftFormat() != NO_OPR && insn.rightFormat() != NO_OPR)
-        outChar(',');
+        *_operands++ = ',';
 
     switch (insn.rightFormat()) {
     case A_REG:
@@ -221,7 +221,7 @@ Error DisZ80::decodeImmediate8(Insn &insn, uint8_t val) {
     default:
         break;
     }
-    outChar(',');
+    *_operands++ = ',';
     outOpr8Hex(val);
     return setError(OK);
 }
@@ -238,7 +238,7 @@ Error DisZ80::decodeImmediate16(Insn &insn, uint16_t val) {
     default:
         break;
     }
-    outChar(',');
+    *_operands++ = ',';
     outOpr16Hex(val);
     return setError(OK);
 }
@@ -270,7 +270,7 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
     default:
         break;
     }
-    if (insn.rightFormat() != NO_OPR) outChar(',');
+    if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
     switch (insn.rightFormat()) {
     case HL_REG:
         outRegister(REG_HL);
@@ -307,7 +307,7 @@ Error DisZ80::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
     default:
         break;
     }
-    outChar(',');
+    *_operands++ = ',';
     switch (insn.rightFormat()) {
     case ADDR_8:
         outOpr8Addr(ioaddr);
@@ -325,7 +325,7 @@ Error DisZ80::decodeRelative(Insn &insn, int8_t delta) {
     if (insn.leftFormat() == COND_4) {
         const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
         outConditionName((opc >> 3) & 3, false);
-        outChar(',');
+        *_operands++ = ',';
     }
     const target::uintptr_t addr = insn.address() + 2 + delta;
     outOpr16Addr(addr, false);
@@ -347,7 +347,7 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
     default:
         break;
     }
-    if (insn.rightFormat() != NO_OPR) outChar(',');
+    if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
     switch (insn.rightFormat()) {
     case IX_OFF:
         outIndexOffset(insn.insnCode(), offset);
@@ -364,7 +364,7 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
 Error DisZ80::decodeIndexedImmediate8(
     Insn &insn, int8_t offset, uint8_t val) {
     outIndexOffset(insn.insnCode(), offset);
-    outChar(',');
+    *_operands++ = ',';
     outOpr8Hex(val);
     return setError(OK);
 }
@@ -397,7 +397,7 @@ Error DisZ80::decodeIndexedBitOp(
     default:
         break;
     }
-    if (insn.rightFormat() != NO_OPR) outChar(',');
+    if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
 
     if (insn.rightFormat() == HL_PTR) {
         outIndexOffset(insn.insnCode(), offset);

@@ -3,10 +3,6 @@
 #include "string_utils.h"
 #include "table_i8080.h"
 
-void DisI8080::outText(const char *text) {
-    _operands = outStr(_operands, text);
-}
-
 void DisI8080::outOpr8Hex(uint8_t val) {
     char *out = _operands;
     if (val >= 0xA0) *out++ = '0';
@@ -35,7 +31,7 @@ Error DisI8080::decodeImmediate8(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    if (insn.insnFormat() != NO_FORMAT) outChar(',');
+    if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
     outOpr8Hex(val);
     return setError(OK);
 }
@@ -44,7 +40,7 @@ Error DisI8080::decodeImmediate16(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    if (insn.insnFormat() != NO_FORMAT) outChar(',');
+    if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
     const char *label = lookup(val);
     if (label) {
         outText(label);
@@ -107,7 +103,7 @@ Error DisI8080::decode(
         break;
     case DATA_DATA_REG:
         outRegister(RegI8080::decodeDataReg((insnCode >> 3) & 7));
-        outChar(',');
+        *_operands++ = ',';
         outRegister(RegI8080::decodeDataReg(insnCode & 7));
         break;
     case VECTOR_NO:

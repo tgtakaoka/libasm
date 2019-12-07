@@ -10,7 +10,7 @@
 #include "asm_interface.h"
 
 template<McuType mcuType>
-class Asm09 : public Assembler<target::uintptr_t> {
+class Asm09 : public AsmCommon<target::uintptr_t> {
 public:
     Error encode(
         const char *line,
@@ -20,20 +20,6 @@ public:
 
 private:
     RegHd6309<mcuType> _regs;
-    const char *_scan;
-    SymbolTable<target::uintptr_t>  *_symtab;
-
-    void reset(const char *line, SymbolTable<target::uintptr_t> *symtab) {
-        _scan = line;
-        _symtab = symtab;
-        resetError();
-    }
-    bool hasSymbol(const char *symbol) const {
-        return _symtab && _symtab->hasSymbol(symbol);
-    }
-    target::uintptr_t lookup(const char *symbol) const {
-        return _symtab ? _symtab->lookup(symbol) : 0;
-    }
 
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
@@ -43,8 +29,8 @@ private:
     }
 
     Error checkLineEnd();
-    Error getHex16(uint16_t &val);
-    Error getHex32(uint32_t &val);
+    Error getHex16(uint16_t &val, const char *p);
+    Error getHex32(uint32_t &val, const char *p);
     Error getInt16(uint16_t &val);
     Error getInt32(uint32_t &val);
     Error getOperand16(uint16_t &val);

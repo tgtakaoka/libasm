@@ -186,10 +186,10 @@ Error AsmI8080::encode(
     for (endName = _scan; isidchar(*endName); endName++)
         ;
     insn.setName(_scan, endName);
-    _scan = skipSpace(endName);
 
     if (TableI8080.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
+    _scan = skipSpace(endName);
 
     switch (insn.insnFormat()) {
     case NO_FORMAT:     setError(OK); break;

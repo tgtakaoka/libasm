@@ -4,14 +4,6 @@
 #include "config_host.h"
 #include "string_utils.h"
 
-#ifdef AVR
-char *outStr(char *out, const __FlashStringHelper *str) {
-  strcpy_P(out, reinterpret_cast<const char *>(str));
-  while (*out) out++;
-  return out;
-}
-#endif
-
 char *outStr(char *out, const char *str) {
     while ((*out = *str++) != 0)
         out++;

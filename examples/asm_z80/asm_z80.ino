@@ -1,7 +1,6 @@
-#include <dis_r65c02.h>
-#include <str_memory.h>
+#include <asm_z80.h>
 
-DisR6502 disassembler;
+AsmZ80 assembler;
 
 void setup() {
   Serial.begin(115200);
@@ -10,25 +9,22 @@ void setup() {
 void loop() {
   while (Serial.available()) {
     String line = Serial.readString();
-    StrMemory memory(0x1000, line.c_str());
-    char operands[20];
     Insn insn;
-    if (disassembler.decode(memory, insn, operands, nullptr)) {
+    if (assembler.encode(line.c_str(), insn, 0x1000, nullptr)) {
       Serial.print(F("Error "));
-      Serial.println(disassembler.getError(), DEC);
+      Serial.print(assembler.getError(), DEC);
+      Serial.print(F(" at: "));
+      Serial.println(assembler.errorAt());
     } else {
       Serial.print(insn.address(), HEX);
       Serial.print(':');
       for (int i = 0; i < insn.insnLen(); i++) {
         Serial.print(' ');
-        uint8_t val = insn.bytes()[i];
+        const uint8_t val = insn.bytes()[i];
         if (val < 0x10) Serial.print('0');
         Serial.print(val, HEX);
       }
-      Serial.print(' ');
-      Serial.print(insn.name());
-      Serial.print(' ');
-      Serial.println(operands);
+      Serial.println();
     }
   }
 }

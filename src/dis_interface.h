@@ -2,6 +2,8 @@
 #ifndef __DIS_INTERFACE_H__
 #define __DIS_INTERFACE_H__
 
+#include "string_utils.h"
+
 template<typename Addr>
 class Disassembler {
 public:
@@ -10,10 +12,19 @@ public:
         Insn& insn,
         char *operands,
         SymbolTable<Addr> *symtab) = 0;
-    Error getError() const { return _error; }
-    bool hasError() const { return !(_error == OK); }
+    virtual Error getError() const = 0;
+};
+
+template<typename Addr>
+class DisCommon : public Disassembler<Addr> {
+public:
+    Error getError() const override { return _error; }
 
 protected:
+    char *_operands;
+    SymbolTable<Addr> *_symtab;
+    Error _error;
+
     Error setError(Error error) {
         _error = error;
         return error;
@@ -22,8 +33,17 @@ protected:
         _error = INVALID_STATE;
     }
 
-private:
-    Error _error;
+    void reset(char *operands, SymbolTable<Addr> *symtab) {
+        *(_operands = operands) = 0;
+        _symtab = symtab;
+        resetError();
+    }
+    const char *lookup(Addr addr) const {
+        return _symtab ? _symtab->lookup(addr) : nullptr;
+    }
+    void outText(const char *text) {
+        _operands = outStr(_operands, text);
+    }
 };
 
 #endif // __DIS_INTERFACE_H__

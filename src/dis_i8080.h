@@ -9,7 +9,7 @@
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-class DisI8080 : public Disassembler<target::uintptr_t> {
+class DisI8080 : public DisCommon<target::uintptr_t> {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,
@@ -18,21 +18,6 @@ public:
         SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
-    char *_operands;
-    SymbolTable<target::uintptr_t> *_symtab;
-
-    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
-        *(_operands = operands) = 0;
-        _symtab = symtab;
-        resetError();
-    }
-
-    const char *lookup(target::uintptr_t addr) const {
-        return _symtab ? _symtab->lookup(addr) : nullptr;
-    }
-
-    void outChar(char c) { *_operands++ = c; *_operands = 0; }
-    void outText(const char *text);
     void outOpr8Hex(uint8_t val);
     void outOpr16Hex(uint16_t val);
     void outOpr16Int(uint16_t val);
