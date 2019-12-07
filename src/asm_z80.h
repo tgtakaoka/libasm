@@ -8,7 +8,7 @@
 #include "symbol_table.h"
 #include "table_z80.h"
 
-class Assembler : public ErrorReporter {
+class AsmZ80 : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn,
                  target::uintptr_t addr, SymbolTable *symtab);
@@ -30,10 +30,10 @@ protected:
     }
 
     void emitInsnCode(Insn &insn) const {
-        const target::opcode_t prefix = InsnTable::prefixCode(insn.insnCode());
-        if (InsnTable::isPrefixCode(prefix))
+        const target::opcode_t prefix = TableZ80::prefixCode(insn.insnCode());
+        if (TableZ80::isPrefixCode(prefix))
             insn.emitByte(prefix);
-        insn.emitByte(InsnTable::opCode(insn.insnCode()));
+        insn.emitByte(TableZ80::opCode(insn.insnCode()));
     }
 
     Error parseOperand(

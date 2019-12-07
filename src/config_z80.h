@@ -73,6 +73,6 @@ enum OprFormat : host::uint_t {
     IX_BIT,                     // DD/FD CB nn xx
 };
 
-#include "registers_z80.h"
+#include "reg_z80.h"
 
 #endif // __CONFIG_Z80_H__

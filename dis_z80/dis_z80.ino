@@ -2,7 +2,7 @@
 
 #include "dis_z80.h"
 
-Disassembler disassembler;
+DisZ80 disassembler;
 
 class LineMemory : public Memory {
   public:

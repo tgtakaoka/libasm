@@ -5,7 +5,7 @@
 #include "config_z80.h"
 #include "insn_z80.h"
 
-class InsnTable {
+class TableZ80 {
 public:
     Error searchName(Insn &insn) const;
     Error searchNameAndOprFormats(
@@ -28,6 +28,6 @@ public:
     static void encodePrefixCode(Insn &insn, RegName ixReg);
 };
 
-extern InsnTable InsnTable;
+extern TableZ80 TableZ80;
 
 #endif // __TABLE_Z80_H__

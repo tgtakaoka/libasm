@@ -1,6 +1,6 @@
 #include "asm_z80.h"
 
-Assembler assembler;
+AsmZ80 assembler;
 
 void setup() {
   Serial.begin(115200);

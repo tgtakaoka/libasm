@@ -35,7 +35,7 @@ enum CcName : char {
     CC_M  = 'M',
 };
 
-class Registers {
+class RegZ80 {
 public:
     static CcName parseCc4Name(const char *line);
     static CcName parseCc8Name(const char *line);

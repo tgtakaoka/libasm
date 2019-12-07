@@ -4,7 +4,7 @@
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-Disassembler disassembler;
+DisZ80 disassembler;
 
 static void set_up() {
 }

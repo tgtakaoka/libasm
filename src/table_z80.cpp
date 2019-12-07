@@ -248,7 +248,7 @@ static Error searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(InsnTable::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(TableZ80::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             return OK;
         }
@@ -262,7 +262,7 @@ static Error searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, lop, rop, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(InsnTable::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(TableZ80::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             return OK;
         }
@@ -273,9 +273,9 @@ static Error searchPages(
 static Error searchPages(
     Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
-        if (InsnTable::prefixCode(insnCode) != page->prefix) continue;
+        if (TableZ80::prefixCode(insnCode) != page->prefix) continue;
         const Entry *entry =
-            searchEntry(InsnTable::opCode(insnCode), page->table, page->end);
+            searchEntry(TableZ80::opCode(insnCode), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             char name[5];
@@ -295,35 +295,35 @@ static const EntryPage PAGES[] = {
     { PREFIX_IY, ARRAY_RANGE(TABLE_IX) },
 };
 
-bool InsnTable::isPrefixCode(target::opcode_t opCode) {
+bool TableZ80::isPrefixCode(target::opcode_t opCode) {
     return opCode == PREFIX_CB || opCode == PREFIX_ED
         || opCode == PREFIX_IX || opCode == PREFIX_IY;
 }
 
-Error InsnTable::searchName(Insn &insn) const {
+Error TableZ80::searchName(Insn &insn) const {
     return searchPages(insn, insn.name(), ARRAY_RANGE(PAGES));
 }
 
-Error InsnTable::searchNameAndOprFormats(
+Error TableZ80::searchNameAndOprFormats(
     Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const {
     return searchPages(insn, insn.name(), leftOpr, rightOpr, ARRAY_RANGE(PAGES));
 }
 
-Error InsnTable::searchInsnCode(Insn &insn) const {
+Error TableZ80::searchInsnCode(Insn &insn) const {
     return searchPages(insn, insn.insnCode(), ARRAY_RANGE(PAGES));
 }
 
-RegName InsnTable::decodeIndexReg(target::insn_t insnCode) {
+RegName TableZ80::decodeIndexReg(target::insn_t insnCode) {
     const target::opcode_t prefix = prefixCode(insnCode);
     if (prefix == PREFIX_IX) return REG_IX;
     if (prefix == PREFIX_IY) return REG_IY;
     return REG_UNDEF;
 }
 
-void InsnTable::encodePrefixCode(Insn &insn, RegName ixReg) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+void TableZ80::encodePrefixCode(Insn &insn, RegName ixReg) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     const target::opcode_t prefix = ixReg == REG_IX ? PREFIX_IX : PREFIX_IY;
-    insn.setInsnCode(InsnTable::insnCode(prefix, opc));
+    insn.setInsnCode(TableZ80::insnCode(prefix, opc));
 }
 
-class InsnTable InsnTable;
+class TableZ80 TableZ80;

@@ -73,7 +73,7 @@ static char regName3rdChar(const RegName regName) {
     }
 }
 
-bool Registers::compareRegName(const char *line, RegName regName) {
+bool RegZ80::compareRegName(const char *line, RegName regName) {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -82,7 +82,7 @@ bool Registers::compareRegName(const char *line, RegName regName) {
     return !isidchar(*line);
 }
 
-host::uint_t Registers::regNameLen(const RegName regName) {
+host::uint_t RegZ80::regNameLen(const RegName regName) {
     switch (regName) {
     case REG_AFP: return 3;
     case REG_HL:
@@ -96,7 +96,7 @@ host::uint_t Registers::regNameLen(const RegName regName) {
     }
 }
 
-char *Registers::outRegName(char *out, const RegName regName) {
+char *RegZ80::outRegName(char *out, const RegName regName) {
     *out++ = regName1stChar(regName);
     const char r2 = regName2ndChar(regName);
     if (r2) {
@@ -128,7 +128,7 @@ static char ccName2ndChar(const CcName ccName) {
     return toupper(ccName);
 }
 
-host::uint_t Registers::ccNameLen(const CcName ccName) {
+host::uint_t RegZ80::ccNameLen(const CcName ccName) {
     return isupper(ccName) ? 1 : 2;
 }
 
@@ -147,12 +147,12 @@ static bool compareCcName(const char *line, CcName ccName) {
     return !isalpha(*line);
 }
 
-char *Registers::outCc4Name(char *out, const target::opcode_t cc4) {
+char *RegZ80::outCc4Name(char *out, const target::opcode_t cc4) {
     const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc4 & 3]));
     return outCcName(out, cc);
 }
 
-char *Registers::outCc8Name(char *out, const target::opcode_t cc8) {
+char *RegZ80::outCc8Name(char *out, const target::opcode_t cc8) {
     const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc8 & 7]));
     return outCcName(out, cc);
 }
@@ -166,15 +166,15 @@ static CcName parseCcName(const char *line, host::int_t max) {
     return CC_UNDEF;
 }
 
-CcName Registers::parseCc4Name(const char *line) {
+CcName RegZ80::parseCc4Name(const char *line) {
     return parseCcName(line, 4);
 }
 
-CcName Registers::parseCc8Name(const char *line) {
+CcName RegZ80::parseCc8Name(const char *line) {
     return parseCcName(line, 8);
 }
 
-host::int_t Registers::encodeCcName(const CcName ccName) {
+host::int_t RegZ80::encodeCcName(const CcName ccName) {
     for (host::int_t cc = 0; cc < 8; cc++) {
         if (CcName(pgm_read_byte(&CC8_NAMES[cc])) == ccName)
             return cc;
@@ -190,7 +190,7 @@ static host::int_t encodeRegNumber(
     return -1;
 }
 
-RegName Registers::parseRegName(
+RegName RegZ80::parseRegName(
     const char *line, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         const RegName regName = RegName(pgm_read_byte(p));
@@ -205,7 +205,7 @@ static RegName decodeRegNumber(
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName Registers::parseRegister(const char *line) {
+RegName RegZ80::parseRegister(const char *line) {
     RegName regName;
     if ((regName = parseRegName(line, ARRAY_RANGE(NON_DATA_REGS))) != REG_UNDEF)
         return regName;
@@ -214,54 +214,54 @@ RegName Registers::parseRegister(const char *line) {
     return parseRegName(line, ARRAY_RANGE(STACK_REGS));
 }
 
-host::int_t Registers::encodePointerReg(RegName regName) {
+host::int_t RegZ80::encodePointerReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
 }
 
-host::int_t Registers::encodePointerRegIx(RegName regName, RegName ix) {
+host::int_t RegZ80::encodePointerRegIx(RegName regName, RegName ix) {
     if (regName == ix) regName = REG_HL;
     return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
 }
 
-host::int_t Registers::encodeStackReg(RegName regName) {
+host::int_t RegZ80::encodeStackReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
 }
 
-host::int_t Registers::encodeIndexReg(RegName regName) {
+host::int_t RegZ80::encodeIndexReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(INDEX_REGS));
 }
 
-host::int_t Registers::encodeIrReg(RegName regName) {
+host::int_t RegZ80::encodeIrReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(IR_REGS));
 }
 
-host::int_t Registers::encodeDataReg(RegName regName) {
+host::int_t RegZ80::encodeDataReg(RegName regName) {
     if (regName == REG_HL) regName = REG_UNDEF;
     return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
 }
 
-RegName Registers::decodePointerReg(uint8_t regNum) {
+RegName RegZ80::decodePointerReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
 }
 
-RegName Registers::decodePointerRegIx(uint8_t regNum,
+RegName RegZ80::decodePointerRegIx(uint8_t regNum,
     RegName ix) {
     const RegName regName = decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
     return regName == REG_HL ? ix : regName;
 }
 
-RegName Registers::decodeStackReg(uint8_t regNum) {
+RegName RegZ80::decodeStackReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(STACK_REGS));
 }
 
-RegName Registers::decodeIndexReg(uint8_t regNum) {
+RegName RegZ80::decodeIndexReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(INDEX_REGS));
 }
 
-RegName Registers::decodeIrReg(uint8_t regNum) {
+RegName RegZ80::decodeIrReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(IR_REGS));
 }
 
-RegName Registers::decodeDataReg(uint8_t regNum) {
+RegName RegZ80::decodeDataReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(DATA_REGS));
 }

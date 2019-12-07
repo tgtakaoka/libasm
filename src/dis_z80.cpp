@@ -3,11 +3,11 @@
 #include "string_utils.h"
 #include "table_z80.h"
 
-void Disassembler::outText(const char *text) {
+void DisZ80::outText(const char *text) {
     _operands = outStr(_operands, text);
 }
 
-void Disassembler::outOpr8Hex(uint8_t val) {
+void DisZ80::outOpr8Hex(uint8_t val) {
     char *out = _operands;
     if (val >= 0xA0) *out++ = '0';
     out = outHex8(out, val);
@@ -15,7 +15,7 @@ void Disassembler::outOpr8Hex(uint8_t val) {
     *(_operands = out) = 0;
 }
 
-void Disassembler::outOpr16Hex(uint16_t val) {
+void DisZ80::outOpr16Hex(uint16_t val) {
     char *out = _operands;
     if (val >= 0xA000) *out++ = '0';
     out = outHex16(out, val);
@@ -23,11 +23,11 @@ void Disassembler::outOpr16Hex(uint16_t val) {
     *(_operands = out) = 0;
 }
 
-void Disassembler::outOpr16Int(int16_t val) {
+void DisZ80::outOpr16Int(int16_t val) {
     _operands = outInt16(_operands, val);
 }
 
-void Disassembler::outOpr16Addr(target::uintptr_t addr, bool indir) {
+void DisZ80::outOpr16Addr(target::uintptr_t addr, bool indir) {
     if (indir) outChar('(');
     const char *label = lookup(addr);
     if (label) {
@@ -38,7 +38,7 @@ void Disassembler::outOpr16Addr(target::uintptr_t addr, bool indir) {
     if (indir) outChar(')');
 }
 
-void Disassembler::outOpr8Addr(uint8_t addr) {
+void DisZ80::outOpr8Addr(uint8_t addr) {
     outChar('(');
     const char *label = lookup(addr);
     if (label) {
@@ -49,45 +49,45 @@ void Disassembler::outOpr8Addr(uint8_t addr) {
     outChar(')');
 }
 
-void Disassembler::outIndexOffset(
+void DisZ80::outIndexOffset(
     target::insn_t insnCode, int8_t offset) {
     outChar('(');
-    outRegister(InsnTable::decodeIndexReg(insnCode));
+    outRegister(TableZ80::decodeIndexReg(insnCode));
     if (offset >= 0) outChar('+');
     outOpr16Int(offset);
     outChar(')');
 }
 
-void Disassembler::outRegister(RegName regName) {
-    _operands = Registers::outRegName(_operands, regName);
+void DisZ80::outRegister(RegName regName) {
+    _operands = RegZ80::outRegName(_operands, regName);
 }
 
-void Disassembler::outPointer(RegName regName) {
+void DisZ80::outPointer(RegName regName) {
     char *out = _operands;
     *out++ = '(';
-    out = Registers::outRegName(out, regName);
+    out = RegZ80::outRegName(out, regName);
     *out++ = ')';
     *(_operands = out) = 0;
 }
 
-void Disassembler::outDataRegister(RegName regName) {
+void DisZ80::outDataRegister(RegName regName) {
     if (regName == REG_UNDEF) {
         outPointer(REG_HL);
     } else {
-        _operands = Registers::outRegName(_operands, regName);
+        _operands = RegZ80::outRegName(_operands, regName);
     }
 }
 
-void Disassembler::outConditionName(target::opcode_t cc, bool cc8) {
+void DisZ80::outConditionName(target::opcode_t cc, bool cc8) {
     if (cc8) {
-        _operands = Registers::outCc8Name(_operands, cc);
+        _operands = RegZ80::outCc8Name(_operands, cc);
     } else {
-        _operands = Registers::outCc4Name(_operands, cc);
+        _operands = RegZ80::outCc4Name(_operands, cc);
     }
 }
 
-Error Disassembler::decodeInherent(Insn& insn) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+Error DisZ80::decodeInherent(Insn& insn) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
         outRegister(REG_A);
@@ -95,13 +95,13 @@ Error Disassembler::decodeInherent(Insn& insn) {
     case REG_8:
         if (insn.insnFormat() == DST_FMT
             || insn.insnFormat() == DST_SRC_FMT) {
-            outDataRegister(Registers::decodeDataReg((opc >> 3) & 7));
+            outDataRegister(RegZ80::decodeDataReg((opc >> 3) & 7));
         } else if (insn.insnFormat() == SRC_FMT) {
-            outDataRegister(Registers::decodeDataReg(opc & 7));
+            outDataRegister(RegZ80::decodeDataReg(opc & 7));
         } else return setError(INTERNAL_ERROR);
         break;
     case IR_REG:
-        outRegister(Registers::decodeIrReg(opc >> 3 & 1));
+        outRegister(RegZ80::decodeIrReg(opc >> 3 & 1));
         break;
     case BC_REG:
         outRegister(REG_BC);
@@ -119,13 +119,13 @@ Error Disassembler::decodeInherent(Insn& insn) {
         outRegister(REG_SP);
         break;
     case REG_16:
-        outRegister(Registers::decodePointerReg((opc >> 4) & 3));
+        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case STK_16:
-        outRegister(Registers::decodeStackReg((opc >> 4 & 3)));
+        outRegister(RegZ80::decodeStackReg((opc >> 4 & 3)));
         break;
     case IX_REG:
-        outRegister(InsnTable::decodeIndexReg(insn.insnCode()));
+        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     case COND_8:
         outConditionName((opc >> 3) & 7);
@@ -134,7 +134,7 @@ Error Disassembler::decodeInherent(Insn& insn) {
         outPointer(REG_C);
         break;
     case BC_PTR:
-        outPointer(Registers::decodeIndexReg((opc >> 4) & 1));
+        outPointer(RegZ80::decodeIndexReg((opc >> 4) & 1));
         break;
     case HL_PTR:
         outPointer(REG_HL);
@@ -143,7 +143,7 @@ Error Disassembler::decodeInherent(Insn& insn) {
         outPointer(REG_SP);
         break;
     case IX_PTR:
-        outPointer(InsnTable::decodeIndexReg(insn.insnCode()));
+        outPointer(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     case VEC_NO:
         outOpr8Hex(opc & 0x38);
@@ -169,14 +169,14 @@ Error Disassembler::decodeInherent(Insn& insn) {
         break;
     case REG_8:
         if (insn.insnFormat() == DST_FMT) {
-            outDataRegister(Registers::decodeDataReg((opc >> 3) & 7));
+            outDataRegister(RegZ80::decodeDataReg((opc >> 3) & 7));
         } else if (insn.insnFormat() == SRC_FMT
                    || insn.insnFormat() == DST_SRC_FMT) {
-            outDataRegister(Registers::decodeDataReg(opc & 7));
+            outDataRegister(RegZ80::decodeDataReg(opc & 7));
         } else return setError(INTERNAL_ERROR);
         break;
     case IR_REG:
-        outRegister(Registers::decodeIrReg(opc >> 3 & 1));
+        outRegister(RegZ80::decodeIrReg(opc >> 3 & 1));
         break;
     case AFPREG:
         outRegister(REG_AFP);
@@ -185,22 +185,22 @@ Error Disassembler::decodeInherent(Insn& insn) {
         outRegister(REG_HL);
         break;
     case REG_16:
-        outRegister(Registers::decodePointerReg((opc >> 4) & 3));
+        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(InsnTable::decodeIndexReg(insn.insnCode()));
+        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     case REG_16X:
         outRegister(
-            Registers::decodePointerRegIx(
+            RegZ80::decodePointerRegIx(
                 (opc >> 4) & 3,
-                InsnTable::decodeIndexReg(insn.insnCode())));
+                TableZ80::decodeIndexReg(insn.insnCode())));
         break;
     case C_PTR:
         outPointer(REG_C);
         break;
     case BC_PTR:
-        outPointer(Registers::decodeIndexReg((opc >> 4) & 1));
+        outPointer(RegZ80::decodeIndexReg((opc >> 4) & 1));
         break;
     default:
         break;
@@ -209,14 +209,14 @@ Error Disassembler::decodeInherent(Insn& insn) {
     return setError(OK);
 }
 
-Error Disassembler::decodeImmediate8(Insn &insn, uint8_t val) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+Error DisZ80::decodeImmediate8(Insn &insn, uint8_t val) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case A_REG:
         outRegister(REG_A);
         break;
     case REG_8:
-        outDataRegister(Registers::decodeDataReg((opc >> 3) & 7));
+        outDataRegister(RegZ80::decodeDataReg((opc >> 3) & 7));
         break;
     default:
         break;
@@ -226,14 +226,14 @@ Error Disassembler::decodeImmediate8(Insn &insn, uint8_t val) {
     return setError(OK);
 }
 
-Error Disassembler::decodeImmediate16(Insn &insn, uint16_t val) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+Error DisZ80::decodeImmediate16(Insn &insn, uint16_t val) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case REG_16:
-        outRegister(Registers::decodePointerReg((opc >> 4) & 3));
+        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(InsnTable::decodeIndexReg(insn.insnCode()));
+        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     default:
         break;
@@ -243,8 +243,8 @@ Error Disassembler::decodeImmediate16(Insn &insn, uint16_t val) {
     return setError(OK);
 }
 
-Error Disassembler::decodeDirect(Insn &insn, target::uintptr_t addr) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case ADDR_16:
         outOpr16Addr(addr);
@@ -262,10 +262,10 @@ Error Disassembler::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outOpr16Addr(addr, false);
         break;
     case REG_16:
-        outRegister(Registers::decodePointerReg((opc >> 4) & 3));
+        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(InsnTable::decodeIndexReg(insn.insnCode()));
+        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     default:
         break;
@@ -285,10 +285,10 @@ Error Disassembler::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outOpr16Addr(addr, false);
         break;
     case REG_16:
-        outRegister(Registers::decodePointerReg((opc >> 4) & 3));
+        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(InsnTable::decodeIndexReg(insn.insnCode()));
+        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     default:
         break;
@@ -296,7 +296,7 @@ Error Disassembler::decodeDirect(Insn &insn, target::uintptr_t addr) {
     return setError(OK);
 }
 
-Error Disassembler::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
+Error DisZ80::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
     switch (insn.leftFormat()) {
     case ADDR_8:
         outOpr8Addr(ioaddr);
@@ -321,9 +321,9 @@ Error Disassembler::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
     return setError(OK);
 }
 
-Error Disassembler::decodeRelative(Insn &insn, int8_t delta) {
+Error DisZ80::decodeRelative(Insn &insn, int8_t delta) {
     if (insn.leftFormat() == COND_4) {
-        const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+        const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
         outConditionName((opc >> 3) & 3, false);
         outChar(',');
     }
@@ -332,14 +332,14 @@ Error Disassembler::decodeRelative(Insn &insn, int8_t delta) {
     return setError(OK);
 }
 
-Error Disassembler::decodeIndexed(Insn &insn, int8_t offset) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case IX_OFF:
         outIndexOffset(insn.insnCode(), offset);
         break;
     case REG_8:
-        outDataRegister(Registers::decodeDataReg((opc >> 3) & 7));
+        outDataRegister(RegZ80::decodeDataReg((opc >> 3) & 7));
         break;
     case A_REG:
         outRegister(REG_A);
@@ -353,7 +353,7 @@ Error Disassembler::decodeIndexed(Insn &insn, int8_t offset) {
         outIndexOffset(insn.insnCode(), offset);
         break;
     case REG_8:
-        outDataRegister(Registers::decodeDataReg(opc & 7));
+        outDataRegister(RegZ80::decodeDataReg(opc & 7));
         break;
     default:
         break;
@@ -361,7 +361,7 @@ Error Disassembler::decodeIndexed(Insn &insn, int8_t offset) {
     return setError(OK);
 }
 
-Error Disassembler::decodeIndexedImmediate8(
+Error DisZ80::decodeIndexedImmediate8(
     Insn &insn, int8_t offset, uint8_t val) {
     outIndexOffset(insn.insnCode(), offset);
     outChar(',');
@@ -369,17 +369,17 @@ Error Disassembler::decodeIndexedImmediate8(
     return setError(OK);
 }
 
-Error Disassembler::decodeIndexedBitOp(
+Error DisZ80::decodeIndexedBitOp(
     Insn &insn, int8_t offset, target::opcode_t opCode) {
-    const target::opcode_t opc = InsnTable::opCode(insn.insnCode());
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     Insn ixBit;
     ixBit.resetAddress(insn.address());
-    ixBit.setInsnCode(InsnTable::insnCode(opc, opCode));
-    if (InsnTable.searchInsnCode(ixBit)) return getError();
+    ixBit.setInsnCode(TableZ80::insnCode(opc, opCode));
+    if (TableZ80.searchInsnCode(ixBit)) return getError();
     insn.setName(ixBit.name());
     insn.setFlags(ixBit);
 
-    const RegName regName = Registers::decodeDataReg(opCode & 7);
+    const RegName regName = RegZ80::decodeDataReg(opCode & 7);
     switch (insn.leftFormat()) {
     case HL_PTR:
         outIndexOffset(insn.insnCode(), offset);
@@ -411,7 +411,7 @@ Error Disassembler::decodeIndexedBitOp(
     return setError(OK);
 }
 
-Error Disassembler::decode(
+Error DisZ80::decode(
     Memory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
@@ -419,14 +419,14 @@ Error Disassembler::decode(
     target::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     target::insn_t insnCode = opCode;
-    if (InsnTable::isPrefixCode(opCode)) {
+    if (TableZ80::isPrefixCode(opCode)) {
         const target::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        insnCode = InsnTable::insnCode(prefix, opCode);
+        insnCode = TableZ80::insnCode(prefix, opCode);
     }
     insn.setInsnCode(insnCode);
 
-    if (InsnTable.searchInsnCode(insn))
+    if (TableZ80.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     uint8_t u8;

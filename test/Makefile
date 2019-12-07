@@ -53,7 +53,7 @@ OBJS_r6502  = table_r6502.o
 OBJS_r65c02 = table_r65c02.o  $(OBJS_r6502)
 OBJS_i8080  = table_i8080.o   reg_i8080.o
 OBJS_tms9995= table_tms9995.o
-OBJS_z80    = table_z80.o     registers_z80.o
+OBJS_z80    = table_z80.o     reg_z80.o
 OBJS        = \
 	$(TEST_OBJS) \
 	$(OBJS_common) \
