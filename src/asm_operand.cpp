@@ -213,8 +213,10 @@ AsmOperand::Value AsmOperand::readAtom() {
     }
     if (_symtab && isSymbolLetter(*_next, true)) {
         char symbol[20];
-        _next = readSymbol(_next, symbol, symbol + sizeof(symbol) - 1);
+        const char *scan =
+            readSymbol(_next, symbol, symbol + sizeof(symbol) - 1);
         if (_symtab->hasSymbol(symbol)) {
+            _next = scan;
             const uint32_t v = _symtab->lookup(symbol);
             if (v & 0x80000000) {
                 return Value::makeSigned(v);
