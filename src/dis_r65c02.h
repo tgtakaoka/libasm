@@ -13,13 +13,16 @@ template<McuType mcuType>
 class Dis6502 : public ErrorReporter {
 public:
     Error decode(
-        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory<target::uintptr_t> &memory,
+        Insn& insn,
+        char *operands,
+        SymbolTable<target::uintptr_t> *symtab);
 
 private:
     char *_operands;
-    SymbolTable *_symtab;
+    SymbolTable<target::uintptr_t> *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
@@ -34,10 +37,10 @@ private:
     void outOpr8Hex(uint8_t val);
     void outOpr16Hex(uint16_t val);
 
-    Error decodeImmediate(DisMemory &memory, Insn &insn);
-    Error decodeAbsolute(DisMemory &memory, Insn &insn);
-    Error decodeZeroPage(DisMemory &memory, Insn &insn);
-    Error decodeRelative(DisMemory &memory, Insn &insn);
+    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeZeroPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
 };
 
 #include "dis_r65c02_impl.h"

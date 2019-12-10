@@ -38,13 +38,13 @@ public:
         *p = 0;
     }
 
-    Error readByte(DisMemory &memory, uint8_t &val) {
+    Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         emitByte(val);
         return OK;
     }
-    Error readUint16(DisMemory &memory, uint16_t &val) {
+    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = (uint16_t)memory.readByte() << 8;
         if (!memory.hasNext()) return NO_MEMORY;
@@ -52,7 +52,7 @@ public:
         emitUint16(val);
         return OK;
     }
-    Error readUint32(DisMemory &memory, uint32_t &val) {
+    Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = (uint32_t)memory.readByte() << 24;
         if (!memory.hasNext()) return NO_MEMORY;

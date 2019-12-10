@@ -13,13 +13,16 @@
 class DisZ80 : public ErrorReporter {
 public:
     Error decode(
-        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory<target::uintptr_t> &memory,
+        Insn& insn,
+        char *operands,
+        SymbolTable<target::uintptr_t> *symtab);
 
 private:
     char *_operands;
-    SymbolTable *_symtab;
+    SymbolTable<target::uintptr_t> *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
@@ -42,7 +45,7 @@ private:
     void outDataRegister(RegName regName);
     void outConditionName(target::opcode_t cc, bool cc8 = true);
 
-    Error decodeOperand(DisMemory &memory, Insn& insn);
+    Error decodeOperand(DisMemory<target::uintptr_t> &memory, Insn& insn);
 
     Error decodeInherent(Insn &insn);
     Error decodeImmediate8(Insn &insn, uint8_t val);

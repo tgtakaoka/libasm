@@ -12,13 +12,16 @@
 class DisI8080 : public ErrorReporter {
 public:
     Error decode(
-        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory<target::uintptr_t> &memory,
+        Insn& insn,
+        char *operands,
+        SymbolTable<target::uintptr_t> *symtab);
 
 private:
     char *_operands;
-    SymbolTable *_symtab;
+    SymbolTable<target::uintptr_t> *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
@@ -35,10 +38,10 @@ private:
     void outOpr16Int(uint16_t val);
     void outRegister(RegName regName);
 
-    Error decodeImmediate8(DisMemory &memory, Insn &insn);
-    Error decodeImmediate16(DisMemory &memory, Insn &insn);
-    Error decodeDirect(DisMemory &memory, Insn &insn);
-    Error decodeIoaddr(DisMemory &memory, Insn &insn);
+    Error decodeImmediate8(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeImmediate16(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeDirect(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeIoaddr(DisMemory<target::uintptr_t> &memory, Insn &insn);
 };
 
 #endif // __DIS_I8080_H__

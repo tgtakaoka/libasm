@@ -4,11 +4,12 @@
 
 #include "config_host.h"
 
+template<typename Addr>
 class SymbolTable {
 public:
-    virtual const char *lookup(target::uintptr_t address) const { return nullptr; }
-    virtual bool hasSymbol(const char *symbol) const { return false; }
-    virtual target::uintptr_t lookup(const char *symbol) const { return 0; }
+    virtual const char *lookup(Addr address) const = 0;
+    virtual bool hasSymbol(const char *symbol) const = 0;
+    virtual Addr lookup(const char *symbol) const = 0;
 };
 
 #endif  // __SYMBOL_TABLE_H__

@@ -194,7 +194,8 @@ Error AsmTms9995::encodeCruOff(Insn &insn) {
 }
 
 Error AsmTms9995::encode(
-    const char *line, Insn &insn, target::uintptr_t addr, SymbolTable *symtab) {
+    const char *line, Insn &insn, target::uintptr_t addr,
+    SymbolTable<target::uintptr_t> *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);

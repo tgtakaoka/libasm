@@ -12,13 +12,16 @@
 class DisTms9995 : public ErrorReporter {
 public:
     Error decode(
-        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory<target::uintptr_t> &memory,
+        Insn& insn,
+        char *operands,
+        SymbolTable<target::uintptr_t> *symtab);
 
 private:
     char *_operands;
-    SymbolTable *_symtab;
+    SymbolTable<target::uintptr_t> *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
@@ -36,8 +39,9 @@ private:
     void outOpr16Addr(target::uintptr_t addr);
     void outRegister(host::uint_t regno);
 
-    Error decodeOperand(DisMemory &memory, Insn& insn, host::uint_t opr);
-    Error decodeImmediate(DisMemory &memory, Insn &insn);
+    Error decodeOperand(
+        DisMemory<target::uintptr_t> &memory, Insn& insn, host::uint_t opr);
+    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeRelative(Insn &insn);
 };
 

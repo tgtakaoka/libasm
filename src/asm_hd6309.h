@@ -12,15 +12,18 @@
 template<McuType mcuType>
 class Asm09 : public ErrorReporter {
 public:
-    Error encode(const char *line, Insn &insn,
-                 target::uintptr_t addr, SymbolTable *symtab);
+    Error encode(
+        const char *line,
+        Insn &insn,
+        target::uintptr_t addr,
+        SymbolTable<target::uintptr_t> *symtab);
 
 private:
     RegHd6309<mcuType> _regs;
     const char *_scan;
-    SymbolTable  *_symtab;
+    SymbolTable<target::uintptr_t>  *_symtab;
 
-    void reset(const char *line, SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable<target::uintptr_t> *symtab) {
         _scan = line;
         _symtab = symtab;
         resetError();
