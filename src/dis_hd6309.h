@@ -9,15 +9,16 @@
 #include "dis_memory.h"
 #include "reg_hd6309.h"
 #include "symbol_table.h"
+#include "dis_interface.h"
 
 template<McuType mcuType>
-class Dis09 : public ErrorReporter {
+class Dis09 : public Disassembler<target::uintptr_t>, public ErrorReporter {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
-        SymbolTable<target::uintptr_t> *symtab);
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     RegHd6309<mcuType> _regs;

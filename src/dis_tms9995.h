@@ -8,14 +8,15 @@
 #include "insn_tms9995.h"
 #include "dis_memory.h"
 #include "symbol_table.h"
+#include "dis_interface.h"
 
-class DisTms9995 : public ErrorReporter {
+class DisTms9995 : public Disassembler<target::uintptr_t>, public ErrorReporter {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
-        SymbolTable<target::uintptr_t> *symtab);
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     char *_operands;

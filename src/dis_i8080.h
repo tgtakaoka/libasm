@@ -8,14 +8,15 @@
 #include "insn_i8080.h"
 #include "dis_memory.h"
 #include "symbol_table.h"
+#include "dis_interface.h"
 
-class DisI8080 : public ErrorReporter {
+class DisI8080 : public Disassembler<target::uintptr_t>, public ErrorReporter {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
-        SymbolTable<target::uintptr_t> *symtab);
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     char *_operands;

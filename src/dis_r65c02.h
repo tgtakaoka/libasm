@@ -8,15 +8,16 @@
 #include "insn_r65c02.h"
 #include "dis_memory.h"
 #include "symbol_table.h"
+#include "dis_interface.h"
 
 template<McuType mcuType>
-class Dis6502 : public ErrorReporter {
+class Dis6502 : public Disassembler<target::uintptr_t>, public ErrorReporter {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
-        SymbolTable<target::uintptr_t> *symtab);
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     char *_operands;
