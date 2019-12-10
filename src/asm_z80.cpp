@@ -401,10 +401,10 @@ Error AsmZ80::encode(
     for (endName = _scan; isidchar(*endName); endName++)
         ;
     insn.setName(_scan, endName);
-    _scan = skipSpace(endName);
 
     if (TableZ80.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
+    _scan = skipSpace(endName);
 
     OprFormat leftFormat = insn.leftFormat();
     OprFormat rightFormat = insn.rightFormat();

@@ -20,8 +20,7 @@ Error Asm09<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getHex16(uint16_t &val) {
-    const char *p = _scan;
+Error Asm09<mcuType>::getHex16(uint16_t &val, const char *p) {
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint16_t v = 0;
     while (isxdigit(*p)) {
@@ -35,8 +34,7 @@ Error Asm09<mcuType>::getHex16(uint16_t &val) {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getHex32(uint32_t &val) {
-    const char *p = _scan;
+Error Asm09<mcuType>::getHex32(uint32_t &val, const char *p) {
     if (!isxdigit(*p)) return UNKNOWN_OPERAND;
     uint32_t v = 0;
     while (isxdigit(*p)) {
@@ -85,10 +83,8 @@ Error Asm09<mcuType>::getInt32(uint32_t &val) {
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand16(uint16_t &val) {
-    if (*_scan == '$') {
-        _scan++;
-        return getHex16(val);
-    }
+    if (*_scan == '$')
+        return getHex16(val, _scan + 1);
     if (getInt16(val) == OK) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
@@ -106,10 +102,8 @@ Error Asm09<mcuType>::getOperand16(uint16_t &val) {
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand32(uint32_t &val) {
-    if (*_scan == '$') {
-        _scan++;
-        return getHex32(val);
-    }
+    if (*_scan == '$')
+        return getHex32(val, _scan + 1);
     if (getInt32(val) == OK) return OK;
     char symbol_buffer[20];
     host::uint_t idx;
@@ -148,8 +142,8 @@ Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
         if (bit == 0) return setError(UNKNOWN_REGISTER);
         post |= bit;
         if (*line == ',') line++;
+        _scan = line;
     }
-    _scan = line;
     emitInsnCode(insn);
     insn.emitByte(post);
     return checkLineEnd();
@@ -472,12 +466,12 @@ Error Asm09<mcuType>::encode(
     for (endName = _scan; isidchar(*endName); endName++)
         ;
     insn.setName(_scan, endName);
-    _scan = skipSpace(endName);
 
     if (TableHd6309<mcuType>::table()->searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.mcuType() == HD6309 && mcuType != HD6309)
         return setError(UNKNOWN_INSTRUCTION);
+    _scan = skipSpace(endName);
 
     switch (insn.addrMode()) {
     case INHR:  emitInsnCode(insn); return checkLineEnd();

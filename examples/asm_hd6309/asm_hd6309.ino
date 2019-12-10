@@ -1,6 +1,6 @@
 #include <asm_hd6309.h>
 
-AsmMc6809 assembler;
+AsmHd6309 assembler;
 
 void setup() {
   Serial.begin(115200);
@@ -12,7 +12,9 @@ void loop() {
     Insn insn;
     if (assembler.encode(line.c_str(), insn, 0x1000, nullptr)) {
       Serial.print(F("Error "));
-      Serial.println(assembler.getError(), DEC);
+      Serial.print(assembler.getError(), DEC);
+      Serial.print(F(" at: "));
+      Serial.println(assembler.errorAt());
     } else {
       Serial.print(insn.address(), HEX);
       Serial.print(':');

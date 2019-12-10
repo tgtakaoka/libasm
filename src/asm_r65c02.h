@@ -9,7 +9,7 @@
 #include "asm_interface.h"
 
 template<McuType mcuType>
-class Asm6502 : public Assembler<target::uintptr_t> {
+class Asm6502 : public AsmCommon<target::uintptr_t> {
 public:
     Error encode(
         const char *line,
@@ -18,27 +18,10 @@ public:
         SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
-    const char *_scan;
-    SymbolTable<target::uintptr_t>  *_symtab;
-
-    void reset(const char *line, SymbolTable<target::uintptr_t> *symtab) {
-        _scan = line;
-        _symtab = symtab;
-        resetError();
-    }
-    bool hasSymbol(const char *symbol) const {
-        return _symtab && _symtab->hasSymbol(symbol);
-    }
-    target::uintptr_t lookup(const char *symbol) const {
-        return _symtab ? _symtab->lookup(symbol) : 0;
-    }
-
-    void emitInsnCode(Insn &insn) const {
-        insn.emitByte(insn.insnCode());
-    }
+    void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 
     Error checkLineEnd();
-    Error getHex16(uint16_t &val);
+    Error getHex16(uint16_t &val, const char *p);
     Error getInt16(uint16_t &val);
     Error getOperand16(uint16_t &val);
     Error parseOperand(Insn &insn, uint16_t &val);

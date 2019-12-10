@@ -1,7 +1,7 @@
 #include <dis_hd6309.h>
 #include <str_memory.h>
 
-DisMc6809 disassembler;
+DisHd6309 disassembler;
 
 void setup() {
   Serial.begin(115200);

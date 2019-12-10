@@ -8,7 +8,7 @@
 #include "table_z80.h"
 #include "asm_interface.h"
 
-class AsmZ80 : public Assembler<target::uintptr_t> {
+class AsmZ80 : public AsmCommon<target::uintptr_t> {
 public:
     Error encode(
         const char *line,
@@ -16,22 +16,7 @@ public:
         target::uintptr_t addr,
         SymbolTable<target::uintptr_t> *symtab) override;
 
-protected:
-    const char *_scan;
-    SymbolTable<target::uintptr_t>  *_symtab;
-
-    void reset(const char *line, SymbolTable<target::uintptr_t> *symtab) {
-        _scan = line;
-        _symtab = symtab;
-        resetError();
-    }
-    bool hasSymbol(const char *symbol) const {
-        return _symtab && _symtab->hasSymbol(symbol);
-    }
-    target::uintptr_t lookup(const char *symbol) const {
-        return _symtab ? _symtab->lookup(symbol) : 0;
-    }
-
+private:
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableZ80::prefixCode(insn.insnCode());
         if (TableZ80::isPrefixCode(prefix))

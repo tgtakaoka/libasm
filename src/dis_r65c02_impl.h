@@ -6,11 +6,6 @@
 #include "table_r65c02.h"
 
 template<McuType mcuType>
-void Dis6502<mcuType>::outText(const char *text) {
-    _operands = outStr(_operands, text);
-}
-
-template<McuType mcuType>
 void Dis6502<mcuType>::outOpr8Hex(uint8_t val) {
     *_operands++ = '$';
     _operands = outHex8(_operands, val);
@@ -27,7 +22,7 @@ Error Dis6502<mcuType>::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outChar('#');
+    *_operands++ = '#';
     const char *label = lookup(val);
     if (label) {
         outText(label);
@@ -57,19 +52,20 @@ Error Dis6502<mcuType>::decodeAbsolute(
     }
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    if (indirect) outChar('(');
+    if (indirect) *_operands++ = '(';
     const char *label = lookup(addr);
     if (label) {
-        if (addr < 0x100) outChar('>');
+        if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
         outOpr16Hex(addr);
     }
     if (index) {
-        outChar(',');
-        outChar(index);
+        *_operands++ = ',';
+        *_operands++ = index;
     }
-    if (indirect) outChar(')');
+    if (indirect) *_operands++ = ')';
+    *_operands = 0;
     return setError(OK);
 }
 
@@ -95,22 +91,23 @@ Error Dis6502<mcuType>::decodeZeroPage(
     }
     uint8_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
-    if (indirect) outChar('(');
+    if (indirect) *_operands++ = '(';
     const char *label = lookup(zp);
     if (label) {
         outText(label);
     } else {
         outOpr8Hex(zp);
     }
-    if (indirect && index == 'Y') outChar(')');
+    if (indirect && index == 'Y') *_operands++ = ')';
     if (index) {
-        outChar(',');
-        outChar(index);
+        *_operands++ = ',';
+        *_operands++ = index;
     }
-    if (indirect && index != 'Y') outChar(')');
+    if (indirect && index != 'Y') *_operands++ = ')';
+    *_operands = 0;
 #ifdef R65C02_ENABLE_BITOPS
     if (insn.addrMode() == ZP_REL8) {
-        outChar(',');
+        *_operands++ = ',';
         return decodeRelative(memory, insn);
     }
 #endif
@@ -160,7 +157,8 @@ Error Dis6502<mcuType>::decode(
     case IMPLIED:
         return setError(OK);
     case ACCUMULATOR:
-        outChar('A');
+        *_operands++ = 'A';
+        *_operands = 0;
         return setError(OK);
     case IMMEDIATE:
         return decodeImmediate(memory, insn);

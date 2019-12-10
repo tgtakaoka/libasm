@@ -6,11 +6,6 @@
 #include "table_hd6309.h"
 
 template<McuType mcuType>
-void Dis09<mcuType>::outText(const char *text) {
-    _operands = outStr(_operands, text);
-}
-
-template<McuType mcuType>
 void  Dis09<mcuType>::outOpr8Hex(uint8_t val) {
     *_operands++ = '$';
     _operands = outHex8(_operands, val);
@@ -45,7 +40,7 @@ Error Dis09<mcuType>::decodeDirectPage(
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     const char *label = lookup(dir);
     if (label) {
-        outChar('<');
+        *_operands ++ = '<';
         outText(label);
     } else {
         outOpr8Hex(dir);
@@ -60,7 +55,7 @@ Error Dis09<mcuType>::decodeExtended(
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
     if (label) {
-        if (addr < 0x100) outChar('>');
+        if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
         outOpr16Hex(addr);
@@ -159,7 +154,7 @@ Error Dis09<mcuType>::decodeIndexed(
         return setError(UNKNOWN_POSTBYTE);
     }
 
-    if (indir) outChar('[');
+    if (indir) *_operands++ = '[';
     if (label) {
         outText(label);
     } else {
@@ -176,12 +171,13 @@ Error Dis09<mcuType>::decodeIndexed(
         }
     }
     if (base) {
-        outChar(',');
-        for (; incr < 0; incr++) outChar('-');
+        *_operands++ = ',';
+        for (; incr < 0; incr++) *_operands++ = '-';
         outRegister(base);
-        for (; incr > 0; incr--) outChar('+');
+        for (; incr > 0; incr--) *_operands++ = '+';
     }
-    if (indir) outChar(']');
+    if (indir) *_operands++ = ']';
+    *_operands = 0;
     return setError(OK);
 }
 
@@ -211,7 +207,7 @@ Error Dis09<mcuType>::decodeRelative(
 template<McuType mcuType>
 Error Dis09<mcuType>::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
-    outChar('#');
+    *_operands++ = '#';
     if (insn.addrMode() == IMM8) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -241,7 +237,7 @@ Error Dis09<mcuType>::decodeStackOp(
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     if (post == 0) {
-        outChar('#');
+        *_operands++ = '#';
         outOpr8Hex(post);
         return setError(OK);
     }
@@ -249,7 +245,7 @@ Error Dis09<mcuType>::decodeStackOp(
     for (host::uint_t i = 0, n = 0; i < 8; i++) {
         const host::uint_t bit = push ? 7 - i : i;
         if (post & (1 << bit)) {
-            if (n != 0) outChar(',');
+            if (n != 0) *_operands++ = ',';
             outRegister(_regs.getStackReg(bit, insn.insnCode()));
             n++;
         }
@@ -266,7 +262,7 @@ Error Dis09<mcuType>::decodeRegisters(
     const RegName dst = _regs.decodeRegName(post & 0xf);
     if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(src);
-    outChar(',');
+    *_operands++ = ',';
     outRegister(dst);
     return setError(OK);
 }
@@ -274,11 +270,11 @@ Error Dis09<mcuType>::decodeRegisters(
 template<McuType mcuType>
 Error Dis09<mcuType>::decodeImmediatePlus(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
-    outChar('#');
+    *_operands++ = '#';
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     outOpr8Hex(val);
-    outChar(',');
+    *_operands++ = ',';
     switch (insn.addrMode()) {
     case IMMDIR: return decodeDirectPage(memory, insn);
     case IMMEXT: return decodeExtended(memory, insn);
@@ -295,11 +291,11 @@ Error Dis09<mcuType>::decodeBitOperation(
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
-    outChar(',');
+    *_operands++ = ',';
     outOpr16Int((post >> 3) & 7);
-    outChar(',');
+    *_operands++ = ',';
     outOpr16Int(post & 0x7);
-    outChar(',');
+    *_operands++ = ',';
     return decodeDirectPage(memory, insn);
 }
 
@@ -314,11 +310,12 @@ Error Dis09<mcuType>::decodeTransferMemory(
     if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(src);
     const char srcModeChar = _regs.tfmSrcModeChar(mode);
-    if (srcModeChar) outChar(srcModeChar);
-    outChar(',');
+    if (srcModeChar) *_operands++ = srcModeChar;
+    *_operands++ = ',';
     outRegister(dst);
     const char dstModeChar = _regs.tfmDstModeChar(mode);
-    if (dstModeChar) outChar(dstModeChar);
+    if (dstModeChar) *_operands++ = dstModeChar;
+    *_operands = 0;
     return setError(OK);
 }
 
