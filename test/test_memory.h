@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <cstdio>
 
-class TestMemory : public DisMemory {
+class TestMemory : public DisMemory<target::uintptr_t> {
 public:
     TestMemory()
         : DisMemory(0),

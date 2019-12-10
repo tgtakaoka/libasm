@@ -4,24 +4,27 @@
 
 #include "config_hd6309.h"
 
-#include "error_reporter.h"
 #include "insn_hd6309.h"
 #include "dis_memory.h"
 #include "reg_hd6309.h"
 #include "symbol_table.h"
+#include "dis_interface.h"
 
 template<McuType mcuType>
-class Dis09 : public ErrorReporter {
+class Dis09 : public Disassembler<target::uintptr_t> {
 public:
     Error decode(
-        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory<target::uintptr_t> &memory,
+        Insn& insn,
+        char *operands,
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     RegHd6309<mcuType> _regs;
     char *_operands;
-    SymbolTable *_symtab;
+    SymbolTable<target::uintptr_t> *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
@@ -40,17 +43,17 @@ private:
     void outRegister(RegName regName);
 
     // MC6809
-    Error decodeDirectPage(DisMemory &memory, Insn &insn);
-    Error decodeIndexed(DisMemory &memory, Insn &insn);
-    Error decodeExtended(DisMemory &memory, Insn &insn);
-    Error decodeRelative(DisMemory &memory, Insn &insn);
-    Error decodeImmediate(DisMemory &memory, Insn &insn);
-    Error decodeStackOp(DisMemory &memory, Insn &insn);
-    Error decodeRegisters(DisMemory &memory, Insn &insn);
+    Error decodeDirectPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeIndexed(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeExtended(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeStackOp(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeRegisters(DisMemory<target::uintptr_t> &memory, Insn &insn);
     // HD6309
-    Error decodeImmediatePlus(DisMemory &memory, Insn &insn);
-    Error decodeBitOperation(DisMemory &memory, Insn &insn);
-    Error decodeTransferMemory(DisMemory &memory, Insn &insn);
+    Error decodeImmediatePlus(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeBitOperation(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeTransferMemory(DisMemory<target::uintptr_t> &memory, Insn &insn);
 };
 
 #include "dis_hd6309_impl.h"

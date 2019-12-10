@@ -6,7 +6,7 @@
 
 #include <ctype.h>
 
-class StrMemory : public DisMemory {
+class StrMemory : public DisMemory<target::uintptr_t> {
 public:
     StrMemory(target::uintptr_t addr, const char *line)
         : DisMemory(addr), _line(skipSpace(line)) {

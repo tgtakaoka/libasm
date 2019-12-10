@@ -4,21 +4,24 @@
 
 #include "config_tms9995.h"
 
-#include "error_reporter.h"
 #include "insn_tms9995.h"
 #include "dis_memory.h"
 #include "symbol_table.h"
+#include "dis_interface.h"
 
-class DisTms9995 : public ErrorReporter {
+class DisTms9995 : public Disassembler<target::uintptr_t> {
 public:
     Error decode(
-        DisMemory &memory, Insn& insn, char *operands, SymbolTable *symtab);
+        DisMemory<target::uintptr_t> &memory,
+        Insn& insn,
+        char *operands,
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     char *_operands;
-    SymbolTable *_symtab;
+    SymbolTable<target::uintptr_t> *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
+    void reset(char *operands, SymbolTable<target::uintptr_t> *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         resetError();
@@ -36,8 +39,9 @@ private:
     void outOpr16Addr(target::uintptr_t addr);
     void outRegister(host::uint_t regno);
 
-    Error decodeOperand(DisMemory &memory, Insn& insn, host::uint_t opr);
-    Error decodeImmediate(DisMemory &memory, Insn &insn);
+    Error decodeOperand(
+        DisMemory<target::uintptr_t> &memory, Insn& insn, host::uint_t opr);
+    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeRelative(Insn &insn);
 };
 

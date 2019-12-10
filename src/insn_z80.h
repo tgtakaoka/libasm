@@ -40,14 +40,14 @@ public:
         _flags2 = other._flags2;
     }
 
-    Error readByte(DisMemory &memory, uint8_t &val) {
+    Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         emitByte(val);
         return OK;
     }
 
-    Error readUint16(DisMemory &memory, uint16_t &val) {
+    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         if (!memory.hasNext()) return NO_MEMORY;

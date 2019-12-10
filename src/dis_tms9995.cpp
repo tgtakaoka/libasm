@@ -36,7 +36,7 @@ void DisTms9995::outRegister(host::uint_t regno) {
 }
 
 Error DisTms9995::decodeOperand(
-    DisMemory &memory, Insn &insn, const host::uint_t opr) {
+    DisMemory<target::uintptr_t> &memory, Insn &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
     const host::uint_t mode = (opr >> 4) & 0x3;
     if (mode == 1 || mode == 3) outChar('*');
@@ -59,7 +59,7 @@ Error DisTms9995::decodeOperand(
 }
 
 Error DisTms9995::decodeImmediate(
-    DisMemory& memory, Insn &insn) {
+    DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     outOpr16Addr(val);
@@ -75,7 +75,10 @@ Error DisTms9995::decodeRelative(Insn& insn) {
 }
 
 Error DisTms9995::decode(
-    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+    DisMemory<target::uintptr_t> &memory,
+    Insn &insn,
+    char *operands,
+    SymbolTable<target::uintptr_t> *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

@@ -4,23 +4,26 @@
 
 #include "config_hd6309.h"
 
-#include "error_reporter.h"
 #include "reg_hd6309.h"
 #include "symbol_table.h"
 #include "table_hd6309.h"
+#include "asm_interface.h"
 
 template<McuType mcuType>
-class Asm09 : public ErrorReporter {
+class Asm09 : public Assembler<target::uintptr_t> {
 public:
-    Error encode(const char *line, Insn &insn,
-                 target::uintptr_t addr, SymbolTable *symtab);
+    Error encode(
+        const char *line,
+        Insn &insn,
+        target::uintptr_t addr,
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
     RegHd6309<mcuType> _regs;
     const char *_scan;
-    SymbolTable  *_symtab;
+    SymbolTable<target::uintptr_t>  *_symtab;
 
-    void reset(const char *line, SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable<target::uintptr_t> *symtab) {
         _scan = line;
         _symtab = symtab;
         resetError();

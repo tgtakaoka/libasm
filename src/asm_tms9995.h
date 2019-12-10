@@ -4,20 +4,23 @@
 
 #include "config_tms9995.h"
 
-#include "error_reporter.h"
 #include "symbol_table.h"
 #include "table_tms9995.h"
+#include "asm_interface.h"
 
-class AsmTms9995 : public ErrorReporter {
+class AsmTms9995 : public Assembler<target::uintptr_t> {
 public:
-    Error encode(const char *line, Insn &insn,
-                 target::uintptr_t addr, SymbolTable *symtab);
+    Error encode(
+        const char *line,
+        Insn &insn,
+        target::uintptr_t addr,
+        SymbolTable<target::uintptr_t> *symtab) override;
 
 protected:
     const char *_scan;
-    SymbolTable  *_symtab;
+    SymbolTable<target::uintptr_t>  *_symtab;
 
-    void reset(const char *line, SymbolTable *symtab) {
+    void reset(const char *line, SymbolTable<target::uintptr_t> *symtab) {
         _scan = line;
         _symtab = symtab;
         resetError();

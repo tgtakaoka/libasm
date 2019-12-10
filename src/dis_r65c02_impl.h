@@ -23,7 +23,8 @@ void Dis6502<mcuType>::outOpr16Hex(uint16_t val) {
 }
 
 template<McuType mcuType>
-Error Dis6502<mcuType>::decodeImmediate(DisMemory& memory, Insn &insn) {
+Error Dis6502<mcuType>::decodeImmediate(
+    DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     outChar('#');
@@ -37,7 +38,8 @@ Error Dis6502<mcuType>::decodeImmediate(DisMemory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis6502<mcuType>::decodeAbsolute(DisMemory& memory, Insn &insn) {
+Error Dis6502<mcuType>::decodeAbsolute(
+    DisMemory<target::uintptr_t>& memory, Insn &insn) {
     const bool indirect = (insn.addrMode() == IDX_ABS_IND)
         || (insn.addrMode() == ABS_INDIRECT);
     char index;
@@ -72,7 +74,8 @@ Error Dis6502<mcuType>::decodeAbsolute(DisMemory& memory, Insn &insn) {
 }
 
 template<McuType mcuType>
-Error Dis6502<mcuType>::decodeZeroPage(DisMemory &memory, Insn& insn) {
+Error Dis6502<mcuType>::decodeZeroPage(
+    DisMemory<target::uintptr_t> &memory, Insn& insn) {
     const bool indirect = insn.addrMode() == INDX_IND
         || insn.addrMode() == INDIRECT_IDX
         || insn.addrMode() == ZP_INDIRECT;
@@ -115,7 +118,8 @@ Error Dis6502<mcuType>::decodeZeroPage(DisMemory &memory, Insn& insn) {
 }
 
 template<McuType mcuType>
-Error Dis6502<mcuType>::decodeRelative(DisMemory &memory, Insn &insn) {
+Error Dis6502<mcuType>::decodeRelative(
+    DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::ptrdiff_t delta;
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -137,7 +141,8 @@ Error Dis6502<mcuType>::decodeRelative(DisMemory &memory, Insn &insn) {
 
 template<McuType mcuType>
 Error Dis6502<mcuType>::decode(
-    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+    DisMemory<target::uintptr_t> &memory, Insn &insn, char *operands,
+    SymbolTable<target::uintptr_t> *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

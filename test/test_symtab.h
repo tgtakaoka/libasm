@@ -7,7 +7,7 @@
 #include <map>
 #include <cstring>
 
-class TestSymtab : public SymbolTable {
+class TestSymtab : public SymbolTable<target::uintptr_t> {
 public:
     bool hasSymbol(const char *symbol) const override {
         return _sym_to_addrs.find(symbol) != _sym_to_addrs.end();
