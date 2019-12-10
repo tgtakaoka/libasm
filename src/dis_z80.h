@@ -4,14 +4,13 @@
 
 #include "config_z80.h"
 
-#include "error_reporter.h"
 #include "insn_z80.h"
 #include "dis_memory.h"
 #include "reg_z80.h"
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-class DisZ80 : public Disassembler<target::uintptr_t>, public ErrorReporter {
+class DisZ80 : public Disassembler<target::uintptr_t> {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,

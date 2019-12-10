@@ -4,12 +4,11 @@
 
 #include "config_z80.h"
 
-#include "error_reporter.h"
 #include "symbol_table.h"
 #include "table_z80.h"
 #include "asm_interface.h"
 
-class AsmZ80 : public Assembler<target::uintptr_t>, public ErrorReporter {
+class AsmZ80 : public Assembler<target::uintptr_t> {
 public:
     Error encode(
         const char *line,

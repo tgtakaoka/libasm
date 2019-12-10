@@ -4,14 +4,13 @@
 
 #include "config_hd6309.h"
 
-#include "error_reporter.h"
 #include "reg_hd6309.h"
 #include "symbol_table.h"
 #include "table_hd6309.h"
 #include "asm_interface.h"
 
 template<McuType mcuType>
-class Asm09 : public Assembler<target::uintptr_t>, public ErrorReporter {
+class Asm09 : public Assembler<target::uintptr_t> {
 public:
     Error encode(
         const char *line,

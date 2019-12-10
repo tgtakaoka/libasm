@@ -4,13 +4,12 @@
 
 #include "config_r65c02.h"
 
-#include "error_reporter.h"
 #include "symbol_table.h"
 #include "table_r65c02.h"
 #include "asm_interface.h"
 
 template<McuType mcuType>
-class Asm6502 : public Assembler<target::uintptr_t>, public ErrorReporter {
+class Asm6502 : public Assembler<target::uintptr_t> {
 public:
     Error encode(
         const char *line,

@@ -4,7 +4,6 @@
 
 #include "config_hd6309.h"
 
-#include "error_reporter.h"
 #include "insn_hd6309.h"
 #include "dis_memory.h"
 #include "reg_hd6309.h"
@@ -12,7 +11,7 @@
 #include "dis_interface.h"
 
 template<McuType mcuType>
-class Dis09 : public Disassembler<target::uintptr_t>, public ErrorReporter {
+class Dis09 : public Disassembler<target::uintptr_t> {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,

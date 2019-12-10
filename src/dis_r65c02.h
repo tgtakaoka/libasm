@@ -4,14 +4,13 @@
 
 #include "config_r65c02.h"
 
-#include "error_reporter.h"
 #include "insn_r65c02.h"
 #include "dis_memory.h"
 #include "symbol_table.h"
 #include "dis_interface.h"
 
 template<McuType mcuType>
-class Dis6502 : public Disassembler<target::uintptr_t>, public ErrorReporter {
+class Dis6502 : public Disassembler<target::uintptr_t> {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,

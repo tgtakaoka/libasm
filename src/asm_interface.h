@@ -10,6 +10,20 @@ public:
         Insn &insn,
         Addr addr,
         SymbolTable<Addr> *symtab) = 0;
+    Error getError() const { return _error; }
+    bool hasError() const { return !(_error == OK); }
+
+protected:
+    Error setError(Error error) {
+        _error = error;
+        return error;
+    }
+    void resetError() {
+        _error = INVALID_STATE;
+    }
+
+private:
+    Error _error;
 };
 
 #endif // __ASM_INTERFACE_H__
