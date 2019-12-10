@@ -7,8 +7,8 @@
 #######################################
 
 Insn            KEYWORD1        libasm
-DisMemory          KEYWORD1        libasm
-Symtab          KEYWORD1        libasm
+DisMemory       KEYWORD1        libasm
+SymbolTable     KEYWORD1        libasm
 Error           KEYWORD1        libasm
 AsmMc6809	KEYWORD1        libasm
 DisMc6809	KEYWORD1        libasm
@@ -28,12 +28,14 @@ DisTms9995	KEYWORD1        libasm
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-encode	KEYWORD2 Asm
-decode	KEYWORD2 Dis
-address KEYWORD2 Insn
-insnLen KEYWORD2 Insn
-bytes   KEYWORD2 Insn
-name    KEYWORD2 Insn
+encode	 KEYWORD2 Asm
+getError KEYWORD2 Asm/Dis
+errorAt  KEYWORD2 Asm
+decode   KEYWORD2 Dis
+address  KEYWORD2 Insn
+insnLen  KEYWORD2 Insn
+bytes    KEYWORD2 Insn
+name     KEYWORD2 Insn
 
 
 #######################################
