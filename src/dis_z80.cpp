@@ -1,6 +1,6 @@
 #include "dis_z80.h"
 
-#include "string_utils.h"
+#include "dis_operand.h"
 #include "table_z80.h"
 
 void DisZ80::outOpr8Hex(uint8_t val) {

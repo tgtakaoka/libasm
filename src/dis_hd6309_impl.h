@@ -2,7 +2,7 @@
 #ifndef __DIS_HD6309_IMPL_H__
 #define __DIS_HD6309_IMPL_H__
 
-#include "string_utils.h"
+#include "dis_operand.h"
 #include "table_hd6309.h"
 
 template<McuType mcuType>

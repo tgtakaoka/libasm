@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef _STRING_UTILS_H__
-#define _STRING_UTILS_H__
+#ifndef _DIS_OPERAND_H__
+#define _DIS_OPERAND_H__
 
 #include <stdint.h>
 

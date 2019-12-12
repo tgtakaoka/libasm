@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "config_host.h"
-#include "string_utils.h"
+#include "dis_operand.h"
 
 char *outStr(char *out, const char *str) {
     while ((*out = *str++) != 0)

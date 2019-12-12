@@ -2,7 +2,7 @@
 #ifndef __DIS_INTERFACE_H__
 #define __DIS_INTERFACE_H__
 
-#include "string_utils.h"
+#include "dis_operand.h"
 
 template<typename Addr>
 class Disassembler {

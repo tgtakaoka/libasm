@@ -1,6 +1,6 @@
 #include "dis_tms9995.h"
 
-#include "string_utils.h"
+#include "dis_operand.h"
 #include "table_tms9995.h"
 
 void DisTms9995::outOpr8Hex(uint8_t val) {

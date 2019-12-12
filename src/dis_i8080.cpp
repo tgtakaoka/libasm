@@ -1,6 +1,6 @@
 #include "dis_i8080.h"
 
-#include "string_utils.h"
+#include "dis_operand.h"
 #include "table_i8080.h"
 
 void DisI8080::outOpr8Hex(uint8_t val) {

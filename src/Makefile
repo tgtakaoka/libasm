@@ -1,7 +1,7 @@
 CXXFLAGS=-Wall -g -O -std=c++17
 CPPFLAGS=-MMD
 
-OBJS_common  = string_utils.o
+OBJS_common  = dis_operand.o
 OBJS_hd6309  = table_mc6809.o table_hd6309.o reg_hd6309.o
 OBJS_r65c02  = table_r6502.o table_r65c02.o
 OBJS_i8080   = asm_i8080.o   dis_i8080.o   table_i8080.o reg_i8080.o
