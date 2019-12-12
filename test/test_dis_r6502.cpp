@@ -53,9 +53,9 @@ static void test_accumulator() {
 }
 
 static void test_immediate() {
-    TEST(LDY, "#$00", 0xA0, 0x00);
-    TEST(LDX, "#$10", 0xA2, 0x10);
-    TEST(CPY, "#$FF", 0xC0, 0xFF);
+    TEST(LDY, "#0",   0xA0, 0x00);
+    TEST(LDX, "#9",   0xA2, 0x09);
+    TEST(CPY, "#$0A", 0xC0, 0x0A);
     TEST(CPX, "#$FF", 0xE0, 0xFF);
 
     TEST(ORA, "#$90", 0x09, 0x90);
@@ -111,9 +111,9 @@ static void test_zeropage() {
 }
 
 static void test_zeropage_indexed() {
-    TEST(ORA, "$10,X", 0x15, 0x10);
-    TEST(AND, "$10,X", 0x35, 0x10);
-    TEST(EOR, "$10,X", 0x55, 0x10);
+    TEST(ORA, "0,X",   0x15, 0x00);
+    TEST(AND, "9,X",   0x35, 0x09);
+    TEST(EOR, "$0A,X", 0x55, 0x0A);
     TEST(ADC, "$10,X", 0x75, 0x10);
     TEST(STA, "$10,X", 0x95, 0x10);
     TEST(LDA, "$10,X", 0xB5, 0x10);

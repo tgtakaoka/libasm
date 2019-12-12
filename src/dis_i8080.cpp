@@ -3,24 +3,9 @@
 #include "dis_operand.h"
 #include "table_i8080.h"
 
-void DisI8080::outOpr8Hex(uint8_t val) {
-    char *out = _operands;
-    if (val >= 0xA0) *out++ = '0';
-    out = outHex8(out, val);
-    *out++ = 'H';
-    *(_operands = out) = 0;
-}
-
-void DisI8080::outOpr16Hex(uint16_t val) {
-    char *out = _operands;
-    if (val >= 0xA000) *out++ = '0';
-    out = outHex16(out, val);
-    *out++ = 'H';
-    *(_operands = out) = 0;
-}
-
-void DisI8080::outOpr16Int(uint16_t val) {
-    _operands = outInt16(_operands, val);
+template<typename U>
+void DisI8080::outConstant(U val, const uint8_t radix) {
+    _operands = outIntelConst(_operands, val, radix);
 }
 
 void DisI8080::outRegister(RegName regName) {
@@ -32,7 +17,7 @@ Error DisI8080::decodeImmediate8(
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
-    outOpr8Hex(val);
+    outConstant(val);
     return setError(OK);
 }
 
@@ -45,7 +30,7 @@ Error DisI8080::decodeImmediate16(
     if (label) {
         outText(label);
     } else {
-        outOpr16Hex(val);
+        outConstant(val);
     }
     return setError(OK);
 }
@@ -58,7 +43,7 @@ Error DisI8080::decodeDirect(
     if (label) {
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr);
     }
     return setError(OK);
 }
@@ -67,7 +52,7 @@ Error DisI8080::decodeIoaddr(
     DisMemory<target::uintptr_t> &memory, Insn& insn) {
     uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
-    outOpr8Hex(ioaddr);
+    outConstant(ioaddr);
     return setError(OK);
 }
 
@@ -107,7 +92,7 @@ Error DisI8080::decode(
         outRegister(RegI8080::decodeDataReg(insnCode & 7));
         break;
     case VECTOR_NO:
-        outOpr16Int((insnCode >> 3) & 7);
+        outConstant(uint8_t((insnCode >> 3) & 7), 10);
         break;
     default:
         break;

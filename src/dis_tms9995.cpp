@@ -3,32 +3,28 @@
 #include "dis_operand.h"
 #include "table_tms9995.h"
 
-void DisTms9995::outOpr8Hex(uint8_t val) {
-    *_operands++ = '>';
-    _operands = outHex8(_operands, val);
+template<typename T>
+void DisTms9995::outConstant(T val, const uint8_t radix) {
+    if (radix == 16 && val >= 10) *_operands++ = '>';
+    if (val < radix && val < 10) {
+        _operands = outputConst(_operands, val, 10);
+    } else {
+        _operands = reverseStr(_operands, outputConst(_operands, val, radix));
+    }
 }
 
-void DisTms9995::outOpr16Hex(uint16_t val) {
-    *_operands++ = '>';
-    _operands = outHex16(_operands, val);
-}
-
-void DisTms9995::outOpr16Int(uint16_t val) {
-    _operands = outInt16(_operands, val);
-}
-
-void DisTms9995::outOpr16Addr(target::uintptr_t addr) {
+void DisTms9995::outAddress(target::uintptr_t addr) {
     const char *label = lookup(addr);
     if (label) {
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr);
     }
 }
 
 void DisTms9995::outRegister(host::uint_t regno) {
     *_operands++ = 'R';
-    _operands = outUint16(_operands, regno & 0xf);
+    outConstant(uint8_t(regno & 0xf), 10);
 }
 
 Error DisTms9995::decodeOperand(
@@ -40,7 +36,7 @@ Error DisTms9995::decodeOperand(
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         *_operands++ = '@';
-        outOpr16Addr(val);
+        outAddress(val);
         if (regno) {
             *_operands++ = '(';
             outRegister(regno);
@@ -59,7 +55,7 @@ Error DisTms9995::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    outOpr16Addr(val);
+    outAddress(val);
     return setError(OK);
 }
 
@@ -67,7 +63,7 @@ Error DisTms9995::decodeRelative(Insn& insn) {
     int16_t delta = (int8_t)(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
-    outOpr16Addr(addr);
+    outAddress(addr);
     return setError(OK);
 }
 
@@ -101,7 +97,7 @@ Error DisTms9995::decode(
         *_operands++ = ',';
         const host::uint_t count = (insnCode >> 4) & 0x0f;
         if (count == 0) outRegister(0);
-        else outOpr16Int(count);
+        else outConstant(uint8_t(count), 10);
         return setError(OK);
     }
     case SRC:
@@ -124,7 +120,7 @@ Error DisTms9995::decode(
         if (label) {
             outText(label);
         } else {
-            outOpr16Int(count);
+            outConstant(uint8_t(count), 10);
         }
         return setError(OK);
     }
@@ -144,7 +140,7 @@ Error DisTms9995::decode(
         if (label) {
             outText(label);
         } else {
-            outOpr8Hex(offset);
+            outConstant(uint8_t(offset));
         }
         return setError(OK);
     }

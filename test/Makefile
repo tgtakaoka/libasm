@@ -46,7 +46,7 @@ TEST_OBJS= \
 	test_asm_z80.o     test_dis_z80.o
 TESTS=$(TEST_OBJS:.o=)
 
-OBJS_common = dis_operand.o test_asserter.o
+OBJS_common = test_asserter.o
 OBJS_mc6809 = table_mc6809.o  reg_hd6309.o
 OBJS_hd6309 = table_hd6309.o  $(OBJS_mc6809)
 OBJS_r6502  = table_r6502.o

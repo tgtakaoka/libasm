@@ -52,15 +52,15 @@ static void test_inherent() {
 }
 
 static void test_immediate() {
-    TEST(ORCC, "#$00", 0x1A, 0x00);
+    TEST(ORCC, "#1",   0x1A, 0x01);
     TEST(ORCC, "#$10", 0x1A, 0x10);
     TEST(ORCC, "#$FF", 0x1A, 0xFF);
     TEST(ANDCC,"#$FF", 0x1C, 0xFF);
     TEST(ANDCC,"#$EF", 0x1C, 0xEF);
-    TEST(ANDCC,"#$00", 0x1C, 0x00);
+    TEST(ANDCC,"#$0A", 0x1C, 0x0A);
     TEST(CWAI, "#$FF", 0x3C, 0xFF);
     TEST(CWAI, "#$EF", 0x3C, 0xEF);
-    TEST(CWAI, "#$00", 0x3C, 0x00);
+    TEST(CWAI, "#9",   0x3C, 0x09);
 
     TEST(SUBA, "#$90", 0x80, 0x90);
     TEST(CMPA, "#$90", 0x81, 0x90);
@@ -580,7 +580,7 @@ static void test_stack() {
     TEST(PULS, "CC,A,B,DP,X,Y,U,PC", 0x35, 0xFF);
     TEST(PSHU, "PC,S,Y,X,DP,B,A,CC", 0x36, 0xFF);
 
-    TEST(PSHS, "#$00", 0x34, 0x00);
+    TEST(PSHS, "#0", 0x34, 0x00);
 }
 
 static void test_register() {

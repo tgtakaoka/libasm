@@ -3,6 +3,7 @@
 #define __ASM_OPERAND_H__
 
 #include <ctype.h>
+#include <string.h>
 
 static bool isValidDigit(const char c, const uint8_t radix) {
     if (radix == 16) return isxdigit(c);

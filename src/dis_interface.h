@@ -42,7 +42,10 @@ protected:
         return _symtab ? _symtab->lookup(addr) : nullptr;
     }
     void outText(const char *text) {
-        _operands = outStr(_operands, text);
+        char *p = _operands;
+        while ((*p = *text++) != 0)
+            p++;
+        _operands = p;
     }
 };
 

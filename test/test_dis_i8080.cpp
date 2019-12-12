@@ -294,16 +294,16 @@ static void test_alu_register() {
 }
 
 static void test_alu_immediate() {
-    TEST(ADI, "02H",  0xC6, 0x02);
+    TEST(ADI, "1",    0xC6, 0x01);
     TEST(ACI, "0FFH", 0xCE, 0xFF);
 
-    TEST(SUI, "02H",  0xD6, 0x02);
+    TEST(SUI, "2",    0xD6, 0x02);
     TEST(SBI, "0FFH", 0xDE, 0xFF);
 
-    TEST(ANI, "02H",  0xE6, 0x02);
+    TEST(ANI, "9",    0xE6, 0x09);
     TEST(XRI, "0FFH", 0xEE, 0xFF);
-    TEST(ORI, "02H",  0xF6, 0x02);
-    TEST(CPI, "0FFH", 0xFE, 0xFF);
+    TEST(ORI, "0AH",  0xF6, 0x0A);
+    TEST(CPI, "0",    0xFE, 0x00);
 }
 
 static void test_io() {

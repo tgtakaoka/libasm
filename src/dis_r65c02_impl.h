@@ -6,15 +6,9 @@
 #include "table_r65c02.h"
 
 template<McuType mcuType>
-void Dis6502<mcuType>::outOpr8Hex(uint8_t val) {
-    *_operands++ = '$';
-    _operands = outHex8(_operands, val);
-}
-
-template<McuType mcuType>
-void Dis6502<mcuType>::outOpr16Hex(uint16_t val) {
-    *_operands++ = '$';
-    _operands = outHex16(_operands, val);
+template<typename T>
+void Dis6502<mcuType>::outConstant(T val, const uint8_t radix) {
+    _operands = outMotoConst(_operands, val, radix);
 }
 
 template<McuType mcuType>
@@ -27,7 +21,7 @@ Error Dis6502<mcuType>::decodeImmediate(
     if (label) {
         outText(label);
     } else {
-        outOpr8Hex(val);
+        outConstant(val);
     }
     return setError(OK);
 }
@@ -58,7 +52,7 @@ Error Dis6502<mcuType>::decodeAbsolute(
         if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr);
     }
     if (index) {
         *_operands++ = ',';
@@ -96,7 +90,7 @@ Error Dis6502<mcuType>::decodeZeroPage(
     if (label) {
         outText(label);
     } else {
-        outOpr8Hex(zp);
+        outConstant(zp);
     }
     if (indirect && index == 'Y') *_operands++ = ')';
     if (index) {
@@ -131,7 +125,7 @@ Error Dis6502<mcuType>::decodeRelative(
     if (label) {
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr);
     }
     return setError(OK);
 }

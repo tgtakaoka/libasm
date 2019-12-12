@@ -19,8 +19,8 @@ public:
         SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
-    void outOpr8Hex(uint8_t val);
-    void outOpr16Hex(uint16_t val);
+    template<typename T>
+    void outConstant(T val,const uint8_t radix = 16);
 
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);

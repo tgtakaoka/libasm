@@ -319,14 +319,14 @@ static void test_alu_register() {
 }
 
 static void test_alu_immediate() {
-    TEST(ADD, "A,02H",  0xC6, 0x02);
+    TEST(ADD, "A,1",    0xC6, 0x01);
     TEST(ADC, "A,0FFH", 0xCE, 0xFF);
-    TEST(SUB, "A,02H",  0xD6, 0x02);
+    TEST(SUB, "A,2",    0xD6, 0x02);
     TEST(SBC, "A,0FFH", 0xDE, 0xFF);
-    TEST(AND, "A,02H",  0xE6, 0x02);
+    TEST(AND, "A,9",    0xE6, 0x09);
     TEST(XOR, "A,0FFH", 0xEE, 0xFF);
-    TEST(OR,  "A,02H",  0xF6, 0x02);
-    TEST(CP,  "A,0FFH", 0xFE, 0xFF);
+    TEST(OR,  "A,0AH",  0xF6, 0x0A);
+    TEST(CP,  "A,0",    0xFE, 0x00);
 }
 
 static void test_io() {
@@ -370,8 +370,8 @@ static void test_inherent() {
 }
 
 static void test_restart() {
-    TEST(RST, "00H", 0xC7);
-    TEST(RST, "08H", 0xCF);
+    TEST(RST, "0",   0xC7);
+    TEST(RST, "8",   0xCF);
     TEST(RST, "10H", 0xD7);
     TEST(RST, "18H", 0xDF);
     TEST(RST, "20H", 0xE7);

@@ -19,11 +19,10 @@ public:
         SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
-    void outOpr8Hex(uint8_t val);
-    void outOpr16Hex(uint16_t val);
-    void outOpr16Int(int16_t val);
-    void outOpr8Addr(uint8_t addr);
-    void outOpr16Addr(target::uintptr_t addr, bool indir = true);
+    template<typename U>
+    void outConstant(U val, const uint8_t radix = 16);
+    template<typename U>
+    void outAddress(U addr, bool indir = true);
     void outIndexOffset(target::insn_t insnCode, int8_t offset);
     void outRegister(RegName regName);
     void outPointer(RegName regName);

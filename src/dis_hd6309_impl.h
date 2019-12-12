@@ -6,26 +6,9 @@
 #include "table_hd6309.h"
 
 template<McuType mcuType>
-void  Dis09<mcuType>::outOpr8Hex(uint8_t val) {
-    *_operands++ = '$';
-    _operands = outHex8(_operands, val);
-}
-
-template<McuType mcuType>
-void Dis09<mcuType>::outOpr16Hex(uint16_t val) {
-    *_operands++ = '$';
-    _operands = outHex16(_operands, val);
-}
-
-template<McuType mcuType>
-void Dis09<mcuType>::outOpr32Hex(uint32_t val) {
-    *_operands++ = '$';
-    _operands = outHex32(_operands, val);
-}
-
-template<McuType mcuType>
-void Dis09<mcuType>::outOpr16Int(int16_t val) {
-    _operands = outInt16(_operands, val);
+template<typename T>
+void Dis09<mcuType>::outConstant(T val, const uint8_t radix) {
+    _operands = outMotoConst(_operands, val, radix);
 }
 
 template<McuType mcuType>
@@ -43,7 +26,7 @@ Error Dis09<mcuType>::decodeDirectPage(
         *_operands ++ = '<';
         outText(label);
     } else {
-        outOpr8Hex(dir);
+        outConstant(dir);
     }
     return setError(OK);
 }
@@ -58,7 +41,7 @@ Error Dis09<mcuType>::decodeExtended(
         if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr);
     }
     return setError(OK);
 }
@@ -162,12 +145,17 @@ Error Dis09<mcuType>::decodeIndexed(
             if (index) {
                 outRegister(index);
             } else if (offSize < 0) {
-                outOpr16Hex(addr);
+                outConstant(addr);
             } else {
-                if (offSize != 0) outOpr16Int(offset);
+                if (offSize != 0) {
+                    const uint16_t o = (offset < 0) ? -offset : offset;
+                    if (offset < 0)
+                        *_operands++ = '-';
+                    outConstant(o, 10);
+                }
             }
         } else {
-            outOpr16Hex(addr);
+            outConstant(addr);
         }
     }
     if (base) {
@@ -199,7 +187,7 @@ Error Dis09<mcuType>::decodeRelative(
     if (label) {
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr);
     }
     return setError(OK);
 }
@@ -211,7 +199,7 @@ Error Dis09<mcuType>::decodeImmediate(
     if (insn.addrMode() == IMM8) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        outOpr8Hex(val);
+        outConstant(val);
     } else if (insn.addrMode() == IMM16) {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
@@ -219,12 +207,12 @@ Error Dis09<mcuType>::decodeImmediate(
         if (label) {
             outText(label);
         } else {
-            outOpr16Hex(val);
+            outConstant(val);
         }
     } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
-        outOpr32Hex(val);
+        outConstant(val);
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
@@ -238,7 +226,7 @@ Error Dis09<mcuType>::decodeStackOp(
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     if (post == 0) {
         *_operands++ = '#';
-        outOpr8Hex(post);
+        outConstant(post);
         return setError(OK);
     }
     const bool push = (insn.insnCode() & 1) == 0;
@@ -273,7 +261,7 @@ Error Dis09<mcuType>::decodeImmediatePlus(
     *_operands++ = '#';
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outOpr8Hex(val);
+    outConstant(val);
     *_operands++ = ',';
     switch (insn.addrMode()) {
     case IMMDIR: return decodeDirectPage(memory, insn);
@@ -292,9 +280,9 @@ Error Dis09<mcuType>::decodeBitOperation(
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
     *_operands++ = ',';
-    outOpr16Int((post >> 3) & 7);
+    outConstant(uint8_t((post >> 3) & 7), 10);
     *_operands++ = ',';
-    outOpr16Int(post & 0x7);
+    outConstant(uint8_t(post & 7), 10);
     *_operands++ = ',';
     return decodeDirectPage(memory, insn);
 }

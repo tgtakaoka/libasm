@@ -18,10 +18,9 @@ public:
         SymbolTable<target::uintptr_t> *symtab) override;
 
 private:
-    void outOpr8Hex(uint8_t val);
-    void outOpr16Hex(uint16_t val);
-    void outOpr16Int(uint16_t val);
-    void outOpr16Addr(target::uintptr_t addr);
+    template<typename T>
+    void outConstant(T val, const uint8_t radix = 16);
+    void outAddress(target::uintptr_t addr);
     void outRegister(host::uint_t regno);
 
     Error decodeOperand(

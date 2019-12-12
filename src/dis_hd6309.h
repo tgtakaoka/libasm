@@ -22,10 +22,8 @@ public:
 private:
     RegHd6309<mcuType> _regs;
 
-    void outOpr8Hex(uint8_t val);
-    void outOpr16Hex(uint16_t val);
-    void outOpr32Hex(uint32_t val);
-    void outOpr16Int(int16_t val);
+    template<typename T>
+    void outConstant(T val, const uint8_t radix = 16);
     void outRegister(RegName regName);
 
     // MC6809

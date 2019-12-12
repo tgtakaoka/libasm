@@ -3,47 +3,21 @@
 #include "dis_operand.h"
 #include "table_z80.h"
 
-void DisZ80::outOpr8Hex(uint8_t val) {
-    char *out = _operands;
-    if (val >= 0xA0) *out++ = '0';
-    out = outHex8(out, val);
-    *out++ = 'H';
-    *(_operands = out) = 0;
+template<typename U>
+void DisZ80::outConstant(U val, const uint8_t radix) {
+    _operands = outIntelConst(_operands, val, radix);
 }
 
-void DisZ80::outOpr16Hex(uint16_t val) {
-    char *out = _operands;
-    if (val >= 0xA000) *out++ = '0';
-    out = outHex16(out, val);
-    *out++ = 'H';
-    *(_operands = out) = 0;
-}
-
-void DisZ80::outOpr16Int(int16_t val) {
-    _operands = outInt16(_operands, val);
-}
-
-void DisZ80::outOpr16Addr(target::uintptr_t addr, bool indir) {
+template<typename U>
+void DisZ80::outAddress(U addr, bool indir) {
     if (indir) *_operands++ = '(';
     const char *label = lookup(addr);
     if (label) {
         outText(label);
     } else {
-        outOpr16Hex(addr);
+        outConstant(addr, 16);
     }
     if (indir) *_operands++ = ')';
-    *_operands = 0;
-}
-
-void DisZ80::outOpr8Addr(uint8_t addr) {
-    *_operands++ = '(';
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outOpr8Hex(addr);
-    }
-    *_operands++ = ')';
     *_operands = 0;
 }
 
@@ -51,8 +25,10 @@ void DisZ80::outIndexOffset(
     target::insn_t insnCode, int8_t offset) {
     *_operands++ = '(';
     outRegister(TableZ80::decodeIndexReg(insnCode));
-    if (offset >= 0) *_operands++ = '+';
-    outOpr16Int(offset);
+    *_operands++ = (offset < 0) ? '-' : '+';
+    int16_t o = offset;
+    if (o < 0) o = -o;
+    outConstant(o, 10);
     *_operands++ = ')';
     *_operands = 0;
 }
@@ -145,10 +121,10 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outPointer(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     case VEC_NO:
-        outOpr8Hex(opc & 0x38);
+        outConstant(uint8_t(opc & 0x38));
         break;
     case BIT_NO:
-        outOpr16Int((opc >> 3) & 7);
+        outConstant(uint8_t((opc >> 3) & 7), 10);
         break;
     case IMM_NO:
         if ((opc & ~0x20) == 0x46) *_operands++ = '0';
@@ -222,7 +198,7 @@ Error DisZ80::decodeImmediate8(Insn &insn, uint8_t val) {
         break;
     }
     *_operands++ = ',';
-    outOpr8Hex(val);
+    outConstant(val);
     return setError(OK);
 }
 
@@ -239,7 +215,7 @@ Error DisZ80::decodeImmediate16(Insn &insn, uint16_t val) {
         break;
     }
     *_operands++ = ',';
-    outOpr16Hex(val);
+    outConstant(val);
     return setError(OK);
 }
 
@@ -247,7 +223,7 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
     const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     switch (insn.leftFormat()) {
     case ADDR_16:
-        outOpr16Addr(addr);
+        outAddress(addr);
         break;
     case HL_REG:
         outRegister(REG_HL);
@@ -259,7 +235,7 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outConditionName((opc >> 3) & 7);
         break;
     case IMM_16:
-        outOpr16Addr(addr, false);
+        outAddress(addr, false);
         break;
     case REG_16:
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
@@ -276,13 +252,13 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outRegister(REG_HL);
         break;
     case ADDR_16:
-        outOpr16Addr(addr);
+        outAddress(addr);
         break;
     case A_REG:
         outRegister(REG_A);
         break;
     case IMM_16:
-        outOpr16Addr(addr, false);
+        outAddress(addr, false);
         break;
     case REG_16:
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
@@ -299,7 +275,7 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
 Error DisZ80::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
     switch (insn.leftFormat()) {
     case ADDR_8:
-        outOpr8Addr(ioaddr);
+        outAddress(ioaddr);
         break;
     case A_REG:
         outRegister(REG_A);
@@ -310,7 +286,7 @@ Error DisZ80::decodeIoaddr(Insn &insn, uint8_t ioaddr) {
     *_operands++ = ',';
     switch (insn.rightFormat()) {
     case ADDR_8:
-        outOpr8Addr(ioaddr);
+        outAddress(ioaddr);
         break;
     case A_REG:
         outRegister(REG_A);
@@ -328,7 +304,7 @@ Error DisZ80::decodeRelative(Insn &insn, int8_t delta) {
         *_operands++ = ',';
     }
     const target::uintptr_t addr = insn.address() + 2 + delta;
-    outOpr16Addr(addr, false);
+    outAddress(addr, false);
     return setError(OK);
 }
 
@@ -365,7 +341,7 @@ Error DisZ80::decodeIndexedImmediate8(
     Insn &insn, int8_t offset, uint8_t val) {
     outIndexOffset(insn.insnCode(), offset);
     *_operands++ = ',';
-    outOpr8Hex(val);
+    outConstant(val);
     return setError(OK);
 }
 
@@ -392,7 +368,7 @@ Error DisZ80::decodeIndexedBitOp(
         }
         break;
     case BIT_NO:
-        outOpr16Int((opCode >> 3) & 7);
+        outConstant(uint8_t((opCode >> 3) & 7), 10);
         break;
     default:
         break;
