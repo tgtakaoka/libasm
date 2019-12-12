@@ -2,6 +2,8 @@
 #ifndef __ASM_R65C02_IMPL_H__
 #define __ASM_R65C02_IMPL_H__
 
+#include "asm_operand.h"
+
 #include <ctype.h>
 
 static bool isidchar(const char c) {
@@ -20,41 +22,12 @@ Error Asm6502<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::getHex16(uint16_t &val, const char *p) {
-    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
-    uint16_t v = 0;
-    while (isxdigit(*p)) {
-        v <<= 4;
-        v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
-        p++;
-    }
-    val = v;
-    _scan = p;
-    return OK;
-}
-
-template<McuType mcuType>
-Error Asm6502<mcuType>::getInt16(uint16_t &val) {
-    const char *p = _scan;
-    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
-    if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    uint16_t v = 0;
-    while (isdigit(*p)) {
-        v *= 10;
-        v += *p - '0';
-        p++;
-    }
-    if (sign == '-') v = -(int16_t)v;
-    val = v;
-    _scan = p;
-    return OK;
-}
-
-template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand16(uint16_t &val) {
-    if (*_scan == '$')
-        return getHex16(val, _scan + 1);
-    if (getInt16(val) == OK) return OK;
+    const char *p = parseMotoConst<uint16_t, int16_t>(_scan, val);
+    if (p) {
+        _scan = p;
+        return OK;
+    }
     char symbol_buffer[20];
     host::uint_t idx;
     for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {

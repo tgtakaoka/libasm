@@ -32,10 +32,6 @@ private:
     }
 
     Error checkLineEnd();
-    Error getHex16(uint16_t &val, const char *p);
-    Error getHex32(uint32_t &val, const char *p);
-    Error getInt16(uint16_t &val);
-    Error getInt32(uint32_t &val);
     Error getOperand16(uint16_t &val);
     Error getOperand32(uint32_t &val);
     Error determineAddrMode(const char *line, Insn &insn);

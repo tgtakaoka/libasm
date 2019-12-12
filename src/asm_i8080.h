@@ -21,7 +21,6 @@ public:
 
 protected:
     Error checkLineEnd();
-    Error getInt16(uint16_t &val);
     Error getOperand16(uint16_t &val);
     Error encodePointerReg(Insn &insn);
     Error encodeStackReg(Insn &insn);

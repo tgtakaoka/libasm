@@ -29,7 +29,6 @@ private:
 
     Error parseOperand(
         OprFormat &oprFormat, RegName &regName, uint16_t &operand);
-    Error getInt16(uint16_t &val);
     Error getOperand16(uint16_t &val);
 
     Error encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOpr);

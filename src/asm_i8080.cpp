@@ -1,66 +1,18 @@
 #include <ctype.h>
 
 #include "asm_i8080.h"
+#include "asm_operand.h"
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmI8080::getInt16(uint16_t &val) {
-    uint16_t v = 0;
-    const char *p;
-
-    for (p = _scan; isxdigit(*p); p++)
-        ;
-    if (p > _scan && toupper(*p) == 'H') {
-        for (p = _scan; isxdigit(*p); p++) {
-            v <<= 4;
-            v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
-        }
-        val = v;
-        _scan = ++p;
-        return OK;
-    }
-
-    for (p = _scan; *p >= '0' && *p < '8'; p++)
-        ;
-    if (p > _scan && toupper(*p) == 'O') {
-        for (p = _scan; *p >= '0' && *p < '8'; p++) {
-            v <<= 3;
-            v += *p - '0';
-        }
-        val = v;
-        _scan = ++p;
-        return OK;
-    }
-
-    for (p = _scan; *p == '0' || *p == '1'; p++)
-        ;
-    if (p > _scan && toupper(*p) == 'B') {
-        for (p = _scan; *p == '0' || *p == '1'; p++) {
-            v <<= 1;
-            v += *p - '0';
-        }
-        val = v;
-        _scan = ++p;
-        return OK;
-    }
-
-    p = _scan;
-    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
-    if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    while (isdigit(*p)) {
-        v *= 10;
-        v += *p++ - '0';
-    }
-    if (sign == '-') v = -(int16_t)v;
-    val = v;
-    _scan = p;
-    return OK;
-}
-
 Error AsmI8080::getOperand16(uint16_t &val) {
-    if (getInt16(val) == OK) return setError(OK);
+    const char *p = parseIntelConst<uint16_t, int16_t>(_scan, val);
+    if (p) {
+        _scan = p;
+        return OK;
+    }
     char symbol_buffer[20];
     host::uint_t idx;
     for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {

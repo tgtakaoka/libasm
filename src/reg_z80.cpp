@@ -2,6 +2,11 @@
 
 #include "config_z80.h"
 
+static constexpr RegName ALL_REGS[] PROGMEM = {
+    REG_AFP, REG_AF, REG_HL, REG_BC, REG_DE, REG_SP, REG_IX, REG_IY,
+    REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_I, REG_R,
+};
+
 static constexpr RegName POINTER_REGS[] PROGMEM = {
     REG_BC, REG_DE, REG_HL, REG_SP
 };
@@ -206,12 +211,7 @@ static RegName decodeRegNumber(
 }
 
 RegName RegZ80::parseRegister(const char *line) {
-    RegName regName;
-    if ((regName = parseRegName(line, ARRAY_RANGE(DATA_REGS))) != REG_UNDEF)
-        return regName;
-    if ((regName = parseRegName(line, ARRAY_RANGE(STACK_REGS))) != REG_UNDEF)
-        return regName;
-    return parseRegName(line, ARRAY_RANGE(NON_DATA_REGS));
+    return parseRegName(line, ARRAY_RANGE(ALL_REGS));
 }
 
 host::int_t RegZ80::encodePointerReg(RegName regName) {

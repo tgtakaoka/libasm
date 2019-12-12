@@ -22,8 +22,6 @@ private:
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 
     Error checkLineEnd();
-    Error getHex16(uint16_t &val, const char *p);
-    Error getInt16(uint16_t &val);
     Error getOperand16(uint16_t &val);
     Error parseOperand(Insn &insn, uint16_t &val);
 
