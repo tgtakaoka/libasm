@@ -15,6 +15,9 @@ public:
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable<target::uintptr_t> *symtab) override;
+    bool isRegister(const char *text) const override {
+        return RegZ80::parseRegister(text) != REG_UNDEF;
+    }
 
 private:
     void emitInsnCode(Insn &insn) const {

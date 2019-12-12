@@ -67,21 +67,27 @@ Error AsmTms9995::getOperand16(uint16_t &val) {
     return setError(UNKNOWN_OPERAND);
 }
 
+#include <stdio.h>
+
+bool AsmTms9995::isRegister(const char *text) const {
+    if (toupper(*text++) != 'R' || !isdigit(*text))
+        return false;
+    if (!isIdChar(text[1]))
+        return true;
+    if (*text++ != '1' || isIdChar(text[1]))
+        return false;
+    return *text >= '0' && *text < '6';
+}
+
 Error AsmTms9995::parseRegName(uint8_t &regno) {
-    const char *line = _scan;
-    if (toupper(*line) == 'R' && isdigit(*++line)) {
-        if (!isIdChar(line[1])) {
-            regno = *line - '0';
-            _scan = skipSpace(line + 1);
-            return OK;
-        } else if (*line == '1' && isdigit(line[1]) && !isIdChar(line[2])) {
-            if (line[1] >= '6') return UNKNOWN_OPERAND;
-            regno = 10 + line[1] - '0';
-            _scan = skipSpace(line + 2);
-            return OK;
-        }
+    if (!isRegister(_scan)) return UNKNOWN_OPERAND;
+    uint8_t v = *++_scan - '0';
+    if (isdigit(*++_scan)) {
+        v *= 10;
+        v += *_scan++ - '0';
     }
-    return UNKNOWN_OPERAND;
+    regno = v;
+    return OK;
 }
 
 Error AsmTms9995::encodeImm(Insn &insn, bool emitInsn) {

@@ -74,6 +74,8 @@ class RegHd6309 : public RegHd6309Utils {
 public:
     RegHd6309() : _indexRegHd6309(), _baseRegHd6309(), _dataRegHd6309() {}
 
+    static bool isRegister(const char *text);
+
     RegName parseIndexReg(const char *line) const {
         return parseRegName(line, _indexRegHd6309.begin(), _indexRegHd6309.end());
     }

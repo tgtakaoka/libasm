@@ -207,11 +207,11 @@ static RegName decodeRegNumber(
 
 RegName RegZ80::parseRegister(const char *line) {
     RegName regName;
-    if ((regName = parseRegName(line, ARRAY_RANGE(NON_DATA_REGS))) != REG_UNDEF)
-        return regName;
     if ((regName = parseRegName(line, ARRAY_RANGE(DATA_REGS))) != REG_UNDEF)
         return regName;
-    return parseRegName(line, ARRAY_RANGE(STACK_REGS));
+    if ((regName = parseRegName(line, ARRAY_RANGE(STACK_REGS))) != REG_UNDEF)
+        return regName;
+    return parseRegName(line, ARRAY_RANGE(NON_DATA_REGS));
 }
 
 host::int_t RegZ80::encodePointerReg(RegName regName) {

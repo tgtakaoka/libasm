@@ -16,6 +16,7 @@ public:
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable<target::uintptr_t> *symtab) override;
+    bool isRegister(const char *text) const override;
 
 private:
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }

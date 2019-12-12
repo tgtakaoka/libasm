@@ -18,6 +18,7 @@ enum RegName : char {
 
 class RegI8080 {
 public:
+    static RegName parseRegister(const char *line);
     static RegName parsePointerReg(const char *line);
     static RegName parseStackReg(const char *line);
     static RegName parseIndexReg(const char *line);

@@ -2,6 +2,10 @@
 
 #include "config_i8080.h"
 
+static constexpr RegName ALL_REGS[] PROGMEM = {
+    REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_SP, REG_PSW
+};
+
 static constexpr RegName POINTER_REGS[] PROGMEM = {
     REG_B, REG_D, REG_H, REG_SP
 };
@@ -85,6 +89,10 @@ static RegName decodeRegNumber(
     const host::uint_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
+}
+
+RegName RegI8080::parseRegister(const char *line) {
+    return parseRegName(line, ARRAY_RANGE(ALL_REGS));
 }
 
 RegName RegI8080::parsePointerReg(const char *line) {

@@ -17,6 +17,9 @@ public:
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable<target::uintptr_t> *symtab) override;
+    bool isRegister(const char *text) const override {
+        return RegHd6309<mcuType>::isRegister(text);
+    }
 
 private:
     RegHd6309<mcuType> _regs;
