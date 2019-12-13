@@ -23,8 +23,8 @@ static void test_inh() {
 }
 
 static void test_imm() {
-    WTEST(LWPI, ">1234", 0x02E0, 0x1234);
-    WTEST(LIMI, ">89AB", 0x0300, 0x89AB);
+    WTEST(LWPI, "1234H", 0x02E0, 0x1234);
+    WTEST(LIMI, "89ABH", 0x0300, 0x89AB);
 
     symtab.put(0x1234, "sym1234");
     symtab.put(0x89AB, "sym89AB");
@@ -42,10 +42,10 @@ static void test_reg() {
 
 static void test_reg_imm() {
     WTEST(LI,   "R0,0",      0x0200, 0x0000);
-    WTEST(AI,   "R1,>000A",  0x0221, 0x000A);
-    WTEST(ANDI, "R8,>00FF",  0x0248, 0x00FF);
-    WTEST(ORI,  "R14,>FF00", 0x026E, 0xFF00);
-    WTEST(CI,   "R15,>FFFF", 0x028F, 0xFFFF);
+    WTEST(AI,   "R1,000AH",  0x0221, 0x000A);
+    WTEST(ANDI, "R8,00FFH",  0x0248, 0x00FF);
+    WTEST(ORI,  "R14,0FF00H", 0x026E, 0xFF00);
+    WTEST(CI,   "R15,0FFFFH", 0x028F, 0xFFFF);
 
     symtab.put(0x1234, "sym1234");
 
@@ -62,22 +62,22 @@ static void test_cnt_reg() {
 static void test_src() {
     WTEST(DIVS, "R2",     0x0182);
     WTEST(DIVS, "*R3",    0x0193);
-    WTEST(DIVS, "@>1234", 0x01A0, 0x1234);
-    WTEST(DIVS, "@>1000(R4)", 0x01A4, 0x1000);
+    WTEST(DIVS, "@1234H", 0x01A0, 0x1234);
+    WTEST(DIVS, "@1000H(R4)", 0x01A4, 0x1000);
     WTEST(DIVS, "*R5+",   0x01B5);
     WTEST(MPYS, "R0",     0x01C0);
     WTEST(MPYS, "@2(R8)", 0x01E8, 0x0002);
     WTEST(MPYS, "*R15+",  0x01FF);
 
-    WTEST(BLWP, "@>9876", 0x0420, 0x9876);
+    WTEST(BLWP, "@9876H", 0x0420, 0x9876);
     WTEST(B,    "R13",    0x044D);
     WTEST(X,    "*R10",   0x049A);
     WTEST(CLR,  "*R12+",  0x04FC);
     WTEST(NEG,  "R0",     0x0500);
-    WTEST(INV,  "@>1234", 0x0560, 0x1234);
+    WTEST(INV,  "@1234H", 0x0560, 0x1234);
     WTEST(INC,  "@2(R7)", 0x05A7, 0x0002);
     WTEST(INCT, "R7",     0x05C7);
-    WTEST(DEC,  "@>FFFE(R7)",0x0627, 0xFFFE);
+    WTEST(DEC,  "@0FFFEH(R7)",0x0627, 0xFFFE);
     WTEST(DECT, "R7",     0x0647);
     WTEST(BL,   "R13",    0x068D);
     WTEST(SWPB, "*R1",    0x06D1);
@@ -97,7 +97,7 @@ static void test_src() {
 
 static void test_reg_src() {
     WTEST(COC, "R1,R2",         0x2081);
-    WTEST(CZC, "@>1234(R3),R7", 0x25E3, 0x1234);
+    WTEST(CZC, "@1234H(R3),R7", 0x25E3, 0x1234);
     WTEST(XOR, "@2(R5),R4", 0x2925, 0x0002);
     WTEST(MPY, "R4,R2",         0x3884);
     WTEST(DIV, "R14,R12",       0x3F0E);
@@ -118,34 +118,34 @@ static void test_cnt_src() {
 
     WTEST(STCR, "@offset2(R4),size7", 0x35E4, 0x0002);
     WTEST(STCR, "@offset2(R4),16",    0x3424, 0x0002);
-    WTEST(STCR, "@>1000(R4),size7",   0x35E4, 0x1000);
+    WTEST(STCR, "@1000H(R4),size7",   0x35E4, 0x1000);
 }
 
 static void test_xop_src() {
-    WTEST(XOP,  "@>9876,0",  0x2C20, 0x9876);
-    WTEST(XOP,  "@>9876,15", 0x2FE0, 0x9876);
+    WTEST(XOP,  "@9876H,0",  0x2C20, 0x9876);
+    WTEST(XOP,  "@9876H,15", 0x2FE0, 0x9876);
 
     symtab.put(10, "xop10");
     symtab.put(0x9876, "sym9876");
 
     WTEST(XOP,  "@sym9876,xop10",   0x2EA0, 0x9876);
     WTEST(XOP,  "@sym9876(R1),8",   0x2E21, 0x9876);
-    WTEST(XOP,  "@>1234(R1),xop10", 0x2EA1, 0x1234);
+    WTEST(XOP,  "@1234H(R1),xop10", 0x2EA1, 0x1234);
 }
 
 static void test_dst_src() {
-    WTEST(SZC,  "@>1234(R10),@>5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    WTEST(SZCB, "@>1234,@>5678",           0x5820, 0x1234, 0x5678);
+    WTEST(SZC,  "@1234H(R10),@5678H(R11)", 0x4AEA, 0x1234, 0x5678);
+    WTEST(SZCB, "@1234H,@5678H",           0x5820, 0x1234, 0x5678);
     WTEST(S,    "*R10,*R11",               0x66DA);
     WTEST(SB,   "*R10+,*R11+",             0x7EFA);
     WTEST(C,    "*R10+,*R10+",             0x8EBA);
     WTEST(CB,   "*R10+,*R11+",             0x9EFA);
-    WTEST(A,    "@>2000,R11",              0xA2E0, 0x2000);
-    WTEST(AB,   "R10,@>4000(R11)",         0xBACA, 0x4000);
+    WTEST(A,    "@2000H,R11",              0xA2E0, 0x2000);
+    WTEST(AB,   "R10,@4000H(R11)",         0xBACA, 0x4000);
     WTEST(MOV,  "@0(R10),@1(R11)",         0xCAEA, 0x0000, 0x0001);
     WTEST(MOVB, "R10,R11",                 0xD2CA);
-    WTEST(SOC,  "@>1234,@>5678(R11)",      0xEAE0, 0x1234, 0x5678);
-    WTEST(SOCB, "@>1234(R10),@>5678",      0xF82A, 0x1234, 0x5678);
+    WTEST(SOC,  "@1234H,@5678H(R11)",      0xEAE0, 0x1234, 0x5678);
+    WTEST(SOCB, "@1234H(R10),@5678H",      0xF82A, 0x1234, 0x5678);
 
     symtab.put(0x0000, "zero");
     symtab.put(0x1234, "sym1234");
@@ -161,19 +161,19 @@ static void test_dst_src() {
 }
 
 static void test_rel() {
-    AWTEST(0x1000, JMP, ">1002", 0x1000);
-    AWTEST(0x1000, JLT, ">1000", 0x11FF);
-    AWTEST(0x1000, JLE, ">1100", 0x127F);
-    AWTEST(0x1000, JEQ, ">0F02", 0x1380);
-    AWTEST(0x1000, JHE, ">1004", 0x1401);
-    AWTEST(0x1000, JGT, ">1006", 0x1502);
-    AWTEST(0x1000, JNE, ">1008", 0x1603);
-    AWTEST(0x1000, JNC, ">100A", 0x1704);
-    AWTEST(0x1000, JOC, ">0FFE", 0x18FE);
-    AWTEST(0x1000, JNO, ">0FFC", 0x19FD);
-    AWTEST(0x1000, JL,  ">0FFA", 0x1AFC);
-    AWTEST(0x1000, JH,  ">0FF8", 0x1BFB);
-    AWTEST(0x1000, JOP, ">0FF6", 0x1CFA);
+    AWTEST(0x1000, JMP, "1002H", 0x1000);
+    AWTEST(0x1000, JLT, "1000H", 0x11FF);
+    AWTEST(0x1000, JLE, "1100H", 0x127F);
+    AWTEST(0x1000, JEQ, "0F02H", 0x1380);
+    AWTEST(0x1000, JHE, "1004H", 0x1401);
+    AWTEST(0x1000, JGT, "1006H", 0x1502);
+    AWTEST(0x1000, JNE, "1008H", 0x1603);
+    AWTEST(0x1000, JNC, "100AH", 0x1704);
+    AWTEST(0x1000, JOC, "0FFEH", 0x18FE);
+    AWTEST(0x1000, JNO, "0FFCH", 0x19FD);
+    AWTEST(0x1000, JL,  "0FFAH", 0x1AFC);
+    AWTEST(0x1000, JH,  "0FF8H", 0x1BFB);
+    AWTEST(0x1000, JOP, "0FF6H", 0x1CFA);
 
     symtab.put(0x0F02, "sym0F02");
     symtab.put(0x1000, "sym1000");
@@ -188,8 +188,8 @@ static void test_rel() {
 
 static void test_cru_off() {
     WTEST(SBO, "0",   0x1D00);
-    WTEST(SBZ, ">7F", 0x1E7F);
-    WTEST(TB,  ">80", 0x1F80);
+    WTEST(SBZ, "7FH", 0x1E7F);
+    WTEST(TB,  "80H", 0x1F80);
 
     symtab.put(0x00, "zero");
     symtab.put(127, "off127");

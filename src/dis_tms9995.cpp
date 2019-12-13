@@ -5,12 +5,7 @@
 
 template<typename T>
 void DisTms9995::outConstant(T val, const uint8_t radix) {
-    if (radix == 16 && val >= 10) *_operands++ = '>';
-    if (val < radix && val < 10) {
-        _operands = outputConst(_operands, val, 10);
-    } else {
-        _operands = reverseStr(_operands, outputConst(_operands, val, radix));
-    }
+    _operands = outIntelConst(_operands, val, radix);
 }
 
 void DisTms9995::outAddress(target::uintptr_t addr) {

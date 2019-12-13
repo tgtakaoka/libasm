@@ -19,8 +19,6 @@ public:
 
 private:
     Error checkComma();
-    Error getHex16(uint16_t &val, const char *p);
-    Error getInt16(uint16_t &val);
     Error getOperand16(uint16_t &val);
     Error parseRegName(uint8_t &regno);
 

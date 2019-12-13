@@ -3,6 +3,7 @@
 #include <ctype.h>
 
 #include "asm_tms9995.h"
+#include "asm_operand.h"
 
 static bool isIdChar(const char c) {
     return isalnum(c) || c == '_';
@@ -20,39 +21,12 @@ Error AsmTms9995::checkComma() {
     return OK;
 }
 
-Error AsmTms9995::getHex16(uint16_t &val, const char *p) {
-    if (!isxdigit(*p)) return UNKNOWN_OPERAND;
-    uint16_t v = 0;
-    while (isxdigit(*p)) {
-        v <<= 4;
-        v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
-        p++;
-    }
-    val = v;
-    _scan = p;
-    return OK;
-}
-
-Error AsmTms9995::getInt16(uint16_t &val) {
-    const char *p = _scan;
-    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
-    if (!isdigit(*p)) return UNKNOWN_OPERAND;
-    int16_t v = 0;
-    while (isdigit(*p)) {
-        v *= 10;
-        v += *p - '0';
-        p++;
-    }
-    if (sign == '-') v = -v;
-    val = (uint16_t)v;
-    _scan = p;
-    return OK;
-}
-
 Error AsmTms9995::getOperand16(uint16_t &val) {
-    if (*_scan == '>')
-        return setError(getHex16(val, _scan + 1));
-    if (getInt16(val) == OK) return setError(OK);
+    const char *p = parseIntelConst<uint16_t, int16_t>(_scan, val);
+    if (p) {
+        _scan = p;
+        return OK;
+    }
     char symbol_buffer[20];
     host::uint_t idx;
     for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isIdChar(_scan[idx]); idx++) {
