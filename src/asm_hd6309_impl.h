@@ -24,7 +24,7 @@ Error Asm09<mcuType>::checkLineEnd() {
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand16(uint16_t &val) {
     AsmMotoOperand<uint16_t> parser;
-    const char *p = parser.parseConstant(_scan, val);
+    const char *p = parser.eval(_scan, val);
     if (p) {
         _scan = p;
         return OK;
@@ -46,7 +46,7 @@ Error Asm09<mcuType>::getOperand16(uint16_t &val) {
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand32(uint32_t &val) {
     AsmMotoOperand<uint32_t> parser;
-    const char *p = parser.parseConstant(_scan, val);
+    const char *p = parser.eval(_scan, val);
     if (p) {
         _scan = p;
         return OK;
