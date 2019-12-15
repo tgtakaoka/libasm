@@ -4,6 +4,7 @@
 
 #include <ctype.h>
 #include <string.h>
+#include "make_signed.h"
 
 static bool isValidDigit(const char c, const uint8_t radix) {
     if (radix == 16) return isxdigit(c);
@@ -30,19 +31,19 @@ const char *parseConst(const char *p, U &val, const uint8_t radix) {
     return p;
 }
 
-template<typename U, typename S>
+template<typename U>
 const char *parseMotoConst(const char *p, U &val) {
     switch (*p) {
     case '~':
-        p = parseMotoConst<U,S>(p + 1, val);
+        p = parseMotoConst(p + 1, val);
         val = ~val;
         return p;
     case '+':
         p++;
         break;
     case '-':
-        p = parseMotoConst<U,S>(p + 1, val);
-        val = -static_cast<S>(val);
+        p = parseMotoConst(p + 1, val);
+        val = -static_cast<typename make_signed<U>::type>(val);
         return p;
     }
     if (isdigit(*p)) {
@@ -59,20 +60,20 @@ const char *parseMotoConst(const char *p, U &val) {
     return p;
 }
 
-template<typename U, typename S>
+template<typename U>
 const char *parseIntelConst(const char *scan, U &val) {
     const char *p;
     switch (*scan) {
     case '~':
-        p = parseIntelConst<U,S>(scan + 1, val);
+        p = parseIntelConst(scan + 1, val);
         val = ~val;
         return p;
     case '+':
         scan++;
         break;
     case '-':
-        p = parseIntelConst<U,S>(scan + 1, val);
-        val = -static_cast<S>(val);
+        p = parseIntelConst(scan + 1, val);
+        val = -static_cast<typename make_signed<U>::type>(val);
         return p;
     }
     if (!isdigit(*scan))

@@ -8,7 +8,7 @@ static bool isidchar(const char c) {
 }
 
 Error AsmI8080::getOperand16(uint16_t &val) {
-    const char *p = parseIntelConst<uint16_t, int16_t>(_scan, val);
+    const char *p = parseIntelConst<uint16_t>(_scan, val);
     if (p) {
         _scan = p;
         return OK;
