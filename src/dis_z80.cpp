@@ -3,13 +3,14 @@
 #include "dis_operand.h"
 #include "table_z80.h"
 
-template<typename U>
-void DisZ80::outConstant(U val, const uint8_t radix) {
-    _operands = outIntelConst(_operands, val, radix);
+template<typename T>
+void DisZ80::outConstant(T val, const uint8_t radix) {
+    DisIntelOperand<T> encoder;
+    _operands = encoder.outputConstant(_operands, val, radix);
 }
 
-template<typename U>
-void DisZ80::outAddress(U addr, bool indir) {
+template<typename T>
+void DisZ80::outAddress(T addr, bool indir) {
     if (indir) *_operands++ = '(';
     const char *label = lookup(addr);
     if (label) {

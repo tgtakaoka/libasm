@@ -8,7 +8,8 @@
 template<McuType mcuType>
 template<typename T>
 void Dis09<mcuType>::outConstant(T val, const uint8_t radix) {
-    _operands = outMotoConst(_operands, val, radix);
+    DisMotoOperand<T> encoder;
+    _operands = encoder.outputConstant(_operands, val, radix);
 }
 
 template<McuType mcuType>

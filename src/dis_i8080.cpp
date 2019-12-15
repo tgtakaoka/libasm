@@ -3,9 +3,10 @@
 #include "dis_operand.h"
 #include "table_i8080.h"
 
-template<typename U>
-void DisI8080::outConstant(U val, const uint8_t radix) {
-    _operands = outIntelConst(_operands, val, radix);
+template<typename T>
+void DisI8080::outConstant(T val, const uint8_t radix) {
+    DisIntelOperand<T> encoder;
+    _operands = encoder.outputConstant(_operands, val, radix);
 }
 
 void DisI8080::outRegister(RegName regName) {

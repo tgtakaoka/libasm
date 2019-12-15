@@ -5,7 +5,8 @@
 
 template<typename T>
 void DisTms9995::outConstant(T val, const uint8_t radix) {
-    _operands = outIntelConst(_operands, val, radix);
+    DisIntelOperand<T> decoder;
+    _operands = decoder.outputConstant(_operands, val, radix);
 }
 
 void DisTms9995::outAddress(target::uintptr_t addr) {
