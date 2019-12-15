@@ -136,7 +136,7 @@ Error DisTms9995::decode(
         if (label) {
             outText(label);
         } else {
-            outConstant(uint8_t(offset));
+            outConstant(offset);
         }
         return setError(OK);
     }

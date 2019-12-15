@@ -149,10 +149,7 @@ Error Dis09<mcuType>::decodeIndexed(
                 outConstant(addr);
             } else {
                 if (offSize != 0) {
-                    const uint16_t o = (offset < 0) ? -offset : offset;
-                    if (offset < 0)
-                        *_operands++ = '-';
-                    outConstant(o, 10);
+                    outConstant(offset, 10);
                 }
             }
         } else {
@@ -281,9 +278,9 @@ Error Dis09<mcuType>::decodeBitOperation(
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
     *_operands++ = ',';
-    outConstant(uint8_t((post >> 3) & 7), 10);
+    outConstant((post >> 3) & 7);
     *_operands++ = ',';
-    outConstant(uint8_t(post & 7), 10);
+    outConstant(post & 7);
     *_operands++ = ',';
     return decodeDirectPage(memory, insn);
 }

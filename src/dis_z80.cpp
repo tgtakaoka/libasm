@@ -16,7 +16,7 @@ void DisZ80::outAddress(T addr, bool indir) {
     if (label) {
         outText(label);
     } else {
-        outConstant(addr, 16);
+        outConstant(addr);
     }
     if (indir) *_operands++ = ')';
     *_operands = 0;
@@ -26,10 +26,8 @@ void DisZ80::outIndexOffset(
     target::insn_t insnCode, int8_t offset) {
     *_operands++ = '(';
     outRegister(TableZ80::decodeIndexReg(insnCode));
-    *_operands++ = (offset < 0) ? '-' : '+';
-    int16_t o = offset;
-    if (o < 0) o = -o;
-    outConstant(o, 10);
+    if (offset >= 0) *_operands++ = '+';
+    outConstant(offset, 10);
     *_operands++ = ')';
     *_operands = 0;
 }
@@ -125,7 +123,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outConstant(uint8_t(opc & 0x38));
         break;
     case BIT_NO:
-        outConstant(uint8_t((opc >> 3) & 7), 10);
+        outConstant((opc >> 3) & 7);
         break;
     case IMM_NO:
         if ((opc & ~0x20) == 0x46) *_operands++ = '0';
@@ -369,7 +367,7 @@ Error DisZ80::decodeIndexedBitOp(
         }
         break;
     case BIT_NO:
-        outConstant(uint8_t((opCode >> 3) & 7), 10);
+        outConstant((opCode >> 3) & 7);
         break;
     default:
         break;

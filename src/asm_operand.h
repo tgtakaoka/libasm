@@ -4,7 +4,7 @@
 
 #include <ctype.h>
 #include <string.h>
-#include "make_signed.h"
+#include "type_traits.h"
 
 template<typename U>
 class AsmOperand {
