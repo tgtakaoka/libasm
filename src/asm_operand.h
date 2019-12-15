@@ -32,7 +32,19 @@ const char *parseConst(const char *p, U &val, const uint8_t radix) {
 
 template<typename U, typename S>
 const char *parseMotoConst(const char *p, U &val) {
-    const char sign = (*p == '+' || *p == '-') ? *p++ : 0;
+    switch (*p) {
+    case '~':
+        p = parseMotoConst<U,S>(p + 1, val);
+        val = ~val;
+        return p;
+    case '+':
+        p++;
+        break;
+    case '-':
+        p = parseMotoConst<U,S>(p + 1, val);
+        val = -static_cast<S>(val);
+        return p;
+    }
     if (isdigit(*p)) {
         p = parseConst(p, val, 10);
     } else if (*p == '$') {
@@ -44,16 +56,27 @@ const char *parseMotoConst(const char *p, U &val) {
     } else {
         p = nullptr;
     }
-    if (sign == '-') val = -(S)val;
     return p;
 }
 
 template<typename U, typename S>
 const char *parseIntelConst(const char *scan, U &val) {
-    const char sign = (*scan == '+' || *scan == '-') ? *scan++ : 0;
+    const char *p;
+    switch (*scan) {
+    case '~':
+        p = parseIntelConst<U,S>(scan + 1, val);
+        val = ~val;
+        return p;
+    case '+':
+        scan++;
+        break;
+    case '-':
+        p = parseIntelConst<U,S>(scan + 1, val);
+        val = -static_cast<S>(val);
+        return p;
+    }
     if (!isdigit(*scan))
         return nullptr;
-    const char *p;
     if ((p = parseConst<U>(scan, val, 16)) && tolower(*p) == 'h') {
         p++;
     } else if ((p = parseConst<U>(scan, val, 10)) && !(*p && strchr("OoBb", *p))) {
@@ -65,7 +88,6 @@ const char *parseIntelConst(const char *scan, U &val) {
     } else {
         p = nullptr;
     }
-    if (sign == '-') val = -(S)val;
     return p;
 }
 

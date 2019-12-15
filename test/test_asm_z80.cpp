@@ -322,14 +322,14 @@ static void test_alu_register() {
 }
 
 static void test_alu_immediate() {
-    TEST("ADD A,02H",  0xC6, 0x02);
-    TEST("ADC A,0FFH", 0xCE, 0xFF);
-    TEST("SUB A,02H",  0xD6, 0x02);
-    TEST("SBC A,0FFH", 0xDE, 0xFF);
-    TEST("AND A,02H",  0xE6, 0x02);
-    TEST("XOR A,0FFH", 0xEE, 0xFF);
-    TEST("OR  A,02H",  0xF6, 0x02);
-    TEST("CP  A,0FFH", 0xFE, 0xFF);
+    TEST("ADD A,10B",  0xC6, 0x02);
+    TEST("ADC A,255",  0xCE, 0xFF);
+    TEST("SUB A,-2",   0xD6, 0xFE);
+    TEST("SBC A,177O", 0xDE, 0x7F);
+    TEST("AND A,~0FH", 0xE6, 0xF0);
+    TEST("XOR A,~001B",0xEE, 0xFE);
+    TEST("OR  A,+127", 0xF6, 0x7F);
+    TEST("CP  A,-128", 0xFE, 0x80);
 }
 
 static void test_io() {

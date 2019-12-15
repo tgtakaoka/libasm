@@ -322,11 +322,11 @@ static void test_alu_immediate() {
     TEST("ACI 255", 0xCE, 0xFF);
 
     TEST("SUI -2",  0xD6, 0xFE);
-    TEST("SBI 127", 0xDE, 0x7F);
+    TEST("SBI 177O", 0xDE, 0x7F);
 
-    TEST("ANI 377O", 0xE6, 0xFF);
-    TEST("XRI 0FFH", 0xEE, 0xFF);
-    TEST("ORI -1",   0xF6, 0xFF);
+    TEST("ANI ~0FH", 0xE6, 0xF0);
+    TEST("XRI ~001B",0xEE, 0xFE);
+    TEST("ORI +127", 0xF6, 0x7F);
     TEST("CPI -128", 0xFE, 0x80);
 }
 

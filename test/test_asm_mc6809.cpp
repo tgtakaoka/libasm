@@ -160,14 +160,14 @@ static void test_relative() {
 }
 
 static void test_immediate() {
-    TEST("ORCC  #$10", 0x1A, 0x10);
-    TEST("ANDCC #$FE", 0x1C, 0xFE);
+    TEST("ORCC  #%10", 0x1A, 0x02);
+    TEST("ANDCC #~1",  0x1C, 0xFE);
     TEST("CWAI  #$EF", 0x3C, 0xEF);
 
     TEST("SUBA #$90", 0x80, 0x90);
-    TEST("CMPA #$90", 0x81, 0x90);
-    TEST("SBCA #$90", 0x82, 0x90);
-    TEST("ANDA #$90", 0x84, 0x90);
+    TEST("CMPA #-1",  0x81, 0xFF);
+    TEST("SBCA #+$00", 0x82, 0x00);
+    TEST("ANDA #@177", 0x84, 0x7F);
     TEST("BITA #$90", 0x85, 0x90);
     TEST("LDA  #$90", 0x86, 0x90);
     TEST("EORA #$90", 0x88, 0x90);

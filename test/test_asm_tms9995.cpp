@@ -41,9 +41,9 @@ static void test_reg() {
 
 static void test_reg_imm() {
     WTEST("LI   R0,0000H",  0x0200, 0x0000);
-    WTEST("AI   R1,1",       0x0221, 0x0001);
-    WTEST("ANDI R8,00FFH",  0x0248, 0x00FF);
-    WTEST("ORI  R14,0FF00H", 0x026E, 0xFF00);
+    WTEST("AI   R1,+1",     0x0221, 0x0001);
+    WTEST("ANDI R8,377O",   0x0248, 0x00FF);
+    WTEST("ORI  R14,~11111111B", 0x026E, 0xFF00);
     WTEST("CI   R15,-1",   0x028F, 0xFFFF);
 
     symtab.put(0x1234, "sym1234");

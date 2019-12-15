@@ -336,8 +336,7 @@ Error AsmZ80::parseOperand(
         return setError(UNKNOWN_OPERAND);
     }
     if (getOperand16(operand) == OK) {
-        if (operand < 0x100) oprFormat = IMM_8;
-        else oprFormat = IMM_16;
+        oprFormat = IMM_8;
         return setError(OK);
     }
     return setError(UNKNOWN_OPERAND);

@@ -64,12 +64,12 @@ static void test_accumulator() {
 static void test_immediate() {
     TEST("LDY #0",   0xA0, 0x00);
     TEST("LDX #16",  0xA2, 0x10);
-    TEST("CPY #255", 0xC0, 0xFF);
-    TEST("CPX #$FF", 0xE0, 0xFF);
+    TEST("CPY #+255", 0xC0, 0xFF);
+    TEST("CPX #-1",  0xE0, 0xFF);
 
-    TEST("ORA #$90", 0x09, 0x90);
-    TEST("AND #$90", 0x29, 0x90);
-    TEST("EOR #$90", 0x49, 0x90);
+    TEST("ORA #%1001", 0x09, 0x09);
+    TEST("AND #~$0F", 0x29, 0xF0);
+    TEST("EOR #@177", 0x49, 0x7F);
     TEST("ADC #$90", 0x69, 0x90);
     TEST("LDA #$90", 0xA9, 0x90);
     TEST("CMP #$90", 0xC9, 0x90);
