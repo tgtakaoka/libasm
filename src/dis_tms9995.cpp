@@ -4,17 +4,17 @@
 #include "table_tms9995.h"
 
 template<typename T>
-void DisTms9995::outConstant(T val, const uint8_t radix) {
+void DisTms9995::outConstant(T val, uint8_t radix, bool relax) {
     DisIntelOperand<T> decoder;
-    _operands = decoder.outputConstant(_operands, val, radix);
+    _operands = decoder.outputConstant(_operands, val, radix, relax);
 }
 
-void DisTms9995::outAddress(target::uintptr_t addr) {
+void DisTms9995::outAddress(target::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);
     if (label) {
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, relax);
     }
 }
 
@@ -59,7 +59,7 @@ Error DisTms9995::decodeRelative(Insn& insn) {
     int16_t delta = (int8_t)(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
-    outAddress(addr);
+    outAddress(addr, false);
     return setError(OK);
 }
 
@@ -136,7 +136,7 @@ Error DisTms9995::decode(
         if (label) {
             outText(label);
         } else {
-            outConstant(offset);
+            outConstant(offset, 10);
         }
         return setError(OK);
     }

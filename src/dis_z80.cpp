@@ -4,9 +4,9 @@
 #include "table_z80.h"
 
 template<typename T>
-void DisZ80::outConstant(T val, const uint8_t radix) {
+void DisZ80::outConstant(T val, uint8_t radix, bool relax) {
     DisIntelOperand<T> encoder;
-    _operands = encoder.outputConstant(_operands, val, radix);
+    _operands = encoder.outputConstant(_operands, val, radix, relax);
 }
 
 template<typename T>
@@ -16,7 +16,7 @@ void DisZ80::outAddress(T addr, bool indir) {
     if (label) {
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, false);
     }
     if (indir) *_operands++ = ')';
     *_operands = 0;
@@ -120,10 +120,10 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outPointer(TableZ80::decodeIndexReg(insn.insnCode()));
         break;
     case VEC_NO:
-        outConstant(uint8_t(opc & 0x38));
+        outConstant(uint8_t(opc & 0x38), 16, false);
         break;
     case BIT_NO:
-        outConstant((opc >> 3) & 7);
+        outConstant(uint8_t((opc >> 3) & 7));
         break;
     case IMM_NO:
         if ((opc & ~0x20) == 0x46) *_operands++ = '0';
@@ -367,7 +367,7 @@ Error DisZ80::decodeIndexedBitOp(
         }
         break;
     case BIT_NO:
-        outConstant((opCode >> 3) & 7);
+        outConstant(uint8_t((opCode >> 3) & 7));
         break;
     default:
         break;

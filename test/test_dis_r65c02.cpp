@@ -135,8 +135,8 @@ static void test_zeropage() {
 }
 
 static void test_zeropage_indexed() {
-    TEST(ORA, "0,X",   0x15, 0x00);
-    TEST(AND, "9,X",   0x35, 0x09);
+    TEST(ORA, "$00,X", 0x15, 0x00);
+    TEST(AND, "$09,X", 0x35, 0x09);
     TEST(EOR, "$0A,X", 0x55, 0x0A);
     TEST(ADC, "$10,X", 0x75, 0x10);
     TEST(STA, "$10,X", 0x95, 0x10);
@@ -223,9 +223,9 @@ static void test_absolute() {
 }
 
 static void test_absolute_indexed() {
-    TEST(ORA, "$1234,X", 0x1D, 0x34, 0x12);
-    TEST(AND, "$1234,X", 0x3D, 0x34, 0x12);
-    TEST(EOR, "$1234,X", 0x5D, 0x34, 0x12);
+    TEST(ORA, "$0000,X", 0x1D, 0x00, 0x00);
+    TEST(AND, "$0009,X", 0x3D, 0x09, 0x00);
+    TEST(EOR, "$0034,X", 0x5D, 0x34, 0x00);
     TEST(ADC, "$1234,X", 0x7D, 0x34, 0x12);
     TEST(STA, "$1234,X", 0x9D, 0x34, 0x12);
     TEST(LDA, "$1234,X", 0xBD, 0x34, 0x12);
@@ -234,9 +234,9 @@ static void test_absolute_indexed() {
 
     TEST(ORA, "$1234,Y", 0x19, 0x34, 0x12);
     TEST(AND, "$1234,Y", 0x39, 0x34, 0x12);
-    TEST(EOR, "$1234,Y", 0x59, 0x34, 0x12);
-    TEST(ADC, "$1234,Y", 0x79, 0x34, 0x12);
-    TEST(STA, "$1234,Y", 0x99, 0x34, 0x12);
+    TEST(EOR, "$0000,Y", 0x59, 0x00, 0x00);
+    TEST(ADC, "$0009,Y", 0x79, 0x09, 0x00);
+    TEST(STA, "$0034,Y", 0x99, 0x34, 0x00);
     TEST(LDA, "$1234,Y", 0xB9, 0x34, 0x12);
     TEST(CMP, "$1234,Y", 0xD9, 0x34, 0x12);
     TEST(SBC, "$1234,Y", 0xF9, 0x34, 0x12);
@@ -271,6 +271,7 @@ static void test_absolute_indexed() {
 }
 
 static void test_absolute_indirect() {
+    TEST(JMP, "($0009)", 0x6C, 0x09, 0x00);
     TEST(JMP, "($1234)", 0x6C, 0x34, 0x12);
 
     symtab.put(0x0010, "abs0010");
@@ -282,6 +283,7 @@ static void test_absolute_indirect() {
 
 static void test_indexed_absolute_indirect() {
     // R65C02
+    TEST(JMP, "($0009,X)", 0x7C, 0x09, 0x00);
     TEST(JMP, "($1234,X)", 0x7C, 0x34, 0x12);
 
     symtab.put(0x0010, "abs0010");
@@ -294,8 +296,8 @@ static void test_indexed_absolute_indirect() {
 
 static void test_zeropage_indirect() {
     // R65C02
-    TEST(ORA, "($10)", 0x12, 0x10);
-    TEST(AND, "($10)", 0x32, 0x10);
+    TEST(ORA, "($00)", 0x12, 0x00);
+    TEST(AND, "($09)", 0x32, 0x09);
     TEST(EOR, "($10)", 0x52, 0x10);
     TEST(ADC, "($10)", 0x72, 0x10);
     TEST(STA, "($10)", 0x92, 0x10);
@@ -311,8 +313,8 @@ static void test_zeropage_indirect() {
 }
 
 static void test_indexed_indirect() {
-    TEST(ORA, "($10,X)", 0x01, 0x10);
-    TEST(AND, "($10,X)", 0x21, 0x10);
+    TEST(ORA, "($00,X)", 0x01, 0x00);
+    TEST(AND, "($09,X)", 0x21, 0x09);
     TEST(EOR, "($10,X)", 0x41, 0x10);
     TEST(ADC, "($10,X)", 0x61, 0x10);
     TEST(STA, "($10,X)", 0x81, 0x10);
@@ -326,8 +328,8 @@ static void test_indexed_indirect() {
 }
 
 static void test_indirect_indexed() {
-    TEST(ORA, "($10),Y", 0x11, 0x10);
-    TEST(AND, "($10),Y", 0x31, 0x10);
+    TEST(ORA, "($00),Y", 0x11, 0x00);
+    TEST(AND, "($09),Y", 0x31, 0x09);
     TEST(EOR, "($10),Y", 0x51, 0x10);
     TEST(ADC, "($10),Y", 0x71, 0x10);
     TEST(STA, "($10),Y", 0x91, 0x10);

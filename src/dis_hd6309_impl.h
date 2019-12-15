@@ -7,9 +7,9 @@
 
 template<McuType mcuType>
 template<typename T>
-void Dis09<mcuType>::outConstant(T val, const uint8_t radix) {
+void Dis09<mcuType>::outConstant(T val, uint8_t radix, bool relax) {
     DisMotoOperand<T> encoder;
-    _operands = encoder.outputConstant(_operands, val, radix);
+    _operands = encoder.outputConstant(_operands, val, radix, relax);
 }
 
 template<McuType mcuType>
@@ -27,7 +27,7 @@ Error Dis09<mcuType>::decodeDirectPage(
         *_operands ++ = '<';
         outText(label);
     } else {
-        outConstant(dir);
+        outConstant(dir, 16, false);
     }
     return setError(OK);
 }
@@ -42,7 +42,7 @@ Error Dis09<mcuType>::decodeExtended(
         if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, false);
     }
     return setError(OK);
 }
@@ -146,14 +146,14 @@ Error Dis09<mcuType>::decodeIndexed(
             if (index) {
                 outRegister(index);
             } else if (offSize < 0) {
-                outConstant(addr);
+                outConstant(addr, 16, false);
             } else {
                 if (offSize != 0) {
                     outConstant(offset, 10);
                 }
             }
         } else {
-            outConstant(addr);
+            outConstant(addr, 16, false);
         }
     }
     if (base) {
@@ -185,7 +185,7 @@ Error Dis09<mcuType>::decodeRelative(
     if (label) {
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, false);
     }
     return setError(OK);
 }
@@ -224,7 +224,7 @@ Error Dis09<mcuType>::decodeStackOp(
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     if (post == 0) {
         *_operands++ = '#';
-        outConstant(post);
+        outConstant(post, 16, false);
         return setError(OK);
     }
     const bool push = (insn.insnCode() & 1) == 0;
@@ -278,9 +278,9 @@ Error Dis09<mcuType>::decodeBitOperation(
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
     *_operands++ = ',';
-    outConstant((post >> 3) & 7);
+    outConstant(uint8_t((post >> 3) & 7));
     *_operands++ = ',';
-    outConstant(post & 7);
+    outConstant(uint8_t(post & 7));
     *_operands++ = ',';
     return decodeDirectPage(memory, insn);
 }

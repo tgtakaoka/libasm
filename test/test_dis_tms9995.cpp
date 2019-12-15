@@ -187,9 +187,9 @@ static void test_rel() {
 }
 
 static void test_cru_off() {
-    WTEST(SBO, "0",   0x1D00);
-    WTEST(SBZ, "7FH", 0x1E7F);
-    WTEST(TB,  "80H", 0x1F80);
+    WTEST(SBO, "0",    0x1D00);
+    WTEST(SBZ, "127",  0x1E7F);
+    WTEST(TB,  "-128", 0x1F80);
 
     symtab.put(0x00, "zero");
     symtab.put(127, "off127");

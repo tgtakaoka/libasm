@@ -10,7 +10,8 @@
 template<typename U>
 class DisOperand {
 public:
-    virtual char *outputConstant(char *p, U val, uint8_t radix) = 0;
+    virtual char *outputConstant(
+        char *p, U val, uint8_t radix, bool relax) = 0;
 
 protected:
     static char toDigitChar(uint8_t val, uint8_t radix) {
@@ -63,10 +64,10 @@ protected:
 template<typename U>
 class DisMotoOperand : public DisOperand<U> {
 public:
-    char *outputConstant(char *p, U val, uint8_t radix) override {
-        if (is_unsigned<U>::value && val < radix && val < 10)
+    char *outputConstant(char *p, U val, uint8_t radix, bool relax) override {
+        if (relax && is_unsigned<U>::value && val < radix && val < 10)
             return DisOperand<U>::outputNumber(p, val, 10);
-        if (is_signed<U>::value) {
+        if (relax && is_signed<U>::value) {
             auto v = static_cast<typename make_signed<U>::type>(val);
             if (v < radix && v < 10 && v > -(int8_t)radix && v > -10) {
                 return DisOperand<U>::reverseStr(
@@ -85,10 +86,10 @@ public:
 template<typename U>
 class DisIntelOperand : public DisOperand<U> {
 public:
-    char *outputConstant(char *p, U val, uint8_t radix) override {
-        if (is_unsigned<U>::value && val < radix && val < 10)
+    char *outputConstant(char *p, U val, uint8_t radix, bool relax) override {
+        if (relax && is_unsigned<U>::value && val < radix && val < 10)
             return DisOperand<U>::outputNumber(p, val, 10);
-        if (is_signed<U>::value) {
+        if (relax && is_signed<U>::value) {
             auto v = static_cast<typename make_signed<U>::type>(val);
             if (v < radix && v < 10 && v > -(int8_t)radix && v > -10)
                 return DisOperand<U>::reverseStr(

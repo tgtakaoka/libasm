@@ -4,9 +4,9 @@
 #include "table_i8080.h"
 
 template<typename T>
-void DisI8080::outConstant(T val, const uint8_t radix) {
+void DisI8080::outConstant(T val, uint8_t radix, bool relax) {
     DisIntelOperand<T> encoder;
-    _operands = encoder.outputConstant(_operands, val, radix);
+    _operands = encoder.outputConstant(_operands, val, radix, relax);
 }
 
 void DisI8080::outRegister(RegName regName) {
@@ -44,7 +44,7 @@ Error DisI8080::decodeDirect(
     if (label) {
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, false);
     }
     return setError(OK);
 }
@@ -53,7 +53,7 @@ Error DisI8080::decodeIoaddr(
     DisMemory<target::uintptr_t> &memory, Insn& insn) {
     uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
-    outConstant(ioaddr);
+    outConstant(ioaddr, 16, false);
     return setError(OK);
 }
 

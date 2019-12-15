@@ -7,9 +7,9 @@
 
 template<McuType mcuType>
 template<typename T>
-void Dis6502<mcuType>::outConstant(T val, const uint8_t radix) {
+void Dis6502<mcuType>::outConstant(T val, uint8_t radix, bool relax) {
     DisMotoOperand<T> encoder;
-    _operands = encoder.outputConstant(_operands, val, radix);
+    _operands = encoder.outputConstant(_operands, val, radix, relax);
 }
 
 template<McuType mcuType>
@@ -53,7 +53,7 @@ Error Dis6502<mcuType>::decodeAbsolute(
         if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, false);
     }
     if (index) {
         *_operands++ = ',';
@@ -91,7 +91,7 @@ Error Dis6502<mcuType>::decodeZeroPage(
     if (label) {
         outText(label);
     } else {
-        outConstant(zp);
+        outConstant(zp, 16, false);
     }
     if (indirect && index == 'Y') *_operands++ = ')';
     if (index) {
@@ -126,7 +126,7 @@ Error Dis6502<mcuType>::decodeRelative(
     if (label) {
         outText(label);
     } else {
-        outConstant(addr);
+        outConstant(addr, 16, false);
     }
     return setError(OK);
 }

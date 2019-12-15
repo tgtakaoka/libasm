@@ -370,8 +370,8 @@ static void test_inherent() {
 }
 
 static void test_restart() {
-    TEST(RST, "0",   0xC7);
-    TEST(RST, "8",   0xCF);
+    TEST(RST, "00H", 0xC7);
+    TEST(RST, "08H", 0xCF);
     TEST(RST, "10H", 0xD7);
     TEST(RST, "18H", 0xDF);
     TEST(RST, "20H", 0xE7);

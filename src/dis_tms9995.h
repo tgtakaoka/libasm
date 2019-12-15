@@ -19,8 +19,8 @@ public:
 
 private:
     template<typename T>
-    void outConstant(T val, const uint8_t radix = 16);
-    void outAddress(target::uintptr_t addr);
+    void outConstant(T val, uint8_t radix = 16, bool relax = true);
+    void outAddress(target::uintptr_t addr, bool relax = true);
     void outRegister(host::uint_t regno);
 
     Error decodeOperand(
