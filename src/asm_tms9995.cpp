@@ -22,7 +22,8 @@ Error AsmTms9995::checkComma() {
 }
 
 Error AsmTms9995::getOperand16(uint16_t &val) {
-    const char *p = parseIntelConst<uint16_t>(_scan, val);
+    AsmIntelOperand<uint16_t> parser;
+    const char *p = parser.parseConstant(_scan, val);
     if (p) {
         _scan = p;
         return OK;
