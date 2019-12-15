@@ -9,7 +9,7 @@ static bool isidchar(const char c) {
 
 Error AsmI8080::getOperand16(uint16_t &val) {
     AsmIntelOperand<uint16_t> parser;
-    const char *p = parser.parseConstant(_scan, val);
+    const char *p = parser.eval(_scan, val);
     if (p) {
         _scan = p;
         return OK;

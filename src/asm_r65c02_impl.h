@@ -24,7 +24,7 @@ Error Asm6502<mcuType>::checkLineEnd() {
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand16(uint16_t &val) {
     AsmMotoOperand<uint16_t> parser;
-    const char *p = parser.parseConstant(_scan, val);
+    const char *p = parser.eval(_scan, val);
     if (p) {
         _scan = p;
         return OK;
