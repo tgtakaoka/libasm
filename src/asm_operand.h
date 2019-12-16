@@ -12,6 +12,7 @@ public:
     const char *eval(const char *expr, U &val) {
         _next = expr;
         _error = false;
+        _stack.clear();
         val = parseExpr();
         return _error ? nullptr : _next;
     }
@@ -106,7 +107,6 @@ private:
     }
 
     U parseExpr() {
-        _stack.clear();
         _stack.push(OprAndLval(Operator(OP_NONE, 0), 0));
         U value = readAtom();
         while (!_stack.empty()) {
