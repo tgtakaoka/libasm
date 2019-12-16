@@ -4,9 +4,10 @@
 
 #include <ctype.h>
 #include <string.h>
+#include "symbol_table.h"
 #include "type_traits.h"
 
-template<typename U>
+template<typename U, typename Addr>
 class AsmOperand {
 public:
     const char *eval(const char *expr, U &val) {
@@ -20,7 +21,11 @@ public:
     }
 
 protected:
-    virtual const char *parseConstant(const char *p, U &val) = 0;
+    AsmOperand(SymbolTable<Addr> *symtab)
+        : _symtab(symtab) {}
+
+    virtual const char *parseConstant(const char *p, U &val) const = 0;
+    virtual bool isSymbolLetter(char c, bool head = false) const = 0;
 
     static bool isValidDigit(const char c, const uint8_t radix) {
         if (radix == 16) return isxdigit(c);
@@ -29,7 +34,7 @@ protected:
 
     static uint8_t toNumber(const char c, const uint8_t radix) {
         if (radix == 16 && !isdigit(c))
-            return tolower(c) - 'a' + 10;
+            return toupper(c) - 'A' + 10;
         return c - '0';
     }
 
@@ -104,6 +109,7 @@ private:
         E _values[4];           // TODO: check stack overflow
     };
 
+    const SymbolTable<Addr> *_symtab;
     const char *_next;
     bool _error;
     Stack<OprAndLval<U>> _stack;
@@ -147,6 +153,13 @@ private:
             _next++;
             return value;
         }
+        if (isSymbolLetter(*_next, true)) {
+            char symbol[20];
+            readSymbol(symbol, symbol + sizeof(symbol) - 1);
+            if (_symtab && _symtab->hasSymbol(symbol))
+                return Value<U>(_symtab->lookup(symbol));
+            return Value<U>();
+        }
         U val;
         const char *p = parseConstant(_next, val);
         if (p == nullptr) {
@@ -182,6 +195,15 @@ private:
         return Operator(OP_NONE, 0);
     }
 
+    void readSymbol(char *buffer, char *end) {
+        while (isSymbolLetter(*_next)) {
+            if (buffer < end)
+                *buffer++ = *_next;
+            _next++;
+        }
+        *buffer = 0;
+    }
+
     Value<U> evalExpr(Op op, Value<U> lhs, Value<U> rhs) {
         if (!lhs._valid || !rhs._valid)
             return Value<U>();
@@ -205,10 +227,19 @@ private:
     }
 };
 
-template<typename U>
-class AsmMotoOperand : public AsmOperand<U> {
+template<typename U, typename Addr>
+class AsmMotoOperand : public AsmOperand<U, Addr> {
+public:
+    AsmMotoOperand(SymbolTable<Addr> *symtab)
+        : AsmOperand<U,Addr>(symtab) {}
+
 protected:
-    const char *parseConstant(const char *p, U &val) override {
+    bool isSymbolLetter(char c, bool head) const override {
+        if (isalpha(c) || c == '_' || c == '.') return true;
+        return !head && isdigit(c);
+    }
+
+    const char *parseConstant(const char *p, U &val) const override {
         switch (*p) {
         case '~':
             p = parseConstant(p + 1, val);
@@ -223,13 +254,13 @@ protected:
             return p;
         }
         if (isdigit(*p)) {
-            p = AsmOperand<U>::parseNumber(p, val, 10);
+            p = AsmOperand<U,Addr>::parseNumber(p, val, 10);
         } else if (*p == '$') {
-            p = AsmOperand<U>::parseNumber(p + 1, val, 16);
+            p = AsmOperand<U,Addr>::parseNumber(p + 1, val, 16);
         } else if (*p == '@') {
-            p = AsmOperand<U>::parseNumber(p + 1, val, 8);
+            p = AsmOperand<U,Addr>::parseNumber(p + 1, val, 8);
         } else if (*p == '%') {
-            p = AsmOperand<U>::parseNumber(p + 1, val, 2);
+            p = AsmOperand<U,Addr>::parseNumber(p + 1, val, 2);
         } else {
             p = nullptr;
         }
@@ -237,10 +268,19 @@ protected:
     }
 };
 
-template<typename U>
-class AsmIntelOperand : public AsmOperand<U> {
+template<typename U, typename Addr>
+class AsmIntelOperand : public AsmOperand<U, Addr> {
+public:
+    AsmIntelOperand(SymbolTable<Addr> *symtab)
+        : AsmOperand<U,Addr>(symtab) {}
+
 protected:
-    const char *parseConstant(const char *scan, U &val) override {
+    bool isSymbolLetter(char c, bool head) const override {
+        if (isalpha(c) || c == '_' || c == '.') return true;
+        return !head && isdigit(c);
+    }
+
+    const char *parseConstant(const char *scan, U &val) const override {
         const char *p;
         switch (*scan) {
         case '~':
@@ -257,17 +297,17 @@ protected:
         }
         if (!isdigit(*scan))
             return nullptr;
-        if ((p = AsmOperand<U>::parseNumber(scan, val, 16))
-            && tolower(*p) == 'h') {
+        if ((p = AsmOperand<U,Addr>::parseNumber(scan, val, 16))
+            && toupper(*p) == 'H') {
             p++;
-        } else if ((p = AsmOperand<U>::parseNumber(scan, val, 10))
+        } else if ((p = AsmOperand<U,Addr>::parseNumber(scan, val, 10))
                    && !(*p && strchr("OoBb", *p))) {
             ;
-        } else if ((p = AsmOperand<U>::parseNumber(scan, val, 8))
-                   && tolower(*p) == 'o') {
+        } else if ((p = AsmOperand<U,Addr>::parseNumber(scan, val, 8))
+                   && toupper(*p) == 'O') {
             p++;
-        } else if ((p = AsmOperand<U>::parseNumber(scan, val, 2))
-                   && tolower(*p) == 'b') {
+        } else if ((p = AsmOperand<U,Addr>::parseNumber(scan, val, 2))
+                   && toupper(*p) == 'B') {
             p++;
         } else {
             p = nullptr;

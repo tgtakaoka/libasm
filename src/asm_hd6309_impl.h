@@ -22,47 +22,20 @@ Error Asm09<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getOperand16(uint16_t &val) {
-    AsmMotoOperand<uint16_t> parser;
+Error Asm09<mcuType>::getOperand(uint32_t &val) {
+    AsmMotoOperand<uint32_t, target::uintptr_t> parser(_symtab);
     const char *p = parser.eval(_scan, val);
-    if (p) {
-        _scan = p;
-        return OK;
-    }
-    char symbol_buffer[20];
-    host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {
-        symbol_buffer[idx] = _scan[idx];
-    }
-    symbol_buffer[idx] = 0;
-    if (hasSymbol(symbol_buffer)) {
-        val = lookup(symbol_buffer);
-        _scan += idx;
-        return OK;
-    }
-    return UNKNOWN_OPERAND;
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
+    return OK;
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getOperand32(uint32_t &val) {
-    AsmMotoOperand<uint32_t> parser;
-    const char *p = parser.eval(_scan, val);
-    if (p) {
-        _scan = p;
-        return OK;
-    }
-    char symbol_buffer[20];
-    host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {
-        symbol_buffer[idx] = _scan[idx];
-    }
-    symbol_buffer[idx] = 0;
-    if (hasSymbol(symbol_buffer)) {
-        val = lookup(symbol_buffer);
-        _scan += idx;
-        return OK;
-    }
-    return UNKNOWN_OPERAND;
+Error Asm09<mcuType>::getOperand16(uint16_t &val) {
+    uint32_t val32;
+    if (getOperand(val32)) return getError();
+    val = val32;
+    return OK;
 }
 
 template<McuType mcuType>
@@ -145,7 +118,7 @@ Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
         else insn.emitUint16(val);
     } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
         uint32_t val;
-        if (getOperand32(val)) return setError(UNKNOWN_OPERAND);
+        if (getOperand(val)) return setError(UNKNOWN_OPERAND);
         insn.emitUint32(val);
     } else {
         return setError(UNKNOWN_OPERAND);
