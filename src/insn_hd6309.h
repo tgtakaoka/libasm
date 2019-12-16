@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "entry_hd6309.h"
+#include "error_reporter.h"
 #include "dis_memory.h"
 
 class Insn {

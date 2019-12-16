@@ -3,7 +3,6 @@
 #define __CONFIG_Z80_H__
 
 #include "config_host.h"
-#include "error_z80.h"
 
 namespace target
 {

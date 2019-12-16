@@ -4,8 +4,8 @@
 
 #include "config_hd6309.h"
 
+#include "insn_hd6309.h"
 #include "reg_hd6309.h"
-#include "symbol_table.h"
 #include "table_hd6309.h"
 #include "asm_interface.h"
 

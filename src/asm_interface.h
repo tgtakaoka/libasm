@@ -2,10 +2,13 @@
 #ifndef __ASM_INTERFACE_H__
 #define __ASM_INTERFACE_H__
 
+#include "error_reporter.h"
+#include "symbol_table.h"
+
 #include <string.h>
 
 template<typename Addr>
-class Assembler {
+class Assembler : public ErrorReporter {
 public:
     typedef Addr addr_t;
 
@@ -14,7 +17,6 @@ public:
         Insn &insn,
         Addr addr,
         SymbolTable<Addr> *symtab) = 0;
-    virtual Error getError() const = 0;
     virtual const char *errorAt() const = 0;
     virtual bool isRegister(const char *text) const = 0;
 };
@@ -22,26 +24,16 @@ public:
 template<typename Addr>
 class AsmCommon : public Assembler<Addr> {
 public:
-    Error getError() const override { return _error; }
     const char *errorAt() const override { return _scan; }
 
 protected:
     const char *_scan;
-    Error _error;
     SymbolTable<Addr>  *_symtab;
-
-    Error setError(Error error) {
-        _error = error;
-        return error;
-    }
-    void resetError() {
-        _error = INVALID_STATE;
-    }
 
     void reset(const char *line, SymbolTable<Addr> *symtab) {
         _scan = line;
         _symtab = symtab;
-        resetError();
+        ErrorReporter::resetError();
     }
     bool hasSymbol(const char *symbol) const {
         return _symtab && _symtab->hasSymbol(symbol);

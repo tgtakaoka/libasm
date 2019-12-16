@@ -3,7 +3,6 @@
 #define __CONFIG_I8080_H__
 
 #include "config_host.h"
-#include "error_i8080.h"
 
 namespace target
 {

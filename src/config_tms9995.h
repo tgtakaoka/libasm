@@ -3,7 +3,6 @@
 #define __CONFIG_TMS9995_H__
 
 #include "config_host.h"
-#include "error_tms9995.h"
 
 namespace target
 {

@@ -3,7 +3,6 @@
 #define __CONFIG_HD6309_H__
 
 #include "config_host.h"
-#include "error_hd6309.h"
 
 namespace target
 {

@@ -3,7 +3,6 @@
 #define __CONFIG_R65C02_H__
 
 #include "config_host.h"
-#include "error_r65c02.h"
 
 // Not all 65C02 variants implemet bit manipulation operation
 #undef R65C02_ENABLE_BITOPS
