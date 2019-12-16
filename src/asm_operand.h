@@ -13,7 +13,9 @@ public:
         _next = expr;
         _error = false;
         _stack.clear();
-        val = parseExpr();
+        Value<U> v = parseExpr();
+        // TODO: Check validity.
+        val = v._value;
         return _error ? nullptr : _next;
     }
 
@@ -69,19 +71,24 @@ private:
         uint8_t _precedence;
     };
 
+    template<typename T>
+    struct Value {
+        Value() : _value(0), _valid(false) {}
+        Value(T value) : _value(value), _valid(true) {}
+        Value(const Value<T> &o) : _value(o._value), _valid(o._valid) {}
+        T _value;
+        bool _valid;
+    };
+
+    template<typename T>
     struct OprAndLval {
-        OprAndLval()
-            : _opr(Operator(OP_NONE, 0)),
-              _value(0)
-        {}
-        OprAndLval(const Operator &opr, U value)
-            : _opr(opr),
-              _value(value)
-        {}
-        bool isEmpty() const { return _opr._op == OP_NONE; }
+        OprAndLval() : _opr(Operator(OP_NONE, 0)), _value() {}
+        OprAndLval(const Operator &opr, Value<T> value) : _opr(opr), _value(value) {}
+        OprAndLval(const OprAndLval<T> &o) : _opr(o._opr), _value(o._value) {}
+        bool isEnd() const { return _opr._op == OP_NONE; }
         int precedence() const { return _opr._precedence; }
         Operator _opr;
-        U _value;
+        Value<T> _value;
     };
 
     template<typename E>
@@ -90,7 +97,7 @@ private:
         void clear() { _top = 0; }
         bool empty() const { return _top <= 0; }
         const E &top() const { return _values[_top - 1]; }
-        void push(E v) { _values[_top++] = v; }
+        void push(const E v) { _values[_top++] = v; }
         void pop() { _top--; }
     private:
         int _top;
@@ -99,20 +106,20 @@ private:
 
     const char *_next;
     bool _error;
-    Stack<OprAndLval> _stack;
+    Stack<OprAndLval<U>> _stack;
 
     void skipSpaces() {
         while (isspace(*_next))
             _next++;
     }
 
-    U parseExpr() {
-        _stack.push(OprAndLval(Operator(OP_NONE, 0), 0));
-        U value = readAtom();
+    Value<U> parseExpr() {
+        _stack.push(OprAndLval<U>());
+        Value<U> value = readAtom();
         while (!_stack.empty()) {
             Operator opr(readOperator());
             while (opr._precedence <= _stack.top().precedence()) {
-                if (_stack.top().isEmpty()) {
+                if (_stack.top().isEnd()) {
                     _stack.pop();
                     return value;
                 }
@@ -120,35 +127,35 @@ private:
                     _stack.top()._opr._op, _stack.top()._value, value);
                 _stack.pop();
             }
-            _stack.push(OprAndLval(opr, value));
+            _stack.push(OprAndLval<U>(opr, value));
             value = readAtom();
         }
-        return 0;
+        return Value<U>();
     }
 
-    U readAtom() {
-        U value = 0;
+    Value<U> readAtom() {
         skipSpaces();
         if (*_next == '(') {
             _next++;
-            value = parseExpr();
+            Value<U> value(parseExpr());
             skipSpaces();
             if (*_next != ')') {
                 // Missing closing ')'.
                 _error = true;
-                return 0;
+                return Value<U>();
             }
             _next++;
             return value;
         }
-        const char *p = parseConstant(_next, value);
+        U val;
+        const char *p = parseConstant(_next, val);
         if (p == nullptr) {
             // Unknown constant.
             _error = true;
             return 0;
         }
         _next = p;
-        return value;
+        return Value<U>(val);
     }
 
     Operator readOperator() {
@@ -175,18 +182,24 @@ private:
         return Operator(OP_NONE, 0);
     }
 
-    U evalExpr(Op op, U lhs, U rhs) {
+    Value<U> evalExpr(Op op, Value<U> lhs, Value<U> rhs) {
+        if (!lhs._valid || !rhs._valid)
+            return Value<U>();
         switch (op) {
-        case OP_ADD: return lhs + rhs;
-        case OP_SUB: return lhs - rhs;
-        case OP_MUL: return lhs * rhs;
-        case OP_DIV: return lhs / rhs; // TODO: check zero divide
-        case OP_MOD: return lhs % rhs; // TODO: check zero divide
-        case OP_BIT_AND: return lhs & rhs;
-        case OP_BIT_XOR: return lhs ^ rhs;
-        case OP_BIT_OR:  return lhs | rhs;
-        case OP_BIT_SHL: return lhs << rhs;
-        case OP_BIT_SHR: return lhs >> rhs;
+        case OP_ADD: return lhs._value + rhs._value;
+        case OP_SUB: return lhs._value - rhs._value;
+        case OP_MUL: return lhs._value * rhs._value;
+        case OP_DIV:
+            if (rhs._value == 0) return Value<U>();
+            return lhs._value / rhs._value;
+        case OP_MOD:
+            if (rhs._value == 0) return Value<U>();
+            return lhs._value % rhs._value;
+        case OP_BIT_AND: return lhs._value & rhs._value;
+        case OP_BIT_XOR: return lhs._value ^ rhs._value;
+        case OP_BIT_OR:  return lhs._value | rhs._value;
+        case OP_BIT_SHL: return lhs._value << rhs._value;
+        case OP_BIT_SHR: return lhs._value >> rhs._value;
         default: return 0;
         }
     }
