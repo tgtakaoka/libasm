@@ -22,31 +22,18 @@ Error Asm6502<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::getOperand16(uint16_t &val) {
-    AsmMotoOperand<uint16_t> parser;
+Error Asm6502<mcuType>::getOperand(uint16_t &val) {
+    AsmMotoOperand<uint16_t, target::uintptr_t> parser(_symtab);
     const char *p = parser.eval(_scan, val);
-    if (p) {
-        _scan = p;
-        return OK;
-    }
-    char symbol_buffer[20];
-    host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {
-        symbol_buffer[idx] = _scan[idx];
-    }
-    symbol_buffer[idx] = 0;
-    if (hasSymbol(symbol_buffer)) {
-        val = lookup(symbol_buffer);
-        _scan += idx;
-        return OK;
-    }
-    return UNKNOWN_OPERAND;
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
+    return OK;
 }
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
-    if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
+    if (getOperand(addr)) return setError(UNKNOWN_OPERAND);
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
     const target::ptrdiff_t delta = addr - base;
     if (emitInsn) emitInsnCode(insn);
@@ -60,7 +47,7 @@ template<McuType mcuType>
 Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
     uint16_t zp;
-    if (getOperand16(zp) || *_scan != ',') return setError(UNKNOWN_OPERAND);
+    if (getOperand(zp) || *_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     emitInsnCode(insn);
     insn.emitByte(zp);
@@ -73,7 +60,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     char c = toupper(*_scan);
     if (c == '#') {
         _scan++;
-        if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
+        if (getOperand(val)) return setError(UNKNOWN_OPERAND);
         if (checkLineEnd()) return setError(GARBAGE_AT_END);
         insn.setAddrMode(IMMEDIATE);
         return OK;
@@ -86,7 +73,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     if (indirect) _scan++;
     const char mode = *_scan;
     if (mode == '<' || mode == '>') _scan++;
-    if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
+    if (getOperand(val)) return setError(UNKNOWN_OPERAND);
     if (!indirect && *skipSpace(_scan) == 0) {
         if (mode == '>' || val >= 0x0100) {
             insn.setAddrMode(ABSOLUTE);

@@ -36,7 +36,7 @@ private:
 
     static int toNumber(char c, int radix) {
         if (radix == 16 && !isdigit(c))
-            return tolower(c) - 'a' + 10;
+            return toupper(c) - 'A' + 10;
         return c - '0';
     }
 
@@ -54,7 +54,7 @@ private:
             v += toNumber(*p++, radix);
         }
         if (suffix) {
-            if (tolower(*p) == suffix && isspace(p[1])) {
+            if (toupper(*p) == suffix && isspace(p[1])) {
                 p++;
             } else {
                 p = nullptr;
@@ -81,19 +81,19 @@ private:
         if (!isdigit(*p))
             return nullptr;     // error
         if (*p == '0') {
-            const char t = tolower(p[1]);
-            if (t == 'x' && (n = readNum(p + 2, 16, v)))     // 0x<hex>
+            const char t = toupper(p[1]);
+            if (t == 'X' && (n = readNum(p + 2, 16, v)))     // 0x<hex>
                 return n;
-            if (t == 'b' && (n = readNum(p + 2, 2, v)))      // 0b<bin>
+            if (t == 'B' && (n = readNum(p + 2, 2, v)))      // 0b<bin>
                 return n;
             if (isValid(t, 8) && (n = readNum(p + 1, 8, v))) // 0<oct>
                 return n;
         }
-        if ((n = readNum(p, 16, v, 'h')))                    // <hex>h
+        if ((n = readNum(p, 16, v, 'H')))                    // <hex>h
             return n;
-        if ((n = readNum(p, 2, v, 'b')))                     // <bin>b
+        if ((n = readNum(p, 2, v, 'B')))                     // <bin>b
             return n;
-        if ((n = readNum(p, 8, v, 'o')))                     // <oct>o
+        if ((n = readNum(p, 8, v, 'O')))                     // <oct>o
             return n;
         if ((n = readNum(p, 10, v)))                         // <dec>
             return n;

@@ -7,25 +7,12 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmZ80::getOperand16(uint16_t &val) {
-    AsmIntelOperand<uint16_t> parser;
+Error AsmZ80::getOperand(uint16_t &val) {
+    AsmIntelOperand<uint16_t, target::uintptr_t> parser(_symtab);
     const char *p = parser.eval(_scan, val);
-    if (p) {
-        _scan = p;
-        return OK;
-    }
-    char symbol_buffer[20];
-    host::uint_t idx;
-    for (idx = 0; idx < sizeof(symbol_buffer) - 1 && isidchar(_scan[idx]); idx++) {
-        symbol_buffer[idx] = _scan[idx];
-    }
-    symbol_buffer[idx] = 0;
-    if (hasSymbol(symbol_buffer)) {
-        val = lookup(symbol_buffer);
-        _scan += idx;
-        return OK;
-    }
-    return setError(UNKNOWN_OPERAND);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
+    return OK;
 }
 
 static const char *skipSpace(const char *line) {
@@ -302,7 +289,7 @@ Error AsmZ80::parseOperand(
     if (*_scan == '(') {
         regName = RegZ80::parseRegister(++_scan);
         if (regName == REG_UNDEF) {
-            if (getOperand16(operand) || *_scan != ')')
+            if (getOperand(operand) || *_scan != ')')
                 return setError(UNKNOWN_OPERAND);
             _scan++;
             oprFormat = (operand < 0x100) ? ADDR_8 : ADDR_16;
@@ -325,7 +312,7 @@ Error AsmZ80::parseOperand(
         }
         if (*_scan == '+' || *_scan == '-') {
             if ((regName == REG_IX || regName == REG_IY)
-                && getOperand16(operand) == OK && *_scan == ')') {
+                && getOperand(operand) == OK && *_scan == ')') {
                 _scan++;
                 const int16_t offset = int16_t(operand);
                 if (offset >= -128 && offset < 128) {
@@ -336,7 +323,7 @@ Error AsmZ80::parseOperand(
         }
         return setError(UNKNOWN_OPERAND);
     }
-    if (getOperand16(operand) == OK) {
+    if (getOperand(operand) == OK) {
         oprFormat = IMM_8;
         return setError(OK);
     }

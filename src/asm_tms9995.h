@@ -19,7 +19,7 @@ public:
 
 private:
     Error checkComma();
-    Error getOperand16(uint16_t &val);
+    Error getOperand(uint16_t &val);
     Error parseRegName(uint8_t &regno);
 
     Error encodeImm(Insn &insn, bool emitInsn);
