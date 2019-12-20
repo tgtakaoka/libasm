@@ -23,10 +23,12 @@ Error Asm6502<mcuType>::checkLineEnd() {
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand(uint16_t &val) {
-    AsmMotoOperand<uint16_t, target::uintptr_t> parser(_symtab);
-    const char *p = parser.eval(_scan, val);
+    uint32_t val32;
+    AsmMotoOperand<target::uintptr_t> parser(_symtab);
+    const char *p = parser.eval(_scan, val32);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
+    val = val32;
     return OK;
 }
 

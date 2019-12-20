@@ -22,10 +22,12 @@ Error AsmTms9995::checkComma() {
 }
 
 Error AsmTms9995::getOperand(uint16_t &val) {
-    AsmIntelOperand<uint16_t, target::uintptr_t> parser(_symtab);
-    const char *p = parser.eval(_scan, val);
+    uint32_t val32;
+    AsmIntelOperand<target::uintptr_t> parser(_symtab);
+    const char *p = parser.eval(_scan, val32);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
+    val = val32;
     return OK;
 }
 

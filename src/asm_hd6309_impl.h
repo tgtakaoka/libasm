@@ -23,7 +23,7 @@ Error Asm09<mcuType>::checkLineEnd() {
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand(uint32_t &val) {
-    AsmMotoOperand<uint32_t, target::uintptr_t> parser(_symtab);
+    AsmMotoOperand<target::uintptr_t> parser(_symtab);
     const char *p = parser.eval(_scan, val);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
