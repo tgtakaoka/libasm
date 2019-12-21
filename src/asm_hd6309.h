@@ -32,8 +32,9 @@ private:
     }
 
     Error checkLineEnd();
-    Error getOperand(uint32_t &val);
-    Error getOperand16(uint16_t &val);
+    Error getOperand32(uint32_t &val32);
+    Error getOperand16(uint16_t &val16);
+    Error getOperand8(uint8_t &val8);
     Error determineAddrMode(const char *line, Insn &insn);
 
     // MC6809

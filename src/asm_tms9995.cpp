@@ -21,13 +21,19 @@ Error AsmTms9995::checkComma() {
     return OK;
 }
 
-Error AsmTms9995::getOperand(uint16_t &val16) {
-    uint32_t val32;
+Error AsmTms9995::getOperand16(uint16_t &val16) {
     AsmIntelOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val32);
+    const char *p = parser.eval(_scan, val16);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
-    val16 = val32;
+    return OK;
+}
+
+Error AsmTms9995::getOperand8(uint8_t &val8) {
+    AsmIntelOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val8);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
     return OK;
 }
 
@@ -54,7 +60,7 @@ Error AsmTms9995::parseRegName(uint8_t &regno) {
 
 Error AsmTms9995::encodeImm(Insn &insn, bool emitInsn) {
     uint16_t val;
-    if (getOperand(val)) return getError();
+    if (getOperand16(val)) return getError();
     if (emitInsn) insn.emitInsn();
     insn.emitOperand(val);
     return setError(OK);
@@ -83,10 +89,11 @@ Error AsmTms9995::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
         _scan += 2;
         count = 0;
     } else {
-        if (getOperand(count)) return getError();
-        if (count > 16 || (!accept16 && count == 16))
+        uint8_t val8;
+        if (getOperand8(val8)) return getError();
+        if (val8 > 16 || (!accept16 && val8 == 16))
             return setError(UNKNOWN_OPERAND);
-        count &= 0xf;
+        count = val8 & 0xf;
     }
     switch (insn.addrMode()) {
     case CNT_REG: count <<= 4; break;
@@ -102,7 +109,7 @@ Error AsmTms9995::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
 Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     uint8_t regno;
     uint8_t mode = 0;
-    uint16_t val;
+    uint16_t val16;
     if (parseRegName(regno) == OK) {
         mode = 0;
     } else if (*_scan == '*') {
@@ -116,7 +123,7 @@ Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     } else if (*_scan == '@') {
         _scan++;
         mode = 2;
-        if (getOperand(val)) return getError();
+        if (getOperand16(val16)) return getError();
         if (*_scan == '(') {
             _scan++;
             if (parseRegName(regno) || regno == 0 || *_scan != ')')
@@ -132,13 +139,13 @@ Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     if (emitInsn)
         insn.emitInsn();
     if (mode == 2)
-        insn.emitOperand(val);
+        insn.emitOperand(val16);
     return setError(OK);
 }
 
 Error AsmTms9995::encodeRel(Insn &insn) {
     target::uintptr_t addr;
-    if (getOperand(addr) || addr % 2 != 0)
+    if (getOperand16(addr) || addr % 2 != 0)
         return setError(UNKNOWN_OPERAND);
     const target::uintptr_t base = insn.address() + 2;
     const target::ptrdiff_t delta = (addr - base) >> 1;
@@ -149,11 +156,9 @@ Error AsmTms9995::encodeRel(Insn &insn) {
 }
 
 Error AsmTms9995::encodeCruOff(Insn &insn) {
-    uint16_t val;
-    if (getOperand(val)) return getError();
-    int16_t offset = (int16_t)val;
-    if (offset >= 128 || offset < -128) return setError(UNKNOWN_OPERAND);
-    insn.setInsnCode(insn.insnCode() | (offset & 0xff));
+    uint8_t val8;
+    if (getOperand8(val8)) return getError();
+    insn.setInsnCode(insn.insnCode() | val8);
     insn.emitInsn();
     return setError(OK);
 }

@@ -7,13 +7,19 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmZ80::getOperand(uint16_t &val16) {
-    uint32_t val32;
+Error AsmZ80::getOperand16(uint16_t &val16) {
     AsmIntelOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val32);
+    const char *p = parser.eval(_scan, val16);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
-    val16 = val32;
+    return OK;
+}
+
+Error AsmZ80::getOperand8(uint8_t &val8) {
+    AsmIntelOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val8);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
     return OK;
 }
 
@@ -243,7 +249,7 @@ Error AsmZ80::encodeInherent(
 }
 
 Error AsmZ80::parseOperand(
-    OprFormat &oprFormat, RegName &regName, uint16_t &operand,
+    OprFormat &oprFormat, RegName &regName, uint16_t &opr16,
     OprSize &oprSize, AddrMode addrMode) {
     setError(OK);
 
@@ -252,19 +258,19 @@ Error AsmZ80::parseOperand(
         if ((ccName = RegZ80::parseCc4Name(_scan)) != CC_UNDEF) {
             _scan += RegZ80::ccNameLen(ccName);
             oprFormat = COND_4;
-            operand = RegZ80::encodeCcName(ccName);
+            opr16 = RegZ80::encodeCcName(ccName);
             return OK;
         }
         if ((ccName = RegZ80::parseCc8Name(_scan)) != CC_UNDEF) {
             _scan += RegZ80::ccNameLen(ccName);
             oprFormat = COND_8;
-            operand = RegZ80::encodeCcName(ccName);
+            opr16 = RegZ80::encodeCcName(ccName);
             return OK;
         }
     }
 
     regName = REG_UNDEF;
-    operand = 0;
+    opr16 = 0;
     if (*_scan == 0) {
         oprFormat = NO_OPR;
         return OK;
@@ -294,14 +300,17 @@ Error AsmZ80::parseOperand(
     if (*_scan == '(') {
         regName = RegZ80::parseRegister(++_scan);
         if (regName == REG_UNDEF) {
-            if (getOperand(operand) || *_scan != ')')
-                return setError(UNKNOWN_OPERAND);
-            _scan++;
             if (addrMode == IOADR) {
+                uint8_t val8;
+                if (getOperand8(val8)) return setError(UNKNOWN_OPERAND);
+                opr16 = val8;
                 oprFormat = ADDR_8;
             } else {
+                if (getOperand16(opr16)) return setError(UNKNOWN_OPERAND);
                 oprFormat = ADDR_16;
             }
+            if (*_scan != ')') return setError(UNKNOWN_OPERAND);
+            _scan++;
             return OK;
         }
         _scan += RegZ80::regNameLen(regName);
@@ -321,11 +330,11 @@ Error AsmZ80::parseOperand(
             return OK;
         }
         if (*_scan == '+' || *_scan == '-') {
-            if ((regName == REG_IX || regName == REG_IY)
-                && getOperand(operand) == OK && *_scan == ')') {
-                _scan++;
-                const int16_t offset = int16_t(operand);
-                if (offset >= -128 && offset < 128) {
+            if (regName == REG_IX || regName == REG_IY) {
+                uint8_t val8;
+                if (getOperand8(val8) == OK && *_scan == ')') {
+                    _scan++;
+                    opr16 = val8;
                     oprFormat = IX_OFF;
                     if (oprSize == SZ_NONE) oprSize = SZ_BYTE;
                     return OK;
@@ -334,17 +343,19 @@ Error AsmZ80::parseOperand(
         }
         return setError(UNKNOWN_OPERAND);
     }
-    if (getOperand(operand) == OK) {
-        if (oprSize == SZ_BYTE) {
+    if (oprSize == SZ_BYTE || oprFormat == IMM_NO
+        || oprFormat == VEC_NO || oprFormat == BIT_NO) {
+        uint8_t val8;
+        if (getOperand8(val8) == OK) {
+            opr16 = val8;
             oprFormat = IMM_8;
-        } else if (oprSize == SZ_WORD || addrMode == REL8 || addrMode == DIRECT) {
-            oprFormat = IMM_16;
-        } else if (oprFormat == IMM_NO || oprFormat == VEC_NO || oprFormat == BIT_NO) {
-            ;
-        } else {
-            return setError(UNKNOWN_OPERAND);
+            return OK;
         }
-        return setError(OK);
+    } else if (oprSize == SZ_WORD || addrMode == REL8 || addrMode == DIRECT) {
+        if (getOperand16(opr16) == OK) {
+            oprFormat = IMM_16;
+            return OK;
+        }
     }
     return setError(UNKNOWN_OPERAND);
 }

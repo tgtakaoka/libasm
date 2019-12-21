@@ -282,6 +282,7 @@ static void test_immediate() {
 
     symtab.put(0x90, "dir90");
     symtab.put(0x90A0, "sym90A0");
+    symtab.put(-2, "minus2");
 
     TEST("LDA  #dir90",   0x86, 0x90);
     TEST("CMPX #sym90A0", 0x8C, 0x90, 0xA0);
@@ -292,6 +293,7 @@ static void test_immediate() {
     TEST("LDE  #dir90",   0x11, 0x86, 0x90);
 
     TEST("LDQ  #sym90A0", 0xCD, 0x00, 0x00, 0x90, 0xA0);
+    TEST("LDQ  #minus2",  0xCD, 0xFF, 0xFF, 0xFF, 0xFE);
     TEST("MULD #dir90",   0x11, 0x8F, 0x00, 0x90);
 }
 

@@ -7,13 +7,19 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmI8080::getOperand(uint16_t &val16) {
-    uint32_t val32;
+Error AsmI8080::getOperand16(uint16_t &val16) {
     AsmIntelOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val32);
+    const char *p = parser.eval(_scan, val16);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
-    val16 = val32;
+    return OK;
+}
+
+Error AsmI8080::getOperand8(uint8_t &val8) {
+    AsmIntelOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val8);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
     return OK;
 }
 
@@ -83,8 +89,8 @@ Error AsmI8080::encodeDataDataReg(Insn &insn) {
 }
 
 Error AsmI8080::encodeVectorNo(Insn &insn) {
-    uint16_t vecNo;
-    if (getOperand(vecNo) == OK && vecNo < 8) {
+    uint8_t vecNo;
+    if (getOperand8(vecNo) == OK && vecNo < 8) {
         insn.setInsnCode(insn.insnCode() | (vecNo << 3));
         return setError(OK);
     }
@@ -94,25 +100,28 @@ Error AsmI8080::encodeVectorNo(Insn &insn) {
 Error AsmI8080::encodeImmediate(Insn &insn) {
     if (insn.insnFormat() != NO_FORMAT && *_scan++ != ',')
         return setError(UNKNOWN_OPERAND);
-    uint16_t val;
-    if (getOperand(val)) return getError();
-    if (insn.addrMode() == IMM8)
-        insn.emitByte(val);
-    if (insn.addrMode() == IMM16)
-        insn.emitUint16(val);
+    if (insn.addrMode() == IMM8) {
+        uint8_t val8;
+        if (getOperand8(val8)) return getError();
+        insn.emitByte(val8);
+    } else if (insn.addrMode() == IMM16) {
+        uint16_t val16;
+        if (getOperand16(val16)) return getError();
+        insn.emitUint16(val16);
+    }
     return checkLineEnd();
 }
 
 Error AsmI8080::encodeDirect(Insn &insn) {
     uint16_t addr;
-    if (getOperand(addr)) return getError();
+    if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
 
 Error AsmI8080::encodeIoaddr(Insn &insn) {
-    uint16_t addr;
-    if (getOperand(addr)) return getError();
+    uint8_t addr;
+    if (getOperand8(addr)) return getError();
     insn.emitByte(addr);
     return checkLineEnd();
 }

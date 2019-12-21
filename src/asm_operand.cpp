@@ -17,6 +17,36 @@ const char *AsmOperand::eval(const char *expr, uint32_t &val32) {
     return _error ? nullptr : _next;
 }
 
+const char *AsmOperand::eval(const char *expr, uint16_t &val16) {
+    uint32_t val32 = 0;
+    const char *p = eval(expr, val32);
+    if (int32_t(val32) < 0 && int32_t(val32) < -32768) {
+        printf("@@@@@ expr='%s' overflow 16bit 0x%x\n", expr, val32);
+        return nullptr;     // overflow
+    }
+    if (int32_t(val32) >= 0 && val32 >= 0x10000) {
+        printf("@@@@@ expr='%s' overflow 16bit 0x%x\n", expr, val32);
+        return nullptr;     // overflow
+    }
+    val16 = val32;
+    return p;
+}
+
+const char *AsmOperand::eval(const char *expr, uint8_t &val8) {
+    uint32_t val32 = 0;
+    const char *p = eval(expr, val32);
+    if (int32_t(val32) < 0 && int32_t(val32) < -128) {
+        printf("@@@@@ expr='%s' overflow 8bit 0x%x\n", expr, val32);
+        return nullptr;     // overflow
+    }
+    if (int32_t(val32) >= 0 && val32 >= 0x100) {
+        printf("@@@@@ expr='%s' overflow 8bit 0x%x\n", expr, val32);
+        return nullptr;     // overflow
+    }
+    val8 = val32;
+    return p;
+}
+
 bool AsmOperand::isValidDigit(const char c, const uint8_t radix) {
     if (radix == 16) return isxdigit(c);
     return c >= '0' && c < '0' + radix;

@@ -22,20 +22,27 @@ Error Asm6502<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::getOperand(uint16_t &val16) {
-    uint32_t val32;
+Error Asm6502<mcuType>::getOperand16(uint16_t &val16) {
     AsmMotoOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val32);
+    const char *p = parser.eval(_scan, val16);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
-    val16 = val32;
+    return OK;
+}
+
+template<McuType mcuType>
+Error Asm6502<mcuType>::getOperand8(uint8_t &val8) {
+    AsmMotoOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val8);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
     return OK;
 }
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
-    if (getOperand(addr)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
     const target::ptrdiff_t delta = addr - base;
     if (emitInsn) emitInsnCode(insn);
@@ -58,11 +65,13 @@ Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
 #endif
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
+Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     char c = toupper(*_scan);
     if (c == '#') {
         _scan++;
-        if (getOperand(val)) return setError(UNKNOWN_OPERAND);
+        uint8_t val8;
+        if (getOperand8(val8)) return setError(UNKNOWN_OPERAND);
+        val16 = val8;
         if (checkLineEnd()) return setError(GARBAGE_AT_END);
         insn.setAddrMode(IMMEDIATE);
         return OK;
@@ -75,13 +84,13 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     if (indirect) _scan++;
     const char mode = *_scan;
     if (mode == '<' || mode == '>') _scan++;
-    if (getOperand(val)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(val16)) return setError(UNKNOWN_OPERAND);
     if (!indirect && *skipSpace(_scan) == 0) {
-        if (mode == '>' || val >= 0x0100) {
+        if (mode == '>' || val16 >= 0x0100) {
             insn.setAddrMode(ABSOLUTE);
             return OK;
         }
-        if (mode == '<' || val < 0x0100) {
+        if (mode == '<' || val16 < 0x0100) {
             insn.setAddrMode(ZEROPAGE);
             return OK;
         }
@@ -91,11 +100,11 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     c = *_scan++;
     if (c == ')' && indirect) {
         if (*skipSpace(_scan) == 0) {
-            if (mode == '>' || val >= 0x0100) {
+            if (mode == '>' || val16 >= 0x0100) {
                 insn.setAddrMode(ABS_INDIRECT);
                 return OK;
             }
-            if (mode == '<' || val < 0x0100) {
+            if (mode == '<' || val16 < 0x0100) {
                 insn.setAddrMode(ZP_INDIRECT);
                 return OK;
             }
@@ -104,7 +113,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
         if (*_scan++ != ',')
             return setError(UNKNOWN_OPERAND);
         if (toupper(*_scan) == 'Y' && *skipSpace(_scan + 1) == 0) {
-            if (mode == '<' || val < 0x0100) {
+            if (mode == '<' || val16 < 0x0100) {
                 insn.setAddrMode(INDIRECT_IDX);
                 return OK;
             }
@@ -118,11 +127,11 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
     if (index != 'X' && index != 'Y') return setError(UNKNOWN_OPERAND);
 
     if (!indirect && *skipSpace(_scan) == 0) {
-        if (mode == '>' || val >= 0x0100)  {
+        if (mode == '>' || val16 >= 0x0100)  {
             insn.setAddrMode(index == 'X' ? ABS_IDX_X : ABS_IDX_Y);
             return OK;
         }
-        if (mode == '<' || val < 0x100) {
+        if (mode == '<' || val16 < 0x100) {
             insn.setAddrMode(index == 'X' ? ZP_IDX_X  : ZP_IDX_Y);
             return OK;
         }
@@ -167,8 +176,8 @@ Error Asm6502<mcuType>::encode(
         break;
     }
 
-    uint16_t val;
-    if (parseOperand(insn, val)) return getError();
+    uint16_t val16;
+    if (parseOperand(insn, val16)) return getError();
     if (TableR65c02<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
@@ -183,7 +192,7 @@ Error Asm6502<mcuType>::encode(
     case INDIRECT_IDX:
     case ZP_INDIRECT:
         emitInsnCode(insn);
-        insn.emitByte(val);
+        insn.emitByte(uint8_t(val16));
         return setError(OK);
     case ABSOLUTE:
     case ABS_IDX_X:
@@ -191,7 +200,7 @@ Error Asm6502<mcuType>::encode(
     case ABS_INDIRECT:
     case IDX_ABS_IND:
         emitInsnCode(insn);
-        insn.emitUint16(val);
+        insn.emitUint16(val16);
         return setError(OK);
     default:
         return setError(INTERNAL_ERROR);

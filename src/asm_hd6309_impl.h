@@ -22,7 +22,7 @@ Error Asm09<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getOperand(uint32_t &val32) {
+Error Asm09<mcuType>::getOperand32(uint32_t &val32) {
     AsmMotoOperand parser(_symtab);
     const char *p = parser.eval(_scan, val32);
     if (!p) return setError(UNKNOWN_OPERAND);
@@ -32,9 +32,19 @@ Error Asm09<mcuType>::getOperand(uint32_t &val32) {
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand16(uint16_t &val16) {
-    uint32_t val32;
-    if (getOperand(val32)) return getError();
-    val16 = val32;
+    AsmMotoOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val16);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
+    return OK;
+}
+
+template<McuType mcuType>
+Error Asm09<mcuType>::getOperand8(uint8_t &val8) {
+    AsmMotoOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val8);
+    if (!p) return setError(UNKNOWN_OPERAND);
+    _scan = p;
     return OK;
 }
 
@@ -112,17 +122,17 @@ Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
     _scan++;
     emitInsnCode(insn);
     if (insn.oprSize() == SZ_BYTE) {
-        uint16_t val;
-        if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
-        insn.emitByte(uint8_t(val));
+        uint8_t val8;
+        if (getOperand8(val8)) return setError(UNKNOWN_OPERAND);
+        insn.emitByte(val8);
     } else if (insn.oprSize() == SZ_WORD) {
-        uint16_t val;
-        if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
-        insn.emitUint16(val);
+        uint16_t val16;
+        if (getOperand16(val16)) return setError(UNKNOWN_OPERAND);
+        insn.emitUint16(val16);
     } else if (mcuType == HD6309 && insn.oprSize() == SZ_LONG) {
-        uint32_t val;
-        if (getOperand(val)) return setError(UNKNOWN_OPERAND);
-        insn.emitUint32(val);
+        uint32_t val32;
+        if (getOperand32(val32)) return setError(UNKNOWN_OPERAND);
+        insn.emitUint32(val32);
     } else {
         return setError(UNKNOWN_OPERAND);
     }

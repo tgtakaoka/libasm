@@ -2,14 +2,14 @@
 #ifndef __ASM_OPERAND_H__
 #define __ASM_OPERAND_H__
 
-#include <ctype.h>
-#include <string.h>
 #include "symbol_table.h"
 #include "type_traits.h"
 
 class AsmOperand {
 public:
     const char *eval(const char *expr, uint32_t &val32);
+    const char *eval(const char *expr, uint16_t &val16);
+    const char *eval(const char *expr, uint8_t &val8);
 
 protected:
     AsmOperand(SymbolTable *symtab)
