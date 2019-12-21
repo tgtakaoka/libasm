@@ -204,6 +204,21 @@ RegName RegZ80::parseRegName(
     return REG_UNDEF;
 }
 
+OprSize RegZ80::registerSize(const RegName regName) {
+    switch (regName) {
+    case REG_BC: case REG_DE: case REG_HL:
+    case REG_SP: case REG_IX: case REG_IY:
+    case REG_AF: case REG_AFP:
+        return SZ_WORD;
+    case REG_B: case REG_C: case REG_D: case REG_E:
+    case REG_H: case REG_L: case REG_A:
+    case REG_I: case REG_R:
+        return SZ_BYTE;
+    default:
+        return SZ_NONE;
+    }
+}
+
 static RegName decodeRegNumber(
     const host::uint_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];

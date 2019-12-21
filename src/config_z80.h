@@ -13,6 +13,12 @@ namespace target
     typedef uint8_t  opcode_t;
 } // namespace target
 
+enum OprSize : host::uint_t {
+    SZ_NONE,                    // unknown
+    SZ_BYTE = 1,
+    SZ_WORD = 2,
+};
+
 enum AddrMode : host::uint_t {
     INHR,
     IMM8,

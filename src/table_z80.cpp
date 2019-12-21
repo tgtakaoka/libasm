@@ -188,13 +188,10 @@ static bool acceptOprFormat(OprFormat opr, OprFormat table) {
         return opr == BC_REG || opr == DE_REG || opr == IX_REG || opr == SP_REG;
     case STK_16:
         return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == AF_REG;
-    case IMM_16:
     case BIT_NO:
     case IMM_NO:
     case VEC_NO:
         return opr == IMM_8;
-    case ADDR_16:
-        return opr == ADDR_8;
     case COND_8:
         return opr == COND_4;
     default:

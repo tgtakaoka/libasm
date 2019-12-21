@@ -44,6 +44,7 @@ public:
     static host::int_t encodeCcName(CcName ccName);
 
     static RegName parseRegister(const char *line);
+    static OprSize registerSize(const RegName regName);
     static host::uint_t regNameLen(const RegName regName);
     static host::int_t encodePointerReg(RegName regName);
     static host::int_t encodePointerRegIx(RegName regName, RegName ix);
