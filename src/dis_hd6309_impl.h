@@ -171,7 +171,7 @@ template<McuType mcuType>
 Error Dis09<mcuType>::decodeRelative(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::ptrdiff_t delta;
-    if (insn.addrMode() == REL8) {
+    if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         delta = static_cast<int8_t>(val);
@@ -194,11 +194,11 @@ template<McuType mcuType>
 Error Dis09<mcuType>::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     *_operands++ = '#';
-    if (insn.addrMode() == IMM8) {
+    if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         outConstant(val);
-    } else if (insn.addrMode() == IMM16) {
+    } else if (insn.oprSize() == SZ_WORD) {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         const char *label = lookup(val);
@@ -207,7 +207,7 @@ Error Dis09<mcuType>::decodeImmediate(
         } else {
             outConstant(val);
         }
-    } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
+    } else if (mcuType == HD6309 && insn.oprSize() == SZ_LONG) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
         outConstant(val);
@@ -335,16 +335,13 @@ Error Dis09<mcuType>::decode(
     case DIRP:  return decodeDirectPage(memory, insn);
     case EXTD:  return decodeExtended(memory, insn);
     case INDX:  return decodeIndexed(memory, insn);
-    case REL8:
-    case REL16: return decodeRelative(memory, insn);
+    case REL:   return decodeRelative(memory, insn);
     case STKOP: return decodeStackOp(memory, insn);
     case REGS:  return decodeRegisters(memory, insn);
-    case IMM8:
-    case IMM16: return decodeImmediate(memory, insn);
+    case IMM:   return decodeImmediate(memory, insn);
     default:
         if (mcuType == HD6309) {
             switch (insn.addrMode()) {
-            case IMM32: return decodeImmediate(memory, insn);
             case IMMDIR:
             case IMMEXT:
             case IMMIDX:return decodeImmediatePlus(memory, insn);

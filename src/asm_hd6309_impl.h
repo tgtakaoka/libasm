@@ -93,11 +93,11 @@ Error Asm09<mcuType>::encodeRelative(Insn &insn) {
     if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
     const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
     const host::uint_t insnLen = (TableHd6309Base::isPrefixCode(prefix) ? 2 : 1)
-        + (insn.addrMode() == REL8 ? 1 : 2);
+        + (insn.oprSize() == SZ_BYTE ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
     emitInsnCode(insn);
-    if (insn.addrMode() == REL8) {
+    if (insn.oprSize() == SZ_BYTE) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitByte(uint8_t(delta));
     } else {
@@ -111,12 +111,15 @@ Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     emitInsnCode(insn);
-    if (insn.addrMode() == IMM8 || insn.addrMode() == IMM16) {
+    if (insn.oprSize() == SZ_BYTE) {
         uint16_t val;
         if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
-        if (insn.addrMode() == IMM8) insn.emitByte(uint8_t(val));
-        else insn.emitUint16(val);
-    } else if (mcuType == HD6309 && insn.addrMode() == IMM32) {
+        insn.emitByte(uint8_t(val));
+    } else if (insn.oprSize() == SZ_WORD) {
+        uint16_t val;
+        if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
+        insn.emitUint16(val);
+    } else if (mcuType == HD6309 && insn.oprSize() == SZ_LONG) {
         uint32_t val;
         if (getOperand(val)) return setError(UNKNOWN_OPERAND);
         insn.emitUint32(val);
@@ -347,7 +350,7 @@ Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
 template<McuType mcuType>
 Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
     switch (*line) {
-    case '#': insn.setAddrMode(IMM8); break;
+    case '#': insn.setAddrMode(IMM); break;
     case '<': insn.setAddrMode(DIRP); break;
     case '>': insn.setAddrMode(EXTD); break;
     case '[':
@@ -394,8 +397,7 @@ Error Asm09<mcuType>::encode(
 
     switch (insn.addrMode()) {
     case INHR:  emitInsnCode(insn); return checkLineEnd();
-    case REL8:
-    case REL16: return encodeRelative(insn);
+    case REL:   return encodeRelative(insn);
     case STKOP: return encodeStackOp(insn);
     case REGS:  return encodeRegisters(insn);
     default:
@@ -416,17 +418,11 @@ Error Asm09<mcuType>::encode(
     if (TableHd6309<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
-    case IMM8:
-    case IMM16: return encodeImmediate(insn);
-    case DIRP:  return encodeDirect(insn);
-    case EXTD:  return encodeExtended(insn);
-    case INDX:  return encodeIndexed(insn);
-    default:
-        if (mcuType == HD6309 && insn.addrMode() == IMM32) {
-            return encodeImmediate(insn);
-        } else {
-            return setError(UNKNOWN_OPERAND);
-        }
+    case IMM:  return encodeImmediate(insn);
+    case DIRP: return encodeDirect(insn);
+    case EXTD: return encodeExtended(insn);
+    case INDX: return encodeIndexed(insn);
+    default:   return setError(UNKNOWN_OPERAND);
     }
 }
 
