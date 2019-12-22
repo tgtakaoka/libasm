@@ -21,24 +21,20 @@ Error Asm6502<mcuType>::checkLineEnd() {
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand16(uint16_t &val16) {
-    const char *p = _parser.eval(_scan, val16, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val16, _symtab);
+    return setError(_parser.getError());
 }
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand8(uint8_t &val8) {
-    const char *p = _parser.eval(_scan, val8, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val8, _symtab);
+    return setError(_parser.getError());
 }
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
-    if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(addr)) return getError();
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
     const target::ptrdiff_t delta = addr - base;
     if (emitInsn) emitInsnCode(insn);
@@ -52,7 +48,8 @@ template<McuType mcuType>
 Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
     uint16_t zp;
-    if (getOperand(zp) || *_scan != ',') return setError(UNKNOWN_OPERAND);
+    if (getOperand(zp)) return getError();
+    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     emitInsnCode(insn);
     insn.emitByte(zp);
@@ -66,7 +63,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     if (c == '#') {
         _scan++;
         uint8_t val8;
-        if (getOperand8(val8)) return setError(UNKNOWN_OPERAND);
+        if (getOperand8(val8)) return getError();
         val16 = val8;
         if (checkLineEnd()) return setError(GARBAGE_AT_END);
         insn.setAddrMode(IMMEDIATE);
@@ -80,7 +77,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     if (indirect) _scan++;
     const char mode = *_scan;
     if (mode == '<' || mode == '>') _scan++;
-    if (getOperand16(val16)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(val16)) return getError();
     if (!indirect && *skipSpace(_scan) == 0) {
         if (mode == '>' || val16 >= 0x0100) {
             insn.setAddrMode(ABSOLUTE);

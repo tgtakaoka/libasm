@@ -16,13 +16,13 @@ bool TestAsserter::check() const {
 }
 
 void TestAsserter::equals(
-    const char *message, const int expected, const int actual) {
+    const char *message, const uint32_t expected, const uint32_t actual) {
     if (expected == actual) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s: expected '%d': actual '%d'\n", message, expected, actual);
+    printf("%s: expected '%u': actual '%u'\n", message, expected, actual);
 }
 
 void TestAsserter::equals(

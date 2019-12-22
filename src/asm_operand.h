@@ -3,17 +3,18 @@
 #define __ASM_OPERAND_H__
 
 #include "symbol_table.h"
-#include "type_traits.h"
+#include "error_reporter.h"
 
-class AsmOperand {
+class AsmOperand : public ErrorReporter {
 public:
     const char *eval(const char *expr, uint32_t &val32, SymbolTable *symtab);
     const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
     const char *eval(const char *expr, uint8_t &val8, SymbolTable *symtab);
 
 protected:
-    virtual const char *parseConstant(const char *p, uint32_t &val) const = 0;
+    virtual const char *parseConstant(const char *p, uint32_t &val) = 0;
     virtual bool isSymbolLetter(char c, bool head = false) const = 0;
+    const char *parseNumber(const char *p, uint32_t &val, const uint8_t base);
 
 private:
     enum Op : char {
@@ -72,12 +73,12 @@ private:
 
     const SymbolTable *_symtab;
     const char *_next;
-    bool _error;
     Stack<OprAndLval> _stack;
 
     void skipSpaces();
     Value parseExpr();
     Value readAtom();
+    Value readConstant();
     Operator readOperator();
     void readSymbol(char *buffer, char *const end);
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
@@ -86,13 +87,13 @@ private:
 class AsmMotoOperand : public AsmOperand {
 protected:
     bool isSymbolLetter(char c, bool head) const override;
-    const char *parseConstant(const char *p, uint32_t &val) const override;
+    const char *parseConstant(const char *p, uint32_t &val) override;
 };
 
 class AsmIntelOperand : public AsmOperand {
 protected:
     bool isSymbolLetter(char c, bool head) const override;
-    const char *parseConstant(const char *scan, uint32_t &val) const override;
+    const char *parseConstant(const char *scan, uint32_t &val) override;
 };
 
 #endif

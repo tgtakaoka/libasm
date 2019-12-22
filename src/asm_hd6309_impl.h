@@ -21,26 +21,20 @@ Error Asm09<mcuType>::checkLineEnd() {
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand32(uint32_t &val32) {
-    const char *p = _parser.eval(_scan, val32, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val32, _symtab);
+    return setError(_parser.getError());
 }
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand16(uint16_t &val16) {
-    const char *p = _parser.eval(_scan, val16, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val16, _symtab);
+    return setError(_parser.getError());
 }
 
 template<McuType mcuType>
 Error Asm09<mcuType>::getOperand8(uint8_t &val8) {
-    const char *p = _parser.eval(_scan, val8, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val8, _symtab);
+    return setError(_parser.getError());
 }
 
 template<McuType mcuType>
@@ -95,7 +89,7 @@ Error Asm09<mcuType>::encodeRegisters(Insn &insn) {
 template<McuType mcuType>
 Error Asm09<mcuType>::encodeRelative(Insn &insn) {
     target::uintptr_t addr;
-    if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(addr)) return getError();
     const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
     const host::uint_t insnLen = (TableHd6309Base::isPrefixCode(prefix) ? 2 : 1)
         + (insn.oprSize() == SZ_BYTE ? 1 : 2);
@@ -118,15 +112,15 @@ Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
     emitInsnCode(insn);
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val8;
-        if (getOperand8(val8)) return setError(UNKNOWN_OPERAND);
+        if (getOperand8(val8)) return getError();
         insn.emitByte(val8);
     } else if (insn.oprSize() == SZ_WORD) {
         uint16_t val16;
-        if (getOperand16(val16)) return setError(UNKNOWN_OPERAND);
+        if (getOperand16(val16)) return getError();
         insn.emitUint16(val16);
     } else if (mcuType == HD6309 && insn.oprSize() == SZ_LONG) {
         uint32_t val32;
-        if (getOperand32(val32)) return setError(UNKNOWN_OPERAND);
+        if (getOperand32(val32)) return getError();
         insn.emitUint32(val32);
     } else {
         return setError(UNKNOWN_OPERAND);
@@ -139,7 +133,7 @@ Error Asm09<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
     if (*_scan == '<') _scan++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
-    if (getOperand16(dir)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(dir)) return getError();
     insn.emitByte(uint8_t(dir));
     return checkLineEnd();
 }
@@ -149,7 +143,7 @@ Error Asm09<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
     if (*_scan == '>') _scan++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
-    if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
@@ -167,7 +161,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         if ((index = _regs.parseIndexReg(_scan)) != REG_UNDEF) {
             _scan += _regs.regNameLen(index); // index register
         } else {
-            if (getOperand16(addr)) return setError(UNKNOWN_OPERAND);
+            if (getOperand16(addr)) return getError();
             index = OFFSET;     // index is in addr
         }
     }
@@ -276,12 +270,12 @@ Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     uint16_t pos;
-    if (getOperand16(pos)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(pos)) return getError();
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     post |= (pos << 3);
-    if (getOperand16(pos)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(pos)) return getError();
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
@@ -296,7 +290,7 @@ Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     uint16_t val;
-    if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
+    if (getOperand16(val)) return getError();
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
 
@@ -373,7 +367,7 @@ Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
         uint16_t val;
         const char *scan = _scan;
         _scan = line;
-        if (getOperand16(val)) return setError(UNKNOWN_OPERAND);
+        if (getOperand16(val)) return getError();
         if (*_scan == ',') insn.setAddrMode(INDX);
         else insn.setAddrMode(val < 0x100 ? DIRP : EXTD);
         _scan = scan;

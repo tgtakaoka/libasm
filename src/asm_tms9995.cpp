@@ -19,10 +19,8 @@ Error AsmTms9995::checkComma() {
 }
 
 Error AsmTms9995::getOperand16(uint16_t &val16) {
-    const char *p = _parser.eval(_scan, val16, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val16, _symtab);
+    return setError(_parser.getError());
 }
 
 Error AsmTms9995::getOperand8(uint8_t &val8) {
@@ -140,8 +138,8 @@ Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
 
 Error AsmTms9995::encodeRel(Insn &insn) {
     target::uintptr_t addr;
-    if (getOperand16(addr) || addr % 2 != 0)
-        return setError(UNKNOWN_OPERAND);
+    if (getOperand16(addr)) return getError();
+    if (addr % 2) return setError(ILLEGAL_OPERAND);
     const target::uintptr_t base = insn.address() + 2;
     const target::ptrdiff_t delta = (addr - base) >> 1;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);

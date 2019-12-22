@@ -7,17 +7,13 @@ static bool isidchar(const char c) {
 }
 
 Error AsmZ80::getOperand16(uint16_t &val16) {
-    const char *p = _parser.eval(_scan, val16, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val16, _symtab);
+    return setError(_parser.getError());
 }
 
 Error AsmZ80::getOperand8(uint8_t &val8) {
-    const char *p = _parser.eval(_scan, val8, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val8, _symtab);
+    return setError(_parser.getError());
 }
 
 static const char *skipSpace(const char *line) {
@@ -299,11 +295,11 @@ Error AsmZ80::parseOperand(
         if (regName == REG_UNDEF) {
             if (addrMode == IOADR) {
                 uint8_t val8;
-                if (getOperand8(val8)) return setError(UNKNOWN_OPERAND);
+                if (getOperand8(val8)) return getError();
                 opr16 = val8;
                 oprFormat = ADDR_8;
             } else {
-                if (getOperand16(opr16)) return setError(UNKNOWN_OPERAND);
+                if (getOperand16(opr16)) return getError();
                 oprFormat = ADDR_16;
             }
             if (*_scan != ')') return setError(UNKNOWN_OPERAND);
@@ -329,13 +325,13 @@ Error AsmZ80::parseOperand(
         if (*_scan == '+' || *_scan == '-') {
             if (regName == REG_IX || regName == REG_IY) {
                 uint8_t val8;
-                if (getOperand8(val8) == OK && *_scan == ')') {
-                    _scan++;
-                    opr16 = val8;
-                    oprFormat = IX_OFF;
-                    if (oprSize == SZ_NONE) oprSize = SZ_BYTE;
-                    return OK;
-                }
+                if (getOperand8(val8)) return getError();
+                if (*_scan != ')') return setError(UNKNOWN_OPERAND);
+                _scan++;
+                opr16 = val8;
+                oprFormat = IX_OFF;
+                if (oprSize == SZ_NONE) oprSize = SZ_BYTE;
+                return OK;
             }
         }
         return setError(UNKNOWN_OPERAND);
@@ -343,16 +339,14 @@ Error AsmZ80::parseOperand(
     if (oprSize == SZ_BYTE || oprFormat == IMM_NO
         || oprFormat == VEC_NO || oprFormat == BIT_NO) {
         uint8_t val8;
-        if (getOperand8(val8) == OK) {
-            opr16 = val8;
-            oprFormat = IMM_8;
-            return OK;
-        }
+        if (getOperand8(val8)) return getError();
+        opr16 = val8;
+        oprFormat = IMM_8;
+        return OK;
     } else if (oprSize == SZ_WORD || addrMode == REL8 || addrMode == DIRECT) {
-        if (getOperand16(opr16) == OK) {
-            oprFormat = IMM_16;
-            return OK;
-        }
+        if (getOperand16(opr16)) return getError();
+        oprFormat = IMM_16;
+        return OK;
     }
     return setError(UNKNOWN_OPERAND);
 }
