@@ -47,18 +47,18 @@ const char *AsmOperand::eval(const char *expr, uint8_t &val8) {
     return p;
 }
 
-bool AsmOperand::isValidDigit(const char c, const uint8_t radix) {
+static bool isValidDigit(const char c, const uint8_t radix) {
     if (radix == 16) return isxdigit(c);
     return c >= '0' && c < '0' + radix;
 }
 
-uint8_t AsmOperand::toNumber(const char c, const uint8_t radix) {
+static uint8_t toNumber(const char c, const uint8_t radix) {
     if (radix == 16 && !isdigit(c))
         return toupper(c) - 'A' + 10;
     return c - '0';
 }
 
-const char *AsmOperand::parseNumber(
+static const char *parseNumber(
     const char *p, uint32_t &val, const uint8_t radix) {
     if (!isValidDigit(*p, radix))
         return nullptr;
@@ -205,13 +205,13 @@ const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) const {
         return p;
     }
     if (isdigit(*p)) {
-        p = AsmOperand::parseNumber(p, val, 10);
+        p = parseNumber(p, val, 10);
     } else if (*p == '$') {
-        p = AsmOperand::parseNumber(p + 1, val, 16);
+        p = parseNumber(p + 1, val, 16);
     } else if (*p == '@') {
-        p = AsmOperand::parseNumber(p + 1, val, 8);
+        p = parseNumber(p + 1, val, 8);
     } else if (*p == '%') {
-        p = AsmOperand::parseNumber(p + 1, val, 2);
+        p = parseNumber(p + 1, val, 2);
     } else {
         p = nullptr;
     }
@@ -241,16 +241,16 @@ const char *AsmIntelOperand::parseConstant(
     }
     if (!isdigit(*scan))
         return nullptr;
-    if ((p = AsmOperand::parseNumber(scan, val, 16))
+    if ((p = parseNumber(scan, val, 16))
         && toupper(*p) == 'H') {
         p++;
-    } else if ((p = AsmOperand::parseNumber(scan, val, 10))
+    } else if ((p = parseNumber(scan, val, 10))
                && !(*p && strchr("OoBb", *p))) {
         ;
-    } else if ((p = AsmOperand::parseNumber(scan, val, 8))
+    } else if ((p = parseNumber(scan, val, 8))
                && toupper(*p) == 'O') {
         p++;
-    } else if ((p = AsmOperand::parseNumber(scan, val, 2))
+    } else if ((p = parseNumber(scan, val, 2))
                && toupper(*p) == 'B') {
         p++;
     } else {

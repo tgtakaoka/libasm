@@ -18,11 +18,6 @@ protected:
     virtual const char *parseConstant(const char *p, uint32_t &val) const = 0;
     virtual bool isSymbolLetter(char c, bool head = false) const = 0;
 
-    static bool isValidDigit(const char c, const uint8_t radix);
-    static uint8_t toNumber(const char c, const uint8_t radix);
-    static const char *parseNumber(
-        const char *p, uint32_t &val, const uint8_t radix);
-
 private:
     enum Op : char {
         OP_NONE,
