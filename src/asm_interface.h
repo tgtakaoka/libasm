@@ -4,6 +4,7 @@
 
 #include "error_reporter.h"
 #include "symbol_table.h"
+#include "asm_operand.h"
 
 #include <string.h>
 
@@ -40,6 +41,20 @@ protected:
     }
     Addr lookup(const char *symbol) const {
         return _symtab ? _symtab->lookup(symbol) : 0;
+    }
+
+    virtual AsmOperand *getParser() = 0;
+    Error getOperand32(uint32_t &val32) {
+        _scan = getParser()->eval(_scan, val32, _symtab);
+        return ErrorReporter::setError(getParser()->getError());
+    }
+    Error getOperand16(uint16_t &val16) {
+        _scan = getParser()->eval(_scan, val16, _symtab);
+        return ErrorReporter::setError(getParser()->getError());
+    }
+    Error getOperand8(uint8_t &val8) {
+        _scan = getParser()->eval(_scan, val8, _symtab);
+        return ErrorReporter::setError(getParser()->getError());
     }
 
     struct strcasecmp {

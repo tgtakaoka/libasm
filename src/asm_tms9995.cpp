@@ -18,18 +18,6 @@ Error AsmTms9995::checkComma() {
     return OK;
 }
 
-Error AsmTms9995::getOperand16(uint16_t &val16) {
-    _scan = _parser.eval(_scan, val16, _symtab);
-    return setError(_parser.getError());
-}
-
-Error AsmTms9995::getOperand8(uint8_t &val8) {
-    const char *p = _parser.eval(_scan, val8, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
-}
-
 bool AsmTms9995::isRegister(const char *text) const {
     if (toupper(*text++) != 'R' || !isdigit(*text))
         return false;

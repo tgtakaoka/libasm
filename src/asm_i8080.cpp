@@ -6,16 +6,6 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmI8080::getOperand16(uint16_t &val16) {
-    _scan = _parser.eval(_scan, val16, _symtab);
-    return setError(_parser.getError());
-}
-
-Error AsmI8080::getOperand8(uint8_t &val8) {
-    _scan = _parser.eval(_scan, val8, _symtab);
-    return setError(_parser.getError());
-}
-
 static const char *skipSpace(const char *line) {
     while (*line == ' ') line++;
     return line;

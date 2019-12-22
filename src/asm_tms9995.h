@@ -18,12 +18,13 @@ public:
         SymbolTable *symtab) override;
     bool isRegister(const char *text) const override;
 
+protected:
+    AsmOperand *getParser() override { return &_parser; }
+
 private:
     AsmIntelOperand _parser;
 
     Error checkComma();
-    Error getOperand16(uint16_t &val16);
-    Error getOperand8(uint8_t &val8);
     Error parseRegName(uint8_t &regno);
 
     Error encodeImm(Insn &insn, bool emitInsn);

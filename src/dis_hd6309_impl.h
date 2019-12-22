@@ -4,16 +4,6 @@
 
 #include "dis_operand.h"
 #include "table_hd6309.h"
-#include "type_traits.h"
-
-template<McuType mcuType>
-template<typename T>
-void Dis09<mcuType>::outConstant(T val, int8_t radix, bool relax) {
-    DisMotoOperand encoder;
-    if (is_signed<T>::value) radix = -radix;
-    _operands = encoder.output(
-        _operands, val, radix, relax, static_cast<uint8_t>(sizeof(T)));
-}
 
 template<McuType mcuType>
 void Dis09<mcuType>::outRegister(RegName regName) {

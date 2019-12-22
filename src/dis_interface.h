@@ -4,6 +4,8 @@
 
 #include "error_reporter.h"
 #include "symbol_table.h"
+#include "dis_operand.h"
+#include "type_traits.h"
 
 template<typename Addr>
 class Disassembler : public ErrorReporter {
@@ -34,6 +36,14 @@ protected:
         while ((*p = *text++) != 0)
             p++;
         _operands = p;
+    }
+
+    virtual DisOperand *getEncoder() = 0;
+    template<typename T>
+    void outConstant(T val, int8_t radix = 16, bool relax = true) {
+        if (is_signed<T>::value) radix = -radix;
+        _operands = getEncoder()->output(
+            _operands, val, radix, relax, static_cast<uint8_t>(sizeof(T)));
     }
 };
 

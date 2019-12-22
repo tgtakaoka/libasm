@@ -20,6 +20,9 @@ public:
         return RegZ80::parseRegister(text) != REG_UNDEF;
     }
 
+protected:
+    AsmOperand *getParser() override { return &_parser; }
+
 private:
     AsmIntelOperand _parser;
 
@@ -33,8 +36,6 @@ private:
     Error parseOperand(
         OprFormat &oprFormat, RegName &regName, uint16_t &operand,
         OprSize &oprSize, AddrMode addrMode);
-    Error getOperand16(uint16_t &val16);
-    Error getOperand8(uint8_t &val8);
 
     Error encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOpr);
     Error encodeInherent(

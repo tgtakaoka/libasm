@@ -2,14 +2,6 @@
 
 #include "dis_operand.h"
 #include "table_i8080.h"
-#include "type_traits.h"
-
-template<typename T>
-void DisI8080::outConstant(T val, int8_t radix, bool relax) {
-    DisIntelOperand encoder;
-    if (is_signed<T>::value) radix = -radix;
-    _operands = encoder.output(_operands, val, radix, relax, sizeof(T));
-}
 
 void DisI8080::outRegister(RegName regName) {
     _operands = RegI8080::outRegName(_operands, regName);

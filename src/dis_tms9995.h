@@ -17,9 +17,12 @@ public:
         char *operands,
         SymbolTable *symtab) override;
 
+protected:
+    DisOperand *getEncoder() { return &_encoder; }
+
 private:
-    template<typename T>
-    void outConstant(T val, int8_t radix = 16, bool relax = true);
+    DisIntelOperand _encoder;
+
     void outAddress(target::uintptr_t addr, bool relax = true);
     void outRegister(host::uint_t regno);
 

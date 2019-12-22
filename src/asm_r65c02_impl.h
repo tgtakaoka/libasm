@@ -20,18 +20,6 @@ Error Asm6502<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::getOperand16(uint16_t &val16) {
-    _scan = _parser.eval(_scan, val16, _symtab);
-    return setError(_parser.getError());
-}
-
-template<McuType mcuType>
-Error Asm6502<mcuType>::getOperand8(uint8_t &val8) {
-    _scan = _parser.eval(_scan, val8, _symtab);
-    return setError(_parser.getError());
-}
-
-template<McuType mcuType>
 Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();

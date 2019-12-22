@@ -2,14 +2,6 @@
 
 #include "dis_operand.h"
 #include "table_tms9995.h"
-#include "type_traits.h"
-
-template<typename T>
-void DisTms9995::outConstant(T val, int8_t radix, bool relax) {
-    DisIntelOperand decoder;
-    if (is_signed<T>::value) radix = -radix;
-    _operands = decoder.output(_operands, val, radix, relax, sizeof(T));
-}
 
 void DisTms9995::outAddress(target::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);

@@ -2,14 +2,6 @@
 
 #include "dis_operand.h"
 #include "table_z80.h"
-#include "type_traits.h"
-
-template<typename T>
-void DisZ80::outConstant(T val, int8_t radix, bool relax) {
-    DisIntelOperand encoder;
-    if (is_signed<T>::value) radix = -radix;
-    _operands = encoder.output(_operands, val, radix, relax, sizeof(T));
-}
 
 template<typename T>
 void DisZ80::outAddress(T addr, bool indir) {

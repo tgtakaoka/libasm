@@ -18,9 +18,11 @@ public:
         char *operands,
         SymbolTable *symtab) override;
 
+protected:
+    DisOperand *getEncoder() { return &_encoder; }
+
 private:
-    template<typename T>
-    void outConstant(T val, int8_t radix = 16, bool relax = true);
+    DisMotoOperand _encoder;
 
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);

@@ -20,24 +20,6 @@ Error Asm09<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getOperand32(uint32_t &val32) {
-    _scan = _parser.eval(_scan, val32, _symtab);
-    return setError(_parser.getError());
-}
-
-template<McuType mcuType>
-Error Asm09<mcuType>::getOperand16(uint16_t &val16) {
-    _scan = _parser.eval(_scan, val16, _symtab);
-    return setError(_parser.getError());
-}
-
-template<McuType mcuType>
-Error Asm09<mcuType>::getOperand8(uint8_t &val8) {
-    _scan = _parser.eval(_scan, val8, _symtab);
-    return setError(_parser.getError());
-}
-
-template<McuType mcuType>
 Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
     const char *line = _scan;

@@ -17,9 +17,11 @@ public:
         char *operands,
         SymbolTable *symtab) override;
 
+protected:
+    DisOperand *getEncoder() { return &_encoder; }
+
 private:
-    template<typename U>
-    void outConstant(U val, int8_t radix = 16, bool relax = true);
+    DisIntelOperand _encoder;
 
     void outRegister(RegName regName);
 

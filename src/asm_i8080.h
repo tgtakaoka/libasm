@@ -20,12 +20,13 @@ public:
         return RegI8080::parseRegister(text) != REG_UNDEF;
     }
 
+protected:
+    AsmOperand *getParser() override { return &_parser; }
+
 private:
     AsmIntelOperand _parser;
 
     Error checkLineEnd();
-    Error getOperand16(uint16_t &val16);
-    Error getOperand8(uint8_t &val8);
     Error encodePointerReg(Insn &insn);
     Error encodeStackReg(Insn &insn);
     Error encodeIndexReg(Insn &insn);

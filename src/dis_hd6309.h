@@ -18,11 +18,13 @@ public:
         char *operands,
         SymbolTable *symtab) override;
 
+protected:
+    DisOperand *getEncoder() { return &_encoder; }
+
 private:
     RegHd6309<mcuType> _regs;
+    DisMotoOperand _encoder;
 
-    template<typename T>
-    void outConstant(T val, int8_t radix = 16, bool relax = true);
     void outRegister(RegName regName);
 
     // MC6809
