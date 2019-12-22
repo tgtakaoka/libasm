@@ -20,7 +20,7 @@ public:
 
 private:
     template<typename U>
-    void outConstant(U val, uint8_t radix = 16, bool relax = true);
+    void outConstant(U val, int8_t radix = 16, bool relax = true);
     template<typename U>
     void outAddress(U addr, bool indir = true);
     void outIndexOffset(target::insn_t insnCode, int8_t offset);

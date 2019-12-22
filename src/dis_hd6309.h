@@ -22,7 +22,7 @@ private:
     RegHd6309<mcuType> _regs;
 
     template<typename T>
-    void outConstant(T val, uint8_t radix = 16, bool relax = true);
+    void outConstant(T val, int8_t radix = 16, bool relax = true);
     void outRegister(RegName regName);
 
     // MC6809

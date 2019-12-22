@@ -19,7 +19,7 @@ public:
 
 private:
     template<typename U>
-    void outConstant(U val, uint8_t radix = 16, bool relax = true);
+    void outConstant(U val, int8_t radix = 16, bool relax = true);
 
     void outRegister(RegName regName);
 

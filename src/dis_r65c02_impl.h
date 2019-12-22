@@ -4,12 +4,15 @@
 
 #include "dis_operand.h"
 #include "table_r65c02.h"
+#include "type_traits.h"
 
 template<McuType mcuType>
 template<typename T>
-void Dis6502<mcuType>::outConstant(T val, uint8_t radix, bool relax) {
-    DisMotoOperand<T> encoder;
-    _operands = encoder.outputConstant(_operands, val, radix, relax);
+void Dis6502<mcuType>::outConstant(T val, int8_t radix, bool relax) {
+    DisMotoOperand encoder;
+    if (is_signed<T>::value) radix = -radix;
+    _operands = encoder.output(
+        _operands, val, radix, relax, static_cast<uint8_t>(sizeof(T)));
 }
 
 template<McuType mcuType>

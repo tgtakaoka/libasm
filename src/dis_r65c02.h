@@ -20,7 +20,7 @@ public:
 
 private:
     template<typename T>
-    void outConstant(T val, uint8_t radix = 16, bool relax = true);
+    void outConstant(T val, int8_t radix = 16, bool relax = true);
 
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);
