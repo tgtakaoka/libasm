@@ -22,13 +22,13 @@ Error Asm6502<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::getOperand(uint16_t &val) {
+Error Asm6502<mcuType>::getOperand(uint16_t &val16) {
     uint32_t val32;
-    AsmMotoOperand<target::uintptr_t> parser(_symtab);
+    AsmMotoOperand parser(_symtab);
     const char *p = parser.eval(_scan, val32);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
-    val = val32;
+    val16 = val32;
     return OK;
 }
 
@@ -138,7 +138,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val) {
 template<McuType mcuType>
 Error Asm6502<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable<target::uintptr_t> *symtab) {
+    SymbolTable *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);

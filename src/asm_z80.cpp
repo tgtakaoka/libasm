@@ -7,13 +7,13 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmZ80::getOperand(uint16_t &val) {
+Error AsmZ80::getOperand(uint16_t &val16) {
     uint32_t val32;
-    AsmIntelOperand<target::uintptr_t> parser(_symtab);
+    AsmIntelOperand parser(_symtab);
     const char *p = parser.eval(_scan, val32);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
-    val = val32;
+    val16 = val32;
     return OK;
 }
 
@@ -351,7 +351,7 @@ Error AsmZ80::parseOperand(
 
 Error AsmZ80::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable<target::uintptr_t> *symtab) {
+    SymbolTable *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);

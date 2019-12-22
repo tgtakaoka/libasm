@@ -16,7 +16,7 @@ public:
         const char *line,
         Insn &insn,
         Addr addr,
-        SymbolTable<Addr> *symtab) = 0;
+        SymbolTable *symtab) = 0;
     virtual const char *errorAt() const = 0;
     virtual bool isRegister(const char *text) const = 0;
 };
@@ -28,9 +28,9 @@ public:
 
 protected:
     const char *_scan;
-    SymbolTable<Addr>  *_symtab;
+    SymbolTable  *_symtab;
 
-    void reset(const char *line, SymbolTable<Addr> *symtab) {
+    void reset(const char *line, SymbolTable *symtab) {
         _scan = line;
         _symtab = symtab;
         ErrorReporter::resetError();

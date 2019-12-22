@@ -22,19 +22,19 @@ Error Asm09<mcuType>::checkLineEnd() {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getOperand(uint32_t &val) {
-    AsmMotoOperand<target::uintptr_t> parser(_symtab);
-    const char *p = parser.eval(_scan, val);
+Error Asm09<mcuType>::getOperand(uint32_t &val32) {
+    AsmMotoOperand parser(_symtab);
+    const char *p = parser.eval(_scan, val32);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
     return OK;
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::getOperand16(uint16_t &val) {
+Error Asm09<mcuType>::getOperand16(uint16_t &val16) {
     uint32_t val32;
     if (getOperand(val32)) return getError();
-    val = val32;
+    val16 = val32;
     return OK;
 }
 
@@ -380,7 +380,7 @@ Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
 template<McuType mcuType>
 Error Asm09<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable<target::uintptr_t> *symtab) {
+    SymbolTable *symtab) {
     reset(skipSpace(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);

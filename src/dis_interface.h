@@ -12,16 +12,16 @@ public:
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
-        SymbolTable<Addr> *symtab) = 0;
+        SymbolTable *symtab) = 0;
 };
 
 template<typename Addr>
 class DisCommon : public Disassembler<Addr> {
 protected:
     char *_operands;
-    SymbolTable<Addr> *_symtab;
+    SymbolTable *_symtab;
 
-    void reset(char *operands, SymbolTable<Addr> *symtab) {
+    void reset(char *operands, SymbolTable *symtab) {
         *(_operands = operands) = 0;
         _symtab = symtab;
         ErrorReporter::resetError();

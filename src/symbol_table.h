@@ -2,14 +2,13 @@
 #ifndef __SYMBOL_TABLE_H__
 #define __SYMBOL_TABLE_H__
 
-#include "config_host.h"
+#include <stdint.h>
 
-template<typename Addr>
 class SymbolTable {
 public:
-    virtual const char *lookup(Addr address) const = 0;
+    virtual const char *lookup(uint32_t address) const = 0;
     virtual bool hasSymbol(const char *symbol) const = 0;
-    virtual Addr lookup(const char *symbol) const = 0;
+    virtual uint32_t lookup(const char *symbol) const = 0;
 };
 
 #endif  // __SYMBOL_TABLE_H__

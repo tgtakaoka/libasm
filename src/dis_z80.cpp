@@ -390,7 +390,7 @@ Error DisZ80::decode(
     DisMemory<target::uintptr_t> &memory,
     Insn &insn,
     char *operands,
-    SymbolTable<target::uintptr_t> *symtab) {
+    SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

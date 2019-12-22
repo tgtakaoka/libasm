@@ -134,7 +134,7 @@ Error Dis6502<mcuType>::decodeRelative(
 template<McuType mcuType>
 Error Dis6502<mcuType>::decode(
     DisMemory<target::uintptr_t> &memory, Insn &insn, char *operands,
-    SymbolTable<target::uintptr_t> *symtab) {
+    SymbolTable *symtab) {
     reset(operands, symtab);
     insn.resetAddress(memory.address());
 

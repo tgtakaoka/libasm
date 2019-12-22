@@ -16,7 +16,7 @@ public:
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
-        SymbolTable<target::uintptr_t> *symtab) override;
+        SymbolTable *symtab) override;
 
 private:
     template<typename T>
