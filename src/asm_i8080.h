@@ -7,6 +7,7 @@
 #include "symbol_table.h"
 #include "table_i8080.h"
 #include "asm_interface.h"
+#include "asm_operand.h"
 
 class AsmI8080 : public AsmCommon<target::uintptr_t> {
 public:
@@ -19,7 +20,9 @@ public:
         return RegI8080::parseRegister(text) != REG_UNDEF;
     }
 
-protected:
+private:
+    AsmIntelOperand _parser;
+
     Error checkLineEnd();
     Error getOperand16(uint16_t &val16);
     Error getOperand8(uint8_t &val8);

@@ -1,23 +1,20 @@
 #include <ctype.h>
 
 #include "asm_i8080.h"
-#include "asm_operand.h"
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
 Error AsmI8080::getOperand16(uint16_t &val16) {
-    AsmIntelOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val16);
+    const char *p = _parser.eval(_scan, val16, _symtab);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
     return OK;
 }
 
 Error AsmI8080::getOperand8(uint8_t &val8) {
-    AsmIntelOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val8);
+    const char *p = _parser.eval(_scan, val8, _symtab);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
     return OK;

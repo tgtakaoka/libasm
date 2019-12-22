@@ -7,6 +7,7 @@
 #include "symbol_table.h"
 #include "table_tms9995.h"
 #include "asm_interface.h"
+#include "asm_operand.h"
 
 class AsmTms9995 : public AsmCommon<target::uintptr_t> {
 public:
@@ -18,6 +19,8 @@ public:
     bool isRegister(const char *text) const override;
 
 private:
+    AsmIntelOperand _parser;
+
     Error checkComma();
     Error getOperand16(uint16_t &val16);
     Error getOperand8(uint8_t &val8);

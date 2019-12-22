@@ -7,14 +7,11 @@
 
 class AsmOperand {
 public:
-    const char *eval(const char *expr, uint32_t &val32);
-    const char *eval(const char *expr, uint16_t &val16);
-    const char *eval(const char *expr, uint8_t &val8);
+    const char *eval(const char *expr, uint32_t &val32, SymbolTable *symtab);
+    const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
+    const char *eval(const char *expr, uint8_t &val8, SymbolTable *symtab);
 
 protected:
-    AsmOperand(SymbolTable *symtab)
-        : _symtab(symtab) {}
-
     virtual const char *parseConstant(const char *p, uint32_t &val) const = 0;
     virtual bool isSymbolLetter(char c, bool head = false) const = 0;
 
@@ -87,20 +84,12 @@ private:
 };
 
 class AsmMotoOperand : public AsmOperand {
-public:
-    AsmMotoOperand(SymbolTable *symtab)
-        : AsmOperand(symtab) {}
-
 protected:
     bool isSymbolLetter(char c, bool head) const override;
     const char *parseConstant(const char *p, uint32_t &val) const override;
 };
 
 class AsmIntelOperand : public AsmOperand {
-public:
-    AsmIntelOperand(SymbolTable *symtab)
-        : AsmOperand(symtab) {}
-
 protected:
     bool isSymbolLetter(char c, bool head) const override;
     const char *parseConstant(const char *scan, uint32_t &val) const override;

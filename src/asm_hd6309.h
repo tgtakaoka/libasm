@@ -8,6 +8,7 @@
 #include "reg_hd6309.h"
 #include "table_hd6309.h"
 #include "asm_interface.h"
+#include "asm_operand.h"
 
 template<McuType mcuType>
 class Asm09 : public AsmCommon<target::uintptr_t> {
@@ -23,6 +24,7 @@ public:
 
 private:
     RegHd6309<mcuType> _regs;
+    AsmMotoOperand _parser;
 
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());

@@ -7,6 +7,7 @@
 #include "symbol_table.h"
 #include "table_z80.h"
 #include "asm_interface.h"
+#include "asm_operand.h"
 
 class AsmZ80 : public AsmCommon<target::uintptr_t> {
 public:
@@ -20,6 +21,8 @@ public:
     }
 
 private:
+    AsmIntelOperand _parser;
+
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableZ80::prefixCode(insn.insnCode());
         if (TableZ80::isPrefixCode(prefix))

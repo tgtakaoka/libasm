@@ -2,8 +2,6 @@
 #ifndef __ASM_R65C02_IMPL_H__
 #define __ASM_R65C02_IMPL_H__
 
-#include "asm_operand.h"
-
 #include <ctype.h>
 
 static bool isidchar(const char c) {
@@ -23,8 +21,7 @@ Error Asm6502<mcuType>::checkLineEnd() {
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand16(uint16_t &val16) {
-    AsmMotoOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val16);
+    const char *p = _parser.eval(_scan, val16, _symtab);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
     return OK;
@@ -32,8 +29,7 @@ Error Asm6502<mcuType>::getOperand16(uint16_t &val16) {
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::getOperand8(uint8_t &val8) {
-    AsmMotoOperand parser(_symtab);
-    const char *p = parser.eval(_scan, val8);
+    const char *p = _parser.eval(_scan, val8, _symtab);
     if (!p) return setError(UNKNOWN_OPERAND);
     _scan = p;
     return OK;

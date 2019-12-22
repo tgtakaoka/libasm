@@ -7,6 +7,7 @@
 #include "symbol_table.h"
 #include "table_r65c02.h"
 #include "asm_interface.h"
+#include "asm_operand.h"
 
 template<McuType mcuType>
 class Asm6502 : public AsmCommon<target::uintptr_t> {
@@ -19,6 +20,8 @@ public:
     bool isRegister(const char *text) const override;
 
 private:
+    AsmMotoOperand _parser;
+
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 
     Error checkLineEnd();
