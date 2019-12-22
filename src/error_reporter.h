@@ -24,6 +24,12 @@ enum Error : host::uint_t {
     OPERAND_TOO_FAR,
     ILLEGAL_BIT_NUMBER,         // HD6309
     GARBAGE_AT_END,
+
+    ILLEGAL_CONSTANT,
+    OVERFLOW_RANGE,
+    MISSING_CLOSING_PAREN,
+    UNKNOWN_EXPR_OPERATOR,
+    DIVIDE_BY_ZERO,
 };
 
 class ErrorReporter {

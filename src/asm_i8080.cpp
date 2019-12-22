@@ -7,17 +7,13 @@ static bool isidchar(const char c) {
 }
 
 Error AsmI8080::getOperand16(uint16_t &val16) {
-    const char *p = _parser.eval(_scan, val16, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val16, _symtab);
+    return setError(_parser.getError());
 }
 
 Error AsmI8080::getOperand8(uint8_t &val8) {
-    const char *p = _parser.eval(_scan, val8, _symtab);
-    if (!p) return setError(UNKNOWN_OPERAND);
-    _scan = p;
-    return OK;
+    _scan = _parser.eval(_scan, val8, _symtab);
+    return setError(_parser.getError());
 }
 
 static const char *skipSpace(const char *line) {
@@ -87,11 +83,10 @@ Error AsmI8080::encodeDataDataReg(Insn &insn) {
 
 Error AsmI8080::encodeVectorNo(Insn &insn) {
     uint8_t vecNo;
-    if (getOperand8(vecNo) == OK && vecNo < 8) {
-        insn.setInsnCode(insn.insnCode() | (vecNo << 3));
-        return setError(OK);
-    }
-    return setError(UNKNOWN_OPERAND);
+    if (getOperand8(vecNo)) return getError();
+    if (vecNo >= 8) return setError(OVERFLOW_RANGE);
+    insn.setInsnCode(insn.insnCode() | (vecNo << 3));
+    return setError(OK);
 }
 
 Error AsmI8080::encodeImmediate(Insn &insn) {

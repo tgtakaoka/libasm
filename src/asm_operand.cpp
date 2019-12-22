@@ -1,77 +1,89 @@
 #include "asm_operand.h"
-#include "symbol_table.h"
 #include "type_traits.h"
 
 #include <ctype.h>
-#include <string.h>
-
-#include <stdio.h>
 
 const char *AsmOperand::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
     _symtab = symtab;
     _next = expr;
-    _error = false;
     _stack.clear();
+    setError(OK);
     Value v = parseExpr();
     // TODO: Check validity.
     val32 = v._value;
-    return _error ? nullptr : _next;
+    return _next;
 }
 
 const char *AsmOperand::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
     uint32_t val32 = 0;
-    const char *p = eval(expr, val32, symtab);
-    if (int32_t(val32) < 0 && int32_t(val32) < -32768) {
-        printf("@@@@@ expr='%s' overflow 16bit 0x%x\n", expr, val32);
-        return nullptr;     // overflow
-    }
-    if (int32_t(val32) >= 0 && val32 >= 0x10000) {
-        printf("@@@@@ expr='%s' overflow 16bit 0x%x\n", expr, val32);
-        return nullptr;     // overflow
-    }
+    eval(expr, val32, symtab);
+    if (getError()) return _next;
+    if (int32_t(val32) < 0 && int32_t(val32) < -0x8000)
+        setError(OVERFLOW_RANGE);
+    if (int32_t(val32) >= 0 && val32 >= 0x10000)
+        setError(OVERFLOW_RANGE);
     val16 = val32;
-    return p;
+    return _next;
 }
 
 const char *AsmOperand::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
     uint32_t val32 = 0;
-    const char *p = eval(expr, val32, symtab);
-    if (int32_t(val32) < 0 && int32_t(val32) < -128) {
-        printf("@@@@@ expr='%s' overflow 8bit 0x%x\n", expr, val32);
-        return nullptr;     // overflow
-    }
-    if (int32_t(val32) >= 0 && val32 >= 0x100) {
-        printf("@@@@@ expr='%s' overflow 8bit 0x%x\n", expr, val32);
-        return nullptr;     // overflow
-    }
+    eval(expr, val32, symtab);
+    if (getError()) return _next;
+    if (int32_t(val32) < 0 && int32_t(val32) < -0x80)
+        setError(OVERFLOW_RANGE);
+    if (int32_t(val32) >= 0 && val32 >= 0x100)
+        setError(OVERFLOW_RANGE);
     val8 = val32;
-    return p;
+    return _next;
 }
 
-static bool isValidDigit(const char c, const uint8_t radix) {
-    if (radix == 16) return isxdigit(c);
-    return c >= '0' && c < '0' + radix;
+static bool isValidDigit(const char c, const uint8_t base) {
+    if (base == 16) return isxdigit(c);
+    return c >= '0' && c < '0' + base;
 }
 
-static uint8_t toNumber(const char c, const uint8_t radix) {
-    if (radix == 16 && !isdigit(c))
+static uint8_t toNumber(const char c, const uint8_t base) {
+    if (base == 16 && !isdigit(c))
         return toupper(c) - 'A' + 10;
     return c - '0';
 }
 
-static const char *parseNumber(
-    const char *p, uint32_t &val, const uint8_t radix) {
-    if (!isValidDigit(*p, radix))
+static bool checkOverflow(
+    uint32_t &val, const uint8_t digit, const uint8_t base) {
+    if (base == 16) {
+        if (val >= 0x10000000) return true;
+    } else if (base == 8) {
+        if (val >= 0x20000000) return true;
+    } else if (base == 2) {
+        if (val >= 0x80000000) return true;
+    } else {
+        if (val >= 429496730)  return true;
+        if (val >= 429496729 && digit >= 6) return true;
+    }
+    val *= base;
+    val += digit;
+    return false;
+}
+
+const char *AsmOperand::parseNumber(
+    const char *p, uint32_t &val, const uint8_t base) {
+    if (!isValidDigit(*p, base)) {
+        setError(ILLEGAL_CONSTANT);
         return nullptr;
+    }
     uint32_t v = 0;
-    while (isValidDigit(*p, radix)) {
-        v *= radix;
-        v += toNumber(*p, radix);
+    while (isValidDigit(*p, base)) {
+        if (checkOverflow(v, toNumber(*p, base), base)) {
+            setError(OVERFLOW_RANGE);
+            return nullptr;
+        }
         p++;
     }
+    setError(OK);
     val = v;
     return p;
 }
@@ -84,6 +96,7 @@ void AsmOperand::skipSpaces() {
 AsmOperand::Value AsmOperand::parseExpr() {
     _stack.push(OprAndLval());
     Value value = readAtom();
+    if (getError()) return Value();
     while (!_stack.empty()) {
         Operator opr(readOperator());
         while (opr._precedence <= _stack.top().precedence()) {
@@ -97,6 +110,7 @@ AsmOperand::Value AsmOperand::parseExpr() {
         }
         _stack.push(OprAndLval(opr, value));
         value = readAtom();
+        if (getError()) return Value();
     }
     return Value();
 }
@@ -108,8 +122,7 @@ AsmOperand::Value AsmOperand::readAtom() {
         Value value(parseExpr());
         skipSpaces();
         if (*_next != ')') {
-            // Missing closing ')'.
-            _error = true;
+            setError(MISSING_CLOSING_PAREN);
             return Value();
         }
         _next++;
@@ -122,13 +135,37 @@ AsmOperand::Value AsmOperand::readAtom() {
             return Value(_symtab->lookup(symbol));
         return Value();
     }
+    return readConstant();
+}
+
+#include <stdio.h>
+AsmOperand::Value AsmOperand::readConstant() {
     uint32_t val;
-    const char *p = parseConstant(_next, val);
-    if (p == nullptr) {
-        // Unknown constant.
-        _error = true;
-        return 0;
+    const char *p;
+    switch (*_next) {
+    case '~':
+        p = parseConstant(_next + 1, val);
+        val = ~val;
+        break;
+    case '+':
+        p = parseConstant(_next + 1, val);
+        break;
+    case '-':
+        p = parseConstant(_next + 1, val);
+        if (getError()) break;
+        if (val > 0x80000000) {
+            setError(OVERFLOW_RANGE);
+            p = nullptr;
+        } else {
+            val = -val;
+        }
+        break;
+    default:
+        p = parseConstant(_next, val);
+        break;
     }
+    if (p == nullptr)
+        return Value();
     _next = p;
     return Value(val);
 }
@@ -142,12 +179,16 @@ AsmOperand::Operator AsmOperand::readOperator() {
     case '+': _next++; return Operator(OP_ADD, 5);
     case '-': _next++; return Operator(OP_SUB, 5);
     case '<':
-        if (*++_next != '<') // Unknown operator.
+        if (*++_next != '<') {
+            setError(UNKNOWN_EXPR_OPERATOR);
             break;
+        }
         _next++; return Operator(OP_BIT_SHL, 4);
     case '>':
-        if (*++_next != '>') // Unknown operator.
+        if (*++_next != '>') {
+            setError(UNKNOWN_EXPR_OPERATOR);
             break;
+        }
         _next++; return Operator(OP_BIT_SHR, 4);
     case '&': _next++; return Operator(OP_BIT_AND, 3);
     case '^': _next++; return Operator(OP_BIT_XOR, 2);
@@ -175,10 +216,16 @@ AsmOperand::Value AsmOperand::evalExpr(
     case OP_SUB: return lhs._value - rhs._value;
     case OP_MUL: return lhs._value * rhs._value;
     case OP_DIV:
-        if (rhs._value == 0) return Value();
+        if (rhs._value == 0) {
+            setError(DIVIDE_BY_ZERO);
+            return Value();
+        }
         return lhs._value / rhs._value;
     case OP_MOD:
-        if (rhs._value == 0) return Value();
+        if (rhs._value == 0) {
+            setError(DIVIDE_BY_ZERO);
+            return Value();
+        }
         return lhs._value % rhs._value;
     case OP_BIT_AND: return lhs._value & rhs._value;
     case OP_BIT_XOR: return lhs._value ^ rhs._value;
@@ -194,20 +241,7 @@ bool AsmMotoOperand::isSymbolLetter(char c, bool head) const {
     return !head && isdigit(c);
 }
 
-const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) const {
-    switch (*p) {
-    case '~':
-        p = parseConstant(p + 1, val);
-        val = ~val;
-        return p;
-    case '+':
-        p++;
-        break;
-    case '-':
-        p = parseConstant(p + 1, val);
-        val = -static_cast<int32_t>(val);
-        return p;
-    }
+const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) {
     if (isdigit(*p)) {
         p = parseNumber(p, val, 10);
     } else if (*p == '$') {
@@ -218,6 +252,7 @@ const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) const {
         p = parseNumber(p + 1, val, 2);
     } else {
         p = nullptr;
+        setError(ILLEGAL_CONSTANT);
     }
     return p;
 }
@@ -227,38 +262,34 @@ bool AsmIntelOperand::isSymbolLetter(char c, bool head) const {
     return !head && isdigit(c);
 }
 
-const char *AsmIntelOperand::parseConstant(
-    const char *scan, uint32_t &val) const {
+static const char *scanConstEnd(
+    const char *p, const uint8_t base, char suffix = 0) {
+    while (isValidDigit(*p, base))
+        p++;
+    if (suffix == 0 || toupper(*p++) == suffix)
+        return p;
+    return nullptr;
+}
+
+const char *AsmIntelOperand::parseConstant(const char *scan, uint32_t &val) {
     const char *p;
-    switch (*scan) {
-    case '~':
-        p = parseConstant(scan + 1, val);
-        val = ~val;
-        return p;
-    case '+':
-        scan++;
-        break;
-    case '-':
-        p = parseConstant(scan + 1, val);
-        val = -static_cast<int32_t>(val);
+    if ((p = scanConstEnd(scan, 16, 'H'))) {
+        parseNumber(scan, val, 16);
         return p;
     }
-    if (!isdigit(*scan))
-        return nullptr;
-    if ((p = parseNumber(scan, val, 16))
-        && toupper(*p) == 'H') {
-        p++;
-    } else if ((p = parseNumber(scan, val, 10))
-               && !(*p && strchr("OoBb", *p))) {
-        ;
-    } else if ((p = parseNumber(scan, val, 8))
-               && toupper(*p) == 'O') {
-        p++;
-    } else if ((p = parseNumber(scan, val, 2))
-               && toupper(*p) == 'B') {
-        p++;
-    } else {
-        p = nullptr;
+    if ((p = scanConstEnd(scan, 10))
+        && (toupper(*p) != 'O' && toupper(*p) != 'B')) {
+        parseNumber(scan, val, 10);
+        return p;
     }
-    return p;
+    if ((p = scanConstEnd(scan, 8, 'O'))) {
+        parseNumber(scan, val, 8);
+        return p;
+    }
+    if ((p = scanConstEnd(scan, 2, 'B'))) {
+        parseNumber(scan, val, 2);
+        return p;
+    }
+    setError(ILLEGAL_CONSTANT);
+    return nullptr;
 }

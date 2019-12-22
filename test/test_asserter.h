@@ -14,7 +14,7 @@ public:
     }
     bool check() const;
     void equals(
-        const char *message, const int expected, const int actual);
+        const char *message, const uint32_t expected, const uint32_t actual);
     void equals(
         const char *message, const char *expected, const char *actual);
     void equals(

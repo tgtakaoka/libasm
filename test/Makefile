@@ -4,12 +4,14 @@ VPATH=../src
 	test_mc6809 test_hd6309 \
 	test_r6502 test_r65c02 \
 	test_tms9995 \
-	test_i8080 test_z80
+	test_i8080 test_z80 \
+	test_expr
 
 test:   test_mc6809 test_hd6309 \
 	test_r6502 test_r65c02 \
 	test_tms9995 \
-	test_i8080 test_z80
+	test_i8080 test_z80 \
+	test_expr
 
 test_mc6809: test_asm_mc6809 test_dis_mc6809
 	./test_asm_mc6809
@@ -32,6 +34,9 @@ test_tms9995:test_asm_tms9995 test_dis_tms9995
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
+test_expr: test_expr_moto test_expr_intel
+	./test_expr_moto
+	./test_expr_intel
 
 CXXFLAGS    = -Wall -g -std=c++17 -O -I$(VPATH)
 CPPFLAGS    = -MMD
@@ -43,7 +48,8 @@ TEST_OBJS= \
 	test_asm_r65c02.o  test_dis_r65c02.o \
 	test_asm_i8080.o   test_dis_i8080.o \
 	test_asm_tms9995.o test_dis_tms9995.o \
-	test_asm_z80.o     test_dis_z80.o
+	test_asm_z80.o     test_dis_z80.o \
+	test_expr_moto.o   test_expr_intel.o
 TESTS=$(TEST_OBJS:.o=)
 
 OBJS_common = test_asserter.o asm_operand.o dis_operand.o
@@ -91,7 +97,11 @@ test_dis_tms9995: test_dis_tms9995.o dis_tms9995.o $(OBJS_tms9995) $(OBJS_common
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_z80:    test_asm_z80.o      asm_z80.o     $(OBJS_z80)     $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_z80  :  test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_common)
+test_dis_z80:    test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_expr_moto:  test_expr_moto.o  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_expr_intel: test_expr_intel.o $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 clean: clean-obj
