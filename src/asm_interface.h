@@ -6,6 +6,7 @@
 #include "symbol_table.h"
 #include "asm_operand.h"
 
+#include <ctype.h>
 #include <string.h>
 
 template<typename Addr>
@@ -48,6 +49,12 @@ protected:
     Error getOperand8(uint8_t &val8) {
         _scan = getParser()->eval(_scan, val8, _symtab);
         return ErrorReporter::setError(getParser()->getError());
+    }
+
+    const char *skipSpaces(const char *scan) {
+        while (isspace(*scan))
+            scan++;
+        return scan;
     }
 
     struct strcasecmp {

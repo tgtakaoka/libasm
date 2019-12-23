@@ -8,14 +8,9 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static const char *skipSpace(const char *line) {
-    while (*line == ' ') line++;
-    return line;
-}
-
 template<McuType mcuType>
 Error Asm09<mcuType>::checkLineEnd() {
-    if (*skipSpace(_scan) == 0) return setError(OK);
+    if (*skipSpaces(_scan) == 0) return setError(OK);
     return setError(GARBAGE_AT_END);
 }
 
@@ -362,7 +357,7 @@ template<McuType mcuType>
 Error Asm09<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
-    reset(skipSpace(line), symtab);
+    reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);
     const char *endName;
@@ -374,7 +369,7 @@ Error Asm09<mcuType>::encode(
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.mcuType() == HD6309 && mcuType != HD6309)
         return setError(UNKNOWN_INSTRUCTION);
-    _scan = skipSpace(endName);
+    _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
     case INHR:  emitInsnCode(insn); return checkLineEnd();

@@ -8,14 +8,9 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static const char *skipSpace(const char *line) {
-    while (*line == ' ') line++;
-    return line;
-}
-
 template<McuType mcuType>
 Error Asm6502<mcuType>::checkLineEnd() {
-    if (*skipSpace(_scan) == 0) return setError(OK);
+    if (*skipSpaces(_scan) == 0) return setError(OK);
     return setError(GARBAGE_AT_END);
 }
 
@@ -57,7 +52,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
         insn.setAddrMode(IMMEDIATE);
         return OK;
     }
-    if (c == 'A' && *skipSpace(_scan + 1) == 0) {
+    if (c == 'A' && *skipSpaces(_scan + 1) == 0) {
         insn.setAddrMode(ACCUMULATOR);
         return OK;
     }
@@ -66,7 +61,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     const char mode = *_scan;
     if (mode == '<' || mode == '>') _scan++;
     if (getOperand16(val16)) return getError();
-    if (!indirect && *skipSpace(_scan) == 0) {
+    if (!indirect && *skipSpaces(_scan) == 0) {
         if (mode == '>' || val16 >= 0x0100) {
             insn.setAddrMode(ABSOLUTE);
             return OK;
@@ -80,7 +75,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
 
     c = *_scan++;
     if (c == ')' && indirect) {
-        if (*skipSpace(_scan) == 0) {
+        if (*skipSpaces(_scan) == 0) {
             if (mode == '>' || val16 >= 0x0100) {
                 insn.setAddrMode(ABS_INDIRECT);
                 return OK;
@@ -93,7 +88,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
         }
         if (*_scan++ != ',')
             return setError(UNKNOWN_OPERAND);
-        if (toupper(*_scan) == 'Y' && *skipSpace(_scan + 1) == 0) {
+        if (toupper(*_scan) == 'Y' && *skipSpaces(_scan + 1) == 0) {
             if (mode == '<' || val16 < 0x0100) {
                 insn.setAddrMode(INDIRECT_IDX);
                 return OK;
@@ -107,7 +102,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     const char index = toupper(*_scan++);
     if (index != 'X' && index != 'Y') return setError(UNKNOWN_OPERAND);
 
-    if (!indirect && *skipSpace(_scan) == 0) {
+    if (!indirect && *skipSpaces(_scan) == 0) {
         if (mode == '>' || val16 >= 0x0100)  {
             insn.setAddrMode(index == 'X' ? ABS_IDX_X : ABS_IDX_Y);
             return OK;
@@ -118,7 +113,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
         }
         return setError(OPERAND_NOT_ZP);
     }
-    if (indirect && index == 'X' && *_scan == ')' && *skipSpace(_scan + 1) == 0) {
+    if (indirect && index == 'X' && *_scan == ')' && *skipSpaces(_scan + 1) == 0) {
         insn.setAddrMode(INDX_IND);
         return OK;
     }
@@ -129,7 +124,7 @@ template<McuType mcuType>
 Error Asm6502<mcuType>::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
-    reset(skipSpace(line), symtab);
+    reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);
     const char *endName;
@@ -141,7 +136,7 @@ Error Asm6502<mcuType>::encode(
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.mcuType() == R65C02 && mcuType != R65C02)
         return setError(UNKNOWN_INSTRUCTION);
-    _scan = skipSpace(endName);
+    _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
     case IMPLIED:

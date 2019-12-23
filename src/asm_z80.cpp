@@ -6,11 +6,6 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static const char *skipSpace(const char *line) {
-    while (*line == ' ') line++;
-    return line;
-}
-
 Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOp) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
@@ -344,7 +339,7 @@ Error AsmZ80::parseOperand(
 Error AsmZ80::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
-    reset(skipSpace(line), symtab);
+    reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);
     const char *endName;
@@ -354,7 +349,7 @@ Error AsmZ80::encode(
 
     if (TableZ80.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    _scan = skipSpace(endName);
+    _scan = skipSpaces(endName);
 
     OprFormat leftFormat = insn.leftFormat();
     OprFormat rightFormat = insn.rightFormat();
@@ -364,7 +359,7 @@ Error AsmZ80::encode(
     if (parseOperand(leftFormat, leftReg, leftOpr, oprSize, insn.addrMode()))
         return getError();
     if (*_scan == ',') {
-        _scan = skipSpace(_scan + 1);
+        _scan = skipSpaces(_scan + 1);
         if (parseOperand(
                 rightFormat, rightReg, rightOpr, oprSize, insn.addrMode()))
             return getError();

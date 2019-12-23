@@ -6,15 +6,10 @@ static bool isIdChar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static const char *skipSpace(const char *line) {
-    while (*line == ' ') line++;
-    return line;
-}
-
 Error AsmTms9995::checkComma() {
-    _scan = skipSpace(_scan);
+    _scan = skipSpaces(_scan);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan = skipSpace(_scan + 1);
+    _scan = skipSpaces(_scan + 1);
     return OK;
 }
 
@@ -147,7 +142,7 @@ Error AsmTms9995::encodeCruOff(Insn &insn) {
 Error AsmTms9995::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
-    reset(skipSpace(line), symtab);
+    reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
     if (!*_scan) return setError(NO_TEXT);
     const char *endName;
@@ -157,7 +152,7 @@ Error AsmTms9995::encode(
 
     if (TableTms9995.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    _scan = skipSpace(endName);
+    _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
     case INH:
@@ -213,5 +208,5 @@ Error AsmTms9995::encode(
         return setError(INTERNAL_ERROR);
     }
     if (getError()) return getError();
-    return *skipSpace(_scan) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    return *skipSpaces(_scan) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
 }

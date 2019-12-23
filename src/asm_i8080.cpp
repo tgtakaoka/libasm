@@ -6,13 +6,8 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static const char *skipSpace(const char *line) {
-    while (*line == ' ') line++;
-    return line;
-}
-
 Error AsmI8080::checkLineEnd() {
-    if (*skipSpace(_scan) == 0) return setError(OK);
+    if (*skipSpaces(_scan) == 0) return setError(OK);
     return setError(GARBAGE_AT_END);
 }
 
@@ -113,7 +108,7 @@ Error AsmI8080::encode(
     SymbolTable *symtab) {
     reset(line, symtab);
     insn.resetAddress(addr);
-    _scan = skipSpace(_scan);
+    _scan = skipSpaces(_scan);
     if (!*_scan) return setError(NO_TEXT);
     const char *endName;
     for (endName = _scan; isidchar(*endName); endName++)
@@ -122,7 +117,7 @@ Error AsmI8080::encode(
 
     if (TableI8080.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    _scan = skipSpace(endName);
+    _scan = skipSpaces(endName);
 
     switch (insn.insnFormat()) {
     case NO_FORMAT:     setError(OK); break;
