@@ -128,6 +128,10 @@ AsmOperand::Value AsmOperand::readAtom() {
         _next++;
         return value;
     }
+    if (_symtab && isCurrentAddressSymbol(*_next)) {
+        _next++;
+        return Value(_symtab->currentAddress());
+    }
     if (_symtab && isSymbolLetter(*_next, true)) {
         char symbol[20];
         readSymbol(symbol, symbol + sizeof(symbol) - 1);
@@ -198,6 +202,11 @@ AsmOperand::Operator AsmOperand::readOperator() {
     return Operator(OP_NONE, 0);
 }
 
+bool AsmOperand::isSymbolLetter(char c, bool head) const {
+    if (isalpha(c) || c == '_' || c == '.') return true;
+    return !head && isdigit(c);
+}
+
 void AsmOperand::readSymbol(char *buffer, char *const end) {
     while (isSymbolLetter(*_next)) {
         if (buffer < end)
@@ -236,9 +245,8 @@ AsmOperand::Value AsmOperand::evalExpr(
     }
 }
 
-bool AsmMotoOperand::isSymbolLetter(char c, bool head) const {
-    if (isalpha(c) || c == '_' || c == '.') return true;
-    return !head && isdigit(c);
+bool AsmMotoOperand::isCurrentAddressSymbol(char c) const {
+    return c == '*';
 }
 
 const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) {
@@ -257,9 +265,8 @@ const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) {
     return p;
 }
 
-bool AsmIntelOperand::isSymbolLetter(char c, bool head) const {
-    if (isalpha(c) || c == '_' || c == '.') return true;
-    return !head && isdigit(c);
+bool AsmIntelOperand::isCurrentAddressSymbol(char c) const {
+    return c == '$';
 }
 
 static const char *scanConstEnd(

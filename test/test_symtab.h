@@ -21,14 +21,23 @@ public:
         return it == _addr_to_syms.end() ? nullptr : it->second;
     }
 
+    uint32_t currentAddress() const override {
+        return _current_address;
+    }
+
     void reset() {
         _sym_to_addrs.clear();
         _addr_to_syms.clear();
+        _current_address = 0;
     }
 
     void put(uint32_t addr, const char *symbol) {
         _sym_to_addrs.insert_or_assign(symbol, addr);
         _addr_to_syms.insert_or_assign(addr, symbol);
+    }
+
+    void setCurrentAddress(uint32_t value) {
+        _current_address = value;
     }
 
 private:
@@ -39,6 +48,7 @@ private:
     };
     std::map<const char *, uint32_t, compare_text> _sym_to_addrs;
     std::map<uint32_t, const char *> _addr_to_syms;
+    uint32_t _current_address;
 };
 
 #endif

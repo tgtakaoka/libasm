@@ -127,6 +127,21 @@ static void test_bin_constant() {
     E32("-%10000000000000000000000000000001", 0,          OVERFLOW_RANGE);
 }
 
+static void test_current_address() {
+    symtab.setCurrentAddress(0x1000);
+    E16("*",        0x1000, OK);
+    E16("*+2",      0x1002, OK);
+    E16("*-2",      0x0FFE, OK);
+    E16("*+$F000", 0,       OVERFLOW_RANGE);
+    E32("*+$F000", 0x10000, OK);
+    E16("*-$1001",  0xFFFF, OK);
+
+    symtab.put(0x1000, "table");
+    symtab.setCurrentAddress(0x1100);
+    E16("*-table",     0x100, OK);
+    E16("(*-table)/2",  0x80, OK);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -140,5 +155,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_hex_constant);
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
+    RUN_TEST(test_current_address);
     return 0;
 }

@@ -13,7 +13,8 @@ public:
 
 protected:
     virtual const char *parseConstant(const char *p, uint32_t &val) = 0;
-    virtual bool isSymbolLetter(char c, bool head = false) const = 0;
+    virtual bool isCurrentAddressSymbol(char c) const = 0;
+    virtual bool isSymbolLetter(char c, bool head = false) const;
     const char *parseNumber(const char *p, uint32_t &val, const uint8_t base);
 
 private:
@@ -86,13 +87,13 @@ private:
 
 class AsmMotoOperand : public AsmOperand {
 protected:
-    bool isSymbolLetter(char c, bool head) const override;
+    bool isCurrentAddressSymbol(char c) const override;
     const char *parseConstant(const char *p, uint32_t &val) override;
 };
 
 class AsmIntelOperand : public AsmOperand {
 protected:
-    bool isSymbolLetter(char c, bool head) const override;
+    bool isCurrentAddressSymbol(char c) const override;
     const char *parseConstant(const char *scan, uint32_t &val) override;
 };
 
