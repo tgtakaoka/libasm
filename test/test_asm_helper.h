@@ -14,6 +14,7 @@ extern TestSymtab symtab;
     do {                                                        \
         Insn insn;                                              \
         char message[80];                                       \
+        symtab.setCurrentAddress(addr);                         \
         assembler.encode(line, insn, addr, &symtab);            \
         sprintf(message, "%s: %s", __FUNCTION__, line);         \
         asserter.equals(message, OK, assembler.getError());     \
