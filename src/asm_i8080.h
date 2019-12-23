@@ -16,9 +16,6 @@ public:
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable *symtab), override;
-    bool isRegister(const char *text) const override {
-        return RegI8080::parseRegister(text) != REG_UNDEF;
-    }
 
 protected:
     AsmOperand *getParser() override { return &_parser; }

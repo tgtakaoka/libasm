@@ -2,9 +2,6 @@
 
 #include "config_hd6309.h"
 
-static constexpr RegName ALL_MC6809[] PROGMEM = {
-    REG_A, REG_B, REG_CC, REG_D, REG_DP, REG_PC, REG_S, REG_U, REG_X, REG_Y
-};
 static constexpr RegName EXTRA_HD6309[] PROGMEM = {
     REG_E, REG_F, REG_V, REG_W
 };
@@ -143,17 +140,6 @@ char RegHd6309Utils::tfmSrcModeChar(host::uint_t mode) {
 
 char RegHd6309Utils::tfmDstModeChar(host::uint_t mode) {
     return pgm_read_byte(&TFM_DST_MODES[mode]);
-}
-
-template<>
-bool RegHd6309<MC6809>::isRegister(const char *text) {
-    return parseRegName(text, ARRAY_RANGE(ALL_MC6809)) != REG_UNDEF;
-}
-
-template<>
-bool RegHd6309<HD6309>::isRegister(const char *text) {
-    return parseRegName(text, ARRAY_RANGE(ALL_MC6809)) != REG_UNDEF
-        || parseRegName(text, ARRAY_RANGE(EXTRA_HD6309)) != REG_UNDEF;
 }
 
 static constexpr RegName MC6809_INDEX_REGS[] PROGMEM = {

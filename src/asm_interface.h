@@ -19,7 +19,6 @@ public:
         Addr addr,
         SymbolTable *symtab) = 0;
     virtual const char *errorAt() const = 0;
-    virtual bool isRegister(const char *text) const = 0;
 };
 
 template<typename Addr>

@@ -188,10 +188,4 @@ Error Asm6502<mcuType>::encode(
     }
 }
 
-template<McuType mcuType>
-bool Asm6502<mcuType>::isRegister(const char *text) const {
-    const char r = toupper(*text++);
-    return (r == 'A' || r == 'X' || r == 'Y') && !isidchar(*text);
-}
-
 #endif // __ASM_R65C02_IMPL_H__

@@ -18,7 +18,7 @@ Error AsmTms9995::checkComma() {
     return OK;
 }
 
-bool AsmTms9995::isRegister(const char *text) const {
+static bool isRegister(const char *text) {
     if (toupper(*text++) != 'R' || !isdigit(*text))
         return false;
     if (!isIdChar(text[1]))

@@ -18,9 +18,6 @@ public:
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable *symtab) override;
-    bool isRegister(const char *text) const override {
-        return RegHd6309<mcuType>::isRegister(text);
-    }
 
 protected:
     AsmOperand *getParser() override { return &_parser; }
