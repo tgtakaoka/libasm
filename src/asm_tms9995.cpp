@@ -208,5 +208,5 @@ Error AsmTms9995::encode(
         return setError(INTERNAL_ERROR);
     }
     if (getError()) return getError();
-    return *skipSpaces(_scan) == 0 ? setError(OK) : setError(GARBAGE_AT_END);
+    return checkLineEnd();
 }

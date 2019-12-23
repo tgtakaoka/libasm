@@ -9,12 +9,6 @@ static bool isidchar(const char c) {
 }
 
 template<McuType mcuType>
-Error Asm6502<mcuType>::checkLineEnd() {
-    if (*skipSpaces(_scan) == 0) return setError(OK);
-    return setError(GARBAGE_AT_END);
-}
-
-template<McuType mcuType>
 Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
@@ -40,6 +34,7 @@ Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
 }
 #endif
 
+#include <stdio.h>
 template<McuType mcuType>
 Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     char c = toupper(*_scan);
@@ -48,11 +43,11 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
         uint8_t val8;
         if (getOperand8(val8)) return getError();
         val16 = val8;
-        if (checkLineEnd()) return setError(GARBAGE_AT_END);
+        if (checkLineEnd()) return getError();
         insn.setAddrMode(IMMEDIATE);
         return OK;
     }
-    if (c == 'A' && *skipSpaces(_scan + 1) == 0) {
+    if (c == 'A' && checkLineEnd(_scan + 1) == OK) {
         insn.setAddrMode(ACCUMULATOR);
         return OK;
     }
@@ -61,7 +56,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     const char mode = *_scan;
     if (mode == '<' || mode == '>') _scan++;
     if (getOperand16(val16)) return getError();
-    if (!indirect && *skipSpaces(_scan) == 0) {
+    if (!indirect && checkLineEnd() == OK) {
         if (mode == '>' || val16 >= 0x0100) {
             insn.setAddrMode(ABSOLUTE);
             return OK;
@@ -75,7 +70,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
 
     c = *_scan++;
     if (c == ')' && indirect) {
-        if (*skipSpaces(_scan) == 0) {
+        if (checkLineEnd() == OK) {
             if (mode == '>' || val16 >= 0x0100) {
                 insn.setAddrMode(ABS_INDIRECT);
                 return OK;
@@ -88,7 +83,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
         }
         if (*_scan++ != ',')
             return setError(UNKNOWN_OPERAND);
-        if (toupper(*_scan) == 'Y' && *skipSpaces(_scan + 1) == 0) {
+        if (toupper(*_scan) == 'Y' && checkLineEnd(_scan + 1) == OK) {
             if (mode == '<' || val16 < 0x0100) {
                 insn.setAddrMode(INDIRECT_IDX);
                 return OK;
@@ -102,7 +97,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     const char index = toupper(*_scan++);
     if (index != 'X' && index != 'Y') return setError(UNKNOWN_OPERAND);
 
-    if (!indirect && *skipSpaces(_scan) == 0) {
+    if (!indirect && checkLineEnd() == OK) {
         if (mode == '>' || val16 >= 0x0100)  {
             insn.setAddrMode(index == 'X' ? ABS_IDX_X : ABS_IDX_Y);
             return OK;
@@ -113,7 +108,8 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
         }
         return setError(OPERAND_NOT_ZP);
     }
-    if (indirect && index == 'X' && *_scan == ')' && *skipSpaces(_scan + 1) == 0) {
+    if (indirect && index == 'X' && *_scan == ')'
+        && checkLineEnd(_scan + 1) == OK) {
         insn.setAddrMode(INDX_IND);
         return OK;
     }

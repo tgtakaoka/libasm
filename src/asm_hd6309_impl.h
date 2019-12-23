@@ -9,12 +9,6 @@ static bool isidchar(const char c) {
 }
 
 template<McuType mcuType>
-Error Asm09<mcuType>::checkLineEnd() {
-    if (*skipSpaces(_scan) == 0) return setError(OK);
-    return setError(GARBAGE_AT_END);
-}
-
-template<McuType mcuType>
 Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
     const char *line = _scan;
@@ -166,7 +160,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         if (*_scan != ']') return setError(UNKNOWN_OPERAND);
         _scan++;
     }
-    if (checkLineEnd()) return setError(GARBAGE_AT_END);
+    if (checkLineEnd()) return getError();
 
     uint8_t post;
     if (base == REG_UNDEF) {    // [n16]
@@ -306,7 +300,7 @@ Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
     _scan += _regs.regNameLen(regName);
     char dstMode = 0;
     if (*_scan == '+' || *_scan == '-') dstMode = *_scan++;
-    if (checkLineEnd()) return setError(GARBAGE_AT_END);
+    if (checkLineEnd()) return getError();
     post |= _regs.encodeTfmBaseReg(regName);
 
     for (uint8_t mode = 0; mode < 4; mode++) {

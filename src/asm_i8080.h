@@ -20,7 +20,6 @@ public:
 private:
     AsmIntelOperand _parser;
 
-    Error checkLineEnd();
     Error encodePointerReg(Insn &insn);
     Error encodeStackReg(Insn &insn);
     Error encodeIndexReg(Insn &insn);

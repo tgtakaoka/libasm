@@ -23,7 +23,6 @@ private:
 
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 
-    Error checkLineEnd();
     Error parseOperand(Insn &insn, uint16_t &val);
 
     Error encodeRelative(Insn &insn, bool emitInsn);

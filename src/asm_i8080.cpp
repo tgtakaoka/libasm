@@ -6,11 +6,6 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-Error AsmI8080::checkLineEnd() {
-    if (*skipSpaces(_scan) == 0) return setError(OK);
-    return setError(GARBAGE_AT_END);
-}
-
 Error AsmI8080::encodePointerReg(Insn &insn) {
     const RegName regName = RegI8080::parsePointerReg(_scan);
     const host::int_t num = RegI8080::encodePointerReg(regName);

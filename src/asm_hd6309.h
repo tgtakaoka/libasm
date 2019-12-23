@@ -30,7 +30,6 @@ private:
         insn.emitByte(TableHd6309Base::opCode(insn.insnCode()));
     }
 
-    Error checkLineEnd();
     Error determineAddrMode(const char *line, Insn &insn);
 
     // MC6809

@@ -56,6 +56,15 @@ protected:
             scan++;
         return scan;
     }
+    Error checkLineEnd(const char *scan = nullptr) {
+        if (scan == nullptr) scan = _scan;
+        const char *p = skipSpaces(scan);
+        if (*p == 0 || *p == ';') {
+            _scan = p;
+            return setError(OK);
+        }
+        return setError(GARBAGE_AT_END);
+    }
 
     struct strcasecmp {
         bool operator()(const char *a, const char *b) const {
