@@ -8,18 +8,15 @@
 #include "reg_hd6309.h"
 #include "table_hd6309.h"
 #include "asm_interface.h"
-#include "asm_operand.h"
 
 template<McuType mcuType>
-class Asm09 : public AsmCommon<target::uintptr_t> {
+class Asm09 : public Assembler<target::uintptr_t> {
 public:
     Error encode(
         const char *line,
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable *symtab) override;
-
-protected:
     AsmOperand *getParser() override { return &_parser; }
 
 private:

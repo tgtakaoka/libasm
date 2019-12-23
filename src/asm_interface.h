@@ -18,13 +18,8 @@ public:
         Insn &insn,
         Addr addr,
         SymbolTable *symtab) = 0;
-    virtual const char *errorAt() const = 0;
-};
-
-template<typename Addr>
-class AsmCommon : public Assembler<Addr> {
-public:
-    const char *errorAt() const override { return _scan; }
+    virtual AsmOperand *getParser() = 0;
+    const char *errorAt() const { return _scan; }
 
 protected:
     const char *_scan;
@@ -42,7 +37,6 @@ protected:
         return _symtab ? _symtab->lookup(symbol) : 0;
     }
 
-    virtual AsmOperand *getParser() = 0;
     Error getOperand32(uint32_t &val32) {
         _scan = getParser()->eval(_scan, val32, _symtab);
         return ErrorReporter::setError(getParser()->getError());

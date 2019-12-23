@@ -7,17 +7,14 @@
 #include "symbol_table.h"
 #include "table_i8080.h"
 #include "asm_interface.h"
-#include "asm_operand.h"
 
-class AsmI8080 : public AsmCommon<target::uintptr_t> {
+class AsmI8080 : public Assembler<target::uintptr_t> {
 public:
     Error encode(
         const char *line,
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable *symtab), override;
-
-protected:
     AsmOperand *getParser() override { return &_parser; }
 
 private:
