@@ -2,10 +2,6 @@
 
 #include "asm_i8080.h"
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
-}
-
 Error AsmI8080::encodePointerReg(Insn &insn) {
     const RegName regName = RegI8080::parsePointerReg(_scan);
     const host::int_t num = RegI8080::encodePointerReg(regName);
@@ -101,13 +97,11 @@ Error AsmI8080::encodeIoaddr(Insn &insn) {
 Error AsmI8080::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
-    reset(line, symtab);
+    reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
-    _scan = skipSpaces(_scan);
-    if (!*_scan) return setError(NO_TEXT);
-    const char *endName;
-    for (endName = _scan; isidchar(*endName); endName++)
-        ;
+
+    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
     insn.setName(_scan, endName);
 
     if (TableI8080.searchName(insn))

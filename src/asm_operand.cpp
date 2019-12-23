@@ -134,7 +134,7 @@ AsmOperand::Value AsmOperand::readAtom() {
     }
     if (_symtab && isSymbolLetter(*_next, true)) {
         char symbol[20];
-        readSymbol(symbol, symbol + sizeof(symbol) - 1);
+        _next = readSymbol(_next, symbol, symbol + sizeof(symbol) - 1);
         if (_symtab->hasSymbol(symbol))
             return Value(_symtab->lookup(symbol));
         return Value();
@@ -207,13 +207,15 @@ bool AsmOperand::isSymbolLetter(char c, bool head) const {
     return !head && isdigit(c);
 }
 
-void AsmOperand::readSymbol(char *buffer, char *const end) {
-    while (isSymbolLetter(*_next)) {
-        if (buffer < end)
-            *buffer++ = *_next;
-        _next++;
+const char *AsmOperand::readSymbol(
+    const char *scan, char *buffer, char *const end) const {
+    while (isSymbolLetter(*scan)) {
+        if (buffer && buffer < end)
+            *buffer++ = *scan;
+        scan++;
     }
-    *buffer = 0;
+    if (buffer) *buffer = 0;
+    return scan;
 }
 
 AsmOperand::Value AsmOperand::evalExpr(

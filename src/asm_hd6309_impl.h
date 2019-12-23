@@ -4,10 +4,6 @@
 
 #include <ctype.h>
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
-}
-
 template<McuType mcuType>
 Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
@@ -353,10 +349,9 @@ Error Asm09<mcuType>::encode(
     SymbolTable *symtab) {
     reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
-    if (!*_scan) return setError(NO_TEXT);
-    const char *endName;
-    for (endName = _scan; isidchar(*endName); endName++)
-        ;
+
+    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
     insn.setName(_scan, endName);
 
     if (TableHd6309<mcuType>::table()->searchName(insn))

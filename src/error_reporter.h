@@ -16,7 +16,7 @@ enum Error : host::uint_t {
     ILLEGAL_OPERAND,            // Z80
 
     // Assembler
-    NO_TEXT,
+    NO_INSTRUCTION,
     UNKNOWN_INSTRUCTION,
     UNKNOWN_REGISTER,
     UNKNOWN_OPERAND,

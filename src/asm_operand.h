@@ -10,11 +10,12 @@ public:
     const char *eval(const char *expr, uint32_t &val32, SymbolTable *symtab);
     const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
     const char *eval(const char *expr, uint8_t &val8, SymbolTable *symtab);
+    virtual bool isSymbolLetter(char c, bool head = false) const;
+    const char *readSymbol(const char *scan, char *buffer, char *const end) const;
 
 protected:
     virtual const char *parseConstant(const char *p, uint32_t &val) = 0;
     virtual bool isCurrentAddressSymbol(char c) const = 0;
-    virtual bool isSymbolLetter(char c, bool head = false) const;
     const char *parseNumber(const char *p, uint32_t &val, const uint8_t base);
 
 private:
@@ -81,7 +82,6 @@ private:
     Value readAtom();
     Value readConstant();
     Operator readOperator();
-    void readSymbol(char *buffer, char *const end);
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
 };
 

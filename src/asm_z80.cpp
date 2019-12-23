@@ -2,10 +2,6 @@
 
 #include "asm_z80.h"
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
-}
-
 Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOp) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
@@ -341,10 +337,9 @@ Error AsmZ80::encode(
     SymbolTable *symtab) {
     reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
-    if (!*_scan) return setError(NO_TEXT);
-    const char *endName;
-    for (endName = _scan; isidchar(*endName); endName++)
-        ;
+
+    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
     insn.setName(_scan, endName);
 
     if (TableZ80.searchName(insn))

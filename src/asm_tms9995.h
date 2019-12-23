@@ -21,6 +21,7 @@ private:
     AsmIntelOperand _parser;
 
     Error checkComma();
+    bool isRegisterName(const char *scan) const;
     Error parseRegName(uint8_t &regno);
 
     Error encodeImm(Insn &insn, bool emitInsn);

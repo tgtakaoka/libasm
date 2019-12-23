@@ -2,10 +2,6 @@
 
 #include "asm_tms9995.h"
 
-static bool isIdChar(const char c) {
-    return isalnum(c) || c == '_';
-}
-
 Error AsmTms9995::checkComma() {
     _scan = skipSpaces(_scan);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
@@ -13,18 +9,18 @@ Error AsmTms9995::checkComma() {
     return OK;
 }
 
-static bool isRegister(const char *text) {
-    if (toupper(*text++) != 'R' || !isdigit(*text))
+bool AsmTms9995::isRegisterName(const char *scan) const {
+    if (toupper(*scan++) != 'R' || !isdigit(*scan))
         return false;
-    if (!isIdChar(text[1]))
+    if (!_parser.isSymbolLetter(scan[1]))
         return true;
-    if (*text++ != '1' || isIdChar(text[1]))
+    if (*scan++ != '1' || _parser.isSymbolLetter(scan[1]))
         return false;
-    return *text >= '0' && *text < '6';
+    return *scan >= '0' && *scan < '6';
 }
 
 Error AsmTms9995::parseRegName(uint8_t &regno) {
-    if (!isRegister(_scan)) return UNKNOWN_OPERAND;
+    if (!isRegisterName(_scan)) return UNKNOWN_OPERAND;
     uint8_t v = *++_scan - '0';
     if (isdigit(*++_scan)) {
         v *= 10;
@@ -61,7 +57,7 @@ Error AsmTms9995::encodeReg(Insn &insn, bool emitInsn) {
 Error AsmTms9995::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     uint16_t count;
     if (acceptR0 && toupper(_scan[0]) == 'R' && _scan[1] == '0'
-        && !isIdChar(_scan[2])) { // R0
+        && !_parser.isSymbolLetter(_scan[2])) { // R0
         _scan += 2;
         count = 0;
     } else {
@@ -144,10 +140,9 @@ Error AsmTms9995::encode(
     SymbolTable *symtab) {
     reset(skipSpaces(line), symtab);
     insn.resetAddress(addr);
-    if (!*_scan) return setError(NO_TEXT);
-    const char *endName;
-    for (endName = _scan; isIdChar(*endName); endName++)
-        ;
+
+    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
     insn.setName(_scan, endName);
 
     if (TableTms9995.searchName(insn))
