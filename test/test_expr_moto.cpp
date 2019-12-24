@@ -11,6 +11,31 @@ static void tear_down() {
     symtab.reset();
 }
 
+static void test_char_constant() {
+    E8("'a'",    0x61, OK);
+    E8("'\\''",  0x27, OK);
+    E8("'\\\"'", 0x22, OK);
+    E8("'\\?'",  0x3F, OK);
+    E8("'\\\\'", 0x5C, OK);
+    E8("'\\b'",  0x08, OK);
+    E8("'\\t'",  0x09, OK);
+    E8("'\\n'",  0x0A, OK);
+    E8("'\\r'",  0x0D, OK);
+    E8("'\\X0'", 0x00, OK);
+    E8("'\\xfF'", 0xFF, OK);
+    E8("'\\0'",  0x00, OK);
+    E8("'\\377'", 0xFF, OK);
+
+    E8("'\\x100'", 0,  OVERFLOW_RANGE);
+    E8("'\\400'", 0,   OVERFLOW_RANGE);
+    E8("''",     0,    MISSING_CLOSING_QUOTE);
+    E8("'a",     0,    MISSING_CLOSING_QUOTE);
+    E8("'\\z'",  0,    UNKNOWN_ESCAPE_SEQUENCE);
+
+    E16("'a'", 0x61, OK);
+    E32("'a'", 0x61, OK);
+}
+
 static void test_dec_constant() {
     E8(" 0",   0x00, OK);
     E8(" 127", 0x7f, OK);
@@ -151,6 +176,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_char_constant);
     RUN_TEST(test_dec_constant);
     RUN_TEST(test_hex_constant);
     RUN_TEST(test_oct_constant);

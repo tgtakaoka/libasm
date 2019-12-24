@@ -80,6 +80,7 @@ private:
     void skipSpaces();
     Value parseExpr();
     Value readAtom();
+    Value readCharacterConstant();
     Value readConstant();
     Operator readOperator();
     Value evalExpr(const Op op, const Value lhs, const Value rhs);

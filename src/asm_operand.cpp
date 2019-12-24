@@ -128,6 +128,18 @@ AsmOperand::Value AsmOperand::readAtom() {
         _next++;
         return value;
     }
+    if (*_next == '\'') {
+        _next++;
+        Value value(readCharacterConstant());
+        if (getError() == OK) {
+            if (*_next == '\'') {
+                _next++;
+            } else {
+                setError(MISSING_CLOSING_QUOTE);
+            }
+        }
+        return value;
+    }
     if (_symtab && isCurrentAddressSymbol(*_next)) {
         _next++;
         return Value(_symtab->currentAddress());
@@ -143,6 +155,42 @@ AsmOperand::Value AsmOperand::readAtom() {
 }
 
 #include <stdio.h>
+AsmOperand::Value AsmOperand::readCharacterConstant() {
+    const char *next = _next;
+    uint32_t val32;
+    if (*next == '\\') {
+        next++;
+        const char c = *next++;
+        if (toupper(c) == 'X') {
+            next = parseNumber(next, val32, 16);
+        } else if (isValidDigit(c, 8)) {
+            next = parseNumber(next - 1, val32, 8);
+        } else {
+            switch (c) {
+            case '\'': case '"': case '?': case '\\':
+                val32 = c;
+                break;
+            case 'b': val32 = 0x08; break;
+            case 't': val32 = 0x09; break;
+            case 'n': val32 = 0x0a; break;
+            case 'r': val32 = 0x0d; break;
+            default:
+                setError(UNKNOWN_ESCAPE_SEQUENCE);
+                break;
+            }
+        }
+    } else {
+        val32 = *next++;
+    }
+    if (getError()) return Value();
+    if (val32 >= 0x100) {
+        setError(OVERFLOW_RANGE);
+        return Value();
+    }
+    _next = next;
+    return Value(static_cast<uint8_t>(val32));
+}
+
 AsmOperand::Value AsmOperand::readConstant() {
     uint32_t val;
     const char *p;
