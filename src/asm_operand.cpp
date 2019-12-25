@@ -10,7 +10,8 @@ const char *AsmOperand::eval(
     _stack.clear();
     setError(OK);
     Value v = parseExpr();
-    // TODO: Check validity.
+    if (getError() == OK && !v._valid)
+        setError(UNDEFINED_SYMBOL);
     val32 = v._value;
     return _next;
 }
@@ -69,23 +70,23 @@ static bool checkOverflow(
     return false;
 }
 
-const char *AsmOperand::parseNumber(
-    const char *p, uint32_t &val, const uint8_t base) {
-    if (!isValidDigit(*p, base)) {
-        setError(ILLEGAL_CONSTANT);
-        return nullptr;
-    }
+Error AsmOperand::parseNumber(
+    const char *p, uint32_t &val, const uint8_t base, const char suffix) {
+    if (!isValidDigit(*p, base))
+        return setError(ILLEGAL_CONSTANT);
     uint32_t v = 0;
     while (isValidDigit(*p, base)) {
-        if (checkOverflow(v, toNumber(*p, base), base)) {
-            setError(OVERFLOW_RANGE);
-            return nullptr;
-        }
+        if (checkOverflow(v, toNumber(*p, base), base))
+            return setError(OVERFLOW_RANGE);
         p++;
     }
-    setError(OK);
+    if (suffix && toupper(*p++) != suffix)
+        return setError(ILLEGAL_CONSTANT);
+    if (isSymbolLetter(*p))
+        return setError(ILLEGAL_CONSTANT);
+    _next = p;
     val = v;
-    return p;
+    return setError(OK);
 }
 
 void AsmOperand::skipSpaces() {
@@ -140,6 +141,25 @@ AsmOperand::Value AsmOperand::readAtom() {
         }
         return value;
     }
+    if (*_next == '~') {
+        _next++;
+        Value value(readAtom());
+        value._value = ~value._value;
+        return value;
+    }
+    if (*_next == '-' || *_next == '+') {
+        if (_next[1] == '-' || _next[1] == '+') {
+            setError(UNKNOWN_EXPR_OPERATOR);
+            return Value();
+        }
+        const char op = *_next++;
+        Value value(readAtom());
+        if (op == '+') return value;
+        if (value._value > 0x80000000)
+            setError(OVERFLOW_RANGE);
+        value._value = -static_cast<int32_t>(value._value);
+        return value;
+    }
     if (_symtab && isCurrentAddressSymbol(*_next)) {
         _next++;
         return Value(_symtab->currentAddress());
@@ -151,20 +171,29 @@ AsmOperand::Value AsmOperand::readAtom() {
             return Value(_symtab->lookup(symbol));
         return Value();
     }
-    return readConstant();
+
+    uint32_t val;
+    if (readNumber(val))
+        return Value();
+    return Value(val);
 }
 
-#include <stdio.h>
 AsmOperand::Value AsmOperand::readCharacterConstant() {
-    const char *next = _next;
+    const char *p = _next;
     uint32_t val32;
-    if (*next == '\\') {
-        next++;
-        const char c = *next++;
+    if (*p == '\\') {
+        p++;
+        const char c = *p++;
         if (toupper(c) == 'X') {
-            next = parseNumber(next, val32, 16);
+            const char *saved_next = _next;
+            parseNumber(p, val32, 16);
+            p = _next;
+            _next = saved_next;
         } else if (isValidDigit(c, 8)) {
-            next = parseNumber(next - 1, val32, 8);
+            const char *saved_next = _next;
+            parseNumber(p - 1, val32, 8);
+            p = _next;
+            _next = saved_next;
         } else {
             switch (c) {
             case '\'': case '"': case '?': case '\\':
@@ -180,46 +209,14 @@ AsmOperand::Value AsmOperand::readCharacterConstant() {
             }
         }
     } else {
-        val32 = *next++;
+        val32 = *p++;
     }
-    if (getError()) return Value();
-    if (val32 >= 0x100) {
-        setError(OVERFLOW_RANGE);
+    if (getError())
         return Value();
-    }
-    _next = next;
-    return Value(static_cast<uint8_t>(val32));
-}
-
-AsmOperand::Value AsmOperand::readConstant() {
-    uint32_t val;
-    const char *p;
-    switch (*_next) {
-    case '~':
-        p = parseConstant(_next + 1, val);
-        val = ~val;
-        break;
-    case '+':
-        p = parseConstant(_next + 1, val);
-        break;
-    case '-':
-        p = parseConstant(_next + 1, val);
-        if (getError()) break;
-        if (val > 0x80000000) {
-            setError(OVERFLOW_RANGE);
-            p = nullptr;
-        } else {
-            val = -val;
-        }
-        break;
-    default:
-        p = parseConstant(_next, val);
-        break;
-    }
-    if (p == nullptr)
-        return Value();
+    if (val32 >= 0x100)
+        return setError(OVERFLOW_RANGE);
     _next = p;
-    return Value(val);
+    return Value(static_cast<uint8_t>(val32));
 }
 
 AsmOperand::Operator AsmOperand::readOperator() {
@@ -299,54 +296,40 @@ bool AsmMotoOperand::isCurrentAddressSymbol(char c) const {
     return c == '*';
 }
 
-const char *AsmMotoOperand::parseConstant(const char *p, uint32_t &val) {
-    if (isdigit(*p)) {
-        p = parseNumber(p, val, 10);
-    } else if (*p == '$') {
-        p = parseNumber(p + 1, val, 16);
-    } else if (*p == '@') {
-        p = parseNumber(p + 1, val, 8);
-    } else if (*p == '%') {
-        p = parseNumber(p + 1, val, 2);
-    } else {
-        p = nullptr;
-        setError(ILLEGAL_CONSTANT);
-    }
-    return p;
+Error AsmMotoOperand::readNumber(uint32_t &val) {
+    const char *p = _next;
+    if (isdigit(*p))
+        return parseNumber(p, val, 10);
+    if (*p == '$')
+        return parseNumber(p + 1, val, 16);
+    if (*p == '@')
+        return parseNumber(p + 1, val, 8);
+    if (*p == '%')
+        return parseNumber(p + 1, val, 2);
+    return setError(ILLEGAL_CONSTANT);
 }
 
 bool AsmIntelOperand::isCurrentAddressSymbol(char c) const {
     return c == '$';
 }
 
-static const char *scanConstEnd(
-    const char *p, const uint8_t base, char suffix = 0) {
+Error AsmIntelOperand::scanNumberEnd(
+    const char *p, const uint8_t base, char suffix) {
     while (isValidDigit(*p, base))
         p++;
-    if (suffix == 0 || toupper(*p++) == suffix)
-        return p;
-    return nullptr;
+    if (suffix && toupper(*p++) != suffix)
+        return ILLEGAL_CONSTANT;
+    return OK;
 }
 
-const char *AsmIntelOperand::parseConstant(const char *scan, uint32_t &val) {
-    const char *p;
-    if ((p = scanConstEnd(scan, 16, 'H'))) {
-        parseNumber(scan, val, 16);
-        return p;
-    }
-    if ((p = scanConstEnd(scan, 10))
-        && (toupper(*p) != 'O' && toupper(*p) != 'B')) {
-        parseNumber(scan, val, 10);
-        return p;
-    }
-    if ((p = scanConstEnd(scan, 8, 'O'))) {
-        parseNumber(scan, val, 8);
-        return p;
-    }
-    if ((p = scanConstEnd(scan, 2, 'B'))) {
-        parseNumber(scan, val, 2);
-        return p;
-    }
-    setError(ILLEGAL_CONSTANT);
-    return nullptr;
+Error AsmIntelOperand::readNumber(uint32_t &val) {
+    if (scanNumberEnd(_next, 16, 'H') == OK)
+        return parseNumber(_next, val, 16, 'H');
+    if (scanNumberEnd(_next, 8, 'O') == OK)
+        return parseNumber(_next, val, 8, 'O');
+    if (scanNumberEnd(_next, 2, 'B') == OK)
+        return parseNumber(_next, val, 2, 'B');
+    if (scanNumberEnd(_next, 10) == OK)
+        return parseNumber(_next, val, 10);
+    return setError(ILLEGAL_CONSTANT);
 }

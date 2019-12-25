@@ -15,6 +15,18 @@ public:
     bool check() const;
     void equals(
         const char *message, const uint32_t expected, const uint32_t actual);
+    void equals16(
+        const char *message, const uint16_t expected, const uint16_t actual) {
+        equals(message,
+               static_cast<uint32_t>(expected),
+               static_cast<uint32_t>(actual));
+    }
+    void equals8(
+        const char *message, const uint8_t expected, const uint8_t actual) {
+        equals(message,
+               static_cast<uint32_t>(expected),
+               static_cast<uint32_t>(actual));
+    }
     void equals(
         const char *message, const char *expected, const char *actual);
     void equals(

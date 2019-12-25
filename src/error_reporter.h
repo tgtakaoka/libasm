@@ -33,6 +33,7 @@ enum Error : host::uint_t {
     UNKNOWN_ESCAPE_SEQUENCE = 104,
     UNKNOWN_EXPR_OPERATOR = 105,
     DIVIDE_BY_ZERO = 106,
+    UNDEFINED_SYMBOL = 107,
 };
 
 class ErrorReporter {

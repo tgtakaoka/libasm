@@ -11,12 +11,17 @@ public:
     const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
     const char *eval(const char *expr, uint8_t &val8, SymbolTable *symtab);
     virtual bool isSymbolLetter(char c, bool head = false) const;
-    const char *readSymbol(const char *scan, char *buffer, char *const end) const;
+    const char *readSymbol(
+        const char *scan, char *buffer, char *const end) const;
 
 protected:
-    virtual const char *parseConstant(const char *p, uint32_t &val) = 0;
+    const char *_next;
+
+    virtual Error readNumber(uint32_t &val) = 0;
     virtual bool isCurrentAddressSymbol(char c) const = 0;
-    const char *parseNumber(const char *p, uint32_t &val, const uint8_t base);
+    Error parseNumber(
+        const char *p, uint32_t &val, const uint8_t base,
+        const char suffix = 0);
 
 private:
     enum Op : char {
@@ -74,14 +79,12 @@ private:
     };
 
     const SymbolTable *_symtab;
-    const char *_next;
     Stack<OprAndLval> _stack;
 
     void skipSpaces();
     Value parseExpr();
     Value readAtom();
     Value readCharacterConstant();
-    Value readConstant();
     Operator readOperator();
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
 };
@@ -89,13 +92,16 @@ private:
 class AsmMotoOperand : public AsmOperand {
 protected:
     bool isCurrentAddressSymbol(char c) const override;
-    const char *parseConstant(const char *p, uint32_t &val) override;
+    Error readNumber(uint32_t &val) override;
 };
 
 class AsmIntelOperand : public AsmOperand {
 protected:
     bool isCurrentAddressSymbol(char c) const override;
-    const char *parseConstant(const char *scan, uint32_t &val) override;
+    Error readNumber(uint32_t &val) override;
+private:
+    Error scanNumberEnd(
+        const char *scan, const uint8_t base, char suffix = 0);
 };
 
 #endif
