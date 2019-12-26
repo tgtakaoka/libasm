@@ -5,25 +5,17 @@
 
 const char *AsmOperand::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
-    _symtab = symtab;
-    _next = expr;
-    _stack.clear();
-    setError(OK);
-    Value v = parseExpr();
-    if (getError() == OK && !v._valid)
-        setError(UNDEFINED_SYMBOL);
+    Value v(eval(expr, symtab));
     val32 = v._value;
     return _next;
 }
 
 const char *AsmOperand::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
-    uint32_t val32 = 0;
-    eval(expr, val32, symtab);
+    Value v(eval(expr, symtab));
     if (getError()) return _next;
-    if (int32_t(val32) < 0 && int32_t(val32) < -0x8000)
-        setError(OVERFLOW_RANGE);
-    if (int32_t(val32) >= 0 && val32 >= 0x10000)
+    uint32_t val32 = v._value;
+    if (int32_t(val32) < -0x8000 || int32_t(val32) >= 0x10000)
         setError(OVERFLOW_RANGE);
     val16 = val32;
     return _next;
@@ -31,12 +23,10 @@ const char *AsmOperand::eval(
 
 const char *AsmOperand::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
-    uint32_t val32 = 0;
-    eval(expr, val32, symtab);
+    Value v(eval(expr, symtab));
     if (getError()) return _next;
-    if (int32_t(val32) < 0 && int32_t(val32) < -0x80)
-        setError(OVERFLOW_RANGE);
-    if (int32_t(val32) >= 0 && val32 >= 0x100)
+    uint32_t val32 = v._value;
+    if (int32_t(val32) < -0x80 || int32_t(val32) >= 0x100)
         setError(OVERFLOW_RANGE);
     val8 = val32;
     return _next;
@@ -94,9 +84,20 @@ void AsmOperand::skipSpaces() {
         _next++;
 }
 
+AsmOperand::Value AsmOperand::eval(const char *expr, SymbolTable *symtab) {
+    _symtab = symtab;
+    _next = expr;
+    _stack.clear();
+    setError(OK);
+    Value v(parseExpr());
+    if (getError() == OK && !v._valid)
+        setError(UNDEFINED_SYMBOL);
+    return v;
+}
+
 AsmOperand::Value AsmOperand::parseExpr() {
     _stack.push(OprAndLval());
-    Value value = readAtom();
+    Value value(readAtom());
     if (getError()) return Value();
     while (!_stack.empty()) {
         Operator opr(readOperator());
@@ -219,29 +220,31 @@ AsmOperand::Value AsmOperand::readCharacterConstant() {
     return Value(static_cast<uint8_t>(val32));
 }
 
+// Operator precedence (larger value means higher precedence).
+// The same order of C/C++ language.
 AsmOperand::Operator AsmOperand::readOperator() {
     skipSpaces();
     switch (*_next) {
-    case '*': _next++; return Operator(OP_MUL, 6);
-    case '/': _next++; return Operator(OP_DIV, 6);
-    case '%': _next++; return Operator(OP_MOD, 6);
-    case '+': _next++; return Operator(OP_ADD, 5);
-    case '-': _next++; return Operator(OP_SUB, 5);
+    case '*': _next++; return Operator(OP_MUL, 13);
+    case '/': _next++; return Operator(OP_DIV, 13);
+    case '%': _next++; return Operator(OP_MOD, 13);
+    case '+': _next++; return Operator(OP_ADD, 12);
+    case '-': _next++; return Operator(OP_SUB, 12);
     case '<':
-        if (*++_next != '<') {
-            setError(UNKNOWN_EXPR_OPERATOR);
-            break;
+        if (_next[1] == '<') {
+            _next += 2; return Operator(OP_BIT_SHL, 11);
         }
-        _next++; return Operator(OP_BIT_SHL, 4);
+        setError(UNKNOWN_EXPR_OPERATOR);
+        break;
     case '>':
-        if (*++_next != '>') {
-            setError(UNKNOWN_EXPR_OPERATOR);
-            break;
+        if (_next[1] == '>') {
+            _next += 2; return Operator(OP_BIT_SHR, 11);
         }
-        _next++; return Operator(OP_BIT_SHR, 4);
-    case '&': _next++; return Operator(OP_BIT_AND, 3);
-    case '^': _next++; return Operator(OP_BIT_XOR, 2);
-    case '|': _next++; return Operator(OP_BIT_OR,  1);
+        setError(UNKNOWN_EXPR_OPERATOR);
+        break;
+    case '&': _next++; return Operator(OP_BIT_AND, 8);
+    case '^': _next++; return Operator(OP_BIT_XOR, 7);
+    case '|': _next++; return Operator(OP_BIT_OR,  6);
     default: break;
     }
     return Operator(OP_NONE, 0);

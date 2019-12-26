@@ -154,6 +154,41 @@ static void test_unary_operator() {
     E32("~-1",    0x00000000, OK);
 }
 
+static void test_binary_operator() {
+    E8("2+3",   5, OK);
+    E8("2-3",  -1, OK);
+    E8("2*3",   6, OK);
+    E8("20/3",  6, OK);
+    E8("20%3",  2, OK);
+
+    E8("$08<<4", 0x80, OK);
+    E8("$80>>7", 0x01, OK);
+
+    E8("%0001|%0100", 0x05, OK);
+    E8("%1011&%0110", 0x02, OK);
+    E8("%0110^%0011", 0x05, OK);
+
+    E32("2+3",   5, OK);
+    E32("2-3",  -1, OK);
+    E32("2*3",   6, OK);
+    E32("20/3",  6, OK);
+    E32("20%3",  2, OK);
+
+    E32("$08<<28", 0x80000000, OK);
+    E32("$80>>7",  0x01, OK);
+
+    E32("%0001|%0100", 0x05, OK);
+    E32("%1011&%0110", 0x02, OK);
+    E32("%0110^-1",    0xfffffff9, OK);
+}
+
+static void test_precedence() {
+    E16("1+2-3+4",  4, OK);
+    E16("1+2*3+4", 11, OK);
+    E16("1+2-7/3",  1, OK);
+    E16("1+8%3*3",  7, OK);
+}
+
 static void test_current_address() {
     symtab.setCurrentAddress(0x1000);
     E16("*",       0x1000, OK);
@@ -205,6 +240,8 @@ int main(int argc, char **argv) {
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_unary_operator);
+    RUN_TEST(test_binary_operator);
+    RUN_TEST(test_precedence);
     RUN_TEST(test_current_address);
     RUN_TEST(test_errors);
     return 0;
