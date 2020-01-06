@@ -295,6 +295,26 @@ AsmOperand::Value AsmOperand::evalExpr(
     }
 }
 
+bool AsmOperand::isCurrentAddressSymbol(char c) const {
+    return c == '*';
+}
+
+Error AsmOperand::readNumber(uint32_t &val) {
+    const char *p = _next;
+    if (*p == '0') {
+        const char c = toupper(p[1]);
+        if (c == 'X')
+            return parseNumber(p + 2, val, 16);
+        if (isValidDigit(c, 8))
+            return parseNumber(p + 1, val, 8);
+        if (c == 'B')
+            return parseNumber(p + 2, val, 2);
+    }
+    if (isdigit(*p))
+        return parseNumber(p, val, 10);
+    return setError(ILLEGAL_CONSTANT);
+}
+
 bool AsmMotoOperand::isCurrentAddressSymbol(char c) const {
     return c == '*';
 }

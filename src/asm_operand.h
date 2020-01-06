@@ -17,8 +17,8 @@ public:
 protected:
     const char *_next;
 
-    virtual Error readNumber(uint32_t &val) = 0;
-    virtual bool isCurrentAddressSymbol(char c) const = 0;
+    virtual Error readNumber(uint32_t &val);
+    virtual bool isCurrentAddressSymbol(char c) const;
     Error parseNumber(
         const char *p, uint32_t &val, const uint8_t base,
         const char suffix = 0);
