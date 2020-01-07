@@ -102,7 +102,7 @@ private:
         E _values[4];           // TODO: check stack overflow
     };
 
-    const SymbolTable *_symtab;
+    SymbolTable *_symtab;
     Stack<OprAndLval> _stack;
 
     void skipSpaces();

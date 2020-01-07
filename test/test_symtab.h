@@ -9,19 +9,19 @@
 
 class TestSymtab : public SymbolTable {
 public:
-    bool hasSymbol(const char *symbol) const override {
+    bool hasSymbol(const char *symbol) override {
         return _sym_to_addrs.find(symbol) != _sym_to_addrs.end();
     }
-    uint32_t lookup(const char *symbol) const override {
+    uint32_t lookup(const char *symbol) override {
         auto it = _sym_to_addrs.find(symbol);
         return it == _sym_to_addrs.end() ? 0 : it->second;
     }
-    const char *lookup(uint32_t addr) const override {
+    const char *lookup(uint32_t addr) override {
         auto it = _addr_to_syms.find(addr);
         return it == _addr_to_syms.end() ? nullptr : it->second;
     }
 
-    uint32_t currentAddress() const override {
+    uint32_t currentAddress() override {
         return _current_address;
     }
 
