@@ -234,22 +234,27 @@ Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
     uint8_t post = _regs.encodeBitOpReg(regName) << 6;
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+    if (*_scan != '.') return setError(UNKNOWN_OPERAND);
     _scan++;
-    uint16_t pos;
-    if (getOperand16(pos)) return getError();
+    uint8_t pos;
+    if (getOperand8(pos)) return getError();
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan++;
     post |= (pos << 3);
-    if (getOperand16(pos)) return getError();
-    if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
+    if (*_scan == '<') _scan++;
+    target::uintptr_t dir;
+    if (getOperand16(dir)) return getError();
+    if (*_scan != '.') return setError(UNKNOWN_OPERAND);
+    _scan++;
+    if (getOperand8(pos)) return getError();
+    if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
     post |= pos;
+
     emitInsnCode(insn);
     insn.emitByte(post);
-    return encodeDirect(insn, /* emitInsn */ false);
+    insn.emitByte(uint8_t(dir));
+    return checkLineEnd();
 }
 
 template<McuType mcuType>

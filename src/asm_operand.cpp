@@ -273,7 +273,8 @@ AsmOperand::Operator AsmOperand::readOperator() {
 }
 
 bool AsmOperand::isSymbolLetter(char c, bool head) const {
-    if (isalpha(c) || c == '_' || c == '.') return true;
+    if (isalpha(c) || c == '_') return true;
+    if (head && c == '.') return true;
     return !head && isdigit(c);
 }
 

@@ -270,12 +270,13 @@ Error Dis09<mcuType>::decodeBitOperation(
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
-    *_operands++ = ',';
+    *_operands++ = '.';
     outConstant(uint8_t((post >> 3) & 7));
     *_operands++ = ',';
+    if (decodeDirectPage(memory, insn)) return getError();
+    *_operands++ = '.';
     outConstant(uint8_t(post & 7));
-    *_operands++ = ',';
-    return decodeDirectPage(memory, insn);
+    return setError(OK);
 }
 
 template<McuType mcuType>
