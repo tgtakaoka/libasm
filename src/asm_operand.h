@@ -15,12 +15,44 @@ public:
         const char *scan, char *buffer, char *const end) const;
 
 protected:
+    class Value {
+    public:
+        static Value makeSigned(int32_t value) {
+            return Value(value, SIGNED);
+        }
+        static Value makeUnsigned(uint32_t value) {
+            return Value(value, UNSIGNED);
+        }
+        Value() : _value(0), _type(UNDEF) {}
+        void setSigned(int32_t value) {
+            _value = value;
+            _type = SIGNED;
+        }
+        void setUnsigned(uint32_t value) {
+            _value = value;
+            _type = UNSIGNED;
+        }
+        bool isUndefined() const { return _type == UNDEF; }
+        bool isSigned() const { return _type == SIGNED; }
+        bool isUnsigned() const { return _type == UNSIGNED; }
+        int32_t getSigned() const { return static_cast<int32_t>(_value); }
+        uint32_t getUnsigned() const { return _value; }
+    private:
+        uint32_t _value;
+        enum ValueType : uint8_t {
+            UNDEF,
+            SIGNED,
+            UNSIGNED,
+        } _type;
+        Value(uint32_t value, ValueType type) : _value(value), _type(type) {}
+    };
+
     const char *_next;
 
-    virtual Error readNumber(uint32_t &val);
     virtual bool isCurrentAddressSymbol(char c) const;
+    virtual Error readNumber(Value &val);
     Error parseNumber(
-        const char *p, uint32_t &val, const uint8_t base,
+        const char *p, Value &val, const uint8_t base,
         const char suffix = 0);
 
 private:
@@ -47,16 +79,8 @@ private:
         uint8_t _precedence;
     };
 
-    struct Value {
-        Value() : _value(0), _valid(false) {}
-        Value(uint32_t value) : _value(value), _valid(true) {}
-        Value(const Value &o) : _value(o._value), _valid(o._valid) {}
-        uint32_t _value;
-        bool _valid;
-    };
-
     struct OprAndLval {
-        OprAndLval() : _opr(Operator(OP_NONE, 0)), _value() {}
+        OprAndLval() : _opr(OP_NONE, 0), _value() {}
         OprAndLval(const Operator &opr, Value value) : _opr(opr), _value(value) {}
         OprAndLval(const OprAndLval &o) : _opr(o._opr), _value(o._value) {}
         bool isEnd() const { return _opr._op == OP_NONE; }
@@ -93,13 +117,13 @@ private:
 class AsmMotoOperand : public AsmOperand {
 protected:
     bool isCurrentAddressSymbol(char c) const override;
-    Error readNumber(uint32_t &val) override;
+    Error readNumber(Value &val) override;
 };
 
 class AsmIntelOperand : public AsmOperand {
 protected:
     bool isCurrentAddressSymbol(char c) const override;
-    Error readNumber(uint32_t &val) override;
+    Error readNumber(Value &val) override;
 private:
     Error scanNumberEnd(
         const char *scan, const uint8_t base, char suffix = 0);

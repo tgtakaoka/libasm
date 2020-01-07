@@ -6,7 +6,8 @@
 const char *AsmOperand::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
-    val32 = v._value;
+    if (getError()) return _next;
+    val32 = v.getUnsigned();
     return _next;
 }
 
@@ -14,10 +15,13 @@ const char *AsmOperand::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
     if (getError()) return _next;
-    uint32_t val32 = v._value;
-    if (int32_t(val32) < -0x8000 || int32_t(val32) >= 0x10000)
+    if (v.isSigned() && v.getSigned() >= -0x8000 && v.getSigned() < 0x10000) {
+        val16 = v.getSigned();
+    } else if (v.isUnsigned() && v.getUnsigned() < 0x10000) {
+        val16 = v.getUnsigned();
+    } else {
         setError(OVERFLOW_RANGE);
-    val16 = val32;
+    }
     return _next;
 }
 
@@ -25,10 +29,13 @@ const char *AsmOperand::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
     if (getError()) return _next;
-    uint32_t val32 = v._value;
-    if (int32_t(val32) < -0x80 || int32_t(val32) >= 0x100)
+    if (v.isSigned() && v.getSigned() >= -0x80 && v.getSigned() < 0x100) {
+        val8 = v.getSigned();
+    } else if (v.isUnsigned() && v.getUnsigned() < 0x100) {
+        val8 = v.getUnsigned();
+    } else {
         setError(OVERFLOW_RANGE);
-    val8 = val32;
+    }
     return _next;
 }
 
@@ -61,7 +68,7 @@ static bool checkOverflow(
 }
 
 Error AsmOperand::parseNumber(
-    const char *p, uint32_t &val, const uint8_t base, const char suffix) {
+    const char *p, Value &val, const uint8_t base, const char suffix) {
     if (!isValidDigit(*p, base))
         return setError(ILLEGAL_CONSTANT);
     uint32_t v = 0;
@@ -75,7 +82,11 @@ Error AsmOperand::parseNumber(
     if (isSymbolLetter(*p))
         return setError(ILLEGAL_CONSTANT);
     _next = p;
-    val = v;
+    if (v & 0x80000000) {
+        val.setUnsigned(v);
+    } else {
+        val.setSigned(v);
+    }
     return setError(OK);
 }
 
@@ -90,7 +101,7 @@ AsmOperand::Value AsmOperand::eval(const char *expr, SymbolTable *symtab) {
     _stack.clear();
     setError(OK);
     Value v(parseExpr());
-    if (getError() == OK && !v._valid)
+    if (getError() == OK && v.isUndefined())
         setError(UNDEFINED_SYMBOL);
     return v;
 }
@@ -145,7 +156,8 @@ AsmOperand::Value AsmOperand::readAtom() {
     if (*_next == '~') {
         _next++;
         Value value(readAtom());
-        value._value = ~value._value;
+        if (value.isSigned()) value.setSigned(~value.getSigned());
+        else value.setUnsigned(~value.getUnsigned());
         return value;
     }
     if (*_next == '-' || *_next == '+') {
@@ -156,68 +168,72 @@ AsmOperand::Value AsmOperand::readAtom() {
         const char op = *_next++;
         Value value(readAtom());
         if (op == '+') return value;
-        if (value._value > 0x80000000)
+        if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
             setError(OVERFLOW_RANGE);
-        value._value = -static_cast<int32_t>(value._value);
+        value.setSigned(-value.getSigned());
         return value;
     }
     if (_symtab && isCurrentAddressSymbol(*_next)) {
         _next++;
-        return Value(_symtab->currentAddress());
+        return Value::makeUnsigned(_symtab->currentAddress());
     }
     if (_symtab && isSymbolLetter(*_next, true)) {
         char symbol[20];
         _next = readSymbol(_next, symbol, symbol + sizeof(symbol) - 1);
         if (_symtab->hasSymbol(symbol))
-            return Value(_symtab->lookup(symbol));
+            return Value::makeUnsigned(_symtab->lookup(symbol));
         return Value();
     }
 
-    uint32_t val;
+    Value val;
     if (readNumber(val))
         return Value();
-    return Value(val);
+    return val;
 }
 
 AsmOperand::Value AsmOperand::readCharacterConstant() {
     const char *p = _next;
-    uint32_t val32;
+    Value val;
     if (*p == '\\') {
         p++;
         const char c = *p++;
         if (toupper(c) == 'X') {
             const char *saved_next = _next;
-            parseNumber(p, val32, 16);
+            parseNumber(p, val, 16);
             p = _next;
             _next = saved_next;
         } else if (isValidDigit(c, 8)) {
             const char *saved_next = _next;
-            parseNumber(p - 1, val32, 8);
+            parseNumber(p - 1, val, 8);
             p = _next;
             _next = saved_next;
         } else {
+            char v = 0;
             switch (c) {
             case '\'': case '"': case '?': case '\\':
-                val32 = c;
+                v = c;
                 break;
-            case 'b': val32 = 0x08; break;
-            case 't': val32 = 0x09; break;
-            case 'n': val32 = 0x0a; break;
-            case 'r': val32 = 0x0d; break;
+            case 'b': v = 0x08; break;
+            case 't': v = 0x09; break;
+            case 'n': v = 0x0a; break;
+            case 'r': v = 0x0d; break;
             default:
                 setError(UNKNOWN_ESCAPE_SEQUENCE);
                 break;
             }
+            val.setSigned(v);
         }
     } else {
-        val32 = *p++;
+        val.setSigned(*p++);
     }
     if (getError())
         return Value();
-    if (val32 >= 0x100)
-        return setError(OVERFLOW_RANGE);
-    _next = p;
-    return Value(static_cast<uint8_t>(val32));
+    if (val.getSigned() >= 0x100 || val.getSigned() < -0x80) {
+        setError(OVERFLOW_RANGE);
+    } else {
+        _next = p;
+    }
+    return val;
 }
 
 // Operator precedence (larger value means higher precedence).
@@ -266,32 +282,80 @@ const char *AsmOperand::readSymbol(
     return scan;
 }
 
+static uint32_t shift_left(uint32_t value, uint8_t count) {
+    for (unsigned i = 0; i <= 32 && i < count; i++)
+        value <<= 1;
+    return value;
+}
+
+static uint32_t shift_right(uint32_t value, uint8_t count, bool sign) {
+    for (unsigned i = 0; i <= 32 && i < count; i++) {
+        value >>= 1;
+        if (sign) value |= 0x80000000;
+    }
+    return value;
+}
+
 AsmOperand::Value AsmOperand::evalExpr(
     const Op op, const Value lhs, const Value rhs) {
-    if (!lhs._valid || !rhs._valid)
+    if (lhs.isUndefined() || rhs.isUndefined())
         return Value();
     switch (op) {
-    case OP_ADD: return lhs._value + rhs._value;
-    case OP_SUB: return lhs._value - rhs._value;
-    case OP_MUL: return lhs._value * rhs._value;
+    case OP_ADD:
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() + rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
+    case OP_SUB:
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() - rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
+    case OP_MUL:
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() * rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
     case OP_DIV:
-        if (rhs._value == 0) {
+        if (rhs.getUnsigned() == 0) {
             setError(DIVIDE_BY_ZERO);
             return Value();
         }
-        return lhs._value / rhs._value;
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() / rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
     case OP_MOD:
-        if (rhs._value == 0) {
+        if (rhs.getUnsigned() == 0) {
             setError(DIVIDE_BY_ZERO);
             return Value();
         }
-        return lhs._value % rhs._value;
-    case OP_BIT_AND: return lhs._value & rhs._value;
-    case OP_BIT_XOR: return lhs._value ^ rhs._value;
-    case OP_BIT_OR:  return lhs._value | rhs._value;
-    case OP_BIT_SHL: return lhs._value << rhs._value;
-    case OP_BIT_SHR: return lhs._value >> rhs._value;
-    default: return 0;
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() % rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
+    case OP_BIT_AND:
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() & rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
+    case OP_BIT_XOR:
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() ^ rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
+    case OP_BIT_OR:
+        if (lhs.isSigned() && rhs.isSigned())
+            return Value::makeSigned(lhs.getSigned() | rhs.getSigned());
+        return Value::makeUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
+    case OP_BIT_SHL:
+        if (lhs.isSigned())
+            return Value::makeSigned(
+                shift_left(lhs.getSigned(), rhs.getUnsigned()));
+        return Value::makeUnsigned(
+            shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+    case OP_BIT_SHR:
+        if (lhs.isSigned())
+            return Value::makeSigned(
+                shift_right(lhs.getSigned(), rhs.getUnsigned(),
+                            lhs.getSigned() & 0x80000000));
+        return Value::makeUnsigned(
+            shift_right(lhs.getUnsigned(), rhs.getUnsigned(), false));
+    default:
+        return Value();
     }
 }
 
@@ -299,7 +363,7 @@ bool AsmOperand::isCurrentAddressSymbol(char c) const {
     return c == '*';
 }
 
-Error AsmOperand::readNumber(uint32_t &val) {
+Error AsmOperand::readNumber(Value &val) {
     const char *p = _next;
     if (*p == '0') {
         const char c = toupper(p[1]);
@@ -319,7 +383,7 @@ bool AsmMotoOperand::isCurrentAddressSymbol(char c) const {
     return c == '*';
 }
 
-Error AsmMotoOperand::readNumber(uint32_t &val) {
+Error AsmMotoOperand::readNumber(Value &val) {
     const char *p = _next;
     if (isdigit(*p))
         return parseNumber(p, val, 10);
@@ -329,7 +393,7 @@ Error AsmMotoOperand::readNumber(uint32_t &val) {
         return parseNumber(p + 1, val, 8);
     if (*p == '%')
         return parseNumber(p + 1, val, 2);
-    return setError(ILLEGAL_CONSTANT);
+    return AsmOperand::readNumber(val);
 }
 
 bool AsmIntelOperand::isCurrentAddressSymbol(char c) const {
@@ -345,7 +409,7 @@ Error AsmIntelOperand::scanNumberEnd(
     return OK;
 }
 
-Error AsmIntelOperand::readNumber(uint32_t &val) {
+Error AsmIntelOperand::readNumber(Value &val) {
     if (scanNumberEnd(_next, 16, 'H') == OK)
         return parseNumber(_next, val, 16, 'H');
     if (scanNumberEnd(_next, 8, 'O') == OK)
@@ -354,5 +418,5 @@ Error AsmIntelOperand::readNumber(uint32_t &val) {
         return parseNumber(_next, val, 2, 'B');
     if (scanNumberEnd(_next, 10) == OK)
         return parseNumber(_next, val, 10);
-    return setError(ILLEGAL_CONSTANT);
+    return AsmOperand::readNumber(val);
 }
