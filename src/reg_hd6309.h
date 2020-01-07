@@ -19,7 +19,7 @@ enum RegName : char {
     REG_F = 'F',
     REG_W = 'W',
     REG_V = 'V',
-    REG_ZERO = '0',
+    REG_Z = 'Z',
 };
 
 class RegHd6309Utils {
