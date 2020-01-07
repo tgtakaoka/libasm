@@ -57,22 +57,22 @@ static void test_dec_constant() {
 }
 
 static void test_hex_constant() {
-    E8("0x0",  0x00, OK);
-    E8("0x7f", 0x7f, OK);
-    E8("0x80", 0x80, OK);
-    E8("0xFF", 0xff, OK);
+    E8("0x0",   0x00, OK);
+    E8("0x7f",  0x7f, OK);
+    E8("0x80",  0x80, OK);
+    E8("0xFF",  0xff, OK);
     E8("0x100", 0,    OVERFLOW_RANGE);
 
-    E16("0x0",    0x0000, OK);
-    E16("0x7fff", 0x7fff, OK);
-    E16("0x8000", 0x8000, OK);
-    E16("0xffff", 0xffff, OK);
+    E16("0x0",     0x0000, OK);
+    E16("0x7fff",  0x7fff, OK);
+    E16("0x8000",  0x8000, OK);
+    E16("0xffff",  0xffff, OK);
     E16("0x10000", 0,      OVERFLOW_RANGE);
 
-    E32("0x0",        0x00000000, OK);
-    E32("0x7FFFFFFF", 0x7fffffff, OK);
-    E32("0x80000000", 0x80000000, OK);
-    E32("0xFFFFffff", 0xffffffff, OK);
+    E32("0x0",         0x00000000, OK);
+    E32("0x7FFFFFFF",  0x7fffffff, OK);
+    E32("0x80000000",  0x80000000, OK);
+    E32("0xFFFFffff",  0xffffffff, OK);
     E32("0x100000000", 0,          OVERFLOW_RANGE);
 }
 
@@ -96,22 +96,22 @@ static void test_oct_constant() {
 }
 
 static void test_bin_constant() {
-    E8("0b0",        0x00, OK);
-    E8("0b01111111", 0x7f, OK);
-    E8("0b10000000", 0x80, OK);
-    E8("0b11111111", 0xff, OK);
-    E8("100000000", 0,    OVERFLOW_RANGE);
+    E8("0b0",         0x00, OK);
+    E8("0b01111111",  0x7f, OK);
+    E8("0b10000000",  0x80, OK);
+    E8("0b11111111",  0xff, OK);
+    E8("0b100000000", 0,    OVERFLOW_RANGE);
 
-    E16("0b0",                0x0000, OK);
-    E16("0b0111111111111111", 0x7fff, OK);
-    E16("0b1000000000000000", 0x8000, OK);
-    E16("0b1111111111111111", 0xffff, OK);
+    E16("0b0",                 0x0000, OK);
+    E16("0b0111111111111111",  0x7fff, OK);
+    E16("0b1000000000000000",  0x8000, OK);
+    E16("0b1111111111111111",  0xffff, OK);
     E16("0b10000000000000000", 0,      OVERFLOW_RANGE);
 
-    E32("0b0",                                0x00000000, OK);
-    E32("0b01111111111111111111111111111111", 0x7fffffff, OK);
-    E32("0b10000000000000000000000000000000", 0x80000000, OK);
-    E32("0b11111111111111111111111111111111", 0xffffffff, OK);
+    E32("0b0",                                 0x00000000, OK);
+    E32("0b01111111111111111111111111111111",  0x7fffffff, OK);
+    E32("0b10000000000000000000000000000000",  0x80000000, OK);
+    E32("0b11111111111111111111111111111111",  0xffffffff, OK);
     E32("0b100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
 }
 

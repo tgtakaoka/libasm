@@ -30,7 +30,6 @@ Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
 }
 #endif
 
-#include <stdio.h>
 template<McuType mcuType>
 Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     char c = toupper(*_scan);

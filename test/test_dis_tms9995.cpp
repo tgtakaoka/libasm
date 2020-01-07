@@ -92,8 +92,7 @@ static void test_src() {
     WTEST(DIVS, "@sym1234",     0x01A0, 0x1234);
     WTEST(DIVS, "@sym1000(R4)", 0x01A4, 0x1000);
     WTEST(BLWP, "@sym9876",     0x0420, 0x9876);
-    WTEST(DEC,  "@0FFFEH(R7)",    0x0627, 0xFFFE);
-    //WTEST(DEC,  "@neg2(R7)",    0x0627, 0xFFFE);
+    WTEST(DEC,  "@neg2(R7)",    0x0627, 0xFFFE);
 }
 
 static void test_reg_src() {
@@ -198,8 +197,7 @@ static void test_cru_off() {
 
     WTEST(SBO, "zero",    0x1D00);
     WTEST(SBZ, "off127",  0x1E7F);
-    WTEST(TB,  "-128",    0x1F80);
-    //WTEST(TB,  "off_128", 0x1F80);
+    WTEST(TB,  "off_128", 0x1F80);
 }
 
 // Macro Instruction Detect

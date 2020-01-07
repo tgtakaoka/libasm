@@ -29,7 +29,16 @@ protected:
         ErrorReporter::resetError();
     }
     const char *lookup(Addr addr) const {
-        return _symtab ? _symtab->lookup(addr) : nullptr;
+        const char *symbol = nullptr;
+        if (_symtab) {
+            symbol = _symtab->lookup(addr);
+            if (!symbol) {
+                auto value =
+                    static_cast<typename make_signed<Addr>::type>(addr);
+                symbol = _symtab->lookup(value);
+            }
+        }
+        return symbol;
     }
     void outText(const char *text) {
         char *p = _operands;
