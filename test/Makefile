@@ -1,5 +1,23 @@
 VPATH=../src
 
+ASL_FLAGS = -gnuerrors -L +t 0x1e -q
+
+all: \
+	test_mc6809.s19 \
+	test_hd6309.s19 \
+	test_r6502.s19 \
+	test_r65c02.s19 \
+	test_tms9995.hex \
+	test_i8080.hex \
+	test_z80.hex \
+
+%.hex: %.asm
+	asl $(ASL_FLAGS) $^
+	p2hex $*.p $@ -F Intel
+%.s19: %.asm
+	asl $(ASL_FLAGS) $^
+	p2hex $*.p $@ -F Moto +5
+
 .PHONY: clean clean-obj test \
 	test_mc6809 test_hd6309 \
 	test_r6502 test_r65c02 \
@@ -111,4 +129,4 @@ test_expr_cstyle:test_expr_cstyle.o $(OBJS_common)
 clean: clean-obj
 	-rm -f $(TESTS)
 clean-obj:
-	-rm -f *.o *.d
+	-rm -f *.o *.d *.p *.lst *.hex *.s19
