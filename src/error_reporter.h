@@ -34,6 +34,13 @@ enum Error : host::uint_t {
     UNKNOWN_EXPR_OPERATOR = 105,
     DIVIDE_BY_ZERO = 106,
     UNDEFINED_SYMBOL = 107,
+
+    // AsmDirective
+    UNKNOWN_DIRECTIVE = 150,
+    ILLEGAL_LABEL = 151,
+    DUPLICATE_LABEL = 152,
+    MISSING_LABEL = 153,
+    MISSING_CLOSING_DQUOTE = 154,
 };
 
 class ErrorReporter {
