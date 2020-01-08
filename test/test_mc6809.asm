@@ -7,6 +7,7 @@
         lsr     $04
         ror     $06
         asr     $07
+        lsl     $08
         asl     $08
         rol     $09
         dec     $0a
@@ -65,6 +66,7 @@
         lsra
         rora
         asra
+	lsla
         asla
         rola
         deca
@@ -77,6 +79,7 @@
         lsrb
         rorb
         asrb
+        lslb
         aslb
         rolb
         decb
@@ -89,6 +92,7 @@
         lsr	$64,x
         ror	$66,x
         asr	$67,x
+	lsl     $68,x
         asl	$68,x
         rol	$69,x
         dec	$6a,x
@@ -102,6 +106,7 @@
         lsr	$7474
         ror	$7676
         asr	$7777
+	lsl     $7878
         asl	$7878
         rol	$7979
         dec	$7a7a
