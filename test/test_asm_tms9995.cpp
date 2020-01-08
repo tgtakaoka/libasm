@@ -12,6 +12,11 @@ static void tear_down() {
     symtab.reset();
 }
 
+static void test_cpu() {
+    asserter.equals(
+        "cpu tms9900", true, assembler.acceptCpu("TMS9900"));
+}
+
 static void test_inh() {
     WTEST("IDLE", 0x0340);
     WTEST("RSET", 0x0360);
@@ -208,6 +213,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_cpu);
     RUN_TEST(test_inh);
     RUN_TEST(test_imm);
     RUN_TEST(test_reg);

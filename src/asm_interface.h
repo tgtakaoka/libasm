@@ -21,6 +21,7 @@ public:
         SymbolTable *symtab) = 0;
     virtual AsmOperand *getParser() = 0;
     const char *errorAt() const { return _scan; }
+    virtual bool acceptCpu(const char *cpu) const = 0;
 
 protected:
     const char *_scan;
@@ -68,12 +69,6 @@ protected:
         }
         return setError(GARBAGE_AT_END);
     }
-
-    struct strcasecmp {
-        bool operator()(const char *a, const char *b) const {
-            return strcasecmp(a, b) < 0;
-        }
-    };
 };
 
 #endif // __ASM_INTERFACE_H__

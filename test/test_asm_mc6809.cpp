@@ -12,6 +12,13 @@ static void tear_down() {
     symtab.reset();
 }
 
+static void test_cpu() {
+    asserter.equals(
+        "cpu 6309", false, assembler.acceptCpu("6309"));
+    asserter.equals(
+        "cpu 6809", true, assembler.acceptCpu("6809"));
+}
+
 static void test_inherent() {
     TEST("NOP",  0x12);
     TEST("SYNC", 0x13);
@@ -616,6 +623,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_cpu);
     RUN_TEST(test_inherent);
     RUN_TEST(test_immediate);
     RUN_TEST(test_direct);

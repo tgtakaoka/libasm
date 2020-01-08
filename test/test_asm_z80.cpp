@@ -12,6 +12,11 @@ static void tear_down() {
     symtab.reset();
 }
 
+static void test_cpu() {
+    asserter.equals(
+        "cpu Z80", true, assembler.acceptCpu("Z80"));
+}
+
 static void test_move_inherent() {
     TEST("LD B,B", 0x40);
     TEST("LD B,C", 0x41);
@@ -618,6 +623,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_cpu);
     RUN_TEST(test_move_inherent);
     RUN_TEST(test_move_immediate);
     RUN_TEST(test_move_direct);

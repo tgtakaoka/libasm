@@ -3,6 +3,18 @@
 #define __ASM_R65C02_IMPL_H__
 
 #include <ctype.h>
+#include <string.h>
+
+template<>
+bool Asm6502<R6502>::acceptCpu(const char *cpu) const {
+    return strcasecmp(cpu, "6502") == 0;
+}
+
+template<>
+bool Asm6502<R65C02>::acceptCpu(const char *cpu) const {
+    return strcasecmp(cpu, "65c02") == 0
+        || strcasecmp(cpu, "6502") == 0;
+}
 
 template<McuType mcuType>
 Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {

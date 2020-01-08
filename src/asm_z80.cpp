@@ -1,6 +1,11 @@
 #include <ctype.h>
+#include <string.h>
 
 #include "asm_z80.h"
+
+bool AsmZ80::acceptCpu(const char *cpu) const {
+    return strcasecmp(cpu, "z80") == 0;
+}
 
 Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOp) {
     uint8_t regNum = 0;

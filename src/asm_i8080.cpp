@@ -1,6 +1,11 @@
 #include <ctype.h>
+#include <string.h>
 
 #include "asm_i8080.h"
+
+bool AsmI8080::acceptCpu(const char *cpu) const {
+    return strcasecmp(cpu, "8080") == 0;
+}
 
 Error AsmI8080::encodePointerReg(Insn &insn) {
     const RegName regName = RegI8080::parsePointerReg(_scan);

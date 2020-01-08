@@ -1,6 +1,11 @@
 #include <ctype.h>
+#include <string.h>
 
 #include "asm_tms9995.h"
+
+bool AsmTms9995::acceptCpu(const char *cpu) const {
+    return strcasecmp(cpu, "tms9900") == 0;
+}
 
 Error AsmTms9995::checkComma() {
     _scan = skipSpaces(_scan);

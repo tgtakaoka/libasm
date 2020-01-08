@@ -12,6 +12,13 @@ static void tear_down() {
     symtab.reset();
 }
 
+static void test_cpu() {
+    asserter.equals(
+        "cpu 65C02", true, assembler.acceptCpu("65C02"));
+    asserter.equals(
+        "cpu 6502", true, assembler.acceptCpu("6502"));
+}
+
 static void test_implied() {
     TEST("BRK", 0x00);
     TEST("RTI", 0x40);
@@ -431,6 +438,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_cpu);
     RUN_TEST(test_implied);
     RUN_TEST(test_accumulator);
     RUN_TEST(test_immediate);

@@ -41,6 +41,7 @@ enum Error : host::uint_t {
     DUPLICATE_LABEL = 152,
     MISSING_LABEL = 153,
     MISSING_CLOSING_DQUOTE = 154,
+    UNSUPPORTED_CPU = 155,
 };
 
 class ErrorReporter {
