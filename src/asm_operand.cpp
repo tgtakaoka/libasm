@@ -44,6 +44,40 @@ static bool isValidDigit(const char c, const uint8_t base) {
     return c >= '0' && c < '0' + base;
 }
 
+const char *AsmOperand::readChar(const char *scan, char &c) {
+    if (*scan == '\\') {
+        uint8_t base = 0;
+        if (toupper(scan[1]) == 'X') base = 16;
+        if (isValidDigit(scan[1], 8)) base = 8;
+        if (base) {
+            Value val;
+            parseNumber(base == 16 ? scan + 2 : scan + 1, val, base);
+            if (getError()) return scan;
+            if (val.getSigned() >= 0x100 || val.getSigned() < -0x80) {
+                setError(OVERFLOW_RANGE);
+                return scan;
+            }
+            c = val.getUnsigned();
+            return _next;
+        }
+        switch (scan[1]) {
+        case '\'': case '"': case '?': case '\\':
+            c = scan[1];
+            break;
+        case 'b': c = 0x08; break;
+        case 't': c = 0x09; break;
+        case 'n': c = 0x0a; break;
+        case 'r': c = 0x0d; break;
+        default:
+            setError(UNKNOWN_ESCAPE_SEQUENCE);
+            return scan;
+        }
+        return scan + 2;
+    }
+    c = *scan;
+    return scan + 1;
+}
+
 static uint8_t toNumber(const char c, const uint8_t base) {
     if (base == 16 && !isdigit(c))
         return toupper(c) - 'A' + 10;
@@ -198,48 +232,10 @@ AsmOperand::Value AsmOperand::readAtom() {
 }
 
 AsmOperand::Value AsmOperand::readCharacterConstant() {
-    const char *p = _next;
-    Value val;
-    if (*p == '\\') {
-        p++;
-        const char c = *p++;
-        if (toupper(c) == 'X') {
-            const char *saved_next = _next;
-            parseNumber(p, val, 16);
-            p = _next;
-            _next = saved_next;
-        } else if (isValidDigit(c, 8)) {
-            const char *saved_next = _next;
-            parseNumber(p - 1, val, 8);
-            p = _next;
-            _next = saved_next;
-        } else {
-            char v = 0;
-            switch (c) {
-            case '\'': case '"': case '?': case '\\':
-                v = c;
-                break;
-            case 'b': v = 0x08; break;
-            case 't': v = 0x09; break;
-            case 'n': v = 0x0a; break;
-            case 'r': v = 0x0d; break;
-            default:
-                setError(UNKNOWN_ESCAPE_SEQUENCE);
-                break;
-            }
-            val.setSigned(v);
-        }
-    } else {
-        val.setSigned(*p++);
-    }
-    if (getError())
-        return Value();
-    if (val.getSigned() >= 0x100 || val.getSigned() < -0x80) {
-        setError(OVERFLOW_RANGE);
-    } else {
-        _next = p;
-    }
-    return val;
+    char c;
+    _next = readChar(_next, c);
+    if (getError()) return Value();
+    return Value::makeSigned(c);
 }
 
 // Operator precedence (larger value means higher precedence).

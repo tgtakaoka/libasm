@@ -13,6 +13,7 @@ public:
     virtual bool isSymbolLetter(char c, bool head = false) const;
     const char *readSymbol(
         const char *scan, char *buffer, char *const end) const;
+    const char *readChar(const char *scan, char &c);
 
 protected:
     class Value {
