@@ -7,6 +7,8 @@
 #include <map>
 #include <vector>
 
+#include "bin_formatter.h"
+
 template<typename Addr>
 class AsmMemory {
 public:
@@ -93,59 +95,24 @@ public:
         other.invalidateCache();
     }
 
-    // Dumper should accept
-    // (Addr addr, const uint8_t *buf, unsigned size)
+    // Dumper should accept (const char *).
     template<typename Dumper>
-    void dump(Dumper dumper) const {
-        for (auto segment = _segments.cbegin(); segment != _segments.cend(); segment++) {
+    void dump(
+        BinFormatter<Addr> *formatter, Dumper dumper) const {
+        const char *header = formatter->start();
+        if (header) dumper(header);
+        for (auto segment = _segments.cbegin();
+             segment != _segments.cend(); segment++) {
             const auto &mem = segment->second;
             for (std::size_t i = 0; i < mem.size(); i += 16) {
                 auto size = (i + 16 < mem.size()) ? 16 : mem.size() - i;
-                dumper(segment->first + i, mem.data() + i, size);
+                const char *line = formatter->dump(
+                    segment->first + i, mem.data() + i, size);
+                dumper(line);
             }
         }
-    }
-
-    // Convert bytes to Intel Hex format.
-    static char *toIntelHex(
-        Addr addr, const uint8_t *data, unsigned size) {
-        const int strmax = (sizeof(Addr) + size + 3) * 2;
-        char *line = static_cast<char *>(malloc(strmax));
-        sprintf(line, ":%02X%04X00", size, static_cast<uint16_t>(addr));
-        char *p = line + strlen(line);
-        uint8_t sum = size + (uint8_t) addr + (uint8_t)(addr >> 8);
-        for (unsigned i = 0; i < size; i++) {
-            sprintf(p, "%02X", data[i]);
-            p += 2;
-            sum += data[i];
-        }
-        sprintf(p, "%02X", static_cast<uint8_t>(-sum & 0xff));
-        return line;
-    }
-
-    // Convert bytes to Motorola S-Record format.
-    static char *toSRecord(
-        Addr addr, const uint8_t *data, unsigned size) {
-        const int strmax = (sizeof(Addr) + size + 3) * 2;
-        char *line = static_cast<char *>(malloc(strmax));
-        unsigned len = sizeof(addr) + size + 1;
-        uint8_t sum = len;
-        if (sizeof(addr) == 2) {
-            sprintf(line, "S1%02X%04X", len, static_cast<uint16_t>(addr));
-            sum += (uint8_t)addr + (uint8_t)(addr >> 8);
-        } else { 
-            sprintf(line, "S3%02X%08X", len, static_cast<uint32_t>(addr));
-            sum += (uint8_t)addr + (uint8_t)(addr >> 8);
-            sum += (uint8_t)(addr >> 16) + (uint8_t)(addr >> 24);
-        }
-        char *p = line + strlen(line);
-        for (unsigned i = 0; i < size; i++) {
-            sprintf(p, "%02X", data[i]);
-            p += 2;
-            sum += data[i];
-        }
-        sprintf(p, "%02X", static_cast<uint8_t>(~sum & 0xff));
-        return line;
+        const char *trailer = formatter->end();
+        if (trailer) dumper(trailer);
     }
 
 private:
