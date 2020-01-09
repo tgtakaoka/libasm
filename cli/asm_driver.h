@@ -16,6 +16,9 @@ public:
     typedef typename Asm::addr_t Addr;
 
     AsmDriver(AsmDirective<Asm> &directive) : _directive(directive) {}
+    virtual ~AsmDriver() {
+        if (_formatter) delete _formatter;
+    }
 
     int main(int argc, const char **argv) {
         _progname = basename(argv[0]);
@@ -50,13 +53,10 @@ public:
                 fprintf(stderr, "Can't open output file %s\n", _output_name);
                 return 1;
             }
-            memory.dump(
-                [this, &output]
-                (Addr addr, const uint8_t *data, unsigned size) {
-                    char *line = _converter(addr, data, size);
-                    fprintf(output, "%s\n", line);
-                    free(line);
-                });
+            memory.dump(_formatter,
+                        [&output](const char *line) {
+                            fprintf(output, "%s\n", line);
+                        });
             fclose(output);
         }
         if (_list_name) {
@@ -80,7 +80,7 @@ private:
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
-    char *(*_converter)(Addr, const uint8_t*, unsigned);
+    BinFormatter<Addr> *_formatter;
 
     int assemble(
         FILE *input, const char *filename, AsmMemory<Addr> &memory,
@@ -173,9 +173,9 @@ private:
                     if (++i >= argc) return 1;
                     const char *fmt = basename(argv[i], '.');
                     if (strcasecmp(fmt, "hex") == 0) {
-                        _converter = AsmMemory<Addr>::toIntelHex;
+                        _formatter = new IntelHex<Addr>();
                     } else if (strcasecmp(fmt, "s19") == 0) {
-                        _converter = AsmMemory<Addr>::toSRecord;
+                        _formatter = new SRecord<Addr>();
                     } else {
                         fprintf(stderr, "Unknown output format: %s\n", fmt);
                         return 1;
