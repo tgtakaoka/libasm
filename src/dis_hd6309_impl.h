@@ -271,11 +271,11 @@ Error Dis09<mcuType>::decodeBitOperation(
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
     *_operands++ = '.';
-    outConstant(uint8_t((post >> 3) & 7));
+    outConstant(uint8_t(post & 7));
     *_operands++ = ',';
     if (decodeDirectPage(memory, insn)) return getError();
     *_operands++ = '.';
-    outConstant(uint8_t(post & 7));
+    outConstant(uint8_t((post >> 3) & 7));
     return setError(OK);
 }
 

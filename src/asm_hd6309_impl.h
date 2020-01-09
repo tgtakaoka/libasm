@@ -251,7 +251,7 @@ Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
     uint8_t pos;
     if (getOperand8(pos)) return getError();
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
-    post |= (pos << 3);
+    post |= pos;
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     if (*_scan == '<') _scan++;
@@ -261,7 +261,7 @@ Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
     _scan++;
     if (getOperand8(pos)) return getError();
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
-    post |= pos;
+    post |= (pos << 3);
 
     emitInsnCode(insn);
     insn.emitByte(post);
