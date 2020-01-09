@@ -169,6 +169,7 @@
         inc     $fefe,x
 
 ;;; R65C02
+	org     $0150
 
 ;;; 0X
         tsb     $04
