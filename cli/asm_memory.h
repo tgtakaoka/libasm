@@ -111,15 +111,15 @@ public:
         Addr addr, const uint8_t *data, unsigned size) {
         const int strmax = (sizeof(Addr) + size + 3) * 2;
         char *line = static_cast<char *>(malloc(strmax));
-        sprintf(line, ":%02x%04x", size, static_cast<uint16_t>(addr));
+        sprintf(line, ":%02X%04X00", size, static_cast<uint16_t>(addr));
         char *p = line + strlen(line);
         uint8_t sum = size + (uint8_t) addr + (uint8_t)(addr >> 8);
         for (unsigned i = 0; i < size; i++) {
-            sprintf(p, "%02x", data[i]);
+            sprintf(p, "%02X", data[i]);
             p += 2;
             sum += data[i];
         }
-        sprintf(p, "%02x", static_cast<uint8_t>(~sum & 0xff));
+        sprintf(p, "%02X", static_cast<uint8_t>(-sum & 0xff));
         return line;
     }
 
@@ -131,20 +131,20 @@ public:
         unsigned len = sizeof(addr) + size + 1;
         uint8_t sum = len;
         if (sizeof(addr) == 2) {
-            sprintf(line, "S1%02x%04x", len, static_cast<uint16_t>(addr));
+            sprintf(line, "S1%02X%04X", len, static_cast<uint16_t>(addr));
             sum += (uint8_t)addr + (uint8_t)(addr >> 8);
         } else { 
-            sprintf(line, "S3%02x%08x", len, static_cast<uint32_t>(addr));
+            sprintf(line, "S3%02X%08X", len, static_cast<uint32_t>(addr));
             sum += (uint8_t)addr + (uint8_t)(addr >> 8);
             sum += (uint8_t)(addr >> 16) + (uint8_t)(addr >> 24);
         }
         char *p = line + strlen(line);
         for (unsigned i = 0; i < size; i++) {
-            sprintf(p, "%02x", data[i]);
+            sprintf(p, "%02X", data[i]);
             p += 2;
             sum += data[i];
         }
-        sprintf(p, "%02x", static_cast<uint8_t>(~sum & 0xff));
+        sprintf(p, "%02X", static_cast<uint8_t>(~sum & 0xff));
         return line;
     }
 
