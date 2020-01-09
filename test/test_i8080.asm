@@ -1,303 +1,262 @@
-	CPU     8080
-	ORG     1000H
+        cpu     8080
 
-        MOV B,B
-        MOV B,C
-        MOV B,D
-        MOV B,E
-        MOV B,H
-        MOV B,L
-        MOV B,M
-        MOV B,A
-        MOV C,B
-        MOV C,C
-        MOV C,D
-        MOV C,E
-        MOV C,H
-        MOV C,L
-        MOV C,M
-        MOV C,A
-
-        MOV D,B
-        MOV D,C
-        MOV D,D
-        MOV D,E
-        MOV D,H
-        MOV D,L
-        MOV D,M
-        MOV D,A
-        MOV E,B
-        MOV E,C
-        MOV E,D
-        MOV E,E
-        MOV E,H
-        MOV E,L
-        MOV E,M
-        MOV E,A
-
-        MOV H,B
-        MOV H,C
-        MOV H,D
-        MOV H,E
-        MOV H,H
-        MOV H,L
-        MOV H,M
-        MOV H,A
-        MOV L,B
-        MOV L,C
-        MOV L,D
-        MOV L,E
-        MOV L,H
-        MOV L,L
-        MOV L,M
-        MOV L,A
-
-        MOV M,B
-        MOV M,C
-        MOV M,D
-        MOV M,E
-        MOV M,H
-        MOV M,L
-
-        MOV M,A
-        MOV A,B
-        MOV A,C
-        MOV A,D
-        MOV A,E
-        MOV A,H
-        MOV A,L
-        MOV A,M
-        MOV A,A
-
-        STAX B
-        STAX D
-        LDAX B
-        LDAX D
-
-        MVI B,0F6H
-        MVI C,9FH
-        MVI D,58
-        MVI E,-128
-        MVI H,127
-        MVI L,-10
-        MVI M,0F6H
-        MVI A,0FEH
-
-        LXI B,0BEEFH
-        LXI D,1234H
-        LXI H,-16657
-        LXI SP,6789H
-
-label1234:      equ     1234H
-label5678:      equ     5678H
-label6789:      equ     6789H
-label9ABC:      equ     9ABCH
-ABCD:           equ     0ABCDH
-BEEF:           equ     0BEEFH
-
-        LXI B,BEEF
-        LXI D,label1234
-        LXI H,BEEF
-        LXI SP,label6789
-
-        STA 9ABCH
-        LDA 1234H
-
-        SHLD 0ABCDH
-        LHLD 5678H
-
-        STA label9ABC
-        LDA label1234
-
-        SHLD ABCD
-        LHLD label5678
-
-        PUSH B
-        PUSH D
-        PUSH H
-        PUSH PSW
-        POP  B
-        POP  D
-        POP  H
-        POP  PSW
-
-        XTHL
-        PCHL
-        SPHL
-        XCHG
-
-        JMP 1234H
-        JNZ 1234H
-        JZ 1234H
-        JNC 1234H
-        JC 1234H
-        JPO 1234H
-        JPE 1234H
-        JP 1234H
-        JM 1234H
-
-        CALL 1234H
-        CNZ 1234H
-        CZ 1234H
-        CNC 1234H
-        CC 1234H
-        CPO 1234H
-        CPE 1234H
-        CP 1234H
-        CM 1234H
-
-        RET
-        RNZ
-        RZ
-        RNC
-        RC
-        RPO
-        RPE
-        RP
-        RM
-
-        JMP label1234
-        CC  label1234
-
-        INR B
-        INR C
-        INR D
-        INR E
-        INR H
-        INR L
-        INR M
-        INR A
-
-        DCR B
-        DCR C
-        DCR D
-        DCR E
-        DCR H
-        DCR L
-        DCR M
-        DCR A
-
-        INX B
-        INX D
-        INX H
-        INX SP
-        DCX B
-        DCX D
-        DCX H
-        DCX SP
-
-        RST 0
-        RST 1
-        RST 2
-        RST 3
-        RST 4
-        RST 5
-        RST 6
-        RST 7
-
-        ADD B
-        ADD C
-        ADD D
-        ADD E
-        ADD H
-        ADD L
-        ADD M
-        ADD A
-
-        ADC B
-        ADC C
-        ADC D
-        ADC E
-        ADC H
-        ADC L
-        ADC M
-        ADC A
-
-        SUB B
-        SUB C
-        SUB D
-        SUB E
-        SUB H
-        SUB L
-        SUB M
-        SUB A
-
-        SBB B
-        SBB C
-        SBB D
-        SBB E
-        SBB H
-        SBB L
-        SBB M
-        SBB A
-
-        ANA B
-        ANA C
-        ANA D
-        ANA E
-        ANA H
-        ANA L
-        ANA M
-        ANA A
-
-        XRA B
-        XRA C
-        XRA D
-        XRA E
-        XRA H
-        XRA L
-        XRA M
-        XRA A
-
-        ORA B
-        ORA C
-        ORA D
-        ORA E
-        ORA H
-        ORA L
-        ORA M
-        ORA A
-
-        CMP B
-        CMP C
-        CMP D
-        CMP E
-        CMP H
-        CMP L
-        CMP M
-        CMP A
-
-        RLC
-        RRC
-        RAL
-        RAR
-
-        DAA
-        CMA
-        STC
-        CMC
-
-        DAD B
-        DAD D
-        DAD H
-        DAD SP
-
-        DI
-        EI
-
-        NOP
-        HLT
-
-        ADI 10B
-        ACI 255
-
-        SUI -2
-        SBI 127
-
-        ANI 377O
-        XRI 0FFH
-        ORI -1
-        CPI -128
-
-        OUT 0F1H
-        IN  0F0H
+;;; 0X
+        nop
+        lxi     b,0101H
+        stax    b
+        inx     b
+        inr     b
+        dcr     b
+        mvi     b,06H
+        rlc
+        dad     b
+        ldax    b
+        dcx     b
+        inr     c
+        dcr     c
+        mvi     c,0eH
+        rrc
+;;; 1X
+        lxi     d,1111H
+        stax    d
+        inx     d
+        inr     d
+        dcr     d
+        mvi     d,16H
+        ral
+        dad     d
+        ldax    d
+        dcx     d
+        inr     e
+        dcr     e
+        mvi     e,1eH
+        rar
+;;; 2X
+        lxi     h,2121H
+        shld    2222H
+        inx     h
+        inr     h
+        dcr     h
+        mvi     h,26H
+        daa
+        dad     h
+        lhld    2a2aH
+        dcx     h
+        inr     l
+        dcr     l
+        mvi     l,2eH
+        cma
+;;; 3X
+        lxi     sp,3131H
+        sta     3232H
+        inx     sp
+        inr     m
+        dcr     m
+        mvi     m,36H
+        stc
+        dad     sp
+        lda     3a3aH
+        dcx     sp
+        inr     a
+        dcr     a
+        mvi     a,3eH
+        cmc
+;;; 4X
+        mov     b,b
+        mov     b,c
+        mov     b,d
+        mov     b,e
+        mov     b,h
+        mov     b,l
+        mov     b,m
+        mov     b,a
+        mov     c,b
+        mov     c,c
+        mov     c,d
+        mov     c,e
+        mov     c,h
+        mov     c,l
+        mov     c,m
+        mov     c,a
+;;; 5X
+        mov     d,b
+        mov     d,c
+        mov     d,d
+        mov     d,e
+        mov     d,h
+        mov     d,l
+        mov     d,m
+        mov     d,a
+        mov     e,b
+        mov     e,c
+        mov     e,d
+        mov     e,e
+        mov     e,h
+        mov     e,l
+        mov     e,m
+        mov     e,a
+;;; 6X
+        mov     h,b
+        mov     h,c
+        mov     h,d
+        mov     h,e
+        mov     h,h
+        mov     h,l
+        mov     h,m
+        mov     h,a
+        mov     l,b
+        mov     l,c
+        mov     l,d
+        mov     l,e
+        mov     l,h
+        mov     l,l
+        mov     l,m
+        mov     l,a
+;;; 7X
+        mov     m,b
+        mov     m,c
+        mov     m,d
+        mov     m,e
+        mov     m,h
+        mov     m,l
+        hlt
+        mov     m,a
+        mov     a,b
+        mov     a,c
+        mov     a,d
+        mov     a,e
+        mov     a,h
+        mov     a,l
+        mov     a,m
+        mov     a,a
+;;; 8X
+        add     b
+        add     c
+        add     d
+        add     e
+        add     h
+        add     l
+        add     m
+        add     a
+        adc     b
+        adc     c
+        adc     d
+        adc     e
+        adc     h
+        adc     l
+        adc     m
+        adc     a
+;;; 9X
+        sub     b
+        sub     c
+        sub     d
+        sub     e
+        sub     h
+        sub     l
+        sub     m
+        sub     a
+        sbb     b
+        sbb     c
+        sbb     d
+        sbb     e
+        sbb     h
+        sbb     l
+        sbb     m
+        sbb     a
+;;; AX
+        ana     b
+        ana     c
+        ana     d
+        ana     e
+        ana     h
+        ana     l
+        ana     m
+        ana     a
+        xra     b
+        xra     c
+        xra     d
+        xra     e
+        xra     h
+        xra     l
+        xra     m
+        xra     a
+;;; BX
+        ora     b
+        ora     c
+        ora     d
+        ora     e
+        ora     h
+        ora     l
+        ora     m
+        ora     a
+        cmp     b
+        cmp     c
+        cmp     d
+        cmp     e
+        cmp     h
+        cmp     l
+        cmp     m
+        cmp     a
+;;; CX
+        rnz
+        pop     b
+        jnz     0c2c2H
+        jmp     0c3c3H
+        cnz     0c4c4H
+        push    b
+        adi     0c6H
+        rst     0
+        rz
+        ret
+        jz      0cacaH
+        cz      0ccccH
+        call    0cdcdH
+        aci     0ceH
+        rst     1
+;;; DX
+        rnc
+        pop     d
+        jnc     0d2d2H
+        out     0d3h
+        cnc     0d4d4H
+        push    d
+        sui     0d6H
+        rst     2
+        rc
+        jc      0dadaH
+        in      0dbH
+        cc      0dcdcH
+        sbi     0deH
+        rst     3
+;;; EX
+        rpo
+        pop     h
+        jpo     0e2e2H
+        xthl
+        cpo     0e4e4H
+        push    h
+        ani     0e6H
+        rst     4
+        rpe
+        pchl
+        jpe     0eaeaH
+        xchg
+        cpe     0ececH
+        xri     0eeH
+        rst     5
+;;; FX
+        rp
+        pop     psw
+        jp      0f2f2H
+        di
+        cp      0f4f4H
+        push    psw
+        ori     0f6H
+        rst     6
+        rm
+        sphl
+        jm      0fafaH
+        ei
+        cm      0fcfcH
+        cpi     0feH
+        rst     7

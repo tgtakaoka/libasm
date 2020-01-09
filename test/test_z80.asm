@@ -1,574 +1,781 @@
-	CPU     Z80
-	ORG     1000H
-
-	LD B,B
-	LD B,C
-	LD B,D
-	LD B,E
-	LD B,H
-	LD B,L
-	LD B,(HL)
-	LD B,A
-
-	LD C,B
-	LD C,C
-	LD C,D
-	LD C,E
-	LD C,H
-	LD C,L
-	LD C,(HL)
-	LD C,A
-
-	LD D,B
-	LD D,C
-	LD D,D
-	LD D,E
-	LD D,H
-	LD D,L
-	LD D,(HL)
-	LD D,A
-
-	LD E,B
-	LD E,C
-	LD E,D
-	LD E,E
-	LD E,H
-	LD E,L
-	LD E,(HL)
-	LD E,A
-
-	LD H,B
-	LD H,C
-	LD H,D
-	LD H,E
-	LD H,H
-	LD H,L
-	LD H,(HL)
-	LD H,A
-
-	LD L,B
-	LD L,C
-	LD L,D
-	LD L,E
-	LD L,H
-	LD L,L
-	LD L,(HL)
-	LD L,A
-
-	LD (HL),B
-	LD (HL),C
-	LD (HL),D
-	LD (HL),E
-	LD (HL),H
-	LD (HL),L
-
-	LD (HL),A
-
-	LD A,B
-	LD A,C
-	LD A,D
-	LD A,E
-	LD A,H
-	LD A,L
-	LD A,(HL)
-	LD A,A
-
-	LD (BC),A
-	LD (DE),A
-	LD A,(BC)
-	LD A,(DE)
-
-	LD I,A
-	LD R,A
-	LD A,I
-	LD A,R
-
-	LDI
-	LDD
-	LDIR
-	LDDR
-	CPI
-	CPD
-	CPIR
-	CPDR
-	INI
-	IND
-	INIR
-	INDR
-	OUTI
-	OUTD
-	OTIR
-	OTDR
-
-	LD B,0F6H
-	LD C,9FH
-	LD D,3AH
-	LD E,80H
-	LD H,0F6H
-	LD L,0F6H
-	LD (HL),0F6H
-	LD A,0FEH
-
-	LD BC,0BEEFH
-	LD DE,1234H
-	LD HL,0BEEFH
-	LD SP,6789H
-
-	LD (9ABCH),A
-	LD A,(1234H)
-
-	LD (0ABCDH),HL
-	LD HL,(5678H)
-
-	LD (0ABCDH),BC
-	LD (0ABCDH),DE
-	LD (0ABCDH),HL
-	LD (0ABCDH),SP
-	LD BC,(5678H)
-	LD DE,(5678H)
-	LD HL,(5678H)
-	LD SP,(5678H)
-
-	PUSH BC
-	PUSH DE
-	PUSH HL
-	PUSH AF
-	POP BC
-	POP DE
-	POP HL
-	POP AF
-
-	EX (SP),HL
-	JP (HL)
-	LD SP,HL
-	EX DE,HL
-
-	EX AF,AF'
-	EXX
-
-	JP 1234H
-	JP NZ,1234H
-	JP Z,1234H
-	JP NC,1234H
-	JP C,1234H
-	JP PO,1234H
-	JP PE,1234H
-	JP P,1234H
-	JP M,1234H
-
-	CALL 1234H
-	CALL NZ,1234H
-	CALL Z,1234H
-	CALL NC,1234H
-	CALL C,1234H
-	CALL PO,1234H
-	CALL PE,1234H
-	CALL P,1234H
-	CALL M,1234H
-
-	RET
-	RET NZ
-	RET Z
-	RET NC
-	RET C
-	RET PO
-	RET PE
-	RET P
-	RET M
-
-	RETN
-	RETI
-
-	IM 0
-	IM 1
-	IM 2
-
-	INC B
-	INC C
-	INC D
-	INC E
-	INC H
-	INC L
-	INC (HL)
-	INC A
-
-	DEC B
-	DEC C
-	DEC D
-	DEC E
-	DEC H
-	DEC L
-	DEC (HL)
-	DEC A
-
-	INC BC
-	INC DE
-	INC HL
-	INC SP
-	DEC BC
-	DEC DE
-	DEC HL
-	DEC SP
-
-	ADD A,B
-	ADD A,C
-	ADD A,D
-	ADD A,E
-	ADD A,H
-	ADD A,L
-	ADD A,(HL)
-	ADD A,A
-
-	ADC A,B
-	ADC A,C
-	ADC A,D
-	ADC A,E
-	ADC A,H
-	ADC A,L
-	ADC A,(HL)
-	ADC A,A
-
-	SUB A,B
-	SUB A,C
-	SUB A,D
-	SUB A,E
-	SUB A,H
-	SUB A,L
-	SUB A,(HL)
-	SUB A,A
-
-	SBC A,B
-	SBC A,C
-	SBC A,D
-	SBC A,E
-	SBC A,H
-	SBC A,L
-	SBC A,(HL)
-	SBC A,A
-
-	AND A,B
-	AND A,C
-	AND A,D
-	AND A,E
-	AND A,H
-	AND A,L
-	AND A,(HL)
-	AND A,A
-
-	XOR A,B
-	XOR A,C
-	XOR A,D
-	XOR A,E
-	XOR A,H
-	XOR A,L
-	XOR A,(HL)
-	XOR A,A
-
-	OR A,B
-	OR A,C
-	OR A,D
-	OR A,E
-	OR A,H
-	OR A,L
-	OR A,(HL)
-	OR A,A
-
-	CP A,B
-	CP A,C
-	CP A,D
-	CP A,E
-	CP A,H
-	CP A,L
-	CP A,(HL)
-	CP A,A
-
-	ADD HL,BC
-	ADD HL,DE
-	ADD HL,HL
-	ADD HL,SP
-
-	ADC HL,BC
-	ADC HL,DE
-	ADC HL,HL
-	ADC HL,SP
-	SBC HL,BC
-	SBC HL,DE
-	SBC HL,HL
-	SBC HL,SP
-
-	ADD A,02H
-	ADC A,0FFH
-	SUB A,02H
-	SBC A,0FFH
-	AND A,02H
-	XOR A,0FFH
-	OR  A,02H
-	CP  A,0FFH
-
-	OUT (0F1H),A
-	IN A,(0F0H)
-
-	IN B,(C)
-	IN C,(C)
-	IN D,(C)
-	IN E,(C)
-	IN H,(C)
-	IN L,(C)
-	IN A,(C)
-
-	OUT (C),B
-	OUT (C),C
-	OUT (C),D
-	OUT (C),E
-	OUT (C),H
-	OUT (C),L
-	OUT (C),A
-
-	DI
-	EI
-
-	NOP
-	HALT
-
-	RLCA
-	RRCA
-	RLA
-	RRA
-
-	DAA
-	CPL
-	NEG
-	SCF
-	CCF
-
-	RST 00H
-	RST 08H
-	RST 10H
-	RST 18H
-	RST 20H
-	RST 28H
-	RST 30H
-	RST 38H
-
-	RLC B
-	RLC C
-	RLC D
-	RLC E
-	RLC H
-	RLC L
-	RLC (HL)
-	RLC A
-
-	RRC B
-	RRC C
-	RRC D
-	RRC E
-	RRC H
-	RRC L
-	RRC (HL)
-	RRC A
-
-	RL B
-	RL C
-	RL D
-	RL E
-	RL H
-	RL L
-	RL (HL)
-	RL A
-
-	RR B
-	RR C
-	RR D
-	RR E
-	RR H
-	RR L
-	RR (HL)
-	RR A
-
-	SLA B
-	SLA C
-	SLA D
-	SLA E
-	SLA H
-	SLA L
-	SLA (HL)
-	SLA A
-
-	SRA B
-	SRA C
-	SRA D
-	SRA E
-	SRA H
-	SRA L
-	SRA (HL)
-	SRA A
-
-	SRL B
-	SRL C
-	SRL D
-	SRL E
-	SRL H
-	SRL L
-	SRL (HL)
-	SRL A
-
-	RRD
-	RLD
-
-	BIT 0,B
-	BIT 1,C
-	BIT 2,D
-	BIT 3,E
-	BIT 4,H
-	BIT 5,L
-	BIT 6,(HL)
-	BIT 7,A
-
-	RES 0,B
-	RES 1,C
-	RES 2,D
-	RES 3,E
-	RES 4,H
-	RES 5,L
-	RES 6,(HL)
-	RES 7,A
-
-	SET 0,B
-	SET 1,C
-	SET 2,D
-	SET 3,E
-	SET 4,H
-	SET 5,L
-	SET 6,(HL)
-	SET 7,A
-
-	ADD IX,BC
-	ADD IX,DE
-	ADD IX,IX
-	ADD IX,SP
-	LD (0ABCDH),IX
-	LD IX,(5678H)
-	INC IX
-	DEC IX
-	POP IX
-	PUSH IX
-	EX (SP),IX
-	JP (IX)
-	LD SP,IX
-
-	ADD IY,BC
-	ADD IY,DE
-	ADD IY,IY
-	ADD IY,SP
-	LD (0ABCDH),IY
-	LD IY,(5678H)
-	INC IY
-	DEC IY
-	POP IY
-	PUSH IY
-	EX (SP),IY
-	JP (IY)
-	LD SP,IY
-
-	INC (IX+2)
-	DEC (IX+2)
-
-	LD B,(IX+2)
-	LD C,(IX+2)
-	LD D,(IX+2)
-	LD E,(IX+2)
-	LD H,(IX+2)
-	LD L,(IX+2)
-	LD A,(IX+2)
-
-	LD (IX+2),B
-	LD (IX+2),C
-	LD (IX+2),D
-	LD (IX+0),E
-	LD (IX+2),H
-	LD (IX+2),L
-	LD (IX+2),A
-
-	LD (IX+2),0F6H
-
-	ADD A,(IX+2)
-	ADC A,(IX+2)
-	SUB A,(IX+2)
-	SBC A,(IX+2)
-	AND A,(IX+2)
-	XOR A,(IX+2)
-	OR  A,(IX+2)
-	CP  A,(IX+2)
-
-	INC (IY-2)
-	DEC (IY-2)
-
-	LD B,(IY-2)
-	LD C,(IY-2)
-	LD D,(IY-2)
-	LD E,(IY-2)
-	LD H,(IY-2)
-	LD L,(IY-2)
-	LD A,(IY-2)
-
-	LD (IY-2),B
-	LD (IY-2),C
-	LD (IY-2),D
-	LD (IY-2),E
-	LD (IY-2),H
-	LD (IY-2),L
-	LD (IY-2),A
-
-	LD (IY-2),0F6H
-
-	ADD A,(IY-2)
-	ADC A,(IY-2)
-	SUB A,(IY-2)
-	SBC A,(IY-2)
-	AND A,(IY-2)
-	XOR A,(IY-2)
-	OR  A,(IY-2)
-	CP  A,(IY-2)
-
-	RLC (IX+127)
-	RRC (IX+127)
-	RL  (IX+127)
-	RR  (IX+127)
-	SLA (IX+127)
-	SRA (IX+127)
-	SRL (IX+127)
-
-	RLC (IY-128)
-	RRC (IY-128)
-	RL  (IY-128)
-	RR  (IY-128)
-	SLA (IY-128)
-	SRA (IY-128)
-	SRL (IY-128)
-
-	BIT 0,(IX-128)
-	RES 1,(IX-128)
-	SET 2,(IX-128)
-
-	BIT 5,(IY+127)
-	RES 6,(IY+127)
-	SET 7,(IY+127)
-
-	ORG  2000H
-	DJNZ 2000H
-
-	ORG  2180H
-	JR   2180H
-
-	ORG  2200H
-	JR   NZ,2204H
-
-	ORG  2300H
-	JR   Z,2381H
-
-	ORG  2400H
-	JR   NC,2382H
-
-	ORG  2500H
-	JR   C,2482H
+        cpu     z80
+
+;;; 0X
+        nop
+        ld      bc,0101H
+        ld      (bc),a
+        inc     bc
+        inc     b
+        dec     b
+        ld      b,06H
+        rlca
+        add     hl,bc
+        ld      a,(bc)
+        dec     bc
+        inc     c
+        dec     c
+        ld      c,0eH
+        rrca
+;;; 1X
+        ld      de,1111H
+        ld      (de),a
+        inc     de
+        inc     d
+        dec     d
+        ld      d,16H
+        rla
+        add     hl,de
+        ld      a,(de)
+        dec     de
+        inc     e
+        dec     e
+        ld      e,1eH
+        rra
+;;; 2X
+        ld      hl,2121H
+        ld      (2222H),hl
+        inc     hl
+        inc     h
+        dec     h
+        ld      h,26H
+        daa
+        add     hl,hl
+        ld      hl,(2a2aH)
+        dec     hl
+        inc     l
+        dec     l
+        ld      l,2eH
+        cpl
+;;; 3X
+        ld      sp,3131H
+        ld      (3232H),a
+        inc     sp
+        inc     (hl)
+        dec     (hl)
+        ld      (hl),36H
+        scf
+        add     hl,sp
+        ld      a,(3a3aH)
+        dec     sp
+        inc     a
+        dec     a
+        ld      a,3eH
+        ccf
+;;; 4X
+        ld      b,b
+        ld      b,c
+        ld      b,d
+        ld      b,e
+        ld      b,h
+        ld      b,l
+        ld      b,(hl)
+        ld      b,a
+        ld      c,b
+        ld      c,c
+        ld      c,d
+        ld      c,e
+        ld      c,h
+        ld      c,l
+        ld      c,(hl)
+        ld      c,a
+;;; 5X
+        ld      d,b
+        ld      d,c
+        ld      d,d
+        ld      d,e
+        ld      d,h
+        ld      d,l
+        ld      d,(hl)
+        ld      d,a
+        ld      e,b
+        ld      e,c
+        ld      e,d
+        ld      e,e
+        ld      e,h
+        ld      e,l
+        ld      e,(hl)
+        ld      e,a
+;;; 6X
+        ld      h,b
+        ld      h,c
+        ld      h,d
+        ld      h,e
+        ld      h,h
+        ld      h,l
+        ld      h,(hl)
+        ld      h,a
+        ld      l,b
+        ld      l,c
+        ld      l,d
+        ld      l,e
+        ld      l,h
+        ld      l,l
+        ld      l,(hl)
+        ld      l,a
+;;; 7X
+        ld      (hl),b
+        ld      (hl),c
+        ld      (hl),d
+        ld      (hl),e
+        ld      (hl),h
+        ld      (hl),l
+        halt
+        ld      (hl),a
+        ld      a,b
+        ld      a,c
+        ld      a,d
+        ld      a,e
+        ld      a,h
+        ld      a,l
+        ld      a,(hl)
+        ld      a,a
+;;; 8X
+        add     a,b
+        add     a,c
+        add     a,d
+        add     a,e
+        add     a,h
+        add     a,l
+        add     a,(hl)
+        add     a,a
+        adc     a,b
+        adc     a,c
+        adc     a,d
+        adc     a,e
+        adc     a,h
+        adc     a,l
+        adc     a,(hl)
+        adc     a,a
+;;; 9X
+        sub     a,b
+        sub     a,c
+        sub     a,d
+        sub     a,e
+        sub     a,h
+        sub     a,l
+        sub     a,(hl)
+        sub     a,a
+        sbc     a,b
+        sbc     a,c
+        sbc     a,d
+        sbc     a,e
+        sbc     a,h
+        sbc     a,l
+        sbc     a,(hl)
+        sbc     a,a
+;;; AX
+        and     a,b
+        and     a,c
+        and     a,d
+        and     a,e
+        and     a,h
+        and     a,l
+        and     a,(hl)
+        and     a,a
+        xor     a,b
+        xor     a,c
+        xor     a,d
+        xor     a,e
+        xor     a,h
+        xor     a,l
+        xor     a,(hl)
+        xor     a,a
+;;; BX
+        or      a,b
+        or      a,c
+        or      a,d
+        or      a,e
+        or      a,h
+        or      a,l
+        or      a,(hl)
+        or      a,a
+        cp      a,b
+        cp      a,c
+        cp      a,d
+        cp      a,e
+        cp      a,h
+        cp      a,l
+        cp      a,(hl)
+        cp      a,a
+;;; CX
+        ret     nz
+        pop     bc
+        jp      nz,0c2c2H
+        jp      0c3c3H
+        call    nz,0c4c4H
+        push    bc
+        add     a,0c6H
+        rst     00h
+        ret     z
+        ret
+        jp      z,0cacaH
+        call    z,0ccccH
+        call    0cdcdH
+        adc     a,0ceH
+        rst     08H
+;;; DX
+        ret     nc
+        pop     de
+        jp      nc,0d2d2H
+        out     (0d3h),a
+        call    nc,0d4d4H
+        push    de
+        sub     a,0d6H
+        rst     10h
+        ret     c
+        jp      c,0dadaH
+        in      a,(0dbH)
+        call    c,0dcdcH
+        sbc     a,0deH
+        rst     18H
+;;; EX
+        ret     po
+        pop     hl
+        jp      po,0e2e2H
+        ex      (sp),hl
+        call    po,0e4e4H
+        push    hl
+        and     a,0e6H
+        rst     20H
+        ret     pe
+        jp      (hl)
+        jp      pe,0eaeaH
+        ex      de,hl
+        call    pe,0ececH
+        xor     a,0eeH
+        rst     28H
+;;; FX
+        ret     p
+        pop     af
+        jp      p,0f2f2H
+        di
+        call    p,0f4f4H
+        push    af
+        or      a,0f6H
+        rst     30H
+        ret     m
+        ld      sp,hl
+        jp      m,0fafaH
+        ei
+        call    m,0fcfcH
+        cp      a,0feH
+        rst     38H
+
+;;; Z80
+        org     0140H
+
+;;; 0X
+        ex      af,af'
+;;; 1X
+        djnz    $+10H
+        jr      $+18H
+;;; 2X
+        jr      nz,$+20H
+        jr      z,$+28H
+;;; 3X
+        jr      nc,$+30H
+        jr      c,$+38H
+;;; DX
+        exx
+
+;;; ED4X
+        in      b,(c)
+        out     (c),b
+        sbc     hl,bc
+        ld      (0ed43H),bc
+        neg
+        retn
+        im      0
+        ld      i,a
+        in      c,(c)
+        out     (c),c
+        adc     hl,bc
+        ld      bc,(0ed4bH)
+        reti
+        ld      r,a
+;;; ED5X
+        in      d,(c)
+        out     (c),d
+        sbc     hl,de
+        ld      (0ed53H),de
+        im      1
+        ld      a,i
+        in      e,(c)
+        out     (c),e
+        adc     hl,de
+        ld      de,(0ed5bH)
+        im      2
+        ld      a,r
+;;; ED6X
+        in      h,(c)
+        out     (c),h
+        sbc     hl,hl
+        rrd
+        in      l,(c)
+        out     (c),l
+        adc     hl,hl
+        rld
+;;; ED7X
+        sbc     hl,sp
+        ld      (0ed73H),sp
+        in      a,(c)
+        out     (c),a
+        adc     hl,sp
+        ld      sp,(0ed7bH)
+;;; EDAX
+        ldi
+        cpi
+        ini
+        outi
+        ldd
+        cpd
+        ind
+        outd
+;;; ED*X
+        ldir
+        cpir
+        inir
+        otir
+        lddr
+        cpdr
+        indr
+        otdr
+
+;;; DD0X
+        add     ix,bc
+;;; DD1X
+        add     ix,de
+;;; DD2X
+        ld      ix,0dd21H
+        ld      (0dd22H),ix
+        inc     ix
+        add     ix,ix
+        ld      ix,(0dd2aH)
+        dec     ix
+;;; DD3X
+        inc     (ix+34H)
+        dec     (ix+35H)
+        ld      (ix+36H),0ddH
+        add     ix,sp
+;;; DD4X
+        ld      b,(ix+46H)
+        ld      c,(ix+4eH)
+;;; DD5X
+        ld      d,(ix+56H)
+        ld      e,(ix+5eH)
+;;; DD6X
+        ld      h,(ix+66H)
+        ld      l,(ix+6eH)
+;;; DD7X
+        ld      (ix+70H),b
+        ld      (ix+71H),c
+        ld      (ix+72H),d
+        ld      (ix+73H),e
+        ld      (ix+74H),h
+        ld      (ix+75H),l
+        ld      (ix+77H),a
+        ld      a,(ix+7eH)
+;;; DD8X
+        add     a,(ix-122)
+        adc     a,(ix-114)
+;;; DD9X
+        sub     a,(ix-106)
+        sbc     a,(ix-98)
+;;; DDAX
+        and     a,(ix-90)
+        xor     a,(ix-82)
+;;; DDBX
+        or      a,(ix-74)
+        cp      a,(ix-66)
+;;; DDEX
+        pop     ix
+        ex      (sp),ix
+        push    ix
+        jp      (ix)
+;;; DDFX
+        ld      sp,ix
+
+;;; FD0X
+        add     iy,bc
+;;; FD1X
+        add     iy,de
+;;; FD2X
+        ld      iy,0fd21H
+        ld      (0fd22H),iy
+        inc     iy
+        add     iy,iy
+        ld      iy,(0fd2aH)
+        dec     iy
+;;; FD3X
+        inc     (iy+34H)
+        dec     (iy+35H)
+        ld      (iy+36H),0fdH
+        add     iy,sp
+;;; FD4X
+        ld      b,(iy+46H)
+        ld      c,(iy+4eH)
+;;; FD5X
+        ld      d,(iy+56H)
+        ld      e,(iy+5eH)
+;;; FD6X
+        ld      h,(iy+66H)
+        ld      l,(iy+6eH)
+;;; FD7X
+        ld      (iy+70H),b
+        ld      (iy+71H),c
+        ld      (iy+72H),d
+        ld      (iy+73H),e
+        ld      (iy+74H),h
+        ld      (iy+75H),l
+        ld      (iy+77H),a
+        ld      a,(iy+7eH)
+;;; FD8X
+        add     a,(iy-122)
+        adc     a,(iy-114)
+;;; FD9X
+        sub     a,(iy-106)
+        sbc     a,(iy-98)
+;;; FDAX
+        and     a,(iy-90)
+        xor     a,(iy-82)
+;;; FDBX
+        or      a,(iy-74)
+        cp      a,(iy-66)
+;;; FDEX
+        pop     iy
+        ex      (sp),iy
+        push    iy
+        jp      (iy)
+;;; FDFX
+        ld      sp,iy
+
+;;; CB0X
+        rlc     b
+        rlc     c
+        rlc     d
+        rlc     e
+        rlc     h
+        rlc     l
+        rlc     (hl)
+        rlc     a
+        rrc     b
+        rrc     c
+        rrc     d
+        rrc     e
+        rrc     h
+        rrc     l
+        rrc     (hl)
+        rrc     a
+;;; CB1X
+        rl      b
+        rl      c
+        rl      d
+        rl      e
+        rl      h
+        rl      l
+        rl      (hl)
+        rl      a
+        rr      b
+        rr      c
+        rr      d
+        rr      e
+        rr      h
+        rr      l
+        rr      (hl)
+        rr      a
+;;; CB2X
+        sla     b
+        sla     c
+        sla     d
+        sla     e
+        sla     h
+        sla     l
+        sla     (hl)
+        sla     a
+        sra     b
+        sra     c
+        sra     d
+        sra     e
+        sra     h
+        sra     l
+        sra     (hl)
+        sra     a
+;;; CB3X
+        srl     b
+        srl     c
+        srl     d
+        srl     e
+        srl     h
+        srl     l
+        srl     (hl)
+        srl     a
+;;; CB4X
+        bit     0,b
+        bit     0,c
+        bit     0,d
+        bit     0,e
+        bit     0,h
+        bit     0,l
+        bit     0,(hl)
+        bit     0,a
+        bit     1,b
+        bit     1,c
+        bit     1,d
+        bit     1,e
+        bit     1,h
+        bit     1,l
+        bit     1,(hl)
+        bit     1,a
+;;; CB5X
+        bit     2,b
+        bit     2,c
+        bit     2,d
+        bit     2,e
+        bit     2,h
+        bit     2,l
+        bit     2,(hl)
+        bit     2,a
+        bit     3,b
+        bit     3,c
+        bit     3,d
+        bit     3,e
+        bit     3,h
+        bit     3,l
+        bit     3,(hl)
+        bit     3,a
+;;; CB6X
+        bit     4,b
+        bit     4,c
+        bit     4,d
+        bit     4,e
+        bit     4,h
+        bit     4,l
+        bit     4,(hl)
+        bit     4,a
+        bit     5,b
+        bit     5,c
+        bit     5,d
+        bit     5,e
+        bit     5,h
+        bit     5,l
+        bit     5,(hl)
+        bit     5,a
+;;; CB7X
+        bit     6,b
+        bit     6,c
+        bit     6,d
+        bit     6,e
+        bit     6,h
+        bit     6,l
+        bit     6,(hl)
+        bit     6,a
+        bit     7,b
+        bit     7,c
+        bit     7,d
+        bit     7,e
+        bit     7,h
+        bit     7,l
+        bit     7,(hl)
+        bit     7,a
+;;; CB8X
+        res     0,b
+        res     0,c
+        res     0,d
+        res     0,e
+        res     0,h
+        res     0,l
+        res     0,(hl)
+        res     0,a
+        res     1,b
+        res     1,c
+        res     1,d
+        res     1,e
+        res     1,h
+        res     1,l
+        res     1,(hl)
+        res     1,a
+;;; CB9X
+        res     2,b
+        res     2,c
+        res     2,d
+        res     2,e
+        res     2,h
+        res     2,l
+        res     2,(hl)
+        res     2,a
+        res     3,b
+        res     3,c
+        res     3,d
+        res     3,e
+        res     3,h
+        res     3,l
+        res     3,(hl)
+        res     3,a
+;;; CBAX
+        res     4,b
+        res     4,c
+        res     4,d
+        res     4,e
+        res     4,h
+        res     4,l
+        res     4,(hl)
+        res     4,a
+        res     5,b
+        res     5,c
+        res     5,d
+        res     5,e
+        res     5,h
+        res     5,l
+        res     5,(hl)
+        res     5,a
+;;; CBBX
+        res     6,b
+        res     6,c
+        res     6,d
+        res     6,e
+        res     6,h
+        res     6,l
+        res     6,(hl)
+        res     6,a
+        res     7,b
+        res     7,c
+        res     7,d
+        res     7,e
+        res     7,h
+        res     7,l
+        res     7,(hl)
+        res     7,a
+;;; CBCX
+        set     0,b
+        set     0,c
+        set     0,d
+        set     0,e
+        set     0,h
+        set     0,l
+        set     0,(hl)
+        set     0,a
+        set     1,b
+        set     1,c
+        set     1,d
+        set     1,e
+        set     1,h
+        set     1,l
+        set     1,(hl)
+        set     1,a
+;;; CBDX
+        set     2,b
+        set     2,c
+        set     2,d
+        set     2,e
+        set     2,h
+        set     2,l
+        set     2,(hl)
+        set     2,a
+        set     3,b
+        set     3,c
+        set     3,d
+        set     3,e
+        set     3,h
+        set     3,l
+        set     3,(hl)
+        set     3,a
+;;; CBEX
+        set     4,b
+        set     4,c
+        set     4,d
+        set     4,e
+        set     4,h
+        set     4,l
+        set     4,(hl)
+        set     4,a
+        set     5,b
+        set     5,c
+        set     5,d
+        set     5,e
+        set     5,h
+        set     5,l
+        set     5,(hl)
+        set     5,a
+;;; CBFX
+        set     6,b
+        set     6,c
+        set     6,d
+        set     6,e
+        set     6,h
+        set     6,l
+        set     6,(hl)
+        set     6,a
+        set     7,b
+        set     7,c
+        set     7,d
+        set     7,e
+        set     7,h
+        set     7,l
+        set     7,(hl)
+        set     7,a
+
+;;; DDCBXX
+        rlc     (ix+06H)
+        rrc     (ix+0eH)
+        rl      (ix+16H)
+        rr      (ix+1eH)
+        sla     (ix+26H)
+        sra     (ix+2eH)
+        srl     (ix+3eH)
+        bit     0,(ix+46H)
+        bit     1,(ix+4eH)
+        bit     2,(ix+56H)
+        bit     3,(ix+5eH)
+        bit     4,(ix+66H)
+        bit     5,(ix+6eH)
+        bit     6,(ix+76H)
+        bit     7,(ix+7eH)
+        res     0,(ix-122)
+        res     1,(ix-114)
+        res     2,(ix-106)
+        res     3,(ix-98)
+        res     4,(ix-90)
+        res     5,(ix-82)
+        res     6,(ix-74)
+        res     7,(ix-66)
+        set     0,(ix-58)
+        set     1,(ix-50)
+        set     2,(ix-42)
+        set     3,(ix-34)
+        set     4,(ix-26)
+        set     5,(ix-18)
+        set     6,(ix-10)
+        set     7,(ix-2)
+        
+;;; FDCBXX
+        rlc     (iy+06H)
+        rrc     (iy+0eH)
+        rl      (iy+16H)
+        rr      (iy+1eH)
+        sla     (iy+26H)
+        sra     (iy+2eH)
+        srl     (iy+3eH)
+        bit     0,(iy+46H)
+        bit     1,(iy+4eH)
+        bit     2,(iy+56H)
+        bit     3,(iy+5eH)
+        bit     4,(iy+66H)
+        bit     5,(iy+6eH)
+        bit     6,(iy+76H)
+        bit     7,(iy+7eH)
+        res     0,(iy-122)
+        res     1,(iy-114)
+        res     2,(iy-106)
+        res     3,(iy-98)
+        res     4,(iy-90)
+        res     5,(iy-82)
+        res     6,(iy-74)
+        res     7,(iy-66)
+        set     0,(iy-58)
+        set     1,(iy-50)
+        set     2,(iy-42)
+        set     3,(iy-34)
+        set     4,(iy-26)
+        set     5,(iy-18)
+        set     6,(iy-10)
+        set     7,(iy-2)
