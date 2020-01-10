@@ -15,9 +15,9 @@ const char *AsmOperand::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
     if (getError()) return _next;
-    if (v.isSigned() && v.getSigned() >= -0x8000 && v.getSigned() < 0x10000) {
+    if (v.isSigned() && v.getSigned() >= -32768 && v.getSigned() < 65536L) {
         val16 = v.getSigned();
-    } else if (v.isUnsigned() && v.getUnsigned() < 0x10000) {
+    } else if (v.isUnsigned() && v.getUnsigned() < 0x10000L) {
         val16 = v.getUnsigned();
     } else {
         setError(OVERFLOW_RANGE);
@@ -29,7 +29,7 @@ const char *AsmOperand::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
     if (getError()) return _next;
-    if (v.isSigned() && v.getSigned() >= -0x80 && v.getSigned() < 0x100) {
+    if (v.isSigned() && v.getSigned() >= -128 && v.getSigned() < 256) {
         val8 = v.getSigned();
     } else if (v.isUnsigned() && v.getUnsigned() < 0x100) {
         val8 = v.getUnsigned();

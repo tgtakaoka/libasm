@@ -2,13 +2,16 @@
 
 AsmHd6309 assembler;
 
+String line;
+bool line_ready = false;
+
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 }
 
 void loop() {
-  while (Serial.available()) {
-    String line = Serial.readString();
+  if (line_ready) {
+    Serial.println(line);
     Insn insn;
     if (assembler.encode(line.c_str(), insn, 0x1000, nullptr)) {
       Serial.print(F("Error "));
@@ -25,6 +28,19 @@ void loop() {
         Serial.print(val, HEX);
       }
       Serial.println();
+    }
+    line = "";
+    line_ready = false;
+  }
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    char c = (char)Serial.read();
+    if (c == '\n') {
+      line_ready = true;
+    } else {
+      line += c;
     }
   }
 }

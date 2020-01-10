@@ -3,13 +3,16 @@
 
 DisZ80 disassembler;
 
+String line;
+bool line_ready = false;
+
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9800);
 }
 
 void loop() {
-  while (Serial.available()) {
-    String line = Serial.readString();
+  if (line_ready) {
+    Serial.println(line);
     StrMemory memory(0x1000, line.c_str());
     char operands[20];
     Insn insn;
@@ -29,6 +32,19 @@ void loop() {
       Serial.print(insn.name());
       Serial.print(' ');
       Serial.println(operands);
+    }
+    line = "";
+    line_ready = false;
+  }
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    char c = (char)Serial.read();
+    if (c == '\n') {
+      line_ready = true;
+    } else {
+      line += c;
     }
   }
 }
