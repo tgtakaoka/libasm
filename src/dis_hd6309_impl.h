@@ -107,8 +107,8 @@ Error Dis09<mcuType>::decodeIndexed(
         // ,R++ ,--R, [,R++] [,--R]
         incr = (mode == 0x81) ? 2 : -2;
     } else if (mode == 0x8C || mode == 0x8D) {
-        // [n8,PC] [n16,PC]
-        base = REG_PC;
+        // [n8,PCR] [n16,PCR]
+        base = REG_PCR;
         offSize = -1;
         if (mode == 0x8C) {
             uint8_t val;

@@ -11,6 +11,7 @@ enum RegName : char {
     REG_U = 'U',
     REG_S = 'S',
     REG_PC = 'P',
+    REG_PCR = 'p', // Program counter relative addressing
     REG_A = 'A',
     REG_B = 'B',
     REG_CC = 'C',
@@ -54,6 +55,7 @@ private:
     static bool regCharCaseEqual(char c, char regChar);
     static char regName1stChar(const RegName);
     static char regName2ndChar(const RegName);
+    static char regName3rdChar(const RegName);
 };
 
 template<McuType type> struct IndexRegHd6309 {

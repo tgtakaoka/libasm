@@ -41,9 +41,13 @@ char RegHd6309Utils::regName1stChar(const RegName regName) {
 }
 
 char RegHd6309Utils::regName2ndChar(const RegName regName) {
-    if (regName == REG_PC) return 'C';
-    if (regName == REG_CC) return 'C';
+    if (regName == REG_PC || regName == REG_PCR || regName == REG_CC) return 'C';
     if (regName == REG_DP) return 'P';
+    return 0;
+}
+
+char RegHd6309Utils::regName3rdChar(const RegName regName) {
+    if (regName == REG_PCR) return 'R';
     return 0;
 }
 
@@ -51,17 +55,25 @@ bool RegHd6309Utils::compareRegName(const char *line, RegName regName) {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
+    const char r3 = regName3rdChar(regName);
+    if (r3 && !regCharCaseEqual(*line++, r3)) return false;
     return !isidchar(*line);
 }
 
 host::uint_t RegHd6309Utils::regNameLen(RegName regName) {
-    return regName2ndChar(regName) == 0 ? 1 : 2;
+    return regName2ndChar(regName) == 0 ? 1
+        : (regName3rdChar(regName) == 0 ? 2 : 3);
 }
 
 char *RegHd6309Utils::outRegName(char *out, const RegName regName) {
     *out++ = regName1stChar(regName);
     const char r2 = regName2ndChar(regName);
-    if (r2) *out++ = r2;
+    if (r2) {
+        *out++ = r2;
+        const char r3 = regName3rdChar(regName);
+        if (r3)
+            *out++ = r3;
+    }
     *out = 0;
     return out;
 }
