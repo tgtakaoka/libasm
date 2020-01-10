@@ -6,6 +6,7 @@ TestSymtab symtab;
 AsmMc6809 assembler;
 
 static void set_up() {
+    TEST("SETDP 0");
 }
 
 static void tear_down() {
@@ -284,16 +285,33 @@ static void test_direct() {
     symtab.put(0x10, "dir10");
     symtab.put(0x90, "dir90");
     symtab.put(0x1290, "sym1290");
+    symtab.put(0x90A0, "sym90A0");
 
     TEST("NEG  dir10",    0x00, 0x10);
     TEST("LDA  dir10",    0x96, 0x10);
     TEST("STB  <sym1290", 0xD7, 0x90);
     TEST("CMPX <sym1290", 0x9C, 0x90);
-    TEST("STU  dir10",    0xDF, 0x10);
-    TEST("LDY  dir10",    0x10, 0x9E, 0x10);
-    TEST("LDS  <sym1290", 0x10, 0xDE, 0x90);
-    TEST("JMP  <sym1290", 0x0E, 0x90);
+    TEST("STU  dir90",    0xDF, 0x90);
+    TEST("LDY  dir90",    0x10, 0x9E, 0x90);
+    TEST("LDS  <sym90A0", 0x10, 0xDE, 0xA0);
+    TEST("JMP  <sym90A0", 0x0E, 0xA0);
     TEST("JSR  dir90",    0x9D, 0x90);
+
+    TEST("SETDP sym1290>>8");
+    TEST("NEG   dir10",    0x70, 0x00, 0x10);
+    TEST("LDA   dir10",    0xB6, 0x00, 0x10);
+    TEST("LDA   <dir10",   0x96, 0x10);
+    TEST("NEG   sym1290",  0x00, 0x90);
+    TEST("LDA   sym1290",  0x96, 0x90);
+    TEST("LDA   >sym1290", 0xB6, 0x12, 0x90);
+
+    TEST("ASSUME DPR:sym90A0>>8");
+    TEST("STU   dir90",    0xFF, 0x00, 0x90);
+    TEST("LDY   dir90",    0x10, 0xBE, 0x00, 0x90);
+    TEST("LDY   <dir90",   0x10, 0x9E, 0x90);
+    TEST("LDS   sym90A0",  0x10, 0xDE, 0xA0);
+    TEST("JMP   sym90A0",  0x0E, 0xA0);
+    TEST("JMP   >sym90A0", 0x7E, 0x90, 0xA0);
 }
 
 static void test_extended() {

@@ -143,4 +143,7 @@ static const char TEXT_TSTA[]  PROGMEM = "TSTA";
 static const char TEXT_TSTB[]  PROGMEM = "TSTB";
 static const char TEXT_TST[]   PROGMEM = "TST";
 
+static const char TEXT_SETDP[] PROGMEM  = "SETDP";
+static const char TEXT_ASSUME[] PROGMEM = "ASSUME";
+
 #endif // __TEXT_MC6809_H__

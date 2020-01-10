@@ -3,7 +3,7 @@
 
 int main(int argc, const char **argv) {
     AsmHd6309 assembler;
-    Asm09Directive<AsmHd6309> directive(assembler);
+    AsmMotoDirective<AsmHd6309> directive(assembler);
     AsmDriver<AsmHd6309> driver(directive);
     return driver.main(argc, argv);
 }

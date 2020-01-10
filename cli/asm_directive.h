@@ -286,38 +286,6 @@ protected:
 };
 
 template<typename Asm>
-class Asm09Directive : public AsmMotoDirective<Asm> {
-public:
-    typedef typename Asm::addr_t Addr;
-    Asm09Directive(Asm &assembler) : AsmMotoDirective<Asm>(assembler) {}
-
-protected:
-    Error processDirective(
-        const char *directive, const char *&label,
-        AsmMemory<Addr> &memory) override {
-        if (strcasecmp(directive, "assume") == 0) {
-            char reg[10];
-            const char *p = AsmDirective<Asm>::_parser->readSymbol(
-                AsmDirective<Asm>::_scan, reg, reg + sizeof(reg) - 1);
-            if (*p != ':')
-                return ErrorReporter::setError(UNKNOWN_OPERAND);
-            if (strcasecmp(reg, "dpr"))
-                return ErrorReporter::setError(UNKNOWN_REGISTER);
-            AsmDirective<Asm>::_scan = p + 1;
-            uint8_t dpr;
-            p = AsmDirective<Asm>::_parser->eval(p + 1, dpr, this);
-            if (AsmDirective<Asm>::_parser->getError())
-                return ErrorReporter::setError(AsmDirective<Asm>::_parser);
-            AsmDirective<Asm>::_scan = p;
-            fprintf(stderr, "@@@@@ assume %s 0x%02x\n", reg, dpr);
-            return ErrorReporter::setError(OK);
-        }
-        return AsmMotoDirective<Asm>::processDirective(
-            directive, label, memory);
-    }
-};
-
-template<typename Asm>
 class AsmIntelDirective : public AsmDirective<Asm> {
 public:
     typedef typename Asm::addr_t Addr;

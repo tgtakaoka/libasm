@@ -85,7 +85,7 @@ private:
     host::uint_t      _insnLen;
     host::uint_t      _flags;
     uint8_t    _bytes[8];
-    char              _name[6];
+    char              _name[8];
 };
 
 #endif // __INSN_HD6309_H__

@@ -5,6 +5,9 @@
 #include "config_hd6309.h"
 #include "insn_hd6309.h"
 
+#define PSEUDO_SETDP   0x00     // reuse NEG opecode
+#define PSEUDO_ASSUME  0x03     // reuse COM opecode
+
 struct EntryPage {
     const target::opcode_t prefix;
     const Entry *const table;

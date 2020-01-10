@@ -40,6 +40,8 @@ enum AddrMode : host::uint_t {
     IMMIDX,
     BITOP,
     TFRM,
+    // Pseudo instruction
+    PSEUDO,
 };
 
 #include "reg_hd6309.h"

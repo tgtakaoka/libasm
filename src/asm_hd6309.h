@@ -23,6 +23,7 @@ public:
 private:
     RegHd6309<mcuType> _regs;
     AsmMotoOperand _parser;
+    uint8_t _direct_page = 0;
 
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
@@ -45,6 +46,8 @@ private:
     Error encodeBitOperation(Insn &insn);
     Error encodeImmediatePlus(Insn &insn);
     Error encodeTransferMemory(Insn &insn);
+    // Pseudo instruction
+    Error processPseudo(Insn &insn);
 };
 
 #include "asm_hd6309_impl.h"
