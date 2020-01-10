@@ -3,7 +3,6 @@
 #define __ASM_HD6309_IMPL_H__
 
 #include <ctype.h>
-#include <string.h>
 
 template<>
 bool Asm09<MC6809>::acceptCpu(const char *cpu) const {
@@ -133,6 +132,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     const bool indir = (*_scan == '[');
     RegName base = REG_UNDEF;
     RegName index = REG_UNDEF;
+    host::int_t osize = 0;      // offset size, -1 undefined
     host::int_t incr = 0;       // auto decrement/increment
     target::uintptr_t addr;
     if (indir) _scan++;
@@ -140,8 +140,21 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         if ((index = _regs.parseIndexReg(_scan)) != REG_UNDEF) {
             _scan += _regs.regNameLen(index); // index register
         } else {
+            if (*_scan == '>') {
+                _scan++;
+                osize = 16;
+            } else if (*_scan == '<') {
+                if (*++_scan == '<') {
+                    _scan++;
+                    osize = 5;
+                } else {
+                    osize = 8;
+                }
+            } else {
+                osize = -1;
+            }
             if (getOperand16(addr)) return getError();
-            index = OFFSET;     // index is in addr
+            index = OFFSET;     // offset is in addr
         }
     }
     if (*_scan == ',') {
@@ -180,28 +193,25 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         insn.emitUint16(addr);
         return setError(OK);
     }
-    if (base == REG_PCR) {      // n,PCR [n,PCR]
-        if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
+    if (base == REG_PCR || base == REG_PC) { // n,PCR [n,PCR] n,PC [n,PC]
+        if (index != OFFSET || osize == 0 || osize == 5 || incr != 0)
+            return setError(UNKNOWN_OPERAND);
         post = indir ? 0x10 : 0;
-        target::ptrdiff_t delta = addr - (insn.address() + insn.insnLen() + 2);
-        if (delta >= -128 && delta < 128) {
-            insn.emitByte(0x8C | post);
-            insn.emitByte((uint8_t)delta);
-            return setError(OK);
+        target::ptrdiff_t offset = (base == REG_PC) ? addr
+            : addr - (insn.address() + insn.insnLen() + 2);
+        if (osize == -1) {
+            if (offset >= -128 && offset < 128) {
+                osize = 8;
+            } else {
+                if (base == REG_PCR) offset--;
+                osize = 16;
+            }
         }
-        delta = addr - (insn.address() + insn.insnLen() + 3);
-        insn.emitByte(0x8D | post);
-        insn.emitUint16(delta);
-        return setError(OK);
-    }
-    if (base == REG_PC) {       // n,PC [n.PC]
-        if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
-        post = indir ? 0x10 : 0;
-        const target::ptrdiff_t offset = addr;
-        if (offset >= -128 && offset < 128) {
+        if (osize == 8) {
             insn.emitByte(0x8C | post);
             insn.emitByte((uint8_t)offset);
-            return setError(OK);
+            return setError(
+                (offset >= -128 && offset < 128) ? OK : OVERFLOW_RANGE);
         }
         insn.emitByte(0x8D | post);
         insn.emitUint16(offset);
@@ -238,18 +248,27 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         return setError(OK);
     }
     const target::ptrdiff_t offset = addr;
-    if (offset >= -16 && offset < 16 && !indir) { // n5.R
+    if (indir && osize == 5) return setError(UNKNOWN_OPERAND);
+    if (osize == -1) {
+        if (offset >= -16 && offset < 16 && !indir) { // n5,R
+            osize = 5;
+        } else if (offset >= -128 && offset < 128) { // n8,R [n8,R]
+            osize = 8;
+        } else {                // n16,R [n16,R]
+            osize = 16;
+        }
+    }
+    if (osize == 5) {
         post |= (offset & 0x1F);
         insn.emitByte(post);
-        return setError(OK);
+        return setError((offset >= -16 && offset < 16) ? OK : OVERFLOW_RANGE);
     }
-    if (offset >= -128 && offset < 128) { // n8,R [n8,R]
+    if (osize == 8) {
         post |= 0x88;
         insn.emitByte(post);
         insn.emitByte((uint8_t)offset);
-        return setError(OK);
+        return setError((offset >= -128 && offset < 128) ? OK : OVERFLOW_RANGE);
     }
-    // n16,R [n16,R]
     post |= 0x89;
     insn.emitByte(post);
     insn.emitUint16(offset);
@@ -348,30 +367,41 @@ Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
 
 template<McuType mcuType>
 Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
-    switch (*line) {
-    case '#': insn.setAddrMode(IMM); break;
-    case '<': insn.setAddrMode(DIRP); break;
-    case '>': insn.setAddrMode(EXTD); break;
-    case '[':
-    case ',': insn.setAddrMode(INDX); break;
-    default:
-        RegName index;
-        if ((index = _regs.parseIndexReg(line)) != REG_UNDEF) {
-            line += _regs.regNameLen(index);
-            if (*line == ',') {
-                insn.setAddrMode(INDX);
-                return OK;
-            }
-            return setError(UNKNOWN_OPERAND);
-        }
-        uint16_t val;
-        const char *scan = _scan;
-        _scan = line;
-        if (getOperand16(val)) return getError();
-        if (*_scan == ',') insn.setAddrMode(INDX);
-        else insn.setAddrMode(val < 0x100 ? DIRP : EXTD);
-        _scan = scan;
-        break;
+    insn.setAddrMode(INDX);
+    if (*line == '#') {
+        insn.setAddrMode(IMM);
+        return OK;
+    }
+    if (*line == '[' || *line == ',')
+        return OK;
+    if (_regs.parseIndexReg(line) != REG_UNDEF)
+        return OK;
+    host::int_t size = -1;
+    if (*line == '<') {
+        size = 8;
+        if (line[1] == '<')     // << for 5bit indexed
+            line++;
+        line++;
+    } else if (*line == '>') {
+        size = 16;
+        line++;
+    }
+    const char *saved_scan = _scan;
+    _scan = line;
+    uint16_t val;
+    getOperand16(val);
+    line = _scan;
+    _scan = saved_scan;
+    if (getError()) return getError();
+    if (*line == ',')
+        return OK;
+    if (size == 8) {
+        insn.setAddrMode(DIRP);
+    } else if (size == 16) {
+        insn.setAddrMode(EXTD);
+    } else {
+        // TODO: support setting DP pseudo feature.
+        insn.setAddrMode(val < 0x100 ? DIRP : EXTD);
     }
     return OK;
 }
