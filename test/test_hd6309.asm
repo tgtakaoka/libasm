@@ -433,8 +433,7 @@
         tfm     x+,y+
         tfm     y-,u-
         tfm     u+,s
-;        tfm     s,d+
-        tfm     s,x+
+        tfm     s,d+
         bitmd   #$3c
         ldmd    #$3d
 ;;; 114X
