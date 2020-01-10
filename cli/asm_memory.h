@@ -2,6 +2,7 @@
 #ifndef __ASM_MEMORY_H__
 #define __ASM_MEMORY_H__
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <map>
@@ -16,12 +17,12 @@ public:
         invalidateCache();
     }
 
-    void writeBytes(Addr addr, const uint8_t *p, unsigned size) {
+    void writeBytes(Addr addr, const uint8_t *p, size_t size) {
         for (const uint8_t *end = p + size; p < end; p++)
             writeByte(addr++, *p);
     }
 
-    bool readBytes(Addr addr, uint8_t *p, unsigned size) {
+    bool readBytes(Addr addr, uint8_t *p, size_t size) {
         for (uint8_t *end = p + size; p < end; p++) {
             if (!readByte(addr, p))
                 return false;
@@ -79,7 +80,7 @@ public:
                 return false;
             if (a->second.size() != b->second.size())
                 return false;
-            for (std::size_t i = 0; i < a->second.size(); i++) {
+            for (size_t i = 0; i < a->second.size(); i++) {
                 if (a->second[i] != b->second[i])
                     return false;
             }
@@ -98,14 +99,14 @@ public:
     // Dumper should accept (const char *).
     template<typename Dumper>
     void dump(
-        BinFormatter<Addr> *formatter, Dumper dumper) const {
+        BinFormatter<Addr> *formatter, size_t record_bytes, Dumper dumper) const {
         const char *header = formatter->start();
         if (header) dumper(header);
         for (auto segment = _segments.cbegin();
              segment != _segments.cend(); segment++) {
             const auto &mem = segment->second;
-            for (std::size_t i = 0; i < mem.size(); i += 16) {
-                auto size = (i + 16 < mem.size()) ? 16 : mem.size() - i;
+            for (size_t i = 0; i < mem.size(); i += record_bytes) {
+                auto size = std::min(record_bytes, mem.size() - i);
                 const char *line = formatter->dump(
                     segment->first + i, mem.data() + i, size);
                 dumper(line);

@@ -53,7 +53,7 @@ public:
                 fprintf(stderr, "Can't open output file %s\n", _output_name);
                 return 1;
             }
-            memory.dump(_formatter,
+            memory.dump(_formatter, _record_bytes,
                         [&output](const char *line) {
                             fprintf(output, "%s\n", line);
                         });
@@ -80,6 +80,7 @@ private:
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
+    size_t _record_bytes;
     BinFormatter<Addr> *_formatter;
 
     int assemble(
@@ -165,27 +166,41 @@ private:
         _input_name = nullptr;
         _output_name = nullptr;
         _list_name = nullptr;
+        _record_bytes = 16;
         _formatter = nullptr;
         char formatter = 0;
         for (int i = 1; i < argc; i++) {
             const char *opt = argv[i];
             if (*opt == '-') {
-                if (strcmp(opt, "-o") == 0) {
+                switch (*++opt) {
+                case 'o':
                     if (++i >= argc) {
                         fprintf(stderr, "-o requires output file name\n");
                         return 1;
                     }
                     _output_name = argv[i];
-                } else if (strcmp(opt, "-l") == 0) {
+                    break;
+                case 'l':
                     if (++i >= argc) {
                         fprintf(stderr, "-l requires listing file name\n");
                         return 1;
                     }
                     _list_name = argv[i];
-                } else if (strcmp(opt, "-S") == 0
-                           || strcmp(opt, "-H") == 0) {
-                    formatter = opt[1];
-                } else {
+                    break;
+                case 'S':
+                case 'H':
+                    formatter = *opt++;
+                    if (*opt) {
+                        char *end;
+                        unsigned long v = strtoul(opt, &end, 10);
+                        if (*end || v > 32) {
+                            fprintf(stderr, "invalid record length: %s\n", argv[i]);
+                            return 3;
+                        }
+                        _record_bytes = v;
+                    }
+                    break;
+                default:
                     fprintf(stderr, "unknown option: %s\n", opt);
                     return 1;
                 }
@@ -220,9 +235,10 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-SH] [-o <output>] [-l <list>] <input>\n"
+                "usage: %s [-(S|H)[<bytes>]] [-o <output>] [-l <list>] <input>\n"
                 "  -S : output Motorola SREC format\n"
-                "  -H : output Intel HEX format\n",
+                "  -H : output Intel HEX format\n"
+                "     : optional <bytes> specifies data record length (max 32)\n",
                 _progname);
         return 2;
     }
