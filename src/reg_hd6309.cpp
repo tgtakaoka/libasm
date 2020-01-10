@@ -37,7 +37,7 @@ bool RegHd6309Utils::regCharCaseEqual(char c, char regChar) {
 }
 
 char RegHd6309Utils::regName1stChar(const RegName regName) {
-    return (regName == REG_DP) ? 'D' : char(regName);
+    return toupper(char(regName));
 }
 
 char RegHd6309Utils::regName2ndChar(const RegName regName) {
@@ -207,7 +207,7 @@ const RegName *DataRegHd6309<MC6809>::end() const {
 
 static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
     REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_W, REG_V,
-    REG_A, REG_B, REG_CC, REG_DP, REG_Z, REG_Z, REG_E, REG_F,
+    REG_A, REG_B, REG_CC, REG_DP, REG_ZERO, REG_ZERO, REG_E, REG_F,
 };
 template<>
 const RegName *DataRegHd6309<HD6309>::begin() const {
