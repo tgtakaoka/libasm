@@ -35,26 +35,9 @@ static bool regCharCaseEqual(char c, char regChar) {
 }
 
 static char regName1stChar(const RegName regName) {
-    switch (regName) {
-    case REG_HL:
-    case REG_H: return 'H';
-    case REG_BC:
-    case REG_B: return 'B';
-    case REG_DE:
-    case REG_D: return 'D';
-    case REG_SP: return 'S';
-    case REG_AF:
-    case REG_AFP:
-    case REG_A: return 'A';
-    case REG_IX:
-    case REG_IY:
-    case REG_I: return 'I';
-    case REG_C: return 'C';
-    case REG_E: return 'E';
-    case REG_L: return 'L';
-    case REG_R: return 'R';
-    default: return 0;
-    }
+    if (regName == REG_IX || regName == REG_IY) return 'I';
+    if (regName == REG_AFP) return 'A';
+    return toupper(char(regName));
 }
 
 static char regName2ndChar(const RegName regName) {
@@ -88,17 +71,9 @@ bool RegZ80::compareRegName(const char *line, RegName regName) {
 }
 
 host::uint_t RegZ80::regNameLen(const RegName regName) {
-    switch (regName) {
-    case REG_AFP: return 3;
-    case REG_HL:
-    case REG_BC:
-    case REG_DE:
-    case REG_SP:
-    case REG_AF:
-    case REG_IX:
-    case REG_IY: return 2;
-    default: return 1;
-    }
+    if (regName == REG_AFP) return 3;
+    if (isupper(char(regName))) return 1;
+    return 2;
 }
 
 char *RegZ80::outRegName(char *out, const RegName regName) {
