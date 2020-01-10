@@ -2,7 +2,7 @@
 #ifndef __TEST_ASSERTER_H__
 #define __TEST_ASSERTER_H__
 
-#include <cstdint>
+#include <stdint.h>
 
 class TestAsserter {
 public:
@@ -31,12 +31,12 @@ public:
         const char *message, const char *expected, const char *actual);
     void equals(
         const char *message,
-        const uint8_t expected[], std::size_t expected_len,
-        const uint8_t actual[], std::size_t actual_len);
+        const uint8_t expected[], size_t expected_len,
+        const uint8_t actual[], size_t actual_len);
     void equals(
         const char *message,
-        const uint16_t expected[], std::size_t expected_len,
-        const uint8_t actual[], std::size_t actual_len);
+        const uint16_t expected[], size_t expected_len,
+        const uint8_t actual[], size_t actual_len);
     void not_equals(
         const char *message, const char *expected, const char *actual);
 

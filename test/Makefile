@@ -129,4 +129,4 @@ test_expr_cstyle:test_expr_cstyle.o $(OBJS_common)
 clean: clean-obj
 	-rm -f $(TESTS)
 clean-obj:
-	-rm -f *.o *.d *.p *.lst *.hex *.s19
+	-rm -f *.o *.d *.p *.lst

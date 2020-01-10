@@ -5,7 +5,7 @@
 #include "symbol_table.h"
 
 #include <map>
-#include <cstring>
+#include <string.h>
 
 class TestSymtab : public SymbolTable {
 public:

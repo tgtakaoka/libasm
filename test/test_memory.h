@@ -4,9 +4,9 @@
 
 #include "dis_memory.h"
 
-#include <cinttypes>
-#include <cstdint>
-#include <cstdio>
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 
 class TestMemory : public DisMemory<target::uintptr_t> {
 public:

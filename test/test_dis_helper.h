@@ -7,7 +7,7 @@
 #include "test_symtab.h"
 #include "symbol_table.h"
 
-#include <cstdio>
+#include <stdio.h>
 
 extern TestAsserter asserter;
 extern TestMemory memory;

@@ -1,9 +1,9 @@
-#include "test_asserter.h"
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
-#include <cinttypes>
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
+#include "test_asserter.h"
 
 bool TestAsserter::check() const {
     if (_fail_count == 0) {
@@ -37,10 +37,10 @@ void TestAsserter::equals(
 
 void TestAsserter::equals(
     const char *message,
-    const uint8_t expected[], std::size_t expected_len,
-    const uint8_t actual[], std::size_t actual_len) {
+    const uint8_t expected[], size_t expected_len,
+    const uint8_t actual[], size_t actual_len) {
     if (expected_len == actual_len) {
-        std::size_t i;
+        size_t i;
         for (i = 0; i < expected_len; i++)
             if (expected[i] != actual[i])
                 break;
@@ -51,22 +51,22 @@ void TestAsserter::equals(
     }
     _fail_count++;
     printf("%s: expected ", message);
-    for (std::size_t i = 0; i < expected_len; i++) {
+    for (size_t i = 0; i < expected_len; i++) {
         printf(i == 0 ?  "[" : " ");
         printf("%02" PRIX8, expected[i]);
     }
     printf("]: actual ");
-    for (std::size_t i = 0; i < actual_len; i++) {
+    for (size_t i = 0; i < actual_len; i++) {
         printf(i == 0 ? "[" : " ");
         printf("%02" PRIX8, actual[i]);
     }
     printf("\n");
 }
 
-static void convert(const uint8_t *bytes, std::size_t blen,
-                    uint16_t *words, std::size_t wlen) {
+static void convert(const uint8_t *bytes, size_t blen,
+                    uint16_t *words, size_t wlen) {
     uint16_t msb = 0;
-    for (std::size_t idx = 0; idx < blen; idx++) {
+    for (size_t idx = 0; idx < blen; idx++) {
         if (idx % 2 == 0) {
             msb = bytes[idx];
         } else {
@@ -77,14 +77,14 @@ static void convert(const uint8_t *bytes, std::size_t blen,
 
 void TestAsserter::equals(
     const char *message,
-    const uint16_t expected[], std::size_t expected_len_b,
-    const uint8_t actual_b[], std::size_t actual_len_b) {
-    const std::size_t expected_len = (expected_len_b + 1) / 2;
-    const std::size_t actual_len = (actual_len_b + 1) / 2;
+    const uint16_t expected[], size_t expected_len_b,
+    const uint8_t actual_b[], size_t actual_len_b) {
+    const size_t expected_len = (expected_len_b + 1) / 2;
+    const size_t actual_len = (actual_len_b + 1) / 2;
     uint16_t actual[actual_len];
     convert(actual_b, actual_len_b, actual, actual_len);
     if (expected_len == actual_len) {
-        std::size_t i;
+        size_t i;
         for (i = 0; i < expected_len; i++)
             if (expected[i] != actual[i])
                 break;
@@ -95,12 +95,12 @@ void TestAsserter::equals(
     }
     _fail_count++;
     printf("%s: expected ", message);
-    for (std::size_t i = 0; i < expected_len; i++) {
+    for (size_t i = 0; i < expected_len; i++) {
         printf(i == 0 ?  "[" : " ");
         printf("%04" PRIX16, expected[i]);
     }
     printf("]: actual ");
-    for (std::size_t i = 0; i < actual_len; i++) {
+    for (size_t i = 0; i < actual_len; i++) {
         printf(i == 0 ? "[" : " ");
         printf("%04" PRIX16, actual[i]);
     }
