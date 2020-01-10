@@ -152,11 +152,14 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
                 incr--;
             }
         }
-        if ((base = _regs.parseBaseReg(_scan)) != REG_UNDEF
-            || _regs.compareRegName(_scan, REG_PC)) {
-            if (base == REG_UNDEF) base = REG_PC;
-            _scan += _regs.regNameLen(base);
-        } else setError(UNKNOWN_OPERAND);
+        if ((base = _regs.parseBaseReg(_scan)) == REG_UNDEF) {
+            if (_regs.compareRegName(_scan, REG_PCR)) {
+                base = REG_PCR;
+            } else if (_regs.compareRegName(_scan, REG_PC)) {
+                base = REG_PC;
+            } else setError(UNKNOWN_OPERAND);
+        }
+        _scan += _regs.regNameLen(base);
         if (index == REG_UNDEF && incr == 0) {
             while (*_scan == '+') {
                 _scan++;
@@ -177,7 +180,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         insn.emitUint16(addr);
         return setError(OK);
     }
-    if (base == REG_PC) {       // n,PC [n,PC]
+    if (base == REG_PCR) {      // n,PCR [n,PCR]
         if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
         post = indir ? 0x10 : 0;
         target::ptrdiff_t delta = addr - (insn.address() + insn.insnLen() + 2);
@@ -189,6 +192,19 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         delta = addr - (insn.address() + insn.insnLen() + 3);
         insn.emitByte(0x8D | post);
         insn.emitUint16(delta);
+        return setError(OK);
+    }
+    if (base == REG_PC) {       // n,PC [n.PC]
+        if (index != OFFSET || incr != 0) return setError(UNKNOWN_OPERAND);
+        post = indir ? 0x10 : 0;
+        const target::ptrdiff_t offset = addr;
+        if (offset >= -128 && offset < 128) {
+            insn.emitByte(0x8C | post);
+            insn.emitByte((uint8_t)offset);
+            return setError(OK);
+        }
+        insn.emitByte(0x8D | post);
+        insn.emitUint16(offset);
         return setError(OK);
     }
     if (mcuType == HD6309 && base == REG_W) {

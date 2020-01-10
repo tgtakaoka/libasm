@@ -48,7 +48,7 @@
 ;;; 3X
         leax    $30,y
         leay    [$31,s]
-        leas    [$32,pc]
+        leas    [$32,pcr]
         leau    $33,x
         pshs    y,x,b
         puls    cc,b,x,y
@@ -275,10 +275,10 @@
         ldy     $9e
         sty     $9f
 ;;; 10AX
-        cmpd    $a3,pc
-        cmpy    $ac,pc
-        ldy     $ae,pc
-        sty     $af,pc
+        cmpd    $a3,pcr
+        cmpy    $ac,pcr
+        ldy     $ae,pcr
+        sty     $af,pcr
 ;;; 10BX
         cmpd    $10b3
         cmpy    $10bc
