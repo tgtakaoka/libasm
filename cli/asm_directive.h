@@ -34,9 +34,9 @@ public:
         listing.address = _origin;
         char label_buf[20];
         const char *label = nullptr;
-        if (_parser->isSymbolLetter(*_scan, true)) {
+        if (_parser.isSymbolLetter(*_scan, true)) {
             listing.label = _scan;
-            _scan = _parser->readSymbol(
+            _scan = _parser.readSymbol(
                 _scan, label_buf, label_buf + sizeof(label_buf) - 1);
             if (*_scan == ':') _scan++; // optional trailing ':' for label.
             listing.label_len = _scan - listing.label;
@@ -44,10 +44,10 @@ public:
         }
         skipSpaces();
 
-        if (_parser->isSymbolLetter(*_scan, true)) {
+        if (_parser.isSymbolLetter(*_scan, true)) {
             listing.instruction = _scan;
             char directive[10];
-            _scan = _parser->readSymbol(
+            _scan = _parser.readSymbol(
                 _scan, directive, directive + sizeof(directive) - 1);
             listing.instruction_len = _scan - listing.instruction;
             skipSpaces();
@@ -116,7 +116,7 @@ protected:
     {}
 
     Asm &_assembler;
-    AsmOperand *_parser;
+    AsmOperand &_parser;
     Addr _origin;
     const char *_scan;
     bool _reportUndef;
@@ -131,8 +131,8 @@ protected:
             if (_reportDuplicate && hasSymbol(label))
                 return setError(DUPLICATE_LABEL);
             Addr value;
-            const char *scan = _parser->eval(_scan, value, this);
-            if (_parser->getError()) return setError(_parser);
+            const char *scan = _parser.eval(_scan, value, this);
+            if (_parser.getError()) return setError(_parser);
             _scan = scan;
             // TODO line end check
             internSymbol(label, value, false);
@@ -141,8 +141,8 @@ protected:
         }
         if (strcasecmp(directive, "org") == 0) {
             Addr value;
-            const char *scan = _parser->eval(_scan, value, this);
-            if (_parser->getError())
+            const char *scan = _parser.eval(_scan, value, this);
+            if (_parser.getError())
                 return setError(_parser);
             _scan = scan;
             // TODO line end check
@@ -152,7 +152,7 @@ protected:
         if (strcasecmp(directive, "cpu") == 0) {
             char cpu[10];
             const char *p =
-                _parser->readSymbol(_scan, cpu, cpu + sizeof(cpu) - 1);
+                _parser.readSymbol(_scan, cpu, cpu + sizeof(cpu) - 1);
             if (!_assembler.acceptCpu(cpu)) return setError(UNSUPPORTED_CPU);
             _scan = p;
             return setError(OK);
@@ -170,8 +170,8 @@ protected:
                     if (*p == 0) return setError(MISSING_CLOSING_DQUOTE);
                     if (*p == '"') break;
                     char c;
-                    p = _parser->readChar(p, c);
-                    if (_parser->getError()) {
+                    p = _parser.readChar(p, c);
+                    if (_parser.getError()) {
                         _scan = p;
                         return setError(_parser);
                     }
@@ -180,15 +180,15 @@ protected:
                 _scan = p + 1;
             } else if (*_scan == '\'') {
                 char c;
-                const char *p = _parser->readChar(_scan + 1, c);
-                if (_parser->getError()) return setError(_parser);
+                const char *p = _parser.readChar(_scan + 1, c);
+                if (_parser.getError()) return setError(_parser);
                 if (*p++ != '\'') return setError(MISSING_CLOSING_QUOTE);
                 _scan = p;
                 memory.writeByte(_origin++, c);
             } else {
                 uint8_t val8;
-                _scan = _parser->eval(_scan, val8, this);
-                if (_parser->getError()) return setError(_parser);
+                _scan = _parser.eval(_scan, val8, this);
+                if (_parser.getError()) return setError(_parser);
                 memory.writeByte(_origin++, val8);
             }
             skipSpaces();
@@ -202,8 +202,8 @@ protected:
         do {
             skipSpaces();
             uint16_t val16;
-            _scan = _parser->eval(_scan, val16, this);
-            if (_parser->getError()) return setError(_parser);
+            _scan = _parser.eval(_scan, val16, this);
+            if (_parser.getError()) return setError(_parser);
             if (bigEndian) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
@@ -219,8 +219,8 @@ protected:
 
     Error defineSpaces() {
         uint16_t val16;
-        _scan = _parser->eval(_scan, val16, this);
-        if (_parser->getError()) return setError(_parser);
+        _scan = _parser.eval(_scan, val16, this);
+        if (_parser.getError()) return setError(_parser);
         if (_origin + val16 < _origin) return setError(OVERFLOW_RANGE);
         _origin += val16;
         return setError(OK);
@@ -295,7 +295,7 @@ protected:
     Error processDirective(
         const char *directive, const char *&label,
         CliMemory<Addr> &memory) override {
-        AsmDirective<Asm>::_parser->isSymbolLetter(0);
+        AsmDirective<Asm>::_parser.isSymbolLetter(0);
         if (strcasecmp(directive, "db") == 0)
             return AsmDirective<Asm>::defineBytes(memory);
         if (strcasecmp(directive, "dw") == 0)

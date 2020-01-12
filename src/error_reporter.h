@@ -56,8 +56,8 @@ protected:
         return error;
     }
 
-    Error setError(const ErrorReporter *other) {
-        return setError(other->getError());
+    Error setError(const ErrorReporter &other) {
+        return setError(other.getError());
     }
 
     void resetError() {

@@ -17,12 +17,10 @@ public:
         Insn& insn,
         char *operands,
         SymbolTable *symtab) override;
-
-protected:
-    DisOperand *getEncoder() { return &_encoder; }
+    DisOperand &getFormatter() override { return _formatter; }
 
 private:
-    DisIntelOperand _encoder;
+    DisIntelOperand _formatter;
 
     template<typename U>
     void outAddress(U addr, bool indir = true);

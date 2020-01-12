@@ -17,12 +17,10 @@ public:
         Insn& insn,
         char *operands,
         SymbolTable *symtab) override;
-
-protected:
-    DisOperand *getEncoder() { return &_encoder; }
+    DisOperand &getFormatter() override { return _formatter; }
 
 private:
-    DisMotoOperand _encoder;
+    DisMotoOperand _formatter;
 
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);

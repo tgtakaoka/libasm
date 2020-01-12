@@ -16,12 +16,10 @@ public:
         Insn& insn,
         char *operands,
         SymbolTable *symtab) override;
-
-protected:
-    DisOperand *getEncoder() { return &_encoder; }
+    DisOperand &getFormatter() override { return _formatter; }
 
 private:
-    DisIntelOperand _encoder;
+    DisIntelOperand _formatter;
 
     void outAddress(target::uintptr_t addr, bool relax = true);
     void outRegister(host::uint_t regno);

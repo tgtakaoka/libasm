@@ -17,13 +17,11 @@ public:
         Insn& insn,
         char *operands,
         SymbolTable *symtab) override;
-
-protected:
-    DisOperand *getEncoder() { return &_encoder; }
+    DisOperand &getFormatter() override { return _formatter; }
 
 private:
     RegHd6309<mcuType> _regs;
-    DisMotoOperand _encoder;
+    DisMotoOperand _formatter;
 
     void outRegister(RegName regName);
 

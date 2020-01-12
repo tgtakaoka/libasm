@@ -19,7 +19,7 @@ public:
         Insn &insn,
         Addr addr,
         SymbolTable *symtab) = 0;
-    virtual AsmOperand *getParser() = 0;
+    virtual AsmOperand &getParser() = 0;
     const char *errorAt() const { return _scan; }
     virtual bool acceptCpu(const char *cpu) const = 0;
 
@@ -40,18 +40,18 @@ protected:
     }
 
     Error getOperand32(uint32_t &val32) {
-        AsmOperand *parser = getParser();
-        _scan = parser->eval(_scan, val32, _symtab);
+        AsmOperand &parser = getParser();
+        _scan = parser.eval(_scan, val32, _symtab);
         return ErrorReporter::setError(parser);
     }
     Error getOperand16(uint16_t &val16) {
-        AsmOperand *parser = getParser();
-        _scan = parser->eval(_scan, val16, _symtab);
+        AsmOperand &parser = getParser();
+        _scan = parser.eval(_scan, val16, _symtab);
         return ErrorReporter::setError(parser);
     }
     Error getOperand8(uint8_t &val8) {
-        AsmOperand *parser = getParser();
-        _scan = parser->eval(_scan, val8, _symtab);
+        AsmOperand &parser = getParser();
+        _scan = parser.eval(_scan, val8, _symtab);
         return ErrorReporter::setError(parser);
     }
 

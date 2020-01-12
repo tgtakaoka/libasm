@@ -16,7 +16,7 @@ public:
         Insn &insn,
         target::uintptr_t addr,
         SymbolTable *symtab) override;
-    AsmOperand *getParser() override { return &_parser; }
+    AsmOperand &getParser() override { return _parser; }
     bool acceptCpu(const char *cpu) const override;
 
 private:

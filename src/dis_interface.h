@@ -10,11 +10,14 @@
 template<typename Addr>
 class Disassembler : public ErrorReporter {
 public:
+    typedef Addr addr_t;
+
     virtual Error decode(
         DisMemory<target::uintptr_t> &memory,
         Insn& insn,
         char *operands,
         SymbolTable *symtab) = 0;
+    virtual DisOperand &getFormatter() = 0;
 };
 
 template<typename Addr>
@@ -47,11 +50,10 @@ protected:
         _operands = p;
     }
 
-    virtual DisOperand *getEncoder() = 0;
     template<typename T>
     void outConstant(T val, int8_t radix = 16, bool relax = true) {
         if (is_signed<T>::value) radix = -radix;
-        _operands = getEncoder()->output(
+        _operands = this->getFormatter().output(
             _operands, val, radix, relax, static_cast<uint8_t>(sizeof(T)));
     }
 };
