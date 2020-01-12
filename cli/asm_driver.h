@@ -2,7 +2,7 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
-#include "asm_memory.h"
+#include "cli_memory.h"
 #include "asm_directive.h"
 #include "file_util.h"
 
@@ -32,14 +32,14 @@ public:
         }
 
         _directive.setSymbolMode(false, true);
-        AsmMemory<Addr> memory;
+        CliMemory<Addr> memory;
         if (assemble(input, _input_name, memory, nullptr) != 0)
             return 1;
 
         do {
             fseek(input, 0L, SEEK_SET);
             _directive.setSymbolMode(true, false);
-            AsmMemory<Addr> next;
+            CliMemory<Addr> next;
             if (assemble(input, _input_name, next, nullptr) != 0)
                 return 1;
             if (memory.equals(next))
@@ -53,10 +53,20 @@ public:
                 fprintf(stderr, "Can't open output file %s\n", _output_name);
                 return 1;
             }
-            memory.dump(_formatter, _record_bytes,
-                        [&output](const char *line) {
-                            fprintf(output, "%s\n", line);
-                        });
+            const char *begin = _formatter->begin();
+            if (begin) fprintf(output, "%s\n", begin);
+            memory.dump(
+                [this, output]
+                (Addr addr, const uint8_t *data, size_t data_size) {
+                    for (size_t i = 0; i < data_size; i += _record_bytes) {
+                        auto size = std::min(_record_bytes, data_size - i);
+                        const char *line =
+                            _formatter->encode(addr + i, data + i, size);
+                        fprintf(output, "%s\n", line);
+                    }
+                });
+            const char *end = _formatter->end();
+            if (end) fprintf(output, "%s\n", end);
             fclose(output);
         }
         if (_list_name) {
@@ -84,7 +94,7 @@ private:
     BinFormatter<Addr> *_formatter;
 
     int assemble(
-        FILE *input, const char *filename, AsmMemory<Addr> &memory,
+        FILE *input, const char *filename, CliMemory<Addr> &memory,
         FILE *list) {
         int lineno = 0;
         int errors = 0;
@@ -112,7 +122,7 @@ private:
     }
 
     void printListing(
-        typename AsmDirective<Asm>::Listing &listing, AsmMemory<Addr> &memory,
+        typename AsmDirective<Asm>::Listing &listing, CliMemory<Addr> &memory,
         FILE *out) {
         if (sizeof(Addr) == 2) {
             fprintf(out, "%04x:", listing.address);
@@ -227,15 +237,21 @@ private:
             return 2;
         }
         if (_output_name) {
-            if (formatter == 'S') _formatter = new SRecord<Addr>();
-            if (formatter == 'H') _formatter = new IntelHex<Addr>();
+            if (formatter == 'S') {
+                _formatter = new SRecord<Addr>();
+            } else if (formatter == 'H') {
+                _formatter = new IntelHex<Addr>();
+            } else {
+                fprintf(stderr, "No output format specified\n");
+                return 3;
+            }
         }
         return 0;
     }
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-(S|H)[<bytes>]] [-o <output>] [-l <list>] <input>\n"
+                "usage: %s -(S|H[<bytes>]] [-o <output>] [-l <list>] <input>\n"
                 "  -S : output Motorola SREC format\n"
                 "  -H : output Intel HEX format\n"
                 "     : optional <bytes> specifies data record length (max 32)\n",

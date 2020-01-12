@@ -6,7 +6,7 @@
 #include <functional>
 
 #include "error_reporter.h"
-#include "asm_memory.h"
+#include "cli_memory.h"
 #include "asm_interface.h"
 
 template <typename Asm>
@@ -27,7 +27,7 @@ public:
     } Listing;
 
     Error assembleLine(
-        const char *scan, AsmMemory<Addr> &memory, Listing &listing) {
+        const char *scan, CliMemory<Addr> &memory, Listing &listing) {
         _scan = scan;
         _listing = &listing;
 
@@ -124,7 +124,7 @@ protected:
     Listing *_listing;
 
     virtual Error processDirective(
-        const char *directive, const char *&label, AsmMemory<Addr> &memory) {
+        const char *directive, const char *&label, CliMemory<Addr> &memory) {
         if (strcasecmp(directive, "equ") == 0) {
             if (label == nullptr)
                 return setError(MISSING_LABEL);
@@ -160,7 +160,7 @@ protected:
         return setError(UNKNOWN_DIRECTIVE);
     }
 
-    Error defineBytes(AsmMemory<Addr> &memory) {
+    Error defineBytes(CliMemory<Addr> &memory) {
         _listing->address = _origin;
         do {
             skipSpaces();
@@ -197,7 +197,7 @@ protected:
         return setError(OK);
     }
 
-    Error defineWords(AsmMemory<Addr> &memory, bool bigEndian) {
+    Error defineWords(CliMemory<Addr> &memory, bool bigEndian) {
         _listing->address = _origin;
         do {
             skipSpaces();
@@ -272,7 +272,7 @@ public:
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        AsmMemory<Addr> &memory) override {
+        CliMemory<Addr> &memory) override {
         if (strcasecmp(directive, "fcb") == 0 ||
             strcasecmp(directive, "fcc") == 0)
             return AsmDirective<Asm>::defineBytes(memory);
@@ -294,7 +294,7 @@ public:
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        AsmMemory<Addr> &memory) override {
+        CliMemory<Addr> &memory) override {
         AsmDirective<Asm>::_parser->isSymbolLetter(0);
         if (strcasecmp(directive, "db") == 0)
             return AsmDirective<Asm>::defineBytes(memory);

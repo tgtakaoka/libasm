@@ -17,8 +17,8 @@ public:
         free(_line);
     }
 
-    virtual const char *start() = 0;
-    virtual const char *dump(
+    virtual const char *begin() = 0;
+    virtual const char *encode(
         Addr addr, const uint8_t *data, size_t size) = 0;
     virtual const char *end() = 0;
 
@@ -48,24 +48,24 @@ template<typename Addr>
 class IntelHex : public BinFormatter<Addr> {
 public:
     IntelHex() : BinFormatter<Addr>() {}
-    const char *start() override { return nullptr; }
-    const char *dump(
+    const char *begin() override { return nullptr; }
+    const char *encode(
         Addr addr, const uint8_t *data, size_t size) override {
-        BinFormatter<Addr>::ensureLine((sizeof(Addr) + size + 3) * 2);
-        char *p = BinFormatter<Addr>::_line;
+        this->ensureLine((sizeof(Addr) + size + 3) * 2);
+        char *p = this->_line;
         p += sprintf(p, ":%02X%04X00",
                      static_cast<uint8_t>(size),
                      static_cast<uint16_t>(addr));
-        BinFormatter<Addr>::resetSum();
-        BinFormatter<Addr>::addSum(static_cast<uint8_t>(size));
-        BinFormatter<Addr>::addSum(addr);
+        this->resetSum();
+        this->addSum(static_cast<uint8_t>(size));
+        this->addSum(addr);
         for (size_t i = 0; i < size; i++) {
             p += sprintf(p, "%02X", data[i]);
-            BinFormatter<Addr>::addSum(data[i]);
+            this->addSum(data[i]);
         }
         sprintf(p, "%02X", static_cast<uint8_t>(
-                    -BinFormatter<Addr>::_check_sum & 0xff));
-        return BinFormatter<Addr>::_line;
+                    -this->_check_sum & 0xff));
+        return this->_line;
     }
     const char *end() override { return ":00000001FF"; }
 };
@@ -74,30 +74,30 @@ template<typename Addr>
 class SRecord : public BinFormatter<Addr> {
 public:
     SRecord() : BinFormatter<Addr>() {}
-    const char *start() override {
+    const char *begin() override {
         return "S0030000FC";
     }
 
-    const char *dump(
+    const char *encode(
         Addr addr, const uint8_t *data, size_t size) override {
-        BinFormatter<Addr>::ensureLine((sizeof(Addr) + size + 3) * 2);
+        this->ensureLine((sizeof(Addr) + size + 3) * 2);
         const uint8_t len = sizeof(addr) + size + 1;
-        BinFormatter<Addr>::resetSum();
-        BinFormatter<Addr>::addSum(len);
-        char *p = BinFormatter<Addr>::_line;
+        this->resetSum();
+        this->addSum(len);
+        char *p = this->_line;
         if (sizeof(Addr) == 2) {
             p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
         } else { 
             p += sprintf(p, "S3%02X%08X", len, static_cast<uint32_t>(addr));
         }
-        BinFormatter<Addr>::addSum(addr);
+        this->addSum(addr);
         for (size_t i = 0; i < size; i++) {
             p += sprintf(p, "%02X", data[i]);
-            BinFormatter<Addr>::addSum(data[i]);
+            this->addSum(data[i]);
         }
         sprintf(p, "%02X", static_cast<uint8_t>(
-                    ~BinFormatter<Addr>::_check_sum & 0xff));
-        return BinFormatter<Addr>::_line;
+                    ~this->_check_sum & 0xff));
+        return this->_line;
     }
     const char *end() override {
         if (sizeof(Addr) == 2) {

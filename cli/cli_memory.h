@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef __ASM_MEMORY_H__
-#define __ASM_MEMORY_H__
+#ifndef __CLI_MEMORY_H__
+#define __CLI_MEMORY_H__
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -11,10 +11,11 @@
 #include "bin_formatter.h"
 
 template<typename Addr>
-class AsmMemory {
+class CliMemory {
 public:
-    AsmMemory() {
-        invalidateCache();
+    CliMemory() {
+        invalidateWriteCache();
+        invalidateReadCache();
     }
 
     void writeBytes(Addr addr, const uint8_t *p, size_t size) {
@@ -22,7 +23,7 @@ public:
             writeByte(addr++, *p);
     }
 
-    bool readBytes(Addr addr, uint8_t *p, size_t size) {
+    bool readBytes(Addr addr, uint8_t *p, size_t size) const {
         for (uint8_t *end = p + size; p < end; p++) {
             if (!readByte(addr, p))
                 return false;
@@ -32,17 +33,19 @@ public:
 
     void writeByte(Addr addr, uint8_t val) {
         // Shortcut for most possible case, appending byte to cached segment.
-        if (atEndOf(_cache, addr)) {
-            appendTo(_cache, addr, val);
+        if (atEndOf(_write_cache, addr)) {
+            appendTo(_write_cache, addr, val);
             return;
         }
-        if (insideOf(_cache, addr)) {
-            replaceAt(_cache, addr, val);
+        if (insideOf(_write_cache, addr)) {
+            replaceAt(_write_cache, addr, val);
             return;
         }
 
-        invalidateCache();
-        for (auto segment = _segments.begin(); segment != _segments.end(); segment++) {
+        invalidateWriteCache();
+        for (auto segment = _segments.begin();
+             segment != _segments.end();
+             segment++) {
             if (atEndOf(segment, addr)) {
                 appendTo(segment, addr, val);
                 return;
@@ -57,22 +60,25 @@ public:
         createSegment(addr, val);
     }
 
-    bool readByte(Addr addr, uint8_t &val) {
-        if (insideOf(_cache, addr)) {
-            val = readFrom(_cache, addr);
+    bool readByte(Addr addr, uint8_t &val) const {
+        if (insideOf(_read_cache, addr)) {
+            val = readFrom(_read_cache, addr);
             return true;
         }
-        for (auto segment = _segments.begin(); segment != _segments.end(); segment++) {
+        for (auto segment = _segments.cbegin();
+             segment != _segments.cend();
+             segment++) {
             if (insideOf(segment, addr)) {
                 val = readFrom(segment, addr);
-                _cache = segment;
+                _read_cache = segment;
                 return true;
             }
         }
+        invalidateReadCache();
         return false;
     }
 
-    bool equals(const AsmMemory<Addr> &other) const {
+    bool equals(const CliMemory<Addr> &other) const {
         auto a = _segments.cbegin();
         auto b = other._segments.cbegin();
         while (a != _segments.cend() && b != other._segments.cend()) {
@@ -90,41 +96,43 @@ public:
         return a == _segments.cend() && b == other._segments.cend();
     }
 
-    void swap(AsmMemory& other) {
+    void swap(CliMemory& other) {
         _segments.swap(other._segments);
-        invalidateCache();
-        other.invalidateCache();
+        invalidateWriteCache();
+        other.invalidateWriteCache();
     }
 
-    // Dumper should accept (const char *).
+    // Dumper should accept (Addr, const uint8_t *, size_t)
     template<typename Dumper>
-    void dump(
-        BinFormatter<Addr> *formatter, size_t record_bytes, Dumper dumper) const {
-        const char *header = formatter->start();
-        if (header) dumper(header);
+    void dump(Dumper dumper) const {
         for (auto segment = _segments.cbegin();
              segment != _segments.cend(); segment++) {
             const auto &mem = segment->second;
-            for (size_t i = 0; i < mem.size(); i += record_bytes) {
-                auto size = std::min(record_bytes, mem.size() - i);
-                const char *line = formatter->dump(
-                    segment->first + i, mem.data() + i, size);
-                dumper(line);
-            }
+            dumper(segment->first, mem.data(), mem.size());
         }
-        const char *trailer = formatter->end();
-        if (trailer) dumper(trailer);
     }
 
 private:
     // Memory segment list in ascending order of start address.
     typedef std::map<Addr, std::vector<uint8_t>> Segments;
     typedef typename Segments::iterator Segment;
+    typedef typename Segments::const_iterator ConstSegment;
     Segments _segments;
-    Segment _cache;
+    Segment _write_cache;
+    mutable ConstSegment _read_cache;
 
-    void invalidateCache() {
-        _cache = _segments.end();
+    void invalidateWriteCache() {
+        _write_cache = _segments.end();
+    }
+
+    void invalidateReadCache() const {
+        _read_cache = _segments.cend();
+    }
+
+    bool insideOf(ConstSegment &segment, Addr addr) const {
+        return segment != _segments.cend()
+            && addr >= segment->first
+            && addr < segment->first + segment->second.size();
     }
 
     bool insideOf(Segment &segment, Addr addr) const {
@@ -138,26 +146,27 @@ private:
             && addr == segment->first + segment->second.size();
     }
 
-    uint8_t readFrom(Segment &segment, Addr addr) const {
+    uint8_t readFrom(ConstSegment &segment, Addr addr) const {
         return segment->second.at(addr - segment->first);
     }
 
-    void appendTo(Segment segment, Addr addr, uint8_t val) {
+    void appendTo(Segment &segment, Addr addr, uint8_t val) {
         segment->second.push_back(val);
-        _cache = segment;
+        _write_cache = segment;
         aggregate(segment);
     }
 
-    void replaceAt(Segment segment, Addr addr, uint8_t val) {
+    void replaceAt(Segment &segment, Addr addr, uint8_t val) {
         segment->second.at(addr - segment->first) = val;
-        _cache = segment;
+        _write_cache = segment;
         aggregate(segment);
     }
 
     void createSegment(Addr addr, uint8_t val) {
-        _cache = _segments.insert(std::make_pair(addr, std::vector<uint8_t>())).first;
-        _cache->second.push_back(val);
-        aggregate(_cache);
+        _write_cache = _segments.insert(
+            std::make_pair(addr, std::vector<uint8_t>())).first;
+        _write_cache->second.push_back(val);
+        aggregate(_write_cache);
     }
 
     void aggregate(Segment hint) {
@@ -172,7 +181,7 @@ private:
                 prev->second.end(),
                 std::make_move_iterator(next->second.begin()),
                 std::make_move_iterator(next->second.end()));
-            invalidateCache();
+            invalidateWriteCache();
         }
     }
 };
