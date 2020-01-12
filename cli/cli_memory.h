@@ -9,15 +9,43 @@
 #include <vector>
 
 #include "bin_formatter.h"
+#include "dis_memory.h"
 
 template<typename Addr>
-class CliMemory {
+class CliMemory : public DisMemory<Addr> {
 public:
-    CliMemory() {
+    CliMemory() : DisMemory<Addr>(0) {
         invalidateWriteCache();
         invalidateReadCache();
     }
 
+    void setAddress(Addr addr) {
+        this->_address = addr;
+    }
+
+    bool hasNext() const override {
+        Addr addr = this->_address;
+        if (insideOf(_read_cache, addr)) return true;
+        for (auto segment = _segments.cbegin();
+             segment != _segments.cend();
+             segment++) {
+            if (insideOf(segment, addr)) {
+                _read_cache = segment;
+                return true;
+            }
+        }
+        invalidateReadCache();
+        return false;
+    }
+
+protected:
+    uint8_t nextByte() override {
+        uint8_t val = 0;
+        readByte(this->_address, val);
+        return val;
+    }
+
+public:
     void writeBytes(Addr addr, const uint8_t *p, size_t size) {
         for (const uint8_t *end = p + size; p < end; p++)
             writeByte(addr++, *p);
@@ -135,13 +163,13 @@ private:
             && addr < segment->first + segment->second.size();
     }
 
-    bool insideOf(Segment &segment, Addr addr) const {
+    bool insideOf(Segment segment, Addr addr) const {
         return segment != _segments.end()
             && addr >= segment->first
             && addr < segment->first + segment->second.size();
     }
 
-    bool atEndOf(Segment &segment, Addr addr) const {
+    bool atEndOf(Segment segment, Addr addr) const {
         return segment != _segments.end()
             && addr == segment->first + segment->second.size();
     }
