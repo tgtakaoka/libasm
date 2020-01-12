@@ -48,7 +48,7 @@ public:
     }
     Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
-        val = (uint16_t)memory.readByte() << 8;
+        val = static_cast<uint16_t>(memory.readByte()) << 8;
         if (!memory.hasNext()) return NO_MEMORY;
         val |= memory.readByte();
         emitUint16(val);
@@ -56,11 +56,11 @@ public:
     }
     Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
-        val = (uint32_t)memory.readByte() << 24;
+        val = static_cast<uint32_t>(memory.readByte()) << 24;
         if (!memory.hasNext()) return NO_MEMORY;
-        val |= (uint32_t)memory.readByte() << 16;
+        val |= static_cast<uint32_t>(memory.readByte()) << 16;
         if (!memory.hasNext()) return NO_MEMORY;
-        val |= (uint16_t)memory.readByte() << 8;
+        val |= static_cast<uint16_t>(memory.readByte()) << 8;
         if (!memory.hasNext()) return NO_MEMORY;
         val |= memory.readByte();
         emitUint32(val);
@@ -71,12 +71,12 @@ public:
         _bytes[_insnLen++] = val;
     }
     void emitUint16(uint16_t val) {
-        emitByte(uint8_t(val >> 8));
-        emitByte(uint8_t(val & 0xff));
+        emitByte(static_cast<uint8_t>(val >> 8));
+        emitByte(static_cast<uint8_t>(val & 0xff));
     }
     void emitUint32(uint32_t val) {
-        emitUint16(uint16_t(val >> 16));
-        emitUint16(uint16_t(val & 0xffff));
+        emitUint16(static_cast<uint16_t>(val >> 16));
+        emitUint16(static_cast<uint16_t>(val & 0xffff));
     }
 
 private:

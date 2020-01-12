@@ -33,7 +33,7 @@ public:
 
     Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
-        val = (uint16_t)memory.readByte() << 8;
+        val = static_cast<uint16_t>(memory.readByte()) << 8;
         if (!memory.hasNext()) return NO_MEMORY;
         val |= memory.readByte();
         appendUint16(val);
@@ -62,8 +62,8 @@ private:
     uint8_t    _bytes[6];
 
     void emitUint16(uint16_t val, host::uint_t pos) {
-        _bytes[pos++] = uint8_t(val >> 8);
-        _bytes[pos] = uint8_t(val);
+        _bytes[pos++] = static_cast<uint8_t>(val >> 8);
+        _bytes[pos] = static_cast<uint8_t>(val);
     }
 };
 

@@ -49,7 +49,7 @@ public:
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         if (!memory.hasNext()) return NO_MEMORY;
-        val |= (uint16_t)memory.readByte() << 8;
+        val |= static_cast<uint16_t>(memory.readByte()) << 8;
         emitUint16(val);
         return OK;
     }
@@ -58,8 +58,8 @@ public:
         _bytes[_insnLen++] = val;
     }
     void emitUint16(uint16_t val) {
-        emitByte(uint8_t(val & 0xff));
-        emitByte(uint8_t(val >> 8));
+        emitByte(static_cast<uint8_t>(val & 0xff));
+        emitByte(static_cast<uint8_t>(val >> 8));
     }
 
 private:

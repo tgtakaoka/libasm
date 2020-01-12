@@ -50,7 +50,7 @@ Error DisTms9995::decodeImmediate(
 }
 
 Error DisTms9995::decodeRelative(Insn& insn) {
-    int16_t delta = (int8_t)(insn.insnCode() & 0xff);
+    int16_t delta = static_cast<int8_t>(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
     outAddress(addr, false);
@@ -125,7 +125,7 @@ Error DisTms9995::decode(
         decodeRelative(insn);
         return setError(OK);
     case CRU_OFF: {
-        const int8_t offset = (int8_t)(insnCode & 0xff);
+        const int8_t offset = static_cast<int8_t>(insnCode & 0xff);
         const char *label = lookup(offset);
         if (label) {
             outText(label);

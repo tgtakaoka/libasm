@@ -209,7 +209,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         }
         if (osize == 8) {
             insn.emitByte(0x8C | post);
-            insn.emitByte((uint8_t)offset);
+            insn.emitByte(static_cast<uint8_t>(offset));
             return setError(
                 (offset >= -128 && offset < 128) ? OK : OVERFLOW_RANGE);
         }
@@ -266,7 +266,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     if (osize == 8) {
         post |= 0x88;
         insn.emitByte(post);
-        insn.emitByte((uint8_t)offset);
+        insn.emitByte(static_cast<uint8_t>(offset));
         return setError((offset >= -128 && offset < 128) ? OK : OVERFLOW_RANGE);
     }
     post |= 0x89;
@@ -308,8 +308,8 @@ template<McuType mcuType>
 Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
-    uint16_t val;
-    if (getOperand16(val)) return getError();
+    uint8_t val8;
+    if (getOperand8(val8)) return getError();
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
 
@@ -323,7 +323,7 @@ Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
     if (TableHd6309<mcuType>::table()->searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
-    insn.emitByte((uint8_t)val);
+    insn.emitByte(val8);
     switch (insn.addrMode()) {
     case IMMDIR: return encodeDirect(insn, /* emitInsn */ false);
     case IMMEXT: return encodeExtended(insn, /* emitInsn */ false);
