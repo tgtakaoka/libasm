@@ -1,15 +1,15 @@
 VPATH=../src
-CXXFLAGS=-Wall -g -O -std=c++17 -I../src
+CXXFLAGS=-Wall -g -std=c++17 -I../src
 CPPFLAGS=-MMD
 
-OBJS_common = asm_operand.o file_util.o
+OBJS_common = asm_operand.o dis_operand.o file_util.o
 OBJS_mc6809 = table_mc6809.o  reg_hd6309.o $(OBJS_common)
 OBJS_hd6309 = table_hd6309.o  $(OBJS_mc6809)
 OBJS_r6502  = table_r6502.o                $(OBJS_common)
 OBJS_r65c02 = table_r65c02.o  $(OBJS_r6502)
-OBJS_i8080  = asm_i8080.o   table_i8080.o   reg_i8080.o  $(OBJS_common)
-OBJS_z80    = asm_z80.o     table_z80.o     reg_z80.o    $(OBJS_common)
-OBJS_tms9995= asm_tms9995.o table_tms9995.o              $(OBJS_common)
+OBJS_i8080  = asm_i8080.o   dis_i8080.o   table_i8080.o   reg_i8080.o  $(OBJS_common)
+OBJS_z80    = asm_z80.o     dis_z80.o     table_z80.o     reg_z80.o    $(OBJS_common)
+OBJS_tms9995= asm_tms9995.o dis_tms9995.o table_tms9995.o             $(OBJS_common)
 OBJS_driver =    \
 	as6809.o \
 	as6309.o \
@@ -17,7 +17,14 @@ OBJS_driver =    \
 	as65c02.o \
 	as8080.o \
 	as80.o \
-	as9995.o
+	as9995.o \
+	dis6809.o \
+	dis6309.o \
+	dis6502.o \
+	dis65c02.o \
+	dis8080.o \
+	dis80.o \
+	dis9995.o \
 
 OBJS =	$(OBJS_common) \
 	$(OBJS_driver) \
@@ -48,6 +55,20 @@ as8080:  as8080.o  $(OBJS_i8080)
 as80:   as80.o     $(OBJS_z80)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 as9995:  as9995.o  $(OBJS_tms9995)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis6809:  dis6809.o  $(OBJS_mc6809)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis6309:  dis6309.o  $(OBJS_hd6309)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis6502:  dis6502.o  $(OBJS_r6502)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis65c02: dis65c02.o $(OBJS_r65c02)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis8080:  dis8080.o  $(OBJS_i8080)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis80:   dis80.o     $(OBJS_z80)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis9995:  dis9995.o  $(OBJS_tms9995)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
