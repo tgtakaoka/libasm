@@ -18,45 +18,47 @@ bool Asm09<HD6309>::acceptCpu(const char *cpu) const {
 template<McuType mcuType>
 Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
-    const char *line = _scan;
-    while (*line) {
+    const char *p = _scan;
+    while (*p) {
         host::uint_t bit = 0;
         host::uint_t reg_d_bits = 0;
         for (host::uint_t index = 0, mask = 0x01; index < 8; index++, mask <<= 1) {
             const RegName regName = _regs.getStackReg(index, insn.insnCode());
             if (regName == REG_A || regName == REG_B) reg_d_bits |= mask;
-            if (_regs.compareRegName(line, regName)) {
-                line += _regs.regNameLen(regName);
+            if (_regs.compareRegName(p, regName)) {
+                p += _regs.regNameLen(regName);
                 bit = mask;
                 break;
             }
         }
-        if (bit == 0 && _regs.compareRegName(line, REG_D)) {
-            line += _regs.regNameLen(REG_D);
+        if (bit == 0 && _regs.compareRegName(p, REG_D)) {
+            p += _regs.regNameLen(REG_D);
             bit = reg_d_bits;
         }
         if (bit == 0) return setError(UNKNOWN_REGISTER);
         post |= bit;
-        if (*line == ',') line++;
-        _scan = line;
+        if (*p == ',') p++;
     }
     emitInsnCode(insn);
     insn.emitByte(post);
+    _scan = p;
     return checkLineEnd();
 }
 
 template<McuType mcuType>
 Error Asm09<mcuType>::encodeRegisters(Insn &insn) {
+    const char *p = _scan;
     RegName regName;
-    if ((regName = _regs.parseDataReg(_scan)) == REG_UNDEF)
+    if ((regName = _regs.parseDataReg(p)) == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
-    _scan += _regs.regNameLen(regName);
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan++;
+    p += _regs.regNameLen(regName);
+    if (*p != ',') return setError(UNKNOWN_OPERAND);
+    _scan = ++p;
     uint8_t post = _regs.encodeDataReg(regName) << 4;
-    if ((regName = _regs.parseDataReg(_scan)) == REG_UNDEF)
+    if ((regName = _regs.parseDataReg(p)) == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
-    _scan += _regs.regNameLen(regName);
+    p += _regs.regNameLen(regName);
+    _scan = p;
     if (checkLineEnd()) return setError(GARBAGE_AT_END);
     post |= _regs.encodeDataReg(regName);
     emitInsnCode(insn);
@@ -129,23 +131,25 @@ Error Asm09<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
 template<McuType mcuType>
 Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
-    const bool indir = (*_scan == '[');
+    const char *saved_scan = _scan;
+    const char *p = _scan;
+    const bool indir = (*p == '[');
     RegName base = REG_UNDEF;
     RegName index = REG_UNDEF;
     host::int_t osize = 0;      // offset size, -1 undefined
     host::int_t incr = 0;       // auto decrement/increment
     target::uintptr_t addr;
-    if (indir) _scan++;
-    if (*_scan != ',') {
-        if ((index = _regs.parseIndexReg(_scan)) != REG_UNDEF) {
-            _scan += _regs.regNameLen(index); // index register
+    if (indir) p++;
+    if (*p != ',') {
+        if ((index = _regs.parseIndexReg(p)) != REG_UNDEF) {
+            p += _regs.regNameLen(index); // index register
         } else {
-            if (*_scan == '>') {
-                _scan++;
+            if (*p == '>') {
+                p++;
                 osize = 16;
-            } else if (*_scan == '<') {
-                if (*++_scan == '<') {
-                    _scan++;
+            } else if (*p == '<') {
+                if (*++p == '<') {
+                    p++;
                     osize = 5;
                 } else {
                     osize = 8;
@@ -153,38 +157,43 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
             } else {
                 osize = -1;
             }
+            _scan = p;
             if (getOperand16(addr)) return getError();
+            p = _scan;
             index = OFFSET;     // offset is in addr
         }
     }
-    if (*_scan == ',') {
-        _scan++;
+    if (*p == ',') {
+        p++;
         if (index == REG_UNDEF) {
-            while (*_scan == '-') {
-                _scan++;
+            while (*p == '-') {
+                p++;
                 incr--;
             }
         }
-        if ((base = _regs.parseBaseReg(_scan)) == REG_UNDEF) {
-            if (_regs.compareRegName(_scan, REG_PCR)) {
+        if ((base = _regs.parseBaseReg(p)) == REG_UNDEF) {
+            if (_regs.compareRegName(p, REG_PCR)) {
                 base = REG_PCR;
-            } else if (_regs.compareRegName(_scan, REG_PC)) {
+            } else if (_regs.compareRegName(p, REG_PC)) {
                 base = REG_PC;
             } else setError(UNKNOWN_OPERAND);
         }
-        _scan += _regs.regNameLen(base);
+        p += _regs.regNameLen(base);
         if (index == REG_UNDEF && incr == 0) {
-            while (*_scan == '+') {
-                _scan++;
+            while (*p == '+') {
+                p++;
                 incr++;
             }
         }
     }
     if (indir) {
-        if (*_scan != ']') return setError(UNKNOWN_OPERAND);
-        _scan++;
+        if (*p != ']') return setError(UNKNOWN_OPERAND);
+        p++;
     }
+    _scan = p;
     if (checkLineEnd()) return getError();
+    p = _scan;
+    _scan = saved_scan;
 
     uint8_t post;
     if (base == REG_UNDEF) {    // [n16]
