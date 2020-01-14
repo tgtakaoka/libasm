@@ -37,7 +37,9 @@ Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
         }
         if (bit == 0) return setError(UNKNOWN_REGISTER);
         post |= bit;
-        if (*p == ',') p++;
+        while (isspace(*p)) p++;
+        if (*p != ',') break;
+        p++;
     }
     emitInsnCode(insn);
     insn.emitByte(post);
