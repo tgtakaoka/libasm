@@ -176,7 +176,7 @@ private:
         _input_name = nullptr;
         _output_name = nullptr;
         _list_name = nullptr;
-        _record_bytes = 16;
+        _record_bytes = 32;
         _formatter = nullptr;
         char formatter = 0;
         for (int i = 1; i < argc; i++) {
@@ -203,7 +203,7 @@ private:
                     if (*opt) {
                         char *end;
                         unsigned long v = strtoul(opt, &end, 10);
-                        if (*end || v > 32) {
+                        if (*end || v > 64) {
                             fprintf(stderr, "invalid record length: %s\n", argv[i]);
                             return 3;
                         }
