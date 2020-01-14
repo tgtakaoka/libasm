@@ -32,28 +32,36 @@ public:
         _listing = &listing;
 
         listing.address = _origin;
-        char label_buf[20];
         const char *label = nullptr;
+        std::string label_buf;
         if (_parser.isSymbolLetter(*_scan, true)) {
             listing.label = _scan;
-            _scan = _parser.readSymbol(
-                _scan, label_buf, label_buf + sizeof(label_buf) - 1);
-            if (*_scan == ':') _scan++; // optional trailing ':' for label.
+            const char *p = _scan;
+            while (_parser.isSymbolLetter(*p))
+                p++;
+            label_buf = std::string(_scan, p);
+            if (*p == ':') p++; // optional trailing ':' for label.
             listing.label_len = _scan - listing.label;
-            label = label_buf;
+            label = label_buf.c_str();
+            _scan = p;
         }
         skipSpaces();
 
         if (_parser.isSymbolLetter(*_scan, true)) {
             listing.instruction = _scan;
-            char directive[10];
-            _scan = _parser.readSymbol(
-                _scan, directive, directive + sizeof(directive) - 1);
+            const char *p = _scan;
+            while (_parser.isSymbolLetter(*p))
+                p++;
+            std::string directive(_scan, p);
+            _scan = p;
             listing.instruction_len = _scan - listing.instruction;
             skipSpaces();
             listing.operand = _scan;
             const Addr origin = _origin;
-            if (processDirective(directive, label, memory) != UNKNOWN_DIRECTIVE) {
+            const Error error = processDirective(directive.c_str(), label, memory);
+            if (error == UNKNOWN_DIRECTIVE) {
+                _scan = listing.instruction;
+            } else {
                 listing.operand_len = _scan - listing.operand;
                 skipSpaces();
                 listing.comment = _scan;
@@ -62,9 +70,8 @@ public:
                 } else {
                     _scan = listing.operand + listing.operand_len;
                 }
-                return getError();
+                return setError(error);
             }
-            _scan = listing.instruction;
         }
 
         if (label) {
@@ -132,18 +139,17 @@ protected:
                 return setError(DUPLICATE_LABEL);
             Addr value;
             const char *scan = _parser.eval(_scan, value, this);
-            if (_parser.getError()) return setError(_parser);
+            if (setError(_parser)) return getError();
             _scan = scan;
             // TODO line end check
             internSymbol(label, value, false);
             label = nullptr;
-            return getError();
+            return setError(OK);
         }
         if (strcasecmp(directive, "org") == 0) {
             Addr value;
             const char *scan = _parser.eval(_scan, value, this);
-            if (_parser.getError())
-                return setError(_parser);
+            if (setError(_parser)) return getError();
             _scan = scan;
             // TODO line end check
             _origin = value;
@@ -169,11 +175,11 @@ protected:
                 for (;;) {
                     if (*p == 0) return setError(MISSING_CLOSING_DQUOTE);
                     if (*p == '"') break;
-                    char c;
+                    char c = 0;
                     p = _parser.readChar(p, c);
-                    if (_parser.getError()) {
+                    if (setError(_parser)) {
                         _scan = p;
-                        return setError(_parser);
+                        return getError();
                     }
                     memory.writeByte(_origin++, c);
                 }
@@ -181,14 +187,19 @@ protected:
             } else if (*_scan == '\'') {
                 char c;
                 const char *p = _parser.readChar(_scan + 1, c);
-                if (_parser.getError()) return setError(_parser);
+                if (setError(_parser)) return getError();
                 if (*p++ != '\'') return setError(MISSING_CLOSING_QUOTE);
                 _scan = p;
                 memory.writeByte(_origin++, c);
             } else {
                 uint8_t val8;
                 _scan = _parser.eval(_scan, val8, this);
-                if (_parser.getError()) return setError(_parser);
+                const Error error = setError(_parser);
+                if (!_reportUndef && error == UNDEFINED_SYMBOL) {
+                    val8 = 0;
+                    setError(OK);
+                }
+                if (getError()) return getError();
                 memory.writeByte(_origin++, val8);
             }
             skipSpaces();
@@ -203,7 +214,12 @@ protected:
             skipSpaces();
             uint16_t val16;
             _scan = _parser.eval(_scan, val16, this);
-            if (_parser.getError()) return setError(_parser);
+            const Error error = setError(_parser);
+            if (!_reportUndef && error == UNDEFINED_SYMBOL) {
+                val16 = 0;
+                setError(OK);
+            }
+            if (getError()) return getError();
             if (bigEndian) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
@@ -220,7 +236,7 @@ protected:
     Error defineSpaces() {
         uint16_t val16;
         _scan = _parser.eval(_scan, val16, this);
-        if (_parser.getError()) return setError(_parser);
+        if (setError(_parser)) return getError();
         if (_origin + val16 < _origin) return setError(OVERFLOW_RANGE);
         _origin += val16;
         return setError(OK);
@@ -250,7 +266,7 @@ protected:
         if (reportDuplicate && hasSymbol(label)) return setError(DUPLICATE_LABEL);
         _symbols.erase(label);
         _symbols.emplace(label, addr);
-        return OK;
+        return setError(OK);
     }
 
     void skipSpaces() {

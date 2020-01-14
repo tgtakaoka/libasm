@@ -45,6 +45,7 @@ static bool isValidDigit(const char c, const uint8_t base) {
 }
 
 const char *AsmOperand::readChar(const char *scan, char &c) {
+    setError(OK);
     if (*scan == '\\') {
         uint8_t base = 0;
         if (toupper(scan[1]) == 'X') base = 16;
