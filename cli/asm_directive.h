@@ -47,10 +47,10 @@ public:
         }
         skipSpaces();
 
-        if (_parser.isSymbolLetter(*_scan, true)) {
+        if (*_scan && *_scan != ';') {
             listing.instruction = _scan;
             const char *p = _scan;
-            while (_parser.isSymbolLetter(*p))
+            while (*p && !isspace(*p))
                 p++;
             std::string directive(_scan, p);
             _scan = p;
@@ -58,7 +58,7 @@ public:
             skipSpaces();
             listing.operand = _scan;
             const Addr origin = _origin;
-            const Error error = processDirective(directive.c_str(), label, memory);
+            const Error error = processPseudo(directive.c_str(), label, memory);
             if (error == UNKNOWN_DIRECTIVE) {
                 _scan = listing.instruction;
             } else {
@@ -132,38 +132,59 @@ protected:
 
     virtual Error processDirective(
         const char *directive, const char *&label, CliMemory<Addr> &memory) {
-        if (strcasecmp(directive, "equ") == 0) {
-            if (label == nullptr)
-                return setError(MISSING_LABEL);
-            if (_reportDuplicate && hasSymbol(label))
-                return setError(DUPLICATE_LABEL);
-            Addr value;
-            const char *scan = _parser.eval(_scan, value, this);
-            if (setError(_parser)) return getError();
-            _scan = scan;
-            // TODO line end check
-            internSymbol(label, value, false);
-            label = nullptr;
-            return setError(OK);
-        }
-        if (strcasecmp(directive, "org") == 0) {
-            Addr value;
-            const char *scan = _parser.eval(_scan, value, this);
-            if (setError(_parser)) return getError();
-            _scan = scan;
-            // TODO line end check
-            _origin = value;
-            return setError(OK);
-        }
+        return UNKNOWN_DIRECTIVE;
+    }
+
+    Error processPseudo(
+        const char *directive, const char *&label, CliMemory<Addr> &memory) {
+        if (processDirective(directive, label, memory) != UNKNOWN_DIRECTIVE)
+            return getError();
+        if (strcasecmp(directive, "org") == 0)
+            return defineOrigin();
+        if (strcasecmp(directive, "equ") == 0)
+            return defineLabel(label, memory);
         if (strcasecmp(directive, "cpu") == 0) {
-            char cpu[10];
-            const char *p =
-                _parser.readSymbol(_scan, cpu, cpu + sizeof(cpu) - 1);
-            if (!_assembler.acceptCpu(cpu)) return setError(UNSUPPORTED_CPU);
+            const char *p = _scan;
+            while (*p && !isspace(*p))
+                p++;
+            std::string cpu(_scan, p);
+            if (!_assembler.acceptCpu(cpu.c_str()))
+                return setError(UNSUPPORTED_CPU);
             _scan = p;
             return setError(OK);
         }
         return setError(UNKNOWN_DIRECTIVE);
+    }
+
+    Error defineOrigin() {
+        Addr value;
+        const char *scan = _parser.eval(_scan, value, this);
+        if (_parser.getError())
+            return setError(_parser);
+        _scan = scan;
+        // TODO line end check
+        _origin = value;
+        return setError(OK);
+    }
+
+    Error defineLabel(const char *&label, CliMemory<Addr> &memory) {
+        if (label == nullptr)
+            return setError(MISSING_LABEL);
+        if (_reportDuplicate && hasSymbol(label))
+            return setError(DUPLICATE_LABEL);
+        Addr value;
+        const char *scan = _parser.eval(_scan, value, this);
+        const Error error = setError(_parser);
+        if (!_reportUndef && error == UNDEFINED_SYMBOL) {
+            value = 0;
+            setError(OK);
+        }
+        if (getError()) return getError();
+        _scan = scan;
+        // TODO line end check
+        internSymbol(label, value, false);
+        label = nullptr;
+        return getError();
     }
 
     Error defineBytes(CliMemory<Addr> &memory) {
@@ -277,50 +298,6 @@ protected:
 private:
     // SymbolTable
     std::map<std::string, uint32_t, std::less<>> _symbols;
-};
-
-template<typename Asm>
-class AsmMotoDirective : public AsmDirective<Asm> {
-public:
-    typedef typename Asm::addr_t Addr;
-    AsmMotoDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
-
-protected:
-    Error processDirective(
-        const char *directive, const char *&label,
-        CliMemory<Addr> &memory) override {
-        if (strcasecmp(directive, "fcb") == 0 ||
-            strcasecmp(directive, "fcc") == 0)
-            return AsmDirective<Asm>::defineBytes(memory);
-        if (strcasecmp(directive, "fdb") == 0)
-            return AsmDirective<Asm>::defineWords(memory, true);
-        if (strcasecmp(directive, "rmb") == 0)
-            return AsmDirective<Asm>::defineSpaces();
-        return AsmDirective<Asm>::processDirective(
-            directive, label, memory);
-    }
-};
-
-template<typename Asm>
-class AsmIntelDirective : public AsmDirective<Asm> {
-public:
-    typedef typename Asm::addr_t Addr;
-    AsmIntelDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
-
-protected:
-    Error processDirective(
-        const char *directive, const char *&label,
-        CliMemory<Addr> &memory) override {
-        AsmDirective<Asm>::_parser.isSymbolLetter(0);
-        if (strcasecmp(directive, "db") == 0)
-            return AsmDirective<Asm>::defineBytes(memory);
-        if (strcasecmp(directive, "dw") == 0)
-            return AsmDirective<Asm>::defineWords(memory, false);
-        if (strcasecmp(directive, "ds") == 0)
-            return AsmDirective<Asm>::defineSpaces();
-        return AsmDirective<Asm>::processDirective(
-            directive, label, memory);
-    }
 };
 
 #endif
