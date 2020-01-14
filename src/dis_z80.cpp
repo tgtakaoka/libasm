@@ -184,14 +184,19 @@ Error DisZ80::decodeImmediate8(Insn &insn, uint8_t val) {
     case A_REG:
         outRegister(REG_A);
         break;
+    case IMM_8:
+        outConstant(val);
+        break;
     case REG_8:
         outDataRegister(RegZ80::decodeDataReg((opc >> 3) & 7));
         break;
     default:
         break;
     }
-    *_operands++ = ',';
-    outConstant(val);
+    if (insn.rightFormat() == IMM_8) {
+        *_operands++ = ',';
+        outConstant(val);
+    }
     return setError(OK);
 }
 
