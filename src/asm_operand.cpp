@@ -141,9 +141,13 @@ AsmOperand::Value AsmOperand::eval(const char *expr, SymbolTable *symtab) {
 }
 
 AsmOperand::Value AsmOperand::parseExpr() {
-    _stack.push(OprAndLval());
     Value value(readAtom());
     if (getError()) return Value();
+    if (_stack.full()) {
+        setError(TOO_COMPLEX_EXPRESSION);
+        return Value();
+    }
+    _stack.push(OprAndLval());
     while (!_stack.empty()) {
         Operator opr(readOperator());
         while (opr._precedence <= _stack.top().precedence()) {
@@ -164,19 +168,22 @@ AsmOperand::Value AsmOperand::parseExpr() {
 
 AsmOperand::Value AsmOperand::readAtom() {
     skipSpaces();
-    if (*_next == '(') {
-        _next++;
+    const char c = *_next++;
+
+    if (c == '(' || c == '[') {
         Value value(parseExpr());
-        skipSpaces();
-        if (*_next != ')') {
-            setError(MISSING_CLOSING_PAREN);
-            return Value();
+        if (getError() == OK) {
+            skipSpaces();
+            const char expected = (c == '(') ? ')' : ']';
+            if (*_next != expected) {
+                setError(MISSING_CLOSING_PAREN);
+                return Value();
+            }
+            _next++;
         }
-        _next++;
         return value;
     }
-    if (*_next == '\'') {
-        _next++;
+    if (c == '\'') {
         Value value(readCharacterConstant());
         if (getError() == OK) {
             if (*_next == '\'') {
@@ -187,31 +194,35 @@ AsmOperand::Value AsmOperand::readAtom() {
         }
         return value;
     }
-    if (*_next == '~') {
-        _next++;
+    if (c == '~') {
         Value value(readAtom());
-        if (value.isSigned()) value.setSigned(~value.getSigned());
-        else value.setUnsigned(~value.getUnsigned());
+        if (getError() == OK) {
+            if (value.isSigned()) value.setSigned(~value.getSigned());
+            else value.setUnsigned(~value.getUnsigned());
+        }
         return value;
     }
-    if (*_next == '-' || *_next == '+') {
-        if (_next[1] == '-' || _next[1] == '+') {
+    if (c == '-' || c == '+') {
+        if (*_next == '-' || *_next == '+') {
             setError(UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
-        const char op = *_next++;
+        const char op = c;
         Value value(readAtom());
-        if (op == '+') return value;
-        if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
-            setError(OVERFLOW_RANGE);
-        value.setSigned(-value.getSigned());
+        if (getError() == OK) {
+            if (op == '+') return value;
+            if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
+                setError(OVERFLOW_RANGE);
+            value.setSigned(-value.getSigned());
+        }
         return value;
     }
-    if (_symtab && isCurrentAddressSymbol(*_next)) {
-        _next++;
+    if (_symtab && isCurrentAddressSymbol(c)) {
         return Value::makeUnsigned(_symtab->currentAddress());
     }
-    if (_symtab && isSymbolLetter(*_next, true)) {
+
+    _next--;
+    if (_symtab && isSymbolLetter(c, true)) {
         char symbol[20];
         const char *scan =
             readSymbol(_next, symbol, symbol + sizeof(symbol) - 1);

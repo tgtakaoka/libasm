@@ -95,12 +95,14 @@ private:
     public:
         void clear() { _top = 0; }
         bool empty() const { return _top <= 0; }
+        bool full() const { return _top >= capacity; }
         const E &top() const { return _values[_top - 1]; }
         void push(const E v) { _values[_top++] = v; }
         void pop() { _top--; }
+        uint8_t _top;
     private:
-        int _top;
-        E _values[4];           // TODO: check stack overflow
+        static constexpr uint8_t capacity = 8;
+        E _values[capacity];
     };
 
     SymbolTable *_symtab;
