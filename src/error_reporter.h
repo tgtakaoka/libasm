@@ -34,6 +34,7 @@ enum Error : host::uint_t {
     UNKNOWN_EXPR_OPERATOR = 105,
     DIVIDE_BY_ZERO = 106,
     UNDEFINED_SYMBOL = 107,
+    TOO_COMPLEX_EXPRESSION = 108,
 
     // AsmDirective
     UNKNOWN_DIRECTIVE = 150,
