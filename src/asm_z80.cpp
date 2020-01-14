@@ -322,16 +322,15 @@ Error AsmZ80::parseOperand(
         }
         return setError(UNKNOWN_OPERAND);
     }
-    if (oprSize == SZ_BYTE || oprFormat == IMM_NO
-        || oprFormat == VEC_NO || oprFormat == BIT_NO) {
-        uint8_t val8;
-        if (getOperand8(val8)) return getError();
-        opr16 = val8;
-        oprFormat = IMM_8;
-        return OK;
-    } else if (oprSize == SZ_WORD || addrMode == REL8 || addrMode == DIRECT) {
+    if (oprSize == SZ_WORD || addrMode == REL8 || addrMode == DIRECT) {
         if (getOperand16(opr16)) return getError();
         oprFormat = IMM_16;
+        return OK;
+    }
+    uint8_t val8;
+    if (getOperand8(val8) == OK) {
+        opr16 = val8;
+        oprFormat = IMM_8;
         return OK;
     }
     return setError(UNKNOWN_OPERAND);
@@ -377,6 +376,10 @@ Error AsmZ80::encode(
         return encodeInherent(insn, leftReg, rightReg, leftOpr);
     case IMM8:
     case IMM16:
+        if (leftFormat == IMM_8 && rightFormat == NO_OPR) {
+            // SUB/AND/XOR/OR/CP immediate instruction
+            rightOpr = leftOpr;
+        }
         return encodeImmediate(insn, leftReg, rightOpr);
     case DIRECT:
         return encodeDirect(insn, leftReg, rightReg, leftOpr, rightOpr);

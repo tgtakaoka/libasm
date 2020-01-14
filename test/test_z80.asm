@@ -147,14 +147,14 @@
         adc     a,(hl)
         adc     a,a
 ;;; 9X
-        sub     a,b
-        sub     a,c
-        sub     a,d
-        sub     a,e
-        sub     a,h
-        sub     a,l
-        sub     a,(hl)
-        sub     a,a
+        sub     b
+        sub     c
+        sub     d
+        sub     e
+        sub     h
+        sub     l
+        sub     (hl)
+        sub     a
         sbc     a,b
         sbc     a,c
         sbc     a,d
@@ -164,39 +164,39 @@
         sbc     a,(hl)
         sbc     a,a
 ;;; AX
-        and     a,b
-        and     a,c
-        and     a,d
-        and     a,e
-        and     a,h
-        and     a,l
-        and     a,(hl)
-        and     a,a
-        xor     a,b
-        xor     a,c
-        xor     a,d
-        xor     a,e
-        xor     a,h
-        xor     a,l
-        xor     a,(hl)
-        xor     a,a
+        and     b
+        and     c
+        and     d
+        and     e
+        and     h
+        and     l
+        and     (hl)
+        and     a
+        xor     b
+        xor     c
+        xor     d
+        xor     e
+        xor     h
+        xor     l
+        xor     (hl)
+        xor     a
 ;;; BX
-        or      a,b
-        or      a,c
-        or      a,d
-        or      a,e
-        or      a,h
-        or      a,l
-        or      a,(hl)
-        or      a,a
-        cp      a,b
-        cp      a,c
-        cp      a,d
-        cp      a,e
-        cp      a,h
-        cp      a,l
-        cp      a,(hl)
-        cp      a,a
+        or      b
+        or      c
+        or      d
+        or      e
+        or      h
+        or      l
+        or      (hl)
+        or      a
+        cp      b
+        cp      c
+        cp      d
+        cp      e
+        cp      h
+        cp      l
+        cp      (hl)
+        cp      a
 ;;; CX
         ret     nz
         pop     bc
@@ -220,7 +220,7 @@
         out     (0d3h),a
         call    nc,0d4d4H
         push    de
-        sub     a,0d6H
+        sub     0d6H
         rst     10h
         ret     c
         jp      c,0dadaH
@@ -235,14 +235,14 @@
         ex      (sp),hl
         call    po,0e4e4H
         push    hl
-        and     a,0e6H
+        and     0e6H
         rst     20H
         ret     pe
         jp      (hl)
         jp      pe,0eaeaH
         ex      de,hl
         call    pe,0ececH
-        xor     a,0eeH
+        xor     0eeH
         rst     28H
 ;;; FX
         ret     p
@@ -251,14 +251,14 @@
         di
         call    p,0f4f4H
         push    af
-        or      a,0f6H
+        or      0f6H
         rst     30H
         ret     m
         ld      sp,hl
         jp      m,0fafaH
         ei
         call    m,0fcfcH
-        cp      a,0feH
+        cp      0feH
         rst     38H
 
 ;;; Z80
@@ -379,14 +379,14 @@
         add     a,(ix-122)
         adc     a,(ix-114)
 ;;; DD9X
-        sub     a,(ix-106)
+        sub     (ix-106)
         sbc     a,(ix-98)
 ;;; DDAX
-        and     a,(ix-90)
-        xor     a,(ix-82)
+        and     (ix-90)
+        xor     (ix-82)
 ;;; DDBX
-        or      a,(ix-74)
-        cp      a,(ix-66)
+        or      (ix-74)
+        cp      (ix-66)
 ;;; DDEX
         pop     ix
         ex      (sp),ix
@@ -433,14 +433,14 @@
         add     a,(iy-122)
         adc     a,(iy-114)
 ;;; FD9X
-        sub     a,(iy-106)
+        sub     (iy-106)
         sbc     a,(iy-98)
 ;;; FDAX
-        and     a,(iy-90)
-        xor     a,(iy-82)
+        and     (iy-90)
+        xor     (iy-82)
 ;;; FDBX
-        or      a,(iy-74)
-        cp      a,(iy-66)
+        or      (iy-74)
+        cp      (iy-66)
 ;;; FDEX
         pop     iy
         ex      (sp),iy
@@ -779,3 +779,62 @@
         set     5,(iy-18)
         set     6,(iy-10)
         set     7,(iy-2)
+
+;;; SUB/AND/XOR/OR/CP instruction can take optionl destination A register.
+        org     05A0H
+
+        sub     a,b
+        sub     a,c
+        sub     a,d
+        sub     a,e
+        sub     a,h
+        sub     a,l
+        sub     a,(hl)
+        sub     a,a
+        and     a,b
+        and     a,c
+        and     a,d
+        and     a,e
+        and     a,h
+        and     a,l
+        and     a,(hl)
+        and     a,a
+        xor     a,b
+        xor     a,c
+        xor     a,d
+        xor     a,e
+        xor     a,h
+        xor     a,l
+        xor     a,(hl)
+        xor     a,a
+        or      a,b
+        or      a,c
+        or      a,d
+        or      a,e
+        or      a,h
+        or      a,l
+        or      a,(hl)
+        or      a,a
+        cp      a,b
+        cp      a,c
+        cp      a,d
+        cp      a,e
+        cp      a,h
+        cp      a,l
+        cp      a,(hl)
+        cp      a,a
+        sub     a,0d6H
+        and     a,0e6H
+        xor     a,0eeH
+        or      a,0f6H
+        cp      a,0feH
+        sub     a,(ix-106)
+        and     a,(ix-90)
+        xor     a,(ix-82)
+        or      a,(ix-74)
+        cp      a,(ix-66)
+        sub     a,(iy-106)
+        and     a,(iy-90)
+        xor     a,(iy-82)
+        or      a,(iy-74)
+        cp      a,(iy-66)
