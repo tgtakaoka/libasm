@@ -4,10 +4,8 @@
 
 #include "cli_memory.h"
 #include "asm_directive.h"
-#include "file_util.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 template<typename Asm>
@@ -25,22 +23,15 @@ public:
         if (parseOption(argc, argv))
             return usage();
 
-        FILE *input = fopen(_input_name, "r");
-        if (input == nullptr) {
-            fprintf(stderr, "Can't open input file %s\n", _input_name);
-            return 1;
-        }
-
         _directive.setSymbolMode(false, true);
         CliMemory<Addr> memory;
-        if (assemble(input, _input_name, memory, nullptr) != 0)
+        if (assemble(memory, nullptr) != 0)
             return 1;
 
         do {
-            fseek(input, 0L, SEEK_SET);
             _directive.setSymbolMode(true, false);
             CliMemory<Addr> next;
-            if (assemble(input, _input_name, next, nullptr) != 0)
+            if (assemble(next, nullptr) != 0)
                 return 1;
             if (memory.equals(next))
                 break;
@@ -75,11 +66,9 @@ public:
                 fprintf(stderr, "Can't open list file %s\n", _list_name);
                 return 1;
             }
-            fseek(input, 0L, SEEK_SET);
-            assemble(input, _input_name, memory, list);
+            assemble(memory, list);
             fclose(list);
         }
-        fclose(input);
 
         return 0;
     }
@@ -93,20 +82,21 @@ private:
     size_t _record_bytes;
     BinFormatter<Addr> *_formatter;
 
-    int assemble(
-        FILE *input, const char *filename, CliMemory<Addr> &memory,
-        FILE *list) {
-        int lineno = 0;
+    int assemble(CliMemory<Addr> &memory, FILE *list) {
+        if (_directive.openSource(_input_name)) {
+            fprintf(stderr, "Can't open input file %s\n", _input_name);
+            return 1;
+        }
+
         int errors = 0;
         _directive.setOrigin(0);
-        size_t line_len = 128;
-        char *line = static_cast<char *>(malloc(line_len));
-        int len;
-        while ((len = getLine(line, line_len, input)) > 0) {
-            lineno++;
+        const char *line;
+        while ((line = _directive.readSourceLine()) != nullptr) {
             typename AsmDirective<Asm>::Listing listing{};
             if (_directive.assembleLine(line, memory, listing)) {
-                int column = _directive.errorAt() - line;
+                const char *filename = _directive.currentSource();
+                const int lineno = _directive.currentLineno();
+                const int column = _directive.errorAt() - line;
                 fprintf(stderr, "%s:%d:%d: error %d\n",
                         filename, lineno, column, _directive.getError());
                 fprintf(stderr, "%s:%d %s\n",
@@ -117,7 +107,6 @@ private:
             if (list)
                 printListing(listing, memory, list);
         }
-        free(line);
         return errors;
     }
 

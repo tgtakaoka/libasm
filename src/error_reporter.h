@@ -43,6 +43,8 @@ enum Error : host::uint_t {
     MISSING_LABEL = 153,
     MISSING_CLOSING_DQUOTE = 154,
     UNSUPPORTED_CPU = 155,
+    TOO_MANY_INCLUDE = 156,
+    NO_INCLUDE_FOUND = 157,
 };
 
 class ErrorReporter {

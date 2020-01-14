@@ -167,3 +167,6 @@
         sbc     $f9f9,y
         sbc     $fdfd,x
         inc     $fefe,x
+
+	end
+;;; comment

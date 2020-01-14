@@ -4,10 +4,12 @@
 
 #include <map>
 #include <functional>
+#include <vector>
 
 #include "error_reporter.h"
 #include "cli_memory.h"
 #include "asm_interface.h"
+#include "file_util.h"
 
 template <typename Asm>
 class AsmDirective : public ErrorReporter, protected SymbolTable {
@@ -26,9 +28,15 @@ public:
         const char *comment;
     } Listing;
 
-    Error assembleLine(
-        const char *scan, CliMemory<Addr> &memory, Listing &listing) {
-        _scan = scan;
+    virtual ~AsmDirective() {
+        free(_line);
+    }
+
+    Error assembleLine(const char *line, CliMemory<Addr> &memory, Listing &listing) {
+        _scan = line;
+        if (_scan == nullptr) {
+            return OK;
+        }
         _listing = &listing;
 
         listing.address = _origin;
@@ -112,23 +120,97 @@ public:
         _reportDuplicate = reportDuplicate;
     }
 
+    const char *currentSource() const {
+        return _sources.empty() ? nullptr : _sources.back().name.c_str();
+    }
+
+    int currentLineno() const {
+        return _sources.empty() ? 0 : _sources.back().lineno;
+    }
+
+    Error openSource(const char *input_name, const char *end = nullptr) {
+        if (_sources.size() >= max_includes)
+            return setError(TOO_MANY_INCLUDE);
+        if (end == nullptr) end = input_name + strlen(input_name);
+        const auto *parent = _sources.empty() ? nullptr : &_sources.back();
+        const size_t pos = parent ? parent->name.find_last_of('/') : std::string::npos;
+        if (pos == std::string::npos || *input_name == '/') {
+            _sources.emplace_back(input_name, end, parent);
+        } else {
+            std::string name(parent->name.c_str(), pos + 1);
+            name.append(input_name, end);
+            _sources.emplace_back(name, parent);
+        }
+        auto source = &_sources.back();
+        if ((source->fp = fopen(source->name.c_str(), "r")) == nullptr) {
+            _sources.pop_back();
+            return setError(NO_INCLUDE_FOUND);
+        }
+        return setError(OK);
+    }
+
+    const char *readSourceLine() {
+        while (!_sources.empty()) {
+            auto source = &_sources.back();
+            source->lineno++;
+            if (getLine(_line, _line_len, source->fp) >= 0)
+                return _line;
+            closeSource();
+        }
+        return nullptr;
+    }
+
 protected:
     AsmDirective(Asm &assembler)
         : _assembler(assembler),
           _parser(assembler.getParser()),
-          _origin(0),
+          _line_len(128),
+          _line(static_cast<char *>(malloc(_line_len))),
           _scan(nullptr),
+          _origin(0),
           _reportUndef(true),
           _reportDuplicate(true)
     {}
 
+    struct Source {
+        Source(const char *file_name, const char *end,
+               const Source *parent)
+            : fp(nullptr),
+              lineno(0),
+              name(file_name, end),
+              include_from(parent)
+        {}
+        Source(const std::string &file_name,
+               const Source *parent)
+            : fp(nullptr),
+              lineno(0),
+              name(file_name),
+              include_from(parent)
+        {}
+        FILE *fp;
+        int lineno;
+        const std::string name;
+        const Source *include_from;
+    };
+
     Asm &_assembler;
     AsmOperand &_parser;
-    Addr _origin;
+    size_t _line_len;
+    char *_line;
     const char *_scan;
+    Addr _origin;
     bool _reportUndef;
     bool _reportDuplicate;
     Listing *_listing;
+    static constexpr int max_includes = 4;
+    std::vector<Source> _sources;
+
+    Error closeSource() {
+        auto source = &_sources.back();
+        fclose(source->fp);
+        _sources.pop_back();
+        return setError(OK);
+    }
 
     virtual Error processDirective(
         const char *directive, const char *&label, CliMemory<Addr> &memory) {
@@ -143,6 +225,11 @@ protected:
             return defineOrigin();
         if (strcasecmp(directive, "equ") == 0)
             return defineLabel(label, memory);
+        if (strcasecmp(directive, "include") == 0)
+            return includeFile();
+        // TODO: implement listing after "end".
+        if (strcasecmp(directive, "end") == 0)
+            return closeSource();
         if (strcasecmp(directive, "cpu") == 0) {
             const char *p = _scan;
             while (*p && !isspace(*p))
@@ -185,6 +272,18 @@ protected:
         internSymbol(label, value, false);
         label = nullptr;
         return getError();
+    }
+
+    Error includeFile() {
+        const char *filename = _scan;
+        char c = 0;
+        if (*filename == '"' || *filename == '\'')  c = *filename++;
+        const char *end = filename;
+        while (*end && (!c || *end != c) && !isspace(*end))
+            end++;
+        if (c && *end != c)
+            return setError(c == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+        return openSource(filename, end);
     }
 
     Error defineBytes(CliMemory<Addr> &memory) {
