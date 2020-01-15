@@ -25,6 +25,6 @@ protected:
 int main(int argc, const char **argv) {
     AsmTms9995 assembler;
     AsmIntelDirective<AsmTms9995> directive(assembler);
-    AsmDriver<AsmTms9995> driver(directive);
+    AsmDriver<AsmTms9995, true> driver(directive);
     return driver.main(argc, argv);
 }

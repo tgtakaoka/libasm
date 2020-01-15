@@ -9,72 +9,68 @@
 #include "error_reporter.h"
 #include "cli_memory.h"
 #include "asm_interface.h"
+#include "asm_listing.h"
 #include "file_util.h"
 
 template <typename Asm>
-class AsmDirective : public ErrorReporter, protected SymbolTable {
+class AsmDirective : public ErrorReporter,
+                     public AsmLine<typename Asm::addr_t>,
+                     protected SymbolTable {
 public:
     typedef typename Asm::addr_t Addr;
-
-    typedef struct {
-        const char *label;      // if label defined
-        int label_len;
-        Addr address;
-        int length;
-        const char *instruction;
-        int instruction_len;
-        const char *operand;
-        int operand_len;
-        const char *comment;
-    } Listing;
 
     virtual ~AsmDirective() {
         free(_line);
     }
 
-    Error assembleLine(const char *line, CliMemory<Addr> &memory, Listing &listing) {
+    Error assembleLine(const char *line, CliMemory<Addr> &memory) {
         _scan = line;
         if (_scan == nullptr) {
             return OK;
         }
-        _listing = &listing;
 
-        listing.address = _origin;
+        _list.address = _origin;
+        _list.length = 0;
+        _list.label_len = 0;
+        _list.instruction_len = 0;
+        _list.operand_len = 0;
+        _list.comment = nullptr;
         const char *label = nullptr;
         std::string label_buf;
+        _list.label_len = 0;
         if (_parser.isSymbolLetter(*_scan, true)) {
-            listing.label = _scan;
-            const char *end = _parser.scanSymbol(listing.label);
-            label_buf = std::string(listing.label, end);
+            _list.label = _scan;
+            const char *end = _parser.scanSymbol(_list.label);
+            label_buf = std::string(_list.label, end);
             if (*end == ':') end++; // optional trailing ':' for label.
-            listing.label_len = end - listing.label;
+            _list.label_len = end - _list.label;
             label = label_buf.c_str();
             _scan = end;
         }
         skipSpaces();
 
         if (*_scan && *_scan != ';') {
-            listing.instruction = _scan;
-            const char *end = listing.instruction;
+            _list.instruction = _scan;
+            const char *end = _list.instruction;
             while (*end && !isspace(*end)) end++;
-            std::string directive(listing.instruction, end);
-            listing.instruction_len = end - listing.instruction;
+            std::string directive(_list.instruction, end);
+            _list.instruction_len = end - _list.instruction;
             _scan = end;
             skipSpaces();
-            listing.operand = _scan;
+            _list.operand = _scan;
             const Addr origin = _origin;
             const Error error = processPseudo(directive.c_str(), label, memory);
             if (error == UNKNOWN_DIRECTIVE) {
-                _scan = listing.instruction;
+                _scan = _list.instruction;
             } else {
-                listing.operand_len = _scan - listing.operand;
+                _list.operand_len = _scan - _list.operand;
                 skipSpaces();
-                listing.comment = _scan;
+                _list.comment = _scan;
                 if (label) intern(origin, label);
                 if (getError()) {
-                    _scan = listing.label;
+                    _scan = _list.label;
                 } else {
-                    _scan = listing.operand + listing.operand_len;
+                    _scan = _list.operand + _list.operand_len;
                 }
                 return setError(error);
             }
@@ -83,13 +79,13 @@ public:
         if (label) {
             intern(_origin, label);
             if (getError()) {
-                _scan = listing.label;
+                _scan = _list.label;
                 return getError();
             }
         }
 
         if (*_scan == 0 || *_scan == ';') {
-            listing.comment = _scan;
+            _list.comment = _scan;
             return setError(OK); // skip comment
         }
 
@@ -98,13 +94,13 @@ public:
         const bool ok = error == OK || (!_reportUndef && error == UNDEFINED_SYMBOL);
         _scan = _assembler.errorAt();
         if (ok) {
-            listing.operand_len = _scan - listing.operand;
+            _list.operand_len = _scan - _list.operand;
             skipSpaces();
-            listing.comment = _scan;
+            _list.comment = _scan;
             if (insn.insnLen() > 0) {
                 memory.writeBytes(insn.address(), insn.bytes(), insn.insnLen());
-                listing.address = insn.address();
-                listing.length = insn.insnLen();
+                _list.address = insn.address();
+                _list.length = insn.insnLen();
                 _origin += insn.insnLen();
             }
             return setError(OK);
@@ -159,6 +155,29 @@ public:
         return nullptr;
     }
 
+    // AsmListing
+    Addr startAddress() const override { return _list.address; }
+    int generatedSize() const override { return _list.length; }
+    bool hasLabel() const override { return _list.label_len; }
+    bool hasInstruction() const override { return _list.instruction_len; }
+    bool hasOperand() const override { return _list.operand_len; }
+    bool hasComment() const override { return _list.comment && *_list.comment; }
+    std::string getLabel() const override {
+        return std::move(std::string(_list.label, _list.label_len));
+    }
+    std::string getInstruction() const override {
+        return std::move(
+            std::string(_list.instruction, _list.instruction_len));
+    }
+    std::string getOperand() const override {
+        return std::move(std::string(_list.operand, _list.operand_len));
+    }
+    std::string getComment() const override {
+        return std::move(std::string(_list.comment));
+    }
+
+    // Error reporting
+
 protected:
     AsmDirective(Asm &assembler)
         : _assembler(assembler),
@@ -200,9 +219,20 @@ protected:
     Addr _origin;
     bool _reportUndef;
     bool _reportDuplicate;
-    Listing *_listing;
     static constexpr int max_includes = 4;
     std::vector<Source> _sources;
+
+    struct Listing {
+        const char *label;      // if label defined
+        int label_len;
+        Addr address;
+        int length;
+        const char *instruction;
+        int instruction_len;
+        const char *operand;
+        int operand_len;
+        const char *comment;
+    } _list;
 
     Error closeSource() {
         auto source = &_sources.back();
@@ -286,7 +316,7 @@ protected:
     }
 
     Error defineBytes(CliMemory<Addr> &memory) {
-        _listing->address = _origin;
+        _list.address = _origin;
         do {
             skipSpaces();
             if (*_scan == '"') {
@@ -323,12 +353,12 @@ protected:
             }
             skipSpaces();
         } while (*_scan++ == ',');
-        _listing->length = _origin - _listing->address;
+        _list.length = _origin - _list.address;
         return setError(OK);
     }
 
     Error defineWords(CliMemory<Addr> &memory, bool bigEndian) {
-        _listing->address = _origin;
+        _list.address = _origin;
         do {
             skipSpaces();
             uint16_t val16;
@@ -348,7 +378,7 @@ protected:
             }
             skipSpaces();
         } while (*_scan++ == ',');
-        _listing->length = _origin - _listing->address;
+        _list.length = _origin - _list.address;
         return setError(OK);
     }
 

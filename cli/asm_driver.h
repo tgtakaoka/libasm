@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include <string.h>
 
-template<typename Asm>
+template<typename Asm, bool wordBase = false>
 class AsmDriver {
 public:
     typedef typename Asm::addr_t Addr;
 
-    AsmDriver(AsmDirective<Asm> &directive) : _directive(directive) {}
+    AsmDriver(AsmDirective<Asm> &directive)
+        : _directive(directive)
+    {}
     virtual ~AsmDriver() {
         if (_formatter) delete _formatter;
     }
@@ -92,8 +94,7 @@ private:
         _directive.setOrigin(0);
         const char *line;
         while ((line = _directive.readSourceLine()) != nullptr) {
-            typename AsmDirective<Asm>::Listing listing{};
-            if (_directive.assembleLine(line, memory, listing)) {
+            if (_directive.assembleLine(line, memory)) {
                 const char *filename = _directive.currentSource();
                 const int lineno = _directive.currentLineno();
                 const int column = _directive.errorAt() - line;
@@ -105,60 +106,16 @@ private:
                 continue;
             }
             if (list)
-                printListing(listing, memory, list);
+                printListing(memory, list);
         }
         return errors;
     }
 
-    void printListing(
-        typename AsmDirective<Asm>::Listing &listing, CliMemory<Addr> &memory,
-        FILE *out) {
-        if (sizeof(Addr) == 2) {
-            fprintf(out, "%04x:", listing.address);
-        } else {
-            fprintf(out, "%08x:", listing.address);
-        }
-        int i = 0;
-        while (i < listing.length && i < 6) {
-            uint8_t val = 0;
-            memory.readByte(listing.address + i, val);
-            fprintf(out, " %02x", val);
-            i++;
-        }
-        listing.address += i;
-        while (i < 6) {
-            fprintf(out, "   ");
-            i++;
-        }
-        if (!listing.label && !listing.instruction) {
-            fprintf(out, "%s\n", listing.comment);
-            return;
-        }
-        if (listing.label) {
-            fprintf(out, " %-8.*s ", listing.label_len, listing.label);
-        } else if (listing.instruction) {
-            fprintf(out, "          ");
-        }
-        fprintf(out, "%-6.*s", listing.instruction_len, listing.instruction);
-        fprintf(out, " %-8.*s", listing.operand_len, listing.operand);
-        fprintf(out, " %s\n", listing.comment);
-        while (i < listing.length) {
-            if (sizeof(Addr) == 2) {
-                fprintf(out, "%04x:", listing.address);
-            } else {
-                fprintf(out, "%08x:", listing.address);
-            }
-            int j = 0;
-            while (i + j < listing.length && j < 6) {
-                uint8_t val = 0;
-                memory.readByte(listing.address + j, val);
-                fprintf(out, " %02x", val);
-                j++;
-            }
-            i += j;
-            listing.address += j;
-            fprintf(out, "\n");
-        }
+    void printListing(CliMemory<Addr> &memory, FILE *out) {
+        AsmListing<Addr, wordBase> listing(_directive, memory);
+        do {
+            fprintf(out, "%s\n", listing.getNext());
+        } while (listing.hasNext());
     }
 
     int parseOption(int argc, const char **argv) {
