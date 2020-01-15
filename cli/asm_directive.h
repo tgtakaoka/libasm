@@ -366,27 +366,18 @@ protected:
     }
 
     bool hasSymbol(const char *symbol, const char *end = nullptr) override {
-        auto it = _symbols.find(std::string(symbol));
-        if (_reportUndef && it == _symbols.cend())
-            setError(UNDEFINED_SYMBOL);
-        return it != _symbols.cend();
+        return end ? hasSymbol(std::string(symbol, end - symbol))
+            : hasSymbol(std::string(symbol));
     }
 
     uint32_t lookup(const char *symbol, const char *end = nullptr) override {
-        auto it = _symbols.find(std::string(symbol));
-        if (_reportUndef && it == _symbols.cend())
-            setError(UNDEFINED_SYMBOL);
-        return it == _symbols.cend() ? 0 : it->second;
+        return end ? lookup(std::string(symbol, end - symbol))
+            : lookup(std::string(symbol));
     }
 
     void intern(uint32_t value, const char *symbol, const char *end = nullptr) override {
-        if (_reportDuplicate && hasSymbol(symbol, end)) {
-            setError(DUPLICATE_LABEL);
-        } else {
-            _symbols.erase(symbol);
-            _symbols.emplace(symbol, value);
-            setError(OK);
-        }
+        if (end) intern(value, std::string(symbol, end - symbol));
+        intern(value, std::string(symbol));
     }
 
     uint32_t currentOrigin() override { return _origin; }
@@ -399,6 +390,30 @@ protected:
 private:
     // SymbolTable
     std::map<std::string, uint32_t, std::less<>> _symbols;
+
+    bool hasSymbol(const std::string &key) {
+        auto it = _symbols.find(key);
+        if (_reportUndef && it == _symbols.end())
+            setError(UNDEFINED_SYMBOL);
+        return it != _symbols.end();
+    }
+
+    uint32_t lookup(const std::string &key) {
+        auto it = _symbols.find(key);
+        if (_reportUndef && it == _symbols.end())
+            setError(UNDEFINED_SYMBOL);
+        return it == _symbols.end() ? 0 : it->second;
+    }
+
+    void intern(uint32_t value, const std::string &key) {
+        if (_reportDuplicate && hasSymbol(key)) {
+            setError(DUPLICATE_LABEL);
+        } else {
+            _symbols.erase(key);
+            _symbols.emplace(key, value);
+            setError(OK);
+        }
+    }
 };
 
 #endif
