@@ -72,9 +72,9 @@ static void test_immediate() {
     TEST("CMP #$90", 0xC9, 0x90);
     TEST("SBC #$90", 0xE9, 0x90);
 
-    symtab.put(0x0010, "zero10");
-    symtab.put(0x00FF, "zeroFF");
-    symtab.put(0x0090, "zero90");
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x00FF, "zeroFF");
+    symtab.intern(0x0090, "zero90");
     
     TEST("LDX #zero10", 0xA2, 0x10);
     TEST("CPY #zeroFF", 0xC0, 0xFF);
@@ -107,9 +107,9 @@ static void test_zeropage() {
     TEST("LSR $10", 0x46, 0x10);
     TEST("ROR $10", 0x66, 0x10);
 
-    symtab.put(0x0010, "zero10");
-    symtab.put(0x00FF, "zeroFF");
-    symtab.put(0x0090, "zero90");
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x00FF, "zeroFF");
+    symtab.intern(0x0090, "zero90");
     
     TEST("SBC zero10", 0xE5, 0x10);
     TEST("DEC zeroFF", 0xC6, 0xFF);
@@ -139,9 +139,9 @@ static void test_zeropage_indexed() {
     TEST("LSR $10,X", 0x56, 0x10);
     TEST("ROR $10,X", 0x76, 0x10);
 
-    symtab.put(0x0010, "zero10");
-    symtab.put(0x00FF, "zeroFF");
-    symtab.put(0x0090, "zero90");
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x00FF, "zeroFF");
+    symtab.intern(0x0090, "zero90");
     
     TEST("SBC zero10,X", 0xF5, 0x10);
     TEST("STY zero90,X", 0x94, 0x90);
@@ -180,9 +180,9 @@ static void test_absolute() {
     TEST("JMP $1234", 0x4C, 0x34, 0x12);
     TEST("JSR $1234", 0x20, 0x34, 0x12);
 
-    symtab.put(0x0010, "abs0010");
-    symtab.put(0x1234, "abs1234");
-    symtab.put(0x0100, "abs0100");
+    symtab.intern(0x0010, "abs0010");
+    symtab.intern(0x1234, "abs1234");
+    symtab.intern(0x0100, "abs0100");
     
     TEST("SBC >abs0010", 0xED, 0x10, 0x00);
     TEST("LDX abs1234",  0xAE, 0x34, 0x12);
@@ -219,9 +219,9 @@ static void test_absolute_indexed() {
     TEST("LSR $1234,X", 0x5E, 0x34, 0x12);
     TEST("ROR $1234,X", 0x7E, 0x34, 0x12);
 
-    symtab.put(0x0010, "abs0010");
-    symtab.put(0x1234, "abs1234");
-    symtab.put(0x0100, "abs0100");
+    symtab.intern(0x0010, "abs0010");
+    symtab.intern(0x1234, "abs1234");
+    symtab.intern(0x0100, "abs0100");
     
     TEST("SBC >abs0010,X", 0xFD, 0x10, 0x00);
     TEST("STA abs1234,Y",  0x99, 0x34, 0x12);
@@ -233,8 +233,8 @@ static void test_absolute_indexed() {
 static void test_absolute_indirect() {
     TEST("JMP ($1234)", 0x6C, 0x34, 0x12);
 
-    symtab.put(0x0010, "abs0010");
-    symtab.put(0x1234, "abs1234");
+    symtab.intern(0x0010, "abs0010");
+    symtab.intern(0x1234, "abs1234");
 
     TEST("JMP (>abs0010)", 0x6C, 0x10, 0x00);
     TEST("JMP (abs1234)",  0x6C, 0x34, 0x12);
@@ -250,7 +250,7 @@ static void test_indexed_indirect() {
     TEST("CMP ($10,X)", 0xC1, 0x10);
     TEST("SBC ($10,X)", 0xE1, 0x10);
 
-    symtab.put(0x0010, "zero10");
+    symtab.intern(0x0010, "zero10");
 
     TEST("LDA (zero10,X)", 0xA1, 0x10);
 }
@@ -265,7 +265,7 @@ static void test_indirect_indexed() {
     TEST("CMP ($10),Y", 0xD1, 0x10);
     TEST("SBC ($10),Y", 0xF1, 0x10);
 
-    symtab.put(0x0010, "zero10");
+    symtab.intern(0x0010, "zero10");
 
     TEST("LDA (zero10),Y", 0xB1, 0x10);
 }
@@ -280,9 +280,9 @@ static void test_relative() {
     ATEST(0x1000, "BNE $1002", 0xD0, 0x00);
     ATEST(0x1000, "BEQ $1002", 0xF0, 0x00);
 
-    symtab.put(0x0F82, "label0F82");
-    symtab.put(0x1000, "label1000");
-    symtab.put(0x1081, "label1081");
+    symtab.intern(0x0F82, "label0F82");
+    symtab.intern(0x1000, "label1000");
+    symtab.intern(0x1081, "label1081");
 
     ATEST(0x1000, "BMI label1000", 0x30, 0xFE);
     ATEST(0x1000, "BVS label1081", 0x70, 0x7F);

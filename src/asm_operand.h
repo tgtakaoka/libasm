@@ -11,8 +11,7 @@ public:
     const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
     const char *eval(const char *expr, uint8_t &val8, SymbolTable *symtab);
     virtual bool isSymbolLetter(char c, bool head = false) const;
-    const char *readSymbol(
-        const char *scan, char *buffer, char *const end) const;
+    const char *scanSymbol(const char *scan) const;
     const char *readChar(const char *scan, char &c);
 
 protected:
@@ -50,7 +49,7 @@ protected:
 
     const char *_next;
 
-    virtual bool isCurrentAddressSymbol(char c) const;
+    virtual bool isCurrentOriginSymbol(char c) const;
     virtual Error readNumber(Value &val);
     Error parseNumber(
         const char *p, Value &val, const uint8_t base,
@@ -119,13 +118,13 @@ private:
 
 class AsmMotoOperand : public AsmOperand {
 protected:
-    bool isCurrentAddressSymbol(char c) const override;
+    bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(Value &val) override;
 };
 
 class AsmIntelOperand : public AsmOperand {
 protected:
-    bool isCurrentAddressSymbol(char c) const override;
+    bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(Value &val) override;
 private:
     Error scanNumberEnd(

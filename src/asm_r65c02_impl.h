@@ -131,7 +131,7 @@ Error Asm6502<mcuType>::encode(
     insn.resetAddress(addr);
 
     if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
-    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
+    const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
     if (TableR65c02<mcuType>::table()->searchName(insn))

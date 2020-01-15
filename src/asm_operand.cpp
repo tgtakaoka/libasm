@@ -218,18 +218,17 @@ AsmOperand::Value AsmOperand::readAtom() {
         }
         return value;
     }
-    if (_symtab && isCurrentAddressSymbol(c)) {
-        return Value::makeUnsigned(_symtab->currentAddress());
+    if (_symtab && isCurrentOriginSymbol(c)) {
+        return Value::makeUnsigned(_symtab->currentOrigin());
     }
 
     _next--;
     if (_symtab && isSymbolLetter(c, true)) {
-        char symbol[20];
-        const char *scan =
-            readSymbol(_next, symbol, symbol + sizeof(symbol) - 1);
-        if (_symtab->hasSymbol(symbol)) {
-            _next = scan;
-            const uint32_t v = _symtab->lookup(symbol);
+        const char *symbol = _next;
+        const char *end = scanSymbol(symbol);
+        if (_symtab->hasSymbol(symbol, end)) {
+            _next = end;
+            const uint32_t v = _symtab->lookup(symbol, end);
             if (v & 0x80000000) {
                 return Value::makeSigned(v);
             } else {
@@ -288,14 +287,9 @@ bool AsmOperand::isSymbolLetter(char c, bool head) const {
     return !head && isdigit(c);
 }
 
-const char *AsmOperand::readSymbol(
-    const char *scan, char *buffer, char *const end) const {
-    while (isSymbolLetter(*scan)) {
-        if (buffer && buffer < end)
-            *buffer++ = *scan;
+const char *AsmOperand::scanSymbol(const char *scan) const {
+    while (isSymbolLetter(*scan))
         scan++;
-    }
-    if (buffer) *buffer = 0;
     return scan;
 }
 
@@ -376,7 +370,7 @@ AsmOperand::Value AsmOperand::evalExpr(
     }
 }
 
-bool AsmOperand::isCurrentAddressSymbol(char c) const {
+bool AsmOperand::isCurrentOriginSymbol(char c) const {
     return c == '*';
 }
 
@@ -396,7 +390,7 @@ Error AsmOperand::readNumber(Value &val) {
     return setError(ILLEGAL_CONSTANT);
 }
 
-bool AsmMotoOperand::isCurrentAddressSymbol(char c) const {
+bool AsmMotoOperand::isCurrentOriginSymbol(char c) const {
     return c == '*';
 }
 
@@ -413,7 +407,7 @@ Error AsmMotoOperand::readNumber(Value &val) {
     return AsmOperand::readNumber(val);
 }
 
-bool AsmIntelOperand::isCurrentAddressSymbol(char c) const {
+bool AsmIntelOperand::isCurrentOriginSymbol(char c) const {
     return c == '$';
 }
 

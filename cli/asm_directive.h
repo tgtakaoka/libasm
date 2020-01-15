@@ -36,25 +36,22 @@ public:
         std::string label_buf;
         if (_parser.isSymbolLetter(*_scan, true)) {
             listing.label = _scan;
-            const char *p = _scan;
-            while (_parser.isSymbolLetter(*p))
-                p++;
-            label_buf = std::string(_scan, p);
-            if (*p == ':') p++; // optional trailing ':' for label.
-            listing.label_len = _scan - listing.label;
+            const char *end = _parser.scanSymbol(listing.label);
+            label_buf = std::string(listing.label, end);
+            if (*end == ':') end++; // optional trailing ':' for label.
+            listing.label_len = end - listing.label;
             label = label_buf.c_str();
-            _scan = p;
+            _scan = end;
         }
         skipSpaces();
 
         if (*_scan && *_scan != ';') {
             listing.instruction = _scan;
-            const char *p = _scan;
-            while (*p && !isspace(*p))
-                p++;
-            std::string directive(_scan, p);
-            _scan = p;
-            listing.instruction_len = _scan - listing.instruction;
+            const char *end = listing.instruction;
+            while (*end && !isspace(*end)) end++;
+            std::string directive(listing.instruction, end);
+            listing.instruction_len = end - listing.instruction;
+            _scan = end;
             skipSpaces();
             listing.operand = _scan;
             const Addr origin = _origin;
@@ -65,7 +62,8 @@ public:
                 listing.operand_len = _scan - listing.operand;
                 skipSpaces();
                 listing.comment = _scan;
-                if (label && internSymbol(label, origin, _reportDuplicate)) {
+                if (label) intern(origin, label);
+                if (getError()) {
                     _scan = listing.label;
                 } else {
                     _scan = listing.operand + listing.operand_len;
@@ -75,7 +73,8 @@ public:
         }
 
         if (label) {
-            if (internSymbol(label, _origin, _reportDuplicate)) {
+            intern(_origin, label);
+            if (getError()) {
                 _scan = listing.label;
                 return getError();
             }
@@ -182,7 +181,7 @@ protected:
         if (getError()) return getError();
         _scan = scan;
         // TODO line end check
-        internSymbol(label, value, false);
+        intern(value, label);
         label = nullptr;
         return getError();
     }
@@ -267,28 +266,31 @@ protected:
         return nullptr;
     }
 
-    bool hasSymbol(const char *symbol) override {
+    bool hasSymbol(const char *symbol, const char *end = nullptr) override {
         auto it = _symbols.find(std::string(symbol));
         if (_reportUndef && it == _symbols.cend())
             setError(UNDEFINED_SYMBOL);
         return it != _symbols.cend();
     }
 
-    uint32_t lookup(const char *symbol) override {
+    uint32_t lookup(const char *symbol, const char *end = nullptr) override {
         auto it = _symbols.find(std::string(symbol));
         if (_reportUndef && it == _symbols.cend())
             setError(UNDEFINED_SYMBOL);
         return it == _symbols.cend() ? 0 : it->second;
     }
 
-    uint32_t currentAddress() override { return _origin; }
-
-    Error internSymbol(const char *label, uint32_t addr, bool reportDuplicate) {
-        if (reportDuplicate && hasSymbol(label)) return setError(DUPLICATE_LABEL);
-        _symbols.erase(label);
-        _symbols.emplace(label, addr);
-        return setError(OK);
+    void intern(uint32_t value, const char *symbol, const char *end = nullptr) override {
+        if (_reportDuplicate && hasSymbol(symbol, end)) {
+            setError(DUPLICATE_LABEL);
+        } else {
+            _symbols.erase(symbol);
+            _symbols.emplace(symbol, value);
+            setError(OK);
+        }
     }
+
+    uint32_t currentOrigin() override { return _origin; }
 
     void skipSpaces() {
         while (isspace(*_scan))

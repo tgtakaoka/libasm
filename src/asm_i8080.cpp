@@ -106,7 +106,7 @@ Error AsmI8080::encode(
     insn.resetAddress(addr);
 
     if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
-    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
+    const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
     if (TableI8080.searchName(insn))

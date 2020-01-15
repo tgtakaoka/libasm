@@ -26,8 +26,8 @@ static void test_imm() {
     WTEST(LWPI, "1234H", 0x02E0, 0x1234);
     WTEST(LIMI, "89ABH", 0x0300, 0x89AB);
 
-    symtab.put(0x1234, "sym1234");
-    symtab.put(0x89AB, "sym89AB");
+    symtab.intern(0x1234, "sym1234");
+    symtab.intern(0x89AB, "sym89AB");
 
     WTEST(LWPI, "sym1234", 0x02E0, 0x1234);
     WTEST(LIMI, "sym89AB", 0x0300, 0x89AB);
@@ -47,7 +47,7 @@ static void test_reg_imm() {
     WTEST(ORI,  "R14,0FF00H", 0x026E, 0xFF00);
     WTEST(CI,   "R15,0FFFFH", 0x028F, 0xFFFF);
 
-    symtab.put(0x1234, "sym1234");
+    symtab.intern(0x1234, "sym1234");
 
     WTEST(LI,   "R2,sym1234", 0x0202, 0x1234);
 }
@@ -84,10 +84,10 @@ static void test_src() {
     WTEST(SETO, "R12",    0x070C);
     WTEST(ABS,  "@8(R3)", 0x0763, 0x0008);
 
-    symtab.put(-2, "neg2");
-    symtab.put(0x1000, "sym1000");
-    symtab.put(0x1234, "sym1234");
-    symtab.put(0x9876, "sym9876");
+    symtab.intern(-2, "neg2");
+    symtab.intern(0x1000, "sym1000");
+    symtab.intern(0x1234, "sym1234");
+    symtab.intern(0x9876, "sym9876");
 
     WTEST(DIVS, "@sym1234",     0x01A0, 0x1234);
     WTEST(DIVS, "@sym1000(R4)", 0x01A4, 0x1000);
@@ -102,8 +102,8 @@ static void test_reg_src() {
     WTEST(MPY, "R4,R2",         0x3884);
     WTEST(DIV, "R14,R12",       0x3F0E);
 
-    symtab.put(0x1234, "sym1234");
-    symtab.put(0x0002, "offset2");
+    symtab.intern(0x1234, "sym1234");
+    symtab.intern(0x0002, "offset2");
 
     WTEST(CZC, "@sym1234(R3),R7", 0x25E3, 0x1234);
     WTEST(XOR, "@offset2(R5),R4", 0x2925, 0x0002);
@@ -113,8 +113,8 @@ static void test_cnt_src() {
     WTEST(LDCR, "*R13+,16",  0x303D);
     WTEST(STCR, "@2(R4),15", 0x37E4, 0x0002);
 
-    symtab.put(7, "size7");
-    symtab.put(2, "offset2");
+    symtab.intern(7, "size7");
+    symtab.intern(2, "offset2");
 
     WTEST(STCR, "@offset2(R4),size7", 0x35E4, 0x0002);
     WTEST(STCR, "@offset2(R4),16",    0x3424, 0x0002);
@@ -125,8 +125,8 @@ static void test_xop_src() {
     WTEST(XOP,  "@9876H,0",  0x2C20, 0x9876);
     WTEST(XOP,  "@9876H,15", 0x2FE0, 0x9876);
 
-    symtab.put(10, "xop10");
-    symtab.put(0x9876, "sym9876");
+    symtab.intern(10, "xop10");
+    symtab.intern(0x9876, "sym9876");
 
     WTEST(XOP,  "@sym9876,xop10",   0x2EA0, 0x9876);
     WTEST(XOP,  "@sym9876(R1),8",   0x2E21, 0x9876);
@@ -147,10 +147,10 @@ static void test_dst_src() {
     WTEST(SOC,  "@1234H,@5678H(R11)",      0xEAE0, 0x1234, 0x5678);
     WTEST(SOCB, "@1234H(R10),@5678H",      0xF82A, 0x1234, 0x5678);
 
-    symtab.put(0x0000, "zero");
-    symtab.put(0x1234, "sym1234");
-    symtab.put(0x4000, "sym4000");
-    symtab.put(0x5678, "sym5678");
+    symtab.intern(0x0000, "zero");
+    symtab.intern(0x1234, "sym1234");
+    symtab.intern(0x4000, "sym4000");
+    symtab.intern(0x5678, "sym5678");
 
     WTEST(SZC,  "@sym1234(R10),@sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
     WTEST(SZCB, "@sym1234,@sym5678",           0x5820, 0x1234, 0x5678);
@@ -175,10 +175,10 @@ static void test_rel() {
     AWTEST(0x1000, JH,  "0FF8H", 0x1BFB);
     AWTEST(0x1000, JOP, "0FF6H", 0x1CFA);
 
-    symtab.put(0x0F02, "sym0F02");
-    symtab.put(0x1000, "sym1000");
-    symtab.put(0x1002, "sym1002");
-    symtab.put(0x1100, "sym1100");
+    symtab.intern(0x0F02, "sym0F02");
+    symtab.intern(0x1000, "sym1000");
+    symtab.intern(0x1002, "sym1002");
+    symtab.intern(0x1100, "sym1100");
 
     AWTEST(0x1000, JMP, "sym1002", 0x1000);
     AWTEST(0x1000, JLT, "sym1000", 0x11FF);
@@ -191,9 +191,9 @@ static void test_cru_off() {
     WTEST(SBZ, "127",  0x1E7F);
     WTEST(TB,  "-128", 0x1F80);
 
-    symtab.put(0x00, "zero");
-    symtab.put(127, "off127");
-    symtab.put(-128, "off_128");
+    symtab.intern(0x00, "zero");
+    symtab.intern(127, "off127");
+    symtab.intern(-128, "off_128");
 
     WTEST(SBO, "zero",    0x1D00);
     WTEST(SBZ, "off127",  0x1E7F);

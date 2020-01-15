@@ -101,8 +101,8 @@ static void test_immediate() {
     TEST(CMPS, "#$90A0", 0x11, 0x8C, 0x90, 0xA0);
     TEST(LDS,  "#$90A0", 0x10, 0xCE, 0x90, 0xA0);
 
-    symtab.put(0x90, "dir90");
-    symtab.put(0x90A0, "dir90A0");
+    symtab.intern(0x90, "dir90");
+    symtab.intern(0x90A0, "dir90A0");
 
     TEST(LDA,  "#$90", 0x86, 0x90);
     TEST(CMPX, "#dir90A0", 0x8C, 0x90, 0xA0);
@@ -172,9 +172,9 @@ static void test_direct() {
     TEST(JMP,  "$10", 0x0E, 0x10);
     TEST(JSR,  "$10", 0x9D, 0x10);
 
-    symtab.put(0x10, "dir10");
-    symtab.put(0x22, "dir22");
-    symtab.put(0x90, "dir90");
+    symtab.intern(0x10, "dir10");
+    symtab.intern(0x22, "dir22");
+    symtab.intern(0x90, "dir90");
 
     TEST(NEG,  "<dir10", 0x00, 0x10);
     TEST(LDA,  "<dir90", 0x96, 0x90);
@@ -248,8 +248,8 @@ static void test_extended() {
     TEST(JMP,  "$1234", 0x7E, 0x12, 0x34);
     TEST(JSR,  "$1234", 0xBD, 0x12, 0x34);
 
-    symtab.put(0x0090, "ext0090");
-    symtab.put(0x9ABC, "ext9ABC");
+    symtab.intern(0x0090, "ext0090");
+    symtab.intern(0x9ABC, "ext9ABC");
 
     TEST(NEG,  ">ext0090", 0x70, 0x00, 0x90);
     TEST(LDA,  "ext9ABC",  0xB6, 0x9A, 0xBC);
@@ -480,13 +480,13 @@ static void test_indexed_mode() {
     TEST(LDA, "[$0009]", 0xA6, 0x9F, 0x00, 0x09);
     TEST(LDA, "[$1234]", 0xA6, 0x9F, 0x12, 0x34);
 
-    symtab.put(0x0F83, "label0F83");
-    symtab.put(0x1003, "label1003");
-    symtab.put(0x1004, "label1004");
-    symtab.put(0x1082, "label1082");
-    symtab.put(0x1234, "label1234");
-    symtab.put(0x9003, "label9003");
-    symtab.put(0x9004, "label9004");
+    symtab.intern(0x0F83, "label0F83");
+    symtab.intern(0x1003, "label1003");
+    symtab.intern(0x1004, "label1004");
+    symtab.intern(0x1082, "label1082");
+    symtab.intern(0x1234, "label1234");
+    symtab.intern(0x9003, "label9003");
+    symtab.intern(0x9004, "label9004");
 
     ATEST(0x1000, LDA, "label1003,PCR",   0xA6, 0x8C, 0x00);
     ATEST(0x1000, LDA, "label1082,PCR",   0xA6, 0x8C, 0x7F);
@@ -543,10 +543,10 @@ static void test_relative() {
     ATEST(0x1000, BSR,  "$1042", 0x8D, 0x40);
     ATEST(0x1000, LBSR, "$1043", 0x17, 0x00, 0x40);
 
-    symtab.put(0x0F82, "sub0F82");
-    symtab.put(0x1081, "sub1081");
-    symtab.put(0x9002, "sub9002");
-    symtab.put(0x9003, "sub9003");
+    symtab.intern(0x0F82, "sub0F82");
+    symtab.intern(0x1081, "sub1081");
+    symtab.intern(0x9002, "sub9002");
+    symtab.intern(0x9003, "sub9003");
 
     ATEST(0x1000, BSR,  "sub1081", 0x8D, 0x7F);
     ATEST(0x1000, BSR,  "sub0F82", 0x8D, 0x80);

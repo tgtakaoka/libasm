@@ -203,10 +203,10 @@ static void test_relative() {
     ATEST(0x1000, "BSR  $1042", 0x8D, 0x40);
     ATEST(0x1000, "LBSR $1043", 0x17, 0x00, 0x40);
 
-    symtab.put(0x0F82, "sub0F82");
-    symtab.put(0x1081, "sub1081");
-    symtab.put(0x9002, "sub9002");
-    symtab.put(0x9003, "sub9003");
+    symtab.intern(0x0F82, "sub0F82");
+    symtab.intern(0x1081, "sub1081");
+    symtab.intern(0x9002, "sub9002");
+    symtab.intern(0x9003, "sub9003");
 
     ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
     ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
@@ -288,9 +288,9 @@ static void test_immediate() {
     TEST("DIVD #$90A0", 0x11, 0x8D, 0x90, 0xA0);
     TEST("DIVQ #$90A0", 0x11, 0x8E, 0x90, 0xA0);
 
-    symtab.put(0x90, "dir90");
-    symtab.put(0x90A0, "sym90A0");
-    symtab.put(-2, "minus2");
+    symtab.intern(0x90, "dir90");
+    symtab.intern(0x90A0, "sym90A0");
+    symtab.intern(-2, "minus2");
 
     TEST("LDA  #dir90",   0x86, 0x90);
     TEST("CMPX #sym90A0", 0x8C, 0x90, 0xA0);
@@ -403,10 +403,10 @@ static void test_direct() {
     TEST("EIM #$30,<$1290", 0x05, 0x30, 0x90);
     TEST("TIM #$30,<$1290", 0x0B, 0x30, 0x90);
 
-    symtab.put(0x10, "dir10");
-    symtab.put(0x90, "dir90");
-    symtab.put(0x1290, "sym1290");
-    symtab.put(0x90A0, "sym90A0");
+    symtab.intern(0x10, "dir10");
+    symtab.intern(0x90, "dir90");
+    symtab.intern(0x1290, "sym1290");
+    symtab.intern(0x90A0, "sym90A0");
 
     TEST("NEG  dir10",    0x00, 0x10);
     TEST("LDA  dir10",    0x96, 0x10);
@@ -550,8 +550,8 @@ static void test_extended() {
     TEST("EIM #$30,$1290", 0x75, 0x30, 0x12, 0x90);
     TEST("TIM #$30,$1290", 0x7B, 0x30, 0x12, 0x90);
 
-    symtab.put(0x0090, "dir90");
-    symtab.put(0x1290, "sym1290");
+    symtab.intern(0x0090, "dir90");
+    symtab.intern(0x1290, "sym1290");
 
     TEST("NEG >dir90",   0x70, 0x00, 0x90);
     TEST("LDA  sym1290", 0xB6, 0x12, 0x90);
@@ -885,13 +885,13 @@ static void test_indexed_mode() {
     TEST("LDA [,W++]",    0xA6, 0xD0);
     TEST("LDA [,--W]",    0xA6, 0xF0);
 
-    symtab.put(0x0F83, "label0F83");
-    symtab.put(0x1003, "label1003");
-    symtab.put(0x1004, "label1004");
-    symtab.put(0x1082, "label1082");
-    symtab.put(0x1234, "label1234");
-    symtab.put(0x9003, "label9003");
-    symtab.put(0x9004, "label9004");
+    symtab.intern(0x0F83, "label0F83");
+    symtab.intern(0x1003, "label1003");
+    symtab.intern(0x1004, "label1004");
+    symtab.intern(0x1082, "label1082");
+    symtab.intern(0x1234, "label1234");
+    symtab.intern(0x9003, "label9003");
+    symtab.intern(0x9004, "label9004");
 
     ATEST(0x1000, "LDA label1003,PCR",   0xA6, 0x8C, 0x00);
     ATEST(0x1000, "LDA label1082,PCR",   0xA6, 0x8C, 0x7F);
@@ -943,8 +943,8 @@ static void test_bit_position() {
     TEST("LDBT A.7,$34.0",  0x11, 0x36, 0x47, 0x34);
     TEST("LDBT B.2,$34.4",  0x11, 0x36, 0xA2, 0x34);
 
-    symtab.put(0x0034, "dir34");
-    symtab.put(0x9030, "sym9030");
+    symtab.intern(0x0034, "dir34");
+    symtab.intern(0x9030, "sym9030");
 
     TEST("LDBT CC.0,dir34.7", 0x11, 0x36, 0x38, 0x34);
     TEST("LDBT B.2,<sym9030.4",  0x11, 0x36, 0xA2, 0x30);
