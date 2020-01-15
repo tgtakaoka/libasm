@@ -309,3 +309,6 @@
 ;;; 11BX
         cmpu    $11b3
         cmps    $11bc
+
+        end
+;;; comment
