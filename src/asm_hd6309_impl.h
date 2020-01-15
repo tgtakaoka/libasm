@@ -426,12 +426,11 @@ Error Asm09<mcuType>::processPseudo(Insn &insn) {
         return setError(OK);
     }
     if (insn.insnCode() == PSEUDO_ASSUME) {
-        char reg[10];
-        const char *p = _parser.readSymbol(
-            _scan, reg, reg + sizeof(reg) - 1);
-        if (*p != ':') return setError(UNKNOWN_OPERAND);
-        if (strcasecmp(reg, "dpr"))
+        const char *p = _parser.scanSymbol(_scan);
+        if (p - _scan != 3 && strncasecmp(_scan, "dpr", 3))
             return setError(UNKNOWN_REGISTER);
+        p = skipSpaces(p);
+        if (*p != ':') return setError(UNKNOWN_OPERAND);
         _scan = p + 1;
         if (getOperand8(_direct_page)) return getError();
         return setError(OK);
@@ -447,7 +446,7 @@ Error Asm09<mcuType>::encode(
     insn.resetAddress(addr);
 
     if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
-    const char *endName = _parser.readSymbol(_scan, nullptr, nullptr);
+    const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
     if (TableHd6309<mcuType>::table()->searchName(insn))

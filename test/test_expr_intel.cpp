@@ -73,7 +73,7 @@ static void test_bin_constant() {
 }
 
 static void test_current_address() {
-    symtab.setCurrentAddress(0x1000);
+    symtab.setCurrentOrigin(0x1000);
     E16("$",        0x1000, OK);
     E16("$+2",      0x1002, OK);
     E16("$-2",      0x0FFE, OK);
@@ -82,8 +82,8 @@ static void test_current_address() {
     E32("$+0F000H", 0x00010000, OK);
     E32("$-1001H",  0xFFFFFFFF, OK);
 
-    symtab.put(0x1000, "table");
-    symtab.setCurrentAddress(0x1100);
+    symtab.intern(0x1000, "table");
+    symtab.setCurrentOrigin(0x1100);
     E16("$-table",     0x100, OK);
     E16("($-table)/2", 0x80,  OK);
 }
