@@ -13,10 +13,10 @@ all: \
 
 %.hex: %.asm
 	asl $(ASL_FLAGS) $^
-	p2hex -l 32 -F Intel $*.p $@
+	p2hex -r \$$-\$$ -l 32 -F Intel $*.p $@ > /dev/null
 %.s19: %.asm
 	asl $(ASL_FLAGS) $^
-	p2hex -l 32 -F Moto +5 $*.p $@
+	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 
 .PHONY: clean clean-obj test \
 	test_mc6809 test_hd6309 \
