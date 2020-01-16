@@ -4,7 +4,8 @@
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-DisTms9995 disassembler;
+DisTms9995 dis9995;
+Disassembler<target::uintptr_t> &disassembler(dis9995);
 
 static void set_up() {
 }

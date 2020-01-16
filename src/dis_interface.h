@@ -12,25 +12,22 @@ class Disassembler : public ErrorReporter {
 public:
     typedef Addr addr_t;
 
-    virtual Error decode(
-        DisMemory<target::uintptr_t> &memory,
-        Insn& insn,
-        char *operands,
-        SymbolTable *symtab) = 0;
-    virtual DisOperand &getFormatter() = 0;
-};
+    Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn,
+        char *operands, SymbolTable *symtab) {
+        insn.resetAddress(memory.address());
+        *(_operands = operands) = 0;
+        _symtab = symtab;
+        this->resetError();
+        return decode(memory, insn);
+    }
 
-template<typename Addr>
-class DisCommon : public Disassembler<Addr> {
+    virtual DisOperand &getFormatter() = 0;
+
 protected:
     char *_operands;
     SymbolTable *_symtab;
 
-    void reset(char *operands, SymbolTable *symtab) {
-        *(_operands = operands) = 0;
-        _symtab = symtab;
-        ErrorReporter::resetError();
-    }
     const char *lookup(Addr addr) const {
         const char *symbol = nullptr;
         if (_symtab) {
@@ -56,6 +53,10 @@ protected:
         _operands = this->getFormatter().output(
             _operands, val, radix, relax, static_cast<uint8_t>(sizeof(T)));
     }
+
+private:
+    virtual Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn) = 0;
 };
 
 #endif // __DIS_INTERFACE_H__

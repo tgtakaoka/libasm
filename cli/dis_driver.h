@@ -15,7 +15,7 @@ class DisDriver {
 public:
     typedef typename Dis::addr_t Addr;
 
-    DisDriver(Dis &disassembler)
+    DisDriver(Disassembler<Addr> &disassembler)
         : _disassembler(disassembler)
     {}
 
@@ -134,7 +134,7 @@ public:
     }
 
 private:
-    Dis &_disassembler;
+    Disassembler<Addr> &_disassembler;
     const char *_progname;
     const char *_input_name;
     const char *_output_name;

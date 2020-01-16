@@ -8,13 +8,8 @@
 #include "reg_mc6809.h"
 #include "dis_interface.h"
 
-class DisMc6809 : public DisCommon<target::uintptr_t> {
+class DisMc6809 : public Disassembler<target::uintptr_t> {
 public:
-    Error decode(
-        DisMemory<target::uintptr_t> &memory,
-        Insn& insn,
-        char *operands,
-        SymbolTable *symtab) override;
     DisOperand &getFormatter() override { return _formatter; }
 
     void acceptCpu(McuType mcuType) { _regs._mcuType = mcuType; }
@@ -39,6 +34,9 @@ private:
     Error decodeImmediatePlus(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeBitOperation(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeTransferMemory(DisMemory<target::uintptr_t> &memory, Insn &insn);
+
+    Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
 
 #endif // __DIS_MC6809_H__

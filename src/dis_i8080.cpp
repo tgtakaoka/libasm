@@ -52,13 +52,7 @@ Error DisI8080::decodeIoaddr(
 }
 
 Error DisI8080::decode(
-    DisMemory<target::uintptr_t> &memory,
-    Insn &insn,
-    char *operands,
-    SymbolTable *symtab) {
-    reset(operands, symtab);
-    insn.resetAddress(memory.address());
-
+    DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);

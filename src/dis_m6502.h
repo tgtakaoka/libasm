@@ -9,13 +9,8 @@
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-class DisM6502 : public DisCommon<target::uintptr_t> {
+class DisM6502 : public Disassembler<target::uintptr_t> {
 public:
-    Error decode(
-        DisMemory<target::uintptr_t> &memory,
-        Insn& insn,
-        char *operands,
-        SymbolTable *symtab) override;
     DisOperand &getFormatter() override { return _formatter; }
 
     void acceptCpu(McuType mcuType) { _mcuType = mcuType; }
@@ -28,6 +23,8 @@ private:
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeZeroPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
 
 #endif // __DIS_M6502_H__

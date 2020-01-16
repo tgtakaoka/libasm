@@ -285,13 +285,7 @@ Error DisMc6809::decodeTransferMemory(
 }
 
 Error DisMc6809::decode(
-    DisMemory<target::uintptr_t> &memory,
-    Insn &insn,
-    char *operands,
-    SymbolTable *symtab) {
-    reset(operands, symtab);
-    insn.resetAddress(memory.address());
-
+    DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     target::insn_t insnCode = opCode;

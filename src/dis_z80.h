@@ -10,13 +10,8 @@
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-class DisZ80 : public DisCommon<target::uintptr_t> {
+class DisZ80 : public Disassembler<target::uintptr_t> {
 public:
-    Error decode(
-        DisMemory<target::uintptr_t> &memory,
-        Insn& insn,
-        char *operands,
-        SymbolTable *symtab) override;
     DisOperand &getFormatter() override { return _formatter; }
 
 private:
@@ -30,7 +25,8 @@ private:
     void outDataRegister(RegName regName);
     void outConditionName(target::opcode_t cc, bool cc8 = true);
 
-    Error decodeOperand(DisMemory<target::uintptr_t> &memory, Insn& insn);
+    Error decodeOperand(
+        DisMemory<target::uintptr_t> &memory, Insn& insn);
 
     Error decodeInherent(Insn &insn);
     Error decodeImmediate8(Insn &insn, uint8_t val);
@@ -41,8 +37,11 @@ private:
     Error decodeIndexed(Insn &insn, int8_t offset);
     Error decodeIndexedImmediate8(
         Insn &insn, int8_t offset, uint8_t val);
-    Error decodeIndexedBitOp(Insn &insn, int8_t offset,
-        target::opcode_t opCode);
+    Error decodeIndexedBitOp(
+        Insn &insn, int8_t offset, target::opcode_t opCode);
+
+    Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
 
 #endif // __DIS_Z80_H__

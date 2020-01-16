@@ -1,14 +1,15 @@
 #include <dis_mc6809.h>
 #include <str_memory.h>
 
-DisMc6809 disassembler;
+DisMc6809 dis6809;
+Disassembler<uint16_t> &disassembler(dis6809);
 
 String line;
 bool line_ready = false;
 
 void setup() {
   Serial.begin(9800);
-  disassembler.acceptCpu(McuType::HD6309);
+  disassembler.acceptCpu("6309");
 }
 
 void loop() {

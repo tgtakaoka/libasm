@@ -9,13 +9,8 @@
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-class DisI8080 : public DisCommon<target::uintptr_t> {
+class DisI8080 : public Disassembler<target::uintptr_t> {
 public:
-    Error decode(
-        DisMemory<target::uintptr_t> &memory,
-        Insn& insn,
-        char *operands,
-        SymbolTable *symtab) override;
     DisOperand &getFormatter() override { return _formatter; }
 
 private:
@@ -27,6 +22,8 @@ private:
     Error decodeImmediate16(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeDirect(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeIoaddr(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
 
 #endif // __DIS_I8080_H__

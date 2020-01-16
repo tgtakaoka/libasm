@@ -4,7 +4,8 @@
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-DisZ80 disassembler;
+DisZ80 disz80;
+Disassembler<target::uintptr_t> &disassembler(disz80);
 
 static void set_up() {
 }

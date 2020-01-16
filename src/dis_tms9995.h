@@ -9,13 +9,8 @@
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-class DisTms9995 : public DisCommon<target::uintptr_t> {
+class DisTms9995 : public Disassembler<target::uintptr_t> {
 public:
-    Error decode(
-        DisMemory<target::uintptr_t> &memory,
-        Insn& insn,
-        char *operands,
-        SymbolTable *symtab) override;
     DisOperand &getFormatter() override { return _formatter; }
 
 private:
@@ -28,6 +23,8 @@ private:
         DisMemory<target::uintptr_t> &memory, Insn& insn, host::uint_t opr);
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeRelative(Insn &insn);
+    Error decode(
+        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
 
 #endif // __DIS_TMS9995_H__

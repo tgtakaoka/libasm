@@ -1,7 +1,8 @@
 #include <dis_z80.h>
 #include <str_memory.h>
 
-DisZ80 disassembler;
+DisZ80 disz80;
+Disassembler<uint16_t> &disassembler(disz80);
 
 String line;
 bool line_ready = false;

@@ -58,13 +58,7 @@ Error DisTms9995::decodeRelative(Insn& insn) {
 }
 
 Error DisTms9995::decode(
-    DisMemory<target::uintptr_t> &memory,
-    Insn &insn,
-    char *operands,
-    SymbolTable *symtab) {
-    reset(operands, symtab);
-    insn.resetAddress(memory.address());
-
+    DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
