@@ -2,171 +2,168 @@
 
 ;;; 0X
         brk
-        ora     ($01,x)
-        ora     $05
-        asl     $06
+        ora     ($02,x)
+        ora     $06
+        asl     $07
         php
-        ora     #$09
+        ora     #$0a
         asl     a
-        ora     $0d0d
-        asl     $0e0e
+        ora     $0f0e
+        asl     $100f
 ;;; 1X
-        bpl     $10
-        ora     ($11),y
-        ora     $15,x
-        asl     $16,x
+        bpl     *+$13
+        ora     ($12),y
+        ora     $16,x
+        asl     $17,x
         clc
-        ora     $1919,y
-        ora     $1d1d,x
-        asl     $1e1e,x
+        ora     $1b1a,y
+        ora     $1f1e,x
+        asl     $201f,x
 ;;; 2X
-        jsr     $2020
-        and     ($21,x)
-        bit     $24
-        and     $25
-        rol     $26
+        jsr     $2221
+        and     ($22,x)
+        bit     $25
+        and     $26
+        rol     $27
         plp
-        and     #$29
+        and     #$2a
         rol     a
-        bit     $2c2c
-        and     $2d2d
-        rol     $2e2e
+        bit     $2e3d
+        and     $2f2e
+        rol     $302f
 ;;; 3X
-        bmi     $30
-        and     ($31),y
-        and     $35,x
-        rol     $36,x
+        bmi     *+$33
+        and     ($32),y
+        and     $36,x
+        rol     $37,x
         sec
-        and     $3939,y
-        and     $3d3d,x
-        rol     $3e3e,x
+        and     $3b3a,y
+        and     $3f3e,x
+        rol     $403f,x
 ;;; 4X
         rti
-        eor     ($41,x)
-        eor     $45
-        lsr     $46
+        eor     ($42,x)
+        eor     $46
+        lsr     $47
         pha
-        eor     #$49
+        eor     #$4a
         lsr     a
-        jmp     $4c4c
-        eor     $4d4d
-        lsr     $4e4e
+        jmp     $4e4d
+        eor     $4f4e
+        lsr     $504f
 ;;; 5X
-        bvc     $50
-        eor     ($51),y
-        eor     $55,x
-        lsr     $56,x
+        bvc     *+$53
+        eor     ($52),y
+        eor     $56,x
+        lsr     $57,x
         cli
-        eor     $5959,y
-        eor     $5d5d,x
-        lsr     $5e5e,x
+        eor     $5b5a,y
+        eor     $5f5e,x
+        lsr     $605f,x
 ;;; 6X
         rts
-        adc     ($61,x)
-        adc     $65
-        ror     $66
+        adc     ($62,x)
+        adc     $66
+        ror     $67
         pla
-        adc     #$69
+        adc     #$6a
         ror     a
-        jmp     ($6c6c)
-        adc     $6d6d
-        ror     $6e6e
+        jmp     ($6e6d)
+        adc     $6f6e
+        ror     $706f
 ;;; 7X
-        bvs     $70
-        adc     ($71),y
-        adc     $75,x
-        ror     $76,x
+        bvs     *+$73
+        adc     ($72),y
+        adc     $76,x
+        ror     $77,x
         sei
-        adc     $7979,y
-        adc     $7d7d,x
-        ror     $7e7e,x
+        adc     $7b7a,y
+        adc     $7f7e,x
+        ror     $807f,x
 ;;; 8X
-        sta     ($81,x)
-        sty     $84
-        sta     $85
-        stx     $86
+        sta     ($82,x)
+        sty     $85
+        sta     $86
+        stx     $87
         dey
         txa
-        sty     $8c8c
-        sta     $8d8d
-        stx     $8e8e
+        sty     $8e8d
+        sta     $8f8e
+        stx     $908f
 ;;; 9X
-        bcc     $90
-        sta     ($91),y
-        sty     $94,x
-        sta     $95,x
-        stx     $96,y
+        bcc     *-109
+        sta     ($92),y
+        sty     $95,x
+        sta     $96,x
+        stx     $97,y
         tya
-        sta     $9999,y
+        sta     $9b9a,y
         txs
-        sta     $9d9d,x
+        sta     $9f9e,x
 ;;; AX
-        ldy     #$a0
-        lda     ($a1,x)
-        ldx     #$a2
-        ldy     $a4
-        lda     $a5
-        ldx     $a6
+        ldy     #$a1
+        lda     ($a2,x)
+        ldx     #$a3
+        ldy     $a5
+        lda     $a6
+        ldx     $a7
         tay
-        lda     #$a9
+        lda     #$aa
         tax
-        ldy     $acac
-        lda     $adad
-        ldx     $aeae
+        ldy     $aead
+        lda     $afae
+        ldx     $b0af
 ;;; BX
-        bcs     $b0
-        lda     ($b1),y
-        ldy     $b4,x
-        lda     $b5,x
-        ldx     $b6,y
+        bcs     *-77
+        lda     ($b2),y
+        ldy     $b5,x
+        lda     $b6,x
+        ldx     $b7,y
         clv
-        lda     $b9b9,y
+        lda     $bbba,y
         tsx
-        ldy     $bcbc,x
-        lda     $bdbd,x
-        ldx     $bebe,y
+        ldy     $bebd,x
+        lda     $bfbe,x
+        ldx     $c0bf,y
 ;;; CX
-        cpy     #$c0
-        cmp     ($c1,x)
-        cpy     $c4
-        cmp     $c5
-        dec     $c6
+        cpy     #$c1
+        cmp     ($c2,x)
+        cpy     $c5
+        cmp     $c6
+        dec     $c7
         iny
-        cmp     #$c9
+        cmp     #$ca
         dex
-        cpy     $cccc
-        cmp     $cdcd
-        dec     $cece
+        cpy     $cecd
+        cmp     $cfce
+        dec     $d0cf
 ;;; DX
-        bne     $d0
-        cmp     ($d1),y
-        cmp     $d5,x
-        dec     $d6,x
+        bne     *-45
+        cmp     ($d2),y
+        cmp     $d6,x
+        dec     $d7,x
         cld
-        cmp     $d9d9,y
-        cmp     $dddd,x
-        dec     $dede,x
+        cmp     $dbda,y
+        cmp     $dfde,x
+        dec     $e0df,x
 ;;; EX
-        cpx     #$e0
-        sbc     ($e1,x)
-        cpx     $e4
-        sbc     $e5
-        inc     $e6
+        cpx     #$e1
+        sbc     ($e2,x)
+        cpx     $e5
+        sbc     $e6
+        inc     $e7
         inx
-        sbc     #$e9
+        sbc     #$ea
         nop
-        cpx     $ecec
-        sbc     $eded
-        inc     $eeee
+        cpx     $eeed
+        sbc     $efee
+        inc     $f0ef
 ;;; FX
-        beq     $f0
-        sbc     ($f1),y
-        sbc     $f5,x
-        inc     $f6,x
+        beq     *-13
+        sbc     ($f2),y
+        sbc     $f6,x
+        inc     $f7,x
         sed
-        sbc     $f9f9,y
-        sbc     $fdfd,x
-        inc     $fefe,x
-
-	end
-;;; comment
+        sbc     $fbfa,y
+        sbc     $fffe,x
+        inc     >$00ff,x

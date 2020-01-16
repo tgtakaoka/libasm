@@ -4,34 +4,38 @@
         assume  dpr:$00
 
 ;;; HD6309
-        org     $02f0
+        org     $02b0
 
 ;;; 0X
-        oim     #$01,$01
-        aim     #$02,$02
-        eim     #$05,$05
-        tim     #$0b,$0b
+        oim     #$02,$03
+        aim     #$03,$04
+        eim     #$06,$07
+        tim     #$0c,$0d
+;;; 1X
+        tfr     w,v
+        exg     e,f
 ;;; 6X
-        oim     #$61,$61,w
-        aim     #$62,[$62,w]
-        eim     #$65,[$65,pcr]
-        tim     #$6b,$6b,w
+        oim     #$62,3,s
+        aim     #$63,4,s
+        eim     #$66,7,s
+        tim     #$6c,13,s
 ;;; 7X
-        oim     #$71,$7171
-        aim     #$72,$7272
-        eim     #$75,$7575
-        tim     #$7b,$7b7b
+        oim     #$72,$7374
+        aim     #$73,$7475
+        eim     #$76,$7778
+        tim     #$7c,$7d7e
 ;;; CX
-        ldq     #$cdcdcdcd
+        ldq     #$cecfd0d1
 ;;; 103X
-        addr    u,d
-        adcr    u,x
-        subr    u,y
-        sbcr    u,u
-        andr    u,s
-        orr     u,pc
-        eorr    u,w
-        cmpr    u,v
+        addr    u,x
+        adcr    u,y
+        subr    u,u
+        sbcr    u,s
+        andr    u,pc
+        orr     u,w
+        eorr    u,v
+        cmpr    e,f
+        cmpr    v,d
         pshsw
         pulsw
         pshuw
@@ -59,76 +63,76 @@
         tstw
         clrw
 ;;; 108X
-        subw    #$1080
-        cmpw    #$1081
-        sbcd    #$1082
-        andd    #$1084
-        bitd    #$1085
-        ldw     #$1086
-        eord    #$1088
-        adcd    #$1089
-        ord     #$108a
-        addw    #$108b
+        subw    #$8182
+        cmpw    #$8283
+        sbcd    #$8384
+        andd    #$8586
+        bitd    #$8788
+        ldw     #$8788
+        eord    #$898a
+        adcd    #$8a8b
+        ord     #$8b8c
+        addw    #$8c8d
 ;;; 109X
-        subw    $90
-        cmpw    $91
-        sbcd    $92
-        andd    $94
-        bitd    $95
-        ldw     $96
-        stw     $97
-        eord    $98
-        adcd    $99
-        ord     $9a
-        addw    $9b
+        subw    $91
+        cmpw    $92
+        sbcd    $93
+        andd    $95
+        bitd    $96
+        ldw     $97
+        stw     $98
+        eord    $99
+        adcd    $9a
+        ord     $9b
+        addw    $9c
 ;;; 10AX
-        subw    $10a0,w
-        cmpw    $10a1,w
-        sbcd    $10a2,w
-        andd    $10a4,w
-        bitd    $10a5,w
-        ldw     $10a6,w
-        stw     $10a7,w
-        eord    $10a8,w
-        adcd    $10a9,w
-        ord     $10aa,w
-        addw    $10ab,w
+        subw    ,y++
+        cmpw    ,-y
+        sbcd    ,--y
+        andd    b,y
+        bitd    a,y
+        ldw     e,y
+        stw     -87,y
+        eord    -21845,y
+        adcd    f,y
+        ord     d,y
+        addw    *-111,pcr
 ;;; 10BX
-        subw    $10b0
-        cmpw    $10b1
-        sbcd    $10b2
-        andd    $10b4
-        bitd    $10b5
-        ldw     $10b6
-        stw     $10b7
-        eord    $10b8
-        adcd    $10b9
-        ord     $10ba
-        addw    $10bb
+        subw    $b1b2
+        cmpw    $b2b3
+        sbcd    $b3b4
+        andd    $b5b6
+        bitd    $b6b7
+        ldw     $b7b8
+        stw     $b8b9
+        eord    $b9ba
+        adcd    $babb
+        ord     $bbbc
+        addw    $bcbd
 ;;; 10DX
-        ldq     $dc
-        stq     $dd
+        ldq     $dd
+        stq     $de
 ;;; 10EX
-        ldq     $10ec,w
-        stq     $10ed,w
+        ldq     ,--w
+        stq     w,s
 ;;; 10FX
-        ldq     $10fc
-        stq     $10fd
+        ldq     $fdfe
+        stq     $feff
 ;;; 113X
-        band    a.0,$30.7
-        biand   b.1,$31.6
-        bor     cc.2,$32.5
-        bior    a.3,$33.4
-        beor    b.4,$34.3
-        bieor   cc.5,$35.2
-        ldbt    a.6,$36.1
-        stbt    b.7,$37.0
+        band    cc.1,$32.6
+        biand   cc.2,$33.6
+        bor     a.2,$52.0
+        bior    a.4,$55.0
+        beor    b.4,$c4.6
+        bieor   b.5,$a5.2
+        ldbt    cc.7,$38.6
+        stbt    cc.0,$39.7
         tfm     x+,y+
         tfm     y-,u-
         tfm     u+,s
         tfm     s,d+
-        bitmd   #$3c
-        ldmd    #$3d
+        bitmd   #$3d
+        ldmd    #$3e
 ;;; 114X
         come
         dece
@@ -142,63 +146,63 @@
         tstf
         clrf
 ;;; 118X
-        sube    #$80
-        cmpe    #$81
-        lde     #$86
-        adde    #$8b
-        divd    #$8d
-        divq    #$118e
-        muld    #$118f
+        sube    #$81
+        cmpe    #$82
+        lde     #$87
+        adde    #$8c
+        divd    #$8e
+        divq    #$8f90
+        muld    #$9091
 ;;; 119X
-        sube    $90
-        cmpe    $91
-        lde     $96
-        ste     $97
-        adde    $9b
-        divd    $9d
-        divq    $9e
-        muld    $9f
+        sube    $91
+        cmpe    $92
+        lde     $97
+        ste     $98
+        adde    $9c
+        divd    $9e
+        divq    $9f
+        muld    $a0
 ;;; 11AX
-        sube    $11a0,w
-        cmpe    $11a1,w
-        lde     $11a6,w
-        ste     $11a7,w
-        adde    $11ab,w
-        divd    $11ad,w
-        divq    $11ae,w
-        muld    $11af,w
+        sube    ,y++
+        cmpe    ,-y
+        lde     e,y
+        ste     -87,y
+        adde    f,y
+        divd    w,y
+        divq    $b0b1,w
+        muld    [,y++]
 ;;; 11BX
-        sube    $11b0
-        cmpe    $11b1
-        lde     $11b6
-        ste     $11b7
-        adde    $11bb
-        divd    $11bd
-        divq    $11be
-        muld    $11bf
+        sube    $b1b2
+        cmpe    $b2b3
+        lde     $b7b8
+        ste     $b8b9
+        adde    $bcbd
+        divd    $bebf
+        divq    $bfc0
+        muld    $c0c1
 ;;; 11CX
-        subf    #$c0
-        cmpf    #$c1
-        ldf     #$c6
-        addf    #$cb
+        subf    #$c1
+        cmpf    #$c2
+        ldf     #$c7
+        addf    #$cc
 ;;; 11DX
-        subf    $d0
-        cmpf    $d1
-        ldf     $d6
-        stf     $d7
-        addf    $db
+        subf    $d1
+        cmpf    $d2
+        ldf     $d7
+        stf     $d8
+        addf    $de
 ;;; 11EX
-        subf    $11e0,w
-        cmpf    $11e1,w
-        ldf     $11e6,w
-        stf     $11e7,w
-        addf    $11eb,w
+        subf    ,s++
+        cmpf    ,-s
+        ldf     e,s
+        stf     -23,s
+        addf    f,s
 ;;; 11FX
-        subf    $11f0
-        cmpf    $11f1
-        ldf     $11f6
-        stf     $11f7
-        addf    $11fb
+        subf    $f1f2
+        cmpf    $f2f3
+        ldf     $f7f8
+        stf     $f8f9
+        addf    $fcfd
 
         end
 ;;; comment

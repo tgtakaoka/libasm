@@ -3,61 +3,61 @@
 
 ;;; 0X
 	neg     $01
-        com     $03
-        lsr     $04
-        ror     $06
-        asr     $07
-        lsl     $08
-        asl     $08
-        rol     $09
-        dec     $0a
-        inc     $0c
-        tst     $0d
-        jmp     $0e
-        clr     $0f
+        com     $04
+        lsr     $05
+        ror     $07
+        asr     $08
+        lsl     $09
+        asl     $09
+        rol     $0a
+        dec     $0b
+        inc     $0d
+        tst     $0e
+        jmp     $0f
+        clr     $10
 ;;; 1X
         nop
         sync
-        lbra    $16
-        lbsr    $17
+        lbra    *+$171b
+        lbsr    *+$181c
         daa
-        orcc    #$1a
-        andcc   #$1c
+        orcc    #$1b
+        andcc   #$1d
         sex
-        exg     x,pc
-        tfr     x,pc
+        exg     y,d
+        tfr     a,dp
 ;;; 2X
-        bra     $20
-        brn     $21
-        bhi     $22
-        bls     $23
-        bcc     $24
-        bhs     $24
-        bcs     $25
-        blo     $25
-        bne     $26
-        beq     $27
-        bvc     $28
-        bvs     $29
-        bpl     $2a
-        bmi     $2b
-        bge     $2c
-        blt     $2d
-        bge     $2e
-        ble     $2f
+        bra     *+$23
+        brn     *+$24
+        bhi     *+$25
+        bls     *+$26
+        bcc     *+$27
+        bcs     *+$28
+        bhs     *+$27
+        blo     *+$28
+        bne     *+$29
+        beq     *+$2a
+        bvc     *+$2b
+        bvs     *+$2c
+        bpl     *+$2d
+        bmi     *+$2e
+        bge     *+$2f
+        blt     *+$30
+        bge     *+$31
+        ble     *+$32
 ;;; 3X
-        leax    $30,y
-        leay    [$31,s]
-        leas    [$32,pcr]
-        leau    $33,x
-        pshs    y,x,b
-        puls    cc,b,x,y
-        pshu    y,x,d
-        pulu    cc,a,b,x,y
+        leax    -15,y
+        leay    -14,y
+        leas    -13,y
+        leau    -12,y
+        pshs    y,x,b,cc
+        puls    d,x,y
+        pshu    y,x,b,a,cc
+        pulu    dp,x,y
         rts
         abx
         rti
-        cwai    #$3c
+        cwai    #$3d
         mul
         swi
 ;;; 4X
@@ -87,228 +87,225 @@
         tstb
         clrb
 ;;; 6X
-        neg	$60,x
-        com	$63,x
-        lsr	$64,x
-        ror	$66,x
-        asr	$67,x
-	lsl     $68,x
-        asl	$68,x
-        rol	$69,x
-        dec	$6a,x
-        inc	$6c,x
-        tst	$6d,x
-        jmp     $6e,x
-        clr	$6f,x
+        neg	1,s
+        com	4,s
+        lsr	5,s
+        ror	6,s
+        asr	8,s
+	lsl     9,s
+        asl	9,s
+        rol	10,s
+        dec	11,s
+        inc	13,s
+        tst	14,s
+        jmp     15,s
+        clr	-16,s
 ;;; 7X
-        neg	$7070
-        com	$7373
-        lsr	$7474
-        ror	$7676
-        asr	$7777
-	lsl     $7878
-        asl	$7878
-        rol	$7979
-        dec	$7a7a
-        inc	$7c7c
-        tst	$7d7d
-        jmp     $7e7e
-        clr	$7f7f
+        neg	$7172
+        com	$7475
+        lsr	$7576
+        ror	$7778
+        asr	$7879
+	lsl     $797a
+        asl	$797a
+        rol	$7a7b
+        dec	$7b7c
+        inc	$7d7e
+        tst	$7e7f
+        jmp     $7f80
+        clr	$8081
 ;;; 8X
-        suba    #$80
-        cmpa    #$81
-        sbca    #$82
-        subd    #$83
-        anda    #$84
-        bita    #$85
-        lda     #$86
-        eora    #$88
-        adca    #$89
-        ora     #$8a
-        adda    #$8b
-        cmpx    #$8c
-        bsr     $8d
-        ldx     #$8e
+        suba    #$81
+        cmpa    #$82
+        sbca    #$83
+        subd    #$8485
+        anda    #$85
+        bita    #$86
+        lda     #$87
+        eora    #$89
+        adca    #$8a
+        ora     #$8b
+        adda    #$8c
+        cmpx    #$8d8e
+        bsr     $8e
+        ldx     #$8f90
 ;;; 9X
-        suba    $90
-        cmpa    $91
-        sbca    $92
-        subd    $93
-        anda    $94
-        bita    $95
-        lda     $96
-        sta     $97
-        eora    $98
-        adca    $99
-        ora     $9a
-        adda    $9b
-        cmpx    $9c
-        jsr     $9d
-        ldx     $9e
-        stx     $9f
+        suba    $91
+        cmpa    $92
+        sbca    $93
+        subd    $94
+        anda    $95
+        bita    $96
+        lda     $97
+        sta     $98
+        eora    $99
+        adca    $9a
+        ora     $9b
+        adda    $9c
+        cmpx    $9d
+        jsr     $9e
+        ldx     $9f
+        stx     $a0
 ;;; AX
-        suba    $a0,y
-        cmpa    $a1,y
-        sbca    $a2,y
-        subd    $a3,y
-        anda    $a4,y
-        bita    $a5,y
-        lda     $a6,y
-        sta     $a7,y
-        eora    $a8,y
-        adca    $a9,y
-        ora     $aa,y
-        adda    $ab,y
-        cmpx    $ac,y
-        jsr     $ad,y
-        ldx     $ae,y
-        stx     $af,y
+        suba    ,y++
+        cmpa    ,-y
+        sbca    ,--y
+        subd    ,y
+        anda    b,y
+        bita    a,y
+        lda     [a,y]
+        sta     -87,y
+        eora    -21845,y
+        adca    [-17733,y]
+        ora     d,y
+        adda    [d,y]
+        cmpx    [,--y]
+        jsr     ,y+
+        ldx     [$a0a1]
+        stx     [,y++]
 ;;; BX
-        suba    $b0b0
-        cmpa    $b1b1
-        sbca    $b2b2
-        subd    $b3b3
-        anda    $b4b4
-        bita    $b5b5
-        lda     $b6b6
-        sta     $b7b7
-        eora    $b8b8
-        adca    $b9b9
-        ora     $baba
-        adda    $bbbb
-        cmpx    $bcbc
-        jsr     $bdbd
-        ldx     $bebe
-        stx     $bfbf
+        suba    $b1b2
+        cmpa    $b2b3
+        sbca    $b3b4
+        subd    $b4b5
+        anda    $b5b6
+        bita    $b6b7
+        lda     $b7b9
+        sta     $b8b9
+        eora    $b9ba
+        adca    $babb
+        ora     $bbbc
+        adda    $bcbd
+        cmpx    $bdbe
+        jsr     $bebf
+        ldx     $bfc0
+        stx     $c0c1
 ;;; CX
-        subb    #$c0
-        cmpb    #$c1
-        sbcb    #$c2
-        addd    #$c3
-        andb    #$c4
-        bitb    #$c5
-        ldb     #$c6
+        subb    #$c1
+        cmpb    #$c2
+        sbcb    #$c3
+        addd    #$c4c5
+        andb    #$c5
+        bitb    #$c6
+        ldb     #$c7
         eorb    #$c8
         adcb    #$c9
         orb     #$ca
         addb    #$cb
-        ldd     #$cc
-        ldu     #$ce
+        ldd     #$cdce
+        ldu     #$cfd0
 ;;; DX
-        subb    $d0
-        cmpb    $d1
-        sbcb    $d2
-        addd    $d3
-        andb    $d4
-        bitb    $d5
-        ldb     $d6
-        stb     $d7
-        eorb    $d8
-        adcb    $d9
-        orb     $da
-        addb    $db
-        ldd     $dc
-        std     $dd
-        ldu     $de
-        stu     $df
+        subb    $d1
+        cmpb    $d2
+        sbcb    $d3
+        addd    $d4
+        andb    $d5
+        bitb    $d6
+        ldb     $d7
+        stb     $d8
+        eorb    $d9
+        adcb    $da
+        orb     $db
+        addb    $dc
+        ldd     $dd
+        std     $de
+        ldu     $df
+        stu     $e0
 ;;; EX
-        subb    $e0,u
-        cmpb    $e1,u
-        sbcb    $e2,u
-        addd    $e3,u
-        andb    $e4,u
-        bitb    $e5,u
-        ldb     $e6,u
-        stb     $e7,u
-        eorb    $e8,u
-        adcb    $e9,u
-        orb     $ea,u
-        addb    $eb,u
-        ldd     $ec,u
-        std     $ed,u
-        ldu     $ee,u
-        stu     $ef,u
+        subb    ,s++
+        cmpb    ,-s
+        sbcb    ,--y
+        addd    ,s
+        andb    b,s
+        bitb    a,s
+        ldb     [a,s]
+        stb     -23,s
+        eorb    -5397,s
+        adcb    [-1285,s]
+        orb     d,s
+        addb    [d,s]
+        ldd     d,s
+        std     [,--s]
+        ldu     [$a0a1]
+        stu     [,s++]
 ;;; FX
-        subb    $f0f0
-        cmpb    $f1f1
-        sbcb    $f2f2
-        addd    $f3f3
-        andb    $f4f4
-        bitb    $f5f5
-        ldb     $f6f6
-        stb     $f7f7
-        eorb    $f8f8
-        adcb    $f9f9
-        orb     $fafa
-        addb    $fbfb
-        ldd     $fcfc
-        std     $fdfd
-        ldu     $fefe
-        stu     $ffff
+        subb    $f1f2
+        cmpb    $f2f3
+        sbcb    $f3f4
+        addd    $f4f5
+        andb    $f5f6
+        bitb    $f6f7
+        ldb     $f7f8
+        stb     $f8f9
+        eorb    $f9fa
+        adcb    $fafb
+        orb     $fbfc
+        addb    $fcfd
+        ldd     $fdfe
+        std     $feff
+        ldu     $ff00
+        stu     >$0001
 ;;; 102X
-        lbrn    $1021
-        lbhi    $1022
-        lbls    $1023
-        lbhs    $1024
-        lbcc    $1024
-        lblo    $1025
-        lbcs    $1025
-        lbne    $1026
-        lbeq    $1027
-        lbvc    $1028
-        lbvs    $1029
-        lbpl    $102a
-        lbmi    $102b
-        lbge    $102c
-        lblt    $102d
-        lbgt    $102e
-        lble    $102f
+        lbrn    *+$2227
+        lbhi    *+$2328
+        lbls    *+$2429
+        lbhs    *+$252a
+        lblo    *+$26ab
+        lbcc    *+$252a
+        lbcs    *+$262b
+        lbne    *+$272c
+        lbeq    *+$282d
+        lbvc    *+$292e
+        lbvs    *+$2a2f
+        lbpl    *+$2b30
+        lbmi    *+$2c31
+        lbge    *+$2d32
+        lblt    *+$2e33
+        lbgt    *+$2f34
+        lble    *+$3035
 ;;; 103X
         swi2
 ;;; 108X
-        cmpd    #$1083
-        cmpy    #$108c
-        ldy     #$108e
+        cmpd    #$8485
+        cmpy    #$8d8e
+        ldy     #$8f90
 ;;; 109X
-        cmpd    $93
-        cmpy    $9c
-        ldy     $9e
-        sty     $9f
+        cmpd    $94
+        cmpy    $9d
+        ldy     $9f
+        sty     $a0
 ;;; 10AX
-        cmpd    $a3,pcr
-        cmpy    $ac,pcr
-        ldy     $ae,pcr
-        sty     $af,pcr
+        cmpd    ,y
+        cmpy    [,--y]
+        ldy     [$a0a1]
+        sty     [,y++]
 ;;; 10BX
-        cmpd    $10b3
-        cmpy    $10bc
-        ldy     $10be
-        sty     $10bf
+        cmpd    $b4b5
+        cmpy    $bdbe
+        ldy     $bfc0
+        sty     $c0c1
 ;;; 10CX
-        lds     #$10ce
+        lds     #$cfd0
 ;;; 10DX
-        lds     $de
-        sts     $df
+        lds     $df
+        sts     $e0
 ;;; 10EX
-        lds     $ee,s
-        sts     $ef,s
+        lds     [$a0a1]
+        sts     [,s++]
 ;;; 10FX
-        lds     $10fe
-        sts     $10ff
+        lds     $ff10
+        sts     >$0001
 ;;; 113X
         swi3
 ;;; 118X
-        cmpu    #$1183
-        cmps    #$118c
+        cmpu    #$8485
+        cmps    #$8d8e
 ;;; 119X
-        cmpu    $93
-        cmps    $9c
+        cmpu    $94
+        cmps    $9d
 ;;; 11AX
-        cmpu    [$11a3]
-        cmps    [$11ac]
+        cmpu    [$11a4]
+        cmps    [$11ad]
 ;;; 11BX
-        cmpu    $11b3
-        cmps    $11bc
-
-        end
-;;; comment
+        cmpu    $b4b5
+        cmps    $bdbe

@@ -2,64 +2,64 @@
 
 ;;; 0X
         nop
-        ld      bc,0101H
+        ld      bc,0302H
         ld      (bc),a
         inc     bc
         inc     b
         dec     b
-        ld      b,06H
+        ld      b,07H
         rlca
         add     hl,bc
         ld      a,(bc)
         dec     bc
         inc     c
         dec     c
-        ld      c,0eH
+        ld      c,0fH
         rrca
 ;;; 1X
-        ld      de,1111H
+        ld      de,1312H
         ld      (de),a
         inc     de
         inc     d
         dec     d
-        ld      d,16H
+        ld      d,17H
         rla
         add     hl,de
         ld      a,(de)
         dec     de
         inc     e
         dec     e
-        ld      e,1eH
+        ld      e,1fH
         rra
 ;;; 2X
-        ld      hl,2121H
-        ld      (2222H),hl
+        ld      hl,2322H
+        ld      (2423H),hl
         inc     hl
         inc     h
         dec     h
-        ld      h,26H
+        ld      h,27H
         daa
         add     hl,hl
-        ld      hl,(2a2aH)
+        ld      hl,(2c2bH)
         dec     hl
         inc     l
         dec     l
-        ld      l,2eH
+        ld      l,2fH
         cpl
 ;;; 3X
-        ld      sp,3131H
-        ld      (3232H),a
+        ld      sp,3332H
+        ld      (3433H),a
         inc     sp
         inc     (hl)
         dec     (hl)
-        ld      (hl),36H
+        ld      (hl),37H
         scf
         add     hl,sp
-        ld      a,(3a3aH)
+        ld      a,(3c3bH)
         dec     sp
         inc     a
         dec     a
-        ld      a,3eH
+        ld      a,3fH
         ccf
 ;;; 4X
         ld      b,b
@@ -200,65 +200,65 @@
 ;;; CX
         ret     nz
         pop     bc
-        jp      nz,0c2c2H
-        jp      0c3c3H
-        call    nz,0c4c4H
+        jp      nz,0c4c3H
+        jp      0c5c4H
+        call    nz,0c6c5H
         push    bc
-        add     a,0c6H
+        add     a,0c7H
         rst     00h
         ret     z
         ret
-        jp      z,0cacaH
-        call    z,0ccccH
-        call    0cdcdH
-        adc     a,0ceH
+        jp      z,0cccbH
+        call    z,0cecdH
+        call    0cfceH
+        adc     a,0cfH
         rst     08H
 ;;; DX
         ret     nc
         pop     de
-        jp      nc,0d2d2H
-        out     (0d3h),a
-        call    nc,0d4d4H
+        jp      nc,0d4d3H
+        out     (0d4h),a
+        call    nc,0d6d5H
         push    de
-        sub     0d6H
+        sub     0d7H
         rst     10h
         ret     c
-        jp      c,0dadaH
-        in      a,(0dbH)
-        call    c,0dcdcH
-        sbc     a,0deH
+        jp      c,0dcdbH
+        in      a,(0dcH)
+        call    c,0deddH
+        sbc     a,0dfH
         rst     18H
 ;;; EX
         ret     po
         pop     hl
-        jp      po,0e2e2H
+        jp      po,0e4e3H
         ex      (sp),hl
-        call    po,0e4e4H
+        call    po,0e6e5H
         push    hl
-        and     0e6H
+        and     0e7H
         rst     20H
         ret     pe
         jp      (hl)
-        jp      pe,0eaeaH
+        jp      pe,0ecebH
         ex      de,hl
-        call    pe,0ececH
-        xor     0eeH
+        call    pe,0eeedH
+        xor     0efH
         rst     28H
 ;;; FX
         ret     p
         pop     af
-        jp      p,0f2f2H
+        jp      p,0f4f3H
         di
-        call    p,0f4f4H
+        call    p,0f6f5H
         push    af
-        or      0f6H
+        or      0f7H
         rst     30H
         ret     m
         ld      sp,hl
-        jp      m,0fafaH
+        jp      m,0fcfbH
         ei
-        call    m,0fcfcH
-        cp      0feH
+        call    m,0fefdH
+        cp      0ffH
         rst     38H
 
 ;;; Z80
@@ -353,40 +353,40 @@
         ld      ix,(0dd2aH)
         dec     ix
 ;;; DD3X
-        inc     (ix+34H)
-        dec     (ix+35H)
-        ld      (ix+36H),0ddH
+        inc     (ix+35H)
+        dec     (ix+36H)
+        ld      (ix+37H),0ddH
         add     ix,sp
 ;;; DD4X
-        ld      b,(ix+46H)
-        ld      c,(ix+4eH)
+        ld      b,(ix+47H)
+        ld      c,(ix+4fH)
 ;;; DD5X
-        ld      d,(ix+56H)
-        ld      e,(ix+5eH)
+        ld      d,(ix+57H)
+        ld      e,(ix+5fH)
 ;;; DD6X
-        ld      h,(ix+66H)
-        ld      l,(ix+6eH)
+        ld      h,(ix+67H)
+        ld      l,(ix+6fH)
 ;;; DD7X
-        ld      (ix+70H),b
-        ld      (ix+71H),c
-        ld      (ix+72H),d
-        ld      (ix+73H),e
-        ld      (ix+74H),h
-        ld      (ix+75H),l
-        ld      (ix+77H),a
-        ld      a,(ix+7eH)
+        ld      (ix+71H),b
+        ld      (ix+72H),c
+        ld      (ix+73H),d
+        ld      (ix+74H),e
+        ld      (ix+75H),h
+        ld      (ix+76H),l
+        ld      (ix+78H),a
+        ld      a,(ix+7fH)
 ;;; DD8X
-        add     a,(ix-122)
+        add     a,(ix-121)
         adc     a,(ix-114)
 ;;; DD9X
-        sub     (ix-106)
-        sbc     a,(ix-98)
+        sub     (ix-105)
+        sbc     a,(ix-97)
 ;;; DDAX
-        and     (ix-90)
-        xor     (ix-82)
+        and     (ix-89)
+        xor     (ix-81)
 ;;; DDBX
-        or      (ix-74)
-        cp      (ix-66)
+        or      (ix-73)
+        cp      (ix-65)
 ;;; DDEX
         pop     ix
         ex      (sp),ix
@@ -407,40 +407,40 @@
         ld      iy,(0fd2aH)
         dec     iy
 ;;; FD3X
-        inc     (iy+34H)
-        dec     (iy+35H)
-        ld      (iy+36H),0fdH
+        inc     (iy+35H)
+        dec     (iy+36H)
+        ld      (iy+37H),0fdH
         add     iy,sp
 ;;; FD4X
-        ld      b,(iy+46H)
-        ld      c,(iy+4eH)
+        ld      b,(iy+47H)
+        ld      c,(iy+4fH)
 ;;; FD5X
-        ld      d,(iy+56H)
-        ld      e,(iy+5eH)
+        ld      d,(iy+57H)
+        ld      e,(iy+5fH)
 ;;; FD6X
-        ld      h,(iy+66H)
-        ld      l,(iy+6eH)
+        ld      h,(iy+67H)
+        ld      l,(iy+6fH)
 ;;; FD7X
-        ld      (iy+70H),b
-        ld      (iy+71H),c
-        ld      (iy+72H),d
-        ld      (iy+73H),e
-        ld      (iy+74H),h
-        ld      (iy+75H),l
-        ld      (iy+77H),a
-        ld      a,(iy+7eH)
+        ld      (iy+71H),b
+        ld      (iy+72H),c
+        ld      (iy+73H),d
+        ld      (iy+74H),e
+        ld      (iy+75H),h
+        ld      (iy+76H),l
+        ld      (iy+78H),a
+        ld      a,(iy+7fH)
 ;;; FD8X
-        add     a,(iy-122)
-        adc     a,(iy-114)
+        add     a,(iy-121)
+        adc     a,(iy-113)
 ;;; FD9X
-        sub     (iy-106)
-        sbc     a,(iy-98)
+        sub     (iy-105)
+        sbc     a,(iy-97)
 ;;; FDAX
-        and     (iy-90)
-        xor     (iy-82)
+        and     (iy-89)
+        xor     (iy-81)
 ;;; FDBX
-        or      (iy-74)
-        cp      (iy-66)
+        or      (iy-73)
+        cp      (iy-65)
 ;;; FDEX
         pop     iy
         ex      (sp),iy
@@ -715,70 +715,70 @@
         set     7,a
 
 ;;; DDCBXX
-        rlc     (ix+06H)
-        rrc     (ix+0eH)
-        rl      (ix+16H)
-        rr      (ix+1eH)
-        sla     (ix+26H)
-        sra     (ix+2eH)
-        srl     (ix+3eH)
-        bit     0,(ix+46H)
-        bit     1,(ix+4eH)
-        bit     2,(ix+56H)
-        bit     3,(ix+5eH)
-        bit     4,(ix+66H)
-        bit     5,(ix+6eH)
-        bit     6,(ix+76H)
-        bit     7,(ix+7eH)
-        res     0,(ix-122)
-        res     1,(ix-114)
-        res     2,(ix-106)
-        res     3,(ix-98)
-        res     4,(ix-90)
-        res     5,(ix-82)
-        res     6,(ix-74)
-        res     7,(ix-66)
-        set     0,(ix-58)
-        set     1,(ix-50)
-        set     2,(ix-42)
-        set     3,(ix-34)
-        set     4,(ix-26)
-        set     5,(ix-18)
-        set     6,(ix-10)
-        set     7,(ix-2)
-        
+        rlc     (ix+05H)
+        rrc     (ix+0dH)
+        rl      (ix+15H)
+        rr      (ix+1dH)
+        sla     (ix+25H)
+        sra     (ix+2dH)
+        srl     (ix+3dH)
+        bit     0,(ix+45H)
+        bit     1,(ix+4dH)
+        bit     2,(ix+55H)
+        bit     3,(ix+5dH)
+        bit     4,(ix+65H)
+        bit     5,(ix+6dH)
+        bit     6,(ix+75H)
+        bit     7,(ix+7dH)
+        res     0,(ix-123)
+        res     1,(ix-115)
+        res     2,(ix-107)
+        res     3,(ix-99)
+        res     4,(ix-91)
+        res     5,(ix-83)
+        res     6,(ix-75)
+        res     7,(ix-67)
+        set     0,(ix-59)
+        set     1,(ix-51)
+        set     2,(ix-43)
+        set     3,(ix-35)
+        set     4,(ix-27)
+        set     5,(ix-19)
+        set     6,(ix-11)
+        set     7,(ix-3)
+
 ;;; FDCBXX
-        rlc     (iy+06H)
-        rrc     (iy+0eH)
-        rl      (iy+16H)
-        rr      (iy+1eH)
-        sla     (iy+26H)
-        sra     (iy+2eH)
-        srl     (iy+3eH)
-        bit     0,(iy+46H)
-        bit     1,(iy+4eH)
-        bit     2,(iy+56H)
-        bit     3,(iy+5eH)
-        bit     4,(iy+66H)
-        bit     5,(iy+6eH)
-        bit     6,(iy+76H)
-        bit     7,(iy+7eH)
-        res     0,(iy-122)
-        res     1,(iy-114)
-        res     2,(iy-106)
-        res     3,(iy-98)
-        res     4,(iy-90)
-        res     5,(iy-82)
-        res     6,(iy-74)
-        res     7,(iy-66)
-        set     0,(iy-58)
-        set     1,(iy-50)
-        set     2,(iy-42)
-        set     3,(iy-34)
-        set     4,(iy-26)
-        set     5,(iy-18)
-        set     6,(iy-10)
-        set     7,(iy-2)
+        rlc     (iy+05H)
+        rrc     (iy+0dH)
+        rl      (iy+15H)
+        rr      (iy+1dH)
+        sla     (iy+25H)
+        sra     (iy+2dH)
+        srl     (iy+3dH)
+        bit     0,(iy+45H)
+        bit     1,(iy+4dH)
+        bit     2,(iy+55H)
+        bit     3,(iy+5dH)
+        bit     4,(iy+65H)
+        bit     5,(iy+6dH)
+        bit     6,(iy+75H)
+        bit     7,(iy+7dH)
+        res     0,(iy-123)
+        res     1,(iy-115)
+        res     2,(iy-107)
+        res     3,(iy-99)
+        res     4,(iy-91)
+        res     5,(iy-83)
+        res     6,(iy-75)
+        res     7,(iy-67)
+        set     0,(iy-59)
+        set     1,(iy-51)
+        set     2,(iy-43)
+        set     3,(iy-35)
+        set     4,(iy-27)
+        set     5,(iy-19)
+        set     6,(iy-11)
+        set     7,(iy-3)
 
 ;;; SUB/AND/XOR/OR/CP instruction can take optionl destination A register.
         org     05A0H
@@ -823,21 +823,21 @@
         cp      a,l
         cp      a,(hl)
         cp      a,a
-        sub     a,0d6H
-        and     a,0e6H
-        xor     a,0eeH
-        or      a,0f6H
-        cp      a,0feH
-        sub     a,(ix-106)
-        and     a,(ix-90)
-        xor     a,(ix-82)
-        or      a,(ix-74)
-        cp      a,(ix-66)
-        sub     a,(iy-106)
-        and     a,(iy-90)
-        xor     a,(iy-82)
-        or      a,(iy-74)
-        cp      a,(iy-66)
+        sub     a,0d7H
+        and     a,0e7H
+        xor     a,0efH
+        or      a,0f7H
+        cp      a,0ffH
+        sub     a,(ix-105)
+        and     a,(ix-89)
+        xor     a,(ix-81)
+        or      a,(ix-73)
+        cp      a,(ix-65)
+        sub     a,(iy-105)
+        and     a,(iy-89)
+        xor     a,(iy-81)
+        or      a,(iy-73)
+        cp      a,(iy-65)
 
         end
         ;; comment

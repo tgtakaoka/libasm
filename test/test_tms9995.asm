@@ -47,22 +47,22 @@
         sla     r12,11
         src     r13,12
 ;;; 1X
-        jmp     $+22H
-        jlt     $+24H
-        jle     $+26H
-        jeq     $+28H
-        jhe     $+2AH
-        jgt     $+2CH
-        jne     $+2EH
-        jnc     $+30H
-        joc     $+32H
-        jno     $+34H
-        jl      $+36H
-        jh      $+38H
-        jop     $+3AH
-        sbo     1DH
-        sbz     1EH
-        tb      1FH
+        jmp     $+24H
+        jlt     $+26H
+        jle     $+28H
+        jeq     $+2aH
+        jhe     $+2cH
+        jgt     $+2eH
+        jne     $+30H
+        jnc     $+32H
+        joc     $+34H
+        jno     $+36H
+        jl      $+38H
+        jh      $+3aH
+        jop     $+3cH
+        sbo     1eH
+        sbz     1fH
+        tb      20H
 ;;; 2X
         coc     @2223H(r1),r0
         czc     @2627H(r5),r0
@@ -74,28 +74,28 @@
         mpy     *r9+,r0
         div     *r13+,r0
 ;;; 4X
-        szc     r4,*r1
+        szc     @89abH(r7),*r5
 ;;; 5X
-        szcb    *r5,*r5
+        szcb    *r8+,*r9
 ;;; 6X
-        s       @6666H(r6),*r9
+        s       r9,*r14
 ;;; 7X
-        sb      *r7+,*r13
+        sb      *r10,@0bcdeH(r2)
 ;;; 8X
-        c       r8,@9999H(r2)
+        c       @0cdefH(r11),@0123H(r6)
 ;;; 9X
-        cb      *r9,@0aaaaH(r6)
+        cb      *r12+,@0def0H(r10)
 ;;; AX
-        a       @0bbbbH(r10),@0ccccH(r10)
+        a       r13,@0ef01H(r15)
 ;;; BX
-        ab      *r11+,@0ccccH(r14)
+        ab      *r14,*r3+
 ;;; CX
-        mov     r12,*r3+
+        mov     @0123H(r15),*r7+
 ;;; DX
-        movb    *r13,*r7+
+        movb    *r0+,*r11+
 ;;; EX
-        soc     @0ffffH(r14),*r11+
+        soc     r1,*r12+
 ;;; FX
-        socb    *r15+,*r15+
+        socb    *r2,r0
 
         end                     ; comment

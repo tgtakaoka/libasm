@@ -6,42 +6,42 @@
 	org     $0150
 
 ;;; 0X
-        tsb     $04
-        tsb     $0c0c
+        tsb     $05
+        tsb     $0e0d
 ;;; 1X
-        ora     ($12)
-        trb     $14
+        ora     ($13)
+        trb     $15
         inc     a
-        trb     $1c1c
+        trb     $1e1d
 ;;; 3X
-        and     ($32)
-        bit     $34,x
+        and     ($33)
+        bit     $35,x
         dec     a
-        bit     $3c3c,x
+        bit     $3e3d,x
 ;;; 5X
-        eor     ($52)
+        eor     ($53)
         phy
 ;;; 6X
-        stz     $64
+        stz     $65
 ;;; 7X
-        adc     ($72)
-        stz     $74,x
+        adc     ($73)
+        stz     $75,x
         ply
-        jmp     ($7c7c,x)
+        jmp     ($7e7d,x)
 ;;; 8X
-        bra     *+$80
-        bit     #$89
+        bra     *-125
+        bit     #$8a
 ;;; 9X
-        sta     ($92)
-        stz     $9c9c
-        stz     $9e9e,x
+        sta     ($93)
+        stz     $9e9d
+        stz     $a09f,x
 ;;; BX
-        lda     ($b2)
+        lda     ($b3)
 ;;; DX
-        cmp     ($d2)
+        cmp     ($d3)
         phx
 ;;; FX
-        sbc     ($f2)
+        sbc     ($f3)
         plx
 
         end

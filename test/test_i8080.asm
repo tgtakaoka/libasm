@@ -2,64 +2,64 @@
 
 ;;; 0X
         nop
-        lxi     b,0101H
+        lxi     b,0302H
         stax    b
         inx     b
         inr     b
         dcr     b
-        mvi     b,06H
+        mvi     b,07H
         rlc
         dad     b
         ldax    b
         dcx     b
         inr     c
         dcr     c
-        mvi     c,0eH
+        mvi     c,0fH
         rrc
 ;;; 1X
-        lxi     d,1111H
+        lxi     d,1312H
         stax    d
         inx     d
         inr     d
         dcr     d
-        mvi     d,16H
+        mvi     d,17H
         ral
         dad     d
         ldax    d
         dcx     d
         inr     e
         dcr     e
-        mvi     e,1eH
+        mvi     e,1fH
         rar
 ;;; 2X
-        lxi     h,2121H
-        shld    2222H
+        lxi     h,2322H
+        shld    2423H
         inx     h
         inr     h
         dcr     h
-        mvi     h,26H
+        mvi     h,27H
         daa
         dad     h
-        lhld    2a2aH
+        lhld    2c2bH
         dcx     h
         inr     l
         dcr     l
-        mvi     l,2eH
+        mvi     l,2fH
         cma
 ;;; 3X
-        lxi     sp,3131H
-        sta     3232H
+        lxi     sp,3332H
+        sta     3433H
         inx     sp
         inr     m
         dcr     m
-        mvi     m,36H
+        mvi     m,37H
         stc
         dad     sp
-        lda     3a3aH
+        lda     3c3bH
         dcx     sp
         inr     a
         dcr     a
-        mvi     a,3eH
+        mvi     a,3fH
         cmc
 ;;; 4X
         mov     b,b
@@ -200,63 +200,63 @@
 ;;; CX
         rnz
         pop     b
-        jnz     0c2c2H
-        jmp     0c3c3H
-        cnz     0c4c4H
+        jnz     0c4c3H
+        jmp     0c5c4H
+        cnz     0c6c5H
         push    b
-        adi     0c6H
+        adi     0c7H
         rst     0
         rz
         ret
-        jz      0cacaH
-        cz      0ccccH
-        call    0cdcdH
-        aci     0ceH
+        jz      0cccbH
+        cz      0cecdH
+        call    0cfceH
+        aci     0cfH
         rst     1
 ;;; DX
         rnc
         pop     d
-        jnc     0d2d2H
-        out     0d3h
-        cnc     0d4d4H
+        jnc     0d4d3H
+        out     0d4h
+        cnc     0d6d5H
         push    d
-        sui     0d6H
+        sui     0d7H
         rst     2
         rc
-        jc      0dadaH
-        in      0dbH
-        cc      0dcdcH
-        sbi     0deH
+        jc      0dcdbH
+        in      0dcH
+        cc      0deddH
+        sbi     0dfH
         rst     3
 ;;; EX
         rpo
         pop     h
-        jpo     0e2e2H
+        jpo     0e4e3H
         xthl
-        cpo     0e4e4H
+        cpo     0e6e5H
         push    h
-        ani     0e6H
+        ani     0e7H
         rst     4
         rpe
         pchl
-        jpe     0eaeaH
+        jpe     0ecebH
         xchg
-        cpe     0ececH
-        xri     0eeH
+        cpe     0eeedH
+        xri     0efH
         rst     5
 ;;; FX
         rp
         pop     psw
-        jp      0f2f2H
+        jp      0f4f3H
         di
-        cp      0f4f4H
+        cp      0f6f5H
         push    psw
-        ori     0f6H
+        ori     0f7H
         rst     6
         rm
         sphl
-        jm      0fafaH
+        jm      0fcfbH
         ei
-        cm      0fcfcH
-        cpi     0feH
+        cm      0fefdH
+        cpi     0ffH
         rst     7
