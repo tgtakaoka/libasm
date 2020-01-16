@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-template<typename Dis>
+template<typename Dis, bool wordBase = false>
 class DisDriver {
 public:
     typedef typename Dis::addr_t Addr;
@@ -89,10 +89,36 @@ public:
                         }
                         int i = 0;
                         while (i < insn.insnLen() && i < 6)
-                            fprintf(list, " %02x", insn.bytes()[i++]);
-                        while (i++ < 6)
-                            fprintf(list, "   ");
+                            fprintf(list, "%s%02x",
+                                    wordBase && (i % 2) == 0? "" : " ",
+                                    insn.bytes()[i++]);
+                        if (wordBase) {
+                            while (i < 6) {
+                                fprintf(list, "     ");
+                                i += 2;
+                            }
+                        } else {
+                            while (i < 6) {
+                                fprintf(list, "     ");
+                                i++;
+                            }
+                        }
                         fprintf(list, " %-6s %s\n", insn.name(), operands);
+                        while (i < insn.insnLen()) {
+                            if (sizeof(Addr) == 2) {
+                                fprintf(list, "%04x:", address + i);
+                            } else {
+                                fprintf(list, "%08x:", address + i);
+                            }
+                            int j = 0;
+                            while (i + j < insn.insnLen() && j < 6) {
+                                fprintf(list, "%s%02x",
+                                        wordBase && (j % 2) == 0 ? "" : " ",
+                                        insn.bytes()[i + j++]);
+                            }
+                            i += j;
+                            fprintf(list, "\n");
+                        }
                     }
                     if (output) {
                         if (_disassembler.getError())
