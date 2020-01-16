@@ -13,20 +13,20 @@ extern TestAsserter asserter;
 extern TestMemory memory;
 extern TestSymtab symtab;
 
-#define ASSERT(addr, mnemonic, expected_operands)               \
-    do {                                                        \
-        Insn insn;                                              \
-        char operands[40], message[40];                         \
-        memory.setAddress(addr);                                \
-        disassembler.decode(memory, insn, operands,&symtab);    \
-        sprintf(message, "%s: %s: ", __FUNCTION__, #mnemonic);  \
-        memory.dump(message + strlen(message));                 \
-        asserter.equals(message, OK, disassembler.getError());  \
-        asserter.equals(message, #mnemonic, insn.name());       \
-        asserter.equals(message, expected_operands, operands);  \
-        asserter.equals(message,                                \
-                        mnemonic, sizeof(mnemonic),             \
-                        insn.bytes(), insn.insnLen());          \
+#define ASSERT(addr, mnemonic, expected_operands)                   \
+    do {                                                            \
+        Insn insn;                                                  \
+        char operands[40], message[40];                             \
+        memory.setAddress(addr);                                    \
+        disassembler.decode(memory, insn, operands, &symtab, true); \
+        sprintf(message, "%s: %s: ", __FUNCTION__, #mnemonic);      \
+        memory.dump(message + strlen(message));                     \
+        asserter.equals(message, OK, disassembler.getError());      \
+        asserter.equals(message, #mnemonic, insn.name());           \
+        asserter.equals(message, expected_operands, operands);      \
+        asserter.equals(message,                                    \
+                        mnemonic, sizeof(mnemonic),                 \
+                        insn.bytes(), insn.insnLen());              \
     } while (0)
 #define ATEST(addr, mnemonic, opr, ...)                 \
     do {                                                \

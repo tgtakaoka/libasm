@@ -7,6 +7,8 @@
 #include "dis_operand.h"
 #include "type_traits.h"
 
+#include <ctype.h>
+
 template<typename Addr>
 class Disassembler : public ErrorReporter {
 public:
@@ -14,12 +16,15 @@ public:
 
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn,
-        char *operands, SymbolTable *symtab) {
+        char *operands, SymbolTable *symtab, bool uppercase = false) {
         insn.resetAddress(memory.address());
         *(_operands = operands) = 0;
         _symtab = symtab;
         this->resetError();
-        return decode(memory, insn);
+        decode(memory, insn);
+        if (!uppercase && insn.insnLen())
+            tolowercase(insn, operands);
+        return getError();
     }
 
     virtual DisOperand &getFormatter() = 0;
@@ -57,6 +62,20 @@ protected:
 private:
     virtual Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) = 0;
+
+    static void tolowercase(Insn &insn, char *operand) {
+        char buf[10];
+        tolowercase(buf, insn.name());
+        insn.setName(buf);
+        tolowercase(operand, operand);
+    }
+
+    static void tolowercase(char *to, const char *from) {
+        while ((*to = tolower(*from)) != 0) {
+            to++;
+            from++;
+        }
+    }
 };
 
 #endif // __DIS_INTERFACE_H__

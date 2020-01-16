@@ -224,7 +224,7 @@ static void test_mid() {
             memory.setAddress(0x1000);
             bytes[0] = h; bytes[1] = l;
             memory.setBytes(bytes, sizeof(bytes));
-            disassembler.decode(memory, insn, operands, nullptr);
+            disassembler.decode(memory, insn, operands, nullptr, true);
             if (m && i > m->end) {
                 if (++m >= &mids[sizeof(mids)/sizeof(mids[0])])
                     m = nullptr;
