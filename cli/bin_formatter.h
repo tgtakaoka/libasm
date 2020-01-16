@@ -36,13 +36,19 @@ protected:
     uint8_t _check_sum;
 
     void ensureLine(size_t len) {
-        _line = static_cast<char *>(
-            _line ? realloc(_line, len) : malloc(len));
+        if (_line_len < len) {
+            _line = static_cast<char *>(
+                _line ? realloc(_line, len) : malloc(len));
+            _line_len = len;
+        }
     }
 
     void ensureData(size_t len) {
-        _data = static_cast<uint8_t *>(
-            _data ? realloc(_data, len) : malloc(len));
+        if (_data_len < len) {
+            _data = static_cast<uint8_t *>(
+                _data ? realloc(_data, len) : malloc(len));
+            _data_len = len;
+        }
     }
 
     void resetSum() { _check_sum = 0; }
