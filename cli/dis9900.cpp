@@ -3,6 +3,6 @@
 
 int main(int argc, const char **argv) {
     DisTms9900 disassembler;
-    DisDriver<DisTms9900, true> driver(disassembler);
+    DisDriver<target::uintptr_t, true> driver(disassembler);
     return driver.main(argc, argv);
 }

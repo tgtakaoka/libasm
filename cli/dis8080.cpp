@@ -3,6 +3,6 @@
 
 int main(int argc, const char **argv) {
     DisI8080 disassembler;
-    DisDriver<DisI8080> driver(disassembler);
+    DisDriver<target::uintptr_t> driver(disassembler);
     return driver.main(argc, argv);
 }
