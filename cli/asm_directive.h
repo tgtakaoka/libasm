@@ -280,6 +280,7 @@ protected:
         _scan = scan;
         // TODO line end check
         _origin = value;
+        _list.address = value;
         return setError(OK);
     }
 
@@ -443,6 +444,72 @@ private:
             _symbols.emplace(key, value);
             setError(OK);
         }
+    }
+};
+
+template<typename Asm>
+class AsmMotoDirective : public AsmDirective<Asm> {
+public:
+    typedef typename Asm::addr_t Addr;
+    AsmMotoDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
+
+protected:
+    Error processDirective(
+        const char *directive, const char *&label,
+        CliMemory<Addr> &memory) override {
+        if (strcasecmp(directive, "fcb") == 0 ||
+            strcasecmp(directive, "fcc") == 0)
+            return this->defineBytes(memory);
+        if (strcasecmp(directive, "fdb") == 0)
+            return this->defineWords(memory, true);
+        if (strcasecmp(directive, "rmb") == 0)
+            return this->defineSpaces();
+        return UNKNOWN_DIRECTIVE;
+    }
+};
+
+template<typename Asm>
+class AsmMostekDirective : public AsmDirective<Asm> {
+public:
+    typedef typename Asm::addr_t Addr;
+    AsmMostekDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
+
+protected:
+    Error processDirective(
+        const char *directive, const char *&label,
+        CliMemory<Addr> &memory) override {
+        if (strcmp(directive, ":=") == 0
+            || strcmp(directive, "=") == 0) {
+            return this->defineLabel(label, memory);
+        }
+        if (strcasecmp(directive, "fcb") == 0)
+            return this->defineBytes(memory);
+        if (strcasecmp(directive, "fdb") == 0)
+            return this->defineWords(memory, true);
+        if (strcasecmp(directive, "rmb") == 0)
+            return this->defineSpaces();
+        return UNKNOWN_DIRECTIVE;
+    }
+};
+
+template<typename Asm>
+class AsmIntelDirective : public AsmDirective<Asm> {
+public:
+    typedef typename Asm::addr_t Addr;
+    AsmIntelDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
+
+protected:
+    Error processDirective(
+        const char *directive, const char *&label,
+        CliMemory<Addr> &memory) override {
+        this->_parser.isSymbolLetter(0);
+        if (strcasecmp(directive, "db") == 0)
+            return this->defineBytes(memory);
+        if (strcasecmp(directive, "dw") == 0)
+            return this->defineWords(memory, false);
+        if (strcasecmp(directive, "ds") == 0)
+            return this->defineSpaces();
+        return UNKNOWN_DIRECTIVE;
     }
 };
 

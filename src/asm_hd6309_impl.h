@@ -133,7 +133,6 @@ Error Asm09<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
 template<McuType mcuType>
 Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
-    const char *saved_scan = _scan;
     const char *p = _scan;
     const bool indir = (*p == '[');
     RegName base = REG_UNDEF;
@@ -194,8 +193,6 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     }
     _scan = p;
     if (checkLineEnd()) return getError();
-    p = _scan;
-    _scan = saved_scan;
 
     uint8_t post;
     if (base == REG_UNDEF) {    // [n16]

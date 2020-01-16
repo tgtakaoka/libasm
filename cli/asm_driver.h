@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-template<typename Asm, bool wordBase = false>
+template<typename Asm, typename Formatter, bool wordBase = false>
 class AsmDriver {
 public:
     typedef typename Asm::addr_t Addr;
@@ -77,12 +77,14 @@ public:
 
 private:
     AsmDirective<Asm> &_directive;
+    AsmListing<Addr> _listing;
     const char *_progname;
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
     size_t _record_bytes;
     BinFormatter<Addr> *_formatter;
+    bool _uppercase;
 
     int assemble(CliMemory<Addr> &memory, FILE *list) {
         if (_directive.openSource(_input_name)) {
@@ -112,10 +114,10 @@ private:
     }
 
     void printListing(CliMemory<Addr> &memory, FILE *out) {
-        AsmListing<Addr, wordBase> listing(_directive, memory);
+        _listing.reset(_directive, memory, wordBase, _uppercase);
         do {
-            fprintf(out, "%s\n", listing.getNext());
-        } while (listing.hasNext());
+            fprintf(out, "%s\n", _listing.getLine());
+        } while (_listing.hasNext());
     }
 
     int parseOption(int argc, const char **argv) {
@@ -124,6 +126,7 @@ private:
         _list_name = nullptr;
         _record_bytes = 32;
         _formatter = nullptr;
+        _uppercase = false;
         char formatter = 0;
         for (int i = 1; i < argc; i++) {
             const char *opt = argv[i];
@@ -155,6 +158,9 @@ private:
                         }
                         _record_bytes = v;
                     }
+                    break;
+                case 'u':
+                    _uppercase = true;
                     break;
                 default:
                     fprintf(stderr, "unknown option: %s\n", opt);
@@ -188,8 +194,7 @@ private:
             } else if (formatter == 'H') {
                 _formatter = new IntelHex<Addr>();
             } else {
-                fprintf(stderr, "No output format specified\n");
-                return 3;
+                _formatter = new Formatter();
             }
         }
         return 0;
@@ -197,10 +202,11 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s -(S|H[<bytes>]] [-o <output>] [-l <list>] <input>\n"
+                "usage: %s [-(S|H)[<bytes>]] [-u] [-o <output>] [-l <list>] <input>\n"
                 "  -S : output Motorola SREC format\n"
                 "  -H : output Intel HEX format\n"
-                "     : optional <bytes> specifies data record length (max 32)\n",
+                "     : optional <bytes> specifies data record length (max 32)\n"
+                "  -u : use uppercase letter for output\n",
                 _progname);
         return 2;
     }

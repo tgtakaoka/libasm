@@ -6,10 +6,10 @@
 
 #include <string>
 
-template <typename Addr>
+template<typename Address>
 class AsmLine {
 public:
-    virtual Addr startAddress() const = 0;
+    virtual Address startAddress() const = 0;
     virtual int generatedSize() const = 0;
     virtual bool hasLabel() const = 0;
     virtual bool hasInstruction() const = 0;
@@ -21,52 +21,53 @@ public:
     virtual std::string getComment() const = 0;
 };
 
-template <typename Addr, bool wordBase>
+template<typename Address>
 class AsmListing {
 public:
-    AsmListing(
-        AsmLine<Addr> &line,
-        CliMemory<Addr> &memory,
-        bool uppercase = false)
-        : _line(line),
-          _memory(memory),
-          _addr(line.startAddress()),
-          _next(0),
-          _uppercase(uppercase)
-    {}
-
-    bool hasNext() const {
-        return _next < _line.generatedSize();
+    void reset(
+        AsmLine<Address> &line,
+        CliMemory<Address> &memory,
+        bool wording,
+        bool uppercase) {
+        _line = &line;
+        _memory = &memory;
+        _wording = wording;
+        _uppercase = uppercase;
+        _next = 0;
     }
 
-    const char *getNext() {
+    bool hasNext() const {
+        return _next < _line->generatedSize();
+    }
+
+    const char *getContent() {
         _out.clear();
-        formatNext();
+        formatContent();
+        return _out.c_str();
+    }
+
+    const char *getLine() {
+        _out.clear();
+        formatLine();
         return _out.c_str();
     }
 
 private:
-    const AsmLine<Addr> &_line;
-    const CliMemory<Addr> &_memory;
-    Addr _addr;
+    const AsmLine<Address> *_line;
+    const CliMemory<Address> *_memory;
+    bool _wording = false;      // 16 bit output if true
+    bool _uppercase = false;
     int _next;
-    bool _uppercase;
     std::string _out;
 
-    void formatChar(char c) {
-        _out = _out + c;
-    }
-    void formatString(const std::string &str) {
-        _out.append(str);
-    }
     void formatHex(uint8_t val) {
         val &= 0xf;
         if (val < 10) {
-            formatChar('0' + val);
+            _out += '0' + val;
         } else if (_uppercase) {
-            formatChar('A' + val - 10);
+            _out += 'A' + val - 10;
         } else {
-            formatChar('a' + val - 10);
+            _out += 'a' + val - 10;
         }
     }
     void formatUint8(uint8_t val) {
@@ -81,63 +82,63 @@ private:
         formatUint16(static_cast<uint16_t>(val >> 16));
         formatUint16(static_cast<uint16_t>(val));
     }
-    void formatTab(int pos) {
-        while (static_cast<int>(_out.size()) < pos)
-            formatChar(' ');
-    }
-
-    void formatAddress(Addr addr) {
-        if (sizeof(Addr) == 2) {
+    void formatAddress(Address addr) {
+        if (sizeof(Address) == 2) {
             formatUint16(addr);
         } else {
             formatUint32(addr);
         }
-        formatChar(':');
+        _out += ':';
     }
-
-    int formatBytes(Addr addr, int base) {
+    int formatBytes(Address addr, int base) {
         int i = 0;
-        while (base + i < _line.generatedSize() && i < 6) {
+        while (base + i < _line->generatedSize() && i < 6) {
             uint8_t val = 0;
-            _memory.readByte(addr + base+ i, val);
-            if (!wordBase || (i % 2) == 0)
-                formatChar(' ');
+            _memory->readByte(addr + base+ i, val);
+            if (!_wording || (i % 2) == 0)
+                _out += ' ';
             formatUint8(val);
             i++;
         }
         return i;
     }
+    void formatTab(int pos) {
+        while (static_cast<int>(_out.size()) < pos)
+            _out += ' ';
+    }
 
-    void formatNext() {
-        formatAddress(_addr + _next);
-        int pos = _out.size();
-        const int n = formatBytes(_addr, _next);
-        if (_next == 0) {
-            if (_line.hasLabel()) {
-                formatTab(pos + 18);
-                formatString(_line.getLabel());
-            }
-            if (!_line.hasInstruction() && _line.hasComment()) {
-                formatTab(pos + 18);
-                formatString(_line.getComment());
-                return;
-            }
-            if (_line.hasInstruction()) {
-                formatChar(' ');
-                formatTab(pos + 26);
-                formatString(_line.getInstruction());
-            }
-            if (_line.hasOperand()) {
-                formatChar(' ');
-                formatTab(pos + 32);
-                formatString(_line.getOperand());
-            }
-            if (_line.hasComment()) {
-                formatChar(' ');
-                formatTab(pos + 40);
-                formatString(_line.getComment());
-            }
+    void formatContent(int pos) {
+        if (!_line->hasLabel() && !_line->hasInstruction() && _line->hasComment()) {
+            formatTab(pos);
+            _out += _line->getComment();
+            return;
         }
+        if (_line->hasLabel()) {
+            formatTab(pos);
+            _out += _line->getLabel();
+        }
+        if (_line->hasInstruction()) {
+            _out += ' ';
+            formatTab(pos + 8);
+            _out += _line->getInstruction();
+        }
+        if (_line->hasOperand()) {
+            _out += ' ';
+            formatTab(pos + 14);
+            _out += _line->getOperand();
+        }
+        if (_line->hasComment()) {
+            _out += ' ';
+            formatTab(pos + 22);
+            _out += _line->getComment();
+        }
+    }
+
+    void formatLine() {
+        formatAddress(_line->startAddress() + _next);
+        int pos = _out.size();
+        const int n = formatBytes(_line->startAddress(), _next);
+        if (_next == 0) formatContent(pos + 18);
         _next += n;
     }
 };

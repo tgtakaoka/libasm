@@ -63,10 +63,8 @@ protected:
     Error checkLineEnd(const char *scan = nullptr) {
         if (scan == nullptr) scan = _scan;
         const char *p = skipSpaces(scan);
-        if (*p == 0 || *p == ';') {
-            _scan = p;
+        if (*p == 0 || *p == ';')
             return setError(OK);
-        }
         return setError(GARBAGE_AT_END);
     }
 };
