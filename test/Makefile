@@ -7,6 +7,7 @@ all: \
 	test_hd6309.s19 \
 	test_m6502.s19 \
 	test_w65c02.s19 \
+	test_tms9900.hex \
 	test_tms9995.hex \
 	test_i8080.hex \
 	test_z80.hex \
@@ -23,14 +24,14 @@ all: \
 	test_m6502   \
 	test_i8080   \
 	test_z80     \
-	test_tms9995 \
+	test_tms9900 \
 	test_expr
 
 test:   test_mc6809  \
 	test_m6502   \
 	test_i8080   \
         test_z80     \
-	test_tms9995 \
+	test_tms9900 \
 	test_expr
 
 test_mc6809: test_asm_mc6809 test_dis_mc6809
@@ -42,9 +43,9 @@ test_m6502: test_asm_m6502 test_dis_m6502
 test_i8080:  test_asm_i8080  test_dis_i8080
 	./test_asm_i8080
 	./test_dis_i8080
-test_tms9995:test_asm_tms9995 test_dis_tms9995
-	./test_asm_tms9995
-	./test_dis_tms9995
+test_tms9900:test_asm_tms9900 test_dis_tms9900
+	./test_asm_tms9900
+	./test_dis_tms9900
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
@@ -61,7 +62,7 @@ TEST_OBJS= \
 	test_asm_m6502.o   test_dis_m6502.o   \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
-	test_asm_tms9995.o test_dis_tms9995.o \
+	test_asm_tms9900.o test_dis_tms9900.o \
 	test_expr_moto.o   test_expr_intel.o  \
 	test_expr_cstyle.o
 
@@ -72,7 +73,7 @@ OBJS_mc6809 = table_mc6809.o  reg_mc6809.o
 OBJS_m6502  = table_m6502.o
 OBJS_i8080  = table_i8080.o   reg_i8080.o
 OBJS_z80    = table_z80.o     reg_z80.o
-OBJS_tms9995= table_tms9995.o
+OBJS_tms9900= table_tms9900.o
 OBJS        = \
 	$(TEST_OBJS) \
 	$(OBJS_common) \
@@ -80,7 +81,7 @@ OBJS        = \
 	$(OBJS_m6502)   asm_m6502.o   dis_m6502.o   \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
-	$(OBJS_tms9995) asm_tms9995.o dis_tms9995.o
+	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
@@ -100,9 +101,9 @@ test_asm_z80:    test_asm_z80.o      asm_z80.o     $(OBJS_z80)     $(OBJS_common
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_z80:    test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_tms9995: test_asm_tms9995.o asm_tms9995.o $(OBJS_tms9995) $(OBJS_common)
+test_asm_tms9900: test_asm_tms9900.o asm_tms9900.o $(OBJS_tms9900) $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_tms9995: test_dis_tms9995.o dis_tms9995.o $(OBJS_tms9995) $(OBJS_common)
+test_dis_tms9900: test_dis_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_expr_moto:  test_expr_moto.o  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^

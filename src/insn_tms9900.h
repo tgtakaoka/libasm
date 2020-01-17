@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-#include "entry_tms9995.h"
+#include "entry_tms9900.h"
 #include "error_reporter.h"
 #include "dis_memory.h"
 
@@ -16,6 +16,7 @@ public:
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
     AddrMode addrMode() const { return _addrMode(_flags); }
+    bool is9995() const { return _mcuType(_flags) == TMS9995; }
 
     void resetAddress(target::uintptr_t addr) {
         _address = addr;
@@ -67,4 +68,4 @@ private:
     }
 };
 
-#endif // __INSN_TMS9995_H__
+#endif // __INSN_TMS9900_H__

@@ -1,5 +1,7 @@
-#ifndef __TEXT_TMS9995__
-#define __TEXT_TMS9995__
+#ifndef __TEXT_TMS9900__
+#define __TEXT_TMS9900__
+
+// TMS9900
 
 #define TEXT_A    'A',  0 , 
 #define TEXT_AB   'A', 'B',  0 , 
@@ -20,7 +22,6 @@
 #define TEXT_DEC  'D', 'E', 'C',  0 , 
 #define TEXT_DECT 'D', 'E', 'C', 'T', 
 #define TEXT_DIV  'D', 'I', 'V',  0 , 
-#define TEXT_DIVS 'D', 'I', 'V', 'S', 
 #define TEXT_IDLE 'I', 'D', 'L', 'E', 
 #define TEXT_INC  'I', 'N', 'C',  0 , 
 #define TEXT_INCT 'I', 'N', 'C', 'T', 
@@ -42,14 +43,11 @@
 #define TEXT_LI   'L', 'I',  0 , 
 #define TEXT_LIMI 'L', 'I', 'M', 'I', 
 #define TEXT_LREX 'L', 'R', 'E', 'X', 
-#define TEXT_LST  'L', 'S', 'T',  0 , 
-#define TEXT_LWP  'L', 'W', 'P',  0 , 
 #define TEXT_LWPI 'L', 'W', 'P', 'I', 
 #define TEXT_MID  'M', 'I', 'D',  0 , 
 #define TEXT_MOV  'M', 'O', 'V',  0 , 
 #define TEXT_MOVB 'M', 'O', 'V', 'B', 
 #define TEXT_MPY  'M', 'P', 'Y',  0 , 
-#define TEXT_MPYS 'M', 'P', 'Y', 'S', 
 #define TEXT_NEG  'N', 'E', 'G',  0 , 
 #define TEXT_ORI  'O', 'R', 'I',  0 , 
 #define TEXT_RSET 'R', 'S', 'E', 'T', 
@@ -76,4 +74,11 @@
 #define TEXT_XOP  'X', 'O', 'P',  0 , 
 #define TEXT_XOR  'X', 'O', 'R',  0 , 
 
-#endif // __TEXT_TMS9995__
+// TMS9995
+
+#define TEXT_MPYS 'M', 'P', 'Y', 'S', 
+#define TEXT_DIVS 'D', 'I', 'V', 'S', 
+#define TEXT_LST  'L', 'S', 'T',  0 , 
+#define TEXT_LWP  'L', 'W', 'P',  0 , 
+
+#endif // __TEXT_TMS9900__

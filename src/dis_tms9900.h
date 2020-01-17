@@ -1,15 +1,13 @@
 /* -*- mode: c++; -*- */
-#ifndef __DIS_TMS9995_H__
-#define __DIS_TMS9995_H__
+#ifndef __DIS_TMS9900_H__
+#define __DIS_TMS9900_H__
 
-#include "config_tms9995.h"
+#include "config_tms9900.h"
 
-#include "insn_tms9995.h"
-#include "dis_memory.h"
-#include "symbol_table.h"
+#include "insn_tms9900.h"
 #include "dis_interface.h"
 
-class DisTms9995 : public Disassembler<target::uintptr_t> {
+class DisTms9900 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool acceptCpu(const char *cpu) override;
@@ -28,4 +26,4 @@ private:
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
 
-#endif // __DIS_TMS9995_H__
+#endif // __DIS_TMS9900_H__

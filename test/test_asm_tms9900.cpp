@@ -1,12 +1,13 @@
-#include "asm_tms9995.h"
+#include "asm_tms9900.h"
 #include "test_asm_helper.h"
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmTms9995 as9995;
-Assembler<target::uintptr_t> &assembler(as9995);
+AsmTms9900 as9900;
+Assembler<target::uintptr_t> &assembler(as9900);
 
 static void set_up() {
+    assembler.acceptCpu("tms9900");
 }
 
 static void tear_down() {
@@ -16,6 +17,8 @@ static void tear_down() {
 static void test_cpu() {
     asserter.equals(
         "cpu tms9900", true, assembler.acceptCpu("TMS9900"));
+    asserter.equals(
+        "cpu tms9995", true, assembler.acceptCpu("TMS9995"));
 }
 
 static void test_inh() {
@@ -39,10 +42,13 @@ static void test_imm() {
 }
 
 static void test_reg() {
-    WTEST("LST  R0",  0x0080);
-    WTEST("LWP  R1",  0x0091);
     WTEST("STWP R14", 0x02AE);
     WTEST("STST R15", 0x02CF);
+
+    // TMS9995
+    assembler.acceptCpu("tms9995");
+    WTEST("LST  R0",  0x0080);
+    WTEST("LWP  R1",  0x0091);
 }
 
 static void test_reg_imm() {
@@ -65,15 +71,6 @@ static void test_cnt_reg() {
 }
 
 static void test_src() {
-    WTEST("DIVS R2",         0x0182);
-    WTEST("DIVS *R3",        0x0193);
-    WTEST("DIVS @1234H",     0x01A0, 0x1234);
-    WTEST("DIVS @1000H(R4)", 0x01A4, 0x1000);
-    WTEST("DIVS *R5+",       0x01B5);
-    WTEST("MPYS R0",         0x01C0);
-    WTEST("MPYS @2(R8)",     0x01E8, 0x0002);
-    WTEST("MPYS *R15+",      0x01FF);
-
     WTEST("BLWP @9876H", 0x0420, 0x9876);
     WTEST("B    R13",    0x044D);
     WTEST("X    *R10",   0x049A);
@@ -89,15 +86,30 @@ static void test_src() {
     WTEST("SETO R12",    0x070C);
     WTEST("ABS @8(R3)",  0x0763, 0x0008);
 
+    // TMS9995
+    assembler.acceptCpu("tms9995");
+    WTEST("DIVS R2",         0x0182);
+    WTEST("DIVS *R3",        0x0193);
+    WTEST("DIVS @1234H",     0x01A0, 0x1234);
+    WTEST("DIVS @1000H(R4)", 0x01A4, 0x1000);
+    WTEST("DIVS *R5+",       0x01B5);
+    WTEST("MPYS R0",         0x01C0);
+    WTEST("MPYS @2(R8)",     0x01E8, 0x0002);
+    WTEST("MPYS *R15+",      0x01FF);
+
     symtab.intern(-2, "neg2");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    WTEST("DIVS @sym1234",     0x01A0, 0x1234);
-    WTEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
+    assembler.acceptCpu("tms9900");
     WTEST("BLWP @sym9876",     0x0420, 0x9876);
     WTEST("DEC  @neg2(R7)",    0x0627, 0xFFFE);
+
+    // TMS9995
+    assembler.acceptCpu("tms9995");
+    WTEST("DIVS @sym1234",     0x01A0, 0x1234);
+    WTEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
 }
 
 static void test_reg_src() {

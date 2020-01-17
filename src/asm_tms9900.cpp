@@ -1,20 +1,31 @@
+#include "asm_tms9900.h"
+#include "table_tms9900.h"
+
 #include <ctype.h>
 #include <string.h>
 
-#include "asm_tms9995.h"
-
-bool AsmTms9995::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "tms9900") == 0;
+bool AsmTms9900::acceptCpu(const char *cpu) {
+    if (strcmp(cpu, "9900") == 0
+        || strcasecmp(cpu, "tms9900") == 0) {
+        TableTms9900.setMcuType(TMS9900);
+        return true;
+    }
+    if (strcmp(cpu, "9995") == 0
+        || strcasecmp(cpu, "tms9995") == 0) {
+        TableTms9900.setMcuType(TMS9995);
+        return true;
+    }
+    return false;
 }
 
-Error AsmTms9995::checkComma() {
+Error AsmTms9900::checkComma() {
     _scan = skipSpaces(_scan);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan = skipSpaces(_scan + 1);
     return OK;
 }
 
-bool AsmTms9995::isRegisterName(const char *scan) const {
+bool AsmTms9900::isRegisterName(const char *scan) const {
     if (toupper(*scan++) != 'R' || !isdigit(*scan))
         return false;
     if (!_parser.isSymbolLetter(scan[1]))
@@ -24,7 +35,7 @@ bool AsmTms9995::isRegisterName(const char *scan) const {
     return *scan >= '0' && *scan < '6';
 }
 
-Error AsmTms9995::parseRegName(uint8_t &regno) {
+Error AsmTms9900::parseRegName(uint8_t &regno) {
     if (!isRegisterName(_scan)) return UNKNOWN_OPERAND;
     uint8_t v = *++_scan - '0';
     if (isdigit(*++_scan)) {
@@ -35,7 +46,7 @@ Error AsmTms9995::parseRegName(uint8_t &regno) {
     return OK;
 }
 
-Error AsmTms9995::encodeImm(Insn &insn, bool emitInsn) {
+Error AsmTms9900::encodeImm(Insn &insn, bool emitInsn) {
     uint16_t val;
     if (getOperand16(val)) return getError();
     if (emitInsn) insn.emitInsn();
@@ -43,7 +54,7 @@ Error AsmTms9995::encodeImm(Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error AsmTms9995::encodeReg(Insn &insn, bool emitInsn) {
+Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
     uint8_t regno;
     if (parseRegName(regno)) return setError(UNKNOWN_OPERAND);
     uint16_t operand = regno;
@@ -59,7 +70,7 @@ Error AsmTms9995::encodeReg(Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error AsmTms9995::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
+Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     uint16_t count;
     if (acceptR0 && toupper(_scan[0]) == 'R' && _scan[1] == '0'
         && !_parser.isSymbolLetter(_scan[2])) { // R0
@@ -83,7 +94,7 @@ Error AsmTms9995::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     return setError(OK);
 }
 
-Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
+Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     uint8_t regno;
     uint8_t mode = 0;
     uint16_t val16;
@@ -120,7 +131,7 @@ Error AsmTms9995::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     return setError(OK);
 }
 
-Error AsmTms9995::encodeRel(Insn &insn) {
+Error AsmTms9900::encodeRel(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (addr % 2) return setError(ILLEGAL_OPERAND);
@@ -132,7 +143,7 @@ Error AsmTms9995::encodeRel(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmTms9995::encodeCruOff(Insn &insn) {
+Error AsmTms9900::encodeCruOff(Insn &insn) {
     uint8_t val8;
     if (getOperand8(val8)) return getError();
     insn.setInsnCode(insn.insnCode() | val8);
@@ -140,10 +151,10 @@ Error AsmTms9995::encodeCruOff(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmTms9995::encode(Insn &insn) {
+Error AsmTms9900::encode(Insn &insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    if (TableTms9995.searchName(insn))
+    if (TableTms9900.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 

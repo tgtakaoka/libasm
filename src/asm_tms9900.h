@@ -1,14 +1,13 @@
 /* -*- mode: c++; -*- */
-#ifndef __ASM_TMS9995_H__
-#define __ASM_TMS9995_H__
+#ifndef __ASM_TMS9900_H__
+#define __ASM_TMS9900_H__
 
-#include "config_tms9995.h"
+#include "config_tms9900.h"
 
-#include "symbol_table.h"
-#include "table_tms9995.h"
+#include "insn_tms9900.h"
 #include "asm_interface.h"
 
-class AsmTms9995 : public Assembler<target::uintptr_t> {
+class AsmTms9900 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool acceptCpu(const char *cpu) override;
@@ -31,4 +30,4 @@ private:
     Error encode(Insn &insn) override;
 };
 
-#endif // __ASM_TMS9995_H__
+#endif // __ASM_TMS9900_H__

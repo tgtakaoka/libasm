@@ -1,13 +1,23 @@
-#include "dis_tms9995.h"
-#include "table_tms9995.h"
+#include "dis_tms9900.h"
+#include "table_tms9900.h"
 
 #include <string.h>
 
-bool DisTms9995::acceptCpu(const char *cpu) {
-    return strcmp(cpu, "9995") == 0;
+bool DisTms9900::acceptCpu(const char *cpu) {
+    if (strcmp(cpu, "9900") == 0
+        || strcasecmp(cpu, "tms9900") == 0) {
+        TableTms9900.setMcuType(TMS9900);
+        return true;
+    }
+    if (strcmp(cpu, "9995") == 0
+        || strcasecmp(cpu, "tms9995") == 0) {
+        TableTms9900.setMcuType(TMS9995);
+        return true;
+    }
+    return false;
 }
 
-void DisTms9995::outAddress(target::uintptr_t addr, bool relax) {
+void DisTms9900::outAddress(target::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -16,12 +26,12 @@ void DisTms9995::outAddress(target::uintptr_t addr, bool relax) {
     }
 }
 
-void DisTms9995::outRegister(host::uint_t regno) {
+void DisTms9900::outRegister(host::uint_t regno) {
     *_operands++ = 'R';
     outConstant(uint8_t(regno & 0xf), 10);
 }
 
-Error DisTms9995::decodeOperand(
+Error DisTms9900::decodeOperand(
     DisMemory<target::uintptr_t> &memory, Insn &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
     const host::uint_t mode = (opr >> 4) & 0x3;
@@ -45,7 +55,7 @@ Error DisTms9995::decodeOperand(
     return setError(OK);
 }
 
-Error DisTms9995::decodeImmediate(
+Error DisTms9900::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
@@ -53,7 +63,7 @@ Error DisTms9995::decodeImmediate(
     return setError(OK);
 }
 
-Error DisTms9995::decodeRelative(Insn& insn) {
+Error DisTms9900::decodeRelative(Insn& insn) {
     int16_t delta = static_cast<int8_t>(insn.insnCode() & 0xff);
     delta <<= 1;
     const target::uintptr_t addr = insn.address() + 2 + delta;
@@ -61,12 +71,12 @@ Error DisTms9995::decodeRelative(Insn& insn) {
     return setError(OK);
 }
 
-Error DisTms9995::decode(
+Error DisTms9900::decode(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
-    TableTms9995.searchInsnCode(insn);
+    TableTms9900.searchInsnCode(insn);
 
     switch (insn.addrMode()) {
     case INH:

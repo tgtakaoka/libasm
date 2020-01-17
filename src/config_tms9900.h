@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef __CONFIG_TMS9995_H__
-#define __CONFIG_TMS9995_H__
+#ifndef __CONFIG_TMS9900_H__
+#define __CONFIG_TMS9900_H__
 
 #include "config_host.h"
 
@@ -10,6 +10,11 @@ namespace target
     typedef int16_t  ptrdiff_t;
     typedef uint16_t insn_t;
 } // namespace target
+
+enum McuType : host::uint_t {
+    TMS9900,
+    TMS9995,
+};
 
 enum AddrMode : host::uint_t {
     INH,                        // ---- ---- ---- ----
@@ -26,6 +31,4 @@ enum AddrMode : host::uint_t {
     CRU_OFF,                    // ---- ---- nnnn nnnn
 };
 
-//#include "registers_tms9995.h"
-
-#endif // __CONFIG_TMS99951_H__
+#endif // __CONFIG_TMS9900_H__

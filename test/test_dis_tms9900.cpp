@@ -1,13 +1,14 @@
-#include "dis_tms9995.h"
+#include "dis_tms9900.h"
 #include "test_dis_helper.h"
 
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-DisTms9995 dis9995;
-Disassembler<target::uintptr_t> &disassembler(dis9995);
+DisTms9900 dis9900;
+Disassembler<target::uintptr_t> &disassembler(dis9900);
 
 static void set_up() {
+    disassembler.acceptCpu("tms9900");
 }
 
 static void tear_down() {
@@ -35,10 +36,13 @@ static void test_imm() {
 }
 
 static void test_reg() {
-    WTEST(LST,  "R0",  0x0080);
-    WTEST(LWP,  "R1",  0x0091);
     WTEST(STWP, "R14", 0x02AE);
     WTEST(STST, "R15", 0x02CF);
+
+    // TMS9995
+    disassembler.acceptCpu("tms9995");
+    WTEST(LST,  "R0",  0x0080);
+    WTEST(LWP,  "R1",  0x0091);
 }
 
 static void test_reg_imm() {
@@ -61,15 +65,6 @@ static void test_cnt_reg() {
 }
 
 static void test_src() {
-    WTEST(DIVS, "R2",     0x0182);
-    WTEST(DIVS, "*R3",    0x0193);
-    WTEST(DIVS, "@1234H", 0x01A0, 0x1234);
-    WTEST(DIVS, "@1000H(R4)", 0x01A4, 0x1000);
-    WTEST(DIVS, "*R5+",   0x01B5);
-    WTEST(MPYS, "R0",     0x01C0);
-    WTEST(MPYS, "@2(R8)", 0x01E8, 0x0002);
-    WTEST(MPYS, "*R15+",  0x01FF);
-
     WTEST(BLWP, "@9876H", 0x0420, 0x9876);
     WTEST(B,    "R13",    0x044D);
     WTEST(X,    "*R10",   0x049A);
@@ -85,15 +80,30 @@ static void test_src() {
     WTEST(SETO, "R12",    0x070C);
     WTEST(ABS,  "@8(R3)", 0x0763, 0x0008);
 
+    // TMS9995
+    disassembler.acceptCpu("tms9995");
+    WTEST(DIVS, "R2",     0x0182);
+    WTEST(DIVS, "*R3",    0x0193);
+    WTEST(DIVS, "@1234H", 0x01A0, 0x1234);
+    WTEST(DIVS, "@1000H(R4)", 0x01A4, 0x1000);
+    WTEST(DIVS, "*R5+",   0x01B5);
+    WTEST(MPYS, "R0",     0x01C0);
+    WTEST(MPYS, "@2(R8)", 0x01E8, 0x0002);
+    WTEST(MPYS, "*R15+",  0x01FF);
+
     symtab.intern(-2, "neg2");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    WTEST(DIVS, "@sym1234",     0x01A0, 0x1234);
-    WTEST(DIVS, "@sym1000(R4)", 0x01A4, 0x1000);
+    disassembler.acceptCpu("tms9900");
     WTEST(BLWP, "@sym9876",     0x0420, 0x9876);
     WTEST(DEC,  "@neg2(R7)",    0x0627, 0xFFFE);
+
+    // TMS9995
+    disassembler.acceptCpu("tms9995");
+    WTEST(DIVS, "@sym1234",     0x01A0, 0x1234);
+    WTEST(DIVS, "@sym1000(R4)", 0x01A4, 0x1000);
 }
 
 static void test_reg_src() {
@@ -202,7 +212,51 @@ static void test_cru_off() {
 }
 
 // Macro Instruction Detect
-static void test_mid() {
+static void test_mid_tms9900() {
+    static const struct mid_range {
+        uint16_t start;
+        uint16_t end;
+    } mids[] = {
+        { 0x0000, 0x01ff },
+        { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
+        { 0x0290, 0x029f }, { 0x02b0, 0x02bf }, { 0x02d0, 0x02df }, { 0x02e1, 0x02ff },
+        { 0x0301, 0x033f }, { 0x0341, 0x035f }, { 0x0361, 0x037f }, { 0x0381, 0x039f },
+        { 0x03a1, 0x03bf }, { 0x03c1, 0x03df }, { 0x03e1, 0x03ff },
+        { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
+    };
+    uint8_t bytes[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    Insn insn;
+    char operands[40], message[40];
+    const mid_range *m = &mids[0];
+
+    disassembler.acceptCpu("TMS9900");
+    for (uint16_t h = 0; h < 0x100; h++) {
+        for (uint16_t l = 0; l < 0x100; l++) {
+            const uint16_t i = (h << 8) | l;
+            memory.setAddress(0x1000);
+            bytes[0] = h; bytes[1] = l;
+            memory.setBytes(bytes, sizeof(bytes));
+            disassembler.decode(memory, insn, operands, nullptr, true);
+            if (m && i > m->end) {
+                if (++m >= &mids[sizeof(mids)/sizeof(mids[0])])
+                    m = nullptr;
+            }
+            if (m && i >= m->start && i <= m->end) {
+                sprintf(message, "%s: >%04X is MID", __FUNCTION__, i);
+                asserter.equals(message, OK, disassembler.getError());
+                asserter.equals(message, "MID", insn.name());
+                asserter.equals(message, i, insn.insnCode());
+                asserter.equals(message, 2, insn.insnLen());
+            } else {
+                sprintf(message, "%s: >%04X is not MID", __FUNCTION__, i);
+                asserter.equals(message, OK, disassembler.getError());
+                asserter.not_equals(message, "MID", insn.name());
+            }
+        }
+    }
+}
+
+static void test_mid_tms9995() {
     static const struct mid_range {
         uint16_t start;
         uint16_t end;
@@ -218,6 +272,8 @@ static void test_mid() {
     Insn insn;
     char operands[40], message[40];
     const mid_range *m = &mids[0];
+
+    disassembler.acceptCpu("TMS9995");
     for (uint16_t h = 0; h < 0x100; h++) {
         for (uint16_t l = 0; l < 0x100; l++) {
             const uint16_t i = (h << 8) | l;
@@ -265,6 +321,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_dst_src);
     RUN_TEST(test_rel);
     RUN_TEST(test_cru_off);
-    RUN_TEST(test_mid);
+    RUN_TEST(test_mid_tms9900);
+    RUN_TEST(test_mid_tms9995);
     return 0;
 }
