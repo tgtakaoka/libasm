@@ -292,7 +292,8 @@ Error TableM6502::searchPages(
 Error TableM6502::searchName(Insn &insn) const {
     if (searchPages(insn, insn.name(), ARRAY_RANGE(M6502_TABLE)) == OK)
         return OK;
-    if (searchPages(insn, insn.name(), ARRAY_RANGE(W65C02_TABLE)) == OK)
+    if (is65c02()
+        && searchPages(insn, insn.name(), ARRAY_RANGE(W65C02_TABLE)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
@@ -301,7 +302,8 @@ Error TableM6502::searchNameAndAddrMode(Insn &insn) const {
     if (searchPages(
             insn, insn.name(), insn.addrMode(), ARRAY_RANGE(M6502_TABLE)) == OK)
         return OK;
-    if (searchPages(
+    if (is65c02()
+        && searchPages(
             insn, insn.name(), insn.addrMode(), ARRAY_RANGE(W65C02_TABLE)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
@@ -310,7 +312,8 @@ Error TableM6502::searchNameAndAddrMode(Insn &insn) const {
 Error TableM6502::searchInsnCode(Insn &insn) const {
     if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(M6502_TABLE)) == OK)
         return OK;
-    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(W65C02_TABLE)) == OK)
+    if (is65c02()
+        && searchPages(insn, insn.insnCode(), ARRAY_RANGE(W65C02_TABLE)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }

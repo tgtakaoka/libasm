@@ -17,7 +17,7 @@ public:
     const char *name() const { return _name; }
     AddrMode addrMode() const { return _addrMode(_flags); }
     OprSize oprSize() const { return _oprSize(_flags); }
-    McuType mcuType() const { return _mcuType(_flags); }
+    bool is6309() const { return _mcuType(_flags) == HD6309; }
 
     void resetAddress(target::uintptr_t addr) {
         _address = addr;

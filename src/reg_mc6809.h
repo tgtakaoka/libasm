@@ -25,8 +25,6 @@ enum RegName : char {
 
 class RegMc6809 {
 public:
-    McuType _mcuType;
-
     RegName parseIndexReg(const char *line) const;
     RegName parseBaseReg(const char *line) const;
     RegName parseDataReg(const char *line) const;

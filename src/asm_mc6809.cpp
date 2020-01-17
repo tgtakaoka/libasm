@@ -4,11 +4,11 @@
 
 bool AsmMc6809::acceptCpu(const char *cpu) {
     if (strcasecmp(cpu, "6809") == 0) {
-        _regs._mcuType = McuType::MC6809;
+        TableMc6809.setMcuType(MC6809);
         return true;
     }
     if (strcasecmp(cpu, "6309") == 0) {
-        _regs._mcuType = McuType::HD6309;
+        TableMc6809.setMcuType(HD6309);
         return true;
     }
     return false;
@@ -69,7 +69,7 @@ Error AsmMc6809::encodeRelative(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     const target::opcode_t prefix = TableMc6809::prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (TableMc6809::isPrefixCode(prefix) ? 2 : 1)
+    const host::uint_t insnLen = (TableMc6809.isPrefixCode(prefix) ? 2 : 1)
         + (insn.oprSize() == SZ_BYTE ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
@@ -95,7 +95,7 @@ Error AsmMc6809::encodeImmediate(Insn &insn) {
         uint16_t val16;
         if (getOperand16(val16)) return getError();
         insn.emitUint16(val16);
-    } else if (mcuType() == HD6309 && insn.oprSize() == SZ_LONG) {
+    } else if (TableMc6809.is6309() && insn.oprSize() == SZ_LONG) {
         uint32_t val32;
         if (getOperand32(val32)) return getError();
         insn.emitUint32(val32);
@@ -217,7 +217,7 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
         insn.emitUint16(offset);
         return setError(OK);
     }
-    if (mcuType() == HD6309 && base == REG_W) {
+    if (TableMc6809.is6309() && base == REG_W) {
         uint8_t post;
         if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
         else if (incr == 0) post = 0x8F;    // ,W [,W]
@@ -434,7 +434,7 @@ Error AsmMc6809::encode(
 
     if (TableMc6809.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.mcuType() == HD6309 && mcuType() != HD6309)
+    if (insn.is6309() && !TableMc6809.is6309())
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
@@ -445,7 +445,7 @@ Error AsmMc6809::encode(
     case REGS:  return encodeRegisters(insn);
     case PSEUDO: return processPseudo(insn);
     default:
-        if (mcuType() == HD6309) {
+        if (TableMc6809.is6309()) {
             switch (insn.addrMode()) {
             case IMMDIR:
             case IMMEXT:

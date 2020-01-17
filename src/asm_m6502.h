@@ -20,7 +20,6 @@ public:
 
 private:
     AsmMotoOperand _parser;
-    McuType _mcuType = M6502;
 
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 

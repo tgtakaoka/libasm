@@ -23,6 +23,10 @@ public:
         free(_line);
     }
 
+    bool acceptCpu(const char *cpu) {
+        return _assembler.acceptCpu(cpu);
+    }
+
     Error assembleLine(const char *line, CliMemory<Addr> &memory) {
         _scan = line;
         if (_scan == nullptr) {

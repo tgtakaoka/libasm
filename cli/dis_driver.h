@@ -212,6 +212,16 @@ private:
                     }
                     _list_name = argv[i];
                     break;
+                case 'C':
+                    if (++i >= argc) {
+                        fprintf(stderr, "-C requires CPU name\n");
+                        return 1;
+                    }
+                    if (!_disassembler.acceptCpu(argv[i])) {
+                        fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
+                        return 4;
+                    }
+                    break;
                 default:
                     fprintf(stderr, "unknown option: %s\n", opt);
                     return 1;
@@ -249,7 +259,8 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-o <output>] [-l <list>] <input>\n"
+                "usage: %s [-C <cpu>] [-o <output>] [-l <list>] <input>\n"
+                "  -C : CPU variant: 6809, 6309, 6502, 65c02, 8080, z80, 9995\n"
                 "  <input> file can be Motorola SREC or Intel HEX format\n",
                 _progname);
         return 2;

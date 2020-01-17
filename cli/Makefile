@@ -13,30 +13,30 @@ OBJS_tms9995 = table_tms9995.o $(OBJS_common)
 OBJS_as6809   = as6809.o   asm_mc6809.o  $(OBJS_asm) $(OBJS_mc6809)  $(OBJS_common)
 OBJS_as6502   = as6502.o   asm_m6502.o   $(OBJS_asm) $(OBJS_m6502)   $(OBJS_common)
 OBJS_as8080   = as8080.o   asm_i8080.o   $(OBJS_asm) $(OBJS_i8080)   $(OBJS_common)
-OBJS_as80     = as80.o     asm_z80.o     $(OBJS_asm) $(OBJS_z80)     $(OBJS_common)
+OBJS_asz80    = asz80.o    asm_z80.o     $(OBJS_asm) $(OBJS_z80)     $(OBJS_common)
 OBJS_as9995   = as9995.o   asm_tms9995.o $(OBJS_asm) $(OBJS_tms9995) $(OBJS_common)
 OBJS_dis6809  = dis6809.o  dis_mc6809.o  $(OBJS_dis) $(OBJS_mc6809)  $(OBJS_common)
 OBJS_dis6502  = dis6502.o  dis_m6502.o   $(OBJS_dis) $(OBJS_m6502)   $(OBJS_common)
 OBJS_dis8080  = dis8080.o  dis_i8080.o   $(OBJS_dis) $(OBJS_i8080)   $(OBJS_common)
-OBJS_dis80    = dis80.o    dis_z80.o     $(OBJS_dis) $(OBJS_z80)     $(OBJS_common)
+OBJS_disz80   = disz80.o   dis_z80.o     $(OBJS_dis) $(OBJS_z80)     $(OBJS_common)
 OBJS_dis9995  = dis9995.o  dis_tms9995.o $(OBJS_dis) $(OBJS_tms9995) $(OBJS_common)
 
 OBJS =	$(OBJS_as6809)  $(OBJS_dis6809)  \
 	$(OBJS_as6502)  $(OBJS_dis6502)  \
 	$(OBJS_as8080)  $(OBJS_dis8080)  \
-	$(OBJS_as80)    $(OBJS_dis80)    \
+	$(OBJS_asz80)   $(OBJS_disz80)   \
 	$(OBJS_as9995)  $(OBJS_dis9995)
 
 OBJS_driver  = \
 	as6809.o   \
 	as6502.o   \
 	as8080.o   \
-	as80.o     \
+	asz80.o    \
 	as9995.o   \
 	dis6809.o  \
 	dis6502.o  \
 	dis8080.o  \
-	dis80.o    \
+	disz80.o   \
 	dis9995.o
 
 DRIVERS = $(OBJS_driver:.o=)
@@ -53,7 +53,7 @@ as6502:   $(OBJS_as6502)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 as8080:   $(OBJS_as8080)
 	$(CXX) $(CXXFLAGS) $^ -o $@
-as80:     $(OBJS_as80)
+asz80:    $(OBJS_asz80)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 as9995:   $(OBJS_as9995)
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -63,7 +63,7 @@ dis6502:  $(OBJS_dis6502)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 dis8080:  $(OBJS_dis8080)
 	$(CXX) $(CXXFLAGS) $^ -o $@
-dis80:    $(OBJS_dis80)
+disz80:   $(OBJS_disz80)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 dis9995:  $(OBJS_dis9995)
 	$(CXX) $(CXXFLAGS) $^ -o $@

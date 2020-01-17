@@ -16,7 +16,7 @@ public:
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
     AddrMode addrMode() const { return _addrMode(_flags); }
-    McuType mcuType() const { return _mcuType(_flags); }
+    bool is65c02() const { return _mcuType(_flags) == W65C02; }
 
     void resetAddress(target::uintptr_t addr) {
         _address = addr;

@@ -24,8 +24,6 @@ private:
     RegMc6809 _regs;
     uint8_t _direct_page = 0;
 
-    McuType mcuType() const { return _regs._mcuType; }
-
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableMc6809::prefixCode(insn.insnCode());
         if (TableMc6809::isPrefixCode(prefix))

@@ -1,6 +1,7 @@
 #include <ctype.h>
 
 #include "config_mc6809.h"
+#include "table_mc6809.h"
 
 static constexpr RegName EXTRA_HD6309[] PROGMEM = {
     REG_E, REG_F, REG_V, REG_W
@@ -183,55 +184,55 @@ static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
 };
 
 RegName RegMc6809::parseIndexReg(const char *line) const {
-    return _mcuType == MC6809
-        ? parseRegName(line, ARRAY_RANGE(MC6809_INDEX_REGS))
-        : parseRegName(line, ARRAY_RANGE(HD6309_INDEX_REGS));
+    return TableMc6809.is6309()
+        ? parseRegName(line, ARRAY_RANGE(HD6309_INDEX_REGS))
+        : parseRegName(line, ARRAY_RANGE(MC6809_INDEX_REGS));
 }
 
 RegName RegMc6809::parseBaseReg(const char *line) const {
-    return _mcuType == MC6809
-        ? parseRegName(line, ARRAY_RANGE(MC6809_BASE_REGS))
-        : parseRegName(line, ARRAY_RANGE(HD6309_BASE_REGS));
+    return TableMc6809.is6309()
+        ? parseRegName(line, ARRAY_RANGE(HD6309_BASE_REGS))
+        : parseRegName(line, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 RegName RegMc6809::parseDataReg(const char *line) const {
-    return _mcuType == MC6809
-        ? parseRegName(line, ARRAY_RANGE(MC6809_DATA_REGS))
-        : parseRegName(line, ARRAY_RANGE(HD6309_DATA_REGS));
+    return TableMc6809.is6309()
+        ? parseRegName(line, ARRAY_RANGE(HD6309_DATA_REGS))
+        : parseRegName(line, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
 host::int_t RegMc6809::encodeIndexReg(RegName regName) const {
-    return _mcuType == MC6809
-        ? encodeRegNumber(regName, ARRAY_RANGE(MC6809_INDEX_REGS))
-        : encodeRegNumber(regName, ARRAY_RANGE(HD6309_INDEX_REGS));
+    return TableMc6809.is6309()
+        ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_INDEX_REGS))
+        : encodeRegNumber(regName, ARRAY_RANGE(MC6809_INDEX_REGS));
 }
 
 host::int_t RegMc6809::encodeBaseReg(RegName regName) const {
-    return _mcuType == MC6809
-        ? encodeRegNumber(regName, ARRAY_RANGE(MC6809_BASE_REGS))
-        : encodeRegNumber(regName, ARRAY_RANGE(HD6309_BASE_REGS));
+    return TableMc6809.is6309()
+        ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_BASE_REGS))
+        : encodeRegNumber(regName, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 host::int_t RegMc6809::encodeDataReg(RegName regName) const {
-    return _mcuType == MC6809
-        ? encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS))
-        : encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS));
+    return TableMc6809.is6309()
+        ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS))
+        : encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
 RegName RegMc6809::decodeIndexReg(uint8_t regNum) const {
-    return _mcuType == MC6809
-        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_INDEX_REGS))
-        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_INDEX_REGS));
+    return TableMc6809.is6309()
+        ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_INDEX_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_INDEX_REGS));
 }
 
 RegName RegMc6809::decodeBaseReg(uint8_t regNum) const {
-    return _mcuType == MC6809
-        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_BASE_REGS))
-        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_BASE_REGS));
+    return TableMc6809.is6309()
+        ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_BASE_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 RegName RegMc6809::decodeRegName(uint8_t regNum) const {
-    return _mcuType == MC6809
-        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS))
-        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS));
+    return TableMc6809.is6309()
+        ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS));
 }

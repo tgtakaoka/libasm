@@ -5,11 +5,11 @@
 
 bool DisMc6809::acceptCpu(const char *cpu) {
     if (strcmp(cpu, "6809") == 0) {
-        _regs._mcuType = McuType::MC6809;
+        TableMc6809.setMcuType(MC6809);
         return true;
     }
     if (strcmp(cpu, "6309") == 0) {
-        _regs._mcuType = McuType::HD6309;
+        TableMc6809.setMcuType(HD6309);
         return true;
     }
     return false;
@@ -65,16 +65,16 @@ Error DisMc6809::decodeIndexed(
     if (mode == 0x84) {
         // ,R [,R]
         ;
-    } else if (mcuType() == HD6309 && (post == 0x8F || post == 0x90)) {
+    } else if (TableMc6809.is6309() && (post == 0x8F || post == 0x90)) {
         // ,W [,W]
         base = REG_W;
-    } else if (mcuType() == HD6309 && (post == 0xAF || post == 0xB0)) {
+    } else if (TableMc6809.is6309() && (post == 0xAF || post == 0xB0)) {
         // n16,W [n16,W]
         base = REG_W;
         offSize = 16;
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
         offset = static_cast<int16_t>(addr);
-    } else if (mcuType() == HD6309
+    } else if (TableMc6809.is6309()
                && (post == 0xCF || post == 0xD0 || post == 0xEF || post == 0xF0)) {
         // ,W++ ,--W [,W++] [,--W]
         base = REG_W;
@@ -204,7 +204,7 @@ Error DisMc6809::decodeImmediate(
         } else {
             outConstant(val);
         }
-    } else if (mcuType() == HD6309 && insn.oprSize() == SZ_LONG) {
+    } else if (TableMc6809.is6309() && insn.oprSize() == SZ_LONG) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
         outConstant(val);
@@ -313,7 +313,7 @@ Error DisMc6809::decode(
     if (TableMc6809.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    if (insn.mcuType() == HD6309 && mcuType() == MC6809)
+    if (insn.is6309() && !TableMc6809.is6309())
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -326,7 +326,7 @@ Error DisMc6809::decode(
     case REGS:  return decodeRegisters(memory, insn);
     case IMM:   return decodeImmediate(memory, insn);
     default:
-        if (mcuType() == HD6309) {
+        if (TableMc6809.is6309()) {
             switch (insn.addrMode()) {
             case IMMDIR:
             case IMMEXT:

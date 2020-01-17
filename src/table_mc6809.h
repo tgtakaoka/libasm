@@ -20,6 +20,9 @@ public:
     Error searchNameAndAddrMode(Insn &insn) const;
     Error searchInsnCode(Insn &insn) const;
 
+    void setMcuType(McuType mcuType) { _mcuType = mcuType; }
+    bool is6309() const { return _mcuType == HD6309; }
+
     static target::insn_t insnCode(
         target::opcode_t prefixCode, target::opcode_t opCode) {
         return (target::insn_t(prefixCode) << 8 | opCode);
@@ -33,6 +36,8 @@ public:
     static bool isPrefixCode(target::opcode_t opCode);
 
 private:
+    McuType _mcuType;
+
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(

@@ -159,6 +159,16 @@ private:
                         _record_bytes = v;
                     }
                     break;
+                case 'C':
+                    if (++i >= argc) {
+                        fprintf(stderr, "-C requires CPU name\n");
+                        return 1;
+                    }
+                    if (!_directive.acceptCpu(argv[i])) {
+                        fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
+                        return 4;
+                    }
+                    break;
                 case 'u':
                     _uppercase = true;
                     break;
@@ -202,10 +212,11 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-(S|H)[<bytes>]] [-u] [-o <output>] [-l <list>] <input>\n"
+                "usage: %s [-(S|H)[<bytes>]] [-C <cpu>] [-u] [-o <output>] [-l <list>] <input>\n"
                 "  -S : output Motorola SREC format\n"
                 "  -H : output Intel HEX format\n"
                 "     : optional <bytes> specifies data record length (max 32)\n"
+                "  -C : CPU variant: 6809, 6309, 6502, 65c02, 8080, z80, 9995\n"
                 "  -u : use uppercase letter for output\n",
                 _progname);
         return 2;

@@ -4,12 +4,12 @@
 #include <string.h>
 
 bool AsmM6502::acceptCpu(const char *cpu) {
-    if (strcasecmp(cpu, "6502") == 0) {
-        _mcuType = McuType::M6502;
+    if (strcmp(cpu, "6502") == 0) {
+        TableM6502.setMcuType(M6502);
         return true;
     }
-    if (strcasecmp(cpu, "65c02") == 0) {
-        _mcuType = McuType::W65C02;
+    if (strcasecmp(cpu, "65C02") == 0) {
+        TableM6502.setMcuType(W65C02);
         return true;
     }
     return false;
@@ -131,7 +131,7 @@ Error AsmM6502::encode(
 
     if (TableM6502.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.mcuType() == W65C02 && _mcuType != W65C02)
+    if (insn.is65c02() && !TableM6502.is65c02())
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
@@ -143,7 +143,7 @@ Error AsmM6502::encode(
         return encodeRelative(insn, /* emitInsn */ true);
     default:
 #ifdef W65C02_ENABLE_BITOPS
-        if (_mcuType == R65C02 && insn.addrMode() == ZP_REL8)
+        if (TableM6502.is65c02() && insn.addrMode() == ZP_REL8)
             return encodeZeroPageRelative(insn);
 #endif
         break;

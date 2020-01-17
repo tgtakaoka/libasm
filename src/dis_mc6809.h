@@ -17,8 +17,6 @@ private:
     DisMotoOperand _formatter;
     RegMc6809 _regs;
 
-    McuType mcuType() const { return _regs._mcuType; }
-
     void outRegister(RegName regName);
 
     // MC6809

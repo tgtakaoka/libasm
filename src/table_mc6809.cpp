@@ -560,7 +560,8 @@ static constexpr EntryPage HD6309_PAGES[] = {
 Error TableMc6809::searchName(Insn &insn) const {
     if (searchPages(insn, insn.name(), ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
-    if (searchPages(insn, insn.name(), ARRAY_RANGE(HD6309_PAGES)) == OK)
+    if (is6309()
+        && searchPages(insn, insn.name(), ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
@@ -568,7 +569,8 @@ Error TableMc6809::searchName(Insn &insn) const {
 Error TableMc6809::searchNameAndAddrMode(Insn &insn) const {
     if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
-    if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
+    if (is6309()
+        && searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
@@ -576,7 +578,8 @@ Error TableMc6809::searchNameAndAddrMode(Insn &insn) const {
 Error TableMc6809::searchInsnCode(Insn &insn) const {
     if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
-    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
+    if (is6309()
+        && searchPages(insn, insn.insnCode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
