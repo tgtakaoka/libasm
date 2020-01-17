@@ -12,8 +12,7 @@
 class DisM6502 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-
-    void acceptCpu(McuType mcuType) { _mcuType = mcuType; }
+    bool acceptCpu(const char *cpu) override;
 
 private:
     DisMotoOperand _formatter;

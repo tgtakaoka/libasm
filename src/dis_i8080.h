@@ -12,6 +12,7 @@
 class DisI8080 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
+    bool acceptCpu(const char *cpu) override;
 
 private:
     DisIntelOperand _formatter;

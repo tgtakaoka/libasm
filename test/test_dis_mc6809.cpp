@@ -8,7 +8,7 @@ DisMc6809 dis6809;
 Disassembler<target::uintptr_t> &disassembler(dis6809);
 
 static void set_up() {
-    dis6809.acceptCpu(McuType::MC6809);
+    disassembler.acceptCpu("6809");
 }
 
 static void tear_down() {
@@ -53,7 +53,7 @@ static void test_inherent() {
     TEST(CLRB, "", 0x5F);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(SEXW,  "", 0x14);
     TEST(PSHSW, "", 0x10, 0x38);
     TEST(PULSW, "", 0x10, 0x39);
@@ -136,7 +136,7 @@ static void test_immediate() {
     TEST(LDS,  "#$90A0", 0x10, 0xCE, 0x90, 0xA0);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(LDMD,  "#1",   0x11, 0x3D, 0x01);
     TEST(BITMD, "#$80", 0x11, 0x3C, 0x80);
 
@@ -171,7 +171,7 @@ static void test_immediate() {
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");
 
-    dis6809.acceptCpu(McuType::MC6809);
+    disassembler.acceptCpu("6809");
     TEST(LDA,  "#$90", 0x86, 0x90);
     TEST(CMPX, "#dir90A0", 0x8C, 0x90, 0xA0);
     TEST(LDY,  "#dir90A0", 0x10, 0x8E, 0x90, 0xA0);
@@ -241,7 +241,7 @@ static void test_direct() {
     TEST(JSR,  "$10", 0x9D, 0x10);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(SBCD, "$90", 0x10, 0x92, 0x90);
     TEST(ANDD, "$90", 0x10, 0x94, 0x90);
     TEST(BITD, "$90", 0x10, 0x95, 0x90);
@@ -283,7 +283,7 @@ static void test_direct() {
     symtab.intern(0x22, "dir22");
     symtab.intern(0x90, "dir90");
 
-    dis6809.acceptCpu(McuType::MC6809);
+    disassembler.acceptCpu("6809");
     TEST(NEG,  "<dir10", 0x00, 0x10);
     TEST(LDA,  "<dir90", 0x96, 0x90);
     TEST(STB,  "<dir90", 0xD7, 0x90);
@@ -294,7 +294,7 @@ static void test_direct() {
     TEST(JMP,  "<dir90", 0x0E, 0x90);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(OIM,  "#$30,<dir10", 0x01, 0x30, 0x10);
 }
 
@@ -361,7 +361,7 @@ static void test_extended() {
     TEST(JSR,  "$1234", 0xBD, 0x12, 0x34);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(SBCD, "$9ABC", 0x10, 0xB2, 0x9A, 0xBC);
     TEST(ANDD, "$9ABC", 0x10, 0xB4, 0x9A, 0xBC);
     TEST(BITD, "$9ABC", 0x10, 0xB5, 0x9A, 0xBC);
@@ -402,7 +402,7 @@ static void test_extended() {
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x9ABC, "ext9ABC");
 
-    dis6809.acceptCpu(McuType::MC6809);
+    disassembler.acceptCpu("6809");
     TEST(NEG,  ">ext0090", 0x70, 0x00, 0x90);
     TEST(LDA,  "ext9ABC",  0xB6, 0x9A, 0xBC);
     TEST(STB,  ">ext0090", 0xF7, 0x00, 0x90);
@@ -414,7 +414,7 @@ static void test_extended() {
     TEST(JSR,  ">ext0090", 0xBD, 0x00, 0x90);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(OIM,  "#$30,ext9ABC",  0x71, 0x30, 0x9A, 0xBC);
     TEST(OIM,  "#$30,>ext0090", 0x71, 0x30, 0x00, 0x90);
 }
@@ -487,7 +487,7 @@ static void test_indexed() {
     TEST(JSR,  "[,X++]", 0xAD, 0x91);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(SBCD, ",W", 0x10, 0xA2, 0x8F);
     TEST(ANDD, ",W++", 0x10, 0xA4, 0xCF);
     TEST(BITD, ",--W", 0x10, 0xA5, 0xEF);
@@ -677,7 +677,7 @@ static void test_indexed_mode() {
     TEST(LDA, "[$1234]", 0xA6, 0x9F, 0x12, 0x34);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(LDA, "E,X", 0xA6, 0x87);
     TEST(LDA, "F,X", 0xA6, 0x8A);
     TEST(LDA, "W,X", 0xA6, 0x8E);
@@ -727,7 +727,7 @@ static void test_indexed_mode() {
     symtab.intern(0x9003, "label9003");
     symtab.intern(0x9004, "label9004");
 
-    dis6809.acceptCpu(McuType::MC6809);
+    disassembler.acceptCpu("6809");
     ATEST(0x1000, LDA, "label1003,PCR",   0xA6, 0x8C, 0x00);
     ATEST(0x1000, LDA, "label1082,PCR",   0xA6, 0x8C, 0x7F);
     ATEST(0x1000, LDA, "label0F83,PCR",   0xA6, 0x8C, 0x80);
@@ -847,7 +847,7 @@ static void test_register() {
     TEST(TFR, "PC,D", 0x1F, 0x50);
 
     // HD6309
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(ADDR, "A,B", 0x10, 0x30, 0x89);
     TEST(ADCR, "A,B", 0x10, 0x31, 0x89);
     TEST(SUBR, "A,B", 0x10, 0x32, 0x89);
@@ -873,7 +873,7 @@ static void test_register() {
 }
 
 static void test_transfer() {
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(TFM, "X+,Y+", 0x11, 0x38, 0x12);
     TEST(TFM, "X-,Y-", 0x11, 0x39, 0x12);
     TEST(TFM, "X+,Y",  0x11, 0x3A, 0x12);
@@ -886,7 +886,7 @@ static void test_transfer() {
 }
 
 static void test_bit_position() {
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
     TEST(BAND,  "A.1,$34.2", 0x11, 0x30, 0x51, 0x34);
     TEST(BIAND, "A.1,$34.2", 0x11, 0x31, 0x51, 0x34);
     TEST(BOR,   "A.1,$34.2", 0x11, 0x32, 0x51, 0x34);
@@ -933,7 +933,7 @@ static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
 }
 
 static void test_illegal_mc6809() {
-    dis6809.acceptCpu(McuType::MC6809);
+    disassembler.acceptCpu("6809");
 
     const uint8_t p00_illegals[] = {
         0x01, 0x02, 0x05, 0x0b,
@@ -984,7 +984,7 @@ static void test_illegal_mc6809() {
 }
 
 static void test_illegal_hd6309() {
-    dis6809.acceptCpu(McuType::HD6309);
+    disassembler.acceptCpu("6309");
 
     const uint8_t p00_illegals[] = {
         0x15, 0x1b,

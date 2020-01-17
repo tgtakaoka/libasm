@@ -1,7 +1,11 @@
 #include "dis_tms9995.h"
-
-#include "dis_operand.h"
 #include "table_tms9995.h"
+
+#include <string.h>
+
+bool DisTms9995::acceptCpu(const char *cpu) {
+    return strcmp(cpu, "9995") == 0;
+}
 
 void DisTms9995::outAddress(target::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);

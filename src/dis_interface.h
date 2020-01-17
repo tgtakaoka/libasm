@@ -26,8 +26,8 @@ public:
             tolowercase(insn, operands);
         return getError();
     }
-
     virtual DisOperand &getFormatter() = 0;
+    virtual bool acceptCpu(const char *cpu) = 0;
 
 protected:
     char *_operands;

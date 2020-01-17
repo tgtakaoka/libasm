@@ -1,7 +1,11 @@
 #include "dis_i8080.h"
-
-#include "dis_operand.h"
 #include "table_i8080.h"
+
+#include <string.h>
+
+bool DisI8080::acceptCpu(const char *cpu) {
+    return strcmp(cpu, "8080") == 0;
+}
 
 void DisI8080::outRegister(RegName regName) {
     _operands = RegI8080::outRegName(_operands, regName);

@@ -13,6 +13,7 @@
 class DisZ80 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
+    bool acceptCpu(const char *cpu) override;
 
 private:
     DisIntelOperand _formatter;

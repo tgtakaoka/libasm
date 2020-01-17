@@ -1,7 +1,11 @@
 #include "dis_z80.h"
-
-#include "dis_operand.h"
 #include "table_z80.h"
+
+#include <string.h>
+
+bool DisZ80::acceptCpu(const char *cpu) {
+    return strcasecmp(cpu, "Z80") == 0;
+}
 
 template<typename T>
 void DisZ80::outAddress(T addr, bool indir) {
