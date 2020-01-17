@@ -1,33 +1,38 @@
-#include <asm_hd6309.h>
+#include <dis_mc6809.h>
+#include <str_memory.h>
 
-AsmHd6309 assembler;
+DisMc6809 disassembler;
 
 String line;
 bool line_ready = false;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9800);
+  disassembler.acceptCpu(McuType::HD6309);
 }
 
 void loop() {
   if (line_ready) {
     Serial.println(line);
+    StrMemory memory(0x1000, line.c_str());
+    char operands[20];
     Insn insn;
-    if (assembler.encode(line.c_str(), insn, 0x1000, nullptr)) {
+    if (disassembler.decode(memory, insn, operands, nullptr)) {
       Serial.print(F("Error "));
-      Serial.print(assembler.getError(), DEC);
-      Serial.print(F(" at: "));
-      Serial.println(assembler.errorAt());
+      Serial.println(disassembler.getError(), DEC);
     } else {
       Serial.print(insn.address(), HEX);
       Serial.print(':');
       for (int i = 0; i < insn.insnLen(); i++) {
         Serial.print(' ');
-        const uint8_t val = insn.bytes()[i];
+        uint8_t val = insn.bytes()[i];
         if (val < 0x10) Serial.print('0');
         Serial.print(val, HEX);
       }
-      Serial.println();
+      Serial.print(' ');
+      Serial.print(insn.name());
+      Serial.print(' ');
+      Serial.println(operands);
     }
     line = "";
     line_ready = false;

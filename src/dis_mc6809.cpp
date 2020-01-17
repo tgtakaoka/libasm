@@ -1,17 +1,11 @@
-/* -*- mode: c++; -*- */
-#ifndef __DIS_HD6309_IMPL_H__
-#define __DIS_HD6309_IMPL_H__
+#include "dis_mc6809.h"
+#include "table_mc6809.h"
 
-#include "dis_operand.h"
-#include "table_hd6309.h"
-
-template<McuType mcuType>
-void Dis09<mcuType>::outRegister(RegName regName) {
+void DisMc6809::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeDirectPage(
+Error DisMc6809::decodeDirectPage(
     DisMemory<target::uintptr_t> &memory, Insn& insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
@@ -25,8 +19,7 @@ Error Dis09<mcuType>::decodeDirectPage(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeExtended(
+Error DisMc6809::decodeExtended(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
@@ -40,8 +33,7 @@ Error Dis09<mcuType>::decodeExtended(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeIndexed(
+Error DisMc6809::decodeIndexed(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
@@ -59,16 +51,16 @@ Error Dis09<mcuType>::decodeIndexed(
     if (mode == 0x84) {
         // ,R [,R]
         ;
-    } else if (mcuType == HD6309 && (post == 0x8F || post == 0x90)) {
+    } else if (mcuType() == HD6309 && (post == 0x8F || post == 0x90)) {
         // ,W [,W]
         base = REG_W;
-    } else if (mcuType == HD6309 && (post == 0xAF || post == 0xB0)) {
+    } else if (mcuType() == HD6309 && (post == 0xAF || post == 0xB0)) {
         // n16,W [n16,W]
         base = REG_W;
         offSize = 16;
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
         offset = static_cast<int16_t>(addr);
-    } else if (mcuType == HD6309
+    } else if (mcuType() == HD6309
                && (post == 0xCF || post == 0xD0 || post == 0xEF || post == 0xF0)) {
         // ,W++ ,--W [,W++] [,--W]
         base = REG_W;
@@ -160,8 +152,7 @@ Error Dis09<mcuType>::decodeIndexed(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeRelative(
+Error DisMc6809::decodeRelative(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::ptrdiff_t delta;
     if (insn.oprSize() == SZ_BYTE) {
@@ -183,8 +174,7 @@ Error Dis09<mcuType>::decodeRelative(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeImmediate(
+Error DisMc6809::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     *_operands++ = '#';
     if (insn.oprSize() == SZ_BYTE) {
@@ -200,7 +190,7 @@ Error Dis09<mcuType>::decodeImmediate(
         } else {
             outConstant(val);
         }
-    } else if (mcuType == HD6309 && insn.oprSize() == SZ_LONG) {
+    } else if (mcuType() == HD6309 && insn.oprSize() == SZ_LONG) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
         outConstant(val);
@@ -210,8 +200,7 @@ Error Dis09<mcuType>::decodeImmediate(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeStackOp(
+Error DisMc6809::decodeStackOp(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
@@ -232,8 +221,7 @@ Error Dis09<mcuType>::decodeStackOp(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeRegisters(
+Error DisMc6809::decodeRegisters(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
@@ -246,8 +234,7 @@ Error Dis09<mcuType>::decodeRegisters(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeImmediatePlus(
+Error DisMc6809::decodeImmediatePlus(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     *_operands++ = '#';
     uint8_t val;
@@ -262,8 +249,7 @@ Error Dis09<mcuType>::decodeImmediatePlus(
     }
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeBitOperation(
+Error DisMc6809::decodeBitOperation(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
@@ -279,8 +265,7 @@ Error Dis09<mcuType>::decodeBitOperation(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decodeTransferMemory(
+Error DisMc6809::decodeTransferMemory(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
@@ -299,8 +284,7 @@ Error Dis09<mcuType>::decodeTransferMemory(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis09<mcuType>::decode(
+Error DisMc6809::decode(
     DisMemory<target::uintptr_t> &memory,
     Insn &insn,
     char *operands,
@@ -311,17 +295,17 @@ Error Dis09<mcuType>::decode(
     target::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     target::insn_t insnCode = opCode;
-    if (TableHd6309Base::isPrefixCode(opCode)) {
+    if (TableMc6809::isPrefixCode(opCode)) {
         const target::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        insnCode = TableHd6309Base::insnCode(prefix, opCode);
+        insnCode = TableMc6809::insnCode(prefix, opCode);
     }
     insn.setInsnCode(insnCode);
 
-    if (TableHd6309<mcuType>::table()->searchInsnCode(insn))
+    if (TableMc6809.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    if (insn.mcuType() == HD6309 && mcuType == MC6809)
+    if (insn.mcuType() == HD6309 && mcuType() == MC6809)
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -334,7 +318,7 @@ Error Dis09<mcuType>::decode(
     case REGS:  return decodeRegisters(memory, insn);
     case IMM:   return decodeImmediate(memory, insn);
     default:
-        if (mcuType == HD6309) {
+        if (mcuType() == HD6309) {
             switch (insn.addrMode()) {
             case IMMDIR:
             case IMMEXT:
@@ -347,5 +331,3 @@ Error Dis09<mcuType>::decode(
         return setError(INTERNAL_ERROR);
     }
 }
-
-#endif // __DIS_HD6309_IMPL_H__

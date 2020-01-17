@@ -1,22 +1,20 @@
-/* -*- mode: c++; -*- */
-#ifndef __ASM_HD6309_IMPL_H__
-#define __ASM_HD6309_IMPL_H__
+#include "asm_mc6809.h"
 
 #include <ctype.h>
 
-template<>
-bool Asm09<MC6809>::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "6809") == 0;
+bool AsmMc6809::acceptCpu(const char *cpu) {
+    if (strcasecmp(cpu, "6809") == 0) {
+        _regs._mcuType = McuType::MC6809;
+        return true;
+    }
+    if (strcasecmp(cpu, "6309") == 0) {
+        _regs._mcuType = McuType::HD6309;
+        return true;
+    }
+    return false;
 }
 
-template<>
-bool Asm09<HD6309>::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "6309") == 0
-        || strcasecmp(cpu, "6809") == 0;
-}
-
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
+Error AsmMc6809::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
     const char *p = _scan;
     while (*p) {
@@ -47,8 +45,7 @@ Error Asm09<mcuType>::encodeStackOp(Insn &insn) {
     return checkLineEnd();
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeRegisters(Insn &insn) {
+Error AsmMc6809::encodeRegisters(Insn &insn) {
     const char *p = _scan;
     RegName regName;
     if ((regName = _regs.parseDataReg(p)) == REG_UNDEF)
@@ -68,12 +65,11 @@ Error Asm09<mcuType>::encodeRegisters(Insn &insn) {
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeRelative(Insn &insn) {
+Error AsmMc6809::encodeRelative(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
-    const target::opcode_t prefix = TableHd6309Base::prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (TableHd6309Base::isPrefixCode(prefix) ? 2 : 1)
+    const target::opcode_t prefix = TableMc6809::prefixCode(insn.insnCode());
+    const host::uint_t insnLen = (TableMc6809::isPrefixCode(prefix) ? 2 : 1)
         + (insn.oprSize() == SZ_BYTE ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
@@ -87,8 +83,7 @@ Error Asm09<mcuType>::encodeRelative(Insn &insn) {
     return checkLineEnd();
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
+Error AsmMc6809::encodeImmediate(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     emitInsnCode(insn);
@@ -100,7 +95,7 @@ Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
         uint16_t val16;
         if (getOperand16(val16)) return getError();
         insn.emitUint16(val16);
-    } else if (mcuType == HD6309 && insn.oprSize() == SZ_LONG) {
+    } else if (mcuType() == HD6309 && insn.oprSize() == SZ_LONG) {
         uint32_t val32;
         if (getOperand32(val32)) return getError();
         insn.emitUint32(val32);
@@ -110,8 +105,7 @@ Error Asm09<mcuType>::encodeImmediate(Insn &insn) {
     return checkLineEnd();
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
+Error AsmMc6809::encodeDirect(Insn &insn, bool emitInsn) {
     if (*_scan == '<') _scan++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t dir;
@@ -120,8 +114,7 @@ Error Asm09<mcuType>::encodeDirect(Insn &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
+Error AsmMc6809::encodeExtended(Insn &insn, bool emitInsn) {
     if (*_scan == '>') _scan++;
     if (emitInsn) emitInsnCode(insn);
     target::uintptr_t addr;
@@ -130,8 +123,7 @@ Error Asm09<mcuType>::encodeExtended(Insn &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
+Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
     if (emitInsn) emitInsnCode(insn);
     const char *p = _scan;
     const bool indir = (*p == '[');
@@ -225,7 +217,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
         insn.emitUint16(offset);
         return setError(OK);
     }
-    if (mcuType == HD6309 && base == REG_W) {
+    if (mcuType() == HD6309 && base == REG_W) {
         uint8_t post;
         if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
         else if (incr == 0) post = 0x8F;    // ,W [,W]
@@ -283,8 +275,7 @@ Error Asm09<mcuType>::encodeIndexed(Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
+Error AsmMc6809::encodeBitOperation(Insn &insn) {
     const RegName regName = _regs.parseBitOpReg(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
@@ -312,8 +303,7 @@ Error Asm09<mcuType>::encodeBitOperation(Insn &insn) {
     return checkLineEnd();
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
+Error AsmMc6809::encodeImmediatePlus(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     uint8_t val8;
@@ -328,7 +318,7 @@ Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
     case INDX: insn.setAddrMode(IMMIDX); break;
     default: return setError(UNKNOWN_OPERAND);
     }
-    if (TableHd6309<mcuType>::table()->searchNameAndAddrMode(insn))
+    if (TableMc6809.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     emitInsnCode(insn);
     insn.emitByte(val8);
@@ -340,8 +330,7 @@ Error Asm09<mcuType>::encodeImmediatePlus(Insn &insn) {
     }
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
+Error AsmMc6809::encodeTransferMemory(Insn &insn) {
     RegName regName = _regs.parseTfmBaseReg(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
@@ -363,8 +352,8 @@ Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
         if (srcMode == _regs.tfmSrcModeChar(mode)
             && dstMode == _regs.tfmDstModeChar(mode)) {
             const target::opcode_t prefixCode =
-                TableHd6309Base::prefixCode(insn.insnCode());
-            insn.setInsnCode(TableHd6309Base::insnCode(prefixCode, 0x38 + mode));
+                TableMc6809::prefixCode(insn.insnCode());
+            insn.setInsnCode(TableMc6809::insnCode(prefixCode, 0x38 + mode));
             emitInsnCode(insn);
             insn.emitByte(post);
             return setError(OK);
@@ -373,8 +362,7 @@ Error Asm09<mcuType>::encodeTransferMemory(Insn &insn) {
     return setError(UNKNOWN_OPERAND);
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
+Error AsmMc6809::determineAddrMode(const char *line, Insn &insn) {
     insn.setAddrMode(INDX);
     if (*line == '#') {
         insn.setAddrMode(IMM);
@@ -415,8 +403,7 @@ Error Asm09<mcuType>::determineAddrMode(const char *line, Insn &insn) {
     return OK;
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::processPseudo(Insn &insn) {
+Error AsmMc6809::processPseudo(Insn &insn) {
     insn.resetAddress(insn.address()); // make generated bytes zero.
     if (insn.insnCode() == PSEUDO_SETDP) {
         if (getOperand8(_direct_page)) return getError();
@@ -435,8 +422,7 @@ Error Asm09<mcuType>::processPseudo(Insn &insn) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-template<McuType mcuType>
-Error Asm09<mcuType>::encode(
+Error AsmMc6809::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
     reset(skipSpaces(line), symtab);
@@ -446,9 +432,9 @@ Error Asm09<mcuType>::encode(
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
-    if (TableHd6309<mcuType>::table()->searchName(insn))
+    if (TableMc6809.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.mcuType() == HD6309 && mcuType != HD6309)
+    if (insn.mcuType() == HD6309 && mcuType() != HD6309)
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
@@ -459,7 +445,7 @@ Error Asm09<mcuType>::encode(
     case REGS:  return encodeRegisters(insn);
     case PSEUDO: return processPseudo(insn);
     default:
-        if (mcuType == HD6309) {
+        if (mcuType() == HD6309) {
             switch (insn.addrMode()) {
             case IMMDIR:
             case IMMEXT:
@@ -473,7 +459,7 @@ Error Asm09<mcuType>::encode(
     }
 
     if (determineAddrMode(_scan, insn)) return getError();
-    if (TableHd6309<mcuType>::table()->searchNameAndAddrMode(insn))
+    if (TableMc6809.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case IMM:  return encodeImmediate(insn);
@@ -483,5 +469,3 @@ Error Asm09<mcuType>::encode(
     default:   return setError(UNKNOWN_OPERAND);
     }
 }
-
-#endif // __ASM_HD6309_IMPL_H__

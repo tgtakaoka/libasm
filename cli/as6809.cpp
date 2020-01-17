@@ -1,4 +1,4 @@
-#include "asm_hd6309.h"
+#include "asm_mc6809.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
 #include "bin_formatter.h"

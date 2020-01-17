@@ -1,10 +1,10 @@
 /* -*- mode: c++; -*- */
-#ifndef __INSN_HD6309_H__
-#define __INSN_HD6309_H__
+#ifndef __INSN_MC6809_H__
+#define __INSN_MC6809_H__
 
 #include <string.h>
 
-#include "entry_hd6309.h"
+#include "entry_mc6809.h"
 #include "error_reporter.h"
 #include "dis_memory.h"
 
@@ -88,4 +88,4 @@ private:
     char              _name[8];
 };
 
-#endif // __INSN_HD6309_H__
+#endif // __INSN_MC6809_H__

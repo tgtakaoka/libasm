@@ -1,9 +1,9 @@
 /* -*- mode: c++; -*- */
-#ifndef __TABLE_HD6309_H__
-#define __TABLE_HD6309_H__
+#ifndef __TABLE_MC6809_H__
+#define __TABLE_MC6809_H__
 
-#include "config_hd6309.h"
-#include "insn_hd6309.h"
+#include "config_mc6809.h"
+#include "insn_mc6809.h"
 
 #define PSEUDO_SETDP   0x00     // reuse NEG opecode
 #define PSEUDO_ASSUME  0x03     // reuse COM opecode
@@ -14,8 +14,12 @@ struct EntryPage {
     const Entry *const end;
 };
 
-class TableHd6309Base {
+class TableMc6809 {
 public:
+    Error searchName(Insn &insn) const;
+    Error searchNameAndAddrMode(Insn &insn) const;
+    Error searchInsnCode(Insn &insn) const;
+
     static target::insn_t insnCode(
         target::opcode_t prefixCode, target::opcode_t opCode) {
         return (target::insn_t(prefixCode) << 8 | opCode);
@@ -28,7 +32,7 @@ public:
     }
     static bool isPrefixCode(target::opcode_t opCode);
 
-protected:
+private:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
@@ -43,14 +47,6 @@ protected:
         Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end);
 };
 
-template<McuType mcuType = HD6309>
-class TableHd6309 : public TableHd6309Base {
-public:
-    static const TableHd6309<mcuType> *table();
+extern TableMc6809 TableMc6809;
 
-    Error searchName(Insn &insn) const;
-    Error searchNameAndAddrMode(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
-};
-
-#endif // __TABLE_HD6309_H__
+#endif // __TABLE_MC6809_H__

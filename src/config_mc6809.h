@@ -1,6 +1,6 @@
 /* -*- mode: c++; -*- */
-#ifndef __CONFIG_HD6309_H__
-#define __CONFIG_HD6309_H__
+#ifndef __CONFIG_MC6809_H__
+#define __CONFIG_MC6809_H__
 
 #include "config_host.h"
 
@@ -44,6 +44,6 @@ enum AddrMode : host::uint_t {
     PSEUDO,
 };
 
-#include "reg_hd6309.h"
+#include "reg_mc6809.h"
 
-#endif // __CONFIG_HD6309_H__
+#endif // __CONFIG_MC6809_H__

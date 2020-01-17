@@ -1,8 +1,8 @@
 /* -*- mode: c++; -*- */
-#ifndef __ENTRY_HD6309_H__
-#define __ENTRY_HD6309_H__
+#ifndef __ENTRY_MC6809_H__
+#define __ENTRY_MC6809_H__
 
-#include "config_hd6309.h"
+#include "config_mc6809.h"
 
 struct Entry {
     const target::opcode_t opc;
@@ -41,4 +41,4 @@ static constexpr host::uint_t _flags(McuType mcuType, OprSize oprSize, AddrMode 
 #define P11(_opc, _name,  _sz, _mcu, _mode)                 \
     { _opc,  _flags(_mcu, SZ_##_sz, _mode), TEXT_##_name },
 
-#endif // __ENTRY_HD6309_H__
+#endif // __ENTRY_MC6809_H__

@@ -1,4 +1,4 @@
-#include "dis_hd6309.h"
+#include "dis_mc6809.h"
 #include "dis_driver.h"
 
 int main(int argc, const char **argv) {

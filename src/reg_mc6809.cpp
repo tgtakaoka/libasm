@@ -1,6 +1,6 @@
 #include <ctype.h>
 
-#include "config_hd6309.h"
+#include "config_mc6809.h"
 
 static constexpr RegName EXTRA_HD6309[] PROGMEM = {
     REG_E, REG_F, REG_V, REG_W
@@ -28,30 +28,30 @@ static constexpr char TFM_DST_MODES[4] PROGMEM = {
     '+', '-',   0, '+'
 };
 
-bool RegHd6309Utils::isidchar(const char c) {
+bool RegMc6809::isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-bool RegHd6309Utils::regCharCaseEqual(char c, char regChar) {
+bool RegMc6809::regCharCaseEqual(char c, char regChar) {
     return c == regChar || (isalpha(c) && toupper(c) == regChar);
 }
 
-char RegHd6309Utils::regName1stChar(const RegName regName) {
+char RegMc6809::regName1stChar(const RegName regName) {
     return toupper(char(regName));
 }
 
-char RegHd6309Utils::regName2ndChar(const RegName regName) {
+char RegMc6809::regName2ndChar(const RegName regName) {
     if (regName == REG_PC || regName == REG_PCR || regName == REG_CC) return 'C';
     if (regName == REG_DP) return 'P';
     return 0;
 }
 
-char RegHd6309Utils::regName3rdChar(const RegName regName) {
+char RegMc6809::regName3rdChar(const RegName regName) {
     if (regName == REG_PCR) return 'R';
     return 0;
 }
 
-bool RegHd6309Utils::compareRegName(const char *line, RegName regName) {
+bool RegMc6809::compareRegName(const char *line, RegName regName) {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -60,12 +60,12 @@ bool RegHd6309Utils::compareRegName(const char *line, RegName regName) {
     return !isidchar(*line);
 }
 
-host::uint_t RegHd6309Utils::regNameLen(RegName regName) {
+host::uint_t RegMc6809::regNameLen(RegName regName) {
     return regName2ndChar(regName) == 0 ? 1
         : (regName3rdChar(regName) == 0 ? 2 : 3);
 }
 
-char *RegHd6309Utils::outRegName(char *out, const RegName regName) {
+char *RegMc6809::outRegName(char *out, const RegName regName) {
     *out++ = regName1stChar(regName);
     const char r2 = regName2ndChar(regName);
     if (r2) {
@@ -78,7 +78,7 @@ char *RegHd6309Utils::outRegName(char *out, const RegName regName) {
     return out;
 }
 
-char *RegHd6309Utils::outCCRBits(char *out, uint8_t val) {
+char *RegMc6809::outCCRBits(char *out, uint8_t val) {
     host::int_t n = 0;
     for (host::uint_t mask = 0x80, i = 0; i < 8; mask >>= 1, i++) {
         if (val & mask) {
@@ -93,7 +93,7 @@ char *RegHd6309Utils::outCCRBits(char *out, uint8_t val) {
     return out;
 }
 
-host::int_t RegHd6309Utils::encodeRegNumber(
+host::int_t RegMc6809::encodeRegNumber(
     RegName regName, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         if (pgm_read_byte(p) == regName) return p - table;
@@ -101,7 +101,7 @@ host::int_t RegHd6309Utils::encodeRegNumber(
     return -1;
 }
 
-RegName RegHd6309Utils::parseRegName(
+RegName RegMc6809::parseRegName(
     const char *line, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         const RegName regName = RegName(pgm_read_byte(p));
@@ -110,47 +110,47 @@ RegName RegHd6309Utils::parseRegName(
     return REG_UNDEF;
 }
 
-RegName RegHd6309Utils::decodeRegNumber(
+RegName RegMc6809::decodeRegNumber(
     host::uint_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName RegHd6309Utils::getStackReg(host::uint_t bit, target::insn_t insnCode) {
+RegName RegMc6809::getStackReg(host::uint_t bit, target::insn_t insnCode) {
     const RegName *table = (insnCode & 2) == 0
         ? &STACK_S_REGS[0] : &STACK_U_REGS[0];
     return RegName(pgm_read_byte(&table[bit]));
 }
 
-RegName RegHd6309Utils::parseBitOpReg(const char *line) {
+RegName RegMc6809::parseBitOpReg(const char *line) {
     return parseRegName(line, ARRAY_RANGE(BIT_OP_REGS));
 }
 
-RegName RegHd6309Utils::parseTfmBaseReg(const char *line) {
+RegName RegMc6809::parseTfmBaseReg(const char *line) {
     return parseRegName(line, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
-host::int_t RegHd6309Utils::encodeBitOpReg(RegName regName) {
+host::int_t RegMc6809::encodeBitOpReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(BIT_OP_REGS));
 }
 
-host::int_t RegHd6309Utils::encodeTfmBaseReg(RegName regName) {
+host::int_t RegMc6809::encodeTfmBaseReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
-RegName RegHd6309Utils::decodeBitOpReg(uint8_t regNum) {
+RegName RegMc6809::decodeBitOpReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(BIT_OP_REGS));
 }
 
-RegName RegHd6309Utils::decodeTfmBaseReg(uint8_t regNum) {
+RegName RegMc6809::decodeTfmBaseReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
-char RegHd6309Utils::tfmSrcModeChar(host::uint_t mode) {
+char RegMc6809::tfmSrcModeChar(host::uint_t mode) {
     return pgm_read_byte(&TFM_SRC_MODES[mode]);
 }
 
-char RegHd6309Utils::tfmDstModeChar(host::uint_t mode) {
+char RegMc6809::tfmDstModeChar(host::uint_t mode) {
     return pgm_read_byte(&TFM_DST_MODES[mode]);
 }
 
@@ -158,74 +158,80 @@ static constexpr RegName MC6809_INDEX_REGS[] PROGMEM = {
     REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_B, REG_A, REG_UNDEF,
     REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_D
 };
-template<>
-const RegName *IndexRegHd6309<MC6809>::begin() const {
-    return ARRAY_BEGIN(MC6809_INDEX_REGS);
-}
-template<>
-const RegName *IndexRegHd6309<MC6809>::end() const {
-    return ARRAY_END(MC6809_INDEX_REGS);
-}
 
 static constexpr RegName HD6309_INDEX_REGS[] PROGMEM = {
     REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_UNDEF, REG_B, REG_A, REG_E,
     REG_UNDEF, REG_UNDEF, REG_F, REG_D, REG_UNDEF, REG_UNDEF, REG_W
 };
-template<>
-const RegName *IndexRegHd6309<HD6309>::begin() const {
-    return ARRAY_BEGIN(HD6309_INDEX_REGS);
-}
-template<>
-const RegName *IndexRegHd6309<HD6309>::end() const {
-    return ARRAY_END(HD6309_INDEX_REGS);
-}
 
 static constexpr RegName MC6809_BASE_REGS[] PROGMEM = {
     REG_X, REG_Y, REG_U, REG_S
 };
-template<>
-const RegName *BaseRegHd6309<MC6809>::begin() const {
-    return ARRAY_BEGIN(MC6809_BASE_REGS);
-}
-template<>
-const RegName *BaseRegHd6309<MC6809>::end() const {
-    return ARRAY_END(MC6809_BASE_REGS);
-}
 
 static constexpr RegName HD6309_BASE_REGS[] PROGMEM = {
     REG_X, REG_Y, REG_U, REG_S, REG_W
 };
-template<>
-const RegName *BaseRegHd6309<HD6309>::begin() const {
-    return ARRAY_BEGIN(HD6309_BASE_REGS);
-}
-template<>
-const RegName *BaseRegHd6309<HD6309>::end() const {
-    return ARRAY_END(HD6309_BASE_REGS);
-}
 
 static constexpr RegName MC6809_DATA_REGS[] PROGMEM = {
     REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_UNDEF, REG_UNDEF,
     REG_A, REG_B, REG_CC, REG_DP
 };
-template<>
-const RegName *DataRegHd6309<MC6809>::begin() const {
-    return ARRAY_BEGIN(MC6809_DATA_REGS);
-}
-template<>
-const RegName *DataRegHd6309<MC6809>::end() const {
-    return ARRAY_END(MC6809_DATA_REGS);
-}
 
 static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
     REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_W, REG_V,
     REG_A, REG_B, REG_CC, REG_DP, REG_ZERO, REG_ZERO, REG_E, REG_F,
 };
-template<>
-const RegName *DataRegHd6309<HD6309>::begin() const {
-    return ARRAY_BEGIN(HD6309_DATA_REGS);
+
+RegName RegMc6809::parseIndexReg(const char *line) const {
+    return _mcuType == MC6809
+        ? parseRegName(line, ARRAY_RANGE(MC6809_INDEX_REGS))
+        : parseRegName(line, ARRAY_RANGE(HD6309_INDEX_REGS));
 }
-template<>
-const RegName *DataRegHd6309<HD6309>::end() const {
-    return ARRAY_END(HD6309_DATA_REGS);
+
+RegName RegMc6809::parseBaseReg(const char *line) const {
+    return _mcuType == MC6809
+        ? parseRegName(line, ARRAY_RANGE(MC6809_BASE_REGS))
+        : parseRegName(line, ARRAY_RANGE(HD6309_BASE_REGS));
+}
+
+RegName RegMc6809::parseDataReg(const char *line) const {
+    return _mcuType == MC6809
+        ? parseRegName(line, ARRAY_RANGE(MC6809_DATA_REGS))
+        : parseRegName(line, ARRAY_RANGE(HD6309_DATA_REGS));
+}
+
+host::int_t RegMc6809::encodeIndexReg(RegName regName) const {
+    return _mcuType == MC6809
+        ? encodeRegNumber(regName, ARRAY_RANGE(MC6809_INDEX_REGS))
+        : encodeRegNumber(regName, ARRAY_RANGE(HD6309_INDEX_REGS));
+}
+
+host::int_t RegMc6809::encodeBaseReg(RegName regName) const {
+    return _mcuType == MC6809
+        ? encodeRegNumber(regName, ARRAY_RANGE(MC6809_BASE_REGS))
+        : encodeRegNumber(regName, ARRAY_RANGE(HD6309_BASE_REGS));
+}
+
+host::int_t RegMc6809::encodeDataReg(RegName regName) const {
+    return _mcuType == MC6809
+        ? encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS))
+        : encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS));
+}
+
+RegName RegMc6809::decodeIndexReg(uint8_t regNum) const {
+    return _mcuType == MC6809
+        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_INDEX_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_INDEX_REGS));
+}
+
+RegName RegMc6809::decodeBaseReg(uint8_t regNum) const {
+    return _mcuType == MC6809
+        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_BASE_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_BASE_REGS));
+}
+
+RegName RegMc6809::decodeRegName(uint8_t regNum) const {
+    return _mcuType == MC6809
+        ? decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS))
+        : decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS));
 }
