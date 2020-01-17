@@ -3,7 +3,7 @@
 
 #include "asm_z80.h"
 
-bool AsmZ80::acceptCpu(const char *cpu) const {
+bool AsmZ80::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "z80") == 0;
 }
 

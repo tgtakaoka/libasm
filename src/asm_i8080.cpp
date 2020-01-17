@@ -3,7 +3,7 @@
 
 #include "asm_i8080.h"
 
-bool AsmI8080::acceptCpu(const char *cpu) const {
+bool AsmI8080::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "8080") == 0;
 }
 

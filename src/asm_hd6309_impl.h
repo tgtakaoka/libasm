@@ -5,12 +5,12 @@
 #include <ctype.h>
 
 template<>
-bool Asm09<MC6809>::acceptCpu(const char *cpu) const {
+bool Asm09<MC6809>::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "6809") == 0;
 }
 
 template<>
-bool Asm09<HD6309>::acceptCpu(const char *cpu) const {
+bool Asm09<HD6309>::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "6309") == 0
         || strcasecmp(cpu, "6809") == 0;
 }

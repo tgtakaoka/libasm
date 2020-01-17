@@ -3,7 +3,7 @@
 
 #include "asm_tms9995.h"
 
-bool AsmTms9995::acceptCpu(const char *cpu) const {
+bool AsmTms9995::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "tms9900") == 0;
 }
 

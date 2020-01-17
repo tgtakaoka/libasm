@@ -21,7 +21,7 @@ public:
         SymbolTable *symtab) = 0;
     virtual AsmOperand &getParser() = 0;
     const char *errorAt() const { return _scan; }
-    virtual bool acceptCpu(const char *cpu) const = 0;
+    virtual bool acceptCpu(const char *cpu) = 0;
 
 protected:
     const char *_scan;
