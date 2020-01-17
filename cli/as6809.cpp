@@ -5,7 +5,7 @@
 
 int main(int argc, const char **argv) {
     AsmMc6809 assembler;
-    AsmMotoDirective<AsmMc6809> directive(assembler);
-    AsmDriver<AsmMc6809, SRecord<target::uintptr_t>> driver(directive);
+    AsmMotoDirective<target::uintptr_t> directive(assembler);
+    AsmDriver<target::uintptr_t, SRecord<target::uintptr_t>> driver(directive);
     return driver.main(argc, argv);
 }

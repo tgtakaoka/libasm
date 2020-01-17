@@ -7,18 +7,22 @@
 #include "asm_operand.h"
 
 #include <ctype.h>
-#include <string.h>
 
 template<typename Addr>
 class Assembler : public ErrorReporter {
 public:
     typedef Addr addr_t;
 
-    virtual Error encode(
-        const char *line,
-        Insn &insn,
-        Addr addr,
-        SymbolTable *symtab) = 0;
+    Error encode(
+        const char *line, Insn &insn, Addr addr,SymbolTable *symtab) {
+        _scan = skipSpaces(line);
+        if (checkLineEnd() == OK)
+            return setError(NO_INSTRUCTION);
+        this->resetError();
+        _symtab = symtab;
+        insn.resetAddress(addr);
+        return encode(insn);
+    }
     virtual AsmOperand &getParser() = 0;
     const char *errorAt() const { return _scan; }
     virtual bool acceptCpu(const char *cpu) = 0;
@@ -67,6 +71,9 @@ protected:
             return setError(OK);
         return setError(GARBAGE_AT_END);
     }
+
+private:
+    virtual Error encode(Insn &insn) = 0;
 };
 
 #endif // __ASM_INTERFACE_H__

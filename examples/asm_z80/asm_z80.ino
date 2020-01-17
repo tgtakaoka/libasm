@@ -1,6 +1,7 @@
 #include <asm_z80.h>
 
-AsmZ80 assembler;
+AsmZ80 asz80;
+Assembler<uint16_t> &assembler(asz80);
 
 String line;
 bool line_ready = false;

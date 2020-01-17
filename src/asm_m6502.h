@@ -10,11 +10,6 @@
 
 class AsmM6502 : public Assembler<target::uintptr_t> {
 public:
-    Error encode(
-        const char *line,
-        Insn &insn,
-        target::uintptr_t addr,
-        SymbolTable *symtab) override;
     AsmOperand &getParser() override { return _parser; }
     bool acceptCpu(const char *cpu) override;
 
@@ -27,6 +22,8 @@ private:
 
     Error encodeRelative(Insn &insn, bool emitInsn);
     Error encodeZeroPageRelative(Insn &insn);
+
+    Error encode(Insn &insn) override;
 };
 
 #endif // __ASM_M6502_H__

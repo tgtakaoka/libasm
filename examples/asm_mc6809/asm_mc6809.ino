@@ -1,6 +1,7 @@
 #include <asm_mc6809.h>
 
-AsmMc6809 assembler;
+AsmMc6809 as6809;
+Assembler<uint16_t> &assembler(as6809);
 
 String line;
 bool line_ready = false;

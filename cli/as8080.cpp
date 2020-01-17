@@ -5,7 +5,7 @@
 
 int main(int argc, const char **argv) {
     AsmI8080 assembler;
-    AsmIntelDirective<AsmI8080> directive(assembler);
-    AsmDriver<AsmI8080, IntelHex<target::uintptr_t>> driver(directive);
+    AsmIntelDirective<target::uintptr_t> directive(assembler);
+    AsmDriver<target::uintptr_t, IntelHex<target::uintptr_t>> driver(directive);
     return driver.main(argc, argv);
 }

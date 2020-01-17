@@ -3,7 +3,8 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmZ80 assembler;
+AsmZ80 asz80;
+Assembler<target::uintptr_t> &assembler(asz80);
 
 static void set_up() {
 }

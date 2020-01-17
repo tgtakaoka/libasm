@@ -119,16 +119,9 @@ Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
     return setError(UNKNOWN_OPERAND);
 }
 
-Error AsmM6502::encode(
-    const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable *symtab) {
-    reset(skipSpaces(line), symtab);
-    insn.resetAddress(addr);
-
-    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+Error AsmM6502::encode(Insn &insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-
     if (TableM6502.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.is65c02() && !TableM6502.is65c02())

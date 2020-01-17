@@ -5,7 +5,7 @@
 
 int main(int argc, const char **argv) {
     AsmTms9995 assembler;
-    AsmIntelDirective<AsmTms9995> directive(assembler);
-    AsmDriver<AsmTms9995, IntelHex<target::uintptr_t>, true> driver(directive);
+    AsmIntelDirective<target::uintptr_t> directive(assembler);
+    AsmDriver<target::uintptr_t, IntelHex<target::uintptr_t>, true> driver(directive);
     return driver.main(argc, argv);
 }

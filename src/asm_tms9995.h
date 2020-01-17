@@ -10,11 +10,6 @@
 
 class AsmTms9995 : public Assembler<target::uintptr_t> {
 public:
-    Error encode(
-        const char *line,
-        Insn &insn,
-        target::uintptr_t addr,
-        SymbolTable *symtab) override;
     AsmOperand &getParser() override { return _parser; }
     bool acceptCpu(const char *cpu) override;
 
@@ -32,6 +27,8 @@ private:
     Error encodeRel(Insn &insn);
     Error encodeCruOff(Insn &insn);
     Error encodeIoaddr(Insn &insn);
+
+    Error encode(Insn &insn) override;
 };
 
 #endif // __ASM_TMS9995_H__

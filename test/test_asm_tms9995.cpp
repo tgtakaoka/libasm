@@ -3,7 +3,8 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmTms9995 assembler;
+AsmTms9995 as9995;
+Assembler<target::uintptr_t> &assembler(as9995);
 
 static void set_up() {
 }

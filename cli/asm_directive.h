@@ -12,13 +12,11 @@
 #include "asm_listing.h"
 #include "file_util.h"
 
-template <typename Asm>
+template <typename Addr>
 class AsmDirective : public ErrorReporter,
-                     public AsmLine<typename Asm::addr_t>,
+                     public AsmLine<Addr>,
                      protected SymbolTable {
 public:
-    typedef typename Asm::addr_t Addr;
-
     virtual ~AsmDirective() {
         free(_line);
     }
@@ -183,7 +181,7 @@ public:
     // Error reporting
 
 protected:
-    AsmDirective(Asm &assembler)
+    AsmDirective(Assembler<Addr> &assembler)
         : _assembler(assembler),
           _parser(assembler.getParser()),
           _line_len(128),
@@ -215,7 +213,7 @@ protected:
         const Source *include_from;
     };
 
-    Asm &_assembler;
+    Assembler<Addr> &_assembler;
     AsmOperand &_parser;
     size_t _line_len;
     char *_line;
@@ -451,11 +449,11 @@ private:
     }
 };
 
-template<typename Asm>
-class AsmMotoDirective : public AsmDirective<Asm> {
+template<typename Addr>
+class AsmMotoDirective : public AsmDirective<Addr> {
 public:
-    typedef typename Asm::addr_t Addr;
-    AsmMotoDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
+    AsmMotoDirective(Assembler<Addr> &assembler)
+        : AsmDirective<Addr>(assembler) {}
 
 protected:
     Error processDirective(
@@ -472,11 +470,11 @@ protected:
     }
 };
 
-template<typename Asm>
-class AsmMostekDirective : public AsmDirective<Asm> {
+template<typename Addr>
+class AsmMostekDirective : public AsmDirective<Addr> {
 public:
-    typedef typename Asm::addr_t Addr;
-    AsmMostekDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
+    AsmMostekDirective(Assembler<Addr> &assembler)
+        : AsmDirective<Addr>(assembler) {}
 
 protected:
     Error processDirective(
@@ -496,11 +494,11 @@ protected:
     }
 };
 
-template<typename Asm>
-class AsmIntelDirective : public AsmDirective<Asm> {
+template<typename Addr>
+class AsmIntelDirective : public AsmDirective<Addr> {
 public:
-    typedef typename Asm::addr_t Addr;
-    AsmIntelDirective(Asm &assembler) : AsmDirective<Asm>(assembler) {}
+    AsmIntelDirective(Assembler<Addr> &assembler)
+        : AsmDirective<Addr>(assembler) {}
 
 protected:
     Error processDirective(

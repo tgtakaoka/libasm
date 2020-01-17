@@ -3,7 +3,8 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmI8080 assembler;
+AsmI8080 as8080;
+Assembler<target::uintptr_t> &assembler(as8080);
 
 static void set_up() {
 }

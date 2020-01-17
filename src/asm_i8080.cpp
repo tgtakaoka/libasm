@@ -99,16 +99,9 @@ Error AsmI8080::encodeIoaddr(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmI8080::encode(
-    const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable *symtab) {
-    reset(skipSpaces(line), symtab);
-    insn.resetAddress(addr);
-
-    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+Error AsmI8080::encode(Insn &insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-
     if (TableI8080.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);

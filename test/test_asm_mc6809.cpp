@@ -3,7 +3,8 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmMc6809 assembler;
+AsmMc6809 as6809;
+Assembler<target::uintptr_t> &assembler(as6809);
 
 static void set_up() {
     TEST("SETDP 0");

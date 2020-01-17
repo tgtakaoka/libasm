@@ -140,16 +140,9 @@ Error AsmTms9995::encodeCruOff(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmTms9995::encode(
-    const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable *symtab) {
-    reset(skipSpaces(line), symtab);
-    insn.resetAddress(addr);
-
-    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+Error AsmTms9995::encode(Insn &insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-
     if (TableTms9995.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);

@@ -5,7 +5,7 @@
 
 int main(int argc, const char **argv) {
     AsmM6502 assembler;
-    AsmMostekDirective<AsmM6502> directive(assembler);
-    AsmDriver<AsmM6502, SRecord<target::uintptr_t>> driver(directive);
+    AsmMostekDirective<target::uintptr_t> directive(assembler);
+    AsmDriver<target::uintptr_t, SRecord<target::uintptr_t>> driver(directive);
     return driver.main(argc, argv);
 }

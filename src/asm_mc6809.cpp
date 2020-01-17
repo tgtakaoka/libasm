@@ -422,16 +422,9 @@ Error AsmMc6809::processPseudo(Insn &insn) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error AsmMc6809::encode(
-    const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable *symtab) {
-    reset(skipSpaces(line), symtab);
-    insn.resetAddress(addr);
-
-    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+Error AsmMc6809::encode(Insn &insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-
     if (TableMc6809.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     if (insn.is6309() && !TableMc6809.is6309())

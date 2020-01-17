@@ -3,7 +3,8 @@
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmM6502 assembler;
+AsmM6502 as6502;
+Assembler<target::uintptr_t> &assembler(as6502);
 
 static void set_up() {
     assembler.acceptCpu("6502");

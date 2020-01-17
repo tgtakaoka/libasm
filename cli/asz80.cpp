@@ -5,7 +5,7 @@
 
 int main(int argc, const char **argv) {
     AsmZ80 assembler;
-    AsmIntelDirective<AsmZ80> directive(assembler);
-    AsmDriver<AsmZ80, IntelHex<target::uintptr_t>> driver(directive);
+    AsmIntelDirective<target::uintptr_t> directive(assembler);
+    AsmDriver<target::uintptr_t, IntelHex<target::uintptr_t>> driver(directive);
     return driver.main(argc, argv);
 }

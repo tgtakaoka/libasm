@@ -8,12 +8,10 @@
 #include <stdio.h>
 #include <string.h>
 
-template<typename Asm, typename Formatter, bool wordBase = false>
+template<typename Addr, typename Formatter, bool wordBase = false>
 class AsmDriver {
 public:
-    typedef typename Asm::addr_t Addr;
-
-    AsmDriver(AsmDirective<Asm> &directive)
+    AsmDriver(AsmDirective<Addr> &directive)
         : _directive(directive)
     {}
     virtual ~AsmDriver() {
@@ -76,7 +74,7 @@ public:
     }
 
 private:
-    AsmDirective<Asm> &_directive;
+    AsmDirective<Addr> &_directive;
     AsmListing<Addr> _listing;
     const char *_progname;
     const char *_input_name;

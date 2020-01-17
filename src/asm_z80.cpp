@@ -336,16 +336,9 @@ Error AsmZ80::parseOperand(
     return setError(UNKNOWN_OPERAND);
 }
 
-Error AsmZ80::encode(
-    const char *line, Insn &insn, target::uintptr_t addr,
-    SymbolTable *symtab) {
-    reset(skipSpaces(line), symtab);
-    insn.resetAddress(addr);
-
-    if (checkLineEnd() == OK) return setError(NO_INSTRUCTION);
+Error AsmZ80::encode(Insn &insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-
     if (TableZ80.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
