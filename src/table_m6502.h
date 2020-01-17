@@ -1,12 +1,17 @@
 /* -*- mode: c++; -*- */
-#ifndef __TABLE_R65C02_H__
-#define __TABLE_R65C02_H__
+#ifndef __TABLE_M6502_H__
+#define __TABLE_M6502_H__
 
-#include "config_r65c02.h"
-#include "insn_r65c02.h"
+#include "config_m6502.h"
+#include "insn_m6502.h"
 
-class TableR65c02Base {
-protected:
+class TableM6502 {
+public:
+    Error searchName(Insn &insn) const;
+    Error searchNameAndAddrMode(Insn &insn) const;
+    Error searchInsnCode(Insn &insn) const;
+
+private:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
@@ -21,14 +26,6 @@ protected:
         Insn &insn, target::insn_t insnCode, const Entry *table, const Entry *end);
 };
 
-template<McuType mcuType = R65C02>
-class TableR65c02 : public TableR65c02Base {
-public:
-    static const TableR65c02<mcuType> *table();
-    
-    Error searchName(Insn &insn) const;
-    Error searchNameAndAddrMode(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
-};
+extern TableM6502 TableM6502;
 
-#endif // __TABLE_R65C02_H__
+#endif // __TABLE_M6502_H__

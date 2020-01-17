@@ -1,23 +1,21 @@
-/* -*- mode: c++; -*- */
-#ifndef __ASM_R65C02_IMPL_H__
-#define __ASM_R65C02_IMPL_H__
+#include "asm_m6502.h"
 
 #include <ctype.h>
 #include <string.h>
 
-template<>
-bool Asm6502<R6502>::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "6502") == 0;
+bool AsmM6502::acceptCpu(const char *cpu) {
+    if (strcasecmp(cpu, "6502") == 0) {
+        _mcuType = McuType::M6502;
+        return true;
+    }
+    if (strcasecmp(cpu, "65c02") == 0) {
+        _mcuType = McuType::W65C02;
+        return true;
+    }
+    return false;
 }
 
-template<>
-bool Asm6502<R65C02>::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "65c02") == 0
-        || strcasecmp(cpu, "6502") == 0;
-}
-
-template<McuType mcuType>
-Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
+Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
@@ -28,9 +26,8 @@ Error Asm6502<mcuType>::encodeRelative(Insn &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
-#ifdef R65C02_ENABLE_BITOPS
-template<McuType mcuType>
-Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
+#ifdef W65C02_ENABLE_BITOPS
+Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
     uint16_t zp;
     if (getOperand(zp)) return getError();
@@ -42,8 +39,7 @@ Error Asm6502<mcuType>::encodeZeroPageRelative(Insn &insn) {
 }
 #endif
 
-template<McuType mcuType>
-Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
+Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
     char c = toupper(*_scan);
     if (c == '#') {
         _scan++;
@@ -123,8 +119,7 @@ Error Asm6502<mcuType>::parseOperand(Insn &insn, uint16_t &val16) {
     return setError(UNKNOWN_OPERAND);
 }
 
-template<McuType mcuType>
-Error Asm6502<mcuType>::encode(
+Error AsmM6502::encode(
     const char *line, Insn &insn, target::uintptr_t addr,
     SymbolTable *symtab) {
     reset(skipSpaces(line), symtab);
@@ -134,9 +129,9 @@ Error Asm6502<mcuType>::encode(
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
-    if (TableR65c02<mcuType>::table()->searchName(insn))
+    if (TableM6502.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.mcuType() == R65C02 && mcuType != R65C02)
+    if (insn.mcuType() == W65C02 && _mcuType != W65C02)
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
@@ -147,8 +142,8 @@ Error Asm6502<mcuType>::encode(
     case REL8:
         return encodeRelative(insn, /* emitInsn */ true);
     default:
-#ifdef R65C02_ENABLE_BITOPS
-        if (mcuType == R65C02 && insn.addrMode() == ZP_REL8)
+#ifdef W65C02_ENABLE_BITOPS
+        if (_mcuType == R65C02 && insn.addrMode() == ZP_REL8)
             return encodeZeroPageRelative(insn);
 #endif
         break;
@@ -156,7 +151,7 @@ Error Asm6502<mcuType>::encode(
 
     uint16_t val16;
     if (parseOperand(insn, val16)) return getError();
-    if (TableR65c02<mcuType>::table()->searchNameAndAddrMode(insn))
+    if (TableM6502.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case ACCUMULATOR:
@@ -170,7 +165,7 @@ Error Asm6502<mcuType>::encode(
     case INDIRECT_IDX:
     case ZP_INDIRECT:
         emitInsnCode(insn);
-        insn.emitByte(uint8_t(val16));
+        insn.emitByte(static_cast<uint8_t>(val16));
         return setError(OK);
     case ABSOLUTE:
     case ABS_IDX_X:
@@ -184,5 +179,3 @@ Error Asm6502<mcuType>::encode(
         return setError(INTERNAL_ERROR);
     }
 }
-
-#endif // __ASM_R65C02_IMPL_H__

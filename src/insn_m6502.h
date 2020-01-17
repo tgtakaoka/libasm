@@ -1,10 +1,10 @@
 /* -*- mode: c++; -*- */
-#ifndef __INSN_R65C02_H__
-#define __INSN_R65C02_H__
+#ifndef __INSN_M6502_H__
+#define __INSN_M6502_H__
 
 #include <string.h>
 
-#include "entry_r65c02.h"
+#include "entry_m6502.h"
 #include "error_reporter.h"
 #include "dis_memory.h"
 
@@ -71,4 +71,4 @@ private:
     char              _name[5];
 };
 
-#endif // __INSN_R65C02_H__
+#endif // __INSN_M6502_H__

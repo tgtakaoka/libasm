@@ -1,4 +1,4 @@
-	include test_r6502.asm
+	include test_m6502.asm
 
         cpu     65c02
 

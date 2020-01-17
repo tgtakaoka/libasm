@@ -1,12 +1,8 @@
-/* -*- mode: c++; -*- */
-#ifndef __DIS_R65C02_IMPL_H__
-#define __DIS_R65C02_IMPL_H__
-
+#include "dis_m6502.h"
 #include "dis_operand.h"
-#include "table_r65c02.h"
+#include "table_m6502.h"
 
-template<McuType mcuType>
-Error Dis6502<mcuType>::decodeImmediate(
+Error DisM6502::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -20,8 +16,7 @@ Error Dis6502<mcuType>::decodeImmediate(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis6502<mcuType>::decodeAbsolute(
+Error DisM6502::decodeAbsolute(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     const bool indirect = (insn.addrMode() == IDX_ABS_IND)
         || (insn.addrMode() == ABS_INDIRECT);
@@ -57,8 +52,7 @@ Error Dis6502<mcuType>::decodeAbsolute(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis6502<mcuType>::decodeZeroPage(
+Error DisM6502::decodeZeroPage(
     DisMemory<target::uintptr_t> &memory, Insn& insn) {
     const bool indirect = insn.addrMode() == INDX_IND
         || insn.addrMode() == INDIRECT_IDX
@@ -93,7 +87,7 @@ Error Dis6502<mcuType>::decodeZeroPage(
     }
     if (indirect && index != 'Y') *_operands++ = ')';
     *_operands = 0;
-#ifdef R65C02_ENABLE_BITOPS
+#ifdef W65C02_ENABLE_BITOPS
     if (insn.addrMode() == ZP_REL8) {
         *_operands++ = ',';
         return decodeRelative(memory, insn);
@@ -102,14 +96,13 @@ Error Dis6502<mcuType>::decodeZeroPage(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis6502<mcuType>::decodeRelative(
+Error DisM6502::decodeRelative(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::ptrdiff_t delta;
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     delta = static_cast<int8_t>(val);
-#ifdef R65C02_ENABLE_BITOPS
+#ifdef W65C02_ENABLE_BITOPS
     const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
 #else
     const host::uint_t insnLen = 2;
@@ -124,8 +117,7 @@ Error Dis6502<mcuType>::decodeRelative(
     return setError(OK);
 }
 
-template<McuType mcuType>
-Error Dis6502<mcuType>::decode(
+Error DisM6502::decode(
     DisMemory<target::uintptr_t> &memory, Insn &insn, char *operands,
     SymbolTable *symtab) {
     reset(operands, symtab);
@@ -135,10 +127,10 @@ Error Dis6502<mcuType>::decode(
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
 
-    if (TableR65c02<mcuType>::table()->searchInsnCode(insn))
+    if (TableM6502.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    if (insn.mcuType() == R65C02 && mcuType != R65C02)
+    if (insn.mcuType() == W65C02 && _mcuType != W65C02)
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -162,7 +154,7 @@ Error Dis6502<mcuType>::decode(
     case INDX_IND:
     case INDIRECT_IDX:
     case ZP_INDIRECT:
-#ifdef R65C02_ENABLE_BITOPS
+#ifdef W65C02_ENABLE_BITOPS
     case ZP_REL8:
 #endif
         return decodeZeroPage(memory, insn);
@@ -172,5 +164,3 @@ Error Dis6502<mcuType>::decode(
         return setError(INTERNAL_ERROR);
     }
 }
-
-#endif // __DIS_R65C02_IMPL_H__

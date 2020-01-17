@@ -1,16 +1,15 @@
 /* -*- mode: c++; -*- */
-#ifndef __DIS_R65C02_H__
-#define __DIS_R65C02_H__
+#ifndef __DIS_M6502_H__
+#define __DIS_M6502_H__
 
-#include "config_r65c02.h"
+#include "config_m6502.h"
 
-#include "insn_r65c02.h"
+#include "insn_m6502.h"
 #include "dis_memory.h"
 #include "symbol_table.h"
 #include "dis_interface.h"
 
-template<McuType mcuType>
-class Dis6502 : public DisCommon<target::uintptr_t> {
+class DisM6502 : public DisCommon<target::uintptr_t> {
 public:
     Error decode(
         DisMemory<target::uintptr_t> &memory,
@@ -19,8 +18,11 @@ public:
         SymbolTable *symtab) override;
     DisOperand &getFormatter() override { return _formatter; }
 
+    void acceptCpu(McuType mcuType) { _mcuType = mcuType; }
+
 private:
     DisMotoOperand _formatter;
+    McuType _mcuType = M6502;
 
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);
@@ -28,9 +30,4 @@ private:
     Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
 };
 
-#include "dis_r65c02_impl.h"
-
-typedef Dis6502<R6502> DisR6502;
-typedef Dis6502<R65C02> DisR65c02;
-
-#endif // __DIS_R65C02_H__
+#endif // __DIS_M6502_H__

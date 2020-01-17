@@ -1,15 +1,14 @@
 /* -*- mode: c++; -*- */
-#ifndef __ASM_R65C02_H__
-#define __ASM_R65C02_H__
+#ifndef __ASM_M6502_H__
+#define __ASM_M6502_H__
 
-#include "config_r65c02.h"
+#include "config_m6502.h"
 
 #include "symbol_table.h"
-#include "table_r65c02.h"
+#include "table_m6502.h"
 #include "asm_interface.h"
 
-template<McuType mcuType>
-class Asm6502 : public Assembler<target::uintptr_t> {
+class AsmM6502 : public Assembler<target::uintptr_t> {
 public:
     Error encode(
         const char *line,
@@ -21,6 +20,7 @@ public:
 
 private:
     AsmMotoOperand _parser;
+    McuType _mcuType = M6502;
 
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 
@@ -30,9 +30,4 @@ private:
     Error encodeZeroPageRelative(Insn &insn);
 };
 
-#include "asm_r65c02_impl.h"
-
-typedef Asm6502<R6502> AsmR6502;
-typedef Asm6502<R65C02> AsmR65c02;
-
-#endif // __ASM_R65C02_H__
+#endif // __ASM_M6502_H__
