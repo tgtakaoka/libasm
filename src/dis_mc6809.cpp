@@ -38,8 +38,8 @@ Error DisMc6809::decodeExtended(
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
+    if (addr < 0x100) *_operands++ = '>';
     if (label) {
-        if (addr < 0x100) *_operands++ = '>';
         outText(label);
     } else {
         outConstant(addr, 16, false);
