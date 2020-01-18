@@ -4,19 +4,19 @@
 
 #include "cli_memory.h"
 #include "dis_interface.h"
+#include "dis_listing.h"
 #include "file_util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-template<typename Dis, bool wordBase = false>
+template<typename Addr, bool wordBase = false>
 class DisDriver {
 public:
-    typedef typename Dis::addr_t Addr;
-
     DisDriver(Disassembler<Addr> &disassembler)
-        : _disassembler(disassembler)
+        : _disassembler(disassembler),
+          _uppercase(false)
     {}
 
     virtual ~DisDriver() {
@@ -57,73 +57,31 @@ public:
         memory.dump(
             [this, output, list, &memory]
             (Addr base, const uint8_t *data, size_t size) {
-                Insn insn;
-                char operands[40];
+                DisListing<Addr, wordBase>
+                    listing(_disassembler, memory, _uppercase);
                 if (list) {
-                    _disassembler.getFormatter().output(
-                        operands, base, 16, false, sizeof(Addr));
-                    if (sizeof(Addr) == 2) {
-                        fprintf(list, "%04x:                   %-6s %s\n",
-                                base, "ORG", operands);
-                    } else {
-                        fprintf(list, "%08x:                   %-6s %s\n",
-                                base, "ORG", operands);
-                    }
+                    fprintf(list, "%s\n", listing.origin(base, true));
                 }
                 if (output) {
-                    _disassembler.getFormatter().output(
-                        operands, base, 16, false, sizeof(Addr));
-                    fprintf(output, "\t%-6s %s\n", "ORG", operands);
+                    fprintf(output, "%s\n", listing.origin(base));
                 }
+                Insn insn;
                 for (size_t pc = 0; pc < size; pc += insn.insnLen()) {
                     Addr address = base + pc;
-                    memory.setAddress(address);
-                    _disassembler.decode(memory, insn, operands, nullptr);
+                    listing.disassemble(address, insn);
                     if (list) {
                         if (_disassembler.getError())
                             fprintf(list, "Error %d\n", _disassembler.getError());
-                        if (sizeof(Addr) == 2) {
-                            fprintf(list, "%04x:", address);
-                        } else {
-                            fprintf(list, "%08x:", address);
-                        }
-                        int i = 0;
-                        while (i < insn.insnLen() && i < 6)
-                            fprintf(list, "%s%02x",
-                                    wordBase && (i % 2) == 0? "" : " ",
-                                    insn.bytes()[i++]);
-                        if (wordBase) {
-                            while (i < 6) {
-                                fprintf(list, "     ");
-                                i += 2;
-                            }
-                        } else {
-                            while (i < 6) {
-                                fprintf(list, "     ");
-                                i++;
-                            }
-                        }
-                        fprintf(list, " %-6s %s\n", insn.name(), operands);
-                        while (i < insn.insnLen()) {
-                            if (sizeof(Addr) == 2) {
-                                fprintf(list, "%04x:", address + i);
-                            } else {
-                                fprintf(list, "%08x:", address + i);
-                            }
-                            int j = 0;
-                            while (i + j < insn.insnLen() && j < 6) {
-                                fprintf(list, "%s%02x",
-                                        wordBase && (j % 2) == 0 ? "" : " ",
-                                        insn.bytes()[i + j++]);
-                            }
-                            i += j;
-                            fprintf(list, "\n");
-                        }
+                        do {
+                            fprintf(list, "%s\n", listing.getLine());
+                        } while (listing.hasNext());
                     }
                     if (output) {
                         if (_disassembler.getError())
                             fprintf(output, "Error %d\n", _disassembler.getError());
-                        fprintf(output, "\t%-6s %s\n", insn.name(), operands);
+                        do {
+                            fprintf(output, "%s\n", listing.getContent());
+                        } while (listing.hasNext());
                     }
                 }
             });
@@ -135,6 +93,7 @@ public:
 
 private:
     Disassembler<Addr> &_disassembler;
+    bool _uppercase;
     const char *_progname;
     const char *_input_name;
     const char *_output_name;
@@ -221,6 +180,8 @@ private:
                         fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                         return 4;
                     }
+                case 'u':
+                    _uppercase = true;
                     break;
                 default:
                     fprintf(stderr, "unknown option: %s\n", opt);
@@ -259,8 +220,9 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-C <cpu>] [-o <output>] [-l <list>] <input>\n"
+                "usage: %s [-C <cpu>] [-u] [-o <output>] [-l <list>] <input>\n"
                 "  -C : CPU variant: 6809, 6309, 6502, 65c02, 8080, z80, 9995\n"
+                "  -u : use uppercase letter for output\n"
                 "  <input> file can be Motorola SREC or Intel HEX format\n",
                 _progname);
         return 2;

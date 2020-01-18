@@ -3,6 +3,6 @@
 
 int main(int argc, const char **argv) {
     DisMc6809 disassembler;
-    DisDriver<DisMc6809> driver(disassembler);
+    DisDriver<target::uintptr_t> driver(disassembler);
     return driver.main(argc, argv);
 }

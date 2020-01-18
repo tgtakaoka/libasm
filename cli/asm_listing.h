@@ -42,7 +42,8 @@ public:
 
     const char *getContent() {
         _out.clear();
-        formatContent();
+        formatContent(0);
+        _next = _line->generatedSize();
         return _out.c_str();
     }
 
