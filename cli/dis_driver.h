@@ -180,6 +180,7 @@ private:
                         fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                         return 4;
                     }
+                    break;
                 case 'u':
                     _uppercase = true;
                     break;
