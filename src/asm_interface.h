@@ -34,7 +34,7 @@ protected:
     void reset(const char *line, SymbolTable *symtab) {
         _scan = line;
         _symtab = symtab;
-        ErrorReporter::resetError();
+        resetError();
     }
     bool hasSymbol(const char *symbol) const {
         return _symtab && _symtab->hasSymbol(symbol);
@@ -46,17 +46,17 @@ protected:
     Error getOperand32(uint32_t &val32) {
         AsmOperand &parser = getParser();
         _scan = parser.eval(_scan, val32, _symtab);
-        return ErrorReporter::setError(parser);
+        return setError(parser);
     }
     Error getOperand16(uint16_t &val16) {
         AsmOperand &parser = getParser();
         _scan = parser.eval(_scan, val16, _symtab);
-        return ErrorReporter::setError(parser);
+        return setError(parser);
     }
     Error getOperand8(uint8_t &val8) {
         AsmOperand &parser = getParser();
         _scan = parser.eval(_scan, val8, _symtab);
-        return ErrorReporter::setError(parser);
+        return setError(parser);
     }
 
     const char *skipSpaces(const char *scan) {

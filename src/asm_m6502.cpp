@@ -40,24 +40,27 @@ Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
 #endif
 
 Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
-    char c = toupper(*_scan);
+    const char *p = _scan;
+    char c = toupper(*p);
     if (c == '#') {
-        _scan++;
         uint8_t val8;
+        _scan = p + 1;
         if (getOperand8(val8)) return getError();
         val16 = val8;
         if (checkLineEnd()) return getError();
         insn.setAddrMode(IMMEDIATE);
         return OK;
     }
-    if (c == 'A' && checkLineEnd(_scan + 1) == OK) {
+    if (c == 'A' && checkLineEnd(p + 1) == OK) {
+        _scan = p + 1;
         insn.setAddrMode(ACCUMULATOR);
         return OK;
     }
     const bool indirect = (c == '(');
-    if (indirect) _scan++;
-    const char mode = *_scan;
-    if (mode == '<' || mode == '>') _scan++;
+    if (indirect) p++;
+    const char mode = *p;
+    if (mode == '<' || mode == '>') p++;
+    _scan = p;
     if (getOperand16(val16)) return getError();
     if (!indirect && checkLineEnd() == OK) {
         if (mode == '>' || val16 >= 0x0100) {
@@ -71,9 +74,11 @@ Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
         return setError(OPERAND_TOO_FAR);
     }
 
-    c = *_scan++;
+    p = _scan;
+    c = *p++;
     if (c == ')' && indirect) {
-        if (checkLineEnd() == OK) {
+        if (checkLineEnd(p) == OK) {
+            _scan = p;
             if (mode == '>' || val16 >= 0x0100) {
                 insn.setAddrMode(ABS_INDIRECT);
                 return OK;
@@ -84,10 +89,12 @@ Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
             }
             return setError(OPERAND_NOT_ZP);
         }
-        if (*_scan++ != ',')
+        if (*p++ != ',')
             return setError(UNKNOWN_OPERAND);
-        if (toupper(*_scan) == 'Y' && checkLineEnd(_scan + 1) == OK) {
+        p = skipSpaces(p);
+        if (toupper(*p) == 'Y' && checkLineEnd(p + 1) == OK) {
             if (mode == '<' || val16 < 0x0100) {
+                _scan = p + 1;
                 insn.setAddrMode(INDIRECT_IDX);
                 return OK;
             }
@@ -97,22 +104,25 @@ Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
     }
 
     if (c != ',') return setError(UNKNOWN_OPERAND);
-    const char index = toupper(*_scan++);
+    const char index = toupper(*p++);
     if (index != 'X' && index != 'Y') return setError(UNKNOWN_OPERAND);
 
-    if (!indirect && checkLineEnd() == OK) {
+    if (!indirect && checkLineEnd(p) == OK) {
         if (mode == '>' || val16 >= 0x0100)  {
+            _scan = p;
             insn.setAddrMode(index == 'X' ? ABS_IDX_X : ABS_IDX_Y);
             return OK;
         }
         if (mode == '<' || val16 < 0x100) {
+            _scan = p;
             insn.setAddrMode(index == 'X' ? ZP_IDX_X  : ZP_IDX_Y);
             return OK;
         }
         return setError(OPERAND_NOT_ZP);
     }
-    if (indirect && index == 'X' && *_scan == ')'
-        && checkLineEnd(_scan + 1) == OK) {
+    if (indirect && index == 'X' && *p == ')'
+        && checkLineEnd(p + 1) == OK) {
+        _scan = p + 1;
         insn.setAddrMode(INDX_IND);
         return OK;
     }
