@@ -219,11 +219,24 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
     }
     if (TableMc6809.is6309() && base == REG_W) {
         uint8_t post;
-        if (index == OFFSET) post = 0xAF;   // n16,W [n16,W]
-        else if (incr == 0) post = 0x8F;    // ,W [,W]
-        else if (incr == 2) post = 0xCF;    // ,W++ [,W++]
-        else if (incr == -2) post = 0xEF;   // ,--W [,--W]
-        else return setError(UNKNOWN_OPERAND);
+        if (index == OFFSET) {
+            if (osize == -1 && addr == 0) {
+                post = 0x8F;    // 0,W [0,W]
+                index = REG_UNDEF;
+            } else if (osize == -1 || osize == 16) {
+                post = 0xAF;    // n16,W [n16,W]
+            } else {
+                return setError(UNKNOWN_OPERAND);
+            }
+        } else if (incr == 0) {
+            post = 0x8F;        // ,W [,W]
+        } else if (incr == 2) {
+            post = 0xCF;        // ,W++ [,W++]
+        } else if (incr == -2) {
+            post = 0xEF;        // ,--W [,--W]
+        } else {
+            return setError(UNKNOWN_OPERAND);
+        }
         if (indir) post++;
         insn.emitByte(post);
         if (index == OFFSET) insn.emitUint16(addr);
@@ -250,13 +263,20 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
     const target::ptrdiff_t offset = addr;
     if (indir && osize == 5) return setError(UNKNOWN_OPERAND);
     if (osize == -1) {
-        if (offset >= -16 && offset < 16 && !indir) { // n5,R
+        if (offset == 0) {
+            osize = 0;
+        } else if (offset >= -16 && offset < 16 && !indir) { // n5,R
             osize = 5;
         } else if (offset >= -128 && offset < 128) { // n8,R [n8,R]
             osize = 8;
         } else {                // n16,R [n16,R]
             osize = 16;
         }
+    }
+    if (osize == 0) {
+        post |= 0x84;
+        insn.emitByte(post);
+        return setError(OK);
     }
     if (osize == 5) {
         post |= (offset & 0x1F);

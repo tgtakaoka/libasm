@@ -47,6 +47,7 @@ Error DisMc6809::decodeExtended(
     return setError(OK);
 }
 
+#include <stdio.h>
 Error DisMc6809::decodeIndexed(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
@@ -132,7 +133,7 @@ Error DisMc6809::decodeIndexed(
         base = REG_UNDEF;
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
         label = lookup(addr);
-        offSize = 16;
+        offSize = -1;
     } else {
         return setError(UNKNOWN_POSTBYTE);
     }
@@ -146,10 +147,18 @@ Error DisMc6809::decodeIndexed(
                 outRegister(index);
             } else if (offSize < 0) {
                 outConstant(addr, 16, false);
-            } else {
-                if (offSize != 0) {
-                    outConstant(offset, 10);
+            } else if (offSize != 0) {
+                if (offSize == 16 && offset >= -128 && offset < 128)
+                    outText(">");
+                if (offSize == 8) {
+                    if (!indir && offset >= -16 && offset < 16)
+                        outText("<");
+                    if (indir && offset == 0)
+                        outText("<");
                 }
+                if (offSize == 5 && offset == 0)
+                    outText("<<");
+                outConstant(offset, 10);
             }
         } else {
             outConstant(addr, 16, false);
