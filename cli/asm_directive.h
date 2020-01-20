@@ -93,9 +93,9 @@ public:
 
         Insn insn;
         const Error error = _assembler.encode(_scan, insn, _origin, this);
-        const bool ok = error == OK || (!_reportUndef && error == UNDEFINED_SYMBOL);
+        const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
         _scan = _assembler.errorAt();
-        if (ok) {
+        if (error == OK || allowUndef) {
             _list.operand_len = _scan - _list.operand;
             skipSpaces();
             _list.comment = _scan;
@@ -291,7 +291,7 @@ protected:
             return setError(MISSING_LABEL);
         if (_reportDuplicate && hasSymbol(label))
             return setError(DUPLICATE_LABEL);
-        Addr value;
+        uint32_t value;
         const char *scan = _parser.eval(_scan, value, this);
         const Error error = setError(_parser);
         if (!_reportUndef && error == UNDEFINED_SYMBOL) {
