@@ -77,7 +77,7 @@ static void test_current_address() {
     E16("*+2",     0x1002, OK);
     E16("*-2",     0x0FFE, OK);
     E16("*+$F000", 0,      OVERFLOW_RANGE);
-    E16("*-$1001", 0,      OVERFLOW_RANGE);
+    E16("*-$1001", 0xFFFF, OK);
     E32("*+$F000", 0x00010000, OK);
     E32("*-$1001", 0xFFFFFFFF, OK);
 

@@ -208,6 +208,27 @@ static void test_binary_operator() {
     E32("0b0110^-1",    0xfffffff9, OK);
 }
 
+static void test_overflow() {
+    E8("0x1000-0x1080", -128, OK);
+    E8("0x1000-0x1081", 0, OVERFLOW_RANGE);
+    E8("0x10ff-0x1000", 255, OK);
+    E8("0x1100-0x1000", 0, OVERFLOW_RANGE);
+    E8("0xE000-0xE080", -128, OK);
+    E8("0xE000-0xE081", 0, OVERFLOW_RANGE);
+    E8("0xE0ff-0xE000", 255, OK);
+    E8("0xE100-0xE000", 0, OVERFLOW_RANGE);
+
+    E16("0xE000-0x6000", 0x8000, OK);
+    E16("0xE000-0x5fff", 0x8001, OK);
+    E16("0xE000-0xE001", -1,     OK);
+    E16("0x2000-0xA000", -32768, OK);
+    E16("0x2000-0xA001", 0,      OVERFLOW_RANGE);
+    E16("0x3000-0x3001", -1   ,  OK);
+
+    E16("0xE000+(-0x2000)", 0xC000, OK);
+    E16("(-0x2000)+0xE000", 0xC000, OK);
+}
+
 static void test_precedence() {
     E16("1+2-3+4",    4, OK);
     E16("1+2*3+4",   11, OK);
@@ -303,6 +324,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_unary_operator);
     RUN_TEST(test_binary_operator);
+    RUN_TEST(test_overflow);
     RUN_TEST(test_precedence);
     RUN_TEST(test_errors);
     return 0;
