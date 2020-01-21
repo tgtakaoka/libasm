@@ -300,7 +300,7 @@ Error AsmMc6809::encodeBitOperation(Insn &insn) {
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan += _regs.regNameLen(regName);
     uint8_t post = _regs.encodeBitOpReg(regName) << 6;
-    if (*_scan != '.') return setError(UNKNOWN_OPERAND);
+    if (*_scan != '.' && *_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     uint8_t pos;
     if (getOperand8(pos)) return getError();
@@ -308,10 +308,13 @@ Error AsmMc6809::encodeBitOperation(Insn &insn) {
     post |= pos;
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
-    if (*_scan == '<') _scan++;
-    target::uintptr_t dir;
-    if (getOperand16(dir)) return getError();
-    if (*_scan != '.') return setError(UNKNOWN_OPERAND);
+    bool forcibly = (*_scan == '<');
+    if (forcibly) _scan++;
+    target::uintptr_t addr;
+    if (getOperand16(addr)) return getError();
+    if (!forcibly && (addr >> 8) != _direct_page)
+        return setError(OPERAND_TOO_FAR);
+    if (*_scan != '.' && *_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     if (getOperand8(pos)) return getError();
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
@@ -319,7 +322,7 @@ Error AsmMc6809::encodeBitOperation(Insn &insn) {
 
     emitInsnCode(insn);
     insn.emitByte(post);
-    insn.emitByte(uint8_t(dir));
+    insn.emitByte(static_cast<uint8_t>(addr));
     return checkLineEnd();
 }
 
