@@ -2,6 +2,9 @@
 
         cpu     TMS9995
 
+;;; TMS9995
+        org     0100H
+
 ;;; 00X
         lst     r8
         lwp     r9
