@@ -16,6 +16,8 @@ public:
     host::uint_t insnLen() const { return _insnLen; }
     InsnCode insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
+    static host::uint_t getMaxBytes() { return maxBytes; }
+    static host::uint_t getMaxName() { return maxName; }
 
     void resetAddress(Addr addr) {
         _address = addr;

@@ -177,6 +177,10 @@ public:
     std::string getComment() const override {
         return std::move(std::string(_list.comment));
     }
+    int maxBytes() const override { return 6; }
+    int labelWidth() const override { return _labelWidth; }
+    int instructionWidth() const override { return Insn::getMaxName() + 1; }
+    int operandWidth() const override { return _operandWidth; }
 
     // Error reporting
 
@@ -189,7 +193,9 @@ protected:
           _scan(nullptr),
           _origin(0),
           _reportUndef(true),
-          _reportDuplicate(true)
+          _reportDuplicate(true),
+          _labelWidth(8),
+          _operandWidth(8)
     {}
 
     struct Source {
@@ -221,6 +227,8 @@ protected:
     Addr _origin;
     bool _reportUndef;
     bool _reportDuplicate;
+    int _labelWidth;
+    int _operandWidth;
     static constexpr int max_includes = 4;
     std::vector<Source> _sources;
 

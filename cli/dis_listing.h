@@ -16,7 +16,9 @@ public:
         : _disassembler(disassembler),
           _memory(memory),
           _listing(),
-          _uppercase(uppercase)
+          _uppercase(uppercase),
+          _labelWidth(8),
+          _operandWidth(8)
     {}
 
     Error disassemble(Addr addr, Insn &insn) {
@@ -49,6 +51,8 @@ private:
     CliMemory<Addr> &_memory;
     AsmListing<Addr> _listing;
     bool _uppercase;
+    int _labelWidth;
+    int _operandWidth;
     Addr _address;
     int _generated_size;
     const char *_instruction;
@@ -69,6 +73,10 @@ private:
         return std::move(std::string(_operands));
     }
     std::string getComment() const override { return ""; }
+    int maxBytes() const override { return 6; }
+    int labelWidth() const override { return _labelWidth; }
+    int instructionWidth() const override { return Insn::getMaxName() + 1; }
+    int operandWidth() const override { return _operandWidth; }
 };
 
 #endif

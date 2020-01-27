@@ -19,6 +19,10 @@ public:
     virtual std::string getInstruction() const = 0;
     virtual std::string getOperand() const = 0;
     virtual std::string getComment() const = 0;
+    virtual int maxBytes() const = 0;
+    virtual int labelWidth() const = 0;
+    virtual int instructionWidth() const = 0;
+    virtual int operandWidth() const = 0;
 };
 
 template<typename Address>
@@ -92,8 +96,9 @@ private:
         _out += ':';
     }
     int formatBytes(Address addr, int base) {
+        const int maxBytes = _line->maxBytes();
         int i = 0;
-        while (base + i < _line->generatedSize() && i < 6) {
+        while (base + i < _line->generatedSize() && i < maxBytes) {
             uint8_t val = 0;
             _memory->readByte(addr + base+ i, val);
             if (!_wording || (i % 2) == 0)
@@ -120,26 +125,31 @@ private:
         }
         if (_line->hasInstruction()) {
             _out += ' ';
-            formatTab(pos + 8);
+            formatTab(pos + _line->labelWidth());
             _out += _line->getInstruction();
         }
         if (_line->hasOperand()) {
             _out += ' ';
-            formatTab(pos + 14);
+            formatTab(pos + _line->labelWidth()
+                      + _line->instructionWidth());
             _out += _line->getOperand();
         }
         if (_line->hasComment()) {
             _out += ' ';
-            formatTab(pos + 22);
+            formatTab(pos + _line->labelWidth()
+                      + _line->instructionWidth() + _line->operandWidth());
             _out += _line->getComment();
         }
     }
 
     void formatLine() {
         formatAddress(_line->startAddress() + _next);
-        int pos = _out.size();
+        const int pos = _out.size();
         const int n = formatBytes(_line->startAddress(), _next);
-        if (_next == 0) formatContent(pos + 18);
+        const int dataTextLen = _wording
+            ? (_line->maxBytes() / 2) * 5
+            : (_line->maxBytes() * 3);
+        if (_next == 0) formatContent(pos + dataTextLen + 1);
         _next += n;
     }
 };
