@@ -21,9 +21,9 @@ public:
         *(_operands = operands) = 0;
         _symtab = symtab;
         this->resetError();
+        getFormatter().setUppercase(uppercase);
         decode(memory, insn);
-        if (!uppercase && insn.insnLen())
-            tolowercase(insn, operands);
+        if (!uppercase) insn.toLower();
         return getError();
     }
     virtual DisOperand &getFormatter() = 0;
@@ -62,20 +62,6 @@ protected:
 private:
     virtual Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) = 0;
-
-    static void tolowercase(Insn &insn, char *operand) {
-        char buf[10];
-        tolowercase(buf, insn.name());
-        insn.setName(buf);
-        tolowercase(operand, operand);
-    }
-
-    static void tolowercase(char *to, const char *from) {
-        while ((*to = tolower(*from)) != 0) {
-            to++;
-            from++;
-        }
-    }
 };
 
 #endif // __DIS_INTERFACE_H__

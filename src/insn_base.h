@@ -2,6 +2,7 @@
 #ifndef __INSN_BASE_H__
 #define __INSN_BASE_H__
 
+#include <ctype.h>
 #include <string.h>
 
 #include "error_reporter.h"
@@ -42,6 +43,11 @@ public:
 
     void emitByte(uint8_t val) {
         _bytes[_insnLen++] = val;
+    }
+
+    void toLower() {
+        for (char *p = _name; *p; p++)
+            *p = tolower(*p);
     }
 
 protected:

@@ -1,11 +1,5 @@
 #include "dis_operand.h"
 
-static char toDigitChar(uint8_t val, uint8_t base) {
-    if (base == 16 && val >= 10)
-        return val - 10 + 'A';
-    return val + '0';
-}
-
 static uint8_t constantWidth(uint8_t size, uint8_t base) {
     if (base == 16) return size * 2;
     if (base == 2)  return size * 8;
@@ -31,7 +25,12 @@ char *DisOperand::outputNumber(
     const uint8_t base = (radix < 0) ? -radix : radix;
     char *t = p;
     while (val) {
-        *t++ = toDigitChar(uint8_t(val % base), base);
+        const uint8_t digit = static_cast<uint8_t>(val % base);
+        if (base == 16 && digit >= 10) {
+            *t++ = digit - 10 + _hexBase;
+        } else {
+            *t++ = digit + '0';
+        }
         val /= base;
     }
     if (t == p) *t++ = '0';
