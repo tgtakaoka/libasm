@@ -47,7 +47,7 @@ static void test_reg() {
 
 static void test_reg_imm() {
     WTEST(LI,   "R0,0",      0x0200, 0x0000);
-    WTEST(AI,   "R1,000AH",  0x0221, 0x000A);
+    WTEST(AI,   "R1,10",     0x0221, 0x000A);
     WTEST(ANDI, "R8,00FFH",  0x0248, 0x00FF);
     WTEST(ORI,  "R14,0FF00H", 0x026E, 0xFF00);
     WTEST(CI,   "R15,0FFFFH", 0x028F, 0xFFFF);

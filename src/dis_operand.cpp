@@ -49,11 +49,11 @@ char *DisOperand::outputNumber(
 
 char *DisOperand::outputRelaxed(
     char *p, uint32_t val, int8_t radix, uint8_t size) const {
-    if (radix > 0 && val < static_cast<uint8_t>(radix) && val < 10)
+    if (radix > 0 && val < static_cast<uint8_t>(radix))
         return reverseStr(p, outputNumber(p, val, 10, size));
     if (radix < 0) {
         int32_t v = static_cast<int32_t>(val);
-        if (v < -radix && v < 10 && v > radix && v > -10)
+        if (v < -radix && v < 10 && v > radix)
             return reverseStr(p, outputNumber(p, v, -10, size));
     }
     return nullptr;

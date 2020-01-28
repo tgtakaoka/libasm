@@ -303,7 +303,7 @@ static void test_alu_immediate() {
 
     TEST(ANI, "9",    0xE6, 0x09);
     TEST(XRI, "0FFH", 0xEE, 0xFF);
-    TEST(ORI, "0AH",  0xF6, 0x0A);
+    TEST(ORI, "10",   0xF6, 0x0A);
     TEST(CPI, "0",    0xFE, 0x00);
 }
 

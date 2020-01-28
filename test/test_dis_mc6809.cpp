@@ -87,13 +87,13 @@ static void test_inherent() {
 
 static void test_immediate() {
     TEST(ORCC, "#1",   0x1A, 0x01);
-    TEST(ORCC, "#$10", 0x1A, 0x10);
-    TEST(ORCC, "#$FF", 0x1A, 0xFF);
-    TEST(ANDCC,"#$FF", 0x1C, 0xFF);
-    TEST(ANDCC,"#$EF", 0x1C, 0xEF);
-    TEST(ANDCC,"#$0A", 0x1C, 0x0A);
-    TEST(CWAI, "#$FF", 0x3C, 0xFF);
-    TEST(CWAI, "#$EF", 0x3C, 0xEF);
+    TEST(ORCC, "#%00010000", 0x1A, 0x10);
+    TEST(ORCC, "#%11111111", 0x1A, 0xFF);
+    TEST(ANDCC,"#%11111111", 0x1C, 0xFF);
+    TEST(ANDCC,"#%11101111", 0x1C, 0xEF);
+    TEST(ANDCC,"#%00001010", 0x1C, 0x0A);
+    TEST(CWAI, "#%11111111", 0x3C, 0xFF);
+    TEST(CWAI, "#%11101111", 0x3C, 0xEF);
     TEST(CWAI, "#0",   0x3C, 0x00);
 
     TEST(SUBA, "#$90", 0x80, 0x90);
@@ -137,8 +137,9 @@ static void test_immediate() {
 
     // HD6309
     disassembler.acceptCpu("6309");
-    TEST(LDMD,  "#1",   0x11, 0x3D, 0x01);
-    TEST(BITMD, "#$80", 0x11, 0x3C, 0x80);
+    TEST(LDMD,  "#1", 0x11, 0x3D, 0x01);
+    TEST(LDMD,  "#%00000011", 0x11, 0x3D, 0x03);
+    TEST(BITMD, "#%10000000", 0x11, 0x3C, 0x80);
 
     TEST(SBCD, "#$90A0", 0x10, 0x82, 0x90, 0xA0);
     TEST(ANDD, "#$90A0", 0x10, 0x84, 0x90, 0xA0);

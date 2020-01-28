@@ -203,7 +203,18 @@ Error DisMc6809::decodeImmediate(
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        outConstant(val);
+        const target::insn_t opc = insn.insnCode();
+        constexpr uint8_t ORCC = 0x1A;
+        constexpr uint8_t ANDCC = 0x1C;
+        constexpr uint8_t CWAI = 0x3C;
+        constexpr target::insn_t BITMD = 0x113C;
+        constexpr target::insn_t LDMD = 0x113D;
+        if (opc == ORCC || opc == ANDCC || opc == CWAI
+            || opc == BITMD || opc == LDMD) {
+            outConstant(val, 2);
+        } else {
+            outConstant(val);
+        }
     } else if (insn.oprSize() == SZ_WORD) {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);

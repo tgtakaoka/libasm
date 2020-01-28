@@ -326,7 +326,7 @@ static void test_alu_immediate() {
     TEST(SBC, "A,0FFH", 0xDE, 0xFF);
     TEST(AND, "9",      0xE6, 0x09);
     TEST(XOR, "0FFH",   0xEE, 0xFF);
-    TEST(OR,  "0AH",    0xF6, 0x0A);
+    TEST(OR,  "10",     0xF6, 0x0A);
     TEST(CP,  "0",      0xFE, 0x00);
 }
 

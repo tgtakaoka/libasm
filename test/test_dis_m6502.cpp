@@ -69,7 +69,7 @@ static void test_accumulator() {
 static void test_immediate() {
     TEST(LDY, "#0",   0xA0, 0x00);
     TEST(LDX, "#9",   0xA2, 0x09);
-    TEST(CPY, "#$0A", 0xC0, 0x0A);
+    TEST(CPY, "#10",  0xC0, 0x0A);
     TEST(CPX, "#$FF", 0xE0, 0xFF);
 
     TEST(ORA, "#$90", 0x09, 0x90);
