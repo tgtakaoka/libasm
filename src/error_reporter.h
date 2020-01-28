@@ -14,6 +14,8 @@ enum Error : host::uint_t {
     UNKNOWN_POSTBYTE = 4,       // HD6309
     ILLEGAL_REGISTER = 5,
     ILLEGAL_OPERAND = 6,        // Z80
+    ILLEGAL_SIZE = 7,           // MC68000
+    ILLEGAL_OPERAND_MODE = 8,   // MC68000
 
     // Assembler
     NO_INSTRUCTION = 20,

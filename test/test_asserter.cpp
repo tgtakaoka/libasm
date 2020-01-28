@@ -27,7 +27,13 @@ void TestAsserter::equals(
 
 void TestAsserter::equals(
     const char *message, const char *expected, const char *actual) {
-    if (strcmp(expected, actual) == 0) {
+    const char *e = expected;
+    const char *a = actual;
+    while (*e && (*e == *a || (*e == '_' && *a== '.'))) {
+        e++;
+        a++;
+    }
+    if (*e == 0 && *a == 0) {
         _pass_count++;
         return;
     }
