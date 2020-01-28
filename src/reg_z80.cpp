@@ -31,37 +31,42 @@ static bool isidchar(const char c) {
 }
 
 static bool regCharCaseEqual(char c, char regChar) {
-    return c == regChar || toupper(c) == regChar;
+    return toupper(c) == toupper(regChar);
 }
 
-static char regName1stChar(const RegName regName) {
-    if (regName == REG_IX || regName == REG_IY) return 'I';
-    if (regName == REG_AFP) return 'A';
-    return toupper(char(regName));
+char RegZ80::regName1stChar(const RegName regName) const {
+    if (regName == REG_IX || regName == REG_IY)
+        return _uppercase ? 'I' : 'i';
+    if (regName == REG_AFP)
+        return _uppercase ? 'A' : 'a';
+    const char r = char(regName);
+    return _uppercase ? toupper(r) : tolower(r);
 }
 
-static char regName2ndChar(const RegName regName) {
+char RegZ80::regName2ndChar(const RegName regName) const {
+    char c;
     switch (regName) {
-    case REG_HL: return 'L';
-    case REG_BC: return 'C';
-    case REG_DE: return 'E';
-    case REG_SP: return 'P';
+    case REG_HL: c = 'L'; break;
+    case REG_BC: c = 'C'; break;
+    case REG_DE: c = 'E'; break;
+    case REG_SP: c = 'P'; break;
     case REG_AF:
-    case REG_AFP: return 'F';
-    case REG_IX: return 'X';
-    case REG_IY: return 'Y';
-    default: return 0;
+    case REG_AFP: c = 'F'; break;
+    case REG_IX: c = 'X'; break;
+    case REG_IY: c = 'Y'; break;
+    default: c = 0;
     }
+    return _uppercase ? c : tolower(c);
 }
 
-static char regName3rdChar(const RegName regName) {
+char RegZ80::regName3rdChar(const RegName regName) const {
     switch (regName) {
     case REG_AFP: return '\'';
     default: return 0;
     }
 }
 
-bool RegZ80::compareRegName(const char *line, RegName regName) {
+bool RegZ80::compareRegName(const char *line, RegName regName) const {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -70,13 +75,13 @@ bool RegZ80::compareRegName(const char *line, RegName regName) {
     return !isidchar(*line);
 }
 
-host::uint_t RegZ80::regNameLen(const RegName regName) {
+host::uint_t RegZ80::regNameLen(const RegName regName) const {
     if (regName == REG_AFP) return 3;
     if (isupper(char(regName))) return 1;
     return 2;
 }
 
-char *RegZ80::outRegName(char *out, const RegName regName) {
+char *RegZ80::outRegName(char *out, const RegName regName) const {
     *out++ = regName1stChar(regName);
     const char r2 = regName2ndChar(regName);
     if (r2) {
@@ -94,25 +99,28 @@ static constexpr CcName CC8_NAMES[] PROGMEM = {
 };
 
 static bool ccCharCaseEqual(char c, char ccChar) {
-    return c == ccChar || toupper(c) == ccChar;
+    return toupper(c) == toupper(ccChar);
 }
 
-static char ccName1stChar(const CcName ccName) {
-    if (isupper(ccName)) return ccName;
-    if (ccName == CC_NZ || ccName == CC_NC) return 'N';
-    return 'P';
+char RegZ80::ccName1stChar(const CcName ccName) const {
+    const char cc = char(ccName);
+    if (isupper(cc))
+        return _uppercase ? cc : tolower(cc);
+    if (ccName == CC_NZ || ccName == CC_NC)
+        return _uppercase ? 'N' : 'n';
+    return _uppercase ? 'P' : 'p';
 }
 
-static char ccName2ndChar(const CcName ccName) {
+char RegZ80::ccName2ndChar(const CcName ccName) const {
     if (isupper(ccName)) return 0;
-    return toupper(ccName);
+    return _uppercase ? toupper(ccName) : char(ccName);
 }
 
-host::uint_t RegZ80::ccNameLen(const CcName ccName) {
+host::uint_t RegZ80::ccNameLen(const CcName ccName) const {
     return isupper(ccName) ? 1 : 2;
 }
 
-static char *outCcName(char *out, const CcName ccName) {
+char *RegZ80::outCcName(char *out, const CcName ccName) const {
     *out++ = ccName1stChar(ccName);
     const char c2 = ccName2ndChar(ccName);
     if (c2) *out++ = c2;
@@ -120,24 +128,24 @@ static char *outCcName(char *out, const CcName ccName) {
     return out;
 }
 
-static bool compareCcName(const char *line, CcName ccName) {
+bool RegZ80::compareCcName(const char *line, CcName ccName) const {
     if (!ccCharCaseEqual(*line++, ccName1stChar(ccName))) return false;
     const char c2 = ccName2ndChar(ccName);
     if (c2 && !ccCharCaseEqual(*line++, c2)) return false;
     return !isalpha(*line);
 }
 
-char *RegZ80::outCc4Name(char *out, const target::opcode_t cc4) {
+char *RegZ80::outCc4Name(char *out, const target::opcode_t cc4) const {
     const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc4 & 3]));
     return outCcName(out, cc);
 }
 
-char *RegZ80::outCc8Name(char *out, const target::opcode_t cc8) {
+char *RegZ80::outCc8Name(char *out, const target::opcode_t cc8) const {
     const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc8 & 7]));
     return outCcName(out, cc);
 }
 
-static CcName parseCcName(const char *line, host::int_t max) {
+CcName RegZ80::parseCcName(const char *line, host::int_t max) const {
     for (host::int_t cc = 0; cc < max; cc++) {
         const CcName ccName = CcName(pgm_read_byte(&CC8_NAMES[cc]));
         if (compareCcName(line, ccName))
@@ -146,11 +154,11 @@ static CcName parseCcName(const char *line, host::int_t max) {
     return CC_UNDEF;
 }
 
-CcName RegZ80::parseCc4Name(const char *line) {
+CcName RegZ80::parseCc4Name(const char *line) const {
     return parseCcName(line, 4);
 }
 
-CcName RegZ80::parseCc8Name(const char *line) {
+CcName RegZ80::parseCc8Name(const char *line) const {
     return parseCcName(line, 8);
 }
 
@@ -171,7 +179,7 @@ static host::int_t encodeRegNumber(
 }
 
 RegName RegZ80::parseRegName(
-    const char *line, const RegName *table, const RegName *end) {
+    const char *line, const RegName *table, const RegName *end) const {
     for (const RegName *p = table; p < end; p++) {
         const RegName regName = RegName(pgm_read_byte(p));
         if (compareRegName(line, regName)) return regName;
@@ -200,7 +208,7 @@ static RegName decodeRegNumber(
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName RegZ80::parseRegister(const char *line) {
+RegName RegZ80::parseRegister(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(ALL_REGS));
 }
 

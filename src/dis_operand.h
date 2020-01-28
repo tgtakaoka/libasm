@@ -9,10 +9,10 @@ public:
     virtual char *output(
         char *p, uint32_t val, int8_t radix,
         bool relax, uint8_t size) const = 0;
-    void setUppercase(bool uppercase) { _hexBase = uppercase ? 'A' : 'a'; }
+    void setUppercase(bool uppercase) { _uppercase = uppercase; }
 
 protected:
-    char _hexBase = 'A';
+    bool _uppercase;
 
     char *outputNumber(
         char *p, uint32_t val, int8_t radix, uint8_t size) const;

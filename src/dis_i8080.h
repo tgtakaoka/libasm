@@ -5,8 +5,7 @@
 #include "config_i8080.h"
 
 #include "insn_i8080.h"
-#include "dis_memory.h"
-#include "symbol_table.h"
+#include "reg_i8080.h"
 #include "dis_interface.h"
 
 class DisI8080 : public Disassembler<target::uintptr_t> {
@@ -16,7 +15,9 @@ public:
 
 private:
     DisIntelOperand _formatter;
+    RegI8080 _regs;
 
+    RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
     Error decodeImmediate8(DisMemory<target::uintptr_t> &memory, Insn &insn);

@@ -22,6 +22,7 @@ public:
         _symtab = symtab;
         this->resetError();
         getFormatter().setUppercase(uppercase);
+        getRegister().setUppercase(uppercase);
         decode(memory, insn);
         if (!uppercase) insn.toLower();
         return getError();
@@ -60,6 +61,7 @@ protected:
     }
 
 private:
+    virtual RegBase &getRegister();
     virtual Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) = 0;
 };

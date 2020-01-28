@@ -29,30 +29,34 @@ static constexpr char TFM_DST_MODES[4] PROGMEM = {
     '+', '-',   0, '+'
 };
 
-bool RegMc6809::isidchar(const char c) {
+static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-bool RegMc6809::regCharCaseEqual(char c, char regChar) {
-    return c == regChar || (isalpha(c) && toupper(c) == regChar);
+static bool regCharCaseEqual(char c, char regChar) {
+    return toupper(c) == toupper(regChar);
 }
 
-char RegMc6809::regName1stChar(const RegName regName) {
-    return toupper(char(regName));
+char RegMc6809::regName1stChar(const RegName regName) const {
+    const char r = char(regName);
+    return _uppercase ? toupper(r) : tolower(r);
 }
 
-char RegMc6809::regName2ndChar(const RegName regName) {
-    if (regName == REG_PC || regName == REG_PCR || regName == REG_CC) return 'C';
-    if (regName == REG_DP) return 'P';
+char RegMc6809::regName2ndChar(const RegName regName) const {
+    if (regName == REG_PC || regName == REG_PCR || regName == REG_CC)
+        return _uppercase ? 'C' : 'c';
+    if (regName == REG_DP)
+        return _uppercase ? 'P' : 'p';
     return 0;
 }
 
-char RegMc6809::regName3rdChar(const RegName regName) {
-    if (regName == REG_PCR) return 'R';
+char RegMc6809::regName3rdChar(const RegName regName) const {
+    if (regName == REG_PCR)
+        return _uppercase ? 'R' : 'r';
     return 0;
 }
 
-bool RegMc6809::compareRegName(const char *line, RegName regName) {
+bool RegMc6809::compareRegName(const char *line, RegName regName) const {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -61,12 +65,12 @@ bool RegMc6809::compareRegName(const char *line, RegName regName) {
     return !isidchar(*line);
 }
 
-host::uint_t RegMc6809::regNameLen(RegName regName) {
+host::uint_t RegMc6809::regNameLen(RegName regName) const {
     return regName2ndChar(regName) == 0 ? 1
         : (regName3rdChar(regName) == 0 ? 2 : 3);
 }
 
-char *RegMc6809::outRegName(char *out, const RegName regName) {
+char *RegMc6809::outRegName(char *out, const RegName regName) const {
     *out++ = regName1stChar(regName);
     const char r2 = regName2ndChar(regName);
     if (r2) {
@@ -79,13 +83,14 @@ char *RegMc6809::outRegName(char *out, const RegName regName) {
     return out;
 }
 
-char *RegMc6809::outCCRBits(char *out, uint8_t val) {
+char *RegMc6809::outCCRBits(char *out, uint8_t val) const {
     host::int_t n = 0;
     for (host::uint_t mask = 0x80, i = 0; i < 8; mask >>= 1, i++) {
         if (val & mask) {
             if (n == 1) { char b = *--out; *out++ = '('; *out++ = b; }
             if (n) *out++ = '|';
-            *out++ = pgm_read_byte(&CCR_BITS[i]);
+            char c = pgm_read_byte(&CCR_BITS[i]);
+            *out++ = _uppercase ? c : tolower(c);
             n++;
         }
     }
@@ -94,7 +99,7 @@ char *RegMc6809::outCCRBits(char *out, uint8_t val) {
     return out;
 }
 
-host::int_t RegMc6809::encodeRegNumber(
+static host::int_t encodeRegNumber(
     RegName regName, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         if (pgm_read_byte(p) == regName) return p - table;
@@ -103,7 +108,7 @@ host::int_t RegMc6809::encodeRegNumber(
 }
 
 RegName RegMc6809::parseRegName(
-    const char *line, const RegName *table, const RegName *end) {
+    const char *line, const RegName *table, const RegName *end) const {
     for (const RegName *p = table; p < end; p++) {
         const RegName regName = RegName(pgm_read_byte(p));
         if (compareRegName(line, regName)) return regName;
@@ -111,7 +116,7 @@ RegName RegMc6809::parseRegName(
     return REG_UNDEF;
 }
 
-RegName RegMc6809::decodeRegNumber(
+static RegName decodeRegNumber(
     host::uint_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
@@ -123,11 +128,11 @@ RegName RegMc6809::getStackReg(host::uint_t bit, target::insn_t insnCode) {
     return RegName(pgm_read_byte(&table[bit]));
 }
 
-RegName RegMc6809::parseBitOpReg(const char *line) {
+RegName RegMc6809::parseBitOpReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(BIT_OP_REGS));
 }
 
-RegName RegMc6809::parseTfmBaseReg(const char *line) {
+RegName RegMc6809::parseTfmBaseReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(TFM_BASE_REGS));
 }
 

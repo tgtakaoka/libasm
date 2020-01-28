@@ -23,11 +23,12 @@ char *DisOperand::outputNumber(
         val = -static_cast<int32_t>(val);
     }
     const uint8_t base = (radix < 0) ? -radix : radix;
+    const char hexBase = _uppercase ? 'A' : 'a';
     char *t = p;
     while (val) {
         const uint8_t digit = static_cast<uint8_t>(val % base);
         if (base == 16 && digit >= 10) {
-            *t++ = digit - 10 + _hexBase;
+            *t++ = digit - 10 + hexBase;
         } else {
             *t++ = digit + '0';
         }
@@ -79,9 +80,9 @@ char *DisIntelOperand::output(
     if (radix == 16 && t[-1] > '9')
         *t++ = '0';
     t = reverseStr(p, t);
-    if (radix == 16) *t++ = 'H';
-    if (radix == 8) *t++ = 'O';
-    if (radix == 2) *t++ = 'B';
+    if (radix == 16) *t++ = _uppercase ? 'H' : 'h';
+    if (radix == 8) *t++ = _uppercase ? 'O' : 'o';
+    if (radix == 2) *t++ = _uppercase ? 'B' : 'b';
     *t = 0;
     return t;
 }

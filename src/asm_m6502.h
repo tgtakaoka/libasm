@@ -4,8 +4,8 @@
 
 #include "config_m6502.h"
 
-#include "symbol_table.h"
-#include "table_m6502.h"
+#include "insn_m6502.h"
+#include "reg_m6502.h"
 #include "asm_interface.h"
 
 class AsmM6502 : public Assembler<target::uintptr_t> {
@@ -15,6 +15,7 @@ public:
 
 private:
     AsmMotoOperand _parser;
+    RegM6502 _regs;
 
     void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
 

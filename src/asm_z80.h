@@ -4,7 +4,8 @@
 
 #include "config_z80.h"
 
-#include "symbol_table.h"
+#include "insn_z80.h"
+#include "reg_z80.h"
 #include "table_z80.h"
 #include "asm_interface.h"
 
@@ -15,6 +16,7 @@ public:
 
 private:
     AsmIntelOperand _parser;
+    RegZ80 _regs;
 
     void emitInsnCode(Insn &insn) const {
         const target::opcode_t prefix = TableZ80::prefixCode(insn.insnCode());

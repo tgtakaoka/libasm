@@ -31,13 +31,13 @@ void DisZ80::outIndexOffset(
 }
 
 void DisZ80::outRegister(RegName regName) {
-    _operands = RegZ80::outRegName(_operands, regName);
+    _operands = _regs.outRegName(_operands, regName);
 }
 
 void DisZ80::outPointer(RegName regName) {
     char *out = _operands;
     *out++ = '(';
-    out = RegZ80::outRegName(out, regName);
+    out = _regs.outRegName(out, regName);
     *out++ = ')';
     *(_operands = out) = 0;
 }
@@ -46,15 +46,15 @@ void DisZ80::outDataRegister(RegName regName) {
     if (regName == REG_UNDEF) {
         outPointer(REG_HL);
     } else {
-        _operands = RegZ80::outRegName(_operands, regName);
+        _operands = _regs.outRegName(_operands, regName);
     }
 }
 
 void DisZ80::outConditionName(target::opcode_t cc, bool cc8) {
     if (cc8) {
-        _operands = RegZ80::outCc8Name(_operands, cc);
+        _operands = _regs.outCc8Name(_operands, cc);
     } else {
-        _operands = RegZ80::outCc4Name(_operands, cc);
+        _operands = _regs.outCc4Name(_operands, cc);
     }
 }
 

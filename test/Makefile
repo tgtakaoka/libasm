@@ -68,13 +68,13 @@ TEST_OBJS= \
 
 TESTS=$(TEST_OBJS:.o=)
 
-OBJS_common = test_asserter.o asm_operand.o dis_operand.o
-OBJS_mc6809 = table_mc6809.o  reg_mc6809.o
-OBJS_m6502  = table_m6502.o
-OBJS_i8080  = table_i8080.o   reg_i8080.o
-OBJS_z80    = table_z80.o     reg_z80.o
-OBJS_tms9900= table_tms9900.o
-OBJS        = \
+OBJS_common  = test_asserter.o asm_operand.o dis_operand.o
+OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
+OBJS_m6502   = table_m6502.o   reg_m6502.o
+OBJS_i8080   = table_i8080.o   reg_i8080.o
+OBJS_z80     = table_z80.o     reg_z80.o
+OBJS_tms9900 = table_tms9900.o reg_tms9900.o
+OBJS         = \
 	$(TEST_OBJS) \
 	$(OBJS_common) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \

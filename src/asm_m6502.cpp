@@ -1,4 +1,5 @@
 #include "asm_m6502.h"
+#include "table_m6502.h"
 
 #include <ctype.h>
 #include <string.h>
@@ -51,8 +52,8 @@ Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
         insn.setAddrMode(IMMEDIATE);
         return OK;
     }
-    if (c == 'A' && checkLineEnd(p + 1) == OK) {
-        _scan = p + 1;
+    if (_regs.compareRegName(_scan, REG_A)) {
+        _scan = p + _regs.regNameLen(REG_A);
         insn.setAddrMode(ACCUMULATOR);
         return OK;
     }
@@ -104,23 +105,24 @@ Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
     }
 
     if (c != ',') return setError(UNKNOWN_OPERAND);
-    const char index = toupper(*p++);
-    if (index != 'X' && index != 'Y') return setError(UNKNOWN_OPERAND);
+    const RegName index = _regs.parseIndexReg(p);
+    if (index == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+    p += _regs.regNameLen(index);
 
     if (!indirect && checkLineEnd(p) == OK) {
         if (mode == '>' || val16 >= 0x0100)  {
             _scan = p;
-            insn.setAddrMode(index == 'X' ? ABS_IDX_X : ABS_IDX_Y);
+            insn.setAddrMode(index == REG_X ? ABS_IDX_X : ABS_IDX_Y);
             return OK;
         }
         if (mode == '<' || val16 < 0x100) {
             _scan = p;
-            insn.setAddrMode(index == 'X' ? ZP_IDX_X  : ZP_IDX_Y);
+            insn.setAddrMode(index == REG_X ? ZP_IDX_X  : ZP_IDX_Y);
             return OK;
         }
         return setError(OPERAND_NOT_ZP);
     }
-    if (indirect && index == 'X' && *p == ')'
+    if (indirect && index == REG_X && *p == ')'
         && checkLineEnd(p + 1) == OK) {
         _scan = p + 1;
         insn.setAddrMode(INDX_IND);

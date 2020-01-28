@@ -5,6 +5,7 @@
 #include "config_tms9900.h"
 
 #include "insn_tms9900.h"
+#include "reg_tms9900.h"
 #include "dis_interface.h"
 
 class DisTms9900 : public Disassembler<target::uintptr_t> {
@@ -14,9 +15,11 @@ public:
 
 private:
     DisIntelOperand _formatter;
+    RegTms9900 _regs;
+
+    RegBase &getRegister() override { return _regs; }
 
     void outAddress(target::uintptr_t addr, bool relax = true);
-    void outRegister(host::uint_t regno);
 
     Error decodeOperand(
         DisMemory<target::uintptr_t> &memory, Insn& insn, host::uint_t opr);

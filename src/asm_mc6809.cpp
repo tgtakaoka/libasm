@@ -1,4 +1,5 @@
 #include "asm_mc6809.h"
+#include "table_mc6809.h"
 
 #include <ctype.h>
 

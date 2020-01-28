@@ -5,9 +5,7 @@
 #include "config_z80.h"
 
 #include "insn_z80.h"
-#include "dis_memory.h"
 #include "reg_z80.h"
-#include "symbol_table.h"
 #include "dis_interface.h"
 
 class DisZ80 : public Disassembler<target::uintptr_t> {
@@ -17,7 +15,9 @@ public:
 
 private:
     DisIntelOperand _formatter;
+    RegZ80 _regs;
 
+    RegBase &getRegister() override { return _regs; }
     template<typename U>
     void outAddress(U addr, bool indir = true);
     void outIndexOffset(target::insn_t insnCode, int8_t offset);

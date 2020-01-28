@@ -5,8 +5,7 @@
 #include "config_m6502.h"
 
 #include "insn_m6502.h"
-#include "dis_memory.h"
-#include "symbol_table.h"
+#include "reg_m6502.h"
 #include "dis_interface.h"
 
 class DisM6502 : public Disassembler<target::uintptr_t> {
@@ -16,7 +15,10 @@ public:
 
 private:
     DisMotoOperand _formatter;
+    RegM6502 _regs;
     McuType _mcuType = M6502;
+
+    RegBase &getRegister() override { return _regs; }
 
     Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);

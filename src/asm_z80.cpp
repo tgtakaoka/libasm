@@ -1,7 +1,8 @@
+#include "asm_z80.h"
+#include "table_z80.h"
+
 #include <ctype.h>
 #include <string.h>
-
-#include "asm_z80.h"
 
 bool AsmZ80::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "z80") == 0;
@@ -234,14 +235,14 @@ Error AsmZ80::parseOperand(
 
     if (oprFormat == COND_4 || oprFormat == COND_8) {
         CcName ccName;
-        if ((ccName = RegZ80::parseCc4Name(_scan)) != CC_UNDEF) {
-            _scan += RegZ80::ccNameLen(ccName);
+        if ((ccName = _regs.parseCc4Name(_scan)) != CC_UNDEF) {
+            _scan += _regs.ccNameLen(ccName);
             oprFormat = COND_4;
             opr16 = RegZ80::encodeCcName(ccName);
             return OK;
         }
-        if ((ccName = RegZ80::parseCc8Name(_scan)) != CC_UNDEF) {
-            _scan += RegZ80::ccNameLen(ccName);
+        if ((ccName = _regs.parseCc8Name(_scan)) != CC_UNDEF) {
+            _scan += _regs.ccNameLen(ccName);
             oprFormat = COND_8;
             opr16 = RegZ80::encodeCcName(ccName);
             return OK;
@@ -255,9 +256,9 @@ Error AsmZ80::parseOperand(
         return OK;
     }
 
-    regName = RegZ80::parseRegister(_scan);
+    regName = _regs.parseRegister(_scan);
     if (regName != REG_UNDEF) {
-        _scan += RegZ80::regNameLen(regName);
+        _scan += _regs.regNameLen(regName);
         switch (regName) {
         case REG_A:   oprFormat = A_REG; break;
         case REG_BC:  oprFormat = BC_REG; break;
@@ -277,7 +278,7 @@ Error AsmZ80::parseOperand(
         return OK;
     }
     if (*_scan == '(') {
-        regName = RegZ80::parseRegister(++_scan);
+        regName = _regs.parseRegister(++_scan);
         if (regName == REG_UNDEF) {
             if (addrMode == IOADR) {
                 uint8_t val8;
@@ -292,7 +293,7 @@ Error AsmZ80::parseOperand(
             _scan++;
             return OK;
         }
-        _scan += RegZ80::regNameLen(regName);
+        _scan += _regs.regNameLen(regName);
         if (*_scan == ')') {
             _scan++;
             switch (regName) {

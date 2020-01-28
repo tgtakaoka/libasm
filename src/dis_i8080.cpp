@@ -8,7 +8,7 @@ bool DisI8080::acceptCpu(const char *cpu) {
 }
 
 void DisI8080::outRegister(RegName regName) {
-    _operands = RegI8080::outRegName(_operands, regName);
+    _operands = _regs.outRegName(_operands, regName);
 }
 
 Error DisI8080::decodeImmediate8(

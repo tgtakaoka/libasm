@@ -1,63 +1,64 @@
+#include "asm_i8080.h"
+#include "table_i8080.h"
+
 #include <ctype.h>
 #include <string.h>
-
-#include "asm_i8080.h"
 
 bool AsmI8080::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "8080") == 0;
 }
 
 Error AsmI8080::encodePointerReg(Insn &insn) {
-    const RegName regName = RegI8080::parsePointerReg(_scan);
-    const host::int_t num = RegI8080::encodePointerReg(regName);
+    const RegName regName = _regs.parsePointerReg(_scan);
+    const host::int_t num = _regs.encodePointerReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.setInsnCode(insn.insnCode() | (num << 4));
-    _scan += RegI8080::regNameLen(regName);
+    _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
 
 Error AsmI8080::encodeStackReg(Insn &insn) {
-    const RegName regName = RegI8080::parseStackReg(_scan);
-    const host::int_t num = RegI8080::encodeStackReg(regName);
+    const RegName regName = _regs.parseStackReg(_scan);
+    const host::int_t num = _regs.encodeStackReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.setInsnCode(insn.insnCode() | (num << 4));
-    _scan += RegI8080::regNameLen(regName);
+    _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
 
 Error AsmI8080::encodeIndexReg(Insn &insn) {
-    const RegName regName = RegI8080::parseIndexReg(_scan);
-    const host::int_t num = RegI8080::encodeIndexReg(regName);
+    const RegName regName = _regs.parseIndexReg(_scan);
+    const host::int_t num = _regs.encodeIndexReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.setInsnCode(insn.insnCode() | (num << 4));
-    _scan += RegI8080::regNameLen(regName);
+    _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
 
 Error AsmI8080::encodeDataReg(Insn &insn) {
-    const RegName regName = RegI8080::parseDataReg(_scan);
-    const host::int_t num = RegI8080::encodeDataReg(regName);
+    const RegName regName = _regs.parseDataReg(_scan);
+    const host::int_t num = _regs.encodeDataReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     if (insn.insnFormat() == DATA_REG)
         insn.setInsnCode(insn.insnCode() | (num << 3));
     if (insn.insnFormat() == LOW_DATA_REG)
         insn.setInsnCode(insn.insnCode() | num);
-    _scan += RegI8080::regNameLen(regName);
+    _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
 
 Error AsmI8080::encodeDataDataReg(Insn &insn) {
-    const RegName dstReg = RegI8080::parseDataReg(_scan);
+    const RegName dstReg = _regs.parseDataReg(_scan);
     if (dstReg == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
-    _scan += RegI8080::regNameLen(dstReg);
+    _scan += _regs.regNameLen(dstReg);
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    const RegName srcReg = RegI8080::parseDataReg(++_scan);
+    const RegName srcReg = _regs.parseDataReg(++_scan);
     if (srcReg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
-    _scan += RegI8080::regNameLen(srcReg);
+    _scan += _regs.regNameLen(srcReg);
 
-    const host::uint_t dstNum = RegI8080::encodeDataReg(dstReg);
-    const host::uint_t srcNum = RegI8080::encodeDataReg(srcReg);
+    const host::uint_t dstNum = _regs.encodeDataReg(dstReg);
+    const host::uint_t srcNum = _regs.encodeDataReg(srcReg);
     insn.setInsnCode(insn.insnCode() | (dstNum << 3) | srcNum);
     return setError(OK);
 }

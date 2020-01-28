@@ -17,6 +17,7 @@ private:
     DisMotoOperand _formatter;
     RegMc6809 _regs;
 
+    RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
     // MC6809

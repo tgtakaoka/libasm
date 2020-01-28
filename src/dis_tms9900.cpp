@@ -26,11 +26,6 @@ void DisTms9900::outAddress(target::uintptr_t addr, bool relax) {
     }
 }
 
-void DisTms9900::outRegister(host::uint_t regno) {
-    *_operands++ = 'R';
-    outConstant(uint8_t(regno & 0xf), 10);
-}
-
 Error DisTms9900::decodeOperand(
     DisMemory<target::uintptr_t> &memory, Insn &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
@@ -43,11 +38,11 @@ Error DisTms9900::decodeOperand(
         outAddress(val);
         if (regno) {
             *_operands++ = '(';
-            outRegister(regno);
+            _operands = _regs.outRegName(_operands, regno);
             *_operands++ = ')';
         }
     } else {
-        outRegister(regno);
+        _operands = _regs.outRegName(_operands, regno);
         if (mode == 3)
             *_operands++ = '+';
     }
@@ -84,17 +79,17 @@ Error DisTms9900::decode(
     case IMM:
         return decodeImmediate(memory, insn);
     case REG:
-        outRegister(insnCode);
+        _operands = _regs.outRegName(_operands, insnCode);
         return setError(OK);
     case REG_IMM:
-        outRegister(insnCode);
+        _operands = _regs.outRegName(_operands, insnCode);
         *_operands++ = ',';
         return decodeImmediate(memory, insn);
     case CNT_REG: {
-        outRegister(insnCode);
+        _operands = _regs.outRegName(_operands, insnCode);
         *_operands++ = ',';
         const host::uint_t count = (insnCode >> 4) & 0x0f;
-        if (count == 0) outRegister(0);
+        if (count == 0) _operands = _regs.outRegName(_operands, 0);
         else outConstant(uint8_t(count), 10);
         return setError(OK);
     }
@@ -104,7 +99,7 @@ Error DisTms9900::decode(
         if (decodeOperand(memory, insn, insnCode))
             return getError();
         *_operands++ = ',';
-        outRegister(insnCode >> 6);
+        _operands = _regs.outRegName(_operands, insnCode >> 6);
         return setError(OK);
     case CNT_SRC:
     case XOP_SRC: {

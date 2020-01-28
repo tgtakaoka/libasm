@@ -16,13 +16,15 @@ enum RegName : char {
     REG_PSW = 'P',
 };
 
-class RegI8080 {
+#include "reg_base.h"
+
+class RegI8080 : public RegBase {
 public:
-    static RegName parseRegister(const char *line);
-    static RegName parsePointerReg(const char *line);
-    static RegName parseStackReg(const char *line);
-    static RegName parseIndexReg(const char *line);
-    static RegName parseDataReg(const char *line);
+    RegName parseRegister(const char *line) const;
+    RegName parsePointerReg(const char *line) const;
+    RegName parseStackReg(const char *line) const;
+    RegName parseIndexReg(const char *line) const;
+    RegName parseDataReg(const char *line) const;
 
     static host::int_t encodePointerReg(RegName regName);
     static host::int_t encodeStackReg(RegName regName);
@@ -34,15 +36,17 @@ public:
     static RegName decodeIndexReg(uint8_t regNum);
     static RegName decodeDataReg(uint8_t regNum);
 
-    static bool compareRegName(const char *line, RegName regName);
-    static host::uint_t regNameLen(RegName regName);
+    bool compareRegName(const char *line, RegName regName) const;
+    host::uint_t regNameLen(RegName regName) const;
 
-    static char *outRegName(char *out, const RegName regName);
-    static char *outCCRBits(char *out, uint8_t val);
+    char *outRegName(char *out, const RegName regName) const;
 
 private:
-    static RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end);
+    RegName parseRegName(
+        const char *line, const RegName *tabel, const RegName *end) const;
+    char regName1stChar(RegName regName) const;
+    char regName2ndChar(RegName regName) const;
+    char regName3rdChar(RegName regName) const;
 };
 
 #endif // __REGISTER_I8080_H__

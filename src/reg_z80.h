@@ -35,17 +35,19 @@ enum CcName : char {
     CC_M  = 'M',
 };
 
-class RegZ80 {
+#include "reg_base.h"
+
+class RegZ80 : public RegBase {
 public:
-    static CcName parseCc4Name(const char *line);
-    static CcName parseCc8Name(const char *line);
-    static bool compareRegName(const char *line, RegName regName);
-    static host::uint_t ccNameLen(const CcName ccName);
+    CcName parseCc4Name(const char *line) const;
+    CcName parseCc8Name(const char *line) const;
+    bool compareRegName(const char *line, RegName regName) const;
+    host::uint_t ccNameLen(const CcName ccName) const;
     static host::int_t encodeCcName(CcName ccName);
 
-    static RegName parseRegister(const char *line);
+    RegName parseRegister(const char *line) const;
     static OprSize registerSize(const RegName regName);
-    static host::uint_t regNameLen(const RegName regName);
+    host::uint_t regNameLen(const RegName regName) const;
     static host::int_t encodePointerReg(RegName regName);
     static host::int_t encodePointerRegIx(RegName regName, RegName ix);
     static host::int_t encodeStackReg(RegName regName);
@@ -61,13 +63,21 @@ public:
     static RegName decodeIrReg(uint8_t regNum);
     static RegName decodeDataReg(uint8_t regNum);
 
-    static char *outRegName(char *out, const RegName regName);
-    static char *outCc4Name(char *out, target::opcode_t cc4);
-    static char *outCc8Name(char *out, target::opcode_t cc8);
+    char *outRegName(char *out, const RegName regName) const;
+    char *outCc4Name(char *out, target::opcode_t cc4) const;
+    char *outCc8Name(char *out, target::opcode_t cc8) const;
 
 private:
-    static RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end);
+    RegName parseRegName(
+        const char *line, const RegName *tabel, const RegName *end) const;
+    char regName1stChar(const RegName regName) const;
+    char regName2ndChar(const RegName regName) const;
+    char regName3rdChar(const RegName regName) const;
+    char ccName1stChar(const CcName ccName) const;
+    char ccName2ndChar(const CcName ccName) const;
+    char *outCcName(char *out, CcName ccName) const;
+    bool compareCcName(const char *line, CcName ccName) const;
+    CcName parseCcName(const char *line, host::int_t max) const;
 };
 
 #endif // __REGISTER_Z80_H__

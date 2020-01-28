@@ -4,8 +4,8 @@
 
 #include "config_i8080.h"
 
-#include "symbol_table.h"
-#include "table_i8080.h"
+#include "insn_i8080.h"
+#include "reg_i8080.h"
 #include "asm_interface.h"
 
 class AsmI8080 : public Assembler<target::uintptr_t> {
@@ -15,6 +15,7 @@ public:
 
 private:
     AsmIntelOperand _parser;
+    RegI8080 _regs;
 
     Error encodePointerReg(Insn &insn);
     Error encodeStackReg(Insn &insn);

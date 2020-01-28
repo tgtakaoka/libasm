@@ -24,25 +24,29 @@ static bool isidchar(const char c) {
 }
 
 static bool regCharCaseEqual(char c, char regChar) {
-    return c == regChar || (isalpha(c) && toupper(c) == regChar);
+    return toupper(c) == toupper(regChar);
 }
 
-static char regName1stChar(const RegName regName) {
-    return char(regName);
+char RegI8080::regName1stChar(const RegName regName) const {
+    const char r = char(regName);
+    return _uppercase ? r : tolower(r);
 }
 
-static char regName2ndChar(const RegName regName) {
-    if (regName == REG_SP) return 'P';
-    if (regName == REG_PSW) return 'S';
+char RegI8080::regName2ndChar(const RegName regName) const {
+    if (regName == REG_SP)
+        return _uppercase ? 'P' : 'p';
+    if (regName == REG_PSW)
+        return _uppercase ? 'S' : 's';
     return 0;
 }
 
-static char regName3rdChar(const RegName regName) {
-    if (regName == REG_PSW) return 'W';
+char RegI8080::regName3rdChar(const RegName regName) const {
+    if (regName == REG_PSW)
+        return _uppercase ? 'W' : 'w';
     return 0;
 }
 
-bool RegI8080::compareRegName(const char *line, RegName regName) {
+bool RegI8080::compareRegName(const char *line, RegName regName) const {
     if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
     const char r2 = regName2ndChar(regName);
     if (r2 && !regCharCaseEqual(*line++, r2)) return false;
@@ -51,12 +55,12 @@ bool RegI8080::compareRegName(const char *line, RegName regName) {
     return !isidchar(*line);
 }
 
-host::uint_t RegI8080::regNameLen(RegName regName) {
+host::uint_t RegI8080::regNameLen(RegName regName) const {
     return regName2ndChar(regName) == 0 ? 1
         : (regName3rdChar(regName) == 0 ? 2 : 3);
 }
 
-char *RegI8080::outRegName(char *out, const RegName regName) {
+char *RegI8080::outRegName(char *out, const RegName regName) const {
     *out++ = regName1stChar(regName);
     const char r2 = regName2ndChar(regName);
     if (r2) {
@@ -77,7 +81,7 @@ static host::int_t encodeRegNumber(
 }
 
 RegName RegI8080::parseRegName(
-    const char *line, const RegName *table, const RegName *end) {
+    const char *line, const RegName *table, const RegName *end) const {
     for (const RegName *p = table; p < end; p++) {
         const RegName regName = RegName(pgm_read_byte(p));
         if (compareRegName(line, regName)) return regName;
@@ -91,23 +95,23 @@ static RegName decodeRegNumber(
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName RegI8080::parseRegister(const char *line) {
+RegName RegI8080::parseRegister(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(ALL_REGS));
 }
 
-RegName RegI8080::parsePointerReg(const char *line) {
+RegName RegI8080::parsePointerReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(POINTER_REGS));
 }
 
-RegName RegI8080::parseStackReg(const char *line) {
+RegName RegI8080::parseStackReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(STACK_REGS));
 }
 
-RegName RegI8080::parseIndexReg(const char *line) {
+RegName RegI8080::parseIndexReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(INDEX_REGS));
 }
 
-RegName RegI8080::parseDataReg(const char *line) {
+RegName RegI8080::parseDataReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(DATA_REGS));
 }
 

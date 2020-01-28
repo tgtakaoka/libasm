@@ -23,7 +23,9 @@ enum RegName : char {
     REG_ZERO = '0',
 };
 
-class RegMc6809 {
+#include "reg_base.h"
+
+class RegMc6809 : public RegBase {
 public:
     RegName parseIndexReg(const char *line) const;
     RegName parseBaseReg(const char *line) const;
@@ -35,17 +37,17 @@ public:
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;
 
-    static char *outRegName(char *out, const RegName regName);
-    static char *outCCRBits(char *out, uint8_t val);
+    char *outRegName(char *out, const RegName regName) const;
+    char *outCCRBits(char *out, uint8_t val) const;
 
     static RegName getStackReg(host::uint_t bit, target::insn_t insnCode);
-    static bool compareRegName(const char *line, RegName regName);
-    static host::uint_t regNameLen(RegName regName);
+    bool compareRegName(const char *line, RegName regName) const;
+    host::uint_t regNameLen(RegName regName) const;
 
-    static RegName parseBitOpReg(const char *line);
+    RegName parseBitOpReg(const char *line) const;
     static host::int_t encodeBitOpReg(RegName regName);
 
-    static RegName parseTfmBaseReg(const char *line);
+    RegName parseTfmBaseReg(const char *line) const;
     static host::int_t encodeTfmBaseReg(RegName regName);
     static RegName decodeBitOpReg(uint8_t regNum);
     static RegName decodeTfmBaseReg(uint8_t regNum);
@@ -53,18 +55,12 @@ public:
     static char tfmDstModeChar(host::uint_t mode);
 
 private:
-    static host::int_t encodeRegNumber(
-        RegName regName, const RegName *table, const RegName *end);
-    static RegName parseRegName(
-        const char *line, const RegName *table, const RegName *end);
-    static RegName decodeRegNumber(
-        host::uint_t regNum, const RegName *table, const RegName *end);
+    RegName parseRegName(
+        const char *line, const RegName *table, const RegName *end) const;
 
-    static bool isidchar(const char c);
-    static bool regCharCaseEqual(char c, char regChar);
-    static char regName1stChar(const RegName);
-    static char regName2ndChar(const RegName);
-    static char regName3rdChar(const RegName);
+    char regName1stChar(const RegName) const;
+    char regName2ndChar(const RegName) const;
+    char regName3rdChar(const RegName) const;
 };
 
 #endif // __REG_MC6809_H__

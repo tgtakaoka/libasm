@@ -25,27 +25,6 @@ Error AsmTms9900::checkComma() {
     return OK;
 }
 
-bool AsmTms9900::isRegisterName(const char *scan) const {
-    if (toupper(*scan++) != 'R' || !isdigit(*scan))
-        return false;
-    if (!_parser.isSymbolLetter(scan[1]))
-        return true;
-    if (*scan++ != '1' || _parser.isSymbolLetter(scan[1]))
-        return false;
-    return *scan >= '0' && *scan < '6';
-}
-
-Error AsmTms9900::parseRegName(uint8_t &regno) {
-    if (!isRegisterName(_scan)) return UNKNOWN_OPERAND;
-    uint8_t v = *++_scan - '0';
-    if (isdigit(*++_scan)) {
-        v *= 10;
-        v += *_scan++ - '0';
-    }
-    regno = v;
-    return OK;
-}
-
 Error AsmTms9900::encodeImm(Insn &insn, bool emitInsn) {
     uint16_t val;
     if (getOperand16(val)) return getError();
@@ -55,9 +34,10 @@ Error AsmTms9900::encodeImm(Insn &insn, bool emitInsn) {
 }
 
 Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
-    uint8_t regno;
-    if (parseRegName(regno)) return setError(UNKNOWN_OPERAND);
-    uint16_t operand = regno;
+    RegName regName = _regs.parseRegName(_scan);
+    if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+    _scan += _regs.regNameLen(regName);
+    uint16_t operand = _regs.encodeRegNumber(regName);
     switch (insn.addrMode()) {
     case REG:
     case REG_IMM:
@@ -72,8 +52,7 @@ Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
 
 Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     uint16_t count;
-    if (acceptR0 && toupper(_scan[0]) == 'R' && _scan[1] == '0'
-        && !_parser.isSymbolLetter(_scan[2])) { // R0
+    if (acceptR0 && _regs.parseRegName(_scan) == REG_R0) {
         _scan += 2;
         count = 0;
     } else {
@@ -95,39 +74,49 @@ Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
 }
 
 Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
-    uint8_t regno;
+    const char *p = _scan;
+    RegName regName;
     uint8_t mode = 0;
     uint16_t val16;
-    if (parseRegName(regno) == OK) {
+    if ((regName = _regs.parseRegName(p)) != REG_UNDEF) {
+        p += _regs.regNameLen(regName);
         mode = 0;
-    } else if (*_scan == '*') {
-        _scan++;
+    } else if (*p == '*') {
+        p++;
         mode = 1;
-        if (parseRegName(regno)) return setError(UNKNOWN_OPERAND);
-        if (*_scan == '+') {
-            _scan++;
+        if ((regName = _regs.parseRegName(p)) == REG_UNDEF)
+            return setError(UNKNOWN_OPERAND);
+        p += _regs.regNameLen(regName);
+        if (*p == '+') {
+            p++;
             mode = 3;
         }
-    } else if (*_scan == '@') {
-        _scan++;
+    } else if (*p == '@') {
         mode = 2;
+        _scan = p + 1;
         if (getOperand16(val16)) return getError();
-        if (*_scan == '(') {
-            _scan++;
-            if (parseRegName(regno) || regno == 0 || *_scan != ')')
+        p = _scan;
+        if (*p == '(') {
+            p++;
+            regName = _regs.parseRegName(p);
+            if (regName == REG_UNDEF || regName == REG_R0)
                 return setError(UNKNOWN_OPERAND);
-            _scan++;
+            p += _regs.regNameLen(regName);
+            if (*p != ')')
+                return setError(UNKNOWN_OPERAND);
+            p++;
         } else {
-            regno = 0;
+            regName = REG_R0;
         }
     }
-    uint16_t operand = (mode << 4) | regno;
+    uint16_t operand = (mode << 4) | _regs.encodeRegNumber(regName);
     if (destinationa) operand <<= 6;
     insn.setInsnCode(insn.insnCode() | operand);
     if (emitInsn)
         insn.emitInsn();
     if (mode == 2)
         insn.emitOperand(val16);
+    _scan = p;
     return setError(OK);
 }
 

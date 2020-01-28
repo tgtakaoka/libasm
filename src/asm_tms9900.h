@@ -5,6 +5,7 @@
 #include "config_tms9900.h"
 
 #include "insn_tms9900.h"
+#include "reg_tms9900.h"
 #include "asm_interface.h"
 
 class AsmTms9900 : public Assembler<target::uintptr_t> {
@@ -14,10 +15,9 @@ public:
 
 private:
     AsmIntelOperand _parser;
+    RegTms9900 _regs;
 
     Error checkComma();
-    bool isRegisterName(const char *scan) const;
-    Error parseRegName(uint8_t &regno);
 
     Error encodeImm(Insn &insn, bool emitInsn);
     Error encodeReg(Insn &insn, bool emitInsn);

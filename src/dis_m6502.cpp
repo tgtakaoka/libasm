@@ -33,17 +33,17 @@ Error DisM6502::decodeAbsolute(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     const bool indirect = (insn.addrMode() == IDX_ABS_IND)
         || (insn.addrMode() == ABS_INDIRECT);
-    char index;
+    RegName index;
     switch (insn.addrMode()) {
     case ABS_IDX_X:
     case IDX_ABS_IND:
-        index = 'X';
+        index = REG_X;
         break;
     case ABS_IDX_Y:
-        index = 'Y';
+        index = REG_Y;
         break;
     default:
-        index = 0;
+        index = REG_UNDEF;
         break;
     }
     target::uintptr_t addr;
@@ -56,9 +56,9 @@ Error DisM6502::decodeAbsolute(
     } else {
         outConstant(addr, 16, false);
     }
-    if (index) {
+    if (index != REG_UNDEF) {
         *_operands++ = ',';
-        *_operands++ = index;
+        _operands = _regs.outRegName(_operands, index);
     }
     if (indirect) *_operands++ = ')';
     *_operands = 0;
@@ -70,18 +70,18 @@ Error DisM6502::decodeZeroPage(
     const bool indirect = insn.addrMode() == INDX_IND
         || insn.addrMode() == INDIRECT_IDX
         || insn.addrMode() == ZP_INDIRECT;
-    char index;
+    RegName index;
     switch (insn.addrMode()) {
     case ZP_IDX_X:
     case INDX_IND:
-        index = 'X';
+        index = REG_X;
         break;
     case ZP_IDX_Y:
     case INDIRECT_IDX:
-        index = 'Y';
+        index = REG_Y;
         break;
     default:
-        index = 0;
+        index = REG_UNDEF;
         break;
     }
     uint8_t zp;
@@ -93,12 +93,12 @@ Error DisM6502::decodeZeroPage(
     } else {
         outConstant(zp, 16, false);
     }
-    if (indirect && index == 'Y') *_operands++ = ')';
-    if (index) {
+    if (indirect && index == REG_Y) *_operands++ = ')';
+    if (index != REG_UNDEF) {
         *_operands++ = ',';
-        *_operands++ = index;
+        _operands = _regs.outRegName(_operands, index);
     }
-    if (indirect && index != 'Y') *_operands++ = ')';
+    if (indirect && index != REG_Y) *_operands++ = ')';
     *_operands = 0;
 #ifdef W65C02_ENABLE_BITOPS
     if (insn.addrMode() == ZP_REL8) {
@@ -146,7 +146,7 @@ Error DisM6502::decode(
     case IMPLIED:
         return setError(OK);
     case ACCUMULATOR:
-        *_operands++ = 'A';
+        _operands = _regs.outRegName(_operands, REG_A);
         *_operands = 0;
         return setError(OK);
     case IMMEDIATE:
