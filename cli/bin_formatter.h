@@ -168,6 +168,7 @@ public:
         sprintf(p, "%02X", static_cast<uint8_t>(~this->_check_sum));
         return this->_line;
     }
+
     const char *end() override {
         if (sizeof(Addr) == 2) {
             return "S9030000FC";
@@ -181,10 +182,16 @@ public:
         const char type = *line++;
         this->ensureData(16);
         size = 0;
-        if (type == '0') return this->_data; // start record
-        if (type == '9' || type == '7') return this->_data; // end record
-        if (type != '1' && type != '3') return nullptr;
-        if (sizeof(Addr) == 2 && type == '3') return nullptr;
+        if (type == '0')
+            return this->_data; // start record
+        if (type == '9' || type == '8' || type == '7')
+            return this->_data; // end record
+        if (type == '5' || type == '6')
+            return this->_data; // record count
+        if (type != '1' && type != '2' && type != '3')
+            return nullptr;     // format error
+        if (sizeof(Addr) == 2 && type != '1')
+            return nullptr;     // address size overflow
         this->resetSum();
         uint8_t len = 0;
         if (this->parseByte(line, len)) return nullptr;
@@ -194,6 +201,14 @@ public:
             if (this->parseUint16(line, val16)) return nullptr;
             addr = val16;
             len -= 2;
+        } else if (type == '2') {
+            if (len < 3) return nullptr;
+            uint8_t val8;
+            if (this->parseByte(line, val8)) return nullptr;
+            addr = static_cast<uint32_t>(val8) << 16;
+            if (this->parseUint16(line, val16)) return nullptr;
+            addr |= val16;
+            len -= 3;
         } else {
             if (len < 4) return nullptr;
             if (this->parseUint16(line, val16)) return nullptr;
