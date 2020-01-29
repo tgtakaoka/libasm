@@ -47,7 +47,6 @@ Error DisMc6809::decodeExtended(
     return setError(OK);
 }
 
-#include <stdio.h>
 Error DisMc6809::decodeIndexed(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
