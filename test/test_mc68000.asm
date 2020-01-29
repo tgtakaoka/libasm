@@ -43,7 +43,7 @@
 ;;; 07XX
         movep.l ($5868,a0),d3
         bchg    d3,-(a5)
-        bchg    d3,(-$66,d7.l,a7)
+        bchg    d3,(-$66,a7,d7.l)
         bclr    d3,(a2)+
 ;;; 08XX
         btst.l  #31,d0
@@ -57,7 +57,9 @@
         bclr    d4,(-$3211,a3)
 ;;; 0AXX
         eori.b  #$02,d1
+        eori    #$3d,ccr
         eori.w  #$5152,(a0)
+        eori    #$7d7e,sr
         eori.l  #$9a9b9c9d,(a1)+
 ;;; 0BXX
         movep.w ($0d0e,a4),d5
@@ -74,7 +76,7 @@
         bset    d7,(-$3457,a5)
 ;;; 1XXX
         move.b  (a1),-(a0)
-        move.b  -$66(d7.l,a4),d1
+        move.b  (-$66,a4,d7.l),d1
 ;;; 2XXX
         move.l  -(a2),d1
         movea.l ($4000,pc),a1

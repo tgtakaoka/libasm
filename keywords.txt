@@ -12,18 +12,15 @@ SymbolTable     KEYWORD1        libasm
 Error           KEYWORD1        libasm
 AsmMc6809	KEYWORD1        libasm
 DisMc6809	KEYWORD1        libasm
-AsmHd6309	KEYWORD1        libasm
-DisHd6309	KEYWORD1        libasm
 AsmI8080	KEYWORD1        libasm
 DisI8080        KEYWORD1        libasm
 AsmZ80          KEYWORD1        libasm
 DisZ80          KEYWORD1        libasm
-AsmR6502	KEYWORD1        libasm
-DisR6502	KEYWORD1        libasm
-AsmR65c02	KEYWORD1        libasm
-DisR65c02	KEYWORD1        libasm
-AsmTms9995	KEYWORD1        libasm
-DisTms9995	KEYWORD1        libasm
+AsmM6502	KEYWORD1        libasm
+DisM6502	KEYWORD1        libasm
+AsmTms9900	KEYWORD1        libasm
+DisTms9900	KEYWORD1        libasm
+DisMc68000      KEYWORD1        libasm
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -41,6 +38,3 @@ name     KEYWORD2 Insn
 #######################################
 # Constants (LITERAL1)
 #######################################
-
-
-

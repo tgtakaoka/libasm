@@ -27,7 +27,8 @@ OBJS =	$(OBJS_as6809)  $(OBJS_dis6809)  \
 	$(OBJS_as6502)  $(OBJS_dis6502)  \
 	$(OBJS_as8080)  $(OBJS_dis8080)  \
 	$(OBJS_asz80)   $(OBJS_disz80)   \
-	$(OBJS_as9900)  $(OBJS_dis9900)
+	$(OBJS_as9900)  $(OBJS_dis9900)  \
+	                $(OBJS_dis68000)
 
 OBJS_driver  = \
 	as6809.o   \
