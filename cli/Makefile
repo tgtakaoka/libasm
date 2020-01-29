@@ -10,6 +10,7 @@ OBJS_m6502   = table_m6502.o   reg_m6502.o   $(OBJS_common)
 OBJS_i8080   = table_i8080.o   reg_i8080.o   $(OBJS_common)
 OBJS_z80     = table_z80.o     reg_z80.o     $(OBJS_common)
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o $(OBJS_common)
+OBJS_mc68000 = table_mc68000.o reg_mc68000.o $(OBJS_common)
 OBJS_as6809   = as6809.o   asm_mc6809.o  $(OBJS_asm) $(OBJS_mc6809)  $(OBJS_common)
 OBJS_as6502   = as6502.o   asm_m6502.o   $(OBJS_asm) $(OBJS_m6502)   $(OBJS_common)
 OBJS_as8080   = as8080.o   asm_i8080.o   $(OBJS_asm) $(OBJS_i8080)   $(OBJS_common)
@@ -20,6 +21,7 @@ OBJS_dis6502  = dis6502.o  dis_m6502.o   $(OBJS_dis) $(OBJS_m6502)   $(OBJS_comm
 OBJS_dis8080  = dis8080.o  dis_i8080.o   $(OBJS_dis) $(OBJS_i8080)   $(OBJS_common)
 OBJS_disz80   = disz80.o   dis_z80.o     $(OBJS_dis) $(OBJS_z80)     $(OBJS_common)
 OBJS_dis9900  = dis9900.o  dis_tms9900.o $(OBJS_dis) $(OBJS_tms9900) $(OBJS_common)
+OBJS_dis68000 = dis68000.o dis_mc68000.o $(OBJS_dis) $(OBJS_mc68000) $(OBJS_common)
 
 OBJS =	$(OBJS_as6809)  $(OBJS_dis6809)  \
 	$(OBJS_as6502)  $(OBJS_dis6502)  \
@@ -37,7 +39,8 @@ OBJS_driver  = \
 	dis6502.o  \
 	dis8080.o  \
 	disz80.o   \
-	dis9900.o
+	dis9900.o  \
+	dis68000.o
 
 DRIVERS = $(OBJS_driver:.o=)
 
@@ -66,6 +69,8 @@ dis8080:  $(OBJS_dis8080)
 disz80:   $(OBJS_disz80)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 dis9900:  $(OBJS_dis9900)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis68000: $(OBJS_dis68000)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:

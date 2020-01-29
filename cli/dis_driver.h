@@ -61,6 +61,7 @@ public:
                     listing(_disassembler, memory, _uppercase);
                 if (list) {
                     fprintf(list, "%s\n", listing.origin(base, true));
+       fflush(list);
                 }
                 if (output) {
                     fprintf(output, "%s\n", listing.origin(base));
@@ -75,6 +76,7 @@ public:
                         do {
                             fprintf(list, "%s\n", listing.getLine());
                         } while (listing.hasNext());
+       fflush(list);
                     }
                     if (output) {
                         if (_disassembler.getError())
