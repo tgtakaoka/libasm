@@ -12,13 +12,12 @@ static void toUppercase(char *p) {
 
 char *RegMc68000::outRegName(char *out, RegName regName) const {
     char *p = out;
-    const char r = char(regName);
-    if (isdigit(r)) {
+    if (isDreg(regName)) {
         *out++ = 'd';
-        *out++ = r;
-    } else if (islower(r)) {
+        *out++ = char(regName) - char(REG_D0) + '0';
+    } else if (isAreg(regName)) {
         *out++ = 'a';
-        *out++ = r - 'a' + '0';
+        *out++ = char(regName) - char(REG_A0) + '0';
     } else if (regName == REG_CCR) {
         *out++ = 'c';
         *out++ = 'c';
@@ -51,6 +50,16 @@ char *RegMc68000::outEaSize(char *out, EaSize size) const {
     *out = 0;
     if (_uppercase) toUppercase(p);
     return out;
+}
+
+bool RegMc68000::isDreg(RegName reg) {
+    const char r = char(reg);
+    return r >= char(REG_D0) && r <= char(REG_D7);
+}
+
+bool RegMc68000::isAreg(RegName reg) {
+    const char r = char(reg);
+    return r >= char(REG_A0) && r <= char(REG_A7);
 }
 
 RegName RegMc68000::decodeDataReg(host::uint_t regno) {

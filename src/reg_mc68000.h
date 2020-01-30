@@ -41,6 +41,8 @@ class RegMc68000 : public RegBase {
 public:
     char *outRegName(char *out, RegName regName) const;
     char *outEaSize(char *out, EaSize size) const;
+    static bool isDreg(RegName reg);
+    static bool isAreg(RegName reg);
     static RegName decodeDataReg(host::uint_t regno);
     static RegName decodeAddrReg(host::uint_t regno);
 };
