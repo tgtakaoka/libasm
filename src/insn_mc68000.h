@@ -9,7 +9,6 @@
 class Insn : public InsnBase<target::uintptr_t, target::insn_t, 10, 7> {
 public:
     InsnFormat insnFormat() const { return _insnFormat(_flags); }
-    ExtWord extWord() const { return _extWord(_flags); }
 
     void setFlags(host::uint_t flags) {
         _flags = flags;
@@ -80,20 +79,6 @@ static const char *insnFormat(const Insn &insn) {
     case MOVA_OPR: return "MOVA_OPR";
     case MOVE_OPR: return "MOVE_OPR";
     default: return "unkn_fmt";
-    }
-}
-
-static const char *extWord(const Insn &insn) __attribute__((unused));
-static const char *extWord(const Insn &insn) {
-    switch (insn.extWord()) {
-    case NO_EXT:  return  "NO_EXT";
-    case EXT_IMM: return  "EXT_IMM";
-    case EXT_BIT: return  "EXT_BIT";
-    case EXT_DISP: return "EXT_DISP";
-    case EXT_DBCC: return "EXT_DBCC";
-    case EXT_BRA:  return "EXT_BRA";
-    case EXT_REGM: return "EXT_REGM";
-    default: return "EXT_unkn";
     }
 }
 

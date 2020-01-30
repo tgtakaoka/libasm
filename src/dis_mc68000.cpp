@@ -126,29 +126,30 @@ Error DisMc68000::decodeEffectiveAddr(
 
 Error DisMc68000::decodeImplied(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
-    if (insn.extWord() == EXT_IMM) { // STOP
+    if (insn.insnCode() == 047162) { // STOP
         *_operands++ = '#';
         return decodeExtensionWord(memory, insn, SZ_WORD);
     }
     return setError(OK);
 }
 
-// EXT_IMM: ORI, ANDI, SUBI, ADDI, EORI, CMPI
-// NO_EXT:  NEGX, CLR, NEG, NOT, TST
+// ORI, ANDI, SUBI, ADDI, EORI, CMPI
+// NEGX, CLR, NEG, NOT, TST
 Error DisMc68000::decodeDestSiz(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
-    const EaMc68000 ea(insn.insnCode());
-    const uint8_t opc = (insn.insnCode() >> 9) & 7;
+    const target::insn_t insnCode = insn.insnCode();
+    const EaMc68000 ea(insnCode);
+    const uint8_t opc = (insnCode >> 9) & 7;
 
-    if (insn.extWord() == EXT_IMM) {
+    if ((insnCode >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
         *_operands++ = '#';
         if (decodeExtensionWord(memory, insn, ea.size()))
             return getError();
         *_operands++ = ',';
-        constexpr uint8_t ORI  = 0;
-        constexpr uint8_t ANDI = 1;
-        constexpr uint8_t EORI = 5;
-        constexpr uint8_t CMPI = 6;
+        constexpr uint8_t ORI  = 00;
+        constexpr uint8_t ANDI = 01;
+        constexpr uint8_t EORI = 05;
+        constexpr uint8_t CMPI = 06;
         if (opc == ORI || opc == ANDI || opc == EORI) {
             if (ea.mode() == M_IMM_DATA) {
                 if (ea.size() == SZ_BYTE) {
@@ -164,7 +165,7 @@ Error DisMc68000::decodeDestSiz(
             return setError(ILLEGAL_OPERAND_MODE);
         if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
-    } else {                    // NO_EXT
+    } else {                    // NEGX/CLR/NEG/NOT/TST
         constexpr uint8_t TST = 5;
         if (opc == TST && !ea.satisfy(CAT_DATA))
             return setError(ILLEGAL_OPERAND_MODE);
@@ -176,16 +177,15 @@ Error DisMc68000::decodeDestSiz(
     return decodeEffectiveAddr(memory, insn, ea);
 }
 
-// EXT_DISP: LINK
-// NO_EXT: UNLK
+// LINK, UNLK
 Error DisMc68000::decodeAddrReg(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     const RegName dest = RegMc68000::decodeAddrReg(insn.insnCode());
-    if (insn.extWord() == NO_EXT) {
+    if (insn.insnCode() & 010) { // UNLK
         outRegName(dest);
         return setError(OK);
     }
-    // EXT_DISP
+    // LINK
     outRegName(dest);
     *_operands++ = ',';
     uint16_t val16;
@@ -196,16 +196,16 @@ Error DisMc68000::decodeAddrReg(
     return setError(OK);
 }
 
-// EXT_DBCC: DBcc
-// NO_EXT: SWAP
+// DBcc, SWAP
 Error DisMc68000::decodeDataReg(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     const RegName dest = RegMc68000::decodeDataReg(insn.insnCode());
-    if (insn.extWord() == NO_EXT) {
+    if ((insn.insnCode() >> 12) == 4) { // SWAP
         outRegName(dest);
         return setError(OK);
     }
-    // EXT_DBCC
+
+    // DBcc
     outRegName(dest);
     *_operands++ = ',';
     uint16_t val16;
@@ -221,7 +221,7 @@ Error DisMc68000::decodeDataReg(
     return setError(OK);
 }
 
-// NO_EXT: MOVE USP
+// MOVE USP
 Error DisMc68000::decodeMoveUsp(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     const RegName areg = RegMc68000::decodeAddrReg(insn.insnCode());
@@ -245,7 +245,7 @@ Error DisMc68000::decodeTrapVec(
     return setError(OK);
 }
 
-// NO_EXT: NBCD, PEA, TAS
+// NBCD, PEA, TAS
 Error DisMc68000::decodeDataDst(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     const target::insn_t insnCode = insn.insnCode();
@@ -269,15 +269,15 @@ Error DisMc68000::decodeDataDst(
     return decodeEffectiveAddr(memory, insn, ea);
 }
 
-// EXT_BIT: BTST, BCHG, BCLR, BSET
-// NO_EXT:  JSR, JMP, Scc,
-// NO_EXT:  ASR, ASL, LSR, LSL, ROXR, ROXL
+// BTST, BCHG, BCLR, BSET
+// JSR, JMP, Scc,
+// ASR, ASL, LSR, LSL, ROXR, ROXL
 Error DisMc68000::decodeDestOpr(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     const EaMc68000 ea(insn.insnCode());
     EaSize size = ea.size();
 
-    if (insn.extWord() == EXT_BIT) {
+    if ((insn.insnCode() >> 12) == 0) { // BTST/BCHG/BCLR/BSET
         const uint8_t opc = (insn.insnCode() >> 6) & 3;
         constexpr uint8_t BTST = 0;
         if (opc == BTST && !ea.satisfy(CAT_DATA))
@@ -289,7 +289,7 @@ Error DisMc68000::decodeDestOpr(
         if (decodeExtensionWord(memory, insn, SZ_BYTE))
             return getError();
         *_operands++ = ',';
-    } else {                    // NO_EXT
+    } else {                    // JSR/JMP/Scc/ASx/LSx/ROXx
         const uint8_t opc = (insn.insnCode() >> 12) & 077;
         constexpr uint8_t JSR_JMP = 004;
         constexpr uint8_t Scc = 005;
