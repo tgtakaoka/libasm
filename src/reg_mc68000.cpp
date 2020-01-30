@@ -3,6 +3,10 @@
 
 #include <ctype.h>
 
+static bool isidchar(const char c) {
+    return isalnum(c) || c == '_';
+}
+
 static void toUppercase(char *p) {
     while (*p) {
         *p = toupper(*p);
@@ -62,12 +66,52 @@ bool RegMc68000::isAreg(RegName reg) {
     return r >= char(REG_A0) && r <= char(REG_A7);
 }
 
+bool RegMc68000::isADreg(RegName reg) {
+    return isAreg(reg) || isDreg(reg);
+}
+
+target::insn_t RegMc68000::encodeRegNo(RegName reg) {
+    return isDreg(reg)
+        ? char(reg) - char(REG_D0)
+        : char(reg) - char(REG_A0);
+}
+
+host::uint_t RegMc68000::encodeRegPos(RegName reg) {
+    return isDreg(reg)
+        ? char(reg) - char(REG_D0)
+        : char(reg) - char(REG_A0) + 8;
+}
+
 RegName RegMc68000::decodeDataReg(host::uint_t regno) {
     return RegName(char(REG_D0) + (regno & 7));
 }
 
 RegName RegMc68000::decodeAddrReg(host::uint_t regno) {
     return RegName(char(REG_A0) + (regno & 7));
+}
+
+host::uint_t RegMc68000::regNameLen(RegName regName) {
+    if (regName == REG_UNDEF) return 0;
+    return (regName == REG_CCR || regName == REG_USP) ? 3 : 2;
+}
+
+RegName RegMc68000::parseRegName(const char *line) {
+    const char c1 = toupper(*line++);
+    const char c2 = toupper(*line++);
+    if (c1 == 'A' || c1 == 'D') {
+        if (c2 < '0' || c2 >= '8' || isidchar(*line)) return REG_UNDEF;
+        return c1 == 'D' ? decodeDataReg(c2 - '0') : decodeAddrReg(c2 - '0');
+    }
+    const char c3 = toupper(*line++);
+    if (c1 == 'P' && c2 == 'C' && !isidchar(c3))
+        return REG_PC;
+    if (c1 == 'S' && c2 == 'R' && !isidchar(c3))
+        return REG_SR;
+    if (c1 == 'C' && c2 == 'C' && c3 == 'R' && !isidchar(*line))
+        return REG_CCR;
+    if (c1 == 'U' && c2 == 'S' && c3 == 'P' && !isidchar(*line))
+        return REG_USP;
+    return REG_UNDEF;
 }
 
 static EaMode parseEaMode(host::uint_t mode, host::uint_t regno) {
@@ -84,6 +128,18 @@ static EaMode parseEaMode(host::uint_t mode, host::uint_t regno) {
     return EaMode(mode);
 }
 
+target::insn_t EaMc68000::encodeMode(EaMode mode) {
+    const host::uint_t m = host::uint_t(mode);
+    return m >= 8 ? 7 : m;
+}
+
+target::insn_t EaMc68000::encodeRegNo(EaMode mode, RegName regName) {
+    const host::uint_t m = host::uint_t(mode);
+    if (m < 8) return RegMc68000::encodeRegNo(regName);
+    if (m < 16) return m - 8;
+    return 0;
+}
+
 static host::uint_t getCategories(EaMode mode) {
     switch (mode) {
     case M_DREG:
@@ -95,6 +151,7 @@ static host::uint_t getCategories(EaMode mode) {
     case M_INDX:
     case M_ABS_SHORT:
     case M_ABS_LONG:
+    case M_LABEL:
         return CAT_DATA | CAT_MEMORY | CAT_CONTROL | CAT_ALTERABLE;
     case M_PINC:
     case M_PDEC:
@@ -104,9 +161,25 @@ static host::uint_t getCategories(EaMode mode) {
         return CAT_DATA | CAT_MEMORY | CAT_CONTROL;
     case M_IMM_DATA:
         return CAT_DATA;
+    /* for assembler operand parsing */
+    case M_NONE:
+        return CAT_NONE;
+    case M_MULT_REGS:
+        return CAT_ALTERABLE;
     default:
-        return CAT_ILLEGAL;
+        return CAT_NONE;
     }
+}
+
+const char *EaMc68000::eaCategory(EaMode mode) {
+    host::uint_t categories = getCategories(mode);
+    static char buf[5];
+    buf[0] = (categories & CAT_DATA) ? 'D' : '_';
+    buf[1] = (categories & CAT_MEMORY) ? 'M' : '_';
+    buf[2] = (categories & CAT_CONTROL) ? 'C' : '_';
+    buf[3] = (categories & CAT_ALTERABLE) ? 'A' : '_';
+    buf[4] = 0;
+    return buf;
 }
 
 static RegName encodeRegName(EaMode mode, host::uint_t regno) {

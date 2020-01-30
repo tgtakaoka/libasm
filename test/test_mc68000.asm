@@ -1,24 +1,25 @@
         cpu     68000
+	org     $10000000
 
 ;;; 00XX
         ori.b   #$23,d1
         ori     #$3d,ccr
         ori.w   #$6789,d5
-        ori.w   #$5152,(a0)
+        ori.w   #$5152,($59,a0,d5.l)
         ori     #$7d7e,sr
         ori.l   #$bcdef012,(a2)+
 ;;; 01XX
-        btst    d0,d2
-        btst    d0,-(a3)
+        btst.l  d0,d2
+        btst.b  d0,-(a3)
         btst    d0,($7654).w
         btst    d0,($87654321).l
-        movep.w ($0a0b,a1),d0
+        movep   ($0a0b,a1),d0
 ;;; 02XX
         andi.b  #$04,d3
         andi    #$3d,ccr
         andi.w  #$6789,d5
         andi.w  #$789a,(a6)
-        andi    #$027d,sr
+        andi.w  #$027d,sr
         andi.l  #$a8a9aaab,-(a7)
         andi.l  #$a8a9aaab,($12345678).l
 ;;; 03XX
@@ -30,6 +31,7 @@
         subi.w  #$5667,d5
         subi.w  #$789a,(a6)
         subi.l  #$04850486,d4
+        subi.l  #$04850486,($0487,a7)
 ;;; 05XX
         bchg    d2,d3
         bchg    d2,-(a7)
@@ -57,8 +59,9 @@
         bclr    d4,(-$3211,a3)
 ;;; 0AXX
         eori.b  #$02,d1
-        eori    #$3d,ccr
+        eori.b  #$3d,ccr
         eori.w  #$5152,(a0)
+        eori.w  #$5152,($53545556).l
         eori    #$7d7e,sr
         eori.l  #$9a9b9c9d,(a1)+
 ;;; 0BXX
@@ -67,6 +70,7 @@
 ;;; 0CXX
         cmpi.b  #$02,d1
         cmpi.w  #$5152,(a0)
+        cmpi.w  #$5152,($5354).w
         cmpi.l  #$9a9b9c9d,(a1)+
 ;;; 0DXX
         movep.l d6,(-$5679,a3)
@@ -79,11 +83,12 @@
         move.b  (-$66,a4,d7.l),d1
 ;;; 2XXX
         move.l  -(a2),d1
-        movea.l ($4000,pc),a1
+        movea.l (*+$4000,pc),a1
         move.l  d5,($6789,a1)
-	move.l  #$12345678,($89abcde0).l
+        move.l  #$12345678,($89abcde0).l
 ;;; 3XXX
         move.w  (a0),d1
+        move    (a0),d1
         move.w  ($33,a3,d3),-(a1)
         movea.w (a6),a2
 ;; ;;; 40XX
@@ -99,19 +104,24 @@
         not.w   d0
 ;; ;;; 48XX
         ext.w   d0
+        ext     d1
         ext.l   d0
         nbcd    d0
         swap    d0
         pea     (a0)
         movem.w d0-d7/a1-a7,-(a0)
         movem.w d0-d7/a1-a7,(a0)
+        movem   d0,-(a0)
 ;;; 4AXX
         illegal
         tas     (a0)
         tst.l   d0
+        tst.w   ($1000).w
+        tst.b   ($12345678).l
 ;;; 4CXX
         movem.l (a1)+,d7-a0/a6-a7
         movem.l (a1),d7-a0/a6-a7
+        movem.l (a1)+,d0
 ;;; 4EXX
         trap    #3
         link    a0,#10
@@ -131,13 +141,17 @@
         lea     ($00,a1,d3.w),a0
         chk.w   #$22,d2     
 ;; ;;; 5XXX
-        addq.l  #1,(a1)
+        addq.b  #1,d2
         addq.w  #8,a2
+        addq    #8,a2
+        addq.l  #1,(a1)
         subq.b  #1,d0
+        subq.w  #1,d0
+        subq    #1,d0
         subq.l  #8,a7
-        st      d0
+        st.b    d0
         sf      d1
-        shi     d2
+        shi.b   d2
         sls     d3
         scc     d4
         shs     d4
@@ -148,9 +162,10 @@
         svc     (a0)
         svs     (a1)+
         spl     -(a2)
-        smi     (a3)
-        sge     (a4)+
-        slt     -(a5)
+;        smi.b   *+10
+        smi.b   (*+10).l
+        sge.b   ($1000).w
+        slt     (*+10).l
         sgt     (a6)
         sle     (a7)+
         dbt     d0,*+0
@@ -193,9 +208,12 @@
         ble     *+15
 ;; ;;; 7XXX
         moveq   #1,d0
+        move.l  #1,d0
         moveq   #-1,d7
+        move.l  #-1,d7
 ;; ;;; 8XXX
         divu.w  (a0),d0
+        divu.w  #10,d0
         divs.w  d1,d2
         sbcd    d0,d1
         sbcd    -(a0),-(a1)
@@ -204,7 +222,7 @@
 ;; ;;; 9XXX
         sub.b   (a0),d0
         sub.l   d0,(a0)
-	subx.l  d0,d1
+        subx.l  d0,d1
         subx.b  -(a1),-(a2)
         suba.w  (a0),a1
 ;; ;;; BXXX
@@ -214,13 +232,14 @@
         cmpa.w  d0,a0
 ;; ;;; CXXX
         mulu.w  d1,d2
+        mulu.w  #10,d2
         muls.w  (a0),d0
         abcd    d0,d1
         abcd    -(a0),-(a1)
         exg.l   d1,d2
-        exg.l   a3,a4
+        exg     a3,a4
         exg.l   d5,a6
-        exg.l   a6,d5
+        exg     a6,d5
         and.b   (a0),d0
         and.l   d0,(a1)
 ;; ;;; DXXX
@@ -235,6 +254,7 @@
         lsr.l   #8,d1
         lsl.b   #1,d0
         roxr.w  d1,d2
+        roxr    d1,d2
         roxl.l  d3,d4
         ror.w   (a3)+     
         rol     -(a3)

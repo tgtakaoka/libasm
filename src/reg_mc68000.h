@@ -39,10 +39,15 @@ enum EaSize : host::uint_t {
 
 class RegMc68000 : public RegBase {
 public:
+    static host::uint_t regNameLen(RegName);
+    static RegName parseRegName(const char *line);
     char *outRegName(char *out, RegName regName) const;
     char *outEaSize(char *out, EaSize size) const;
     static bool isDreg(RegName reg);
     static bool isAreg(RegName reg);
+    static bool isADreg(RegName reg);
+    static target::insn_t encodeRegNo(RegName reg);
+    static host::uint_t encodeRegPos(RegName reg);
     static RegName decodeDataReg(host::uint_t regno);
     static RegName decodeAddrReg(host::uint_t regno);
 };
@@ -56,16 +61,21 @@ enum EaMode : host::uint_t {
     M_PDEC   = 4,       // DM_A: -(An): Address Register Indirect with Predecrement
     M_DISP   = 5,       // DMCA: (d16,An): Address Register Indirect with Displacement
     M_INDX   = 6,       // DMCA: (d8,An,Xn): Address Register Indirect with Index
-    M_ABS_SHORT = 8,    // DMCA: (xxx).W: Absolute Short Addressing
-    M_ABS_LONG  = 9,    // DMCA: (xxx).L: Absolute Long Addressing
-    M_PC_DISP   = 10,   // DMC_: (d16,PC): Program Counter Indirect with Displacement
-    M_PC_INDX   = 11,   // DMC_: (d8,PC,Xn): Program Counter Indirect with Index
-    M_IMM_DATA  = 12,   // DM__: #imm: Immediate Data
-    M_ILLEGAL   = 13,
+    M_ABS_SHORT = 8+0,  // DMCA: (xxx).W: Absolute Short Addressing
+    M_ABS_LONG  = 8+1,  // DMCA: (xxx).L: Absolute Long Addressing
+    M_PC_DISP   = 8+2,  // DMC_: (d16,PC): Program Counter Indirect with Displacement
+    M_PC_INDX   = 8+3,  // DMC_: (d8,PC,Xn): Program Counter Indirect with Index
+    M_IMM_DATA  = 8+4,  // DM__: #imm: Immediate Data
+    M_ILLEGAL   = 31,
+
+    // for assembler operand parsing
+    M_NONE      = 16,   // no operand
+    M_MULT_REGS = 17,   // MOVEM register list
+    M_LABEL     = 18,   // label
 };
 
 // Effective Address Category
-#define CAT_ILLEGAL   0
+#define CAT_NONE      0
 #define CAT_DATA      1
 #define CAT_MEMORY    2
 #define CAT_CONTROL   4
@@ -80,6 +90,9 @@ struct EaMc68000 {
         return satisfy(mode, categories);
     }
     static bool satisfy(EaMode mode, host::uint_t categories);
+    static target::insn_t encodeMode(EaMode mode);
+    static target::insn_t encodeRegNo(EaMode mode, RegName regName);
+    static const char *eaCategory(EaMode mode);
 
     EaSize size;
     EaMode mode;
@@ -101,6 +114,7 @@ static const char *eaSize(EaSize size) {
     case SZ_BYTE: return ".B";
     case SZ_WORD: return ".W";
     case SZ_LONG: return ".L";
+    case SZ_NONE: return "__";
     default: return "SZ_unkn";
     }
 }
@@ -120,6 +134,9 @@ static const char *eaMode(EaMode mode) {
     case M_PC_DISP: return "(d16,PC)";
     case M_PC_INDX: return "(d8,PC,Xn)";
     case M_IMM_DATA: return "#imm";
+    case M_NONE:     return "____";
+    case M_MULT_REGS: return "Dx/Ax";
+    case M_LABEL:     return "label";
     default: return "M_unkn";
     }
 }

@@ -702,6 +702,6 @@ Error DisMc68000::decode(
     case REGS_EXG: return decodeRegsExg(memory, insn);
     case MOVA_OPR:
     case MOVE_OPR: return decodeMoveOpr(memory, insn);
-    default:       return setError(UNKNOWN_INSTRUCTION);
     }
+    return setError(UNKNOWN_INSTRUCTION);
 }
