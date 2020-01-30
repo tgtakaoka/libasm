@@ -53,9 +53,6 @@ class ErrorReporter {
 public:
     Error getError() const { return _error; }
 
-protected:
-    Error _error;
-
     Error setError(Error error) {
         _error = error;
         return error;
@@ -68,6 +65,9 @@ protected:
     void resetError() {
         _error = INVALID_STATE;
     }
+
+private:
+    Error _error;
 };
 
 #endif // __ERROR_HD6309_H__

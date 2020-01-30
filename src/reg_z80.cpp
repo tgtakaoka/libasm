@@ -75,7 +75,7 @@ bool RegZ80::compareRegName(const char *line, RegName regName) const {
     return !isidchar(*line);
 }
 
-host::uint_t RegZ80::regNameLen(const RegName regName) const {
+host::uint_t RegZ80::regNameLen(const RegName regName) {
     if (regName == REG_AFP) return 3;
     if (isupper(char(regName))) return 1;
     return 2;
@@ -116,7 +116,7 @@ char RegZ80::ccName2ndChar(const CcName ccName) const {
     return _uppercase ? toupper(ccName) : char(ccName);
 }
 
-host::uint_t RegZ80::ccNameLen(const CcName ccName) const {
+host::uint_t RegZ80::ccNameLen(const CcName ccName) {
     return isupper(ccName) ? 1 : 2;
 }
 

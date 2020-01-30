@@ -25,9 +25,15 @@ private:
         insn.emitByte(TableZ80::opCode(insn.insnCode()));
     }
 
-    Error parseOperand(
-        OprFormat &oprFormat, RegName &regName, uint16_t &operand,
-        OprSize &oprSize, AddrMode addrMode);
+    struct Operand : public ErrorReporter {
+        OprFormat format;
+        RegName reg;
+        uint16_t val;
+        OprSize size;
+        AddrMode mode;
+    };
+
+    Error parseOperand(Operand &opr);
 
     Error encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOpr);
     Error encodeInherent(

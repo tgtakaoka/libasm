@@ -228,113 +228,116 @@ Error AsmZ80::encodeInherent(
     return setError(OK);
 }
 
-Error AsmZ80::parseOperand(
-    OprFormat &oprFormat, RegName &regName, uint16_t &opr16,
-    OprSize &oprSize, AddrMode addrMode) {
-    setError(OK);
+Error AsmZ80::parseOperand(Operand &opr) {
+    opr.resetError();
 
-    if (oprFormat == COND_4 || oprFormat == COND_8) {
+    if (opr.format == COND_4 || opr.format == COND_8) {
         CcName ccName;
         if ((ccName = _regs.parseCc4Name(_scan)) != CC_UNDEF) {
-            _scan += _regs.ccNameLen(ccName);
-            oprFormat = COND_4;
-            opr16 = RegZ80::encodeCcName(ccName);
-            return OK;
+            _scan += RegZ80::ccNameLen(ccName);
+            opr.format = COND_4;
+            opr.val = RegZ80::encodeCcName(ccName);
+            return opr.setError(OK);
         }
         if ((ccName = _regs.parseCc8Name(_scan)) != CC_UNDEF) {
-            _scan += _regs.ccNameLen(ccName);
-            oprFormat = COND_8;
-            opr16 = RegZ80::encodeCcName(ccName);
-            return OK;
+            _scan += RegZ80::ccNameLen(ccName);
+            opr.format = COND_8;
+            opr.val = RegZ80::encodeCcName(ccName);
+            return opr.setError(OK);
         }
     }
 
-    regName = REG_UNDEF;
-    opr16 = 0;
+    opr.reg = REG_UNDEF;
+    opr.val = 0;
     if (*_scan == 0) {
-        oprFormat = NO_OPR;
-        return OK;
+        opr.format = NO_OPR;
+        return opr.setError(OK);
     }
 
-    regName = _regs.parseRegister(_scan);
-    if (regName != REG_UNDEF) {
-        _scan += _regs.regNameLen(regName);
-        switch (regName) {
-        case REG_A:   oprFormat = A_REG; break;
-        case REG_BC:  oprFormat = BC_REG; break;
-        case REG_DE:  oprFormat = DE_REG; break;
-        case REG_HL:  oprFormat = HL_REG; break;
-        case REG_SP:  oprFormat = SP_REG; break;
+    opr.reg = _regs.parseRegister(_scan);
+    if (opr.reg != REG_UNDEF) {
+        _scan += RegZ80::regNameLen(opr.reg);
+        switch (opr.reg) {
+        case REG_A:   opr.format = A_REG; break;
+        case REG_BC:  opr.format = BC_REG; break;
+        case REG_DE:  opr.format = DE_REG; break;
+        case REG_HL:  opr.format = HL_REG; break;
+        case REG_SP:  opr.format = SP_REG; break;
         case REG_IX:
-        case REG_IY:  oprFormat = IX_REG; break;
+        case REG_IY:  opr.format = IX_REG; break;
         case REG_I:
-        case REG_R:   oprFormat = IR_REG; break;
-        case REG_AF:  oprFormat = AF_REG; break;
-        case REG_AFP: oprFormat = AFPREG; break;
-        default:      oprFormat = REG_8; break;
+        case REG_R:   opr.format = IR_REG; break;
+        case REG_AF:  opr.format = AF_REG; break;
+        case REG_AFP: opr.format = AFPREG; break;
+        default:      opr.format = REG_8; break;
         }
-        if (oprSize == SZ_NONE)
-            oprSize = RegZ80::registerSize(regName);
-        return OK;
+        if (opr.size == SZ_NONE)
+            opr.size = RegZ80::registerSize(opr.reg);
+        return opr.setError(OK);
     }
-    if (*_scan == '(') {
-        regName = _regs.parseRegister(++_scan);
-        if (regName == REG_UNDEF) {
-            if (addrMode == IOADR) {
+    const char *p = _scan;
+    if (*p == '(') {
+        p = skipSpaces(p + 1);
+        opr.reg = _regs.parseRegister(p);
+        if (opr.reg == REG_UNDEF) {
+            _scan = p;
+            if (opr.mode == IOADR) {
                 uint8_t val8;
-                if (getOperand8(val8)) return getError();
-                opr16 = val8;
-                oprFormat = ADDR_8;
+                if (getOperand8(val8)) return opr.setError(getError());
+                opr.val = val8;
+                opr.format = ADDR_8;
             } else {
-                if (getOperand16(opr16)) return getError();
-                oprFormat = ADDR_16;
+                if (getOperand16(opr.val)) return opr.setError(getError());
+                opr.format = ADDR_16;
             }
-            if (*_scan != ')') return setError(UNKNOWN_OPERAND);
+            if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
             _scan++;
-            return OK;
+            return opr.setError(OK);
         }
-        _scan += _regs.regNameLen(regName);
-        if (*_scan == ')') {
-            _scan++;
-            switch (regName) {
+        p = skipSpaces(p + RegZ80::regNameLen(opr.reg));
+        if (*p == ')') {
+            p++;
+            switch (opr.reg) {
             case REG_BC:
-            case REG_DE: oprFormat = BC_PTR; break;
-            case REG_HL: oprFormat = HL_PTR; break;
-            case REG_SP: oprFormat = SP_PTR; break;
+            case REG_DE: opr.format = BC_PTR; break;
+            case REG_HL: opr.format = HL_PTR; break;
+            case REG_SP: opr.format = SP_PTR; break;
             case REG_IX:
-            case REG_IY: oprFormat = IX_PTR; break;
-            case REG_C:  oprFormat = C_PTR; break;
-            default:     return setError(UNKNOWN_OPERAND);
+            case REG_IY: opr.format = IX_PTR; break;
+            case REG_C:  opr.format = C_PTR; break;
+            default:     return opr.setError(UNKNOWN_OPERAND);
             }
-            if (oprSize == SZ_NONE) oprSize = SZ_BYTE;
-            return OK;
+            if (opr.size == SZ_NONE) opr.size = SZ_BYTE;
+            _scan = p;
+            return opr.setError(OK);
         }
-        if (*_scan == '+' || *_scan == '-') {
-            if (regName == REG_IX || regName == REG_IY) {
+        if (*p == '+' || *p == '-') {
+            if (opr.reg == REG_IX || opr.reg == REG_IY) {
                 uint8_t val8;
-                if (getOperand8(val8)) return getError();
-                if (*_scan != ')') return setError(UNKNOWN_OPERAND);
+                _scan = p;
+                if (getOperand8(val8)) return opr.setError(getError());
+                if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
                 _scan++;
-                opr16 = val8;
-                oprFormat = IX_OFF;
-                if (oprSize == SZ_NONE) oprSize = SZ_BYTE;
-                return OK;
+                opr.val = val8;
+                opr.format = IX_OFF;
+                if (opr.size == SZ_NONE) opr.size = SZ_BYTE;
+                return opr.setError(OK);
             }
         }
-        return setError(UNKNOWN_OPERAND);
+        return opr.setError(UNKNOWN_OPERAND);
     }
-    if (oprSize == SZ_WORD || addrMode == REL8 || addrMode == DIRECT) {
-        if (getOperand16(opr16)) return getError();
-        oprFormat = IMM_16;
-        return OK;
+    if (opr.size == SZ_WORD || opr.mode == REL8 || opr.mode == DIRECT) {
+        if (getOperand16(opr.val)) return opr.setError(getError());
+        opr.format = IMM_16;
+        return opr.setError(OK);
     }
     uint8_t val8;
     if (getOperand8(val8) == OK) {
-        opr16 = val8;
-        oprFormat = IMM_8;
-        return OK;
+        opr.val = val8;
+        opr.format = IMM_8;
+        return opr.setError(OK);
     }
-    return setError(UNKNOWN_OPERAND);
+    return opr.setError(UNKNOWN_OPERAND);
 }
 
 Error AsmZ80::encode(Insn &insn) {
@@ -344,49 +347,50 @@ Error AsmZ80::encode(Insn &insn) {
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
-    OprFormat leftFormat = insn.leftFormat();
-    OprFormat rightFormat = insn.rightFormat();
-    RegName leftReg, rightReg;
-    uint16_t leftOpr, rightOpr;
-    OprSize oprSize = SZ_NONE;
-    if (parseOperand(leftFormat, leftReg, leftOpr, oprSize, insn.addrMode()))
-        return getError();
+    Operand left, right;
+    left.format = insn.leftFormat();
+    left.size = SZ_NONE;
+    left.mode = insn.addrMode();
+    parseOperand(left);
+    if (left.getError()) return setError(left);
     if (*_scan == ',') {
         _scan = skipSpaces(_scan + 1);
-        if (parseOperand(
-                rightFormat, rightReg, rightOpr, oprSize, insn.addrMode()))
-            return getError();
+        right.format = insn.rightFormat();
+        right.size = left.size;
+        right.mode = insn.addrMode();
+        parseOperand(right);
+        if (right.getError()) return setError(right);
     } else {
-        rightFormat = NO_OPR;
-        rightReg = REG_UNDEF;
-        rightOpr = 0;
+        right.format = NO_OPR;
+        right.reg = REG_UNDEF;
+        right.val = 0;
     }
 
-    if (TableZ80.searchNameAndOprFormats(insn, leftFormat, rightFormat))
+    if (TableZ80.searchNameAndOprFormats(insn, left.format, right.format))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
     case INHR:
-        return encodeInherent(insn, leftReg, rightReg, leftOpr);
+        return encodeInherent(insn, left.reg, right.reg, left.val);
     case IMM8:
     case IMM16:
-        if (leftFormat == IMM_8 && rightFormat == NO_OPR) {
+        if (left.format == IMM_8 && right.format == NO_OPR) {
             // SUB/AND/XOR/OR/CP immediate instruction
-            rightOpr = leftOpr;
+            right.val = left.val;
         }
-        return encodeImmediate(insn, leftReg, rightOpr);
+        return encodeImmediate(insn, left.reg, right.val);
     case DIRECT:
-        return encodeDirect(insn, leftReg, rightReg, leftOpr, rightOpr);
+        return encodeDirect(insn, left.reg, right.reg, left.val, right.val);
     case IOADR:
-        return encodeIoaddr(insn, leftOpr, rightOpr);
+        return encodeIoaddr(insn, left.val, right.val);
     case REL8:
-        return encodeRelative(insn, leftOpr, rightOpr);
+        return encodeRelative(insn, left.val, right.val);
     case INDX:
     case INDX_IMM8:
         if (insn.addrMode() == INDX || insn.rightFormat() == IMM_8) {
-            return encodeIndexed(insn, leftReg, rightReg, leftOpr, rightOpr);
+            return encodeIndexed(insn, left.reg, right.reg, left.val, right.val);
         } else {
-            return encodeIndexedImmediate8(insn, leftReg, rightReg, leftOpr, rightOpr);
+            return encodeIndexedImmediate8(insn, left.reg, right.reg, left.val, right.val);
         }
     default: break;
     }

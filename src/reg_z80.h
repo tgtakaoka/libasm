@@ -42,12 +42,12 @@ public:
     CcName parseCc4Name(const char *line) const;
     CcName parseCc8Name(const char *line) const;
     bool compareRegName(const char *line, RegName regName) const;
-    host::uint_t ccNameLen(const CcName ccName) const;
+    static host::uint_t ccNameLen(const CcName ccName);
     static host::int_t encodeCcName(CcName ccName);
 
     RegName parseRegister(const char *line) const;
     static OprSize registerSize(const RegName regName);
-    host::uint_t regNameLen(const RegName regName) const;
+    static host::uint_t regNameLen(const RegName regName);
     static host::int_t encodePointerReg(RegName regName);
     static host::int_t encodePointerRegIx(RegName regName, RegName ix);
     static host::int_t encodeStackReg(RegName regName);
