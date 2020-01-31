@@ -71,23 +71,19 @@ enum EaMode : host::uint_t {
 #define CAT_CONTROL   4
 #define CAT_ALTERABLE 8
 
-class EaMc68000 {
-public:
+struct EaMc68000 {
     EaMc68000(target::insn_t insnCode);
     EaMc68000(EaSize size, host::uint_t mode, host::uint_t regno);
     EaMc68000(EaSize size, EaMode mode, host::uint_t regno);
 
-    EaSize size() const { return _size; }
-    EaMode mode() const { return _mode; }
-    RegName reg() const;
+    bool satisfy(host::uint_t categories) const {
+        return satisfy(mode, categories);
+    }
+    static bool satisfy(EaMode mode, host::uint_t categories);
 
-    bool satisfy(host::uint_t categories) const;
-
-private:
-    EaSize _size;
-    EaMode _mode;
-    host::uint_t _regno;
-    host::uint_t _categories;
+    EaSize size;
+    EaMode mode;
+    RegName reg;
 };
 
 // Brief extension word.

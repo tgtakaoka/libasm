@@ -84,7 +84,7 @@ static EaMode parseEaMode(host::uint_t mode, host::uint_t regno) {
     return EaMode(mode);
 }
 
-static host::uint_t parseEaCategories(EaMode mode) {
+static host::uint_t getCategories(EaMode mode) {
     switch (mode) {
     case M_DREG:
         return CAT_DATA | CAT_ALTERABLE;
@@ -109,31 +109,10 @@ static host::uint_t parseEaCategories(EaMode mode) {
     }
 }
 
-EaMc68000::EaMc68000(target::insn_t insnCode) {
-    _size = EaSize((insnCode >> 6) & 3);
-    _regno = insnCode & 7;
-    _mode = parseEaMode((insnCode >> 3) & 7, _regno);
-    _categories = parseEaCategories(_mode);
-}
-
-EaMc68000::EaMc68000(EaSize size, host::uint_t mode, host::uint_t regno) {
-    _size = size;
-    _regno = regno & 7;
-    _mode = parseEaMode(mode & 7, _regno);
-    _categories = parseEaCategories(_mode);
-}
-
-EaMc68000::EaMc68000(EaSize size, EaMode mode, host::uint_t regno) {
-    _size = size;
-    _regno = regno & 7;
-    _mode = mode;
-    _categories = parseEaCategories(_mode);
-}
-
-RegName EaMc68000::reg() const {
-    switch (mode()) {
+static RegName encodeRegName(EaMode mode, host::uint_t regno) {
+    switch (mode) {
     case M_DREG:
-        return RegMc68000::decodeDataReg(_regno);
+        return RegMc68000::decodeDataReg(regno);
     case M_ABS_SHORT:
     case M_ABS_LONG:
     case M_PC_DISP:
@@ -141,12 +120,32 @@ RegName EaMc68000::reg() const {
     case M_ILLEGAL:
         return REG_UNDEF;
     default:
-        return RegMc68000::decodeAddrReg(_regno);
+        return RegMc68000::decodeAddrReg(regno);
     }
 }
 
-bool EaMc68000::satisfy(host::uint_t categories) const {
-    return (_categories & categories) == categories;
+EaMc68000::EaMc68000(target::insn_t insnCode) {
+    const host::uint_t regno = insnCode & 7;
+    size = EaSize((insnCode >> 6) & 3);
+    mode = parseEaMode((insnCode >> 3) & 7, regno);
+    reg = encodeRegName(mode, regno);
+}
+
+EaMc68000::EaMc68000(EaSize size, host::uint_t raw_mode, host::uint_t regno) {
+    regno &= 7;
+    size = size;
+    mode = parseEaMode(raw_mode & 7, regno);
+    reg = encodeRegName(mode, regno);
+}
+
+EaMc68000::EaMc68000(EaSize size_, EaMode mode_, host::uint_t regno) {
+    size = size_;
+    mode = mode_;
+    reg = encodeRegName(mode, regno);
+}
+
+bool EaMc68000::satisfy(EaMode mode, host::uint_t categories) {
+    return (getCategories(mode) & categories) == categories;
 }
 
 EaSize BriefExt::indexSize() const {
