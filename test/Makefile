@@ -7,9 +7,10 @@ all: \
 	test_hd6309.s19 \
 	test_m6502.s19 \
 	test_w65c02.s19 \
-	test_tms9900.hex \
 	test_i8080.hex \
 	test_z80.hex \
+	test_tms9900.hex \
+	test_tms9995.hex \
 	test_mc68000.s19
 
 %.hex: %.asm
