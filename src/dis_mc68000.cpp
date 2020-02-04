@@ -348,11 +348,11 @@ static RegName decodeMoveMltReg(host::int_t regno) {
 }
 
 void DisMc68000::decodeMoveMltRegList(
-    uint16_t list, bool pop,
+    uint16_t list, bool push,
     void (DisMc68000::*outRegs)(RegName, RegName, char)) {
     host::int_t start = -1;
     host::int_t last = 0;
-    uint16_t mask = pop ? 1 : 0x8000;
+    uint16_t mask = push ? 0x8000 : 0x0001;
     for (host::int_t i = 0; i < 16; i++) {
         if (list & mask) {
             if (start < 0) {
@@ -365,8 +365,8 @@ void DisMc68000::decodeMoveMltRegList(
                 start = last = i;
             }
         }
-        if (pop) mask <<= 1;
-        else mask >>= 1;
+        if (push) mask >>= 1;
+        else mask <<= 1;
     }
     if (start >= 0)
         (this->*outRegs)(
@@ -396,12 +396,18 @@ Error DisMc68000::decodeMoveMlt(
             return setError(ILLEGAL_OPERAND_MODE);
         decodeEffectiveAddr(memory, insn, ea);
         *_operands++ = ',';
-        decodeMoveMltRegList(list, true, &DisMc68000::outMoveMltRegs);
+        decodeMoveMltRegList(list, false, &DisMc68000::outMoveMltRegs);
         *_operands++ = 0;
     } else {
-        if (!(ea.mode == M_PDEC || ea.satisfy(CAT_CONTROL | CAT_ALTERABLE)))
+        bool push;
+        if (ea.mode == M_PDEC) {
+            push = true;
+        } else if (ea.satisfy(CAT_CONTROL | CAT_ALTERABLE)) {
+            push = false;
+        } else {
             return setError(ILLEGAL_OPERAND_MODE);
-        decodeMoveMltRegList(list, false, &DisMc68000::outMoveMltRegs);
+        }
+        decodeMoveMltRegList(list, push, &DisMc68000::outMoveMltRegs);
         *_operands++ = ',';
         decodeEffectiveAddr(memory, insn, ea);
     }

@@ -104,12 +104,14 @@
         swap    d0
         pea     (a0)
         movem.w d0-d7/a1-a7,-(a0)
+        movem.w d0-d7/a1-a7,(a0)
 ;;; 4AXX
         illegal
         tas     (a0)
         tst.l   d0
 ;;; 4CXX
         movem.l (a1)+,d7-a0/a6-a7
+        movem.l (a1),d7-a0/a6-a7
 ;;; 4EXX
         trap    #3
         link    a0,#10
