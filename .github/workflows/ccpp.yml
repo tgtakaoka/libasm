@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: test
-      run: cd tests; make test
+      run: cd test; make test
     - name: make cli
       run: cd cli; make
