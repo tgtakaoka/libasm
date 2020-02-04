@@ -11,12 +11,15 @@ all: \
 	test_z80.hex \
 	test_tms9900.hex \
 	test_tms9995.hex \
-	test_mc68000.s19
+	test_mc68000.s37
 
 %.hex: %.asm
 	asl $(ASL_FLAGS) $^
 	p2hex -r \$$-\$$ -l 32 -F Intel $*.p $@ > /dev/null
 %.s19: %.asm
+	asl $(ASL_FLAGS) $^
+	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+%.s37: %.asm
 	asl $(ASL_FLAGS) $^
 	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 
@@ -52,8 +55,9 @@ test_tms9900:test_asm_tms9900 test_dis_tms9900
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
-test_mc68000:                 test_dis_mc68000
+test_mc68000: test_asm_mc68000 test_dis_mc68000
 	asl -gnuerrors -L +t 0x1E -q test_mc68000.asm
+	./test_asm_mc68000
 	./test_dis_mc68000
 test_expr: test_expr_moto test_expr_intel test_expr_cstyle
 	./test_expr_moto
@@ -69,7 +73,7 @@ TEST_OBJS= \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
 	test_asm_tms9900.o test_dis_tms9900.o \
-	                   test_dis_mc68000.o \
+	test_asm_mc68000.o test_dis_mc68000.o \
 	test_expr_moto.o   test_expr_intel.o  \
 	test_expr_cstyle.o
 
@@ -90,7 +94,7 @@ OBJS         = \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
-	$(OBJS_mc68000)               dis_mc68000.o
+	$(OBJS_mc68000) asm_mc68000.o dis_mc68000.o
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
@@ -113,6 +117,8 @@ test_dis_z80:    test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_common
 test_asm_tms9900: test_asm_tms9900.o asm_tms9900.o $(OBJS_tms9900) $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_tms9900: test_dis_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^

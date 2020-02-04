@@ -14,7 +14,14 @@ public:
         _flags = flags;
     }
 
+    target::insn_t embed(target::insn_t data, host::uint_t gp = 0) {
+        return (_insnCode |= (data << gp));
+    }
+
+    void setSize(EaSize size) { _size = size; }
+    EaSize size() const { return _size; }
     void appendSize(EaSize size, RegMc68000 regs) {
+        _size = size;
         regs.outEaSize(_name + strlen(_name), size);
     }
 
@@ -34,18 +41,30 @@ public:
         return OK;
     }
 
-    void emitUint16(uint16_t val) {
-        emitByte(static_cast<uint8_t>(val >> 8));
-        emitByte(static_cast<uint8_t>(val & 0xff));
+    void emitInsn() {
+        emitUint16(_insnCode, 0);
+        if (_insnLen == 0) _insnLen = 2;
     }
 
-    void emitUint32(uint32_t val) {
-        emitUint16(static_cast<uint16_t>(val >> 16));
-        emitUint16(static_cast<uint16_t>(val & 0xffff));
+    void emitOperand16(uint16_t val16) {
+        if (_insnLen == 0) _insnLen = 2;
+        emitUint16(val16, _insnLen);
+        _insnLen += 2;
+    }
+
+    void emitOperand32(uint32_t val32) {
+        emitOperand16(static_cast<uint16_t>(val32 >> 16));
+        emitOperand16(static_cast<uint16_t>(val32));
     }
 
 private:
     host::uint_t _flags;
+    EaSize _size;
+
+    void emitUint16(uint16_t val16, host::uint_t pos) {
+        _bytes[pos++] = static_cast<uint8_t>(val16 >> 8);
+        _bytes[pos] = static_cast<uint8_t>(val16);
+    }
 };
 
 static const char *insnFormat(const Insn &insn) __attribute__((unused));
