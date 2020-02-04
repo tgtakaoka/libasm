@@ -22,7 +22,7 @@ private:
     void outRegName(RegName regName);
     void outEaSize(EaSize size);
 
-    Error decodeExtensionWord(
+    Error decodeImmediateData(
         DisMemory<target::uintptr_t> &memory, Insn &insn, EaSize eaSize);
     Error decodeEffectiveAddr(
         DisMemory<target::uintptr_t> &memory, Insn &insn, const EaMc68000 &ea);

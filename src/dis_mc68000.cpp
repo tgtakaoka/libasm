@@ -16,7 +16,7 @@ void DisMc68000::outEaSize(EaSize size) {
     _operands = _regs.outEaSize(_operands, size);
 }
 
-Error DisMc68000::decodeExtensionWord(
+Error DisMc68000::decodeImmediateData(
     DisMemory<target::uintptr_t> &memory, Insn &insn, EaSize size) {
     Error error = OK;
     if (size == SZ_BYTE) {
@@ -48,7 +48,7 @@ Error DisMc68000::decodeEffectiveAddr(
     }
     if (mode == M_IMM_DATA) {
         *_operands++ = '#';
-        return decodeExtensionWord(memory, insn, ea.size);
+        return decodeImmediateData(memory, insn, ea.size);
     }
 
     if (mode == M_PDEC) *_operands++ = '-';
@@ -128,7 +128,7 @@ Error DisMc68000::decodeImplied(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     if (insn.insnCode() == 047162) { // STOP
         *_operands++ = '#';
-        return decodeExtensionWord(memory, insn, SZ_WORD);
+        return decodeImmediateData(memory, insn, SZ_WORD);
     }
     return setError(OK);
 }
@@ -143,7 +143,7 @@ Error DisMc68000::decodeDestSiz(
 
     if ((insnCode >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
         *_operands++ = '#';
-        if (decodeExtensionWord(memory, insn, ea.size))
+        if (decodeImmediateData(memory, insn, ea.size))
             return getError();
         *_operands++ = ',';
         constexpr uint8_t ORI  = 00;
@@ -286,7 +286,7 @@ Error DisMc68000::decodeDestOpr(
             return setError(ILLEGAL_OPERAND_MODE);
         size = (ea.mode == M_DREG) ? SZ_LONG : SZ_BYTE;
         *_operands++ = '#';
-        if (decodeExtensionWord(memory, insn, SZ_BYTE))
+        if (decodeImmediateData(memory, insn, SZ_BYTE))
             return getError();
         *_operands++ = ',';
     } else {                    // JSR/JMP/Scc/ASx/LSx/ROXx

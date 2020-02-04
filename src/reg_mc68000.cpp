@@ -131,9 +131,9 @@ EaMc68000::EaMc68000(target::insn_t insnCode) {
     reg = encodeRegName(mode, regno);
 }
 
-EaMc68000::EaMc68000(EaSize size, host::uint_t raw_mode, host::uint_t regno) {
+EaMc68000::EaMc68000(EaSize size_, host::uint_t raw_mode, host::uint_t regno) {
     regno &= 7;
-    size = size;
+    size = size_;
     mode = parseEaMode(raw_mode & 7, regno);
     reg = encodeRegName(mode, regno);
 }
