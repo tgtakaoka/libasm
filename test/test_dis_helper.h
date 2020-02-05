@@ -16,7 +16,7 @@ extern TestSymtab symtab;
 #define ASSERT(addr, mnemonic, expected_operands)                   \
     do {                                                            \
         Insn insn;                                                  \
-        char operands[40], message[40];                             \
+        char operands[40], message[80];                             \
         memory.setAddress(addr);                                    \
         disassembler.decode(memory, insn, operands, &symtab, true); \
         sprintf(message, "%s: %s: ", __FUNCTION__, #mnemonic);      \
