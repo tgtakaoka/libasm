@@ -56,7 +56,6 @@ test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
 test_mc68000: test_asm_mc68000 test_dis_mc68000
-	asl -gnuerrors -L +t 0x1E -q test_mc68000.asm
 	./test_asm_mc68000
 	./test_dis_mc68000
 test_expr: test_expr_moto test_expr_intel test_expr_cstyle
