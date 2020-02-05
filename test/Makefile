@@ -1,4 +1,5 @@
-VPATH=../src
+INCLUDES=-I ../src -I ../cli
+VPATH=../src:../cli
 
 ASL_FLAGS = -gnuerrors -L +t 0x1e -q
 
@@ -63,7 +64,15 @@ test_expr: test_expr_moto test_expr_intel test_expr_cstyle
 	./test_expr_intel
 	./test_expr_cstyle
 
-CXXFLAGS    = -Wall -g -std=c++17 -O -I$(VPATH)
+gen: \
+	gen_mc6809  \
+	gen_m6502   \
+	gen_i8080   \
+	gen_z80     \
+	gen_tms9900 \
+	gen_mc68000
+
+CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES)
 CPPFLAGS    = -MMD
 
 TEST_OBJS= \
@@ -74,7 +83,13 @@ TEST_OBJS= \
 	test_asm_tms9900.o test_dis_tms9900.o \
 	test_asm_mc68000.o test_dis_mc68000.o \
 	test_expr_moto.o   test_expr_intel.o  \
-	test_expr_cstyle.o
+	test_expr_cstyle.o \
+	gen_mc6809.o  \
+	gen_m6502.o   \
+	gen_i8080.o   \
+	gen_z80.o     \
+	gen_tms9900.o \
+	gen_mc68000.o
 
 TESTS=$(TEST_OBJS:.o=)
 
@@ -126,6 +141,19 @@ test_expr_moto:  test_expr_moto.o  $(OBJS_common)
 test_expr_intel: test_expr_intel.o $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_expr_cstyle:test_expr_cstyle.o $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+
+gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_tms9900: gen_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 clean: clean-obj
