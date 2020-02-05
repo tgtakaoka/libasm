@@ -61,10 +61,11 @@ public:
                     listing(_disassembler, memory, _uppercase);
                 if (list) {
                     fprintf(list, "%s\n", listing.origin(base, true));
-       fflush(list);
+                    fflush(list);
                 }
                 if (output) {
                     fprintf(output, "%s\n", listing.origin(base));
+                    fflush(output);
                 }
                 Insn insn;
                 for (size_t pc = 0; pc < size; pc += insn.insnLen()) {
@@ -76,7 +77,7 @@ public:
                         do {
                             fprintf(list, "%s\n", listing.getLine());
                         } while (listing.hasNext());
-       fflush(list);
+                        fflush(list);
                     }
                     if (output) {
                         if (_disassembler.getError())
@@ -84,6 +85,7 @@ public:
                         do {
                             fprintf(output, "%s\n", listing.getContent());
                         } while (listing.hasNext());
+                        fflush(output);
                     }
                 }
             });

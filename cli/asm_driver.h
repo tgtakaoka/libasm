@@ -54,6 +54,7 @@ public:
                         const char *line =
                             _formatter->encode(addr + i, data + i, size);
                         fprintf(output, "%s\n", line);
+                        fflush(output);
                     }
                 });
             const char *end = _formatter->end();
@@ -116,6 +117,7 @@ private:
         do {
             fprintf(out, "%s\n", _listing.getLine());
         } while (_listing.hasNext());
+        fflush(out);
     }
 
     int parseOption(int argc, const char **argv) {
