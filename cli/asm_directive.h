@@ -33,6 +33,7 @@ public:
 
         _list.address = _origin;
         _list.length = 0;
+        _list.memory = &memory;
         _list.label_len = 0;
         _list.instruction_len = 0;
         _list.operand_len = 0;
@@ -160,6 +161,11 @@ public:
     // AsmListing
     Addr startAddress() const override { return _list.address; }
     int generatedSize() const override { return _list.length; }
+    uint8_t getByte(int offset) const override {
+        uint8_t val = 0;
+        _list.memory->readByte(_list.address + offset, val);
+        return val;
+    }
     bool hasLabel() const override { return _list.label_len; }
     bool hasInstruction() const override { return _list.instruction_len; }
     bool hasOperand() const override { return _list.operand_len; }
@@ -236,6 +242,7 @@ protected:
         const char *label;      // if label defined
         int label_len;
         Addr address;
+        CliMemory<Addr> *memory;
         int length;
         const char *instruction;
         int instruction_len;

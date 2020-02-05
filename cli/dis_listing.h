@@ -25,7 +25,7 @@ public:
         _memory.setAddress(addr);
         const Error error = _disassembler.decode(
             _memory, insn, _operands, nullptr, _uppercase);
-        _listing.reset(*this, _memory, wordBase, _uppercase);
+        _listing.reset(*this,  wordBase, _uppercase);
         _address = addr;
         _generated_size = insn.insnLen();
         _instruction = insn.name();
@@ -35,7 +35,7 @@ public:
     const char *origin(Addr origin, bool withBytes = false) {
         _disassembler.getFormatter().output(
             _operands, origin, 16, false, sizeof(Addr));
-        _listing.reset(*this, _memory, wordBase, _uppercase);
+        _listing.reset(*this, wordBase, _uppercase);
         _address = origin;
         _generated_size = 0;
         _instruction = _uppercase ? "ORG" : "org";
@@ -61,6 +61,11 @@ private:
     // AsmLine<Addr>
     Addr startAddress() const override { return _address; }
     int generatedSize() const override { return _generated_size; }
+    uint8_t getByte(int offset) const override {
+        uint8_t val = 0;
+        _memory.readByte(_address + offset, val);
+        return val;
+    }
     bool hasLabel() const override { return false; }
     bool hasInstruction() const override { return _instruction; }
     bool hasOperand() const override { return *_operands; }

@@ -112,7 +112,7 @@ private:
     }
 
     void printListing(CliMemory<Addr> &memory, FILE *out) {
-        _listing.reset(_directive, memory, wordBase, _uppercase);
+        _listing.reset(_directive, wordBase, _uppercase);
         do {
             fprintf(out, "%s\n", _listing.getLine());
         } while (_listing.hasNext());

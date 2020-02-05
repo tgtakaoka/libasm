@@ -2,8 +2,6 @@
 #ifndef __ASM_LISTING_H__
 #define __ASM_LISTING_H__
 
-#include "cli_memory.h"
-
 #include <string>
 
 template<typename Address>
@@ -11,6 +9,7 @@ class AsmLine {
 public:
     virtual Address startAddress() const = 0;
     virtual int generatedSize() const = 0;
+    virtual uint8_t getByte(int offset) const = 0;
     virtual bool hasLabel() const = 0;
     virtual bool hasInstruction() const = 0;
     virtual bool hasOperand() const = 0;
@@ -30,11 +29,9 @@ class AsmListing {
 public:
     void reset(
         AsmLine<Address> &line,
-        CliMemory<Address> &memory,
         bool wording,
         bool uppercase) {
         _line = &line;
-        _memory = &memory;
         _wording = wording;
         _uppercase = uppercase;
         _next = 0;
@@ -59,7 +56,6 @@ public:
 
 private:
     const AsmLine<Address> *_line;
-    const CliMemory<Address> *_memory;
     bool _wording = false;      // 16 bit output if true
     bool _uppercase = false;
     int _next;
@@ -95,12 +91,11 @@ private:
         }
         _out += ':';
     }
-    int formatBytes(Address addr, int base) {
+    int formatBytes(int base) {
         const int maxBytes = _line->maxBytes();
         int i = 0;
         while (base + i < _line->generatedSize() && i < maxBytes) {
-            uint8_t val = 0;
-            _memory->readByte(addr + base+ i, val);
+            uint8_t val = _line->getByte(base + i);
             if (!_wording || (i % 2) == 0)
                 _out += ' ';
             formatUint8(val);
@@ -145,7 +140,7 @@ private:
     void formatLine() {
         formatAddress(_line->startAddress() + _next);
         const int pos = _out.size();
-        const int n = formatBytes(_line->startAddress(), _next);
+        const int n = formatBytes(_next);
         const int dataTextLen = _wording
             ? (_line->maxBytes() / 2) * 5
             : (_line->maxBytes() * 3);
