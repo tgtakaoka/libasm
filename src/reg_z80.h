@@ -55,9 +55,8 @@ public:
     static host::int_t encodeIrReg(RegName regName);
     static host::int_t encodeDataReg(RegName regName);
 
-    static RegName decodePointerReg(uint8_t regNum);
-    static RegName decodePointerRegIx(
-        uint8_t regNum, RegName ix);
+    static RegName decodePointerReg(
+        uint8_t regNum, target::insn_t insnCode = 0);
     static RegName decodeStackReg(uint8_t regNum);
     static RegName decodeIndexReg(uint8_t regNum);
     static RegName decodeIrReg(uint8_t regNum);

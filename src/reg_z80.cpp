@@ -1,6 +1,7 @@
 #include <ctype.h>
 
 #include "config_z80.h"
+#include "table_z80.h"
 
 static constexpr RegName ALL_REGS[] PROGMEM = {
     REG_AFP, REG_AF, REG_HL, REG_BC, REG_DE, REG_SP, REG_IX, REG_IY,
@@ -234,32 +235,31 @@ host::int_t RegZ80::encodeIrReg(RegName regName) {
 }
 
 host::int_t RegZ80::encodeDataReg(RegName regName) {
+    // (HL) is parsed as HL_PTR, then looked up as format=REG_8
+    // reg=REG_HL.  So we have to map REG_HL to register number 6
+    // which is encoded by REG_UNDEF in DATA_REG[].
     if (regName == REG_HL) regName = REG_UNDEF;
     return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
 }
 
-RegName RegZ80::decodePointerReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
-}
-
-RegName RegZ80::decodePointerRegIx(uint8_t regNum,
-    RegName ix) {
-    const RegName regName = decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
-    return regName == REG_HL ? ix : regName;
+RegName RegZ80::decodePointerReg(uint8_t regNum, target::insn_t insnCode) {
+    const RegName regName = decodeRegNumber(regNum & 3, ARRAY_RANGE(POINTER_REGS));
+    if (insnCode == 0 || regName != REG_HL) return regName;
+    return TableZ80::decodeIndexReg(insnCode);
 }
 
 RegName RegZ80::decodeStackReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(STACK_REGS));
+    return decodeRegNumber(regNum & 3, ARRAY_RANGE(STACK_REGS));
 }
 
 RegName RegZ80::decodeIndexReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(INDEX_REGS));
+    return decodeRegNumber(regNum & 1, ARRAY_RANGE(INDEX_REGS));
 }
 
 RegName RegZ80::decodeIrReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(IR_REGS));
+    return decodeRegNumber(regNum & 1, ARRAY_RANGE(IR_REGS));
 }
 
 RegName RegZ80::decodeDataReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(DATA_REGS));
+    return decodeRegNumber(regNum & 7, ARRAY_RANGE(DATA_REGS));
 }
