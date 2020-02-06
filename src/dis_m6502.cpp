@@ -51,9 +51,10 @@ Error DisM6502::decodeAbsolute(
     if (indirect) *_operands++ = '(';
     const char *label = lookup(addr);
     if (label) {
-        if (addr < 0x100) *_operands++ = '>';
+        *_operands++ = '>';
         outText(label);
     } else {
+        if (addr < 0x100) *_operands++ = '>';
         outConstant(addr, 16, false);
     }
     if (index != REG_UNDEF) {
@@ -89,6 +90,7 @@ Error DisM6502::decodeZeroPage(
     if (indirect) *_operands++ = '(';
     const char *label = lookup(zp);
     if (label) {
+        *_operands++ = '<';
         outText(label);
     } else {
         outConstant(zp, 16, false);
