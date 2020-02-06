@@ -71,7 +71,10 @@ Error DisTms9900::decode(
     target::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
-    TableTms9900.searchInsnCode(insn);
+    if (TableTms9900.searchInsnCode(insn)) {
+        insn.setName("MID");
+        return setError(UNKNOWN_INSTRUCTION);
+    }
 
     switch (insn.addrMode()) {
     case INH:

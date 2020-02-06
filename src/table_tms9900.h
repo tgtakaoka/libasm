@@ -8,7 +8,7 @@
 class TableTms9900 {
 public:
     Error searchName(Insn &insn) const;
-    void searchInsnCode(Insn &insn) const;
+    Error searchInsnCode(Insn &insn) const;
 
     void setMcuType(McuType mcuType) { _mcuType = mcuType; }
     bool is9995() const { return _mcuType == TMS9995; }

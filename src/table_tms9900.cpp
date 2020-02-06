@@ -82,10 +82,6 @@ static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E(0xF000, TEXT_SOCB, DST_SRC, TMS9900)
 };
 
-static constexpr Entry TABLE_MID[] PROGMEM = {
-    E(0x0000, TEXT_MID,  INH, TMS9900)
-};
-
 static const Entry *searchEntry(
     const char *name,
     const Entry *table, const Entry *end) {
@@ -142,19 +138,20 @@ Error TableTms9900::searchName(Insn &insn) const {
     return OK;
 }
 
-void TableTms9900::searchInsnCode(Insn &insn) const {
+Error TableTms9900::searchInsnCode(Insn &insn) const {
     const target::insn_t insnCode = insn.insnCode();
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_TMS9900));
     if (!entry)
-        entry = &TABLE_MID[0];  // Macro Instruction Detection
+        return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
-        entry = &TABLE_MID[0];
+        return UNKNOWN_INSTRUCTION;
     char name[5];
     pgm_strncpy(name, entry->name, sizeof(Entry::name));
     name[4] = 0;
     insn.setName(name);
     insn.setFlags(pgm_read_byte(&entry->flags));
+    return OK;
 }
 
 class TableTms9900 TableTms9900;

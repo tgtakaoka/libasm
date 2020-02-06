@@ -243,7 +243,7 @@ static void test_mid_tms9900() {
             }
             if (m && i >= m->start && i <= m->end) {
                 sprintf(message, "%s: >%04X is MID", __FUNCTION__, i);
-                asserter.equals(message, OK, disassembler.getError());
+                asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 asserter.equals(message, "MID", insn.name());
                 asserter.equals(message, i, insn.insnCode());
                 asserter.equals(message, 2, insn.insnLen());
@@ -287,7 +287,7 @@ static void test_mid_tms9995() {
             }
             if (m && i >= m->start && i <= m->end) {
                 sprintf(message, "%s: >%04X is MID", __FUNCTION__, i);
-                asserter.equals(message, OK, disassembler.getError());
+                asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 asserter.equals(message, "MID", insn.name());
                 asserter.equals(message, i, insn.insnCode());
                 asserter.equals(message, 2, insn.insnLen());
