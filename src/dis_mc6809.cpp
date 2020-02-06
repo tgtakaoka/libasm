@@ -255,7 +255,12 @@ Error DisMc6809::decodeRegisters(
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeRegName(post >> 4);
     const RegName dst = _regs.decodeRegName(post & 0xf);
-    if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
+    if (src == REG_UNDEF || dst == REG_UNDEF)
+        return setError(ILLEGAL_REGISTER);
+    const OprSize size1 = RegMc6809::regSize(src);
+    const OprSize size2 = RegMc6809::regSize(dst);
+    if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
+        return setError(ILLEGAL_SIZE);
     outRegister(src);
     *_operands++ = ',';
     outRegister(dst);

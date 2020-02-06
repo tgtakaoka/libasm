@@ -3,9 +3,6 @@
 #include "config_mc6809.h"
 #include "table_mc6809.h"
 
-static constexpr RegName EXTRA_HD6309[] PROGMEM = {
-    REG_E, REG_F, REG_V, REG_W
-};
 static constexpr RegName STACK_S_REGS[8] PROGMEM = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC
 };
@@ -39,6 +36,7 @@ static bool regCharCaseEqual(char c, char regChar) {
 
 char RegMc6809::regName1stChar(const RegName regName) const {
     const char r = char(regName);
+    if (isdigit(r)) return '0';
     return _uppercase ? toupper(r) : tolower(r);
 }
 
@@ -47,6 +45,8 @@ char RegMc6809::regName2ndChar(const RegName regName) const {
         return _uppercase ? 'C' : 'c';
     if (regName == REG_DP)
         return _uppercase ? 'P' : 'p';
+    if (regName == REG_00)
+        return '0';
     return 0;
 }
 
@@ -179,13 +179,14 @@ static constexpr RegName HD6309_BASE_REGS[] PROGMEM = {
 };
 
 static constexpr RegName MC6809_DATA_REGS[] PROGMEM = {
-    REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_UNDEF, REG_UNDEF,
+    REG_D, REG_X, REG_Y,  REG_U, REG_S, REG_PC, REG_UNDEF, REG_UNDEF,
     REG_A, REG_B, REG_CC, REG_DP
 };
 
 static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
-    REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_W, REG_V,
-    REG_A, REG_B, REG_CC, REG_DP, REG_ZERO, REG_ZERO, REG_E, REG_F,
+    REG_D, REG_X, REG_Y,  REG_U,  REG_S, REG_PC, REG_W, REG_V,
+    REG_A, REG_B, REG_CC, REG_DP, REG_0, REG_00, REG_E, REG_F,
+    REG_Z
 };
 
 RegName RegMc6809::parseIndexReg(const char *line) const {
@@ -219,9 +220,11 @@ host::int_t RegMc6809::encodeBaseReg(RegName regName) const {
 }
 
 host::int_t RegMc6809::encodeDataReg(RegName regName) const {
-    return TableMc6809.is6309()
-        ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS))
-        : encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS));
+    if (TableMc6809.is6309()) {
+        if (regName == REG_Z) regName = REG_0;
+        return encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS));
+    } 
+    return encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
 RegName RegMc6809::decodeIndexReg(uint8_t regNum) const {
@@ -240,4 +243,19 @@ RegName RegMc6809::decodeRegName(uint8_t regNum) const {
     return TableMc6809.is6309()
         ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS))
         : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS));
+}
+
+static constexpr RegName BYTE_REGS[] PROGMEM = {
+    REG_A, REG_B, REG_CC, REG_DP, REG_E, REG_F
+};
+static constexpr RegName WORD_REGS[] PROGMEM = {
+    REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_W, REG_V
+};
+
+OprSize RegMc6809::regSize(RegName regName) {
+    if (encodeRegNumber(regName, ARRAY_RANGE(BYTE_REGS)) >= 0)
+        return SZ_BYTE;
+    if (encodeRegNumber(regName, ARRAY_RANGE(WORD_REGS)) >= 0)
+        return SZ_WORD;
+    return SZ_NONE; // REG_0, REG_00, REG_Z
 }

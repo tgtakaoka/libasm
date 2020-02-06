@@ -48,21 +48,27 @@ Error AsmMc6809::encodeStackOp(Insn &insn) {
 
 Error AsmMc6809::encodeRegisters(Insn &insn) {
     const char *p = _scan;
-    RegName regName;
-    if ((regName = _regs.parseDataReg(p)) == REG_UNDEF)
+    const RegName reg1 = _regs.parseDataReg(p);
+    if (reg1 == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
-    p += _regs.regNameLen(regName);
+    p += _regs.regNameLen(reg1);
     if (*p != ',') return setError(UNKNOWN_OPERAND);
     _scan = ++p;
-    uint8_t post = _regs.encodeDataReg(regName) << 4;
-    if ((regName = _regs.parseDataReg(p)) == REG_UNDEF)
+    const RegName reg2 = _regs.parseDataReg(p);
+    if (reg2 == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
-    p += _regs.regNameLen(regName);
+    p += _regs.regNameLen(reg2);
+
+    const OprSize size1 = RegMc6809::regSize(reg1);
+    const OprSize size2 = RegMc6809::regSize(reg2);
+    if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
+        return setError(ILLEGAL_SIZE);
+
     _scan = p;
     if (checkLineEnd()) return setError(GARBAGE_AT_END);
-    post |= _regs.encodeDataReg(regName);
     emitInsnCode(insn);
-    insn.emitByte(post);
+    insn.emitByte((_regs.encodeDataReg(reg1) << 4)
+                  | _regs.encodeDataReg(reg2));
     return setError(OK);
 }
 
