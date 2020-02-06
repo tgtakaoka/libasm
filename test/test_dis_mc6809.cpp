@@ -846,7 +846,10 @@ static void test_stack() {
     TEST(PULS, "CC,A,B,DP,X,Y,U,PC", 0x35, 0xFF);
     TEST(PSHU, "PC,S,Y,X,DP,B,A,CC", 0x36, 0xFF);
 
-    TEST(PSHS, "#$00", 0x34, 0x00);
+    TEST(PSHS, "",   0x34, 0x00);
+    TEST(PULS, "",   0x35, 0x00);
+    TEST(PSHU, "",   0x36, 0x00);
+    TEST(PULU, "",   0x37, 0x00);
 }
 
 static void test_register() {

@@ -237,11 +237,6 @@ Error DisMc6809::decodeStackOp(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
-    if (post == 0) {
-        *_operands++ = '#';
-        outConstant(post, 16, false);
-        return setError(OK);
-    }
     const bool push = (insn.insnCode() & 1) == 0;
     for (host::uint_t i = 0, n = 0; i < 8; i++) {
         const host::uint_t bit = push ? 7 - i : i;

@@ -458,7 +458,9 @@ Error AsmMc6809::encode(Insn &insn) {
     switch (insn.addrMode()) {
     case INHR:  emitInsnCode(insn); return checkLineEnd();
     case REL:   return encodeRelative(insn);
-    case STKOP: return encodeStackOp(insn);
+    case STKOP:
+        if (*_scan == '#') return encodeImmediate(insn);
+        return encodeStackOp(insn);
     case REGS:  return encodeRegisters(insn);
     case PSEUDO: return processPseudo(insn);
     default:
