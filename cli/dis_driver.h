@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-template<typename Addr, bool wordBase = false>
+template<typename Addr>
 class DisDriver {
 public:
     DisDriver(Disassembler<Addr> &disassembler)
@@ -57,8 +57,7 @@ public:
         memory.dump(
             [this, output, list, &memory]
             (Addr base, const uint8_t *data, size_t size) {
-                DisListing<Addr, wordBase>
-                    listing(_disassembler, memory, _uppercase);
+                DisListing<Addr> listing(_disassembler, memory, _uppercase);
                 if (list) {
                     fprintf(list, "%s\n", listing.origin(base, true));
                     fflush(list);

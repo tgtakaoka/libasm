@@ -6,7 +6,7 @@
 
 #include <string>
 
-template<typename Addr, bool wordBase>
+template<typename Addr>
 class DisListing : public AsmLine<Addr> {
 public:
     DisListing(
@@ -25,7 +25,7 @@ public:
         _memory.setAddress(addr);
         const Error error = _disassembler.decode(
             _memory, insn, _operands, nullptr, _uppercase);
-        _listing.reset(*this,  wordBase, _uppercase);
+        _listing.reset(*this, sizeof(Insn::insn_unit_t), _uppercase);
         _address = addr;
         _generated_size = insn.insnLen();
         _instruction = insn.name();
@@ -35,7 +35,7 @@ public:
     const char *origin(Addr origin, bool withBytes = false) {
         _disassembler.getFormatter().output(
             _operands, origin, 16, false, sizeof(Addr));
-        _listing.reset(*this, wordBase, _uppercase);
+        _listing.reset(*this, sizeof(Insn::insn_unit_t), _uppercase);
         _address = origin;
         _generated_size = 0;
         _instruction = _uppercase ? "ORG" : "org";

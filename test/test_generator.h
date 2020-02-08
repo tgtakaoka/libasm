@@ -58,7 +58,7 @@ private:
         do {
             _bytes[pos] = i;
             _memory.setAddress(_addr);
-            _memory.setBytes(_bytes, Insn::getMaxBytes());
+            _memory.setMemory(_bytes, Insn::getMaxBytes());
             Insn insn;
             _disassembler.decode(_memory, insn, _operands, nullptr);
             if (_disassembler.getError() == OK) {

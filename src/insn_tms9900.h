@@ -5,20 +5,12 @@
 #include "insn_base.h"
 #include "entry_tms9900.h"
 
-class Insn : public InsnBase<target::uintptr_t, target::insn_t, 6, 4> {
+class Insn : public InsnBase<uint16_t, ENDIAN_BIG, 6, 4> {
 public:
     AddrMode addrMode() const { return _addrMode(_flags); }
     bool is9995() const { return _mcuType(_flags) == TMS9995; }
 
     void setFlags(host::uint_t flags) { _flags = flags; }
-
-    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
-        uint8_t high, low;
-        if (readByte(memory, high)) return NO_MEMORY;
-        if (readByte(memory, low))  return NO_MEMORY;
-        val = static_cast<uint16_t>(high) << 8 | low;
-        return OK;
-    }
 
     void emitInsn() {
         emitUint16(_insnCode, 0);

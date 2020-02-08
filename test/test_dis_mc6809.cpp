@@ -950,9 +950,9 @@ static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
     Insn insn;
     const uint8_t codes[] = { prefix, opc };
     if (prefix == 0) {
-        memory.setBytes(&codes[1], 1);
+        memory.setMemory(&codes[1], 1);
     } else {
-        memory.setBytes(&codes[0], 2);
+        memory.setMemory(&codes[0], 2);
     }
     disassembler.decode(memory, insn, operands, nullptr);
     char message[40];

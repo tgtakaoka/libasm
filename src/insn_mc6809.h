@@ -5,7 +5,7 @@
 #include "insn_base.h"
 #include "entry_mc6809.h"
 
-class Insn : public InsnBase<target::uintptr_t, target::insn_t, 5, 6> {
+class Insn : public InsnBase<uint8_t, ENDIAN_BIG, 5, 6> {
 public:
     AddrMode addrMode() const { return _addrMode(_flags); }
     OprSize oprSize() const { return _oprSize(_flags); }
@@ -16,33 +16,8 @@ public:
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = ::_flags(_mcuType(_flags), _oprSize(_flags), _addrMode(addrMode));
-    }
-
-    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
-        uint8_t high, low;
-        if (readByte(memory, high)) return NO_MEMORY;
-        if (readByte(memory, low))  return NO_MEMORY;
-        val = static_cast<uint16_t>(high) << 8 | low;
-        return OK;
-    }
-
-    Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
-        uint16_t high, low;
-        if (readUint16(memory, high)) return NO_MEMORY;
-        if (readUint16(memory, low))  return NO_MEMORY;
-        val = static_cast<uint32_t>(high) << 16 | low;
-        return OK;
-    }
-
-    void emitUint16(uint16_t val) {
-        emitByte(static_cast<uint8_t>(val >> 8));
-        emitByte(static_cast<uint8_t>(val & 0xff));
-    }
-
-    void emitUint32(uint32_t val) {
-        emitUint16(static_cast<uint16_t>(val >> 16));
-        emitUint16(static_cast<uint16_t>(val & 0xffff));
+        _flags = ::_flags(
+            _mcuType(_flags), _oprSize(_flags), _addrMode(addrMode));
     }
 
 private:

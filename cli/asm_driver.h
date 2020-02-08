@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-template<typename Addr, typename Formatter, bool wordBase = false>
+template<typename Addr, typename Formatter>
 class AsmDriver {
 public:
     AsmDriver(AsmDirective<Addr> &directive)
@@ -113,7 +113,7 @@ private:
     }
 
     void printListing(CliMemory<Addr> &memory, FILE *out) {
-        _listing.reset(_directive, wordBase, _uppercase);
+        _listing.reset(_directive, sizeof(target::opcode_t), _uppercase);
         do {
             fprintf(out, "%s\n", _listing.getLine());
         } while (_listing.hasNext());

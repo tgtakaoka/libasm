@@ -158,7 +158,7 @@ public:
         return nullptr;
     }
 
-    // AsmListing
+    // AsmLine
     Addr startAddress() const override { return _list.address; }
     int generatedSize() const override { return _list.length; }
     uint8_t getByte(int offset) const override {
