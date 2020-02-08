@@ -480,7 +480,7 @@ static void test_illegal_m6502() {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0xBF, 0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setBytes(&illegals[idx], 1);
+        memory.setMemory(&illegals[idx], 1);
         disassembler.decode(memory, insn, operands, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);
@@ -502,7 +502,7 @@ static void test_illegal_w65c02() {
         0x5C, 0xDC, 0xFC,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setBytes(&illegals[idx], 1);
+        memory.setMemory(&illegals[idx], 1);
         disassembler.decode(memory, insn, operands, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);

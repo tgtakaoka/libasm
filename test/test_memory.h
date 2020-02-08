@@ -16,19 +16,8 @@ public:
           _words(nullptr)
     {}
 
-    void setBytes(const uint8_t *bytes, host::uint_t size) {
-        _bytes = bytes;
-        _words = nullptr;
-        _size = size;
-        _index = 0;
-    }
-    // Set big-endian words.
-    void setWords(const uint16_t *words, host::uint_t size) {
-        _words = words;
-        _bytes = nullptr;
-        _size = size;
-        _index = 0;
-    }
+    template<typename T>
+    void setMemory(const T *data, host::uint_t size);
     bool hasNext() const override { return _index < _size; }
     void setAddress(target::uintptr_t addr) { _address = addr; }
     char *dump(char *out) {
@@ -62,5 +51,21 @@ private:
     host::uint_t _size;
     host::uint_t _index;
 };
+
+template<>
+void TestMemory::setMemory<uint8_t>(const uint8_t *data, host::uint_t size) {
+    _bytes = data;
+    _words = nullptr;
+    _size = size;
+    _index = 0;
+}
+
+template<>
+void TestMemory::setMemory<uint16_t>(const uint16_t *data, host::uint_t size) {
+    _bytes = nullptr;
+    _words = data;
+    _size = size;
+    _index = 0;
+}
 
 #endif

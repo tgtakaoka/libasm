@@ -68,9 +68,6 @@ private:
     Error encodeDataQic(Insn &insn, const Operand &op1, const Operand &op2);
     Error encodeDmemOpr(Insn &insn, const Operand &op1, const Operand &op2);
     Error encodeDmemSiz(Insn &insn, const Operand &op1, const Operand &op2);
-#if 0
-    Error encodeDregRot(Insn &insn, const Operand &op1, const Operand &op2);
-#endif
     Error encodeRegsExg(Insn &insn, const Operand &op1, const Operand &op2);
     Error encodeMoveOpr(Insn &insn, const Operand &op1, const Operand &op2);
 

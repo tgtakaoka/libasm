@@ -412,7 +412,7 @@ static void test_illegal() {
         0xDD, 0xED, 0xFD,                         // CALL*
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setBytes(&illegals[idx], 1);
+        memory.setMemory(&illegals[idx], 1);
         disassembler.decode(memory, insn, operands, nullptr);
         char message[40];
         sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);

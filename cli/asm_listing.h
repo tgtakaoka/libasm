@@ -29,10 +29,10 @@ class AsmListing {
 public:
     void reset(
         AsmLine<Address> &line,
-        bool wording,
+        size_t insnUnitSize,
         bool uppercase) {
         _line = &line;
-        _wording = wording;
+        _insnUnitSize = insnUnitSize;
         _uppercase = uppercase;
         _next = 0;
     }
@@ -56,7 +56,7 @@ public:
 
 private:
     const AsmLine<Address> *_line;
-    bool _wording = false;      // 16 bit output if true
+    size_t _insnUnitSize;
     bool _uppercase = false;
     int _next;
     std::string _out;
@@ -96,7 +96,7 @@ private:
         int i = 0;
         while (base + i < _line->generatedSize() && i < maxBytes) {
             uint8_t val = _line->getByte(base + i);
-            if (!_wording || (i % 2) == 0)
+            if (_insnUnitSize == 1 || (i % 2) == 0)
                 _out += ' ';
             formatUint8(val);
             i++;
@@ -141,7 +141,7 @@ private:
         formatAddress(_line->startAddress() + _next);
         const int pos = _out.size();
         const int n = formatBytes(_next);
-        const int dataTextLen = _wording
+        const int dataTextLen = _insnUnitSize == 2
             ? (_line->maxBytes() / 2) * 5
             : (_line->maxBytes() * 3);
         if (_next == 0) formatContent(pos + dataTextLen + 1);

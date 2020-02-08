@@ -6,7 +6,7 @@
 #include "entry_mc68000.h"
 #include "reg_mc68000.h"
 
-class Insn : public InsnBase<target::uintptr_t, target::insn_t, 10, 7> {
+class Insn : public InsnBase<uint16_t, ENDIAN_BIG, 10, 7> {
 public:
     InsnFormat insnFormat() const { return _insnFormat(_flags); }
 
@@ -23,22 +23,6 @@ public:
     void appendSize(EaSize size, RegMc68000 regs) {
         _size = size;
         regs.outEaSize(_name + strlen(_name), size);
-    }
-
-    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
-        uint8_t high, low;
-        if (readByte(memory, high)) return NO_MEMORY;
-        if (readByte(memory, low))  return NO_MEMORY;
-        val = static_cast<uint16_t>(high) << 8 | low;
-        return OK;
-    }
-
-    Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
-        uint16_t high, low;
-        if (readUint16(memory, high)) return NO_MEMORY;
-        if (readUint16(memory, low))  return NO_MEMORY;
-        val = static_cast<uint32_t>(high) << 16 | low;
-        return OK;
     }
 
     void emitInsn() {
