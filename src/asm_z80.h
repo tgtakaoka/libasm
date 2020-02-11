@@ -30,27 +30,24 @@ private:
         RegName reg;
         uint16_t val;
         OprSize size;
-        AddrMode mode;
     };
 
-    Error parseOperand(Operand &opr);
+    Error parseOperand(const Insn &insn, Operand &opr);
 
-    Error encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOpr);
+    Error encodeImmediate(
+        Insn &insn, const Operand &left, const Operand &right);
     Error encodeInherent(
-        Insn &insn, RegName leftReg, RegName rightReg, uint16_t leftOpr);
+        Insn &insn, const Operand &left, const Operand &right);
     Error encodeDirect(
-        Insn &insn, RegName leftReg, RegName rightReg,
-        target::uintptr_t leftOpr, target::uintptr_t rightOpr);
+        Insn &insn, const Operand &left, const Operand &right);
     Error encodeIoaddr(
-        Insn &insn, uint16_t leftOpr, uint16_t rightOpr);
+        Insn &insn, const Operand &left, const Operand &right);
     Error encodeRelative(
-        Insn &insn, target::uintptr_t leftOpr, target::uintptr_t rightOpr);
+        Insn &insn, const Operand &left, const Operand &right);
     Error encodeIndexed(
-        Insn &insn, RegName leftReg, RegName rightReg,
-        uint16_t leftOpr, uint16_t rightOpr);
+        Insn &insn, const Operand &left, const Operand &right);
     Error encodeIndexedImmediate8(
-        Insn &insn, RegName leftReg, RegName rightReg,
-        uint16_t leftOpr, uint16_t rightOpr);
+        Insn &insn, const Operand &left, const Operand &right);
 
     Error encode(Insn &insn) override;
 };
