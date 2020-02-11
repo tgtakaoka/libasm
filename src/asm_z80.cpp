@@ -8,18 +8,19 @@ bool AsmZ80::acceptCpu(const char *cpu) {
     return strcasecmp(cpu, "z80") == 0;
 }
 
-Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOp) {
+Error AsmZ80::encodeImmediate(
+    Insn &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
-        regNum = RegZ80::encodeDataReg(leftReg) << 3;
+        regNum = RegZ80::encodeDataReg(left.reg) << 3;
         break;
     case PTR_FMT:
-        regNum = RegZ80::encodePointerReg(leftReg) << 4;
+        regNum = RegZ80::encodePointerReg(left.reg) << 4;
         break;
     case NO_FMT:
         if (insn.leftFormat() == IX_REG)
-            TableZ80::encodePrefixCode(insn, leftReg);
+            TableZ80::encodePrefixCode(insn, left.reg);
         break;
     default:
         return setError(INTERNAL_ERROR);
@@ -27,85 +28,80 @@ Error AsmZ80::encodeImmediate(Insn &insn, RegName leftReg, uint16_t rightOp) {
     insn.setInsnCode(insn.insnCode() | regNum);
     emitInsnCode(insn);
     if (insn.addrMode() == IMM8)
-        insn.emitByte(rightOp);
+        insn.emitByte(right.val);
     if (insn.addrMode() == IMM16)
-        insn.emitUint16(rightOp);
+        insn.emitUint16(right.val);
     return setError(OK);
 }
 
 Error AsmZ80::encodeDirect(
-    Insn &insn, RegName leftReg, RegName rightReg,
-    target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
-    const OprFormat left = insn.leftFormat();
-    const OprFormat right = insn.rightFormat();
+    Insn &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
-        if (left == COND_8) regNum = leftOpr << 3;
+        if (left.format == COND_8) regNum = left.val << 3;
         else return setError(INTERNAL_ERROR);
         break;
     case PTR_FMT:
-        if (left == REG_16) {
-            regNum = RegZ80::encodePointerReg(leftReg) << 4;
-        } else if (right == REG_16) {
-            regNum = RegZ80::encodePointerReg(rightReg) << 4;
+        if (left.format == REG_16) {
+            regNum = RegZ80::encodePointerReg(left.reg) << 4;
+        } else if (right.format == REG_16) {
+            regNum = RegZ80::encodePointerReg(right.reg) << 4;
         } else return setError(INTERNAL_ERROR);
         break;
     case NO_FMT:
-        if (left == IX_REG)
-            TableZ80::encodePrefixCode(insn, leftReg);
-        if (right == IX_REG)
-            TableZ80::encodePrefixCode(insn, rightReg);
+        if (left.format == IX_REG)
+            TableZ80::encodePrefixCode(insn, left.reg);
+        if (right.format == IX_REG)
+            TableZ80::encodePrefixCode(insn, right.reg);
         break;
     default:
         return setError(INTERNAL_ERROR);
     }
     insn.setInsnCode(insn.insnCode() | regNum);
     emitInsnCode(insn);
-    if (left == ADDR_16 || left == IMM_16)
-        insn.emitUint16(leftOpr);
-    if (right == ADDR_16 || right == IMM_16)
-        insn.emitUint16(rightOpr);
+    if (left.format == ADDR_16 || left.format == IMM_16)
+        insn.emitUint16(left.val);
+    if (right.format == ADDR_16 || right.format == IMM_16)
+        insn.emitUint16(right.val);
     return setError(OK);
 }
 
 Error AsmZ80::encodeIoaddr(
-    Insn &insn, uint16_t leftOpr, uint16_t rightOpr) {
+    Insn &insn, const Operand &left, const Operand &right) {
     emitInsnCode(insn);
-    if (insn.leftFormat() == ADDR_8)
-        insn.emitByte(leftOpr);
-    if (insn.rightFormat() == ADDR_8)
-        insn.emitByte(rightOpr);
+    if (left.format == ADDR_8)
+        insn.emitByte(left.val);
+    if (right.format == ADDR_8)
+        insn.emitByte(right.val);
     return setError(OK);
 }
 
 Error AsmZ80::encodeRelative(
-    Insn &insn, target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
+    Insn &insn, const Operand &left, const Operand &right) {
+    target::uintptr_t addr = left.val;
     if (insn.insnFormat() == CC4_FMT) {
-        insn.setInsnCode(insn.insnCode() | (leftOpr << 3));
-        leftOpr = rightOpr;
+        insn.setInsnCode(insn.insnCode() | (left.val << 3));
+        addr = right.val;
     }
-    const target::ptrdiff_t delta = leftOpr - insn.address() - 2;
+    const target::ptrdiff_t delta = addr - insn.address() - 2;
     if (delta < -128 || delta >= 128) return setError(ILLEGAL_OPERAND);
     emitInsnCode(insn);
-    insn.emitByte(uint8_t(delta));
+    insn.emitByte(static_cast<uint8_t>(delta));
     return setError(OK);
 }
 
 Error AsmZ80::encodeIndexed(
-    Insn &insn, RegName leftReg, RegName rightReg,
-    target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
-    const OprFormat left = insn.leftFormat();
-    const OprFormat right = insn.rightFormat();
-    if (left == IX_OFF) {
-        if (right == REG_8 && rightReg == REG_HL)
+    Insn &insn, const Operand &left, const Operand &right) {
+    if (left.format == IX_OFF) {
+        if (right.format == REG_8 && right.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (IX+n),(HL)
-        TableZ80::encodePrefixCode(insn, leftReg);
+        TableZ80::encodePrefixCode(insn, left.reg);
     }
-    if (right == IX_OFF) {
-        if (left == REG_8 && leftReg == REG_HL)
+    if (right.format == IX_OFF) {
+        if (left.format == REG_8 && left.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (HL),(IX+n)
-        TableZ80::encodePrefixCode(insn, rightReg);
+        TableZ80::encodePrefixCode(insn, right.reg);
     }
 
     uint8_t regNum = 0;
@@ -113,131 +109,124 @@ Error AsmZ80::encodeIndexed(
     case NO_FMT:
         break;
     case DST_FMT:
-        regNum = RegZ80::encodeDataReg(leftReg) << 3;
+        regNum = RegZ80::encodeDataReg(left.reg) << 3;
         break;
     case SRC_FMT:
-        regNum = RegZ80::encodeDataReg(rightReg);
+        regNum = RegZ80::encodeDataReg(right.reg);
         break;
     default:
         return setError(INTERNAL_ERROR);
     }
     insn.setInsnCode(insn.insnCode() | regNum);
     emitInsnCode(insn);
-    if (left == IX_OFF)
-        insn.emitByte(leftOpr);
-    if (right == IX_OFF)
-        insn.emitByte(rightOpr);
-    if (right == IMM_8)
-        insn.emitByte(rightOpr);
+    if (left.format == IX_OFF)
+        insn.emitByte(left.val);
+    if (right.format == IX_OFF || right.format == IMM_8)
+        insn.emitByte(right.val);
     return setError(OK);
 }
 
 Error AsmZ80::encodeIndexedImmediate8(
-    Insn &insn, RegName leftReg, RegName rightReg,
-    target::uintptr_t leftOpr, target::uintptr_t rightOpr) {
-    const OprFormat left = insn.leftFormat();
-    const OprFormat right = insn.rightFormat();
+    Insn &insn, const Operand &left, const Operand &right) {
     const target::opcode_t prefixCode = TableZ80::prefixCode(insn.insnCode());
     target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     insn.setInsnCode(prefixCode);
-    if (left == IX_OFF)
-        TableZ80::encodePrefixCode(insn, leftReg);
-    if (right == IX_OFF)
-        TableZ80::encodePrefixCode(insn, rightReg);
+    if (left.format == IX_OFF)
+        TableZ80::encodePrefixCode(insn, left.reg);
+    if (right.format == IX_OFF)
+        TableZ80::encodePrefixCode(insn, right.reg);
     if (insn.insnFormat() == DST_FMT)
-        opc |= leftOpr << 3;
+        opc |= left.val << 3;
     emitInsnCode(insn);
-    if (left == IX_OFF)
-        insn.emitByte(leftOpr);
-    if (right == IX_OFF)
-        insn.emitByte(rightOpr);
+    if (left.format == IX_OFF)
+        insn.emitByte(left.val);
+    if (right.format == IX_OFF)
+        insn.emitByte(right.val);
     insn.emitByte(opc);
     return setError(OK);
 }
 
 Error AsmZ80::encodeInherent(
-    Insn &insn, RegName leftReg, RegName rightReg, uint16_t leftOpr) {
-    const OprFormat left = insn.leftFormat();
-    const OprFormat right = insn.rightFormat();
+    Insn &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case NO_FMT:
-        if (left == IX_REG || left == IX_PTR)
-            TableZ80::encodePrefixCode(insn, leftReg);
-        if (right == IX_REG)
-            TableZ80::encodePrefixCode(insn, rightReg);
+        if (left.format == IX_REG || left.format == IX_PTR)
+            TableZ80::encodePrefixCode(insn, left.reg);
+        if (right.format == IX_REG)
+            TableZ80::encodePrefixCode(insn, right.reg);
         break;
     case DST_SRC_FMT:
-        if (left == REG_8 && leftReg == REG_HL
-            && right == REG_8 && rightReg == REG_HL)
+        if (left.format == REG_8 && left.reg == REG_HL
+            && right.format == REG_8 && right.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (HL),(HL)
-        if (left == REG_8 || left == HL_PTR) {
-            regNum = RegZ80::encodeDataReg(leftReg);
-        } else if (left == BIT_NO) {
-            if (leftOpr >= 8) return setError(ILLEGAL_OPERAND);
-            regNum = leftOpr;
+        if (left.format == REG_8 || left.format == HL_PTR) {
+            regNum = RegZ80::encodeDataReg(left.reg);
+        } else if (left.format == BIT_NO) {
+            if (left.val >= 8) return setError(ILLEGAL_OPERAND);
+            regNum = left.val;
         } else return setError(INTERNAL_ERROR);
         regNum <<= 3;
-        if (right == REG_8 || right == HL_PTR) {
-            regNum |= RegZ80::encodeDataReg(rightReg);
+        if (right.format == REG_8 || right.format == HL_PTR) {
+            regNum |= RegZ80::encodeDataReg(right.reg);
         } else return setError(INTERNAL_ERROR);
         break;
     case DST_FMT:
-        if (left == C_PTR && right == REG_8 && rightReg == REG_HL)
+        if (left.format == C_PTR && right.format == REG_8 && right.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (C),(HL)
-        if (right == C_PTR && left == REG_8 && leftReg == REG_HL)
+        if (right.format == C_PTR && left.format == REG_8 && left.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (HL),(C)
-        if (left == REG_8) {
-            regNum = RegZ80::encodeDataReg(leftReg);
-        } else if (right == REG_8) {
-            regNum = RegZ80::encodeDataReg(rightReg);
-        } else if (left == COND_8) {
-            regNum = leftOpr;
-        } else if (left == IMM_NO) {
-            if (leftOpr == 0) regNum = 0;
-            else if (leftOpr == 1) regNum = 2;
-            else if (leftOpr == 2) regNum = 3;
+        if (left.format == REG_8) {
+            regNum = RegZ80::encodeDataReg(left.reg);
+        } else if (right.format == REG_8) {
+            regNum = RegZ80::encodeDataReg(right.reg);
+        } else if (left.format == COND_8) {
+            regNum = left.val;
+        } else if (left.format == IMM_NO) {
+            if (left.val == 0) regNum = 0;
+            else if (left.val == 1) regNum = 2;
+            else if (left.val  == 2) regNum = 3;
             else return setError(ILLEGAL_OPERAND);
-        } else if (left == VEC_NO) {
-            if ((leftOpr & ~0x38) != 0) return setError(ILLEGAL_OPERAND);
-            regNum = leftOpr >> 3;
+        } else if (left.format == VEC_NO) {
+            if ((left.val & ~0x38) != 0) return setError(ILLEGAL_OPERAND);
+            regNum = left.val >> 3;
         } else return setError(INTERNAL_ERROR);
         regNum <<= 3;
         break;
     case SRC_FMT:
-        if (left == REG_8) {
-            regNum = RegZ80::encodeDataReg(leftReg);
-        } else if (right == REG_8) {
-            regNum = RegZ80::encodeDataReg(rightReg);
+        if (left.format == REG_8) {
+            regNum = RegZ80::encodeDataReg(left.reg);
+        } else if (right.format == REG_8) {
+            regNum = RegZ80::encodeDataReg(right.reg);
         } else return setError(INTERNAL_ERROR);
         break;
     case IR_FMT:
-        if (left == IR_REG) {
-            regNum = RegZ80::encodeIrReg(leftReg);
-        } else if (right == IR_REG) {
-            regNum = RegZ80::encodeIrReg(rightReg);
+        if (left.format == IR_REG) {
+            regNum = RegZ80::encodeIrReg(left.reg);
+        } else if (right.format == IR_REG) {
+            regNum = RegZ80::encodeIrReg(right.reg);
         } else return setError(INTERNAL_ERROR);
         regNum <<= 3;
         break;
     case IDX_FMT:
-        if (left == BC_PTR) {
-            regNum = RegZ80::encodeIndexReg(leftReg);
-        } else if (right == BC_PTR) {
-            regNum = RegZ80::encodeIndexReg(rightReg);
+        if (left.format == BC_PTR) {
+            regNum = RegZ80::encodeIndexReg(left.reg);
+        } else if (right.format == BC_PTR) {
+            regNum = RegZ80::encodeIndexReg(right.reg);
         } else return setError(INTERNAL_ERROR);
         regNum <<= 4;
         break;
     case PTR_FMT:
-        if (left == IX_REG)
-            TableZ80::encodePrefixCode(insn, leftReg);
-        if (left == STK_16) {
-            regNum = RegZ80::encodeStackReg(leftReg);
-        } else if (left == REG_16) {
-            regNum = RegZ80::encodePointerReg(leftReg);
-        } else if (right == REG_16) {
-            regNum = RegZ80::encodePointerReg(rightReg);
-        } else if (right == REG_16X) {
-            regNum = RegZ80::encodePointerRegIx(rightReg, leftReg);
+        if (left.format == IX_REG)
+            TableZ80::encodePrefixCode(insn, left.reg);
+        if (left.format == STK_16) {
+            regNum = RegZ80::encodeStackReg(left.reg);
+        } else if (left.format == REG_16) {
+            regNum = RegZ80::encodePointerReg(left.reg);
+        } else if (right.format == REG_16) {
+            regNum = RegZ80::encodePointerReg(right.reg);
+        } else if (right.format == REG_16X) {
+            regNum = RegZ80::encodePointerRegIx(right.reg, left.reg);
         } else return setError(INTERNAL_ERROR);
         regNum <<= 4;
         break;
@@ -249,7 +238,7 @@ Error AsmZ80::encodeInherent(
     return setError(OK);
 }
 
-Error AsmZ80::parseOperand(Operand &opr) {
+Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
     opr.resetError();
 
     if (opr.format == COND_4 || opr.format == COND_8) {
@@ -302,7 +291,7 @@ Error AsmZ80::parseOperand(Operand &opr) {
         opr.reg = _regs.parseRegister(p);
         if (opr.reg == REG_UNDEF) {
             _scan = p;
-            if (opr.mode == IOADR) {
+            if (insn.addrMode() == IOADR) {
                 uint8_t val8;
                 if (getOperand8(val8)) return opr.setError(getError());
                 opr.val = val8;
@@ -347,7 +336,8 @@ Error AsmZ80::parseOperand(Operand &opr) {
         }
         return opr.setError(UNKNOWN_OPERAND);
     }
-    if (opr.size == SZ_WORD || opr.mode == REL8 || opr.mode == DIRECT) {
+    if (opr.size == SZ_WORD
+        || insn.addrMode() == REL8 || insn.addrMode() == DIRECT) {
         if (getOperand16(opr.val)) return opr.setError(getError());
         opr.format = IMM_16;
         return opr.setError(OK);
@@ -371,15 +361,13 @@ Error AsmZ80::encode(Insn &insn) {
     Operand left, right;
     left.format = insn.leftFormat();
     left.size = SZ_NONE;
-    left.mode = insn.addrMode();
-    parseOperand(left);
+    parseOperand(insn, left);
     if (left.getError()) return setError(left);
     if (*_scan == ',') {
         _scan = skipSpaces(_scan + 1);
         right.format = insn.rightFormat();
         right.size = left.size;
-        right.mode = insn.addrMode();
-        parseOperand(right);
+        parseOperand(insn, right);
         if (right.getError()) return setError(right);
     } else {
         right.format = NO_OPR;
@@ -389,29 +377,30 @@ Error AsmZ80::encode(Insn &insn) {
 
     if (TableZ80.searchNameAndOprFormats(insn, left.format, right.format))
         return setError(UNKNOWN_INSTRUCTION);
+    left.format = insn.leftFormat();
+    right.format = insn.rightFormat();
 
     switch (insn.addrMode()) {
-    case INHR:
-        return encodeInherent(insn, left.reg, right.reg, left.val);
+    case INHR: return encodeInherent(insn, left, right);
     case IMM8:
     case IMM16:
         if (left.format == IMM_8 && right.format == NO_OPR) {
             // SUB/AND/XOR/OR/CP immediate instruction
             right.val = left.val;
         }
-        return encodeImmediate(insn, left.reg, right.val);
+        return encodeImmediate(insn, left, right);
     case DIRECT:
-        return encodeDirect(insn, left.reg, right.reg, left.val, right.val);
+        return encodeDirect(insn, left, right);
     case IOADR:
-        return encodeIoaddr(insn, left.val, right.val);
+        return encodeIoaddr(insn, left, right);
     case REL8:
-        return encodeRelative(insn, left.val, right.val);
+        return encodeRelative(insn, left, right);
     case INDX:
     case INDX_IMM8:
         if (insn.addrMode() == INDX || insn.rightFormat() == IMM_8) {
-            return encodeIndexed(insn, left.reg, right.reg, left.val, right.val);
+            return encodeIndexed(insn, left, right);
         } else {
-            return encodeIndexedImmediate8(insn, left.reg, right.reg, left.val, right.val);
+            return encodeIndexedImmediate8(insn, left, right);
         }
     default: break;
     }
