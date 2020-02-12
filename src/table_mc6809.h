@@ -23,16 +23,6 @@ public:
     void setMcuType(McuType mcuType) { _mcuType = mcuType; }
     bool is6309() const { return _mcuType == HD6309; }
 
-    static target::insn_t insnCode(
-        target::opcode_t prefixCode, target::opcode_t opCode) {
-        return (target::insn_t(prefixCode) << 8 | opCode);
-    }
-    static target::opcode_t prefixCode(target::insn_t insnCode) {
-        return target::opcode_t(insnCode >> 8);
-    }
-    static target::opcode_t opCode(target::insn_t insnCode) {
-        return target::opcode_t(insnCode & 0xff);
-    }
     static bool isPrefixCode(target::opcode_t opCode);
 
 private:
@@ -43,13 +33,12 @@ private:
     static const Entry *searchEntry(
         const target::opcode_t opCode, const Entry *table, const Entry *end);
 
-    static Error searchPages(
-        Insn &insn, const char *name, const EntryPage *pages, const EntryPage *end);
-    static Error searchPages(
-        Insn &insn, const char *name, AddrMode addrMode,
-        const EntryPage *pages, const EntryPage *end);
-    static Error searchPages(
-        Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end);
+    static Error searchName(
+        Insn &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchNameAndAddrMode(
+        Insn &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchInsnCode(
+        Insn &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableMc6809 TableMc6809;

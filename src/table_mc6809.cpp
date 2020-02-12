@@ -500,12 +500,13 @@ const Entry *TableMc6809::searchEntry(
     return nullptr;
 }
 
-Error TableMc6809::searchPages(
-    Insn &insn, const char *name, const EntryPage *pages, const EntryPage *end) {
+Error TableMc6809::searchName(
+    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
             insn.setFlags(pgm_read_byte(&entry->flags));
             return OK;
         }
@@ -513,14 +514,16 @@ Error TableMc6809::searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6809::searchPages(
-    Insn &insn, const char *name, AddrMode addrMode, const EntryPage *pages, const EntryPage *end) {
+Error TableMc6809::searchNameAndAddrMode(
+    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    const char *name = insn.name();
+    const AddrMode addrMode = insn.addrMode();
     for (const EntryPage *page = pages; page < end; page++) {
         for (const Entry *entry = page->table; entry < page->end
                  && (entry = searchEntry(name, entry, page->end)) != nullptr; entry++) {
             const host::uint_t flags = pgm_read_byte(&entry->flags);
             if (addrMode == _addrMode(flags)) {
-                insn.setInsnCode(insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+                insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
                 insn.setFlags(flags);
                 return OK;
             }
@@ -529,11 +532,11 @@ Error TableMc6809::searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6809::searchPages(
-    Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end) {
+Error TableMc6809::searchInsnCode(
+    Insn &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
-        if (TableMc6809::prefixCode(insnCode) != page->prefix) continue;
-        const Entry *entry = searchEntry(opCode(insnCode), page->table, page->end);
+        if (insn.prefixCode() != page->prefix) continue;
+        const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags));
             char name[8];
@@ -558,28 +561,25 @@ static constexpr EntryPage HD6309_PAGES[] = {
 };
 
 Error TableMc6809::searchName(Insn &insn) const {
-    if (searchPages(insn, insn.name(), ARRAY_RANGE(MC6809_PAGES)) == OK)
+    if (searchName(insn, ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
-    if (is6309()
-        && searchPages(insn, insn.name(), ARRAY_RANGE(HD6309_PAGES)) == OK)
+    if (is6309() && searchName(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 Error TableMc6809::searchNameAndAddrMode(Insn &insn) const {
-    if (searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(MC6809_PAGES)) == OK)
+    if (searchNameAndAddrMode(insn, ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
-    if (is6309()
-        && searchPages(insn, insn.name(), insn.addrMode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
+    if (is6309() && searchNameAndAddrMode(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 Error TableMc6809::searchInsnCode(Insn &insn) const {
-    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(MC6809_PAGES)) == OK)
+    if (searchInsnCode(insn, ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
-    if (is6309()
-        && searchPages(insn, insn.insnCode(), ARRAY_RANGE(HD6309_PAGES)) == OK)
+    if (is6309() && searchInsnCode(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
 }

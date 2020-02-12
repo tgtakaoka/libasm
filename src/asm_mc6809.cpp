@@ -40,7 +40,7 @@ Error AsmMc6809::encodeStackOp(Insn &insn) {
         if (*p != ',') break;
         p++;
     }
-    emitInsnCode(insn);
+    insn.emitInsnCode();
     insn.emitByte(post);
     _scan = p;
     return checkLineEnd();
@@ -66,7 +66,7 @@ Error AsmMc6809::encodeRegisters(Insn &insn) {
 
     _scan = p;
     if (checkLineEnd()) return setError(GARBAGE_AT_END);
-    emitInsnCode(insn);
+    insn.emitInsnCode();
     insn.emitByte((_regs.encodeDataReg(reg1) << 4)
                   | _regs.encodeDataReg(reg2));
     return setError(OK);
@@ -75,12 +75,11 @@ Error AsmMc6809::encodeRegisters(Insn &insn) {
 Error AsmMc6809::encodeRelative(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
-    const target::opcode_t prefix = TableMc6809::prefixCode(insn.insnCode());
-    const host::uint_t insnLen = (TableMc6809.isPrefixCode(prefix) ? 2 : 1)
+    const host::uint_t insnLen = (insn.hasPrefix() ? 2 : 1)
         + (insn.oprSize() == SZ_BYTE ? 1 : 2);
     const target::uintptr_t base = insn.address() + insnLen;
     const target::ptrdiff_t delta = addr - base;
-    emitInsnCode(insn);
+    insn.emitInsnCode();
     if (insn.oprSize() == SZ_BYTE) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitByte(uint8_t(delta));
@@ -93,7 +92,7 @@ Error AsmMc6809::encodeRelative(Insn &insn) {
 Error AsmMc6809::encodeImmediate(Insn &insn) {
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
-    emitInsnCode(insn);
+    insn.emitInsnCode();
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val8;
         if (getOperand8(val8)) return getError();
@@ -114,7 +113,7 @@ Error AsmMc6809::encodeImmediate(Insn &insn) {
 
 Error AsmMc6809::encodeDirect(Insn &insn, bool emitInsn) {
     if (*_scan == '<') _scan++;
-    if (emitInsn) emitInsnCode(insn);
+    if (emitInsn) insn.emitInsnCode();
     target::uintptr_t dir;
     if (getOperand16(dir)) return getError();
     insn.emitByte(uint8_t(dir));
@@ -123,7 +122,7 @@ Error AsmMc6809::encodeDirect(Insn &insn, bool emitInsn) {
 
 Error AsmMc6809::encodeExtended(Insn &insn, bool emitInsn) {
     if (*_scan == '>') _scan++;
-    if (emitInsn) emitInsnCode(insn);
+    if (emitInsn) insn.emitInsnCode();
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
@@ -131,7 +130,7 @@ Error AsmMc6809::encodeExtended(Insn &insn, bool emitInsn) {
 }
 
 Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
-    if (emitInsn) emitInsnCode(insn);
+    if (emitInsn) insn.emitInsnCode();
     const char *p = _scan;
     const bool indir = (*p == '[');
     RegName base = REG_UNDEF;
@@ -327,7 +326,7 @@ Error AsmMc6809::encodeBitOperation(Insn &insn) {
     if (pos >= 8) return setError(ILLEGAL_BIT_NUMBER);
     post |= (pos << 3);
 
-    emitInsnCode(insn);
+    insn.emitInsnCode();
     insn.emitByte(post);
     insn.emitByte(static_cast<uint8_t>(addr));
     return checkLineEnd();
@@ -350,7 +349,7 @@ Error AsmMc6809::encodeImmediatePlus(Insn &insn) {
     }
     if (TableMc6809.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    emitInsnCode(insn);
+    insn.emitInsnCode();
     insn.emitByte(val8);
     switch (insn.addrMode()) {
     case IMMDIR: return encodeDirect(insn, /* emitInsn */ false);
@@ -381,10 +380,8 @@ Error AsmMc6809::encodeTransferMemory(Insn &insn) {
     for (uint8_t mode = 0; mode < 4; mode++) {
         if (srcMode == _regs.tfmSrcModeChar(mode)
             && dstMode == _regs.tfmDstModeChar(mode)) {
-            const target::opcode_t prefixCode =
-                TableMc6809::prefixCode(insn.insnCode());
-            insn.setInsnCode(TableMc6809::insnCode(prefixCode, 0x38 + mode));
-            emitInsnCode(insn);
+            insn.setInsnCode(insn.prefixCode(), 0x38 + mode);
+            insn.emitInsnCode();
             insn.emitByte(post);
             return setError(OK);
         }
@@ -462,7 +459,7 @@ Error AsmMc6809::encode(Insn &insn) {
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
-    case INHR:  emitInsnCode(insn); return checkLineEnd();
+    case INHR:  insn.emitInsnCode(); return checkLineEnd();
     case REL:   return encodeRelative(insn);
     case STKOP:
         if (*_scan == '#') return encodeImmediate(insn);

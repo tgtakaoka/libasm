@@ -19,13 +19,6 @@ private:
     RegMc6809 _regs;
     uint8_t _direct_page = 0;
 
-    void emitInsnCode(Insn &insn) const {
-        const target::opcode_t prefix = TableMc6809::prefixCode(insn.insnCode());
-        if (TableMc6809::isPrefixCode(prefix))
-            insn.emitByte(prefix);
-        insn.emitByte(TableMc6809::opCode(insn.insnCode()));
-    }
-
     Error determineAddrMode(const char *line, Insn &insn);
 
     // MC6809
