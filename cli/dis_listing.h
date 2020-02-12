@@ -72,10 +72,10 @@ private:
     bool hasComment() const override { return false; }
     std::string getLabel() const override { return ""; }
     std::string getInstruction() const override {
-        return std::move(std::string(_instruction));
+        return std::string(_instruction);
     }
     std::string getOperand() const override {
-        return std::move(std::string(_operands));
+        return std::string(_operands);
     }
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }

@@ -171,17 +171,16 @@ public:
     bool hasOperand() const override { return _list.operand_len; }
     bool hasComment() const override { return _list.comment && *_list.comment; }
     std::string getLabel() const override {
-        return std::move(std::string(_list.label, _list.label_len));
+        return std::string(_list.label, _list.label_len);
     }
     std::string getInstruction() const override {
-        return std::move(
-            std::string(_list.instruction, _list.instruction_len));
+        return std::string(_list.instruction, _list.instruction_len);
     }
     std::string getOperand() const override {
-        return std::move(std::string(_list.operand, _list.operand_len));
+        return std::string(_list.operand, _list.operand_len);
     }
     std::string getComment() const override {
-        return std::move(std::string(_list.comment));
+        return std::string(_list.comment);
     }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
