@@ -5,7 +5,6 @@
 const char *AsmOperand::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
-    if (getError()) return _next;
     val32 = v.getUnsigned();
     return _next;
 }
@@ -13,7 +12,6 @@ const char *AsmOperand::eval(
 const char *AsmOperand::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
-    if (getError()) return _next;
     if (v.getUnsigned() < 0x10000L || (v.getSigned() < 0 && v.getSigned() >= -32768)) {
         val16 = v.getUnsigned();
     } else {
@@ -25,8 +23,7 @@ const char *AsmOperand::eval(
 const char *AsmOperand::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
-    if (getError()) return _next;
-     if (v.getUnsigned() < 0x100 || (v.getSigned() < 0 && v.getSigned() >= -128)) {
+    if (v.getUnsigned() < 0x100 || (v.getSigned() < 0 && v.getSigned() >= -128)) {
         val8 = v.getUnsigned();
     } else {
         setError(OVERFLOW_RANGE);
@@ -193,8 +190,8 @@ AsmOperand::Value AsmOperand::readAtom() {
     if (c == '~') {
         Value value(readAtom());
         if (getError() == OK) {
-            if (value.isSigned()) value.setSigned(~value.getSigned());
-            else value.setUnsigned(~value.getUnsigned());
+            if (value.isSigned())   value.setSigned(~value.getSigned());
+            if (value.isUnsigned()) value.setUnsigned(~value.getUnsigned());
         }
         return value;
     }
@@ -209,7 +206,7 @@ AsmOperand::Value AsmOperand::readAtom() {
             if (op == '+') return value;
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(OVERFLOW_RANGE);
-            value.setSigned(-value.getSigned());
+            if (!value.isUndefined()) value.setSigned(-value.getSigned());
         }
         return value;
     }
@@ -221,8 +218,8 @@ AsmOperand::Value AsmOperand::readAtom() {
     if (_symtab && isSymbolLetter(c, true)) {
         const char *symbol = _next;
         const char *end = scanSymbol(symbol);
+        _next = end;
         if (_symtab->hasSymbol(symbol, end)) {
-            _next = end;
             const uint32_t v = _symtab->lookup(symbol, end);
             if (v & 0x80000000) {
                 return Value::makeSigned(v);

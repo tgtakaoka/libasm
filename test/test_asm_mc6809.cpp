@@ -1032,6 +1032,48 @@ static void test_bit_position() {
     TEST("LDBT B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
 }
 
+static void test_undefined_symbol() {
+    ETEST(UNDEFINED_SYMBOL, "LDA  #UNDEF",  0x86, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUBD #UNDEF",  0x83, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "NEG  UNDEF",   0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUBA <UNDEF",  0x90, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUBB >UNDEF",  0xF0, 0x00, 0x00);
+
+    ETEST(UNDEFINED_SYMBOL, "LDA  UNDEF,Y",    0xA6, 0xA4);
+    ETEST(UNDEFINED_SYMBOL, "LDA  <<UNDEF,Y",  0xA6, 0x20);
+    ETEST(UNDEFINED_SYMBOL, "LDA  <UNDEF,Y",   0xA6, 0xA8, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA  >UNDEF,Y",   0xA6, 0xA9, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA  [UNDEF,Y]",  0xA6, 0xB4);
+    ETEST(UNDEFINED_SYMBOL, "LDA  [<UNDEF,Y]", 0xA6, 0xB8, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA  [>UNDEF,Y]", 0xA6, 0xB9, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA  [UNDEF]",    0xA6, 0x9F, 0x00, 0x00);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF",     0x20, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "LBRA UNDEF",    0x16, 0xFF, 0xFD);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "LBCC UNDEF",    0x10, 0x24, 0xFF, 0xFC);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "LDA UNDEF,PCR",   0xA6, 0x8D, 0x00, 0x00);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "LDA [UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
+
+    // HD6309
+    assembler.acceptCpu("6309");
+    ETEST(UNDEFINED_SYMBOL, "BITMD #UNDEF",  0x11, 0x3C, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDQ   #UNDEF",  0xCD, 0x00, 0x00, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "MULD  #UNDEF",  0x11, 0x8F, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA UNDEF,W",    0xA6, 0x8F);
+    ETEST(UNDEFINED_SYMBOL, "LDA >UNDEF,W",   0xA6, 0xAF, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA [UNDEF,W]",  0xA6, 0x90);
+    ETEST(UNDEFINED_SYMBOL, "LDA [>UNDEF,W]", 0xA6, 0xB0, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$10",       0x01, 0x00, 0x10);
+    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$1000",     0x71, 0x00, 0x10, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,[$1000,X]", 0x61, 0x00, 0x99, 0x10, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OIM #$30,UNDEF",       0x01, 0x30, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OIM #$30,>UNDEF",      0x71, 0x30, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OIM #$30,[UNDEF,X]",   0x61, 0x30, 0x94);
+    ETEST(UNDEFINED_SYMBOL, "BOR A.UNDEF,$34.2", 0x11, 0x32, 0x50, 0x34);
+    ETEST(UNDEFINED_SYMBOL, "BOR A.1,UNDEF.2",   0x11, 0x32, 0x51, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BOR A.1,$34.UNDEF", 0x11, 0x32, 0x41, 0x34);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -1053,5 +1095,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_register);
     RUN_TEST(test_transfer);
     RUN_TEST(test_bit_position);
+    RUN_TEST(test_undefined_symbol);
     return 0;
 }

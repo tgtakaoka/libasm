@@ -6,7 +6,6 @@
 
 enum Error : host::uint_t {
     OK = 0,
-    INVALID_STATE = 1,
 
     // Disassembler
     NO_MEMORY = 2,
@@ -63,7 +62,7 @@ public:
     }
 
     void resetError() {
-        _error = INVALID_STATE;
+        _error = OK;
     }
 
 private:

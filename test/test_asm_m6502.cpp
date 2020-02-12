@@ -93,7 +93,7 @@ static void test_immediate() {
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
-    
+
     assembler.acceptCpu("6502");
     TEST("LDX #zero10", 0xA2, 0x10);
     TEST("CPY #zeroFF", 0xC0, 0xFF);
@@ -139,7 +139,7 @@ static void test_zeropage() {
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
-    
+
     assembler.acceptCpu("6502");
     TEST("SBC zero10", 0xE5, 0x10);
     TEST("DEC zeroFF", 0xC6, 0xFF);
@@ -181,7 +181,7 @@ static void test_zeropage_indexed() {
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
-    
+
     assembler.acceptCpu("6502");
     TEST("SBC zero10,X", 0xF5, 0x10);
     TEST("STY zero90,X", 0x94, 0x90);
@@ -233,7 +233,7 @@ static void test_absolute() {
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
     symtab.intern(0x0100, "abs0100");
-    
+
     assembler.acceptCpu("6502");
     TEST("SBC >abs0010", 0xED, 0x10, 0x00);
     TEST("LDX abs1234",  0xAE, 0x34, 0x12);
@@ -282,7 +282,7 @@ static void test_absolute_indexed() {
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
     symtab.intern(0x0100, "abs0100");
-    
+
     assembler.acceptCpu("6502");
     TEST("SBC >abs0010,X", 0xFD, 0x10, 0x00);
     TEST("STA abs1234,Y",  0x99, 0x34, 0x12);
@@ -455,6 +455,50 @@ static void test_zeropage_relative() {
 }
 #endif
 
+static void test_undefined_symbol() {
+    ETEST(UNDEFINED_SYMBOL, "LDA #UNDEF", 0xA9, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JSR UNDEF",  0x20, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JSR >UNDEF", 0x20, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BIT UNDEF",  0x24, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BIT <UNDEF", 0x24, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BIT >UNDEF", 0x2C, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDY UNDEF,X",  0xB4, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDY <UNDEF,X", 0xB4, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDY >UNDEF,X", 0xBC, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDX UNDEF,Y",  0xB6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDX <UNDEF,Y", 0xB6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDX >UNDEF,Y", 0xBE, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA (UNDEF,X)",  0xA1, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA (<UNDEF,X)", 0xA1, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA (UNDEF),Y",  0xB1, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA (<UNDEF),Y", 0xB1, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMP (UNDEF)",    0x6C, 0x00, 0x00);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BCC UNDEF",     0x90, 0xFE);
+
+    // W65C02
+    assembler.acceptCpu("65c02");
+    ETEST(UNDEFINED_SYMBOL, "BIT #UNDEF",   0x89, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,X",  0x34, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BIT <UNDEF,X", 0x34, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "BIT >UNDEF,X", 0x3C, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA (UNDEF)",  0xB2, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA (<UNDEF)", 0xB2, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMP (UNDEF,X)",  0x7C, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMP (>UNDEF,X)", 0x7C, 0x00, 0x00);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF",     0x80, 0xFE);
+
+#ifdef W65C02_ENABLE_BITOPS
+    ETEST(UNDEFINED_SYMBOL, "RMB5 UNDEF",  0x57, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SMB4 <UNDEF", 0xC7, 0x00);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BBR3 UNDEF,$1082", 0x3F, 0x00, 0x7F);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS6 $10,UNDEF",   0xEF, 0x10, 0xFD);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS7 UNDEF,UNDEF", 0xFF, 0x00, 0xFD);
+#endif
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -482,5 +526,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_bit_manipulation);
     RUN_TEST(test_zeropage_relative);
 #endif
+    RUN_TEST(test_undefined_symbol);
     return 0;
 }

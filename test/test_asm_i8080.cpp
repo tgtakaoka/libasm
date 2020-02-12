@@ -338,7 +338,19 @@ static void test_alu_immediate() {
 
 static void test_io() {
     TEST("OUT 0F1H", 0xD3, 0xF1);
-    TEST("IN  0F0H",  0xDB, 0xF0);
+    TEST("IN  0F0H", 0xDB, 0xF0);
+}
+
+static void test_undefined_symbol() {
+    ETEST(UNDEFINED_SYMBOL, "MVI  B,UNDEF", 0x06, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LXI  B,UNDEF", 0x01, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "STA  UNDEF",   0x32, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SHLD UNDEF",   0x22, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMP  UNDEF",   0xC3, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "CALL UNDEF",   0xCD, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "ADI  UNDEF",   0xC6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OUT  UNDEF",   0xD3, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "IN   UNDEF",   0xDB, 0x00);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -360,5 +372,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_alu_register);
     RUN_TEST(test_alu_immediate);
     RUN_TEST(test_io);
+    RUN_TEST(test_undefined_symbol);
     return 0;
 }

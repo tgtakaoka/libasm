@@ -15,6 +15,7 @@ public:
 
     Error encode(
         const char *line, Insn &insn, Addr addr,SymbolTable *symtab) {
+        this->resetError();
         _scan = skipSpaces(line);
         if (checkLineEnd() == OK)
             return setError(NO_INSTRUCTION);
@@ -46,17 +47,25 @@ protected:
     Error getOperand32(uint32_t &val32) {
         AsmOperand &parser = getParser();
         _scan = parser.eval(_scan, val32, _symtab);
-        return setError(parser);
+        if (setError(parser) == UNDEFINED_SYMBOL)
+            return OK;
+        return getError();
     }
+
     Error getOperand16(uint16_t &val16) {
         AsmOperand &parser = getParser();
         _scan = parser.eval(_scan, val16, _symtab);
-        return setError(parser);
+        if (setError(parser) == UNDEFINED_SYMBOL)
+            return OK;
+        return getError();
     }
+
     Error getOperand8(uint8_t &val8) {
         AsmOperand &parser = getParser();
         _scan = parser.eval(_scan, val8, _symtab);
-        return setError(parser);
+        if (setError(parser) == UNDEFINED_SYMBOL)
+            return OK;
+        return getError();
     }
 
     const char *skipSpaces(const char *scan) {
@@ -64,11 +73,12 @@ protected:
             scan++;
         return scan;
     }
+
     Error checkLineEnd(const char *scan = nullptr) {
         if (scan == nullptr) scan = _scan;
         const char *p = skipSpaces(scan);
         if (*p == 0 || *p == ';')
-            return setError(OK);
+            return setError(getError());
         return setError(GARBAGE_AT_END);
     }
 

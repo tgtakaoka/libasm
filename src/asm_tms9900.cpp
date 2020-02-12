@@ -30,7 +30,7 @@ Error AsmTms9900::encodeImm(Insn &insn, bool emitInsn) {
     if (getOperand16(val)) return getError();
     if (emitInsn) insn.emitInsn();
     insn.emitOperand(val);
-    return setError(OK);
+    return setError(getError());
 }
 
 Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
@@ -70,7 +70,7 @@ Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     }
     insn.embed(count);
     insn.emitInsn();
-    return setError(OK);
+    return getError();
 }
 
 Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
@@ -81,6 +81,7 @@ Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     if ((regName = _regs.parseRegName(p)) != REG_UNDEF) {
         p += _regs.regNameLen(regName);
         mode = 0;
+        setError(OK);
     } else if (*p == '*') {
         p++;
         mode = 1;
@@ -91,6 +92,7 @@ Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
             p++;
             mode = 3;
         }
+        setError(OK);
     } else if (*p == '@') {
         mode = 2;
         _scan = p + 1;
@@ -117,19 +119,20 @@ Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     if (mode == 2)
         insn.emitOperand(val16);
     _scan = p;
-    return setError(OK);
+    return getError();
 }
 
 Error AsmTms9900::encodeRel(Insn &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
+    if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     if (addr % 2) return setError(ILLEGAL_OPERAND);
     const target::uintptr_t base = insn.address() + 2;
     const target::ptrdiff_t delta = (addr - base) >> 1;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
     insn.emitInsn();
-    return setError(OK);
+    return getError();
 }
 
 Error AsmTms9900::encodeCruOff(Insn &insn) {
@@ -137,7 +140,7 @@ Error AsmTms9900::encodeCruOff(Insn &insn) {
     if (getOperand8(val8)) return getError();
     insn.embed(val8);
     insn.emitInsn();
-    return setError(OK);
+    return getError();
 }
 
 Error AsmTms9900::encode(Insn &insn) {
@@ -147,6 +150,7 @@ Error AsmTms9900::encode(Insn &insn) {
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
+    Error error = OK;
     switch (insn.addrMode()) {
     case INH:
         insn.emitInsn();
@@ -159,12 +163,12 @@ Error AsmTms9900::encode(Insn &insn) {
         encodeReg(insn, true);
         break;
     case REG_IMM:
-        if (encodeReg(insn, true)) return getError();
+        error = encodeReg(insn, true);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeImm(insn, false);
         break;
     case CNT_REG:
-        if (encodeReg(insn, false)) return getError();
+        error = encodeReg(insn, false);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeCnt(insn, /* R0 */true, /* 16 */false);
         break;
@@ -172,22 +176,22 @@ Error AsmTms9900::encode(Insn &insn) {
         encodeOpr(insn, true);
         break;
     case CNT_SRC:
-        encodeOpr(insn, false);
+        error = encodeOpr(insn, false);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeCnt(insn, /* R0 */false, /* 16 */true);
         break;
     case XOP_SRC:
-        encodeOpr(insn, false);
+        error = encodeOpr(insn, false);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeCnt(insn, /* R0 */false, /* 16 */false);
         break;
     case REG_SRC:
-        encodeOpr(insn, false);
+        error = encodeOpr(insn, false);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeReg(insn, true);
         break;
     case DST_SRC:
-        encodeOpr(insn, false);
+        error = encodeOpr(insn, false);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeOpr(insn, true, true);
         break;
@@ -200,6 +204,6 @@ Error AsmTms9900::encode(Insn &insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    if (getError()) return getError();
+    if (getError() == OK) setError(error);
     return checkLineEnd();
 }
