@@ -30,7 +30,7 @@ extern TestSymtab symtab;
     } while (0)
 #define ATEST(addr, mnemonic, opr, ...)                         \
     do {                                                        \
-        const Insn::insn_unit_t mnemonic[] = { __VA_ARGS__ };   \
+        const target::opcode_t mnemonic[] = { __VA_ARGS__ };    \
         memory.setMemory(mnemonic, sizeof(mnemonic));           \
         ASSERT(addr, mnemonic, opr);                            \
     } while (0)

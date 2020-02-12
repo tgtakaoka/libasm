@@ -6,9 +6,10 @@
 
 namespace target
 {
-    typedef ::uint32_t uintptr_t;
-    typedef ::int32_t  ptrdiff_t;
-    typedef ::uint16_t insn_t;
+    typedef uint32_t uintptr_t;
+    typedef int32_t  ptrdiff_t;
+    typedef uint16_t opcode_t;
+    typedef uint16_t insn_t;
 } // namespace target
 
 enum InsnFormat : host::uint_t {

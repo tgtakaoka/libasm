@@ -14,7 +14,6 @@ enum Endian {
 };
 
 template<
-    typename InsnType,
     Endian endian,
     int maxBytes,
     int maxName>
@@ -25,7 +24,6 @@ public:
     host::uint_t insnLen() const { return _insnLen; }
     target::insn_t insnCode() const { return _insnCode; }
     const char *name() const { return _name; }
-    typedef InsnType insn_unit_t;
     static bool bigEndian() { return endian == ENDIAN_BIG; }
     static bool littleEndian() { return endian == ENDIAN_LITTLE; }
     static host::uint_t getMaxBytes() { return maxBytes; }

@@ -8,6 +8,7 @@ namespace target
 {
     typedef uint16_t uintptr_t;
     typedef int16_t  ptrdiff_t;
+    typedef uint16_t opcode_t;
     typedef uint16_t insn_t;
 } // namespace target
 

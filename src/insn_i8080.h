@@ -5,7 +5,7 @@
 #include "insn_base.h"
 #include "entry_i8080.h"
 
-class Insn : public InsnBase<uint8_t, ENDIAN_LITTLE, 3, 4> {
+class Insn : public InsnBase<ENDIAN_LITTLE, 3, 4> {
 public:
     AddrMode addrMode() const { return _addrMode(_flags); }
     InsnFormat insnFormat() const { return _insnFormat(_flags); }

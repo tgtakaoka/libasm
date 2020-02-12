@@ -5,7 +5,7 @@
 #include "insn_base.h"
 #include "entry_mc6809.h"
 
-class Insn : public InsnBase<uint8_t, ENDIAN_BIG, 5, 6> {
+class Insn : public InsnBase<ENDIAN_BIG, 5, 6> {
 public:
     AddrMode addrMode() const { return _addrMode(_flags); }
     OprSize oprSize() const { return _oprSize(_flags); }
