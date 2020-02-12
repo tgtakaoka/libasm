@@ -20,7 +20,7 @@ Error AsmZ80::encodeImmediate(
         break;
     case NO_FMT:
         if (insn.leftFormat() == IX_REG)
-            TableZ80::encodePrefixCode(insn, left.reg);
+            RegZ80::encodeIndexReg(insn, left.reg);
         break;
     default:
         return setError(INTERNAL_ERROR);
@@ -51,9 +51,9 @@ Error AsmZ80::encodeDirect(
         break;
     case NO_FMT:
         if (left.format == IX_REG)
-            TableZ80::encodePrefixCode(insn, left.reg);
+            RegZ80::encodeIndexReg(insn, left.reg);
         if (right.format == IX_REG)
-            TableZ80::encodePrefixCode(insn, right.reg);
+            RegZ80::encodeIndexReg(insn, right.reg);
         break;
     default:
         return setError(INTERNAL_ERROR);
@@ -96,12 +96,12 @@ Error AsmZ80::encodeIndexed(
     if (left.format == IX_OFF) {
         if (right.format == REG_8 && right.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (IX+n),(HL)
-        TableZ80::encodePrefixCode(insn, left.reg);
+        RegZ80::encodeIndexReg(insn, left.reg);
     }
     if (right.format == IX_OFF) {
         if (left.format == REG_8 && left.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (HL),(IX+n)
-        TableZ80::encodePrefixCode(insn, right.reg);
+        RegZ80::encodeIndexReg(insn, right.reg);
     }
 
     uint8_t regNum = 0;
@@ -132,9 +132,9 @@ Error AsmZ80::encodeIndexedImmediate8(
     target::opcode_t opc = TableZ80::opCode(insn.insnCode());
     insn.setInsnCode(prefixCode);
     if (left.format == IX_OFF)
-        TableZ80::encodePrefixCode(insn, left.reg);
+        RegZ80::encodeIndexReg(insn, left.reg);
     if (right.format == IX_OFF)
-        TableZ80::encodePrefixCode(insn, right.reg);
+        RegZ80::encodeIndexReg(insn, right.reg);
     if (insn.insnFormat() == DST_FMT)
         opc |= left.val << 3;
     emitInsnCode(insn);
@@ -152,9 +152,9 @@ Error AsmZ80::encodeInherent(
     switch (insn.insnFormat()) {
     case NO_FMT:
         if (left.format == IX_REG || left.format == IX_PTR)
-            TableZ80::encodePrefixCode(insn, left.reg);
+            RegZ80::encodeIndexReg(insn, left.reg);
         if (right.format == IX_REG)
-            TableZ80::encodePrefixCode(insn, right.reg);
+            RegZ80::encodeIndexReg(insn, right.reg);
         break;
     case DST_SRC_FMT:
         if (left.format == REG_8 && left.reg == REG_HL
@@ -210,15 +210,15 @@ Error AsmZ80::encodeInherent(
         break;
     case IDX_FMT:
         if (left.format == BC_PTR) {
-            regNum = RegZ80::encodeIndexReg(left.reg);
+            regNum = RegZ80::encodeIndirectBase(left.reg);
         } else if (right.format == BC_PTR) {
-            regNum = RegZ80::encodeIndexReg(right.reg);
+            regNum = RegZ80::encodeIndirectBase(right.reg);
         } else return setError(INTERNAL_ERROR);
         regNum <<= 4;
         break;
     case PTR_FMT:
         if (left.format == IX_REG)
-            TableZ80::encodePrefixCode(insn, left.reg);
+            RegZ80::encodeIndexReg(insn, left.reg);
         if (left.format == STK_16) {
             regNum = RegZ80::encodeStackReg(left.reg);
         } else if (left.format == REG_16) {

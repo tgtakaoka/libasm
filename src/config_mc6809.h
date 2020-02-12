@@ -44,6 +44,4 @@ enum AddrMode : host::uint_t {
     PSEUDO,
 };
 
-#include "reg_mc6809.h"
-
 #endif // __CONFIG_MC6809_H__

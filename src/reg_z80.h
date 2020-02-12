@@ -2,6 +2,8 @@
 #ifndef __REGISTER_Z80_H__
 #define __REGISTER_Z80_H__
 
+#include "insn_z80.h"
+
 enum RegName : char {
     REG_UNDEF = 0,
     REG_HL = 'h',
@@ -51,14 +53,16 @@ public:
     static host::int_t encodePointerReg(RegName regName);
     static host::int_t encodePointerRegIx(RegName regName, RegName ix);
     static host::int_t encodeStackReg(RegName regName);
-    static host::int_t encodeIndexReg(RegName regName);
+    static host::int_t encodeIndirectBase(RegName regName);
+    static void encodeIndexReg(Insn &insn, RegName ixReg);
     static host::int_t encodeIrReg(RegName regName);
     static host::int_t encodeDataReg(RegName regName);
 
     static RegName decodePointerReg(
-        uint8_t regNum, target::insn_t insnCode = 0);
+        uint8_t regNum, const Insn *insn = nullptr);
     static RegName decodeStackReg(uint8_t regNum);
-    static RegName decodeIndexReg(uint8_t regNum);
+    static RegName decodeIndirectBase(uint8_t regNum);
+    static RegName decodeIndexReg(const Insn &insn);
     static RegName decodeIrReg(uint8_t regNum);
     static RegName decodeDataReg(uint8_t regNum);
 

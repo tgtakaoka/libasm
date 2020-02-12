@@ -1,6 +1,7 @@
-#include <ctype.h>
-
 #include "config_i8080.h"
+#include "reg_i8080.h"
+
+#include <ctype.h>
 
 static constexpr RegName ALL_REGS[] PROGMEM = {
     REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_SP, REG_PSW

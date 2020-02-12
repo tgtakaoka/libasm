@@ -20,10 +20,9 @@ void DisZ80::outAddress(T addr, bool indir) {
     *_operands = 0;
 }
 
-void DisZ80::outIndexOffset(
-    target::insn_t insnCode, int8_t offset) {
+void DisZ80::outIndexOffset(const Insn &insn, int8_t offset) {
     *_operands++ = '(';
-    outRegister(TableZ80::decodeIndexReg(insnCode));
+    outRegister(RegZ80::decodeIndexReg(insn));
     if (offset >= 0) *_operands++ = '+';
     outConstant(offset, 10);
     *_operands++ = ')';
@@ -99,7 +98,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outRegister(RegZ80::decodeStackReg(opc >> 4));
         break;
     case IX_REG:
-        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
+        outRegister(RegZ80::decodeIndexReg(insn));
         break;
     case COND_8:
         outConditionName((opc >> 3) & 7);
@@ -111,7 +110,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outPointer(REG_C);
         break;
     case BC_PTR:
-        outPointer(RegZ80::decodeIndexReg(opc >> 4));
+        outPointer(RegZ80::decodeIndirectBase(opc >> 4));
         break;
     case HL_PTR:
         outPointer(REG_HL);
@@ -120,7 +119,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outPointer(REG_SP);
         break;
     case IX_PTR:
-        outPointer(TableZ80::decodeIndexReg(insn.insnCode()));
+        outPointer(RegZ80::decodeIndexReg(insn));
         break;
     case VEC_NO:
         outConstant(uint8_t(opc & 0x38), 16, false);
@@ -168,16 +167,16 @@ Error DisZ80::decodeInherent(Insn& insn) {
         outRegister(RegZ80::decodePointerReg(opc >> 4));
         break;
     case IX_REG:
-        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
+        outRegister(RegZ80::decodeIndexReg(insn));
         break;
     case REG_16X:
-        outRegister(RegZ80::decodePointerReg(opc >> 4, insn.insnCode()));
+        outRegister(RegZ80::decodePointerReg(opc >> 4, &insn));
         break;
     case C_PTR:
         outPointer(REG_C);
         break;
     case BC_PTR:
-        outPointer(RegZ80::decodeIndexReg(opc >> 4));
+        outPointer(RegZ80::decodeIndirectBase(opc >> 4));
         break;
     default:
         break;
@@ -215,7 +214,7 @@ Error DisZ80::decodeImmediate16(Insn &insn, uint16_t val) {
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
+        outRegister(RegZ80::decodeIndexReg(insn));
         break;
     default:
         break;
@@ -247,7 +246,7 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
+        outRegister(RegZ80::decodeIndexReg(insn));
         break;
     default:
         break;
@@ -270,7 +269,7 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
     case IX_REG:
-        outRegister(TableZ80::decodeIndexReg(insn.insnCode()));
+        outRegister(RegZ80::decodeIndexReg(insn));
         break;
     default:
         break;
@@ -321,7 +320,7 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
     case IX_OFF:
         if (insn.rightFormat() == REG_8 && RegZ80::decodeDataReg(opc) == REG_UNDEF)
             return setError(ILLEGAL_OPERAND);
-        outIndexOffset(insn.insnCode(), offset);
+        outIndexOffset(insn, offset);
         break;
     case REG_8:
         regName = RegZ80::decodeDataReg(opc >> 3);
@@ -338,7 +337,7 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
     if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
     switch (insn.rightFormat()) {
     case IX_OFF:
-        outIndexOffset(insn.insnCode(), offset);
+        outIndexOffset(insn, offset);
         break;
     case REG_8:
         outDataRegister(RegZ80::decodeDataReg(opc));
@@ -351,7 +350,7 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
 
 Error DisZ80::decodeIndexedImmediate8(
     Insn &insn, int8_t offset, uint8_t val) {
-    outIndexOffset(insn.insnCode(), offset);
+    outIndexOffset(insn, offset);
     *_operands++ = ',';
     outConstant(val);
     return setError(OK);
@@ -370,11 +369,11 @@ Error DisZ80::decodeIndexedBitOp(
     const RegName regName = RegZ80::decodeDataReg(opCode);
     switch (insn.leftFormat()) {
     case HL_PTR:
-        outIndexOffset(insn.insnCode(), offset);
+        outIndexOffset(insn, offset);
         break;
     case REG_8:
         if (regName == REG_UNDEF) {
-            outIndexOffset(insn.insnCode(), offset);
+            outIndexOffset(insn, offset);
         } else {
             outDataRegister(regName);
         }
@@ -388,10 +387,10 @@ Error DisZ80::decodeIndexedBitOp(
     if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
 
     if (insn.rightFormat() == HL_PTR) {
-        outIndexOffset(insn.insnCode(), offset);
+        outIndexOffset(insn, offset);
     } else if (insn.rightFormat() == REG_8) {
         if (regName == REG_UNDEF) {
-            outIndexOffset(insn.insnCode(), offset);
+            outIndexOffset(insn, offset);
         } else {
             outDataRegister(regName);
         }
