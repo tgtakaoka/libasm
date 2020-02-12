@@ -72,7 +72,7 @@ public:
 
 private:
     RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end) const;
+        const char *line, const RegName *table, const RegName *end) const;
     char regName1stChar(const RegName regName) const;
     char regName2ndChar(const RegName regName) const;
     char regName3rdChar(const RegName regName) const;
