@@ -258,7 +258,7 @@ static Error searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(TableZ80::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             return OK;
         }
@@ -272,7 +272,7 @@ static Error searchPages(
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, lop, rop, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(TableZ80::insnCode(page->prefix, pgm_read_byte(&entry->opc)));
+            insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             return OK;
         }
@@ -283,9 +283,8 @@ static Error searchPages(
 static Error searchPages(
     Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
-        if (TableZ80::prefixCode(insnCode) != page->prefix) continue;
-        const Entry *entry =
-            searchEntry(TableZ80::opCode(insnCode), page->table, page->end);
+        if (insn.prefixCode() != page->prefix) continue;
+        const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             char name[5];

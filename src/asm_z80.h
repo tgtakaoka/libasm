@@ -18,13 +18,6 @@ private:
     AsmIntelOperand _parser;
     RegZ80 _regs;
 
-    void emitInsnCode(Insn &insn) const {
-        const target::opcode_t prefix = TableZ80::prefixCode(insn.insnCode());
-        if (TableZ80::isPrefixCode(prefix))
-            insn.emitByte(prefix);
-        insn.emitByte(TableZ80::opCode(insn.insnCode()));
-    }
-
     struct Operand : public ErrorReporter {
         OprFormat format;
         RegName reg;
