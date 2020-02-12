@@ -1,7 +1,8 @@
-#include <ctype.h>
-
 #include "config_mc6809.h"
+#include "reg_mc6809.h"
 #include "table_mc6809.h"
+
+#include <ctype.h>
 
 static constexpr RegName STACK_S_REGS[8] PROGMEM = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC

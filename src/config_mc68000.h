@@ -51,6 +51,4 @@ enum ExtWord : host::uint_t {
     EXT_REGM,  // Registers mask
 };
 
-#include "reg_mc68000.h"
-
 #endif // __CONFIG_MC68000_H__

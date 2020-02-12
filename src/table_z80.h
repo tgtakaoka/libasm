@@ -24,8 +24,8 @@ public:
     }
     static bool isPrefixCode(target::opcode_t opCode);
 
-    static RegName decodeIndexReg(target::insn_t insnCode);
-    static void encodePrefixCode(Insn &insn, RegName ixReg);
+    static constexpr target::opcode_t PREFIX_IX = 0xDD;
+    static constexpr target::opcode_t PREFIX_IY = 0xFD;
 };
 
 extern TableZ80 TableZ80;

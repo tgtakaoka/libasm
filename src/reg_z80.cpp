@@ -1,6 +1,7 @@
 #include <ctype.h>
 
 #include "config_z80.h"
+#include "reg_z80.h"
 #include "table_z80.h"
 
 static constexpr RegName ALL_REGS[] PROGMEM = {
@@ -14,7 +15,7 @@ static constexpr RegName POINTER_REGS[] PROGMEM = {
 static constexpr RegName STACK_REGS[] PROGMEM = {
     REG_BC, REG_DE, REG_HL, REG_AF
 };
-static constexpr RegName INDEX_REGS[] PROGMEM = {
+static constexpr RegName INDIRECT_BASES[] PROGMEM = {
     REG_BC, REG_DE
 };
 static constexpr RegName IR_REGS[] PROGMEM = {
@@ -226,8 +227,15 @@ host::int_t RegZ80::encodeStackReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
 }
 
-host::int_t RegZ80::encodeIndexReg(RegName regName) {
-    return encodeRegNumber(regName, ARRAY_RANGE(INDEX_REGS));
+host::int_t RegZ80::encodeIndirectBase(RegName regName) {
+    return encodeRegNumber(regName, ARRAY_RANGE(INDIRECT_BASES));
+}
+
+void RegZ80::encodeIndexReg(Insn &insn, RegName ixReg) {
+    const target::opcode_t opc = TableZ80::opCode(insn.insnCode());
+    const target::opcode_t prefix =
+        ixReg == REG_IX ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
+    insn.setInsnCode(TableZ80::insnCode(prefix, opc));
 }
 
 host::int_t RegZ80::encodeIrReg(RegName regName) {
@@ -242,18 +250,25 @@ host::int_t RegZ80::encodeDataReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
 }
 
-RegName RegZ80::decodePointerReg(uint8_t regNum, target::insn_t insnCode) {
+RegName RegZ80::decodePointerReg(uint8_t regNum, const Insn *insn) {
     const RegName regName = decodeRegNumber(regNum & 3, ARRAY_RANGE(POINTER_REGS));
-    if (insnCode == 0 || regName != REG_HL) return regName;
-    return TableZ80::decodeIndexReg(insnCode);
+    if (insn == nullptr || regName != REG_HL) return regName;
+    return decodeIndexReg(*insn);
 }
 
 RegName RegZ80::decodeStackReg(uint8_t regNum) {
     return decodeRegNumber(regNum & 3, ARRAY_RANGE(STACK_REGS));
 }
 
-RegName RegZ80::decodeIndexReg(uint8_t regNum) {
-    return decodeRegNumber(regNum & 1, ARRAY_RANGE(INDEX_REGS));
+RegName RegZ80::decodeIndirectBase(uint8_t regNum) {
+    return decodeRegNumber(regNum & 1, ARRAY_RANGE(INDIRECT_BASES));
+}
+
+RegName RegZ80::decodeIndexReg(const Insn &insn) {
+    const target::opcode_t prefix = TableZ80::prefixCode(insn.insnCode());
+    if (prefix == TableZ80::PREFIX_IX) return REG_IX;
+    if (prefix == TableZ80::PREFIX_IY) return REG_IY;
+    return REG_UNDEF;
 }
 
 RegName RegZ80::decodeIrReg(uint8_t regNum) {
