@@ -23,7 +23,7 @@ extern TestSymtab symtab;
     } while (0)
 #define ATEST(addr, line, ...)                                  \
     do {                                                        \
-        const Insn::insn_unit_t expected[] = { __VA_ARGS__ };   \
+        const target::opcode_t expected[] = { __VA_ARGS__ };    \
         ASSERT(addr, line, expected);                           \
     } while (0)
 #define TEST(line, ...) ATEST(0x0000, line, __VA_ARGS__)

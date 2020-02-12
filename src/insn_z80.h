@@ -5,7 +5,7 @@
 #include "insn_base.h"
 #include "entry_z80.h"
 
-class Insn : public InsnBase<uint8_t, ENDIAN_LITTLE, 4, 4> {
+class Insn : public InsnBase<ENDIAN_LITTLE, 4, 4> {
 public:
     AddrMode addrMode() const { return _addrMode(_flags2); }
     InsnFormat insnFormat() const { return _insnFormat(_flags1); }

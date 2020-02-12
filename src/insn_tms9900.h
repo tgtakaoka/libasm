@@ -5,7 +5,7 @@
 #include "insn_base.h"
 #include "entry_tms9900.h"
 
-class Insn : public InsnBase<uint16_t, ENDIAN_BIG, 6, 4> {
+class Insn : public InsnBase<ENDIAN_BIG, 6, 4> {
 public:
     AddrMode addrMode() const { return _addrMode(_flags); }
     bool is9995() const { return _mcuType(_flags) == TMS9995; }
