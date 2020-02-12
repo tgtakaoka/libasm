@@ -20,6 +20,23 @@ public:
             _mcuType(_flags), _oprSize(_flags), _addrMode(addrMode));
     }
 
+    void setInsnCode(target::opcode_t prefixCode, target::opcode_t opCode) {
+        _insnCode = (static_cast<target::insn_t>(prefixCode) << 8) | opCode;
+    }
+    bool hasPrefix() const { return prefixCode() != 0; }
+    target::opcode_t prefixCode() const {
+        return static_cast<target::opcode_t>(_insnCode >> 8);
+    }
+    target::opcode_t opCode() const {
+        return static_cast<target::opcode_t>(_insnCode);
+    }
+
+    void emitInsnCode() {
+        if (hasPrefix())
+            emitByte(prefixCode());
+        emitByte(opCode());
+    }
+
 private:
     host::uint_t _flags;
 };

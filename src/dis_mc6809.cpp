@@ -321,13 +321,12 @@ Error DisMc6809::decode(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-    target::insn_t insnCode = opCode;
+    insn.setInsnCode(0, opCode);
     if (TableMc6809::isPrefixCode(opCode)) {
         const target::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        insnCode = TableMc6809::insnCode(prefix, opCode);
+        insn.setInsnCode(prefix, opCode);
     }
-    insn.setInsnCode(insnCode);
 
     if (TableMc6809.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
