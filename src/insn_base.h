@@ -55,10 +55,11 @@ public:
 
     Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         uint8_t msb, lsb;
-        if (endian == ENDIAN_BIG) {
+        if (bigEndian()) {
             if (readByte(memory, msb)) return NO_MEMORY;
             if (readByte(memory, lsb))  return NO_MEMORY;
-        } else {
+        }
+        if (littleEndian()) {
             if (readByte(memory, lsb))  return NO_MEMORY;
             if (readByte(memory, msb)) return NO_MEMORY;
         }
@@ -68,10 +69,11 @@ public:
 
     Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
         uint16_t msw, lsw;
-        if (endian == ENDIAN_BIG) {
+        if (bigEndian()) {
             if (readUint16(memory, msw)) return NO_MEMORY;
             if (readUint16(memory, lsw))  return NO_MEMORY;
-        } else {
+        }
+        if (littleEndian()) {
             if (readUint16(memory, lsw))  return NO_MEMORY;
             if (readUint16(memory, msw)) return NO_MEMORY;
         }
@@ -84,20 +86,22 @@ public:
     }
 
     void emitUint16(uint16_t val) {
-        if (endian == ENDIAN_BIG) {
+        if (bigEndian()) {
             emitByte(static_cast<uint8_t>(val >> 8));
             emitByte(static_cast<uint8_t>(val));
-        } else {
+        }
+        if (littleEndian()) {
             emitByte(static_cast<uint8_t>(val));
             emitByte(static_cast<uint8_t>(val >> 8));
         }
     }
 
     void emitUint32(uint32_t val) {
-        if (endian == ENDIAN_BIG) {
+        if (bigEndian()) {
             emitUint16(static_cast<uint16_t>(val >> 16));
             emitUint16(static_cast<uint16_t>(val));
-        } else {
+        }
+        if (littleEndian()) {
             emitUint16(static_cast<uint16_t>(val));
             emitUint16(static_cast<uint16_t>(val >> 16));
         }

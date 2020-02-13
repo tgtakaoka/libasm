@@ -334,6 +334,7 @@ protected:
 
     Error defineBytes(CliMemory<Addr> &memory) {
         _list.address = _origin;
+        _list.length = 0;
         do {
             skipSpaces();
             if (*_scan == '"') {
@@ -348,6 +349,7 @@ protected:
                         return getError();
                     }
                     memory.writeByte(_origin++, c);
+                    _list.length++;
                 }
                 _scan = p + 1;
             } else {
@@ -360,15 +362,16 @@ protected:
                 }
                 if (getError()) return getError();
                 memory.writeByte(_origin++, val8);
+                _list.length++;
             }
             skipSpaces();
         } while (*_scan++ == ',');
-        _list.length = _origin - _list.address;
         return setError(OK);
     }
 
-    Error defineWords(CliMemory<Addr> &memory, bool bigEndian) {
+    Error defineWords(CliMemory<Addr> &memory) {
         _list.address = _origin;
+        _list.length = 0;
         do {
             skipSpaces();
             uint16_t val16;
@@ -379,16 +382,17 @@ protected:
                 setError(OK);
             }
             if (getError()) return getError();
-            if (bigEndian) {
+            if (Insn::bigEndian()) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
-            } else {
+            }
+            if (Insn::littleEndian()) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
             }
+            _list.length += 2;
             skipSpaces();
         } while (*_scan++ == ',');
-        _list.length = _origin - _list.address;
         return setError(OK);
     }
 
@@ -470,7 +474,7 @@ protected:
             strcasecmp(directive, "fcc") == 0)
             return this->defineBytes(memory);
         if (strcasecmp(directive, "fdb") == 0)
-            return this->defineWords(memory, true);
+            return this->defineWords(memory);
         if (strcasecmp(directive, "rmb") == 0)
             return this->defineSpaces();
         return UNKNOWN_DIRECTIVE;
@@ -494,7 +498,7 @@ protected:
         if (strcasecmp(directive, "fcb") == 0)
             return this->defineBytes(memory);
         if (strcasecmp(directive, "fdb") == 0)
-            return this->defineWords(memory, true);
+            return this->defineWords(memory);
         if (strcasecmp(directive, "rmb") == 0)
             return this->defineSpaces();
         return UNKNOWN_DIRECTIVE;
@@ -515,7 +519,7 @@ protected:
         if (strcasecmp(directive, "db") == 0)
             return this->defineBytes(memory);
         if (strcasecmp(directive, "dw") == 0)
-            return this->defineWords(memory, false);
+            return this->defineWords(memory);
         if (strcasecmp(directive, "ds") == 0)
             return this->defineSpaces();
         return UNKNOWN_DIRECTIVE;
