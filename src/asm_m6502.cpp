@@ -161,7 +161,7 @@ Error AsmM6502::encode(Insn &insn) {
     switch (insn.addrMode()) {
     case ACCUMULATOR:
         insn.emitInsn();
-        return setError(OK);
+        break;
     case IMMEDIATE:
     case ZEROPAGE:
     case ZP_IDX_X:
@@ -171,7 +171,7 @@ Error AsmM6502::encode(Insn &insn) {
     case ZP_INDIRECT:
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(val16));
-        return setError(OK);
+        break;
     case ABSOLUTE:
     case ABS_IDX_X:
     case ABS_IDX_Y:
@@ -179,8 +179,10 @@ Error AsmM6502::encode(Insn &insn) {
     case IDX_ABS_IND:
         insn.emitInsn();
         insn.emitUint16(val16);
-        return setError(OK);
+        break;
     default:
         return setError(INTERNAL_ERROR);
     }
+
+    return checkLineEnd();
 }

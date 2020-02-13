@@ -65,11 +65,10 @@ Error AsmMc6809::encodeRegisters(Insn &insn) {
         return setError(ILLEGAL_SIZE);
 
     _scan = p;
-    if (checkLineEnd()) return setError(GARBAGE_AT_END);
     insn.emitInsn();
     insn.emitByte((_regs.encodeDataReg(reg1) << 4)
                   | _regs.encodeDataReg(reg2));
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmMc6809::encodeRelative(Insn &insn) {
@@ -190,16 +189,13 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
         p++;
     }
     _scan = p;
-    if (checkLineEnd()) return getError();
 
     uint8_t post;
     if (base == REG_UNDEF) {    // [n16]
         if (index != OFFSET) return setError(UNKNOWN_OPERAND);
         insn.emitByte(0x9F);
         insn.emitUint16(addr);
-        return setError(OK);
-    }
-    if (base == REG_PCR || base == REG_PC) { // n,PCR [n,PCR] n,PC [n,PC]
+    } else if (base == REG_PCR || base == REG_PC) { // n,PCR [n,PCR] n,PC [n,PC]
         if (index != OFFSET || osize == 0 || osize == 5 || incr != 0)
             return setError(UNKNOWN_OPERAND);
         post = indir ? 0x10 : 0;
@@ -221,9 +217,7 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
         }
         insn.emitByte(0x8D | post);
         insn.emitUint16(offset);
-        return setError(OK);
-    }
-    if (TableMc6809.is6309() && base == REG_W) {
+    } else if (TableMc6809.is6309() && base == REG_W) {
         uint8_t post;
         if (index == OFFSET) {
             if (osize == -1 && addr == 0) {
@@ -246,59 +240,55 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
         if (indir) post++;
         insn.emitByte(post);
         if (index == OFFSET) insn.emitUint16(addr);
-        return setError(OK);
-    }
-
-    post = _regs.encodeBaseReg(base) << 5;
-    if (indir) post |= 0x10;
-    if (index == REG_UNDEF) { // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
-        if (incr == 0) post |= 0x84;
-        else if (incr == 2) post |= 0x81;
-        else if (incr == -2) post |= 0x83;
-        else if (!indir && incr == 1) post |= 0x80;
-        else if (!indir && incr == -1) post |= 0x82;
-        else return setError(UNKNOWN_OPERAND);
-        insn.emitByte(post);
-        return setError(OK);
-    }
-    if (index != OFFSET) {      // R,R
-        post |= _regs.encodeIndexReg(index);
-        insn.emitByte(0x80 | post);
-        return setError(OK);
-    }
-    const target::ptrdiff_t offset = addr;
-    if (indir && osize == 5) return setError(UNKNOWN_OPERAND);
-    if (osize == -1) {
-        if (offset == 0) {
-            osize = 0;
-        } else if (offset >= -16 && offset < 16 && !indir) { // n5,R
-            osize = 5;
-        } else if (offset >= -128 && offset < 128) { // n8,R [n8,R]
-            osize = 8;
-        } else {                // n16,R [n16,R]
-            osize = 16;
+    } else {
+        post = _regs.encodeBaseReg(base) << 5;
+        if (indir) post |= 0x10;
+        if (index == REG_UNDEF) { // ,R [,R] ,R+ ,R- ,R++ ,--R [,R++] [,--R]
+            if (incr == 0) post |= 0x84;
+            else if (incr == 2) post |= 0x81;
+            else if (incr == -2) post |= 0x83;
+            else if (!indir && incr == 1) post |= 0x80;
+            else if (!indir && incr == -1) post |= 0x82;
+            else return setError(UNKNOWN_OPERAND);
+            insn.emitByte(post);
+        } else if (index != OFFSET) {      // R,R
+            post |= _regs.encodeIndexReg(index);
+            insn.emitByte(0x80 | post);
+        } else {
+            const target::ptrdiff_t offset = addr;
+            if (indir && osize == 5) return setError(UNKNOWN_OPERAND);
+            if (osize == -1) {
+                if (offset == 0) {
+                    osize = 0;
+                } else if (offset >= -16 && offset < 16 && !indir) { // n5,R
+                    osize = 5;
+                } else if (offset >= -128 && offset < 128) { // n8,R [n8,R]
+                    osize = 8;
+                } else {                // n16,R [n16,R]
+                    osize = 16;
+                }
+            }
+            if (osize == 0) {
+                post |= 0x84;
+                insn.emitByte(post);
+            } else if (osize == 5) {
+                post |= (offset & 0x1F);
+                insn.emitByte(post);
+                if (offset < -16 || offset >= 16) return setError(OVERFLOW_RANGE);
+            } else if (osize == 8) {
+                post |= 0x88;
+                insn.emitByte(post);
+                insn.emitByte(static_cast<uint8_t>(offset));
+                if (offset < -128 || offset >= 128) return setError(OVERFLOW_RANGE);
+            } else {
+                post |= 0x89;
+                insn.emitByte(post);
+                insn.emitUint16(offset);
+            }
         }
     }
-    if (osize == 0) {
-        post |= 0x84;
-        insn.emitByte(post);
-        return setError(OK);
-    }
-    if (osize == 5) {
-        post |= (offset & 0x1F);
-        insn.emitByte(post);
-        return setError((offset >= -16 && offset < 16) ? OK : OVERFLOW_RANGE);
-    }
-    if (osize == 8) {
-        post |= 0x88;
-        insn.emitByte(post);
-        insn.emitByte(static_cast<uint8_t>(offset));
-        return setError((offset >= -128 && offset < 128) ? OK : OVERFLOW_RANGE);
-    }
-    post |= 0x89;
-    insn.emitByte(post);
-    insn.emitUint16(offset);
-    return setError(OK);
+
+    return checkLineEnd();
 }
 
 Error AsmMc6809::encodeBitOperation(Insn &insn) {
@@ -374,19 +364,22 @@ Error AsmMc6809::encodeTransferMemory(Insn &insn) {
     _scan += _regs.regNameLen(regName);
     char dstMode = 0;
     if (*_scan == '+' || *_scan == '-') dstMode = *_scan++;
-    if (checkLineEnd()) return getError();
     post |= _regs.encodeTfmBaseReg(regName);
 
-    for (uint8_t mode = 0; mode < 4; mode++) {
+    uint8_t mode = 0;
+    while (mode < 4) {
         if (srcMode == _regs.tfmSrcModeChar(mode)
             && dstMode == _regs.tfmDstModeChar(mode)) {
-            insn.setInsnCode(insn.prefixCode(), 0x38 + mode);
-            insn.emitInsn();
-            insn.emitByte(post);
-            return setError(OK);
+            break;
         }
+        mode++;
     }
-    return setError(UNKNOWN_OPERAND);
+    if (mode == 4) return setError(UNKNOWN_OPERAND);
+
+    insn.setInsnCode(insn.prefixCode(), 0x38 + mode);
+    insn.emitInsn();
+    insn.emitByte(post);
+    return checkLineEnd();
 }
 
 Error AsmMc6809::determineAddrMode(const char *line, Insn &insn) {

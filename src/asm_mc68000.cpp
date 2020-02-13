@@ -825,6 +825,7 @@ Error AsmMc68000::encode(Insn &insn) {
     } else {
         op2.reset();
     }
+    if (checkLineEnd()) return setError(GARBAGE_AT_END);
     setError(INVALID_STATE);
     switch (insn.insnFormat()) {
     case IMPLIED:  return encodeImplied(insn, op1, op2);

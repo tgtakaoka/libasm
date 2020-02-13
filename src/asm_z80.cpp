@@ -32,7 +32,7 @@ Error AsmZ80::encodeImmediate(
         insn.emitByte(right.val);
     if (insn.addrMode() == IMM16)
         insn.emitUint16(right.val);
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::encodeDirect(
@@ -65,7 +65,7 @@ Error AsmZ80::encodeDirect(
         insn.emitUint16(left.val);
     if (right.format == ADDR_16 || right.format == IMM_16)
         insn.emitUint16(right.val);
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::encodeIoaddr(
@@ -75,7 +75,7 @@ Error AsmZ80::encodeIoaddr(
         insn.emitByte(left.val);
     if (right.format == ADDR_8)
         insn.emitByte(right.val);
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::encodeRelative(
@@ -89,7 +89,7 @@ Error AsmZ80::encodeRelative(
     if (delta < -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(delta));
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::encodeIndexed(
@@ -124,7 +124,7 @@ Error AsmZ80::encodeIndexed(
         insn.emitByte(left.val);
     if (right.format == IX_OFF || right.format == IMM_8)
         insn.emitByte(right.val);
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::encodeIndexedImmediate8(
@@ -143,7 +143,7 @@ Error AsmZ80::encodeIndexedImmediate8(
     if (right.format == IX_OFF)
         insn.emitByte(right.val);
     insn.emitByte(opc);
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::encodeInherent(
@@ -235,7 +235,7 @@ Error AsmZ80::encodeInherent(
     }
     insn.embed(regNum);
     insn.emitInsn();
-    return setError(OK);
+    return checkLineEnd();
 }
 
 Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {

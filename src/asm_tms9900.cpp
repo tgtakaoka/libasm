@@ -20,7 +20,7 @@ bool AsmTms9900::acceptCpu(const char *cpu) {
 
 Error AsmTms9900::checkComma() {
     _scan = skipSpaces(_scan);
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+    if (*_scan != ',') return UNKNOWN_OPERAND;
     _scan = skipSpaces(_scan + 1);
     return OK;
 }
@@ -160,12 +160,12 @@ Error AsmTms9900::encode(Insn &insn) {
         break;
     case REG_IMM:
         if (encodeReg(insn, true)) return getError();
-        if (checkComma()) return getError();
+        if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeImm(insn, false);
         break;
     case CNT_REG:
         if (encodeReg(insn, false)) return getError();
-        if (checkComma()) return getError();
+        if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeCnt(insn, /* R0 */true, /* 16 */false);
         break;
     case SRC:
@@ -173,22 +173,22 @@ Error AsmTms9900::encode(Insn &insn) {
         break;
     case CNT_SRC:
         encodeOpr(insn, false);
-        if (checkComma()) return getError();
+        if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeCnt(insn, /* R0 */false, /* 16 */true);
         break;
     case XOP_SRC:
         encodeOpr(insn, false);
-        if (checkComma()) return getError();
+        if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeCnt(insn, /* R0 */false, /* 16 */false);
         break;
     case REG_SRC:
         encodeOpr(insn, false);
-        if (checkComma()) return getError();
+        if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeReg(insn, true);
         break;
     case DST_SRC:
         encodeOpr(insn, false);
-        if (checkComma()) return getError();
+        if (checkComma()) return setError(UNKNOWN_OPERAND);
         encodeOpr(insn, true, true);
         break;
     case REL:
