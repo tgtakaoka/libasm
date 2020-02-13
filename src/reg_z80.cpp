@@ -25,9 +25,6 @@ static constexpr RegName IR_REGS[] PROGMEM = {
 static constexpr RegName DATA_REGS[] PROGMEM = {
     REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_UNDEF, REG_A
 };
-static constexpr RegName NON_DATA_REGS[] PROGMEM = {
-    REG_SP, REG_IX, REG_IY, REG_I, REG_R, REG_AFP
-};
 
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';

@@ -41,7 +41,7 @@ protected:
             if (!symbol) {
                 auto value =
                     static_cast<typename make_signed<Addr>::type>(addr);
-                symbol = _symtab->lookup(value);
+                symbol = _symtab->lookup(static_cast<int32_t>(value));
             }
         }
         return symbol;

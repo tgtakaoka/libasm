@@ -93,7 +93,7 @@ Error DisTms9900::decode(
         *_operands++ = ',';
         const host::uint_t count = (insnCode >> 4) & 0x0f;
         if (count == 0) _operands = _regs.outRegName(_operands, 0);
-        else outConstant(uint8_t(count), 10);
+        else outConstant(static_cast<uint8_t>(count), 10);
         return setError(OK);
     }
     case SRC:
@@ -116,7 +116,7 @@ Error DisTms9900::decode(
         if (label) {
             outText(label);
         } else {
-            outConstant(uint8_t(count), 10);
+            outConstant(static_cast<uint8_t>(count), 10);
         }
         return setError(OK);
     }

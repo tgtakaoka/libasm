@@ -110,7 +110,7 @@ public:
     }
     const char *end() override { return ":00000001FF"; }
 
-    uint8_t *decode(const char *line, Addr &addr, size_t &size) {
+    uint8_t *decode(const char *line, Addr &addr, size_t &size) override {
         if (*line++ != ':') return nullptr;
         size = 0;
         uint8_t len = 0;
@@ -177,7 +177,7 @@ public:
         }
     }
 
-    uint8_t *decode(const char *line, Addr &addr, size_t &size) {
+    uint8_t *decode(const char *line, Addr &addr, size_t &size) override {
         if (*line++ != 'S') return nullptr;
         const char type = *line++;
         this->ensureData(16);

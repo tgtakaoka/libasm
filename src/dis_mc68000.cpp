@@ -192,7 +192,7 @@ Error DisMc68000::decodeAddrReg(
     if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
     const int16_t disp = static_cast<int16_t>(val16);
     *_operands++ = '#';
-    outConstant(disp, -16);
+    outConstant(disp);
     return setError(OK);
 }
 
@@ -589,7 +589,7 @@ Error DisMc68000::decodeDregRot(
         uint8_t val = (insnCode >> 9) & 7;
         if (val == 0) val = 8;
         *_operands++ = '#';
-        outConstant(val);
+        outConstant(val, 10);
     }
     *_operands++ = ',';
     outRegName(dst);

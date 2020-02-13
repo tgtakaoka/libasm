@@ -16,7 +16,6 @@ public:
 private:
     DisMotoOperand _formatter;
     RegM6502 _regs;
-    McuType _mcuType = M6502;
 
     RegBase &getRegister() override { return _regs; }
 

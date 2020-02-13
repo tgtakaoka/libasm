@@ -1,5 +1,4 @@
 #include "asm_operand.h"
-#include "type_traits.h"
 
 #include <ctype.h>
 

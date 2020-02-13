@@ -10,7 +10,7 @@
 
 class DisMc68000 : public Disassembler<target::uintptr_t> {
 public:
-    DisOperand &getFormatter() { return _formatter; }
+    DisOperand &getFormatter() override { return _formatter; }
     bool acceptCpu(const char *cpu) override;
 
 private:
