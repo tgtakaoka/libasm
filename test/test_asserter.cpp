@@ -66,7 +66,7 @@ void TestAsserter::equals(
         printf(i == 0 ? "[" : " ");
         printf("%02" PRIX8, actual[i]);
     }
-    printf("\n");
+    printf("]\n");
 }
 
 static void convert(const uint8_t *bytes, size_t blen,
@@ -110,7 +110,7 @@ void TestAsserter::equals(
         printf(i == 0 ? "[" : " ");
         printf("%04" PRIX16, actual[i]);
     }
-    printf("\n");
+    printf("]\n");
 }
 
 void TestAsserter::not_equals(
