@@ -283,6 +283,13 @@ static void test_precedence() {
 
 static void test_errors() {
     E32("undef",   0, UNDEFINED_SYMBOL);
+    E32("+undef",  0, UNDEFINED_SYMBOL);
+    E32("-undef",  0, UNDEFINED_SYMBOL);
+    E32("~undef",  0, UNDEFINED_SYMBOL);
+    E32("(undef)", 0, UNDEFINED_SYMBOL);
+    E32("1-undef", 0, UNDEFINED_SYMBOL);
+    E32("undef+1", 0, UNDEFINED_SYMBOL);
+    E32("undef",   0, UNDEFINED_SYMBOL);
     E32("0xxx",    0, ILLEGAL_CONSTANT);
     E32("0ooo",    0, ILLEGAL_CONSTANT);
     E32("0bbb",    0, ILLEGAL_CONSTANT);

@@ -62,17 +62,17 @@ Error AsmMc68000::checkSize(const uint32_t val32, const EaSize size, bool uint) 
 }
 
 Error AsmMc68000::emitImmediateData(
-    Insn &insn, EaSize size, uint32_t val32) {
+    Insn &insn, EaSize size, uint32_t val32, Error error) {
     if (size == SZ_LONG) {
         insn.emitOperand32(val32);
-        return setError(OK);
+        return setError(error);
     }
     if (size == SZ_WORD && checkSize(val32, size, true) == OK) {
         insn.emitOperand16(static_cast<uint16_t>(val32));
-        return setError(OK);
+        return setError(error);
     } else if (size == SZ_BYTE && checkSize(val32, size, true) == OK) {
         insn.emitOperand16(static_cast<uint8_t>(val32));
-        return setError(OK);
+        return setError(error);
     }
     return setError(OVERFLOW_RANGE);
 }
@@ -102,7 +102,9 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode == M_INDX || mode == M_PC_INDX) {
         target::ptrdiff_t disp;
         if (mode == M_PC_INDX) {
-            disp = ea.val32 - (insn.address() + 2);
+            target::uintptr_t addr = ea.val32;
+            if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
+            disp = addr - (insn.address() + 2);
         } else {
             disp = static_cast<target::ptrdiff_t>(ea.val32);
         }
@@ -112,20 +114,27 @@ Error AsmMc68000::emitEffectiveAddr(
         if (RegMc68000::isAreg(ea.index)) extWord |= (1 << 15);
         if (ea.size == SZ_LONG) extWord |= (1 << 11);
         insn.emitOperand16(extWord);
-    } else if (mode == M_DISP || mode == M_PC_DISP || mode == M_ABS_SHORT) {
+        return setError(ea);
+    }
+    if (mode == M_DISP || mode == M_PC_DISP || mode == M_ABS_SHORT) {
         target::ptrdiff_t disp;
         if (mode == M_PC_DISP) {
-            disp = ea.val32 - (insn.address() + 2);
+            target::uintptr_t addr = ea.val32;
+            if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
+            disp = addr - (insn.address() + 2);
         } else {
             disp = static_cast<target::ptrdiff_t>(ea.val32);
         }
         if (checkSize(disp, SZ_WORD, false)) return getError();
         insn.emitOperand16(static_cast<uint16_t>(disp));
-    } else if (mode == M_ABS_LONG) {
-        insn.emitOperand32(ea.val32);
-    } else if (mode == M_IMM_DATA) {
-        return emitImmediateData(insn, insn.size(), ea.val32);
+        return setError(ea);
     }
+    if (mode == M_ABS_LONG) {
+        insn.emitOperand32(ea.val32);
+        return setError(ea);
+    }
+    if (mode == M_IMM_DATA)
+        return emitImmediateData(insn, insn.size(), ea.val32, ea.getError());
     return setError(OK);
 }
 
@@ -136,7 +145,7 @@ Error AsmMc68000::encodeImplied(
     if (insn.insnCode() == STOP) {
         if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
         insn.emitInsn();
-        return emitImmediateData(insn, SZ_WORD, op1.val32);
+        return emitImmediateData(insn, SZ_WORD, op1.val32, op1.getError());
     }
     insn.emitInsn();
     return setError(OK);
@@ -163,14 +172,17 @@ Error AsmMc68000::encodeDestSiz(
                 insn.embed(0100);
             }
             insn.emitInsn();
-            return emitImmediateData(insn, insn.size(), op1.val32);
+            return emitImmediateData(
+                insn, insn.size(), op1.val32, op1.getError());
         }
         if (opc == CMPI && !op2.satisfy(CAT_DATA))
             return setError(ILLEGAL_OPERAND_MODE);
         if (!op2.satisfy(CAT_DATA | CAT_ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
-        emitImmediateData(insn, insn.size(), op1.val32);
-        return emitEffectiveAddr(insn, op2);
+        const Error error = emitImmediateData(
+            insn, insn.size(), op1.val32, op1.getError());
+        emitEffectiveAddr(insn, op2);
+        return setError(error ? error : getError());
     }
     // NEGX/CLR/NEG/NOT/TST
     if (op2.mode != M_NONE) setError(UNKNOWN_OPERAND);
@@ -200,7 +212,7 @@ Error AsmMc68000::encodeAddrReg(
     if (checkSize(op2.val32, SZ_WORD, false)) return getError();
     insn.embed(RegMc68000::encodeRegNo(op1.reg));
     insn.emitInsn();
-    return emitImmediateData(insn, SZ_WORD, op2.val32);
+    return emitImmediateData(insn, SZ_WORD, op2.val32, op2.getError());
 }
 
 // SWAP, DBcc
@@ -219,12 +231,14 @@ Error AsmMc68000::encodeDataReg(
     // DBcc
     if (op2.mode == M_ABS_LONG || op2.mode == M_ABS_SHORT
         || op2.mode == M_LABEL) {
-        const target::ptrdiff_t disp = op2.val32 - (insn.address() + 2);
+        target::uintptr_t addr = op2.val32;
+        if (op2.getError() == UNDEFINED_SYMBOL) addr = insn.address();
+        const target::ptrdiff_t disp = addr - (insn.address() + 2);
         if (checkSize(disp, SZ_WORD, false))
             return setError(OPERAND_TOO_FAR);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
         insn.emitInsn();
-        return emitImmediateData(insn, SZ_WORD, disp);
+        return emitImmediateData(insn, SZ_WORD, disp, op2.getError());
     }
     return setError(ILLEGAL_OPERAND_MODE);
 }
@@ -284,9 +298,10 @@ Error AsmMc68000::encodeDestOpr(
             return setError(UNKNOWN_OPERAND);
         if (op1.val32 >= (RegMc68000::isDreg(op2.reg) ? 32 : 8))
             return setError(OVERFLOW_RANGE);
-        emitEffectiveAddr(insn, op2, -1);
-        emitImmediateData(insn, SZ_BYTE, op1.val32);
-        return setError(OK);
+        const Error error1 = emitEffectiveAddr(insn, op2, -1);
+        const Error error2 =
+            emitImmediateData(insn, SZ_BYTE, op1.val32, op1.getError());
+        return setError(error1 ? error1 : (error2 ? error2 : OK));
     }
     // JSR/JMP/Scc/ASd/LSd/ROXd/ROd
     const uint8_t opc = (insn.insnCode() >> 12) & 077;
@@ -326,12 +341,13 @@ Error AsmMc68000::encodeDestOpr(
         return emitEffectiveAddr(insn, op2, 6, -1);
     }
     if (op1.mode == M_IMM_DATA) { // #<data>,Dy
-        if (op1.val32 == 0 || op1.val32 > 8)
+        if (op1.val32 > 8 || (op1.getError() == OK && op1.val32 == 0))
             return setError(OVERFLOW_RANGE);
         uint8_t rot = static_cast<uint8_t>(op1.val32);
         if (rot == 8) rot = 0;
         insn.embed(static_cast<target::insn_t>(rot), 9);
-        return emitEffectiveAddr(insn, op2, 6, -1);
+        emitEffectiveAddr(insn, op2, 6, -1);
+        return setError(op1.getError() ? op1.getError() : getError());
     }
     return setError(ILLEGAL_OPERAND_MODE);
 }
@@ -349,13 +365,15 @@ Error AsmMc68000::encodeSignExt(
     return setError(OK);
 }
 
-// BRA,BSR, Bcc
+// BRA, BSR, Bcc
 Error AsmMc68000::encodeRelative(
     Insn &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_LONG) return setError(ILLEGAL_SIZE);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     if (op1.mode != M_LABEL) return setError(ILLEGAL_OPERAND_MODE);
-    const target::ptrdiff_t disp = op1.val32 - (insn.address() + 2);
+    target::uintptr_t addr = op1.val32;
+    if (op1.getError() == UNDEFINED_SYMBOL) addr = insn.address();
+    const target::ptrdiff_t disp = addr - (insn.address() + 2);
     if (insn.size() == SZ_NONE)
         insn.setSize(checkSize(disp, SZ_BYTE, false) == OK ? SZ_BYTE : SZ_WORD);
     if (insn.size() == SZ_BYTE && checkSize(disp, SZ_BYTE, false))
@@ -365,11 +383,10 @@ Error AsmMc68000::encodeRelative(
     if (insn.size() == SZ_BYTE) {
         insn.embed(static_cast<uint8_t>(disp));
         insn.emitInsn();
-    } else {
-        insn.emitInsn();
-        emitImmediateData(insn, SZ_WORD, disp);
+        return setError(op1);
     }
-    return setError(OK);
+    insn.emitInsn();
+    return emitImmediateData(insn, SZ_WORD, disp, op1.getError());
 }
 
 static uint16_t reverseBits(uint16_t bits) {
@@ -481,7 +498,7 @@ Error AsmMc68000::encodeMoveQic(
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
     insn.embed(data);
     insn.emitInsn();
-    return setError(OK);
+    return setError(op1);
 }
 
 // MOVEP
@@ -495,13 +512,13 @@ Error AsmMc68000::encodeMovePer(
         insn.embed(RegMc68000::encodeRegNo(op1.reg), 9);
         insn.embed(RegMc68000::encodeRegNo(op2.reg));
         insn.emitInsn();
-        return emitImmediateData(insn, SZ_WORD, op2.val32);
+        return emitImmediateData(insn, SZ_WORD, op2.val32, op2.getError());
     }
     if (op1.mode == M_DISP && RegMc68000::isDreg(op2.reg)) {
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
         insn.emitInsn();
-        return emitImmediateData(insn, SZ_WORD, op1.val32);
+        return emitImmediateData(insn, SZ_WORD, op1.val32, op1.getError());
     }
     return setError(ILLEGAL_OPERAND_MODE);
 }
@@ -512,14 +529,16 @@ Error AsmMc68000::encodeDataQic(
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (op2.mode == M_AREG && insn.size() == SZ_BYTE)
         return setError(ILLEGAL_SIZE);
-    if (op1.mode != M_IMM_DATA || op1.val32 == 0)
+    if (op1.mode != M_IMM_DATA)
         return setError(ILLEGAL_OPERAND_MODE);
-    if (op1.val32 > 8) return setError(OVERFLOW_RANGE);
-    if (!op2.satisfy(CAT_ALTERABLE)) return setError(ILLEGAL_OPERAND_MODE);
     uint8_t data = static_cast<uint8_t>(op1.val32);
+    if (op1.val32 > 8 || (op1.getError() == OK && op1.val32 == 0))
+        return setError(OVERFLOW_RANGE);
     if (data == 8) data = 0;
+    if (!op2.satisfy(CAT_ALTERABLE)) return setError(ILLEGAL_OPERAND_MODE);
     insn.embed(data, 9);
-    return emitEffectiveAddr(insn, op2);
+    emitEffectiveAddr(insn, op2);
+    return setError(op1.getError() ? op1.getError() : getError());
 }
 
 // DMEM_SIZ: OR, SUB, AND, ADD
@@ -662,8 +681,9 @@ Error AsmMc68000::encodeMoveOpr(
     if (size == SZ_WORD) insn.setInsnCode(030000);
     else if (size == SZ_LONG) insn.setInsnCode(020000);
     else insn.setInsnCode(010000);
-    emitEffectiveAddr(insn, op1, -1);
-    return emitEffectiveAddr(insn, op2, -1, 6, 9);
+    const Error error1 = emitEffectiveAddr(insn, op1, -1);
+    const Error error2 = emitEffectiveAddr(insn, op2, -1, 6, 9);
+    return setError(error1 ? error1 : (error2 ? error2 : OK));
 }
 
 Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
@@ -699,15 +719,12 @@ Error AsmMc68000::parseOperand(Operand &opr) {
     const char *p = _scan;
     if (*p == 0 || *p == ';')
         return opr.setError(OK);
-    Error error;
     if (*p == '#') {
         _scan = p + 1;
-        error = opr.setError(getOperand32(opr.val32));
-        if (error == OK || error == UNDEFINED_SYMBOL) {
-            opr.mode = M_IMM_DATA;
-            return opr.setError(OK);
-        }
-        return opr.setError(error);
+        if (getOperand32(opr.val32)) return getError();
+        opr.setError(getError());
+        opr.mode = M_IMM_DATA;
+        return setError(OK);
     }
     const char pdec = *p;
     if (pdec == '-' && p[1] == '(')
@@ -726,12 +743,11 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 opr.mode = (pdec == '-') ? M_PDEC : M_AIND;
             }
             _scan = p;
-            return opr.setError(OK);
+            return setError(opr.setError(OK));
         }
         _scan = p;
-        error = opr.setError(getOperand32(opr.val32));
-        if (error != OK && error != UNDEFINED_SYMBOL)
-            return opr.setError(error);
+        if (getOperand32(opr.val32)) return opr.setError(getError());
+        if (getError()) opr.setError(getError());
         p = skipSpaces(_scan);
         if (*p == ')') {
             p = parseSize(p + 1, opr.size);
@@ -745,7 +761,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 return opr.setError(UNKNOWN_OPERAND);
             }
             _scan = p;
-            return opr.setError(OK);
+            return setError(OK);
         }
         if (*p == ',') {
             p = skipSpaces(p + 1);
@@ -758,7 +774,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 _scan = p + 1;
                 if (opr.mode == M_DISP && checkSize(opr.val32, SZ_WORD, false))
                     return opr.setError(*this);
-                return opr.setError(OK);
+                return setError(OK);
             }
             if (*p != ',')
                 return opr.setError(UNKNOWN_OPERAND);
@@ -774,7 +790,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
             if (opr.mode == M_INDX && checkSize(opr.val32, SZ_BYTE, false))
                 return opr.setError(*this);
             _scan = p;
-            return opr.setError(OK);
+            return setError(OK);
         }
         return opr.setError(UNKNOWN_OPERAND);
     }
@@ -793,12 +809,10 @@ Error AsmMc68000::parseOperand(Operand &opr) {
         return opr.setError(OK);
     }
     _scan = p;
-    error = opr.setError(getOperand32(opr.val32));
-    if (error == OK || error == UNDEFINED_SYMBOL) {
-        opr.mode = M_LABEL;
-        return opr.setError(OK);
-    }
-    return opr.setError(error);
+    if (getOperand32(opr.val32)) return opr.setError(getError());
+    if (getError()) opr.setError(getError());
+    opr.mode = M_LABEL;
+    return setError(OK);
 }
 
 Error AsmMc68000::encode(Insn &insn) {
@@ -826,7 +840,7 @@ Error AsmMc68000::encode(Insn &insn) {
         op2.reset();
     }
     if (checkLineEnd()) return setError(GARBAGE_AT_END);
-    setError(INVALID_STATE);
+
     switch (insn.insnFormat()) {
     case IMPLIED:  return encodeImplied(insn, op1, op2);
     case DEST_SIZ: return encodeDestSiz(insn, op1, op2);

@@ -255,8 +255,9 @@ Error TableM6502::searchPages(
 
 static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
+    if (opr == ZEROPAGE) return table == ABSOLUTE;
     if (opr == INDX_IND) return table == IDX_ABS_IND;
-    if (opr == ABS_INDIRECT) return table == ZP_INDIRECT;
+    if (opr == ZP_INDIRECT) return table == ABS_INDIRECT;
     if (opr == ZP_IDX_X) return table == ABS_IDX_X;
     if (opr == ZP_IDX_Y) return table == ABS_IDX_Y;
     return false;

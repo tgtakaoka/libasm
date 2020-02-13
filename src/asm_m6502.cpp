@@ -19,6 +19,7 @@ bool AsmM6502::acceptCpu(const char *cpu) {
 Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
+    if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
     const target::ptrdiff_t delta = addr - base;
     if (emitInsn) insn.emitInsn();
@@ -31,12 +32,14 @@ Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
 Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
     uint16_t zp;
-    if (getOperand(zp)) return getError();
+    if (getOperand16(zp)) return getError();
+    const Error error = setError(getError());
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
     insn.emitInsn();
     insn.emitByte(zp);
-    return encodeRelative(insn, /* emitInsn */ false);
+    encodeRelative(insn, /* emitInsn */ false);
+    return setError(error ? error : getError());
 }
 #endif
 
@@ -49,19 +52,20 @@ Error AsmM6502::selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp
         op.mode = zp;
         return OK;
     }
-    return op.setError(OPERAND_NOT_ZP);
+    return setError(OPERAND_NOT_ZP);
 }
 
 Error AsmM6502::parseOperand(Operand &op) {
+    op.resetError();
     const char *p = _scan;
     if (*p == '#') {            // #nn
         uint8_t val8;
         _scan = p + 1;
-        if (getOperand8(val8)) return op.setError(getError());
+        if (getOperand8(val8)) return getError();
+        op.setError(getError());
         p = _scan;
         op.mode = IMMEDIATE;
         op.val16 = val8;
-        op.setError(OK);
     } else if (_regs.compareRegName(p, REG_A)) { // A
         p += _regs.regNameLen(REG_A);
         op.mode = ACCUMULATOR;
@@ -72,7 +76,7 @@ Error AsmM6502::parseOperand(Operand &op) {
         const char modifier = *p;
         if (modifier == '<' || modifier == '>') p++;
         _scan = p;
-        if (getOperand16(op.val16)) return op.setError(getError());
+        if (getOperand16(op.val16)) return getError();
         op.setError(getError());
         p = skipSpaces(_scan);
         if (*p == ',') {
@@ -83,21 +87,21 @@ Error AsmM6502::parseOperand(Operand &op) {
                     if (*p != ')') return op.setError(UNKNOWN_OPERAND);
                     p++;
                     if (selectMode(modifier, op, IDX_ABS_IND, INDX_IND))
-                        return op.getError();
+                        return getError();
                     if (op.mode == IDX_ABS_IND && !TableM6502.is65c02())
-                        return op.setError(UNKNOWN_OPERAND);
+                        return setError(UNKNOWN_OPERAND);
                 } else {
                     if (selectMode(modifier, op, ABS_IDX_X, ZP_IDX_X))
-                        return op.getError();
+                        return getError();
                 }
             } else if (_regs.compareRegName(p, REG_Y)) { // nn.Y
-                if (indirect) return op.setError(UNKNOWN_OPERAND);
+                if (indirect) return setError(UNKNOWN_OPERAND);
                 p = skipSpaces(p + _regs.regNameLen(REG_Y));
                 if (selectMode(modifier, op, ABS_IDX_Y, ZP_IDX_Y))
-                    return op.getError();
-            } else return op.setError(UNKNOWN_OPERAND);
+                    return getError();
+            } else return setError(UNKNOWN_OPERAND);
         } else if (*p == ')') {
-            if (!indirect) return op.setError(UNKNOWN_OPERAND);
+            if (!indirect) return setError(UNKNOWN_OPERAND);
             p = skipSpaces(p + 1);
             if (*p == ',') {
                 p = skipSpaces(p + 1);
@@ -105,22 +109,20 @@ Error AsmM6502::parseOperand(Operand &op) {
                     p += _regs.regNameLen(REG_Y);
                     if (modifier == '<' || op.val16 < 0x100) {
                         op.mode = INDIRECT_IDX;
-                    } else return op.setError(OPERAND_NOT_ZP);
-                } else return op.setError(UNKNOWN_OPERAND);
+                    } else return setError(OPERAND_NOT_ZP);
+                } else return setError(UNKNOWN_OPERAND);
             } else {            // (abs), (zp)
                 if (selectMode(modifier, op, ABS_INDIRECT, ZP_INDIRECT))
-                    return op.getError();
-                if (op.mode == ZP_INDIRECT && !TableM6502.is65c02())
-                    return op.setError(UNKNOWN_OPERAND);
+                    return getError();
             }
         } else {                // abs, zp
-            if (indirect) return op.setError(UNKNOWN_OPERAND);
+            if (indirect) return setError(UNKNOWN_OPERAND);
             if (selectMode(modifier, op, ABSOLUTE, ZEROPAGE))
-                return op.getError();
+                return getError();
         }
     }
     _scan = skipSpaces(p);
-    return OK;
+    return setError(OK);
 }
 
 Error AsmM6502::encode(Insn &insn) {
@@ -138,11 +140,12 @@ Error AsmM6502::encode(Insn &insn) {
         return checkLineEnd();
     case REL8:
         return encodeRelative(insn, /* emitInsn */ true);
-    default:
 #ifdef W65C02_ENABLE_BITOPS
-        if (TableM6502.is65c02() && insn.addrMode() == ZP_REL8)
+    case ZP_REL8:
+        if (TableM6502.is65c02())
             return encodeZeroPageRelative(insn);
 #endif
+    default:
         break;
     }
 
@@ -164,6 +167,7 @@ Error AsmM6502::encode(Insn &insn) {
     case ZP_INDIRECT:
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(op.val16));
+        setError(op);
         break;
     case ABSOLUTE:
     case ABS_IDX_X:
@@ -172,6 +176,7 @@ Error AsmM6502::encode(Insn &insn) {
     case IDX_ABS_IND:
         insn.emitInsn();
         insn.emitUint16(op.val16);
+        setError(op);
         break;
     default:
         return setError(INTERNAL_ERROR);

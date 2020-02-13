@@ -526,8 +526,8 @@ static void test_index_registers() {
 }
 
 static void test_indexed() {
-    TEST("INC (IX+2)",0xDD, 0x34, 0x02);
-    TEST("DEC (IX+2)",0xDD, 0x35, 0x02);
+    TEST("INC (IX+2)", 0xDD, 0x34, 0x02);
+    TEST("DEC (IX+2)", 0xDD, 0x35, 0x02);
 
     TEST("LD B,(IX+2)", 0xDD, 0x46, 0x02);
     TEST("LD C,(IX+2)", 0xDD, 0x4E, 0x02);
@@ -615,6 +615,42 @@ static void test_bitop_indexed() {
     TEST("SET 7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
 }
 
+static void test_undefined_symbol() {
+    ETEST(UNDEFINED_SYMBOL, "LD B,UNDEF",    0x06, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD BC,UNDEF",   0x01, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),A",  0x32, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD A,(UNDEF)",  0x3A, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),HL", 0x22, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD HL,(UNDEF)", 0x2A, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),BC", 0xED, 0x43, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD BC,(UNDEF)", 0xED, 0x4B, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JP UNDEF",      0xC3, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JP NZ,UNDEF",   0xC2, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "CALL UNDEF",    0xCD, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "CALL NZ,UNDEF", 0xC4, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "IM UNDEF",      0xED, 0x46);
+    ETEST(UNDEFINED_SYMBOL, "ADD A,UNDEF",   0xC6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OUT (UNDEF),A", 0xD3, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "IN  A,(UNDEF)", 0xDB, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "RST UNDEF",     0xC7);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0xFE);
+
+    ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,B",   0xCB, 0x40);
+
+    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),IY",   0xFD, 0x22, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD IY,(UNDEF)",   0xFD, 0x2A, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "INC (IX+UNDEF)",  0xDD, 0x34, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD (IY-UNDEF),B", 0xFD, 0x70, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD (IY-2),UNDEF", 0xFD, 0x36, 0xFE, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "RLC (IX+UNDEF)",  0xDD, 0xCB, 0x00, 0x06);
+    ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,(IX-128)",   0xDD, 0xCB, 0x80, 0x46);
+    ETEST(UNDEFINED_SYMBOL, "RES 7,(IX-UNDEF)",     0xDD, 0xCB, 0x00, 0xBE);
+    ETEST(UNDEFINED_SYMBOL, "SET UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -643,5 +679,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_shift_indexed);
     RUN_TEST(test_bitop_indexed);
+    RUN_TEST(test_undefined_symbol);
     return 0;
 }

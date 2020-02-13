@@ -217,6 +217,28 @@ static void test_cru_off() {
     TEST("TB off_128", 0x1F80);
 }
 
+static void test_undefined_symbol() {
+    ETEST(UNDEFINED_SYMBOL, "LWPI UNDEF",    0x02E0, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "LI   R0,UNDEF", 0x0200, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "SRL  R4,UNDEF", 0x0904);
+    ETEST(UNDEFINED_SYMBOL, "BLWP @UNDEF",   0x0420, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "INC  @UNDEF(R7)",    0x05A7, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "CZC  @UNDEF(R3),R7", 0x25E3, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "STCR @UNDEF(R4),15",    0x37E4, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "STCR @2(R4),UNDEF",     0x3424, 0x0002);
+    ETEST(UNDEFINED_SYMBOL, "STCR @UNDEF(R4),UNDEF", 0x3424, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "XOP  @UNDEF,15",     0x2FE0, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "XOP  @9876H,UNDEF",  0x2C20, 0x9876);
+    ETEST(UNDEFINED_SYMBOL, "XOP  @UNDEF,UNDEF",  0x2C20, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "SZC  @UNDEF(R10),@5678H(R11)", 0x4AEA, 0x0000, 0x5678);
+    ETEST(UNDEFINED_SYMBOL, "SZC  @1234H(R10),@UNDEF(R11)", 0x4AEA, 0x1234, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "SZC  @UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
+    ETEST(UNDEFINED_SYMBOL, "SBZ  UNDEF", 0x1E00);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x10FF);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JNE UNDEF", 0x16FF);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -239,5 +261,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_dst_src);
     RUN_TEST(test_rel);
     RUN_TEST(test_cru_off);
+    RUN_TEST(test_undefined_symbol);
     return 0;
 }

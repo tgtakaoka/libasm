@@ -43,7 +43,8 @@ private:
     Error parseOperand(Operand &opr);
     Error parseMoveMultiRegList(Operand &opr);
 
-    Error emitImmediateData(Insn &insn, EaSize size, uint32_t val);
+    Error emitImmediateData(
+        Insn &insn, EaSize size, uint32_t val, Error error);
     Error emitEffectiveAddr(
         Insn &insn,
         const Operand &ea,

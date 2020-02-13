@@ -81,9 +81,11 @@ Error AsmZ80::encodeIoaddr(
 Error AsmZ80::encodeRelative(
     Insn &insn, const Operand &left, const Operand &right) {
     target::uintptr_t addr = left.val;
+    if (left.getError() == UNDEFINED_SYMBOL) addr = insn.address();
     if (insn.insnFormat() == CC4_FMT) {
         insn.embed(left.val << 3);
         addr = right.val;
+        if (right.getError() == UNDEFINED_SYMBOL) addr = insn.address();
     }
     const target::ptrdiff_t delta = addr - insn.address() - 2;
     if (delta < -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
@@ -143,6 +145,8 @@ Error AsmZ80::encodeIndexedImmediate8(
     if (right.format == IX_OFF)
         insn.emitByte(right.val);
     insn.emitByte(opc);
+    if (left.getError()) setError(left);
+    if (right.getError()) setError(right);
     return checkLineEnd();
 }
 
@@ -239,7 +243,7 @@ Error AsmZ80::encodeInherent(
 }
 
 Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
-    opr.resetError();
+    opr.setError(OK);
 
     if (opr.format == COND_4 || opr.format == COND_8) {
         CcName ccName;
@@ -326,12 +330,13 @@ Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
                 uint8_t val8;
                 _scan = p;
                 if (getOperand8(val8)) return opr.setError(getError());
+                opr.setError(getError());
                 if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
                 _scan++;
                 opr.val = val8;
                 opr.format = IX_OFF;
                 if (opr.size == SZ_NONE) opr.size = SZ_BYTE;
-                return opr.setError(OK);
+                return OK;
             }
         }
         return opr.setError(UNKNOWN_OPERAND);
@@ -339,16 +344,16 @@ Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
     if (opr.size == SZ_WORD
         || insn.addrMode() == REL8 || insn.addrMode() == DIRECT) {
         if (getOperand16(opr.val)) return opr.setError(getError());
+        opr.setError(getError());
         opr.format = IMM_16;
-        return opr.setError(OK);
+        return OK;;
     }
     uint8_t val8;
-    if (getOperand8(val8) == OK) {
-        opr.val = val8;
-        opr.format = IMM_8;
-        return opr.setError(OK);
-    }
-    return opr.setError(UNKNOWN_OPERAND);
+    if (getOperand8(val8)) return opr.setError(getError());
+    opr.setError(getError());
+    opr.val = val8;
+    opr.format = IMM_8;
+    return OK;
 }
 
 Error AsmZ80::encode(Insn &insn) {
@@ -361,15 +366,16 @@ Error AsmZ80::encode(Insn &insn) {
     Operand left, right;
     left.format = insn.leftFormat();
     left.size = SZ_NONE;
-    parseOperand(insn, left);
-    if (left.getError()) return setError(left);
+    if (parseOperand(insn, left))
+        return setError(left);
     if (*_scan == ',') {
         _scan = skipSpaces(_scan + 1);
         right.format = insn.rightFormat();
         right.size = left.size;
-        parseOperand(insn, right);
-        if (right.getError()) return setError(right);
+        if (parseOperand(insn, right))
+            return setError(right);
     } else {
+        right.setError(OK);
         right.format = NO_OPR;
         right.reg = REG_UNDEF;
         right.val = 0;
