@@ -350,13 +350,6 @@ protected:
                     memory.writeByte(_origin++, c);
                 }
                 _scan = p + 1;
-            } else if (*_scan == '\'') {
-                char c;
-                const char *p = _parser.readChar(_scan + 1, c);
-                if (setError(_parser)) return getError();
-                if (*p++ != '\'') return setError(MISSING_CLOSING_QUOTE);
-                _scan = p;
-                memory.writeByte(_origin++, c);
             } else {
                 uint8_t val8;
                 _scan = _parser.eval(_scan, val8, this);
