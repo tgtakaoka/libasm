@@ -17,7 +17,13 @@ private:
     AsmMotoOperand _parser;
     RegM6502 _regs;
 
-    Error parseOperand(Insn &insn, uint16_t &val);
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        uint16_t val16;
+    };
+
+    Error selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp);
+    Error parseOperand(Operand &op);
 
     Error encodeRelative(Insn &insn, bool emitInsn);
     Error encodeZeroPageRelative(Insn &insn);

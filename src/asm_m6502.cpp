@@ -40,95 +40,87 @@ Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
 }
 #endif
 
-Error AsmM6502::parseOperand(Insn &insn, uint16_t &val16) {
+Error AsmM6502::selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp) {
+    if (modifier == '>' || op.val16 >= 0x100) {
+        op.mode = abs;
+        return OK;
+    }
+    if (modifier == '<' || op.val16 < 0x100) {
+        op.mode = zp;
+        return OK;
+    }
+    return op.setError(OPERAND_NOT_ZP);
+}
+
+Error AsmM6502::parseOperand(Operand &op) {
     const char *p = _scan;
-    char c = toupper(*p);
-    if (c == '#') {
+    if (*p == '#') {            // #nn
         uint8_t val8;
         _scan = p + 1;
-        if (getOperand8(val8)) return getError();
-        val16 = val8;
-        if (checkLineEnd()) return getError();
-        insn.setAddrMode(IMMEDIATE);
-        return OK;
-    }
-    if (_regs.compareRegName(_scan, REG_A)) {
-        _scan = p + _regs.regNameLen(REG_A);
-        insn.setAddrMode(ACCUMULATOR);
-        return OK;
-    }
-    const bool indirect = (c == '(');
-    if (indirect) p++;
-    const char mode = *p;
-    if (mode == '<' || mode == '>') p++;
-    _scan = p;
-    if (getOperand16(val16)) return getError();
-    if (!indirect && checkLineEnd() == OK) {
-        if (mode == '>' || val16 >= 0x0100) {
-            insn.setAddrMode(ABSOLUTE);
-            return OK;
-        }
-        if (mode == '<' || val16 < 0x0100) {
-            insn.setAddrMode(ZEROPAGE);
-            return OK;
-        }
-        return setError(OPERAND_TOO_FAR);
-    }
-
-    p = _scan;
-    c = *p++;
-    if (c == ')' && indirect) {
-        if (checkLineEnd(p) == OK) {
-            _scan = p;
-            if (mode == '>' || val16 >= 0x0100) {
-                insn.setAddrMode(ABS_INDIRECT);
-                return OK;
+        if (getOperand8(val8)) return op.setError(getError());
+        p = _scan;
+        op.mode = IMMEDIATE;
+        op.val16 = val8;
+        op.setError(OK);
+    } else if (_regs.compareRegName(p, REG_A)) { // A
+        p += _regs.regNameLen(REG_A);
+        op.mode = ACCUMULATOR;
+        op.setError(OK);
+    } else {
+        const bool indirect = (*p == '(');
+        if (indirect) p = skipSpaces(p + 1);
+        const char modifier = *p;
+        if (modifier == '<' || modifier == '>') p++;
+        _scan = p;
+        if (getOperand16(op.val16)) return op.setError(getError());
+        op.setError(getError());
+        p = skipSpaces(_scan);
+        if (*p == ',') {
+            p = skipSpaces(p + 1);
+            if (_regs.compareRegName(p, REG_X)) { // nn,X, (nn,X)
+                p = skipSpaces(p + _regs.regNameLen(REG_X));
+                if (indirect) {
+                    if (*p != ')') return op.setError(UNKNOWN_OPERAND);
+                    p++;
+                    if (selectMode(modifier, op, IDX_ABS_IND, INDX_IND))
+                        return op.getError();
+                    if (op.mode == IDX_ABS_IND && !TableM6502.is65c02())
+                        return op.setError(UNKNOWN_OPERAND);
+                } else {
+                    if (selectMode(modifier, op, ABS_IDX_X, ZP_IDX_X))
+                        return op.getError();
+                }
+            } else if (_regs.compareRegName(p, REG_Y)) { // nn.Y
+                if (indirect) return op.setError(UNKNOWN_OPERAND);
+                p = skipSpaces(p + _regs.regNameLen(REG_Y));
+                if (selectMode(modifier, op, ABS_IDX_Y, ZP_IDX_Y))
+                    return op.getError();
+            } else return op.setError(UNKNOWN_OPERAND);
+        } else if (*p == ')') {
+            if (!indirect) return op.setError(UNKNOWN_OPERAND);
+            p = skipSpaces(p + 1);
+            if (*p == ',') {
+                p = skipSpaces(p + 1);
+                if (_regs.compareRegName(p, REG_Y)) { // (zp),Y
+                    p += _regs.regNameLen(REG_Y);
+                    if (modifier == '<' || op.val16 < 0x100) {
+                        op.mode = INDIRECT_IDX;
+                    } else return op.setError(OPERAND_NOT_ZP);
+                } else return op.setError(UNKNOWN_OPERAND);
+            } else {            // (abs), (zp)
+                if (selectMode(modifier, op, ABS_INDIRECT, ZP_INDIRECT))
+                    return op.getError();
+                if (op.mode == ZP_INDIRECT && !TableM6502.is65c02())
+                    return op.setError(UNKNOWN_OPERAND);
             }
-            if (mode == '<' || val16 < 0x0100) {
-                insn.setAddrMode(ZP_INDIRECT);
-                return OK;
-            }
-            return setError(OPERAND_NOT_ZP);
+        } else {                // abs, zp
+            if (indirect) return op.setError(UNKNOWN_OPERAND);
+            if (selectMode(modifier, op, ABSOLUTE, ZEROPAGE))
+                return op.getError();
         }
-        if (*p++ != ',')
-            return setError(UNKNOWN_OPERAND);
-        p = skipSpaces(p);
-        if (toupper(*p) == 'Y' && checkLineEnd(p + 1) == OK) {
-            if (mode == '<' || val16 < 0x0100) {
-                _scan = p + 1;
-                insn.setAddrMode(INDIRECT_IDX);
-                return OK;
-            }
-            return setError(OPERAND_NOT_ZP);
-        }
-        return setError(UNKNOWN_OPERAND);
     }
-
-    if (c != ',') return setError(UNKNOWN_OPERAND);
-    const RegName index = _regs.parseIndexReg(p);
-    if (index == REG_UNDEF) return setError(UNKNOWN_OPERAND);
-    p += _regs.regNameLen(index);
-
-    if (!indirect && checkLineEnd(p) == OK) {
-        if (mode == '>' || val16 >= 0x0100)  {
-            _scan = p;
-            insn.setAddrMode(index == REG_X ? ABS_IDX_X : ABS_IDX_Y);
-            return OK;
-        }
-        if (mode == '<' || val16 < 0x100) {
-            _scan = p;
-            insn.setAddrMode(index == REG_X ? ZP_IDX_X  : ZP_IDX_Y);
-            return OK;
-        }
-        return setError(OPERAND_NOT_ZP);
-    }
-    if (indirect && index == REG_X && *p == ')'
-        && checkLineEnd(p + 1) == OK) {
-        _scan = p + 1;
-        insn.setAddrMode(INDX_IND);
-        return OK;
-    }
-    return setError(UNKNOWN_OPERAND);
+    _scan = skipSpaces(p);
+    return OK;
 }
 
 Error AsmM6502::encode(Insn &insn) {
@@ -154,8 +146,9 @@ Error AsmM6502::encode(Insn &insn) {
         break;
     }
 
-    uint16_t val16;
-    if (parseOperand(insn, val16)) return getError();
+    Operand op;
+    if (parseOperand(op)) return setError(op);
+    insn.setAddrMode(op.mode);
     if (TableM6502.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
@@ -170,7 +163,7 @@ Error AsmM6502::encode(Insn &insn) {
     case INDIRECT_IDX:
     case ZP_INDIRECT:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(val16));
+        insn.emitByte(static_cast<uint8_t>(op.val16));
         break;
     case ABSOLUTE:
     case ABS_IDX_X:
@@ -178,7 +171,7 @@ Error AsmM6502::encode(Insn &insn) {
     case ABS_INDIRECT:
     case IDX_ABS_IND:
         insn.emitInsn();
-        insn.emitUint16(val16);
+        insn.emitUint16(op.val16);
         break;
     default:
         return setError(INTERNAL_ERROR);
