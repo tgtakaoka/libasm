@@ -12,7 +12,7 @@ Error AsmI8080::encodePointerReg(Insn &insn) {
     const RegName regName = _regs.parsePointerReg(_scan);
     const host::int_t num = _regs.encodePointerReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
-    insn.setInsnCode(insn.insnCode() | (num << 4));
+    insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
@@ -21,7 +21,7 @@ Error AsmI8080::encodeStackReg(Insn &insn) {
     const RegName regName = _regs.parseStackReg(_scan);
     const host::int_t num = _regs.encodeStackReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
-    insn.setInsnCode(insn.insnCode() | (num << 4));
+    insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
@@ -30,7 +30,7 @@ Error AsmI8080::encodeIndexReg(Insn &insn) {
     const RegName regName = _regs.parseIndexReg(_scan);
     const host::int_t num = _regs.encodeIndexReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
-    insn.setInsnCode(insn.insnCode() | (num << 4));
+    insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
@@ -40,9 +40,9 @@ Error AsmI8080::encodeDataReg(Insn &insn) {
     const host::int_t num = _regs.encodeDataReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     if (insn.insnFormat() == DATA_REG)
-        insn.setInsnCode(insn.insnCode() | (num << 3));
+        insn.embed(num << 3);
     if (insn.insnFormat() == LOW_DATA_REG)
-        insn.setInsnCode(insn.insnCode() | num);
+        insn.embed(num);
     _scan += _regs.regNameLen(regName);
     return setError(OK);
 }
@@ -59,7 +59,7 @@ Error AsmI8080::encodeDataDataReg(Insn &insn) {
 
     const host::uint_t dstNum = _regs.encodeDataReg(dstReg);
     const host::uint_t srcNum = _regs.encodeDataReg(srcReg);
-    insn.setInsnCode(insn.insnCode() | (dstNum << 3) | srcNum);
+    insn.embed((dstNum << 3) | srcNum);
     return setError(OK);
 }
 
@@ -67,7 +67,7 @@ Error AsmI8080::encodeVectorNo(Insn &insn) {
     uint8_t vecNo;
     if (getOperand8(vecNo)) return getError();
     if (vecNo >= 8) return setError(OVERFLOW_RANGE);
-    insn.setInsnCode(insn.insnCode() | (vecNo << 3));
+    insn.embed(vecNo << 3);
     return setError(OK);
 }
 

@@ -21,6 +21,9 @@ public:
         _flags2 = other._flags2;
     }
 
+    void embed(target::opcode_t data) {
+        _insnCode |= data;
+    }
     void setInsnCode(target::opcode_t prefixCode, target::opcode_t opCode) {
         _insnCode = (static_cast<target::insn_t>(prefixCode) << 8) | opCode;
     }
@@ -32,7 +35,7 @@ public:
         return static_cast<target::opcode_t>(_insnCode);
     }
 
-    void emitInsnCode() {
+    void emitInsn() {
         if (hasPrefix())
             emitByte(prefixCode());
         emitByte(opCode());

@@ -45,7 +45,7 @@ Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
     case REG_SRC: operand <<= 6; break;
     default: return setError(INTERNAL_ERROR);
     }
-    insn.setInsnCode(insn.insnCode() | operand);
+    insn.embed(operand);
     if (emitInsn) insn.emitInsn();
     return setError(OK);
 }
@@ -68,7 +68,7 @@ Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     case XOP_SRC: count <<= 6; break;
     default: return setError(INTERNAL_ERROR);
     }
-    insn.setInsnCode(insn.insnCode() | count);
+    insn.embed(count);
     insn.emitInsn();
     return setError(OK);
 }
@@ -111,7 +111,7 @@ Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     }
     uint16_t operand = (mode << 4) | _regs.encodeRegNumber(regName);
     if (destinationa) operand <<= 6;
-    insn.setInsnCode(insn.insnCode() | operand);
+    insn.embed(operand);
     if (emitInsn)
         insn.emitInsn();
     if (mode == 2)
@@ -127,7 +127,7 @@ Error AsmTms9900::encodeRel(Insn &insn) {
     const target::uintptr_t base = insn.address() + 2;
     const target::ptrdiff_t delta = (addr - base) >> 1;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-    insn.setInsnCode(insn.insnCode() | (delta & 0xff));
+    insn.embed(static_cast<uint8_t>(delta));
     insn.emitInsn();
     return setError(OK);
 }
@@ -135,7 +135,7 @@ Error AsmTms9900::encodeRel(Insn &insn) {
 Error AsmTms9900::encodeCruOff(Insn &insn) {
     uint8_t val8;
     if (getOperand8(val8)) return getError();
-    insn.setInsnCode(insn.insnCode() | val8);
+    insn.embed(val8);
     insn.emitInsn();
     return setError(OK);
 }

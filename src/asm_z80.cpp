@@ -26,8 +26,8 @@ Error AsmZ80::encodeImmediate(
     default:
         return setError(INTERNAL_ERROR);
     }
-    insn.setInsnCode(insn.prefixCode(), insn.opCode() | regNum);
-    insn.emitInsnCode();
+    insn.embed(regNum);
+    insn.emitInsn();
     if (insn.addrMode() == IMM8)
         insn.emitByte(right.val);
     if (insn.addrMode() == IMM16)
@@ -59,8 +59,8 @@ Error AsmZ80::encodeDirect(
     default:
         return setError(INTERNAL_ERROR);
     }
-    insn.setInsnCode(insn.prefixCode(), insn.opCode() | regNum);
-    insn.emitInsnCode();
+    insn.embed(regNum);
+    insn.emitInsn();
     if (left.format == ADDR_16 || left.format == IMM_16)
         insn.emitUint16(left.val);
     if (right.format == ADDR_16 || right.format == IMM_16)
@@ -70,7 +70,7 @@ Error AsmZ80::encodeDirect(
 
 Error AsmZ80::encodeIoaddr(
     Insn &insn, const Operand &left, const Operand &right) {
-    insn.emitInsnCode();
+    insn.emitInsn();
     if (left.format == ADDR_8)
         insn.emitByte(left.val);
     if (right.format == ADDR_8)
@@ -82,12 +82,12 @@ Error AsmZ80::encodeRelative(
     Insn &insn, const Operand &left, const Operand &right) {
     target::uintptr_t addr = left.val;
     if (insn.insnFormat() == CC4_FMT) {
-        insn.setInsnCode(insn.prefixCode(), insn.opCode() | (left.val << 3));
+        insn.embed(left.val << 3);
         addr = right.val;
     }
     const target::ptrdiff_t delta = addr - insn.address() - 2;
-    if (delta < -128 || delta >= 128) return setError(ILLEGAL_OPERAND);
-    insn.emitInsnCode();
+    if (delta < -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
+    insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(delta));
     return setError(OK);
 }
@@ -118,8 +118,8 @@ Error AsmZ80::encodeIndexed(
     default:
         return setError(INTERNAL_ERROR);
     }
-    insn.setInsnCode(insn.prefixCode(), insn.opCode() | regNum);
-    insn.emitInsnCode();
+    insn.embed(regNum);
+    insn.emitInsn();
     if (left.format == IX_OFF)
         insn.emitByte(left.val);
     if (right.format == IX_OFF || right.format == IMM_8)
@@ -137,7 +137,7 @@ Error AsmZ80::encodeIndexedImmediate8(
         RegZ80::encodeIndexReg(insn, right.reg);
     if (insn.insnFormat() == DST_FMT)
         opc |= left.val << 3;
-    insn.emitInsnCode();
+    insn.emitInsn();
     if (left.format == IX_OFF)
         insn.emitByte(left.val);
     if (right.format == IX_OFF)
@@ -233,8 +233,8 @@ Error AsmZ80::encodeInherent(
     default:
         return setError(INTERNAL_ERROR);
     }
-    insn.setInsnCode(insn.prefixCode(), insn.opCode() | regNum);
-    insn.emitInsnCode();
+    insn.embed(regNum);
+    insn.emitInsn();
     return setError(OK);
 }
 

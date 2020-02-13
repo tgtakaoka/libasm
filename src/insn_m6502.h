@@ -18,6 +18,10 @@ public:
         _flags = ::_flags(_mcuType(_flags), _addrMode(addrMode));
     }
 
+    void emitInsn() {
+        emitByte(_insnCode);
+    }
+
 private:
     host::uint_t _flags;
 };

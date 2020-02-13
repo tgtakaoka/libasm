@@ -21,7 +21,7 @@ Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
     if (getOperand16(addr)) return getError();
     const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
     const target::ptrdiff_t delta = addr - base;
-    if (emitInsn) emitInsnCode(insn);
+    if (emitInsn) insn.emitInsn();
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(uint8_t(delta));
     return checkLineEnd();
@@ -34,7 +34,7 @@ Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
     if (getOperand(zp)) return getError();
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
-    emitInsnCode(insn);
+    insn.emitInsn();
     insn.emitByte(zp);
     return encodeRelative(insn, /* emitInsn */ false);
 }
@@ -142,7 +142,7 @@ Error AsmM6502::encode(Insn &insn) {
 
     switch (insn.addrMode()) {
     case IMPLIED:
-        emitInsnCode(insn);
+        insn.emitInsn();
         return checkLineEnd();
     case REL8:
         return encodeRelative(insn, /* emitInsn */ true);
@@ -160,7 +160,7 @@ Error AsmM6502::encode(Insn &insn) {
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case ACCUMULATOR:
-        emitInsnCode(insn);
+        insn.emitInsn();
         return setError(OK);
     case IMMEDIATE:
     case ZEROPAGE:
@@ -169,7 +169,7 @@ Error AsmM6502::encode(Insn &insn) {
     case INDX_IND:
     case INDIRECT_IDX:
     case ZP_INDIRECT:
-        emitInsnCode(insn);
+        insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(val16));
         return setError(OK);
     case ABSOLUTE:
@@ -177,7 +177,7 @@ Error AsmM6502::encode(Insn &insn) {
     case ABS_IDX_Y:
     case ABS_INDIRECT:
     case IDX_ABS_IND:
-        emitInsnCode(insn);
+        insn.emitInsn();
         insn.emitUint16(val16);
         return setError(OK);
     default:

@@ -31,7 +31,7 @@ public:
         return static_cast<target::opcode_t>(_insnCode);
     }
 
-    void emitInsnCode() {
+    void emitInsn() {
         if (hasPrefix())
             emitByte(prefixCode());
         emitByte(opCode());

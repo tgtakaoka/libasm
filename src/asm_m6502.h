@@ -17,8 +17,6 @@ private:
     AsmMotoOperand _parser;
     RegM6502 _regs;
 
-    void emitInsnCode(Insn &insn) const { insn.emitByte(insn.insnCode()); }
-
     Error parseOperand(Insn &insn, uint16_t &val);
 
     Error encodeRelative(Insn &insn, bool emitInsn);

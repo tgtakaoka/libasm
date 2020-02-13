@@ -12,6 +12,10 @@ public:
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
+    void embed(target::opcode_t data) {
+        _insnCode |= data;
+    }
+
 private:
     host::uint_t _flags;
 };

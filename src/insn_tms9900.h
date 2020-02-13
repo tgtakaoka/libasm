@@ -12,6 +12,10 @@ public:
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
+    void embed(target::opcode_t data) {
+        _insnCode |= data;
+    }
+
     void emitInsn() {
         emitUint16(_insnCode, 0);
         if (_insnLen == 0) _insnLen = 2;
