@@ -36,17 +36,16 @@ protected:
     uint8_t _check_sum;
 
     void ensureLine(size_t len) {
+        len += 1;
         if (_line_len < len) {
-            _line = static_cast<char *>(
-                _line ? realloc(_line, len) : malloc(len));
+            _line = static_cast<char *>(realloc(_line, len));
             _line_len = len;
         }
     }
 
     void ensureData(size_t len) {
         if (_data_len < len) {
-            _data = static_cast<uint8_t *>(
-                _data ? realloc(_data, len) : malloc(len));
+            _data = static_cast<uint8_t *>(realloc(_data, len));
             _data_len = len;
         }
     }
@@ -104,8 +103,7 @@ public:
             p += sprintf(p, "%02X", data[i]);
             this->addSum(data[i]);
         }
-        sprintf(p, "%02X", static_cast<uint8_t>(
-                    -this->_check_sum & 0xff));
+        sprintf(p, "%02X", static_cast<uint8_t>(-this->_check_sum));
         return this->_line;
     }
     const char *end() override { return ":00000001FF"; }
