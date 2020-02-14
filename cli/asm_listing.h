@@ -131,8 +131,10 @@ private:
         }
         return i;
     }
-    void formatTab(int pos) {
-        while (static_cast<int>(_out.size()) < pos)
+    void formatTab(size_t pos, int delta = 4) {
+        while (pos < _out.size() + 1)
+            pos += delta;
+        while (_out.size() < pos)
             _out += ' ';
     }
 
@@ -147,18 +149,15 @@ private:
             _out += _line->getLabel();
         }
         if (_line->hasInstruction()) {
-            _out += ' ';
-            formatTab(pos + _line->labelWidth());
+            formatTab(pos + _line->labelWidth(), 8);
             _out += _line->getInstruction();
         }
         if (_line->hasOperand()) {
-            _out += ' ';
             formatTab(pos + _line->labelWidth()
                       + _line->instructionWidth());
             _out += _line->getOperand();
         }
         if (_line->hasComment()) {
-            _out += ' ';
             formatTab(pos + _line->labelWidth()
                       + _line->instructionWidth() + _line->operandWidth());
             _out += _line->getComment();
@@ -170,12 +169,12 @@ private:
             char buf[12];
             uint16_t nest = _line->includeNest();
             if (nest) {
-                sprintf(buf, "(%d) ", nest);
+                sprintf(buf, "(%d)", nest);
                 _out += buf;
             } else {
-                _out += "    ";
+                _out += "   ";
             }
-            sprintf(buf, "%6d/ ", _line->lineNumber());
+            sprintf(buf, "%5d/ ", _line->lineNumber());
             _out += buf;
         }
         formatAddress(_line->startAddress() + _next, true, true);

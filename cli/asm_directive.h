@@ -184,7 +184,7 @@ public:
         return std::string(_list.instruction, _list.instruction_len);
     }
     std::string getOperand() const override {
-        return std::string(_list.operand, _list.operand_len);
+        return std::string(_list.operand, trimRight(_list.operand, _list.operand_len));
     }
     std::string getComment() const override {
         return std::string(_list.comment);
@@ -206,8 +206,8 @@ protected:
           _origin(0),
           _reportUndef(true),
           _reportDuplicate(true),
-          _labelWidth(8),
-          _operandWidth(8)
+          _labelWidth(16),
+          _operandWidth(16)
     {}
 
     struct Source {
@@ -377,8 +377,13 @@ protected:
                 memory.writeByte(_origin++, val8);
                 _list.length++;
             }
+            const char *save = _scan;
             skipSpaces();
-        } while (*_scan++ == ',');
+            if (*_scan++ == ',')
+                continue;
+            _scan = save;
+            break;
+        } while (true);
         return setError(OK);
     }
 
@@ -404,8 +409,13 @@ protected:
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
             }
             _list.length += 2;
+            const char *save = _scan;
             skipSpaces();
-        } while (*_scan++ == ',');
+            if (*_scan++ == ',')
+                continue;
+            _scan = save;
+            break;
+        } while (true);
         return setError(OK);
     }
 
@@ -470,6 +480,12 @@ private:
             _symbols.emplace(key, value);
             setError(OK);
         }
+    }
+
+    static int trimRight(const char *str, int len) {
+        while (len > 0 && isspace(str[len - 1]))
+            len--;
+        return len;
     }
 };
 
