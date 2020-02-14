@@ -244,6 +244,13 @@ Error AsmZ80::encodeInherent(
 
 Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
     opr.setError(OK);
+    opr.reg = REG_UNDEF;
+    opr.val = 0;
+
+    if (*_scan == 0 || *_scan == ';') {
+        opr.format = NO_OPR;
+        return opr.setError(OK);
+    }
 
     if (opr.format == COND_4 || opr.format == COND_8) {
         CcName ccName;
@@ -259,13 +266,6 @@ Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
             opr.val = RegZ80::encodeCcName(ccName);
             return opr.setError(OK);
         }
-    }
-
-    opr.reg = REG_UNDEF;
-    opr.val = 0;
-    if (*_scan == 0) {
-        opr.format = NO_OPR;
-        return opr.setError(OK);
     }
 
     opr.reg = _regs.parseRegister(_scan);

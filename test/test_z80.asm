@@ -1,7 +1,7 @@
         cpu     z80
 
 ;;; 0X
-        nop
+        nop                     ;comment
         ld      bc,0302H
         ld      (bc),a
         inc     bc

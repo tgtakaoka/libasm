@@ -455,6 +455,22 @@ static void test_zeropage_relative() {
 }
 #endif
 
+static void test_comment() {
+    TEST("BRK        ; comment", 0x00);
+    TEST("ASL A      ; comment", 0x0A);
+    TEST("CPY #+255  ; comment", 0xC0, 0xFF);
+    TEST("BIT $10    ; comment", 0x24, 0x10);
+    TEST("ORA $10,X  ; comment", 0x15, 0x10);
+    TEST("LDX $10,Y  ; comment", 0xB6, 0x10);
+    TEST("BIT $1234  ; comment", 0x2C, 0x34, 0x12);
+    TEST("ORA $1234,X; comment", 0x1D, 0x34, 0x12);
+    TEST("ORA $1234,Y; comment", 0x19, 0x34, 0x12);
+    TEST("JMP ($1234); comment", 0x6C, 0x34, 0x12);
+    TEST("ORA ($10,X); comment", 0x01, 0x10);
+    TEST("ORA ($10),Y; comment", 0x11, 0x10);
+    ATEST(0x1000, "BPL $1002; comment", 0x10, 0x00);
+}
+
 static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LDA #UNDEF", 0xA9, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JSR UNDEF",  0x20, 0x00, 0x00);
@@ -526,6 +542,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_bit_manipulation);
     RUN_TEST(test_zeropage_relative);
 #endif
+    RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }

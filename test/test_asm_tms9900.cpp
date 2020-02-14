@@ -84,7 +84,7 @@ static void test_src() {
     TEST("BL   R13",    0x068D);
     TEST("SWPB *R1",    0x06D1);
     TEST("SETO R12",    0x070C);
-    TEST("ABS @8(R3)",  0x0763, 0x0008);
+    TEST("ABS  @8(R3)", 0x0763, 0x0008);
 
     // TMS9995
     assembler.acceptCpu("tms9995");
@@ -217,6 +217,21 @@ static void test_cru_off() {
     TEST("TB off_128", 0x1F80);
 }
 
+static void test_comment() {
+    TEST("IDLE         ; comment", 0x0340);
+    TEST("LWPI 1234H   ; comment", 0x02E0, 0x1234);
+    TEST("STWP R14     ; comment", 0x02AE);
+    TEST("LI   R0,0000H; comment", 0x0200, 0x0000);
+    TEST("X    *R10    ; comment",   0x049A);
+    TEST("CLR  *R12+   ; comment",  0x04FC);
+    TEST("BLWP @9876H  ; comment", 0x0420, 0x9876);
+    TEST("INC  @2(R7)  ; comment", 0x05A7, 0x0002);
+    TEST("LDCR *R13+,16; comment",  0x303D);
+    TEST("SBO 0        ; comment",    0x1D00);
+    TEST("SZC  @1234H(R10),@5678H(R11) ; comment", 0x4AEA, 0x1234, 0x5678);
+    ATEST(0x1000, "JMP 1002H ; comment", 0x1000);
+}
+
 static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LWPI UNDEF",    0x02E0, 0x0000);
     ETEST(UNDEFINED_SYMBOL, "LI   R0,UNDEF", 0x0200, 0x0000);
@@ -261,6 +276,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_dst_src);
     RUN_TEST(test_rel);
     RUN_TEST(test_cru_off);
+    RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }

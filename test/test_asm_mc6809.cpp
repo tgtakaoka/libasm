@@ -1032,6 +1032,19 @@ static void test_bit_position() {
     TEST("LDBT B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
 }
 
+static void test_comment() {
+    TEST("NOP      ; comment", 0x12);
+    TEST("PSHS A   ; comment", 0x34, 0x02);
+    TEST("PSHS CC,A,B,DP,X,Y,U,PC;comment", 0x34, 0xFF);
+    TEST("TFR D,X  ; comment", 0x1F, 0x01);
+    TEST("SUBB #$90; comment", 0xC0, 0x90);
+    TEST("NEG $10  ; comment", 0x00, 0x10);
+    TEST("SUBA >$90; comment", 0xB0, 0x00, 0x90);
+    TEST("LDA [0,X]; comment", 0xA6, 0x94);
+    ATEST(0x1000, "BRA $1002 ; comment",      0x20, 0x00);
+    ATEST(0x1000, "LDA [$1004,PCR];comment ", 0xA6, 0x9C, 0x01);
+}
+
 static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LDA  #UNDEF",  0x86, 0x00);
     ETEST(UNDEFINED_SYMBOL, "SUBD #UNDEF",  0x83, 0x00, 0x00);
@@ -1095,6 +1108,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_register);
     RUN_TEST(test_transfer);
     RUN_TEST(test_bit_position);
+    RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }

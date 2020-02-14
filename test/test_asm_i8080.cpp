@@ -341,6 +341,15 @@ static void test_io() {
     TEST("IN  0F0H", 0xDB, 0xF0);
 }
 
+static void test_comment() {
+    TEST("MOV B,B  ; comment", 0x40);
+    TEST("STAX B   ; comment", 0x02);
+    TEST("XTHL     ; comment", 0xE3);
+    TEST("JMP 1234H; comment", 0xC3, 0x34, 0x12);
+    TEST("ANI ~0FH ; comment", 0xE6, 0xF0);
+    TEST("CPI -1-23; comment", 0xFE, 0xE8);
+}
+
 static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "MVI  B,UNDEF", 0x06, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LXI  B,UNDEF", 0x01, 0x00, 0x00);
@@ -372,6 +381,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_alu_register);
     RUN_TEST(test_alu_immediate);
     RUN_TEST(test_io);
+    RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }

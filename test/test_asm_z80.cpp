@@ -615,6 +615,23 @@ static void test_bitop_indexed() {
     TEST("SET 7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
 }
 
+static void test_comment() {
+    TEST("LD B,B;        comment", 0x40);
+    TEST("LDIR         ; comment", 0xED, 0xB0);
+    TEST("LD BC,0BEEFH ; comment", 0x01, 0xEF, 0xBE);
+    TEST("LD HL,(5678H); comment", 0x2A, 0x78, 0x56);
+    TEST("EX AF,AF';     comment",  0x08);
+    TEST("CALL C,1234H; comment", 0xDC, 0x34, 0x12);
+    TEST("RET         ; comment", 0xC9);
+    TEST("RET NZ      ; comment", 0xC0);
+    TEST("BIT 0,B     ; comment", 0xCB, 0x40);
+    TEST("INC (IX+2)  ; comment", 0xDD, 0x34, 0x02);
+    TEST("ADD A,(IY-2); comment", 0xFD, 0x86, 0xFE);
+
+    ATEST(0x1000, "JR 1000H   ; comment",    0x18, 0xFE);
+    ATEST(0x1000, "JR NZ,1004H; comment", 0x20, 0x02);
+}
+
 static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LD B,UNDEF",    0x06, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LD BC,UNDEF",   0x01, 0x00, 0x00);
@@ -679,6 +696,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_shift_indexed);
     RUN_TEST(test_bitop_indexed);
+    RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }
