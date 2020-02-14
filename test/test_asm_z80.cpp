@@ -7,6 +7,7 @@ AsmZ80 asz80;
 Assembler<target::uintptr_t> &assembler(asz80);
 
 static void set_up() {
+    assembler.acceptCpu("8080");
 }
 
 static void tear_down() {
@@ -14,6 +15,8 @@ static void tear_down() {
 }
 
 static void test_cpu() {
+    asserter.equals(
+        "cpu 8080", true, assembler.acceptCpu("8080"));
     asserter.equals(
         "cpu Z80", true, assembler.acceptCpu("Z80"));
 }
@@ -96,6 +99,8 @@ static void test_move_inherent() {
     TEST("LD A,(BC)", 0x0A);
     TEST("LD A,(DE)", 0x1A);
 
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("LD I,A", 0xED, 0x47);
     TEST("LD R,A", 0xED, 0x4F);
     TEST("LD A,I", 0xED, 0x57);
@@ -142,13 +147,14 @@ static void test_move_direct() {
     TEST("LD (0ABCDH),HL", 0x22, 0xCD, 0xAB);
     TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
 
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("LD (0ABCDH),BC", 0xED, 0x43, 0xCD, 0xAB);
     TEST("LD (0ABCDH),DE", 0xED, 0x53, 0xCD, 0xAB);
     TEST("LD (0ABCDH),HL", 0x22, 0xCD, 0xAB);
     TEST("LD (0ABCDH),SP", 0xED, 0x73, 0xCD, 0xAB);
     TEST("LD BC,(5678H)",  0xED, 0x4B, 0x78, 0x56);
     TEST("LD DE,(5678H)",  0xED, 0x5B, 0x78, 0x56);
-    TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
     TEST("LD SP,(5678H)",  0xED, 0x7B, 0x78, 0x56);
 }
 
@@ -167,6 +173,8 @@ static void test_stack_op() {
     TEST("LD SP,HL",   0xF9);
     TEST("EX DE,HL",   0xEB);
 
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("EX AF,AF'",  0x08);
     TEST("EXX",       0xD9);
 }
@@ -202,6 +210,8 @@ static void test_jump_call() {
     TEST("RET P",  0xF0);
     TEST("RET M",  0xF8);
 
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("RETN", 0xED, 0x45);
     TEST("RETI", 0xED, 0x4D);
 
@@ -317,6 +327,8 @@ static void test_alu_register() {
     TEST("ADD HL,HL", 0x29);
     TEST("ADD HL,SP", 0x39);
 
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("ADC HL,BC", 0xED, 0x4A);
     TEST("ADC HL,DE", 0xED, 0x5A);
     TEST("ADC HL,HL", 0xED, 0x6A);
@@ -342,6 +354,8 @@ static void test_io() {
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
     TEST("IN A,(0F0H)",  0xDB, 0xF0);
 
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("IN B,(C)", 0xED, 0x40);
     TEST("IN C,(C)", 0xED, 0x48);
     TEST("IN D,(C)", 0xED, 0x50);
@@ -373,9 +387,12 @@ static void test_inherent() {
 
     TEST("DAA", 0x27);
     TEST("CPL", 0x2F);
-    TEST("NEG", 0xED, 0x44);
     TEST("SCF", 0x37);
     TEST("CCF", 0x3F);
+
+    // Z80
+    assembler.acceptCpu("z80");
+    TEST("NEG", 0xED, 0x44);
 }
 
 static void test_restart() {
@@ -390,6 +407,8 @@ static void test_restart() {
 }
 
 static void test_relative() {
+    // Z80
+    assembler.acceptCpu("z80");
     ATEST(0x1000, "DJNZ 1000H",  0x10, 0xFE);
     ATEST(0x1000, "JR 1000H",    0x18, 0xFE);
     ATEST(0x1000, "JR NZ,1004H", 0x20, 0x02);
@@ -399,6 +418,8 @@ static void test_relative() {
 }
 
 static void test_shift() {
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("RLC B", 0xCB, 0x00);
     TEST("RLC C", 0xCB, 0x01);
     TEST("RLC D", 0xCB, 0x02);
@@ -467,6 +488,8 @@ static void test_shift() {
 }
 
 static void test_bitop() {
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("BIT 0,B", 0xCB, 0x40);
     TEST("BIT 1,C", 0xCB, 0x49);
     TEST("BIT 2,D", 0xCB, 0x52);
@@ -496,6 +519,8 @@ static void test_bitop() {
 }
 
 static void test_index_registers() {
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("ADD IX,BC", 0xDD, 0x09);
     TEST("ADD IX,DE", 0xDD, 0x19);
     TEST("ADD IX,IX", 0xDD, 0x29);
@@ -526,6 +551,8 @@ static void test_index_registers() {
 }
 
 static void test_indexed() {
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("INC (IX+2)", 0xDD, 0x34, 0x02);
     TEST("DEC (IX+2)", 0xDD, 0x35, 0x02);
 
@@ -588,6 +615,8 @@ static void test_indexed() {
 }
 
 static void test_shift_indexed() {
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("RLC (IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
     TEST("RRC (IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
     TEST("RL  (IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
@@ -606,6 +635,8 @@ static void test_shift_indexed() {
 }
 
 static void test_bitop_indexed() {
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
     TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
     TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
@@ -617,16 +648,19 @@ static void test_bitop_indexed() {
 
 static void test_comment() {
     TEST("LD B,B;        comment", 0x40);
-    TEST("LDIR         ; comment", 0xED, 0xB0);
+    TEST("NOP          ; comment", 0x00);
     TEST("LD BC,0BEEFH ; comment", 0x01, 0xEF, 0xBE);
     TEST("LD HL,(5678H); comment", 0x2A, 0x78, 0x56);
-    TEST("EX AF,AF';     comment",  0x08);
     TEST("CALL C,1234H; comment", 0xDC, 0x34, 0x12);
     TEST("RET         ; comment", 0xC9);
     TEST("RET NZ      ; comment", 0xC0);
+
+    // Z80
+    assembler.acceptCpu("z80");
     TEST("BIT 0,B     ; comment", 0xCB, 0x40);
     TEST("INC (IX+2)  ; comment", 0xDD, 0x34, 0x02);
     TEST("ADD A,(IY-2); comment", 0xFD, 0x86, 0xFE);
+    TEST("EX AF,AF';     comment",  0x08);
 
     ATEST(0x1000, "JR 1000H   ; comment",    0x18, 0xFE);
     ATEST(0x1000, "JR NZ,1004H; comment", 0x20, 0x02);
@@ -639,24 +673,21 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LD A,(UNDEF)",  0x3A, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),HL", 0x22, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LD HL,(UNDEF)", 0x2A, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),BC", 0xED, 0x43, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD BC,(UNDEF)", 0xED, 0x4B, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JP UNDEF",      0xC3, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JP NZ,UNDEF",   0xC2, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "CALL UNDEF",    0xCD, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "CALL NZ,UNDEF", 0xC4, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "IM UNDEF",      0xED, 0x46);
     ETEST(UNDEFINED_SYMBOL, "ADD A,UNDEF",   0xC6, 0x00);
     ETEST(UNDEFINED_SYMBOL, "OUT (UNDEF),A", 0xD3, 0x00);
     ETEST(UNDEFINED_SYMBOL, "IN  A,(UNDEF)", 0xDB, 0x00);
     ETEST(UNDEFINED_SYMBOL, "RST UNDEF",     0xC7);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0xFE);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0xFE);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0xFE);
-
+    // Z80
+    assembler.acceptCpu("z80");
+    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),BC", 0xED, 0x43, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD BC,(UNDEF)", 0xED, 0x4B, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "IM UNDEF",      0xED, 0x46);
     ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,B",   0xCB, 0x40);
-
     ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),IY",   0xFD, 0x22, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LD IY,(UNDEF)",   0xFD, 0x2A, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "INC (IX+UNDEF)",  0xDD, 0x34, 0x00);
@@ -666,6 +697,10 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,(IX-128)",   0xDD, 0xCB, 0x80, 0x46);
     ETEST(UNDEFINED_SYMBOL, "RES 7,(IX-UNDEF)",     0xDD, 0xCB, 0x00, 0xBE);
     ETEST(UNDEFINED_SYMBOL, "SET UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0xFE);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

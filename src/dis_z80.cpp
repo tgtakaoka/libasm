@@ -4,7 +4,15 @@
 #include <string.h>
 
 bool DisZ80::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "Z80") == 0;
+    if (strcasecmp(cpu, "z80") == 0) {
+        TableZ80.setMcuType(Z80);
+        return true;
+    }
+    if (strcmp(cpu, "8080") == 0) {
+        TableZ80.setMcuType(I8080);
+        return true;
+    }
+    return false;
 }
 
 template<typename T>
@@ -403,7 +411,7 @@ Error DisZ80::decode(
     target::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setInsnCode(0, opCode);
-    if (TableZ80::isPrefixCode(opCode)) {
+    if (TableZ80.isZ80() && TableZ80::isPrefixCode(opCode)) {
         const target::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
         insn.setInsnCode(prefix, opCode);

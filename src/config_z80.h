@@ -12,6 +12,11 @@ namespace target
     typedef uint16_t insn_t;
 } // namespace target
 
+enum McuType : host::uint_t {
+    Z80,
+    I8080,
+};
+
 enum OprSize : host::uint_t {
     SZ_NONE,                    // unknown
     SZ_BYTE = 1,

@@ -6,7 +6,15 @@
 #include <string.h>
 
 bool AsmZ80::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "z80") == 0;
+    if (strcasecmp(cpu, "z80") == 0) {
+        TableZ80.setMcuType(Z80);
+        return true;
+    }
+    if (strcmp(cpu, "8080") == 0) {
+        TableZ80.setMcuType(I8080);
+        return true;
+    }
+    return false;
 }
 
 Error AsmZ80::encodeImmediate(

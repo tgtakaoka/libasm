@@ -173,6 +173,31 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xE5, PUSH, NO_FMT,  IX_REG, NO_OPR, INHR)
 };
 
+static constexpr target::opcode_t Z80_CODE[] PROGMEM = {
+    0x08, // EX AF,AF'
+    0x10, // DJNZ
+    0x18, // JR
+    0x20, // JR NZ
+    0x28, // JR Z
+    0x30, // JR NC
+    0x38, // JR C
+    PREFIX_CB,
+    0xD9, // EXX
+    TableZ80::PREFIX_IX,
+    PREFIX_ED,
+    TableZ80::PREFIX_IY,
+};
+
+static bool checkZ80Code(
+    target::opcode_t opCode,
+    const target::opcode_t *table, const target::opcode_t *end) {
+    for (const target::opcode_t *entry = table; entry < end; entry++) {
+        if (opCode == pgm_read_byte(entry))
+            return true;
+    }
+    return false;
+}
+
 static const Entry *searchEntry(
     const char *name, const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
@@ -253,8 +278,9 @@ struct EntryPage {
     const Entry *const end;
 };
 
-static Error searchPages(
-    Insn &insn, const char *name, const EntryPage *pages, const EntryPage *end) {
+static Error searchName(
+    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
@@ -266,9 +292,10 @@ static Error searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-static Error searchPages(
-    Insn &insn, const char *name, OprFormat lop, OprFormat rop,
+static Error searchNameAndOprFormats(
+    Insn &insn, OprFormat lop, OprFormat rop,
     const EntryPage *pages, const EntryPage *end) {
+    const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
         if ((entry = searchEntry(name, lop, rop, page->table, page->end)) != nullptr) {
@@ -280,8 +307,8 @@ static Error searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-static Error searchPages(
-    Insn &insn, target::insn_t insnCode, const EntryPage *pages, const EntryPage *end) {
+static Error searchInsnCode(
+    Insn &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         if (insn.prefixCode() != page->prefix) continue;
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
@@ -296,7 +323,10 @@ static Error searchPages(
     return UNKNOWN_INSTRUCTION;
 }
 
-static const EntryPage PAGES[] = {
+static const EntryPage PAGES_I8080[] = {
+    { PREFIX_00, ARRAY_RANGE(TABLE_00) },
+};
+static const EntryPage PAGES_Z80[] = {
     { PREFIX_00, ARRAY_RANGE(TABLE_00) },
     { PREFIX_CB, ARRAY_RANGE(TABLE_CB) },
     { PREFIX_ED, ARRAY_RANGE(TABLE_ED) },
@@ -306,20 +336,35 @@ static const EntryPage PAGES[] = {
 
 bool TableZ80::isPrefixCode(target::opcode_t opCode) {
     return opCode == PREFIX_CB || opCode == PREFIX_ED
-        || opCode == PREFIX_IX || opCode == PREFIX_IY;
+        || opCode == TableZ80::PREFIX_IX || opCode == TableZ80::PREFIX_IY;
 }
 
 Error TableZ80::searchName(Insn &insn) const {
-    return searchPages(insn, insn.name(), ARRAY_RANGE(PAGES));
+    if (isZ80())
+        return ::searchName(insn, ARRAY_RANGE(PAGES_Z80));
+    return ::searchName(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 Error TableZ80::searchNameAndOprFormats(
     Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const {
-    return searchPages(insn, insn.name(), leftOpr, rightOpr, ARRAY_RANGE(PAGES));
+    if (isZ80())
+        return ::searchNameAndOprFormats(
+            insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_Z80));
+
+    if (::searchNameAndOprFormats(
+            insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_I8080)) == OK
+        && !checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
+        return OK;
+    return UNKNOWN_INSTRUCTION;
 }
 
 Error TableZ80::searchInsnCode(Insn &insn) const {
-    return searchPages(insn, insn.insnCode(), ARRAY_RANGE(PAGES));
+    if (isZ80())
+        return ::searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80));
+
+    if (checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
+        return UNKNOWN_INSTRUCTION;
+    return ::searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 class TableZ80 TableZ80;
