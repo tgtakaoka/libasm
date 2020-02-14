@@ -31,8 +31,11 @@ public:
             return OK;
         }
 
+        _list.line_number = currentLineno();
+        _list.include_nest = _sources.size() - 1;
         _list.address = _origin;
         _list.length = 0;
+        _list.value_defined = false;
         _list.memory = &memory;
         _list.label_len = 0;
         _list.instruction_len = 0;
@@ -159,6 +162,8 @@ public:
     }
 
     // AsmLine
+    uint16_t lineNumber() const override { return _list.line_number; }
+    uint16_t includeNest() const override { return _list.include_nest; }
     Addr startAddress() const override { return _list.address; }
     int generatedSize() const override { return _list.length; }
     uint8_t getByte(int offset) const override {
@@ -166,6 +171,8 @@ public:
         _list.memory->readByte(_list.address + offset, val);
         return val;
     }
+    bool hasValue() const override { return _list.value_defined; }
+    uint32_t value() const override { return _list.value; }
     bool hasLabel() const override { return _list.label_len; }
     bool hasInstruction() const override { return _list.instruction_len; }
     bool hasOperand() const override { return _list.operand_len; }
@@ -238,11 +245,15 @@ protected:
     std::vector<Source> _sources;
 
     struct Listing {
+        uint16_t line_number;
+        uint16_t include_nest;
         const char *label;      // if label defined
         int label_len;
         Addr address;
         CliMemory<Addr> *memory;
         int length;
+        bool value_defined;
+        uint32_t value;
         const char *instruction;
         int instruction_len;
         const char *operand;
@@ -316,6 +327,8 @@ protected:
         _scan = scan;
         // TODO line end check
         intern(value, label);
+        _list.value = value;
+        _list.value_defined = true;
         label = nullptr;
         return getError();
     }

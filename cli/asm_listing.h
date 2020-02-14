@@ -7,9 +7,13 @@
 template<typename Address>
 class AsmLine {
 public:
+    virtual uint16_t lineNumber() const = 0;
+    virtual uint16_t includeNest() const = 0;
     virtual Address startAddress() const = 0;
     virtual int generatedSize() const = 0;
     virtual uint8_t getByte(int offset) const = 0;
+    virtual bool hasValue() const = 0;
+    virtual uint32_t value() const = 0;
     virtual bool hasLabel() const = 0;
     virtual bool hasInstruction() const = 0;
     virtual bool hasOperand() const = 0;
@@ -30,10 +34,12 @@ public:
     void reset(
         AsmLine<Address> &line,
         size_t insnUnitSize,
-        bool uppercase) {
+        bool uppercase,
+        bool lineNumner) {
         _line = &line;
         _insnUnitSize = insnUnitSize;
         _uppercase = uppercase;
+        _lineNumber = lineNumner;
         _next = 0;
     }
 
@@ -58,6 +64,7 @@ private:
     const AsmLine<Address> *_line;
     size_t _insnUnitSize;
     bool _uppercase = false;
+    bool _lineNumber = false;
     int _next;
     std::string _out;
 
@@ -71,23 +78,44 @@ private:
             _out += 'a' + val - 10;
         }
     }
-    void formatUint8(uint8_t val) {
-        formatHex(val >> 4);
+    void formatUint8(
+        uint8_t val, bool fixedWidth = true, bool zeroSuppress = false) {
+        const uint8_t msd = (val >> 4);
+        if (msd || !zeroSuppress) {
+            formatHex(msd);
+        } else if (fixedWidth) {
+            _out += ' ';
+        }
         formatHex(val);
     }
-    void formatUint16(uint16_t val) {
-        formatUint8(static_cast<uint8_t>(val >> 8));
-        formatUint8(static_cast<uint8_t>(val));
+    void formatUint16(
+        uint16_t val, bool fixedWidth = true, bool zeroSuppress = false) {
+        const uint8_t msb = static_cast<uint8_t>(val >> 8);
+        if (msb || !zeroSuppress) {
+            formatUint8(msb, fixedWidth, zeroSuppress);
+            zeroSuppress = false;
+        } else if (fixedWidth) {
+            _out += "  ";
+        }
+        formatUint8(static_cast<uint8_t>(val), fixedWidth, zeroSuppress);
     }
-    void formatUint32(uint32_t val) {
-        formatUint16(static_cast<uint16_t>(val >> 16));
-        formatUint16(static_cast<uint16_t>(val));
+    void formatUint32(
+        uint32_t val, bool fixedWidth = true, bool zeroSuppress = false) {
+        const uint16_t msw = static_cast<uint16_t>(val >> 16);
+        if (msw || !zeroSuppress) {
+            formatUint16(msw, fixedWidth, zeroSuppress);
+            zeroSuppress = false;
+        } else if (fixedWidth) {
+            _out += "    ";
+        }
+        formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
     }
-    void formatAddress(Address addr) {
+    void formatAddress(
+        Address addr, bool fixedWidth = true, bool zeroSuppress = false) {
         if (sizeof(Address) == 2) {
-            formatUint16(addr);
+            formatUint16(addr, fixedWidth, zeroSuppress);
         } else {
-            formatUint32(addr);
+            formatUint32(addr, fixedWidth, zeroSuppress);
         }
         _out += ':';
     }
@@ -138,14 +166,33 @@ private:
     }
 
     void formatLine() {
-        formatAddress(_line->startAddress() + _next);
+        if (_lineNumber) {
+            char buf[12];
+            uint16_t nest = _line->includeNest();
+            if (nest) {
+                sprintf(buf, "(%d) ", nest);
+                _out += buf;
+            } else {
+                _out += "    ";
+            }
+            sprintf(buf, "%6d/ ", _line->lineNumber());
+            _out += buf;
+        }
+        formatAddress(_line->startAddress() + _next, true, true);
         const int pos = _out.size();
-        const int n = formatBytes(_next);
+        int formattedBytes = 0;
+        if (_line->hasValue()) {
+            _out += " =$";
+            formatUint32(_line->value(), false, true);
+            formattedBytes = 0;
+        } else {
+            formattedBytes = formatBytes(_next);
+        }
         const int dataTextLen = _insnUnitSize == 2
             ? (_line->maxBytes() / 2) * 5
             : (_line->maxBytes() * 3);
         if (_next == 0) formatContent(pos + dataTextLen + 1);
-        _next += n;
+        _next += formattedBytes;
     }
 };
 

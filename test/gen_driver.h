@@ -65,7 +65,7 @@ private:
     void print(const Insn &insn, const char *operands) override {
         _insn = &insn;
         _operands = operands;
-        _listing.reset(*this, false, false);
+        _listing.reset(*this, false, false, false);
         if (_list) {
             do {
                 fprintf(_list, "%s\n", _listing.getLine());
@@ -81,9 +81,13 @@ private:
     }
 
     // AsmLine<Addr>
+    uint16_t lineNumber() const override { return 0; }
+    uint16_t includeNest() const override { return 0; }
     Addr startAddress() const override { return _insn->address(); }
     int generatedSize() const override { return _insn->insnLen(); }
     uint8_t getByte(int offset) const override { return _insn->bytes()[offset]; }
+    bool hasValue() const override { return false; }
+    uint32_t value() const override { return 0; }
     bool hasLabel() const override { return false; }
     bool hasInstruction() const override { return true; }
     bool hasOperand() const override { return *_operands; }

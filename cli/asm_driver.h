@@ -84,6 +84,7 @@ private:
     size_t _record_bytes;
     BinFormatter<Addr> *_formatter;
     bool _uppercase;
+    bool _line_number;
 
     int assemble(CliMemory<Addr> &memory, FILE *list) {
         if (_directive.openSource(_input_name)) {
@@ -113,7 +114,8 @@ private:
     }
 
     void printListing(CliMemory<Addr> &memory, FILE *out) {
-        _listing.reset(_directive, sizeof(target::opcode_t), _uppercase);
+        _listing.reset(
+            _directive, sizeof(target::opcode_t), _uppercase, _line_number);
         do {
             fprintf(out, "%s\n", _listing.getLine());
         } while (_listing.hasNext());
@@ -127,6 +129,7 @@ private:
         _record_bytes = 32;
         _formatter = nullptr;
         _uppercase = false;
+        _line_number = false;
         char formatter = 0;
         for (int i = 1; i < argc; i++) {
             const char *opt = argv[i];
@@ -172,6 +175,9 @@ private:
                 case 'u':
                     _uppercase = true;
                     break;
+                case 'n':
+                    _line_number = true;
+                    break;
                 default:
                     fprintf(stderr, "unknown option: %s\n", opt);
                     return 1;
@@ -212,12 +218,16 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-(S|H)[<bytes>]] [-C <cpu>] [-u] [-o <output>] [-l <list>] <input>\n"
-                "  -S : output Motorola SREC format\n"
-                "  -H : output Intel HEX format\n"
-                "     : optional <bytes> specifies data record length (max 32)\n"
-                "  -C : CPU variant: 6809, 6309, 6502, 65c02, 8080, z80, 9995\n"
-                "  -u : use uppercase letter for output\n",
+                "usage: %s [-o <output>] [-l <list>] <input>\n"
+                " options:\n"
+                "  -o <output> : output file\n"
+                "  -l <list>   : list file\n"
+                "  -S[<bytes>] : output Motorola SREC format\n"
+                "  -H[<bytes>] : output Intel HEX format\n"
+                "              : optional <bytes> specifies data record length (max 32)\n"
+                "  -C          : CPU variant: 6309, 65c02, tms9995 etc.\n"
+                "  -u          : use uppercase letter for output\n"
+                "  -n          : output line number to list file\n",
                 _progname);
         return 2;
     }
