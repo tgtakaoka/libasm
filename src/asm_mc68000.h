@@ -5,7 +5,6 @@
 #include "config_mc68000.h"
 
 #include "insn_mc68000.h"
-#include "reg_mc68000.h"
 #include "table_mc68000.h"
 #include "asm_interface.h"
 
@@ -16,7 +15,6 @@ public:
 
 private:
     AsmMotoOperand _parser;
-    RegMc68000 _regs;
 
 public:
     struct Operand : public ErrorReporter {

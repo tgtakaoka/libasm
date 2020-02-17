@@ -45,7 +45,7 @@ public:
         }
 
         const Tcost editDistance = distance[sourceSize];
-        delete distance;
+        delete[] distance;
         return editDistance;
     }
 
