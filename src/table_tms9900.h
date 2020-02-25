@@ -10,11 +10,12 @@ public:
     Error searchName(Insn &insn) const;
     Error searchInsnCode(Insn &insn) const;
 
-    void setMcuType(McuType mcuType) { _mcuType = mcuType; }
-    bool is9995() const { return _mcuType == TMS9995; }
+    bool setCpu(const char *cpu);
+    static const char *listCpu();
+    bool is9995() const { return _cpuType == TMS9995; }
 
 private:
-    McuType _mcuType;
+    CpuType _cpuType;
 };
 
 extern TableTms9900 TableTms9900;

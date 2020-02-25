@@ -1,10 +1,10 @@
-#include <ctype.h>
-
 #include "config_mc68000.h"
 
 #include "entry_mc68000.h"
 #include "table_mc68000.h"
 #include "text_mc68000.h"
+
+#include <string.h>
 
 static constexpr Entry TABLE_MC68000[] PROGMEM = {
     E(0000000, ORI,   DEST_SIZ)
@@ -228,6 +228,15 @@ Error TableMc68000::searchInsnCode(Insn &insn) const {
     pgm_strcpy(name, entry->name);
     insn.setName(name);
     return OK;
+}
+
+const char *TableMc68000::listCpu() {
+    return "68000, 68008";
+}
+
+bool TableMc68000::setCpu(const char *cpu) {
+    return strcmp(cpu, "68000") == 0
+        || strcmp(cpu, "68008") == 0;
 }
 
 class TableMc68000 TableMc68000;

@@ -1,20 +1,6 @@
 #include "dis_mc6809.h"
 #include "table_mc6809.h"
 
-#include <string.h>
-
-bool DisMc6809::acceptCpu(const char *cpu) {
-    if (strcmp(cpu, "6809") == 0) {
-        TableMc6809.setMcuType(MC6809);
-        return true;
-    }
-    if (strcmp(cpu, "6309") == 0) {
-        TableMc6809.setMcuType(HD6309);
-        return true;
-    }
-    return false;
-}
-
 void DisMc6809::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }

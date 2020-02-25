@@ -15,9 +15,9 @@ static void tear_down() {
 
 static void test_cpu() {
     asserter.equals(
-        "cpu 68000", true, assembler.acceptCpu("68000"));
+        "cpu 68000", true, assembler.setCpu("68000"));
     asserter.equals(
-        "cpu 68008", true, assembler.acceptCpu("68008"));
+        "cpu 68008", true, assembler.setCpu("68008"));
 }
 
 static void test_inherent() {

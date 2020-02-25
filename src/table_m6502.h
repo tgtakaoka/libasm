@@ -11,11 +11,12 @@ public:
     Error searchNameAndAddrMode(Insn &insn) const;
     Error searchInsnCode(Insn &insn) const;
 
-    void setMcuType(McuType mcuType) { _mcuType = mcuType; }
-    bool is65c02() const { return _mcuType == W65C02; }
+    bool setCpu(const char *cpu);
+    static const char *listCpu();
+    bool is65c02() const { return _cpuType == W65C02; }
 
 private:
-    McuType _mcuType;
+    CpuType _cpuType;
 
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);

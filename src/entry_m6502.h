@@ -13,15 +13,15 @@ struct Entry {
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
 
-static inline McuType _mcuType(host::uint_t flags) {
+static inline CpuType _cpuType(host::uint_t flags) {
     return (flags & Entry::w65c02_bm) == 0 ? M6502 : W65C02;
 }
 static inline AddrMode _addrMode(host::uint_t flags) {
     return AddrMode(flags & Entry::addrMode_gm);
 }
 
-static constexpr host::uint_t _flags(McuType mcuType, AddrMode addrMode) {
-    return (mcuType == M6502 ? 0 : Entry::w65c02_bm) | host::uint_t(addrMode);
+static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
+    return (cpuType == M6502 ? 0 : Entry::w65c02_bm) | host::uint_t(addrMode);
 }
 
 #define E(_opc, _name, _mcu, _amode)       \

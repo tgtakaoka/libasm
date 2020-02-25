@@ -1,20 +1,6 @@
 #include "asm_mc6809.h"
 #include "table_mc6809.h"
 
-#include <ctype.h>
-
-bool AsmMc6809::acceptCpu(const char *cpu) {
-    if (strcasecmp(cpu, "6809") == 0) {
-        TableMc6809.setMcuType(MC6809);
-        return true;
-    }
-    if (strcasecmp(cpu, "6309") == 0) {
-        TableMc6809.setMcuType(HD6309);
-        return true;
-    }
-    return false;
-}
-
 Error AsmMc6809::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
     const char *p = _scan;

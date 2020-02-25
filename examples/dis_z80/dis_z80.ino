@@ -1,14 +1,16 @@
+/* -*- mode: c++; c-basic-offset: 2; tab-width: 2; -*- */
 #include <dis_z80.h>
 #include <str_memory.h>
 
 DisZ80 disz80;
-Disassembler<uint16_t> &disassembler(disz80);
+Disassembler<target::uintptr_t> &disassembler(disz80);
 
 String line;
 bool line_ready = false;
 
 void setup() {
   Serial.begin(9800);
+  disassembler.setCpu("z80");
 }
 
 void loop() {

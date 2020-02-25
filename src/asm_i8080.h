@@ -6,12 +6,14 @@
 
 #include "insn_i8080.h"
 #include "reg_i8080.h"
+#include "table_i8080.h"
 #include "asm_interface.h"
 
 class AsmI8080 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
+    const char *listCpu() const override { return TableI8080::listCpu(); }
 
 private:
     AsmIntelOperand _parser;

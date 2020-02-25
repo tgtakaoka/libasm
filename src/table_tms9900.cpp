@@ -1,10 +1,11 @@
-#include <ctype.h>
-
 #include "config_tms9900.h"
 
 #include "entry_tms9900.h"
 #include "table_tms9900.h"
 #include "text_tms9900.h"
+
+#include <ctype.h>
+#include <string.h>
 
 static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E(0x0080, TEXT_LST,  REG, TMS9995)
@@ -153,5 +154,24 @@ Error TableTms9900::searchInsnCode(Insn &insn) const {
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
+
+const char *TableTms9900::listCpu() {
+    return "[tms]9900, [tms]9995";
+}
+
+bool TableTms9900::setCpu(const char *cpu) {
+    if (strncasecmp(cpu, "tms", 3) == 0)
+        cpu += 3;
+    if (strcmp(cpu, "9900") == 0) {
+        _cpuType = TMS9900;
+        return true;
+    }
+    if (strcmp(cpu, "9995") == 0) {
+        _cpuType = TMS9995;
+        return true;
+    }
+    return false;
+}
+
 
 class TableTms9900 TableTms9900;

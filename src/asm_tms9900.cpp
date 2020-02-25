@@ -1,23 +1,6 @@
 #include "asm_tms9900.h"
 #include "table_tms9900.h"
 
-#include <ctype.h>
-#include <string.h>
-
-bool AsmTms9900::acceptCpu(const char *cpu) {
-    if (strcmp(cpu, "9900") == 0
-        || strcasecmp(cpu, "tms9900") == 0) {
-        TableTms9900.setMcuType(TMS9900);
-        return true;
-    }
-    if (strcmp(cpu, "9995") == 0
-        || strcasecmp(cpu, "tms9995") == 0) {
-        TableTms9900.setMcuType(TMS9995);
-        return true;
-    }
-    return false;
-}
-
 Error AsmTms9900::checkComma() {
     _scan = skipSpaces(_scan);
     if (*_scan != ',') return UNKNOWN_OPERAND;

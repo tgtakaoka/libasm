@@ -15,7 +15,9 @@ static void tear_down() {
 
 static void test_cpu() {
     asserter.equals(
-        "cpu 8080", true, assembler.acceptCpu("8080"));
+        "cpu 8080", true, assembler.setCpu("8080"));
+    asserter.equals(
+        "cpu i8080", true, assembler.setCpu("i8080"));
 }
 
 static void test_move_inherent() {

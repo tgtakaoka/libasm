@@ -9,6 +9,9 @@ class TableI8080 {
 public:
     Error searchName(Insn &insn) const;
     Error searchInsnCode(Insn &insn) const;
+
+    bool setCpu(const char *cpu);
+    static const char *listCpu();
 };
 
 extern TableI8080 TableI8080;

@@ -4,6 +4,8 @@
 #include "table_m6502.h"
 #include "text_m6502.h"
 
+#include <string.h>
+
 static constexpr Entry M6502_TABLE[] PROGMEM = {
     E(0x00, BRK, M6502, IMPLIED)
     E(0x40, RTI, M6502, IMPLIED)
@@ -317,6 +319,22 @@ Error TableM6502::searchInsnCode(Insn &insn) const {
         && searchPages(insn, insn.insnCode(), ARRAY_RANGE(W65C02_TABLE)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
+}
+
+const char *TableM6502::listCpu() {
+    return "6502, 65c02";
+}
+
+bool TableM6502::setCpu(const char *cpu) {
+    if (strcmp(cpu, "6502") == 0) {
+        _cpuType = M6502;
+        return true;
+    }
+    if (strcasecmp(cpu, "65C02") == 0) {
+        _cpuType = W65C02;
+        return true;
+    }
+    return false;
 }
 
 class TableM6502 TableM6502;

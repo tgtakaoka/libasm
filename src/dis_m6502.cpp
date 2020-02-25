@@ -1,20 +1,6 @@
 #include "dis_m6502.h"
 #include "table_m6502.h"
 
-#include <string.h>
-
-bool DisM6502::acceptCpu(const char *cpu) {
-    if (strcmp(cpu, "6502") == 0) {
-        TableM6502.setMcuType(M6502);
-        return true;
-    }
-    if (strcasecmp(cpu, "65C02") == 0) {
-        TableM6502.setMcuType(W65C02);
-        return true;
-    }
-    return false;
-}
-
 Error DisM6502::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint8_t val;

@@ -16,7 +16,7 @@ struct Entry {
     static constexpr host::uint_t addrMode_gm = 0x0f;
 };
 
-static inline McuType _mcuType(host::uint_t flags) {
+static inline CpuType _cpuType(host::uint_t flags) {
     return (flags & Entry::hd6309_bm) == 0 ? MC6809 : HD6309;
 }
 
@@ -28,8 +28,8 @@ static inline AddrMode _addrMode(host::uint_t flags) {
     return AddrMode((flags >> Entry::addrMode_gp) & Entry::addrMode_gm);
 }
 
-static constexpr host::uint_t _flags(McuType mcuType, OprSize oprSize, AddrMode addrMode) {
-    return (mcuType == MC6809 ? 0 : Entry::hd6309_bm)
+static constexpr host::uint_t _flags(CpuType cpuType, OprSize oprSize, AddrMode addrMode) {
+    return (cpuType == MC6809 ? 0 : Entry::hd6309_bm)
         | (host::uint_t(oprSize) << Entry::oprSize_gp)
         | (host::uint_t(addrMode) << Entry::addrMode_gp);
 }

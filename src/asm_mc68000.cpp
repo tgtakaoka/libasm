@@ -2,12 +2,6 @@
 #include "table_mc68000.h"
 
 #include <ctype.h>
-#include <string.h>
-
-bool AsmMc68000::acceptCpu(const char *cpu) {
-    return strcmp(cpu, "68000") == 0
-        || strcmp(cpu, "68008") == 0;
-}
 
 static const char *parseSize(const char *line, EaSize &size) {
     const char *p = line;

@@ -1,22 +1,6 @@
 #include "dis_tms9900.h"
 #include "table_tms9900.h"
 
-#include <string.h>
-
-bool DisTms9900::acceptCpu(const char *cpu) {
-    if (strcmp(cpu, "9900") == 0
-        || strcasecmp(cpu, "tms9900") == 0) {
-        TableTms9900.setMcuType(TMS9900);
-        return true;
-    }
-    if (strcmp(cpu, "9995") == 0
-        || strcasecmp(cpu, "tms9995") == 0) {
-        TableTms9900.setMcuType(TMS9995);
-        return true;
-    }
-    return false;
-}
-
 void DisTms9900::outAddress(target::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);
     if (label) {

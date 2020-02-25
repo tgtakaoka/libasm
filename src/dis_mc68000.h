@@ -6,12 +6,14 @@
 
 #include "insn_mc68000.h"
 #include "reg_mc68000.h"
+#include "table_mc68000.h"
 #include "dis_interface.h"
 
 class DisMc68000 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
+    const char *listCpu() const override { return TableMc68000::listCpu(); }
 
 private:
     DisMotoOperand _formatter;

@@ -28,7 +28,8 @@ public:
         return getError();
     }
     virtual DisOperand &getFormatter() = 0;
-    virtual bool acceptCpu(const char *cpu) = 0;
+    virtual bool setCpu(const char *cpu) = 0;
+    virtual const char *listCpu() const = 0;
 
 protected:
     char *_operands;

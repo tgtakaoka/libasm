@@ -1,10 +1,11 @@
-#include <ctype.h>
-
 #include "config_i8080.h"
 
 #include "entry_i8080.h"
 #include "table_i8080.h"
 #include "text_i8080.h"
+
+#include <ctype.h>
+#include <string.h>
 
 static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x00, TEXT_NOP,  INHR,   NO_FORMAT)
@@ -147,6 +148,15 @@ Error TableI8080::searchInsnCode(Insn &insn) const {
     name[4] = 0;
     insn.setName(name);
     return OK;
+}
+
+const char *TableI8080::listCpu() {
+    return "[i]8080";
+}
+
+bool TableI8080::setCpu(const char *cpu) {
+    if (toupper(*cpu) == 'I') cpu++;
+    return strcasecmp(cpu, "8080") == 0;
 }
 
 class TableI8080 TableI8080;

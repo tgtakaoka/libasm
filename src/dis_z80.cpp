@@ -1,20 +1,6 @@
 #include "dis_z80.h"
 #include "table_z80.h"
 
-#include <string.h>
-
-bool DisZ80::acceptCpu(const char *cpu) {
-    if (strcasecmp(cpu, "z80") == 0) {
-        TableZ80.setMcuType(Z80);
-        return true;
-    }
-    if (strcmp(cpu, "8080") == 0) {
-        TableZ80.setMcuType(I8080);
-        return true;
-    }
-    return false;
-}
-
 template<typename T>
 void DisZ80::outAddress(T addr, bool indir) {
     if (indir) *_operands++ = '(';

@@ -8,11 +8,22 @@ DisTms9900 dis9900;
 Disassembler<target::uintptr_t> &disassembler(dis9900);
 
 static void set_up() {
-    disassembler.acceptCpu("tms9900");
+    disassembler.setCpu("tms9900");
 }
 
 static void tear_down() {
     symtab.reset();
+}
+
+static void test_cpu() {
+    asserter.equals(
+        "cpu 9900", true, disassembler.setCpu("9900"));
+    asserter.equals(
+        "cpu 9995", true, disassembler.setCpu("9995"));
+    asserter.equals(
+        "cpu TMS9900", true, disassembler.setCpu("TMS9900"));
+    asserter.equals(
+        "cpu tms9995", true, disassembler.setCpu("tms9995"));
 }
 
 static void test_inh() {
@@ -40,7 +51,7 @@ static void test_reg() {
     TEST(STST, "R15", 0x02CF);
 
     // TMS9995
-    disassembler.acceptCpu("tms9995");
+    disassembler.setCpu("tms9995");
     TEST(LST,  "R0",  0x0080);
     TEST(LWP,  "R1",  0x0091);
 }
@@ -81,7 +92,7 @@ static void test_src() {
     TEST(ABS,  "@8(R3)", 0x0763, 0x0008);
 
     // TMS9995
-    disassembler.acceptCpu("tms9995");
+    disassembler.setCpu("tms9995");
     TEST(DIVS, "R2",     0x0182);
     TEST(DIVS, "*R3",    0x0193);
     TEST(DIVS, "@1234H", 0x01A0, 0x1234);
@@ -96,12 +107,12 @@ static void test_src() {
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    disassembler.acceptCpu("tms9900");
+    disassembler.setCpu("tms9900");
     TEST(BLWP, "@sym9876",     0x0420, 0x9876);
     TEST(DEC,  "@neg2(R7)",    0x0627, 0xFFFE);
 
     // TMS9995
-    disassembler.acceptCpu("tms9995");
+    disassembler.setCpu("tms9995");
     TEST(DIVS, "@sym1234",     0x01A0, 0x1234);
     TEST(DIVS, "@sym1000(R4)", 0x01A4, 0x1000);
 }
@@ -229,7 +240,7 @@ static void test_mid_tms9900() {
     char operands[40], message[40];
     const mid_range *m = &mids[0];
 
-    disassembler.acceptCpu("TMS9900");
+    disassembler.setCpu("TMS9900");
     for (uint16_t h = 0; h < 0x100; h++) {
         for (uint16_t l = 0; l < 0x100; l++) {
             const uint16_t i = (h << 8) | l;
@@ -273,7 +284,7 @@ static void test_mid_tms9995() {
     char operands[40], message[40];
     const mid_range *m = &mids[0];
 
-    disassembler.acceptCpu("TMS9995");
+    disassembler.setCpu("TMS9995");
     for (uint16_t h = 0; h < 0x100; h++) {
         for (uint16_t l = 0; l < 0x100; l++) {
             const uint16_t i = (h << 8) | l;
@@ -309,6 +320,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_cpu);
     RUN_TEST(test_inh);
     RUN_TEST(test_imm);
     RUN_TEST(test_reg);

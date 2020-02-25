@@ -14,6 +14,13 @@ static void tear_down() {
     symtab.reset();
 }
 
+static void test_cpu() {
+    asserter.equals(
+        "cpu 68000", true, disassembler.setCpu("68000"));
+    asserter.equals(
+        "cpu 68008", true, disassembler.setCpu("68008"));
+}
+
 static void test_dest_size() {
     TEST(ORI_B,  "#$23,D1",     000001, 0x0023);
     TEST(ORI_W,  "#$6789,D5",   000105, 0x6789);
@@ -70,6 +77,7 @@ static void run_test(void (*test)(), const char *test_name) {
 }
 
 int main(int argc, char **argv) {
+    RUN_TEST(test_cpu);
     RUN_TEST(test_dest_size);
     RUN_TEST(test_implied);
     return 0;

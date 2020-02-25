@@ -6,12 +6,14 @@
 
 #include "insn_m6502.h"
 #include "reg_m6502.h"
+#include "table_m6502.h"
 #include "dis_interface.h"
 
 class DisM6502 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
+    const char *listCpu() const override { return TableM6502::listCpu(); }
 
 private:
     DisMotoOperand _formatter;

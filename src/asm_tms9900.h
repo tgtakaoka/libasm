@@ -6,12 +6,14 @@
 
 #include "insn_tms9900.h"
 #include "reg_tms9900.h"
+#include "table_tms9900.h"
 #include "asm_interface.h"
 
 class AsmTms9900 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
+    const char *listCpu() const override { return TableTms9900::listCpu(); }
 
 private:
     AsmIntelOperand _parser;

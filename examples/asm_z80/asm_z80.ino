@@ -1,13 +1,15 @@
+/* -*- mode: c++; c-basic-offset: 2; tab-width: 2; -*- */
 #include <asm_z80.h>
 
 AsmZ80 asz80;
-Assembler<uint16_t> &assembler(asz80);
+Assembler<target::uintptr_t> &assembler(asz80);
 
 String line;
 bool line_ready = false;
 
 void setup() {
   Serial.begin(9600);
+  assembler.setCpu("z80");
 }
 
 void loop() {

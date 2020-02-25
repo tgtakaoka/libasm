@@ -1,21 +1,6 @@
 #include "asm_m6502.h"
 #include "table_m6502.h"
 
-#include <ctype.h>
-#include <string.h>
-
-bool AsmM6502::acceptCpu(const char *cpu) {
-    if (strcmp(cpu, "6502") == 0) {
-        TableM6502.setMcuType(M6502);
-        return true;
-    }
-    if (strcasecmp(cpu, "65C02") == 0) {
-        TableM6502.setMcuType(W65C02);
-        return true;
-    }
-    return false;
-}
-
 Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();

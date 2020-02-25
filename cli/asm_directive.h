@@ -21,8 +21,11 @@ public:
         free(_line);
     }
 
-    bool acceptCpu(const char *cpu) {
-        return _assembler.acceptCpu(cpu);
+    bool setCpu(const char *cpu) {
+        return _assembler.setCpu(cpu);
+    }
+    const char *listCpu() const {
+        return _assembler.listCpu();
     }
 
     Error assembleLine(const char *line, CliMemory<Addr> &memory) {
@@ -291,7 +294,7 @@ protected:
             while (*p && !isspace(*p))
                 p++;
             std::string cpu(_scan, p);
-            if (!_assembler.acceptCpu(cpu.c_str()))
+            if (!_assembler.setCpu(cpu.c_str()))
                 return setError(UNSUPPORTED_CPU);
             _scan = p;
             return setError(OK);

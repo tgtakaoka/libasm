@@ -1,14 +1,15 @@
+/* -*- mode: c++; c-basic-offset: 2; tab-width: 2; -*- */
 #include <asm_mc6809.h>
 
 AsmMc6809 as6809;
-Assembler<uint16_t> &assembler(as6809);
+Assembler<target::uintptr_t> &assembler(as6809);
 
 String line;
 bool line_ready = false;
 
 void setup() {
   Serial.begin(9600);
-  assembler.acceptCpu("6309");
+  assembler.setCpu("6309");
 }
 
 void loop() {

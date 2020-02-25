@@ -1,10 +1,11 @@
-#include <ctype.h>
-
 #include "config_z80.h"
 
 #include "entry_z80.h"
 #include "table_z80.h"
 #include "text_z80.h"
+
+#include <ctype.h>
+#include <string.h>
 
 static constexpr Entry TABLE_00[] PROGMEM = {
     E(0x00, NOP,  NO_FMT,  NO_OPR, NO_OPR, INHR)
@@ -365,6 +366,23 @@ Error TableZ80::searchInsnCode(Insn &insn) const {
     if (checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
         return UNKNOWN_INSTRUCTION;
     return ::searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
+}
+
+const char *TableZ80::listCpu() {
+    return "z80, [i]8080";
+}
+
+bool TableZ80::setCpu(const char *cpu) {
+    if (toupper(*cpu) == 'Z' && strcmp(cpu + 1, "80") == 0) {
+        _cpuType = Z80;
+        return true;
+    }
+    if (toupper(*cpu) == 'I') cpu++;
+    if (strcmp(cpu, "8080") == 0) {
+        _cpuType = I8080;
+        return true;
+    }
+    return false;
 }
 
 class TableZ80 TableZ80;

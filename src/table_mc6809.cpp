@@ -4,6 +4,8 @@
 #include "table_mc6809.h"
 #include "text_mc6809.h"
 
+#include <string.h>
+
 static constexpr Entry MC6809_P00[] PROGMEM = {
     P00(0x00, NEG,   BYTE, MC6809, DIRP)
     P00(0x03, COM,   BYTE, MC6809, DIRP)
@@ -582,6 +584,22 @@ Error TableMc6809::searchInsnCode(Insn &insn) const {
     if (is6309() && searchInsnCode(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)
         return OK;
     return UNKNOWN_INSTRUCTION;
+}
+
+const char *TableMc6809::listCpu() {
+    return "6809, 6309";
+}
+
+bool TableMc6809::setCpu(const char *cpu) {
+    if (strcmp(cpu, "6809") == 0) {
+        _cpuType = MC6809;
+        return true;
+    }
+    if (strcmp(cpu, "6309") == 0) {
+        _cpuType = HD6309;
+        return true;
+    }
+    return false;
 }
 
 class TableMc6809 TableMc6809;

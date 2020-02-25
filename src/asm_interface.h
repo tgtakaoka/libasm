@@ -26,7 +26,8 @@ public:
     }
     virtual AsmOperand &getParser() = 0;
     const char *errorAt() const { return _scan; }
-    virtual bool acceptCpu(const char *cpu) = 0;
+    virtual bool setCpu(const char *cpu) = 0;
+    virtual const char *listCpu() const = 0;
 
 protected:
     const char *_scan;

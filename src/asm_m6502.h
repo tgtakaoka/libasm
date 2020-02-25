@@ -6,12 +6,14 @@
 
 #include "insn_m6502.h"
 #include "reg_m6502.h"
+#include "table_m6502.h"
 #include "asm_interface.h"
 
 class AsmM6502 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
+    const char *listCpu() const override { return TableM6502::listCpu(); }
 
 private:
     AsmMotoOperand _parser;

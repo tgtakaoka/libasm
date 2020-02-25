@@ -6,12 +6,14 @@
 
 #include "insn_tms9900.h"
 #include "reg_tms9900.h"
+#include "table_tms9900.h"
 #include "dis_interface.h"
 
 class DisTms9900 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
+    const char *listCpu() const override { return TableTms9900::listCpu(); }
 
 private:
     DisIntelOperand _formatter;

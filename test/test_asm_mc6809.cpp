@@ -8,7 +8,7 @@ Assembler<target::uintptr_t> &assembler(as6809);
 
 static void set_up() {
     TEST("SETDP 0");
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
 }
 
 static void tear_down() {
@@ -17,9 +17,9 @@ static void tear_down() {
 
 static void test_cpu() {
     asserter.equals(
-        "cpu 6309", true, assembler.acceptCpu("6309"));
+        "cpu 6309", true, assembler.setCpu("6309"));
     asserter.equals(
-        "cpu 6809", true, assembler.acceptCpu("6809"));
+        "cpu 6809", true, assembler.setCpu("6809"));
 }
 
 static void test_inherent() {
@@ -60,7 +60,7 @@ static void test_inherent() {
     TEST("CLRB", 0x5F);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
 
     TEST("SEXW",  0x14);
     TEST("PSHSW", 0x10, 0x38);
@@ -155,7 +155,7 @@ static void test_register() {
     TEST("TFR PC,D", 0x1F, 0x50);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("ADDR A,B", 0x10, 0x30, 0x89);
     TEST("ADCR A,B", 0x10, 0x31, 0x89);
     TEST("SUBR A,B", 0x10, 0x32, 0x89);
@@ -277,7 +277,7 @@ static void test_immediate() {
     TEST("LDS  #$90A0", 0x10, 0xCE, 0x90, 0xA0);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("LDMD  #$01", 0x11, 0x3D, 0x01);
     TEST("BITMD #$80", 0x11, 0x3C, 0x80);
 
@@ -313,14 +313,14 @@ static void test_immediate() {
     symtab.intern(0x90A0, "sym90A0");
     symtab.intern(-2, "minus2");
 
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
     TEST("LDA  #dir90",   0x86, 0x90);
     TEST("CMPX #sym90A0", 0x8C, 0x90, 0xA0);
     TEST("LDY  #sym90A0", 0x10, 0x8E, 0x90, 0xA0);
     TEST("LDS  #sym90A0", 0x10, 0xCE, 0x90, 0xA0);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD #sym90A0", 0x10, 0x82, 0x90, 0xA0);
     TEST("LDE  #dir90",   0x11, 0x86, 0x90);
 
@@ -392,7 +392,7 @@ static void test_direct() {
     TEST("JSR <$1290", 0x9D, 0x90);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD $90",    0x10, 0x92, 0x90);
     TEST("ANDD $90",    0x10, 0x94, 0x90);
     TEST("BITD $90",    0x10, 0x95, 0x90);
@@ -435,7 +435,7 @@ static void test_direct() {
     symtab.intern(0x1290, "sym1290");
     symtab.intern(0x90A0, "sym90A0");
 
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
     TEST("NEG  dir10",    0x00, 0x10);
     TEST("LDA  dir10",    0x96, 0x10);
     TEST("STB  <sym1290", 0xD7, 0x90);
@@ -447,7 +447,7 @@ static void test_direct() {
     TEST("JSR  dir90",    0x9D, 0x90);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD <sym90A0", 0x10, 0x92, 0xA0);
     TEST("LDE  dir90",    0x11, 0x96, 0x90);
 
@@ -457,7 +457,7 @@ static void test_direct() {
     TEST("OIM #$30,dir10",    0x01, 0x30, 0x10);
     TEST("OIM #$30,<sym1290", 0x01, 0x30, 0x90);
 
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
     TEST("SETDP sym1290>>8");
     TEST("NEG   dir10",    0x70, 0x00, 0x10);
     TEST("LDA   dir10",    0xB6, 0x00, 0x10);
@@ -466,12 +466,12 @@ static void test_direct() {
     TEST("LDA   sym1290",  0x96, 0x90);
     TEST("LDA   >sym1290", 0xB6, 0x12, 0x90);
 
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("LDE   dir90",      0x11, 0xB6, 0x00, 0x90);
     TEST("LDQ   sym1290",    0x10, 0xDC, 0x90);
     TEST("OIM #$30,sym1290", 0x01, 0x30, 0x90);
 
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
     TEST("ASSUME DPR:sym90A0>>8");
     TEST("STU   dir90",    0xFF, 0x00, 0x90);
     TEST("LDY   dir90",    0x10, 0xBE, 0x00, 0x90);
@@ -480,7 +480,7 @@ static void test_direct() {
     TEST("JMP   sym90A0",  0x0E, 0xA0);
     TEST("JMP   >sym90A0", 0x7E, 0x90, 0xA0);
 
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD  sym90A0",   0x10, 0x92, 0xA0);
     TEST("MULD  dir90",     0x11, 0xBF, 0x00, 0x90);
     TEST("OIM #$30,<dir10", 0x01, 0x30, 0x10);
@@ -549,7 +549,7 @@ static void test_extended() {
     TEST("JSR >$90",  0xBD, 0x00, 0x90);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD $9ABC", 0x10, 0xB2, 0x9A, 0xBC);
     TEST("ANDD $9ABC", 0x10, 0xB4, 0x9A, 0xBC);
     TEST("BITD $9ABC", 0x10, 0xB5, 0x9A, 0xBC);
@@ -590,7 +590,7 @@ static void test_extended() {
     symtab.intern(0x0090, "dir90");
     symtab.intern(0x1290, "sym1290");
 
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
     TEST("NEG >dir90",   0x70, 0x00, 0x90);
     TEST("LDA  sym1290", 0xB6, 0x12, 0x90);
     TEST("STB >dir90",   0xF7, 0x00, 0x90);
@@ -601,7 +601,7 @@ static void test_extended() {
     TEST("JMP  sym1290", 0x7E, 0x12, 0x90);
     TEST("JSR >dir90",   0xBD, 0x00, 0x90);
 
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD sym1290", 0x10, 0xB2, 0x12, 0x90);
     TEST("LDE  >dir90",  0x11, 0xB6, 0x00, 0x90);
 
@@ -680,7 +680,7 @@ static void test_indexed() {
     TEST("JSR  [,X++]", 0xAD, 0x91);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("SBCD ,W",   0x10, 0xA2, 0x8F);
     TEST("ANDD ,W++", 0x10, 0xA4, 0xCF);
     TEST("BITD ,--W", 0x10, 0xA5, 0xEF);
@@ -912,7 +912,7 @@ static void test_indexed_mode() {
 
     TEST("LDA [$1234]", 0xA6, 0x9F, 0x12, 0x34);
 
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("LDA E,X", 0xA6, 0x87);
     TEST("LDA F,X", 0xA6, 0x8A);
     TEST("LDA W,X", 0xA6, 0x8E);
@@ -964,7 +964,7 @@ static void test_indexed_mode() {
     symtab.intern(0x9003, "label9003");
     symtab.intern(0x9004, "label9004");
 
-    assembler.acceptCpu("6809");
+    assembler.setCpu("6809");
     ATEST(0x1000, "LDA label1003,PCR",   0xA6, 0x8C, 0x00);
     ATEST(0x1000, "LDA label1082,PCR",   0xA6, 0x8C, 0x7F);
     ATEST(0x1000, "LDA label0F83,PCR",   0xA6, 0x8C, 0x80);
@@ -983,7 +983,7 @@ static void test_indexed_mode() {
 }
 
 static void test_transfer() {
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("TFM X+,Y+", 0x11, 0x38, 0x12);
     TEST("TFM X-,Y-", 0x11, 0x39, 0x12);
     TEST("TFM X+,Y",  0x11, 0x3A, 0x12);
@@ -996,7 +996,7 @@ static void test_transfer() {
 }
 
 static void test_bit_position() {
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     TEST("BAND  A.1,$34.2", 0x11, 0x30, 0x51, 0x34);
     TEST("BIAND A.1,$34.2", 0x11, 0x31, 0x51, 0x34);
     TEST("BOR   A.1,$34.2", 0x11, 0x32, 0x51, 0x34);
@@ -1068,7 +1068,7 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "LDA [UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
 
     // HD6309
-    assembler.acceptCpu("6309");
+    assembler.setCpu("6309");
     ETEST(UNDEFINED_SYMBOL, "BITMD #UNDEF",  0x11, 0x3C, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LDQ   #UNDEF",  0xCD, 0x00, 0x00, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "MULD  #UNDEF",  0x11, 0x8F, 0x00, 0x00);

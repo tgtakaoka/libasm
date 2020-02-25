@@ -12,7 +12,8 @@
 class AsmZ80 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
+    const char *listCpu() const override { return TableZ80::listCpu(); }
 
 private:
     AsmIntelOperand _parser;

@@ -1,13 +1,6 @@
 #include "dis_mc68000.h"
 #include "table_mc68000.h"
 
-#include <string.h>
-
-bool DisMc68000::acceptCpu(const char *cpu) {
-    return strcmp(cpu, "68000") == 0
-        || strcmp(cpu, "68008") == 0;
-}
-
 void DisMc68000::outRegName(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }

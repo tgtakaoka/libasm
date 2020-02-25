@@ -10,6 +10,9 @@ public:
     Error searchName(Insn &insn) const;
     Error searchNameAndAddrMode(Insn &insn) const;
     Error searchInsnCode(Insn &insn) const;
+
+    bool setCpu(const char *cpu);
+    static const char *listCpu();
 };
 
 extern TableMc68000 TableMc68000;

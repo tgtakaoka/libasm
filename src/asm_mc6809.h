@@ -12,7 +12,8 @@
 class AsmMc6809 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
+    const char *listCpu() const override { return TableMc6809::listCpu(); }
 
 private:
     AsmMotoOperand _parser;

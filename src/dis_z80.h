@@ -6,12 +6,14 @@
 
 #include "insn_z80.h"
 #include "reg_z80.h"
+#include "table_z80.h"
 #include "dis_interface.h"
 
 class DisZ80 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    bool acceptCpu(const char *cpu) override;
+    bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
+    const char *listCpu() const override { return TableZ80::listCpu(); }
 
 private:
     DisIntelOperand _formatter;

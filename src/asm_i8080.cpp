@@ -1,13 +1,6 @@
 #include "asm_i8080.h"
 #include "table_i8080.h"
 
-#include <ctype.h>
-#include <string.h>
-
-bool AsmI8080::acceptCpu(const char *cpu) {
-    return strcasecmp(cpu, "8080") == 0;
-}
-
 Error AsmI8080::encodePointerReg(Insn &insn) {
     const RegName regName = _regs.parsePointerReg(_scan);
     const host::int_t num = _regs.encodePointerReg(regName);

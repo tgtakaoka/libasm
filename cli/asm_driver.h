@@ -167,7 +167,7 @@ private:
                         fprintf(stderr, "-C requires CPU name\n");
                         return 1;
                     }
-                    if (!_directive.acceptCpu(argv[i])) {
+                    if (!_directive.setCpu(argv[i])) {
                         fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                         return 4;
                     }
@@ -225,10 +225,10 @@ private:
                 "  -S[<bytes>] : output Motorola SREC format\n"
                 "  -H[<bytes>] : output Intel HEX format\n"
                 "              : optional <bytes> specifies data record length (max 32)\n"
-                "  -C          : CPU variant: 6309, 65c02, tms9995 etc.\n"
+                "  -C          : CPU variant: %s\n"
                 "  -u          : use uppercase letter for output\n"
                 "  -n          : output line number to list file\n",
-                _progname);
+                _progname, _directive.listCpu());
         return 2;
     }
 

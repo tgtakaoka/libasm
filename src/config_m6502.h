@@ -15,7 +15,7 @@ namespace target
     typedef uint8_t  insn_t;
 } // namespace target
 
-enum McuType : host::uint_t {
+enum CpuType : host::uint_t {
     M6502,
     W65C02,
 };

@@ -7,7 +7,7 @@ AsmTms9900 as9900;
 Assembler<target::uintptr_t> &assembler(as9900);
 
 static void set_up() {
-    assembler.acceptCpu("tms9900");
+    assembler.setCpu("tms9900");
 }
 
 static void tear_down() {
@@ -16,9 +16,13 @@ static void tear_down() {
 
 static void test_cpu() {
     asserter.equals(
-        "cpu tms9900", true, assembler.acceptCpu("TMS9900"));
+        "cpu 9900", true, assembler.setCpu("9900"));
     asserter.equals(
-        "cpu tms9995", true, assembler.acceptCpu("TMS9995"));
+        "cpu 9995", true, assembler.setCpu("9995"));
+    asserter.equals(
+        "cpu TMS9900", true, assembler.setCpu("TMS9900"));
+    asserter.equals(
+        "cpu tms9995", true, assembler.setCpu("tms9995"));
 }
 
 static void test_inh() {
@@ -46,7 +50,7 @@ static void test_reg() {
     TEST("STST R15", 0x02CF);
 
     // TMS9995
-    assembler.acceptCpu("tms9995");
+    assembler.setCpu("tms9995");
     TEST("LST  R0",  0x0080);
     TEST("LWP  R1",  0x0091);
 }
@@ -87,7 +91,7 @@ static void test_src() {
     TEST("ABS  @8(R3)", 0x0763, 0x0008);
 
     // TMS9995
-    assembler.acceptCpu("tms9995");
+    assembler.setCpu("tms9995");
     TEST("DIVS R2",         0x0182);
     TEST("DIVS *R3",        0x0193);
     TEST("DIVS @1234H",     0x01A0, 0x1234);
@@ -102,12 +106,12 @@ static void test_src() {
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    assembler.acceptCpu("tms9900");
+    assembler.setCpu("tms9900");
     TEST("BLWP @sym9876",     0x0420, 0x9876);
     TEST("DEC  @neg2(R7)",    0x0627, 0xFFFE);
 
     // TMS9995
-    assembler.acceptCpu("tms9995");
+    assembler.setCpu("tms9995");
     TEST("DIVS @sym1234",     0x01A0, 0x1234);
     TEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
 }

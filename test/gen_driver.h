@@ -127,7 +127,7 @@ private:
                         fprintf(stderr, "-C requires CPU name\n");
                         return 1;
                     }
-                    if (!_disassembler.acceptCpu(argv[i])) {
+                    if (!_disassembler.setCpu(argv[i])) {
                         fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                         return 4;
                     }
@@ -144,8 +144,8 @@ private:
     int usage() {
         fprintf(stderr,
                 "usage: %s [-C <cpu>] [-o <output>] [-l <list>]\n"
-                "  -C : CPU variant: 6809, 6309, 6502, 65c02, 8080, z80, 9995\n",
-                _progname);
+                "  -C : CPU variant: %s\n",
+                _progname, _disassembler.listCpu());
         return 2;
     }
 

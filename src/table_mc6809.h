@@ -20,13 +20,14 @@ public:
     Error searchNameAndAddrMode(Insn &insn) const;
     Error searchInsnCode(Insn &insn) const;
 
-    void setMcuType(McuType mcuType) { _mcuType = mcuType; }
-    bool is6309() const { return _mcuType == HD6309; }
+    bool setCpu(const char *cpu);
+    static const char *listCpu();
+    bool is6309() const { return _cpuType == HD6309; }
 
     static bool isPrefixCode(target::opcode_t opCode);
 
 private:
-    McuType _mcuType;
+    CpuType _cpuType;
 
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);

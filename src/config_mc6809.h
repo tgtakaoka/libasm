@@ -12,7 +12,7 @@ namespace target
     typedef uint16_t insn_t;
 } // namespace target
 
-enum McuType : host::uint_t {
+enum CpuType : host::uint_t {
     MC6809,
     HD6309,
 };

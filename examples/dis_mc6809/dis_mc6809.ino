@@ -1,15 +1,16 @@
+/* -*- mode: c++; c-basic-offset: 2; tab-width: 2; -*- */
 #include <dis_mc6809.h>
 #include <str_memory.h>
 
 DisMc6809 dis6809;
-Disassembler<uint16_t> &disassembler(dis6809);
+Disassembler<target::uintptr_t> &disassembler(dis6809);
 
 String line;
 bool line_ready = false;
 
 void setup() {
   Serial.begin(9800);
-  disassembler.acceptCpu("6309");
+  disassembler.setCpu("6309");
 }
 
 void loop() {
