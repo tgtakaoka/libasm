@@ -166,7 +166,7 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xB6, OR,   NO_FMT,  A_REG,  IX_OFF, INDX)
     E(0xBE, CP,   NO_FMT,  IX_OFF, NO_OPR, INDX)
     E(0xBE, CP,   NO_FMT,  A_REG,  IX_OFF, INDX)
-    E(0xCB, BIT,  NO_FMT,  IX_BIT, IX_BIT, INDX_IMM8)
+    E(0xCB, BIT,  NO_FMT,  IX_BIT, IX_BIT, INDX_IMM8) // to TABLE_CB[]
     E(0xE1, POP,  NO_FMT,  IX_REG, NO_OPR, INHR)
     E(0xE9, JP,   NO_FMT,  IX_PTR, NO_OPR, INHR)
     E(0xF9, LD,   NO_FMT,  SP_REG, IX_REG, INHR)

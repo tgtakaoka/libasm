@@ -61,7 +61,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
         if (insn.insnFormat() == DST_FMT || insn.insnFormat() == DST_SRC_FMT) {
             RegName regName = RegZ80::decodeDataReg(opc >> 3);
             if (regName == REG_UNDEF && insn.rightFormat() == C_PTR)
-                return setError(ILLEGAL_OPERAND);
+                return setError(UNKNOWN_INSTRUCTION);
             outDataRegister(regName);
         } else if (insn.insnFormat() == SRC_FMT) {
             outDataRegister(RegZ80::decodeDataReg(opc));
@@ -100,7 +100,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
     case C_PTR:
         if (insn.rightFormat() == REG_8 && insn.insnFormat() == DST_FMT
             && RegZ80::decodeDataReg(opc >> 3) == REG_UNDEF)
-            return setError(ILLEGAL_OPERAND);
+            return setError(UNKNOWN_INSTRUCTION);
         outPointer(REG_C);
         break;
     case BC_PTR:
@@ -126,7 +126,7 @@ Error DisZ80::decodeInherent(Insn& insn) {
         case 0x46: *_operands++ = '0'; break;
         case 0x56: *_operands++ = '1'; break;
         case 0x5E: *_operands++ = '2'; break;
-        default: return setError(ILLEGAL_OPERAND);
+        default: return setError(UNKNOWN_INSTRUCTION);
         }
         *_operands = 0;
         break;
@@ -220,6 +220,7 @@ Error DisZ80::decodeImmediate16(Insn &insn, uint16_t val) {
 
 Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
     const target::opcode_t opc = insn.opCode();
+    RegName regName;
     switch (insn.leftFormat()) {
     case ADDR_16:
         outAddress(addr);
@@ -237,7 +238,10 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outAddress(addr, false);
         break;
     case REG_16:
-        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
+        regName = RegZ80::decodePointerReg((opc >> 4) & 3);
+        if (regName == REG_HL && insn.insnFormat() == PTR_FMT)
+            return setError(UNKNOWN_INSTRUCTION);
+        outRegister(regName);
         break;
     case IX_REG:
         outRegister(RegZ80::decodeIndexReg(insn));
@@ -260,7 +264,10 @@ Error DisZ80::decodeDirect(Insn &insn, target::uintptr_t addr) {
         outAddress(addr, false);
         break;
     case REG_16:
-        outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
+        regName = RegZ80::decodePointerReg((opc >> 4) & 3);
+        if (regName == REG_HL && insn.insnFormat() == PTR_FMT)
+            return setError(UNKNOWN_INSTRUCTION);
+        outRegister(regName);
         break;
     case IX_REG:
         outRegister(RegZ80::decodeIndexReg(insn));
@@ -318,8 +325,7 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
         break;
     case REG_8:
         regName = RegZ80::decodeDataReg(opc >> 3);
-        if (insn.rightFormat() == IX_OFF && regName == REG_UNDEF)
-            return setError(ILLEGAL_OPERAND);
+        if (regName == REG_UNDEF) return setError(UNKNOWN_INSTRUCTION);
         outDataRegister(regName);
         break;
     case A_REG:
@@ -334,7 +340,9 @@ Error DisZ80::decodeIndexed(Insn &insn, int8_t offset) {
         outIndexOffset(insn, offset);
         break;
     case REG_8:
-        outDataRegister(RegZ80::decodeDataReg(opc));
+        regName = RegZ80::decodeDataReg(opc);
+        if (regName == REG_UNDEF) return setError(UNKNOWN_INSTRUCTION);
+        outDataRegister(regName);
         break;
     default:
         break;
@@ -356,38 +364,21 @@ Error DisZ80::decodeIndexedBitOp(
     Insn ixBit;
     ixBit.resetAddress(insn.address());
     ixBit.setInsnCode(opc, opCode);
-    if (TableZ80.searchInsnCode(ixBit)) return getError();
+    if (TableZ80.searchInsnCode(ixBit))
+        return setError(UNKNOWN_INSTRUCTION);
     insn.setName(ixBit.name());
-    insn.setFlags(ixBit);
 
     const RegName regName = RegZ80::decodeDataReg(opCode);
-    switch (insn.leftFormat()) {
-    case HL_PTR:
-        outIndexOffset(insn, offset);
-        break;
-    case REG_8:
-        if (regName == REG_UNDEF) {
-            outIndexOffset(insn, offset);
-        } else {
-            outDataRegister(regName);
-        }
-        break;
-    case BIT_NO:
+    if (ixBit.leftFormat() == BIT_NO
+        && ixBit.rightFormat() == REG_8 && regName == REG_UNDEF) {
         outConstant(uint8_t((opCode >> 3) & 7));
-        break;
-    default:
-        break;
-    }
-    if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
-
-    if (insn.rightFormat() == HL_PTR) {
+        *_operands++ = ',';
         outIndexOffset(insn, offset);
-    } else if (insn.rightFormat() == REG_8) {
-        if (regName == REG_UNDEF) {
-            outIndexOffset(insn, offset);
-        } else {
-            outDataRegister(regName);
-        }
+    } else if (ixBit.leftFormat() == REG_8 && regName == REG_UNDEF
+               && ixBit.rightFormat() == NO_OPR) {
+        outIndexOffset(insn, offset);
+    } else {
+        return setError(UNKNOWN_INSTRUCTION);
     }
     return setError(OK);
 }

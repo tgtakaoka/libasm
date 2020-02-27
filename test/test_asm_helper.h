@@ -21,18 +21,14 @@ extern TestSymtab symtab;
         asserter.equals(message, expected, sizeof(expected),    \
                         insn.bytes(), insn.insnLen());          \
     } while (0)
-#define ATEST(addr, line, ...)                                  \
-    do {                                                        \
-        const target::opcode_t expected[] = { __VA_ARGS__ };    \
-        EASSERT(OK, addr, line, expected);                      \
-    } while (0)
 #define EATEST(error, addr, line, ...)                          \
     do {                                                        \
         const target::opcode_t expected[] = { __VA_ARGS__ };    \
         EASSERT(error, addr, line, expected);                   \
     } while (0)
-#define TEST(line, ...) ATEST(0x0000, line, __VA_ARGS__)
+#define ATEST(addr, line, ...) EATEST(OK, addr, line, __VA_ARGS__)
 #define ETEST(error, line, ...) EATEST(error, 0x0000, line,  __VA_ARGS__)
+#define TEST(line, ...) ETEST(OK, line, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test)
 

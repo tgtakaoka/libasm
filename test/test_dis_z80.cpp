@@ -152,11 +152,9 @@ static void test_move_direct() {
     disassembler.setCpu("z80");
     TEST(LD, "(0ABCDH),BC", 0xED, 0x43, 0xCD, 0xAB);
     TEST(LD, "(0ABCDH),DE", 0xED, 0x53, 0xCD, 0xAB);
-    TEST(LD, "(0ABCDH),HL", 0xED, 0x63, 0xCD, 0xAB);
     TEST(LD, "(0ABCDH),SP", 0xED, 0x73, 0xCD, 0xAB);
     TEST(LD, "BC,(5678H)",  0xED, 0x4B, 0x78, 0x56);
     TEST(LD, "DE,(5678H)",  0xED, 0x5B, 0x78, 0x56);
-    TEST(LD, "HL,(5678H)",  0xED, 0x6B, 0x78, 0x56);
     TEST(LD, "SP,(5678H)",  0xED, 0x7B, 0x78, 0x56);
 }
 
@@ -648,6 +646,92 @@ static void test_bitop_indexed() {
     TEST(SET, "7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
 }
 
+static void test_illegal_i8080() {
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x08);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x10);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xED);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFD);
+}
+
+static void assert_illegal(uint8_t prefix, uint8_t opc, uint8_t opr1 = 0, uint8_t opr2 = 0) {
+    char operands[40];
+    Insn insn;
+    const uint8_t codes[] = { prefix, opc, opr1, opr2 };
+    memory.setMemory(&codes[0], sizeof(codes));
+    disassembler.decode(memory, insn, operands, nullptr);
+    char message[40];
+    sprintf(message, "%s opecode %02X %02X %02X %02X",
+            __FUNCTION__, prefix, opc, opr1, opr2);
+    asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+}
+
+static void test_illegal_z80() {
+    disassembler.setCpu("z80");
+
+    for (uint8_t opc = 0x30; opc < 0x38; opc++)
+        assert_illegal(0xCB, opc);
+
+    for (uint8_t opc = 0x00; opc < 0x40; opc++)
+        assert_illegal(0xED, opc);
+    for (uint8_t opc = 0x7C; opc < 0xA0; opc++)
+        assert_illegal(0xED, opc);
+    for (uint8_t opc = 0xBC; opc; opc++)
+        assert_illegal(0xED, opc);
+    const uint8_t ed_illegals[] = {
+        0x4C, 0x4E,
+        0x54, 0x55, 0x5C, 0x5D,
+        0x63, 0x64, 0x65, 0x66, 0x6B, 0x6C, 0x6D, 0x6E,
+        0x70, 0x71, 0x74, 0x75, 0x76, 0x77,
+        0xA4, 0xA5, 0xA6, 0xA7, 0xAC, 0xAD, 0xAE, 0xAF,
+        0xB4, 0xB5, 0xB6, 0xB7,
+    };
+    for (int idx = 0; idx < sizeof(ed_illegals); idx++)
+        assert_illegal(0xED, ed_illegals[idx]);
+
+    const uint8_t ddfd_legals[] = {
+        0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B, 0x34, 0x35, 0x36, 0x39,
+        0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E,
+        0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x77, 0x7E,
+        0x86, 0x8E, 0x96, 0x9E, 0xA6, 0xAE, 0xB6, 0xBE,
+        0xCB, 0xE1, 0xE3, 0xE5, 0xE9, 0xF9
+    };
+    uint8_t prefix = 0xdd;
+    while (true) {
+        int idx = 0;
+        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+            if (idx == sizeof(ddfd_legals) || opc < ddfd_legals[idx])
+                assert_illegal(prefix, opc++);
+            else idx++;
+        }
+        if (prefix == 0xfd) break;
+        prefix = 0xfd;
+    }
+
+    const uint8_t ddfdcb_legals[] = {
+        0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x3E,
+        0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E, 0x76, 0x7E,
+        0x86, 0x8E, 0x96, 0x9E, 0xA6, 0xAE, 0xB6, 0xBE,
+        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6, 0xFE,
+    };
+    prefix = 0xdd;
+    while (true) {
+        int idx = 0;
+        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+            if (idx == sizeof(ddfdcb_legals) || opc < ddfdcb_legals[idx])
+                assert_illegal(prefix, 0xCB, 0x00, opc++);
+            else idx++;
+        }
+        if (prefix == 0xfd) break;
+        prefix = 0xfd;
+    }
+}
+
 // 00 000 000 NOP
 // 00 001 000 EX AF,AF'
 // 00 010 000 DJNZ dd
@@ -833,5 +917,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_shift_indexed);
     RUN_TEST(test_bitop_indexed);
+    RUN_TEST(test_illegal_i8080);
+    RUN_TEST(test_illegal_z80);
     return 0;
 }

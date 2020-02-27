@@ -410,21 +410,16 @@ static void test_restart() {
 // 11 aaa 111 RST aaa
 
 static void test_illegal() {
-    Insn insn;
-    char operands[40];
-
-    const uint8_t illegals[] = {
-        0x08, 0x10, 0x18, 0x20, 0x28, 0x30, 0x38, // NOP*
-        0xD9,                                     // RET*
-        0xDD, 0xED, 0xFD,                         // CALL*
-    };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setMemory(&illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);
-        asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x08);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x10);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xED);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFD);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
