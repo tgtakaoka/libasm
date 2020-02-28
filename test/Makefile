@@ -6,6 +6,7 @@ ASL_FLAGS = -gnuerrors -L +t 0x1e -q
 all: \
 	test_mc6809.s19 \
 	test_hd6309.s19 \
+	test_mc6800.s19 \
 	test_m6502.s19 \
 	test_w65c02.s19 \
 	test_i8080.hex \
@@ -26,6 +27,7 @@ all: \
 
 .PHONY: clean clean-obj test \
 	test_mc6809  \
+	test_mc6800  \
 	test_m6502   \
 	test_i8080   \
 	test_z80     \
@@ -34,6 +36,7 @@ all: \
 	test_expr
 
 test:   test_mc6809  \
+	test_mc6800  \
 	test_m6502   \
 	test_i8080   \
         test_z80     \
@@ -44,6 +47,9 @@ test:   test_mc6809  \
 test_mc6809: test_asm_mc6809 test_dis_mc6809
 	./test_asm_mc6809
 	./test_dis_mc6809
+test_mc6800: test_asm_mc6800 test_dis_mc6800
+	./test_asm_mc6800
+	./test_dis_mc6800
 test_m6502: test_asm_m6502 test_dis_m6502
 	./test_asm_m6502
 	./test_dis_m6502
@@ -66,6 +72,7 @@ test_expr: test_expr_moto test_expr_intel test_expr_cstyle
 
 gen: \
 	gen_mc6809  \
+	gen_mc6800  \
 	gen_m6502   \
 	gen_i8080   \
 	gen_z80     \
@@ -77,6 +84,7 @@ CPPFLAGS    = -MMD
 
 TEST_OBJS= \
 	test_asm_mc6809.o  test_dis_mc6809.o  \
+	test_asm_mc6800.o  test_dis_mc6800.o  \
 	test_asm_m6502.o   test_dis_m6502.o   \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
@@ -85,6 +93,7 @@ TEST_OBJS= \
 	test_expr_moto.o   test_expr_intel.o  \
 	test_expr_cstyle.o \
 	gen_mc6809.o  \
+	gen_mc6800.o  \
 	gen_m6502.o   \
 	gen_i8080.o   \
 	gen_z80.o     \
@@ -95,6 +104,7 @@ TESTS=$(TEST_OBJS:.o=)
 
 OBJS_common  = test_asserter.o asm_operand.o dis_operand.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
+OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
 OBJS_m6502   = table_m6502.o   reg_m6502.o
 OBJS_i8080   = table_i8080.o   reg_i8080.o
 OBJS_z80     = table_z80.o     reg_z80.o
@@ -104,6 +114,7 @@ OBJS         = \
 	$(TEST_OBJS) \
 	$(OBJS_common) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
+	$(OBJS_mc6800)  asm_mc6800.o  dis_mc6800.o  \
 	$(OBJS_m6502)   asm_m6502.o   dis_m6502.o   \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
@@ -115,6 +126,10 @@ OBJS         = \
 test_asm_mc6809: test_asm_mc6809.o   asm_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mc6809: test_dis_mc6809.o   dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_mc6800: test_asm_mc6800.o   asm_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_dis_mc6800: test_dis_mc6800.o   dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_m6502:  test_asm_m6502.o    asm_m6502.o   $(OBJS_m6502)   $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
@@ -144,6 +159,8 @@ test_expr_cstyle:test_expr_cstyle.o $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
