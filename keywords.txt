@@ -10,29 +10,31 @@ Insn            KEYWORD1        libasm
 DisMemory       KEYWORD1        libasm
 SymbolTable     KEYWORD1        libasm
 Error           KEYWORD1        libasm
-AsmMc6809	KEYWORD1        libasm
-DisMc6809	KEYWORD1        libasm
-AsmI8080	KEYWORD1        libasm
+AsmMc6809       KEYWORD1        libasm
+DisMc6809       KEYWORD1        libasm
+AsmMc6800       KEYWORD1        libasm
+DisMc6800       KEYWORD1        libasm
+AsmI8080        KEYWORD1        libasm
 DisI8080        KEYWORD1        libasm
 AsmZ80          KEYWORD1        libasm
 DisZ80          KEYWORD1        libasm
-AsmM6502	KEYWORD1        libasm
-DisM6502	KEYWORD1        libasm
-AsmTms9900	KEYWORD1        libasm
-DisTms9900	KEYWORD1        libasm
+AsmM6502        KEYWORD1        libasm
+DisM6502        KEYWORD1        libasm
+AsmTms9900      KEYWORD1        libasm
+DisTms9900      KEYWORD1        libasm
 DisMc68000      KEYWORD1        libasm
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-encode	 KEYWORD2 Asm
-getError KEYWORD2 Asm/Dis
-errorAt  KEYWORD2 Asm
-decode   KEYWORD2 Dis
-address  KEYWORD2 Insn
-insnLen  KEYWORD2 Insn
-bytes    KEYWORD2 Insn
-name     KEYWORD2 Insn
+encode   KEYWORD2
+decode   KEYWORD2
+address  KEYWORD2
+insnLen  KEYWORD2
+bytes    KEYWORD2
+name     KEYWORD2
+getError KEYWORD2
+errorAt  KEYWORD2
 
 
 #######################################
