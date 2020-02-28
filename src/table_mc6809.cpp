@@ -6,6 +6,13 @@
 
 #include <string.h>
 
+#define P00(_opc, _name, _sz, _mcu, _mode)                          \
+    { _opc,  Entry::_flags(_mcu, SZ_##_sz, _mode), TEXT_##_name },
+#define P10(_opc, _name, _sz, _mcu, _mode)                          \
+    { _opc,  Entry::_flags(_mcu, SZ_##_sz, _mode), TEXT_##_name },
+#define P11(_opc, _name,  _sz, _mcu, _mode)                         \
+    { _opc,  Entry::_flags(_mcu, SZ_##_sz, _mode), TEXT_##_name },
+
 static constexpr Entry MC6809_P00[] PROGMEM = {
     P00(0x00, NEG,   BYTE, MC6809, DIRP)
     P00(0x03, COM,   BYTE, MC6809, DIRP)
@@ -524,7 +531,7 @@ Error TableMc6809::searchNameAndAddrMode(
         for (const Entry *entry = page->table; entry < page->end
                  && (entry = searchEntry(name, entry, page->end)) != nullptr; entry++) {
             const host::uint_t flags = pgm_read_byte(&entry->flags);
-            if (addrMode == _addrMode(flags)) {
+            if (addrMode == Entry::_addrMode(flags)) {
                 insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
                 insn.setFlags(flags);
                 return OK;
@@ -541,7 +548,7 @@ Error TableMc6809::searchInsnCode(
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags));
-            char name[8];
+            char name[Entry::name_max + 1];
             pgm_strcpy(name, entry->name);
             insn.setName(name);
             return OK;

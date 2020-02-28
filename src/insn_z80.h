@@ -5,12 +5,13 @@
 #include "insn_base.h"
 #include "entry_z80.h"
 
-class Insn : public InsnBase<ENDIAN_LITTLE, 4, 4> {
+class Insn
+    : public InsnBase<ENDIAN_LITTLE, Entry::code_max, Entry::name_max> {
 public:
-    AddrMode addrMode() const { return _addrMode(_flags2); }
-    InsnFormat insnFormat() const { return _insnFormat(_flags1); }
-    OprFormat leftFormat() const { return _oprFormat(_flags1); }
-    OprFormat rightFormat() const { return _oprFormat(_flags2); }
+    AddrMode addrMode() const { return Entry::_addrMode(_flags2); }
+    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags1); }
+    OprFormat leftFormat() const { return Entry::_oprFormat(_flags1); }
+    OprFormat rightFormat() const { return Entry::_oprFormat(_flags2); }
 
     void setFlags(host::uint_t flags1, host::uint_t flags2) {
         _flags1 = flags1;

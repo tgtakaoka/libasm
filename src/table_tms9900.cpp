@@ -7,6 +7,9 @@
 #include <ctype.h>
 #include <string.h>
 
+#define E(_insn, _name, _amode, _mcu)                   \
+    { _insn, Entry::_flags(_mcu, _amode), { _name } },
+
 static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E(0x0080, TEXT_LST,  REG, TMS9995)
     E(0x0090, TEXT_LWP,  REG, TMS9995)
@@ -106,7 +109,7 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         target::insn_t i = insnCode;
-        const AddrMode addrMode = _addrMode(pgm_read_byte(&entry->flags));
+        const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
         switch (addrMode) {
         case REG:
         case REG_IMM: i &= ~0x000f; break;
@@ -147,9 +150,9 @@ Error TableTms9900::searchInsnCode(Insn &insn) const {
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
-    char name[5];
+    char name[Entry::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(Entry::name));
-    name[4] = 0;
+    name[Entry::name_max] = 0;
     insn.setName(name);
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;

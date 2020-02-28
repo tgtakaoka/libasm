@@ -6,6 +6,9 @@
 
 #include <string.h>
 
+#define E(_opc, _name, _mcu, _amode)                        \
+    { _opc, Entry::_flags(_mcu, _amode), TEXT_##_name },
+
 static constexpr Entry M6502_TABLE[] PROGMEM = {
     E(0x00, BRK, M6502, IMPLIED)
     E(0x40, RTI, M6502, IMPLIED)
@@ -270,7 +273,7 @@ Error TableM6502::searchPages(
     for (const Entry *entry = table; entry < end
              && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
         const host::uint_t flags = pgm_read_byte(&entry->flags);
-        if (acceptAddrMode(addrMode, _addrMode(flags))) {
+        if (acceptAddrMode(addrMode, Entry::_addrMode(flags))) {
             insn.setInsnCode(pgm_read_byte(&entry->insnCode));
             insn.setFlags(flags);
             return OK;
@@ -284,7 +287,7 @@ Error TableM6502::searchPages(
     const Entry *entry = searchEntry(insnCode, table, end);
     if (entry) {
         insn.setFlags(pgm_read_byte(&entry->flags));
-        char name[8];
+        char name[Entry::name_max + 1];
         pgm_strcpy(name, entry->name);
         insn.setName(name);
         return OK;

@@ -5,19 +5,22 @@
 #include "insn_base.h"
 #include "entry_mc6809.h"
 
-class Insn : public InsnBase<ENDIAN_BIG, 5, 6> {
+class Insn
+    : public InsnBase<ENDIAN_BIG, Entry::code_max, Entry::name_max> {
 public:
-    AddrMode addrMode() const { return _addrMode(_flags); }
-    OprSize oprSize() const { return _oprSize(_flags); }
-    bool is6309() const { return _cpuType(_flags) == HD6309; }
+    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
+    OprSize oprSize() const { return Entry::_oprSize(_flags); }
+    bool is6309() const { return Entry::_cpuType(_flags) == HD6309; }
 
     void setFlags(host::uint_t flags) {
         _flags = flags;
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = ::_flags(
-            _cpuType(_flags), _oprSize(_flags), _addrMode(addrMode));
+        _flags = Entry::_flags(
+            Entry::_cpuType(_flags),
+            Entry::_oprSize(_flags),
+            addrMode);
     }
 
     void setInsnCode(target::opcode_t prefixCode, target::opcode_t opCode) {

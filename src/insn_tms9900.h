@@ -5,10 +5,11 @@
 #include "insn_base.h"
 #include "entry_tms9900.h"
 
-class Insn : public InsnBase<ENDIAN_BIG, 6, 4> {
+class Insn
+    : public InsnBase<ENDIAN_BIG, Entry::code_max, Entry::name_max> {
 public:
-    AddrMode addrMode() const { return _addrMode(_flags); }
-    bool is9995() const { return _cpuType(_flags) == TMS9995; }
+    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
+    bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 

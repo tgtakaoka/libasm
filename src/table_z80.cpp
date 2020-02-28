@@ -7,6 +7,13 @@
 #include <ctype.h>
 #include <string.h>
 
+#define E(_opc, _name, _iformat, _leftOpr, _rightOpr, _amode)   \
+    { _opc,                                                     \
+      Entry::_flags1(_leftOpr, _iformat),                       \
+      Entry::_flags2(_rightOpr, _amode),                        \
+      TEXT_##_name                                              \
+    },
+
 static constexpr Entry TABLE_00[] PROGMEM = {
     E(0x00, NOP,  NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHR)
@@ -243,8 +250,8 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end
              && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
-        const OprFormat lop = _oprFormat(pgm_read_byte(&entry->flags1));
-        const OprFormat rop = _oprFormat(pgm_read_byte(&entry->flags2));
+        const OprFormat lop = Entry::_oprFormat(pgm_read_byte(&entry->flags1));
+        const OprFormat rop = Entry::_oprFormat(pgm_read_byte(&entry->flags2));
         if (acceptOprFormat(leftOpr, lop) && acceptOprFormat(rightOpr, rop))
             return entry;
     }
@@ -256,7 +263,7 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         target::opcode_t opc = opcode;
-        const InsnFormat iformat = _insnFormat(pgm_read_byte(&entry->flags1));
+        const InsnFormat iformat = Entry::_insnFormat(pgm_read_byte(&entry->flags1));
         switch (iformat) {
         case PTR_FMT: opc &= ~0x30; break;
         case CC4_FMT: opc &= ~0x18; break;
@@ -315,7 +322,7 @@ static Error searchInsnCode(
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
-            char name[5];
+            char name[Insn::getMaxName() + 1];
             pgm_strcpy(name, entry->name);
             insn.setName(name);
             return OK;

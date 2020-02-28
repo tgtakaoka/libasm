@@ -6,9 +6,10 @@
 #include "entry_mc68000.h"
 #include "reg_mc68000.h"
 
-class Insn : public InsnBase<ENDIAN_BIG, 10, 7> {
+class Insn
+    : public InsnBase<ENDIAN_BIG, Entry::code_max, Entry::name_max> {
 public:
-    InsnFormat insnFormat() const { return _insnFormat(_flags); }
+    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
     void setFlags(host::uint_t flags) {
         _flags = flags;

@@ -6,6 +6,9 @@
 
 #include <string.h>
 
+#define E(_opc, _name, _iformat)                        \
+    { _opc,  Entry::_flags(_iformat), TEXT_##_name },
+
 static constexpr Entry TABLE_MC68000[] PROGMEM = {
     E(0000000, ORI,   DEST_SIZ)
     E(0001000, ANDI,  DEST_SIZ)
@@ -202,7 +205,7 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         const host::uint_t flags = pgm_read_byte(&entry->flags);
-        const target::insn_t mask = getInsnMask(_insnFormat(flags));
+        const target::insn_t mask = getInsnMask(Entry::_insnFormat(flags));
         if ((insnCode & ~mask) == pgm_read_word(&entry->insnCode))
             return entry;
     }

@@ -8,23 +8,22 @@ struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
     const char *name;
+    static constexpr host::uint_t code_max = 3;
+    static constexpr host::uint_t name_max = 4;
 
+    static inline CpuType _cpuType(host::uint_t flags) {
+        return (flags & w65c02_bm) == 0 ? M6502 : W65C02;
+    }
+    static inline AddrMode _addrMode(host::uint_t flags) {
+        return AddrMode(flags & addrMode_gm);
+    }
+    static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
+        return (cpuType == M6502 ? 0 : w65c02_bm) | host::uint_t(addrMode);
+    }
+
+private:
     static constexpr host::uint_t w65c02_bm = 0x80;
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
-
-static inline CpuType _cpuType(host::uint_t flags) {
-    return (flags & Entry::w65c02_bm) == 0 ? M6502 : W65C02;
-}
-static inline AddrMode _addrMode(host::uint_t flags) {
-    return AddrMode(flags & Entry::addrMode_gm);
-}
-
-static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
-    return (cpuType == M6502 ? 0 : Entry::w65c02_bm) | host::uint_t(addrMode);
-}
-
-#define E(_opc, _name, _mcu, _amode)       \
-    { _opc, _flags(_mcu, _amode), TEXT_##_name },
 
 #endif // __ENTRY_M6502_H__

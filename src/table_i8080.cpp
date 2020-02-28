@@ -7,6 +7,9 @@
 #include <ctype.h>
 #include <string.h>
 
+#define E(_opc, _name, _amode, _iformat)                    \
+    { _opc, Entry::_flags(_amode, _iformat), { _name } },
+
 static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x00, TEXT_NOP,  INHR,   NO_FORMAT)
     E(0x01, TEXT_LXI,  IMM16,  POINTER_REG)
@@ -111,7 +114,8 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         target::insn_t i = insnCode;
-        const InsnFormat iformat = _insnFormat(pgm_read_byte(&entry->flags));
+        const InsnFormat iformat =
+            Entry::_insnFormat(pgm_read_byte(&entry->flags));
         switch (iformat) {
         case INDEX_REG: i &= ~0x10; break;
         case POINTER_REG:
@@ -143,9 +147,9 @@ Error TableI8080::searchInsnCode(Insn &insn) const {
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[5];
+    char name[Entry::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(Entry::name));
-    name[4] = 0;
+    name[Entry::name_max] = 0;
     insn.setName(name);
     return OK;
 }
