@@ -98,8 +98,8 @@ Error DisMc6809::decodeIndexed(
     } else if (mode == 0x81 || mode == 0x83) {
         // ,R++ ,--R, [,R++] [,--R]
         incr = (mode == 0x81) ? 2 : -2;
-    } else if (mode == 0x8C || mode == 0x8D) {
-        // [n8,PCR] [n16,PCR]
+    } else if (post == 0x8C || post == 0x8D || post == 0x9C || post == 0x9D) {
+        // n8,PCR n16,PCR [n8,PCR] [n16,PCR]
         base = REG_PCR;
         offSize = -1;
         if (mode == 0x8C) {

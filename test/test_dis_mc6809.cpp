@@ -777,6 +777,62 @@ static void test_indexed_mode() {
     ATEST(0x1000, LDA, "[label1234]",    0xA6, 0x9F, 0x12, 0x34);
 }
 
+static void test_indexed_error() {
+    ETEST(OK,               LDA, "$0003,PCR",   0xA6, 0x8C, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "$0003,PCR",   0xA6, 0xAC, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "$0003,PCR",   0xA6, 0xCC, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "$0003,PCR",   0xA6, 0xEC, 0x00);
+    ETEST(OK,               LDA, "[$0003,PCR]", 0xA6, 0x9C, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[$0003,PCR]", 0xA6, 0xBC, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[$0003,PCR]", 0xA6, 0xDC, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[$0003,PCR]", 0xA6, 0xFC, 0x00);
+    ETEST(OK,               LDA, "$0004,PCR",   0xA6, 0x8D, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "$0004,PCR",   0xA6, 0xAD, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "$0004,PCR",   0xA6, 0xCD, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "$0004,PCR",   0xA6, 0xED, 0x00, 0x00);
+    ETEST(OK,               LDA, "[$0004,PCR]", 0xA6, 0x9D, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[$0004,PCR]", 0xA6, 0xBD, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[$0004,PCR]", 0xA6, 0xDD, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[$0004,PCR]", 0xA6, 0xFD, 0x00, 0x00);
+
+    ETEST(UNKNOWN_POSTBYTE, LDA, "E,X",   0xA6, 0x87);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "F,X",   0xA6, 0x8A);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "W,X",   0xA6, 0x8E);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[E,X]", 0xA6, 0x97);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[F,X]", 0xA6, 0x9A);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[W,X]", 0xA6, 0x9E);
+
+    ETEST(UNKNOWN_POSTBYTE, LDA, "E,Y",   0xA6, 0xA7);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "F,Y",   0xA6, 0xAA);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "W,Y",   0xA6, 0xAE);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[E,Y]", 0xA6, 0xB7);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[F,Y]", 0xA6, 0xBA);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[W,Y]", 0xA6, 0xBE);
+
+    ETEST(UNKNOWN_POSTBYTE, LDA, "E,U",   0xA6, 0xC7);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "F,U",   0xA6, 0xCA);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "W,U",   0xA6, 0xCE);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[E,U]", 0xA6, 0xD7);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[F,U]", 0xA6, 0xDA);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[W,U]", 0xA6, 0xDE);
+
+    ETEST(UNKNOWN_POSTBYTE, LDA, "E,S",   0xA6, 0xE7);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "F,S",   0xA6, 0xEA);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "W,S",   0xA6, 0xEE);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[E,S]", 0xA6, 0xF7);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[F,S]", 0xA6, 0xFA);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[W,S]", 0xA6, 0xFE);
+
+    ETEST(UNKNOWN_POSTBYTE, LDA, ",W",     0xA6, 0x8F);
+    ETEST(UNKNOWN_POSTBYTE, LDA, ">0,W",   0xA6, 0xAF, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, ",W++",   0xA6, 0xCF);
+    ETEST(UNKNOWN_POSTBYTE, LDA, ",--W",   0xA6, 0xEF);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[,W]",   0xA6, 0x90);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[>0,W]", 0xA6, 0xB0, 0x00, 0x00);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[,W++]", 0xA6, 0xD0);
+    ETEST(UNKNOWN_POSTBYTE, LDA, "[,--W]", 0xA6, 0xF0);
+}
+
 static void test_relative() {
     ATEST(0x1000, BRA, "$1002", 0x20, 0x00);
     ATEST(0x1000, BRN, "$1000", 0x21, 0xFE);
@@ -1094,6 +1150,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_extended);
     RUN_TEST(test_indexed);
     RUN_TEST(test_indexed_mode);
+    RUN_TEST(test_indexed_error);
     RUN_TEST(test_relative);
     RUN_TEST(test_stack);
     RUN_TEST(test_register);
