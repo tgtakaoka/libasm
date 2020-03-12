@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+INSTALL_DIR ?= /usr/local/bin
 VPATH=../src
 CXXFLAGS=-Wall -g -O -std=c++17 -I../src
 CPPFLAGS=-MMD
@@ -102,6 +103,8 @@ dis9900:  $(OBJS_dis9900)
 dis68000: $(OBJS_dis68000)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
+install: $(DRIVERS)
+	install $(DRIVERS) ${INSTALL_DIR}
 clean:
 	-rm -f *.o *.d
 clobber: clean
