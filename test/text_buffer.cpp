@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Tadashi G. Takaoka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "text_buffer.h"
 
 #include <ctype.h>
@@ -52,9 +68,16 @@ static bool isNumber(const char *&p) {
     return false;
 }
 
-#define TOKEN_DIGITS(n) (0x80 | (n))
-#define IS_DIGITS(t) (((t) & 0x80) == 0x80)
-#define DIGITS_LEN(t) ((t) & ~0x80)
+static constexpr uint8_t TOKEN_DIGITS = 0x80;
+static uint8_t digitsToken(uint8_t length) {
+    return TOKEN_DIGITS | length;
+}
+static bool isDigitsToken(uint8_t token) {
+    return (token & TOKEN_DIGITS) == TOKEN_DIGITS;
+}
+static uint8_t digitsLength(uint8_t token) {
+    return token & ~TOKEN_DIGITS;
+}
 
 void TextBuffer::toTokens() {
     const char *b = _buffer;
@@ -62,7 +85,7 @@ void TextBuffer::toTokens() {
     while (*b) {
         const char *tmp = b;
         if (isNumber(tmp)) {
-            *t++ = TOKEN_DIGITS(tmp - b);
+            *t++ = digitsToken(tmp - b);
             b = tmp;
         } else {
             *t++ = *b++;
@@ -83,9 +106,9 @@ void TextBuffer::analyze(TextBuffer &a, TextBuffer &b) {
     const uint8_t *ap = a._tokens;
     const uint8_t *bp = b._tokens;
     while (*ap && *bp) {
-        if (IS_DIGITS(*ap) && IS_DIGITS(*bp)) {
-            int ad = DIGITS_LEN(*ap);
-            int bd = DIGITS_LEN(*bp);
+        if (isDigitsToken(*ap) && isDigitsToken(*bp)) {
+            int ad = digitsLength(*ap);
+            int bd = digitsLength(*bp);
             a._prefixLen += ad;
             a._digitsInPrefix += ad;
             b._prefixLen += bd;
@@ -104,9 +127,9 @@ void TextBuffer::analyze(TextBuffer &a, TextBuffer &b) {
     while (as > ap && bs > bp) {
         as--;
         bs--;
-        if (IS_DIGITS(*as) && IS_DIGITS(*bs)) {
-            int ad = DIGITS_LEN(*as);
-            int bd = DIGITS_LEN(*bs);
+        if (isDigitsToken(*as) && isDigitsToken(*bs)) {
+            int ad = digitsLength(*as);
+            int bd = digitsLength(*bs);
             a._suffixLen += ad;
             a._digitsInSuffix += ad;
             b._suffixLen += bd;
@@ -120,3 +143,9 @@ void TextBuffer::analyze(TextBuffer &a, TextBuffer &b) {
     }
 }
 
+// Local Variables:
+// mode: c++
+// c-basic-offset: 4
+// tab-width: 4
+// End:
+// vim: set ft=cpp et ts=4 sw=4:
