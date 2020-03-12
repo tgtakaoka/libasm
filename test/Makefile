@@ -53,7 +53,7 @@ test:   test_mc6809  \
 	test_mc6800  \
 	test_m6502   \
 	test_i8080   \
-        test_z80     \
+	test_z80     \
 	test_tms9900 \
 	test_mc68000 \
 	test_expr
@@ -89,11 +89,9 @@ gen: \
 	gen_mc6800  \
 	gen_m6502   \
 	gen_i8080   \
-	gen_z80     \
-	gen_tms9900 \
-	gen_mc68000
+	gen_z80
 
-CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES)
+CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS    = -MMD
 
 TEST_OBJS= \
@@ -110,13 +108,11 @@ TEST_OBJS= \
 	gen_mc6800.o  \
 	gen_m6502.o   \
 	gen_i8080.o   \
-	gen_z80.o     \
-	gen_tms9900.o \
-	gen_mc68000.o
+	gen_z80.o
 
 TESTS=$(TEST_OBJS:.o=)
 
-OBJS_common  = test_asserter.o asm_operand.o dis_operand.o
+OBJS_common  = test_asserter.o asm_operand.o dis_operand.o text_buffer.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
 OBJS_m6502   = table_m6502.o   reg_m6502.o
@@ -124,7 +120,7 @@ OBJS_i8080   = table_i8080.o   reg_i8080.o
 OBJS_z80     = table_z80.o     reg_z80.o
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o
 OBJS_mc68000 = table_mc68000.o reg_mc68000.o
-OBJS         = \
+OBJS	 = \
 	$(TEST_OBJS) \
 	$(OBJS_common) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
@@ -174,18 +170,22 @@ test_expr_cstyle:test_expr_cstyle.o $(OBJS_common)
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_mc6809 -u -C 6809 -o gen_mc6809.asm
+	./gen_mc6809 -u -C 6309 -o gen_hd6309.asm
 gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_mc6800 -u -C 6800  -o gen_mc6800.asm
 gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_m6502 -u -C 6502  -o gen_m6502.asm
+	./gen_m6502 -u -C 65c02 -o gen_w65c02.asm
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_i8080 -u -C 8080 -o gen_i8080.asm
 gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-gen_tms9900: gen_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_common)
-	$(CXX) -o $@ $(CXXFLAGS) $^
-gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_common)
-	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_z80   -u -C z80  -o gen_z80.asm
+	./gen_z80   -u -C 8080 -o gen_z80_i8080.asm
 
 clean: clean-obj
 	-rm -f $(TESTS)

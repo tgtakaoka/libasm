@@ -29,10 +29,14 @@ public:
     {}
 
     Tcost distance(const char *source, const char *target) {
-        const size_t sourceSize = strlen(source);
-        const size_t targetSize = strlen(target);
+        return distance(source, strlen(source),
+                        target, strlen(target));
+    }
+
+    Tcost distance(const char *source, const size_t sourceSize,
+                   const char *target, const size_t targetSize) {
         if (targetSize < sourceSize)
-            return distance(target, source);
+            return distance(target, targetSize, source, sourceSize);
 
         Tcost *distance = new Tcost[sourceSize + 1];
         distance[0] = 0;

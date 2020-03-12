@@ -17,10 +17,40 @@
 #include "dis_z80.h"
 #include "gen_driver.h"
 
+static bool filterZ80Prefix(uint8_t opc) {
+    if (opc == 0xCB) return true;
+    if (opc == 0xDD) return true;
+    if (opc == 0xED) return true;
+    if (opc == 0xFD) return true;
+    return false;
+}
+
+static bool filterZ80IxBitPrefix(uint8_t opc) {
+    if (opc == 0xCB) return true;
+    return false;
+}
+
 int main(int argc, const char **argv) {
     DisZ80 disz80;
     GenDriver<target::uintptr_t> driver(disz80);
-    return driver.main(argc, argv);
+    if (driver.main(argc, argv))
+        return 1;
+
+    TestGenerator<target::uintptr_t> generator(
+        disz80,
+        Insn::bigEndian(),
+        sizeof(target::opcode_t),
+        driver.uppercase());
+    generator
+        .generate(driver, filterZ80Prefix)
+        .generate(driver, 0xED)
+        .generate(driver, 0xDD, filterZ80IxBitPrefix)
+        .generate(driver, 0xFD, filterZ80IxBitPrefix)
+        .generate(driver, 0xCB)
+        .generate(driver, 0xDD, 0xCB, 0x7F)
+        .generate(driver, 0xFD, 0xCB, 0x80);
+
+    return driver.close();
 }
 
 // Local Variables:
