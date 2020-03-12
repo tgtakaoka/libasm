@@ -20,7 +20,17 @@
 int main(int argc, const char **argv) {
     DisMc6800 dis6800;
     GenDriver<target::uintptr_t> driver(dis6800);
-    return driver.main(argc, argv);
+    if (driver.main(argc, argv))
+        return 1;
+
+    TestGenerator<target::uintptr_t> generator(
+        dis6800,
+        Insn::bigEndian(),
+        sizeof(target::opcode_t),
+        driver.uppercase());
+    generator.generate(driver);
+
+    return driver.close();
 }
 
 // Local Variables:

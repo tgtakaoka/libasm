@@ -22,16 +22,14 @@
 #include "test_generator.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 template<typename Addr>
-class GenDriver : private AsmLine<Addr>,
-                  private TestGenerator<Addr>::Printer {
+class GenDriver : public TestGenerator<Addr>::Printer,
+                  private AsmLine<Addr> {
 public:
     GenDriver(Disassembler<Addr> &disassembler)
         : _disassembler(disassembler),
-          _generator(disassembler),
           _listing()
     {}
 
@@ -56,21 +54,24 @@ public:
                 return 1;
             }
         }
+        return 0;
+    }
 
-        _generator.generate(this);
+    bool uppercase() const { return _uppercase; }
+
+    int close() {
         if (_output) fclose(_output);
         if (_list) fclose(_list);
-
         return 0;
     }
 
 private:
     Disassembler<Addr> &_disassembler;
-    TestGenerator<Addr> _generator;
     AsmListing<Addr> _listing;
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
+    bool _uppercase;
     FILE *_output;
     FILE *_list;
     const Insn *_insn;
@@ -80,7 +81,7 @@ private:
     void print(const Insn &insn, const char *operands) override {
         _insn = &insn;
         _operands = operands;
-        _listing.reset(*this, false, false, false);
+        _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
         if (_list) {
             do {
                 fprintf(_list, "%s\n", _listing.getLine());
@@ -119,6 +120,7 @@ private:
     int parseOption(int argc, const char **argv) {
         _output_name = nullptr;
         _list_name = nullptr;
+        _uppercase = false;
         for (int i = 1; i < argc; i++) {
             const char *opt = argv[i];
             if (*opt == '-') {
@@ -147,6 +149,9 @@ private:
                         return 4;
                     }
                     break;
+                case 'u':
+                    _uppercase = true;
+                    break;
                 default:
                     fprintf(stderr, "unknown option: %s\n", opt);
                     return 1;
@@ -158,8 +163,12 @@ private:
 
     int usage() {
         fprintf(stderr,
-                "usage: %s [-C <cpu>] [-o <output>] [-l <list>]\n"
-                "  -C : CPU variant: %s\n",
+                "usage: %s [-o <output>] [-l <list>]\n"
+                " options:\n"
+                "  -o <output> : output file\n"
+                "  -l <list>   : list file\n"
+                "  -C          : CPU variant: %s\n"
+                "  -u          : use uppercase letter for output\n",
                 _progname, _disassembler.listCpu());
         return 2;
     }
