@@ -964,12 +964,22 @@ static void test_register() {
     TEST(EORR, "A,B", 0x10, 0x36, 0x89);
     TEST(CMPR, "A,B", 0x10, 0x37, 0x89);
 
+#if defined(HD6309_0_REG)
     TEST(TFR, "A,0",  0x1F, 0x8C);
     TEST(TFR, "A,00", 0x1F, 0x8D);
+#elif defined(HD6309_Z_REG)
+    TEST(TFR, "A,Z",  0x1F, 0x8C);
+    TEST(TFR, "A,Z",  0x1F, 0x8D);
+#endif
     TEST(TFR, "A,E",  0x1F, 0x8E);
     TEST(TFR, "A,F",  0x1F, 0x8F);
+#if defined(HD6309_0_REG)
     TEST(TFR, "0,A",  0x1F, 0xC8);
     TEST(TFR, "00,A", 0x1F, 0xD8);
+#elif defined(HD6309_Z_REG)
+    TEST(TFR, "Z,A",  0x1F, 0xC8);
+    TEST(TFR, "Z,A",  0x1F, 0xD8);
+#endif
     TEST(TFR, "E,A",  0x1F, 0xE8);
     TEST(TFR, "F,A",  0x1F, 0xF8);
 
@@ -979,8 +989,13 @@ static void test_register() {
     TEST(TFR, "V,D",  0x1F, 0x70);
     TEST(TFR, "W,PC", 0x1F, 0x65);
     TEST(TFR, "S,W",  0x1F, 0x46);
+#if defined(HD6309_0_REG)
     TEST(TFR, "0,V",  0x1F, 0xC7);
     TEST(TFR, "X,00", 0x1F, 0x1D);
+#elif defined(HD6309_Z_REG)
+    TEST(TFR, "Z,V",  0x1F, 0xC7);
+    TEST(TFR, "X,Z",  0x1F, 0x1D);
+#endif
 }
 
 static void test_transfer() {

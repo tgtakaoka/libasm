@@ -295,6 +295,9 @@ private:
                 status = 0;
             } else if (o.prefixLen() > 0 && o.digitsInPrefix() >= 3) {
                 status = 0;
+            } else if (
+                strcmp(_data->operands().buffer(), _prev->operands().buffer()) == 0) {
+                status = 0;
             }
         }
 #if DEBUG_TEXT

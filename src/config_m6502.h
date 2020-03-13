@@ -20,7 +20,7 @@
 #include "config_host.h"
 
 // Not all 65C02 variants implemet bit manipulation operation
-#undef W65C02_ENABLE_BITOPS
+//#define W65C02_ENABLE_BITOPS
 
 namespace target
 {

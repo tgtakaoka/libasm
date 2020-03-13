@@ -62,8 +62,10 @@ char RegMc6809::regName2ndChar(const RegName regName) const {
         return _uppercase ? 'C' : 'c';
     if (regName == REG_DP)
         return _uppercase ? 'P' : 'p';
+#ifdef HD6309_0_REG
     if (regName == REG_00)
         return '0';
+#endif
     return 0;
 }
 
@@ -202,8 +204,18 @@ static constexpr RegName MC6809_DATA_REGS[] PROGMEM = {
 
 static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
     REG_D, REG_X, REG_Y,  REG_U,  REG_S, REG_PC, REG_W, REG_V,
-    REG_A, REG_B, REG_CC, REG_DP, REG_0, REG_00, REG_E, REG_F,
+    REG_A, REG_B, REG_CC, REG_DP,
+#if defined(HD6309_0_REG)
+    REG_0, REG_00,
+#elif defined(HD6309_Z_REG)
+    REG_Z, REG_Z,
+#else
+    REG_UNDEF, REG_UNDEF,
+#endif
+    REG_E, REG_F,
+#if defined(HD6309_0_REG) && defined(HD6309_Z_REG)
     REG_Z
+#endif
 };
 
 RegName RegMc6809::parseIndexReg(const char *line) const {
@@ -238,7 +250,9 @@ host::int_t RegMc6809::encodeBaseReg(RegName regName) const {
 
 host::int_t RegMc6809::encodeDataReg(RegName regName) const {
     if (TableMc6809.is6309()) {
+#if defined(HD6309_Z_REG) && defined(HD6309_0_REG)
         if (regName == REG_Z) regName = REG_0;
+#endif
         return encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS));
     } 
     return encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS));

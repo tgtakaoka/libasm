@@ -181,22 +181,32 @@ static void test_register() {
     TEST("EORR A,B", 0x10, 0x36, 0x89);
     TEST("CMPR A,B", 0x10, 0x37, 0x89);
 
-    TEST("TFR A,0",  0x1F, 0x8C);
-    TEST("TFR A,Z",  0x1F, 0x8C);
     TEST("TFR A,E",  0x1F, 0x8E);
     TEST("TFR A,F",  0x1F, 0x8F);
-    TEST("TFR 0,A",  0x1F, 0xC8);
-    TEST("TFR Z,A",  0x1F, 0xC8);
     TEST("TFR E,A",  0x1F, 0xE8);
     TEST("TFR F,A",  0x1F, 0xF8);
+#if defined(HD6309_0_REG)
+    TEST("TFR A,0",  0x1F, 0x8C);
+    TEST("TFR 0,A",  0x1F, 0xC8);
+#endif
+#if defined(HD6309_Z_REG)
+    TEST("TFR A,Z",  0x1F, 0x8C);
+    TEST("TFR Z,A",  0x1F, 0xC8);
+#endif
     TEST("TFR D,W",  0x1F, 0x06);
     TEST("TFR D,V",  0x1F, 0x07);
     TEST("TFR W,D",  0x1F, 0x60);
     TEST("TFR V,D",  0x1F, 0x70);
     TEST("TFR W,PC", 0x1F, 0x65);
     TEST("TFR S,W",  0x1F, 0x46);
+#if defined(HD6309_0_REG)
     TEST("TFR 00,V", 0x1F, 0xD7);
     TEST("TFR X,00", 0x1F, 0x1D);
+#endif
+#if defined(HD6309_Z_REG)
+    TEST("TFR Z,V",  0x1F, 0xC7);
+    TEST("TFR X,Z",  0x1F, 0x1C);
+#endif
 }
 
 static void test_relative() {
