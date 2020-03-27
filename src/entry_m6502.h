@@ -27,17 +27,19 @@ struct Entry {
     static constexpr host::uint_t name_max = 4;
 
     static inline CpuType _cpuType(host::uint_t flags) {
-        return (flags & w65c02_bm) == 0 ? M6502 : W65C02;
+        return CpuType((flags >> cputype_gp) & cputype_gm);
     }
     static inline AddrMode _addrMode(host::uint_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
     static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
-        return (cpuType == M6502 ? 0 : w65c02_bm) | host::uint_t(addrMode);
+        return (host::uint_t(cpuType) << cputype_gp)
+            | host::uint_t(addrMode);
     }
 
 private:
-    static constexpr host::uint_t w65c02_bm = 0x80;
+    static constexpr host::uint_t cputype_gp = 6;
+    static constexpr host::uint_t cputype_gm = 0x3;
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
 

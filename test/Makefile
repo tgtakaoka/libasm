@@ -22,7 +22,9 @@ all: \
 	test_hd6309.s19 \
 	test_mc6800.s19 \
 	test_m6502.s19 \
-	test_w65c02.s19 \
+	test_w65sc02.s19 \
+	test_r65c02.s19 \
+	test_w65c02s.s19 \
 	test_i8080.hex \
 	test_z80.hex \
 	test_tms9900.hex \
@@ -177,8 +179,10 @@ gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
 	./gen_mc6800 -u -C 6800  -o gen_mc6800.asm
 gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_m6502 -u -C 6502  -o gen_m6502.asm
-	./gen_m6502 -u -C 65c02 -o gen_w65c02.asm
+	./gen_m6502 -u -C 6502    -o gen_m6502.asm
+	./gen_m6502 -u -C 65sc02  -o gen_w65sc02.asm
+	./gen_m6502 -u -C 65c02   -o gen_r65c02.asm
+	./gen_m6502 -u -C w65c02s -o gen_w65c02s.asm
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)  $(OBJS_common)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_i8080 -u -C 8080 -o gen_i8080.asm

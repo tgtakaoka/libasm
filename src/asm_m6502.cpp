@@ -29,7 +29,6 @@ Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
-#ifdef W65C02_ENABLE_BITOPS
 Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
     if (*_scan == '<') _scan++;
     uint16_t zp;
@@ -42,7 +41,6 @@ Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
     encodeRelative(insn, /* emitInsn */ false);
     return setError(error ? error : getError());
 }
-#endif
 
 Error AsmM6502::selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp) {
     if (modifier == '>' || op.val16 >= 0x100) {
@@ -89,7 +87,7 @@ Error AsmM6502::parseOperand(Operand &op) {
                     p++;
                     if (selectMode(modifier, op, IDX_ABS_IND, INDX_IND))
                         return getError();
-                    if (op.mode == IDX_ABS_IND && !TableM6502.is65c02())
+                    if (op.mode == IDX_ABS_IND && TableM6502.is6502())
                         return setError(UNKNOWN_OPERAND);
                 } else {
                     if (selectMode(modifier, op, ABS_IDX_X, ZP_IDX_X))
@@ -131,8 +129,6 @@ Error AsmM6502::encode(Insn &insn) {
     insn.setName(_scan, endName);
     if (TableM6502.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.is65c02() && !TableM6502.is65c02())
-        return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
@@ -141,11 +137,8 @@ Error AsmM6502::encode(Insn &insn) {
         return checkLineEnd();
     case REL8:
         return encodeRelative(insn, /* emitInsn */ true);
-#ifdef W65C02_ENABLE_BITOPS
     case ZP_REL8:
-        if (TableM6502.is65c02())
-            return encodeZeroPageRelative(insn);
-#endif
+        return encodeZeroPageRelative(insn);
     default:
         break;
     }

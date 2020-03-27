@@ -28,7 +28,7 @@ public:
 
     bool setCpu(const char *cpu);
     static const char *listCpu();
-    bool is65c02() const { return _cpuType == W65C02; }
+    bool is6502() const { return _cpuType == M6502; }
 
 private:
     CpuType _cpuType;

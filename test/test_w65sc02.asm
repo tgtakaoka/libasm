@@ -12,12 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	include test_m6502.asm
+        include test_m6502.asm
 
-        cpu     65c02
+        cpu     65sc02
 
-;;; R65C02
-	org     $0150
+;;; W65SC02
+        org     $0150
 
 ;;; 0X
         tsb     $05
@@ -58,7 +58,6 @@
         sbc     ($f3)
         plx
 
-        end
 ;;; comment
 
 ;;; Local Variables:
