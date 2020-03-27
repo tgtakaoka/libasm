@@ -177,70 +177,67 @@ static constexpr Entry M6502_TABLE[] PROGMEM = {
     E(0xB0, BCS, M6502, REL8)
     E(0xD0, BNE, M6502, REL8)
     E(0xF0, BEQ, M6502, REL8)
-};
-
-static constexpr Entry W65C02_TABLE[] PROGMEM = {
-    E(0x5A, PHY, W65C02, IMPLIED)
-    E(0x7A, PLY, W65C02, IMPLIED)
-    E(0xDA, PHX, W65C02, IMPLIED)
-    E(0xFA, PLX, W65C02, IMPLIED)
-    E(0x1A, INC, W65C02, ACCUMULATOR)
-    E(0x3A, DEC, W65C02, ACCUMULATOR)
-    E(0x89, BIT, W65C02, IMMEDIATE)
-    E(0x04, TSB, W65C02, ZEROPAGE)
-    E(0x14, TRB, W65C02, ZEROPAGE)
-    E(0x64, STZ, W65C02, ZEROPAGE)
-    E(0x34, BIT, W65C02, ZP_IDX_X)
-    E(0x74, STZ, W65C02, ZP_IDX_X)
-    E(0x0C, TSB, W65C02, ABSOLUTE)
-    E(0x1C, TRB, W65C02, ABSOLUTE)
-    E(0x9C, STZ, W65C02, ABSOLUTE)
-    E(0x3C, BIT, W65C02, ABS_IDX_X)
-    E(0x9E, STZ, W65C02, ABS_IDX_X)
-    E(0x7C, JMP, W65C02, IDX_ABS_IND)
-    E(0x12, ORA, W65C02, ZP_INDIRECT)
-    E(0x32, AND, W65C02, ZP_INDIRECT)
-    E(0x52, EOR, W65C02, ZP_INDIRECT)
-    E(0x72, ADC, W65C02, ZP_INDIRECT)
-    E(0x92, STA, W65C02, ZP_INDIRECT)
-    E(0xB2, LDA, W65C02, ZP_INDIRECT)
-    E(0xD2, CMP, W65C02, ZP_INDIRECT)
-    E(0xF2, SBC, W65C02, ZP_INDIRECT)
-    E(0x80, BRA, W65C02, REL8)
-#ifdef W65C02_ENABLE_BITOPS
-    E(0x07, RMB0, W65C02, ZEROPAGE)
-    E(0x17, RMB1, W65C02, ZEROPAGE)
-    E(0x27, RMB2, W65C02, ZEROPAGE)
-    E(0x37, RMB3, W65C02, ZEROPAGE)
-    E(0x47, RMB4, W65C02, ZEROPAGE)
-    E(0x57, RMB5, W65C02, ZEROPAGE)
-    E(0x67, RMB6, W65C02, ZEROPAGE)
-    E(0x77, RMB7, W65C02, ZEROPAGE)
-    E(0x87, SMB0, W65C02, ZEROPAGE)
-    E(0x97, SMB1, W65C02, ZEROPAGE)
-    E(0xA7, SMB2, W65C02, ZEROPAGE)
-    E(0xB7, SMB3, W65C02, ZEROPAGE)
-    E(0xC7, SMB4, W65C02, ZEROPAGE)
-    E(0xD7, SMB5, W65C02, ZEROPAGE)
-    E(0xE7, SMB6, W65C02, ZEROPAGE)
-    E(0xF7, SMB7, W65C02, ZEROPAGE)
-    E(0x0F, BBR0, W65C02, ZP_REL8)
-    E(0x1F, BBR1, W65C02, ZP_REL8)
-    E(0x2F, BBR2, W65C02, ZP_REL8)
-    E(0x3F, BBR3, W65C02, ZP_REL8)
-    E(0x4F, BBR4, W65C02, ZP_REL8)
-    E(0x5F, BBR5, W65C02, ZP_REL8)
-    E(0x6F, BBR6, W65C02, ZP_REL8)
-    E(0x7F, BBR7, W65C02, ZP_REL8)
-    E(0x8F, BBS0, W65C02, ZP_REL8)
-    E(0x9F, BBS1, W65C02, ZP_REL8)
-    E(0xAF, BBS2, W65C02, ZP_REL8)
-    E(0xBF, BBS3, W65C02, ZP_REL8)
-    E(0xCF, BBS4, W65C02, ZP_REL8)
-    E(0xDF, BBS5, W65C02, ZP_REL8)
-    E(0xEF, BBS6, W65C02, ZP_REL8)
-    E(0xFF, BBS7, W65C02, ZP_REL8)
-#endif
+    E(0x5A, PHY, W65SC02, IMPLIED)
+    E(0x7A, PLY, W65SC02, IMPLIED)
+    E(0xDA, PHX, W65SC02, IMPLIED)
+    E(0xFA, PLX, W65SC02, IMPLIED)
+    E(0x1A, INC, W65SC02, ACCUMULATOR)
+    E(0x3A, DEC, W65SC02, ACCUMULATOR)
+    E(0x89, BIT, W65SC02, IMMEDIATE)
+    E(0x04, TSB, W65SC02, ZEROPAGE)
+    E(0x14, TRB, W65SC02, ZEROPAGE)
+    E(0x64, STZ, W65SC02, ZEROPAGE)
+    E(0x34, BIT, W65SC02, ZP_IDX_X)
+    E(0x74, STZ, W65SC02, ZP_IDX_X)
+    E(0x0C, TSB, W65SC02, ABSOLUTE)
+    E(0x1C, TRB, W65SC02, ABSOLUTE)
+    E(0x9C, STZ, W65SC02, ABSOLUTE)
+    E(0x3C, BIT, W65SC02, ABS_IDX_X)
+    E(0x9E, STZ, W65SC02, ABS_IDX_X)
+    E(0x7C, JMP, W65SC02, IDX_ABS_IND)
+    E(0x12, ORA, W65SC02, ZP_INDIRECT)
+    E(0x32, AND, W65SC02, ZP_INDIRECT)
+    E(0x52, EOR, W65SC02, ZP_INDIRECT)
+    E(0x72, ADC, W65SC02, ZP_INDIRECT)
+    E(0x92, STA, W65SC02, ZP_INDIRECT)
+    E(0xB2, LDA, W65SC02, ZP_INDIRECT)
+    E(0xD2, CMP, W65SC02, ZP_INDIRECT)
+    E(0xF2, SBC, W65SC02, ZP_INDIRECT)
+    E(0x80, BRA, W65SC02, REL8)
+    E(0x0F, BBR0, R65C02, ZP_REL8)
+    E(0x1F, BBR1, R65C02, ZP_REL8)
+    E(0x2F, BBR2, R65C02, ZP_REL8)
+    E(0x3F, BBR3, R65C02, ZP_REL8)
+    E(0x4F, BBR4, R65C02, ZP_REL8)
+    E(0x5F, BBR5, R65C02, ZP_REL8)
+    E(0x6F, BBR6, R65C02, ZP_REL8)
+    E(0x7F, BBR7, R65C02, ZP_REL8)
+    E(0x8F, BBS0, R65C02, ZP_REL8)
+    E(0x9F, BBS1, R65C02, ZP_REL8)
+    E(0xAF, BBS2, R65C02, ZP_REL8)
+    E(0xBF, BBS3, R65C02, ZP_REL8)
+    E(0xCF, BBS4, R65C02, ZP_REL8)
+    E(0xDF, BBS5, R65C02, ZP_REL8)
+    E(0xEF, BBS6, R65C02, ZP_REL8)
+    E(0xFF, BBS7, R65C02, ZP_REL8)
+    E(0x07, RMB0, R65C02, ZEROPAGE)
+    E(0x17, RMB1, R65C02, ZEROPAGE)
+    E(0x27, RMB2, R65C02, ZEROPAGE)
+    E(0x37, RMB3, R65C02, ZEROPAGE)
+    E(0x47, RMB4, R65C02, ZEROPAGE)
+    E(0x57, RMB5, R65C02, ZEROPAGE)
+    E(0x67, RMB6, R65C02, ZEROPAGE)
+    E(0x77, RMB7, R65C02, ZEROPAGE)
+    E(0x87, SMB0, R65C02, ZEROPAGE)
+    E(0x97, SMB1, R65C02, ZEROPAGE)
+    E(0xA7, SMB2, R65C02, ZEROPAGE)
+    E(0xB7, SMB3, R65C02, ZEROPAGE)
+    E(0xC7, SMB4, R65C02, ZEROPAGE)
+    E(0xD7, SMB5, R65C02, ZEROPAGE)
+    E(0xE7, SMB6, R65C02, ZEROPAGE)
+    E(0xF7, SMB7, R65C02, ZEROPAGE)
+    E(0xCB, WAI, W65C02S, IMPLIED)
+    E(0xDB, STP, W65C02S, IMPLIED)
 };
 
 const Entry *TableM6502::searchEntry(
@@ -312,36 +309,29 @@ Error TableM6502::searchPages(
 }
 
 Error TableM6502::searchName(Insn &insn) const {
-    if (searchPages(insn, insn.name(), ARRAY_RANGE(M6502_TABLE)) == OK)
-        return OK;
-    if (is65c02()
-        && searchPages(insn, insn.name(), ARRAY_RANGE(W65C02_TABLE)) == OK)
+    if (searchPages(insn, insn.name(), ARRAY_RANGE(M6502_TABLE)) == OK
+        && insn.supported(_cpuType))
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 Error TableM6502::searchNameAndAddrMode(Insn &insn) const {
     if (searchPages(
-            insn, insn.name(), insn.addrMode(), ARRAY_RANGE(M6502_TABLE)) == OK)
-        return OK;
-    if (is65c02()
-        && searchPages(
-            insn, insn.name(), insn.addrMode(), ARRAY_RANGE(W65C02_TABLE)) == OK)
+            insn, insn.name(), insn.addrMode(), ARRAY_RANGE(M6502_TABLE)) == OK
+        && insn.supported(_cpuType))
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 Error TableM6502::searchInsnCode(Insn &insn) const {
-    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(M6502_TABLE)) == OK)
-        return OK;
-    if (is65c02()
-        && searchPages(insn, insn.insnCode(), ARRAY_RANGE(W65C02_TABLE)) == OK)
+    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(M6502_TABLE)) == OK
+        && insn.supported(_cpuType))
         return OK;
     return UNKNOWN_INSTRUCTION;
 }
 
 const char *TableM6502::listCpu() {
-    return "6502, 65c02";
+    return "6502, 65sc02, 65c02, w65c02s";
 }
 
 bool TableM6502::setCpu(const char *cpu) {
@@ -349,8 +339,16 @@ bool TableM6502::setCpu(const char *cpu) {
         _cpuType = M6502;
         return true;
     }
+    if (strcasecmp(cpu, "65SC02") == 0) {
+        _cpuType = W65SC02;
+        return true;
+    }
     if (strcasecmp(cpu, "65C02") == 0) {
-        _cpuType = W65C02;
+        _cpuType = R65C02;
+        return true;
+    }
+    if (strcasecmp(cpu, "W65C02S") == 0) {
+        _cpuType = W65C02S;
         return true;
     }
     return false;

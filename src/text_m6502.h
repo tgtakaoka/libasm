@@ -78,19 +78,19 @@ static const char TEXT_TXA[] PROGMEM = "TXA";
 static const char TEXT_TXS[] PROGMEM = "TXS";
 static const char TEXT_TYA[] PROGMEM = "TYA";
 
-// W65C02 instructions
+// W65SC02 instructions
 
 static const char TEXT_BRA[] PROGMEM = "BRA";
 static const char TEXT_PHX[] PROGMEM = "PHX";
 static const char TEXT_PHY[] PROGMEM = "PHY";
 static const char TEXT_PLX[] PROGMEM = "PLX";
 static const char TEXT_PLY[] PROGMEM = "PLY";
-static const char TEXT_STP[] PROGMEM = "STP";
 static const char TEXT_STZ[] PROGMEM = "STZ";
 static const char TEXT_TRB[] PROGMEM = "TRB";
 static const char TEXT_TSB[] PROGMEM = "TSB";
-static const char TEXT_WAI[] PROGMEM = "WAI";
-#ifdef W65C02_ENABLE_BITOPS
+
+// R65C02 instructions
+
 static const char TEXT_BBR0[] PROGMEM = "BBR0";
 static const char TEXT_BBR1[] PROGMEM = "BBR1";
 static const char TEXT_BBR2[] PROGMEM = "BBR2";
@@ -123,7 +123,11 @@ static const char TEXT_SMB4[] PROGMEM = "SMB4";
 static const char TEXT_SMB5[] PROGMEM = "SMB5";
 static const char TEXT_SMB6[] PROGMEM = "SMB6";
 static const char TEXT_SMB7[] PROGMEM = "SMB7";
-#endif
+
+// W65C02 instructions
+
+static const char TEXT_STP[] PROGMEM  = "STP";
+static const char TEXT_WAI[] PROGMEM  = "WAI";
 
 #endif // __TEXT_M6502_H__
 

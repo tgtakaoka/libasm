@@ -104,12 +104,10 @@ Error DisM6502::decodeZeroPage(
     }
     if (indirect && index != REG_Y) *_operands++ = ')';
     *_operands = 0;
-#ifdef W65C02_ENABLE_BITOPS
     if (insn.addrMode() == ZP_REL8) {
         *_operands++ = ',';
         return decodeRelative(memory, insn);
     }
-#endif
     return setError(OK);
 }
 
@@ -119,11 +117,7 @@ Error DisM6502::decodeRelative(
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     delta = static_cast<int8_t>(val);
-#ifdef W65C02_ENABLE_BITOPS
     const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
-#else
-    const host::uint_t insnLen = 2;
-#endif
     const target::uintptr_t addr = insn.address() + insnLen + delta;
     const char *label = lookup(addr);
     if (label) {
@@ -141,9 +135,6 @@ Error DisM6502::decode(
     insn.setInsnCode(insnCode);
 
     if (TableM6502.searchInsnCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
-
-    if (insn.is65c02() && !TableM6502.is65c02())
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -167,9 +158,7 @@ Error DisM6502::decode(
     case INDX_IND:
     case INDIRECT_IDX:
     case ZP_INDIRECT:
-#ifdef W65C02_ENABLE_BITOPS
     case ZP_REL8:
-#endif
         return decodeZeroPage(memory, insn);
     case REL8:
         return decodeRelative(memory, insn);

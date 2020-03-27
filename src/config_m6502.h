@@ -32,7 +32,9 @@ namespace target
 
 enum CpuType : host::uint_t {
     M6502,
-    W65C02,
+    W65SC02,
+    R65C02,
+    W65C02S,
 };
 
 enum AddrMode : host::uint_t {
@@ -53,9 +55,7 @@ enum AddrMode : host::uint_t {
     // M6502
     IDX_ABS_IND,                // Indexed Absolute Indirect (abs,X)
     ZP_INDIRECT,                // Zero Page Indirect (zp)
-#ifdef W65C02_ENABLE_BITOPS
     ZP_REL8,                    // Zero Page Relative zp,abs
-#endif
 };
 
 #endif // __CONFIG_M6502_H__

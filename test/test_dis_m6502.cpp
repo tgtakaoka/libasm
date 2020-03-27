@@ -35,9 +35,11 @@ static void test_cpu() {
     asserter.equals(
         "cpu 6502", true, disassembler.setCpu("6502"));
     asserter.equals(
-        "cpu 65c02", true, disassembler.setCpu("65c02"));
+        "cpu 65sc02", true, disassembler.setCpu("65sc02"));
     asserter.equals(
         "cpu 65C02", true, disassembler.setCpu("65C02"));
+    asserter.equals(
+        "cpu w65c02s", true, disassembler.setCpu("w65c02s"));
 }
 
 static void test_implied() {
@@ -71,12 +73,17 @@ static void test_implied() {
     TEST(CLD, "", 0xD8);
     TEST(SED, "", 0xF8);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(PHY, "", 0x5A);
     TEST(PLY, "", 0x7A);
     TEST(PHX, "", 0xDA);
     TEST(PLX, "", 0xFA);
+
+    // W65C02S
+    disassembler.setCpu("W65C02S");
+    TEST(WAI, "", 0xCB);
+    TEST(STP, "", 0xDB);
 }
 
 static void test_accumulator() {
@@ -85,8 +92,8 @@ static void test_accumulator() {
     TEST(LSR, "A", 0x4A);
     TEST(ROR, "A", 0x6A);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(INC, "A", 0x1A);
     TEST(DEC, "A", 0x3A);
 }
@@ -105,8 +112,8 @@ static void test_immediate() {
     TEST(CMP, "#$90", 0xC9, 0x90);
     TEST(SBC, "#$90", 0xE9, 0x90);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(BIT, "#$90", 0x89, 0x90);
 
     symtab.intern(0x0010, "zero10");
@@ -118,8 +125,8 @@ static void test_immediate() {
     TEST(CPY, "#zeroFF", 0xC0, 0xFF);
     TEST(SBC, "#zero90", 0xE9, 0x90);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(BIT, "#zero90", 0x89, 0x90);
 }
 
@@ -149,8 +156,8 @@ static void test_zeropage() {
     TEST(LSR, "$10", 0x46, 0x10);
     TEST(ROR, "$10", 0x66, 0x10);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(TSB, "$10", 0x04, 0x10);
     TEST(TRB, "$10", 0x14, 0x10);
     TEST(STZ, "$10", 0x64, 0x10);
@@ -164,8 +171,8 @@ static void test_zeropage() {
     TEST(DEC, "<zeroFF", 0xC6, 0xFF);
     TEST(ROR, "<zero90", 0x66, 0x90);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(STZ, "<zero10", 0x64, 0x10);
 }
 
@@ -192,8 +199,8 @@ static void test_zeropage_indexed() {
     TEST(LSR, "$10,X", 0x56, 0x10);
     TEST(ROR, "$10,X", 0x76, 0x10);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(BIT, "$10,X", 0x34, 0x10);
     TEST(STZ, "$10,X", 0x74, 0x10);
 
@@ -209,8 +216,8 @@ static void test_zeropage_indexed() {
     TEST(LDX, "<zeroFF,Y", 0xB6, 0xFF);
     TEST(ROR, "<zero90,X", 0x76, 0x90);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(BIT, "<zero10,X", 0x34, 0x10);
 }
 
@@ -247,8 +254,8 @@ static void test_absolute() {
     TEST(JSR,  "$1234",  0x20, 0x34, 0x12);
     TEST(JSR, ">$0034", 0x20, 0x34, 0x00);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(TSB,  "$1234", 0x0C, 0x34, 0x12);
     TEST(TRB,  "$1234", 0x1C, 0x34, 0x12);
     TEST(STZ,  "$1234", 0x9C, 0x34, 0x12);
@@ -263,8 +270,8 @@ static void test_absolute() {
     TEST(LDX, ">abs1234", 0xAE, 0x34, 0x12);
     TEST(JSR, ">abs0100", 0x20, 0x00, 0x01);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(TSB, ">abs1234", 0x0C, 0x34, 0x12);
     TEST(TRB, ">abs0010", 0x1C, 0x10, 0x00);
 }
@@ -302,8 +309,8 @@ static void test_absolute_indexed() {
     TEST(ROR,  "$1234,X", 0x7E, 0x34, 0x12);
     TEST(ROR, ">$0034,X", 0x7E, 0x34, 0x00);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(BIT,  "$1234,X", 0x3C, 0x34, 0x12);
     TEST(STZ,  "$1234,X", 0x9E, 0x34, 0x12);
 
@@ -318,8 +325,8 @@ static void test_absolute_indexed() {
     TEST(LDX, ">abs1234,Y", 0xBE, 0x34, 0x12);
     TEST(LSR, ">abs0100,X", 0x5E, 0x00, 0x01);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(STZ, ">abs1234,X",  0x9E, 0x34, 0x12);
 }
 
@@ -335,22 +342,22 @@ static void test_absolute_indirect() {
 }
 
 static void test_indexed_absolute_indirect() {
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(JMP, "(>$0009,X)", 0x7C, 0x09, 0x00);
     TEST(JMP, "($1234,X)", 0x7C, 0x34, 0x12);
 
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
-    // W65C02
+    // 65SC02
     TEST(JMP, "(>abs0010,X)", 0x7C, 0x10, 0x00);
     TEST(JMP, "(>abs1234,X)", 0x7C, 0x34, 0x12);
 }
 
 static void test_zeropage_indirect() {
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     TEST(ORA, "($00)", 0x12, 0x00);
     TEST(AND, "($09)", 0x32, 0x09);
     TEST(EOR, "($10)", 0x52, 0x10);
@@ -407,8 +414,8 @@ static void test_relative() {
     ATEST(0x1000, BNE, "$1002", 0xD0, 0x00);
     ATEST(0x1000, BEQ, "$1002", 0xF0, 0x00);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     ATEST(0x1000, BRA, "$1002", 0x80, 0x00);
 
     symtab.intern(0x0F82, "label0F82");
@@ -420,14 +427,13 @@ static void test_relative() {
     ATEST(0x1000, BVS, "label1081", 0x70, 0x7F);
     ATEST(0x1000, BCC, "label0F82", 0x90, 0x80);
 
-    // W65C02
-    disassembler.setCpu("65C02");
+    // 65SC02
+    disassembler.setCpu("65SC02");
     ATEST(0x1000, BRA, "label1000", 0x80, 0xFE);
 }
 
-#ifdef W65C02_ENABLE_BITOPS
 static void test_bit_manipulation() {
-    // W65C02
+    // 65C02
     disassembler.setCpu("65C02");
     TEST(RMB0, "$10", 0x07, 0x10);
     TEST(RMB1, "$10", 0x17, 0x10);
@@ -453,7 +459,7 @@ static void test_bit_manipulation() {
 }
 
 static void test_zeropage_relative() {
-    // W65C02
+    // R65C02
     disassembler.setCpu("65C02");
     ATEST(0x1000, BBR0, "$10,$1003", 0x0F, 0x10, 0x00);
     ATEST(0x1000, BBR1, "$10,$1000", 0x1F, 0x10, 0xFD);
@@ -483,7 +489,6 @@ static void test_zeropage_relative() {
     ATEST(0x1000, BBS4, "<zero10,label1003", 0xCF, 0x10, 0x00);
     ATEST(0x1000, BBS5, "<zero10,label1000", 0xDF, 0x10, 0xFD);
 }
-#endif
 
 static void test_illegal_m6502() {
     disassembler.setCpu("6502");
@@ -513,8 +518,8 @@ static void test_illegal_m6502() {
     }
 }
 
-static void test_illegal_w65c02() {
-    disassembler.setCpu("65C02");
+static void test_illegal_w65sc02() {
+    disassembler.setCpu("65SC02");
 
     Insn insn;
     char operands[40];
@@ -558,12 +563,10 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed_indirect);
     RUN_TEST(test_indirect_indexed);
     RUN_TEST(test_relative);
-#ifdef W65C02_ENABLE_BITOPS
     RUN_TEST(test_bit_manipulation);
     RUN_TEST(test_zeropage_relative);
-#endif
     RUN_TEST(test_illegal_m6502);
-    RUN_TEST(test_illegal_w65c02);
+    RUN_TEST(test_illegal_w65sc02);
     return 0;
 }
 
