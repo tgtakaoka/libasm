@@ -40,6 +40,7 @@ bool RegM6502::compareRegName(const char *line, RegName regName) const {
 RegName RegM6502::parseIndexReg(const char *line) const {
     if (compareRegName(line, REG_X)) return REG_X;
     if (compareRegName(line, REG_Y)) return REG_Y;
+    if (compareRegName(line, REG_S)) return REG_S;
     return REG_UNDEF;
 }
 

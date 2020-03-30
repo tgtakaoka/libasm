@@ -204,40 +204,136 @@ static constexpr Entry M6502_TABLE[] PROGMEM = {
     E(0xD2, CMP, W65SC02, ZPG_IDIR)
     E(0xF2, SBC, W65SC02, ZPG_IDIR)
     E(0x80, BRA, W65SC02, REL)
-    E(0x0F, BBR0, R65C02, ZPG_REL)
-    E(0x1F, BBR1, R65C02, ZPG_REL)
-    E(0x2F, BBR2, R65C02, ZPG_REL)
-    E(0x3F, BBR3, R65C02, ZPG_REL)
-    E(0x4F, BBR4, R65C02, ZPG_REL)
-    E(0x5F, BBR5, R65C02, ZPG_REL)
-    E(0x6F, BBR6, R65C02, ZPG_REL)
-    E(0x7F, BBR7, R65C02, ZPG_REL)
-    E(0x8F, BBS0, R65C02, ZPG_REL)
-    E(0x9F, BBS1, R65C02, ZPG_REL)
-    E(0xAF, BBS2, R65C02, ZPG_REL)
-    E(0xBF, BBS3, R65C02, ZPG_REL)
-    E(0xCF, BBS4, R65C02, ZPG_REL)
-    E(0xDF, BBS5, R65C02, ZPG_REL)
-    E(0xEF, BBS6, R65C02, ZPG_REL)
-    E(0xFF, BBS7, R65C02, ZPG_REL)
-    E(0x07, RMB0, R65C02, ZPG)
-    E(0x17, RMB1, R65C02, ZPG)
-    E(0x27, RMB2, R65C02, ZPG)
-    E(0x37, RMB3, R65C02, ZPG)
-    E(0x47, RMB4, R65C02, ZPG)
-    E(0x57, RMB5, R65C02, ZPG)
-    E(0x67, RMB6, R65C02, ZPG)
-    E(0x77, RMB7, R65C02, ZPG)
-    E(0x87, SMB0, R65C02, ZPG)
-    E(0x97, SMB1, R65C02, ZPG)
-    E(0xA7, SMB2, R65C02, ZPG)
-    E(0xB7, SMB3, R65C02, ZPG)
-    E(0xC7, SMB4, R65C02, ZPG)
-    E(0xD7, SMB5, R65C02, ZPG)
-    E(0xE7, SMB6, R65C02, ZPG)
-    E(0xF7, SMB7, R65C02, ZPG)
+    E(0x0F, BBR0, R65C02BIT, ZPG_REL)
+    E(0x1F, BBR1, R65C02BIT, ZPG_REL)
+    E(0x2F, BBR2, R65C02BIT, ZPG_REL)
+    E(0x3F, BBR3, R65C02BIT, ZPG_REL)
+    E(0x4F, BBR4, R65C02BIT, ZPG_REL)
+    E(0x5F, BBR5, R65C02BIT, ZPG_REL)
+    E(0x6F, BBR6, R65C02BIT, ZPG_REL)
+    E(0x7F, BBR7, R65C02BIT, ZPG_REL)
+    E(0x8F, BBS0, R65C02BIT, ZPG_REL)
+    E(0x9F, BBS1, R65C02BIT, ZPG_REL)
+    E(0xAF, BBS2, R65C02BIT, ZPG_REL)
+    E(0xBF, BBS3, R65C02BIT, ZPG_REL)
+    E(0xCF, BBS4, R65C02BIT, ZPG_REL)
+    E(0xDF, BBS5, R65C02BIT, ZPG_REL)
+    E(0xEF, BBS6, R65C02BIT, ZPG_REL)
+    E(0xFF, BBS7, R65C02BIT, ZPG_REL)
     E(0xCB, WAI, W65C02S, IMPL)
     E(0xDB, STP, W65C02S, IMPL)
+    E(0x07, RMB0, R65C02BIT, ZPG)
+    E(0x17, RMB1, R65C02BIT, ZPG)
+    E(0x27, RMB2, R65C02BIT, ZPG)
+    E(0x37, RMB3, R65C02BIT, ZPG)
+    E(0x47, RMB4, R65C02BIT, ZPG)
+    E(0x57, RMB5, R65C02BIT, ZPG)
+    E(0x67, RMB6, R65C02BIT, ZPG)
+    E(0x77, RMB7, R65C02BIT, ZPG)
+    E(0x87, SMB0, R65C02BIT, ZPG)
+    E(0x97, SMB1, R65C02BIT, ZPG)
+    E(0xA7, SMB2, R65C02BIT, ZPG)
+    E(0xB7, SMB3, R65C02BIT, ZPG)
+    E(0xC7, SMB4, R65C02BIT, ZPG)
+    E(0xD7, SMB5, R65C02BIT, ZPG)
+    E(0xE7, SMB6, R65C02BIT, ZPG)
+    E(0xF7, SMB7, R65C02BIT, ZPG)
+    E(0xCB, WAI,  W65C02S, IMPL)
+    E(0xDB, STP,  W65C02S, IMPL)
+    E(0x0B, PHD,  W65C816, IMPL)
+    E(0x1B, TCS,  W65C816, IMPL)
+    E(0x2B, PLD,  W65C816, IMPL)
+    E(0x3B, TSC,  W65C816, IMPL)
+    E(0x4B, PHK,  W65C816, IMPL)
+    E(0x5B, TCD,  W65C816, IMPL)
+    E(0x6B, RTL,  W65C816, IMPL)
+    E(0x7B, TDC,  W65C816, IMPL)
+    E(0x8B, PHB,  W65C816, IMPL)
+    E(0x9B, TXY,  W65C816, IMPL)
+    E(0xAB, PLB,  W65C816, IMPL)
+    E(0xBB, TYX,  W65C816, IMPL)
+    E(0xEB, XBA,  W65C816, IMPL)
+    E(0xFB, XCE,  W65C816, IMPL)
+    E(0x02, COP,  W65C816, IMM)
+    E(0x42, WDM,  W65C816, IMM)
+    E(0xC2, REP,  W65C816, IMM)
+    E(0xE2, SEP,  W65C816, IMM)
+    E(0x5C, JMP,  W65C816, ABS_LONG)
+    E(0xDC, JMP,  W65C816, ABS_IDIR_LONG)
+    E(0xFC, JSR,  W65C816, ABS_IDX_IDIR)
+    E(0x22, JSL,  W65C816, ABS_LONG)
+    E(0x62, PER,  W65C816, REL_LONG)
+    E(0x82, BRL,  W65C816, REL_LONG)
+    E(0xD4, PEI,  W65C816, ZPG_IDIR)
+    E(0xF4, PEA,  W65C816, ABS)
+    E(0x44, MVP,  W65C816, BLOCK_MOVE)
+    E(0x54, MVN,  W65C816, BLOCK_MOVE)
+    E(0x03, ORA,  W65C816, SP_REL)
+    E(0x13, ORA,  W65C816, SP_REL_IDIR_IDY)
+    E(0x07, ORA,  W65C816, ZPG_IDIR_LONG)
+    E(0x17, ORA,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0x0F, ORA,  W65C816, ABS_LONG)
+    E(0x1F, ORA,  W65C816, ABS_LONG_IDX)
+    E(0x23, AND,  W65C816, SP_REL)
+    E(0x33, AND,  W65C816, SP_REL_IDIR_IDY)
+    E(0x27, AND,  W65C816, ZPG_IDIR_LONG)
+    E(0x37, AND,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0x2F, AND,  W65C816, ABS_LONG)
+    E(0x3F, AND,  W65C816, ABS_LONG_IDX)
+    E(0x43, EOR,  W65C816, SP_REL)
+    E(0x53, EOR,  W65C816, SP_REL_IDIR_IDY)
+    E(0x47, EOR,  W65C816, ZPG_IDIR_LONG)
+    E(0x57, EOR,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0x4F, EOR,  W65C816, ABS_LONG)
+    E(0x5F, EOR,  W65C816, ABS_LONG_IDX)
+    E(0x63, ADC,  W65C816, SP_REL)
+    E(0x73, ADC,  W65C816, SP_REL_IDIR_IDY)
+    E(0x67, ADC,  W65C816, ZPG_IDIR_LONG)
+    E(0x77, ADC,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0x6F, ADC,  W65C816, ABS_LONG)
+    E(0x7F, ADC,  W65C816, ABS_LONG_IDX)
+    E(0x83, STA,  W65C816, SP_REL)
+    E(0x93, STA,  W65C816, SP_REL_IDIR_IDY)
+    E(0x87, STA,  W65C816, ZPG_IDIR_LONG)
+    E(0x97, STA,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0x8F, STA,  W65C816, ABS_LONG)
+    E(0x9F, STA,  W65C816, ABS_LONG_IDX)
+    E(0xA3, LDA,  W65C816, SP_REL)
+    E(0xB3, LDA,  W65C816, SP_REL_IDIR_IDY)
+    E(0xA7, LDA,  W65C816, ZPG_IDIR_LONG)
+    E(0xB7, LDA,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0xAF, LDA,  W65C816, ABS_LONG)
+    E(0xBF, LDA,  W65C816, ABS_LONG_IDX)
+    E(0xC3, CMP,  W65C816, SP_REL)
+    E(0xD3, CMP,  W65C816, SP_REL_IDIR_IDY)
+    E(0xC7, CMP,  W65C816, ZPG_IDIR_LONG)
+    E(0xD7, CMP,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0xCF, CMP,  W65C816, ABS_LONG)
+    E(0xDF, CMP,  W65C816, ABS_LONG_IDX)
+    E(0xE3, SBC,  W65C816, SP_REL)
+    E(0xF3, SBC,  W65C816, SP_REL_IDIR_IDY)
+    E(0xE7, SBC,  W65C816, ZPG_IDIR_LONG)
+    E(0xF7, SBC,  W65C816, ZPG_IDIR_LONG_IDY)
+    E(0xEF, SBC,  W65C816, ABS_LONG)
+    E(0xFF, SBC,  W65C816, ABS_LONG_IDX)
+
+    E(0xDC, JMPL, W65C816, ABS_IDIR)
+    E(0x07, ORAL, W65C816, ZPG_IDIR)
+    E(0x17, ORAL, W65C816, ZPG_IDIR_IDY)
+    E(0x27, ANDL, W65C816, ZPG_IDIR)
+    E(0x37, ANDL, W65C816, ZPG_IDIR_IDY)
+    E(0x47, EORL, W65C816, ZPG_IDIR)
+    E(0x57, EORL, W65C816, ZPG_IDIR_IDY)
+    E(0x67, ADCL, W65C816, ZPG_IDIR)
+    E(0x77, ADCL, W65C816, ZPG_IDIR_IDY)
+    E(0x87, STAL, W65C816, ZPG_IDIR)
+    E(0x97, STAL, W65C816, ZPG_IDIR_IDY)
+    E(0xA7, LDAL, W65C816, ZPG_IDIR)
+    E(0xB7, LDAL, W65C816, ZPG_IDIR_IDY)
+    E(0xC7, CMPL, W65C816, ZPG_IDIR)
+    E(0xD7, CMPL, W65C816, ZPG_IDIR_IDY)
+    E(0xE7, SBCL, W65C816, ZPG_IDIR)
+    E(0xF7, SBCL, W65C816, ZPG_IDIR_IDY)
 };
 
 const Entry *TableM6502::searchEntry(
@@ -301,14 +397,25 @@ Error TableM6502::searchNameAndAddrMode(
     return UNKNOWN_INSTRUCTION;
 }
 
+static bool acceptAddrMode(AddrMode addrMode, bool acceptIndirectLong) {
+    if (addrMode == ABS_IDIR_LONG
+        || addrMode == ZPG_IDIR_LONG
+        || addrMode == ZPG_IDIR_LONG_IDY)
+        return acceptIndirectLong;
+    return true;
+}
+
 Error TableM6502::searchInsnCode(
-    Insn &insn, const Entry *table, const Entry *end) const {
+    Insn &insn, bool acceptIndirectLong,
+    const Entry *table, const Entry *end) const {
     const target::insn_t insnCode = insn.insnCode();
     for (const Entry *entry = table;
          entry < end && (entry = searchEntry(insnCode, entry, end)) != nullptr;
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
+        if (!acceptAddrMode(insn.addrMode(), acceptIndirectLong))
+            continue;
         char name[Entry::name_max + 1];
         pgm_strncpy(name, entry->name, sizeof(name));
         insn.setName(name);
@@ -325,12 +432,14 @@ Error TableM6502::searchNameAndAddrMode(Insn &insn) const {
     return searchNameAndAddrMode(insn, ARRAY_RANGE(M6502_TABLE));
 }
 
-Error TableM6502::searchInsnCode(Insn &insn) const {
-    return searchInsnCode(insn, ARRAY_RANGE(M6502_TABLE));
+Error TableM6502::searchInsnCode(
+    Insn &insn, bool acceptIndirectLong) const {
+    return searchInsnCode(
+        insn, acceptIndirectLong, ARRAY_RANGE(M6502_TABLE));
 }
 
 const char *TableM6502::listCpu() {
-    return "6502, 65sc02, 65c02, w65c02s";
+    return "6502, 65sc02, 65c02, w65c02s, 65816";
 }
 
 bool TableM6502::setCpu(const char *cpu) {
@@ -348,6 +457,10 @@ bool TableM6502::setCpu(const char *cpu) {
     }
     if (strcasecmp(cpu, "W65C02S") == 0) {
         _cpuType = W65C02S;
+        return true;
+    }
+    if (strcmp(cpu, "65816") == 0) {
+        _cpuType = W65C816;
         return true;
     }
     return false;

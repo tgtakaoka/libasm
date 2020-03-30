@@ -22,6 +22,7 @@ enum RegName : char {
     REG_A = 'A',
     REG_X = 'X',
     REG_Y = 'Y',
+    REG_S = 'S',
 };
 
 #include "reg_base.h"

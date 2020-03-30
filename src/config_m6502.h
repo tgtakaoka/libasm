@@ -19,9 +19,6 @@
 
 #include "config_host.h"
 
-// Not all 65C02 variants implemet bit manipulation operation
-//#define W65C02_ENABLE_BITOPS
-
 namespace target
 {
     typedef uint16_t uintptr_t;
@@ -33,8 +30,10 @@ namespace target
 enum CpuType : host::uint_t {
     M6502,
     W65SC02,
+    R65C02BIT,
     R65C02,
     W65C02S,
+    W65C816,
 };
 
 enum AddrMode : host::uint_t {
@@ -57,6 +56,17 @@ enum AddrMode : host::uint_t {
     ABS_IDX_IDIR,        // Indexed Absolute Indirect: (abs,X)
     ZPG_IDIR,            // Zero Page Indirect: (zp)
     ZPG_REL,             // Zero Page Relative: zp,abs
+
+    // W65C816
+    ABS_LONG,            // Absolute Long: al
+    ABS_LONG_IDX,        // Absolute Long Indexed: al,x
+    ABS_IDIR_LONG,       // Absolute Indirect Long: [a]
+    REL_LONG,            // Relative Long: rl
+    SP_REL,              // Stack Relative: off,s
+    SP_REL_IDIR_IDY,     // Stack Relative Indirect Indexed: (off,s),y
+    ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
+    ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
+    BLOCK_MOVE,          // Block Move: #ss,#dd
 };
 
 #endif // __CONFIG_M6502_H__

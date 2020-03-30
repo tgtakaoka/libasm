@@ -24,7 +24,7 @@ class TableM6502 {
 public:
     Error searchName(Insn &insn) const;
     Error searchNameAndAddrMode(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
+    Error searchInsnCode(Insn &insn, bool acceptIndirectLong) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();
@@ -43,7 +43,8 @@ private:
     Error searchNameAndAddrMode(
         Insn &insn, const Entry *table, const Entry *end) const;
     Error searchInsnCode(
-        Insn &insn, const Entry *table, const Entry *end) const;
+        Insn &insn, bool acceptIndirectLong,
+        const Entry *table, const Entry *end) const;
 };
 
 extern TableM6502 TableM6502;
