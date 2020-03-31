@@ -38,13 +38,12 @@ private:
     static const Entry *searchEntry(
         const target::insn_t insnCode, const Entry *table, const Entry *end);
 
-    static Error searchPages(
-        Insn &insn, const char *name, const Entry *table, const Entry *end);
-    static Error searchPages(
-        Insn &insn, const char *name, AddrMode addrMode,
-        const Entry *table, const Entry *end);
-    static Error searchPages(
-        Insn &insn, target::insn_t insnCode, const Entry *table, const Entry *end);
+    Error searchName(
+        Insn &insn,  const Entry *table, const Entry *end) const;
+    Error searchNameAndAddrMode(
+        Insn &insn, const Entry *table, const Entry *end) const;
+    Error searchInsnCode(
+        Insn &insn, const Entry *table, const Entry *end) const;
 };
 
 extern TableM6502 TableM6502;

@@ -260,12 +260,15 @@ const Entry *TableM6502::searchEntry(
     return nullptr;
 }
 
-Error TableM6502::searchPages(
-    Insn &insn, const char *name, const Entry *table, const Entry *end) {
-    const Entry *entry = searchEntry(name, table, end);
-    if (entry) {
-        insn.setInsnCode(pgm_read_byte(&entry->insnCode));
+Error TableM6502::searchName(
+    Insn &insn, const Entry *table, const Entry *end) const {
+    const char *name = insn.name();
+    for (const Entry *entry = table;
+         entry < end && (entry = searchEntry(name, table, end)) != nullptr;
+         entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
+        if (!insn.supported(_cpuType)) continue;
+        insn.setInsnCode(pgm_read_byte(&entry->insnCode));
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
@@ -281,25 +284,31 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-Error TableM6502::searchPages(
-    Insn &insn, const char *name, AddrMode addrMode, const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end
-             && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
-        const host::uint_t flags = pgm_read_byte(&entry->flags);
-        if (acceptAddrMode(addrMode, Entry::_addrMode(flags))) {
+Error TableM6502::searchNameAndAddrMode(
+    Insn &insn, const Entry *table, const Entry *end) const {
+    const char *name = insn.name();
+    const AddrMode addrMode = insn.addrMode();
+    for (const Entry *entry = table;
+         entry < end && (entry = searchEntry(name, entry, end)) != nullptr;
+         entry++) {
+        insn.setFlags(pgm_read_byte(&entry->flags));
+        if (!insn.supported(_cpuType)) continue;
+        if (acceptAddrMode(addrMode, insn.addrMode())) {
             insn.setInsnCode(pgm_read_byte(&entry->insnCode));
-            insn.setFlags(flags);
             return OK;
         }
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableM6502::searchPages(
-    Insn &insn, target::insn_t insnCode, const Entry *table, const Entry *end) {
-    const Entry *entry = searchEntry(insnCode, table, end);
-    if (entry) {
+Error TableM6502::searchInsnCode(
+    Insn &insn, const Entry *table, const Entry *end) const {
+    const target::insn_t insnCode = insn.insnCode();
+    for (const Entry *entry = table;
+         entry < end && (entry = searchEntry(insnCode, entry, end)) != nullptr;
+         entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
+        if (!insn.supported(_cpuType)) continue;
         char name[Entry::name_max + 1];
         pgm_strcpy(name, entry->name);
         insn.setName(name);
@@ -309,25 +318,15 @@ Error TableM6502::searchPages(
 }
 
 Error TableM6502::searchName(Insn &insn) const {
-    if (searchPages(insn, insn.name(), ARRAY_RANGE(M6502_TABLE)) == OK
-        && insn.supported(_cpuType))
-        return OK;
-    return UNKNOWN_INSTRUCTION;
+    return searchName(insn, ARRAY_RANGE(M6502_TABLE));
 }
 
 Error TableM6502::searchNameAndAddrMode(Insn &insn) const {
-    if (searchPages(
-            insn, insn.name(), insn.addrMode(), ARRAY_RANGE(M6502_TABLE)) == OK
-        && insn.supported(_cpuType))
-        return OK;
-    return UNKNOWN_INSTRUCTION;
+    return searchNameAndAddrMode(insn, ARRAY_RANGE(M6502_TABLE));
 }
 
 Error TableM6502::searchInsnCode(Insn &insn) const {
-    if (searchPages(insn, insn.insnCode(), ARRAY_RANGE(M6502_TABLE)) == OK
-        && insn.supported(_cpuType))
-        return OK;
-    return UNKNOWN_INSTRUCTION;
+    return searchInsnCode(insn, ARRAY_RANGE(M6502_TABLE));
 }
 
 const char *TableM6502::listCpu() {
