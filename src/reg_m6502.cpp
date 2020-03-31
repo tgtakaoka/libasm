@@ -32,7 +32,8 @@ host::uint_t RegM6502::regNameLen(RegName regName) const {
 }
 
 bool RegM6502::compareRegName(const char *line, RegName regName) const {
-    if (!regCharCaseEqual(*line++, char(regName)))return false;
+    if (!regCharCaseEqual(*line++, char(regName)))
+        return false;
     return !isidchar(*line);
 }
 

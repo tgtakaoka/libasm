@@ -33,15 +33,16 @@ Error DisM6502::decodeImmediate(
 
 Error DisM6502::decodeAbsolute(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
-    const bool indirect = (insn.addrMode() == IDX_ABS_IND)
-        || (insn.addrMode() == ABS_INDIRECT);
+    const AddrMode addrMode = insn.addrMode();
+    const bool indirect = addrMode == ABS_IDX_IDIR
+        || addrMode == ABS_IDIR;
     RegName index;
-    switch (insn.addrMode()) {
-    case ABS_IDX_X:
-    case IDX_ABS_IND:
+    switch (addrMode) {
+    case ABS_IDX:
+    case ABS_IDX_IDIR:
         index = REG_X;
         break;
-    case ABS_IDX_Y:
+    case ABS_IDY:
         index = REG_Y;
         break;
     default:
@@ -70,17 +71,18 @@ Error DisM6502::decodeAbsolute(
 
 Error DisM6502::decodeZeroPage(
     DisMemory<target::uintptr_t> &memory, Insn& insn) {
-    const bool indirect = insn.addrMode() == INDX_IND
-        || insn.addrMode() == INDIRECT_IDX
-        || insn.addrMode() == ZP_INDIRECT;
+    const AddrMode addrMode = insn.addrMode();
+    const bool indirect = addrMode == ZPG_IDX_IDIR
+        || addrMode == ZPG_IDIR_IDY
+        || addrMode == ZPG_IDIR;
     RegName index;
-    switch (insn.addrMode()) {
-    case ZP_IDX_X:
-    case INDX_IND:
+    switch (addrMode) {
+    case ZPG_IDX:
+    case ZPG_IDX_IDIR:
         index = REG_X;
         break;
-    case ZP_IDX_Y:
-    case INDIRECT_IDX:
+    case ZPG_IDY:
+    case ZPG_IDIR_IDY:
         index = REG_Y;
         break;
     default:
@@ -104,7 +106,7 @@ Error DisM6502::decodeZeroPage(
     }
     if (indirect && index != REG_Y) *_operands++ = ')';
     *_operands = 0;
-    if (insn.addrMode() == ZP_REL8) {
+    if (addrMode == ZPG_REL) {
         *_operands++ = ',';
         return decodeRelative(memory, insn);
     }
@@ -113,12 +115,11 @@ Error DisM6502::decodeZeroPage(
 
 Error DisM6502::decodeRelative(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
-    target::ptrdiff_t delta;
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    delta = static_cast<int8_t>(val);
-    const host::uint_t insnLen = (insn.addrMode() == ZP_REL8 ? 3 : 2);
-    const target::uintptr_t addr = insn.address() + insnLen + delta;
+    const host::uint_t insnLen = (insn.addrMode() == ZPG_REL ? 3 : 2);
+    const target::uintptr_t addr = insn.address() + insnLen
+        + static_cast<int8_t>(val);
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -138,29 +139,29 @@ Error DisM6502::decode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case IMPLIED:
+    case IMPL:
         return setError(OK);
-    case ACCUMULATOR:
+    case ACCM:
         _operands = _regs.outRegName(_operands, REG_A);
         *_operands = 0;
         return setError(OK);
-    case IMMEDIATE:
+    case IMM:
         return decodeImmediate(memory, insn);
-    case ABSOLUTE:
-    case ABS_IDX_X:
-    case ABS_IDX_Y:
-    case ABS_INDIRECT:
-    case IDX_ABS_IND:
+    case ABS:
+    case ABS_IDX:
+    case ABS_IDY:
+    case ABS_IDIR:
+    case ABS_IDX_IDIR:
         return decodeAbsolute(memory, insn);
-    case ZEROPAGE:
-    case ZP_IDX_X:
-    case ZP_IDX_Y:
-    case INDX_IND:
-    case INDIRECT_IDX:
-    case ZP_INDIRECT:
-    case ZP_REL8:
+    case ZPG:
+    case ZPG_IDX:
+    case ZPG_IDY:
+    case ZPG_IDX_IDIR:
+    case ZPG_IDIR_IDY:
+    case ZPG_IDIR:
+    case ZPG_REL:
         return decodeZeroPage(memory, insn);
-    case REL8:
+    case REL:
         return decodeRelative(memory, insn);
     default:
         return setError(INTERNAL_ERROR);

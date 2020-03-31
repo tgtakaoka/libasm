@@ -38,24 +38,25 @@ enum CpuType : host::uint_t {
 };
 
 enum AddrMode : host::uint_t {
-    IMPLIED,
-    ACCUMULATOR,
-    IMMEDIATE,
-    ABSOLUTE,
-    ZEROPAGE,
-    ZP_IDX_X,                   // Zero Page Indexed zp,X
-    ZP_IDX_Y,                   // Zero Page Indexed zp,Y
-    ABS_IDX_X,                  // Absolute Indexed abs,X
-    ABS_IDX_Y,                  // Absolute Indexed abs,Y
-    REL8,
-    INDX_IND,                   // Indexed Indirect (zp,X)
-    INDIRECT_IDX,               // Indirect Indexed (zp),Y
-    ABS_INDIRECT,               // Absolute Indirect (abs)
-
     // M6502
-    IDX_ABS_IND,                // Indexed Absolute Indirect (abs,X)
-    ZP_INDIRECT,                // Zero Page Indirect (zp)
-    ZP_REL8,                    // Zero Page Relative zp,abs
+    IMPL,                // Implied
+    ACCM,                // Accumulator A
+    IMM,                 // Immediate: #nn
+    ABS,                 // Absolute: abs
+    ZPG,                 // Zero Page: zp
+    ZPG_IDX,             // Zero Page Indexed: zp,X
+    ZPG_IDY,             // Zero Page Indexed: zp,Y
+    ABS_IDX,             // Absolute Indexed: abs,X
+    ABS_IDY,             // Absolute Indexed: abs,Y
+    REL,                 // Relative: abs
+    ZPG_IDX_IDIR,        // Indexed Indirect: (zp,X)
+    ZPG_IDIR_IDY,        // Indirect Indexed: (zp),Y
+    ABS_IDIR,            // Absolute Indirect: (abs)
+
+    // W65SC02
+    ABS_IDX_IDIR,        // Indexed Absolute Indirect: (abs,X)
+    ZPG_IDIR,            // Zero Page Indirect: (zp)
+    ZPG_REL,             // Zero Page Relative: zp,abs
 };
 
 #endif // __CONFIG_M6502_H__

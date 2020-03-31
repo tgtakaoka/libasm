@@ -63,11 +63,11 @@ Error AsmM6502::parseOperand(Operand &op) {
         if (getOperand8(val8)) return getError();
         op.setError(getError());
         p = _scan;
-        op.mode = IMMEDIATE;
+        op.mode = IMM;
         op.val16 = val8;
     } else if (_regs.compareRegName(p, REG_A)) { // A
         p += _regs.regNameLen(REG_A);
-        op.mode = ACCUMULATOR;
+        op.mode = ACCM;
         op.setError(OK);
     } else {
         const bool indirect = (*p == '(');
@@ -85,18 +85,18 @@ Error AsmM6502::parseOperand(Operand &op) {
                 if (indirect) {
                     if (*p != ')') return op.setError(UNKNOWN_OPERAND);
                     p++;
-                    if (selectMode(modifier, op, IDX_ABS_IND, INDX_IND))
+                    if (selectMode(modifier, op, ABS_IDX_IDIR, ZPG_IDX_IDIR))
                         return getError();
-                    if (op.mode == IDX_ABS_IND && TableM6502.is6502())
+                    if (op.mode == ABS_IDX_IDIR && TableM6502.is6502())
                         return setError(UNKNOWN_OPERAND);
                 } else {
-                    if (selectMode(modifier, op, ABS_IDX_X, ZP_IDX_X))
+                    if (selectMode(modifier, op, ABS_IDX, ZPG_IDX))
                         return getError();
                 }
             } else if (_regs.compareRegName(p, REG_Y)) { // nn.Y
                 if (indirect) return setError(UNKNOWN_OPERAND);
                 p = skipSpaces(p + _regs.regNameLen(REG_Y));
-                if (selectMode(modifier, op, ABS_IDX_Y, ZP_IDX_Y))
+                if (selectMode(modifier, op, ABS_IDY, ZPG_IDY))
                     return getError();
             } else return setError(UNKNOWN_OPERAND);
         } else if (*p == ')') {
@@ -107,16 +107,16 @@ Error AsmM6502::parseOperand(Operand &op) {
                 if (_regs.compareRegName(p, REG_Y)) { // (zp),Y
                     p += _regs.regNameLen(REG_Y);
                     if (modifier == '<' || op.val16 < 0x100) {
-                        op.mode = INDIRECT_IDX;
+                        op.mode = ZPG_IDIR_IDY;
                     } else return setError(OPERAND_NOT_ZP);
                 } else return setError(UNKNOWN_OPERAND);
             } else {            // (abs), (zp)
-                if (selectMode(modifier, op, ABS_INDIRECT, ZP_INDIRECT))
+                if (selectMode(modifier, op, ABS_IDIR, ZPG_IDIR))
                     return getError();
             }
         } else {                // abs, zp
             if (indirect) return setError(UNKNOWN_OPERAND);
-            if (selectMode(modifier, op, ABSOLUTE, ZEROPAGE))
+            if (selectMode(modifier, op, ABS, ZPG))
                 return getError();
         }
     }
@@ -132,12 +132,12 @@ Error AsmM6502::encode(Insn &insn) {
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
-    case IMPLIED:
+    case IMPL:
         insn.emitInsn();
         return checkLineEnd();
-    case REL8:
+    case REL:
         return encodeRelative(insn, /* emitInsn */ true);
-    case ZP_REL8:
+    case ZPG_REL:
         return encodeZeroPageRelative(insn);
     default:
         break;
@@ -149,25 +149,25 @@ Error AsmM6502::encode(Insn &insn) {
     if (TableM6502.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
-    case ACCUMULATOR:
+    case ACCM:
         insn.emitInsn();
         break;
-    case IMMEDIATE:
-    case ZEROPAGE:
-    case ZP_IDX_X:
-    case ZP_IDX_Y:
-    case INDX_IND:
-    case INDIRECT_IDX:
-    case ZP_INDIRECT:
+    case IMM:
+    case ZPG:
+    case ZPG_IDX:
+    case ZPG_IDY:
+    case ZPG_IDX_IDIR:
+    case ZPG_IDIR_IDY:
+    case ZPG_IDIR:
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(op.val16));
         setError(op);
         break;
-    case ABSOLUTE:
-    case ABS_IDX_X:
-    case ABS_IDX_Y:
-    case ABS_INDIRECT:
-    case IDX_ABS_IND:
+    case ABS:
+    case ABS_IDX:
+    case ABS_IDY:
+    case ABS_IDIR:
+    case ABS_IDX_IDIR:
         insn.emitInsn();
         insn.emitUint16(op.val16);
         setError(op);

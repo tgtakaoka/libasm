@@ -41,7 +41,7 @@ static void test_cpu() {
         "cpu W65C02S", true, assembler.setCpu("W65C02S"));
 }
 
-static void test_implied() {
+static void test_impl() {
     TEST("BRK", 0x00);
     TEST("RTI", 0x40);
     TEST("RTS", 0x60);
@@ -85,7 +85,7 @@ static void test_implied() {
     TEST("STP", 0xDB);
 }
 
-static void test_accumulator() {
+static void test_accm() {
     TEST("ASL A", 0x0A);
     TEST("ROL A", 0x2A);
     TEST("LSR A", 0x4A);
@@ -97,7 +97,7 @@ static void test_accumulator() {
     TEST("DEC A", 0x3A);
 }
 
-static void test_immediate() {
+static void test_imm() {
     TEST("LDY #0",   0xA0, 0x00);
     TEST("LDX #16",  0xA2, 0x10);
     TEST("CPY #+255", 0xC0, 0xFF);
@@ -129,7 +129,7 @@ static void test_immediate() {
     TEST("BIT #zero90", 0x89, 0x90);
 }
 
-static void test_zeropage() {
+static void test_zpg() {
     TEST("BIT $10", 0x24, 0x10);
     TEST("ORA $10", 0x05, 0x10);
     TEST("AND $10", 0x25, 0x10);
@@ -175,7 +175,7 @@ static void test_zeropage() {
     TEST("STZ zero10", 0x64, 0x10);
 }
 
-static void test_zeropage_indexed() {
+static void test_zpg_indexed() {
     TEST("ORA $10,X", 0x15, 0x10);
     TEST("AND $10,X", 0x35, 0x10);
     TEST("EOR $10,X", 0x55, 0x10);
@@ -220,7 +220,7 @@ static void test_zeropage_indexed() {
     TEST("BIT zero10,X", 0x34, 0x10);
 }
 
-static void test_absolute() {
+static void test_abs() {
     TEST("BIT $1234", 0x2C, 0x34, 0x12);
     TEST("ORA $1234", 0x0D, 0x34, 0x12);
     TEST("AND $1234", 0x2D, 0x34, 0x12);
@@ -269,7 +269,7 @@ static void test_absolute() {
     TEST("TSB abs1234",  0x0C, 0x34, 0x12);
 }
 
-static void test_absolute_indexed() {
+static void test_abs_indexed() {
     TEST("ORA $1234,X", 0x1D, 0x34, 0x12);
     TEST("AND $1234,X", 0x3D, 0x34, 0x12);
     TEST("EOR $1234,X", 0x5D, 0x34, 0x12);
@@ -320,7 +320,7 @@ static void test_absolute_indexed() {
     TEST("STZ abs1234,X",  0x9E, 0x34, 0x12);
 }
 
-static void test_absolute_indirect() {
+static void test_abs_idir() {
     TEST("JMP ($1234)", 0x6C, 0x34, 0x12);
 
     symtab.intern(0x0010, "abs0010");
@@ -330,7 +330,7 @@ static void test_absolute_indirect() {
     TEST("JMP (abs1234)",  0x6C, 0x34, 0x12);
 }
 
-static void test_indexed_absolute_indirect() {
+static void test_abs_indexed_idir() {
     // 65SC02
     assembler.setCpu("65sc02");
     TEST("JMP ($1234,X)", 0x7C, 0x34, 0x12);
@@ -343,7 +343,7 @@ static void test_indexed_absolute_indirect() {
     TEST("JMP (abs1234,X)",  0x7C, 0x34, 0x12);
 }
 
-static void test_zeropage_indirect() {
+static void test_zpg_idir() {
     // 65SC02
     assembler.setCpu("65sc02");
     TEST("ORA ($10)", 0x12, 0x10);
@@ -362,7 +362,7 @@ static void test_zeropage_indirect() {
     TEST("AND (zeroFF)", 0x32, 0xFF);
 }
 
-static void test_indexed_indirect() {
+static void test_zpg_indexed_idir() {
     TEST("ORA ($10,X)", 0x01, 0x10);
     TEST("AND ($10,X)", 0x21, 0x10);
     TEST("EOR ($10,X)", 0x41, 0x10);
@@ -377,7 +377,7 @@ static void test_indexed_indirect() {
     TEST("LDA (zero10,X)", 0xA1, 0x10);
 }
 
-static void test_indirect_indexed() {
+static void test_zpg_idir_indexed() {
     TEST("ORA ($10),Y", 0x11, 0x10);
     TEST("AND ($10),Y", 0x31, 0x10);
     TEST("EOR ($10),Y", 0x51, 0x10);
@@ -392,7 +392,7 @@ static void test_indirect_indexed() {
     TEST("LDA (zero10),Y", 0xB1, 0x10);
 }
 
-static void test_relative() {
+static void test_rel() {
     ATEST(0x1000, "BPL $1002", 0x10, 0x00);
     ATEST(0x1000, "BMI $1000", 0x30, 0xFE);
     ATEST(0x1000, "BVC $1004", 0x50, 0x02);
@@ -420,7 +420,7 @@ static void test_relative() {
     ATEST(0x1000, "BRA label1000", 0x80, 0xFE);
 }
 
-static void test_bit_manipulation() {
+static void test_bitop() {
     // 65C02
     assembler.setCpu("65c02");
     TEST("RMB0 $10", 0x07, 0x10);
@@ -446,7 +446,7 @@ static void test_bit_manipulation() {
     TEST("SMB0 zero10", 0x87, 0x10);
 }
 
-static void test_zeropage_relative() {
+static void test_zpg_rel() {
     // 65C02
     assembler.setCpu("65c02");
     ATEST(0x1000, "BBR0 $10,$1003", 0x0F, 0x10, 0x00);
@@ -547,21 +547,21 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_implied);
-    RUN_TEST(test_accumulator);
-    RUN_TEST(test_immediate);
-    RUN_TEST(test_zeropage);
-    RUN_TEST(test_zeropage_indexed);
-    RUN_TEST(test_absolute);
-    RUN_TEST(test_absolute_indexed);
-    RUN_TEST(test_absolute_indirect);
-    RUN_TEST(test_zeropage_indirect);
-    RUN_TEST(test_indexed_absolute_indirect);
-    RUN_TEST(test_indexed_indirect);
-    RUN_TEST(test_indirect_indexed);
-    RUN_TEST(test_relative);
-    RUN_TEST(test_bit_manipulation);
-    RUN_TEST(test_zeropage_relative);
+    RUN_TEST(test_impl);
+    RUN_TEST(test_accm);
+    RUN_TEST(test_imm);
+    RUN_TEST(test_zpg);
+    RUN_TEST(test_zpg_indexed);
+    RUN_TEST(test_abs);
+    RUN_TEST(test_abs_indexed);
+    RUN_TEST(test_abs_idir);
+    RUN_TEST(test_zpg_idir);
+    RUN_TEST(test_abs_indexed_idir);
+    RUN_TEST(test_zpg_indexed_idir);
+    RUN_TEST(test_zpg_idir_indexed);
+    RUN_TEST(test_rel);
+    RUN_TEST(test_bitop);
+    RUN_TEST(test_zpg_rel);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;

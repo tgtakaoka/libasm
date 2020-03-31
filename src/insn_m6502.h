@@ -25,7 +25,8 @@ class Insn
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {
-        return host::uint_t(cpuType) >= host::uint_t(Entry::_cpuType(_flags));
+        const CpuType insnType = Entry::_cpuType(_flags);
+        return host::uint_t(cpuType) >= host::uint_t(insnType);
     }
 
     void setFlags(host::uint_t flags) {
