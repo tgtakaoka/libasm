@@ -101,9 +101,9 @@
       ADC A,#$8A
       ORA A,#$8B
       ADD A,#$8C
-      CPX #$008D
+      CPX #$8D
       BSR $0034
-      LDS #$008F
+      LDS #$8F
       SUB A,$91
       CMP A,$92
       SBC A,$93
@@ -158,7 +158,7 @@
       ADC B,#$CA
       ORA B,#$CB
       ADD B,#$CC
-      LDX #$00CF
+      LDX #$CF
       SUB B,$D1
       CMP B,$D2
       SBC B,$D3

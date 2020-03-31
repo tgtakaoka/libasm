@@ -16,7 +16,8 @@
 
 #include "dis_operand.h"
 
-static uint8_t constantWidth(uint8_t size, uint8_t base) {
+static uint8_t constantWidth(uint8_t size, int8_t base) {
+    if (size < 0) return 0;     // zero suppress
     if (base == 16) return size * 2;
     if (base == 2)  return size * 8;
     return (size * 8 + 2) / 3;  // base == 8
@@ -32,7 +33,7 @@ static char *reverseStr(char *p, char *t) {
 }
 
 char *DisOperand::outputNumber(
-    char *p, uint32_t val, int8_t radix, uint8_t size) const {
+    char *p, uint32_t val, int8_t radix, int8_t size) const {
     bool negative = false;
     if (radix == -10 && static_cast<int32_t>(val) < 0) {
         negative = true;
@@ -55,7 +56,7 @@ char *DisOperand::outputNumber(
         if (negative)
             *t++ = '-';
     } else {
-        const uint8_t width = constantWidth(size, radix);
+        const int8_t width = constantWidth(size, radix);
         while (t - p < width)
             *t++ = '0';
     }
@@ -64,7 +65,7 @@ char *DisOperand::outputNumber(
 }
 
 char *DisOperand::outputRelaxed(
-    char *p, uint32_t val, int8_t radix, uint8_t size) const {
+    char *p, uint32_t val, int8_t radix, int8_t size) const {
     if (radix > 0 && val < static_cast<uint8_t>(radix))
         return reverseStr(p, outputNumber(p, val, 10, size));
     if (radix < 0) {
@@ -76,23 +77,23 @@ char *DisOperand::outputRelaxed(
  }
 
 char *DisMotoOperand::output(
-    char *p, uint32_t val, int8_t radix, bool relax, uint8_t size) const {
+    char *p, uint32_t val, int8_t radix, bool relax, int8_t size) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, size)))
         return t;
     if (radix == 16) *p++ = '$';
     else if (radix == 8) *p++ = '@';
     else if (radix == 2) *p++ = '%';
-    t = DisOperand::outputNumber(p, val, radix, size);
+    t = DisOperand::outputNumber(p, val, radix, relax ? -size : size);
     return reverseStr(p, t);
 }
 
 char *DisIntelOperand::output(
-    char *p, uint32_t val, int8_t radix, bool relax, uint8_t size) const {
+    char *p, uint32_t val, int8_t radix, bool relax, int8_t size) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, size)))
         return t;
-    t = DisOperand::outputNumber(p, val, radix, size);
+    t = DisOperand::outputNumber(p, val, radix, relax ? -size : size);
     if (radix == 16 && t[-1] > '9')
         *t++ = '0';
     t = reverseStr(p, t);

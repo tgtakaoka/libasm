@@ -18,7 +18,7 @@
       LD   C,15
       RRCA
       DJNZ 0027H
-      LD   DE,0012H
+      LD   DE,12H
       LD   (DE),A
       INC  DE
       INC  D
@@ -34,7 +34,7 @@
       LD   E,1FH
       RRA
       JR   NZ,004DH
-      LD   HL,0022H
+      LD   HL,22H
       LD   (0023H),HL
       INC  HL
       INC  H
@@ -50,7 +50,7 @@
       LD   L,2FH
       CPL
       JR   NC,0077H
-      LD   SP,0032H
+      LD   SP,32H
       LD   (0033H),A
       INC  SP
       INC  (HL)
@@ -311,7 +311,7 @@
       OTDR
       ADD  IX,BC
       ADD  IX,DE
-      LD   IX,0022H
+      LD   IX,22H
       LD   (0023H),IX
       INC  IX
       ADD  IX,IX
@@ -350,7 +350,7 @@
       LD   SP,IX
       ADD  IY,BC
       ADD  IY,DE
-      LD   IY,0022H
+      LD   IY,22H
       LD   (0023H),IY
       INC  IY
       ADD  IY,IY
