@@ -374,7 +374,10 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
     if (opr == ZPG) return table == ABS;
     if (opr == ZPG_IDX_IDIR) return table == ABS_IDX_IDIR;
-    if (opr == ZPG_IDIR) return table == ABS_IDIR;
+    if (opr == ZPG_IDIR) return table == ABS_IDIR
+                             || table == ZPG_IDIR_LONG;
+    if (opr == ZPG_IDIR_IDY) return table == ZPG_IDIR_LONG_IDY;
+    if (opr == ZPG_IDIR_LONG) return table == ABS_IDIR_LONG;
     if (opr == ZPG_IDX) return table == ABS_IDX;
     if (opr == ZPG_IDY) return table == ABS_IDY;
     return false;
