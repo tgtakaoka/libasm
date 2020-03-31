@@ -56,7 +56,7 @@ protected:
     bool hasSymbol(const char *symbol) const {
         return _symtab && _symtab->hasSymbol(symbol);
     }
-    Addr lookup(const char *symbol) const {
+    uint32_t lookup(const char *symbol) const {
         return _symtab ? _symtab->lookup(symbol) : 0;
     }
 

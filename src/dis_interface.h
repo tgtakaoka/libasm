@@ -50,7 +50,7 @@ protected:
     char *_operands;
     SymbolTable *_symtab;
 
-    const char *lookup(Addr addr) const {
+    const char *lookup(uint32_t addr) const {
         const char *symbol = nullptr;
         if (_symtab) {
             symbol = _symtab->lookup(addr);

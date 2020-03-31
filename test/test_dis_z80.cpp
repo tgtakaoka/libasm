@@ -707,7 +707,7 @@ static void test_illegal_z80() {
         0xA4, 0xA5, 0xA6, 0xA7, 0xAC, 0xAD, 0xAE, 0xAF,
         0xB4, 0xB5, 0xB6, 0xB7,
     };
-    for (int idx = 0; idx < sizeof(ed_illegals); idx++)
+    for (size_t idx = 0; idx < sizeof(ed_illegals); idx++)
         assert_illegal(0xED, ed_illegals[idx]);
 
     const uint8_t ddfd_legals[] = {
