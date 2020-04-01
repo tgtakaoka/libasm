@@ -243,8 +243,8 @@ Error TableMc68000::searchInsnCode(Insn &insn) const {
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_MC68000));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[8];
-    pgm_strcpy(name, entry->name);
+    char name[Entry::name_max + 1];
+    pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;
 }

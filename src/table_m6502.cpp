@@ -310,7 +310,7 @@ Error TableM6502::searchInsnCode(
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
         char name[Entry::name_max + 1];
-        pgm_strcpy(name, entry->name);
+        pgm_strncpy(name, entry->name, sizeof(name));
         insn.setName(name);
         return OK;
     }

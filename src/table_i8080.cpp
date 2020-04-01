@@ -23,104 +23,96 @@
 #include <ctype.h>
 #include <string.h>
 
-#define E(_opc, _name, _amode, _iformat)                    \
-    { _opc, Entry::_flags(_amode, _iformat), { _name } },
+#define E(_opc, _name, _amode, _iformat)                        \
+    { _opc, Entry::_flags(_amode, _iformat), TEXT_##_name },
 
 static constexpr Entry TABLE_I8080[] PROGMEM = {
-    E(0x00, TEXT_NOP,  INHR,   NO_FORMAT)
-    E(0x01, TEXT_LXI,  IMM16,  POINTER_REG)
-    E(0x09, TEXT_DAD,  INHR,   POINTER_REG)
-    E(0x02, TEXT_STAX, INHR,   INDEX_REG)
-    E(0x22, TEXT_SHLD, DIRECT, NO_FORMAT)
-    E(0x32, TEXT_STA,  DIRECT, NO_FORMAT)
-    E(0x0A, TEXT_LDAX, INHR,   INDEX_REG)
-    E(0x2A, TEXT_LHLD, DIRECT, NO_FORMAT)
-    E(0x3A, TEXT_LDA,  DIRECT, NO_FORMAT)
-    E(0x03, TEXT_INX,  INHR,   POINTER_REG)
-    E(0x0B, TEXT_DCX,  INHR,   POINTER_REG)
-    E(0x04, TEXT_INR,  INHR,   DATA_REG)
-    E(0x05, TEXT_DCR,  INHR,   DATA_REG)
-    E(0x06, TEXT_MVI,  IMM8,   DATA_REG)
-    E(0x07, TEXT_RLC,  INHR,   NO_FORMAT)
-    E(0x0F, TEXT_RRC,  INHR,   NO_FORMAT)
-    E(0x17, TEXT_RAL,  INHR,   NO_FORMAT)
-    E(0x1F, TEXT_RAR,  INHR,   NO_FORMAT)
-    E(0x27, TEXT_DAA,  INHR,   NO_FORMAT)
-    E(0x2F, TEXT_CMA,  INHR,   NO_FORMAT)
-    E(0x37, TEXT_STC,  INHR,   NO_FORMAT)
-    E(0x3F, TEXT_CMC,  INHR,   NO_FORMAT)
-    E(0x76, TEXT_HLT,  INHR,   NO_FORMAT)
-    E(0x40, TEXT_MOV,  INHR,   DATA_DATA_REG)
-    E(0x80, TEXT_ADD,  INHR,   LOW_DATA_REG)
-    E(0x88, TEXT_ADC,  INHR,   LOW_DATA_REG)
-    E(0x90, TEXT_SUB,  INHR,   LOW_DATA_REG)
-    E(0x98, TEXT_SBB,  INHR,   LOW_DATA_REG)
-    E(0xA0, TEXT_ANA,  INHR,   LOW_DATA_REG)
-    E(0xA8, TEXT_XRA,  INHR,   LOW_DATA_REG)
-    E(0xB0, TEXT_ORA,  INHR,   LOW_DATA_REG)
-    E(0xB8, TEXT_CMP,  INHR,   LOW_DATA_REG)
-    E(0xC0, TEXT_RNZ,  INHR,   NO_FORMAT)
-    E(0xC8, TEXT_RZ,   INHR,   NO_FORMAT)
-    E(0xD0, TEXT_RNC,  INHR,   NO_FORMAT)
-    E(0xD8, TEXT_RC,   INHR,   NO_FORMAT)
-    E(0xE0, TEXT_RPO,  INHR,   NO_FORMAT)
-    E(0xE8, TEXT_RPE,  INHR,   NO_FORMAT)
-    E(0xF0, TEXT_RP,   INHR,   NO_FORMAT)
-    E(0xF8, TEXT_RM,   INHR,   NO_FORMAT)
-    E(0xC1, TEXT_POP,  INHR,   STACK_REG)
-    E(0xC9, TEXT_RET,  INHR,   NO_FORMAT)
-    E(0xE9, TEXT_PCHL, INHR,   NO_FORMAT)
-    E(0xF9, TEXT_SPHL, INHR,   NO_FORMAT)
-    E(0xC2, TEXT_JNZ,  DIRECT, NO_FORMAT)
-    E(0xCA, TEXT_JZ,   DIRECT, NO_FORMAT)
-    E(0xD2, TEXT_JNC,  DIRECT, NO_FORMAT)
-    E(0xDA, TEXT_JC,   DIRECT, NO_FORMAT)
-    E(0xE2, TEXT_JPO,  DIRECT, NO_FORMAT)
-    E(0xEA, TEXT_JPE,  DIRECT, NO_FORMAT)
-    E(0xF2, TEXT_JP,   DIRECT, NO_FORMAT)
-    E(0xFA, TEXT_JM,   DIRECT, NO_FORMAT)
-    E(0xC3, TEXT_JMP,  DIRECT, NO_FORMAT)
-    E(0xD3, TEXT_OUT,  IOADR,  NO_FORMAT)
-    E(0xDB, TEXT_IN,   IOADR,  NO_FORMAT)
-    E(0xE3, TEXT_XTHL, INHR,   NO_FORMAT)
-    E(0xEB, TEXT_XCHG, INHR,   NO_FORMAT)
-    E(0xF3, TEXT_DI,   INHR,   NO_FORMAT)
-    E(0xFB, TEXT_EI,   INHR,   NO_FORMAT)
-    E(0xC4, TEXT_CNZ,  DIRECT, NO_FORMAT)
-    E(0xCC, TEXT_CZ,   DIRECT, NO_FORMAT)
-    E(0xD4, TEXT_CNC,  DIRECT, NO_FORMAT)
-    E(0xDC, TEXT_CC,   DIRECT, NO_FORMAT)
-    E(0xE4, TEXT_CPO,  DIRECT, NO_FORMAT)
-    E(0xEC, TEXT_CPE,  DIRECT, NO_FORMAT)
-    E(0xF4, TEXT_CP,   DIRECT, NO_FORMAT)
-    E(0xFC, TEXT_CM,   DIRECT, NO_FORMAT)
-    E(0xC5, TEXT_PUSH, INHR,   STACK_REG)
-    E(0xCD, TEXT_CALL, DIRECT, NO_FORMAT)
-    E(0xC6, TEXT_ADI,  IMM8,   NO_FORMAT)
-    E(0xCE, TEXT_ACI,  IMM8,   NO_FORMAT)
-    E(0xD6, TEXT_SUI,  IMM8,   NO_FORMAT)
-    E(0xDE, TEXT_SBI,  IMM8,   NO_FORMAT)
-    E(0xE6, TEXT_ANI,  IMM8,   NO_FORMAT)
-    E(0xEE, TEXT_XRI,  IMM8,   NO_FORMAT)
-    E(0xF6, TEXT_ORI,  IMM8,   NO_FORMAT)
-    E(0xFE, TEXT_CPI,  IMM8,   NO_FORMAT)
-    E(0xC7, TEXT_RST,  INHR,   VECTOR_NO)
+    E(0x00, NOP,  INHR,   NO_FORMAT)
+    E(0x01, LXI,  IMM16,  POINTER_REG)
+    E(0x09, DAD,  INHR,   POINTER_REG)
+    E(0x02, STAX, INHR,   INDEX_REG)
+    E(0x22, SHLD, DIRECT, NO_FORMAT)
+    E(0x32, STA,  DIRECT, NO_FORMAT)
+    E(0x0A, LDAX, INHR,   INDEX_REG)
+    E(0x2A, LHLD, DIRECT, NO_FORMAT)
+    E(0x3A, LDA,  DIRECT, NO_FORMAT)
+    E(0x03, INX,  INHR,   POINTER_REG)
+    E(0x0B, DCX,  INHR,   POINTER_REG)
+    E(0x04, INR,  INHR,   DATA_REG)
+    E(0x05, DCR,  INHR,   DATA_REG)
+    E(0x06, MVI,  IMM8,   DATA_REG)
+    E(0x07, RLC,  INHR,   NO_FORMAT)
+    E(0x0F, RRC,  INHR,   NO_FORMAT)
+    E(0x17, RAL,  INHR,   NO_FORMAT)
+    E(0x1F, RAR,  INHR,   NO_FORMAT)
+    E(0x27, DAA,  INHR,   NO_FORMAT)
+    E(0x2F, CMA,  INHR,   NO_FORMAT)
+    E(0x37, STC,  INHR,   NO_FORMAT)
+    E(0x3F, CMC,  INHR,   NO_FORMAT)
+    E(0x76, HLT,  INHR,   NO_FORMAT)
+    E(0x40, MOV,  INHR,   DATA_DATA_REG)
+    E(0x80, ADD,  INHR,   LOW_DATA_REG)
+    E(0x88, ADC,  INHR,   LOW_DATA_REG)
+    E(0x90, SUB,  INHR,   LOW_DATA_REG)
+    E(0x98, SBB,  INHR,   LOW_DATA_REG)
+    E(0xA0, ANA,  INHR,   LOW_DATA_REG)
+    E(0xA8, XRA,  INHR,   LOW_DATA_REG)
+    E(0xB0, ORA,  INHR,   LOW_DATA_REG)
+    E(0xB8, CMP,  INHR,   LOW_DATA_REG)
+    E(0xC0, RNZ,  INHR,   NO_FORMAT)
+    E(0xC8, RZ,   INHR,   NO_FORMAT)
+    E(0xD0, RNC,  INHR,   NO_FORMAT)
+    E(0xD8, RC,   INHR,   NO_FORMAT)
+    E(0xE0, RPO,  INHR,   NO_FORMAT)
+    E(0xE8, RPE,  INHR,   NO_FORMAT)
+    E(0xF0, RP,   INHR,   NO_FORMAT)
+    E(0xF8, RM,   INHR,   NO_FORMAT)
+    E(0xC1, POP,  INHR,   STACK_REG)
+    E(0xC9, RET,  INHR,   NO_FORMAT)
+    E(0xE9, PCHL, INHR,   NO_FORMAT)
+    E(0xF9, SPHL, INHR,   NO_FORMAT)
+    E(0xC2, JNZ,  DIRECT, NO_FORMAT)
+    E(0xCA, JZ,   DIRECT, NO_FORMAT)
+    E(0xD2, JNC,  DIRECT, NO_FORMAT)
+    E(0xDA, JC,   DIRECT, NO_FORMAT)
+    E(0xE2, JPO,  DIRECT, NO_FORMAT)
+    E(0xEA, JPE,  DIRECT, NO_FORMAT)
+    E(0xF2, JP,   DIRECT, NO_FORMAT)
+    E(0xFA, JM,   DIRECT, NO_FORMAT)
+    E(0xC3, JMP,  DIRECT, NO_FORMAT)
+    E(0xD3, OUT,  IOADR,  NO_FORMAT)
+    E(0xDB, IN,   IOADR,  NO_FORMAT)
+    E(0xE3, XTHL, INHR,   NO_FORMAT)
+    E(0xEB, XCHG, INHR,   NO_FORMAT)
+    E(0xF3, DI,   INHR,   NO_FORMAT)
+    E(0xFB, EI,   INHR,   NO_FORMAT)
+    E(0xC4, CNZ,  DIRECT, NO_FORMAT)
+    E(0xCC, CZ,   DIRECT, NO_FORMAT)
+    E(0xD4, CNC,  DIRECT, NO_FORMAT)
+    E(0xDC, CC,   DIRECT, NO_FORMAT)
+    E(0xE4, CPO,  DIRECT, NO_FORMAT)
+    E(0xEC, CPE,  DIRECT, NO_FORMAT)
+    E(0xF4, CP,   DIRECT, NO_FORMAT)
+    E(0xFC, CM,   DIRECT, NO_FORMAT)
+    E(0xC5, PUSH, INHR,   STACK_REG)
+    E(0xCD, CALL, DIRECT, NO_FORMAT)
+    E(0xC6, ADI,  IMM8,   NO_FORMAT)
+    E(0xCE, ACI,  IMM8,   NO_FORMAT)
+    E(0xD6, SUI,  IMM8,   NO_FORMAT)
+    E(0xDE, SBI,  IMM8,   NO_FORMAT)
+    E(0xE6, ANI,  IMM8,   NO_FORMAT)
+    E(0xEE, XRI,  IMM8,   NO_FORMAT)
+    E(0xF6, ORI,  IMM8,   NO_FORMAT)
+    E(0xFE, CPI,  IMM8,   NO_FORMAT)
+    E(0xC7, RST,  INHR,   VECTOR_NO)
 };
 
 static const Entry *searchEntry(
     const char *name,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        host::uint_t idx = 0;
-        while (name[idx] && idx < sizeof(entry->name)) {
-            const char n = pgm_read_byte(&entry->name[idx]);
-            if (toupper(name[idx]) != n) break;
-            idx++;
-        }
-        if (name[idx] == 0) {
-            if (idx == sizeof(entry->name)) return entry;
-            if (pgm_read_byte(&entry->name[idx]) == 0) return entry;
-        }
+        if (pgm_strcasecmp(name, entry->name) == 0)
+            return entry;
     }
     return nullptr;
 }
@@ -164,8 +156,7 @@ Error TableI8080::searchInsnCode(Insn &insn) const {
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     char name[Entry::name_max + 1];
-    pgm_strncpy(name, entry->name, sizeof(Entry::name));
-    name[Entry::name_max] = 0;
+    pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;
 }

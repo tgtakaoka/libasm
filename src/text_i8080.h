@@ -17,84 +17,84 @@
 #ifndef __TEXT_I8080__
 #define __TEXT_I8080__
 
-#define TEXT_ACI  'A', 'C', 'I', 0
-#define TEXT_ADC  'A', 'D', 'C', 0
-#define TEXT_ADD  'A', 'D', 'D', 0
-#define TEXT_ADI  'A', 'D', 'I', 0
-#define TEXT_ANA  'A', 'N', 'A', 0
-#define TEXT_ANI  'A', 'N', 'I', 0
-#define TEXT_CALL 'C', 'A', 'L', 'L'
-#define TEXT_CC   'C', 'C', 0
-#define TEXT_CM   'C', 'M', 0
-#define TEXT_CMA  'C', 'M', 'A', 0
-#define TEXT_CMC  'C', 'M', 'C', 0
-#define TEXT_CMP  'C', 'M', 'P', 0
-#define TEXT_CNC  'C', 'N', 'C', 0
-#define TEXT_CNZ  'C', 'N', 'Z', 0
-#define TEXT_CP   'C', 'P', 0
-#define TEXT_CPE  'C', 'P', 'E', 0
-#define TEXT_CPI  'C', 'P', 'I', 0
-#define TEXT_CPO  'C', 'P', 'O', 0
-#define TEXT_CZ   'C', 'Z', 0
-#define TEXT_DAA  'D', 'A', 'A', 0
-#define TEXT_DAD  'D', 'A', 'D', 0
-#define TEXT_DCR  'D', 'C', 'R', 0
-#define TEXT_DCX  'D', 'C', 'X', 0
-#define TEXT_DI   'D', 'I', 0
-#define TEXT_EI   'E', 'I', 0
-#define TEXT_HLT  'H', 'L', 'T', 0
-#define TEXT_IN   'I', 'N', 0
-#define TEXT_INR  'I', 'N', 'R', 0
-#define TEXT_INX  'I', 'N', 'X', 0
-#define TEXT_JC   'J', 'C', 0
-#define TEXT_JM   'J', 'M', 0
-#define TEXT_JMP  'J', 'M', 'P', 0
-#define TEXT_JNC  'J', 'N', 'C', 0
-#define TEXT_JNZ  'J', 'N', 'Z', 0
-#define TEXT_JP   'J', 'P', 0
-#define TEXT_JPE  'J', 'P', 'E', 0
-#define TEXT_JPO  'J', 'P', 'O', 0
-#define TEXT_JZ   'J', 'Z', 0
-#define TEXT_LDA  'L', 'D', 'A', 0
-#define TEXT_LDAX 'L', 'D', 'A', 'X'
-#define TEXT_LHLD 'L', 'H', 'L', 'D'
-#define TEXT_LXI  'L', 'X', 'I', 0
-#define TEXT_MOV  'M', 'O', 'V', 0
-#define TEXT_MVI  'M', 'V', 'I', 0
-#define TEXT_NOP  'N', 'O', 'P', 0
-#define TEXT_ORA  'O', 'R', 'A', 0
-#define TEXT_ORI  'O', 'R', 'I', 0
-#define TEXT_OUT  'O', 'U', 'T', 0
-#define TEXT_PCHL 'P', 'C', 'H', 'L'
-#define TEXT_POP  'P', 'O', 'P', 0
-#define TEXT_PUSH 'P', 'U', 'S', 'H'
-#define TEXT_RAL  'R', 'A', 'L', 0
-#define TEXT_RAR  'R', 'A', 'R', 0
-#define TEXT_RC   'R', 'C', 0
-#define TEXT_RET  'R', 'E', 'T', 0
-#define TEXT_RLC  'R', 'L', 'C', 0
-#define TEXT_RM   'R', 'M', 0
-#define TEXT_RNC  'R', 'N', 'C', 0
-#define TEXT_RNZ  'R', 'N', 'Z', 0
-#define TEXT_RP   'R', 'P', 0
-#define TEXT_RPE  'R', 'P', 'E', 0
-#define TEXT_RPO  'R', 'P', 'O', 0
-#define TEXT_RRC  'R', 'R', 'C', 0
-#define TEXT_RST  'R', 'S', 'T', 0
-#define TEXT_RZ   'R', 'Z', 0
-#define TEXT_SBB  'S', 'B', 'B', 0
-#define TEXT_SBI  'S', 'B', 'I', 0
-#define TEXT_SHLD 'S', 'H', 'L', 'D'
-#define TEXT_SPHL 'S', 'P', 'H', 'L'
-#define TEXT_STA  'S', 'T', 'A', 0
-#define TEXT_STAX 'S', 'T', 'A', 'X'
-#define TEXT_STC  'S', 'T', 'C', 0
-#define TEXT_SUB  'S', 'U', 'B', 0
-#define TEXT_SUI  'S', 'U', 'I', 0
-#define TEXT_XCHG 'X', 'C', 'H', 'G'
-#define TEXT_XRA  'X', 'R', 'A', 0
-#define TEXT_XRI  'X', 'R', 'I', 0
-#define TEXT_XTHL 'X', 'T', 'H', 'L'
+static const char TEXT_ACI[]  PROGMEM = "ACI";
+static const char TEXT_ADC[]  PROGMEM = "ADC";
+static const char TEXT_ADD[]  PROGMEM = "ADD";
+static const char TEXT_ADI[]  PROGMEM = "ADI";
+static const char TEXT_ANA[]  PROGMEM = "ANA";
+static const char TEXT_ANI[]  PROGMEM = "ANI";
+static const char TEXT_CALL[] PROGMEM = "CALL";
+static const char TEXT_CC[]   PROGMEM = "CC";
+static const char TEXT_CM[]   PROGMEM = "CM";
+static const char TEXT_CMA[]  PROGMEM = "CMA";
+static const char TEXT_CMC[]  PROGMEM = "CMC";
+static const char TEXT_CMP[]  PROGMEM = "CMP";
+static const char TEXT_CNC[]  PROGMEM = "CNC";
+static const char TEXT_CNZ[]  PROGMEM = "CNZ";
+static const char TEXT_CP[]   PROGMEM = "CP";
+static const char TEXT_CPE[]  PROGMEM = "CPE";
+static const char TEXT_CPI[]  PROGMEM = "CPI";
+static const char TEXT_CPO[]  PROGMEM = "CPO";
+static const char TEXT_CZ[]   PROGMEM = "CZ";
+static const char TEXT_DAA[]  PROGMEM = "DAA";
+static const char TEXT_DAD[]  PROGMEM = "DAD";
+static const char TEXT_DCR[]  PROGMEM = "DCR";
+static const char TEXT_DCX[]  PROGMEM = "DCX";
+static const char TEXT_DI[]   PROGMEM = "DI";
+static const char TEXT_EI[]   PROGMEM = "EI";
+static const char TEXT_HLT[]  PROGMEM = "HLT";
+static const char TEXT_IN[]   PROGMEM = "IN";
+static const char TEXT_INR[]  PROGMEM = "INR";
+static const char TEXT_INX[]  PROGMEM = "INX";
+static const char TEXT_JC[]   PROGMEM = "JC";
+static const char TEXT_JM[]   PROGMEM = "JM";
+static const char TEXT_JMP[]  PROGMEM = "JMP";
+static const char TEXT_JNC[]  PROGMEM = "JNC";
+static const char TEXT_JNZ[]  PROGMEM = "JNZ";
+static const char TEXT_JP[]   PROGMEM = "JP";
+static const char TEXT_JPE[]  PROGMEM = "JPE";
+static const char TEXT_JPO[]  PROGMEM = "JPO";
+static const char TEXT_JZ[]   PROGMEM = "JZ";
+static const char TEXT_LDA[]  PROGMEM = "LDA";
+static const char TEXT_LDAX[] PROGMEM = "LDAX";
+static const char TEXT_LHLD[] PROGMEM = "LHLD";
+static const char TEXT_LXI[]  PROGMEM = "LXI";
+static const char TEXT_MOV[]  PROGMEM = "MOV";
+static const char TEXT_MVI[]  PROGMEM = "MVI";
+static const char TEXT_NOP[]  PROGMEM = "NOP";
+static const char TEXT_ORA[]  PROGMEM = "ORA";
+static const char TEXT_ORI[]  PROGMEM = "ORI";
+static const char TEXT_OUT[]  PROGMEM = "OUT";
+static const char TEXT_PCHL[] PROGMEM = "PCHL";
+static const char TEXT_POP[]  PROGMEM = "POP";
+static const char TEXT_PUSH[] PROGMEM = "PUSH";
+static const char TEXT_RAL[]  PROGMEM = "RAL";
+static const char TEXT_RAR[]  PROGMEM = "RAR";
+static const char TEXT_RC[]   PROGMEM = "RC";
+static const char TEXT_RET[]  PROGMEM = "RET";
+static const char TEXT_RLC[]  PROGMEM = "RLC";
+static const char TEXT_RM[]   PROGMEM = "RM";
+static const char TEXT_RNC[]  PROGMEM = "RNC";
+static const char TEXT_RNZ[]  PROGMEM = "RNZ";
+static const char TEXT_RP[]   PROGMEM = "RP";
+static const char TEXT_RPE[]  PROGMEM = "RPE";
+static const char TEXT_RPO[]  PROGMEM = "RPO";
+static const char TEXT_RRC[]  PROGMEM = "RRC";
+static const char TEXT_RST[]  PROGMEM = "RST";
+static const char TEXT_RZ[]   PROGMEM = "RZ";
+static const char TEXT_SBB[]  PROGMEM = "SBB";
+static const char TEXT_SBI[]  PROGMEM = "SBI";
+static const char TEXT_SHLD[] PROGMEM = "SHLD";
+static const char TEXT_SPHL[] PROGMEM = "SPHL";
+static const char TEXT_STA[]  PROGMEM = "STA";
+static const char TEXT_STAX[] PROGMEM = "STAX";
+static const char TEXT_STC[]  PROGMEM = "STC";
+static const char TEXT_SUB[]  PROGMEM = "SUB";
+static const char TEXT_SUI[]  PROGMEM = "SUI";
+static const char TEXT_XCHG[] PROGMEM = "XCHG";
+static const char TEXT_XRA[]  PROGMEM = "XRA";
+static const char TEXT_XRI[]  PROGMEM = "XRI";
+static const char TEXT_XTHL[] PROGMEM = "XTHL";
 
 #endif // __TEXT_I8080__
 

@@ -225,16 +225,8 @@ static bool checkZ80Code(
 static const Entry *searchEntry(
     const char *name, const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        host::uint_t idx = 0;
-        while (name[idx] && idx < sizeof(entry->name)) {
-            const char n = pgm_read_byte(&entry->name[idx]);
-            if (toupper(name[idx]) != n) break;
-            idx++;
-        }
-        if (name[idx] == 0) {
-            if (idx == sizeof(entry->name)) return entry;
-            if (pgm_read_byte(&entry->name[idx]) == 0) return entry;
-        }
+        if (pgm_strcasecmp(name, entry->name) == 0)
+            return entry;
     }
     return nullptr;
 }
@@ -338,8 +330,8 @@ static Error searchInsnCode(
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
-            char name[Insn::getMaxName() + 1];
-            pgm_strcpy(name, entry->name);
+            char name[Entry::name_max + 1];
+            pgm_strncpy(name, entry->name, sizeof(name));
             insn.setName(name);
             return OK;
         }

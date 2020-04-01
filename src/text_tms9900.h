@@ -19,83 +19,83 @@
 
 // TMS9900
 
-#define TEXT_A    'A',  0 , 
-#define TEXT_AB   'A', 'B',  0 , 
-#define TEXT_ABS  'A', 'B', 'S',  0 , 
-#define TEXT_AI   'A', 'I',  0 , 
-#define TEXT_ANDI 'A', 'N', 'D', 'I', 
-#define TEXT_B    'B',  0 , 
-#define TEXT_BL   'B', 'L',  0 , 
-#define TEXT_BLWP 'B', 'L', 'W', 'P', 
-#define TEXT_C    'C',  0 , 
-#define TEXT_CB   'C', 'B',  0 , 
-#define TEXT_CI   'C', 'I',  0 , 
-#define TEXT_CKOF 'C', 'K', 'O', 'F', 
-#define TEXT_CKON 'C', 'K', 'O', 'N', 
-#define TEXT_CLR  'C', 'L', 'R',  0 , 
-#define TEXT_COC  'C', 'O', 'C',  0 , 
-#define TEXT_CZC  'C', 'Z', 'C',  0 , 
-#define TEXT_DEC  'D', 'E', 'C',  0 , 
-#define TEXT_DECT 'D', 'E', 'C', 'T', 
-#define TEXT_DIV  'D', 'I', 'V',  0 , 
-#define TEXT_IDLE 'I', 'D', 'L', 'E', 
-#define TEXT_INC  'I', 'N', 'C',  0 , 
-#define TEXT_INCT 'I', 'N', 'C', 'T', 
-#define TEXT_INV  'I', 'N', 'V',  0 , 
-#define TEXT_JEQ  'J', 'E', 'Q',  0 , 
-#define TEXT_JGT  'J', 'G', 'T',  0 , 
-#define TEXT_JH   'J', 'H',  0 , 
-#define TEXT_JHE  'J', 'H', 'E',  0 , 
-#define TEXT_JL   'J', 'L',  0 , 
-#define TEXT_JLE  'J', 'L', 'E',  0 , 
-#define TEXT_JLT  'J', 'L', 'T',  0 , 
-#define TEXT_JMP  'J', 'M', 'P',  0 , 
-#define TEXT_JNC  'J', 'N', 'C',  0 , 
-#define TEXT_JNE  'J', 'N', 'E',  0 , 
-#define TEXT_JNO  'J', 'N', 'O',  0 , 
-#define TEXT_JOC  'J', 'O', 'C',  0 , 
-#define TEXT_JOP  'J', 'O', 'P',  0 , 
-#define TEXT_LDCR 'L', 'D', 'C', 'R', 
-#define TEXT_LI   'L', 'I',  0 , 
-#define TEXT_LIMI 'L', 'I', 'M', 'I', 
-#define TEXT_LREX 'L', 'R', 'E', 'X', 
-#define TEXT_LWPI 'L', 'W', 'P', 'I', 
-#define TEXT_MID  'M', 'I', 'D',  0 , 
-#define TEXT_MOV  'M', 'O', 'V',  0 , 
-#define TEXT_MOVB 'M', 'O', 'V', 'B', 
-#define TEXT_MPY  'M', 'P', 'Y',  0 , 
-#define TEXT_NEG  'N', 'E', 'G',  0 , 
-#define TEXT_ORI  'O', 'R', 'I',  0 , 
-#define TEXT_RSET 'R', 'S', 'E', 'T', 
-#define TEXT_RTWP 'R', 'T', 'W', 'P', 
-#define TEXT_S    'S',  0 , 
-#define TEXT_SB   'S', 'B',  0 , 
-#define TEXT_SBO  'S', 'B', 'O',  0 , 
-#define TEXT_SBZ  'S', 'B', 'Z',  0 , 
-#define TEXT_SETO 'S', 'E', 'T', 'O', 
-#define TEXT_SLA  'S', 'L', 'A',  0 , 
-#define TEXT_SRA  'S', 'R', 'A',  0 , 
-#define TEXT_SRC  'S', 'R', 'C',  0 , 
-#define TEXT_SRL  'S', 'R', 'L',  0 , 
-#define TEXT_SOC  'S', 'O', 'C',  0 , 
-#define TEXT_SOCB 'S', 'O', 'C', 'B', 
-#define TEXT_STCR 'S', 'T', 'C', 'R', 
-#define TEXT_STST 'S', 'T', 'S', 'T', 
-#define TEXT_STWP 'S', 'T', 'W', 'P', 
-#define TEXT_SWPB 'S', 'W', 'P', 'B', 
-#define TEXT_SZC  'S', 'Z', 'C',  0 , 
-#define TEXT_SZCB 'S', 'Z', 'C', 'B', 
-#define TEXT_TB   'T', 'B',  0 , 
-#define TEXT_X    'X',  0 , 
-#define TEXT_XOP  'X', 'O', 'P',  0 , 
-#define TEXT_XOR  'X', 'O', 'R',  0 , 
+static const char TEXT_A[]    PROGMEM = "A";
+static const char TEXT_AB[]   PROGMEM = "AB";
+static const char TEXT_ABS[]  PROGMEM = "ABS";
+static const char TEXT_AI[]   PROGMEM = "AI";
+static const char TEXT_ANDI[] PROGMEM = "ANDI";
+static const char TEXT_B[]    PROGMEM = "B";
+static const char TEXT_BL[]   PROGMEM = "BL";
+static const char TEXT_BLWP[] PROGMEM = "BLWP";
+static const char TEXT_C[]    PROGMEM = "C";
+static const char TEXT_CB[]   PROGMEM = "CB";
+static const char TEXT_CI[]   PROGMEM = "CI";
+static const char TEXT_CKOF[] PROGMEM = "CKOF";
+static const char TEXT_CKON[] PROGMEM = "CKON";
+static const char TEXT_CLR[]  PROGMEM = "CLR";
+static const char TEXT_COC[]  PROGMEM = "COC";
+static const char TEXT_CZC[]  PROGMEM = "CZC";
+static const char TEXT_DEC[]  PROGMEM = "DEC";
+static const char TEXT_DECT[] PROGMEM = "DECT";
+static const char TEXT_DIV[]  PROGMEM = "DIV";
+static const char TEXT_IDLE[] PROGMEM = "IDLE";
+static const char TEXT_INC[]  PROGMEM = "INC";
+static const char TEXT_INCT[] PROGMEM = "INCT";
+static const char TEXT_INV[]  PROGMEM = "INV";
+static const char TEXT_JEQ[]  PROGMEM = "JEQ";
+static const char TEXT_JGT[]  PROGMEM = "JGT";
+static const char TEXT_JH[]   PROGMEM = "JH";
+static const char TEXT_JHE[]  PROGMEM = "JHE";
+static const char TEXT_JL[]   PROGMEM = "JL";
+static const char TEXT_JLE[]  PROGMEM = "JLE";
+static const char TEXT_JLT[]  PROGMEM = "JLT";
+static const char TEXT_JMP[]  PROGMEM = "JMP";
+static const char TEXT_JNC[]  PROGMEM = "JNC";
+static const char TEXT_JNE[]  PROGMEM = "JNE";
+static const char TEXT_JNO[]  PROGMEM = "JNO";
+static const char TEXT_JOC[]  PROGMEM = "JOC";
+static const char TEXT_JOP[]  PROGMEM = "JOP";
+static const char TEXT_LDCR[] PROGMEM = "LDCR";
+static const char TEXT_LI[]   PROGMEM = "LI";
+static const char TEXT_LIMI[] PROGMEM = "LIMI";
+static const char TEXT_LREX[] PROGMEM = "LREX";
+static const char TEXT_LWPI[] PROGMEM = "LWPI";
+static const char TEXT_MID[]  PROGMEM = "MID";
+static const char TEXT_MOV[]  PROGMEM = "MOV";
+static const char TEXT_MOVB[] PROGMEM = "MOVB";
+static const char TEXT_MPY[]  PROGMEM = "MPY";
+static const char TEXT_NEG[]  PROGMEM = "NEG";
+static const char TEXT_ORI[]  PROGMEM = "ORI";
+static const char TEXT_RSET[] PROGMEM = "RSET";
+static const char TEXT_RTWP[] PROGMEM = "RTWP";
+static const char TEXT_S[]    PROGMEM = "S";
+static const char TEXT_SB[]   PROGMEM = "SB";
+static const char TEXT_SBO[]  PROGMEM = "SBO";
+static const char TEXT_SBZ[]  PROGMEM = "SBZ";
+static const char TEXT_SETO[] PROGMEM = "SETO";
+static const char TEXT_SLA[]  PROGMEM = "SLA";
+static const char TEXT_SRA[]  PROGMEM = "SRA";
+static const char TEXT_SRC[]  PROGMEM = "SRC";
+static const char TEXT_SRL[]  PROGMEM = "SRL";
+static const char TEXT_SOC[]  PROGMEM = "SOC";
+static const char TEXT_SOCB[] PROGMEM = "SOCB";
+static const char TEXT_STCR[] PROGMEM = "STCR";
+static const char TEXT_STST[] PROGMEM = "STST";
+static const char TEXT_STWP[] PROGMEM = "STWP";
+static const char TEXT_SWPB[] PROGMEM = "SWPB";
+static const char TEXT_SZC[]  PROGMEM = "SZC";
+static const char TEXT_SZCB[] PROGMEM = "SZCB";
+static const char TEXT_TB[]   PROGMEM = "TB";
+static const char TEXT_X[]    PROGMEM = "X";
+static const char TEXT_XOP[]  PROGMEM = "XOP";
+static const char TEXT_XOR[]  PROGMEM = "XOR";
 
 // TMS9995
 
-#define TEXT_MPYS 'M', 'P', 'Y', 'S', 
-#define TEXT_DIVS 'D', 'I', 'V', 'S', 
-#define TEXT_LST  'L', 'S', 'T',  0 , 
-#define TEXT_LWP  'L', 'W', 'P',  0 , 
+static const char TEXT_MPYS[] PROGMEM = "MPYS";
+static const char TEXT_DIVS[] PROGMEM = "DIVS";
+static const char TEXT_LST[]  PROGMEM = "LST";
+static const char TEXT_LWP[]  PROGMEM = "LWP";
 
 #endif // __TEXT_TMS9900__
 
