@@ -565,7 +565,7 @@ Error TableMc6809::searchInsnCode(
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags));
             char name[Entry::name_max + 1];
-            pgm_strcpy(name, entry->name);
+            pgm_strncpy(name, entry->name, sizeof(name));
             insn.setName(name);
             return OK;
         }

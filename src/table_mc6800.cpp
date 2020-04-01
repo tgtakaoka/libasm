@@ -237,8 +237,7 @@ Error TableMc6800::searchInsnCode(Insn &insn) const {
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     char name[Entry::name_max + 1];
-    pgm_strncpy(name, entry->name, Entry::name_max);
-    name[Entry::name_max] = 0;
+    pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;
 }

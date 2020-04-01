@@ -24,7 +24,7 @@ struct Entry {
     const host::uint_t flags;
     static constexpr host::uint_t code_max = 6;
     static constexpr host::uint_t name_max = 4;
-    const char name[name_max];
+    const char *name;
 
     static inline CpuType _cpuType(host::uint_t flags) {
         return (flags & tms9995_bm) == 0 ? TMS9900 : TMS9995;
