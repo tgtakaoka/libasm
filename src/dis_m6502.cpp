@@ -97,12 +97,8 @@ Error DisM6502::decodeZeroPage(
         || addrMode == SP_REL_IDIR_IDY
         || addrMode == ZPG_IDIR_LONG
         || addrMode == ZPG_IDIR_LONG_IDY;
-#ifdef W65C816_LONG_NAME
-    const bool zpLong = false;
-#else
     const bool zpLong = addrMode == ZPG_IDIR_LONG
         || addrMode == ZPG_IDIR_LONG_IDY;
-#endif
     RegName index;
     switch (addrMode) {
     case ZPG_IDX:
