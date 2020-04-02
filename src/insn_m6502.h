@@ -26,7 +26,11 @@ public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {
         const CpuType insnType = Entry::_cpuType(_flags);
-        return host::uint_t(cpuType) >= host::uint_t(insnType);
+        if (host::uint_t(cpuType) < host::uint_t(insnType))
+            return false;
+        if (cpuType == W65C816 && insnType == R65C02BIT)
+            return false;
+        return true;
     }
 
     void setFlags(host::uint_t flags) {

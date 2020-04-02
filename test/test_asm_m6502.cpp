@@ -39,6 +39,8 @@ static void test_cpu() {
         "cpu 65C02", true, assembler.setCpu("65C02"));
     asserter.equals(
         "cpu W65C02S", true, assembler.setCpu("W65C02S"));
+    asserter.equals(
+        "cpu 65816", true, assembler.setCpu("65816"));
 }
 
 static void test_impl() {
@@ -83,6 +85,23 @@ static void test_impl() {
     assembler.setCpu("W65C02S");
     TEST("WAI", 0xCB);
     TEST("STP", 0xDB);
+
+    // 65816
+    assembler.setCpu("65816");
+    TEST("RTL", 0x6B);
+    TEST("PHB", 0x8B);
+    TEST("PHD", 0x0B);
+    TEST("PHK", 0x4B);
+    TEST("PLB", 0xAB);
+    TEST("PLD", 0x2B);
+    TEST("TCS", 0x1B);
+    TEST("TSC", 0x3B);
+    TEST("TCD", 0x5B);
+    TEST("TDC", 0x7B);
+    TEST("TXY", 0x9B);
+    TEST("TYX", 0xBB);
+    TEST("XBA", 0xEB);
+    TEST("XCE", 0xFB);
 }
 
 static void test_accm() {
@@ -114,6 +133,15 @@ static void test_imm() {
     // 65SC02
     assembler.setCpu("65sc02");
     TEST("BIT #$90", 0x89, 0x90);
+
+    // 65816
+    assembler.setCpu("65816");
+    TEST("COP #$10", 0x02, 0x10);
+    TEST("WDM #$10", 0x42, 0x10);
+    TEST("REP #$20", 0xC2, 0x20);
+    TEST("SEP #$10", 0xE2, 0x10);
+    TEST("MVP $12,$34", 0x44, 0x12, 0x34);
+    TEST("MVN $12,$34", 0x54, 0x12, 0x34);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
@@ -220,6 +248,51 @@ static void test_zpg_indexed() {
     TEST("BIT zero10,X", 0x34, 0x10);
 }
 
+static void test_zpg_long() {
+    // 65816
+    assembler.setCpu("65816");
+
+    TEST("ORA [$10]", 0x07, 0x10);
+    TEST("AND [$10]", 0x27, 0x10);
+    TEST("EOR [$10]", 0x47, 0x10);
+    TEST("ADC [$10]", 0x67, 0x10);
+    TEST("STA [$10]", 0x87, 0x10);
+    TEST("LDA [$10]", 0xA7, 0x10);
+    TEST("CMP [$10]", 0xC7, 0x10);
+    TEST("SBC [$10]", 0xE7, 0x10);
+
+    TEST("ORA [$10],Y", 0x17, 0x10);
+    TEST("AND [$10],Y", 0x37, 0x10);
+    TEST("EOR [$10],Y", 0x57, 0x10);
+    TEST("ADC [$10],Y", 0x77, 0x10);
+    TEST("STA [$10],Y", 0x97, 0x10);
+    TEST("LDA [$10],Y", 0xB7, 0x10);
+    TEST("CMP [$10],Y", 0xD7, 0x10);
+    TEST("SBC [$10],Y", 0xF7, 0x10);
+}
+
+static void test_sp_rel() {
+    // 65816
+    assembler.setCpu("65816");
+    TEST("ORA $10,S", 0x03, 0x10);
+    TEST("AND $10,S", 0x23, 0x10);
+    TEST("EOR $10,S", 0x43, 0x10);
+    TEST("ADC $10,S", 0x63, 0x10);
+    TEST("STA $10,S", 0x83, 0x10);
+    TEST("LDA $10,S", 0xA3, 0x10);
+    TEST("CMP $10,S", 0xC3, 0x10);
+    TEST("SBC $10,S", 0xE3, 0x10);
+
+    TEST("ORA ($10,S),Y", 0x13, 0x10);
+    TEST("AND ($10,S),Y", 0x33, 0x10);
+    TEST("EOR ($10,S),Y", 0x53, 0x10);
+    TEST("ADC ($10,S),Y", 0x73, 0x10);
+    TEST("STA ($10,S),Y", 0x93, 0x10);
+    TEST("LDA ($10,S),Y", 0xB3, 0x10);
+    TEST("CMP ($10,S),Y", 0xD3, 0x10);
+    TEST("SBC ($10,S),Y", 0xF3, 0x10);
+}
+
 static void test_abs() {
     TEST("BIT $1234", 0x2C, 0x34, 0x12);
     TEST("ORA $1234", 0x0D, 0x34, 0x12);
@@ -255,6 +328,10 @@ static void test_abs() {
     TEST("TRB $1234", 0x1C, 0x34, 0x12);
     TEST("STZ $1234", 0x9C, 0x34, 0x12);
 
+    // 65816
+    assembler.setCpu("65816");
+    TEST("PEA $1234", 0xF4, 0x34, 0x12);
+
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
     symtab.intern(0x0100, "abs0100");
@@ -267,6 +344,46 @@ static void test_abs() {
     // 65SC02
     assembler.setCpu("65sc02");
     TEST("TSB abs1234",  0x0C, 0x34, 0x12);
+
+    // 65816
+    assembler.setCpu("65816");
+    TEST("PEA abs0010", 0xF4, 0x10, 0x00);
+}
+
+static void test_abs_long() {
+    // 65816
+    assembler.setCpu("65816");
+    TEST("ORA $123456", 0x0F, 0x56, 0x34, 0x12);
+    TEST("AND $123456", 0x2F, 0x56, 0x34, 0x12);
+    TEST("EOR $123456", 0x4F, 0x56, 0x34, 0x12);
+    TEST("ADC $123456", 0x6F, 0x56, 0x34, 0x12);
+    TEST("STA $123456", 0x8F, 0x56, 0x34, 0x12);
+    TEST("LDA $123456", 0xAF, 0x56, 0x34, 0x12);
+    TEST("CMP $123456", 0xCF, 0x56, 0x34, 0x12);
+    TEST("SBC $123456", 0xEF, 0x56, 0x34, 0x12);
+
+    TEST("JMP $123456", 0x5C, 0x56, 0x34, 0x12);
+    TEST("JSL $123456", 0x22, 0x56, 0x34, 0x12);
+    TEST("JMP [$1234]", 0xDC, 0x34, 0x12);
+
+    TEST("ORA $123456,X", 0x1F, 0x56, 0x34, 0x12);
+    TEST("AND $123456,X", 0x3F, 0x56, 0x34, 0x12);
+    TEST("EOR $123456,X", 0x5F, 0x56, 0x34, 0x12);
+    TEST("ADC $123456,X", 0x7F, 0x56, 0x34, 0x12);
+    TEST("STA $123456,X", 0x9F, 0x56, 0x34, 0x12);
+    TEST("LDA $123456,X", 0xBF, 0x56, 0x34, 0x12);
+    TEST("CMP $123456,X", 0xDF, 0x56, 0x34, 0x12);
+    TEST("SBC $123456,X", 0xFF, 0x56, 0x34, 0x12);
+
+    symtab.intern(0x1234, "sym1234");
+    symtab.intern(0x123456, "long3456");
+
+    TEST("JMP [sym1234]", 0xDC, 0x34, 0x12);
+    TEST("JMP >>sym1234",   0x5C, 0x34, 0x12, 0x00);
+    TEST("JSL long3456",    0x22, 0x56, 0x34, 0x12);
+    TEST("ORA long3456",    0x0F, 0x56, 0x34, 0x12);
+    TEST("ORA >>sym1234,X", 0x1F, 0x34, 0x12, 0x00);
+    TEST("ORA long3456,X",  0x1F, 0x56, 0x34, 0x12);
 }
 
 static void test_abs_indexed() {
@@ -335,12 +452,20 @@ static void test_abs_indexed_idir() {
     assembler.setCpu("65sc02");
     TEST("JMP ($1234,X)", 0x7C, 0x34, 0x12);
 
+    // 65816
+    assembler.setCpu("65816");
+    TEST("JSR ($1234,X)",  0xFC, 0x34, 0x12);
+
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
     // 65SC02
     TEST("JMP (>abs0010,X)", 0x7C, 0x10, 0x00);
     TEST("JMP (abs1234,X)",  0x7C, 0x34, 0x12);
+
+    // 65816
+    assembler.setCpu("65816");
+    TEST("JSR (>abs0010,X)", 0xFC, 0x10, 0x00);
 }
 
 static void test_zpg_idir() {
@@ -354,6 +479,10 @@ static void test_zpg_idir() {
     TEST("LDA ($10)", 0xB2, 0x10);
     TEST("CMP ($10)", 0xD2, 0x10);
     TEST("SBC ($10)", 0xF2, 0x10);
+
+    // 65816
+    assembler.setCpu("65816");
+    TEST("PEI ($10)", 0xD4, 0x10);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
@@ -405,6 +534,11 @@ static void test_rel() {
     // 65SC02
     assembler.setCpu("65sc02");
     ATEST(0x1000, "BRA $1002", 0x80, 0x00);
+
+    // 65816
+    assembler.setCpu("65816");
+    ATEST(0x1000, "BRL $1234", 0x82, 0x31, 0x02);
+    ATEST(0x1000, "PER $1234", 0x62, 0x31, 0x02);
 
     symtab.intern(0x0F82, "label0F82");
     symtab.intern(0x1000, "label1000");
@@ -478,6 +612,35 @@ static void test_zpg_rel() {
     ATEST(0x1000, "BBS5 zero10,label1000", 0xDF, 0x10, 0xFD);
 }
 
+static void test_no_idir_long() {
+    // 65816
+    assembler.setCpu("65816");
+
+    TEST("ORAL ($10)", 0x07, 0x10);
+    TEST("ANDL ($10)", 0x27, 0x10);
+    TEST("EORL ($10)", 0x47, 0x10);
+    TEST("ADCL ($10)", 0x67, 0x10);
+    TEST("STAL ($10)", 0x87, 0x10);
+    TEST("LDAL ($10)", 0xA7, 0x10);
+    TEST("CMPL ($10)", 0xC7, 0x10);
+    TEST("SBCL ($10)", 0xE7, 0x10);
+
+    TEST("ORAL ($10),Y", 0x17, 0x10);
+    TEST("ANDL ($10),Y", 0x37, 0x10);
+    TEST("EORL ($10),Y", 0x57, 0x10);
+    TEST("ADCL ($10),Y", 0x77, 0x10);
+    TEST("STAL ($10),Y", 0x97, 0x10);
+    TEST("LDAL ($10),Y", 0xB7, 0x10);
+    TEST("CMPL ($10),Y", 0xD7, 0x10);
+    TEST("SBCL ($10),Y", 0xF7, 0x10);
+
+    TEST("JMPL ($1234)", 0xDC, 0x34, 0x12);
+
+    symtab.intern(0x1234, "sym1234");
+
+    TEST("JMPL (sym1234)", 0xDC, 0x34, 0x12);
+}
+
 static void test_comment() {
     TEST("BRK        ; comment", 0x00);
     TEST("ASL A      ; comment", 0x0A);
@@ -535,6 +698,36 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BBR3 UNDEF,$1082", 0x3F, 0x00, 0x7F);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS6 $10,UNDEF",   0xEF, 0x10, 0xFD);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS7 UNDEF,UNDEF", 0xFF, 0x00, 0xFD);
+
+    // 65816
+    assembler.setCpu("65816");
+    ETEST(UNDEFINED_SYMBOL, "SEP #UNDEF",      0xE2, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "MVP $12,UNDEF",   0x44, 0x12, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "MVP UNDEF,$12",   0x44, 0x00, 0x12);
+    ETEST(UNDEFINED_SYMBOL, "MVN UNDEF,UNDEF", 0x54, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "ORA [UNDEF]",     0x07, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "AND [UNDEF],Y",   0x37, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "EOR UNDEF,S",     0x43, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "ADC (UNDEF,S),Y", 0x73, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "PEA UNDEF",       0xF4, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "PEI (UNDEF)",     0xD4, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "STA   UNDEF",     0x85, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "STA  <UNDEF",     0x85, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "STA  >UNDEF",     0x8D, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "STA >>UNDEF",     0x8F, 0x00, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA   UNDEF,X",   0xB5, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA  <UNDEF,X",   0xB5, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA  >UNDEF,X",   0xBD, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA >>UNDEF,X",   0xBF, 0x00, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMP [UNDEF]",     0xDC, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JSR (UNDEF,X)",   0xFC, 0x00, 0x00);
+
+    ETEST(UNDEFINED_SYMBOL, "SBCL (UNDEF)",    0xE7, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "CMPL (UNDEF),Y",  0xD7, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMPL (UNDEF)",    0xDC, 0x00, 0x00);
+
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRL UNDEF", 0x82, 0xFD, 0xFF);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "PER UNDEF", 0x62, 0xFD, 0xFF);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -552,7 +745,10 @@ int main(int argc, char **argv) {
     RUN_TEST(test_imm);
     RUN_TEST(test_zpg);
     RUN_TEST(test_zpg_indexed);
+    RUN_TEST(test_zpg_long);
+    RUN_TEST(test_sp_rel);
     RUN_TEST(test_abs);
+    RUN_TEST(test_abs_long);
     RUN_TEST(test_abs_indexed);
     RUN_TEST(test_abs_idir);
     RUN_TEST(test_zpg_idir);
@@ -562,6 +758,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_rel);
     RUN_TEST(test_bitop);
     RUN_TEST(test_zpg_rel);
+    RUN_TEST(test_no_idir_long);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;

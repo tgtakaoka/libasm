@@ -29,10 +29,12 @@ public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
     const char *listCpu() const override { return TableM6502::listCpu(); }
+    void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
 
 private:
     DisMotoOperand _formatter;
     RegM6502 _regs;
+    bool _acceptIndirectLong = true;
 
     RegBase &getRegister() override { return _regs; }
 
@@ -40,6 +42,7 @@ private:
     Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeZeroPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeBlockMove(DisMemory<target::uintptr_t> &memory, Insn &insn);
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };

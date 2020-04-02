@@ -35,11 +35,16 @@ Error DisM6502::decodeAbsolute(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ABS_IDX_IDIR
-        || addrMode == ABS_IDIR;
+        || addrMode == ABS_IDIR
+        || addrMode == ABS_IDIR_LONG;
+    const bool absLong =
+        (addrMode == ABS_LONG || addrMode == ABS_LONG_IDX);
+    const bool idirLong = addrMode == ABS_IDIR_LONG;
     RegName index;
     switch (addrMode) {
     case ABS_IDX:
     case ABS_IDX_IDIR:
+    case ABS_LONG_IDX:
         index = REG_X;
         break;
     case ABS_IDY:
@@ -50,21 +55,35 @@ Error DisM6502::decodeAbsolute(
         break;
     }
     target::uintptr_t addr;
+    uint32_t target;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    if (indirect) *_operands++ = '(';
-    const char *label = lookup(addr);
+    target = addr;
+    if (absLong) {
+        uint8_t bank;
+        if (insn.readByte(memory, bank)) return setError(NO_MEMORY);
+        target |= static_cast<uint32_t>(bank) << 16;
+    }
+    if (indirect) *_operands++ = idirLong ? '[' : '(';
+    const char *label = lookup(target);
     if (label) {
         *_operands++ = '>';
+        if (absLong) *_operands++ = '>';
         outText(label);
-    } else {
-        if (addr < 0x100) *_operands++ = '>';
+    } else if (!absLong) {
+        if (target < 0x100) *_operands++ = '>';
         outConstant(addr, 16, false);
+    } else {
+        if (target < 0x10000) {
+            *_operands++ = '>';
+            *_operands++ = '>';
+        }
+        outConstant(target, 16);
     }
     if (index != REG_UNDEF) {
         *_operands++ = ',';
         _operands = _regs.outRegName(_operands, index);
     }
-    if (indirect) *_operands++ = ')';
+    if (indirect) *_operands++ = idirLong ? ']' : ')';
     *_operands = 0;
     return setError(OK);
 }
@@ -74,7 +93,16 @@ Error DisM6502::decodeZeroPage(
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ZPG_IDX_IDIR
         || addrMode == ZPG_IDIR_IDY
-        || addrMode == ZPG_IDIR;
+        || addrMode == ZPG_IDIR
+        || addrMode == SP_REL_IDIR_IDY
+        || addrMode == ZPG_IDIR_LONG
+        || addrMode == ZPG_IDIR_LONG_IDY;
+#ifdef W65C816_LONG_NAME
+    const bool zpLong = false;
+#else
+    const bool zpLong = addrMode == ZPG_IDIR_LONG
+        || addrMode == ZPG_IDIR_LONG_IDY;
+#endif
     RegName index;
     switch (addrMode) {
     case ZPG_IDX:
@@ -83,7 +111,12 @@ Error DisM6502::decodeZeroPage(
         break;
     case ZPG_IDY:
     case ZPG_IDIR_IDY:
+    case ZPG_IDIR_LONG_IDY:
         index = REG_Y;
+        break;
+    case SP_REL:
+    case SP_REL_IDIR_IDY:
+        index = REG_S;
         break;
     default:
         index = REG_UNDEF;
@@ -91,7 +124,7 @@ Error DisM6502::decodeZeroPage(
     }
     uint8_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
-    if (indirect) *_operands++ = '(';
+    if (indirect) *_operands++ = zpLong ? '[' : '(';
     const char *label = lookup(zp);
     if (label) {
         *_operands++ = '<';
@@ -99,12 +132,16 @@ Error DisM6502::decodeZeroPage(
     } else {
         outConstant(zp, 16, false);
     }
-    if (indirect && index == REG_Y) *_operands++ = ')';
+    if (indirect && index == REG_Y) *_operands++ = zpLong ? ']' : ')';
     if (index != REG_UNDEF) {
         *_operands++ = ',';
         _operands = _regs.outRegName(_operands, index);
     }
-    if (indirect && index != REG_Y) *_operands++ = ')';
+    if (indirect && index != REG_Y) *_operands++ = zpLong ? ']' : ')';
+    if (addrMode == SP_REL_IDIR_IDY) {
+        *_operands++ = ',';
+        _operands = _regs.outRegName(_operands, REG_Y);
+    }
     *_operands = 0;
     if (addrMode == ZPG_REL) {
         *_operands++ = ',';
@@ -115,11 +152,17 @@ Error DisM6502::decodeZeroPage(
 
 Error DisM6502::decodeRelative(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    const host::uint_t insnLen = (insn.addrMode() == ZPG_REL ? 3 : 2);
-    const target::uintptr_t addr = insn.address() + insnLen
-        + static_cast<int8_t>(val);
+    target::uintptr_t addr;
+    if (insn.addrMode() == REL_LONG) {
+        uint16_t val;
+        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
+        addr = insn.address() + 3 + static_cast<int16_t>(val);
+    } else {
+        uint8_t val;
+        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
+        addr = insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
+            + static_cast<int8_t>(val);
+    }
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -129,13 +172,24 @@ Error DisM6502::decodeRelative(
     return setError(OK);
 }
 
+Error DisM6502::decodeBlockMove(
+    DisMemory<target::uintptr_t> &memory, Insn& insn) {
+    uint8_t srcpg, dstpg;
+    if (insn.readByte(memory, srcpg)) return setError(NO_MEMORY);
+    if (insn.readByte(memory, dstpg)) return setError(NO_MEMORY);
+    outConstant(srcpg, 16, false);
+    *_operands++ = ',';
+    outConstant(dstpg, 16, false);
+    return setError(OK);
+}
+
 Error DisM6502::decode(
     DisMemory<target::uintptr_t> &memory, Insn &insn) {
     target::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
 
-    if (TableM6502.searchInsnCode(insn))
+    if (TableM6502.searchInsnCode(insn, _acceptIndirectLong))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -152,6 +206,9 @@ Error DisM6502::decode(
     case ABS_IDY:
     case ABS_IDIR:
     case ABS_IDX_IDIR:
+    case ABS_LONG:
+    case ABS_LONG_IDX:
+    case ABS_IDIR_LONG:
         return decodeAbsolute(memory, insn);
     case ZPG:
     case ZPG_IDX:
@@ -160,9 +217,16 @@ Error DisM6502::decode(
     case ZPG_IDIR_IDY:
     case ZPG_IDIR:
     case ZPG_REL:
+    case SP_REL:
+    case SP_REL_IDIR_IDY:
+    case ZPG_IDIR_LONG:
+    case ZPG_IDIR_LONG_IDY:
         return decodeZeroPage(memory, insn);
     case REL:
+    case REL_LONG:
         return decodeRelative(memory, insn);
+    case BLOCK_MOVE:
+        return decodeBlockMove(memory, insn);
     default:
         return setError(INTERNAL_ERROR);
     }

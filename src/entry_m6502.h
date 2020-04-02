@@ -23,7 +23,7 @@ struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
     const char *name;
-    static constexpr host::uint_t code_max = 3;
+    static constexpr host::uint_t code_max = 4;
     static constexpr host::uint_t name_max = 4;
 
     static inline CpuType _cpuType(host::uint_t flags) {
@@ -38,8 +38,8 @@ struct Entry {
     }
 
 private:
-    static constexpr host::uint_t cputype_gp = 6;
-    static constexpr host::uint_t cputype_gm = 0x3;
+    static constexpr host::uint_t cputype_gp = 5;
+    static constexpr host::uint_t cputype_gm = 0x7;
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
 

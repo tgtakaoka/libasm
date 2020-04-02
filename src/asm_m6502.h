@@ -36,14 +36,17 @@ private:
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        uint16_t val16;
+        uint32_t val32;
     };
 
-    Error selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp);
+    Error selectMode(
+        char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
     Error parseOperand(Operand &op);
 
+    Error encodeLongRelative(Insn &insn);
     Error encodeRelative(Insn &insn, bool emitInsn);
     Error encodeZeroPageRelative(Insn &insn);
+    Error encodeBlockMove(Insn &insn);
 
     Error encode(Insn &insn) override;
 };

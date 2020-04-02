@@ -25,6 +25,7 @@ all: \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
 	test_w65c02s.s19 \
+	test_w65c816.s19 \
 	test_i8080.hex \
 	test_z80.hex \
 	test_tms9900.hex \
