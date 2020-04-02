@@ -16,55 +16,53 @@
 
 #include <dis_mc6809.h>
 #include <str_memory.h>
+#include <libcli.h>
 
 DisMc6809 dis6809;
 Disassembler<target::uintptr_t> &disassembler(dis6809);
 
-String line;
-bool line_ready = false;
+void disassemble(DisMemory<target::uintptr_t> &memory) {
+  char operands[20];
+  Insn insn;
+  while (memory.hasNext()) {
+    if (disassembler.decode(memory, insn, operands, nullptr)) {
+      Cli.print(F("Error "));
+      Cli.println(disassembler.getError());
+    } else {
+      Cli.printUint16(insn.address());
+      Cli.print(':');
+      for (int i = 0; i < insn.insnLen(); i++) {
+        Cli.print(' ');
+        uint8_t val = insn.bytes()[i];
+        Cli.printUint8(val);
+      }
+      for (int i = insn.insnLen(); i < Insn::getMaxBytes(); i++)
+        Cli.print(F("   "));
+      Cli.print(' ');
+      for (size_t n = Cli.print(insn.name());
+           n <= Insn::getMaxName(); n++)
+        Cli.print(' ');
+      Cli.println(operands);
+    }
+  }
+}
+
+bool handleLine(Cli::State state, char *line, uintptr_t extra) {
+  StrMemory memory(0x1000, line);
+  disassemble(memory);
+  return Cli.readLine(handleLine, 0);
+}
 
 void setup() {
-  Serial.begin(9800);
   disassembler.setCpu("6309");
+
+  Serial.begin(9800);
+  Cli.begin(Serial);
+  Cli.readLine(handleLine, 0);
 }
 
 void loop() {
-  if (line_ready) {
-    Serial.println(line);
-    StrMemory memory(0x1000, line.c_str());
-    char operands[20];
-    Insn insn;
-    if (disassembler.decode(memory, insn, operands, nullptr)) {
-      Serial.print(F("Error "));
-      Serial.println(disassembler.getError(), DEC);
-    } else {
-      Serial.print(insn.address(), HEX);
-      Serial.print(':');
-      for (int i = 0; i < insn.insnLen(); i++) {
-        Serial.print(' ');
-        uint8_t val = insn.bytes()[i];
-        if (val < 0x10) Serial.print('0');
-        Serial.print(val, HEX);
-      }
-      Serial.print(' ');
-      Serial.print(insn.name());
-      Serial.print(' ');
-      Serial.println(operands);
-    }
-    line = "";
-    line_ready = false;
-  }
-}
-
-void serialEvent() {
-  while (Serial.available()) {
-    char c = (char)Serial.read();
-    if (c == '\n') {
-      line_ready = true;
-    } else {
-      line += c;
-    }
-  }
+  Cli.loop();
 }
 
 // Local Variables:
