@@ -12,17 +12,17 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        include test_r65c02.asm
-
         cpu     w65c02s
 
-;;; W65C02S
-        org     $01F0
+        include "test_m6502.inc"
+	org     $150
+        include "test_w65sc02.inc"
+	org     $190
+        include "test_r65c02.inc"
+	org     $1F0
+        include "test_w65c02s.inc"
 
-        wai
-        stp
-
-;;; comment
+        end
 
 ;;; Local Variables:
 ;;; mode: asm

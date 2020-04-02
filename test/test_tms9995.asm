@@ -12,19 +12,11 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        include "test_tms9900.asm"
-
         cpu     TMS9995
 
-;;; TMS9995
-        org     0100H
-
-;;; 00X
-        lst     r8
-        lwp     r9
-;;; 01X
-        divs    r8
-        mpys    r12
+        include "test_tms9900.inc"
+        org     100H
+        include "test_tms9995.inc"
 
         end                     ; comment
 

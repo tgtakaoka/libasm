@@ -12,13 +12,14 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     65sc02
+;;; TMS9995
 
-        include "test_m6502.inc"
-	org     $150
-        include "test_w65sc02.inc"
-
-        end
+;;; 00X
+        lst     r8
+        lwp     r9
+;;; 01X
+        divs    r8
+        mpys    r12
 
 ;;; Local Variables:
 ;;; mode: asm

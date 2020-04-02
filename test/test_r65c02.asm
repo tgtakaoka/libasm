@@ -12,48 +12,15 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        include test_w65sc02.asm
-
         cpu     65c02
 
-;;; 65C02
-        org     $0190
+        include "test_m6502.inc"
+        org     $150
+        include "test_w65sc02.inc"
+	org     $190
+        include "test_r65c02.inc"
 
-        rmb0    $08
-        rmb1    $18
-        rmb2    $28
-        rmb3    $38
-        rmb4    $48
-        rmb5    $58
-        rmb6    $68
-        rmb7    $78
-        smb0    $88
-        smb1    $98
-        smb2    $A8
-        smb3    $B8
-        smb4    $C8
-        smb5    $D8
-        smb6    $E8
-        smb7    $F8
-                 
-        bbr0    $10,*+20
-        bbr1    $20,*+36
-        bbr2    $30,*+52
-        bbr3    $40,*+68
-        bbr4    $50,*+84
-        bbr5    $60,*+100
-        bbr6    $70,*+116
-        bbr7    $80,*-124
-        bbs0    $90,*-108
-        bbs1    $A0,*-92
-        bbs2    $B0,*-76
-        bbs3    $C0,*-60
-        bbs4    $D0,*-44
-        bbs5    $E0,*-28
-        bbs6    $F0,*-12
-        bbs7    $00,*+4
-
-;;; comment
+        end
 
 ;;; Local Variables:
 ;;; mode: asm
