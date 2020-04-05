@@ -17,6 +17,9 @@
 #ifndef __TEXT_I8080__
 #define __TEXT_I8080__
 
+namespace libasm {
+namespace i8080 {
+
 static const char TEXT_ACI[]  PROGMEM = "ACI";
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
@@ -95,6 +98,9 @@ static const char TEXT_XCHG[] PROGMEM = "XCHG";
 static const char TEXT_XRA[]  PROGMEM = "XRA";
 static const char TEXT_XRI[]  PROGMEM = "XRI";
 static const char TEXT_XTHL[] PROGMEM = "XTHL";
+
+} // namespace i8080
+} // namespace libasm
 
 #endif // __TEXT_I8080__
 

@@ -24,6 +24,9 @@
 #include "table_i8080.h"
 #include "asm_interface.h"
 
+namespace libasm {
+namespace i8080 {
+
 class AsmI8080 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
@@ -50,6 +53,9 @@ private:
 
     Error encode(Insn &insn) override;
 };
+
+} // namespace i8080
+} // namespace libasm
 
 #endif // __ASM_I8080_H__
 

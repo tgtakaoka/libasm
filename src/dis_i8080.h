@@ -24,6 +24,9 @@
 #include "table_i8080.h"
 #include "dis_interface.h"
 
+namespace libasm {
+namespace i8080 {
+
 class DisI8080 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
@@ -47,6 +50,9 @@ private:
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
+
+} // namespace i8080
+} // namespace libasm
 
 #endif // __DIS_I8080_H__
 

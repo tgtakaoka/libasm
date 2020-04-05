@@ -23,6 +23,9 @@
 #include <ctype.h>
 #include <string.h>
 
+namespace libasm {
+namespace i8080 {
+
 #define E(_opc, _name, _amode, _iformat)                        \
     { _opc, Entry::_flags(_amode, _iformat), TEXT_##_name },
 
@@ -170,6 +173,9 @@ bool TableI8080::setCpu(const char *cpu) {
 }
 
 class TableI8080 TableI8080;
+
+} // namespace i8080
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

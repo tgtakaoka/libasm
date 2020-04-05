@@ -20,6 +20,9 @@
 #include "config_i8080.h"
 #include "insn_i8080.h"
 
+namespace libasm {
+namespace i8080 {
+
 class TableI8080 {
 public:
     Error searchName(Insn &insn) const;
@@ -30,6 +33,10 @@ public:
 };
 
 extern TableI8080 TableI8080;
+
+} // namespace i8080
+} // namespace libasm
+
 #endif // __TABLE_I8080_H__
 
 // Local Variables:

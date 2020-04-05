@@ -17,6 +17,9 @@
 #include "dis_i8080.h"
 #include "table_i8080.h"
 
+namespace libasm {
+namespace i8080 {
+
 void DisI8080::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
@@ -116,6 +119,9 @@ Error DisI8080::decode(
         return setError(INTERNAL_ERROR);
     }
 }
+
+} // namespace i8080
+} // namespace libasm
 
 // Local Variables:
 // mode: c++
