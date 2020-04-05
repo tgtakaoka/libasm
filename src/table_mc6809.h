@@ -20,6 +20,9 @@
 #include "config_mc6809.h"
 #include "insn_mc6809.h"
 
+namespace libasm {
+namespace mc6809 {
+
 #define PSEUDO_SETDP   0x00     // reuse NEG opecode
 #define PSEUDO_ASSUME  0x03     // reuse COM opecode
 
@@ -58,6 +61,9 @@ private:
 };
 
 extern TableMc6809 TableMc6809;
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __TABLE_MC6809_H__
 

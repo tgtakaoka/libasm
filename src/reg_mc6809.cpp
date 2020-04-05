@@ -20,6 +20,9 @@
 
 #include <ctype.h>
 
+namespace libasm {
+namespace mc6809 {
+
 static constexpr RegName STACK_S_REGS[8] PROGMEM = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC
 };
@@ -290,6 +293,9 @@ OprSize RegMc6809::regSize(RegName regName) {
         return SZ_WORD;
     return SZ_NONE; // REG_0, REG_00, REG_Z
 }
+
+} // namespace mc6809
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

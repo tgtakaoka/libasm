@@ -18,6 +18,8 @@
 #include <str_memory.h>
 #include <libcli.h>
 
+using namespace libasm::mc6809;
+
 DisMc6809 dis6809;
 Disassembler<target::uintptr_t> &disassembler(dis6809);
 

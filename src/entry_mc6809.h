@@ -19,6 +19,9 @@
 
 #include "config_mc6809.h"
 
+namespace libasm {
+namespace mc6809 {
+
 struct Entry {
     const target::opcode_t opc;
     const host::uint_t flags;
@@ -52,6 +55,9 @@ private:
     static constexpr host::uint_t addrMode_gp = 0;
     static constexpr host::uint_t addrMode_gm = 0x0f;
 };
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __ENTRY_MC6809_H__
 
