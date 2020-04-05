@@ -17,6 +17,8 @@
 #include "dis_mc68000.h"
 #include "test_dis_helper.h"
 
+using namespace libasm::mc68000;
+
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;

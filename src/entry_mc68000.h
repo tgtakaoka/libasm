@@ -19,6 +19,9 @@
 
 #include "config_mc68000.h"
 
+namespace libasm {
+namespace mc68000 {
+
 struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
@@ -37,6 +40,9 @@ private:
     static constexpr host::uint_t insnFmt_gp = 0;
     static constexpr host::uint_t insnFmt_gm = 0x1f;
 };
+
+} // namespace mc68000
+} // namespace libasm
 
 #endif // __ENTRY_MC68000_H__
 

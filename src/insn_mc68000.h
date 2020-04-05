@@ -21,6 +21,10 @@
 #include "entry_mc68000.h"
 #include "reg_mc68000.h"
 
+using libasm::mc68000::Entry;
+using libasm::mc68000::EaSize;
+using libasm::mc68000::RegMc68000;
+
 class Insn : public InsnBase {
 public:
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }

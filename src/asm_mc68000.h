@@ -23,6 +23,9 @@
 #include "table_mc68000.h"
 #include "asm_interface.h"
 
+namespace libasm {
+namespace mc68000 {
+
 class AsmMc68000 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
@@ -91,6 +94,9 @@ private:
 
     Error encode(Insn &insn) override;
 };
+
+} // namespace mc68000
+} // namespace libasm
 
 #endif // __ASM_MC68000_H__
 

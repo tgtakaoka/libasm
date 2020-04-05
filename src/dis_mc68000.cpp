@@ -17,6 +17,9 @@
 #include "dis_mc68000.h"
 #include "table_mc68000.h"
 
+namespace libasm {
+namespace mc68000 {
+
 void DisMc68000::outRegName(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
@@ -714,6 +717,9 @@ Error DisMc68000::decode(
     }
     return setError(UNKNOWN_INSTRUCTION);
 }
+
+} // namespace mc68000
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

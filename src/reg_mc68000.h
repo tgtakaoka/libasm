@@ -17,6 +17,11 @@
 #ifndef __REGISTER_MC68000_H__
 #define __REGISTER_MC68000_H__
 
+#include "reg_base.h"
+
+namespace libasm {
+namespace mc68000 {
+
 enum RegName : char {
     REG_UNDEF = 0,
     REG_D0 = '0',
@@ -40,8 +45,6 @@ enum RegName : char {
     REG_SR = 'S',
     REG_USP = 'U',
 };
-
-#include "reg_base.h"
 
 // Effective Address Size
 enum EaSize : host::uint_t {
@@ -155,6 +158,9 @@ static const char *eaMode(EaMode mode) {
     default: return "M_unkn";
     }
 }
+
+} // namespace mc68000
+} // namespace libasm
 
 #endif // __REGISTER_MC68000_H__
 

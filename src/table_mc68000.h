@@ -20,6 +20,9 @@
 #include "config_mc68000.h"
 #include "insn_mc68000.h"
 
+namespace libasm {
+namespace mc68000 {
+
 class TableMc68000 {
 public:
     Error searchName(Insn &insn) const;
@@ -31,6 +34,9 @@ public:
 };
 
 extern TableMc68000 TableMc68000;
+
+} // namespace mc68000
+} // namespace libasm
 
 #endif // __TABLE_MC68000_H__
 

@@ -17,6 +17,8 @@
 #include "asm_mc68000.h"
 #include "test_asm_helper.h"
 
+using namespace libasm::mc68000;
+
 TestAsserter asserter;
 TestSymtab symtab;
 AsmMc68000 as68000;
