@@ -17,6 +17,9 @@
 #include "dis_mc6800.h"
 #include "table_mc6800.h"
 
+namespace libasm {
+namespace mc6800 {
+
 void DisMc6800::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
@@ -147,6 +150,9 @@ Error DisMc6800::decode(
     }
     return setError(INTERNAL_ERROR);
 }
+
+} // namespace m6502
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

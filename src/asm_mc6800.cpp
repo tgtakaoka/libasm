@@ -17,6 +17,9 @@
 #include "asm_mc6800.h"
 #include "table_mc6800.h"
 
+namespace libasm {
+namespace mc6800 {
+
 bool AsmMc6800::adjustAccumulator(Insn &insn) {
     const InsnAdjust iAdjust = insn.insnAdjust();
     if (iAdjust == ADJ_ZERO) return false;
@@ -197,6 +200,9 @@ Error AsmMc6800::encode(Insn &insn) {
     default:  return setError(UNKNOWN_OPERAND);
     }
 }
+
+} // namespace m6800
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

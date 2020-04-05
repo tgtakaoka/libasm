@@ -19,6 +19,8 @@
 #include "asm_driver.h"
 #include "bin_formatter.h"
 
+using namespace libasm::mc6800;
+
 int main(int argc, const char **argv) {
     AsmMc6800 assembler;
     AsmMotoDirective<target::uintptr_t> directive(assembler);

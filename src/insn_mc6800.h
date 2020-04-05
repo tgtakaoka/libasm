@@ -20,6 +20,8 @@
 #include "insn_base.h"
 #include "entry_mc6800.h"
 
+using libasm::mc6800::Entry;
+
 class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }

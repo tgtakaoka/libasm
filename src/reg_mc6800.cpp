@@ -20,6 +20,9 @@
 
 #include <ctype.h>
 
+namespace libasm {
+namespace mc6800 {
+
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
@@ -54,6 +57,9 @@ RegName RegMc6800::parseRegName(const char *line) const {
     if (compareRegName(line, REG_X)) return REG_X;
     return REG_UNDEF;
 }
+
+} // namespace m6502
+} // namespace libasm
 
 // Local Variables:
 // mode: c++
