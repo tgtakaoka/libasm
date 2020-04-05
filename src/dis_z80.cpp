@@ -17,6 +17,9 @@
 #include "dis_z80.h"
 #include "table_z80.h"
 
+namespace libasm {
+namespace z80 {
+
 template<typename T>
 void DisZ80::outAddress(T addr, bool indir) {
     if (indir) *_operands++ = '(';
@@ -448,6 +451,9 @@ Error DisZ80::decode(
         return setError(INTERNAL_ERROR);
     }
 }
+
+} // namespace z80
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

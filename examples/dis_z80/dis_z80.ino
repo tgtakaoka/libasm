@@ -18,6 +18,8 @@
 #include <str_memory.h>
 #include <libcli.h>
 
+using namespace libasm::z80;
+
 DisZ80 disz80;
 Disassembler<target::uintptr_t> &disassembler(disz80);
 

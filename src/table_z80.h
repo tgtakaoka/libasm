@@ -20,6 +20,9 @@
 #include "config_z80.h"
 #include "insn_z80.h"
 
+namespace libasm {
+namespace z80 {
+
 class TableZ80 {
 public:
     Error searchName(Insn &insn) const;
@@ -41,6 +44,9 @@ private:
 };
 
 extern TableZ80 TableZ80;
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __TABLE_Z80_H__
 

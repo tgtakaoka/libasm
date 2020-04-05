@@ -20,6 +20,8 @@
 #include "insn_base.h"
 #include "entry_z80.h"
 
+using libasm::z80::Entry;
+
 class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags2); }

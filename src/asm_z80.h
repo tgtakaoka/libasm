@@ -24,6 +24,9 @@
 #include "table_z80.h"
 #include "asm_interface.h"
 
+namespace libasm {
+namespace z80 {
+
 class AsmZ80 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
@@ -63,6 +66,9 @@ private:
 
     Error encode(Insn &insn) override;
 };
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __ASM_Z80_H__
 

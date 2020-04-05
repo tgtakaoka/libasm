@@ -23,6 +23,9 @@
 #include <ctype.h>
 #include <string.h>
 
+namespace libasm {
+namespace z80 {
+
 #define E(_opc, _name, _iformat, _leftOpr, _rightOpr, _amode)   \
     { _opc,                                                     \
       Entry::_flags1(_leftOpr, _iformat),                       \
@@ -357,17 +360,17 @@ bool TableZ80::isPrefixCode(target::opcode_t opCode) {
 
 Error TableZ80::searchName(Insn &insn) const {
     if (isZ80())
-        return ::searchName(insn, ARRAY_RANGE(PAGES_Z80));
-    return ::searchName(insn, ARRAY_RANGE(PAGES_I8080));
+        return libasm::z80::searchName(insn, ARRAY_RANGE(PAGES_Z80));
+    return libasm::z80::searchName(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 Error TableZ80::searchNameAndOprFormats(
     Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const {
     if (isZ80())
-        return ::searchNameAndOprFormats(
+        return libasm::z80::searchNameAndOprFormats(
             insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_Z80));
 
-    if (::searchNameAndOprFormats(
+    if (libasm::z80::searchNameAndOprFormats(
             insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_I8080)) == OK
         && !checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
         return OK;
@@ -376,11 +379,11 @@ Error TableZ80::searchNameAndOprFormats(
 
 Error TableZ80::searchInsnCode(Insn &insn) const {
     if (isZ80())
-        return ::searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80));
+        return libasm::z80::searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80));
 
     if (checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
         return UNKNOWN_INSTRUCTION;
-    return ::searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
+    return libasm::z80::searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 const char *TableZ80::listCpu() {
@@ -401,6 +404,9 @@ bool TableZ80::setCpu(const char *cpu) {
 }
 
 class TableZ80 TableZ80;
+
+} // namespace z80
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

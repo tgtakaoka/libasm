@@ -19,6 +19,9 @@
 
 #include "config_z80.h"
 
+namespace libasm {
+namespace z80 {
+
 struct Entry {
     const target::opcode_t opc;
     const host::uint_t flags1;
@@ -53,6 +56,9 @@ private:
     static constexpr host::uint_t oprFormat_mask = 0x1f;
     static constexpr host::uint_t addrMode_mask = 0x7;
 };
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __ENTRY_Z80_H__
 
