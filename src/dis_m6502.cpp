@@ -17,6 +17,9 @@
 #include "dis_m6502.h"
 #include "table_m6502.h"
 
+namespace libasm {
+namespace m6502 {
+
 Error DisM6502::decodeImmediate(
     DisMemory<target::uintptr_t>& memory, Insn &insn) {
     uint8_t val;
@@ -227,6 +230,9 @@ Error DisM6502::decode(
         return setError(INTERNAL_ERROR);
     }
 }
+
+} // namespace m6502
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

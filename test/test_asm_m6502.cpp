@@ -17,6 +17,8 @@
 #include "asm_m6502.h"
 #include "test_asm_helper.h"
 
+using namespace libasm::m6502;
+
 TestAsserter asserter;
 TestSymtab symtab;
 AsmM6502 as6502;

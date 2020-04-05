@@ -20,6 +20,9 @@
 #include "config_m6502.h"
 #include "insn_m6502.h"
 
+namespace libasm {
+namespace m6502 {
+
 class TableM6502 {
 public:
     Error searchName(Insn &insn) const;
@@ -48,6 +51,9 @@ private:
 };
 
 extern TableM6502 TableM6502;
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __TABLE_M6502_H__
 

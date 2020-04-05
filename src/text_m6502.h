@@ -19,6 +19,9 @@
 
 #include "config_host.h"
 
+namespace libasm {
+namespace m6502 {
+
 // M6502 instructions
 
 extern const char TEXT_ADC[] PROGMEM = "ADC";
@@ -167,6 +170,9 @@ static const char TEXT_LDAL[] PROGMEM = "LDAL";
 static const char TEXT_ORAL[] PROGMEM = "ORAL";
 static const char TEXT_SBCL[] PROGMEM = "SBCL";
 static const char TEXT_STAL[] PROGMEM = "STAL";
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __TEXT_M6502_H__
 

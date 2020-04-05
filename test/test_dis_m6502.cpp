@@ -17,6 +17,8 @@
 #include "dis_m6502.h"
 #include "test_dis_helper.h"
 
+using namespace libasm::m6502;
+
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
