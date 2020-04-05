@@ -20,6 +20,8 @@
 #include "insn_base.h"
 #include "entry_tms9900.h"
 
+using libasm::tms9900::Entry;
+
 class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }

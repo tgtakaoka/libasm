@@ -20,6 +20,9 @@
 #include "config_tms9900.h"
 #include "insn_tms9900.h"
 
+namespace libasm {
+namespace tms9900 {
+
 class TableTms9900 {
 public:
     Error searchName(Insn &insn) const;
@@ -34,6 +37,10 @@ private:
 };
 
 extern TableTms9900 TableTms9900;
+
+} // namespace tms9900
+} // namespace libasm
+
 #endif // __TABLE_TMS9900_H__
 
 // Local Variables:

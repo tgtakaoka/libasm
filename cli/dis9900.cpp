@@ -17,6 +17,8 @@
 #include "dis_tms9900.h"
 #include "dis_driver.h"
 
+using namespace libasm::tms9900;
+
 int main(int argc, const char **argv) {
     DisTms9900 disassembler;
     DisDriver<target::uintptr_t> driver(disassembler);

@@ -17,6 +17,8 @@
 #include "asm_tms9900.h"
 #include "test_asm_helper.h"
 
+using namespace libasm::tms9900;
+
 TestAsserter asserter;
 TestSymtab symtab;
 AsmTms9900 as9900;

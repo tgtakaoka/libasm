@@ -19,6 +19,9 @@
 #include "config_tms9900.h"
 #include "reg_tms9900.h"
 
+namespace libasm {
+namespace tms9900 {
+
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
@@ -58,6 +61,9 @@ uint16_t RegTms9900::encodeRegNumber(RegName regName) const {
     if (isdigit(r)) return r - '0';
     return r - 'A' + 10;
 }
+
+} // namespace tms9900
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

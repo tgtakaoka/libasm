@@ -17,6 +17,9 @@
 #ifndef __TEXT_TMS9900__
 #define __TEXT_TMS9900__
 
+namespace libasm {
+namespace tms9900 {
+
 // TMS9900
 
 static const char TEXT_A[]    PROGMEM = "A";
@@ -96,6 +99,9 @@ static const char TEXT_MPYS[] PROGMEM = "MPYS";
 static const char TEXT_DIVS[] PROGMEM = "DIVS";
 static const char TEXT_LST[]  PROGMEM = "LST";
 static const char TEXT_LWP[]  PROGMEM = "LWP";
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __TEXT_TMS9900__
 

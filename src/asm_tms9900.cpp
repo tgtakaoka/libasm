@@ -17,6 +17,9 @@
 #include "asm_tms9900.h"
 #include "table_tms9900.h"
 
+namespace libasm {
+namespace tms9900 {
+
 Error AsmTms9900::checkComma() {
     _scan = skipSpaces(_scan);
     if (*_scan != ',') return UNKNOWN_OPERAND;
@@ -206,6 +209,9 @@ Error AsmTms9900::encode(Insn &insn) {
     if (getError() == OK) setError(error);
     return checkLineEnd();
 }
+
+} // namespace tms9900
+} // namespace libasm
 
 // Local Variables:
 // mode: c++
