@@ -17,6 +17,9 @@
 #include "dis_tms9900.h"
 #include "table_tms9900.h"
 
+namespace libasm {
+namespace tms9900 {
+
 void DisTms9900::outAddress(target::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);
     if (label) {
@@ -144,6 +147,9 @@ Error DisTms9900::decode(
         return setError(INTERNAL_ERROR);
     }
 }
+
+} // namespace tms9900
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

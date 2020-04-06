@@ -17,6 +17,8 @@
 #include "dis_mc6809.h"
 #include "gen_driver.h"
 
+using namespace libasm::mc6809;
+
 static bool filterHd6309BitImmIndexed(uint8_t opc) {
     if (opc == 0x10) return true; // prefix
     if (opc == 0x11) return true; // prefix

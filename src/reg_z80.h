@@ -18,6 +18,10 @@
 #define __REGISTER_Z80_H__
 
 #include "insn_z80.h"
+#include "reg_base.h"
+
+namespace libasm {
+namespace z80 {
 
 enum RegName : char {
     REG_UNDEF = 0,
@@ -51,8 +55,6 @@ enum CcName : char {
     CC_P  = 'P',
     CC_M  = 'M',
 };
-
-#include "reg_base.h"
 
 class RegZ80 : public RegBase {
 public:
@@ -97,6 +99,9 @@ private:
     bool compareCcName(const char *line, CcName ccName) const;
     CcName parseCcName(const char *line, host::int_t max) const;
 };
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __REGISTER_Z80_H__
 

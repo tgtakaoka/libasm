@@ -17,6 +17,8 @@
 #include "dis_z80.h"
 #include "test_dis_helper.h"
 
+using namespace libasm::z80;
+
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;

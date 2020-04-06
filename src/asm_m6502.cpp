@@ -17,6 +17,9 @@
 #include "asm_m6502.h"
 #include "table_m6502.h"
 
+namespace libasm {
+namespace m6502 {
+
 Error AsmM6502::encodeLongRelative(Insn &insn) {
     uint32_t addr;
     if (getOperand32(addr)) return getError();
@@ -242,6 +245,9 @@ Error AsmM6502::encode(Insn &insn) {
 
     return checkLineEnd();
 }
+
+} // namespace m6502
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

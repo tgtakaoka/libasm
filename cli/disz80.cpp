@@ -17,6 +17,8 @@
 #include "dis_z80.h"
 #include "dis_driver.h"
 
+using namespace libasm::z80;
+
 int main(int argc, const char **argv) {
     DisZ80 disassembler;
     DisDriver<target::uintptr_t> driver(disassembler);

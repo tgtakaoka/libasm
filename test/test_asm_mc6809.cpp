@@ -17,6 +17,8 @@
 #include "asm_mc6809.h"
 #include "test_asm_helper.h"
 
+using namespace libasm::mc6809;
+
 TestAsserter asserter;
 TestSymtab symtab;
 AsmMc6809 as6809;

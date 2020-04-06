@@ -20,6 +20,8 @@
 #include "insn_base.h"
 #include "entry_i8080.h"
 
+using libasm::i8080::Entry;
+
 class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }

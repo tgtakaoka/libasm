@@ -24,6 +24,9 @@
 #include "table_tms9900.h"
 #include "dis_interface.h"
 
+namespace libasm {
+namespace tms9900 {
+
 class DisTms9900 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
@@ -48,6 +51,9 @@ private:
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __DIS_TMS9900_H__
 

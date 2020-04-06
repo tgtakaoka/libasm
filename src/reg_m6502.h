@@ -17,6 +17,11 @@
 #ifndef __REG_M6502_H__
 #define __REG_M6502_H__
 
+#include "reg_base.h"
+
+namespace libasm {
+namespace m6502 {
+
 enum RegName : char {
     REG_UNDEF = 0,
     REG_A = 'A',
@@ -25,8 +30,6 @@ enum RegName : char {
     REG_S = 'S',
 };
 
-#include "reg_base.h"
-
 class RegM6502 : public RegBase {
 public:
     host::uint_t regNameLen(RegName regName) const;
@@ -34,6 +37,9 @@ public:
     RegName parseIndexReg(const char *line) const;
     char *outRegName(char *out, const RegName regName) const;
 };
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __REG_M6502_H__
 

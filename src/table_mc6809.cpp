@@ -22,6 +22,9 @@
 
 #include <string.h>
 
+namespace libasm {
+namespace mc6809 {
+
 #define P00(_opc, _name, _sz, _mcu, _mode)                          \
     { _opc,  Entry::_flags(_mcu, SZ_##_sz, _mode), TEXT_##_name },
 #define P10(_opc, _name, _sz, _mcu, _mode)                          \
@@ -626,6 +629,9 @@ bool TableMc6809::setCpu(const char *cpu) {
 }
 
 class TableMc6809 TableMc6809;
+
+} // namespace mc6809
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

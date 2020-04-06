@@ -19,6 +19,8 @@
 #include "asm_driver.h"
 #include "bin_formatter.h"
 
+using namespace libasm::tms9900;
+
 int main(int argc, const char **argv) {
     AsmTms9900 assembler;
     AsmIntelDirective<target::uintptr_t> directive(assembler);

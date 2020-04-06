@@ -22,6 +22,9 @@
 
 #include <string.h>
 
+namespace libasm {
+namespace mc6800 {
+
 #define E(_opc, _name, _mode, _adjust, _size)                           \
     { _opc, Entry::_flags(_mode, ADJ_##_adjust, SZ_##_size), TEXT_##_name },
 
@@ -252,6 +255,9 @@ bool TableMc6800::setCpu(const char *cpu) {
 }
 
 class TableMc6800 TableMc6800;
+
+} // namespace mc6800
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

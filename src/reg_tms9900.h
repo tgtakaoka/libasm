@@ -17,6 +17,11 @@
 #ifndef __REG_TMS9900_H__
 #define __REG_TMS9900_H__
 
+#include "reg_base.h"
+
+namespace libasm {
+namespace tms9900 {
+
 enum RegName : char {
     REG_UNDEF = 0,
     REG_R0 = '0',
@@ -37,8 +42,6 @@ enum RegName : char {
     REG_R15 = 'F',
 };
 
-#include "reg_base.h"
-
 class RegTms9900 : public RegBase {
 public:
     host::uint_t regNameLen(RegName regName) const;
@@ -46,6 +49,9 @@ public:
     char *outRegName(char *out, host::uint_t regno) const;
     uint16_t encodeRegNumber(RegName regName) const;
 };
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __REG_TMS9900_H__
 

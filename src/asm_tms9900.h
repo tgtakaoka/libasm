@@ -24,6 +24,9 @@
 #include "table_tms9900.h"
 #include "asm_interface.h"
 
+namespace libasm {
+namespace tms9900 {
+
 class AsmTms9900 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
@@ -49,6 +52,9 @@ private:
 
     Error encode(Insn &insn) override;
 };
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __ASM_TMS9900_H__
 

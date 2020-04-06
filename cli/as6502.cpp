@@ -19,6 +19,8 @@
 #include "asm_driver.h"
 #include "bin_formatter.h"
 
+using namespace libasm::m6502;
+
 int main(int argc, const char **argv) {
     AsmM6502 assembler;
     AsmMostekDirective<target::uintptr_t> directive(assembler);

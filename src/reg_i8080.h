@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+#include "reg_base.h"
+
 #ifndef __REGISTER_I8080_H__
 #define __REGISTER_I8080_H__
+
+namespace libasm {
+namespace i8080 {
 
 enum RegName : char {
     REG_UNDEF = 0,
@@ -30,8 +35,6 @@ enum RegName : char {
     REG_SP = 'S',
     REG_PSW = 'P',
 };
-
-#include "reg_base.h"
 
 class RegI8080 : public RegBase {
 public:
@@ -63,6 +66,9 @@ private:
     char regName2ndChar(RegName regName) const;
     char regName3rdChar(RegName regName) const;
 };
+
+} // namespace i8080
+} // namespace libasm
 
 #endif // __REGISTER_I8080_H__
 

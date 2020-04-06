@@ -17,14 +17,17 @@
 #ifndef __REG_MC6800_H__
 #define __REG_MC6800_H__
 
+#include "reg_base.h"
+
+namespace libasm {
+namespace mc6800 {
+
 enum RegName : char {
     REG_UNDEF = 0,
     REG_A = 'A',
     REG_B = 'B',
     REG_X = 'X',
 };
-
-#include "reg_base.h"
 
 class RegMc6800 : public RegBase {
 public:
@@ -38,6 +41,9 @@ public:
 private:
     char regName1stChar(const RegName regName) const;
 };
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __REG_MC6800_H__
 

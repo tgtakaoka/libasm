@@ -24,6 +24,9 @@
 #include "table_mc6809.h"
 #include "asm_interface.h"
 
+namespace libasm {
+namespace mc6809 {
+
 class AsmMc6809 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
@@ -56,6 +59,9 @@ private:
     Error processPseudo(Insn &insn);
     Error encode(Insn &insn) override;
 };
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __ASM_MC6809_H__
 

@@ -19,6 +19,9 @@
 
 #include <ctype.h>
 
+namespace libasm {
+namespace mc68000 {
+
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
@@ -250,6 +253,9 @@ RegName BriefExt::index() const {
 uint8_t BriefExt::disp() const {
     return static_cast<uint8_t>(word);
 }
+
+} // namespace mc68000
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

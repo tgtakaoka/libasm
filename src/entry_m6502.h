@@ -19,6 +19,9 @@
 
 #include "config_m6502.h"
 
+namespace libasm {
+namespace m6502 {
+
 struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
@@ -42,6 +45,9 @@ private:
     static constexpr host::uint_t cputype_gm = 0x7;
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __ENTRY_M6502_H__
 

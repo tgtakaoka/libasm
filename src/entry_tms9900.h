@@ -19,6 +19,9 @@
 
 #include "config_tms9900.h"
 
+namespace libasm {
+namespace tms9900 {
+
 struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
@@ -42,6 +45,9 @@ private:
     static constexpr host::uint_t tms9995_bm = 0x80;
     static constexpr host::uint_t addrMode_gm = 0x0f;
 };
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __ENTRY_TMS9900_H__
 

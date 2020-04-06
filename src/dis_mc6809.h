@@ -24,6 +24,9 @@
 #include "table_mc6809.h"
 #include "dis_interface.h"
 
+namespace libasm {
+namespace mc6809 {
+
 class DisMc6809 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
@@ -56,6 +59,9 @@ private:
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __DIS_MC6809_H__
 

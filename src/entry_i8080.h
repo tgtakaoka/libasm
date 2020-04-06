@@ -19,6 +19,9 @@
 
 #include "config_i8080.h"
 
+namespace libasm {
+namespace i8080 {
+
 struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
@@ -41,6 +44,9 @@ private:
     static constexpr host::uint_t insnFormat_mask = 0x7;
     static constexpr host::uint_t addrMode_mask = 0x07;
 };
+
+} // namespace i8080
+} // namespace libasm
 
 #endif // __ENTRY_I8080_H__
 

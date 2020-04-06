@@ -18,6 +18,9 @@
 #include "table_z80.h"
 #include "reg_z80.h"
 
+namespace libasm {
+namespace z80 {
+
 Error AsmZ80::encodeImmediate(
     Insn &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
@@ -422,6 +425,9 @@ Error AsmZ80::encode(Insn &insn) {
 
     return setError(UNKNOWN_INSTRUCTION);
 }
+
+} // namespace z80
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

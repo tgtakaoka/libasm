@@ -19,6 +19,9 @@
 
 #include "config_host.h"
 
+namespace libasm {
+namespace mc6800 {
+
 static const char TEXT_ABA[] PROGMEM = "ABA";
 static const char TEXT_ADC[] PROGMEM = "ADC";
 static const char TEXT_ADD[] PROGMEM = "ADD";
@@ -94,6 +97,9 @@ static const char TEXT_TST[] PROGMEM = "TST";
 static const char TEXT_TSX[] PROGMEM = "TSX";
 static const char TEXT_TXS[] PROGMEM = "TXS";
 static const char TEXT_WAI[] PROGMEM = "WAI";
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __TEXT_MC6800__
 

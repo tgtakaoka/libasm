@@ -17,6 +17,9 @@
 #include "asm_i8080.h"
 #include "table_i8080.h"
 
+namespace libasm {
+namespace i8080 {
+
 Error AsmI8080::encodePointerReg(Insn &insn) {
     const RegName regName = _regs.parsePointerReg(_scan);
     const host::int_t num = _regs.encodePointerReg(regName);
@@ -139,6 +142,9 @@ Error AsmI8080::encode(Insn &insn) {
     default:     return setError(UNKNOWN_OPERAND);
     }
 }
+
+} // namespace i8080
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

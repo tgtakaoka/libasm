@@ -19,6 +19,9 @@
 #include "config_m6502.h"
 #include "reg_m6502.h"
 
+namespace libasm {
+namespace m6502 {
+
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
@@ -50,6 +53,9 @@ char *RegM6502::outRegName(char *out, const RegName regName) const {
     *out = 0;
     return out;
 }
+
+} // namespace m6502
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

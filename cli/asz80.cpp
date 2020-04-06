@@ -19,6 +19,8 @@
 #include "asm_driver.h"
 #include "bin_formatter.h"
 
+using namespace libasm::z80;
+
 int main(int argc, const char **argv) {
     AsmZ80 assembler;
     AsmIntelDirective<target::uintptr_t> directive(assembler);

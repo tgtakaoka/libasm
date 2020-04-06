@@ -17,6 +17,11 @@
 #ifndef __REG_MC6809_H__
 #define __REG_MC6809_H__
 
+#include "reg_base.h"
+
+namespace libasm {
+namespace mc6809 {
+
 enum RegName : char {
     REG_UNDEF = 0,
     OFFSET =  'o', // Describe offset in indexed addressing
@@ -43,8 +48,6 @@ enum RegName : char {
     REG_00 =  '1', // "00" zero register
 #endif
 };
-
-#include "reg_base.h"
 
 class RegMc6809 : public RegBase {
 public:
@@ -85,6 +88,9 @@ private:
     char regName2ndChar(const RegName regName) const;
     char regName3rdChar(const RegName regName) const;
 };
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __REG_MC6809_H__
 

@@ -17,6 +17,8 @@
 #include "dis_i8080.h"
 #include "gen_driver.h"
 
+using namespace libasm::i8080;
+
 int main(int argc, const char **argv) {
     DisI8080 dis8080;
     GenDriver<target::uintptr_t> driver(dis8080);

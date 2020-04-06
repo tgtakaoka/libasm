@@ -17,6 +17,8 @@
 #include "dis_mc6800.h"
 #include "gen_driver.h"
 
+using namespace libasm::mc6800;
+
 int main(int argc, const char **argv) {
     DisMc6800 dis6800;
     GenDriver<target::uintptr_t> driver(dis6800);

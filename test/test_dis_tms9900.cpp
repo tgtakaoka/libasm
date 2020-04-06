@@ -17,6 +17,8 @@
 #include "dis_tms9900.h"
 #include "test_dis_helper.h"
 
+using namespace libasm::tms9900;
+
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;

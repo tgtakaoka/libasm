@@ -24,6 +24,9 @@
 #include "table_z80.h"
 #include "dis_interface.h"
 
+namespace libasm {
+namespace z80 {
+
 class DisZ80 : public Disassembler<target::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
@@ -64,6 +67,9 @@ private:
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __DIS_Z80_H__
 

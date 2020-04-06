@@ -17,6 +17,8 @@
 #include "dis_m6502.h"
 #include "dis_driver.h"
 
+using namespace libasm::m6502;
+
 int main(int argc, const char **argv) {
     DisM6502 disassembler;
     DisDriver<target::uintptr_t> driver(disassembler);

@@ -19,6 +19,9 @@
 
 #include "config_host.h"
 
+namespace libasm {
+namespace z80 {
+
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
 static const char TEXT_AND[]  PROGMEM = "AND";
@@ -87,6 +90,9 @@ static const char TEXT_SRA[]  PROGMEM = "SRA";
 static const char TEXT_SRL[]  PROGMEM = "SRL";
 static const char TEXT_SUB[]  PROGMEM = "SUB";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __TEXT_Z80__
 

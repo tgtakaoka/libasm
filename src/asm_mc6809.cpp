@@ -17,6 +17,9 @@
 #include "asm_mc6809.h"
 #include "table_mc6809.h"
 
+namespace libasm {
+namespace mc6809 {
+
 Error AsmMc6809::encodeStackOp(Insn &insn) {
     uint8_t post = 0;
     const char *p = _scan;
@@ -498,6 +501,9 @@ Error AsmMc6809::encode(Insn &insn) {
     default:   return setError(UNKNOWN_OPERAND);
     }
 }
+
+} // namespace mc6809
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

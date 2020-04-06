@@ -17,6 +17,9 @@
 #include "dis_mc6809.h"
 #include "table_mc6809.h"
 
+namespace libasm {
+namespace mc6809 {
+
 void DisMc6809::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
@@ -359,6 +362,9 @@ Error DisMc6809::decode(
         return setError(INTERNAL_ERROR);
     }
 }
+
+} // namespace mc6809
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

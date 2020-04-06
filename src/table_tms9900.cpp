@@ -23,6 +23,9 @@
 #include <ctype.h>
 #include <string.h>
 
+namespace libasm {
+namespace tms9900 {
+
 #define E(_insn, _name, _amode, _mcu)                       \
     { _insn, Entry::_flags(_mcu, _amode), TEXT_##_name },
 
@@ -181,8 +184,10 @@ bool TableTms9900::setCpu(const char *cpu) {
     return false;
 }
 
-
 class TableTms9900 TableTms9900;
+
+} // namespace tms9900
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

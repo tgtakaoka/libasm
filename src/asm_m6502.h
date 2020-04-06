@@ -24,6 +24,9 @@
 #include "table_m6502.h"
 #include "asm_interface.h"
 
+namespace libasm {
+namespace m6502 {
+
 class AsmM6502 : public Assembler<target::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
@@ -53,6 +56,9 @@ private:
 
     Error encode(Insn &insn) override;
 };
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __ASM_M6502_H__
 

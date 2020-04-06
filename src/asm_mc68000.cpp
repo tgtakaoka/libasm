@@ -19,6 +19,9 @@
 
 #include <ctype.h>
 
+namespace libasm {
+namespace mc68000 {
+
 static const char *parseSize(const char *line, EaSize &size) {
     const char *p = line;
     if (*p++ != '.') {
@@ -880,6 +883,9 @@ Error AsmMc68000::encode(Insn &insn) {
     }
     return setError(UNKNOWN_INSTRUCTION);
 }
+
+} // namespace mc68000
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

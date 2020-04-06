@@ -19,6 +19,9 @@
 
 #include "config_host.h"
 
+namespace libasm {
+namespace mc6809 {
+
 static const char TEXT_ABX[]   PROGMEM = "ABX";
 static const char TEXT_ADCA[]  PROGMEM = "ADCA";
 static const char TEXT_ADCB[]  PROGMEM = "ADCB";
@@ -250,6 +253,9 @@ static const char TEXT_TSTW[]  PROGMEM = "TSTW";
 
 static const char TEXT_SETDP[] PROGMEM  = "SETDP";
 static const char TEXT_ASSUME[] PROGMEM = "ASSUME";
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __TEXT_MC6809_H__
 

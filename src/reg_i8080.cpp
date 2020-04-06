@@ -19,6 +19,9 @@
 
 #include <ctype.h>
 
+namespace libasm {
+namespace i8080 {
+
 static constexpr RegName ALL_REGS[] PROGMEM = {
     REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_SP, REG_PSW
 };
@@ -163,6 +166,9 @@ RegName RegI8080::decodeIndexReg(uint8_t regNum) {
 RegName RegI8080::decodeDataReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(DATA_REGS));
 }
+
+} // namespace i8080
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

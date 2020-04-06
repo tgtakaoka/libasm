@@ -20,6 +20,9 @@
 #include "config_mc6800.h"
 #include "insn_mc6800.h"
 
+namespace libasm {
+namespace mc6800 {
+
 class TableMc6800 {
 public:
     Error searchName(Insn &insn) const;
@@ -37,6 +40,9 @@ private:
 };
 
 extern TableMc6800 TableMc6800;
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __TABLE_MC6800_H__
 
