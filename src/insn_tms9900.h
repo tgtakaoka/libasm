@@ -20,8 +20,7 @@
 #include "insn_base.h"
 #include "entry_tms9900.h"
 
-class Insn
-    : public InsnBase<ENDIAN_BIG, Entry::code_max, Entry::name_max> {
+class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }
@@ -34,18 +33,21 @@ public:
 
     void emitInsn() {
         emitUint16(_insnCode, 0);
-        if (_insnLen == 0) _insnLen = 2;
+        if (_length == 0) _length = 2;
     }
 
     void emitOperand(uint16_t val) {
-        if (_insnLen == 0) _insnLen = 2;
+        if (_length == 0) _length = 2;
         appendUint16(val);
     }
 
     void appendUint16(uint16_t val) {
-        emitUint16(val, _insnLen);
-        _insnLen += 2;
+        emitUint16(val, _length);
+        _length += 2;
     }
+
+protected:
+    Endian endian() override { return ENDIAN_BIG; }
 
 private:
     host::uint_t _flags;

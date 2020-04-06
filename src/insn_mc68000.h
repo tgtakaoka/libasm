@@ -21,8 +21,7 @@
 #include "entry_mc68000.h"
 #include "reg_mc68000.h"
 
-class Insn
-    : public InsnBase<ENDIAN_BIG, Entry::code_max, Entry::name_max> {
+class Insn : public InsnBase {
 public:
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
@@ -43,19 +42,22 @@ public:
 
     void emitInsn() {
         emitUint16(_insnCode, 0);
-        if (_insnLen == 0) _insnLen = 2;
+        if (_length == 0) _length = 2;
     }
 
     void emitOperand16(uint16_t val16) {
-        if (_insnLen == 0) _insnLen = 2;
-        emitUint16(val16, _insnLen);
-        _insnLen += 2;
+        if (_length == 0) _length = 2;
+        emitUint16(val16, _length);
+        _length += 2;
     }
 
     void emitOperand32(uint32_t val32) {
         emitOperand16(static_cast<uint16_t>(val32 >> 16));
         emitOperand16(static_cast<uint16_t>(val32));
     }
+
+protected:
+    Endian endian() override { return ENDIAN_BIG; }
 
 private:
     host::uint_t _flags;

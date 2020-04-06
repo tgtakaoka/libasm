@@ -38,7 +38,6 @@ int main(int argc, const char **argv) {
 
     TestGenerator<target::uintptr_t> generator(
         disz80,
-        Insn::bigEndian(),
         sizeof(target::opcode_t),
         driver.uppercase());
     generator

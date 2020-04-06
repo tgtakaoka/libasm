@@ -31,9 +31,9 @@ class DataGenerator {
 public:
     typedef bool (*Filter)(uint8_t);
 
-    DataGenerator(uint8_t *buffer, bool bigEndian, int size, Filter filter = nullptr)
+    DataGenerator(uint8_t *buffer, Endian endian, int size, Filter filter = nullptr)
         : _buffer(buffer),
-          _bigEndian(bigEndian),
+          _endian(endian),
           _pos(0),
           _size(size),
           _end(calcEnd(0, size)),
@@ -43,7 +43,7 @@ public:
 
     DataGenerator(const DataGenerator &parent, int size, Filter filter = nullptr)
         : _buffer(parent._buffer),
-          _bigEndian(parent._bigEndian),
+          _endian(parent._endian),
           _pos(parent._pos + parent._size),
           _size(size),
           _end(calcEnd(parent._i, size)),
@@ -71,7 +71,7 @@ public:
 
     void debugPrint(const char *msg, const uint8_t *memory) const {
 #if DEBUG_TRACE
-        printf("%s %d/%d%c: ", msg, _pos, _size, _bigEndian ? 'b' : 'l');
+        printf("%s %d/%d%c: ", msg, _pos, _size, _endian == ENDIAN_BIG? 'B' : 'L');
         for (int i = 0; i < _pos; i++)
             printf(" %02X", memory[i]);
         for (int i = 0; i < _size; i++)
@@ -83,7 +83,7 @@ public:
 
 private:
     uint8_t *const _buffer;
-    const bool _bigEndian;
+    const Endian _endian;
     int _pos;
     int _size;
     const uint32_t _end;
@@ -110,7 +110,7 @@ private:
     }
 
     void outUint16(uint16_t val16, int offset = 0) {
-        if (_bigEndian) {
+        if (_endian == ENDIAN_BIG) {
             outUint8(static_cast<uint8_t>(val16 >> 8), offset + 0);
             outUint8(static_cast<uint8_t>(val16 >> 0), offset + 1);
         } else {
@@ -120,7 +120,7 @@ private:
     }
 
     void outUint32(uint32_t val32, int offset = 0) {
-        if (_bigEndian) {
+        if (_endian == ENDIAN_BIG) {
             outUint16(static_cast<uint16_t>(val32 >> 16), offset + 0);
             outUint16(static_cast<uint16_t>(val32 >> 0),  offset + 2);
         } else {
@@ -173,12 +173,11 @@ class TestGenerator {
 public:
     TestGenerator(
         Disassembler<Addr> &disassembler,
-        bool bigEndian,
         size_t opcodeSize,
         bool uppercase)
         : _disassembler(disassembler),
-          _memorySize(Insn::getMaxBytes()),
-          _bigEndian(bigEndian),
+          _memorySize(disassembler.maxBytes()),
+          _endian(disassembler.endian()),
           _opcodeSize(opcodeSize),
           _uppercase(uppercase) {
         _memory = new uint8_t[_memorySize];
@@ -196,13 +195,13 @@ public:
     typedef bool (*Filter)(uint8_t);
 
     TestGenerator<Addr> &generate(Printer &printer, Filter filter = nullptr) {
-        DataGenerator gen(_memory, _bigEndian, _opcodeSize, filter);
+        DataGenerator gen(_memory, _endian, _opcodeSize, filter);
         return generate(printer, gen);
     }
 
     TestGenerator<Addr> &generate(
         Printer &printer, target::opcode_t opc1, Filter filter = nullptr) {
-        DataGenerator parent(_memory, _bigEndian, _opcodeSize);
+        DataGenerator parent(_memory, _endian, _opcodeSize);
         parent.outUint8(opc1);
         DataGenerator gen(parent, _opcodeSize, filter);
         return generate(printer, gen);
@@ -210,7 +209,7 @@ public:
 
     TestGenerator<Addr> &generate(
         Printer &printer, target::opcode_t opc1, target::opcode_t opc2) {
-        DataGenerator parent(_memory, _bigEndian, _opcodeSize * 2);
+        DataGenerator parent(_memory, _endian, _opcodeSize * 2);
         parent.outUint8(opc1, 0);
         parent.outUint8(opc2, 1);
         DataGenerator gen(parent, _opcodeSize);
@@ -220,7 +219,7 @@ public:
     TestGenerator<Addr> &generate(
         Printer &printer,
         target::opcode_t opc1, target::opcode_t opc2, target::opcode_t opc3) {
-        DataGenerator parent(_memory, _bigEndian, _opcodeSize * 3);
+        DataGenerator parent(_memory, _endian, _opcodeSize * 3);
         parent.outUint8(opc1, 0);
         parent.outUint8(opc2, 1);
         parent.outUint8(opc3, 2);
@@ -231,7 +230,7 @@ public:
 private:
     Disassembler<Addr> &_disassembler;
     const int _memorySize;
-    const bool _bigEndian;
+    const Endian _endian;
     const size_t _opcodeSize;
     const bool _uppercase;
     uint8_t *_memory;
@@ -255,7 +254,7 @@ private:
 
     void printInsn(const TestData<Addr> *data) {
         _printer->print(data->insn(), data->operands().buffer());
-        _addr += data->insn().insnLen();
+        _addr += data->insn().length();
     }
 
     void swapBuffers() {
@@ -270,7 +269,7 @@ private:
 
     int meaningfulTestData(const DataGenerator &gen) {
         if (strcmp(_data->insn().name(), _prev->insn().name())
-            || _data->insn().insnLen() != _prev->insn().insnLen()) {
+            || _data->insn().length() != _prev->insn().length()) {
             _similarCount = 0;
 #if DEBUG_TEXT
             printf("@@ %s : %s\n", _data->insn().name(), _data->operands().buffer());
@@ -337,7 +336,7 @@ private:
             _data->tryGenerate(
                 _disassembler, _addr, _memory, _memorySize, _uppercase);
             if (_disassembler.getError() == OK) {
-                int size = _data->insn().insnLen() - (gen.pos() + gen.size());
+                int size = _data->insn().length() - (gen.pos() + gen.size());
                 if (size > 0) {
                     if (size % 2 == 0 || size == 1) {
                         DataGenerator child(gen, size);

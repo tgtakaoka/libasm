@@ -29,6 +29,9 @@ public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
     const char *listCpu() const override { return TableM6502::listCpu(); }
+    Endian endian() const override { return ENDIAN_LITTLE; }
+    host::uint_t maxBytes() const override { return Entry::code_max; }
+    host::uint_t maxName() const override { return Entry::name_max; }
 
 private:
     AsmMotoOperand _parser;

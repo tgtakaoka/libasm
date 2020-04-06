@@ -89,7 +89,7 @@ Error DisMc6800::decodeRelative(
     uint8_t delta8;
     if (insn.readByte(memory, delta8)) return setError(NO_MEMORY);
     const target::uintptr_t addr =
-        insn.address() + insn.insnLen() + static_cast<int8_t>(delta8);
+        insn.address() + insn.length() + static_cast<int8_t>(delta8);
     const char *label = lookup(addr);
     if (label) {
         outText(label);

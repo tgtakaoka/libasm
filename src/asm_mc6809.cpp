@@ -211,7 +211,7 @@ Error AsmMc6809::encodeIndexed(Insn &insn, bool emitInsn) {
             osize = 16;
         }
         target::ptrdiff_t offset = (base == REG_PC) ? addr
-            : addr - (insn.address() + insn.insnLen() + 2);
+            : addr - (insn.address() + insn.length() + 2);
         if (osize == -1) {
             if (offset >= -128 && offset < 128) {
                 osize = 8;

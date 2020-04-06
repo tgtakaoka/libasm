@@ -82,7 +82,7 @@ public:
                     fflush(output);
                 }
                 Insn insn;
-                for (size_t pc = 0; pc < size; pc += insn.insnLen()) {
+                for (size_t pc = 0; pc < size; pc += insn.length()) {
                     Addr address = base + pc;
                     listing.disassemble(address, insn);
                     if (list) {

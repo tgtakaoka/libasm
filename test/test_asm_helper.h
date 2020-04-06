@@ -34,7 +34,7 @@ extern TestSymtab symtab;
         sprintf(message, "%s: %s", __FUNCTION__, line);         \
         asserter.equals(message, error, assembler.getError());  \
         asserter.equals(message, expected, sizeof(expected),    \
-                        insn.bytes(), insn.insnLen());          \
+                        insn.bytes(), insn.length());           \
     } while (0)
 #define EATEST(error, addr, line, ...)                          \
     do {                                                        \

@@ -43,6 +43,9 @@ public:
     const char *errorAt() const { return _scan; }
     virtual bool setCpu(const char *cpu) = 0;
     virtual const char *listCpu() const = 0;
+    virtual Endian endian() const = 0;
+    virtual host::uint_t maxBytes() const = 0;
+    virtual host::uint_t maxName() const = 0;
 
 protected:
     const char *_scan;

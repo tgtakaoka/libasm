@@ -28,37 +28,28 @@ enum Endian {
     ENDIAN_LITTLE,
 };
 
-template<
-    Endian endian,
-    int maxBytes,
-    int maxName>
 class InsnBase {
 public:
     target::uintptr_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
-    host::uint_t insnLen() const { return _insnLen; }
-    target::insn_t insnCode() const { return _insnCode; }
+    host::uint_t length() const { return _length; }
     const char *name() const { return _name; }
-    static bool bigEndian() { return endian == ENDIAN_BIG; }
-    static bool littleEndian() { return endian == ENDIAN_LITTLE; }
-    static host::uint_t getMaxBytes() { return maxBytes; }
-    static host::uint_t getMaxName() { return maxName; }
 
     void resetAddress(target::uintptr_t addr) {
         _address = addr;
-        _insnLen = 0;
+        _length = 0;
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
     void setInsnCode(target::insn_t insnCode) {
         _insnCode = insnCode;
     }
 
     void setName(const char *name, const char *end = nullptr) {
-        if (!end) end = name + strlen(name);
-        char *p = _name;
-        while (name < end && p < _name + maxName)
-            *p++ = *name++;
-        *p = 0;
+        size_t len = end ? end - name : strlen(name);
+        if (len >= sizeof(_name) - 1) len = sizeof(_name) - 1;
+        strncpy(_name, name, len);
+        _name[len] = 0;
     }
 
     Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
@@ -70,11 +61,10 @@ public:
 
     Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         uint8_t msb, lsb;
-        if (bigEndian()) {
+        if (endian() == ENDIAN_BIG) {
             if (readByte(memory, msb)) return NO_MEMORY;
             if (readByte(memory, lsb))  return NO_MEMORY;
-        }
-        if (littleEndian()) {
+        } else {
             if (readByte(memory, lsb))  return NO_MEMORY;
             if (readByte(memory, msb)) return NO_MEMORY;
         }
@@ -84,11 +74,10 @@ public:
 
     Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
         uint16_t msw, lsw;
-        if (bigEndian()) {
+        if (endian() == ENDIAN_BIG) {
             if (readUint16(memory, msw)) return NO_MEMORY;
             if (readUint16(memory, lsw))  return NO_MEMORY;
-        }
-        if (littleEndian()) {
+        } else {
             if (readUint16(memory, lsw))  return NO_MEMORY;
             if (readUint16(memory, msw)) return NO_MEMORY;
         }
@@ -97,26 +86,24 @@ public:
     }
 
     void emitByte(uint8_t val) {
-        _bytes[_insnLen++] = val;
+        _bytes[_length++] = val;
     }
 
     void emitUint16(uint16_t val) {
-        if (bigEndian()) {
+        if (endian() == ENDIAN_BIG) {
             emitByte(static_cast<uint8_t>(val >> 8));
             emitByte(static_cast<uint8_t>(val));
-        }
-        if (littleEndian()) {
+        } else {
             emitByte(static_cast<uint8_t>(val));
             emitByte(static_cast<uint8_t>(val >> 8));
         }
     }
 
     void emitUint32(uint32_t val) {
-        if (bigEndian()) {
+        if (endian() == ENDIAN_BIG) {
             emitUint16(static_cast<uint16_t>(val >> 16));
             emitUint16(static_cast<uint16_t>(val));
-        }
-        if (littleEndian()) {
+        } else {
             emitUint16(static_cast<uint16_t>(val));
             emitUint16(static_cast<uint16_t>(val >> 16));
         }
@@ -129,10 +116,12 @@ public:
 
 protected:
     target::uintptr_t _address;
+    host::uint_t _length;
+    uint8_t _bytes[16];
+    char    _name[15 + 1];
     target::insn_t _insnCode;
-    host::uint_t _insnLen;
-    uint8_t _bytes[maxBytes];
-    char    _name[maxName + 1];
+
+    virtual Endian endian() = 0;
 };
 
 #endif // __INSN_BASE_H__

@@ -20,8 +20,7 @@
 #include "insn_base.h"
 #include "entry_mc6800.h"
 
-class Insn
-    : public InsnBase<ENDIAN_BIG, Entry::code_max, Entry::name_max> {
+class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnAdjust insnAdjust() const { return Entry::_insnAdjust(_flags); }
@@ -42,6 +41,9 @@ public:
     void emitInsn() {
         emitByte(_insnCode);
     }
+
+protected:
+    Endian endian() override { return ENDIAN_BIG; }
 
 private:
     host::uint_t _flags;

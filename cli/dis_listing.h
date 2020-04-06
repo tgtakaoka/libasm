@@ -42,7 +42,7 @@ public:
             _memory, insn, _operands, nullptr, _uppercase);
         _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
         _address = addr;
-        _generated_size = insn.insnLen();
+        _generated_size = insn.length();
         _instruction = insn.name();
         return error;
     }
@@ -99,7 +99,7 @@ private:
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return Insn::getMaxName() + 1; }
+    int instructionWidth() const override { return _disassembler.maxName() + 1; }
     int operandWidth() const override { return _operandWidth; }
 };
 

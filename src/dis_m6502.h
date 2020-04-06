@@ -29,6 +29,10 @@ public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
     const char *listCpu() const override { return TableM6502::listCpu(); }
+    Endian endian() const override { return ENDIAN_LITTLE; }
+    host::uint_t maxBytes() const override { return Entry::code_max; }
+    host::uint_t maxName() const override { return Entry::name_max; }
+
     void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
 
 private:

@@ -146,7 +146,6 @@ Error TableI8080::searchName(Insn &insn) const {
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_byte(&entry->insnCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
-    insn.setName(name);
     return OK;
 }
 

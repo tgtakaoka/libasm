@@ -20,8 +20,7 @@
 #include "insn_base.h"
 #include "entry_z80.h"
 
-class Insn
-    : public InsnBase<ENDIAN_LITTLE, Entry::code_max, Entry::name_max> {
+class Insn : public InsnBase {
 public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags2); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags1); }
@@ -56,6 +55,9 @@ public:
             emitByte(prefixCode());
         emitByte(opCode());
     }
+
+protected:
+    Endian endian() override { return ENDIAN_LITTLE; }
 
 private:
     host::uint_t _flags1;

@@ -273,7 +273,7 @@ static void test_mid_tms9900() {
                 asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 asserter.equals(message, "MID", insn.name());
                 asserter.equals(message, i, insn.insnCode());
-                asserter.equals(message, 2, insn.insnLen());
+                asserter.equals(message, 2, insn.length());
             } else {
                 sprintf(message, "%s: >%04X is not MID", __FUNCTION__, i);
                 asserter.equals(message, OK, disassembler.getError());
@@ -317,7 +317,7 @@ static void test_mid_tms9995() {
                 asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 asserter.equals(message, "MID", insn.name());
                 asserter.equals(message, i, insn.insnCode());
-                asserter.equals(message, 2, insn.insnLen());
+                asserter.equals(message, 2, insn.length());
             } else {
                 sprintf(message, "%s: >%04X is not MID", __FUNCTION__, i);
                 asserter.equals(message, OK, disassembler.getError());

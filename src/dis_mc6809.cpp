@@ -127,7 +127,7 @@ Error DisMc6809::decodeIndexed(
             if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
             offset = static_cast<int16_t>(val);
         }
-        addr = insn.address() + insn.insnLen() + offset;
+        addr = insn.address() + insn.length() + offset;
         label = lookup(addr);
     } else if (post == 0x9F) {
         // [n16]
@@ -188,7 +188,7 @@ Error DisMc6809::decodeRelative(
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         delta = static_cast<target::ptrdiff_t>(val);
     }
-    const target::uintptr_t addr = insn.address() + insn.insnLen() + delta;
+    const target::uintptr_t addr = insn.address() + insn.length() + delta;
     const char *label = lookup(addr);
     if (label) {
         outText(label);

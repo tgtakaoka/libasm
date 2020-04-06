@@ -144,7 +144,6 @@ Error TableTms9900::searchName(Insn &insn) const {
         return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_word(&entry->insnCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
-    insn.setName(name);
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
     return OK;

@@ -234,7 +234,6 @@ Error TableMc68000::searchName(Insn &insn) const {
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_word(&entry->insnCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
-    insn.setName(name);
     return OK;
 }
 

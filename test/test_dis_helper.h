@@ -42,7 +42,7 @@ extern TestSymtab symtab;
             asserter.equals(message, expected_operands, operands);  \
             asserter.equals(message,                                \
                             mnemonic, sizeof(mnemonic),             \
-                            insn.bytes(), insn.insnLen());          \
+                            insn.bytes(), insn.length());           \
         }                                                           \
     } while (0)
 #define EATEST(error, addr, mnemonic, opr, ...)                 \

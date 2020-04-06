@@ -121,11 +121,11 @@ public:
             _list.operand_len = _scan - _list.operand;
             skipSpaces();
             _list.comment = _scan;
-            if (insn.insnLen() > 0) {
-                memory.writeBytes(insn.address(), insn.bytes(), insn.insnLen());
+            if (insn.length() > 0) {
+                memory.writeBytes(insn.address(), insn.bytes(), insn.length());
                 _list.address = insn.address();
-                _list.length = insn.insnLen();
-                _origin += insn.insnLen();
+                _list.length = insn.length();
+                _origin += insn.length();
             }
             return setError(OK);
         }
@@ -209,7 +209,7 @@ public:
     }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return Insn::getMaxName() + 1; }
+    int instructionWidth() const override { return _assembler.maxName() + 1; }
     int operandWidth() const override { return _operandWidth; }
 
     // Error reporting
@@ -418,11 +418,10 @@ protected:
                 setError(OK);
             }
             if (getError()) return getError();
-            if (Insn::bigEndian()) {
+            if (_assembler.endian() == ENDIAN_BIG) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
-            }
-            if (Insn::littleEndian()) {
+            } else {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
             }

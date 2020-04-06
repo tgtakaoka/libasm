@@ -102,7 +102,7 @@ private:
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
     Addr startAddress() const override { return _insn->address(); }
-    int generatedSize() const override { return _insn->insnLen(); }
+    int generatedSize() const override { return _insn->length(); }
     uint8_t getByte(int offset) const override { return _insn->bytes()[offset]; }
     bool hasValue() const override { return false; }
     uint32_t value() const override { return 0; }
@@ -116,7 +116,7 @@ private:
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return 6; }
-    int instructionWidth() const override { return Insn::getMaxName() + 1; }
+    int instructionWidth() const override { return _disassembler.maxName() + 1; }
     int operandWidth() const override { return 40; }
 
     int parseOption(int argc, const char **argv) {

@@ -25,7 +25,6 @@ int main(int argc, const char **argv) {
 
     TestGenerator<target::uintptr_t> generator(
         dis6800,
-        Insn::bigEndian(),
         sizeof(target::opcode_t),
         driver.uppercase());
     generator.generate(driver);
