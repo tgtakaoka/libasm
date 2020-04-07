@@ -22,9 +22,9 @@ using namespace libasm;
 using namespace libasm::mc6809;
 
 DisMc6809 dis6809;
-Disassembler<target::uintptr_t> &disassembler(dis6809);
+Disassembler<uint16_t> &disassembler(dis6809);
 
-void disassemble(DisMemory<target::uintptr_t> &memory) {
+void disassemble(DisMemory<uint16_t> &memory) {
   char operands[20];
   Insn insn;
   while (memory.hasNext()) {
@@ -51,7 +51,7 @@ void disassemble(DisMemory<target::uintptr_t> &memory) {
 }
 
 bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  StrMemory memory(0x1000, line);
+  StrMemory<uint16_t> memory(0x1000, line);
   disassemble(memory);
   return Cli.readLine(handleLine, 0);
 }

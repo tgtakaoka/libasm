@@ -23,9 +23,10 @@
 
 namespace libasm {
 
-class StrMemory : public DisMemory<target::uintptr_t> {
+template<typename Addr>
+class StrMemory : public DisMemory<Addr> {
 public:
-    StrMemory(target::uintptr_t addr, const char *line)
+    StrMemory(Addr addr, const char *line)
         : DisMemory(addr), _next(line) {
         skipSpaces();
     }
