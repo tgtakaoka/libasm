@@ -22,10 +22,10 @@ using namespace libasm::m6502;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config::uintptr_t> memory;
+TestMemory<Config> memory;
 TestSymtab symtab;
 DisM6502 dis6502;
-Disassembler<Config::uintptr_t> &disassembler(dis6502);
+Disassembler<Config> &disassembler(dis6502);
 
 static void set_up() {
     disassembler.setCpu("6502");
@@ -661,7 +661,7 @@ static void test_no_idir_long() {
 static void test_illegal_m6502() {
     disassembler.setCpu("6502");
 
-    Insn<Config::uintptr_t> insn;
+    Insn<Config> insn;
     char operands[40];
 
     const uint8_t illegals[] = {
@@ -689,7 +689,7 @@ static void test_illegal_m6502() {
 static void test_illegal_w65sc02() {
     disassembler.setCpu("65SC02");
 
-    Insn<Config::uintptr_t> insn;
+    Insn<Config> insn;
     char operands[40];
 
     const uint8_t illegals[] = {

@@ -368,7 +368,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
     return OK;
 }
 
-Error AsmZ80::encode(Insn<Config::uintptr_t> &_insn) {
+Error AsmZ80::encode(Insn<Config> &_insn) {
     InsnZ80 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

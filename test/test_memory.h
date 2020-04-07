@@ -26,11 +26,11 @@
 namespace libasm {
 namespace test {
 
-template<typename Addr>
-class TestMemory : public DisMemory<Addr> {
+template<typename Conf>
+class TestMemory : public DisMemory<Conf> {
 public:
     TestMemory()
-        : DisMemory<Addr>(0),
+        : DisMemory<Conf>(0),
           _bytes(nullptr),
           _words(nullptr)
     {}
@@ -48,7 +48,9 @@ public:
         _index = 0;
     }
     bool hasNext() const override { return _index < _size; }
-    void setAddress(Addr addr) { this->_address = addr; }
+    void setAddress(typename Conf::uintptr_t addr) {
+        this->_address = addr;
+    }
     char *dump(char *out) {
         if (_words) {
             for (host::uint_t idx = 0; idx < _size; idx += 2) {

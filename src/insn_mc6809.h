@@ -23,9 +23,9 @@
 namespace libasm {
 namespace mc6809 {
 
-class InsnMc6809 : public InsnBase<Config::endian, Config::uintptr_t> {
+class InsnMc6809 : public InsnBase<Config> {
 public:
-    InsnMc6809(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
+    InsnMc6809(Insn<Config> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }

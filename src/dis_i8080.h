@@ -27,14 +27,11 @@
 namespace libasm {
 namespace i8080 {
 
-class DisI8080 : public Disassembler<Config::uintptr_t> {
+class DisI8080 : public Disassembler<Config> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
     const char *listCpu() const override { return TableI8080::listCpu(); }
-    Endian endian() const override { return ENDIAN_LITTLE; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     DisIntelOperand _formatter;
@@ -43,17 +40,11 @@ private:
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
-    Error decodeImmediate8(
-        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
-    Error decodeImmediate16(
-        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
-    Error decodeDirect(
-        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
-    Error decodeIoaddr(
-        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
-    Error decode(
-        DisMemory<Config::uintptr_t> &memory,
-        Insn<Config::uintptr_t> &insn) override;
+    Error decodeImmediate8(DisMemory<Config> &memory, InsnI8080 &insn);
+    Error decodeImmediate16(DisMemory<Config> &memory, InsnI8080 &insn);
+    Error decodeDirect(DisMemory<Config> &memory, InsnI8080 &insn);
+    Error decodeIoaddr(DisMemory<Config> &memory, InsnI8080 &insn);
+    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
 };
 
 } // namespace i8080

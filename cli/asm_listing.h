@@ -46,16 +46,16 @@ public:
     virtual int operandWidth() const = 0;
 };
 
-template<typename Address>
+template<typename Conf>
 class AsmListing {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
     void reset(
-        AsmLine<Address> &line,
-        size_t insnUnitSize,
+        AsmLine<addr_t> &line,
         bool uppercase,
         bool lineNumner) {
         _line = &line;
-        _insnUnitSize = insnUnitSize;
         _uppercase = uppercase;
         _lineNumber = lineNumner;
         _next = 0;
@@ -79,8 +79,7 @@ public:
     }
 
 private:
-    const AsmLine<Address> *_line;
-    size_t _insnUnitSize;
+    const AsmLine<addr_t> *_line;
     bool _uppercase = false;
     bool _lineNumber = false;
     int _next;
@@ -129,8 +128,8 @@ private:
         formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
     }
     void formatAddress(
-        Address addr, bool fixedWidth = true, bool zeroSuppress = false) {
-        if (sizeof(Address) == 2) {
+        addr_t addr, bool fixedWidth = true, bool zeroSuppress = false) {
+        if (sizeof(addr_t) == 2) {
             formatUint16(addr, fixedWidth, zeroSuppress);
         } else {
             formatUint32(addr, fixedWidth, zeroSuppress);
@@ -142,7 +141,7 @@ private:
         int i = 0;
         while (base + i < _line->generatedSize() && i < maxBytes) {
             uint8_t val = _line->getByte(base + i);
-            if (_insnUnitSize == 1 || (i % 2) == 0)
+            if (sizeof(typename Conf::opcode_t) == 1 || (i % 2) == 0)
                 _out += ' ';
             formatUint8(val);
             i++;
@@ -205,7 +204,7 @@ private:
         } else {
             formattedBytes = formatBytes(_next);
         }
-        const int dataTextLen = _insnUnitSize == 2
+        const int dataTextLen = sizeof(typename Conf::opcode_t) == 2
             ? (_line->maxBytes() / 2) * 5
             : (_line->maxBytes() * 3);
         if (_next == 0) formatContent(pos + dataTextLen + 1);

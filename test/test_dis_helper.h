@@ -26,7 +26,7 @@
 
 #define EASSERT(error, addr, mnemonic, expected_operands)           \
     do {                                                            \
-        Insn<Config::uintptr_t> insn;                               \
+        Insn<Config> insn;                                          \
         char operands[40], message[80];                             \
         memory.setAddress(addr);                                    \
         disassembler.decode(memory, insn, operands, &symtab, true); \

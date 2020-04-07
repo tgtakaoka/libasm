@@ -21,7 +21,7 @@ namespace libasm {
 namespace m6502 {
 
 Error DisM6502::decodeImmediate(
-    DisMemory<Config::uintptr_t>& memory, InsnM6502 &insn) {
+    DisMemory<Config>& memory, InsnM6502 &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     *_operands++ = '#';
@@ -35,7 +35,7 @@ Error DisM6502::decodeImmediate(
 }
 
 Error DisM6502::decodeAbsolute(
-    DisMemory<Config::uintptr_t>& memory, InsnM6502 &insn) {
+    DisMemory<Config>& memory, InsnM6502 &insn) {
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ABS_IDX_IDIR
         || addrMode == ABS_IDIR
@@ -92,7 +92,7 @@ Error DisM6502::decodeAbsolute(
 }
 
 Error DisM6502::decodeZeroPage(
-    DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn) {
+    DisMemory<Config> &memory, InsnM6502 &insn) {
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ZPG_IDX_IDIR
         || addrMode == ZPG_IDIR_IDY
@@ -150,7 +150,7 @@ Error DisM6502::decodeZeroPage(
 }
 
 Error DisM6502::decodeRelative(
-    DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn) {
+    DisMemory<Config> &memory, InsnM6502 &insn) {
     Config::uintptr_t addr;
     if (insn.addrMode() == REL_LONG) {
         uint16_t val;
@@ -172,7 +172,7 @@ Error DisM6502::decodeRelative(
 }
 
 Error DisM6502::decodeBlockMove(
-    DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn) {
+    DisMemory<Config> &memory, InsnM6502 &insn) {
     uint8_t srcpg, dstpg;
     if (insn.readByte(memory, srcpg)) return setError(NO_MEMORY);
     if (insn.readByte(memory, dstpg)) return setError(NO_MEMORY);
@@ -183,7 +183,7 @@ Error DisM6502::decodeBlockMove(
 }
 
 Error DisM6502::decode(
-    DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &_insn) {
+    DisMemory<Config> &memory, Insn<Config> &_insn) {
     InsnM6502 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);

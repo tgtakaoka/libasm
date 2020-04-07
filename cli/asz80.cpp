@@ -24,8 +24,8 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmZ80 assembler;
-    AsmIntelDirective<Config::uintptr_t> directive(assembler);
-    AsmDriver<Config::uintptr_t, Config::opcode_t, IntelHex<Config::uintptr_t>> driver(directive);
+    AsmIntelDirective<Config> directive(assembler);
+    AsmDriver<Config, IntelHex<Config>> driver(directive);
     return driver.main(argc, argv);
 }
 

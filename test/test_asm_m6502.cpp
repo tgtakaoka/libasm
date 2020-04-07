@@ -24,7 +24,7 @@ using namespace libasm::test;
 TestAsserter asserter;
 TestSymtab symtab;
 AsmM6502 as6502;
-Assembler<Config::uintptr_t> &assembler(as6502);
+Assembler<Config> &assembler(as6502);
 
 static void set_up() {
     assembler.setCpu("6502");

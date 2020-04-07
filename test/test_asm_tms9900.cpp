@@ -24,7 +24,7 @@ using namespace libasm::test;
 TestAsserter asserter;
 TestSymtab symtab;
 AsmTms9900 as9900;
-Assembler<Config::uintptr_t> &assembler(as9900);
+Assembler<Config> &assembler(as9900);
 
 static void set_up() {
     assembler.setCpu("tms9900");

@@ -27,14 +27,11 @@
 namespace libasm {
 namespace mc6809 {
 
-class DisMc6809 : public Disassembler<Config::uintptr_t> {
+class DisMc6809 : public Disassembler<Config> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
     const char *listCpu() const override { return TableMc6809::listCpu(); }
-    Endian endian() const override { return Config::endian; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     DisMotoOperand _formatter;
@@ -44,31 +41,19 @@ private:
     void outRegister(RegName regName);
 
     // MC6809
-    Error decodeDirectPage(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeIndexed(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeExtended(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeRelative(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeImmediate(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeStackOp(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeRegisters(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeDirectPage(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeIndexed(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeExtended(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeRelative(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeImmediate(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeStackOp(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeRegisters(DisMemory<Config> &memory, InsnMc6809 &insn);
     // HD6309
-    Error decodeImmediatePlus(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeBitOperation(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
-    Error decodeTransferMemory(
-        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeImmediatePlus(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeBitOperation(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeTransferMemory(DisMemory<Config> &memory, InsnMc6809 &insn);
 
-    Error decode(
-        DisMemory<Config::uintptr_t> &memory,
-        Insn<Config::uintptr_t> &insn) override;
+    Error decode(DisMemory<Config> &memory,  Insn<Config> &insn) override;
 };
 
 } // namespace mc6809

@@ -36,13 +36,13 @@ bool DisMc6800::outAccumulator(const InsnMc6800 &insn) {
 }
 
 Error DisMc6800::decodeInherent(
-    DisMemory<Config::uintptr_t> &memory, InsnMc6800& insn) {
+    DisMemory<Config> &memory, InsnMc6800& insn) {
     outAccumulator(insn);
     return setError(OK);
 }
 
 Error DisMc6800::decodeDirectPage(
-    DisMemory<Config::uintptr_t> &memory, InsnMc6800& insn) {
+    DisMemory<Config> &memory, InsnMc6800& insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = ',';
@@ -57,7 +57,7 @@ Error DisMc6800::decodeDirectPage(
 }
 
 Error DisMc6800::decodeExtended(
-    DisMemory<Config::uintptr_t>& memory, InsnMc6800 &insn) {
+    DisMemory<Config> &memory, InsnMc6800 &insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = ',';
@@ -72,7 +72,7 @@ Error DisMc6800::decodeExtended(
 }
 
 Error DisMc6800::decodeIndexed(
-    DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn) {
+    DisMemory<Config> &memory, InsnMc6800 &insn) {
     uint8_t disp8;
     if (insn.readByte(memory, disp8)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = ',';
@@ -88,7 +88,7 @@ Error DisMc6800::decodeIndexed(
 }
 
 Error DisMc6800::decodeRelative(
-    DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn) {
+    DisMemory<Config> &memory, InsnMc6800 &insn) {
     uint8_t delta8;
     if (insn.readByte(memory, delta8)) return setError(NO_MEMORY);
     const Config::uintptr_t addr =
@@ -103,7 +103,7 @@ Error DisMc6800::decodeRelative(
 }
 
 Error DisMc6800::decodeImmediate(
-    DisMemory<Config::uintptr_t>& memory, InsnMc6800 &insn) {
+    DisMemory<Config> &memory, InsnMc6800 &insn) {
     if (outAccumulator(insn)) *_operands++ = ',';
     *_operands++ = '#';
     if (insn.oprSize() == SZ_BYTE) {
@@ -131,7 +131,7 @@ Error DisMc6800::decodeImmediate(
 }
 
 Error DisMc6800::decode(
-    DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &_insn) {
+    DisMemory<Config> &memory, Insn<Config> &_insn) {
     InsnMc6800 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);

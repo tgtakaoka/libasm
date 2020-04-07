@@ -24,7 +24,7 @@ using namespace libasm::test;
 TestAsserter asserter;
 TestSymtab symtab;
 AsmMc6809 as6809;
-Assembler<Config::uintptr_t> &assembler(as6809);
+Assembler<Config> &assembler(as6809);
 
 static void set_up() {
     TEST("SETDP 0");

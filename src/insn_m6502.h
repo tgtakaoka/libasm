@@ -23,9 +23,9 @@
 namespace libasm {
 namespace m6502 {
 
-class InsnM6502 : public InsnBase<Config::endian, Config::uintptr_t> {
+class InsnM6502 : public InsnBase<Config> {
 public:
-    InsnM6502(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
+    InsnM6502(Insn<Config> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {

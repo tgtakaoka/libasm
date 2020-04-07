@@ -26,13 +26,12 @@
 
 namespace libasm {
 
-template<typename Addr>
+template<typename Conf>
 class Disassembler : public ErrorReporter {
 public:
-    typedef Addr addr_t;
 
     Error decode(
-        DisMemory<Addr> &memory, Insn<Addr> &insn,
+        DisMemory<Conf> &memory, Insn<Conf> &insn,
         char *operands, SymbolTable *symtab, bool uppercase = false) {
         insn.resetAddress(memory.address());
         *(_operands = operands) = 0;
@@ -47,9 +46,6 @@ public:
     virtual DisOperand &getFormatter() = 0;
     virtual bool setCpu(const char *cpu) = 0;
     virtual const char *listCpu() const = 0;
-    virtual Endian endian() const = 0;
-    virtual host::uint_t maxBytes() const = 0;
-    virtual host::uint_t maxName() const = 0;
 
 protected:
     char *_operands;
@@ -60,8 +56,8 @@ protected:
         if (_symtab) {
             symbol = _symtab->lookup(addr);
             if (!symbol) {
-                auto value =
-                    static_cast<typename make_signed<Addr>::type>(addr);
+                auto value = static_cast<
+                    typename make_signed<typename Conf::uintptr_t>::type>(addr);
                 symbol = _symtab->lookup(static_cast<int32_t>(value));
             }
         }
@@ -83,7 +79,7 @@ protected:
 
 private:
     virtual RegBase &getRegister();
-    virtual Error decode(DisMemory<Addr> &memory, Insn<Addr> &insn) = 0;
+    virtual Error decode(DisMemory<Conf> &memory, Insn<Conf> &insn) = 0;
 };
 
 } // namespace libasm

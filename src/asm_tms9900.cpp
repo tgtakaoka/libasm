@@ -146,7 +146,7 @@ Error AsmTms9900::encodeCruOff(InsnTms9900 &insn) {
     return getError();
 }
 
-Error AsmTms9900::encode(Insn<Config::uintptr_t> &_insn) {
+Error AsmTms9900::encode(Insn<Config> &_insn) {
     InsnTms9900 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

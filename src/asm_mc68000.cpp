@@ -828,7 +828,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
     return setError(OK);
 }
 
-Error AsmMc68000::encode(Insn<Config::uintptr_t> &_insn) {
+Error AsmMc68000::encode(Insn<Config> &_insn) {
     InsnMc68000 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

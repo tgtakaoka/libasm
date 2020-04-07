@@ -22,7 +22,7 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisMc6800 disassembler;
-    DisDriver<Config::uintptr_t, Config::opcode_t> driver(disassembler);
+    DisDriver<Config> driver(disassembler);
     return driver.main(argc, argv);
 }
 

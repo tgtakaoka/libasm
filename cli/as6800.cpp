@@ -24,8 +24,8 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmMc6800 assembler;
-    AsmMotoDirective<Config::uintptr_t> directive(assembler);
-    AsmDriver<Config::uintptr_t, Config::opcode_t, SRecord<Config::uintptr_t>> driver(directive);
+    AsmMotoDirective<Config> directive(assembler);
+    AsmDriver<Config, SRecord<Config>> driver(directive);
     return driver.main(argc, argv);
 }
 

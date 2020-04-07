@@ -23,9 +23,9 @@
 namespace libasm {
 namespace tms9900 {
 
-class InsnTms9900 : public InsnBase<Config::endian, Config::uintptr_t> {
+class InsnTms9900 : public InsnBase<Config> {
 public:
-    InsnTms9900(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
+    InsnTms9900(Insn<Config> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }

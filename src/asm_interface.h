@@ -25,13 +25,13 @@
 
 namespace libasm {
 
-template<typename Addr>
+template<typename Conf>
 class Assembler : public ErrorReporter {
-public:
-    typedef Addr addr_t;
+    typedef typename Conf::uintptr_t addr_t;
 
+public:
     Error encode(
-        const char *line, Insn<Addr> &insn, Addr addr,SymbolTable *symtab) {
+        const char *line, Insn<Conf> &insn, addr_t addr, SymbolTable *symtab) {
         this->resetError();
         _scan = skipSpaces(line);
         if (checkLineEnd() == OK)
@@ -45,9 +45,9 @@ public:
     const char *errorAt() const { return _scan; }
     virtual bool setCpu(const char *cpu) = 0;
     virtual const char *listCpu() const = 0;
-    virtual Endian endian() const = 0;
-    virtual host::uint_t maxBytes() const = 0;
-    virtual host::uint_t maxName() const = 0;
+    Endian endian() const { return Conf::endian; }
+    host::uint_t maxBytes() const { return Conf::code_max; }
+    host::uint_t maxName() const { return Conf::name_max; }
 
 protected:
     const char *_scan;
@@ -104,7 +104,7 @@ protected:
     }
 
 private:
-    virtual Error encode(Insn<Addr> &insn) = 0;
+    virtual Error encode(Insn<Conf> &insn) = 0;
 };
 
 } // namespace libasm

@@ -30,11 +30,13 @@ namespace test {
 using libasm::cli::AsmLine;
 using libasm::cli::AsmListing;
 
-template<typename Addr, typename InsnUnit>
-class GenDriver : public TestGenerator<Addr>::Printer,
-                  private AsmLine<Addr> {
+template<typename Conf>
+class GenDriver : public TestGenerator<Conf>::Printer,
+                  private AsmLine<typename Conf::uintptr_t> {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
-    GenDriver(Disassembler<Addr> &disassembler)
+    GenDriver(Disassembler<Conf> &disassembler)
         : _disassembler(disassembler),
           _listing()
     {}
@@ -74,22 +76,22 @@ public:
     }
 
 private:
-    Disassembler<Addr> &_disassembler;
-    AsmListing<Addr> _listing;
+    Disassembler<Conf> &_disassembler;
+    AsmListing<Conf> _listing;
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
     bool _uppercase;
     FILE *_output;
     FILE *_list;
-    const Insn<Addr> *_insn;
+    const Insn<Conf> *_insn;
     const char *_operands;
 
     // TestGenerator<Addr>::Printer
-    void print(const Insn<Addr> &insn, const char *operands) override {
+    void print(const Insn<Conf> &insn, const char *operands) override {
         _insn = &insn;
         _operands = operands;
-        _listing.reset(*this, sizeof(InsnUnit), _uppercase, false);
+        _listing.reset(*this, _uppercase, false);
         if (_list) {
             do {
                 fprintf(_list, "%s\n", _listing.getLine());
@@ -107,7 +109,7 @@ private:
     // AsmLine<Addr>
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
-    Addr startAddress() const override { return _insn->address(); }
+    addr_t startAddress() const override { return _insn->address(); }
     int generatedSize() const override { return _insn->length(); }
     uint8_t getByte(int offset) const override { return _insn->bytes()[offset]; }
     bool hasValue() const override { return false; }
@@ -122,7 +124,7 @@ private:
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return 6; }
-    int instructionWidth() const override { return _disassembler.maxName() + 1; }
+    int instructionWidth() const override { return Conf::name_max + 1; }
     int operandWidth() const override { return 40; }
 
     int parseOption(int argc, const char **argv) {

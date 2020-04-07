@@ -23,9 +23,9 @@
 namespace libasm {
 namespace i8080 {
 
-class InsnI8080 : public InsnBase<Config::endian, Config::uintptr_t> {
+class InsnI8080 : public InsnBase<Config> {
 public:
-    InsnI8080(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
+    InsnI8080(Insn<Config> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }

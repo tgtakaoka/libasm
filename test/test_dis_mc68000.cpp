@@ -22,10 +22,10 @@ using namespace libasm::mc68000;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config::uintptr_t> memory;
+TestMemory<Config> memory;
 TestSymtab symtab;
 DisMc68000 dis68000;
-Disassembler<Config::uintptr_t> &disassembler(dis68000);
+Disassembler<Config> &disassembler(dis68000);
 
 static void set_up() {
 }

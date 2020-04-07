@@ -26,10 +26,10 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr, typename InsnUnit, typename Formatter>
+template<typename Conf, typename Formatter>
 class AsmDriver {
 public:
-    AsmDriver(AsmDirective<Addr> &directive)
+    AsmDriver(AsmDirective<Conf> &directive)
         : _directive(directive)
     {}
     virtual ~AsmDriver() {
@@ -42,13 +42,13 @@ public:
             return usage();
 
         _directive.setSymbolMode(false, true);
-        CliMemory<Addr> memory;
+        CliMemory<Conf> memory;
         if (assemble(memory, nullptr) != 0)
             return 1;
 
         do {
             _directive.setSymbolMode(true, false);
-            CliMemory<Addr> next;
+            CliMemory<Conf> next;
             if (assemble(next, nullptr) != 0)
                 return 1;
             if (memory.equals(next))
@@ -64,9 +64,10 @@ public:
             }
             const char *begin = _formatter->begin();
             if (begin) fprintf(output, "%s\n", begin);
+            typedef typename Conf::uintptr_t addr_t;
             memory.dump(
                 [this, output]
-                (Addr addr, const uint8_t *data, size_t data_size) {
+                (addr_t addr, const uint8_t *data, size_t data_size) {
                     for (size_t i = 0; i < data_size; i += _record_bytes) {
                         auto size = std::min(_record_bytes, data_size - i);
                         const char *line =
@@ -93,18 +94,18 @@ public:
     }
 
 private:
-    AsmDirective<Addr> &_directive;
-    AsmListing<Addr> _listing;
+    AsmDirective<Conf> &_directive;
+    AsmListing<Conf> _listing;
     const char *_progname;
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
     size_t _record_bytes;
-    BinFormatter<Addr> *_formatter;
+    BinFormatter<Conf> *_formatter;
     bool _uppercase;
     bool _line_number;
 
-    int assemble(CliMemory<Addr> &memory, FILE *list) {
+    int assemble(CliMemory<Conf> &memory, FILE *list) {
         if (_directive.openSource(_input_name)) {
             fprintf(stderr, "Can't open input file %s\n", _input_name);
             return 1;
@@ -131,9 +132,8 @@ private:
         return errors;
     }
 
-    void printListing(CliMemory<Addr> &memory, FILE *out) {
-        _listing.reset(
-            _directive, sizeof(InsnUnit), _uppercase, _line_number);
+    void printListing(CliMemory<Conf> &memory, FILE *out) {
+        _listing.reset(_directive, _uppercase, _line_number);
         do {
             fprintf(out, "%s\n", _listing.getLine());
         } while (_listing.hasNext());
@@ -224,9 +224,9 @@ private:
         }
         if (_output_name) {
             if (formatter == 'S') {
-                _formatter = new SRecord<Addr>();
+                _formatter = new SRecord<Conf>();
             } else if (formatter == 'H') {
-                _formatter = new IntelHex<Addr>();
+                _formatter = new IntelHex<Conf>();
             } else {
                 _formatter = new Formatter();
             }

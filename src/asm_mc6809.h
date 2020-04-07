@@ -27,14 +27,11 @@
 namespace libasm {
 namespace mc6809 {
 
-class AsmMc6809 : public Assembler<Config::uintptr_t> {
+class AsmMc6809 : public Assembler<Config> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
     const char *listCpu() const override { return TableMc6809::listCpu(); }
-    Endian endian() const override { return ENDIAN_BIG; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     AsmMotoOperand _parser;
@@ -57,7 +54,7 @@ private:
     Error encodeTransferMemory(InsnMc6809 &insn);
     // Pseudo instruction
     Error processPseudo(InsnMc6809 &insn);
-    Error encode(Insn<Config::uintptr_t> &insn) override;
+    Error encode(Insn<Config> &insn) override;
 };
 
 } // namespace mc6809

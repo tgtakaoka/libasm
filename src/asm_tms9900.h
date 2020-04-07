@@ -27,14 +27,11 @@
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900 : public Assembler<Config::uintptr_t> {
+class AsmTms9900 : public Assembler<Config> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
     const char *listCpu() const override { return TableTms9900::listCpu(); }
-    Endian endian() const override { return ENDIAN_BIG; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     AsmIntelOperand _parser;
@@ -51,7 +48,7 @@ private:
     Error encodeCruOff(InsnTms9900 &insn);
     Error encodeIoaddr(InsnTms9900 &insn);
 
-    Error encode(Insn<Config::uintptr_t> &insn) override;
+    Error encode(Insn<Config> &insn) override;
 };
 
 } // namespace tms9900

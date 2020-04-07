@@ -27,14 +27,11 @@
 namespace libasm {
 namespace z80 {
 
-class DisZ80 : public Disassembler<Config::uintptr_t> {
+class DisZ80 : public Disassembler<Config> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
     const char *listCpu() const override { return TableZ80::listCpu(); }
-    Endian endian() const override { return ENDIAN_LITTLE; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     DisIntelOperand _formatter;
@@ -49,8 +46,7 @@ private:
     void outDataRegister(RegName regName);
     void outConditionName(Config::opcode_t cc, bool cc8 = true);
 
-    Error decodeOperand(
-        DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t>& insn);
+    Error decodeOperand(DisMemory<Config> &memory, Insn<Config>& insn);
 
     Error decodeInherent(InsnZ80 &insn);
     Error decodeImmediate8(InsnZ80 &insn, uint8_t val);
@@ -64,9 +60,7 @@ private:
     Error decodeIndexedBitOp(
         InsnZ80 &insn, int8_t offset, Config::opcode_t opCode);
 
-    Error decode(
-        DisMemory<Config::uintptr_t> &memory,
-        Insn<Config::uintptr_t> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
 };
 
 } // namespace z80

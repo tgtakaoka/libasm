@@ -27,14 +27,11 @@
 namespace libasm {
 namespace m6502 {
 
-class DisM6502 : public Disassembler<Config::uintptr_t> {
+class DisM6502 : public Disassembler<Config> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
     const char *listCpu() const override { return TableM6502::listCpu(); }
-    Endian endian() const override { return ENDIAN_LITTLE; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
     void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
 
@@ -45,18 +42,12 @@ private:
 
     RegBase &getRegister() override { return _regs; }
 
-    Error decodeImmediate(
-        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
-    Error decodeAbsolute(
-        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
-    Error decodeZeroPage(
-        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
-    Error decodeRelative(
-        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
-    Error decodeBlockMove(
-        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
-    Error decode(
-        DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &insn) override;
+    Error decodeImmediate(DisMemory<Config> &memory, InsnM6502 &insn);
+    Error decodeAbsolute(DisMemory<Config> &memory, InsnM6502 &insn);
+    Error decodeZeroPage(DisMemory<Config> &memory, InsnM6502 &insn);
+    Error decodeRelative(DisMemory<Config> &memory, InsnM6502 &insn);
+    Error decodeBlockMove(DisMemory<Config> &memory, InsnM6502 &insn);
+    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
 };
 
 } // namespace m6502

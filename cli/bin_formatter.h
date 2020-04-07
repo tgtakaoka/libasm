@@ -25,8 +25,10 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr>
+template<typename Conf>
 class BinFormatter {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
     BinFormatter()
         : _line(nullptr),
@@ -41,10 +43,10 @@ public:
 
     virtual const char *begin() = 0;
     virtual const char *encode(
-        Addr addr, const uint8_t *data, size_t size) = 0;
+        addr_t addr, const uint8_t *data, size_t size) = 0;
     virtual const char *end() = 0;
     virtual uint8_t *decode(
-        const char *line, Addr &addr, size_t &size) = 0;
+        const char *line, addr_t &addr, size_t &size) = 0;
 
 protected:
     char *_line;
@@ -102,14 +104,16 @@ protected:
     }
 };
 
-template<typename Addr>
-class IntelHex : public BinFormatter<Addr> {
+template<typename Conf>
+class IntelHex : public BinFormatter<Conf> {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
-    IntelHex() : BinFormatter<Addr>() {}
+    IntelHex() : BinFormatter<Conf>() {}
     const char *begin() override { return nullptr; }
     const char *encode(
-        Addr addr, const uint8_t *data, size_t size) override {
-        this->ensureLine((sizeof(Addr) + size + 3) * 2);
+        addr_t addr, const uint8_t *data, size_t size) override {
+        this->ensureLine((sizeof(addr_t) + size + 3) * 2);
         char *p = this->_line;
         p += sprintf(p, ":%02X%04X00",
                      static_cast<uint8_t>(size),
@@ -126,7 +130,7 @@ public:
     }
     const char *end() override { return ":00000001FF"; }
 
-    uint8_t *decode(const char *line, Addr &addr, size_t &size) override {
+    uint8_t *decode(const char *line, addr_t &addr, size_t &size) override {
         if (*line++ != ':') return nullptr;
         size = 0;
         uint8_t len = 0;
@@ -156,22 +160,24 @@ public:
     }
 };
 
-template<typename Addr>
-class SRecord : public BinFormatter<Addr> {
+template<typename Conf>
+class SRecord : public BinFormatter<Conf> {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
-    SRecord() : BinFormatter<Addr>() {}
+    SRecord() : BinFormatter<Conf>() {}
     const char *begin() override {
         return "S0030000FC";
     }
 
     const char *encode(
-        Addr addr, const uint8_t *data, size_t size) override {
-        this->ensureLine((sizeof(Addr) + size + 3) * 2);
-        const uint8_t len = sizeof(addr) + size + 1;
+        addr_t addr, const uint8_t *data, size_t size) override {
+        this->ensureLine((sizeof(addr_t) + size + 3) * 2);
+        const uint8_t len = sizeof(addr_t) + size + 1;
         this->resetSum();
         this->addSum(len);
         char *p = this->_line;
-        if (sizeof(Addr) == 2) {
+        if (sizeof(addr_t) == 2) {
             p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
         } else { 
             p += sprintf(p, "S3%02X%08X", len, static_cast<uint32_t>(addr));
@@ -186,14 +192,14 @@ public:
     }
 
     const char *end() override {
-        if (sizeof(Addr) == 2) {
+        if (sizeof(addr_t) == 2) {
             return "S9030000FC";
         } else {
             return "S70500000000FA";
         }
     }
 
-    uint8_t *decode(const char *line, Addr &addr, size_t &size) override {
+    uint8_t *decode(const char *line, addr_t &addr, size_t &size) override {
         if (*line++ != 'S') return nullptr;
         const char type = *line++;
         this->ensureData(16);
@@ -206,7 +212,7 @@ public:
             return this->_data; // record count
         if (type != '1' && type != '2' && type != '3')
             return nullptr;     // format error
-        if (sizeof(Addr) == 2 && type != '1')
+        if (sizeof(addr_t) == 2 && type != '1')
             return nullptr;     // address size overflow
         this->resetSum();
         uint8_t len = 0;

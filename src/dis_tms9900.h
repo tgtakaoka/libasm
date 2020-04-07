@@ -27,14 +27,11 @@
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900 : public Disassembler<Config::uintptr_t> {
+class DisTms9900 : public Disassembler<Config> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
     const char *listCpu() const override { return TableTms9900::listCpu(); }
-    Endian endian() const override { return ENDIAN_BIG; }
-    host::uint_t maxBytes() const override { return Config::code_max; }
-    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     DisIntelOperand _formatter;
@@ -45,14 +42,10 @@ private:
     void outAddress(Config::uintptr_t addr, bool relax = true);
 
     Error decodeOperand(
-        DisMemory<Config::uintptr_t> &memory, InsnTms9900 &insn,
-        host::uint_t opr);
-    Error decodeImmediate(
-        DisMemory<Config::uintptr_t> &memory, InsnTms9900 &insn);
+        DisMemory<Config> &memory, InsnTms9900 &insn, host::uint_t opr);
+    Error decodeImmediate(DisMemory<Config> &memory, InsnTms9900 &insn);
     Error decodeRelative(InsnTms9900 &insn);
-    Error decode(
-        DisMemory<Config::uintptr_t> &memory,
-        Insn<Config::uintptr_t> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
 };
 
 } // namespace tms9900

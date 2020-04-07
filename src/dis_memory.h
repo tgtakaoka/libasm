@@ -19,11 +19,13 @@
 
 namespace libasm {
 
-template<typename Addr>
+template<typename Conf>
 class DisMemory {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
     virtual bool hasNext() const = 0;
-    Addr address() const { return _address; }
+    addr_t address() const { return _address; }
     uint8_t readByte() {
         const uint8_t val = nextByte();
         _address++;
@@ -31,9 +33,9 @@ public:
     }
 
 protected:
-    Addr _address;
+    addr_t _address;
 
-    DisMemory(Addr address) : _address(address) {}
+    DisMemory(addr_t address) : _address(address) {}
     virtual uint8_t nextByte() = 0;
 };
 
