@@ -22,16 +22,10 @@
 namespace libasm {
 namespace mc6809 {
 
-struct Config {
-    typedef uint16_t uintptr_t;
-    typedef int16_t  ptrdiff_t;
-    typedef uint8_t  opcode_t;
-    typedef uint16_t insn_t;
-
-    static constexpr Endian endian = ENDIAN_BIG;
-    static constexpr host::uint_t code_max = 5;
-    static constexpr host::uint_t name_max = 6;
-};
+struct Config : ConfigBase<
+    uint16_t, int16_t, uint8_t, uint16_t,
+    ENDIAN_BIG, 5, 6>
+{};
 
 enum CpuType : host::uint_t {
     MC6809,

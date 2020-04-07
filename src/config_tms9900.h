@@ -22,16 +22,10 @@
 namespace libasm {
 namespace tms9900 {
 
-struct Config {
-    typedef uint16_t uintptr_t;
-    typedef int16_t  ptrdiff_t;
-    typedef uint16_t opcode_t;
-    typedef uint16_t insn_t;
-
-    static constexpr Endian endian = ENDIAN_BIG;
-    static constexpr host::uint_t code_max = 6;
-    static constexpr host::uint_t name_max = 4;
-};
+struct Config : ConfigBase<
+    uint16_t, int16_t, uint16_t, uint16_t,
+    ENDIAN_BIG, 6, 4>
+{};
 
 enum CpuType : host::uint_t {
     TMS9900,

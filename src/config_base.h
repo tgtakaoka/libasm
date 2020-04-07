@@ -26,6 +26,26 @@ enum Endian : host::uint_t {
     ENDIAN_LITTLE,
 };
 
+template<
+    typename AddrT,
+    typename DiffT,
+    typename OpCodeT,
+    typename InsnT,
+    Endian EndianE,
+    host::uint_t CodeMax,
+    host::uint_t NameMax
+    >
+struct ConfigBase {
+    typedef AddrT   uintptr_t;
+    typedef DiffT   ptrdiff_t;
+    typedef OpCodeT opcode_t;
+    typedef InsnT   insn_t;
+
+    static constexpr Endian endian = EndianE;
+    static constexpr host::uint_t code_max = CodeMax;
+    static constexpr host::uint_t name_max = NameMax;
+};
+
 } // namespace libasm
 
 #endif // __CONFIG_BASE_H__

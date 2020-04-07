@@ -22,16 +22,10 @@
 namespace libasm {
 namespace z80 {
 
-struct Config {
-    typedef uint16_t uintptr_t;
-    typedef int16_t  ptrdiff_t;
-    typedef uint8_t  opcode_t;
-    typedef uint16_t insn_t;
-
-    static constexpr Endian endian = ENDIAN_LITTLE;
-    static constexpr host::uint_t code_max = 4;
-    static constexpr host::uint_t name_max = 4;
-};
+struct Config : ConfigBase<
+    uint16_t, int16_t, uint8_t, uint16_t,
+    ENDIAN_LITTLE, 4, 4>
+{};
 
 enum CpuType : host::uint_t {
     Z80,

@@ -22,16 +22,10 @@
 namespace libasm {
 namespace mc68000 {
 
-struct Config {
-    typedef uint32_t uintptr_t;
-    typedef int32_t  ptrdiff_t;
-    typedef uint16_t opcode_t;
-    typedef uint16_t insn_t;
-
-    static constexpr Endian endian = ENDIAN_BIG;
-    static constexpr host::uint_t code_max = 10;
-    static constexpr host::uint_t name_max = 7;
-};
+struct Config : ConfigBase<
+    uint32_t, int32_t, uint16_t, uint16_t,
+    ENDIAN_BIG, 10, 7>
+{};
 
 } // namespace mc68000
 } // namespace libasm

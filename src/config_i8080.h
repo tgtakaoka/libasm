@@ -22,16 +22,10 @@
 namespace libasm {
 namespace i8080 {
 
-struct Config {
-    typedef uint16_t uintptr_t;
-    typedef int16_t  ptrdiff_t;
-    typedef uint8_t  opcode_t;
-    typedef uint8_t  insn_t;
-
-    static constexpr Endian endian = ENDIAN_LITTLE;
-    static constexpr host::uint_t code_max = 3;
-    static constexpr host::uint_t name_max = 4;
-};
+struct Config : ConfigBase<
+    uint16_t, int16_t, uint8_t, uint8_t,
+    ENDIAN_LITTLE, 3, 4>
+{};
 
 } // namespace i8080
 } // namespace libasm
