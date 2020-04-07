@@ -25,8 +25,8 @@ namespace tms9900 {
 
 class TableTms9900 {
 public:
-    Error searchName(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
+    Error searchName(InsnTms9900 &insn) const;
+    Error searchInsnCode(InsnTms9900 &insn) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();

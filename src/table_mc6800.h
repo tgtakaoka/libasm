@@ -25,9 +25,9 @@ namespace mc6800 {
 
 class TableMc6800 {
 public:
-    Error searchName(Insn &insn) const;
-    Error searchNameAndAddrMode(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
+    Error searchName(InsnMc6800 &insn) const;
+    Error searchNameAndAddrMode(InsnMc6800 &insn) const;
+    Error searchInsnCode(InsnMc6800 &insn) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();

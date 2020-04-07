@@ -72,14 +72,14 @@ void TestAsserter::equals(
         }
     }
     _fail_count++;
-    printf("%s: expected ", message);
+    printf("%s: expected [", message);
     for (size_t i = 0; i < expected_len; i++) {
-        printf(i == 0 ?  "[" : " ");
+        if (i) printf(" ");
         printf("%02" PRIX8, expected[i]);
     }
-    printf("]: actual ");
+    printf("]: actual [");
     for (size_t i = 0; i < actual_len; i++) {
-        printf(i == 0 ? "[" : " ");
+        if (i) printf(" ");
         printf("%02" PRIX8, actual[i]);
     }
     printf("]\n");
@@ -116,14 +116,14 @@ void TestAsserter::equals(
         }
     }
     _fail_count++;
-    printf("%s: expected ", message);
+    printf("%s: expected [", message);
     for (size_t i = 0; i < expected_len; i++) {
-        printf(i == 0 ?  "[" : " ");
+        if (i) printf(" ");
         printf("%04" PRIX16, expected[i]);
     }
-    printf("]: actual ");
+    printf("]: actual [");
     for (size_t i = 0; i < actual_len; i++) {
-        printf(i == 0 ? "[" : " ");
+        if (i) printf(" ");
         printf("%04" PRIX16, actual[i]);
     }
     printf("]\n");

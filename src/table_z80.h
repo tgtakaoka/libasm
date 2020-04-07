@@ -25,10 +25,10 @@ namespace z80 {
 
 class TableZ80 {
 public:
-    Error searchName(Insn &insn) const;
+    Error searchName(InsnZ80 &insn) const;
     Error searchNameAndOprFormats(
-        Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const;
-    Error searchInsnCode(Insn &insn) const;
+        InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const;
+    Error searchInsnCode(InsnZ80 &insn) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();

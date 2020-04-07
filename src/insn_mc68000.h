@@ -21,12 +21,13 @@
 #include "entry_mc68000.h"
 #include "reg_mc68000.h"
 
-using libasm::mc68000::Entry;
-using libasm::mc68000::EaSize;
-using libasm::mc68000::RegMc68000;
+namespace libasm {
+namespace mc68000 {
 
-class Insn : public InsnBase {
+class InsnMc68000 : public InsnBase<ENDIAN_BIG> {
 public:
+    InsnMc68000(Insn &insn) : InsnBase(insn) {}
+
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
     void setFlags(host::uint_t flags) {
@@ -41,18 +42,19 @@ public:
     EaSize size() const { return _size; }
     void appendSize(EaSize size, RegMc68000 regs) {
         _size = size;
-        regs.outEaSize(_name + strlen(_name), size);
+        char suffix[4];
+        regs.outEaSize(suffix, size);
+        _insn.appendName(suffix);
     }
 
     void emitInsn() {
         emitUint16(_insnCode, 0);
-        if (_length == 0) _length = 2;
     }
 
     void emitOperand16(uint16_t val16) {
-        if (_length == 0) _length = 2;
-        emitUint16(val16, _length);
-        _length += 2;
+        host::uint_t pos = _insn.length();
+        if (pos == 0) pos = 2;
+        emitUint16(val16, pos);
     }
 
     void emitOperand32(uint32_t val32) {
@@ -60,52 +62,18 @@ public:
         emitOperand16(static_cast<uint16_t>(val32));
     }
 
-protected:
-    Endian endian() override { return ENDIAN_BIG; }
-
 private:
     host::uint_t _flags;
     EaSize _size;
 
-    void emitUint16(uint16_t val16, host::uint_t pos) {
-        _bytes[pos++] = static_cast<uint8_t>(val16 >> 8);
-        _bytes[pos] = static_cast<uint8_t>(val16);
+    void emitUint16(uint16_t val, host::uint_t pos) {
+        _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
+        _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
     }
 };
 
-static const char *insnFormat(const Insn &insn) __attribute__((unused));
-static const char *insnFormat(const Insn &insn) {
-    switch (insn.insnFormat()) {
-    case IMPLIED: return "IMPLIED";
-    case ADDR_REG: return "ADDR_REG";
-    case DATA_REG: return "DATA_REG";
-    case MOVE_USP: return "MOVE_USP";
-    case TRAP_VEC: return "TRAP_VEC";
-    case DATA_DST: return "DATA_DST";
-    case DEST_OPR: return "DEST_OPR";
-    case SIGN_EXT: return "SIGN_EXT";
-    case RELATIVE: return "RELATIVE";
-    case DEST_SIZ: return "DEST_SIZ";
-    case MOVE_MLT: return "MOVE_MLT";
-    case MOVE_SR:  return "MOVE_SR";
-    case AREG_LNG: return "AREG_LNG";
-    case AREG_SIZ: return "AREG_SIZ";
-    case DREG_DST: return "DREG_DST";
-    case MOVE_QIC: return "MOVE_QIC";
-    case MOVE_PER: return "MOVE_PER";
-    case DATA_QIC: return "DATA_QIC";
-    case DREG_SIZ: return "DREG_SIZ";
-    case DMEM_SIZ: return "DMEM_SIZ";
-    case DREG_ROT: return "DREG_ROT";
-    case DMEM_DST: return "DMEM_DST";
-    case REGS_EXG: return "REGS_EXG";
-    case CMPM_SIZ: return "CMPM_SIZ";
-    case DMEM_OPR: return "DMEM_OPR";
-    case MOVA_OPR: return "MOVA_OPR";
-    case MOVE_OPR: return "MOVE_OPR";
-    default: return "unkn_fmt";
-    }
-}
+} // namespace mc68000
+} // namespace libasm
 
 #endif // __INSN_MC68000_H__
 

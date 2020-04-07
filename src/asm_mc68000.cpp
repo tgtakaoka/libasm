@@ -46,7 +46,7 @@ static const char *parseSize(const char *line, EaSize &size) {
     return p;
 }
 
-Error AsmMc68000::checkSize(Insn &insn, const EaSize size) {
+Error AsmMc68000::checkSize(InsnMc68000 &insn, const EaSize size) {
     if (size == insn.size()) return setError(OK);
     if (size == SZ_NONE && insn.size() != SZ_NONE)
         return setError(ILLEGAL_SIZE);
@@ -75,7 +75,7 @@ Error AsmMc68000::checkSize(const uint32_t val32, const EaSize size, bool uint) 
 }
 
 Error AsmMc68000::emitImmediateData(
-    Insn &insn, EaSize size, uint32_t val32, Error error) {
+    InsnMc68000 &insn, EaSize size, uint32_t val32, Error error) {
     if (size == SZ_LONG) {
         insn.emitOperand32(val32);
         return setError(error);
@@ -91,7 +91,7 @@ Error AsmMc68000::emitImmediateData(
 }
 
 Error AsmMc68000::emitEffectiveAddr(
-    Insn &insn, const Operand &ea,
+    InsnMc68000 &insn, const Operand &ea,
     host::int_t size_gp, host::int_t mode_gp, host::uint_t reg_gp) {
     if (size_gp >= 0) {
         if (insn.size() == SZ_NONE) return setError(ILLEGAL_SIZE);
@@ -152,7 +152,7 @@ Error AsmMc68000::emitEffectiveAddr(
 }
 
 Error AsmMc68000::encodeImplied(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     constexpr target::insn_t STOP = 047162;
     if (insn.insnCode() == STOP) {
@@ -167,7 +167,7 @@ Error AsmMc68000::encodeImplied(
 // ORI, ANDI, SUBI, ADDI, EORI, CMPI
 // NEGX, CLR, NEG, NOT, TST
 Error AsmMc68000::encodeDestSiz(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     const uint8_t opc = (insn.insnCode() >> 9) & 7;
     constexpr uint8_t SUBI = 2;
     constexpr uint8_t ADDI = 3;
@@ -209,7 +209,7 @@ Error AsmMc68000::encodeDestSiz(
 
 // LINK, UNLK
 Error AsmMc68000::encodeAddrReg(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.insnCode() & 010) { // UNLK
         if (checkSize(insn, SZ_NONE)) return getError();
         if (op1.mode != M_AREG) return setError(ILLEGAL_OPERAND_MODE);
@@ -230,7 +230,7 @@ Error AsmMc68000::encodeAddrReg(
 
 // SWAP, DBcc
 Error AsmMc68000::encodeDataReg(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_WORD)) return getError();
     if (!RegMc68000::isDreg(op1.reg)) return setError(ILLEGAL_OPERAND_MODE);
     const uint8_t opc = (insn.insnCode() >> 12) & 017;
@@ -258,7 +258,7 @@ Error AsmMc68000::encodeDataReg(
 
 // TRAP
 Error AsmMc68000::encodeTrapVec(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     if (op1.mode != M_IMM_DATA) return setError(UNKNOWN_OPERAND);
     if (op1.val32 >= 16) return setError(OVERFLOW_RANGE);
@@ -269,7 +269,7 @@ Error AsmMc68000::encodeTrapVec(
 
 // NBCD, PEA, TAS
 Error AsmMc68000::encodeDataDst(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     const target::insn_t insnCode = insn.insnCode();
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     const uint8_t opc = (insnCode >> 6) & 077;
@@ -291,7 +291,7 @@ Error AsmMc68000::encodeDataDst(
 // JSR, JMP, Scc,
 // ASR, ASL, LSR, LSL, ROXR, ROXL
 Error AsmMc68000::encodeDestOpr(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if ((insn.insnCode() >> 12) == 0) { // BTST/BCHG/BCLR/BSET
         const uint8_t opc = (insn.insnCode() >> 6) & 3;
         constexpr uint8_t BTST = 0;
@@ -367,7 +367,7 @@ Error AsmMc68000::encodeDestOpr(
 
 // EXT
 Error AsmMc68000::encodeSignExt(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_BYTE) return setError(ILLEGAL_SIZE);
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
@@ -380,7 +380,7 @@ Error AsmMc68000::encodeSignExt(
 
 // BRA, BSR, Bcc
 Error AsmMc68000::encodeRelative(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_LONG) return setError(ILLEGAL_SIZE);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     if (op1.mode != M_LABEL) return setError(ILLEGAL_OPERAND_MODE);
@@ -415,7 +415,7 @@ static uint16_t reverseBits(uint16_t bits) {
 
 // MOVEM
 Error AsmMc68000::encodeMoveMlt(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_BYTE) return setError(ILLEGAL_SIZE);
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (insn.size() == SZ_LONG) insn.embed(0100);
@@ -456,7 +456,7 @@ Error AsmMc68000::encodeMoveMlt(
 // AREG_LNG: LEA
 // AREG_SIZ: SUBA, CMPA, ADDA
 Error AsmMc68000::encodeAregSiz(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     target::insn_t insnCode = insn.insnCode();
     const uint8_t opc = (insnCode >> 12) & 017;
     constexpr uint8_t LEA = 004;
@@ -476,7 +476,7 @@ Error AsmMc68000::encodeAregSiz(
 // BTST, BCHG, BCLR, BSET (redirect from DEST_OPR)
 // CHK, DIVU, DIVS, MULU, MULS
 Error AsmMc68000::encodeDregDst(
-    Insn &insn, const Operand &op1, const Operand& op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand& op2) {
     const target::insn_t insnCode = insn.insnCode();
     const uint8_t opc = insnCode >> 12;
     constexpr uint8_t Bxxx = 0;
@@ -502,7 +502,7 @@ Error AsmMc68000::encodeDregDst(
 
 // MOVEQ
 Error AsmMc68000::encodeMoveQic(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_LONG)) return getError();
     if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
     if (checkSize(op1.val32, SZ_BYTE, true)) return getError();
@@ -516,7 +516,7 @@ Error AsmMc68000::encodeMoveQic(
 
 // MOVEP
 Error AsmMc68000::encodeMovePer(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_BYTE) return setError(ILLEGAL_SIZE);
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (insn.size() == SZ_LONG) insn.embed(0100);
@@ -538,7 +538,7 @@ Error AsmMc68000::encodeMovePer(
 
 // ADDQ, SUBQ
 Error AsmMc68000::encodeDataQic(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (op2.mode == M_AREG && insn.size() == SZ_BYTE)
         return setError(ILLEGAL_SIZE);
@@ -557,7 +557,7 @@ Error AsmMc68000::encodeDataQic(
 // DMEM_SIZ: OR, SUB, AND, ADD
 // DREG_SIZ: CMP, EOR
 Error AsmMc68000::encodeDmemSiz(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     const uint8_t opc = (insn.insnCode() >> 8) & ~0xE;
     constexpr uint8_t CMP = 0xB0;
@@ -582,7 +582,7 @@ Error AsmMc68000::encodeDmemSiz(
 // DMEM_OPR: SUBX, ADDX
 // CMPM_SIZ: CMPM
 Error AsmMc68000::encodeDmemOpr(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     const uint8_t opc = (insn.insnCode() >> 12);
     constexpr uint8_t SBCD = 010;
     constexpr uint8_t ABCD = 014;
@@ -610,7 +610,7 @@ Error AsmMc68000::encodeDmemOpr(
 
 // EXG
 Error AsmMc68000::encodeRegsExg(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_LONG)) return getError();
     if (!RegMc68000::isADreg(op1.reg) || !RegMc68000::isADreg(op2.reg))
         return setError(ILLEGAL_OPERAND_MODE);
@@ -638,7 +638,7 @@ Error AsmMc68000::encodeRegsExg(
 
 // MOVE, MOVEA
 Error AsmMc68000::encodeMoveOpr(
-    Insn &insn, const Operand &op1, const Operand &op2) {
+    InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (op1.reg == REG_SR) {
         if (checkSize(insn, SZ_WORD)) return getError();
         if (!op2.satisfy(CAT_DATA | CAT_ALTERABLE))
@@ -828,7 +828,8 @@ Error AsmMc68000::parseOperand(Operand &opr) {
     return setError(OK);
 }
 
-Error AsmMc68000::encode(Insn &insn) {
+Error AsmMc68000::encode(Insn &_insn) {
+    InsnMc68000 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 

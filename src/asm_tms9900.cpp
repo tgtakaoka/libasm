@@ -27,7 +27,7 @@ Error AsmTms9900::checkComma() {
     return OK;
 }
 
-Error AsmTms9900::encodeImm(Insn &insn, bool emitInsn) {
+Error AsmTms9900::encodeImm(InsnTms9900 &insn, bool emitInsn) {
     uint16_t val;
     if (getOperand16(val)) return getError();
     if (emitInsn) insn.emitInsn();
@@ -35,7 +35,7 @@ Error AsmTms9900::encodeImm(Insn &insn, bool emitInsn) {
     return setError(getError());
 }
 
-Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
+Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
     RegName regName = _regs.parseRegName(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
     _scan += _regs.regNameLen(regName);
@@ -52,7 +52,7 @@ Error AsmTms9900::encodeReg(Insn &insn, bool emitInsn) {
     return setError(OK);
 }
 
-Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
+Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
     uint16_t count;
     if (acceptR0 && _regs.parseRegName(_scan) == REG_R0) {
         _scan += 2;
@@ -75,7 +75,8 @@ Error AsmTms9900::encodeCnt(Insn &insn, bool acceptR0, bool accept16) {
     return getError();
 }
 
-Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
+Error AsmTms9900::encodeOpr(
+    InsnTms9900 &insn, bool emitInsn, bool destinationa) {
     const char *p = _scan;
     RegName regName;
     uint8_t mode = 0;
@@ -124,7 +125,7 @@ Error AsmTms9900::encodeOpr(Insn &insn, bool emitInsn, bool destinationa) {
     return getError();
 }
 
-Error AsmTms9900::encodeRel(Insn &insn) {
+Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
@@ -137,7 +138,7 @@ Error AsmTms9900::encodeRel(Insn &insn) {
     return getError();
 }
 
-Error AsmTms9900::encodeCruOff(Insn &insn) {
+Error AsmTms9900::encodeCruOff(InsnTms9900 &insn) {
     uint8_t val8;
     if (getOperand8(val8)) return getError();
     insn.embed(val8);
@@ -145,7 +146,8 @@ Error AsmTms9900::encodeCruOff(Insn &insn) {
     return getError();
 }
 
-Error AsmTms9900::encode(Insn &insn) {
+Error AsmTms9900::encode(Insn &_insn) {
+    InsnTms9900 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableTms9900.searchName(insn))

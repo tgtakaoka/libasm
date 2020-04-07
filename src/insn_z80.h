@@ -20,10 +20,14 @@
 #include "insn_base.h"
 #include "entry_z80.h"
 
-using libasm::z80::Entry;
+namespace libasm {
+namespace z80 {
 
-class Insn : public InsnBase {
+class InsnZ80 : public InsnBase<ENDIAN_LITTLE> {
 public:
+    InsnZ80(Insn &insn) : InsnBase(insn) {}
+    InsnZ80(InsnZ80 &other) : InsnBase(other._insn) {}
+
     AddrMode addrMode() const { return Entry::_addrMode(_flags2); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags1); }
     OprFormat leftFormat() const { return Entry::_oprFormat(_flags1); }
@@ -33,7 +37,7 @@ public:
         _flags1 = flags1;
         _flags2 = flags2;
     }
-    void setFlags(const Insn &other) {
+    void setFlags(const InsnZ80 &other) {
         _flags1 = other._flags1;
         _flags2 = other._flags2;
     }
@@ -58,13 +62,13 @@ public:
         emitByte(opCode());
     }
 
-protected:
-    Endian endian() override { return ENDIAN_LITTLE; }
-
 private:
     host::uint_t _flags1;
     host::uint_t _flags2;
 };
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __INSN_Z80_H__
 

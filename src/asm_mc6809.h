@@ -41,22 +41,22 @@ private:
     RegMc6809 _regs;
     uint8_t _direct_page = 0;
 
-    Error determineAddrMode(const char *line, Insn &insn);
+    Error determineAddrMode(const char *line, InsnMc6809 &insn);
 
     // MC6809
-    Error encodeStackOp(Insn &insn);
-    Error encodeRegisters(Insn &insn);
-    Error encodeRelative(Insn &insn);
-    Error encodeImmediate(Insn &insn);
-    Error encodeDirect(Insn &insn, bool emitInsn = true);
-    Error encodeExtended(Insn &insn, bool emitInsn = true);
-    Error encodeIndexed(Insn &insn, bool emitInsn = true);
+    Error encodeStackOp(InsnMc6809 &insn);
+    Error encodeRegisters(InsnMc6809 &insn);
+    Error encodeRelative(InsnMc6809 &insn);
+    Error encodeImmediate(InsnMc6809 &insn);
+    Error encodeDirect(InsnMc6809 &insn, bool emitInsn = true);
+    Error encodeExtended(InsnMc6809 &insn, bool emitInsn = true);
+    Error encodeIndexed(InsnMc6809 &insn, bool emitInsn = true);
     // MC6809
-    Error encodeBitOperation(Insn &insn);
-    Error encodeImmediatePlus(Insn &insn);
-    Error encodeTransferMemory(Insn &insn);
+    Error encodeBitOperation(InsnMc6809 &insn);
+    Error encodeImmediatePlus(InsnMc6809 &insn);
+    Error encodeTransferMemory(InsnMc6809 &insn);
     // Pseudo instruction
-    Error processPseudo(Insn &insn);
+    Error processPseudo(InsnMc6809 &insn);
     Error encode(Insn &insn) override;
 };
 

@@ -20,10 +20,13 @@
 #include "insn_base.h"
 #include "entry_mc6809.h"
 
-using libasm::mc6809::Entry;
+namespace libasm {
+namespace mc6809 {
 
-class Insn : public InsnBase {
+class InsnMc6809 : public InsnBase<ENDIAN_BIG> {
 public:
+    InsnMc6809(Insn &insn) : InsnBase(insn) {}
+
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
     bool is6309() const { return Entry::_cpuType(_flags) == HD6309; }
@@ -56,12 +59,12 @@ public:
         emitByte(opCode());
     }
 
-protected:
-    Endian endian() override { return ENDIAN_BIG; }
-
 private:
     host::uint_t _flags;
 };
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __INSN_MC6809_H__
 

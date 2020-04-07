@@ -43,10 +43,14 @@ private:
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
-    Error decodeImmediate8(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeImmediate16(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeDirect(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeIoaddr(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeImmediate8(
+        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+    Error decodeImmediate16(
+        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+    Error decodeDirect(
+        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+    Error decodeIoaddr(
+        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };

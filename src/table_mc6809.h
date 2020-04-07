@@ -34,9 +34,9 @@ struct EntryPage {
 
 class TableMc6809 {
 public:
-    Error searchName(Insn &insn) const;
-    Error searchNameAndAddrMode(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
+    Error searchName(InsnMc6809 &insn) const;
+    Error searchNameAndAddrMode(InsnMc6809 &insn) const;
+    Error searchInsnCode(InsnMc6809 &insn) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();
@@ -53,11 +53,11 @@ private:
         const target::opcode_t opCode, const Entry *table, const Entry *end);
 
     static Error searchName(
-        Insn &insn, const EntryPage *pages, const EntryPage *end);
+        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchNameAndAddrMode(
-        Insn &insn, const EntryPage *pages, const EntryPage *end);
+        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchInsnCode(
-        Insn &insn, const EntryPage *pages, const EntryPage *end);
+        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableMc6809 TableMc6809;

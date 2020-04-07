@@ -39,7 +39,7 @@ public:
         getFormatter().setUppercase(uppercase);
         getRegister().setUppercase(uppercase);
         decode(memory, insn);
-        if (!uppercase) insn.toLower();
+        if (!uppercase) insn.toLowerName();
         return getError();
     }
     virtual DisOperand &getFormatter() = 0;

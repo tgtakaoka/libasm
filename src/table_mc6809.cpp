@@ -529,7 +529,7 @@ const Entry *TableMc6809::searchEntry(
 }
 
 Error TableMc6809::searchName(
-    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
@@ -543,7 +543,7 @@ Error TableMc6809::searchName(
 }
 
 Error TableMc6809::searchNameAndAddrMode(
-    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
     for (const EntryPage *page = pages; page < end; page++) {
@@ -561,7 +561,7 @@ Error TableMc6809::searchNameAndAddrMode(
 }
 
 Error TableMc6809::searchInsnCode(
-    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         if (insn.prefixCode() != page->prefix) continue;
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
@@ -588,7 +588,7 @@ static constexpr EntryPage HD6309_PAGES[] = {
     { PREFIX_P11, &HD6309_P11[0], ARRAY_END(HD6309_P11) },
 };
 
-Error TableMc6809::searchName(Insn &insn) const {
+Error TableMc6809::searchName(InsnMc6809 &insn) const {
     if (searchName(insn, ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
     if (is6309() && searchName(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)
@@ -596,7 +596,7 @@ Error TableMc6809::searchName(Insn &insn) const {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6809::searchNameAndAddrMode(Insn &insn) const {
+Error TableMc6809::searchNameAndAddrMode(InsnMc6809 &insn) const {
     if (searchNameAndAddrMode(insn, ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
     if (is6309() && searchNameAndAddrMode(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)
@@ -604,7 +604,7 @@ Error TableMc6809::searchNameAndAddrMode(Insn &insn) const {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6809::searchInsnCode(Insn &insn) const {
+Error TableMc6809::searchInsnCode(InsnMc6809 &insn) const {
     if (searchInsnCode(insn, ARRAY_RANGE(MC6809_PAGES)) == OK)
         return OK;
     if (is6309() && searchInsnCode(insn, ARRAY_RANGE(HD6309_PAGES)) == OK)

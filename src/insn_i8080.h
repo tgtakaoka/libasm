@@ -20,10 +20,13 @@
 #include "insn_base.h"
 #include "entry_i8080.h"
 
-using libasm::i8080::Entry;
+namespace libasm {
+namespace i8080 {
 
-class Insn : public InsnBase {
+class InsnI8080 : public InsnBase<ENDIAN_LITTLE> {
 public:
+    InsnI8080(Insn& insn) : InsnBase(insn) {}
+
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
@@ -33,12 +36,12 @@ public:
         _insnCode |= data;
     }
 
-protected:
-    Endian endian() override { return ENDIAN_LITTLE; }
-
 private:
     host::uint_t _flags;
 };
+
+} // namespace i8080
+} // namespace libasm
 
 #endif // __INSN_I8080_H__
 

@@ -271,10 +271,12 @@ static void test_mid_tms9900() {
                     m = nullptr;
             }
             if (m && i >= m->start && i <= m->end) {
+                const uint16_t insnCode =
+                    ((uint16_t)insn.bytes()[0] << 8) | insn.bytes()[1];
                 sprintf(message, "%s: >%04X is MID", __FUNCTION__, i);
                 asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 asserter.equals(message, "MID", insn.name());
-                asserter.equals(message, i, insn.insnCode());
+                asserter.equals(message, i, insnCode);
                 asserter.equals(message, 2, insn.length());
             } else {
                 sprintf(message, "%s: >%04X is not MID", __FUNCTION__, i);
@@ -315,10 +317,12 @@ static void test_mid_tms9995() {
                     m = nullptr;
             }
             if (m && i >= m->start && i <= m->end) {
+                const uint16_t insnCode =
+                    ((uint16_t)insn.bytes()[0] << 8) | insn.bytes()[1];
                 sprintf(message, "%s: >%04X is MID", __FUNCTION__, i);
                 asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 asserter.equals(message, "MID", insn.name());
-                asserter.equals(message, i, insn.insnCode());
+                asserter.equals(message, i, insnCode);;
                 asserter.equals(message, 2, insn.length());
             } else {
                 sprintf(message, "%s: >%04X is not MID", __FUNCTION__, i);

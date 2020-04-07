@@ -22,7 +22,7 @@ namespace libasm {
 namespace z80 {
 
 Error AsmZ80::encodeImmediate(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
@@ -48,7 +48,7 @@ Error AsmZ80::encodeImmediate(
 }
 
 Error AsmZ80::encodeDirect(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case DST_FMT:
@@ -81,7 +81,7 @@ Error AsmZ80::encodeDirect(
 }
 
 Error AsmZ80::encodeIoaddr(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     insn.emitInsn();
     if (left.format == ADDR_8)
         insn.emitByte(left.val);
@@ -91,7 +91,7 @@ Error AsmZ80::encodeIoaddr(
 }
 
 Error AsmZ80::encodeRelative(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     target::uintptr_t addr = left.val;
     if (left.getError() == UNDEFINED_SYMBOL) addr = insn.address();
     if (insn.insnFormat() == CC4_FMT) {
@@ -107,7 +107,7 @@ Error AsmZ80::encodeRelative(
 }
 
 Error AsmZ80::encodeIndexed(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     if (left.format == IX_OFF) {
         if (right.format == REG_8 && right.reg == REG_HL)
             return setError(ILLEGAL_OPERAND); // (IX+n),(HL)
@@ -142,7 +142,7 @@ Error AsmZ80::encodeIndexed(
 }
 
 Error AsmZ80::encodeIndexedImmediate8(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     target::opcode_t opc = insn.opCode();
     insn.setInsnCode(0, insn.prefixCode());
     if (left.format == IX_OFF)
@@ -163,7 +163,7 @@ Error AsmZ80::encodeIndexedImmediate8(
 }
 
 Error AsmZ80::encodeInherent(
-    Insn &insn, const Operand &left, const Operand &right) {
+    InsnZ80 &insn, const Operand &left, const Operand &right) {
     uint8_t regNum = 0;
     switch (insn.insnFormat()) {
     case NO_FMT:
@@ -254,7 +254,7 @@ Error AsmZ80::encodeInherent(
     return checkLineEnd();
 }
 
-Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
+Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
     opr.setError(OK);
     opr.reg = REG_UNDEF;
     opr.val = 0;
@@ -368,7 +368,8 @@ Error AsmZ80::parseOperand(const Insn &insn, Operand &opr) {
     return OK;
 }
 
-Error AsmZ80::encode(Insn &insn) {
+Error AsmZ80::encode(Insn &_insn) {
+    InsnZ80 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableZ80.searchName(insn))

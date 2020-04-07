@@ -42,13 +42,14 @@ private:
 
     Error checkComma();
 
-    Error encodeImm(Insn &insn, bool emitInsn);
-    Error encodeReg(Insn &insn, bool emitInsn);
-    Error encodeCnt(Insn &insn, bool acceptR0, bool accept16);
-    Error encodeOpr(Insn &insn, bool emitInsn, bool destinationa = false);
-    Error encodeRel(Insn &insn);
-    Error encodeCruOff(Insn &insn);
-    Error encodeIoaddr(Insn &insn);
+    Error encodeImm(InsnTms9900 &insn, bool emitInsn);
+    Error encodeReg(InsnTms9900 &insn, bool emitInsn);
+    Error encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16);
+    Error encodeOpr(
+        InsnTms9900 &insn, bool emitInsn, bool destinationa = false);
+    Error encodeRel(InsnTms9900 &insn);
+    Error encodeCruOff(InsnTms9900 &insn);
+    Error encodeIoaddr(InsnTms9900 &insn);
 
     Error encode(Insn &insn) override;
 };

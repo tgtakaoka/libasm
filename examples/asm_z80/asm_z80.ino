@@ -32,7 +32,7 @@ void assemble(const char *line) {
   } else {
     Cli.printUint16(insn.address());
     Cli.print(':');
-    for (int i = 0; i < insn.insnLen(); i++) {
+    for (int i = 0; i < insn.length(); i++) {
       Cli.print(' ');
       const uint8_t val = insn.bytes()[i];
       Cli.printUint8(val);

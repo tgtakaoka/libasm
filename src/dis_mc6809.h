@@ -44,20 +44,30 @@ private:
     void outRegister(RegName regName);
 
     // MC6809
-    Error decodeDirectPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeIndexed(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeExtended(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeStackOp(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeRegisters(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeDirectPage(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeIndexed(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeExtended(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeRelative(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeImmediate(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeStackOp(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeRegisters(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
     // HD6309
-    Error decodeImmediatePlus(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeBitOperation(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeTransferMemory(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeImmediatePlus(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeBitOperation(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+    Error decodeTransferMemory(
+        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
 
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+        DisMemory<target::uintptr_t> &memory, Insn &insn) override;
 };
 
 } // namespace mc6809
