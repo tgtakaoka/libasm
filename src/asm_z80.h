@@ -27,7 +27,7 @@
 namespace libasm {
 namespace z80 {
 
-class AsmZ80 : public Assembler<target::uintptr_t> {
+class AsmZ80 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
@@ -64,7 +64,7 @@ private:
     Error encodeIndexedImmediate8(
         InsnZ80 &insn, const Operand &left, const Operand &right);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace z80

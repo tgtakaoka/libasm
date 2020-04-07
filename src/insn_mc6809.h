@@ -23,9 +23,9 @@
 namespace libasm {
 namespace mc6809 {
 
-class InsnMc6809 : public InsnBase<ENDIAN_BIG> {
+class InsnMc6809 : public InsnBase<ENDIAN_BIG, Config::uintptr_t> {
 public:
-    InsnMc6809(Insn &insn) : InsnBase(insn) {}
+    InsnMc6809(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
@@ -42,19 +42,19 @@ public:
             addrMode);
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
-    void setInsnCode(target::opcode_t prefixCode, target::opcode_t opCode) {
-        _insnCode = (static_cast<target::insn_t>(prefixCode) << 8) | opCode;
+    void setInsnCode(Config::opcode_t prefixCode, Config::opcode_t opCode) {
+        _insnCode = (static_cast<Config::insn_t>(prefixCode) << 8) | opCode;
     }
     bool hasPrefix() const { return prefixCode() != 0; }
-    target::opcode_t prefixCode() const {
-        return static_cast<target::opcode_t>(_insnCode >> 8);
+    Config::opcode_t prefixCode() const {
+        return static_cast<Config::opcode_t>(_insnCode >> 8);
     }
-    target::opcode_t opCode() const {
-        return static_cast<target::opcode_t>(_insnCode);
+    Config::opcode_t opCode() const {
+        return static_cast<Config::opcode_t>(_insnCode);
     }
 
     void emitInsn() {
@@ -64,7 +64,7 @@ public:
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags;
 };
 

@@ -27,7 +27,7 @@
 namespace libasm {
 namespace i8080 {
 
-class AsmI8080 : public Assembler<target::uintptr_t> {
+class AsmI8080 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
@@ -51,7 +51,7 @@ private:
     Error encodeDirect(InsnI8080 &insn);
     Error encodeIoaddr(InsnI8080 &insn);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace i8080

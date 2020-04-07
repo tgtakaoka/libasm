@@ -24,7 +24,7 @@ using namespace libasm::test;
 TestAsserter asserter;
 TestSymtab symtab;
 AsmMc6800 as6800;
-Assembler<target::uintptr_t> &assembler(as6800);
+Assembler<Config::uintptr_t> &assembler(as6800);
 
 static void set_up() {
 }

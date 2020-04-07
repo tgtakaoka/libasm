@@ -27,7 +27,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class AsmMc6800 : public Assembler<target::uintptr_t> {
+class AsmMc6800 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
@@ -50,7 +50,7 @@ private:
     Error encodeRelative(InsnMc6800 &insn);
     Error encodeImmediate(InsnMc6800 &insn);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace m6502

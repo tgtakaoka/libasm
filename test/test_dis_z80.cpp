@@ -22,10 +22,10 @@ using namespace libasm::z80;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory memory;
+TestMemory<Config::uintptr_t> memory;
 TestSymtab symtab;
 DisZ80 disz80;
-Disassembler<target::uintptr_t> &disassembler(disz80);
+Disassembler<Config::uintptr_t> &disassembler(disz80);
 
 static void set_up() {
     disassembler.setCpu("8080");
@@ -681,7 +681,7 @@ static void test_illegal_i8080() {
 
 static void assert_illegal(uint8_t prefix, uint8_t opc, uint8_t opr1 = 0, uint8_t opr2 = 0) {
     char operands[40];
-    Insn insn;
+    Insn<Config::uintptr_t> insn;
     const uint8_t codes[] = { prefix, opc, opr1, opr2 };
     memory.setMemory(&codes[0], sizeof(codes));
     disassembler.decode(memory, insn, operands, nullptr);

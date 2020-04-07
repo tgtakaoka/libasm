@@ -89,7 +89,7 @@ bool RegMc68000::isADreg(RegName reg) {
     return isAreg(reg) || isDreg(reg);
 }
 
-target::insn_t RegMc68000::encodeRegNo(RegName reg) {
+Config::insn_t RegMc68000::encodeRegNo(RegName reg) {
     return isDreg(reg)
         ? char(reg) - char(REG_D0)
         : char(reg) - char(REG_A0);
@@ -147,12 +147,12 @@ static EaMode parseEaMode(host::uint_t mode, host::uint_t regno) {
     return EaMode(mode);
 }
 
-target::insn_t EaMc68000::encodeMode(EaMode mode) {
+Config::insn_t EaMc68000::encodeMode(EaMode mode) {
     const host::uint_t m = host::uint_t(mode);
     return m >= 8 ? 7 : m;
 }
 
-target::insn_t EaMc68000::encodeRegNo(EaMode mode, RegName regName) {
+Config::insn_t EaMc68000::encodeRegNo(EaMode mode, RegName regName) {
     const host::uint_t m = host::uint_t(mode);
     if (m < 8) return RegMc68000::encodeRegNo(regName);
     if (m < 16) return m - 8;
@@ -216,7 +216,7 @@ static RegName encodeRegName(EaMode mode, host::uint_t regno) {
     }
 }
 
-EaMc68000::EaMc68000(target::insn_t insnCode) {
+EaMc68000::EaMc68000(Config::insn_t insnCode) {
     const host::uint_t regno = insnCode & 7;
     size = EaSize((insnCode >> 6) & 3);
     mode = parseEaMode((insnCode >> 3) & 7, regno);

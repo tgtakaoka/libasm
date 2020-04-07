@@ -19,13 +19,18 @@
 
 #include "config_host.h"
 
-namespace target
-{
+namespace libasm {
+namespace z80 {
+
+struct Config {
     typedef uint16_t uintptr_t;
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint16_t insn_t;
-} // namespace target
+};
+
+} // namespace z80
+} // namespace libasm
 
 #endif // __CONFIG_Z80_H__
 

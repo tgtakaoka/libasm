@@ -22,11 +22,11 @@ using namespace libasm;
 using namespace libasm::z80;
 
 DisZ80 disz80;
-Disassembler<uint16_t> &disassembler(disz80);
+Disassembler<Config::uintptr_t> &disassembler(disz80);
 
-void disassemble(DisMemory<uint16_t> &memory) {
+void disassemble(DisMemory<Config::uintptr_t> &memory) {
   char operands[20];
-  Insn insn;
+  Insn<Config::uintptr_t> insn;
   while (memory.hasNext()) {
     if (disassembler.decode(memory, insn, operands, nullptr)) {
       Cli.print(F("Error "));
@@ -51,7 +51,7 @@ void disassemble(DisMemory<uint16_t> &memory) {
 }
 
 bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  StrMemory<uint16_t> memory(0x1000, line);
+  StrMemory<Config::uintptr_t> memory(0x1000, line);
   disassemble(memory);
   return Cli.readLine(handleLine, 0);
 }

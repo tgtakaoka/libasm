@@ -22,12 +22,9 @@
 
 #include <stdio.h>
 
-extern libasm::test::TestAsserter asserter;
-extern libasm::test::TestSymtab symtab;
-
 #define EASSERT(error, addr, line, expected)                    \
     do {                                                        \
-        Insn insn;                                              \
+        Insn<Config::uintptr_t> insn;                           \
         char message[80];                                       \
         symtab.setCurrentOrigin(addr);                          \
         assembler.encode(line, insn, addr, &symtab);            \
@@ -38,7 +35,7 @@ extern libasm::test::TestSymtab symtab;
     } while (0)
 #define EATEST(error, addr, line, ...)                          \
     do {                                                        \
-        const target::opcode_t expected[] = { __VA_ARGS__ };    \
+        const Config::opcode_t expected[] = { __VA_ARGS__ };    \
         EASSERT(error, addr, line, expected);                   \
     } while (0)
 #define ATEST(addr, line, ...) EATEST(OK, addr, line, __VA_ARGS__)

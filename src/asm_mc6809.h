@@ -27,7 +27,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class AsmMc6809 : public Assembler<target::uintptr_t> {
+class AsmMc6809 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
@@ -57,7 +57,7 @@ private:
     Error encodeTransferMemory(InsnMc6809 &insn);
     // Pseudo instruction
     Error processPseudo(InsnMc6809 &insn);
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace mc6809

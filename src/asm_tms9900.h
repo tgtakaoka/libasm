@@ -27,7 +27,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900 : public Assembler<target::uintptr_t> {
+class AsmTms9900 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
@@ -51,7 +51,7 @@ private:
     Error encodeCruOff(InsnTms9900 &insn);
     Error encodeIoaddr(InsnTms9900 &insn);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace tms9900

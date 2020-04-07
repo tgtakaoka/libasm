@@ -33,11 +33,11 @@ Error AsmM6502::encodeLongRelative(InsnM6502 &insn) {
 }
 
 Error AsmM6502::encodeRelative(InsnM6502 &insn, bool emitInsn) {
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const target::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
-    const target::ptrdiff_t delta = addr - base;
+    const Config::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
+    const Config::ptrdiff_t delta = addr - base;
     if (emitInsn) insn.emitInsn();
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
@@ -177,7 +177,7 @@ Error AsmM6502::parseOperand(Operand &op) {
     return setError(OK);
 }
 
-Error AsmM6502::encode(Insn &_insn) {
+Error AsmM6502::encode(Insn<Config::uintptr_t> &_insn) {
     InsnM6502 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

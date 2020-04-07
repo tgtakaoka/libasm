@@ -22,10 +22,10 @@ using namespace libasm::mc6809;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory memory;
+TestMemory<Config::uintptr_t> memory;
 TestSymtab symtab;
 DisMc6809 dis6809;
-Disassembler<target::uintptr_t> &disassembler(dis6809);
+Disassembler<Config::uintptr_t> &disassembler(dis6809);
 
 static void set_up() {
     disassembler.setCpu("6809");
@@ -1030,7 +1030,7 @@ static void test_bit_position() {
 
 static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
     char operands[40];
-    Insn insn;
+    Insn<Config::uintptr_t> insn;
     const uint8_t codes[] = { prefix, opc };
     if (prefix == 0) {
         memory.setMemory(&codes[1], 1);

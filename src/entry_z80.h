@@ -93,7 +93,7 @@ enum OprFormat : host::uint_t {
 };
 
 struct Entry {
-    const target::opcode_t opc;
+    const Config::opcode_t opc;
     const host::uint_t flags1;
     const host::uint_t flags2;
     const char *name;

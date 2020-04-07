@@ -19,13 +19,18 @@
 
 #include "config_host.h"
 
-namespace target
-{
+namespace libasm {
+namespace m6502 {
+
+struct Config {
     typedef uint16_t uintptr_t;
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint8_t  insn_t;
-} // namespace target
+};
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __CONFIG_M6502_H__
 

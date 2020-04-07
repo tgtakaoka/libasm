@@ -32,13 +32,13 @@ static bool filterHd6309BitImmIndexed(uint8_t opc) {
 
 int main(int argc, const char **argv) {
     DisMc6809 dis6809;
-    GenDriver<target::uintptr_t> driver(dis6809);
+    GenDriver<Config::uintptr_t, Config::opcode_t> driver(dis6809);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<target::uintptr_t> generator(
+    TestGenerator<Config::uintptr_t> generator(
         dis6809,
-        sizeof(target::opcode_t),
+        sizeof(Config::opcode_t),
         driver.uppercase());
     generator
         .generate(driver, filterHd6309BitImmIndexed)

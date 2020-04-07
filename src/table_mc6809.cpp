@@ -500,11 +500,11 @@ static constexpr Entry HD6309_P11[] PROGMEM = {
     P11(0xFB, ADDF,  BYTE, HD6309, EXTD)
 };
 
-static constexpr target::opcode_t PREFIX_P00 = 0x00;
-static constexpr target::opcode_t PREFIX_P10 = 0x10;
-static constexpr target::opcode_t PREFIX_P11 = 0x11;
+static constexpr Config::opcode_t PREFIX_P00 = 0x00;
+static constexpr Config::opcode_t PREFIX_P10 = 0x10;
+static constexpr Config::opcode_t PREFIX_P11 = 0x11;
 
-bool TableMc6809::isPrefixCode(target::opcode_t opCode) {
+bool TableMc6809::isPrefixCode(Config::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
@@ -519,7 +519,7 @@ const Entry *TableMc6809::searchEntry(
 }
 
 const Entry *TableMc6809::searchEntry(
-    const target::opcode_t opCode,
+    const Config::opcode_t opCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         if (opCode == pgm_read_byte(&entry->opc))

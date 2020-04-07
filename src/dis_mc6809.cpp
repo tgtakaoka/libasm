@@ -25,7 +25,7 @@ void DisMc6809::outRegister(RegName regName) {
 }
 
 Error DisMc6809::decodeDirectPage(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     const char *label = lookup(dir);
@@ -39,8 +39,8 @@ Error DisMc6809::decodeDirectPage(
 }
 
 Error DisMc6809::decodeExtended(
-    DisMemory<target::uintptr_t>& memory, InsnMc6809 &insn) {
-    target::uintptr_t addr;
+    DisMemory<Config::uintptr_t>& memory, InsnMc6809 &insn) {
+    Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     const char *label = lookup(addr);
     if (addr < 0x100) *_operands++ = '>';
@@ -53,15 +53,15 @@ Error DisMc6809::decodeExtended(
 }
 
 Error DisMc6809::decodeIndexed(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const uint8_t mode = post & 0x8F;
 
     uint8_t indir = (post & 0x10);
     const char *label = nullptr;
-    target::uintptr_t addr = 0;
-    target::ptrdiff_t offset = 0;
+    Config::uintptr_t addr = 0;
+    Config::ptrdiff_t offset = 0;
     host::int_t offSize = 0;
     RegName base = _regs.decodeBaseReg((post >> 5) & 3);
     RegName index = REG_UNDEF;
@@ -180,8 +180,8 @@ Error DisMc6809::decodeIndexed(
 }
 
 Error DisMc6809::decodeRelative(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
-    target::ptrdiff_t delta;
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
+    Config::ptrdiff_t delta;
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -189,9 +189,9 @@ Error DisMc6809::decodeRelative(
     } else {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-        delta = static_cast<target::ptrdiff_t>(val);
+        delta = static_cast<Config::ptrdiff_t>(val);
     }
-    const target::uintptr_t addr = insn.address() + insn.length() + delta;
+    const Config::uintptr_t addr = insn.address() + insn.length() + delta;
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -202,17 +202,17 @@ Error DisMc6809::decodeRelative(
 }
 
 Error DisMc6809::decodeImmediate(
-    DisMemory<target::uintptr_t>& memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t>& memory, InsnMc6809 &insn) {
     *_operands++ = '#';
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        const target::insn_t opc = insn.insnCode();
+        const Config::insn_t opc = insn.insnCode();
         constexpr uint8_t ORCC = 0x1A;
         constexpr uint8_t ANDCC = 0x1C;
         constexpr uint8_t CWAI = 0x3C;
-        constexpr target::insn_t BITMD = 0x113C;
-        constexpr target::insn_t LDMD = 0x113D;
+        constexpr Config::insn_t BITMD = 0x113C;
+        constexpr Config::insn_t LDMD = 0x113D;
         if (opc == ORCC || opc == ANDCC || opc == CWAI
             || opc == BITMD || opc == LDMD) {
             outConstant(val, 2);
@@ -239,7 +239,7 @@ Error DisMc6809::decodeImmediate(
 }
 
 Error DisMc6809::decodeStackOp(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const bool push = (insn.insnCode() & 1) == 0;
@@ -255,7 +255,7 @@ Error DisMc6809::decodeStackOp(
 }
 
 Error DisMc6809::decodeRegisters(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeRegName(post >> 4);
@@ -273,7 +273,7 @@ Error DisMc6809::decodeRegisters(
 }
 
 Error DisMc6809::decodeImmediatePlus(
-    DisMemory<target::uintptr_t>& memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t>& memory, InsnMc6809 &insn) {
     *_operands++ = '#';
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
@@ -288,7 +288,7 @@ Error DisMc6809::decodeImmediatePlus(
 }
 
 Error DisMc6809::decodeBitOperation(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
@@ -304,7 +304,7 @@ Error DisMc6809::decodeBitOperation(
 }
 
 Error DisMc6809::decodeTransferMemory(
-    DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
@@ -323,13 +323,13 @@ Error DisMc6809::decodeTransferMemory(
 }
 
 Error DisMc6809::decode(
-    DisMemory<target::uintptr_t> &memory, Insn &_insn) {
+    DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &_insn) {
     InsnMc6809 insn(_insn);
-    target::opcode_t opCode;
+    Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setInsnCode(0, opCode);
     if (TableMc6809::isPrefixCode(opCode)) {
-        const target::opcode_t prefix = opCode;
+        const Config::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
         insn.setInsnCode(prefix, opCode);
     }

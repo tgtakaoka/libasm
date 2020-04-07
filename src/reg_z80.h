@@ -84,8 +84,8 @@ public:
     static RegName decodeDataReg(uint8_t regNum);
 
     char *outRegName(char *out, const RegName regName) const;
-    char *outCc4Name(char *out, target::opcode_t cc4) const;
-    char *outCc8Name(char *out, target::opcode_t cc8) const;
+    char *outCc4Name(char *out, Config::opcode_t cc4) const;
+    char *outCc8Name(char *out, Config::opcode_t cc8) const;
 
 private:
     RegName parseRegName(

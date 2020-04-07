@@ -26,7 +26,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class AsmMc68000 : public Assembler<target::uintptr_t> {
+class AsmMc68000 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
@@ -111,7 +111,7 @@ private:
     Error encodeMoveOpr(
         InsnMc68000 &insn, const Operand &op1, const Operand &op2);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace mc68000

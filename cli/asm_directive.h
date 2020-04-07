@@ -116,7 +116,7 @@ public:
             return setError(OK); // skip comment
         }
 
-        Insn insn;
+        Insn<Addr> insn;
         const Error error = _assembler.encode(_scan, insn, _origin, this);
         const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
         _scan = _assembler.errorAt();

@@ -27,7 +27,7 @@ template<typename Addr>
 class StrMemory : public DisMemory<Addr> {
 public:
     StrMemory(Addr addr, const char *line)
-        : DisMemory(addr), _next(line) {
+        : DisMemory<Addr>(addr), _next(line) {
         skipSpaces();
     }
     

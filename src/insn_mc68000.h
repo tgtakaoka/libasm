@@ -24,9 +24,9 @@
 namespace libasm {
 namespace mc68000 {
 
-class InsnMc68000 : public InsnBase<ENDIAN_BIG> {
+class InsnMc68000 : public InsnBase<ENDIAN_BIG, Config::uintptr_t> {
 public:
-    InsnMc68000(Insn &insn) : InsnBase(insn) {}
+    InsnMc68000(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
@@ -34,11 +34,11 @@ public:
         _flags = flags;
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
-    target::insn_t embed(target::insn_t data, host::uint_t gp = 0) {
+    Config::insn_t embed(Config::insn_t data, host::uint_t gp = 0) {
         return (_insnCode |= (data << gp));
     }
 
@@ -67,7 +67,7 @@ public:
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags;
     EaSize _size;
 

@@ -29,7 +29,7 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr>
+template<typename Addr, typename InsnUnit>
 class DisDriver {
 public:
     DisDriver(Disassembler<Addr> &disassembler)
@@ -75,7 +75,7 @@ public:
         memory.dump(
             [this, output, list, &memory]
             (Addr base, const uint8_t *data, size_t size) {
-                DisListing<Addr> listing(_disassembler, memory, _uppercase);
+                DisListing<Addr, InsnUnit> listing(_disassembler, memory, _uppercase);
                 if (list) {
                     fprintf(list, "%s\n", listing.origin(base, true));
                     fflush(list);
@@ -84,7 +84,7 @@ public:
                     fprintf(output, "%s\n", listing.origin(base));
                     fflush(output);
                 }
-                Insn insn;
+                Insn<Addr> insn;
                 for (size_t pc = 0; pc < size; pc += insn.length()) {
                     Addr address = base + pc;
                     listing.disassemble(address, insn);

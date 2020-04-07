@@ -27,7 +27,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900 : public Disassembler<target::uintptr_t> {
+class DisTms9900 : public Disassembler<Config::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
@@ -42,16 +42,17 @@ private:
 
     RegBase &getRegister() override { return _regs; }
 
-    void outAddress(target::uintptr_t addr, bool relax = true);
+    void outAddress(Config::uintptr_t addr, bool relax = true);
 
     Error decodeOperand(
-        DisMemory<target::uintptr_t> &memory, InsnTms9900 &insn,
+        DisMemory<Config::uintptr_t> &memory, InsnTms9900 &insn,
         host::uint_t opr);
     Error decodeImmediate(
-        DisMemory<target::uintptr_t> &memory, InsnTms9900 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnTms9900 &insn);
     Error decodeRelative(InsnTms9900 &insn);
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+        DisMemory<Config::uintptr_t> &memory,
+        Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace tms9900

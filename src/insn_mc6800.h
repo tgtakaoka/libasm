@@ -23,9 +23,9 @@
 namespace libasm {
 namespace mc6800 {
 
-class InsnMc6800 : public InsnBase<ENDIAN_BIG> {
+class InsnMc6800 : public InsnBase<ENDIAN_BIG, Config::uintptr_t> {
 public:
-    InsnMc6800(Insn &insn) : InsnBase(insn) {}
+    InsnMc6800(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnAdjust insnAdjust() const { return Entry::_insnAdjust(_flags); }
@@ -40,11 +40,11 @@ public:
             addrMode, Entry::_insnAdjust(_flags), Entry::_oprSize(_flags));
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
-    void embed(target::opcode_t data) {
+    void embed(Config::opcode_t data) {
         _insnCode |= data;
     }
     void emitInsn() {
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags;
 };
 

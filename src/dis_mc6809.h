@@ -27,7 +27,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class DisMc6809 : public Disassembler<target::uintptr_t> {
+class DisMc6809 : public Disassembler<Config::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
@@ -45,29 +45,30 @@ private:
 
     // MC6809
     Error decodeDirectPage(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeIndexed(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeExtended(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeRelative(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeImmediate(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeStackOp(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeRegisters(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     // HD6309
     Error decodeImmediatePlus(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeBitOperation(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
     Error decodeTransferMemory(
-        DisMemory<target::uintptr_t> &memory, InsnMc6809 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnMc6809 &insn);
 
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn &insn) override;
+        DisMemory<Config::uintptr_t> &memory,
+        Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace mc6809

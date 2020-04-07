@@ -27,7 +27,7 @@
 namespace libasm {
 namespace m6502 {
 
-class AsmM6502 : public Assembler<target::uintptr_t> {
+class AsmM6502 : public Assembler<Config::uintptr_t> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
@@ -54,7 +54,7 @@ private:
     Error encodeZeroPageRelative(InsnM6502 &insn);
     Error encodeBlockMove(InsnM6502 &insn);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace m6502

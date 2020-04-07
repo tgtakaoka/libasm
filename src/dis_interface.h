@@ -32,7 +32,7 @@ public:
     typedef Addr addr_t;
 
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn,
+        DisMemory<Addr> &memory, Insn<Addr> &insn,
         char *operands, SymbolTable *symtab, bool uppercase = false) {
         insn.resetAddress(memory.address());
         *(_operands = operands) = 0;
@@ -83,8 +83,7 @@ protected:
 
 private:
     virtual RegBase &getRegister();
-    virtual Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) = 0;
+    virtual Error decode(DisMemory<Addr> &memory, Insn<Addr> &insn) = 0;
 };
 
 } // namespace libasm

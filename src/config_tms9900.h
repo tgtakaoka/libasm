@@ -19,13 +19,18 @@
 
 #include "config_host.h"
 
-namespace target
-{
+namespace libasm {
+namespace tms9900 {
+
+struct Config {
     typedef uint16_t uintptr_t;
     typedef int16_t  ptrdiff_t;
     typedef uint16_t opcode_t;
     typedef uint16_t insn_t;
-} // namespace target
+};
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __CONFIG_TMS9900_H__
 

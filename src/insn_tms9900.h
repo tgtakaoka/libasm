@@ -23,20 +23,20 @@
 namespace libasm {
 namespace tms9900 {
 
-class InsnTms9900 : public InsnBase<ENDIAN_BIG> {
+class InsnTms9900 : public InsnBase<ENDIAN_BIG, Config::uintptr_t> {
 public:
-    InsnTms9900(Insn &insn) : InsnBase(insn) {}
+    InsnTms9900(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
-    void embed(target::opcode_t data) {
+    void embed(Config::opcode_t data) {
         _insnCode |= data;
     }
 
@@ -51,7 +51,7 @@ public:
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags;
 
     void emitUint16(uint16_t val, host::uint_t pos) {

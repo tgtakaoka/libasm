@@ -30,7 +30,7 @@ namespace test {
 using libasm::cli::AsmLine;
 using libasm::cli::AsmListing;
 
-template<typename Addr>
+template<typename Addr, typename InsnUnit>
 class GenDriver : public TestGenerator<Addr>::Printer,
                   private AsmLine<Addr> {
 public:
@@ -82,14 +82,14 @@ private:
     bool _uppercase;
     FILE *_output;
     FILE *_list;
-    const Insn *_insn;
+    const Insn<Addr> *_insn;
     const char *_operands;
 
     // TestGenerator<Addr>::Printer
-    void print(const Insn &insn, const char *operands) override {
+    void print(const Insn<Addr> &insn, const char *operands) override {
         _insn = &insn;
         _operands = operands;
-        _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
+        _listing.reset(*this, sizeof(InsnUnit), _uppercase, false);
         if (_list) {
             do {
                 fprintf(_list, "%s\n", _listing.getLine());

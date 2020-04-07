@@ -24,8 +24,8 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmM6502 assembler;
-    AsmMostekDirective<target::uintptr_t> directive(assembler);
-    AsmDriver<target::uintptr_t, SRecord<target::uintptr_t>> driver(directive);
+    AsmMostekDirective<Config::uintptr_t> directive(assembler);
+    AsmDriver<Config::uintptr_t, Config::opcode_t, SRecord<Config::uintptr_t>> driver(directive);
     return driver.main(argc, argv);
 }
 

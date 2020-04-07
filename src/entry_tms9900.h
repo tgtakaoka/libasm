@@ -43,7 +43,7 @@ enum AddrMode : host::uint_t {
 };
 
 struct Entry {
-    const target::insn_t insnCode;
+    const Config::insn_t insnCode;
     const host::uint_t flags;
     static constexpr host::uint_t code_max = 6;
     static constexpr host::uint_t name_max = 4;

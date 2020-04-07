@@ -77,13 +77,13 @@ Error AsmMc6809::encodeRegisters(InsnMc6809 &insn) {
 }
 
 Error AsmMc6809::encodeRelative(InsnMc6809 &insn) {
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     const host::uint_t insnLen = (insn.hasPrefix() ? 2 : 1)
         + (insn.oprSize() == SZ_BYTE ? 1 : 2);
-    const target::uintptr_t base = insn.address() + insnLen;
-    const target::ptrdiff_t delta = addr - base;
+    const Config::uintptr_t base = insn.address() + insnLen;
+    const Config::ptrdiff_t delta = addr - base;
     insn.emitInsn();
     if (insn.oprSize() == SZ_BYTE) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
@@ -119,7 +119,7 @@ Error AsmMc6809::encodeImmediate(InsnMc6809 &insn) {
 Error AsmMc6809::encodeDirect(InsnMc6809 &insn, bool emitInsn) {
     if (*_scan == '<') _scan++;
     if (emitInsn) insn.emitInsn();
-    target::uintptr_t dir;
+    Config::uintptr_t dir;
     if (getOperand16(dir)) return getError();
     // TODO: Warning if dir isn't on _direct_page.
     insn.emitByte(static_cast<uint8_t>(dir));
@@ -129,7 +129,7 @@ Error AsmMc6809::encodeDirect(InsnMc6809 &insn, bool emitInsn) {
 Error AsmMc6809::encodeExtended(InsnMc6809 &insn, bool emitInsn) {
     if (*_scan == '>') _scan++;
     if (emitInsn) insn.emitInsn();
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
@@ -143,7 +143,7 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, bool emitInsn) {
     RegName index = REG_UNDEF;
     host::int_t osize = 0;      // offset size, -1 undefined
     host::int_t incr = 0;       // auto decrement/increment
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     bool undef = false;
     if (indir) p++;
     if (*p != ',') {
@@ -213,7 +213,7 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, bool emitInsn) {
             base = REG_PC;
             osize = 16;
         }
-        target::ptrdiff_t offset = (base == REG_PC) ? addr
+        Config::ptrdiff_t offset = (base == REG_PC) ? addr
             : addr - (insn.address() + insn.length() + 2);
         if (osize == -1) {
             if (offset >= -128 && offset < 128) {
@@ -269,7 +269,7 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, bool emitInsn) {
             post |= _regs.encodeIndexReg(index);
             insn.emitByte(0x80 | post);
         } else {
-            const target::ptrdiff_t offset = addr;
+            const Config::ptrdiff_t offset = addr;
             if (indir && osize == 5) return setError(UNKNOWN_OPERAND);
             if (osize == -1) {
                 if (offset == 0) {
@@ -320,7 +320,7 @@ Error AsmMc6809::encodeBitOperation(InsnMc6809 &insn) {
     _scan++;
     bool forcibly = (*_scan == '<');
     if (forcibly) _scan++;
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError()) error = getError();
     if (!forcibly && (addr >> 8) != _direct_page)
@@ -377,7 +377,7 @@ Error AsmMc6809::encodeTransferMemory(InsnMc6809 &insn) {
     if (*_scan == '+' || *_scan == '-') srcMode = *_scan++;
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
-    target::opcode_t post = _regs.encodeTfmBaseReg(regName) << 4;
+    Config::opcode_t post = _regs.encodeTfmBaseReg(regName) << 4;
 
     regName = _regs.parseTfmBaseReg(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_REGISTER);
@@ -459,7 +459,7 @@ Error AsmMc6809::processPseudo(InsnMc6809 &insn) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error AsmMc6809::encode(Insn &_insn) {
+Error AsmMc6809::encode(Insn<Config::uintptr_t> &_insn) {
     InsnMc6809 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

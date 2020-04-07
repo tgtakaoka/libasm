@@ -27,7 +27,7 @@
 namespace libasm {
 namespace i8080 {
 
-class DisI8080 : public Disassembler<target::uintptr_t> {
+class DisI8080 : public Disassembler<Config::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
@@ -44,15 +44,16 @@ private:
     void outRegister(RegName regName);
 
     Error decodeImmediate8(
-        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
     Error decodeImmediate16(
-        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
     Error decodeDirect(
-        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
     Error decodeIoaddr(
-        DisMemory<target::uintptr_t> &memory, InsnI8080 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnI8080 &insn);
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+        DisMemory<Config::uintptr_t> &memory,
+        Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace i8080

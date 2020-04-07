@@ -29,7 +29,7 @@ void DisMc68000::outEaSize(EaSize size) {
 }
 
 Error DisMc68000::decodeImmediateData(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn, EaSize size) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn, EaSize size) {
     Error error = OK;
     if (size == SZ_BYTE) {
         uint16_t val16;
@@ -50,7 +50,7 @@ Error DisMc68000::decodeImmediateData(
 }
 
 Error DisMc68000::decodeEffectiveAddr(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn,
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn,
     const EaMc68000 &ea) {
     const EaMode mode = ea.mode;
     if (mode == M_ILLEGAL)
@@ -71,7 +71,7 @@ Error DisMc68000::decodeEffectiveAddr(
         uint16_t val16;
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
         if (mode == M_PC_DISP) {
-            const target::uintptr_t addr =
+            const Config::uintptr_t addr =
                 insn.address() + 2 + static_cast<int16_t>(val16);
             outConstant(addr, 16, false);
         } else {
@@ -111,7 +111,7 @@ Error DisMc68000::decodeEffectiveAddr(
         if (insn.readUint16(memory, ext.word)) return setError(NO_MEMORY);
         const uint8_t val8 = ext.disp();
         if (mode == M_PC_INDX) {
-            const target::uintptr_t addr =
+            const Config::uintptr_t addr =
                 insn.address() + 2 + static_cast<int8_t>(val8);
             outConstant(addr, 16);
         } else {
@@ -138,7 +138,7 @@ Error DisMc68000::decodeEffectiveAddr(
 }
 
 Error DisMc68000::decodeImplied(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     if (insn.insnCode() == 047162) { // STOP
         *_operands++ = '#';
         return decodeImmediateData(memory, insn, SZ_WORD);
@@ -149,8 +149,8 @@ Error DisMc68000::decodeImplied(
 // ORI, ANDI, SUBI, ADDI, EORI, CMPI
 // NEGX, CLR, NEG, NOT, TST
 Error DisMc68000::decodeDestSiz(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const EaMc68000 ea(insnCode);
     const uint8_t opc = (insnCode >> 9) & 7;
 
@@ -192,7 +192,7 @@ Error DisMc68000::decodeDestSiz(
 
 // LINK, UNLK
 Error DisMc68000::decodeAddrReg(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     const RegName dest = RegMc68000::decodeAddrReg(insn.insnCode());
     if (insn.insnCode() & 010) { // UNLK
         outRegName(dest);
@@ -211,7 +211,7 @@ Error DisMc68000::decodeAddrReg(
 
 // DBcc, SWAP
 Error DisMc68000::decodeDataReg(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     const RegName dest = RegMc68000::decodeDataReg(insn.insnCode());
     if ((insn.insnCode() >> 12) == 4) { // SWAP
         outRegName(dest);
@@ -224,7 +224,7 @@ Error DisMc68000::decodeDataReg(
     uint16_t val16;
     if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
     const int16_t disp = static_cast<int16_t>(val16);
-    const target::uintptr_t addr = insn.address() + 2 + disp;
+    const Config::uintptr_t addr = insn.address() + 2 + disp;
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -236,7 +236,7 @@ Error DisMc68000::decodeDataReg(
 
 // MOVE USP
 Error DisMc68000::decodeMoveUsp(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     const RegName areg = RegMc68000::decodeAddrReg(insn.insnCode());
     if (insn.insnCode() & 010) { // USP->An
         outRegName(REG_USP);
@@ -252,7 +252,7 @@ Error DisMc68000::decodeMoveUsp(
 
 // TRAP
 Error DisMc68000::decodeTrapVec(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     *_operands++ = '#';
     outConstant(static_cast<uint8_t>(insn.insnCode() & 017), 10);
     return setError(OK);
@@ -260,8 +260,8 @@ Error DisMc68000::decodeTrapVec(
 
 // NBCD, PEA, TAS
 Error DisMc68000::decodeDataDst(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const uint8_t opc = (insnCode >> 6) & 077;
     constexpr uint8_t NBCD = 040;
     constexpr uint8_t PEA = 041;
@@ -286,7 +286,7 @@ Error DisMc68000::decodeDataDst(
 // JSR, JMP, Scc,
 // ASR, ASL, LSR, LSL, ROXR, ROXL
 Error DisMc68000::decodeDestOpr(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     const EaMc68000 ea(insn.insnCode());
     EaSize size = ea.size;
 
@@ -326,8 +326,8 @@ Error DisMc68000::decodeDestOpr(
 
 // EXT
 Error DisMc68000::decodeSignExt(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     insn.appendSize((insnCode & 0100) ? SZ_LONG : SZ_WORD, _regs);
     outRegName(RegMc68000::decodeDataReg(insnCode));
     return setError(OK);
@@ -335,9 +335,9 @@ Error DisMc68000::decodeSignExt(
 
 // EXT_BRA: BRA, BSR, Bcc
 Error DisMc68000::decodeRelative(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
     const uint8_t val8 = static_cast<uint8_t>(insn.insnCode());
-    target::uintptr_t addr = insn.address() + 2;
+    Config::uintptr_t addr = insn.address() + 2;
     if (val8) {
         addr += static_cast<int8_t>(val8);
     } else {
@@ -398,8 +398,8 @@ void DisMc68000::outMoveMltRegs(RegName start, RegName last, char suffix) {
 
 // MOVEM
 Error DisMc68000::decodeMoveMlt(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const EaMc68000 ea(
         (insnCode & 0100) ? SZ_LONG : SZ_WORD, insnCode >> 3, insnCode);
     uint16_t list;
@@ -431,8 +431,8 @@ Error DisMc68000::decodeMoveMlt(
 
 // MOVE fromSR, toSR, toCCR
 Error DisMc68000::decodeMoveSr(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const host::uint_t opc = (insnCode >> 8) & 017;
     constexpr host::uint_t toCCR = 4;
     constexpr host::uint_t fromSR = 0;
@@ -456,8 +456,8 @@ Error DisMc68000::decodeMoveSr(
 
 // MOVEQ
 Error DisMc68000::decodeMoveQic(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const uint8_t val8 = static_cast<uint8_t>(insnCode);
     *_operands++ = '#';
     outConstant(static_cast<int8_t>(val8));
@@ -468,8 +468,8 @@ Error DisMc68000::decodeMoveQic(
 
 // MOVEP
 Error DisMc68000::decodeMovePer(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const EaMc68000 ea(
         (insnCode & 0100) ? SZ_LONG : SZ_WORD, M_DISP, insnCode);
     const RegName dest = RegMc68000::decodeDataReg(insnCode >> 9);
@@ -489,8 +489,8 @@ Error DisMc68000::decodeMovePer(
 // AREG_LNG: LEA
 // AREG_SIZ: SUBA, CMPA, ADDA
 Error DisMc68000::decodeAregSiz(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     EaSize size = (insnCode & 0400) ? SZ_LONG : SZ_WORD;
     const EaMc68000 ea(size, insnCode >> 3, insnCode);
     const uint8_t opc = (insnCode >> 12) & 017;
@@ -512,8 +512,8 @@ Error DisMc68000::decodeAregSiz(
 
 // NO_EXT: BTST, BCHG, BCLR, BSET, CHK, DIVU, DIVS, MULU, MULS
 Error DisMc68000::decodeDregDst(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const RegName dest = RegMc68000::decodeDataReg(insn.insnCode() >> 9);
     EaSize size;
 
@@ -556,8 +556,8 @@ static EaSize moveSize(host::uint_t moveSize) {
 
 // ADDQ, SUBQ
 Error DisMc68000::decodeDataQic(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const EaMc68000 ea(insnCode);
     uint8_t val = (insnCode >> 9) & 7;
     if (val == 0) val = 8;
@@ -573,8 +573,8 @@ Error DisMc68000::decodeDataQic(
 // DMEM_SIZ: OR, SUB, AND, ADD
 // DREG_SIZ: CMP, EOR
 Error DisMc68000::decodeDmemSiz(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const EaMc68000 ea(insnCode);
     const RegName dreg = RegMc68000::decodeDataReg(insnCode >> 9);
     insn.appendSize(ea.size, _regs);
@@ -594,8 +594,8 @@ Error DisMc68000::decodeDmemSiz(
 
 // ASR, ASL, LSR, LSL, ROXR, ROXL, ROR, ROL
 Error DisMc68000::decodeDregRot(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const RegName dst = RegMc68000::decodeDataReg(insnCode);
     const EaSize size = EaSize((insnCode >> 6) & 3);
     if (insnCode & 040) {       // Dx
@@ -616,8 +616,8 @@ Error DisMc68000::decodeDregRot(
 // DMEM_OPR: SUBX, ADDX
 // CMPM_SIZ: CMPM
 Error DisMc68000::decodeDmemOpr(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const uint8_t opc = (insnCode >> 12);
     constexpr uint8_t SBCD = 010;
     constexpr uint8_t ABCD = 014;
@@ -642,8 +642,8 @@ Error DisMc68000::decodeDmemOpr(
 
 // EXG
 Error DisMc68000::decodeRegsExg(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const uint8_t mode = (insnCode >> 3) & 031;
     if (mode == 010) {          // Dx,Dy
         outRegName(RegMc68000::decodeDataReg(insnCode >> 9));
@@ -663,8 +663,8 @@ Error DisMc68000::decodeRegsExg(
 
 // NO_EXT: MOVE, MOVEA
 Error DisMc68000::decodeMoveOpr(
-    DisMemory<target::uintptr_t> &memory, InsnMc68000 &insn) {
-    const target::insn_t insnCode = insn.insnCode();
+    DisMemory<Config::uintptr_t> &memory, InsnMc68000 &insn) {
+    const Config::insn_t insnCode = insn.insnCode();
     const EaSize size = moveSize(insnCode >> 12);
     const EaMc68000 src(size, insnCode >> 3, insnCode);
     const EaMc68000 dst(size, insnCode >> 6, insnCode >> 9);
@@ -682,9 +682,9 @@ Error DisMc68000::decodeMoveOpr(
 }
 
 Error DisMc68000::decode(
-    DisMemory<target::uintptr_t> &memory, Insn &_insn) {
+    DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &_insn) {
     InsnMc68000 insn(_insn);
-    target::insn_t insnCode;
+    Config::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
     if (TableMc68000.searchInsnCode(insn))

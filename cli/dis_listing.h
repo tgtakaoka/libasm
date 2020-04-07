@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr>
+template<typename Addr, typename InsnUnit>
 class DisListing : public AsmLine<Addr> {
 public:
     DisListing(
@@ -39,11 +39,11 @@ public:
           _operandWidth(8)
     {}
 
-    Error disassemble(Addr addr, Insn &insn) {
+    Error disassemble(Addr addr, Insn<Addr> &insn) {
         _memory.setAddress(addr);
         const Error error = _disassembler.decode(
             _memory, insn, _operands, nullptr, _uppercase);
-        _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
+        _listing.reset(*this, sizeof(InsnUnit), _uppercase, false);
         _address = addr;
         _generated_size = insn.length();
         _instruction = insn.name();
@@ -53,7 +53,7 @@ public:
     const char *origin(Addr origin, bool withBytes = false) {
         _disassembler.getFormatter().output(
             _operands, origin, 16, false, sizeof(Addr));
-        _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
+        _listing.reset(*this, sizeof(InsnUnit), _uppercase, false);
         _address = origin;
         _generated_size = 0;
         _instruction = _uppercase ? "ORG" : "org";

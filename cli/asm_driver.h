@@ -26,7 +26,7 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr, typename Formatter>
+template<typename Addr, typename InsnUnit, typename Formatter>
 class AsmDriver {
 public:
     AsmDriver(AsmDirective<Addr> &directive)
@@ -133,7 +133,7 @@ private:
 
     void printListing(CliMemory<Addr> &memory, FILE *out) {
         _listing.reset(
-            _directive, sizeof(target::opcode_t), _uppercase, _line_number);
+            _directive, sizeof(InsnUnit), _uppercase, _line_number);
         do {
             fprintf(out, "%s\n", _listing.getLine());
         } while (_listing.hasNext());

@@ -35,13 +35,13 @@ static bool filterZ80IxBitPrefix(uint8_t opc) {
 
 int main(int argc, const char **argv) {
     DisZ80 disz80;
-    GenDriver<target::uintptr_t> driver(disz80);
+    GenDriver<Config::uintptr_t, Config::opcode_t> driver(disz80);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<target::uintptr_t> generator(
+    TestGenerator<Config::uintptr_t> generator(
         disz80,
-        sizeof(target::opcode_t),
+        sizeof(Config::opcode_t),
         driver.uppercase());
     generator
         .generate(driver, filterZ80Prefix)

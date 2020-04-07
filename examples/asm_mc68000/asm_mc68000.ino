@@ -21,10 +21,10 @@ using namespace libasm;
 using namespace libasm::mc68000;
 
 AsmMc68000 as68k;
-Assembler<target::uintptr_t> &assembler(as68k);
+Assembler<Config::uintptr_t> &assembler(as68k);
 
 void assemble(const char *line) {
-  Insn insn;
+  Insn<Config::uintptr_t> insn;
   if (assembler.encode(line, insn, 0x10000, nullptr)) {
     Cli.print(F("Error "));
     Cli.print(assembler.getError());

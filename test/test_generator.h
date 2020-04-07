@@ -141,7 +141,7 @@ public:
           _operands(60)
     {}
 
-    const Insn &insn() const { return _insn; }
+    const Insn<Addr> &insn() const { return _insn; }
     TextBuffer &operands() { return _operands; }
     const TextBuffer &operands() const { return _operands; }
     Error tryGenerate(
@@ -164,7 +164,7 @@ private:
     uint8_t *_memory;
     int _memorySize;
     int _memoryIndex;
-    Insn _insn;
+    Insn<Addr> _insn;
 
     // DisMemory<Addr>
     bool hasNext() const override { return _memoryIndex < _memorySize; }
@@ -193,7 +193,7 @@ public:
 
     class Printer {
     public:
-        virtual void print(const Insn &insn, const char *operands) = 0;
+        virtual void print(const Insn<Addr> &insn, const char *operands) = 0;
     };
     typedef bool (*Filter)(uint8_t);
 
@@ -203,7 +203,7 @@ public:
     }
 
     TestGenerator<Addr> &generate(
-        Printer &printer, target::opcode_t opc1, Filter filter = nullptr) {
+        Printer &printer, uint8_t opc1, Filter filter = nullptr) {
         DataGenerator parent(_memory, _endian, _opcodeSize);
         parent.outUint8(opc1);
         DataGenerator gen(parent, _opcodeSize, filter);
@@ -211,7 +211,7 @@ public:
     }
 
     TestGenerator<Addr> &generate(
-        Printer &printer, target::opcode_t opc1, target::opcode_t opc2) {
+        Printer &printer, uint8_t opc1, uint8_t opc2) {
         DataGenerator parent(_memory, _endian, _opcodeSize * 2);
         parent.outUint8(opc1, 0);
         parent.outUint8(opc2, 1);
@@ -220,8 +220,7 @@ public:
     }
 
     TestGenerator<Addr> &generate(
-        Printer &printer,
-        target::opcode_t opc1, target::opcode_t opc2, target::opcode_t opc3) {
+        Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
         DataGenerator parent(_memory, _endian, _opcodeSize * 3);
         parent.outUint8(opc1, 0);
         parent.outUint8(opc2, 1);

@@ -22,11 +22,11 @@ using namespace libasm;
 using namespace libasm::mc68000;
 
 DisMc68000 dis68k;
-Disassembler<uint32_t> &disassembler(dis68k);
+Disassembler<Config::uintptr_t> &disassembler(dis68k);
 
-void disassemble(DisMemory<uint32_t> &memory) {
+void disassemble(DisMemory<Config::uintptr_t> &memory) {
   char operands[20];
-  Insn insn;
+  Insn<Config::uintptr_t> insn;
   while (memory.hasNext()) {
     if (disassembler.decode(memory, insn, operands, nullptr)) {
       Cli.print(F("Error "));
@@ -52,7 +52,7 @@ void disassemble(DisMemory<uint32_t> &memory) {
 }
 
 bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  StrMemory<uint32_t> memory(0x10000, line);
+  StrMemory<Config::uintptr_t> memory(0x10000, line);
   disassemble(memory);
   return Cli.readLine(handleLine, 0);
 }

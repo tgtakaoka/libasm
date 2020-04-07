@@ -23,25 +23,25 @@
 namespace libasm {
 namespace i8080 {
 
-class InsnI8080 : public InsnBase<ENDIAN_LITTLE> {
+class InsnI8080 : public InsnBase<ENDIAN_LITTLE, Config::uintptr_t> {
 public:
-    InsnI8080(Insn& insn) : InsnBase(insn) {}
+    InsnI8080(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
-    void embed(target::opcode_t data) {
+    void embed(Config::opcode_t data) {
         _insnCode |= data;
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags;
 };
 

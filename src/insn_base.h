@@ -30,14 +30,15 @@ enum Endian {
     ENDIAN_LITTLE,
 };
 
+template<typename Addr>
 class Insn {
 public:
-    uint32_t address() const { return _address; }
+    Addr address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     host::uint_t length() const { return _length; }
     const char *name() const { return _name; }
 
-    void resetAddress(uint32_t addr) {
+    void resetAddress(Addr addr) {
         _address = addr;
         _length = 0;
     }
@@ -72,36 +73,36 @@ public:
     static constexpr size_t MAX_NAME = 7;
 
 private:
-    uint32_t     _address;
+    Addr         _address;
     host::uint_t _length;
     uint8_t      _bytes[MAX_BYTES];
     char         _name[MAX_NAME + 1];
 };
 
-template<Endian endian>
+template<Endian endian, typename Addr>
 class InsnBase {
 public:
-    InsnBase(Insn& insn) : _insn(insn) {}
+    InsnBase(Insn<Addr> &insn) : _insn(insn) {}
 
-    target::uintptr_t address() const { return _insn.address(); }
+    Addr address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     host::uint_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
 
-    void resetAddress(target::uintptr_t addr) {
+    void resetAddress(Addr addr) {
         _insn.resetAddress(addr);
     }
     void setName(const char *name, const char *end = nullptr) {
         _insn.setName(name, end ? end - name : strlen(name));
     }
 
-    Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
+    Error readByte(DisMemory<Addr> &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         return _insn.emitByte(val);
     }
 
-    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
+    Error readUint16(DisMemory<Addr> &memory, uint16_t &val) {
         uint8_t msb, lsb;
         if (endian == ENDIAN_BIG) {
             if (readByte(memory, msb)) return NO_MEMORY;
@@ -114,7 +115,7 @@ public:
         return OK;
     }
 
-    Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
+    Error readUint32(DisMemory<Addr> &memory, uint32_t &val) {
         uint16_t msw, lsw;
         if (endian == ENDIAN_BIG) {
             if (readUint16(memory, msw)) return NO_MEMORY;
@@ -154,7 +155,7 @@ public:
     }
 
 protected:
-    Insn &_insn;
+    Insn<Addr> &_insn;
 };
 
 } // namespace libasm

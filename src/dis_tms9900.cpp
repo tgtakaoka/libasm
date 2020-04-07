@@ -20,7 +20,7 @@
 namespace libasm {
 namespace tms9900 {
 
-void DisTms9900::outAddress(target::uintptr_t addr, bool relax) {
+void DisTms9900::outAddress(Config::uintptr_t addr, bool relax) {
     const char *label = lookup(addr);
     if (label) {
         outText(label);
@@ -30,7 +30,7 @@ void DisTms9900::outAddress(target::uintptr_t addr, bool relax) {
 }
 
 Error DisTms9900::decodeOperand(
-    DisMemory<target::uintptr_t> &memory, InsnTms9900 &insn, const host::uint_t opr) {
+    DisMemory<Config::uintptr_t> &memory, InsnTms9900 &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
     const host::uint_t mode = (opr >> 4) & 0x3;
     if (mode == 1 || mode == 3) *_operands++ = '*';
@@ -54,7 +54,7 @@ Error DisTms9900::decodeOperand(
 }
 
 Error DisTms9900::decodeImmediate(
-    DisMemory<target::uintptr_t>& memory, InsnTms9900 &insn) {
+    DisMemory<Config::uintptr_t>& memory, InsnTms9900 &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     outAddress(val);
@@ -64,15 +64,15 @@ Error DisTms9900::decodeImmediate(
 Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
     int16_t delta = static_cast<int8_t>(insn.insnCode() & 0xff);
     delta <<= 1;
-    const target::uintptr_t addr = insn.address() + 2 + delta;
+    const Config::uintptr_t addr = insn.address() + 2 + delta;
     outAddress(addr, false);
     return setError(OK);
 }
 
 Error DisTms9900::decode(
-    DisMemory<target::uintptr_t> &memory, Insn &_insn) {
+    DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &_insn) {
     InsnTms9900 insn(_insn);
-    target::insn_t insnCode;
+    Config::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
     if (TableTms9900.searchInsnCode(insn)) {

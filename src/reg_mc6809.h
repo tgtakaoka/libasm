@@ -60,7 +60,7 @@ public:
     char *outRegName(char *out, const RegName regName) const;
     char *outCCRBits(char *out, uint8_t val) const;
 
-    static RegName getStackReg(host::uint_t bit, target::insn_t insnCode);
+    static RegName getStackReg(host::uint_t bit, Config::insn_t insnCode);
     bool compareRegName(const char *line, RegName regName) const;
     host::uint_t regNameLen(RegName regName) const;
 

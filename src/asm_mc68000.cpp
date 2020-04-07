@@ -95,7 +95,7 @@ Error AsmMc68000::emitEffectiveAddr(
     host::int_t size_gp, host::int_t mode_gp, host::uint_t reg_gp) {
     if (size_gp >= 0) {
         if (insn.size() == SZ_NONE) return setError(ILLEGAL_SIZE);
-        insn.embed(static_cast<target::insn_t>(insn.size()), size_gp);
+        insn.embed(static_cast<Config::insn_t>(insn.size()), size_gp);
     }
     const EaMode mode = (ea.mode == M_LABEL)
         ? (checkSize(ea.val32, SZ_WORD, false) ? M_ABS_LONG : M_ABS_SHORT)
@@ -113,13 +113,13 @@ Error AsmMc68000::emitEffectiveAddr(
 
     insn.emitInsn();
     if (mode == M_INDX || mode == M_PC_INDX) {
-        target::ptrdiff_t disp;
+        Config::ptrdiff_t disp;
         if (mode == M_PC_INDX) {
-            target::uintptr_t addr = ea.val32;
+            Config::uintptr_t addr = ea.val32;
             if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
             disp = addr - (insn.address() + 2);
         } else {
-            disp = static_cast<target::ptrdiff_t>(ea.val32);
+            disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
         if (checkSize(disp, SZ_BYTE, false)) return getError();
         uint16_t extWord = static_cast<uint8_t>(disp);
@@ -130,13 +130,13 @@ Error AsmMc68000::emitEffectiveAddr(
         return setError(ea);
     }
     if (mode == M_DISP || mode == M_PC_DISP || mode == M_ABS_SHORT) {
-        target::ptrdiff_t disp;
+        Config::ptrdiff_t disp;
         if (mode == M_PC_DISP) {
-            target::uintptr_t addr = ea.val32;
+            Config::uintptr_t addr = ea.val32;
             if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
             disp = addr - (insn.address() + 2);
         } else {
-            disp = static_cast<target::ptrdiff_t>(ea.val32);
+            disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
         if (checkSize(disp, SZ_WORD, false)) return getError();
         insn.emitOperand16(static_cast<uint16_t>(disp));
@@ -154,7 +154,7 @@ Error AsmMc68000::emitEffectiveAddr(
 Error AsmMc68000::encodeImplied(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
-    constexpr target::insn_t STOP = 047162;
+    constexpr Config::insn_t STOP = 047162;
     if (insn.insnCode() == STOP) {
         if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
         insn.emitInsn();
@@ -244,9 +244,9 @@ Error AsmMc68000::encodeDataReg(
     // DBcc
     if (op2.mode == M_ABS_LONG || op2.mode == M_ABS_SHORT
         || op2.mode == M_LABEL) {
-        target::uintptr_t addr = op2.val32;
+        Config::uintptr_t addr = op2.val32;
         if (op2.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-        const target::ptrdiff_t disp = addr - (insn.address() + 2);
+        const Config::ptrdiff_t disp = addr - (insn.address() + 2);
         if (checkSize(disp, SZ_WORD, false))
             return setError(OPERAND_TOO_FAR);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
@@ -270,7 +270,7 @@ Error AsmMc68000::encodeTrapVec(
 // NBCD, PEA, TAS
 Error AsmMc68000::encodeDataDst(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    const target::insn_t insnCode = insn.insnCode();
+    const Config::insn_t insnCode = insn.insnCode();
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     const uint8_t opc = (insnCode >> 6) & 077;
     constexpr uint8_t PEA = 041;
@@ -358,7 +358,7 @@ Error AsmMc68000::encodeDestOpr(
             return setError(OVERFLOW_RANGE);
         uint8_t rot = static_cast<uint8_t>(op1.val32);
         if (rot == 8) rot = 0;
-        insn.embed(static_cast<target::insn_t>(rot), 9);
+        insn.embed(static_cast<Config::insn_t>(rot), 9);
         emitEffectiveAddr(insn, op2, 6, -1);
         return setError(op1.getError() ? op1.getError() : getError());
     }
@@ -384,9 +384,9 @@ Error AsmMc68000::encodeRelative(
     if (insn.size() == SZ_LONG) return setError(ILLEGAL_SIZE);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     if (op1.mode != M_LABEL) return setError(ILLEGAL_OPERAND_MODE);
-    target::uintptr_t addr = op1.val32;
+    Config::uintptr_t addr = op1.val32;
     if (op1.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const target::ptrdiff_t disp = addr - (insn.address() + 2);
+    const Config::ptrdiff_t disp = addr - (insn.address() + 2);
     if (insn.size() == SZ_NONE)
         insn.setSize(checkSize(disp, SZ_BYTE, false) == OK ? SZ_BYTE : SZ_WORD);
     if (insn.size() == SZ_BYTE && checkSize(disp, SZ_BYTE, false))
@@ -457,7 +457,7 @@ Error AsmMc68000::encodeMoveMlt(
 // AREG_SIZ: SUBA, CMPA, ADDA
 Error AsmMc68000::encodeAregSiz(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    target::insn_t insnCode = insn.insnCode();
+    Config::insn_t insnCode = insn.insnCode();
     const uint8_t opc = (insnCode >> 12) & 017;
     constexpr uint8_t LEA = 004;
     if (opc == LEA) {
@@ -477,7 +477,7 @@ Error AsmMc68000::encodeAregSiz(
 // CHK, DIVU, DIVS, MULU, MULS
 Error AsmMc68000::encodeDregDst(
     InsnMc68000 &insn, const Operand &op1, const Operand& op2) {
-    const target::insn_t insnCode = insn.insnCode();
+    const Config::insn_t insnCode = insn.insnCode();
     const uint8_t opc = insnCode >> 12;
     constexpr uint8_t Bxxx = 0;
     if (opc == Bxxx) {
@@ -828,7 +828,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
     return setError(OK);
 }
 
-Error AsmMc68000::encode(Insn &_insn) {
+Error AsmMc68000::encode(Insn<Config::uintptr_t> &_insn) {
     InsnMc68000 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

@@ -27,7 +27,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class DisMc6800 : public Disassembler<target::uintptr_t> {
+class DisMc6800 : public Disassembler<Config::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
@@ -45,15 +45,15 @@ private:
     bool outAccumulator(const InsnMc6800 &insn);
 
     // MC6800
-    Error decodeInherent(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeDirectPage(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeExtended(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeIndexed(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeRelative(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeInherent(DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeDirectPage(DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeExtended(DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeIndexed(DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeRelative(DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeImmediate(DisMemory<Config::uintptr_t> &memory, InsnMc6800 &insn);
 
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+        DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace m6502

@@ -31,7 +31,7 @@ public:
     typedef Addr addr_t;
 
     Error encode(
-        const char *line, Insn &insn, Addr addr,SymbolTable *symtab) {
+        const char *line, Insn<Addr> &insn, Addr addr,SymbolTable *symtab) {
         this->resetError();
         _scan = skipSpaces(line);
         if (checkLineEnd() == OK)
@@ -104,7 +104,7 @@ protected:
     }
 
 private:
-    virtual Error encode(Insn &insn) = 0;
+    virtual Error encode(Insn<Addr> &insn) = 0;
 };
 
 } // namespace libasm

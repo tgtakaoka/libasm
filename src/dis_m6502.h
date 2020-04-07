@@ -27,7 +27,7 @@
 namespace libasm {
 namespace m6502 {
 
-class DisM6502 : public Disassembler<target::uintptr_t> {
+class DisM6502 : public Disassembler<Config::uintptr_t> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
@@ -46,17 +46,17 @@ private:
     RegBase &getRegister() override { return _regs; }
 
     Error decodeImmediate(
-        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
     Error decodeAbsolute(
-        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
     Error decodeZeroPage(
-        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
     Error decodeRelative(
-        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
     Error decodeBlockMove(
-        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+        DisMemory<Config::uintptr_t> &memory, InsnM6502 &insn);
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn &insn) override;
+        DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &insn) override;
 };
 
 } // namespace m6502

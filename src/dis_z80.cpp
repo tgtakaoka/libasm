@@ -62,7 +62,7 @@ void DisZ80::outDataRegister(RegName regName) {
     }
 }
 
-void DisZ80::outConditionName(target::opcode_t cc, bool cc8) {
+void DisZ80::outConditionName(Config::opcode_t cc, bool cc8) {
     if (cc8) {
         _operands = _regs.outCc8Name(_operands, cc);
     } else {
@@ -71,7 +71,7 @@ void DisZ80::outConditionName(target::opcode_t cc, bool cc8) {
 }
 
 Error DisZ80::decodeInherent(InsnZ80 &insn) {
-    const target::opcode_t opc = insn.opCode();
+    const Config::opcode_t opc = insn.opCode();
     switch (insn.leftFormat()) {
     case A_REG:
         outRegister(REG_A);
@@ -199,7 +199,7 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
 }
 
 Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
-    const target::opcode_t opc = insn.opCode();
+    const Config::opcode_t opc = insn.opCode();
     switch (insn.leftFormat()) {
     case A_REG:
         outRegister(REG_A);
@@ -221,7 +221,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
 }
 
 Error DisZ80::decodeImmediate16(InsnZ80 &insn, uint16_t val) {
-    const target::opcode_t opc = insn.opCode();
+    const Config::opcode_t opc = insn.opCode();
     switch (insn.leftFormat()) {
     case REG_16:
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
@@ -237,8 +237,8 @@ Error DisZ80::decodeImmediate16(InsnZ80 &insn, uint16_t val) {
     return setError(OK);
 }
 
-Error DisZ80::decodeDirect(InsnZ80 &insn, target::uintptr_t addr) {
-    const target::opcode_t opc = insn.opCode();
+Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
+    const Config::opcode_t opc = insn.opCode();
     RegName regName;
     switch (insn.leftFormat()) {
     case ADDR_16:
@@ -324,17 +324,17 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
 
 Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
     if (insn.leftFormat() == COND_4) {
-        const target::opcode_t opc = insn.opCode();
+        const Config::opcode_t opc = insn.opCode();
         outConditionName((opc >> 3) & 3, false);
         *_operands++ = ',';
     }
-    const target::uintptr_t addr = insn.address() + 2 + delta;
+    const Config::uintptr_t addr = insn.address() + 2 + delta;
     outAddress(addr, false);
     return setError(OK);
 }
 
 Error DisZ80::decodeIndexed(InsnZ80 &insn, int8_t offset) {
-    const target::opcode_t opc = insn.opCode();
+    const Config::opcode_t opc = insn.opCode();
     RegName regName;
     switch (insn.leftFormat()) {
     case IX_OFF:
@@ -378,7 +378,7 @@ Error DisZ80::decodeIndexedImmediate8(
 }
 
 Error DisZ80::decodeIndexedBitOp(
-    InsnZ80 &insn, int8_t offset, target::opcode_t opCode) {
+    InsnZ80 &insn, int8_t offset, Config::opcode_t opCode) {
     InsnZ80 ixBit(insn);
     ixBit.setInsnCode(insn.opCode(), opCode);
     if (TableZ80.searchInsnCode(ixBit)) 
@@ -401,13 +401,13 @@ Error DisZ80::decodeIndexedBitOp(
 }
 
 Error DisZ80::decode(
-    DisMemory<target::uintptr_t> &memory, Insn &_insn) {
+    DisMemory<Config::uintptr_t> &memory, Insn<Config::uintptr_t> &_insn) {
     InsnZ80 insn(_insn);
-    target::opcode_t opCode;
+    Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setInsnCode(0, opCode);
     if (TableZ80.isZ80() && TableZ80::isPrefixCode(opCode)) {
-        const target::opcode_t prefix = opCode;
+        const Config::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
         insn.setInsnCode(prefix, opCode);
     }
