@@ -41,13 +41,8 @@ enum RegName : char {
     REG_F =   'F',
     REG_W =   'W',
     REG_V =   'V',
-#ifdef HD6309_Z_REG
-    REG_Z =   'Z', // zero register
-#endif
-#ifdef HD6309_0_REG
+    REG_Z =   'Z', // "z" zero register
     REG_0 =   '0', // "0" zero register
-    REG_00 =  '1', // "00" zero register
-#endif
 };
 
 class RegMc6809 : public RegBase {

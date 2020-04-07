@@ -19,11 +19,6 @@
 
 #include "config_host.h"
 
-// Support HD6309's Z (Zero) register
-//#define HD6309_Z_REG
-// Support HD6309's 0/00 (Zero) register
-//#define HD6309_0_REG
-
 namespace target
 {
     typedef uint16_t uintptr_t;
