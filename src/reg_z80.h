@@ -71,15 +71,15 @@ public:
     static host::int_t encodePointerRegIx(RegName regName, RegName ix);
     static host::int_t encodeStackReg(RegName regName);
     static host::int_t encodeIndirectBase(RegName regName);
-    static void encodeIndexReg(Insn &insn, RegName ixReg);
+    static void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
     static host::int_t encodeIrReg(RegName regName);
     static host::int_t encodeDataReg(RegName regName);
 
     static RegName decodePointerReg(
-        uint8_t regNum, const Insn *insn = nullptr);
+        uint8_t regNum, const InsnZ80 *insn = nullptr);
     static RegName decodeStackReg(uint8_t regNum);
     static RegName decodeIndirectBase(uint8_t regNum);
-    static RegName decodeIndexReg(const Insn &insn);
+    static RegName decodeIndexReg(const InsnZ80 &insn);
     static RegName decodeIrReg(uint8_t regNum);
     static RegName decodeDataReg(uint8_t regNum);
 

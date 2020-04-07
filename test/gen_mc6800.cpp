@@ -18,6 +18,7 @@
 #include "gen_driver.h"
 
 using namespace libasm::mc6800;
+using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisMc6800 dis6800;

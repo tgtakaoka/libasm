@@ -22,8 +22,8 @@
 
 #include <stdio.h>
 
-extern TestAsserter asserter;
-extern TestSymtab symtab;
+extern libasm::test::TestAsserter asserter;
+extern libasm::test::TestSymtab symtab;
 
 #define EASSERT(error, addr, line, expected)                    \
     do {                                                        \
@@ -42,7 +42,7 @@ extern TestSymtab symtab;
         EASSERT(error, addr, line, expected);                   \
     } while (0)
 #define ATEST(addr, line, ...) EATEST(OK, addr, line, __VA_ARGS__)
-#define ETEST(error, line, ...) EATEST(error, 0x0000, line,  __VA_ARGS__)
+#define ETEST(error, line, ...) EATEST(error, 0x0000, line, __VA_ARGS__)
 #define TEST(line, ...) ETEST(OK, line, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test)

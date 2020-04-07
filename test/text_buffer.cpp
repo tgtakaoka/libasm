@@ -19,6 +19,9 @@
 #include <ctype.h>
 #include <string.h>
 
+namespace libasm {
+namespace test {
+
 static bool isBdigits(const char *&r, const char *p) {
     if (*p != '0' && *p != '1') return false;
     while (*p == '0' || *p == '1')
@@ -142,6 +145,9 @@ void TextBuffer::analyze(TextBuffer &a, TextBuffer &b) {
         }
     }
 }
+
+} // namespace test
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

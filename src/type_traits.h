@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 
+namespace libasm {
+
 // Extracted from <type_traits>
 
 template<bool v>
@@ -76,6 +78,8 @@ template<typename T>
 struct make_signed {
     typedef typename __make_signed<T>::__type type;
 };
+
+} // namespace libasm
 
 #endif
 

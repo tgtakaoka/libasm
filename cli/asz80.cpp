@@ -20,6 +20,7 @@
 #include "bin_formatter.h"
 
 using namespace libasm::z80;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmZ80 assembler;

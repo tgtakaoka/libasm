@@ -19,6 +19,9 @@
 
 #include <stdint.h>
 
+namespace libasm {
+namespace test {
+
 class TestAsserter {
 public:
     TestAsserter() : _fail_count(0) {}
@@ -60,6 +63,9 @@ private:
     int _pass_count;
     int _fail_count;
 };
+
+} // namespace test
+} // namespace libasm
 
 #endif
 

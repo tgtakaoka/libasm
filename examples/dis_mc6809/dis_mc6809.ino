@@ -18,6 +18,7 @@
 #include <str_memory.h>
 #include <libcli.h>
 
+using namespace libasm;
 using namespace libasm::mc6809;
 
 DisMc6809 dis6809;
@@ -33,16 +34,16 @@ void disassemble(DisMemory<target::uintptr_t> &memory) {
     } else {
       Cli.printUint16(insn.address());
       Cli.print(':');
-      for (int i = 0; i < insn.insnLen(); i++) {
+      for (int i = 0; i < insn.length(); i++) {
         Cli.print(' ');
         uint8_t val = insn.bytes()[i];
         Cli.printUint8(val);
       }
-      for (int i = insn.insnLen(); i < Insn::getMaxBytes(); i++)
+      for (int i = insn.length(); i < disassembler.maxBytes(); i++)
         Cli.print(F("   "));
       Cli.print(' ');
       for (size_t n = Cli.print(insn.name());
-           n <= Insn::getMaxName(); n++)
+           n <= disassembler.maxName(); n++)
         Cli.print(' ');
       Cli.println(operands);
     }

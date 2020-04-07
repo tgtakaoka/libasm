@@ -45,13 +45,18 @@ private:
 
     RegBase &getRegister() override { return _regs; }
 
-    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeAbsolute(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeZeroPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeBlockMove(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeImmediate(
+        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+    Error decodeAbsolute(
+        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+    Error decodeZeroPage(
+        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+    Error decodeRelative(
+        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
+    Error decodeBlockMove(
+        DisMemory<target::uintptr_t> &memory, InsnM6502 &insn);
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+        DisMemory<target::uintptr_t> &memory, Insn &insn) override;
 };
 
 } // namespace m6502

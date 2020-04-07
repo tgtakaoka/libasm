@@ -18,6 +18,7 @@
 #include "dis_driver.h"
 
 using namespace libasm::tms9900;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisTms9900 disassembler;

@@ -23,49 +23,91 @@
 #include "error_reporter.h"
 #include "dis_memory.h"
 
+namespace libasm {
+
 enum Endian {
     ENDIAN_BIG,
     ENDIAN_LITTLE,
 };
 
-class InsnBase {
+class Insn {
 public:
-    target::uintptr_t address() const { return _address; }
+    uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     host::uint_t length() const { return _length; }
     const char *name() const { return _name; }
 
-    void resetAddress(target::uintptr_t addr) {
+    void resetAddress(uint32_t addr) {
         _address = addr;
         _length = 0;
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
-        _insnCode = insnCode;
-    }
-
-    void setName(const char *name, const char *end = nullptr) {
-        size_t len = end ? end - name : strlen(name);
-        if (len >= sizeof(_name) - 1) len = sizeof(_name) - 1;
+    void setName(const char *name, size_t len) {
+        if (len >= MAX_NAME) len = MAX_NAME;
         strncpy(_name, name, len);
         _name[len] = 0;
+    }
+
+    void appendName(const char *suffix) {
+        strncat(_name, suffix, MAX_NAME - strlen(_name));
+    }
+
+    void toLowerName() {
+        for (char *p = _name; *p; p++)
+            *p = tolower(*p);
+    }
+
+    Error emitByte(uint8_t val) {
+        return emitByte(val, _length);
+    }
+
+    Error emitByte(uint8_t val, host::uint_t pos) {
+        if (pos >= MAX_BYTES) return NO_MEMORY;
+        _bytes[pos++] = val;
+        if (_length < pos) _length = pos;
+        return OK;
+    }
+
+    static constexpr size_t MAX_BYTES = 10;
+    static constexpr size_t MAX_NAME = 7;
+
+private:
+    uint32_t     _address;
+    host::uint_t _length;
+    uint8_t      _bytes[MAX_BYTES];
+    char         _name[MAX_NAME + 1];
+};
+
+template<Endian endian>
+class InsnBase {
+public:
+    InsnBase(Insn& insn) : _insn(insn) {}
+
+    target::uintptr_t address() const { return _insn.address(); }
+    const uint8_t *bytes() const { return _insn.bytes(); }
+    host::uint_t length() const { return _insn.length(); }
+    const char *name() const { return _insn.name(); }
+
+    void resetAddress(target::uintptr_t addr) {
+        _insn.resetAddress(addr);
+    }
+    void setName(const char *name, const char *end = nullptr) {
+        _insn.setName(name, end ? end - name : strlen(name));
     }
 
     Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
-        emitByte(val);
-        return OK;
+        return _insn.emitByte(val);
     }
 
     Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
         uint8_t msb, lsb;
-        if (endian() == ENDIAN_BIG) {
+        if (endian == ENDIAN_BIG) {
             if (readByte(memory, msb)) return NO_MEMORY;
-            if (readByte(memory, lsb))  return NO_MEMORY;
+            if (readByte(memory, lsb)) return NO_MEMORY;
         } else {
-            if (readByte(memory, lsb))  return NO_MEMORY;
+            if (readByte(memory, lsb)) return NO_MEMORY;
             if (readByte(memory, msb)) return NO_MEMORY;
         }
         val = static_cast<uint16_t>(msb) << 8 | lsb;
@@ -74,55 +116,48 @@ public:
 
     Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
         uint16_t msw, lsw;
-        if (endian() == ENDIAN_BIG) {
+        if (endian == ENDIAN_BIG) {
             if (readUint16(memory, msw)) return NO_MEMORY;
-            if (readUint16(memory, lsw))  return NO_MEMORY;
+            if (readUint16(memory, lsw)) return NO_MEMORY;
         } else {
-            if (readUint16(memory, lsw))  return NO_MEMORY;
+            if (readUint16(memory, lsw)) return NO_MEMORY;
             if (readUint16(memory, msw)) return NO_MEMORY;
         }
         val = static_cast<uint32_t>(msw) << 16 | lsw;
         return OK;
     }
 
-    void emitByte(uint8_t val) {
-        _bytes[_length++] = val;
+    Error emitByte(uint8_t val) {
+        return _insn.emitByte(val);
     }
 
-    void emitUint16(uint16_t val) {
-        if (endian() == ENDIAN_BIG) {
-            emitByte(static_cast<uint8_t>(val >> 8));
-            emitByte(static_cast<uint8_t>(val));
+    Error emitUint16(uint16_t val) {
+        if (endian == ENDIAN_BIG) {
+            if (emitByte(static_cast<uint8_t>(val >> 8))) return NO_MEMORY;
+            if (emitByte(static_cast<uint8_t>(val >> 0))) return NO_MEMORY;
         } else {
-            emitByte(static_cast<uint8_t>(val));
-            emitByte(static_cast<uint8_t>(val >> 8));
+            if (emitByte(static_cast<uint8_t>(val >> 0))) return NO_MEMORY;
+            if (emitByte(static_cast<uint8_t>(val >> 8))) return NO_MEMORY;
         }
+        return OK;
     }
 
-    void emitUint32(uint32_t val) {
-        if (endian() == ENDIAN_BIG) {
-            emitUint16(static_cast<uint16_t>(val >> 16));
-            emitUint16(static_cast<uint16_t>(val));
+    Error emitUint32(uint32_t val) {
+        if (endian == ENDIAN_BIG) {
+            if (emitUint16(static_cast<uint16_t>(val >> 16))) return NO_MEMORY;
+            if (emitUint16(static_cast<uint16_t>(val >>  0))) return NO_MEMORY;
         } else {
-            emitUint16(static_cast<uint16_t>(val));
-            emitUint16(static_cast<uint16_t>(val >> 16));
+            if (emitUint16(static_cast<uint16_t>(val >>  0))) return NO_MEMORY;
+            if (emitUint16(static_cast<uint16_t>(val >> 16))) return NO_MEMORY;
         }
-    }
-
-    void toLower() {
-        for (char *p = _name; *p; p++)
-            *p = tolower(*p);
+        return OK;
     }
 
 protected:
-    target::uintptr_t _address;
-    host::uint_t _length;
-    uint8_t _bytes[16];
-    char    _name[15 + 1];
-    target::insn_t _insnCode;
-
-    virtual Endian endian() = 0;
+    Insn &_insn;
 };
+
+} // namespace libasm
 
 #endif // __INSN_BASE_H__
 

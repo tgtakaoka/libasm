@@ -20,10 +20,13 @@
 #include "insn_base.h"
 #include "entry_m6502.h"
 
-using libasm::m6502::Entry;
+namespace libasm {
+namespace m6502 {
 
-class Insn : public InsnBase {
+class InsnM6502 : public InsnBase<ENDIAN_LITTLE> {
 public:
+    InsnM6502(Insn &insn) : InsnBase(insn) {}
+
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {
         const CpuType insnType = Entry::_cpuType(_flags);
@@ -42,16 +45,21 @@ public:
         _flags = Entry::_flags(Entry::_cpuType(_flags), addrMode);
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     void emitInsn() {
         emitByte(_insnCode);
     }
 
-protected:
-    Endian endian() override { return ENDIAN_LITTLE; }
-
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags;
 };
+
+} // namespace m6502
+} // namespace libasm
 
 #endif // __INSN_M6502_H__
 

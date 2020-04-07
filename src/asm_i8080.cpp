@@ -20,7 +20,7 @@
 namespace libasm {
 namespace i8080 {
 
-Error AsmI8080::encodePointerReg(Insn &insn) {
+Error AsmI8080::encodePointerReg(InsnI8080 &insn) {
     const RegName regName = _regs.parsePointerReg(_scan);
     const host::int_t num = _regs.encodePointerReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
@@ -29,7 +29,7 @@ Error AsmI8080::encodePointerReg(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmI8080::encodeStackReg(Insn &insn) {
+Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
     const RegName regName = _regs.parseStackReg(_scan);
     const host::int_t num = _regs.encodeStackReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
@@ -38,7 +38,7 @@ Error AsmI8080::encodeStackReg(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmI8080::encodeIndexReg(Insn &insn) {
+Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
     const RegName regName = _regs.parseIndexReg(_scan);
     const host::int_t num = _regs.encodeIndexReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
@@ -47,7 +47,7 @@ Error AsmI8080::encodeIndexReg(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmI8080::encodeDataReg(Insn &insn) {
+Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
     const RegName regName = _regs.parseDataReg(_scan);
     const host::int_t num = _regs.encodeDataReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
@@ -59,7 +59,7 @@ Error AsmI8080::encodeDataReg(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmI8080::encodeDataDataReg(Insn &insn) {
+Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
     const RegName dstReg = _regs.parseDataReg(_scan);
     if (dstReg == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
@@ -75,7 +75,7 @@ Error AsmI8080::encodeDataDataReg(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmI8080::encodeVectorNo(Insn &insn) {
+Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
     uint8_t vecNo;
     if (getOperand8(vecNo)) return getError();
     if (vecNo >= 8) return setError(OVERFLOW_RANGE);
@@ -83,7 +83,7 @@ Error AsmI8080::encodeVectorNo(Insn &insn) {
     return setError(OK);
 }
 
-Error AsmI8080::encodeImmediate(Insn &insn) {
+Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
     if (insn.insnFormat() != NO_FORMAT && *_scan++ != ',')
         return setError(UNKNOWN_OPERAND);
     if (insn.addrMode() == IMM8) {
@@ -98,21 +98,22 @@ Error AsmI8080::encodeImmediate(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmI8080::encodeDirect(Insn &insn) {
+Error AsmI8080::encodeDirect(InsnI8080 &insn) {
     uint16_t addr;
     if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
 
-Error AsmI8080::encodeIoaddr(Insn &insn) {
+Error AsmI8080::encodeIoaddr(InsnI8080 &insn) {
     uint8_t addr;
     if (getOperand8(addr)) return getError();
     insn.emitByte(addr);
     return checkLineEnd();
 }
 
-Error AsmI8080::encode(Insn &insn) {
+Error AsmI8080::encode(Insn &_insn) {
+    InsnI8080 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableI8080.searchName(insn))

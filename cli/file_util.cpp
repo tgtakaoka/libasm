@@ -19,6 +19,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+namespace libasm {
+namespace cli {
+
 int getLine(char *&lineptr, size_t &n, FILE *input) {
     char *p = lineptr;
     int max = n - 1;
@@ -35,6 +38,9 @@ int getLine(char *&lineptr, size_t &n, FILE *input) {
     }
     return -1;
 }
+
+} // namespace cli
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

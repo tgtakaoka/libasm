@@ -20,7 +20,7 @@
 namespace libasm {
 namespace m6502 {
 
-Error AsmM6502::encodeLongRelative(Insn &insn) {
+Error AsmM6502::encodeLongRelative(InsnM6502 &insn) {
     uint32_t addr;
     if (getOperand32(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
@@ -32,7 +32,7 @@ Error AsmM6502::encodeLongRelative(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
+Error AsmM6502::encodeRelative(InsnM6502 &insn, bool emitInsn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
@@ -44,7 +44,7 @@ Error AsmM6502::encodeRelative(Insn &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
-Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
+Error AsmM6502::encodeZeroPageRelative(InsnM6502 &insn) {
     if (*_scan == '<') _scan++;
     uint8_t zp;
     if (getOperand8(zp)) return getError();
@@ -57,7 +57,7 @@ Error AsmM6502::encodeZeroPageRelative(Insn &insn) {
     return setError(error ? error : getError());
 }
 
-Error AsmM6502::encodeBlockMove(Insn &insn) {
+Error AsmM6502::encodeBlockMove(InsnM6502 &insn) {
     uint8_t srcpg, dstpg;
     if (getOperand8(srcpg)) return getError();
     Error error = getError();
@@ -177,7 +177,8 @@ Error AsmM6502::parseOperand(Operand &op) {
     return setError(OK);
 }
 
-Error AsmM6502::encode(Insn &insn) {
+Error AsmM6502::encode(Insn &_insn) {
+    InsnM6502 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableM6502.searchName(insn))

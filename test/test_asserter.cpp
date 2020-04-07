@@ -21,6 +21,9 @@
 
 #include "test_asserter.h"
 
+namespace libasm {
+namespace test {
+
 bool TestAsserter::check() const {
     if (_fail_count == 0) {
         printf("  PASS (%4d)     %s\n", _pass_count, _test_name);
@@ -72,14 +75,14 @@ void TestAsserter::equals(
         }
     }
     _fail_count++;
-    printf("%s: expected ", message);
+    printf("%s: expected [", message);
     for (size_t i = 0; i < expected_len; i++) {
-        printf(i == 0 ?  "[" : " ");
+        if (i) printf(" ");
         printf("%02" PRIX8, expected[i]);
     }
-    printf("]: actual ");
+    printf("]: actual [");
     for (size_t i = 0; i < actual_len; i++) {
-        printf(i == 0 ? "[" : " ");
+        if (i) printf(" ");
         printf("%02" PRIX8, actual[i]);
     }
     printf("]\n");
@@ -116,14 +119,14 @@ void TestAsserter::equals(
         }
     }
     _fail_count++;
-    printf("%s: expected ", message);
+    printf("%s: expected [", message);
     for (size_t i = 0; i < expected_len; i++) {
-        printf(i == 0 ?  "[" : " ");
+        if (i) printf(" ");
         printf("%04" PRIX16, expected[i]);
     }
-    printf("]: actual ");
+    printf("]: actual [");
     for (size_t i = 0; i < actual_len; i++) {
-        printf(i == 0 ? "[" : " ");
+        if (i) printf(" ");
         printf("%04" PRIX16, actual[i]);
     }
     printf("]\n");
@@ -138,6 +141,9 @@ void TestAsserter::not_equals(
     _fail_count++;
     printf("%s: not expected '%s': actual '%s'\n", message, expected, actual);
 }
+
+} // namespace test
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

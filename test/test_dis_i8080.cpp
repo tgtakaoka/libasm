@@ -17,7 +17,9 @@
 #include "dis_i8080.h"
 #include "test_dis_helper.h"
 
+using namespace libasm;
 using namespace libasm::i8080;
+using namespace libasm::test;
 
 TestAsserter asserter;
 TestMemory memory;

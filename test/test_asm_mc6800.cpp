@@ -17,7 +17,9 @@
 #include "asm_mc6800.h"
 #include "test_asm_helper.h"
 
+using namespace libasm;
 using namespace libasm::mc6800;
+using namespace libasm::test;
 
 TestAsserter asserter;
 TestSymtab symtab;

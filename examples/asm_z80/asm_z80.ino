@@ -17,6 +17,7 @@
 #include <asm_z80.h>
 #include <libcli.h>
 
+using namespace libasm;
 using namespace libasm::z80;
 
 AsmZ80 asz80;
@@ -32,7 +33,7 @@ void assemble(const char *line) {
   } else {
     Cli.printUint16(insn.address());
     Cli.print(':');
-    for (int i = 0; i < insn.insnLen(); i++) {
+    for (int i = 0; i < insn.length(); i++) {
       Cli.print(' ');
       const uint8_t val = insn.bytes()[i];
       Cli.printUint8(val);

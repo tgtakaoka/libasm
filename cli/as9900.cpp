@@ -20,6 +20,7 @@
 #include "bin_formatter.h"
 
 using namespace libasm::tms9900;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmTms9900 assembler;

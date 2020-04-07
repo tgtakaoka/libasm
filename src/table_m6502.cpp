@@ -350,8 +350,7 @@ const Entry *TableM6502::searchEntry(
 }
 
 const Entry *TableM6502::searchEntry(
-    const target::insn_t insnCode,
-    const Entry *table, const Entry *end) {
+    const target::insn_t insnCode, const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         if (insnCode == pgm_read_byte(&entry->insnCode))
             return entry;
@@ -360,7 +359,7 @@ const Entry *TableM6502::searchEntry(
 }
 
 Error TableM6502::searchName(
-    Insn &insn, const Entry *table, const Entry *end) const {
+    InsnM6502 &insn, const Entry *table, const Entry *end) const {
     const char *name = insn.name();
     for (const Entry *entry = table;
          entry < end && (entry = searchEntry(name, table, end)) != nullptr;
@@ -387,7 +386,7 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
 }
 
 Error TableM6502::searchNameAndAddrMode(
-    Insn &insn, const Entry *table, const Entry *end) const {
+    InsnM6502 &insn, const Entry *table, const Entry *end) const {
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
     for (const Entry *entry = table;
@@ -412,7 +411,7 @@ static bool acceptAddrMode(AddrMode addrMode, bool acceptIndirectLong) {
 }
 
 Error TableM6502::searchInsnCode(
-    Insn &insn, bool acceptIndirectLong,
+    InsnM6502 &insn, bool acceptIndirectLong,
     const Entry *table, const Entry *end) const {
     const target::insn_t insnCode = insn.insnCode();
     for (const Entry *entry = table;
@@ -430,16 +429,16 @@ Error TableM6502::searchInsnCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableM6502::searchName(Insn &insn) const {
+Error TableM6502::searchName(InsnM6502 &insn) const {
     return searchName(insn, ARRAY_RANGE(M6502_TABLE));
 }
 
-Error TableM6502::searchNameAndAddrMode(Insn &insn) const {
+Error TableM6502::searchNameAndAddrMode(InsnM6502 &insn) const {
     return searchNameAndAddrMode(insn, ARRAY_RANGE(M6502_TABLE));
 }
 
 Error TableM6502::searchInsnCode(
-    Insn &insn, bool acceptIndirectLong) const {
+    InsnM6502 &insn, bool acceptIndirectLong) const {
     return searchInsnCode(
         insn, acceptIndirectLong, ARRAY_RANGE(M6502_TABLE));
 }

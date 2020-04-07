@@ -16,6 +16,9 @@
 
 #include "test_expr_helper.h"
 
+using namespace libasm;
+using namespace libasm::test;
+
 AsmIntelOperand parser;
 TestSymtab symtab;
 TestAsserter asserter;

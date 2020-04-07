@@ -42,15 +42,15 @@ private:
 
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
-    bool outAccumulator(const Insn &insn);
+    bool outAccumulator(const InsnMc6800 &insn);
 
     // MC6800
-    Error decodeInherent(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeDirectPage(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeExtended(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeIndexed(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeRelative(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
+    Error decodeInherent(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeDirectPage(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeExtended(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeIndexed(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeRelative(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
 
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;

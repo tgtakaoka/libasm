@@ -18,6 +18,8 @@
 
 #include <ctype.h>
 
+namespace libasm {
+
 const char *AsmOperand::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
@@ -439,6 +441,8 @@ Error AsmIntelOperand::readNumber(Value &val) {
         return parseNumber(_next, val, 10);
     return AsmOperand::readNumber(val);
 }
+
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

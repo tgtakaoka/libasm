@@ -16,6 +16,8 @@
 
 #include "dis_operand.h"
 
+namespace libasm {
+
 static uint8_t constantWidth(uint8_t size, int8_t base) {
     if (size < 0) return 0;     // zero suppress
     if (base == 16) return size * 2;
@@ -103,6 +105,8 @@ char *DisIntelOperand::output(
     *t = 0;
     return t;
 }
+
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

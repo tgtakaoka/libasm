@@ -20,45 +20,48 @@
 #include "insn_base.h"
 #include "entry_tms9900.h"
 
-using libasm::tms9900::Entry;
+namespace libasm {
+namespace tms9900 {
 
-class Insn : public InsnBase {
+class InsnTms9900 : public InsnBase<ENDIAN_BIG> {
 public:
+    InsnTms9900(Insn &insn) : InsnBase(insn) {}
+
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     void embed(target::opcode_t data) {
         _insnCode |= data;
     }
 
     void emitInsn() {
         emitUint16(_insnCode, 0);
-        if (_length == 0) _length = 2;
     }
 
     void emitOperand(uint16_t val) {
-        if (_length == 0) _length = 2;
-        appendUint16(val);
+        host::uint_t pos = _insn.length();
+        if (pos == 0) pos = 2;
+        emitUint16(val, pos);
     }
-
-    void appendUint16(uint16_t val) {
-        emitUint16(val, _length);
-        _length += 2;
-    }
-
-protected:
-    Endian endian() override { return ENDIAN_BIG; }
 
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags;
 
     void emitUint16(uint16_t val, host::uint_t pos) {
-        _bytes[pos++] = static_cast<uint8_t>(val >> 8);
-        _bytes[pos] = static_cast<uint8_t>(val);
+        _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
+        _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
     }
 };
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __INSN_TMS9900_H__
 

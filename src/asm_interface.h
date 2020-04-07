@@ -23,6 +23,8 @@
 
 #include <ctype.h>
 
+namespace libasm {
+
 template<typename Addr>
 class Assembler : public ErrorReporter {
 public:
@@ -104,6 +106,8 @@ protected:
 private:
     virtual Error encode(Insn &insn) = 0;
 };
+
+} // namespace libasm
 
 #endif // __ASM_INTERFACE_H__
 

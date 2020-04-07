@@ -40,16 +40,16 @@ private:
     AsmIntelOperand _parser;
     RegI8080 _regs;
 
-    Error encodePointerReg(Insn &insn);
-    Error encodeStackReg(Insn &insn);
-    Error encodeIndexReg(Insn &insn);
-    Error encodeDataReg(Insn &insn);
-    Error encodeDataDataReg(Insn &insn);
-    Error encodeVectorNo(Insn &insn);
+    Error encodePointerReg(InsnI8080 &insn);
+    Error encodeStackReg(InsnI8080 &insn);
+    Error encodeIndexReg(InsnI8080 &insn);
+    Error encodeDataReg(InsnI8080 &insn);
+    Error encodeDataDataReg(InsnI8080 &insn);
+    Error encodeVectorNo(InsnI8080 &insn);
 
-    Error encodeImmediate(Insn &insn);
-    Error encodeDirect(Insn &insn);
-    Error encodeIoaddr(Insn &insn);
+    Error encodeImmediate(InsnI8080 &insn);
+    Error encodeDirect(InsnI8080 &insn);
+    Error encodeIoaddr(InsnI8080 &insn);
 
     Error encode(Insn &insn) override;
 };

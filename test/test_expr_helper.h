@@ -21,8 +21,8 @@
 #include "test_symtab.h"
 #include "test_asserter.h"
 
-extern TestSymtab symtab;
-extern TestAsserter asserter;
+extern libasm::test::TestSymtab symtab;
+extern libasm::test::TestAsserter asserter;
 
 #define E8(expr, expected, expected_error) do {                     \
         uint8_t val;                                                \

@@ -23,6 +23,9 @@
 #include <stdio.h>
 #include <string.h>
 
+namespace libasm {
+namespace cli {
+
 template<typename Addr, typename Formatter>
 class AsmDriver {
 public:
@@ -252,6 +255,9 @@ private:
         return sep ? sep + 1 : str;
     }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

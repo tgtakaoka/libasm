@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 
+namespace libasm {
+
 class SymbolTable {
 public:
     virtual const char *lookup(uint32_t value) = 0;
@@ -30,6 +32,8 @@ public:
         uint32_t value, const char *symbol, const char *end = nullptr) = 0;
     virtual uint32_t currentOrigin() = 0;
 };
+
+} // namespace libasm
 
 #endif  // __SYMBOL_TABLE_H__
 

@@ -20,7 +20,7 @@
 namespace libasm {
 namespace mc6800 {
 
-bool AsmMc6800::adjustAccumulator(Insn &insn) {
+bool AsmMc6800::adjustAccumulator(InsnMc6800 &insn) {
     const InsnAdjust iAdjust = insn.insnAdjust();
     if (iAdjust == ADJ_ZERO) return false;
     const char *line = _scan;
@@ -42,13 +42,13 @@ bool AsmMc6800::adjustAccumulator(Insn &insn) {
     return false;
 }
 
-Error AsmMc6800::encodeInherent(Insn &insn) {
+Error AsmMc6800::encodeInherent(InsnMc6800 &insn) {
     adjustAccumulator(insn);
     insn.emitInsn();
     return checkLineEnd();
  }
 
-Error AsmMc6800::encodeDirect(Insn &insn) {
+Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
     if (adjustAccumulator(insn)) {
         if (*_scan != ',') return setError(UNKNOWN_OPERAND);
         _scan = skipSpaces(_scan + 1);
@@ -62,7 +62,7 @@ Error AsmMc6800::encodeDirect(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmMc6800::encodeExtended(Insn &insn) {
+Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
     if (adjustAccumulator(insn)) {
         if (*_scan != ',') return setError(UNKNOWN_OPERAND);
         _scan = skipSpaces(_scan + 1);
@@ -75,7 +75,7 @@ Error AsmMc6800::encodeExtended(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmMc6800::encodeIndexed(Insn &insn) {
+Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
     if (adjustAccumulator(insn)) {
         if (*_scan != ',') return setError(UNKNOWN_OPERAND);
         _scan = skipSpaces(_scan + 1);
@@ -95,7 +95,7 @@ Error AsmMc6800::encodeIndexed(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmMc6800::encodeRelative(Insn &insn) {
+Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
     target::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
@@ -107,7 +107,7 @@ Error AsmMc6800::encodeRelative(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmMc6800::encodeImmediate(Insn &insn) {
+Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
     if (adjustAccumulator(insn)) {
         if (*_scan != ',') return setError(UNKNOWN_OPERAND);
         _scan = skipSpaces(_scan + 1);
@@ -129,7 +129,7 @@ Error AsmMc6800::encodeImmediate(Insn &insn) {
     return checkLineEnd();
 }
 
-Error AsmMc6800::determineAddrMode(const char *line, Insn &insn) {
+Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     RegName reg = _regs.parseRegName(line);
     if (reg == REG_A || reg == REG_B) {
         line = skipSpaces(line + _regs.regNameLen(reg));
@@ -176,7 +176,8 @@ Error AsmMc6800::determineAddrMode(const char *line, Insn &insn) {
     return OK;
 }
 
-Error AsmMc6800::encode(Insn &insn) {
+Error AsmMc6800::encode(Insn &_insn) {
+    InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableMc6800.searchName(insn))

@@ -45,9 +45,11 @@ private:
     void outAddress(target::uintptr_t addr, bool relax = true);
 
     Error decodeOperand(
-        DisMemory<target::uintptr_t> &memory, Insn& insn, host::uint_t opr);
-    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, Insn &insn);
-    Error decodeRelative(Insn &insn);
+        DisMemory<target::uintptr_t> &memory, InsnTms9900 &insn,
+        host::uint_t opr);
+    Error decodeImmediate(
+        DisMemory<target::uintptr_t> &memory, InsnTms9900 &insn);
+    Error decodeRelative(InsnTms9900 &insn);
     Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) override;
 };

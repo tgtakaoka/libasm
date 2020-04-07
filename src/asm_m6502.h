@@ -49,10 +49,10 @@ private:
         char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
     Error parseOperand(Operand &op);
 
-    Error encodeLongRelative(Insn &insn);
-    Error encodeRelative(Insn &insn, bool emitInsn);
-    Error encodeZeroPageRelative(Insn &insn);
-    Error encodeBlockMove(Insn &insn);
+    Error encodeLongRelative(InsnM6502 &insn);
+    Error encodeRelative(InsnM6502 &insn, bool emitInsn);
+    Error encodeZeroPageRelative(InsnM6502 &insn);
+    Error encodeBlockMove(InsnM6502 &insn);
 
     Error encode(Insn &insn) override;
 };

@@ -18,6 +18,7 @@
 #include "dis_driver.h"
 
 using namespace libasm::z80;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisZ80 disassembler;

@@ -17,7 +17,9 @@
 #include "asm_z80.h"
 #include "test_asm_helper.h"
 
+using namespace libasm;
 using namespace libasm::z80;
+using namespace libasm::test;
 
 TestAsserter asserter;
 TestSymtab symtab;

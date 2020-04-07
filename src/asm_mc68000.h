@@ -58,39 +58,58 @@ public:
     };
 private:
 
-    Error checkSize(Insn& insn, const EaSize size);
+    Error checkSize(InsnMc68000 &insn, const EaSize size);
     Error checkSize(const uint32_t val32, const EaSize size, bool uint);
     Error parseOperand(Operand &opr);
     Error parseMoveMultiRegList(Operand &opr);
 
     Error emitImmediateData(
-        Insn &insn, EaSize size, uint32_t val, Error error);
+        InsnMc68000 &insn, EaSize size, uint32_t val, Error error);
     Error emitEffectiveAddr(
-        Insn &insn,
+        InsnMc68000 &insn,
         const Operand &ea,
         host::int_t size_gp = 6,
         host::int_t mode_gp = 3,
         host::uint_t reg_gp = 0);
 
-    Error encodeImplied(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDestSiz(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeAddrReg(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDataReg(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeTrapVec(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDataDst(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDestOpr(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeSignExt(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeRelative(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeMoveMlt(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeMoveQic(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeMovePer(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeAregSiz(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDregDst(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDataQic(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDmemOpr(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeDmemSiz(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeRegsExg(Insn &insn, const Operand &op1, const Operand &op2);
-    Error encodeMoveOpr(Insn &insn, const Operand &op1, const Operand &op2);
+    Error encodeImplied(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDestSiz(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeAddrReg(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDataReg(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeTrapVec(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDataDst(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDestOpr(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeSignExt(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeRelative(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeMoveMlt(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeMoveQic(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeMovePer(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeAregSiz(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDregDst(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDataQic(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDmemOpr(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeDmemSiz(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeRegsExg(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
+    Error encodeMoveOpr(
+        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
 
     Error encode(Insn &insn) override;
 };

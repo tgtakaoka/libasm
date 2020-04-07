@@ -27,6 +27,9 @@
 #include "asm_listing.h"
 #include "file_util.h"
 
+namespace libasm {
+namespace cli {
+
 template <typename Addr>
 class AsmDirective : public ErrorReporter,
                      public AsmLine<Addr>,
@@ -571,6 +574,9 @@ protected:
         return UNKNOWN_DIRECTIVE;
     }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

@@ -20,6 +20,8 @@
 #include "symbol_table.h"
 #include "error_reporter.h"
 
+namespace libasm {
+
 class AsmOperand : public ErrorReporter {
 public:
     const char *eval(const char *expr, uint32_t &val32, SymbolTable *symtab);
@@ -145,6 +147,8 @@ private:
     Error scanNumberEnd(
         const char *scan, const uint8_t base, char suffix = 0);
 };
+
+} // namespace libasm
 
 #endif
 

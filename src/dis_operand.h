@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 
+namespace libasm {
+
 class DisOperand {
 public:
     virtual char *output(
@@ -48,6 +50,8 @@ public:
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t size) const override;
 };
+
+} // namespace libasm
 
 #endif
 

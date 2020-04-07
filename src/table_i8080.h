@@ -25,8 +25,8 @@ namespace i8080 {
 
 class TableI8080 {
 public:
-    Error searchName(Insn &insn) const;
-    Error searchInsnCode(Insn &insn) const;
+    Error searchName(InsnI8080 &insn) const;
+    Error searchInsnCode(InsnI8080 &insn) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();

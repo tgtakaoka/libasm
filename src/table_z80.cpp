@@ -298,7 +298,7 @@ struct EntryPage {
 };
 
 static Error searchName(
-    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
@@ -312,7 +312,7 @@ static Error searchName(
 }
 
 static Error searchNameAndOprFormats(
-    Insn &insn, OprFormat lop, OprFormat rop,
+    InsnZ80 &insn, OprFormat lop, OprFormat rop,
     const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
@@ -327,7 +327,7 @@ static Error searchNameAndOprFormats(
 }
 
 static Error searchInsnCode(
-    Insn &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         if (insn.prefixCode() != page->prefix) continue;
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
@@ -358,14 +358,14 @@ bool TableZ80::isPrefixCode(target::opcode_t opCode) {
         || opCode == TableZ80::PREFIX_IX || opCode == TableZ80::PREFIX_IY;
 }
 
-Error TableZ80::searchName(Insn &insn) const {
+Error TableZ80::searchName(InsnZ80 &insn) const {
     if (isZ80())
         return libasm::z80::searchName(insn, ARRAY_RANGE(PAGES_Z80));
     return libasm::z80::searchName(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 Error TableZ80::searchNameAndOprFormats(
-    Insn &insn, OprFormat leftOpr, OprFormat rightOpr) const {
+    InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const {
     if (isZ80())
         return libasm::z80::searchNameAndOprFormats(
             insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_Z80));
@@ -377,7 +377,7 @@ Error TableZ80::searchNameAndOprFormats(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableZ80::searchInsnCode(Insn &insn) const {
+Error TableZ80::searchInsnCode(InsnZ80 &insn) const {
     if (isZ80())
         return libasm::z80::searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80));
 

@@ -47,22 +47,22 @@ private:
         OprSize size;
     };
 
-    Error parseOperand(const Insn &insn, Operand &opr);
+    Error parseOperand(const InsnZ80 &insn, Operand &opr);
 
     Error encodeImmediate(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
     Error encodeInherent(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
     Error encodeDirect(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
     Error encodeIoaddr(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
     Error encodeRelative(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
     Error encodeIndexed(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
     Error encodeIndexedImmediate8(
-        Insn &insn, const Operand &left, const Operand &right);
+        InsnZ80 &insn, const Operand &left, const Operand &right);
 
     Error encode(Insn &insn) override;
 };

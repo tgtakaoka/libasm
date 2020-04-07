@@ -18,6 +18,7 @@
 #include "dis_driver.h"
 
 using namespace libasm::i8080;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisI8080 disassembler;

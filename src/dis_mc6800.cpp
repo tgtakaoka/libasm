@@ -24,7 +24,7 @@ void DisMc6800::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
 
-bool DisMc6800::outAccumulator(const Insn &insn) {
+bool DisMc6800::outAccumulator(const InsnMc6800 &insn) {
     const target::opcode_t opc = insn.insnCode();
     switch (insn.insnAdjust()) {
     case ADJ_AB01: outRegister((opc & 1) == 0 ? REG_A : REG_B); break;
@@ -36,13 +36,13 @@ bool DisMc6800::outAccumulator(const Insn &insn) {
 }
 
 Error DisMc6800::decodeInherent(
-    DisMemory<target::uintptr_t> &memory, Insn& insn) {
+    DisMemory<target::uintptr_t> &memory, InsnMc6800& insn) {
     outAccumulator(insn);
     return setError(OK);
 }
 
 Error DisMc6800::decodeDirectPage(
-    DisMemory<target::uintptr_t> &memory, Insn& insn) {
+    DisMemory<target::uintptr_t> &memory, InsnMc6800& insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = ',';
@@ -57,7 +57,7 @@ Error DisMc6800::decodeDirectPage(
 }
 
 Error DisMc6800::decodeExtended(
-    DisMemory<target::uintptr_t>& memory, Insn &insn) {
+    DisMemory<target::uintptr_t>& memory, InsnMc6800 &insn) {
     target::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = ',';
@@ -72,7 +72,7 @@ Error DisMc6800::decodeExtended(
 }
 
 Error DisMc6800::decodeIndexed(
-    DisMemory<target::uintptr_t> &memory, Insn &insn) {
+    DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn) {
     uint8_t disp8;
     if (insn.readByte(memory, disp8)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = ',';
@@ -88,7 +88,7 @@ Error DisMc6800::decodeIndexed(
 }
 
 Error DisMc6800::decodeRelative(
-    DisMemory<target::uintptr_t> &memory, Insn &insn) {
+    DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn) {
     uint8_t delta8;
     if (insn.readByte(memory, delta8)) return setError(NO_MEMORY);
     const target::uintptr_t addr =
@@ -103,7 +103,7 @@ Error DisMc6800::decodeRelative(
 }
 
 Error DisMc6800::decodeImmediate(
-    DisMemory<target::uintptr_t>& memory, Insn &insn) {
+    DisMemory<target::uintptr_t>& memory, InsnMc6800 &insn) {
     if (outAccumulator(insn)) *_operands++ = ',';
     *_operands++ = '#';
     if (insn.oprSize() == SZ_BYTE) {
@@ -131,7 +131,8 @@ Error DisMc6800::decodeImmediate(
 }
 
 Error DisMc6800::decode(
-    DisMemory<target::uintptr_t> &memory, Insn &insn) {
+    DisMemory<target::uintptr_t> &memory, Insn &_insn) {
+    InsnMc6800 insn(_insn);
     target::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);

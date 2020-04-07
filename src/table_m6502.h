@@ -25,9 +25,9 @@ namespace m6502 {
 
 class TableM6502 {
 public:
-    Error searchName(Insn &insn) const;
-    Error searchNameAndAddrMode(Insn &insn) const;
-    Error searchInsnCode(Insn &insn, bool acceptIndirectLong) const;
+    Error searchName(InsnM6502 &insn) const;
+    Error searchNameAndAddrMode(InsnM6502 &insn) const;
+    Error searchInsnCode(InsnM6502 &insn, bool acceptIndirectLong) const;
 
     bool setCpu(const char *cpu);
     static const char *listCpu();
@@ -42,11 +42,11 @@ private:
         const target::insn_t insnCode, const Entry *table, const Entry *end);
 
     Error searchName(
-        Insn &insn,  const Entry *table, const Entry *end) const;
+        InsnM6502 &insn,  const Entry *table, const Entry *end) const;
     Error searchNameAndAddrMode(
-        Insn &insn, const Entry *table, const Entry *end) const;
+        InsnM6502 &insn, const Entry *table, const Entry *end) const;
     Error searchInsnCode(
-        Insn &insn, bool acceptIndirectLong,
+        InsnM6502 &insn, bool acceptIndirectLong,
         const Entry *table, const Entry *end) const;
 };
 

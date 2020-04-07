@@ -24,6 +24,8 @@
 
 #include <ctype.h>
 
+namespace libasm {
+
 template<typename Addr>
 class Disassembler : public ErrorReporter {
 public:
@@ -39,7 +41,7 @@ public:
         getFormatter().setUppercase(uppercase);
         getRegister().setUppercase(uppercase);
         decode(memory, insn);
-        if (!uppercase) insn.toLower();
+        if (!uppercase) insn.toLowerName();
         return getError();
     }
     virtual DisOperand &getFormatter() = 0;
@@ -84,6 +86,8 @@ private:
     virtual Error decode(
         DisMemory<target::uintptr_t> &memory, Insn& insn) = 0;
 };
+
+} // namespace libasm
 
 #endif // __DIS_INTERFACE_H__
 

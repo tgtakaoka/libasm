@@ -24,9 +24,9 @@
 
 #include <stdio.h>
 
-extern TestAsserter asserter;
-extern TestMemory memory;
-extern TestSymtab symtab;
+extern libasm::test::TestAsserter asserter;
+extern libasm::test::TestMemory memory;
+extern libasm::test::TestSymtab symtab;
 
 #define EASSERT(error, addr, mnemonic, expected_operands)           \
     do {                                                            \

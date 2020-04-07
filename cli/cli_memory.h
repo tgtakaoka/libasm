@@ -26,6 +26,9 @@
 #include "bin_formatter.h"
 #include "dis_memory.h"
 
+namespace libasm {
+namespace cli {
+
 template<typename Addr>
 class CliMemory : public DisMemory<Addr> {
 public:
@@ -228,6 +231,9 @@ private:
         }
     }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

@@ -19,6 +19,8 @@
 
 #include "config_host.h"
 
+namespace libasm {
+
 enum Error : host::uint_t {
     OK = 0,
 
@@ -83,6 +85,8 @@ public:
 private:
     Error _error;
 };
+
+} // namespace libasm
 
 #endif // __ERROR_HD6309_H__
 

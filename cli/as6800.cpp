@@ -20,6 +20,7 @@
 #include "bin_formatter.h"
 
 using namespace libasm::mc6800;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmMc6800 assembler;

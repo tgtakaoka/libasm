@@ -205,7 +205,7 @@ const Entry *TableMc6800::searchEntry(
     return nullptr;
 }
 
-Error TableMc6800::searchName(Insn &insn) const {
+Error TableMc6800::searchName(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.name(), ARRAY_RANGE(MC6800_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_byte(&entry->opc));
@@ -219,7 +219,7 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-Error TableMc6800::searchNameAndAddrMode(Insn &insn) const {
+Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
     const AddrMode addrMode = insn.addrMode();
     const Entry *end = ARRAY_END(MC6800_TABLE);
     for (const Entry *entry = ARRAY_BEGIN(MC6800_TABLE);
@@ -235,7 +235,7 @@ Error TableMc6800::searchNameAndAddrMode(Insn &insn) const {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6800::searchInsnCode(Insn &insn) const {
+Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6800_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));

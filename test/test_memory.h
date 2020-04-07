@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+namespace libasm {
+namespace test {
+
 class TestMemory : public DisMemory<target::uintptr_t> {
 public:
     TestMemory()
@@ -82,6 +85,9 @@ void TestMemory::setMemory<uint16_t>(const uint16_t *data, host::uint_t size) {
     _size = size;
     _index = 0;
 }
+
+} // namespace test
+} // namespace libasm
 
 #endif
 

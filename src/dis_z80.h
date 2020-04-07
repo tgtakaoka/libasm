@@ -43,7 +43,7 @@ private:
     RegBase &getRegister() override { return _regs; }
     template<typename U>
     void outAddress(U addr, bool indir = true);
-    void outIndexOffset(const Insn &insn, int8_t offset);
+    void outIndexOffset(const InsnZ80 &insn, int8_t offset);
     void outRegister(RegName regName);
     void outPointer(RegName regName);
     void outDataRegister(RegName regName);
@@ -52,20 +52,20 @@ private:
     Error decodeOperand(
         DisMemory<target::uintptr_t> &memory, Insn& insn);
 
-    Error decodeInherent(Insn &insn);
-    Error decodeImmediate8(Insn &insn, uint8_t val);
-    Error decodeImmediate16(Insn &insn, uint16_t val);
-    Error decodeDirect(Insn &insn, target::uintptr_t addr);
-    Error decodeIoaddr(Insn &insn, uint8_t ioaddr);
-    Error decodeRelative(Insn &insn, int8_t delta);
-    Error decodeIndexed(Insn &insn, int8_t offset);
+    Error decodeInherent(InsnZ80 &insn);
+    Error decodeImmediate8(InsnZ80 &insn, uint8_t val);
+    Error decodeImmediate16(InsnZ80 &insn, uint16_t val);
+    Error decodeDirect(InsnZ80 &insn, target::uintptr_t addr);
+    Error decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr);
+    Error decodeRelative(InsnZ80 &insn, int8_t delta);
+    Error decodeIndexed(InsnZ80 &insn, int8_t offset);
     Error decodeIndexedImmediate8(
-        Insn &insn, int8_t offset, uint8_t val);
+        InsnZ80 &insn, int8_t offset, uint8_t val);
     Error decodeIndexedBitOp(
-        Insn &insn, int8_t offset, target::opcode_t opCode);
+        InsnZ80 &insn, int8_t offset, target::opcode_t opCode);
 
     Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+        DisMemory<target::uintptr_t> &memory, Insn &insn) override;
 };
 
 } // namespace z80

@@ -20,10 +20,13 @@
 #include "insn_base.h"
 #include "entry_mc6800.h"
 
-using libasm::mc6800::Entry;
+namespace libasm {
+namespace mc6800 {
 
-class Insn : public InsnBase {
+class InsnMc6800 : public InsnBase<ENDIAN_BIG> {
 public:
+    InsnMc6800(Insn &insn) : InsnBase(insn) {}
+
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnAdjust insnAdjust() const { return Entry::_insnAdjust(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
@@ -37,6 +40,10 @@ public:
             addrMode, Entry::_insnAdjust(_flags), Entry::_oprSize(_flags));
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     void embed(target::opcode_t data) {
         _insnCode |= data;
     }
@@ -44,12 +51,13 @@ public:
         emitByte(_insnCode);
     }
 
-protected:
-    Endian endian() override { return ENDIAN_BIG; }
-
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags;
 };
+
+} // namespace mc6800
+} // namespace libasm
 
 #endif // __INSN_MC6800_H__
 

@@ -17,6 +17,8 @@
 #ifndef __DIS_MEMORY_H__
 #define __DIS_MEMORY_H__
 
+namespace libasm {
+
 template<typename Addr>
 class DisMemory {
 public:
@@ -34,6 +36,8 @@ protected:
     DisMemory(Addr address) : _address(address) {}
     virtual uint8_t nextByte() = 0;
 };
+
+} // namespace libasm
 
 #endif
 

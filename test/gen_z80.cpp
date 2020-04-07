@@ -18,6 +18,7 @@
 #include "gen_driver.h"
 
 using namespace libasm::z80;
+using namespace libasm::test;
 
 static bool filterZ80Prefix(uint8_t opc) {
     if (opc == 0xCB) return true;
