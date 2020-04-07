@@ -17,7 +17,7 @@
 #ifndef __CONFIG_I8080_H__
 #define __CONFIG_I8080_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace i8080 {
@@ -27,6 +27,10 @@ struct Config {
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint8_t  insn_t;
+
+    static constexpr Endian endian = ENDIAN_LITTLE;
+    static constexpr host::uint_t code_max = 3;
+    static constexpr host::uint_t name_max = 4;
 };
 
 } // namespace i8080

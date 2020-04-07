@@ -157,7 +157,7 @@ Error TableI8080::searchInsnCode(InsnI8080 &insn) const {
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Entry::name_max + 1];
+    char name[Config::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

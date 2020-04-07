@@ -22,11 +22,6 @@
 namespace libasm {
 namespace tms9900 {
 
-enum CpuType : host::uint_t {
-    TMS9900,
-    TMS9995,
-};
-
 enum AddrMode : host::uint_t {
     INH,                        // ---- ---- ---- ----
     IMM,                        // ---- ---- ---- ---- + nnnn
@@ -45,8 +40,6 @@ enum AddrMode : host::uint_t {
 struct Entry {
     const Config::insn_t insnCode;
     const host::uint_t flags;
-    static constexpr host::uint_t code_max = 6;
-    static constexpr host::uint_t name_max = 4;
     const char *name;
 
     static inline CpuType _cpuType(host::uint_t flags) {

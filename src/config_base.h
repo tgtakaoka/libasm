@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-#ifndef __CONFIG_MC68000_H__
-#define __CONFIG_MC68000_H__
+#ifndef __CONFIG_BASE_H__
+#define __CONFIG_BASE_H__
 
-#include "config_base.h"
+#include "config_host.h"
 
 namespace libasm {
-namespace mc68000 {
 
-struct Config {
-    typedef uint32_t uintptr_t;
-    typedef int32_t  ptrdiff_t;
-    typedef uint16_t opcode_t;
-    typedef uint16_t insn_t;
-
-    static constexpr Endian endian = ENDIAN_BIG;
-    static constexpr host::uint_t code_max = 10;
-    static constexpr host::uint_t name_max = 7;
+enum Endian : host::uint_t {
+    ENDIAN_BIG,
+    ENDIAN_LITTLE,
 };
 
-} // namespace mc68000
 } // namespace libasm
 
-#endif // __CONFIG_MC68000_H__
+#endif // __CONFIG_BASE_H__
 
 // Local Variables:
 // mode: c++

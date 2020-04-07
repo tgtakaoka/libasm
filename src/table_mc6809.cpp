@@ -567,7 +567,7 @@ Error TableMc6809::searchInsnCode(
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags));
-            char name[Entry::name_max + 1];
+            char name[Config::name_max + 1];
             pgm_strncpy(name, entry->name, sizeof(name));
             insn.setName(name);
             return OK;

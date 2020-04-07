@@ -421,7 +421,7 @@ Error TableM6502::searchInsnCode(
         if (!insn.supported(_cpuType)) continue;
         if (!acceptAddrMode(insn.addrMode(), acceptIndirectLong))
             continue;
-        char name[Entry::name_max + 1];
+        char name[Config::name_max + 1];
         pgm_strncpy(name, entry->name, sizeof(name));
         insn.setName(name);
         return OK;

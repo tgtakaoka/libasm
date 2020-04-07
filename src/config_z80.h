@@ -17,7 +17,7 @@
 #ifndef __CONFIG_Z80_H__
 #define __CONFIG_Z80_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace z80 {
@@ -27,6 +27,15 @@ struct Config {
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint16_t insn_t;
+
+    static constexpr Endian endian = ENDIAN_LITTLE;
+    static constexpr host::uint_t code_max = 4;
+    static constexpr host::uint_t name_max = 4;
+};
+
+enum CpuType : host::uint_t {
+    Z80,
+    I8080,
 };
 
 } // namespace z80

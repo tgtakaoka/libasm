@@ -17,7 +17,7 @@
 #ifndef __CONFIG_TMS9900_H__
 #define __CONFIG_TMS9900_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace tms9900 {
@@ -27,6 +27,15 @@ struct Config {
     typedef int16_t  ptrdiff_t;
     typedef uint16_t opcode_t;
     typedef uint16_t insn_t;
+
+    static constexpr Endian endian = ENDIAN_BIG;
+    static constexpr host::uint_t code_max = 6;
+    static constexpr host::uint_t name_max = 4;
+};
+
+enum CpuType : host::uint_t {
+    TMS9900,
+    TMS9995,
 };
 
 } // namespace tms9900

@@ -23,7 +23,7 @@
 namespace libasm {
 namespace m6502 {
 
-class InsnM6502 : public InsnBase<ENDIAN_LITTLE, Config::uintptr_t> {
+class InsnM6502 : public InsnBase<Config::endian, Config::uintptr_t> {
 public:
     InsnM6502(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 

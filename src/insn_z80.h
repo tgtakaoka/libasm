@@ -23,7 +23,7 @@
 namespace libasm {
 namespace z80 {
 
-class InsnZ80 : public InsnBase<ENDIAN_LITTLE, Config::uintptr_t> {
+class InsnZ80 : public InsnBase<Config::endian, Config::uintptr_t> {
 public:
     InsnZ80(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
     InsnZ80(InsnZ80 &other) : InsnBase(other._insn) {}

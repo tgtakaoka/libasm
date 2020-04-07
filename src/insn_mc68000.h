@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class InsnMc68000 : public InsnBase<ENDIAN_BIG, Config::uintptr_t> {
+class InsnMc68000 : public InsnBase<Config::endian, Config::uintptr_t> {
 public:
     InsnMc68000(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 

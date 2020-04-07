@@ -32,8 +32,8 @@ public:
     bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
     const char *listCpu() const override { return TableMc68000::listCpu(); }
     Endian endian() const override { return ENDIAN_BIG; }
-    host::uint_t maxBytes() const override { return Entry::code_max; }
-    host::uint_t maxName() const override { return Entry::name_max; }
+    host::uint_t maxBytes() const override { return Config::code_max; }
+    host::uint_t maxName() const override { return Config::name_max; }
 
 private:
     AsmMotoOperand _parser;

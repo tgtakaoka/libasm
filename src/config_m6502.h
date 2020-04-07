@@ -17,7 +17,7 @@
 #ifndef __CONFIG_M6502_H__
 #define __CONFIG_M6502_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace m6502 {
@@ -27,6 +27,19 @@ struct Config {
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint8_t  insn_t;
+
+    static constexpr Endian endian = ENDIAN_LITTLE;
+    static constexpr host::uint_t code_max = 4;
+    static constexpr host::uint_t name_max = 4;
+};
+
+enum CpuType : host::uint_t {
+    M6502,
+    W65SC02,
+    R65C02BIT,
+    R65C02,
+    W65C02S,
+    W65C816,
 };
 
 } // namespace m6502

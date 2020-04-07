@@ -23,7 +23,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class InsnTms9900 : public InsnBase<ENDIAN_BIG, Config::uintptr_t> {
+class InsnTms9900 : public InsnBase<Config::endian, Config::uintptr_t> {
 public:
     InsnTms9900(Insn<Config::uintptr_t> &insn) : InsnBase(insn) {}
 

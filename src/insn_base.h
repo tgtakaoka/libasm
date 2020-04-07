@@ -25,11 +25,6 @@
 
 namespace libasm {
 
-enum Endian {
-    ENDIAN_BIG,
-    ENDIAN_LITTLE,
-};
-
 template<typename Addr>
 class Insn {
 public:

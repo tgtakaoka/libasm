@@ -17,7 +17,7 @@
 #ifndef __CONFIG_MC6809_H__
 #define __CONFIG_MC6809_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -27,6 +27,15 @@ struct Config {
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint16_t insn_t;
+
+    static constexpr Endian endian = ENDIAN_BIG;
+    static constexpr host::uint_t code_max = 5;
+    static constexpr host::uint_t name_max = 6;
+};
+
+enum CpuType : host::uint_t {
+    MC6809,
+    HD6309,
 };
 
 } // namespace mc6809

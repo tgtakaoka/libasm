@@ -17,7 +17,7 @@
 #ifndef __CONFIG_MC6800_H__
 #define __CONFIG_MC6800_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace mc6800 {
@@ -27,6 +27,10 @@ struct Config {
     typedef int16_t  ptrdiff_t;
     typedef uint8_t  opcode_t;
     typedef uint8_t  insn_t;
+
+    static constexpr Endian endian = ENDIAN_BIG;
+    static constexpr host::uint_t code_max = 3;
+    static constexpr host::uint_t name_max = 3;
 };
 
 } // namespace mc6800

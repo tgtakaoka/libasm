@@ -22,11 +22,6 @@
 namespace libasm {
 namespace z80 {
 
-enum CpuType : host::uint_t {
-    Z80,
-    I8080,
-};
-
 enum OprSize : host::uint_t {
     SZ_NONE,                    // unknown
     SZ_BYTE = 1,
@@ -97,8 +92,6 @@ struct Entry {
     const host::uint_t flags1;
     const host::uint_t flags2;
     const char *name;
-    static constexpr host::uint_t code_max = 4;
-    static constexpr host::uint_t name_max = 4;
 
     static inline InsnFormat _insnFormat(host::uint_t flags1) {
         return InsnFormat(flags1 & insnFormat_mask);

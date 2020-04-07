@@ -22,15 +22,6 @@
 namespace libasm {
 namespace m6502 {
 
-enum CpuType : host::uint_t {
-    M6502,
-    W65SC02,
-    R65C02BIT,
-    R65C02,
-    W65C02S,
-    W65C816,
-};
-
 enum AddrMode : host::uint_t {
     // M6502
     IMPL,                // Implied
@@ -68,8 +59,6 @@ struct Entry {
     const uint8_t insnCode;
     const host::uint_t flags;
     const char *name;
-    static constexpr host::uint_t code_max = 4;
-    static constexpr host::uint_t name_max = 4;
 
     static inline CpuType _cpuType(host::uint_t flags) {
         return CpuType((flags >> cputype_gp) & cputype_gm);
