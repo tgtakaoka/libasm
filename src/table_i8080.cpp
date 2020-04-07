@@ -121,10 +121,10 @@ static const Entry *searchEntry(
 }
 
 static const Entry *searchEntry(
-    const target::insn_t insnCode,
+    const Config::insn_t insnCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        target::insn_t i = insnCode;
+        Config::insn_t i = insnCode;
         const InsnFormat iformat =
             Entry::_insnFormat(pgm_read_byte(&entry->flags));
         switch (iformat) {
@@ -153,11 +153,11 @@ Error TableI8080::searchName(InsnI8080 &insn) const {
 }
 
 Error TableI8080::searchInsnCode(InsnI8080 &insn) const {
-    const target::insn_t insnCode = insn.insnCode();
+    const Config::insn_t insnCode = insn.insnCode();
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Entry::name_max + 1];
+    char name[Config::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

@@ -22,10 +22,10 @@ using namespace libasm::mc6800;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory memory;
+TestMemory<Config> memory;
 TestSymtab symtab;
 DisMc6800 dis6800;
-Disassembler<target::uintptr_t> &disassembler(dis6800);
+Disassembler<Config> &disassembler(dis6800);
 
 static void set_up() {
 }
@@ -324,7 +324,7 @@ static void test_relative() {
 
 static void assert_illegal(uint8_t opc) {
     char operands[40];
-    Insn insn;
+    Insn<Config> insn;
     const uint8_t codes[] = { opc };
     memory.setMemory(&codes[0], 1);
     disassembler.decode(memory, insn, operands, nullptr);

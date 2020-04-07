@@ -14,20 +14,41 @@
  * limitations under the License.
  */
 
-#include "asm_z80.h"
-#include "asm_directive.h"
-#include "asm_driver.h"
-#include "bin_formatter.h"
+#ifndef __CONFIG_BASE_H__
+#define __CONFIG_BASE_H__
 
-using namespace libasm::z80;
-using namespace libasm::cli;
+#include "config_host.h"
 
-int main(int argc, const char **argv) {
-    AsmZ80 assembler;
-    AsmIntelDirective<Config> directive(assembler);
-    AsmDriver<Config, IntelHex<Config>> driver(directive);
-    return driver.main(argc, argv);
-}
+namespace libasm {
+
+enum Endian : host::uint_t {
+    ENDIAN_BIG,
+    ENDIAN_LITTLE,
+};
+
+template<
+    typename AddrT,
+    typename DiffT,
+    typename OpCodeT,
+    typename InsnT,
+    Endian EndianE,
+    host::uint_t CodeMax,
+    host::uint_t NameMax
+    >
+struct ConfigBase {
+    typedef AddrT   uintptr_t;
+    typedef DiffT   ptrdiff_t;
+    typedef OpCodeT opcode_t;
+    typedef InsnT   insn_t;
+
+    static constexpr Endian endian = EndianE;
+    static constexpr host::uint_t code_max = CodeMax;
+    static constexpr host::uint_t name_max = NameMax;
+};
+
+} // namespace libasm
+
+#endif // __CONFIG_BASE_H__
 
 // Local Variables:
 // mode: c++

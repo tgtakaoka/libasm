@@ -350,7 +350,7 @@ const Entry *TableM6502::searchEntry(
 }
 
 const Entry *TableM6502::searchEntry(
-    const target::insn_t insnCode, const Entry *table, const Entry *end) {
+    const Config::insn_t insnCode, const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         if (insnCode == pgm_read_byte(&entry->insnCode))
             return entry;
@@ -413,7 +413,7 @@ static bool acceptAddrMode(AddrMode addrMode, bool acceptIndirectLong) {
 Error TableM6502::searchInsnCode(
     InsnM6502 &insn, bool acceptIndirectLong,
     const Entry *table, const Entry *end) const {
-    const target::insn_t insnCode = insn.insnCode();
+    const Config::insn_t insnCode = insn.insnCode();
     for (const Entry *entry = table;
          entry < end && (entry = searchEntry(insnCode, entry, end)) != nullptr;
          entry++) {
@@ -421,7 +421,7 @@ Error TableM6502::searchInsnCode(
         if (!insn.supported(_cpuType)) continue;
         if (!acceptAddrMode(insn.addrMode(), acceptIndirectLong))
             continue;
-        char name[Entry::name_max + 1];
+        char name[Config::name_max + 1];
         pgm_strncpy(name, entry->name, sizeof(name));
         insn.setName(name);
         return OK;

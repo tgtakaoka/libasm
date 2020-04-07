@@ -27,14 +27,11 @@
 namespace libasm {
 namespace i8080 {
 
-class AsmI8080 : public Assembler<target::uintptr_t> {
+class AsmI8080 : public Assembler<Config> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
     const char *listCpu() const override { return TableI8080::listCpu(); }
-    Endian endian() const override { return ENDIAN_LITTLE; }
-    host::uint_t maxBytes() const override { return Entry::code_max; }
-    host::uint_t maxName() const override { return Entry::name_max; }
 
 private:
     AsmIntelOperand _parser;
@@ -51,7 +48,7 @@ private:
     Error encodeDirect(InsnI8080 &insn);
     Error encodeIoaddr(InsnI8080 &insn);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config> &insn) override;
 };
 
 } // namespace i8080

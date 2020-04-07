@@ -126,12 +126,12 @@ Error AsmTms9900::encodeOpr(
 }
 
 Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     if (addr % 2) return setError(ILLEGAL_OPERAND);
-    const target::uintptr_t base = insn.address() + 2;
-    const target::ptrdiff_t delta = (addr - base) >> 1;
+    const Config::uintptr_t base = insn.address() + 2;
+    const Config::ptrdiff_t delta = (addr - base) >> 1;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
     insn.emitInsn();
@@ -146,7 +146,7 @@ Error AsmTms9900::encodeCruOff(InsnTms9900 &insn) {
     return getError();
 }
 
-Error AsmTms9900::encode(Insn &_insn) {
+Error AsmTms9900::encode(Insn<Config> &_insn) {
     InsnTms9900 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

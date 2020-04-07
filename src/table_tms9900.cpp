@@ -116,10 +116,10 @@ static const Entry *searchEntry(
 }
 
 static const Entry *searchEntry(
-    const target::insn_t insnCode,
+    const Config::insn_t insnCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        target::insn_t i = insnCode;
+        Config::insn_t i = insnCode;
         const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
         switch (addrMode) {
         case REG:
@@ -153,14 +153,14 @@ Error TableTms9900::searchName(InsnTms9900 &insn) const {
 }
 
 Error TableTms9900::searchInsnCode(InsnTms9900 &insn) const {
-    const target::insn_t insnCode = insn.insnCode();
+    const Config::insn_t insnCode = insn.insnCode();
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_TMS9900));
     if (!entry)
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
-    char name[Entry::name_max + 1];
+    char name[Config::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

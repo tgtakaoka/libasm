@@ -154,12 +154,12 @@ bool RegZ80::compareCcName(const char *line, CcName ccName) const {
     return !isalpha(*line);
 }
 
-char *RegZ80::outCc4Name(char *out, const target::opcode_t cc4) const {
+char *RegZ80::outCc4Name(char *out, const Config::opcode_t cc4) const {
     const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc4 & 3]));
     return outCcName(out, cc);
 }
 
-char *RegZ80::outCc8Name(char *out, const target::opcode_t cc8) const {
+char *RegZ80::outCc8Name(char *out, const Config::opcode_t cc8) const {
     const CcName cc = CcName(pgm_read_byte(&CC8_NAMES[cc8 & 7]));
     return outCcName(out, cc);
 }
@@ -249,7 +249,7 @@ host::int_t RegZ80::encodeIndirectBase(RegName regName) {
 }
 
 void RegZ80::encodeIndexReg(InsnZ80 &insn, RegName ixReg) {
-    const target::opcode_t prefix =
+    const Config::opcode_t prefix =
         (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
     insn.setInsnCode(prefix, insn.opCode());
 }
@@ -282,7 +282,7 @@ RegName RegZ80::decodeIndirectBase(uint8_t regNum) {
 }
 
 RegName RegZ80::decodeIndexReg(const InsnZ80 &insn) {
-    const target::opcode_t prefix = insn.prefixCode();
+    const Config::opcode_t prefix = insn.prefixCode();
     if (prefix == TableZ80::PREFIX_IX) return REG_IX;
     if (prefix == TableZ80::PREFIX_IY) return REG_IY;
     return REG_UNDEF;

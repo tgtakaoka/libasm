@@ -22,11 +22,6 @@
 namespace libasm {
 namespace mc6809 {
 
-enum CpuType : host::uint_t {
-    MC6809,
-    HD6309,
-};
-
 enum OprSize : host::uint_t {
     SZ_NONE = 0,
     SZ_BYTE = 1,                // 8 bit operation
@@ -54,11 +49,9 @@ enum AddrMode : host::uint_t {
 };
 
 struct Entry {
-    const target::opcode_t opc;
+    const Config::opcode_t opc;
     const host::uint_t flags;
     const char *name;
-    static constexpr host::uint_t code_max = 5;
-    static constexpr host::uint_t name_max = 6;
 
     static inline CpuType _cpuType(host::uint_t flags) {
         return (flags & hd6309_bm) == 0 ? MC6809 : HD6309;

@@ -22,11 +22,11 @@ using namespace libasm;
 using namespace libasm::z80;
 
 DisZ80 disz80;
-Disassembler<target::uintptr_t> &disassembler(disz80);
+Disassembler<Config> &disassembler(disz80);
 
-void disassemble(DisMemory<target::uintptr_t> &memory) {
+void disassemble(DisMemory<Config> &memory) {
   char operands[20];
-  Insn insn;
+  Insn<Config> insn;
   while (memory.hasNext()) {
     if (disassembler.decode(memory, insn, operands, nullptr)) {
       Cli.print(F("Error "));
@@ -39,11 +39,10 @@ void disassemble(DisMemory<target::uintptr_t> &memory) {
         uint8_t val = insn.bytes()[i];
         Cli.printUint8(val);
       }
-      for (int i = insn.length(); i < disassembler.maxBytes(); i++)
+      for (int i = insn.length(); i < Config::code_max; i++)
         Cli.print(F("   "));
       Cli.print(' ');
-      for (size_t n = Cli.print(insn.name());
-           n <= disassembler.maxName(); n++)
+      for (size_t n = Cli.print(insn.name()); n <= Config::name_max; n++)
         Cli.print(' ');
       Cli.println(operands);
     }
@@ -51,7 +50,7 @@ void disassemble(DisMemory<target::uintptr_t> &memory) {
 }
 
 bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  StrMemory memory(0x1000, line);
+  StrMemory<Config> memory(0x1000, line);
   disassemble(memory);
   return Cli.readLine(handleLine, 0);
 }

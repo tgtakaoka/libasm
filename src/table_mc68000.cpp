@@ -177,7 +177,7 @@ static constexpr Entry TABLE_MC68000[] PROGMEM = {
     E(0160430, ROL,   DREG_ROT) // ROL.BWL #/Dx,Dn
 };
 
-static target::insn_t getInsnMask(InsnFormat iformat) {
+static Config::insn_t getInsnMask(InsnFormat iformat) {
     switch (iformat) {
     case MOVA_OPR: return 007077;
     case MOVE_OPR:
@@ -220,11 +220,11 @@ static const Entry *searchEntry(
 }
 
 static const Entry *searchEntry(
-    const target::insn_t insnCode,
+    const Config::insn_t insnCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         const host::uint_t flags = pgm_read_byte(&entry->flags);
-        const target::insn_t mask = getInsnMask(Entry::_insnFormat(flags));
+        const Config::insn_t mask = getInsnMask(Entry::_insnFormat(flags));
         if ((insnCode & ~mask) == pgm_read_word(&entry->insnCode))
             return entry;
     }
@@ -241,11 +241,11 @@ Error TableMc68000::searchName(InsnMc68000 &insn) const {
 }
 
 Error TableMc68000::searchInsnCode(InsnMc68000 &insn) const {
-    const target::insn_t insnCode = insn.insnCode();
+    const Config::insn_t insnCode = insn.insnCode();
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_MC68000));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Entry::name_max + 1];
+    char name[Config::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

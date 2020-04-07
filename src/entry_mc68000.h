@@ -63,11 +63,9 @@ enum ExtWord : host::uint_t {
 };
 
 struct Entry {
-    const target::insn_t insnCode;
+    const Config::insn_t insnCode;
     const host::uint_t flags;
     const char *name;
-    static constexpr host::uint_t code_max = 10;
-    static constexpr host::uint_t name_max = 7;
 
     static inline InsnFormat _insnFormat(host::uint_t flags) {
         return InsnFormat((flags >> insnFmt_gp) & insnFmt_gm);

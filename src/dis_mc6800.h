@@ -27,14 +27,11 @@
 namespace libasm {
 namespace mc6800 {
 
-class DisMc6800 : public Disassembler<target::uintptr_t> {
+class DisMc6800 : public Disassembler<Config> {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
     const char *listCpu() const override { return TableMc6800::listCpu(); }
-    Endian endian() const override { return ENDIAN_BIG; }
-    host::uint_t maxBytes() const override { return Entry::code_max; }
-    host::uint_t maxName() const override { return Entry::name_max; }
 
 private:
     DisMotoOperand _formatter;
@@ -45,15 +42,14 @@ private:
     bool outAccumulator(const InsnMc6800 &insn);
 
     // MC6800
-    Error decodeInherent(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeDirectPage(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeExtended(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeIndexed(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeRelative(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
-    Error decodeImmediate(DisMemory<target::uintptr_t> &memory, InsnMc6800 &insn);
+    Error decodeInherent(DisMemory<Config> &memory, InsnMc6800 &insn);
+    Error decodeDirectPage(DisMemory<Config> &memory, InsnMc6800 &insn);
+    Error decodeExtended(DisMemory<Config> &memory, InsnMc6800 &insn);
+    Error decodeIndexed(DisMemory<Config> &memory, InsnMc6800 &insn);
+    Error decodeRelative(DisMemory<Config> &memory, InsnMc6800 &insn);
+    Error decodeImmediate(DisMemory<Config> &memory, InsnMc6800 &insn);
 
-    Error decode(
-        DisMemory<target::uintptr_t> &memory, Insn& insn) override;
+    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
 };
 
 } // namespace m6502

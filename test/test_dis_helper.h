@@ -24,13 +24,9 @@
 
 #include <stdio.h>
 
-extern libasm::test::TestAsserter asserter;
-extern libasm::test::TestMemory memory;
-extern libasm::test::TestSymtab symtab;
-
 #define EASSERT(error, addr, mnemonic, expected_operands)           \
     do {                                                            \
-        Insn insn;                                                  \
+        Insn<Config> insn;                                          \
         char operands[40], message[80];                             \
         memory.setAddress(addr);                                    \
         disassembler.decode(memory, insn, operands, &symtab, true); \
@@ -47,7 +43,7 @@ extern libasm::test::TestSymtab symtab;
     } while (0)
 #define EATEST(error, addr, mnemonic, opr, ...)                 \
     do {                                                        \
-        const target::opcode_t mnemonic[] = { __VA_ARGS__ };    \
+        const Config::opcode_t mnemonic[] = { __VA_ARGS__ };    \
         memory.setMemory(mnemonic, sizeof(mnemonic));           \
         EASSERT(error, addr, mnemonic, opr);                    \
     } while (0)

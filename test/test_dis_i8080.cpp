@@ -22,10 +22,10 @@ using namespace libasm::i8080;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory memory;
+TestMemory<Config> memory;
 TestSymtab symtab;
 DisI8080 dis8080;
-Disassembler<target::uintptr_t> &disassembler(dis8080);
+Disassembler<Config> &disassembler(dis8080);
 
 static void set_up() {
 }

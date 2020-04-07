@@ -17,15 +17,18 @@
 #ifndef __CONFIG_MC68000_H__
 #define __CONFIG_MC68000_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
-namespace target
-{
-    typedef uint32_t uintptr_t;
-    typedef int32_t  ptrdiff_t;
-    typedef uint16_t opcode_t;
-    typedef uint16_t insn_t;
-} // namespace target
+namespace libasm {
+namespace mc68000 {
+
+struct Config : ConfigBase<
+    uint32_t, int32_t, uint16_t, uint16_t,
+    ENDIAN_BIG, 10, 7>
+{};
+
+} // namespace mc68000
+} // namespace libasm
 
 #endif // __CONFIG_MC68000_H__
 

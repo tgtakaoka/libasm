@@ -22,10 +22,10 @@ using namespace libasm::tms9900;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory memory;
+TestMemory<Config> memory;
 TestSymtab symtab;
 DisTms9900 dis9900;
-Disassembler<target::uintptr_t> &disassembler(dis9900);
+Disassembler<Config> &disassembler(dis9900);
 
 static void set_up() {
     disassembler.setCpu("tms9900");
@@ -256,7 +256,7 @@ static void test_mid_tms9900() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
     uint8_t bytes[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-    Insn insn;
+    Insn<Config> insn;
     char operands[40], message[40];
     const mid_range *m = &mids[0];
 
@@ -302,7 +302,7 @@ static void test_mid_tms9995() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
     uint8_t bytes[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-    Insn insn;
+    Insn<Config> insn;
     char operands[40], message[40];
     const mid_range *m = &mids[0];
 

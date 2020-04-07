@@ -24,7 +24,7 @@ using namespace libasm::test;
 TestAsserter asserter;
 TestSymtab symtab;
 AsmZ80 asz80;
-Assembler<target::uintptr_t> &assembler(asz80);
+Assembler<Config> &assembler(asz80);
 
 static void set_up() {
     assembler.setCpu("8080");

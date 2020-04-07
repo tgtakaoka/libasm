@@ -29,20 +29,22 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr>
-class CliMemory : public DisMemory<Addr> {
+template<typename Conf>
+class CliMemory : public DisMemory<Conf> {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
-    CliMemory() : DisMemory<Addr>(0) {
+    CliMemory() : DisMemory<Conf>(0) {
         invalidateWriteCache();
         invalidateReadCache();
     }
 
-    void setAddress(Addr addr) {
+    void setAddress(addr_t addr) {
         this->_address = addr;
     }
 
     bool hasNext() const override {
-        Addr addr = this->_address;
+        addr_t addr = this->_address;
         if (insideOf(_read_cache, addr)) return true;
         for (auto segment = _segments.cbegin();
              segment != _segments.cend();
@@ -64,12 +66,12 @@ protected:
     }
 
 public:
-    void writeBytes(Addr addr, const uint8_t *p, size_t size) {
+    void writeBytes(addr_t addr, const uint8_t *p, size_t size) {
         for (const uint8_t *end = p + size; p < end; p++)
             writeByte(addr++, *p);
     }
 
-    bool readBytes(Addr addr, uint8_t *p, size_t size) const {
+    bool readBytes(addr_t addr, uint8_t *p, size_t size) const {
         for (uint8_t *end = p + size; p < end; p++) {
             if (!readByte(addr, p))
                 return false;
@@ -77,7 +79,7 @@ public:
         return true;
     }
 
-    void writeByte(Addr addr, uint8_t val) {
+    void writeByte(addr_t addr, uint8_t val) {
         // Shortcut for most possible case, appending byte to cached segment.
         if (atEndOf(_write_cache, addr)) {
             appendTo(_write_cache, addr, val);
@@ -106,7 +108,7 @@ public:
         createSegment(addr, val);
     }
 
-    bool readByte(Addr addr, uint8_t &val) const {
+    bool readByte(addr_t addr, uint8_t &val) const {
         if (insideOf(_read_cache, addr)) {
             val = readFrom(_read_cache, addr);
             return true;
@@ -124,7 +126,7 @@ public:
         return false;
     }
 
-    bool equals(const CliMemory<Addr> &other) const {
+    bool equals(const CliMemory<Conf> &other) const {
         auto a = _segments.cbegin();
         auto b = other._segments.cbegin();
         while (a != _segments.cend() && b != other._segments.cend()) {
@@ -160,7 +162,7 @@ public:
 
 private:
     // Memory segment list in ascending order of start address.
-    typedef std::map<Addr, std::vector<uint8_t>> Segments;
+    typedef std::map<addr_t, std::vector<uint8_t>> Segments;
     typedef typename Segments::iterator Segment;
     typedef typename Segments::const_iterator ConstSegment;
     Segments _segments;
@@ -175,40 +177,40 @@ private:
         _read_cache = _segments.cend();
     }
 
-    bool insideOf(ConstSegment &segment, Addr addr) const {
+    bool insideOf(ConstSegment &segment, addr_t addr) const {
         return segment != _segments.cend()
             && addr >= segment->first
             && addr < segment->first + segment->second.size();
     }
 
-    bool insideOf(Segment segment, Addr addr) const {
+    bool insideOf(Segment segment, addr_t addr) const {
         return segment != _segments.end()
             && addr >= segment->first
             && addr < segment->first + segment->second.size();
     }
 
-    bool atEndOf(Segment segment, Addr addr) const {
+    bool atEndOf(Segment segment, addr_t addr) const {
         return segment != _segments.end()
             && addr == segment->first + segment->second.size();
     }
 
-    uint8_t readFrom(ConstSegment &segment, Addr addr) const {
+    uint8_t readFrom(ConstSegment &segment, addr_t addr) const {
         return segment->second.at(addr - segment->first);
     }
 
-    void appendTo(Segment &segment, Addr addr, uint8_t val) {
+    void appendTo(Segment &segment, addr_t addr, uint8_t val) {
         segment->second.push_back(val);
         _write_cache = segment;
         aggregate(segment);
     }
 
-    void replaceAt(Segment &segment, Addr addr, uint8_t val) {
+    void replaceAt(Segment &segment, addr_t addr, uint8_t val) {
         segment->second.at(addr - segment->first) = val;
         _write_cache = segment;
         aggregate(segment);
     }
 
-    void createSegment(Addr addr, uint8_t val) {
+    void createSegment(addr_t addr, uint8_t val) {
         _write_cache = _segments.insert(
             std::make_pair(addr, std::vector<uint8_t>())).first;
         _write_cache->second.push_back(val);

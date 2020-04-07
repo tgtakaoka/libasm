@@ -188,10 +188,10 @@ const Entry *TableMc6800::searchEntry(
 }
 
 const Entry *TableMc6800::searchEntry(
-    const target::insn_t insnCode,
+    const Config::insn_t insnCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        target::insn_t opc = insnCode;
+        Config::insn_t opc = insnCode;
         const InsnAdjust iAdjust = Entry::_insnAdjust(pgm_read_byte(&entry->flags));
         switch (iAdjust) {
         case ADJ_AB01: opc &= ~1; break;
@@ -239,7 +239,7 @@ Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6800_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Entry::name_max + 1];
+    char name[Config::name_max + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

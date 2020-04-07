@@ -39,7 +39,7 @@ private:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
-        const target::insn_t insnCode, const Entry *table, const Entry *end);
+        const Config::insn_t insnCode, const Entry *table, const Entry *end);
 
     Error searchName(
         InsnM6502 &insn,  const Entry *table, const Entry *end) const;

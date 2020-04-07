@@ -30,10 +30,12 @@
 namespace libasm {
 namespace cli {
 
-template <typename Addr>
+template <typename Conf>
 class AsmDirective : public ErrorReporter,
-                     public AsmLine<Addr>,
+                     public AsmLine<typename Conf::uintptr_t>,
                      protected SymbolTable {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
     virtual ~AsmDirective() {
         free(_line);
@@ -46,7 +48,7 @@ public:
         return _assembler.listCpu();
     }
 
-    Error assembleLine(const char *line, CliMemory<Addr> &memory) {
+    Error assembleLine(const char *line, CliMemory<Conf> &memory) {
         _scan = line;
         if (_scan == nullptr) {
             return OK;
@@ -85,7 +87,7 @@ public:
             _scan = end;
             skipSpaces();
             _list.operand = _scan;
-            const Addr origin = _origin;
+            const addr_t origin = _origin;
             const Error error = processPseudo(directive.c_str(), label, memory);
             if (error == UNKNOWN_DIRECTIVE) {
                 _scan = _list.instruction;
@@ -116,7 +118,7 @@ public:
             return setError(OK); // skip comment
         }
 
-        Insn insn;
+        Insn<Conf> insn;
         const Error error = _assembler.encode(_scan, insn, _origin, this);
         const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
         _scan = _assembler.errorAt();
@@ -135,7 +137,7 @@ public:
         return setError(error);
     }
 
-    void setOrigin(Addr origin) { _origin = origin; }
+    void setOrigin(addr_t origin) { _origin = origin; }
     const char *errorAt() const { return _scan; }
     void setSymbolMode(bool reportUndef, bool reportDuplicate) {
         _reportUndef = reportUndef;
@@ -185,7 +187,7 @@ public:
     // AsmLine
     uint16_t lineNumber() const override { return _list.line_number; }
     uint16_t includeNest() const override { return _list.include_nest; }
-    Addr startAddress() const override { return _list.address; }
+    addr_t startAddress() const override { return _list.address; }
     int generatedSize() const override { return _list.length; }
     uint8_t getByte(int offset) const override {
         uint8_t val = 0;
@@ -218,7 +220,7 @@ public:
     // Error reporting
 
 protected:
-    AsmDirective(Assembler<Addr> &assembler)
+    AsmDirective(Assembler<Conf> &assembler)
         : _assembler(assembler),
           _parser(assembler.getParser()),
           _line_len(128),
@@ -252,12 +254,12 @@ protected:
         const Source *include_from;
     };
 
-    Assembler<Addr> &_assembler;
+    Assembler<Conf> &_assembler;
     AsmOperand &_parser;
     size_t _line_len;
     char *_line;
     const char *_scan;
-    Addr _origin;
+    addr_t _origin;
     bool _reportUndef;
     bool _reportDuplicate;
     int _labelWidth;
@@ -270,8 +272,8 @@ protected:
         uint16_t include_nest;
         const char *label;      // if label defined
         int label_len;
-        Addr address;
-        CliMemory<Addr> *memory;
+        addr_t address;
+        CliMemory<Conf> *memory;
         int length;
         bool value_defined;
         uint32_t value;
@@ -290,12 +292,12 @@ protected:
     }
 
     virtual Error processDirective(
-        const char *directive, const char *&label, CliMemory<Addr> &memory) {
+        const char *directive, const char *&label, CliMemory<Conf> &memory) {
         return UNKNOWN_DIRECTIVE;
     }
 
     Error processPseudo(
-        const char *directive, const char *&label, CliMemory<Addr> &memory) {
+        const char *directive, const char *&label, CliMemory<Conf> &memory) {
         if (processDirective(directive, label, memory) != UNKNOWN_DIRECTIVE)
             return getError();
         if (strcasecmp(directive, "org") == 0)
@@ -321,7 +323,7 @@ protected:
     }
 
     Error defineOrigin() {
-        Addr value;
+        addr_t value;
         const char *scan = _parser.eval(_scan, value, this);
         if (_parser.getError())
             return setError(_parser);
@@ -332,7 +334,7 @@ protected:
         return setError(OK);
     }
 
-    Error defineLabel(const char *&label, CliMemory<Addr> &memory) {
+    Error defineLabel(const char *&label, CliMemory<Conf> &memory) {
         if (label == nullptr)
             return setError(MISSING_LABEL);
         if (_reportDuplicate && hasSymbol(label))
@@ -366,7 +368,7 @@ protected:
         return openSource(filename, end);
     }
 
-    Error defineBytes(CliMemory<Addr> &memory) {
+    Error defineBytes(CliMemory<Conf> &memory) {
         _list.address = _origin;
         _list.length = 0;
         do {
@@ -408,7 +410,7 @@ protected:
         return setError(OK);
     }
 
-    Error defineWords(CliMemory<Addr> &memory) {
+    Error defineWords(CliMemory<Conf> &memory) {
         _list.address = _origin;
         _list.length = 0;
         do {
@@ -509,16 +511,16 @@ private:
     }
 };
 
-template<typename Addr>
-class AsmMotoDirective : public AsmDirective<Addr> {
+template<typename Conf>
+class AsmMotoDirective : public AsmDirective<Conf> {
 public:
-    AsmMotoDirective(Assembler<Addr> &assembler)
-        : AsmDirective<Addr>(assembler) {}
+    AsmMotoDirective(Assembler<Conf> &assembler)
+        : AsmDirective<Conf>(assembler) {}
 
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        CliMemory<Addr> &memory) override {
+        CliMemory<Conf> &memory) override {
         if (strcasecmp(directive, "fcb") == 0 ||
             strcasecmp(directive, "fcc") == 0)
             return this->defineBytes(memory);
@@ -530,16 +532,16 @@ protected:
     }
 };
 
-template<typename Addr>
-class AsmMostekDirective : public AsmDirective<Addr> {
+template<typename Conf>
+class AsmMostekDirective : public AsmDirective<Conf> {
 public:
-    AsmMostekDirective(Assembler<Addr> &assembler)
-        : AsmDirective<Addr>(assembler) {}
+    AsmMostekDirective(Assembler<Conf> &assembler)
+        : AsmDirective<Conf>(assembler) {}
 
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        CliMemory<Addr> &memory) override {
+        CliMemory<Conf> &memory) override {
         if (strcmp(directive, ":=") == 0
             || strcmp(directive, "=") == 0) {
             return this->defineLabel(label, memory);
@@ -554,16 +556,16 @@ protected:
     }
 };
 
-template<typename Addr>
-class AsmIntelDirective : public AsmDirective<Addr> {
+template<typename Conf>
+class AsmIntelDirective : public AsmDirective<Conf> {
 public:
-    AsmIntelDirective(Assembler<Addr> &assembler)
-        : AsmDirective<Addr>(assembler) {}
+    AsmIntelDirective(Assembler<Conf> &assembler)
+        : AsmDirective<Conf>(assembler) {}
 
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        CliMemory<Addr> &memory) override {
+        CliMemory<Conf> &memory) override {
         this->_parser.isSymbolLetter(0);
         if (strcasecmp(directive, "db") == 0)
             return this->defineBytes(memory);

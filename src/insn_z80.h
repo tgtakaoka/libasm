@@ -23,9 +23,9 @@
 namespace libasm {
 namespace z80 {
 
-class InsnZ80 : public InsnBase<ENDIAN_LITTLE> {
+class InsnZ80 : public InsnBase<Config> {
 public:
-    InsnZ80(Insn &insn) : InsnBase(insn) {}
+    InsnZ80(Insn<Config> &insn) : InsnBase(insn) {}
     InsnZ80(InsnZ80 &other) : InsnBase(other._insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags2); }
@@ -42,22 +42,22 @@ public:
         _flags2 = other._flags2;
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
-    void embed(target::opcode_t data) {
+    void embed(Config::opcode_t data) {
         _insnCode |= data;
     }
-    void setInsnCode(target::opcode_t prefixCode, target::opcode_t opCode) {
-        _insnCode = (static_cast<target::insn_t>(prefixCode) << 8) | opCode;
+    void setInsnCode(Config::opcode_t prefixCode, Config::opcode_t opCode) {
+        _insnCode = (static_cast<Config::insn_t>(prefixCode) << 8) | opCode;
     }
     bool hasPrefix() const { return prefixCode() != 0; }
-    target::opcode_t prefixCode() const {
-        return static_cast<target::opcode_t>(_insnCode >> 8);
+    Config::opcode_t prefixCode() const {
+        return static_cast<Config::opcode_t>(_insnCode >> 8);
     }
-    target::opcode_t opCode() const {
-        return static_cast<target::opcode_t>(_insnCode);
+    Config::opcode_t opCode() const {
+        return static_cast<Config::opcode_t>(_insnCode);
     }
 
     void emitInsn() {
@@ -67,7 +67,7 @@ public:
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags1;
     host::uint_t _flags2;
 };

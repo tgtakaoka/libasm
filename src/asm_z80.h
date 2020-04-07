@@ -27,14 +27,11 @@
 namespace libasm {
 namespace z80 {
 
-class AsmZ80 : public Assembler<target::uintptr_t> {
+class AsmZ80 : public Assembler<Config> {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
     const char *listCpu() const override { return TableZ80::listCpu(); }
-    Endian endian() const override { return ENDIAN_LITTLE; }
-    host::uint_t maxBytes() const override { return Entry::code_max; }
-    host::uint_t maxName() const override { return Entry::name_max; }
 
 private:
     AsmIntelOperand _parser;
@@ -64,7 +61,7 @@ private:
     Error encodeIndexedImmediate8(
         InsnZ80 &insn, const Operand &left, const Operand &right);
 
-    Error encode(Insn &insn) override;
+    Error encode(Insn<Config> &insn) override;
 };
 
 } // namespace z80

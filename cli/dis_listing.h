@@ -24,12 +24,14 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr>
-class DisListing : public AsmLine<Addr> {
+template<typename Conf>
+class DisListing : public AsmLine<typename Conf::uintptr_t> {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
     DisListing(
-        Disassembler<Addr>&disassembler,
-        CliMemory<Addr> &memory,
+        Disassembler<Conf>&disassembler,
+        CliMemory<Conf> &memory,
         bool uppercase = false)
         : _disassembler(disassembler),
           _memory(memory),
@@ -39,21 +41,21 @@ public:
           _operandWidth(8)
     {}
 
-    Error disassemble(Addr addr, Insn &insn) {
+    Error disassemble(addr_t addr, Insn<Conf> &insn) {
         _memory.setAddress(addr);
         const Error error = _disassembler.decode(
             _memory, insn, _operands, nullptr, _uppercase);
-        _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
+        _listing.reset(*this, _uppercase, false);
         _address = addr;
         _generated_size = insn.length();
         _instruction = insn.name();
         return error;
     }
 
-    const char *origin(Addr origin, bool withBytes = false) {
+    const char *origin(addr_t origin, bool withBytes = false) {
         _disassembler.getFormatter().output(
-            _operands, origin, 16, false, sizeof(Addr));
-        _listing.reset(*this, sizeof(target::opcode_t), _uppercase, false);
+            _operands, origin, 16, false, sizeof(addr_t));
+        _listing.reset(*this, _uppercase, false);
         _address = origin;
         _generated_size = 0;
         _instruction = _uppercase ? "ORG" : "org";
@@ -65,13 +67,13 @@ public:
     const char *getContent() { return _listing.getContent(); }
 
 private:
-    Disassembler<Addr> &_disassembler;
-    CliMemory<Addr> &_memory;
-    AsmListing<Addr> _listing;
+    Disassembler<Conf> &_disassembler;
+    CliMemory<Conf> &_memory;
+    AsmListing<Conf> _listing;
     bool _uppercase;
     int _labelWidth;
     int _operandWidth;
-    Addr _address;
+    addr_t _address;
     int _generated_size;
     const char *_instruction;
     char _operands[40];
@@ -79,7 +81,7 @@ private:
     // AsmLine<Addr>
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
-    Addr startAddress() const override { return _address; }
+    addr_t startAddress() const override { return _address; }
     int generatedSize() const override { return _generated_size; }
     uint8_t getByte(int offset) const override {
         uint8_t val = 0;
@@ -102,7 +104,7 @@ private:
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return _disassembler.maxName() + 1; }
+    int instructionWidth() const override { return Conf::name_max + 1; }
     int operandWidth() const override { return _operandWidth; }
 };
 

@@ -22,7 +22,7 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisTms9900 disassembler;
-    DisDriver<target::uintptr_t> driver(disassembler);
+    DisDriver<Config> driver(disassembler);
     return driver.main(argc, argv);
 }
 

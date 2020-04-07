@@ -42,10 +42,8 @@ enum InsnFormat : host::uint_t {
 };
 
 struct Entry {
-    const target::insn_t insnCode;
+    const Config::insn_t insnCode;
     const host::uint_t flags;
-    static constexpr host::uint_t code_max = 3;
-    static constexpr host::uint_t name_max = 4;
     const char *name;
 
     static inline InsnFormat _insnFormat(host::uint_t flags) {

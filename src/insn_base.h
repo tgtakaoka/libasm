@@ -25,31 +25,27 @@
 
 namespace libasm {
 
-enum Endian {
-    ENDIAN_BIG,
-    ENDIAN_LITTLE,
-};
-
+template<typename Conf>
 class Insn {
 public:
-    uint32_t address() const { return _address; }
+    typename Conf::uintptr_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     host::uint_t length() const { return _length; }
     const char *name() const { return _name; }
 
-    void resetAddress(uint32_t addr) {
+    void resetAddress(typename Conf::uintptr_t addr) {
         _address = addr;
         _length = 0;
     }
 
     void setName(const char *name, size_t len) {
-        if (len >= MAX_NAME) len = MAX_NAME;
+        if (len >= Conf::name_max) len = Conf::name_max;
         strncpy(_name, name, len);
         _name[len] = 0;
     }
 
     void appendName(const char *suffix) {
-        strncat(_name, suffix, MAX_NAME - strlen(_name));
+        strncat(_name, suffix, Conf::name_max - strlen(_name));
     }
 
     void toLowerName() {
@@ -62,48 +58,45 @@ public:
     }
 
     Error emitByte(uint8_t val, host::uint_t pos) {
-        if (pos >= MAX_BYTES) return NO_MEMORY;
+        if (pos >= Conf::code_max) return NO_MEMORY;
         _bytes[pos++] = val;
         if (_length < pos) _length = pos;
         return OK;
     }
 
-    static constexpr size_t MAX_BYTES = 10;
-    static constexpr size_t MAX_NAME = 7;
-
 private:
-    uint32_t     _address;
+    typename Conf::uintptr_t _address;
     host::uint_t _length;
-    uint8_t      _bytes[MAX_BYTES];
-    char         _name[MAX_NAME + 1];
+    uint8_t      _bytes[Conf::code_max];
+    char         _name[Conf::name_max + 1];
 };
 
-template<Endian endian>
+template<typename Conf>
 class InsnBase {
 public:
-    InsnBase(Insn& insn) : _insn(insn) {}
+    InsnBase(Insn<Conf> &insn) : _insn(insn) {}
 
-    target::uintptr_t address() const { return _insn.address(); }
+    typename Conf::uintptr_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     host::uint_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
 
-    void resetAddress(target::uintptr_t addr) {
+    void resetAddress(typename Conf::uintptr_t addr) {
         _insn.resetAddress(addr);
     }
     void setName(const char *name, const char *end = nullptr) {
         _insn.setName(name, end ? end - name : strlen(name));
     }
 
-    Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
+    Error readByte(DisMemory<Conf> &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         return _insn.emitByte(val);
     }
 
-    Error readUint16(DisMemory<target::uintptr_t> &memory, uint16_t &val) {
+    Error readUint16(DisMemory<Conf> &memory, uint16_t &val) {
         uint8_t msb, lsb;
-        if (endian == ENDIAN_BIG) {
+        if (Conf::endian == ENDIAN_BIG) {
             if (readByte(memory, msb)) return NO_MEMORY;
             if (readByte(memory, lsb)) return NO_MEMORY;
         } else {
@@ -114,9 +107,9 @@ public:
         return OK;
     }
 
-    Error readUint32(DisMemory<target::uintptr_t> &memory, uint32_t &val) {
+    Error readUint32(DisMemory<Conf> &memory, uint32_t &val) {
         uint16_t msw, lsw;
-        if (endian == ENDIAN_BIG) {
+        if (Conf::endian == ENDIAN_BIG) {
             if (readUint16(memory, msw)) return NO_MEMORY;
             if (readUint16(memory, lsw)) return NO_MEMORY;
         } else {
@@ -132,7 +125,7 @@ public:
     }
 
     Error emitUint16(uint16_t val) {
-        if (endian == ENDIAN_BIG) {
+        if (Conf::endian == ENDIAN_BIG) {
             if (emitByte(static_cast<uint8_t>(val >> 8))) return NO_MEMORY;
             if (emitByte(static_cast<uint8_t>(val >> 0))) return NO_MEMORY;
         } else {
@@ -143,7 +136,7 @@ public:
     }
 
     Error emitUint32(uint32_t val) {
-        if (endian == ENDIAN_BIG) {
+        if (Conf::endian == ENDIAN_BIG) {
             if (emitUint16(static_cast<uint16_t>(val >> 16))) return NO_MEMORY;
             if (emitUint16(static_cast<uint16_t>(val >>  0))) return NO_MEMORY;
         } else {
@@ -154,7 +147,7 @@ public:
     }
 
 protected:
-    Insn &_insn;
+    Insn<Conf> &_insn;
 };
 
 } // namespace libasm

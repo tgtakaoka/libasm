@@ -29,10 +29,12 @@
 namespace libasm {
 namespace cli {
 
-template<typename Addr>
+template<typename Conf>
 class DisDriver {
+    typedef typename Conf::uintptr_t addr_t;
+
 public:
-    DisDriver(Disassembler<Addr> &disassembler)
+    DisDriver(Disassembler<Conf> &disassembler)
         : _disassembler(disassembler),
           _uppercase(false)
     {}
@@ -51,7 +53,7 @@ public:
             fprintf(stderr, "Can't open input file %s\n", _input_name);
             return 1;
         }
-        CliMemory<Addr> memory;
+        CliMemory<Conf> memory;
         if (readInput(input, _input_name, memory) != 0)
             return 1;
         fclose(input);
@@ -74,8 +76,8 @@ public:
         }
         memory.dump(
             [this, output, list, &memory]
-            (Addr base, const uint8_t *data, size_t size) {
-                DisListing<Addr> listing(_disassembler, memory, _uppercase);
+            (addr_t base, const uint8_t *data, size_t size) {
+                DisListing<Conf> listing(_disassembler, memory, _uppercase);
                 if (list) {
                     fprintf(list, "%s\n", listing.origin(base, true));
                     fflush(list);
@@ -84,9 +86,9 @@ public:
                     fprintf(output, "%s\n", listing.origin(base));
                     fflush(output);
                 }
-                Insn insn;
+                Insn<Conf> insn;
                 for (size_t pc = 0; pc < size; pc += insn.length()) {
-                    Addr address = base + pc;
+                    addr_t address = base + pc;
                     listing.disassemble(address, insn);
                     if (list) {
                         if (_disassembler.getError())
@@ -113,16 +115,16 @@ public:
     }
 
 private:
-    Disassembler<Addr> &_disassembler;
+    Disassembler<Conf> &_disassembler;
     bool _uppercase;
     const char *_progname;
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
-    BinFormatter<Addr> *_formatter;
+    BinFormatter<Conf> *_formatter;
 
     int readInput(
-        FILE *input, const char *filename, CliMemory<Addr> &memory) {
+        FILE *input, const char *filename, CliMemory<Conf> &memory) {
         int lineno = 0;
         int errors = 0;
         size_t line_len = 128;
@@ -130,7 +132,7 @@ private:
         int len;
         while ((len = getLine(line, line_len, input)) > 0) {
             lineno++;
-            Addr addr;
+            addr_t addr;
             size_t size;
             uint8_t *data = _formatter->decode(line, addr, size);
             if (data == nullptr) {
@@ -151,7 +153,7 @@ private:
         return errors;
     }
 
-    BinFormatter<Addr> *determineInputFormat(const char *input_name) {
+    BinFormatter<Conf> *determineInputFormat(const char *input_name) {
         FILE *input = fopen(input_name, "r");
         if (input == nullptr) {
             fprintf(stderr, "Can't open input file %s\n", input_name);
@@ -165,8 +167,8 @@ private:
         const char c = (len > 0) ? *line : 0;
         free(line);
 
-        if (c == 'S') return new SRecord<Addr>();
-        if (c == ':') return new IntelHex<Addr>();
+        if (c == 'S') return new SRecord<Conf>();
+        if (c == ':') return new IntelHex<Conf>();
         return nullptr;
     }
     

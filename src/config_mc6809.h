@@ -17,15 +17,23 @@
 #ifndef __CONFIG_MC6809_H__
 #define __CONFIG_MC6809_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
-namespace target
-{
-    typedef uint16_t uintptr_t;
-    typedef int16_t  ptrdiff_t;
-    typedef uint8_t  opcode_t;
-    typedef uint16_t insn_t;
-} // namespace target
+namespace libasm {
+namespace mc6809 {
+
+struct Config : ConfigBase<
+    uint16_t, int16_t, uint8_t, uint16_t,
+    ENDIAN_BIG, 5, 6>
+{};
+
+enum CpuType : host::uint_t {
+    MC6809,
+    HD6309,
+};
+
+} // namespace mc6809
+} // namespace libasm
 
 #endif // __CONFIG_MC6809_H__
 

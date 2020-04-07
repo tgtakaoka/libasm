@@ -27,7 +27,7 @@ namespace mc6809 {
 #define PSEUDO_ASSUME  0x03     // reuse COM opecode
 
 struct EntryPage {
-    const target::opcode_t prefix;
+    const Config::opcode_t prefix;
     const Entry *const table;
     const Entry *const end;
 };
@@ -42,7 +42,7 @@ public:
     static const char *listCpu();
     bool is6309() const { return _cpuType == HD6309; }
 
-    static bool isPrefixCode(target::opcode_t opCode);
+    static bool isPrefixCode(Config::opcode_t opCode);
 
 private:
     CpuType _cpuType;
@@ -50,7 +50,7 @@ private:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
-        const target::opcode_t opCode, const Entry *table, const Entry *end);
+        const Config::opcode_t opCode, const Entry *table, const Entry *end);
 
     static Error searchName(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);

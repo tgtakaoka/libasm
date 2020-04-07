@@ -34,10 +34,10 @@ public:
     static const char *listCpu();
     bool isZ80() const { return _cpuType == Z80; }
 
-    static bool isPrefixCode(target::opcode_t opCode);
+    static bool isPrefixCode(Config::opcode_t opCode);
 
-    static constexpr target::opcode_t PREFIX_IX = 0xDD;
-    static constexpr target::opcode_t PREFIX_IY = 0xFD;
+    static constexpr Config::opcode_t PREFIX_IX = 0xDD;
+    static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
 private:
     CpuType _cpuType;

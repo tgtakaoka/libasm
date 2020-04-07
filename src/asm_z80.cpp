@@ -92,14 +92,14 @@ Error AsmZ80::encodeIoaddr(
 
 Error AsmZ80::encodeRelative(
     InsnZ80 &insn, const Operand &left, const Operand &right) {
-    target::uintptr_t addr = left.val;
+    Config::uintptr_t addr = left.val;
     if (left.getError() == UNDEFINED_SYMBOL) addr = insn.address();
     if (insn.insnFormat() == CC4_FMT) {
         insn.embed(left.val << 3);
         addr = right.val;
         if (right.getError() == UNDEFINED_SYMBOL) addr = insn.address();
     }
-    const target::ptrdiff_t delta = addr - insn.address() - 2;
+    const Config::ptrdiff_t delta = addr - insn.address() - 2;
     if (delta < -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(delta));
@@ -143,7 +143,7 @@ Error AsmZ80::encodeIndexed(
 
 Error AsmZ80::encodeIndexedImmediate8(
     InsnZ80 &insn, const Operand &left, const Operand &right) {
-    target::opcode_t opc = insn.opCode();
+    Config::opcode_t opc = insn.opCode();
     insn.setInsnCode(0, insn.prefixCode());
     if (left.format == IX_OFF)
         RegZ80::encodeIndexReg(insn, left.reg);
@@ -368,7 +368,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
     return OK;
 }
 
-Error AsmZ80::encode(Insn &_insn) {
+Error AsmZ80::encode(Insn<Config> &_insn) {
     InsnZ80 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

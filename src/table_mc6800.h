@@ -36,7 +36,7 @@ private:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
-        const target::opcode_t opCode, const Entry *table, const Entry *end);
+        const Config::opcode_t opCode, const Entry *table, const Entry *end);
 };
 
 extern TableMc6800 TableMc6800;

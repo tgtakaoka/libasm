@@ -22,13 +22,12 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisMc6800 dis6800;
-    GenDriver<target::uintptr_t> driver(dis6800);
+    GenDriver<Config> driver(dis6800);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<target::uintptr_t> generator(
+    TestGenerator<Config> generator(
         dis6800,
-        sizeof(target::opcode_t),
         driver.uppercase());
     generator.generate(driver);
 

@@ -26,18 +26,31 @@
 namespace libasm {
 namespace test {
 
-class TestMemory : public DisMemory<target::uintptr_t> {
+template<typename Conf>
+class TestMemory : public DisMemory<Conf> {
 public:
     TestMemory()
-        : DisMemory(0),
+        : DisMemory<Conf>(0),
           _bytes(nullptr),
           _words(nullptr)
     {}
 
-    template<typename T>
-    void setMemory(const T *data, host::uint_t size);
+    void setMemory(const uint8_t *data, host::uint_t size) {
+        _bytes = data;
+        _words = nullptr;
+        _size = size;
+        _index = 0;
+    }
+    void setMemory(const uint16_t*data, host::uint_t size) {
+        _bytes = nullptr;
+        _words = data;
+        _size = size;
+        _index = 0;
+    }
     bool hasNext() const override { return _index < _size; }
-    void setAddress(target::uintptr_t addr) { _address = addr; }
+    void setAddress(typename Conf::uintptr_t addr) {
+        this->_address = addr;
+    }
     char *dump(char *out) {
         if (_words) {
             for (host::uint_t idx = 0; idx < _size; idx += 2) {
@@ -69,22 +82,6 @@ private:
     host::uint_t _size;
     host::uint_t _index;
 };
-
-template<>
-void TestMemory::setMemory<uint8_t>(const uint8_t *data, host::uint_t size) {
-    _bytes = data;
-    _words = nullptr;
-    _size = size;
-    _index = 0;
-}
-
-template<>
-void TestMemory::setMemory<uint16_t>(const uint16_t *data, host::uint_t size) {
-    _bytes = nullptr;
-    _words = data;
-    _size = size;
-    _index = 0;
-}
 
 } // namespace test
 } // namespace libasm

@@ -55,7 +55,7 @@ Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
     }
     if (*_scan == '<') _scan++;
     insn.emitInsn();
-    target::uintptr_t dir;
+    Config::uintptr_t dir;
     if (getOperand16(dir)) return getError();
     // TODO: Warning if dir isn't on _direct_page.
     insn.emitByte(static_cast<uint8_t>(dir));
@@ -69,7 +69,7 @@ Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
     }
     if (*_scan == '>') _scan++;
     insn.emitInsn();
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
@@ -96,11 +96,11 @@ Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
-    target::uintptr_t addr;
+    Config::uintptr_t addr;
     if (getOperand16(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const target::uintptr_t base = insn.address() + 2;
-    const target::ptrdiff_t delta = addr - base;
+    const Config::uintptr_t base = insn.address() + 2;
+    const Config::ptrdiff_t delta = addr - base;
     insn.emitInsn();
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
@@ -176,7 +176,7 @@ Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     return OK;
 }
 
-Error AsmMc6800::encode(Insn &_insn) {
+Error AsmMc6800::encode(Insn<Config> &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

@@ -46,11 +46,9 @@ enum OprSize : host::uint_t {
 };
 
 struct Entry {
-    const target::opcode_t opc;
+    const Config::opcode_t opc;
     const host::uint_t flags;
     const char *name;
-    static constexpr host::uint_t code_max = 3;
-    static constexpr host::uint_t name_max = 3;
 
     static inline AddrMode _addrMode(host::uint_t flags) {
         return AddrMode(flags & addrMode_gm);

@@ -17,15 +17,23 @@
 #ifndef __CONFIG_TMS9900_H__
 #define __CONFIG_TMS9900_H__
 
-#include "config_host.h"
+#include "config_base.h"
 
-namespace target
-{
-    typedef uint16_t uintptr_t;
-    typedef int16_t  ptrdiff_t;
-    typedef uint16_t opcode_t;
-    typedef uint16_t insn_t;
-} // namespace target
+namespace libasm {
+namespace tms9900 {
+
+struct Config : ConfigBase<
+    uint16_t, int16_t, uint16_t, uint16_t,
+    ENDIAN_BIG, 6, 4>
+{};
+
+enum CpuType : host::uint_t {
+    TMS9900,
+    TMS9995,
+};
+
+} // namespace tms9900
+} // namespace libasm
 
 #endif // __CONFIG_TMS9900_H__
 

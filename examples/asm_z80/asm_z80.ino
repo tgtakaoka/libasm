@@ -21,10 +21,10 @@ using namespace libasm;
 using namespace libasm::z80;
 
 AsmZ80 asz80;
-Assembler<target::uintptr_t> &assembler(asz80);
+Assembler<Config> &assembler(asz80);
 
 void assemble(const char *line) {
-  Insn insn;
+  Insn<Config> insn;
   if (assembler.encode(line, insn, 0x1000, nullptr)) {
     Cli.print(F("Error "));
     Cli.print(assembler.getError());

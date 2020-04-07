@@ -107,7 +107,7 @@ static constexpr Entry TABLE_00[] PROGMEM = {
     E(0xFE, CP,   NO_FMT,  A_REG,  IMM_8,  IMM8)
     E(0xC7, RST,  DST_FMT, VEC_NO, NO_OPR, INHR)
 };
-static constexpr target::opcode_t PREFIX_00 = 0x00;
+static constexpr Config::opcode_t PREFIX_00 = 0x00;
 
 static constexpr Entry TABLE_CB[] PROGMEM = {
     E(0x00, RLC,  SRC_FMT, REG_8,  NO_OPR, INHR)
@@ -131,7 +131,7 @@ static constexpr Entry TABLE_CB[] PROGMEM = {
     E(0x86, RES,  DST_FMT, BIT_NO, IX_OFF, INDX_IMM8)
     E(0xC6, SET,  DST_FMT, BIT_NO, IX_OFF, INDX_IMM8)
 };
-static constexpr target::opcode_t PREFIX_CB = 0xCB;
+static constexpr Config::opcode_t PREFIX_CB = 0xCB;
 
 static constexpr Entry TABLE_ED[] PROGMEM = {
     E(0x40, IN,   DST_FMT, REG_8,  C_PTR,  INHR)
@@ -165,7 +165,7 @@ static constexpr Entry TABLE_ED[] PROGMEM = {
     E(0xB3, OTIR, NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0xBB, OTDR, NO_FMT,  NO_OPR, NO_OPR, INHR)
 };
-static constexpr target::opcode_t PREFIX_ED = 0xED;
+static constexpr Config::opcode_t PREFIX_ED = 0xED;
 
 static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0x09, ADD,  PTR_FMT, IX_REG, REG_16X,INHR)
@@ -200,7 +200,7 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xE5, PUSH, NO_FMT,  IX_REG, NO_OPR, INHR)
 };
 
-static constexpr target::opcode_t Z80_CODE[] PROGMEM = {
+static constexpr Config::opcode_t Z80_CODE[] PROGMEM = {
     0x08, // EX AF,AF'
     0x10, // DJNZ
     0x18, // JR
@@ -216,9 +216,9 @@ static constexpr target::opcode_t Z80_CODE[] PROGMEM = {
 };
 
 static bool checkZ80Code(
-    target::opcode_t opCode,
-    const target::opcode_t *table, const target::opcode_t *end) {
-    for (const target::opcode_t *entry = table; entry < end; entry++) {
+    Config::opcode_t opCode,
+    const Config::opcode_t *table, const Config::opcode_t *end) {
+    for (const Config::opcode_t *entry = table; entry < end; entry++) {
         if (opCode == pgm_read_byte(entry))
             return true;
     }
@@ -270,10 +270,10 @@ static const Entry *searchEntry(
 }
 
 static const Entry *searchEntry(
-    const target::opcode_t opcode,
+    const Config::opcode_t opcode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
-        target::opcode_t opc = opcode;
+        Config::opcode_t opc = opcode;
         const InsnFormat iformat = Entry::_insnFormat(pgm_read_byte(&entry->flags1));
         switch (iformat) {
         case PTR_FMT: opc &= ~0x30; break;
@@ -292,7 +292,7 @@ static const Entry *searchEntry(
 }
 
 struct EntryPage {
-    const target::opcode_t prefix;
+    const Config::opcode_t prefix;
     const Entry *const table;
     const Entry *const end;
 };
@@ -333,7 +333,7 @@ static Error searchInsnCode(
         const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
-            char name[Entry::name_max + 1];
+            char name[Config::name_max + 1];
             pgm_strncpy(name, entry->name, sizeof(name));
             insn.setName(name);
             return OK;
@@ -353,7 +353,7 @@ static const EntryPage PAGES_Z80[] = {
     { TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX) },
 };
 
-bool TableZ80::isPrefixCode(target::opcode_t opCode) {
+bool TableZ80::isPrefixCode(Config::opcode_t opCode) {
     return opCode == PREFIX_CB || opCode == PREFIX_ED
         || opCode == TableZ80::PREFIX_IX || opCode == TableZ80::PREFIX_IY;
 }

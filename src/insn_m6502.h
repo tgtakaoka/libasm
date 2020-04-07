@@ -23,9 +23,9 @@
 namespace libasm {
 namespace m6502 {
 
-class InsnM6502 : public InsnBase<ENDIAN_LITTLE> {
+class InsnM6502 : public InsnBase<Config> {
 public:
-    InsnM6502(Insn &insn) : InsnBase(insn) {}
+    InsnM6502(Insn<Config> &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {
@@ -45,8 +45,8 @@ public:
         _flags = Entry::_flags(Entry::_cpuType(_flags), addrMode);
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
+    Config::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(Config::insn_t insnCode) {
         _insnCode = insnCode;
     }
     void emitInsn() {
@@ -54,7 +54,7 @@ public:
     }
 
 private:
-    target::insn_t _insnCode;
+    Config::insn_t _insnCode;
     host::uint_t _flags;
 };
 

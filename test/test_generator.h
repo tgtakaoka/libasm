@@ -133,20 +133,20 @@ private:
     }
 };
 
-template<typename Addr>
-class TestData : private DisMemory<Addr> {
+template<typename Conf>
+class TestData : private DisMemory<Conf> {
 public:
     TestData()
-        : DisMemory<Addr>(0),
+        : DisMemory<Conf>(0),
           _operands(60)
     {}
 
-    const Insn &insn() const { return _insn; }
+    const Insn<Conf> &insn() const { return _insn; }
     TextBuffer &operands() { return _operands; }
     const TextBuffer &operands() const { return _operands; }
     Error tryGenerate(
-        Disassembler<Addr> &dis,
-        Addr addr,
+        Disassembler<Conf> &dis,
+        typename Conf::uintptr_t addr,
         uint8_t *memory,
         int size,
         bool uppercase) {
@@ -164,24 +164,23 @@ private:
     uint8_t *_memory;
     int _memorySize;
     int _memoryIndex;
-    Insn _insn;
+    Insn<Conf> _insn;
 
-    // DisMemory<Addr>
+    // DisMemory<Conf>
     bool hasNext() const override { return _memoryIndex < _memorySize; }
     uint8_t nextByte() override { return _memory[_memoryIndex++]; }
 };
 
-template<typename Addr>
+template<typename Conf>
 class TestGenerator {
 public:
     TestGenerator(
-        Disassembler<Addr> &disassembler,
-        size_t opcodeSize,
+        Disassembler<Conf> &disassembler,
         bool uppercase)
         : _disassembler(disassembler),
-          _memorySize(disassembler.maxBytes()),
-          _endian(disassembler.endian()),
-          _opcodeSize(opcodeSize),
+          _memorySize(Conf::code_max),
+          _endian(Conf::endian),
+          _opcodeSize(sizeof(typename Conf::opcode_t)),
           _uppercase(uppercase) {
         _memory = new uint8_t[_memorySize];
         _addr = 0;
@@ -193,25 +192,25 @@ public:
 
     class Printer {
     public:
-        virtual void print(const Insn &insn, const char *operands) = 0;
+        virtual void print(const Insn<Conf> &insn, const char *operands) = 0;
     };
     typedef bool (*Filter)(uint8_t);
 
-    TestGenerator<Addr> &generate(Printer &printer, Filter filter = nullptr) {
+    TestGenerator<Conf> &generate(Printer &printer, Filter filter = nullptr) {
         DataGenerator gen(_memory, _endian, _opcodeSize, filter);
         return generate(printer, gen);
     }
 
-    TestGenerator<Addr> &generate(
-        Printer &printer, target::opcode_t opc1, Filter filter = nullptr) {
+    TestGenerator<Conf> &generate(
+        Printer &printer, uint8_t opc1, Filter filter = nullptr) {
         DataGenerator parent(_memory, _endian, _opcodeSize);
         parent.outUint8(opc1);
         DataGenerator gen(parent, _opcodeSize, filter);
         return generate(printer, gen);
     }
 
-    TestGenerator<Addr> &generate(
-        Printer &printer, target::opcode_t opc1, target::opcode_t opc2) {
+    TestGenerator<Conf> &generate(
+        Printer &printer, uint8_t opc1, uint8_t opc2) {
         DataGenerator parent(_memory, _endian, _opcodeSize * 2);
         parent.outUint8(opc1, 0);
         parent.outUint8(opc2, 1);
@@ -219,9 +218,8 @@ public:
         return generate(printer, gen);
     }
 
-    TestGenerator<Addr> &generate(
-        Printer &printer,
-        target::opcode_t opc1, target::opcode_t opc2, target::opcode_t opc3) {
+    TestGenerator<Conf> &generate(
+        Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
         DataGenerator parent(_memory, _endian, _opcodeSize * 3);
         parent.outUint8(opc1, 0);
         parent.outUint8(opc2, 1);
@@ -231,22 +229,22 @@ public:
     }
 
 private:
-    Disassembler<Addr> &_disassembler;
+    Disassembler<Conf> &_disassembler;
     const int _memorySize;
     const Endian _endian;
     const size_t _opcodeSize;
     const bool _uppercase;
     uint8_t *_memory;
-    TestData<Addr> _data1;
-    TestData<Addr> _data2;
+    TestData<Conf> _data1;
+    TestData<Conf> _data2;
 
-    Addr _addr;
+    typename Conf::uintptr_t _addr;
     Printer *_printer;
-    TestData<Addr> *_data;
-    TestData<Addr> *_prev;
+    TestData<Conf> *_data;
+    TestData<Conf> *_prev;
     int _similarCount;
 
-    TestGenerator<Addr> &generate(Printer &printer, DataGenerator &gen) {
+    TestGenerator<Conf> &generate(Printer &printer, DataGenerator &gen) {
         _printer = &printer;
         _data = &_data1;
         _prev = &_data2;
@@ -255,7 +253,7 @@ private:
         return *this;
     }
 
-    void printInsn(const TestData<Addr> *data) {
+    void printInsn(const TestData<Conf> *data) {
         _printer->print(data->insn(), data->operands().buffer());
         _addr += data->insn().length();
     }
