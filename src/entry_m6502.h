@@ -22,6 +22,48 @@
 namespace libasm {
 namespace m6502 {
 
+enum CpuType : host::uint_t {
+    M6502,
+    W65SC02,
+    R65C02BIT,
+    R65C02,
+    W65C02S,
+    W65C816,
+};
+
+enum AddrMode : host::uint_t {
+    // M6502
+    IMPL,                // Implied
+    ACCM,                // Accumulator A
+    IMM,                 // Immediate: #nn
+    ABS,                 // Absolute: abs
+    ZPG,                 // Zero Page: zp
+    ZPG_IDX,             // Zero Page Indexed: zp,X
+    ZPG_IDY,             // Zero Page Indexed: zp,Y
+    ABS_IDX,             // Absolute Indexed: abs,X
+    ABS_IDY,             // Absolute Indexed: abs,Y
+    REL,                 // Relative: abs
+    ZPG_IDX_IDIR,        // Indexed Indirect: (zp,X)
+    ZPG_IDIR_IDY,        // Indirect Indexed: (zp),Y
+    ABS_IDIR,            // Absolute Indirect: (abs)
+
+    // W65SC02
+    ABS_IDX_IDIR,        // Indexed Absolute Indirect: (abs,X)
+    ZPG_IDIR,            // Zero Page Indirect: (zp)
+    ZPG_REL,             // Zero Page Relative: zp,abs
+
+    // W65C816
+    ABS_LONG,            // Absolute Long: al
+    ABS_LONG_IDX,        // Absolute Long Indexed: al,x
+    ABS_IDIR_LONG,       // Absolute Indirect Long: [a]
+    REL_LONG,            // Relative Long: rl
+    SP_REL,              // Stack Relative: off,s
+    SP_REL_IDIR_IDY,     // Stack Relative Indirect Indexed: (off,s),y
+    ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
+    ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
+    BLOCK_MOVE,          // Block Move: #ss,#dd
+};
+
 struct Entry {
     const uint8_t insnCode;
     const host::uint_t flags;

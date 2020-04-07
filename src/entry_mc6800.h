@@ -22,6 +22,29 @@
 namespace libasm {
 namespace mc6800 {
 
+enum AddrMode : host::uint_t {
+    INH,  // Inherent
+    ACC,  // Accumulator
+    DIR,  // Direct page
+    EXT,  // Extended
+    IDX,  // Indexed
+    REL,  // Relative
+    IMM,  // Immediate
+};
+
+enum InsnAdjust : host::uint_t {
+    ADJ_ZERO = 0,
+    ADJ_AB01 = 1,   // Accumulator A:+0, B:+1
+    ADJ_AB16 = 2,  // Accumulator A:+0, B:+$10
+    ADJ_AB64 = 3,  // Accumulator A:+0, B:+$40
+};
+
+enum OprSize : host::uint_t {
+    SZ_NONE,                    // unknown
+    SZ_BYTE = 1,
+    SZ_WORD = 2,
+};
+
 struct Entry {
     const target::opcode_t opc;
     const host::uint_t flags;

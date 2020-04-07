@@ -22,6 +22,26 @@
 namespace libasm {
 namespace tms9900 {
 
+enum CpuType : host::uint_t {
+    TMS9900,
+    TMS9995,
+};
+
+enum AddrMode : host::uint_t {
+    INH,                        // ---- ---- ---- ----
+    IMM,                        // ---- ---- ---- ---- + nnnn
+    REG,                        // ---- ---- ---- wwww
+    REG_IMM,                    // ---- ---- ---- wwww + nnnn
+    CNT_REG,                    // ---- ---- cccc wwww
+    SRC,                        // ---- ---- --SS ssss
+    CNT_SRC,                    // ---- --cc ccSS ssss
+    XOP_SRC,                    // ---- --vv vvSS ssss
+    REG_SRC,                    // ---- --dd ddSS ssss
+    DST_SRC,                    // ---- DDdd ddSS ssss
+    REL,                        // ---- ---- nnnn nnnn
+    CRU_OFF,                    // ---- ---- nnnn nnnn
+};
+
 struct Entry {
     const target::insn_t insnCode;
     const host::uint_t flags;
