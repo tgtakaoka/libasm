@@ -181,7 +181,7 @@ static void test_register() {
     TEST("SUBR A,B", 0x10, 0x32, 0x89);
     TEST("SBCR A,B", 0x10, 0x33, 0x89);
     TEST("ANDR A,B", 0x10, 0x34, 0x89);
-    TEST("ORR A,B",  0x10, 0x35, 0x89);
+    TEST("ORR  A,B", 0x10, 0x35, 0x89);
     TEST("EORR A,B", 0x10, 0x36, 0x89);
     TEST("CMPR A,B", 0x10, 0x37, 0x89);
 
@@ -189,28 +189,20 @@ static void test_register() {
     TEST("TFR A,F",  0x1F, 0x8F);
     TEST("TFR E,A",  0x1F, 0xE8);
     TEST("TFR F,A",  0x1F, 0xF8);
-#if defined(HD6309_0_REG)
-    TEST("TFR A,0",  0x1F, 0x8C);
-    TEST("TFR 0,A",  0x1F, 0xC8);
-#endif
-#if defined(HD6309_Z_REG)
     TEST("TFR A,Z",  0x1F, 0x8C);
     TEST("TFR Z,A",  0x1F, 0xC8);
-#endif
+    TEST("TFR A,0",  0x1F, 0x8C);
+    TEST("TFR 0,A",  0x1F, 0xC8);
     TEST("TFR D,W",  0x1F, 0x06);
     TEST("TFR D,V",  0x1F, 0x07);
     TEST("TFR W,D",  0x1F, 0x60);
     TEST("TFR V,D",  0x1F, 0x70);
     TEST("TFR W,PC", 0x1F, 0x65);
     TEST("TFR S,W",  0x1F, 0x46);
-#if defined(HD6309_0_REG)
-    TEST("TFR 00,V", 0x1F, 0xD7);
-    TEST("TFR X,00", 0x1F, 0x1D);
-#endif
-#if defined(HD6309_Z_REG)
     TEST("TFR Z,V",  0x1F, 0xC7);
     TEST("TFR X,Z",  0x1F, 0x1C);
-#endif
+    TEST("TFR 0,V",  0x1F, 0xC7);
+    TEST("TFR X,0",  0x1F, 0x1C);
 }
 
 static void test_relative() {
