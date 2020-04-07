@@ -21,6 +21,9 @@
 
 #include <string>
 
+namespace libasm {
+namespace cli {
+
 template<typename Addr>
 class DisListing : public AsmLine<Addr> {
 public:
@@ -102,6 +105,9 @@ private:
     int instructionWidth() const override { return _disassembler.maxName() + 1; }
     int operandWidth() const override { return _operandWidth; }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

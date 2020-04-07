@@ -18,6 +18,7 @@
 #include "gen_driver.h"
 
 using namespace libasm::i8080;
+using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisI8080 dis8080;

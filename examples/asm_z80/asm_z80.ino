@@ -17,6 +17,7 @@
 #include <asm_z80.h>
 #include <libcli.h>
 
+using namespace libasm;
 using namespace libasm::z80;
 
 AsmZ80 asz80;

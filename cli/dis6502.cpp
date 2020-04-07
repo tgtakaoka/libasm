@@ -18,6 +18,7 @@
 #include "dis_driver.h"
 
 using namespace libasm::m6502;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisM6502 disassembler;

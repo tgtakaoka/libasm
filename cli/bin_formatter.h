@@ -22,6 +22,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+namespace libasm {
+namespace cli {
+
 template<typename Addr>
 class BinFormatter {
 public:
@@ -245,6 +248,9 @@ public:
         return this->_data;
     }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

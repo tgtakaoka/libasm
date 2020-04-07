@@ -17,6 +17,7 @@
 #include <asm_mc6809.h>
 #include <libcli.h>
 
+using namespace libasm;
 using namespace libasm::mc6809;
 
 AsmMc6809 as6809;

@@ -34,6 +34,10 @@ public:
         _flags = flags;
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     target::insn_t embed(target::insn_t data, host::uint_t gp = 0) {
         return (_insnCode |= (data << gp));
     }
@@ -63,6 +67,7 @@ public:
     }
 
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags;
     EaSize _size;
 

@@ -21,6 +21,9 @@
 
 #include "test_asserter.h"
 
+namespace libasm {
+namespace test {
+
 bool TestAsserter::check() const {
     if (_fail_count == 0) {
         printf("  PASS (%4d)     %s\n", _pass_count, _test_name);
@@ -138,6 +141,9 @@ void TestAsserter::not_equals(
     _fail_count++;
     printf("%s: not expected '%s': actual '%s'\n", message, expected, actual);
 }
+
+} // namespace test
+} // namespace libasm
 
 // Local Variables:
 // mode: c++

@@ -21,6 +21,8 @@
 
 #include <ctype.h>
 
+namespace libasm {
+
 class StrMemory : public DisMemory<target::uintptr_t> {
 public:
     StrMemory(target::uintptr_t addr, const char *line)
@@ -131,6 +133,8 @@ private:
         return false;
     }
 };
+
+} // namespace libasm
 
 #endif
 

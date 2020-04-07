@@ -24,6 +24,12 @@
 #include <stdio.h>
 #include <string.h>
 
+namespace libasm {
+namespace test {
+
+using libasm::cli::AsmLine;
+using libasm::cli::AsmListing;
+
 template<typename Addr>
 class GenDriver : public TestGenerator<Addr>::Printer,
                   private AsmLine<Addr> {
@@ -188,6 +194,9 @@ private:
         fprintf(out, "\n\n");
     }
 };
+
+} // namespace test
+} // namespace libasm
 
 #endif
 

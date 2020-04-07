@@ -19,6 +19,9 @@
 
 #include <string>
 
+namespace libasm {
+namespace cli {
+
 template<typename Address>
 class AsmLine {
 public:
@@ -209,6 +212,9 @@ private:
         _next += formattedBytes;
     }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

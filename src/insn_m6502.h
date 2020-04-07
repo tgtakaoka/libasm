@@ -45,11 +45,16 @@ public:
         _flags = Entry::_flags(Entry::_cpuType(_flags), addrMode);
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     void emitInsn() {
         emitByte(_insnCode);
     }
 
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags;
 };
 

@@ -350,8 +350,7 @@ const Entry *TableM6502::searchEntry(
 }
 
 const Entry *TableM6502::searchEntry(
-    const target::insn_t insnCode,
-    const Entry *table, const Entry *end) {
+    const target::insn_t insnCode, const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         if (insnCode == pgm_read_byte(&entry->insnCode))
             return entry;

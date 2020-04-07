@@ -19,6 +19,9 @@
 
 #include <stdint.h>
 
+namespace libasm {
+namespace test {
+
 class TextBuffer {
 public:
     TextBuffer(int max) {
@@ -55,6 +58,9 @@ private:
     int _digitsInSuffix;
     void toTokens();
 };
+
+} // namespace test
+} // namespace libasm
 
 #endif
 

@@ -20,11 +20,17 @@
 #include <stdio.h>
 #include <stdint.h>
 
+namespace libasm {
+namespace cli {
+
 /*
  * Simplified version of getline() of glibc.
  * Line terminate '\n' will be eliminated.
  */
 int getLine(char *&lineptr, size_t &t, FILE *input);
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

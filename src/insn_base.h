@@ -23,6 +23,8 @@
 #include "error_reporter.h"
 #include "dis_memory.h"
 
+namespace libasm {
+
 enum Endian {
     ENDIAN_BIG,
     ENDIAN_LITTLE,
@@ -93,11 +95,6 @@ public:
         _insn.setName(name, end ? end - name : strlen(name));
     }
 
-    target::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(target::insn_t insnCode) {
-        _insnCode = insnCode;
-    }
-
     Error readByte(DisMemory<target::uintptr_t> &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
@@ -158,9 +155,9 @@ public:
 
 protected:
     Insn &_insn;
-
-    target::insn_t _insnCode;
 };
+
+} // namespace libasm
 
 #endif // __INSN_BASE_H__
 

@@ -17,7 +17,9 @@
 #include "asm_i8080.h"
 #include "test_asm_helper.h"
 
+using namespace libasm;
 using namespace libasm::i8080;
+using namespace libasm::test;
 
 TestAsserter asserter;
 TestSymtab symtab;

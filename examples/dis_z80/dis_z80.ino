@@ -18,6 +18,7 @@
 #include <str_memory.h>
 #include <libcli.h>
 
+using namespace libasm;
 using namespace libasm::z80;
 
 DisZ80 disz80;

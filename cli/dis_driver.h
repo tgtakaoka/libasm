@@ -26,6 +26,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+namespace libasm {
+namespace cli {
+
 template<typename Addr>
 class DisDriver {
 public:
@@ -252,6 +255,9 @@ private:
         return sep ? sep + 1 : str;
     }
 };
+
+} // namespace cli
+} // namespace libasm
 
 #endif
 

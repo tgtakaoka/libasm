@@ -42,6 +42,10 @@ public:
         _flags2 = other._flags2;
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     void embed(target::opcode_t data) {
         _insnCode |= data;
     }
@@ -63,6 +67,7 @@ public:
     }
 
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags1;
     host::uint_t _flags2;
 };

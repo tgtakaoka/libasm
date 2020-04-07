@@ -42,6 +42,10 @@ public:
             addrMode);
     }
 
+    target::insn_t insnCode() const { return _insnCode; }
+    void setInsnCode(target::insn_t insnCode) {
+        _insnCode = insnCode;
+    }
     void setInsnCode(target::opcode_t prefixCode, target::opcode_t opCode) {
         _insnCode = (static_cast<target::insn_t>(prefixCode) << 8) | opCode;
     }
@@ -60,6 +64,7 @@ public:
     }
 
 private:
+    target::insn_t _insnCode;
     host::uint_t _flags;
 };
 

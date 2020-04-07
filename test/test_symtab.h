@@ -23,6 +23,9 @@
 #include <string>
 #include <string.h>
 
+namespace libasm {
+namespace test {
+
 class TestSymtab : public SymbolTable {
 public:
     const char *lookup(uint32_t addr) override {
@@ -75,6 +78,9 @@ private:
         _value_to_symbol[value] = key;
     }
 };
+
+} // namespace test
+} // namespace libasm
 
 #endif
 

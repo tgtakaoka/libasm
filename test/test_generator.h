@@ -27,6 +27,9 @@
 #include <stdio.h>
 #endif
 
+namespace libasm {
+namespace test {
+
 class DataGenerator {
 public:
     typedef bool (*Filter)(uint8_t);
@@ -369,6 +372,9 @@ private:
         gen.debugPrint("@@ leave", _memory);
     }
 };
+
+} // namespace test
+} // namespace libasm
 
 #endif
 

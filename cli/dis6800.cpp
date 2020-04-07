@@ -18,6 +18,7 @@
 #include "dis_driver.h"
 
 using namespace libasm::mc6800;
+using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisMc6800 disassembler;
