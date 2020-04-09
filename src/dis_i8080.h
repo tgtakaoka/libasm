@@ -40,11 +40,11 @@ private:
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
-    Error decodeImmediate8(DisMemory<Config> &memory, InsnI8080 &insn);
-    Error decodeImmediate16(DisMemory<Config> &memory, InsnI8080 &insn);
-    Error decodeDirect(DisMemory<Config> &memory, InsnI8080 &insn);
-    Error decodeIoaddr(DisMemory<Config> &memory, InsnI8080 &insn);
-    Error decode(DisMemory<Config> &memory, Insn &insn) override;
+    Error decodeImmediate8(DisMemory &memory, InsnI8080 &insn);
+    Error decodeImmediate16(DisMemory &memory, InsnI8080 &insn);
+    Error decodeDirect(DisMemory &memory, InsnI8080 &insn);
+    Error decodeIoaddr(DisMemory &memory, InsnI8080 &insn);
+    Error decode(DisMemory &memory, Insn &insn) override;
 };
 
 } // namespace i8080

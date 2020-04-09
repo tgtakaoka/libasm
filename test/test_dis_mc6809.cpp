@@ -22,7 +22,7 @@ using namespace libasm::mc6809;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config> memory;
+TestMemory memory;
 TestSymtab symtab;
 DisMc6809 dis6809;
 Disassembler<Config> &disassembler(dis6809);
@@ -1040,9 +1040,9 @@ static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
     disassembler.decode(memory, insn, operands, nullptr);
     char message[40];
     if (prefix == 0) {
-        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, opc);
+        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, opc);
     } else {
-        sprintf(message, "%s opecode 0x%02x 0x%02" PRIX8, __FUNCTION__, prefix, opc);
+        sprintf(message, "%s opecode 0x%02x 0x%02x", __FUNCTION__, prefix, opc);
     }
     asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
 }

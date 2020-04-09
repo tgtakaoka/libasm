@@ -48,7 +48,7 @@ public:
         return _assembler.listCpu();
     }
 
-    Error assembleLine(const char *line, CliMemory<Conf> &memory) {
+    Error assembleLine(const char *line, CliMemory &memory) {
         _scan = line;
         if (_scan == nullptr) {
             return OK;
@@ -273,7 +273,7 @@ protected:
         const char *label;      // if label defined
         int label_len;
         addr_t address;
-        CliMemory<Conf> *memory;
+        CliMemory *memory;
         int length;
         bool value_defined;
         uint32_t value;
@@ -292,12 +292,12 @@ protected:
     }
 
     virtual Error processDirective(
-        const char *directive, const char *&label, CliMemory<Conf> &memory) {
+        const char *directive, const char *&label, CliMemory &memory) {
         return UNKNOWN_DIRECTIVE;
     }
 
     Error processPseudo(
-        const char *directive, const char *&label, CliMemory<Conf> &memory) {
+        const char *directive, const char *&label, CliMemory &memory) {
         if (processDirective(directive, label, memory) != UNKNOWN_DIRECTIVE)
             return getError();
         if (strcasecmp(directive, "org") == 0)
@@ -334,7 +334,7 @@ protected:
         return setError(OK);
     }
 
-    Error defineLabel(const char *&label, CliMemory<Conf> &memory) {
+    Error defineLabel(const char *&label, CliMemory &memory) {
         if (label == nullptr)
             return setError(MISSING_LABEL);
         if (_reportDuplicate && hasSymbol(label))
@@ -368,7 +368,7 @@ protected:
         return openSource(filename, end);
     }
 
-    Error defineBytes(CliMemory<Conf> &memory) {
+    Error defineBytes(CliMemory &memory) {
         _list.address = _origin;
         _list.length = 0;
         do {
@@ -410,7 +410,7 @@ protected:
         return setError(OK);
     }
 
-    Error defineWords(CliMemory<Conf> &memory) {
+    Error defineWords(CliMemory &memory) {
         _list.address = _origin;
         _list.length = 0;
         do {
@@ -520,7 +520,7 @@ public:
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        CliMemory<Conf> &memory) override {
+        CliMemory &memory) override {
         if (strcasecmp(directive, "fcb") == 0 ||
             strcasecmp(directive, "fcc") == 0)
             return this->defineBytes(memory);
@@ -541,7 +541,7 @@ public:
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        CliMemory<Conf> &memory) override {
+        CliMemory &memory) override {
         if (strcmp(directive, ":=") == 0
             || strcmp(directive, "=") == 0) {
             return this->defineLabel(label, memory);
@@ -565,7 +565,7 @@ public:
 protected:
     Error processDirective(
         const char *directive, const char *&label,
-        CliMemory<Conf> &memory) override {
+        CliMemory &memory) override {
         this->_parser.isSymbolLetter(0);
         if (strcasecmp(directive, "db") == 0)
             return this->defineBytes(memory);

@@ -115,7 +115,9 @@ TEST_OBJS= \
 
 TESTS=$(TEST_OBJS:.o=)
 
-OBJS_common  = test_asserter.o asm_operand.o dis_operand.o text_buffer.o
+OBJS_asm = asm_operand.o test_asserter.o
+OBJS_dis = dis_operand.o test_asserter.o test_memory.o
+OBJS_gen = dis_operand.o test_memory.o text_buffer.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
 OBJS_m6502   = table_m6502.o   reg_m6502.o
@@ -124,8 +126,7 @@ OBJS_z80     = table_z80.o     reg_z80.o
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o
 OBJS_mc68000 = table_mc68000.o reg_mc68000.o
 OBJS	 = \
-	$(TEST_OBJS) \
-	$(OBJS_common) \
+	$(TEST_OBJS) (OBJS_asm) $(OBJS_dis) $(OBJS_gen) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
 	$(OBJS_mc6800)  asm_mc6800.o  dis_mc6800.o  \
 	$(OBJS_m6502)   asm_m6502.o   dis_m6502.o   \
@@ -136,58 +137,58 @@ OBJS	 = \
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
-test_asm_mc6809: test_asm_mc6809.o   asm_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
+test_asm_mc6809: test_asm_mc6809.o   asm_mc6809.o  $(OBJS_mc6809)  $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_mc6809: test_dis_mc6809.o   dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
+test_dis_mc6809: test_dis_mc6809.o   dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_mc6800: test_asm_mc6800.o   asm_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
+test_asm_mc6800: test_asm_mc6800.o   asm_mc6800.o  $(OBJS_mc6800)  $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_mc6800: test_dis_mc6800.o   dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
+test_dis_mc6800: test_dis_mc6800.o   dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_m6502:  test_asm_m6502.o    asm_m6502.o   $(OBJS_m6502)   $(OBJS_common)
+test_asm_m6502:  test_asm_m6502.o    asm_m6502.o   $(OBJS_m6502)   $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_m6502:  test_dis_m6502.o    dis_m6502.o   $(OBJS_m6502)   $(OBJS_common)
+test_dis_m6502:  test_dis_m6502.o    dis_m6502.o   $(OBJS_m6502)   $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_i8080:  test_asm_i8080.o    asm_i8080.o   $(OBJS_i8080)   $(OBJS_common)
+test_asm_i8080:  test_asm_i8080.o    asm_i8080.o   $(OBJS_i8080)   $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_i8080:  test_dis_i8080.o    dis_i8080.o   $(OBJS_i8080)   $(OBJS_common)
+test_dis_i8080:  test_dis_i8080.o    dis_i8080.o   $(OBJS_i8080)   $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_z80:    test_asm_z80.o      asm_z80.o     $(OBJS_z80)     $(OBJS_common)
+test_asm_z80:    test_asm_z80.o      asm_z80.o     $(OBJS_z80)     $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_z80:    test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_common)
+test_dis_z80:    test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_tms9900: test_asm_tms9900.o asm_tms9900.o $(OBJS_tms9900) $(OBJS_common)
+test_asm_tms9900: test_asm_tms9900.o asm_tms9900.o $(OBJS_tms9900) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_tms9900: test_dis_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_common)
+test_dis_tms9900: test_dis_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_common)
+test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_common)
+test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_moto:  test_expr_moto.o  $(OBJS_common)
+test_expr_moto:  test_expr_moto.o  $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_intel: test_expr_intel.o $(OBJS_common)
+test_expr_intel: test_expr_intel.o $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_cstyle:test_expr_cstyle.o $(OBJS_common)
+test_expr_cstyle:test_expr_cstyle.o $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
-gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_common)
+gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_mc6809 -u -C 6809 -o gen_mc6809.asm
 	./gen_mc6809 -u -C 6309 -o gen_hd6309.asm
-gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_common)
+gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_mc6800 -u -C 6800  -o gen_mc6800.asm
-gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_common)
+gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_m6502 -u -C 6502    -o gen_m6502.asm
 	./gen_m6502 -u -C 65sc02  -o gen_w65sc02.asm
 	./gen_m6502 -u -C 65c02   -o gen_r65c02.asm
 	./gen_m6502 -u -C w65c02s -o gen_w65c02s.asm
-gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)  $(OBJS_common)
+gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_i8080 -u -C 8080 -o gen_i8080.asm
-gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)  $(OBJS_common)
+gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_z80   -u -C z80  -o gen_z80.asm
 	./gen_z80   -u -C 8080 -o gen_z80_i8080.asm

@@ -17,15 +17,14 @@
 #ifndef __DIS_MEMORY_H__
 #define __DIS_MEMORY_H__
 
+#include <stdint.h>
+
 namespace libasm {
 
-template<typename Conf>
 class DisMemory {
-    typedef typename Conf::uintptr_t addr_t;
-
 public:
     virtual bool hasNext() const = 0;
-    addr_t address() const { return _address; }
+    uint32_t address() const { return _address; }
     uint8_t readByte() {
         const uint8_t val = nextByte();
         _address++;
@@ -33,9 +32,9 @@ public:
     }
 
 protected:
-    addr_t _address;
+    uint32_t _address;
 
-    DisMemory(addr_t address) : _address(address) {}
+    DisMemory(uint32_t address) : _address(address) {}
     virtual uint8_t nextByte() = 0;
 };
 

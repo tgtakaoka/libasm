@@ -24,7 +24,7 @@ using namespace libasm::mc68000;
 DisMc68000 dis68k;
 Disassembler<Config> &disassembler(dis68k);
 
-void disassemble(DisMemory<Config> &memory) {
+void disassemble(DisMemory &memory) {
   char operands[20];
   Insn insn;
   while (memory.hasNext()) {

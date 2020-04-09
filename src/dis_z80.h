@@ -46,7 +46,7 @@ private:
     void outDataRegister(RegName regName);
     void outConditionName(Config::opcode_t cc, bool cc8 = true);
 
-    Error decodeOperand(DisMemory<Config> &memory, Insn& insn);
+    Error decodeOperand(DisMemory &memory, Insn& insn);
 
     Error decodeInherent(InsnZ80 &insn);
     Error decodeImmediate8(InsnZ80 &insn, uint8_t val);
@@ -60,7 +60,7 @@ private:
     Error decodeIndexedBitOp(
         InsnZ80 &insn, int8_t offset, Config::opcode_t opCode);
 
-    Error decode(DisMemory<Config> &memory, Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn) override;
 };
 
 } // namespace z80

@@ -42,10 +42,10 @@ private:
     void outAddress(Config::uintptr_t addr, bool relax = true);
 
     Error decodeOperand(
-        DisMemory<Config> &memory, InsnTms9900 &insn, host::uint_t opr);
-    Error decodeImmediate(DisMemory<Config> &memory, InsnTms9900 &insn);
+        DisMemory &memory, InsnTms9900 &insn, host::uint_t opr);
+    Error decodeImmediate(DisMemory &memory, InsnTms9900 &insn);
     Error decodeRelative(InsnTms9900 &insn);
-    Error decode(DisMemory<Config> &memory, Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn) override;
 };
 
 } // namespace tms9900

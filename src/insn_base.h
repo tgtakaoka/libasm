@@ -89,13 +89,13 @@ public:
         _insn.setName(name, end ? end - name : strlen(name));
     }
 
-    Error readByte(DisMemory<Conf> &memory, uint8_t &val) {
+    Error readByte(DisMemory &memory, uint8_t &val) {
         if (!memory.hasNext()) return NO_MEMORY;
         val = memory.readByte();
         return _insn.emitByte(val);
     }
 
-    Error readUint16(DisMemory<Conf> &memory, uint16_t &val) {
+    Error readUint16(DisMemory &memory, uint16_t &val) {
         uint8_t msb, lsb;
         if (Conf::endian == ENDIAN_BIG) {
             if (readByte(memory, msb)) return NO_MEMORY;
@@ -108,7 +108,7 @@ public:
         return OK;
     }
 
-    Error readUint32(DisMemory<Conf> &memory, uint32_t &val) {
+    Error readUint32(DisMemory &memory, uint32_t &val) {
         uint16_t msw, lsw;
         if (Conf::endian == ENDIAN_BIG) {
             if (readUint16(memory, msw)) return NO_MEMORY;

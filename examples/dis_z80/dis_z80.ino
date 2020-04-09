@@ -24,7 +24,7 @@ using namespace libasm::z80;
 DisZ80 disz80;
 Disassembler<Config> &disassembler(disz80);
 
-void disassemble(DisMemory<Config> &memory) {
+void disassemble(DisMemory &memory) {
   char operands[20];
   Insn insn;
   while (memory.hasNext()) {

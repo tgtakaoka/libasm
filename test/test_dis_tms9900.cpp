@@ -22,7 +22,7 @@ using namespace libasm::tms9900;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config> memory;
+TestMemory memory;
 TestSymtab symtab;
 DisTms9900 dis9900;
 Disassembler<Config> &disassembler(dis9900);

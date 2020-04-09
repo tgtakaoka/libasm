@@ -134,10 +134,10 @@ private:
 };
 
 template<typename Conf>
-class TestData : private DisMemory<Conf> {
+class TestData : private DisMemory {
 public:
     TestData()
-        : DisMemory<Conf>(0),
+        : DisMemory(0),
           _operands(60)
     {}
 
@@ -166,7 +166,7 @@ private:
     int _memoryIndex;
     Insn _insn;
 
-    // DisMemory<Conf>
+    // DisMemory
     bool hasNext() const override { return _memoryIndex < _memorySize; }
     uint8_t nextByte() override { return _memory[_memoryIndex++]; }
 };

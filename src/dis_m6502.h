@@ -42,12 +42,12 @@ private:
 
     RegBase &getRegister() override { return _regs; }
 
-    Error decodeImmediate(DisMemory<Config> &memory, InsnM6502 &insn);
-    Error decodeAbsolute(DisMemory<Config> &memory, InsnM6502 &insn);
-    Error decodeZeroPage(DisMemory<Config> &memory, InsnM6502 &insn);
-    Error decodeRelative(DisMemory<Config> &memory, InsnM6502 &insn);
-    Error decodeBlockMove(DisMemory<Config> &memory, InsnM6502 &insn);
-    Error decode(DisMemory<Config> &memory, Insn &insn) override;
+    Error decodeImmediate(DisMemory &memory, InsnM6502 &insn);
+    Error decodeAbsolute(DisMemory &memory, InsnM6502 &insn);
+    Error decodeZeroPage(DisMemory &memory, InsnM6502 &insn);
+    Error decodeRelative(DisMemory &memory, InsnM6502 &insn);
+    Error decodeBlockMove(DisMemory &memory, InsnM6502 &insn);
+    Error decode(DisMemory &memory, Insn &insn) override;
 };
 
 } // namespace m6502

@@ -22,7 +22,7 @@ using namespace libasm::z80;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config> memory;
+TestMemory memory;
 TestSymtab symtab;
 DisZ80 disz80;
 Disassembler<Config> &disassembler(disz80);

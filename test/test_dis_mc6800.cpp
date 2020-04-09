@@ -22,7 +22,7 @@ using namespace libasm::mc6800;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config> memory;
+TestMemory memory;
 TestSymtab symtab;
 DisMc6800 dis6800;
 Disassembler<Config> &disassembler(dis6800);
@@ -329,7 +329,7 @@ static void assert_illegal(uint8_t opc) {
     memory.setMemory(&codes[0], 1);
     disassembler.decode(memory, insn, operands, nullptr);
     char message[40];
-    sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, opc);
+    sprintf(message, "%s opecode 0x%02x", __FUNCTION__, opc);
     asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
 }
 

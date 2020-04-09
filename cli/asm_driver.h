@@ -42,13 +42,13 @@ public:
             return usage();
 
         _directive.setSymbolMode(false, true);
-        CliMemory<Conf> memory;
+        CliMemory memory;
         if (assemble(memory, nullptr) != 0)
             return 1;
 
         do {
             _directive.setSymbolMode(true, false);
-            CliMemory<Conf> next;
+            CliMemory next;
             if (assemble(next, nullptr) != 0)
                 return 1;
             if (memory.equals(next))
@@ -105,7 +105,7 @@ private:
     bool _uppercase;
     bool _line_number;
 
-    int assemble(CliMemory<Conf> &memory, FILE *list) {
+    int assemble(CliMemory &memory, FILE *list) {
         if (_directive.openSource(_input_name)) {
             fprintf(stderr, "Can't open input file %s\n", _input_name);
             return 1;
@@ -132,7 +132,7 @@ private:
         return errors;
     }
 
-    void printListing(CliMemory<Conf> &memory, FILE *out) {
+    void printListing(CliMemory &memory, FILE *out) {
         _listing.reset(_directive, _uppercase, _line_number);
         do {
             fprintf(out, "%s\n", _listing.getLine());

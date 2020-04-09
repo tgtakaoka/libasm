@@ -22,7 +22,7 @@ using namespace libasm::m6502;
 using namespace libasm::test;
 
 TestAsserter asserter;
-TestMemory<Config> memory;
+TestMemory memory;
 TestSymtab symtab;
 DisM6502 dis6502;
 Disassembler<Config> &disassembler(dis6502);
@@ -681,7 +681,7 @@ static void test_illegal_m6502() {
         memory.setMemory(&illegals[idx], 1);
         disassembler.decode(memory, insn, operands, nullptr);
         char message[40];
-        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);
+        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, illegals[idx]);
         asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 }
@@ -703,7 +703,7 @@ static void test_illegal_w65sc02() {
         memory.setMemory(&illegals[idx], 1);
         disassembler.decode(memory, insn, operands, nullptr);
         char message[40];
-        sprintf(message, "%s opecode 0x%02" PRIX8, __FUNCTION__, illegals[idx]);
+        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, illegals[idx]);
         asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
     }
 }

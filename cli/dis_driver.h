@@ -53,7 +53,7 @@ public:
             fprintf(stderr, "Can't open input file %s\n", _input_name);
             return 1;
         }
-        CliMemory<Conf> memory;
+        CliMemory memory;
         if (readInput(input, _input_name, memory) != 0)
             return 1;
         fclose(input);
@@ -124,7 +124,7 @@ private:
     BinFormatter<Conf> *_formatter;
 
     int readInput(
-        FILE *input, const char *filename, CliMemory<Conf> &memory) {
+        FILE *input, const char *filename, CliMemory &memory) {
         int lineno = 0;
         int errors = 0;
         size_t line_len = 128;

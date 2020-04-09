@@ -41,19 +41,19 @@ private:
     void outRegister(RegName regName);
 
     // MC6809
-    Error decodeDirectPage(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeIndexed(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeExtended(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeRelative(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeImmediate(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeStackOp(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeRegisters(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeExtended(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeStackOp(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn);
     // HD6309
-    Error decodeImmediatePlus(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeBitOperation(DisMemory<Config> &memory, InsnMc6809 &insn);
-    Error decodeTransferMemory(DisMemory<Config> &memory, InsnMc6809 &insn);
+    Error decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeBitOperation(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn);
 
-    Error decode(DisMemory<Config> &memory,  Insn &insn) override;
+    Error decode(DisMemory &memory,  Insn &insn) override;
 };
 
 } // namespace mc6809

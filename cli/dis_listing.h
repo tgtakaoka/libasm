@@ -31,7 +31,7 @@ class DisListing : public AsmLine<typename Conf::uintptr_t> {
 public:
     DisListing(
         Disassembler<Conf>&disassembler,
-        CliMemory<Conf> &memory,
+        CliMemory &memory,
         bool uppercase = false)
         : _disassembler(disassembler),
           _memory(memory),
@@ -68,7 +68,7 @@ public:
 
 private:
     Disassembler<Conf> &_disassembler;
-    CliMemory<Conf> &_memory;
+    CliMemory &_memory;
     AsmListing<Conf> _listing;
     bool _uppercase;
     int _labelWidth;

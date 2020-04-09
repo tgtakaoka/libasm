@@ -42,14 +42,14 @@ private:
     bool outAccumulator(const InsnMc6800 &insn);
 
     // MC6800
-    Error decodeInherent(DisMemory<Config> &memory, InsnMc6800 &insn);
-    Error decodeDirectPage(DisMemory<Config> &memory, InsnMc6800 &insn);
-    Error decodeExtended(DisMemory<Config> &memory, InsnMc6800 &insn);
-    Error decodeIndexed(DisMemory<Config> &memory, InsnMc6800 &insn);
-    Error decodeRelative(DisMemory<Config> &memory, InsnMc6800 &insn);
-    Error decodeImmediate(DisMemory<Config> &memory, InsnMc6800 &insn);
+    Error decodeInherent(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn);
 
-    Error decode(DisMemory<Config> &memory, Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn) override;
 };
 
 } // namespace m6502

@@ -24,10 +24,10 @@
 namespace libasm {
 
 template<typename Conf>
-class StrMemory : public DisMemory<Conf> {
+class StrMemory : public DisMemory {
 public:
     StrMemory(typename Conf::uintptr_t addr, const char *line)
-        : DisMemory<Conf>(addr), _next(line) {
+        : DisMemory(addr), _next(line) {
         skipSpaces();
     }
     

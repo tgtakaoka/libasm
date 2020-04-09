@@ -30,7 +30,7 @@ void DisTms9900::outAddress(Config::uintptr_t addr, bool relax) {
 }
 
 Error DisTms9900::decodeOperand(
-    DisMemory<Config> &memory, InsnTms9900 &insn, const host::uint_t opr) {
+    DisMemory &memory, InsnTms9900 &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
     const host::uint_t mode = (opr >> 4) & 0x3;
     if (mode == 1 || mode == 3) *_operands++ = '*';
@@ -54,7 +54,7 @@ Error DisTms9900::decodeOperand(
 }
 
 Error DisTms9900::decodeImmediate(
-    DisMemory<Config>& memory, InsnTms9900 &insn) {
+    DisMemory& memory, InsnTms9900 &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     outAddress(val);
@@ -70,7 +70,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
 }
 
 Error DisTms9900::decode(
-    DisMemory<Config> &memory, Insn &_insn) {
+    DisMemory &memory, Insn &_insn) {
     InsnTms9900 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
