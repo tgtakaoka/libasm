@@ -121,7 +121,7 @@ private:
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
-    BinFormatter<Conf> *_formatter;
+    BinFormatter *_formatter;
 
     int readInput(
         FILE *input, const char *filename, CliMemory &memory) {
@@ -132,8 +132,8 @@ private:
         int len;
         while ((len = getLine(line, line_len, input)) > 0) {
             lineno++;
-            addr_t addr;
-            size_t size;
+            uint32_t addr;
+            host::uint_t size;
             uint8_t *data = _formatter->decode(line, addr, size);
             if (data == nullptr) {
                 if (errors < 3) {
@@ -153,7 +153,7 @@ private:
         return errors;
     }
 
-    BinFormatter<Conf> *determineInputFormat(const char *input_name) {
+    BinFormatter *determineInputFormat(const char *input_name) {
         FILE *input = fopen(input_name, "r");
         if (input == nullptr) {
             fprintf(stderr, "Can't open input file %s\n", input_name);
@@ -167,8 +167,9 @@ private:
         const char c = (len > 0) ? *line : 0;
         free(line);
 
-        if (c == 'S') return new SRecord<Conf>();
-        if (c == ':') return new IntelHex<Conf>();
+        const size_t addrWidth = sizeof(typename Conf::uintptr_t);
+        if (c == 'S') return new MotoSrec(addrWidth);
+        if (c == ':') return new IntelHex(addrWidth);
         return nullptr;
     }
     

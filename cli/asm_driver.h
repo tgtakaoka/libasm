@@ -101,7 +101,7 @@ private:
     const char *_output_name;
     const char *_list_name;
     size_t _record_bytes;
-    BinFormatter<Conf> *_formatter;
+    BinFormatter *_formatter;
     bool _uppercase;
     bool _line_number;
 
@@ -223,12 +223,13 @@ private:
             return 2;
         }
         if (_output_name) {
+            const size_t addrWidth = sizeof(typename Conf::uintptr_t);
             if (formatter == 'S') {
-                _formatter = new SRecord<Conf>();
+                _formatter = new MotoSrec(addrWidth);
             } else if (formatter == 'H') {
-                _formatter = new IntelHex<Conf>();
+                _formatter = new IntelHex(addrWidth);
             } else {
-                _formatter = new Formatter();
+                _formatter = new Formatter(addrWidth);
             }
         }
         return 0;

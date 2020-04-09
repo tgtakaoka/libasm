@@ -17,7 +17,7 @@ VPATH=../src
 CXXFLAGS=-Wall -g -O -std=c++17 -I../src
 CPPFLAGS=-MMD
 
-OBJS_common   = file_util.o
+OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o
 OBJS_asm      = asm_base.o asm_operand.o
 OBJS_dis      = dis_operand.o
 OBJS_mc6809   = table_mc6809.o  reg_mc6809.o  $(OBJS_common)

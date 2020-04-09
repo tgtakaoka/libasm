@@ -25,7 +25,7 @@ using namespace libasm::cli;
 int main(int argc, const char **argv) {
     AsmTms9900 assembler;
     AsmIntelDirective<Config> directive(assembler);
-    AsmDriver<Config, IntelHex<Config>> driver(directive);
+    AsmDriver<Config, IntelHex> driver(directive);
     return driver.main(argc, argv);
 }
 
