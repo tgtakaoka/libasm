@@ -18,16 +18,15 @@
 #define __DIS_TMS9900_H__
 
 #include "config_tms9900.h"
-
+#include "dis_base.h"
 #include "insn_tms9900.h"
 #include "reg_tms9900.h"
 #include "table_tms9900.h"
-#include "dis_interface.h"
 
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900 : public Disassembler<Config> {
+class DisTms9900 : public Disassembler {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }

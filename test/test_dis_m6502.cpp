@@ -25,7 +25,7 @@ TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
 DisM6502 dis6502;
-Disassembler<Config> &disassembler(dis6502);
+Disassembler &disassembler(dis6502);
 
 static void set_up() {
     disassembler.setCpu("6502");

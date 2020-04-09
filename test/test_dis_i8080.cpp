@@ -25,7 +25,7 @@ TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
 DisI8080 dis8080;
-Disassembler<Config> &disassembler(dis8080);
+Disassembler &disassembler(dis8080);
 
 static void set_up() {
 }

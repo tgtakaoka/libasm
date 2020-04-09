@@ -18,16 +18,15 @@
 #define __DIS_M6502_H__
 
 #include "config_m6502.h"
-
+#include "dis_base.h"
 #include "insn_m6502.h"
 #include "reg_m6502.h"
 #include "table_m6502.h"
-#include "dis_interface.h"
 
 namespace libasm {
 namespace m6502 {
 
-class DisM6502 : public Disassembler<Config> {
+class DisM6502 : public Disassembler {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }

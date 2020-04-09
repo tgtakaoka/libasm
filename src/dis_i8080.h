@@ -18,16 +18,15 @@
 #define __DIS_I8080_H__
 
 #include "config_i8080.h"
-
+#include "dis_base.h"
 #include "insn_i8080.h"
 #include "reg_i8080.h"
 #include "table_i8080.h"
-#include "dis_interface.h"
 
 namespace libasm {
 namespace i8080 {
 
-class DisI8080 : public Disassembler<Config> {
+class DisI8080 : public Disassembler {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }

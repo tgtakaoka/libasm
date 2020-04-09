@@ -30,7 +30,7 @@ class DisListing : public AsmLine<typename Conf::uintptr_t> {
 
 public:
     DisListing(
-        Disassembler<Conf>&disassembler,
+        Disassembler&disassembler,
         CliMemory &memory,
         bool uppercase = false)
         : _disassembler(disassembler),
@@ -67,7 +67,7 @@ public:
     const char *getContent() { return _listing.getContent(); }
 
 private:
-    Disassembler<Conf> &_disassembler;
+    Disassembler &_disassembler;
     CliMemory &_memory;
     AsmListing<Conf> _listing;
     bool _uppercase;

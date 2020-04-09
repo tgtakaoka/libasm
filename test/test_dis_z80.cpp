@@ -25,7 +25,7 @@ TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
 DisZ80 disz80;
-Disassembler<Config> &disassembler(disz80);
+Disassembler &disassembler(disz80);
 
 static void set_up() {
     disassembler.setCpu("8080");

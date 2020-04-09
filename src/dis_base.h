@@ -14,35 +14,27 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_INTERFACE_H__
-#define __DIS_INTERFACE_H__
+#ifndef __DIS_BASE_H__
+#define __DIS_BASE_H__
 
-#include "error_reporter.h"
-#include "symbol_table.h"
+#include "dis_memory.h"
 #include "dis_operand.h"
+#include "error_reporter.h"
+#include "insn_base.h"
+#include "reg_base.h"
+#include "symbol_table.h"
 #include "type_traits.h"
 
 #include <ctype.h>
 
 namespace libasm {
 
-template<typename Conf>
 class Disassembler : public ErrorReporter {
 public:
-
     Error decode(
         DisMemory &memory, Insn &insn,
-        char *operands, SymbolTable *symtab, bool uppercase = false) {
-        insn.resetAddress(memory.address());
-        *(_operands = operands) = 0;
-        _symtab = symtab;
-        this->resetError();
-        getFormatter().setUppercase(uppercase);
-        getRegister().setUppercase(uppercase);
-        decode(memory, insn);
-        if (!uppercase) insn.toLowerName();
-        return getError();
-    }
+        char *operands, SymbolTable *symtab, bool uppercase = false);
+
     virtual DisOperand &getFormatter() = 0;
     virtual bool setCpu(const char *cpu) = 0;
     virtual const char *listCpu() const = 0;
@@ -51,23 +43,20 @@ protected:
     char *_operands;
     SymbolTable *_symtab;
 
-    const char *lookup(uint32_t addr) const {
+    void outText(const char *text);
+
+    template<typename Addr>
+    const char *lookup(Addr addr) const {
         const char *symbol = nullptr;
         if (_symtab) {
             symbol = _symtab->lookup(addr);
             if (!symbol) {
                 auto value = static_cast<
-                    typename make_signed<typename Conf::uintptr_t>::type>(addr);
+                    typename make_signed<Addr>::type>(addr);
                 symbol = _symtab->lookup(static_cast<int32_t>(value));
             }
         }
         return symbol;
-    }
-    void outText(const char *text) {
-        char *p = _operands;
-        while ((*p = *text++) != 0)
-            p++;
-        _operands = p;
     }
 
     template<typename T>
@@ -78,13 +67,13 @@ protected:
     }
 
 private:
-    virtual RegBase &getRegister();
+    virtual RegBase &getRegister() = 0;
     virtual Error decode(DisMemory &memory, Insn &insn) = 0;
 };
 
 } // namespace libasm
 
-#endif // __DIS_INTERFACE_H__
+#endif // __DIS_BASE_H__
 
 // Local Variables:
 // mode: c++

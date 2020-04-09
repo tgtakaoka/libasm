@@ -17,8 +17,9 @@
 #ifndef __INSN_M6502_H__
 #define __INSN_M6502_H__
 
-#include "insn_base.h"
+#include "config_m6502.h"
 #include "entry_m6502.h"
+#include "insn_base.h"
 
 namespace libasm {
 namespace m6502 {

@@ -18,26 +18,27 @@
 #define __DIS_MC6809_H__
 
 #include "config_mc6809.h"
-
+#include "dis_base.h"
 #include "insn_mc6809.h"
 #include "reg_mc6809.h"
 #include "table_mc6809.h"
-#include "dis_interface.h"
 
 namespace libasm {
 namespace mc6809 {
 
-class DisMc6809 : public Disassembler<Config> {
+class DisMc6809 : public Disassembler {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
     const char *listCpu() const override { return TableMc6809::listCpu(); }
 
+protected:
+    RegBase &getRegister() override { return _regs; }
+
 private:
     DisMotoOperand _formatter;
     RegMc6809 _regs;
 
-    RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
     // MC6809
@@ -53,7 +54,7 @@ private:
     Error decodeBitOperation(DisMemory &memory, InsnMc6809 &insn);
     Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn);
 
-    Error decode(DisMemory &memory,  Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn) override;
 };
 
 } // namespace mc6809

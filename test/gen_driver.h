@@ -18,7 +18,7 @@
 #define __GEN_DRIVER_H__
 
 #include "asm_listing.h"
-#include "dis_interface.h"
+#include "dis_base.h"
 #include "test_generator.h"
 
 #include <stdio.h>
@@ -36,7 +36,7 @@ class GenDriver : public TestGenerator<Conf>::Printer,
     typedef typename Conf::uintptr_t addr_t;
 
 public:
-    GenDriver(Disassembler<Conf> &disassembler)
+    GenDriver(Disassembler &disassembler)
         : _disassembler(disassembler),
           _listing()
     {}
@@ -76,7 +76,7 @@ public:
     }
 
 private:
-    Disassembler<Conf> &_disassembler;
+    Disassembler &_disassembler;
     AsmListing<Conf> _listing;
     const char *_progname;
     const char *_output_name;

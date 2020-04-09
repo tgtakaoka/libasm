@@ -22,7 +22,7 @@ using namespace libasm;
 using namespace libasm::z80;
 
 DisZ80 disz80;
-Disassembler<Config> &disassembler(disz80);
+Disassembler &disassembler(disz80);
 
 void disassemble(DisMemory &memory) {
   char operands[20];

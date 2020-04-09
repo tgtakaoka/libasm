@@ -17,7 +17,7 @@
 #ifndef __TEST_GENERATOR_H__
 #define __TEST_GENERATOR_H__
 
-#include "dis_interface.h"
+#include "dis_base.h"
 #include "dis_memory.h"
 #include "text_buffer.h"
 
@@ -145,7 +145,7 @@ public:
     TextBuffer &operands() { return _operands; }
     const TextBuffer &operands() const { return _operands; }
     Error tryGenerate(
-        Disassembler<Conf> &dis,
+        Disassembler &dis,
         typename Conf::uintptr_t addr,
         uint8_t *memory,
         int size,
@@ -175,7 +175,7 @@ template<typename Conf>
 class TestGenerator {
 public:
     TestGenerator(
-        Disassembler<Conf> &disassembler,
+        Disassembler &disassembler,
         bool uppercase)
         : _disassembler(disassembler),
           _memorySize(Conf::code_max),
@@ -229,7 +229,7 @@ public:
     }
 
 private:
-    Disassembler<Conf> &_disassembler;
+    Disassembler &_disassembler;
     const int _memorySize;
     const Endian _endian;
     const size_t _opcodeSize;

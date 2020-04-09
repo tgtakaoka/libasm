@@ -18,16 +18,15 @@
 #define __DIS_MC6800_H__
 
 #include "config_mc6800.h"
-
+#include "dis_base.h"
 #include "insn_mc6800.h"
 #include "reg_mc6800.h"
 #include "table_mc6800.h"
-#include "dis_interface.h"
 
 namespace libasm {
 namespace mc6800 {
 
-class DisMc6800 : public Disassembler<Config> {
+class DisMc6800 : public Disassembler {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }

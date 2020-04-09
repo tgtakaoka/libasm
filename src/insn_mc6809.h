@@ -17,8 +17,9 @@
 #ifndef __INSN_MC6809_H__
 #define __INSN_MC6809_H__
 
-#include "insn_base.h"
+#include "config_mc6809.h"
 #include "entry_mc6809.h"
+#include "insn_base.h"
 
 namespace libasm {
 namespace mc6809 {

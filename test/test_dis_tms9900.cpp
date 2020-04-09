@@ -25,7 +25,7 @@ TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
 DisTms9900 dis9900;
-Disassembler<Config> &disassembler(dis9900);
+Disassembler &disassembler(dis9900);
 
 static void set_up() {
     disassembler.setCpu("tms9900");

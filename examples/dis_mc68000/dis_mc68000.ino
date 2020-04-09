@@ -22,7 +22,7 @@ using namespace libasm;
 using namespace libasm::mc68000;
 
 DisMc68000 dis68k;
-Disassembler<Config> &disassembler(dis68k);
+Disassembler &disassembler(dis68k);
 
 void disassemble(DisMemory &memory) {
   char operands[20];

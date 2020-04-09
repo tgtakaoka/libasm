@@ -25,7 +25,7 @@ TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
 DisMc6800 dis6800;
-Disassembler<Config> &disassembler(dis6800);
+Disassembler &disassembler(dis6800);
 
 static void set_up() {
 }

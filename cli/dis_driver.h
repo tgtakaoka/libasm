@@ -18,7 +18,7 @@
 #define __DIS_DRIVER_H__
 
 #include "cli_memory.h"
-#include "dis_interface.h"
+#include "dis_base.h"
 #include "dis_listing.h"
 #include "file_util.h"
 
@@ -34,7 +34,7 @@ class DisDriver {
     typedef typename Conf::uintptr_t addr_t;
 
 public:
-    DisDriver(Disassembler<Conf> &disassembler)
+    DisDriver(Disassembler &disassembler)
         : _disassembler(disassembler),
           _uppercase(false)
     {}
@@ -115,7 +115,7 @@ public:
     }
 
 private:
-    Disassembler<Conf> &_disassembler;
+    Disassembler &_disassembler;
     bool _uppercase;
     const char *_progname;
     const char *_input_name;

@@ -17,8 +17,9 @@
 #ifndef __INSN_MC68000_H__
 #define __INSN_MC68000_H__
 
-#include "insn_base.h"
+#include "config_mc68000.h"
 #include "entry_mc68000.h"
+#include "insn_base.h"
 #include "reg_mc68000.h"
 
 namespace libasm {

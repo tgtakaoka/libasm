@@ -18,16 +18,15 @@
 #define __DIS_Z80_H__
 
 #include "config_z80.h"
-
+#include "dis_base.h"
 #include "insn_z80.h"
 #include "reg_z80.h"
 #include "table_z80.h"
-#include "dis_interface.h"
 
 namespace libasm {
 namespace z80 {
 
-class DisZ80 : public Disassembler<Config> {
+class DisZ80 : public Disassembler {
 public:
     DisOperand &getFormatter() override { return _formatter; }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }

@@ -17,8 +17,9 @@
 #ifndef __INSN_I8080_H__
 #define __INSN_I8080_H__
 
-#include "insn_base.h"
+#include "config_i8080.h"
 #include "entry_i8080.h"
+#include "insn_base.h"
 
 namespace libasm {
 namespace i8080 {
