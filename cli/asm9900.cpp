@@ -24,9 +24,11 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmTms9900 assembler;
-    AsmIntelDirective<Config> directive(assembler);
-    AsmDriver<Config, IntelHex> driver(directive);
-    return driver.main(argc, argv);
+    AsmIntelDirective directive(assembler);
+    AsmDriver driver;
+    if (driver.parseOption(argc, argv, directive))
+        return driver.usage();
+    return driver.assemble();
 }
 
 // Local Variables:

@@ -117,7 +117,7 @@ TESTS=$(TEST_OBJS:.o=)
 
 OBJS_asm = asm_base.o asm_operand.o test_asserter.o
 OBJS_dis = dis_base.o dis_operand.o test_asserter.o test_memory.o
-OBJS_gen = dis_base.o dis_operand.o test_memory.o text_buffer.o
+OBJS_gen = dis_base.o dis_operand.o test_memory.o text_buffer.o cli_listing.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
 OBJS_m6502   = table_m6502.o   reg_m6502.o
@@ -179,16 +179,16 @@ gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
 gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_mc6800 -u -C 6800  -o gen_mc6800.asm
-gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)  $(OBJS_gen)
+gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_m6502 -u -C 6502    -o gen_m6502.asm
 	./gen_m6502 -u -C 65sc02  -o gen_w65sc02.asm
 	./gen_m6502 -u -C 65c02   -o gen_r65c02.asm
 	./gen_m6502 -u -C w65c02s -o gen_w65c02s.asm
-gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)  $(OBJS_gen)
+gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_i8080 -u -C 8080 -o gen_i8080.asm
-gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)  $(OBJS_gen)
+gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_z80   -u -C z80  -o gen_z80.asm
 	./gen_z80   -u -C 8080 -o gen_z80_i8080.asm

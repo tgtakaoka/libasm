@@ -21,7 +21,7 @@
 namespace libasm {
 namespace cli {
 
-MotoSrec::MotoSrec(host::uint_t addrWidth)
+MotoSrec::MotoSrec(AddressWidth addrWidth)
     : BinFormatter(addrWidth)
 {}
 
@@ -35,25 +35,32 @@ const char *MotoSrec::begin() {
 
 const char *MotoSrec::encode(
     uint32_t addr, const uint8_t *data, host::uint_t size) {
-    ensureLine((_addrWidth + size + 3) * 2);
-    const uint8_t len = _addrWidth + size + 1;
+    uint8_t addrSize = 0;
+    switch (_addrWidth) {
+    case ADDRESS_16BIT: addrSize = 2; break;
+    case ADDRESS_24BIT: addrSize = 3; break;
+    case ADDRESS_32BIT: addrSize = 4; break;
+    }
+    ensureLine((addrSize + size + 3) * 2);
+    const uint8_t len = addrSize + size + 1;
     resetSum();
     addSum(len);
     char *p = _line;
-    if (_addrWidth == 2) {
+    switch (_addrWidth) {
+    case ADDRESS_16BIT:
         addr &= ((uint32_t)1 << 16) - 1;
-        p += sprintf(p, "S1%02X%04X", len,
-                     static_cast<uint16_t>(addr));
-    }
-    if (_addrWidth == 3) {
+        p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
+        break;
+    case ADDRESS_24BIT:
         addr &= ((uint32_t)1 << 24) - 1;
         p += sprintf(p, "S2%02X%02X%04X", len,
                      static_cast<uint8_t>(addr >> 16),
                      static_cast<uint16_t>(addr));
-    }
-    if (_addrWidth == 4) {
+        break;
+    case ADDRESS_32BIT:
         p += sprintf(p, "S3%02X%08X", len,
                      static_cast<uint32_t>(addr));
+        break;
     }
     addSum(addr);
     for (host::uint_t i = 0; i < size; i++) {
@@ -65,12 +72,14 @@ const char *MotoSrec::encode(
 }
 
 const char *MotoSrec::end() {
-    if (_addrWidth == 2)
+    switch (_addrWidth) {
+    case ADDRESS_16BIT:
         return "S9030000FC";
-    if (_addrWidth == 3)
+    case ADDRESS_24BIT:
         return "S804000000FB";
-    if (_addrWidth == 4)
+    case ADDRESS_32BIT:
         return "S70500000000FA";
+    }
     return nullptr;
 }
 
@@ -88,9 +97,9 @@ uint8_t *MotoSrec::decode(
         return _data; // record count
     if (type != '1' && type != '2' && type != '3')
         return nullptr;     // format error
-    if (_addrWidth == 2 && (type == '2' || type == '3'))
+    if (_addrWidth == ADDRESS_16BIT && (type == '2' || type == '3'))
         return nullptr;     // address size overflow
-    if (_addrWidth == 3 && type == '3')
+    if (_addrWidth == ADDRESS_24BIT && type == '3')
         return nullptr;     // address size overflow
     resetSum();
     uint8_t len = 0;

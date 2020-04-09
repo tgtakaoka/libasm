@@ -17,6 +17,7 @@
 #ifndef __BIN_FORMATTER_H__
 #define __BIN_FORMATTER_H__
 
+#include "config_base.h"
 #include "config_host.h"
 
 #include <stdint.h>
@@ -26,7 +27,7 @@ namespace cli {
 
 class BinFormatter {
 public:
-    BinFormatter(host::uint_t addrWidth);
+    BinFormatter(AddressWidth addrWidth);
     virtual ~BinFormatter();
 
     virtual const char *begin() = 0;
@@ -38,7 +39,7 @@ public:
         const char *line, uint32_t &addr, host::uint_t &size) = 0;
 
 protected:
-    const host::uint_t _addrWidth;
+    AddressWidth _addrWidth;
     char *_line;
     host::uint_t _line_len;
     uint8_t *_data;
@@ -58,7 +59,7 @@ protected:
 
 class IntelHex : public BinFormatter {
 public:
-    IntelHex(host::uint_t addrWidth);
+    IntelHex(AddressWidth addrWidth);
 
     const char *begin() override;
     const char *prepare(uint32_t addr) override;
@@ -69,14 +70,14 @@ public:
         const char *line, uint32_t &addr, host::uint_t &size) override;
 
 private:
-    uint16_t _ela;              // Extended Linear Address;
+    uint16_t _ela;              // Extended Linear Address
 
     uint8_t getSum() const override;
 };
 
 class MotoSrec : public BinFormatter {
 public:
-    MotoSrec(host::uint_t addrWidth);
+    MotoSrec(AddressWidth addrWidth);
 
     const char *begin() override;
     const char *prepare(uint32_t addr) override { return nullptr; }

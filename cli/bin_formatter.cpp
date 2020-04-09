@@ -22,7 +22,7 @@
 namespace libasm {
 namespace cli {
 
-BinFormatter::BinFormatter(host::uint_t addrWidth)
+BinFormatter::BinFormatter(AddressWidth addrWidth)
     : _addrWidth(addrWidth),
       _line(nullptr),
       _line_len(0),

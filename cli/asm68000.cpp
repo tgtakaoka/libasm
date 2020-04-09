@@ -24,9 +24,11 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     AsmMc68000 assembler;
-    AsmMotoDirective<Config> directive(assembler);
-    AsmDriver<Config, MotoSrec> driver(directive);
-    return driver.main(argc, argv);
+    AsmMotoDirective directive(assembler);
+    AsmDriver driver;
+    if (driver.parseOption(argc, argv, directive))
+        return driver.usage();
+    return driver.assemble();
 }
 
 // Local Variables:

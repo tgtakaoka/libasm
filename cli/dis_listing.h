@@ -17,20 +17,17 @@
 #ifndef __DIS_LISTING_H__
 #define __DIS_LISTING_H__
 
-#include "asm_listing.h"
+#include "cli_listing.h"
 
 #include <string>
 
 namespace libasm {
 namespace cli {
 
-template<typename Conf>
-class DisListing : public AsmLine<typename Conf::uintptr_t> {
-    typedef typename Conf::uintptr_t addr_t;
-
+class DisListing : public ListingLine {
 public:
     DisListing(
-        Disassembler&disassembler,
+        Disassembler &disassembler,
         CliMemory &memory,
         bool uppercase = false)
         : _disassembler(disassembler),
@@ -41,7 +38,7 @@ public:
           _operandWidth(8)
     {}
 
-    Error disassemble(addr_t addr, Insn &insn) {
+    Error disassemble(uint32_t addr, Insn &insn) {
         _memory.setAddress(addr);
         const Error error = _disassembler.decode(
             _memory, insn, _operands, nullptr, _uppercase);
@@ -52,9 +49,9 @@ public:
         return error;
     }
 
-    const char *origin(addr_t origin, bool withBytes = false) {
+    const char *origin(uint32_t origin, bool withBytes = false) {
         _disassembler.getFormatter().output(
-            _operands, origin, 16, false, sizeof(addr_t));
+            _operands, origin, 16, false, _disassembler.addressWidth());
         _listing.reset(*this, _uppercase, false);
         _address = origin;
         _generated_size = 0;
@@ -69,19 +66,21 @@ public:
 private:
     Disassembler &_disassembler;
     CliMemory &_memory;
-    AsmListing<Conf> _listing;
+    CliListing _listing;
     bool _uppercase;
     int _labelWidth;
     int _operandWidth;
-    addr_t _address;
+    uint32_t _address;
     int _generated_size;
     const char *_instruction;
     char _operands[40];
 
-    // AsmLine<Addr>
+    // ListingLine
+    AddressWidth addressWidth() const override { return _disassembler.addressWidth(); }
+    OpCodeWidth opCodeWidth() const override { return _disassembler.opCodeWidth(); }
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
-    addr_t startAddress() const override { return _address; }
+    uint32_t startAddress() const override { return _address; }
     int generatedSize() const override { return _generated_size; }
     uint8_t getByte(int offset) const override {
         uint8_t val = 0;

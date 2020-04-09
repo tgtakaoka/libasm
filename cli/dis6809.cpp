@@ -22,8 +22,10 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisMc6809 disassembler;
-    DisDriver<Config> driver(disassembler);
-    return driver.main(argc, argv);
+    DisDriver driver;
+    if (driver.parseOption(argc, argv, disassembler))
+        return driver.usage();
+    return driver.disassemble();
 }
 
 // Local Variables:

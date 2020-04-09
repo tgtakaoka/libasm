@@ -21,7 +21,7 @@
 namespace libasm {
 namespace cli {
 
-IntelHex::IntelHex(host::uint_t addrWidth)
+IntelHex::IntelHex(AddressWidth addrWidth)
     : BinFormatter(addrWidth),
       _ela(0)
 {}
@@ -36,7 +36,7 @@ const char *IntelHex::begin() {
 
 // Output Type "04" Extended Linear Address, if necessary.
 const char *IntelHex::prepare(uint32_t addr) {
-    if (_addrWidth == 2) return nullptr;
+    if (_addrWidth == ADDRESS_16BIT) return nullptr;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
     if (_ela == ela) return nullptr;
     const uint8_t len = sizeof(ela);

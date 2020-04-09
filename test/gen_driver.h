@@ -17,7 +17,7 @@
 #ifndef __GEN_DRIVER_H__
 #define __GEN_DRIVER_H__
 
-#include "asm_listing.h"
+#include "cli_listing.h"
 #include "dis_base.h"
 #include "test_generator.h"
 
@@ -27,14 +27,12 @@
 namespace libasm {
 namespace test {
 
-using libasm::cli::AsmLine;
-using libasm::cli::AsmListing;
+using libasm::cli::ListingLine;
+using libasm::cli::CliListing;
 
 template<typename Conf>
 class GenDriver : public TestGenerator<Conf>::Printer,
-                  private AsmLine<typename Conf::uintptr_t> {
-    typedef typename Conf::uintptr_t addr_t;
-
+                  private ListingLine {
 public:
     GenDriver(Disassembler &disassembler)
         : _disassembler(disassembler),
@@ -77,7 +75,7 @@ public:
 
 private:
     Disassembler &_disassembler;
-    AsmListing<Conf> _listing;
+    CliListing _listing;
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
@@ -106,10 +104,12 @@ private:
         }
     }
 
-    // AsmLine<Addr>
+    // ListingLine
+    AddressWidth addressWidth() const override { return _disassembler.addressWidth(); }
+    OpCodeWidth opCodeWidth() const override { return _disassembler.opCodeWidth(); }
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
-    addr_t startAddress() const override { return _insn->address(); }
+    uint32_t startAddress() const override { return _insn->address(); }
     int generatedSize() const override { return _insn->length(); }
     uint8_t getByte(int offset) const override { return _insn->bytes()[offset]; }
     bool hasValue() const override { return false; }
