@@ -70,8 +70,9 @@ public:
                 (addr_t addr, const uint8_t *data, size_t data_size) {
                     for (size_t i = 0; i < data_size; i += _record_bytes) {
                         auto size = std::min(_record_bytes, data_size - i);
-                        const char *line =
-                            _formatter->encode(addr + i, data + i, size);
+                        const char *line = _formatter->prepare(addr + i);
+                        if (line) fprintf(output, "%s\n", line);
+                        line = _formatter->encode(addr + i, data + i, size);
                         fprintf(output, "%s\n", line);
                         fflush(output);
                     }

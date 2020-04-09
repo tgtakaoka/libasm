@@ -25,6 +25,10 @@ MotoSrec::MotoSrec(host::uint_t addrWidth)
     : BinFormatter(addrWidth)
 {}
 
+uint8_t MotoSrec::getSum() const {
+    return static_cast<uint8_t>(~_check_sum);
+}
+
 const char *MotoSrec::begin() {
     return "S0030000FC";
 }
@@ -33,14 +37,16 @@ const char *MotoSrec::encode(
     uint32_t addr, const uint8_t *data, host::uint_t size) {
     ensureLine((_addrWidth + size + 3) * 2);
     const uint8_t len = _addrWidth + size + 1;
-    this->resetSum();
-    this->addSum(len);
-    char *p = this->_line;
+    resetSum();
+    addSum(len);
+    char *p = _line;
     if (_addrWidth == 2) {
+        addr &= ((uint32_t)1 << 16) - 1;
         p += sprintf(p, "S1%02X%04X", len,
                      static_cast<uint16_t>(addr));
     }
     if (_addrWidth == 3) {
+        addr &= ((uint32_t)1 << 24) - 1;
         p += sprintf(p, "S2%02X%02X%04X", len,
                      static_cast<uint8_t>(addr >> 16),
                      static_cast<uint16_t>(addr));
@@ -49,20 +55,20 @@ const char *MotoSrec::encode(
         p += sprintf(p, "S3%02X%08X", len,
                      static_cast<uint32_t>(addr));
     }
-    this->addSum(addr);
+    addSum(addr);
     for (host::uint_t i = 0; i < size; i++) {
         p += sprintf(p, "%02X", data[i]);
-        this->addSum(data[i]);
+        addSum(data[i]);
     }
-    sprintf(p, "%02X", static_cast<uint8_t>(~this->_check_sum));
-    return this->_line;
+    sprintf(p, "%02X", getSum());
+    return _line;
 }
 
 const char *MotoSrec::end() {
     if (_addrWidth == 2)
         return "S9030000FC";
     if (_addrWidth == 3)
-        return "S8030000FC";
+        return "S804000000FB";
     if (_addrWidth == 4)
         return "S70500000000FA";
     return nullptr;
@@ -72,60 +78,60 @@ uint8_t *MotoSrec::decode(
     const char *line, uint32_t &addr, host::uint_t &size) {
     if (*line++ != 'S') return nullptr;
     const char type = *line++;
-    this->ensureData(16);
+    ensureData(16);
     size = 0;
     if (type == '0')
-        return this->_data; // start record
+        return _data; // start record
     if (type == '9' || type == '8' || type == '7')
-        return this->_data; // end record
+        return _data; // end record
     if (type == '5' || type == '6')
-        return this->_data; // record count
+        return _data; // record count
     if (type != '1' && type != '2' && type != '3')
         return nullptr;     // format error
     if (_addrWidth == 2 && (type == '2' || type == '3'))
         return nullptr;     // address size overflow
     if (_addrWidth == 3 && type == '3')
         return nullptr;     // address size overflow
-    this->resetSum();
+    resetSum();
     uint8_t len = 0;
-    if (this->parseByte(line, len)) return nullptr;
+    if (parseByte(line, len)) return nullptr;
     uint16_t val16 = 0;
     if (type == '1') {
         if (len < 2) return nullptr;
-        if (this->parseUint16(line, val16)) return nullptr;
+        if (parseUint16(line, val16)) return nullptr;
         addr = val16;
         len -= 2;
     }
     if (type == '2') {
         if (len < 3) return nullptr;
         uint8_t val8;
-        if (this->parseByte(line, val8)) return nullptr;
+        if (parseByte(line, val8)) return nullptr;
         addr = static_cast<uint32_t>(val8) << 16;
-        if (this->parseUint16(line, val16)) return nullptr;
+        if (parseUint16(line, val16)) return nullptr;
         addr |= val16;
         len -= 3;
     }
     if (type == '3') {
         if (len < 4) return nullptr;
-        if (this->parseUint16(line, val16)) return nullptr;
+        if (parseUint16(line, val16)) return nullptr;
         addr = static_cast<uint32_t>(val16) << 16;
-        if (this->parseUint16(line, val16)) return nullptr;
+        if (parseUint16(line, val16)) return nullptr;
         addr |= val16;
         len -= 4;
     }
     if (len < 1) return nullptr;
     size = len - 1;
 
-    this->ensureData(size);
+    ensureData(size);
     for (host::uint_t i = 0; i < size; i++)
-        if (this->parseByte(line, this->_data[i])) return nullptr;
-    const uint8_t sum = this->_check_sum;
+        if (parseByte(line, _data[i])) return nullptr;
+    const uint8_t sum = getSum();
     uint8_t val = 0;
-    if (this->parseByte(line, val)) return nullptr;
-    if (static_cast<uint8_t>(~val) != sum) // checksum error
+    if (parseByte(line, val)) return nullptr;
+    if (val != sum)             // checksum error
         return nullptr;
 
-    return this->_data;
+    return _data;
 }
 
 } // namespace cli

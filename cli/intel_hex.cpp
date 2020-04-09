@@ -22,61 +22,89 @@ namespace libasm {
 namespace cli {
 
 IntelHex::IntelHex(host::uint_t addrWidth)
-    : BinFormatter(addrWidth)
+    : BinFormatter(addrWidth),
+      _ela(0)
 {}
+
+uint8_t IntelHex::getSum() const {
+    return static_cast<uint8_t>(-this->_check_sum);
+}
 
 const char *IntelHex::begin() {
     return nullptr;
 }
 
+// Output Type "04" Extended Linear Address, if necessary.
+const char *IntelHex::prepare(uint32_t addr) {
+    if (_addrWidth == 2) return nullptr;
+    const uint16_t ela = static_cast<uint16_t>(addr >> 16);
+    if (_ela == ela) return nullptr;
+    const uint8_t len = sizeof(ela);
+    const uint16_t dummy = 0;
+    // :LLdddd04EEEESS
+    ensureLine(1 + (1 + sizeof(dummy) + 1 + len + 1) * 2);
+    resetSum();
+    addSum(len);
+    addSum(dummy);
+    addSum(ela);
+    char *p = _line;
+    p += sprintf(p, ":%02X%04X04%04X%2X",
+                 len, dummy, ela, getSum());
+    return _line;
+}
+
 const char *IntelHex::encode(
-    uint32_t addr, const uint8_t *data, host::uint_t size) {
-    ensureLine((_addrWidth + size + 3) * 2);
-    char *p = this->_line;
-    p += sprintf(p, ":%02X%04X00",
-                 static_cast<uint8_t>(size),
-                 static_cast<uint16_t>(addr));
-    this->resetSum();
-    this->addSum(static_cast<uint8_t>(size));
-    this->addSum(addr);
+    uint32_t ela_addr, const uint8_t *data, host::uint_t size) {
+    const uint16_t addr = static_cast<uint16_t>(ela_addr);
+    // :LLaaaa00dd....ddSS
+    ensureLine(1 + (1 + sizeof(addr) + 1 + size + 1) * 2);
+    char *p = _line;
+    p += sprintf(p, ":%02X%04X00", static_cast<uint8_t>(size), addr);
+    resetSum();
+    addSum(static_cast<uint8_t>(size));
+    addSum(addr);
     for (host::uint_t i = 0; i < size; i++) {
         p += sprintf(p, "%02X", data[i]);
-        this->addSum(data[i]);
+        addSum(data[i]);
     }
-    sprintf(p, "%02X", static_cast<uint8_t>(-this->_check_sum));
-    return this->_line;
+    sprintf(p, "%02X", getSum());
+    return _line;
 }
 
 const char *IntelHex::end() { return ":00000001FF"; }
 
 uint8_t *IntelHex::decode(
-    const char *line, uint32_t &addr, host::uint_t &size) {
+    const char *line, uint32_t &ela_addr, host::uint_t &size) {
     if (*line++ != ':') return nullptr;
     size = 0;
     uint8_t len = 0;
-    if (this->parseByte(line, len)) return nullptr;
-    uint16_t val16 = 0;
-    if (this->parseUint16(line, val16)) return nullptr;
-    addr = val16;
+    if (parseByte(line, len)) return nullptr;
+    uint16_t addr = 0;
+    if (parseUint16(line, addr)) return nullptr;
     uint8_t type;
-    if (this->parseByte(line, type)) return nullptr;
-    if (type == 0x01) return this->_data; // terminator
+    if (parseByte(line, type)) return nullptr;
+    if (type == 0x01) return _data; // terminator
+    if (type == 0x04) {                   // Extended Linear Address
+        _ela = addr;
+        return _data;
+    }
     if (type != 0x00) return nullptr;
 
+    ela_addr = static_cast<uint32_t>(_ela) << 16 | addr;
     size = len;
-    this->ensureData(size);
-    this->resetSum();
-    this->addSum(static_cast<uint8_t>(size));
-    this->addSum(addr);
+    ensureData(size);
+    resetSum();
+    addSum(static_cast<uint8_t>(size));
+    addSum(addr);
     for (host::uint_t i = 0; i < size; i++) {
-        if (this->parseByte(line, this->_data[i]))
+        if (parseByte(line, _data[i]))
             return nullptr;
     }
     uint8_t val = 0;
-    if (this->parseByte(line, val)) return nullptr;
-    if (this->_check_sum) return nullptr; // checksum error
+    if (parseByte(line, val)) return nullptr;
+    if (_check_sum) return nullptr; // checksum error
 
-    return this->_data;
+    return _data;
 }
 
 } // namespace cli

@@ -30,6 +30,7 @@ public:
     virtual ~BinFormatter();
 
     virtual const char *begin() = 0;
+    virtual const char *prepare(uint32_t addr) = 0;
     virtual const char *encode(
         uint32_t addr, const uint8_t *data, host::uint_t size) = 0;
     virtual const char *end() = 0;
@@ -50,6 +51,7 @@ protected:
     void addSum(uint8_t data);
     void addSum(uint16_t data);
     void addSum(uint32_t data);
+    virtual uint8_t getSum() const = 0;
     bool parseByte(const char *&line, uint8_t &val);
     bool parseUint16(const char *&line, uint16_t &val);
 };
@@ -59,11 +61,17 @@ public:
     IntelHex(host::uint_t addrWidth);
 
     const char *begin() override;
+    const char *prepare(uint32_t addr) override;
     const char *encode(
         uint32_t addr, const uint8_t *data, host::uint_t size) override;
     const char *end() override;
     uint8_t *decode(
         const char *line, uint32_t &addr, host::uint_t &size) override;
+
+private:
+    uint16_t _ela;              // Extended Linear Address;
+
+    uint8_t getSum() const override;
 };
 
 class MotoSrec : public BinFormatter {
@@ -71,11 +79,15 @@ public:
     MotoSrec(host::uint_t addrWidth);
 
     const char *begin() override;
+    const char *prepare(uint32_t addr) override { return nullptr; }
     const char *encode(
         uint32_t addr, const uint8_t *data, host::uint_t size) override;
     const char *end() override;
     uint8_t *decode(
         const char *line, uint32_t &addr, host::uint_t &size) override;
+
+private:
+    uint8_t getSum() const override;
 };
 
 } // namespace cli
