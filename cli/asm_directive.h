@@ -40,10 +40,9 @@ public:
     AsmCommonDirective();
     virtual ~AsmCommonDirective();
 
-    void setDirective(AsmDirective &directive);
+    void setDirectives(std::vector<AsmDirective *> &directives);
 
-    bool setCpu(const char *cpu);
-    const char *listCpu() const;
+    AsmDirective *setCpu(const char *cpu);
 
     Error assembleLine(const char *line, CliMemory &memory);
 
@@ -63,6 +62,7 @@ public:
     Error defineSpaces();
 
 private:
+    std::vector<AsmDirective *> *_directives;
     AsmDirective *_directive;
     Assembler *_assembler;
     AsmOperand *_parser;

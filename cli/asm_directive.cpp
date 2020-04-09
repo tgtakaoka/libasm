@@ -35,18 +35,23 @@ AsmCommonDirective::~AsmCommonDirective() {
     free(_line);
 }
 
-void AsmCommonDirective::setDirective(AsmDirective &directive) {
-    _directive = &directive;
-    _assembler = &directive.assembler();
+void AsmCommonDirective::setDirectives(std::vector<AsmDirective *> &directives) {
+    _directives = &directives;
+    _directive = _directives->front();
+    _assembler = &_directive->assembler();
     _parser = &_assembler->getParser();
 }
 
-bool AsmCommonDirective::setCpu(const char *cpu) {
-    return _assembler->setCpu(cpu);
-}
-
-const char *AsmCommonDirective::listCpu() const {
-    return _assembler->listCpu();
+AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
+    for (auto dir : *_directives) {
+        if (dir->assembler().setCpu(cpu)) {
+            _directive = dir;
+            _assembler = &dir->assembler();
+            _parser = &_assembler->getParser();
+            return dir;
+        }
+    }
+    return nullptr;
 }
 
 Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
@@ -236,7 +241,7 @@ Error AsmCommonDirective::processPseudo(
         while (*p && !isspace(*p))
             p++;
         std::string cpu(_scan, p);
-        if (!_assembler->setCpu(cpu.c_str()))
+        if (setCpu(cpu.c_str()) == nullptr)
             return setError(UNSUPPORTED_CPU);
         _scan = p;
         return setError(OK);

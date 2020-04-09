@@ -28,17 +28,33 @@ DisDriver::~DisDriver() {
 }
 
 int DisDriver::usage() {
+    const char *cpuSep = "\n                ";
+    std::string cpuList;
+    for (auto dis : *_disassemblers) {
+        cpuList += cpuSep;
+        cpuList += dis->listCpu();
+    }
     fprintf(stderr,
-            "usage: %s [-C <cpu>] [-u] [-o <output>] [-l <list>] <input>\n"
-            "  -C : CPU variant: %s\n"
-            "  -u : use uppercase letter for output\n"
-            "  <input> file can be Motorola SREC or Intel HEX format\n",
-            _progname, _disassembler->listCpu());
+            "usage: %s -C <cpu> [-u] [-o <output>] [-l <list>] <input>\n"
+            " options:\n"
+            "  -C          : CPU variant%s\n"
+            "  -o <output> : output file\n"
+            "  -l <list>   : list file\n"
+            "  -u          : use uppercase letter for output\n"
+            "  <input>     : file can be Motorola SREC or Intel HEX format\n",
+            _progname, cpuList.c_str());
     return 2;
 }
 
-int DisDriver::parseOption(int argc, const char **argv, Disassembler &disassembler) {
-    _disassembler = &disassembler;
+int DisDriver::parseOption(
+    int argc, const char **argv, Disassembler &disassembler) {
+    std::vector<Disassembler *> disassemblers = { &disassembler };
+    return parseOption(argc, argv, disassemblers);
+}
+
+int DisDriver::parseOption(
+    int argc, const char **argv, std::vector<Disassembler *> &disassemblers) {
+    _disassemblers = &disassemblers;
     _progname = basename(argv[0]);
     return parseOption(argc, argv);
 }
@@ -165,6 +181,8 @@ int DisDriver::parseOption(int argc, const char **argv) {
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
+    _disassembler = nullptr;
+    _formatter = nullptr;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -183,16 +201,25 @@ int DisDriver::parseOption(int argc, const char **argv) {
                 }
                 _list_name = argv[i];
                 break;
-            case 'C':
+            case 'C': {
                 if (++i >= argc) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                if (!_disassembler->setCpu(argv[i])) {
+                Disassembler *disassembler = nullptr;
+                for (auto dis : *_disassemblers) {
+                    if (dis->setCpu(argv[i])) {
+                        disassembler = dis;
+                        break;
+                    }
+                }
+                if (disassembler == nullptr) {
                     fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                     return 4;
                 }
+                _disassembler = disassembler;
                 break;
+            }
             case 'u':
                 _uppercase = true;
                 break;

@@ -31,25 +31,37 @@ AsmDriver::~AsmDriver() {
 }
 
 int AsmDriver::usage() const {
+    const char *cpuSep = "\n                ";
+    std::string cpuList;
+    for (auto dir : *_directives) {
+        cpuList += cpuSep;
+        cpuList += dir->assembler().listCpu();
+    }
     fprintf(stderr,
-            "usage: %s [-o <output>] [-l <list>] <input>\n"
+            "usage: %s -C <cpu> [-u] [-o <output>] [-l <list>] <input>\n"
             " options:\n"
+            "  -C          : CPU variant%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  -S[<bytes>] : output Motorola SREC format\n"
             "  -H[<bytes>] : output Intel HEX format\n"
             "              : optional <bytes> specifies data record length (max 32)\n"
-            "  -C          : CPU variant: %s\n"
             "  -u          : use uppercase letter for output\n"
             "  -n          : output line number to list file\n",
-            _progname, _commonDir.listCpu());
+            _progname, cpuList.c_str());
     return 2;
 }
 
 int AsmDriver::parseOption(
     int argc, const char **argv, AsmDirective &directive) {
-    _commonDir.setDirective(directive);
-    _directive = &directive;
+    std::vector<AsmDirective *> directives = { &directive };
+    return parseOption(argc, argv, directives);
+}
+
+int AsmDriver::parseOption(
+    int argc, const char **argv, std::vector<AsmDirective *> &directives) {
+    _directives = &directives;
+    _commonDir.setDirectives(directives);
     _progname = basename(argv[0]);
     return parseOption(argc, argv);
 }
@@ -150,6 +162,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _formatter = nullptr;
     _uppercase = false;
     _line_number = false;
+    AsmDirective *directive = nullptr;
     char formatter = 0;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
@@ -187,7 +200,8 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                if (!_commonDir.setCpu(argv[i])) {
+                directive = _commonDir.setCpu(argv[i]);
+                if (directive == nullptr) {
                     fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                     return 4;
                 }
@@ -225,13 +239,17 @@ int AsmDriver::parseOption(int argc, const char **argv) {
         return 2;
     }
     if (_output_name) {
-        const AddressWidth addrWidth = _directive->assembler().addressWidth();
+        if (directive == nullptr) {
+            fprintf(stderr, "no target CPU specified\n");
+            return 1;
+        }
+        const AddressWidth addrWidth = directive->assembler().addressWidth();
         if (formatter == 'S') {
             _formatter = new MotoSrec(addrWidth);
         } else if (formatter == 'H') {
             _formatter = new IntelHex(addrWidth);
         } else {
-            _formatter = _directive->defaultFormatter();
+            _formatter = directive->defaultFormatter();
         }
     }
     return 0;
