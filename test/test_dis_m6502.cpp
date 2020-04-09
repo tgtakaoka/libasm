@@ -661,7 +661,7 @@ static void test_no_idir_long() {
 static void test_illegal_m6502() {
     disassembler.setCpu("6502");
 
-    Insn<Config> insn;
+    Insn insn;
     char operands[40];
 
     const uint8_t illegals[] = {
@@ -689,7 +689,7 @@ static void test_illegal_m6502() {
 static void test_illegal_w65sc02() {
     disassembler.setCpu("65SC02");
 
-    Insn<Config> insn;
+    Insn insn;
     char operands[40];
 
     const uint8_t illegals[] = {

@@ -682,7 +682,7 @@ Error DisMc68000::decodeMoveOpr(
 }
 
 Error DisMc68000::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnMc68000 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);

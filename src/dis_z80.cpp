@@ -401,7 +401,7 @@ Error DisZ80::decodeIndexedBitOp(
 }
 
 Error DisZ80::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnZ80 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);

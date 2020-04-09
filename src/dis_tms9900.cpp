@@ -70,7 +70,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
 }
 
 Error DisTms9900::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnTms9900 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);

@@ -25,27 +25,26 @@
 
 namespace libasm {
 
-template<typename Conf>
 class Insn {
 public:
-    typename Conf::uintptr_t address() const { return _address; }
+    uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     host::uint_t length() const { return _length; }
     const char *name() const { return _name; }
 
-    void resetAddress(typename Conf::uintptr_t addr) {
+    void resetAddress(uint32_t addr) {
         _address = addr;
         _length = 0;
     }
 
     void setName(const char *name, size_t len) {
-        if (len >= Conf::name_max) len = Conf::name_max;
+        if (len >= NAME_MAX) len = NAME_MAX;
         strncpy(_name, name, len);
         _name[len] = 0;
     }
 
     void appendName(const char *suffix) {
-        strncat(_name, suffix, Conf::name_max - strlen(_name));
+        strncat(_name, suffix, NAME_MAX - strlen(_name));
     }
 
     void toLowerName() {
@@ -58,23 +57,25 @@ public:
     }
 
     Error emitByte(uint8_t val, host::uint_t pos) {
-        if (pos >= Conf::code_max) return NO_MEMORY;
+        if (pos >= CODE_MAX) return NO_MEMORY;
         _bytes[pos++] = val;
         if (_length < pos) _length = pos;
         return OK;
     }
 
 private:
-    typename Conf::uintptr_t _address;
+    uint32_t     _address;
     host::uint_t _length;
-    uint8_t      _bytes[Conf::code_max];
-    char         _name[Conf::name_max + 1];
+    static constexpr size_t CODE_MAX = 10;
+    uint8_t      _bytes[CODE_MAX];
+    static constexpr size_t NAME_MAX = 7;
+    char         _name[NAME_MAX+ 1];
 };
 
 template<typename Conf>
 class InsnBase {
 public:
-    InsnBase(Insn<Conf> &insn) : _insn(insn) {}
+    InsnBase(Insn &insn) : _insn(insn) {}
 
     typename Conf::uintptr_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
@@ -147,7 +148,7 @@ public:
     }
 
 protected:
-    Insn<Conf> &_insn;
+    Insn &_insn;
 };
 
 } // namespace libasm

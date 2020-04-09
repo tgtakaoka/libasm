@@ -26,7 +26,7 @@ namespace mc68000 {
 
 class InsnMc68000 : public InsnBase<Config> {
 public:
-    InsnMc68000(Insn<Config> &insn) : InsnBase(insn) {}
+    InsnMc68000(Insn &insn) : InsnBase(insn) {}
 
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 

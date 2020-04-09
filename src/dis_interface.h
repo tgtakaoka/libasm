@@ -31,7 +31,7 @@ class Disassembler : public ErrorReporter {
 public:
 
     Error decode(
-        DisMemory<Conf> &memory, Insn<Conf> &insn,
+        DisMemory<Conf> &memory, Insn &insn,
         char *operands, SymbolTable *symtab, bool uppercase = false) {
         insn.resetAddress(memory.address());
         *(_operands = operands) = 0;
@@ -79,7 +79,7 @@ protected:
 
 private:
     virtual RegBase &getRegister();
-    virtual Error decode(DisMemory<Conf> &memory, Insn<Conf> &insn) = 0;
+    virtual Error decode(DisMemory<Conf> &memory, Insn &insn) = 0;
 };
 
 } // namespace libasm

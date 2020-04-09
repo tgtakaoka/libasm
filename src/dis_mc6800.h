@@ -49,7 +49,7 @@ private:
     Error decodeRelative(DisMemory<Config> &memory, InsnMc6800 &insn);
     Error decodeImmediate(DisMemory<Config> &memory, InsnMc6800 &insn);
 
-    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn &insn) override;
 };
 
 } // namespace m6502

@@ -141,7 +141,7 @@ public:
           _operands(60)
     {}
 
-    const Insn<Conf> &insn() const { return _insn; }
+    const Insn &insn() const { return _insn; }
     TextBuffer &operands() { return _operands; }
     const TextBuffer &operands() const { return _operands; }
     Error tryGenerate(
@@ -164,7 +164,7 @@ private:
     uint8_t *_memory;
     int _memorySize;
     int _memoryIndex;
-    Insn<Conf> _insn;
+    Insn _insn;
 
     // DisMemory<Conf>
     bool hasNext() const override { return _memoryIndex < _memorySize; }
@@ -192,7 +192,7 @@ public:
 
     class Printer {
     public:
-        virtual void print(const Insn<Conf> &insn, const char *operands) = 0;
+        virtual void print(const Insn &insn, const char *operands) = 0;
     };
     typedef bool (*Filter)(uint8_t);
 

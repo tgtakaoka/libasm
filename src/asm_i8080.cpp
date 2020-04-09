@@ -112,7 +112,7 @@ Error AsmI8080::encodeIoaddr(InsnI8080 &insn) {
     return checkLineEnd();
 }
 
-Error AsmI8080::encode(Insn<Config> &_insn) {
+Error AsmI8080::encode(Insn &_insn) {
     InsnI8080 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

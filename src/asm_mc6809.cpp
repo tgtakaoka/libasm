@@ -459,7 +459,7 @@ Error AsmMc6809::processPseudo(InsnMc6809 &insn) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error AsmMc6809::encode(Insn<Config> &_insn) {
+Error AsmMc6809::encode(Insn &_insn) {
     InsnMc6809 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

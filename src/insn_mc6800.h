@@ -25,7 +25,7 @@ namespace mc6800 {
 
 class InsnMc6800 : public InsnBase<Config> {
 public:
-    InsnMc6800(Insn<Config> &insn) : InsnBase(insn) {}
+    InsnMc6800(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnAdjust insnAdjust() const { return Entry::_insnAdjust(_flags); }

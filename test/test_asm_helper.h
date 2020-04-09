@@ -24,7 +24,7 @@
 
 #define EASSERT(error, addr, line, expected)                    \
     do {                                                        \
-        Insn<Config> insn;                                      \
+        Insn insn;                                      \
         char message[80];                                       \
         symtab.setCurrentOrigin(addr);                          \
         assembler.encode(line, insn, addr, &symtab);            \

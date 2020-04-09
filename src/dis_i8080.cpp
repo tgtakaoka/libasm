@@ -69,7 +69,7 @@ Error DisI8080::decodeIoaddr(
 }
 
 Error DisI8080::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnI8080 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);

@@ -131,7 +131,7 @@ Error DisMc6800::decodeImmediate(
 }
 
 Error DisMc6800::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnMc6800 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);

@@ -44,7 +44,7 @@ private:
     Error decodeImmediate16(DisMemory<Config> &memory, InsnI8080 &insn);
     Error decodeDirect(DisMemory<Config> &memory, InsnI8080 &insn);
     Error decodeIoaddr(DisMemory<Config> &memory, InsnI8080 &insn);
-    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn &insn) override;
 };
 
 } // namespace i8080

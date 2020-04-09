@@ -47,7 +47,7 @@ private:
     Error encodeRelative(InsnMc6800 &insn);
     Error encodeImmediate(InsnMc6800 &insn);
 
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace m6502

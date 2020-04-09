@@ -54,7 +54,7 @@ private:
     Error encodeTransferMemory(InsnMc6809 &insn);
     // Pseudo instruction
     Error processPseudo(InsnMc6809 &insn);
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace mc6809

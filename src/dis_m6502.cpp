@@ -183,7 +183,7 @@ Error DisM6502::decodeBlockMove(
 }
 
 Error DisM6502::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnM6502 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);

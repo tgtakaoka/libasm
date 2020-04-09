@@ -48,7 +48,7 @@ private:
     Error encodeCruOff(InsnTms9900 &insn);
     Error encodeIoaddr(InsnTms9900 &insn);
 
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace tms9900

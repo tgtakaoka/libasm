@@ -84,11 +84,11 @@ private:
     bool _uppercase;
     FILE *_output;
     FILE *_list;
-    const Insn<Conf> *_insn;
+    const Insn *_insn;
     const char *_operands;
 
     // TestGenerator<Addr>::Printer
-    void print(const Insn<Conf> &insn, const char *operands) override {
+    void print(const Insn &insn, const char *operands) override {
         _insn = &insn;
         _operands = operands;
         _listing.reset(*this, _uppercase, false);

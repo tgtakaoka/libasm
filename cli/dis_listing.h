@@ -41,7 +41,7 @@ public:
           _operandWidth(8)
     {}
 
-    Error disassemble(addr_t addr, Insn<Conf> &insn) {
+    Error disassemble(addr_t addr, Insn &insn) {
         _memory.setAddress(addr);
         const Error error = _disassembler.decode(
             _memory, insn, _operands, nullptr, _uppercase);

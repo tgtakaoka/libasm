@@ -108,7 +108,7 @@ private:
     Error encodeMoveOpr(
         InsnMc68000 &insn, const Operand &op1, const Operand &op2);
 
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace mc68000

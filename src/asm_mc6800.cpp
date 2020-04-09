@@ -176,7 +176,7 @@ Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     return OK;
 }
 
-Error AsmMc6800::encode(Insn<Config> &_insn) {
+Error AsmMc6800::encode(Insn &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

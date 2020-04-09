@@ -26,7 +26,7 @@ Disassembler<Config> &disassembler(dis6809);
 
 void disassemble(DisMemory<Config> &memory) {
   char operands[20];
-  Insn<Config> insn;
+  Insn insn;
   while (memory.hasNext()) {
     if (disassembler.decode(memory, insn, operands, nullptr)) {
       Cli.print(F("Error "));

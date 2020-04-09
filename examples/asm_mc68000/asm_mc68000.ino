@@ -24,7 +24,7 @@ AsmMc68000 as68k;
 Assembler<Config> &assembler(as68k);
 
 void assemble(const char *line) {
-  Insn<Config> insn;
+  Insn insn;
   if (assembler.encode(line, insn, 0x10000, nullptr)) {
     Cli.print(F("Error "));
     Cli.print(assembler.getError());

@@ -24,7 +24,7 @@ AsmZ80 asz80;
 Assembler<Config> &assembler(asz80);
 
 void assemble(const char *line) {
-  Insn<Config> insn;
+  Insn insn;
   if (assembler.encode(line, insn, 0x1000, nullptr)) {
     Cli.print(F("Error "));
     Cli.print(assembler.getError());

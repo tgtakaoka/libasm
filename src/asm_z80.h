@@ -61,7 +61,7 @@ private:
     Error encodeIndexedImmediate8(
         InsnZ80 &insn, const Operand &left, const Operand &right);
 
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace z80

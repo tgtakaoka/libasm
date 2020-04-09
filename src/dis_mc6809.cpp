@@ -323,7 +323,7 @@ Error DisMc6809::decodeTransferMemory(
 }
 
 Error DisMc6809::decode(
-    DisMemory<Config> &memory, Insn<Config> &_insn) {
+    DisMemory<Config> &memory, Insn &_insn) {
     InsnMc6809 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);

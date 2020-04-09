@@ -86,7 +86,7 @@ public:
                     fprintf(output, "%s\n", listing.origin(base));
                     fflush(output);
                 }
-                Insn<Conf> insn;
+                Insn insn;
                 for (size_t pc = 0; pc < size; pc += insn.length()) {
                     addr_t address = base + pc;
                     listing.disassemble(address, insn);

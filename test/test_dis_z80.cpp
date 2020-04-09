@@ -681,7 +681,7 @@ static void test_illegal_i8080() {
 
 static void assert_illegal(uint8_t prefix, uint8_t opc, uint8_t opr1 = 0, uint8_t opr2 = 0) {
     char operands[40];
-    Insn<Config> insn;
+    Insn insn;
     const uint8_t codes[] = { prefix, opc, opr1, opr2 };
     memory.setMemory(&codes[0], sizeof(codes));
     disassembler.decode(memory, insn, operands, nullptr);

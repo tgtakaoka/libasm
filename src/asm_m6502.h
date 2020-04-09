@@ -51,7 +51,7 @@ private:
     Error encodeZeroPageRelative(InsnM6502 &insn);
     Error encodeBlockMove(InsnM6502 &insn);
 
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace m6502

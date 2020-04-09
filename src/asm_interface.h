@@ -31,7 +31,7 @@ class Assembler : public ErrorReporter {
 
 public:
     Error encode(
-        const char *line, Insn<Conf> &insn, addr_t addr, SymbolTable *symtab) {
+        const char *line, Insn &insn, addr_t addr, SymbolTable *symtab) {
         this->resetError();
         _scan = skipSpaces(line);
         if (checkLineEnd() == OK)
@@ -104,7 +104,7 @@ protected:
     }
 
 private:
-    virtual Error encode(Insn<Conf> &insn) = 0;
+    virtual Error encode(Insn &insn) = 0;
 };
 
 } // namespace libasm

@@ -74,7 +74,7 @@ private:
     Error decodeRegsExg(DisMemory<Config> &memory, InsnMc68000 &insn);
     Error decodeMoveOpr(DisMemory<Config> &memory, InsnMc68000 &insn);
 
-    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn &insn) override;
 };
 
 } // namespace mc68000

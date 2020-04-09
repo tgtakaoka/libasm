@@ -48,7 +48,7 @@ private:
     Error encodeDirect(InsnI8080 &insn);
     Error encodeIoaddr(InsnI8080 &insn);
 
-    Error encode(Insn<Config> &insn) override;
+    Error encode(Insn &insn) override;
 };
 
 } // namespace i8080

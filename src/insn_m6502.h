@@ -25,7 +25,7 @@ namespace m6502 {
 
 class InsnM6502 : public InsnBase<Config> {
 public:
-    InsnM6502(Insn<Config> &insn) : InsnBase(insn) {}
+    InsnM6502(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {

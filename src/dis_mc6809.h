@@ -53,7 +53,7 @@ private:
     Error decodeBitOperation(DisMemory<Config> &memory, InsnMc6809 &insn);
     Error decodeTransferMemory(DisMemory<Config> &memory, InsnMc6809 &insn);
 
-    Error decode(DisMemory<Config> &memory,  Insn<Config> &insn) override;
+    Error decode(DisMemory<Config> &memory,  Insn &insn) override;
 };
 
 } // namespace mc6809

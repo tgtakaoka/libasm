@@ -177,7 +177,7 @@ Error AsmM6502::parseOperand(Operand &op) {
     return setError(OK);
 }
 
-Error AsmM6502::encode(Insn<Config> &_insn) {
+Error AsmM6502::encode(Insn &_insn) {
     InsnM6502 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);

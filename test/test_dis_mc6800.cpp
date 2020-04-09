@@ -324,7 +324,7 @@ static void test_relative() {
 
 static void assert_illegal(uint8_t opc) {
     char operands[40];
-    Insn<Config> insn;
+    Insn insn;
     const uint8_t codes[] = { opc };
     memory.setMemory(&codes[0], 1);
     disassembler.decode(memory, insn, operands, nullptr);

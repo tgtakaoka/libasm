@@ -47,7 +47,7 @@ private:
     Error decodeZeroPage(DisMemory<Config> &memory, InsnM6502 &insn);
     Error decodeRelative(DisMemory<Config> &memory, InsnM6502 &insn);
     Error decodeBlockMove(DisMemory<Config> &memory, InsnM6502 &insn);
-    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn &insn) override;
 };
 
 } // namespace m6502

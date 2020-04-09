@@ -45,7 +45,7 @@ private:
         DisMemory<Config> &memory, InsnTms9900 &insn, host::uint_t opr);
     Error decodeImmediate(DisMemory<Config> &memory, InsnTms9900 &insn);
     Error decodeRelative(InsnTms9900 &insn);
-    Error decode(DisMemory<Config> &memory, Insn<Config> &insn) override;
+    Error decode(DisMemory<Config> &memory, Insn &insn) override;
 };
 
 } // namespace tms9900

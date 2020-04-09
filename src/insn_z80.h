@@ -25,7 +25,7 @@ namespace z80 {
 
 class InsnZ80 : public InsnBase<Config> {
 public:
-    InsnZ80(Insn<Config> &insn) : InsnBase(insn) {}
+    InsnZ80(Insn &insn) : InsnBase(insn) {}
     InsnZ80(InsnZ80 &other) : InsnBase(other._insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags2); }

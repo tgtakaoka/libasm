@@ -1030,7 +1030,7 @@ static void test_bit_position() {
 
 static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
     char operands[40];
-    Insn<Config> insn;
+    Insn insn;
     const uint8_t codes[] = { prefix, opc };
     if (prefix == 0) {
         memory.setMemory(&codes[1], 1);
