@@ -17,6 +17,7 @@
 #ifndef __DIS_BASE_H__
 #define __DIS_BASE_H__
 
+#include "config_base.h"
 #include "dis_memory.h"
 #include "dis_operand.h"
 #include "error_reporter.h"
@@ -29,15 +30,15 @@
 
 namespace libasm {
 
-class Disassembler : public ErrorReporter {
+class Disassembler
+    : public ErrorReporter,
+      virtual public ConfigBase {
 public:
     Error decode(
         DisMemory &memory, Insn &insn,
         char *operands, SymbolTable *symtab, bool uppercase = false);
 
     virtual DisOperand &getFormatter() = 0;
-    virtual bool setCpu(const char *cpu) = 0;
-    virtual const char *listCpu() const = 0;
 
 protected:
     char *_operands;

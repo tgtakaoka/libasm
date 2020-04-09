@@ -124,7 +124,7 @@ private:
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return 6; }
-    int instructionWidth() const override { return Conf::name_max + 1; }
+    int instructionWidth() const override { return Conf::NAME_MAX + 1; }
     int operandWidth() const override { return 40; }
 
     int parseOption(int argc, const char **argv) {

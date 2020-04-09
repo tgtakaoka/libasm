@@ -21,29 +21,59 @@
 
 namespace libasm {
 
+enum AddressWidth : host::uint_t {
+    ADDRESS_16BIT,
+    ADDRESS_24BIT,
+    ADDRESS_32BIT,
+};
+
+enum OpCodeWidth : host::uint_t {
+    OPCODE_8BIT,
+    OPCODE_16BIT,
+};
+
 enum Endian : host::uint_t {
     ENDIAN_BIG,
     ENDIAN_LITTLE,
 };
 
+struct ConfigBase {
+    virtual AddressWidth addressWidth() const = 0;
+    virtual OpCodeWidth opCodeWidth() const = 0;
+    virtual host::uint_t codeMax() const = 0;
+    virtual Endian endian() const = 0;
+    virtual host::uint_t nameMax() const = 0;
+
+    virtual const char *listCpu() const = 0;
+    virtual bool setCpu(const char *cpu) = 0;
+};
+
 template<
+    AddressWidth AddrWE,
     typename AddrT,
     typename DiffT,
+    OpCodeWidth CodeWE,
+    host::uint_t CodeMax,
+    Endian EndianE,
     typename OpCodeT,
     typename InsnT,
-    Endian EndianE,
-    host::uint_t CodeMax,
     host::uint_t NameMax
     >
-struct ConfigBase {
+struct ConfigImpl : virtual public ConfigBase {
     typedef AddrT   uintptr_t;
     typedef DiffT   ptrdiff_t;
     typedef OpCodeT opcode_t;
     typedef InsnT   insn_t;
 
-    static constexpr Endian endian = EndianE;
-    static constexpr host::uint_t code_max = CodeMax;
-    static constexpr host::uint_t name_max = NameMax;
+    static constexpr host::uint_t CODE_MAX = CodeMax;
+    static constexpr Endian ENDIAN = EndianE;
+    static constexpr host::uint_t NAME_MAX = NameMax;
+
+    AddressWidth addressWidth() const override { return AddrWE; }
+    OpCodeWidth opCodeWidth() const override { return CodeWE; }
+    host::uint_t codeMax() const override { return CodeMax; }
+    Endian endian() const override { return EndianE; }
+    host::uint_t nameMax() const override { return NameMax; }
 };
 
 } // namespace libasm

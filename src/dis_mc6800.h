@@ -26,9 +26,13 @@
 namespace libasm {
 namespace mc6800 {
 
-class DisMc6800 : public Disassembler {
+class DisMc6800
+    : public Disassembler,
+      public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
+
+    // Config
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
     const char *listCpu() const override { return TableMc6800::listCpu(); }
 

@@ -22,9 +22,10 @@
 namespace libasm {
 namespace mc6809 {
 
-struct Config : ConfigBase<
-    uint16_t, int16_t, uint8_t, uint16_t,
-    ENDIAN_BIG, 5, 6>
+struct Config : public ConfigImpl<
+    ADDRESS_16BIT, uint16_t, int16_t,
+    OPCODE_8BIT, 5, ENDIAN_BIG, uint8_t, uint16_t,
+    6>
 {};
 
 enum CpuType : host::uint_t {

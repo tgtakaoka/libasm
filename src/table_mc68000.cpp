@@ -245,7 +245,7 @@ Error TableMc68000::searchInsnCode(InsnMc68000 &insn) const {
     const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_MC68000));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Config::name_max + 1];
+    char name[Config::NAME_MAX + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

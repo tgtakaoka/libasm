@@ -214,7 +214,7 @@ public:
     }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return Conf::name_max + 1; }
+    int instructionWidth() const override { return _assembler.nameMax() + 1; }
     int operandWidth() const override { return _operandWidth; }
 
     // Error reporting
@@ -423,7 +423,7 @@ protected:
                 setError(OK);
             }
             if (getError()) return getError();
-            if (Conf::endian == ENDIAN_BIG) {
+            if (_assembler.endian() == ENDIAN_BIG) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
             } else {

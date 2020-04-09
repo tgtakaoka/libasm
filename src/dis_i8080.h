@@ -26,11 +26,15 @@
 namespace libasm {
 namespace i8080 {
 
-class DisI8080 : public Disassembler {
+class DisI8080
+    : public Disassembler,
+      public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableI8080::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
 
 private:
     DisIntelOperand _formatter;

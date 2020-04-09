@@ -18,6 +18,7 @@
 #define __ASM_BASE_H__
 
 #include "asm_operand.h"
+#include "config_base.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "symbol_table.h"
@@ -26,15 +27,15 @@
 
 namespace libasm {
 
-class Assembler : public ErrorReporter {
+class Assembler
+    : public ErrorReporter,
+      virtual public ConfigBase {
 public:
     Error encode(
         const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
     virtual AsmOperand &getParser() = 0;
     const char *errorAt() const { return _scan; }
-    virtual bool setCpu(const char *cpu) = 0;
-    virtual const char *listCpu() const = 0;
 
 protected:
     const char *_scan;

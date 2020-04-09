@@ -178,8 +178,8 @@ public:
         Disassembler &disassembler,
         bool uppercase)
         : _disassembler(disassembler),
-          _memorySize(Conf::code_max),
-          _endian(Conf::endian),
+          _memorySize(Conf::CODE_MAX),
+          _endian(Conf::ENDIAN),
           _opcodeSize(sizeof(typename Conf::opcode_t)),
           _uppercase(uppercase) {
         _memory = new uint8_t[_memorySize];

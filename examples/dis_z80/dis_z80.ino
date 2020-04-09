@@ -39,10 +39,10 @@ void disassemble(DisMemory &memory) {
         uint8_t val = insn.bytes()[i];
         Cli.printUint8(val);
       }
-      for (int i = insn.length(); i < Config::code_max; i++)
+      for (int i = insn.length(); i < Config::CODE_MAX; i++)
         Cli.print(F("   "));
       Cli.print(' ');
-      for (size_t n = Cli.print(insn.name()); n <= Config::name_max; n++)
+      for (size_t n = Cli.print(insn.name()); n <= Config::NAME_MAX; n++)
         Cli.print(' ');
       Cli.println(operands);
     }

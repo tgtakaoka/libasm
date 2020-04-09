@@ -160,7 +160,7 @@ Error TableTms9900::searchInsnCode(InsnTms9900 &insn) const {
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
-    char name[Config::name_max + 1];
+    char name[Config::NAME_MAX + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;

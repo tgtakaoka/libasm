@@ -26,9 +26,13 @@
 namespace libasm {
 namespace m6502 {
 
-class DisM6502 : public Disassembler {
+class DisM6502
+    : public Disassembler,
+      public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
+
+    // Config
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
     const char *listCpu() const override { return TableM6502::listCpu(); }
 

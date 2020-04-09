@@ -17,21 +17,24 @@
 #ifndef __ASM_Z80_H__
 #define __ASM_Z80_H__
 
+#include "asm_base.h"
 #include "config_z80.h"
-
 #include "insn_z80.h"
 #include "reg_z80.h"
 #include "table_z80.h"
-#include "asm_base.h"
 
 namespace libasm {
 namespace z80 {
 
-class AsmZ80 : public Assembler {
+class AsmZ80
+    : public Assembler,
+      public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableZ80::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
 
 private:
     AsmIntelOperand _parser;

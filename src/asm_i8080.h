@@ -17,21 +17,24 @@
 #ifndef __ASM_I8080_H__
 #define __ASM_I8080_H__
 
+#include "asm_base.h"
 #include "config_i8080.h"
-
 #include "insn_i8080.h"
 #include "reg_i8080.h"
 #include "table_i8080.h"
-#include "asm_base.h"
 
 namespace libasm {
 namespace i8080 {
 
-class AsmI8080 : public Assembler {
+class AsmI8080
+    : public Assembler,
+      public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableI8080::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
 
 private:
     AsmIntelOperand _parser;

@@ -98,7 +98,7 @@ public:
 
     Error readUint16(DisMemory &memory, uint16_t &val) {
         uint8_t msb, lsb;
-        if (Conf::endian == ENDIAN_BIG) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
             if (readByte(memory, msb)) return NO_MEMORY;
             if (readByte(memory, lsb)) return NO_MEMORY;
         } else {
@@ -111,7 +111,7 @@ public:
 
     Error readUint32(DisMemory &memory, uint32_t &val) {
         uint16_t msw, lsw;
-        if (Conf::endian == ENDIAN_BIG) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
             if (readUint16(memory, msw)) return NO_MEMORY;
             if (readUint16(memory, lsw)) return NO_MEMORY;
         } else {
@@ -127,7 +127,7 @@ public:
     }
 
     Error emitUint16(uint16_t val) {
-        if (Conf::endian == ENDIAN_BIG) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
             if (emitByte(static_cast<uint8_t>(val >> 8))) return NO_MEMORY;
             if (emitByte(static_cast<uint8_t>(val >> 0))) return NO_MEMORY;
         } else {
@@ -138,7 +138,7 @@ public:
     }
 
     Error emitUint32(uint32_t val) {
-        if (Conf::endian == ENDIAN_BIG) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
             if (emitUint16(static_cast<uint16_t>(val >> 16))) return NO_MEMORY;
             if (emitUint16(static_cast<uint16_t>(val >>  0))) return NO_MEMORY;
         } else {

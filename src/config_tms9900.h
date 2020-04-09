@@ -22,9 +22,10 @@
 namespace libasm {
 namespace tms9900 {
 
-struct Config : ConfigBase<
-    uint16_t, int16_t, uint16_t, uint16_t,
-    ENDIAN_BIG, 6, 4>
+struct Config : ConfigImpl<
+    ADDRESS_16BIT, uint16_t, int16_t,
+    OPCODE_16BIT, 6, ENDIAN_BIG, uint16_t, uint16_t,
+    4>
 {};
 
 enum CpuType : host::uint_t {

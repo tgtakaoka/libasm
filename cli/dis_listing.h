@@ -104,7 +104,7 @@ private:
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return Conf::name_max + 1; }
+    int instructionWidth() const override { return _disassembler.nameMax() + 1; }
     int operandWidth() const override { return _operandWidth; }
 };
 

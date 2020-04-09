@@ -17,21 +17,24 @@
 #ifndef __ASM_TMS9900_H__
 #define __ASM_TMS9900_H__
 
+#include "asm_base.h"
 #include "config_tms9900.h"
-
 #include "insn_tms9900.h"
 #include "reg_tms9900.h"
 #include "table_tms9900.h"
-#include "asm_base.h"
 
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900 : public Assembler {
+class AsmTms9900
+    : public Assembler,
+      public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableTms9900::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
 
 private:
     AsmIntelOperand _parser;

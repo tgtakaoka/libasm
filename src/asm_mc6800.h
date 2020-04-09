@@ -17,21 +17,24 @@
 #ifndef __ASM_MC6800_H__
 #define __ASM_MC6800_H__
 
+#include "asm_base.h"
 #include "config_mc6800.h"
-
 #include "insn_mc6800.h"
 #include "reg_mc6800.h"
 #include "table_mc6800.h"
-#include "asm_base.h"
 
 namespace libasm {
 namespace mc6800 {
 
-class AsmMc6800 : public Assembler {
+class AsmMc6800
+    : public Assembler,
+      public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableMc6800::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
 
 private:
     AsmMotoOperand _parser;

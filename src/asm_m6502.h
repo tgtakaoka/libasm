@@ -17,21 +17,24 @@
 #ifndef __ASM_M6502_H__
 #define __ASM_M6502_H__
 
+#include "asm_base.h"
 #include "config_m6502.h"
-
 #include "insn_m6502.h"
 #include "reg_m6502.h"
 #include "table_m6502.h"
-#include "asm_base.h"
 
 namespace libasm {
 namespace m6502 {
 
-class AsmM6502 : public Assembler {
+class AsmM6502
+    : public Assembler,
+      public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
-    bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableM6502::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
 
 private:
     AsmMotoOperand _parser;

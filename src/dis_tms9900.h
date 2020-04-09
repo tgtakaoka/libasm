@@ -26,11 +26,15 @@
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900 : public Disassembler {
+class DisTms9900
+    : public Disassembler,
+      public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
+
+    // Config
     const char *listCpu() const override { return TableTms9900::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
 
 private:
     DisIntelOperand _formatter;

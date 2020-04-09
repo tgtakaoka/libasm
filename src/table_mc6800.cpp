@@ -239,7 +239,7 @@ Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6800_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Config::name_max + 1];
+    char name[Config::NAME_MAX + 1];
     pgm_strncpy(name, entry->name, sizeof(name));
     insn.setName(name);
     return OK;
