@@ -734,7 +734,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
         return opr.setError(OK);
     if (*p == '#') {
         _scan = p + 1;
-        if (getOperand32(opr.val32)) return getError();
+        if (getOperand(opr.val32)) return getError();
         opr.setError(getError());
         opr.mode = M_IMM_DATA;
         return setError(OK);
@@ -759,7 +759,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
             return setError(opr.setError(OK));
         }
         _scan = p;
-        if (getOperand32(opr.val32)) return opr.setError(getError());
+        if (getOperand(opr.val32)) return opr.setError(getError());
         if (getError()) opr.setError(getError());
         p = skipSpaces(_scan);
         if (*p == ')') {
@@ -822,7 +822,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
         return opr.setError(OK);
     }
     _scan = p;
-    if (getOperand32(opr.val32)) return opr.setError(getError());
+    if (getOperand(opr.val32)) return opr.setError(getError());
     if (getError()) opr.setError(getError());
     opr.mode = M_LABEL;
     return setError(OK);

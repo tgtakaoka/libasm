@@ -22,12 +22,12 @@
 #include "insn_tms9900.h"
 #include "reg_tms9900.h"
 #include "table_tms9900.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900 : public Assembler<Config> {
+class AsmTms9900 : public Assembler {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }

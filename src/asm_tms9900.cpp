@@ -29,7 +29,7 @@ Error AsmTms9900::checkComma() {
 
 Error AsmTms9900::encodeImm(InsnTms9900 &insn, bool emitInsn) {
     uint16_t val;
-    if (getOperand16(val)) return getError();
+    if (getOperand(val)) return getError();
     if (emitInsn) insn.emitInsn();
     insn.emitOperand(val);
     return setError(getError());
@@ -59,7 +59,7 @@ Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
         count = 0;
     } else {
         uint8_t val8;
-        if (getOperand8(val8)) return getError();
+        if (getOperand(val8)) return getError();
         if (val8 > 16 || (!accept16 && val8 == 16))
             return setError(UNKNOWN_OPERAND);
         count = val8 & 0xf;
@@ -99,7 +99,7 @@ Error AsmTms9900::encodeOpr(
     } else if (*p == '@') {
         mode = 2;
         _scan = p + 1;
-        if (getOperand16(val16)) return getError();
+        if (getOperand(val16)) return getError();
         p = _scan;
         if (*p == '(') {
             p++;
@@ -127,7 +127,7 @@ Error AsmTms9900::encodeOpr(
 
 Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
     Config::uintptr_t addr;
-    if (getOperand16(addr)) return getError();
+    if (getOperand(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     if (addr % 2) return setError(ILLEGAL_OPERAND);
     const Config::uintptr_t base = insn.address() + 2;
@@ -140,7 +140,7 @@ Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
 
 Error AsmTms9900::encodeCruOff(InsnTms9900 &insn) {
     uint8_t val8;
-    if (getOperand8(val8)) return getError();
+    if (getOperand(val8)) return getError();
     insn.embed(val8);
     insn.emitInsn();
     return getError();

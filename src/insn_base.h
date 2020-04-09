@@ -20,8 +20,9 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "error_reporter.h"
+#include "config_base.h"
 #include "dis_memory.h"
+#include "error_reporter.h"
 
 namespace libasm {
 

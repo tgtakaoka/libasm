@@ -22,12 +22,12 @@
 #include "insn_i8080.h"
 #include "reg_i8080.h"
 #include "table_i8080.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 
 namespace libasm {
 namespace i8080 {
 
-class AsmI8080 : public Assembler<Config> {
+class AsmI8080 : public Assembler {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }

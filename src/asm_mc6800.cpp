@@ -56,7 +56,7 @@ Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
     if (*_scan == '<') _scan++;
     insn.emitInsn();
     Config::uintptr_t dir;
-    if (getOperand16(dir)) return getError();
+    if (getOperand(dir)) return getError();
     // TODO: Warning if dir isn't on _direct_page.
     insn.emitByte(static_cast<uint8_t>(dir));
     return checkLineEnd();
@@ -70,7 +70,7 @@ Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
     if (*_scan == '>') _scan++;
     insn.emitInsn();
     Config::uintptr_t addr;
-    if (getOperand16(addr)) return getError();
+    if (getOperand(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
@@ -83,7 +83,7 @@ Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
     insn.emitInsn();
     uint8_t disp8 = 0;          // accept ",X" as "0,X"
     if (*_scan != ',') {
-        if (getOperand8(disp8)) return getError();
+        if (getOperand(disp8)) return getError();
         _scan = skipSpaces(_scan);
     }
     insn.emitByte(disp8);
@@ -97,7 +97,7 @@ Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
 
 Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
     Config::uintptr_t addr;
-    if (getOperand16(addr)) return getError();
+    if (getOperand(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     const Config::uintptr_t base = insn.address() + 2;
     const Config::ptrdiff_t delta = addr - base;
@@ -117,11 +117,11 @@ Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
     insn.emitInsn();
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val8;
-        if (getOperand8(val8)) return getError();
+        if (getOperand(val8)) return getError();
         insn.emitByte(val8);
     } else if (insn.oprSize() == SZ_WORD) {
         uint16_t val16;
-        if (getOperand16(val16)) return getError();
+        if (getOperand(val16)) return getError();
         insn.emitUint16(val16);
     } else {
         return setError(UNKNOWN_OPERAND);
@@ -159,7 +159,7 @@ Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     if (*line != ',') {
         const char *saved_scan = _scan;
         _scan = line;
-        const Error error = getOperand16(val16);
+        const Error error = getOperand(val16);
         line = _scan;
         _scan = saved_scan;
         if (error != OK) return error;

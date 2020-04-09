@@ -21,7 +21,7 @@ using namespace libasm;
 using namespace libasm::mc68000;
 
 AsmMc68000 as68k;
-Assembler<Config> &assembler(as68k);
+Assembler &assembler(as68k);
 
 void assemble(const char *line) {
   Insn insn;

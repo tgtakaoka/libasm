@@ -18,7 +18,7 @@ CXXFLAGS=-Wall -g -O -std=c++17 -I../src
 CPPFLAGS=-MMD
 
 OBJS_common   = file_util.o
-OBJS_asm      = asm_operand.o
+OBJS_asm      = asm_base.o asm_operand.o
 OBJS_dis      = dis_operand.o
 OBJS_mc6809   = table_mc6809.o  reg_mc6809.o  $(OBJS_common)
 OBJS_mc6800   = table_mc6800.o  reg_mc6800.o  $(OBJS_common)

@@ -21,7 +21,7 @@ using namespace libasm;
 using namespace libasm::z80;
 
 AsmZ80 asz80;
-Assembler<Config> &assembler(asz80);
+Assembler &assembler(asz80);
 
 void assemble(const char *line) {
   Insn insn;

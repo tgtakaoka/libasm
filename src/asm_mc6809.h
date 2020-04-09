@@ -22,12 +22,12 @@
 #include "insn_mc6809.h"
 #include "reg_mc6809.h"
 #include "table_mc6809.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 
 namespace libasm {
 namespace mc6809 {
 
-class AsmMc6809 : public Assembler<Config> {
+class AsmMc6809 : public Assembler {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }

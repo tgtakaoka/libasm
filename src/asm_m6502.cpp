@@ -22,7 +22,7 @@ namespace m6502 {
 
 Error AsmM6502::encodeLongRelative(InsnM6502 &insn) {
     uint32_t addr;
-    if (getOperand32(addr)) return getError();
+    if (getOperand(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     const uint32_t base = insn.address() + 3;
     const int32_t delta = addr - base;
@@ -34,7 +34,7 @@ Error AsmM6502::encodeLongRelative(InsnM6502 &insn) {
 
 Error AsmM6502::encodeRelative(InsnM6502 &insn, bool emitInsn) {
     Config::uintptr_t addr;
-    if (getOperand16(addr)) return getError();
+    if (getOperand(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
     const Config::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
     const Config::ptrdiff_t delta = addr - base;
@@ -47,7 +47,7 @@ Error AsmM6502::encodeRelative(InsnM6502 &insn, bool emitInsn) {
 Error AsmM6502::encodeZeroPageRelative(InsnM6502 &insn) {
     if (*_scan == '<') _scan++;
     uint8_t zp;
-    if (getOperand8(zp)) return getError();
+    if (getOperand(zp)) return getError();
     const Error error = setError(getError());
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
@@ -59,11 +59,11 @@ Error AsmM6502::encodeZeroPageRelative(InsnM6502 &insn) {
 
 Error AsmM6502::encodeBlockMove(InsnM6502 &insn) {
     uint8_t srcpg, dstpg;
-    if (getOperand8(srcpg)) return getError();
+    if (getOperand(srcpg)) return getError();
     Error error = getError();
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
-    if (getOperand8(dstpg)) return getError();
+    if (getOperand(dstpg)) return getError();
     if (getError()) error = getError();
     insn.emitInsn();
     insn.emitByte(srcpg);
@@ -94,7 +94,7 @@ Error AsmM6502::parseOperand(Operand &op) {
     if (*p == '#') {            // #nn
         uint8_t val8;
         _scan = p + 1;
-        if (getOperand8(val8)) return getError();
+        if (getOperand(val8)) return getError();
         op.setError(getError());
         p = _scan;
         op.mode = IMM;
@@ -110,7 +110,7 @@ Error AsmM6502::parseOperand(Operand &op) {
         if (modifier == '<' || modifier == '>') p++;
         if (*p == '>') { modifier = '}'; p++; }
         _scan = p;
-        if (getOperand32(op.val32)) return getError();
+        if (getOperand(op.val32)) return getError();
         op.setError(getError());
         p = skipSpaces(_scan);
         if (*p == ',') {

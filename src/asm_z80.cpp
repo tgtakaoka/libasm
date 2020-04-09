@@ -309,11 +309,11 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             _scan = p;
             if (insn.addrMode() == IOADR) {
                 uint8_t val8;
-                if (getOperand8(val8)) return opr.setError(getError());
+                if (getOperand(val8)) return opr.setError(getError());
                 opr.val = val8;
                 opr.format = ADDR_8;
             } else {
-                if (getOperand16(opr.val)) return opr.setError(getError());
+                if (getOperand(opr.val)) return opr.setError(getError());
                 opr.format = ADDR_16;
             }
             if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
@@ -341,7 +341,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             if (opr.reg == REG_IX || opr.reg == REG_IY) {
                 uint8_t val8;
                 _scan = p;
-                if (getOperand8(val8)) return opr.setError(getError());
+                if (getOperand(val8)) return opr.setError(getError());
                 opr.setError(getError());
                 if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
                 _scan++;
@@ -355,13 +355,13 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
     }
     if (opr.size == SZ_WORD
         || insn.addrMode() == REL8 || insn.addrMode() == DIRECT) {
-        if (getOperand16(opr.val)) return opr.setError(getError());
+        if (getOperand(opr.val)) return opr.setError(getError());
         opr.setError(getError());
         opr.format = IMM_16;
         return OK;;
     }
     uint8_t val8;
-    if (getOperand8(val8)) return opr.setError(getError());
+    if (getOperand(val8)) return opr.setError(getError());
     opr.setError(getError());
     opr.val = val8;
     opr.format = IMM_8;

@@ -22,12 +22,12 @@
 #include "insn_m6502.h"
 #include "reg_m6502.h"
 #include "table_m6502.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 
 namespace libasm {
 namespace m6502 {
 
-class AsmM6502 : public Assembler<Config> {
+class AsmM6502 : public Assembler {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }

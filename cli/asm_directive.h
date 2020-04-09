@@ -23,7 +23,7 @@
 
 #include "error_reporter.h"
 #include "cli_memory.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 #include "asm_listing.h"
 #include "file_util.h"
 
@@ -214,13 +214,13 @@ public:
     }
     int maxBytes() const override { return 6; }
     int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return _assembler.maxName() + 1; }
+    int instructionWidth() const override { return Conf::name_max + 1; }
     int operandWidth() const override { return _operandWidth; }
 
     // Error reporting
 
 protected:
-    AsmDirective(Assembler<Conf> &assembler)
+    AsmDirective(Assembler &assembler)
         : _assembler(assembler),
           _parser(assembler.getParser()),
           _line_len(128),
@@ -254,7 +254,7 @@ protected:
         const Source *include_from;
     };
 
-    Assembler<Conf> &_assembler;
+    Assembler &_assembler;
     AsmOperand &_parser;
     size_t _line_len;
     char *_line;
@@ -423,7 +423,7 @@ protected:
                 setError(OK);
             }
             if (getError()) return getError();
-            if (_assembler.endian() == ENDIAN_BIG) {
+            if (Conf::endian == ENDIAN_BIG) {
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
                 memory.writeByte(_origin++, static_cast<uint8_t>(val16));
             } else {
@@ -514,7 +514,7 @@ private:
 template<typename Conf>
 class AsmMotoDirective : public AsmDirective<Conf> {
 public:
-    AsmMotoDirective(Assembler<Conf> &assembler)
+    AsmMotoDirective(Assembler &assembler)
         : AsmDirective<Conf>(assembler) {}
 
 protected:
@@ -535,7 +535,7 @@ protected:
 template<typename Conf>
 class AsmMostekDirective : public AsmDirective<Conf> {
 public:
-    AsmMostekDirective(Assembler<Conf> &assembler)
+    AsmMostekDirective(Assembler &assembler)
         : AsmDirective<Conf>(assembler) {}
 
 protected:
@@ -559,7 +559,7 @@ protected:
 template<typename Conf>
 class AsmIntelDirective : public AsmDirective<Conf> {
 public:
-    AsmIntelDirective(Assembler<Conf> &assembler)
+    AsmIntelDirective(Assembler &assembler)
         : AsmDirective<Conf>(assembler) {}
 
 protected:

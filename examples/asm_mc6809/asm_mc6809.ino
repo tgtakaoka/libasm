@@ -21,7 +21,7 @@ using namespace libasm;
 using namespace libasm::mc6809;
 
 AsmMc6809 as6809;
-Assembler<Config> &assembler(as6809);
+Assembler &assembler(as6809);
 
 void assemble(const char *line) {
   Insn insn;

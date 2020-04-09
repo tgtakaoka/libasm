@@ -22,12 +22,12 @@
 #include "insn_z80.h"
 #include "reg_z80.h"
 #include "table_z80.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 
 namespace libasm {
 namespace z80 {
 
-class AsmZ80 : public Assembler<Config> {
+class AsmZ80 : public Assembler {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }

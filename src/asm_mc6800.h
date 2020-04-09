@@ -22,12 +22,12 @@
 #include "insn_mc6800.h"
 #include "reg_mc6800.h"
 #include "table_mc6800.h"
-#include "asm_interface.h"
+#include "asm_base.h"
 
 namespace libasm {
 namespace mc6800 {
 
-class AsmMc6800 : public Assembler<Config> {
+class AsmMc6800 : public Assembler {
 public:
     AsmOperand &getParser() override { return _parser; }
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }

@@ -77,7 +77,7 @@ Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
 
 Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
     uint8_t vecNo;
-    if (getOperand8(vecNo)) return getError();
+    if (getOperand(vecNo)) return getError();
     if (vecNo >= 8) return setError(OVERFLOW_RANGE);
     insn.embed(vecNo << 3);
     return setError(OK);
@@ -88,11 +88,11 @@ Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
         return setError(UNKNOWN_OPERAND);
     if (insn.addrMode() == IMM8) {
         uint8_t val8;
-        if (getOperand8(val8)) return getError();
+        if (getOperand(val8)) return getError();
         insn.emitByte(val8);
     } else if (insn.addrMode() == IMM16) {
         uint16_t val16;
-        if (getOperand16(val16)) return getError();
+        if (getOperand(val16)) return getError();
         insn.emitUint16(val16);
     }
     return checkLineEnd();
@@ -100,14 +100,14 @@ Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
 
 Error AsmI8080::encodeDirect(InsnI8080 &insn) {
     uint16_t addr;
-    if (getOperand16(addr)) return getError();
+    if (getOperand(addr)) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
 
 Error AsmI8080::encodeIoaddr(InsnI8080 &insn) {
     uint8_t addr;
-    if (getOperand8(addr)) return getError();
+    if (getOperand(addr)) return getError();
     insn.emitByte(addr);
     return checkLineEnd();
 }

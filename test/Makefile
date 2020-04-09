@@ -115,7 +115,7 @@ TEST_OBJS= \
 
 TESTS=$(TEST_OBJS:.o=)
 
-OBJS_asm = asm_operand.o test_asserter.o
+OBJS_asm = asm_base.o asm_operand.o test_asserter.o
 OBJS_dis = dis_operand.o test_asserter.o test_memory.o
 OBJS_gen = dis_operand.o test_memory.o text_buffer.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
