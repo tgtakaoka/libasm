@@ -161,6 +161,7 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
 }
     
 int DisDriver::parseOption(int argc, const char **argv) {
+    _uppercase = false;
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
