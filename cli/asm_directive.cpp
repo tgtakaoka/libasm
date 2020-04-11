@@ -143,6 +143,27 @@ void AsmDirective::setSymbolMode(bool reportUndef, bool reportDuplicate) {
     _reportDuplicate = reportDuplicate;
 }
 
+struct AsmDirective::Source {
+    Source(const char *file_name, const char *end,
+           const Source *parent)
+        : fp(nullptr),
+          lineno(0),
+          name(file_name, end),
+          include_from(parent)
+    {}
+    Source(const std::string &file_name,
+           const Source *parent)
+        : fp(nullptr),
+          lineno(0),
+          name(file_name),
+          include_from(parent)
+    {}
+    FILE *fp;
+    int lineno;
+    const std::string name;
+    const Source *include_from;
+};
+
 const char *AsmDirective::currentSource() const {
     return _sources.empty() ? nullptr : _sources.back().name.c_str();
 }
@@ -189,6 +210,8 @@ Error AsmDirective::closeSource() {
     _sources.pop_back();
     return setError(OK);
 }
+
+// protected
 
 Error AsmDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory) {
@@ -404,6 +427,160 @@ int AsmDirective::trimRight(const char *str, int len) {
     while (len > 0 && isspace(str[len - 1]))
         len--;
     return len;
+}
+
+// ListingLine oevrrides
+
+uint32_t AsmDirective::startAddress() const {
+    return _list.address;
+}
+
+int AsmDirective::generatedSize() const {
+    return _list.length;
+}
+
+uint8_t AsmDirective::getByte(int offset) const {
+    uint8_t val = 0;
+    _list.memory->readByte(_list.address + offset, val);
+    return val;
+}
+
+bool AsmDirective::hasInstruction() const {
+    return _list.instruction_len;
+}
+
+std::string AsmDirective::getInstruction() const {
+    return std::string(_list.instruction, _list.instruction_len);
+}
+
+bool AsmDirective::hasOperand() const {
+    return _list.operand_len;
+}
+
+std::string AsmDirective::getOperand() const {
+    return std::string(_list.operand,
+                       trimRight(_list.operand, _list.operand_len));
+}
+
+uint16_t AsmDirective::lineNumber() const {
+    return _list.line_number;
+}
+
+uint16_t AsmDirective::includeNest() const {
+    return _list.include_nest;
+}
+
+bool AsmDirective::hasValue() const {
+    return _list.value_defined;
+}
+
+uint32_t AsmDirective::value() const {
+    return _list.value;
+}
+
+bool AsmDirective::hasLabel() const {
+    return _list.label_len;
+}
+
+std::string AsmDirective::getLabel() const {
+    return std::string(_list.label, _list.label_len);
+}
+
+bool AsmDirective::hasComment() const {
+    return _list.comment && *_list.comment;
+}
+
+std::string AsmDirective::getComment() const {
+    return std::string(_list.comment);
+}
+
+AddressWidth AsmDirective::addressWidth() const {
+    return _assembler.addressWidth();
+}
+
+OpCodeWidth AsmDirective::opCodeWidth() const {
+    return _assembler.opCodeWidth();
+}
+
+int AsmDirective::maxBytes() const {
+    return 6;
+}
+
+int AsmDirective::labelWidth() const {
+    return _labelWidth;
+}
+
+int AsmDirective::instructionWidth() const {
+    return _assembler.nameMax() + 1;
+}
+
+int AsmDirective::operandWidth() const {
+    return _operandWidth;
+}
+
+// Motorola type directives
+
+AsmMotoDirective::AsmMotoDirective(Assembler &assembler)
+    : AsmDirective(assembler)
+{}
+
+BinFormatter *AsmMotoDirective::defaultFormatter() const {
+    return new MotoSrec(_assembler.addressWidth());
+}
+
+Error AsmMotoDirective::processDirective(
+    const char *directive, const char *&label, CliMemory &memory) {
+    if (strcasecmp(directive, "fcb") == 0 ||
+        strcasecmp(directive, "fcc") == 0)
+        return this->defineBytes(memory);
+    if (strcasecmp(directive, "fdb") == 0)
+        return this->defineWords(memory);
+    if (strcasecmp(directive, "rmb") == 0)
+        return this->defineSpaces();
+    return UNKNOWN_DIRECTIVE;
+}
+
+AsmMostekDirective::AsmMostekDirective(Assembler &assembler)
+    : AsmDirective(assembler)
+{}
+
+BinFormatter *AsmMostekDirective::defaultFormatter() const {
+    return new MotoSrec(_assembler.addressWidth());
+}
+
+Error AsmMostekDirective::processDirective(
+    const char *directive, const char *&label, CliMemory &memory) {
+    if (strcmp(directive, ":=") == 0
+        || strcmp(directive, "=") == 0) {
+        return this->defineLabel(label, memory);
+    }
+    if (strcasecmp(directive, "fcb") == 0)
+        return this->defineBytes(memory);
+    if (strcasecmp(directive, "fdb") == 0)
+        return this->defineWords(memory);
+    if (strcasecmp(directive, "rmb") == 0)
+        return this->defineSpaces();
+    return UNKNOWN_DIRECTIVE;
+}
+
+AsmIntelDirective::AsmIntelDirective(Assembler &assembler)
+    : AsmDirective(assembler)
+{}
+
+BinFormatter *AsmIntelDirective::defaultFormatter() const {
+    return new IntelHex(_assembler.addressWidth());
+}        
+
+Error AsmIntelDirective::processDirective(
+    const char *directive, const char *&label, CliMemory &memory) {
+    this->_parser.isSymbolLetter(0);
+    if (strcasecmp(directive, "db") == 0)
+        return this->defineBytes(memory);
+    if (strcasecmp(directive, "dw") == 0)
+        return this->defineWords(memory);
+    if (strcasecmp(directive, "ds") == 0)
+        return this->defineSpaces();
+    return UNKNOWN_DIRECTIVE;
 }
 
 } // namespace cli

@@ -51,64 +51,8 @@ public:
     Error openSource(const char *input_name, const char *end = nullptr);
     const char *readSourceLine();
 
-    // ListingLine
-    AddressWidth addressWidth() const override { return _assembler.addressWidth(); }
-    OpCodeWidth opCodeWidth() const override { return _assembler.opCodeWidth(); }
-    uint16_t lineNumber() const override { return _list.line_number; }
-    uint16_t includeNest() const override { return _list.include_nest; }
-    uint32_t startAddress() const override { return _list.address; }
-    int generatedSize() const override { return _list.length; }
-    uint8_t getByte(int offset) const override {
-        uint8_t val = 0;
-        _list.memory->readByte(_list.address + offset, val);
-        return val;
-    }
-    bool hasValue() const override { return _list.value_defined; }
-    uint32_t value() const override { return _list.value; }
-    bool hasLabel() const override { return _list.label_len; }
-    bool hasInstruction() const override { return _list.instruction_len; }
-    bool hasOperand() const override { return _list.operand_len; }
-    bool hasComment() const override { return _list.comment && *_list.comment; }
-    std::string getLabel() const override {
-        return std::string(_list.label, _list.label_len);
-    }
-    std::string getInstruction() const override {
-        return std::string(_list.instruction, _list.instruction_len);
-    }
-    std::string getOperand() const override {
-        return std::string(_list.operand, trimRight(_list.operand, _list.operand_len));
-    }
-    std::string getComment() const override {
-        return std::string(_list.comment);
-    }
-    int maxBytes() const override { return 6; }
-    int labelWidth() const override { return _labelWidth; }
-    int instructionWidth() const override { return _assembler.nameMax() + 1; }
-    int operandWidth() const override { return _operandWidth; }
-
 protected:
     AsmDirective(Assembler &assembler);
-
-    struct Source {
-        Source(const char *file_name, const char *end,
-               const Source *parent)
-            : fp(nullptr),
-              lineno(0),
-              name(file_name, end),
-              include_from(parent)
-        {}
-        Source(const std::string &file_name,
-               const Source *parent)
-            : fp(nullptr),
-              lineno(0),
-              name(file_name),
-              include_from(parent)
-        {}
-        FILE *fp;
-        int lineno;
-        const std::string name;
-        const Source *include_from;
-    };
 
     Assembler &_assembler;
     AsmOperand &_parser;
@@ -121,6 +65,7 @@ protected:
     int _labelWidth;
     int _operandWidth;
     static constexpr int max_includes = 4;
+    struct Source;
     std::vector<Source> _sources;
 
     struct Listing {
@@ -168,81 +113,59 @@ private:
     uint32_t lookup(const std::string &key);
     void intern(uint32_t value, const std::string &key);
     static int trimRight(const char *str, int len);
+
+    // ListingLine
+public:
+    uint32_t startAddress() const override;
+    int generatedSize() const override;
+    uint8_t getByte(int offset) const override;
+    bool hasInstruction() const override;
+    std::string getInstruction() const override;
+    bool hasOperand() const override;
+    std::string getOperand() const override;
+    uint16_t lineNumber() const override;
+    uint16_t includeNest() const override;
+    bool hasValue() const override;
+    uint32_t value() const override;
+    bool hasLabel() const override;
+    std::string getLabel() const override;
+    bool hasComment() const override;
+    std::string getComment() const override;
+public:
+    AddressWidth addressWidth() const override;
+private:
+    OpCodeWidth opCodeWidth() const override;
+    int maxBytes() const override;
+    int labelWidth() const override;
+    int instructionWidth() const override;
+    int operandWidth() const override;
 };
 
 class AsmMotoDirective : public AsmDirective {
 public:
-    AsmMotoDirective(Assembler &assembler)
-        : AsmDirective(assembler) {}
-
-    BinFormatter *defaultFormatter() const override {
-        return new MotoSrec(_assembler.addressWidth());
-    }
-
+    AsmMotoDirective(Assembler &assembler);
+    BinFormatter *defaultFormatter() const override;
 protected:
     Error processDirective(
-        const char *directive, const char *&label,
-        CliMemory &memory) override {
-        if (strcasecmp(directive, "fcb") == 0 ||
-            strcasecmp(directive, "fcc") == 0)
-            return this->defineBytes(memory);
-        if (strcasecmp(directive, "fdb") == 0)
-            return this->defineWords(memory);
-        if (strcasecmp(directive, "rmb") == 0)
-            return this->defineSpaces();
-        return UNKNOWN_DIRECTIVE;
-    }
+        const char *directive, const char *&label, CliMemory &memory) override;
 };
 
 class AsmMostekDirective : public AsmDirective {
 public:
-    AsmMostekDirective(Assembler &assembler)
-        : AsmDirective(assembler) {}
-
-    BinFormatter *defaultFormatter() const override {
-        return new MotoSrec(_assembler.addressWidth());
-    }
-
+    AsmMostekDirective(Assembler &assembler);
+    BinFormatter *defaultFormatter() const override;
 protected:
     Error processDirective(
-        const char *directive, const char *&label,
-        CliMemory &memory) override {
-        if (strcmp(directive, ":=") == 0
-            || strcmp(directive, "=") == 0) {
-            return this->defineLabel(label, memory);
-        }
-        if (strcasecmp(directive, "fcb") == 0)
-            return this->defineBytes(memory);
-        if (strcasecmp(directive, "fdb") == 0)
-            return this->defineWords(memory);
-        if (strcasecmp(directive, "rmb") == 0)
-            return this->defineSpaces();
-        return UNKNOWN_DIRECTIVE;
-    }
+        const char *directive, const char *&label, CliMemory &memory) override;
 };
 
 class AsmIntelDirective : public AsmDirective {
 public:
-    AsmIntelDirective(Assembler &assembler)
-        : AsmDirective(assembler) {}
-
-    BinFormatter *defaultFormatter() const override {
-        return new IntelHex(_assembler.addressWidth());
-    }        
-
+    AsmIntelDirective(Assembler &assembler);
+    BinFormatter *defaultFormatter() const override;
 protected:
     Error processDirective(
-        const char *directive, const char *&label,
-        CliMemory &memory) override {
-        this->_parser.isSymbolLetter(0);
-        if (strcasecmp(directive, "db") == 0)
-            return this->defineBytes(memory);
-        if (strcasecmp(directive, "dw") == 0)
-            return this->defineWords(memory);
-        if (strcasecmp(directive, "ds") == 0)
-            return this->defineSpaces();
-        return UNKNOWN_DIRECTIVE;
-    }
+        const char *directive, const char *&label, CliMemory &memory) override;
 };
 
 } // namespace cli

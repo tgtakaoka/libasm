@@ -28,23 +28,27 @@ namespace cli {
 
 class ListingLine {
 public:
-    virtual AddressWidth addressWidth() const = 0;
-    virtual OpCodeWidth opCodeWidth() const = 0;
-    virtual uint16_t lineNumber() const = 0;
-    virtual uint16_t includeNest() const = 0;
     virtual uint32_t startAddress() const = 0;
     virtual int generatedSize() const = 0;
     virtual uint8_t getByte(int offset) const = 0;
+    virtual bool hasInstruction() const = 0;
+    virtual std::string getInstruction() const = 0;
+    virtual bool hasOperand() const = 0;
+    virtual std::string getOperand() const = 0;
+
+    // assemble listing only
+    virtual uint16_t lineNumber() const = 0;
+    virtual uint16_t includeNest() const = 0;
     virtual bool hasValue() const = 0;
     virtual uint32_t value() const = 0;
     virtual bool hasLabel() const = 0;
-    virtual bool hasInstruction() const = 0;
-    virtual bool hasOperand() const = 0;
-    virtual bool hasComment() const = 0;
     virtual std::string getLabel() const = 0;
-    virtual std::string getInstruction() const = 0;
-    virtual std::string getOperand() const = 0;
+    virtual bool hasComment() const = 0;
     virtual std::string getComment() const = 0;
+
+    // configuration
+    virtual AddressWidth addressWidth() const = 0;
+    virtual OpCodeWidth opCodeWidth() const = 0;
     virtual int maxBytes() const = 0;
     virtual int labelWidth() const = 0;
     virtual int instructionWidth() const = 0;

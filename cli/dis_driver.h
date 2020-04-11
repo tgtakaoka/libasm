@@ -19,7 +19,7 @@
 
 #include "cli_memory.h"
 #include "dis_base.h"
-#include "dis_listing.h"
+#include "dis_directive.h"
 #include "file_util.h"
 
 #include <stdio.h>

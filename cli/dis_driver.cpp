@@ -73,7 +73,7 @@ int DisDriver::disassemble() {
     memory.dump(
         [this, output, list, &memory]
         (uint32_t base, const uint8_t *data, size_t size) {
-            DisListing listing(*_disassembler, memory, _uppercase);
+            DisDirective listing(*_disassembler, memory, _uppercase);
             if (list) {
                 fprintf(list, "%s\n", listing.origin(base, true));
                 fflush(list);
