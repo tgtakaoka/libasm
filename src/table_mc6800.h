@@ -38,6 +38,9 @@ private:
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
     static const Entry *searchEntry(
+        const char *name, AddrMode addrMode,
+        const Entry *table, const Entry *end);
+    static const Entry *searchEntry(
         const Config::opcode_t opCode, const Entry *table, const Entry *end);
 };
 

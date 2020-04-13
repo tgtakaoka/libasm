@@ -328,6 +328,25 @@ const Entry *TableMc6800::searchEntry(
     return nullptr;
 }
 
+static bool acceptAddrMode(AddrMode opr, AddrMode table) {
+    if (opr == table) return true;
+    if (opr == DIR) return table == EXT;
+    return false;
+}
+
+const Entry *TableMc6800::searchEntry(
+    const char *name, AddrMode addrMode,
+    const Entry *table, const Entry *end) {
+    for (const Entry *entry = table;
+         entry < end && (entry = searchEntry(name, entry, end));
+         entry++) {
+        const host::uint_t flags = pgm_read_byte(&entry->flags);
+        if (acceptAddrMode(addrMode, Entry::_addrMode(flags)))
+            return entry;
+    }
+    return nullptr;
+}
+
 const Entry *TableMc6800::searchEntry(
     const Config::insn_t insnCode,
     const Entry *table, const Entry *end) {
@@ -348,32 +367,26 @@ const Entry *TableMc6800::searchEntry(
 
 Error TableMc6800::searchName(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.name(), ARRAY_RANGE(MC6800_TABLE));
+    if (_cpuType == MC6801 && entry == nullptr)
+        entry = searchEntry(insn.name(), ARRAY_RANGE(MC6801_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_byte(&entry->opc));
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
 
-static bool acceptAddrMode(AddrMode opr, AddrMode table) {
-    if (opr == table) return true;
-    if (opr == DIR) return table == EXT;
-    return false;
-}
-
 Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
-    const AddrMode addrMode = insn.addrMode();
-    const Entry *end = ARRAY_END(MC6800_TABLE);
-    for (const Entry *entry = ARRAY_BEGIN(MC6800_TABLE);
-         entry < end && (entry = searchEntry(insn.name(), entry, end));
-         entry++) {
-        const host::uint_t flags = pgm_read_byte(&entry->flags);
-        if (acceptAddrMode(addrMode, Entry::_addrMode(flags))) {
-            insn.setInsnCode(pgm_read_byte(&entry->opc));
-            insn.setFlags(flags);
-            return OK;
-        }
-    }
-    return UNKNOWN_INSTRUCTION;
+    const Entry *entry = nullptr;
+    if (_cpuType == MC6801)
+        entry = searchEntry(
+            insn.name(), insn.addrMode(), ARRAY_RANGE(MC6801_TABLE));
+    if (entry == nullptr)
+        entry = searchEntry(
+            insn.name(), insn.addrMode(), ARRAY_RANGE(MC6800_TABLE));
+    if (!entry) return UNKNOWN_INSTRUCTION;
+    insn.setInsnCode(pgm_read_byte(&entry->opc));
+    insn.setFlags(pgm_read_byte(&entry->flags));
+    return OK;
 }
 
 Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {

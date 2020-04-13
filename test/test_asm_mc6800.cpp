@@ -27,6 +27,7 @@ AsmMc6800 as6800;
 Assembler &assembler(as6800);
 
 static void set_up() {
+    assembler.setCpu("6800");
 }
 
 static void tear_down() {
@@ -36,6 +37,8 @@ static void tear_down() {
 static void test_cpu() {
     asserter.equals(
         "cpu 6800", true, assembler.setCpu("6800"));
+    asserter.equals(
+        "cpu 6801", true, assembler.setCpu("6801"));
 }
 
 static void test_inherent() {
@@ -120,6 +123,16 @@ static void test_inherent() {
     TEST("INCB", 0x5C);
     TEST("TSTB", 0x5D);
     TEST("CLRB", 0x5F);
+
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("LSRD", 0x04);
+    TEST("ASLD", 0x05);
+    TEST("LSLD", 0x05);
+    TEST("PULX", 0x38);
+    TEST("ABX",  0x3A);
+    TEST("PSHX", 0x3C);
+    TEST("MUL",  0x3D);
 }
 
 static void test_relative() {
@@ -139,15 +152,24 @@ static void test_relative() {
     ATEST(0x1000, "BGT $1002", 0x2E, 0x00);
     ATEST(0x1000, "BLE $1002", 0x2F, 0x00);
 
-    ATEST(0x1000, "BSR  $1042", 0x8D, 0x40);
+    ATEST(0x1000, "BSR $1042", 0x8D, 0x40);
+
+    // MC6801
+    assembler.setCpu("6801");
+    ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
 
     symtab.intern(0x0F82, "sub0F82");
     symtab.intern(0x1081, "sub1081");
     symtab.intern(0x9002, "sub9002");
     symtab.intern(0x9003, "sub9003");
 
+    assembler.setCpu("6800");
     ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
     ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
+
+    // MC6801
+    assembler.setCpu("6801");
+    ATEST(0x1000, "BRN sub0F82", 0x21, 0x80);
 }
 
 static void test_immediate() {
@@ -197,15 +219,27 @@ static void test_immediate() {
     TEST("LDX #$90A0", 0xCE, 0x90, 0xA0);
     TEST("LDS #$90A0", 0x8E, 0x90, 0xA0);
 
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
+    TEST("ADDD #$90A0", 0xC3, 0x90, 0xA0);
+    TEST("LDD  #$90A0", 0xCC, 0x90, 0xA0);
+
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");
 
+    assembler.setCpu("6800");
     TEST("LDA A #$90", 0x86, 0x90);
     TEST("LDAA #$90",  0x86, 0x90);
     TEST("LDA B,#$90", 0xC6, 0x90);
     TEST("CPX #dir90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
     TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
+
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("LDD  #dir90A0", 0xCC, 0x90, 0xA0);
+    TEST("ADDD #dir90",   0xC3, 0x00, 0x90);
 }
 
 static void test_direct() {
@@ -262,19 +296,35 @@ static void test_direct() {
     TEST("LDS $90", 0x9E, 0x90);
     TEST("STS $90", 0x9F, 0x90);
 
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("SUBD $90", 0x93, 0x90);
+    TEST("ADDD $90", 0xD3, 0x90);
+    TEST("LDD  $90", 0xDC, 0x90);
+    TEST("STD  $90", 0xDD, 0x90);
+    TEST("JSR  $90", 0x9D, 0x90);
+
     symtab.intern(0x10, "dir10");
     symtab.intern(0x22, "dir22");
     symtab.intern(0x90, "dir90");
 
+    assembler.setCpu("6800");
     TEST("LDA A <dir90", 0x96, 0x90);
     TEST("STA B,<dir90", 0xD7, 0x90);
     TEST("LDAA <dir90",  0x96, 0x90);
-    TEST("STAB <dir90",  0xD7, 0x90);
+    TEST("STAB dir90",   0xD7, 0x90);
     TEST("CPX <dir22", 0x9C, 0x22);
-    TEST("LDX <dir22", 0xDE, 0x22);
+    TEST("LDX  dir22", 0xDE, 0x22);
     TEST("STX <dir22", 0xDF, 0x22);
-    TEST("LDS <dir90", 0x9E, 0x90);
+    TEST("LDS  dir90", 0x9E, 0x90);
     TEST("STS <dir90", 0x9F, 0x90);
+
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("LDD  <dir90", 0xDC, 0x90);
+    TEST("SUBD  dir90", 0x93, 0x90);
+    TEST("ADDD  dir22", 0xD3, 0x22);
+    TEST("JSR  <dir22", 0x9D, 0x22);
 }
 
 static void test_extended() {
@@ -345,14 +395,23 @@ static void test_extended() {
     TEST("JMP $0034", 0x7E, 0x00, 0x34);
     TEST("JSR $1234", 0xBD, 0x12, 0x34);
 
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("SUBD $1234", 0xB3, 0x12, 0x34);
+    TEST("ADDD $1234", 0xF3, 0x12, 0x34);
+    TEST("LDD  $1234", 0xFC, 0x12, 0x34);
+    TEST("STD  $1234", 0xFD, 0x12, 0x34);
+
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x9ABC, "ext9ABC");
 
+    assembler.setCpu("6800");
     TEST("NEG   >ext0090", 0x70, 0x00, 0x90);
     TEST("LDA A  ext9ABC", 0xB6, 0x9A, 0xBC);
     TEST("STA B,>ext0090", 0xF7, 0x00, 0x90);
     TEST("LDAA   ext9ABC", 0xB6, 0x9A, 0xBC);
     TEST("STAB  >ext0090", 0xF7, 0x00, 0x90);
+
     TEST("CPX  ext9ABC", 0xBC, 0x9A, 0xBC);
     TEST("LDX  ext9ABC", 0xFE, 0x9A, 0xBC);
     TEST("STX >ext0090", 0xFF, 0x00, 0x90);
@@ -360,6 +419,13 @@ static void test_extended() {
     TEST("STS >ext0090", 0xBF, 0x00, 0x90);
     TEST("JMP  ext9ABC", 0x7E, 0x9A, 0xBC);
     TEST("JSR  ext0090", 0xBD, 0x00, 0x90);
+
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("SUBD >ext0090", 0xB3, 0x00, 0x90);
+    TEST("ADDD  ext9ABC", 0xF3, 0x9A, 0xBC);
+    TEST("LDD  >ext0090", 0xFC, 0x00, 0x90);
+    TEST("STD   ext9ABC", 0xFD, 0x9A, 0xBC);
 }
 
 static void test_indexed() {
@@ -432,9 +498,17 @@ static void test_indexed() {
     TEST("JMP 0,X",   0x6E, 0x00);
     TEST("JSR 255,X", 0xAD, 0xFF);
 
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("SUBD    ,X", 0xA3, 0x00);
+    TEST("ADDD 128,X", 0xE3, 0x80);
+    TEST("LDD  255,X", 0xEC, 0xFF);
+    TEST("STD    0,X", 0xED, 0x00);
+
     symtab.intern(0,   "offset0");
     symtab.intern(255, "offset255");
 
+    assembler.setCpu("6800");
     TEST("NEG     offset0,X", 0x60, 0x00);
     TEST("COM   offset255,X", 0x63, 0xFF);
     TEST("CMP A   offset0,X", 0xA1, 0x00);
@@ -443,6 +517,13 @@ static void test_indexed() {
     TEST("ADDB  offset255,X", 0xEB, 0xFF);
     TEST("JMP     offset0,X", 0x6E, 0x00);
     TEST("JSR   offset255,X", 0xAD, 0xFF);
+
+    // MC6801
+    assembler.setCpu("6801");
+    TEST("SUBD   offset0,X", 0xA3, 0x00);
+    TEST("ADDD offset255,X", 0xE3, 0xFF);
+    TEST("LDD    offset0,X", 0xEC, 0x00);
+    TEST("STD  offset255,X", 0xED, 0xFF);
 }
 
 static void test_comment() {
@@ -485,6 +566,10 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LDA A,UNDEF,X", 0xA6, 0x00);
 
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF", 0x20, 0xFE);
+
+    assembler.setCpu("6801");
+    ETEST(UNDEFINED_SYMBOL, "SUBD #UNDEF", 0x83, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JSR   UNDEF", 0x9D, 0x00);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
