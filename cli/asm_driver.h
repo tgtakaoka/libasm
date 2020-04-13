@@ -18,21 +18,28 @@
 #define __ASM_DRIVER_H__
 
 #include "asm_directive.h"
+#include "cli_listing.h"
 #include "cli_memory.h"
+
+#include <vector>
 
 namespace libasm {
 namespace cli {
 
 class AsmDriver {
 public:
+    AsmDriver();
     virtual ~AsmDriver();
 
     int usage() const;
     int parseOption(int argc, const char **argv, AsmDirective &directive);
+    int parseOption(
+        int argc, const char **argv, std::vector<AsmDirective *> &directives);
     int assemble();
 
 private:
-    AsmDirective *_directive;
+    AsmCommonDirective _commonDir;
+    std::vector<AsmDirective *> *_directives;
     CliListing _listing;
     const char *_progname;
     const char *_input_name;

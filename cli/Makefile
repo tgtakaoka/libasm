@@ -17,9 +17,9 @@ VPATH=../src
 CXXFLAGS=-Wall -g -O -std=c++17 -I../src
 CPPFLAGS=-MMD
 
-OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o
-OBJS_asm      = asm_base.o asm_operand.o asm_driver.o asm_directive.o cli_listing.o cli_memory.o
-OBJS_dis      = dis_base.o dis_operand.o dis_driver.o dis_directive.o cli_listing.o cli_memory.o
+OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o cli_listing.o cli_memory.o
+OBJS_asm      = asm_base.o asm_operand.o asm_driver.o asm_directive.o
+OBJS_dis      = dis_base.o dis_operand.o dis_driver.o dis_directive.o
 OBJS_mc6809   = table_mc6809.o  reg_mc6809.o  $(OBJS_common)
 OBJS_mc6800   = table_mc6800.o  reg_mc6800.o  $(OBJS_common)
 OBJS_m6502    = table_m6502.o   reg_m6502.o   $(OBJS_common)
@@ -65,7 +65,9 @@ OBJS_driver = \
 	dis8080.o  \
 	disz80.o   \
 	dis9900.o  \
-	dis68000.o
+	dis68000.o \
+	asm.o      \
+	dis.o
 
 DRIVERS = $(OBJS_driver:.o=)
 
@@ -102,6 +104,24 @@ disz80:   $(OBJS_disz80)
 dis9900:  $(OBJS_dis9900)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 dis68000: $(OBJS_dis68000)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+asm:    asm.o $(OBJS_asm) $(OBJS_common) \
+	asm_mc6809.o  $(OBJS_mc6809)  \
+	asm_mc6800.o  $(OBJS_mc6800)  \
+	asm_m6502.o   $(OBJS_m6502)   \
+	asm_i8080.o   $(OBJS_i8080)   \
+	asm_z80.o     $(OBJS_z80)     \
+	asm_tms9900.o $(OBJS_tms9900) \
+	asm_mc68000.o $(OBJS_mc68000)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+dis:    dis.o $(OBJS_dis) $(OBJS_common) \
+	dis_mc6809.o  $(OBJS_mc6809)  \
+	dis_mc6800.o  $(OBJS_mc6800)  \
+	dis_m6502.o   $(OBJS_m6502)   \
+	dis_i8080.o   $(OBJS_i8080)   \
+	dis_z80.o     $(OBJS_z80)     \
+	dis_tms9900.o $(OBJS_tms9900) \
+	dis_mc68000.o $(OBJS_mc68000)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 install: $(DRIVERS)

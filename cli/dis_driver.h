@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 namespace libasm {
 namespace cli {
@@ -35,10 +36,13 @@ public:
 
     int usage();
     int parseOption(int argc, const char **argv, Disassembler &disassembler);
+    int parseOption(
+        int argc, const char **argv, std::vector<Disassembler *> &disassemblers);
     int disassemble();
 
 private:
     bool _uppercase;
+    std::vector<Disassembler *> *_disassemblers;
     Disassembler *_disassembler;
     const char *_progname;
     const char *_input_name;

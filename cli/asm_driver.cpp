@@ -22,41 +22,58 @@
 namespace libasm {
 namespace cli {
 
+AsmDriver::AsmDriver()
+    : _commonDir()
+{}
+
 AsmDriver::~AsmDriver() {
     if (_formatter) delete _formatter;
 }
 
 int AsmDriver::usage() const {
+    const char *cpuSep = "\n                ";
+    std::string cpuList;
+    for (auto dir : *_directives) {
+        cpuList += cpuSep;
+        cpuList += dir->assembler().listCpu();
+    }
     fprintf(stderr,
-            "usage: %s [-o <output>] [-l <list>] <input>\n"
+            "usage: %s -C <cpu> [-u] [-o <output>] [-l <list>] <input>\n"
             " options:\n"
+            "  -C          : CPU variant%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  -S[<bytes>] : output Motorola SREC format\n"
             "  -H[<bytes>] : output Intel HEX format\n"
             "              : optional <bytes> specifies data record length (max 32)\n"
-            "  -C          : CPU variant: %s\n"
             "  -u          : use uppercase letter for output\n"
             "  -n          : output line number to list file\n",
-            _progname, _directive->listCpu());
+            _progname, cpuList.c_str());
     return 2;
 }
 
 int AsmDriver::parseOption(
     int argc, const char **argv, AsmDirective &directive) {
-    _directive = &directive;
+    std::vector<AsmDirective *> directives = { &directive };
+    return parseOption(argc, argv, directives);
+}
+
+int AsmDriver::parseOption(
+    int argc, const char **argv, std::vector<AsmDirective *> &directives) {
+    _directives = &directives;
+    _commonDir.setDirectives(directives);
     _progname = basename(argv[0]);
     return parseOption(argc, argv);
 }
 
 int AsmDriver::assemble() {
-    _directive->setSymbolMode(false, true);
+    _commonDir.setSymbolMode(false, true);
     CliMemory memory;
     if (assemble(memory, nullptr) != 0)
         return 1;
 
     do {
-        _directive->setSymbolMode(true, false);
+        _commonDir.setSymbolMode(true, false);
         CliMemory next;
         if (assemble(next, nullptr) != 0)
             return 1;
@@ -103,23 +120,23 @@ int AsmDriver::assemble() {
 }
 
 int AsmDriver::assemble(CliMemory &memory, FILE *list) {
-    if (_directive->openSource(_input_name)) {
+    if (_commonDir.openSource(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
 
     int errors = 0;
-    _directive->setOrigin(0);
+    _commonDir.setOrigin(0);
     const char *line;
-    while ((line = _directive->readSourceLine()) != nullptr) {
-        if (_directive->assembleLine(line, memory)) {
-            const char *filename = _directive->currentSource();
-            const int lineno = _directive->currentLineno();
-            const int column = _directive->errorAt() - line;
+    while ((line = _commonDir.readSourceLine()) != nullptr) {
+        if (_commonDir.assembleLine(line, memory)) {
+            const char *filename = _commonDir.currentSource();
+            const int lineno = _commonDir.currentLineno();
+            const int column = _commonDir.errorAt() - line;
             fprintf(stderr, "%s:%d:%d: error %d\n",
-                    filename, lineno, column, _directive->getError());
+                    filename, lineno, column, _commonDir.getError());
             fprintf(stderr, "%s:%d %s\n",
-                    filename, lineno, _directive->errorAt());
+                    filename, lineno, _commonDir.errorAt());
             errors++;
             continue;
         }
@@ -130,7 +147,7 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list) {
 }
 
 void AsmDriver::printListing(CliMemory &memory, FILE *out) {
-    _listing.reset(*_directive, _uppercase, _line_number);
+    _listing.reset(_commonDir, _uppercase, _line_number);
     do {
         fprintf(out, "%s\n", _listing.getLine());
     } while (_listing.hasNext());
@@ -145,6 +162,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _formatter = nullptr;
     _uppercase = false;
     _line_number = false;
+    AsmDirective *directive = nullptr;
     char formatter = 0;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
@@ -182,7 +200,8 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                if (!_directive->setCpu(argv[i])) {
+                directive = _commonDir.setCpu(argv[i]);
+                if (directive == nullptr) {
                     fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                     return 4;
                 }
@@ -220,13 +239,17 @@ int AsmDriver::parseOption(int argc, const char **argv) {
         return 2;
     }
     if (_output_name) {
-        const AddressWidth addrWidth = _directive->addressWidth();
+        if (directive == nullptr) {
+            fprintf(stderr, "no target CPU specified\n");
+            return 1;
+        }
+        const AddressWidth addrWidth = directive->assembler().addressWidth();
         if (formatter == 'S') {
             _formatter = new MotoSrec(addrWidth);
         } else if (formatter == 'H') {
             _formatter = new IntelHex(addrWidth);
         } else {
-            _formatter = _directive->defaultFormatter();
+            _formatter = directive->defaultFormatter();
         }
     }
     return 0;
