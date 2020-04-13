@@ -58,7 +58,7 @@ RegName RegMc6800::parseRegName(const char *line) const {
     return REG_UNDEF;
 }
 
-} // namespace m6502
+} // namespace mc6802
 } // namespace libasm
 
 // Local Variables:

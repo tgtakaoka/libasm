@@ -33,15 +33,20 @@ public:
     static const char *listCpu();
 
 private:
+    CpuType _cpuType;
+
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);
+    static const Entry *searchEntry(
+        const char *name, AddrMode addrMode,
+        const Entry *table, const Entry *end);
     static const Entry *searchEntry(
         const Config::opcode_t opCode, const Entry *table, const Entry *end);
 };
 
 extern TableMc6800 TableMc6800;
 
-} // namespace m6502
+} // namespace mc6800
 } // namespace libasm
 
 #endif // __TABLE_MC6800_H__
