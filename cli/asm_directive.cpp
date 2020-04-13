@@ -20,10 +20,8 @@
 namespace libasm {
 namespace cli {
 
-AsmDirective::AsmDirective(Assembler &assembler)
-    : _assembler(assembler),
-      _parser(assembler.getParser()),
-      _line_len(128),
+AsmCommonDirective::AsmCommonDirective()
+    : _line_len(128),
       _line(static_cast<char *>(malloc(_line_len))),
       _scan(nullptr),
       _origin(0),
@@ -33,19 +31,25 @@ AsmDirective::AsmDirective(Assembler &assembler)
       _operandWidth(16)
 {}
 
-AsmDirective::~AsmDirective() {
+AsmCommonDirective::~AsmCommonDirective() {
     free(_line);
 }
 
-bool AsmDirective::setCpu(const char *cpu) {
-    return _assembler.setCpu(cpu);
+void AsmCommonDirective::setDirective(AsmDirective &directive) {
+    _directive = &directive;
+    _assembler = &directive.assembler();
+    _parser = &_assembler->getParser();
 }
 
-const char *AsmDirective::listCpu() const {
-    return _assembler.listCpu();
+bool AsmCommonDirective::setCpu(const char *cpu) {
+    return _assembler->setCpu(cpu);
 }
 
-Error AsmDirective::assembleLine(const char *line, CliMemory &memory) {
+const char *AsmCommonDirective::listCpu() const {
+    return _assembler->listCpu();
+}
+
+Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     _scan = line;
     if (_scan == nullptr) {
         return OK;
@@ -64,9 +68,9 @@ Error AsmDirective::assembleLine(const char *line, CliMemory &memory) {
     const char *label = nullptr;
     std::string label_buf;
     _list.label_len = 0;
-    if (_parser.isSymbolLetter(*_scan, true)) {
+    if (_parser->isSymbolLetter(*_scan, true)) {
         _list.label = _scan;
-        const char *end = _parser.scanSymbol(_list.label);
+        const char *end = _parser->scanSymbol(_list.label);
         label_buf = std::string(_list.label, end);
         if (*end == ':') end++; // optional trailing ':' for label.
         _list.label_len = end - _list.label;
@@ -116,9 +120,9 @@ Error AsmDirective::assembleLine(const char *line, CliMemory &memory) {
     }
 
     Insn insn;
-    const Error error = _assembler.encode(_scan, insn, _origin, this);
+    const Error error = _assembler->encode(_scan, insn, _origin, this);
     const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
-    _scan = _assembler.errorAt();
+    _scan = _assembler->errorAt();
     if (error == OK || allowUndef) {
         _list.operand_len = _scan - _list.operand;
         skipSpaces();
@@ -134,16 +138,16 @@ Error AsmDirective::assembleLine(const char *line, CliMemory &memory) {
     return setError(error);
 }
 
-void AsmDirective::setOrigin(uint32_t origin) { _origin = origin; }
+void AsmCommonDirective::setOrigin(uint32_t origin) { _origin = origin; }
 
-const char *AsmDirective::errorAt() const { return _scan; }
+const char *AsmCommonDirective::errorAt() const { return _scan; }
 
-void AsmDirective::setSymbolMode(bool reportUndef, bool reportDuplicate) {
+void AsmCommonDirective::setSymbolMode(bool reportUndef, bool reportDuplicate) {
     _reportUndef = reportUndef;
     _reportDuplicate = reportDuplicate;
 }
 
-struct AsmDirective::Source {
+struct AsmCommonDirective::Source {
     Source(const char *file_name, const char *end,
            const Source *parent)
         : fp(nullptr),
@@ -164,28 +168,29 @@ struct AsmDirective::Source {
     const Source *include_from;
 };
 
-const char *AsmDirective::currentSource() const {
-    return _sources.empty() ? nullptr : _sources.back().name.c_str();
+const char *AsmCommonDirective::currentSource() const {
+    return _sources.empty() ? nullptr : _sources.back()->name.c_str();
 }
 
-int AsmDirective::currentLineno() const {
-    return _sources.empty() ? 0 : _sources.back().lineno;
+int AsmCommonDirective::currentLineno() const {
+    return _sources.empty() ? 0 : _sources.back()->lineno;
 }
 
-Error AsmDirective::openSource(const char *input_name, const char *end) {
+Error AsmCommonDirective::openSource(const char *input_name, const char *end) {
     if (_sources.size() >= max_includes)
         return setError(TOO_MANY_INCLUDE);
     if (end == nullptr) end = input_name + strlen(input_name);
-    const auto *parent = _sources.empty() ? nullptr : &_sources.back();
+    const Source *parent = _sources.empty() ? nullptr : _sources.back();
     const size_t pos = parent ? parent->name.find_last_of('/') : std::string::npos;
+    Source *source;
     if (pos == std::string::npos || *input_name == '/') {
-        _sources.emplace_back(input_name, end, parent);
+        source = new Source(input_name, end, parent);
     } else {
         std::string name(parent->name.c_str(), pos + 1);
         name.append(input_name, end);
-        _sources.emplace_back(name, parent);
+        source = new Source(name, parent);
     }
-    auto source = &_sources.back();
+    _sources.push_back(source);
     if ((source->fp = fopen(source->name.c_str(), "r")) == nullptr) {
         _sources.pop_back();
         return setError(NO_INCLUDE_FOUND);
@@ -193,9 +198,9 @@ Error AsmDirective::openSource(const char *input_name, const char *end) {
     return setError(OK);
 }
 
-const char *AsmDirective::readSourceLine() {
+const char *AsmCommonDirective::readSourceLine() {
     while (!_sources.empty()) {
-        auto source = &_sources.back();
+        Source *source = _sources.back();
         source->lineno++;
         if (getLine(_line, _line_len, source->fp) >= 0)
             return _line;
@@ -204,23 +209,18 @@ const char *AsmDirective::readSourceLine() {
     return nullptr;
 }
 
-Error AsmDirective::closeSource() {
-    auto source = &_sources.back();
+Error AsmCommonDirective::closeSource() {
+    Source *source = _sources.back();
     fclose(source->fp);
+    delete source;
     _sources.pop_back();
     return setError(OK);
 }
 
-// protected
-
-Error AsmDirective::processDirective(
+Error AsmCommonDirective::processPseudo(
     const char *directive, const char *&label, CliMemory &memory) {
-    return UNKNOWN_DIRECTIVE;
-}
-
-Error AsmDirective::processPseudo(
-    const char *directive, const char *&label, CliMemory &memory) {
-    if (processDirective(directive, label, memory) != UNKNOWN_DIRECTIVE)
+    if (_directive->processDirective(
+            directive, label, memory, *this) != UNKNOWN_DIRECTIVE)
         return getError();
     if (strcasecmp(directive, "org") == 0)
         return defineOrigin();
@@ -236,7 +236,7 @@ Error AsmDirective::processPseudo(
         while (*p && !isspace(*p))
             p++;
         std::string cpu(_scan, p);
-        if (!_assembler.setCpu(cpu.c_str()))
+        if (!_assembler->setCpu(cpu.c_str()))
             return setError(UNSUPPORTED_CPU);
         _scan = p;
         return setError(OK);
@@ -244,11 +244,11 @@ Error AsmDirective::processPseudo(
     return setError(UNKNOWN_DIRECTIVE);
 }
 
-Error AsmDirective::defineOrigin() {
+Error AsmCommonDirective::defineOrigin() {
     uint32_t value;
-    const char *scan = _parser.eval(_scan, value, this);
-    if (_parser.getError())
-        return setError(_parser);
+    const char *scan = _parser->eval(_scan, value, this);
+    if (_parser->getError())
+        return setError(*_parser);
     _scan = scan;
     // TODO line end check
     _origin = value;
@@ -256,14 +256,14 @@ Error AsmDirective::defineOrigin() {
     return setError(OK);
 }
 
-Error AsmDirective::defineLabel(const char *&label, CliMemory &memory) {
+Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
     if (label == nullptr)
         return setError(MISSING_LABEL);
     if (_reportDuplicate && hasSymbol(label))
         return setError(DUPLICATE_LABEL);
     uint32_t value;
-    const char *scan = _parser.eval(_scan, value, this);
-    const Error error = setError(_parser);
+    const char *scan = _parser->eval(_scan, value, this);
+    const Error error = setError(*_parser);
     if (!_reportUndef && error == UNDEFINED_SYMBOL) {
         value = 0;
         setError(OK);
@@ -278,7 +278,7 @@ Error AsmDirective::defineLabel(const char *&label, CliMemory &memory) {
     return getError();
 }
 
-Error AsmDirective::includeFile() {
+Error AsmCommonDirective::includeFile() {
     const char *filename = _scan;
     char c = 0;
     if (*filename == '"' || *filename == '\'')  c = *filename++;
@@ -290,7 +290,7 @@ Error AsmDirective::includeFile() {
     return openSource(filename, end);
 }
 
-Error AsmDirective::defineBytes(CliMemory &memory) {
+Error AsmCommonDirective::defineBytes(CliMemory &memory) {
     _list.address = _origin;
     _list.length = 0;
     do {
@@ -301,8 +301,8 @@ Error AsmDirective::defineBytes(CliMemory &memory) {
                 if (*p == 0) return setError(MISSING_CLOSING_DQUOTE);
                 if (*p == '"') break;
                 char c = 0;
-                p = _parser.readChar(p, c);
-                if (setError(_parser)) {
+                p = _parser->readChar(p, c);
+                if (setError(*_parser)) {
                     _scan = p;
                     return getError();
                 }
@@ -312,8 +312,8 @@ Error AsmDirective::defineBytes(CliMemory &memory) {
             _scan = p + 1;
         } else {
             uint8_t val8;
-            _scan = _parser.eval(_scan, val8, this);
-            const Error error = setError(_parser);
+            _scan = _parser->eval(_scan, val8, this);
+            const Error error = setError(*_parser);
             if (!_reportUndef && error == UNDEFINED_SYMBOL) {
                 val8 = 0;
                 setError(OK);
@@ -332,20 +332,20 @@ Error AsmDirective::defineBytes(CliMemory &memory) {
     return setError(OK);
 }
 
-Error AsmDirective::defineWords(CliMemory &memory) {
+Error AsmCommonDirective::defineWords(CliMemory &memory) {
     _list.address = _origin;
     _list.length = 0;
     do {
         skipSpaces();
         uint16_t val16;
-        _scan = _parser.eval(_scan, val16, this);
-        const Error error = setError(_parser);
+        _scan = _parser->eval(_scan, val16, this);
+        const Error error = setError(*_parser);
         if (!_reportUndef && error == UNDEFINED_SYMBOL) {
             val16 = 0;
             setError(OK);
         }
         if (getError()) return getError();
-        if (_assembler.endian() == ENDIAN_BIG) {
+        if (_assembler->endian() == ENDIAN_BIG) {
             memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
             memory.writeByte(_origin++, static_cast<uint8_t>(val16));
         } else {
@@ -363,55 +363,55 @@ Error AsmDirective::defineWords(CliMemory &memory) {
     return setError(OK);
 }
 
-Error AsmDirective::defineSpaces() {
+Error AsmCommonDirective::defineSpaces() {
     uint16_t val16;
-    _scan = _parser.eval(_scan, val16, this);
-    if (setError(_parser)) return getError();
+    _scan = _parser->eval(_scan, val16, this);
+    if (setError(*_parser)) return getError();
     if (_origin + val16 < _origin) return setError(OVERFLOW_RANGE);
     _origin += val16;
     return setError(OK);
 }
 
-const char *AsmDirective::lookupValue(uint32_t address) {
+const char *AsmCommonDirective::lookupValue(uint32_t address) {
     return nullptr;
 }
 
-bool AsmDirective::hasSymbol(const char *symbol, const char *end) {
+bool AsmCommonDirective::hasSymbol(const char *symbol, const char *end) {
     return end ? symbolExists(std::string(symbol, end - symbol))
         : symbolExists(std::string(symbol));
 }
 
-uint32_t AsmDirective::lookupSymbol(const char *symbol, const char *end) {
+uint32_t AsmCommonDirective::lookupSymbol(const char *symbol, const char *end) {
     return end ? symbolLookup(std::string(symbol, end - symbol))
         : symbolLookup(std::string(symbol));
 }
 
-uint32_t AsmDirective::currentOrigin() {
+uint32_t AsmCommonDirective::currentOrigin() {
     return _origin;
 }
 
-Error AsmDirective::internSymbol(
+Error AsmCommonDirective::internSymbol(
     uint32_t value, const char *symbol, const char *end) {
     if (end) return symbolIntern(value, std::string(symbol, end - symbol));
     return symbolIntern(value, std::string(symbol));
 }
 
-void AsmDirective::skipSpaces() {
+void AsmCommonDirective::skipSpaces() {
     while (isspace(*_scan))
         _scan++;
 }
 
-bool AsmDirective::symbolExists(const std::string &key) const {
+bool AsmCommonDirective::symbolExists(const std::string &key) const {
     auto it = _symbols.find(key);
     return it != _symbols.end();
 }
 
-uint32_t AsmDirective::symbolLookup(const std::string &key) const {
+uint32_t AsmCommonDirective::symbolLookup(const std::string &key) const {
     auto it = _symbols.find(key);
     return it == _symbols.end() ? 0 : it->second;
 }
 
-Error AsmDirective::symbolIntern(uint32_t value, const std::string &key) {
+Error AsmCommonDirective::symbolIntern(uint32_t value, const std::string &key) {
     if (_reportDuplicate && symbolExists(key))
         return setError(DUPLICATE_LABEL);
     _symbols.erase(key);
@@ -419,7 +419,7 @@ Error AsmDirective::symbolIntern(uint32_t value, const std::string &key) {
     return setError(OK);
 }
 
-int AsmDirective::trimRight(const char *str, int len) {
+int AsmCommonDirective::trimRight(const char *str, int len) {
     while (len > 0 && isspace(str[len - 1]))
         len--;
     return len;
@@ -427,90 +427,90 @@ int AsmDirective::trimRight(const char *str, int len) {
 
 // ListingLine oevrrides
 
-uint32_t AsmDirective::startAddress() const {
+uint32_t AsmCommonDirective::startAddress() const {
     return _list.address;
 }
 
-int AsmDirective::generatedSize() const {
+int AsmCommonDirective::generatedSize() const {
     return _list.length;
 }
 
-uint8_t AsmDirective::getByte(int offset) const {
+uint8_t AsmCommonDirective::getByte(int offset) const {
     uint8_t val = 0;
     _list.memory->readByte(_list.address + offset, val);
     return val;
 }
 
-bool AsmDirective::hasInstruction() const {
+bool AsmCommonDirective::hasInstruction() const {
     return _list.instruction_len;
 }
 
-std::string AsmDirective::getInstruction() const {
+std::string AsmCommonDirective::getInstruction() const {
     return std::string(_list.instruction, _list.instruction_len);
 }
 
-bool AsmDirective::hasOperand() const {
+bool AsmCommonDirective::hasOperand() const {
     return _list.operand_len;
 }
 
-std::string AsmDirective::getOperand() const {
+std::string AsmCommonDirective::getOperand() const {
     return std::string(_list.operand,
                        trimRight(_list.operand, _list.operand_len));
 }
 
-uint16_t AsmDirective::lineNumber() const {
+uint16_t AsmCommonDirective::lineNumber() const {
     return _list.line_number;
 }
 
-uint16_t AsmDirective::includeNest() const {
+uint16_t AsmCommonDirective::includeNest() const {
     return _list.include_nest;
 }
 
-bool AsmDirective::hasValue() const {
+bool AsmCommonDirective::hasValue() const {
     return _list.value_defined;
 }
 
-uint32_t AsmDirective::value() const {
+uint32_t AsmCommonDirective::value() const {
     return _list.value;
 }
 
-bool AsmDirective::hasLabel() const {
+bool AsmCommonDirective::hasLabel() const {
     return _list.label_len;
 }
 
-std::string AsmDirective::getLabel() const {
+std::string AsmCommonDirective::getLabel() const {
     return std::string(_list.label, _list.label_len);
 }
 
-bool AsmDirective::hasComment() const {
+bool AsmCommonDirective::hasComment() const {
     return _list.comment && *_list.comment;
 }
 
-std::string AsmDirective::getComment() const {
+std::string AsmCommonDirective::getComment() const {
     return std::string(_list.comment);
 }
 
-AddressWidth AsmDirective::addressWidth() const {
-    return _assembler.addressWidth();
+AddressWidth AsmCommonDirective::addressWidth() const {
+    return _assembler->addressWidth();
 }
 
-OpCodeWidth AsmDirective::opCodeWidth() const {
-    return _assembler.opCodeWidth();
+OpCodeWidth AsmCommonDirective::opCodeWidth() const {
+    return _assembler->opCodeWidth();
 }
 
-int AsmDirective::maxBytes() const {
+int AsmCommonDirective::maxBytes() const {
     return 6;
 }
 
-int AsmDirective::labelWidth() const {
+int AsmCommonDirective::labelWidth() const {
     return _labelWidth;
 }
 
-int AsmDirective::instructionWidth() const {
-    return _assembler.nameMax() + 1;
+int AsmCommonDirective::instructionWidth() const {
+    return _assembler->nameMax() + 1;
 }
 
-int AsmDirective::operandWidth() const {
+int AsmCommonDirective::operandWidth() const {
     return _operandWidth;
 }
 
@@ -525,14 +525,15 @@ BinFormatter *AsmMotoDirective::defaultFormatter() const {
 }
 
 Error AsmMotoDirective::processDirective(
-    const char *directive, const char *&label, CliMemory &memory) {
+    const char *directive, const char *&label, CliMemory &memory,
+    AsmCommonDirective &common) {
     if (strcasecmp(directive, "fcb") == 0 ||
         strcasecmp(directive, "fcc") == 0)
-        return this->defineBytes(memory);
+        return common.defineBytes(memory);
     if (strcasecmp(directive, "fdb") == 0)
-        return this->defineWords(memory);
+        return common.defineWords(memory);
     if (strcasecmp(directive, "rmb") == 0)
-        return this->defineSpaces();
+        return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }
 
@@ -545,17 +546,18 @@ BinFormatter *AsmMostekDirective::defaultFormatter() const {
 }
 
 Error AsmMostekDirective::processDirective(
-    const char *directive, const char *&label, CliMemory &memory) {
+    const char *directive, const char *&label, CliMemory &memory,
+    AsmCommonDirective &common) {
     if (strcmp(directive, ":=") == 0
         || strcmp(directive, "=") == 0) {
-        return this->defineLabel(label, memory);
+        return common.defineLabel(label, memory);
     }
     if (strcasecmp(directive, "fcb") == 0)
-        return this->defineBytes(memory);
+        return common.defineBytes(memory);
     if (strcasecmp(directive, "fdb") == 0)
-        return this->defineWords(memory);
+        return common.defineWords(memory);
     if (strcasecmp(directive, "rmb") == 0)
-        return this->defineSpaces();
+        return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }
 
@@ -568,14 +570,15 @@ BinFormatter *AsmIntelDirective::defaultFormatter() const {
 }        
 
 Error AsmIntelDirective::processDirective(
-    const char *directive, const char *&label, CliMemory &memory) {
-    this->_parser.isSymbolLetter(0);
+    const char *directive, const char *&label, CliMemory &memory,
+    AsmCommonDirective &common) {
+    _assembler.getParser().isSymbolLetter(0);
     if (strcasecmp(directive, "db") == 0)
-        return this->defineBytes(memory);
+        return common.defineBytes(memory);
     if (strcasecmp(directive, "dw") == 0)
-        return this->defineWords(memory);
+        return common.defineWords(memory);
     if (strcasecmp(directive, "ds") == 0)
-        return this->defineSpaces();
+        return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }
 

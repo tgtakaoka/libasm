@@ -30,17 +30,21 @@
 namespace libasm {
 namespace cli {
 
-class AsmDirective
+class AsmDirective;
+
+class AsmCommonDirective
     : public ErrorReporter,
       public ListingLine,
       protected SymbolTable {
 public:
-    virtual ~AsmDirective();
+    AsmCommonDirective();
+    virtual ~AsmCommonDirective();
+
+    void setDirective(AsmDirective &directive);
 
     bool setCpu(const char *cpu);
     const char *listCpu() const;
 
-    virtual BinFormatter *defaultFormatter() const = 0;
     Error assembleLine(const char *line, CliMemory &memory);
 
     void setOrigin(uint32_t origin);
@@ -51,11 +55,17 @@ public:
     Error openSource(const char *input_name, const char *end = nullptr);
     const char *readSourceLine();
 
-protected:
-    AsmDirective(Assembler &assembler);
+    Error defineOrigin();
+    Error defineLabel(const char *&label, CliMemory &memory);
+    Error includeFile();
+    Error defineBytes(CliMemory &memory);
+    Error defineWords(CliMemory &memory);
+    Error defineSpaces();
 
-    Assembler &_assembler;
-    AsmOperand &_parser;
+private:
+    AsmDirective *_directive;
+    Assembler *_assembler;
+    AsmOperand *_parser;
     size_t _line_len;
     char *_line;
     const char *_scan;
@@ -66,7 +76,7 @@ protected:
     int _operandWidth;
     static constexpr int max_includes = 4;
     struct Source;
-    std::vector<Source> _sources;
+    std::vector<Source *> _sources;
 
     struct Listing {
         uint16_t line_number;
@@ -86,16 +96,8 @@ protected:
     } _list;
 
     Error closeSource();
-    virtual Error processDirective(
-        const char *directive, const char *&label, CliMemory &memory);
     Error processPseudo(
         const char *directive, const char *&label, CliMemory &memory);
-    Error defineOrigin();
-    Error defineLabel(const char *&label, CliMemory &memory);
-    Error includeFile();
-    Error defineBytes(CliMemory &memory);
-    Error defineWords(CliMemory &memory);
-    Error defineSpaces();
 
     // SymbolTable
     const char *lookupValue(uint32_t address) override;
@@ -141,31 +143,47 @@ private:
     static int trimRight(const char *str, int len);
 };
 
+class AsmDirective {
+public:
+    Assembler &assembler() { return _assembler; }
+    virtual BinFormatter *defaultFormatter() const = 0;
+    virtual Error processDirective(
+        const char *directive, const char *&label, CliMemory &memory,
+        AsmCommonDirective &common) = 0;
+
+protected:
+    Assembler &_assembler;
+
+    AsmDirective(Assembler &assembler)
+        : _assembler(assembler)
+    {}
+};
+
 class AsmMotoDirective : public AsmDirective {
 public:
     AsmMotoDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
-protected:
     Error processDirective(
-        const char *directive, const char *&label, CliMemory &memory) override;
+        const char *directive, const char *&label, CliMemory &memory,
+        AsmCommonDirective &common) override;
 };
 
 class AsmMostekDirective : public AsmDirective {
 public:
     AsmMostekDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
-protected:
     Error processDirective(
-        const char *directive, const char *&label, CliMemory &memory) override;
+        const char *directive, const char *&label, CliMemory &memory,
+        AsmCommonDirective &common) override;
 };
 
 class AsmIntelDirective : public AsmDirective {
 public:
     AsmIntelDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
-protected:
     Error processDirective(
-        const char *directive, const char *&label, CliMemory &memory) override;
+        const char *directive, const char *&label, CliMemory &memory,
+        AsmCommonDirective &common) override;
 };
 
 } // namespace cli

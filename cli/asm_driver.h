@@ -25,6 +25,7 @@ namespace cli {
 
 class AsmDriver {
 public:
+    AsmDriver();
     virtual ~AsmDriver();
 
     int usage() const;
@@ -32,6 +33,7 @@ public:
     int assemble();
 
 private:
+    AsmCommonDirective _commonDir;
     AsmDirective *_directive;
     CliListing _listing;
     const char *_progname;
