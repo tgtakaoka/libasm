@@ -380,8 +380,10 @@ const Entry *TableMc6800::searchEntry(
 
 Error TableMc6800::searchName(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.name(), ARRAY_RANGE(MC6800_TABLE));
-    if (_cpuType == MC6801 && entry == nullptr)
+    if (_cpuType != MC6800 && entry == nullptr)
         entry = searchEntry(insn.name(), ARRAY_RANGE(MC6801_TABLE));
+    if (_cpuType == HD6301 && entry == nullptr)
+        entry = searchEntry(insn.name(), ARRAY_RANGE(HD6301_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_byte(&entry->opc));
     insn.setFlags(pgm_read_byte(&entry->flags));
@@ -390,9 +392,12 @@ Error TableMc6800::searchName(InsnMc6800 &insn) const {
 
 Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
     const Entry *entry = nullptr;
-    if (_cpuType == MC6801)
+    if (_cpuType != MC6800)
         entry = searchEntry(
             insn.name(), insn.addrMode(), ARRAY_RANGE(MC6801_TABLE));
+    if (_cpuType == HD6301 && entry == nullptr)
+        entry = searchEntry(
+            insn.name(), insn.addrMode(), ARRAY_RANGE(HD6301_TABLE));
     if (entry == nullptr)
         entry = searchEntry(
             insn.name(), insn.addrMode(), ARRAY_RANGE(MC6800_TABLE));
