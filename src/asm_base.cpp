@@ -44,8 +44,8 @@ bool Assembler::hasSymbol(const char *symbol) const {
     return _symtab && _symtab->hasSymbol(symbol);
 }
 
-uint32_t Assembler::lookup(const char *symbol) const {
-    return _symtab ? _symtab->lookup(symbol) : 0;
+uint32_t Assembler::lookupSymbol(const char *symbol) const {
+    return _symtab ? _symtab->lookupSymbol(symbol) : 0;
 }
 
 Error Assembler::checkLineEnd(const char *scan) {

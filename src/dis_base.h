@@ -50,11 +50,11 @@ protected:
     const char *lookup(Addr addr) const {
         const char *symbol = nullptr;
         if (_symtab) {
-            symbol = _symtab->lookup(addr);
+            symbol = _symtab->lookupValue(addr);
             if (!symbol) {
                 auto value = static_cast<
                     typename make_signed<Addr>::type>(addr);
-                symbol = _symtab->lookup(static_cast<int32_t>(value));
+                symbol = _symtab->lookupValue(static_cast<int32_t>(value));
             }
         }
         return symbol;

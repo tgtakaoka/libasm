@@ -97,22 +97,20 @@ protected:
     Error defineWords(CliMemory &memory);
     Error defineSpaces();
 
-    const char *lookup(uint32_t address) override;
+    // SymbolTable
+    const char *lookupValue(uint32_t address) override;
     bool hasSymbol(const char *symbol, const char *end = nullptr) override;
-    uint32_t lookup(const char *symbol, const char *end = nullptr) override;
-    void intern(uint32_t value, const char *symbol, const char *end = nullptr) override;
+    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) override;
     uint32_t currentOrigin() override;
+    Error internSymbol(uint32_t value, const char *symbol, const char *end = nullptr);
 
     void skipSpaces();
 
 private:
-    // SymbolTable
     std::map<std::string, uint32_t, std::less<>> _symbols;
-
-    bool hasSymbol(const std::string &key);
-    uint32_t lookup(const std::string &key);
-    void intern(uint32_t value, const std::string &key);
-    static int trimRight(const char *str, int len);
+    bool symbolExists(const std::string &key) const;
+    uint32_t symbolLookup(const std::string &key) const;
+    Error symbolIntern(uint32_t value, const std::string &key);
 
     // ListingLine
 public:
@@ -139,6 +137,8 @@ private:
     int labelWidth() const override;
     int instructionWidth() const override;
     int operandWidth() const override;
+
+    static int trimRight(const char *str, int len);
 };
 
 class AsmMotoDirective : public AsmDirective {

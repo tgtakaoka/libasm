@@ -238,7 +238,7 @@ AsmOperand::Value AsmOperand::readAtom() {
         const char *end = scanSymbol(symbol);
         _next = end;
         if (_symtab->hasSymbol(symbol, end)) {
-            const uint32_t v = _symtab->lookup(symbol, end);
+            const uint32_t v = _symtab->lookupSymbol(symbol, end);
             if (v & 0x80000000) {
                 return Value::makeSigned(v);
             } else {

@@ -92,7 +92,7 @@ Error AsmDirective::assembleLine(const char *line, CliMemory &memory) {
             _list.operand_len = _scan - _list.operand;
             skipSpaces();
             _list.comment = _scan;
-            if (label) intern(origin, label);
+            if (label) internSymbol(origin, label);
             if (getError()) {
                 _scan = _list.label;
             } else {
@@ -103,7 +103,7 @@ Error AsmDirective::assembleLine(const char *line, CliMemory &memory) {
     }
 
     if (label) {
-        intern(_origin, label);
+        internSymbol(_origin, label);
         if (getError()) {
             _scan = _list.label;
             return getError();
@@ -271,7 +271,7 @@ Error AsmDirective::defineLabel(const char *&label, CliMemory &memory) {
     if (getError()) return getError();
     _scan = scan;
     // TODO line end check
-    intern(value, label);
+    internSymbol(value, label);
     _list.value = value;
     _list.value_defined = true;
     label = nullptr;
@@ -372,55 +372,51 @@ Error AsmDirective::defineSpaces() {
     return setError(OK);
 }
 
-const char *AsmDirective::lookup(uint32_t address) {
+const char *AsmDirective::lookupValue(uint32_t address) {
     return nullptr;
 }
 
 bool AsmDirective::hasSymbol(const char *symbol, const char *end) {
-    return end ? hasSymbol(std::string(symbol, end - symbol))
-        : hasSymbol(std::string(symbol));
+    return end ? symbolExists(std::string(symbol, end - symbol))
+        : symbolExists(std::string(symbol));
 }
 
-uint32_t AsmDirective::lookup(const char *symbol, const char *end) {
-    return end ? lookup(std::string(symbol, end - symbol))
-        : lookup(std::string(symbol));
+uint32_t AsmDirective::lookupSymbol(const char *symbol, const char *end) {
+    return end ? symbolLookup(std::string(symbol, end - symbol))
+        : symbolLookup(std::string(symbol));
 }
 
-void AsmDirective::intern(
+uint32_t AsmDirective::currentOrigin() {
+    return _origin;
+}
+
+Error AsmDirective::internSymbol(
     uint32_t value, const char *symbol, const char *end) {
-    if (end) intern(value, std::string(symbol, end - symbol));
-    intern(value, std::string(symbol));
+    if (end) return symbolIntern(value, std::string(symbol, end - symbol));
+    return symbolIntern(value, std::string(symbol));
 }
-
-uint32_t AsmDirective::currentOrigin() { return _origin; }
 
 void AsmDirective::skipSpaces() {
     while (isspace(*_scan))
         _scan++;
 }
 
-bool AsmDirective::hasSymbol(const std::string &key) {
+bool AsmDirective::symbolExists(const std::string &key) const {
     auto it = _symbols.find(key);
-    if (_reportUndef && it == _symbols.end())
-        setError(UNDEFINED_SYMBOL);
     return it != _symbols.end();
 }
 
-uint32_t AsmDirective::lookup(const std::string &key) {
+uint32_t AsmDirective::symbolLookup(const std::string &key) const {
     auto it = _symbols.find(key);
-    if (_reportUndef && it == _symbols.end())
-        setError(UNDEFINED_SYMBOL);
     return it == _symbols.end() ? 0 : it->second;
 }
 
-void AsmDirective::intern(uint32_t value, const std::string &key) {
-    if (_reportDuplicate && hasSymbol(key)) {
-        setError(DUPLICATE_LABEL);
-    } else {
-        _symbols.erase(key);
-        _symbols.emplace(key, value);
-        setError(OK);
-    }
+Error AsmDirective::symbolIntern(uint32_t value, const std::string &key) {
+    if (_reportDuplicate && symbolExists(key))
+        return setError(DUPLICATE_LABEL);
+    _symbols.erase(key);
+    _symbols.emplace(key, value);
+    return setError(OK);
 }
 
 int AsmDirective::trimRight(const char *str, int len) {
