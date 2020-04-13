@@ -76,7 +76,7 @@ private:
 
 };
 
-} // namespace m6502
+} // namespace mc6800
 } // namespace libasm
 
 #endif // __ENTRY_MC6800_H__

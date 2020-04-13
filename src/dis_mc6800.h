@@ -55,7 +55,7 @@ private:
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 
-} // namespace m6502
+} // namespace mc6800
 } // namespace libasm
 
 #endif // __DIS_MC6800_H__

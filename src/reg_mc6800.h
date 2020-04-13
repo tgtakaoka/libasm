@@ -42,7 +42,7 @@ private:
     char regName1stChar(const RegName regName) const;
 };
 
-} // namespace m6502
+} // namespace mc6800
 } // namespace libasm
 
 #endif // __REG_MC6800_H__

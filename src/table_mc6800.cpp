@@ -291,6 +291,33 @@ static constexpr Entry MC6800_TABLE[] PROGMEM = {
     E(0xFF, STX,  EXT, ZERO, WORD)
 };
 
+static constexpr Entry MC6801_TABLE[] PROGMEM = {
+    E(0x04, LSRD, INH, ZERO, NONE)
+    E(0x05, ASLD, INH, ZERO, NONE)
+    E(0x05, LSLD, INH, ZERO, NONE)
+    E(0x21, BRN,  REL, ZERO, BYTE)
+    E(0x38, PULX, INH, ZERO, NONE)
+    E(0x3A, ABX,  INH, ZERO, NONE)
+    E(0x3C, PSHX, INH, ZERO, NONE)
+    E(0x3D, MUL,  INH, ZERO, NONE)
+    E(0x83, SUBD, IMM, ZERO, WORD)
+    E(0x93, SUBD, DIR, ZERO, BYTE)
+    E(0x9D, JSR,  DIR, ZERO, NONE)
+    E(0xA3, SUBD, IDX, ZERO, BYTE)
+    E(0xB3, SUBD, EXT, ZERO, WORD)
+    E(0xC3, ADDD, IMM, ZERO, WORD)
+    E(0xCC, LDD,  IMM, ZERO, WORD)
+    E(0xD3, ADDD, DIR, ZERO, BYTE)
+    E(0xDC, LDD,  DIR, ZERO, BYTE)
+    E(0xDD, STD,  DIR, ZERO, BYTE)
+    E(0xE3, ADDD, IDX, ZERO, BYTE)
+    E(0xEC, LDD,  IDX, ZERO, BYTE)
+    E(0xED, STD,  IDX, ZERO, BYTE)
+    E(0xF3, ADDD, EXT, ZERO, WORD)
+    E(0xFC, LDD,  EXT, ZERO, WORD)
+    E(0xFD, STD,  EXT, ZERO, WORD)
+};
+
 const Entry *TableMc6800::searchEntry(
     const char *name,
     const Entry *table, const Entry *end) {
@@ -351,6 +378,8 @@ Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
 
 Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6800_TABLE));
+    if (_cpuType == MC6801 && entry == nullptr)
+        entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6801_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     char name[Config::NAME_MAX + 1];
@@ -360,12 +389,19 @@ Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
 }
 
 const char *TableMc6800::listCpu() {
-    return "6800, 6802";
+    return "6800, 6801";
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
-    return strcmp(cpu, "6800") == 0
-        || strcmp(cpu, "6802") == 0;
+    if (strcmp(cpu, "6800") == 0) {
+        _cpuType = MC6800;
+        return true;
+    }
+    if (strcmp(cpu, "6801") == 0) {
+        _cpuType = MC6801;
+        return true;
+    }
+    return false;
 }
 
 class TableMc6800 TableMc6800;

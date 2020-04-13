@@ -149,7 +149,21 @@ static const char TEXT_TSX[]  PROGMEM = "TSX";
 static const char TEXT_TXS[]  PROGMEM = "TXS";
 static const char TEXT_WAI[]  PROGMEM = "WAI";
 
-} // namespace m6502
+// MC6801
+static const char TEXT_ABX[]  PROGMEM = "ABX";
+static const char TEXT_ADDD[] PROGMEM = "ADDD";
+static const char TEXT_ASLD[] PROGMEM = "ASLD";
+static const char TEXT_BRN[]  PROGMEM = "BRN";
+static const char TEXT_LDD[]  PROGMEM = "LDD";
+static const char TEXT_LSLD[] PROGMEM = "LSLD";
+static const char TEXT_LSRD[] PROGMEM = "LSRD";
+static const char TEXT_MUL[]  PROGMEM = "MUL";
+static const char TEXT_STD[]  PROGMEM = "STD";
+static const char TEXT_SUBD[] PROGMEM = "SUBD";
+static const char TEXT_PSHX[] PROGMEM = "PSHX";
+static const char TEXT_PULX[] PROGMEM = "PULX";
+
+} // namespace mc6800
 } // namespace libasm
 
 #endif // __TEXT_MC6800__

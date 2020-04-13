@@ -28,6 +28,11 @@ struct Config : public ConfigImpl<
     4>
 {};
 
+enum CpuType : host::uint_t {
+    MC6800,
+    MC6801,
+};
+
 } // namespace mc6800
 } // namespace libasm
 

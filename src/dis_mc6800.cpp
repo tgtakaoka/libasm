@@ -151,7 +151,7 @@ Error DisMc6800::decode(
     return setError(INTERNAL_ERROR);
 }
 
-} // namespace m6502
+} // namespace mc6800
 } // namespace libasm
 
 // Local Variables:

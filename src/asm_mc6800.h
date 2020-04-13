@@ -53,7 +53,7 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace m6502
+} // namespace mc6800
 } // namespace libasm
 
 #endif // __ASM_MC6800_H__
