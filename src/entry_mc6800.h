@@ -24,7 +24,6 @@ namespace mc6800 {
 
 enum AddrMode : host::uint_t {
     INH,  // Inherent
-    ACC,  // Accumulator
     DIR,  // Direct page
     EXT,  // Extended
     IDX,  // Indexed

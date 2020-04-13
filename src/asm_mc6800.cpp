@@ -49,10 +49,7 @@ Error AsmMc6800::encodeInherent(InsnMc6800 &insn) {
  }
 
 Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn)) {
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-        _scan = skipSpaces(_scan + 1);
-    }
+    adjustAccumulator(insn);
     if (*_scan == '<') _scan++;
     insn.emitInsn();
     Config::uintptr_t dir;
@@ -63,10 +60,7 @@ Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn)) {
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-        _scan = skipSpaces(_scan + 1);
-    }
+    adjustAccumulator(insn);
     if (*_scan == '>') _scan++;
     insn.emitInsn();
     Config::uintptr_t addr;
@@ -76,10 +70,7 @@ Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn)) {
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-        _scan = skipSpaces(_scan + 1);
-    }
+    adjustAccumulator(insn);
     insn.emitInsn();
     uint8_t disp8 = 0;          // accept ",X" as "0,X"
     if (*_scan != ',') {
@@ -108,10 +99,7 @@ Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn)) {
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-        _scan = skipSpaces(_scan + 1);
-    }
+    adjustAccumulator(insn);
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     insn.emitInsn();
@@ -131,18 +119,11 @@ Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
 
 Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     RegName reg = _regs.parseRegName(line);
-    if (reg == REG_A || reg == REG_B) {
+    insn.setAddrMode(INH);
+    if (reg == REG_A || reg == REG_B)
         line = skipSpaces(line + _regs.regNameLen(reg));
-        if (*line != ',') {
-            insn.setAddrMode(ACC);
-            return OK;
-        }
-        line = skipSpaces(line + 1);
-    }
-    if (*line == 0 || *line == ';') {
-        insn.setAddrMode(INH);
+    if (*line == 0 || *line == ';') 
         return OK;
-    }
     if (*line == '#') {
         insn.setAddrMode(IMM);
         return OK;
@@ -192,8 +173,7 @@ Error AsmMc6800::encode(Insn &_insn) {
     if (TableMc6800.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
-    case INH:
-    case ACC: return encodeInherent(insn);
+    case INH: return encodeInherent(insn);
     case DIR: return encodeDirect(insn);
     case EXT: return encodeExtended(insn);
     case IDX: return encodeIndexed(insn);

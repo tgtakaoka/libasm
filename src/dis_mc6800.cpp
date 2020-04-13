@@ -140,8 +140,7 @@ Error DisMc6800::decode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INH:
-    case ACC: return decodeInherent(memory, insn);
+    case INH: return decodeInherent(memory, insn);
     case DIR: return decodeDirectPage(memory, insn);
     case EXT: return decodeExtended(memory, insn);
     case IDX: return decodeIndexed(memory, insn);
