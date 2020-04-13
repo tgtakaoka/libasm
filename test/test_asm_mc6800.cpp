@@ -160,7 +160,7 @@ static void test_immediate() {
     TEST("EOR A #$90", 0x88, 0x90);
     TEST("ADC A #$90", 0x89, 0x90);
     TEST("ORA A #$90", 0x8A, 0x90);
-    TEST("ADD A #$90", 0x8B, 0x90);
+    TEST("ADD A,#$90", 0x8B, 0x90);
     TEST("SUBA #$90", 0x80, 0x90);
     TEST("CMPA #$90", 0x81, 0x90);
     TEST("SBCA #$90", 0x82, 0x90);
@@ -181,7 +181,7 @@ static void test_immediate() {
     TEST("EOR B #$90", 0xC8, 0x90);
     TEST("ADC B #$90", 0xC9, 0x90);
     TEST("ORA B #$90", 0xCA, 0x90);
-    TEST("ADD B #$90", 0xCB, 0x90);
+    TEST("ADD B,#$90", 0xCB, 0x90);
     TEST("SUBB #$90", 0xC0, 0x90);
     TEST("CMPB #$90", 0xC1, 0x90);
     TEST("SBCB #$90", 0xC2, 0x90);
@@ -202,6 +202,7 @@ static void test_immediate() {
 
     TEST("LDA A #$90", 0x86, 0x90);
     TEST("LDAA #$90",  0x86, 0x90);
+    TEST("LDA B,#$90", 0xC6, 0x90);
     TEST("CPX #dir90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
     TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
@@ -219,6 +220,7 @@ static void test_direct() {
     TEST("ADC A $90", 0x99, 0x90);
     TEST("ORA A $90", 0x9A, 0x90);
     TEST("ADD A $90", 0x9B, 0x90);
+    TEST("ADD A,$90", 0x9B, 0x90);
     TEST("SUBA $90", 0x90, 0x90);
     TEST("CMPA $90", 0x91, 0x90);
     TEST("SBCA $90", 0x92, 0x90);
@@ -241,7 +243,7 @@ static void test_direct() {
     TEST("EOR B $90", 0xD8, 0x90);
     TEST("ADC B $90", 0xD9, 0x90);
     TEST("ORA B $90", 0xDA, 0x90);
-    TEST("ADD B $90", 0xDB, 0x90);
+    TEST("ADD B,$90", 0xDB, 0x90);
     TEST("SUBB $90", 0xD0, 0x90);
     TEST("CMPB $90", 0xD1, 0x90);
     TEST("SBCB $90", 0xD2, 0x90);
@@ -265,7 +267,7 @@ static void test_direct() {
     symtab.intern(0x90, "dir90");
 
     TEST("LDA A <dir90", 0x96, 0x90);
-    TEST("STA B <dir90", 0xD7, 0x90);
+    TEST("STA B,<dir90", 0xD7, 0x90);
     TEST("LDAA <dir90",  0x96, 0x90);
     TEST("STAB <dir90",  0xD7, 0x90);
     TEST("CPX <dir22", 0x9C, 0x22);
@@ -298,7 +300,7 @@ static void test_extended() {
     TEST("EOR A >$0090", 0xB8, 0x00, 0x90);
     TEST("ADC A >$0090", 0xB9, 0x00, 0x90);
     TEST("ORA A >$0090", 0xBA, 0x00, 0x90);
-    TEST("ADD A >$0090", 0xBB, 0x00, 0x90);
+    TEST("ADD A,>$0090", 0xBB, 0x00, 0x90);
     TEST("SUBA >$0090", 0xB0, 0x00, 0x90);
     TEST("CMPA >$0090", 0xB1, 0x00, 0x90);
     TEST("SBCA >$0090", 0xB2, 0x00, 0x90);
@@ -321,7 +323,7 @@ static void test_extended() {
     TEST("EOR B $9ABC", 0xF8, 0x9A, 0xBC);
     TEST("ADC B $9ABC", 0xF9, 0x9A, 0xBC);
     TEST("ORA B $9ABC", 0xFA, 0x9A, 0xBC);
-    TEST("ADD B $9ABC", 0xFB, 0x9A, 0xBC);
+    TEST("ADD B,$9ABC", 0xFB, 0x9A, 0xBC);
     TEST("SUBB $9ABC", 0xF0, 0x9A, 0xBC);
     TEST("CMPB $9ABC", 0xF1, 0x9A, 0xBC);
     TEST("SBCB $9ABC", 0xF2, 0x9A, 0xBC);
@@ -346,18 +348,18 @@ static void test_extended() {
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x9ABC, "ext9ABC");
 
-    TEST("NEG >ext0090",   0x70, 0x00, 0x90);
-    TEST("LDA A ext9ABC",  0xB6, 0x9A, 0xBC);
-    TEST("STA B >ext0090", 0xF7, 0x00, 0x90);
-    TEST("LDAA  ext9ABC",  0xB6, 0x9A, 0xBC);
-    TEST("STAB >ext0090",  0xF7, 0x00, 0x90);
-    TEST("CPX ext9ABC",  0xBC, 0x9A, 0xBC);
-    TEST("LDX ext9ABC",  0xFE, 0x9A, 0xBC);
+    TEST("NEG   >ext0090", 0x70, 0x00, 0x90);
+    TEST("LDA A  ext9ABC", 0xB6, 0x9A, 0xBC);
+    TEST("STA B,>ext0090", 0xF7, 0x00, 0x90);
+    TEST("LDAA   ext9ABC", 0xB6, 0x9A, 0xBC);
+    TEST("STAB  >ext0090", 0xF7, 0x00, 0x90);
+    TEST("CPX  ext9ABC", 0xBC, 0x9A, 0xBC);
+    TEST("LDX  ext9ABC", 0xFE, 0x9A, 0xBC);
     TEST("STX >ext0090", 0xFF, 0x00, 0x90);
-    TEST("LDS ext9ABC",  0xBE, 0x9A, 0xBC);
+    TEST("LDS  ext9ABC", 0xBE, 0x9A, 0xBC);
     TEST("STS >ext0090", 0xBF, 0x00, 0x90);
-    TEST("JMP ext9ABC",  0x7E, 0x9A, 0xBC);
-    TEST("JSR ext0090",  0xBD, 0x00, 0x90);
+    TEST("JMP  ext9ABC", 0x7E, 0x9A, 0xBC);
+    TEST("JSR  ext0090", 0xBD, 0x00, 0x90);
 }
 
 static void test_indexed() {
@@ -374,6 +376,7 @@ static void test_indexed() {
     TEST("CLR 255,X", 0x6F, 0xFF);
 
     TEST("SUB A ,X",  0xA0, 0x00);
+    TEST("SUB A,,X",  0xA0, 0x00);
     TEST("CMP A 0,X", 0xA1, 0x00);
     TEST("SBC A 1,X", 0xA2, 0x01);
     TEST("AND A 2,X", 0xA4, 0x02);
@@ -383,7 +386,7 @@ static void test_indexed() {
     TEST("EOR A 6,X", 0xA8, 0x06);
     TEST("ADC A 127,X", 0xA9, 0x7F);
     TEST("ORA A 128,X", 0xAA, 0x80);
-    TEST("ADD A 255,X", 0xAB, 0xFF);
+    TEST("ADD A,255,X", 0xAB, 0xFF);
     TEST("SUBA ,X",  0xA0, 0x00);
     TEST("CMPA 0,X", 0xA1, 0x00);
     TEST("SBCA 1,X", 0xA2, 0x01);
@@ -397,6 +400,7 @@ static void test_indexed() {
     TEST("ADDA 255,X", 0xAB, 0xFF);
 
     TEST("SUB B ,X",  0xE0, 0x00);
+    TEST("SUB B,,X",  0xE0, 0x00);
     TEST("CMP B 0,X", 0xE1, 0x00);
     TEST("SBC B 1,X", 0xE2, 0x01);
     TEST("AND B 2,X", 0xE4, 0x02);
@@ -406,7 +410,7 @@ static void test_indexed() {
     TEST("EOR B 6,X", 0xE8, 0x06);
     TEST("ADC B 127,X", 0xE9, 0x7F);
     TEST("ORA B 128,X", 0xEA, 0x80);
-    TEST("ADD B 255,X", 0xEB, 0xFF);
+    TEST("ADD B,255,X", 0xEB, 0xFF);
     TEST("SUBB ,X",  0xE0, 0x00);
     TEST("CMPB 0,X", 0xE1, 0x00);
     TEST("SBCB 1,X", 0xE2, 0x01);
@@ -431,14 +435,14 @@ static void test_indexed() {
     symtab.intern(0,   "offset0");
     symtab.intern(255, "offset255");
 
-    TEST("NEG offset0,X",     0x60, 0x00);
-    TEST("COM offset255,X",   0x63, 0xFF);
-    TEST("CMP A offset0,X",   0xA1, 0x00);
-    TEST("ADD B offset255,X", 0xEB, 0xFF);
-    TEST("CMPA offset0,X",    0xA1, 0x00);
-    TEST("ADDB offset255,X",  0xEB, 0xFF);
-    TEST("JMP offset0,X",     0x6E, 0x00);
-    TEST("JSR offset255,X",   0xAD, 0xFF);
+    TEST("NEG     offset0,X", 0x60, 0x00);
+    TEST("COM   offset255,X", 0x63, 0xFF);
+    TEST("CMP A   offset0,X", 0xA1, 0x00);
+    TEST("ADD B,offset255,X", 0xEB, 0xFF);
+    TEST("CMPA    offset0,X", 0xA1, 0x00);
+    TEST("ADDB  offset255,X", 0xEB, 0xFF);
+    TEST("JMP     offset0,X", 0x6E, 0x00);
+    TEST("JSR   offset255,X", 0xAD, 0xFF);
 }
 
 static void test_comment() {
@@ -475,8 +479,10 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "SUBA <UNDEF", 0x90, 0x00);
     ETEST(UNDEFINED_SYMBOL, "SUBB >UNDEF", 0xF0, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JMP  UNDEF",    0x7E, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JSR  UNDEF",    0xBD, 0x00, 0x00);
 
-    ETEST(UNDEFINED_SYMBOL, "LDA  UNDEF,X",    0xA6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA A UNDEF,X", 0xA6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA A,UNDEF,X", 0xA6, 0x00);
 
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF", 0x20, 0xFE);
 }

@@ -49,7 +49,8 @@ Error AsmMc6800::encodeInherent(InsnMc6800 &insn) {
  }
 
 Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
-    adjustAccumulator(insn);
+    if (adjustAccumulator(insn) && *_scan == ',')
+        _scan = skipSpaces(_scan + 1);
     if (*_scan == '<') _scan++;
     insn.emitInsn();
     Config::uintptr_t dir;
@@ -60,7 +61,8 @@ Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
-    adjustAccumulator(insn);
+    if (adjustAccumulator(insn) && *_scan == ',')
+        _scan = skipSpaces(_scan + 1);
     if (*_scan == '>') _scan++;
     insn.emitInsn();
     Config::uintptr_t addr;
@@ -70,16 +72,23 @@ Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
-    adjustAccumulator(insn);
+    bool needDisp = true;
+    if (adjustAccumulator(insn) && *_scan == ',') {
+        _scan = skipSpaces(_scan + 1);
+        if (_regs.parseRegName(_scan) == REG_X) // "A ,X"
+            needDisp = false;
+    }
     insn.emitInsn();
     uint8_t disp8 = 0;          // accept ",X" as "0,X"
-    if (*_scan != ',') {
+    if (needDisp && *_scan != ',') {
         if (getOperand(disp8)) return getError();
         _scan = skipSpaces(_scan);
     }
     insn.emitByte(disp8);
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan = skipSpaces(_scan + 1);
+    if (needDisp) {
+        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+        _scan = skipSpaces(_scan + 1);
+    }
     if (_regs.parseRegName(_scan) != REG_X)
         return setError(UNKNOWN_OPERAND);
     _scan += _regs.regNameLen(REG_X);
@@ -99,7 +108,8 @@ Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
 }
 
 Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
-    adjustAccumulator(insn);
+    if (adjustAccumulator(insn) && *_scan == ',')
+        _scan = skipSpaces(_scan + 1);
     if (*_scan != '#') return setError(UNKNOWN_OPERAND);
     _scan++;
     insn.emitInsn();
@@ -120,8 +130,16 @@ Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
 Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     RegName reg = _regs.parseRegName(line);
     insn.setAddrMode(INH);
-    if (reg == REG_A || reg == REG_B)
+    if (reg == REG_A || reg == REG_B) {
         line = skipSpaces(line + _regs.regNameLen(reg));
+        if (*line == ',') {
+            line = skipSpaces(line + 1);
+            if (_regs.parseRegName(line) == REG_X) { // "A ,X"
+                insn.setAddrMode(IDX);
+                return OK;
+            }
+        }
+    }
     if (*line == 0 || *line == ';') 
         return OK;
     if (*line == '#') {
