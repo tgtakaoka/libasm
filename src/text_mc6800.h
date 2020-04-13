@@ -163,6 +163,14 @@ static const char TEXT_SUBD[] PROGMEM = "SUBD";
 static const char TEXT_PSHX[] PROGMEM = "PSHX";
 static const char TEXT_PULX[] PROGMEM = "PULX";
 
+// HD6301
+static const char TEXT_AIM[]  PROGMEM = "AIM";
+static const char TEXT_EIM[]  PROGMEM = "EIM";
+static const char TEXT_OIM[]  PROGMEM = "OIM";
+static const char TEXT_SLP[]  PROGMEM = "SLP";
+static const char TEXT_TIM[]  PROGMEM = "TIM";
+static const char TEXT_XGDX[] PROGMEM = "XGDX";
+
 } // namespace mc6800
 } // namespace libasm
 

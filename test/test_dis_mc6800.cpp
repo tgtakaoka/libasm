@@ -40,6 +40,8 @@ static void test_cpu() {
         "cpu 6800", true, disassembler.setCpu("6800"));
     asserter.equals(
         "cpu 6801", true, disassembler.setCpu("6801"));
+    asserter.equals(
+        "cpu 6301", true, disassembler.setCpu("6301"));
 }
 
 static void test_inherent() {
@@ -107,6 +109,11 @@ static void test_inherent() {
     TEST(ABX,  "", 0x3A);
     TEST(PSHX, "", 0x3C);
     TEST(MUL,  "", 0x3D);
+
+    // HD6301
+    disassembler.setCpu("6301");
+    TEST(XGDX, "", 0x18);
+    TEST(SLP,  "", 0x1A);
 }
 
 static void test_immediate() {
@@ -399,6 +406,31 @@ static void test_relative() {
     ATEST(0x1000, BRN, "sub0F82", 0x21, 0x80);
 }
 
+static void test_bit_ops() {
+    // HD6301
+    disassembler.setCpu("6301");
+    TEST(AIM, "#$88,0,X",   0x61, 0x88, 0x00);
+    TEST(OIM, "#$44,1,X",   0x62, 0x44, 0x01);
+    TEST(EIM, "#$22,128,X", 0x65, 0x22, 0x80);
+    TEST(TIM, "#$11,255,X", 0x6B, 0x11, 0xFF);
+
+    TEST(AIM, "#$88,$90", 0x71, 0x88, 0x90);
+    TEST(OIM, "#$44,$90", 0x72, 0x44, 0x90);
+    TEST(EIM, "#$22,$90", 0x75, 0x22, 0x90);
+    TEST(TIM, "#$11,$90", 0x7B, 0x11, 0x90);
+
+    symtab.intern(0x90, "dir90");
+    symtab.intern(255,  "offset255");
+    symtab.intern(0,    "offset0");
+    symtab.intern(0x88, "data88");
+    symtab.intern(0x10, "bm4");
+    symtab.intern(0x40, "bm6");
+
+    TEST(AIM, "#data88,offset0,X", 0x61, 0x88, 0x00);
+    TEST(OIM, "#bm4,<dir90",       0x72, 0x10, 0x90);
+    TEST(EIM, "#bm6,offset255,X",  0x65, 0x40, 0xFF);
+}
+
 static void assert_illegal(uint8_t opc) {
     char operands[40];
     Insn insn;
@@ -440,6 +472,19 @@ static void test_illegal_mc6801() {
         assert_illegal(illegals[idx]);
 }
 
+static void test_illegal_hd6301() {
+    const uint8_t illegals[] = {
+        0x00, 0x02, 0x03,
+        0x12, 0x13, 0x14, 0x15, 0x1C, 0x1D, 0x1E, 0x1F,
+        0x41, 0x42, 0x45, 0x4B, 0x4E, 0x51, 0x52, 0x55, 0x5B, 0x5E,
+        0x87, 0x8F,
+        0xC7, 0xCD, 0xCF,
+    };
+    disassembler.setCpu("6301");
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        assert_illegal(illegals[idx]);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -456,8 +501,10 @@ int main(int argc, char **argv) {
     RUN_TEST(test_extended);
     RUN_TEST(test_indexed);
     RUN_TEST(test_relative);
+    RUN_TEST(test_bit_ops);
     RUN_TEST(test_illegal_mc6800);
     RUN_TEST(test_illegal_mc6801);
+    RUN_TEST(test_illegal_hd6301);
     return 0;
 }
 
