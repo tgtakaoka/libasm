@@ -40,17 +40,16 @@ private:
     AsmMotoOperand _parser;
     RegMc6800 _regs;
 
-    bool adjustAccumulator(InsnMc6800 &insn);
-    Error determineAddrMode(const char *line, InsnMc6800 &insn);
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        RegName reg;
+        uint16_t imm;
+        uint16_t opr;
+    };
 
-    Error encodeInherent(InsnMc6800 &insn);
-    Error encodeDirect(InsnMc6800 &insn);
-    Error encodeExtended(InsnMc6800 &insn);
-    Error encodeIndexed(InsnMc6800 &insn);
+    void adjustAccumulator(InsnMc6800 &insn, const Operand &op);
+    Error parseOperand(Operand &op);
     Error encodeRelative(InsnMc6800 &insn);
-    Error encodeImmediate(InsnMc6800 &insn);
-    Error encodeBitOperation(InsnMc6800 &insn);
-
     Error encode(Insn &insn) override;
 };
 

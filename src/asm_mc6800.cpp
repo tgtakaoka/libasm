@@ -20,79 +20,16 @@
 namespace libasm {
 namespace mc6800 {
 
-bool AsmMc6800::adjustAccumulator(InsnMc6800 &insn) {
+void AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
+    if (op.reg != REG_B) return;
     const InsnAdjust iAdjust = insn.insnAdjust();
-    if (iAdjust == ADJ_ZERO) return false;
-    const char *line = _scan;
-    const RegName accum = _regs.parseRegName(line);
-    line = skipSpaces(line + _regs.regNameLen(accum));
-    if (accum == REG_A) {
-        _scan = line;
-        return true;
-    } else if (accum == REG_B) {
-        switch (iAdjust) {
-        case ADJ_AB01: insn.embed(1); break;
-        case ADJ_AB16: insn.embed(0x10); break;
-        case ADJ_AB64: insn.embed(0x40); break;
-        default: break;
-        }
-        _scan = line;
-        return true;
+    if (iAdjust == ADJ_AB01) {
+        insn.embed(1);
+    } else if (iAdjust == ADJ_AB16) {
+        insn.embed(0x10);
+    } else if (iAdjust == ADJ_AB64) {
+        insn.embed(0x40);
     }
-    return false;
-}
-
-Error AsmMc6800::encodeInherent(InsnMc6800 &insn) {
-    adjustAccumulator(insn);
-    insn.emitInsn();
-    return checkLineEnd();
- }
-
-Error AsmMc6800::encodeDirect(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn) && *_scan == ',')
-        _scan = skipSpaces(_scan + 1);
-    if (*_scan == '<') _scan++;
-    insn.emitInsn();
-    Config::uintptr_t dir;
-    if (getOperand(dir)) return getError();
-    // TODO: Warning if dir isn't on _direct_page.
-    insn.emitByte(static_cast<uint8_t>(dir));
-    return checkLineEnd();
-}
-
-Error AsmMc6800::encodeExtended(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn) && *_scan == ',')
-        _scan = skipSpaces(_scan + 1);
-    if (*_scan == '>') _scan++;
-    insn.emitInsn();
-    Config::uintptr_t addr;
-    if (getOperand(addr)) return getError();
-    insn.emitUint16(addr);
-    return checkLineEnd();
-}
-
-Error AsmMc6800::encodeIndexed(InsnMc6800 &insn) {
-    bool needDisp = true;
-    if (adjustAccumulator(insn) && *_scan == ',') {
-        _scan = skipSpaces(_scan + 1);
-        if (_regs.parseRegName(_scan) == REG_X) // "A ,X"
-            needDisp = false;
-    }
-    insn.emitInsn();
-    uint8_t disp8 = 0;          // accept ",X" as "0,X"
-    if (needDisp && *_scan != ',') {
-        if (getOperand(disp8)) return getError();
-        _scan = skipSpaces(_scan);
-    }
-    insn.emitByte(disp8);
-    if (needDisp) {
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-        _scan = skipSpaces(_scan + 1);
-    }
-    if (_regs.parseRegName(_scan) != REG_X)
-        return setError(UNKNOWN_OPERAND);
-    _scan += _regs.regNameLen(REG_X);
-    return checkLineEnd();
 }
 
 Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
@@ -107,116 +44,83 @@ Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
     return checkLineEnd();
 }
 
-Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
-    if (adjustAccumulator(insn) && *_scan == ',')
-        _scan = skipSpaces(_scan + 1);
-    if (*_scan != '#') return setError(UNKNOWN_OPERAND);
-    _scan++;
-    insn.emitInsn();
-    if (insn.oprSize() == SZ_BYTE) {
-        uint8_t val8;
-        if (getOperand(val8)) return getError();
-        insn.emitByte(val8);
-    } else if (insn.oprSize() == SZ_WORD) {
-        uint16_t val16;
-        if (getOperand(val16)) return getError();
-        insn.emitUint16(val16);
-    } else {
-        return setError(UNKNOWN_OPERAND);
-    }
-    return checkLineEnd();
-}
-
-Error AsmMc6800::encodeBitOperation(InsnMc6800 &insn) {
-    if (*_scan != '#') return setError(UNKNOWN_OPERAND);
-    _scan++;
-    insn.emitInsn();
-    uint8_t val8;
-    if (getOperand(val8)) return getError();
-    const Error error1 = getError();
-    insn.emitByte(val8);
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan = skipSpaces(_scan + 1);
-    if (insn.addrMode() == IMM_IDX) {
-        uint8_t disp8;
-        if (*_scan == ',') {
-            disp8 = 0;
-        } else {
-            if (getOperand(disp8)) return getError();
-            setError(error1 ? error1 : getError());
-        }
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-        _scan = skipSpaces(_scan + 1);
-        if (_regs.parseRegName(_scan) != REG_X) return setError(UNKNOWN_OPERAND);
-        _scan += _regs.regNameLen(REG_X);
-        insn.emitByte(disp8);
-    } else {
-        uint8_t dir8;
-        if (*_scan == '<') _scan++;
-        if (getOperand(dir8)) return getError();
-        setError(error1 ? error1 : getError());
-        insn.emitByte(dir8);
-    }
-    return checkLineEnd();
-}
-
-Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
-    RegName reg = _regs.parseRegName(line);
-    insn.setAddrMode(INH);
-    if (reg == REG_A || reg == REG_B) {
-        line = skipSpaces(line + _regs.regNameLen(reg));
-        if (*line == ',') {
-            line = skipSpaces(line + 1);
-            if (_regs.parseRegName(line) == REG_X) { // "A ,X"
-                insn.setAddrMode(IDX);
-                return OK;
-            }
+Error AsmMc6800::parseOperand(Operand &op) {
+    op.resetError();
+    const char *p = _scan;
+    host::uint_t comma = 0;
+    op.mode = INH;
+    op.reg = _regs.parseRegName(p);
+    if (op.reg == REG_A || op.reg == REG_B) {
+        p = skipSpaces(p + _regs.regNameLen(op.reg));
+        while (*p == ',') {
+            comma++;
+            p = skipSpaces(p + 1);
         }
     }
-    if (*line == 0 || *line == ';') 
-        return OK;
+    if (comma == 0 && (*p == 0 || *p == ';')) {
+        _scan = p;
+        return setError(OK);
+    }
     bool hasImmediate = false;
-    if (*line == '#') {
-        insn.setAddrMode(IMM);
-        const char *saved_scan = _scan;
-        _scan = line + 1;
-        uint16_t val16;
-        Error error = getOperand(val16);
-        line = _scan;
-        _scan = saved_scan;
-        if (error) return error;
-        if (*line != ',') return OK;
-        line = skipSpaces(line + 1);
+    if (*p == '#') {
+        if (comma >= 2) return setError(UNKNOWN_OPERAND);
+        comma = 0;
+        _scan = p + 1;
+        if (getOperand(op.imm)) return getError();
+        op.setError(getError());
+        p = _scan;
+        op.mode = IMM;
         hasImmediate = true;
+        if (op.reg != REG_UNDEF) // A #IMM
+            return setError(OK);
+        while (*p == ',') {
+            comma++;
+            p = skipSpaces(p + 1);
+        }
+        if (comma == 0 && (*p == 0 || *p == ';')) {
+            _scan = p;
+            return setError(OK);
+        }
+    } else if (*p == ',') { // ,X
+        comma++;
+        p = skipSpaces(p + 1);
+    }
+    if (_regs.compareRegName(p, REG_X)) { // ,X
+        if (comma == 0 || comma >= 3)
+            return op.setError(UNKNOWN_OPERAND);
+        _scan = p + _regs.regNameLen(REG_X);
+        op.opr = 0;
+        op.mode = hasImmediate ? IMM_IDX : IDX;
+        return setError(OK);
     }
     host::int_t size = -1;
-    if (*line == '<') {
+    if (*p == '<') {
         size = 8;
-        line++;
-    } else if (*line == '>') {
+        p++;
+    } else if (*p == '>') {
         size = 16;
-        line++;
+        p++;
     }
-    uint16_t val16 = 0;         // accept ",X" as "0,X"
-    if (*line != ',') {
-        const char *saved_scan = _scan;
-        _scan = line;
-        const Error error = getOperand(val16);
-        line = _scan;
-        _scan = saved_scan;
-        if (error) return error;
-    }
-    if (*line == ',' && _regs.parseRegName(skipSpaces(line + 1)) == REG_X) {
-        insn.setAddrMode(hasImmediate ? IMM_IDX : IDX);
-        return OK;
-    }
-    if (size == 8 || (size == -1 && val16 < 0x100)) {
-        insn.setAddrMode(hasImmediate ? IMM_DIR : DIR);
+    _scan = p;
+    if (getOperand(op.opr)) return getError();
+    if (getError()) op.setError(getError());
+    p = _scan;
+    if (*p == ',') {            // nn,X
+        p = skipSpaces(p + 1);
+        if (!_regs.compareRegName(p, REG_X))
+            return op.setError(UNKNOWN_OPERAND);
+        p += _regs.regNameLen(REG_X);
+        if (size == 16 || (size < 0 && op.opr >= 0x100))
+            return op.setError(OVERFLOW_RANGE);
+        op.mode = hasImmediate ? IMM_IDX : IDX;
+    } else if (size == 8 || (size < 0 && op.opr < 0x100)) {
+        op.mode = hasImmediate ? IMM_DIR : DIR;
     } else {
-        if (hasImmediate) return OVERFLOW_RANGE;
-        insn.setAddrMode(EXT);
+        if (hasImmediate) return op.setError(OVERFLOW_RANGE);
+        op.mode = EXT;
     }
-    return OK;
+    _scan = p;
+    return setError(OK);
 }
 
 Error AsmMc6800::encode(Insn &_insn) {
@@ -230,21 +134,41 @@ Error AsmMc6800::encode(Insn &_insn) {
     if (insn.addrMode() == REL)
         return encodeRelative(insn);
 
-    if (determineAddrMode(_scan, insn)) return getError();
+    Operand op;
+    if (parseOperand(op)) return setError(op);
+    setError(op);
 
+    insn.setAddrMode(op.mode);
     if (TableMc6800.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
+
+    adjustAccumulator(insn, op);
+    insn.emitInsn();
     switch (insn.addrMode()) {
-    case INH: return encodeInherent(insn);
-    case DIR: return encodeDirect(insn);
-    case EXT: return encodeExtended(insn);
-    case IDX: return encodeIndexed(insn);
-    case IMM: return encodeImmediate(insn);
+    case INH:
+        break;
+    case DIR:
+    case IDX:
+        insn.emitByte(static_cast<uint8_t>(op.opr));
+        break;
+    case EXT:
+        insn.emitUint16(op.opr);
+        break;
+    case IMM:
+        if (insn.oprSize() == SZ_BYTE)
+            insn.emitByte(static_cast<uint8_t>(op.imm));
+        if (insn.oprSize() == SZ_WORD)
+            insn.emitUint16(op.imm);
+        break;
     case IMM_IDX:
     case IMM_DIR:
-        return encodeBitOperation(insn);
-    default:  return setError(UNKNOWN_OPERAND);
+        insn.emitByte(static_cast<uint8_t>(op.imm));
+        insn.emitByte(static_cast<uint8_t>(op.opr));
+        break;
+    default:
+        break;
     }
+    return checkLineEnd();
 }
 
 } // namespace m6800
