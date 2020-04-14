@@ -31,6 +31,7 @@ struct Config : public ConfigImpl<
 enum CpuType : host::uint_t {
     MC6800,
     MC6801,
+    HD6301,
 };
 
 } // namespace mc6800

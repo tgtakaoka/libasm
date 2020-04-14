@@ -130,6 +130,23 @@ Error DisMc6800::decodeImmediate(
     return setError(OK);
 }
 
+Error DisMc6800::decodeBitOperation(
+    DisMemory &memory, InsnMc6800 &insn) {
+    uint8_t val8;
+    if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
+    *_operands++ = '#';
+    const char *label = lookup(val8);
+    if (label) {
+        outText(label);
+    } else {
+        outConstant(val8);
+    }
+    *_operands++ = ',';
+    return (insn.addrMode() == IMM_DIR)
+        ? decodeDirectPage(memory, insn)
+        : decodeIndexed(memory, insn);
+}
+
 Error DisMc6800::decode(
     DisMemory &memory, Insn &_insn) {
     InsnMc6800 insn(_insn);
@@ -146,6 +163,8 @@ Error DisMc6800::decode(
     case IDX: return decodeIndexed(memory, insn);
     case REL: return decodeRelative(memory, insn);
     case IMM: return decodeImmediate(memory, insn);
+    case IMM_DIR:
+    case IMM_IDX: return decodeBitOperation(memory, insn);
     default: break;
     }
     return setError(INTERNAL_ERROR);

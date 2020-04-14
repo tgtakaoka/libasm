@@ -29,6 +29,9 @@ enum AddrMode : host::uint_t {
     IDX,  // Indexed
     REL,  // Relative
     IMM,  // Immediate
+    // HD6301
+    IMM_DIR,
+    IMM_IDX,
 };
 
 enum InsnAdjust : host::uint_t {

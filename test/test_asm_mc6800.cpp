@@ -39,6 +39,8 @@ static void test_cpu() {
         "cpu 6800", true, assembler.setCpu("6800"));
     asserter.equals(
         "cpu 6801", true, assembler.setCpu("6801"));
+    asserter.equals(
+        "cpu 6301", true, assembler.setCpu("6301"));
 }
 
 static void test_inherent() {
@@ -133,6 +135,11 @@ static void test_inherent() {
     TEST("ABX",  0x3A);
     TEST("PSHX", 0x3C);
     TEST("MUL",  0x3D);
+
+    // HD6301
+    assembler.setCpu("6301");
+    TEST("XGDX", 0x18);
+    TEST("SLP",  0x1A);
 }
 
 static void test_relative() {
@@ -526,6 +533,31 @@ static void test_indexed() {
     TEST("STD  offset255,X", 0xED, 0xFF);
 }
 
+static void test_bit_ops() {
+    // HD6301
+    assembler.setCpu("6301");
+    TEST("AIM #$88,,X",    0x61, 0x88, 0x00);
+    TEST("OIM #$44,1,X",   0x62, 0x44, 0x01);
+    TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
+    TEST("TIM #$11,255,X", 0x6B, 0x11, 0xFF);
+
+    TEST("AIM #$88,$90", 0x71, 0x88, 0x90);
+    TEST("OIM #$44,$90", 0x72, 0x44, 0x90);
+    TEST("EIM #$22,$90", 0x75, 0x22, 0x90);
+    TEST("TIM #$11,$90", 0x7B, 0x11, 0x90);
+
+    symtab.intern(0x90, "dir90");
+    symtab.intern(255,  "offset255");
+    symtab.intern(0,    "offset0");
+    symtab.intern(0x88, "data88");
+    symtab.intern(0x10, "bm4");
+    symtab.intern(0x40, "bm6");
+
+    TEST("AIM #data88,offset0,X", 0x61, 0x88, 0x00);
+    TEST("OIM #bm4,<dir90",       0x72, 0x10, 0x90);
+    TEST("EIM #bm6,offset255,X",  0x65, 0x40, 0xFF);
+}
+
 static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
@@ -549,27 +581,35 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ETEST(UNDEFINED_SYMBOL, "LDA  A #UNDEF", 0x86, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LDAA #UNDEF",   0x86, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LDS  #UNDEF",   0x8E, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "NEG  UNDEF",    0x70, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUB  A UNDEF",  0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUB  A <UNDEF", 0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUB  B >UNDEF", 0xF0, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUBA UNDEF",  0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUBA <UNDEF", 0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUBB >UNDEF", 0xF0, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JMP  UNDEF",    0x7E, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JSR  UNDEF",    0xBD, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDA A #UNDEF", 0x86, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDAA  #UNDEF", 0x86, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDS   #UNDEF", 0x8E, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "NEG    UNDEF", 0x70, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUB  A UNDEF", 0x90, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUB A <UNDEF", 0x90, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUB B >UNDEF", 0xF0, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUBA   UNDEF", 0x90, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUBA  <UNDEF", 0x90, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "SUBB  >UNDEF", 0xF0, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JMP    UNDEF", 0x7E, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "JSR    UNDEF", 0xBD, 0x00, 0x00);
 
     ETEST(UNDEFINED_SYMBOL, "LDA A UNDEF,X", 0xA6, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LDA A,UNDEF,X", 0xA6, 0x00);
 
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF", 0x20, 0xFE);
 
+    // MC6801
     assembler.setCpu("6801");
     ETEST(UNDEFINED_SYMBOL, "SUBD #UNDEF", 0x83, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JSR   UNDEF", 0x9D, 0x00);
+
+    // HD6301
+    assembler.setCpu("6301");
+    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$10,X", 0x62, 0x00, 0x10);
+    ETEST(UNDEFINED_SYMBOL, "OIM #$10,UNDEF,X", 0x62, 0x10, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$30",   0x72, 0x00, 0x30);
+    ETEST(UNDEFINED_SYMBOL, "OIM #$30,UNDEF",   0x72, 0x30, 0x00);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -588,6 +628,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_extended);
     RUN_TEST(test_indexed);
     RUN_TEST(test_relative);
+    RUN_TEST(test_bit_ops);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;

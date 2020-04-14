@@ -51,6 +51,7 @@ private:
     Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn);
     Error decodeRelative(DisMemory &memory, InsnMc6800 &insn);
     Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeBitOperation(DisMemory &memory, InsnMc6800 &insn);
 
     Error decode(DisMemory &memory, Insn &insn) override;
 };

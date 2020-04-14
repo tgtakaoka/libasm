@@ -318,6 +318,19 @@ static constexpr Entry MC6801_TABLE[] PROGMEM = {
     E(0xFD, STD,  EXT, ZERO, WORD)
 };
 
+static constexpr Entry HD6301_TABLE[] PROGMEM = {
+    E(0x18, XGDX, INH,     ZERO, NONE)
+    E(0x1A, SLP,  INH,     ZERO, NONE)
+    E(0x61, AIM,  IMM_IDX, ZERO, BYTE)
+    E(0x62, OIM,  IMM_IDX, ZERO, BYTE)
+    E(0x65, EIM,  IMM_IDX, ZERO, BYTE)
+    E(0x6B, TIM,  IMM_IDX, ZERO, BYTE)
+    E(0x71, AIM,  IMM_DIR, ZERO, BYTE)
+    E(0x72, OIM,  IMM_DIR, ZERO, BYTE)
+    E(0x75, EIM,  IMM_DIR, ZERO, BYTE)
+    E(0x7B, TIM,  IMM_DIR, ZERO, BYTE)
+};
+
 const Entry *TableMc6800::searchEntry(
     const char *name,
     const Entry *table, const Entry *end) {
@@ -367,8 +380,10 @@ const Entry *TableMc6800::searchEntry(
 
 Error TableMc6800::searchName(InsnMc6800 &insn) const {
     const Entry *entry = searchEntry(insn.name(), ARRAY_RANGE(MC6800_TABLE));
-    if (_cpuType == MC6801 && entry == nullptr)
+    if (_cpuType != MC6800 && entry == nullptr)
         entry = searchEntry(insn.name(), ARRAY_RANGE(MC6801_TABLE));
+    if (_cpuType == HD6301 && entry == nullptr)
+        entry = searchEntry(insn.name(), ARRAY_RANGE(HD6301_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setInsnCode(pgm_read_byte(&entry->opc));
     insn.setFlags(pgm_read_byte(&entry->flags));
@@ -377,9 +392,12 @@ Error TableMc6800::searchName(InsnMc6800 &insn) const {
 
 Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
     const Entry *entry = nullptr;
-    if (_cpuType == MC6801)
+    if (_cpuType != MC6800)
         entry = searchEntry(
             insn.name(), insn.addrMode(), ARRAY_RANGE(MC6801_TABLE));
+    if (_cpuType == HD6301 && entry == nullptr)
+        entry = searchEntry(
+            insn.name(), insn.addrMode(), ARRAY_RANGE(HD6301_TABLE));
     if (entry == nullptr)
         entry = searchEntry(
             insn.name(), insn.addrMode(), ARRAY_RANGE(MC6800_TABLE));
@@ -390,9 +408,13 @@ Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
 }
 
 Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
-    const Entry *entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6800_TABLE));
-    if (_cpuType == MC6801 && entry == nullptr)
-        entry = searchEntry(insn.insnCode(), ARRAY_RANGE(MC6801_TABLE));
+    Config::insn_t insnCode = insn.insnCode();
+    const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(MC6800_TABLE));
+    if (_cpuType != MC6800 && entry == nullptr)
+        entry = searchEntry(insnCode, ARRAY_RANGE(MC6801_TABLE));
+    if (_cpuType == HD6301 && entry == nullptr) {
+        entry = searchEntry(insnCode, ARRAY_RANGE(HD6301_TABLE));
+    }
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     char name[Config::NAME_MAX + 1];
@@ -402,7 +424,7 @@ Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
 }
 
 const char *TableMc6800::listCpu() {
-    return "6800, 6801";
+    return "6800, 6801, 6301";
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
@@ -412,6 +434,10 @@ bool TableMc6800::setCpu(const char *cpu) {
     }
     if (strcmp(cpu, "6801") == 0) {
         _cpuType = MC6801;
+        return true;
+    }
+    if (strcmp(cpu, "6301") == 0) {
+        _cpuType = HD6301;
         return true;
     }
     return false;

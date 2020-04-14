@@ -22,6 +22,7 @@ all: \
 	test_hd6309.s19 \
 	test_mc6800.s19 \
 	test_mc6801.s19 \
+	test_hd6301.s19 \
 	test_m6502.s19 \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
@@ -181,6 +182,7 @@ gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_mc6800 -u -C 6800  -o gen_mc6800.asm
 	./gen_mc6800 -u -C 6801  -o gen_mc6801.asm
+	./gen_mc6800 -u -C 6301  -o gen_hd6301.asm
 gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_m6502 -u -C 6502    -o gen_m6502.asm

@@ -49,6 +49,7 @@ private:
     Error encodeIndexed(InsnMc6800 &insn);
     Error encodeRelative(InsnMc6800 &insn);
     Error encodeImmediate(InsnMc6800 &insn);
+    Error encodeBitOperation(InsnMc6800 &insn);
 
     Error encode(Insn &insn) override;
 };

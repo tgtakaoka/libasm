@@ -127,6 +127,39 @@ Error AsmMc6800::encodeImmediate(InsnMc6800 &insn) {
     return checkLineEnd();
 }
 
+Error AsmMc6800::encodeBitOperation(InsnMc6800 &insn) {
+    if (*_scan != '#') return setError(UNKNOWN_OPERAND);
+    _scan++;
+    insn.emitInsn();
+    uint8_t val8;
+    if (getOperand(val8)) return getError();
+    const Error error1 = getError();
+    insn.emitByte(val8);
+    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+    _scan = skipSpaces(_scan + 1);
+    if (insn.addrMode() == IMM_IDX) {
+        uint8_t disp8;
+        if (*_scan == ',') {
+            disp8 = 0;
+        } else {
+            if (getOperand(disp8)) return getError();
+            setError(error1 ? error1 : getError());
+        }
+        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+        _scan = skipSpaces(_scan + 1);
+        if (_regs.parseRegName(_scan) != REG_X) return setError(UNKNOWN_OPERAND);
+        _scan += _regs.regNameLen(REG_X);
+        insn.emitByte(disp8);
+    } else {
+        uint8_t dir8;
+        if (*_scan == '<') _scan++;
+        if (getOperand(dir8)) return getError();
+        setError(error1 ? error1 : getError());
+        insn.emitByte(dir8);
+    }
+    return checkLineEnd();
+}
+
 Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     RegName reg = _regs.parseRegName(line);
     insn.setAddrMode(INH);
@@ -142,9 +175,19 @@ Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
     }
     if (*line == 0 || *line == ';') 
         return OK;
+    bool hasImmediate = false;
     if (*line == '#') {
         insn.setAddrMode(IMM);
-        return OK;
+        const char *saved_scan = _scan;
+        _scan = line + 1;
+        uint16_t val16;
+        Error error = getOperand(val16);
+        line = _scan;
+        _scan = saved_scan;
+        if (error) return error;
+        if (*line != ',') return OK;
+        line = skipSpaces(line + 1);
+        hasImmediate = true;
     }
     host::int_t size = -1;
     if (*line == '<') {
@@ -161,15 +204,16 @@ Error AsmMc6800::determineAddrMode(const char *line, InsnMc6800 &insn) {
         const Error error = getOperand(val16);
         line = _scan;
         _scan = saved_scan;
-        if (error != OK) return error;
+        if (error) return error;
     }
     if (*line == ',' && _regs.parseRegName(skipSpaces(line + 1)) == REG_X) {
-        insn.setAddrMode(IDX);
+        insn.setAddrMode(hasImmediate ? IMM_IDX : IDX);
         return OK;
     }
     if (size == 8 || (size == -1 && val16 < 0x100)) {
-        insn.setAddrMode(DIR);
+        insn.setAddrMode(hasImmediate ? IMM_DIR : DIR);
     } else {
+        if (hasImmediate) return OVERFLOW_RANGE;
         insn.setAddrMode(EXT);
     }
     return OK;
@@ -196,6 +240,9 @@ Error AsmMc6800::encode(Insn &_insn) {
     case EXT: return encodeExtended(insn);
     case IDX: return encodeIndexed(insn);
     case IMM: return encodeImmediate(insn);
+    case IMM_IDX:
+    case IMM_DIR:
+        return encodeBitOperation(insn);
     default:  return setError(UNKNOWN_OPERAND);
     }
 }
