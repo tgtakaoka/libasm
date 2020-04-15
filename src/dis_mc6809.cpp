@@ -326,9 +326,6 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
     if (TableMc6809.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    if (insn.is6309() && !TableMc6809.is6309())
-        return setError(UNKNOWN_INSTRUCTION);
-
     switch (insn.addrMode()) {
     case INHR:  return setError(OK);
     case DIRP:  return decodeDirectPage(memory, insn);

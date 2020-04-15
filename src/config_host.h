@@ -42,6 +42,7 @@ namespace host
 #define PROGMEM
 #define pgm_read_byte(p) *reinterpret_cast<const uint8_t *>(p)
 #define pgm_read_word(p) *reinterpret_cast<const uint16_t *>(p)
+#define pgm_read_ptr(p) *reinterpret_cast<const uintptr_t *>(p)
 #define F(text) (text)
 #define strcpy_P(d, s) strcpy((d), (s))
 #define strncpy_P(d, s, n) strncpy((d), (s), (n))

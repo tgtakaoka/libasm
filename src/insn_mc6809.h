@@ -30,17 +30,13 @@ public:
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
-    bool is6309() const { return Entry::_cpuType(_flags) == HD6309; }
 
     void setFlags(host::uint_t flags) {
         _flags = flags;
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(
-            Entry::_cpuType(_flags),
-            Entry::_oprSize(_flags),
-            addrMode);
+        _flags = Entry::_flags(Entry::_oprSize(_flags), addrMode);
     }
 
     Config::insn_t insnCode() const { return _insnCode; }

@@ -26,14 +26,10 @@ namespace mc6809 {
 #define PSEUDO_SETDP   0x00     // reuse NEG opecode
 #define PSEUDO_ASSUME  0x03     // reuse COM opecode
 
-struct EntryPage {
-    const Config::opcode_t prefix;
-    const Entry *const table;
-    const Entry *const end;
-};
-
 class TableMc6809 {
 public:
+    TableMc6809();
+
     Error searchName(InsnMc6809 &insn) const;
     Error searchNameAndAddrMode(InsnMc6809 &insn) const;
     Error searchInsnCode(InsnMc6809 &insn) const;
@@ -44,8 +40,14 @@ public:
 
     static bool isPrefixCode(Config::opcode_t opCode);
 
+    struct EntryPage;
+
 private:
     CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
+
+    void setCpu(CpuType cpuType);
 
     static const Entry *searchEntry(
         const char *name, const Entry *table, const Entry *end);

@@ -465,8 +465,6 @@ Error AsmMc6809::encode(Insn &_insn) {
     insn.setName(_scan, endName);
     if (TableMc6809.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    if (insn.is6309() && !TableMc6809.is6309())
-        return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
@@ -477,18 +475,13 @@ Error AsmMc6809::encode(Insn &_insn) {
         return encodeStackOp(insn);
     case REGS:  return encodeRegisters(insn);
     case PSEUDO: return processPseudo(insn);
-    default:
-        if (TableMc6809.is6309()) {
-            switch (insn.addrMode()) {
-            case IMMDIR:
-            case IMMEXT:
-            case IMMIDX: return encodeImmediatePlus(insn);
-            case BITOP:  return encodeBitOperation(insn);
-            case TFRM:   return encodeTransferMemory(insn);
-            default:     break;
-            }
-        }
-        break;
+        // HD6309
+    case IMMDIR:
+    case IMMEXT:
+    case IMMIDX: return encodeImmediatePlus(insn);
+    case BITOP:  return encodeBitOperation(insn);
+    case TFRM:   return encodeTransferMemory(insn);
+    default:     break;
     }
 
     if (determineAddrMode(_scan, insn)) return getError();
