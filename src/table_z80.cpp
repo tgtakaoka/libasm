@@ -33,12 +33,8 @@ namespace z80 {
       TEXT_##_name                                              \
     },
 
-static constexpr Entry TABLE_00[] PROGMEM = {
+static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x00, NOP,  NO_FMT,  NO_OPR, NO_OPR, INHR)
-    E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHR)
-    E(0x10, DJNZ, NO_FMT,  IMM_16, NO_OPR, REL8)
-    E(0x20, JR,   CC4_FMT, COND_4, IMM_16, REL8)
-    E(0x18, JR,   NO_FMT,  IMM_16, NO_OPR, REL8)
     E(0x01, LD,   PTR_FMT, REG_16, IMM_16, IMM16)
     E(0x09, ADD,  PTR_FMT, HL_REG, REG_16, INHR)
     E(0x02, LD,   IDX_FMT, BC_PTR, A_REG,  INHR)
@@ -78,7 +74,6 @@ static constexpr Entry TABLE_00[] PROGMEM = {
     E(0xC0, RET,  DST_FMT, COND_8, NO_OPR, INHR)
     E(0xC1, POP,  PTR_FMT, STK_16, NO_OPR, INHR)
     E(0xC9, RET,  NO_FMT,  NO_OPR, NO_OPR, INHR)
-    E(0xD9, EXX,  NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0xF9, LD,   NO_FMT,  SP_REG, HL_REG, INHR)
     E(0xC2, JP,   DST_FMT, COND_8, IMM_16, DIRECT)
     E(0xC3, JP,   NO_FMT,  IMM_16, NO_OPR, DIRECT)
@@ -106,6 +101,13 @@ static constexpr Entry TABLE_00[] PROGMEM = {
     E(0xFE, CP,   NO_FMT,  IMM_8,  NO_OPR, IMM8)
     E(0xFE, CP,   NO_FMT,  A_REG,  IMM_8,  IMM8)
     E(0xC7, RST,  DST_FMT, VEC_NO, NO_OPR, INHR)
+};
+static constexpr Entry TABLE_Z80[] PROGMEM = {
+    E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHR)
+    E(0x10, DJNZ, NO_FMT,  IMM_16, NO_OPR, REL8)
+    E(0x20, JR,   CC4_FMT, COND_4, IMM_16, REL8)
+    E(0x18, JR,   NO_FMT,  IMM_16, NO_OPR, REL8)
+    E(0xD9, EXX,  NO_FMT,  NO_OPR, NO_OPR, INHR)
 };
 static constexpr Config::opcode_t PREFIX_00 = 0x00;
 
@@ -200,6 +202,7 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xE5, PUSH, NO_FMT,  IX_REG, NO_OPR, INHR)
 };
 
+#if 0
 static constexpr Config::opcode_t Z80_CODE[] PROGMEM = {
     0x08, // EX AF,AF'
     0x10, // DJNZ
@@ -224,6 +227,7 @@ static bool checkZ80Code(
     }
     return false;
 }
+#endif
 
 static const Entry *searchEntry(
     const char *name, const Entry *table, const Entry *end) {
@@ -291,19 +295,34 @@ static const Entry *searchEntry(
     return nullptr;
 }
 
-struct EntryPage {
+struct TableZ80::EntryPage {
     const Config::opcode_t prefix;
     const Entry *const table;
     const Entry *const end;
 };
 
-static Error searchName(
+static constexpr TableZ80::EntryPage PAGES_I8080[] PROGMEM = {
+    { PREFIX_00, ARRAY_RANGE(TABLE_I8080) },
+};
+static constexpr TableZ80:: EntryPage PAGES_Z80[] PROGMEM = {
+    { PREFIX_00, ARRAY_RANGE(TABLE_Z80) },
+    { PREFIX_00, ARRAY_RANGE(TABLE_I8080) },
+    { PREFIX_CB, ARRAY_RANGE(TABLE_CB) },
+    { PREFIX_ED, ARRAY_RANGE(TABLE_ED) },
+    { TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX) },
+    { TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX) },
+};
+
+Error TableZ80::searchName(
     InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
-        if ((entry = searchEntry(name, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        if ((entry = searchEntry(name, table, end)) != nullptr) {
+            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+            insn.setInsnCode(prefix, pgm_read_byte(&entry->opc));
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             return OK;
         }
@@ -311,14 +330,17 @@ static Error searchName(
     return UNKNOWN_INSTRUCTION;
 }
 
-static Error searchNameAndOprFormats(
+Error TableZ80::searchNameAndOprFormats(
     InsnZ80 &insn, OprFormat lop, OprFormat rop,
     const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry;
-        if ((entry = searchEntry(name, lop, rop, page->table, page->end)) != nullptr) {
-            insn.setInsnCode(page->prefix, pgm_read_byte(&entry->opc));
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        if ((entry = searchEntry(name, lop, rop, table, end)) != nullptr) {
+            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+            insn.setInsnCode(prefix, pgm_read_byte(&entry->opc));
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             return OK;
         }
@@ -326,11 +348,14 @@ static Error searchNameAndOprFormats(
     return UNKNOWN_INSTRUCTION;
 }
 
-static Error searchInsnCode(
+Error TableZ80::searchInsnCode(
     InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
-        if (insn.prefixCode() != page->prefix) continue;
-        const Entry *entry = searchEntry(insn.opCode(), page->table, page->end);
+        Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+        if (insn.prefixCode() != prefix) continue;
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = searchEntry(insn.opCode(), table, end);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
             char name[Config::NAME_MAX + 1];
@@ -342,48 +367,43 @@ static Error searchInsnCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-static const EntryPage PAGES_I8080[] = {
-    { PREFIX_00, ARRAY_RANGE(TABLE_00) },
-};
-static const EntryPage PAGES_Z80[] = {
-    { PREFIX_00, ARRAY_RANGE(TABLE_00) },
-    { PREFIX_CB, ARRAY_RANGE(TABLE_CB) },
-    { PREFIX_ED, ARRAY_RANGE(TABLE_ED) },
-    { TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX) },
-    { TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX) },
-};
-
 bool TableZ80::isPrefixCode(Config::opcode_t opCode) {
     return opCode == PREFIX_CB || opCode == PREFIX_ED
         || opCode == TableZ80::PREFIX_IX || opCode == TableZ80::PREFIX_IY;
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) const {
-    if (isZ80())
-        return libasm::z80::searchName(insn, ARRAY_RANGE(PAGES_Z80));
-    return libasm::z80::searchName(insn, ARRAY_RANGE(PAGES_I8080));
+    return isZ80()
+        ? searchName(insn, ARRAY_RANGE(PAGES_Z80))
+        : searchName(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 Error TableZ80::searchNameAndOprFormats(
-    InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const {
-    if (isZ80())
-        return libasm::z80::searchNameAndOprFormats(
-            insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_Z80));
-
-    if (libasm::z80::searchNameAndOprFormats(
-            insn, leftOpr, rightOpr, ARRAY_RANGE(PAGES_I8080)) == OK
-        && !checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
-        return OK;
-    return UNKNOWN_INSTRUCTION;
+    InsnZ80 &insn, OprFormat left, OprFormat right) const {
+    return isZ80()
+        ? searchNameAndOprFormats(insn, left, right, ARRAY_RANGE(PAGES_Z80))
+        : searchNameAndOprFormats(insn, left, right, ARRAY_RANGE(PAGES_I8080));
 }
 
 Error TableZ80::searchInsnCode(InsnZ80 &insn) const {
-    if (isZ80())
-        return libasm::z80::searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80));
+    return isZ80()
+        ? searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80))
+        : searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
+}
 
-    if (checkZ80Code(insn.opCode(), ARRAY_RANGE(Z80_CODE)))
-        return UNKNOWN_INSTRUCTION;
-    return libasm::z80::searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
+TableZ80::TableZ80() {
+    setCpu(Z80);
+}
+
+void TableZ80::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    if (cpuType == Z80) {
+        _table = ARRAY_BEGIN(PAGES_Z80);
+        _end = ARRAY_END(PAGES_Z80);
+    } else {
+        _table = ARRAY_BEGIN(PAGES_I8080);
+        _end = ARRAY_END(PAGES_I8080);
+    }
 }
 
 const char *TableZ80::listCpu() {
@@ -392,12 +412,12 @@ const char *TableZ80::listCpu() {
 
 bool TableZ80::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'Z' && strcmp(cpu + 1, "80") == 0) {
-        _cpuType = Z80;
+        setCpu(Z80);
         return true;
     }
     if (toupper(*cpu) == 'I') cpu++;
     if (strcmp(cpu, "8080") == 0) {
-        _cpuType = I8080;
+        setCpu(I8080);
         return true;
     }
     return false;

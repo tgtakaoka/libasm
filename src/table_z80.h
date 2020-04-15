@@ -25,6 +25,8 @@ namespace z80 {
 
 class TableZ80 {
 public:
+    TableZ80();
+
     Error searchName(InsnZ80 &insn) const;
     Error searchNameAndOprFormats(
         InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const;
@@ -39,8 +41,21 @@ public:
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
+    struct EntryPage;
 private:
     CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
+
+    void setCpu(CpuType cpuType);
+
+    static Error searchName(
+        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchNameAndOprFormats(
+        InsnZ80 &insn, OprFormat lop, OprFormat rop,
+        const EntryPage *pages, const EntryPage *end);
+    static Error searchInsnCode(
+        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableZ80 TableZ80;
