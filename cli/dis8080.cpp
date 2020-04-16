@@ -22,8 +22,8 @@ using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
     DisI8080 disassembler;
-    DisDriver driver;
-    if (driver.parseOption(argc, argv, disassembler))
+    DisDriver driver(disassembler);
+    if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.disassemble();
 }

@@ -22,8 +22,12 @@
 namespace libasm {
 namespace cli {
 
-AsmDriver::AsmDriver()
-    : _commonDir()
+AsmDriver::AsmDriver(AsmDirective &directive)
+    : _commonDir(directive)
+{}
+
+AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives)
+    : _commonDir(directives)
 {}
 
 AsmDriver::~AsmDriver() {
@@ -32,13 +36,19 @@ AsmDriver::~AsmDriver() {
 
 int AsmDriver::usage() const {
     const char *cpuSep = "\n                ";
-    std::string cpuList;
-    for (auto dir : *_directives) {
-        cpuList += cpuSep;
-        cpuList += dir->assembler().listCpu();
+    std::string cpuList(cpuSep + _commonDir.listCpu(cpuSep));
+    std::string cpuOption = "-C <cpu>";
+    AsmDirective *directive = _commonDir.defaultDirective();
+    if (directive) {
+        cpuList = ": ";
+        cpuList += directive->assembler().listCpu();
+        cpuOption = '[' + cpuOption + ']';
+    } else {
+        const char *cpuSep = "\n                ";
+        cpuList = cpuSep + _commonDir.listCpu(cpuSep);
     }
     fprintf(stderr,
-            "usage: %s -C <cpu> [-u] [-o <output>] [-l <list>] <input>\n"
+            "usage: %s %s [-u] [-o <output>] [-l <list>] <input>\n"
             " options:\n"
             "  -C          : CPU variant%s\n"
             "  -o <output> : output file\n"
@@ -48,22 +58,8 @@ int AsmDriver::usage() const {
             "              : optional <bytes> specifies data record length (max 32)\n"
             "  -u          : use uppercase letter for output\n"
             "  -n          : output line number to list file\n",
-            _progname, cpuList.c_str());
+            _progname, cpuOption.c_str(), cpuList.c_str());
     return 2;
-}
-
-int AsmDriver::parseOption(
-    int argc, const char **argv, AsmDirective &directive) {
-    std::vector<AsmDirective *> directives = { &directive };
-    return parseOption(argc, argv, directives);
-}
-
-int AsmDriver::parseOption(
-    int argc, const char **argv, std::vector<AsmDirective *> &directives) {
-    _directives = &directives;
-    _commonDir.setDirectives(directives);
-    _progname = basename(argv[0]);
-    return parseOption(argc, argv);
 }
 
 int AsmDriver::assemble() {
@@ -155,6 +151,7 @@ void AsmDriver::printListing(CliMemory &memory, FILE *out) {
 }
 
 int AsmDriver::parseOption(int argc, const char **argv) {
+    _progname = basename(argv[0]);
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
@@ -162,7 +159,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _formatter = nullptr;
     _uppercase = false;
     _line_number = false;
-    AsmDirective *directive = nullptr;
+    AsmDirective *directive = _commonDir.defaultDirective();
     char formatter = 0;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];

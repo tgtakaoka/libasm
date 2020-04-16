@@ -52,8 +52,8 @@ std::vector<AsmDirective *> directives = {
 };
 
 int main(int argc, const char **argv) {
-    AsmDriver driver;
-    if (driver.parseOption(argc, argv, directives))
+    AsmDriver driver(directives);
+    if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.assemble();
 }

@@ -23,40 +23,44 @@
 namespace libasm {
 namespace cli {
 
+DisDriver::DisDriver(Disassembler &disassembler) {
+    _disassemblers.push_back(&disassembler);
+}
+
+DisDriver::DisDriver(std::vector<Disassembler *> &disassemblers) {
+    _disassemblers.reserve(disassemblers.size());
+    _disassemblers.insert(
+        _disassemblers.end(), disassemblers.begin(), disassemblers.end());
+}
+
 DisDriver::~DisDriver() {
     if (_formatter) delete _formatter;
 }
 
 int DisDriver::usage() {
-    const char *cpuSep = "\n                ";
     std::string cpuList;
-    for (auto dis : *_disassemblers) {
-        cpuList += cpuSep;
-        cpuList += dis->listCpu();
+    std::string cpuOption = "-C <cpu>";
+    if (_disassemblers.size() == 1) {
+        cpuList = ": ";
+        cpuList += _disassembler->listCpu();
+        cpuOption = '[' + cpuOption + ']';
+    } else {
+        const char *cpuSep = "\n                ";
+        for (auto dis : _disassemblers) {
+            cpuList += cpuSep;
+            cpuList += dis->listCpu();
+        }
     }
     fprintf(stderr,
-            "usage: %s -C <cpu> [-u] [-o <output>] [-l <list>] <input>\n"
+            "usage: %s %s [-u] [-o <output>] [-l <list>] <input>\n"
             " options:\n"
             "  -C          : CPU variant%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  -u          : use uppercase letter for output\n"
             "  <input>     : file can be Motorola SREC or Intel HEX format\n",
-            _progname, cpuList.c_str());
+            _progname, cpuOption.c_str(), cpuList.c_str());
     return 2;
-}
-
-int DisDriver::parseOption(
-    int argc, const char **argv, Disassembler &disassembler) {
-    std::vector<Disassembler *> disassemblers = { &disassembler };
-    return parseOption(argc, argv, disassemblers);
-}
-
-int DisDriver::parseOption(
-    int argc, const char **argv, std::vector<Disassembler *> &disassemblers) {
-    _disassemblers = &disassemblers;
-    _progname = basename(argv[0]);
-    return parseOption(argc, argv);
 }
 
 int DisDriver::disassemble() {
@@ -177,11 +181,13 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
 }
     
 int DisDriver::parseOption(int argc, const char **argv) {
+    _progname = basename(argv[0]);
     _uppercase = false;
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
-    _disassembler = nullptr;
+    _disassembler =
+        (_disassemblers.size() == 1) ? _disassemblers.front() : nullptr;
     _formatter = nullptr;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
@@ -207,7 +213,7 @@ int DisDriver::parseOption(int argc, const char **argv) {
                     return 1;
                 }
                 Disassembler *disassembler = nullptr;
-                for (auto dis : *_disassemblers) {
+                for (auto dis : _disassemblers) {
                     if (dis->setCpu(argv[i])) {
                         disassembler = dis;
                         break;

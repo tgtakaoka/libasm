@@ -25,8 +25,8 @@ using namespace libasm::cli;
 int main(int argc, const char **argv) {
     AsmTms9900 assembler;
     AsmIntelDirective directive(assembler);
-    AsmDriver driver;
-    if (driver.parseOption(argc, argv, directive))
+    AsmDriver driver(directive);
+    if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.assemble();
 }

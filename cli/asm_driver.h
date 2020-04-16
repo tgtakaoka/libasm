@@ -28,18 +28,16 @@ namespace cli {
 
 class AsmDriver {
 public:
-    AsmDriver();
+    AsmDriver(AsmDirective &directive);
+    AsmDriver(std::vector<AsmDirective *> &directives);
     virtual ~AsmDriver();
 
     int usage() const;
-    int parseOption(int argc, const char **argv, AsmDirective &directive);
-    int parseOption(
-        int argc, const char **argv, std::vector<AsmDirective *> &directives);
+    int parseOption(int argc, const char **argv);
     int assemble();
 
 private:
     AsmCommonDirective _commonDir;
-    std::vector<AsmDirective *> *_directives;
     CliListing _listing;
     const char *_progname;
     const char *_input_name;
@@ -52,7 +50,6 @@ private:
 
     int assemble(CliMemory &memory, FILE *list);
     void printListing(CliMemory &memory, FILE *out);
-    int parseOption(int argc, const char **argv);
 
     static const char *basename(const char *str, char sep_char = '/');
 };

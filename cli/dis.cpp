@@ -43,8 +43,8 @@ std::vector<Disassembler *> disassemblers = {
 };
 
 int main(int argc, const char **argv) {
-    DisDriver driver;
-    if (driver.parseOption(argc, argv, disassemblers))
+    DisDriver driver(disassemblers);
+    if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.disassemble();
 }

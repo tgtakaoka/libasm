@@ -20,30 +20,43 @@
 namespace libasm {
 namespace cli {
 
-AsmCommonDirective::AsmCommonDirective()
-    : _line_len(128),
-      _line(static_cast<char *>(malloc(_line_len))),
-      _scan(nullptr),
-      _origin(0),
-      _reportUndef(true),
-      _reportDuplicate(true),
-      _labelWidth(16),
-      _operandWidth(16)
-{}
+AsmCommonDirective::AsmCommonDirective(AsmDirective &directive) {
+    _directives.push_back(&directive);
+    init();
+}
+
+AsmCommonDirective::AsmCommonDirective(
+    std::vector<AsmDirective *> &directives) {
+    _directives.reserve(directives.size());
+    _directives.insert(
+        _directives.begin(), directives.begin(), directives.end());
+    init();
+}
+
+void AsmCommonDirective::init() {
+    _directive = _directives.front();
+    _assembler = &_directive->assembler();
+    _parser = &_assembler->getParser();
+    _line_len = 128;
+    _line = static_cast<char *>(malloc(_line_len));
+    _scan = nullptr;
+    _origin = 0;
+    _reportUndef = true;
+    _reportDuplicate = true;
+    _labelWidth = 16;
+    _operandWidth = 16;
+}
 
 AsmCommonDirective::~AsmCommonDirective() {
     free(_line);
 }
 
-void AsmCommonDirective::setDirectives(std::vector<AsmDirective *> &directives) {
-    _directives = &directives;
-    _directive = _directives->front();
-    _assembler = &_directive->assembler();
-    _parser = &_assembler->getParser();
+AsmDirective *AsmCommonDirective::defaultDirective() const {
+    return _directives.size() == 1 ? _directives.front() : nullptr;
 }
 
 AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
-    for (auto dir : *_directives) {
+    for (auto dir : _directives) {
         if (dir->assembler().setCpu(cpu)) {
             _directive = dir;
             _assembler = &dir->assembler();
@@ -52,6 +65,15 @@ AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
         }
     }
     return nullptr;
+}
+
+std::string AsmCommonDirective::listCpu(const char *separator) const {
+    std::string cpuList;
+    for (auto dir : _directives) {
+        if (!cpuList.empty()) cpuList += separator;
+        cpuList += dir->assembler().listCpu();
+    }
+    return cpuList;
 }
 
 Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {

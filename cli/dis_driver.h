@@ -32,17 +32,17 @@ namespace cli {
 
 class DisDriver {
 public:
+    DisDriver(Disassembler &disassembler);
+    DisDriver(std::vector<Disassembler *> &disassemblers);
     virtual ~DisDriver();
 
     int usage();
-    int parseOption(int argc, const char **argv, Disassembler &disassembler);
-    int parseOption(
-        int argc, const char **argv, std::vector<Disassembler *> &disassemblers);
+    int parseOption(int argc, const char **argv);
     int disassemble();
 
 private:
     bool _uppercase;
-    std::vector<Disassembler *> *_disassemblers;
+    std::vector<Disassembler *> _disassemblers;
     Disassembler *_disassembler;
     const char *_progname;
     const char *_input_name;
@@ -52,7 +52,6 @@ private:
 
     int readInput(FILE *input, const char *filename, CliMemory &memory);
     BinFormatter *determineInputFormat(const char *input_name);
-    int parseOption(int argc, const char **argv);
     static const char *basename(const char *str, char sep_char = '/');
 };
 

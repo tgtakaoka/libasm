@@ -37,12 +37,13 @@ class AsmCommonDirective
       public ListingLine,
       protected SymbolTable {
 public:
-    AsmCommonDirective();
+    AsmCommonDirective(AsmDirective &directive);
+    AsmCommonDirective(std::vector<AsmDirective *> &directives);
     virtual ~AsmCommonDirective();
 
-    void setDirectives(std::vector<AsmDirective *> &directives);
-
+    AsmDirective *defaultDirective() const;
     AsmDirective *setCpu(const char *cpu);
+    std::string listCpu(const char *separator = ",") const;
 
     Error assembleLine(const char *line, CliMemory &memory);
 
@@ -62,7 +63,7 @@ public:
     Error defineSpaces();
 
 private:
-    std::vector<AsmDirective *> *_directives;
+    std::vector<AsmDirective *> _directives;
     AsmDirective *_directive;
     Assembler *_assembler;
     AsmOperand *_parser;
@@ -77,6 +78,8 @@ private:
     static constexpr int max_includes = 4;
     struct Source;
     std::vector<Source *> _sources;
+
+    void init();
 
     struct Listing {
         uint16_t line_number;
