@@ -40,6 +40,7 @@ public:
     AsmCommonDirective(std::vector<AsmDirective *> &directives);
     virtual ~AsmCommonDirective();
 
+    AsmDirective *restrictCpu(const char *cpu);
     AsmDirective *setCpu(const char *cpu);
     std::string listCpu(const char *separator = ",") const;
 

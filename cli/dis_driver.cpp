@@ -177,13 +177,16 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
     return nullptr;
 }
     
-Disassembler *DisDriver::defaultDisassembler() const {
+Disassembler *DisDriver::defaultDisassembler() {
     const size_t prefix_len = strlen(PROG_PREFIX);
     if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
         const char *cpu = _progname + prefix_len;
         for (auto dis : _disassemblers) {
-            if (dis->setCpu(cpu))
+            if (dis->setCpu(cpu)) {
+                _disassemblers.clear();
+                _disassemblers.push_back(dis);
                 return dis;
+            }
         }
     }
     return nullptr;

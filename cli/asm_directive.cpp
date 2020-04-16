@@ -42,6 +42,15 @@ AsmCommonDirective::~AsmCommonDirective() {
     free(_line);
 }
 
+AsmDirective *AsmCommonDirective::restrictCpu(const char *cpu) {
+    AsmDirective *dir = setCpu(cpu);
+    if (dir) {
+        _directives.clear();
+        _directives.push_back(dir);
+    }
+    return dir;
+}
+
 AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
     for (auto dir : _directives) {
         if (dir->assembler().setCpu(cpu)) {

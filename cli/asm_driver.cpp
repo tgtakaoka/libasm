@@ -151,7 +151,7 @@ AsmDirective *AsmDriver::defaultDirective() {
     AsmDirective *directive = nullptr;
     if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
         const char *cpu = _progname + prefix_len;
-        directive = _commonDir.setCpu(cpu);
+        directive = _commonDir.restrictCpu(cpu);
     }
     return directive;
 }
