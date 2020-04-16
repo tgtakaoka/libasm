@@ -28,11 +28,10 @@ namespace cli {
 
 class AsmDriver {
 public:
-    AsmDriver(AsmDirective &directive);
     AsmDriver(std::vector<AsmDirective *> &directives);
     virtual ~AsmDriver();
 
-    int usage() const;
+    int usage();
     int parseOption(int argc, const char **argv);
     int assemble();
 
@@ -48,6 +47,8 @@ private:
     bool _uppercase;
     bool _line_number;
 
+    static constexpr const char *PROG_PREFIX = "asm";
+    AsmDirective *defaultDirective();
     int assemble(CliMemory &memory, FILE *list);
     void printListing(CliMemory &memory, FILE *out);
 

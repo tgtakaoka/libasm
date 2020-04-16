@@ -20,20 +20,11 @@
 namespace libasm {
 namespace cli {
 
-AsmCommonDirective::AsmCommonDirective(AsmDirective &directive) {
-    _directives.push_back(&directive);
-    init();
-}
-
 AsmCommonDirective::AsmCommonDirective(
     std::vector<AsmDirective *> &directives) {
     _directives.reserve(directives.size());
     _directives.insert(
         _directives.begin(), directives.begin(), directives.end());
-    init();
-}
-
-void AsmCommonDirective::init() {
     _directive = _directives.front();
     _assembler = &_directive->assembler();
     _parser = &_assembler->getParser();
@@ -49,10 +40,6 @@ void AsmCommonDirective::init() {
 
 AsmCommonDirective::~AsmCommonDirective() {
     free(_line);
-}
-
-AsmDirective *AsmCommonDirective::defaultDirective() const {
-    return _directives.size() == 1 ? _directives.front() : nullptr;
 }
 
 AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {

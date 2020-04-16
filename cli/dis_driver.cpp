@@ -23,10 +23,6 @@
 namespace libasm {
 namespace cli {
 
-DisDriver::DisDriver(Disassembler &disassembler) {
-    _disassemblers.push_back(&disassembler);
-}
-
 DisDriver::DisDriver(std::vector<Disassembler *> &disassemblers) {
     _disassemblers.reserve(disassemblers.size());
     _disassemblers.insert(
@@ -40,9 +36,10 @@ DisDriver::~DisDriver() {
 int DisDriver::usage() {
     std::string cpuList;
     std::string cpuOption = "-C <cpu>";
-    if (_disassemblers.size() == 1) {
+    Disassembler *dis = defaultDisassembler();
+    if (dis) {
         cpuList = ": ";
-        cpuList += _disassembler->listCpu();
+        cpuList += dis->listCpu();
         cpuOption = '[' + cpuOption + ']';
     } else {
         const char *cpuSep = "\n                ";
@@ -180,14 +177,25 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
     return nullptr;
 }
     
+Disassembler *DisDriver::defaultDisassembler() const {
+    const size_t prefix_len = strlen(PROG_PREFIX);
+    if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
+        const char *cpu = _progname + prefix_len;
+        for (auto dis : _disassemblers) {
+            if (dis->setCpu(cpu))
+                return dis;
+        }
+    }
+    return nullptr;
+}
+
 int DisDriver::parseOption(int argc, const char **argv) {
     _progname = basename(argv[0]);
     _uppercase = false;
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
-    _disassembler =
-        (_disassemblers.size() == 1) ? _disassemblers.front() : nullptr;
+    _disassembler = defaultDisassembler();
     _formatter = nullptr;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];

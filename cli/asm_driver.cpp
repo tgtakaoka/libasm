@@ -22,10 +22,6 @@
 namespace libasm {
 namespace cli {
 
-AsmDriver::AsmDriver(AsmDirective &directive)
-    : _commonDir(directive)
-{}
-
 AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives)
     : _commonDir(directives)
 {}
@@ -34,11 +30,11 @@ AsmDriver::~AsmDriver() {
     if (_formatter) delete _formatter;
 }
 
-int AsmDriver::usage() const {
+int AsmDriver::usage() {
     const char *cpuSep = "\n                ";
     std::string cpuList(cpuSep + _commonDir.listCpu(cpuSep));
     std::string cpuOption = "-C <cpu>";
-    AsmDirective *directive = _commonDir.defaultDirective();
+    AsmDirective *directive = defaultDirective();
     if (directive) {
         cpuList = ": ";
         cpuList += directive->assembler().listCpu();
@@ -150,6 +146,16 @@ void AsmDriver::printListing(CliMemory &memory, FILE *out) {
     fflush(out);
 }
 
+AsmDirective *AsmDriver::defaultDirective() {
+    const size_t prefix_len = strlen(PROG_PREFIX);
+    AsmDirective *directive = nullptr;
+    if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
+        const char *cpu = _progname + prefix_len;
+        directive = _commonDir.setCpu(cpu);
+    }
+    return directive;
+}
+
 int AsmDriver::parseOption(int argc, const char **argv) {
     _progname = basename(argv[0]);
     _input_name = nullptr;
@@ -159,7 +165,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _formatter = nullptr;
     _uppercase = false;
     _line_number = false;
-    AsmDirective *directive = _commonDir.defaultDirective();
+    AsmDirective *directive = defaultDirective();
     char formatter = 0;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];

@@ -37,11 +37,9 @@ class AsmCommonDirective
       public ListingLine,
       protected SymbolTable {
 public:
-    AsmCommonDirective(AsmDirective &directive);
     AsmCommonDirective(std::vector<AsmDirective *> &directives);
     virtual ~AsmCommonDirective();
 
-    AsmDirective *defaultDirective() const;
     AsmDirective *setCpu(const char *cpu);
     std::string listCpu(const char *separator = ",") const;
 
@@ -78,8 +76,6 @@ private:
     static constexpr int max_includes = 4;
     struct Source;
     std::vector<Source *> _sources;
-
-    void init();
 
     struct Listing {
         uint16_t line_number;
