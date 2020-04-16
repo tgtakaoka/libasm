@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#include "asm_m6502.h"
+#include "asm_mos6502.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
 #include "bin_formatter.h"
 
-using namespace libasm::m6502;
+using namespace libasm::mos6502;
 using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
-    AsmM6502 assembler;
+    AsmMos6502 assembler;
     AsmMostekDirective directive(assembler);
     AsmDriver driver;
     if (driver.parseOption(argc, argv, directive))

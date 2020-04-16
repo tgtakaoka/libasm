@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "dis_m6502.h"
+#include "dis_mos6502.h"
 #include "dis_driver.h"
 
-using namespace libasm::m6502;
+using namespace libasm::mos6502;
 using namespace libasm::cli;
 
 int main(int argc, const char **argv) {
-    DisM6502 disassembler;
+    DisMos6502 disassembler;
     DisDriver driver;
     if (driver.parseOption(argc, argv, disassembler))
         return driver.usage();

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "dis_m6502.h"
-#include "table_m6502.h"
+#include "dis_mos6502.h"
+#include "table_mos6502.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
-Error DisM6502::decodeImmediate(
-    DisMemory& memory, InsnM6502 &insn) {
+Error DisMos6502::decodeImmediate(
+    DisMemory& memory, InsnMos6502 &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     *_operands++ = '#';
@@ -34,8 +34,8 @@ Error DisM6502::decodeImmediate(
     return setError(OK);
 }
 
-Error DisM6502::decodeAbsolute(
-    DisMemory& memory, InsnM6502 &insn) {
+Error DisMos6502::decodeAbsolute(
+    DisMemory& memory, InsnMos6502 &insn) {
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ABS_IDX_IDIR
         || addrMode == ABS_IDIR
@@ -91,8 +91,8 @@ Error DisM6502::decodeAbsolute(
     return setError(OK);
 }
 
-Error DisM6502::decodeZeroPage(
-    DisMemory &memory, InsnM6502 &insn) {
+Error DisMos6502::decodeZeroPage(
+    DisMemory &memory, InsnMos6502 &insn) {
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ZPG_IDX_IDIR
         || addrMode == ZPG_IDIR_IDY
@@ -149,8 +149,8 @@ Error DisM6502::decodeZeroPage(
     return setError(OK);
 }
 
-Error DisM6502::decodeRelative(
-    DisMemory &memory, InsnM6502 &insn) {
+Error DisMos6502::decodeRelative(
+    DisMemory &memory, InsnMos6502 &insn) {
     Config::uintptr_t addr;
     if (insn.addrMode() == REL_LONG) {
         uint16_t val;
@@ -171,8 +171,8 @@ Error DisM6502::decodeRelative(
     return setError(OK);
 }
 
-Error DisM6502::decodeBlockMove(
-    DisMemory &memory, InsnM6502 &insn) {
+Error DisMos6502::decodeBlockMove(
+    DisMemory &memory, InsnMos6502 &insn) {
     uint8_t srcpg, dstpg;
     if (insn.readByte(memory, srcpg)) return setError(NO_MEMORY);
     if (insn.readByte(memory, dstpg)) return setError(NO_MEMORY);
@@ -182,14 +182,14 @@ Error DisM6502::decodeBlockMove(
     return setError(OK);
 }
 
-Error DisM6502::decode(
+Error DisMos6502::decode(
     DisMemory &memory, Insn &_insn) {
-    InsnM6502 insn(_insn);
+    InsnMos6502 insn(_insn);
     Config::insn_t insnCode;
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
 
-    if (TableM6502.searchInsnCode(insn, _acceptIndirectLong))
+    if (TableMos6502.searchInsnCode(insn, _acceptIndirectLong))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -232,7 +232,7 @@ Error DisM6502::decode(
     }
 }
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
 // Local Variables:

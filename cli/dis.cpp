@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-#include "dis_m6502.h"
+#include "dis_driver.h"
+#include "dis_i8080.h"
 #include "dis_mc6800.h"
 #include "dis_mc6809.h"
-#include "dis_i8080.h"
-#include "dis_z80.h"
-#include "dis_tms9900.h"
 #include "dis_mc68000.h"
-#include "dis_driver.h"
+#include "dis_mos6502.h"
+#include "dis_tms9900.h"
+#include "dis_z80.h"
 
 #include <vector>
 
 using namespace libasm;
 using namespace libasm::cli;
 
-m6502::DisM6502     dis6502;
+mos6502::DisMos6502 dis6502;
 mc6800::DisMc6800   dis6800;
 mc6809::DisMc6809   dis6809;
 i8080::DisI8080     dis8080;

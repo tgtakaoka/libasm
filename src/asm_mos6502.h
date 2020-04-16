@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_M6502_H__
-#define __ASM_M6502_H__
+#ifndef __ASM_MOS6502_H__
+#define __ASM_MOS6502_H__
 
 #include "asm_base.h"
-#include "config_m6502.h"
-#include "insn_m6502.h"
-#include "reg_m6502.h"
-#include "table_m6502.h"
+#include "config_mos6502.h"
+#include "insn_mos6502.h"
+#include "reg_mos6502.h"
+#include "table_mos6502.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
-class AsmM6502
+class AsmMos6502
     : public Assembler,
       public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
 
     // Config
-    const char *listCpu() const override { return TableM6502::listCpu(); }
-    bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
+    const char *listCpu() const override { return TableMos6502::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
 
 private:
     AsmMotoOperand _parser;
-    RegM6502 _regs;
+    RegMos6502 _regs;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
@@ -49,18 +49,18 @@ private:
         char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
     Error parseOperand(Operand &op);
 
-    Error encodeLongRelative(InsnM6502 &insn);
-    Error encodeRelative(InsnM6502 &insn, bool emitInsn);
-    Error encodeZeroPageRelative(InsnM6502 &insn);
-    Error encodeBlockMove(InsnM6502 &insn);
+    Error encodeLongRelative(InsnMos6502 &insn);
+    Error encodeRelative(InsnMos6502 &insn, bool emitInsn);
+    Error encodeZeroPageRelative(InsnMos6502 &insn);
+    Error encodeBlockMove(InsnMos6502 &insn);
 
     Error encode(Insn &insn) override;
 };
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
-#endif // __ASM_M6502_H__
+#endif // __ASM_MOS6502_H__
 
 // Local Variables:
 // mode: c++

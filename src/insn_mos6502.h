@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_M6502_H__
-#define __INSN_M6502_H__
+#ifndef __INSN_MOS6502_H__
+#define __INSN_MOS6502_H__
 
-#include "config_m6502.h"
-#include "entry_m6502.h"
+#include "config_mos6502.h"
+#include "entry_mos6502.h"
 #include "insn_base.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
-class InsnM6502 : public InsnBase<Config> {
+class InsnMos6502 : public InsnBase<Config> {
 public:
-    InsnM6502(Insn &insn) : InsnBase(insn) {}
+    InsnMos6502(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool supported(CpuType cpuType) const {
         const CpuType insnType = Entry::_cpuType(_flags);
         if (host::uint_t(cpuType) < host::uint_t(insnType))
             return false;
-        if (cpuType == W65C816 && insnType == R65C02BIT)
+        if (cpuType == W65C816 && insnType == R65C02)
             return false;
         return true;
     }
@@ -59,10 +59,10 @@ private:
     host::uint_t _flags;
 };
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
-#endif // __INSN_M6502_H__
+#endif // __INSN_MOS6502_H__
 
 // Local Variables:
 // mode: c++

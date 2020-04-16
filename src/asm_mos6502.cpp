@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "asm_m6502.h"
-#include "table_m6502.h"
+#include "asm_mos6502.h"
+#include "table_mos6502.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
-Error AsmM6502::encodeLongRelative(InsnM6502 &insn) {
+Error AsmMos6502::encodeLongRelative(InsnMos6502 &insn) {
     uint32_t addr;
     if (getOperand(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
@@ -32,7 +32,7 @@ Error AsmM6502::encodeLongRelative(InsnM6502 &insn) {
     return checkLineEnd();
 }
 
-Error AsmM6502::encodeRelative(InsnM6502 &insn, bool emitInsn) {
+Error AsmMos6502::encodeRelative(InsnMos6502 &insn, bool emitInsn) {
     Config::uintptr_t addr;
     if (getOperand(addr)) return getError();
     if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
@@ -44,7 +44,7 @@ Error AsmM6502::encodeRelative(InsnM6502 &insn, bool emitInsn) {
     return checkLineEnd();
 }
 
-Error AsmM6502::encodeZeroPageRelative(InsnM6502 &insn) {
+Error AsmMos6502::encodeZeroPageRelative(InsnMos6502 &insn) {
     if (*_scan == '<') _scan++;
     uint8_t zp;
     if (getOperand(zp)) return getError();
@@ -57,7 +57,7 @@ Error AsmM6502::encodeZeroPageRelative(InsnM6502 &insn) {
     return setError(error ? error : getError());
 }
 
-Error AsmM6502::encodeBlockMove(InsnM6502 &insn) {
+Error AsmMos6502::encodeBlockMove(InsnMos6502 &insn) {
     uint8_t srcpg, dstpg;
     if (getOperand(srcpg)) return getError();
     Error error = getError();
@@ -71,7 +71,7 @@ Error AsmM6502::encodeBlockMove(InsnM6502 &insn) {
     return setError(error ? error : getError());
 };
 
-Error AsmM6502::selectMode(char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp) {
+Error AsmMos6502::selectMode(char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp) {
     if (modifier == '}' || op.val32 >= 0x10000) {
         if (labs == IMPL) return setError(OPERAND_NOT_ZP);
         op.mode = labs;
@@ -88,7 +88,7 @@ Error AsmM6502::selectMode(char modifier, Operand &op, AddrMode labs, AddrMode a
     return setError(OPERAND_NOT_ZP);
 }
 
-Error AsmM6502::parseOperand(Operand &op) {
+Error AsmMos6502::parseOperand(Operand &op) {
     op.resetError();
     const char *p = _scan;
     if (*p == '#') {            // #nn
@@ -122,7 +122,7 @@ Error AsmM6502::parseOperand(Operand &op) {
                     p++;
                     if (selectMode(modifier, op, IMPL, ABS_IDX_IDIR, ZPG_IDX_IDIR))
                         return getError();
-                    if (op.mode == ABS_IDX_IDIR && TableM6502.is6502())
+                    if (op.mode == ABS_IDX_IDIR && TableMos6502.is6502())
                         return setError(UNKNOWN_OPERAND);
                 } else if (indir == 0) {
                     if (selectMode(modifier, op, ABS_LONG_IDX, ABS_IDX, ZPG_IDX))
@@ -177,11 +177,11 @@ Error AsmM6502::parseOperand(Operand &op) {
     return setError(OK);
 }
 
-Error AsmM6502::encode(Insn &_insn) {
-    InsnM6502 insn(_insn);
+Error AsmMos6502::encode(Insn &_insn) {
+    InsnMos6502 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    if (TableM6502.searchName(insn))
+    if (TableMos6502.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
@@ -204,7 +204,7 @@ Error AsmM6502::encode(Insn &_insn) {
     Operand op;
     if (parseOperand(op)) return setError(op);
     insn.setAddrMode(op.mode);
-    if (TableM6502.searchNameAndAddrMode(insn))
+    if (TableMos6502.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
     switch (insn.addrMode()) {
     case ACCM:
@@ -247,7 +247,7 @@ Error AsmM6502::encode(Insn &_insn) {
     return checkLineEnd();
 }
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
 // Local Variables:

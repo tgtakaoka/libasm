@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#include "asm_m6502.h"
+#include "asm_mos6502.h"
 #include "test_asm_helper.h"
 
 using namespace libasm;
-using namespace libasm::m6502;
+using namespace libasm::mos6502;
 using namespace libasm::test;
 
 TestAsserter asserter;
 TestSymtab symtab;
-AsmM6502 as6502;
+AsmMos6502 as6502;
 Assembler &assembler(as6502);
 
 static void set_up() {

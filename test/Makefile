@@ -23,7 +23,7 @@ all: \
 	test_mc6800.s19 \
 	test_mc6801.s19 \
 	test_hd6301.s19 \
-	test_m6502.s19 \
+	test_mos6502.s19 \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
 	test_w65c02s.s19 \
@@ -47,7 +47,7 @@ all: \
 .PHONY: clean clean-obj test \
 	test_mc6809  \
 	test_mc6800  \
-	test_m6502   \
+	test_mos6502 \
 	test_i8080   \
 	test_z80     \
 	test_tms9900 \
@@ -56,7 +56,7 @@ all: \
 
 test:   test_mc6809  \
 	test_mc6800  \
-	test_m6502   \
+	test_mos6502 \
 	test_i8080   \
 	test_z80     \
 	test_tms9900 \
@@ -69,9 +69,9 @@ test_mc6809: test_asm_mc6809 test_dis_mc6809
 test_mc6800: test_asm_mc6800 test_dis_mc6800
 	./test_asm_mc6800
 	./test_dis_mc6800
-test_m6502: test_asm_m6502 test_dis_m6502
-	./test_asm_m6502
-	./test_dis_m6502
+test_mos6502: test_asm_mos6502 test_dis_mos6502
+	./test_asm_mos6502
+	./test_dis_mos6502
 test_i8080:  test_asm_i8080  test_dis_i8080
 	./test_asm_i8080
 	./test_dis_i8080
@@ -92,7 +92,7 @@ test_expr: test_expr_moto test_expr_intel test_expr_cstyle
 gen: \
 	gen_mc6809  \
 	gen_mc6800  \
-	gen_m6502   \
+	gen_mos6502 \
 	gen_i8080   \
 	gen_z80
 
@@ -102,7 +102,7 @@ CPPFLAGS    = -MMD
 TEST_OBJS= \
 	test_asm_mc6809.o  test_dis_mc6809.o  \
 	test_asm_mc6800.o  test_dis_mc6800.o  \
-	test_asm_m6502.o   test_dis_m6502.o   \
+	test_asm_mos6502.o test_dis_mos6502.o \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
 	test_asm_tms9900.o test_dis_tms9900.o \
@@ -111,7 +111,7 @@ TEST_OBJS= \
 	test_expr_cstyle.o \
 	gen_mc6809.o  \
 	gen_mc6800.o  \
-	gen_m6502.o   \
+	gen_mos6502.o \
 	gen_i8080.o   \
 	gen_z80.o
 
@@ -122,7 +122,7 @@ OBJS_dis = dis_base.o dis_operand.o test_asserter.o test_memory.o
 OBJS_gen = dis_base.o dis_operand.o test_memory.o text_buffer.o cli_listing.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
-OBJS_m6502   = table_m6502.o   reg_m6502.o
+OBJS_mos6502 = table_mos6502.o reg_mos6502.o
 OBJS_i8080   = table_i8080.o   reg_i8080.o
 OBJS_z80     = table_z80.o     reg_z80.o
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o
@@ -131,7 +131,7 @@ OBJS	 = \
 	$(TEST_OBJS) (OBJS_asm) $(OBJS_dis) $(OBJS_gen) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
 	$(OBJS_mc6800)  asm_mc6800.o  dis_mc6800.o  \
-	$(OBJS_m6502)   asm_m6502.o   dis_m6502.o   \
+	$(OBJS_mos6502) asm_mos6502.o dis_mos6502.o \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
@@ -139,25 +139,25 @@ OBJS	 = \
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
-test_asm_mc6809: test_asm_mc6809.o   asm_mc6809.o  $(OBJS_mc6809)  $(OBJS_asm)
+test_asm_mc6809:  test_asm_mc6809.o  asm_mc6809.o  $(OBJS_mc6809)  $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_mc6809: test_dis_mc6809.o   dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_dis)
+test_dis_mc6809:  test_dis_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_mc6800: test_asm_mc6800.o   asm_mc6800.o  $(OBJS_mc6800)  $(OBJS_asm)
+test_asm_mc6800:  test_asm_mc6800.o  asm_mc6800.o  $(OBJS_mc6800)  $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_mc6800: test_dis_mc6800.o   dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_dis)
+test_dis_mc6800:  test_dis_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_m6502:  test_asm_m6502.o    asm_m6502.o   $(OBJS_m6502)   $(OBJS_asm)
+test_asm_mos6502: test_asm_mos6502.o asm_mos6502.o $(OBJS_mos6502) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_m6502:  test_dis_m6502.o    dis_m6502.o   $(OBJS_m6502)   $(OBJS_dis)
+test_dis_mos6502: test_dis_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_i8080:  test_asm_i8080.o    asm_i8080.o   $(OBJS_i8080)   $(OBJS_asm)
+test_asm_i8080:   test_asm_i8080.o   asm_i8080.o   $(OBJS_i8080)   $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_i8080:  test_dis_i8080.o    dis_i8080.o   $(OBJS_i8080)   $(OBJS_dis)
+test_dis_i8080:   test_dis_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_z80:    test_asm_z80.o      asm_z80.o     $(OBJS_z80)     $(OBJS_asm)
+test_asm_z80:     test_asm_z80.o     asm_z80.o     $(OBJS_z80)     $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_z80:    test_dis_z80.o      dis_z80.o     $(OBJS_z80)     $(OBJS_dis)
+test_dis_z80:     test_dis_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_tms9900: test_asm_tms9900.o asm_tms9900.o $(OBJS_tms9900) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
@@ -167,11 +167,11 @@ test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_moto:  test_expr_moto.o  $(OBJS_asm)
+test_expr_moto:  test_expr_moto.o    $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_intel: test_expr_intel.o $(OBJS_asm)
+test_expr_intel:  test_expr_intel.o  $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_cstyle:test_expr_cstyle.o $(OBJS_asm)
+test_expr_cstyle: test_expr_cstyle.o $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
@@ -183,12 +183,12 @@ gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	./gen_mc6800 -u -C 6800  -o gen_mc6800.asm
 	./gen_mc6800 -u -C 6801  -o gen_mc6801.asm
 	./gen_mc6800 -u -C 6301  -o gen_hd6301.asm
-gen_m6502:   gen_m6502.o   dis_m6502.o   $(OBJS_m6502)   $(OBJS_gen)
+gen_mos6502: gen_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_m6502 -u -C 6502    -o gen_m6502.asm
-	./gen_m6502 -u -C 65sc02  -o gen_w65sc02.asm
-	./gen_m6502 -u -C 65c02   -o gen_r65c02.asm
-	./gen_m6502 -u -C w65c02s -o gen_w65c02s.asm
+	./gen_mos6502 -u -C 6502    -o gen_mos6502.asm
+	./gen_mos6502 -u -C 65sc02  -o gen_w65sc02.asm
+	./gen_mos6502 -u -C 65c02   -o gen_r65c02.asm
+	./gen_mos6502 -u -C w65c02s -o gen_w65c02s.asm
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_i8080 -u -C 8080 -o gen_i8080.asm

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#include "dis_m6502.h"
+#include "dis_mos6502.h"
 #include "test_dis_helper.h"
 
 using namespace libasm;
-using namespace libasm::m6502;
+using namespace libasm::mos6502;
 using namespace libasm::test;
 
 TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
-DisM6502 dis6502;
+DisMos6502 dis6502;
 Disassembler &disassembler(dis6502);
 
 static void set_up() {
@@ -658,7 +658,7 @@ static void test_no_idir_long() {
     TEST(JMPL, "(>sym1234)", 0xDC, 0x34, 0x12);
 }
 
-static void test_illegal_m6502() {
+static void test_illegal_mos6502() {
     disassembler.setCpu("6502");
 
     Insn insn;
@@ -737,7 +737,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_bitop);
     RUN_TEST(test_zpg_rel);
     RUN_TEST(test_no_idir_long);
-    RUN_TEST(test_illegal_m6502);
+    RUN_TEST(test_illegal_mos6502);
     RUN_TEST(test_illegal_w65sc02);
     return 0;
 }

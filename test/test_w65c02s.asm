@@ -14,7 +14,7 @@
 
         cpu     w65c02s
 
-        include "test_m6502.inc"
+        include "test_mos6502.inc"
 	org     $150
         include "test_w65sc02.inc"
 	org     $190

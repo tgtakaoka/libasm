@@ -14,33 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef __CONFIG_M6502_H__
-#define __CONFIG_M6502_H__
+#include "dis_mos6502.h"
+#include "gen_driver.h"
 
-#include "config_base.h"
+using namespace libasm::mos6502;
+using namespace libasm::test;
 
-namespace libasm {
-namespace m6502 {
+int main(int argc, const char **argv) {
+    DisMos6502 dis6502;
+    GenDriver<Config> driver(dis6502);
+    if (driver.main(argc, argv))
+        return 1;
 
-struct Config : ConfigImpl<
-    ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, 4, ENDIAN_LITTLE, uint8_t, uint8_t,
-    4>
-{};
+    TestGenerator<Config> generator(
+        dis6502,
+        driver.uppercase());
+    generator.generate(driver);
 
-enum CpuType : host::uint_t {
-    M6502,
-    W65SC02,
-    R65C02BIT,
-    R65C02,
-    W65C02S,
-    W65C816,
-};
-
-} // namespace m6502
-} // namespace libasm
-
-#endif // __CONFIG_M6502_H__
+    return driver.close();
+}
 
 // Local Variables:
 // mode: c++

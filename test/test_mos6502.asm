@@ -14,7 +14,7 @@
 
         cpu     6502
 
-        include "test_m6502.inc"
+        include "test_mos6502.inc"
 
         end
 

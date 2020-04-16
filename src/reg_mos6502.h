@@ -14,25 +14,34 @@
  * limitations under the License.
  */
 
-#include "dis_m6502.h"
-#include "gen_driver.h"
+#ifndef __REG_MOS6502_H__
+#define __REG_MOS6502_H__
 
-using namespace libasm::m6502;
-using namespace libasm::test;
+#include "reg_base.h"
 
-int main(int argc, const char **argv) {
-    DisM6502 dis6502;
-    GenDriver<Config> driver(dis6502);
-    if (driver.main(argc, argv))
-        return 1;
+namespace libasm {
+namespace mos6502 {
 
-    TestGenerator<Config> generator(
-        dis6502,
-        driver.uppercase());
-    generator.generate(driver);
+enum RegName : char {
+    REG_UNDEF = 0,
+    REG_A = 'A',
+    REG_X = 'X',
+    REG_Y = 'Y',
+    REG_S = 'S',
+};
 
-    return driver.close();
-}
+class RegMos6502 : public RegBase {
+public:
+    host::uint_t regNameLen(RegName regName) const;
+    bool compareRegName(const char *line, RegName regName) const;
+    RegName parseIndexReg(const char *line) const;
+    char *outRegName(char *out, const RegName regName) const;
+};
+
+} // namespace mos6502
+} // namespace libasm
+
+#endif // __REG_MOS6502_H__
 
 // Local Variables:
 // mode: c++

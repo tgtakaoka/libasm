@@ -14,49 +14,49 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_M6502_H__
-#define __DIS_M6502_H__
+#ifndef __DIS_MOS6502_H__
+#define __DIS_MOS6502_H__
 
-#include "config_m6502.h"
+#include "config_mos6502.h"
 #include "dis_base.h"
-#include "insn_m6502.h"
-#include "reg_m6502.h"
-#include "table_m6502.h"
+#include "insn_mos6502.h"
+#include "reg_mos6502.h"
+#include "table_mos6502.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
-class DisM6502
+class DisMos6502
     : public Disassembler,
       public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
 
     // Config
-    bool setCpu(const char *cpu) override { return TableM6502.setCpu(cpu); }
-    const char *listCpu() const override { return TableM6502::listCpu(); }
+    bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
+    const char *listCpu() const override { return TableMos6502::listCpu(); }
 
     void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
 
 private:
     DisMotoOperand _formatter;
-    RegM6502 _regs;
+    RegMos6502 _regs;
     bool _acceptIndirectLong = true;
 
     RegBase &getRegister() override { return _regs; }
 
-    Error decodeImmediate(DisMemory &memory, InsnM6502 &insn);
-    Error decodeAbsolute(DisMemory &memory, InsnM6502 &insn);
-    Error decodeZeroPage(DisMemory &memory, InsnM6502 &insn);
-    Error decodeRelative(DisMemory &memory, InsnM6502 &insn);
-    Error decodeBlockMove(DisMemory &memory, InsnM6502 &insn);
+    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn);
+    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn);
+    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn);
+    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn);
+    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
-#endif // __DIS_M6502_H__
+#endif // __DIS_MOS6502_H__
 
 // Local Variables:
 // mode: c++

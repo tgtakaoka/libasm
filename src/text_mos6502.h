@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_M6502_H__
-#define __TEXT_M6502_H__
+#ifndef __TEXT_MOS6502_H__
+#define __TEXT_MOS6502_H__
 
 #include "config_host.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
-// M6502 instructions
+// MOS6502 instructions
 
 extern const char TEXT_ADC[] PROGMEM = "ADC";
 extern const char TEXT_AND[] PROGMEM = "AND";
@@ -171,10 +171,10 @@ static const char TEXT_ORAL[] PROGMEM = "ORAL";
 static const char TEXT_SBCL[] PROGMEM = "SBCL";
 static const char TEXT_STAL[] PROGMEM = "STAL";
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
-#endif // __TEXT_M6502_H__
+#endif // __TEXT_MOS6502_H__
 
 // Local Variables:
 // mode: c++

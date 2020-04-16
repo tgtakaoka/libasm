@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_M6502_H__
-#define __ENTRY_M6502_H__
+#ifndef __ENTRY_MOS6502_H__
+#define __ENTRY_MOS6502_H__
 
-#include "config_m6502.h"
+#include "config_mos6502.h"
 
 namespace libasm {
-namespace m6502 {
+namespace mos6502 {
 
 enum AddrMode : host::uint_t {
-    // M6502
+    // MOS6502
     IMPL,                // Implied
     ACCM,                // Accumulator A
     IMM,                 // Immediate: #nn
@@ -77,10 +77,10 @@ private:
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
 
-} // namespace m6502
+} // namespace mos6502
 } // namespace libasm
 
-#endif // __ENTRY_M6502_H__
+#endif // __ENTRY_MOS6502_H__
 
 // Local Variables:
 // mode: c++
