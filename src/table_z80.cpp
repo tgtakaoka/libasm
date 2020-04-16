@@ -407,11 +407,11 @@ void TableZ80::setCpu(CpuType cpuType) {
 }
 
 const char *TableZ80::listCpu() {
-    return "z80, [i]8080";
+    return "Z80";
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    if (toupper(*cpu) == 'Z' && strcmp(cpu + 1, "80") == 0) {
+    if (strcasecmp(cpu, "z80") == 0) {
         setCpu(Z80);
         return true;
     }

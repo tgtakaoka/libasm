@@ -37,9 +37,13 @@ static void tear_down() {
 
 static void test_cpu() {
     asserter.equals(
+        "cpu 6809", true, assembler.setCpu("6809"));
+    asserter.equals(
         "cpu 6309", true, assembler.setCpu("6309"));
     asserter.equals(
-        "cpu 6809", true, assembler.setCpu("6809"));
+        "cpu mc6809", true, assembler.setCpu("mc6809"));
+    asserter.equals(
+        "cpu hd6309", true, assembler.setCpu("hd6309"));
 }
 
 static void test_inherent() {

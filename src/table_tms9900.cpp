@@ -167,7 +167,7 @@ Error TableTms9900::searchInsnCode(InsnTms9900 &insn) const {
 }
 
 const char *TableTms9900::listCpu() {
-    return "[tms]9900, [tms]9995";
+    return "TMS9900, TMS9995";
 }
 
 bool TableTms9900::setCpu(const char *cpu) {

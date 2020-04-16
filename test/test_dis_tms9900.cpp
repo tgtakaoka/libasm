@@ -43,7 +43,7 @@ static void test_cpu() {
     asserter.equals(
         "cpu TMS9900", true, disassembler.setCpu("TMS9900"));
     asserter.equals(
-        "cpu tms9995", true, disassembler.setCpu("tms9995"));
+        "cpu TMS9995", true, disassembler.setCpu("TMS9995"));
 }
 
 static void test_inh() {

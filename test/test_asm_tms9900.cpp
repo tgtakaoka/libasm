@@ -40,7 +40,7 @@ static void test_cpu() {
     asserter.equals(
         "cpu 9995", true, assembler.setCpu("9995"));
     asserter.equals(
-        "cpu TMS9900", true, assembler.setCpu("TMS9900"));
+        "cpu tms9900", true, assembler.setCpu("tms9900"));
     asserter.equals(
         "cpu tms9995", true, assembler.setCpu("tms9995"));
 }

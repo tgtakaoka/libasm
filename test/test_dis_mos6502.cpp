@@ -39,13 +39,25 @@ static void test_cpu() {
     asserter.equals(
         "cpu 6502", true, disassembler.setCpu("6502"));
     asserter.equals(
-        "cpu 65sc02", true, disassembler.setCpu("65sc02"));
+        "cpu MOS6502", true, disassembler.setCpu("MOS6502"));
+    asserter.equals(
+        "cpu 65SC02", true, disassembler.setCpu("65SC02"));
+    asserter.equals(
+        "cpu W65SC02", true, disassembler.setCpu("W65SC02"));
     asserter.equals(
         "cpu 65C02", true, disassembler.setCpu("65C02"));
     asserter.equals(
-        "cpu w65c02s", true, disassembler.setCpu("w65c02s"));
+        "cpu R65C02", true, disassembler.setCpu("R65C02"));
+    asserter.equals(
+        "cpu W65C02S", true, disassembler.setCpu("W65C02S"));
     asserter.equals(
         "cpu 65816", true, disassembler.setCpu("65816"));
+    asserter.equals(
+        "cpu W65816", true, disassembler.setCpu("W65816"));
+    asserter.equals(
+        "cpu W65C816", true, disassembler.setCpu("W65C816"));
+    asserter.equals(
+        "cpu W65C816S", true, disassembler.setCpu("W65C816S"));
 }
 
 static void test_impl() {

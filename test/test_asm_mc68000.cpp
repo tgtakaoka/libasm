@@ -37,7 +37,9 @@ static void test_cpu() {
     asserter.equals(
         "cpu 68000", true, assembler.setCpu("68000"));
     asserter.equals(
-        "cpu 68008", true, assembler.setCpu("68008"));
+        "cpu 68k", true, assembler.setCpu("68k"));
+    asserter.equals(
+        "cpu mc68000", true, assembler.setCpu("mc68000"));
 }
 
 static void test_inherent() {

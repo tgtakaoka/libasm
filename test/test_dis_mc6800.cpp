@@ -42,6 +42,12 @@ static void test_cpu() {
         "cpu 6801", true, disassembler.setCpu("6801"));
     asserter.equals(
         "cpu 6301", true, disassembler.setCpu("6301"));
+    asserter.equals(
+        "cpu MC6800", true, disassembler.setCpu("MC6800"));
+    asserter.equals(
+        "cpu MC6801", true, disassembler.setCpu("MC6801"));
+    asserter.equals(
+        "cpu HD6301", true, disassembler.setCpu("HD6301"));
 }
 
 static void test_inherent() {

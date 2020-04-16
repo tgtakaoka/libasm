@@ -444,27 +444,35 @@ Error TableMos6502::searchInsnCode(
 }
 
 const char *TableMos6502::listCpu() {
-    return "6502, 65sc02, 65c02, w65c02s, 65816";
+    return "6502, 65SC02, 65C02, W65C02S, 65816";
 }
 
 bool TableMos6502::setCpu(const char *cpu) {
-    if (strcmp(cpu, "6502") == 0) {
+    const char *p;
+    p = cpu + (strncasecmp(cpu, "MOS", 3) ? 0 : 3);
+    if (strcmp(p, "6502") == 0) {
         _cpuType = MOS6502;
         return true;
     }
-    if (strcasecmp(cpu, "65SC02") == 0) {
+    p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
+    if (strcasecmp(p, "65SC02") == 0) {
         _cpuType = W65SC02;
         return true;
     }
-    if (strcasecmp(cpu, "65C02") == 0) {
+    p = cpu + (toupper(*cpu) == 'R' ? 1 : 0);
+    if (strcasecmp(p, "65C02") == 0) {
         _cpuType = R65C02;
         return true;
     }
-    if (strcasecmp(cpu, "W65C02S") == 0) {
+    if (strncasecmp(cpu, "W65C02", 6) == 0
+        && (cpu[6] == 0 || toupper(cpu[6]) == 'S')) {
         _cpuType = W65C02S;
         return true;
     }
-    if (strcmp(cpu, "65816") == 0) {
+    p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
+    if (strcmp(p, "65816") == 0
+        || strcasecmp(p, "65C816") == 0
+        || strcasecmp(p, "65C816S") == 0) {
         _cpuType = W65C816;
         return true;
     }

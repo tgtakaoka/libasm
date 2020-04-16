@@ -428,15 +428,18 @@ const char *TableMc6800::listCpu() {
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
-    if (strcmp(cpu, "6800") == 0) {
+    const char *p;
+    p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
+    if (strcmp(p, "6800") == 0) {
         _cpuType = MC6800;
         return true;
     }
-    if (strcmp(cpu, "6801") == 0) {
+    if (strcmp(p, "6801") == 0) {
         _cpuType = MC6801;
         return true;
     }
-    if (strcmp(cpu, "6301") == 0) {
+    p = cpu + (strncasecmp(cpu, "HD", 2) ? 0 : 2);
+    if (strcmp(p, "6301") == 0) {
         _cpuType = HD6301;
         return true;
     }

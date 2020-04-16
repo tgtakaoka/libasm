@@ -164,7 +164,7 @@ Error TableI8080::searchInsnCode(InsnI8080 &insn) const {
 }
 
 const char *TableI8080::listCpu() {
-    return "[i]8080";
+    return "8080";
 }
 
 bool TableI8080::setCpu(const char *cpu) {

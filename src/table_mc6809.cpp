@@ -634,11 +634,14 @@ const char *TableMc6809::listCpu() {
 }
 
 bool TableMc6809::setCpu(const char *cpu) {
-    if (strcmp(cpu, "6809") == 0) {
+    const char *p;
+    p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
+    if (strcmp(p, "6809") == 0) {
         setCpu(MC6809);
         return true;
     }
-    if (strcmp(cpu, "6309") == 0) {
+    p = cpu + (strncasecmp(cpu, "HD", 2) ? 0 : 2);
+    if (strcmp(p, "6309") == 0) {
         setCpu(HD6309);
         return true;
     }

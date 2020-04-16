@@ -252,12 +252,14 @@ Error TableMc68000::searchInsnCode(InsnMc68000 &insn) const {
 }
 
 const char *TableMc68000::listCpu() {
-    return "68000, 68008";
+    return "68000";
 }
 
 bool TableMc68000::setCpu(const char *cpu) {
-    return strcmp(cpu, "68000") == 0
-        || strcmp(cpu, "68008") == 0;
+    const char *p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
+    return strcmp(p, "68000") == 0
+        || strcmp(p, "68008") == 0
+        || strcasecmp(p, "68k") == 0;
 }
 
 class TableMc68000 TableMc68000;
