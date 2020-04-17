@@ -29,18 +29,16 @@ public:
     InsnZ80(Insn &insn) : InsnBase(insn) {}
     InsnZ80(InsnZ80 &other) : InsnBase(other._insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags2); }
-    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags1); }
-    OprFormat leftFormat() const { return Entry::_oprFormat(_flags1); }
-    OprFormat rightFormat() const { return Entry::_oprFormat(_flags2); }
+    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
+    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
+    OprFormat leftFormat() const { return Entry::_leftFormat(_flags); }
+    OprFormat rightFormat() const { return Entry::_rightFormat(_flags); }
 
-    void setFlags(host::uint_t flags1, host::uint_t flags2) {
-        _flags1 = flags1;
-        _flags2 = flags2;
+    void setFlags(uint16_t flags) {
+        _flags = flags;
     }
     void setFlags(const InsnZ80 &other) {
-        _flags1 = other._flags1;
-        _flags2 = other._flags2;
+        _flags = other._flags;
     }
 
     Config::insn_t insnCode() const { return _insnCode; }
@@ -69,8 +67,7 @@ public:
 
 private:
     Config::insn_t _insnCode;
-    host::uint_t _flags1;
-    host::uint_t _flags2;
+    uint16_t _flags;
 };
 
 } // namespace z80

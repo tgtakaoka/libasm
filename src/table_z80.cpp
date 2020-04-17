@@ -28,8 +28,7 @@ namespace z80 {
 
 #define E(_opc, _name, _iformat, _leftOpr, _rightOpr, _amode)   \
     { _opc,                                                     \
-      Entry::_flags1(_leftOpr, _iformat),                       \
-      Entry::_flags2(_rightOpr, _amode),                        \
+      Entry::_flags(_iformat, _amode, _leftOpr, _rightOpr),     \
       TEXT_##_name                                              \
     },
 
@@ -265,8 +264,9 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end
              && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
-        const OprFormat lop = Entry::_oprFormat(pgm_read_byte(&entry->flags1));
-        const OprFormat rop = Entry::_oprFormat(pgm_read_byte(&entry->flags2));
+        const uint16_t flags = pgm_read_word(&entry->flags);
+        const OprFormat lop = Entry::_leftFormat(flags);
+        const OprFormat rop = Entry::_rightFormat(flags);
         if (acceptOprFormat(leftOpr, lop) && acceptOprFormat(rightOpr, rop))
             return entry;
     }
@@ -278,7 +278,7 @@ static const Entry *searchEntry(
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         Config::opcode_t opc = opcode;
-        const InsnFormat iformat = Entry::_insnFormat(pgm_read_byte(&entry->flags1));
+        const InsnFormat iformat = Entry::_insnFormat(pgm_read_word(&entry->flags));
         switch (iformat) {
         case PTR_FMT: opc &= ~0x30; break;
         case CC4_FMT: opc &= ~0x18; break;
@@ -323,7 +323,7 @@ Error TableZ80::searchName(
         if ((entry = searchEntry(name, table, end)) != nullptr) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setInsnCode(prefix, pgm_read_byte(&entry->opc));
-            insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
+            insn.setFlags(pgm_read_word(&entry->flags));
             return OK;
         }
     }
@@ -341,7 +341,7 @@ Error TableZ80::searchNameAndOprFormats(
         if ((entry = searchEntry(name, lop, rop, table, end)) != nullptr) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setInsnCode(prefix, pgm_read_byte(&entry->opc));
-            insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
+            insn.setFlags(pgm_read_word(&entry->flags));
             return OK;
         }
     }
@@ -357,7 +357,7 @@ Error TableZ80::searchInsnCode(
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = searchEntry(insn.opCode(), table, end);
         if (entry) {
-            insn.setFlags(pgm_read_byte(&entry->flags1), pgm_read_byte(&entry->flags2));
+            insn.setFlags(pgm_read_word(&entry->flags));
             char name[Config::NAME_MAX + 1];
             pgm_strncpy(name, entry->name, sizeof(name));
             insn.setName(name);
