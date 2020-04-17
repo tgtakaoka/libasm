@@ -28,13 +28,13 @@ class TableMos6502 : private TableBase {
 public:
     Error searchName(InsnMos6502 &insn) const;
     Error searchNameAndAddrMode(InsnMos6502 &insn) const;
-    Error searchInsnCode(InsnMos6502 &insn, bool acceptIndirectLong) const;
+    Error searchInsnCode(InsnMos6502 &insn) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
     bool is6502() const { return _cpuType == MOS6502; }
 
-private:
+protected:
     CpuType _cpuType;
 
     Error searchName(
@@ -42,8 +42,7 @@ private:
     Error searchNameAndAddrMode(
         InsnMos6502 &insn, const Entry *table, const Entry *end) const;
     Error searchInsnCode(
-        InsnMos6502 &insn, bool acceptIndirectLong,
-        const Entry *table, const Entry *end) const;
+        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
 };
 
 extern TableMos6502 TableMos6502;

@@ -43,6 +43,7 @@ enum AddrMode : host::uint_t {
     ZPG_IDIR,            // Zero Page Indirect: (zp)
     ZPG_REL,             // Zero Page Relative: zp,abs
 
+#if 0
     // W65C816
     ABS_LONG,            // Absolute Long: al
     ABS_LONG_IDX,        // Absolute Long Indexed: al,x
@@ -53,6 +54,7 @@ enum AddrMode : host::uint_t {
     ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
     ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
     BLOCK_MOVE,          // Block Move: #ss,#dd
+#endif
 };
 
 struct Entry {

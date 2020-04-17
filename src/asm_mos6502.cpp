@@ -20,18 +20,6 @@
 namespace libasm {
 namespace mos6502 {
 
-Error AsmMos6502::encodeLongRelative(InsnMos6502 &insn) {
-    uint32_t addr;
-    if (getOperand(addr)) return getError();
-    if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const uint32_t base = insn.address() + 3;
-    const int32_t delta = addr - base;
-    insn.emitInsn();
-    if (delta >= 32768L || delta < -32768L) return setError(OPERAND_TOO_FAR);
-    insn.emitUint16(static_cast<uint16_t>(delta));
-    return checkLineEnd();
-}
-
 Error AsmMos6502::encodeRelative(InsnMos6502 &insn, bool emitInsn) {
     Config::uintptr_t addr;
     if (getOperand(addr)) return getError();
@@ -57,31 +45,12 @@ Error AsmMos6502::encodeZeroPageRelative(InsnMos6502 &insn) {
     return setError(error ? error : getError());
 }
 
-Error AsmMos6502::encodeBlockMove(InsnMos6502 &insn) {
-    uint32_t src, dst;
-    if (getOperand(src)) return getError();
-    Error error = getError();
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan++;
-    if (getOperand(dst)) return getError();
-    if (getError()) error = getError();
-    insn.emitInsn();
-    insn.emitByte(static_cast<uint8_t>(dst >> 16));
-    insn.emitByte(static_cast<uint8_t>(src >> 16));
-    return setError(error ? error : getError());
-};
-
-Error AsmMos6502::selectMode(char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp) {
-    if (modifier == '}' || op.val32 >= 0x10000) {
-        if (labs == IMPL) return setError(OPERAND_NOT_ZP);
-        op.mode = labs;
-        return OK;
-    }
-    if (modifier == '>' || op.val32 >= 0x100) {
+Error AsmMos6502::selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp) {
+    if (modifier == '>' || op.val16 >= 0x100) {
         op.mode = abs;
         return OK;
     }
-    if (modifier == '<' || op.val32 < 0x100) {
+    if (modifier == '<' || op.val16 < 0x100) {
         op.mode = zp;
         return OK;
     }
@@ -98,19 +67,19 @@ Error AsmMos6502::parseOperand(Operand &op) {
         op.setError(getError());
         p = _scan;
         op.mode = IMM;
-        op.val32 = val8;
+        op.val16 = val8;
     } else if (_regs.compareRegName(p, REG_A)) { // A
         p += _regs.regNameLen(REG_A);
         op.mode = ACCM;
         op.setError(OK);
     } else {
-        const char indir = (*p == '(' || *p == '[') ? *p : 0;;
+        const char indir = (*p == '(') ? *p : 0;;
         if (indir) p = skipSpaces(p + 1);
         char modifier = *p;
         if (modifier == '<' || modifier == '>') p++;
         if (*p == '>') { modifier = '}'; p++; }
         _scan = p;
-        if (getOperand(op.val32)) return getError();
+        if (getOperand(op.val16)) return getError();
         op.setError(getError());
         p = skipSpaces(_scan);
         if (*p == ',') {
@@ -120,33 +89,19 @@ Error AsmMos6502::parseOperand(Operand &op) {
                 if (indir == '(') {
                     if (*p != ')') return setError(MISSING_CLOSING_PAREN);
                     p++;
-                    if (selectMode(modifier, op, IMPL, ABS_IDX_IDIR, ZPG_IDX_IDIR))
+                    if (selectMode(modifier, op, ABS_IDX_IDIR, ZPG_IDX_IDIR))
                         return getError();
                     if (op.mode == ABS_IDX_IDIR && TableMos6502.is6502())
                         return setError(UNKNOWN_OPERAND);
                 } else if (indir == 0) {
-                    if (selectMode(modifier, op, ABS_LONG_IDX, ABS_IDX, ZPG_IDX))
+                    if (selectMode(modifier, op, ABS_IDX, ZPG_IDX))
                         return getError();
                 } else return setError(UNKNOWN_OPERAND);
             } else if (_regs.compareRegName(p, REG_Y)) { // abs,Y zp,Y
                 if (indir) return setError(UNKNOWN_OPERAND);
                 p = skipSpaces(p + _regs.regNameLen(REG_Y));
-                if (selectMode(modifier, op, IMPL, ABS_IDY, ZPG_IDY))
+                if (selectMode(modifier, op, ABS_IDY, ZPG_IDY))
                     return getError();
-            } else if (_regs.compareRegName(p, REG_S)) { // off,S (off,S),Y
-                p = skipSpaces(p + _regs.regNameLen(REG_S));
-                if (indir == 0) {
-                    op.mode = SP_REL;
-                } else if (indir == '(') {
-                    if (*p != ')') return setError(MISSING_CLOSING_PAREN);
-                    p = skipSpaces(p + 1);
-                    if (*p != ',') return setError(UNKNOWN_OPERAND);
-                    p = skipSpaces(p + 1);
-                    if (_regs.compareRegName(p, REG_Y)) {
-                        p += _regs.regNameLen(REG_Y);
-                        op.mode = SP_REL_IDIR_IDY;
-                    } else return setError(UNKNOWN_OPERAND);
-                } else return setError(UNKNOWN_OPERAND);
             } else return setError(UNKNOWN_OPERAND);
         } else if (indir) {
             if ((indir == '(' && *p != ')') || (indir == '[' && *p != ']'))
@@ -154,22 +109,19 @@ Error AsmMos6502::parseOperand(Operand &op) {
             p = skipSpaces(p + 1);
             if (*p == ',') {
                 p = skipSpaces(p + 1);
-                if (_regs.compareRegName(p, REG_Y)) { // (zp),Y [zp],Y
+                if (_regs.compareRegName(p, REG_Y)) { // (zp),Y
                     p += _regs.regNameLen(REG_Y);
-                    if (modifier == '<' || op.val32< 0x100) {
-                        op.mode = indir == '('
-                            ? ZPG_IDIR_IDY : ZPG_IDIR_LONG_IDY;
+                    if (modifier == '<' || op.val16 < 0x100) {
+                        op.mode = ZPG_IDIR_IDY;
                     } else return setError(OPERAND_NOT_ZP);
                 } else return setError(UNKNOWN_OPERAND);
-            } else {            // (abs), (zp), [abs], [zp]
-                if (selectMode(modifier, op, IMPL,
-                               indir == '[' ? ABS_IDIR_LONG : ABS_IDIR,
-                               indir == '[' ? ZPG_IDIR_LONG : ZPG_IDIR))
+            } else {            // (abs), (zp)
+                if (selectMode(modifier, op, ABS_IDIR, ZPG_IDIR))
                     return getError();
             }
-        } else {                // al, abs, zp
+        } else {                // abs, zp
             if (indir) return setError(UNKNOWN_OPERAND);
-            if (selectMode(modifier, op, ABS_LONG, ABS, ZPG))
+            if (selectMode(modifier, op, ABS, ZPG))
                 return getError();
         }
     }
@@ -191,12 +143,8 @@ Error AsmMos6502::encode(Insn &_insn) {
         return checkLineEnd();
     case REL:
         return encodeRelative(insn, /* emitInsn */ true);
-    case REL_LONG:
-        return encodeLongRelative(insn);
     case ZPG_REL:
         return encodeZeroPageRelative(insn);
-    case BLOCK_MOVE:
-        return encodeBlockMove(insn);
     default:
         break;
     }
@@ -217,27 +165,16 @@ Error AsmMos6502::encode(Insn &_insn) {
     case ZPG_IDX_IDIR:
     case ZPG_IDIR_IDY:
     case ZPG_IDIR:
-    case SP_REL:
-    case SP_REL_IDIR_IDY:
-    case ZPG_IDIR_LONG:
-    case ZPG_IDIR_LONG_IDY:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op.val32));
+        insn.emitByte(static_cast<uint8_t>(op.val16));
         break;
     case ABS:
     case ABS_IDX:
     case ABS_IDY:
     case ABS_IDIR:
     case ABS_IDX_IDIR:
-    case ABS_IDIR_LONG:
         insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
-        break;
-    case ABS_LONG:
-    case ABS_LONG_IDX:
-        insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
-        insn.emitByte(static_cast<uint8_t>(op.val32 >> 16));
+        insn.emitUint16(static_cast<uint16_t>(op.val16));
         break;
     default:
         return setError(INTERNAL_ERROR);

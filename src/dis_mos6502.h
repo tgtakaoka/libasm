@@ -36,12 +36,9 @@ public:
     const char *listCpu() const override { return TableMos6502.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
 
-    void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
-
 private:
     DisMotoOperand _formatter;
     RegMos6502 _regs;
-    bool _acceptIndirectLong = true;
 
     RegBase &getRegister() override { return _regs; }
 
@@ -49,7 +46,6 @@ private:
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn);
     Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn);
     Error decodeRelative(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 

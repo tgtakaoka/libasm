@@ -33,8 +33,6 @@ public:
         const CpuType insnType = Entry::_cpuType(_flags);
         if (host::uint_t(cpuType) < host::uint_t(insnType))
             return false;
-        if (cpuType == W65C816 && insnType == R65C02)
-            return false;
         return true;
     }
 

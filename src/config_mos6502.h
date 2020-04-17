@@ -33,7 +33,6 @@ enum CpuType : host::uint_t {
     W65SC02,
     R65C02,
     W65C02S,
-    W65C816,
 };
 
 } // namespace mos6502
