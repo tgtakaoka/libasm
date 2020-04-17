@@ -24,28 +24,25 @@
 extern libasm::test::TestSymtab symtab;
 extern libasm::test::TestAsserter asserter;
 
-#define E8(expr, expected, expected_error) do {                     \
-        uint8_t val;                                                \
-        parser.eval(expr, val, &symtab);                            \
-        asserter.equals(expr, expected_error, parser.getError());   \
+#define __ASSERT(file, line, T, expr, value, expected_error)        \
+    do {                                                            \
+        char msg[80];                                               \
+        sprintf(msg, "%s:%d: %s", file, line, expr);                \
+        const T expected = value;                                   \
+        T actual;                                                   \
+        parser.eval(expr, actual, &symtab);                         \
+        asserter.equals(msg, expected_error, parser.getError());    \
         if (parser.getError() == OK)                                \
-            asserter.equals8(expr, expected, val);                  \
+            asserter.equals(msg,                                    \
+                            static_cast<uint32_t>(expected),        \
+                            static_cast<uint32_t>(actual));         \
     } while (false);
-#define E16(expr, expected, expected_error) do {                    \
-        uint16_t val;                                               \
-        parser.eval(expr, val, &symtab);                            \
-        asserter.equals(expr, expected_error, parser.getError());   \
-        if (parser.getError() == OK)                                \
-            asserter.equals16(expr, expected, val);                 \
-    } while (false);
-
-#define E32(expr, expected, expected_error) do {                    \
-        uint32_t val;                                               \
-        parser.eval(expr, val, &symtab);                            \
-        asserter.equals(expr, expected_error, parser.getError());   \
-        if (parser.getError() == OK)                                \
-            asserter.equals(expr, expected, val);                   \
-    } while (false);
+#define E8(expr, expected, expected_error)                              \
+    __ASSERT(__FILE__, __LINE__, uint8_t, expr, expected, expected_error)
+#define E16(expr, expected, expected_error)                             \
+    __ASSERT(__FILE__, __LINE__, uint16_t, expr, expected, expected_error)
+#define E32(expr, expected, expected_error)                             \
+    __ASSERT(__FILE__, __LINE__, uint32_t, expr, expected, expected_error)
 
 #define RUN_TEST(test) run_test(test, #test)
 
