@@ -13,13 +13,16 @@
 ;;; limitations under the License.
 
         cpu     65816
+        assume  m:1
+        assume  x:1
 
+        org     $100000
         include "test_mos6502.inc"
-	org     $150
+        org     $100150
         include "test_w65sc02.inc"
-        org     $188
+        org     $100188
         include "test_w65c02s.inc"
-        org     $190
+        org     $100190
         include "test_w65c816.inc"
 
         end

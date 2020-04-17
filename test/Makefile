@@ -27,7 +27,7 @@ all: \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
 	test_w65c02s.s19 \
-	test_w65c816.s19 \
+	test_w65c816.s28 \
 	test_i8080.hex \
 	test_z80.hex \
 	test_tms9900.hex \
@@ -38,6 +38,9 @@ all: \
 	asl $(ASL_FLAGS) $^
 	p2hex -r \$$-\$$ -l 32 -F Intel $*.p $@ > /dev/null
 %.s19: %.asm
+	asl $(ASL_FLAGS) $^
+	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+%.s28: %.asm
 	asl $(ASL_FLAGS) $^
 	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 %.s37: %.asm
