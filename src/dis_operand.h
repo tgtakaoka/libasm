@@ -25,30 +25,30 @@ class DisOperand {
 public:
     virtual char *output(
         char *p, uint32_t val, int8_t radix,
-        bool relax, int8_t size) const = 0;
+        bool relax, uint8_t bitWidth) const = 0;
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
 
 protected:
     bool _uppercase;
 
     char *outputNumber(
-        char *p, uint32_t val, int8_t radix, int8_t size) const;
+        char *p, uint32_t val, int8_t radix, int8_t bitWidth) const;
     char *outputRelaxed(
-        char *p, uint32_t val, int8_t radix, int8_t size) const;
+        char *p, uint32_t val, int8_t radix, uint8_t bitWidth) const;
 };
 
 class DisMotoOperand : public DisOperand {
 public:
     char *output(
         char *p, uint32_t val, int8_t radix,
-        bool relax, int8_t size) const override;
+        bool relax, uint8_t bitWidth) const override;
 };
 
 class DisIntelOperand : public DisOperand {
 public:
     char *output(
         char *p, uint32_t val, int8_t radix,
-        bool relax, int8_t size) const override;
+        bool relax, uint8_t bitWidth) const override;
 };
 
 } // namespace libasm

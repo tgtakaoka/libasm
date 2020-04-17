@@ -80,7 +80,7 @@ Error DisMos6502::decodeAbsolute(
             *_operands++ = '>';
             *_operands++ = '>';
         }
-        outConstant(target, 16);
+        outConstant(target, 16, false, ADDRESS_24BIT);
     }
     if (index != REG_UNDEF) {
         *_operands++ = ',';

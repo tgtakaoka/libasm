@@ -22,9 +22,9 @@
 namespace libasm {
 
 enum AddressWidth : host::uint_t {
-    ADDRESS_16BIT,
-    ADDRESS_24BIT,
-    ADDRESS_32BIT,
+    ADDRESS_16BIT = 16,
+    ADDRESS_24BIT = 24,
+    ADDRESS_32BIT = 32,
 };
 
 enum OpCodeWidth : host::uint_t {
@@ -39,6 +39,7 @@ enum Endian : host::uint_t {
 
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
+    virtual int8_t addressBits() const = 0;
     virtual OpCodeWidth opCodeWidth() const = 0;
     virtual host::uint_t codeMax() const = 0;
     virtual Endian endian() const = 0;
@@ -70,6 +71,7 @@ struct ConfigImpl : virtual public ConfigBase {
     static constexpr host::uint_t NAME_MAX = NameMax;
 
     AddressWidth addressWidth() const override { return AddrWE; }
+    int8_t addressBits() const override { return int8_t(AddrWE); }
     OpCodeWidth opCodeWidth() const override { return CodeWE; }
     host::uint_t codeMax() const override { return CodeMax; }
     Endian endian() const override { return EndianE; }

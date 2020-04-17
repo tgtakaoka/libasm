@@ -95,7 +95,7 @@ Error DisMc68000::decodeEffectiveAddr(
         if (val16 & 0x8000) {
             const int16_t signed16 = static_cast<int16_t>(val16);
             const int32_t signed32 = static_cast<int32_t>(signed16);
-            outConstant(signed32, -16);
+            outConstant(signed32, -16, false, Config::addressBits());
         } else {
             outConstant(val16, 16);
         }
@@ -103,7 +103,7 @@ Error DisMc68000::decodeEffectiveAddr(
     if (mode == M_ABS_LONG) {
         uint32_t val32;
         if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
-        outConstant(val32, 16);
+        outConstant(val32, 16, false, Config::addressBits());
     }
     if (mode == M_INDX || mode == M_PC_INDX) {
         const RegName base = (mode == M_INDX) ? ea.reg : REG_PC;
@@ -113,7 +113,7 @@ Error DisMc68000::decodeEffectiveAddr(
         if (mode == M_PC_INDX) {
             const Config::uintptr_t addr =
                 insn.address() + 2 + static_cast<int8_t>(val8);
-            outConstant(addr, 16);
+            outConstant(addr, 16, false, Config::addressBits());
         } else {
             if (val8 & 0x80) {
                 const uint8_t disp8 = 0x100 - val8;
@@ -229,7 +229,7 @@ Error DisMc68000::decodeDataReg(
     if (label) {
         outText(label);
     } else {
-        outConstant(addr, 16);
+        outConstant(addr, 16, false, Config::addressBits());
     }
     return setError(OK);
 }
@@ -349,7 +349,7 @@ Error DisMc68000::decodeRelative(
     if (label) {
         outText(label);
     } else {
-        outConstant(addr, 16);
+        outConstant(addr, 16, false, Config::addressBits());
     }
     return setError(OK);
 }

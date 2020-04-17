@@ -61,10 +61,11 @@ protected:
     }
 
     template<typename T>
-    void outConstant(T val, int8_t radix = 16, bool relax = true) {
-        if (is_signed<T>::value) radix = -radix;
+    void outConstant(T val, uint8_t radix = 16, bool relax = true,
+                     uint8_t bitWidth = sizeof(T) * 8) {
+        const int8_t r = is_signed<T>::value ? -radix : radix;
         _operands = this->getFormatter().output(
-            _operands, val, radix, relax, static_cast<uint8_t>(sizeof(T)));
+            _operands, val, r, relax, bitWidth);
     }
 
 private:

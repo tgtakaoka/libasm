@@ -79,7 +79,7 @@ static void test_reg() {
 static void test_reg_imm() {
     TEST(LI,   "R0,0",      0x0200, 0x0000);
     TEST(AI,   "R1,10",     0x0221, 0x000A);
-    TEST(ANDI, "R8,0FFH",   0x0248, 0x00FF);
+    TEST(ANDI, "R8,00FFH",   0x0248, 0x00FF);
     TEST(ORI,  "R14,0FF00H", 0x026E, 0xFF00);
     TEST(CI,   "R15,0FFFFH", 0x028F, 0xFFFF);
 
