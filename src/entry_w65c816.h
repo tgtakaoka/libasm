@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_MOS6502_H__
-#define __ENTRY_MOS6502_H__
+#ifndef __ENTRY_W65C816_H__
+#define __ENTRY_W65C816_H__
 
-#include "config_mos6502.h"
+#include "config_w65c816.h"
+#include "entry_mos6502.h"
 
 namespace libasm {
-namespace mos6502 {
+namespace w65c816 {
 
 enum AddrMode : host::uint_t {
     // MOS6502
-    IMPL,                // Implied
-    ACCM,                // Accumulator A
-    IMM,                 // Immediate: #nn
-    ABS,                 // Absolute: abs
-    ZPG,                 // Zero Page: zp
-    ZPG_IDX,             // Zero Page Indexed: zp,X
-    ZPG_IDY,             // Zero Page Indexed: zp,Y
-    ABS_IDX,             // Absolute Indexed: abs,X
-    ABS_IDY,             // Absolute Indexed: abs,Y
-    REL,                 // Relative: abs
-    ZPG_IDX_IDIR,        // Indexed Indirect: (zp,X)
-    ZPG_IDIR_IDY,        // Indirect Indexed: (zp),Y
-    ABS_IDIR,            // Absolute Indirect: (abs)
+    IMPL         = mos6502::AddrMode::IMPL,
+    ACCM         = mos6502::AddrMode::ACCM,
+    IMM          = mos6502::AddrMode::IMM,
+    ABS          = mos6502::AddrMode::ABS,
+    ZPG          = mos6502::AddrMode::ZPG,
+    ZPG_IDX      = mos6502::AddrMode::ZPG_IDX,
+    ZPG_IDY      = mos6502::AddrMode::ZPG_IDY,
+    ABS_IDX      = mos6502::AddrMode::ABS_IDX,
+    ABS_IDY      = mos6502::AddrMode::ABS_IDY,
+    REL          = mos6502::AddrMode::REL,
+    ZPG_IDX_IDIR = mos6502::AddrMode::ZPG_IDX_IDIR,
+    ZPG_IDIR_IDY = mos6502::AddrMode::ZPG_IDIR_IDY,
+    ABS_IDIR     = mos6502::AddrMode::ABS_IDIR,
 
     // W65SC02
-    ABS_IDX_IDIR,        // Indexed Absolute Indirect: (abs,X)
-    ZPG_IDIR,            // Zero Page Indirect: (zp)
-    ZPG_REL,             // Zero Page Relative: zp,abs
+    ABS_IDX_IDIR = mos6502::AddrMode::ABS_IDX_IDIR,
+    ZPG_IDIR     = mos6502::AddrMode::ZPG_IDIR,
+    ZPG_REL      = mos6502::AddrMode::ZPG_REL,
 
-#if 0
     // W65C816
     ABS_LONG,            // Absolute Long: al
     ABS_LONG_IDX,        // Absolute Long Indexed: al,x
@@ -54,7 +54,6 @@ enum AddrMode : host::uint_t {
     ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
     ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
     BLOCK_MOVE,          // Block Move: #ss,#dd
-#endif
 };
 
 struct Entry {
@@ -79,10 +78,10 @@ private:
     static constexpr host::uint_t addrMode_gm = 0x1f;
 };
 
-} // namespace mos6502
+} // namespace w65c816
 } // namespace libasm
 
-#endif // __ENTRY_MOS6502_H__
+#endif // __ENTRY_W65C816_H__
 
 // Local Variables:
 // mode: c++

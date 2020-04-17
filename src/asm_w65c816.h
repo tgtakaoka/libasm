@@ -14,51 +14,53 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_MOS6502_H__
-#define __ASM_MOS6502_H__
+#ifndef __ASM_W65C816_H__
+#define __ASM_W65C816_H__
 
 #include "asm_base.h"
-#include "config_mos6502.h"
-#include "insn_mos6502.h"
+#include "config_w65c816.h"
+#include "insn_w65c816.h"
 #include "reg_mos6502.h"
-#include "table_mos6502.h"
+#include "table_w65c816.h"
 
 namespace libasm {
-namespace mos6502 {
+namespace w65c816 {
 
-class AsmMos6502
+class AsmW65C816
     : public Assembler,
       public Config {
 public:
     AsmOperand &getParser() override { return _parser; }
 
     // Config
-    const char *listCpu() const override { return TableMos6502.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
+    const char *listCpu() const override { return TableW65C816.listCpu(); }
+    bool setCpu(const char *cpu) override { return TableW65C816.setCpu(cpu); }
 
 private:
     AsmMotoOperand _parser;
-    RegMos6502 _regs;
+    mos6502::RegMos6502 _regs;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        uint16_t val16;
+        uint32_t val32;
     };
 
     Error selectMode(
-        char modifier, Operand &op, /* AddrMode labs,*/ AddrMode abs, AddrMode zp);
+        char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
     Error parseOperand(Operand &op);
 
-    Error encodeRelative(InsnMos6502 &insn, bool emitInsn);
-    Error encodeZeroPageRelative(InsnMos6502 &insn);
+    Error encodeLongRelative(InsnW65C816 &insn);
+    Error encodeRelative(InsnW65C816 &insn, bool emitInsn);
+    Error encodeZeroPageRelative(InsnW65C816 &insn);
+    Error encodeBlockMove(InsnW65C816 &insn);
 
     Error encode(Insn &insn) override;
 };
 
-} // namespace mos6502
+} // namespace w65c816
 } // namespace libasm
 
-#endif // __ASM_MOS6502_H__
+#endif // __ASM_W65C816_H__
 
 // Local Variables:
 // mode: c++

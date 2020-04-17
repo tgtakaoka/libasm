@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_MOS6502_H__
-#define __INSN_MOS6502_H__
+#ifndef __INSN_W65C816_H__
+#define __INSN_W65C816_H__
 
-#include "config_mos6502.h"
-#include "entry_mos6502.h"
+#include "config_w65c816.h"
+#include "entry_w65c816.h"
 #include "insn_base.h"
 
 namespace libasm {
-namespace mos6502 {
+namespace w65c816 {
 
-class InsnMos6502 : public InsnBase<Config> {
+class InsnW65C816 : public InsnBase<Config> {
 public:
-    InsnMos6502(Insn &insn) : InsnBase(insn) {}
+    InsnW65C816(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    bool supported(CpuType cpuType) const {
-        const CpuType insnType = Entry::_cpuType(_flags);
-        if (host::uint_t(cpuType) < host::uint_t(insnType))
-            return false;
-        return true;
+    AddrMode addrMode() const {
+        return AddrMode(Entry::_addrMode(_flags));
     }
 
     host::uint_t flags() const { return _flags; }
@@ -58,10 +54,10 @@ private:
     host::uint_t _flags;
 };
 
-} // namespace mos6502
+} // namespace w65c816
 } // namespace libasm
 
-#endif // __INSN_MOS6502_H__
+#endif // __INSN_W65C816_H__
 
 // Local Variables:
 // mode: c++

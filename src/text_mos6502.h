@@ -24,13 +24,13 @@ namespace mos6502 {
 
 // MOS6502 instructions
 
-extern const char TEXT_ADC[] PROGMEM = "ADC";
-extern const char TEXT_AND[] PROGMEM = "AND";
+static const char TEXT_ADC[] PROGMEM = "ADC";
+static const char TEXT_AND[] PROGMEM = "AND";
 static const char TEXT_ASL[] PROGMEM = "ASL";
 static const char TEXT_BCC[] PROGMEM = "BCC";
 static const char TEXT_BCS[] PROGMEM = "BCS";
 static const char TEXT_BEQ[] PROGMEM = "BEQ";
-extern const char TEXT_BIT[] PROGMEM = "BIT";
+static const char TEXT_BIT[] PROGMEM = "BIT";
 static const char TEXT_BMI[] PROGMEM = "BMI";
 static const char TEXT_BNE[] PROGMEM = "BNE";
 static const char TEXT_BPL[] PROGMEM = "BPL";
@@ -41,24 +41,24 @@ static const char TEXT_CLC[] PROGMEM = "CLC";
 static const char TEXT_CLD[] PROGMEM = "CLD";
 static const char TEXT_CLI[] PROGMEM = "CLI";
 static const char TEXT_CLV[] PROGMEM = "CLV";
-extern const char TEXT_CMP[] PROGMEM = "CMP";
+static const char TEXT_CMP[] PROGMEM = "CMP";
 static const char TEXT_CPX[] PROGMEM = "CPX";
 static const char TEXT_CPY[] PROGMEM = "CPY";
-extern const char TEXT_DEC[] PROGMEM = "DEC";
+static const char TEXT_DEC[] PROGMEM = "DEC";
 static const char TEXT_DEX[] PROGMEM = "DEX";
 static const char TEXT_DEY[] PROGMEM = "DEY";
-extern const char TEXT_EOR[] PROGMEM = "EOR";
-extern const char TEXT_INC[] PROGMEM = "INC";
+static const char TEXT_EOR[] PROGMEM = "EOR";
+static const char TEXT_INC[] PROGMEM = "INC";
 static const char TEXT_INX[] PROGMEM = "INX";
 static const char TEXT_INY[] PROGMEM = "INY";
-extern const char TEXT_JMP[] PROGMEM = "JMP";
+static const char TEXT_JMP[] PROGMEM = "JMP";
 static const char TEXT_JSR[] PROGMEM = "JSR";
-extern const char TEXT_LDA[] PROGMEM = "LDA";
+static const char TEXT_LDA[] PROGMEM = "LDA";
 static const char TEXT_LDX[] PROGMEM = "LDX";
 static const char TEXT_LDY[] PROGMEM = "LDY";
 static const char TEXT_LSR[] PROGMEM = "LSR";
 static const char TEXT_NOP[] PROGMEM = "NOP";
-extern const char TEXT_ORA[] PROGMEM = "ORA";
+static const char TEXT_ORA[] PROGMEM = "ORA";
 static const char TEXT_PHA[] PROGMEM = "PHA";
 static const char TEXT_PHP[] PROGMEM = "PHP";
 static const char TEXT_PLA[] PROGMEM = "PLA";
@@ -67,11 +67,11 @@ static const char TEXT_ROL[] PROGMEM = "ROL";
 static const char TEXT_ROR[] PROGMEM = "ROR";
 static const char TEXT_RTI[] PROGMEM = "RTI";
 static const char TEXT_RTS[] PROGMEM = "RTS";
-extern const char TEXT_SBC[] PROGMEM = "SBC";
-extern const char TEXT_SEC[] PROGMEM = "SEC";
+static const char TEXT_SBC[] PROGMEM = "SBC";
+static const char TEXT_SEC[] PROGMEM = "SEC";
 static const char TEXT_SED[] PROGMEM = "SED";
 static const char TEXT_SEI[] PROGMEM = "SEI";
-extern const char TEXT_STA[] PROGMEM = "STA";
+static const char TEXT_STA[] PROGMEM = "STA";
 static const char TEXT_STX[] PROGMEM = "STX";
 static const char TEXT_STY[] PROGMEM = "STY";
 static const char TEXT_TAX[] PROGMEM = "TAX";
@@ -131,45 +131,6 @@ static const char TEXT_SMB7[] PROGMEM = "SMB7";
 
 static const char TEXT_STP[] PROGMEM  = "STP";
 static const char TEXT_WAI[] PROGMEM  = "WAI";
-
-// W65C816 instructions
-static const char TEXT_BRL[] PROGMEM  = "BRL";
-static const char TEXT_COP[] PROGMEM  = "COP";
-static const char TEXT_JML[] PROGMEM  = "JML";
-static const char TEXT_JSL[] PROGMEM  = "JSL";
-static const char TEXT_MVN[] PROGMEM  = "MVN";
-static const char TEXT_MVP[] PROGMEM  = "MVP";
-static const char TEXT_PEA[] PROGMEM  = "PEA";
-static const char TEXT_PEI[] PROGMEM  = "PEI";
-static const char TEXT_PER[] PROGMEM  = "PER";
-static const char TEXT_PHB[] PROGMEM  = "PHB";
-static const char TEXT_PHD[] PROGMEM  = "PHD";
-static const char TEXT_PHK[] PROGMEM  = "PHK";
-static const char TEXT_PLB[] PROGMEM  = "PLB";
-static const char TEXT_PLD[] PROGMEM  = "PLD";
-static const char TEXT_PSD[] PROGMEM  = "PSD";
-static const char TEXT_REP[] PROGMEM  = "REP";
-static const char TEXT_RTL[] PROGMEM  = "RTL";
-static const char TEXT_SEP[] PROGMEM  = "SEP";
-static const char TEXT_TCD[] PROGMEM  = "TCD";
-static const char TEXT_TCS[] PROGMEM  = "TCS";
-static const char TEXT_TDC[] PROGMEM  = "TDC";
-static const char TEXT_TSC[] PROGMEM  = "TSC";
-static const char TEXT_TXY[] PROGMEM  = "TXY";
-static const char TEXT_TYX[] PROGMEM  = "TYX";
-static const char TEXT_WDM[] PROGMEM  = "WDM";
-static const char TEXT_XBA[] PROGMEM  = "XBA";
-static const char TEXT_XCE[] PROGMEM  = "XCE";
-
-static const char TEXT_JMPL[] PROGMEM = "JMPL";
-static const char TEXT_ADCL[] PROGMEM = "ADCL";
-static const char TEXT_ANDL[] PROGMEM = "ANDL";
-static const char TEXT_CMPL[] PROGMEM = "CMPL";
-static const char TEXT_EORL[] PROGMEM = "EORL";
-static const char TEXT_LDAL[] PROGMEM = "LDAL";
-static const char TEXT_ORAL[] PROGMEM = "ORAL";
-static const char TEXT_SBCL[] PROGMEM = "SBCL";
-static const char TEXT_STAL[] PROGMEM = "STAL";
 
 } // namespace mos6502
 } // namespace libasm

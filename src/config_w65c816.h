@@ -14,36 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef __REG_MOS6502_H__
-#define __REG_MOS6502_H__
+#ifndef __CONFIG_W65C816_H__
+#define __CONFIG_W65C816_H__
 
-#include "reg_base.h"
+#include "config_base.h"
+#include "config_mos6502.h"
 
 namespace libasm {
-namespace mos6502 {
+namespace w65c816 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_A = 'A',
-    REG_X = 'X',
-    REG_Y = 'Y',
-#if 0
-    REG_S = 'S',
-#endif
+struct Config : ConfigImpl<
+    ADDRESS_24BIT, uint32_t, int32_t,
+    OPCODE_8BIT, 4, ENDIAN_LITTLE, uint8_t, uint8_t,
+    4>
+{};
+
+enum CpuType : host::uint_t {
+    MOS6502 = mos6502::CpuType::MOS6502,
+    W65SC02 = mos6502::CpuType::W65SC02,
+    R65C02  = mos6502::CpuType::R65C02,
+    W65C02S = mos6502::CpuType::W65C02S,
+    W65C816,
 };
 
-class RegMos6502 : public RegBase {
-public:
-    host::uint_t regNameLen(RegName regName) const;
-    bool compareRegName(const char *line, RegName regName) const;
-    RegName parseIndexReg(const char *line) const;
-    char *outRegName(char *out, const RegName regName) const;
-};
-
-} // namespace mos6502
+} // namespace w65c816
 } // namespace libasm
 
-#endif // __REG_MOS6502_H__
+#endif // __CONFIG_W65816_H__
 
 // Local Variables:
 // mode: c++

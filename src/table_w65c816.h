@@ -14,43 +14,41 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_MOS6502_H__
-#define __TABLE_MOS6502_H__
+#ifndef __TABLE_W65C816_H__
+#define __TABLE_W65C816_H__
 
-#include "config_mos6502.h"
-#include "insn_mos6502.h"
+#include "config_w65c816.h"
+#include "insn_w65c816.h"
 #include "table_base.h"
 
 namespace libasm {
-namespace mos6502 {
+namespace w65c816 {
 
-class TableMos6502 : private TableBase {
+class TableW65C816 : private TableBase {
 public:
-    Error searchName(InsnMos6502 &insn) const;
-    Error searchNameAndAddrMode(InsnMos6502 &insn) const;
-    Error searchInsnCode(InsnMos6502 &insn) const;
+    Error searchName(InsnW65C816 &insn) const;
+    Error searchNameAndAddrMode(InsnW65C816 &insn) const;
+    Error searchInsnCode(InsnW65C816 &insn, bool acceptIndirectLong) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
-    bool is6502() const { return _cpuType == MOS6502; }
 
-protected:
-    CpuType _cpuType;
-
+private:
     Error searchName(
-        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
+        InsnW65C816 &insn, const Entry *table, const Entry *end) const;
     Error searchNameAndAddrMode(
-        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
+        InsnW65C816 &insn, const Entry *table, const Entry *end) const;
     Error searchInsnCode(
-        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
+        InsnW65C816 &insn, bool acceptIndirectLong,
+        const Entry *table, const Entry *end) const;
 };
 
-extern TableMos6502 TableMos6502;
+extern TableW65C816 TableW65C816;
 
-} // namespace mos6502
+} // namespace w65c816
 } // namespace libasm
 
-#endif // __TABLE_MOS6502_H__
+#endif // __TABLE_W65C816_H__
 
 // Local Variables:
 // mode: c++

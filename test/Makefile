@@ -51,6 +51,7 @@ all: \
 	test_mc6809  \
 	test_mc6800  \
 	test_mos6502 \
+	test_w65c816 \
 	test_i8080   \
 	test_z80     \
 	test_tms9900 \
@@ -60,6 +61,7 @@ all: \
 test:   test_mc6809  \
 	test_mc6800  \
 	test_mos6502 \
+	test_w65c816 \
 	test_i8080   \
 	test_z80     \
 	test_tms9900 \
@@ -75,6 +77,9 @@ test_mc6800: test_asm_mc6800 test_dis_mc6800
 test_mos6502: test_asm_mos6502 test_dis_mos6502
 	./test_asm_mos6502
 	./test_dis_mos6502
+test_w65c816: test_asm_w65c816 test_dis_w65c816
+	./test_asm_w65c816
+	./test_dis_w65c816
 test_i8080:  test_asm_i8080  test_dis_i8080
 	./test_asm_i8080
 	./test_dis_i8080
@@ -106,6 +111,7 @@ TEST_OBJS= \
 	test_asm_mc6809.o  test_dis_mc6809.o  \
 	test_asm_mc6800.o  test_dis_mc6800.o  \
 	test_asm_mos6502.o test_dis_mos6502.o \
+	test_asm_w65c816.o test_dis_w65c816.o \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
 	test_asm_tms9900.o test_dis_tms9900.o \
@@ -126,6 +132,7 @@ OBJS_gen = dis_base.o dis_operand.o test_memory.o text_buffer.o cli_listing.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
 OBJS_mos6502 = table_mos6502.o reg_mos6502.o
+OBJS_w65c816 = table_w65c816.o reg_mos6502.o table_mos6502.o
 OBJS_i8080   = table_i8080.o   reg_i8080.o
 OBJS_z80     = table_z80.o     reg_z80.o
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o
@@ -135,6 +142,7 @@ OBJS	 = \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
 	$(OBJS_mc6800)  asm_mc6800.o  dis_mc6800.o  \
 	$(OBJS_mos6502) asm_mos6502.o dis_mos6502.o \
+	$(OBJS_w65c816) asm_w65c816.o dis_w65c816.o \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
@@ -153,6 +161,10 @@ test_dis_mc6800:  test_dis_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_dis)
 test_asm_mos6502: test_asm_mos6502.o asm_mos6502.o $(OBJS_mos6502) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mos6502: test_dis_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_dis)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_w65c816: test_asm_w65c816.o asm_w65c816.o $(OBJS_w65c816) $(OBJS_asm)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_dis_w65c816: test_dis_w65c816.o dis_w65c816.o $(OBJS_w65c816) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_i8080:   test_asm_i8080.o   asm_i8080.o   $(OBJS_i8080)   $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^

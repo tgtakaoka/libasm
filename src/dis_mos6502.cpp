@@ -38,16 +38,11 @@ Error DisMos6502::decodeAbsolute(
     DisMemory& memory, InsnMos6502 &insn) {
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ABS_IDX_IDIR
-        || addrMode == ABS_IDIR
-        || addrMode == ABS_IDIR_LONG;
-    const bool absLong =
-        (addrMode == ABS_LONG || addrMode == ABS_LONG_IDX);
-    const bool idirLong = addrMode == ABS_IDIR_LONG;
+        || addrMode == ABS_IDIR;
     RegName index;
     switch (addrMode) {
     case ABS_IDX:
     case ABS_IDX_IDIR:
-    case ABS_LONG_IDX:
         index = REG_X;
         break;
     case ABS_IDY:
@@ -61,32 +56,20 @@ Error DisMos6502::decodeAbsolute(
     uint32_t target;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     target = addr;
-    if (absLong) {
-        uint8_t bank;
-        if (insn.readByte(memory, bank)) return setError(NO_MEMORY);
-        target |= static_cast<uint32_t>(bank) << 16;
-    }
-    if (indirect) *_operands++ = idirLong ? '[' : '(';
+    if (indirect) *_operands++ = '(';
     const char *label = lookup(target);
     if (label) {
         *_operands++ = '>';
-        if (absLong) *_operands++ = '>';
         outText(label);
-    } else if (!absLong) {
+    } else {
         if (target < 0x100) *_operands++ = '>';
         outConstant(addr, 16, false);
-    } else {
-        if (target < 0x10000) {
-            *_operands++ = '>';
-            *_operands++ = '>';
-        }
-        outConstant(target, 16, false, ADDRESS_24BIT);
     }
     if (index != REG_UNDEF) {
         *_operands++ = ',';
         _operands = _regs.outRegName(_operands, index);
     }
-    if (indirect) *_operands++ = idirLong ? ']' : ')';
+    if (indirect) *_operands++ = ')';
     *_operands = 0;
     return setError(OK);
 }
@@ -96,12 +79,7 @@ Error DisMos6502::decodeZeroPage(
     const AddrMode addrMode = insn.addrMode();
     const bool indirect = addrMode == ZPG_IDX_IDIR
         || addrMode == ZPG_IDIR_IDY
-        || addrMode == ZPG_IDIR
-        || addrMode == SP_REL_IDIR_IDY
-        || addrMode == ZPG_IDIR_LONG
-        || addrMode == ZPG_IDIR_LONG_IDY;
-    const bool zpLong = addrMode == ZPG_IDIR_LONG
-        || addrMode == ZPG_IDIR_LONG_IDY;
+        || addrMode == ZPG_IDIR;
     RegName index;
     switch (addrMode) {
     case ZPG_IDX:
@@ -110,12 +88,7 @@ Error DisMos6502::decodeZeroPage(
         break;
     case ZPG_IDY:
     case ZPG_IDIR_IDY:
-    case ZPG_IDIR_LONG_IDY:
         index = REG_Y;
-        break;
-    case SP_REL:
-    case SP_REL_IDIR_IDY:
-        index = REG_S;
         break;
     default:
         index = REG_UNDEF;
@@ -123,7 +96,7 @@ Error DisMos6502::decodeZeroPage(
     }
     uint8_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
-    if (indirect) *_operands++ = zpLong ? '[' : '(';
+    if (indirect) *_operands++ = '(';
     const char *label = lookup(zp);
     if (label) {
         *_operands++ = '<';
@@ -131,16 +104,12 @@ Error DisMos6502::decodeZeroPage(
     } else {
         outConstant(zp, 16, false);
     }
-    if (indirect && index == REG_Y) *_operands++ = zpLong ? ']' : ')';
+    if (indirect && index == REG_Y) *_operands++ = ')';
     if (index != REG_UNDEF) {
         *_operands++ = ',';
         _operands = _regs.outRegName(_operands, index);
     }
-    if (indirect && index != REG_Y) *_operands++ = zpLong ? ']' : ')';
-    if (addrMode == SP_REL_IDIR_IDY) {
-        *_operands++ = ',';
-        _operands = _regs.outRegName(_operands, REG_Y);
-    }
+    if (indirect && index != REG_Y) *_operands++ = ')';
     *_operands = 0;
     if (addrMode == ZPG_REL) {
         *_operands++ = ',';
@@ -152,48 +121,15 @@ Error DisMos6502::decodeZeroPage(
 Error DisMos6502::decodeRelative(
     DisMemory &memory, InsnMos6502 &insn) {
     Config::uintptr_t addr;
-    if (insn.addrMode() == REL_LONG) {
-        uint16_t val;
-        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-        addr = insn.address() + 3 + static_cast<int16_t>(val);
-    } else {
-        uint8_t val;
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        addr = insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
-            + static_cast<int8_t>(val);
-    }
+    uint8_t val;
+    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
+    addr = insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
+        + static_cast<int8_t>(val);
     const char *label = lookup(addr);
     if (label) {
         outText(label);
     } else {
         outConstant(addr, 16, false);
-    }
-    return setError(OK);
-}
-
-Error DisMos6502::decodeBlockMove(
-    DisMemory &memory, InsnMos6502 &insn) {
-    uint8_t sbank, dbank;
-    if (insn.readByte(memory, dbank)) return setError(NO_MEMORY);
-    if (insn.readByte(memory, sbank)) return setError(NO_MEMORY);
-    const uint32_t src = static_cast<uint32_t>(sbank) << 16;
-    const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
-    const char *label = lookup(src);
-    if (label) {
-        *_operands++ = '>';
-        *_operands++ = '>';
-        outText(label);
-    } else {
-        outConstant(src, 16, false, ADDRESS_24BIT);
-    }
-    *_operands++ = ',';
-    label = lookup(dst);
-    if (label) {
-        *_operands++ = '>';
-        *_operands++ = '>';
-        outText(label);
-    } else {
-        outConstant(dst, 16, false, ADDRESS_24BIT);
     }
     return setError(OK);
 }
@@ -205,7 +141,7 @@ Error DisMos6502::decode(
     if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
     insn.setInsnCode(insnCode);
 
-    if (TableMos6502.searchInsnCode(insn, _acceptIndirectLong))
+    if (TableMos6502.searchInsnCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -222,9 +158,6 @@ Error DisMos6502::decode(
     case ABS_IDY:
     case ABS_IDIR:
     case ABS_IDX_IDIR:
-    case ABS_LONG:
-    case ABS_LONG_IDX:
-    case ABS_IDIR_LONG:
         return decodeAbsolute(memory, insn);
     case ZPG:
     case ZPG_IDX:
@@ -233,16 +166,9 @@ Error DisMos6502::decode(
     case ZPG_IDIR_IDY:
     case ZPG_IDIR:
     case ZPG_REL:
-    case SP_REL:
-    case SP_REL_IDIR_IDY:
-    case ZPG_IDIR_LONG:
-    case ZPG_IDIR_LONG_IDY:
         return decodeZeroPage(memory, insn);
     case REL:
-    case REL_LONG:
         return decodeRelative(memory, insn);
-    case BLOCK_MOVE:
-        return decodeBlockMove(memory, insn);
     default:
         return setError(INTERNAL_ERROR);
     }

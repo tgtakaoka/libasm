@@ -14,45 +14,49 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_MOS6502_H__
-#define __DIS_MOS6502_H__
+#ifndef __DIS_W65C816_H__
+#define __DIS_W65C816_H__
 
-#include "config_mos6502.h"
+#include "config_w65c816.h"
 #include "dis_base.h"
-#include "insn_mos6502.h"
+#include "insn_w65c816.h"
 #include "reg_mos6502.h"
-#include "table_mos6502.h"
+#include "table_w65c816.h"
 
 namespace libasm {
-namespace mos6502 {
+namespace w65c816 {
 
-class DisMos6502
+class DisW65C816
     : public Disassembler,
       public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
 
     // Config
-    const char *listCpu() const override { return TableMos6502.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
+    bool setCpu(const char *cpu) override { return TableW65C816.setCpu(cpu); }
+    const char *listCpu() const override { return TableW65C816.listCpu(); }
+
+    void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
 
 private:
     DisMotoOperand _formatter;
-    RegMos6502 _regs;
+    mos6502::RegMos6502 _regs;
+    bool _acceptIndirectLong = true;
 
     RegBase &getRegister() override { return _regs; }
 
-    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn);
+    Error decodeImmediate(DisMemory &memory, InsnW65C816 &insn);
+    Error decodeAbsolute(DisMemory &memory, InsnW65C816 &insn);
+    Error decodeZeroPage(DisMemory &memory, InsnW65C816 &insn);
+    Error decodeRelative(DisMemory &memory, InsnW65C816 &insn);
+    Error decodeBlockMove(DisMemory &memory, InsnW65C816 &insn);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 
-} // namespace mos6502
+} // namespace w65c816
 } // namespace libasm
 
-#endif // __DIS_MOS6502_H__
+#endif // __DIS_W65C816_H__
 
 // Local Variables:
 // mode: c++

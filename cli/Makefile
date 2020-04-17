@@ -23,6 +23,7 @@ OBJS_dis      = dis_base.o dis_operand.o dis_driver.o dis_directive.o
 OBJS_mc6809   = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800   = table_mc6800.o  reg_mc6800.o
 OBJS_mos6502  = table_mos6502.o reg_mos6502.o
+OBJS_w65c816  = table_w65c816.o
 OBJS_i8080    = table_i8080.o   reg_i8080.o
 OBJS_z80      = table_z80.o     reg_z80.o
 OBJS_tms9900  = table_tms9900.o reg_tms9900.o
@@ -53,6 +54,7 @@ asm:    asm.o $(OBJS_asm) $(OBJS_common) \
 	asm_mc6809.o  $(OBJS_mc6809)  \
 	asm_mc6800.o  $(OBJS_mc6800)  \
 	asm_mos6502.o $(OBJS_mos6502) \
+	asm_w65c816.o $(OBJS_w65c816) \
 	asm_i8080.o   $(OBJS_i8080)   \
 	asm_z80.o     $(OBJS_z80)     \
 	asm_tms9900.o $(OBJS_tms9900) \
@@ -62,6 +64,7 @@ dis:    dis.o $(OBJS_dis) $(OBJS_common) \
 	dis_mc6809.o  $(OBJS_mc6809)  \
 	dis_mc6800.o  $(OBJS_mc6800)  \
 	dis_mos6502.o $(OBJS_mos6502) \
+	dis_w65c816.o $(OBJS_w65c816) \
 	dis_i8080.o   $(OBJS_i8080)   \
 	dis_z80.o     $(OBJS_z80)     \
 	dis_tms9900.o $(OBJS_tms9900) \
