@@ -20,22 +20,24 @@ CPPFLAGS=-MMD
 OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o cli_listing.o cli_memory.o
 OBJS_asm      = asm_base.o asm_operand.o asm_driver.o asm_directive.o
 OBJS_dis      = dis_base.o dis_operand.o dis_driver.o dis_directive.o
-OBJS_mc6809   = table_mc6809.o  reg_mc6809.o  $(OBJS_common)
-OBJS_mc6800   = table_mc6800.o  reg_mc6800.o  $(OBJS_common)
-OBJS_mos6502  = table_mos6502.o reg_mos6502.o $(OBJS_common)
-OBJS_i8080    = table_i8080.o   reg_i8080.o   $(OBJS_common)
-OBJS_z80      = table_z80.o     reg_z80.o     $(OBJS_common)
-OBJS_tms9900  = table_tms9900.o reg_tms9900.o $(OBJS_common)
-OBJS_mc68000  = table_mc68000.o reg_mc68000.o $(OBJS_common)
+OBJS_mc6809   = table_mc6809.o  reg_mc6809.o
+OBJS_mc6800   = table_mc6800.o  reg_mc6800.o
+OBJS_mos6502  = table_mos6502.o reg_mos6502.o
+OBJS_i8080    = table_i8080.o   reg_i8080.o
+OBJS_z80      = table_z80.o     reg_z80.o
+OBJS_tms9900  = table_tms9900.o reg_tms9900.o
+OBJS_mc68000  = table_mc68000.o reg_mc68000.o
 
-OBJS = \
-	$(OBJS_asm6809)  $(OBJS_dis6809)  \
-	$(OBJS_asm6800)  $(OBJS_dis6800)  \
-	$(OBJS_asm6502)  $(OBJS_dis6502)  \
-	$(OBJS_asm8080)  $(OBJS_dis8080)  \
-	$(OBJS_asmz80)   $(OBJS_disz80)   \
-	$(OBJS_asm9900)  $(OBJS_dis9900)  \
-	$(OBJS_asm68000) $(OBJS_dis68000)
+OBJS = 	$(OBJS_common)  \
+	$(OBJS_asm)     \
+	$(OBJS_dis)     \
+	$(OBJS_mc6809)  \
+	$(OBJS_mc6800)  \
+	$(OBJS_mos6502) \
+	$(OBJS_i8080)   \
+	$(OBJS_z80)     \
+	$(OBJS_tms9900) \
+	$(OBJS_mc68000)
 
 OBJS_driver = asm.o dis.o
 
@@ -43,7 +45,7 @@ DRIVERS = $(OBJS_driver:.o=)
 
 .PHONY: all clean distclean
 
-all: $(OBJS_driver:.o=)
+all: $(DRIVERS)
 
 -include $(OBJS:.o=.d)
 
