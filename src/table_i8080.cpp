@@ -110,56 +110,45 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0xC7, RST,  INHR,   VECTOR_NO)
 };
 
-static const Entry *searchEntry(
-    const char *name,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (pgm_strcasecmp(name, entry->name) == 0)
-            return entry;
-    }
-    return nullptr;
-}
-
-static const Entry *searchEntry(
-    const Config::insn_t insnCode,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        Config::insn_t i = insnCode;
-        const InsnFormat iformat =
-            Entry::_insnFormat(pgm_read_byte(&entry->flags));
-        switch (iformat) {
-        case INDEX_REG: i &= ~0x10; break;
-        case POINTER_REG:
-        case STACK_REG: i &= ~0x30; break;
-        case DATA_REG:
-        case VECTOR_NO: i &= ~0x38; break;
-        case LOW_DATA_REG: i &= ~0x07; break;
-        case DATA_DATA_REG: i &= ~0x3F; break;
-        default: break;
-        }
-        if (i == pgm_read_byte(&entry->insnCode))
-            return entry;
-    }
-    return nullptr;
-}
-
 Error TableI8080::searchName(InsnI8080 &insn) const {
     const char *name = insn.name();
-    const Entry *entry = searchEntry(name, ARRAY_RANGE(TABLE_I8080));
+    const Entry *entry = TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_byte(&entry->insnCode));
+    insn.setInsnCode(pgm_read_byte(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
 
+static Config::opcode_t tableCode(
+    Config::opcode_t opCode, const Entry *entry) {
+    const InsnFormat iformat =
+        Entry::_insnFormat(pgm_read_byte(&entry->flags));
+    switch (iformat) {
+    case INDEX_REG:
+        return opCode & ~0x10;
+    case POINTER_REG:
+    case STACK_REG:
+        return opCode & ~0x30;
+    case DATA_REG:
+    case VECTOR_NO:
+        return opCode & ~0x38;
+    case LOW_DATA_REG:
+        return opCode & ~0x07;
+    case DATA_DATA_REG:
+        return opCode & ~0x3F;
+    default:
+        return opCode;
+    }
+}
+
 Error TableI8080::searchInsnCode(InsnI8080 &insn) const {
     const Config::insn_t insnCode = insn.insnCode();
-    const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_I8080));
+    const Entry *entry =
+        TableBase::searchCode<Entry, Config::opcode_t>(
+            insnCode, ARRAY_RANGE(TABLE_I8080), tableCode);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    char name[Config::NAME_MAX + 1];
-    pgm_strncpy(name, entry->name, sizeof(name));
-    insn.setName(name);
+    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
     return OK;
 }
 

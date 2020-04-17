@@ -33,7 +33,7 @@ public:
     AsmOperand &getParser() override { return _parser; }
 
     // Config
-    const char *listCpu() const override { return TableTms9900::listCpu(); }
+    const char *listCpu() const override { return TableTms9900.listCpu(); }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
 
 private:

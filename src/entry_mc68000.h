@@ -63,7 +63,7 @@ enum ExtWord : host::uint_t {
 };
 
 struct Entry {
-    const Config::insn_t insnCode;
+    const Config::opcode_t opCode;
     const host::uint_t flags;
     const char *name;
 

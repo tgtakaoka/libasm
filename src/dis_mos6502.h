@@ -33,8 +33,8 @@ public:
     DisOperand &getFormatter() override { return _formatter; }
 
     // Config
+    const char *listCpu() const override { return TableMos6502.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
-    const char *listCpu() const override { return TableMos6502::listCpu(); }
 
     void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
 

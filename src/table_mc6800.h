@@ -19,29 +19,22 @@
 
 #include "config_mc6800.h"
 #include "insn_mc6800.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace mc6800 {
 
-class TableMc6800 {
+class TableMc6800 : private TableBase {
 public:
     Error searchName(InsnMc6800 &insn) const;
     Error searchNameAndAddrMode(InsnMc6800 &insn) const;
     Error searchInsnCode(InsnMc6800 &insn) const;
 
-    bool setCpu(const char *cpu);
-    static const char *listCpu();
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
 
 private:
     CpuType _cpuType;
-
-    static const Entry *searchEntry(
-        const char *name, const Entry *table, const Entry *end);
-    static const Entry *searchEntry(
-        const char *name, AddrMode addrMode,
-        const Entry *table, const Entry *end);
-    static const Entry *searchEntry(
-        const Config::opcode_t opCode, const Entry *table, const Entry *end);
 };
 
 extern TableMc6800 TableMc6800;

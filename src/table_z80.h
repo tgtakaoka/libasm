@@ -19,11 +19,12 @@
 
 #include "config_z80.h"
 #include "insn_z80.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace z80 {
 
-class TableZ80 {
+class TableZ80 : private TableBase {
 public:
     TableZ80();
 
@@ -32,8 +33,8 @@ public:
         InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const;
     Error searchInsnCode(InsnZ80 &insn) const;
 
-    bool setCpu(const char *cpu);
-    static const char *listCpu();
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
     bool isZ80() const { return _cpuType == Z80; }
 
     static bool isPrefixCode(Config::opcode_t opCode);
@@ -42,6 +43,7 @@ public:
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
     struct EntryPage;
+
 private:
     CpuType _cpuType;
     const EntryPage *_table;

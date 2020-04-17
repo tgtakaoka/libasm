@@ -33,7 +33,7 @@ public:
     DisOperand &getFormatter() override { return _formatter; }
 
     // Config
-    const char *listCpu() const override { return TableZ80::listCpu(); }
+    const char *listCpu() const override { return TableZ80.listCpu(); }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
 
 private:

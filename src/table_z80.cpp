@@ -202,41 +202,6 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
 };
 
 #if 0
-static constexpr Config::opcode_t Z80_CODE[] PROGMEM = {
-    0x08, // EX AF,AF'
-    0x10, // DJNZ
-    0x18, // JR
-    0x20, // JR NZ
-    0x28, // JR Z
-    0x30, // JR NC
-    0x38, // JR C
-    PREFIX_CB,
-    0xD9, // EXX
-    TableZ80::PREFIX_IX,
-    PREFIX_ED,
-    TableZ80::PREFIX_IY,
-};
-
-static bool checkZ80Code(
-    Config::opcode_t opCode,
-    const Config::opcode_t *table, const Config::opcode_t *end) {
-    for (const Config::opcode_t *entry = table; entry < end; entry++) {
-        if (opCode == pgm_read_byte(entry))
-            return true;
-    }
-    return false;
-}
-#endif
-
-static const Entry *searchEntry(
-    const char *name, const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (pgm_strcasecmp(name, entry->name) == 0)
-            return entry;
-    }
-    return nullptr;
-}
-
 static bool acceptOprFormat(OprFormat opr, OprFormat table) {
     if (table == opr) return true;
     switch (table) {
@@ -258,7 +223,9 @@ static bool acceptOprFormat(OprFormat opr, OprFormat table) {
         return false;
     }
 }
+#endif
 
+#if 0
 static const Entry *searchEntry(
     const char *name, OprFormat leftOpr, OprFormat rightOpr,
     const Entry *table, const Entry *end) {
@@ -294,6 +261,7 @@ static const Entry *searchEntry(
     }
     return nullptr;
 }
+#endif
 
 struct TableZ80::EntryPage {
     const Config::opcode_t prefix;
@@ -317,12 +285,12 @@ Error TableZ80::searchName(
     InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry;
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        if ((entry = searchEntry(name, table, end)) != nullptr) {
+        const Entry *entry = TableBase::searchName<Entry>(name, table, end);
+        if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setInsnCode(prefix, pgm_read_byte(&entry->opc));
+            insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
             insn.setFlags(pgm_read_word(&entry->flags));
             return OK;
         }
@@ -330,22 +298,67 @@ Error TableZ80::searchName(
     return UNKNOWN_INSTRUCTION;
 }
 
+static bool acceptOprFormat(OprFormat opr, OprFormat table) {
+    if (table == opr) return true;
+    switch (table) {
+    case REG_8:
+        return opr == A_REG || opr == HL_PTR;
+    case REG_16:
+        return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == SP_REG;
+    case REG_16X:
+        return opr == BC_REG || opr == DE_REG || opr == IX_REG || opr == SP_REG;
+    case STK_16:
+        return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == AF_REG;
+    case BIT_NO:
+    case IMM_NO:
+    case VEC_NO:
+        return opr == IMM_8;
+    case COND_8:
+        return opr == COND_4;
+    default:
+        return false;
+    }
+}
+
+static bool acceptOprFormats(uint16_t flags, const Entry *entry) {
+    const uint16_t table = pgm_read_word(&entry->flags);
+    return acceptOprFormat(Entry::_leftFormat(flags), Entry::_leftFormat(table))
+        && acceptOprFormat(Entry::_rightFormat(flags), Entry::_rightFormat(table));
+}
+
 Error TableZ80::searchNameAndOprFormats(
     InsnZ80 &insn, OprFormat lop, OprFormat rop,
     const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
+    const uint16_t flags = Entry::_flags(NO_FMT, INHR, lop, rop);
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry;
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        if ((entry = searchEntry(name, lop, rop, table, end)) != nullptr) {
+        const Entry *entry = TableBase::searchName<Entry,uint16_t>(
+            name, flags, table, end, acceptOprFormats);
+        if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setInsnCode(prefix, pgm_read_byte(&entry->opc));
+            insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
             insn.setFlags(pgm_read_word(&entry->flags));
             return OK;
         }
     }
     return UNKNOWN_INSTRUCTION;
+}
+
+static Config::opcode_t maskCode(
+    Config::opcode_t opCode, const Entry *entry) {
+    const InsnFormat iformat = Entry::_insnFormat(pgm_read_word(&entry->flags));
+    switch (iformat) {
+    case PTR_FMT: return opCode & ~0x30;
+    case CC4_FMT: return opCode & ~0x18;
+    case IDX_FMT: return opCode & ~0x10;
+    case IR_FMT:  return opCode & ~0x08;
+    case DST_FMT: return opCode & ~0x38;
+    case SRC_FMT: return opCode & ~0x07;
+    case DST_SRC_FMT: return opCode & ~0x3F;
+    default: return opCode;
+    }
 }
 
 Error TableZ80::searchInsnCode(
@@ -355,12 +368,11 @@ Error TableZ80::searchInsnCode(
         if (insn.prefixCode() != prefix) continue;
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = searchEntry(insn.opCode(), table, end);
+        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+            insn.opCode(), table, end, maskCode);
         if (entry) {
             insn.setFlags(pgm_read_word(&entry->flags));
-            char name[Config::NAME_MAX + 1];
-            pgm_strncpy(name, entry->name, sizeof(name));
-            insn.setName(name);
+            TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
             return OK;
         }
     }

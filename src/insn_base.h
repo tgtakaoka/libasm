@@ -70,13 +70,16 @@ private:
     static constexpr size_t CODE_MAX = 10;
     uint8_t      _bytes[CODE_MAX];
     static constexpr size_t NAME_MAX = 7;
-    char         _name[NAME_MAX+ 1];
+    char         _name[NAME_MAX + 1];
+
+    friend class TableBase;
 };
 
 template<typename Conf>
 class InsnBase {
 public:
     InsnBase(Insn &insn) : _insn(insn) {}
+    Insn &insn() { return _insn; }
 
     typename Conf::uintptr_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }

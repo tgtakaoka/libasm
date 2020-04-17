@@ -105,64 +105,53 @@ static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E(0xF000, SOCB, DST_SRC, TMS9900)
 };
 
-static const Entry *searchEntry(
-    const char *name,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (pgm_strcasecmp(name, entry->name) == 0)
-            return entry;
-    }
-    return nullptr;
-}
-
-static const Entry *searchEntry(
-    const Config::insn_t insnCode,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        Config::insn_t i = insnCode;
-        const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
-        switch (addrMode) {
-        case REG:
-        case REG_IMM: i &= ~0x000f; break;
-        case SRC:     i &= ~0x003f; break;
-        case REL:
-        case CNT_REG:
-        case CRU_OFF: i &= ~0x00ff; break;
-        case CNT_SRC:
-        case XOP_SRC:
-        case REG_SRC: i &= ~0x03ff; break;
-        case DST_SRC: i &= ~0x0fff; break;
-        default: break;
-        }
-        if (i == pgm_read_word(&entry->insnCode))
-            return entry;
-    }
-    return nullptr;
-}
-
 Error TableTms9900::searchName(InsnTms9900 &insn) const {
     const char *name = insn.name();
-    const Entry *entry = searchEntry(name, ARRAY_RANGE(TABLE_TMS9900));
+    const Entry *entry =
+        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_TMS9900));
     if (!entry)
         return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_word(&entry->insnCode));
+    insn.setInsnCode(pgm_read_word(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
     return OK;
 }
 
+static Config::opcode_t maskCode(
+    Config::opcode_t opCode, const Entry *entry) {
+    const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
+    switch (addrMode) {
+    case REG:
+    case REG_IMM:
+        return opCode & ~0x000f;
+    case SRC:
+        return opCode & ~0x003f;
+    case REL:
+    case CNT_REG:
+    case CRU_OFF:
+        return opCode & ~0x00ff;
+    case CNT_SRC:
+    case XOP_SRC:
+    case REG_SRC:
+        return opCode & ~0x03ff;
+    case DST_SRC:
+        return opCode & ~0x0fff;
+    default:
+        return opCode;
+    }
+}
+
 Error TableTms9900::searchInsnCode(InsnTms9900 &insn) const {
-    const Config::insn_t insnCode = insn.insnCode();
-    const Entry *entry = searchEntry(insnCode, ARRAY_RANGE(TABLE_TMS9900));
+    const Config::opcode_t insnCode = insn.insnCode();
+    const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+        insnCode, ARRAY_RANGE(TABLE_TMS9900), maskCode);
     if (!entry)
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
-    char name[Config::NAME_MAX + 1];
-    pgm_strncpy(name, entry->name, sizeof(name));
-    insn.setName(name);
+    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
     return OK;
 }
 

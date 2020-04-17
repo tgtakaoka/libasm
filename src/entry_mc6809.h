@@ -49,7 +49,7 @@ enum AddrMode : host::uint_t {
 };
 
 struct Entry {
-    const Config::opcode_t opc;
+    const Config::opcode_t opCode;
     const host::uint_t flags;
     const char *name;
 

@@ -56,7 +56,7 @@ enum AddrMode : host::uint_t {
 };
 
 struct Entry {
-    const uint8_t insnCode;
+    const Config::opcode_t opCode;
     const host::uint_t flags;
     const char *name;
 

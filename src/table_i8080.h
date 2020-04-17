@@ -19,17 +19,18 @@
 
 #include "config_i8080.h"
 #include "insn_i8080.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace i8080 {
 
-class TableI8080 {
+class TableI8080 : private TableBase {
 public:
     Error searchName(InsnI8080 &insn) const;
     Error searchInsnCode(InsnI8080 &insn) const;
 
-    bool setCpu(const char *cpu);
-    static const char *listCpu();
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
 };
 
 extern TableI8080 TableI8080;

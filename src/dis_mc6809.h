@@ -31,7 +31,8 @@ class DisMc6809
       public Config {
 public:
     DisOperand &getFormatter() override { return _formatter; }
-    const char *listCpu() const override { return TableMc6809::listCpu(); }
+
+    const char *listCpu() const override { return TableMc6809.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
 
 protected:

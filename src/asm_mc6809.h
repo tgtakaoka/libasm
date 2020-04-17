@@ -32,9 +32,8 @@ class AsmMc6809
 public:
     AsmOperand &getParser() override { return _parser; }
 
-
     // Config
-    const char *listCpu() const override { return TableMc6809::listCpu(); }
+    const char *listCpu() const override { return TableMc6809.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
 
 private:

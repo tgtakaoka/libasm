@@ -19,30 +19,26 @@
 
 #include "config_mos6502.h"
 #include "insn_mos6502.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace mos6502 {
 
-class TableMos6502 {
+class TableMos6502 : private TableBase {
 public:
     Error searchName(InsnMos6502 &insn) const;
     Error searchNameAndAddrMode(InsnMos6502 &insn) const;
     Error searchInsnCode(InsnMos6502 &insn, bool acceptIndirectLong) const;
 
-    bool setCpu(const char *cpu);
-    static const char *listCpu();
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
     bool is6502() const { return _cpuType == MOS6502; }
 
 private:
     CpuType _cpuType;
 
-    static const Entry *searchEntry(
-        const char *name, const Entry *table, const Entry *end);
-    static const Entry *searchEntry(
-        const Config::insn_t insnCode, const Entry *table, const Entry *end);
-
     Error searchName(
-        InsnMos6502 &insn,  const Entry *table, const Entry *end) const;
+        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
     Error searchNameAndAddrMode(
         InsnMos6502 &insn, const Entry *table, const Entry *end) const;
     Error searchInsnCode(

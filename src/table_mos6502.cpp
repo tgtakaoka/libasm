@@ -339,40 +339,22 @@ static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E(0xF7, SBCL, W65C816, ZPG_IDIR_IDY)
 };
 
-const Entry *TableMos6502::searchEntry(
-    const char *name,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (pgm_strcasecmp(name, entry->name) == 0)
-            return entry;
-    }
-    return nullptr;
-}
-
-const Entry *TableMos6502::searchEntry(
-    const Config::insn_t insnCode, const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (insnCode == pgm_read_byte(&entry->insnCode))
-            return entry;
-    }
-    return nullptr;
-}
-
 Error TableMos6502::searchName(
     InsnMos6502 &insn, const Entry *table, const Entry *end) const {
     const char *name = insn.name();
     for (const Entry *entry = table;
-         entry < end && (entry = searchEntry(name, table, end)) != nullptr;
+         entry < end && (entry = TableBase::searchName<Entry>(name, table, end));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
-        insn.setInsnCode(pgm_read_byte(&entry->insnCode));
+        insn.setInsnCode(pgm_read_byte(&entry->opCode));
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-static bool acceptAddrMode(AddrMode opr, AddrMode table) {
+static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
+    AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
     if (opr == ZPG) return table == ABS;
     if (opr == ZPG_IDX_IDIR) return table == ABS_IDX_IDIR;
@@ -390,14 +372,14 @@ Error TableMos6502::searchNameAndAddrMode(
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
     for (const Entry *entry = table;
-         entry < end && (entry = searchEntry(name, entry, end)) != nullptr;
+         entry < end
+             && (entry = TableBase::searchName<Entry>(
+                     name, addrMode, entry, end, acceptAddrMode));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
-        if (acceptAddrMode(addrMode, insn.addrMode())) {
-            insn.setInsnCode(pgm_read_byte(&entry->insnCode));
-            return OK;
-        }
+        insn.setInsnCode(pgm_read_byte(&entry->opCode));
+        return OK;
     }
     return UNKNOWN_INSTRUCTION;
 }
@@ -415,15 +397,15 @@ Error TableMos6502::searchInsnCode(
     const Entry *table, const Entry *end) const {
     const Config::insn_t insnCode = insn.insnCode();
     for (const Entry *entry = table;
-         entry < end && (entry = searchEntry(insnCode, entry, end)) != nullptr;
+         entry < end
+             && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
+                     insnCode, entry, end));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
         if (!acceptAddrMode(insn.addrMode(), acceptIndirectLong))
             continue;
-        char name[Config::NAME_MAX + 1];
-        pgm_strncpy(name, entry->name, sizeof(name));
-        insn.setName(name);
+        TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
         return OK;
     }
     return UNKNOWN_INSTRUCTION;

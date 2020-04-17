@@ -19,6 +19,7 @@
 
 #include "config_mc6809.h"
 #include "insn_mc6809.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -26,7 +27,7 @@ namespace mc6809 {
 #define PSEUDO_SETDP   0x00     // reuse NEG opecode
 #define PSEUDO_ASSUME  0x03     // reuse COM opecode
 
-class TableMc6809 {
+class TableMc6809 : private TableBase {
 public:
     TableMc6809();
 
@@ -34,8 +35,8 @@ public:
     Error searchNameAndAddrMode(InsnMc6809 &insn) const;
     Error searchInsnCode(InsnMc6809 &insn) const;
 
-    bool setCpu(const char *cpu);
-    static const char *listCpu();
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
     bool is6309() const { return _cpuType == HD6309; }
 
     static bool isPrefixCode(Config::opcode_t opCode);
@@ -48,11 +49,6 @@ private:
     const EntryPage *_end;
 
     void setCpu(CpuType cpuType);
-
-    static const Entry *searchEntry(
-        const char *name, const Entry *table, const Entry *end);
-    static const Entry *searchEntry(
-        const Config::opcode_t opCode, const Entry *table, const Entry *end);
 
     static Error searchName(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);

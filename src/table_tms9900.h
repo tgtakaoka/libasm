@@ -19,17 +19,18 @@
 
 #include "config_tms9900.h"
 #include "insn_tms9900.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace tms9900 {
 
-class TableTms9900 {
+class TableTms9900 : private TableBase {
 public:
     Error searchName(InsnTms9900 &insn) const;
     Error searchInsnCode(InsnTms9900 &insn) const;
 
-    bool setCpu(const char *cpu);
-    static const char *listCpu();
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
     bool is9995() const { return _cpuType == TMS9995; }
 
 private:

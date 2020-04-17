@@ -33,7 +33,7 @@ public:
     DisOperand &getFormatter() override { return _formatter; }
 
     // Config
-    const char *listCpu() const override { return TableTms9900::listCpu(); }
+    const char *listCpu() const override { return TableTms9900.listCpu(); }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
 
 private:
