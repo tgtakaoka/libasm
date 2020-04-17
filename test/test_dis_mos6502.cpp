@@ -157,12 +157,14 @@ static void test_imm() {
     TEST(WDM, "#$10", 0x42, 0x10);
     TEST(REP, "#$20", 0xC2, 0x20);
     TEST(SEP, "#$10", 0xE2, 0x10);
-    TEST(MVP, "$12,$34", 0x44, 0x12, 0x34);
-    TEST(MVN, "$12,$34", 0x54, 0x12, 0x34);
+    TEST(MVP, "$120000,$340000", 0x44, 0x34, 0x12);
+    TEST(MVN, "$000000,$FF0000", 0x54, 0xFF, 0x00);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
+    symtab.intern(0x120000, "bank12");
+    symtab.intern(0x340000, "bank34");
 
     disassembler.setCpu("6502");
     TEST(LDX, "#zero10", 0xA2, 0x10);
@@ -172,6 +174,10 @@ static void test_imm() {
     // 65SC02
     disassembler.setCpu("65SC02");
     TEST(BIT, "#zero90", 0x89, 0x90);
+
+    // 65816
+    disassembler.setCpu("65816");
+    TEST(MVP, ">>bank12,>>bank34", 0x44, 0x34, 0x12);
 }
 
 static void test_zpg() {

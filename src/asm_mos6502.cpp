@@ -58,16 +58,16 @@ Error AsmMos6502::encodeZeroPageRelative(InsnMos6502 &insn) {
 }
 
 Error AsmMos6502::encodeBlockMove(InsnMos6502 &insn) {
-    uint8_t srcpg, dstpg;
-    if (getOperand(srcpg)) return getError();
+    uint32_t src, dst;
+    if (getOperand(src)) return getError();
     Error error = getError();
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);
     _scan++;
-    if (getOperand(dstpg)) return getError();
+    if (getOperand(dst)) return getError();
     if (getError()) error = getError();
     insn.emitInsn();
-    insn.emitByte(srcpg);
-    insn.emitByte(dstpg);
+    insn.emitByte(static_cast<uint8_t>(dst >> 16));
+    insn.emitByte(static_cast<uint8_t>(src >> 16));
     return setError(error ? error : getError());
 };
 

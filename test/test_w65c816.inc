@@ -40,13 +40,13 @@
         ;; wdm
         fcb     $42,$43
         eor     $44,s
-        mvp     $45,$46
+        mvp     $46789A,$456789
         eorl    ($48)
         phk
         eor     $525150
 ;;; 5X
         eor     ($54,s),y
-        mvn     $55,$56
+        mvn     $56789A,$556789
         eorl    ($58),y
         tcd
         jmp     $5F5E5D

@@ -173,12 +173,28 @@ Error DisMos6502::decodeRelative(
 
 Error DisMos6502::decodeBlockMove(
     DisMemory &memory, InsnMos6502 &insn) {
-    uint8_t srcpg, dstpg;
-    if (insn.readByte(memory, srcpg)) return setError(NO_MEMORY);
-    if (insn.readByte(memory, dstpg)) return setError(NO_MEMORY);
-    outConstant(srcpg, 16, false);
+    uint8_t sbank, dbank;
+    if (insn.readByte(memory, dbank)) return setError(NO_MEMORY);
+    if (insn.readByte(memory, sbank)) return setError(NO_MEMORY);
+    const uint32_t src = static_cast<uint32_t>(sbank) << 16;
+    const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
+    const char *label = lookup(src);
+    if (label) {
+        *_operands++ = '>';
+        *_operands++ = '>';
+        outText(label);
+    } else {
+        outConstant(src, 16, false, ADDRESS_24BIT);
+    }
     *_operands++ = ',';
-    outConstant(dstpg, 16, false);
+    label = lookup(dst);
+    if (label) {
+        *_operands++ = '>';
+        *_operands++ = '>';
+        outText(label);
+    } else {
+        outConstant(dst, 16, false, ADDRESS_24BIT);
+    }
     return setError(OK);
 }
 
