@@ -22,6 +22,13 @@
 namespace libasm {
 namespace mos6502 {
 
+enum CpuType : host::uint_t {
+    MOS6502,
+    W65SC02,
+    R65C02,
+    W65C02S,
+};
+
 enum AddrMode : host::uint_t {
     // MOS6502
     IMPL,                // Implied

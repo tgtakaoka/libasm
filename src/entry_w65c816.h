@@ -17,11 +17,20 @@
 #ifndef __ENTRY_W65C816_H__
 #define __ENTRY_W65C816_H__
 
+#include "config_mos6502.h"
 #include "config_w65c816.h"
 #include "entry_mos6502.h"
 
 namespace libasm {
 namespace w65c816 {
+
+enum CpuType : host::uint_t {
+    MOS6502 = mos6502::CpuType::MOS6502,
+    W65SC02 = mos6502::CpuType::W65SC02,
+    R65C02  = mos6502::CpuType::R65C02,
+    W65C02S = mos6502::CpuType::W65C02S,
+    W65C816,
+};
 
 enum AddrMode : host::uint_t {
     // MOS6502

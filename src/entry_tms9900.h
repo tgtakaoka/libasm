@@ -22,6 +22,11 @@
 namespace libasm {
 namespace tms9900 {
 
+enum CpuType : host::uint_t {
+    TMS9900,
+    TMS9995,
+};
+
 enum AddrMode : host::uint_t {
     INH,                        // ---- ---- ---- ----
     IMM,                        // ---- ---- ---- ---- + nnnn

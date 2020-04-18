@@ -28,11 +28,6 @@ struct Config : ConfigImpl<
     4>
 {};
 
-enum CpuType : host::uint_t {
-    Z80,
-    I8080,
-};
-
 } // namespace z80
 } // namespace libasm
 

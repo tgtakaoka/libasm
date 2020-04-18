@@ -22,6 +22,11 @@
 namespace libasm {
 namespace mc6809 {
 
+enum CpuType : host::uint_t {
+    MC6809,
+    HD6309,
+};
+
 enum OprSize : host::uint_t {
     SZ_NONE = 0,
     SZ_BYTE = 1,                // 8 bit operation

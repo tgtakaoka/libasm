@@ -18,7 +18,6 @@
 #define __CONFIG_W65C816_H__
 
 #include "config_base.h"
-#include "config_mos6502.h"
 
 namespace libasm {
 namespace w65c816 {
@@ -28,14 +27,6 @@ struct Config : ConfigImpl<
     OPCODE_8BIT, 4, ENDIAN_LITTLE, uint8_t, uint8_t,
     4>
 {};
-
-enum CpuType : host::uint_t {
-    MOS6502 = mos6502::CpuType::MOS6502,
-    W65SC02 = mos6502::CpuType::W65SC02,
-    R65C02  = mos6502::CpuType::R65C02,
-    W65C02S = mos6502::CpuType::W65C02S,
-    W65C816,
-};
 
 } // namespace w65c816
 } // namespace libasm

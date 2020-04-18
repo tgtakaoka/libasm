@@ -22,6 +22,12 @@
 namespace libasm {
 namespace mc6800 {
 
+enum CpuType : host::uint_t {
+    MC6800,
+    MC6801,
+    HD6301,
+};
+
 enum AddrMode : host::uint_t {
     INH,  // Inherent
     DIR,  // Direct page

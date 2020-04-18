@@ -22,6 +22,11 @@
 namespace libasm {
 namespace z80 {
 
+enum CpuType : host::uint_t {
+    Z80,
+    I8080,
+};
+
 enum OprSize : host::uint_t {
     SZ_NONE,                    // unknown
     SZ_BYTE = 1,

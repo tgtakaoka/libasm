@@ -28,11 +28,6 @@ struct Config : public ConfigImpl<
     6>
 {};
 
-enum CpuType : host::uint_t {
-    MC6809,
-    HD6309,
-};
-
 } // namespace mc6809
 } // namespace libasm
 

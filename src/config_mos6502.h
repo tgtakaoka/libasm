@@ -28,13 +28,6 @@ struct Config : ConfigImpl<
     4>
 {};
 
-enum CpuType : host::uint_t {
-    MOS6502,
-    W65SC02,
-    R65C02,
-    W65C02S,
-};
-
 } // namespace mos6502
 } // namespace libasm
 

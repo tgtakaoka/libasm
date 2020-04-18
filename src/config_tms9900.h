@@ -28,11 +28,6 @@ struct Config : ConfigImpl<
     4>
 {};
 
-enum CpuType : host::uint_t {
-    TMS9900,
-    TMS9995,
-};
-
 } // namespace tms9900
 } // namespace libasm
 
