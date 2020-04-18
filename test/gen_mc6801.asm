@@ -101,7 +101,7 @@
       SUB  A #$81
       CMP  A #$82
       SBC  A #$83
-      SUBD #$84
+      SUBD #$0084
       AND  A #$85
       BIT  A #$86
       LDA  A #$87
@@ -109,9 +109,9 @@
       ADC  A #$8A
       ORA  A #$8B
       ADD  A #$8C
-      CPX  #$8D
+      CPX  #$008D
       BSR  $003F
-      LDS  #$8F
+      LDS  #$008F
       SUB  A $91
       CMP  A $92
       SBC  A $93
@@ -163,7 +163,7 @@
       SUB  B #$C1
       CMP  B #$C2
       SBC  B #$C3
-      ADDD #$C4
+      ADDD #$00C4
       AND  B #$C5
       BIT  B #$C6
       LDA  B #$C7
@@ -171,8 +171,8 @@
       ADC  B #$CA
       ORA  B #$CB
       ADD  B #$CC
-      LDD  #$CD
-      LDX  #$CF
+      LDD  #$00CD
+      LDX  #$00CF
       SUB  B $D1
       CMP  B $D2
       SBC  B $D3

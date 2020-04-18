@@ -16,7 +16,7 @@
       DEC  C
       LD   C,15
       RRCA
-      LD   DE,12H
+      LD   DE,0012H
       LD   (DE),A
       INC  DE
       INC  D
@@ -30,7 +30,7 @@
       DEC  E
       LD   E,1FH
       RRA
-      LD   HL,22H
+      LD   HL,0022H
       LD   (0023H),HL
       INC  HL
       INC  H
@@ -44,7 +44,7 @@
       DEC  L
       LD   L,2FH
       CPL
-      LD   SP,32H
+      LD   SP,0032H
       LD   (0033H),A
       INC  SP
       INC  (HL)

@@ -23,12 +23,8 @@
       LBRA   $0041
       LBSR   $0045
       DAA
-      ORCC   #%11011
-      ORCC   #%10000000
-      ORCC   #%10
-      ANDCC  #%11101
-      ANDCC  #%10000000
-      ANDCC  #%10
+      ORCC   #%00011011
+      ANDCC  #%00011101
       SEX
       EXG    Y,D
       EXG    Y,X
@@ -318,22 +314,22 @@
       TFR    X,W
       TFR    X,V
       TFR    X,Z
-      BRA    $029E
-      BRN    $02A1
-      BHI    $02A4
-      BLS    $02A7
-      BHS    $02AA
-      BLO    $02AD
-      BNE    $02B0
-      BEQ    $02B3
-      BVC    $02B6
-      BVS    $02B9
-      BPL    $02BC
-      BMI    $02BF
-      BGE    $02C2
-      BLT    $02C5
-      BGT    $02C8
-      BLE    $02CB
+      BRA    $0296
+      BRN    $0299
+      BHI    $029C
+      BLS    $029F
+      BHS    $02A2
+      BLO    $02A5
+      BNE    $02A8
+      BEQ    $02AB
+      BVC    $02AE
+      BVS    $02B1
+      BPL    $02B4
+      BMI    $02B7
+      BGE    $02BA
+      BLT    $02BD
+      BGT    $02C0
+      BLE    $02C3
       LEAX   -15,Y
       LEAX   <<0,U
       LEAX   1,U
@@ -353,8 +349,8 @@
       LEAX   138,X
       LEAX   F,X
       LEAX   D,X
-      LEAX   $0256,PCR
-      LEAX   $035B,PCR
+      LEAX   $024E,PCR
+      LEAX   $0353,PCR
       LEAX   W,X
       LEAX   ,W
       LEAX   [,W]
@@ -370,8 +366,8 @@
       LEAX   [154,X]
       LEAX   [F,X]
       LEAX   [D,X]
-      LEAX   [$0290,PCR]
-      LEAX   [$0395,PCR]
+      LEAX   [$0288,PCR]
+      LEAX   [$038D,PCR]
       LEAX   [W,X]
       LEAX   [$00A0]
       LEAX   ,Y+
@@ -487,8 +483,8 @@
       LEAY   138,X
       LEAY   F,X
       LEAY   D,X
-      LEAY   $0396,PCR
-      LEAY   $049B,PCR
+      LEAY   $038E,PCR
+      LEAY   $0493,PCR
       LEAY   W,X
       LEAY   ,W
       LEAY   [,W]
@@ -504,8 +500,8 @@
       LEAY   [154,X]
       LEAY   [F,X]
       LEAY   [D,X]
-      LEAY   [$03D0,PCR]
-      LEAY   [$04D5,PCR]
+      LEAY   [$03C8,PCR]
+      LEAY   [$04CD,PCR]
       LEAY   [W,X]
       LEAY   [$00A0]
       LEAY   ,Y+
@@ -621,8 +617,8 @@
       LEAS   138,X
       LEAS   F,X
       LEAS   D,X
-      LEAS   $04D6,PCR
-      LEAS   $05DB,PCR
+      LEAS   $04CE,PCR
+      LEAS   $05D3,PCR
       LEAS   W,X
       LEAS   ,W
       LEAS   [,W]
@@ -638,8 +634,8 @@
       LEAS   [154,X]
       LEAS   [F,X]
       LEAS   [D,X]
-      LEAS   [$0510,PCR]
-      LEAS   [$0615,PCR]
+      LEAS   [$0508,PCR]
+      LEAS   [$060D,PCR]
       LEAS   [W,X]
       LEAS   [$00A0]
       LEAS   ,Y+
@@ -755,8 +751,8 @@
       LEAU   138,X
       LEAU   F,X
       LEAU   D,X
-      LEAU   $0616,PCR
-      LEAU   $071B,PCR
+      LEAU   $060E,PCR
+      LEAU   $0713,PCR
       LEAU   W,X
       LEAU   ,W
       LEAU   [,W]
@@ -772,8 +768,8 @@
       LEAU   [154,X]
       LEAU   [F,X]
       LEAU   [D,X]
-      LEAU   [$0650,PCR]
-      LEAU   [$0755,PCR]
+      LEAU   [$0648,PCR]
+      LEAU   [$074D,PCR]
       LEAU   [W,X]
       LEAU   [$00A0]
       LEAU   ,Y+
@@ -1897,9 +1893,7 @@
       RTS
       ABX
       RTI
-      CWAI   #%111101
-      CWAI   #%10000000
-      CWAI   #%10
+      CWAI   #%00111101
       MUL
       SWI
       NEGA
@@ -1939,8 +1933,8 @@
       NEG    138,X
       NEG    F,X
       NEG    D,X
-      NEG    $0F6F,PCR
-      NEG    $1074,PCR
+      NEG    $0F63,PCR
+      NEG    $1068,PCR
       NEG    W,X
       NEG    ,W
       NEG    [,W]
@@ -1956,8 +1950,8 @@
       NEG    [154,X]
       NEG    [F,X]
       NEG    [D,X]
-      NEG    [$0FA9,PCR]
-      NEG    [$10AE,PCR]
+      NEG    [$0F9D,PCR]
+      NEG    [$10A2,PCR]
       NEG    [W,X]
       NEG    [$00A0]
       NEG    ,Y+
@@ -2072,8 +2066,8 @@
       COM    138,X
       COM    F,X
       COM    D,X
-      COM    $10AD,PCR
-      COM    $11B2,PCR
+      COM    $10A1,PCR
+      COM    $11A6,PCR
       COM    W,X
       COM    ,W
       COM    [,W]
@@ -2089,8 +2083,8 @@
       COM    [154,X]
       COM    [F,X]
       COM    [D,X]
-      COM    [$10E7,PCR]
-      COM    [$11EC,PCR]
+      COM    [$10DB,PCR]
+      COM    [$11E0,PCR]
       COM    [W,X]
       COM    [$00A0]
       COM    ,Y+
@@ -2206,8 +2200,8 @@
       LSR    138,X
       LSR    F,X
       LSR    D,X
-      LSR    $11ED,PCR
-      LSR    $12F2,PCR
+      LSR    $11E1,PCR
+      LSR    $12E6,PCR
       LSR    W,X
       LSR    ,W
       LSR    [,W]
@@ -2223,8 +2217,8 @@
       LSR    [154,X]
       LSR    [F,X]
       LSR    [D,X]
-      LSR    [$1227,PCR]
-      LSR    [$132C,PCR]
+      LSR    [$121B,PCR]
+      LSR    [$1320,PCR]
       LSR    [W,X]
       LSR    [$00A0]
       LSR    ,Y+
@@ -2340,8 +2334,8 @@
       ROR    138,X
       ROR    F,X
       ROR    D,X
-      ROR    $132D,PCR
-      ROR    $1432,PCR
+      ROR    $1321,PCR
+      ROR    $1426,PCR
       ROR    W,X
       ROR    ,W
       ROR    [,W]
@@ -2357,8 +2351,8 @@
       ROR    [154,X]
       ROR    [F,X]
       ROR    [D,X]
-      ROR    [$1367,PCR]
-      ROR    [$146C,PCR]
+      ROR    [$135B,PCR]
+      ROR    [$1460,PCR]
       ROR    [W,X]
       ROR    [$00A0]
       ROR    ,Y+
@@ -2474,8 +2468,8 @@
       ASR    138,X
       ASR    F,X
       ASR    D,X
-      ASR    $146D,PCR
-      ASR    $1572,PCR
+      ASR    $1461,PCR
+      ASR    $1566,PCR
       ASR    W,X
       ASR    ,W
       ASR    [,W]
@@ -2491,8 +2485,8 @@
       ASR    [154,X]
       ASR    [F,X]
       ASR    [D,X]
-      ASR    [$14A7,PCR]
-      ASR    [$15AC,PCR]
+      ASR    [$149B,PCR]
+      ASR    [$15A0,PCR]
       ASR    [W,X]
       ASR    [$00A0]
       ASR    ,Y+
@@ -2608,8 +2602,8 @@
       ASL    138,X
       ASL    F,X
       ASL    D,X
-      ASL    $15AD,PCR
-      ASL    $16B2,PCR
+      ASL    $15A1,PCR
+      ASL    $16A6,PCR
       ASL    W,X
       ASL    ,W
       ASL    [,W]
@@ -2625,8 +2619,8 @@
       ASL    [154,X]
       ASL    [F,X]
       ASL    [D,X]
-      ASL    [$15E7,PCR]
-      ASL    [$16EC,PCR]
+      ASL    [$15DB,PCR]
+      ASL    [$16E0,PCR]
       ASL    [W,X]
       ASL    [$00A0]
       ASL    ,Y+
@@ -2742,8 +2736,8 @@
       ROL    138,X
       ROL    F,X
       ROL    D,X
-      ROL    $16ED,PCR
-      ROL    $17F2,PCR
+      ROL    $16E1,PCR
+      ROL    $17E6,PCR
       ROL    W,X
       ROL    ,W
       ROL    [,W]
@@ -2759,8 +2753,8 @@
       ROL    [154,X]
       ROL    [F,X]
       ROL    [D,X]
-      ROL    [$1727,PCR]
-      ROL    [$182C,PCR]
+      ROL    [$171B,PCR]
+      ROL    [$1820,PCR]
       ROL    [W,X]
       ROL    [$00A0]
       ROL    ,Y+
@@ -2876,8 +2870,8 @@
       DEC    138,X
       DEC    F,X
       DEC    D,X
-      DEC    $182D,PCR
-      DEC    $1932,PCR
+      DEC    $1821,PCR
+      DEC    $1926,PCR
       DEC    W,X
       DEC    ,W
       DEC    [,W]
@@ -2893,8 +2887,8 @@
       DEC    [154,X]
       DEC    [F,X]
       DEC    [D,X]
-      DEC    [$1867,PCR]
-      DEC    [$196C,PCR]
+      DEC    [$185B,PCR]
+      DEC    [$1960,PCR]
       DEC    [W,X]
       DEC    [$00A0]
       DEC    ,Y+
@@ -3010,8 +3004,8 @@
       INC    138,X
       INC    F,X
       INC    D,X
-      INC    $196D,PCR
-      INC    $1A72,PCR
+      INC    $1961,PCR
+      INC    $1A66,PCR
       INC    W,X
       INC    ,W
       INC    [,W]
@@ -3027,8 +3021,8 @@
       INC    [154,X]
       INC    [F,X]
       INC    [D,X]
-      INC    [$19A7,PCR]
-      INC    [$1AAC,PCR]
+      INC    [$199B,PCR]
+      INC    [$1AA0,PCR]
       INC    [W,X]
       INC    [$00A0]
       INC    ,Y+
@@ -3144,8 +3138,8 @@
       TST    138,X
       TST    F,X
       TST    D,X
-      TST    $1AAD,PCR
-      TST    $1BB2,PCR
+      TST    $1AA1,PCR
+      TST    $1BA6,PCR
       TST    W,X
       TST    ,W
       TST    [,W]
@@ -3161,8 +3155,8 @@
       TST    [154,X]
       TST    [F,X]
       TST    [D,X]
-      TST    [$1AE7,PCR]
-      TST    [$1BEC,PCR]
+      TST    [$1ADB,PCR]
+      TST    [$1BE0,PCR]
       TST    [W,X]
       TST    [$00A0]
       TST    ,Y+
@@ -3278,8 +3272,8 @@
       JMP    138,X
       JMP    F,X
       JMP    D,X
-      JMP    $1BED,PCR
-      JMP    $1CF2,PCR
+      JMP    $1BE1,PCR
+      JMP    $1CE6,PCR
       JMP    W,X
       JMP    ,W
       JMP    [,W]
@@ -3295,8 +3289,8 @@
       JMP    [154,X]
       JMP    [F,X]
       JMP    [D,X]
-      JMP    [$1C27,PCR]
-      JMP    [$1D2C,PCR]
+      JMP    [$1C1B,PCR]
+      JMP    [$1D20,PCR]
       JMP    [W,X]
       JMP    [$00A0]
       JMP    ,Y+
@@ -3412,8 +3406,8 @@
       CLR    138,X
       CLR    F,X
       CLR    D,X
-      CLR    $1D2D,PCR
-      CLR    $1E32,PCR
+      CLR    $1D21,PCR
+      CLR    $1E26,PCR
       CLR    W,X
       CLR    ,W
       CLR    [,W]
@@ -3429,8 +3423,8 @@
       CLR    [154,X]
       CLR    [F,X]
       CLR    [D,X]
-      CLR    [$1D67,PCR]
-      CLR    [$1E6C,PCR]
+      CLR    [$1D5B,PCR]
+      CLR    [$1E60,PCR]
       CLR    [W,X]
       CLR    [$00A0]
       CLR    ,Y+
@@ -3550,7 +3544,7 @@
       SUBA   #$81
       CMPA   #$82
       SBCA   #$83
-      SUBD   #$84
+      SUBD   #$0084
       ANDA   #$85
       BITA   #$86
       LDA    #$87
@@ -3558,9 +3552,9 @@
       ADCA   #$8A
       ORA    #$8B
       ADDA   #$8C
-      CMPX   #$8D
-      BSR    $1E98
-      LDX    #$8F
+      CMPX   #$008D
+      BSR    $1E8C
+      LDX    #$008F
       SUBA   $91
       CMPA   $92
       SBCA   $93
@@ -3688,8 +3682,8 @@
       SUBA   394,X
       SUBA   F,X
       SUBA   D,X
-      SUBA   $1FC2,PCR
-      SUBA   $21C7,PCR
+      SUBA   $1FB6,PCR
+      SUBA   $21BB,PCR
       SUBA   W,X
       SUBA   ,W
       SUBA   [,W]
@@ -3705,8 +3699,8 @@
       SUBA   [410,X]
       SUBA   [F,X]
       SUBA   [D,X]
-      SUBA   [$1FFC,PCR]
-      SUBA   [$2201,PCR]
+      SUBA   [$1FF0,PCR]
+      SUBA   [$21F5,PCR]
       SUBA   [W,X]
       SUBA   [$01A0]
       SUBA   ,Y+
@@ -3820,8 +3814,8 @@
       CMPA   394,X
       CMPA   F,X
       CMPA   D,X
-      CMPA   $20FE,PCR
-      CMPA   $2303,PCR
+      CMPA   $20F2,PCR
+      CMPA   $22F7,PCR
       CMPA   W,X
       CMPA   ,W
       CMPA   [,W]
@@ -3837,8 +3831,8 @@
       CMPA   [410,X]
       CMPA   [F,X]
       CMPA   [D,X]
-      CMPA   [$2138,PCR]
-      CMPA   [$233D,PCR]
+      CMPA   [$212C,PCR]
+      CMPA   [$2331,PCR]
       CMPA   [W,X]
       CMPA   [$01A0]
       CMPA   ,Y+
@@ -3952,8 +3946,8 @@
       SBCA   394,X
       SBCA   F,X
       SBCA   D,X
-      SBCA   $223A,PCR
-      SBCA   $243F,PCR
+      SBCA   $222E,PCR
+      SBCA   $2433,PCR
       SBCA   W,X
       SBCA   ,W
       SBCA   [,W]
@@ -3969,8 +3963,8 @@
       SBCA   [410,X]
       SBCA   [F,X]
       SBCA   [D,X]
-      SBCA   [$2274,PCR]
-      SBCA   [$2479,PCR]
+      SBCA   [$2268,PCR]
+      SBCA   [$246D,PCR]
       SBCA   [W,X]
       SBCA   [$01A0]
       SBCA   ,Y+
@@ -4084,8 +4078,8 @@
       SUBD   394,X
       SUBD   F,X
       SUBD   D,X
-      SUBD   $2376,PCR
-      SUBD   $257B,PCR
+      SUBD   $236A,PCR
+      SUBD   $256F,PCR
       SUBD   W,X
       SUBD   ,W
       SUBD   [,W]
@@ -4101,8 +4095,8 @@
       SUBD   [410,X]
       SUBD   [F,X]
       SUBD   [D,X]
-      SUBD   [$23B0,PCR]
-      SUBD   [$25B5,PCR]
+      SUBD   [$23A4,PCR]
+      SUBD   [$25A9,PCR]
       SUBD   [W,X]
       SUBD   [$01A0]
       SUBD   ,Y+
@@ -4216,8 +4210,8 @@
       ANDA   394,X
       ANDA   F,X
       ANDA   D,X
-      ANDA   $24B2,PCR
-      ANDA   $26B7,PCR
+      ANDA   $24A6,PCR
+      ANDA   $26AB,PCR
       ANDA   W,X
       ANDA   ,W
       ANDA   [,W]
@@ -4233,8 +4227,8 @@
       ANDA   [410,X]
       ANDA   [F,X]
       ANDA   [D,X]
-      ANDA   [$24EC,PCR]
-      ANDA   [$26F1,PCR]
+      ANDA   [$24E0,PCR]
+      ANDA   [$26E5,PCR]
       ANDA   [W,X]
       ANDA   [$01A0]
       ANDA   ,Y+
@@ -4348,8 +4342,8 @@
       BITA   394,X
       BITA   F,X
       BITA   D,X
-      BITA   $25EE,PCR
-      BITA   $27F3,PCR
+      BITA   $25E2,PCR
+      BITA   $27E7,PCR
       BITA   W,X
       BITA   ,W
       BITA   [,W]
@@ -4365,8 +4359,8 @@
       BITA   [410,X]
       BITA   [F,X]
       BITA   [D,X]
-      BITA   [$2628,PCR]
-      BITA   [$282D,PCR]
+      BITA   [$261C,PCR]
+      BITA   [$2821,PCR]
       BITA   [W,X]
       BITA   [$01A0]
       BITA   ,Y+
@@ -4480,8 +4474,8 @@
       LDA    394,X
       LDA    F,X
       LDA    D,X
-      LDA    $272A,PCR
-      LDA    $292F,PCR
+      LDA    $271E,PCR
+      LDA    $2923,PCR
       LDA    W,X
       LDA    ,W
       LDA    [,W]
@@ -4497,8 +4491,8 @@
       LDA    [410,X]
       LDA    [F,X]
       LDA    [D,X]
-      LDA    [$2764,PCR]
-      LDA    [$2969,PCR]
+      LDA    [$2758,PCR]
+      LDA    [$295D,PCR]
       LDA    [W,X]
       LDA    [$01A0]
       LDA    ,Y+
@@ -4612,8 +4606,8 @@
       STA    394,X
       STA    F,X
       STA    D,X
-      STA    $2866,PCR
-      STA    $2A6B,PCR
+      STA    $285A,PCR
+      STA    $2A5F,PCR
       STA    W,X
       STA    ,W
       STA    [,W]
@@ -4629,8 +4623,8 @@
       STA    [410,X]
       STA    [F,X]
       STA    [D,X]
-      STA    [$28A0,PCR]
-      STA    [$2AA5,PCR]
+      STA    [$2894,PCR]
+      STA    [$2A99,PCR]
       STA    [W,X]
       STA    [$01A0]
       STA    ,Y+
@@ -4742,8 +4736,8 @@
       EORA   394,X
       EORA   F,X
       EORA   D,X
-      EORA   $299B,PCR
-      EORA   $2BA0,PCR
+      EORA   $298F,PCR
+      EORA   $2B94,PCR
       EORA   W,X
       EORA   ,W
       EORA   [,W]
@@ -4759,8 +4753,8 @@
       EORA   [410,X]
       EORA   [F,X]
       EORA   [D,X]
-      EORA   [$29D5,PCR]
-      EORA   [$2BDA,PCR]
+      EORA   [$29C9,PCR]
+      EORA   [$2BCE,PCR]
       EORA   [W,X]
       EORA   [$01A0]
       EORA   ,Y+
@@ -4874,8 +4868,8 @@
       ADCA   394,X
       ADCA   F,X
       ADCA   D,X
-      ADCA   $2AD5,PCR
-      ADCA   $2CDA,PCR
+      ADCA   $2AC9,PCR
+      ADCA   $2CCE,PCR
       ADCA   W,X
       ADCA   ,W
       ADCA   [,W]
@@ -4891,8 +4885,8 @@
       ADCA   [410,X]
       ADCA   [F,X]
       ADCA   [D,X]
-      ADCA   [$2B0F,PCR]
-      ADCA   [$2D14,PCR]
+      ADCA   [$2B03,PCR]
+      ADCA   [$2D08,PCR]
       ADCA   [W,X]
       ADCA   [$01A0]
       ADCA   ,Y+
@@ -5006,8 +5000,8 @@
       ORA    394,X
       ORA    F,X
       ORA    D,X
-      ORA    $2C11,PCR
-      ORA    $2E16,PCR
+      ORA    $2C05,PCR
+      ORA    $2E0A,PCR
       ORA    W,X
       ORA    ,W
       ORA    [,W]
@@ -5023,8 +5017,8 @@
       ORA    [410,X]
       ORA    [F,X]
       ORA    [D,X]
-      ORA    [$2C4B,PCR]
-      ORA    [$2E50,PCR]
+      ORA    [$2C3F,PCR]
+      ORA    [$2E44,PCR]
       ORA    [W,X]
       ORA    [$01A0]
       ORA    ,Y+
@@ -5138,8 +5132,8 @@
       ADDA   394,X
       ADDA   F,X
       ADDA   D,X
-      ADDA   $2D4D,PCR
-      ADDA   $2F52,PCR
+      ADDA   $2D41,PCR
+      ADDA   $2F46,PCR
       ADDA   W,X
       ADDA   ,W
       ADDA   [,W]
@@ -5155,8 +5149,8 @@
       ADDA   [410,X]
       ADDA   [F,X]
       ADDA   [D,X]
-      ADDA   [$2D87,PCR]
-      ADDA   [$2F8C,PCR]
+      ADDA   [$2D7B,PCR]
+      ADDA   [$2F80,PCR]
       ADDA   [W,X]
       ADDA   [$01A0]
       ADDA   ,Y+
@@ -5271,8 +5265,8 @@
       CMPX   394,X
       CMPX   F,X
       CMPX   D,X
-      CMPX   $2E8B,PCR
-      CMPX   $3090,PCR
+      CMPX   $2E7F,PCR
+      CMPX   $3084,PCR
       CMPX   W,X
       CMPX   ,W
       CMPX   [,W]
@@ -5288,8 +5282,8 @@
       CMPX   [410,X]
       CMPX   [F,X]
       CMPX   [D,X]
-      CMPX   [$2EC5,PCR]
-      CMPX   [$30CA,PCR]
+      CMPX   [$2EB9,PCR]
+      CMPX   [$30BE,PCR]
       CMPX   [W,X]
       CMPX   [$01A0]
       CMPX   ,Y+
@@ -5404,8 +5398,8 @@
       JSR    394,X
       JSR    F,X
       JSR    D,X
-      JSR    $2FC9,PCR
-      JSR    $31CE,PCR
+      JSR    $2FBD,PCR
+      JSR    $31C2,PCR
       JSR    W,X
       JSR    ,W
       JSR    [,W]
@@ -5421,8 +5415,8 @@
       JSR    [410,X]
       JSR    [F,X]
       JSR    [D,X]
-      JSR    [$3003,PCR]
-      JSR    [$3208,PCR]
+      JSR    [$2FF7,PCR]
+      JSR    [$31FC,PCR]
       JSR    [W,X]
       JSR    [$01A0]
       JSR    ,Y+
@@ -5536,8 +5530,8 @@
       LDX    394,X
       LDX    F,X
       LDX    D,X
-      LDX    $3105,PCR
-      LDX    $330A,PCR
+      LDX    $30F9,PCR
+      LDX    $32FE,PCR
       LDX    W,X
       LDX    ,W
       LDX    [,W]
@@ -5553,8 +5547,8 @@
       LDX    [410,X]
       LDX    [F,X]
       LDX    [D,X]
-      LDX    [$313F,PCR]
-      LDX    [$3344,PCR]
+      LDX    [$3133,PCR]
+      LDX    [$3338,PCR]
       LDX    [W,X]
       LDX    [$01A0]
       LDX    ,Y+
@@ -5668,8 +5662,8 @@
       STX    394,X
       STX    F,X
       STX    D,X
-      STX    $323F,PCR
-      STX    $3444,PCR
+      STX    $3233,PCR
+      STX    $3438,PCR
       STX    W,X
       STX    ,W
       STX    [,W]
@@ -5685,8 +5679,8 @@
       STX    [410,X]
       STX    [F,X]
       STX    [D,X]
-      STX    [$3279,PCR]
-      STX    [$347E,PCR]
+      STX    [$326D,PCR]
+      STX    [$3472,PCR]
       STX    [W,X]
       STX    [$01A0]
       STX    ,Y+
@@ -5724,7 +5718,7 @@
       SUBB   #$C1
       CMPB   #$C2
       SBCB   #$C3
-      ADDD   #$C4
+      ADDD   #$00C4
       ANDB   #$C5
       BITB   #$C6
       LDB    #$C7
@@ -5732,9 +5726,9 @@
       ADCB   #$CA
       ORB    #$CB
       ADDB   #$CC
-      LDD    #$CD
-      LDQ    #$CE
-      LDU    #$CF
+      LDD    #$00CD
+      LDQ    #$000000CE
+      LDU    #$00CF
       SUBB   $D1
       CMPB   $D2
       SBCB   $D3
@@ -5802,8 +5796,8 @@
       SUBB   394,X
       SUBB   F,X
       SUBB   D,X
-      SUBB   $3384,PCR
-      SUBB   $3589,PCR
+      SUBB   $3378,PCR
+      SUBB   $357D,PCR
       SUBB   W,X
       SUBB   ,W
       SUBB   [,W]
@@ -5819,8 +5813,8 @@
       SUBB   [410,X]
       SUBB   [F,X]
       SUBB   [D,X]
-      SUBB   [$33BE,PCR]
-      SUBB   [$35C3,PCR]
+      SUBB   [$33B2,PCR]
+      SUBB   [$35B7,PCR]
       SUBB   [W,X]
       SUBB   [$01A0]
       SUBB   ,Y+
@@ -5934,8 +5928,8 @@
       CMPB   394,X
       CMPB   F,X
       CMPB   D,X
-      CMPB   $34C0,PCR
-      CMPB   $36C5,PCR
+      CMPB   $34B4,PCR
+      CMPB   $36B9,PCR
       CMPB   W,X
       CMPB   ,W
       CMPB   [,W]
@@ -5951,8 +5945,8 @@
       CMPB   [410,X]
       CMPB   [F,X]
       CMPB   [D,X]
-      CMPB   [$34FA,PCR]
-      CMPB   [$36FF,PCR]
+      CMPB   [$34EE,PCR]
+      CMPB   [$36F3,PCR]
       CMPB   [W,X]
       CMPB   [$01A0]
       CMPB   ,Y+
@@ -6066,8 +6060,8 @@
       SBCB   394,X
       SBCB   F,X
       SBCB   D,X
-      SBCB   $35FC,PCR
-      SBCB   $3801,PCR
+      SBCB   $35F0,PCR
+      SBCB   $37F5,PCR
       SBCB   W,X
       SBCB   ,W
       SBCB   [,W]
@@ -6083,8 +6077,8 @@
       SBCB   [410,X]
       SBCB   [F,X]
       SBCB   [D,X]
-      SBCB   [$3636,PCR]
-      SBCB   [$383B,PCR]
+      SBCB   [$362A,PCR]
+      SBCB   [$382F,PCR]
       SBCB   [W,X]
       SBCB   [$01A0]
       SBCB   ,Y+
@@ -6198,8 +6192,8 @@
       ADDD   394,X
       ADDD   F,X
       ADDD   D,X
-      ADDD   $3738,PCR
-      ADDD   $393D,PCR
+      ADDD   $372C,PCR
+      ADDD   $3931,PCR
       ADDD   W,X
       ADDD   ,W
       ADDD   [,W]
@@ -6215,8 +6209,8 @@
       ADDD   [410,X]
       ADDD   [F,X]
       ADDD   [D,X]
-      ADDD   [$3772,PCR]
-      ADDD   [$3977,PCR]
+      ADDD   [$3766,PCR]
+      ADDD   [$396B,PCR]
       ADDD   [W,X]
       ADDD   [$01A0]
       ADDD   ,Y+
@@ -6330,8 +6324,8 @@
       ANDB   394,X
       ANDB   F,X
       ANDB   D,X
-      ANDB   $3874,PCR
-      ANDB   $3A79,PCR
+      ANDB   $3868,PCR
+      ANDB   $3A6D,PCR
       ANDB   W,X
       ANDB   ,W
       ANDB   [,W]
@@ -6347,8 +6341,8 @@
       ANDB   [410,X]
       ANDB   [F,X]
       ANDB   [D,X]
-      ANDB   [$38AE,PCR]
-      ANDB   [$3AB3,PCR]
+      ANDB   [$38A2,PCR]
+      ANDB   [$3AA7,PCR]
       ANDB   [W,X]
       ANDB   [$01A0]
       ANDB   ,Y+
@@ -6462,8 +6456,8 @@
       BITB   394,X
       BITB   F,X
       BITB   D,X
-      BITB   $39B0,PCR
-      BITB   $3BB5,PCR
+      BITB   $39A4,PCR
+      BITB   $3BA9,PCR
       BITB   W,X
       BITB   ,W
       BITB   [,W]
@@ -6479,8 +6473,8 @@
       BITB   [410,X]
       BITB   [F,X]
       BITB   [D,X]
-      BITB   [$39EA,PCR]
-      BITB   [$3BEF,PCR]
+      BITB   [$39DE,PCR]
+      BITB   [$3BE3,PCR]
       BITB   [W,X]
       BITB   [$01A0]
       BITB   ,Y+
@@ -6594,8 +6588,8 @@
       LDB    394,X
       LDB    F,X
       LDB    D,X
-      LDB    $3AEC,PCR
-      LDB    $3CF1,PCR
+      LDB    $3AE0,PCR
+      LDB    $3CE5,PCR
       LDB    W,X
       LDB    ,W
       LDB    [,W]
@@ -6611,8 +6605,8 @@
       LDB    [410,X]
       LDB    [F,X]
       LDB    [D,X]
-      LDB    [$3B26,PCR]
-      LDB    [$3D2B,PCR]
+      LDB    [$3B1A,PCR]
+      LDB    [$3D1F,PCR]
       LDB    [W,X]
       LDB    [$01A0]
       LDB    ,Y+
@@ -6726,8 +6720,8 @@
       STB    394,X
       STB    F,X
       STB    D,X
-      STB    $3C28,PCR
-      STB    $3E2D,PCR
+      STB    $3C1C,PCR
+      STB    $3E21,PCR
       STB    W,X
       STB    ,W
       STB    [,W]
@@ -6743,8 +6737,8 @@
       STB    [410,X]
       STB    [F,X]
       STB    [D,X]
-      STB    [$3C62,PCR]
-      STB    [$3E67,PCR]
+      STB    [$3C56,PCR]
+      STB    [$3E5B,PCR]
       STB    [W,X]
       STB    [$01A0]
       STB    ,Y+
@@ -6856,8 +6850,8 @@
       EORB   394,X
       EORB   F,X
       EORB   D,X
-      EORB   $3D5D,PCR
-      EORB   $3F62,PCR
+      EORB   $3D51,PCR
+      EORB   $3F56,PCR
       EORB   W,X
       EORB   ,W
       EORB   [,W]
@@ -6873,8 +6867,8 @@
       EORB   [410,X]
       EORB   [F,X]
       EORB   [D,X]
-      EORB   [$3D97,PCR]
-      EORB   [$3F9C,PCR]
+      EORB   [$3D8B,PCR]
+      EORB   [$3F90,PCR]
       EORB   [W,X]
       EORB   [$01A0]
       EORB   ,Y+
@@ -6988,8 +6982,8 @@
       ADCB   394,X
       ADCB   F,X
       ADCB   D,X
-      ADCB   $3E97,PCR
-      ADCB   $409C,PCR
+      ADCB   $3E8B,PCR
+      ADCB   $4090,PCR
       ADCB   W,X
       ADCB   ,W
       ADCB   [,W]
@@ -7005,8 +6999,8 @@
       ADCB   [410,X]
       ADCB   [F,X]
       ADCB   [D,X]
-      ADCB   [$3ED1,PCR]
-      ADCB   [$40D6,PCR]
+      ADCB   [$3EC5,PCR]
+      ADCB   [$40CA,PCR]
       ADCB   [W,X]
       ADCB   [$01A0]
       ADCB   ,Y+
@@ -7120,8 +7114,8 @@
       ORB    394,X
       ORB    F,X
       ORB    D,X
-      ORB    $3FD3,PCR
-      ORB    $41D8,PCR
+      ORB    $3FC7,PCR
+      ORB    $41CC,PCR
       ORB    W,X
       ORB    ,W
       ORB    [,W]
@@ -7137,8 +7131,8 @@
       ORB    [410,X]
       ORB    [F,X]
       ORB    [D,X]
-      ORB    [$400D,PCR]
-      ORB    [$4212,PCR]
+      ORB    [$4001,PCR]
+      ORB    [$4206,PCR]
       ORB    [W,X]
       ORB    [$01A0]
       ORB    ,Y+
@@ -7252,8 +7246,8 @@
       ADDB   394,X
       ADDB   F,X
       ADDB   D,X
-      ADDB   $410F,PCR
-      ADDB   $4314,PCR
+      ADDB   $4103,PCR
+      ADDB   $4308,PCR
       ADDB   W,X
       ADDB   ,W
       ADDB   [,W]
@@ -7269,8 +7263,8 @@
       ADDB   [410,X]
       ADDB   [F,X]
       ADDB   [D,X]
-      ADDB   [$4149,PCR]
-      ADDB   [$434E,PCR]
+      ADDB   [$413D,PCR]
+      ADDB   [$4342,PCR]
       ADDB   [W,X]
       ADDB   [$01A0]
       ADDB   ,Y+
@@ -7385,8 +7379,8 @@
       LDD    394,X
       LDD    F,X
       LDD    D,X
-      LDD    $424D,PCR
-      LDD    $4452,PCR
+      LDD    $4241,PCR
+      LDD    $4446,PCR
       LDD    W,X
       LDD    ,W
       LDD    [,W]
@@ -7402,8 +7396,8 @@
       LDD    [410,X]
       LDD    [F,X]
       LDD    [D,X]
-      LDD    [$4287,PCR]
-      LDD    [$448C,PCR]
+      LDD    [$427B,PCR]
+      LDD    [$4480,PCR]
       LDD    [W,X]
       LDD    [$01A0]
       LDD    ,Y+
@@ -7518,8 +7512,8 @@
       STD    394,X
       STD    F,X
       STD    D,X
-      STD    $438B,PCR
-      STD    $4590,PCR
+      STD    $437F,PCR
+      STD    $4584,PCR
       STD    W,X
       STD    ,W
       STD    [,W]
@@ -7535,8 +7529,8 @@
       STD    [410,X]
       STD    [F,X]
       STD    [D,X]
-      STD    [$43C5,PCR]
-      STD    [$45CA,PCR]
+      STD    [$43B9,PCR]
+      STD    [$45BE,PCR]
       STD    [W,X]
       STD    [$01A0]
       STD    ,Y+
@@ -7650,8 +7644,8 @@
       LDU    394,X
       LDU    F,X
       LDU    D,X
-      LDU    $44C7,PCR
-      LDU    $46CC,PCR
+      LDU    $44BB,PCR
+      LDU    $46C0,PCR
       LDU    W,X
       LDU    ,W
       LDU    [,W]
@@ -7667,8 +7661,8 @@
       LDU    [410,X]
       LDU    [F,X]
       LDU    [D,X]
-      LDU    [$4501,PCR]
-      LDU    [$4706,PCR]
+      LDU    [$44F5,PCR]
+      LDU    [$46FA,PCR]
       LDU    [W,X]
       LDU    [$01A0]
       LDU    ,Y+
@@ -7782,8 +7776,8 @@
       STU    394,X
       STU    F,X
       STU    D,X
-      STU    $4603,PCR
-      STU    $4808,PCR
+      STU    $45F7,PCR
+      STU    $47FC,PCR
       STU    W,X
       STU    ,W
       STU    [,W]
@@ -7799,8 +7793,8 @@
       STU    [410,X]
       STU    [F,X]
       STU    [D,X]
-      STU    [$463D,PCR]
-      STU    [$4842,PCR]
+      STU    [$4631,PCR]
+      STU    [$4836,PCR]
       STU    [W,X]
       STU    [$01A0]
       STU    ,Y+
@@ -7895,21 +7889,21 @@
       STD    >$00FE
       LDU    >$00FF
       STU    $0100
-      LBRN   $47B5
-      LBHI   $47BA
-      LBLS   $47BF
-      LBHS   $47C4
-      LBLO   $47C9
-      LBNE   $47CE
-      LBEQ   $47D3
-      LBVC   $47D8
-      LBVS   $47DD
-      LBPL   $47E2
-      LBMI   $47E7
-      LBGE   $47EC
-      LBLT   $47F1
-      LBGT   $47F6
-      LBLE   $47FB
+      LBRN   $47A9
+      LBHI   $47AE
+      LBLS   $47B3
+      LBHS   $47B8
+      LBLO   $47BD
+      LBNE   $47C2
+      LBEQ   $47C7
+      LBVC   $47CC
+      LBVS   $47D1
+      LBPL   $47D6
+      LBMI   $47DB
+      LBGE   $47E0
+      LBLT   $47E5
+      LBGT   $47EA
+      LBLE   $47EF
       ADDR   U,X
       ADDR   U,Y
       ADDR   U,U
@@ -9086,19 +9080,19 @@
       INCW
       TSTW
       CLRW
-      SUBW   #$81
-      CMPW   #$82
-      SBCD   #$83
-      CMPD   #$84
-      ANDD   #$85
-      BITD   #$86
-      LDW    #$87
-      EORD   #$89
-      ADCD   #$8A
-      ORD    #$8B
-      ADDW   #$8C
-      CMPY   #$8D
-      LDY    #$8F
+      SUBW   #$0081
+      CMPW   #$0082
+      SBCD   #$0083
+      CMPD   #$0084
+      ANDD   #$0085
+      BITD   #$0086
+      LDW    #$0087
+      EORD   #$0089
+      ADCD   #$008A
+      ORD    #$008B
+      ADDW   #$008C
+      CMPY   #$008D
+      LDY    #$008F
       SUBW   $91
       CMPW   $92
       SBCD   $93
@@ -9225,8 +9219,8 @@
       SUBW   394,X
       SUBW   F,X
       SUBW   D,X
-      SUBW   $56E1,PCR
-      SUBW   $58E7,PCR
+      SUBW   $56D5,PCR
+      SUBW   $58DB,PCR
       SUBW   W,X
       SUBW   ,W
       SUBW   [,W]
@@ -9242,8 +9236,8 @@
       SUBW   [410,X]
       SUBW   [F,X]
       SUBW   [D,X]
-      SUBW   [$572C,PCR]
-      SUBW   [$5932,PCR]
+      SUBW   [$5720,PCR]
+      SUBW   [$5926,PCR]
       SUBW   [W,X]
       SUBW   [$01A0]
       SUBW   ,Y+
@@ -9357,8 +9351,8 @@
       CMPW   394,X
       CMPW   F,X
       CMPW   D,X
-      CMPW   $58A1,PCR
-      CMPW   $5AA7,PCR
+      CMPW   $5895,PCR
+      CMPW   $5A9B,PCR
       CMPW   W,X
       CMPW   ,W
       CMPW   [,W]
@@ -9374,8 +9368,8 @@
       CMPW   [410,X]
       CMPW   [F,X]
       CMPW   [D,X]
-      CMPW   [$58EC,PCR]
-      CMPW   [$5AF2,PCR]
+      CMPW   [$58E0,PCR]
+      CMPW   [$5AE6,PCR]
       CMPW   [W,X]
       CMPW   [$01A0]
       CMPW   ,Y+
@@ -9489,8 +9483,8 @@
       SBCD   394,X
       SBCD   F,X
       SBCD   D,X
-      SBCD   $5A61,PCR
-      SBCD   $5C67,PCR
+      SBCD   $5A55,PCR
+      SBCD   $5C5B,PCR
       SBCD   W,X
       SBCD   ,W
       SBCD   [,W]
@@ -9506,8 +9500,8 @@
       SBCD   [410,X]
       SBCD   [F,X]
       SBCD   [D,X]
-      SBCD   [$5AAC,PCR]
-      SBCD   [$5CB2,PCR]
+      SBCD   [$5AA0,PCR]
+      SBCD   [$5CA6,PCR]
       SBCD   [W,X]
       SBCD   [$01A0]
       SBCD   ,Y+
@@ -9621,8 +9615,8 @@
       CMPD   394,X
       CMPD   F,X
       CMPD   D,X
-      CMPD   $5C21,PCR
-      CMPD   $5E27,PCR
+      CMPD   $5C15,PCR
+      CMPD   $5E1B,PCR
       CMPD   W,X
       CMPD   ,W
       CMPD   [,W]
@@ -9638,8 +9632,8 @@
       CMPD   [410,X]
       CMPD   [F,X]
       CMPD   [D,X]
-      CMPD   [$5C6C,PCR]
-      CMPD   [$5E72,PCR]
+      CMPD   [$5C60,PCR]
+      CMPD   [$5E66,PCR]
       CMPD   [W,X]
       CMPD   [$01A0]
       CMPD   ,Y+
@@ -9753,8 +9747,8 @@
       ANDD   394,X
       ANDD   F,X
       ANDD   D,X
-      ANDD   $5DE1,PCR
-      ANDD   $5FE7,PCR
+      ANDD   $5DD5,PCR
+      ANDD   $5FDB,PCR
       ANDD   W,X
       ANDD   ,W
       ANDD   [,W]
@@ -9770,8 +9764,8 @@
       ANDD   [410,X]
       ANDD   [F,X]
       ANDD   [D,X]
-      ANDD   [$5E2C,PCR]
-      ANDD   [$6032,PCR]
+      ANDD   [$5E20,PCR]
+      ANDD   [$6026,PCR]
       ANDD   [W,X]
       ANDD   [$01A0]
       ANDD   ,Y+
@@ -9885,8 +9879,8 @@
       BITD   394,X
       BITD   F,X
       BITD   D,X
-      BITD   $5FA1,PCR
-      BITD   $61A7,PCR
+      BITD   $5F95,PCR
+      BITD   $619B,PCR
       BITD   W,X
       BITD   ,W
       BITD   [,W]
@@ -9902,8 +9896,8 @@
       BITD   [410,X]
       BITD   [F,X]
       BITD   [D,X]
-      BITD   [$5FEC,PCR]
-      BITD   [$61F2,PCR]
+      BITD   [$5FE0,PCR]
+      BITD   [$61E6,PCR]
       BITD   [W,X]
       BITD   [$01A0]
       BITD   ,Y+
@@ -10017,8 +10011,8 @@
       LDW    394,X
       LDW    F,X
       LDW    D,X
-      LDW    $6161,PCR
-      LDW    $6367,PCR
+      LDW    $6155,PCR
+      LDW    $635B,PCR
       LDW    W,X
       LDW    ,W
       LDW    [,W]
@@ -10034,8 +10028,8 @@
       LDW    [410,X]
       LDW    [F,X]
       LDW    [D,X]
-      LDW    [$61AC,PCR]
-      LDW    [$63B2,PCR]
+      LDW    [$61A0,PCR]
+      LDW    [$63A6,PCR]
       LDW    [W,X]
       LDW    [$01A0]
       LDW    ,Y+
@@ -10149,8 +10143,8 @@
       STW    394,X
       STW    F,X
       STW    D,X
-      STW    $6321,PCR
-      STW    $6527,PCR
+      STW    $6315,PCR
+      STW    $651B,PCR
       STW    W,X
       STW    ,W
       STW    [,W]
@@ -10166,8 +10160,8 @@
       STW    [410,X]
       STW    [F,X]
       STW    [D,X]
-      STW    [$636C,PCR]
-      STW    [$6572,PCR]
+      STW    [$6360,PCR]
+      STW    [$6566,PCR]
       STW    [W,X]
       STW    [$01A0]
       STW    ,Y+
@@ -10279,8 +10273,8 @@
       EORD   394,X
       EORD   F,X
       EORD   D,X
-      EORD   $64D8,PCR
-      EORD   $66DE,PCR
+      EORD   $64CC,PCR
+      EORD   $66D2,PCR
       EORD   W,X
       EORD   ,W
       EORD   [,W]
@@ -10296,8 +10290,8 @@
       EORD   [410,X]
       EORD   [F,X]
       EORD   [D,X]
-      EORD   [$6523,PCR]
-      EORD   [$6729,PCR]
+      EORD   [$6517,PCR]
+      EORD   [$671D,PCR]
       EORD   [W,X]
       EORD   [$01A0]
       EORD   ,Y+
@@ -10411,8 +10405,8 @@
       ADCD   394,X
       ADCD   F,X
       ADCD   D,X
-      ADCD   $6696,PCR
-      ADCD   $689C,PCR
+      ADCD   $668A,PCR
+      ADCD   $6890,PCR
       ADCD   W,X
       ADCD   ,W
       ADCD   [,W]
@@ -10428,8 +10422,8 @@
       ADCD   [410,X]
       ADCD   [F,X]
       ADCD   [D,X]
-      ADCD   [$66E1,PCR]
-      ADCD   [$68E7,PCR]
+      ADCD   [$66D5,PCR]
+      ADCD   [$68DB,PCR]
       ADCD   [W,X]
       ADCD   [$01A0]
       ADCD   ,Y+
@@ -10543,8 +10537,8 @@
       ORD    394,X
       ORD    F,X
       ORD    D,X
-      ORD    $6856,PCR
-      ORD    $6A5C,PCR
+      ORD    $684A,PCR
+      ORD    $6A50,PCR
       ORD    W,X
       ORD    ,W
       ORD    [,W]
@@ -10560,8 +10554,8 @@
       ORD    [410,X]
       ORD    [F,X]
       ORD    [D,X]
-      ORD    [$68A1,PCR]
-      ORD    [$6AA7,PCR]
+      ORD    [$6895,PCR]
+      ORD    [$6A9B,PCR]
       ORD    [W,X]
       ORD    [$01A0]
       ORD    ,Y+
@@ -10675,8 +10669,8 @@
       ADDW   394,X
       ADDW   F,X
       ADDW   D,X
-      ADDW   $6A16,PCR
-      ADDW   $6C1C,PCR
+      ADDW   $6A0A,PCR
+      ADDW   $6C10,PCR
       ADDW   W,X
       ADDW   ,W
       ADDW   [,W]
@@ -10692,8 +10686,8 @@
       ADDW   [410,X]
       ADDW   [F,X]
       ADDW   [D,X]
-      ADDW   [$6A61,PCR]
-      ADDW   [$6C67,PCR]
+      ADDW   [$6A55,PCR]
+      ADDW   [$6C5B,PCR]
       ADDW   [W,X]
       ADDW   [$01A0]
       ADDW   ,Y+
@@ -10808,8 +10802,8 @@
       CMPY   394,X
       CMPY   F,X
       CMPY   D,X
-      CMPY   $6BD9,PCR
-      CMPY   $6DDF,PCR
+      CMPY   $6BCD,PCR
+      CMPY   $6DD3,PCR
       CMPY   W,X
       CMPY   ,W
       CMPY   [,W]
@@ -10825,8 +10819,8 @@
       CMPY   [410,X]
       CMPY   [F,X]
       CMPY   [D,X]
-      CMPY   [$6C24,PCR]
-      CMPY   [$6E2A,PCR]
+      CMPY   [$6C18,PCR]
+      CMPY   [$6E1E,PCR]
       CMPY   [W,X]
       CMPY   [$01A0]
       CMPY   ,Y+
@@ -10940,8 +10934,8 @@
       LDY    394,X
       LDY    F,X
       LDY    D,X
-      LDY    $6D99,PCR
-      LDY    $6F9F,PCR
+      LDY    $6D8D,PCR
+      LDY    $6F93,PCR
       LDY    W,X
       LDY    ,W
       LDY    [,W]
@@ -10957,8 +10951,8 @@
       LDY    [410,X]
       LDY    [F,X]
       LDY    [D,X]
-      LDY    [$6DE4,PCR]
-      LDY    [$6FEA,PCR]
+      LDY    [$6DD8,PCR]
+      LDY    [$6FDE,PCR]
       LDY    [W,X]
       LDY    [$01A0]
       LDY    ,Y+
@@ -11072,8 +11066,8 @@
       STY    394,X
       STY    F,X
       STY    D,X
-      STY    $6F57,PCR
-      STY    $715D,PCR
+      STY    $6F4B,PCR
+      STY    $7151,PCR
       STY    W,X
       STY    ,W
       STY    [,W]
@@ -11089,8 +11083,8 @@
       STY    [410,X]
       STY    [F,X]
       STY    [D,X]
-      STY    [$6FA2,PCR]
-      STY    [$71A8,PCR]
+      STY    [$6F96,PCR]
+      STY    [$719C,PCR]
       STY    [W,X]
       STY    [$01A0]
       STY    ,Y+
@@ -11124,7 +11118,7 @@
       CMPY   >$00BD
       LDY    >$00BF
       STY    >$00C0
-      LDS    #$CF
+      LDS    #$00CF
       LDQ    $DD
       STQ    $DE
       LDS    $DF
@@ -11167,8 +11161,8 @@
       LDQ    394,X
       LDQ    F,X
       LDQ    D,X
-      LDQ    $70A2,PCR
-      LDQ    $72A8,PCR
+      LDQ    $7096,PCR
+      LDQ    $729C,PCR
       LDQ    W,X
       LDQ    ,W
       LDQ    [,W]
@@ -11184,8 +11178,8 @@
       LDQ    [410,X]
       LDQ    [F,X]
       LDQ    [D,X]
-      LDQ    [$70ED,PCR]
-      LDQ    [$72F3,PCR]
+      LDQ    [$70E1,PCR]
+      LDQ    [$72E7,PCR]
       LDQ    [W,X]
       LDQ    [$01A0]
       LDQ    ,Y+
@@ -11300,8 +11294,8 @@
       STQ    394,X
       STQ    F,X
       STQ    D,X
-      STQ    $7265,PCR
-      STQ    $746B,PCR
+      STQ    $7259,PCR
+      STQ    $745F,PCR
       STQ    W,X
       STQ    ,W
       STQ    [,W]
@@ -11317,8 +11311,8 @@
       STQ    [410,X]
       STQ    [F,X]
       STQ    [D,X]
-      STQ    [$72B0,PCR]
-      STQ    [$74B6,PCR]
+      STQ    [$72A4,PCR]
+      STQ    [$74AA,PCR]
       STQ    [W,X]
       STQ    [$01A0]
       STQ    ,Y+
@@ -11432,8 +11426,8 @@
       LDS    394,X
       LDS    F,X
       LDS    D,X
-      LDS    $7425,PCR
-      LDS    $762B,PCR
+      LDS    $7419,PCR
+      LDS    $761F,PCR
       LDS    W,X
       LDS    ,W
       LDS    [,W]
@@ -11449,8 +11443,8 @@
       LDS    [410,X]
       LDS    [F,X]
       LDS    [D,X]
-      LDS    [$7470,PCR]
-      LDS    [$7676,PCR]
+      LDS    [$7464,PCR]
+      LDS    [$766A,PCR]
       LDS    [W,X]
       LDS    [$01A0]
       LDS    ,Y+
@@ -11564,8 +11558,8 @@
       STS    394,X
       STS    F,X
       STS    D,X
-      STS    $75E5,PCR
-      STS    $77EB,PCR
+      STS    $75D9,PCR
+      STS    $77DF,PCR
       STS    W,X
       STS    ,W
       STS    [,W]
@@ -11581,8 +11575,8 @@
       STS    [410,X]
       STS    [F,X]
       STS    [D,X]
-      STS    [$7630,PCR]
-      STS    [$7836,PCR]
+      STS    [$7624,PCR]
+      STS    [$782A,PCR]
       STS    [W,X]
       STS    [$01A0]
       STS    ,Y+
@@ -11773,12 +11767,8 @@
       TFM    U,Y+
       TFM    U,U+
       TFM    U,S+
-      BITMD  #%111101
-      BITMD  #%10000000
-      BITMD  #%10
-      LDMD   #%111110
-      LDMD   #%10000000
-      LDMD   #%10
+      BITMD  #%00111101
+      LDMD   #%00111110
       SWI3
       COME
       DECE
@@ -11792,13 +11782,13 @@
       CLRF
       SUBE   #$81
       CMPE   #$82
-      CMPU   #$84
+      CMPU   #$0084
       LDE    #$87
       ADDE   #$8C
-      CMPS   #$8D
-      DIVD   #$8E
-      DIVQ   #$8F
-      MULD   #$90
+      CMPS   #$008D
+      DIVD   #$008E
+      DIVQ   #$008F
+      MULD   #$0090
       SUBE   $91
       CMPE   $92
       CMPU   $94
@@ -11920,8 +11910,8 @@
       SUBE   394,X
       SUBE   F,X
       SUBE   D,X
-      SUBE   $7A68,PCR
-      SUBE   $7C6E,PCR
+      SUBE   $7A50,PCR
+      SUBE   $7C56,PCR
       SUBE   W,X
       SUBE   ,W
       SUBE   [,W]
@@ -11937,8 +11927,8 @@
       SUBE   [410,X]
       SUBE   [F,X]
       SUBE   [D,X]
-      SUBE   [$7AB3,PCR]
-      SUBE   [$7CB9,PCR]
+      SUBE   [$7A9B,PCR]
+      SUBE   [$7CA1,PCR]
       SUBE   [W,X]
       SUBE   [$01A0]
       SUBE   ,Y+
@@ -12052,8 +12042,8 @@
       CMPE   394,X
       CMPE   F,X
       CMPE   D,X
-      CMPE   $7C28,PCR
-      CMPE   $7E2E,PCR
+      CMPE   $7C10,PCR
+      CMPE   $7E16,PCR
       CMPE   W,X
       CMPE   ,W
       CMPE   [,W]
@@ -12069,8 +12059,8 @@
       CMPE   [410,X]
       CMPE   [F,X]
       CMPE   [D,X]
-      CMPE   [$7C73,PCR]
-      CMPE   [$7E79,PCR]
+      CMPE   [$7C5B,PCR]
+      CMPE   [$7E61,PCR]
       CMPE   [W,X]
       CMPE   [$01A0]
       CMPE   ,Y+
@@ -12183,8 +12173,8 @@
       CMPU   394,X
       CMPU   F,X
       CMPU   D,X
-      CMPU   $7DE5,PCR
-      CMPU   $7FEB,PCR
+      CMPU   $7DCD,PCR
+      CMPU   $7FD3,PCR
       CMPU   W,X
       CMPU   ,W
       CMPU   [,W]
@@ -12200,8 +12190,8 @@
       CMPU   [410,X]
       CMPU   [F,X]
       CMPU   [D,X]
-      CMPU   [$7E30,PCR]
-      CMPU   [$8036,PCR]
+      CMPU   [$7E18,PCR]
+      CMPU   [$801E,PCR]
       CMPU   [W,X]
       CMPU   [$01A0]
       CMPU   ,Y+
@@ -12313,8 +12303,8 @@
       LDE    394,X
       LDE    F,X
       LDE    D,X
-      LDE    $7F9F,PCR
-      LDE    $81A5,PCR
+      LDE    $7F87,PCR
+      LDE    $818D,PCR
       LDE    W,X
       LDE    ,W
       LDE    [,W]
@@ -12330,8 +12320,8 @@
       LDE    [410,X]
       LDE    [F,X]
       LDE    [D,X]
-      LDE    [$7FEA,PCR]
-      LDE    [$81F0,PCR]
+      LDE    [$7FD2,PCR]
+      LDE    [$81D8,PCR]
       LDE    [W,X]
       LDE    [$01A0]
       LDE    ,Y+
@@ -12445,8 +12435,8 @@
       STE    394,X
       STE    F,X
       STE    D,X
-      STE    $815F,PCR
-      STE    $8365,PCR
+      STE    $8147,PCR
+      STE    $834D,PCR
       STE    W,X
       STE    ,W
       STE    [,W]
@@ -12462,8 +12452,8 @@
       STE    [410,X]
       STE    [F,X]
       STE    [D,X]
-      STE    [$81AA,PCR]
-      STE    [$83B0,PCR]
+      STE    [$8192,PCR]
+      STE    [$8398,PCR]
       STE    [W,X]
       STE    [$01A0]
       STE    ,Y+
@@ -12572,8 +12562,8 @@
       ADDE   394,X
       ADDE   F,X
       ADDE   D,X
-      ADDE   $830B,PCR
-      ADDE   $8511,PCR
+      ADDE   $82F3,PCR
+      ADDE   $84F9,PCR
       ADDE   W,X
       ADDE   ,W
       ADDE   [,W]
@@ -12589,8 +12579,8 @@
       ADDE   [410,X]
       ADDE   [F,X]
       ADDE   [D,X]
-      ADDE   [$8356,PCR]
-      ADDE   [$855C,PCR]
+      ADDE   [$833E,PCR]
+      ADDE   [$8544,PCR]
       ADDE   [W,X]
       ADDE   [$01A0]
       ADDE   ,Y+
@@ -12705,8 +12695,8 @@
       CMPS   394,X
       CMPS   F,X
       CMPS   D,X
-      CMPS   $84CE,PCR
-      CMPS   $86D4,PCR
+      CMPS   $84B6,PCR
+      CMPS   $86BC,PCR
       CMPS   W,X
       CMPS   ,W
       CMPS   [,W]
@@ -12722,8 +12712,8 @@
       CMPS   [410,X]
       CMPS   [F,X]
       CMPS   [D,X]
-      CMPS   [$8519,PCR]
-      CMPS   [$871F,PCR]
+      CMPS   [$8501,PCR]
+      CMPS   [$8707,PCR]
       CMPS   [W,X]
       CMPS   [$01A0]
       CMPS   ,Y+
@@ -12838,8 +12828,8 @@
       DIVD   394,X
       DIVD   F,X
       DIVD   D,X
-      DIVD   $8691,PCR
-      DIVD   $8897,PCR
+      DIVD   $8679,PCR
+      DIVD   $887F,PCR
       DIVD   W,X
       DIVD   ,W
       DIVD   [,W]
@@ -12855,8 +12845,8 @@
       DIVD   [410,X]
       DIVD   [F,X]
       DIVD   [D,X]
-      DIVD   [$86DC,PCR]
-      DIVD   [$88E2,PCR]
+      DIVD   [$86C4,PCR]
+      DIVD   [$88CA,PCR]
       DIVD   [W,X]
       DIVD   [$01A0]
       DIVD   ,Y+
@@ -12970,8 +12960,8 @@
       DIVQ   394,X
       DIVQ   F,X
       DIVQ   D,X
-      DIVQ   $8851,PCR
-      DIVQ   $8A57,PCR
+      DIVQ   $8839,PCR
+      DIVQ   $8A3F,PCR
       DIVQ   W,X
       DIVQ   ,W
       DIVQ   [,W]
@@ -12987,8 +12977,8 @@
       DIVQ   [410,X]
       DIVQ   [F,X]
       DIVQ   [D,X]
-      DIVQ   [$889C,PCR]
-      DIVQ   [$8AA2,PCR]
+      DIVQ   [$8884,PCR]
+      DIVQ   [$8A8A,PCR]
       DIVQ   [W,X]
       DIVQ   [$01A0]
       DIVQ   ,Y+
@@ -13102,8 +13092,8 @@
       MULD   394,X
       MULD   F,X
       MULD   D,X
-      MULD   $8A0F,PCR
-      MULD   $8C15,PCR
+      MULD   $89F7,PCR
+      MULD   $8BFD,PCR
       MULD   W,X
       MULD   ,W
       MULD   [,W]
@@ -13119,8 +13109,8 @@
       MULD   [410,X]
       MULD   [F,X]
       MULD   [D,X]
-      MULD   [$8A5A,PCR]
-      MULD   [$8C60,PCR]
+      MULD   [$8A42,PCR]
+      MULD   [$8C48,PCR]
       MULD   [W,X]
       MULD   [$01A0]
       MULD   ,Y+
@@ -13209,8 +13199,8 @@
       SUBF   394,X
       SUBF   F,X
       SUBF   D,X
-      SUBF   $8B7D,PCR
-      SUBF   $8D83,PCR
+      SUBF   $8B65,PCR
+      SUBF   $8D6B,PCR
       SUBF   W,X
       SUBF   ,W
       SUBF   [,W]
@@ -13226,8 +13216,8 @@
       SUBF   [410,X]
       SUBF   [F,X]
       SUBF   [D,X]
-      SUBF   [$8BC8,PCR]
-      SUBF   [$8DCE,PCR]
+      SUBF   [$8BB0,PCR]
+      SUBF   [$8DB6,PCR]
       SUBF   [W,X]
       SUBF   [$01A0]
       SUBF   ,Y+
@@ -13341,8 +13331,8 @@
       CMPF   394,X
       CMPF   F,X
       CMPF   D,X
-      CMPF   $8D3D,PCR
-      CMPF   $8F43,PCR
+      CMPF   $8D25,PCR
+      CMPF   $8F2B,PCR
       CMPF   W,X
       CMPF   ,W
       CMPF   [,W]
@@ -13358,8 +13348,8 @@
       CMPF   [410,X]
       CMPF   [F,X]
       CMPF   [D,X]
-      CMPF   [$8D88,PCR]
-      CMPF   [$8F8E,PCR]
+      CMPF   [$8D70,PCR]
+      CMPF   [$8F76,PCR]
       CMPF   [W,X]
       CMPF   [$01A0]
       CMPF   ,Y+
@@ -13469,8 +13459,8 @@
       LDF    394,X
       LDF    F,X
       LDF    D,X
-      LDF    $8EF1,PCR
-      LDF    $90F7,PCR
+      LDF    $8ED9,PCR
+      LDF    $90DF,PCR
       LDF    W,X
       LDF    ,W
       LDF    [,W]
@@ -13486,8 +13476,8 @@
       LDF    [410,X]
       LDF    [F,X]
       LDF    [D,X]
-      LDF    [$8F3C,PCR]
-      LDF    [$9142,PCR]
+      LDF    [$8F24,PCR]
+      LDF    [$912A,PCR]
       LDF    [W,X]
       LDF    [$01A0]
       LDF    ,Y+
@@ -13601,8 +13591,8 @@
       STF    394,X
       STF    F,X
       STF    D,X
-      STF    $90B1,PCR
-      STF    $92B7,PCR
+      STF    $9099,PCR
+      STF    $929F,PCR
       STF    W,X
       STF    ,W
       STF    [,W]
@@ -13618,8 +13608,8 @@
       STF    [410,X]
       STF    [F,X]
       STF    [D,X]
-      STF    [$90FC,PCR]
-      STF    [$9302,PCR]
+      STF    [$90E4,PCR]
+      STF    [$92EA,PCR]
       STF    [W,X]
       STF    [$01A0]
       STF    ,Y+
@@ -13728,8 +13718,8 @@
       ADDF   394,X
       ADDF   F,X
       ADDF   D,X
-      ADDF   $925D,PCR
-      ADDF   $9463,PCR
+      ADDF   $9245,PCR
+      ADDF   $944B,PCR
       ADDF   W,X
       ADDF   ,W
       ADDF   [,W]
@@ -13745,8 +13735,8 @@
       ADDF   [410,X]
       ADDF   [F,X]
       ADDF   [D,X]
-      ADDF   [$92A8,PCR]
-      ADDF   [$94AE,PCR]
+      ADDF   [$9290,PCR]
+      ADDF   [$9496,PCR]
       ADDF   [W,X]
       ADDF   [$01A0]
       ADDF   ,Y+
@@ -13850,8 +13840,8 @@
       OIM    #$62,138,X
       OIM    #$62,F,X
       OIM    #$62,D,X
-      OIM    #$62,$93FF,PCR
-      OIM    #$62,$9505,PCR
+      OIM    #$62,$93E7,PCR
+      OIM    #$62,$94ED,PCR
       OIM    #$62,W,X
       OIM    #$62,,W
       OIM    #$62,[,W]
@@ -13867,8 +13857,8 @@
       OIM    #$62,[154,X]
       OIM    #$62,[F,X]
       OIM    #$62,[D,X]
-      OIM    #$62,[$944A,PCR]
-      OIM    #$62,[$9550,PCR]
+      OIM    #$62,[$9432,PCR]
+      OIM    #$62,[$9538,PCR]
       OIM    #$62,[W,X]
       OIM    #$62,[$00A0]
       OIM    #$62,,Y+
@@ -13983,8 +13973,8 @@
       AIM    #$63,138,X
       AIM    #$63,F,X
       AIM    #$63,D,X
-      AIM    #$63,$95C2,PCR
-      AIM    #$63,$96C8,PCR
+      AIM    #$63,$95AA,PCR
+      AIM    #$63,$96B0,PCR
       AIM    #$63,W,X
       AIM    #$63,,W
       AIM    #$63,[,W]
@@ -14000,8 +13990,8 @@
       AIM    #$63,[154,X]
       AIM    #$63,[F,X]
       AIM    #$63,[D,X]
-      AIM    #$63,[$960D,PCR]
-      AIM    #$63,[$9713,PCR]
+      AIM    #$63,[$95F5,PCR]
+      AIM    #$63,[$96FB,PCR]
       AIM    #$63,[W,X]
       AIM    #$63,[$00A0]
       AIM    #$63,,Y+
@@ -14116,8 +14106,8 @@
       EIM    #$66,138,X
       EIM    #$66,F,X
       EIM    #$66,D,X
-      EIM    #$66,$9785,PCR
-      EIM    #$66,$988B,PCR
+      EIM    #$66,$976D,PCR
+      EIM    #$66,$9873,PCR
       EIM    #$66,W,X
       EIM    #$66,,W
       EIM    #$66,[,W]
@@ -14133,8 +14123,8 @@
       EIM    #$66,[154,X]
       EIM    #$66,[F,X]
       EIM    #$66,[D,X]
-      EIM    #$66,[$97D0,PCR]
-      EIM    #$66,[$98D6,PCR]
+      EIM    #$66,[$97B8,PCR]
+      EIM    #$66,[$98BE,PCR]
       EIM    #$66,[W,X]
       EIM    #$66,[$00A0]
       EIM    #$66,,Y+
@@ -14249,8 +14239,8 @@
       TIM    #$6C,138,X
       TIM    #$6C,F,X
       TIM    #$6C,D,X
-      TIM    #$6C,$9948,PCR
-      TIM    #$6C,$9A4E,PCR
+      TIM    #$6C,$9930,PCR
+      TIM    #$6C,$9A36,PCR
       TIM    #$6C,W,X
       TIM    #$6C,,W
       TIM    #$6C,[,W]
@@ -14266,8 +14256,8 @@
       TIM    #$6C,[154,X]
       TIM    #$6C,[F,X]
       TIM    #$6C,[D,X]
-      TIM    #$6C,[$9993,PCR]
-      TIM    #$6C,[$9A99,PCR]
+      TIM    #$6C,[$997B,PCR]
+      TIM    #$6C,[$9A81,PCR]
       TIM    #$6C,[W,X]
       TIM    #$6C,[$00A0]
       TIM    #$6C,,Y+
