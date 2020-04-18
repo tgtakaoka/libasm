@@ -33,16 +33,16 @@ public:
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
-    Config::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(Config::insn_t insnCode) {
-        _insnCode = insnCode;
+    Config::opcode_t opCode() const { return _opCode; }
+    void setOpCode(Config::opcode_t opCode) {
+        _opCode = opCode;
     }
     void embed(Config::opcode_t data) {
-        _insnCode |= data;
+        _opCode |= data;
     }
 
 private:
-    Config::insn_t _insnCode;
+    Config::opcode_t _opCode;
     host::uint_t _flags;
 };
 

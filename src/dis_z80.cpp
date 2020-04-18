@@ -381,7 +381,7 @@ Error DisZ80::decodeIndexedBitOp(
     InsnZ80 &insn, int8_t offset, Config::opcode_t opCode) {
     InsnZ80 ixBit(insn);
     ixBit.setInsnCode(insn.opCode(), opCode);
-    if (TableZ80.searchInsnCode(ixBit)) 
+    if (TableZ80.searchOpCode(ixBit)) 
         return setError(UNKNOWN_INSTRUCTION);
     insn.setName(ixBit.name());
 
@@ -412,7 +412,7 @@ Error DisZ80::decode(
         insn.setInsnCode(prefix, opCode);
     }
 
-    if (TableZ80.searchInsnCode(insn))
+    if (TableZ80.searchOpCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     uint8_t u8;

@@ -62,7 +62,7 @@ Error DisTms9900::decodeImmediate(
 }
 
 Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
-    int16_t delta = static_cast<int8_t>(insn.insnCode() & 0xff);
+    int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
     delta <<= 1;
     const Config::uintptr_t addr = insn.address() + 2 + delta;
     outAddress(addr, false);
@@ -72,10 +72,10 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
 Error DisTms9900::decode(
     DisMemory &memory, Insn &_insn) {
     InsnTms9900 insn(_insn);
-    Config::insn_t insnCode;
-    if (insn.readUint16(memory, insnCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(insnCode);
-    if (TableTms9900.searchInsnCode(insn)) {
+    Config::opcode_t opCode;
+    if (insn.readUint16(memory, opCode)) return setError(NO_MEMORY);
+    insn.setOpCode(opCode);
+    if (TableTms9900.searchOpCode(insn)) {
         insn.setName("MID");
         return setError(UNKNOWN_INSTRUCTION);
     }
@@ -86,34 +86,34 @@ Error DisTms9900::decode(
     case IMM:
         return decodeImmediate(memory, insn);
     case REG:
-        _operands = _regs.outRegName(_operands, insnCode);
+        _operands = _regs.outRegName(_operands, opCode);
         return setError(OK);
     case REG_IMM:
-        _operands = _regs.outRegName(_operands, insnCode);
+        _operands = _regs.outRegName(_operands, opCode);
         *_operands++ = ',';
         return decodeImmediate(memory, insn);
     case CNT_REG: {
-        _operands = _regs.outRegName(_operands, insnCode);
+        _operands = _regs.outRegName(_operands, opCode);
         *_operands++ = ',';
-        const host::uint_t count = (insnCode >> 4) & 0x0f;
+        const host::uint_t count = (opCode >> 4) & 0x0f;
         if (count == 0) _operands = _regs.outRegName(_operands, 0);
         else outConstant(static_cast<uint8_t>(count), 10);
         return setError(OK);
     }
     case SRC:
-        return decodeOperand(memory, insn, insnCode);
+        return decodeOperand(memory, insn, opCode);
     case REG_SRC:
-        if (decodeOperand(memory, insn, insnCode))
+        if (decodeOperand(memory, insn, opCode))
             return getError();
         *_operands++ = ',';
-        _operands = _regs.outRegName(_operands, insnCode >> 6);
+        _operands = _regs.outRegName(_operands, opCode >> 6);
         return setError(OK);
     case CNT_SRC:
     case XOP_SRC: {
-        if (decodeOperand(memory, insn, insnCode))
+        if (decodeOperand(memory, insn, opCode))
             return getError();
         *_operands++ = ',';
-        host::uint_t count = (insnCode >> 6) & 0xf;
+        host::uint_t count = (opCode >> 6) & 0xf;
         if (insn.addrMode() == CNT_SRC && count == 0)
             count = 16;
         const char *label = lookup(count);
@@ -125,17 +125,17 @@ Error DisTms9900::decode(
         return setError(OK);
     }
     case DST_SRC: {
-        if (decodeOperand(memory, insn, insnCode))
+        if (decodeOperand(memory, insn, opCode))
             return getError();
         *_operands++ = ',';
-        decodeOperand(memory, insn, insnCode >> 6);
+        decodeOperand(memory, insn, opCode >> 6);
         return getError();
     }
     case REL:
         decodeRelative(insn);
         return setError(OK);
     case CRU_OFF: {
-        const int8_t offset = static_cast<int8_t>(insnCode & 0xff);
+        const int8_t offset = static_cast<int8_t>(opCode & 0xff);
         const char *label = lookup(offset);
         if (label) {
             outText(label);

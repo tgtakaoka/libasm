@@ -28,7 +28,7 @@ class TableW65C816 : private TableBase {
 public:
     Error searchName(InsnW65C816 &insn) const;
     Error searchNameAndAddrMode(InsnW65C816 &insn) const;
-    Error searchInsnCode(InsnW65C816 &insn, bool acceptIndirectLong) const;
+    Error searchOpCode(InsnW65C816 &insn, bool acceptIndirectLong) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
@@ -38,7 +38,7 @@ private:
         InsnW65C816 &insn, const Entry *table, const Entry *end) const;
     Error searchNameAndAddrMode(
         InsnW65C816 &insn, const Entry *table, const Entry *end) const;
-    Error searchInsnCode(
+    Error searchOpCode(
         InsnW65C816 &insn, bool acceptIndirectLong,
         const Entry *table, const Entry *end) const;
 };

@@ -25,7 +25,7 @@ void DisMc6800::outRegister(RegName regName) {
 }
 
 bool DisMc6800::outAccumulator(const InsnMc6800 &insn) {
-    const Config::opcode_t opc = insn.insnCode();
+    const Config::opcode_t opc = insn.opCode();
     switch (insn.insnAdjust()) {
     case ADJ_AB01: outRegister((opc & 1) == 0 ? REG_A : REG_B); break;
     case ADJ_AB16: outRegister((opc & 0x10) == 0 ? REG_A : REG_B); break;
@@ -150,10 +150,10 @@ Error DisMc6800::decodeBitOperation(
 Error DisMc6800::decode(
     DisMemory &memory, Insn &_insn) {
     InsnMc6800 insn(_insn);
-    Config::insn_t insnCode;
-    if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(insnCode);
-    if (TableMc6800.searchInsnCode(insn))
+    Config::opcode_t opCode;
+    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    insn.setOpCode(opCode);
+    if (TableMc6800.searchOpCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

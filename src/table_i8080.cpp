@@ -114,7 +114,7 @@ Error TableI8080::searchName(InsnI8080 &insn) const {
     const char *name = insn.name();
     const Entry *entry = TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_I8080));
     if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_byte(&entry->opCode));
+    insn.setOpCode(pgm_read_byte(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
@@ -141,11 +141,11 @@ static Config::opcode_t tableCode(
     }
 }
 
-Error TableI8080::searchInsnCode(InsnI8080 &insn) const {
-    const Config::insn_t insnCode = insn.insnCode();
+Error TableI8080::searchOpCode(InsnI8080 &insn) const {
+    const Config::opcode_t opCode = insn.opCode();
     const Entry *entry =
         TableBase::searchCode<Entry, Config::opcode_t>(
-            insnCode, ARRAY_RANGE(TABLE_I8080), tableCode);
+            opCode, ARRAY_RANGE(TABLE_I8080), tableCode);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);

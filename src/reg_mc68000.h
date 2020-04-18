@@ -64,7 +64,7 @@ public:
     static bool isDreg(RegName reg);
     static bool isAreg(RegName reg);
     static bool isADreg(RegName reg);
-    static Config::insn_t encodeRegNo(RegName reg);
+    static Config::opcode_t encodeRegNo(RegName reg);
     static host::uint_t encodeRegPos(RegName reg);
     static RegName decodeDataReg(host::uint_t regno);
     static RegName decodeAddrReg(host::uint_t regno);
@@ -100,7 +100,7 @@ enum EaMode : host::uint_t {
 #define CAT_ALTERABLE 8
 
 struct EaMc68000 {
-    EaMc68000(Config::insn_t insnCode);
+    EaMc68000(Config::opcode_t opCode);
     EaMc68000(EaSize size, host::uint_t mode, host::uint_t regno);
     EaMc68000(EaSize size, EaMode mode, host::uint_t regno);
 
@@ -108,8 +108,8 @@ struct EaMc68000 {
         return satisfy(mode, categories);
     }
     static bool satisfy(EaMode mode, host::uint_t categories);
-    static Config::insn_t encodeMode(EaMode mode);
-    static Config::insn_t encodeRegNo(EaMode mode, RegName regName);
+    static Config::opcode_t encodeMode(EaMode mode);
+    static Config::opcode_t encodeRegNo(EaMode mode, RegName regName);
     static const char *eaCategory(EaMode mode);
 
     EaSize size;

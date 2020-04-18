@@ -137,11 +137,11 @@ Error DisMos6502::decodeRelative(
 Error DisMos6502::decode(
     DisMemory &memory, Insn &_insn) {
     InsnMos6502 insn(_insn);
-    Config::insn_t insnCode;
-    if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(insnCode);
+    Config::opcode_t opCode;
+    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    insn.setOpCode(opCode);
 
-    if (TableMos6502.searchInsnCode(insn))
+    if (TableMos6502.searchOpCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

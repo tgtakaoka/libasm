@@ -35,12 +35,12 @@ public:
         _flags = flags;
     }
 
-    Config::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(Config::insn_t insnCode) {
-        _insnCode = insnCode;
+    Config::opcode_t opCode() const { return _opCode; }
+    void setOpCode(Config::opcode_t opCode) {
+        _opCode = opCode;
     }
-    Config::insn_t embed(Config::insn_t data, host::uint_t gp = 0) {
-        return (_insnCode |= (data << gp));
+    void embed(Config::opcode_t data, host::uint_t gp = 0) {
+        _opCode |= (data << gp);
     }
 
     void setSize(EaSize size) { _size = size; }
@@ -53,7 +53,7 @@ public:
     }
 
     void emitInsn() {
-        emitUint16(_insnCode, 0);
+        emitUint16(_opCode, 0);
     }
 
     void emitOperand16(uint16_t val16) {
@@ -68,7 +68,7 @@ public:
     }
 
 private:
-    Config::insn_t _insnCode;
+    Config::opcode_t _opCode;
     host::uint_t _flags;
     EaSize _size;
 

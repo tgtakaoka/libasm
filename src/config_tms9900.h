@@ -24,8 +24,8 @@ namespace tms9900 {
 
 struct Config : ConfigImpl<
     ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_16BIT, 6, ENDIAN_BIG, uint16_t, uint16_t,
-    4>
+    OPCODE_16BIT, uint16_t, 6,
+    ENDIAN_BIG, 4>
 {};
 
 } // namespace tms9900

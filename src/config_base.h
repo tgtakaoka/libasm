@@ -54,17 +54,15 @@ template<
     typename AddrT,
     typename DiffT,
     OpCodeWidth CodeWE,
+    typename OpCodeT,
     host::uint_t CodeMax,
     Endian EndianE,
-    typename OpCodeT,
-    typename InsnT,
     host::uint_t NameMax
     >
 struct ConfigImpl : virtual public ConfigBase {
     typedef AddrT   uintptr_t;
     typedef DiffT   ptrdiff_t;
     typedef OpCodeT opcode_t;
-    typedef InsnT   insn_t;
 
     static constexpr host::uint_t CODE_MAX = CodeMax;
     static constexpr Endian ENDIAN = EndianE;

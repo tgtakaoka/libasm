@@ -361,7 +361,7 @@ static Config::opcode_t maskCode(
     }
 }
 
-Error TableZ80::searchInsnCode(
+Error TableZ80::searchOpCode(
     InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         Config::opcode_t prefix = pgm_read_byte(&page->prefix);
@@ -397,10 +397,10 @@ Error TableZ80::searchNameAndOprFormats(
         : searchNameAndOprFormats(insn, left, right, ARRAY_RANGE(PAGES_I8080));
 }
 
-Error TableZ80::searchInsnCode(InsnZ80 &insn) const {
+Error TableZ80::searchOpCode(InsnZ80 &insn) const {
     return isZ80()
-        ? searchInsnCode(insn, ARRAY_RANGE(PAGES_Z80))
-        : searchInsnCode(insn, ARRAY_RANGE(PAGES_I8080));
+        ? searchOpCode(insn, ARRAY_RANGE(PAGES_Z80))
+        : searchOpCode(insn, ARRAY_RANGE(PAGES_I8080));
 }
 
 TableZ80::TableZ80() {

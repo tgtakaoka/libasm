@@ -211,11 +211,11 @@ Error DisW65C816::decodeBlockMove(
 Error DisW65C816::decode(
     DisMemory &memory, Insn &_insn) {
     InsnW65C816 insn(_insn);
-    Config::insn_t insnCode;
-    if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(insnCode);
+    Config::opcode_t opCode;
+    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    insn.setOpCode(opCode);
 
-    if (TableW65C816.searchInsnCode(insn, _acceptIndirectLong))
+    if (TableW65C816.searchOpCode(insn, _acceptIndirectLong))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

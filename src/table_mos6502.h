@@ -28,7 +28,7 @@ class TableMos6502 : private TableBase {
 public:
     Error searchName(InsnMos6502 &insn) const;
     Error searchNameAndAddrMode(InsnMos6502 &insn) const;
-    Error searchInsnCode(InsnMos6502 &insn) const;
+    Error searchOpCode(InsnMos6502 &insn) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
@@ -41,7 +41,7 @@ protected:
         InsnMos6502 &insn, const Entry *table, const Entry *end) const;
     Error searchNameAndAddrMode(
         InsnMos6502 &insn, const Entry *table, const Entry *end) const;
-    Error searchInsnCode(
+    Error searchOpCode(
         InsnMos6502 &insn, const Entry *table, const Entry *end) const;
 };
 

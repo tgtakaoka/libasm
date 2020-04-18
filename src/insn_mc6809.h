@@ -39,15 +39,13 @@ public:
         _flags = Entry::_flags(Entry::_oprSize(_flags), addrMode);
     }
 
-    Config::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(Config::insn_t insnCode) {
+    uint16_t insnCode() const { return _insnCode; }
+    void setInsnCode(uint16_t insnCode) {
         _insnCode = insnCode;
     }
     void setInsnCode(
         Config::opcode_t prefixCode, Config::opcode_t opCode) {
-        _insnCode =
-            (static_cast<Config::insn_t>(prefixCode) << 8)
-            | opCode;
+        _insnCode = (static_cast<uint16_t>(prefixCode) << 8) | opCode;
     }
     bool hasPrefix() const { return prefixCode() != 0; }
     Config::opcode_t prefixCode() const {
@@ -64,7 +62,7 @@ public:
     }
 
 private:
-    Config::insn_t _insnCode;
+    uint16_t _insnCode;
     host::uint_t _flags;
 };
 

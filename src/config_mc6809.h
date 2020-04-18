@@ -24,8 +24,8 @@ namespace mc6809 {
 
 struct Config : public ConfigImpl<
     ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, 5, ENDIAN_BIG, uint8_t, uint16_t,
-    6>
+    OPCODE_8BIT, uint8_t, 5,
+    ENDIAN_BIG, 6>
 {};
 
 } // namespace mc6809

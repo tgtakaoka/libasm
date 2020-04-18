@@ -340,7 +340,7 @@ Error TableMc6800::searchName(InsnMc6800 &insn) const {
     if (_cpuType == HD6301 && entry == nullptr)
         entry = TableBase::searchName<Entry>(name, ARRAY_RANGE(HD6301_TABLE));
     if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_byte(&entry->opCode));
+    insn.setOpCode(pgm_read_byte(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
@@ -366,7 +366,7 @@ Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
         entry = TableBase::searchName<Entry,AddrMode>(
             name, addrMode, ARRAY_RANGE(MC6800_TABLE), acceptAddrMode);
     if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_byte(&entry->opCode));
+    insn.setOpCode(pgm_read_byte(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
@@ -383,16 +383,16 @@ static Config::opcode_t tableCode(
     }
 }
 
-Error TableMc6800::searchInsnCode(InsnMc6800 &insn) const {
-    Config::opcode_t insnCode = insn.insnCode();
+Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
+    Config::opcode_t opCode = insn.opCode();
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
-        insnCode, ARRAY_RANGE(MC6800_TABLE), tableCode);
+        opCode, ARRAY_RANGE(MC6800_TABLE), tableCode);
     if (_cpuType != MC6800 && entry == nullptr)
         entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            insnCode, ARRAY_RANGE(MC6801_TABLE), tableCode);
+            opCode, ARRAY_RANGE(MC6801_TABLE), tableCode);
     if (_cpuType == HD6301 && entry == nullptr) {
         entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            insnCode, ARRAY_RANGE(HD6301_TABLE), tableCode);
+            opCode, ARRAY_RANGE(HD6301_TABLE), tableCode);
     }
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));

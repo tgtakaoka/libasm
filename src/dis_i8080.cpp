@@ -71,35 +71,35 @@ Error DisI8080::decodeIoaddr(
 Error DisI8080::decode(
     DisMemory &memory, Insn &_insn) {
     InsnI8080 insn(_insn);
-    Config::insn_t insnCode;
-    if (insn.readByte(memory, insnCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(insnCode);
-    if (TableI8080.searchInsnCode(insn))
+    Config::opcode_t opCode;
+    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    insn.setOpCode(opCode);
+    if (TableI8080.searchOpCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.insnFormat()) {
     case POINTER_REG:
-        outRegister(RegI8080::decodePointerReg((insnCode >> 4) & 3));
+        outRegister(RegI8080::decodePointerReg((opCode >> 4) & 3));
         break;
     case STACK_REG:
-        outRegister(RegI8080::decodeStackReg((insnCode >> 4) & 3));
+        outRegister(RegI8080::decodeStackReg((opCode >> 4) & 3));
         break;
     case INDEX_REG:
-        outRegister(RegI8080::decodeIndexReg((insnCode >> 4) & 1));
+        outRegister(RegI8080::decodeIndexReg((opCode >> 4) & 1));
         break;
     case DATA_REG:
-        outRegister(RegI8080::decodeDataReg((insnCode >> 3) & 7));
+        outRegister(RegI8080::decodeDataReg((opCode >> 3) & 7));
         break;
     case LOW_DATA_REG:
-        outRegister(RegI8080::decodeDataReg(insnCode & 7));
+        outRegister(RegI8080::decodeDataReg(opCode & 7));
         break;
     case DATA_DATA_REG:
-        outRegister(RegI8080::decodeDataReg((insnCode >> 3) & 7));
+        outRegister(RegI8080::decodeDataReg((opCode >> 3) & 7));
         *_operands++ = ',';
-        outRegister(RegI8080::decodeDataReg(insnCode & 7));
+        outRegister(RegI8080::decodeDataReg(opCode & 7));
         break;
     case VECTOR_NO:
-        outConstant((insnCode >> 3) & 7);
+        outConstant((opCode >> 3) & 7);
         break;
     default:
         break;

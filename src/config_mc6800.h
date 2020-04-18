@@ -24,8 +24,8 @@ namespace mc6800 {
 
 struct Config : public ConfigImpl<
     ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, 3, ENDIAN_BIG, uint8_t, uint8_t,
-    4>
+    OPCODE_8BIT, uint8_t, 3,
+    ENDIAN_BIG, 4>
 {};
 
 } // namespace mc6800

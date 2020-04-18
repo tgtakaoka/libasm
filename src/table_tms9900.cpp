@@ -111,7 +111,7 @@ Error TableTms9900::searchName(InsnTms9900 &insn) const {
         TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_TMS9900));
     if (!entry)
         return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_word(&entry->opCode));
+    insn.setOpCode(pgm_read_word(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
@@ -142,10 +142,10 @@ static Config::opcode_t maskCode(
     }
 }
 
-Error TableTms9900::searchInsnCode(InsnTms9900 &insn) const {
-    const Config::opcode_t insnCode = insn.insnCode();
+Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
+    const Config::opcode_t opCode = insn.opCode();
     const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-        insnCode, ARRAY_RANGE(TABLE_TMS9900), maskCode);
+        opCode, ARRAY_RANGE(TABLE_TMS9900), maskCode);
     if (!entry)
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));

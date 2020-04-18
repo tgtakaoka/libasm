@@ -27,7 +27,7 @@ namespace tms9900 {
 class TableTms9900 : private TableBase {
 public:
     Error searchName(InsnTms9900 &insn) const;
-    Error searchInsnCode(InsnTms9900 &insn) const;
+    Error searchOpCode(InsnTms9900 &insn) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;

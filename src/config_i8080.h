@@ -24,8 +24,8 @@ namespace i8080 {
 
 struct Config : ConfigImpl<
     ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, 3, ENDIAN_LITTLE, uint8_t, uint8_t,
-    4>
+    OPCODE_8BIT, uint8_t, 3,
+    ENDIAN_LITTLE, 4>
 {};
 
 } // namespace i8080

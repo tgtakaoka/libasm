@@ -202,14 +202,14 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        const Config::insn_t opc = insn.insnCode();
+        const uint16_t insnCode = insn.insnCode();
         constexpr uint8_t ORCC = 0x1A;
         constexpr uint8_t ANDCC = 0x1C;
         constexpr uint8_t CWAI = 0x3C;
-        constexpr Config::insn_t BITMD = 0x113C;
-        constexpr Config::insn_t LDMD = 0x113D;
-        if (opc == ORCC || opc == ANDCC || opc == CWAI
-            || opc == BITMD || opc == LDMD) {
+        constexpr uint16_t BITMD = 0x113C;
+        constexpr uint16_t LDMD = 0x113D;
+        if (insnCode == ORCC || insnCode == ANDCC || insnCode == CWAI
+            || insnCode == BITMD || insnCode == LDMD) {
             outConstant(val, 2);
         } else {
             outConstant(val);
@@ -323,7 +323,7 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
         insn.setInsnCode(prefix, opCode);
     }
 
-    if (TableMc6809.searchInsnCode(insn))
+    if (TableMc6809.searchOpCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

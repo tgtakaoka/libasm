@@ -33,7 +33,7 @@ public:
 
     Error searchName(InsnMc6809 &insn) const;
     Error searchNameAndAddrMode(InsnMc6809 &insn) const;
-    Error searchInsnCode(InsnMc6809 &insn) const;
+    Error searchOpCode(InsnMc6809 &insn) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
@@ -54,7 +54,7 @@ private:
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchNameAndAddrMode(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchInsnCode(
+    static Error searchOpCode(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
 };
 

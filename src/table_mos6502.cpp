@@ -253,7 +253,7 @@ Error TableMos6502::searchName(
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
-        insn.setInsnCode(pgm_read_byte(&entry->opCode));
+        insn.setOpCode(pgm_read_byte(&entry->opCode));
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
@@ -281,19 +281,19 @@ Error TableMos6502::searchNameAndAddrMode(
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
-        insn.setInsnCode(pgm_read_byte(&entry->opCode));
+        insn.setOpCode(pgm_read_byte(&entry->opCode));
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMos6502::searchInsnCode(
+Error TableMos6502::searchOpCode(
     InsnMos6502 &insn, const Entry *table, const Entry *end) const {
-    const Config::insn_t insnCode = insn.insnCode();
+    const Config::opcode_t opCode = insn.opCode();
     for (const Entry *entry = table;
          entry < end
              && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
-                     insnCode, entry, end));
+                     opCode, entry, end));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;
@@ -311,8 +311,8 @@ Error TableMos6502::searchNameAndAddrMode(InsnMos6502 &insn) const {
     return searchNameAndAddrMode(insn, ARRAY_RANGE(MOS6502_TABLE));
 }
 
-Error TableMos6502::searchInsnCode(InsnMos6502 &insn) const {
-    return searchInsnCode(insn, ARRAY_RANGE(MOS6502_TABLE));
+Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
+    return searchOpCode(insn, ARRAY_RANGE(MOS6502_TABLE));
 }
 
 const char *TableMos6502::listCpu() {

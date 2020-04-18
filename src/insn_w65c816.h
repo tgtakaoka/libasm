@@ -41,16 +41,16 @@ public:
         _flags = Entry::_flags(Entry::_cpuType(_flags), addrMode);
     }
 
-    Config::insn_t insnCode() const { return _insnCode; }
-    void setInsnCode(Config::insn_t insnCode) {
-        _insnCode = insnCode;
+    Config::opcode_t opCode() const { return _opCode; }
+    void setOpCode(Config::opcode_t opCode) {
+        _opCode = opCode;
     }
     void emitInsn() {
-        emitByte(_insnCode);
+        emitByte(_opCode);
     }
 
 private:
-    Config::insn_t _insnCode;
+    Config::opcode_t _opCode;
     host::uint_t _flags;
 };
 

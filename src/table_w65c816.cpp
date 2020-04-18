@@ -136,7 +136,7 @@ Error TableW65C816::searchName(
          entry < end && (entry = TableBase::searchName<Entry>(name, table, end));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
-        insn.setInsnCode(pgm_read_byte(&entry->opCode));
+        insn.setOpCode(pgm_read_byte(&entry->opCode));
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
@@ -162,7 +162,7 @@ Error TableW65C816::searchNameAndAddrMode(
         name, addrMode, table, end, acceptAddrMode);
     if (entry) {
         insn.setFlags(pgm_read_byte(&entry->flags));
-        insn.setInsnCode(pgm_read_byte(&entry->opCode));
+        insn.setOpCode(pgm_read_byte(&entry->opCode));
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
@@ -176,14 +176,14 @@ static bool acceptAddrMode(AddrMode addrMode, bool acceptIndirectLong) {
     return true;
 }
 
-Error TableW65C816::searchInsnCode(
+Error TableW65C816::searchOpCode(
     InsnW65C816 &insn, bool acceptIndirectLong,
     const Entry *table, const Entry *end) const {
-    const Config::opcode_t insnCode = insn.insnCode();
+    const Config::opcode_t opCode = insn.opCode();
     for (const Entry *entry = table;
          entry < end
              && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
-                     insnCode, entry, end));
+                     opCode, entry, end));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!acceptAddrMode(insn.addrMode(), acceptIndirectLong))
@@ -202,7 +202,7 @@ Error TableW65C816::searchName(InsnW65C816 &insn) const {
     if (mos6502::TableMos6502.searchName(mos6502))
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(mos6502.flags());
-    insn.setInsnCode(mos6502.insnCode());
+    insn.setOpCode(mos6502.opCode());
     return OK;
 }
 
@@ -215,20 +215,20 @@ Error TableW65C816::searchNameAndAddrMode(InsnW65C816 &insn) const {
     if (mos6502::TableMos6502.searchNameAndAddrMode(mos6502))
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(mos6502.flags());
-    insn.setInsnCode(mos6502.insnCode());
+    insn.setOpCode(mos6502.opCode());
     return OK;
 }
 
-Error TableW65C816::searchInsnCode(
+Error TableW65C816::searchOpCode(
     InsnW65C816 &insn, bool acceptIndirectLong) const {
-    if (searchInsnCode(
+    if (searchOpCode(
             insn, acceptIndirectLong, ARRAY_RANGE(W65C816_TABLE)) == OK)
         return OK;
 
     mos6502::InsnMos6502 mos6502(insn.insn());
-    mos6502.setInsnCode(insn.insnCode());
+    mos6502.setOpCode(insn.opCode());
     mos6502::TableMos6502.setCpu("65SC02");
-    if (mos6502::TableMos6502.searchInsnCode(mos6502))
+    if (mos6502::TableMos6502.searchOpCode(mos6502))
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(mos6502.flags());
     return OK;

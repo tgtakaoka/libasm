@@ -221,12 +221,12 @@ static const Entry *searchEntry(
 }
 
 static const Entry *searchEntry(
-    const Config::insn_t insnCode,
+    const Config::opcode_t opCode,
     const Entry *table, const Entry *end) {
     for (const Entry *entry = table; entry < end; entry++) {
         const host::uint_t flags = pgm_read_byte(&entry->flags);
-        const Config::insn_t mask = getInsnMask(Entry::_insnFormat(flags));
-        if ((insnCode & ~mask) == pgm_read_word(&entry->insnCode))
+        const Config::opcode_t mask = getInsnMask(Entry::_insnFormat(flags));
+        if ((opCode & ~mask) == pgm_read_word(&entry->opCode))
             return entry;
     }
     return nullptr;
@@ -239,7 +239,7 @@ Error TableMc68000::searchName(InsnMc68000 &insn) const {
     const Entry *entry =
         TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_MC68000));
     if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setInsnCode(pgm_read_word(&entry->opCode));
+    insn.setOpCode(pgm_read_word(&entry->opCode));
     insn.setFlags(pgm_read_byte(&entry->flags));
     return OK;
 }
@@ -250,10 +250,10 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableMc68000::searchInsnCode(InsnMc68000 &insn) const {
-    const Config::insn_t insnCode = insn.insnCode();
+Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
+    const Config::opcode_t opCode = insn.opCode();
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
-        insnCode, ARRAY_RANGE(TABLE_MC68000), maskCode);
+        opCode, ARRAY_RANGE(TABLE_MC68000), maskCode);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);

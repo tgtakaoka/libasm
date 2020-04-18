@@ -95,7 +95,7 @@ Error AsmMc68000::emitEffectiveAddr(
     host::int_t size_gp, host::int_t mode_gp, host::uint_t reg_gp) {
     if (size_gp >= 0) {
         if (insn.size() == SZ_NONE) return setError(ILLEGAL_SIZE);
-        insn.embed(static_cast<Config::insn_t>(insn.size()), size_gp);
+        insn.embed(static_cast<Config::opcode_t>(insn.size()), size_gp);
     }
     const EaMode mode = (ea.mode == M_LABEL)
         ? (checkSize(ea.val32, SZ_WORD, false) ? M_ABS_LONG : M_ABS_SHORT)
@@ -154,8 +154,8 @@ Error AsmMc68000::emitEffectiveAddr(
 Error AsmMc68000::encodeImplied(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
-    constexpr Config::insn_t STOP = 047162;
-    if (insn.insnCode() == STOP) {
+    constexpr Config::opcode_t STOP = 047162;
+    if (insn.opCode() == STOP) {
         if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
         insn.emitInsn();
         return emitImmediateData(insn, SZ_WORD, op1.val32, op1.getError());
@@ -168,11 +168,11 @@ Error AsmMc68000::encodeImplied(
 // NEGX, CLR, NEG, NOT, TST
 Error AsmMc68000::encodeDestSiz(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    const uint8_t opc = (insn.insnCode() >> 9) & 7;
+    const uint8_t opc = (insn.opCode() >> 9) & 7;
     constexpr uint8_t SUBI = 2;
     constexpr uint8_t ADDI = 3;
     constexpr uint8_t CMPI = 6;
-    if ((insn.insnCode() >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
+    if ((insn.opCode() >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
         if (op1.mode != M_IMM_DATA)
             return setError(UNKNOWN_OPERAND);
         if (op2.reg == REG_CCR || op2.reg == REG_SR) {
@@ -210,7 +210,7 @@ Error AsmMc68000::encodeDestSiz(
 // LINK, UNLK
 Error AsmMc68000::encodeAddrReg(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    if (insn.insnCode() & 010) { // UNLK
+    if (insn.opCode() & 010) { // UNLK
         if (checkSize(insn, SZ_NONE)) return getError();
         if (op1.mode != M_AREG) return setError(ILLEGAL_OPERAND_MODE);
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
@@ -233,7 +233,7 @@ Error AsmMc68000::encodeDataReg(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_WORD)) return getError();
     if (!RegMc68000::isDreg(op1.reg)) return setError(ILLEGAL_OPERAND_MODE);
-    const uint8_t opc = (insn.insnCode() >> 12) & 017;
+    const uint8_t opc = (insn.opCode() >> 12) & 017;
     constexpr uint8_t SWAP = 004;
     if (opc == SWAP) {
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
@@ -270,9 +270,9 @@ Error AsmMc68000::encodeTrapVec(
 // NBCD, PEA, TAS
 Error AsmMc68000::encodeDataDst(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    const Config::insn_t insnCode = insn.insnCode();
+    const Config::opcode_t opCode = insn.opCode();
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
-    const uint8_t opc = (insnCode >> 6) & 077;
+    const uint8_t opc = (opCode >> 6) & 077;
     constexpr uint8_t PEA = 041;
     if (opc == PEA) {
         if (checkSize(insn, SZ_LONG)) return getError();
@@ -292,8 +292,8 @@ Error AsmMc68000::encodeDataDst(
 // ASR, ASL, LSR, LSL, ROXR, ROXL
 Error AsmMc68000::encodeDestOpr(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    if ((insn.insnCode() >> 12) == 0) { // BTST/BCHG/BCLR/BSET
-        const uint8_t opc = (insn.insnCode() >> 6) & 3;
+    if ((insn.opCode() >> 12) == 0) { // BTST/BCHG/BCLR/BSET
+        const uint8_t opc = (insn.opCode() >> 6) & 3;
         constexpr uint8_t BTST = 0;
         if (opc == BTST && !op2.satisfy(CAT_DATA))
             return setError(ILLEGAL_OPERAND_MODE);
@@ -317,7 +317,7 @@ Error AsmMc68000::encodeDestOpr(
         return setError(error1 ? error1 : (error2 ? error2 : OK));
     }
     // JSR/JMP/Scc/ASd/LSd/ROXd/ROd
-    const uint8_t opc = (insn.insnCode() >> 12) & 077;
+    const uint8_t opc = (insn.opCode() >> 12) & 077;
     constexpr uint8_t JSR_JMP = 004;
     constexpr uint8_t Scc = 005;
     if (opc == JSR_JMP) {
@@ -345,8 +345,8 @@ Error AsmMc68000::encodeDestOpr(
         return setError(UNKNOWN_OPERAND);
     // DREG_ROT
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
-    const uint8_t rotOpc = (insn.insnCode() >> 9) & 3;
-    insn.setInsnCode(0160000 | (insn.insnCode() & 0400));
+    const uint8_t rotOpc = (insn.opCode() >> 9) & 3;
+    insn.setOpCode(0160000 | (insn.opCode() & 0400));
     insn.embed(rotOpc, 3);
     if (RegMc68000::isDreg(op1.reg)) { // Dx,Dy
         insn.embed(040);
@@ -358,7 +358,7 @@ Error AsmMc68000::encodeDestOpr(
             return setError(OVERFLOW_RANGE);
         uint8_t rot = static_cast<uint8_t>(op1.val32);
         if (rot == 8) rot = 0;
-        insn.embed(static_cast<Config::insn_t>(rot), 9);
+        insn.embed(static_cast<Config::opcode_t>(rot), 9);
         emitEffectiveAddr(insn, op2, 6, -1);
         return setError(op1.getError() ? op1.getError() : getError());
     }
@@ -457,8 +457,8 @@ Error AsmMc68000::encodeMoveMlt(
 // AREG_SIZ: SUBA, CMPA, ADDA
 Error AsmMc68000::encodeAregSiz(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    Config::insn_t insnCode = insn.insnCode();
-    const uint8_t opc = (insnCode >> 12) & 017;
+    Config::opcode_t opCode = insn.opCode();
+    const uint8_t opc = (opCode >> 12) & 017;
     constexpr uint8_t LEA = 004;
     if (opc == LEA) {
         if (checkSize(insn, SZ_LONG)) return getError();
@@ -477,11 +477,11 @@ Error AsmMc68000::encodeAregSiz(
 // CHK, DIVU, DIVS, MULU, MULS
 Error AsmMc68000::encodeDregDst(
     InsnMc68000 &insn, const Operand &op1, const Operand& op2) {
-    const Config::insn_t insnCode = insn.insnCode();
-    const uint8_t opc = insnCode >> 12;
+    const Config::opcode_t opCode = insn.opCode();
+    const uint8_t opc = opCode >> 12;
     constexpr uint8_t Bxxx = 0;
     if (opc == Bxxx) {
-        insn.setInsnCode(insnCode & ~07077);
+        insn.setOpCode(opCode & ~07077);
         insn.embed(0400);
         // Error check has dobe at DEST_OPR.
         if (RegMc68000::isDreg(op2.reg) && checkSize(insn, SZ_LONG))
@@ -559,7 +559,7 @@ Error AsmMc68000::encodeDataQic(
 Error AsmMc68000::encodeDmemSiz(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
-    const uint8_t opc = (insn.insnCode() >> 8) & ~0xE;
+    const uint8_t opc = (insn.opCode() >> 8) & ~0xE;
     constexpr uint8_t CMP = 0xB0;
     constexpr uint8_t EOR = 0xB1;
     if (RegMc68000::isDreg(op2.reg)) { // <ea>,Dn
@@ -583,7 +583,7 @@ Error AsmMc68000::encodeDmemSiz(
 // CMPM_SIZ: CMPM
 Error AsmMc68000::encodeDmemOpr(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
-    const uint8_t opc = (insn.insnCode() >> 12);
+    const uint8_t opc = (insn.opCode() >> 12);
     constexpr uint8_t SBCD = 010;
     constexpr uint8_t ABCD = 014;
     constexpr uint8_t CMPM = 013;
@@ -614,7 +614,7 @@ Error AsmMc68000::encodeRegsExg(
     if (checkSize(insn, SZ_LONG)) return getError();
     if (!RegMc68000::isADreg(op1.reg) || !RegMc68000::isADreg(op2.reg))
         return setError(ILLEGAL_OPERAND_MODE);
-    insn.setInsnCode(0xC100);
+    insn.setOpCode(0xC100);
     if (op1.mode == M_AREG && op2.mode == M_AREG) {
         insn.embed(0110);
         insn.embed(RegMc68000::encodeRegNo(op1.reg), 9);
@@ -643,31 +643,31 @@ Error AsmMc68000::encodeMoveOpr(
         if (checkSize(insn, SZ_WORD)) return getError();
         if (!op2.satisfy(CAT_DATA | CAT_ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
-        insn.setInsnCode(040300);
+        insn.setOpCode(040300);
         return emitEffectiveAddr(insn, op2);
     }
     if (op2.reg == REG_SR) {
         if (checkSize(insn, SZ_WORD)) return getError();
         if (!op1.satisfy(CAT_DATA)) return setError(ILLEGAL_OPERAND_MODE);
-        insn.setInsnCode(043300);
+        insn.setOpCode(043300);
         return emitEffectiveAddr(insn, op1);
     }
     if (op2.reg == REG_CCR) {
         if (checkSize(insn, SZ_BYTE)) return getError();
         if (!op1.satisfy(CAT_DATA)) return setError(ILLEGAL_OPERAND_MODE);
-        insn.setInsnCode(042300);
+        insn.setOpCode(042300);
         return emitEffectiveAddr(insn, op1);
     }
     if (op1.reg == REG_USP || op2.reg == REG_USP) {
         if (checkSize(insn, SZ_LONG)) return getError();
         if (op1.reg == REG_USP && op2.mode == M_AREG) {
-            insn.setInsnCode(047150);
+            insn.setOpCode(047150);
             insn.embed(RegMc68000::encodeRegNo(op2.reg));
             insn.emitInsn();
             return setError(OK);
         }
         if (op1.mode == M_AREG && op2.reg == REG_USP) {
-            insn.setInsnCode(047140);
+            insn.setOpCode(047140);
             insn.embed(RegMc68000::encodeRegNo(op1.reg));
             insn.emitInsn();
             return setError(OK);
@@ -691,9 +691,9 @@ Error AsmMc68000::encodeMoveOpr(
             return setError(ILLEGAL_OPERAND_MODE);
     }
     insn.setSize(size);
-    if (size == SZ_WORD) insn.setInsnCode(030000);
-    else if (size == SZ_LONG) insn.setInsnCode(020000);
-    else insn.setInsnCode(010000);
+    if (size == SZ_WORD) insn.setOpCode(030000);
+    else if (size == SZ_LONG) insn.setOpCode(020000);
+    else insn.setOpCode(010000);
     const Error error1 = emitEffectiveAddr(insn, op1, -1);
     const Error error2 = emitEffectiveAddr(insn, op2, -1, 6, 9);
     return setError(error1 ? error1 : (error2 ? error2 : OK));

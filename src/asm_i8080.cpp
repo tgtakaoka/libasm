@@ -71,7 +71,8 @@ Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
 
     const host::uint_t dstNum = _regs.encodeDataReg(dstReg);
     const host::uint_t srcNum = _regs.encodeDataReg(srcReg);
-    insn.embed((dstNum << 3) | srcNum);
+    insn.embed(dstNum << 3);
+    insn.embed(srcNum);
     return setError(OK);
 }
 
@@ -133,7 +134,7 @@ Error AsmI8080::encode(Insn &_insn) {
     }
     if (getError()) return getError();
 
-    insn.emitByte(insn.insnCode());
+    insn.emitByte(insn.opCode());
     switch (insn.addrMode()) {
     case INHR:   return checkLineEnd();
     case IMM8:

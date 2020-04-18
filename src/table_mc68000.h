@@ -28,7 +28,7 @@ class TableMc68000 : private TableBase {
 public:
     Error searchName(InsnMc68000 &insn) const;
     Error searchNameAndAddrMode(InsnMc68000 &insn) const;
-    Error searchInsnCode(InsnMc68000 &insn) const;
+    Error searchOpCode(InsnMc68000 &insn) const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;

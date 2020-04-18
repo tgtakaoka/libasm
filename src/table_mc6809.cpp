@@ -565,7 +565,7 @@ Error TableMc6809::searchNameAndAddrMode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6809::searchInsnCode(
+Error TableMc6809::searchOpCode(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
@@ -591,8 +591,8 @@ Error TableMc6809::searchNameAndAddrMode(InsnMc6809 &insn) const {
     return searchNameAndAddrMode(insn, _table, _end);
 }
 
-Error TableMc6809::searchInsnCode(InsnMc6809 &insn) const {
-    return searchInsnCode(insn, _table, _end);
+Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
+    return searchOpCode(insn, _table, _end);
 }
 
 TableMc6809::TableMc6809() {
