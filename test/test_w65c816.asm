@@ -18,11 +18,11 @@
 
         org     $100000
         include "test_mos6502.inc"
-        org     $100150
+        org     $100160
         include "test_w65sc02.inc"
-        org     $100188
+        org     $1001A0
         include "test_w65c02s.inc"
-        org     $100190
+        org     $1001C0
         include "test_w65c816.inc"
 
         org     $110000

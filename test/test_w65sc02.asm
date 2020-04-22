@@ -15,7 +15,7 @@
         cpu     65sc02
 
         include "test_mos6502.inc"
-	org     $150
+        org     $160
         include "test_w65sc02.inc"
 
         end
