@@ -25,6 +25,26 @@
         org     $100190
         include "test_w65c816.inc"
 
+        org     $110000
+        assume  m:0
+        assume  x:0
+        include "test_w65c816_imm.inc"
+
+        org     $110100
+        assume  m:0
+        assume  x:1
+        include "test_w65c816_imm.inc"
+
+        org     $110200
+        assume  m:1
+        assume  x:0
+        include "test_w65c816_imm.inc"
+
+        org     $110300
+        assume  m:1
+        assume  x:1
+        include "test_w65c816_imm.inc"
+
         end
 
 ;;; Local Variables:
