@@ -47,10 +47,10 @@ static const Entry W65C816_TABLE[] PROGMEM = {
     E(0xBB, TYX,  W65C816, IMPL)
     E(0xEB, XBA,  W65C816, IMPL)
     E(0xFB, XCE,  W65C816, IMPL)
-    E(0x02, COP,  W65C816, IMM)
-    E(0x42, WDM,  W65C816, IMM)
-    E(0xC2, REP,  W65C816, IMM)
-    E(0xE2, SEP,  W65C816, IMM)
+    E(0x02, COP,  W65C816, IMM8)
+    E(0x42, WDM,  W65C816, IMM8)
+    E(0xC2, REP,  W65C816, IMM8)
+    E(0xE2, SEP,  W65C816, IMM8)
     E(0x5C, JMP,  W65C816, ABS_LONG)
     E(0xDC, JMP,  W65C816, ABS_IDIR_LONG)
     E(0xFC, JSR,  W65C816, ABS_IDX_IDIR)
@@ -127,6 +127,11 @@ static const Entry W65C816_TABLE[] PROGMEM = {
     E(0xD7, CMPL, W65C816, ZPG_IDIR_IDY)
     E(0xE7, SBCL, W65C816, ZPG_IDIR)
     E(0xF7, SBCL, W65C816, ZPG_IDIR_IDY)
+
+    // Pseudo instruction to control M and X bits.
+    E(PSEUDO_LONGA,  LONGA,  W65C816, PSEUDO)
+    E(PSEUDO_LONGI,  LONGI,  W65C816, PSEUDO)
+    E(PSEUDO_ASSUME, ASSUME, W65C816, PSEUDO)
 };
 
 Error TableW65C816::searchName(
@@ -145,6 +150,7 @@ Error TableW65C816::searchName(
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
+    if (opr == IMMA) return table == IMM8;
     if (opr == ZPG) return table == ABS;
     if (opr == ZPG_IDX_IDIR) return table == ABS_IDX_IDIR;
     if (opr == ZPG_IDIR) return table == ABS_IDIR;

@@ -29,6 +29,8 @@ Disassembler &disassembler(dis65c816);
 
 static void set_up() {
     dis65c816.acceptIndirectLong(true);
+    dis65c816.longAccumlator(false);
+    dis65c816.longIndex(false);
 }
 
 static void tear_down() {
@@ -152,6 +154,50 @@ static void test_imm() {
 
     // W65SC02
     TEST(BIT, "#zero90", 0x89, 0x90);
+}
+
+static void test_long_imm() {
+    dis65c816.longAccumlator(false);
+    dis65c816.longIndex(true);
+
+    // MOS6502
+    TEST(LDY, "#0",     0xA0, 0x00, 0x00);
+    TEST(LDX, "#$1000", 0xA2, 0x00, 0x10);
+    TEST(CPY, "#$00FF", 0xC0, 0xFF, 0x00);
+    TEST(CPX, "#$FFFF", 0xE0, 0xFF, 0xFF);
+    TEST(ORA, "#9",   0x09, 0x09);
+
+    dis65c816.longAccumlator(true);
+    dis65c816.longIndex(false);
+
+    TEST(ORA, "#9",     0x09, 0x09, 0x00);
+    TEST(AND, "#$FFF0", 0x29, 0xF0, 0xFF);
+    TEST(EOR, "#$007F", 0x49, 0x7F, 0x00);
+    TEST(ADC, "#$8000", 0x69, 0x00, 0x80);
+    TEST(LDA, "#$FFFF", 0xA9, 0xFF, 0xFF);
+    TEST(CMP, "#$8000", 0xC9, 0x00, 0x80);
+    TEST(SBC, "#$FFFF", 0xE9, 0xFF, 0xFF);
+    TEST(CPX, "#$FF",   0xE0, 0xFF);
+
+    // W65SC02
+    TEST(BIT, "#$1234", 0x89, 0x34, 0x12);
+
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x01FF, "zero1FF");
+    symtab.intern(-1,     "minus1");
+
+    dis65c816.longAccumlator(true);
+    dis65c816.longIndex(true);
+
+    TEST(LDX, "#zero10",  0xA2, 0x10, 0x00);
+    TEST(CPY, "#zero1FF", 0xC0, 0xFF, 0x01);
+    TEST(SBC, "#minus1",  0xE9, 0xFF, 0xFF);
+
+    // W65SC02
+    TEST(BIT, "#zero10",  0x89, 0x10, 0x00);
+
+    // always 8bit immediate
+    TEST(SEP, "#zero10",  0xE2, 0x10);
 }
 
 static void test_zpg() {
@@ -610,6 +656,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_impl);
     RUN_TEST(test_accm);
     RUN_TEST(test_imm);
+    RUN_TEST(test_long_imm);
     RUN_TEST(test_zpg);
     RUN_TEST(test_zpg_indexed);
     RUN_TEST(test_zpg_long);

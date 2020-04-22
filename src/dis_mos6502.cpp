@@ -151,7 +151,8 @@ Error DisMos6502::decode(
         _operands = _regs.outRegName(_operands, REG_A);
         *_operands = 0;
         return setError(OK);
-    case IMM:
+    case IMMA:
+    case IMMX:
         return decodeImmediate(memory, insn);
     case ABS:
     case ABS_IDX:

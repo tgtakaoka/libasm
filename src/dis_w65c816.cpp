@@ -29,14 +29,24 @@ using mos6502::RegName::REG_Y;
 
 Error DisW65C816::decodeImmediate(
     DisMemory& memory, InsnW65C816 &insn) {
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
+    const bool imm16 = (insn.addrMode() == IMMA && _long_acc)
+        || (insn.addrMode() == IMMX && _long_idx);
+    uint16_t val;
+    if (imm16) {
+        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
+    } else {
+        uint8_t val8;
+        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
+        val = val8;
+    }
     *_operands++ = '#';
     const char *label = lookup(val);
     if (label) {
         outText(label);
-    } else {
+    } else if (imm16) {
         outConstant(val);
+    } else {
+        outConstant(static_cast<uint8_t>(val));
     }
     return setError(OK);
 }
@@ -225,7 +235,9 @@ Error DisW65C816::decode(
         _operands = _regs.outRegName(_operands, REG_A);
         *_operands = 0;
         return setError(OK);
-    case IMM:
+    case IMM8:
+    case IMMA:
+    case IMMX:
         return decodeImmediate(memory, insn);
     case ABS:
     case ABS_IDX:

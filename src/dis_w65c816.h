@@ -37,11 +37,15 @@ public:
     const char *listCpu() const override { return TableW65C816.listCpu(); }
 
     void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
+    void longAccumlator(bool on) { _long_acc = on; }
+    void longIndex(bool on) { _long_idx = on; }
 
 private:
     DisMotoOperand _formatter;
     mos6502::RegMos6502 _regs;
     bool _acceptIndirectLong = true;
+    bool _long_acc = false;
+    bool _long_idx = false;
 
     RegBase &getRegister() override { return _regs; }
 
