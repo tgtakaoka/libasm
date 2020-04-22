@@ -9,7 +9,7 @@ small environment (less than 15kB on Arduino).
   - 6809, 6309
   - 6800, 6801, 6301
   - 6502, 65SC02, R65C02, W65C02S
-  - 65816 (16bit address space only)
+  - 65816 (Support 24bit address and LONGA/LONGI)
   - 8080 (Intel and Zilog syntax)
   - Z80
   - TMS9900, TMS9995

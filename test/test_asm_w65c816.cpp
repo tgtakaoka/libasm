@@ -27,6 +27,8 @@ AsmW65C816 as65816;
 Assembler &assembler(as65816);
 
 static void set_up() {
+    TEST("longa off");
+    TEST("longi off");
 }
 
 static void tear_down() {
@@ -138,14 +140,10 @@ static void test_imm() {
     TEST("WDM #$10", 0x42, 0x10);
     TEST("REP #$20", 0xC2, 0x20);
     TEST("SEP #$10", 0xE2, 0x10);
-    TEST("MVP $123456,$345678", 0x44, 0x34, 0x12);
-    TEST("MVN $003456,$345678", 0x54, 0x34, 0x00);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
-    symtab.intern(0x123456, "bank12");
-    symtab.intern(0x345678, "bank34");
 
     TEST("LDX #zero10", 0xA2, 0x10);
     TEST("CPY #zeroFF", 0xC0, 0xFF);
@@ -157,9 +155,50 @@ static void test_imm() {
     // W65C816
     TEST("REP #zero10", 0xC2, 0x10);
     TEST("SEP #zeroFF", 0xE2, 0xFF);
+}
 
-    TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
-    TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
+static void test_long_imm() {
+    TEST("assume m:1");
+    TEST("LONGI ON");
+
+    // MOS6502
+    TEST("LDY #0",    0xA0, 0x00, 0x00);
+    TEST("LDX #16",   0xA2, 0x10, 0x00);
+    TEST("CPY #+255", 0xC0, 0xFF, 0x00);
+    TEST("CPX #-1",   0xE0, 0xFF, 0xFF);
+    TEST("ORA #%1001",0x09, 0x09);
+
+    TEST("LONGA ON");
+    TEST("assume x:1");
+
+    TEST("ORA #%1001",  0x09, 0x09, 0x00);
+    TEST("AND #~$0F",   0x29, 0xF0, 0xFF);
+    TEST("EOR #@177",   0x49, 0x7F, 0x00);
+    TEST("ADC #-32768", 0x69, 0x00, 0x80);
+    TEST("LDA #-1",     0xA9, 0xFF, 0xFF);
+    TEST("CMP #32768",  0xC9, 0x00, 0x80);
+    TEST("SBC #65535",  0xE9, 0xFF, 0xFF);
+    TEST("CPX #-1",     0xE0, 0xFF);
+
+    // W65SC02
+    TEST("BIT #~0",     0x89, 0xFF, 0xFF);
+
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x01FF, "zero1FF");
+    symtab.intern(-1,     "minus1");
+
+    TEST("ASSUME M:0");
+    TEST("ASSUME X:0");
+
+    TEST("LDX #zero10",  0xA2, 0x10, 0x00);
+    TEST("CPY #zero1FF", 0xC0, 0xFF, 0x01);
+    TEST("SBC #minus1",  0xE9, 0xFF, 0xFF);
+
+    // W65SC02
+    TEST("BIT #zero10", 0x89, 0x10, 0x00);
+
+    // always 8bit immediate
+    TEST("SEP #$10", 0xE2, 0x10);
 }
 
 static void test_zpg() {
@@ -398,8 +437,14 @@ static void test_abs_long() {
     TEST("JMP  [$1234]", 0xDC, 0x34, 0x12);
     TEST("JMPL ($1234)", 0xDC, 0x34, 0x12);
 
+    TEST("MVP $123456,$345678", 0x44, 0x34, 0x12);
+    TEST("MVN $003456,$345678", 0x54, 0x34, 0x00);
+
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x123456, "long3456");
+    symtab.intern(0x10,     "zero10");
+    symtab.intern(0x123456, "bank12");
+    symtab.intern(0x345678, "bank34");
 
     // W65C816
     TEST("ORA long3456",    0x0F, 0x56, 0x34, 0x12);
@@ -410,6 +455,9 @@ static void test_abs_long() {
 
     TEST("JMP  [sym1234]",  0xDC, 0x34, 0x12);
     TEST("JMPL (sym1234)",  0xDC, 0x34, 0x12);
+
+    TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
+    TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
 }
 
 static void test_abs_indexed() {
@@ -672,6 +720,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_impl);
     RUN_TEST(test_accm);
     RUN_TEST(test_imm);
+    RUN_TEST(test_long_imm);
     RUN_TEST(test_zpg);
     RUN_TEST(test_zpg_indexed);
     RUN_TEST(test_zpg_long);

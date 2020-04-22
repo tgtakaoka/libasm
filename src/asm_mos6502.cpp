@@ -66,7 +66,7 @@ Error AsmMos6502::parseOperand(Operand &op) {
         if (getOperand(val8)) return getError();
         op.setError(getError());
         p = _scan;
-        op.mode = IMM;
+        op.mode = IMMA;
         op.val16 = val8;
     } else if (_regs.compareRegName(p, REG_A)) { // A
         p += _regs.regNameLen(REG_A);
@@ -158,7 +158,8 @@ Error AsmMos6502::encode(Insn &_insn) {
     case ACCM:
         insn.emitInsn();
         break;
-    case IMM:
+    case IMMA:
+    case IMMX:
     case ZPG:
     case ZPG_IDX:
     case ZPG_IDY:

@@ -58,17 +58,17 @@ static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E(0x2A, ROL,  MOS6502, ACCM)
     E(0x4A, LSR,  MOS6502, ACCM)
     E(0x6A, ROR,  MOS6502, ACCM)
-    E(0xA0, LDY,  MOS6502, IMM)
-    E(0xA2, LDX,  MOS6502, IMM)
-    E(0xC0, CPY,  MOS6502, IMM)
-    E(0xE0, CPX,  MOS6502, IMM)
-    E(0x09, ORA,  MOS6502, IMM)
-    E(0x29, AND,  MOS6502, IMM)
-    E(0x49, EOR,  MOS6502, IMM)
-    E(0x69, ADC,  MOS6502, IMM)
-    E(0xA9, LDA,  MOS6502, IMM)
-    E(0xC9, CMP,  MOS6502, IMM)
-    E(0xE9, SBC,  MOS6502, IMM)
+    E(0xA0, LDY,  MOS6502, IMMX)
+    E(0xA2, LDX,  MOS6502, IMMX)
+    E(0xC0, CPY,  MOS6502, IMMX)
+    E(0xE0, CPX,  MOS6502, IMMX)
+    E(0x09, ORA,  MOS6502, IMMA)
+    E(0x29, AND,  MOS6502, IMMA)
+    E(0x49, EOR,  MOS6502, IMMA)
+    E(0x69, ADC,  MOS6502, IMMA)
+    E(0xA9, LDA,  MOS6502, IMMA)
+    E(0xC9, CMP,  MOS6502, IMMA)
+    E(0xE9, SBC,  MOS6502, IMMA)
     E(0x24, BIT,  MOS6502, ZPG)
     E(0x05, ORA,  MOS6502, ZPG)
     E(0x25, AND,  MOS6502, ZPG)
@@ -186,7 +186,7 @@ static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E(0xFA, PLX,  W65SC02, IMPL)
     E(0x1A, INC,  W65SC02, ACCM)
     E(0x3A, DEC,  W65SC02, ACCM)
-    E(0x89, BIT,  W65SC02, IMM)
+    E(0x89, BIT,  W65SC02, IMMA)
     E(0x04, TSB,  W65SC02, ZPG)
     E(0x14, TRB,  W65SC02, ZPG)
     E(0x64, STZ,  W65SC02, ZPG)
@@ -262,6 +262,7 @@ Error TableMos6502::searchName(
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
+    if (opr == IMMA) return table == IMMX;
     if (opr == ZPG) return table == ABS;
     if (opr == ZPG_IDX_IDIR) return table == ABS_IDX_IDIR;
     if (opr == ZPG_IDIR) return table == ABS_IDIR;

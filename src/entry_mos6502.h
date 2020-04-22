@@ -33,7 +33,8 @@ enum AddrMode : host::uint_t {
     // MOS6502
     IMPL,                // Implied
     ACCM,                // Accumulator A
-    IMM,                 // Immediate: #nn
+    IMMA,                // Immediate Accumulator: #nn
+    IMMX,                // Immediate Index register: #nn
     ABS,                 // Absolute: abs
     ZPG,                 // Zero Page: zp
     ZPG_IDX,             // Zero Page Indexed: zp,X
@@ -49,19 +50,6 @@ enum AddrMode : host::uint_t {
     ABS_IDX_IDIR,        // Indexed Absolute Indirect: (abs,X)
     ZPG_IDIR,            // Zero Page Indirect: (zp)
     ZPG_REL,             // Zero Page Relative: zp,abs
-
-#if 0
-    // W65C816
-    ABS_LONG,            // Absolute Long: al
-    ABS_LONG_IDX,        // Absolute Long Indexed: al,x
-    ABS_IDIR_LONG,       // Absolute Indirect Long: [a]
-    REL_LONG,            // Relative Long: rl
-    SP_REL,              // Stack Relative: off,s
-    SP_REL_IDIR_IDY,     // Stack Relative Indirect Indexed: (off,s),y
-    ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
-    ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
-    BLOCK_MOVE,          // Block Move: #ss,#dd
-#endif
 };
 
 struct Entry {

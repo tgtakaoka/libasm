@@ -36,7 +36,8 @@ enum AddrMode : host::uint_t {
     // MOS6502
     IMPL         = mos6502::AddrMode::IMPL,
     ACCM         = mos6502::AddrMode::ACCM,
-    IMM          = mos6502::AddrMode::IMM,
+    IMMA         = mos6502::AddrMode::IMMA,
+    IMMX         = mos6502::AddrMode::IMMX,
     ABS          = mos6502::AddrMode::ABS,
     ZPG          = mos6502::AddrMode::ZPG,
     ZPG_IDX      = mos6502::AddrMode::ZPG_IDX,
@@ -63,6 +64,10 @@ enum AddrMode : host::uint_t {
     ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
     ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
     BLOCK_MOVE,          // Block Move: #ss,#dd
+    IMM8,                // Immediate Byte.
+
+    // Pseudo instruction
+    PSEUDO,
 };
 
 struct Entry {
