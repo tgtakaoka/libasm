@@ -140,14 +140,10 @@ static void test_imm() {
     TEST(WDM, "#$10", 0x42, 0x10);
     TEST(REP, "#$20", 0xC2, 0x20);
     TEST(SEP, "#$10", 0xE2, 0x10);
-    TEST(MVP, "$120000,$340000", 0x44, 0x34, 0x12);
-    TEST(MVN, "$000000,$340000", 0x54, 0x34, 0x00);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
-    symtab.intern(0x120000, "bank12");
-    symtab.intern(0x340000, "bank34");
 
     // MOS6502
     TEST(LDX, "#zero10", 0xA2, 0x10);
@@ -156,9 +152,6 @@ static void test_imm() {
 
     // W65SC02
     TEST(BIT, "#zero90", 0x89, 0x90);
-
-    // W65C816
-    TEST(MVP, ">>bank12,>>bank34", 0x44, 0x34, 0x12);
 }
 
 static void test_zpg() {
@@ -406,14 +399,21 @@ static void test_abs_long() {
     dis65c816.acceptIndirectLong(false);
     TEST(JMPL, "($1234)", 0xDC, 0x34, 0x12);
 
+    TEST(MVP, "$120000,$340000", 0x44, 0x34, 0x12);
+    TEST(MVN, "$000000,$340000", 0x54, 0x34, 0x00);
+
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x123456, "long3456");
+    symtab.intern(0x120000, "bank12");
+    symtab.intern(0x340000, "bank34");
 
     // W65C816
     TEST(ORA, ">>long3456",   0x0F, 0x56, 0x34, 0x12);
     TEST(ORA, ">>long3456,X", 0x1F, 0x56, 0x34, 0x12);
     TEST(JMP, ">>long3456", 0x5C, 0x56, 0x34, 0x12);
     TEST(JSL, ">>long3456", 0x22, 0x56, 0x34, 0x12);
+
+    TEST(MVP, ">>bank12,>>bank34", 0x44, 0x34, 0x12);
 
     dis65c816.acceptIndirectLong(true);
     TEST(JMP,  "[>sym1234]", 0xDC, 0x34, 0x12);

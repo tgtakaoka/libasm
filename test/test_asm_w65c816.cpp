@@ -138,14 +138,10 @@ static void test_imm() {
     TEST("WDM #$10", 0x42, 0x10);
     TEST("REP #$20", 0xC2, 0x20);
     TEST("SEP #$10", 0xE2, 0x10);
-    TEST("MVP $123456,$345678", 0x44, 0x34, 0x12);
-    TEST("MVN $003456,$345678", 0x54, 0x34, 0x00);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
-    symtab.intern(0x123456, "bank12");
-    symtab.intern(0x345678, "bank34");
 
     TEST("LDX #zero10", 0xA2, 0x10);
     TEST("CPY #zeroFF", 0xC0, 0xFF);
@@ -157,9 +153,6 @@ static void test_imm() {
     // W65C816
     TEST("REP #zero10", 0xC2, 0x10);
     TEST("SEP #zeroFF", 0xE2, 0xFF);
-
-    TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
-    TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
 }
 
 static void test_zpg() {
@@ -398,8 +391,14 @@ static void test_abs_long() {
     TEST("JMP  [$1234]", 0xDC, 0x34, 0x12);
     TEST("JMPL ($1234)", 0xDC, 0x34, 0x12);
 
+    TEST("MVP $123456,$345678", 0x44, 0x34, 0x12);
+    TEST("MVN $003456,$345678", 0x54, 0x34, 0x00);
+
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x123456, "long3456");
+    symtab.intern(0x10,     "zero10");
+    symtab.intern(0x123456, "bank12");
+    symtab.intern(0x345678, "bank34");
 
     // W65C816
     TEST("ORA long3456",    0x0F, 0x56, 0x34, 0x12);
@@ -410,6 +409,9 @@ static void test_abs_long() {
 
     TEST("JMP  [sym1234]",  0xDC, 0x34, 0x12);
     TEST("JMPL (sym1234)",  0xDC, 0x34, 0x12);
+
+    TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
+    TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
 }
 
 static void test_abs_indexed() {
