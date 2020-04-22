@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     68000
-	org     $10000000
+        org     $100000
 
 ;;; 00XX
         ori.b   #$23,d1

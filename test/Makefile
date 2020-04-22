@@ -33,7 +33,7 @@ all: \
 	test_z80.hex \
 	test_tms9900.hex \
 	test_tms9995.hex \
-	test_mc68000.s37
+	test_mc68000.s28
 
 %.hex: %.asm
 	asl $(ASL_FLAGS) $^
