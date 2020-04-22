@@ -286,14 +286,14 @@ static void test_alu_register() {
     TEST(ADC, "A,(HL)", 0x8E);
     TEST(ADC, "A,A", 0x8F);
 
-    TEST(SUB, "B", 0x90);
-    TEST(SUB, "C", 0x91);
-    TEST(SUB, "D", 0x92);
-    TEST(SUB, "E", 0x93);
-    TEST(SUB, "H", 0x94);
-    TEST(SUB, "L", 0x95);
-    TEST(SUB, "(HL)", 0x96);
-    TEST(SUB, "A", 0x97);
+    TEST(SUB, "A,B", 0x90);
+    TEST(SUB, "A,C", 0x91);
+    TEST(SUB, "A,D", 0x92);
+    TEST(SUB, "A,E", 0x93);
+    TEST(SUB, "A,H", 0x94);
+    TEST(SUB, "A,L", 0x95);
+    TEST(SUB, "A,(HL)", 0x96);
+    TEST(SUB, "A,A", 0x97);
 
     TEST(SBC, "A,B", 0x98);
     TEST(SBC, "A,C", 0x99);
@@ -304,41 +304,41 @@ static void test_alu_register() {
     TEST(SBC, "A,(HL)", 0x9E);
     TEST(SBC, "A,A", 0x9F);
 
-    TEST(AND, "B", 0xA0);
-    TEST(AND, "C", 0xA1);
-    TEST(AND, "D", 0xA2);
-    TEST(AND, "E", 0xA3);
-    TEST(AND, "H", 0xA4);
-    TEST(AND, "L", 0xA5);
-    TEST(AND, "(HL)", 0xA6);
-    TEST(AND, "A", 0xA7);
+    TEST(AND, "A,B", 0xA0);
+    TEST(AND, "A,C", 0xA1);
+    TEST(AND, "A,D", 0xA2);
+    TEST(AND, "A,E", 0xA3);
+    TEST(AND, "A,H", 0xA4);
+    TEST(AND, "A,L", 0xA5);
+    TEST(AND, "A,(HL)", 0xA6);
+    TEST(AND, "A,A", 0xA7);
 
-    TEST(XOR, "B", 0xA8);
-    TEST(XOR, "C", 0xA9);
-    TEST(XOR, "D", 0xAA);
-    TEST(XOR, "E", 0xAB);
-    TEST(XOR, "H", 0xAC);
-    TEST(XOR, "L", 0xAD);
-    TEST(XOR, "(HL)", 0xAE);
-    TEST(XOR, "A", 0xAF);
+    TEST(XOR, "A,B", 0xA8);
+    TEST(XOR, "A,C", 0xA9);
+    TEST(XOR, "A,D", 0xAA);
+    TEST(XOR, "A,E", 0xAB);
+    TEST(XOR, "A,H", 0xAC);
+    TEST(XOR, "A,L", 0xAD);
+    TEST(XOR, "A,(HL)", 0xAE);
+    TEST(XOR, "A,A", 0xAF);
 
-    TEST(OR,  "B", 0xB0);
-    TEST(OR,  "C", 0xB1);
-    TEST(OR,  "D", 0xB2);
-    TEST(OR,  "E", 0xB3);
-    TEST(OR,  "H", 0xB4);
-    TEST(OR,  "L", 0xB5);
-    TEST(OR,  "(HL)", 0xB6);
-    TEST(OR,  "A", 0xB7);
+    TEST(OR,  "A,B", 0xB0);
+    TEST(OR,  "A,C", 0xB1);
+    TEST(OR,  "A,D", 0xB2);
+    TEST(OR,  "A,E", 0xB3);
+    TEST(OR,  "A,H", 0xB4);
+    TEST(OR,  "A,L", 0xB5);
+    TEST(OR,  "A,(HL)", 0xB6);
+    TEST(OR,  "A,A", 0xB7);
 
-    TEST(CP,  "B", 0xB8);
-    TEST(CP,  "C", 0xB9);
-    TEST(CP,  "D", 0xBA);
-    TEST(CP,  "E", 0xBB);
-    TEST(CP,  "H", 0xBC);
-    TEST(CP,  "L", 0xBD);
-    TEST(CP,  "(HL)", 0xBE);
-    TEST(CP,  "A", 0xBF);
+    TEST(CP,  "A,B", 0xB8);
+    TEST(CP,  "A,C", 0xB9);
+    TEST(CP,  "A,D", 0xBA);
+    TEST(CP,  "A,E", 0xBB);
+    TEST(CP,  "A,H", 0xBC);
+    TEST(CP,  "A,L", 0xBD);
+    TEST(CP,  "A,(HL)", 0xBE);
+    TEST(CP,  "A,A", 0xBF);
 
     TEST(ADD, "HL,BC", 0x09);
     TEST(ADD, "HL,DE", 0x19);
@@ -360,12 +360,12 @@ static void test_alu_register() {
 static void test_alu_immediate() {
     TEST(ADD, "A,1",    0xC6, 0x01);
     TEST(ADC, "A,0FFH", 0xCE, 0xFF);
-    TEST(SUB, "2",      0xD6, 0x02);
+    TEST(SUB, "A,2",    0xD6, 0x02);
     TEST(SBC, "A,0FFH", 0xDE, 0xFF);
-    TEST(AND, "9",      0xE6, 0x09);
-    TEST(XOR, "0FFH",   0xEE, 0xFF);
-    TEST(OR,  "10",     0xF6, 0x0A);
-    TEST(CP,  "0",      0xFE, 0x00);
+    TEST(AND, "A,9",    0xE6, 0x09);
+    TEST(XOR, "A,0FFH", 0xEE, 0xFF);
+    TEST(OR,  "A,10",   0xF6, 0x0A);
+    TEST(CP,  "A,0",    0xFE, 0x00);
 }
 
 static void test_io() {
@@ -594,12 +594,12 @@ static void test_indexed() {
 
     TEST(ADD, "A,(IX+2)", 0xDD, 0x86, 0x02);
     TEST(ADC, "A,(IX+2)", 0xDD, 0x8E, 0x02);
-    TEST(SUB, "(IX+2)",   0xDD, 0x96, 0x02);
+    TEST(SUB, "A,(IX+2)", 0xDD, 0x96, 0x02);
     TEST(SBC, "A,(IX+2)", 0xDD, 0x9E, 0x02);
-    TEST(AND, "(IX+2)",   0xDD, 0xA6, 0x02);
-    TEST(XOR, "(IX+2)",   0xDD, 0xAE, 0x02);
-    TEST(OR,  "(IX+2)",   0xDD, 0xB6, 0x02);
-    TEST(CP,  "(IX+2)",   0xDD, 0xBE, 0x02);
+    TEST(AND, "A,(IX+2)", 0xDD, 0xA6, 0x02);
+    TEST(XOR, "A,(IX+2)", 0xDD, 0xAE, 0x02);
+    TEST(OR,  "A,(IX+2)", 0xDD, 0xB6, 0x02);
+    TEST(CP,  "A,(IX+2)", 0xDD, 0xBE, 0x02);
 
     TEST(INC, "(IY-2)",   0xFD, 0x34, 0xFE);
     TEST(DEC, "(IY-2)",   0xFD, 0x35, 0xFE);
@@ -624,12 +624,12 @@ static void test_indexed() {
 
     TEST(ADD, "A,(IY-2)", 0xFD, 0x86, 0xFE);
     TEST(ADC, "A,(IY-2)", 0xFD, 0x8E, 0xFE);
-    TEST(SUB, "(IY-2)",   0xFD, 0x96, 0xFE);
+    TEST(SUB, "A,(IY-2)", 0xFD, 0x96, 0xFE);
     TEST(SBC, "A,(IY-2)", 0xFD, 0x9E, 0xFE);
-    TEST(AND, "(IY-2)",   0xFD, 0xA6, 0xFE);
-    TEST(XOR, "(IY-2)",   0xFD, 0xAE, 0xFE);
-    TEST(OR,  "(IY-2)",   0xFD, 0xB6, 0xFE);
-    TEST(CP,  "(IY-2)",   0xFD, 0xBE, 0xFE);
+    TEST(AND, "A,(IY-2)", 0xFD, 0xA6, 0xFE);
+    TEST(XOR, "A,(IY-2)", 0xFD, 0xAE, 0xFE);
+    TEST(OR,  "A,(IY-2)", 0xFD, 0xB6, 0xFE);
+    TEST(CP,  "A,(IY-2)", 0xFD, 0xBE, 0xFE);
 }
 
 static void test_shift_indexed() {

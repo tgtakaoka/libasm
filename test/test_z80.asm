@@ -162,13 +162,13 @@
         adc     a,(hl)
         adc     a,a
 ;;; 9X
-        sub     b
-        sub     c
-        sub     d
-        sub     e
-        sub     h
-        sub     l
-        sub     (hl)
+        sub     a,b
+        sub     a,c
+        sub     a,d
+        sub     a,e
+        sub     a,h
+        sub     a,l
+        sub     a,(hl)
         sub     a
         sbc     a,b
         sbc     a,c
@@ -179,39 +179,39 @@
         sbc     a,(hl)
         sbc     a,a
 ;;; AX
-        and     b
-        and     c
-        and     d
-        and     e
-        and     h
-        and     l
-        and     (hl)
-        and     a
-        xor     b
-        xor     c
-        xor     d
-        xor     e
-        xor     h
-        xor     l
-        xor     (hl)
-        xor     a
+        and     a,b
+        and     a,c
+        and     a,d
+        and     a,e
+        and     a,h
+        and     a,l
+        and     a,(hl)
+        and     a,a
+        xor     a,b
+        xor     a,c
+        xor     a,d
+        xor     a,e
+        xor     a,h
+        xor     a,l
+        xor     a,(hl)
+        xor     a,a
 ;;; BX
-        or      b
-        or      c
-        or      d
-        or      e
-        or      h
-        or      l
-        or      (hl)
-        or      a
-        cp      b
-        cp      c
-        cp      d
-        cp      e
-        cp      h
-        cp      l
-        cp      (hl)
-        cp      a
+        or      a,b
+        or      a,c
+        or      a,d
+        or      a,e
+        or      a,h
+        or      a,l
+        or      a,(hl)
+        or      a,a
+        cp      a,b
+        cp      a,c
+        cp      a,d
+        cp      a,e
+        cp      a,h
+        cp      a,l
+        cp      a,(hl)
+        cp      a,a
 ;;; CX
         ret     nz
         pop     bc
@@ -235,7 +235,7 @@
         out     (0d4h),a
         call    nc,0d6d5H
         push    de
-        sub     0d7H
+        sub     a,0d7H
         rst     10h
         ret     c
         jp      c,0dcdbH
@@ -250,14 +250,14 @@
         ex      (sp),hl
         call    po,0e6e5H
         push    hl
-        and     0e7H
+        and     a,0e7H
         rst     20H
         ret     pe
         jp      (hl)
         jp      pe,0ecebH
         ex      de,hl
         call    pe,0eeedH
-        xor     0efH
+        xor     a,0efH
         rst     28H
 ;;; FX
         ret     p
@@ -266,14 +266,14 @@
         di
         call    p,0f6f5H
         push    af
-        or      0f7H
+        or      a,0f7H
         rst     30H
         ret     m
         ld      sp,hl
         jp      m,0fcfbH
         ei
         call    m,0fefdH
-        cp      0ffH
+        cp      a,0ffH
         rst     38H
 
 ;;; Z80
@@ -395,14 +395,14 @@
         add     a,(ix-121)
         adc     a,(ix-114)
 ;;; DD9X
-        sub     (ix-105)
+        sub     a,(ix-105)
         sbc     a,(ix-97)
 ;;; DDAX
-        and     (ix-89)
-        xor     (ix-81)
+        and     a,(ix-89)
+        xor     a,(ix-81)
 ;;; DDBX
-        or      (ix-73)
-        cp      (ix-65)
+        or      a,(ix-73)
+        cp      a,(ix-65)
 ;;; DDEX
         pop     ix
         ex      (sp),ix
@@ -449,14 +449,14 @@
         add     a,(iy-121)
         adc     a,(iy-113)
 ;;; FD9X
-        sub     (iy-105)
+        sub     a,(iy-105)
         sbc     a,(iy-97)
 ;;; FDAX
-        and     (iy-89)
-        xor     (iy-81)
+        and     a,(iy-89)
+        xor     a,(iy-81)
 ;;; FDBX
-        or      (iy-73)
-        cp      (iy-65)
+        or      a,(iy-73)
+        cp      a,(iy-65)
 ;;; FDEX
         pop     iy
         ex      (sp),iy
@@ -799,61 +799,61 @@
 ;;; SUB/AND/XOR/OR/CP instruction can take optionl destination A register.
         org     05A0H
 
-        sub     a,b
-        sub     a,c
-        sub     a,d
-        sub     a,e
-        sub     a,h
-        sub     a,l
-        sub     a,(hl)
-        sub     a,a
-        and     a,b
-        and     a,c
-        and     a,d
-        and     a,e
-        and     a,h
-        and     a,l
-        and     a,(hl)
-        and     a,a
-        xor     a,b
-        xor     a,c
-        xor     a,d
-        xor     a,e
-        xor     a,h
-        xor     a,l
-        xor     a,(hl)
-        xor     a,a
-        or      a,b
-        or      a,c
-        or      a,d
-        or      a,e
-        or      a,h
-        or      a,l
-        or      a,(hl)
-        or      a,a
-        cp      a,b
-        cp      a,c
-        cp      a,d
-        cp      a,e
-        cp      a,h
-        cp      a,l
-        cp      a,(hl)
-        cp      a,a
-        sub     a,0d7H
-        and     a,0e7H
-        xor     a,0efH
-        or      a,0f7H
-        cp      a,0ffH
-        sub     a,(ix-105)
-        and     a,(ix-89)
-        xor     a,(ix-81)
-        or      a,(ix-73)
-        cp      a,(ix-65)
-        sub     a,(iy-105)
-        and     a,(iy-89)
-        xor     a,(iy-81)
-        or      a,(iy-73)
-        cp      a,(iy-65)
+        sub     b
+        sub     c
+        sub     d
+        sub     e
+        sub     h
+        sub     l
+        sub     (hl)
+        sub     a
+        and     b
+        and     c
+        and     d
+        and     e
+        and     h
+        and     l
+        and     (hl)
+        and     a
+        xor     b
+        xor     c
+        xor     d
+        xor     e
+        xor     h
+        xor     l
+        xor     (hl)
+        xor     a
+        or      b
+        or      c
+        or      d
+        or      e
+        or      h
+        or      l
+        or      (hl)
+        or      a
+        cp      b
+        cp      c
+        cp      d
+        cp      e
+        cp      h
+        cp      l
+        cp      (hl)
+        cp      a
+        sub     0d7H
+        and     0e7H
+        xor     0efH
+        or      0f7H
+        cp      0ffH
+        sub     (ix-105)
+        and     (ix-89)
+        xor     (ix-81)
+        or      (ix-73)
+        cp      (ix-65)
+        sub     (iy-105)
+        and     (iy-89)
+        xor     (iy-81)
+        or      (iy-73)
+        cp      (iy-65)
 
         end
         ;; comment

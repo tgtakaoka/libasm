@@ -138,14 +138,14 @@
       ADC  A,L
       ADC  A,(HL)
       ADC  A,A
-      SUB  B
-      SUB  C
-      SUB  D
-      SUB  E
-      SUB  H
-      SUB  L
-      SUB  (HL)
-      SUB  A
+      SUB  A,B
+      SUB  A,C
+      SUB  A,D
+      SUB  A,E
+      SUB  A,H
+      SUB  A,L
+      SUB  A,(HL)
+      SUB  A,A
       SBC  A,B
       SBC  A,C
       SBC  A,D
@@ -154,38 +154,38 @@
       SBC  A,L
       SBC  A,(HL)
       SBC  A,A
-      AND  B
-      AND  C
-      AND  D
-      AND  E
-      AND  H
-      AND  L
-      AND  (HL)
-      AND  A
-      XOR  B
-      XOR  C
-      XOR  D
-      XOR  E
-      XOR  H
-      XOR  L
-      XOR  (HL)
-      XOR  A
-      OR   B
-      OR   C
-      OR   D
-      OR   E
-      OR   H
-      OR   L
-      OR   (HL)
-      OR   A
-      CP   B
-      CP   C
-      CP   D
-      CP   E
-      CP   H
-      CP   L
-      CP   (HL)
-      CP   A
+      AND  A,B
+      AND  A,C
+      AND  A,D
+      AND  A,E
+      AND  A,H
+      AND  A,L
+      AND  A,(HL)
+      AND  A,A
+      XOR  A,B
+      XOR  A,C
+      XOR  A,D
+      XOR  A,E
+      XOR  A,H
+      XOR  A,L
+      XOR  A,(HL)
+      XOR  A,A
+      OR   A,B
+      OR   A,C
+      OR   A,D
+      OR   A,E
+      OR   A,H
+      OR   A,L
+      OR   A,(HL)
+      OR   A,A
+      CP   A,B
+      CP   A,C
+      CP   A,D
+      CP   A,E
+      CP   A,H
+      CP   A,L
+      CP   A,(HL)
+      CP   A,A
       RET  NZ
       POP  BC
       JP   NZ,00C3H
@@ -207,7 +207,7 @@
       OUT  (0D4H),A
       CALL NC,00D5H
       PUSH DE
-      SUB  0D7H
+      SUB  A,0D7H
       RST  10H
       RET  C
       JP   C,00DBH
@@ -221,14 +221,14 @@
       EX   (SP),HL
       CALL PO,00E5H
       PUSH HL
-      AND  0E7H
+      AND  A,0E7H
       RST  20H
       RET  PE
       JP   (HL)
       JP   PE,00EBH
       EX   DE,HL
       CALL PE,00EDH
-      XOR  0EFH
+      XOR  A,0EFH
       RST  28H
       RET  P
       POP  AF
@@ -236,12 +236,12 @@
       DI
       CALL P,00F5H
       PUSH AF
-      OR   0F7H
+      OR   A,0F7H
       RST  30H
       RET  M
       LD   SP,HL
       JP   M,00FBH
       EI
       CALL M,00FDH
-      CP   0FFH
+      CP   A,0FFH
       RST  38H
