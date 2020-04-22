@@ -12,14 +12,16 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     z80
+	cpu     8080
+        z80syntax on
+
+halt    macro
+        hlt
+        endm
+
         include "test_i8080_z80syn.inc"
 
-        org     $+32-($&31)
-        include "test_z80.inc"
-
         end
-        ;; comment
 
 ;;; Local Variables:
 ;;; mode: asm

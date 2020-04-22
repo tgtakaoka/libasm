@@ -29,6 +29,7 @@ all: \
 	test_w65c02s.s19 \
 	test_w65c816.s28 \
 	test_i8080.hex \
+	test_i8080_z80syn.hex \
 	test_z80.hex \
 	test_tms9900.hex \
 	test_tms9995.hex \
@@ -210,7 +211,7 @@ gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_z80   -u -C z80   -o gen_z80.asm
-	./gen_z80   -u -C i8080 -o gen_z80_i8080.asm
+	./gen_z80   -u -C i8080 -o gen_i8080_z80syn.asm
 
 clean: clean-obj
 	-rm -f $(TESTS)
