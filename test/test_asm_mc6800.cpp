@@ -442,9 +442,9 @@ static void test_extended() {
 }
 
 static void test_indexed() {
-    TEST("NEG ,X",  0x60, 0x00);
-    TEST("COM 0,X", 0x63, 0x00);
-    TEST("LSR 1,X", 0x64, 0x01);
+    TEST("NEG X",   0x60, 0x00);
+    TEST("COM ,X",  0x63, 0x00);
+    TEST("LSR 0,X", 0x64, 0x00);
     TEST("ROR 2,X", 0x66, 0x02);
     TEST("ASR 3,X", 0x67, 0x03);
     TEST("ASL 4,X", 0x68, 0x04);
@@ -454,6 +454,7 @@ static void test_indexed() {
     TEST("TST 128,X", 0x6D, 0x80);
     TEST("CLR 255,X", 0x6F, 0xFF);
 
+    TEST("SUB A X",   0xA0, 0x00);
     TEST("SUB A ,X",  0xA0, 0x00);
     TEST("SUB A,,X",  0xA0, 0x00);
     TEST("CMP A 0,X", 0xA1, 0x00);
@@ -466,6 +467,7 @@ static void test_indexed() {
     TEST("ADC A 127,X", 0xA9, 0x7F);
     TEST("ORA A 128,X", 0xAA, 0x80);
     TEST("ADD A,255,X", 0xAB, 0xFF);
+    TEST("SUBA X",   0xA0, 0x00);
     TEST("SUBA ,X",  0xA0, 0x00);
     TEST("CMPA 0,X", 0xA1, 0x00);
     TEST("SBCA 1,X", 0xA2, 0x01);
@@ -478,6 +480,7 @@ static void test_indexed() {
     TEST("ORAA 128,X", 0xAA, 0x80);
     TEST("ADDA 255,X", 0xAB, 0xFF);
 
+    TEST("SUB B X",   0xE0, 0x00);
     TEST("SUB B ,X",  0xE0, 0x00);
     TEST("SUB B,,X",  0xE0, 0x00);
     TEST("CMP B 0,X", 0xE1, 0x00);
@@ -490,6 +493,7 @@ static void test_indexed() {
     TEST("ADC B 127,X", 0xE9, 0x7F);
     TEST("ORA B 128,X", 0xEA, 0x80);
     TEST("ADD B,255,X", 0xEB, 0xFF);
+    TEST("SUBB X",   0xE0, 0x00);
     TEST("SUBB ,X",  0xE0, 0x00);
     TEST("CMPB 0,X", 0xE1, 0x00);
     TEST("SBCB 1,X", 0xE2, 0x01);
@@ -502,17 +506,20 @@ static void test_indexed() {
     TEST("ORAB 128,X", 0xEA, 0x80);
     TEST("ADDB 255,X", 0xEB, 0xFF);
 
+    TEST("CPX X",   0xAC, 0x00);
     TEST("CPX ,X",  0xAC, 0x00);
     TEST("LDX 0,X", 0xEE, 0x00);
     TEST("STX 2,X", 0xEF, 0x02);
     TEST("LDS 128,X", 0xAE, 0x80);
     TEST("STS 255,X", 0xAF, 0xFF);
 
+    TEST("JMP X",     0x6E, 0x00);
     TEST("JMP 0,X",   0x6E, 0x00);
     TEST("JSR 255,X", 0xAD, 0xFF);
 
     // MC6801
     assembler.setCpu("6801");
+    TEST("SUBD     X", 0xA3, 0x00);
     TEST("SUBD    ,X", 0xA3, 0x00);
     TEST("ADDD 128,X", 0xE3, 0x80);
     TEST("LDD  255,X", 0xEC, 0xFF);

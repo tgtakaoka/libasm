@@ -86,7 +86,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
         p = skipSpaces(p + 1);
     }
     if (_regs.compareRegName(p, REG_X)) { // ,X
-        if (comma == 0 || comma >= 3)
+        if (comma >= 3)
             return op.setError(UNKNOWN_OPERAND);
         _scan = p + _regs.regNameLen(REG_X);
         op.opr = 0;
