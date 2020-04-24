@@ -82,6 +82,8 @@ int DisDriver::disassemble() {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
+        if (_verbose)
+            fprintf(stderr, "%s: Opened for output\n", _output_name);
         fprintf(output, "%s\n", listing.getCpu());
     }
     FILE *list = nullptr;
@@ -91,6 +93,8 @@ int DisDriver::disassemble() {
             fprintf(stderr, "Can't open list file %s\n", _list_name);
             return 1;
         }
+        if (_verbose)
+            fprintf(stderr, "%s: Opened for listing\n", _list_name);
         fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump(
@@ -108,17 +112,21 @@ int DisDriver::disassemble() {
             for (size_t pc = 0; pc < size; pc += insn.length()) {
                 uint32_t address = base + pc;
                 listing.disassemble(address, insn);
+                const Error error = _disassembler->getError();
+                if (error)
+                    fprintf(stderr, "%s at 0x%04x\n",
+                            _disassembler->errorText(), address);
                 if (list) {
-                    if (_disassembler->getError())
-                        fprintf(list, "Error %d\n", _disassembler->getError());
+                    if (error)
+                        fprintf(list, "%s\n", _disassembler->errorText());
                     do {
                         fprintf(list, "%s\n", listing.getLine());
                     } while (listing.hasNext());
                     fflush(list);
                 }
                 if (output) {
-                    if (_disassembler->getError())
-                        fprintf(output, "Error %d\n", _disassembler->getError());
+                    if (error)
+                        fprintf(output, "; %s\n", _disassembler->errorText());
                     do {
                         fprintf(output, "%s\n", listing.getContent());
                     } while (listing.hasNext());
@@ -161,8 +169,8 @@ int DisDriver::readInput(
                 start = end = addr;
             if (addr != end) {
                 if (_verbose)
-                    fprintf(stderr, "Read %4d bytes %04x-%04x\n",
-                            end - start, start, end - 1);
+                    fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n",
+                            _input_name, end - start, start, end - 1);
                 start = addr;
             }
             end = addr + size;
@@ -170,8 +178,8 @@ int DisDriver::readInput(
         }
     }
     if (start != end && _verbose)
-        fprintf(stderr, "Read %4d bytes %04x-%04x\n",
-                end - start, start, end - 1);
+        fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n",
+                _input_name, end - start, start, end - 1);
     free(line);
     return errors;
 }

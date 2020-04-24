@@ -61,6 +61,17 @@ void TestAsserter::equals(
 }
 
 void TestAsserter::equals(
+    const char *message, Error expected, const ErrorReporter &actual) {
+    if (expected == actual.getError()) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s: expected '%s': actual '%s'\n", message,
+           ErrorReporter::errorText(expected), actual.errorText());
+}
+
+void TestAsserter::equals(
     const char *message,
     const uint8_t expected[], size_t expected_len,
     const uint8_t actual[], size_t actual_len) {

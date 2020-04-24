@@ -59,17 +59,15 @@ int AsmDriver::assemble() {
     CliMemory memory;
     if (_verbose) {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
-        fprintf(stderr, "Pass %d\n", ++pass);
+        fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
-    if (assemble(memory, nullptr) != 0)
-        return 1;
+    (void)assemble(memory);
 
     do {
         _commonDir.setSymbolMode(true, false);
         CliMemory next;
-        if (_verbose) fprintf(stderr, "Pass %d\n", ++pass);
-        if (assemble(next, nullptr) != 0)
-            return 1;
+        if (_verbose) fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
+        (void)assemble(next);
         if (memory.equals(next))
             break;
         memory.swap(next);
@@ -97,7 +95,8 @@ int AsmDriver::assemble() {
             [this, output, formatter]
             (uint32_t addr, const uint8_t *data, size_t data_size) {
                 if (_verbose)
-                    fprintf(stderr, "Write %4lu bytes %04x-%04x\n",
+                    fprintf(stderr, "%s: Write %4lu bytes %04x-%04x\n",
+                            _output_name,
                             data_size, addr, (uint32_t)(addr + data_size - 1));
                 for (size_t i = 0; i < data_size; i += _record_bytes) {
                     auto size = std::min(_record_bytes, data_size - i);
@@ -113,21 +112,24 @@ int AsmDriver::assemble() {
         fclose(output);
         delete formatter;
     }
+    FILE *list = nullptr;
     if (_list_name) {
-        FILE *list = fopen(_list_name, "w");
+        list = fopen(_list_name, "w");
         if (list == nullptr) {
             fprintf(stderr, "Can't open list file %s\n", _list_name);
             return 1;
         }
-        if (_verbose) fprintf(stderr, "Pass listing\n");
-        assemble(memory, list);
-        fclose(list);
+        if (_verbose)
+            fprintf(stderr, "%s: Opened for listing\n", _list_name);
     }
+    if (_verbose) fprintf(stderr, "%s: Pass listing\n", _input_name);
+    assemble(memory, list, true);
+    if (list) fclose(list);
 
     return 0;
 }
 
-int AsmDriver::assemble(CliMemory &memory, FILE *list) {
+int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
     if (_commonDir.openSource(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
@@ -138,14 +140,14 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list) {
     _commonDir.setOrigin(0);
     const char *line;
     while ((line = _commonDir.readSourceLine()) != nullptr) {
-        if (_commonDir.assembleLine(line, memory)) {
+        if (_commonDir.assembleLine(line, memory) && reportError) {
             const char *filename = _commonDir.currentSource();
             const int lineno = _commonDir.currentLineno();
-            const int column = _commonDir.errorAt() - line;
-            fprintf(stderr, "%s:%d:%d: error %d\n",
-                    filename, lineno, column, _commonDir.getError());
-            fprintf(stderr, "%s:%d %s\n",
-                    filename, lineno, _commonDir.errorAt());
+            const int column = _commonDir.errorAt() - line + 1;
+            fprintf(stderr, "%s:%d:%d: %s\n",
+                    filename, lineno, column,
+                    _commonDir.errorText());
+            fprintf(stderr, "%s:%d %s\n", filename, lineno, line);
             errors++;
             continue;
         }

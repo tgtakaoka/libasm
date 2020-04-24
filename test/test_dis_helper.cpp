@@ -36,7 +36,7 @@ void dis_assert(
     disassembler.decode(memory, insn, actual_opr, &symtab, true);
     sprintf(message, "%s:%d: %s: ", file, line, expected_name);
     memory.dump(message + strlen(message));
-    asserter.equals(message, error, disassembler.getError());
+    asserter.equals(message, error, disassembler);
     if (error == OK) {
         asserter.equals(message, expected_name, insn.name());
         asserter.equals(message, expected_opr, actual_opr);

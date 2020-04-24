@@ -17,6 +17,8 @@
 #ifndef __TEST_ASSERTER_H__
 #define __TEST_ASSERTER_H__
 
+#include "error_reporter.h"
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -36,6 +38,8 @@ public:
         const char *message, const uint32_t expected, const uint32_t actual);
     void equals(
         const char *message, const char *expected, const char *actual);
+    void equals(
+        const char *message, Error expected, const ErrorReporter &actual);
     void equals(
         const char *message,
         const uint8_t expected[], size_t expected_len,

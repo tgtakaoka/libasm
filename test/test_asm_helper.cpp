@@ -34,7 +34,7 @@ void asm_assert(
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
     sprintf(message, "%s:%d: %s", file, line, src);
-    asserter.equals(message, error, assembler.getError());
+    asserter.equals(message, error, assembler);
     asserter.equals(message, expected, length,
                     insn.bytes(), insn.length());
 }
@@ -49,7 +49,7 @@ void asm_assert(
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
     sprintf(message, "%s:%d: %s", file, line, src);
-    asserter.equals(message, error, assembler.getError());
+    asserter.equals(message, error, assembler);
     asserter.equals(message, expected, length,
                     insn.bytes(), insn.length());
 }

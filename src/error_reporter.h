@@ -81,13 +81,16 @@ public:
         return _error;
     }
 
+    const char *errorText() const;
+    static const char *errorText(Error error);
+
 private:
     Error _error;
 };
 
 } // namespace libasm
 
-#endif // __ERROR_HD6309_H__
+#endif // __ERROR_REPORTER_H__
 
 // Local Variables:
 // mode: c++
