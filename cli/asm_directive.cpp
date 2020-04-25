@@ -313,16 +313,17 @@ Error AsmCommonDirective::includeFile() {
     return openSource(filename, end);
 }
 
-Error AsmCommonDirective::defineBytes(CliMemory &memory) {
+Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
     _list.address = _origin;
     _list.length = 0;
     do {
         skipSpaces();
-        if (*_scan == '"') {
+        if (terminator || *_scan == '"') {
+            const char delim = *_scan;
             const char *p = _scan + 1;
             for (;;) {
                 if (*p == 0) return setError(MISSING_CLOSING_DQUOTE);
-                if (*p == '"') break;
+                if (*p == delim) break;
                 char c = 0;
                 p = _parser->readChar(p, c);
                 if (setError(*_parser)) {
@@ -550,9 +551,10 @@ BinFormatter *AsmMotoDirective::defaultFormatter() const {
 Error AsmMotoDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory,
     AsmCommonDirective &common) {
-    if (strcasecmp(directive, "fcb") == 0 ||
-        strcasecmp(directive, "fcc") == 0)
+    if (strcasecmp(directive, "fcb") == 0)
         return common.defineBytes(memory);
+    if (strcasecmp(directive, "fcc") == 0)
+        return common.defineBytes(memory, /* terminator */true);
     if (strcasecmp(directive, "fdb") == 0)
         return common.defineWords(memory);
     if (strcasecmp(directive, "rmb") == 0)
@@ -590,7 +592,7 @@ AsmIntelDirective::AsmIntelDirective(Assembler &assembler)
 
 BinFormatter *AsmIntelDirective::defaultFormatter() const {
     return new IntelHex(_assembler.addressWidth());
-}        
+}
 
 Error AsmIntelDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory,

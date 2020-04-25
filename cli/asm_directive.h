@@ -57,7 +57,7 @@ public:
     Error defineOrigin();
     Error defineLabel(const char *&label, CliMemory &memory);
     Error includeFile();
-    Error defineBytes(CliMemory &memory);
+    Error defineBytes(CliMemory &memory, bool terminator = false);
     Error defineWords(CliMemory &memory);
     Error defineSpaces();
 
