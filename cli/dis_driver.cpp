@@ -49,18 +49,22 @@ int DisDriver::usage() {
         }
     }
     fprintf(stderr,
+            "libasm disassembler (version " LIBASM_VERSION_STRING ")\n"
             "usage: %s %s [-u] [-o <output>] [-l <list>] <input>\n"
             " options:\n"
             "  -C          : CPU variant%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  -u          : use uppercase letter for output\n"
+            "  -v          : print progress verbosely\n"
             "  <input>     : file can be Motorola SREC or Intel HEX format\n",
             _progname, cpuOption.c_str(), cpuList.c_str());
     return 2;
 }
 
 int DisDriver::disassemble() {
+    if (_verbose)
+        fprintf(stderr, "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
     FILE *input = fopen(_input_name, "r");
     if (input == nullptr) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
@@ -134,6 +138,7 @@ int DisDriver::readInput(
     size_t line_len = 128;
     char *line = static_cast<char *>(malloc(line_len));
     int len;
+    uint32_t start = 0, end = 0;;
     while ((len = getLine(line, line_len, input)) > 0) {
         lineno++;
         uint32_t addr;
@@ -150,9 +155,22 @@ int DisDriver::readInput(
             errors++;
             continue;
         }
-        if (size)
+        if (size) {
+            if (start == end)
+                start = end = addr;
+            if (addr != end) {
+                if (_verbose)
+                    fprintf(stderr, "Read %4d bytes %04x-%04x\n",
+                            end - start, start, end - 1);
+                start = addr;
+            }
+            end = addr + size;
             memory.writeBytes(addr, data, size);
+        }
     }
+    if (start != end && _verbose)
+        fprintf(stderr, "Read %4d bytes %04x-%04x\n",
+                end - start, start, end - 1);
     free(line);
     return errors;
 }
@@ -195,6 +213,7 @@ Disassembler *DisDriver::defaultDisassembler() {
 int DisDriver::parseOption(int argc, const char **argv) {
     _progname = basename(argv[0]);
     _uppercase = false;
+    _verbose = false;
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
@@ -239,6 +258,9 @@ int DisDriver::parseOption(int argc, const char **argv) {
             }
             case 'u':
                 _uppercase = true;
+                break;
+            case 'v':
+                _verbose = true;
                 break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);

@@ -41,6 +41,7 @@ public:
 
 private:
     bool _uppercase;
+    bool _verbose;
     std::vector<Disassembler *> _disassemblers;
     Disassembler *_disassembler;
     const char *_progname;

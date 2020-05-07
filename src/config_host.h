@@ -17,6 +17,8 @@
 #ifndef __CONFIG_HOST_H__
 #define __CONFIG_HOST_H__
 
+#include "version.h"
+
 #include <stdint.h>
 
 namespace host

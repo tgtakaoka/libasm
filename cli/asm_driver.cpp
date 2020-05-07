@@ -44,6 +44,7 @@ int AsmDriver::usage() {
         cpuList = cpuSep + _commonDir.listCpu(cpuSep);
     }
     fprintf(stderr,
+            "libasm assembler (version " LIBASM_VERSION_STRING ")\n"
             "usage: %s %s [-u] [-o <output>] [-l <list>] <input>\n"
             " options:\n"
             "  -C          : CPU variant%s\n"
@@ -53,20 +54,27 @@ int AsmDriver::usage() {
             "  -H[<bytes>] : output Intel HEX format\n"
             "              : optional <bytes> specifies data record length (max 32)\n"
             "  -u          : use uppercase letter for output\n"
-            "  -n          : output line number to list file\n",
+            "  -n          : output line number to list file\n"
+            "  -v          : print progress verbosely\n",
             _progname, cpuOption.c_str(), cpuList.c_str());
     return 2;
 }
 
 int AsmDriver::assemble() {
     _commonDir.setSymbolMode(false, true);
+    int pass = 0;
     CliMemory memory;
+    if (_verbose) {
+        fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
+        fprintf(stderr, "Pass %d\n", ++pass);
+    }
     if (assemble(memory, nullptr) != 0)
         return 1;
 
     do {
         _commonDir.setSymbolMode(true, false);
         CliMemory next;
+        if (_verbose) fprintf(stderr, "Pass %d\n", ++pass);
         if (assemble(next, nullptr) != 0)
             return 1;
         if (memory.equals(next))
@@ -85,6 +93,9 @@ int AsmDriver::assemble() {
         memory.dump(
             [this, output]
             (uint32_t addr, const uint8_t *data, size_t data_size) {
+                if (_verbose)
+                    fprintf(stderr, "Write %4lu bytes %04x-%04x\n",
+                            data_size, addr, (uint32_t)(addr + data_size - 1));
                 for (size_t i = 0; i < data_size; i += _record_bytes) {
                     auto size = std::min(_record_bytes, data_size - i);
                     const char *line = _formatter->prepare(addr + i);
@@ -104,6 +115,7 @@ int AsmDriver::assemble() {
             fprintf(stderr, "Can't open list file %s\n", _list_name);
             return 1;
         }
+        if (_verbose) fprintf(stderr, "Pass listing\n");
         assemble(memory, list);
         fclose(list);
     }
@@ -165,6 +177,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _formatter = nullptr;
     _uppercase = false;
     _line_number = false;
+    _verbose = false;
     AsmDirective *directive = defaultDirective();
     char formatter = 0;
     for (int i = 1; i < argc; i++) {
@@ -214,6 +227,9 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                 break;
             case 'n':
                 _line_number = true;
+                break;
+            case 'v':
+                _verbose = true;
                 break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);

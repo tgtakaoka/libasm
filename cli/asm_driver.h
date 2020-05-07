@@ -46,6 +46,7 @@ private:
     BinFormatter *_formatter;
     bool _uppercase;
     bool _line_number;
+    bool _verbose;
 
     static constexpr const char *PROG_PREFIX = "asm";
     AsmDirective *defaultDirective();
