@@ -64,6 +64,10 @@ static bool isNumber(const char *&p) {
     } else if ((*p == '-' || *p == '+') && isDigits(s, p + 1)) {
         p = s;
         return true;
+    } else if (p[0] == '0' && toupper(p[1]) == 'X'
+               && isXdigits(s, p + 2) && s - p >= 3) {
+        p = s;
+        return true;
     } else if (isDigits(s, p)) {
         p = s;
         return true;

@@ -26,6 +26,7 @@ OBJS_mos6502  = table_mos6502.o reg_mos6502.o
 OBJS_w65c816  = table_w65c816.o
 OBJS_i8080    = table_i8080.o   reg_i8080.o
 OBJS_z80      = table_z80.o     reg_z80.o
+OBJS_ins8060  = table_ins8060.o reg_ins8060.o
 OBJS_tms9900  = table_tms9900.o reg_tms9900.o
 OBJS_mc68000  = table_mc68000.o reg_mc68000.o
 
@@ -37,6 +38,7 @@ OBJS = 	$(OBJS_common)  \
 	$(OBJS_mos6502) \
 	$(OBJS_i8080)   \
 	$(OBJS_z80)     \
+	$(OBJS_ins8060) \
 	$(OBJS_tms9900) \
 	$(OBJS_mc68000)
 
@@ -67,6 +69,7 @@ dis:    dis.o $(OBJS_dis) $(OBJS_common) \
 	dis_w65c816.o $(OBJS_w65c816) \
 	dis_i8080.o   $(OBJS_i8080)   \
 	dis_z80.o     $(OBJS_z80)     \
+	dis_ins8060.o $(OBJS_ins8060) \
 	dis_tms9900.o $(OBJS_tms9900) \
 	dis_mc68000.o $(OBJS_mc68000)
 	$(CXX) $(CXXFLAGS) $^ -o $@
