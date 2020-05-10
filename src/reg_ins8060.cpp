@@ -36,7 +36,7 @@ static bool regCharCaseEqual(char c, char regChar) {
 
 char RegIns8060::regName1stChar(const RegName regName) const {
     const char r = char(regName);
-    if (isdigit(r)) return 'P';
+    if (isdigit(r)) return _uppercase ? 'P' : 'p';
     return _uppercase ? r : tolower(r);
 }
 
@@ -44,7 +44,7 @@ char RegIns8060::regName2ndChar(const RegName regName) const {
     const char r = char(regName);
     if (isdigit(r)) return r;
     if (regName == REG_PC)
-        return _uppercase ? 'C' : 'C';
+        return _uppercase ? 'C' : 'c';
     return 0;
 }
 
