@@ -25,7 +25,7 @@ class DisOperand {
 public:
     virtual char *output(
         char *p, uint32_t val, int8_t radix,
-        bool relax, uint8_t bitWidth) const = 0;
+        bool relax, uint8_t bitWidth) const;
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
 
 protected:

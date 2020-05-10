@@ -78,6 +78,24 @@ char *DisOperand::outputRelaxed(
     return nullptr;
  }
 
+char *DisOperand::output(
+    char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
+    char *t;
+    if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
+        return t;
+    if (radix == 16) {
+        *p++ = '0';
+        *p++ = 'x';
+    } else if (radix == 8) {
+        *p++ = '0';
+    } else if (radix == 2) {
+        *p++ = '0';
+        *p++ = 'b';
+    }
+    t = outputNumber(p, val, radix, bitWidth);
+    return reverseStr(p, t);
+}
+
 char *DisMotoOperand::output(
     char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
     char *t;

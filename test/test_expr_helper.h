@@ -18,13 +18,14 @@
 #define __TEST_EXPT_HELPER_H__
 
 #include "asm_operand.h"
+#include "dis_operand.h"
 #include "test_symtab.h"
 #include "test_asserter.h"
 
 extern libasm::test::TestSymtab symtab;
 extern libasm::test::TestAsserter asserter;
 
-#define __ASSERT(file, line, T, expr, value, expected_error)        \
+#define __PARSER(file, line, T, expr, value, expected_error)        \
     do {                                                            \
         char msg[80];                                               \
         sprintf(msg, "%s:%d: %s", file, line, expr);                \
@@ -36,13 +37,30 @@ extern libasm::test::TestAsserter asserter;
             asserter.equals(msg,                                    \
                             static_cast<uint32_t>(expected),        \
                             static_cast<uint32_t>(actual));         \
-    } while (false);
+    } while (false)
 #define E8(expr, expected, expected_error)                              \
-    __ASSERT(__FILE__, __LINE__, uint8_t, expr, expected, expected_error)
+    __PARSER(__FILE__, __LINE__, uint8_t, expr, expected, expected_error)
 #define E16(expr, expected, expected_error)                             \
-    __ASSERT(__FILE__, __LINE__, uint16_t, expr, expected, expected_error)
+    __PARSER(__FILE__, __LINE__, uint16_t, expr, expected, expected_error)
 #define E32(expr, expected, expected_error)                             \
-    __ASSERT(__FILE__, __LINE__, uint32_t, expr, expected, expected_error)
+    __PARSER(__FILE__, __LINE__, uint32_t, expr, expected, expected_error)
+
+#define __FORMATTER(file, line, value, radix, relax, bitWidth, expected) \
+    do {                                                                \
+        char msg[80];                                                   \
+        sprintf(msg, "%s:%d: %d (%x)", file, line, value, value);       \
+        char actual[80];                                                \
+        formatter.output(actual, value, radix, relax, bitWidth);        \
+        asserter.equals(msg, expected, actual);                         \
+    } while (false)
+#define F8(value, radix, relax, expected)                               \
+    __FORMATTER(__FILE__, __LINE__, value, radix, relax, 8, expected)
+#define F16(value, radix, relax, expected)                              \
+    __FORMATTER(__FILE__, __LINE__, value, radix, relax, 16, expected)
+#define F24(value, radix, relax, expected)                              \
+    __FORMATTER(__FILE__, __LINE__, value, radix, relax, 24, expected)
+#define F32(value, radix, relax, expected)                              \
+    __FORMATTER(__FILE__, __LINE__, value, radix, relax, 32, expected)
 
 #define RUN_TEST(test) run_test(test, #test)
 

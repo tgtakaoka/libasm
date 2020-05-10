@@ -388,16 +388,25 @@ Error AsmOperand::readNumber(Value &val) {
     const char *p = _next;
     if (*p == '0') {
         const char c = toupper(p[1]);
-        if (c == 'X')
+        if (c == 'X' && scanNumberEnd(p + 2, 16) == OK)
             return parseNumber(p + 2, val, 16);
-        if (isValidDigit(c, 8))
+        if (isValidDigit(c, 8) && scanNumberEnd(p + 1, 8) == OK)
             return parseNumber(p + 1, val, 8);
-        if (c == 'B')
+        if (c == 'B' && scanNumberEnd(p + 2, 2) == OK)
             return parseNumber(p + 2, val, 2);
     }
-    if (isdigit(*p))
+    if (isdigit(*p) && scanNumberEnd(p, 10) == OK)
         return parseNumber(p, val, 10);
     return setError(ILLEGAL_CONSTANT);
+}
+
+Error AsmOperand::scanNumberEnd(
+    const char *p, const uint8_t base, char suffix) {
+    while (isValidDigit(*p, base))
+        p++;
+    if (suffix && toupper(*p++) != suffix)
+        return ILLEGAL_CONSTANT;
+    return OK;
 }
 
 bool AsmMotoOperand::isCurrentOriginSymbol(char c) const {
@@ -406,28 +415,19 @@ bool AsmMotoOperand::isCurrentOriginSymbol(char c) const {
 
 Error AsmMotoOperand::readNumber(Value &val) {
     const char *p = _next;
-    if (isdigit(*p))
-        return parseNumber(p, val, 10);
-    if (*p == '$')
+    if (*p == '$' && scanNumberEnd(p + 1, 16) == OK)
         return parseNumber(p + 1, val, 16);
-    if (*p == '@')
+    if (*p == '@' && scanNumberEnd(p + 1, 8) == OK)
         return parseNumber(p + 1, val, 8);
-    if (*p == '%')
+    if (*p == '%' && scanNumberEnd(p + 1, 2) == OK)
         return parseNumber(p + 1, val, 2);
+    if (scanNumberEnd(_next, 10) == OK)
+        return parseNumber(p, val, 10);
     return AsmOperand::readNumber(val);
 }
 
 bool AsmIntelOperand::isCurrentOriginSymbol(char c) const {
     return c == '$';
-}
-
-Error AsmIntelOperand::scanNumberEnd(
-    const char *p, const uint8_t base, char suffix) {
-    while (isValidDigit(*p, base))
-        p++;
-    if (suffix && toupper(*p++) != suffix)
-        return ILLEGAL_CONSTANT;
-    return OK;
 }
 
 Error AsmIntelOperand::readNumber(Value &val) {

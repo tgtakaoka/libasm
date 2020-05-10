@@ -71,6 +71,8 @@ protected:
     Error parseNumber(
         const char *p, Value &val, const uint8_t base,
         const char suffix = 0);
+    Error scanNumberEnd(
+        const char *scan, const uint8_t base, char suffix = 0);
 
 private:
     enum Op : char {
@@ -143,9 +145,6 @@ class AsmIntelOperand : public AsmOperand {
 protected:
     bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(Value &val) override;
-private:
-    Error scanNumberEnd(
-        const char *scan, const uint8_t base, char suffix = 0);
 };
 
 } // namespace libasm

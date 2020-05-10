@@ -20,6 +20,7 @@ using namespace libasm;
 using namespace libasm::test;
 
 AsmIntelOperand parser;
+DisIntelOperand formatter;
 TestSymtab symtab;
 TestAsserter asserter;
 
@@ -108,9 +109,24 @@ static void test_current_address() {
 }
 
 static void test_errors() {
-    E32("0ABCX",   0, ILLEGAL_CONSTANT);
-    E32("0177A",   0, ILLEGAL_CONSTANT);
-    E32("0101C",   0, ILLEGAL_CONSTANT);
+    E32("0ABCGH", 0, ILLEGAL_CONSTANT);
+    E32("01778O", 0, ILLEGAL_CONSTANT);
+    E32("01012B", 0, ILLEGAL_CONSTANT);
+    E32("56789A", 0, ILLEGAL_CONSTANT);
+}
+
+static void test_formatter() {
+    formatter.setUppercase(true);
+    F8(-1,  -10, true,  "-1");
+    F8(15,   16, true,  "15");
+    F8(-15, -16, true,  "-15");
+    F8(7,     8, true,  "7");
+    F8(-7,   -8, true,  "-7");
+    F8(1,     2, true,  "1");
+    F8(255,  16, false, "0FFH");
+    F8(255,   8, false, "377O");
+    F8(255,   2, false, "11111111B");
+    F24(0,   16, false, "000000H");
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -127,6 +143,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_current_address);
     RUN_TEST(test_errors);
+    RUN_TEST(test_formatter);
     return 0;
 }
 

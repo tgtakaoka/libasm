@@ -20,6 +20,7 @@ using namespace libasm;
 using namespace libasm::test;
 
 AsmMotoOperand parser;
+DisMotoOperand formatter;
 TestSymtab symtab;
 TestAsserter asserter;
 
@@ -107,9 +108,23 @@ static void test_current_address() {
 }
 
 static void test_errors() {
-    E32("$xxx",    0, ILLEGAL_CONSTANT);
-    E32("@ooo",    0, ILLEGAL_CONSTANT);
-    E32("%bbb",    0, ILLEGAL_CONSTANT);
+    E32("$bcdefg", 0, ILLEGAL_CONSTANT);
+    E32("@345678", 0, ILLEGAL_CONSTANT);
+    E32("%101012", 0, ILLEGAL_CONSTANT);
+    E32("456789a", 0, ILLEGAL_CONSTANT);
+}
+
+static void test_formatter() {
+    F8(-1,  -10, true,  "-1");
+    F8(15,   16, true,  "15");
+    F8(-15, -16, true,  "-15");
+    F8(7,     8, true,  "7");
+    F8(-7,   -8, true,  "-7");
+    F8(1,     2, true,  "1");
+    F8(255,  16, false, "$ff");
+    F8(255,   8, false, "@377");
+    F8(255,   2, false, "%11111111");
+    F24(0,   16, false, "$000000");
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -126,6 +141,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_current_address);
     RUN_TEST(test_errors);
+    RUN_TEST(test_formatter);
     return 0;
 }
 

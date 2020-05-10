@@ -20,6 +20,7 @@ using namespace libasm;
 using namespace libasm::test;
 
 AsmOperand parser;
+DisOperand formatter;
 TestSymtab symtab;
 TestAsserter asserter;
 
@@ -309,9 +310,10 @@ static void test_errors() {
     E32("1-undef", 0, UNDEFINED_SYMBOL);
     E32("undef+1", 0, UNDEFINED_SYMBOL);
     E32("undef",   0, UNDEFINED_SYMBOL);
-    E32("0xxx",    0, ILLEGAL_CONSTANT);
-    E32("0ooo",    0, ILLEGAL_CONSTANT);
-    E32("0bbb",    0, ILLEGAL_CONSTANT);
+    E32("0xcdefg", 0, ILLEGAL_CONSTANT);
+    E32("0345678", 0, ILLEGAL_CONSTANT);
+    E32("0b10102", 0, ILLEGAL_CONSTANT);
+    E32("456789A", 0, ILLEGAL_CONSTANT);
     E32("2*(1+3",  0, MISSING_CLOSING_PAREN);
     E32("2*[1+3",  0, MISSING_CLOSING_PAREN);
     E32("2*(1+3]", 0, MISSING_CLOSING_PAREN);
@@ -334,6 +336,19 @@ static void test_errors() {
     E32("100%0",   0, DIVIDE_BY_ZERO);
 }
 
+static void test_formatter() {
+    F8(-1,  -10, true,  "-1");
+    F8(15,   16, true,  "15");
+    F8(-15, -16, true,  "-15");
+    F8(7,     8, true,  "7");
+    F8(-7,   -8, true,  "-7");
+    F8(1,     2, true,  "1");
+    F8(255,  16, false, "0xff");
+    F8(255,   8, false, "0377");
+    F8(255,   2, false, "0b11111111");
+    F24(0,   16, false, "0x000000");
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -353,6 +368,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_overflow);
     RUN_TEST(test_precedence);
     RUN_TEST(test_errors);
+    RUN_TEST(test_formatter);
     return 0;
 }
 

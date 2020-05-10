@@ -183,11 +183,11 @@ test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_moto:  test_expr_moto.o    $(OBJS_asm)
+test_expr_moto:  test_expr_moto.o    $(OBJS_asm) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_intel:  test_expr_intel.o  $(OBJS_asm)
+test_expr_intel:  test_expr_intel.o  $(OBJS_asm) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_cstyle: test_expr_cstyle.o $(OBJS_asm)
+test_expr_cstyle: test_expr_cstyle.o $(OBJS_asm) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
