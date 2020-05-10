@@ -59,6 +59,7 @@ asm:    asm.o $(OBJS_asm) $(OBJS_common) \
 	asm_w65c816.o $(OBJS_w65c816) \
 	asm_i8080.o   $(OBJS_i8080)   \
 	asm_z80.o     $(OBJS_z80)     \
+	asm_ins8060.o $(OBJS_ins8060) \
 	asm_tms9900.o $(OBJS_tms9900) \
 	asm_mc68000.o $(OBJS_mc68000)
 	$(CXX) $(CXXFLAGS) $^ -o $@

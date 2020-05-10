@@ -32,12 +32,19 @@ public:
 
     void setFlags(host::uint_t flags) { _flags = flags; }
 
+    void setAddrMode(AddrMode addrMode) {
+        _flags = Entry::_flags(addrMode);
+    }
+
     Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
     void embed(Config::opcode_t data) {
         _opCode |= data;
+    }
+    void emitInsn() {
+        emitByte(_opCode);
     }
 
 private:
