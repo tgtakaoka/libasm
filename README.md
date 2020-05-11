@@ -12,6 +12,7 @@ small environment (less than 15kB on Arduino).
   - 65816 (Support 24bit address and LONGA/LONGI)
   - 8080 (Intel and Zilog syntax)
   - Z80
+  - SC/MP
   - TMS9900, TMS9995
   - 68000
 
