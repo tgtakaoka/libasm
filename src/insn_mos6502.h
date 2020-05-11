@@ -42,7 +42,7 @@ public:
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(Entry::_cpuType(_flags), addrMode);
+        _flags = Entry::_set(_flags, addrMode);
     }
 
     Config::opcode_t opCode() const { return _opCode; }

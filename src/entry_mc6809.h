@@ -71,6 +71,10 @@ struct Entry {
             | (host::uint_t(addrMode) << addrMode_gp);
     }
 
+    static host::uint_t _set(host::uint_t flags, AddrMode addrMode) {
+        return (flags & ~addrMode_gm) | host::uint_t(addrMode);
+    }
+
 private:
     static constexpr host::uint_t oprSize_gp = 4;
     static constexpr host::uint_t oprSize_gm = 0x03;

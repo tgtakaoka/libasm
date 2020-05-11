@@ -36,7 +36,7 @@ public:
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(Entry::_oprSize(_flags), addrMode);
+        _flags = Entry::_set(_flags, addrMode);
     }
 
     uint16_t insnCode() const { return _insnCode; }

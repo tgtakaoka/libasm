@@ -85,6 +85,9 @@ struct Entry {
         return (host::uint_t(cpuType) << cputype_gp)
             | host::uint_t(addrMode);
     }
+    static host::uint_t _set(host::uint_t flags, AddrMode addrMode) {
+        return (flags & ~addrMode_gm) | host::uint_t(addrMode);
+    }
 
 private:
     static constexpr host::uint_t cputype_gp = 5;
