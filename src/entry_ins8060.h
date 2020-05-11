@@ -38,14 +38,14 @@ struct Entry {
     const char *name;
 
     static inline AddrMode _addrMode(host::uint_t flags) {
-        return AddrMode(flags & addrMode_mask);
+        return AddrMode(flags & addrMode_gm);
     }
     static constexpr host::uint_t _flags(AddrMode addrMode) {
         return host::uint_t(addrMode);
     }
 
 private:
-    static constexpr host::uint_t addrMode_mask = 0x07;
+    static constexpr host::uint_t addrMode_gm = 0x07;
 };
 
 } // namespace ins8060

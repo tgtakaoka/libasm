@@ -106,8 +106,6 @@ Error DisIns8060::decode(
         return decodeIndx(memory, insn, false);
     case INDX:
         return decodeIndx(memory, insn, true);
-    case UNDEF:
-        return setError(UNKNOWN_INSTRUCTION);
     default:
         return setError(INTERNAL_ERROR);
     }

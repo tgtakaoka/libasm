@@ -132,12 +132,13 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
             opCode, ARRAY_RANGE(TABLE_INS8060), tableCode);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
+    if (insn.addrMode() == UNDEF) return UNKNOWN_INSTRUCTION;
     TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
     return OK;
 }
 
 const char *TableIns8060::listCpu() {
-    return "sc/mp";
+    return "SC/MP";
 }
 
 bool TableIns8060::setCpu(const char *cpu) {
