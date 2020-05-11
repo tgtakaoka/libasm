@@ -84,10 +84,16 @@ private:
     FILE *_list;
     const Insn *_insn;
     const char *_operands;
+    typename Conf::uintptr_t _address;
+    size_t _generated_size;
+    const char *_instruction;
 
     // TestGenerator<Addr>::Printer
     void print(const Insn &insn, const char *operands) override {
         _insn = &insn;
+        _address = insn.address();
+        _generated_size = insn.length();
+        _instruction = insn.name();
         _operands = operands;
         _listing.reset(*this, _uppercase, false);
         if (_list) {
@@ -103,14 +109,32 @@ private:
             fflush(_output);
         }
     }
+    void origin(typename Conf::uintptr_t addr) override {
+        char operands[40];
+        _disassembler.getFormatter().output(
+            operands, addr, 16, false, _disassembler.addressWidth());
+        _listing.reset(*this, _uppercase, false);
+        _address = addr;
+        _generated_size = 0;
+        _instruction = _uppercase ? "ORG" : "org";
+        _operands = operands;
+        if (_list) {
+            fprintf(_list, "%s\n", _listing.getLine());
+            fflush(_list);
+        }
+        if (_output) {
+            fprintf(_output, "%s\n", _listing.getContent());
+            fflush(_output);
+        }
+    }
 
     // ListingLine
     AddressWidth addressWidth() const override { return _disassembler.addressWidth(); }
     OpCodeWidth opCodeWidth() const override { return _disassembler.opCodeWidth(); }
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
-    uint32_t startAddress() const override { return _insn->address(); }
-    int generatedSize() const override { return _insn->length(); }
+    uint32_t startAddress() const override { return _address; }
+    int generatedSize() const override { return _generated_size; }
     uint8_t getByte(int offset) const override { return _insn->bytes()[offset]; }
     bool hasValue() const override { return false; }
     uint32_t value() const override { return 0; }
@@ -119,7 +143,7 @@ private:
     bool hasOperand() const override { return *_operands; }
     bool hasComment() const override { return false; }
     std::string getLabel() const override { return ""; }
-    std::string getInstruction() const override { return std::string(_insn->name()); }
+    std::string getInstruction() const override { return std::string(_instruction); }
     std::string getOperand() const override { return std::string(_operands); }
     std::string getComment() const override { return ""; }
     int maxBytes() const override { return 6; }

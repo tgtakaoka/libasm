@@ -176,14 +176,15 @@ class TestGenerator {
 public:
     TestGenerator(
         Disassembler &disassembler,
-        bool uppercase)
+        bool uppercase,
+        typename Conf::uintptr_t addr = 0)
         : _disassembler(disassembler),
           _memorySize(Conf::CODE_MAX),
           _endian(Conf::ENDIAN),
           _opcodeSize(sizeof(typename Conf::opcode_t)),
           _uppercase(uppercase) {
         _memory = new uint8_t[_memorySize];
-        _addr = 0;
+        _addr = addr;
     }
 
     virtual ~TestGenerator() {
@@ -193,11 +194,13 @@ public:
     class Printer {
     public:
         virtual void print(const Insn &insn, const char *operands) = 0;
+        virtual void origin(typename Conf::uintptr_t addr) = 0;
     };
     typedef bool (*Filter)(uint8_t);
 
     TestGenerator<Conf> &generate(Printer &printer, Filter filter = nullptr) {
         DataGenerator gen(_memory, _endian, _opcodeSize, filter);
+        if (_addr) printer.origin(_addr);
         return generate(printer, gen);
     }
 
