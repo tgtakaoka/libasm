@@ -71,12 +71,12 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
         if (!autoDisp && op.reg == REG_UNDEF) {
             op.mode = INHR;
             _scan = p;
-            return op.setError(OK);
+            return setError(OK);
         }
         if (!autoDisp && op.reg != REG_E) {
             op.mode = PNTR;
             _scan = p;
-            return op.setError(OK);
+            return setError(OK);
         }
         return setError(UNKNOWN_OPERAND);
     }

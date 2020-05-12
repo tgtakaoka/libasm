@@ -101,7 +101,8 @@ test_z80: test_asm_z80 test_dis_z80
 test_ins8060: test_asm_ins8060 test_dis_ins8060
 	./test_asm_ins8060
 	./test_dis_ins8060
-test_ins8070: test_dis_ins8070
+test_ins8070: test_asm_ins8070 test_dis_ins8070
+	./test_asm_ins8070
 	./test_dis_ins8070
 test_mc68000: test_asm_mc68000 test_dis_mc68000
 	./test_asm_mc68000
@@ -130,7 +131,7 @@ TEST_OBJS= \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
 	test_asm_ins8060.o test_dis_ins8060.o \
-	                   test_dis_ins8070.o \
+	test_asm_ins8070.o test_dis_ins8070.o \
 	test_asm_tms9900.o test_dis_tms9900.o \
 	test_asm_mc68000.o test_dis_mc68000.o \
 	test_expr_moto.o   test_expr_intel.o  \
@@ -167,7 +168,7 @@ OBJS	 = \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
 	$(OBJS_ins8060) asm_ins8060.o dis_ins8060.o \
-	$(OBJS_ins8070)               dis_ins8070.o \
+	$(OBJS_ins8070) asm_ins8070.o dis_ins8070.o \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
 	$(OBJS_mc68000) asm_mc68000.o dis_mc68000.o
 
@@ -200,6 +201,8 @@ test_dis_z80:     test_dis_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_dis)
 test_asm_ins8060: test_asm_ins8060.o asm_ins8060.o $(OBJS_ins8060) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_ins8060: test_dis_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_dis)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_ins8070: test_asm_ins8070.o asm_ins8070.o $(OBJS_ins8070) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_ins8070: test_dis_ins8070.o dis_ins8070.o $(OBJS_ins8070) $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
