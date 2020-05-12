@@ -49,7 +49,7 @@ private:
     const EntryPage *_table;
     const EntryPage *_end;
 
-    void setCpu(CpuType cpuType);
+    bool setCpu(CpuType cpuType);
 
     static Error searchName(
         InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);

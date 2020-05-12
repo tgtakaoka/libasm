@@ -209,31 +209,6 @@ static Config::opcode_t getInsnMask(InsnFormat iformat) {
     }
 }
 
-#if 0
-static const Entry *searchEntry(
-    const char *name,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        if (pgm_strcasecmp(name, entry->name) == 0)
-            return entry;
-    }
-    return nullptr;
-}
-
-static const Entry *searchEntry(
-    const Config::opcode_t opCode,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        const host::uint_t flags = pgm_read_byte(&entry->flags);
-        const Config::opcode_t mask = getInsnMask(Entry::_insnFormat(flags));
-        if ((opCode & ~mask) == pgm_read_word(&entry->opCode))
-            return entry;
-    }
-    return nullptr;
-}
-
-#endif
-
 Error TableMc68000::searchName(InsnMc68000 &insn) const {
     const char *name = insn.name();
     const Entry *entry =

@@ -201,68 +201,6 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xE5, PUSH, NO_FMT,  IX_REG, NO_OPR, INHR)
 };
 
-#if 0
-static bool acceptOprFormat(OprFormat opr, OprFormat table) {
-    if (table == opr) return true;
-    switch (table) {
-    case REG_8:
-        return opr == A_REG || opr == HL_PTR;
-    case REG_16:
-        return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == SP_REG;
-    case REG_16X:
-        return opr == BC_REG || opr == DE_REG || opr == IX_REG || opr == SP_REG;
-    case STK_16:
-        return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == AF_REG;
-    case BIT_NO:
-    case IMM_NO:
-    case VEC_NO:
-        return opr == IMM_8;
-    case COND_8:
-        return opr == COND_4;
-    default:
-        return false;
-    }
-}
-#endif
-
-#if 0
-static const Entry *searchEntry(
-    const char *name, OprFormat leftOpr, OprFormat rightOpr,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end
-             && (entry = searchEntry(name, entry, end)) != nullptr; entry++) {
-        const uint16_t flags = pgm_read_word(&entry->flags);
-        const OprFormat lop = Entry::_leftFormat(flags);
-        const OprFormat rop = Entry::_rightFormat(flags);
-        if (acceptOprFormat(leftOpr, lop) && acceptOprFormat(rightOpr, rop))
-            return entry;
-    }
-    return nullptr;
-}
-
-static const Entry *searchEntry(
-    const Config::opcode_t opcode,
-    const Entry *table, const Entry *end) {
-    for (const Entry *entry = table; entry < end; entry++) {
-        Config::opcode_t opc = opcode;
-        const InsnFormat iformat = Entry::_insnFormat(pgm_read_word(&entry->flags));
-        switch (iformat) {
-        case PTR_FMT: opc &= ~0x30; break;
-        case CC4_FMT: opc &= ~0x18; break;
-        case IDX_FMT: opc &= ~0x10; break;
-        case IR_FMT:  opc &= ~0x08; break;
-        case DST_FMT: opc &= ~0x38; break;
-        case SRC_FMT: opc &= ~0x07; break;
-        case DST_SRC_FMT: opc &= ~0x3F; break;
-        default: break;
-        }
-        if (opc == pgm_read_byte(&entry->opc))
-            return entry;
-    }
-    return nullptr;
-}
-#endif
-
 struct TableZ80::EntryPage {
     const Config::opcode_t prefix;
     const Entry *const table;
@@ -385,37 +323,35 @@ bool TableZ80::isPrefixCode(Config::opcode_t opCode) {
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) const {
-    return isZ80()
-        ? searchName(insn, ARRAY_RANGE(PAGES_Z80))
-        : searchName(insn, ARRAY_RANGE(PAGES_I8080));
+    return searchName(insn, _table, _end);
 }
 
 Error TableZ80::searchNameAndOprFormats(
     InsnZ80 &insn, OprFormat left, OprFormat right) const {
-    return isZ80()
-        ? searchNameAndOprFormats(insn, left, right, ARRAY_RANGE(PAGES_Z80))
-        : searchNameAndOprFormats(insn, left, right, ARRAY_RANGE(PAGES_I8080));
+    return searchNameAndOprFormats(insn, left, right, _table, _end);
 }
 
 Error TableZ80::searchOpCode(InsnZ80 &insn) const {
-    return isZ80()
-        ? searchOpCode(insn, ARRAY_RANGE(PAGES_Z80))
-        : searchOpCode(insn, ARRAY_RANGE(PAGES_I8080));
+    return searchOpCode(insn, _table, _end);
 }
 
 TableZ80::TableZ80() {
     setCpu(Z80);
 }
 
-void TableZ80::setCpu(CpuType cpuType) {
+bool TableZ80::setCpu(CpuType cpuType) {
     _cpuType = cpuType;
     if (cpuType == Z80) {
         _table = ARRAY_BEGIN(PAGES_Z80);
         _end = ARRAY_END(PAGES_Z80);
-    } else {
+        return true;
+    }
+    if (cpuType == I8080) {
         _table = ARRAY_BEGIN(PAGES_I8080);
         _end = ARRAY_END(PAGES_I8080);
+        return true;
     }
+    return false;
 }
 
 const char *TableZ80::listCpu() {
@@ -423,15 +359,11 @@ const char *TableZ80::listCpu() {
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    if (strcasecmp(cpu, "z80") == 0) {
-        setCpu(Z80);
-        return true;
-    }
+    if (strcasecmp(cpu, "z80") == 0)
+        return setCpu(Z80);
     if (toupper(*cpu) == 'I') cpu++;
-    if (strcmp(cpu, "8080") == 0) {
-        setCpu(I8080);
-        return true;
-    }
+    if (strcmp(cpu, "8080") == 0)
+        return setCpu(I8080);
     return false;
 }
 
