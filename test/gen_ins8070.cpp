@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#include "dis_ins8070.h"
+#include "gen_driver.h"
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 3
-#define LIBASM_VERSION_PATCH 0
-#define LIBASM_VERSION_STRING "1.3.0"
+using namespace libasm::ins8070;
+using namespace libasm::test;
 
-#endif // __VERSION_H__
+int main(int argc, const char **argv) {
+    DisIns8070 dis8070;
+    dis8070.setImmediateSymbol(true);
+    GenDriver<Config> driver(dis8070);
+    if (driver.main(argc, argv))
+        return 1;
+
+    TestGenerator<Config> generator(
+        dis8070,
+        driver.uppercase(),
+        0x0100);
+    generator.generate(driver);
+
+    return driver.close();
+}
 
 // Local Variables:
 // mode: c++

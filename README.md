@@ -13,6 +13,7 @@ small environment (less than 15kB on Arduino).
   - 8080, 8085
   - Z80
   - SC/MP
+  - INS8070
   - TMS9900, TMS9995
   - 68000
 

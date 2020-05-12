@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __TABLE_INS8070_H__
+#define __TABLE_INS8070_H__
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 3
-#define LIBASM_VERSION_PATCH 0
-#define LIBASM_VERSION_STRING "1.3.0"
+#include "config_ins8070.h"
+#include "insn_ins8070.h"
+#include "table_base.h"
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace ins8070 {
+
+class TableIns8070 : private TableBase {
+public:
+    Error searchName(InsnIns8070 &insn) const;
+    Error searchNameAndOprFormats(
+        InsnIns8070 &insn, OprFormat left, OprFormat right) const;
+    Error searchOpCode(InsnIns8070 &insn) const;
+
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
+};
+
+extern TableIns8070 TableIns8070;
+
+} // namespace ins8070
+} // namespace libasm
+
+#endif // __TABLE_INS8070_H__
 
 // Local Variables:
 // mode: c++

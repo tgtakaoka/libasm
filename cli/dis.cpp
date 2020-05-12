@@ -17,6 +17,7 @@
 #include "dis_driver.h"
 #include "dis_i8080.h"
 #include "dis_ins8060.h"
+#include "dis_ins8070.h"
 #include "dis_mc6800.h"
 #include "dis_mc6809.h"
 #include "dis_mc68000.h"
@@ -37,12 +38,13 @@ mc6809::DisMc6809   dis6809;
 i8080::DisI8080     dis8080;
 z80::DisZ80         disz80;
 ins8060::DisIns8060 dis8060;
+ins8070::DisIns8070 dis8070;
 tms9900::DisTms9900 dis9900;
 mc68000::DisMc68000 dis68000;
 
 std::vector<Disassembler *> disassemblers = {
     &dis6809, &dis6800, &dis6502, &dis65816,
-    &dis8080, &disz80, &dis8060,
+    &dis8080, &disz80,  &dis8060, &dis8070,
     &dis9900, &dis68000,
 };
 
