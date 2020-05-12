@@ -42,6 +42,7 @@ static const char TEXT_EI[]   PROGMEM = "EI";
 static const char TEXT_EX[]   PROGMEM = "EX";
 static const char TEXT_EXX[]  PROGMEM = "EXX";
 static const char TEXT_HALT[] PROGMEM = "HALT";
+static const char TEXT_HLT[]  PROGMEM = "HLT";
 static const char TEXT_IM[]   PROGMEM = "IM";
 static const char TEXT_IN[]   PROGMEM = "IN";
 static const char TEXT_INC[]  PROGMEM = "INC";
@@ -90,6 +91,10 @@ static const char TEXT_SRA[]  PROGMEM = "SRA";
 static const char TEXT_SRL[]  PROGMEM = "SRL";
 static const char TEXT_SUB[]  PROGMEM = "SUB";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
+
+// i8085
+static const char TEXT_RIM[]  PROGMEM = "RIM";
+static const char TEXT_SIM[]  PROGMEM = "SIM";
 
 } // namespace z80
 } // namespace libasm

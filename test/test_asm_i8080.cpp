@@ -27,6 +27,7 @@ AsmI8080 as8080;
 Assembler &assembler(as8080);
 
 static void set_up() {
+    assembler.setCpu("8080");
 }
 
 static void tear_down() {
@@ -38,6 +39,10 @@ static void test_cpu() {
         "cpu 8080", true, assembler.setCpu("8080"));
     asserter.equals(
         "cpu i8080", true, assembler.setCpu("i8080"));
+    asserter.equals(
+        "cpu 8085", true, assembler.setCpu("8085"));
+    asserter.equals(
+        "cpu i8085", true, assembler.setCpu("i8085"));
 }
 
 static void test_move_inherent() {
@@ -113,6 +118,11 @@ static void test_move_inherent() {
     TEST("STAX D",  0x12);
     TEST("LDAX B",  0x0A);
     TEST("LDAX D",  0x1A);
+
+    // i8085
+    assembler.setCpu("8085");
+    TEST("RIM", 0x20);
+    TEST("SIM", 0x30);
 }
 
 static void test_move_immediate() {

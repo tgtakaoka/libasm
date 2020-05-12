@@ -131,7 +131,7 @@
         ld      (hl),e
         ld      (hl),h
         ld      (hl),l
-        halt
+        hlt                     ; halt
         ld      (hl),a
         ld      a,b
         ld      a,c

@@ -31,6 +31,9 @@ public:
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
+
+private:
+    CpuType _cpuType;
 };
 
 extern TableI8080 TableI8080;

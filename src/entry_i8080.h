@@ -22,6 +22,11 @@
 namespace libasm {
 namespace i8080 {
 
+enum CpuType : host::uint_t {
+    I8080,
+    I8085,
+};
+
 enum AddrMode : host::uint_t {
     INHR,
     IMM8,

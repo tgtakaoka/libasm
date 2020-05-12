@@ -28,6 +28,7 @@ DisI8080 dis8080;
 Disassembler &disassembler(dis8080);
 
 static void set_up() {
+    disassembler.setCpu("8080");
 }
 
 static void tear_down() {
@@ -39,6 +40,10 @@ static void test_cpu() {
         "cpu 8080", true, disassembler.setCpu("8080"));
     asserter.equals(
         "cpu I8080", true, disassembler.setCpu("I8080"));
+    asserter.equals(
+        "cpu 8085", true, disassembler.setCpu("8085"));
+    asserter.equals(
+        "cpu I8085", true, disassembler.setCpu("I8085"));
 }
 
 static void test_move_inherent() {
@@ -114,6 +119,11 @@ static void test_move_inherent() {
     TEST(STAX, "D",   0x12);
     TEST(LDAX, "B",   0x0A);
     TEST(LDAX, "D",   0x1A);
+
+    // i8085
+    disassembler.setCpu("8085");
+    TEST(RIM, "", 0x20);
+    TEST(SIM, "", 0x30);
 }
 
 static void test_move_immediate() {
@@ -435,6 +445,7 @@ static void test_illegal() {
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);

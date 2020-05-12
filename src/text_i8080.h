@@ -99,6 +99,10 @@ static const char TEXT_XRA[]  PROGMEM = "XRA";
 static const char TEXT_XRI[]  PROGMEM = "XRI";
 static const char TEXT_XTHL[] PROGMEM = "XTHL";
 
+// i8085
+static const char TEXT_RIM[]  PROGMEM = "RIM";
+static const char TEXT_SIM[]  PROGMEM = "SIM";
+
 } // namespace i8080
 } // namespace libasm
 

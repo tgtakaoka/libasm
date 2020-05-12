@@ -40,6 +40,10 @@ static void test_cpu() {
     asserter.equals(
         "cpu i8080", true, assembler.setCpu("i8080"));
     asserter.equals(
+        "cpu 8085", true, assembler.setCpu("8085"));
+    asserter.equals(
+        "cpu i8085", true, assembler.setCpu("i8085"));
+    asserter.equals(
         "cpu z80", true, assembler.setCpu("z80"));
 }
 
@@ -447,6 +451,7 @@ static void test_inherent() {
 
     TEST("NOP",  0x00);
     TEST("HALT", 0x76);
+    TEST("HLT",  0x76); // i8080 compatibility
 
     TEST("RLCA", 0x07);
     TEST("RRCA", 0x0F);
@@ -457,6 +462,11 @@ static void test_inherent() {
     TEST("CPL", 0x2F);
     TEST("SCF", 0x37);
     TEST("CCF", 0x3F);
+
+    // i8085
+    assembler.setCpu("8085");
+    TEST("RIM", 0x20);
+    TEST("SIM", 0x30);
 
     // Z80
     assembler.setCpu("z80");

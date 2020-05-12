@@ -29,7 +29,9 @@ all: \
 	test_w65c02s.s19 \
 	test_w65c816.s28 \
 	test_i8080.hex \
+	test_i8085.hex \
 	test_i8080_z80syn.hex \
+	test_i8085_z80syn.hex \
 	test_z80.hex \
 	test_ins8060.hex \
 	test_tms9900.hex \
@@ -223,10 +225,12 @@ gen_mos6502: gen_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_gen)
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_i8080 -u -C i8080 -o gen_i8080.asm
+	./gen_i8080 -u -C i8085 -o gen_i8085.asm
 gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_z80   -u -C z80   -o gen_z80.asm
 	./gen_z80   -u -C i8080 -o gen_i8080_z80syn.asm
+	./gen_z80   -u -C i8085 -o gen_i8085_z80syn.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_ins8060 -u -C ins8060 -o gen_ins8060.asm

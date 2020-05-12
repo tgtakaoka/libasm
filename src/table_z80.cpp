@@ -56,6 +56,7 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x37, SCF,  NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0x3F, CCF,  NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0x76, HALT, NO_FMT,  NO_OPR, NO_OPR, INHR)
+    E(0x76, HLT,  NO_FMT,  NO_OPR, NO_OPR, INHR) // For i8080 compatibility
     E(0x40, LD,   DST_SRC_FMT, REG_8,REG_8,INHR)
     E(0x80, ADD,  SRC_FMT, A_REG,  REG_8,  INHR)
     E(0x88, ADC,  SRC_FMT, A_REG,  REG_8,  INHR)
@@ -100,6 +101,10 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0xFE, CP,   NO_FMT,  A_REG,  IMM_8,  IMM8)
     E(0xFE, CP,   NO_FMT,  IMM_8,  NO_OPR, IMM8)
     E(0xC7, RST,  DST_FMT, VEC_NO, NO_OPR, INHR)
+};
+static constexpr Entry TABLE_I8085[] PROGMEM = {
+    E(0x20, RIM,  NO_FMT,  NO_OPR, NO_OPR, INHR)
+    E(0x30, SIM,  NO_FMT,  NO_OPR, NO_OPR, INHR)
 };
 static constexpr Entry TABLE_Z80[] PROGMEM = {
     E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHR)
@@ -209,6 +214,10 @@ struct TableZ80::EntryPage {
 
 static constexpr TableZ80::EntryPage PAGES_I8080[] PROGMEM = {
     { PREFIX_00, ARRAY_RANGE(TABLE_I8080) },
+};
+static constexpr TableZ80::EntryPage PAGES_I8085[] PROGMEM = {
+    { PREFIX_00, ARRAY_RANGE(TABLE_I8080) },
+    { PREFIX_00, ARRAY_RANGE(TABLE_I8085) },
 };
 static constexpr TableZ80:: EntryPage PAGES_Z80[] PROGMEM = {
     { PREFIX_00, ARRAY_RANGE(TABLE_Z80) },
@@ -351,6 +360,11 @@ bool TableZ80::setCpu(CpuType cpuType) {
         _end = ARRAY_END(PAGES_I8080);
         return true;
     }
+    if (cpuType == I8085) {
+        _table = ARRAY_BEGIN(PAGES_I8085);
+        _end = ARRAY_END(PAGES_I8085);
+        return true;
+    }
     return false;
 }
 
@@ -364,6 +378,8 @@ bool TableZ80::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I') cpu++;
     if (strcmp(cpu, "8080") == 0)
         return setCpu(I8080);
+    if (strcmp(cpu, "8085") == 0)
+        return setCpu(I8085);
     return false;
 }
 
