@@ -12,8 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     8080
-	include "test_i8080.inc"
+        cpu     8085
+        include "test_i8080.inc"
+
+        org     $+32-($&31)
+        rim
+        sim
 
         end
 

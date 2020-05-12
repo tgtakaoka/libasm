@@ -25,6 +25,7 @@ namespace z80 {
 enum CpuType : host::uint_t {
     Z80,
     I8080,
+    I8085,
 };
 
 enum OprSize : host::uint_t {

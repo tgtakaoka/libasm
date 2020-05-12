@@ -41,6 +41,10 @@ static void test_cpu() {
     asserter.equals(
         "cpu I8080", true, disassembler.setCpu("I8080"));
     asserter.equals(
+        "cpu 8085", true, disassembler.setCpu("8085"));
+    asserter.equals(
+        "cpu I8085", true, disassembler.setCpu("I8085"));
+    asserter.equals(
         "cpu Z80", true, disassembler.setCpu("Z80"));
 }
 
@@ -408,6 +412,11 @@ static void test_inherent() {
     TEST(SCF, "", 0x37);
     TEST(CCF, "", 0x3F);
 
+    // i8085
+    disassembler.setCpu("8085");
+    TEST(RIM, "", 0x20);
+    TEST(SIM, "", 0x30);
+
     // Z80
     disassembler.setCpu("z80");
     TEST(NEG, "", 0xED, 0x44);
@@ -670,6 +679,7 @@ static void test_illegal_i8080() {
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);

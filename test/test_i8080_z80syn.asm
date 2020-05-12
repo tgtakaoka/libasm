@@ -15,10 +15,6 @@
 	cpu     8080
         z80syntax on
 
-halt    macro
-        hlt
-        endm
-
         include "test_i8080_z80syn.inc"
 
         end
