@@ -25,6 +25,14 @@ AsmCommonDirective::AsmCommonDirective(
     _directives.reserve(directives.size());
     _directives.insert(
         _directives.begin(), directives.begin(), directives.end());
+    _asmZ80 = _asmI8080 = nullptr;
+    for (auto directive : _directives) {
+        if (directive->assembler().setCpu("Z80")) {
+            _asmZ80 = directive;
+        } else if (directive->assembler().setCpu("8080")) {
+            _asmI8080 = directive;
+        }
+    }
     _directive = _directives.front();
     _assembler = &_directive->assembler();
     _parser = &_assembler->getParser();
@@ -47,18 +55,25 @@ AsmDirective *AsmCommonDirective::restrictCpu(const char *cpu) {
     if (dir) {
         _directives.clear();
         _directives.push_back(dir);
+        if (dir == _asmI8080)
+            _directives.push_back(_asmZ80);
+        if (dir == _asmZ80)
+            _directives.push_back(_asmI8080);
     }
+    return dir;
+}
+
+AsmDirective *AsmCommonDirective::switchDirective(AsmDirective *dir) {
+    _directive = dir;
+    _assembler = &dir->assembler();
+    _parser = &_assembler->getParser();
     return dir;
 }
 
 AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
     for (auto dir : _directives) {
-        if (dir->assembler().setCpu(cpu)) {
-            _directive = dir;
-            _assembler = &dir->assembler();
-            _parser = &_assembler->getParser();
-            return dir;
-        }
+        if (dir->assembler().setCpu(cpu))
+            return switchDirective(dir);
     }
     return nullptr;
 }
@@ -115,6 +130,8 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         const Error error = processPseudo(directive.c_str(), label, memory);
         if (error == UNKNOWN_DIRECTIVE) {
             _scan = _list.instruction;
+        } else if (error) {
+            return error;
         } else {
             _list.operand_len = _scan - _list.operand;
             skipSpaces();
@@ -125,7 +142,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
             } else {
                 _scan = _list.operand + _list.operand_len;
             }
-            return setError(error);
+            return getError();
         }
     }
 
@@ -262,6 +279,25 @@ Error AsmCommonDirective::processPseudo(
         if (setCpu(cpu.c_str()) == nullptr)
             return setError(UNSUPPORTED_CPU);
         _scan = p;
+        return setError(OK);
+    }
+    if (strcasecmp(directive, "z80syntax") == 0) {
+        const char *cpu = _assembler->getCpu();
+        if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
+            return setError(UNKNOWN_DIRECTIVE);
+        const char *p = _parser->scanSymbol(_scan);
+        std::string val(_scan, p);
+        bool value = false;
+        if (strcasecmp(val.c_str(), "on") == 0) {
+            value = true;
+        } else if (strcasecmp(val.c_str(), "off") == 0) {
+            value = false;
+        } else return setError(UNKNOWN_OPERAND);
+        _scan = p;
+        if (_directive == _asmI8080 && value)
+            switchDirective(_asmZ80)->assembler().setCpu(cpu);
+        if (_directive == _asmZ80 && !value)
+            switchDirective(_asmI8080)->assembler().setCpu(cpu);
         return setError(OK);
     }
     return setError(UNKNOWN_DIRECTIVE);
@@ -597,7 +633,6 @@ BinFormatter *AsmIntelDirective::defaultFormatter() const {
 Error AsmIntelDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory,
     AsmCommonDirective &common) {
-    _assembler.getParser().isSymbolLetter(0);
     if (strcasecmp(directive, "db") == 0)
         return common.defineBytes(memory);
     if (strcasecmp(directive, "dw") == 0)
