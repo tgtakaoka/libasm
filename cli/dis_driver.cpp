@@ -57,7 +57,7 @@ int DisDriver::usage() {
             "  -l <list>   : list file\n"
             "  -u          : use uppercase letter for output\n"
             "  -v          : print progress verbosely\n"
-            "  <input>     : file can be Motorola SREC or Intel HEX format\n",
+            "  <input>     : file can be Motorola S-Record or Intel HEX format\n",
             _progname, cpuOption.c_str(), cpuList.c_str());
     return 2;
 }
