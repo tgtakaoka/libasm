@@ -34,8 +34,9 @@ public:
     Error searchNameAndAddrMode(InsnW65C816 &insn) const;
     Error searchOpCode(InsnW65C816 &insn, bool acceptIndirectLong) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return getCpu(); }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return "65816"; }
 
 private:
     Error searchName(

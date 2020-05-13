@@ -35,6 +35,7 @@ public:
     // Config
     bool setCpu(const char *cpu) override { return TableW65C816.setCpu(cpu); }
     const char *listCpu() const override { return TableW65C816.listCpu(); }
+    const char *getCpu() const override { return TableW65C816.getCpu(); }
 
     void acceptIndirectLong(bool accept) { _acceptIndirectLong = accept; }
     void longAccumlator(bool on) { _long_acc = on; }

@@ -173,10 +173,6 @@ Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
     return OK;
 }
 
-const char *TableIns8070::listCpu() {
-    return "8070";
-}
-
 bool TableIns8070::setCpu(const char *cpu) {
     if (strncasecmp(cpu, "ins", 3) == 0)
         cpu += 3;

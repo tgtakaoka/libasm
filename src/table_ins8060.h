@@ -30,8 +30,9 @@ public:
     Error searchNameAndAddrMode(InsnIns8060 &insn) const;
     Error searchOpCode(InsnIns8060 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return getCpu(); }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return "SC/MP"; }
 };
 
 extern TableIns8060 TableIns8060;

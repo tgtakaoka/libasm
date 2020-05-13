@@ -163,10 +163,6 @@ Error TableI8080::searchOpCode(InsnI8080 &insn) const {
     return OK;
 }
 
-const char *TableI8080::listCpu() {
-    return "8080, 8085";
-}
-
 bool TableI8080::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I') cpu++;
     if (strcmp(cpu, "8080") == 0) {

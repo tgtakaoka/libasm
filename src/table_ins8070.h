@@ -31,8 +31,9 @@ public:
         InsnIns8070 &insn, OprFormat left, OprFormat right) const;
     Error searchOpCode(InsnIns8070 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return getCpu(); }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return "8070"; }
 };
 
 extern TableIns8070 TableIns8070;

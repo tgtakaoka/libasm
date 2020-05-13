@@ -610,8 +610,8 @@ void TableMc6809::setCpu(CpuType cpuType) {
     }
 }
 
-const char *TableMc6809::listCpu() {
-    return "6809, 6309";
+const char *TableMc6809::getCpu() {
+    return _cpuType == MC6809 ? "6809" : "6309";
 }
 
 bool TableMc6809::setCpu(const char *cpu) {

@@ -24,8 +24,9 @@ namespace libasm {
 
 class TableBase {
 public:
-    virtual bool setCpu(const char *cpu) = 0;
     virtual const char *listCpu() = 0;
+    virtual bool setCpu(const char *cpu) = 0;
+    virtual const char *getCpu() = 0;
 
 protected:
     template<typename E>

@@ -153,10 +153,6 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
     return OK;
 }
 
-const char *TableCdp1802::listCpu() {
-    return "1802";
-}
-
 bool TableCdp1802::setCpu(const char *cpu) {
     if (strncasecmp(cpu, "cdp", 3) == 0)
         cpu += 3;

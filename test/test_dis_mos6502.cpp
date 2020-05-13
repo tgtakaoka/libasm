@@ -39,17 +39,37 @@ static void test_cpu() {
     asserter.equals(
         "cpu 6502", true, disassembler.setCpu("6502"));
     asserter.equals(
-        "cpu MOS6502", true, disassembler.setCpu("MOS6502"));
+        "get cpu", "6502", disassembler.getCpu());
+
     asserter.equals(
         "cpu 65SC02", true, disassembler.setCpu("65SC02"));
     asserter.equals(
-        "cpu W65SC02", true, disassembler.setCpu("W65SC02"));
+        "get cpu", "65SC02", disassembler.getCpu());
+
     asserter.equals(
         "cpu 65C02", true, disassembler.setCpu("65C02"));
     asserter.equals(
+        "get cpu", "65C02", disassembler.getCpu());
+
+    asserter.equals(
+        "cpu MOS6502", true, disassembler.setCpu("MOS6502"));
+    asserter.equals(
+        "get cpu", "6502", disassembler.getCpu());
+
+    asserter.equals(
+        "cpu W65SC02", true, disassembler.setCpu("W65SC02"));
+    asserter.equals(
+        "get cpu", "65SC02", disassembler.getCpu());
+
+    asserter.equals(
         "cpu R65C02", true, disassembler.setCpu("R65C02"));
     asserter.equals(
+        "get cpu", "65C02", disassembler.getCpu());
+
+    asserter.equals(
         "cpu W65C02S", true, disassembler.setCpu("W65C02S"));
+    asserter.equals(
+        "get cpu", "W65C02S", disassembler.getCpu());
 }
 
 static void test_impl() {

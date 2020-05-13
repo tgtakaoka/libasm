@@ -30,8 +30,9 @@ public:
     Error searchNameAndAddrMode(InsnMc6800 &insn) const;
     Error searchOpCode(InsnMc6800 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return "6800, 6801, 6301"; }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override;
 
 private:
     CpuType _cpuType;

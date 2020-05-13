@@ -29,8 +29,11 @@ public:
     Error searchName(InsnI8080 &insn) const;
     Error searchOpCode(InsnI8080 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return "8080, 8085"; }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override {
+        return _cpuType == I8080 ? "8080" : "8085";
+    }
 
 private:
     CpuType _cpuType;

@@ -137,10 +137,6 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
     return OK;
 }
 
-const char *TableIns8060::listCpu() {
-    return "SC/MP";
-}
-
 bool TableIns8060::setCpu(const char *cpu) {
     if (strcasecmp(cpu, "sc/mp") == 0)
         return true;

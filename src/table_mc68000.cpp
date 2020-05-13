@@ -235,10 +235,6 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     return OK;
 }
 
-const char *TableMc68000::listCpu() {
-    return "68000";
-}
-
 bool TableMc68000::setCpu(const char *cpu) {
     const char *p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
     return strcmp(p, "68000") == 0

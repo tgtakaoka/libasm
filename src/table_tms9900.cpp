@@ -155,8 +155,8 @@ Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
     return OK;
 }
 
-const char *TableTms9900::listCpu() {
-    return "TMS9900, TMS9995";
+const char *TableTms9900::getCpu() {
+    return _cpuType == TMS9900 ? "TMS9900" : "TMS9995";
 }
 
 bool TableTms9900::setCpu(const char *cpu) {

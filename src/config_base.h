@@ -47,6 +47,7 @@ struct ConfigBase {
 
     virtual const char *listCpu() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
+    virtual const char *getCpu() const = 0;
 };
 
 template<

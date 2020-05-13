@@ -39,13 +39,27 @@ static void test_cpu() {
     asserter.equals(
         "cpu 8080", true, disassembler.setCpu("8080"));
     asserter.equals(
-        "cpu I8080", true, disassembler.setCpu("I8080"));
+        "get cpu", "8080", disassembler.getCpu());
+
     asserter.equals(
         "cpu 8085", true, disassembler.setCpu("8085"));
     asserter.equals(
+        "get cpu", "8085", disassembler.getCpu());
+
+    asserter.equals(
+        "cpu I8080", true, disassembler.setCpu("I8080"));
+    asserter.equals(
+        "get cpu", "8080", disassembler.getCpu());
+
+    asserter.equals(
         "cpu I8085", true, disassembler.setCpu("I8085"));
     asserter.equals(
+        "get cpu", "8085", disassembler.getCpu());
+
+    asserter.equals(
         "cpu Z80", true, disassembler.setCpu("Z80"));
+    asserter.equals(
+        "get cpu", "Z80", disassembler.getCpu());
 }
 
 static void test_move_inherent() {

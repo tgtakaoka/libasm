@@ -35,8 +35,9 @@ public:
     Error searchNameAndAddrMode(InsnMc6809 &insn) const;
     Error searchOpCode(InsnMc6809 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return "6809, 6309"; }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override;
     bool is6309() const { return _cpuType == HD6309; }
 
     static bool isPrefixCode(Config::opcode_t opCode);

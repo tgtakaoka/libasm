@@ -30,8 +30,9 @@ public:
     Error searchNameAndAddrMode(InsnMc68000 &insn) const;
     Error searchOpCode(InsnMc68000 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return getCpu(); }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return "68000"; }
 };
 
 extern TableMc68000 TableMc68000;

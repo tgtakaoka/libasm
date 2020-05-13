@@ -368,8 +368,9 @@ bool TableZ80::setCpu(CpuType cpuType) {
     return false;
 }
 
-const char *TableZ80::listCpu() {
-    return "Z80";
+const char *TableZ80::getCpu() {
+    if (_cpuType == Z80) return "Z80";
+    return _cpuType == I8080 ? "8080" : "8085";
 }
 
 bool TableZ80::setCpu(const char *cpu) {

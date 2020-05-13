@@ -38,7 +38,12 @@ static void test_cpu() {
     asserter.equals(
         "cpu 1802", true, disassembler.setCpu("1802"));
     asserter.equals(
+        "get cpu", "1802", disassembler.getCpu());
+
+    asserter.equals(
         "cpu CDP1802", true, disassembler.setCpu("CDP1802"));
+    asserter.equals(
+        "get cpu", "1802", disassembler.getCpu());
 }
 
 static void test_inherent() {

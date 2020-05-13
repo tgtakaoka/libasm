@@ -34,6 +34,7 @@ public:
 
     const char *listCpu() const override { return TableMc6809.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
+    const char *getCpu() const override { return TableMc6809.getCpu(); }
 
 protected:
     RegBase &getRegister() override { return _regs; }

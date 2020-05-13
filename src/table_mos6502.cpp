@@ -314,8 +314,10 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
     return searchOpCode(insn, ARRAY_RANGE(MOS6502_TABLE));
 }
 
-const char *TableMos6502::listCpu() {
-    return "6502, 65SC02, 65C02, W65C02S";
+const char *TableMos6502::getCpu() {
+    if (_cpuType == MOS6502) return "6502";
+    if (_cpuType == W65SC02) return "65SC02";
+    return _cpuType == R65C02 ? "65C02" : "W65C02S";
 }
 
 bool TableMos6502::setCpu(const char *cpu) {

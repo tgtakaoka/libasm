@@ -63,6 +63,8 @@ public:
 
 private:
     std::vector<AsmDirective *> _directives;
+    AsmDirective *_asmZ80;
+    AsmDirective *_asmI8080;
     AsmDirective *_directive;
     Assembler *_assembler;
     AsmOperand *_parser;
@@ -74,6 +76,7 @@ private:
     bool _reportDuplicate;
     int _labelWidth;
     int _operandWidth;
+
     static constexpr int max_includes = 4;
     struct Source;
     std::vector<Source *> _sources;
@@ -134,6 +137,7 @@ public:
 public:
     AddressWidth addressWidth() const override;
 private:
+    AsmDirective *switchDirective(AsmDirective *);
     OpCodeWidth opCodeWidth() const override;
     int maxBytes() const override;
     int labelWidth() const override;
