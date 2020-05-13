@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#include "dis_cdp1802.h"
+#include "gen_driver.h"
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 0
-#define LIBASM_VERSION_STRING "1.4.0"
+using namespace libasm::cdp1802;
+using namespace libasm::test;
 
-#endif // __VERSION_H__
+int main(int argc, const char **argv) {
+    DisCdp1802 dis1802;
+    GenDriver<Config> driver(dis1802);
+    if (driver.main(argc, argv))
+        return 1;
+
+    TestGenerator<Config> generator(
+        dis1802,
+        driver.uppercase());
+    generator.generate(driver);
+
+    return driver.close();
+}
 
 // Local Variables:
 // mode: c++

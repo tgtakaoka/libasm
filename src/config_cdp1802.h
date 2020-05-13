@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __CONFIG_CDP1802_H__
+#define __CONFIG_CDP1802_H__
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 0
-#define LIBASM_VERSION_STRING "1.4.0"
+#include "config_base.h"
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace cdp1802 {
+
+struct Config : ConfigImpl<
+    ADDRESS_16BIT, uint16_t, int16_t,
+    OPCODE_8BIT, uint8_t, 3,
+    ENDIAN_BIG, 4>
+{};
+
+} // namespace cdp1802
+} // namespace libasm
+
+#endif // __CONFIG_CDP1802_H__
 
 // Local Variables:
 // mode: c++

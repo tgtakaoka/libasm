@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#include "reg_base.h"
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 0
-#define LIBASM_VERSION_STRING "1.4.0"
+#ifndef __REGISTER_CDP1802_H__
+#define __REGISTER_CDP1802_H__
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace cdp1802 {
+
+/*
+ * SCRT (Standard CALL and RETURN Techinique.
+ * R0: Direct Memory Access
+ * R1: Interrupt
+ * R2: Stack Pointer
+ * R3: Program Counter
+ * R4: Subroutine Call address
+ * R5: Link register
+ * R6: Argument pointer
+ * R7-R15: Working register
+ */
+
+class RegCdp1802 : public RegBase {
+};
+
+} // namespace cdp1802
+} // namespace libasm
+
+#endif // __REGISTER_CDP1802_H__
 
 // Local Variables:
 // mode: c++

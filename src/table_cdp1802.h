@@ -14,15 +14,31 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __TABLE_CDP1802_H__
+#define __TABLE_CDP1802_H__
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 0
-#define LIBASM_VERSION_STRING "1.4.0"
+#include "config_cdp1802.h"
+#include "insn_cdp1802.h"
+#include "table_base.h"
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace cdp1802 {
+
+class TableCdp1802 : private TableBase {
+public:
+    Error searchName(InsnCdp1802 &insn) const;
+    Error searchOpCode(InsnCdp1802 &insn) const;
+
+    const char *listCpu() override;
+    bool setCpu(const char *cpu) override;
+};
+
+extern TableCdp1802 TableCdp1802;
+
+} // namespace cdp1802
+} // namespace libasm
+
+#endif // __TABLE_CDP1802_H__
 
 // Local Variables:
 // mode: c++

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "asm_cdp1802.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
 #include "asm_i8080.h"
@@ -40,6 +41,7 @@ i8080::AsmI8080     asm8080;
 z80::AsmZ80         asmz80;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
+cdp1802::AsmCdp1802 asm1802;
 tms9900::AsmTms9900 asm9900;
 mc68000::AsmMc68000 asm68000;
 
@@ -51,13 +53,14 @@ AsmIntelDirective  dir8080(asm8080);
 AsmIntelDirective  dirz80(asmz80);
 AsmIntelDirective  dir8060(asm8060);
 AsmIntelDirective  dir8070(asm8070);
+AsmIntelDirective  dir1802(asm1802);
 AsmIntelDirective  dir9900(asm9900);
 AsmMotoDirective   dir68000(asm68000);
 
 std::vector<AsmDirective *> directives = {
     &dir6809, &dir6800, &dir6502, &dir65816,
     &dir8080, &dirz80,  &dir8060, &dir8070,
-    &dir9900, &dir68000
+    &dir1802, &dir9900, &dir68000
 };
 
 int main(int argc, const char **argv) {
