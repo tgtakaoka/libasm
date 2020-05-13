@@ -30,8 +30,9 @@ public:
     Error searchNameAndAddrMode(InsnMos6502 &insn) const;
     Error searchOpCode(InsnMos6502 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return "6502, 65SC02, 65C02, W65C02S"; }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override;
     bool is6502() const { return _cpuType == MOS6502; }
 
 protected:

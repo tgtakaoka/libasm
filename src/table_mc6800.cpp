@@ -400,8 +400,9 @@ Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
     return OK;
 }
 
-const char *TableMc6800::listCpu() {
-    return "6800, 6801, 6301";
+const char *TableMc6800::getCpu() {
+    if (_cpuType == MC6800) return "6800";
+    return _cpuType == MC6801 ? "6801" : "6301";
 }
 
 bool TableMc6800::setCpu(const char *cpu) {

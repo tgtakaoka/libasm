@@ -240,10 +240,6 @@ Error TableW65C816::searchOpCode(
     return OK;
 }
 
-const char *TableW65C816::listCpu() {
-    return "65816";
-}
-
 bool TableW65C816::setCpu(const char *cpu) {
     const char *p;
     p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);

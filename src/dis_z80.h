@@ -35,6 +35,7 @@ public:
     // Config
     const char *listCpu() const override { return TableZ80.listCpu(); }
     bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
+    const char *getCpu() const override { return TableZ80.getCpu(); }
 
 private:
     DisIntelOperand _formatter;

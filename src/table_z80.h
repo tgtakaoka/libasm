@@ -33,8 +33,9 @@ public:
         InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const;
     Error searchOpCode(InsnZ80 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return "Z80"; }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override;
     bool isZ80() const { return _cpuType == Z80; }
 
     static bool isPrefixCode(Config::opcode_t opCode);

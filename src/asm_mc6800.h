@@ -35,6 +35,7 @@ public:
     // Config
     const char *listCpu() const override { return TableMc6800.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
+    const char *getCpu() const override { return TableMc6800.getCpu(); }
 
 private:
     AsmMotoOperand _parser;

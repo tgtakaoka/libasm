@@ -29,8 +29,9 @@ public:
     Error searchName(InsnTms9900 &insn) const;
     Error searchOpCode(InsnTms9900 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return "TMS9900, TMS9995"; }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override;
     bool is9995() const { return _cpuType == TMS9995; }
 
 private:

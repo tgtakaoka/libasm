@@ -38,9 +38,17 @@ static void test_cpu() {
     asserter.equals(
         "cpu 68000", true, disassembler.setCpu("68000"));
     asserter.equals(
+        "get cpu", "68000", disassembler.getCpu());
+
+    asserter.equals(
         "cpu 68K", true, disassembler.setCpu("68K"));
     asserter.equals(
+        "get cpu", "68000", disassembler.getCpu());
+
+    asserter.equals(
         "cpu MC68000", true, disassembler.setCpu("MC68000"));
+    asserter.equals(
+        "get cpu", "68000", disassembler.getCpu());
 }
 
 static void test_dest_size() {

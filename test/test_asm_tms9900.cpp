@@ -38,11 +38,22 @@ static void test_cpu() {
     asserter.equals(
         "cpu 9900", true, assembler.setCpu("9900"));
     asserter.equals(
+        "get cpu", "TMS9900", assembler.getCpu());
+
+    asserter.equals(
         "cpu 9995", true, assembler.setCpu("9995"));
+    asserter.equals(
+        "get cpu", "TMS9995", assembler.getCpu());
+
     asserter.equals(
         "cpu tms9900", true, assembler.setCpu("tms9900"));
     asserter.equals(
+        "get cpu", "TMS9900", assembler.getCpu());
+
+    asserter.equals(
         "cpu tms9995", true, assembler.setCpu("tms9995"));
+    asserter.equals(
+        "get cpu", "TMS9995", assembler.getCpu());
 }
 
 static void test_inh() {

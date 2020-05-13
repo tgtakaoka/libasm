@@ -35,6 +35,7 @@ public:
     // Config
     const char *listCpu() const override { return TableIns8060.listCpu(); }
     bool setCpu(const char *cpu) override { return TableIns8060.setCpu(cpu); }
+    const char *getCpu() const override { return TableIns8060.getCpu(); }
 
 private:
     AsmOperand _parser;

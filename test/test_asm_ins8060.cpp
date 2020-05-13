@@ -37,9 +37,17 @@ static void test_cpu() {
     asserter.equals(
         "cpu sc/mp", true, assembler.setCpu("SC/MP"));
     asserter.equals(
+        "get cpu", "SC/MP", assembler.getCpu());
+
+    asserter.equals(
         "cpu 8060", true, assembler.setCpu("8060"));
     asserter.equals(
+        "get cpu", "SC/MP", assembler.getCpu());
+
+    asserter.equals(
         "cpu INS8060", true, assembler.setCpu("INS8060"));
+    asserter.equals(
+        "get cpu", "SC/MP", assembler.getCpu());
 }
 
 static void test_inherent() {

@@ -35,6 +35,7 @@ public:
     // Config
     const char *listCpu() const override { return TableTms9900.listCpu(); }
     bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
+    const char *getCpu() const override { return TableTms9900.getCpu(); }
 
 private:
     AsmIntelOperand _parser;

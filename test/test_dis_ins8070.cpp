@@ -38,7 +38,12 @@ static void test_cpu() {
     asserter.equals(
         "cpu 8070", true, disassembler.setCpu("8070"));
     asserter.equals(
+        "get cpu", "8070", disassembler.getCpu());
+
+    asserter.equals(
         "cpu INS8070", true, disassembler.setCpu("INS8070"));
+    asserter.equals(
+        "get cpu", "8070", disassembler.getCpu());
 }
 
 static void test_implied() {

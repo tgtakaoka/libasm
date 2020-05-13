@@ -29,8 +29,9 @@ public:
     Error searchName(InsnCdp1802 &insn) const;
     Error searchOpCode(InsnCdp1802 &insn) const;
 
-    const char *listCpu() override;
+    const char *listCpu() override { return getCpu(); }
     bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return "1802"; }
 };
 
 extern TableCdp1802 TableCdp1802;
