@@ -6,7 +6,7 @@
       INC  0
       DEC  0
       BR   0031H
-      SKP
+      BQ   0032H
       BZ   0033H
       BDF  0034H
       B1   0035H

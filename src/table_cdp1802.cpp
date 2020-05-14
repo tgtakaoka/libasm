@@ -35,7 +35,6 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0x10, INC,  REGN)
     E(0x20, DEC,  REGN)
     E(0x30, BR,   PAGE)
-    E(0x31, SKP,  IMPL)
     E(0x31, BQ,   PAGE)
     E(0x32, BZ,   PAGE)
     E(0x33, BDF,  PAGE)

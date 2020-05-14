@@ -321,6 +321,7 @@ static void test_io() {
 
 static void test_branch() {
     ATEST(0x1000, "BR  1031H", 0x30, 0x31);
+    ATEST(0x1000, "BQ  1032H", 0x31, 0x32);
     ATEST(0x1000, "BZ  1033H", 0x32, 0x33);
     ATEST(0x1000, "BDF 1034H", 0x33, 0x34);
     ATEST(0x1000, "B1  1035H", 0x34, 0x35);
@@ -360,7 +361,7 @@ static void test_branch() {
 
     TEST("LBQ sym1234",  0xC1, 0x12, 0x34);
 
-    TEST("SKP",  0x31);
+    TEST("SKP",  0x38);
     TEST("LSNQ", 0xC5);
     TEST("LSNZ", 0xC6);
     TEST("LSNF", 0xC7);
