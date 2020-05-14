@@ -38,7 +38,7 @@
 
         assume  m:0
         assume  x:1
-        org     $120100
+        org     $120000
         include "test_mos6502.inc"
         org     $120160
         include "test_w65sc02.inc"
@@ -49,7 +49,7 @@
 
         assume  m:1
         assume  x:0
-        org     $130200
+        org     $130000
         include "test_mos6502.inc"
         org     $130160
         include "test_w65sc02.inc"
