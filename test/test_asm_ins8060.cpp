@@ -96,6 +96,7 @@ static void test_immediate() {
 static void test_jump() {
     ATEST(0x1000, "JMP 0x1000",   0x90, 0xFE);
     ATEST(0x1000, "JP  0x1081",   0x94, 0x7F);
+    ATEST(0x1000, "JMP $+2",      0x90, 0x00);
     // 4kB page boundary
     EATEST(OPERAND_TOO_FAR, 0x1000, "JZ 0x0FF0");
     EATEST(OPERAND_TOO_FAR, 0x1FF0, "JZ 0x2010");

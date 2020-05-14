@@ -38,7 +38,10 @@ public:
     const char *getCpu() const override { return TableIns8070.getCpu(); }
 
 private:
-    AsmOperand _parser;
+    class _AsmOperand : public AsmOperand {
+    protected:
+        bool isCurrentOriginSymbol(char c) const override { return c == '$'; }
+    } _parser;
     RegIns8070 _regs;
 
     struct Operand : public ErrorReporter {
