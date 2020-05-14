@@ -30,7 +30,7 @@ class AsmI8080
     : public Assembler,
       public Config {
 public:
-    AsmOperand &getParser() override { return _parser; }
+    AsmOperand *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableI8080.listCpu(); }

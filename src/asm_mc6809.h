@@ -30,7 +30,7 @@ class AsmMc6809
     : public Assembler,
       public Config {
 public:
-    AsmOperand &getParser() override { return _parser; }
+    AsmOperand *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableMc6809.listCpu(); }

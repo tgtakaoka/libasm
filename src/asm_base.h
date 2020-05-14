@@ -34,7 +34,7 @@ public:
     Error encode(
         const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
-    virtual AsmOperand &getParser() = 0;
+    virtual AsmOperand *getParser() = 0;
     const char *errorAt() const { return _scan; }
 
 protected:
@@ -49,9 +49,9 @@ protected:
 
     template<typename T>
     Error getOperand(T &val) {
-        AsmOperand &parser = getParser();
-        _scan = parser.eval(_scan, val, _symtab);
-        if (setError(parser) == UNDEFINED_SYMBOL)
+        AsmOperand *parser = getParser();
+        _scan = parser->eval(_scan, val, _symtab);
+        if (setError(*parser) == UNDEFINED_SYMBOL)
             return OK;
         return getError();
     }

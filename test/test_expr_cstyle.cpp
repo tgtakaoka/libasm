@@ -301,6 +301,22 @@ static void test_precedence() {
     E8("(1^3)<<3", 16, OK);
 }
 
+static void test_current_address() {
+    symtab.setCurrentOrigin(0x1000);
+    E16("$",       0x1000, OK);
+    E16("*+2",     0x1002, OK);
+    E16("$-2",     0x0FFE, OK);
+    E16("*+0xF000", 0,      OVERFLOW_RANGE);
+    E16("$-0x1001", 0xFFFF, OK);
+    E32("*+0xF000", 0x00010000, OK);
+    E32("$-0x1001", 0xFFFFFFFF, OK);
+
+    symtab.intern(0x1000, "table");
+    symtab.setCurrentOrigin(0x1100);
+    E16("$-table",     0x100, OK);
+    E16("(*-table)/2", 0x80,  OK);
+}
+
 static void test_errors() {
     E32("undef",   0, UNDEFINED_SYMBOL);
     E32("+undef",  0, UNDEFINED_SYMBOL);
@@ -367,6 +383,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_binary_operator);
     RUN_TEST(test_overflow);
     RUN_TEST(test_precedence);
+    RUN_TEST(test_current_address);
     RUN_TEST(test_errors);
     RUN_TEST(test_formatter);
     return 0;

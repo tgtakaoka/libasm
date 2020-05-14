@@ -381,7 +381,7 @@ AsmOperand::Value AsmOperand::evalExpr(
 }
 
 bool AsmOperand::isCurrentOriginSymbol(char c) const {
-    return c == '*';
+    return c == '*' || c == '$';
 }
 
 Error AsmOperand::readNumber(Value &val) {
