@@ -103,8 +103,8 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0xC7, RST,  DST_FMT, VEC_NO, NO_OPR, INHR)
 };
 static constexpr Entry TABLE_I8085[] PROGMEM = {
-    E(0x20, RIM,  NO_FMT,  NO_OPR, NO_OPR, INHR)
-    E(0x30, SIM,  NO_FMT,  NO_OPR, NO_OPR, INHR)
+    E(0x20, LD,   NO_FMT,  A_REG,  IM_REG, INHR)
+    E(0x30, LD,   NO_FMT,  IM_REG, A_REG,  INHR)
 };
 static constexpr Entry TABLE_Z80[] PROGMEM = {
     E(0x08, EX,   NO_FMT,  AF_REG, AFPREG, INHR)

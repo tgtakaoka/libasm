@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
 	cpu     8080
-        z80syntax on
+        z80syntax exclusive
 
         include "test_i8080_z80syn.inc"
 

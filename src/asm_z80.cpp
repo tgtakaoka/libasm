@@ -171,6 +171,8 @@ Error AsmZ80::encodeInherent(
             RegZ80::encodeIndexReg(insn, left.reg);
         if (right.format == IX_REG)
             RegZ80::encodeIndexReg(insn, right.reg);
+        if (left.format == IM_REG || right.format == IM_REG)
+            regNum = 0;         // 8085: RIM/SIM => LD A,IM/IM,A
         break;
     case DST_SRC_FMT:
         if (left.format == REG_8 && left.reg == REG_HL
@@ -295,6 +297,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
         case REG_R:   opr.format = IR_REG; break;
         case REG_AF:  opr.format = AF_REG; break;
         case REG_AFP: opr.format = AFPREG; break;
+        case REG_IM:  opr.format = IM_REG; break;
         default:      opr.format = REG_8; break;
         }
         if (opr.size == SZ_NONE)

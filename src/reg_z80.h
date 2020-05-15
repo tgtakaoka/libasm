@@ -42,6 +42,8 @@ enum RegName : char {
     REG_A = 'A',
     REG_I = 'I',
     REG_R = 'R',
+    // 8085
+    REG_IM = 'i',
 };
 
 enum CcName : char {

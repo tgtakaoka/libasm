@@ -13,13 +13,13 @@
 ;;; limitations under the License.
 
 	cpu     8085
-        z80syntax on
+        z80syntax exclusive
 
         include "test_i8080_z80syn.inc"
 
         org     $+32-($&31)
-        rim
-        sim
+        ld      a,im
+        ld      im,a
 
         end
 

@@ -27,6 +27,7 @@ namespace z80 {
 static constexpr RegName ALL_REGS[] PROGMEM = {
     REG_AFP, REG_AF, REG_HL, REG_BC, REG_DE, REG_SP, REG_IX, REG_IY,
     REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_I, REG_R,
+    REG_IM,
 };
 
 static constexpr RegName POINTER_REGS[] PROGMEM = {
@@ -54,11 +55,11 @@ static bool regCharCaseEqual(char c, char regChar) {
 }
 
 char RegZ80::regName1stChar(const RegName regName) const {
+    char r = char(regName);
     if (regName == REG_IX || regName == REG_IY)
-        return _uppercase ? 'I' : 'i';
+        r = 'I';
     if (regName == REG_AFP)
-        return _uppercase ? 'A' : 'a';
-    const char r = char(regName);
+        r = 'A';
     return _uppercase ? toupper(r) : tolower(r);
 }
 
@@ -71,18 +72,16 @@ char RegZ80::regName2ndChar(const RegName regName) const {
     case REG_SP: c = 'P'; break;
     case REG_AF:
     case REG_AFP: c = 'F'; break;
-    case REG_IX: c = 'X'; break;
-    case REG_IY: c = 'Y'; break;
+    case REG_IX:
+    case REG_IY: c = char(regName); break;
+    case REG_IM: c = 'M'; break;
     default: c = 0;
     }
-    return _uppercase ? c : tolower(c);
+    return _uppercase ? toupper(c) : tolower(c);
 }
 
 char RegZ80::regName3rdChar(const RegName regName) const {
-    switch (regName) {
-    case REG_AFP: return '\'';
-    default: return 0;
-    }
+    return regName == REG_AFP ? '\'' : 0;
 }
 
 bool RegZ80::compareRegName(const char *line, RegName regName) const {
@@ -122,12 +121,10 @@ static bool ccCharCaseEqual(char c, char ccChar) {
 }
 
 char RegZ80::ccName1stChar(const CcName ccName) const {
-    const char cc = char(ccName);
-    if (isupper(cc))
-        return _uppercase ? cc : tolower(cc);
-    if (ccName == CC_NZ || ccName == CC_NC)
-        return _uppercase ? 'N' : 'n';
-    return _uppercase ? 'P' : 'p';
+    char cc = char(ccName);
+    if (islower(cc))
+        cc = (ccName == CC_NZ || ccName == CC_NC) ? 'N' : 'P';
+    return _uppercase ? cc : tolower(cc);
 }
 
 char RegZ80::ccName2ndChar(const CcName ccName) const {
@@ -214,7 +211,7 @@ OprSize RegZ80::registerSize(const RegName regName) {
         return SZ_WORD;
     case REG_B: case REG_C: case REG_D: case REG_E:
     case REG_H: case REG_L: case REG_A:
-    case REG_I: case REG_R:
+    case REG_I: case REG_R: case REG_IM:
         return SZ_BYTE;
     default:
         return SZ_NONE;

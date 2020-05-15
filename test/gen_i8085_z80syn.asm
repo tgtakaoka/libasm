@@ -30,7 +30,7 @@
       DEC  E
       LD   E,1FH
       RRA
-      RIM
+      LD   A,IM
       LD   HL,0022H
       LD   (0023H),HL
       INC  HL
@@ -45,7 +45,7 @@
       DEC  L
       LD   L,2FH
       CPL
-      SIM
+      LD   IM,A
       LD   SP,0032H
       LD   (0033H),A
       INC  SP

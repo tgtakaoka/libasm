@@ -428,8 +428,8 @@ static void test_inherent() {
 
     // i8085
     disassembler.setCpu("8085");
-    TEST(RIM, "", 0x20);
-    TEST(SIM, "", 0x30);
+    TEST(LD, "A,IM", 0x20);
+    TEST(LD, "IM,A", 0x30);
 
     // Z80
     disassembler.setCpu("z80");

@@ -91,6 +91,7 @@ enum OprFormat : host::uint_t {
     VEC_NO,                     // [0123][08]H
     IX_OFF,                     // (IX/IY+nn)
     IX_BIT,                     // DD/FD CB nn xx
+    IM_REG,                     // 8080/IM
 };
 
 struct Entry {

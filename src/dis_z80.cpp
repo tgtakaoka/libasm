@@ -149,6 +149,9 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
         }
         *_operands = 0;
         break;
+    case IM_REG:
+        outRegister(REG_IM);
+        break;
     default:
         break;
     }
@@ -191,6 +194,8 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
     case BC_PTR:
         outPointer(RegZ80::decodeIndirectBase(opc >> 4));
         break;
+    case IM_REG:
+        outRegister(REG_IM);
     default:
         break;
     }
