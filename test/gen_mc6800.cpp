@@ -30,6 +30,7 @@ static bool filterHd6301BitImmIndexed(uint8_t opc) {
 
 int main(int argc, const char **argv) {
     DisMc6800 dis6800;
+    dis6800.setAccumulatorDelimitor(true);
     GenDriver<Config> driver(dis6800);
     if (driver.main(argc, argv))
         return 1;

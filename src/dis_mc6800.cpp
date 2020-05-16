@@ -45,7 +45,7 @@ Error DisMc6800::decodeDirectPage(
     DisMemory &memory, InsnMc6800& insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
-    if (outAccumulator(insn)) *_operands++ = ' ';
+    if (outAccumulator(insn)) *_operands++ = _accDelim;
     const char *label = lookup(dir);
     if (label) {
         *_operands ++ = '<';
@@ -60,7 +60,7 @@ Error DisMc6800::decodeExtended(
     DisMemory &memory, InsnMc6800 &insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    if (outAccumulator(insn)) *_operands++ = ' ';
+    if (outAccumulator(insn)) *_operands++ = _accDelim;
     const char *label = lookup(addr);
     if (addr < 0x100) *_operands++ = '>';
     if (label) {
@@ -75,7 +75,7 @@ Error DisMc6800::decodeIndexed(
     DisMemory &memory, InsnMc6800 &insn) {
     uint8_t disp8;
     if (insn.readByte(memory, disp8)) return setError(NO_MEMORY);
-    if (outAccumulator(insn)) *_operands++ = ' ';
+    if (outAccumulator(insn)) *_operands++ = _accDelim;
     const char *label = lookup(disp8);
     if (label) {
         outText(label);
@@ -104,7 +104,7 @@ Error DisMc6800::decodeRelative(
 
 Error DisMc6800::decodeImmediate(
     DisMemory &memory, InsnMc6800 &insn) {
-    if (outAccumulator(insn)) *_operands++ = ' ';
+    if (outAccumulator(insn)) *_operands++ = _accDelim;
     *_operands++ = '#';
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val8;

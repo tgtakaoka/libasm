@@ -454,6 +454,30 @@ static void test_bit_ops() {
     TEST(EIM, "#bm6,offset255,X",  0x65, 0x40, 0xFF);
 }
 
+static void test_acc_delimitor() {
+    dis6800.setAccumulatorDelimitor(false);
+
+    TEST(SUB, "A #$90",   0x80, 0x90);
+    TEST(CMP, "B #$90",   0xC1, 0x90);
+    TEST(SBC, "A $90",    0x92, 0x90);
+    TEST(AND, "B $90",    0xD4, 0x90);
+    TEST(BIT, "A >$0090", 0xB5, 0x00, 0x90);
+    TEST(LDA, "B $9ABC",  0xF6, 0x9A, 0xBC);
+    TEST(STA, "A 5,X",    0xA7, 0x05);
+    TEST(EOR, "B 6,X",    0xE8, 0x06);
+
+    dis6800.setAccumulatorDelimitor(true);
+
+    TEST(SUB, "A,#$90",   0x80, 0x90);
+    TEST(CMP, "B,#$90",   0xC1, 0x90);
+    TEST(SBC, "A,$90",    0x92, 0x90);
+    TEST(AND, "B,$90",    0xD4, 0x90);
+    TEST(BIT, "A,>$0090", 0xB5, 0x00, 0x90);
+    TEST(LDA, "B,$9ABC",  0xF6, 0x9A, 0xBC);
+    TEST(STA, "A,5,X",    0xA7, 0x05);
+    TEST(EOR, "B,6,X",    0xE8, 0x06);
+}
+
 static void assert_illegal(uint8_t opc) {
     char operands[40];
     Insn insn;
@@ -525,6 +549,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_relative);
     RUN_TEST(test_bit_ops);
+    RUN_TEST(test_acc_delimitor);
     RUN_TEST(test_illegal_mc6800);
     RUN_TEST(test_illegal_mc6801);
     RUN_TEST(test_illegal_hd6301);

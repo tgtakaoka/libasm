@@ -37,9 +37,12 @@ public:
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
     const char *getCpu() const override { return TableMc6800.getCpu(); }
 
+    void setAccumulatorDelimitor(bool comma) { _accDelim = comma ? ',' : ' '; }
+
 private:
     DisMotoOperand _formatter;
     RegMc6800 _regs;
+    char _accDelim = ' ';
 
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
