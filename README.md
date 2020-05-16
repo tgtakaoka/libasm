@@ -19,7 +19,7 @@ small environment (less than 15kB on Arduino).
   - MC68000
 
 * Supported host environment.
-  - Arduino
+  - Arduino (AVR, ARM)
   - Linux, macOS (`g++`, `clang++`)
 
 More information about this library can be found at

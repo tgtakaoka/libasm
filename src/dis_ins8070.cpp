@@ -42,7 +42,9 @@ bool DisIns8070::outOperand(OprFormat opr, uint8_t value) {
         }
         break;
     case OPR_T: outRegister(REG_T); break;
-    case OPR_4: outConstant(value & 15, 10); break;
+    case OPR_4:
+        outConstant(static_cast<uint8_t>(value & 15), 10);
+        break;
     case OPR_NO: break;
     default:
         return false;

@@ -99,7 +99,7 @@ Error DisI8080::decode(
         outRegister(RegI8080::decodeDataReg(opCode & 7));
         break;
     case VECTOR_NO:
-        outConstant((opCode >> 3) & 7);
+        outConstant(static_cast<uint8_t>((opCode >> 3) & 7));
         break;
     default:
         break;
