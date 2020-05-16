@@ -67,6 +67,11 @@ public:
 
     bool uppercase() const { return _uppercase; }
 
+    void pseudo(const char *pseudo) {
+        if (_output) fprintf(_output, "      %s\n\n", pseudo);
+        if (_list) fprintf(_list, "      %s\n\n", pseudo);
+    }
+
     int close() {
         if (_output) fclose(_output);
         if (_list) fclose(_list);

@@ -3,6 +3,8 @@
 
       CPU 8080
 
+      Z80SYNTAX EXCLUSIVE
+
       NOP
       LD   BC,2
       LD   (BC),A
