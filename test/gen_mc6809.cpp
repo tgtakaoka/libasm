@@ -36,9 +36,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(
-        dis6809,
-        driver.uppercase());
+    TestGenerator<Config> generator(dis6809);
     generator
         .generate(driver, filterHd6309BitImmIndexed)
         .generate(driver, 0x10)

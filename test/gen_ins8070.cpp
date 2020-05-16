@@ -27,10 +27,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(
-        dis8070,
-        driver.uppercase(),
-        0x0100);
+    TestGenerator<Config> generator(dis8070, 0x0100);
     generator.generate(driver);
 
     return driver.close();

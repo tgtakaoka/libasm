@@ -35,9 +35,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(
-        dis6800,
-        driver.uppercase());
+    TestGenerator<Config> generator(dis6800);
     generator
         .generate(driver, filterHd6301BitImmIndexed)
         .generate(driver, 0x61, 0x62) // AIM

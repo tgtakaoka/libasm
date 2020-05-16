@@ -176,13 +176,11 @@ class TestGenerator {
 public:
     TestGenerator(
         Disassembler &disassembler,
-        bool uppercase,
         typename Conf::uintptr_t addr = 0)
         : _disassembler(disassembler),
           _memorySize(Conf::CODE_MAX),
           _endian(Conf::ENDIAN),
-          _opcodeSize(sizeof(typename Conf::opcode_t)),
-          _uppercase(uppercase) {
+          _opcodeSize(sizeof(typename Conf::opcode_t)) {
         _memory = new uint8_t[_memorySize];
         _addr = addr;
     }
@@ -193,6 +191,7 @@ public:
 
     class Printer {
     public:
+        virtual bool uppercase() = 0;
         virtual void print(const Insn &insn, const char *operands) = 0;
         virtual void origin(typename Conf::uintptr_t addr) = 0;
     };
@@ -236,7 +235,6 @@ private:
     const int _memorySize;
     const Endian _endian;
     const size_t _opcodeSize;
-    const bool _uppercase;
     uint8_t *_memory;
     TestData<Conf> _data1;
     TestData<Conf> _data2;
@@ -338,7 +336,8 @@ private:
             gen.next();
             gen.debugPrint("@@  loop", _memory);
             _data->tryGenerate(
-                _disassembler, _addr, _memory, _memorySize, _uppercase);
+                _disassembler, _addr, _memory, _memorySize,
+                _printer->uppercase());
             if (_disassembler.getError() == OK) {
                 int size = _data->insn().length() - (gen.pos() + gen.size());
                 if (size > 0) {

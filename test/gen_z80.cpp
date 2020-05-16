@@ -41,9 +41,7 @@ int main(int argc, const char **argv) {
     if (strcmp(disz80.getCpu(), "Z80"))
         driver.pseudo("Z80SYNTAX EXCLUSIVE");
 
-    TestGenerator<Config> generator(
-        disz80,
-        driver.uppercase());
+    TestGenerator<Config> generator(disz80);
     generator
         .generate(driver, filterZ80Prefix)
         .generate(driver, 0xED)

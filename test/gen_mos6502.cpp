@@ -26,9 +26,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(
-        dis6502,
-        driver.uppercase());
+    TestGenerator<Config> generator(dis6502);
     generator.generate(driver);
 
     return driver.close();
