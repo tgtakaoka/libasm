@@ -124,7 +124,9 @@ gen: \
 	gen_mos6502 \
 	gen_i8080   \
 	gen_z80     \
-	gen_ins8060
+	gen_ins8060 \
+	gen_ins8070 \
+	gen_cdp1802
 
 CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS    = -MMD
