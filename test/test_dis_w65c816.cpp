@@ -150,7 +150,7 @@ static void test_imm() {
 
     // W65C816
     TEST(COP, "#$10", 0x02, 0x10);
-    TEST(WDM, "#$10", 0x42, 0x10);
+    ETEST(UNKNOWN_INSTRUCTION, WDM, "#$10", 0x42, 0x10);
     TEST(REP, "#$20", 0xC2, 0x20);
     TEST(SEP, "#$10", 0xE2, 0x10);
 
@@ -470,7 +470,7 @@ static void test_abs_long() {
     TEST(JMP, ">>long3456", 0x5C, 0x56, 0x34, 0x12);
     TEST(JSL, ">>long3456", 0x22, 0x56, 0x34, 0x12);
 
-    TEST(MVP, ">>bank12,>>bank34", 0x44, 0x34, 0x12);
+    TEST(MVP, "bank12,bank34", 0x44, 0x34, 0x12);
 
     dis65c816.acceptIndirectLong(true);
     TEST(JMP,  "[>sym1234]", 0xDC, 0x34, 0x12);

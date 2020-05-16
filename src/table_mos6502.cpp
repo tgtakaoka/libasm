@@ -247,7 +247,7 @@ Error TableMos6502::searchName(
     InsnMos6502 &insn, const Entry *table, const Entry *end) const {
     const char *name = insn.name();
     for (const Entry *entry = table;
-         entry < end && (entry = TableBase::searchName<Entry>(name, table, end));
+         entry < end && (entry = TableBase::searchName<Entry>(name, entry, end));
          entry++) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!insn.supported(_cpuType)) continue;

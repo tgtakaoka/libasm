@@ -38,6 +38,8 @@ public:
     bool setCpu(const char *cpu) override;
     const char *getCpu() override { return "65816"; }
 
+    static constexpr Config::opcode_t WDM = 0x42;
+
 private:
     Error searchName(
         InsnW65C816 &insn, const Entry *table, const Entry *end) const;

@@ -48,6 +48,8 @@ Error DisW65C816::decodeImmediate(
     } else {
         outConstant(static_cast<uint8_t>(val));
     }
+    if (insn.opCode() == TableW65C816::WDM)
+        return setError(UNKNOWN_INSTRUCTION);
     return setError(OK);
 }
 
@@ -200,8 +202,6 @@ Error DisW65C816::decodeBlockMove(
     const Config::uintptr_t dst = static_cast<Config::uintptr_t>(dbank) << 16;
     const char *label = lookup(src);
     if (label) {
-        *_operands++ = '>';
-        *_operands++ = '>';
         outText(label);
     } else {
         outConstant(src, 16, false, Config::addressBits());
@@ -209,8 +209,6 @@ Error DisW65C816::decodeBlockMove(
     *_operands++ = ',';
     label = lookup(dst);
     if (label) {
-        *_operands++ = '>';
-        *_operands++ = '>';
         outText(label);
     } else {
         outConstant(dst, 16, false, Config::addressBits());

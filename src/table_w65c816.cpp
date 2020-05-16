@@ -201,43 +201,38 @@ Error TableW65C816::searchOpCode(
 }
 
 Error TableW65C816::searchName(InsnW65C816 &insn) const {
-    if (searchName(insn, ARRAY_RANGE(W65C816_TABLE)) == OK)
-        return OK;
     mos6502::InsnMos6502 mos6502(insn.insn());
     mos6502::TableMos6502.setCpu("65SC02");
-    if (mos6502::TableMos6502.searchName(mos6502))
-        return UNKNOWN_INSTRUCTION;
-    insn.setFlags(mos6502.flags());
-    insn.setOpCode(mos6502.opCode());
-    return OK;
+    if (mos6502::TableMos6502.searchName(mos6502) == OK) {
+        insn.setFlags(mos6502.flags());
+        insn.setOpCode(mos6502.opCode());
+        return OK;
+    }
+    return searchName(insn, ARRAY_RANGE(W65C816_TABLE));
 }
 
 Error TableW65C816::searchNameAndAddrMode(InsnW65C816 &insn) const {
-    if (searchNameAndAddrMode(insn, ARRAY_RANGE(W65C816_TABLE)) == OK)
-        return OK;
     mos6502::InsnMos6502 mos6502(insn.insn());
     mos6502.setFlags(insn.flags());
     mos6502::TableMos6502.setCpu("65SC02");
-    if (mos6502::TableMos6502.searchNameAndAddrMode(mos6502))
-        return UNKNOWN_INSTRUCTION;
-    insn.setFlags(mos6502.flags());
-    insn.setOpCode(mos6502.opCode());
-    return OK;
+    if (mos6502::TableMos6502.searchNameAndAddrMode(mos6502) == OK) {
+        insn.setFlags(mos6502.flags());
+        insn.setOpCode(mos6502.opCode());
+        return OK;
+    }
+    return searchNameAndAddrMode(insn, ARRAY_RANGE(W65C816_TABLE));
 }
 
 Error TableW65C816::searchOpCode(
     InsnW65C816 &insn, bool acceptIndirectLong) const {
-    if (searchOpCode(
-            insn, acceptIndirectLong, ARRAY_RANGE(W65C816_TABLE)) == OK)
-        return OK;
-
     mos6502::InsnMos6502 mos6502(insn.insn());
     mos6502.setOpCode(insn.opCode());
     mos6502::TableMos6502.setCpu("65SC02");
-    if (mos6502::TableMos6502.searchOpCode(mos6502))
-        return UNKNOWN_INSTRUCTION;
-    insn.setFlags(mos6502.flags());
-    return OK;
+    if (mos6502::TableMos6502.searchOpCode(mos6502) == OK) {
+        insn.setFlags(mos6502.flags());
+        return OK;
+    }
+    return searchOpCode(insn, acceptIndirectLong, ARRAY_RANGE(W65C816_TABLE));
 }
 
 bool TableW65C816::setCpu(const char *cpu) {
