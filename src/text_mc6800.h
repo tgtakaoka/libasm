@@ -165,6 +165,10 @@ static const char TEXT_PULX[] PROGMEM = "PULX";
 
 // HD6301
 static const char TEXT_AIM[]  PROGMEM = "AIM";
+static const char TEXT_BCLR[] PROGMEM = "BCLR";
+static const char TEXT_BSET[] PROGMEM = "BSET";
+static const char TEXT_BTGL[] PROGMEM = "BTGL";
+static const char TEXT_BTST[] PROGMEM = "BTST";
 static const char TEXT_EIM[]  PROGMEM = "EIM";
 static const char TEXT_OIM[]  PROGMEM = "OIM";
 static const char TEXT_SLP[]  PROGMEM = "SLP";

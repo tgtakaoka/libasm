@@ -105,6 +105,20 @@ Error AsmMc6800::parseOperand(Operand &op) {
     if (getOperand(op.opr)) return getError();
     if (getError()) op.setError(getError());
     p = _scan;
+    bool hasBitNum = false;
+    if (*p == ',' && !hasImmediate && op.opr < 8) { // maybe bit number
+        op.imm = op.opr;
+        _scan = skipSpaces(p + 1);
+        if (_regs.compareRegName(_scan, REG_X)) {
+            _scan = p;
+        } else if (getOperand(op.opr)) {
+            _scan = p;
+        } else {
+            if (getError() && op.getError() == OK) op.setError(getError());
+            p = skipSpaces(_scan);
+            hasBitNum = true;
+        }
+    }
     if (*p == ',') {            // nn,X
         p = skipSpaces(p + 1);
         if (!_regs.compareRegName(p, REG_X))
@@ -112,11 +126,13 @@ Error AsmMc6800::parseOperand(Operand &op) {
         p += _regs.regNameLen(REG_X);
         if (size == 16 || (size < 0 && op.opr >= 0x100))
             return op.setError(OVERFLOW_RANGE);
-        op.mode = hasImmediate ? IMM_IDX : IDX;
+        if (hasBitNum) op.mode = BIT_IDX;
+        else op.mode = hasImmediate ? IMM_IDX : IDX;
     } else if (size == 8 || (size < 0 && op.opr < 0x100)) {
-        op.mode = hasImmediate ? IMM_DIR : DIR;
+        if (hasBitNum) op.mode = BIT_DIR;
+        else op.mode = hasImmediate ? IMM_DIR : DIR;
     } else {
-        if (hasImmediate) return op.setError(OVERFLOW_RANGE);
+        if (hasImmediate || hasBitNum) return op.setError(OVERFLOW_RANGE);
         op.mode = EXT;
     }
     _scan = p;
@@ -162,6 +178,14 @@ Error AsmMc6800::encode(Insn &_insn) {
         break;
     case IMM_IDX:
     case IMM_DIR:
+        insn.emitByte(static_cast<uint8_t>(op.imm));
+        insn.emitByte(static_cast<uint8_t>(op.opr));
+        break;
+    case BIT_IDX:
+    case BIT_DIR:
+        op.imm = 1 << op.imm;
+        if ((insn.opCode() & 0xF) == 1) // AIM
+            op.imm = ~op.imm;
         insn.emitByte(static_cast<uint8_t>(op.imm));
         insn.emitByte(static_cast<uint8_t>(op.opr));
         break;

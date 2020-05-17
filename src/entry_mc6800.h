@@ -36,8 +36,10 @@ enum AddrMode : host::uint_t {
     REL,  // Relative
     IMM,  // Immediate
     // HD6301
-    IMM_DIR,
-    IMM_IDX,
+    IMM_DIR, // Immediate,Direct Page
+    IMM_IDX, // Immediate,Indexed
+    BIT_DIR, // Bit number,Direct
+    BIT_IDX, // Bit number,Indexed
 };
 
 enum InsnAdjust : host::uint_t {
@@ -82,10 +84,10 @@ struct Entry {
     }
 
 private:
-    static constexpr host::uint_t addrMode_gm = 0x7;
-    static constexpr host::uint_t insnAdjust_gp = 3;
+    static constexpr host::uint_t addrMode_gm = 0xF;
+    static constexpr host::uint_t insnAdjust_gp = 4;
     static constexpr host::uint_t insnAdjust_gm = 0x3;
-    static constexpr host::uint_t oprSize_gp = 5;
+    static constexpr host::uint_t oprSize_gp = 6;
     static constexpr host::uint_t oprSize_gm = 0x3;
 
 };

@@ -20,14 +20,6 @@
 using namespace libasm::mc6800;
 using namespace libasm::test;
 
-static bool filterHd6301BitImmIndexed(uint8_t opc) {
-    if (opc == 0x61) return true; // AIM #nn,<indexed>
-    if (opc == 0x62) return true; // OIM #nn,<indexed>
-    if (opc == 0x65) return true; // EIM #nn,<indexed>
-    if (opc == 0x6B) return true; // TIM #nn,<indexed>
-    return false;
-}
-
 int main(int argc, const char **argv) {
     DisMc6800 dis6800;
     dis6800.setAccumulatorDelimitor(true);
@@ -37,11 +29,8 @@ int main(int argc, const char **argv) {
 
     TestGenerator<Config> generator(dis6800);
     generator
-        .generate(driver, filterHd6301BitImmIndexed)
-        .generate(driver, 0x61, 0x62) // AIM
-        .generate(driver, 0x62, 0x63) // OIM
-        .generate(driver, 0x65, 0x66) // EIM
-        .generate(driver, 0x6B, 0x6C) // TIM
+        .generate(driver)
+        .generate(driver, 0x61, 0xFB) // AIM
         .generate(driver, 0x71, 0xFB); // AIM
 
     return driver.close();
