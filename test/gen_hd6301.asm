@@ -77,13 +77,35 @@
       TST  B
       CLR  B
       NEG  97,X
+      AIM  #0,98,X
+      OIM  #0,99,X
+      BSET 0,0,X
+      OIM  #3,0,X
+      BSET 2,0,X
+      OIM  #5,0,X
+      BSET 3,0,X
+      OIM  #9,0,X
       COM  100,X
       LSR  101,X
+      EIM  #0,102,X
+      BTGL 0,0,X
+      EIM  #3,0,X
+      BTGL 2,0,X
+      EIM  #5,0,X
+      BTGL 3,0,X
+      EIM  #9,0,X
       ROR  103,X
       ASR  104,X
       ASL  105,X
       ROL  106,X
       DEC  107,X
+      TIM  #0,108,X
+      BTST 0,0,X
+      TIM  #3,0,X
+      BTST 2,0,X
+      TIM  #5,0,X
+      BTST 3,0,X
+      TIM  #9,0,X
       INC  109,X
       TST  110,X
       JMP  111,X
@@ -91,15 +113,33 @@
       NEG  >$0071
       AIM  #0,$72
       OIM  #0,$73
+      BSET 0,$00
+      OIM  #3,$00
+      BSET 2,$00
+      OIM  #5,$00
+      BSET 3,$00
+      OIM  #9,$00
       COM  >$0074
       LSR  >$0075
       EIM  #0,$76
+      BTGL 0,$00
+      EIM  #3,$00
+      BTGL 2,$00
+      EIM  #5,$00
+      BTGL 3,$00
+      EIM  #9,$00
       ROR  >$0077
       ASR  >$0078
       ASL  >$0079
       ROL  >$007A
       DEC  >$007B
       TIM  #0,$7C
+      BTST 0,$00
+      TIM  #3,$00
+      BTST 2,$00
+      TIM  #5,$00
+      BTST 3,$00
+      TIM  #9,$00
       INC  >$007D
       TST  >$007E
       JMP  >$007F
@@ -116,7 +156,7 @@
       ORA  A,#$8B
       ADD  A,#$8C
       CPX  #$008D
-      BSR  $004D
+      BSR  $00C5
       LDS  #$008F
       SUB  A,$91
       CMP  A,$92
@@ -227,8 +267,5 @@
       STD  >$00FE
       LDX  >$00FF
       STX  $0100
-      AIM  #$62,0,X
-      OIM  #$63,0,X
-      EIM  #$66,0,X
-      TIM  #$6C,0,X
-      AIM  #$FB,$00
+      BCLR 2,0,X
+      BCLR 2,$00

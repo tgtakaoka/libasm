@@ -20,11 +20,19 @@
         oim     #$63,$64,x
         eim     #$66,$67,x
         tim     #$6c,$6d,x
+        bclr    0,$63,x
+        bset    1,$64,x
+        btgl    2,$67,x
+        btst    3,$6d,x
 ;;; 7X
         aim     #$72,$73
         oim     #$73,$74
         eim     #$76,$77
         tim     #$7c,$7d
+        bclr    4,$73
+        bset    5,$74
+        btgl    6,$77
+        btst    7,$7d
 
 ;;; Local Variables:
 ;;; mode: asm

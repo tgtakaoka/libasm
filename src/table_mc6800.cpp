@@ -322,13 +322,21 @@ static constexpr Entry HD6301_TABLE[] PROGMEM = {
     E(0x18, XGDX, INH,     ZERO, NONE)
     E(0x1A, SLP,  INH,     ZERO, NONE)
     E(0x61, AIM,  IMM_IDX, ZERO, BYTE)
+    E(0x61, BCLR, BIT_IDX, ZERO, BYTE)
     E(0x62, OIM,  IMM_IDX, ZERO, BYTE)
+    E(0x62, BSET, BIT_IDX, ZERO, BYTE)
     E(0x65, EIM,  IMM_IDX, ZERO, BYTE)
+    E(0x65, BTGL, BIT_IDX, ZERO, BYTE)
     E(0x6B, TIM,  IMM_IDX, ZERO, BYTE)
+    E(0x6B, BTST, BIT_IDX, ZERO, BYTE)
     E(0x71, AIM,  IMM_DIR, ZERO, BYTE)
+    E(0x71, BCLR, BIT_DIR, ZERO, BYTE)
     E(0x72, OIM,  IMM_DIR, ZERO, BYTE)
+    E(0x72, BSET, BIT_DIR, ZERO, BYTE)
     E(0x75, EIM,  IMM_DIR, ZERO, BYTE)
+    E(0x75, BTGL, BIT_DIR, ZERO, BYTE)
     E(0x7B, TIM,  IMM_DIR, ZERO, BYTE)
+    E(0x7B, BTST, BIT_DIR, ZERO, BYTE)
 };
 
 Error TableMc6800::searchName(InsnMc6800 &insn) const {
@@ -345,10 +353,13 @@ Error TableMc6800::searchName(InsnMc6800 &insn) const {
     return OK;
 }
 
+#include <stdio.h>
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
     if (opr == DIR) return table == EXT;
+    if (opr == BIT_IDX) return table == IDX;
+    if (opr == BIT_DIR) return table == DIR;
     return false;
 }
 
@@ -383,7 +394,7 @@ static Config::opcode_t tableCode(
     }
 }
 
-Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
+const Entry *TableMc6800::searchOpCodeEntry(InsnMc6800 &insn) const {
     Config::opcode_t opCode = insn.opCode();
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
         opCode, ARRAY_RANGE(MC6800_TABLE), tableCode);
@@ -394,10 +405,27 @@ Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
         entry = TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(HD6301_TABLE), tableCode);
     }
+    return entry;
+}
+
+Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
+    const Entry *entry = searchOpCodeEntry(insn);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
     return OK;
+}
+
+Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
+    const Entry *entry = searchOpCodeEntry(insn);
+    if (!entry) return UNKNOWN_INSTRUCTION;
+    entry += 1;
+    if (pgm_read_byte(&entry->opCode) == insn.opCode()) {
+        insn.setFlags(pgm_read_byte(&entry->flags));
+        TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+        return OK;
+    }
+    return UNKNOWN_INSTRUCTION;
 }
 
 const char *TableMc6800::getCpu() {

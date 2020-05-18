@@ -570,11 +570,19 @@ static void test_bit_ops() {
     TEST("OIM #$44,1,X",   0x62, 0x44, 0x01);
     TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
     TEST("TIM #$11,255,X", 0x6B, 0x11, 0xFF);
+    TEST("BCLR 0,1,X",     0x61, 0xFE, 0x01);
+    TEST("BSET 1,128,X",   0x62, 0x02, 0x80);
+    TEST("BTGL 6,255,X",   0x65, 0x40, 0xFF);
+    TEST("BTST 7,0,X",     0x6B, 0x80, 0x00);
 
     TEST("AIM #$88,$90", 0x71, 0x88, 0x90);
     TEST("OIM #$44,$90", 0x72, 0x44, 0x90);
     TEST("EIM #$22,$90", 0x75, 0x22, 0x90);
     TEST("TIM #$11,$90", 0x7B, 0x11, 0x90);
+    TEST("BCLR 7,$90",   0x71, 0x7F, 0x90);
+    TEST("BSET 6,$90",   0x72, 0x40, 0x90);
+    TEST("BTGL 1,$90",   0x75, 0x02, 0x90);
+    TEST("BTST 0,$90",   0x7B, 0x01, 0x90);
 
     symtab.intern(0x90, "dir90");
     symtab.intern(255,  "offset255");
@@ -582,10 +590,17 @@ static void test_bit_ops() {
     symtab.intern(0x88, "data88");
     symtab.intern(0x10, "bm4");
     symtab.intern(0x40, "bm6");
+    symtab.intern(4, "bp4");
+    symtab.intern(6, "bp6");
 
     TEST("AIM #data88,offset0,X", 0x61, 0x88, 0x00);
     TEST("OIM #bm4,<dir90",       0x72, 0x10, 0x90);
     TEST("EIM #bm6,offset255,X",  0x65, 0x40, 0xFF);
+#if 0
+    TEST("BCLR bp4,offset0,X",    0x61, 0xEF, 0x00);
+    TEST("BSET bp4,<dir90",       0x72, 0x10, 0x90);
+    TEST("BTGL bp6,offset255,X",  0x65, 0x40, 0xFF);
+#endif
 }
 
 static void test_comment() {

@@ -18,6 +18,7 @@
 #define __TABLE_MC6800_H__
 
 #include "config_mc6800.h"
+#include "entry_mc6800.h"
 #include "insn_mc6800.h"
 #include "table_base.h"
 
@@ -29,6 +30,7 @@ public:
     Error searchName(InsnMc6800 &insn) const;
     Error searchNameAndAddrMode(InsnMc6800 &insn) const;
     Error searchOpCode(InsnMc6800 &insn) const;
+    Error searchOpCodeAlias(InsnMc6800 &insn) const;
 
     const char *listCpu() override { return "6800, 6801, 6301"; }
     bool setCpu(const char *cpu) override;
@@ -36,6 +38,8 @@ public:
 
 private:
     CpuType _cpuType;
+
+    const Entry *searchOpCodeEntry(InsnMc6800 &insn) const;
 };
 
 extern TableMc6800 TableMc6800;
