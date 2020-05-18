@@ -111,12 +111,18 @@ Error AsmMc6800::parseOperand(Operand &op) {
         _scan = skipSpaces(p + 1);
         if (_regs.compareRegName(_scan, REG_X)) {
             _scan = p;
-        } else if (getOperand(op.opr)) {
-            _scan = p;
         } else {
-            if (getError() && op.getError() == OK) op.setError(getError());
-            p = skipSpaces(_scan);
-            hasBitNum = true;
+            if (*_scan == '<') {
+                size = 8;
+                _scan++;
+            }
+            if (getOperand(op.opr)) {
+                _scan = p;
+            } else {
+                if (getError() && op.getError() == OK) op.setError(getError());
+                p = skipSpaces(_scan);
+                hasBitNum = true;
+            }
         }
     }
     if (*p == ',') {            // nn,X

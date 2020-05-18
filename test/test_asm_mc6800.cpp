@@ -596,11 +596,9 @@ static void test_bit_ops() {
     TEST("AIM #data88,offset0,X", 0x61, 0x88, 0x00);
     TEST("OIM #bm4,<dir90",       0x72, 0x10, 0x90);
     TEST("EIM #bm6,offset255,X",  0x65, 0x40, 0xFF);
-#if 0
     TEST("BCLR bp4,offset0,X",    0x61, 0xEF, 0x00);
     TEST("BSET bp4,<dir90",       0x72, 0x10, 0x90);
     TEST("BTGL bp6,offset255,X",  0x65, 0x40, 0xFF);
-#endif
 }
 
 static void test_comment() {

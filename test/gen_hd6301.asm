@@ -267,5 +267,3 @@
       STD  >$00FE
       LDX  >$00FF
       STX  $0100
-      BCLR 2,0,X
-      BCLR 2,$00
