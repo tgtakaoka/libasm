@@ -50,7 +50,7 @@ OBJS_driver = asm.o dis.o
 
 DRIVERS = $(OBJS_driver:.o=)
 
-.PHONY: all clean distclean
+.PHONY: all clean
 
 all: $(DRIVERS)
 
@@ -87,7 +87,6 @@ install: $(DRIVERS)
 	install $(DRIVERS) ${INSTALL_DIR}
 clean:
 	-rm -f *.o *.d
-distclean: clean
 	-rm -f $(DRIVERS)
 
 # Local Variables:

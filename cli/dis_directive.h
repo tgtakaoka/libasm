@@ -34,6 +34,7 @@ public:
         Disassembler &disassembler, CliMemory &memory, bool uppercase = false);
 
     Error disassemble(uint32_t addr, Insn &insn);
+    const char *getCpu(bool withBytes = false);
     const char *origin(uint32_t origin, bool withBytes = false);
     bool hasNext() const;
     const char *getLine();

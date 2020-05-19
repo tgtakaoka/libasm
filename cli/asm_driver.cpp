@@ -26,28 +26,21 @@ AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives)
     : _commonDir(directives)
 {}
 
-AsmDriver::~AsmDriver() {
-    if (_formatter) delete _formatter;
-}
-
 int AsmDriver::usage() {
     const char *cpuSep = "\n                ";
     std::string cpuList(cpuSep + _commonDir.listCpu(cpuSep));
-    std::string cpuOption = "-C <cpu>";
     AsmDirective *directive = defaultDirective();
     if (directive) {
         cpuList = ": ";
         cpuList += directive->assembler().listCpu();
-        cpuOption = '[' + cpuOption + ']';
     } else {
         const char *cpuSep = "\n                ";
         cpuList = cpuSep + _commonDir.listCpu(cpuSep);
     }
     fprintf(stderr,
             "libasm assembler (version " LIBASM_VERSION_STRING ")\n"
-            "usage: %s %s [-u] [-o <output>] [-l <list>] <input>\n"
-            " options:\n"
-            "  -C          : CPU variant%s\n"
+            "usage: %s [-o <output>] [-l <list>] <input>\n"
+            "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  -S[<bytes>] : output Motorola SREC format\n"
@@ -56,7 +49,7 @@ int AsmDriver::usage() {
             "  -u          : use uppercase letter for output\n"
             "  -n          : output line number to list file\n"
             "  -v          : print progress verbosely\n",
-            _progname, cpuOption.c_str(), cpuList.c_str());
+            _progname, cpuList.c_str());
     return 2;
 }
 
@@ -88,26 +81,37 @@ int AsmDriver::assemble() {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
-        const char *begin = _formatter->begin();
+        AsmDirective *directive = _commonDir.currentDirective();
+        const AddressWidth addrWidth = directive->assembler().addressWidth();
+        BinFormatter *formatter;
+        if (_formatter == 'S') {
+            formatter = new MotoSrec(addrWidth);
+        } else if (_formatter == 'H') {
+            formatter = new IntelHex(addrWidth);
+        } else {
+            formatter = directive->defaultFormatter();
+        }
+        const char *begin = formatter->begin();
         if (begin) fprintf(output, "%s\n", begin);
         memory.dump(
-            [this, output]
+            [this, output, formatter]
             (uint32_t addr, const uint8_t *data, size_t data_size) {
                 if (_verbose)
                     fprintf(stderr, "Write %4lu bytes %04x-%04x\n",
                             data_size, addr, (uint32_t)(addr + data_size - 1));
                 for (size_t i = 0; i < data_size; i += _record_bytes) {
                     auto size = std::min(_record_bytes, data_size - i);
-                    const char *line = _formatter->prepare(addr + i);
+                    const char *line = formatter->prepare(addr + i);
                     if (line) fprintf(output, "%s\n", line);
-                    line = _formatter->encode(addr + i, data + i, size);
+                    line = formatter->encode(addr + i, data + i, size);
                     fprintf(output, "%s\n", line);
                     fflush(output);
                 }
             });
-        const char *end = _formatter->end();
+        const char *end = formatter->end();
         if (end) fprintf(output, "%s\n", end);
         fclose(output);
+        delete formatter;
     }
     if (_list_name) {
         FILE *list = fopen(_list_name, "w");
@@ -174,12 +178,11 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _output_name = nullptr;
     _list_name = nullptr;
     _record_bytes = 32;
-    _formatter = nullptr;
+    _formatter = 0;
     _uppercase = false;
     _line_number = false;
     _verbose = false;
     AsmDirective *directive = defaultDirective();
-    char formatter = 0;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -200,7 +203,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                 break;
             case 'S':
             case 'H':
-                formatter = *opt++;
+                _formatter = *opt++;
                 if (*opt) {
                     char *end;
                     unsigned long v = strtoul(opt, &end, 10);
@@ -256,20 +259,6 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     if (_list_name && strcmp(_list_name, _input_name) == 0) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
-    }
-    if (_output_name) {
-        if (directive == nullptr) {
-            fprintf(stderr, "no target CPU specified\n");
-            return 1;
-        }
-        const AddressWidth addrWidth = directive->assembler().addressWidth();
-        if (formatter == 'S') {
-            _formatter = new MotoSrec(addrWidth);
-        } else if (formatter == 'H') {
-            _formatter = new IntelHex(addrWidth);
-        } else {
-            _formatter = directive->defaultFormatter();
-        }
     }
     return 0;
 }

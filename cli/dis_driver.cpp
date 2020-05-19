@@ -35,12 +35,12 @@ DisDriver::~DisDriver() {
 
 int DisDriver::usage() {
     std::string cpuList;
-    std::string cpuOption = "-C <cpu>";
+    const char *cpuOption = " -C <CPU>";
     Disassembler *dis = defaultDisassembler();
     if (dis) {
         cpuList = ": ";
         cpuList += dis->listCpu();
-        cpuOption = '[' + cpuOption + ']';
+        cpuOption = "";
     } else {
         const char *cpuSep = "\n                ";
         for (auto dis : _disassemblers) {
@@ -50,15 +50,14 @@ int DisDriver::usage() {
     }
     fprintf(stderr,
             "libasm disassembler (version " LIBASM_VERSION_STRING ")\n"
-            "usage: %s %s [-u] [-o <output>] [-l <list>] <input>\n"
-            " options:\n"
-            "  -C          : CPU variant%s\n"
+            "usage: %s%s [-o <output>] [-l <list>] <input>\n"
+            "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
+            "  <input>     : file can be Motorola S-Record or Intel HEX format\n"
             "  -u          : use uppercase letter for output\n"
-            "  -v          : print progress verbosely\n"
-            "  <input>     : file can be Motorola S-Record or Intel HEX format\n",
-            _progname, cpuOption.c_str(), cpuList.c_str());
+            "  -v          : print progress verbosely\n",
+            _progname, cpuOption, cpuList.c_str());
     return 2;
 }
 
@@ -75,6 +74,7 @@ int DisDriver::disassemble() {
         return 1;
     fclose(input);
 
+    DisDirective listing(*_disassembler, memory, _uppercase);
     FILE *output = nullptr;
     if (_output_name) {
         output = fopen(_output_name, "w");
@@ -82,6 +82,7 @@ int DisDriver::disassemble() {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
+        fprintf(output, "%s\n", listing.getCpu());
     }
     FILE *list = nullptr;
     if (_list_name) {
@@ -90,11 +91,11 @@ int DisDriver::disassemble() {
             fprintf(stderr, "Can't open list file %s\n", _list_name);
             return 1;
         }
+        fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump(
-        [this, output, list, &memory]
+        [this, output, list, &listing, &memory]
         (uint32_t base, const uint8_t *data, size_t size) {
-            DisDirective listing(*_disassembler, memory, _uppercase);
             if (list) {
                 fprintf(list, "%s\n", listing.origin(base, true));
                 fflush(list);
@@ -278,6 +279,10 @@ int DisDriver::parseOption(int argc, const char **argv) {
     }
     if (!_input_name) {
         fprintf(stderr, "no input file\n");
+        return 1;
+    }
+    if (_disassembler == nullptr) {
+        fprintf(stderr, "no target CPU specified\n");
         return 1;
     }
     _formatter = determineInputFormat(_input_name);

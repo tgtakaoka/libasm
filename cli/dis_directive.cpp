@@ -28,7 +28,8 @@ DisDirective::DisDirective(
       _listing(),
       _uppercase(uppercase),
       _labelWidth(8),
-      _operandWidth(8)
+      _operandWidth(8),
+      _address(0)
 {}
 
 Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
@@ -40,6 +41,14 @@ Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
     _generated_size = insn.length();
     _instruction = insn.name();
     return error;
+}
+
+const char *DisDirective::getCpu( bool withBytes) {
+    _listing.reset(*this, _uppercase, false);
+    _generated_size = 0;
+    _instruction = _uppercase ? "CPU" : "cpu";
+    strcpy(_operands, _disassembler.getCpu());
+    return withBytes ? _listing.getLine() : _listing.getContent();
 }
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {

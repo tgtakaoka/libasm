@@ -87,6 +87,10 @@ std::string AsmCommonDirective::listCpu(const char *separator) const {
     return cpuList;
 }
 
+AsmDirective *AsmCommonDirective::currentDirective() {
+    return _directive;
+}
+
 Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     _scan = line;
     if (_scan == nullptr) {

@@ -29,7 +29,6 @@ namespace cli {
 class AsmDriver {
 public:
     AsmDriver(std::vector<AsmDirective *> &directives);
-    virtual ~AsmDriver();
 
     int usage();
     int parseOption(int argc, const char **argv);
@@ -42,8 +41,8 @@ private:
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
+    char _formatter;
     size_t _record_bytes;
-    BinFormatter *_formatter;
     bool _uppercase;
     bool _line_number;
     bool _verbose;
