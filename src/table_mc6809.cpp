@@ -534,7 +534,7 @@ Error TableMc6809::searchName(
         const Entry *entry = TableBase::searchName<Entry>(name, table, end);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
+            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
             insn.setFlags(pgm_read_byte(&entry->flags));
             return OK;
         }
@@ -557,7 +557,7 @@ Error TableMc6809::searchNameAndAddrMode(
             insn.name(), addrMode, table, end, matchAddrMode);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
+            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
             insn.setFlags(pgm_read_byte(&entry->flags));
             return OK;
         }

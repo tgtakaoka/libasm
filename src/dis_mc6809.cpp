@@ -202,14 +202,13 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        const uint16_t insnCode = insn.insnCode();
+        const Config::opcode_t opCode = insn.opCode();
         constexpr uint8_t ORCC = 0x1A;
         constexpr uint8_t ANDCC = 0x1C;
-        constexpr uint8_t CWAI = 0x3C;
-        constexpr uint16_t BITMD = 0x113C;
-        constexpr uint16_t LDMD = 0x113D;
-        if (insnCode == ORCC || insnCode == ANDCC || insnCode == CWAI
-            || insnCode == BITMD || insnCode == LDMD) {
+        constexpr uint8_t CWAI_BITMD = 0x3C;
+        constexpr uint8_t LDMD = 0x3D;
+        if (opCode == ORCC || opCode == ANDCC
+            || opCode == CWAI_BITMD || opCode == LDMD) {
             outConstant(val, 2);
         } else {
             outConstant(val);
@@ -236,12 +235,12 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
 Error DisMc6809::decodeStackOp(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
-    const bool push = (insn.insnCode() & 1) == 0;
+    const bool push = (insn.opCode() & 1) == 0;
     for (host::uint_t i = 0, n = 0; i < 8; i++) {
         const host::uint_t bit = push ? 7 - i : i;
         if (post & (1 << bit)) {
             if (n != 0) *_operands++ = ',';
-            outRegister(_regs.getStackReg(bit, insn.insnCode()));
+            outRegister(_regs.getStackReg(bit, insn.opCode()));
             n++;
         }
     }
@@ -299,7 +298,7 @@ Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn) {
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
     const RegName dst = _regs.decodeTfmBaseReg(post & 0xf);
-    const uint8_t mode = insn.insnCode() & 0x3;
+    const uint8_t mode = insn.opCode() & 0x3;
     if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(src);
     const char srcModeChar = _regs.tfmSrcModeChar(mode);
@@ -316,11 +315,11 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
     InsnMc6809 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(0, opCode);
+    insn.setOpCode(opCode);
     if (TableMc6809::isPrefixCode(opCode)) {
         const Config::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        insn.setInsnCode(prefix, opCode);
+        insn.setOpCode(opCode, prefix);
     }
 
     if (TableMc6809.searchOpCode(insn))

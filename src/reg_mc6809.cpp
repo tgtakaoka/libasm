@@ -140,8 +140,8 @@ static RegName decodeRegNumber(
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName RegMc6809::getStackReg(host::uint_t bit, uint16_t insnCode) {
-    const RegName *table = (insnCode & 2) == 0
+RegName RegMc6809::getStackReg(host::uint_t bit, Config::opcode_t opCode) {
+    const RegName *table = (opCode & 2) == 0
         ? &STACK_S_REGS[0] : &STACK_U_REGS[0];
     return RegName(pgm_read_byte(&table[bit]));
 }
