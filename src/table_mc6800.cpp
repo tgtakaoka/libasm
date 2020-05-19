@@ -339,47 +339,51 @@ static constexpr Entry HD6301_TABLE[] PROGMEM = {
     E(0x7B, BTST, BIT_DIR, ZERO, BYTE)
 };
 
-Error TableMc6800::searchName(InsnMc6800 &insn) const {
-    const char *name = insn.name();
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(MC6800_TABLE));
-    if (_cpuType != MC6800 && entry == nullptr)
-        entry = TableBase::searchName<Entry>(name, ARRAY_RANGE(MC6801_TABLE));
-    if (_cpuType == HD6301 && entry == nullptr)
-        entry = TableBase::searchName<Entry>(name, ARRAY_RANGE(HD6301_TABLE));
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
-}
+struct TableMc6800::EntryPage {
+    const Entry *const table;
+    const Entry *const end;
+};
 
-#include <stdio.h>
+static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(MC6800_TABLE) },
+};
+
+static constexpr TableMc6800::EntryPage MC6801_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(MC6801_TABLE) },
+    { ARRAY_RANGE(MC6800_TABLE) },
+};
+
+static constexpr TableMc6800::EntryPage HD6301_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(HD6301_TABLE) },
+    { ARRAY_RANGE(MC6801_TABLE) },
+    { ARRAY_RANGE(MC6800_TABLE) },
+};
+
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
-    if (opr == DIR) return table == EXT;
+    if (opr == DIR) return table == EXT || table == REL;
+    if (opr == EXT) return table == REL;
     if (opr == BIT_IDX) return table == IDX;
     if (opr == BIT_DIR) return table == DIR;
     return false;
 }
 
-Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
-    const char *name = insn.name();
+Error TableMc6800::searchNameAndAddrMode(
+    InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
     const AddrMode addrMode = insn.addrMode();
-    const Entry *entry = nullptr;
-    if (_cpuType != MC6800)
-        entry = TableBase::searchName<Entry,AddrMode>(
-            name, addrMode, ARRAY_RANGE(MC6801_TABLE), acceptAddrMode);
-    if (_cpuType == HD6301 && entry == nullptr)
-        entry = TableBase::searchName<Entry,AddrMode>(
-            name, addrMode, ARRAY_RANGE(HD6301_TABLE), acceptAddrMode);
-    if (entry == nullptr)
-        entry = TableBase::searchName<Entry,AddrMode>(
-            name, addrMode, ARRAY_RANGE(MC6800_TABLE), acceptAddrMode);
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchName<Entry,AddrMode>(
+            insn.name(), addrMode, table, end, acceptAddrMode);
+        if (entry) {
+            insn.setOpCode(pgm_read_byte(&entry->opCode));
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
 }
 
 static Config::opcode_t tableCode(
@@ -394,22 +398,24 @@ static Config::opcode_t tableCode(
     }
 }
 
-const Entry *TableMc6800::searchOpCodeEntry(InsnMc6800 &insn) const {
-    Config::opcode_t opCode = insn.opCode();
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
-        opCode, ARRAY_RANGE(MC6800_TABLE), tableCode);
-    if (_cpuType != MC6800 && entry == nullptr)
-        entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(MC6801_TABLE), tableCode);
-    if (_cpuType == HD6301 && entry == nullptr) {
-        entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(HD6301_TABLE), tableCode);
+const Entry *TableMc6800::searchOpCode(
+    InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+            insn.opCode(), table, end, tableCode);
+        if (entry) return entry;
     }
-    return entry;
+    return nullptr;
+}
+
+Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
+    return searchNameAndAddrMode(insn, _table, _end);
 }
 
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
-    const Entry *entry = searchOpCodeEntry(insn);
+    const Entry *entry = searchOpCode(insn, _table, _end);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
@@ -417,38 +423,51 @@ Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
 }
 
 Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
-    const Entry *entry = searchOpCodeEntry(insn);
+    const Entry *entry = searchOpCode(insn, _table, _end);
     if (!entry) return UNKNOWN_INSTRUCTION;
     entry += 1;
-    if (pgm_read_byte(&entry->opCode) == insn.opCode()) {
-        insn.setFlags(pgm_read_byte(&entry->flags));
-        TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
-        return OK;
+    if (pgm_read_byte(&entry->opCode) != insn.opCode())
+        return UNKNOWN_INSTRUCTION;
+    insn.setFlags(pgm_read_byte(&entry->flags));
+    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    return OK;
+}
+
+TableMc6800::TableMc6800() {
+    setCpu(MC6800);
+}
+
+bool TableMc6800::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    if (cpuType == MC6800) {
+        _table = ARRAY_BEGIN(MC6800_PAGES);
+        _end = ARRAY_END(MC6800_PAGES);
+    } else if (cpuType == MC6801) {
+        _table = ARRAY_BEGIN(MC6801_PAGES);
+        _end = ARRAY_END(MC6801_PAGES);
+    } else {
+        _table = ARRAY_BEGIN(HD6301_PAGES);
+        _end = ARRAY_END(HD6301_PAGES);
     }
-    return UNKNOWN_INSTRUCTION;
+    return true;
 }
 
 const char *TableMc6800::getCpu() {
-    if (_cpuType == MC6800) return "6800";
+    if (_cpuType == MC6800)
+        return "6800";
     return _cpuType == MC6801 ? "6801" : "6301";
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
     const char *p;
     p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
-    if (strcmp(p, "6800") == 0) {
-        _cpuType = MC6800;
-        return true;
-    }
-    if (strcmp(p, "6801") == 0) {
-        _cpuType = MC6801;
-        return true;
-    }
+    if (strcmp(p, "6800") == 0)
+        return setCpu(MC6800);
+    if (strcmp(p, "6801") == 0)
+        return setCpu(MC6801);
     p = cpu + (strncasecmp(cpu, "HD", 2) ? 0 : 2);
-    if (strcmp(p, "6301") == 0) {
-        _cpuType = HD6301;
-        return true;
-    }
+    if (strcmp(p, "6301") == 0)
+        return setCpu(HD6301);
     return false;
 }
 

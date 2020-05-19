@@ -15,7 +15,11 @@
         cpu     6301
 
         include "test_mc6800.inc"
+
+        org     $1A0
         include "test_mc6801.inc"
+
+        org     $1E0
         include "test_hd6301.inc"
 
         end

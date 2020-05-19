@@ -27,7 +27,8 @@ namespace mc6800 {
 
 class TableMc6800 : private TableBase {
 public:
-    Error searchName(InsnMc6800 &insn) const;
+    TableMc6800();
+
     Error searchNameAndAddrMode(InsnMc6800 &insn) const;
     Error searchOpCode(InsnMc6800 &insn) const;
     Error searchOpCodeAlias(InsnMc6800 &insn) const;
@@ -36,10 +37,18 @@ public:
     bool setCpu(const char *cpu) override;
     const char *getCpu() override;
 
+    struct EntryPage;
+
 private:
     CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
 
-    const Entry *searchOpCodeEntry(InsnMc6800 &insn) const;
+    bool setCpu(CpuType cpuType);
+    static Error searchNameAndAddrMode(
+        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end);
+    static const Entry *searchOpCode(
+        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableMc6800 TableMc6800;

@@ -32,13 +32,10 @@ void AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
     }
 }
 
-Error AsmMc6800::encodeRelative(InsnMc6800 &insn) {
-    Config::uintptr_t addr;
-    if (getOperand(addr)) return getError();
-    if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
+Error AsmMc6800::encodeRelative(InsnMc6800 &insn, const Operand &op) {
+    const Config::uintptr_t addr = op.getError() ? insn.address() : op.opr;
     const Config::uintptr_t base = insn.address() + 2;
     const Config::ptrdiff_t delta = addr - base;
-    insn.emitInsn();
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
     return checkLineEnd();
@@ -149,13 +146,7 @@ Error AsmMc6800::encode(Insn &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    if (TableMc6800.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
-
-    if (insn.addrMode() == REL)
-        return encodeRelative(insn);
-
     Operand op;
     if (parseOperand(op)) return setError(op);
     setError(op);
@@ -176,6 +167,8 @@ Error AsmMc6800::encode(Insn &_insn) {
     case EXT:
         insn.emitUint16(op.opr);
         break;
+    case REL:
+        return encodeRelative(insn, op);
     case IMM:
         if (insn.oprSize() == SZ_BYTE)
             insn.emitByte(static_cast<uint8_t>(op.imm));

@@ -50,7 +50,7 @@ private:
 
     void adjustAccumulator(InsnMc6800 &insn, const Operand &op);
     Error parseOperand(Operand &op);
-    Error encodeRelative(InsnMc6800 &insn);
+    Error encodeRelative(InsnMc6800 &insn, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

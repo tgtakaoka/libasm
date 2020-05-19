@@ -12,9 +12,11 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     6301            ; FIXME: 6801
+        cpu     6801
 
         include "test_mc6800.inc"
+
+        org     $1A0
         include "test_mc6801.inc"
 
         end

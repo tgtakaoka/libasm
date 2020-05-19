@@ -23,6 +23,7 @@ all: \
 	test_mc6800.s19 \
 	test_mc6801.s19 \
 	test_hd6301.s19 \
+	test_mc68hc11.s19 \
 	test_mos6502.s19 \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
