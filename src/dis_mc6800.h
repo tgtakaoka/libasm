@@ -37,16 +37,16 @@ public:
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
     const char *getCpu() const override { return TableMc6800.getCpu(); }
 
-    void setAccumulatorDelimitor(bool comma) { _accDelim = comma ? ',' : ' '; }
+    void setAccumulatorDelimitor(char delim = 0) { _accDelim = delim; }
 
 private:
     DisMotoOperand _formatter;
     RegMc6800 _regs;
-    char _accDelim = ' ';
+    char _accDelim = 0;
 
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
-    bool outAccumulator(const InsnMc6800 &insn);
+    bool outAccumulator(InsnMc6800 &insn);
 
     // MC6800
     Error decodeInherent(DisMemory &memory, InsnMc6800 &insn);

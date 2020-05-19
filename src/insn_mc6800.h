@@ -20,6 +20,7 @@
 #include "config_mc6800.h"
 #include "entry_mc6800.h"
 #include "insn_base.h"
+#include "reg_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
@@ -38,6 +39,12 @@ public:
 
     void setAddrMode(AddrMode addrMode) {
         _flags = Entry::_set(_flags, addrMode);
+    }
+
+    void appendRegister(RegName regName, RegMc6800 regs) {
+        char suffix[4];
+        regs.outRegName(suffix, regName);
+        _insn.appendName(suffix);
     }
 
     Config::opcode_t opCode() const { return _opCode; }

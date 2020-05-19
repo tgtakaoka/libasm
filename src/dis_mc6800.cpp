@@ -24,15 +24,26 @@ void DisMc6800::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
 
-bool DisMc6800::outAccumulator(const InsnMc6800 &insn) {
-    const Config::opcode_t opc = insn.opCode();
-    switch (insn.insnAdjust()) {
-    case ADJ_AB01: outRegister((opc & 1) == 0 ? REG_A : REG_B); break;
-    case ADJ_AB16: outRegister((opc & 0x10) == 0 ? REG_A : REG_B); break;
-    case ADJ_AB64: outRegister((opc & 0x40) == 0 ? REG_A : REG_B); break;
-    default: return false;
+bool DisMc6800::outAccumulator(InsnMc6800 &insn) {
+    Config::opcode_t opc = insn.opCode();
+
+    if (insn.insnAdjust() == ADJ_AB01) {
+        opc &= 1;
+    } else if (insn.insnAdjust() == ADJ_AB16) {
+        opc &= 0x10;
+    } else if (insn.insnAdjust() == ADJ_AB64) {
+        opc &= 0x40;
+    } else {
+        return false;
     }
-    return true;
+    const RegName regName = (opc == 0) ? REG_A : REG_B;
+    if (_accDelim) {
+        outRegister(regName);
+        return true;
+    } else {
+        insn.appendRegister(regName, _regs);
+        return false;
+    }
 }
 
 Error DisMc6800::decodeInherent(

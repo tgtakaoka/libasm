@@ -52,42 +52,42 @@
 ;;; 3X
         tsx
         ins
-        pul     a
-        pul     b
+        pula
+        pulb
         des
         txs
-        psh     a
-        psh     b
+        psha
+        pshb
         rts
         rti
         wai
         swi
 ;;; 4X
-        neg     a
-        com     a
-        lsr     a
-        ror     a
-        asr     a
-        lsl     a
-        asl     a
-        rol     a
-        dec     a
-        inc     a
-        tst     a
-        clr     a
+        nega
+        coma
+        lsra
+        rora
+        asra
+        lsla
+        asla
+        rola
+        deca
+        inca
+        tsta
+        clra
 ;;; 5X
-        neg     b
-        com     b
-        lsr     b
-        ror     b
-        asr     b
-        lsl     b
-        asl     b
-        rol     b
-        dec     b
-        inc     b
-        tst     b
-        clr     b
+        negb
+        comb
+        lsrb
+        rorb
+        asrb
+        lslb
+        aslb
+        rolb
+        decb
+        incb
+        tstb
+        clrb
 ;;; 6X
         neg     ,x
         com     0,x
@@ -117,119 +117,119 @@
         jmp     $7f80
         clr     $8081
 ;;; 8X
-        sub     a,#$81
-        cmp     a,#$82
-        sbc     a,#$83
-        and     a,#$85
-        bit     a,#$86
-        lda     a,#$87
-        eor     a,#$89
-        adc     a,#$8a
-        ora     a,#$8b
-        add     a,#$8c
+        suba    #$81
+        cmpa    #$82
+        sbca    #$83
+        anda    #$85
+        bita    #$86
+        ldaa    #$87
+        eora    #$89
+        adca    #$8a
+        oraa    #$8b
+        adda    #$8c
         cpx     #$8d8e
         bsr     $008e
         lds     #$8f90
 ;;; 9X
-        sub     a,$91
-        cmp     a,$92
-        sbc     a,$93
-        and     a,$95
-        bit     a,$96
-        lda     a,$97
-        sta     a,$98
-        eor     a,$99
-        adc     a,$9a
-        ora     a,$9b
-        add     a,$9c
+        suba    $91
+        cmpa    $92
+        sbca    $93
+        anda    $95
+        bita    $96
+        ldaa    $97
+        staa    $98
+        eora    $99
+        adca    $9a
+        oraa    $9b
+        adda    $9c
         cpx     $9d
         lds     $9f
         sts     $a0
 ;;; AX
-        sub     a,,x
-        cmp     a,0,x
-        sbc     a,1,x
-        and     a,2,x
-        bit     a,3,x
-        lda     a,4,x
-        sta     a,5,x
-        eor     a,6,x
-        adc     a,127,x
-        ora     a,128,x
-        add     a,255,x
+        suba    ,x
+        cmpa    0,x
+        sbca    1,x
+        anda    2,x
+        bita    3,x
+        ldaa    4,x
+        staa    5,x
+        eora    6,x
+        adca    127,x
+        oraa    128,x
+        adda    255,x
         cpx     ,x
         jsr     2,x
         lds     4,x
         sts     6,x
 ;;; BX
-        sub     a,$b1b2
-        sub     a,$b1b2
-        cmp     a,$b2b3
-        sbc     a,$b3b4
-        and     a,$b5b6
-        bit     a,$b6b7
-        lda     a,$b7b9
-        sta     a,$b8b9
-        eor     a,$b9ba
-        adc     a,$babb
-        ora     a,$bbbc
-        add     a,$bcbd
+        suba    $b1b2
+        suba    $b1b2
+        cmpa    $b2b3
+        sbca    $b3b4
+        anda    $b5b6
+        bita    $b6b7
+        ldaa    $b7b9
+        staa    $b8b9
+        eora    $b9ba
+        adca    $babb
+        oraa    $bbbc
+        adda    $bcbd
         cpx     $bdbe
         jsr     $bebf
         lds     $bfc0
         sts     $c0c1
 ;;; CX
-        sub     b,#$c1
-        cmp     b,#$c2
-        sbc     b,#$c3
-        and     b,#$c5
-        bit     b,#$c6
-        lda     b,#$c7
-        eor     b,#$c8
-        adc     b,#$c9
-        ora     b,#$ca
-        add     b,#$cb
+        subb    #$c1
+        cmpb    #$c2
+        sbcb    #$c3
+        andb    #$c5
+        bitb    #$c6
+        ldab    #$c7
+        eorb    #$c8
+        adcb    #$c9
+        orab    #$ca
+        addb    #$cb
         ldx     #$cdce
 ;;; DX
-        sub     b,$d1
-        cmp     b,$d2
-        sbc     b,$d3
-        and     b,$d5
-        bit     b,$d6
-        lda     b,$d7
-        sta     b,$d8
-        eor     b,$d9
-        adc     b,$da
-        ora     b,$db
-        add     b,$dc
+        subb    $d1
+        cmpb    $d2
+        sbcb    $d3
+        andb    $d5
+        bitb    $d6
+        ldab    $d7
+        stab    $d8
+        eorb    $d9
+        adcb    $da
+        orab    $db
+        addb    $dc
         ldx     $df
         stx     $e0
 ;;; EX
-        sub     b,,x
-        cmp     b,0,x
-        sbc     b,1,x
-        and     b,2,x
-        bit     b,3,x
-        lda     b,4,x
-        sta     b,5,x
-        eor     b,,x
-        adc     b,127,x
-        ora     b,128,x
-        add     b,255,x
+        subb    ,x
+        cmpb    0,x
+        sbcb    1,x
+        andb    2,x
+        bitb    3,x
+        ldab    4,x
+        stab    5,x
+        eorb    ,x
+        adcb    127,x
+        orab    128,x
+        addb    255,x
         ldx     4,x
         stx     6,x
 ;;; FX
-        sub     b,$f1f2
-        cmp     b,$f2f3
-        sbc     b,$f3f4
-        and     b,$f5f6
-        bit     b,$f6f7
-        lda     b,$f7f8
-        sta     b,$f8f9
-        eor     b,$f9fa
-        adc     b,$fafb
-        ora     b,$fbfc
-        add     b,$fcfd
+        subb    $f1f2
+        cmpb    $f2f3
+        sbcb    $f3f4
+        andb    $f5f6
+        bitb    $f6f7
+        ldab    $f7f8
+        stab    $f8f9
+        eorb    $f9fa
+        adcb    $fafb
+        orab    $fbfc
+        addb    $fcfd
         ldx     $ff00
         stx     >$0001
 

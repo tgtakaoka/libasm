@@ -38,12 +38,12 @@
       BLE  $0063
       TSX
       INS
-      PUL  A
-      PUL  B
+      PULA
+      PULB
       DES
       TXS
-      PSH  A
-      PSH  B
+      PSHA
+      PSHB
       PULX
       RTS
       ABX
@@ -52,28 +52,28 @@
       MUL
       WAI
       SWI
-      NEG  A
-      COM  A
-      LSR  A
-      ROR  A
-      ASR  A
-      ASL  A
-      ROL  A
-      DEC  A
-      INC  A
-      TST  A
-      CLR  A
-      NEG  B
-      COM  B
-      LSR  B
-      ROR  B
-      ASR  B
-      ASL  B
-      ROL  B
-      DEC  B
-      INC  B
-      TST  B
-      CLR  B
+      NEGA
+      COMA
+      LSRA
+      RORA
+      ASRA
+      ASLA
+      ROLA
+      DECA
+      INCA
+      TSTA
+      CLRA
+      NEGB
+      COMB
+      LSRB
+      RORB
+      ASRB
+      ASLB
+      ROLB
+      DECB
+      INCB
+      TSTB
+      CLRB
       NEG  97,X
       COM  100,X
       LSR  101,X
@@ -98,125 +98,125 @@
       TST  >$007E
       JMP  >$007F
       CLR  >$0080
-      SUB  A,#$81
-      CMP  A,#$82
-      SBC  A,#$83
+      SUBA #$81
+      CMPA #$82
+      SBCA #$83
       SUBD #$0084
-      AND  A,#$85
-      BIT  A,#$86
-      LDA  A,#$87
-      EOR  A,#$89
-      ADC  A,#$8A
-      ORA  A,#$8B
-      ADD  A,#$8C
+      ANDA #$85
+      BITA #$86
+      LDAA #$87
+      EORA #$89
+      ADCA #$8A
+      ORAA #$8B
+      ADDA #$8C
       CPX  #$008D
       BSR  $003F
       LDS  #$008F
-      SUB  A,$91
-      CMP  A,$92
-      SBC  A,$93
+      SUBA $91
+      CMPA $92
+      SBCA $93
       SUBD $94
-      AND  A,$95
-      BIT  A,$96
-      LDA  A,$97
-      STA  A,$98
-      EOR  A,$99
-      ADC  A,$9A
-      ORA  A,$9B
-      ADD  A,$9C
+      ANDA $95
+      BITA $96
+      LDAA $97
+      STAA $98
+      EORA $99
+      ADCA $9A
+      ORAA $9B
+      ADDA $9C
       CPX  $9D
       JSR  $9E
       LDS  $9F
       STS  $A0
-      SUB  A,161,X
-      CMP  A,162,X
-      SBC  A,163,X
+      SUBA 161,X
+      CMPA 162,X
+      SBCA 163,X
       SUBD 164,X
-      AND  A,165,X
-      BIT  A,166,X
-      LDA  A,167,X
-      STA  A,168,X
-      EOR  A,169,X
-      ADC  A,170,X
-      ORA  A,171,X
-      ADD  A,172,X
+      ANDA 165,X
+      BITA 166,X
+      LDAA 167,X
+      STAA 168,X
+      EORA 169,X
+      ADCA 170,X
+      ORAA 171,X
+      ADDA 172,X
       CPX  173,X
       JSR  174,X
       LDS  175,X
       STS  176,X
-      SUB  A,>$00B1
-      CMP  A,>$00B2
-      SBC  A,>$00B3
+      SUBA >$00B1
+      CMPA >$00B2
+      SBCA >$00B3
       SUBD >$00B4
-      AND  A,>$00B5
-      BIT  A,>$00B6
-      LDA  A,>$00B7
-      STA  A,>$00B8
-      EOR  A,>$00B9
-      ADC  A,>$00BA
-      ORA  A,>$00BB
-      ADD  A,>$00BC
+      ANDA >$00B5
+      BITA >$00B6
+      LDAA >$00B7
+      STAA >$00B8
+      EORA >$00B9
+      ADCA >$00BA
+      ORAA >$00BB
+      ADDA >$00BC
       CPX  >$00BD
       JSR  >$00BE
       LDS  >$00BF
       STS  >$00C0
-      SUB  B,#$C1
-      CMP  B,#$C2
-      SBC  B,#$C3
+      SUBB #$C1
+      CMPB #$C2
+      SBCB #$C3
       ADDD #$00C4
-      AND  B,#$C5
-      BIT  B,#$C6
-      LDA  B,#$C7
-      EOR  B,#$C9
-      ADC  B,#$CA
-      ORA  B,#$CB
-      ADD  B,#$CC
+      ANDB #$C5
+      BITB #$C6
+      LDAB #$C7
+      EORB #$C9
+      ADCB #$CA
+      ORAB #$CB
+      ADDB #$CC
       LDD  #$00CD
       LDX  #$00CF
-      SUB  B,$D1
-      CMP  B,$D2
-      SBC  B,$D3
+      SUBB $D1
+      CMPB $D2
+      SBCB $D3
       ADDD $D4
-      AND  B,$D5
-      BIT  B,$D6
-      LDA  B,$D7
-      STA  B,$D8
-      EOR  B,$D9
-      ADC  B,$DA
-      ORA  B,$DB
-      ADD  B,$DC
+      ANDB $D5
+      BITB $D6
+      LDAB $D7
+      STAB $D8
+      EORB $D9
+      ADCB $DA
+      ORAB $DB
+      ADDB $DC
       LDD  $DD
       STD  $DE
       LDX  $DF
       STX  $E0
-      SUB  B,225,X
-      CMP  B,226,X
-      SBC  B,227,X
+      SUBB 225,X
+      CMPB 226,X
+      SBCB 227,X
       ADDD 228,X
-      AND  B,229,X
-      BIT  B,230,X
-      LDA  B,231,X
-      STA  B,232,X
-      EOR  B,233,X
-      ADC  B,234,X
-      ORA  B,235,X
-      ADD  B,236,X
+      ANDB 229,X
+      BITB 230,X
+      LDAB 231,X
+      STAB 232,X
+      EORB 233,X
+      ADCB 234,X
+      ORAB 235,X
+      ADDB 236,X
       LDD  237,X
       STD  238,X
       LDX  239,X
       STX  240,X
-      SUB  B,>$00F1
-      CMP  B,>$00F2
-      SBC  B,>$00F3
+      SUBB >$00F1
+      CMPB >$00F2
+      SBCB >$00F3
       ADDD >$00F4
-      AND  B,>$00F5
-      BIT  B,>$00F6
-      LDA  B,>$00F7
-      STA  B,>$00F8
-      EOR  B,>$00F9
-      ADC  B,>$00FA
-      ORA  B,>$00FB
-      ADD  B,>$00FC
+      ANDB >$00F5
+      BITB >$00F6
+      LDAB >$00F7
+      STAB >$00F8
+      EORB >$00F9
+      ADCB >$00FA
+      ORAB >$00FB
+      ADDB >$00FC
       LDD  >$00FD
       STD  >$00FE
       LDX  >$00FF
