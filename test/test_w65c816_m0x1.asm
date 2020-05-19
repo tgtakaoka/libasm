@@ -14,7 +14,7 @@
 
         cpu     65816
 
-        assume  m:1
+        assume  m:0
         assume  x:1
         org     $100000
         include "test_mos6502.inc"
@@ -23,39 +23,6 @@
         org     $1001A0
         include "test_w65c02s.inc"
         org     $1001C0
-        include "test_w65c816.inc"
-
-        assume  m:0
-        assume  x:0
-        org     $110000
-        include "test_mos6502.inc"
-        org     $110160
-        include "test_w65sc02.inc"
-        org     $1101A0
-        include "test_w65c02s.inc"
-        org     $1101C0
-        include "test_w65c816.inc"
-
-        assume  m:0
-        assume  x:1
-        org     $120000
-        include "test_mos6502.inc"
-        org     $120160
-        include "test_w65sc02.inc"
-        org     $1201A0
-        include "test_w65c02s.inc"
-        org     $1201C0
-        include "test_w65c816.inc"
-
-        assume  m:1
-        assume  x:0
-        org     $130000
-        include "test_mos6502.inc"
-        org     $130160
-        include "test_w65sc02.inc"
-        org     $1301A0
-        include "test_w65c02s.inc"
-        org     $1301C0
         include "test_w65c816.inc"
 
         end

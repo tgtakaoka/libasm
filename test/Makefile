@@ -27,7 +27,10 @@ all: \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
 	test_w65c02s.s19 \
-	test_w65c816.s28 \
+	test_w65c816_m1x1.s28 \
+	test_w65c816_m0x0.s28 \
+	test_w65c816_m1x0.s28 \
+	test_w65c816_m0x1.s28 \
 	test_i8080.hex \
 	test_i8085.hex \
 	test_i8080_z80syn.hex \
