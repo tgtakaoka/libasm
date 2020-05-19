@@ -37,6 +37,7 @@ public:
     const char *listCpu() override { return "6800, 6801, 6301, 6811"; }
     bool setCpu(const char *cpu) override;
     const char *getCpu() override;
+    bool is6811() const { return _cpuType == MC68HC11; }
 
     struct EntryPage;
 
