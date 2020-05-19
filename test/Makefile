@@ -46,16 +46,16 @@ all: \
 
 %.hex: %.asm
 	asl $(ASL_FLAGS) $^
-	p2hex -r \$$-\$$ -l 32 -F Intel $*.p $@ > /dev/null
+	p2hex -k -r \$$-\$$ -l 32 -F Intel $*.p $@ > /dev/null
 %.s19: %.asm
 	asl $(ASL_FLAGS) $^
-	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+	p2hex -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 %.s28: %.asm
 	asl $(ASL_FLAGS) $^
-	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+	p2hex -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 %.s37: %.asm
 	asl $(ASL_FLAGS) $^
-	p2hex -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+	p2hex -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 
 .PHONY: clean clean-obj test \
 	test_mc6809  \
@@ -251,6 +251,7 @@ gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	./gen_mc6800 -u -C mc6800  -o gen_mc6800.asm
 	./gen_mc6800 -u -C mc6801  -o gen_mc6801.asm
 	./gen_mc6800 -u -C hd6301  -o gen_hd6301.asm
+	./gen_mc6800 -u -C mc68hc11  -o gen_mc68hc11.asm
 gen_mos6502: gen_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_mos6502 -u -C mos6502 -o gen_mos6502.asm

@@ -175,6 +175,25 @@ static const char TEXT_SLP[]  PROGMEM = "SLP";
 static const char TEXT_TIM[]  PROGMEM = "TIM";
 static const char TEXT_XGDX[] PROGMEM = "XGDX";
 
+// MC68HC11
+static const char TEXT_ABY[]   PROGMEM = "ABY";
+static const char TEXT_BRCLR[] PROGMEM = "BRCLR";
+static const char TEXT_BRSET[] PROGMEM = "BRSET";
+static const char TEXT_CPD[]   PROGMEM = "CPD";
+static const char TEXT_CPY[]   PROGMEM = "CPY";
+static const char TEXT_DEY[]   PROGMEM = "DEY";
+static const char TEXT_FDIV[]  PROGMEM = "FDIV";
+static const char TEXT_IDIV[]  PROGMEM = "IDIV";
+static const char TEXT_INY[]   PROGMEM = "INY";
+static const char TEXT_LDY[]   PROGMEM = "LDY";
+static const char TEXT_PSHY[]  PROGMEM = "PSHY";
+static const char TEXT_PULY[]  PROGMEM = "PULY";
+static const char TEXT_STOP[]  PROGMEM = "STOP";
+static const char TEXT_STY[]   PROGMEM = "STY";
+static const char TEXT_TSY[]   PROGMEM = "TSY";
+static const char TEXT_TYS[]   PROGMEM = "TYS";
+static const char TEXT_XGDY[]  PROGMEM = "XGDY";
+
 } // namespace mc6800
 } // namespace libasm
 

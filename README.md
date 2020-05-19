@@ -7,7 +7,7 @@ small environment (less than 15kB on Arduino).
 
 * Supported target CPUs.
   - MC6809, HD6309
-  - MC6800, MC6801, HD6301
+  - MC6800, MC6801, HD6301, MC68HC11
   - MOS6502, W65SC02, R65C02, W65C02S
   - W65816 (Support 24bit address and LONGA/LONGI)
   - i8080, i8085

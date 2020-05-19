@@ -32,8 +32,9 @@ public:
     Error searchNameAndAddrMode(InsnMc6800 &insn) const;
     Error searchOpCode(InsnMc6800 &insn) const;
     Error searchOpCodeAlias(InsnMc6800 &insn) const;
+    bool isPrefixCode(Config::opcode_t opCode);
 
-    const char *listCpu() override { return "6800, 6801, 6301"; }
+    const char *listCpu() override { return "6800, 6801, 6301, 6811"; }
     bool setCpu(const char *cpu) override;
     const char *getCpu() override;
 

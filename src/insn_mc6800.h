@@ -48,18 +48,25 @@ public:
     }
 
     Config::opcode_t opCode() const { return _opCode; }
-    void setOpCode(Config::opcode_t opCode) {
+    bool hasPrefix() const { return _prefixCode != 0; }
+    Config::opcode_t prefixCode() const { return _prefixCode; }
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefixCode = 0) {
         _opCode = opCode;
+        _prefixCode = prefixCode;
     }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
     void emitInsn() {
-        emitByte(_opCode);
+        if (hasPrefix())
+            emitByte(prefixCode());
+        emitByte(opCode());
     }
 
 private:
     Config::opcode_t _opCode;
+    Config::opcode_t _prefixCode;
     host::uint_t _flags;
 };
 
