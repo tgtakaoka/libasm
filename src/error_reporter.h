@@ -43,7 +43,7 @@ enum Error : host::uint_t {
     ILLEGAL_BIT_NUMBER = 16,    // HD6309
     GARBAGE_AT_END = 27,
 
-    // AsmOperand
+    // ValueParser
     ILLEGAL_CONSTANT = 100,
     OVERFLOW_RANGE = 101,
     MISSING_CLOSING_PAREN = 102,

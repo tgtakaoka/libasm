@@ -19,7 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-AsmIntelOperand parser;
+IntelValueParser parser;
 IntelValueFormatter formatter;
 TestSymtab symtab;
 TestAsserter asserter;

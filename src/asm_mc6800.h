@@ -30,7 +30,7 @@ class AsmMc6800
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableMc6800.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableMc6800.getCpu(); }
 
 private:
-    AsmMotoOperand _parser;
+    MotoValueParser _parser;
     RegMc6800 _regs;
 
     struct Operand : public ErrorReporter {

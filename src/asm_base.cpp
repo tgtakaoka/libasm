@@ -16,7 +16,7 @@
 
 #include "asm_base.h"
 #include "symbol_table.h"
-#include "asm_operand.h"
+#include "value_parser.h"
 
 #include <ctype.h>
 

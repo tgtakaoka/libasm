@@ -17,10 +17,10 @@
 #ifndef __TEST_EXPT_HELPER_H__
 #define __TEST_EXPT_HELPER_H__
 
-#include "asm_operand.h"
-#include "value_formatter.h"
 #include "test_symtab.h"
 #include "test_asserter.h"
+#include "value_formatter.h"
+#include "value_parser.h"
 
 extern libasm::test::TestSymtab symtab;
 extern libasm::test::TestAsserter asserter;

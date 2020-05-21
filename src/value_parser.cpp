@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-#include "asm_operand.h"
+#include "value_parser.h"
 
 #include <ctype.h>
 
 namespace libasm {
 
-const char *AsmOperand::eval(
+const char *ValueParser::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
     val32 = v.getUnsigned();
     return _next;
 }
 
-const char *AsmOperand::eval(
+const char *ValueParser::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
-    if (v.getUnsigned() < 0x10000L || (v.getSigned() < 0 && v.getSigned() >= -32768)) {
-        val16 = v.getUnsigned();
-    } else {
+    if (v.getSigned() < -32768L || (v.getSigned() >= 0 && v.getUnsigned() >= 0x10000L)) {
         setError(OVERFLOW_RANGE);
+    } else {
+        val16 = v.getUnsigned();
     }
     return _next;
 }
 
-const char *AsmOperand::eval(
+const char *ValueParser::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
-    if (v.getUnsigned() < 0x100 || (v.getSigned() < 0 && v.getSigned() >= -128)) {
-        val8 = v.getUnsigned();
-    } else {
+    if (v.getSigned() < -128 || (v.getSigned() >= 0 && v.getUnsigned() >= 0x100)) {
         setError(OVERFLOW_RANGE);
+    } else {
+        val8 = v.getUnsigned();
     }
     return _next;
 }
@@ -54,7 +54,7 @@ static bool isValidDigit(const char c, const uint8_t base) {
     return c >= '0' && c < '0' + base;
 }
 
-const char *AsmOperand::readChar(const char *scan, char &c) {
+const char *ValueParser::readChar(const char *scan, char &c) {
     setError(OK);
     if (*scan == '\\') {
         uint8_t base = 0;
@@ -112,7 +112,7 @@ static bool checkOverflow(
     return false;
 }
 
-Error AsmOperand::parseNumber(
+Error ValueParser::parseNumber(
     const char *p, Value &val, const uint8_t base, const char suffix) {
     if (!isValidDigit(*p, base))
         return setError(ILLEGAL_CONSTANT);
@@ -135,12 +135,12 @@ Error AsmOperand::parseNumber(
     return setError(OK);
 }
 
-void AsmOperand::skipSpaces() {
+void ValueParser::skipSpaces() {
     while (isspace(*_next))
         _next++;
 }
 
-AsmOperand::Value AsmOperand::eval(const char *expr, SymbolTable *symtab) {
+Value ValueParser::eval(const char *expr, SymbolTable *symtab) {
     _symtab = symtab;
     _next = expr;
     _stack.clear();
@@ -151,7 +151,7 @@ AsmOperand::Value AsmOperand::eval(const char *expr, SymbolTable *symtab) {
     return v;
 }
 
-AsmOperand::Value AsmOperand::parseExpr() {
+Value ValueParser::parseExpr() {
     Value value(readAtom());
     if (getError()) return Value();
     if (_stack.full()) {
@@ -177,7 +177,7 @@ AsmOperand::Value AsmOperand::parseExpr() {
     return Value();
 }
 
-AsmOperand::Value AsmOperand::readAtom() {
+Value ValueParser::readAtom() {
     skipSpaces();
     const char c = *_next++;
 
@@ -254,7 +254,7 @@ AsmOperand::Value AsmOperand::readAtom() {
     return val;
 }
 
-AsmOperand::Value AsmOperand::readCharacterConstant() {
+Value ValueParser::readCharacterConstant() {
     char c;
     _next = readChar(_next, c);
     if (getError()) return Value();
@@ -263,7 +263,7 @@ AsmOperand::Value AsmOperand::readCharacterConstant() {
 
 // Operator precedence (larger value means higher precedence).
 // The same order of C/C++ language.
-AsmOperand::Operator AsmOperand::readOperator() {
+ValueParser::Operator ValueParser::readOperator() {
     skipSpaces();
     switch (*_next) {
     case '*': _next++; return Operator(OP_MUL, 13);
@@ -291,13 +291,13 @@ AsmOperand::Operator AsmOperand::readOperator() {
     return Operator(OP_NONE, 0);
 }
 
-bool AsmOperand::isSymbolLetter(char c, bool head) const {
+bool ValueParser::isSymbolLetter(char c, bool head) const {
     if (isalpha(c) || c == '_') return true;
     if (head && c == '.') return true;
     return !head && isdigit(c);
 }
 
-const char *AsmOperand::scanSymbol(const char *scan) const {
+const char *ValueParser::scanSymbol(const char *scan) const {
     while (isSymbolLetter(*scan))
         scan++;
     return scan;
@@ -317,7 +317,7 @@ static uint32_t shift_right(uint32_t value, uint8_t count, bool sign) {
     return value;
 }
 
-AsmOperand::Value AsmOperand::evalExpr(
+Value ValueParser::evalExpr(
     const Op op, const Value lhs, const Value rhs) {
     if (lhs.isUndefined() || rhs.isUndefined())
         return Value();
@@ -380,11 +380,11 @@ AsmOperand::Value AsmOperand::evalExpr(
     }
 }
 
-bool AsmOperand::isCurrentOriginSymbol(char c) const {
+bool ValueParser::isCurrentOriginSymbol(char c) const {
     return c == '*' || c == '$';
 }
 
-Error AsmOperand::readNumber(Value &val) {
+Error ValueParser::readNumber(Value &val) {
     const char *p = _next;
     if (*p == '0') {
         const char c = toupper(p[1]);
@@ -400,7 +400,7 @@ Error AsmOperand::readNumber(Value &val) {
     return setError(ILLEGAL_CONSTANT);
 }
 
-Error AsmOperand::scanNumberEnd(
+Error ValueParser::scanNumberEnd(
     const char *p, const uint8_t base, char suffix) {
     while (isValidDigit(*p, base))
         p++;
@@ -409,11 +409,11 @@ Error AsmOperand::scanNumberEnd(
     return OK;
 }
 
-bool AsmMotoOperand::isCurrentOriginSymbol(char c) const {
+bool MotoValueParser::isCurrentOriginSymbol(char c) const {
     return c == '*';
 }
 
-Error AsmMotoOperand::readNumber(Value &val) {
+Error MotoValueParser::readNumber(Value &val) {
     const char *p = _next;
     if (*p == '$' && scanNumberEnd(p + 1, 16) == OK)
         return parseNumber(p + 1, val, 16);
@@ -423,14 +423,14 @@ Error AsmMotoOperand::readNumber(Value &val) {
         return parseNumber(p + 1, val, 2);
     if (scanNumberEnd(_next, 10) == OK)
         return parseNumber(p, val, 10);
-    return AsmOperand::readNumber(val);
+    return ValueParser::readNumber(val);
 }
 
-bool AsmIntelOperand::isCurrentOriginSymbol(char c) const {
+bool IntelValueParser::isCurrentOriginSymbol(char c) const {
     return c == '$';
 }
 
-Error AsmIntelOperand::readNumber(Value &val) {
+Error IntelValueParser::readNumber(Value &val) {
     if (scanNumberEnd(_next, 16, 'H') == OK)
         return parseNumber(_next, val, 16, 'H');
     if (scanNumberEnd(_next, 8, 'O') == OK)
@@ -439,7 +439,7 @@ Error AsmIntelOperand::readNumber(Value &val) {
         return parseNumber(_next, val, 2, 'B');
     if (scanNumberEnd(_next, 10) == OK)
         return parseNumber(_next, val, 10);
-    return AsmOperand::readNumber(val);
+    return ValueParser::readNumber(val);
 }
 
 } // namespace libasm

@@ -30,7 +30,7 @@ class AsmCdp1802
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableCdp1802.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableCdp1802.getCpu(); }
 
 private:
-    AsmIntelOperand _parser;
+    IntelValueParser _parser;
     RegCdp1802 _regs;
 
     Error encodeRegn(InsnCdp1802 &insn);

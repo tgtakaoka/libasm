@@ -30,7 +30,7 @@ class AsmZ80
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableZ80.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableZ80.getCpu(); }
 
 private:
-    AsmIntelOperand _parser;
+    IntelValueParser _parser;
     RegZ80 _regs;
 
     struct Operand : public ErrorReporter {

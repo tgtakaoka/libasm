@@ -30,7 +30,7 @@ class AsmIns8070
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableIns8070.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableIns8070.getCpu(); }
 
 private:
-    class _AsmOperand : public AsmOperand {
+    class _ValueParser : public ValueParser {
     protected:
         bool isCurrentOriginSymbol(char c) const override { return c == '$'; }
     } _parser;

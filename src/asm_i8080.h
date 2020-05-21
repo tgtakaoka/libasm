@@ -30,7 +30,7 @@ class AsmI8080
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableI8080.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableI8080.getCpu(); }
 
 private:
-    AsmIntelOperand _parser;
+    IntelValueParser _parser;
     RegI8080 _regs;
 
     Error encodePointerReg(InsnI8080 &insn);

@@ -17,11 +17,11 @@
 #ifndef __ASM_BASE_H__
 #define __ASM_BASE_H__
 
-#include "asm_operand.h"
 #include "config_base.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "symbol_table.h"
+#include "value_parser.h"
 
 #include <stdint.h>
 
@@ -34,7 +34,7 @@ public:
     Error encode(
         const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
-    virtual AsmOperand *getParser() = 0;
+    virtual ValueParser *getParser() = 0;
     const char *errorAt() const { return _scan; }
 
 protected:
@@ -50,7 +50,7 @@ protected:
 
     template<typename T>
     Error getOperand(T &val) {
-        AsmOperand *parser = getParser();
+        ValueParser *parser = getParser();
         _scan = parser->eval(_scan, val, _symtab);
         if (setError(*parser) == UNDEFINED_SYMBOL)
             return OK;

@@ -30,7 +30,7 @@ class AsmW65C816
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableW65C816.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableW65C816.getCpu(); }
 
 private:
-    AsmMotoOperand _parser;
+    MotoValueParser _parser;
     mos6502::RegMos6502 _regs;
     bool _long_acc = false;
     bool _long_idx = false;

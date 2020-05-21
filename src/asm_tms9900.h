@@ -30,7 +30,7 @@ class AsmTms9900
     : public Assembler,
       public Config {
 public:
-    AsmOperand *getParser() override { return &_parser; }
+    ValueParser *getParser() override { return &_parser; }
 
     // Config
     const char *listCpu() const override { return TableTms9900.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableTms9900.getCpu(); }
 
 private:
-    AsmIntelOperand _parser;
+    IntelValueParser _parser;
     RegTms9900 _regs;
 
     Error checkComma();

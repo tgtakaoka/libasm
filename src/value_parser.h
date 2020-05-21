@@ -14,15 +14,63 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_OPERAND_H__
-#define __ASM_OPERAND_H__
+#ifndef __VALUE_PARSER_H__
+#define __VALUE_PARSER_H__
 
 #include "symbol_table.h"
 #include "error_reporter.h"
 
 namespace libasm {
 
-class AsmOperand : public ErrorReporter {
+class Value {
+public:
+    static Value makeSigned(int32_t value) {
+        return Value(value, SIGNED);
+    }
+
+    static Value makeUnsigned(uint32_t value) {
+        return Value(value, UNSIGNED);
+    }
+
+    Value() : _value(0), _type(UNDEFINED) {}
+
+    bool isUndefined() const { return _type == UNDEFINED; }
+    bool isSigned()    const { return _type == SIGNED; }
+    bool isUnsigned()  const { return _type == UNSIGNED; }
+
+    void setSigned(int32_t value) {
+        _value = value;
+        _type = SIGNED;
+    }
+
+    void setUnsigned(uint32_t value) {
+        _value = value;
+        _type = UNSIGNED;
+    }
+
+    int32_t getSigned() const {
+        return static_cast<int32_t>(_value);
+    }
+
+    uint32_t getUnsigned() const {
+        return _value;
+    }
+
+private:
+    enum ValueType : uint8_t {
+        UNDEFINED,
+        SIGNED,
+        UNSIGNED,
+    };
+
+    uint32_t _value;
+    ValueType _type;
+
+    Value(uint32_t value, ValueType type)
+        : _value(value), _type(type) {}
+};
+
+class ValueParser : public ErrorReporter {
 public:
     const char *eval(const char *expr, uint32_t &val32, SymbolTable *symtab);
     const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
@@ -32,38 +80,6 @@ public:
     const char *readChar(const char *scan, char &c);
 
 protected:
-    class Value {
-    public:
-        static Value makeSigned(int32_t value) {
-            return Value(value, SIGNED);
-        }
-        static Value makeUnsigned(uint32_t value) {
-            return Value(value, UNSIGNED);
-        }
-        Value() : _value(0), _type(UNDEF) {}
-        void setSigned(int32_t value) {
-            _value = value;
-            _type = SIGNED;
-        }
-        void setUnsigned(uint32_t value) {
-            _value = value;
-            _type = UNSIGNED;
-        }
-        bool isUndefined() const { return _type == UNDEF; }
-        bool isSigned() const { return _type == SIGNED; }
-        bool isUnsigned() const { return _type == UNSIGNED; }
-        int32_t getSigned() const { return static_cast<int32_t>(_value); }
-        uint32_t getUnsigned() const { return _value; }
-    private:
-        uint32_t _value;
-        enum ValueType : uint8_t {
-            UNDEF,
-            SIGNED,
-            UNSIGNED,
-        } _type;
-        Value(uint32_t value, ValueType type) : _value(value), _type(type) {}
-    };
-
     const char *_next;
 
     virtual bool isCurrentOriginSymbol(char c) const;
@@ -135,13 +151,13 @@ private:
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
 };
 
-class AsmMotoOperand : public AsmOperand {
+class MotoValueParser : public ValueParser {
 protected:
     bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(Value &val) override;
 };
 
-class AsmIntelOperand : public AsmOperand {
+class IntelValueParser : public ValueParser {
 protected:
     bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(Value &val) override;
