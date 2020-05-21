@@ -37,6 +37,8 @@ public:
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned()    const { return _type == SIGNED; }
     bool isUnsigned()  const { return _type == UNSIGNED; }
+    bool overflowUint8() const;
+    bool overflowUint16() const;
 
     void setSigned(int32_t value) {
         _value = value;

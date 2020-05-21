@@ -20,6 +20,14 @@
 
 namespace libasm {
 
+bool Value::overflowUint8() const {
+    return getSigned() < -128 || (getSigned() >= 0 && getUnsigned() >= 0x100);
+}
+
+bool Value::overflowUint16() const {
+    return getSigned() < -32768L || (getSigned() >= 0 && getUnsigned() >= 0x10000L);
+}
+
 const char *ValueParser::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
     Value v(eval(expr, symtab));
