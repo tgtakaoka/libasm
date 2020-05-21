@@ -28,20 +28,29 @@ namespace test {
 class TestMemory : public DisMemory {
 public:
     TestMemory();
+    virtual ~TestMemory();
+
     void setMemory(const uint8_t *data, host::uint_t size);
-    void setMemory(const uint16_t*data, host::uint_t size);
+    void setMemory(const uint16_t *data, host::uint_t size);
     bool hasNext() const override;
     void setAddress(uint32_t addr);
-    char *dump(char *out);
+    const uint8_t *bytes() const;
+    host::uint_t length() const;
+    uint32_t origin() const;
+    char *dump(char *out) const;
 
 protected:
     uint8_t nextByte() override;
 
 private:
-    const uint8_t *_bytes;
-    const uint16_t *_words;
-    host::uint_t _size;
+    size_t _size;
+    uint8_t *_bytes;
+    uint32_t _origin;
+    host::uint_t _length;;
     host::uint_t _index;
+    const uint16_t *_words;
+
+    void ensureBytes(size_t size);
 };
 
 } // namespace test

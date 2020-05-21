@@ -16,14 +16,12 @@
 
 #include "dis_mc6800.h"
 #include "test_dis_helper.h"
+#include "test_symtab.h"
 
 using namespace libasm;
 using namespace libasm::mc6800;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisMc6800 dis6800;
 Disassembler &disassembler(dis6800);
 

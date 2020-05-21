@@ -17,6 +17,7 @@
 #ifndef __TEST_ASSERTER_H__
 #define __TEST_ASSERTER_H__
 
+#include <stddef.h>
 #include <stdint.h>
 
 namespace libasm {

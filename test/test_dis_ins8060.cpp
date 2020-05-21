@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::ins8060;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisIns8060 dis8060;
 Disassembler &disassembler(dis8060);
 

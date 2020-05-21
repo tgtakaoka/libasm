@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::w65c816;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisW65C816 dis65c816;
 Disassembler &disassembler(dis65c816);
 

@@ -17,43 +17,40 @@
 #ifndef __TEST_DIS_HELPER_H__
 #define __TEST_DIS_HELPER_H__
 
+#include "dis_base.h"
 #include "test_asserter.h"
 #include "test_memory.h"
 #include "test_symtab.h"
-#include "symbol_table.h"
 
-#include <stdio.h>
+namespace libasm {
+namespace test {
 
-#define __ASSERT(file, line, error, addr, mnemonic, expected_opr)       \
-    do {                                                                \
-        Insn insn;                                                      \
-        char actual_opr[40], message[80];                               \
-        memory.setAddress(addr);                                        \
-        disassembler.decode(memory, insn, actual_opr, &symtab, true);   \
-        sprintf(message, "%s:%d: %s: ", file, line, #mnemonic);         \
-        memory.dump(message + strlen(message));                         \
-        asserter.equals(message, error, disassembler.getError());       \
-        if (error == OK) {                                              \
-            asserter.equals(message, #mnemonic, insn.name());           \
-            asserter.equals(message, expected_opr, actual_opr);         \
-            asserter.equals(message,                                    \
-                            mnemonic, sizeof(mnemonic),                 \
-                            insn.bytes(), insn.length());               \
-        }                                                               \
+extern TestAsserter asserter;
+extern TestMemory memory;
+extern TestSymtab symtab;
+
+void dis_assert(
+    const char *file, int line, Error error,
+    const char *expected_name, const char *expected_opr,
+    Disassembler &disassembler);
+
+} // test
+} // namespace
+
+#define __VASSERT(file, line, error, addr, name, opr, ...)          \
+    do {                                                            \
+        const Config::opcode_t name[] = { __VA_ARGS__ };            \
+        memory.setMemory(name, sizeof(name));                       \
+        memory.setAddress(addr);                                    \
+        dis_assert(file, line, error, #name, opr, disassembler);    \
     } while (0)
-#define __VASSERT(file, line, error, addr, mnemonic, opr, ...)  \
-    do {                                                        \
-        const Config::opcode_t mnemonic[] = { __VA_ARGS__ };    \
-        memory.setMemory(mnemonic, sizeof(mnemonic));           \
-        __ASSERT(file, line, error, addr, mnemonic, opr);       \
-    } while (0)
-#define EATEST(error, addr, mnemonic, opr, ...)                         \
-    __VASSERT(__FILE__, __LINE__, error, addr, mnemonic, opr, __VA_ARGS__)
-#define ATEST(addr, mnemonic, opr, ...)                                 \
-    __VASSERT(__FILE__, __LINE__, OK, addr, mnemonic, opr, __VA_ARGS__)
-#define ETEST(error, mnemonic, opr, ...)                                \
-    __VASSERT(__FILE__, __LINE__, error, 0x0000, mnemonic, opr, __VA_ARGS__)
-#define TEST(mnemonic, opr, ...) ETEST(OK, mnemonic, opr, __VA_ARGS__)
+#define EATEST(error, addr, name, opr, ...)                             \
+    __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
+#define ATEST(addr, name, opr, ...)                                 \
+    __VASSERT(__FILE__, __LINE__, OK, addr, name, opr, __VA_ARGS__)
+#define ETEST(error, name, opr, ...)                                    \
+    __VASSERT(__FILE__, __LINE__, error, 0x0000, name, opr, __VA_ARGS__)
+#define TEST(name, opr, ...) ETEST(OK, name, opr, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test)
 

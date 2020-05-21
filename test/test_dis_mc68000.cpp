@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::mc68000;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisMc68000 dis68000;
 Disassembler &disassembler(dis68000);
 

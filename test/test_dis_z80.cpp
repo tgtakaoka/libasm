@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::z80;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisZ80 disz80;
 Disassembler &disassembler(disz80);
 

@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::mc6809;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisMc6809 dis6809;
 Disassembler &disassembler(dis6809);
 

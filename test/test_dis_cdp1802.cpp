@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::cdp1802;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisCdp1802 dis1802;
 Disassembler &disassembler(dis1802);
 

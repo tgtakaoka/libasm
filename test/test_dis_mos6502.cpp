@@ -21,9 +21,6 @@ using namespace libasm;
 using namespace libasm::mos6502;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestMemory memory;
-TestSymtab symtab;
 DisMos6502 dis6502;
 Disassembler &disassembler(dis6502);
 
