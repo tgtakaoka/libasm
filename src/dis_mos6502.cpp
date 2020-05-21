@@ -31,7 +31,7 @@ Error DisMos6502::decodeImmediate(
     } else {
         outConstant(val);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMos6502::decodeAbsolute(
@@ -71,7 +71,7 @@ Error DisMos6502::decodeAbsolute(
     }
     if (indirect) *_operands++ = ')';
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMos6502::decodeZeroPage(
@@ -115,7 +115,7 @@ Error DisMos6502::decodeZeroPage(
         *_operands++ = ',';
         return decodeRelative(memory, insn);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMos6502::decodeRelative(
@@ -131,7 +131,7 @@ Error DisMos6502::decodeRelative(
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMos6502::decode(
@@ -146,11 +146,11 @@ Error DisMos6502::decode(
 
     switch (insn.addrMode()) {
     case IMPL:
-        return setError(OK);
+        return setOK();
     case ACCM:
         _operands = _regs.outRegName(_operands, REG_A);
         *_operands = 0;
-        return setError(OK);
+        return setOK();
     case IMMA:
     case IMMX:
         return decodeImmediate(memory, insn);

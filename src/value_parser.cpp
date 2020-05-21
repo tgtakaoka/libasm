@@ -66,7 +66,7 @@ static bool isValidDigit(const char c, const uint8_t base) {
 }
 
 const char *ValueParser::readChar(const char *scan, char &c) {
-    setError(OK);
+    setOK();
     if (*scan == '\\') {
         uint8_t base = 0;
         if (toupper(scan[1]) == 'X') base = 16;
@@ -143,7 +143,7 @@ Error ValueParser::parseNumber(
     } else {
         val.setSigned(v);
     }
-    return setError(OK);
+    return setOK();
 }
 
 void ValueParser::skipSpaces() {
@@ -156,7 +156,7 @@ const char *ValueParser::eval(
     _symtab = symtab;
     _next = expr;
     _stack.clear();
-    setError(OK);
+    setOK();
     value = parseExpr();
     if (getError() == OK && value.isUndefined())
         setError(UNDEFINED_SYMBOL);

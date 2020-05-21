@@ -47,12 +47,12 @@ static const char *parseSize(const char *line, EaSize &size) {
 }
 
 Error AsmMc68000::checkSize(InsnMc68000 &insn, const EaSize size) {
-    if (size == insn.size()) return setError(OK);
+    if (size == insn.size()) return setOK();
     if (size == SZ_NONE && insn.size() != SZ_NONE)
         return setError(ILLEGAL_SIZE);
     if (insn.size() == SZ_NONE) {
         insn.setSize(size);
-        return setError(OK);
+        return setOK();
     }
     return setError(ILLEGAL_SIZE);
 }
@@ -61,15 +61,15 @@ Error AsmMc68000::checkSize(const uint32_t val32, const EaSize size, bool uint) 
     const int32_t signed32 = static_cast<int32_t>(val32);
     if (size == SZ_BYTE) {
         if (!uint && signed32 >= -128 && signed32 < 128)
-            return setError(OK);
+            return setOK();
         if (uint && (val32 < 0x100 || (signed32 < 0 && signed32 >= -128)))
-            return setError(OK);
+            return setOK();
     }
     if (size == SZ_WORD) {
         if (!uint && signed32 >= -32768L && signed32 < 32768L)
-            return setError(OK);
+            return setOK();
         if (uint && (val32 < 0x10000L || (signed32 < 0 && signed32 >= -32768)))
-            return setError(OK);
+            return setOK();
     }
     return setError(OVERFLOW_RANGE);
 }
@@ -148,7 +148,7 @@ Error AsmMc68000::emitEffectiveAddr(
     }
     if (mode == M_IMM_DATA)
         return emitImmediateData(insn, insn.size(), ea.val32, ea.getError());
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmMc68000::encodeImplied(
@@ -161,7 +161,7 @@ Error AsmMc68000::encodeImplied(
         return emitImmediateData(insn, SZ_WORD, op1.val32, op1.getError());
     }
     insn.emitInsn();
-    return setError(OK);
+    return setOK();
 }
 
 // ORI, ANDI, SUBI, ADDI, EORI, CMPI
@@ -216,7 +216,7 @@ Error AsmMc68000::encodeAddrReg(
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
         insn.emitInsn();
-        return setError(OK);
+        return setOK();
     }
     // LINK
     if (checkSize(insn, SZ_WORD)) return getError();
@@ -239,7 +239,7 @@ Error AsmMc68000::encodeDataReg(
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
         insn.emitInsn();
-        return setError(OK);
+        return setOK();
     }
     // DBcc
     if (op2.mode == M_ABS_LONG || op2.mode == M_ABS_SHORT
@@ -264,7 +264,7 @@ Error AsmMc68000::encodeTrapVec(
     if (op1.val32 >= 16) return setError(OVERFLOW_RANGE);
     insn.embed(static_cast<uint8_t>(op1.val32));
     insn.emitInsn();
-    return setError(OK);
+    return setOK();
 }
 
 // NBCD, PEA, TAS
@@ -375,7 +375,7 @@ Error AsmMc68000::encodeSignExt(
     insn.embed(insn.size() == SZ_WORD ? 044200 : 044300);
     insn.embed(RegMc68000::encodeRegNo(op1.reg));
     insn.emitInsn();
-    return setError(OK);
+    return setOK();
 }
 
 // BRA, BSR, Bcc
@@ -633,7 +633,7 @@ Error AsmMc68000::encodeRegsExg(
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 0);
     }
     insn.emitInsn();
-    return setError(OK);
+    return setOK();
 }
 
 // MOVE, MOVEA
@@ -664,13 +664,13 @@ Error AsmMc68000::encodeMoveOpr(
             insn.setOpCode(047150);
             insn.embed(RegMc68000::encodeRegNo(op2.reg));
             insn.emitInsn();
-            return setError(OK);
+            return setOK();
         }
         if (op1.mode == M_AREG && op2.reg == REG_USP) {
             insn.setOpCode(047140);
             insn.embed(RegMc68000::encodeRegNo(op1.reg));
             insn.emitInsn();
-            return setError(OK);
+            return setOK();
         }
         return setError(ILLEGAL_OPERAND_MODE);
     }
@@ -724,20 +724,20 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
     }
     opr.mode = M_MULT_REGS;
     _scan = p;
-    return opr.setError(OK);
+    return opr.setOK();
 }
 
 Error AsmMc68000::parseOperand(Operand &opr) {
     opr.reset();
     const char *p = _scan;
     if (endOfLine(p))
-        return opr.setError(OK);
+        return opr.setOK();
     if (*p == '#') {
         _scan = p + 1;
         if (getOperand(opr.val32)) return getError();
         opr.setError(getError());
         opr.mode = M_IMM_DATA;
-        return setError(OK);
+        return setOK();
     }
     const char pdec = *p;
     if (pdec == '-' && p[1] == '(')
@@ -756,7 +756,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 opr.mode = (pdec == '-') ? M_PDEC : M_AIND;
             }
             _scan = p;
-            return setError(opr.setError(OK));
+            return setError(opr.setOK());
         }
         _scan = p;
         if (getOperand(opr.val32)) return opr.setError(getError());
@@ -774,7 +774,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 return opr.setError(UNKNOWN_OPERAND);
             }
             _scan = p;
-            return setError(OK);
+            return setOK();
         }
         if (*p == ',') {
             p = skipSpaces(p + 1);
@@ -787,7 +787,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 _scan = p + 1;
                 if (opr.mode == M_DISP && checkSize(opr.val32, SZ_WORD, false))
                     return opr.setError(*this);
-                return setError(OK);
+                return setOK();
             }
             if (*p != ',')
                 return opr.setError(UNKNOWN_OPERAND);
@@ -803,7 +803,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
             if (opr.mode == M_INDX && checkSize(opr.val32, SZ_BYTE, false))
                 return opr.setError(*this);
             _scan = p;
-            return setError(OK);
+            return setOK();
         }
         return opr.setError(UNKNOWN_OPERAND);
     }
@@ -819,13 +819,13 @@ Error AsmMc68000::parseOperand(Operand &opr) {
             opr.mode = M_DREG;  // include other register SR/CCR/USP
         }
         _scan = p;
-        return opr.setError(OK);
+        return opr.setOK();
     }
     _scan = p;
     if (getOperand(opr.val32)) return opr.setError(getError());
     if (getError()) opr.setError(getError());
     opr.mode = M_LABEL;
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmMc68000::encode(Insn &_insn) {

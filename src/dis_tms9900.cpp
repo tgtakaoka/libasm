@@ -50,7 +50,7 @@ Error DisTms9900::decodeOperand(
             *_operands++ = '+';
     }
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisTms9900::decodeImmediate(
@@ -58,7 +58,7 @@ Error DisTms9900::decodeImmediate(
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     outAddress(val);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
@@ -66,7 +66,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
     delta <<= 1;
     const Config::uintptr_t addr = insn.address() + 2 + delta;
     outAddress(addr, false);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisTms9900::decode(
@@ -82,12 +82,12 @@ Error DisTms9900::decode(
 
     switch (insn.addrMode()) {
     case INH:
-        return setError(OK);
+        return setOK();
     case IMM:
         return decodeImmediate(memory, insn);
     case REG:
         _operands = _regs.outRegName(_operands, opCode);
-        return setError(OK);
+        return setOK();
     case REG_IMM:
         _operands = _regs.outRegName(_operands, opCode);
         *_operands++ = ',';
@@ -98,7 +98,7 @@ Error DisTms9900::decode(
         const host::uint_t count = (opCode >> 4) & 0x0f;
         if (count == 0) _operands = _regs.outRegName(_operands, 0);
         else outConstant(static_cast<uint8_t>(count), 10);
-        return setError(OK);
+        return setOK();
     }
     case SRC:
         return decodeOperand(memory, insn, opCode);
@@ -107,7 +107,7 @@ Error DisTms9900::decode(
             return getError();
         *_operands++ = ',';
         _operands = _regs.outRegName(_operands, opCode >> 6);
-        return setError(OK);
+        return setOK();
     case CNT_SRC:
     case XOP_SRC: {
         if (decodeOperand(memory, insn, opCode))
@@ -122,7 +122,7 @@ Error DisTms9900::decode(
         } else {
             outConstant(static_cast<uint8_t>(count), 10);
         }
-        return setError(OK);
+        return setOK();
     }
     case DST_SRC: {
         if (decodeOperand(memory, insn, opCode))
@@ -133,7 +133,7 @@ Error DisTms9900::decode(
     }
     case REL:
         decodeRelative(insn);
-        return setError(OK);
+        return setOK();
     case CRU_OFF: {
         const int8_t offset = static_cast<int8_t>(opCode & 0xff);
         const char *label = lookup(offset);
@@ -142,7 +142,7 @@ Error DisTms9900::decode(
         } else {
             outConstant(offset, 10);
         }
-        return setError(OK);
+        return setOK();
     }
     default:
         return setError(INTERNAL_ERROR);

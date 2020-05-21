@@ -59,7 +59,7 @@ Error DisIns8070::decodeImplied(
             *_operands++ = ',';
             outOperand(insn.rightOpr(), insn.opCode());
         }
-        return setError(OK);
+        return setOK();
     }
     return setError(ILLEGAL_OPERAND);
 }
@@ -80,7 +80,7 @@ Error DisIns8070::decodeImmediate(
     } else {
         outConstant(val, 16);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisIns8070::decodeAbsolute(
@@ -95,7 +95,7 @@ Error DisIns8070::decodeAbsolute(
     } else {
         outConstant(target, 16);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisIns8070::decodeRelative(
@@ -133,7 +133,7 @@ Error DisIns8070::decodeRelative(
             outOperand(OPR_PN, insn.opCode());
         }
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisIns8070::decodeGeneric(
@@ -158,7 +158,7 @@ Error DisIns8070::decodeGeneric(
         } else {
             outConstant(addr, 16, false);
         }
-        return setError(OK);
+        return setOK();
     }
     return UNKNOWN_INSTRUCTION;
 }

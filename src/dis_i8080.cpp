@@ -30,7 +30,7 @@ Error DisI8080::decodeImmediate8(
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
     outConstant(val);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisI8080::decodeImmediate16(
@@ -44,7 +44,7 @@ Error DisI8080::decodeImmediate16(
     } else {
         outConstant(val);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisI8080::decodeDirect(
@@ -57,7 +57,7 @@ Error DisI8080::decodeDirect(
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisI8080::decodeIoaddr(
@@ -65,7 +65,7 @@ Error DisI8080::decodeIoaddr(
     uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
     outConstant(ioaddr, 16, false);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisI8080::decode(
@@ -107,7 +107,7 @@ Error DisI8080::decode(
 
     switch (insn.addrMode()) {
     case INHR:
-        return setError(OK);
+        return setOK();
     case IMM8:
         return decodeImmediate8(memory, insn);
     case IMM16:

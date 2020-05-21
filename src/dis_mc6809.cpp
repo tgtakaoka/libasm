@@ -34,7 +34,7 @@ Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn) {
     } else {
         outConstant(dir, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn) {
@@ -47,7 +47,7 @@ Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn) {
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
@@ -173,7 +173,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
     }
     if (indir) *_operands++ = ']';
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
@@ -194,7 +194,7 @@ Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
@@ -229,7 +229,7 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeStackOp(DisMemory &memory, InsnMc6809 &insn) {
@@ -244,7 +244,7 @@ Error DisMc6809::decodeStackOp(DisMemory &memory, InsnMc6809 &insn) {
             n++;
         }
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn) {
@@ -261,7 +261,7 @@ Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn) {
     outRegister(src);
     *_operands++ = ',';
     outRegister(dst);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn) {
@@ -290,7 +290,7 @@ Error DisMc6809::decodeBitOperation(DisMemory &memory, InsnMc6809 &insn) {
     if (decodeDirectPage(memory, insn)) return getError();
     *_operands++ = '.';
     outConstant(uint8_t((post >> 3) & 7));
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn) {
@@ -308,7 +308,7 @@ Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn) {
     const char dstModeChar = _regs.tfmDstModeChar(mode);
     if (dstModeChar) *_operands++ = dstModeChar;
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
@@ -326,7 +326,7 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INHR:  return setError(OK);
+    case INHR:  return setOK();
     case DIRP:  return decodeDirectPage(memory, insn);
     case EXTD:  return decodeExtended(memory, insn);
     case INDX:  return decodeIndexed(memory, insn);

@@ -58,7 +58,7 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
 }
 
 Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
-    op.setError(OK);
+    op.setOK();
     op.mode = UNDEF;
     const char *p = _scan;
     const bool autoDisp = (*p == '@');
@@ -71,12 +71,12 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
         if (!autoDisp && op.reg == REG_UNDEF) {
             op.mode = INHR;
             _scan = p;
-            return setError(OK);
+            return setOK();
         }
         if (!autoDisp && op.reg != REG_E) {
             op.mode = PNTR;
             _scan = p;
-            return setError(OK);
+            return setOK();
         }
         return setError(UNKNOWN_OPERAND);
     }
@@ -97,11 +97,11 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
         if (*p != ')') return setError(UNKNOWN_OPERAND);
         op.mode = autoDisp ? INDX : DISP;
         _scan = skipSpaces(p + 1);
-        return setError(OK);
+        return setOK();
     } else if (op.reg == REG_UNDEF && !autoDisp) {
         op.mode = REL8;        // May be IMM8 too.
         _scan = p;
-        return setError(OK);
+        return setOK();
     }
     return setError(UNKNOWN_OPERAND);
 }

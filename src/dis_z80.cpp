@@ -200,7 +200,7 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
         break;
     }
 
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
@@ -222,7 +222,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
         *_operands++ = ',';
         outConstant(val);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeImmediate16(InsnZ80 &insn, uint16_t val) {
@@ -239,7 +239,7 @@ Error DisZ80::decodeImmediate16(InsnZ80 &insn, uint16_t val) {
     }
     *_operands++ = ',';
     outConstant(val);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
@@ -299,7 +299,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
     default:
         break;
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
@@ -324,7 +324,7 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
     default:
         break;
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
@@ -335,7 +335,7 @@ Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
     }
     const Config::uintptr_t addr = insn.address() + 2 + delta;
     outAddress(addr, false);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeIndexed(InsnZ80 &insn, int8_t offset) {
@@ -371,7 +371,7 @@ Error DisZ80::decodeIndexed(InsnZ80 &insn, int8_t offset) {
     default:
         break;
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeIndexedImmediate8(
@@ -379,7 +379,7 @@ Error DisZ80::decodeIndexedImmediate8(
     outIndexOffset(insn, offset);
     *_operands++ = ',';
     outConstant(val);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decodeIndexedBitOp(
@@ -402,7 +402,7 @@ Error DisZ80::decodeIndexedBitOp(
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisZ80::decode(

@@ -51,7 +51,7 @@ public:
             return EaMc68000::satisfy(mode, categories);
         }
         void reset() {
-            setError(OK);
+            setOK();
             mode = M_NONE;
             reg = index = REG_UNDEF;
             size = SZ_NONE;

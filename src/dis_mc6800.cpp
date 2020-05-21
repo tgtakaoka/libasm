@@ -49,7 +49,7 @@ bool DisMc6800::outAccumulator(InsnMc6800 &insn) {
 Error DisMc6800::decodeInherent(
     DisMemory &memory, InsnMc6800& insn) {
     outAccumulator(insn);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6800::decodeDirectPage(
@@ -64,7 +64,7 @@ Error DisMc6800::decodeDirectPage(
     } else {
         outConstant(dir, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6800::decodeExtended(
@@ -79,7 +79,7 @@ Error DisMc6800::decodeExtended(
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6800::decodeIndexed(
@@ -95,7 +95,7 @@ Error DisMc6800::decodeIndexed(
     }
     *_operands++ = ',';
     outRegister(REG_X);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6800::decodeRelative(
@@ -110,7 +110,7 @@ Error DisMc6800::decodeRelative(
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc6800::decodeImmediate(
@@ -138,7 +138,7 @@ Error DisMc6800::decodeImmediate(
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
-    return setError(OK);
+    return setOK();
 }
 
 static int8_t decodeBitNumber(uint8_t val, Config::opcode_t opCode) {

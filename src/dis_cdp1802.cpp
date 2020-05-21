@@ -27,7 +27,7 @@ Error DisCdp1802::outDecimal(uint8_t val) {
     } else {
         outConstant(val, 10);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisCdp1802::outImm8(uint8_t val) {
@@ -37,7 +37,7 @@ Error DisCdp1802::outImm8(uint8_t val) {
     } else {
         outConstant(val, 16);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisCdp1802::outAddr(Config::uintptr_t addr) {
@@ -47,7 +47,7 @@ Error DisCdp1802::outAddr(Config::uintptr_t addr) {
     } else {
         outConstant(addr, 16, false);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisCdp1802::decode(
@@ -84,7 +84,7 @@ Error DisCdp1802::decode(
     default:
         return setError(INTERNAL_ERROR);
     }
-    return setError(OK);
+    return setOK();
 }
 
 } // namespace cdp1802

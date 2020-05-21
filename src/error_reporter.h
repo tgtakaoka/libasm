@@ -69,17 +69,11 @@ class ErrorReporter {
 public:
     Error getError() const { return _error; }
 
-    Error setError(Error error) {
-        _error = error;
-        return error;
-    }
-
+    Error resetError() { return setOK(); }
+    Error setOK() { return setError(OK); }
+    Error setError(Error error) { return _error = error; }
     Error setError(const ErrorReporter &other) {
         return setError(other.getError());
-    }
-
-    void resetError() {
-        _error = OK;
     }
 
 private:

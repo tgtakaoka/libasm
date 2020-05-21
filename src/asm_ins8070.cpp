@@ -157,29 +157,29 @@ Error AsmIns8070::nextToken(Operand &op, OprFormat &opr) {
         return setError(UNKNOWN_REGISTER);
     }
     _scan = skipSpaces(_scan + _regs.regNameLen(reg));
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmIns8070::parseOperand(Operand &op) {
-    op.setError(OK);
+    op.setOK();
     op.left = op.right = OPR_NO;
     op.reg = REG_UNDEF;
     op.autoIndex = op.hasVal = false;
     op.val = 0;
 
     if (endOfLine(_scan))
-        return setError(OK);
+        return setOK();
     if (nextToken(op, op.left))
         return getError();
     if (endOfLine(_scan))
-        return setError(OK);
+        return setOK();
     if (*_scan != ',')
         return setError(UNKNOWN_OPERAND);
     _scan = skipSpaces(_scan + 1);
     if (nextToken(op, op.right))
         return getError();
     if (endOfLine(_scan))
-        return setError(OK);
+        return setOK();
     if (*_scan != ',')
         return setError(UNKNOWN_OPERAND);
     _scan = skipSpaces(_scan + 1);

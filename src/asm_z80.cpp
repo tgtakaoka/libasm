@@ -257,13 +257,13 @@ Error AsmZ80::encodeInherent(
 }
 
 Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
-    opr.setError(OK);
+    opr.setOK();
     opr.reg = REG_UNDEF;
     opr.val = 0;
 
     if (endOfLine(_scan)) {
         opr.format = NO_OPR;
-        return opr.setError(OK);
+        return opr.setOK();
     }
 
     if (opr.format == COND_4 || opr.format == COND_8) {
@@ -272,13 +272,13 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             _scan += RegZ80::ccNameLen(ccName);
             opr.format = COND_4;
             opr.val = RegZ80::encodeCcName(ccName);
-            return opr.setError(OK);
+            return opr.setOK();
         }
         if ((ccName = _regs.parseCc8Name(_scan)) != CC_UNDEF) {
             _scan += RegZ80::ccNameLen(ccName);
             opr.format = COND_8;
             opr.val = RegZ80::encodeCcName(ccName);
-            return opr.setError(OK);
+            return opr.setOK();
         }
     }
 
@@ -302,7 +302,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
         }
         if (opr.size == SZ_NONE)
             opr.size = RegZ80::registerSize(opr.reg);
-        return opr.setError(OK);
+        return opr.setOK();
     }
     const char *p = _scan;
     if (*p == '(') {
@@ -321,7 +321,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             }
             if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
             _scan++;
-            return opr.setError(OK);
+            return opr.setOK();
         }
         p = skipSpaces(p + RegZ80::regNameLen(opr.reg));
         if (*p == ')') {
@@ -338,7 +338,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             }
             if (opr.size == SZ_NONE) opr.size = SZ_BYTE;
             _scan = p;
-            return opr.setError(OK);
+            return opr.setOK();
         }
         if (*p == '+' || *p == '-') {
             if (opr.reg == REG_IX || opr.reg == REG_IY) {
@@ -391,7 +391,7 @@ Error AsmZ80::encode(Insn &_insn) {
         if (parseOperand(insn, right))
             return setError(right);
     } else {
-        right.setError(OK);
+        right.setOK();
         right.format = NO_OPR;
         right.reg = REG_UNDEF;
         right.val = 0;

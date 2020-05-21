@@ -50,7 +50,7 @@ Error DisW65C816::decodeImmediate(
     }
     if (insn.opCode() == TableW65C816::WDM)
         return setError(UNKNOWN_INSTRUCTION);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisW65C816::decodeAbsolute(
@@ -107,7 +107,7 @@ Error DisW65C816::decodeAbsolute(
     }
     if (indirect) *_operands++ = idirLong ? ']' : ')';
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisW65C816::decodeZeroPage(
@@ -165,7 +165,7 @@ Error DisW65C816::decodeZeroPage(
         *_operands++ = ',';
         return decodeRelative(memory, insn);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisW65C816::decodeRelative(
@@ -190,7 +190,7 @@ Error DisW65C816::decodeRelative(
     } else {
         outConstant(target, 16, false, Config::addressBits());
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisW65C816::decodeBlockMove(
@@ -213,7 +213,7 @@ Error DisW65C816::decodeBlockMove(
     } else {
         outConstant(dst, 16, false, Config::addressBits());
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisW65C816::decode(
@@ -228,11 +228,11 @@ Error DisW65C816::decode(
 
     switch (insn.addrMode()) {
     case IMPL:
-        return setError(OK);
+        return setOK();
     case ACCM:
         _operands = _regs.outRegName(_operands, REG_A);
         *_operands = 0;
-        return setError(OK);
+        return setOK();
     case IMM8:
     case IMMA:
     case IMMX:

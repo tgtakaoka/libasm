@@ -26,7 +26,7 @@ Error AsmI8080::encodePointerReg(InsnI8080 &insn) {
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
@@ -35,7 +35,7 @@ Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
@@ -44,7 +44,7 @@ Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
@@ -56,7 +56,7 @@ Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
     if (insn.insnFormat() == LOW_DATA_REG)
         insn.embed(num);
     _scan += _regs.regNameLen(regName);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
@@ -73,7 +73,7 @@ Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
     const host::uint_t srcNum = _regs.encodeDataReg(srcReg);
     insn.embed(dstNum << 3);
     insn.embed(srcNum);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
@@ -81,7 +81,7 @@ Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
     if (getOperand(vecNo)) return getError();
     if (vecNo >= 8) return setError(OVERFLOW_RANGE);
     insn.embed(vecNo << 3);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
@@ -122,7 +122,7 @@ Error AsmI8080::encode(Insn &_insn) {
     _scan = skipSpaces(endName);
 
     switch (insn.insnFormat()) {
-    case NO_FORMAT:     setError(OK); break;
+    case NO_FORMAT:     setOK(); break;
     case POINTER_REG:   encodePointerReg(insn); break;
     case STACK_REG:     encodeStackReg(insn); break;
     case INDEX_REG:     encodeIndexReg(insn); break;

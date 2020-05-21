@@ -56,7 +56,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
     }
     if (comma == 0 && endOfLine(p)) {
         _scan = p;
-        return setError(OK);
+        return setOK();
     }
     bool hasImmediate = false;
     if (*p == '#') {
@@ -69,14 +69,14 @@ Error AsmMc6800::parseOperand(Operand &op) {
         op.mode = IMM;
         hasImmediate = true;
         if (op.reg != REG_UNDEF) // A #IMM
-            return setError(OK);
+            return setOK();
         while (*p == ',') {
             comma++;
             p = skipSpaces(p + 1);
         }
         if (comma == 0 && endOfLine(p)) {
             _scan = p;
-            return setError(OK);
+            return setOK();
         }
     } else if (*p == ',') { // ,X
         comma++;
@@ -88,7 +88,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
         _scan = p + _regs.regNameLen(REG_X);
         op.opr = 0;
         op.mode = hasImmediate ? IMM_IDX : IDX;
-        return setError(OK);
+        return setOK();
     }
     host::int_t size = -1;
     if (*p == '<') {
@@ -139,7 +139,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
         op.mode = EXT;
     }
     _scan = p;
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmMc6800::encode(Insn &_insn) {

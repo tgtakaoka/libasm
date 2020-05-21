@@ -71,7 +71,7 @@ Error AsmMos6502::parseOperand(Operand &op) {
     } else if (_regs.compareRegName(p, REG_A)) { // A
         p += _regs.regNameLen(REG_A);
         op.mode = ACCM;
-        op.setError(OK);
+        op.setOK();
     } else {
         const char indir = (*p == '(') ? *p : 0;;
         if (indir) p = skipSpaces(p + 1);
@@ -126,7 +126,7 @@ Error AsmMos6502::parseOperand(Operand &op) {
         }
     }
     _scan = skipSpaces(p);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmMos6502::encode(Insn &_insn) {

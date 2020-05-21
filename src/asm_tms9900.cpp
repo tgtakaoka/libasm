@@ -49,7 +49,7 @@ Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
     }
     insn.embed(operand);
     if (emitInsn) insn.emitInsn();
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
@@ -84,7 +84,7 @@ Error AsmTms9900::encodeOpr(
     if ((regName = _regs.parseRegName(p)) != REG_UNDEF) {
         p += _regs.regNameLen(regName);
         mode = 0;
-        setError(OK);
+        setOK();
     } else if (*p == '*') {
         p++;
         mode = 1;
@@ -95,7 +95,7 @@ Error AsmTms9900::encodeOpr(
             p++;
             mode = 3;
         }
-        setError(OK);
+        setOK();
     } else if (*p == '@') {
         mode = 2;
         _scan = p + 1;
@@ -158,7 +158,7 @@ Error AsmTms9900::encode(Insn &_insn) {
     switch (insn.addrMode()) {
     case INH:
         insn.emitInsn();
-        setError(OK);
+        setOK();
         break;
     case IMM:
         encodeImm(insn, true);

@@ -57,7 +57,7 @@ Error DisMc68000::decodeEffectiveAddr(
         return setError(ILLEGAL_OPERAND);
     if (mode == M_DREG || mode == M_AREG) {
         outRegName(ea.reg);
-        return setError(OK);
+        return setOK();
     }
     if (mode == M_IMM_DATA) {
         *_operands++ = '#';
@@ -134,7 +134,7 @@ Error DisMc68000::decodeEffectiveAddr(
     if (mode == M_ABS_LONG)  outEaSize(SZ_LONG);
     if (mode == M_PINC) *_operands++ = '+';
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc68000::decodeImplied(
@@ -143,7 +143,7 @@ Error DisMc68000::decodeImplied(
         *_operands++ = '#';
         return decodeImmediateData(memory, insn, SZ_WORD);
     }
-    return setError(OK);
+    return setOK();
 }
 
 // ORI, ANDI, SUBI, ADDI, EORI, CMPI
@@ -167,10 +167,10 @@ Error DisMc68000::decodeDestSiz(
             if (ea.mode == M_IMM_DATA) {
                 if (ea.size == SZ_BYTE) {
                     outRegName(REG_CCR);
-                    return setError(OK);
+                    return setOK();
                 } else if (ea.size == SZ_WORD) {
                     outRegName(REG_SR);
-                    return setError(OK);
+                    return setOK();
                 }
             }
         }
@@ -196,7 +196,7 @@ Error DisMc68000::decodeAddrReg(
     const RegName dest = RegMc68000::decodeAddrReg(insn.opCode());
     if (insn.opCode() & 010) { // UNLK
         outRegName(dest);
-        return setError(OK);
+        return setOK();
     }
     // LINK
     outRegName(dest);
@@ -206,7 +206,7 @@ Error DisMc68000::decodeAddrReg(
     const int16_t disp = static_cast<int16_t>(val16);
     *_operands++ = '#';
     outConstant(disp);
-    return setError(OK);
+    return setOK();
 }
 
 // DBcc, SWAP
@@ -215,7 +215,7 @@ Error DisMc68000::decodeDataReg(
     const RegName dest = RegMc68000::decodeDataReg(insn.opCode());
     if ((insn.opCode() >> 12) == 4) { // SWAP
         outRegName(dest);
-        return setError(OK);
+        return setOK();
     }
 
     // DBcc
@@ -231,7 +231,7 @@ Error DisMc68000::decodeDataReg(
     } else {
         outConstant(addr, 16, false, Config::addressBits());
     }
-    return setError(OK);
+    return setOK();
 }
 
 // MOVE USP
@@ -247,7 +247,7 @@ Error DisMc68000::decodeMoveUsp(
         *_operands++ = ',';
         outRegName(REG_USP);
     }
-    return setError(OK);
+    return setOK();
 }
 
 // TRAP
@@ -255,7 +255,7 @@ Error DisMc68000::decodeTrapVec(
     DisMemory &memory, InsnMc68000 &insn) {
     *_operands++ = '#';
     outConstant(static_cast<uint8_t>(insn.opCode() & 017), 10);
-    return setError(OK);
+    return setOK();
 }
 
 // NBCD, PEA, TAS
@@ -330,7 +330,7 @@ Error DisMc68000::decodeSignExt(
     const Config::opcode_t opCode = insn.opCode();
     insn.appendSize((opCode & 0100) ? SZ_LONG : SZ_WORD, _regs);
     outRegName(RegMc68000::decodeDataReg(opCode));
-    return setError(OK);
+    return setOK();
 }
 
 // EXT_BRA: BRA, BSR, Bcc
@@ -351,7 +351,7 @@ Error DisMc68000::decodeRelative(
     } else {
         outConstant(addr, 16, false, Config::addressBits());
     }
-    return setError(OK);
+    return setOK();
 }
 
 static RegName decodeMoveMltReg(host::int_t regno) {
@@ -463,7 +463,7 @@ Error DisMc68000::decodeMoveQic(
     outConstant(static_cast<int8_t>(val8));
     *_operands++ = ',';
     outRegName(RegMc68000::decodeDataReg(opCode >> 9));
-    return setError(OK);
+    return setOK();
 }
 
 // MOVEP
@@ -609,7 +609,7 @@ Error DisMc68000::decodeDregRot(
     *_operands++ = ',';
     outRegName(dst);
     insn.appendSize(size, _regs);
-    return setError(OK);
+    return setOK();
 }
 
 // DMEM_DST: SBCD, ABCD
@@ -637,7 +637,7 @@ Error DisMc68000::decodeDmemOpr(
         *_operands++ = ',';
         outRegName(RegMc68000::decodeDataReg(opCode >> 9));
     }
-    return setError(OK);
+    return setOK();
 }
 
 // EXG
@@ -658,7 +658,7 @@ Error DisMc68000::decodeRegsExg(
         *_operands++ = ',';
         outRegName(RegMc68000::decodeAddrReg(opCode));
     }
-    return setError(OK);
+    return setOK();
 }
 
 // NO_EXT: MOVE, MOVEA
@@ -678,7 +678,7 @@ Error DisMc68000::decodeMoveOpr(
     *_operands++ = ',';
     if (decodeEffectiveAddr(memory, insn, dst)) return getError();
     insn.appendSize(size, _regs);
-    return setError(OK);
+    return setOK();
 }
 
 Error DisMc68000::decode(

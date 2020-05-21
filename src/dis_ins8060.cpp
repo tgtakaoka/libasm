@@ -27,7 +27,7 @@ void DisIns8060::outRegister(RegName regName) {
 Error DisIns8060::decodePntr(
     DisMemory& memory, InsnIns8060 &insn) {
     outRegister(_regs.decodePointerReg(insn.opCode() & 3));
-    return setError(OK);
+    return setOK();
 }
 
 Error DisIns8060::decodeImm8(
@@ -40,7 +40,7 @@ Error DisIns8060::decodeImm8(
     } else {
         outConstant(val);
     }
-    return setError(OK);
+    return setOK();
 }
 
 Error DisIns8060::decodeIndx(
@@ -65,7 +65,7 @@ Error DisIns8060::decodeIndx(
         } else {
             outConstant(target, 16, false);
         }
-        return setError(OK);
+        return setOK();
     }
     if (opr == 0x80) {         // E(Pn)
         outRegister(REG_E);
@@ -82,7 +82,7 @@ Error DisIns8060::decodeIndx(
     outRegister(reg);
     *_operands++ = ')';
     *_operands = 0;
-    return setError(OK);
+    return setOK();
 }
 
 Error DisIns8060::decode(
@@ -96,7 +96,7 @@ Error DisIns8060::decode(
 
     switch (insn.addrMode()) {
     case INHR:
-        return setError(OK);
+        return setOK();
     case PNTR:
         return decodePntr(memory, insn);
     case IMM8:
