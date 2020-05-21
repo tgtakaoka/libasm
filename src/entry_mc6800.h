@@ -26,6 +26,7 @@ enum CpuType : host::uint_t {
     MC6800,
     MC6801,
     HD6301,
+    MC68HC11,
 };
 
 enum AddrMode : host::uint_t {
@@ -40,6 +41,14 @@ enum AddrMode : host::uint_t {
     IMM_IDX, // Immediate,Indexed
     BIT_DIR, // Bit number,Direct
     BIT_IDX, // Bit number,Indexed
+    // MC68HC11
+    IDY,         // Indexed Y
+    DIR_IMM,     // Direct page,Immediate
+    IDX_IMM,     // Indexed X,Immediate
+    IDY_IMM,     // Indexed Y,Immediate
+    DIR_IMM_REL, // Direct page,Immediate,Relative
+    IDX_IMM_REL, // Indexed X,Immediate,Relative
+    IDY_IMM_REL, // Indexed Y,Immediate,Relative
 };
 
 enum InsnAdjust : host::uint_t {
@@ -52,7 +61,7 @@ enum InsnAdjust : host::uint_t {
 enum OprSize : host::uint_t {
     SZ_BYTE = 0,
     SZ_WORD = 1,
-    SZ_NONE = 2,   // unknown
+    SZ_NONE = 2,   // unknown, in Table ==SZ_BYTE
 };
 
 struct Entry {
@@ -84,11 +93,11 @@ struct Entry {
     }
 
 private:
-    static constexpr host::uint_t addrMode_gm = 0xF;
-    static constexpr host::uint_t insnAdjust_gp = 4;
+    static constexpr host::uint_t addrMode_gm = 0x1F;
+    static constexpr host::uint_t insnAdjust_gp = 5;
     static constexpr host::uint_t insnAdjust_gm = 0x3;
-    static constexpr host::uint_t oprSize_gp = 6;
-    static constexpr host::uint_t oprSize_gm = 0x3;
+    static constexpr host::uint_t oprSize_gp = 7;
+    static constexpr host::uint_t oprSize_gm = 0x1;
 
 };
 

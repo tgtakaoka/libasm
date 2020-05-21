@@ -27,6 +27,8 @@ enum RegName : char {
     REG_A = 'A',
     REG_B = 'B',
     REG_X = 'X',
+    // MC68HC11
+    REG_Y = 'Y',
 };
 
 class RegMc6800 : public RegBase {

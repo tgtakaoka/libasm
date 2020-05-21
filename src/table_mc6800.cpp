@@ -339,24 +339,158 @@ static constexpr Entry HD6301_TABLE[] PROGMEM = {
     E(0x7B, BTST, BIT_DIR, ZERO, BYTE)
 };
 
+static constexpr Entry MC68HC11_P00[] PROGMEM = {
+    E(0x02, IDIV,  INH, ZERO, NONE)
+    E(0x03, FDIV,  INH, ZERO, NONE)
+    E(0x12, BRSET, DIR_IMM_REL, ZERO, BYTE)
+    E(0x13, BRCLR, DIR_IMM_REL, ZERO, BYTE)
+    E(0x14, BSET,  DIR_IMM, ZERO, BYTE)
+    E(0x15, BCLR,  DIR_IMM, ZERO, BYTE)
+    E(0x1C, BSET,  IDX_IMM, ZERO, BYTE)
+    E(0x1D, BCLR,  IDX_IMM, ZERO, BYTE)
+    E(0x1E, BRSET, IDX_IMM_REL, ZERO, BYTE)
+    E(0x1F, BRCLR, IDX_IMM_REL, ZERO, BYTE)
+    E(0x8F, XGDX,  INH, ZERO, NONE)
+    E(0xCF, STOP,  INH, ZERO, NONE)
+};
+
+static constexpr Entry MC68HC11_P18[] PROGMEM = {
+    E(0x08, INY,   INH, ZERO, NONE)
+    E(0x09, DEY,   INH, ZERO, NONE)
+    E(0x1C, BSET,  IDY_IMM, ZERO, BYTE)
+    E(0x1D, BCLR,  IDY_IMM, ZERO, BYTE)
+    E(0x1E, BRSET, IDY_IMM_REL, ZERO, BYTE)
+    E(0x1F, BRCLR, IDY_IMM_REL, ZERO, BYTE)
+    E(0x30, TSY,   INH, ZERO, NONE)
+    E(0x35, TYS,   INH, ZERO, NONE)
+    E(0x38, PULY,  INH, ZERO, NONE)
+    E(0x3A, ABY,   INH, ZERO, NONE)
+    E(0x3C, PSHY,  INH, ZERO, NONE)
+    E(0x60, NEG,   IDY, ZERO, BYTE)
+    E(0x63, COM,   IDY, ZERO, BYTE)
+    E(0x64, LSR,   IDY, ZERO, BYTE)
+    E(0x66, ROR,   IDY, ZERO, BYTE)
+    E(0x67, ASR,   IDY, ZERO, BYTE)
+    E(0x68, ASL,   IDY, ZERO, BYTE)
+    E(0x68, LSL,   IDY, ZERO, BYTE)
+    E(0x69, ROL,   IDY, ZERO, BYTE)
+    E(0x6A, DEC,   IDY, ZERO, BYTE)
+    E(0x6C, INC,   IDY, ZERO, BYTE)
+    E(0x6D, TST,   IDY, ZERO, BYTE)
+    E(0x6E, JMP,   IDY, ZERO, BYTE)
+    E(0x6F, CLR,   IDY, ZERO, BYTE)
+    E(0x8C, CPY,   IMM, ZERO, WORD)
+    E(0x8F, XGDY,  INH, ZERO, NONE)
+    E(0x9C, CPY,   DIR, ZERO, BYTE)
+    E(0xA0, SUB,   IDY, AB64, BYTE)
+    E(0xA0, SUBA,  IDY, ZERO, BYTE)
+    E(0xE0, SUBB,  IDY, ZERO, BYTE)
+    E(0xA1, CMP,   IDY, AB64, BYTE)
+    E(0xA1, CMPA,  IDY, ZERO, BYTE)
+    E(0xE1, CMPB,  IDY, ZERO, BYTE)
+    E(0xA2, SBC,   IDY, AB64, BYTE)
+    E(0xA2, SBCA,  IDY, ZERO, BYTE)
+    E(0xE2, SBCB,  IDY, ZERO, BYTE)
+    E(0xA3, SUBD,  IDY, ZERO, BYTE)
+    E(0xE3, ADDD,  IDY, ZERO, BYTE)
+    E(0xA4, AND,   IDY, AB64, BYTE)
+    E(0xA4, ANDA,  IDY, ZERO, BYTE)
+    E(0xE4, ANDB,  IDY, ZERO, BYTE)
+    E(0xA5, BIT,   IDY, AB64, BYTE)
+    E(0xA5, BITA,  IDY, ZERO, BYTE)
+    E(0xE5, BITB,  IDY, ZERO, BYTE)
+    E(0xA6, LDA,   IDY, AB64, BYTE)
+    E(0xA6, LDAA,  IDY, ZERO, BYTE)
+    E(0xE6, LDAB,  IDY, ZERO, BYTE)
+    E(0xA7, STA,   IDY, AB64, BYTE)
+    E(0xA7, STAA,  IDY, ZERO, BYTE)
+    E(0xE7, STAB,  IDY, ZERO, BYTE)
+    E(0xA8, EOR,   IDY, AB64, BYTE)
+    E(0xA8, EORA,  IDY, ZERO, BYTE)
+    E(0xE8, EORB,  IDY, ZERO, BYTE)
+    E(0xA9, ADC,   IDY, AB64, BYTE)
+    E(0xA9, ADCA,  IDY, ZERO, BYTE)
+    E(0xE9, ADCB,  IDY, ZERO, BYTE)
+    E(0xAA, ORA,   IDY, AB64, BYTE)
+    E(0xAA, ORAA,  IDY, ZERO, BYTE)
+    E(0xEA, ORAB,  IDY, ZERO, BYTE)
+    E(0xAB, ADD,   IDY, AB64, BYTE)
+    E(0xAB, ADDA,  IDY, ZERO, BYTE)
+    E(0xEB, ADDB,  IDY, ZERO, BYTE)
+    E(0xAC, CPY,   IDY, ZERO, BYTE)
+    E(0xAD, JSR,   IDY, ZERO, BYTE)
+    E(0xAE, LDS,   IDY, ZERO, BYTE)
+    E(0xAF, STS,   IDY, ZERO, BYTE)
+    E(0xBC, CPY,   EXT, ZERO, WORD)
+    E(0xCE, LDY,   IMM, ZERO, WORD)
+    E(0xDE, LDY,   DIR, ZERO, BYTE)
+    E(0xDF, STY,   DIR, ZERO, BYTE)
+    E(0xEC, LDD,   IDY, ZERO, BYTE)
+    E(0xED, STD,   IDY, ZERO, BYTE)
+    E(0xEE, LDY,   IDY, ZERO, BYTE)
+    E(0xEF, STY,   IDY, ZERO, BYTE)
+    E(0xFE, LDY,   EXT, ZERO, WORD)
+    E(0xFF, STY,   EXT, ZERO, WORD)
+};
+
+static constexpr Entry MC68HC11_P1A[] PROGMEM = {
+    E(0x83, CPD,   IMM, ZERO, WORD)
+    E(0x93, CPD,   DIR, ZERO, BYTE)
+    E(0xA3, CPD,   IDX, ZERO, BYTE)
+    E(0xAC, CPY,   IDX, ZERO, BYTE)
+    E(0xB3, CPD,   EXT, ZERO, BYTE)
+    E(0xEE, LDY,   IDX, ZERO, BYTE)
+    E(0xEF, STY,   IDX, ZERO, BYTE)
+};
+
+static constexpr Entry MC68HC11_PCD[] PROGMEM = {
+    E(0xA3, CPD,   IDY, ZERO, BYTE)
+    E(0xAC, CPX,   IDY, ZERO, BYTE)
+    E(0xEE, LDX,   IDY, ZERO, BYTE)
+    E(0xEF, STX,   IDY, ZERO, BYTE)
+};
+
+static constexpr Config::opcode_t PREFIX_P00 = 0x00;
+static constexpr Config::opcode_t PREFIX_P18 = 0x18;
+static constexpr Config::opcode_t PREFIX_P1A = 0x1A;
+static constexpr Config::opcode_t PREFIX_PCD = 0xCD;
+
+bool TableMc6800::isPrefixCode(Config::opcode_t opCode) {
+    if (_cpuType == MC68HC11) {
+        return opCode == PREFIX_P18 || opCode == PREFIX_P1A
+            || opCode == PREFIX_PCD;
+    }
+    return false;
+}
+
 struct TableMc6800::EntryPage {
+    const Config::opcode_t prefix;
     const Entry *const table;
     const Entry *const end;
 };
 
 static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
-    { ARRAY_RANGE(MC6800_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC6800_TABLE) },
 };
 
 static constexpr TableMc6800::EntryPage MC6801_PAGES[] PROGMEM = {
-    { ARRAY_RANGE(MC6801_TABLE) },
-    { ARRAY_RANGE(MC6800_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC6801_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC6800_TABLE) },
 };
 
 static constexpr TableMc6800::EntryPage HD6301_PAGES[] PROGMEM = {
-    { ARRAY_RANGE(HD6301_TABLE) },
-    { ARRAY_RANGE(MC6801_TABLE) },
-    { ARRAY_RANGE(MC6800_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(HD6301_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC6801_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC6800_TABLE) },
+};
+
+static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
+    { PREFIX_P00, ARRAY_RANGE(MC6801_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC6800_TABLE) },
+    { PREFIX_P00, ARRAY_RANGE(MC68HC11_P00) },
+    { PREFIX_P18, ARRAY_RANGE(MC68HC11_P18) },
+    { PREFIX_P1A, ARRAY_RANGE(MC68HC11_P1A) },
+    { PREFIX_PCD, ARRAY_RANGE(MC68HC11_PCD) },
 };
 
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
@@ -377,7 +511,8 @@ Error TableMc6800::searchNameAndAddrMode(
         const Entry *entry = TableBase::searchName<Entry,AddrMode>(
             insn.name(), addrMode, table, end, acceptAddrMode);
         if (entry) {
-            insn.setOpCode(pgm_read_byte(&entry->opCode));
+            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
             insn.setFlags(pgm_read_byte(&entry->flags));
             return OK;
         }
@@ -400,6 +535,8 @@ static Config::opcode_t tableCode(
 const Entry *TableMc6800::searchOpCode(
     InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
+        const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+        if (insn.prefixCode() != prefix) continue;
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
@@ -444,6 +581,9 @@ bool TableMc6800::setCpu(CpuType cpuType) {
     } else if (cpuType == MC6801) {
         _table = ARRAY_BEGIN(MC6801_PAGES);
         _end = ARRAY_END(MC6801_PAGES);
+    } else if (cpuType == MC68HC11) {
+        _table = ARRAY_BEGIN(MC68HC11_PAGES);
+        _end = ARRAY_END(MC68HC11_PAGES);
     } else {
         _table = ARRAY_BEGIN(HD6301_PAGES);
         _end = ARRAY_END(HD6301_PAGES);
@@ -454,6 +594,8 @@ bool TableMc6800::setCpu(CpuType cpuType) {
 const char *TableMc6800::getCpu() {
     if (_cpuType == MC6800)
         return "6800";
+    if (_cpuType == MC68HC11)
+        return "6811";
     return _cpuType == MC6801 ? "6801" : "6301";
 }
 
@@ -464,6 +606,8 @@ bool TableMc6800::setCpu(const char *cpu) {
         return setCpu(MC6800);
     if (strcmp(p, "6801") == 0)
         return setCpu(MC6801);
+    if (strcmp(p, "6811") == 0 || strcasecmp(p, "68HC11") == 0)
+        return setCpu(MC68HC11);
     p = cpu + (strncasecmp(cpu, "HD", 2) ? 0 : 2);
     if (strcmp(p, "6301") == 0)
         return setCpu(HD6301);

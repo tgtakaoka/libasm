@@ -94,7 +94,12 @@ Error DisMc6800::decodeIndexed(
         outConstant(disp8, 10);
     }
     *_operands++ = ',';
-    outRegister(REG_X);
+    const AddrMode mode = insn.addrMode();
+    if (mode == IDY || mode == IDY_IMM || mode == IDY_IMM_REL) {
+        outRegister(REG_Y);
+    } else {
+        outRegister(REG_X);
+    }
     return setOK();
 }
 
@@ -151,26 +156,42 @@ static int8_t decodeBitNumber(uint8_t val, Config::opcode_t opCode) {
 
 Error DisMc6800::decodeBitOperation(
     DisMemory &memory, InsnMc6800 &insn) {
-    uint8_t val8;
-    if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-    const int8_t bitNum = decodeBitNumber(val8, insn.opCode());
-    if (bitNum >= 0) {
-        val8 = bitNum;
-        if (TableMc6800.searchOpCodeAlias(insn))
-            return setError(INTERNAL_ERROR);
+    const AddrMode mode = insn.addrMode();
+    if (mode == DIR_IMM || mode == DIR_IMM_REL) {
+        decodeDirectPage(memory, insn);
+    } else if (mode == IDX_IMM || mode == IDY_IMM
+               || mode == IDX_IMM_REL || mode == IDY_IMM_REL) {
+        decodeIndexed(memory, insn);
     } else {
-        *_operands++ = '#';
-    }
-    const char *label = lookup(val8);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val8);
+        uint8_t val8;
+        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
+        const int8_t bitNum = decodeBitNumber(val8, insn.opCode());
+        if (bitNum >= 0) {
+            val8 = bitNum;
+            if (TableMc6800.searchOpCodeAlias(insn))
+                return setError(INTERNAL_ERROR);
+        } else {
+            *_operands++ = '#';
+        }
+        const char *label = lookup(val8);
+        if (label) {
+            outText(label);
+        } else {
+            outConstant(val8);
+        }
     }
     *_operands++ = ',';
-    return (insn.addrMode() == IMM_DIR || insn.addrMode() == BIT_DIR)
-        ? decodeDirectPage(memory, insn)
-        : decodeIndexed(memory, insn);
+    if (mode == IMM_DIR || mode == BIT_DIR) {
+        return decodeDirectPage(memory, insn);
+    } else if (mode == IMM_IDX) {
+        return decodeIndexed(memory, insn);
+    } else {
+        decodeImmediate(memory, insn);
+        if (mode == DIR_IMM || mode == IDX_IMM || mode == IDY_IMM)
+            return OK;
+        *_operands++ = ',';
+        return decodeRelative(memory, insn);
+    }
 }
 
 Error DisMc6800::decode(
@@ -179,6 +200,11 @@ Error DisMc6800::decode(
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
+    if (TableMc6800.isPrefixCode(opCode)) {
+        const Config::opcode_t prefix = opCode;
+        if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+        insn.setOpCode(opCode, prefix);
+    }
     if (TableMc6800.searchOpCode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
@@ -186,13 +212,21 @@ Error DisMc6800::decode(
     case INH: return decodeInherent(memory, insn);
     case DIR: return decodeDirectPage(memory, insn);
     case EXT: return decodeExtended(memory, insn);
-    case IDX: return decodeIndexed(memory, insn);
+    case IDX:
+    case IDY:
+        return decodeIndexed(memory, insn);
     case REL: return decodeRelative(memory, insn);
     case IMM: return decodeImmediate(memory, insn);
     case IMM_DIR:
     case IMM_IDX:
     case BIT_DIR:
     case BIT_IDX:
+    case DIR_IMM:
+    case IDX_IMM:
+    case IDY_IMM:
+    case DIR_IMM_REL:
+    case IDX_IMM_REL:
+    case IDY_IMM_REL:
         return decodeBitOperation(memory, insn);
     default: break;
     }
