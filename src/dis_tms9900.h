@@ -30,7 +30,7 @@ class DisTms9900
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableTms9900.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableTms9900.getCpu(); }
 
 private:
-    DisIntelOperand _formatter;
+    IntelValueFormatter _formatter;
     RegTms9900 _regs;
 
     RegBase &getRegister() override { return _regs; }

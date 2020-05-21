@@ -30,7 +30,7 @@ class DisCdp1802
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableCdp1802.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableCdp1802.getCpu(); }
 
 private:
-    DisIntelOperand _formatter;
+    IntelValueFormatter _formatter;
     RegCdp1802 _regs;
 
     RegBase &getRegister() override { return _regs; }

@@ -30,7 +30,7 @@ class DisMc6809
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     const char *listCpu() const override { return TableMc6809.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
@@ -40,7 +40,7 @@ protected:
     RegBase &getRegister() override { return _regs; }
 
 private:
-    DisMotoOperand _formatter;
+    MotoValueFormatter _formatter;
     RegMc6809 _regs;
 
     void outRegister(RegName regName);

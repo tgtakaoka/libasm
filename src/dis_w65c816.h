@@ -30,7 +30,7 @@ class DisW65C816
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     bool setCpu(const char *cpu) override { return TableW65C816.setCpu(cpu); }
@@ -42,7 +42,7 @@ public:
     void longIndex(bool on) { _long_idx = on; }
 
 private:
-    DisMotoOperand _formatter;
+    MotoValueFormatter _formatter;
     mos6502::RegMos6502 _regs;
     bool _acceptIndirectLong = true;
     bool _long_acc = false;

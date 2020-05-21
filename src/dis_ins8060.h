@@ -30,7 +30,7 @@ class DisIns8060
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableIns8060.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableIns8060.getCpu(); }
 
 private:
-    DisOperand _formatter;
+    ValueFormatter _formatter;
     RegIns8060 _regs;
 
     RegBase &getRegister() override { return _regs; }

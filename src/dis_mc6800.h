@@ -30,7 +30,7 @@ class DisMc6800
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableMc6800.listCpu(); }
@@ -40,7 +40,7 @@ public:
     void setAccumulatorDelimitor(char delim = 0) { _accDelim = delim; }
 
 private:
-    DisMotoOperand _formatter;
+    MotoValueFormatter _formatter;
     RegMc6800 _regs;
     char _accDelim = 0;
 

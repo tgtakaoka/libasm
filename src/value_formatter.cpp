@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "dis_operand.h"
+#include "value_formatter.h"
 
 namespace libasm {
 
@@ -34,7 +34,7 @@ static char *reverseStr(char *p, char *t) {
     return t;
 }
 
-char *DisOperand::outputNumber(
+char *ValueFormatter::outputNumber(
     char *p, uint32_t val, int8_t radix, int8_t bitWidth) const {
     bool negative = false;
     if (radix == -10 && static_cast<int32_t>(val) < 0) {
@@ -66,7 +66,7 @@ char *DisOperand::outputNumber(
     return t;
 }
 
-char *DisOperand::outputRelaxed(
+char *ValueFormatter::outputRelaxed(
     char *p, uint32_t val, int8_t radix, uint8_t bitWidth) const {
     if (radix > 0 && val < static_cast<uint8_t>(radix))
         return reverseStr(p, outputNumber(p, val, 10, bitWidth));
@@ -78,7 +78,7 @@ char *DisOperand::outputRelaxed(
     return nullptr;
  }
 
-char *DisOperand::output(
+char *ValueFormatter::output(
     char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
@@ -96,7 +96,7 @@ char *DisOperand::output(
     return reverseStr(p, t);
 }
 
-char *DisMotoOperand::output(
+char *MotoValueFormatter::output(
     char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
@@ -104,16 +104,16 @@ char *DisMotoOperand::output(
     if (radix == 16) *p++ = '$';
     else if (radix == 8) *p++ = '@';
     else if (radix == 2) *p++ = '%';
-    t = DisOperand::outputNumber(p, val, radix, bitWidth);
+    t = ValueFormatter::outputNumber(p, val, radix, bitWidth);
     return reverseStr(p, t);
 }
 
-char *DisIntelOperand::output(
+char *IntelValueFormatter::output(
     char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
         return t;
-    t = DisOperand::outputNumber(p, val, radix, bitWidth);
+    t = ValueFormatter::outputNumber(p, val, radix, bitWidth);
     if (radix == 16 && t[-1] > '9')
         *t++ = '0';
     t = reverseStr(p, t);

@@ -19,7 +19,7 @@ CPPFLAGS=-MMD
 
 OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o cli_listing.o cli_memory.o
 OBJS_asm      = asm_base.o asm_operand.o asm_driver.o asm_directive.o
-OBJS_dis      = dis_base.o dis_operand.o dis_driver.o dis_directive.o
+OBJS_dis      = dis_base.o value_formatter.o dis_driver.o dis_directive.o
 OBJS_mc6809   = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800   = table_mc6800.o  reg_mc6800.o
 OBJS_mos6502  = table_mos6502.o reg_mos6502.o

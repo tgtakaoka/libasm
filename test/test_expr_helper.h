@@ -18,7 +18,7 @@
 #define __TEST_EXPT_HELPER_H__
 
 #include "asm_operand.h"
-#include "dis_operand.h"
+#include "value_formatter.h"
 #include "test_symtab.h"
 #include "test_asserter.h"
 

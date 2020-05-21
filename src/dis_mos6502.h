@@ -30,7 +30,7 @@ class DisMos6502
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableMos6502.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableMos6502.getCpu(); }
 
 private:
-    DisMotoOperand _formatter;
+    MotoValueFormatter _formatter;
     RegMos6502 _regs;
 
     RegBase &getRegister() override { return _regs; }

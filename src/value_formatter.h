@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef _DIS_OPERAND_H__
-#define _DIS_OPERAND_H__
+#ifndef _VALUE_FORMATTER_H__
+#define _VALUE_FORMATTER_H__
 
 #include <stdint.h>
 
 namespace libasm {
 
-class DisOperand {
+class ValueFormatter {
 public:
     virtual char *output(
         char *p, uint32_t val, int8_t radix,
@@ -37,14 +37,14 @@ protected:
         char *p, uint32_t val, int8_t radix, uint8_t bitWidth) const;
 };
 
-class DisMotoOperand : public DisOperand {
+class MotoValueFormatter : public ValueFormatter {
 public:
     char *output(
         char *p, uint32_t val, int8_t radix,
         bool relax, uint8_t bitWidth) const override;
 };
 
-class DisIntelOperand : public DisOperand {
+class IntelValueFormatter : public ValueFormatter {
 public:
     char *output(
         char *p, uint32_t val, int8_t radix,

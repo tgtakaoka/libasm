@@ -19,12 +19,12 @@
 
 #include "config_base.h"
 #include "dis_memory.h"
-#include "dis_operand.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "reg_base.h"
 #include "symbol_table.h"
 #include "type_traits.h"
+#include "value_formatter.h"
 
 #include <ctype.h>
 
@@ -38,7 +38,7 @@ public:
         DisMemory &memory, Insn &insn,
         char *operands, SymbolTable *symtab, bool uppercase = false);
 
-    virtual DisOperand &getFormatter() = 0;
+    virtual ValueFormatter &getFormatter() = 0;
 
 protected:
     char *_operands;

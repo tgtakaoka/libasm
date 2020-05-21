@@ -30,7 +30,7 @@ class DisZ80
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableZ80.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableZ80.getCpu(); }
 
 private:
-    DisIntelOperand _formatter;
+    IntelValueFormatter _formatter;
     RegZ80 _regs;
 
     RegBase &getRegister() override { return _regs; }

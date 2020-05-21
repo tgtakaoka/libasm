@@ -30,7 +30,7 @@ class DisMc68000
     : public Disassembler,
       public Config {
 public:
-    DisOperand &getFormatter() override { return _formatter; }
+    ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
     const char *listCpu() const override { return TableMc68000.listCpu(); }
@@ -38,7 +38,7 @@ public:
     const char *getCpu() const override { return TableMc68000.getCpu(); }
 
 private:
-    DisMotoOperand _formatter;
+    MotoValueFormatter _formatter;
     RegMc68000 _regs;
 
     RegBase &getRegister() override { return _regs; }
