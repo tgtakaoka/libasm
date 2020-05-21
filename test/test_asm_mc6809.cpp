@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::mc6809;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmMc6809 as6809;
 Assembler &assembler(as6809);
 

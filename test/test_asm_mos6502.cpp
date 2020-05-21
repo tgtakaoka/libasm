@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::mos6502;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmMos6502 as6502;
 Assembler &assembler(as6502);
 

@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::ins8070;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmIns8070 asm8070;
 Assembler &assembler(asm8070);
 

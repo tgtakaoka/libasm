@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::z80;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmZ80 asz80;
 Assembler &assembler(asz80);
 

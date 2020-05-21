@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::w65c816;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmW65C816 as65816;
 Assembler &assembler(as65816);
 

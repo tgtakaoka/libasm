@@ -17,26 +17,37 @@
 #ifndef __TEST_ASM_HELPER_H__
 #define __TEST_ASM_HELPER_H__
 
+#include "asm_base.h"
 #include "test_asserter.h"
 #include "test_symtab.h"
 
-#include <stdio.h>
+namespace libasm {
+namespace test {
 
-#define __ASSERT(file, line, error, addr, src, expected)        \
-    do {                                                        \
-        Insn insn;                                              \
-        char message[80];                                       \
-        symtab.setCurrentOrigin(addr);                          \
-        assembler.encode(src, insn, addr, &symtab);             \
-        sprintf(message, "%s:%d: %s", file, line, src);         \
-        asserter.equals(message, error, assembler.getError());  \
-        asserter.equals(message, expected, sizeof(expected),    \
-                        insn.bytes(), insn.length());           \
-    } while (0)
-#define __VASSERT(file, line, error, addr, src, ...)            \
-    do {                                                        \
-        const Config::opcode_t expected[] = { __VA_ARGS__ };    \
-        __ASSERT(file, line, error, addr, src, expected);       \
+extern TestAsserter asserter;
+extern TestSymtab symtab;
+
+void asm_assert(
+    const char *file, int line, Error error,
+    uint32_t addr, const char *src,
+    const uint8_t *expected, host::uint_t length,
+    Assembler &assembler);
+
+void asm_assert(
+    const char *file, int line, Error error,
+    uint32_t addr, const char *src,
+    const uint16_t *expected, host::uint_t length,
+    Assembler &assembler);
+
+} // namespace test
+} // namespace libasm
+
+#define __VASSERT(file, line, error, addr, src, ...)                \
+    do {                                                            \
+        const Config::opcode_t expected[] = { __VA_ARGS__ };        \
+        const host::uint_t length = sizeof(expected);               \
+        asm_assert(file, line, error, addr, src, \
+                   expected, length, assembler);           \
     } while (0)
 #define EATEST(error, addr, src, ...)                               \
     __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)

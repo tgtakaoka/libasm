@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::i8080;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmI8080 as8080;
 Assembler &assembler(as8080);
 

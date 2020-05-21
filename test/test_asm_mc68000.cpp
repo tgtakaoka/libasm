@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::mc68000;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmMc68000 as68000;
 Assembler &assembler(as68000);
 

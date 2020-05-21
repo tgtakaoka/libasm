@@ -21,8 +21,6 @@ using namespace libasm;
 using namespace libasm::cdp1802;
 using namespace libasm::test;
 
-TestAsserter asserter;
-TestSymtab symtab;
 AsmCdp1802 asm1802;
 Assembler &assembler(asm1802);
 
