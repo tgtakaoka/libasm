@@ -145,7 +145,7 @@ private:
     Stack<OprAndLval> _stack;
 
     void skipSpaces();
-    Value eval(const char *expr, SymbolTable *symtab);
+    const char *eval(const char *expr, Value &value, SymbolTable *symtab);
     Value parseExpr();
     Value readAtom();
     Value readCharacterConstant();

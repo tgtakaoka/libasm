@@ -30,31 +30,34 @@ bool Value::overflowUint16() const {
 
 const char *ValueParser::eval(
     const char *expr, uint32_t &val32, SymbolTable *symtab) {
-    Value v(eval(expr, symtab));
-    val32 = v.getUnsigned();
-    return _next;
+    Value val;
+    const char *next = eval(expr, val, symtab);
+    val32 = val.getUnsigned();
+    return next;
 }
 
 const char *ValueParser::eval(
     const char *expr, uint16_t &val16, SymbolTable *symtab) {
-    Value v(eval(expr, symtab));
-    if (v.getSigned() < -32768L || (v.getSigned() >= 0 && v.getUnsigned() >= 0x10000L)) {
+    Value val;
+    const char *next = eval(expr, val, symtab);
+    if (val.overflowUint16()) {
         setError(OVERFLOW_RANGE);
     } else {
-        val16 = v.getUnsigned();
+        val16 = val.getUnsigned();
     }
-    return _next;
+    return next;
 }
 
 const char *ValueParser::eval(
     const char *expr, uint8_t &val8, SymbolTable *symtab) {
-    Value v(eval(expr, symtab));
-    if (v.getSigned() < -128 || (v.getSigned() >= 0 && v.getUnsigned() >= 0x100)) {
+    Value val;
+    const char *next = eval(expr, val, symtab);
+    if (val.overflowUint8()) {
         setError(OVERFLOW_RANGE);
     } else {
-        val8 = v.getUnsigned();
+        val8 = val.getUnsigned();
     }
-    return _next;
+    return next;
 }
 
 static bool isValidDigit(const char c, const uint8_t base) {
@@ -148,15 +151,16 @@ void ValueParser::skipSpaces() {
         _next++;
 }
 
-Value ValueParser::eval(const char *expr, SymbolTable *symtab) {
+const char *ValueParser::eval(
+    const char *expr, Value &value, SymbolTable *symtab) {
     _symtab = symtab;
     _next = expr;
     _stack.clear();
     setError(OK);
-    Value v(parseExpr());
-    if (getError() == OK && v.isUndefined())
+    value = parseExpr();
+    if (getError() == OK && value.isUndefined())
         setError(UNDEFINED_SYMBOL);
-    return v;
+    return _next;
 }
 
 Value ValueParser::parseExpr() {
