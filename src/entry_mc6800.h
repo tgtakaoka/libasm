@@ -44,15 +44,15 @@ enum AddrMode : host::uint_t {
 
 enum InsnAdjust : host::uint_t {
     ADJ_ZERO = 0,
-    ADJ_AB01 = 1,   // Accumulator A:+0, B:+1
+    ADJ_AB01 = 1,  // Accumulator A:+0, B:+1
     ADJ_AB16 = 2,  // Accumulator A:+0, B:+$10
     ADJ_AB64 = 3,  // Accumulator A:+0, B:+$40
 };
 
 enum OprSize : host::uint_t {
-    SZ_NONE,                    // unknown
-    SZ_BYTE = 1,
-    SZ_WORD = 2,
+    SZ_BYTE = 0,
+    SZ_WORD = 1,
+    SZ_NONE = 2,   // unknown
 };
 
 struct Entry {

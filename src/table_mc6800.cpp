@@ -365,7 +365,6 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     if (opr == DIR) return table == EXT || table == REL;
     if (opr == EXT) return table == REL;
     if (opr == BIT_IDX) return table == IDX;
-    if (opr == BIT_DIR) return table == DIR;
     return false;
 }
 

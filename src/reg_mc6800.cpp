@@ -16,7 +16,6 @@
 
 #include "config_mc6800.h"
 #include "reg_mc6800.h"
-#include "table_mc6800.h"
 
 #include <ctype.h>
 
@@ -58,7 +57,7 @@ RegName RegMc6800::parseRegName(const char *line) const {
     return REG_UNDEF;
 }
 
-} // namespace mc6802
+} // namespace mc6800
 } // namespace libasm
 
 // Local Variables:
