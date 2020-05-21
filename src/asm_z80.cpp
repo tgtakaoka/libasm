@@ -261,7 +261,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
     opr.reg = REG_UNDEF;
     opr.val = 0;
 
-    if (*_scan == 0 || *_scan == ';') {
+    if (endOfLine(_scan)) {
         opr.format = NO_OPR;
         return opr.setError(OK);
     }

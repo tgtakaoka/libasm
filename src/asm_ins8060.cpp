@@ -67,7 +67,7 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
     op.reg = _regs.parseRegister(p);
     op.val = 0;
     p = skipSpaces(p + _regs.regNameLen(op.reg));
-    if (*p == 0 || *p == ';') {
+    if (endOfLine(p)) {
         if (!autoDisp && op.reg == REG_UNDEF) {
             op.mode = INHR;
             _scan = p;

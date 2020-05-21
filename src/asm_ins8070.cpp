@@ -167,18 +167,18 @@ Error AsmIns8070::parseOperand(Operand &op) {
     op.autoIndex = op.hasVal = false;
     op.val = 0;
 
-    if (*_scan == 0 || *_scan == ';')
+    if (endOfLine(_scan))
         return setError(OK);
     if (nextToken(op, op.left))
         return getError();
-    if (*_scan == 0 || *_scan == ';')
+    if (endOfLine(_scan))
         return setError(OK);
     if (*_scan != ',')
         return setError(UNKNOWN_OPERAND);
     _scan = skipSpaces(_scan + 1);
     if (nextToken(op, op.right))
         return getError();
-    if (*_scan == 0 || *_scan == ';')
+    if (endOfLine(_scan))
         return setError(OK);
     if (*_scan != ',')
         return setError(UNKNOWN_OPERAND);

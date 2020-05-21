@@ -730,7 +730,7 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
 Error AsmMc68000::parseOperand(Operand &opr) {
     opr.reset();
     const char *p = _scan;
-    if (*p == 0 || *p == ';')
+    if (endOfLine(p))
         return opr.setError(OK);
     if (*p == '#') {
         _scan = p + 1;

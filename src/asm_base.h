@@ -44,6 +44,7 @@ protected:
     void reset(const char *line, SymbolTable *symtab);
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;
+    bool endOfLine(const char *scan);
     Error checkLineEnd(const char *scan = nullptr);
     static const char *skipSpaces(const char *scan);
 

@@ -54,7 +54,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
             p = skipSpaces(p + 1);
         }
     }
-    if (comma == 0 && (*p == 0 || *p == ';')) {
+    if (comma == 0 && endOfLine(p)) {
         _scan = p;
         return setError(OK);
     }
@@ -74,7 +74,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
             comma++;
             p = skipSpaces(p + 1);
         }
-        if (comma == 0 && (*p == 0 || *p == ';')) {
+        if (comma == 0 && endOfLine(p)) {
             _scan = p;
             return setError(OK);
         }
