@@ -24,27 +24,29 @@ Error AsmMc6809::encodeStackOp(InsnMc6809 &insn) {
     uint8_t post = 0;
     const char *p = _scan;
     const bool onUserStack = (insn.opCode() & 2) != 0;
-    while (*p) {
-        host::uint_t bit = 0;
-        host::uint_t reg_d_bits = 0;
-        for (host::uint_t bitPos = 0, mask = 0x01; bitPos < 8; bitPos++, mask <<= 1) {
-            const RegName regName = _regs.decodeStackReg(bitPos, onUserStack);
-            if (regName == REG_A || regName == REG_B) reg_d_bits |= mask;
-            if (_regs.compareRegName(p, regName)) {
-                p += _regs.regNameLen(regName);
-                bit = mask;
-                break;
-            }
+    while (!endOfLine(p)) {
+        const RegName regName = _regs.parseRegName(p);
+        if (regName == REG_UNDEF) {
+            setError(UNKNOWN_REGISTER);
+            break;
         }
-        if (bit == 0 && _regs.compareRegName(p, REG_D)) {
-            p += _regs.regNameLen(REG_D);
-            bit = reg_d_bits;
+        const host::int_t bits = _regs.encodeStackReg(regName, onUserStack);
+        if (bits == 0) {
+            setError(ILLEGAL_REGISTER);
+            break;
         }
-        if (bit == 0) return setError(UNKNOWN_REGISTER);
-        post |= bit;
-        while (isspace(*p)) p++;
-        if (*p != ',') break;
-        p++;
+        if (post & bits) {
+            post |= bits;
+            setError(DUPLICATE_REGISTER);
+            break;
+        }
+        post |= bits;
+        p = skipSpaces(p + _regs.regNameLen(regName));
+        if (*p == ',') {
+            p = skipSpaces(p + 1);
+            continue;
+        }
+        break;
     }
     insn.emitInsn();
     insn.emitByte(post);

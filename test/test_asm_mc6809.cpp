@@ -163,6 +163,16 @@ static void test_stack() {
     TEST("PULS #$00", 0x35, 0x00);
     TEST("PSHU #$AA", 0x36, 0xAA);
     TEST("PULU #$FF", 0x37, 0xFF);
+
+    ETEST(ILLEGAL_REGISTER, "PSHS S", 0x34, 0x00);
+    ETEST(ILLEGAL_REGISTER, "PULS S", 0x35, 0x00);
+    ETEST(ILLEGAL_REGISTER, "PSHU U", 0x36, 0x00);
+    ETEST(ILLEGAL_REGISTER, "PULU U", 0x37, 0x00);
+
+    ETEST(DUPLICATE_REGISTER, "PSHS A,D",   0x34, 0x06);
+    ETEST(DUPLICATE_REGISTER, "PULS D,B",   0x35, 0x06);
+    ETEST(DUPLICATE_REGISTER, "PSHU X,D,X", 0x36, 0x16);
+    ETEST(UNKNOWN_REGISTER,   "PULU W",     0x37, 0x00);
 }
 
 static void test_register() {

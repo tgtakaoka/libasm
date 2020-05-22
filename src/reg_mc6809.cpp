@@ -142,6 +142,14 @@ RegName RegMc6809::decodeStackReg(host::uint_t bitPos, bool onUserStack) const {
     return (onUserStack && regName == REG_U) ? REG_S : regName;
 }
 
+uint8_t RegMc6809::encodeStackReg(RegName regName, bool onUserStack) const {
+    if (onUserStack && regName == REG_U) return 0;
+    if (onUserStack && regName == REG_S) regName = REG_U;
+    if (regName == REG_D) return 0x06;
+    const host::int_t regNum = encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
+    return regNum >= 0 ? (1 << regNum) : 0;
+}
+
 RegName RegMc6809::parseBitOpReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(BIT_OP_REGS));
 }
@@ -257,6 +265,22 @@ RegName RegMc6809::decodeRegName(uint8_t regNum) const {
     return TableMc6809.is6309()
         ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS))
         : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS));
+}
+
+static constexpr RegName MC6809_REGS[] PROGMEM = {
+    REG_A, REG_B, REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC,
+    REG_CC, REG_DP, REG_PCR,
+};
+
+static constexpr RegName HD6309_EXTRA_REGS[] PROGMEM = {
+    REG_E, REG_F, REG_W, REG_V, REG_Z
+};
+
+RegName RegMc6809::parseRegName(const char *line) const {
+    RegName regName = parseRegName(line, ARRAY_RANGE(MC6809_REGS));
+    if (regName == REG_UNDEF && TableMc6809.is6309())
+        regName = parseRegName(line, ARRAY_RANGE(HD6309_EXTRA_REGS));
+    return regName;
 }
 
 static constexpr RegName BYTE_REGS[] PROGMEM = {

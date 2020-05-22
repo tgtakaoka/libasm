@@ -40,8 +40,9 @@ enum Error : host::uint_t {
     UNKNOWN_OPERAND = 23,
     OPERAND_NOT_ZP = 24,        // R6502
     OPERAND_TOO_FAR = 25,
-    ILLEGAL_BIT_NUMBER = 16,    // HD6309
+    ILLEGAL_BIT_NUMBER = 26,    // HD6309
     GARBAGE_AT_END = 27,
+    DUPLICATE_REGISTER = 28,
 
     // ValueParser
     ILLEGAL_CONSTANT = 100,

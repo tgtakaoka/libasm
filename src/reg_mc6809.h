@@ -47,12 +47,14 @@ enum RegName : char {
 
 class RegMc6809 : public RegBase {
 public:
+    RegName parseRegName(const char *line) const;
     RegName parseIndexReg(const char *line) const;
     RegName parseBaseReg(const char *line) const;
     RegName parseDataReg(const char *line) const;
     host::int_t encodeIndexReg(RegName regName) const;
     host::int_t encodeBaseReg(RegName regName) const;
     host::int_t encodeDataReg(RegName regName) const;
+    uint8_t encodeStackReg(RegName regName, bool onUserStack) const;
     RegName decodeIndexReg(uint8_t regNum) const;
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;
