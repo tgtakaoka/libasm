@@ -116,17 +116,18 @@ Error AsmIns8070::encodeGeneric(
 }
 
 Error AsmIns8070::nextToken(Operand &op, OprFormat &opr) {
-    if (*_scan == '@') {
+    const char *p = _scan;
+    if (*p == '@') {
         if (op.autoIndex) return setError(UNKNOWN_OPERAND);
         op.autoIndex = true;
-        _scan = skipSpaces(_scan + 1);
+        p = skipSpaces(p + 1);
     }
-    const RegName reg = _regs.parseRegister(_scan);
+    const RegName reg = _regs.parseRegister(p);
     if (reg == REG_UNDEF) {
         if (op.hasVal) return setError(UNKNOWN_OPERAND);
-        const bool immediate = (*_scan == '=' || *_scan == '#');
-        if (immediate)
-            _scan = skipSpaces(_scan + 1);
+        const bool immediate = (*p == '=' || *p == '#');
+        if (immediate) p = skipSpaces(p + 1);
+        _scan = p;
         if (getOperand(op.val)) return getError();
         op.setError(getError());
         op.hasVal = true;
@@ -156,7 +157,7 @@ Error AsmIns8070::nextToken(Operand &op, OprFormat &opr) {
     default:
         return setError(UNKNOWN_REGISTER);
     }
-    _scan = skipSpaces(_scan + _regs.regNameLen(reg));
+    _scan = p + _regs.regNameLen(reg);
     return setOK();
 }
 
@@ -167,22 +168,25 @@ Error AsmIns8070::parseOperand(Operand &op) {
     op.autoIndex = op.hasVal = false;
     op.val = 0;
 
-    if (endOfLine(_scan))
+    const char *p = _scan;
+    if (endOfLine(p))
         return setOK();
     if (nextToken(op, op.left))
         return getError();
-    if (endOfLine(_scan))
+    p = skipSpaces(_scan);
+    if (endOfLine(p))
         return setOK();
-    if (*_scan != ',')
+    if (*p != ',')
         return setError(UNKNOWN_OPERAND);
-    _scan = skipSpaces(_scan + 1);
+    _scan = skipSpaces(p + 1);
     if (nextToken(op, op.right))
         return getError();
-    if (endOfLine(_scan))
+    p = skipSpaces(_scan);
+    if (endOfLine(p))
         return setOK();
-    if (*_scan != ',')
+    if (*p != ',')
         return setError(UNKNOWN_OPERAND);
-    _scan = skipSpaces(_scan + 1);
+    _scan = skipSpaces(p + 1);
     OprFormat extra;
     if (nextToken(op, extra)) return getError();
     if (op.right != OPR_16)

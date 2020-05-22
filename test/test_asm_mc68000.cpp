@@ -58,27 +58,37 @@ static void test_inherent() {
     TEST("RTR",   047167);
 }
 
-static void test_comment() {
-    TEST("NOP         ; comment", 047161);
-    TEST("ORI   #0,CCR; comment", 000074, 0x0000);
-    TEST("ANDI  #0,SR ; comment", 001174, 0x0000);
-    TEST("MOVE  (0),D1; comment", 031070, 0x0000);
-    TEST("MOVE  #0,D1 ; comment", 031074, 0x0000);
-    TEST("MOVE  D1,(0); comment", 030701, 0x0000);
-    TEST("MOVE  D2,(0,A3)   ; comment", 033502, 0x0000);
-    TEST("MOVE  (0,A1,D2),D3; comment", 033061, 0x2000);
-    TEST("MOVEP D1,(0,A1)   ; comment", 001611, 0x0000);
-    TEST("MOVEP (0,A1),D1   ; comment", 001411, 0x0000);
-    TEST("MOVEQ #0,D1       ; comment", 071000);
-    TEST("ADDQ  #8,D1       ; comment", 050101);
-    TEST("ADDQ  #1,(0,A1)   ; comment", 051151, 0x0000);
-    TEST("LSR   #8,D1       ; comment", 0160111);
-    TEST("ROR   (0,A1)      ; comment", 0163351, 0x0000);
+static void test_move_mlt() {
+    TEST("MOVEM.W D0-D7/A1-A7,-(A0)", 044240, 0xFF7F);
+    TEST("MOVEM.W D0-D7/A1-A7,(A0)",  044220, 0xFEFF);
+    TEST("MOVEM   D0,-(A0)",          044240, 0x8000);
+    TEST("MOVEM.L (A1)+,D7-A0/A6-A7", 046331, 0xC180);
+    TEST("MOVEM.L (A1)+,D0",          046331, 0x0001);
+    TEST("MOVEM.L (A1)+,D4-A3/D0",    046331, 0x0FF1);
+    ETEST(DUPLICATE_REGISTER, "MOVEM.L (A1)+,D4-A3/D7");
+}
 
-    ATEST(0x1000, "BRA   *   ; comment", 060000|0xFE);
-    ATEST(0x1000, "DBRA  D0,*; comment", 050710, 0xFFFE);
-    ATEST(0x1000, "MOVEA (*,PC),A1     ; comment", 021172, 0xFFFE);
-    ATEST(0x1000, "MOVEA (*,PC,D1.L),A1; comment", 021173, 0x18FE);
+static void test_comment() {
+    TEST("NOP             ; comment", 047161);
+    TEST("ORI  # 0 , CCR  ; comment", 000074, 0x0000);
+    TEST("ANDI # 0 , SR   ; comment", 001174, 0x0000);
+    TEST("MOVE ( 0 ) , D1 ; comment", 031070, 0x0000);
+    TEST("MOVE # 0 , D1   ; comment", 031074, 0x0000);
+    TEST("MOVE D1 , ( 0 ) ; comment", 030701, 0x0000);
+    TEST("MOVE D2 , ( 0 , A3 )      ; comment", 033502, 0x0000);
+    TEST("MOVE ( 0 , A1 , D2 ) , D3 ; comment", 033061, 0x2000);
+    TEST("MOVEP D1 , ( 0 , A1 ); comment", 001611, 0x0000);
+    TEST("MOVEP ( 0 , A1 ) , D1; comment", 001411, 0x0000);
+    TEST("MOVEQ # 0 , D1       ; comment", 071000);
+    TEST("ADDQ  # 8 , D1       ; comment", 050101);
+    TEST("ADDQ  # 1 , ( 0 , A1 )   ; comment", 051151, 0x0000);
+    TEST("LSR   # 8 , D1       ; comment", 0160111);
+    TEST("ROR   ( 0 , A1 )     ; comment", 0163351, 0x0000);
+
+    ATEST(0x1000, "BRA   *      ; comment", 060000|0xFE);
+    ATEST(0x1000, "DBRA  D0 , * ; comment", 050710, 0xFFFE);
+    ATEST(0x1000, "MOVEA ( * , PC ) , A1        ; comment", 021172, 0xFFFE);
+    ATEST(0x1000, "MOVEA ( * , PC , D1.L ) , A1 ; comment", 021173, 0x18FE);
 }
 
 static void test_undefined_symbol() {
@@ -114,6 +124,7 @@ static void run_test(void (*test)(), const char *test_name) {
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
     RUN_TEST(test_inherent);
+    RUN_TEST(test_move_mlt);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;

@@ -261,30 +261,31 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
     opr.reg = REG_UNDEF;
     opr.val = 0;
 
-    if (endOfLine(_scan)) {
+    const char *p = _scan;
+    if (endOfLine(p)) {
         opr.format = NO_OPR;
         return opr.setOK();
     }
 
     if (opr.format == COND_4 || opr.format == COND_8) {
         CcName ccName;
-        if ((ccName = _regs.parseCc4Name(_scan)) != CC_UNDEF) {
-            _scan += RegZ80::ccNameLen(ccName);
+        if ((ccName = _regs.parseCc4Name(p)) != CC_UNDEF) {
+            _scan = p + RegZ80::ccNameLen(ccName);
             opr.format = COND_4;
             opr.val = RegZ80::encodeCcName(ccName);
             return opr.setOK();
         }
-        if ((ccName = _regs.parseCc8Name(_scan)) != CC_UNDEF) {
-            _scan += RegZ80::ccNameLen(ccName);
+        if ((ccName = _regs.parseCc8Name(p)) != CC_UNDEF) {
+            _scan = p + RegZ80::ccNameLen(ccName);
             opr.format = COND_8;
             opr.val = RegZ80::encodeCcName(ccName);
             return opr.setOK();
         }
     }
 
-    opr.reg = _regs.parseRegister(_scan);
+    opr.reg = _regs.parseRegister(p);
     if (opr.reg != REG_UNDEF) {
-        _scan += RegZ80::regNameLen(opr.reg);
+        _scan = p + RegZ80::regNameLen(opr.reg);
         switch (opr.reg) {
         case REG_A:   opr.format = A_REG; break;
         case REG_BC:  opr.format = BC_REG; break;
@@ -304,7 +305,6 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             opr.size = RegZ80::registerSize(opr.reg);
         return opr.setOK();
     }
-    const char *p = _scan;
     if (*p == '(') {
         p = skipSpaces(p + 1);
         opr.reg = _regs.parseRegister(p);
@@ -319,13 +319,13 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
                 if (getOperand(opr.val)) return opr.setError(getError());
                 opr.format = ADDR_16;
             }
-            if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
-            _scan++;
+            p = skipSpaces(_scan);
+            if (*p != ')') return opr.setError(UNKNOWN_OPERAND);
+            _scan = p + 1;
             return opr.setOK();
         }
         p = skipSpaces(p + RegZ80::regNameLen(opr.reg));
         if (*p == ')') {
-            p++;
             switch (opr.reg) {
             case REG_BC:
             case REG_DE: opr.format = BC_PTR; break;
@@ -337,7 +337,7 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
             default:     return opr.setError(UNKNOWN_OPERAND);
             }
             if (opr.size == SZ_NONE) opr.size = SZ_BYTE;
-            _scan = p;
+            _scan = p + 1;
             return opr.setOK();
         }
         if (*p == '+' || *p == '-') {
@@ -346,16 +346,18 @@ Error AsmZ80::parseOperand(const InsnZ80 &insn, Operand &opr) {
                 _scan = p;
                 if (getOperand(val8)) return opr.setError(getError());
                 opr.setError(getError());
-                if (*_scan != ')') return opr.setError(UNKNOWN_OPERAND);
-                _scan++;
+                p = skipSpaces(_scan);
+                if (*p != ')') return opr.setError(UNKNOWN_OPERAND);
                 opr.val = val8;
                 opr.format = IX_OFF;
                 if (opr.size == SZ_NONE) opr.size = SZ_BYTE;
+                _scan = p + 1;
                 return OK;
             }
         }
         return opr.setError(UNKNOWN_OPERAND);
     }
+    _scan = p;
     if (opr.size == SZ_WORD
         || insn.addrMode() == REL8 || insn.addrMode() == DIRECT) {
         if (getOperand(opr.val)) return opr.setError(getError());
@@ -384,6 +386,7 @@ Error AsmZ80::encode(Insn &_insn) {
     left.size = SZ_NONE;
     if (parseOperand(insn, left))
         return setError(left);
+    _scan = skipSpaces(_scan);
     if (*_scan == ',') {
         _scan = skipSpaces(_scan + 1);
         right.format = insn.rightFormat();

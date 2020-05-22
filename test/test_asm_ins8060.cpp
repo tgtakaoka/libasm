@@ -213,7 +213,7 @@ static void test_comment() {
     TEST("JMP E(P1)     ; comment", 0x91, 0x80);
     TEST("JMP p127 (P2) ; comment", 0x92, 0x7F);
     TEST("JMP m127  (P3); comment", 0x93, 0x81);
-    TEST("LD @126(P3)   ; comment", 0xC7, 0x7E);
+    TEST("LD @ 126(P3)  ; comment", 0xC7, 0x7E);
 }
 
 static void test_undefined_symbol() {

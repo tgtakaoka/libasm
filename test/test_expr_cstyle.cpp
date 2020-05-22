@@ -352,17 +352,28 @@ static void test_errors() {
     E32("100%0",   0, DIVIDE_BY_ZERO);
 }
 
+static void test_spaces() {
+    E32(" - 1 ", -1, OK);
+    E32(" + 1 ",  1, OK);
+    E32(" ~ 0 ", -1, OK);
+    E32(" 1 + 2 ; + 3 ", 3, OK);
+    E32(" ( 1 + 2 ) * 3 ", 9, OK);
+}
+
 static void test_formatter() {
-    F8(-1,  -10, true,  "-1");
-    F8(15,   16, true,  "15");
-    F8(-15, -16, true,  "-15");
-    F8(7,     8, true,  "7");
-    F8(-7,   -8, true,  "-7");
-    F8(1,     2, true,  "1");
-    F8(255,  16, false, "0xff");
-    F8(255,   8, false, "0377");
-    F8(255,   2, false, "0b11111111");
-    F24(0,   16, false, "0x000000");
+    F16(-1,  -10, true,  "-1");
+    F16(15,   16, true,  "15");
+    F16(16,   16, true,  "0x0010");
+    F16(-15, -16, true,  "-15");
+    F16(7,     8, true,  "7");
+    F16(8,     8, true,  "0000010");
+    F16(-7,   -8, true,  "-7");
+    F8(1,      2, true,  "1");
+    F8(2,      2, true,  "0b00000010");
+    F16(255,  16, false, "0x00ff");
+    F16(255,   8, false, "0000377");
+    F16(255,   2, false, "0b0000000011111111");
+    F24(0,    16, false, "0x000000");
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -385,6 +396,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_precedence);
     RUN_TEST(test_current_address);
     RUN_TEST(test_errors);
+    RUN_TEST(test_spaces);
     RUN_TEST(test_formatter);
     return 0;
 }

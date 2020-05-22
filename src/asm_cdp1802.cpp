@@ -29,7 +29,7 @@ Error AsmCdp1802::encodeRegn(InsnCdp1802 &insn) {
         return setError(ILLEGAL_REGISTER);
     insn.embed(regNo);
     insn.emitInsn();
-    return checkLineEnd();
+    return OK;
 }
 
 Error AsmCdp1802::encodeImm8(InsnCdp1802 &insn) {
@@ -37,7 +37,7 @@ Error AsmCdp1802::encodeImm8(InsnCdp1802 &insn) {
     if (getOperand(val)) return getError();
     insn.emitInsn();
     insn.emitByte(val);
-    return checkLineEnd();
+    return OK;
 }
 
 Error AsmCdp1802::encodePage(InsnCdp1802 &insn) {
@@ -50,7 +50,7 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn) {
         return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(addr));
-    return checkLineEnd();
+    return OK;
 }
 
 Error AsmCdp1802::encodeAddr(InsnCdp1802 &insn) {
@@ -58,7 +58,7 @@ Error AsmCdp1802::encodeAddr(InsnCdp1802 &insn) {
     if (getOperand(addr)) return getError();
     insn.emitInsn();
     insn.emitUint16(addr);
-    return checkLineEnd();
+    return OK;
 }
 
 Error AsmCdp1802::encodeIoad(InsnCdp1802 &insn) {
@@ -70,7 +70,7 @@ Error AsmCdp1802::encodeIoad(InsnCdp1802 &insn) {
         return setError(OVERFLOW_RANGE);
     insn.embed(ioAddr);
     insn.emitInsn();
-    return checkLineEnd();
+    return OK;
 }
 
 Error AsmCdp1802::encode(Insn &_insn) {
@@ -82,17 +82,16 @@ Error AsmCdp1802::encode(Insn &_insn) {
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
-    case IMPL:
-        insn.emitInsn(); return checkLineEnd();
+    case IMPL: insn.emitInsn(); break;
     case REGN:
-    case REG1: return encodeRegn(insn);
-    case IMM8: return encodeImm8(insn);
-    case PAGE: return encodePage(insn);
-    case ADDR: return encodeAddr(insn);
-    case IOAD: return encodeIoad(insn);
-    default:
-        return setError(INTERNAL_ERROR);
+    case REG1: encodeRegn(insn); break;
+    case IMM8: encodeImm8(insn); break;
+    case PAGE: encodePage(insn); break;
+    case ADDR: encodeAddr(insn); break;
+    case IOAD: encodeIoad(insn); break;
+    default: return setError(INTERNAL_ERROR);
     }
+    return checkLineEnd();
 }
 
 } // namespace cdp1802

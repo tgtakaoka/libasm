@@ -60,14 +60,16 @@ Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
 }
 
 Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
-    const RegName dstReg = _regs.parseDataReg(_scan);
+    const char *p = _scan;
+    const RegName dstReg = _regs.parseDataReg(p);
     if (dstReg == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
-    _scan += _regs.regNameLen(dstReg);
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    const RegName srcReg = _regs.parseDataReg(++_scan);
+    p = skipSpaces(p + _regs.regNameLen(dstReg));
+    if (*p != ',') return setError(UNKNOWN_OPERAND);
+    p = skipSpaces(p + 1);
+    const RegName srcReg = _regs.parseDataReg(p);
     if (srcReg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
-    _scan += _regs.regNameLen(srcReg);
+    _scan = p + _regs.regNameLen(srcReg);
 
     const host::uint_t dstNum = _regs.encodeDataReg(dstReg);
     const host::uint_t srcNum = _regs.encodeDataReg(srcReg);
@@ -85,8 +87,11 @@ Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
 }
 
 Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
-    if (insn.insnFormat() != NO_FORMAT && *_scan++ != ',')
-        return setError(UNKNOWN_OPERAND);
+    if (insn.insnFormat() != NO_FORMAT) {
+        _scan = skipSpaces(_scan);
+        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+        _scan++;
+    }
     if (insn.addrMode() == IMM8) {
         uint8_t val8;
         if (getOperand(val8)) return getError();

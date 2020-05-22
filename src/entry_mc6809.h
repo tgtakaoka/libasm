@@ -29,28 +29,27 @@ enum CpuType : host::uint_t {
 
 enum OprSize : host::uint_t {
     SZ_NONE = 0,
-    SZ_BYTE = 1,                // 8 bit operation
-    SZ_WORD = 2,                // 16 bit operation
-    SZ_LONG = 3,                // 32 bit operation
+    SZ_BYTE = 1, // 8 bit operation
+    SZ_WORD = 2, // 16 bit operation
+    SZ_LONG = 3, // 32 bit operation
 };
 
 enum AddrMode : host::uint_t {
-    INHR,
-    DIRP,
-    EXTD,
-    INDX,
-    REL,
-    IMM,
-    STKOP,
-    REGS,
+    INH,       // Inherent
+    DIR,       // Direct Page
+    EXT,       // Extended
+    IDX,       // Indexed
+    REL,       // Relative
+    IMM,       // Immediate
+    PSH_PUL,   // Push Pull
+    REG_REG,   // Inter register
     // HD6309
-    IMMDIR,
-    IMMEXT,
-    IMMIDX,
-    BITOP,
-    TFRM,
-    // Pseudo instruction
-    PSEUDO,
+    IMM_DIR,   // Immediate and Direct Page
+    IMM_EXT,   // Immediate and Extended
+    IMM_IDX,   // Immediate and Indexed
+    BITOP,     // Bit Operation
+    TFR_MEM,   // Transfer Memory
+    PSEUDO,    // Pseudo instruction
 };
 
 struct Entry {

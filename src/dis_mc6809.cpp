@@ -232,7 +232,7 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
     return setOK();
 }
 
-Error DisMc6809::decodeStackOp(DisMemory &memory, InsnMc6809 &insn) {
+Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const bool push = (insn.opCode() & 1) == 0;
@@ -275,9 +275,9 @@ Error DisMc6809::decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn) {
     outConstant(val);
     *_operands++ = ',';
     switch (insn.addrMode()) {
-    case IMMDIR: return decodeDirectPage(memory, insn);
-    case IMMEXT: return decodeExtended(memory, insn);
-    case IMMIDX: return decodeIndexed(memory, insn);
+    case IMM_DIR: return decodeDirectPage(memory, insn);
+    case IMM_EXT: return decodeExtended(memory, insn);
+    case IMM_IDX: return decodeIndexed(memory, insn);
     default:     return setError(INTERNAL_ERROR);
     }
 }
@@ -330,26 +330,20 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INHR:  return setOK();
-    case DIRP:  return decodeDirectPage(memory, insn);
-    case EXTD:  return decodeExtended(memory, insn);
-    case INDX:  return decodeIndexed(memory, insn);
-    case REL:   return decodeRelative(memory, insn);
-    case STKOP: return decodeStackOp(memory, insn);
-    case REGS:  return decodeRegisters(memory, insn);
-    case IMM:   return decodeImmediate(memory, insn);
-    default:
-        if (TableMc6809.is6309()) {
-            switch (insn.addrMode()) {
-            case IMMDIR:
-            case IMMEXT:
-            case IMMIDX:return decodeImmediatePlus(memory, insn);
-            case BITOP: return decodeBitOperation(memory, insn);
-            case TFRM:  return decodeTransferMemory(memory, insn);
-            default:    break;
-            }
-        }
-        return setError(INTERNAL_ERROR);
+    case INH: return setOK();
+    case DIR: return decodeDirectPage(memory, insn);
+    case EXT: return decodeExtended(memory, insn);
+    case IDX: return decodeIndexed(memory, insn);
+    case REL: return decodeRelative(memory, insn);
+    case IMM: return decodeImmediate(memory, insn);
+    case PSH_PUL: return decodePushPull(memory, insn);
+    case REG_REG: return decodeRegisters(memory, insn);
+    case IMM_DIR:
+    case IMM_EXT:
+    case IMM_IDX: return decodeImmediatePlus(memory, insn);
+    case BITOP:   return decodeBitOperation(memory, insn);
+    case TFR_MEM: return decodeTransferMemory(memory, insn);
+    default:      return setError(INTERNAL_ERROR);
     }
 }
 

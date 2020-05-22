@@ -543,6 +543,12 @@ static void test_comment() {
     TEST("ORA ($10,X); comment", 0x01, 0x10);
     TEST("ORA ($10),Y; comment", 0x11, 0x10);
     ATEST(0x1000, "BPL $1002; comment", 0x10, 0x00);
+
+    TEST("LDX $10 , Y     ; comment", 0xB6, 0x10);
+    TEST("ORA $1234 , X   ; comment", 0x1D, 0x34, 0x12);
+    TEST("JMP ( $1234 )   ; comment", 0x6C, 0x34, 0x12);
+    TEST("ORA ( $10 , X ) ; comment", 0x01, 0x10);
+    TEST("ORA ( $10 ) , Y ; comment", 0x11, 0x10);
 }
 
 static void test_undefined_symbol() {

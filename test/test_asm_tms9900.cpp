@@ -254,15 +254,17 @@ static void test_comment() {
     TEST("IDLE         ; comment", 0x0340);
     TEST("LWPI 1234H   ; comment", 0x02E0, 0x1234);
     TEST("STWP R14     ; comment", 0x02AE);
-    TEST("LI   R0,0000H; comment", 0x0200, 0x0000);
-    TEST("X    *R10    ; comment",   0x049A);
-    TEST("CLR  *R12+   ; comment",  0x04FC);
-    TEST("BLWP @9876H  ; comment", 0x0420, 0x9876);
-    TEST("INC  @2(R7)  ; comment", 0x05A7, 0x0002);
-    TEST("LDCR *R13+,16; comment",  0x303D);
-    TEST("SBO 0        ; comment",    0x1D00);
-    TEST("SZC  @1234H(R10),@5678H(R11) ; comment", 0x4AEA, 0x1234, 0x5678);
+    TEST("LI   R0 , 0  ; comment", 0x0200, 0x0000);
+    TEST("X    * R10   ; comment", 0x049A);
+    TEST("CLR  * R12+  ; comment", 0x04FC);
+    TEST("BLWP @ 9876H ; comment", 0x0420, 0x9876);
+    TEST("SBO  0       ; comment", 0x1D00);
+    TEST("INC  @ 2 ( R7 )  ; comment", 0x05A7, 0x0002);
+    TEST("LDCR * R13+ , 16 ; comment", 0x303D);
+    TEST("SZC  @ 1234H ( R10 ) , @ 5678H ( R11 ) ; comment", 0x4AEA, 0x1234, 0x5678);
     ATEST(0x1000, "JMP 1002H ; comment", 0x1000);
+    ETEST(GARBAGE_AT_END, "CLR  *R12 + ; comment", 0x04DC);
+    ETEST(UNKNOWN_OPERAND, "LDCR *R13 +, 16 ; comment");
 }
 
 static void test_undefined_symbol() {

@@ -21,9 +21,9 @@ namespace libasm {
 namespace tms9900 {
 
 Error AsmTms9900::checkComma() {
-    _scan = skipSpaces(_scan);
-    if (*_scan != ',') return UNKNOWN_OPERAND;
-    _scan = skipSpaces(_scan + 1);
+    const char *p = skipSpaces(_scan);
+    if (*p != ',') return setErrorIf(UNKNOWN_OPERAND);
+    _scan = skipSpaces(p + 1);
     return OK;
 }
 
@@ -32,22 +32,26 @@ Error AsmTms9900::encodeImm(InsnTms9900 &insn, bool emitInsn) {
     if (getOperand(val)) return getError();
     if (emitInsn) insn.emitInsn();
     insn.emitOperand(val);
-    return setError(getError());
+    return OK;
 }
 
 Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
     RegName regName = _regs.parseRegName(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
     _scan += _regs.regNameLen(regName);
-    uint16_t operand = _regs.encodeRegNumber(regName);
+    const uint16_t regNo = _regs.encodeRegNumber(regName);
     switch (insn.addrMode()) {
     case REG:
     case REG_IMM:
-    case CNT_REG: break;
-    case REG_SRC: operand <<= 6; break;
-    default: return setError(INTERNAL_ERROR);
+    case CNT_REG:
+        insn.embed(regNo);
+        break;
+    case REG_SRC:
+        insn.embed(regNo << 6);
+        break;
+    default:
+        return setError(INTERNAL_ERROR);
     }
-    insn.embed(operand);
     if (emitInsn) insn.emitInsn();
     return setOK();
 }
@@ -65,12 +69,16 @@ Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
         count = val8 & 0xf;
     }
     switch (insn.addrMode()) {
-    case CNT_REG: count <<= 4; break;
+    case CNT_REG:
+        insn.embed(count << 4);
+        break;
     case CNT_SRC:
-    case XOP_SRC: count <<= 6; break;
-    default: return setError(INTERNAL_ERROR);
+    case XOP_SRC:
+        insn.embed(count << 6);
+        break;
+    default:
+        return setError(INTERNAL_ERROR);
     }
-    insn.embed(count);
     insn.emitInsn();
     return getError();
 }
@@ -86,7 +94,7 @@ Error AsmTms9900::encodeOpr(
         mode = 0;
         setOK();
     } else if (*p == '*') {
-        p++;
+        p = skipSpaces(p + 1);
         mode = 1;
         if ((regName = _regs.parseRegName(p)) == REG_UNDEF)
             return setError(UNKNOWN_OPERAND);
@@ -98,15 +106,15 @@ Error AsmTms9900::encodeOpr(
         setOK();
     } else if (*p == '@') {
         mode = 2;
-        _scan = p + 1;
+        _scan = skipSpaces(p + 1);
         if (getOperand(val16)) return getError();
-        p = _scan;
+        p = skipSpaces(_scan);
         if (*p == '(') {
-            p++;
+            p = skipSpaces(p + 1);
             regName = _regs.parseRegName(p);
             if (regName == REG_UNDEF || regName == REG_R0)
                 return setError(UNKNOWN_OPERAND);
-            p += _regs.regNameLen(regName);
+            p = skipSpaces(p + _regs.regNameLen(regName));
             if (*p != ')')
                 return setError(UNKNOWN_OPERAND);
             p++;
@@ -114,6 +122,7 @@ Error AsmTms9900::encodeOpr(
             regName = REG_R0;
         }
     }
+    _scan = p;
     uint16_t operand = (mode << 4) | _regs.encodeRegNumber(regName);
     if (destinationa) operand <<= 6;
     insn.embed(operand);
@@ -121,7 +130,6 @@ Error AsmTms9900::encodeOpr(
         insn.emitInsn();
     if (mode == 2)
         insn.emitOperand(val16);
-    _scan = p;
     return getError();
 }
 

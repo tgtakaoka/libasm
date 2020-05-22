@@ -78,7 +78,7 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
             _scan = p;
             return setOK();
         }
-        return setError(UNKNOWN_OPERAND);
+        return setOK();
     }
 
     if (op.reg == REG_E) {
@@ -89,6 +89,7 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
         op.setError(getError());
         p = _scan;
     }
+    p = skipSpaces(p);
     if (*p == '(') {
         p = skipSpaces(p + 1);
         op.reg = _regs.parsePointerReg(p);
@@ -96,7 +97,7 @@ Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
         p = skipSpaces(p + _regs.regNameLen(op.reg));
         if (*p != ')') return setError(UNKNOWN_OPERAND);
         op.mode = autoDisp ? INDX : DISP;
-        _scan = skipSpaces(p + 1);
+        _scan = p + 1;
         return setOK();
     } else if (op.reg == REG_UNDEF && !autoDisp) {
         op.mode = REL8;        // May be IMM8 too.
@@ -116,7 +117,6 @@ Error AsmIns8060::encode(Insn &_insn) {
 
     Operand op;
     if (parseOperand(insn, op)) return setError(op);
-    setError(op);
 
     insn.setAddrMode(op.mode);
     if (TableIns8060.searchNameAndAddrMode(insn))
@@ -127,14 +127,16 @@ Error AsmIns8060::encode(Insn &_insn) {
         insn.emitInsn();
         break;
     case REL8:
-        return encodeRel8(insn, op);
+        encodeRel8(insn, op);
+        break;
     case PNTR:
         insn.embed(_regs.encodePointerReg(op.reg));
         insn.emitInsn();
         break;
     case DISP:
     case INDX:
-        return encodeIndx(insn, op);
+        encodeIndx(insn, op);
+        break;
     case IMM8:
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(op.val));
@@ -142,7 +144,8 @@ Error AsmIns8060::encode(Insn &_insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    return setError(op);
+    setErrorIf(op.getError());
+    return checkLineEnd();
 }
 
 } // namespace ins8060

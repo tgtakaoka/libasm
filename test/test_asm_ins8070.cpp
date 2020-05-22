@@ -326,6 +326,25 @@ static void test_auto_indexed() {
     TEST("SUB A,@neg1,P3",   0xFF, 0xFF);
 }
 
+static void test_comment() {
+    TEST("NOP        ; comment", 0x00);
+    TEST("XCH  A , E ; comment", 0x01);
+    TEST("PUSH EA    ; comment", 0x08);
+    TEST("CALL 15    ; comment", 0x1F);
+    TEST("SSM  P2    ; comment", 0x2E);
+    TEST("LD EA , SP ; comment", 0x31);
+    TEST("ADD A , # 0x12    ; comment", 0xF4, 0x12);
+    TEST("PLI P2 , # 0x1234 ; comment", 0x22, 0x34, 0x12);
+    TEST("ADD A , = 0x12    ; comment", 0xF4, 0x12);
+    TEST("PLI P2 , = 0x1234 ; comment", 0x22, 0x34, 0x12);
+    TEST("ADD EA , 0xFF34   ; comment", 0xB5, 0x34);
+    ATEST(0x1000, "BZ 0x1005; comment", 0x6C, 0x03);
+    TEST("BZ 0 , P3         ; comment", 0x6F, 0x00);
+    TEST("LD EA , 0 , SP    ; comment", 0x81, 0x00);
+    ATEST(0x1000, "LD T , 0x1080 , PC ; comment",  0xA0, 0x7F);
+    TEST("ST EA , @ 127 , P3; comment", 0x8F, 0x7F);
+}
+
 static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "AND S,=UNDEF",  0x39, 0x00);
     ETEST(UNDEFINED_SYMBOL, "ADD A,=UNDEF",  0xF4, 0x00);
@@ -360,6 +379,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_relative);
     RUN_TEST(test_indexed);
     RUN_TEST(test_auto_indexed);
+    RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }

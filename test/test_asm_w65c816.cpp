@@ -650,6 +650,11 @@ static void test_comment() {
     TEST("ORA ($10,X); comment", 0x01, 0x10);
     TEST("ORA ($10),Y; comment", 0x11, 0x10);
     ATEST(0x121000, "BPL $121002; comment", 0x10, 0x00);
+
+    TEST("ORA ( $10 , S ) , Y ; comment", 0x13, 0x10);
+    TEST("SBC $123456 , X ; comment",     0xFF, 0x56, 0x34, 0x12);
+    TEST("JMP  [ $1234 ] ; comment", 0xDC, 0x34, 0x12);
+    TEST("JMPL ( $1234 ) ; comment", 0xDC, 0x34, 0x12);
 }
 
 static void test_undefined_symbol() {

@@ -45,7 +45,7 @@ private:
     Error determineAddrMode(const char *line, InsnMc6809 &insn);
 
     // MC6809
-    Error encodeStackOp(InsnMc6809 &insn);
+    Error encodePushPull(InsnMc6809 &insn);
     Error encodeRegisters(InsnMc6809 &insn);
     Error encodeRelative(InsnMc6809 &insn);
     Error encodeImmediate(InsnMc6809 &insn);

@@ -747,23 +747,31 @@ static void test_bitop_indexed() {
 }
 
 static void test_comment() {
-    TEST("LD B,B;        comment", 0x40);
-    TEST("NOP          ; comment", 0x00);
-    TEST("LD BC,0BEEFH ; comment", 0x01, 0xEF, 0xBE);
-    TEST("LD HL,(5678H); comment", 0x2A, 0x78, 0x56);
-    TEST("CALL C,1234H; comment", 0xDC, 0x34, 0x12);
+    TEST("RST 18H        ; comment", 0xDF);
+    TEST("LD B , B       ; comment", 0x40);
+    TEST("NOP            ; comment", 0x00);
+    TEST("LD BC , 0BEEFH ; comment", 0x01, 0xEF, 0xBE);
+    TEST("LD HL , ( 5678H ) ; comment", 0x2A, 0x78, 0x56);
+    TEST("CALL C , 1234H ; comment", 0xDC, 0x34, 0x12);
     TEST("RET         ; comment", 0xC9);
     TEST("RET NZ      ; comment", 0xC0);
 
     // Z80
     assembler.setCpu("z80");
-    TEST("BIT 0,B     ; comment", 0xCB, 0x40);
-    TEST("INC (IX+2)  ; comment", 0xDD, 0x34, 0x02);
-    TEST("ADD A,(IY-2); comment", 0xFD, 0x86, 0xFE);
-    TEST("EX AF,AF';     comment",  0x08);
+    TEST("IM 2           ; comment", 0xED, 0x5E);
+    TEST("BIT 0 , B      ; comment", 0xCB, 0x40);
+    TEST("BIT 6 , ( HL ) ; comment", 0xCB, 0x76);
+    TEST("INC ( IX + 2 ) ; comment", 0xDD, 0x34, 0x02);
+    TEST("LD ( IY - 2 ) , B  ; comment", 0xFD, 0x70, 0xFE);
+    TEST("ADD A , ( IY - 2 ) ; comment", 0xFD, 0x86, 0xFE);
+    TEST("EX AF , AF'        ; comment", 0x08);
+    TEST("LD ( 0ABCDH ) , IX ; comment", 0xDD, 0x22, 0xCD, 0xAB);
+    TEST("LD IX , ( 5678H )  ; comment", 0xDD, 0x2A, 0x78, 0x56);
+    TEST("EX ( SP ) , IX     ; comment", 0xDD, 0xE3);
+    TEST("JP ( IX )          ; comment", 0xDD, 0xE9);
 
-    ATEST(0x1000, "JR 1000H   ; comment",    0x18, 0xFE);
-    ATEST(0x1000, "JR NZ,1004H; comment", 0x20, 0x02);
+    ATEST(0x1000, "JR 1000H     ; comment", 0x18, 0xFE);
+    ATEST(0x1000, "JR NZ , 1004H; comment", 0x20, 0x02);
 }
 
 static void test_undefined_symbol() {

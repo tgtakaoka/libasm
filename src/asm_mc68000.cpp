@@ -701,6 +701,7 @@ Error AsmMc68000::encodeMoveOpr(
 
 Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
     const char *p = _scan;
+    Error error = OK;
     for (;;) {
         RegName start = RegMc68000::parseRegName(p);
         if (!RegMc68000::isADreg(start))
@@ -717,14 +718,17 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
             p = skipSpaces(p + RegMc68000::regNameLen(last));
         }
         if (s > e) return opr.setError(UNKNOWN_OPERAND);
-        for (host::uint_t i = s; i <= e; i++)
-            opr.val32 |= (1 << i);
+        for (host::uint_t i = s; i <= e; i++) {
+            const uint32_t bm = (1 << i);
+            if (opr.val32 & bm) error = DUPLICATE_REGISTER;
+            opr.val32 |= bm;
+        }
         if (*p != '/') break;
         p++;
     }
     opr.mode = M_MULT_REGS;
     _scan = p;
-    return opr.setOK();
+    return opr.setError(error);
 }
 
 Error AsmMc68000::parseOperand(Operand &opr) {

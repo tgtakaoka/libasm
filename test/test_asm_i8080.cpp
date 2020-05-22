@@ -383,12 +383,16 @@ static void test_io() {
 }
 
 static void test_comment() {
+    TEST("RST 1    ; comment", 0xCF);
     TEST("MOV B,B  ; comment", 0x40);
     TEST("STAX B   ; comment", 0x02);
     TEST("XTHL     ; comment", 0xE3);
     TEST("JMP 1234H; comment", 0xC3, 0x34, 0x12);
     TEST("ANI ~0FH ; comment", 0xE6, 0xF0);
     TEST("CPI -1-23; comment", 0xFE, 0xE8);
+    TEST("MOV B , B  ; comment", 0x40);
+    TEST("MVI M , 0F6H ; comment", 0x36, 0xF6);
+    TEST("LXI B , 0BEEFH ; comment", 0x01, 0xEF, 0xBE);
 }
 
 static void test_undefined_symbol() {

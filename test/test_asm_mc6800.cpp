@@ -815,12 +815,12 @@ static void test_comment() {
     TEST("NOP       ; comment", 0x01);
     TEST("PSH A     ; comment", 0x36);
     TEST("PSHA      ; comment", 0x36);
-    TEST("SUB A #$90; comment", 0x80, 0x90);
-    TEST("SUBA  #$90; comment", 0x80, 0x90);
-    TEST("NEG >$0010; comment", 0x70, 0x00, 0x10);
-    TEST("SUB A >$90; comment", 0xB0, 0x00, 0x90);
+    TEST("SUB A #$90 ; comment", 0x80, 0x90);
+    TEST("SUBA  #$90 ; comment", 0x80, 0x90);
+    TEST("NEG > $0010; comment", 0x70, 0x00, 0x10);
+    TEST("SUB A >$90; comment",  0xB0, 0x00, 0x90);
     TEST("SUB A sym255;comment ", 0x90, 0xFF);
-    TEST("SUB A >sym255;comment", 0xB0, 0x00, 0xFF);
+    TEST("SUB A > sym255;comment", 0xB0, 0x00, 0xFF);
     TEST("SUB A sym1234;comment", 0xB0, 0x12, 0x34);
     TEST("SUBA   >$90; comment", 0xB0, 0x00, 0x90);
     TEST("SUBA sym255;comment ", 0x90, 0xFF);
@@ -828,6 +828,9 @@ static void test_comment() {
     TEST("SUBA sym1234;comment", 0xB0, 0x12, 0x34);
     TEST("JMP sym255;comment ", 0x7E, 0x00, 0xFF);
     TEST("JSR sym1234;comment", 0xBD, 0x12, 0x34);
+    TEST("LDA A X ; comment",     0xA6, 0x00);
+    TEST("LDA A , X ; comment",   0xA6, 0x00);
+    TEST("LDA A 0 , X ; comment", 0xA6, 0x00);
 }
 
 static void test_undefined_symbol() {

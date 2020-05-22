@@ -51,7 +51,7 @@ private:
     Error decodeExtended(DisMemory &memory, InsnMc6809 &insn);
     Error decodeRelative(DisMemory &memory, InsnMc6809 &insn);
     Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeStackOp(DisMemory &memory, InsnMc6809 &insn);
+    Error decodePushPull(DisMemory &memory, InsnMc6809 &insn);
     Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn);
     // HD6309
     Error decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn);

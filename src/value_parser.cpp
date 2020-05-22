@@ -276,6 +276,7 @@ Value ValueParser::readCharacterConstant() {
 // Operator precedence (larger value means higher precedence).
 // The same order of C/C++ language.
 ValueParser::Operator ValueParser::readOperator() {
+    const char *saved_next = _next;
     skipSpaces();
     switch (*_next) {
     case '*': _next++; return Operator(OP_MUL, 13);
@@ -300,6 +301,7 @@ ValueParser::Operator ValueParser::readOperator() {
     case '|': _next++; return Operator(OP_BIT_OR,  6);
     default: break;
     }
+    _next = saved_next;
     return Operator(OP_NONE, 0);
 }
 
