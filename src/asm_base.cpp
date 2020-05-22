@@ -55,7 +55,7 @@ bool Assembler::endOfLine(const char *scan) {
 Error Assembler::checkLineEnd(const char *scan) {
     if (scan == nullptr) scan = _scan;
     if (endOfLine(skipSpaces(scan)))
-        return setError(getError());
+        return setErrorIf(getError());
     return setError(GARBAGE_AT_END);
 }
 

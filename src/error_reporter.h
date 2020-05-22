@@ -75,6 +75,10 @@ public:
     Error setError(const ErrorReporter &other) {
         return setError(other.getError());
     }
+    Error setErrorIf(Error error) {
+        if (_error == OK) _error = error;
+        return _error;
+    }
 
 private:
     Error _error;

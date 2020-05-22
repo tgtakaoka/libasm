@@ -157,8 +157,8 @@ Error AsmZ80::encodeIndexedImmediate8(
     if (right.format == IX_OFF)
         insn.emitByte(right.val);
     insn.emitByte(opc);
-    if (left.getError()) setError(left);
-    if (right.getError()) setError(right);
+    setErrorIf(left.getError());
+    setErrorIf(right.getError());
     return checkLineEnd();
 }
 

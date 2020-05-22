@@ -760,7 +760,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
         }
         _scan = p;
         if (getOperand(opr.val32)) return opr.setError(getError());
-        if (getError()) opr.setError(getError());
+        opr.setErrorIf(getError());
         p = skipSpaces(_scan);
         if (*p == ')') {
             p = parseSize(p + 1, opr.size);
@@ -823,7 +823,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
     }
     _scan = p;
     if (getOperand(opr.val32)) return opr.setError(getError());
-    if (getError()) opr.setError(getError());
+    opr.setErrorIf(getError());
     opr.mode = M_LABEL;
     return setOK();
 }

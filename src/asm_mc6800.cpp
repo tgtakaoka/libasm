@@ -104,14 +104,14 @@ Error AsmMc6800::parseOperand(Operand &op) {
     if (_token == VALUE) {
         if (comma >= 2) return setError(UNKNOWN_OPERAND);
         op.opr = _val;
-        if (_valError) op.setError(_valError);
+        op.setErrorIf(_valError);
         opSize = _valSize;
         op.mode = EXT;
         comma = 0;
         if (nextToken() == COMMA) {
             comma = 1;
             if (nextToken() == VALUE) {
-                if (_valError) op.setError(_valError);
+                op.setErrorIf(_valError);
                 if (op.reg == REG_UNDEF && !hasImmediate
                     && opSize != SZ_WORD && op.opr < 8) {
                     hasBitNum = true;
@@ -144,7 +144,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
     if (_token == POUND) {
         if (hasImmediate || hasBitNum) return setError(UNKNOWN_OPERAND);
         if (nextToken() != VALUE) return setError(UNKNOWN_OPERAND);
-        if (_valError) op.setError(_valError);
+        op.setErrorIf(_valError);
         hasImmSuffix = true;
         op.imm = _val;
         nextToken();
@@ -152,7 +152,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
     bool hasAddress = false;
     if (_token == COMMA) {
         if (nextToken() != VALUE) return setError(UNKNOWN_OPERAND);
-        if ((op.addrError = _valError)) op.setError(_valError);
+        op.setErrorIf(op.addrError = _valError);
         hasAddress = true;
         op.addr = _val;
         nextToken();

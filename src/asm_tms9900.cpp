@@ -208,7 +208,7 @@ Error AsmTms9900::encode(Insn &_insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    if (getError() == OK) setError(error);
+    setErrorIf(error);
     return checkLineEnd();
 }
 
