@@ -938,8 +938,8 @@ static void test_stack() {
     TEST(PULU, "S",  0x37, 0x40);
     TEST(PULU, "PC", 0x37, 0x80);
 
-    TEST(PULS, "CC,A,B,DP,X,Y,U,PC", 0x35, 0xFF);
-    TEST(PSHU, "PC,S,Y,X,DP,B,A,CC", 0x36, 0xFF);
+    TEST(PULS, "CC,D,DP,X,Y,U,PC", 0x35, 0xFF);
+    TEST(PSHU, "PC,S,Y,X,DP,D,CC", 0x36, 0xFF);
 
     TEST(PSHS, "",   0x34, 0x00);
     TEST(PULS, "",   0x35, 0x00);

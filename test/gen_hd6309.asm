@@ -867,1029 +867,1029 @@
       LEAU   <<0,Y
       LEAU   1,Y
       PSHS   Y,X,B,CC
-      PSHS   Y,X,B,A
-      PSHS   Y,X,B,A,CC
+      PSHS   Y,X,D
+      PSHS   Y,X,D,CC
       PSHS   Y,X,DP
       PSHS   Y,X,DP,CC
       PSHS   Y,X,DP,A
       PSHS   Y,X,DP,A,CC
       PSHS   Y,X,DP,B
       PSHS   Y,X,DP,B,CC
-      PSHS   Y,X,DP,B,A
-      PSHS   Y,X,DP,B,A,CC
+      PSHS   Y,X,DP,D
+      PSHS   Y,X,DP,D,CC
       PSHS   U
       PSHS   U,CC
       PSHS   U,A
       PSHS   U,A,CC
       PSHS   U,B
       PSHS   U,B,CC
-      PSHS   U,B,A
-      PSHS   U,B,A,CC
+      PSHS   U,D
+      PSHS   U,D,CC
       PSHS   U,DP
       PSHS   U,DP,CC
       PSHS   U,DP,A
       PSHS   U,DP,A,CC
       PSHS   U,DP,B
       PSHS   U,DP,B,CC
-      PSHS   U,DP,B,A
-      PSHS   U,DP,B,A,CC
+      PSHS   U,DP,D
+      PSHS   U,DP,D,CC
       PSHS   U,X
       PSHS   U,X,CC
       PSHS   U,X,A
       PSHS   U,X,A,CC
       PSHS   U,X,B
       PSHS   U,X,B,CC
-      PSHS   U,X,B,A
-      PSHS   U,X,B,A,CC
+      PSHS   U,X,D
+      PSHS   U,X,D,CC
       PSHS   U,X,DP
       PSHS   U,X,DP,CC
       PSHS   U,X,DP,A
       PSHS   U,X,DP,A,CC
       PSHS   U,X,DP,B
       PSHS   U,X,DP,B,CC
-      PSHS   U,X,DP,B,A
-      PSHS   U,X,DP,B,A,CC
+      PSHS   U,X,DP,D
+      PSHS   U,X,DP,D,CC
       PSHS   U,Y
       PSHS   U,Y,CC
       PSHS   U,Y,A
       PSHS   U,Y,A,CC
       PSHS   U,Y,B
       PSHS   U,Y,B,CC
-      PSHS   U,Y,B,A
-      PSHS   U,Y,B,A,CC
+      PSHS   U,Y,D
+      PSHS   U,Y,D,CC
       PSHS   U,Y,DP
       PSHS   U,Y,DP,CC
       PSHS   U,Y,DP,A
       PSHS   U,Y,DP,A,CC
       PSHS   U,Y,DP,B
       PSHS   U,Y,DP,B,CC
-      PSHS   U,Y,DP,B,A
-      PSHS   U,Y,DP,B,A,CC
+      PSHS   U,Y,DP,D
+      PSHS   U,Y,DP,D,CC
       PSHS   U,Y,X
       PSHS   U,Y,X,CC
       PSHS   U,Y,X,A
       PSHS   U,Y,X,A,CC
       PSHS   U,Y,X,B
       PSHS   U,Y,X,B,CC
-      PSHS   U,Y,X,B,A
-      PSHS   U,Y,X,B,A,CC
+      PSHS   U,Y,X,D
+      PSHS   U,Y,X,D,CC
       PSHS   U,Y,X,DP
       PSHS   U,Y,X,DP,CC
       PSHS   U,Y,X,DP,A
       PSHS   U,Y,X,DP,A,CC
       PSHS   U,Y,X,DP,B
       PSHS   U,Y,X,DP,B,CC
-      PSHS   U,Y,X,DP,B,A
-      PSHS   U,Y,X,DP,B,A,CC
+      PSHS   U,Y,X,DP,D
+      PSHS   U,Y,X,DP,D,CC
       PSHS   PC
       PSHS   PC,CC
       PSHS   PC,A
       PSHS   PC,A,CC
       PSHS   PC,B
       PSHS   PC,B,CC
-      PSHS   PC,B,A
-      PSHS   PC,B,A,CC
+      PSHS   PC,D
+      PSHS   PC,D,CC
       PSHS   PC,DP
       PSHS   PC,DP,CC
       PSHS   PC,DP,A
       PSHS   PC,DP,A,CC
       PSHS   PC,DP,B
       PSHS   PC,DP,B,CC
-      PSHS   PC,DP,B,A
-      PSHS   PC,DP,B,A,CC
+      PSHS   PC,DP,D
+      PSHS   PC,DP,D,CC
       PSHS   PC,X
       PSHS   PC,X,CC
       PSHS   PC,X,A
       PSHS   PC,X,A,CC
       PSHS   PC,X,B
       PSHS   PC,X,B,CC
-      PSHS   PC,X,B,A
-      PSHS   PC,X,B,A,CC
+      PSHS   PC,X,D
+      PSHS   PC,X,D,CC
       PSHS   PC,X,DP
       PSHS   PC,X,DP,CC
       PSHS   PC,X,DP,A
       PSHS   PC,X,DP,A,CC
       PSHS   PC,X,DP,B
       PSHS   PC,X,DP,B,CC
-      PSHS   PC,X,DP,B,A
-      PSHS   PC,X,DP,B,A,CC
+      PSHS   PC,X,DP,D
+      PSHS   PC,X,DP,D,CC
       PSHS   PC,Y
       PSHS   PC,Y,CC
       PSHS   PC,Y,A
       PSHS   PC,Y,A,CC
       PSHS   PC,Y,B
       PSHS   PC,Y,B,CC
-      PSHS   PC,Y,B,A
-      PSHS   PC,Y,B,A,CC
+      PSHS   PC,Y,D
+      PSHS   PC,Y,D,CC
       PSHS   PC,Y,DP
       PSHS   PC,Y,DP,CC
       PSHS   PC,Y,DP,A
       PSHS   PC,Y,DP,A,CC
       PSHS   PC,Y,DP,B
       PSHS   PC,Y,DP,B,CC
-      PSHS   PC,Y,DP,B,A
-      PSHS   PC,Y,DP,B,A,CC
+      PSHS   PC,Y,DP,D
+      PSHS   PC,Y,DP,D,CC
       PSHS   PC,Y,X
       PSHS   PC,Y,X,CC
       PSHS   PC,Y,X,A
       PSHS   PC,Y,X,A,CC
       PSHS   PC,Y,X,B
       PSHS   PC,Y,X,B,CC
-      PSHS   PC,Y,X,B,A
-      PSHS   PC,Y,X,B,A,CC
+      PSHS   PC,Y,X,D
+      PSHS   PC,Y,X,D,CC
       PSHS   PC,Y,X,DP
       PSHS   PC,Y,X,DP,CC
       PSHS   PC,Y,X,DP,A
       PSHS   PC,Y,X,DP,A,CC
       PSHS   PC,Y,X,DP,B
       PSHS   PC,Y,X,DP,B,CC
-      PSHS   PC,Y,X,DP,B,A
-      PSHS   PC,Y,X,DP,B,A,CC
+      PSHS   PC,Y,X,DP,D
+      PSHS   PC,Y,X,DP,D,CC
       PSHS   PC,U
       PSHS   PC,U,CC
       PSHS   PC,U,A
       PSHS   PC,U,A,CC
       PSHS   PC,U,B
       PSHS   PC,U,B,CC
-      PSHS   PC,U,B,A
-      PSHS   PC,U,B,A,CC
+      PSHS   PC,U,D
+      PSHS   PC,U,D,CC
       PSHS   PC,U,DP
       PSHS   PC,U,DP,CC
       PSHS   PC,U,DP,A
       PSHS   PC,U,DP,A,CC
       PSHS   PC,U,DP,B
       PSHS   PC,U,DP,B,CC
-      PSHS   PC,U,DP,B,A
-      PSHS   PC,U,DP,B,A,CC
+      PSHS   PC,U,DP,D
+      PSHS   PC,U,DP,D,CC
       PSHS   PC,U,X
       PSHS   PC,U,X,CC
       PSHS   PC,U,X,A
       PSHS   PC,U,X,A,CC
       PSHS   PC,U,X,B
       PSHS   PC,U,X,B,CC
-      PSHS   PC,U,X,B,A
-      PSHS   PC,U,X,B,A,CC
+      PSHS   PC,U,X,D
+      PSHS   PC,U,X,D,CC
       PSHS   PC,U,X,DP
       PSHS   PC,U,X,DP,CC
       PSHS   PC,U,X,DP,A
       PSHS   PC,U,X,DP,A,CC
       PSHS   PC,U,X,DP,B
       PSHS   PC,U,X,DP,B,CC
-      PSHS   PC,U,X,DP,B,A
-      PSHS   PC,U,X,DP,B,A,CC
+      PSHS   PC,U,X,DP,D
+      PSHS   PC,U,X,DP,D,CC
       PSHS   PC,U,Y
       PSHS   PC,U,Y,CC
       PSHS   PC,U,Y,A
       PSHS   PC,U,Y,A,CC
       PSHS   PC,U,Y,B
       PSHS   PC,U,Y,B,CC
-      PSHS   PC,U,Y,B,A
-      PSHS   PC,U,Y,B,A,CC
+      PSHS   PC,U,Y,D
+      PSHS   PC,U,Y,D,CC
       PSHS   PC,U,Y,DP
       PSHS   PC,U,Y,DP,CC
       PSHS   PC,U,Y,DP,A
       PSHS   PC,U,Y,DP,A,CC
       PSHS   PC,U,Y,DP,B
       PSHS   PC,U,Y,DP,B,CC
-      PSHS   PC,U,Y,DP,B,A
-      PSHS   PC,U,Y,DP,B,A,CC
+      PSHS   PC,U,Y,DP,D
+      PSHS   PC,U,Y,DP,D,CC
       PSHS   PC,U,Y,X
       PSHS   PC,U,Y,X,CC
       PSHS   PC,U,Y,X,A
       PSHS   PC,U,Y,X,A,CC
       PSHS   PC,U,Y,X,B
       PSHS   PC,U,Y,X,B,CC
-      PSHS   PC,U,Y,X,B,A
-      PSHS   PC,U,Y,X,B,A,CC
+      PSHS   PC,U,Y,X,D
+      PSHS   PC,U,Y,X,D,CC
       PSHS   PC,U,Y,X,DP
       PSHS   PC,U,Y,X,DP,CC
       PSHS   PC,U,Y,X,DP,A
       PSHS   PC,U,Y,X,DP,A,CC
       PSHS   PC,U,Y,X,DP,B
       PSHS   PC,U,Y,X,DP,B,CC
-      PSHS   PC,U,Y,X,DP,B,A
-      PSHS   PC,U,Y,X,DP,B,A,CC
+      PSHS   PC,U,Y,X,DP,D
+      PSHS   PC,U,Y,X,DP,D,CC
       PSHS
       PSHS   CC
       PSHS   A
       PSHS   A,CC
       PSHS   B
       PSHS   B,CC
-      PSHS   B,A
-      PSHS   B,A,CC
+      PSHS   D
+      PSHS   D,CC
       PSHS   DP
       PSHS   DP,CC
       PSHS   DP,A
       PSHS   DP,A,CC
       PSHS   DP,B
       PSHS   DP,B,CC
-      PSHS   DP,B,A
-      PSHS   DP,B,A,CC
+      PSHS   DP,D
+      PSHS   DP,D,CC
       PSHS   X
       PSHS   X,CC
       PSHS   X,A
       PSHS   X,A,CC
       PSHS   X,B
       PSHS   X,B,CC
-      PSHS   X,B,A
-      PSHS   X,B,A,CC
+      PSHS   X,D
+      PSHS   X,D,CC
       PSHS   X,DP
       PSHS   X,DP,CC
       PSHS   X,DP,A
       PSHS   X,DP,A,CC
       PSHS   X,DP,B
       PSHS   X,DP,B,CC
-      PSHS   X,DP,B,A
-      PSHS   X,DP,B,A,CC
+      PSHS   X,DP,D
+      PSHS   X,DP,D,CC
       PSHS   Y
       PSHS   Y,CC
       PSHS   Y,A
       PSHS   Y,A,CC
       PSHS   Y,B
       PSHS   Y,B,CC
-      PSHS   Y,B,A
-      PSHS   Y,B,A,CC
+      PSHS   Y,D
+      PSHS   Y,D,CC
       PSHS   Y,DP
       PSHS   Y,DP,CC
       PSHS   Y,DP,A
       PSHS   Y,DP,A,CC
       PSHS   Y,DP,B
       PSHS   Y,DP,B,CC
-      PSHS   Y,DP,B,A
-      PSHS   Y,DP,B,A,CC
+      PSHS   Y,DP,D
+      PSHS   Y,DP,D,CC
       PSHS   Y,X
       PSHS   Y,X,CC
       PSHS   Y,X,A
       PSHS   Y,X,A,CC
       PSHS   Y,X,B
-      PULS   A,B,X,Y
-      PULS   CC,A,B,X,Y
+      PULS   D,X,Y
+      PULS   CC,D,X,Y
       PULS   DP,X,Y
       PULS   CC,DP,X,Y
       PULS   A,DP,X,Y
       PULS   CC,A,DP,X,Y
       PULS   B,DP,X,Y
       PULS   CC,B,DP,X,Y
-      PULS   A,B,DP,X,Y
-      PULS   CC,A,B,DP,X,Y
+      PULS   D,DP,X,Y
+      PULS   CC,D,DP,X,Y
       PULS   U
       PULS   CC,U
       PULS   A,U
       PULS   CC,A,U
       PULS   B,U
       PULS   CC,B,U
-      PULS   A,B,U
-      PULS   CC,A,B,U
+      PULS   D,U
+      PULS   CC,D,U
       PULS   DP,U
       PULS   CC,DP,U
       PULS   A,DP,U
       PULS   CC,A,DP,U
       PULS   B,DP,U
       PULS   CC,B,DP,U
-      PULS   A,B,DP,U
-      PULS   CC,A,B,DP,U
+      PULS   D,DP,U
+      PULS   CC,D,DP,U
       PULS   X,U
       PULS   CC,X,U
       PULS   A,X,U
       PULS   CC,A,X,U
       PULS   B,X,U
       PULS   CC,B,X,U
-      PULS   A,B,X,U
-      PULS   CC,A,B,X,U
+      PULS   D,X,U
+      PULS   CC,D,X,U
       PULS   DP,X,U
       PULS   CC,DP,X,U
       PULS   A,DP,X,U
       PULS   CC,A,DP,X,U
       PULS   B,DP,X,U
       PULS   CC,B,DP,X,U
-      PULS   A,B,DP,X,U
-      PULS   CC,A,B,DP,X,U
+      PULS   D,DP,X,U
+      PULS   CC,D,DP,X,U
       PULS   Y,U
       PULS   CC,Y,U
       PULS   A,Y,U
       PULS   CC,A,Y,U
       PULS   B,Y,U
       PULS   CC,B,Y,U
-      PULS   A,B,Y,U
-      PULS   CC,A,B,Y,U
+      PULS   D,Y,U
+      PULS   CC,D,Y,U
       PULS   DP,Y,U
       PULS   CC,DP,Y,U
       PULS   A,DP,Y,U
       PULS   CC,A,DP,Y,U
       PULS   B,DP,Y,U
       PULS   CC,B,DP,Y,U
-      PULS   A,B,DP,Y,U
-      PULS   CC,A,B,DP,Y,U
+      PULS   D,DP,Y,U
+      PULS   CC,D,DP,Y,U
       PULS   X,Y,U
       PULS   CC,X,Y,U
       PULS   A,X,Y,U
       PULS   CC,A,X,Y,U
       PULS   B,X,Y,U
       PULS   CC,B,X,Y,U
-      PULS   A,B,X,Y,U
-      PULS   CC,A,B,X,Y,U
+      PULS   D,X,Y,U
+      PULS   CC,D,X,Y,U
       PULS   DP,X,Y,U
       PULS   CC,DP,X,Y,U
       PULS   A,DP,X,Y,U
       PULS   CC,A,DP,X,Y,U
       PULS   B,DP,X,Y,U
       PULS   CC,B,DP,X,Y,U
-      PULS   A,B,DP,X,Y,U
-      PULS   CC,A,B,DP,X,Y,U
+      PULS   D,DP,X,Y,U
+      PULS   CC,D,DP,X,Y,U
       PULS   PC
       PULS   CC,PC
       PULS   A,PC
       PULS   CC,A,PC
       PULS   B,PC
       PULS   CC,B,PC
-      PULS   A,B,PC
-      PULS   CC,A,B,PC
+      PULS   D,PC
+      PULS   CC,D,PC
       PULS   DP,PC
       PULS   CC,DP,PC
       PULS   A,DP,PC
       PULS   CC,A,DP,PC
       PULS   B,DP,PC
       PULS   CC,B,DP,PC
-      PULS   A,B,DP,PC
-      PULS   CC,A,B,DP,PC
+      PULS   D,DP,PC
+      PULS   CC,D,DP,PC
       PULS   X,PC
       PULS   CC,X,PC
       PULS   A,X,PC
       PULS   CC,A,X,PC
       PULS   B,X,PC
       PULS   CC,B,X,PC
-      PULS   A,B,X,PC
-      PULS   CC,A,B,X,PC
+      PULS   D,X,PC
+      PULS   CC,D,X,PC
       PULS   DP,X,PC
       PULS   CC,DP,X,PC
       PULS   A,DP,X,PC
       PULS   CC,A,DP,X,PC
       PULS   B,DP,X,PC
       PULS   CC,B,DP,X,PC
-      PULS   A,B,DP,X,PC
-      PULS   CC,A,B,DP,X,PC
+      PULS   D,DP,X,PC
+      PULS   CC,D,DP,X,PC
       PULS   Y,PC
       PULS   CC,Y,PC
       PULS   A,Y,PC
       PULS   CC,A,Y,PC
       PULS   B,Y,PC
       PULS   CC,B,Y,PC
-      PULS   A,B,Y,PC
-      PULS   CC,A,B,Y,PC
+      PULS   D,Y,PC
+      PULS   CC,D,Y,PC
       PULS   DP,Y,PC
       PULS   CC,DP,Y,PC
       PULS   A,DP,Y,PC
       PULS   CC,A,DP,Y,PC
       PULS   B,DP,Y,PC
       PULS   CC,B,DP,Y,PC
-      PULS   A,B,DP,Y,PC
-      PULS   CC,A,B,DP,Y,PC
+      PULS   D,DP,Y,PC
+      PULS   CC,D,DP,Y,PC
       PULS   X,Y,PC
       PULS   CC,X,Y,PC
       PULS   A,X,Y,PC
       PULS   CC,A,X,Y,PC
       PULS   B,X,Y,PC
       PULS   CC,B,X,Y,PC
-      PULS   A,B,X,Y,PC
-      PULS   CC,A,B,X,Y,PC
+      PULS   D,X,Y,PC
+      PULS   CC,D,X,Y,PC
       PULS   DP,X,Y,PC
       PULS   CC,DP,X,Y,PC
       PULS   A,DP,X,Y,PC
       PULS   CC,A,DP,X,Y,PC
       PULS   B,DP,X,Y,PC
       PULS   CC,B,DP,X,Y,PC
-      PULS   A,B,DP,X,Y,PC
-      PULS   CC,A,B,DP,X,Y,PC
+      PULS   D,DP,X,Y,PC
+      PULS   CC,D,DP,X,Y,PC
       PULS   U,PC
       PULS   CC,U,PC
       PULS   A,U,PC
       PULS   CC,A,U,PC
       PULS   B,U,PC
       PULS   CC,B,U,PC
-      PULS   A,B,U,PC
-      PULS   CC,A,B,U,PC
+      PULS   D,U,PC
+      PULS   CC,D,U,PC
       PULS   DP,U,PC
       PULS   CC,DP,U,PC
       PULS   A,DP,U,PC
       PULS   CC,A,DP,U,PC
       PULS   B,DP,U,PC
       PULS   CC,B,DP,U,PC
-      PULS   A,B,DP,U,PC
-      PULS   CC,A,B,DP,U,PC
+      PULS   D,DP,U,PC
+      PULS   CC,D,DP,U,PC
       PULS   X,U,PC
       PULS   CC,X,U,PC
       PULS   A,X,U,PC
       PULS   CC,A,X,U,PC
       PULS   B,X,U,PC
       PULS   CC,B,X,U,PC
-      PULS   A,B,X,U,PC
-      PULS   CC,A,B,X,U,PC
+      PULS   D,X,U,PC
+      PULS   CC,D,X,U,PC
       PULS   DP,X,U,PC
       PULS   CC,DP,X,U,PC
       PULS   A,DP,X,U,PC
       PULS   CC,A,DP,X,U,PC
       PULS   B,DP,X,U,PC
       PULS   CC,B,DP,X,U,PC
-      PULS   A,B,DP,X,U,PC
-      PULS   CC,A,B,DP,X,U,PC
+      PULS   D,DP,X,U,PC
+      PULS   CC,D,DP,X,U,PC
       PULS   Y,U,PC
       PULS   CC,Y,U,PC
       PULS   A,Y,U,PC
       PULS   CC,A,Y,U,PC
       PULS   B,Y,U,PC
       PULS   CC,B,Y,U,PC
-      PULS   A,B,Y,U,PC
-      PULS   CC,A,B,Y,U,PC
+      PULS   D,Y,U,PC
+      PULS   CC,D,Y,U,PC
       PULS   DP,Y,U,PC
       PULS   CC,DP,Y,U,PC
       PULS   A,DP,Y,U,PC
       PULS   CC,A,DP,Y,U,PC
       PULS   B,DP,Y,U,PC
       PULS   CC,B,DP,Y,U,PC
-      PULS   A,B,DP,Y,U,PC
-      PULS   CC,A,B,DP,Y,U,PC
+      PULS   D,DP,Y,U,PC
+      PULS   CC,D,DP,Y,U,PC
       PULS   X,Y,U,PC
       PULS   CC,X,Y,U,PC
       PULS   A,X,Y,U,PC
       PULS   CC,A,X,Y,U,PC
       PULS   B,X,Y,U,PC
       PULS   CC,B,X,Y,U,PC
-      PULS   A,B,X,Y,U,PC
-      PULS   CC,A,B,X,Y,U,PC
+      PULS   D,X,Y,U,PC
+      PULS   CC,D,X,Y,U,PC
       PULS   DP,X,Y,U,PC
       PULS   CC,DP,X,Y,U,PC
       PULS   A,DP,X,Y,U,PC
       PULS   CC,A,DP,X,Y,U,PC
       PULS   B,DP,X,Y,U,PC
       PULS   CC,B,DP,X,Y,U,PC
-      PULS   A,B,DP,X,Y,U,PC
-      PULS   CC,A,B,DP,X,Y,U,PC
+      PULS   D,DP,X,Y,U,PC
+      PULS   CC,D,DP,X,Y,U,PC
       PULS
       PULS   CC
       PULS   A
       PULS   CC,A
       PULS   B
       PULS   CC,B
-      PULS   A,B
-      PULS   CC,A,B
+      PULS   D
+      PULS   CC,D
       PULS   DP
       PULS   CC,DP
       PULS   A,DP
       PULS   CC,A,DP
       PULS   B,DP
       PULS   CC,B,DP
-      PULS   A,B,DP
-      PULS   CC,A,B,DP
+      PULS   D,DP
+      PULS   CC,D,DP
       PULS   X
       PULS   CC,X
       PULS   A,X
       PULS   CC,A,X
       PULS   B,X
       PULS   CC,B,X
-      PULS   A,B,X
-      PULS   CC,A,B,X
+      PULS   D,X
+      PULS   CC,D,X
       PULS   DP,X
       PULS   CC,DP,X
       PULS   A,DP,X
       PULS   CC,A,DP,X
       PULS   B,DP,X
       PULS   CC,B,DP,X
-      PULS   A,B,DP,X
-      PULS   CC,A,B,DP,X
+      PULS   D,DP,X
+      PULS   CC,D,DP,X
       PULS   Y
       PULS   CC,Y
       PULS   A,Y
       PULS   CC,A,Y
       PULS   B,Y
       PULS   CC,B,Y
-      PULS   A,B,Y
-      PULS   CC,A,B,Y
+      PULS   D,Y
+      PULS   CC,D,Y
       PULS   DP,Y
       PULS   CC,DP,Y
       PULS   A,DP,Y
       PULS   CC,A,DP,Y
       PULS   B,DP,Y
       PULS   CC,B,DP,Y
-      PULS   A,B,DP,Y
-      PULS   CC,A,B,DP,Y
+      PULS   D,DP,Y
+      PULS   CC,D,DP,Y
       PULS   X,Y
       PULS   CC,X,Y
       PULS   A,X,Y
       PULS   CC,A,X,Y
       PULS   B,X,Y
       PULS   CC,B,X,Y
-      PSHU   Y,X,B,A,CC
+      PSHU   Y,X,D,CC
       PSHU   Y,X,DP
       PSHU   Y,X,DP,CC
       PSHU   Y,X,DP,A
       PSHU   Y,X,DP,A,CC
       PSHU   Y,X,DP,B
       PSHU   Y,X,DP,B,CC
-      PSHU   Y,X,DP,B,A
-      PSHU   Y,X,DP,B,A,CC
+      PSHU   Y,X,DP,D
+      PSHU   Y,X,DP,D,CC
       PSHU   S
       PSHU   S,CC
       PSHU   S,A
       PSHU   S,A,CC
       PSHU   S,B
       PSHU   S,B,CC
-      PSHU   S,B,A
-      PSHU   S,B,A,CC
+      PSHU   S,D
+      PSHU   S,D,CC
       PSHU   S,DP
       PSHU   S,DP,CC
       PSHU   S,DP,A
       PSHU   S,DP,A,CC
       PSHU   S,DP,B
       PSHU   S,DP,B,CC
-      PSHU   S,DP,B,A
-      PSHU   S,DP,B,A,CC
+      PSHU   S,DP,D
+      PSHU   S,DP,D,CC
       PSHU   S,X
       PSHU   S,X,CC
       PSHU   S,X,A
       PSHU   S,X,A,CC
       PSHU   S,X,B
       PSHU   S,X,B,CC
-      PSHU   S,X,B,A
-      PSHU   S,X,B,A,CC
+      PSHU   S,X,D
+      PSHU   S,X,D,CC
       PSHU   S,X,DP
       PSHU   S,X,DP,CC
       PSHU   S,X,DP,A
       PSHU   S,X,DP,A,CC
       PSHU   S,X,DP,B
       PSHU   S,X,DP,B,CC
-      PSHU   S,X,DP,B,A
-      PSHU   S,X,DP,B,A,CC
+      PSHU   S,X,DP,D
+      PSHU   S,X,DP,D,CC
       PSHU   S,Y
       PSHU   S,Y,CC
       PSHU   S,Y,A
       PSHU   S,Y,A,CC
       PSHU   S,Y,B
       PSHU   S,Y,B,CC
-      PSHU   S,Y,B,A
-      PSHU   S,Y,B,A,CC
+      PSHU   S,Y,D
+      PSHU   S,Y,D,CC
       PSHU   S,Y,DP
       PSHU   S,Y,DP,CC
       PSHU   S,Y,DP,A
       PSHU   S,Y,DP,A,CC
       PSHU   S,Y,DP,B
       PSHU   S,Y,DP,B,CC
-      PSHU   S,Y,DP,B,A
-      PSHU   S,Y,DP,B,A,CC
+      PSHU   S,Y,DP,D
+      PSHU   S,Y,DP,D,CC
       PSHU   S,Y,X
       PSHU   S,Y,X,CC
       PSHU   S,Y,X,A
       PSHU   S,Y,X,A,CC
       PSHU   S,Y,X,B
       PSHU   S,Y,X,B,CC
-      PSHU   S,Y,X,B,A
-      PSHU   S,Y,X,B,A,CC
+      PSHU   S,Y,X,D
+      PSHU   S,Y,X,D,CC
       PSHU   S,Y,X,DP
       PSHU   S,Y,X,DP,CC
       PSHU   S,Y,X,DP,A
       PSHU   S,Y,X,DP,A,CC
       PSHU   S,Y,X,DP,B
       PSHU   S,Y,X,DP,B,CC
-      PSHU   S,Y,X,DP,B,A
-      PSHU   S,Y,X,DP,B,A,CC
+      PSHU   S,Y,X,DP,D
+      PSHU   S,Y,X,DP,D,CC
       PSHU   PC
       PSHU   PC,CC
       PSHU   PC,A
       PSHU   PC,A,CC
       PSHU   PC,B
       PSHU   PC,B,CC
-      PSHU   PC,B,A
-      PSHU   PC,B,A,CC
+      PSHU   PC,D
+      PSHU   PC,D,CC
       PSHU   PC,DP
       PSHU   PC,DP,CC
       PSHU   PC,DP,A
       PSHU   PC,DP,A,CC
       PSHU   PC,DP,B
       PSHU   PC,DP,B,CC
-      PSHU   PC,DP,B,A
-      PSHU   PC,DP,B,A,CC
+      PSHU   PC,DP,D
+      PSHU   PC,DP,D,CC
       PSHU   PC,X
       PSHU   PC,X,CC
       PSHU   PC,X,A
       PSHU   PC,X,A,CC
       PSHU   PC,X,B
       PSHU   PC,X,B,CC
-      PSHU   PC,X,B,A
-      PSHU   PC,X,B,A,CC
+      PSHU   PC,X,D
+      PSHU   PC,X,D,CC
       PSHU   PC,X,DP
       PSHU   PC,X,DP,CC
       PSHU   PC,X,DP,A
       PSHU   PC,X,DP,A,CC
       PSHU   PC,X,DP,B
       PSHU   PC,X,DP,B,CC
-      PSHU   PC,X,DP,B,A
-      PSHU   PC,X,DP,B,A,CC
+      PSHU   PC,X,DP,D
+      PSHU   PC,X,DP,D,CC
       PSHU   PC,Y
       PSHU   PC,Y,CC
       PSHU   PC,Y,A
       PSHU   PC,Y,A,CC
       PSHU   PC,Y,B
       PSHU   PC,Y,B,CC
-      PSHU   PC,Y,B,A
-      PSHU   PC,Y,B,A,CC
+      PSHU   PC,Y,D
+      PSHU   PC,Y,D,CC
       PSHU   PC,Y,DP
       PSHU   PC,Y,DP,CC
       PSHU   PC,Y,DP,A
       PSHU   PC,Y,DP,A,CC
       PSHU   PC,Y,DP,B
       PSHU   PC,Y,DP,B,CC
-      PSHU   PC,Y,DP,B,A
-      PSHU   PC,Y,DP,B,A,CC
+      PSHU   PC,Y,DP,D
+      PSHU   PC,Y,DP,D,CC
       PSHU   PC,Y,X
       PSHU   PC,Y,X,CC
       PSHU   PC,Y,X,A
       PSHU   PC,Y,X,A,CC
       PSHU   PC,Y,X,B
       PSHU   PC,Y,X,B,CC
-      PSHU   PC,Y,X,B,A
-      PSHU   PC,Y,X,B,A,CC
+      PSHU   PC,Y,X,D
+      PSHU   PC,Y,X,D,CC
       PSHU   PC,Y,X,DP
       PSHU   PC,Y,X,DP,CC
       PSHU   PC,Y,X,DP,A
       PSHU   PC,Y,X,DP,A,CC
       PSHU   PC,Y,X,DP,B
       PSHU   PC,Y,X,DP,B,CC
-      PSHU   PC,Y,X,DP,B,A
-      PSHU   PC,Y,X,DP,B,A,CC
+      PSHU   PC,Y,X,DP,D
+      PSHU   PC,Y,X,DP,D,CC
       PSHU   PC,S
       PSHU   PC,S,CC
       PSHU   PC,S,A
       PSHU   PC,S,A,CC
       PSHU   PC,S,B
       PSHU   PC,S,B,CC
-      PSHU   PC,S,B,A
-      PSHU   PC,S,B,A,CC
+      PSHU   PC,S,D
+      PSHU   PC,S,D,CC
       PSHU   PC,S,DP
       PSHU   PC,S,DP,CC
       PSHU   PC,S,DP,A
       PSHU   PC,S,DP,A,CC
       PSHU   PC,S,DP,B
       PSHU   PC,S,DP,B,CC
-      PSHU   PC,S,DP,B,A
-      PSHU   PC,S,DP,B,A,CC
+      PSHU   PC,S,DP,D
+      PSHU   PC,S,DP,D,CC
       PSHU   PC,S,X
       PSHU   PC,S,X,CC
       PSHU   PC,S,X,A
       PSHU   PC,S,X,A,CC
       PSHU   PC,S,X,B
       PSHU   PC,S,X,B,CC
-      PSHU   PC,S,X,B,A
-      PSHU   PC,S,X,B,A,CC
+      PSHU   PC,S,X,D
+      PSHU   PC,S,X,D,CC
       PSHU   PC,S,X,DP
       PSHU   PC,S,X,DP,CC
       PSHU   PC,S,X,DP,A
       PSHU   PC,S,X,DP,A,CC
       PSHU   PC,S,X,DP,B
       PSHU   PC,S,X,DP,B,CC
-      PSHU   PC,S,X,DP,B,A
-      PSHU   PC,S,X,DP,B,A,CC
+      PSHU   PC,S,X,DP,D
+      PSHU   PC,S,X,DP,D,CC
       PSHU   PC,S,Y
       PSHU   PC,S,Y,CC
       PSHU   PC,S,Y,A
       PSHU   PC,S,Y,A,CC
       PSHU   PC,S,Y,B
       PSHU   PC,S,Y,B,CC
-      PSHU   PC,S,Y,B,A
-      PSHU   PC,S,Y,B,A,CC
+      PSHU   PC,S,Y,D
+      PSHU   PC,S,Y,D,CC
       PSHU   PC,S,Y,DP
       PSHU   PC,S,Y,DP,CC
       PSHU   PC,S,Y,DP,A
       PSHU   PC,S,Y,DP,A,CC
       PSHU   PC,S,Y,DP,B
       PSHU   PC,S,Y,DP,B,CC
-      PSHU   PC,S,Y,DP,B,A
-      PSHU   PC,S,Y,DP,B,A,CC
+      PSHU   PC,S,Y,DP,D
+      PSHU   PC,S,Y,DP,D,CC
       PSHU   PC,S,Y,X
       PSHU   PC,S,Y,X,CC
       PSHU   PC,S,Y,X,A
       PSHU   PC,S,Y,X,A,CC
       PSHU   PC,S,Y,X,B
       PSHU   PC,S,Y,X,B,CC
-      PSHU   PC,S,Y,X,B,A
-      PSHU   PC,S,Y,X,B,A,CC
+      PSHU   PC,S,Y,X,D
+      PSHU   PC,S,Y,X,D,CC
       PSHU   PC,S,Y,X,DP
       PSHU   PC,S,Y,X,DP,CC
       PSHU   PC,S,Y,X,DP,A
       PSHU   PC,S,Y,X,DP,A,CC
       PSHU   PC,S,Y,X,DP,B
       PSHU   PC,S,Y,X,DP,B,CC
-      PSHU   PC,S,Y,X,DP,B,A
-      PSHU   PC,S,Y,X,DP,B,A,CC
+      PSHU   PC,S,Y,X,DP,D
+      PSHU   PC,S,Y,X,DP,D,CC
       PSHU
       PSHU   CC
       PSHU   A
       PSHU   A,CC
       PSHU   B
       PSHU   B,CC
-      PSHU   B,A
-      PSHU   B,A,CC
+      PSHU   D
+      PSHU   D,CC
       PSHU   DP
       PSHU   DP,CC
       PSHU   DP,A
       PSHU   DP,A,CC
       PSHU   DP,B
       PSHU   DP,B,CC
-      PSHU   DP,B,A
-      PSHU   DP,B,A,CC
+      PSHU   DP,D
+      PSHU   DP,D,CC
       PSHU   X
       PSHU   X,CC
       PSHU   X,A
       PSHU   X,A,CC
       PSHU   X,B
       PSHU   X,B,CC
-      PSHU   X,B,A
-      PSHU   X,B,A,CC
+      PSHU   X,D
+      PSHU   X,D,CC
       PSHU   X,DP
       PSHU   X,DP,CC
       PSHU   X,DP,A
       PSHU   X,DP,A,CC
       PSHU   X,DP,B
       PSHU   X,DP,B,CC
-      PSHU   X,DP,B,A
-      PSHU   X,DP,B,A,CC
+      PSHU   X,DP,D
+      PSHU   X,DP,D,CC
       PSHU   Y
       PSHU   Y,CC
       PSHU   Y,A
       PSHU   Y,A,CC
       PSHU   Y,B
       PSHU   Y,B,CC
-      PSHU   Y,B,A
-      PSHU   Y,B,A,CC
+      PSHU   Y,D
+      PSHU   Y,D,CC
       PSHU   Y,DP
       PSHU   Y,DP,CC
       PSHU   Y,DP,A
       PSHU   Y,DP,A,CC
       PSHU   Y,DP,B
       PSHU   Y,DP,B,CC
-      PSHU   Y,DP,B,A
-      PSHU   Y,DP,B,A,CC
+      PSHU   Y,DP,D
+      PSHU   Y,DP,D,CC
       PSHU   Y,X
       PSHU   Y,X,CC
       PSHU   Y,X,A
       PSHU   Y,X,A,CC
       PSHU   Y,X,B
       PSHU   Y,X,B,CC
-      PSHU   Y,X,B,A
+      PSHU   Y,X,D
       PULU   DP,X,Y
       PULU   CC,DP,X,Y
       PULU   A,DP,X,Y
       PULU   CC,A,DP,X,Y
       PULU   B,DP,X,Y
       PULU   CC,B,DP,X,Y
-      PULU   A,B,DP,X,Y
-      PULU   CC,A,B,DP,X,Y
+      PULU   D,DP,X,Y
+      PULU   CC,D,DP,X,Y
       PULU   S
       PULU   CC,S
       PULU   A,S
       PULU   CC,A,S
       PULU   B,S
       PULU   CC,B,S
-      PULU   A,B,S
-      PULU   CC,A,B,S
+      PULU   D,S
+      PULU   CC,D,S
       PULU   DP,S
       PULU   CC,DP,S
       PULU   A,DP,S
       PULU   CC,A,DP,S
       PULU   B,DP,S
       PULU   CC,B,DP,S
-      PULU   A,B,DP,S
-      PULU   CC,A,B,DP,S
+      PULU   D,DP,S
+      PULU   CC,D,DP,S
       PULU   X,S
       PULU   CC,X,S
       PULU   A,X,S
       PULU   CC,A,X,S
       PULU   B,X,S
       PULU   CC,B,X,S
-      PULU   A,B,X,S
-      PULU   CC,A,B,X,S
+      PULU   D,X,S
+      PULU   CC,D,X,S
       PULU   DP,X,S
       PULU   CC,DP,X,S
       PULU   A,DP,X,S
       PULU   CC,A,DP,X,S
       PULU   B,DP,X,S
       PULU   CC,B,DP,X,S
-      PULU   A,B,DP,X,S
-      PULU   CC,A,B,DP,X,S
+      PULU   D,DP,X,S
+      PULU   CC,D,DP,X,S
       PULU   Y,S
       PULU   CC,Y,S
       PULU   A,Y,S
       PULU   CC,A,Y,S
       PULU   B,Y,S
       PULU   CC,B,Y,S
-      PULU   A,B,Y,S
-      PULU   CC,A,B,Y,S
+      PULU   D,Y,S
+      PULU   CC,D,Y,S
       PULU   DP,Y,S
       PULU   CC,DP,Y,S
       PULU   A,DP,Y,S
       PULU   CC,A,DP,Y,S
       PULU   B,DP,Y,S
       PULU   CC,B,DP,Y,S
-      PULU   A,B,DP,Y,S
-      PULU   CC,A,B,DP,Y,S
+      PULU   D,DP,Y,S
+      PULU   CC,D,DP,Y,S
       PULU   X,Y,S
       PULU   CC,X,Y,S
       PULU   A,X,Y,S
       PULU   CC,A,X,Y,S
       PULU   B,X,Y,S
       PULU   CC,B,X,Y,S
-      PULU   A,B,X,Y,S
-      PULU   CC,A,B,X,Y,S
+      PULU   D,X,Y,S
+      PULU   CC,D,X,Y,S
       PULU   DP,X,Y,S
       PULU   CC,DP,X,Y,S
       PULU   A,DP,X,Y,S
       PULU   CC,A,DP,X,Y,S
       PULU   B,DP,X,Y,S
       PULU   CC,B,DP,X,Y,S
-      PULU   A,B,DP,X,Y,S
-      PULU   CC,A,B,DP,X,Y,S
+      PULU   D,DP,X,Y,S
+      PULU   CC,D,DP,X,Y,S
       PULU   PC
       PULU   CC,PC
       PULU   A,PC
       PULU   CC,A,PC
       PULU   B,PC
       PULU   CC,B,PC
-      PULU   A,B,PC
-      PULU   CC,A,B,PC
+      PULU   D,PC
+      PULU   CC,D,PC
       PULU   DP,PC
       PULU   CC,DP,PC
       PULU   A,DP,PC
       PULU   CC,A,DP,PC
       PULU   B,DP,PC
       PULU   CC,B,DP,PC
-      PULU   A,B,DP,PC
-      PULU   CC,A,B,DP,PC
+      PULU   D,DP,PC
+      PULU   CC,D,DP,PC
       PULU   X,PC
       PULU   CC,X,PC
       PULU   A,X,PC
       PULU   CC,A,X,PC
       PULU   B,X,PC
       PULU   CC,B,X,PC
-      PULU   A,B,X,PC
-      PULU   CC,A,B,X,PC
+      PULU   D,X,PC
+      PULU   CC,D,X,PC
       PULU   DP,X,PC
       PULU   CC,DP,X,PC
       PULU   A,DP,X,PC
       PULU   CC,A,DP,X,PC
       PULU   B,DP,X,PC
       PULU   CC,B,DP,X,PC
-      PULU   A,B,DP,X,PC
-      PULU   CC,A,B,DP,X,PC
+      PULU   D,DP,X,PC
+      PULU   CC,D,DP,X,PC
       PULU   Y,PC
       PULU   CC,Y,PC
       PULU   A,Y,PC
       PULU   CC,A,Y,PC
       PULU   B,Y,PC
       PULU   CC,B,Y,PC
-      PULU   A,B,Y,PC
-      PULU   CC,A,B,Y,PC
+      PULU   D,Y,PC
+      PULU   CC,D,Y,PC
       PULU   DP,Y,PC
       PULU   CC,DP,Y,PC
       PULU   A,DP,Y,PC
       PULU   CC,A,DP,Y,PC
       PULU   B,DP,Y,PC
       PULU   CC,B,DP,Y,PC
-      PULU   A,B,DP,Y,PC
-      PULU   CC,A,B,DP,Y,PC
+      PULU   D,DP,Y,PC
+      PULU   CC,D,DP,Y,PC
       PULU   X,Y,PC
       PULU   CC,X,Y,PC
       PULU   A,X,Y,PC
       PULU   CC,A,X,Y,PC
       PULU   B,X,Y,PC
       PULU   CC,B,X,Y,PC
-      PULU   A,B,X,Y,PC
-      PULU   CC,A,B,X,Y,PC
+      PULU   D,X,Y,PC
+      PULU   CC,D,X,Y,PC
       PULU   DP,X,Y,PC
       PULU   CC,DP,X,Y,PC
       PULU   A,DP,X,Y,PC
       PULU   CC,A,DP,X,Y,PC
       PULU   B,DP,X,Y,PC
       PULU   CC,B,DP,X,Y,PC
-      PULU   A,B,DP,X,Y,PC
-      PULU   CC,A,B,DP,X,Y,PC
+      PULU   D,DP,X,Y,PC
+      PULU   CC,D,DP,X,Y,PC
       PULU   S,PC
       PULU   CC,S,PC
       PULU   A,S,PC
       PULU   CC,A,S,PC
       PULU   B,S,PC
       PULU   CC,B,S,PC
-      PULU   A,B,S,PC
-      PULU   CC,A,B,S,PC
+      PULU   D,S,PC
+      PULU   CC,D,S,PC
       PULU   DP,S,PC
       PULU   CC,DP,S,PC
       PULU   A,DP,S,PC
       PULU   CC,A,DP,S,PC
       PULU   B,DP,S,PC
       PULU   CC,B,DP,S,PC
-      PULU   A,B,DP,S,PC
-      PULU   CC,A,B,DP,S,PC
+      PULU   D,DP,S,PC
+      PULU   CC,D,DP,S,PC
       PULU   X,S,PC
       PULU   CC,X,S,PC
       PULU   A,X,S,PC
       PULU   CC,A,X,S,PC
       PULU   B,X,S,PC
       PULU   CC,B,X,S,PC
-      PULU   A,B,X,S,PC
-      PULU   CC,A,B,X,S,PC
+      PULU   D,X,S,PC
+      PULU   CC,D,X,S,PC
       PULU   DP,X,S,PC
       PULU   CC,DP,X,S,PC
       PULU   A,DP,X,S,PC
       PULU   CC,A,DP,X,S,PC
       PULU   B,DP,X,S,PC
       PULU   CC,B,DP,X,S,PC
-      PULU   A,B,DP,X,S,PC
-      PULU   CC,A,B,DP,X,S,PC
+      PULU   D,DP,X,S,PC
+      PULU   CC,D,DP,X,S,PC
       PULU   Y,S,PC
       PULU   CC,Y,S,PC
       PULU   A,Y,S,PC
       PULU   CC,A,Y,S,PC
       PULU   B,Y,S,PC
       PULU   CC,B,Y,S,PC
-      PULU   A,B,Y,S,PC
-      PULU   CC,A,B,Y,S,PC
+      PULU   D,Y,S,PC
+      PULU   CC,D,Y,S,PC
       PULU   DP,Y,S,PC
       PULU   CC,DP,Y,S,PC
       PULU   A,DP,Y,S,PC
       PULU   CC,A,DP,Y,S,PC
       PULU   B,DP,Y,S,PC
       PULU   CC,B,DP,Y,S,PC
-      PULU   A,B,DP,Y,S,PC
-      PULU   CC,A,B,DP,Y,S,PC
+      PULU   D,DP,Y,S,PC
+      PULU   CC,D,DP,Y,S,PC
       PULU   X,Y,S,PC
       PULU   CC,X,Y,S,PC
       PULU   A,X,Y,S,PC
       PULU   CC,A,X,Y,S,PC
       PULU   B,X,Y,S,PC
       PULU   CC,B,X,Y,S,PC
-      PULU   A,B,X,Y,S,PC
-      PULU   CC,A,B,X,Y,S,PC
+      PULU   D,X,Y,S,PC
+      PULU   CC,D,X,Y,S,PC
       PULU   DP,X,Y,S,PC
       PULU   CC,DP,X,Y,S,PC
       PULU   A,DP,X,Y,S,PC
       PULU   CC,A,DP,X,Y,S,PC
       PULU   B,DP,X,Y,S,PC
       PULU   CC,B,DP,X,Y,S,PC
-      PULU   A,B,DP,X,Y,S,PC
-      PULU   CC,A,B,DP,X,Y,S,PC
+      PULU   D,DP,X,Y,S,PC
+      PULU   CC,D,DP,X,Y,S,PC
       PULU
       PULU   CC
       PULU   A
       PULU   CC,A
       PULU   B
       PULU   CC,B
-      PULU   A,B
-      PULU   CC,A,B
+      PULU   D
+      PULU   CC,D
       PULU   DP
       PULU   CC,DP
       PULU   A,DP
       PULU   CC,A,DP
       PULU   B,DP
       PULU   CC,B,DP
-      PULU   A,B,DP
-      PULU   CC,A,B,DP
+      PULU   D,DP
+      PULU   CC,D,DP
       PULU   X
       PULU   CC,X
       PULU   A,X
       PULU   CC,A,X
       PULU   B,X
       PULU   CC,B,X
-      PULU   A,B,X
-      PULU   CC,A,B,X
+      PULU   D,X
+      PULU   CC,D,X
       PULU   DP,X
       PULU   CC,DP,X
       PULU   A,DP,X
       PULU   CC,A,DP,X
       PULU   B,DP,X
       PULU   CC,B,DP,X
-      PULU   A,B,DP,X
-      PULU   CC,A,B,DP,X
+      PULU   D,DP,X
+      PULU   CC,D,DP,X
       PULU   Y
       PULU   CC,Y
       PULU   A,Y
       PULU   CC,A,Y
       PULU   B,Y
       PULU   CC,B,Y
-      PULU   A,B,Y
-      PULU   CC,A,B,Y
+      PULU   D,Y
+      PULU   CC,D,Y
       PULU   DP,Y
       PULU   CC,DP,Y
       PULU   A,DP,Y
       PULU   CC,A,DP,Y
       PULU   B,DP,Y
       PULU   CC,B,DP,Y
-      PULU   A,B,DP,Y
-      PULU   CC,A,B,DP,Y
+      PULU   D,DP,Y
+      PULU   CC,D,DP,Y
       PULU   X,Y
       PULU   CC,X,Y
       PULU   A,X,Y
       PULU   CC,A,X,Y
       PULU   B,X,Y
       PULU   CC,B,X,Y
-      PULU   A,B,X,Y
-      PULU   CC,A,B,X,Y
+      PULU   D,X,Y
+      PULU   CC,D,X,Y
       RTS
       ABX
       RTI
