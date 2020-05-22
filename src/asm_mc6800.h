@@ -41,19 +41,18 @@ private:
     MotoValueParser _parser;
     RegMc6800 _regs;
 
-    enum Token {
+    enum Token : char {
         EOL = 0,
         ERROR = '?',
         COMMA = ',',
-        POUND = '#',
         REG_ACC = 'A',
-        REG_IDX = 'X',
-        VALUE = 'V',
+        REG_IDX = 'x',
+        VAL_IMM = '#',
+        VAL_ADR = 'v',
     };
     Token _token;
     RegName _reg;
     uint16_t _val;
-    Error _valError;
     OprSize _valSize;
     Token nextToken();
 

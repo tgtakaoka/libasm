@@ -37,23 +37,23 @@ Error AsmMc6800::encodeRelative(InsnMc6800 &insn, Config::uintptr_t addr) {
     const Config::ptrdiff_t delta = addr - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
-    return checkLineEnd();
+    return OK;
 }
 
 AsmMc6800::Token AsmMc6800::nextToken() {
     const char *p = _scan;
+    Token t;
     if (endOfLine(p)) {
-        _token = EOL;
+        t = EOL;
     } else if (*p == ',') {
         p++;
-        _token = COMMA;
-    } else if (*p == '#') {
-        p++;
-        _token = POUND;
+        t = COMMA;
     } else if ((_reg = _regs.parseRegName(p)) != REG_UNDEF) {
         p += _regs.regNameLen(_reg);
-        _token = (_reg == REG_X || _reg == REG_Y) ? REG_IDX : REG_ACC;
+        t = (_reg == REG_X || _reg == REG_Y) ? REG_IDX : REG_ACC;
     } else {
+        const bool imm = *p == '#';
+        if (imm) p = skipSpaces(p + 1);
         _valSize = SZ_NONE;
         if (*p == '<') {
             p++;
@@ -63,13 +63,15 @@ AsmMc6800::Token AsmMc6800::nextToken() {
             _valSize = SZ_WORD;
         }
         _scan = p;
-        if (getOperand(_val)) return ERROR;
-        _valError = getError();
-        _token = VALUE;
-        p = _scan;
+        if (getOperand(_val)) {
+            t = ERROR;
+        } else {
+            t = imm ? VAL_IMM : VAL_ADR;
+            p = _scan;
+        }
     }
     _scan = skipSpaces(p);
-    return _token;
+    return _token = t;
 }
 
 Error AsmMc6800::parseOperand(Operand &op) {
@@ -87,11 +89,10 @@ Error AsmMc6800::parseOperand(Operand &op) {
         return setOK();
     }
     bool hasImmediate = false;
-    if (_token == POUND) {
+    if (_token == VAL_IMM) {
         if (comma >= 2)  return setError(UNKNOWN_OPERAND);
-        if (nextToken() != VALUE) return setError(UNKNOWN_OPERAND);
         op.imm = _val;
-        op.setError(_valError);
+        op.setError(getError());
         op.mode = IMM;
         hasImmediate = true;
         comma = 0;
@@ -101,17 +102,17 @@ Error AsmMc6800::parseOperand(Operand &op) {
     }
     bool hasBitNum = false;
     OprSize opSize = SZ_NONE;
-    if (_token == VALUE) {
+    if (_token == VAL_ADR) {
         if (comma >= 2) return setError(UNKNOWN_OPERAND);
         op.opr = _val;
-        op.setErrorIf(_valError);
+        op.setErrorIf(getError());
         opSize = _valSize;
         op.mode = EXT;
         comma = 0;
         if (nextToken() == COMMA) {
             comma = 1;
-            if (nextToken() == VALUE) {
-                op.setErrorIf(_valError);
+            if (nextToken() == VAL_ADR) {
+                op.setErrorIf(getError());
                 if (op.reg == REG_UNDEF && !hasImmediate
                     && opSize != SZ_WORD && op.opr < 8) {
                     hasBitNum = true;
@@ -141,18 +142,17 @@ Error AsmMc6800::parseOperand(Operand &op) {
         if (_token == COMMA) nextToken();
     }
     bool hasImmSuffix = false;
-    if (_token == POUND) {
+    if (_token == VAL_IMM) {
         if (hasImmediate || hasBitNum) return setError(UNKNOWN_OPERAND);
-        if (nextToken() != VALUE) return setError(UNKNOWN_OPERAND);
-        op.setErrorIf(_valError);
+        op.setErrorIf(getError());
         hasImmSuffix = true;
         op.imm = _val;
         nextToken();
     }
     bool hasAddress = false;
     if (_token == COMMA) {
-        if (nextToken() != VALUE) return setError(UNKNOWN_OPERAND);
-        op.setErrorIf(op.addrError = _valError);
+        if (nextToken() != VAL_ADR) return setError(UNKNOWN_OPERAND);
+        op.setErrorIf(op.addrError = getError());
         hasAddress = true;
         op.addr = _val;
         nextToken();
@@ -181,7 +181,7 @@ Error AsmMc6800::encode(Insn &_insn) {
     insn.setName(_scan, endName);
     _scan = skipSpaces(endName);
     Operand op;
-    if (parseOperand(op)) return setError(op);
+    if (parseOperand(op)) return getError();
     setError(op);
 
     insn.setAddrMode(op.mode);
@@ -203,7 +203,8 @@ Error AsmMc6800::encode(Insn &_insn) {
         break;
     case REL:
         op.addr = op.getError() ? insn.address() : op.opr;
-        return encodeRelative(insn, op.addr);
+        encodeRelative(insn, op.addr);
+        break;
     case IMM:
         if (insn.oprSize() == SZ_BYTE)
             insn.emitByte(static_cast<uint8_t>(op.imm));
@@ -235,7 +236,8 @@ Error AsmMc6800::encode(Insn &_insn) {
         insn.emitByte(static_cast<uint8_t>(op.opr));
         insn.emitByte(static_cast<uint8_t>(op.imm));
         if (op.addrError) op.addr = insn.address();
-        return encodeRelative(insn, op.addr);
+        encodeRelative(insn, op.addr);
+        break;
     default:
         break;
     }
