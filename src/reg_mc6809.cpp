@@ -23,11 +23,8 @@
 namespace libasm {
 namespace mc6809 {
 
-static constexpr RegName STACK_S_REGS[8] PROGMEM = {
+static constexpr RegName STACK_REGS[8] PROGMEM = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC
-};
-static constexpr RegName STACK_U_REGS[8] PROGMEM = {
-    REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_S, REG_PC
 };
 static constexpr char CCR_BITS[8] PROGMEM = {
     'E', 'F', 'H', 'I', 'N', 'Z', 'V', 'C'
@@ -140,10 +137,9 @@ static RegName decodeRegNumber(
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName RegMc6809::getStackReg(host::uint_t bit, Config::opcode_t opCode) {
-    const RegName *table = (opCode & 2) == 0
-        ? &STACK_S_REGS[0] : &STACK_U_REGS[0];
-    return RegName(pgm_read_byte(&table[bit]));
+RegName RegMc6809::decodeStackReg(host::uint_t bitPos, bool onUserStack) const {
+    const RegName regName = RegName(pgm_read_byte(&STACK_REGS[bitPos]));
+    return (onUserStack && regName == REG_U) ? REG_S : regName;
 }
 
 RegName RegMc6809::parseBitOpReg(const char *line) const {

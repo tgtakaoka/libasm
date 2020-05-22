@@ -56,11 +56,11 @@ public:
     RegName decodeIndexReg(uint8_t regNum) const;
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;
+    RegName decodeStackReg(host::uint_t bitPos, bool onUserStack) const;
 
     char *outRegName(char *out, const RegName regName) const;
     char *outCCRBits(char *out, uint8_t val) const;
 
-    static RegName getStackReg(host::uint_t bit, Config::opcode_t Code);
     bool compareRegName(const char *line, RegName regName) const;
     host::uint_t regNameLen(RegName regName) const;
 

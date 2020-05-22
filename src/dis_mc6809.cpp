@@ -236,11 +236,12 @@ Error DisMc6809::decodeStackOp(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
     const bool push = (insn.opCode() & 1) == 0;
+    const bool onUserStack = (insn.opCode() & 2) != 0;
     for (host::uint_t i = 0, n = 0; i < 8; i++) {
-        const host::uint_t bit = push ? 7 - i : i;
-        if (post & (1 << bit)) {
+        const host::uint_t bitPos = push ? 7 - i : i;
+        if (post & (1 << bitPos)) {
             if (n != 0) *_operands++ = ',';
-            outRegister(_regs.getStackReg(bit, insn.opCode()));
+            outRegister(_regs.decodeStackReg(bitPos, onUserStack));
             n++;
         }
     }
