@@ -209,8 +209,7 @@ static Config::opcode_t getInsnMask(InsnFormat iformat) {
     }
 }
 
-Error TableMc68000::searchName(InsnMc68000 &insn) const {
-    const char *name = insn.name();
+Error TableMc68000::searchName(InsnMc68000 &insn, const char *name) const {
     const Entry *entry =
         TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_MC68000));
     if (!entry) return UNKNOWN_INSTRUCTION;

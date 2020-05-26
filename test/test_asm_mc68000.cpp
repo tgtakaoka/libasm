@@ -25,6 +25,7 @@ AsmMc68000 as68000;
 Assembler &assembler(as68000);
 
 static void set_up() {
+    as68000.setOptimize(true);
 }
 
 static void tear_down() {
@@ -66,6 +67,40 @@ static void test_move_mlt() {
     TEST("MOVEM.L (A1)+,D0",          046331, 0x0001);
     TEST("MOVEM.L (A1)+,D4-A3/D0",    046331, 0x0FF1);
     ETEST(DUPLICATE_REGISTER, "MOVEM.L (A1)+,D4-A3/D7");
+}
+
+static void test_optimize() {
+    as68000.setOptimize(false);
+    ETEST(ILLEGAL_OPERAND_MODE, "ADDI.W #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "ADDI.L #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "SUBI.W #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "SUBI.L #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "CMPI.W #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "CMPI.L #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "ADD.W  #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "ADD.L  #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "SUB.W  #0,A0");
+    ETEST(ILLEGAL_OPERAND_MODE, "SUB.L  #0,A0");
+    TEST("MOVE.L #127,D0" , 0020074, 0x0000, 0x007F);
+    TEST("MOVE.L #-128,D0", 0020074, 0xFFFF, 0xFF80);
+    TEST("MOVE.W #127,D0" , 0030074, 0x007F);
+    TEST("MOVE.W #-128,D0", 0030074, 0xFF80);
+
+    as68000.setOptimize(true);
+    TEST("ADDI.W #0,A0", 0150374, 0x0000);          // ADDA.W #0,A0
+    TEST("ADDI.L #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
+    TEST("SUBI.W #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0
+    TEST("SUBI.L #0,A0", 0110774, 0x0000, 0x0000);  // SUBA.L #0,A0
+    TEST("CMPI.W #0,A0", 0130374, 0x0000);          // CMPA.W #0,A0
+    TEST("CMPI.L #0,A0", 0130774, 0x0000, 0x0000);  // CMPA.L #0,A0
+    TEST("ADD.W  #0,A0", 0150374, 0x0000);          // ADDA.W #0,A0
+    TEST("ADD.L  #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
+    TEST("SUB.W  #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0
+    TEST("SUB.L  #0,A0", 0110774, 0x0000, 0x0000);  // SUBA.L #0,A0
+    TEST("MOVE.L #127,D0",  0070000 | 0x7F);        // MOVEQ #127,D0
+    TEST("MOVE.L #-128,D0", 0070000 | 0x80);        // MOVEQ #-128,D0
+    TEST("MOVE.W #127,D0" , 0030074, 0x007F);       // can't optimize because WORD
+    TEST("MOVE.W #-128,D0", 0030074, 0xFF80);       // can't optimize because WORD
 }
 
 static void test_comment() {
@@ -125,6 +160,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
     RUN_TEST(test_inherent);
     RUN_TEST(test_move_mlt);
+    RUN_TEST(test_optimize);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     return 0;

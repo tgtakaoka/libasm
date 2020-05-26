@@ -37,8 +37,11 @@ public:
     bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
     const char *getCpu() const override { return TableMc68000.getCpu(); }
 
+    void setOptimize(bool enabled) { _optimize = enabled; }
+
 private:
     MotoValueParser _parser;
+    bool _optimize = true;
 
 public:
     struct Operand : public ErrorReporter {
