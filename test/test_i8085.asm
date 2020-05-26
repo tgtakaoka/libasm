@@ -15,7 +15,7 @@
         cpu     8085
         include "test_i8080.inc"
 
-        org     $+32-($&31)
+        align   32
         rim
         sim
 

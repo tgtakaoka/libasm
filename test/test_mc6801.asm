@@ -16,7 +16,7 @@
 
         include "test_mc6800.inc"
 
-        org     $1A0
+        align   32
         include "test_mc6801.inc"
 
         end

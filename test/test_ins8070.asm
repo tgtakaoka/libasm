@@ -14,7 +14,6 @@
 
         cpu     8070
         org     0x0100
-
 ;;; 0X
         nop
         xch     a,e

@@ -14,7 +14,6 @@
 
         cpu     sc/mp
         org     0x0100
-
 ;;; 0X
         halt
         xae

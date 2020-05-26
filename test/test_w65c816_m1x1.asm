@@ -16,13 +16,17 @@
 
         assume  m:1
         assume  x:1
+
         org     $100000
         include "test_mos6502.inc"
-        org     $100160
+
+        align   32
         include "test_w65sc02.inc"
-        org     $1001A0
+
+        align   32
         include "test_w65c02s.inc"
-        org     $1001C0
+
+        align   32
         include "test_w65c816.inc"
 
         end

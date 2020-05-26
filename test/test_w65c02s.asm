@@ -15,11 +15,14 @@
         cpu     w65c02s
 
         include "test_mos6502.inc"
-	org     $150
+
+        align   32
         include "test_w65sc02.inc"
-	org     $190
+
+        align   32
         include "test_r65c02.inc"
-	org     $1F0
+
+        align   32
         include "test_w65c02s.inc"
 
         end

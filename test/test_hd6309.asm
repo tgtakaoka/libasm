@@ -16,7 +16,8 @@
         assume  dpr:$00
 
 	include "test_mc6809.inc"
-	org     $02c0
+
+        align   32
 	include "test_hd6309.inc"
 
         end

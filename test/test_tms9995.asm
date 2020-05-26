@@ -15,7 +15,8 @@
         cpu     TMS9995
 
         include "test_tms9900.inc"
-        org     100H
+
+        align   32
         include "test_tms9995.inc"
 
         end                     ; comment

@@ -17,7 +17,7 @@
 
         include "test_i8080_z80syn.inc"
 
-        org     $+32-($&31)
+        align   32
         ld      a,im
         ld      im,a
 

@@ -275,6 +275,8 @@ Error AsmCommonDirective::processPseudo(
     // TODO: implement listing after "end".
     if (strcasecmp(directive, "end") == 0)
         return closeSource();
+    if (strcasecmp(directive, "align") == 0)
+        return alignOrigin();
     if (strcasecmp(directive, "cpu") == 0) {
         const char *p = _scan;
         while (*p && !isspace(*p))
@@ -314,8 +316,21 @@ Error AsmCommonDirective::defineOrigin() {
         return setError(*_parser);
     _scan = scan;
     // TODO line end check
-    _origin = value;
-    _list.address = value;
+    _list.address = _origin = value;
+    return setError(OK);
+}
+
+Error AsmCommonDirective::alignOrigin() {
+    uint32_t value;
+    const char *scan = _parser->eval(_scan, value, this);
+    if (_parser->getError())
+        return setError(*_parser);
+    if (static_cast<int32_t>(value) <= 0) setError(ILLEGAL_OPERAND);
+    _scan = scan;
+    // TODO line end check
+    _list.address = _origin;
+    _origin += value - 1;
+    _origin -= _origin % value;
     return setError(OK);
 }
 

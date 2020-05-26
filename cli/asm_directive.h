@@ -56,6 +56,7 @@ public:
     const char *readSourceLine();
 
     Error defineOrigin();
+    Error alignOrigin();
     Error defineLabel(const char *&label, CliMemory &memory);
     Error includeFile();
     Error defineBytes(CliMemory &memory, bool terminator = false);
