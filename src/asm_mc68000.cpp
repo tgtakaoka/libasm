@@ -566,16 +566,21 @@ Error AsmMc68000::encodeDmemSiz(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     const uint8_t opc = (insn.opCode() >> 8) & ~0xE;
-    constexpr uint8_t CMP = 0xB0;
-    constexpr uint8_t EOR = 0xB1;
-    if (RegMc68000::isDreg(op2.reg)) { // <ea>,Dn
-        if (opc == EOR) return setError(ILLEGAL_OPERAND_MODE);
+    constexpr uint8_t CMP = 0xB0;      // <ea>,Dn only
+    constexpr uint8_t EOR = 0xB1;      // Dn,<ea> only
+    const uint8_t op4 = (opc >> 4);
+    constexpr uint8_t OR = 0x8;
+    constexpr uint8_t SUB = 0x9;
+    constexpr uint8_t AND = 0xC;
+    constexpr uint8_t ADD = 0xD;
+    if (opc != EOR && RegMc68000::isDreg(op2.reg)) { // <ea>,Dn
+        if (opc == CMP && op1.mode == M_AREG && insn.size() == SZ_BYTE)
+            return setError(ILLEGAL_SIZE);
+        if (op1.mode == M_AREG && (op4 == OR || op4 == AND))
+            return setError(ILLEGAL_OPERAND_MODE);
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
         return emitEffectiveAddr(insn, op1);
     }
-    const uint8_t op4 = (opc >> 4);
-    constexpr uint8_t SUB = 0x9;
-    constexpr uint8_t ADD = 0xD;
     const char *alias = nullptr;
     if (op4 == SUB) alias = "SUBA";
     if (op4 == ADD) alias = "ADDA";
@@ -584,8 +589,9 @@ Error AsmMc68000::encodeDmemSiz(
         return encodeAregSiz(insn, op1, op2);
     }
     if (RegMc68000::isDreg(op1.reg)) { // Dn,<ea>
-        if (opc == CMP) return setError(ILLEGAL_OPERAND_MODE);
-        if (!op2.satisfy(CAT_MEMORY | CAT_ALTERABLE))
+        const host::uint_t categories = (opc == EOR ? CAT_DATA : CAT_MEMORY)
+            | CAT_ALTERABLE;
+        if (!op2.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
         insn.embed(0400);
         insn.embed(RegMc68000::encodeRegNo(op1.reg), 9);
@@ -701,6 +707,8 @@ Error AsmMc68000::encodeMoveOpr(
     if (op2.mode == M_AREG) {
         if (size == SZ_BYTE) return setError(ILLEGAL_SIZE);
         if (size == SZ_NONE) size = SZ_LONG;
+    } else if (op1.mode == M_AREG) {
+        if (size == SZ_BYTE) return setError(ILLEGAL_SIZE);
     } else {
         if (size == SZ_NONE) size = SZ_WORD;
         if (!op2.satisfy(CAT_DATA | CAT_ALTERABLE))
