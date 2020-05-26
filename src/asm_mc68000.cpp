@@ -513,7 +513,7 @@ Error AsmMc68000::encodeMoveQic(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_LONG)) return getError();
     if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
-    if (checkSize(op1.val32, SZ_BYTE, true)) return getError();
+    if (checkSize(op1.val32, SZ_BYTE, false)) return getError();
     if (!RegMc68000::isDreg(op2.reg)) return setError(ILLEGAL_OPERAND_MODE);
     const uint8_t data = static_cast<uint8_t>(op1.val32);
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
@@ -693,13 +693,13 @@ Error AsmMc68000::encodeMoveOpr(
         return setError(ILLEGAL_OPERAND_MODE);
     }
     EaSize size = insn.size();
-#if 0
     // MOVE.L #<data>,Dn => MOVEQ #<data>,Dn
-    if (op1.mode == M_IMM_DATA && checkSize(op1.val32, SZ_BYTE) == OK
-        && insn.size() == SZ_LONG && RegMc68000::isDreg(op2.reg)) {
+    if (_optimize && op1.mode == M_IMM_DATA && insn.size() == SZ_LONG
+        && checkSize(op1.val32, SZ_BYTE, false) == OK
+        && RegMc68000::isDreg(op2.reg)) {
+        TableMc68000.searchName(insn, "MOVEQ");
         return encodeMoveQic(insn, op1, op2);
     }
-#endif
     if (op2.mode == M_AREG) {
         if (size == SZ_BYTE) return setError(ILLEGAL_SIZE);
         if (size == SZ_NONE) size = SZ_LONG;
