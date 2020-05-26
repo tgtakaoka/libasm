@@ -57,6 +57,9 @@ static bool isNumber(const char *&p) {
     } else if (isXdigits(s, p) && toupper(*s) == 'H') {
         p = s + 1;
         return true;
+    } else if (p[0] == '>' && isXdigits(s, p + 1) && toupper(*s) == 'H') {
+        p = s + 1;
+        return true;
     } else if ((p[0] == '-' || p[0] == '>')
                && p[1] == '$' && isXdigits(s, p + 2) && s - p >= 3) {
         p = s;

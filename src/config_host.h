@@ -37,6 +37,7 @@ namespace host
 #define pgm_strcpy(d, s) strcpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))))
 #define pgm_strncpy(d, s, n) strncpy_P((d), reinterpret_cast<const char *>(pgm_read_word(&(s))), (n))
 #define pgm_strcasecmp(n, p) strcasecmp_P((n), reinterpret_cast<const char *>(pgm_read_word(&(p))))
+#define pgm_strncasecmp(n, p, l) strncasecmp_P((n), reinterpret_cast<const char *>(pgm_read_word(&(p))), (l))
 
 #else  // AVR
 
@@ -54,6 +55,7 @@ namespace host
 #define pgm_strcpy(d, s) strcpy((d), (s))
 #define pgm_strncpy(d, s, n) strncpy((d), (s), (n))
 #define pgm_strcasecmp(n, p) strcasecmp((n), (p))
+#define pgm_strncasecmp(n, p, l) strncasecmp((n), (p), (l))
 
 #endif // AVR
 
