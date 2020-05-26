@@ -574,7 +574,8 @@ Error AsmMc68000::encodeDmemSiz(
     constexpr uint8_t AND = 0xC;
     constexpr uint8_t ADD = 0xD;
     if (opc != EOR && RegMc68000::isDreg(op2.reg)) { // <ea>,Dn
-        if (opc == CMP && op1.mode == M_AREG && insn.size() == SZ_BYTE)
+        if (op1.mode == M_AREG && insn.size() == SZ_BYTE
+            && (opc == CMP || op4 == SUB || op4 == ADD))
             return setError(ILLEGAL_SIZE);
         if (op1.mode == M_AREG && (op4 == OR || op4 == AND))
             return setError(ILLEGAL_OPERAND_MODE);
