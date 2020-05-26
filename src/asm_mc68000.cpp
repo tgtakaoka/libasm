@@ -302,7 +302,7 @@ Error AsmMc68000::encodeDestOpr(
         constexpr uint8_t BTST = 0;
         if (opc == BTST && !op2.satisfy(CAT_DATA))
             return setError(ILLEGAL_OPERAND_MODE);
-        if (!op2.satisfy(CAT_DATA | CAT_ALTERABLE))
+        if (opc != BTST && !op2.satisfy(CAT_DATA | CAT_ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
 
         if (RegMc68000::isDreg(op1.reg))
