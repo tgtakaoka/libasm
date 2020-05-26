@@ -195,8 +195,6 @@ Error AsmMc68000::encodeDestSiz(
             return emitImmediateData(
                 insn, insn.size(), op1.val32, op1.getError());
         }
-        if (opc == CMPI && !op2.satisfy(CAT_DATA))
-            return setError(ILLEGAL_OPERAND_MODE);
         if (!op2.satisfy(CAT_DATA | CAT_ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
         const Error error = emitImmediateData(
