@@ -172,12 +172,19 @@ Error AsmMc68000::encodeDestSiz(
     constexpr uint8_t SUBI = 2;
     constexpr uint8_t ADDI = 3;
     constexpr uint8_t CMPI = 6;
+    const char *alias = nullptr;
+    if (opc == SUBI) alias = "SUBA";
+    if (opc == ADDI) alias = "ADDA";
+    if (opc == CMPI) alias = "CMPA";
     if ((insn.opCode() >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
         if (op1.mode != M_IMM_DATA)
             return setError(UNKNOWN_OPERAND);
+        if (_optimize && op2.mode == M_AREG && alias) {
+            TableMc68000.searchName(insn, alias);
+            return encodeAregSiz(insn, op1, op2);
+        }
         if (op2.reg == REG_CCR || op2.reg == REG_SR) {
-            if (opc == SUBI || opc == ADDI || opc == CMPI)
-                return setError(UNKNOWN_OPERAND);
+            if (alias) return setError(UNKNOWN_OPERAND);
             insn.setSize(SZ_BYTE);
             insn.embed(0074);
             if (op2.reg == REG_SR) {
@@ -466,6 +473,7 @@ Error AsmMc68000::encodeAregSiz(
     } else { // SUBA, CMPA, ADDA
         if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
         if (insn.size() == SZ_BYTE) return setError(ILLEGAL_SIZE);
+        if (insn.size() == SZ_LONG) insn.embed(0400);
     }
     if (op2.mode != M_AREG) return setError(ILLEGAL_OPERAND_MODE);
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
@@ -566,6 +574,16 @@ Error AsmMc68000::encodeDmemSiz(
         if (opc == EOR) return setError(ILLEGAL_OPERAND_MODE);
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
         return emitEffectiveAddr(insn, op1);
+    }
+    const uint8_t op4 = (opc >> 4);
+    constexpr uint8_t SUB = 0x9;
+    constexpr uint8_t ADD = 0xD;
+    const char *alias = nullptr;
+    if (op4 == SUB) alias = "SUBA";
+    if (op4 == ADD) alias = "ADDA";
+    if (_optimize && op2.mode == M_AREG && alias) {
+        TableMc68000.searchName(insn, alias);
+        return encodeAregSiz(insn, op1, op2);
     }
     if (RegMc68000::isDreg(op1.reg)) { // Dn,<ea>
         if (opc == CMP) return setError(ILLEGAL_OPERAND_MODE);
@@ -842,7 +860,7 @@ Error AsmMc68000::encode(Insn &_insn) {
     if (size == SZ_INVALID) return setError(ILLEGAL_SIZE);
     insn.setSize(size);
 
-    if (TableMc68000.searchName(insn))
+    if (TableMc68000.searchName(insn, insn.name()))
         return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endSize);
     Operand op1;

@@ -26,8 +26,7 @@ namespace mc68000 {
 
 class TableMc68000 : private TableBase {
 public:
-    Error searchName(InsnMc68000 &insn) const;
-    Error searchNameAndAddrMode(InsnMc68000 &insn) const;
+    Error searchName(InsnMc68000 &insn, const char *name) const;
     Error searchOpCode(InsnMc68000 &insn) const;
 
     const char *listCpu() override { return getCpu(); }
