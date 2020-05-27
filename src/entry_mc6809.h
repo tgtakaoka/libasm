@@ -49,7 +49,6 @@ enum AddrMode : host::uint_t {
     IMM_IDX,   // Immediate and Indexed
     BITOP,     // Bit Operation
     TFR_MEM,   // Transfer Memory
-    PSEUDO,    // Pseudo instruction
 };
 
 struct Entry {

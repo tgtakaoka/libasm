@@ -57,7 +57,7 @@ private:
     Error encodeImmediatePlus(InsnMc6809 &insn);
     Error encodeTransferMemory(InsnMc6809 &insn);
     // Pseudo instruction
-    Error processPseudo(InsnMc6809 &insn);
+    Error processPseudo(InsnMc6809 &insn, const char *line);
     Error encode(Insn &insn) override;
 };
 

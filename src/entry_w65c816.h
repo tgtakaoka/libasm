@@ -65,9 +65,6 @@ enum AddrMode : host::uint_t {
     ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
     BLOCK_MOVE,          // Block Move: #ss,#dd
     IMM8,                // Immediate Byte.
-
-    // Pseudo instruction
-    PSEUDO,
 };
 
 struct Entry {

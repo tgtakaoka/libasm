@@ -48,7 +48,7 @@ private:
         uint32_t val32;
     };
 
-    Error parseOnOff(bool &val);
+    Error parseOnOff(const char *line, bool &val);
     Error parseZeroOne(const char *line, bool &val);
     Error selectMode(
         char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
@@ -59,7 +59,7 @@ private:
     Error encodeZeroPageRelative(InsnW65C816 &insn);
     Error encodeBlockMove(InsnW65C816 &insn);
     // Pseudo instruction
-    Error processPseudo(InsnW65C816 &insn);
+    Error processPseudo(InsnW65C816 &insn, const char *line);
     Error encode(Insn &insn) override;
 };
 

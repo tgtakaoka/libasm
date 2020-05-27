@@ -249,11 +249,6 @@ static const char TEXT_TSTE[]  PROGMEM = "TSTE";
 static const char TEXT_TSTF[]  PROGMEM = "TSTF";
 static const char TEXT_TSTW[]  PROGMEM = "TSTW";
 
-// Pseudo
-
-static const char TEXT_SETDP[] PROGMEM  = "SETDP";
-static const char TEXT_ASSUME[] PROGMEM = "ASSUME";
-
 } // namespace mc6809
 } // namespace libasm
 

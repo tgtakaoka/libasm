@@ -127,11 +127,6 @@ static const Entry W65C816_TABLE[] PROGMEM = {
     E(0xD7, CMPL, W65C816, ZPG_IDIR_IDY)
     E(0xE7, SBCL, W65C816, ZPG_IDIR)
     E(0xF7, SBCL, W65C816, ZPG_IDIR_IDY)
-
-    // Pseudo instruction to control M and X bits.
-    E(PSEUDO_LONGA,  LONGA,  W65C816, PSEUDO)
-    E(PSEUDO_LONGI,  LONGI,  W65C816, PSEUDO)
-    E(PSEUDO_ASSUME, ASSUME, W65C816, PSEUDO)
 };
 
 Error TableW65C816::searchName(

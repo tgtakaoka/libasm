@@ -222,7 +222,7 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
         } else {
             outConstant(val);
         }
-    } else if (TableMc6809.is6309() && insn.oprSize() == SZ_LONG) {
+    } else if (insn.oprSize() == SZ_LONG) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
         outConstant(val);

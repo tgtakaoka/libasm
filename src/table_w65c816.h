@@ -24,10 +24,6 @@
 namespace libasm {
 namespace w65c816 {
 
-static constexpr Config::opcode_t PSEUDO_LONGA  = 0xCB;
-static constexpr Config::opcode_t PSEUDO_LONGI  = 0xDB;
-static constexpr Config::opcode_t PSEUDO_ASSUME = 0x0B;
-
 class TableW65C816 : private TableBase {
 public:
     Error searchName(InsnW65C816 &insn) const;

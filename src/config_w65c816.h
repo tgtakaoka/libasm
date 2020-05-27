@@ -25,7 +25,7 @@ namespace w65c816 {
 struct Config : ConfigImpl<
     ADDRESS_24BIT, uint32_t, int32_t,
     OPCODE_8BIT, uint8_t, 4,
-    ENDIAN_LITTLE, 6>
+    ENDIAN_LITTLE, 4>
 {};
 
 } // namespace w65c816

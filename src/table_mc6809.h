@@ -24,9 +24,6 @@
 namespace libasm {
 namespace mc6809 {
 
-static constexpr Config::opcode_t PSEUDO_SETDP  = 0x00;
-static constexpr Config::opcode_t PSEUDO_ASSUME = 0x03;
-
 class TableMc6809 : private TableBase {
 public:
     TableMc6809();

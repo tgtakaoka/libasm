@@ -80,12 +80,6 @@ static const char TEXT_ORAL[] PROGMEM = "ORAL";
 static const char TEXT_SBCL[] PROGMEM = "SBCL";
 static const char TEXT_STAL[] PROGMEM = "STAL";
 
-// Pseudo
-
-static const char TEXT_LONGA[] PROGMEM  = "LONGA";
-static const char TEXT_LONGI[] PROGMEM  = "LONGI";
-static const char TEXT_ASSUME[] PROGMEM = "ASSUME";
-
 } // namespace w65c816
 } // namespace libasm
 

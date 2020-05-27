@@ -257,10 +257,6 @@ static constexpr Entry MC6809_P00[] PROGMEM = {
     E(0xFD, STD,   WORD, EXT)
     E(0xFE, LDU,   WORD, EXT)
     E(0xFF, STU,   WORD, EXT)
-
-    // Pseudo instruction to set DP on assembler
-    E(PSEUDO_SETDP,  SETDP,  BYTE, PSEUDO)
-    E(PSEUDO_ASSUME, ASSUME, BYTE, PSEUDO)
 };
 
 static constexpr Entry MC6809_P10[] PROGMEM = {
