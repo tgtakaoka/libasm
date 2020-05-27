@@ -71,22 +71,6 @@ static void test_move_mlt() {
 
 static void test_optimize() {
     as68000.setOptimize(false);
-    ETEST(ILLEGAL_OPERAND_MODE, "ADDI.W #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "ADDI.L #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "SUBI.W #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "SUBI.L #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "CMPI.W #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "CMPI.L #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "ADD.W  #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "ADD.L  #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "SUB.W  #0,A0");
-    ETEST(ILLEGAL_OPERAND_MODE, "SUB.L  #0,A0");
-    TEST("MOVE.L #127,D0" , 0020074, 0x0000, 0x007F);
-    TEST("MOVE.L #-128,D0", 0020074, 0xFFFF, 0xFF80);
-    TEST("MOVE.W #127,D0" , 0030074, 0x007F);
-    TEST("MOVE.W #-128,D0", 0030074, 0xFF80);
-
-    as68000.setOptimize(true);
     TEST("ADDI.W #0,A0", 0150374, 0x0000);          // ADDA.W #0,A0
     TEST("ADDI.L #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
     TEST("SUBI.W #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0
@@ -97,6 +81,13 @@ static void test_optimize() {
     TEST("ADD.L  #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
     TEST("SUB.W  #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0
     TEST("SUB.L  #0,A0", 0110774, 0x0000, 0x0000);  // SUBA.L #0,A0
+
+    TEST("MOVE.L #127,D0" , 0020074, 0x0000, 0x007F);
+    TEST("MOVE.L #-128,D0", 0020074, 0xFFFF, 0xFF80);
+    TEST("MOVE.W #127,D0" , 0030074, 0x007F);
+    TEST("MOVE.W #-128,D0", 0030074, 0xFF80);
+
+    as68000.setOptimize(true);
     TEST("MOVE.L #127,D0",  0070000 | 0x7F);        // MOVEQ #127,D0
     TEST("MOVE.L #-128,D0", 0070000 | 0x80);        // MOVEQ #-128,D0
     TEST("MOVE.W #127,D0" , 0030074, 0x007F);       // can't optimize because WORD

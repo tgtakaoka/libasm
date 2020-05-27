@@ -117,7 +117,7 @@ Error AsmMc68000::emitEffectiveAddr(
         if (mode == M_PC_INDX) {
             Config::uintptr_t addr = ea.val32;
             if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-            disp = addr - (insn.address() + 2);
+            disp = addr - (insn.address() + insn.length());
         } else {
             disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
@@ -134,7 +134,7 @@ Error AsmMc68000::emitEffectiveAddr(
         if (mode == M_PC_DISP) {
             Config::uintptr_t addr = ea.val32;
             if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-            disp = addr - (insn.address() + 2);
+            disp = addr - (insn.address() + insn.length());
         } else {
             disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
@@ -179,7 +179,7 @@ Error AsmMc68000::encodeDestSiz(
     if ((insn.opCode() >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
         if (op1.mode != M_IMM_DATA)
             return setError(UNKNOWN_OPERAND);
-        if (_optimize && op2.mode == M_AREG && alias) {
+        if (op2.mode == M_AREG && alias) {
             TableMc68000.searchName(insn, alias);
             return encodeAregSiz(insn, op1, op2);
         }
@@ -251,7 +251,8 @@ Error AsmMc68000::encodeDataReg(
         || op2.mode == M_LABEL) {
         Config::uintptr_t addr = op2.val32;
         if (op2.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-        const Config::ptrdiff_t disp = addr - (insn.address() + 2);
+        const Config::ptrdiff_t disp =
+            addr - (insn.address() + sizeof(Config::opcode_t));
         if (checkSize(disp, SZ_WORD, false))
             return setError(OPERAND_TOO_FAR);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
@@ -316,9 +317,9 @@ Error AsmMc68000::encodeDestOpr(
             return setError(UNKNOWN_OPERAND);
         if (op1.val32 >= (RegMc68000::isDreg(op2.reg) ? 32 : 8))
             return setError(OVERFLOW_RANGE);
-        const Error error1 = emitEffectiveAddr(insn, op2, -1);
-        const Error error2 =
+        const Error error1 =
             emitImmediateData(insn, SZ_BYTE, op1.val32, op1.getError());
+        const Error error2 = emitEffectiveAddr(insn, op2, -1);
         return setError(error1 ? error1 : (error2 ? error2 : OK));
     }
     // JSR/JMP/Scc/ASd/LSd/ROXd/ROd
@@ -391,7 +392,8 @@ Error AsmMc68000::encodeRelative(
     if (op1.mode != M_LABEL) return setError(ILLEGAL_OPERAND_MODE);
     Config::uintptr_t addr = op1.val32;
     if (op1.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const Config::ptrdiff_t disp = addr - (insn.address() + 2);
+    const Config::ptrdiff_t disp =
+        addr - (insn.address() + sizeof(Config::opcode_t));
     if (insn.size() == SZ_NONE)
         insn.setSize(checkSize(disp, SZ_BYTE, false) == OK ? SZ_BYTE : SZ_WORD);
     if (insn.size() == SZ_BYTE && checkSize(disp, SZ_BYTE, false))
@@ -585,7 +587,7 @@ Error AsmMc68000::encodeDmemSiz(
     const char *alias = nullptr;
     if (op4 == SUB) alias = "SUBA";
     if (op4 == ADD) alias = "ADDA";
-    if (_optimize && op2.mode == M_AREG && alias) {
+    if (op2.mode == M_AREG && alias) {
         TableMc68000.searchName(insn, alias);
         return encodeAregSiz(insn, op1, op2);
     }

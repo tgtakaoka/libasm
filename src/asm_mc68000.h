@@ -41,7 +41,7 @@ public:
 
 private:
     MotoValueParser _parser;
-    bool _optimize = true;
+    bool _optimize = false;
 
 public:
     struct Operand : public ErrorReporter {

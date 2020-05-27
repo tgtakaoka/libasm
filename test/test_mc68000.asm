@@ -13,6 +13,7 @@
 ;;; limitations under the License.
 
         cpu     68000
+        org     $10000
 
         align   32
         ori.b   #5,ccr
@@ -205,8 +206,8 @@
         cmpi.b  #5,(8,a7,d3)
         cmpi.b  #5,(-4).w
         cmpi.b  #5,(8).l
-        cmpi.b  #5,(*,pc)       ; should be error
-        cmpi.b  #5,(*,pc,d3)    ; should be error
+;       cmpi.b  #5,(*,pc)
+;       cmpi.b  #5,(*,pc,d3)
         cmpi.w  #5,d1
         cmpi.w  #5,a2           ; cmpa.w #5,a2
         cmpi.w  #5,(a3)
@@ -216,8 +217,8 @@
         cmpi.w  #5,(8,a7,d3)
         cmpi.w  #5,(-4).w
         cmpi.w  #5,(8).l
-        cmpi.w  #5,(*,pc)       ; should be error
-        cmpi.w  #5,(*,pc,d3)    ; should be error
+;       cmpi.w  #5,(*,pc)
+;       cmpi.w  #5,(*,pc,d3)
         cmpi.l  #5,d1
         cmpi.l  #5,a2           ; cmpa.l #5,a2
         cmpi.l  #5,(a3)
@@ -227,8 +228,8 @@
         cmpi.l  #5,(8,a7,d3)
         cmpi.l  #5,(-4).w
         cmpi.l  #5,(8).l
-        cmpi.l  #5,(*,pc)       ; should be error
-        cmpi.l  #5,(*,pc,d3)    ; should be error
+;       cmpi.l  #5,(*,pc)
+;       cmpi.l  #5,(*,pc,d3)
 
         align   32
         bchg.l  #5,d1
@@ -401,7 +402,7 @@
 
         align   32
         move.b  d2,d1
-        move.b  a4,d1           ; should be error
+;       move.b  a4,d1
         move.b  (a3),d1
         move.b  (a4)+,d1
         move.b  -(a5),d1
@@ -412,20 +413,20 @@
         move.b  #5,d1
         move.b  (*,pc),d1
         move.b  (*,pc,d3),d1
-        move.b  d2,a2           ; should be error
-        move.b  a4,a2           ; should be error
-        move.b  (a3),a2         ; should be error
-        move.b  (a4)+,a2        ; should be error
-        move.b  -(a5),a2        ; should be error
-        move.b  (4,a6),a2       ; should be error
-        move.b  (8,a7,d3),a2    ; should be error
-        move.b  (-4).w,a2       ; should be error
-        move.b  (8).l,a2        ; should be error
-        move.b  #5,a2           ; should be error
-        move.b  (*,pc),a2       ; should be error
-        move.b  (*,pc,d3),a2    ; should be error
+;       move.b  d2,a2
+;       move.b  a4,a2
+;       move.b  (a3),a2
+;       move.b  (a4)+,a2
+;       move.b  -(a5),a2
+;       move.b  (4,a6),a2
+;       move.b  (8,a7,d3),a2
+;       move.b  (-4).w,a2
+;       move.b  (8).l,a2
+;       move.b  #5,a2
+;       move.b  (*,pc),a2
+;       move.b  (*,pc,d3),a2
         move.b  d2,(a3)
-        move.b  a4,(a3)         ; should be error
+;       move.b  a4,(a3)
         move.b  (a3),(a3)
         move.b  (a4)+,(a3)
         move.b  -(a5),(a3)
@@ -436,7 +437,7 @@
         move.b  #5,(a3)
         move.b  (*,pc),(a3)
         move.b  (*,pc,d3),(a3)
-        move.b  a4,(a4)+        ; should be error
+;       move.b  a4,(a4)+
         move.b  (a3),(a4)+
         move.b  (a4)+,(a4)+
         move.b  -(a5),(a4)+
@@ -447,7 +448,7 @@
         move.b  #5,(a4)+
         move.b  (*,pc),(a4)+
         move.b  (*,pc,d3),(a4)+
-        move.b  a4,-(a5)        ; should be error
+;       move.b  a4,-(a5)
         move.b  (a3),-(a5)
         move.b  (a4)+,-(a5)
         move.b  -(a5),-(a5)
@@ -458,7 +459,7 @@
         move.b  #5,-(a5)
         move.b  (*,pc),-(a5)
         move.b  (*,pc,d3),-(a5)
-        move.b  a4,(4,a6)       ; should be error
+;       move.b  a4,(4,a6)
         move.b  (a3),(4,a6)
         move.b  (a4)+,(4,a6)
         move.b  -(a5),(4,a6)
@@ -469,7 +470,7 @@
         move.b  #5,(4,a6)
         move.b  (*,pc),(4,a6)
         move.b  (*,pc,d3),(4,a6)
-        move.b  a4,(0,a4,d2)    ; should be error
+;       move.b  a4,(0,a4,d2)
         move.b  (a3),(0,a4,d2)
         move.b  (a4)+,(0,a4,d2)
         move.b  -(a5),(0,a4,d2)
@@ -480,7 +481,7 @@
         move.b  #5,(0,a4,d2)
         move.b  (*,pc),(0,a4,d2)
         move.b  (*,pc,d3),(0,a4,d2)
-        move.b  a4,(-4).w       ; should be error
+;       move.b  a4,(-4).w
         move.b  (a3),(-4).w
         move.b  (a4)+,(-4).w
         move.b  -(a5),(-4).w
@@ -491,7 +492,7 @@
         move.b  #5,(-4).w
         move.b  (*,pc),(-4).w
         move.b  (*,pc,d3),(-4).w
-        move.b  a4,(8).l        ; should be error
+;       move.b  a4,(8).l
         move.b  (a3),(8).l
         move.b  (a4)+,(8).l
         move.b  -(a5),(8).l
@@ -1517,7 +1518,7 @@
 
         align   32
         sub.b   d2,d1
-        sub.b   a4,d1           ; should be error
+;       sub.b   a4,d1
         sub.b   (a3),d1
         sub.b   (a4)+,d1
         sub.b   -(a5),d1
@@ -1663,7 +1664,7 @@
 
         align   32
         cmp.b   d2,d1
-        cmp.b   a4,d1           ; should be error
+;       cmp.b   a4,d1
         cmp.b   (a3),d1
         cmp.b   (a4)+,d1
         cmp.b   -(a5),d1
@@ -1835,7 +1836,7 @@
 
         align   32
         add.b   d2,d1
-        add.b   a4,d1           ; should be error
+;       add.b   a4,d1
         add.b   (a3),d1
         add.b   (a4)+,d1
         add.b   -(a5),d1
