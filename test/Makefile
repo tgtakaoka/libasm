@@ -244,38 +244,38 @@ test_expr_cstyle: test_expr_cstyle.o $(OBJS_expr)
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mc6809 -u -C mc6809 -o gen_mc6809.asm
-	./gen_mc6809 -u -C hd6309 -o gen_hd6309.asm
+	./gen_mc6809 -u -C 6809 -o gen_mc6809.asm
+	./gen_mc6809 -u -C 6309 -o gen_hd6309.asm
 gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mc6800 -u -C mc6800  -o gen_mc6800.asm
-	./gen_mc6800 -u -C mc6801  -o gen_mc6801.asm
-	./gen_mc6800 -u -C hd6301  -o gen_hd6301.asm
-	./gen_mc6800 -u -C mc68hc11  -o gen_mc68hc11.asm
+	./gen_mc6800 -u -C 6800 -o gen_mc6800.asm
+	./gen_mc6800 -u -C 6801 -o gen_mc6801.asm
+	./gen_mc6800 -u -C 6301 -o gen_hd6301.asm
+	./gen_mc6800 -u -C 6811 -o gen_mc68hc11.asm
 gen_mos6502: gen_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mos6502 -u -C mos6502 -o gen_mos6502.asm
-	./gen_mos6502 -u -C w65sc02 -o gen_w65sc02.asm
-	./gen_mos6502 -u -C r65c02  -o gen_r65c02.asm
-	./gen_mos6502 -u -C w65c02s -o gen_w65c02s.asm
+	./gen_mos6502 -u -C 6502    -o gen_mos6502.asm
+	./gen_mos6502 -u -C 65SC02  -o gen_w65sc02.asm
+	./gen_mos6502 -u -C 65C02   -o gen_r65c02.asm
+	./gen_mos6502 -u -C W65C02S -o gen_w65c02s.asm
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_i8080 -u -C i8080 -o gen_i8080.asm
-	./gen_i8080 -u -C i8085 -o gen_i8085.asm
+	./gen_i8080 -u -C 8080 -o gen_i8080.asm
+	./gen_i8080 -u -C 8085 -o gen_i8085.asm
 gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z80   -u -C z80   -o gen_z80.asm
-	./gen_z80   -u -C i8080 -o gen_i8080_z80syn.asm
-	./gen_z80   -u -C i8085 -o gen_i8085_z80syn.asm
+	./gen_z80   -u -C Z80  -o gen_z80.asm
+	./gen_z80   -u -C 8080 -o gen_i8080_z80syn.asm
+	./gen_z80   -u -C 8085 -o gen_i8085_z80syn.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_ins8060 -u -C ins8060 -o gen_ins8060.asm
+	./gen_ins8060 -u -C SC/MP -o gen_ins8060.asm
 gen_ins8070: gen_ins8070.o dis_ins8070.o $(OBJS_ins8070) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_ins8070 -u -C ins8070 -o gen_ins8070.asm
+	./gen_ins8070 -u -C 8070 -o gen_ins8070.asm
 gen_cdp1802: gen_cdp1802.o dis_cdp1802.o $(OBJS_cdp1802) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_cdp1802 -u -C cdp1802 -o gen_cdp1802.asm
+	./gen_cdp1802 -u -C 1802 -o gen_cdp1802.asm
 
 clean: clean-obj
 	-rm -f $(TESTS)
