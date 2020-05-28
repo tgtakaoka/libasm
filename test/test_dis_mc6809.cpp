@@ -212,7 +212,7 @@ static void test_immediate() {
     symtab.intern(0x90A0, "dir90A0");
 
     disassembler.setCpu("6809");
-    TEST(LDA,  "#$90", 0x86, 0x90);
+    TEST(LDA,  "#dir90",   0x86, 0x90);
     TEST(CMPX, "#dir90A0", 0x8C, 0x90, 0xA0);
     TEST(LDY,  "#dir90A0", 0x10, 0x8E, 0x90, 0xA0);
     TEST(LDS,  "#dir90A0", 0x10, 0xCE, 0x90, 0xA0);

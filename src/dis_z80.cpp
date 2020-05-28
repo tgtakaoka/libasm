@@ -23,12 +23,7 @@ namespace z80 {
 template<typename T>
 void DisZ80::outAddress(T addr, bool indir) {
     if (indir) *_operands++ = '(';
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     if (indir) *_operands++ = ')';
     *_operands = 0;
 }

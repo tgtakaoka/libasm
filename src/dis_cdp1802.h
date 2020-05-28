@@ -43,9 +43,6 @@ private:
 
     RegBase &getRegister() override { return _regs; }
 
-    Error outDecimal(uint8_t val);
-    Error outImm8(uint8_t val);
-    Error outAddr(Config::uintptr_t addr);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 

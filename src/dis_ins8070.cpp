@@ -74,12 +74,7 @@ Error DisIns8070::decodeImmediate(
 
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val, 16);
-    }
+    outConstant(val, 16);
     return setOK();
 }
 
@@ -89,12 +84,7 @@ Error DisIns8070::decodeAbsolute(
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = val + fetch;
-    const char *label = lookup(target);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(target, 16);
-    }
+    outConstant(target, 16);
     return setOK();
 }
 
@@ -109,23 +99,13 @@ Error DisIns8070::decodeRelative(
         || (right == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (right == OPR_NO) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
-        const char *label = lookup(target);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(target, 16, false);
-        }
+        outConstant(target, 16, false);
         if (right == OPR_GN) {
             *_operands++ = ',';
             outRegister(REG_PC);
         }
     } else {
-        const char *label = lookup(disp);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(disp, 10);
-        }
+        outConstant(disp, 10);
         *_operands++ = ',';
         if (right == OPR_IX) {
             outOperand(right, insn.opCode());
@@ -152,12 +132,7 @@ Error DisIns8070::decodeGeneric(
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         const Config::uintptr_t addr = 0xFF00 | val;
-        const char *label = lookup(addr);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(addr, 16, false);
-        }
+        outConstant(addr, 16, false);
         return setOK();
     }
     return UNKNOWN_INSTRUCTION;

@@ -20,36 +20,6 @@
 namespace libasm {
 namespace cdp1802 {
 
-Error DisCdp1802::outDecimal(uint8_t val) {
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val, 10);
-    }
-    return setOK();
-}
-
-Error DisCdp1802::outImm8(uint8_t val) {
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val, 16);
-    }
-    return setOK();
-}
-
-Error DisCdp1802::outAddr(Config::uintptr_t addr) {
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
-    return setOK();
-}
-
 Error DisCdp1802::decode(
     DisMemory &memory, Insn &_insn) {
     InsnCdp1802 insn(_insn);
@@ -64,21 +34,24 @@ Error DisCdp1802::decode(
     switch (insn.addrMode()) {
     case REGN:
     case REG1:
-        outDecimal(insn.opCode() & 0xF);
+        outConstant(insn.opCode() & 0xF, 10);
         break;
     case IMM8:
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        return outImm8(val);
+        outConstant(val, 16);
+        break;
     case IOAD:
-        outDecimal(insn.opCode() & 7);
+        outConstant(insn.opCode() & 7, 10);
         break;
     case ADDR:
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        return outAddr(addr);
+        outConstant(addr, 16, false);
+        break;
     case PAGE:
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        addr = (insn.address() + 2) & ~0xFF;
-        return outAddr(addr | val);
+        addr = ((insn.address() + 2) & ~0xFF) | val;
+        outConstant(addr, 16, false);
+        break;
     case IMPL:
         break;
     default:

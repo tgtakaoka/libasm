@@ -99,7 +99,7 @@ Error DisW65C816::decodeAbsolute(
             *_operands++ = '>';
             *_operands++ = '>';
         }
-        outConstant(target, 16, false, ADDRESS_24BIT);
+        outConstant(target, 16, false, true, ADDRESS_24BIT);
     }
     if (index != REG_UNDEF) {
         *_operands++ = ',';
@@ -184,12 +184,7 @@ Error DisW65C816::decodeRelative(
     }
     const Config::uintptr_t target =
         (static_cast<Config::uintptr_t>(bank) << 16) + addr;
-    const char *label = lookup(target);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(target, 16, false, Config::addressBits());
-    }
+    outConstant(target, 16, false, true, Config::addressBits());
     return setOK();
 }
 
@@ -200,19 +195,9 @@ Error DisW65C816::decodeBlockMove(
     if (insn.readByte(memory, sbank)) return setError(NO_MEMORY);
     const Config::uintptr_t src = static_cast<Config::uintptr_t>(sbank) << 16;
     const Config::uintptr_t dst = static_cast<Config::uintptr_t>(dbank) << 16;
-    const char *label = lookup(src);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(src, 16, false, Config::addressBits());
-    }
+    outConstant(src, 16, false, true, Config::addressBits());
     *_operands++ = ',';
-    label = lookup(dst);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(dst, 16, false, Config::addressBits());
-    }
+    outConstant(dst, 16, false, true, Config::addressBits());
     return setOK();
 }
 

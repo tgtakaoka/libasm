@@ -34,12 +34,7 @@ Error DisIns8060::decodeImm8(
     DisMemory& memory, InsnIns8060 &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val);
-    }
+    outConstant(val);
     return setOK();
 }
 
@@ -59,24 +54,14 @@ Error DisIns8060::decodeIndx(
         // Program space is paged by 4kB.
         const Config::uintptr_t target =
             (base & ~0xFFF) | ((base + disp + fetch) & 0xFFF);
-        const char *label = lookup(target);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(target, 16, false);
-        }
+        outConstant(target, 16, false);
         return setOK();
     }
     if (opr == 0x80) {         // E(Pn)
         outRegister(REG_E);
     } else {
         const int8_t disp = static_cast<int8_t>(opr);
-        const char *label = lookup(disp);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(disp, 10);
-        }
+        outConstant(disp, 10);
     }
     *_operands++ = '(';
     outRegister(reg);

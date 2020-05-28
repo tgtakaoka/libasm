@@ -38,12 +38,7 @@ Error DisI8080::decodeImmediate16(
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val);
-    }
+    outConstant(val);
     return setOK();
 }
 
@@ -51,12 +46,7 @@ Error DisI8080::decodeDirect(
     DisMemory &memory, InsnI8080& insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     return setOK();
 }
 

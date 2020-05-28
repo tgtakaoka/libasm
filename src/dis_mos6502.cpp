@@ -25,12 +25,7 @@ Error DisMos6502::decodeImmediate(
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     *_operands++ = '#';
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(val);
-    }
+    outConstant(val);
     return setOK();
 }
 
@@ -125,12 +120,7 @@ Error DisMos6502::decodeRelative(
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     addr = insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
         + static_cast<int8_t>(val);
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     return setOK();
 }
 

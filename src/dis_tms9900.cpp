@@ -20,15 +20,6 @@
 namespace libasm {
 namespace tms9900 {
 
-void DisTms9900::outAddress(Config::uintptr_t addr, bool relax) {
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, relax);
-    }
-}
-
 Error DisTms9900::decodeOperand(
     DisMemory &memory, InsnTms9900 &insn, const host::uint_t opr) {
     const host::uint_t regno = opr & 0xf;
@@ -38,7 +29,7 @@ Error DisTms9900::decodeOperand(
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         *_operands++ = '@';
-        outAddress(val);
+        outConstant(val, 16);
         if (regno) {
             *_operands++ = '(';
             _operands = _regs.outRegName(_operands, regno);
@@ -57,7 +48,7 @@ Error DisTms9900::decodeImmediate(
     DisMemory& memory, InsnTms9900 &insn) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    outAddress(val);
+    outConstant(val, 16);
     return setOK();
 }
 
@@ -65,7 +56,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
     int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
     delta <<= 1;
     const Config::uintptr_t addr = insn.address() + 2 + delta;
-    outAddress(addr, false);
+    outConstant(addr, 16, false);
     return setOK();
 }
 
@@ -116,12 +107,7 @@ Error DisTms9900::decode(
         host::uint_t count = (opCode >> 6) & 0xf;
         if (insn.addrMode() == CNT_SRC && count == 0)
             count = 16;
-        const char *label = lookup(count);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(static_cast<uint8_t>(count), 10);
-        }
+        outConstant(static_cast<uint8_t>(count), 10);
         return setOK();
     }
     case DST_SRC: {
@@ -136,12 +122,7 @@ Error DisTms9900::decode(
         return setOK();
     case CRU_OFF: {
         const int8_t offset = static_cast<int8_t>(opCode & 0xff);
-        const char *label = lookup(offset);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(offset, 10);
-        }
+        outConstant(offset, 10);
         return setOK();
     }
     default:

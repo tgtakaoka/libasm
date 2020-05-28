@@ -72,13 +72,8 @@ Error DisMc6800::decodeExtended(
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = _accDelim;
-    const char *label = lookup(addr);
     if (addr < 0x100) *_operands++ = '>';
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     return setOK();
 }
 
@@ -87,12 +82,7 @@ Error DisMc6800::decodeIndexed(
     uint8_t disp8;
     if (insn.readByte(memory, disp8)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = _accDelim;
-    const char *label = lookup(disp8);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(disp8, 10);
-    }
+    outConstant(disp8, 10);
     *_operands++ = ',';
     const AddrMode mode = insn.addrMode();
     if (mode == IDY || mode == IDY_IMM || mode == IDY_IMM_REL) {
@@ -109,12 +99,7 @@ Error DisMc6800::decodeRelative(
     if (insn.readByte(memory, delta8)) return setError(NO_MEMORY);
     const Config::uintptr_t addr =
         insn.address() + insn.length() + static_cast<int8_t>(delta8);
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     return setOK();
 }
 
@@ -125,21 +110,11 @@ Error DisMc6800::decodeImmediate(
     if (insn.oprSize() == SZ_BYTE) {
         uint8_t val8;
         if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        const char *label = lookup(val8);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(val8);
-        }
+        outConstant(val8);
     } else if (insn.oprSize() == SZ_WORD) {
         uint16_t val16;
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        const char *label = lookup(val16);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(val16);
-        }
+        outConstant(val16);
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
@@ -173,12 +148,7 @@ Error DisMc6800::decodeBitOperation(
         } else {
             *_operands++ = '#';
         }
-        const char *label = lookup(val8);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(val8);
-        }
+        outConstant(val8);
     }
     *_operands++ = ',';
     if (mode == IMM_DIR || mode == BIT_DIR) {

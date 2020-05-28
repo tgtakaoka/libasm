@@ -61,8 +61,18 @@ protected:
     }
 
     template<typename T>
-    void outConstant(T val, uint8_t radix = 16, bool relax = true,
+    void outConstant(T val,
+                     uint8_t radix = 16,
+                     bool relax = true,
+                     bool symbol = true,
                      uint8_t bitWidth = sizeof(T) * 8) {
+        if (symbol) {
+            const char *label = lookup(val);
+            if (label) {
+                outText(label);
+                return;
+            }
+        }
         const int8_t r = is_signed<T>::value ? -radix : radix;
         _operands = this->getFormatter().output(
             _operands, val, r, relax, bitWidth);

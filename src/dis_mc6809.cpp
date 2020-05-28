@@ -40,13 +40,8 @@ Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn) {
 Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    const char *label = lookup(addr);
     if (addr < 0x100) *_operands++ = '>';
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     return setOK();
 }
 
@@ -188,12 +183,7 @@ Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
         delta = static_cast<Config::ptrdiff_t>(val);
     }
     const Config::uintptr_t addr = insn.address() + insn.length() + delta;
-    const char *label = lookup(addr);
-    if (label) {
-        outText(label);
-    } else {
-        outConstant(addr, 16, false);
-    }
+    outConstant(addr, 16, false);
     return setOK();
 }
 
@@ -216,12 +206,7 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
     } else if (insn.oprSize() == SZ_WORD) {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-        const char *label = lookup(val);
-        if (label) {
-            outText(label);
-        } else {
-            outConstant(val);
-        }
+        outConstant(val);
     } else if (insn.oprSize() == SZ_LONG) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
@@ -289,7 +274,7 @@ Error DisMc6809::decodeBitOperation(DisMemory &memory, InsnMc6809 &insn) {
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
     *_operands++ = '.';
-    outConstant(uint8_t(post & 7));
+    outConstant(uint8_t(post & 7), 10);
     *_operands++ = ',';
     if (decodeDirectPage(memory, insn)) return getError();
     *_operands++ = '.';

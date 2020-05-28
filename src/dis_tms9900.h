@@ -43,8 +43,6 @@ private:
 
     RegBase &getRegister() override { return _regs; }
 
-    void outAddress(Config::uintptr_t addr, bool relax = true);
-
     Error decodeOperand(
         DisMemory &memory, InsnTms9900 &insn, host::uint_t opr);
     Error decodeImmediate(DisMemory &memory, InsnTms9900 &insn);
