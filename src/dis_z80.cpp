@@ -67,14 +67,14 @@ void DisZ80::outConditionName(Config::opcode_t cc, bool cc8) {
 
 Error DisZ80::decodeInherent(InsnZ80 &insn) {
     const Config::opcode_t opc = insn.opCode();
-    switch (insn.leftFormat()) {
+    switch (insn.dstFormat()) {
     case A_REG:
         outRegister(REG_A);
         break;
     case REG_8:
         if (insn.insnFormat() == DST_FMT || insn.insnFormat() == DST_SRC_FMT) {
             RegName regName = RegZ80::decodeDataReg(opc >> 3);
-            if (regName == REG_UNDEF && insn.rightFormat() == C_PTR)
+            if (regName == REG_UNDEF && insn.srcFormat() == C_PTR)
                 return setError(UNKNOWN_INSTRUCTION);
             outDataRegister(regName);
         } else if (insn.insnFormat() == SRC_FMT) {
@@ -112,7 +112,7 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
         outConditionName((opc >> 3) & 7);
         break;
     case C_PTR:
-        if (insn.rightFormat() == REG_8 && insn.insnFormat() == DST_FMT
+        if (insn.srcFormat() == REG_8 && insn.insnFormat() == DST_FMT
             && RegZ80::decodeDataReg(opc >> 3) == REG_UNDEF)
             return setError(UNKNOWN_INSTRUCTION);
         outPointer(REG_C);
@@ -151,10 +151,10 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
         break;
     }
 
-    if (insn.leftFormat() != NO_OPR && insn.rightFormat() != NO_OPR)
+    if (insn.dstFormat() != NO_OPR && insn.srcFormat() != NO_OPR)
         *_operands++ = ',';
 
-    switch (insn.rightFormat()) {
+    switch (insn.srcFormat()) {
     case A_REG:
         outRegister(REG_A);
         break;
@@ -200,7 +200,7 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
 
 Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
     const Config::opcode_t opc = insn.opCode();
-    switch (insn.leftFormat()) {
+    switch (insn.dstFormat()) {
     case A_REG:
         outRegister(REG_A);
         break;
@@ -213,7 +213,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
     default:
         break;
     }
-    if (insn.rightFormat() == IMM_8) {
+    if (insn.srcFormat() == IMM_8) {
         *_operands++ = ',';
         outConstant(val);
     }
@@ -222,7 +222,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, uint8_t val) {
 
 Error DisZ80::decodeImmediate16(InsnZ80 &insn, uint16_t val) {
     const Config::opcode_t opc = insn.opCode();
-    switch (insn.leftFormat()) {
+    switch (insn.dstFormat()) {
     case REG_16:
         outRegister(RegZ80::decodePointerReg((opc >> 4) & 3));
         break;
@@ -240,7 +240,7 @@ Error DisZ80::decodeImmediate16(InsnZ80 &insn, uint16_t val) {
 Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
     const Config::opcode_t opc = insn.opCode();
     RegName regName;
-    switch (insn.leftFormat()) {
+    switch (insn.dstFormat()) {
     case ADDR_16:
         outAddress(addr);
         break;
@@ -268,8 +268,8 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
     default:
         break;
     }
-    if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
-    switch (insn.rightFormat()) {
+    if (insn.srcFormat() != NO_OPR) *_operands++ = ',';
+    switch (insn.srcFormat()) {
     case HL_REG:
         outRegister(REG_HL);
         break;
@@ -298,7 +298,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
 }
 
 Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
-    switch (insn.leftFormat()) {
+    switch (insn.dstFormat()) {
     case ADDR_8:
         outAddress(ioaddr);
         break;
@@ -309,7 +309,7 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
         break;
     }
     *_operands++ = ',';
-    switch (insn.rightFormat()) {
+    switch (insn.srcFormat()) {
     case ADDR_8:
         outAddress(ioaddr);
         break;
@@ -323,7 +323,7 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
 }
 
 Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
-    if (insn.leftFormat() == COND_4) {
+    if (insn.dstFormat() == COND_4) {
         const Config::opcode_t opc = insn.opCode();
         outConditionName((opc >> 3) & 3, false);
         *_operands++ = ',';
@@ -336,9 +336,9 @@ Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
 Error DisZ80::decodeIndexed(InsnZ80 &insn, int8_t offset) {
     const Config::opcode_t opc = insn.opCode();
     RegName regName;
-    switch (insn.leftFormat()) {
+    switch (insn.dstFormat()) {
     case IX_OFF:
-        if (insn.rightFormat() == REG_8 && RegZ80::decodeDataReg(opc) == REG_UNDEF)
+        if (insn.srcFormat() == REG_8 && RegZ80::decodeDataReg(opc) == REG_UNDEF)
             return setError(ILLEGAL_OPERAND);
         outIndexOffset(insn, offset);
         break;
@@ -353,8 +353,8 @@ Error DisZ80::decodeIndexed(InsnZ80 &insn, int8_t offset) {
     default:
         break;
     }
-    if (insn.rightFormat() != NO_OPR) *_operands++ = ',';
-    switch (insn.rightFormat()) {
+    if (insn.srcFormat() != NO_OPR) *_operands++ = ',';
+    switch (insn.srcFormat()) {
     case IX_OFF:
         outIndexOffset(insn, offset);
         break;
@@ -386,13 +386,13 @@ Error DisZ80::decodeIndexedBitOp(
     insn.setName(ixBit.name());
 
     const RegName regName = RegZ80::decodeDataReg(opCode);
-    if (ixBit.leftFormat() == BIT_NO
-        && ixBit.rightFormat() == REG_8 && regName == REG_UNDEF) {
+    if (ixBit.dstFormat() == BIT_NO
+        && ixBit.srcFormat() == REG_8 && regName == REG_UNDEF) {
         outConstant(uint8_t((opCode >> 3) & 7));
         *_operands++ = ',';
         outIndexOffset(insn, offset);
-    } else if (ixBit.leftFormat() == REG_8 && regName == REG_UNDEF
-               && ixBit.rightFormat() == NO_OPR) {
+    } else if (ixBit.dstFormat() == REG_8 && regName == REG_UNDEF
+               && ixBit.srcFormat() == NO_OPR) {
         outIndexOffset(insn, offset);
     } else {
         return setError(UNKNOWN_INSTRUCTION);
@@ -443,7 +443,7 @@ Error DisZ80::decode(
     case INDX_IMM8:
         if (insn.readByte(memory, offset)) return setError(NO_MEMORY);
         if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
-        if (insn.leftFormat() == IX_BIT)
+        if (insn.dstFormat() == IX_BIT)
             return decodeIndexedBitOp(insn, offset, u8);
         return decodeIndexedImmediate8(insn, offset, u8);
     default:

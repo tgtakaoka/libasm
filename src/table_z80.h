@@ -29,8 +29,6 @@ public:
     TableZ80();
 
     Error searchName(InsnZ80 &insn) const;
-    Error searchNameAndOprFormats(
-        InsnZ80 &insn, OprFormat leftOpr, OprFormat rightOpr) const;
     Error searchOpCode(InsnZ80 &insn) const;
 
     const char *listCpu() override { return "Z80"; }
@@ -54,9 +52,6 @@ private:
 
     static Error searchName(
         InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchNameAndOprFormats(
-        InsnZ80 &insn, OprFormat lop, OprFormat rop,
-        const EntryPage *pages, const EntryPage *end);
     static Error searchOpCode(
         InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);
 };

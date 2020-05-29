@@ -57,6 +57,11 @@ static void test_cpu() {
         "cpu Z80", true, disassembler.setCpu("Z80"));
     asserter.equals(
         "get cpu", "Z80", disassembler.getCpu());
+
+    asserter.equals(
+        "cpu Z84C00", true, disassembler.setCpu("Z84C00"));
+    asserter.equals(
+        "get cpu", "Z80", disassembler.getCpu());
 }
 
 static void test_move_inherent() {

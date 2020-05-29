@@ -9,10 +9,10 @@ small environment (less than 15kB on Arduino).
   - MC6809, HD6309
   - MC6800, MC6801, HD6301, MC68HC11
   - MOS6502, W65SC02, R65C02, W65C02S
-  - W65816 (Support 24bit address and LONGA/LONGI)
-  - i8080, i8085
-  - Z80
-  - SC/MP
+  - W65816 (W65C816S)
+  - i8080, i8085 (Intel or Zilog syntax)
+  - Z80 (Z84Cxx)
+  - SC/MP (INS8060)
   - INS8070
   - CDP1802
   - TMS9900, TMS9995

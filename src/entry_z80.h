@@ -66,6 +66,7 @@ enum OprFormat : host::uint_t {
     REG_16,                     // BC/DE/HL/SP
     REG_16X,                    // BC/DE/IX/SP, BC/DE/IY/SP
     A_REG,                      // A
+    C_REG,                      // C-register or Carry-condition
     BC_REG,                     // BC
     DE_REG,                     // DE
     HL_REG,                     // HL
@@ -102,32 +103,32 @@ struct Entry {
     static inline InsnFormat _insnFormat(uint16_t flags) {
         return InsnFormat((flags >> insnFormat_gp) & insnFormat_gm);
     }
-    static inline OprFormat _leftFormat(uint16_t flags) {
-        return OprFormat((flags >> leftFormat_gp) & oprFormat_gm);
+    static inline OprFormat _dstFormat(uint16_t flags) {
+        return OprFormat((flags >> dstFormat_gp) & oprFormat_gm);
     }
-    static inline OprFormat _rightFormat(uint16_t flags) {
-        return OprFormat((flags >> rightFormat_gp) & oprFormat_gm);
+    static inline OprFormat _srcFormat(uint16_t flags) {
+        return OprFormat((flags >> srcFormat_gp) & oprFormat_gm);
     }
     static inline AddrMode _addrMode(uint16_t flags) {
         return AddrMode((flags >> addrMode_gp) & addrMode_gm);
     }
     static constexpr uint16_t _flags(
         InsnFormat iformat, AddrMode addrMode,
-        OprFormat leftFormat, OprFormat rightFormat) {
+        OprFormat dstFormat, OprFormat srcFormat) {
         return (uint16_t(iformat) << insnFormat_gp)
-            | (uint16_t(leftFormat) << leftFormat_gp)
+            | (uint16_t(dstFormat) << dstFormat_gp)
             | (uint16_t(addrMode) << addrMode_gp)
-            | (uint16_t(rightFormat) << rightFormat_gp);
+            | (uint16_t(srcFormat) << srcFormat_gp);
     }
 
 private:
     static constexpr host::uint_t insnFormat_gp = 0;
     static constexpr host::uint_t insnFormat_gm = 0x7;
-    static constexpr host::uint_t leftFormat_gp = 3;
+    static constexpr host::uint_t dstFormat_gp = 3;
     static constexpr host::uint_t oprFormat_gm = 0x1f;
     static constexpr host::uint_t addrMode_gp = 8;
     static constexpr host::uint_t addrMode_gm = 0x7;
-    static constexpr host::uint_t rightFormat_gp = 11;
+    static constexpr host::uint_t srcFormat_gp = 11;
 };
 
 } // namespace z80

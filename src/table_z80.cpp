@@ -26,9 +26,9 @@
 namespace libasm {
 namespace z80 {
 
-#define E(_opc, _name, _iformat, _leftOpr, _rightOpr, _amode)   \
+#define E(_opc, _name, _iformat, _dstOpr, _srcOpr, _amode)   \
     { _opc,                                                     \
-      Entry::_flags(_iformat, _amode, _leftOpr, _rightOpr),     \
+      Entry::_flags(_iformat, _amode, _dstOpr, _srcOpr),     \
       TEXT_##_name                                              \
     },
 
@@ -228,56 +228,37 @@ static constexpr TableZ80:: EntryPage PAGES_Z80[] PROGMEM = {
     { TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX) },
 };
 
-Error TableZ80::searchName(
-    InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
-    const char *name = insn.name();
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry>(name, table, end);
-        if (entry) {
-            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
-            insn.setFlags(pgm_read_word(&entry->flags));
-            return OK;
-        }
-    }
-    return UNKNOWN_INSTRUCTION;
-}
-
 static bool acceptOprFormat(OprFormat opr, OprFormat table) {
-    if (table == opr) return true;
-    switch (table) {
-    case REG_8:
-        return opr == A_REG || opr == HL_PTR;
-    case REG_16:
-        return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == SP_REG;
-    case REG_16X:
-        return opr == BC_REG || opr == DE_REG || opr == IX_REG || opr == SP_REG;
-    case STK_16:
-        return opr == BC_REG || opr == DE_REG || opr == HL_REG || opr == AF_REG;
-    case BIT_NO:
-    case IMM_NO:
-    case VEC_NO:
-        return opr == IMM_8;
-    case COND_8:
-        return opr == COND_4;
-    default:
-        return false;
-    }
+    if (opr == table) return true;
+    if (opr == A_REG) return table == REG_8;
+    if (opr == C_REG) return table == REG_8
+                          || table == COND_4 || table == COND_8;
+    if (opr == HL_PTR) return table == REG_8;
+    if (opr == BC_REG || opr == DE_REG)
+        return table == REG_16 || table == REG_16X || table == STK_16;
+    if (opr == HL_REG) return table == REG_16 || table == STK_16;
+    if (opr == SP_REG) return table == REG_16 || table == REG_16X;
+    if (opr == AF_REG) return table == STK_16;
+    if (opr == IX_REG) return table == REG_16X;
+    if (opr == IMM_16)
+        return table == IMM_8 || table == BIT_NO || table == VEC_NO
+            || table == IMM_NO;
+    if (opr == ADDR_16) return table == ADDR_8;
+    if (opr == COND_4) return table == COND_8;
+    return false;
 }
 
 static bool acceptOprFormats(uint16_t flags, const Entry *entry) {
     const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptOprFormat(Entry::_leftFormat(flags), Entry::_leftFormat(table))
-        && acceptOprFormat(Entry::_rightFormat(flags), Entry::_rightFormat(table));
+    return acceptOprFormat(Entry::_dstFormat(flags), Entry::_dstFormat(table))
+        && acceptOprFormat(Entry::_srcFormat(flags), Entry::_srcFormat(table));
 }
 
-Error TableZ80::searchNameAndOprFormats(
-    InsnZ80 &insn, OprFormat lop, OprFormat rop,
-    const EntryPage *pages, const EntryPage *end) {
+Error TableZ80::searchName(
+    InsnZ80 &insn,  const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
-    const uint16_t flags = Entry::_flags(NO_FMT, INHR, lop, rop);
+    const uint16_t flags =
+        Entry::_flags(NO_FMT, INHR, insn.dstFormat(), insn.srcFormat());
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
@@ -335,11 +316,6 @@ Error TableZ80::searchName(InsnZ80 &insn) const {
     return searchName(insn, _table, _end);
 }
 
-Error TableZ80::searchNameAndOprFormats(
-    InsnZ80 &insn, OprFormat left, OprFormat right) const {
-    return searchNameAndOprFormats(insn, left, right, _table, _end);
-}
-
 Error TableZ80::searchOpCode(InsnZ80 &insn) const {
     return searchOpCode(insn, _table, _end);
 }
@@ -374,7 +350,8 @@ const char *TableZ80::getCpu() {
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    if (strcasecmp(cpu, "z80") == 0)
+    if (strcasecmp(cpu, "z80") == 0
+        || strncasecmp(cpu, "z84c", 4) == 0)
         return setCpu(Z80);
     if (toupper(*cpu) == 'I') cpu++;
     if (strcmp(cpu, "8080") == 0)

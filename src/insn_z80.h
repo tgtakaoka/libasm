@@ -31,8 +31,11 @@ public:
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
-    OprFormat leftFormat() const { return Entry::_leftFormat(_flags); }
-    OprFormat rightFormat() const { return Entry::_rightFormat(_flags); }
+    OprFormat dstFormat() const { return Entry::_dstFormat(_flags); }
+    OprFormat srcFormat() const { return Entry::_srcFormat(_flags); }
+    void setOprFormats(OprFormat dst, OprFormat src) {
+        _flags = Entry::_flags(insnFormat(), addrMode(), dst, src);
+    }
 
     void setFlags(uint16_t flags) {
         _flags = flags;
