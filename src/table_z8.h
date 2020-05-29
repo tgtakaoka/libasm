@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __TABLE_Z8_H__
+#define __TABLE_Z8_H__
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 9
-#define LIBASM_VERSION_STRING "1.4.9"
+#include "config_z8.h"
+#include "insn_z8.h"
+#include "table_base.h"
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace z8 {
+
+class TableZ8 : private TableBase {
+public:
+    Error searchName(InsnZ8 &insn) const;
+    Error searchOpCode(InsnZ8 &insn) const;
+
+    const char *listCpu() override { return "Z8"; }
+    bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return listCpu(); }
+};
+
+extern TableZ8 TableZ8;
+
+} // namespace z8
+} // namespace libasm
+
+#endif // __TABLE_Z8_H__
 
 // Local Variables:
 // mode: c++

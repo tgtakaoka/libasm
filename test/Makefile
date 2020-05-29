@@ -37,6 +37,7 @@ all: \
 	test_i8080_z80syn.hex \
 	test_i8085_z80syn.hex \
 	test_z80.hex \
+	test_z8.hex \
 	test_ins8060.hex \
 	test_ins8070.hex \
 	test_cdp1802.hex \
@@ -64,6 +65,7 @@ all: \
 	test_w65c816 \
 	test_i8080   \
 	test_z80     \
+	test_z8      \
 	test_ins8060 \
 	test_ins8070 \
 	test_cdp1802 \
@@ -105,6 +107,9 @@ test_tms9900:test_asm_tms9900 test_dis_tms9900
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
+test_z8: test_asm_z8 test_dis_z8
+	./test_asm_z8
+	./test_dis_z8
 test_ins8060: test_asm_ins8060 test_dis_ins8060
 	./test_asm_ins8060
 	./test_dis_ins8060
@@ -128,6 +133,7 @@ gen: \
 	gen_mos6502 \
 	gen_i8080   \
 	gen_z80     \
+	gen_z8      \
 	gen_ins8060 \
 	gen_ins8070 \
 	gen_cdp1802
@@ -142,6 +148,7 @@ TEST_OBJS= \
 	test_asm_w65c816.o test_dis_w65c816.o \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
+	test_asm_z8.o      test_dis_z8.o      \
 	test_asm_ins8060.o test_dis_ins8060.o \
 	test_asm_ins8070.o test_dis_ins8070.o \
 	test_asm_cdp1802.o test_dis_cdp1802.o \
@@ -154,6 +161,7 @@ TEST_OBJS= \
 	gen_mos6502.o \
 	gen_i8080.o   \
 	gen_z80.o     \
+	gen_z8.o      \
 	gen_ins8060.o \
 	gen_ins8070.o \
 	gen_cdp1802.o
@@ -170,6 +178,7 @@ OBJS_mos6502 = table_mos6502.o reg_mos6502.o
 OBJS_w65c816 = table_w65c816.o reg_mos6502.o table_mos6502.o
 OBJS_i8080   = table_i8080.o   reg_i8080.o
 OBJS_z80     = table_z80.o     reg_z80.o
+OBJS_z8      = table_z8.o      reg_z8.o
 OBJS_ins8060 = table_ins8060.o reg_ins8060.o
 OBJS_ins8070 = table_ins8070.o reg_ins8070.o
 OBJS_cdp1802 = table_cdp1802.o
@@ -182,7 +191,8 @@ OBJS	 = \
 	$(OBJS_mos6502) asm_mos6502.o dis_mos6502.o \
 	$(OBJS_w65c816) asm_w65c816.o dis_w65c816.o \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
-	$(OBJS_Z80)     asm_z80.o     dis_z80.o     \
+	$(OBJS_z80)     asm_z80.o     dis_z80.o     \
+	$(OBJS_z8)      asm_z8.o      dis_z8.o      \
 	$(OBJS_ins8060) asm_ins8060.o dis_ins8060.o \
 	$(OBJS_ins8070) asm_ins8070.o dis_ins8070.o \
 	$(OBJS_cdp1802) asm_cdp1802.o dis_cdp1802.o \
@@ -214,6 +224,10 @@ test_dis_i8080:   test_dis_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_dis)
 test_asm_z80:     test_asm_z80.o     asm_z80.o     $(OBJS_z80)     $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_z80:     test_dis_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_dis)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_z8:      test_asm_z8.o      asm_z8.o      $(OBJS_z8)      $(OBJS_asm)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_dis_z8:      test_dis_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_ins8060: test_asm_ins8060.o asm_ins8060.o $(OBJS_ins8060) $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
@@ -267,6 +281,9 @@ gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	./gen_z80   -u -C Z80  -o gen_z80.asm
 	./gen_z80   -u -C 8080 -o gen_i8080_z80syn.asm
 	./gen_z80   -u -C 8085 -o gen_i8085_z80syn.asm
+gen_z8:      gen_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_gen)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_z8    -u -C Z8601 -o gen_z8.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_ins8060 -u -C SC/MP -o gen_ins8060.asm
