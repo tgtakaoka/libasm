@@ -73,6 +73,10 @@ RegName RegZ8::decodeRegNum(uint8_t regNum, bool pair) {
     return RegName(regNum);
 }
 
+bool RegZ8::isRegPair(RegName regName) {
+    return host::int_t(regName) >= 16;
+}
+
 char *RegZ8::outRegName(char *out, RegName regName) const {
     host::int_t num = host::int_t(regName);
     if (num >= 0) {
@@ -135,7 +139,8 @@ static host::uint_t CC_NEXT(host::uint_t idx) {
 CcName RegZ8::parseCcName(const char *line) const {
     for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
         const host::uint_t len = CC_LEN(idx);
-        if (len && pgm_strncasecmp(line, CC_TEXT(idx), len) == 0)
+        if (len && pgm_strncasecmp(line, CC_TEXT(idx), len) == 0
+            && !isidchar(line[len]))
             return CC_NAME(idx);
     }
     return CC_UNDEF;

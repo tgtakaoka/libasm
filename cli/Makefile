@@ -65,6 +65,7 @@ asm:    asm.o $(OBJS_asm) $(OBJS_common) \
 	asm_w65c816.o $(OBJS_w65c816) \
 	asm_i8080.o   $(OBJS_i8080)   \
 	asm_z80.o     $(OBJS_z80)     \
+	asm_z8.o      $(OBJS_z8)      \
 	asm_ins8060.o $(OBJS_ins8060) \
 	asm_ins8070.o $(OBJS_ins8070) \
 	asm_cdp1802.o $(OBJS_cdp1802) \

@@ -107,7 +107,8 @@ test_tms9900:test_asm_tms9900 test_dis_tms9900
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
-test_z8:               test_dis_z8
+test_z8: test_asm_z8 test_dis_z8
+	./test_asm_z8
 	./test_dis_z8
 test_ins8060: test_asm_ins8060 test_dis_ins8060
 	./test_asm_ins8060
@@ -147,7 +148,7 @@ TEST_OBJS= \
 	test_asm_w65c816.o test_dis_w65c816.o \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
-	                   test_dis_z8.o      \
+	test_asm_z8.o      test_dis_z8.o      \
 	test_asm_ins8060.o test_dis_ins8060.o \
 	test_asm_ins8070.o test_dis_ins8070.o \
 	test_asm_cdp1802.o test_dis_cdp1802.o \
@@ -191,7 +192,7 @@ OBJS	 = \
 	$(OBJS_w65c816) asm_w65c816.o dis_w65c816.o \
 	$(OBJS_i8080)   asm_i8080.o   dis_i8080.o   \
 	$(OBJS_z80)     asm_z80.o     dis_z80.o     \
-	$(OBJS_z8)                    dis_z8.o      \
+	$(OBJS_z8)      asm_z8.o      dis_z8.o      \
 	$(OBJS_ins8060) asm_ins8060.o dis_ins8060.o \
 	$(OBJS_ins8070) asm_ins8070.o dis_ins8070.o \
 	$(OBJS_cdp1802) asm_cdp1802.o dis_cdp1802.o \
@@ -223,6 +224,8 @@ test_dis_i8080:   test_dis_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_dis)
 test_asm_z80:     test_asm_z80.o     asm_z80.o     $(OBJS_z80)     $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_z80:     test_dis_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_dis)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_z8:      test_asm_z8.o      asm_z8.o      $(OBJS_z8)      $(OBJS_asm)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_z8:      test_dis_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_dis)
 	$(CXX) -o $@ $(CXXFLAGS) $^

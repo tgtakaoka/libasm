@@ -83,6 +83,7 @@ public:
     static host::uint_t regNameLen(RegName regName);
     static uint8_t encodeRegName(RegName regName);
     static RegName decodeRegNum(uint8_t regNum, bool pair = false);
+    static bool isRegPair(RegName);
     char *outRegName(char *out, RegName regName) const;
 
     CcName parseCcName(const char *line) const;

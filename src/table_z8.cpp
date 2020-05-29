@@ -33,8 +33,8 @@ namespace z8 {
     },
 
 static constexpr Entry TABLE_Z8[] PROGMEM = {
-    E(0x08, LD,   r,   R)
     E(0x09, LD,   R,   r)
+    E(0x08, LD,   r,   R)
     E(0x0C, LD,   r,   IM)
     E(0xC7, LD,   r,   X)
     E(0xD7, LD,   X,   r)
@@ -167,9 +167,11 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
-    if (opr == M_DA) return table == M_RA;
+    if (opr == M_DA) return table == M_R || table == M_RA;
     if (opr == M_r) return table == M_R;
     if (opr == M_Ir) return table == M_IR;
+    if (opr == M_IRR) return table == M_IR;
+    if (opr == M_Irr) return table == M_IRR;
     return false;
 }
 

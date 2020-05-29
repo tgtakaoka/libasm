@@ -12,6 +12,7 @@ small environment (less than 15kB on Arduino).
   - W65816 (W65C816S)
   - i8080, i8085 (Intel or Zilog syntax)
   - Z80 (Z84Cxx)
+  - Z8 (Z86xx)
   - SC/MP (INS8060)
   - INS8070
   - CDP1802
