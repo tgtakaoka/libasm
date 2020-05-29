@@ -61,32 +61,29 @@ struct Entry {
     static inline AddrMode _addrMode(uint16_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-    static inline OprFormat _leftOpr(uint16_t flags) {
-        return OprFormat((flags >> leftOpr_gp) & oprFormat_gm);
+    static inline OprFormat _dstOpr(uint16_t flags) {
+        return OprFormat((flags >> dstOpr_gp) & oprFormat_gm);
     }
-    static inline OprFormat _rightOpr(uint16_t flags) {
-        return OprFormat((flags >> rightOpr_gp) & oprFormat_gm);
+    static inline OprFormat _srcOpr(uint16_t flags) {
+        return OprFormat((flags >> srcOpr_gp) & oprFormat_gm);
     }
     static inline OprSize _oprSize(uint16_t flags) {
         return OprSize((flags >> oprSize_gp) & oprSize_gm);
     }
     static constexpr uint16_t _flags(
-        AddrMode addrMode, OprFormat left, OprFormat right, OprSize size) {
+        AddrMode addrMode, OprFormat dst, OprFormat src, OprSize size) {
         return uint16_t(addrMode)
-            | (uint16_t(left) << leftOpr_gp)
-            | (uint16_t(right) << rightOpr_gp)
+            | (uint16_t(dst) << dstOpr_gp)
+            | (uint16_t(src) << srcOpr_gp)
             | (uint16_t(size) << oprSize_gp);
-    }
-    static uint16_t _set(uint16_t flags, AddrMode addrMode) {
-        return (flags & ~addrMode_gm) | uint16_t(addrMode);
     }
 
 private:
     static constexpr host::uint_t addrMode_gm = 0x07;
     static constexpr host::uint_t oprFormat_gm = 0x0F;
     static constexpr host::uint_t oprSize_gm = 0x3;
-    static constexpr host::uint_t leftOpr_gp = 8;
-    static constexpr host::uint_t rightOpr_gp = 12;
+    static constexpr host::uint_t dstOpr_gp = 8;
+    static constexpr host::uint_t srcOpr_gp = 12;
     static constexpr host::uint_t oprSize_gp = 4;
 };
 

@@ -54,10 +54,10 @@ bool DisIns8070::outOperand(OprFormat opr, uint8_t value) {
 
 Error DisIns8070::decodeImplied(
     DisMemory &memory, InsnIns8070 &insn) {
-    if (outOperand(insn.leftOpr(), insn.opCode())) {
-        if (insn.rightOpr() != OPR_NO) {
+    if (outOperand(insn.dstOpr(), insn.opCode())) {
+        if (insn.srcOpr() != OPR_NO) {
             *_operands++ = ',';
-            outOperand(insn.rightOpr(), insn.opCode());
+            outOperand(insn.srcOpr(), insn.opCode());
         }
         return setOK();
     }
@@ -66,7 +66,7 @@ Error DisIns8070::decodeImplied(
 
 Error DisIns8070::decodeImmediate(
     DisMemory &memory, InsnIns8070 &insn) {
-    outOperand(insn.leftOpr(), insn.opCode());
+    outOperand(insn.dstOpr(), insn.opCode());
     *_operands++ = ',';
     *_operands++ = _immSym ? '#' : '=';
     if (insn.oprSize() == SZ_WORD)
@@ -93,22 +93,22 @@ Error DisIns8070::decodeRelative(
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     const Config::ptrdiff_t disp = static_cast<int8_t>(val);
-    const OprFormat right = insn.rightOpr();
+    const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
-    if (right == OPR_NO
-        || (right == OPR_GN && base == REG_PC)) {
-        const uint8_t fetch = (right == OPR_NO) ? 1 : 0;
+    if (src == OPR_NO
+        || (src == OPR_GN && base == REG_PC)) {
+        const uint8_t fetch = (src == OPR_NO) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
         outConstant(target, 16, false);
-        if (right == OPR_GN) {
+        if (src == OPR_GN) {
             *_operands++ = ',';
             outRegister(REG_PC);
         }
     } else {
         outConstant(disp, 10);
         *_operands++ = ',';
-        if (right == OPR_IX) {
-            outOperand(right, insn.opCode());
+        if (src == OPR_IX) {
+            outOperand(src, insn.opCode());
         } else {
             outOperand(OPR_PN, insn.opCode());
         }
@@ -121,7 +121,7 @@ Error DisIns8070::decodeGeneric(
     const host::uint_t mode = insn.opCode() & 7;
     if (mode == 4) return decodeImmediate(memory, insn);
 
-    outOperand(insn.leftOpr());
+    outOperand(insn.dstOpr());
     *_operands++ = ',';
     if (mode < 4) return decodeRelative(memory, insn);
     if (mode >= 6) {

@@ -26,9 +26,9 @@
 namespace libasm {
 namespace ins8070 {
 
-#define E(_opc, _name, _left, _right, _size, _amode)    \
+#define E(_opc, _name, _dst, _src, _size, _amode)    \
     { _opc,                                             \
-      Entry::_flags(_amode, _left, _right, SZ_##_size), \
+      Entry::_flags(_amode, _dst, _src, SZ_##_size), \
       TEXT_##_name },
 
 static constexpr Entry TABLE_INS8070[] PROGMEM = {
@@ -102,16 +102,6 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0xF8, SUB,  OPR_A,  OPR_GN, BYTE, GENERIC)
 };
 
-Error TableIns8070::searchName(InsnIns8070 &insn) const {
-    const char *name = insn.name();
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_INS8070));
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_word(&entry->flags));
-    return OK;
-}
-
 static bool acceptOprFormat(OprFormat opr, OprFormat table) {
     if (opr == table) return true;
     if (opr == OPR_16)
@@ -127,14 +117,14 @@ static bool acceptOprFormat(OprFormat opr, OprFormat table) {
 
 static bool acceptOprFormats(uint16_t flags, const Entry *entry) {
     const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptOprFormat(Entry::_leftOpr(flags), Entry::_leftOpr(table))
-        && acceptOprFormat(Entry::_rightOpr(flags), Entry::_rightOpr(table));
+    return acceptOprFormat(Entry::_dstOpr(flags), Entry::_dstOpr(table))
+        && acceptOprFormat(Entry::_srcOpr(flags), Entry::_srcOpr(table));
 }
 
-Error TableIns8070::searchNameAndOprFormats(
-    InsnIns8070 &insn, OprFormat left, OprFormat right) const {
+Error TableIns8070::searchName(InsnIns8070 &insn) const {
     const char *name = insn.name();
-    const uint16_t flags = Entry::_flags(IMPLIED, left, right, SZ_NONE);
+    const uint16_t flags =
+        Entry::_flags(IMPLIED, insn.dstOpr(), insn.srcOpr(), SZ_NONE);
     const Entry *entry = TableBase::searchName<Entry,uint16_t>(
         name, flags, ARRAY_RANGE(TABLE_INS8070), acceptOprFormats);
     if (!entry) return UNKNOWN_INSTRUCTION;
@@ -146,13 +136,13 @@ Error TableIns8070::searchNameAndOprFormats(
 static Config::opcode_t tableCode(
     Config::opcode_t opCode, const Entry *entry) {
     const uint16_t flags = pgm_read_word(&entry->flags);
-    switch (Entry::_leftOpr(flags)) {
+    switch (Entry::_dstOpr(flags)) {
     case OPR_4:  opCode &= ~0xF; break;
     case OPR_IX: opCode &= ~1; break;
     case OPR_PN: opCode &= ~3; break;
     default: break;
     }
-    switch (Entry::_rightOpr(flags)) {
+    switch (Entry::_srcOpr(flags)) {
     case OPR_IX: opCode &= ~1; break;
     case OPR_PN: opCode &= ~3; break;
     case OPR_GN: opCode &= ~7; break;

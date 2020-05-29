@@ -27,8 +27,6 @@ namespace ins8070 {
 class TableIns8070 : private TableBase {
 public:
     Error searchName(InsnIns8070 &insn) const;
-    Error searchNameAndOprFormats(
-        InsnIns8070 &insn, OprFormat left, OprFormat right) const;
     Error searchOpCode(InsnIns8070 &insn) const;
 
     const char *listCpu() override { return getCpu(); }

@@ -22,16 +22,16 @@ namespace ins8070 {
 
 Error AsmIns8070::encodeImplied(
     InsnIns8070 &insn, const Operand &op) {
-    if (insn.leftOpr() == OPR_4) {
-        if (op.left != OPR_16) return setError(UNKNOWN_OPERAND);
+    if (insn.dstOpr() == OPR_4) {
+        if (op.dst != OPR_16) return setError(UNKNOWN_OPERAND);
         if (op.val >= 16) return setError(OVERFLOW_RANGE);
         insn.embed(op.val & 0xf);
     }
-    if (insn.leftOpr() == OPR_IX)
+    if (insn.dstOpr() == OPR_IX)
         insn.embed(_regs.encodePointerReg(op.reg));
-    if (insn.leftOpr() == OPR_PN)
+    if (insn.dstOpr() == OPR_PN)
         insn.embed(_regs.encodePointerReg(op.reg));
-    if (insn.rightOpr() == OPR_PN)
+    if (insn.srcOpr() == OPR_PN)
         insn.embed(_regs.encodePointerReg(op.reg));
     insn.emitInsn();
     return setError(op);
@@ -49,9 +49,9 @@ Error AsmIns8070::encodeAbsolute(
 
 Error AsmIns8070::encodeImmediate(
     InsnIns8070 &insn, const Operand &op) {
-    if (insn.leftOpr() == OPR_IX)
+    if (insn.dstOpr() == OPR_IX)
         insn.embed(_regs.encodePointerReg(op.reg));
-    if (insn.leftOpr() == OPR_PN)
+    if (insn.dstOpr() == OPR_PN)
         insn.embed(_regs.encodePointerReg(op.reg));
     if (insn.addrMode() == GENERIC)
         insn.embed(4);
@@ -66,7 +66,7 @@ Error AsmIns8070::encodeImmediate(
 Error AsmIns8070::encodeRelative(
     InsnIns8070 &insn, const Operand &op) {
     if (op.autoIndex) return setError(UNKNOWN_OPERAND);
-    if (insn.rightOpr() == OPR_IX)
+    if (insn.srcOpr() == OPR_IX)
         return encodeIndexed(insn, op);
 
     const Config::uintptr_t base = insn.address() + 1;
@@ -97,9 +97,9 @@ Error AsmIns8070::encodeIndexed(
 
 Error AsmIns8070::encodeGeneric(
     InsnIns8070 &insn, const Operand &op) {
-    if (op.right == OPR_IM)
+    if (op.src == OPR_IM)
         return encodeImmediate(insn, op);
-    if (op.right == OPR_16 && op.reg == REG_UNDEF) {
+    if (op.src == OPR_16 && op.reg == REG_UNDEF) {
         const Config::uintptr_t target =
             op.getError() ? 0xFF00 : op.val;
         if (target < 0xFF00) return setError(OVERFLOW_RANGE);
@@ -163,7 +163,7 @@ Error AsmIns8070::nextToken(Operand &op, OprFormat &opr) {
 
 Error AsmIns8070::parseOperand(Operand &op) {
     op.setOK();
-    op.left = op.right = OPR_NO;
+    op.dst = op.src = OPR_NO;
     op.reg = REG_UNDEF;
     op.autoIndex = op.hasVal = false;
     op.val = 0;
@@ -171,7 +171,7 @@ Error AsmIns8070::parseOperand(Operand &op) {
     const char *p = _scan;
     if (endOfLine(p))
         return setOK();
-    if (nextToken(op, op.left))
+    if (nextToken(op, op.dst))
         return getError();
     p = skipSpaces(_scan);
     if (endOfLine(p))
@@ -179,7 +179,7 @@ Error AsmIns8070::parseOperand(Operand &op) {
     if (*p != ',')
         return setError(UNKNOWN_OPERAND);
     _scan = skipSpaces(p + 1);
-    if (nextToken(op, op.right))
+    if (nextToken(op, op.src))
         return getError();
     p = skipSpaces(_scan);
     if (endOfLine(p))
@@ -189,11 +189,11 @@ Error AsmIns8070::parseOperand(Operand &op) {
     _scan = skipSpaces(p + 1);
     OprFormat extra;
     if (nextToken(op, extra)) return getError();
-    if (op.right != OPR_16)
+    if (op.src != OPR_16)
         return setError(UNKNOWN_OPERAND);
     if (extra != OPR_IX && extra != OPR_SP && extra != OPR_PN)
         return setError(UNKNOWN_OPERAND);
-    op.right = OPR_GN;
+    op.src = OPR_GN;
     return checkLineEnd();
 }
 
@@ -207,7 +207,8 @@ Error AsmIns8070::encode(Insn &_insn) {
     if (parseOperand(op)) return setError(op);
     setError(op);
 
-    if (TableIns8070.searchNameAndOprFormats(insn, op.left, op.right))
+    insn.setOprFormats(op.dst, op.src);
+    if (TableIns8070.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {

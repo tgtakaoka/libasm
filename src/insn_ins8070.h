@@ -29,14 +29,14 @@ public:
     InsnIns8070(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    OprFormat leftOpr() const { return Entry::_leftOpr(_flags); }
-    OprFormat rightOpr() const { return Entry::_rightOpr(_flags); }
+    OprFormat dstOpr() const { return Entry::_dstOpr(_flags); }
+    OprFormat srcOpr() const { return Entry::_srcOpr(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
 
     void setFlags(uint16_t flags) { _flags = flags; }
 
-    void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_set(_flags, addrMode);
+    void setOprFormats(OprFormat dst, OprFormat src) {
+        _flags = Entry::_flags(addrMode(), dst, src, oprSize());
     }
 
     Config::opcode_t opCode() const { return _opCode; }

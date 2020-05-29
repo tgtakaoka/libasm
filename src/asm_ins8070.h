@@ -45,8 +45,8 @@ private:
     RegIns8070 _regs;
 
     struct Operand : public ErrorReporter {
-        OprFormat left;
-        OprFormat right;
+        OprFormat dst;
+        OprFormat src;
         RegName reg;
         bool autoIndex;
         bool hasVal;
