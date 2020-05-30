@@ -21,10 +21,11 @@
 namespace libasm {
 namespace z8 {
 
-Error AsmZ8::encodeOperand(InsnZ8 &insn, const Operand &op) {
-    if (op.mode == M_NO) return getError();
-    if (op.reg != REG_UNDEF
-        && (op.mode == M_R || op.mode == M_IR || op.mode == M_IRR)) {
+Error AsmZ8::encodeOperand(
+    InsnZ8 &insn, const AddrMode mode, const Operand &op) {
+    if (mode == M_NO) return getError();
+    if ((mode == M_R || mode == M_IR || mode == M_IRR)
+        && op.reg != REG_UNDEF) {
         insn.emitByte(RegZ8::encodeRegName(op.reg) | 0xE0);
         return getError();
     }
@@ -34,22 +35,24 @@ Error AsmZ8::encodeOperand(InsnZ8 &insn, const Operand &op) {
 }
 
 Error AsmZ8::encodeAbsolute(
-    InsnZ8 &insn, const Operand &dst, const Operand &src) {
-    const Operand &op = (dst.mode == M_DA) ? dst : src;
-    if (dst.mode == M_cc)
-        insn.embed(RegZ8::encodeCcName(dst.cc) << 4);
+    InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+    const AddrMode dst = insn.dstMode();
+    const Operand &op = (dst == M_DA) ? dstOp : srcOp;
+    if (dst == M_cc)
+        insn.embed(RegZ8::encodeCcName(dstOp.cc) << 4);
     insn.emitInsn();
     insn.emitUint16(op.val);
     return op.getError();
 }
 
 Error AsmZ8::encodeRelative(
-    InsnZ8 &insn, const Operand &dst, const Operand &src) {
-    const Operand& op = (dst.mode == M_RA) ? dst : src;
-    if (dst.mode == M_cc) {
-        insn.embed(RegZ8::encodeCcName(dst.cc) << 4);
-    } else if (dst.mode == M_r) {
-        insn.embed(RegZ8::encodeRegName(dst.reg) << 4);
+    InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+    const AddrMode dst = insn.dstMode();
+    const Operand& op = (dst== M_RA) ? dstOp : srcOp;
+    if (dst == M_cc) {
+        insn.embed(RegZ8::encodeCcName(dstOp.cc) << 4);
+    } else if (dst == M_r) {
+        insn.embed(RegZ8::encodeRegName(dstOp.reg) << 4);
     }
     const Config::uintptr_t target = op.getError() ? insn.address() : op.val;
     const Config::uintptr_t base = insn.address() + 2;
@@ -61,13 +64,14 @@ Error AsmZ8::encodeRelative(
 }
 
 Error AsmZ8::encodeIndexed(
-    InsnZ8 &insn, const Operand &dst, const Operand &src) {
-    const RegName index = (dst.mode == M_X) ? dst.reg : src.reg;
-    const uint16_t disp = (dst.mode == M_X) ? dst.val : src.val;
-    const RegName reg = (dst.mode == M_X) ? src.reg : dst.reg;
+    InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+    const AddrMode dst = insn.dstMode();
+    const RegName index = (dst == M_X) ? dstOp.reg : srcOp.reg;
+    const uint16_t disp = (dst == M_X) ? dstOp.val : srcOp.val;
+    const RegName reg = (dst == M_X) ? srcOp.reg : dstOp.reg;
     if (disp >= 0x100) return setError(OVERFLOW_RANGE);
-    const uint8_t op1 = RegZ8::encodeRegName(index)
-        | (RegZ8::encodeRegName(reg) << 4);
+    const uint8_t op1 =
+        RegZ8::encodeRegName(index) | (RegZ8::encodeRegName(reg) << 4);
     insn.emitInsn();
     insn.emitByte(op1);
     insn.emitByte(static_cast<uint8_t>(disp));
@@ -75,43 +79,52 @@ Error AsmZ8::encodeIndexed(
 }
 
 Error AsmZ8::encodeIndirectRegPair(
-    InsnZ8 &insn, const Operand &dst, const Operand &src) {
-    const RegName pair = (dst.mode == M_Irr) ? dst.reg : src.reg;
-    const RegName reg = (dst.mode == M_Irr) ? src.reg : dst.reg;
-    const uint8_t opr = RegZ8::encodeRegName(pair)
-        | (RegZ8::encodeRegName(reg) << 4);
+    InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+    const AddrMode dst = insn.dstMode();
+    const RegName pair = (dst == M_Irr) ? dstOp.reg : srcOp.reg;
+    const RegName reg = (dst == M_Irr) ? srcOp.reg : dstOp.reg;
+    const uint8_t opr =
+        RegZ8::encodeRegName(pair) | (RegZ8::encodeRegName(reg) << 4);
     insn.emitInsn();
     insn.emitByte(opr);
     return getError();
 }
 
 Error AsmZ8::encodeInOpCode(
-    InsnZ8 &insn, const Operand &dst, const Operand &src) {
-    const RegName reg = (dst.mode == M_r) ? dst.reg : src.reg;
-    const Operand &op = (dst.mode == M_r) ? src : dst;
+    InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+    const AddrMode dst = insn.dstMode();
+    const AddrMode src = insn.srcMode();
+    const RegName reg = (dst == M_r) ? dstOp.reg : srcOp.reg;
+    const Operand &op = (dst == M_r) ? srcOp : dstOp;
+    const AddrMode mode = (dst == M_r) ? src : dst;
     insn.embed(RegZ8::encodeRegName(reg) << 4);
-
-    // In "LD r,R", Only a full 8-bit register address can be used
-    if (op.mode == M_R && (op.val & 0xF0) == 0xE0)
-        return setError(ILLEGAL_REGISTER);
-
     insn.emitInsn();
-    return encodeOperand(insn, op);
+    return encodeOperand(insn, mode, op);
 }
 
+#include <stdio.h>
 Error AsmZ8::encodeTwoOperands(
-    InsnZ8 &insn, const Operand &dst, const Operand &src) {
+    InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
     insn.emitInsn();
-    if (dst.mode == M_r || dst.mode == M_Ir) {
-        if (src.mode == M_r || (dst.mode == M_r && src.mode == M_Ir)) {
-            insn.emitByte(RegZ8::encodeRegName(src.reg)
-                          | (RegZ8::encodeRegName(dst.reg) << 4));
+    const AddrMode dst = insn.dstMode();
+    const AddrMode src = insn.srcMode();
+    if (dst == M_r || dst == M_Ir) {
+        if (src == M_r || (dst == M_r && src == M_Ir)) {
+            const uint8_t opr = RegZ8::encodeRegName(srcOp.reg)
+                | (RegZ8::encodeRegName(dstOp.reg) << 4);
+            insn.emitByte(opr);
             return getError();
         }
         return setError(INTERNAL_ERROR);
     }
-    const Error error1 = encodeOperand(insn, (src.mode == M_IM) ? dst : src);
-    const Error error2 = encodeOperand(insn, (src.mode == M_IM) ? src : dst);
+    Error error1, error2;
+    if (src == M_IM) {
+        error1 = encodeOperand(insn, dst, dstOp);
+        error2 = encodeOperand(insn, src, srcOp);
+    } else {
+        error1 = encodeOperand(insn, src, srcOp);
+        error2 = encodeOperand(insn, dst, dstOp);
+    }
     setErrorIf(error1);
     setErrorIf(error2);
     return getError();
@@ -179,7 +192,7 @@ Error AsmZ8::parseOperand(Operand &op) {
     if (indir) {
         if (regAddr) return setError(UNKNOWN_OPERAND); // unnecessary
         if (op.val >= 0x100) return setError(OVERFLOW_RANGE);
-        op.mode = (op.val & 1) == 0 ? M_IRR : M_IR;
+        op.mode = M_IR;
         return OK;
     }
     if (regAddr) {
@@ -187,7 +200,14 @@ Error AsmZ8::parseOperand(Operand &op) {
         op.mode = M_R;
         return OK;
     }
-    op.mode = M_DA;
+    if (op.val >= 0x100) {
+        op.mode = M_DA;
+    } else if ((op.val & 0xF0) != /* RP */ 0x00) {
+        op.mode = M_R;
+    } else {
+        op.mode = M_Rr;
+        op.reg = _regs.decodeRegNum(op.val & 0xF);
+    }
     return OK;
 }
 
@@ -214,8 +234,8 @@ Error AsmZ8::encode(Insn &_insn) {
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableZ8.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    const AddrMode dst = dstOp.mode = insn.dstMode();
-    const AddrMode src = srcOp.mode = insn.srcMode();
+    const AddrMode dst = insn.dstMode();
+    const AddrMode src = insn.srcMode();
 
     if (dst == M_NO) {
         insn.emitInsn();
@@ -232,8 +252,10 @@ Error AsmZ8::encode(Insn &_insn) {
     if (InsnZ8::operandInOpCode(insn.opCode()))
         return encodeInOpCode(insn, dstOp, srcOp);
     if (src == M_NO) {
+        if (dst == M_IRR && (dstOp.val & 1) != 0)
+            return setError(ILLEGAL_REGISTER);
         insn.emitInsn();
-        return encodeOperand(insn, dstOp);
+        return encodeOperand(insn, dst, dstOp);
     }
     return encodeTwoOperands(insn, dstOp, srcOp);
 }

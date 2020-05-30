@@ -29,7 +29,7 @@
         inc     @02h
         inc     @r2
 
-        jp      @031h           ; shold be error
+;        jp      @031h           ; should be error
         jp      @032h
         jp      @rr2
         srp     #30h
@@ -213,7 +213,7 @@
         xor     @0a8h,#0a9h
         xor     @r8,#0a9h
 
-        call    @0d5h           ; should be warning
+;        call    @0d5h           ; should be warning
         call    @0d6h
         call    0d7d8h
 
@@ -239,7 +239,7 @@
         ld      @0f7h,0f6h
 ;;; x8
         ld      r0, >9
-        ld      r0, 9
+        ld      r0, 9           ; LD @r0,@r9
         ld      r0, r9
         ld      r1, 19h
         ld      r2, 29h
@@ -259,7 +259,7 @@
         ld      r15,0f9h
 ;;; x9
         ld      >10, r0
-        ld      10,  r0
+        ld      10,  r0         ; LD r10,r0
         ld      1ah, r1
         ld      2ah, r2
         ld      3ah, r3
@@ -273,7 +273,7 @@
         ld      0bah,r11
         ld      0cah,r12
         ld      0dah,r13
-        ld      0eah,r14
+;        ld      0eah,r14        ; should be error
         ld      0fah,r15
 ;;; xA
         djnz    r0, $+13
