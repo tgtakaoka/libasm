@@ -468,7 +468,6 @@ static void test_inherent() {
 
     TEST("NOP",  0x00);
     TEST("HALT", 0x76);
-    TEST("HLT",  0x76); // i8080 compatibility
 
     TEST("RLCA", 0x07);
     TEST("RRCA", 0x0F);

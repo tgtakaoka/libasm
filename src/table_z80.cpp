@@ -56,7 +56,6 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x37, SCF,  NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0x3F, CCF,  NO_FMT,  NO_OPR, NO_OPR, INHR)
     E(0x76, HALT, NO_FMT,  NO_OPR, NO_OPR, INHR)
-    E(0x76, HLT,  NO_FMT,  NO_OPR, NO_OPR, INHR) // For i8080 compatibility
     E(0x40, LD,   DST_SRC_FMT, REG_8,REG_8,INHR)
     E(0x80, ADD,  SRC_FMT, A_REG,  REG_8,  INHR)
     E(0x88, ADC,  SRC_FMT, A_REG,  REG_8,  INHR)
