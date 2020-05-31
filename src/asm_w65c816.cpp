@@ -84,7 +84,7 @@ Error AsmW65C816::encodeBlockMove(InsnW65C816 &insn) {
 
 Error AsmW65C816::selectMode(char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp) {
     if (modifier == '}' || op.val32 >= 0x10000) {
-        if (labs == IMPL) return setError(OPERAND_NOT_ZP);
+        if (labs == IMPL) return setError(UNKNOWN_OPERAND);
         op.mode = labs;
         return OK;
     }
@@ -181,8 +181,12 @@ Error AsmW65C816::parseOperand(Operand &op) {
                 return getError();
         }
     }
-    _scan = skipSpaces(p);
-    return setOK();
+    p = skipSpaces(p);
+    if (endOfLine(p)) {
+        _scan = p;
+        return OK;
+    }
+    return setError(UNKNOWN_OPERAND);
 }
 
 Error AsmW65C816::parseOnOff(const char *line, bool &val) {
@@ -261,7 +265,8 @@ Error AsmW65C816::encode(Insn &_insn) {
     }
 
     Operand op;
-    if (parseOperand(op)) return setError(op);
+    if (parseOperand(op)) return getError();
+    setError(op);
     insn.setAddrMode(op.mode);
     if (TableW65C816.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
@@ -317,9 +322,8 @@ Error AsmW65C816::encode(Insn &_insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    setError(op);
 
-    return checkLineEnd();
+    return getError();
 }
 
 } // namespace w65c816

@@ -721,6 +721,22 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x121000, "PER UNDEF", 0x62, 0xFD, 0xFF);
 }
 
+static void test_error() {
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,Y)");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10),X");
+    ETEST(UNKNOWN_OPERAND, "SBC [$10],X");
+    ETEST(UNKNOWN_OPERAND, "ORAL ($10),X");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,S),X");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,X),X");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,X),Y");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,Y),X");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,Y),Y");
+    ETEST(UNKNOWN_OPERAND, "ORA $123456,Y");
+
+    ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
+    ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -750,6 +766,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_rel);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_error);
     return 0;
 }
 
