@@ -150,7 +150,7 @@ Error AsmMos6502::encode(Insn &_insn) {
     }
 
     Operand op;
-    if (parseOperand(op)) return setError(op);
+    if (parseOperand(op)) return getError();
     insn.setAddrMode(op.mode);
     if (TableMos6502.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);

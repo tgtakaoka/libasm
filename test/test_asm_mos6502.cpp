@@ -596,6 +596,17 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS7 UNDEF,UNDEF", 0xFF, 0x00, 0xFD);
 }
 
+static void test_error() {
+    ETEST(UNKNOWN_OPERAND, "ORA ($10,Y)");
+    ETEST(UNKNOWN_OPERAND, "ORA ($10),X");
+
+    // W65SC02
+    assembler.setCpu("65sc02");
+    ETEST(UNKNOWN_OPERAND,     "JMP ($1234,Y)");
+    ETEST(UNKNOWN_INSTRUCTION, "JSR ($1234,X)");
+    ETEST(UNKNOWN_OPERAND,     "JSR ($1234,Y)");
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -623,6 +634,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_zpg_rel);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_error);
     return 0;
 }
 
