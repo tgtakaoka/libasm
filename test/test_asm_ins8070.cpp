@@ -342,7 +342,7 @@ static void test_comment() {
     TEST("BZ 0 , P3         ; comment", 0x6F, 0x00);
     TEST("LD EA , 0 , SP    ; comment", 0x81, 0x00);
     ATEST(0x1000, "LD T , 0x1080 , PC ; comment",  0xA0, 0x7F);
-    TEST("ST EA , @ 127 , P3; comment", 0x8F, 0x7F);
+    TEST("ST EA , @127 , P3; comment", 0x8F, 0x7F);
 }
 
 static void test_undefined_symbol() {
@@ -360,6 +360,16 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "LD  EA,UNDEF,PC", 0x80, 0xFF);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JSR UNDEF", 0x20, 0x00, 0x00);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x24, 0x00, 0x00);
+}
+
+static void test_error() {
+    ETEST(ILLEGAL_CONSTANT, "LD A,@@1,P3");
+    ETEST(UNKNOWN_OPERAND,  "LD A,@ 1,P3");
+    ETEST(UNKNOWN_OPERAND,  "LD A,@#1");
+    ETEST(UNKNOWN_OPERAND,  "LD A,@=1");
+    ETEST(UNKNOWN_OPERAND,  "LD A,1(P3)");  // SC/MP style
+    ETEST(UNKNOWN_OPERAND,  "LD A,@1(P3)"); // SC/MP style
+    ETEST(UNKNOWN_OPERAND,  "LD A,1,(EA)");
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -381,6 +391,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_auto_indexed);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_error);
     return 0;
 }
 

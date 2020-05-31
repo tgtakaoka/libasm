@@ -34,7 +34,7 @@ Error AsmIns8070::encodeImplied(
     if (insn.srcOpr() == OPR_PN)
         insn.embed(_regs.encodePointerReg(op.reg));
     insn.emitInsn();
-    return setError(op);
+    return getError();
 }
 
 Error AsmIns8070::encodeAbsolute(
@@ -44,7 +44,7 @@ Error AsmIns8070::encodeAbsolute(
     insn.emitInsn();
     // PC will be +1 before fetching instruction.
     insn.emitUint16(target - 1);
-    return setError(op);
+    return getError();
 }
 
 Error AsmIns8070::encodeImmediate(
@@ -60,7 +60,7 @@ Error AsmIns8070::encodeImmediate(
         insn.emitUint16(op.val);
     if (insn.oprSize() == SZ_BYTE)
         insn.emitByte(static_cast<uint8_t>(op.val));
-    return setError(op);
+    return getError();
 }
 
 Error AsmIns8070::encodeRelative(
@@ -79,7 +79,7 @@ Error AsmIns8070::encodeRelative(
         return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(offset));
-    return setError(op);
+    return getError();
 }
 
 Error AsmIns8070::encodeIndexed(
@@ -92,7 +92,7 @@ Error AsmIns8070::encodeIndexed(
     if (op.autoIndex) insn.embed(4);
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(offset));
-    return setError(op);
+    return getError();
 }
 
 Error AsmIns8070::encodeGeneric(
@@ -106,7 +106,7 @@ Error AsmIns8070::encodeGeneric(
         insn.embed(5);
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(target));
-        return setError(op);
+        return getError();
     }
     if (op.reg == REG_PC)
         return encodeRelative(insn, op);
@@ -118,15 +118,18 @@ Error AsmIns8070::encodeGeneric(
 Error AsmIns8070::nextToken(Operand &op, OprFormat &opr) {
     const char *p = _scan;
     if (*p == '@') {
-        if (op.autoIndex) return setError(UNKNOWN_OPERAND);
+        if (op.autoIndex || isspace(*++p))
+            return setError(UNKNOWN_OPERAND);
         op.autoIndex = true;
-        p = skipSpaces(p + 1);
     }
     const RegName reg = _regs.parseRegister(p);
     if (reg == REG_UNDEF) {
         if (op.hasVal) return setError(UNKNOWN_OPERAND);
         const bool immediate = (*p == '=' || *p == '#');
-        if (immediate) p = skipSpaces(p + 1);
+        if (immediate) {
+            if (op.autoIndex) return setError(UNKNOWN_OPERAND);
+            p++;
+        }
         _scan = p;
         if (getOperand(op.val)) return getError();
         op.setError(getError());
@@ -204,7 +207,7 @@ Error AsmIns8070::encode(Insn &_insn) {
     _scan = skipSpaces(endName);
 
     Operand op;
-    if (parseOperand(op)) return setError(op);
+    if (parseOperand(op)) return getError();
     setError(op);
 
     insn.setOprFormats(op.dst, op.src);
