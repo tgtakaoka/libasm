@@ -20,16 +20,22 @@
 namespace libasm {
 namespace mc6800 {
 
-void AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
-    if (op.reg != REG_B) return;
+Error AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
     const InsnAdjust iAdjust = insn.insnAdjust();
-    if (iAdjust == ADJ_AB01) {
-        insn.embed(1);
-    } else if (iAdjust == ADJ_AB16) {
-        insn.embed(0x10);
-    } else if (iAdjust == ADJ_AB64) {
-        insn.embed(0x40);
+    if (iAdjust == ADJ_ZERO)
+        return op.reg == REG_UNDEF ? OK : setError(UNKNOWN_OPERAND);
+    if (op.reg == REG_A) return OK;
+    if (op.reg == REG_B) {
+        if (iAdjust == ADJ_AB01) {
+            insn.embed(1);
+        } else if (iAdjust == ADJ_AB16) {
+            insn.embed(0x10);
+        } else if (iAdjust == ADJ_AB64) {
+            insn.embed(0x40);
+        }
+        return OK;
     }
+    return setError(UNKNOWN_INSTRUCTION);
 }
 
 Error AsmMc6800::encodeRelative(InsnMc6800 &insn, Config::uintptr_t addr) {
@@ -188,7 +194,7 @@ Error AsmMc6800::encode(Insn &_insn) {
     if (TableMc6800.searchNameAndAddrMode(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
-    adjustAccumulator(insn, op);
+    if (adjustAccumulator(insn, op)) return getError();
     insn.emitInsn();
     switch (insn.addrMode()) {
     case INH:
