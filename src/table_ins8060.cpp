@@ -79,16 +79,6 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E(0xF8, CAD,  INDX)
 };
 
-Error TableIns8060::searchName(InsnIns8060 &insn) const {
-    const char *name = insn.name();
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_INS8060));
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
-}
-
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
@@ -99,7 +89,7 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     return false;
 }
 
-Error TableIns8060::searchNameAndAddrMode(InsnIns8060 &insn) const {
+Error TableIns8060::searchName(InsnIns8060 &insn) const {
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
     const Entry *entry = TableBase::searchName<Entry,AddrMode>(

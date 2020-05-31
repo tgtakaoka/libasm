@@ -50,7 +50,7 @@ private:
         uint16_t val;
     };
 
-    Error parseOperand(const InsnIns8060 &insn, Operand &opr);
+    Error parseOperand(Operand &opr);
 
     Error encodeRel8(InsnIns8060 &insn, const Operand &opr);
     Error encodeIndx(InsnIns8060 &insn, const Operand &opr);

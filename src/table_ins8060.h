@@ -27,7 +27,6 @@ namespace ins8060 {
 class TableIns8060 : private TableBase {
 public:
     Error searchName(InsnIns8060 &insn) const;
-    Error searchNameAndAddrMode(InsnIns8060 &insn) const;
     Error searchOpCode(InsnIns8060 &insn) const;
 
     const char *listCpu() override { return getCpu(); }

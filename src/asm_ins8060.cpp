@@ -41,7 +41,7 @@ Error AsmIns8060::encodeRel8(
     }
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(delta));
-    return setError(op);
+    return getError();
 }
 
 Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
@@ -54,55 +54,52 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
     }
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(op.val));
-    return setError(op);
+    return getError();
 }
 
-Error AsmIns8060::parseOperand(const InsnIns8060 &insn, Operand &op) {
+Error AsmIns8060::parseOperand(Operand &op) {
     op.setOK();
     op.mode = UNDEF;
     const char *p = _scan;
     const bool autoDisp = (*p == '@');
-    if (autoDisp) p = skipSpaces(p + 1);
-
-    op.reg = _regs.parseRegister(p);
-    op.val = 0;
-    p = skipSpaces(p + _regs.regNameLen(op.reg));
-    if (endOfLine(p)) {
-        if (!autoDisp && op.reg == REG_UNDEF) {
-            op.mode = INHR;
-            _scan = p;
-            return setOK();
-        }
-        if (!autoDisp && op.reg != REG_E) {
-            op.mode = PNTR;
-            _scan = p;
-            return setOK();
-        }
-        return setOK();
+    if (autoDisp) {
+        p++;
+        if (isspace(*p)) return setError(UNKNOWN_OPERAND);
     }
 
-    if (op.reg == REG_E) {
-        op.val = 0x80;
+    if (!autoDisp && endOfLine(p)) {
+        op.mode = INHR;
+        return OK;
+    } else if ((op.reg = _regs.parseRegister(p)) != REG_UNDEF) {
+        p += _regs.regNameLen(op.reg);
+        if (op.reg == REG_E) {
+            op.reg = REG_UNDEF;
+            op.val = 0x80;
+            if (*p != '(') return setError(UNKNOWN_OPERAND);
+        }
     } else {
+        if (*p == '(' && _regs.parseRegister(p + 1) != REG_UNDEF)
+            return setError(UNKNOWN_OPERAND);
         _scan = p;
         if (getOperand(op.val)) return getError();
         op.setError(getError());
         p = _scan;
     }
-    p = skipSpaces(p);
     if (*p == '(') {
         p = skipSpaces(p + 1);
+        if (op.reg != REG_UNDEF) return setError(UNKNOWN_OPERAND);
         op.reg = _regs.parsePointerReg(p);
         if (op.reg == REG_UNDEF) return setError(UNKNOWN_OPERAND);
         p = skipSpaces(p + _regs.regNameLen(op.reg));
-        if (*p != ')') return setError(UNKNOWN_OPERAND);
+        if (*p != ')') return setError(MISSING_CLOSING_PAREN);
         op.mode = autoDisp ? INDX : DISP;
         _scan = p + 1;
-        return setOK();
-    } else if (op.reg == REG_UNDEF && !autoDisp) {
-        op.mode = REL8;        // May be IMM8 too.
+        return OK;
+    } else if (!autoDisp) {
+        op.mode = (op.reg != REG_UNDEF) ? PNTR
+            : REL8; // May be IMM8 too
         _scan = p;
-        return setOK();
+        return OK;
     }
     return setError(UNKNOWN_OPERAND);
 }
@@ -111,15 +108,16 @@ Error AsmIns8060::encode(Insn &_insn) {
     InsnIns8060 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    if (TableIns8060.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
     _scan = skipSpaces(endName);
 
     Operand op;
-    if (parseOperand(insn, op)) return setError(op);
+    if (parseOperand(op)) return getError();
+    _scan = skipSpaces(_scan);
+    if (!endOfLine(_scan)) return setError(GARBAGE_AT_END);
+    setErrorIf(op.getError());
 
     insn.setAddrMode(op.mode);
-    if (TableIns8060.searchNameAndAddrMode(insn))
+    if (TableIns8060.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
@@ -144,8 +142,7 @@ Error AsmIns8060::encode(Insn &_insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    setErrorIf(op.getError());
-    return checkLineEnd();
+    return getError();
 }
 
 } // namespace ins8060
