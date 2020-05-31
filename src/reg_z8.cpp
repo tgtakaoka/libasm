@@ -139,7 +139,8 @@ static host::uint_t CC_NEXT(host::uint_t idx) {
 CcName RegZ8::parseCcName(const char *line) const {
     for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
         const host::uint_t len = CC_LEN(idx);
-        if (len && pgm_strncasecmp(line, CC_TEXT(idx), len) == 0
+        const char *text = CC_TEXT(idx);
+        if (len && strncasecmp_P(line, text, len) == 0
             && !isidchar(line[len]))
             return CC_NAME(idx);
     }

@@ -46,8 +46,7 @@ bool DisMc6800::outAccumulator(InsnMc6800 &insn) {
     }
 }
 
-Error DisMc6800::decodeInherent(
-    DisMemory &memory, InsnMc6800& insn) {
+Error DisMc6800::decodeInherent(InsnMc6800& insn) {
     outAccumulator(insn);
     return setOK();
 }
@@ -179,7 +178,7 @@ Error DisMc6800::decode(
         return setError(UNKNOWN_INSTRUCTION);
 
     switch (insn.addrMode()) {
-    case INH: return decodeInherent(memory, insn);
+    case INH: return decodeInherent(insn);
     case DIR: return decodeDirectPage(memory, insn);
     case EXT: return decodeExtended(memory, insn);
     case IDX:

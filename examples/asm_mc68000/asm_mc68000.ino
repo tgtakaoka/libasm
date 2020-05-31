@@ -14,50 +14,22 @@
  * limitations under the License.
  */
 
+#include <arduino_example.h>
 #include <asm_mc68000.h>
-#include <libcli.h>
 
-using namespace libasm;
-using namespace libasm::mc68000;
+using libasm::arduino::AsmExample;
+using libasm::mc68000::AsmMc68000;
 
-AsmMc68000 as68k;
-Assembler &assembler(as68k);
-
-void assemble(const char *line) {
-  Insn insn;
-  if (assembler.encode(line, insn, 0x10000, nullptr)) {
-    Cli.print(F("Error "));
-    Cli.print(assembler.getError());
-    Cli.print(F(" at: "));
-    Cli.println(assembler.errorAt());
-  } else {
-    Cli.printUint24(insn.address());
-    Cli.print(':');
-    for (int i = 0; i < insn.length(); i += 2) {
-      Cli.print(' ');
-      uint16_t val = static_cast<uint16_t>(insn.bytes()[i]) << 8;
-      val |= insn.bytes()[i+1];
-      Cli.printUint16(val);
-    }
-    Cli.println();
-  }
-}
-
-bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  assemble(line);
-  return Cli.readLine(handleLine, 0);
-}
+AsmMc68000 asm68000;
+AsmExample example(asm68000);
 
 void setup() {
-  assembler.setCpu("68008");
-
   Serial.begin(9600);
-  Cli.begin(Serial);
-  Cli.readLine(handleLine, 0);
+  example.begin(Serial);
 }
 
 void loop() {
-  Cli.loop();
+  example.loop();
 }
 
 // Local Variables:

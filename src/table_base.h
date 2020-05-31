@@ -33,7 +33,9 @@ protected:
     static const E *searchName(
         const char *name, const E *begin, const E *end) {
         for (const E *entry = begin; entry < end; entry++) {
-            if (pgm_strcasecmp(name, entry->name) == 0)
+            const char *target = reinterpret_cast<const char *>(
+                pgm_read_ptr(&entry->name));
+            if (strcasecmp_P(name, target) == 0)
                 return entry;
         }
         return nullptr;
@@ -67,7 +69,7 @@ protected:
     }
 
     static void setName(Insn &insn, const char *name, host::uint_t max) {
-        pgm_strncpy(insn._name, name, max + 1);
+        strncpy_P(insn._name, name, max + 1);
     }
 };
 

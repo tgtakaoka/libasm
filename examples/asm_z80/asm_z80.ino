@@ -14,49 +14,22 @@
  * limitations under the License.
  */
 
+#include <arduino_example.h>
 #include <asm_z80.h>
-#include <libcli.h>
 
-using namespace libasm;
-using namespace libasm::z80;
+using libasm::arduino::AsmExample;
+using libasm::z80::AsmZ80;
 
-AsmZ80 asz80;
-Assembler &assembler(asz80);
-
-void assemble(const char *line) {
-  Insn insn;
-  if (assembler.encode(line, insn, 0x1000, nullptr)) {
-    Cli.print(F("Error "));
-    Cli.print(assembler.getError());
-    Cli.print(F(" at: "));
-    Cli.println(assembler.errorAt());
-  } else {
-    Cli.printUint16(insn.address());
-    Cli.print(':');
-    for (int i = 0; i < insn.length(); i++) {
-      Cli.print(' ');
-      const uint8_t val = insn.bytes()[i];
-      Cli.printUint8(val);
-    }
-    Cli.println();
-  }
-}
-
-bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  assemble(line);
-  return Cli.readLine(handleLine, 0);
-}
+AsmZ80 asmz80;
+AsmExample example(asmz80);
 
 void setup() {
-  assembler.setCpu("z80");
-
   Serial.begin(9600);
-  Cli.begin(Serial);
-  Cli.readLine(handleLine, 0);
+  example.begin(Serial);
 }
 
 void loop() {
-  Cli.loop();
+  example.loop();
 }
 
 // Local Variables:

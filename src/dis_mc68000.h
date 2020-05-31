@@ -55,11 +55,11 @@ private:
     Error decodeDestSiz(DisMemory &memory, InsnMc68000 &insn);
     Error decodeAddrReg(DisMemory &memory, InsnMc68000 &insn);
     Error decodeDataReg(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeMoveUsp(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeTrapVec(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeMoveUsp(InsnMc68000 &insn);
+    Error decodeTrapVec(InsnMc68000 &insn);
     Error decodeDataDst(DisMemory &memory, InsnMc68000 &insn);
     Error decodeDestOpr(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeSignExt(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeSignExt(InsnMc68000 &insn);
     Error decodeRelative(DisMemory &memory, InsnMc68000 &insn);
     void  decodeMoveMltRegList(
         uint16_t list, bool pop,
@@ -67,15 +67,15 @@ private:
     void  outMoveMltRegs(RegName start, RegName last, char suffix);
     Error decodeMoveMlt(DisMemory &memory, InsnMc68000 &insn);
     Error decodeMoveSr(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeMoveQic(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeMoveQic(InsnMc68000 &insn);
     Error decodeMovePer(DisMemory &memory, InsnMc68000 &insn);
     Error decodeAregSiz(DisMemory &memory, InsnMc68000 &insn);
     Error decodeDregDst(DisMemory &memory, InsnMc68000 &insn);
     Error decodeDataQic(DisMemory &memory, InsnMc68000 &insn);
     Error decodeDmemSiz(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDregRot(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeDregRot(InsnMc68000 &insn);
     Error decodeDmemOpr(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeRegsExg(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeRegsExg(InsnMc68000 &insn);
     Error decodeMoveOpr(DisMemory &memory, InsnMc68000 &insn);
 
     Error decode(DisMemory &memory, Insn &insn) override;

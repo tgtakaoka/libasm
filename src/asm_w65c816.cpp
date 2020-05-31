@@ -57,7 +57,7 @@ Error AsmW65C816::encodeRelative(InsnW65C816 &insn, bool emitInsn) {
 
 Error AsmW65C816::encodeZeroPageRelative(InsnW65C816 &insn) {
     if (*_scan == '<') _scan++;
-    uint8_t zp;
+    uint8_t zp = 0;
     if (getOperand(zp)) return getError();
     const Error error = setError(getError());
     if (*_scan != ',') return setError(UNKNOWN_OPERAND);

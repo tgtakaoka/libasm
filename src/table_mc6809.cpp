@@ -571,8 +571,10 @@ Error TableMc6809::searchOpCode(
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end);
         if (entry) {
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
             insn.setFlags(pgm_read_byte(&entry->flags));
-            TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
             return OK;
         }
     }

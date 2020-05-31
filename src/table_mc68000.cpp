@@ -230,7 +230,9 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
         opCode, ARRAY_RANGE(TABLE_MC68000), maskCode);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    const char *name =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
     return OK;
 }
 

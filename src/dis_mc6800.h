@@ -49,7 +49,7 @@ private:
     bool outAccumulator(InsnMc6800 &insn);
 
     // MC6800
-    Error decodeInherent(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeInherent(InsnMc6800 &insn);
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn);
     Error decodeExtended(DisMemory &memory, InsnMc6800 &insn);
     Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn);

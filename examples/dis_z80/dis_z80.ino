@@ -14,57 +14,22 @@
  * limitations under the License.
  */
 
+#include <arduino_example.h>
 #include <dis_z80.h>
-#include <str_memory.h>
-#include <libcli.h>
 
-using namespace libasm;
-using namespace libasm::z80;
+using libasm::arduino::DisExample;
+using libasm::z80::DisZ80;
 
 DisZ80 disz80;
-Disassembler &disassembler(disz80);
-
-void disassemble(DisMemory &memory) {
-  char operands[20];
-  Insn insn;
-  while (memory.hasNext()) {
-    if (disassembler.decode(memory, insn, operands, nullptr)) {
-      Cli.print(F("Error "));
-      Cli.println(disassembler.getError());
-    } else {
-      Cli.printUint16(insn.address());
-      Cli.print(':');
-      for (int i = 0; i < insn.length(); i++) {
-        Cli.print(' ');
-        uint8_t val = insn.bytes()[i];
-        Cli.printUint8(val);
-      }
-      for (int i = insn.length(); i < Config::CODE_MAX; i++)
-        Cli.print(F("   "));
-      Cli.print(' ');
-      for (size_t n = Cli.print(insn.name()); n <= Config::NAME_MAX; n++)
-        Cli.print(' ');
-      Cli.println(operands);
-    }
-  }
-}
-
-bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  StrMemory<Config> memory(0x1000, line);
-  disassemble(memory);
-  return Cli.readLine(handleLine, 0);
-}
+DisExample example(disz80);
 
 void setup() {
-  disassembler.setCpu("z80");
-
   Serial.begin(9800);
-  Cli.begin(Serial);
-  Cli.readLine(handleLine, 0);
+  example.begin(Serial);
 }
 
 void loop() {
-  Cli.loop();
+  example.loop();
 }
 
 // Local Variables:

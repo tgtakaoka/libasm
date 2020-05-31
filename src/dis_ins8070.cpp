@@ -52,8 +52,7 @@ bool DisIns8070::outOperand(OprFormat opr, uint8_t value) {
     return true;
 }
 
-Error DisIns8070::decodeImplied(
-    DisMemory &memory, InsnIns8070 &insn) {
+Error DisIns8070::decodeImplied(InsnIns8070 &insn) {
     if (outOperand(insn.dstOpr(), insn.opCode())) {
         if (insn.srcOpr() != OPR_NO) {
             *_operands++ = ',';
@@ -149,7 +148,7 @@ Error DisIns8070::decode(
 
     switch (insn.addrMode()) {
     case IMPLIED:
-        return decodeImplied(memory, insn);
+        return decodeImplied(insn);
     case IMMEDIATE:
         return decodeImmediate(memory, insn);
     case ABSOLUTE:

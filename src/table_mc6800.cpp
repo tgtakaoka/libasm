@@ -554,7 +554,9 @@ Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
     const Entry *entry = searchOpCode(insn, _table, _end);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    const char *name =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
     return OK;
 }
 
@@ -565,7 +567,9 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     if (pgm_read_byte(&entry->opCode) != insn.opCode())
         return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    const char *name =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
     return OK;
 }
 

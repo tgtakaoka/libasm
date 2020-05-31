@@ -83,7 +83,8 @@ AsmMc6800::Token AsmMc6800::nextToken() {
 Error AsmMc6800::parseOperand(Operand &op) {
     op.resetError();
     op.reg = REG_UNDEF;
-    op.opr = 0;
+    op.imm = op.opr = op.addr = 0;
+    op.addrError = OK;
     host::uint_t comma = 0;
     if (nextToken() == REG_ACC) {
         op.reg = _reg;

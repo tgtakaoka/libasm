@@ -299,7 +299,9 @@ Error TableZ80::searchOpCode(
             insn.opCode(), table, end, maskCode);
         if (entry) {
             insn.setFlags(pgm_read_word(&entry->flags));
-            TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
             return OK;
         }
     }
