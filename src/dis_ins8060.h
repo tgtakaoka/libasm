@@ -44,7 +44,7 @@ private:
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
 
-    Error decodePntr(DisMemory &memory, InsnIns8060 &insn);
+    Error decodePntr(InsnIns8060 &insn);
     Error decodeImm8(DisMemory &memory, InsnIns8060 &insn);
     Error decodeIndx(DisMemory &memory, InsnIns8060 &insn, bool hasMode);
     Error decode(DisMemory &memory, Insn &insn) override;

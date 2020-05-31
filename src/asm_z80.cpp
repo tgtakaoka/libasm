@@ -339,7 +339,7 @@ Error AsmZ80::parseOperand(Operand &opr) {
         }
         if (*p == '+' || *p == '-') {
             if (opr.reg == REG_IX || opr.reg == REG_IY) {
-                uint8_t val8;
+                uint8_t val8 = 0;
                 _scan = p;
                 if (getOperand(val8)) return opr.setError(getError());
                 opr.setError(getError());

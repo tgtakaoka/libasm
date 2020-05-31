@@ -230,8 +230,7 @@ Error DisMc68000::decodeDataReg(
 }
 
 // MOVE USP
-Error DisMc68000::decodeMoveUsp(
-    DisMemory &memory, InsnMc68000 &insn) {
+Error DisMc68000::decodeMoveUsp(InsnMc68000 &insn) {
     const RegName areg = RegMc68000::decodeAddrReg(insn.opCode());
     if (insn.opCode() & 010) { // USP->An
         outRegName(REG_USP);
@@ -246,8 +245,7 @@ Error DisMc68000::decodeMoveUsp(
 }
 
 // TRAP
-Error DisMc68000::decodeTrapVec(
-    DisMemory &memory, InsnMc68000 &insn) {
+Error DisMc68000::decodeTrapVec(InsnMc68000 &insn) {
     *_operands++ = '#';
     outConstant(static_cast<uint8_t>(insn.opCode() & 017), 10);
     return setOK();
@@ -320,8 +318,7 @@ Error DisMc68000::decodeDestOpr(
 }
 
 // EXT
-Error DisMc68000::decodeSignExt(
-    DisMemory &memory, InsnMc68000 &insn) {
+Error DisMc68000::decodeSignExt(InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     insn.appendSize((opCode & 0100) ? SZ_LONG : SZ_WORD, _regs);
     outRegName(RegMc68000::decodeDataReg(opCode));
@@ -445,8 +442,7 @@ Error DisMc68000::decodeMoveSr(
 }
 
 // MOVEQ
-Error DisMc68000::decodeMoveQic(
-    DisMemory &memory, InsnMc68000 &insn) {
+Error DisMc68000::decodeMoveQic(InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     const uint8_t val8 = static_cast<uint8_t>(opCode);
     *_operands++ = '#';
@@ -583,8 +579,7 @@ Error DisMc68000::decodeDmemSiz(
 }
 
 // ASR, ASL, LSR, LSL, ROXR, ROXL, ROR, ROL
-Error DisMc68000::decodeDregRot(
-    DisMemory &memory, InsnMc68000 &insn) {
+Error DisMc68000::decodeDregRot(InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     const RegName dst = RegMc68000::decodeDataReg(opCode);
     const EaSize size = EaSize((opCode >> 6) & 3);
@@ -631,8 +626,7 @@ Error DisMc68000::decodeDmemOpr(
 }
 
 // EXG
-Error DisMc68000::decodeRegsExg(
-    DisMemory &memory, InsnMc68000 &insn) {
+Error DisMc68000::decodeRegsExg(InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     const uint8_t mode = (opCode >> 3) & 031;
     if (mode == 010) {          // Dx,Dy
@@ -685,27 +679,27 @@ Error DisMc68000::decode(
     case DEST_SIZ: return decodeDestSiz(memory, insn);
     case ADDR_REG: return decodeAddrReg(memory, insn);
     case DATA_REG: return decodeDataReg(memory, insn);
-    case MOVE_USP: return decodeMoveUsp(memory, insn);
-    case TRAP_VEC: return decodeTrapVec(memory, insn);
+    case MOVE_USP: return decodeMoveUsp(insn);
+    case TRAP_VEC: return decodeTrapVec(insn);
     case DATA_DST: return decodeDataDst(memory, insn);
     case DEST_OPR: return decodeDestOpr(memory, insn);
-    case SIGN_EXT: return decodeSignExt(memory, insn);
+    case SIGN_EXT: return decodeSignExt(insn);
     case RELATIVE: return decodeRelative(memory, insn);
     case MOVE_MLT: return decodeMoveMlt(memory, insn);
     case MOVE_SR:  return decodeMoveSr(memory, insn);
     case AREG_LNG:
     case AREG_SIZ: return decodeAregSiz(memory, insn);
     case DREG_DST: return decodeDregDst(memory, insn);
-    case MOVE_QIC: return decodeMoveQic(memory, insn);
+    case MOVE_QIC: return decodeMoveQic(insn);
     case MOVE_PER: return decodeMovePer(memory, insn);
     case DATA_QIC: return decodeDataQic(memory, insn);
     case DREG_SIZ:
     case DMEM_SIZ: return decodeDmemSiz(memory, insn);
-    case DREG_ROT: return decodeDregRot(memory, insn);
+    case DREG_ROT: return decodeDregRot(insn);
     case CMPM_SIZ:
     case DMEM_DST:
     case DMEM_OPR: return decodeDmemOpr(memory, insn);
-    case REGS_EXG: return decodeRegsExg(memory, insn);
+    case REGS_EXG: return decodeRegsExg(insn);
     case MOVA_OPR:
     case MOVE_OPR: return decodeMoveOpr(memory, insn);
     }

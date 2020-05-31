@@ -33,9 +33,9 @@ protected:
     static const E *searchName(
         const char *name, const E *begin, const E *end) {
         for (const E *entry = begin; entry < end; entry++) {
-            const char *name = reinterpret_cast<const char *>(
+            const char *target = reinterpret_cast<const char *>(
                 pgm_read_ptr(&entry->name));
-            if (strcasecmp_P(name, name) == 0)
+            if (strcasecmp_P(name, target) == 0)
                 return entry;
         }
         return nullptr;

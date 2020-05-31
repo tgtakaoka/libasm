@@ -267,7 +267,7 @@ Value ValueParser::readAtom() {
 }
 
 Value ValueParser::readCharacterConstant() {
-    char c;
+    char c = 0;
     _next = readChar(_next, c);
     if (getError()) return Value();
     return Value::makeSigned(c);

@@ -48,7 +48,7 @@ private:
     void outRegister(RegName regName);
     bool outOperand(OprFormat opr, uint8_t value = 0);
 
-    Error decodeImplied(DisMemory &memory, InsnIns8070 &insn);
+    Error decodeImplied(InsnIns8070 &insn);
     Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn);
     Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn);
     Error decodeRelative(DisMemory &memory, InsnIns8070 &insn);

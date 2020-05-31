@@ -24,8 +24,7 @@ void DisIns8060::outRegister(RegName regName) {
     _operands = _regs.outRegName(_operands, regName);
 }
 
-Error DisIns8060::decodePntr(
-    DisMemory& memory, InsnIns8060 &insn) {
+Error DisIns8060::decodePntr(InsnIns8060 &insn) {
     outRegister(_regs.decodePointerReg(insn.opCode() & 3));
     return setOK();
 }
@@ -83,7 +82,7 @@ Error DisIns8060::decode(
     case INHR:
         return setOK();
     case PNTR:
-        return decodePntr(memory, insn);
+        return decodePntr(insn);
     case IMM8:
         return decodeImm8(memory, insn);
     case REL8:
