@@ -159,7 +159,9 @@ Error TableI8080::searchOpCode(InsnI8080 &insn) const {
             opCode, ARRAY_RANGE(TABLE_I8085), tableCode);
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
-    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    const char *name =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
     return OK;
 }
 

@@ -189,7 +189,9 @@ Error TableW65C816::searchOpCode(
         insn.setFlags(pgm_read_byte(&entry->flags));
         if (!acceptAddrMode(insn.addrMode(), acceptIndirectLong))
             continue;
-        TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+        const char *name =
+            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
         return OK;
     }
     return UNKNOWN_INSTRUCTION;

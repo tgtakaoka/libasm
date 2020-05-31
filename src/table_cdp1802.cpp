@@ -148,7 +148,9 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
     if (!entry) return UNKNOWN_INSTRUCTION;
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.addrMode() == UNDF) return UNKNOWN_INSTRUCTION;
-    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    const char *name =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
     return OK;
 }
 

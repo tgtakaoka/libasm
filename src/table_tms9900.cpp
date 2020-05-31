@@ -151,7 +151,9 @@ Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.is9995() && !is9995())
         return UNKNOWN_INSTRUCTION;
-    TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+    const char *name =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
     return OK;
 }
 

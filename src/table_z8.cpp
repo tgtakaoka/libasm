@@ -205,7 +205,9 @@ Error TableZ8::searchOpCode(InsnZ8 &insn) const {
         insn.opCode(), ARRAY_RANGE(TABLE_Z8), maskCode);
     if (entry) {
         insn.setFlags(pgm_read_word(&entry->flags));
-        TableBase::setName(insn.insn(), entry->name, Config::NAME_MAX);
+        const char *name =
+            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
