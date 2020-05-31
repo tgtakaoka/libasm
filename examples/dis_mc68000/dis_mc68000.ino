@@ -14,58 +14,22 @@
  * limitations under the License.
  */
 
+#include <arduino_example.h>
 #include <dis_mc68000.h>
-#include <str_memory.h>
-#include <libcli.h>
 
-using namespace libasm;
-using namespace libasm::mc68000;
+using libasm::arduino::DisExample;
+using libasm::mc68000::DisMc68000;
 
-DisMc68000 dis68k;
-Disassembler &disassembler(dis68k);
-
-void disassemble(DisMemory &memory) {
-  char operands[20];
-  Insn insn;
-  while (memory.hasNext()) {
-    if (disassembler.decode(memory, insn, operands, nullptr)) {
-      Cli.print(F("Error "));
-      Cli.println(disassembler.getError());
-    } else {
-      Cli.printUint24(insn.address());
-      Cli.print(':');
-      for (int i = 0; i < insn.length(); i += 2) {
-        Cli.print(' ');
-        uint16_t val = static_cast<uint16_t>(insn.bytes()[i]) << 8;
-        val |= insn.bytes()[i+1];
-        Cli.printUint16(val);
-      }
-      for (int i = insn.length(); i < Config::CODE_MAX; i += 2)
-        Cli.print(F("     "));
-      Cli.print(' ');
-      for (size_t n = Cli.print(insn.name()); n <= Config::NAME_MAX; n++)
-        Cli.print(' ');
-      Cli.println(operands);
-    }
-  }
-}
-
-bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  StrMemory<Config> memory(0x10000, line);
-  disassemble(memory);
-  return Cli.readLine(handleLine, 0);
-}
+DisMc68000 dis68000;
+DisExample example(dis68000);
 
 void setup() {
-  disassembler.setCpu("68008");
-
   Serial.begin(9800);
-  Cli.begin(Serial);
-  Cli.readLine(handleLine, 0);
+  example.begin(Serial);
 }
 
 void loop() {
-  Cli.loop();
+  example.loop();
 }
 
 // Local Variables:

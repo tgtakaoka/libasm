@@ -23,11 +23,11 @@
 
 namespace libasm {
 
-template<typename Conf>
 class StrMemory : public DisMemory {
 public:
-    StrMemory(typename Conf::uintptr_t addr, const char *line)
-        : DisMemory(addr), _next(line) {
+    StrMemory(uint32_t addr, const char *line)
+        : DisMemory(addr),
+          _next(line) {
         skipSpaces();
     }
     

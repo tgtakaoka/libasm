@@ -14,49 +14,22 @@
  * limitations under the License.
  */
 
+#include <arduino_example.h>
 #include <asm_mc6809.h>
-#include <libcli.h>
 
-using namespace libasm;
-using namespace libasm::mc6809;
+using libasm::arduino::AsmExample;
+using libasm::mc6809::AsmMc6809;
 
-AsmMc6809 as6809;
-Assembler &assembler(as6809);
-
-void assemble(const char *line) {
-  Insn insn;
-  if (assembler.encode(line, insn, 0x1000, nullptr)) {
-    Cli.print(F("Error "));
-    Cli.print(assembler.getError());
-    Cli.print(F(" at: "));
-    Cli.println(assembler.errorAt());
-  } else {
-    Cli.printUint16(insn.address());
-    Cli.print(':');
-    for (int i = 0; i < insn.length(); i++) {
-      Cli.print(' ');
-      const uint8_t val = insn.bytes()[i];
-      Cli.printUint8(val);
-    }
-    Cli.println();
-  }
-}
-
-bool handleLine(Cli::State state, char *line, uintptr_t extra) {
-  assemble(line);
-  return Cli.readLine(handleLine, 0);
-}
+AsmMc6809 asm6809;
+AsmExample example(asm6809);
 
 void setup() {
-  assembler.setCpu("6309");
-
   Serial.begin(9600);
-  Cli.begin(Serial);
-  Cli.readLine(handleLine, 0);
+  example.begin(Serial);
 }
 
 void loop() {
-  Cli.loop();
+  example.loop();
 }
 
 // Local Variables:
