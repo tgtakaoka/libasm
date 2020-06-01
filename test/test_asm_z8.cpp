@@ -145,8 +145,10 @@ static void test_relative() {
 
 static void test_operand_in_opcode() {
     TEST("LD R0,>09H",  0x08, 0x09);
+    TEST("LD R0,9",     0x08, 0xE9);
+    TEST("LD R0,R9",    0x08, 0xE9);
     TEST("LD R1,>0FH",  0x18, 0x0F);
-    TEST("LD R2,P0",    0x28, 0x00);
+    TEST("LD R2,P0",    0x28, 0xE0);
     TEST("LD R3,10H",   0x38, 0x10);
     TEST("LD R4,49H",   0x48, 0x49);
     TEST("LD R5,59H",   0x58, 0x59);
@@ -158,12 +160,13 @@ static void test_operand_in_opcode() {
     TEST("LD R11,0B9H", 0xB8, 0xB9);
     TEST("LD R12,0C9H", 0xC8, 0xC9);
     TEST("LD R13,0D9H", 0xD8, 0xD9);
-    ETEST(ILLEGAL_REGISTER, "LD R14,0E9H");
+    TEST("LD R14,0E9H", 0xE8, 0xE9);
     TEST("LD R15,IPR",  0xF8, 0xF9);
 
     TEST("LD >0AH,R0",  0x09, 0x0A);
+    TEST("LD 10,R0",    0xA8, 0xE0);
     TEST("LD >0FH,R1",  0x19, 0x0F);
-    TEST("LD P0,R2",    0x29, 0x00);
+    TEST("LD P0,R2",    0x08, 0xE2);
     TEST("LD 10H,R3",   0x39, 0x10);
     TEST("LD 4AH,R4",   0x49, 0x4A);
     TEST("LD 5AH,R5",   0x59, 0x5A);
@@ -175,7 +178,7 @@ static void test_operand_in_opcode() {
     TEST("LD 0BAH,R11", 0xB9, 0xBA);
     TEST("LD 0CAH,R12", 0xC9, 0xCA);
     TEST("LD 0DAH,R13", 0xD9, 0xDA);
-    TEST("LD R10,R14",  0xE9, 0xEA);
+    ETEST(ILLEGAL_REGISTER, "LD 0EAH,R14");
     TEST("LD IRQ,R15",  0xF9, 0xFA);
 
     TEST("LD R0,#13",    0x0C, 0x0D);
@@ -214,7 +217,7 @@ static void test_operand_in_opcode() {
 }
 
 static void test_one_operand() {
-    TEST("DEC P1",   0x00, 0x01);
+    TEST("DEC P1",   0x00, 0xE1);
     TEST("DEC R1",   0x00, 0xE1);
     TEST("DEC @05H", 0x01, 0x05);
     TEST("DEC @R2",  0x01, 0xE2);
@@ -432,7 +435,7 @@ static void test_two_operands() {
     TEST("LD 37H,@36H",   0xE5, 0x36, 0x37);
     TEST("LD 37H,#38H",   0xE6, 0x37, 0x38);
     TEST("LD @38H,#39H",  0xE7, 0x38, 0x39);
-    TEST("LD R6,R5",      0x59, 0xE6);
+    TEST("LD R6,R5",      0x68, 0xE5);
     TEST("LD R7,@R6",     0xE3, 0x76);
     TEST("LD R7,#0E8H",   0x7C, 0xE8);
     TEST("LD @R8,#0E9H",  0xE7, 0xE8, 0xE9);
@@ -465,7 +468,7 @@ static void test_comment() {
     TEST(" JP  ULE , 3E3FH ; comment", 0x3D, 0x3E, 0x3F);
     TEST(" JP  8E8FH       ; comment", 0x8D, 0x8E, 0x8F);
     TEST(" LD  R1 , >0FH   ; comment", 0x18, 0x0F);
-    TEST(" LD  R2 , P0     ; comment", 0x28, 0x00);
+    TEST(" LD  R2 , P0     ; comment", 0x28, 0xE0);
     TEST(" LD  >0FH , R1   ; comment", 0x19, 0x0F);
     TEST(" LD  R9 , #9DH   ; comment", 0x9C, 0x9D);
     TEST(" INC R0          ; comment", 0x0E);
@@ -487,12 +490,19 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "JP   C,UNDEF", 0x7D, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JP   UNDEF",   0x8D, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "CALL UNDEF",   0xD6, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD R0,UNDEF",  0x08, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,R0",  0x09, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,UNDEF", 0xE4, 0x00, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD R0,UNDEF",  0x08, 0xE0);
+    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,R0",  0x08, 0xE0);
+    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,UNDEF", 0x08, 0xE0);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",      0x8B, 0xFE);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JR Z,UNDEF",    0x6B, 0xFE);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ R0,UNDEF", 0x0A, 0xFE);
+}
+
+static void test_error() {
+    ETEST(ILLEGAL_REGISTER, "JP   @11");
+    ETEST(ILLEGAL_REGISTER, "CALL @0e5h");
+    ETEST(UNKNOWN_INSTRUCTION, "JP   @r0");
+    ETEST(UNKNOWN_INSTRUCTION, "CALL @r4");
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -514,6 +524,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_error);
     return 0;
 }
 

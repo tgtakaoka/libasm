@@ -50,19 +50,20 @@ private:
 
     Error parseOperand(Operand &op);
 
-    Error encodeOperand(InsnZ8 &insn, const Operand &op);
+    Error encodeOperand(
+        InsnZ8 &insn, const AddrMode mode, const Operand &op);
     Error encodeAbsolute(
-        InsnZ8 &insn, const Operand &dst, const Operand &src);
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeRelative(
-        InsnZ8 &insn, const Operand &dst, const Operand &src);
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeIndexed(
-        InsnZ8 &insn, const Operand &dst, const Operand &src);
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeIndirectRegPair(
-        InsnZ8 &insn, const Operand &dst, const Operand &src);
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeInOpCode(
-        InsnZ8 &insn, const Operand &dst, const Operand &src);
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeTwoOperands(
-        InsnZ8 &insn, const Operand &dst, const Operand &src);
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encode(Insn &insn) override;
 };
 
