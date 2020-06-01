@@ -25,6 +25,7 @@ AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("tms9900");
 }
 

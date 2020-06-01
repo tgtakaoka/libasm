@@ -25,6 +25,7 @@ AsmI8080 as8080;
 Assembler &assembler(as8080);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("8080");
 }
 

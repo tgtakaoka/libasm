@@ -25,7 +25,7 @@ AsmMc6809 as6809;
 Assembler &assembler(as6809);
 
 static void set_up() {
-    TEST("SETDP 0");
+    assembler.reset();
     assembler.setCpu("6809");
 }
 

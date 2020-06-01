@@ -25,6 +25,7 @@ AsmZ80 asz80;
 Assembler &assembler(asz80);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("8080");
 }
 

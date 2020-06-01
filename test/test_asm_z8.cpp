@@ -25,6 +25,7 @@ AsmZ8 asmz8;
 Assembler &assembler(asmz8);
 
 static void set_up() {
+    assembler.reset();
     symtab.intern(0xFF, "SPL");   // Stack Pointer
     symtab.intern(0xFE, "SPH");
     symtab.intern(0xFD, "RP");    // Register Pointer

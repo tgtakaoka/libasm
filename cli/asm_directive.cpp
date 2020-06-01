@@ -66,6 +66,7 @@ AsmDirective *AsmCommonDirective::restrictCpu(const char *cpu) {
 AsmDirective *AsmCommonDirective::switchDirective(AsmDirective *dir) {
     _directive = dir;
     _assembler = &dir->assembler();
+    _assembler->reset();
     _parser = _assembler->getParser();
     return dir;
 }

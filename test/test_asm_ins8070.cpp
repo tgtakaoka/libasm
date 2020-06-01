@@ -25,6 +25,7 @@ AsmIns8070 asm8070;
 Assembler &assembler(asm8070);
 
 static void set_up() {
+    assembler.reset();
 }
 
 static void tear_down() {

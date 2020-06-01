@@ -25,6 +25,7 @@ AsmMos6502 as6502;
 Assembler &assembler(as6502);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("6502");
 }
 

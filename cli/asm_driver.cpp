@@ -134,6 +134,7 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list) {
     }
 
     int errors = 0;
+    _commonDir.currentDirective()->assembler().reset();
     _commonDir.setOrigin(0);
     const char *line;
     while ((line = _commonDir.readSourceLine()) != nullptr) {

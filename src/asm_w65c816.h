@@ -37,6 +37,8 @@ public:
     bool setCpu(const char *cpu) override { return TableW65C816.setCpu(cpu); }
     const char *getCpu() const override { return TableW65C816.getCpu(); }
 
+    void reset() override { _long_acc = _long_idx = false; }
+
 private:
     MotoValueParser _parser;
     mos6502::RegMos6502 _regs;

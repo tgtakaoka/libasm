@@ -25,6 +25,7 @@ AsmMc6800 as6800;
 Assembler &assembler(as6800);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("6800");
 }
 

@@ -37,10 +37,12 @@ public:
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
     const char *getCpu() const override { return TableMc6809.getCpu(); }
 
+    void reset() override { _direct_page = 0; }
+
 private:
     MotoValueParser _parser;
     RegMc6809 _regs;
-    uint8_t _direct_page = 0;
+    uint8_t _direct_page;
 
     Error determineAddrMode(const char *line, InsnMc6809 &insn);
 

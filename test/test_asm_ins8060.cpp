@@ -25,6 +25,7 @@ AsmIns8060 asm8060;
 Assembler &assembler(asm8060);
 
 static void set_up() {
+    assembler.reset();
 }
 
 static void tear_down() {

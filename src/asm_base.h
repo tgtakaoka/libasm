@@ -36,6 +36,7 @@ public:
 
     virtual ValueParser *getParser() = 0;
     const char *errorAt() const { return _scan; }
+    virtual void reset() {}
 
 protected:
     const char *_scan;

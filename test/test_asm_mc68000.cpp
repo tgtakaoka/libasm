@@ -25,6 +25,7 @@ AsmMc68000 as68000;
 Assembler &assembler(as68000);
 
 static void set_up() {
+    assembler.reset();
     as68000.setOptimize(true);
 }
 

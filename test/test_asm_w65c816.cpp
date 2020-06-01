@@ -25,8 +25,7 @@ AsmW65C816 as65816;
 Assembler &assembler(as65816);
 
 static void set_up() {
-    TEST("longa off");
-    TEST("longi off");
+    assembler.reset();
 }
 
 static void tear_down() {

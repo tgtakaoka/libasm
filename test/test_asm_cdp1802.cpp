@@ -25,6 +25,7 @@ AsmCdp1802 asm1802;
 Assembler &assembler(asm1802);
 
 static void set_up() {
+    assembler.reset();
 }
 
 static void tear_down() {
