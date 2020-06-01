@@ -29,7 +29,7 @@
         inc     @02h
         inc     @r2
 
-;        jp      @031h           ; should be error
+;       jp      @031h           ; should be error
         jp      @032h
         jp      @rr2
         srp     #30h
@@ -213,7 +213,7 @@
         xor     @0a8h,#0a9h
         xor     @r8,#0a9h
 
-;        call    @0d5h           ; should be warning
+;       call    @0d5h           ; should be warning
         call    @0d6h
         call    0d7d8h
 
@@ -379,6 +379,44 @@
         scf
         ccf
         nop
+
+        align   32
+        assume  RP:00H
+        ld      21H,R4
+        ld      R4,21H
+        ld      21H,#66H
+        ld      R1,33H(R4)
+        ld      33H(R4),R1
+        ld      21H,24H
+        ld      24H,21H
+        ld      21H,@24H
+        ld      @21H,24H
+        add     21H,24H
+        add     21H,@24H
+        lde     R1,@RR4
+        lde     @RR4,R1
+        ldei    @R1,@RR4
+        ldei    @RR4,@R1
+        djnz    R1,$
+
+        align   32
+        assume  RP:20H
+        ld      21H,R4          ; ld R1,R4
+        ld      R4,21H          ; ld R4,R1
+        ld      21H,#66H        ; ld R1,#66H
+        ld      21H,33H(R4)     ; ld R1,33H(R4)
+        ld      33H(R4),21H     ; ld 33H(R4),R1
+        ld      21H,24H         ; ld R1,R4
+        ld      24H,21H         ; ld R4,R1
+        ld      21H,@24H        ; ld R1,@R4
+        ld      @21H,24H        ; ld @R4,R1
+        add     21H,24H         ; add R1,R4
+        add     21H,@24H        ; add R1,@R4
+        lde     21H,@24H        ; lde R1,@RR4
+        lde     @24H,21H        ; lde @RR4,R1
+        ldei    @21H,@24H       ; ldei @R1,@RR4
+        ldei    @24H,@21H       ; ldei @RR4,@R1
+        djnz    21H,$           ; djnz R1,$
 
         end
         ;; comment
