@@ -34,14 +34,16 @@ Error DisCdp1802::decode(
     switch (insn.addrMode()) {
     case REGN:
     case REG1:
-        outConstant(insn.opCode() & 0xF, 10);
+        val = insn.opCode() & 0xF;
+        outConstant(val, 10);
         break;
     case IMM8:
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         outConstant(val, 16);
         break;
     case IOAD:
-        outConstant(insn.opCode() & 7, 10);
+        val = insn.opCode() & 7;
+        outConstant(val, 10);
         break;
     case ADDR:
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);

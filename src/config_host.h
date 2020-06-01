@@ -34,9 +34,17 @@
 #define PROGMEM
 // Teensy 3.x (ARM) predefined following macros.
 #if !defined(pgm_read_byte)
-#define pgm_read_byte(p) *reinterpret_cast<const uint8_t *>(p)
-#define pgm_read_word(p) *reinterpret_cast<const uint16_t *>(p)
-#define pgm_read_ptr(p) *reinterpret_cast<const uintptr_t *>(p)
+namespace libasm {
+namespace host {
+typedef union {
+    void *p;
+    uintptr_t i;
+} read_ptr_t;
+} // host
+} //libasm
+#define pgm_read_byte(p) *(p)
+#define pgm_read_word(p) *(p)
+#define pgm_read_ptr(p) ((libasm::host::read_ptr_t *)(p))->i
 #define F(text) (text)
 #define strcpy_P(d, s) strcpy((d), (s))
 #define strncpy_P(d, s, n) strncpy((d), (s), (n))
