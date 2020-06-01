@@ -22,83 +22,82 @@
 namespace libasm {
 namespace mc6800 {
 
-enum CpuType : host::uint_t {
+enum CpuType {
     MC6800,
     MC6801,
     HD6301,
     MC68HC11,
 };
 
-enum AddrMode : host::uint_t {
-    INH,  // Inherent
-    DIR,  // Direct page
-    EXT,  // Extended
-    IDX,  // Indexed
-    REL,  // Relative
-    IMM,  // Immediate
+enum AddrMode {
+    INH         = 0,   // Inherent
+    DIR         = 1,   // Direct page
+    EXT         = 2,   // Extended
+    IDX         = 3,   // Indexed
+    REL         = 4,   // Relative
+    IMM         = 5,   // Immediate
     // HD6301
-    IMM_DIR, // Immediate,Direct Page
-    IMM_IDX, // Immediate,Indexed
-    BIT_DIR, // Bit number,Direct
-    BIT_IDX, // Bit number,Indexed
+    IMM_DIR     = 6,   // Immediate,Direct Page
+    IMM_IDX     = 7,   // Immediate,Indexed
+    BIT_DIR     = 8,   // Bit number,Direct
+    BIT_IDX     = 9,   // Bit number,Indexed
     // MC68HC11
-    IDY,         // Indexed Y
-    DIR_IMM,     // Direct page,Immediate
-    IDX_IMM,     // Indexed X,Immediate
-    IDY_IMM,     // Indexed Y,Immediate
-    DIR_IMM_REL, // Direct page,Immediate,Relative
-    IDX_IMM_REL, // Indexed X,Immediate,Relative
-    IDY_IMM_REL, // Indexed Y,Immediate,Relative
+    IDY         = 10,  // Indexed Y
+    DIR_IMM     = 11,  // Direct page,Immediate
+    IDX_IMM     = 12,  // Indexed X,Immediate
+    IDY_IMM     = 13,  // Indexed Y,Immediate
+    DIR_IMM_REL = 14,  // Direct page,Immediate,Relative
+    IDX_IMM_REL = 15,  // Indexed X,Immediate,Relative
+    IDY_IMM_REL = 16,  // Indexed Y,Immediate,Relative
 };
 
-enum InsnAdjust : host::uint_t {
+enum InsnAdjust {
     ADJ_ZERO = 0,
     ADJ_AB01 = 1,  // Accumulator A:+0, B:+1
     ADJ_AB16 = 2,  // Accumulator A:+0, B:+$10
     ADJ_AB64 = 3,  // Accumulator A:+0, B:+$40
 };
 
-enum OprSize : host::uint_t {
+enum OprSize {
     SZ_BYTE = 0,
     SZ_WORD = 1,
-    SZ_NONE = 2,   // unknown, in Table ==SZ_BYTE
+    SZ_NONE = 2,   // unknown, in Table == SZ_BYTE
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline AddrMode _addrMode(host::uint_t flags) {
+    static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
 
-    static inline InsnAdjust _insnAdjust(host::uint_t flags) {
+    static inline InsnAdjust _insnAdjust(uint8_t flags) {
         return InsnAdjust((flags >> insnAdjust_gp) & insnAdjust_gm);
     }
 
-    static inline OprSize _oprSize(host::uint_t flags) {
+    static inline OprSize _oprSize(uint8_t flags) {
         return OprSize((flags >> oprSize_gp) & oprSize_gm);
     }
 
-    static constexpr host::uint_t _flags(
+    static constexpr uint8_t _flags(
         AddrMode addrMode, InsnAdjust insnAdjust, OprSize oprSize) {
-        return host::uint_t(addrMode)
-            | (host::uint_t(insnAdjust) << insnAdjust_gp)
-            | (host::uint_t(oprSize)   << oprSize_gp);
+        return static_cast<uint8_t>(addrMode)
+            | (static_cast<uint8_t>(insnAdjust) << insnAdjust_gp)
+            | (static_cast<uint8_t>(oprSize)    << oprSize_gp);
     }
 
-    static host::uint_t _set(host::uint_t flags, AddrMode addrMode) {
-        return (flags & ~addrMode_gm) | host::uint_t(addrMode);
+    static uint8_t _set(uint8_t flags, AddrMode addrMode) {
+        return (flags & ~addrMode_gm) | static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr host::uint_t addrMode_gm = 0x1F;
-    static constexpr host::uint_t insnAdjust_gp = 5;
-    static constexpr host::uint_t insnAdjust_gm = 0x3;
-    static constexpr host::uint_t oprSize_gp = 7;
-    static constexpr host::uint_t oprSize_gm = 0x1;
-
+    static constexpr uint8_t addrMode_gm = 0x1F;
+    static constexpr uint8_t insnAdjust_gm = 0x3;
+    static constexpr uint8_t oprSize_gm = 0x1;
+    static constexpr int insnAdjust_gp = 5;
+    static constexpr int oprSize_gp = 7;
 };
 
 } // namespace mc6800

@@ -22,46 +22,46 @@
 namespace libasm {
 namespace tms9900 {
 
-enum CpuType : host::uint_t {
+enum CpuType {
     TMS9900,
     TMS9995,
 };
 
-enum AddrMode : host::uint_t {
-    INH,                        // ---- ---- ---- ----
-    IMM,                        // ---- ---- ---- ---- + nnnn
-    REG,                        // ---- ---- ---- wwww
-    REG_IMM,                    // ---- ---- ---- wwww + nnnn
-    CNT_REG,                    // ---- ---- cccc wwww
-    SRC,                        // ---- ---- --SS ssss
-    CNT_SRC,                    // ---- --cc ccSS ssss
-    XOP_SRC,                    // ---- --vv vvSS ssss
-    REG_SRC,                    // ---- --dd ddSS ssss
-    DST_SRC,                    // ---- DDdd ddSS ssss
-    REL,                        // ---- ---- nnnn nnnn
-    CRU_OFF,                    // ---- ---- nnnn nnnn
+enum AddrMode {
+    INH     = 0,   // ---- ---- ---- ----
+    IMM     = 1,   // ---- ---- ---- ---- + nnnn
+    REG     = 2,   // ---- ---- ---- wwww
+    REG_IMM = 3,   // ---- ---- ---- wwww + nnnn
+    CNT_REG = 4,   // ---- ---- cccc wwww
+    SRC     = 5,   // ---- ---- --SS ssss
+    CNT_SRC = 6,   // ---- --cc ccSS ssss
+    XOP_SRC = 7,   // ---- --vv vvSS ssss
+    REG_SRC = 8,   // ---- --dd ddSS ssss
+    DST_SRC = 9,   // ---- DDdd ddSS ssss
+    REL     = 10,  // ---- ---- nnnn nnnn
+    CRU_OFF = 11,  // ---- ---- nnnn nnnn
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline CpuType _cpuType(host::uint_t flags) {
+    static inline CpuType _cpuType(uint8_t flags) {
         return (flags & tms9995_bm) == 0 ? TMS9900 : TMS9995;
     }
 
-    static inline AddrMode _addrMode(host::uint_t flags) {
+    static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-    static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
+    static constexpr uint8_t _flags(CpuType cpuType, AddrMode addrMode) {
         return (cpuType == TMS9995 ? tms9995_bm : 0)
-            | host::uint_t(addrMode);
+            | static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr host::uint_t tms9995_bm = 0x80;
-    static constexpr host::uint_t addrMode_gm = 0x0f;
+    static constexpr uint8_t tms9995_bm = 0x80;
+    static constexpr uint8_t addrMode_gm = 0xf;
 };
 
 } // namespace tms9900

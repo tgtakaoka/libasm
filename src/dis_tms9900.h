@@ -44,7 +44,7 @@ private:
     RegBase &getRegister() override { return _regs; }
 
     Error decodeOperand(
-        DisMemory &memory, InsnTms9900 &insn, host::uint_t opr);
+        DisMemory &memory, InsnTms9900 &insn, uint8_t opr);
     Error decodeImmediate(DisMemory &memory, InsnTms9900 &insn);
     Error decodeRelative(InsnTms9900 &insn);
     Error decode(DisMemory &memory, Insn &insn) override;

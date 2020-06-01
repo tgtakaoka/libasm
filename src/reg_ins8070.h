@@ -40,12 +40,12 @@ public:
     RegName parseRegister(const char *line) const;
     RegName parsePointerReg(const char *line) const;
 
-    static host::int_t encodePointerReg(RegName regName);
+    static int8_t encodePointerReg(RegName regName);
 
     static RegName decodePointerReg(uint8_t regNum);
 
     bool compareRegName(const char *line, RegName regName) const;
-    host::uint_t regNameLen(RegName regName) const;
+    uint8_t regNameLen(RegName regName) const;
 
     char *outRegName(char *out, const RegName regName) const;
 

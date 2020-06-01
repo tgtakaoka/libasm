@@ -92,7 +92,7 @@ Error AsmMc68000::emitImmediateData(
 
 Error AsmMc68000::emitEffectiveAddr(
     InsnMc68000 &insn, const Operand &ea,
-    host::int_t size_gp, host::int_t mode_gp, host::uint_t reg_gp) {
+    int8_t size_gp, int8_t mode_gp, uint8_t reg_gp) {
     if (size_gp >= 0) {
         if (insn.size() == SZ_NONE) return setError(ILLEGAL_SIZE);
         insn.embed(static_cast<Config::opcode_t>(insn.size()), size_gp);
@@ -411,7 +411,7 @@ Error AsmMc68000::encodeRelative(
 
 static uint16_t reverseBits(uint16_t bits) {
     uint16_t reverse = 0;
-    for (host::uint_t i = 0; ; i++) {
+    for (uint8_t i = 0; ; i++) {
         if (bits & 1) reverse |= 1;
         if (i == 15) break;
         bits >>= 1;
@@ -592,7 +592,7 @@ Error AsmMc68000::encodeDmemSiz(
         return encodeAregSiz(insn, op1, op2);
     }
     if (RegMc68000::isDreg(op1.reg)) { // Dn,<ea>
-        const host::uint_t categories = (opc == EOR ? CAT_DATA : CAT_MEMORY)
+        const uint8_t categories = (opc == EOR ? CAT_DATA : CAT_MEMORY)
             | CAT_ALTERABLE;
         if (!op2.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
@@ -734,8 +734,8 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
         if (!RegMc68000::isADreg(start))
             return opr.setError(UNKNOWN_OPERAND);
         p = skipSpaces(p + RegMc68000::regNameLen(start));
-        host::uint_t s = RegMc68000::encodeRegPos(start);
-        host::uint_t e = s;
+        uint8_t s = RegMc68000::encodeRegPos(start);
+        uint8_t e = s;
         if (*p == '-') {
             p = skipSpaces(p + 1);
             RegName last = RegMc68000::parseRegName(p);
@@ -745,7 +745,7 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
             p = skipSpaces(p + RegMc68000::regNameLen(last));
         }
         if (s > e) return opr.setError(UNKNOWN_OPERAND);
-        for (host::uint_t i = s; i <= e; i++) {
+        for (uint8_t i = s; i <= e; i++) {
             const uint32_t bm = (1 << i);
             if (opr.val32 & bm) error = DUPLICATE_REGISTER;
             opr.val32 |= bm;

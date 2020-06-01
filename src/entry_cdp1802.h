@@ -22,31 +22,31 @@
 namespace libasm {
 namespace cdp1802 {
 
-enum AddrMode : host::uint_t {
-    REGN,  // Register number, 0~15
-    REG1,  // Register number, 1~15
-    IMPL,  // Implied
-    IMM8,  // Immediate, 0~15
-    PAGE,  // Page offset
-    ADDR,  // Absolute address
-    IOAD,  // IO address, 1~7
-    UNDF,  // Undefined instruction
+enum AddrMode {
+    REGN = 1,  // Register number, 0~15
+    REG1 = 2,  // Register number, 1~15
+    IMPL = 3,  // Implied
+    IMM8 = 4,  // Immediate, 0~15
+    PAGE = 5,  // Page offset
+    ADDR = 6,  // Absolute address
+    IOAD = 7,  // IO address, 1~7
+    UNDF = 0,  // Undefined instruction
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline AddrMode _addrMode(host::uint_t flags) {
+    static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-    static constexpr host::uint_t _flags(AddrMode addrMode) {
-        return host::uint_t(addrMode);
+    static constexpr uint8_t _flags(AddrMode addrMode) {
+        return static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr host::uint_t addrMode_gm = 0x07;
+    static constexpr uint8_t addrMode_gm = 0x07;
 };
 
 } // namespace cdp1802

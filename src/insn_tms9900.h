@@ -31,7 +31,7 @@ public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }
 
-    void setFlags(host::uint_t flags) { _flags = flags; }
+    void setFlags(uint8_t flags) { _flags = flags; }
 
     Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
@@ -46,16 +46,16 @@ public:
     }
 
     void emitOperand(uint16_t val) {
-        host::uint_t pos = _insn.length();
+        uint8_t pos = _insn.length();
         if (pos == 0) pos = 2;
         emitUint16(val, pos);
     }
 
 private:
     Config::opcode_t _opCode;
-    host::uint_t _flags;
+    uint8_t _flags;
 
-    void emitUint16(uint16_t val, host::uint_t pos) {
+    void emitUint16(uint16_t val, uint8_t pos) {
         _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
         _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
     }

@@ -30,24 +30,24 @@ extern TestSymtab symtab;
 void asm_assert(
     const char *file, int line, Error error,
     uint32_t addr, const char *src,
-    const uint8_t *expected, host::uint_t length,
+    const uint8_t *expected, uint8_t length,
     Assembler &assembler);
 
 void asm_assert(
     const char *file, int line, Error error,
     uint32_t addr, const char *src,
-    const uint16_t *expected, host::uint_t length,
+    const uint16_t *expected, uint8_t length,
     Assembler &assembler);
 
 } // namespace test
 } // namespace libasm
 
-#define __VASSERT(file, line, error, addr, src, ...)                \
-    do {                                                            \
-        const Config::opcode_t expected[] = { __VA_ARGS__ };        \
-        const host::uint_t length = sizeof(expected);               \
-        asm_assert(file, line, error, addr, src, \
-                   expected, length, assembler);           \
+#define __VASSERT(file, line, error, addr, src, ...)            \
+    do {                                                        \
+        const Config::opcode_t expected[] = { __VA_ARGS__ };    \
+        const uint8_t length = sizeof(expected);                \
+        asm_assert(file, line, error, addr, src,                \
+                   expected, length, assembler);                \
     } while (0)
 #define EATEST(error, addr, src, ...)                               \
     __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)

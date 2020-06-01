@@ -22,7 +22,7 @@ namespace i8080 {
 
 Error AsmI8080::encodePointerReg(InsnI8080 &insn) {
     const RegName regName = _regs.parsePointerReg(_scan);
-    const host::int_t num = _regs.encodePointerReg(regName);
+    const int8_t num = _regs.encodePointerReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
@@ -31,7 +31,7 @@ Error AsmI8080::encodePointerReg(InsnI8080 &insn) {
 
 Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
     const RegName regName = _regs.parseStackReg(_scan);
-    const host::int_t num = _regs.encodeStackReg(regName);
+    const int8_t num = _regs.encodeStackReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
@@ -40,7 +40,7 @@ Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
 
 Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
     const RegName regName = _regs.parseIndexReg(_scan);
-    const host::int_t num = _regs.encodeIndexReg(regName);
+    const int8_t num = _regs.encodeIndexReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     insn.embed(num << 4);
     _scan += _regs.regNameLen(regName);
@@ -49,7 +49,7 @@ Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
 
 Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
     const RegName regName = _regs.parseDataReg(_scan);
-    const host::int_t num = _regs.encodeDataReg(regName);
+    const int8_t num = _regs.encodeDataReg(regName);
     if (num < 0) return setError(UNKNOWN_REGISTER);
     if (insn.insnFormat() == DATA_REG)
         insn.embed(num << 3);
@@ -71,8 +71,8 @@ Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
     if (srcReg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
     _scan = p + _regs.regNameLen(srcReg);
 
-    const host::uint_t dstNum = _regs.encodeDataReg(dstReg);
-    const host::uint_t srcNum = _regs.encodeDataReg(srcReg);
+    const uint8_t dstNum = _regs.encodeDataReg(dstReg);
+    const uint8_t srcNum = _regs.encodeDataReg(srcReg);
     insn.embed(dstNum << 3);
     insn.embed(srcNum);
     return setOK();

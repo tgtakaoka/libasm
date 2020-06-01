@@ -31,7 +31,7 @@ public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
-    void setFlags(host::uint_t flags) { _flags = flags; }
+    void setFlags(uint8_t flags) { _flags = flags; }
 
     Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
@@ -43,7 +43,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    host::uint_t _flags;
+    uint8_t _flags;
 };
 
 } // namespace i8080

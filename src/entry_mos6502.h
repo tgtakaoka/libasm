@@ -22,59 +22,59 @@
 namespace libasm {
 namespace mos6502 {
 
-enum CpuType : host::uint_t {
+enum CpuType {
     MOS6502,
     W65SC02,
     R65C02,
     W65C02S,
 };
 
-enum AddrMode : host::uint_t {
+enum AddrMode {
     // MOS6502
-    IMPL,                // Implied
-    ACCM,                // Accumulator A
-    IMMA,                // Immediate Accumulator: #nn
-    IMMX,                // Immediate Index register: #nn
-    ABS,                 // Absolute: abs
-    ZPG,                 // Zero Page: zp
-    ZPG_IDX,             // Zero Page Indexed: zp,X
-    ZPG_IDY,             // Zero Page Indexed: zp,Y
-    ABS_IDX,             // Absolute Indexed: abs,X
-    ABS_IDY,             // Absolute Indexed: abs,Y
-    REL,                 // Relative: abs
-    ZPG_IDX_IDIR,        // Indexed Indirect: (zp,X)
-    ZPG_IDIR_IDY,        // Indirect Indexed: (zp),Y
-    ABS_IDIR,            // Absolute Indirect: (abs)
+    IMPL         = 0,   // Implied
+    ACCM         = 1,   // Accumulator A
+    IMMA         = 2,   // Immediate Accumulator: #nn
+    IMMX         = 3,   // Immediate Index register: #nn
+    ABS          = 4,   // Absolute: abs
+    ZPG          = 5,   // Zero Page: zp
+    ZPG_IDX      = 6,   // Zero Page Indexed: zp,X
+    ZPG_IDY      = 7,   // Zero Page Indexed: zp,Y
+    ABS_IDX      = 8,   // Absolute Indexed: abs,X
+    ABS_IDY      = 9,   // Absolute Indexed: abs,Y
+    REL          = 10,  // Relative: abs
+    ZPG_IDX_IDIR = 11,  // Indexed Indirect: (zp,X)
+    ZPG_IDIR_IDY = 12,  // Indirect Indexed: (zp),Y
+    ABS_IDIR     = 13,  // Absolute Indirect: (abs)
 
     // W65SC02
-    ABS_IDX_IDIR,        // Indexed Absolute Indirect: (abs,X)
-    ZPG_IDIR,            // Zero Page Indirect: (zp)
-    ZPG_REL,             // Zero Page Relative: zp,abs
+    ABS_IDX_IDIR = 14,  // Indexed Absolute Indirect: (abs,X)
+    ZPG_IDIR     = 15,  // Zero Page Indirect: (zp)
+    ZPG_REL      = 16,  // Zero Page Relative: zp,abs
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline CpuType _cpuType(host::uint_t flags) {
+    static inline CpuType _cpuType(uint8_t flags) {
         return CpuType((flags >> cputype_gp) & cputype_gm);
     }
-    static inline AddrMode _addrMode(host::uint_t flags) {
+    static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-    static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
-        return (host::uint_t(cpuType) << cputype_gp)
-            | host::uint_t(addrMode);
+    static constexpr uint8_t _flags(CpuType cpuType, AddrMode addrMode) {
+        return (static_cast<uint8_t>(cpuType) << cputype_gp)
+            | static_cast<uint8_t>(addrMode);
     }
-    static host::uint_t _set(host::uint_t flags, AddrMode addrMode) {
-        return (flags & ~addrMode_gm) | host::uint_t(addrMode);
+    static uint8_t _set(uint8_t flags, AddrMode addrMode) {
+        return (flags & ~addrMode_gm) | static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr host::uint_t cputype_gp = 5;
-    static constexpr host::uint_t cputype_gm = 0x7;
-    static constexpr host::uint_t addrMode_gm = 0x1f;
+    static constexpr uint8_t cputype_gm = 0x7;
+    static constexpr uint8_t addrMode_gm = 0x1f;
+    static constexpr int cputype_gp = 5;
 };
 
 } // namespace mos6502

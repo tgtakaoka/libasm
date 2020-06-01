@@ -54,10 +54,10 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
     const char *label = nullptr;
     Config::uintptr_t addr = 0;
     Config::ptrdiff_t offset = 0;
-    host::int_t offSize = 0;
+    int8_t offSize = 0;
     RegName base = _regs.decodeBaseReg((post >> 5) & 3);
     RegName index = REG_UNDEF;
-    host::int_t incr = 0;
+    int8_t incr = 0;
 
     if (mode == 0x84) {
         // ,R [,R]
@@ -224,8 +224,8 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn) {
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg) post &= ~0x02; // clear REG_A
     const bool onUserStack = (insn.opCode() & 2) != 0;
-    for (host::uint_t i = 0, n = 0; i < 8; i++) {
-        const host::uint_t bitPos = push ? 7 - i : i;
+    for (uint8_t i = 0, n = 0; i < 8; i++) {
+        const uint8_t bitPos = push ? 7 - i : i;
         if (post & (1 << bitPos)) {
             if (n != 0) *_operands++ = ',';
             const RegName regName = _regs.decodeStackReg(bitPos, onUserStack);
@@ -274,11 +274,11 @@ Error DisMc6809::decodeBitOperation(DisMemory &memory, InsnMc6809 &insn) {
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     outRegister(reg);
     *_operands++ = '.';
-    outConstant(uint8_t(post & 7), 10);
+    outConstant(static_cast<uint8_t>(post & 7), 10);
     *_operands++ = ',';
     if (decodeDirectPage(memory, insn)) return getError();
     *_operands++ = '.';
-    outConstant(uint8_t((post >> 3) & 7));
+    outConstant(static_cast<uint8_t>((post >> 3) & 7));
     return setOK();
 }
 

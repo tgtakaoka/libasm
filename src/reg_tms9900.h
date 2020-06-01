@@ -44,9 +44,9 @@ enum RegName : char {
 
 class RegTms9900 : public RegBase {
 public:
-    host::uint_t regNameLen(RegName regName) const;
+    uint8_t regNameLen(RegName regName) const;
     RegName parseRegName(const char *line) const;
-    char *outRegName(char *out, host::uint_t regno) const;
+    char *outRegName(char *out, uint8_t regno) const;
     uint16_t encodeRegNumber(RegName regName) const;
 };
 

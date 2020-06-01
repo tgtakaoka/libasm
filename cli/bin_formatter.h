@@ -33,21 +33,21 @@ public:
     virtual const char *begin() = 0;
     virtual const char *prepare(uint32_t addr) = 0;
     virtual const char *encode(
-        uint32_t addr, const uint8_t *data, host::uint_t size) = 0;
+        uint32_t addr, const uint8_t *data, uint8_t size) = 0;
     virtual const char *end() = 0;
     virtual uint8_t *decode(
-        const char *line, uint32_t &addr, host::uint_t &size) = 0;
+        const char *line, uint32_t &addr, uint8_t &size) = 0;
 
 protected:
     AddressWidth _addrWidth;
     char *_line;
-    host::uint_t _line_len;
+    uint8_t _line_len;
     uint8_t *_data;
-    host::uint_t _data_len;
+    uint8_t _data_len;
     uint8_t _check_sum;
 
-    void ensureLine(host::uint_t len);
-    void ensureData(host::uint_t len);
+    void ensureLine(uint8_t len);
+    void ensureData(uint8_t len);
     void resetSum();
     void addSum(uint8_t data);
     void addSum(uint16_t data);
@@ -64,10 +64,10 @@ public:
     const char *begin() override;
     const char *prepare(uint32_t addr) override;
     const char *encode(
-        uint32_t addr, const uint8_t *data, host::uint_t size) override;
+        uint32_t addr, const uint8_t *data, uint8_t size) override;
     const char *end() override;
     uint8_t *decode(
-        const char *line, uint32_t &addr, host::uint_t &size) override;
+        const char *line, uint32_t &addr, uint8_t &size) override;
 
 private:
     uint16_t _ela;              // Extended Linear Address
@@ -82,10 +82,10 @@ public:
     const char *begin() override;
     const char *prepare(uint32_t addr) override { return nullptr; }
     const char *encode(
-        uint32_t addr, const uint8_t *data, host::uint_t size) override;
+        uint32_t addr, const uint8_t *data, uint8_t size) override;
     const char *end() override;
     uint8_t *decode(
-        const char *line, uint32_t &addr, host::uint_t &size) override;
+        const char *line, uint32_t &addr, uint8_t &size) override;
 
 private:
     uint8_t getSum() const override;

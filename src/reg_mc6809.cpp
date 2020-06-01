@@ -80,7 +80,7 @@ bool RegMc6809::compareRegName(const char *line, RegName regName) const {
     return !isidchar(*line);
 }
 
-host::uint_t RegMc6809::regNameLen(RegName regName) const {
+uint8_t RegMc6809::regNameLen(RegName regName) const {
     return regName2ndChar(regName) == 0 ? 1
         : (regName3rdChar(regName) == 0 ? 2 : 3);
 }
@@ -99,8 +99,8 @@ char *RegMc6809::outRegName(char *out, const RegName regName) const {
 }
 
 char *RegMc6809::outCCRBits(char *out, uint8_t val) const {
-    host::int_t n = 0;
-    for (host::uint_t mask = 0x80, i = 0; i < 8; mask >>= 1, i++) {
+    int8_t n = 0;
+    for (uint8_t mask = 0x80, i = 0; i < 8; mask >>= 1, i++) {
         if (val & mask) {
             if (n == 1) { char b = *--out; *out++ = '('; *out++ = b; }
             if (n) *out++ = '|';
@@ -114,7 +114,7 @@ char *RegMc6809::outCCRBits(char *out, uint8_t val) const {
     return out;
 }
 
-static host::int_t encodeRegNumber(
+static int8_t encodeRegNumber(
     RegName regName, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         if (pgm_read_byte(p) == regName) return p - table;
@@ -132,12 +132,12 @@ RegName RegMc6809::parseRegName(
 }
 
 static RegName decodeRegNumber(
-    host::uint_t regNum, const RegName *table, const RegName *end) {
+    uint8_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
 
-RegName RegMc6809::decodeStackReg(host::uint_t bitPos, bool onUserStack) const {
+RegName RegMc6809::decodeStackReg(uint8_t bitPos, bool onUserStack) const {
     const RegName regName = RegName(pgm_read_byte(&STACK_REGS[bitPos]));
     return (onUserStack && regName == REG_U) ? REG_S : regName;
 }
@@ -146,7 +146,7 @@ uint8_t RegMc6809::encodeStackReg(RegName regName, bool onUserStack) const {
     if (onUserStack && regName == REG_U) return 0;
     if (onUserStack && regName == REG_S) regName = REG_U;
     if (regName == REG_D) return 0x06;
-    const host::int_t regNum = encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
+    const int8_t regNum = encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
     return regNum >= 0 ? (1 << regNum) : 0;
 }
 
@@ -158,11 +158,11 @@ RegName RegMc6809::parseTfmBaseReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
-host::int_t RegMc6809::encodeBitOpReg(RegName regName) {
+int8_t RegMc6809::encodeBitOpReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(BIT_OP_REGS));
 }
 
-host::int_t RegMc6809::encodeTfmBaseReg(RegName regName) {
+int8_t RegMc6809::encodeTfmBaseReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
@@ -174,11 +174,11 @@ RegName RegMc6809::decodeTfmBaseReg(uint8_t regNum) {
     return decodeRegNumber(regNum, ARRAY_RANGE(TFM_BASE_REGS));
 }
 
-char RegMc6809::tfmSrcModeChar(host::uint_t mode) {
+char RegMc6809::tfmSrcModeChar(uint8_t mode) {
     return pgm_read_byte(&TFM_SRC_MODES[mode]);
 }
 
-char RegMc6809::tfmDstModeChar(host::uint_t mode) {
+char RegMc6809::tfmDstModeChar(uint8_t mode) {
     return pgm_read_byte(&TFM_DST_MODES[mode]);
 }
 
@@ -229,19 +229,19 @@ RegName RegMc6809::parseDataReg(const char *line) const {
         : parseRegName(line, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
-host::int_t RegMc6809::encodeIndexReg(RegName regName) const {
+int8_t RegMc6809::encodeIndexReg(RegName regName) const {
     return TableMc6809.is6309()
         ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_INDEX_REGS))
         : encodeRegNumber(regName, ARRAY_RANGE(MC6809_INDEX_REGS));
 }
 
-host::int_t RegMc6809::encodeBaseReg(RegName regName) const {
+int8_t RegMc6809::encodeBaseReg(RegName regName) const {
     return TableMc6809.is6309()
         ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_BASE_REGS))
         : encodeRegNumber(regName, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
-host::int_t RegMc6809::encodeDataReg(RegName regName) const {
+int8_t RegMc6809::encodeDataReg(RegName regName) const {
     if (TableMc6809.is6309()) {
         if (regName == REG_0) regName = REG_Z;
         return encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS));

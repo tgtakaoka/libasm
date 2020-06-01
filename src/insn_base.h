@@ -30,7 +30,7 @@ class Insn {
 public:
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
-    host::uint_t length() const { return _length; }
+    uint8_t length() const { return _length; }
     const char *name() const { return _name; }
 
     void resetAddress(uint32_t addr) {
@@ -57,7 +57,7 @@ public:
         return emitByte(val, _length);
     }
 
-    Error emitByte(uint8_t val, host::uint_t pos) {
+    Error emitByte(uint8_t val, uint8_t pos) {
         if (pos >= CODE_MAX) return NO_MEMORY;
         _bytes[pos++] = val;
         if (_length < pos) _length = pos;
@@ -124,7 +124,7 @@ public:
 
 private:
     uint32_t     _address;
-    host::uint_t _length;
+    uint8_t _length;
     static constexpr size_t CODE_MAX = 10;
     uint8_t      _bytes[CODE_MAX];
     static constexpr size_t NAME_MAX = 7;
@@ -139,7 +139,7 @@ public:
     Insn &insn() { return _insn; }
     typename Conf::uintptr_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
-    host::uint_t length() const { return _insn.length(); }
+    uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
 
     void resetAddress(typename Conf::uintptr_t addr) {

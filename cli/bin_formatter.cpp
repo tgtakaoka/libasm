@@ -35,7 +35,7 @@ BinFormatter::~BinFormatter() {
     if (_data) free(_data);
 }
 
-void BinFormatter::ensureLine(host::uint_t len) {
+void BinFormatter::ensureLine(uint8_t len) {
     len += 1;
     if (_line_len < len) {
         _line = static_cast<char *>(realloc(_line, len));
@@ -43,7 +43,7 @@ void BinFormatter::ensureLine(host::uint_t len) {
     }
 }
 
-void BinFormatter::ensureData(host::uint_t len) {
+void BinFormatter::ensureData(uint8_t len) {
     if (_data_len < len) {
         _data = static_cast<uint8_t *>(realloc(_data, len));
         _data_len = len;

@@ -31,7 +31,7 @@ public:
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
 
-    void setFlags(host::uint_t flags) {
+    void setFlags(uint8_t flags) {
         _flags = flags;
     }
 
@@ -57,7 +57,7 @@ public:
 private:
     Config::opcode_t _opCode;
     Config::opcode_t _prefixCode;
-    host::uint_t _flags;
+    uint8_t _flags;
 };
 
 } // namespace mc6809

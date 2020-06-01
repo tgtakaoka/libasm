@@ -41,7 +41,7 @@ bool RegMc6800::compareRegName(const char *line, RegName regName) const {
     return !isidchar(*line);
 }
 
-host::uint_t RegMc6800::regNameLen(RegName regName) const {
+uint8_t RegMc6800::regNameLen(RegName regName) const {
     return regName == REG_UNDEF ? 0 : 1;
 }
 

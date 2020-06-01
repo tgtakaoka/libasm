@@ -44,10 +44,10 @@ public:
     RegName parseIndexReg(const char *line) const;
     RegName parseDataReg(const char *line) const;
 
-    static host::int_t encodePointerReg(RegName regName);
-    static host::int_t encodeStackReg(RegName regName);
-    static host::int_t encodeIndexReg(RegName regName);
-    static host::int_t encodeDataReg(RegName regName);
+    static int8_t encodePointerReg(RegName regName);
+    static int8_t encodeStackReg(RegName regName);
+    static int8_t encodeIndexReg(RegName regName);
+    static int8_t encodeDataReg(RegName regName);
 
     static RegName decodePointerReg(uint8_t regNum);
     static RegName decodeStackReg(uint8_t regNum);
@@ -55,7 +55,7 @@ public:
     static RegName decodeDataReg(uint8_t regNum);
 
     bool compareRegName(const char *line, RegName regName) const;
-    host::uint_t regNameLen(RegName regName) const;
+    uint8_t regNameLen(RegName regName) const;
 
     char *outRegName(char *out, const RegName regName) const;
 

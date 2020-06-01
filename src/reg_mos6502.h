@@ -34,7 +34,7 @@ enum RegName : char {
 
 class RegMos6502 : public RegBase {
 public:
-    host::uint_t regNameLen(RegName regName) const;
+    uint8_t regNameLen(RegName regName) const;
     bool compareRegName(const char *line, RegName regName) const;
     RegName parseIndexReg(const char *line) const;
     char *outRegName(char *out, const RegName regName) const;

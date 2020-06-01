@@ -54,7 +54,7 @@ const char *IntelHex::prepare(uint32_t addr) {
 }
 
 const char *IntelHex::encode(
-    uint32_t ela_addr, const uint8_t *data, host::uint_t size) {
+    uint32_t ela_addr, const uint8_t *data, uint8_t size) {
     const uint16_t addr = static_cast<uint16_t>(ela_addr);
     // :LLaaaa00dd....ddSS
     ensureLine(1 + (1 + sizeof(addr) + 1 + size + 1) * 2);
@@ -63,7 +63,7 @@ const char *IntelHex::encode(
     resetSum();
     addSum(static_cast<uint8_t>(size));
     addSum(addr);
-    for (host::uint_t i = 0; i < size; i++) {
+    for (uint8_t i = 0; i < size; i++) {
         p += sprintf(p, "%02X", data[i]);
         addSum(data[i]);
     }
@@ -74,7 +74,7 @@ const char *IntelHex::encode(
 const char *IntelHex::end() { return ":00000001FF"; }
 
 uint8_t *IntelHex::decode(
-    const char *line, uint32_t &ela_addr, host::uint_t &size) {
+    const char *line, uint32_t &ela_addr, uint8_t &size) {
     if (*line++ != ':') return nullptr;
     size = 0;
     uint8_t len = 0;
@@ -96,7 +96,7 @@ uint8_t *IntelHex::decode(
     resetSum();
     addSum(static_cast<uint8_t>(size));
     addSum(addr);
-    for (host::uint_t i = 0; i < size; i++) {
+    for (uint8_t i = 0; i < size; i++) {
         if (parseByte(line, _data[i]))
             return nullptr;
     }

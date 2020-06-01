@@ -38,7 +38,7 @@ public:
     char *outRegName(char *out, const RegName regName) const;
 
     bool compareRegName(const char *line, RegName regName) const;
-    host::uint_t regNameLen(RegName regName) const;
+    uint8_t regNameLen(RegName regName) const;
 
 private:
     char regName1stChar(const RegName regName) const;

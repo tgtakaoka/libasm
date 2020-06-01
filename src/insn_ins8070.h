@@ -21,6 +21,8 @@
 #include "entry_ins8070.h"
 #include "insn_base.h"
 
+#include <stdio.h>
+
 namespace libasm {
 namespace ins8070 {
 
@@ -33,7 +35,9 @@ public:
     OprFormat srcOpr() const { return Entry::_srcOpr(_flags); }
     OprSize oprSize() const { return Entry::_oprSize(_flags); }
 
-    void setFlags(uint16_t flags) { _flags = flags; }
+    void setFlags(uint16_t flags) {
+        _flags = flags;
+    }
 
     void setOprFormats(OprFormat dst, OprFormat src) {
         _flags = Entry::_flags(addrMode(), dst, src, oprSize());

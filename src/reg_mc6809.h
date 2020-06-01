@@ -51,30 +51,30 @@ public:
     RegName parseIndexReg(const char *line) const;
     RegName parseBaseReg(const char *line) const;
     RegName parseDataReg(const char *line) const;
-    host::int_t encodeIndexReg(RegName regName) const;
-    host::int_t encodeBaseReg(RegName regName) const;
-    host::int_t encodeDataReg(RegName regName) const;
+    int8_t encodeIndexReg(RegName regName) const;
+    int8_t encodeBaseReg(RegName regName) const;
+    int8_t encodeDataReg(RegName regName) const;
     uint8_t encodeStackReg(RegName regName, bool onUserStack) const;
     RegName decodeIndexReg(uint8_t regNum) const;
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;
-    RegName decodeStackReg(host::uint_t bitPos, bool onUserStack) const;
+    RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
 
     char *outRegName(char *out, const RegName regName) const;
     char *outCCRBits(char *out, uint8_t val) const;
 
     bool compareRegName(const char *line, RegName regName) const;
-    host::uint_t regNameLen(RegName regName) const;
+    uint8_t regNameLen(RegName regName) const;
 
     RegName parseBitOpReg(const char *line) const;
-    static host::int_t encodeBitOpReg(RegName regName);
+    static int8_t encodeBitOpReg(RegName regName);
 
     RegName parseTfmBaseReg(const char *line) const;
-    static host::int_t encodeTfmBaseReg(RegName regName);
+    static int8_t encodeTfmBaseReg(RegName regName);
     static RegName decodeBitOpReg(uint8_t regNum);
     static RegName decodeTfmBaseReg(uint8_t regNum);
-    static char tfmSrcModeChar(host::uint_t mode);
-    static char tfmDstModeChar(host::uint_t mode);
+    static char tfmSrcModeChar(uint8_t mode);
+    static char tfmDstModeChar(uint8_t mode);
 
     static OprSize regSize(RegName regName);
 

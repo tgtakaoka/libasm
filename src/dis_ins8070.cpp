@@ -117,7 +117,7 @@ Error DisIns8070::decodeRelative(
 
 Error DisIns8070::decodeGeneric(
     DisMemory &memory, InsnIns8070 &insn) {
-    const host::uint_t mode = insn.opCode() & 7;
+    const uint8_t mode = insn.opCode() & 7;
     if (mode == 4) return decodeImmediate(memory, insn);
 
     outOperand(insn.dstOpr());

@@ -59,16 +59,21 @@ protected:
         const C opCode, const E *begin, const E *end,
         C (*convert)(C, const E *) = nullptr) {
         for (const E *entry = begin; entry < end; entry++) {
-            const C code = (sizeof(C) == 1)
-                ? pgm_read_byte(&entry->opCode)
-                : pgm_read_word(&entry->opCode);
-            if ((convert ? convert(opCode, entry) : opCode) == code)
-                return entry;
+            if (sizeof(C) == 1) {
+                const C code = pgm_read_byte(&entry->opCode);
+                if ((convert ? convert(opCode, entry) : opCode) == code)
+                    return entry;
+            }
+            if (sizeof(C) == 2) {
+                const C code =  pgm_read_word(&entry->opCode);
+                if ((convert ? convert(opCode, entry) : opCode) == code)
+                    return entry;
+            }
         }
         return nullptr;
     }
 
-    static void setName(Insn &insn, const char *name, host::uint_t max) {
+    static void setName(Insn &insn, const char *name, uint8_t max) {
         strncpy_P(insn._name, name, max + 1);
     }
 };

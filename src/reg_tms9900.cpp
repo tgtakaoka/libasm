@@ -26,7 +26,7 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-host::uint_t RegTms9900::regNameLen(RegName regName) const {
+uint8_t RegTms9900::regNameLen(RegName regName) const {
     const char r = char(regName);
     if (isdigit(r)) return 2;
     if (isalpha(r)) return 3;
@@ -43,7 +43,7 @@ RegName RegTms9900::parseRegName(const char *line) const {
     return REG_UNDEF;
 }
 
-char *RegTms9900::outRegName(char *out, host::uint_t regno) const {
+char *RegTms9900::outRegName(char *out, uint8_t regno) const {
     regno &= 0x0f;
     *out++ = _uppercase ? 'R' : 'r';
     if (regno < 10) {

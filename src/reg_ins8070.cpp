@@ -61,7 +61,7 @@ bool RegIns8070::compareRegName(const char *line, RegName regName) const {
     return !isidchar(*line);
 }
 
-host::uint_t RegIns8070::regNameLen(RegName regName) const {
+uint8_t RegIns8070::regNameLen(RegName regName) const {
     if (regName == REG_UNDEF) return 0;
     return regName2ndChar(regName) ? 2 : 1;
 }
@@ -91,7 +91,7 @@ RegName RegIns8070::parsePointerReg(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(POINTER_REGS));
 }
 
-host::int_t RegIns8070::encodePointerReg(RegName regName) {
+int8_t RegIns8070::encodePointerReg(RegName regName) {
     if (regName == REG_PC) return 0;
     if (regName == REG_SP) return 1;
     return char(regName) - '0';

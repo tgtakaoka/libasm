@@ -31,7 +31,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn) {
             setError(UNKNOWN_REGISTER);
             break;
         }
-        const host::int_t bits = _regs.encodeStackReg(regName, onUserStack);
+        const int8_t bits = _regs.encodeStackReg(regName, onUserStack);
         if (bits == 0) {
             setError(ILLEGAL_REGISTER);
             break;
@@ -142,8 +142,8 @@ Error AsmMc6809::encodeExtended(InsnMc6809 &insn, bool emitInsn) {
 Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, bool emitInsn) {
     RegName base = REG_UNDEF;
     RegName index = REG_UNDEF;
-    host::int_t osize = 0;      // offset size, -1 undefined
-    host::int_t incr = 0;       // auto decrement/increment
+    int8_t osize = 0;      // offset size, -1 undefined
+    int8_t incr = 0;       // auto decrement/increment
     Config::uintptr_t addr;
     bool undef = false;
 
@@ -433,7 +433,7 @@ Error AsmMc6809::determineAddrMode(const char *line, InsnMc6809 &insn) {
         return OK;
     if (_regs.parseIndexReg(line) != REG_UNDEF)
         return OK;
-    host::int_t size = -1;
+    int8_t size = -1;
     if (*line == '<') {
         size = 8;
         if (line[1] == '<')     // << for 5bit indexed

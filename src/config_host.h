@@ -21,12 +21,6 @@
 
 #include <stdint.h>
 
-namespace host
-{
-    typedef int_least8_t  int_t;
-    typedef uint_least8_t uint_t;
-} // namespace host
-
 #define ARRAY_BEGIN(array) (&(array)[0])
 #define ARRAY_END(array)   (&(array)[sizeof(array) / sizeof(array[0])])
 #define ARRAY_RANGE(array) ARRAY_BEGIN(array), ARRAY_END(array)

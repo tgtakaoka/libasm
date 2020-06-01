@@ -95,21 +95,21 @@ Config::opcode_t RegMc68000::encodeRegNo(RegName reg) {
         : char(reg) - char(REG_A0);
 }
 
-host::uint_t RegMc68000::encodeRegPos(RegName reg) {
+uint8_t RegMc68000::encodeRegPos(RegName reg) {
     return isDreg(reg)
         ? char(reg) - char(REG_D0)
         : char(reg) - char(REG_A0) + 8;
 }
 
-RegName RegMc68000::decodeDataReg(host::uint_t regno) {
+RegName RegMc68000::decodeDataReg(uint8_t regno) {
     return RegName(char(REG_D0) + (regno & 7));
 }
 
-RegName RegMc68000::decodeAddrReg(host::uint_t regno) {
+RegName RegMc68000::decodeAddrReg(uint8_t regno) {
     return RegName(char(REG_A0) + (regno & 7));
 }
 
-host::uint_t RegMc68000::regNameLen(RegName regName) {
+uint8_t RegMc68000::regNameLen(RegName regName) {
     if (regName == REG_UNDEF) return 0;
     return (regName == REG_CCR || regName == REG_USP) ? 3 : 2;
 }
@@ -133,7 +133,7 @@ RegName RegMc68000::parseRegName(const char *line) {
     return REG_UNDEF;
 }
 
-static EaMode parseEaMode(host::uint_t mode, host::uint_t regno) {
+static EaMode parseEaMode(uint8_t mode, uint8_t regno) {
     if (mode == 7) {
         switch (regno) {
         case 0: return M_ABS_SHORT;
@@ -148,18 +148,18 @@ static EaMode parseEaMode(host::uint_t mode, host::uint_t regno) {
 }
 
 Config::opcode_t EaMc68000::encodeMode(EaMode mode) {
-    const host::uint_t m = host::uint_t(mode);
+    const uint8_t m = static_cast<uint8_t>(mode);
     return m >= 8 ? 7 : m;
 }
 
 Config::opcode_t EaMc68000::encodeRegNo(EaMode mode, RegName regName) {
-    const host::uint_t m = host::uint_t(mode);
+    const uint8_t m = static_cast<uint8_t>(mode);
     if (m < 8) return RegMc68000::encodeRegNo(regName);
     if (m < 16) return m - 8;
     return 0;
 }
 
-static host::uint_t getCategories(EaMode mode) {
+static uint8_t getCategories(EaMode mode) {
     switch (mode) {
     case M_DREG:
         return CAT_DATA | CAT_ALTERABLE;
@@ -191,7 +191,7 @@ static host::uint_t getCategories(EaMode mode) {
 }
 
 const char *EaMc68000::eaCategory(EaMode mode) {
-    host::uint_t categories = getCategories(mode);
+    uint8_t categories = getCategories(mode);
     static char buf[5];
     buf[0] = (categories & CAT_DATA) ? 'D' : '_';
     buf[1] = (categories & CAT_MEMORY) ? 'M' : '_';
@@ -201,7 +201,7 @@ const char *EaMc68000::eaCategory(EaMode mode) {
     return buf;
 }
 
-static RegName encodeRegName(EaMode mode, host::uint_t regno) {
+static RegName encodeRegName(EaMode mode, uint8_t regno) {
     switch (mode) {
     case M_DREG:
         return RegMc68000::decodeDataReg(regno);
@@ -217,26 +217,26 @@ static RegName encodeRegName(EaMode mode, host::uint_t regno) {
 }
 
 EaMc68000::EaMc68000(Config::opcode_t insnCode) {
-    const host::uint_t regno = insnCode & 7;
+    const uint8_t regno = insnCode & 7;
     size = EaSize((insnCode >> 6) & 3);
     mode = parseEaMode((insnCode >> 3) & 7, regno);
     reg = encodeRegName(mode, regno);
 }
 
-EaMc68000::EaMc68000(EaSize size_, host::uint_t raw_mode, host::uint_t regno) {
+EaMc68000::EaMc68000(EaSize size_, uint8_t raw_mode, uint8_t regno) {
     regno &= 7;
     size = size_;
     mode = parseEaMode(raw_mode & 7, regno);
     reg = encodeRegName(mode, regno);
 }
 
-EaMc68000::EaMc68000(EaSize size_, EaMode mode_, host::uint_t regno) {
+EaMc68000::EaMc68000(EaSize size_, EaMode mode_, uint8_t regno) {
     size = size_;
     mode = mode_;
     reg = encodeRegName(mode, regno);
 }
 
-bool EaMc68000::satisfy(EaMode mode, host::uint_t categories) {
+bool EaMc68000::satisfy(EaMode mode, uint8_t categories) {
     return (getCategories(mode) & categories) == categories;
 }
 

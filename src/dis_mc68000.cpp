@@ -341,7 +341,7 @@ Error DisMc68000::decodeRelative(
     return setOK();
 }
 
-static RegName decodeMoveMltReg(host::int_t regno) {
+static RegName decodeMoveMltReg(int8_t regno) {
     return (regno < 8)
         ? RegMc68000::decodeDataReg(regno)
         : RegMc68000::decodeAddrReg(regno - 8);
@@ -350,10 +350,10 @@ static RegName decodeMoveMltReg(host::int_t regno) {
 void DisMc68000::decodeMoveMltRegList(
     uint16_t list, bool push,
     void (DisMc68000::*outRegs)(RegName, RegName, char)) {
-    host::int_t start = -1;
-    host::int_t last = 0;
+    int8_t start = -1;
+    int8_t last = 0;
     uint16_t mask = push ? 0x8000 : 0x0001;
-    for (host::int_t i = 0; i < 16; i++) {
+    for (int8_t i = 0; i < 16; i++) {
         if (list & mask) {
             if (start < 0) {
                 start = last = i;
@@ -420,9 +420,9 @@ Error DisMc68000::decodeMoveMlt(
 Error DisMc68000::decodeMoveSr(
     DisMemory &memory, InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
-    const host::uint_t opc = (opCode >> 8) & 017;
-    constexpr host::uint_t toCCR = 4;
-    constexpr host::uint_t fromSR = 0;
+    const uint8_t opc = (opCode >> 8) & 017;
+    constexpr uint8_t toCCR = 4;
+    constexpr uint8_t fromSR = 0;
     const EaSize size = (opc == toCCR) ? SZ_BYTE : SZ_WORD;
     const EaMc68000 ea(size, opCode >> 3, opCode);
     if (opc == fromSR) {
@@ -531,7 +531,7 @@ Error DisMc68000::decodeDregDst(
     return getError();
 }
 
-static EaSize moveSize(host::uint_t moveSize) {
+static EaSize moveSize(uint8_t moveSize) {
     switch (moveSize & 3) {
     case 1: return SZ_BYTE;
     case 2: return SZ_LONG;
@@ -612,8 +612,8 @@ Error DisMc68000::decodeDmemOpr(
     insn.appendSize(size, _regs);
     if (opCode & 010) {       // -(Ay),-(Ax) or (Ay)+,(Ax)+
         const EaMode mode = (opc == CMPM) ? M_PINC : M_PDEC;
-        const EaMc68000 src(SZ_BYTE, host::uint_t(mode), opCode);
-        const EaMc68000 dst(SZ_BYTE, host::uint_t(mode), opCode >> 9);
+        const EaMc68000 src(SZ_BYTE, static_cast<uint8_t>(mode), opCode);
+        const EaMc68000 dst(SZ_BYTE, static_cast<uint8_t>(mode), opCode >> 9);
         decodeEffectiveAddr(memory, insn, src);
         *_operands++ = ',';
         decodeEffectiveAddr(memory, insn, dst);

@@ -61,10 +61,10 @@ protected:
             _cli.printUint32(addr);
     }
 
-    void printBytes(const uint8_t *bytes, host::uint_t length) {
+    void printBytes(const uint8_t *bytes, uint8_t length) {
         const OpCodeWidth width = _config->opCodeWidth();
         const Endian endian = _config->endian();
-        for (host::uint_t i = 0; i < length; ) {
+        for (uint8_t i = 0; i < length; ) {
             _cli.print(' ');
             if (width == OPCODE_8BIT)
                 _cli.printUint8(bytes[i++]);
@@ -79,8 +79,8 @@ protected:
                 _cli.printUint16(val);
             }
         }
-        const host::uint_t codeMax = _config->codeMax();
-        for (host::uint_t i = length; i < codeMax; ) {
+        const uint8_t codeMax = _config->codeMax();
+        for (uint8_t i = length; i < codeMax; ) {
             if (width == OPCODE_8BIT) {
                 _cli.print(F("   "));
                 i += 1;
@@ -93,8 +93,8 @@ protected:
     }
 
     void printInsn(const Insn &insn, const char *operands) {
-        const host::uint_t nameMax = _config->nameMax();
-        host::uint_t n = _cli.print(insn.name());
+        const uint8_t nameMax = _config->nameMax();
+        uint8_t n = _cli.print(insn.name());
         if (operands && *operands) {
             while (n++ <= nameMax)
                 _cli.print(' ');

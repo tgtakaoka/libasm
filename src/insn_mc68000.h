@@ -31,7 +31,7 @@ public:
 
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
 
-    void setFlags(host::uint_t flags) {
+    void setFlags(uint8_t flags) {
         _flags = flags;
     }
 
@@ -39,7 +39,7 @@ public:
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
-    void embed(Config::opcode_t data, host::uint_t gp = 0) {
+    void embed(Config::opcode_t data, uint8_t gp = 0) {
         _opCode |= (data << gp);
     }
 
@@ -57,7 +57,7 @@ public:
     }
 
     void emitOperand16(uint16_t val16) {
-        host::uint_t pos = _insn.length();
+        uint8_t pos = _insn.length();
         if (pos == 0) pos = 2;
         emitUint16(val16, pos);
     }
@@ -69,10 +69,10 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    host::uint_t _flags;
+    uint8_t _flags;
     EaSize _size;
 
-    void emitUint16(uint16_t val, host::uint_t pos) {
+    void emitUint16(uint16_t val, uint8_t pos) {
         _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
         _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
     }

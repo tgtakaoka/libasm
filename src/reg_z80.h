@@ -63,19 +63,19 @@ public:
     CcName parseCc4Name(const char *line) const;
     CcName parseCc8Name(const char *line) const;
     bool compareRegName(const char *line, RegName regName) const;
-    static host::uint_t ccNameLen(const CcName ccName);
-    static host::int_t encodeCcName(CcName ccName);
+    static uint8_t ccNameLen(const CcName ccName);
+    static int8_t encodeCcName(CcName ccName);
 
     RegName parseRegister(const char *line) const;
     static OprSize registerSize(const RegName regName);
-    static host::uint_t regNameLen(const RegName regName);
-    static host::int_t encodePointerReg(RegName regName);
-    static host::int_t encodePointerRegIx(RegName regName, RegName ix);
-    static host::int_t encodeStackReg(RegName regName);
-    static host::int_t encodeIndirectBase(RegName regName);
+    static uint8_t regNameLen(const RegName regName);
+    static int8_t encodePointerReg(RegName regName);
+    static int8_t encodePointerRegIx(RegName regName, RegName ix);
+    static int8_t encodeStackReg(RegName regName);
+    static int8_t encodeIndirectBase(RegName regName);
     static void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
-    static host::int_t encodeIrReg(RegName regName);
-    static host::int_t encodeDataReg(RegName regName);
+    static int8_t encodeIrReg(RegName regName);
+    static int8_t encodeDataReg(RegName regName);
 
     static RegName decodePointerReg(
         uint8_t regNum, const InsnZ80 *insn = nullptr);
@@ -99,7 +99,7 @@ private:
     char ccName2ndChar(const CcName ccName) const;
     char *outCcName(char *out, CcName ccName) const;
     bool compareCcName(const char *line, CcName ccName) const;
-    CcName parseCcName(const char *line, host::int_t max) const;
+    CcName parseCcName(const char *line, int8_t max) const;
 };
 
 } // namespace z80

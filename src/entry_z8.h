@@ -22,41 +22,41 @@
 namespace libasm {
 namespace z8 {
 
-enum AddrMode : host::uint_t {
-    M_NO,   // No operand
-    M_R,    // Register:                  Rn
-    M_IR,   // Indirect Register:         @Rn
-    M_r,    // Working register:          rn
-    M_Ir,   // Indirect Working register: @rn
-    M_IRR,  // Indirect Register Pair:    @RRn
-    M_Irr,  // Indirect Working Register Pair: @rrn
-    M_IM,   // Immediate:                 #nn
-    M_X,    // Indexed:                   nn(rn)
-    M_DA,   // Direct Address:            nnnn
-    M_RA,   // Relative Address:          nnnn
-    M_cc,   // Condition Code:            cc
+enum AddrMode {
+    M_NO  = 0,   // No operand
+    M_R   = 1,   // Register: Rn
+    M_IR  = 2,   // Indirect Register: @Rn
+    M_r   = 3,   // Working register: rn
+    M_Ir  = 4,   // Indirect Working register: @rn
+    M_IRR = 5,   // Indirect Register Pair: @RRn
+    M_Irr = 6,   // Indirect Working Register Pair: @rrn
+    M_IM  = 7,   // Immediate: #nn
+    M_X   = 8,   // Indexed: nn(rn)
+    M_DA  = 9,   // Direct Address: nnnn
+    M_RA  = 10,  // Relative Address: nnnn
+    M_cc  = 11,  // Condition Code: cc
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline AddrMode _dstMode(host::uint_t flags) {
+    static inline AddrMode _dstMode(uint8_t flags) {
         return AddrMode((flags >> dstMode_gp) & addrMode_gm);
     }
-    static inline AddrMode _srcMode(host::uint_t flags) {
+    static inline AddrMode _srcMode(uint8_t flags) {
         return AddrMode((flags >> srcMode_gp) & addrMode_gm);
     }
-    static constexpr host::uint_t _flags(AddrMode dst, AddrMode src) {
-        return (host::uint_t(dst) << dstMode_gp)
-            | (host::uint_t(src) << srcMode_gp);
+    static constexpr uint8_t _flags(AddrMode dst, AddrMode src) {
+        return (static_cast<uint8_t>(dst) << dstMode_gp)
+            | (static_cast<uint8_t>(src) << srcMode_gp);
     }
 
 private:
-    static constexpr host::uint_t addrMode_gm = 0x0f;
-    static constexpr host::uint_t dstMode_gp = 0;
-    static constexpr host::uint_t srcMode_gp = 4;
+    static constexpr uint8_t addrMode_gm = 0xf;
+    static constexpr uint8_t dstMode_gp = 0;
+    static constexpr uint8_t srcMode_gp = 4;
 };
 
 } // namespace z8

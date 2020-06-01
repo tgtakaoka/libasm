@@ -34,7 +34,7 @@ const char *MotoSrec::begin() {
 }
 
 const char *MotoSrec::encode(
-    uint32_t addr, const uint8_t *data, host::uint_t size) {
+    uint32_t addr, const uint8_t *data, uint8_t size) {
     uint8_t addrSize = 0;
     switch (_addrWidth) {
     case ADDRESS_16BIT: addrSize = 2; break;
@@ -63,7 +63,7 @@ const char *MotoSrec::encode(
         break;
     }
     addSum(addr);
-    for (host::uint_t i = 0; i < size; i++) {
+    for (uint8_t i = 0; i < size; i++) {
         p += sprintf(p, "%02X", data[i]);
         addSum(data[i]);
     }
@@ -84,7 +84,7 @@ const char *MotoSrec::end() {
 }
 
 uint8_t *MotoSrec::decode(
-    const char *line, uint32_t &addr, host::uint_t &size) {
+    const char *line, uint32_t &addr, uint8_t &size) {
     if (*line++ != 'S') return nullptr;
     const char type = *line++;
     ensureData(16);
@@ -132,7 +132,7 @@ uint8_t *MotoSrec::decode(
     size = len - 1;
 
     ensureData(size);
-    for (host::uint_t i = 0; i < size; i++)
+    for (uint8_t i = 0; i < size; i++)
         if (parseByte(line, _data[i])) return nullptr;
     const uint8_t sum = getSum();
     uint8_t val = 0;

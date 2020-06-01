@@ -175,16 +175,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(host::uint_t flags, const Entry *entry) {
-    const host::uint_t table = pgm_read_word(&entry->flags);
+static bool acceptModes(uint8_t flags, const Entry *entry) {
+    const uint8_t table = pgm_read_word(&entry->flags);
     return acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table))
         && acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table));
 }
 
 Error TableZ8::searchName(InsnZ8 &insn) const {
     const char *name = insn.name();
-    const host::uint_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
-    const Entry *entry = TableBase::searchName<Entry,host::uint_t>(
+    const uint8_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
+    const Entry *entry = TableBase::searchName<Entry,uint8_t>(
         name, flags, ARRAY_RANGE(TABLE_Z8), acceptModes);
     if (entry) {
         insn.setOpCode(pgm_read_byte(&entry->opCode));

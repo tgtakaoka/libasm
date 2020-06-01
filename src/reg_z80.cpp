@@ -93,7 +93,7 @@ bool RegZ80::compareRegName(const char *line, RegName regName) const {
     return !isidchar(*line);
 }
 
-host::uint_t RegZ80::regNameLen(const RegName regName) {
+uint8_t RegZ80::regNameLen(const RegName regName) {
     if (regName == REG_AFP) return 3;
     if (isupper(char(regName))) return 1;
     return 2;
@@ -132,7 +132,7 @@ char RegZ80::ccName2ndChar(const CcName ccName) const {
     return _uppercase ? toupper(ccName) : char(ccName);
 }
 
-host::uint_t RegZ80::ccNameLen(const CcName ccName) {
+uint8_t RegZ80::ccNameLen(const CcName ccName) {
     return isupper(ccName) ? 1 : 2;
 }
 
@@ -161,8 +161,8 @@ char *RegZ80::outCc8Name(char *out, const Config::opcode_t cc8) const {
     return outCcName(out, cc);
 }
 
-CcName RegZ80::parseCcName(const char *line, host::int_t max) const {
-    for (host::int_t cc = 0; cc < max; cc++) {
+CcName RegZ80::parseCcName(const char *line, int8_t max) const {
+    for (int8_t cc = 0; cc < max; cc++) {
         const CcName ccName = CcName(pgm_read_byte(&CC8_NAMES[cc]));
         if (compareCcName(line, ccName))
             return ccName;
@@ -178,15 +178,15 @@ CcName RegZ80::parseCc8Name(const char *line) const {
     return parseCcName(line, 8);
 }
 
-host::int_t RegZ80::encodeCcName(const CcName ccName) {
-    for (host::int_t cc = 0; cc < 8; cc++) {
+int8_t RegZ80::encodeCcName(const CcName ccName) {
+    for (int8_t cc = 0; cc < 8; cc++) {
         if (CcName(pgm_read_byte(&CC8_NAMES[cc])) == ccName)
             return cc;
     }
     return -1;
 }
 
-static host::int_t encodeRegNumber(
+static int8_t encodeRegNumber(
     RegName regName, const RegName *table, const RegName *end) {
     for (const RegName *p = table; p < end; p++) {
         if (pgm_read_byte(p) == regName) return p - table;
@@ -219,7 +219,7 @@ OprSize RegZ80::registerSize(const RegName regName) {
 }
 
 static RegName decodeRegNumber(
-    const host::uint_t regNum, const RegName *table, const RegName *end) {
+    const uint8_t regNum, const RegName *table, const RegName *end) {
     const RegName *entry = &table[regNum];
     return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
 }
@@ -228,20 +228,20 @@ RegName RegZ80::parseRegister(const char *line) const {
     return parseRegName(line, ARRAY_RANGE(ALL_REGS));
 }
 
-host::int_t RegZ80::encodePointerReg(RegName regName) {
+int8_t RegZ80::encodePointerReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
 }
 
-host::int_t RegZ80::encodePointerRegIx(RegName regName, RegName ix) {
+int8_t RegZ80::encodePointerRegIx(RegName regName, RegName ix) {
     if (regName == ix) regName = REG_HL;
     return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
 }
 
-host::int_t RegZ80::encodeStackReg(RegName regName) {
+int8_t RegZ80::encodeStackReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
 }
 
-host::int_t RegZ80::encodeIndirectBase(RegName regName) {
+int8_t RegZ80::encodeIndirectBase(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(INDIRECT_BASES));
 }
 
@@ -251,11 +251,11 @@ void RegZ80::encodeIndexReg(InsnZ80 &insn, RegName ixReg) {
     insn.setInsnCode(prefix, insn.opCode());
 }
 
-host::int_t RegZ80::encodeIrReg(RegName regName) {
+int8_t RegZ80::encodeIrReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(IR_REGS));
 }
 
-host::int_t RegZ80::encodeDataReg(RegName regName) {
+int8_t RegZ80::encodeDataReg(RegName regName) {
     // (HL) is parsed as HL_PTR, then looked up as format=REG_8
     // reg=REG_HL.  So we have to map REG_HL to register number 6
     // which is encoded by REG_UNDEF in DATA_REG[].

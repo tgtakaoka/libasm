@@ -22,35 +22,35 @@
 namespace libasm {
 namespace ins8070 {
 
-enum OprSize : host::uint_t {
-    SZ_NONE,                    // unknown
+enum OprSize {
+    SZ_NONE = 0,  // unknown
     SZ_BYTE = 1,
     SZ_WORD = 2,
 };
 
-enum AddrMode : host::uint_t {
-    IMPLIED,
-    GENERIC,
-    ABSOLUTE,
-    RELATIVE,
-    IMMEDIATE,
-    UNDEF, // Undefined instruction
+enum AddrMode {
+    IMPLIED   = 1,  // Implied
+    GENERIC   = 2,  // Generic; nnnn,PC/nn,SP/nn,Pn/@nn,Pn/0xFFnn/
+    ABSOLUTE  = 3,  // Absolute; nnnn
+    RELATIVE  = 4,  // Relative; nnnn
+    IMMEDIATE = 5,  // Immediate; #nn
+    UNDEF     = 0,  // Undefined instruction
 };
 
-enum OprFormat : host::uint_t {
-    OPR_NO,
-    OPR_A,   // A register
-    OPR_E,   // E register
-    OPR_S,   // S register
-    OPR_EA,  // EA register
-    OPR_IX,  // P2/P3 register
-    OPR_SP,  // SP register
-    OPR_PN,  // PC/SP/P2/P3 register
-    OPR_T,   // T register
-    OPR_4,   // 4 bit constant
-    OPR_IM,  // Immediate constant
-    OPR_16,  // 16 bit constant
-    OPR_GN,  // nn/nn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn
+enum OprFormat {
+    OPR_NO = 0,
+    OPR_A  = 1,  // A register
+    OPR_E  = 2,  // E register
+    OPR_S  = 3,  // S register
+    OPR_EA = 4,  // EA register
+    OPR_IX = 5,  // P2/P3 register
+    OPR_SP = 6,  // SP register
+    OPR_PN = 7,  // PC/SP/P2/P3 register
+    OPR_T  = 8,  // T register
+    OPR_4  = 9,  // 4 bit constant
+    OPR_IM = 10, // Immediate constant
+    OPR_16 = 11, // 16 bit constant
+    OPR_GN = 12, // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
 };
 
 struct Entry {
@@ -72,19 +72,19 @@ struct Entry {
     }
     static constexpr uint16_t _flags(
         AddrMode addrMode, OprFormat dst, OprFormat src, OprSize size) {
-        return uint16_t(addrMode)
-            | (uint16_t(dst) << dstOpr_gp)
-            | (uint16_t(src) << srcOpr_gp)
-            | (uint16_t(size) << oprSize_gp);
+        return static_cast<uint16_t>(addrMode)
+            | (static_cast<uint16_t>(dst) << dstOpr_gp)
+            | (static_cast<uint16_t>(src) << srcOpr_gp)
+            | (static_cast<uint16_t>(size) << oprSize_gp);
     }
 
 private:
-    static constexpr host::uint_t addrMode_gm = 0x07;
-    static constexpr host::uint_t oprFormat_gm = 0x0F;
-    static constexpr host::uint_t oprSize_gm = 0x3;
-    static constexpr host::uint_t dstOpr_gp = 8;
-    static constexpr host::uint_t srcOpr_gp = 12;
-    static constexpr host::uint_t oprSize_gp = 4;
+    static constexpr uint8_t addrMode_gm  = 0x7;
+    static constexpr uint8_t oprFormat_gm = 0xF;
+    static constexpr uint8_t oprSize_gm   = 0x3;
+    static constexpr int oprSize_gp = 4;
+    static constexpr int dstOpr_gp = 8;
+    static constexpr int srcOpr_gp = 12;
 };
 
 } // namespace ins8070

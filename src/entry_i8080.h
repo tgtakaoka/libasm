@@ -22,49 +22,50 @@
 namespace libasm {
 namespace i8080 {
 
-enum CpuType : host::uint_t {
+enum CpuType {
     I8080,
     I8085,
 };
 
-enum AddrMode : host::uint_t {
-    INHR,
-    IMM8,
-    IMM16,
-    DIRECT,
-    IOADR,
+enum AddrMode {
+    INHR   = 0,
+    IMM8   = 1,
+    IMM16  = 2,
+    DIRECT = 3,
+    IOADR  = 4,
 };
 
-enum InsnFormat : host::uint_t {
-    NO_FORMAT,
-    POINTER_REG,                // **PP_****: B/D/H/SP
-    STACK_REG,                  // **PP_****: B/D/H/PSW
-    INDEX_REG,                  // ***I_****: B/D
-    DATA_REG,                   // **DD_D***: B/C/D/E/H/L/M/A
-    LOW_DATA_REG,               // ****_*DDD: B/C/D/E/H/L/M/A
-    DATA_DATA_REG,              // **DD_DSSS: B/C/D/E/H/L/M/A
-    VECTOR_NO,                  // **VV_V***: 0~7
+enum InsnFormat {
+    NO_FORMAT     = 0,
+    POINTER_REG   = 1,  // **pp_****: B/D/H/SP
+    STACK_REG     = 2,  // **PP_****: B/D/H/PSW
+    INDEX_REG     = 3,  // ***I_****: B/D
+    DATA_REG      = 4,  // **DD_D***: B/C/D/E/H/L/M/A
+    LOW_DATA_REG  = 5,  // ****_*DDD: B/C/D/E/H/L/M/A
+    DATA_DATA_REG = 6,  // **DD_DSSS: B/C/D/E/H/L/M/A
+    VECTOR_NO     = 7,  // **VV_V***: 0~7
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline InsnFormat _insnFormat(host::uint_t flags) {
-        return InsnFormat((flags >> insnFormat_shift) & insnFormat_mask);
+    static inline InsnFormat _insnFormat(uint8_t flags) {
+        return InsnFormat((flags >> insnFormat_gp) & insnFormat_gm);
     }
-    static inline AddrMode _addrMode(host::uint_t flags) {
-        return AddrMode(flags & addrMode_mask);
+    static inline AddrMode _addrMode(uint8_t flags) {
+        return AddrMode(flags & addrMode_gm);
     }
-    static constexpr host::uint_t _flags(AddrMode addrMode, InsnFormat iformat) {
-        return (host::uint_t(iformat) << insnFormat_shift) | host::uint_t(addrMode);
+    static constexpr uint8_t _flags(AddrMode addrMode, InsnFormat iformat) {
+        return (static_cast<uint8_t>(iformat) << insnFormat_gp)
+            | static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr host::uint_t insnFormat_shift = 4;
-    static constexpr host::uint_t insnFormat_mask = 0x7;
-    static constexpr host::uint_t addrMode_mask = 0x07;
+    static constexpr int     insnFormat_gp = 4;
+    static constexpr uint8_t insnFormat_gm = 0x7;
+    static constexpr uint8_t addrMode_gm   = 0x07;
 };
 
 } // namespace i8080

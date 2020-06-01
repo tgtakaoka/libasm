@@ -143,7 +143,7 @@ int DisDriver::readInput(
     while ((len = getLine(line, line_len, input)) > 0) {
         lineno++;
         uint32_t addr;
-        host::uint_t size;
+        uint8_t size;
         uint8_t *data = _formatter->decode(line, addr, size);
         if (data == nullptr) {
             if (errors < 3) {

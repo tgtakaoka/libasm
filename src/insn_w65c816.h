@@ -32,8 +32,8 @@ public:
         return AddrMode(Entry::_addrMode(_flags));
     }
 
-    host::uint_t flags() const { return _flags; }
-    void setFlags(host::uint_t flags) {
+    uint8_t flags() const { return _flags; }
+    void setFlags(uint8_t flags) {
         _flags = flags;
     }
 
@@ -51,7 +51,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    host::uint_t _flags;
+    uint8_t _flags;
 };
 
 } // namespace w65c816

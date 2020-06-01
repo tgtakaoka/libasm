@@ -23,7 +23,7 @@
 namespace libasm {
 namespace z8 {
 
-enum RegName : host::int_t {
+enum RegName : int8_t {
     REG_UNDEF = -1,
     REG_R0  = 0,
     REG_R1  = 1,
@@ -52,7 +52,7 @@ enum RegName : host::int_t {
     REG_RR14 = 16 + 14,
 };
 
-enum CcName : host::int_t {
+enum CcName : int8_t {
     CC_UNDEF = -1,
     CC_F   = 0,
     CC_LT  = 1,
@@ -80,15 +80,15 @@ enum CcName : host::int_t {
 class RegZ8 : public RegBase {
 public:
     RegName parseRegName(const char *line) const;
-    static host::uint_t regNameLen(RegName regName);
+    static uint8_t regNameLen(RegName regName);
     static uint8_t encodeRegName(RegName regName);
     static RegName decodeRegNum(uint8_t regNum, bool pair = false);
     static bool isRegPair(RegName);
     char *outRegName(char *out, RegName regName) const;
 
     CcName parseCcName(const char *line) const;
-    static host::uint_t ccNameLen(const CcName ccName);
-    static host::int_t encodeCcName(CcName ccName);
+    static uint8_t ccNameLen(const CcName ccName);
+    static int8_t encodeCcName(CcName ccName);
     static CcName decodeCcNum(uint8_t ccNum);
     char *outCcName(char *out, CcName ccName) const;
 
@@ -100,7 +100,7 @@ private:
     char regName3rdChar(const RegName regName) const;
     char ccName1stChar(const CcName ccName) const;
     char ccName2ndChar(const CcName ccName) const;
-    CcName parseCcName(const char *line, host::int_t max) const;
+    CcName parseCcName(const char *line, int8_t max) const;
 };
 
 } // namespace z8

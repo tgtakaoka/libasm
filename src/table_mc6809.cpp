@@ -539,7 +539,7 @@ Error TableMc6809::searchName(
 }
 
 static bool matchAddrMode(AddrMode addrMode, const Entry *entry) {
-    const host::uint_t flags = pgm_read_byte(&entry->flags);
+    const uint8_t flags = pgm_read_byte(&entry->flags);
     return addrMode == Entry::_addrMode(flags);
 }
 

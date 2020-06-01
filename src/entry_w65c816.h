@@ -24,7 +24,7 @@
 namespace libasm {
 namespace w65c816 {
 
-enum CpuType : host::uint_t {
+enum CpuType {
     MOS6502 = mos6502::CpuType::MOS6502,
     W65SC02 = mos6502::CpuType::W65SC02,
     R65C02  = mos6502::CpuType::R65C02,
@@ -32,7 +32,7 @@ enum CpuType : host::uint_t {
     W65C816,
 };
 
-enum AddrMode : host::uint_t {
+enum AddrMode {
     // MOS6502
     IMPL         = mos6502::AddrMode::IMPL,
     ACCM         = mos6502::AddrMode::ACCM,
@@ -55,41 +55,41 @@ enum AddrMode : host::uint_t {
     ZPG_REL      = mos6502::AddrMode::ZPG_REL,
 
     // W65C816
-    ABS_LONG,            // Absolute Long: al
-    ABS_LONG_IDX,        // Absolute Long Indexed: al,x
-    ABS_IDIR_LONG,       // Absolute Indirect Long: [a]
-    REL_LONG,            // Relative Long: rl
-    SP_REL,              // Stack Relative: off,s
-    SP_REL_IDIR_IDY,     // Stack Relative Indirect Indexed: (off,s),y
-    ZPG_IDIR_LONG,       // Zero Page Indirect Long: [zp]
-    ZPG_IDIR_LONG_IDY,   // Zero Page Indirect Long Indexed: [zp],y
-    BLOCK_MOVE,          // Block Move: #ss,#dd
-    IMM8,                // Immediate Byte.
+    ABS_LONG          = 17,  // Absolute Long: al
+    ABS_LONG_IDX      = 18,  // Absolute Long Indexed: al,x
+    ABS_IDIR_LONG     = 19,  // Absolute Indirect Long: [a]
+    REL_LONG          = 20,  // Relative Long: rl
+    SP_REL            = 21,  // Stack Relative: off,s
+    SP_REL_IDIR_IDY   = 22,  // Stack Relative Indirect Indexed: (off,s),y
+    ZPG_IDIR_LONG     = 23,  // Zero Page Indirect Long: [zp]
+    ZPG_IDIR_LONG_IDY = 24,  // Zero Page Indirect Long Indexed: [zp],y
+    BLOCK_MOVE        = 25,  // Block Move: #ss,#dd
+    IMM8              = 26,  // Immediate Byte.
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const host::uint_t flags;
+    const uint8_t flags;
     const char *name;
 
-    static inline CpuType _cpuType(host::uint_t flags) {
+    static inline CpuType _cpuType(uint8_t flags) {
         return CpuType((flags >> cputype_gp) & cputype_gm);
     }
-    static inline AddrMode _addrMode(host::uint_t flags) {
+    static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-    static constexpr host::uint_t _flags(CpuType cpuType, AddrMode addrMode) {
-        return (host::uint_t(cpuType) << cputype_gp)
-            | host::uint_t(addrMode);
+    static constexpr uint8_t _flags(CpuType cpuType, AddrMode addrMode) {
+        return (static_cast<uint8_t>(cpuType) << cputype_gp)
+            | static_cast<uint8_t>(addrMode);
     }
-    static host::uint_t _set(host::uint_t flags, AddrMode addrMode) {
-        return (flags & ~addrMode_gm) | host::uint_t(addrMode);
+    static uint8_t _set(uint8_t flags, AddrMode addrMode) {
+        return (flags & ~addrMode_gm) | static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr host::uint_t cputype_gp = 5;
-    static constexpr host::uint_t cputype_gm = 0x7;
-    static constexpr host::uint_t addrMode_gm = 0x1f;
+    static constexpr uint8_t cputype_gm = 0x7;
+    static constexpr uint8_t addrMode_gm = 0x1f;
+    static constexpr uint8_t cputype_gp = 5;
 };
 
 } // namespace w65c816

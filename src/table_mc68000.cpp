@@ -219,7 +219,7 @@ Error TableMc68000::searchName(InsnMc68000 &insn, const char *name) const {
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const host::uint_t flags = pgm_read_byte(&entry->flags);
+    const uint8_t flags = pgm_read_byte(&entry->flags);
     const Config::opcode_t mask = getInsnMask(Entry::_insnFormat(flags));
     return opCode & ~mask;
 }

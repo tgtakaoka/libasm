@@ -40,7 +40,7 @@ void TestMemory::ensureBytes(size_t size) {
     _size = size;
 }
 
-void TestMemory::setMemory(const uint8_t *data, host::uint_t size) {
+void TestMemory::setMemory(const uint8_t *data, uint8_t size) {
     _words = nullptr;
     ensureBytes(size);
     memcpy(_bytes, data, size);
@@ -48,10 +48,10 @@ void TestMemory::setMemory(const uint8_t *data, host::uint_t size) {
     _index = 0;
 }
 
-void TestMemory::setMemory(const uint16_t *data, host::uint_t size) {
+void TestMemory::setMemory(const uint16_t *data, uint8_t size) {
     _words = data;
     ensureBytes(size);
-    for (host::uint_t i = 0; i < size; i += 2) {
+    for (uint8_t i = 0; i < size; i += 2) {
         const uint16_t d = *data++;
         // Big-endian word. Most significant byte is in lowest address.
         _bytes[i + 0] = static_cast<uint8_t>(d >> 8);
@@ -74,7 +74,7 @@ const uint8_t *TestMemory::bytes() const {
     return _bytes;
 }
 
-host::uint_t TestMemory::length() const {
+uint8_t TestMemory::length() const {
     return _length;
 }
 
@@ -84,13 +84,13 @@ uint32_t TestMemory::origin() const {
 
 char *TestMemory::dump(char *out) const {
     if (_words) {
-        for (host::uint_t idx = 0; idx < _length; idx += 2) {
+        for (uint8_t idx = 0; idx < _length; idx += 2) {
             sprintf(out, "%04" PRIX16 " ", _words[idx / 2]);
             out += 8;
         }
         return out;
     }
-    for (host::uint_t idx = 0; idx < _length; idx++) {
+    for (uint8_t idx = 0; idx < _length; idx++) {
         sprintf(out, "%02" PRIX8 " ", _bytes[idx]);
         out += 3;
     }

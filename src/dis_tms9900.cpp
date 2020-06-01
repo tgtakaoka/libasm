@@ -21,9 +21,9 @@ namespace libasm {
 namespace tms9900 {
 
 Error DisTms9900::decodeOperand(
-    DisMemory &memory, InsnTms9900 &insn, const host::uint_t opr) {
-    const host::uint_t regno = opr & 0xf;
-    const host::uint_t mode = (opr >> 4) & 0x3;
+    DisMemory &memory, InsnTms9900 &insn, const uint8_t opr) {
+    const uint8_t regno = opr & 0xf;
+    const uint8_t mode = (opr >> 4) & 0x3;
     if (mode == 1 || mode == 3) *_operands++ = '*';
     if (mode == 2) {
         uint16_t val;
@@ -86,7 +86,7 @@ Error DisTms9900::decode(
     case CNT_REG: {
         _operands = _regs.outRegName(_operands, opCode);
         *_operands++ = ',';
-        const host::uint_t count = (opCode >> 4) & 0x0f;
+        const uint8_t count = (opCode >> 4) & 0x0f;
         if (count == 0) _operands = _regs.outRegName(_operands, 0);
         else outConstant(static_cast<uint8_t>(count), 10);
         return setOK();
@@ -104,7 +104,7 @@ Error DisTms9900::decode(
         if (decodeOperand(memory, insn, opCode))
             return getError();
         *_operands++ = ',';
-        host::uint_t count = (opCode >> 6) & 0xf;
+        uint8_t count = (opCode >> 6) & 0xf;
         if (insn.addrMode() == CNT_SRC && count == 0)
             count = 16;
         outConstant(static_cast<uint8_t>(count), 10);

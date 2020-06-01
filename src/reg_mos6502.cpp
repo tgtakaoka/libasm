@@ -30,7 +30,7 @@ static bool regCharCaseEqual(char c, char regChar) {
     return toupper(c) == toupper(regChar);
 }
 
-host::uint_t RegMos6502::regNameLen(RegName regName) const {
+uint8_t RegMos6502::regNameLen(RegName regName) const {
     return regName == REG_UNDEF ? 0 : 1;
 }
 

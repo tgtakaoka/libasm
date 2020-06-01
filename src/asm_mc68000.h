@@ -50,7 +50,7 @@ public:
         RegName index;          // index register
         EaSize size;            // index size
         uint32_t val32;
-        bool satisfy(host::uint_t categories) const {
+        bool satisfy(uint8_t categories) const {
             return EaMc68000::satisfy(mode, categories);
         }
         void reset() {
@@ -73,9 +73,9 @@ private:
     Error emitEffectiveAddr(
         InsnMc68000 &insn,
         const Operand &ea,
-        host::int_t size_gp = 6,
-        host::int_t mode_gp = 3,
-        host::uint_t reg_gp = 0);
+        int8_t size_gp = 6,
+        int8_t mode_gp = 3,
+        uint8_t reg_gp = 0);
 
     Error encodeImplied(
         InsnMc68000 &insn, const Operand &op1, const Operand &op2);

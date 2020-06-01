@@ -85,7 +85,7 @@ Error AsmMc6800::parseOperand(Operand &op) {
     op.reg = REG_UNDEF;
     op.imm = op.opr = op.addr = 0;
     op.addrError = OK;
-    host::uint_t comma = 0;
+    uint8_t comma = 0;
     if (nextToken() == REG_ACC) {
         op.reg = _reg;
         while (nextToken() == COMMA)

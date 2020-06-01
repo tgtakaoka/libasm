@@ -47,17 +47,17 @@ enum RegName : char {
 };
 
 // Effective Address Size
-enum EaSize : host::uint_t {
-    SZ_BYTE = 0,
-    SZ_WORD = 1,
-    SZ_LONG = 2,
-    SZ_INVALID = 3,
-    SZ_NONE = 4,
+enum EaSize {
+    SZ_BYTE     = 0,
+    SZ_WORD     = 1,
+    SZ_LONG     = 2,
+    SZ_INVALID  = 3,
+    SZ_NONE     = 4,
 };
 
 class RegMc68000 : public RegBase {
 public:
-    static host::uint_t regNameLen(RegName);
+    static uint8_t regNameLen(RegName);
     static RegName parseRegName(const char *line);
     char *outRegName(char *out, RegName regName) const;
     char *outEaSize(char *out, EaSize size) const;
@@ -65,20 +65,20 @@ public:
     static bool isAreg(RegName reg);
     static bool isADreg(RegName reg);
     static Config::opcode_t encodeRegNo(RegName reg);
-    static host::uint_t encodeRegPos(RegName reg);
-    static RegName decodeDataReg(host::uint_t regno);
-    static RegName decodeAddrReg(host::uint_t regno);
+    static uint8_t encodeRegPos(RegName reg);
+    static RegName decodeDataReg(uint8_t regno);
+    static RegName decodeAddrReg(uint8_t regno);
 };
 
 // Effective Address Mode
-enum EaMode : host::uint_t {
-    M_DREG   = 0,       // D__A: Dn: Data Register Direct
-    M_AREG   = 1,       // ___A: An: Address Register Direct
-    M_AIND   = 2,       // DMCA: (An): Address Register Indirect
-    M_PINC   = 3,       // DM_A: (An)+: Address Register Indirect with Postincrement
-    M_PDEC   = 4,       // DM_A: -(An): Address Register Indirect with Predecrement
-    M_DISP   = 5,       // DMCA: (d16,An): Address Register Indirect with Displacement
-    M_INDX   = 6,       // DMCA: (d8,An,Xn): Address Register Indirect with Index
+enum EaMode {
+    M_DREG      = 0,    // D__A: Dn: Data Register Direct
+    M_AREG      = 1,    // ___A: An: Address Register Direct
+    M_AIND      = 2,    // DMCA: (An): Address Register Indirect
+    M_PINC      = 3,    // DM_A: (An)+: Address Register Indirect with Postincrement
+    M_PDEC      = 4,    // DM_A: -(An): Address Register Indirect with Predecrement
+    M_DISP      = 5,    // DMCA: (d16,An): Address Register Indirect with Displacement
+    M_INDX      = 6,    // DMCA: (d8,An,Xn): Address Register Indirect with Index
     M_ABS_SHORT = 8+0,  // DMCA: (xxx).W: Absolute Short Addressing
     M_ABS_LONG  = 8+1,  // DMCA: (xxx).L: Absolute Long Addressing
     M_PC_DISP   = 8+2,  // DMC_: (d16,PC): Program Counter Indirect with Displacement
@@ -101,13 +101,13 @@ enum EaMode : host::uint_t {
 
 struct EaMc68000 {
     EaMc68000(Config::opcode_t opCode);
-    EaMc68000(EaSize size, host::uint_t mode, host::uint_t regno);
-    EaMc68000(EaSize size, EaMode mode, host::uint_t regno);
+    EaMc68000(EaSize size, uint8_t mode, uint8_t regno);
+    EaMc68000(EaSize size, EaMode mode, uint8_t regno);
 
-    bool satisfy(host::uint_t categories) const {
+    bool satisfy(uint8_t categories) const {
         return satisfy(mode, categories);
     }
-    static bool satisfy(EaMode mode, host::uint_t categories);
+    static bool satisfy(EaMode mode, uint8_t categories);
     static Config::opcode_t encodeMode(EaMode mode);
     static Config::opcode_t encodeRegNo(EaMode mode, RegName regName);
     static const char *eaCategory(EaMode mode);

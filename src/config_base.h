@@ -21,29 +21,29 @@
 
 namespace libasm {
 
-enum AddressWidth : host::uint_t {
+enum AddressWidth {
     ADDRESS_16BIT = 16,
     ADDRESS_24BIT = 24,
     ADDRESS_32BIT = 32,
 };
 
-enum OpCodeWidth : host::uint_t {
-    OPCODE_8BIT,
-    OPCODE_16BIT,
+enum OpCodeWidth {
+    OPCODE_8BIT  = 8,
+    OPCODE_16BIT = 16,
 };
 
-enum Endian : host::uint_t {
-    ENDIAN_BIG,
-    ENDIAN_LITTLE,
+enum Endian {
+    ENDIAN_BIG    = 0,
+    ENDIAN_LITTLE = 1,
 };
 
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
     virtual int8_t addressBits() const = 0;
     virtual OpCodeWidth opCodeWidth() const = 0;
-    virtual host::uint_t codeMax() const = 0;
+    virtual uint8_t codeMax() const = 0;
     virtual Endian endian() const = 0;
-    virtual host::uint_t nameMax() const = 0;
+    virtual uint8_t nameMax() const = 0;
 
     virtual const char *listCpu() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
@@ -56,25 +56,25 @@ template<
     typename DiffT,
     OpCodeWidth CodeWE,
     typename OpCodeT,
-    host::uint_t CodeMax,
+    uint8_t CodeMax,
     Endian EndianE,
-    host::uint_t NameMax
+    uint8_t NameMax
     >
 struct ConfigImpl : virtual public ConfigBase {
     typedef AddrT   uintptr_t;
     typedef DiffT   ptrdiff_t;
     typedef OpCodeT opcode_t;
 
-    static constexpr host::uint_t CODE_MAX = CodeMax;
+    static constexpr uint8_t CODE_MAX = CodeMax;
     static constexpr Endian ENDIAN = EndianE;
-    static constexpr host::uint_t NAME_MAX = NameMax;
+    static constexpr uint8_t NAME_MAX = NameMax;
 
     AddressWidth addressWidth() const override { return AddrWE; }
     int8_t addressBits() const override { return int8_t(AddrWE); }
     OpCodeWidth opCodeWidth() const override { return CodeWE; }
-    host::uint_t codeMax() const override { return CodeMax; }
+    uint8_t codeMax() const override { return CodeMax; }
     Endian endian() const override { return EndianE; }
-    host::uint_t nameMax() const override { return NameMax; }
+    uint8_t nameMax() const override { return NameMax; }
 };
 
 } // namespace libasm

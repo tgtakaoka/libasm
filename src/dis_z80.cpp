@@ -130,10 +130,10 @@ Error DisZ80::decodeInherent(InsnZ80 &insn) {
         outPointer(RegZ80::decodeIndexReg(insn));
         break;
     case VEC_NO:
-        outConstant(uint8_t(opc & 0x38), 16, false);
+        outConstant(static_cast<uint8_t>(opc & 0x38), 16, false);
         break;
     case BIT_NO:
-        outConstant(uint8_t((opc >> 3) & 7));
+        outConstant(static_cast<uint8_t>((opc >> 3) & 7));
         break;
     case IMM_NO:
         switch (opc) {
@@ -388,7 +388,7 @@ Error DisZ80::decodeIndexedBitOp(
     const RegName regName = RegZ80::decodeDataReg(opCode);
     if (ixBit.dstFormat() == BIT_NO
         && ixBit.srcFormat() == REG_8 && regName == REG_UNDEF) {
-        outConstant(uint8_t((opCode >> 3) & 7));
+        outConstant(static_cast<uint8_t>((opCode >> 3) & 7));
         *_operands++ = ',';
         outIndexOffset(insn, offset);
     } else if (ixBit.dstFormat() == REG_8 && regName == REG_UNDEF

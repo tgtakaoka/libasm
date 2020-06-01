@@ -28,7 +28,7 @@ static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
 
-static host::int_t parseRegNum(const char *line) {
+static int8_t parseRegNum(const char *line) {
     if (isdigit(*line) && !isidchar(line[1]))
         return *line - '0';
     if (*line++ == '1' && (*line >= '0' && *line < '6') && !isidchar(line[1]))
@@ -39,11 +39,11 @@ static host::int_t parseRegNum(const char *line) {
 RegName RegZ8::parseRegName(const char *line) const {
     if (toupper(*line++) == 'R') {
         if (toupper(*line) == 'R') {
-            const host::int_t regNum = parseRegNum(line + 1);
+            const int8_t regNum = parseRegNum(line + 1);
             if (regNum >= 0 && regNum % 2 == 0)
                 return RegName(regNum + 16);
         } else {
-            const host::int_t regNum = parseRegNum(line);
+            const int8_t regNum = parseRegNum(line);
             if (regNum >= 0)
                 return RegName(regNum);
         }
@@ -51,8 +51,8 @@ RegName RegZ8::parseRegName(const char *line) const {
     return REG_UNDEF;
 }
 
-host::uint_t RegZ8::regNameLen(RegName regName) {
-    const host::int_t num = host::int_t(regName);
+uint8_t RegZ8::regNameLen(RegName regName) {
+    const int8_t num = int8_t(regName);
     if (num >= 16 + 10) return 4; // RRnn
     if (num >= 10)      return 3; // RRn, Rnn
     if (num >= 0)       return 2; // Rn
@@ -60,7 +60,7 @@ host::uint_t RegZ8::regNameLen(RegName regName) {
 }
 
 uint8_t RegZ8::encodeRegName(RegName regName) {
-    const host::int_t num = host::int_t(regName);
+    const int8_t num = int8_t(regName);
     if (num >= 16) return num - 16; // RRn
     if (num >= 0)  return num;      // Rn
     return 0;
@@ -74,11 +74,11 @@ RegName RegZ8::decodeRegNum(uint8_t regNum, bool pair) {
 }
 
 bool RegZ8::isRegPair(RegName regName) {
-    return host::int_t(regName) >= 16;
+    return int8_t(regName) >= 16;
 }
 
 char *RegZ8::outRegName(char *out, RegName regName) const {
-    host::int_t num = host::int_t(regName);
+    int8_t num = int8_t(regName);
     if (num >= 0) {
         const char r = _uppercase ? 'R' : 'r';
         *out++ = r;
@@ -120,25 +120,25 @@ static const uint8_t CC_TABLE[] PROGMEM = {
     CC_ENTRY(CC_NE,  14, 2, 'N', 'E'),
     CC_ENTRY(CC_UGE, 15, 3, 'U', 'G', 'E'),
 };
-static CcName CC_NAME(host::uint_t idx) {
+static CcName CC_NAME(uint8_t idx) {
     return CcName(pgm_read_byte(&CC_TABLE[idx]));
 }
-static uint8_t CC_CODE(host::uint_t idx) {
+static uint8_t CC_CODE(uint8_t idx) {
     return pgm_read_byte(&CC_TABLE[idx + 1]) & 0xf;
 }
-static host::uint_t CC_LEN(host::uint_t idx)  {
+static uint8_t CC_LEN(uint8_t idx)  {
     return pgm_read_byte(&CC_TABLE[idx + 1]) >> 4;
 }
-static const char *CC_TEXT(host::uint_t idx) {
+static const char *CC_TEXT(uint8_t idx) {
     return reinterpret_cast<const char *>(&CC_TABLE[idx + 2]);
 }
-static host::uint_t CC_NEXT(host::uint_t idx) {
+static uint8_t CC_NEXT(uint8_t idx) {
     return idx + 2 + CC_LEN(idx);
 }
 
 CcName RegZ8::parseCcName(const char *line) const {
-    for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        const host::uint_t len = CC_LEN(idx);
+    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
+        const uint8_t len = CC_LEN(idx);
         const char *text = CC_TEXT(idx);
         if (len && strncasecmp_P(line, text, len) == 0
             && !isidchar(line[len]))
@@ -147,16 +147,16 @@ CcName RegZ8::parseCcName(const char *line) const {
     return CC_UNDEF;
 }
 
-host::uint_t RegZ8::ccNameLen(const CcName ccName) {
-    for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
+uint8_t RegZ8::ccNameLen(const CcName ccName) {
+    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
         if (ccName == CC_NAME(idx))
             return CC_LEN(idx);
     }
     return 0;
 }
 
-host::int_t RegZ8::encodeCcName(CcName ccName) {
-    for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
+int8_t RegZ8::encodeCcName(CcName ccName) {
+    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
         if (ccName == CC_NAME(idx))
             return CC_CODE(idx);
     }
@@ -164,7 +164,7 @@ host::int_t RegZ8::encodeCcName(CcName ccName) {
 }
 
 CcName RegZ8::decodeCcNum(uint8_t ccNum) {
-    for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
+    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
         if (ccNum == CC_CODE(idx))
             return CC_NAME(idx);
     }
@@ -172,11 +172,11 @@ CcName RegZ8::decodeCcNum(uint8_t ccNum) {
 }
 
 char *RegZ8::outCcName(char *out, CcName ccName) const {
-    for (host::uint_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
+    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
         if (ccName != CC_NAME(idx)) continue;
         const char *text = CC_TEXT(idx);
-        const host::uint_t len = CC_LEN(idx);
-        for (host::uint_t i = 0; i < len; i++) {
+        const uint8_t len = CC_LEN(idx);
+        for (uint8_t i = 0; i < len; i++) {
             const char c = pgm_read_byte(&text[i]);
             *out++ = _uppercase ? c : tolower(c);
         }

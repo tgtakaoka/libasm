@@ -27,7 +27,7 @@ TestSymtab symtab;
 void asm_assert(
     const char *file, int line, Error error,
     uint32_t addr, const char *src,
-    const uint8_t *expected, host::uint_t length,
+    const uint8_t *expected, uint8_t length,
     Assembler &assembler) {
     Insn insn;
     char message[80];
@@ -42,7 +42,7 @@ void asm_assert(
 void asm_assert(
     const char *file, int line, Error error,
     uint32_t addr, const char *src,
-    const uint16_t *expected, host::uint_t length,
+    const uint16_t *expected, uint8_t length,
     Assembler &assembler) {
     Insn insn;
     char message[80];

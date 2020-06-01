@@ -30,7 +30,7 @@ public:
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
 
-    void setFlags(host::uint_t flags) { _flags = flags; }
+    void setFlags(uint8_t flags) { _flags = flags; }
 
     void setAddrMode(AddrMode addrMode) {
         _flags = Entry::_flags(addrMode);
@@ -49,7 +49,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    host::uint_t _flags;
+    uint8_t _flags;
 };
 
 } // namespace ins8060
