@@ -27,9 +27,6 @@ enum RegName : char {
     REG_A = 'A',
     REG_X = 'X',
     REG_Y = 'Y',
-#if 0
-    REG_S = 'S',
-#endif
 };
 
 class RegMos6502 : public RegBase {

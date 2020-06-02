@@ -20,143 +20,138 @@
 namespace libasm {
 namespace mos6502 {
 
-Error AsmMos6502::encodeRelative(InsnMos6502 &insn, bool emitInsn) {
-    Config::uintptr_t addr;
-    if (getOperand(addr)) return getError();
-    if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const Config::uintptr_t base = insn.address() + (emitInsn ? 2 : 3);
-    const Config::ptrdiff_t delta = addr - base;
-    if (emitInsn) insn.emitInsn();
+Error AsmMos6502::encodeRelative(InsnMos6502 &insn, const Operand &op) {
+    const Config::uintptr_t base = insn.address() + 2;
+    const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
+    const Config::ptrdiff_t delta = target - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-    insn.emitByte(static_cast<uint8_t>(delta));
-    return checkLineEnd();
-}
-
-Error AsmMos6502::encodeZeroPageRelative(InsnMos6502 &insn) {
-    if (*_scan == '<') _scan++;
-    uint8_t zp;
-    if (getOperand(zp)) return getError();
-    const Error error = setError(getError());
-    if (*_scan != ',') return setError(UNKNOWN_OPERAND);
-    _scan++;
     insn.emitInsn();
-    insn.emitByte(zp);
-    encodeRelative(insn, /* emitInsn */ false);
-    return setError(error ? error : getError());
+    insn.emitByte(static_cast<uint8_t>(delta));
+    return OK;
 }
 
-Error AsmMos6502::selectMode(char modifier, Operand &op, AddrMode abs, AddrMode zp) {
-    if (modifier == '>' || op.val16 >= 0x100) {
+Error AsmMos6502::encodeZeroPageRelative(
+    InsnMos6502 &insn, const Operand &op, const Operand &extra) {
+    const Config::uintptr_t base = insn.address() + 3;
+    const Config::uintptr_t target =
+        extra.getError() ? insn.address() : extra.val16;
+    const Config::ptrdiff_t delta = target - base;
+    if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
+    insn.emitInsn();
+    insn.emitByte(static_cast<uint8_t>(op.val16));
+    insn.emitByte(static_cast<uint8_t>(delta));
+    return OK;
+}
+
+Error AsmMos6502::selectMode(
+    char size, Operand &op, AddrMode abs, AddrMode zp) {
+    if (size == '>') {
         op.mode = abs;
-        return OK;
-    }
-    if (modifier == '<' || op.val16 < 0x100) {
+    } else if (size == '<') {
         op.mode = zp;
-        return OK;
+    } else {
+        op.mode = (op.val16 < 0x100) ? zp : abs;
     }
-    return setError(OPERAND_NOT_ZP);
+    if (endOfLine(skipSpaces(_scan))) return OK;
+    return setError(UNKNOWN_OPERAND);
 }
 
-Error AsmMos6502::parseOperand(Operand &op) {
+Error AsmMos6502::parseOperand(Operand &op, Operand &extra) {
     op.resetError();
+    extra.resetError();
     const char *p = _scan;
+
+    if (endOfLine(p)) {
+        op.mode = IMPL;
+        return OK;
+    }
     if (*p == '#') {            // #nn
-        uint8_t val8;
         _scan = p + 1;
-        if (getOperand(val8)) return getError();
-        op.setError(getError());
-        p = _scan;
-        op.mode = IMMA;
-        op.val16 = val8;
-    } else if (_regs.compareRegName(p, REG_A)) { // A
-        p += _regs.regNameLen(REG_A);
-        op.mode = ACCM;
-        op.setOK();
-    } else {
-        const char indir = (*p == '(') ? *p : 0;;
-        if (indir) p = skipSpaces(p + 1);
-        char modifier = *p;
-        if (modifier == '<' || modifier == '>') p++;
-        if (*p == '>') { modifier = '}'; p++; }
-        _scan = p;
         if (getOperand(op.val16)) return getError();
         op.setError(getError());
-        p = skipSpaces(_scan);
-        if (*p == ',') {
-            p = skipSpaces(p + 1);
-            if (_regs.compareRegName(p, REG_X)) { // al,X abs,X zp,X (abs,X) (zp,X)
-                p = skipSpaces(p + _regs.regNameLen(REG_X));
-                if (indir == '(') {
-                    if (*p != ')') return setError(MISSING_CLOSING_PAREN);
-                    p++;
-                    if (selectMode(modifier, op, ABS_IDX_IDIR, ZPG_IDX_IDIR))
-                        return getError();
-                    if (op.mode == ABS_IDX_IDIR && TableMos6502.is6502())
-                        return setError(UNKNOWN_OPERAND);
-                } else if (indir == 0) {
-                    if (selectMode(modifier, op, ABS_IDX, ZPG_IDX))
-                        return getError();
-                } else return setError(UNKNOWN_OPERAND);
-            } else if (_regs.compareRegName(p, REG_Y)) { // abs,Y zp,Y
-                if (indir) return setError(UNKNOWN_OPERAND);
-                p = skipSpaces(p + _regs.regNameLen(REG_Y));
-                if (selectMode(modifier, op, ABS_IDY, ZPG_IDY))
-                    return getError();
-            } else return setError(UNKNOWN_OPERAND);
-        } else if (indir) {
-            if ((indir == '(' && *p != ')') || (indir == '[' && *p != ']'))
-                return setError(MISSING_CLOSING_PAREN);
-            p = skipSpaces(p + 1);
-            if (*p == ',') {
-                p = skipSpaces(p + 1);
-                if (_regs.compareRegName(p, REG_Y)) { // (zp),Y
-                    p += _regs.regNameLen(REG_Y);
-                    if (modifier == '<' || op.val16 < 0x100) {
-                        op.mode = ZPG_IDIR_IDY;
-                    } else return setError(OPERAND_NOT_ZP);
-                } else return setError(UNKNOWN_OPERAND);
-            } else {            // (abs), (zp)
-                if (selectMode(modifier, op, ABS_IDIR, ZPG_IDIR))
-                    return getError();
-            }
-        } else {                // abs, zp
-            if (indir) return setError(UNKNOWN_OPERAND);
-            if (selectMode(modifier, op, ABS, ZPG))
-                return getError();
-        }
+        op.mode = IMMA;
+        return OK;
     }
-    _scan = skipSpaces(p);
-    return setOK();
+    if (_regs.compareRegName(p, REG_A)) { // A
+        _scan = p + _regs.regNameLen(REG_A);
+        op.mode = ACCM;
+        return OK;
+    }
+
+    const char indir = (*p == '(') ? ')' : 0;
+    if (indir) p = skipSpaces(p + 1);
+    const char size = (*p == '>' || *p == '<') ? *p++ : 0;
+    _scan = p;
+    if (getOperand(op.val16)) return getError();
+    op.setError(getError());
+    p = skipSpaces(_scan);
+    if (*p == ',') {
+        p = skipSpaces(p + 1);
+        if (_regs.compareRegName(p, REG_X)) { // abs,X zp,X (abs,X) (zp,X)
+            p = skipSpaces(p + _regs.regNameLen(REG_X));
+            if (indir) {
+                if (*p == ')') {
+                    _scan = p + 1;
+                    return selectMode(size, op, ABS_IDX_IDIR, ZPG_IDX_IDIR);
+                }
+                return setError(MISSING_CLOSING_PAREN);
+            }
+            _scan = p;
+            return selectMode(size, op, ABS_IDX, ZPG_IDX);
+        }
+        if (_regs.compareRegName(p, REG_Y)) { // abs,Y zp,Y
+            if (indir) return setError(UNKNOWN_OPERAND);
+            _scan = p + _regs.regNameLen(REG_Y);
+            return selectMode(size, op, ABS_IDY, ZPG_IDY);
+        }
+        if (indir) return setError(UNKNOWN_OPERAND);
+        _scan = p;
+        if (getOperand(extra.val16)) return getError();
+        extra.setError(getError());
+        op.mode = ZPG_REL;
+        return OK;
+    }
+    if (indir) {
+        if (*p != indir) return setError(MISSING_CLOSING_PAREN);
+        p = skipSpaces(p + 1);
+        if (*p == ',') {        // (zp),Y
+            p = skipSpaces(p + 1);
+            if (_regs.compareRegName(p, REG_Y)) {
+                _scan = p + _regs.regNameLen(REG_Y);
+                op.mode = ZPG_IDIR_IDY;
+                return OK;
+            }
+            return setError(UNKNOWN_OPERAND);
+        }
+        // (abs) (zp)
+        _scan = p;
+        return selectMode(size, op, ABS_IDIR, ZPG_IDIR);
+    }
+    // abs zp
+    _scan = p;
+    return selectMode(size, op, ABS, ZPG);
 }
 
 Error AsmMos6502::encode(Insn &_insn) {
     InsnMos6502 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+    _scan = skipSpaces(endName);
+    Operand op, extra;
+    if (parseOperand(op, extra)) return getError();
+    insn.setAddrMode(op.mode);
     if (TableMos6502.searchName(insn))
         return setError(UNKNOWN_INSTRUCTION);
-    _scan = skipSpaces(endName);
-
     switch (insn.addrMode()) {
     case IMPL:
-        insn.emitInsn();
-        return checkLineEnd();
-    case REL:
-        return encodeRelative(insn, /* emitInsn */ true);
-    case ZPG_REL:
-        return encodeZeroPageRelative(insn);
-    default:
-        break;
-    }
-
-    Operand op;
-    if (parseOperand(op)) return getError();
-    insn.setAddrMode(op.mode);
-    if (TableMos6502.searchNameAndAddrMode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
-    switch (insn.addrMode()) {
     case ACCM:
         insn.emitInsn();
+        break;
+    case REL:
+        encodeRelative(insn, op);
+        break;
+    case ZPG_REL:
+        encodeZeroPageRelative(insn, op, extra);
         break;
     case IMMA:
     case IMMX:
@@ -180,7 +175,7 @@ Error AsmMos6502::encode(Insn &_insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    setError(op);
+    setErrorIf(op.getError());
 
     return checkLineEnd();
 }

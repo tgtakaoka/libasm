@@ -29,12 +29,6 @@ public:
     InsnMos6502(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    bool supported(CpuType cpuType) const {
-        const CpuType insnType = Entry::_cpuType(_flags);
-        if (static_cast<uint8_t>(cpuType) < static_cast<uint8_t>(insnType))
-            return false;
-        return true;
-    }
 
     uint8_t flags() const { return _flags; }
     void setFlags(uint8_t flags) {
@@ -42,7 +36,7 @@ public:
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_set(_flags, addrMode);
+        _flags = Entry::_flags(addrMode);
     }
 
     Config::opcode_t opCode() const { return _opCode; }

@@ -25,295 +25,342 @@
 namespace libasm {
 namespace mos6502 {
 
-#define E(_opc, _name, _mcu, _amode)                        \
-    { _opc, Entry::_flags(_mcu, _amode), TEXT_##_name },
+#define E(_opc, _name, _amode)                      \
+    { _opc, Entry::_flags(_amode), TEXT_##_name },
 
 static constexpr Entry MOS6502_TABLE[] PROGMEM = {
-    E(0x00, BRK,  MOS6502, IMPL)
-    E(0x40, RTI,  MOS6502, IMPL)
-    E(0x60, RTS,  MOS6502, IMPL)
-    E(0xEA, NOP,  MOS6502, IMPL)
-    E(0x08, PHP,  MOS6502, IMPL)
-    E(0x28, PLP,  MOS6502, IMPL)
-    E(0x48, PHA,  MOS6502, IMPL)
-    E(0x68, PLA,  MOS6502, IMPL)
-    E(0x88, DEY,  MOS6502, IMPL)
-    E(0xC8, INY,  MOS6502, IMPL)
-    E(0xCA, DEX,  MOS6502, IMPL)
-    E(0xE8, INX,  MOS6502, IMPL)
-    E(0x98, TYA,  MOS6502, IMPL)
-    E(0xA8, TAY,  MOS6502, IMPL)
-    E(0x8A, TXA,  MOS6502, IMPL)
-    E(0xAA, TAX,  MOS6502, IMPL)
-    E(0x9A, TXS,  MOS6502, IMPL)
-    E(0xBA, TSX,  MOS6502, IMPL)
-    E(0x18, CLC,  MOS6502, IMPL)
-    E(0x38, SEC,  MOS6502, IMPL)
-    E(0x58, CLI,  MOS6502, IMPL)
-    E(0x78, SEI,  MOS6502, IMPL)
-    E(0xB8, CLV,  MOS6502, IMPL)
-    E(0xD8, CLD,  MOS6502, IMPL)
-    E(0xF8, SED,  MOS6502, IMPL)
-    E(0x0A, ASL,  MOS6502, ACCM)
-    E(0x2A, ROL,  MOS6502, ACCM)
-    E(0x4A, LSR,  MOS6502, ACCM)
-    E(0x6A, ROR,  MOS6502, ACCM)
-    E(0xA0, LDY,  MOS6502, IMMX)
-    E(0xA2, LDX,  MOS6502, IMMX)
-    E(0xC0, CPY,  MOS6502, IMMX)
-    E(0xE0, CPX,  MOS6502, IMMX)
-    E(0x09, ORA,  MOS6502, IMMA)
-    E(0x29, AND,  MOS6502, IMMA)
-    E(0x49, EOR,  MOS6502, IMMA)
-    E(0x69, ADC,  MOS6502, IMMA)
-    E(0xA9, LDA,  MOS6502, IMMA)
-    E(0xC9, CMP,  MOS6502, IMMA)
-    E(0xE9, SBC,  MOS6502, IMMA)
-    E(0x24, BIT,  MOS6502, ZPG)
-    E(0x05, ORA,  MOS6502, ZPG)
-    E(0x25, AND,  MOS6502, ZPG)
-    E(0x45, EOR,  MOS6502, ZPG)
-    E(0x65, ADC,  MOS6502, ZPG)
-    E(0x85, STA,  MOS6502, ZPG)
-    E(0xA5, LDA,  MOS6502, ZPG)
-    E(0xC5, CMP,  MOS6502, ZPG)
-    E(0xE5, SBC,  MOS6502, ZPG)
-    E(0x84, STY,  MOS6502, ZPG)
-    E(0xA4, LDY,  MOS6502, ZPG)
-    E(0xC4, CPY,  MOS6502, ZPG)
-    E(0x86, STX,  MOS6502, ZPG)
-    E(0xA6, LDX,  MOS6502, ZPG)
-    E(0xE4, CPX,  MOS6502, ZPG)
-    E(0xC6, DEC,  MOS6502, ZPG)
-    E(0xE6, INC,  MOS6502, ZPG)
-    E(0x06, ASL,  MOS6502, ZPG)
-    E(0x26, ROL,  MOS6502, ZPG)
-    E(0x46, LSR,  MOS6502, ZPG)
-    E(0x66, ROR,  MOS6502, ZPG)
-    E(0x15, ORA,  MOS6502, ZPG_IDX)
-    E(0x35, AND,  MOS6502, ZPG_IDX)
-    E(0x55, EOR,  MOS6502, ZPG_IDX)
-    E(0x75, ADC,  MOS6502, ZPG_IDX)
-    E(0x95, STA,  MOS6502, ZPG_IDX)
-    E(0xB5, LDA,  MOS6502, ZPG_IDX)
-    E(0xD5, CMP,  MOS6502, ZPG_IDX)
-    E(0xF5, SBC,  MOS6502, ZPG_IDX)
-    E(0x94, STY,  MOS6502, ZPG_IDX)
-    E(0xB4, LDY,  MOS6502, ZPG_IDX)
-    E(0x96, STX,  MOS6502, ZPG_IDY)
-    E(0xB6, LDX,  MOS6502, ZPG_IDY)
-    E(0xD6, DEC,  MOS6502, ZPG_IDX)
-    E(0xF6, INC,  MOS6502, ZPG_IDX)
-    E(0x16, ASL,  MOS6502, ZPG_IDX)
-    E(0x36, ROL,  MOS6502, ZPG_IDX)
-    E(0x56, LSR,  MOS6502, ZPG_IDX)
-    E(0x76, ROR,  MOS6502, ZPG_IDX)
-    E(0x2C, BIT,  MOS6502, ABS)
-    E(0x0D, ORA,  MOS6502, ABS)
-    E(0x2D, AND,  MOS6502, ABS)
-    E(0x4D, EOR,  MOS6502, ABS)
-    E(0x6D, ADC,  MOS6502, ABS)
-    E(0x8D, STA,  MOS6502, ABS)
-    E(0xAD, LDA,  MOS6502, ABS)
-    E(0xCD, CMP,  MOS6502, ABS)
-    E(0xED, SBC,  MOS6502, ABS)
-    E(0x8C, STY,  MOS6502, ABS)
-    E(0xAC, LDY,  MOS6502, ABS)
-    E(0xCC, CPY,  MOS6502, ABS)
-    E(0x8E, STX,  MOS6502, ABS)
-    E(0xAE, LDX,  MOS6502, ABS)
-    E(0xEC, CPX,  MOS6502, ABS)
-    E(0xCE, DEC,  MOS6502, ABS)
-    E(0xEE, INC,  MOS6502, ABS)
-    E(0x0E, ASL,  MOS6502, ABS)
-    E(0x2E, ROL,  MOS6502, ABS)
-    E(0x4E, LSR,  MOS6502, ABS)
-    E(0x6E, ROR,  MOS6502, ABS)
-    E(0x4C, JMP,  MOS6502, ABS)
-    E(0x20, JSR,  MOS6502, ABS)
-    E(0x1D, ORA,  MOS6502, ABS_IDX)
-    E(0x3D, AND,  MOS6502, ABS_IDX)
-    E(0x5D, EOR,  MOS6502, ABS_IDX)
-    E(0x7D, ADC,  MOS6502, ABS_IDX)
-    E(0x9D, STA,  MOS6502, ABS_IDX)
-    E(0xBD, LDA,  MOS6502, ABS_IDX)
-    E(0xDD, CMP,  MOS6502, ABS_IDX)
-    E(0xFD, SBC,  MOS6502, ABS_IDX)
-    E(0x19, ORA,  MOS6502, ABS_IDY)
-    E(0x39, AND,  MOS6502, ABS_IDY)
-    E(0x59, EOR,  MOS6502, ABS_IDY)
-    E(0x79, ADC,  MOS6502, ABS_IDY)
-    E(0x99, STA,  MOS6502, ABS_IDY)
-    E(0xB9, LDA,  MOS6502, ABS_IDY)
-    E(0xD9, CMP,  MOS6502, ABS_IDY)
-    E(0xF9, SBC,  MOS6502, ABS_IDY)
-    E(0xBC, LDY,  MOS6502, ABS_IDX)
-    E(0xBE, LDX,  MOS6502, ABS_IDY)
-    E(0xDE, DEC,  MOS6502, ABS_IDX)
-    E(0xFE, INC,  MOS6502, ABS_IDX)
-    E(0x1E, ASL,  MOS6502, ABS_IDX)
-    E(0x3E, ROL,  MOS6502, ABS_IDX)
-    E(0x5E, LSR,  MOS6502, ABS_IDX)
-    E(0x7E, ROR,  MOS6502, ABS_IDX)
-    E(0x6C, JMP,  MOS6502, ABS_IDIR)
-    E(0x01, ORA,  MOS6502, ZPG_IDX_IDIR)
-    E(0x21, AND,  MOS6502, ZPG_IDX_IDIR)
-    E(0x41, EOR,  MOS6502, ZPG_IDX_IDIR)
-    E(0x61, ADC,  MOS6502, ZPG_IDX_IDIR)
-    E(0x81, STA,  MOS6502, ZPG_IDX_IDIR)
-    E(0xA1, LDA,  MOS6502, ZPG_IDX_IDIR)
-    E(0xC1, CMP,  MOS6502, ZPG_IDX_IDIR)
-    E(0xE1, SBC,  MOS6502, ZPG_IDX_IDIR)
-    E(0x11, ORA,  MOS6502, ZPG_IDIR_IDY)
-    E(0x31, AND,  MOS6502, ZPG_IDIR_IDY)
-    E(0x51, EOR,  MOS6502, ZPG_IDIR_IDY)
-    E(0x71, ADC,  MOS6502, ZPG_IDIR_IDY)
-    E(0x91, STA,  MOS6502, ZPG_IDIR_IDY)
-    E(0xB1, LDA,  MOS6502, ZPG_IDIR_IDY)
-    E(0xD1, CMP,  MOS6502, ZPG_IDIR_IDY)
-    E(0xF1, SBC,  MOS6502, ZPG_IDIR_IDY)
-    E(0x10, BPL,  MOS6502, REL)
-    E(0x30, BMI,  MOS6502, REL)
-    E(0x50, BVC,  MOS6502, REL)
-    E(0x70, BVS,  MOS6502, REL)
-    E(0x90, BCC,  MOS6502, REL)
-    E(0xB0, BCS,  MOS6502, REL)
-    E(0xD0, BNE,  MOS6502, REL)
-    E(0xF0, BEQ,  MOS6502, REL)
-    E(0x5A, PHY,  W65SC02, IMPL)
-    E(0x7A, PLY,  W65SC02, IMPL)
-    E(0xDA, PHX,  W65SC02, IMPL)
-    E(0xFA, PLX,  W65SC02, IMPL)
-    E(0x1A, INC,  W65SC02, ACCM)
-    E(0x3A, DEC,  W65SC02, ACCM)
-    E(0x89, BIT,  W65SC02, IMMA)
-    E(0x04, TSB,  W65SC02, ZPG)
-    E(0x14, TRB,  W65SC02, ZPG)
-    E(0x64, STZ,  W65SC02, ZPG)
-    E(0x34, BIT,  W65SC02, ZPG_IDX)
-    E(0x74, STZ,  W65SC02, ZPG_IDX)
-    E(0x0C, TSB,  W65SC02, ABS)
-    E(0x1C, TRB,  W65SC02, ABS)
-    E(0x9C, STZ,  W65SC02, ABS)
-    E(0x3C, BIT,  W65SC02, ABS_IDX)
-    E(0x9E, STZ,  W65SC02, ABS_IDX)
-    E(0x7C, JMP,  W65SC02, ABS_IDX_IDIR)
-    E(0x12, ORA,  W65SC02, ZPG_IDIR)
-    E(0x32, AND,  W65SC02, ZPG_IDIR)
-    E(0x52, EOR,  W65SC02, ZPG_IDIR)
-    E(0x72, ADC,  W65SC02, ZPG_IDIR)
-    E(0x92, STA,  W65SC02, ZPG_IDIR)
-    E(0xB2, LDA,  W65SC02, ZPG_IDIR)
-    E(0xD2, CMP,  W65SC02, ZPG_IDIR)
-    E(0xF2, SBC,  W65SC02, ZPG_IDIR)
-    E(0x80, BRA,  W65SC02, REL)
-    E(0x0F, BBR0, R65C02,  ZPG_REL)
-    E(0x1F, BBR1, R65C02,  ZPG_REL)
-    E(0x2F, BBR2, R65C02,  ZPG_REL)
-    E(0x3F, BBR3, R65C02,  ZPG_REL)
-    E(0x4F, BBR4, R65C02,  ZPG_REL)
-    E(0x5F, BBR5, R65C02,  ZPG_REL)
-    E(0x6F, BBR6, R65C02,  ZPG_REL)
-    E(0x7F, BBR7, R65C02,  ZPG_REL)
-    E(0x8F, BBS0, R65C02,  ZPG_REL)
-    E(0x9F, BBS1, R65C02,  ZPG_REL)
-    E(0xAF, BBS2, R65C02,  ZPG_REL)
-    E(0xBF, BBS3, R65C02,  ZPG_REL)
-    E(0xCF, BBS4, R65C02,  ZPG_REL)
-    E(0xDF, BBS5, R65C02,  ZPG_REL)
-    E(0xEF, BBS6, R65C02,  ZPG_REL)
-    E(0xFF, BBS7, R65C02,  ZPG_REL)
-    E(0x07, RMB0, R65C02,  ZPG)
-    E(0x17, RMB1, R65C02,  ZPG)
-    E(0x27, RMB2, R65C02,  ZPG)
-    E(0x37, RMB3, R65C02,  ZPG)
-    E(0x47, RMB4, R65C02,  ZPG)
-    E(0x57, RMB5, R65C02,  ZPG)
-    E(0x67, RMB6, R65C02,  ZPG)
-    E(0x77, RMB7, R65C02,  ZPG)
-    E(0x87, SMB0, R65C02,  ZPG)
-    E(0x97, SMB1, R65C02,  ZPG)
-    E(0xA7, SMB2, R65C02,  ZPG)
-    E(0xB7, SMB3, R65C02,  ZPG)
-    E(0xC7, SMB4, R65C02,  ZPG)
-    E(0xD7, SMB5, R65C02,  ZPG)
-    E(0xE7, SMB6, R65C02,  ZPG)
-    E(0xF7, SMB7, R65C02,  ZPG)
-    E(0xCB, WAI,  W65C02S, IMPL)
-    E(0xDB, STP,  W65C02S, IMPL)
+    E(0x00, BRK,  IMPL)
+    E(0x40, RTI,  IMPL)
+    E(0x60, RTS,  IMPL)
+    E(0xEA, NOP,  IMPL)
+    E(0x08, PHP,  IMPL)
+    E(0x28, PLP,  IMPL)
+    E(0x48, PHA,  IMPL)
+    E(0x68, PLA,  IMPL)
+    E(0x88, DEY,  IMPL)
+    E(0xC8, INY,  IMPL)
+    E(0xCA, DEX,  IMPL)
+    E(0xE8, INX,  IMPL)
+    E(0x98, TYA,  IMPL)
+    E(0xA8, TAY,  IMPL)
+    E(0x8A, TXA,  IMPL)
+    E(0xAA, TAX,  IMPL)
+    E(0x9A, TXS,  IMPL)
+    E(0xBA, TSX,  IMPL)
+    E(0x18, CLC,  IMPL)
+    E(0x38, SEC,  IMPL)
+    E(0x58, CLI,  IMPL)
+    E(0x78, SEI,  IMPL)
+    E(0xB8, CLV,  IMPL)
+    E(0xD8, CLD,  IMPL)
+    E(0xF8, SED,  IMPL)
+    E(0x0A, ASL,  ACCM)
+    E(0x2A, ROL,  ACCM)
+    E(0x4A, LSR,  ACCM)
+    E(0x6A, ROR,  ACCM)
+    E(0xA0, LDY,  IMMX)
+    E(0xA2, LDX,  IMMX)
+    E(0xC0, CPY,  IMMX)
+    E(0xE0, CPX,  IMMX)
+    E(0x09, ORA,  IMMA)
+    E(0x29, AND,  IMMA)
+    E(0x49, EOR,  IMMA)
+    E(0x69, ADC,  IMMA)
+    E(0xA9, LDA,  IMMA)
+    E(0xC9, CMP,  IMMA)
+    E(0xE9, SBC,  IMMA)
+    E(0x24, BIT,  ZPG)
+    E(0x05, ORA,  ZPG)
+    E(0x25, AND,  ZPG)
+    E(0x45, EOR,  ZPG)
+    E(0x65, ADC,  ZPG)
+    E(0x85, STA,  ZPG)
+    E(0xA5, LDA,  ZPG)
+    E(0xC5, CMP,  ZPG)
+    E(0xE5, SBC,  ZPG)
+    E(0x84, STY,  ZPG)
+    E(0xA4, LDY,  ZPG)
+    E(0xC4, CPY,  ZPG)
+    E(0x86, STX,  ZPG)
+    E(0xA6, LDX,  ZPG)
+    E(0xE4, CPX,  ZPG)
+    E(0xC6, DEC,  ZPG)
+    E(0xE6, INC,  ZPG)
+    E(0x06, ASL,  ZPG)
+    E(0x26, ROL,  ZPG)
+    E(0x46, LSR,  ZPG)
+    E(0x66, ROR,  ZPG)
+    E(0x15, ORA,  ZPG_IDX)
+    E(0x35, AND,  ZPG_IDX)
+    E(0x55, EOR,  ZPG_IDX)
+    E(0x75, ADC,  ZPG_IDX)
+    E(0x95, STA,  ZPG_IDX)
+    E(0xB5, LDA,  ZPG_IDX)
+    E(0xD5, CMP,  ZPG_IDX)
+    E(0xF5, SBC,  ZPG_IDX)
+    E(0x94, STY,  ZPG_IDX)
+    E(0xB4, LDY,  ZPG_IDX)
+    E(0x96, STX,  ZPG_IDY)
+    E(0xB6, LDX,  ZPG_IDY)
+    E(0xD6, DEC,  ZPG_IDX)
+    E(0xF6, INC,  ZPG_IDX)
+    E(0x16, ASL,  ZPG_IDX)
+    E(0x36, ROL,  ZPG_IDX)
+    E(0x56, LSR,  ZPG_IDX)
+    E(0x76, ROR,  ZPG_IDX)
+    E(0x2C, BIT,  ABS)
+    E(0x0D, ORA,  ABS)
+    E(0x2D, AND,  ABS)
+    E(0x4D, EOR,  ABS)
+    E(0x6D, ADC,  ABS)
+    E(0x8D, STA,  ABS)
+    E(0xAD, LDA,  ABS)
+    E(0xCD, CMP,  ABS)
+    E(0xED, SBC,  ABS)
+    E(0x8C, STY,  ABS)
+    E(0xAC, LDY,  ABS)
+    E(0xCC, CPY,  ABS)
+    E(0x8E, STX,  ABS)
+    E(0xAE, LDX,  ABS)
+    E(0xEC, CPX,  ABS)
+    E(0xCE, DEC,  ABS)
+    E(0xEE, INC,  ABS)
+    E(0x0E, ASL,  ABS)
+    E(0x2E, ROL,  ABS)
+    E(0x4E, LSR,  ABS)
+    E(0x6E, ROR,  ABS)
+    E(0x4C, JMP,  ABS)
+    E(0x20, JSR,  ABS)
+    E(0x1D, ORA,  ABS_IDX)
+    E(0x3D, AND,  ABS_IDX)
+    E(0x5D, EOR,  ABS_IDX)
+    E(0x7D, ADC,  ABS_IDX)
+    E(0x9D, STA,  ABS_IDX)
+    E(0xBD, LDA,  ABS_IDX)
+    E(0xDD, CMP,  ABS_IDX)
+    E(0xFD, SBC,  ABS_IDX)
+    E(0x19, ORA,  ABS_IDY)
+    E(0x39, AND,  ABS_IDY)
+    E(0x59, EOR,  ABS_IDY)
+    E(0x79, ADC,  ABS_IDY)
+    E(0x99, STA,  ABS_IDY)
+    E(0xB9, LDA,  ABS_IDY)
+    E(0xD9, CMP,  ABS_IDY)
+    E(0xF9, SBC,  ABS_IDY)
+    E(0xBC, LDY,  ABS_IDX)
+    E(0xBE, LDX,  ABS_IDY)
+    E(0xDE, DEC,  ABS_IDX)
+    E(0xFE, INC,  ABS_IDX)
+    E(0x1E, ASL,  ABS_IDX)
+    E(0x3E, ROL,  ABS_IDX)
+    E(0x5E, LSR,  ABS_IDX)
+    E(0x7E, ROR,  ABS_IDX)
+    E(0x6C, JMP,  ABS_IDIR)
+    E(0x01, ORA,  ZPG_IDX_IDIR)
+    E(0x21, AND,  ZPG_IDX_IDIR)
+    E(0x41, EOR,  ZPG_IDX_IDIR)
+    E(0x61, ADC,  ZPG_IDX_IDIR)
+    E(0x81, STA,  ZPG_IDX_IDIR)
+    E(0xA1, LDA,  ZPG_IDX_IDIR)
+    E(0xC1, CMP,  ZPG_IDX_IDIR)
+    E(0xE1, SBC,  ZPG_IDX_IDIR)
+    E(0x11, ORA,  ZPG_IDIR_IDY)
+    E(0x31, AND,  ZPG_IDIR_IDY)
+    E(0x51, EOR,  ZPG_IDIR_IDY)
+    E(0x71, ADC,  ZPG_IDIR_IDY)
+    E(0x91, STA,  ZPG_IDIR_IDY)
+    E(0xB1, LDA,  ZPG_IDIR_IDY)
+    E(0xD1, CMP,  ZPG_IDIR_IDY)
+    E(0xF1, SBC,  ZPG_IDIR_IDY)
+    E(0x10, BPL,  REL)
+    E(0x30, BMI,  REL)
+    E(0x50, BVC,  REL)
+    E(0x70, BVS,  REL)
+    E(0x90, BCC,  REL)
+    E(0xB0, BCS,  REL)
+    E(0xD0, BNE,  REL)
+    E(0xF0, BEQ,  REL)
 };
 
-Error TableMos6502::searchName(
-    InsnMos6502 &insn, const Entry *table, const Entry *end) const {
-    const char *name = insn.name();
-    for (const Entry *entry = table;
-         entry < end && (entry = TableBase::searchName<Entry>(name, entry, end));
-         entry++) {
-        insn.setFlags(pgm_read_byte(&entry->flags));
-        if (!insn.supported(_cpuType)) continue;
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        return OK;
-    }
-    return UNKNOWN_INSTRUCTION;
-}
+static constexpr Entry W65SC02_TABLE[] PROGMEM = {
+    E(0x5A, PHY,  IMPL)
+    E(0x7A, PLY,  IMPL)
+    E(0xDA, PHX,  IMPL)
+    E(0xFA, PLX,  IMPL)
+    E(0x1A, INC,  ACCM)
+    E(0x3A, DEC,  ACCM)
+    E(0x89, BIT,  IMMA)
+    E(0x04, TSB,  ZPG)
+    E(0x14, TRB,  ZPG)
+    E(0x64, STZ,  ZPG)
+    E(0x34, BIT,  ZPG_IDX)
+    E(0x74, STZ,  ZPG_IDX)
+    E(0x0C, TSB,  ABS)
+    E(0x1C, TRB,  ABS)
+    E(0x9C, STZ,  ABS)
+    E(0x3C, BIT,  ABS_IDX)
+    E(0x9E, STZ,  ABS_IDX)
+    E(0x7C, JMP,  ABS_IDX_IDIR)
+    E(0x12, ORA,  ZPG_IDIR)
+    E(0x32, AND,  ZPG_IDIR)
+    E(0x52, EOR,  ZPG_IDIR)
+    E(0x72, ADC,  ZPG_IDIR)
+    E(0x92, STA,  ZPG_IDIR)
+    E(0xB2, LDA,  ZPG_IDIR)
+    E(0xD2, CMP,  ZPG_IDIR)
+    E(0xF2, SBC,  ZPG_IDIR)
+    E(0x80, BRA,  REL)
+};
+
+static constexpr Entry R65C02_TABLE[] PROGMEM = {
+    E(0x0F, BBR0, ZPG_REL)
+    E(0x1F, BBR1, ZPG_REL)
+    E(0x2F, BBR2, ZPG_REL)
+    E(0x3F, BBR3, ZPG_REL)
+    E(0x4F, BBR4, ZPG_REL)
+    E(0x5F, BBR5, ZPG_REL)
+    E(0x6F, BBR6, ZPG_REL)
+    E(0x7F, BBR7, ZPG_REL)
+    E(0x8F, BBS0, ZPG_REL)
+    E(0x9F, BBS1, ZPG_REL)
+    E(0xAF, BBS2, ZPG_REL)
+    E(0xBF, BBS3, ZPG_REL)
+    E(0xCF, BBS4, ZPG_REL)
+    E(0xDF, BBS5, ZPG_REL)
+    E(0xEF, BBS6, ZPG_REL)
+    E(0xFF, BBS7, ZPG_REL)
+    E(0x07, RMB0, ZPG)
+    E(0x17, RMB1, ZPG)
+    E(0x27, RMB2, ZPG)
+    E(0x37, RMB3, ZPG)
+    E(0x47, RMB4, ZPG)
+    E(0x57, RMB5, ZPG)
+    E(0x67, RMB6, ZPG)
+    E(0x77, RMB7, ZPG)
+    E(0x87, SMB0, ZPG)
+    E(0x97, SMB1, ZPG)
+    E(0xA7, SMB2, ZPG)
+    E(0xB7, SMB3, ZPG)
+    E(0xC7, SMB4, ZPG)
+    E(0xD7, SMB5, ZPG)
+    E(0xE7, SMB6, ZPG)
+    E(0xF7, SMB7, ZPG)
+};
+
+static constexpr Entry W65C02S_TABLE[] PROGMEM = {
+    E(0xCB, WAI,  IMPL)
+    E(0xDB, STP,  IMPL)
+};
+
+struct TableMos6502::EntryPage {
+    const Entry *const table;
+    const Entry *const end;
+};
+
+static constexpr TableMos6502::EntryPage PAGES_MOS6502[] PROGMEM = {
+    { ARRAY_RANGE(MOS6502_TABLE) },
+};
+static constexpr TableMos6502::EntryPage PAGES_W65SC02[] PROGMEM = {
+    { ARRAY_RANGE(MOS6502_TABLE) },
+    { ARRAY_RANGE(W65SC02_TABLE) },
+};
+static constexpr TableMos6502::EntryPage PAGES_R65C02[] PROGMEM = {
+    { ARRAY_RANGE(MOS6502_TABLE) },
+    { ARRAY_RANGE(W65SC02_TABLE) },
+    { ARRAY_RANGE(R65C02_TABLE) },
+};
+static constexpr TableMos6502::EntryPage PAGES_W65C02S[] PROGMEM = {
+    { ARRAY_RANGE(MOS6502_TABLE) },
+    { ARRAY_RANGE(W65SC02_TABLE) },
+    { ARRAY_RANGE(R65C02_TABLE) },
+    { ARRAY_RANGE(W65C02S_TABLE) },
+};
 
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
-    AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+    const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
     if (opr == IMMA) return table == IMMX;
-    if (opr == ZPG) return table == ABS;
+    if (opr == ZPG) return table == ABS || table == REL;
     if (opr == ZPG_IDX_IDIR) return table == ABS_IDX_IDIR;
     if (opr == ZPG_IDIR) return table == ABS_IDIR;
     if (opr == ZPG_IDX) return table == ABS_IDX;
     if (opr == ZPG_IDY) return table == ABS_IDY;
+    if (opr == ABS) return table == REL;
     return false;
 }
 
-Error TableMos6502::searchNameAndAddrMode(
-    InsnMos6502 &insn, const Entry *table, const Entry *end) const {
+Error TableMos6502::searchName(
+    InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
-    for (const Entry *entry = table;
-         entry < end
-             && (entry = TableBase::searchName<Entry>(
-                     name, addrMode, entry, end, acceptAddrMode));
-         entry++) {
-        insn.setFlags(pgm_read_byte(&entry->flags));
-        if (!insn.supported(_cpuType)) continue;
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        return OK;
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchName<Entry, AddrMode>(
+            name, addrMode, table, end, acceptAddrMode);
+        if (entry) {
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setOpCode(pgm_read_byte(&entry->opCode));
+            return OK;
+        }
     }
     return UNKNOWN_INSTRUCTION;
 }
 
 Error TableMos6502::searchOpCode(
-    InsnMos6502 &insn, const Entry *table, const Entry *end) const {
+    InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) {
     const Config::opcode_t opCode = insn.opCode();
-    for (const Entry *entry = table;
-         entry < end
-             && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
-                     opCode, entry, end));
-         entry++) {
-        insn.setFlags(pgm_read_byte(&entry->flags));
-        if (!insn.supported(_cpuType)) continue;
-        const char *name =
-            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-        return OK;
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+            opCode, table, end);
+        if (entry) {
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            return OK;
+        }
     }
     return UNKNOWN_INSTRUCTION;
 }
 
 Error TableMos6502::searchName(InsnMos6502 &insn) const {
-    return searchName(insn, ARRAY_RANGE(MOS6502_TABLE));
-}
-
-Error TableMos6502::searchNameAndAddrMode(InsnMos6502 &insn) const {
-    return searchNameAndAddrMode(insn, ARRAY_RANGE(MOS6502_TABLE));
+    return searchName(insn, _table, _end);
 }
 
 Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
-    return searchOpCode(insn, ARRAY_RANGE(MOS6502_TABLE));
+    return searchOpCode(insn, _table, _end);
+}
+
+TableMos6502::TableMos6502() {
+    setCpu(MOS6502);
+}
+
+bool TableMos6502::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    if (cpuType == MOS6502) {
+        _table = ARRAY_BEGIN(PAGES_MOS6502);
+        _end = ARRAY_END(PAGES_MOS6502);
+        return true;
+    }
+    if (cpuType == W65SC02) {
+        _table = ARRAY_BEGIN(PAGES_W65SC02);
+        _end = ARRAY_END(PAGES_W65SC02);
+        return true;
+    }
+    if (cpuType == R65C02) {
+        _table = ARRAY_BEGIN(PAGES_R65C02);
+        _end = ARRAY_END(PAGES_R65C02);
+        return true;
+    }
+    if (cpuType == W65C02S) {
+        _table = ARRAY_BEGIN(PAGES_W65C02S);
+        _end = ARRAY_END(PAGES_W65C02S);
+        return true;
+    }
+    return false;
 }
 
 const char *TableMos6502::getCpu() {
@@ -325,25 +372,17 @@ const char *TableMos6502::getCpu() {
 bool TableMos6502::setCpu(const char *cpu) {
     const char *p;
     p = cpu + (strncasecmp(cpu, "MOS", 3) ? 0 : 3);
-    if (strcmp(p, "6502") == 0) {
-        _cpuType = MOS6502;
-        return true;
-    }
+    if (strcmp(p, "6502") == 0)
+        return setCpu(MOS6502);
     p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
-    if (strcasecmp(p, "65SC02") == 0) {
-        _cpuType = W65SC02;
-        return true;
-    }
+    if (strcasecmp(p, "65SC02") == 0)
+        return setCpu(W65SC02);
     p = cpu + (toupper(*cpu) == 'R' ? 1 : 0);
-    if (strcasecmp(p, "65C02") == 0) {
-        _cpuType = R65C02;
-        return true;
-    }
+    if (strcasecmp(p, "65C02") == 0)
+        return setCpu(R65C02);
     if (strncasecmp(cpu, "W65C02", 6) == 0
-        && (cpu[6] == 0 || toupper(cpu[6]) == 'S')) {
-        _cpuType = W65C02S;
-        return true;
-    }
+        && (cpu[6] == 0 || toupper(cpu[6]) == 'S'))
+        return setCpu(W65C02S);
     return false;
 }
 

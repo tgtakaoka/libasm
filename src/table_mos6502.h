@@ -26,8 +26,9 @@ namespace mos6502 {
 
 class TableMos6502 : private TableBase {
 public:
+    TableMos6502();
+
     Error searchName(InsnMos6502 &insn) const;
-    Error searchNameAndAddrMode(InsnMos6502 &insn) const;
     Error searchOpCode(InsnMos6502 &insn) const;
 
     const char *listCpu() override { return "6502, 65SC02, 65C02, W65C02S"; }
@@ -35,15 +36,19 @@ public:
     const char *getCpu() override;
     bool is6502() const { return _cpuType == MOS6502; }
 
+    struct EntryPage;
+
 protected:
     CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
 
-    Error searchName(
-        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
-    Error searchNameAndAddrMode(
-        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
-    Error searchOpCode(
-        InsnMos6502 &insn, const Entry *table, const Entry *end) const;
+    bool setCpu(CpuType cpuType);
+
+    static Error searchName(
+        InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchOpCode(
+        InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableMos6502 TableMos6502;

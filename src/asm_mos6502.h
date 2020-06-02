@@ -46,12 +46,12 @@ private:
         uint16_t val16;
     };
 
-    Error selectMode(
-        char modifier, Operand &op, /* AddrMode labs,*/ AddrMode abs, AddrMode zp);
-    Error parseOperand(Operand &op);
+    Error selectMode(char size, Operand &op, AddrMode abs, AddrMode zp);
+    Error parseOperand(Operand &op, Operand &extra);
 
-    Error encodeRelative(InsnMos6502 &insn, bool emitInsn);
-    Error encodeZeroPageRelative(InsnMos6502 &insn);
+    Error encodeRelative(InsnMos6502 &insn, const Operand &op);
+    Error encodeZeroPageRelative(
+        InsnMos6502 &insn, const Operand &op, const Operand &extra);
 
     Error encode(Insn &insn) override;
 };
