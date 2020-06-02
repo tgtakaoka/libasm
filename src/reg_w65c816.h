@@ -14,48 +14,34 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_W65C816_H__
-#define __INSN_W65C816_H__
+#ifndef __REG_W65C816_H__
+#define __REG_W65C816_H__
 
-#include "config_w65c816.h"
-#include "entry_w65c816.h"
-#include "insn_base.h"
+#include "reg_base.h"
 
 namespace libasm {
 namespace w65c816 {
 
-class InsnW65C816 : public InsnBase<Config> {
+enum RegName : char {
+    REG_UNDEF = 0,
+    REG_A = 'A',
+    REG_X = 'X',
+    REG_Y = 'Y',
+    REG_S = 'S',
+};
+
+class RegW65C816 : public RegBase {
 public:
-    InsnW65C816(Insn &insn) : InsnBase(insn) {}
-
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-
-    uint8_t flags() const { return _flags; }
-    void setFlags(uint8_t flags) {
-        _flags = flags;
-    }
-
-    void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(addrMode);
-    }
-
-    Config::opcode_t opCode() const { return _opCode; }
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
-    void emitInsn() {
-        emitByte(_opCode);
-    }
-
-private:
-    Config::opcode_t _opCode;
-    uint8_t _flags;
+    uint8_t regNameLen(RegName regName) const;
+    bool compareRegName(const char *line, RegName regName) const;
+    RegName parseIndexReg(const char *line) const;
+    char *outRegName(char *out, const RegName regName) const;
 };
 
 } // namespace w65c816
 } // namespace libasm
 
-#endif // __INSN_W65C816_H__
+#endif // __REG_W65C816_H__
 
 // Local Variables:
 // mode: c++

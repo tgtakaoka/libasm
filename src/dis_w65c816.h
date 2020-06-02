@@ -20,7 +20,7 @@
 #include "config_w65c816.h"
 #include "dis_base.h"
 #include "insn_w65c816.h"
-#include "reg_mos6502.h"
+#include "reg_w65c816.h"
 #include "table_w65c816.h"
 
 namespace libasm {
@@ -43,7 +43,7 @@ public:
 
 private:
     MotoValueFormatter _formatter;
-    mos6502::RegMos6502 _regs;
+    RegW65C816 _regs;
     bool _acceptIndirectLong = true;
     bool _long_acc = false;
     bool _long_idx = false;

@@ -20,13 +20,6 @@
 namespace libasm {
 namespace w65c816 {
 
-using mos6502::RegName;
-using mos6502::RegName::REG_UNDEF;
-using mos6502::RegName::REG_A;
-using mos6502::RegName::REG_X;
-using mos6502::RegName::REG_Y;
-#define REG_S mos6502::RegName('S')
-
 Error DisW65C816::decodeImmediate(
     DisMemory& memory, InsnW65C816 &insn) {
     const bool imm16 = (insn.addrMode() == IMMA && _long_acc)

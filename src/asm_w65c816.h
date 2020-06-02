@@ -20,7 +20,7 @@
 #include "asm_base.h"
 #include "config_w65c816.h"
 #include "insn_w65c816.h"
-#include "reg_mos6502.h"
+#include "reg_w65c816.h"
 #include "table_w65c816.h"
 
 namespace libasm {
@@ -41,7 +41,7 @@ public:
 
 private:
     MotoValueParser _parser;
-    mos6502::RegMos6502 _regs;
+    RegW65C816 _regs;
     bool _long_acc = false;
     bool _long_idx = false;
 
@@ -53,14 +53,13 @@ private:
     Error parseOnOff(const char *line, bool &val);
     Error parseZeroOne(const char *line, bool &val);
     Error selectMode(
-        char modifier, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
-    Error parseOperand(Operand &op);
+        char size, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
+    Error parseOperand(Operand &op, Operand &extra);
 
-    Error encodeLongRelative(InsnW65C816 &insn);
-    Error encodeRelative(InsnW65C816 &insn, bool emitInsn);
-    Error encodeZeroPageRelative(InsnW65C816 &insn);
-    Error encodeBlockMove(InsnW65C816 &insn);
-    // Pseudo instruction
+    Error encodeLongRelative(InsnW65C816 &insn, const Operand &op);
+    Error encodeRelative(InsnW65C816 &insn, const Operand &op);
+    Error encodeZeroPageRelative(
+        InsnW65C816 &insn, const Operand &op, const Operand &extra);
     Error processPseudo(InsnW65C816 &insn, const char *line);
     Error encode(Insn &insn) override;
 };
