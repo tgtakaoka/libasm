@@ -47,37 +47,32 @@ Error AsmMc6800::encodeRelative(InsnMc6800 &insn, Config::uintptr_t addr) {
 }
 
 AsmMc6800::Token AsmMc6800::nextToken() {
-    const char *p = _scan;
-    Token t;
-    if (endOfLine(p)) {
-        t = EOL;
-    } else if (*p == ',') {
-        p++;
-        t = COMMA;
-    } else if ((_reg = _regs.parseRegName(p)) != REG_UNDEF) {
-        p += _regs.regNameLen(_reg);
-        t = (_reg == REG_X || _reg == REG_Y) ? REG_IDX : REG_ACC;
-    } else {
-        const bool imm = *p == '#';
-        if (imm) p = skipSpaces(p + 1);
-        _valSize = SZ_NONE;
-        if (*p == '<') {
-            p++;
-            _valSize = SZ_BYTE;
-        } else if (*p == '>') {
-            p++;
-            _valSize = SZ_WORD;
-        }
-        _scan = p;
-        if (getOperand(_val)) {
-            t = ERROR;
-        } else {
-            t = imm ? VAL_IMM : VAL_ADR;
-            p = _scan;
-        }
+    const char *p = skipSpaces(_scan);
+    if (endOfLine(p))
+        return _token = EOL;
+    if (*p == ',') {
+        _scan = p + 1;
+        return _token = COMMA;
     }
-    _scan = skipSpaces(p);
-    return _token = t;
+    if ((_reg = _regs.parseRegName(p)) != REG_UNDEF) {
+        _scan = p + _regs.regNameLen(_reg);
+        return _token = (_reg == REG_X || _reg == REG_Y) ? REG_IDX : REG_ACC;
+    }
+
+    const bool imm = *p == '#';
+    if (imm) p = skipSpaces(p + 1);
+    _valSize = SZ_NONE;
+    if (*p == '<') {
+        p++;
+        _valSize = SZ_BYTE;
+    } else if (*p == '>') {
+        p++;
+        _valSize = SZ_WORD;
+    }
+    _scan = p;
+    if (getOperand(_val))
+        return _token = ERROR;
+    return _token = imm ? VAL_IMM : VAL_ADR;
 }
 
 Error AsmMc6800::parseOperand(Operand &op) {
