@@ -249,12 +249,6 @@ int8_t RegMc6809::encodeDataReg(RegName regName) const {
     return encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
-RegName RegMc6809::decodeIndexReg(uint8_t regNum) const {
-    return TableMc6809.is6309()
-        ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_INDEX_REGS))
-        : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_INDEX_REGS));
-}
-
 RegName RegMc6809::decodeBaseReg(uint8_t regNum) const {
     return TableMc6809.is6309()
         ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_BASE_REGS))

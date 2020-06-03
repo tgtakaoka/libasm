@@ -46,127 +46,65 @@ Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn) {
 }
 
 Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
-    uint8_t post;
+    uint8_t post = 0;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
-    const uint8_t mode = post & 0x8F;
-
-    uint8_t indir = (post & 0x10);
-    const char *label = nullptr;
-    Config::uintptr_t addr = 0;
-    Config::ptrdiff_t offset = 0;
-    int8_t offSize = 0;
-    RegName base = _regs.decodeBaseReg((post >> 5) & 3);
-    RegName index = REG_UNDEF;
-    int8_t incr = 0;
-
-    if (mode == 0x84) {
-        // ,R [,R]
-        ;
-    } else if (TableMc6809.is6309() && (post == 0x8F || post == 0x90)) {
-        // ,W [,W]
-        base = REG_W;
-    } else if (TableMc6809.is6309() && (post == 0xAF || post == 0xB0)) {
-        // n16,W [n16,W]
-        base = REG_W;
-        offSize = 16;
-        if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        offset = static_cast<int16_t>(addr);
-    } else if (TableMc6809.is6309()
-               && (post == 0xCF || post == 0xD0 || post == 0xEF || post == 0xF0)) {
-        // ,W++ ,--W [,W++] [,--W]
-        base = REG_W;
-        incr = (post < 0xE0) ? 2 : -2;
-    } else if ((post & 0x80) == 0) {
-        // n5,R
-        offSize = 5;
-        addr = post & 0x1F;
-        if (post & 0x10) addr |= 0xFFE0;
-        offset = static_cast<int16_t>(addr);
-        indir = 0;
-    } else if (mode == 0x88) {
-        // n8,R [n8,R]
-        offSize = 8;
-        uint8_t val;
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        addr = val;
-        offset = static_cast<int8_t>(val);
-    } else if (mode == 0x89) {
-        // n16,R [n16,R]
-        offSize = 16;
-        if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        offset = static_cast<int16_t>(addr);
-    } else if (_regs.decodeIndexReg(post & 0xf) != REG_UNDEF) {
-        // R,R [R,R]
-        index = _regs.decodeIndexReg(mode & 0xf);
-    } else if (mode == 0x80) {
-        // ,R+
-        if (indir) return setError(UNKNOWN_POSTBYTE);
-        incr = 1;
-    } else if (mode == 0x82) {
-        // ,-R
-        if (indir) return setError(UNKNOWN_POSTBYTE);
-        incr = -1;
-    } else if (mode == 0x81 || mode == 0x83) {
-        // ,R++ ,--R, [,R++] [,--R]
-        incr = (mode == 0x81) ? 2 : -2;
-    } else if (post == 0x8C || post == 0x8D || post == 0x9C || post == 0x9D) {
-        // n8,PCR n16,PCR [n8,PCR] [n16,PCR]
-        base = REG_PCR;
-        offSize = -1;
-        if (mode == 0x8C) {
+    PostSpec spec;
+    if (TableMc6809.searchPostByte(post, spec)) return setError(UNKNOWN_POSTBYTE);
+    if (spec.indir) *_operands++ = '[';
+    if (spec.mode == DISP_IDX || spec.mode == PNTR_IDX) {
+        Config::ptrdiff_t offset = 0;
+        const char *force = nullptr;
+        if (spec.size == 5) {
+            offset = post & 0x1F;
+            if (post & 0x10) offset |= 0xFFE0;
+            if (offset == 0) force = "<<";
+        } else if (spec.size == 8) {
             uint8_t val;
             if (insn.readByte(memory, val)) return setError(NO_MEMORY);
             offset = static_cast<int8_t>(val);
-        } else {
+            if (spec.indir && offset == 0) force = "<";
+            if (!spec.indir && offset >= -16 && offset < 16) force = "<";
+        } else if (spec.size == 16) {
             uint16_t val;
             if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
             offset = static_cast<int16_t>(val);
+            if (offset >= -128 && offset < 128) force = ">";
         }
-        addr = insn.address() + insn.length() + offset;
-        label = lookup(addr);
-    } else if (post == 0x9F) {
-        // [n16]
-        base = REG_UNDEF;
-        if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        label = lookup(addr);
-        offSize = -1;
-    } else {
-        return setError(UNKNOWN_POSTBYTE);
-    }
-
-    if (indir) *_operands++ = '[';
-    if (label) {
-        outText(label);
-    } else {
-        if (base) {
-            if (index) {
-                outRegister(index);
-            } else if (offSize < 0) {
+        if (spec.size) {
+            if (spec.base == REG_PCR) {
+                const Config::uintptr_t addr =
+                    insn.address() + insn.length() + offset;
                 outConstant(addr, 16, false);
-            } else if (offSize != 0) {
-                if (offSize == 16 && offset >= -128 && offset < 128)
-                    outText(">");
-                if (offSize == 8) {
-                    if (!indir && offset >= -16 && offset < 16)
-                        outText("<");
-                    if (indir && offset == 0)
-                        outText("<");
-                }
-                if (offSize == 5 && offset == 0)
-                    outText("<<");
+            } else {
+                if (force) outText(force);
                 outConstant(offset, 10);
             }
-        } else {
-            outConstant(addr, 16, false);
         }
     }
-    if (base) {
+    if (spec.mode == ACCM_IDX)
+        outRegister(spec.index);
+    if (spec.mode == ABS_IDIR) {
+        Config::uintptr_t addr;
+        if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
+        outConstant(addr, 16, false);
+    } else {
         *_operands++ = ',';
-        for (; incr < 0; incr++) *_operands++ = '-';
-        outRegister(base);
-        for (; incr > 0; incr--) *_operands++ = '+';
     }
-    if (indir) *_operands++ = ']';
+    if (spec.mode == AUTO_IDX && spec.size < 0) {
+        *_operands++ = '-';
+        if (spec.size == -2) *_operands++ = '-';
+    }
+    if (spec.base == REG_X) {
+        const RegName base = _regs.decodeBaseReg((post >> 5) & 3);
+        outRegister(base);
+    } else if (spec.base != REG_UNDEF) {
+        outRegister(spec.base);
+    }
+    if (spec.mode == AUTO_IDX && spec.size > 0) {
+        *_operands++ = '+';
+        if (spec.size == 2) *_operands++ = '+';
+    }
+    if (spec.indir) *_operands++ = ']';
     *_operands = 0;
     return setOK();
 }

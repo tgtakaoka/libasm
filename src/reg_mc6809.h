@@ -55,7 +55,6 @@ public:
     int8_t encodeBaseReg(RegName regName) const;
     int8_t encodeDataReg(RegName regName) const;
     uint8_t encodeStackReg(RegName regName, bool onUserStack) const;
-    RegName decodeIndexReg(uint8_t regNum) const;
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;
     RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
