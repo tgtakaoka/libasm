@@ -502,7 +502,7 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     return false;
 }
 
-Error TableMc6800::searchNameAndAddrMode(
+Error TableMc6800::searchName(
     InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
     const AddrMode addrMode = insn.addrMode();
     for (const EntryPage *page = pages; page < end; page++) {
@@ -546,8 +546,8 @@ const Entry *TableMc6800::searchOpCode(
     return nullptr;
 }
 
-Error TableMc6800::searchNameAndAddrMode(InsnMc6800 &insn) const {
-    return searchNameAndAddrMode(insn, _table, _end);
+Error TableMc6800::searchName(InsnMc6800 &insn) const {
+    return searchName(insn, _table, _end);
 }
 
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {

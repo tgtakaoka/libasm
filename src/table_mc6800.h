@@ -29,7 +29,7 @@ class TableMc6800 : private TableBase {
 public:
     TableMc6800();
 
-    Error searchNameAndAddrMode(InsnMc6800 &insn) const;
+    Error searchName(InsnMc6800 &insn) const;
     Error searchOpCode(InsnMc6800 &insn) const;
     Error searchOpCodeAlias(InsnMc6800 &insn) const;
     bool isPrefixCode(Config::opcode_t opCode);
@@ -47,7 +47,7 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    static Error searchNameAndAddrMode(
+    static Error searchName(
         InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end);
     static const Entry *searchOpCode(
         InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end);
