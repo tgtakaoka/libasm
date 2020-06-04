@@ -44,6 +44,9 @@ public:
         _opCode = opCode;
         _prefixCode = prefixCode;
     }
+    void embed(Config::opcode_t opCode) {
+        _opCode |= opCode;
+    }
     bool hasPrefix() const { return prefixCode() != 0; }
     Config::opcode_t prefixCode() const { return _prefixCode; }
     Config::opcode_t opCode() const { return _opCode; }

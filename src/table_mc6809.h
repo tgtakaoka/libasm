@@ -37,9 +37,9 @@ enum IndexedSubMode : uint8_t {
 
 struct PostSpec {
     IndexedSubMode mode;
-    int8_t size;
-    RegName base;
     RegName index;
+    RegName base;
+    int8_t size;
     bool indir;
 };
 
@@ -48,9 +48,9 @@ public:
     TableMc6809();
 
     Error searchName(InsnMc6809 &insn) const;
-    Error searchNameAndAddrMode(InsnMc6809 &insn) const;
     Error searchOpCode(InsnMc6809 &insn) const;
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
+    Error searchPostSpec(PostSpec &spec, uint8_t &post) const;
 
     const char *listCpu() override { return "6809, 6309"; }
     bool setCpu(const char *cpu) override;
@@ -71,12 +71,13 @@ private:
 
     static Error searchName(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchNameAndAddrMode(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchOpCode(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchPostByte(
         const uint8_t post, PostSpec &spec,
+        const PostEntry *table, const PostEntry *end);
+    static Error searchPostSpec(
+        PostSpec &spec, uint8_t &post,
         const PostEntry *table, const PostEntry *end);
 };
 

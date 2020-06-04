@@ -54,7 +54,9 @@ public:
     int8_t encodeIndexReg(RegName regName) const;
     int8_t encodeBaseReg(RegName regName) const;
     int8_t encodeDataReg(RegName regName) const;
-    uint8_t encodeStackReg(RegName regName, bool onUserStack) const;
+    bool isIndexReg(RegName regName) const;
+    bool isBaseReg(RegName regName) const;
+    static uint8_t encodeStackReg(RegName regName, bool onUserStack);
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;
     RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
@@ -69,6 +71,7 @@ public:
     static int8_t encodeBitOpReg(RegName regName);
 
     RegName parseTfmBaseReg(const char *line) const;
+    bool isTfmBaseReg(RegName regName) const;
     static int8_t encodeTfmBaseReg(RegName regName);
     static RegName decodeBitOpReg(uint8_t regNum);
     static RegName decodeTfmBaseReg(uint8_t regNum);
