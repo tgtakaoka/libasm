@@ -189,7 +189,7 @@ Error DisZ8::decode(DisMemory &memory, Insn &_insn) {
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableZ8.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableZ8.getError());
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     if (dst == M_NO)

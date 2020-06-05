@@ -202,7 +202,7 @@ Error DisW65C816::decode(
     insn.setOpCode(opCode);
 
     if (TableW65C816.searchOpCode(insn, _acceptIndirectLong))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableW65C816.getError());
 
     switch (insn.addrMode()) {
     case IMPL:

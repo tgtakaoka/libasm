@@ -258,11 +258,12 @@ Error TableZ80::searchName(
     const char *name = insn.name();
     const uint16_t flags =
         Entry::_flags(NO_FMT, INHR, insn.dstFormat(), insn.srcFormat());
+    uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry,uint16_t>(
-            name, flags, table, end, acceptOprFormats);
+            name, flags, table, end, acceptOprFormats, count);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
@@ -270,7 +271,7 @@ Error TableZ80::searchName(
             return OK;
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
 static Config::opcode_t maskCode(
@@ -314,11 +315,11 @@ bool TableZ80::isPrefixCode(Config::opcode_t opCode) {
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) const {
-    return searchName(insn, _table, _end);
+    return _error.setError(searchName(insn, _table, _end));
 }
 
 Error TableZ80::searchOpCode(InsnZ80 &insn) const {
-    return searchOpCode(insn, _table, _end);
+    return _error.setError(searchOpCode(insn, _table, _end));
 }
 
 TableZ80::TableZ80() {

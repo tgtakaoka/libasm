@@ -143,7 +143,7 @@ Error DisMc6800::decodeBitOperation(
         if (bitNum >= 0) {
             val8 = bitNum;
             if (TableMc6800.searchOpCodeAlias(insn))
-                return setError(INTERNAL_ERROR);
+                return setError(TableMc6800.getError());
         } else {
             *_operands++ = '#';
         }
@@ -175,7 +175,7 @@ Error DisMc6800::decode(
         insn.setOpCode(opCode, prefix);
     }
     if (TableMc6800.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc6800.getError());
 
     switch (insn.addrMode()) {
     case INH: return decodeInherent(insn);

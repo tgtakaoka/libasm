@@ -331,16 +331,17 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 
 Error TableW65C816::searchName(
     InsnW65C816 &insn, const Entry *table, const Entry *end) const {
+    uint8_t count = 0;
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
     const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-        name, addrMode, table, end, acceptAddrMode);
+        name, addrMode, table, end, acceptAddrMode, count);
     if (entry) {
         insn.setFlags(pgm_read_byte(&entry->flags));
         insn.setOpCode(pgm_read_byte(&entry->opCode));
         return OK;
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
 static bool acceptAddrMode(AddrMode addrMode, bool acceptIndirectLong) {
@@ -372,12 +373,13 @@ Error TableW65C816::searchOpCode(
 }
 
 Error TableW65C816::searchName(InsnW65C816 &insn) const {
-    return searchName(insn, ARRAY_RANGE(W65C816_TABLE));
+    return _error.setError(searchName(insn, ARRAY_RANGE(W65C816_TABLE)));
 }
 
 Error TableW65C816::searchOpCode(
     InsnW65C816 &insn, bool acceptIndirectLong) const {
-    return searchOpCode(insn, acceptIndirectLong, ARRAY_RANGE(W65C816_TABLE));
+    return _error.setError(
+        searchOpCode(insn, acceptIndirectLong, ARRAY_RANGE(W65C816_TABLE)));
 }
 
 bool TableW65C816::setCpu(const char *cpu) {

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class TableMc68000 : private TableBase {
+class TableMc68000 : public TableBase {
 public:
     Error searchName(InsnMc68000 &insn, const char *name) const;
     Error searchOpCode(InsnMc68000 &insn) const;

@@ -159,7 +159,7 @@ Error AsmTms9900::encode(Insn &_insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableTms9900.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableTms9900.getError());
     _scan = skipSpaces(endName);
 
     Error error = OK;

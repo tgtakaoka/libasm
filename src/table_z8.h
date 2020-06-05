@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z8 {
 
-class TableZ8 : private TableBase {
+class TableZ8 : public TableBase {
 public:
     Error searchName(InsnZ8 &insn) const;
     Error searchOpCode(InsnZ8 &insn) const;

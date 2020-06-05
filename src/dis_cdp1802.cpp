@@ -27,7 +27,7 @@ Error DisCdp1802::decode(
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableCdp1802.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableCdp1802.getError());
 
     uint8_t val;
     Config::uintptr_t addr;

@@ -18,13 +18,14 @@
 #define __TABLE_MC6809_H__
 
 #include "config_mc6809.h"
+#include "error_reporter.h"
 #include "insn_mc6809.h"
 #include "table_base.h"
 
 namespace libasm {
 namespace mc6809 {
 
-class TableMc6809 : private TableBase {
+class TableMc6809 : public TableBase {
 public:
     TableMc6809();
 

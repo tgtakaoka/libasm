@@ -212,7 +212,7 @@ Error AsmIns8070::encode(Insn &_insn) {
 
     insn.setOprFormats(op.dst, op.src);
     if (TableIns8070.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableIns8070.getError());
 
     switch (insn.addrMode()) {
     case IMPLIED:   return encodeImplied(insn, op);

@@ -124,10 +124,12 @@ Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
     const char *name = insn.name();
     const Entry *entry =
         TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_CDP1802));
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
+    if (entry) {
+        insn.setOpCode(pgm_read_byte(&entry->opCode));
+        insn.setFlags(pgm_read_byte(&entry->flags));
+        return _error.setOK();
+    }
+    return _error.setError(UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t tableCode(
@@ -145,13 +147,13 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
     const Entry *entry =
         TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(TABLE_CDP1802), tableCode);
-    if (!entry) return UNKNOWN_INSTRUCTION;
+    if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(pgm_read_byte(&entry->flags));
-    if (insn.addrMode() == UNDF) return UNKNOWN_INSTRUCTION;
+    if (insn.addrMode() == UNDF) return _error.setError(UNKNOWN_INSTRUCTION);
     const char *name =
         reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
     TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    return _error.setOK();
 }
 
 bool TableCdp1802::setCpu(const char *cpu) {

@@ -236,7 +236,7 @@ Error AsmW65C816::encode(Insn &_insn) {
     setError(op);
     insn.setAddrMode(op.mode);
     if (TableW65C816.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableW65C816.getError());
     switch (insn.addrMode()) {
     case IMPL:
     case ACCM:

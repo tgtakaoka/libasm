@@ -26,96 +26,115 @@
 namespace libasm {
 namespace tms9900 {
 
-#define E(_insn, _name, _amode, _mcu)                       \
-    { _insn, Entry::_flags(_mcu, _amode), TEXT_##_name },
+#define E(_insn, _name, _amode)                     \
+    { _insn, Entry::_flags(_amode), TEXT_##_name },
 
 static constexpr Entry TABLE_TMS9900[] PROGMEM = {
-    E(0x0080, LST,  REG, TMS9995)
-    E(0x0090, LWP,  REG, TMS9995)
-    E(0x0180, DIVS, SRC, TMS9995)
-    E(0x01C0, MPYS, SRC, TMS9995)
-    E(0x0200, LI,   REG_IMM, TMS9900)
-    E(0x0220, AI,   REG_IMM, TMS9900)
-    E(0x0240, ANDI, REG_IMM, TMS9900)
-    E(0x0260, ORI,  REG_IMM, TMS9900)
-    E(0x0280, CI,   REG_IMM, TMS9900)
-    E(0x02A0, STWP, REG, TMS9900)
-    E(0x02C0, STST, REG, TMS9900)
-    E(0x02E0, LWPI, IMM, TMS9900)
-    E(0x0300, LIMI, IMM, TMS9900)
-    E(0x0340, IDLE, INH, TMS9900)
-    E(0x0360, RSET, INH, TMS9900)
-    E(0x0380, RTWP, INH, TMS9900)
-    E(0x03A0, CKON, INH, TMS9900)
-    E(0x03C0, CKOF, INH, TMS9900)
-    E(0x03E0, LREX, INH, TMS9900)
-    E(0x0400, BLWP, SRC, TMS9900)
-    E(0x0440, B,    SRC, TMS9900)
-    E(0x0480, X,    SRC, TMS9900)
-    E(0x04C0, CLR,  SRC, TMS9900)
-    E(0x0500, NEG,  SRC, TMS9900)
-    E(0x0540, INV,  SRC, TMS9900)
-    E(0x0580, INC,  SRC, TMS9900)
-    E(0x05C0, INCT, SRC, TMS9900)
-    E(0x0600, DEC,  SRC, TMS9900)
-    E(0x0640, DECT, SRC, TMS9900)
-    E(0x0680, BL,   SRC, TMS9900)
-    E(0x06C0, SWPB, SRC, TMS9900)
-    E(0x0700, SETO, SRC, TMS9900)
-    E(0X0740, ABS,  SRC, TMS9900)
-    E(0x0800, SRA,  CNT_REG, TMS9900)
-    E(0x0900, SRL,  CNT_REG, TMS9900)
-    E(0x0A00, SLA,  CNT_REG, TMS9900)
-    E(0x0B00, SRC,  CNT_REG, TMS9900)
-    E(0x1000, JMP,  REL, TMS9900)
-    E(0x1100, JLT,  REL, TMS9900)
-    E(0x1200, JLE,  REL, TMS9900)
-    E(0x1300, JEQ,  REL, TMS9900)
-    E(0x1400, JHE,  REL, TMS9900)
-    E(0x1500, JGT,  REL, TMS9900)
-    E(0x1600, JNE,  REL, TMS9900)
-    E(0x1700, JNC,  REL, TMS9900)
-    E(0x1800, JOC,  REL, TMS9900)
-    E(0x1900, JNO,  REL, TMS9900)
-    E(0x1A00, JL,   REL, TMS9900)
-    E(0x1B00, JH,   REL, TMS9900)
-    E(0x1C00, JOP,  REL, TMS9900)
-    E(0x1D00, SBO,  CRU_OFF, TMS9900)
-    E(0x1E00, SBZ,  CRU_OFF, TMS9900)
-    E(0x1F00, TB,   CRU_OFF, TMS9900)
-    E(0x2000, COC,  REG_SRC, TMS9900)
-    E(0x2400, CZC,  REG_SRC, TMS9900)
-    E(0x2800, XOR,  REG_SRC, TMS9900)
-    E(0x2C00, XOP,  XOP_SRC, TMS9900)
-    E(0x3000, LDCR, CNT_SRC, TMS9900)
-    E(0x3400, STCR, CNT_SRC, TMS9900)
-    E(0x3800, MPY,  REG_SRC, TMS9900)
-    E(0x3C00, DIV,  REG_SRC, TMS9900)
-    E(0x4000, SZC,  DST_SRC, TMS9900)
-    E(0x5000, SZCB, DST_SRC, TMS9900)
-    E(0x6000, S,    DST_SRC, TMS9900)
-    E(0x7000, SB,   DST_SRC, TMS9900)
-    E(0x8000, C,    DST_SRC, TMS9900)
-    E(0x9000, CB,   DST_SRC, TMS9900)
-    E(0xA000, A,    DST_SRC, TMS9900)
-    E(0xB000, AB,   DST_SRC, TMS9900)
-    E(0xC000, MOV,  DST_SRC, TMS9900)
-    E(0xD000, MOVB, DST_SRC, TMS9900)
-    E(0xE000, SOC,  DST_SRC, TMS9900)
-    E(0xF000, SOCB, DST_SRC, TMS9900)
+    E(0x0200, LI,   REG_IMM)
+    E(0x0220, AI,   REG_IMM)
+    E(0x0240, ANDI, REG_IMM)
+    E(0x0260, ORI,  REG_IMM)
+    E(0x0280, CI,   REG_IMM)
+    E(0x02A0, STWP, REG)
+    E(0x02C0, STST, REG)
+    E(0x02E0, LWPI, IMM)
+    E(0x0300, LIMI, IMM)
+    E(0x0340, IDLE, INH)
+    E(0x0360, RSET, INH)
+    E(0x0380, RTWP, INH)
+    E(0x03A0, CKON, INH)
+    E(0x03C0, CKOF, INH)
+    E(0x03E0, LREX, INH)
+    E(0x0400, BLWP, SRC)
+    E(0x0440, B,    SRC)
+    E(0x0480, X,    SRC)
+    E(0x04C0, CLR,  SRC)
+    E(0x0500, NEG,  SRC)
+    E(0x0540, INV,  SRC)
+    E(0x0580, INC,  SRC)
+    E(0x05C0, INCT, SRC)
+    E(0x0600, DEC,  SRC)
+    E(0x0640, DECT, SRC)
+    E(0x0680, BL,   SRC)
+    E(0x06C0, SWPB, SRC)
+    E(0x0700, SETO, SRC)
+    E(0X0740, ABS,  SRC)
+    E(0x0800, SRA,  CNT_REG)
+    E(0x0900, SRL,  CNT_REG)
+    E(0x0A00, SLA,  CNT_REG)
+    E(0x0B00, SRC,  CNT_REG)
+    E(0x1000, JMP,  REL)
+    E(0x1100, JLT,  REL)
+    E(0x1200, JLE,  REL)
+    E(0x1300, JEQ,  REL)
+    E(0x1400, JHE,  REL)
+    E(0x1500, JGT,  REL)
+    E(0x1600, JNE,  REL)
+    E(0x1700, JNC,  REL)
+    E(0x1800, JOC,  REL)
+    E(0x1900, JNO,  REL)
+    E(0x1A00, JL,   REL)
+    E(0x1B00, JH,   REL)
+    E(0x1C00, JOP,  REL)
+    E(0x1D00, SBO,  CRU_OFF)
+    E(0x1E00, SBZ,  CRU_OFF)
+    E(0x1F00, TB,   CRU_OFF)
+    E(0x2000, COC,  REG_SRC)
+    E(0x2400, CZC,  REG_SRC)
+    E(0x2800, XOR,  REG_SRC)
+    E(0x2C00, XOP,  XOP_SRC)
+    E(0x3000, LDCR, CNT_SRC)
+    E(0x3400, STCR, CNT_SRC)
+    E(0x3800, MPY,  REG_SRC)
+    E(0x3C00, DIV,  REG_SRC)
+    E(0x4000, SZC,  DST_SRC)
+    E(0x5000, SZCB, DST_SRC)
+    E(0x6000, S,    DST_SRC)
+    E(0x7000, SB,   DST_SRC)
+    E(0x8000, C,    DST_SRC)
+    E(0x9000, CB,   DST_SRC)
+    E(0xA000, A,    DST_SRC)
+    E(0xB000, AB,   DST_SRC)
+    E(0xC000, MOV,  DST_SRC)
+    E(0xD000, MOVB, DST_SRC)
+    E(0xE000, SOC,  DST_SRC)
+    E(0xF000, SOCB, DST_SRC)
 };
 
-Error TableTms9900::searchName(InsnTms9900 &insn) const {
-    const char *name = insn.name();
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_TMS9900));
-    if (!entry)
-        return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_word(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    if (insn.is9995() && !is9995())
-        return UNKNOWN_INSTRUCTION;
-    return OK;
+static constexpr Entry TABLE_TMS9995[] PROGMEM = {
+    E(0x0080, LST,  REG)
+    E(0x0090, LWP,  REG)
+    E(0x0180, DIVS, SRC)
+    E(0x01C0, MPYS, SRC)
+};
+
+struct TableTms9900::EntryPage {
+    const Entry *table;
+    const Entry *end;
+};
+
+static constexpr TableTms9900::EntryPage TMS9900_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_TMS9900) },
+};
+
+static constexpr TableTms9900::EntryPage TMS9995_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_TMS9900) },
+    { ARRAY_RANGE(TABLE_TMS9995) },
+};
+
+Error TableTms9900::searchName(
+    InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchName<Entry>(insn.name(), table, end);
+        if (entry) {
+            insn.setOpCode(pgm_read_word(&entry->opCode));
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
 }
 
 static Config::opcode_t maskCode(
@@ -142,19 +161,43 @@ static Config::opcode_t maskCode(
     }
 }
 
+Error TableTms9900::searchOpCode(
+    InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+            insn.opCode(), table, end, maskCode);
+        if (entry) {
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
+Error TableTms9900::searchName(InsnTms9900 &insn) const {
+    return _error.setError(searchName(insn, _table, _end));
+}
+
 Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-        opCode, ARRAY_RANGE(TABLE_TMS9900), maskCode);
-    if (!entry)
-        return UNKNOWN_INSTRUCTION;
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    if (insn.is9995() && !is9995())
-        return UNKNOWN_INSTRUCTION;
-    const char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    return _error.setError(searchOpCode(insn, _table, _end));
+}
+
+TableTms9900::TableTms9900() {
+    setCpu(TMS9900);
+}
+
+bool TableTms9900::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    _table = (cpuType == TMS9900)
+        ? ARRAY_BEGIN(TMS9900_PAGES) : ARRAY_BEGIN(TMS9995_PAGES);
+    _end = (cpuType == TMS9900)
+        ? ARRAY_END(TMS9900_PAGES) : ARRAY_END(TMS9995_PAGES);
+    return true;
 }
 
 const char *TableTms9900::getCpu() {
@@ -164,14 +207,10 @@ const char *TableTms9900::getCpu() {
 bool TableTms9900::setCpu(const char *cpu) {
     if (strncasecmp(cpu, "tms", 3) == 0)
         cpu += 3;
-    if (strcmp(cpu, "9900") == 0) {
-        _cpuType = TMS9900;
-        return true;
-    }
-    if (strcmp(cpu, "9995") == 0) {
-        _cpuType = TMS9995;
-        return true;
-    }
+    if (strcmp(cpu, "9900") == 0)
+        return setCpu(TMS9900);
+    if (strcmp(cpu, "9995") == 0)
+        return setCpu(TMS9995);
     return false;
 }
 

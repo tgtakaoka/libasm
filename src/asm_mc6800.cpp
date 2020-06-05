@@ -188,7 +188,7 @@ Error AsmMc6800::encode(Insn &_insn) {
 
     insn.setAddrMode(op.mode);
     if (TableMc6800.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc6800.getError());
 
     if (adjustAccumulator(insn, op)) return getError();
     insn.emitInsn();

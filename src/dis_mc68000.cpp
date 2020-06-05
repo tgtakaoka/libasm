@@ -672,7 +672,7 @@ Error DisMc68000::decode(
     if (insn.readUint16(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableMc68000.searchOpCode(insn))
-        return getError();
+        return setError(TableMc68000.getError());
 
     switch (insn.insnFormat()) {
     case IMPLIED:  return decodeImplied(memory, insn);

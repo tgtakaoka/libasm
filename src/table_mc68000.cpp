@@ -212,10 +212,12 @@ static Config::opcode_t getInsnMask(InsnFormat iformat) {
 Error TableMc68000::searchName(InsnMc68000 &insn, const char *name) const {
     const Entry *entry =
         TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_MC68000));
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_word(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
+    if (entry) {
+        insn.setOpCode(pgm_read_word(&entry->opCode));
+        insn.setFlags(pgm_read_byte(&entry->flags));
+        return _error.setOK();
+    }
+    return _error.setError(UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
@@ -228,12 +230,14 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     const Config::opcode_t opCode = insn.opCode();
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
         opCode, ARRAY_RANGE(TABLE_MC68000), maskCode);
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    const char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    if (entry) {
+        insn.setFlags(pgm_read_byte(&entry->flags));
+        const char *name =
+            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+        return _error.setOK();
+    }
+    return _error.setError(UNKNOWN_INSTRUCTION);
 }
 
 bool TableMc68000::setCpu(const char *cpu) {

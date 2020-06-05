@@ -382,7 +382,7 @@ Error AsmZ80::encode(Insn &_insn) {
 
     insn.setOprFormats(dst.format, src.format);
     if (TableZ80.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableZ80.getError());
     dst.format = insn.dstFormat();
     src.format = insn.srcFormat();
 

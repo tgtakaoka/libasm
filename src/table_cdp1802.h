@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class TableCdp1802 : private TableBase {
+class TableCdp1802 : public TableBase {
 public:
     Error searchName(InsnCdp1802 &insn) const;
     Error searchOpCode(InsnCdp1802 &insn) const;

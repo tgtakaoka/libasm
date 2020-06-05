@@ -377,7 +377,7 @@ Error AsmMc6809::encodeImmediatePlus(InsnMc6809 &insn) {
     }
     insn.setAddrMode(mode);
     if (TableMc6809.searchNameAndAddrMode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc6809.getError());
     insn.emitInsn();
     insn.emitByte(val8);
     switch (mode) {
@@ -492,7 +492,7 @@ Error AsmMc6809::encode(Insn &_insn) {
     if (processPseudo(insn, skipSpaces(endName)) == OK)
         return getError();
     if (TableMc6809.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc6809.getError());
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {
@@ -511,7 +511,7 @@ Error AsmMc6809::encode(Insn &_insn) {
 
     if (determineAddrMode(_scan, insn)) return getError();
     if (TableMc6809.searchNameAndAddrMode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc6809.getError());
     switch (insn.addrMode()) {
     case IMM: return encodeImmediate(insn);
     case DIR: return encodeDirect(insn);

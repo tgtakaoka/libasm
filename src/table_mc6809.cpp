@@ -546,11 +546,12 @@ static bool matchAddrMode(AddrMode addrMode, const Entry *entry) {
 Error TableMc6809::searchNameAndAddrMode(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     const AddrMode addrMode = insn.addrMode();
+    uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-            insn.name(), addrMode, table, end, matchAddrMode);
+            insn.name(), addrMode, table, end, matchAddrMode, count);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
@@ -558,7 +559,7 @@ Error TableMc6809::searchNameAndAddrMode(
             return OK;
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
 Error TableMc6809::searchOpCode(
@@ -582,15 +583,15 @@ Error TableMc6809::searchOpCode(
 }
 
 Error TableMc6809::searchName(InsnMc6809 &insn) const {
-    return searchName(insn, _table, _end);
+    return _error.setError(searchName(insn, _table, _end));
 }
 
 Error TableMc6809::searchNameAndAddrMode(InsnMc6809 &insn) const {
-    return searchNameAndAddrMode(insn, _table, _end);
+    return _error.setError(searchNameAndAddrMode(insn, _table, _end));
 }
 
 Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
-    return searchOpCode(insn, _table, _end);
+    return _error.setError(searchOpCode(insn, _table, _end));
 }
 
 TableMc6809::TableMc6809() {

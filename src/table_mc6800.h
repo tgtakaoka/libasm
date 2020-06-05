@@ -25,7 +25,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class TableMc6800 : private TableBase {
+class TableMc6800 : public TableBase {
 public:
     TableMc6800();
 

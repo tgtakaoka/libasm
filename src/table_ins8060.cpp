@@ -90,14 +90,16 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 }
 
 Error TableIns8060::searchName(InsnIns8060 &insn) const {
-    const char *name = insn.name();
-    const AddrMode addrMode = insn.addrMode();
+    uint8_t count = 0;
     const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-        name, addrMode, ARRAY_RANGE(TABLE_INS8060), acceptAddrMode);
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
+        insn.name(), insn.addrMode(), ARRAY_RANGE(TABLE_INS8060),
+        acceptAddrMode, count);
+    if (entry) {
+        insn.setOpCode(pgm_read_byte(&entry->opCode));
+        insn.setFlags(pgm_read_byte(&entry->flags));
+        return _error.setOK();
+    }
+    return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND);
 }
 
 static Config::opcode_t tableCode(
@@ -120,13 +122,13 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
     const Entry *entry =
         TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(TABLE_INS8060), tableCode);
-    if (!entry) return UNKNOWN_INSTRUCTION;
+    if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(pgm_read_byte(&entry->flags));
-    if (insn.addrMode() == UNDEF) return UNKNOWN_INSTRUCTION;
+    if (insn.addrMode() == UNDEF) return _error.setError(UNKNOWN_INSTRUCTION);
     const char *name =
         reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
     TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    return _error.setOK();
 }
 
 bool TableIns8060::setCpu(const char *cpu) {

@@ -141,7 +141,7 @@ Error AsmMos6502::encode(Insn &_insn) {
     if (parseOperand(op, extra)) return getError();
     insn.setAddrMode(op.mode);
     if (TableMos6502.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMos6502.getError());
     switch (insn.addrMode()) {
     case IMPL:
     case ACCM:

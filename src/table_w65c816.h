@@ -24,7 +24,7 @@
 namespace libasm {
 namespace w65c816 {
 
-class TableW65C816 : private TableBase {
+class TableW65C816 : public TableBase {
 public:
     Error searchName(InsnW65C816 &insn) const;
     Error searchNameAndAddrMode(InsnW65C816 &insn) const;

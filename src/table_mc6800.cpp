@@ -505,11 +505,12 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 Error TableMc6800::searchName(
     InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
     const AddrMode addrMode = insn.addrMode();
+    uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-            insn.name(), addrMode, table, end, acceptAddrMode);
+            insn.name(), addrMode, table, end, acceptAddrMode, count);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
@@ -517,7 +518,7 @@ Error TableMc6800::searchName(
             return OK;
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
 static Config::opcode_t tableCode(
@@ -541,36 +542,37 @@ const Entry *TableMc6800::searchOpCode(
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end, tableCode);
-        if (entry) return entry;
+        if (entry) {
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            return entry;
+        }
     }
     return nullptr;
 }
 
 Error TableMc6800::searchName(InsnMc6800 &insn) const {
-    return searchName(insn, _table, _end);
+    return _error.setError(searchName(insn, _table, _end));
 }
 
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
     const Entry *entry = searchOpCode(insn, _table, _end);
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    const char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    return _error.setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     const Entry *entry = searchOpCode(insn, _table, _end);
-    if (!entry) return UNKNOWN_INSTRUCTION;
+    if (!entry) return _error.setError(INTERNAL_ERROR);
     entry += 1;
     if (pgm_read_byte(&entry->opCode) != insn.opCode())
-        return UNKNOWN_INSTRUCTION;
+        return _error.setError(INTERNAL_ERROR);
     insn.setFlags(pgm_read_byte(&entry->flags));
     const char *name =
         reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
     TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    return _error.setOK();
 }
 
 TableMc6800::TableMc6800() {

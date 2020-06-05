@@ -293,18 +293,19 @@ Error TableMos6502::searchName(
     InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) {
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
+    uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry, AddrMode>(
-            name, addrMode, table, end, acceptAddrMode);
+            name, addrMode, table, end, acceptAddrMode, count);
         if (entry) {
             insn.setFlags(pgm_read_byte(&entry->flags));
             insn.setOpCode(pgm_read_byte(&entry->opCode));
             return OK;
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
 Error TableMos6502::searchOpCode(
@@ -327,11 +328,11 @@ Error TableMos6502::searchOpCode(
 }
 
 Error TableMos6502::searchName(InsnMos6502 &insn) const {
-    return searchName(insn, _table, _end);
+    return _error.setError(searchName(insn, _table, _end));
 }
 
 Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
-    return searchOpCode(insn, _table, _end);
+    return _error.setError(searchOpCode(insn, _table, _end));
 }
 
 TableMos6502::TableMos6502() {

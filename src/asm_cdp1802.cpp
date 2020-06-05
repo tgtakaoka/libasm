@@ -78,7 +78,7 @@ Error AsmCdp1802::encode(Insn &_insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     if (TableCdp1802.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableCdp1802.getError());
     _scan = skipSpaces(endName);
 
     switch (insn.addrMode()) {

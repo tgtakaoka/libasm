@@ -24,8 +24,10 @@
 namespace libasm {
 namespace i8080 {
 
-class TableI8080 : private TableBase {
+class TableI8080 : public TableBase {
 public:
+    TableI8080();
+
     Error searchName(InsnI8080 &insn) const;
     Error searchOpCode(InsnI8080 &insn) const;
 
@@ -35,8 +37,18 @@ public:
         return _cpuType == I8080 ? "8080" : "8085";
     }
 
+    struct EntryPage;
+
 private:
     CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
+
+    bool setCpu(CpuType cpuType);
+    static Error searchName(
+        InsnI8080 &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchOpCode(
+        InsnI8080 &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableI8080 TableI8080;

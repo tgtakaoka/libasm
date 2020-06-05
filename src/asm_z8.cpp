@@ -233,7 +233,7 @@ Error AsmZ8::encode(Insn &_insn) {
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableZ8.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableZ8.getError());
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
 

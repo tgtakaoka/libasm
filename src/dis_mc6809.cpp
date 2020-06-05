@@ -312,7 +312,7 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
     }
 
     if (TableMc6809.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc6809.getError());
 
     switch (insn.addrMode()) {
     case INH: return setOK();

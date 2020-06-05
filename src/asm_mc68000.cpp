@@ -180,7 +180,8 @@ Error AsmMc68000::encodeDestSiz(
         if (op1.mode != M_IMM_DATA)
             return setError(UNKNOWN_OPERAND);
         if (op2.mode == M_AREG && alias) {
-            TableMc68000.searchName(insn, alias);
+            if (TableMc68000.searchName(insn, alias))
+                return setError(TableMc68000.getError());
             return encodeAregSiz(insn, op1, op2);
         }
         if (op2.reg == REG_CCR || op2.reg == REG_SR) {
@@ -588,7 +589,8 @@ Error AsmMc68000::encodeDmemSiz(
     if (op4 == SUB) alias = "SUBA";
     if (op4 == ADD) alias = "ADDA";
     if (op2.mode == M_AREG && alias) {
-        TableMc68000.searchName(insn, alias);
+        if (TableMc68000.searchName(insn, alias))
+            return setError(TableMc68000.getError());
         return encodeAregSiz(insn, op1, op2);
     }
     if (RegMc68000::isDreg(op1.reg)) { // Dn,<ea>
@@ -704,7 +706,8 @@ Error AsmMc68000::encodeMoveOpr(
     if (_optimize && op1.mode == M_IMM_DATA && insn.size() == SZ_LONG
         && checkSize(op1.val32, SZ_BYTE, false) == OK
         && RegMc68000::isDreg(op2.reg)) {
-        TableMc68000.searchName(insn, "MOVEQ");
+        if (TableMc68000.searchName(insn, "MOVEQ"))
+            return setError(TableMc68000.getError());
         return encodeMoveQic(insn, op1, op2);
     }
     if (op2.mode == M_AREG) {
@@ -870,7 +873,7 @@ Error AsmMc68000::encode(Insn &_insn) {
     insn.setSize(size);
 
     if (TableMc68000.searchName(insn, insn.name()))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMc68000.getError());
     _scan = skipSpaces(endSize);
     Operand op1;
     Operand op2;

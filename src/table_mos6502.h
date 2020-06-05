@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mos6502 {
 
-class TableMos6502 : private TableBase {
+class TableMos6502 : public TableBase {
 public:
     TableMos6502();
 

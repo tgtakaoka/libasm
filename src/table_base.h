@@ -18,6 +18,7 @@
 #define __TABLE_BASE_H__
 
 #include "config_host.h"
+#include "error_reporter.h"
 #include "insn_base.h"
 
 namespace libasm {
@@ -27,8 +28,11 @@ public:
     virtual const char *listCpu() = 0;
     virtual bool setCpu(const char *cpu) = 0;
     virtual const char *getCpu() = 0;
-
+    Error getError() const { return _error.getError(); }
+    
 protected:
+    mutable ErrorReporter _error;
+
     template<typename E>
     static const E *searchName(
         const char *name, const E *begin, const E *end) {
@@ -44,10 +48,11 @@ protected:
     template<typename E, typename A>
     static const E *searchName(
         const char *name, A attr, const E *begin, const E *end,
-        bool (*accept)(A, const E *)) {
+        bool (*accept)(A, const E *), uint8_t &count) {
         for (const E *entry = begin;
              entry < end && (entry = searchName(name, entry, end));
              entry++) {
+            count++;
             if (accept(attr, entry))
                 return entry;
         }

@@ -132,7 +132,7 @@ Error DisMos6502::decode(
     insn.setOpCode(opCode);
 
     if (TableMos6502.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableMos6502.getError());
 
     switch (insn.addrMode()) {
     case IMPL:

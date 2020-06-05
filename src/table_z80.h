@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z80 {
 
-class TableZ80 : private TableBase {
+class TableZ80 : public TableBase {
 public:
     TableZ80();
 

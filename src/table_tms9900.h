@@ -24,8 +24,10 @@
 namespace libasm {
 namespace tms9900 {
 
-class TableTms9900 : private TableBase {
+class TableTms9900 : public TableBase {
 public:
+    TableTms9900();
+
     Error searchName(InsnTms9900 &insn) const;
     Error searchOpCode(InsnTms9900 &insn) const;
 
@@ -34,8 +36,18 @@ public:
     const char *getCpu() override;
     bool is9995() const { return _cpuType == TMS9995; }
 
+    struct EntryPage;
+
 private:
     CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
+
+    bool setCpu(CpuType cpuType);
+    static Error searchName(
+        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end);
+    static Error searchOpCode(
+        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end);
 };
 
 extern TableTms9900 TableTms9900;

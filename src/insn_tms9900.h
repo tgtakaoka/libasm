@@ -29,7 +29,6 @@ public:
     InsnTms9900(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    bool is9995() const { return Entry::_cpuType(_flags) == TMS9995; }
 
     void setFlags(uint8_t flags) { _flags = flags; }
 

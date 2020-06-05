@@ -144,7 +144,7 @@ Error DisIns8070::decode(
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableIns8070.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableIns8070.getError());
 
     switch (insn.addrMode()) {
     case IMPLIED:

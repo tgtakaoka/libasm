@@ -68,7 +68,7 @@ Error DisTms9900::decode(
     insn.setOpCode(opCode);
     if (TableTms9900.searchOpCode(insn)) {
         insn.setName("MID");
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableTms9900.getError());
     }
 
     switch (insn.addrMode()) {

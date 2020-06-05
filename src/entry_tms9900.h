@@ -47,20 +47,14 @@ struct Entry {
     const uint8_t flags;
     const char *name;
 
-    static inline CpuType _cpuType(uint8_t flags) {
-        return (flags & tms9995_bm) == 0 ? TMS9900 : TMS9995;
-    }
-
     static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-    static constexpr uint8_t _flags(CpuType cpuType, AddrMode addrMode) {
-        return (cpuType == TMS9995 ? tms9995_bm : 0)
-            | static_cast<uint8_t>(addrMode);
+    static constexpr uint8_t _flags(AddrMode addrMode) {
+        return static_cast<uint8_t>(addrMode);
     }
 
 private:
-    static constexpr uint8_t tms9995_bm = 0x80;
     static constexpr uint8_t addrMode_gm = 0xf;
 };
 

@@ -76,7 +76,7 @@ Error DisIns8060::decode(
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableIns8060.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableIns8060.getError());
 
     switch (insn.addrMode()) {
     case INHR:

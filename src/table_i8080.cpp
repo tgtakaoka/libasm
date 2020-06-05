@@ -115,16 +115,33 @@ static constexpr Entry TABLE_I8085[] PROGMEM = {
     E(0x30, SIM,  INHR,   NO_FORMAT)
 };
 
-Error TableI8080::searchName(InsnI8080 &insn) const {
-    const char *name = insn.name();
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_I8080));
-    if (!entry && _cpuType == I8085)
-        entry = TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_I8085));
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setOpCode(pgm_read_byte(&entry->opCode));
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    return OK;
+struct TableI8080::EntryPage {
+    const Entry *table;
+    const Entry *end;
+};
+
+static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_I8080) },
+};
+static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_I8080) },
+    { ARRAY_RANGE(TABLE_I8085) },
+};
+
+Error TableI8080::searchName(
+    InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry =
+            TableBase::searchName<Entry>(insn.name(), table, end);
+        if (entry) {
+            insn.setOpCode(pgm_read_byte(&entry->opCode));
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
 }
 
 static Config::opcode_t tableCode(
@@ -149,32 +166,51 @@ static Config::opcode_t tableCode(
     }
 }
 
+Error TableI8080::searchOpCode(
+    InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+            insn.opCode(), table, end, tableCode);
+        if (entry) {
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
+Error TableI8080::searchName(InsnI8080 &insn) const {
+    return _error.setError(searchName(insn, _table, _end));
+}
+
 Error TableI8080::searchOpCode(InsnI8080 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry =
-        TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_I8080), tableCode);
-    if (!entry && _cpuType == I8085)
-        entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_I8085), tableCode);
-    if (!entry) return UNKNOWN_INSTRUCTION;
-    insn.setFlags(pgm_read_byte(&entry->flags));
-    const char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-    return OK;
+    return _error.setError(searchOpCode(insn, _table, _end));
+}
+
+TableI8080::TableI8080() {
+    setCpu(I8080);
+}
+
+bool TableI8080::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    _table = (cpuType == I8080)
+        ? ARRAY_BEGIN(I8080_PAGES) : ARRAY_BEGIN(I8085_PAGES);
+    _end = (cpuType == I8080)
+        ? ARRAY_END(I8080_PAGES) : ARRAY_END(I8085_PAGES);
+    return true;
 }
 
 bool TableI8080::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I') cpu++;
-    if (strcmp(cpu, "8080") == 0) {
-        _cpuType = I8080;
-        return true;
-    }
-    if (strcmp(cpu, "8085") == 0) {
-        _cpuType = I8085;
-        return true;
-    }
+    if (strcmp(cpu, "8080") == 0)
+        return setCpu(I8080);
+    if (strcmp(cpu, "8085") == 0)
+        return setCpu(I8085);
     return false;
 }
 

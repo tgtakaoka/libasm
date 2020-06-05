@@ -24,7 +24,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class TableIns8070 : private TableBase {
+class TableIns8070 : public TableBase {
 public:
     Error searchName(InsnIns8070 &insn) const;
     Error searchOpCode(InsnIns8070 &insn) const;

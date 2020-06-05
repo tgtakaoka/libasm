@@ -118,7 +118,7 @@ Error AsmIns8060::encode(Insn &_insn) {
 
     insn.setAddrMode(op.mode);
     if (TableIns8060.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableIns8060.getError());
 
     switch (insn.addrMode()) {
     case INHR:

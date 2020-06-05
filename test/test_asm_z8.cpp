@@ -179,7 +179,7 @@ static void test_operand_in_opcode() {
     TEST("LD 0BAH,R11", 0xB9, 0xBA);
     TEST("LD 0CAH,R12", 0xC9, 0xCA);
     TEST("LD 0DAH,R13", 0xD9, 0xDA);
-    ETEST(ILLEGAL_REGISTER, "LD 0EAH,R14");
+    TEST("LD 0EAH,R14", 0xE9, 0xEA);
     TEST("LD IRQ,R15",  0xF9, 0xFA);
 
     TEST("LD R0,#13",    0x0C, 0x0D);
@@ -502,8 +502,8 @@ static void test_undefined_symbol() {
 static void test_error() {
     ETEST(ILLEGAL_REGISTER, "JP   @11");
     ETEST(ILLEGAL_REGISTER, "CALL @0e5h");
-    ETEST(UNKNOWN_INSTRUCTION, "JP   @r0");
-    ETEST(UNKNOWN_INSTRUCTION, "CALL @r4");
+    ETEST(UNKNOWN_OPERAND,  "JP   @r0");
+    ETEST(UNKNOWN_OPERAND,  "CALL @r4");
 }
 
 static void run_test(void (*test)(), const char *test_name) {

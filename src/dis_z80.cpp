@@ -382,7 +382,7 @@ Error DisZ80::decodeIndexedBitOp(
     InsnZ80 ixBit(insn);
     ixBit.setInsnCode(insn.opCode(), opCode);
     if (TableZ80.searchOpCode(ixBit)) 
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableZ80.getError());
     insn.setName(ixBit.name());
 
     const RegName regName = RegZ80::decodeDataReg(opCode);
@@ -413,7 +413,7 @@ Error DisZ80::decode(
     }
 
     if (TableZ80.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableZ80.getError());
 
     uint8_t u8;
     uint16_t u16;

@@ -185,16 +185,16 @@ static bool acceptModes(uint8_t flags, const Entry *entry) {
 }
 
 Error TableZ8::searchName(InsnZ8 &insn) const {
-    const char *name = insn.name();
+    uint8_t count = 0;
     const uint8_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
     const Entry *entry = TableBase::searchName<Entry,uint8_t>(
-        name, flags, ARRAY_RANGE(TABLE_Z8), acceptModes);
+        insn.name(), flags, ARRAY_RANGE(TABLE_Z8), acceptModes, count);
     if (entry) {
         insn.setOpCode(pgm_read_byte(&entry->opCode));
         insn.setFlags(pgm_read_byte(&entry->flags));
-        return OK;
+        return _error.setOK();
     }
-    return UNKNOWN_INSTRUCTION;
+    return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND);
 }
 
 static Config::opcode_t maskCode(
@@ -211,9 +211,9 @@ Error TableZ8::searchOpCode(InsnZ8 &insn) const {
         const char *name =
             reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
         TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-        return OK;
+        return _error.setOK();
     }
-    return UNKNOWN_INSTRUCTION;
+    return _error.setError(UNKNOWN_INSTRUCTION);
 }
 
 bool TableZ8::setCpu(const char *cpu) {

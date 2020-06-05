@@ -603,9 +603,9 @@ static void test_error() {
 
     // W65SC02
     assembler.setCpu("65sc02");
-    ETEST(UNKNOWN_OPERAND,     "JMP ($1234,Y)");
-    ETEST(UNKNOWN_INSTRUCTION, "JSR ($1234,X)");
-    ETEST(UNKNOWN_OPERAND,     "JSR ($1234,Y)");
+    ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
+    ETEST(UNKNOWN_OPERAND, "JSR ($1234,X)");
+    ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
 }
 
 static void run_test(void (*test)(), const char *test_name) {
