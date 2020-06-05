@@ -429,10 +429,6 @@ AsmMc6809::Token AsmMc6809::nextToken() {
     const RegName reg = _regs.parseRegName(p);
     if (reg != REG_UNDEF) {
         p += _regs.regNameLen(reg);
-        if (_regs.isIndexReg(reg)) {
-            if (tokenAccumulatorIndex(p, reg))
-                return _token;
-        }
         if (_regs.isTfmBaseReg(reg)) {
             if (tokenTransferMemory(p, reg))
                 return _token;
@@ -442,6 +438,10 @@ AsmMc6809::Token AsmMc6809::nextToken() {
                 _reg = reg;
                 return _token = REG_BITP;
             }
+        }
+        if (_regs.isIndexReg(reg)) {
+            if (tokenAccumulatorIndex(p, reg))
+                return _token;
         }
         _scan = p;
         _reg = reg;
