@@ -273,7 +273,7 @@
         ld      0bah,r11
         ld      0cah,r12
         ld      0dah,r13
-;        ld      0eah,r14        ; should be error
+        ld      0eah,r14
         ld      0fah,r15
 ;;; xA
         djnz    r0, $+13
