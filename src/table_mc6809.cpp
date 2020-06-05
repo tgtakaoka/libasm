@@ -521,29 +521,17 @@ static constexpr TableMc6809::EntryPage HD6309_PAGES[] PROGMEM = {
     { PREFIX_P11, ARRAY_RANGE(HD6309_P11) },
 };
 
+static bool matchAddrMode(AddrMode opr, const Entry *entry) {
+    const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+    if (opr == table) return true;
+    if (opr == REG_REG) return table == IDX || table == PSH_PUL;
+    if (opr == DIR) return table == REL;
+    if (opr == EXT) return table == REL;
+    if (table == PSH_PUL) return opr == IMM || opr == INH;
+    return false;
+}
+
 Error TableMc6809::searchName(
-    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
-    const char *name = insn.name();
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry>(name, table, end);
-        if (entry) {
-            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
-            insn.setFlags(pgm_read_byte(&entry->flags));
-            return OK;
-        }
-    }
-    return UNKNOWN_INSTRUCTION;
-}
-
-static bool matchAddrMode(AddrMode addrMode, const Entry *entry) {
-    const uint8_t flags = pgm_read_byte(&entry->flags);
-    return addrMode == Entry::_addrMode(flags);
-}
-
-Error TableMc6809::searchNameAndAddrMode(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     const AddrMode addrMode = insn.addrMode();
     uint8_t count = 0;
@@ -586,12 +574,118 @@ Error TableMc6809::searchName(InsnMc6809 &insn) const {
     return _error.setError(searchName(insn, _table, _end));
 }
 
-Error TableMc6809::searchNameAndAddrMode(InsnMc6809 &insn) const {
-    return _error.setError(searchNameAndAddrMode(insn, _table, _end));
-}
-
 Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
     return _error.setError(searchOpCode(insn, _table, _end));
+}
+
+struct TableMc6809::PostEntry {
+    uint8_t mask;
+    uint8_t byte;
+    IndexedSubMode mode;
+    int8_t size;
+    RegName base;
+    RegName index;
+};
+
+static constexpr TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
+    { 0x8F, 0x84, PNTR_IDX,  0, REG_X, REG_UNDEF }, // ,X [,X]
+    { 0x80, 0x00, DISP_IDX,  5, REG_X, REG_UNDEF }, // n5,X
+    { 0x8F, 0x88, DISP_IDX,  8, REG_X, REG_UNDEF }, // n8,X [n8,X]
+    { 0x8F, 0x89, DISP_IDX, 16, REG_X, REG_UNDEF }, // n16,X [n16,X]
+    { 0x8F, 0x86, ACCM_IDX,  0, REG_X, REG_A },     // A,X [A,X]
+    { 0x8F, 0x85, ACCM_IDX,  0, REG_X, REG_B },     // B,X [B,X]
+    { 0x8F, 0x8B, ACCM_IDX,  0, REG_X, REG_D },     // D,X [D,X]
+    { 0x9F, 0x80, AUTO_IDX,  1, REG_X, REG_UNDEF }, // ,X+
+    { 0x8F, 0x81, AUTO_IDX,  2, REG_X, REG_UNDEF }, // ,X++ [,x++]
+    { 0x9F, 0x82, AUTO_IDX, -1, REG_X, REG_UNDEF }, // ,-X
+    { 0x8F, 0x83, AUTO_IDX, -2, REG_X, REG_UNDEF }, // ,--X [,--X]
+    { 0xEF, 0x8C, DISP_IDX,  8, REG_PCR, REG_UNDEF }, // n8,PCR [n8,PCR]
+    { 0xEF, 0x8D, DISP_IDX, 16, REG_PCR, REG_UNDEF }, // n16,PCR [n16,PCR]
+    { 0xFF, 0x9F, ABS_IDIR, 16, REG_UNDEF, REG_UNDEF }, // [n16]
+};
+
+static constexpr TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
+    { 0x8F, 0x87, ACCM_IDX,  0, REG_X, REG_E },     // E,X [E,X]
+    { 0x8F, 0x8A, ACCM_IDX,  0, REG_X, REG_F },     // F,X [F,X]
+    { 0x8F, 0x8E, ACCM_IDX,  0, REG_X, REG_W },     // W,X [W,X]
+    { 0xFF, 0x8F, PNTR_IDX,  0, REG_W, REG_UNDEF }, // ,W
+    { 0xFF, 0x90, PNTR_IDX,  0, REG_W, REG_UNDEF }, // [,W]
+    { 0xFF, 0xAF, DISP_IDX, 16, REG_W, REG_UNDEF }, // n16,W
+    { 0xFF, 0xB0, DISP_IDX, 16, REG_W, REG_UNDEF }, // [n16,W]
+    { 0xFF, 0xCF, AUTO_IDX,  2, REG_W, REG_UNDEF }, // ,W++
+    { 0xFF, 0xD0, AUTO_IDX,  2, REG_W, REG_UNDEF }, // [,W++]
+    { 0xFF, 0xEF, AUTO_IDX, -2, REG_W, REG_UNDEF }, // ,--W
+    { 0xFF, 0xF0, AUTO_IDX, -2, REG_W, REG_UNDEF }, // [,--W]
+};
+
+Error TableMc6809::searchPostByte(
+    const uint8_t post, PostSpec &spec,
+    const PostEntry *table, const PostEntry *end) {
+    for (const PostEntry *entry = table; entry < end; entry++) {
+        const uint8_t mask = pgm_read_byte(&entry->mask);
+        const uint8_t byte = post & mask;
+        if (byte == pgm_read_byte(&entry->byte)) {
+            spec.mode = IndexedSubMode(pgm_read_byte(&entry->mode));
+            spec.size = pgm_read_byte(&entry->size);
+            spec.base = RegName(pgm_read_byte(&entry->base));
+            spec.index = RegName(pgm_read_byte(&entry->index));
+            spec.indir = (mask != 0x80 && mask != 0x9F && (post & 0x10) != 0);
+            return OK;
+        }
+    }
+    return UNKNOWN_POSTBYTE;
+}
+
+static RegName baseRegName(const RegName base) {
+    if (base == REG_X || base == REG_W || base == REG_PCR)
+        return base;
+    if (base == REG_Y || base == REG_U || base == REG_S)
+        return REG_X;
+    if (base == REG_PC)
+        return REG_PCR;
+    return REG_UNDEF;
+}
+
+Error TableMc6809::searchPostSpec(
+    PostSpec &spec, uint8_t &post,
+    const PostEntry *table, const PostEntry *end) {
+    const RegName specBase = baseRegName(spec.base);
+    for (const PostEntry *entry = table; entry < end; entry++) {
+        const RegName base = RegName(pgm_read_byte(&entry->base));
+        const int8_t size = static_cast<int8_t>(pgm_read_byte(&entry->size));
+        if (spec.mode == IndexedSubMode(pgm_read_byte(&entry->mode))
+            && specBase == base
+            && spec.index == RegName(pgm_read_byte(&entry->index))
+            && spec.size == size) {
+            const uint8_t mask = pgm_read_byte(&entry->mask);
+            const uint8_t byte = pgm_read_byte(&entry->byte);
+            const bool indir = (mask == 0x8F || mask == 0xEF)
+                || (mask == 0xFF && (mask & byte & 0x10));
+            if (spec.indir && !indir) continue;
+            post = byte;
+            if (spec.indir) post |= 0x10;
+            spec.size = (spec.mode == AUTO_IDX) ? 0 : size;
+            spec.base = RegName(pgm_read_byte(&entry->base));
+            return OK;
+        }
+    }
+    return UNKNOWN_POSTBYTE;
+}
+
+Error TableMc6809::searchPostByte(
+    const uint8_t post, PostSpec &spec) const {
+    if (is6309()
+        && searchPostByte(post, spec, ARRAY_RANGE(HD6309_POSTBYTE)) == OK)
+        return OK;
+    return searchPostByte(post, spec, ARRAY_RANGE(MC6809_POSTBYTE));
+}
+
+Error TableMc6809::searchPostSpec(
+    PostSpec &spec, uint8_t &post) const {
+    if (is6309()
+        && searchPostSpec(spec, post, ARRAY_RANGE(HD6309_POSTBYTE)) == OK)
+        return OK;
+    return searchPostSpec(spec, post, ARRAY_RANGE(MC6809_POSTBYTE));
 }
 
 TableMc6809::TableMc6809() {

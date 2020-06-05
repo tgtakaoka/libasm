@@ -152,6 +152,9 @@ static void test_stack() {
     TEST("PULU PC", 0x37, 0x80);
     TEST("PULU D",  0x37, 0x06);
 
+    TEST("PSHU A,X",     0x36, 0x12);
+    TEST("PSHU A,X,B,Y", 0x36, 0x36);
+
     TEST("PSHS CC,A,B,DP,X,Y,U,PC", 0x34, 0xFF);
     TEST("PULS PC,A,DP,B,X,U,Y,CC", 0x35, 0xFF);
     TEST("PSHU PC,S,Y,X,DP,B,A,CC", 0x36, 0xFF);
@@ -164,20 +167,36 @@ static void test_stack() {
     TEST("PSHU #$AA", 0x36, 0xAA);
     TEST("PULU #$FF", 0x37, 0xFF);
 
-    ETEST(ILLEGAL_REGISTER, "PSHS S", 0x34, 0x00);
-    ETEST(ILLEGAL_REGISTER, "PULS S", 0x35, 0x00);
-    ETEST(ILLEGAL_REGISTER, "PSHU U", 0x36, 0x00);
-    ETEST(ILLEGAL_REGISTER, "PULU U", 0x37, 0x00);
+    ETEST(ILLEGAL_REGISTER, "PSHS S");
+    ETEST(ILLEGAL_REGISTER, "PULS S");
+    ETEST(ILLEGAL_REGISTER, "PSHU U");
+    ETEST(ILLEGAL_REGISTER, "PULU U");
 
-    ETEST(DUPLICATE_REGISTER, "PSHS A,D",   0x34, 0x06);
-    ETEST(DUPLICATE_REGISTER, "PULS D,B",   0x35, 0x06);
-    ETEST(DUPLICATE_REGISTER, "PSHU X,D,X", 0x36, 0x16);
-    ETEST(UNKNOWN_REGISTER,   "PULU W",     0x37, 0x00);
+    ETEST(DUPLICATE_REGISTER, "PSHS A,D");
+    ETEST(DUPLICATE_REGISTER, "PULS D,B");
+    ETEST(DUPLICATE_REGISTER, "PSHU X,D,X");
+    ETEST(ILLEGAL_REGISTER,   "PSHU X,D,U");
+    ETEST(ILLEGAL_REGISTER,   "PSHS X,D,S");
+    ETEST(DUPLICATE_REGISTER, "PSHU S,D,S");
+
+    ETEST(UNKNOWN_OPERAND, "PULU W");
+    ETEST(UNKNOWN_OPERAND, "PULS E");
+    ETEST(UNKNOWN_OPERAND, "PSHU F");
+    ETEST(UNKNOWN_OPERAND, "PSHS V");
+
+    // HD6309
+    assembler.setCpu("6309");
+    ETEST(ILLEGAL_REGISTER, "PULU W");
+    ETEST(ILLEGAL_REGISTER, "PULS E,X");
+    ETEST(ILLEGAL_REGISTER, "PSHU F,Y");
+    ETEST(ILLEGAL_REGISTER, "PSHS V,S");
 }
 
 static void test_register() {
     TEST("EXG A,B", 0x1E, 0x89);
+    TEST("EXG A,A", 0x1E, 0x88);
     TEST("TFR X,Y", 0x1F, 0x12);
+    TEST("TFR X,X", 0x1F, 0x11);
 
     TEST("TFR A,B",  0x1F, 0x89);
     TEST("TFR A,CC", 0x1F, 0x8A);
@@ -196,6 +215,11 @@ static void test_register() {
     TEST("TFR U,D",  0x1F, 0x30);
     TEST("TFR S,D",  0x1F, 0x40);
     TEST("TFR PC,D", 0x1F, 0x50);
+
+    ETEST(UNKNOWN_OPERAND, "EXG A");
+    ETEST(UNKNOWN_OPERAND, "EXG A,");
+    ETEST(ILLEGAL_SIZE,    "EXG A,X");
+    ETEST(UNKNOWN_OPERAND, "EXG A,X,Y");
 
     // HD6309
     assembler.setCpu("6309");
@@ -216,6 +240,8 @@ static void test_register() {
     TEST("TFR Z,A",  0x1F, 0xC8);
     TEST("TFR A,0",  0x1F, 0x8C);
     TEST("TFR 0,A",  0x1F, 0xC8);
+    TEST("TFR CC,0", 0x1F, 0xAC);
+    TEST("TFR 0,CC", 0x1F, 0xCA);
     TEST("TFR D,W",  0x1F, 0x06);
     TEST("TFR D,V",  0x1F, 0x07);
     TEST("TFR W,D",  0x1F, 0x60);
@@ -226,6 +252,16 @@ static void test_register() {
     TEST("TFR X,Z",  0x1F, 0x1C);
     TEST("TFR 0,V",  0x1F, 0xC7);
     TEST("TFR X,0",  0x1F, 0x1C);
+
+    ETEST(UNKNOWN_OPERAND, "ADDR A");
+    ETEST(UNKNOWN_OPERAND, "ADDR A,");
+    ETEST(ILLEGAL_SIZE,    "ADDR A,X");
+    ETEST(UNKNOWN_OPERAND, "ADDR A,X,Y");
+
+    ETEST(UNKNOWN_OPERAND, "TFR E");
+    ETEST(UNKNOWN_OPERAND, "TFR E,");
+    ETEST(ILLEGAL_SIZE,    "TFR E,W");
+    ETEST(UNKNOWN_OPERAND, "TFR E,X,F");
 }
 
 static void test_relative() {
@@ -556,7 +592,6 @@ static void test_extended() {
     TEST("ADCA >$90", 0xB9, 0x00, 0x90);
     TEST("ORA  >$90", 0xBA, 0x00, 0x90);
     TEST("ADDA >$90", 0xBB, 0x00, 0x90);
-    TEST("ADDA > $90", 0xBB, 0x00, 0x90);
 
     TEST("SUBB $9ABC", 0xF0, 0x9A, 0xBC);
     TEST("CMPB $9ABC", 0xF1, 0x9A, 0xBC);
@@ -1054,9 +1089,10 @@ static void test_bit_position() {
     TEST("BIEOR A.1,$1234.2", 0x11, 0x35, 0x51, 0x34);
     TEST("LDBT  A,1,$1234,2", 0x11, 0x36, 0x51, 0x34);
     TEST("STBT  A.1,<$5634.2", 0x11, 0x37, 0x51, 0x34);
+    TEST("STBT  B,0,<$5634.2", 0x11, 0x37, 0x90, 0x34);
 
     TEST("SETDP 0");
-    TEST("LDBT CC.0,$34.7", 0x11, 0x36, 0x38, 0x34);
+    TEST("LDBT CC,0,$34.7", 0x11, 0x36, 0x38, 0x34);
     TEST("LDBT CC.1,$34.7", 0x11, 0x36, 0x39, 0x34);
     TEST("LDBT CC.2,$34.7", 0x11, 0x36, 0x3A, 0x34);
     // ',' can be accepted as bit number separator.
@@ -1086,58 +1122,79 @@ static void test_comment() {
     TEST("TFR  D , X   ; comment", 0x1F, 0x01);
     TEST("SUBB # $90   ; comment", 0xC0, 0x90);
     TEST("NEG  $10     ; comment", 0x00, 0x10);
-    TEST("SUBA > $90   ; comment", 0xB0, 0x00, 0x90);
-    TEST("ADDB < $1290 ; comment", 0xDB, 0x90);
     ATEST(0x1000, "BRA $1002           ; comment", 0x20, 0x00);
     ATEST(0x1000, "LDA [ $1004 , PCR ] ; comment", 0xA6, 0x9C, 0x01);
 
-    TEST("LDA , S      ; comment", 0xA6, 0xE4);
-    TEST("LDA 0 , S    ; comment", 0xA6, 0xE4);
-    TEST("LDA << 0 , S ; comment", 0xA6, 0x60);
-    TEST("LDA < 0 , X  ; comment", 0xA6, 0x88, 0x00);
-    TEST("LDA > 0 , X  ; comment", 0xA6, 0x89, 0x00, 0x00);
-    TEST("LDA D , X    ; comment", 0xA6, 0x8B);
-    TEST("LDA - 1 , S  ; comment", 0xA6, 0x7F);
-    TEST("LDA 15 , S   ; comment", 0xA6, 0x6F);
-    TEST("LDA [ , S ]         ; comment", 0xA6, 0xF4);
+    TEST("LDA ,S      ; comment", 0xA6, 0xE4);
+    TEST("LDA <<0 , S ; comment", 0xA6, 0x60);
+    TEST("LDA <0 , X  ; comment", 0xA6, 0x88, 0x00);
+    TEST("LDA >0 , X  ; comment", 0xA6, 0x89, 0x00, 0x00);
+    TEST("LDA D , X   ; comment", 0xA6, 0x8B);
+    TEST("LDA - 1 , S ; comment", 0xA6, 0x7F);
+    TEST("LDA 15 , S  ; comment", 0xA6, 0x6F);
+    TEST("LDA [ ,S ]          ; comment", 0xA6, 0xF4);
     TEST("LDA [ 0 , S ]       ; comment", 0xA6, 0xF4);
-    TEST("LDA [ < 0 , X ]     ; comment", 0xA6, 0x98, 0x00);
-    TEST("LDA [ > 0 , X ]     ; comment", 0xA6, 0x99, 0x00, 0x00);
+    TEST("LDA [ <0 , X ]      ; comment", 0xA6, 0x98, 0x00);
+    TEST("LDA [ >0 , X ]      ; comment", 0xA6, 0x99, 0x00, 0x00);
     TEST("LDA [ -32768 , PC ] ; comment", 0xA6, 0x9D, 0x80, 0x00);
     TEST("LDA [ D , X ]       ; comment", 0xA6, 0x9B);
     ATEST(0x1000, "LDA $0F83 , PCR     ; comment", 0xA6, 0x8C, 0x80);
     ATEST(0x1000, "LDA [ $0F83 , PCR ] ; comment", 0xa6, 0x9C, 0x80);
 
-    TEST(                  "LDA , X+      ; comment", 0xA6, 0x80);
-    TEST(                  "LDA , X++     ; comment", 0xA6, 0x81);
-    TEST(                  "LDA , -X      ; comment", 0xA6, 0x82);
-    TEST(                  "LDA , --X     ; comment", 0xA6, 0x83);
-    TEST(                  "LDA [ , X++ ] ; comment", 0xA6, 0x91);
-    TEST(                  "LDA [ , --X ] ; comment", 0xA6, 0x93);
-    ETEST(GARBAGE_AT_END,  "LDA ,X +      ; comment", 0xA6, 0x84);
-    ETEST(GARBAGE_AT_END,  "LDA ,X ++     ; comment", 0xA6, 0x84);
-    ETEST(UNKNOWN_OPERAND, "LDA , - X     ; comment");
-    ETEST(UNKNOWN_OPERAND, "LDA , -- X    ; comment");
+    // HD6309
+    assembler.setCpu("6309");
+    TEST("TFM S+ , D+  ; comment", 0x11, 0x38, 0x40);
+    TEST("TFM X- , Y-  ; comment", 0x11, 0x39, 0x12);
+    TEST("TFM X+ , Y   ; comment", 0x11, 0x3A, 0x12);
+    TEST("TFM X , Y+   ; comment", 0x11, 0x3B, 0x12);
+    TEST("BOR A.1   , $34.2   ; comment", 0x11, 0x32, 0x51, 0x34);
+    TEST("BOR A , 1 , $34 , 2 ; comment", 0x11, 0x32, 0x51, 0x34);
+}
+
+static void test_error() {
+    ETEST(UNKNOWN_OPERAND, "SUBA > $90");
+    ETEST(UNKNOWN_OPERAND, "ADDB < $1290");
+    ETEST(UNKNOWN_OPERAND, "LDA , S");
+    ETEST(UNKNOWN_OPERAND, "LDA << 0,S");
+    ETEST(UNKNOWN_OPERAND, "LDA < 0,X");
+    ETEST(UNKNOWN_OPERAND, "LDA > 0,X");
+    ETEST(UNKNOWN_OPERAND, "LDA [ < 0,X ]");
+    ETEST(UNKNOWN_OPERAND, "LDA [ > 0,X ]");
+    ETEST(UNKNOWN_OPERAND, "LDA , X+");
+    ETEST(UNKNOWN_OPERAND, "LDA , X++");
+    ETEST(UNKNOWN_OPERAND, "LDA , -X");
+    ETEST(UNKNOWN_OPERAND, "LDA , --X");
+    ETEST(UNKNOWN_OPERAND, "LDA [ , X++ ]");
+    ETEST(UNKNOWN_OPERAND, "LDA [ , --X ]");
+    ETEST(UNKNOWN_OPERAND, "LDA ,X +");
+    ETEST(UNKNOWN_OPERAND, "LDA ,X ++");
+    ETEST(UNKNOWN_OPERAND, "LDA ,X+ +");
+    ETEST(UNKNOWN_OPERAND, "LDA ,- X");
+    ETEST(UNKNOWN_OPERAND, "LDA ,-- X");
+    ETEST(UNKNOWN_OPERAND, "LDA ,- -X");
+    ETEST(UNKNOWN_OPERAND, "LDA ,X]");
+    ETEST(MISSING_CLOSING_PAREN, "LDA [,X");
 
     // HD6309
     assembler.setCpu("6309");
-    TEST("ADDR A , B    ; comment", 0x10, 0x30, 0x89);
-    TEST("LDA , W++     ; comment", 0xA6, 0xCF);
-    TEST("LDA , --W     ; comment", 0xA6, 0xEF);
-    TEST("LDA [ , W++ ] ; comment", 0xA6, 0xD0);
-    TEST("LDA [ , --W ] ; comment", 0xA6, 0xF0);
-    TEST("TIM # $30 , < $1290 ; comment", 0x0B, 0x30, 0x90);
+    ETEST(UNKNOWN_OPERAND, "LDA ,W+");
+    ETEST(UNKNOWN_OPERAND, "LDA ,-W");
+    ETEST(UNKNOWN_OPERAND, "LDA , W++");
+    ETEST(UNKNOWN_OPERAND, "LDA , --W");
+    ETEST(UNKNOWN_OPERAND, "LDA [ , W++ ]");
+    ETEST(UNKNOWN_OPERAND, "LDA [ , --W ]");
+    ETEST(UNKNOWN_OPERAND, "TIM #$30, < $1290");
 
-    TEST(                  "TFM S+ , D+  ; comment", 0x11, 0x38, 0x40);
-    TEST(                  "TFM X- , Y-  ; comment", 0x11, 0x39, 0x12);
-    TEST(                  "TFM X+ , Y   ; comment", 0x11, 0x3A, 0x12);
-    TEST(                  "TFM X , Y+   ; comment", 0x11, 0x3B, 0x12);
-    ETEST(UNKNOWN_OPERAND, "TFM D + , X+ ; comment");
-    ETEST(GARBAGE_AT_END,  "TFM D+ , X + ; comment", 0x11, 0x3A, 0x01);
-    ETEST(UNKNOWN_OPERAND, "TFM X - , Y- ; comment");
-    ETEST(UNKNOWN_OPERAND, "TFM X- , Y - ; comment"); // no X-,Y mode
-    TEST("BOR A . 1 , $34 . 2 ; comment", 0x11, 0x32, 0x51, 0x34);
-    TEST("BOR A , 1 , $34 , 2 ; comment", 0x11, 0x32, 0x51, 0x34);
+    ETEST(UNKNOWN_OPERAND, "TFM D+,W+");
+    ETEST(UNKNOWN_OPERAND, "TFM D + , X+");
+    ETEST(UNKNOWN_OPERAND, "TFM D+ , X +");
+    ETEST(UNKNOWN_OPERAND, "TFM X - , Y-");
+    ETEST(UNKNOWN_OPERAND, "TFM X- , Y -");
+    ETEST(UNKNOWN_OPERAND, "BOR A .1  , $34.2");
+    ETEST(UNKNOWN_OPERAND, "BOR A. 1  , $34.2");
+    ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34 .2");
+    ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34. 2");
+    TEST(                  "BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
 }
 
 static void test_undefined_symbol() {
@@ -1204,6 +1261,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_transfer);
     RUN_TEST(test_bit_position);
     RUN_TEST(test_comment);
+    RUN_TEST(test_error);
     RUN_TEST(test_undefined_symbol);
     return 0;
 }

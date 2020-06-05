@@ -44,21 +44,83 @@ private:
     RegMc6809 _regs;
     uint8_t _direct_page;
 
-    Error determineAddrMode(const char *line, InsnMc6809 &insn);
+    enum Token : char {
+        EOL = 0,         // end of line
+        ERROR = '?',
+        COMMA = ',',
+        LBRKT = '[',
+        RBRKT = ']',
+        IDX_PNTR = 'P',  // ,x where x=base register
+        IDX_AUTO = 'a',  // ,x+/,x++/,-x/,--x where x=base register
+                         //  _extra=1/2/-1/-2
+        IDX_DISP = 'D',  // disp,x where x=base/PC/PCR register
+                         //  _extra=0/5/8/16
+        IDX_ACCM = 'i',  // a,x where a=A/B/D/E/F/W where x=X/Y/U/S
+        TFM_MODE = 'T',  // x+,x+/x-,x-/x+,x/x,x+ where x=D/X/Y/U/S
+                         // _extra=TFM mode
+        REG_BITP = 'B',  // r.n/r,n where r=A/B/CC
+        REG_NAME = 'R',  // any register
+        DIR_BITP = 'b',  // nn.n/nn,n
+        VAL_IMM  = '#',  // immediate value
+        VAL_ADDR = 'A'   // address value _extra=0/8/16
+    } _token;
+    RegName _reg;
+    RegName _reg2;
+    int8_t _extra;
+    uint32_t _val32;
+    Token nextToken();
+    Token printToken();
+    bool tokenPointerIndex(const char *p);
+    bool tokenAccumulatorIndex(const char *p, RegName index);
+    bool tokenTransferMemory(const char *p, RegName reg1);
+    bool tokenDisplacementIndex(const char *p, int8_t size);
+    bool tokenBitPosition(const char *p);
+    bool tokenConstant(const char *p, const char immediate);
+
+    struct RegPair : public ErrorReporter {
+        RegPair();
+        void add(const RegName reg);
+        bool hasReg() const;
+        RegName reg1;
+        RegName reg2;
+    };
+    struct RegList : public ErrorReporter {
+        RegPair pair;
+        RegList();
+        void add(const RegName reg);
+        bool add(Token token, RegName reg1, RegName reg2, bool zero);
+        uint8_t post;
+        RegName stack;
+    };
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        IndexedSubMode sub;
+        RegName index;
+        RegName base;
+        bool indir;
+        int8_t extra;
+        uint32_t val32;
+        RegList list;
+    };
+    void printOperand(const Operand &op, const Operand &extra);
+    Error parseOperand(Operand &op, Operand &extra);
 
     // MC6809
-    Error encodePushPull(InsnMc6809 &insn);
-    Error encodeRegisters(InsnMc6809 &insn);
-    Error encodeRelative(InsnMc6809 &insn);
-    Error encodeImmediate(InsnMc6809 &insn);
-    Error encodeDirect(InsnMc6809 &insn, bool emitInsn = true);
-    Error encodeExtended(InsnMc6809 &insn, bool emitInsn = true);
-    Error encodeIndexed(InsnMc6809 &insn, bool emitInsn = true);
-    // MC6809
-    Error encodeBitOperation(InsnMc6809 &insn);
-    Error encodeImmediatePlus(InsnMc6809 &insn);
-    Error encodeTransferMemory(InsnMc6809 &insn);
-    // Pseudo instruction
+    Error encodePushPull(InsnMc6809 &insn, const Operand &op);
+    Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
+    Error encodeRelative(InsnMc6809 &insn, const Operand &op);
+    Error encodeImmediate(InsnMc6809 &insn, const Operand &op);
+    Config::ptrdiff_t calculateDisplacement(
+        const InsnMc6809 &insn, const Operand &op) const;
+    Error encodeIndexed(
+        InsnMc6809 &insn, const Operand &op, bool emitInsn = true);
+    // HD6309
+    Error encodeBitOperation(
+        InsnMc6809 &insn, const Operand &op, const Operand &extra);
+    Error encodeImmediatePlus(
+        InsnMc6809 &insn, const Operand &op, const Operand &extra);
+    Error encodeTransferMemory(InsnMc6809 &insn, const Operand &op);
+
     Error processPseudo(InsnMc6809 &insn, const char *line);
     Error encode(Insn &insn) override;
 };

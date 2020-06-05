@@ -21,17 +21,36 @@
 #include "error_reporter.h"
 #include "insn_mc6809.h"
 #include "table_base.h"
+#include "reg_mc6809.h"
 
 namespace libasm {
 namespace mc6809 {
+
+enum IndexedSubMode : uint8_t {
+    PNTR_IDX = 0,  // ,X [,X}
+    DISP_IDX = 1,  // n5,X n8,X   n8,PCR   n16,X   n16,PCR
+                   //     [n8,X] [n8,PCR] [n16,X] [n16,PCR]
+    ACCM_IDX = 2,  // R,X [R,X]
+    AUTO_IDX = 3,  // ,X+ ,X++ ,-X, ,--X [,X++] [,--X]
+    ABS_IDIR = 4,  // [n16]
+};
+
+struct PostSpec {
+    IndexedSubMode mode;
+    RegName index;
+    RegName base;
+    int8_t size;
+    bool indir;
+};
 
 class TableMc6809 : public TableBase {
 public:
     TableMc6809();
 
     Error searchName(InsnMc6809 &insn) const;
-    Error searchNameAndAddrMode(InsnMc6809 &insn) const;
     Error searchOpCode(InsnMc6809 &insn) const;
+    Error searchPostByte(const uint8_t post, PostSpec &spec) const;
+    Error searchPostSpec(PostSpec &spec, uint8_t &post) const;
 
     const char *listCpu() override { return "6809, 6309"; }
     bool setCpu(const char *cpu) override;
@@ -41,6 +60,7 @@ public:
     static bool isPrefixCode(Config::opcode_t opCode);
 
     struct EntryPage;
+    struct PostEntry;
 
 private:
     CpuType _cpuType;
@@ -51,10 +71,14 @@ private:
 
     static Error searchName(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchNameAndAddrMode(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchOpCode(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchPostByte(
+        const uint8_t post, PostSpec &spec,
+        const PostEntry *table, const PostEntry *end);
+    static Error searchPostSpec(
+        PostSpec &spec, uint8_t &post,
+        const PostEntry *table, const PostEntry *end);
 };
 
 extern TableMc6809 TableMc6809;

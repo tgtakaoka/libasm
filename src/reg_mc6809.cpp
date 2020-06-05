@@ -116,6 +116,7 @@ char *RegMc6809::outCCRBits(char *out, uint8_t val) const {
 
 static int8_t encodeRegNumber(
     RegName regName, const RegName *table, const RegName *end) {
+    if (regName == REG_UNDEF) return -1;
     for (const RegName *p = table; p < end; p++) {
         if (pgm_read_byte(p) == regName) return p - table;
     }
@@ -142,7 +143,7 @@ RegName RegMc6809::decodeStackReg(uint8_t bitPos, bool onUserStack) const {
     return (onUserStack && regName == REG_U) ? REG_S : regName;
 }
 
-uint8_t RegMc6809::encodeStackReg(RegName regName, bool onUserStack) const {
+uint8_t RegMc6809::encodeStackReg(RegName regName, bool onUserStack) {
     if (onUserStack && regName == REG_U) return 0;
     if (onUserStack && regName == REG_S) regName = REG_U;
     if (regName == REG_D) return 0x06;
@@ -160,6 +161,10 @@ RegName RegMc6809::parseTfmBaseReg(const char *line) const {
 
 int8_t RegMc6809::encodeBitOpReg(RegName regName) {
     return encodeRegNumber(regName, ARRAY_RANGE(BIT_OP_REGS));
+}
+
+bool RegMc6809::isTfmBaseReg(RegName regName) const {
+    return TableMc6809.is6309() && encodeTfmBaseReg(regName) >= 0;
 }
 
 int8_t RegMc6809::encodeTfmBaseReg(RegName regName) {
@@ -249,10 +254,12 @@ int8_t RegMc6809::encodeDataReg(RegName regName) const {
     return encodeRegNumber(regName, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
-RegName RegMc6809::decodeIndexReg(uint8_t regNum) const {
-    return TableMc6809.is6309()
-        ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_INDEX_REGS))
-        : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_INDEX_REGS));
+bool RegMc6809::isIndexReg(RegName regName) const {
+    return encodeIndexReg(regName) >= 0;
+}
+
+bool RegMc6809::isBaseReg(RegName regName) const {
+    return encodeBaseReg(regName) >= 0;
 }
 
 RegName RegMc6809::decodeBaseReg(uint8_t regNum) const {
