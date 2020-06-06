@@ -51,17 +51,23 @@ private:
         LBRKT = '[',
         RBRKT = ']',
         IDX_PNTR = 'P',  // ,x where x=base register
+                         // _reg=x
         IDX_AUTO = 'a',  // ,x+/,x++/,-x/,--x where x=base register
-                         //  _extra=1/2/-1/-2
+                         // _reg=x _extra=1/2/-1/-2
         IDX_DISP = 'D',  // disp,x where x=base/PC/PCR register
-                         //  _extra=0/5/8/16
+                         // _val32=disp _reg=x _extra=0/5/8/16
         IDX_ACCM = 'i',  // a,x where a=A/B/D/E/F/W where x=X/Y/U/S
+                         // _reg=a _reg2=x
         TFM_MODE = 'T',  // x+,x+/x-,x-/x+,x/x,x+ where x=D/X/Y/U/S
-                         // _extra=TFM mode
-        REG_BITP = 'B',  // r.n/r,n where r=A/B/CC
-        REG_NAME = 'R',  // any register
-        DIR_BITP = 'b',  // nn.n/nn,n
+                         // _reg=x _extra=TFM mode
+        REG_BITP = 'B',  // r.b/r,b where r=A/B/CC
+                         // _reg=r _extra=b
+        DIR_BITP = 'b',  // nn.b/nn,b where nn is direct page address
+                         // _val32=nn _extra=b
+        REG_NAME = 'R',  // r where r is any register
+                         // _reg=r
         VAL_IMM  = '#',  // immediate value
+        VAL_IMMC = 'M',  // immediate value and following comma.
         VAL_ADDR = 'A'   // address value _extra=0/8/16
     } _token;
     RegName _reg;
@@ -69,7 +75,7 @@ private:
     int8_t _extra;
     uint32_t _val32;
     Token nextToken();
-    Token printToken();
+    void printToken() const;
     bool tokenPointerIndex(const char *p);
     bool tokenAccumulatorIndex(const char *p, RegName index);
     bool tokenTransferMemory(const char *p, RegName reg1);

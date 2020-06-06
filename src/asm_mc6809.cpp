@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 Tadashi G. Takaoka
  *
@@ -16,6 +17,11 @@
 
 #include "asm_mc6809.h"
 #include "table_mc6809.h"
+
+//#define DEBUG_TOKEN
+#if defined(DEBUG_TOKEN)
+#include <stdio.h>
+#endif
 
 namespace libasm {
 namespace mc6809 {
@@ -241,27 +247,23 @@ Error AsmMc6809::encodeTransferMemory(
 }
 
 bool AsmMc6809::tokenPointerIndex(const char *p) {
-    int8_t e = 0;
+    int8_t auto_disp = 0;
     if (*p == '-') {
-        p++;
-        e = -1;
+        p++; auto_disp = -1;
         if (*p == '-') {
-            p++;
-            e = -2;
+            p++; auto_disp = -2;
         }
     }
     const RegName reg = _regs.parseRegName(p);
     if (!_regs.isBaseReg(reg)) return false;
 
     p += _regs.regNameLen(reg);
-    if (e) {
+    if (auto_disp) {
         _token = IDX_AUTO;
     } else if (*p == '+') {
-        p++;
-        e = 1;
+        p++; auto_disp = 1;
         if (*p == '+') {
-            p++;
-            e = 2;
+            p++; auto_disp = 2;
         }
         _token = IDX_AUTO;
     } else {
@@ -269,11 +271,12 @@ bool AsmMc6809::tokenPointerIndex(const char *p) {
     }
     _scan = p;
     _reg = reg;
-    _extra = e;
+    _extra = auto_disp;
     return true;
 }
 
 bool AsmMc6809::tokenAccumulatorIndex(const char *p, RegName index) {
+    if (!_regs.isIndexReg(index)) return false;
     p = skipSpaces(p);
     if (*p != ',') return false;
     p = skipSpaces(p + 1);
@@ -287,6 +290,7 @@ bool AsmMc6809::tokenAccumulatorIndex(const char *p, RegName index) {
 }
 
 bool AsmMc6809::tokenTransferMemory(const char *p, RegName reg1) {
+    if (!_regs.isTfmBaseReg(reg1)) return false;
     const char mode1 = (*p == '+' || *p == '-') ? *p : 0;
     if (mode1) p++;
     p = skipSpaces(p);
@@ -316,27 +320,31 @@ bool AsmMc6809::tokenTransferMemory(const char *p, RegName reg1) {
 bool AsmMc6809::tokenDisplacementIndex(const char *p, int8_t size) {
     p = skipSpaces(p);
     const RegName base = _regs.parseRegName(p);
-    if (!_regs.isBaseReg(base) && base != REG_PC && base != REG_PCR)
-        return false;
-    _scan = p + _regs.regNameLen(base);
-    _reg = base;
-    _extra = size;
-    _token = IDX_DISP;
-    return true;
+    if (_regs.isBaseReg(base) || base == REG_PCR || base == REG_PC) {
+        _scan = p + _regs.regNameLen(base);
+        _reg = base;
+        _extra = size;
+        _token = IDX_DISP;
+        return true;
+    }
+    return false;
 }
 
 bool AsmMc6809::tokenBitPosition(const char *p) {
     const char *a = skipSpaces(p);
     if (*p == '.') {
         p++;
+        // bit position separator '.' can't have space around it.
         if (isspace(*p)) {
             _scan = p;
             return false;
         }
     } else if (*a == ',') {
+        // bit position separator ',' can have spaces around it.
         p = skipSpaces(a + 1);
     } else return false;
 
+    // if register name follows, this isn't a bit position.
     const RegName reg = _regs.parseRegName(p);
     if (reg != REG_UNDEF) return false;
 
@@ -356,17 +364,16 @@ bool AsmMc6809::tokenBitPosition(const char *p) {
 bool AsmMc6809::tokenConstant(const char *p, const char immediate) {
     int8_t size = 0;
     if (*p == '>') {
-        p++;
-        size = 16;
+        p++; size = 16;
     } else if (*p == '<') {
-        p++;
-        size = 8;
+        p++; size = 8;
         if (*p == '<') {
-            p++;
-            size = 5;
+            p++; size = 5;
         }
     }
-    if (size && (immediate || isspace(*p))) {
+    // A value should follow size prefix without space.
+    // An immediate value should not have size prefix.
+    if (size && (isspace(*p) || immediate)) {
         _scan = p;
         return false;
     }
@@ -377,16 +384,20 @@ bool AsmMc6809::tokenConstant(const char *p, const char immediate) {
     }
     p = skipSpaces(_scan);
 
-    if (*p == ',' && !immediate) {
-        if (tokenDisplacementIndex(p + 1, size))
-            return true;
-    }
-
     if (immediate) {
         _extra = 0;
-        _token = VAL_IMM;
+        if (*p == ',') {
+            p++;
+            _token = VAL_IMMC;
+        } else {
+            _token = VAL_IMM;
+        }
+        _scan = p;
         return true;
     }
+
+    if (*p == ',' && tokenDisplacementIndex(p + 1, size))
+        return true;
 
     if (size == 0) {
         const Config::uintptr_t addr =
@@ -399,6 +410,7 @@ bool AsmMc6809::tokenConstant(const char *p, const char immediate) {
     } else if (size == 5) {
         size = 8;
     }
+    // A bit position an follow just after an direct address.
     if (size == 8 && tokenBitPosition(_scan)) {
         _token = DIR_BITP;
         return true;
@@ -406,6 +418,28 @@ bool AsmMc6809::tokenConstant(const char *p, const char immediate) {
     _extra = size;
     _token = VAL_ADDR;
     return true;
+}
+
+void AsmMc6809::printToken() const {
+#if defined(DEBUG_TOKEN)
+    switch (_token) {
+    case EOL: printf("EOL\n"); return;
+    case ERROR: printf("ERROR(%d) ", getError()); return;
+    case COMMA: printf("COMMA "); return;
+    case LBRKT: case RBRKT: printf("%c ", _token); return;
+    case IDX_PNTR: printf("IDX_PNTR(,%c) ", _reg); return;
+    case IDX_AUTO: printf("IDX_AUTO(%c%d) ", _reg, _extra); return;
+    case IDX_DISP: printf("IDX_DISP(%d:%d:%c) ", _extra, _val32, _reg); return;
+    case IDX_ACCM: printf("IDX_ACCM(%c,%c) ", _reg, _reg2); return;
+    case TFM_MODE: printf("TFM_MODE(%d:%c,%c) ", _extra, _reg, _reg2); return;
+    case REG_NAME: printf("REG_NAME(%c) ", _reg); return;
+    case REG_BITP: printf("REG_BITP(%c.%d) ", _reg, _extra); return;
+    case DIR_BITP: printf("DIR_BITP($%02X.%d) ", _val32, _extra); return;
+    case VAL_IMM:  printf("VAL_IMM(#$%X) ", _val32); return;
+    case VAL_IMMC: printf("VAL_IMMC(#$%X), ", _val32); return;
+    case VAL_ADDR: printf("VAL_ADDR(%d:$%X) ", _extra, _val32); return;
+    }
+#endif
 }
 
 AsmMc6809::Token AsmMc6809::nextToken() {
@@ -428,23 +462,16 @@ AsmMc6809::Token AsmMc6809::nextToken() {
 
     const RegName reg = _regs.parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += _regs.regNameLen(reg);
-        if (_regs.isIndexReg(reg)) {
-            if (tokenAccumulatorIndex(p, reg))
-                return _token;
-        }
-        if (_regs.isTfmBaseReg(reg)) {
-            if (tokenTransferMemory(p, reg))
-                return _token;
-        }
-        if (reg == REG_A || reg == REG_B || reg == REG_CC) {
-            if (tokenBitPosition(p)) {
-                _reg = reg;
-                return _token = REG_BITP;
-            }
-        }
-        _scan = p;
         _reg = reg;
+        p += _regs.regNameLen(reg);
+        if (tokenTransferMemory(p, reg))
+            return _token;
+        if ((reg == REG_A || reg == REG_B || reg == REG_CC)
+            && tokenBitPosition(p))
+            return _token = REG_BITP;
+        if (tokenAccumulatorIndex(p, reg))
+            return _token;
+        _scan = p;
         return _token = REG_NAME;
     }
 
@@ -494,13 +521,15 @@ Error AsmMc6809::parseOperand(Operand &op, Operand &extra) {
         return OK;
     }
     bool hasImmediate = false;
-    if (_token == VAL_IMM) {
+    if (_token == VAL_IMM || _token == VAL_IMMC) {
         op.setError(getError());
         op.mode = IMM;
         op.val32 = _val32;
         op.extra = _extra;
-        if (nextToken() == EOL) return OK;
-        if (_token != COMMA) setError(UNKNOWN_OPERAND);
+        if (_token == VAL_IMM && nextToken() == EOL)
+            return OK;
+        if (_token != COMMA && _token != VAL_IMMC)
+            setError(UNKNOWN_OPERAND);
         extra = op;
         hasImmediate = true;
         nextToken();
@@ -628,6 +657,15 @@ Error AsmMc6809::encode(Insn &_insn) {
     if (processPseudo(insn, skipSpaces(endName)) == OK)
         return getError();
     _scan = endName;
+
+#if defined(DEBUG_TOKEN)
+    printf("@@ tokens: \"%s\"; ", _scan);
+    do {
+        nextToken();
+        printToken();
+    } while (_token != EOL);
+    _scan = endName;
+#endif
 
     Operand op, extra;
     if (parseOperand(op, extra)) return getError();
