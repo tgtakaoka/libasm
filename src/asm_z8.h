@@ -37,9 +37,13 @@ public:
     bool setCpu(const char *cpu) override { return TableZ8.setCpu(cpu); }
     const char *getCpu() const override { return TableZ8.getCpu(); }
 
+    void reset() override { _register_pointer = 0; }
+    Error setRegisterPointer(uint8_t rp);
+
 private:
     IntelValueParser _parser;
     RegZ8 _regs;
+    uint8_t _register_pointer = 0;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
@@ -64,6 +68,7 @@ private:
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeTwoOperands(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    Error processPseudo(InsnZ8 &insn, const char *line);
     Error encode(Insn &insn) override;
 };
 

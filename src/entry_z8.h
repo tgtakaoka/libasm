@@ -35,7 +35,9 @@ enum AddrMode {
     M_DA  = 9,   // Direct Address: nnnn
     M_RA  = 10,  // Relative Address: nnnn
     M_cc  = 11,  // Condition Code: cc
-    M_Rr  = 12,  // Register or Working register: xy x=rp
+    M_w   = 12,  // Register or Working register: Rxy x==RP
+    M_Iw  = 13,  // Indirect Register or Working register: @Rxy x==RP
+    M_Iww = 14,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
 };
 
 struct Entry {
