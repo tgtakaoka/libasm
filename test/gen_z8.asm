@@ -213,7 +213,7 @@
       LD   0E6H,@00H
       LD   >00H,#0E7H
       LD   @00H,#0E8H
-      LD   R14,0F0H
+      LD   R14,0E9H
       LD   0EAH,R14
       DJNZ R14,$-0013H
       JR   NZ,$-0012H

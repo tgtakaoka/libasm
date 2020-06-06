@@ -22,7 +22,7 @@
 namespace libasm {
 namespace z8 {
 
-// Z8600
+// Z8
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
 static const char TEXT_AND[]  PROGMEM = "AND";
@@ -68,41 +68,6 @@ static const char TEXT_SWAP[] PROGMEM = "SWAP";
 static const char TEXT_TCM[]  PROGMEM = "TCM";
 static const char TEXT_TM[]   PROGMEM = "TM";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
-
-// Z8800
-static const char TEXT_BAND[]   PROGMEM = "BAND";
-static const char TEXT_BCP[]    PROGMEM = "BCP";
-static const char TEXT_BITC[]   PROGMEM = "BITC";
-static const char TEXT_BITR[]   PROGMEM = "BITR";
-static const char TEXT_BITS[]   PROGMEM = "BITS";
-static const char TEXT_BOR[]    PROGMEM = "BOR";
-static const char TEXT_BTJRF[]  PROGMEM = "BTJRF";
-static const char TEXT_BTJRT[]  PROGMEM = "BTJRT";
-static const char TEXT_BXOR[]   PROGMEM = "BXOR";
-static const char TEXT_CPIJE[]  PROGMEM = "CPIJE";
-static const char TEXT_CPIJNE[] PROGMEM = "CPIJNE";
-static const char TEXT_DIV[]    PROGMEM = "DIV";
-static const char TEXT_ENTER[]  PROGMEM = "ENTER";
-static const char TEXT_EXIT[]   PROGMEM = "EXIT";
-static const char TEXT_LDB[]    PROGMEM = "LDB";
-static const char TEXT_LDCD[]   PROGMEM = "LDCD";
-static const char TEXT_LDCPD[]  PROGMEM = "LDCPD";
-static const char TEXT_LDCPI[]  PROGMEM = "LDCPI";
-static const char TEXT_LDED[]   PROGMEM = "LDED";
-static const char TEXT_LDEPD[]  PROGMEM = "LDEPD";
-static const char TEXT_LDEPI[]  PROGMEM = "LDEPI";
-static const char TEXT_LDW[]    PROGMEM = "LDW";
-static const char TEXT_MULT[]   PROGMEM = "MULT";
-static const char TEXT_NEXT[]   PROGMEM = "NEXT";
-static const char TEXT_POPUD[]  PROGMEM = "POPUD";
-static const char TEXT_POPUI[]  PROGMEM = "POPUI";
-static const char TEXT_PUSHUD[] PROGMEM = "PUSHUD";
-static const char TEXT_PUSHUI[] PROGMEM = "PUSHUI";
-static const char TEXT_SB0[]    PROGMEM = "SB0";
-static const char TEXT_SB1[]    PROGMEM = "SB1";
-static const char TEXT_SRP0[]   PROGMEM = "SRP0";
-static const char TEXT_SRP1[]   PROGMEM = "SRP1";
-static const char TEXT_WFI[]    PROGMEM = "WFI";
 
 } // namespace z8
 } // namespace libasm

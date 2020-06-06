@@ -80,6 +80,7 @@ test:   test_mc6809  \
 	test_w65c816 \
 	test_i8080   \
 	test_z80     \
+	test_z8      \
 	test_ins8060 \
 	test_ins8070 \
 	test_cdp1802 \

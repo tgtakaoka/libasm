@@ -102,7 +102,6 @@ Error AsmZ8::encodeInOpCode(
     return encodeOperand(insn, mode, op);
 }
 
-#include <stdio.h>
 Error AsmZ8::encodeTwoOperands(
     InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
     insn.emitInsn();
@@ -205,6 +204,7 @@ Error AsmZ8::parseOperand(Operand &op) {
             if (pair) return setError(UNKNOWN_OPERAND);
             op.mode = M_r;
         }
+        op.val = RegZ8::encodeRegName(op.reg) | 0xE0;
         return OK;
     }
 
@@ -236,7 +236,7 @@ Error AsmZ8::parseOperand(Operand &op) {
             op.reg = _regs.decodeRegNum(op.val & 0xF);
             return OK;
         }
-        op.mode = M_IR;
+        op.mode = (op.val & 1) == 0 ? M_IRR : M_IR;
         return OK;
     }
     if (regAddr) {
@@ -285,11 +285,9 @@ Error AsmZ8::encode(Insn &_insn) {
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
 
-    // Automatically set register pointer on SRP instruction.
     if (insn.opCode() == 0x31) { // SRP
         if ((dstOp.val & 0xF) != 0)
             return setError(ILLEGAL_CONSTANT);
-        setRegisterPointer(dstOp.val);
     }
 
     if (dst == M_NO) {
@@ -307,8 +305,6 @@ Error AsmZ8::encode(Insn &_insn) {
     if (InsnZ8::operandInOpCode(insn.opCode()))
         return encodeInOpCode(insn, dstOp, srcOp);
     if (src == M_NO) {
-        if (dst == M_IRR && (dstOp.val & 1) != 0)
-            return setError(ILLEGAL_REGISTER);
         insn.emitInsn();
         return encodeOperand(insn, dst, dstOp);
     }

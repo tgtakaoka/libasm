@@ -26,12 +26,28 @@ namespace z8 {
 
 class TableZ8 : public TableBase {
 public:
+    TableZ8();
+
     Error searchName(InsnZ8 &insn) const;
     Error searchOpCode(InsnZ8 &insn) const;
 
-    const char *listCpu() override { return "Z8"; }
+    const char *listCpu() override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override { return listCpu(); }
+    const char *getCpu() override;
+
+    struct EntryPage;
+
+private:
+    CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
+
+    bool setCpu(CpuType cpuType);
+
+    static Error searchName(
+        InsnZ8 &insn, const EntryPage *pages, const EntryPage *end);
+    static Error searchOpCode(
+        InsnZ8 &insn, const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableZ8 TableZ8;

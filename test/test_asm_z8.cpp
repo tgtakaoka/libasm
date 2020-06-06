@@ -27,26 +27,7 @@ Assembler &assembler(asmz8);
 static void set_up() {
     assembler.reset();
 
-    symtab.intern(0xFF, "SPL");   // Stack Pointer
-    symtab.intern(0xFE, "SPH");
-    symtab.intern(0xFD, "RP");    // Register Pointer
-    symtab.intern(0xFC, "FLAGS"); // CPU Flags
-    symtab.intern(0xFB, "IMR");   // Interrupt Mask
-    symtab.intern(0xFA, "IRQ");   // Interrupt Request
-    symtab.intern(0xF9, "IPR");   // Interrupt Priority
-    symtab.intern(0xF8, "P01M");  // Port 0, Port 1 Mode
-    symtab.intern(0xF7, "P3M");   // Port 3 Mode
-    symtab.intern(0xF6, "P2M");   // Port 2 Mode
-    symtab.intern(0xF5, "PRE0");  // T0 Prescaler
-    symtab.intern(0xF4, "T0");    // Timer 0 Counter
-    symtab.intern(0xF3, "PRE1");  // T1 Prescaler
-    symtab.intern(0xF2, "T1");    // Timer 1 Counter
-    symtab.intern(0xF1, "TMR");   // Timer Mode
-    symtab.intern(0xF0, "SIO");   // Serial I/O
-    symtab.intern(0x03, "P3");    // Port 3
-    symtab.intern(0x02, "P2");    // Port 2
-    symtab.intern(0x01, "P1");    // Port 1
-    symtab.intern(0x00, "P0");    // Port 0
+    assembler.setCpu("Z8");
 }
 
 static void tear_down() {
@@ -150,7 +131,7 @@ static void test_operand_in_opcode() {
     TEST("LD R0,9",     0x08, 0xE9);
     TEST("LD R0,R9",    0x08, 0xE9);
     TEST("LD R1,>0FH",  0x18, 0x0F);
-    TEST("LD R2,P0",    0x28, 0xE0);
+    TEST("LD R2,R0",    0x28, 0xE0);
     TEST("LD R3,10H",   0x38, 0x10);
     TEST("LD R4,49H",   0x48, 0x49);
     TEST("LD R5,59H",   0x58, 0x59);
@@ -163,28 +144,28 @@ static void test_operand_in_opcode() {
     TEST("LD R12,0C9H", 0xC8, 0xC9);
     TEST("LD R13,0D9H", 0xD8, 0xD9);
     TEST("LD R14,0E9H", 0xE8, 0xE9);
-    TEST("LD R15,IPR",  0xF8, 0xF9);
+    TEST("LD R15,0F9H", 0xF8, 0xF9);
 
     TEST("LD >0AH,R0",  0x09, 0x0A);
     TEST("LD 10,R0",    0xA8, 0xE0);
     TEST("LD >0FH,R1",  0x19, 0x0F);
-    TEST("LD P0,R2",    0x08, 0xE2);
+    TEST("LD R0,R2",    0x08, 0xE2);
     TEST("LD 10H,R3",   0x39, 0x10);
     TEST("LD 4AH,R4",   0x49, 0x4A);
     TEST("LD 5AH,R5",   0x59, 0x5A);
     TEST("LD 6AH,R6",   0x69, 0x6A);
     TEST("LD 7AH,R7",   0x79, 0x7A);
-    TEST("LD SPL,R8",   0x89, 0xFF);
+    TEST("LD 0FFH,R8",  0x89, 0xFF);
     TEST("LD 9AH,R9",   0x99, 0x9A);
     TEST("LD 0AAH,R10", 0xA9, 0xAA);
     TEST("LD 0BAH,R11", 0xB9, 0xBA);
     TEST("LD 0CAH,R12", 0xC9, 0xCA);
     TEST("LD 0DAH,R13", 0xD9, 0xDA);
     TEST("LD 0EAH,R14", 0xE9, 0xEA);
-    TEST("LD IRQ,R15",  0xF9, 0xFA);
+    TEST("LD 0FAH,R15", 0xF9, 0xFA);
 
     TEST("LD R0,#13",    0x0C, 0x0D);
-    TEST("LD R1,#P0",    0x1C, 0x00);
+    TEST("LD R1,#0",     0x1C, 0x00);
     TEST("LD R2,#15",    0x2C, 0x0F);
     TEST("LD R3,#10H",   0x3C, 0x10);
     TEST("LD R4,#4DH",   0x4C, 0x4D);
@@ -198,7 +179,7 @@ static void test_operand_in_opcode() {
     TEST("LD R12,#0CDH", 0xCC, 0xCD);
     TEST("LD R13,#0DDH", 0xDC, 0xDD);
     TEST("LD R14,#0EDH", 0xEC, 0xED);
-    TEST("LD R15,#RP",   0xFC, 0xFD);
+    TEST("LD R15,#0FDH", 0xFC, 0xFD);
 
     TEST("INC R0",  0x0E);
     TEST("INC R1",  0x1E);
@@ -219,7 +200,6 @@ static void test_operand_in_opcode() {
 }
 
 static void test_one_operand() {
-    TEST("DEC P1",   0x00, 0xE1);
     TEST("DEC R1",   0x00, 0xE1);
     TEST("DEC @15H", 0x01, 0x15);
     TEST("DEC @R2",  0x01, 0xE2);
@@ -239,7 +219,7 @@ static void test_one_operand() {
     TEST("DA @42H", 0x41, 0x42);
     TEST("DA @R2",  0x41, 0xE2);
 
-    TEST("POP FLAGS",0x50, 0xFC);
+    TEST("POP 0FCH", 0x50, 0xFC);
     TEST("POP R1",   0x50, 0xE1);
     TEST("POP @52H", 0x51, 0x52);
     TEST("POP @R2",  0x51, 0xE2);
@@ -249,7 +229,7 @@ static void test_one_operand() {
     TEST("COM @62H", 0x61, 0x62);
     TEST("COM @R2",  0x61, 0xE2);
 
-    TEST("PUSH SPL",  0x70, 0xFF);
+    TEST("PUSH 0FFH", 0x70, 0xFF);
     TEST("PUSH R1",   0x70, 0xE1);
     TEST("PUSH @72H", 0x71, 0x72);
     TEST("PUSH @R2",  0x71, 0xE2);
@@ -442,8 +422,8 @@ static void test_two_operands() {
     TEST("LD R7,#0E8H",   0x7C, 0xE8);
     TEST("LD @R8,#0E9H",  0xE7, 0xE8, 0xE9);
     TEST("LD @R15,R4",    0xF3, 0xF4);
-    TEST("LD @0C7H,SIO",  0xF5, 0xF0, 0xC7);
-    TEST("LD @R7,SIO",    0xF5, 0xF0, 0xE7);
+    TEST("LD @0C7H,0F0H", 0xF5, 0xF0, 0xC7);
+    TEST("LD @R7,0F0H",   0xF5, 0xF0, 0xE7);
 
     TEST("LDE R7,@RR4",   0x82, 0x74);
     TEST("LDEI @R7,@RR4", 0x83, 0x74);
@@ -483,6 +463,8 @@ static void test_setrp() {
     TEST("LDEI @R1,@RR4", 0x83, 0x14);
     TEST("LDEI @RR4,@R1", 0x93, 0x14);
     TEST("DJNZ R1,$",     0x1A, 0xFE);
+    TEST("JP   @24H",     0x30, 0x24);
+    TEST("CALL @24H",     0xD4, 0x24);
 
     TEST("SETRP 21H & 0F0H");
     TEST("LD  21H,R4",   0x18, 0xE4);
@@ -501,6 +483,8 @@ static void test_setrp() {
     TEST("LDEI @21H,@24H", 0x83, 0x14);
     TEST("LDEI @24H,@21H", 0x93, 0x14);
     TEST("DJNZ 21H,$",     0x1A, 0xFE);
+    TEST("JP   @24H",      0x30, 0xE4);
+    TEST("CALL @24H",      0xD4, 0xE4);
 
     TEST(                   "SRP #10H", 0x31, 0x10);
     ETEST(ILLEGAL_CONSTANT, "SRP #11H");
@@ -519,44 +503,6 @@ static void test_setrp() {
     ETEST(ILLEGAL_CONSTANT, "SRP #1EH");
     ETEST(ILLEGAL_CONSTANT, "SRP #1FH");
     TEST(                   "SRP #20H", 0x31, 0x20);
-
-    // Automatically set by SRP.
-    TEST("SRP #0",       0x31, 0x00);
-    TEST("LD  21H,R4",   0x49, 0x21);
-    TEST("LD  R4,21H",   0x48, 0x21);
-    TEST("LD  21H,#66H", 0xE6, 0x21, 0x66);
-    ETEST(UNKNOWN_OPERAND, "LD 21H,33H(R4)"); // LD R,X
-    ETEST(UNKNOWN_OPERAND, "LD 33H(R4),21H"); // LD X,R
-    TEST("LD  21H,24H",  0xE4, 0x24, 0x21);
-    TEST("LD  24H,21H",  0XE4, 0x21, 0x24);
-    TEST("LD  21H,@24H", 0xE5, 0x24, 0x21);
-    TEST("LD  @21H,24H", 0xF5, 0x24, 0x21);
-    TEST("ADD 21H,24H" , 0x04, 0x24, 0x21);
-    TEST("ADD 21H,@24H", 0x05, 0x24, 0x21);
-    ETEST(UNKNOWN_OPERAND, "LDC  21H,@24H");
-    ETEST(UNKNOWN_OPERAND, "LDC  @24H,21H");
-    ETEST(UNKNOWN_OPERAND, "LDCI @21H,@24H");
-    ETEST(UNKNOWN_OPERAND, "LDCI @24H,@21H");
-    ETEST(UNKNOWN_OPERAND, "DJNZ 21H,$");
-
-    // Automatically set by SRP.
-    TEST("SRP #20H",     0x31, 0x20);
-    TEST("LD  21H,R4",   0x18, 0xE4);
-    TEST("LD  R4,21H",   0x48, 0xE1);
-    TEST("LD  21H,#66H", 0x1C, 0x66);
-    TEST("LD  21H,33H(R4)", 0xC7, 0x14, 0x33); // LD r,X
-    TEST("LD  33H(R4),21H", 0xD7, 0x14, 0x33); // LD X,r
-    TEST("LD  21H,24H",  0x18, 0xE4);
-    TEST("LD  24H,21H",  0X48, 0xE1);
-    TEST("LD  21H,@24H", 0xE3, 0x14);
-    TEST("LD  @21H,24H", 0xF3, 0x14);
-    TEST("ADD 21H,24H",  0x02, 0x14);
-    TEST("ADD 21H,@24H", 0x03, 0x14);
-    TEST("LDC  21H,@24H",  0xC2, 0x14);
-    TEST("LDC  @24H,21H",  0xD2, 0x14);
-    TEST("LDCI @21H,@24H", 0xC3, 0x14);
-    TEST("LDCI @24H,@21H", 0xD3, 0x14);
-    TEST("DJNZ 21H,$",     0x1A, 0xFE);
 }
 
 static void test_comment() {
@@ -564,7 +510,7 @@ static void test_comment() {
     TEST(" JP  ULE , 3E3FH ; comment", 0x3D, 0x3E, 0x3F);
     TEST(" JP  8E8FH       ; comment", 0x8D, 0x8E, 0x8F);
     TEST(" LD  R1 , >0FH   ; comment", 0x18, 0x0F);
-    TEST(" LD  R2 , P0     ; comment", 0x28, 0xE0);
+    TEST(" LD  R2 , R0     ; comment", 0x28, 0xE0);
     TEST(" LD  >0FH , R1   ; comment", 0x19, 0x0F);
     TEST(" LD  R9 , #9DH   ; comment", 0x9C, 0x9D);
     TEST(" INC R0          ; comment", 0x0E);
@@ -595,15 +541,15 @@ static void test_undefined_symbol() {
 }
 
 static void test_error() {
-    ETEST(ILLEGAL_REGISTER, "JP   @11");
-    ETEST(ILLEGAL_REGISTER, "CALL @0e5h");
-    ETEST(UNKNOWN_OPERAND,  "JP   @r0");
-    ETEST(UNKNOWN_OPERAND,  "CALL @r4");
-    TEST(                   "LD >0FH,R1", 0x19, 0x0F);
-    ETEST(UNKNOWN_OPERAND,  "LD > 0FH,R1");
-    TEST(                   "DEC @>15H",  0x01, 0x15);
-    ETEST(UNKNOWN_OPERAND,  "DEC @ >15H");
-    ETEST(UNKNOWN_OPERAND,  "DEC @> 15H");
+    ETEST(UNKNOWN_OPERAND, "JP   @11");
+    ETEST(UNKNOWN_OPERAND, "CALL @0e5h");
+    ETEST(UNKNOWN_OPERAND, "JP   @r0");
+    ETEST(UNKNOWN_OPERAND, "CALL @r4");
+    TEST(                  "LD >0FH,R1", 0x19, 0x0F);
+    ETEST(UNKNOWN_OPERAND, "LD > 0FH,R1");
+    TEST(                  "DEC @>15H",  0x01, 0x15);
+    ETEST(UNKNOWN_OPERAND, "DEC @ >15H");
+    ETEST(UNKNOWN_OPERAND, "DEC @> 15H");
 }
 
 static void run_test(void (*test)(), const char *test_name) {

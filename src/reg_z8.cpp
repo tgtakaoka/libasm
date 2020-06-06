@@ -31,7 +31,7 @@ static bool isidchar(const char c) {
 static int8_t parseRegNum(const char *line) {
     if (isdigit(*line) && !isidchar(line[1]))
         return *line - '0';
-    if (*line++ == '1' && (*line >= '0' && *line < '6') && !isidchar(line[1]))
+    if (*line++ == '1' && *line >= '0' && *line < '6' && !isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }
@@ -53,8 +53,8 @@ RegName RegZ8::parseRegName(const char *line) const {
 
 uint8_t RegZ8::regNameLen(RegName regName) {
     const int8_t num = int8_t(regName);
-    if (num >= 16 + 10) return 4; // RRnn
-    if (num >= 10)      return 3; // RRn, Rnn
+    if (num >= 16 + 10) return 4; // RR1n
+    if (num >= 10)      return 3; // RRn, R1n
     if (num >= 0)       return 2; // Rn
     return 0;
 }

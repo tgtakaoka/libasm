@@ -162,19 +162,28 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
     E(0xFF, NOP,  M_NO,  M_NO)
 };
 
+struct TableZ8::EntryPage {
+    const Entry *const table;
+    const Entry *const end;
+};
+
+static constexpr TableZ8::EntryPage Z8_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_Z8) },
+};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
-    if (opr == M_w)
-        return table == M_r || table == M_R || table == M_DA || table == M_RA;
-    if (opr == M_R) return table == M_DA || table == M_RA;
-    if (opr == M_DA) return table == M_RA;
-    if (opr == M_r) return table == M_R;
-    if (opr == M_Iw) return table == M_Ir || table == M_IR || table == M_IRR;
-    if (opr == M_Ir) return table == M_IR;
-    if (opr == M_IR) return table == M_IRR;
+    if (opr == M_DA)  return table == M_RA;
+    if (opr == M_r)   return table == M_R;
+    if (opr == M_Ir)  return table == M_IR;
     if (opr == M_Irr) return table == M_IRR;
-    if (opr == M_Iww) return table == M_IR || table == M_Ir
-                          || table == M_IRR || table == M_Irr;
+    if (opr == M_R)   return table == M_DA  || table == M_RA;
+    if (opr == M_IRR) return table == M_IR;
+    if (opr == M_w)   return table == M_r   || table == M_R
+                          || table == M_DA  || table == M_RA;
+    if (opr == M_Iw)  return table == M_Ir  || table == M_IR;
+    if (opr == M_Iww) return table == M_Ir  || table == M_IR
+                          || table == M_Irr || table == M_IRR;
     return false;
 }
 
@@ -184,17 +193,22 @@ static bool acceptModes(uint8_t flags, const Entry *entry) {
         && acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table));
 }
 
-Error TableZ8::searchName(InsnZ8 &insn) const {
+Error TableZ8::searchName(
+    InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) {
     uint8_t count = 0;
-    const uint8_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
-    const Entry *entry = TableBase::searchName<Entry,uint8_t>(
-        insn.name(), flags, ARRAY_RANGE(TABLE_Z8), acceptModes, count);
-    if (entry) {
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        insn.setFlags(pgm_read_byte(&entry->flags));
-        return _error.setOK();
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const uint8_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
+        const Entry *entry = TableBase::searchName<Entry,uint8_t>(
+            insn.name(), flags, table, end, acceptModes, count);
+        if (entry) {
+            insn.setOpCode(pgm_read_byte(&entry->opCode));
+            insn.setFlags(pgm_read_byte(&entry->flags));
+            return OK;
+        }
     }
-    return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND);
+    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
 static Config::opcode_t maskCode(
@@ -203,22 +217,59 @@ static Config::opcode_t maskCode(
     return InsnZ8::operandInOpCode(table) ? opCode & 0x0f : opCode;
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn) const {
-    const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-        insn.opCode(), ARRAY_RANGE(TABLE_Z8), maskCode);
-    if (entry) {
-        insn.setFlags(pgm_read_word(&entry->flags));
-        const char *name =
-            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
-        return _error.setOK();
+Error TableZ8::searchOpCode(
+    InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
+            insn.opCode(), table, end, maskCode);
+        if (entry) {
+            insn.setFlags(pgm_read_word(&entry->flags));
+            const char *name =
+                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
+            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            return OK;
+        }
     }
-    return _error.setError(UNKNOWN_INSTRUCTION);
+    return UNKNOWN_INSTRUCTION;
+}
+
+Error TableZ8::searchName(InsnZ8 &insn) const {
+    return _error.setError(searchName(insn, _table, _end));
+}
+
+Error TableZ8::searchOpCode(InsnZ8 &insn) const {
+    return _error.setError(searchOpCode(insn, _table, _end));
+}
+
+TableZ8::TableZ8() {
+    setCpu(Z8);
+}
+
+bool TableZ8::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    if (cpuType == Z8) {
+        _table = ARRAY_BEGIN(Z8_PAGES);
+        _end = ARRAY_END(Z8_PAGES);
+        return true;
+    }
+    return false;
+}
+
+const char *TableZ8::listCpu() {
+    return "Z8";
+}
+
+const char *TableZ8::getCpu() {
+    return "Z8";
 }
 
 bool TableZ8::setCpu(const char *cpu) {
-    return strcasecmp(cpu, "z8") == 0
-        || strncasecmp(cpu, "z86", 3) == 0;
+    if (strcasecmp(cpu, "z8") == 0
+        || strncasecmp(cpu, "z86", 3) == 0)
+        return setCpu(Z8);
+    return false;
 }
 
 class TableZ8 TableZ8;

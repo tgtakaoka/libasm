@@ -152,10 +152,8 @@ Error DisZ8::decodeInOpCode(DisMemory &memory, InsnZ8 &insn) {
     if (src == M_r)
         return decodeWorkReg(insn.opCode() >> 4);
     if (src == M_R) {
-        // In "LD r,R", Only a full 8-bit register address can be used.
         uint8_t val = 0;
         if (insn.readByte(memory, val)) setError(NO_MEMORY);
-        if ((val & 0xF0) == 0xE0) return setError(ILLEGAL_REGISTER);
         return decodeRegister(val);
     }
     return decodeOperand(memory, insn, src);

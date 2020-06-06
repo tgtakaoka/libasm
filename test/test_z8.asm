@@ -412,10 +412,10 @@
         ld      @21H,24H        ; ld @R4,R1
         add     21H,24H         ; add R1,R4
         add     21H,@24H        ; add R1,@R4
-        lde     21H,@24H        ; lde R1,@RR4
-        lde     @24H,21H        ; lde @RR4,R1
-        ldei    @21H,@24H       ; ldei @R1,@RR4
-        ldei    @24H,@21H       ; ldei @RR4,@R1
+;       lde     21H,@24H        ; lde R1,@RR4
+;       lde     @24H,21H        ; lde @RR4,R1
+;       ldei    @21H,@24H       ; ldei @R1,@RR4
+;       ldei    @24H,@21H       ; ldei @RR4,@R1
         djnz    21H,$           ; djnz R1,$
 
         end

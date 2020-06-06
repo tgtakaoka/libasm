@@ -25,26 +25,8 @@ DisZ8 disz8;
 Disassembler &disassembler(disz8);
 
 static void set_up() {
-    symtab.intern(0xFF, "SPL");   // Stack Pointer
-    symtab.intern(0xFE, "SPH");
-    symtab.intern(0xFD, "RP");    // Register Pointer
-    symtab.intern(0xFC, "FLAGS"); // CPU Flags
-    symtab.intern(0xFB, "IMR");   // Interrupt Mask
-    symtab.intern(0xFA, "IRQ");   // Interrupt Request
-    symtab.intern(0xF9, "IPR");   // Interrupt Priority
-    symtab.intern(0xF8, "P01M");  // Port 0, Port 1 Mode
-    symtab.intern(0xF7, "P3M");   // Port 3 Mode
-    symtab.intern(0xF6, "P2M");   // Port 2 Mode
-    symtab.intern(0xF5, "PRE0");  // T0 Prescaler
-    symtab.intern(0xF4, "T0");    // Timer 0 Counter
-    symtab.intern(0xF3, "PRE1");  // T1 Prescaler
-    symtab.intern(0xF2, "T1");    // Timer 1 Counter
-    symtab.intern(0xF1, "TMR");   // Timer Mode
-    symtab.intern(0xF0, "SIO");   // Serial I/O
-    symtab.intern(0x03, "P3");    // Port 3
-    symtab.intern(0x02, "P2");    // Port 2
-    symtab.intern(0x01, "P1");    // Port 1
-    symtab.intern(0x00, "P0");    // Port 0
+    disassembler.setCpu("Z8");
+    disz8.preferWorkRegister(true);
 }
 
 static void tear_down() {
@@ -146,7 +128,7 @@ static void test_relative() {
 static void test_operand_in_opcode() {
     TEST(LD, "R0,>09H",  0x08, 0x09);
     TEST(LD, "R1,>0FH",  0x18, 0x0F);
-    TEST(LD, "R2,P0",    0x28, 0x00);
+    TEST(LD, "R2,>00H",  0x28, 0x00);
     TEST(LD, "R3,10H",   0x38, 0x10);
     TEST(LD, "R4,49H",   0x48, 0x49);
     TEST(LD, "R5,59H",   0x58, 0x59);
@@ -158,30 +140,30 @@ static void test_operand_in_opcode() {
     TEST(LD, "R11,0B9H", 0xB8, 0xB9);
     TEST(LD, "R12,0C9H", 0xC8, 0xC9);
     TEST(LD, "R13,0D9H", 0xD8, 0xD9);
-    ETEST(ILLEGAL_REGISTER, LD, "R14,0E9H", 0xE8, 0xE9);
-    TEST(LD, "R15,IPR",  0xF8, 0xF9);
+    TEST(LD, "R14,R9",   0xE8, 0xE9);
+    TEST(LD, "R15,0F9H", 0xF8, 0xF9);
 
     TEST(LD, ">0AH,R0",  0x09, 0x0A);
     TEST(LD, ">0FH,R1",  0x19, 0x0F);
-    TEST(LD, "P0,R2",    0x29, 0x00);
+    TEST(LD, ">00H,R2",  0x29, 0x00);
     TEST(LD, "10H,R3",   0x39, 0x10);
     TEST(LD, "4AH,R4",   0x49, 0x4A);
     TEST(LD, "5AH,R5",   0x59, 0x5A);
     TEST(LD, "6AH,R6",   0x69, 0x6A);
     TEST(LD, "7AH,R7",   0x79, 0x7A);
-    TEST(LD, "SPL,R8",   0x89, 0xFF);
+    TEST(LD, "0FFH,R8",  0x89, 0xFF);
     TEST(LD, "9AH,R9",   0x99, 0x9A);
     TEST(LD, "0AAH,R10", 0xA9, 0xAA);
     TEST(LD, "0BAH,R11", 0xB9, 0xBA);
     TEST(LD, "0CAH,R12", 0xC9, 0xCA);
     TEST(LD, "0DAH,R13", 0xD9, 0xDA);
     TEST(LD, "R10,R14",  0xE9, 0xEA);
-    TEST(LD, "IRQ,R15",  0xF9, 0xFA);
+    TEST(LD, "0FAH,R15", 0xF9, 0xFA);
 
     TEST(LD, "R0,#13",    0x0C, 0x0D);
-    TEST(LD, "R1,#P0",    0x1C, 0x00);
+    TEST(LD, "R1,#0",     0x1C, 0x00);
     TEST(LD, "R2,#15",    0x2C, 0x0F);
-    TEST(LD, "R3,#10H",   0x3C, 0x10);
+    TEST(LD, "R3,#16",    0x3C, 0x10);
     TEST(LD, "R4,#4DH",   0x4C, 0x4D);
     TEST(LD, "R5,#5DH",   0x5C, 0x5D);
     TEST(LD, "R6,#6DH",   0x6C, 0x6D);
@@ -193,7 +175,7 @@ static void test_operand_in_opcode() {
     TEST(LD, "R12,#0CDH", 0xCC, 0xCD);
     TEST(LD, "R13,#0DDH", 0xDC, 0xDD);
     TEST(LD, "R14,#0EDH", 0xEC, 0xED);
-    TEST(LD, "R15,#RP",   0xFC, 0xFD);
+    TEST(LD, "R15,#0FDH", 0xFC, 0xFD);
 
     TEST(INC, "R0",  0x0E);
     TEST(INC, "R1",  0x1E);
@@ -214,15 +196,15 @@ static void test_operand_in_opcode() {
 }
 
 static void test_one_operand() {
-    TEST(DEC,  "P1",   0x00, 0x01);
-    TEST(DEC,  "R1",   0x00, 0xE1);
-    TEST(DEC,  "@05H", 0x01, 0x05);
-    TEST(DEC,  "@R2",  0x01, 0xE2);
+    TEST(DEC,  ">01H",  0x00, 0x01);
+    TEST(DEC,  "R1",    0x00, 0xE1);
+    TEST(DEC,  "@05H",  0x01, 0x05);
+    TEST(DEC,  "@R2",   0x01, 0xE2);
 
-    TEST(RLC,  "11H",  0x10, 0x11);
-    TEST(RLC,  "R1",   0x10, 0xE1);
-    TEST(RLC,  "@12H", 0x11, 0x12);
-    TEST(RLC,  "@R2",  0x11, 0xE2);
+    TEST(RLC,  "11H",   0x10, 0x11);
+    TEST(RLC,  "R1",    0x10, 0xE1);
+    TEST(RLC,  "@12H",  0x11, 0x12);
+    TEST(RLC,  "@R2",   0x11, 0xE2);
 
     TEST(INC,  "21H",  0x20, 0x21);
     TEST(INC,  "R1",   0x20, 0xE1);
@@ -234,7 +216,7 @@ static void test_one_operand() {
     TEST(DA,   "@42H", 0x41, 0x42);
     TEST(DA,   "@R2",  0x41, 0xE2);
 
-    TEST(POP,  "FLAGS",0x50, 0xFC);
+    TEST(POP,  "0FCH", 0x50, 0xFC);
     TEST(POP,  "R1",   0x50, 0xE1);
     TEST(POP,  "@52H", 0x51, 0x52);
     TEST(POP,  "@R2",  0x51, 0xE2);
@@ -244,7 +226,7 @@ static void test_one_operand() {
     TEST(COM,  "@62H", 0x61, 0x62);
     TEST(COM,  "@R2",  0x61, 0xE2);
 
-    TEST(PUSH, "SPL",  0x70, 0xFF);
+    TEST(PUSH, "0FFH", 0x70, 0xFF);
     TEST(PUSH, "R1",   0x70, 0xE1);
     TEST(PUSH, "@72H", 0x71, 0x72);
     TEST(PUSH, "@R2",  0x71, 0xE2);
@@ -437,8 +419,8 @@ static void test_two_operands() {
     TEST(LD, "R7,#0E8H",   0xE6, 0xE7, 0xE8);
     TEST(LD, "@R8,#0E9H",  0xE7, 0xE8, 0xE9);
     TEST(LD, "@R15,R4",    0xF3, 0xF4);
-    TEST(LD, "@0C7H,SIO",  0xF5, 0xF0, 0xC7);
-    TEST(LD, "@R7,SIO",    0xF5, 0xF0, 0xE7);
+    TEST(LD, "@0C7H,0F0H", 0xF5, 0xF0, 0xC7);
+    TEST(LD, "@R7,0F0H",   0xF5, 0xF0, 0xE7);
 
     TEST(LDE,  "R7,@RR4",  0x82, 0x74);
     TEST(LDEI, "@R7,@RR4", 0x83, 0x74);

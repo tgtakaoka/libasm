@@ -22,6 +22,10 @@
 namespace libasm {
 namespace z8 {
 
+enum CpuType {
+    Z8,
+};
+
 enum AddrMode {
     M_NO  = 0,   // No operand
     M_R   = 1,   // Register: Rn
