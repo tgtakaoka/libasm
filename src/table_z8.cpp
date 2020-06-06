@@ -29,27 +29,14 @@ namespace z8 {
 #define E(_opc, _name, _dst, _src)                      \
     { _opc, Entry::_flags(_dst, _src), TEXT_##_name },
 
-static constexpr Entry TABLE_Z8[] PROGMEM = {
+static constexpr Entry TABLE_COMMON[] PROGMEM = {
     E(0x08, LD,   M_r,   M_R)
     E(0x09, LD,   M_R,   M_r)
     E(0x0C, LD,   M_r,   M_IM)
-    E(0xC7, LD,   M_r,   M_X)
-    E(0xD7, LD,   M_X,   M_r)
-    E(0xE3, LD,   M_r,   M_Ir)
     E(0xE4, LD,   M_R,   M_R)
     E(0xE5, LD,   M_R,   M_IR)
     E(0xE6, LD,   M_R,   M_IM)
-    E(0xE7, LD,   M_IR,  M_IM)
-    E(0xF3, LD,   M_Ir,  M_r)
     E(0xF5, LD,   M_IR,  M_R)
-    E(0x82, LDE,  M_r,   M_Irr)
-    E(0x92, LDE,  M_Irr, M_r)
-    E(0x83, LDEI, M_Ir,  M_Irr)
-    E(0x93, LDEI, M_Irr, M_Ir)
-    E(0xC2, LDC,  M_r,   M_Irr)
-    E(0xD2, LDC,  M_Irr, M_r)
-    E(0xC3, LDCI, M_Ir,  M_Irr)
-    E(0xD3, LDCI, M_Irr, M_Ir)
     E(0x0A, DJNZ, M_r,   M_RA)
     E(0x8B, JR,   M_RA,  M_NO)
     E(0x0B, JR,   M_cc,  M_RA)
@@ -57,8 +44,6 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
     E(0x0D, JP,   M_cc,  M_DA)
     E(0x30, JP,   M_IRR, M_NO)
     E(0x31, SRP,  M_IM,  M_NO)
-    E(0xD6, CALL, M_DA,  M_NO)
-    E(0xD4, CALL, M_IRR, M_NO)
     E(0x02, ADD,  M_r,   M_r)
     E(0x03, ADD,  M_r,   M_Ir)
     E(0x04, ADD,  M_R,   M_R)
@@ -150,8 +135,6 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
     E(0xE1, RR,   M_IR,  M_NO)
     E(0xF0, SWAP, M_R,   M_NO)
     E(0xF1, SWAP, M_IR,  M_NO)
-    E(0x6F, STOP, M_NO,  M_NO)
-    E(0x7F, HALT, M_NO,  M_NO)
     E(0x8F, DI,   M_NO,  M_NO)
     E(0x9F, EI,   M_NO,  M_NO)
     E(0xAF, RET,  M_NO,  M_NO)
@@ -162,6 +145,29 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
     E(0xFF, NOP,  M_NO,  M_NO)
 };
 
+static constexpr Entry TABLE_Z8[] PROGMEM = {
+    E(0xC7, LD,   M_r,   M_X)
+    E(0xD7, LD,   M_X,   M_r)
+    E(0xE3, LD,   M_r,   M_Ir)
+    E(0xE7, LD,   M_IR,  M_IM)
+    E(0xF3, LD,   M_Ir,  M_r)
+    E(0x82, LDE,  M_r,   M_Irr)
+    E(0x92, LDE,  M_Irr, M_r)
+    E(0x83, LDEI, M_Ir,  M_Irr)
+    E(0x93, LDEI, M_Irr, M_Ir)
+    E(0xC2, LDC,  M_r,   M_Irr)
+    E(0xD2, LDC,  M_Irr, M_r)
+    E(0xC3, LDCI, M_Ir,  M_Irr)
+    E(0xD3, LDCI, M_Irr, M_Ir)
+    E(0xD6, CALL, M_DA,  M_NO)
+    E(0xD4, CALL, M_IRR, M_NO)
+};
+
+static constexpr Entry TABLE_Z86C[] PROGMEM = {
+    E(0x6F, STOP, M_NO,  M_NO)
+    E(0x7F, HALT, M_NO,  M_NO)
+};
+
 struct TableZ8::EntryPage {
     const Entry *const table;
     const Entry *const end;
@@ -169,6 +175,13 @@ struct TableZ8::EntryPage {
 
 static constexpr TableZ8::EntryPage Z8_PAGES[] PROGMEM = {
     { ARRAY_RANGE(TABLE_Z8) },
+    { ARRAY_RANGE(TABLE_COMMON) },
+};
+
+static constexpr TableZ8::EntryPage Z86C_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_Z8) },
+    { ARRAY_RANGE(TABLE_COMMON) },
+    { ARRAY_RANGE(TABLE_Z86C) },
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -254,18 +267,26 @@ bool TableZ8::setCpu(CpuType cpuType) {
         _end = ARRAY_END(Z8_PAGES);
         return true;
     }
+    if (cpuType == Z86C) {
+        _table = ARRAY_BEGIN(Z86C_PAGES);
+        _end = ARRAY_END(Z86C_PAGES);
+        return true;
+    }
     return false;
 }
 
 const char *TableZ8::listCpu() {
-    return "Z8";
+    return "Z8, Z86C";
 }
 
 const char *TableZ8::getCpu() {
-    return "Z8";
+    if (_cpuType == Z8) return "Z8";
+    return "Z86C";
 }
 
 bool TableZ8::setCpu(const char *cpu) {
+    if (strncasecmp(cpu, "z86c", 4) == 0)
+        return setCpu(Z86C);
     if (strcasecmp(cpu, "z8") == 0
         || strncasecmp(cpu, "z86", 3) == 0)
         return setCpu(Z8);

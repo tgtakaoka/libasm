@@ -47,12 +47,11 @@ static void test_cpu() {
     asserter.equals(
         "cpu Z86C91", true, disassembler.setCpu("Z86C91"));
     asserter.equals(
-        "get cpu", "Z8", disassembler.getCpu());
+        "get cpu", "Z86C", disassembler.getCpu());
 }
 
 static void test_implied() {
-    TEST(STOP, "", 0x6F);
-    TEST(HALT, "", 0x7F);
+    // Z8
     TEST(DI  , "", 0x8F);
     TEST(EI,   "", 0x9F);
     TEST(RET,  "", 0xAF);
@@ -61,6 +60,11 @@ static void test_implied() {
     TEST(SCF,  "", 0xDF);
     TEST(CCF,  "", 0xEF);
     TEST(NOP,  "", 0xFF);
+
+    // Z86C
+    disassembler.setCpu("Z86C");
+    TEST(STOP, "", 0x6F);
+    TEST(HALT, "", 0x7F);
 }
 
 static void test_absolute() {
@@ -455,6 +459,20 @@ static void assert_illegal(uint8_t opc) {
 
 static void test_illegal_z8() {
     const uint8_t illegals[] = {
+        0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0x7F,
+        0x84, 0x85, 0x86, 0x87,
+        0x94, 0x95, 0x96, 0x97,
+        0xC4, 0xC5, 0xC6,
+        0xD5,
+        0xE2,
+        0xF2, 0xF4, 0xF6, 0xF7,
+    };
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        assert_illegal(illegals[idx]);
+}
+
+static void test_illegal_z86c() {
+    const uint8_t illegals[] = {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F,
         0x84, 0x85, 0x86, 0x87,
         0x94, 0x95, 0x96, 0x97,
@@ -485,6 +503,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_two_operands);
     RUN_TEST(test_indexed);
     RUN_TEST(test_illegal_z8);
+    RUN_TEST(test_illegal_z86c);
     return 0;
 }
 

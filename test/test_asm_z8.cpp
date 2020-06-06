@@ -26,7 +26,6 @@ Assembler &assembler(asmz8);
 
 static void set_up() {
     assembler.reset();
-
     assembler.setCpu("Z8");
 }
 
@@ -48,12 +47,11 @@ static void test_cpu() {
     asserter.equals(
         "cpu Z86C91", true, assembler.setCpu("Z86C91"));
     asserter.equals(
-        "get cpu", "Z8", assembler.getCpu());
+        "get cpu", "Z86C", assembler.getCpu());
 }
 
 static void test_implied() {
-    TEST("STOP", 0x6F);
-    TEST("HALT", 0x7F);
+    // Z8
     TEST("DI",   0x8F);
     TEST("EI",   0x9F);
     TEST("RET",  0xAF);
@@ -62,6 +60,13 @@ static void test_implied() {
     TEST("SCF",  0xDF);
     TEST("CCF",  0xEF);
     TEST("NOP",  0xFF);
+    ETEST(UNKNOWN_INSTRUCTION, "STOP");
+    ETEST(UNKNOWN_INSTRUCTION, "HALT");
+
+    // Z86C
+    assembler.setCpu("Z86C");
+    TEST("STOP", 0x6F);
+    TEST("HALT", 0x7F);
 }
 
 static void test_absolute() {

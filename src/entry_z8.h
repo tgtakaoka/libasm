@@ -24,6 +24,7 @@ namespace z8 {
 
 enum CpuType {
     Z8,
+    Z86C,
 };
 
 enum AddrMode {

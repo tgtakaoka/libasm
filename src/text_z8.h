@@ -37,7 +37,6 @@ static const char TEXT_DECW[] PROGMEM = "DECW";
 static const char TEXT_DI[]   PROGMEM = "DI";
 static const char TEXT_DJNZ[] PROGMEM = "DJNZ";
 static const char TEXT_EI[]   PROGMEM = "EI";
-static const char TEXT_HALT[] PROGMEM = "HALT";
 static const char TEXT_INC[]  PROGMEM = "INC";
 static const char TEXT_INCW[] PROGMEM = "INCW";
 static const char TEXT_IRET[] PROGMEM = "IRET";
@@ -62,12 +61,15 @@ static const char TEXT_SBC[]  PROGMEM = "SBC";
 static const char TEXT_SCF[]  PROGMEM = "SCF";
 static const char TEXT_SRA[]  PROGMEM = "SRA";
 static const char TEXT_SRP[]  PROGMEM = "SRP";
-static const char TEXT_STOP[] PROGMEM = "STOP";
 static const char TEXT_SUB[]  PROGMEM = "SUB";
 static const char TEXT_SWAP[] PROGMEM = "SWAP";
 static const char TEXT_TCM[]  PROGMEM = "TCM";
 static const char TEXT_TM[]   PROGMEM = "TM";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
+
+// Z86C
+static const char TEXT_HALT[] PROGMEM = "HALT";
+static const char TEXT_STOP[] PROGMEM = "STOP";
 
 } // namespace z8
 } // namespace libasm

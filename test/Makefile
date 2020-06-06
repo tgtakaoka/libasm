@@ -38,6 +38,7 @@ all: \
 	test_i8085_z80syn.hex \
 	test_z80.hex \
 	test_z8.hex \
+	test_z86c.hex \
 	test_ins8060.hex \
 	test_ins8070.hex \
 	test_cdp1802.hex \
@@ -287,7 +288,8 @@ gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	./gen_z80   -u -C 8085 -o gen_i8085_z80syn.asm
 gen_z8:      gen_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z8    -u -C Z8601 -o gen_z8.asm
+	./gen_z8    -u -C Z8601  -o gen_z8.asm
+	./gen_z8    -u -C Z86C91 -o gen_z86c91.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_ins8060 -u -C SC/MP -o gen_ins8060.asm

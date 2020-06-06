@@ -12,10 +12,14 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     z8601
+        cpu     z86c03
 
         org     0
         include "test_z8.inc"
+
+        align   32
+        stop
+        halt
 
         end
         ;; comment
