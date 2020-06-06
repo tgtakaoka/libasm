@@ -104,6 +104,10 @@ char *positiveValue(char *p, uint32_t &val, int8_t radix, int8_t bitWidth) {
     return p;
 }
 
+const char *ValueFormatter::currentOriginSymbol() const {
+    return "$";
+}
+
 char *ValueFormatter::output(
     char *p, uint32_t val, int8_t radix, bool relax, int8_t bitWidth) const {
     char *t;
@@ -122,6 +126,10 @@ char *ValueFormatter::output(
     }
     t = outputNumber(p, val, base, bitWidth);
     return reverseStr(p, t);
+}
+
+const char *MotoValueFormatter::currentOriginSymbol() const {
+    return "*";
 }
 
 char *MotoValueFormatter::output(

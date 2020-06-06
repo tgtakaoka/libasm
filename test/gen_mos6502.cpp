@@ -22,6 +22,7 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisMos6502 dis6502;
+    dis6502.setRelativeTarget(true);
     GenDriver<Config> driver(dis6502);
     if (driver.main(argc, argv))
         return 1;

@@ -30,9 +30,9 @@
       ADE
       CAE
       DLY  0x90
-      JMP  0x00B0
+      JMP  $-0x006D
       JMP  E(PC)
-      JMP  0x00A4
+      JMP  $-0x007D
       JMP  -110(P1)
       JMP  E(P1)
       JMP  -127(P1)
@@ -40,9 +40,9 @@
       JMP  -127(P2)
       JMP  E(P3)
       JMP  -127(P3)
-      JP   0x00C8
+      JP   $-0x0069
       JP   E(PC)
-      JP   0x00B8
+      JP   $-0x007D
       JP   -106(P1)
       JP   E(P1)
       JP   -127(P1)
@@ -50,9 +50,9 @@
       JP   -127(P2)
       JP   E(P3)
       JP   -127(P3)
-      JZ   0x00E0
+      JZ   $-0x0065
       JZ   E(PC)
-      JZ   0x00CC
+      JZ   $-0x007D
       JZ   -102(P1)
       JZ   E(P1)
       JZ   -127(P1)
@@ -60,9 +60,9 @@
       JZ   -127(P2)
       JZ   E(P3)
       JZ   -127(P3)
-      JNZ  0x00F8
+      JNZ  $-0x0061
       JNZ  E(PC)
-      JNZ  0x00E0
+      JNZ  $-0x007D
       JNZ  -98(P1)
       JNZ  E(P1)
       JNZ  -127(P1)
@@ -70,9 +70,9 @@
       JNZ  -127(P2)
       JNZ  E(P3)
       JNZ  -127(P3)
-      ILD  0x0117
+      ILD  $-0x0056
       ILD  E(PC)
-      ILD  0x00F3
+      ILD  $-0x007E
       ILD  -86(P1)
       ILD  E(P1)
       ILD  -127(P1)
@@ -80,9 +80,9 @@
       ILD  -127(P2)
       ILD  E(P3)
       ILD  -127(P3)
-      DLD  0x013B
+      DLD  $-0x0046
       DLD  E(PC)
-      DLD  0x0107
+      DLD  $-0x007E
       DLD  -70(P1)
       DLD  E(P1)
       DLD  -127(P1)
@@ -90,9 +90,9 @@
       DLD  -127(P2)
       DLD  E(P3)
       DLD  -127(P3)
-      LD   0x0157
+      LD   $-0x003E
       LD   E(PC)
-      LD   0x011B
+      LD   $-0x007E
       LD   -62(P1)
       LD   E(P1)
       LD   -127(P1)
@@ -108,9 +108,9 @@
       LD   @-127(P2)
       LD   @E(P3)
       LD   @-127(P3)
-      ST   0x0183
+      ST   $-0x0036
       ST   E(PC)
-      ST   0x013F
+      ST   $-0x007E
       ST   -54(P1)
       ST   E(P1)
       ST   -127(P1)
@@ -125,9 +125,9 @@
       ST   @-127(P2)
       ST   @E(P3)
       ST   @-127(P3)
-      AND  0x01AD
+      AND  $-0x002E
       AND  E(PC)
-      AND  0x0161
+      AND  $-0x007E
       AND  -46(P1)
       AND  E(P1)
       AND  -127(P1)
@@ -143,9 +143,9 @@
       AND  @-127(P2)
       AND  @E(P3)
       AND  @-127(P3)
-      OR   0x01D9
+      OR   $-0x0026
       OR   E(PC)
-      OR   0x0185
+      OR   $-0x007E
       OR   -38(P1)
       OR   E(P1)
       OR   -127(P1)
@@ -161,9 +161,9 @@
       OR   @-127(P2)
       OR   @E(P3)
       OR   @-127(P3)
-      XOR  0x0205
+      XOR  $-0x001E
       XOR  E(PC)
-      XOR  0x01A9
+      XOR  $-0x007E
       XOR  -30(P1)
       XOR  E(P1)
       XOR  -127(P1)
@@ -179,9 +179,9 @@
       XOR  @-127(P2)
       XOR  @E(P3)
       XOR  @-127(P3)
-      DAD  0x0231
+      DAD  $-0x0016
       DAD  E(PC)
-      DAD  0x01CD
+      DAD  $-0x007E
       DAD  -22(P1)
       DAD  E(P1)
       DAD  -127(P1)
@@ -197,9 +197,9 @@
       DAD  @-127(P2)
       DAD  @E(P3)
       DAD  @-127(P3)
-      ADD  0x025D
+      ADD  $-14
       ADD  E(PC)
-      ADD  0x01F1
+      ADD  $-0x007E
       ADD  -14(P1)
       ADD  E(P1)
       ADD  -127(P1)
@@ -215,9 +215,9 @@
       ADD  @-127(P2)
       ADD  @E(P3)
       ADD  @-127(P3)
-      CAD  0x0289
+      CAD  $-6
       CAD  E(PC)
-      CAD  0x0215
+      CAD  $-0x007E
       CAD  -6(P1)
       CAD  E(P1)
       CAD  -127(P1)

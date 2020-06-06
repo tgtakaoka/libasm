@@ -46,35 +46,26 @@ static bool isDigits(const char *&r, const char *p) {
     return true;
 }
 
-static bool isNumber(const char *&p) {
+static bool isNumber(const char *p, const char *&r) {
     const char *s;
     if (*p == '$' && isXdigits(s, p + 1) && s - p >= 3) {
-        p = s;
+        r = s;
         return true;
     } else if (*p == '%' && isBdigits(s, p + 1) && s - p >= 9) {
-        p = s;
+        r = s;
         return true;
     } else if (isXdigits(s, p) && toupper(*s) == 'H') {
-        p = s + 1;
-        return true;
-    } else if (p[0] == '>' && isXdigits(s, p + 1) && toupper(*s) == 'H') {
-        p = s + 1;
-        return true;
-    } else if ((p[0] == '-' || p[0] == '>')
-               && p[1] == '$' && isXdigits(s, p + 2) && s - p >= 3) {
-        p = s;
-        return true;
-    } else if ((*p == '-' || *p == '+') && isDigits(s, p + 1)) {
-        p = s;
+        r = s + 1;
         return true;
     } else if (p[0] == '0' && toupper(p[1]) == 'X'
                && isXdigits(s, p + 2) && s - p >= 3) {
-        p = s;
+        r = s;
         return true;
     } else if (isDigits(s, p)) {
-        p = s;
+        r = s;
         return true;
     }
+    r = p;
     return false;
 }
 
@@ -93,10 +84,34 @@ void TextBuffer::toTokens() {
     const char *b = _buffer;
     uint8_t *t = _tokens;
     while (*b) {
-        const char *tmp = b;
-        if (isNumber(tmp)) {
+        const char *tmp;
+        if (isNumber(b, tmp)) {
             *t++ = digitsToken(tmp - b);
             b = tmp;
+        } else if ((*b == '+' || *b == '-') && isNumber(b + 1, tmp)) {
+            *t++ = digitsToken(tmp - b);
+            b = tmp;
+        } else if (*b == '>' && isNumber(b + 1, tmp)) {
+            *t++ = digitsToken(tmp - b);
+            b = tmp;
+        } else if (*b == '<' && isNumber(b + 1, tmp)) {
+            *t++ = digitsToken(tmp - b);
+            b = tmp;
+        } else if (*b == '<' && b[1] == '<' && isNumber(b + 2, tmp)) {
+            *t++ = digitsToken(tmp - b);
+            b = tmp;
+        } else if (*b == '<' && b[1] == '-' && isNumber(b + 2, tmp)) {
+            *t++ = digitsToken(tmp - b);
+            b = tmp;
+        } else if ((*b == '*' || *b == '$')
+                   && (b[1] == '+' || b[1] == '-')
+                   && isNumber(b + 2, tmp)) {
+            *t++ = digitsToken(tmp - b);
+            b = tmp;
+        } else if ((*b == '*' || *b == '$')
+                   && !isNumber(b + 1, tmp)) {
+            *t++ = digitsToken(1);
+            b++;
         } else {
             *t++ = *b++;
         }

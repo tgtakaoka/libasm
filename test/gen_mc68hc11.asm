@@ -18,8 +18,6 @@
       SEI
       SBA
       CBA
-      BRSET $13,#0,$0029
-      BRCLR $14,#0,$002E
       BSET  $00,#$15
       BCLR  $00,#$16
       TAB
@@ -28,24 +26,22 @@
       ABA
       BSET  0,X,#$1D
       BCLR  0,X,#$1E
-      BRSET 31,X,#0,$004D
-      BRCLR 32,X,#0,$0052
-      BRA   $0054
-      BRN   $0057
-      BHI   $005A
-      BLS   $005D
-      BHS   $0060
-      BLO   $0063
-      BNE   $0066
-      BEQ   $0069
-      BVC   $006C
-      BVS   $006F
-      BPL   $0072
-      BMI   $0075
-      BGE   $0078
-      BLT   $007B
-      BGT   $007E
-      BLE   $0081
+      BRA   *+$0023
+      BRN   *+$0024
+      BHI   *+$0025
+      BLS   *+$0026
+      BHS   *+$0027
+      BLO   *+$0028
+      BNE   *+$0029
+      BEQ   *+$002A
+      BVC   *+$002B
+      BVS   *+$002C
+      BPL   *+$002D
+      BMI   *+$002E
+      BGE   *+$002F
+      BLT   *+$0030
+      BGT   *+$0031
+      BLE   *+$0032
       TSX
       INS
       PULA
@@ -120,7 +116,7 @@
       ORAA  #$8B
       ADDA  #$8C
       CPX   #$008D
-      BSR   $005D
+      BSR   *-$0070
       LDS   #$008F
       XGDX
       SUBA  $91
@@ -233,12 +229,14 @@
       STD   >$00FE
       LDX   >$00FF
       STX   $0100
+      BRSET $13,#$14,*+4
+      BRCLR $14,#$15,*+4
+      BRSET 31,X,#$20,*+4
+      BRCLR 32,X,#$21,*+4
       INY
       DEY
       BSET  0,Y,#$1D
       BCLR  0,Y,#$1E
-      BRSET 31,Y,#0,$0202
-      BRCLR 32,Y,#0,$0208
       TSY
       TYS
       PULY
@@ -297,6 +295,8 @@
       STY   240,Y
       LDY   >$00FF
       STY   $0100
+      BRSET 31,Y,#$20,*+5
+      BRCLR 32,Y,#$21,*+5
       CPD   #$0084
       CPD   $94
       CPD   164,X

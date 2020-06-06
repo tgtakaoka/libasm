@@ -93,9 +93,9 @@ Error DisZ8::decodeRelative(DisMemory &memory, InsnZ8 &insn) {
     }
     uint8_t disp;
     if (insn.readByte(memory, disp)) return setError(NO_MEMORY);
-    const Config::uintptr_t addr =
+    const Config::uintptr_t target =
         insn.address() + insn.length() + static_cast<int8_t>(disp);
-    outConstant(addr, 16, false);
+    outRelativeAddr(target, insn.address());
     return setOK();
 }
 

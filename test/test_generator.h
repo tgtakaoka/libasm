@@ -230,6 +230,17 @@ public:
         return generate(printer, gen);
     }
 
+    TestGenerator<Conf> &generate(
+        Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3, uint8_t opc4) {
+        DataGenerator parent(_memory, _endian, _opcodeSize * 4);
+        parent.outUint8(opc1, 0);
+        parent.outUint8(opc2, 1);
+        parent.outUint8(opc3, 2);
+        parent.outUint8(opc4, 3);
+        DataGenerator gen(parent, _opcodeSize);
+        return generate(printer, gen);
+    }
+
 private:
     Disassembler &_disassembler;
     const int _memorySize;

@@ -13,8 +13,8 @@
       TSB  >$000D
       ORA  >$000E
       ASL  >$000F
-      BBR0 $10,$001B
-      BPL  $002E
+      BBR0 $10,*+3
+      BPL  *+$0013
       ORA  ($12),Y
       ORA  ($13)
       TRB  $15
@@ -27,7 +27,7 @@
       TRB  >$001D
       ORA  >$001E,X
       ASL  >$001F,X
-      BBR1 $20,$003A
+      BBR1 $20,*+3
       JSR  >$0021
       AND  ($22,X)
       BIT  $25
@@ -40,8 +40,8 @@
       BIT  >$002D
       AND  >$002E
       ROL  >$002F
-      BBR2 $30,$0057
-      BMI  $008A
+      BBR2 $30,*+3
+      BMI  *+$0033
       AND  ($32),Y
       AND  ($33)
       BIT  $35,X
@@ -54,7 +54,7 @@
       BIT  >$003D,X
       AND  >$003E,X
       ROL  >$003F,X
-      BBR3 $40,$0076
+      BBR3 $40,*+3
       RTI
       EOR  ($42,X)
       EOR  $46
@@ -66,8 +66,8 @@
       JMP  >$004D
       EOR  >$004E
       LSR  >$004F
-      BBR4 $50,$008F
-      BVC  $00E2
+      BBR4 $50,*+3
+      BVC  *+$0053
       EOR  ($52),Y
       EOR  ($53)
       EOR  $56,X
@@ -78,7 +78,7 @@
       PHY
       EOR  >$005E,X
       LSR  >$005F,X
-      BBR5 $60,$00A9
+      BBR5 $60,*+3
       RTS
       ADC  ($62,X)
       STZ  $65
@@ -91,8 +91,8 @@
       JMP  (>$006D)
       ADC  >$006E
       ROR  >$006F
-      BBR6 $70,$00C4
-      BVS  $0137
+      BBR6 $70,*+3
+      BVS  *+$0073
       ADC  ($72),Y
       ADC  ($73)
       STZ  $75,X
@@ -105,8 +105,8 @@
       JMP  (>$007D,X)
       ADC  >$007E,X
       ROR  >$007F,X
-      BBR7 $80,$00E3
-      BRA  $0066
+      BBR7 $80,*+3
+      BRA  *-$007D
       STA  ($82,X)
       STY  $85
       STA  $86
@@ -118,8 +118,8 @@
       STY  >$008D
       STA  >$008E
       STX  >$008F
-      BBS0 $90,$00FF
-      BCC  $0092
+      BBS0 $90,*+3
+      BCC  *-$006D
       STA  ($92),Y
       STA  ($93)
       STY  $95,X
@@ -132,7 +132,7 @@
       STZ  >$009D
       STA  >$009E,X
       STZ  >$009F,X
-      BBS1 $A0,$011E
+      BBS1 $A0,*+3
       LDY  #$A1
       LDA  ($A2,X)
       LDX  #$A3
@@ -146,8 +146,8 @@
       LDY  >$00AD
       LDA  >$00AE
       LDX  >$00AF
-      BBS2 $B0,$013C
-      BCS  $00EF
+      BBS2 $B0,*+3
+      BCS  *-$004D
       LDA  ($B2),Y
       LDA  ($B3)
       LDY  $B5,X
@@ -160,7 +160,7 @@
       LDY  >$00BD,X
       LDA  >$00BE,X
       LDX  >$00BF,Y
-      BBS3 $C0,$015B
+      BBS3 $C0,*+3
       CPY  #$C1
       CMP  ($C2,X)
       CPY  $C5
@@ -174,8 +174,8 @@
       CPY  >$00CD
       CMP  >$00CE
       DEC  >$00CF
-      BBS4 $D0,$0178
-      BNE  $014B
+      BBS4 $D0,*+3
+      BNE  *-$002D
       CMP  ($D2),Y
       CMP  ($D3)
       CMP  $D6,X
@@ -187,7 +187,7 @@
       STP
       CMP  >$00DE,X
       DEC  >$00DF,X
-      BBS5 $E0,$0193
+      BBS5 $E0,*+3
       CPX  #$E1
       SBC  ($E2,X)
       CPX  $E5
@@ -200,8 +200,8 @@
       CPX  >$00ED
       SBC  >$00EE
       INC  >$00EF
-      BBS6 $F0,$01AF
-      BEQ  $01A2
+      BBS6 $F0,*+3
+      BEQ  *-13
       SBC  ($F2),Y
       SBC  ($F3)
       SBC  $F6,X
@@ -212,4 +212,4 @@
       PLX
       SBC  >$00FE,X
       INC  >$00FF,X
-      BBS7 $00,$01CA
+      BBS7 $00,*+4

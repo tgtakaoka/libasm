@@ -71,9 +71,9 @@ Error DisMc68000::decodeEffectiveAddr(
         uint16_t val16;
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
         if (mode == M_PC_DISP) {
-            const Config::uintptr_t addr =
+            const Config::uintptr_t target =
                 insn.address() + 2 + static_cast<int16_t>(val16);
-            outConstant(addr, 16, false);
+            outRelativeAddr(target, insn.address(), Config::addressBits());
         } else {
             if (val16 & 0x8000) {
                 const uint16_t disp16 = 0x10000 - val16;
@@ -329,15 +329,15 @@ Error DisMc68000::decodeSignExt(InsnMc68000 &insn) {
 Error DisMc68000::decodeRelative(
     DisMemory &memory, InsnMc68000 &insn) {
     const uint8_t val8 = static_cast<uint8_t>(insn.opCode());
-    Config::uintptr_t addr = insn.address() + 2;
+    Config::uintptr_t target = insn.address() + 2;
     if (val8) {
-        addr += static_cast<int8_t>(val8);
+        target += static_cast<int8_t>(val8);
     } else {
         uint16_t val16;
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        addr += static_cast<int16_t>(val16);
+        target += static_cast<int16_t>(val16);
     }
-    outConstant(addr, 16, false, true, Config::addressBits());
+    outRelativeAddr(target, insn.address(), Config::addressBits());
     return setOK();
 }
 

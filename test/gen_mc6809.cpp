@@ -32,6 +32,7 @@ static bool filterHd6309BitImmIndexed(uint8_t opc) {
 
 int main(int argc, const char **argv) {
     DisMc6809 dis6809;
+    dis6809.setRelativeTarget(true);
     GenDriver<Config> driver(dis6809);
     if (driver.main(argc, argv))
         return 1;

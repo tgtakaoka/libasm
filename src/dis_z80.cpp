@@ -328,8 +328,8 @@ Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
         outConditionName((opc >> 3) & 3, false);
         *_operands++ = ',';
     }
-    const Config::uintptr_t addr = insn.address() + 2 + delta;
-    outAddress(addr, false);
+    const Config::uintptr_t target = insn.address() + 2 + delta;
+    outRelativeAddr(target, insn.address());
     return setOK();
 }
 

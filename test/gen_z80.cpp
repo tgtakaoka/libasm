@@ -35,6 +35,7 @@ static bool filterZ80IxBitPrefix(uint8_t opc) {
 
 int main(int argc, const char **argv) {
     DisZ80 disz80;
+    disz80.setRelativeTarget(true);
     GenDriver<Config> driver(disz80);
     if (driver.main(argc, argv))
         return 1;

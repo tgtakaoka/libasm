@@ -177,7 +177,7 @@ Error DisW65C816::decodeRelative(
     }
     const Config::uintptr_t target =
         (static_cast<Config::uintptr_t>(bank) << 16) + addr;
-    outConstant(target, 16, false, true, Config::addressBits());
+    outRelativeAddr(target, insn.address(), Config::addressBits());
     return setOK();
 }
 

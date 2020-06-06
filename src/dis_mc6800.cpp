@@ -96,9 +96,9 @@ Error DisMc6800::decodeRelative(
     DisMemory &memory, InsnMc6800 &insn) {
     uint8_t delta8;
     if (insn.readByte(memory, delta8)) return setError(NO_MEMORY);
-    const Config::uintptr_t addr =
+    const Config::uintptr_t target =
         insn.address() + insn.length() + static_cast<int8_t>(delta8);
-    outConstant(addr, 16, false);
+    outRelativeAddr(target, insn.address());
     return setOK();
 }
 

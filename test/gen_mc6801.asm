@@ -20,22 +20,22 @@
       TBA
       DAA
       ABA
-      BRA   $0036
-      BRN   $0039
-      BHI   $003C
-      BLS   $003F
-      BHS   $0042
-      BLO   $0045
-      BNE   $0048
-      BEQ   $004B
-      BVC   $004E
-      BVS   $0051
-      BPL   $0054
-      BMI   $0057
-      BGE   $005A
-      BLT   $005D
-      BGT   $0060
-      BLE   $0063
+      BRA   *+$0023
+      BRN   *+$0024
+      BHI   *+$0025
+      BLS   *+$0026
+      BHS   *+$0027
+      BLO   *+$0028
+      BNE   *+$0029
+      BEQ   *+$002A
+      BVC   *+$002B
+      BVS   *+$002C
+      BPL   *+$002D
+      BMI   *+$002E
+      BGE   *+$002F
+      BLT   *+$0030
+      BGT   *+$0031
+      BLE   *+$0032
       TSX
       INS
       PULA
@@ -110,7 +110,7 @@
       ORAA  #$8B
       ADDA  #$8C
       CPX   #$008D
-      BSR   $003F
+      BSR   *-$0070
       LDS   #$008F
       SUBA  $91
       CMPA  $92

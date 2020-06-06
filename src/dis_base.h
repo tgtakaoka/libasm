@@ -40,9 +40,12 @@ public:
 
     virtual ValueFormatter &getFormatter() = 0;
 
+    void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
+
 protected:
     char *_operands;
     SymbolTable *_symtab;
+    bool _relativeTarget = false;
 
     void outText(const char *text);
 
@@ -62,7 +65,7 @@ protected:
 
     template<typename T>
     void outConstant(T val,
-                     uint8_t radix = 16,
+                     int8_t radix = 16,
                      bool relax = true,
                      bool symbol = true,
                      uint8_t bitWidth = sizeof(T) * 8) {
@@ -76,6 +79,28 @@ protected:
         const int8_t r = is_signed<T>::value ? -radix : radix;
         _operands = this->getFormatter().output(
             _operands, val, r, relax, bitWidth);
+    }
+
+    template<typename Addr>
+    void outRelativeAddr(Addr target, Addr origin, int8_t addressBits = 0) {
+        const char *label = lookup(target);
+        if (label) {
+            outText(label);
+            return;
+        }
+        if (_relativeTarget) {
+            const auto delta = static_cast<
+                typename make_signed<Addr>::type>(target - origin);
+            outText(getFormatter().currentOriginSymbol());
+            if (delta > 0) *_operands++ = '+';
+            if (delta != 0) outConstant(delta);
+            return;
+        }
+        if (addressBits == 0) {
+            outConstant(target, 16, false, true);
+        } else {
+            outConstant(target, 16, false, true, addressBits);
+        }
     }
 
 private:

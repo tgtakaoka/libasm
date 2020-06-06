@@ -34,6 +34,7 @@ public:
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t bitWidth) const;
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    virtual const char *currentOriginSymbol() const;
 
 protected:
     bool _uppercase;
@@ -59,6 +60,7 @@ public:
     char *output(
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t bitWidth) const override;
+    const char *currentOriginSymbol() const override;
 };
 
 class IntelValueFormatter : public ValueFormatter {

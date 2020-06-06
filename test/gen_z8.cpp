@@ -22,6 +22,7 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisZ8 disz8;
+    disz8.setRelativeTarget(true);
     disz8.preferWorkRegister(false);
     GenDriver<Config> driver(disz8);
     if (driver.main(argc, argv))

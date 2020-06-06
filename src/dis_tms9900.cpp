@@ -55,8 +55,8 @@ Error DisTms9900::decodeImmediate(
 Error DisTms9900::decodeRelative(InsnTms9900 &insn) {
     int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
     delta <<= 1;
-    const Config::uintptr_t addr = insn.address() + 2 + delta;
-    outConstant(addr, 16, false);
+    const Config::uintptr_t target = insn.address() + 2 + delta;
+    outRelativeAddr(target, insn.address());
     return setOK();
 }
 

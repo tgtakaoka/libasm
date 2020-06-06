@@ -11,8 +11,8 @@
       ADD  @00H,#8
       LD   R0,>09H
       LD   >0AH,R0
-      DJNZ R0,0025H
-      JR   F,0028H
+      DJNZ R0,$+13
+      JR   F,$+14
       LD   R0,#13
       JP   F,000EH
       INC  R0
@@ -26,8 +26,8 @@
       ADC  @00H,#18H
       LD   R1,19H
       LD   1AH,R1
-      DJNZ R1,0057H
-      JR   LT,005AH
+      DJNZ R1,$+001DH
+      JR   LT,$+001EH
       LD   R1,#1DH
       JP   LT,001EH
       INC  R1
@@ -41,8 +41,8 @@
       SUB  @00H,#28H
       LD   R2,29H
       LD   2AH,R2
-      DJNZ R2,0089H
-      JR   LE,008CH
+      DJNZ R2,$+002DH
+      JR   LE,$+002EH
       LD   R2,#2DH
       JP   LE,002EH
       INC  R2
@@ -55,8 +55,8 @@
       SBC  @00H,#38H
       LD   R3,39H
       LD   3AH,R3
-      DJNZ R3,00B9H
-      JR   ULE,00BCH
+      DJNZ R3,$+003DH
+      JR   ULE,$+003EH
       LD   R3,#3DH
       JP   ULE,003EH
       INC  R3
@@ -70,8 +70,8 @@
       OR   @00H,#48H
       LD   R4,49H
       LD   4AH,R4
-      DJNZ R4,00EBH
-      JR   OV,00EEH
+      DJNZ R4,$+004DH
+      JR   OV,$+004EH
       LD   R4,#4DH
       JP   OV,004EH
       INC  R4
@@ -85,8 +85,8 @@
       AND  @00H,#58H
       LD   R5,59H
       LD   5AH,R5
-      DJNZ R5,011DH
-      JR   MI,0120H
+      DJNZ R5,$+005DH
+      JR   MI,$+005EH
       LD   R5,#5DH
       JP   MI,005EH
       INC  R5
@@ -100,8 +100,8 @@
       TCM  @00H,#68H
       LD   R6,69H
       LD   6AH,R6
-      DJNZ R6,014FH
-      JR   Z,0152H
+      DJNZ R6,$+006DH
+      JR   Z,$+006EH
       LD   R6,#6DH
       JP   Z,006EH
       INC  R6
@@ -116,8 +116,8 @@
       TM   @00H,#78H
       LD   R7,79H
       LD   7AH,R7
-      DJNZ R7,0182H
-      JR   C,0185H
+      DJNZ R7,$+007DH
+      JR   C,$+007EH
       LD   R7,#7DH
       JP   C,007EH
       INC  R7
@@ -128,8 +128,8 @@
       LDEI @R8,@RR4
       LD   R8,89H
       LD   8AH,R8
-      DJNZ R8,00A9H
-      JR   00ACH
+      DJNZ R8,$-0073H
+      JR   $-0072H
       LD   R8,#8DH
       JP   008EH
       INC  R8
@@ -140,8 +140,8 @@
       LDEI @RR4,@R9
       LD   R9,99H
       LD   9AH,R9
-      DJNZ R9,00D0H
-      JR   GE,00D3H
+      DJNZ R9,$-0063H
+      JR   GE,$-0062H
       LD   R9,#9DH
       JP   GE,009EH
       INC  R9
@@ -156,8 +156,8 @@
       CP   @00H,#0A8H
       LD   R10,0A9H
       LD   0AAH,R10
-      DJNZ R10,0103H
-      JR   GT,0106H
+      DJNZ R10,$-0053H
+      JR   GT,$-0052H
       LD   R10,#0ADH
       JP   GT,00AEH
       INC  R10
@@ -172,8 +172,8 @@
       XOR  @00H,#0B8H
       LD   R11,0B9H
       LD   0BAH,R11
-      DJNZ R11,0136H
-      JR   UGT,0139H
+      DJNZ R11,$-0043H
+      JR   UGT,$-0042H
       LD   R11,#0BDH
       JP   UGT,00BEH
       INC  R11
@@ -185,8 +185,8 @@
       LD   R0,0C8H(R0)
       LD   R12,0C9H
       LD   0CAH,R12
-      DJNZ R12,0160H
-      JR   NOV,0163H
+      DJNZ R12,$-0033H
+      JR   NOV,$-0032H
       LD   R12,#0CDH
       JP   NOV,00CEH
       INC  R12
@@ -200,8 +200,8 @@
       LD   0D8H(R0),R0
       LD   R13,0D9H
       LD   0DAH,R13
-      DJNZ R13,018FH
-      JR   PL,0192H
+      DJNZ R13,$-0023H
+      JR   PL,$-0022H
       LD   R13,#0DDH
       JP   PL,00DEH
       INC  R13
@@ -215,8 +215,8 @@
       LD   @00H,#0E8H
       LD   R14,0F0H
       LD   0EAH,R14
-      DJNZ R14,01C0H
-      JR   NZ,01C3H
+      DJNZ R14,$-0013H
+      JR   NZ,$-0012H
       LD   R14,#0EDH
       JP   NZ,00EEH
       INC  R14
@@ -227,8 +227,8 @@
       LD   @0F6H,>00H
       LD   R15,0F9H
       LD   0FAH,R15
-      DJNZ R15,01E8H
-      JR   NC,01EBH
+      DJNZ R15,$-3
+      JR   NC,$-2
       LD   R15,#0FDH
       JP   NC,00FEH
       INC  R15

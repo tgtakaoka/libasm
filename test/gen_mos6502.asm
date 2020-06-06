@@ -10,7 +10,7 @@
       ASL  A
       ORA  >$000E
       ASL  >$000F
-      BPL  $0024
+      BPL  *+$0013
       ORA  ($12),Y
       ORA  $16,X
       ASL  $17,X
@@ -29,7 +29,7 @@
       BIT  >$002D
       AND  >$002E
       ROL  >$002F
-      BMI  $006E
+      BMI  *+$0033
       AND  ($32),Y
       AND  $36,X
       ROL  $37,X
@@ -47,7 +47,7 @@
       JMP  >$004D
       EOR  >$004E
       LSR  >$004F
-      BVC  $00B4
+      BVC  *+$0053
       EOR  ($52),Y
       EOR  $56,X
       LSR  $57,X
@@ -65,7 +65,7 @@
       JMP  (>$006D)
       ADC  >$006E
       ROR  >$006F
-      BVS  $00FA
+      BVS  *+$0073
       ADC  ($72),Y
       ADC  $76,X
       ROR  $77,X
@@ -82,7 +82,7 @@
       STY  >$008D
       STA  >$008E
       STX  >$008F
-      BCC  $003F
+      BCC  *-$006D
       STA  ($92),Y
       STY  $95,X
       STA  $96,X
@@ -103,7 +103,7 @@
       LDY  >$00AD
       LDA  >$00AE
       LDX  >$00AF
-      BCS  $008A
+      BCS  *-$004D
       LDA  ($B2),Y
       LDY  $B5,X
       LDA  $B6,X
@@ -125,7 +125,7 @@
       CPY  >$00CD
       CMP  >$00CE
       DEC  >$00CF
-      BNE  $00D9
+      BNE  *-$002D
       CMP  ($D2),Y
       CMP  $D6,X
       DEC  $D7,X
@@ -144,7 +144,7 @@
       CPX  >$00ED
       SBC  >$00EE
       INC  >$00EF
-      BEQ  $0122
+      BEQ  *-13
       SBC  ($F2),Y
       SBC  $F6,X
       INC  $F7,X

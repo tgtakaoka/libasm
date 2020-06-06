@@ -113,19 +113,17 @@ Error DisMos6502::decodeZeroPage(
     return setOK();
 }
 
-Error DisMos6502::decodeRelative(
-    DisMemory &memory, InsnMos6502 &insn) {
-    Config::uintptr_t addr;
+Error DisMos6502::decodeRelative(DisMemory &memory, InsnMos6502 &insn) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    addr = insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
+    const Config::uintptr_t target =
+        insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
         + static_cast<int8_t>(val);
-    outConstant(addr, 16, false);
+    outRelativeAddr(target, insn.address());
     return setOK();
 }
 
-Error DisMos6502::decode(
-    DisMemory &memory, Insn &_insn) {
+Error DisMos6502::decode(DisMemory &memory, Insn &_insn) {
     InsnMos6502 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);

@@ -17,7 +17,7 @@
       DEC  C
       LD   C,15
       RRCA
-      DJNZ 0027H
+      DJNZ $+0013H
       LD   DE,0012H
       LD   (DE),A
       INC  DE
@@ -25,7 +25,7 @@
       DEC  D
       LD   D,17H
       RLA
-      JR   003BH
+      JR   $+001BH
       ADD  HL,DE
       LD   A,(DE)
       DEC  DE
@@ -33,7 +33,7 @@
       DEC  E
       LD   E,1FH
       RRA
-      JR   NZ,004DH
+      JR   NZ,$+0023H
       LD   HL,0022H
       LD   (0023H),HL
       INC  HL
@@ -41,7 +41,7 @@
       DEC  H
       LD   H,27H
       DAA
-      JR   Z,0063H
+      JR   Z,$+002BH
       ADD  HL,HL
       LD   HL,(002BH)
       DEC  HL
@@ -49,7 +49,7 @@
       DEC  L
       LD   L,2FH
       CPL
-      JR   NC,0077H
+      JR   NC,$+0033H
       LD   SP,0032H
       LD   (0033H),A
       INC  SP
@@ -57,7 +57,7 @@
       DEC  (HL)
       LD   (HL),37H
       SCF
-      JR   C,008DH
+      JR   C,$+003BH
       ADD  HL,SP
       LD   A,(003BH)
       DEC  SP

@@ -22,6 +22,7 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisIns8070 dis8070;
+    dis8070.setRelativeTarget(true);
     dis8070.setImmediateSymbol(true);
     GenDriver<Config> driver(dis8070);
     if (driver.main(argc, argv))

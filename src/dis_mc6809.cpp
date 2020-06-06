@@ -72,9 +72,9 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
         }
         if (spec.size) {
             if (spec.base == REG_PCR) {
-                const Config::uintptr_t addr =
+                const Config::uintptr_t target =
                     insn.address() + insn.length() + offset;
-                outConstant(addr, 16, false);
+                outRelativeAddr(target, insn.address());
             } else {
                 if (force) outText(force);
                 outConstant(offset, 10);
@@ -120,8 +120,8 @@ Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         delta = static_cast<Config::ptrdiff_t>(val);
     }
-    const Config::uintptr_t addr = insn.address() + insn.length() + delta;
-    outConstant(addr, 16, false);
+    const Config::uintptr_t target = insn.address() + insn.length() + delta;
+    outRelativeAddr(target, insn.address());
     return setOK();
 }
 
