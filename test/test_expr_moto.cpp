@@ -21,8 +21,6 @@ using namespace libasm::test;
 
 MotoValueParser parser;
 MotoValueFormatter formatter;
-TestSymtab symtab;
-TestAsserter asserter;
 
 static void set_up() {
 }

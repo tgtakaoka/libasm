@@ -21,8 +21,6 @@ using namespace libasm::test;
 
 ValueParser parser;
 ValueFormatter formatter;
-TestSymtab symtab;
-TestAsserter asserter;
 
 static void set_up() {
 }

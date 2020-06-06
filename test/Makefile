@@ -171,7 +171,8 @@ TESTS=$(TEST_OBJS:.o=)
 OBJS_test = test_asserter.o error_reporter.o
 OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o
 OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o test_memory.o
-OBJS_expr = test_asserter.o error_reporter.o value_parser.o value_formatter.o
+OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \
+            value_parser.o value_formatter.o
 OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
