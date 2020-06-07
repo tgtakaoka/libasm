@@ -122,10 +122,10 @@ test_cdp1802: test_asm_cdp1802 test_dis_cdp1802
 test_mc68000: test_asm_mc68000 test_dis_mc68000
 	./test_asm_mc68000
 	./test_dis_mc68000
-test_expr: test_expr_moto test_expr_intel test_expr_cstyle
+test_expr: test_expr_moto test_expr_intel test_expr_base
 	./test_expr_moto
 	./test_expr_intel
-	./test_expr_cstyle
+	./test_expr_base
 
 gen: \
 	gen_mc6809  \
@@ -155,7 +155,7 @@ TEST_OBJS= \
 	test_asm_tms9900.o test_dis_tms9900.o \
 	test_asm_mc68000.o test_dis_mc68000.o \
 	test_expr_moto.o   test_expr_intel.o  \
-	test_expr_cstyle.o \
+	test_expr_base.o \
 	gen_mc6809.o  \
 	gen_mc6800.o  \
 	gen_mos6502.o \
@@ -251,11 +251,11 @@ test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_asm) $
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_dis) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_moto:  test_expr_moto.o    $(OBJS_expr) $(OBJS_test)
+test_expr_moto:   test_expr_moto.o  $(OBJS_expr) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_intel:  test_expr_intel.o  $(OBJS_expr) $(OBJS_test)
+test_expr_intel:  test_expr_intel.o $(OBJS_expr) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-test_expr_cstyle: test_expr_cstyle.o $(OBJS_expr) $(OBJS_test)
+test_expr_base:   test_expr_base.o  $(OBJS_expr) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)

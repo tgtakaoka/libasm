@@ -18,8 +18,7 @@
 
 namespace libasm {
 
-static int8_t constantWidth(uint8_t bitWidth, int8_t base) {
-    if (base < 0) return 0;     // zero suppress
+static int8_t constantWidth(uint8_t bitWidth, uint8_t base) {
     if (base == 16) return bitWidth / 4;
     if (base == 2)  return bitWidth;
     return (bitWidth + 2) / 3;  // base == 8
@@ -35,13 +34,7 @@ static char *reverseStr(char *p, char *t) {
 }
 
 char *ValueFormatter::outputNumber(
-    char *p, uint32_t val, int8_t radix, int8_t bitWidth) const {
-    bool negative = false;
-    if (radix == -10 && static_cast<int32_t>(val) < 0) {
-        negative = true;
-        val = -static_cast<int32_t>(val);
-    }
-    const uint8_t base = (radix < 0) ? -radix : radix;
+    char *p, uint32_t val, uint8_t base, int8_t bitWidth) const {
     const char hexBase = _uppercase ? 'A' : 'a';
     char *t = p;
     while (val) {
@@ -54,72 +47,111 @@ char *ValueFormatter::outputNumber(
         val /= base;
     }
     if (t == p) *t++ = '0';
-    if (base == 10) {
-        if (negative)
-            *t++ = '-';
-    } else {
-        const int8_t textWidth = constantWidth(bitWidth, radix);
-        while (t - p < textWidth)
-            *t++ = '0';
-    }
+    const int8_t textWidth = (bitWidth < 0 || base == 10) ? 0:
+        constantWidth(bitWidth, base);
+    while (t - p < textWidth)
+        *t++ = '0';
     *t = 0;
     return t;
 }
 
+static int32_t makeSigned(uint32_t val, int8_t bitWidth) {
+    const int8_t bw = (bitWidth < 0) ? -bitWidth : bitWidth;
+    if (bw == 8) return static_cast<int8_t>(val);
+    if (bw == 16) return static_cast<int16_t>(val);
+    if (bw == 24) return static_cast<int32_t>(
+        (val & 0x00800000L) ? 0xFF000000L | val : 0x00FFFFFFL & val);
+     return static_cast<int32_t>(val);
+}
+
+static uint32_t makeUnsigned(uint32_t val, int8_t bitWidth) {
+    const int8_t bw = (bitWidth < 0) ? -bitWidth : bitWidth;
+    if (bw == 8) return static_cast<uint8_t>(val);
+    if (bw == 16) return static_cast<uint16_t>(val);
+    if (bw == 24) return static_cast<uint32_t>(val & 0x00FFFFFFL);
+    return val;
+}
+
 char *ValueFormatter::outputRelaxed(
-    char *p, uint32_t val, int8_t radix, uint8_t bitWidth) const {
-    if (radix > 0 && val < static_cast<uint8_t>(radix))
-        return reverseStr(p, outputNumber(p, val, 10, bitWidth));
-    if (radix < 0) {
-        int32_t v = static_cast<int32_t>(val);
-        if (v < -radix && v < 10 && v > radix)
-            return reverseStr(p, outputNumber(p, v, -10, bitWidth));
+    char *p, uint32_t val, int8_t radix, int8_t &bitWidth) const {
+    const int8_t saved = bitWidth;
+    if (bitWidth > 0) bitWidth = -bitWidth;
+    if (radix >= 0) {
+        auto uval = makeUnsigned(val, bitWidth);
+        if (uval <= 16 || (uval <= 32 && bitWidth < -16))
+            return reverseStr(p, outputNumber(p, uval, 10, bitWidth));
+    } else {
+        auto sval = makeSigned(val, bitWidth);
+        if (sval < 0 && sval >= -16) {
+            *p++ = '-';
+            return reverseStr(p, outputNumber(p, -sval, 10, bitWidth));
+        }
+        if (sval >= 0 && sval <= 16)
+            return reverseStr(p, outputNumber(p, sval, 10, bitWidth));
     }
+    bitWidth = saved;
     return nullptr;
- }
+}
+
+char *positiveValue(char *p, uint32_t &val, int8_t radix, int8_t bitWidth) {
+    const auto sval = makeSigned(val, bitWidth);
+    if (radix < 0 && sval < 0) {
+        *p++ = '-';
+        val = makeUnsigned(-sval, bitWidth);
+    } else {
+        val = makeUnsigned(val, bitWidth);
+    }
+    return p;
+}
 
 char *ValueFormatter::output(
-    char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
+    char *p, uint32_t val, int8_t radix, bool relax, int8_t bitWidth) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
         return t;
-    if (radix == 16) {
+    p = positiveValue(p, val, radix, bitWidth);
+    const uint8_t base = (radix < 0) ? -radix : radix;
+    if (base == 16) {
         *p++ = '0';
         *p++ = 'x';
-    } else if (radix == 8) {
+    } else if (base == 8) {
         *p++ = '0';
-    } else if (radix == 2) {
+    } else if (base == 2) {
         *p++ = '0';
         *p++ = 'b';
     }
-    t = outputNumber(p, val, radix, bitWidth);
+    t = outputNumber(p, val, base, bitWidth);
     return reverseStr(p, t);
 }
 
 char *MotoValueFormatter::output(
-    char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
+    char *p, uint32_t val, int8_t radix, bool relax, int8_t bitWidth) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
         return t;
-    if (radix == 16) *p++ = '$';
-    else if (radix == 8) *p++ = '@';
-    else if (radix == 2) *p++ = '%';
-    t = ValueFormatter::outputNumber(p, val, radix, bitWidth);
+    p = positiveValue(p, val, radix, bitWidth);
+    const uint8_t base = (radix < 0) ? -radix : radix;
+    if (base == 16) *p++ = '$';
+    else if (base == 8) *p++ = '@';
+    else if (base == 2) *p++ = '%';
+    t = ValueFormatter::outputNumber(p, val, base, bitWidth);
     return reverseStr(p, t);
 }
 
 char *IntelValueFormatter::output(
-    char *p, uint32_t val, int8_t radix, bool relax, uint8_t bitWidth) const {
+    char *p, uint32_t val, int8_t radix, bool relax, int8_t bitWidth) const {
     char *t;
     if (relax && (t = outputRelaxed(p, val, radix, bitWidth)))
         return t;
-    t = ValueFormatter::outputNumber(p, val, radix, bitWidth);
-    if (radix == 16 && t[-1] > '9')
+    p = positiveValue(p, val, radix, bitWidth);
+    const uint8_t base = (radix < 0) ? -radix : radix;
+    t = ValueFormatter::outputNumber(p, val, base, bitWidth);
+    if (base == 16 && t[-1] > '9')
         *t++ = '0';
     t = reverseStr(p, t);
-    if (radix == 16) *t++ = _uppercase ? 'H' : 'h';
-    if (radix == 8) *t++ = _uppercase ? 'O' : 'o';
-    if (radix == 2) *t++ = _uppercase ? 'B' : 'b';
+    if (base == 16) *t++ = _uppercase ? 'H' : 'h';
+    if (base == 8) *t++ = _uppercase ? 'O' : 'o';
+    if (base == 2) *t++ = _uppercase ? 'B' : 'b';
     *t = 0;
     return t;
 }

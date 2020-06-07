@@ -137,7 +137,7 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
         constexpr uint8_t LDMD = 0x3D;
         if (opCode == ORCC || opCode == ANDCC
             || opCode == CWAI_BITMD || opCode == LDMD) {
-            outConstant(val, 2);
+            outConstant(val, 2, false);
         } else {
             outConstant(val);
         }

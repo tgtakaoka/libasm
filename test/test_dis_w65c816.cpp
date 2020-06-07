@@ -146,10 +146,10 @@ static void test_imm() {
     TEST(BIT, "#$90", 0x89, 0x90);
 
     // W65C816
-    TEST(COP, "#$10", 0x02, 0x10);
+    TEST(COP, "#16",  0x02, 0x10);
     ETEST(UNKNOWN_INSTRUCTION, WDM, "#$10", 0x42, 0x10);
     TEST(REP, "#$20", 0xC2, 0x20);
-    TEST(SEP, "#$10", 0xE2, 0x10);
+    TEST(SEP, "#16",  0xE2, 0x10);
 
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
