@@ -67,11 +67,18 @@ Error DisTms9900::decode(
     if (insn.readUint16(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableTms9900.searchOpCode(insn)) {
+    mid:
         insn.setName("MID");
-        return setError(TableTms9900.getError());
+        return setError(UNKNOWN_INSTRUCTION);
     }
 
+    uint8_t count;
     switch (insn.addrMode()) {
+    case IMM_MOD:
+        count = insn.opCode() & 7;
+        if (count == 1 || count == 2 || count == 4)
+            outConstant(count, 10);
+        return setOK();
     case INH:
         return setOK();
     case IMM:
@@ -83,14 +90,23 @@ Error DisTms9900::decode(
         _operands = _regs.outRegName(_operands, opCode);
         *_operands++ = ',';
         return decodeImmediate(memory, insn);
-    case CNT_REG: {
+    case CNT_REG:
         _operands = _regs.outRegName(_operands, opCode);
         *_operands++ = ',';
-        const uint8_t count = (opCode >> 4) & 0x0f;
+        count = (opCode >> 4) & 0x0f;
         if (count == 0) _operands = _regs.outRegName(_operands, 0);
-        else outConstant(static_cast<uint8_t>(count), 10);
+        else outConstant(count, 10);
         return setOK();
-    }
+    case DW_BIT_SRC:
+        if (insn.readUint16(memory, opCode))
+            return setError(NO_MEMORY);
+        count = (opCode >> 6) & 0x0f;
+        if ((opCode & 0xFC00) != 0x0000) goto mid;
+        if ((opCode & 0x0030) == 0x0030) goto mid; // no auto increment mode
+        if (decodeOperand(memory, insn, opCode)) return getError();
+        *_operands++ = ',';
+        outConstant(count, 10);
+        return setOK();
     case SRC:
         return decodeOperand(memory, insn, opCode);
     case REG_SRC:
@@ -99,24 +115,38 @@ Error DisTms9900::decode(
         *_operands++ = ',';
         _operands = _regs.outRegName(_operands, opCode >> 6);
         return setOK();
-    case CNT_SRC:
-    case XOP_SRC: {
+    case DW_CNT_SRC:
+        if (insn.readUint16(memory, opCode))
+            return setError(NO_MEMORY);
+        if ((opCode & 0xFC00) != 0x4000) goto mid;
         if (decodeOperand(memory, insn, opCode))
             return getError();
         *_operands++ = ',';
-        uint8_t count = (opCode >> 6) & 0xf;
+        count = (opCode >> 6) & 0xf;
+        if (count == 0) _operands = _regs.outRegName(_operands, 0);
+        else outConstant(count, 10);
+        return setOK();
+    case CNT_SRC:
+    case XOP_SRC:
+        if (decodeOperand(memory, insn, opCode))
+            return getError();
+        *_operands++ = ',';
+        count = (opCode >> 6) & 0xf;
         if (insn.addrMode() == CNT_SRC && count == 0)
             count = 16;
-        outConstant(static_cast<uint8_t>(count), 10);
+        outConstant(count, 10);
         return setOK();
-    }
-    case DST_SRC: {
+    case DW_DST_SRC:
+        if (insn.readUint16(memory, opCode))
+            return setError(NO_MEMORY);
+        if ((opCode & 0xF000) != 0x4000) goto mid;
+        /* Fall-through */
+    case DST_SRC:
         if (decodeOperand(memory, insn, opCode))
             return getError();
         *_operands++ = ',';
         decodeOperand(memory, insn, opCode >> 6);
         return getError();
-    }
     case REL:
         decodeRelative(insn);
         return setOK();

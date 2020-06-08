@@ -100,6 +100,19 @@ static const char TEXT_DIVS[] PROGMEM = "DIVS";
 static const char TEXT_LST[]  PROGMEM = "LST";
 static const char TEXT_LWP[]  PROGMEM = "LWP";
 
+// TMS999105
+
+static const char TEXT_AM[]   PROGMEM = "AM";
+static const char TEXT_BIND[] PROGMEM = "BIND";
+static const char TEXT_BLSK[] PROGMEM = "BLSK";
+static const char TEXT_EVAD[] PROGMEM = "EVAD";
+static const char TEXT_SLAM[] PROGMEM = "SLAM";
+static const char TEXT_SM[]   PROGMEM = "SM";
+static const char TEXT_SRAM[] PROGMEM = "SRAM";
+static const char TEXT_TCMB[] PROGMEM = "TCMB";
+static const char TEXT_TMB[]  PROGMEM = "TMB";
+static const char TEXT_TSMB[] PROGMEM = "TSMB";
+
 } // namespace tms9900
 } // namespace libasm
 

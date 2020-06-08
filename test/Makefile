@@ -43,6 +43,7 @@ all: \
 	test_cdp1802.hex \
 	test_tms9900.hex \
 	test_tms9995.hex \
+	test_tms99105.hex \
 	test_mc68000.s28
 
 %.hex: %.asm
