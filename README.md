@@ -16,7 +16,7 @@ small environment (less than 15kB on Arduino).
   - SC/MP (INS8060)
   - INS8070
   - CDP1802
-  - TMS9900, TMS9995
+  - TMS9900, TMS9995, TMS99105
   - MC68000
 
 * Supported host environment.
