@@ -45,6 +45,11 @@ static void test_cpu() {
         "get cpu", "TMS9995", assembler.getCpu());
 
     asserter.equals(
+        "cpu 99105", true, assembler.setCpu("99105"));
+    asserter.equals(
+        "get cpu", "TMS99105", assembler.getCpu());
+
+    asserter.equals(
         "cpu tms9900", true, assembler.setCpu("tms9900"));
     asserter.equals(
         "get cpu", "TMS9900", assembler.getCpu());
@@ -53,6 +58,11 @@ static void test_cpu() {
         "cpu tms9995", true, assembler.setCpu("tms9995"));
     asserter.equals(
         "get cpu", "TMS9995", assembler.getCpu());
+
+    asserter.equals(
+        "cpu tms99105", true, assembler.setCpu("tms99105"));
+    asserter.equals(
+        "get cpu", "TMS99105", assembler.getCpu());
 }
 
 static void test_inh() {
@@ -62,6 +72,12 @@ static void test_inh() {
     TEST("CKON", 0x03A0);
     TEST("CKOF", 0x03C0);
     TEST("LREX", 0x03E0);
+
+    // TMS99105
+    assembler.setCpu("TMS99105");
+    TEST("RTWP 1", 0x0381);
+    TEST("RTWP 2", 0x0382);
+    TEST("RTWP 4", 0x0384);
 }
 
 static void test_imm() {
@@ -95,6 +111,11 @@ static void test_reg_imm() {
     symtab.intern(0x1234, "sym1234");
 
     TEST("LI R2,sym1234", 0x0202, 0x1234);
+
+    // TMS99105
+    assembler.setCpu("TMS99105");
+    TEST("BLSK R3,4567H",   0x00B3, 0x4567);
+    TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
 }
 
 static void test_cnt_reg() {
@@ -131,6 +152,14 @@ static void test_src() {
     TEST("MPYS @2(R8)",     0x01E8, 0x0002);
     TEST("MPYS *R15+",      0x01FF);
 
+    // TMS99105
+    assembler.setCpu("tms99105");
+    TEST("TMB  @0123H(R15),7", 0x0C09, 0x01EF, 0x0123);
+    TEST("TCMB R0,0",          0x0C0A, 0x0000);
+    TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
+    TEST("BIND @2223H(R1)", 0x0161, 0x2223);
+    TEST("EVAD R5",         0x0105);
+
     symtab.intern(-2, "neg2");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1234, "sym1234");
@@ -144,6 +173,10 @@ static void test_src() {
     assembler.setCpu("tms9995");
     TEST("DIVS @sym1234",     0x01A0, 0x1234);
     TEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
+
+    // TMS99105
+    assembler.setCpu("tms99105");
+    TEST("BIND @sym1000(R1)", 0x0161, 0x1000);
 }
 
 static void test_reg_src() {
@@ -170,6 +203,12 @@ static void test_cnt_src() {
     TEST("STCR @offset2(R4),size7", 0x35E4, 0x0002);
     TEST("STCR @offset2(R4),16",    0x3424, 0x0002);
     TEST("STCR @1000H(R4),size7",   0x35E4, 0x1000);
+
+    // TMS99105
+    assembler.setCpu("TMS99105");
+    TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
+    TEST("SLAM R11,R0",          0x001D, 0x400B);
+    TEST("SLAM *R13+,1",         0x001D, 0x407D);
 }
 
 static void test_xop_src() {
@@ -209,6 +248,15 @@ static void test_dst_src() {
     TEST("MOV  @zero(R10),@0001H(R11)", 0xCAEA, 0x0000, 0x0001);
     TEST("SOC  @sym1234,@sym5678(R11)", 0xEAE0, 0x1234, 0x5678);
     TEST("SOCB @sym1234(R10),@sym5678", 0xF82A, 0x1234, 0x5678);
+
+    // TMS99105
+    assembler.setCpu("TMS99105");
+    TEST("SM @sym1234(R10),@sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
+    TEST("SM @sym1234,@sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
+    TEST("SM R10,@sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
+    TEST("AM @zero(R10),@1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
+    TEST("AM @sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
+    TEST("AM @sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
 }
 
 static void test_rel() {
