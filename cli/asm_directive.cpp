@@ -579,7 +579,8 @@ OpCodeWidth AsmCommonDirective::opCodeWidth() const {
 }
 
 int AsmCommonDirective::maxBytes() const {
-    return 6;
+    const uint8_t codeMax = _assembler->codeMax();
+    return codeMax < 6 ? codeMax : 6;
 }
 
 int AsmCommonDirective::labelWidth() const {

@@ -146,7 +146,8 @@ OpCodeWidth DisDirective::opCodeWidth() const {
 }
 
 int DisDirective::maxBytes() const {
-    return 6;
+    const uint8_t codeMax = _disassembler.codeMax();
+    return codeMax < 6 ? codeMax : 6;
 }
 
 int DisDirective::labelWidth() const {
