@@ -44,13 +44,17 @@ private:
     Error checkComma();
 
     Error encodeImm(InsnTms9900 &insn, bool emitInsn);
+    Error encodeImmMod(InsnTms9900 &insn);
     Error encodeReg(InsnTms9900 &insn, bool emitInsn);
     Error encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16);
     Error encodeOpr(
-        InsnTms9900 &insn, bool emitInsn, bool destinationa = false);
+        InsnTms9900 &insn, bool emitInsn, bool destination = false);
+    Error encodeOpr(Config::opcode_t &opCode, uint16_t &operand);
+    bool needsOperandWord(Config::opcode_t opCode) const;
     Error encodeRel(InsnTms9900 &insn);
     Error encodeCruOff(InsnTms9900 &insn);
     Error encodeIoaddr(InsnTms9900 &insn);
+    Error encodeDoubleWords(InsnTms9900 &insn);
 
     Error encode(Insn &insn) override;
 };

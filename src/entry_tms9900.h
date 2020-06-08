@@ -25,6 +25,7 @@ namespace tms9900 {
 enum CpuType {
     TMS9900,
     TMS9995,
+    TMS99105,
 };
 
 enum AddrMode {
@@ -40,6 +41,10 @@ enum AddrMode {
     DST_SRC = 9,   // ---- DDdd ddSS ssss
     REL     = 10,  // ---- ---- nnnn nnnn
     CRU_OFF = 11,  // ---- ---- nnnn nnnn
+    DW_DST_SRC = 12,  // 0100 DDdd ddSS ssss in 2nd word
+    DW_CNT_SRC = 13,  // 0100 00cc ccSS ssss in 2nd word
+    DW_BIT_SRC = 14,  // 0000 00bb bbSS ssss in 2nd word
+    IMM_MOD = 15,  // ---- ---- ---- -nnn RTWP mode
 };
 
 struct Entry {

@@ -35,6 +35,19 @@ Error AsmTms9900::encodeImm(InsnTms9900 &insn, bool emitInsn) {
     return OK;
 }
 
+Error AsmTms9900::encodeImmMod(InsnTms9900 &insn) {
+    uint16_t mode;
+    if (endOfLine(_scan)) {
+        mode = 0;
+    } else {
+        if (getOperand(mode)) return getError();
+        if (mode == 3 || mode >= 5) return setError(ILLEGAL_OPERAND);
+    }
+    insn.embed(mode);
+    insn.emitInsn();
+    return OK;
+}
+
 Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
     RegName regName = _regs.parseRegName(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
@@ -84,11 +97,22 @@ Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
 }
 
 Error AsmTms9900::encodeOpr(
-    InsnTms9900 &insn, bool emitInsn, bool destinationa) {
+    InsnTms9900 &insn, bool emitInsn, bool destination) {
+    Config::opcode_t opCode;
+    uint16_t operand;
+    if (encodeOpr(opCode, operand)) return getError();
+    insn.embed(destination ? (opCode << 6) : opCode);
+    if (emitInsn)
+        insn.emitInsn();
+    if (needsOperandWord(opCode))
+        insn.emitOperand(operand);
+    return getError();
+}
+
+Error AsmTms9900::encodeOpr(Config::opcode_t &oprMode, uint16_t &operand) {
     const char *p = _scan;
     RegName regName;
     uint8_t mode = 0;
-    uint16_t val16;
     if ((regName = _regs.parseRegName(p)) != REG_UNDEF) {
         p += _regs.regNameLen(regName);
         mode = 0;
@@ -107,7 +131,7 @@ Error AsmTms9900::encodeOpr(
     } else if (*p == '@') {
         mode = 2;
         _scan = skipSpaces(p + 1);
-        if (getOperand(val16)) return getError();
+        if (getOperand(operand)) return getError();
         p = skipSpaces(_scan);
         if (*p == '(') {
             p = skipSpaces(p + 1);
@@ -123,14 +147,12 @@ Error AsmTms9900::encodeOpr(
         }
     }
     _scan = p;
-    uint16_t operand = (mode << 4) | _regs.encodeRegNumber(regName);
-    if (destinationa) operand <<= 6;
-    insn.embed(operand);
-    if (emitInsn)
-        insn.emitInsn();
-    if (mode == 2)
-        insn.emitOperand(val16);
-    return getError();
+    oprMode = (mode << 4) | _regs.encodeRegNumber(regName);
+    return OK;
+}
+
+bool AsmTms9900::needsOperandWord(Config::opcode_t oprMode) const {
+    return (oprMode & 0x30) == 0x20;
 }
 
 Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
@@ -154,6 +176,43 @@ Error AsmTms9900::encodeCruOff(InsnTms9900 &insn) {
     return getError();
 }
 
+Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
+    Config::opcode_t srcMode, dstMode = 0;
+    uint16_t srcOpr, dstOpr = 0;
+    if (encodeOpr(srcMode, srcOpr)) return getError();
+    if (*_scan != ',') setError(UNKNOWN_OPERAND);
+    _scan = skipSpaces(_scan + 1);
+
+    if (insn.addrMode() == DW_BIT_SRC) {
+        if ((srcMode & 0x30) == 0x30)
+            return setError(ILLEGAL_OPERAND);
+        if (getOperand(dstOpr)) return getError();
+        if (dstOpr >= 16) return setError(ILLEGAL_BIT_NUMBER);
+        dstMode = dstOpr;
+    } else if (insn.addrMode() == DW_CNT_SRC) {
+        const RegName reg = _regs.parseRegName(_scan);
+        if (reg == REG_R0) {
+            _scan += _regs.regNameLen(reg);
+            dstOpr = 0;
+        } else if (getOperand(dstOpr)) {
+            return getError();
+        } else if (dstOpr == 0 || dstOpr >= 16) {
+            return setError(ILLEGAL_OPERAND);
+        }
+        dstMode = dstOpr;
+        srcMode |= 0x4000;
+    } else if (insn.addrMode() == DW_DST_SRC) {
+        if (encodeOpr(dstMode, dstOpr)) return getError();
+        srcMode |= 0x4000;
+    } else setError(INTERNAL_ERROR);
+
+    insn.emitInsn();
+    insn.emitOperand(srcMode | (dstMode << 6));
+    if (needsOperandWord(srcMode)) insn.emitOperand(srcOpr);
+    if (needsOperandWord(dstMode)) insn.emitOperand(dstOpr);
+    return getError();
+}
+
 Error AsmTms9900::encode(Insn &_insn) {
     InsnTms9900 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
@@ -170,6 +229,9 @@ Error AsmTms9900::encode(Insn &_insn) {
         break;
     case IMM:
         encodeImm(insn, true);
+        break;
+    case IMM_MOD:
+        encodeImmMod(insn);
         break;
     case REG:
         encodeReg(insn, true);
@@ -212,6 +274,11 @@ Error AsmTms9900::encode(Insn &_insn) {
         break;
     case CRU_OFF:
         encodeCruOff(insn);
+        break;
+    case DW_CNT_SRC:
+    case DW_DST_SRC:
+    case DW_BIT_SRC:
+        encodeDoubleWords(insn);
         break;
     default:
         return setError(INTERNAL_ERROR);

@@ -108,6 +108,23 @@ static constexpr Entry TABLE_TMS9995[] PROGMEM = {
     E(0x01C0, MPYS, SRC)
 };
 
+static constexpr Entry TABLE_TMS99105[] PROGMEM = {
+    E(0x001C, SRAM, DW_CNT_SRC)
+    E(0x001D, SLAM, DW_CNT_SRC)
+    E(0x0029, SM,   DW_DST_SRC)
+    E(0x002A, AM,   DW_DST_SRC)
+    E(0x00B0, BLSK, REG_IMM)
+    E(0x0140, BIND, SRC)
+    E(0x0C09, TMB,  DW_BIT_SRC)
+    E(0x0C0A, TCMB, DW_BIT_SRC)
+    E(0x0C0B, TSMB, DW_BIT_SRC)
+    E(0x0100, EVAD, SRC)
+    E(0x0380, RTWP, IMM_MOD)
+    E(0x0381, RTWP, IMM_MOD)
+    E(0x0382, RTWP, IMM_MOD)
+    E(0x0384, RTWP, IMM_MOD)
+};
+
 struct TableTms9900::EntryPage {
     const Entry *table;
     const Entry *end;
@@ -118,6 +135,12 @@ static constexpr TableTms9900::EntryPage TMS9900_PAGES[] PROGMEM = {
 };
 
 static constexpr TableTms9900::EntryPage TMS9995_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_TMS9900) },
+    { ARRAY_RANGE(TABLE_TMS9995) },
+};
+
+static constexpr TableTms9900::EntryPage TMS99105_PAGES[] PROGMEM = {
+    { ARRAY_RANGE(TABLE_TMS99105) },
     { ARRAY_RANGE(TABLE_TMS9900) },
     { ARRAY_RANGE(TABLE_TMS9995) },
 };
@@ -193,14 +216,26 @@ TableTms9900::TableTms9900() {
 
 bool TableTms9900::setCpu(CpuType cpuType) {
     _cpuType = cpuType;
-    _table = (cpuType == TMS9900)
-        ? ARRAY_BEGIN(TMS9900_PAGES) : ARRAY_BEGIN(TMS9995_PAGES);
-    _end = (cpuType == TMS9900)
-        ? ARRAY_END(TMS9900_PAGES) : ARRAY_END(TMS9995_PAGES);
-    return true;
+    if (cpuType == TMS9900) {
+        _table = ARRAY_BEGIN(TMS9900_PAGES);
+        _end = ARRAY_END(TMS9900_PAGES);
+        return true;
+    }
+    if (cpuType == TMS9995) {
+        _table = ARRAY_BEGIN(TMS9995_PAGES);
+        _end = ARRAY_END(TMS9995_PAGES);
+        return true;
+    }
+    if (cpuType == TMS99105) {
+        _table = ARRAY_BEGIN(TMS99105_PAGES);
+        _end =  ARRAY_END(TMS99105_PAGES);
+        return true;
+    }
+    return false;
 }
 
 const char *TableTms9900::getCpu() {
+    if (_cpuType == TMS99105) return "TMS99105";
     return _cpuType == TMS9900 ? "TMS9900" : "TMS9995";
 }
 
@@ -211,6 +246,8 @@ bool TableTms9900::setCpu(const char *cpu) {
         return setCpu(TMS9900);
     if (strcmp(cpu, "9995") == 0)
         return setCpu(TMS9995);
+    if (strcmp(cpu, "99105") == 0)
+        return setCpu(TMS99105);
     return false;
 }
 
