@@ -93,21 +93,35 @@ enum EaMode {
 };
 
 // Effective Address Category
-#define CAT_NONE      0
-#define CAT_DATA      1
-#define CAT_MEMORY    2
-#define CAT_CONTROL   4
-#define CAT_ALTERABLE 8
+class EaCat final {
+public:
+    enum Type : uint8_t {
+        NONE      = 1 << 0,
+        DATA      = 1 << 1,
+        MEMORY    = 1 << 2,
+        CONTROL   = 1 << 3,
+        ALTERABLE = 1 << 4,
+    };
+
+    constexpr EaCat(const uint8_t val) noexcept
+        : _val(static_cast<Type>(val))
+    {}
+
+    constexpr operator uint8_t() const { return _val; }
+
+private:
+    Type _val;
+};
 
 struct EaMc68000 {
     EaMc68000(Config::opcode_t opCode);
     EaMc68000(EaSize size, uint8_t mode, uint8_t regno);
     EaMc68000(EaSize size, EaMode mode, uint8_t regno);
 
-    bool satisfy(uint8_t categories) const {
+    bool satisfy(EaCat categories) const {
         return satisfy(mode, categories);
     }
-    static bool satisfy(EaMode mode, uint8_t categories);
+    static bool satisfy(EaMode mode, EaCat categories);
     static Config::opcode_t encodeMode(EaMode mode);
     static Config::opcode_t encodeRegNo(EaMode mode, RegName regName);
     static const char *eaCategory(EaMode mode);

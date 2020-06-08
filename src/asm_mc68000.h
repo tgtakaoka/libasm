@@ -50,7 +50,7 @@ public:
         RegName index;          // index register
         EaSize size;            // index size
         uint32_t val32;
-        bool satisfy(uint8_t categories) const {
+        bool satisfy(EaCat categories) const {
             return EaMc68000::satisfy(mode, categories);
         }
         void reset() {

@@ -159,44 +159,44 @@ Config::opcode_t EaMc68000::encodeRegNo(EaMode mode, RegName regName) {
     return 0;
 }
 
-static uint8_t getCategories(EaMode mode) {
+static EaCat getCategories(EaMode mode) {
     switch (mode) {
     case M_DREG:
-        return CAT_DATA | CAT_ALTERABLE;
+        return EaCat::DATA | EaCat::ALTERABLE;
     case M_AREG:
-        return CAT_ALTERABLE;
+        return EaCat::ALTERABLE;
     case M_AIND:
     case M_DISP:
     case M_INDX:
     case M_ABS_SHORT:
     case M_ABS_LONG:
     case M_LABEL:
-        return CAT_DATA | CAT_MEMORY | CAT_CONTROL | CAT_ALTERABLE;
+        return EaCat::DATA | EaCat::MEMORY | EaCat::CONTROL | EaCat::ALTERABLE;
     case M_PINC:
     case M_PDEC:
-        return CAT_DATA | CAT_MEMORY | CAT_ALTERABLE;
+        return EaCat::DATA | EaCat::MEMORY | EaCat::ALTERABLE;
     case M_PC_DISP:
     case M_PC_INDX:
-        return CAT_DATA | CAT_MEMORY | CAT_CONTROL;
+        return EaCat::DATA | EaCat::MEMORY | EaCat::CONTROL;
     case M_IMM_DATA:
-        return CAT_DATA;
+        return EaCat::DATA;
     /* for assembler operand parsing */
     case M_NONE:
-        return CAT_NONE;
+        return EaCat::NONE;
     case M_MULT_REGS:
-        return CAT_ALTERABLE;
+        return EaCat::ALTERABLE;
     default:
-        return CAT_NONE;
+        return EaCat::NONE;
     }
 }
 
 const char *EaMc68000::eaCategory(EaMode mode) {
-    uint8_t categories = getCategories(mode);
+    const EaCat categories = getCategories(mode);
     static char buf[5];
-    buf[0] = (categories & CAT_DATA) ? 'D' : '_';
-    buf[1] = (categories & CAT_MEMORY) ? 'M' : '_';
-    buf[2] = (categories & CAT_CONTROL) ? 'C' : '_';
-    buf[3] = (categories & CAT_ALTERABLE) ? 'A' : '_';
+    buf[0] = (categories & EaCat::DATA) ? 'D' : '_';
+    buf[1] = (categories & EaCat::MEMORY) ? 'M' : '_';
+    buf[2] = (categories & EaCat::CONTROL) ? 'C' : '_';
+    buf[3] = (categories & EaCat::ALTERABLE) ? 'A' : '_';
     buf[4] = 0;
     return buf;
 }
@@ -236,7 +236,7 @@ EaMc68000::EaMc68000(EaSize size_, EaMode mode_, uint8_t regno) {
     reg = encodeRegName(mode, regno);
 }
 
-bool EaMc68000::satisfy(EaMode mode, uint8_t categories) {
+bool EaMc68000::satisfy(EaMode mode, EaCat categories) {
     return (getCategories(mode) & categories) == categories;
 }
 

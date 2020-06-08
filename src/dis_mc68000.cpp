@@ -174,15 +174,15 @@ Error DisMc68000::decodeDestSiz(
                 }
             }
         }
-        if (opc == CMPI && !ea.satisfy(CAT_DATA))
-            return setError(ILLEGAL_OPERAND_MODE);
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        const EaCat categories = (opc == CMPI) ? EaCat::DATA
+            : EaCat::DATA | EaCat::ALTERABLE;
+        if (!ea.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
     } else {                    // NEGX/CLR/NEG/NOT/TST
         constexpr uint8_t TST = 5;
-        if (opc == TST && !ea.satisfy(CAT_DATA))
-            return setError(ILLEGAL_OPERAND_MODE);
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        const EaCat categories = (opc == TST) ? EaCat::DATA
+            : EaCat::DATA | EaCat::ALTERABLE;
+        if (!ea.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
     }
 
@@ -261,14 +261,14 @@ Error DisMc68000::decodeDataDst(
     EaSize size = (opc == PEA) ? SZ_LONG : SZ_BYTE;
     const EaMc68000 ea(size,  opCode >> 3, opCode);
     if (opc == NBCD) {
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
     } else if (opc == PEA) {
-        if (!ea.satisfy(CAT_CONTROL))
+        if (!ea.satisfy(EaCat::CONTROL))
             return setError(ILLEGAL_OPERAND_MODE);
         size = SZ_NONE;
     } else {                    // opc == TAS(053)
-        if (!ea.satisfy(CAT_DATA))
+        if (!ea.satisfy(EaCat::DATA))
             return setError(ILLEGAL_OPERAND_MODE);
     }
     insn.appendSize(size, _regs);
@@ -286,9 +286,9 @@ Error DisMc68000::decodeDestOpr(
     if ((insn.opCode() >> 12) == 0) { // BTST/BCHG/BCLR/BSET
         const uint8_t opc = (insn.opCode() >> 6) & 3;
         constexpr uint8_t BTST = 0;
-        if (opc == BTST && !ea.satisfy(CAT_DATA))
-            return setError(ILLEGAL_OPERAND_MODE);
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        const EaCat categories = (opc == BTST) ? EaCat::DATA
+            : EaCat::DATA | EaCat::ALTERABLE;
+        if (!ea.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
         size = (ea.mode == M_DREG) ? SZ_LONG : SZ_BYTE;
         *_operands++ = '#';
@@ -300,15 +300,15 @@ Error DisMc68000::decodeDestOpr(
         constexpr uint8_t JSR_JMP = 004;
         constexpr uint8_t Scc = 005;
         if (opc == JSR_JMP) {
-            if (!ea.satisfy(CAT_CONTROL))
+            if (!ea.satisfy(EaCat::CONTROL))
                 return setError(ILLEGAL_OPERAND_MODE);
             size = SZ_NONE;
         } else if (opc == Scc) {
-            if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+            if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
                 return setError(ILLEGAL_OPERAND_MODE);
             size = SZ_NONE;
         } else {
-            if (!ea.satisfy(CAT_MEMORY | CAT_ALTERABLE))
+            if (!ea.satisfy(EaCat::MEMORY | EaCat::ALTERABLE))
                 return setError(ILLEGAL_OPERAND_MODE);
         }
     }
@@ -393,7 +393,7 @@ Error DisMc68000::decodeMoveMlt(
     if (insn.readUint16(memory, list)) return setError(NO_MEMORY);
     const bool pop = (opCode & 02000);
     if (pop) {
-        if (!(ea.mode == M_PINC || ea.satisfy(CAT_CONTROL)))
+        if (!(ea.mode == M_PINC || ea.satisfy(EaCat::CONTROL)))
             return setError(ILLEGAL_OPERAND_MODE);
         decodeEffectiveAddr(memory, insn, ea);
         *_operands++ = ',';
@@ -403,7 +403,7 @@ Error DisMc68000::decodeMoveMlt(
         bool push;
         if (ea.mode == M_PDEC) {
             push = true;
-        } else if (ea.satisfy(CAT_CONTROL | CAT_ALTERABLE)) {
+        } else if (ea.satisfy(EaCat::CONTROL | EaCat::ALTERABLE)) {
             push = false;
         } else {
             return setError(ILLEGAL_OPERAND_MODE);
@@ -426,13 +426,13 @@ Error DisMc68000::decodeMoveSr(
     const EaSize size = (opc == toCCR) ? SZ_BYTE : SZ_WORD;
     const EaMc68000 ea(size, opCode >> 3, opCode);
     if (opc == fromSR) {
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
         outRegName(REG_SR);
         *_operands++ = ',';
         decodeEffectiveAddr(memory, insn, ea);            
     } else {
-        if (!ea.satisfy(CAT_DATA))
+        if (!ea.satisfy(EaCat::DATA))
             return setError(ILLEGAL_OPERAND_MODE);
         decodeEffectiveAddr(memory, insn, ea);
         *_operands++ = ',';
@@ -484,7 +484,7 @@ Error DisMc68000::decodeAregSiz(
     if (opc == LEA) {
         if (size == SZ_WORD)
             return setError(ILLEGAL_SIZE);
-        if (!ea.satisfy(CAT_CONTROL))
+        if (!ea.satisfy(EaCat::CONTROL))
             return setError(ILLEGAL_OPERAND_MODE);
         size = SZ_NONE;
     }
@@ -511,9 +511,9 @@ Error DisMc68000::decodeDregDst(
         const uint8_t mode = (opCode >> 3) & 7;
         size = (mode == /* M_DREG */0) ? SZ_LONG : SZ_BYTE;
         const EaMc68000 ea(size, mode, opCode);
-        if (opc == BTST && !ea.satisfy(CAT_DATA))
-            return setError(ILLEGAL_OPERAND_MODE);
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        const EaCat categories = (opc == BTST) ? EaCat::DATA
+            : EaCat::DATA | EaCat::ALTERABLE;
+        if (!ea.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
         outRegName(dest);
         *_operands++ = ',';
@@ -521,7 +521,7 @@ Error DisMc68000::decodeDregDst(
     } else {
         size = SZ_WORD;
         const EaMc68000 ea(size, opCode >> 3, opCode);
-        if (!ea.satisfy(CAT_DATA))
+        if (!ea.satisfy(EaCat::DATA))
             return setError(ILLEGAL_OPERAND_MODE);
         decodeEffectiveAddr(memory, insn, ea);
         *_operands++ = ',';
@@ -547,7 +547,7 @@ Error DisMc68000::decodeDataQic(
     const EaMc68000 ea(opCode);
     uint8_t val = (opCode >> 9) & 7;
     if (val == 0) val = 8;
-    if (!ea.satisfy(CAT_ALTERABLE))
+    if (!ea.satisfy(EaCat::ALTERABLE))
         return setError(ILLEGAL_OPERAND_MODE);
     insn.appendSize(ea.size, _regs);
     *_operands++ = '#';
@@ -565,7 +565,7 @@ Error DisMc68000::decodeDmemSiz(
     const RegName dreg = RegMc68000::decodeDataReg(opCode >> 9);
     insn.appendSize(ea.size, _regs);
     if (opCode & 0400) {      // Dn,<ea>
-        if (!ea.satisfy(CAT_DATA | CAT_ALTERABLE))
+        if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
         outRegName(dreg);
         *_operands++ = ',';
@@ -655,7 +655,7 @@ Error DisMc68000::decodeMoveOpr(
     if (dst.mode == M_AREG) { // MOVEA
         if (size == SZ_BYTE) return setError(ILLEGAL_SIZE);
     } else {
-        if (!dst.satisfy(CAT_DATA | CAT_ALTERABLE))
+        if (!dst.satisfy(EaCat::DATA | EaCat::ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
     }
     if (decodeEffectiveAddr(memory, insn, src)) return getError();
