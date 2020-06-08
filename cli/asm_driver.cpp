@@ -144,10 +144,16 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
             const char *filename = _commonDir.currentSource();
             const int lineno = _commonDir.currentLineno();
             const int column = _commonDir.errorAt() - line + 1;
-            fprintf(stderr, "%s:%d:%d: %s\n",
+            fprintf(stderr, "%s:%d:%d: error: %s\n",
                     filename, lineno, column,
                     _commonDir.errorText());
             fprintf(stderr, "%s:%d %s\n", filename, lineno, line);
+            if (list) {
+                fprintf(list, "%s:%d:%d: error: %s\n",
+                        filename, lineno, column,
+                        _commonDir.errorText());
+                fprintf(list, "%s:%d %s\n", filename, lineno, line);
+            }
             errors++;
             continue;
         }

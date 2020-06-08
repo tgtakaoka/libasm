@@ -114,11 +114,12 @@ int DisDriver::disassemble() {
                 listing.disassemble(address, insn);
                 const Error error = _disassembler->getError();
                 if (error)
-                    fprintf(stderr, "%s at 0x%04x\n",
-                            _disassembler->errorText(), address);
+                    fprintf(stderr, "%s:0x%04x: error: %s\n",
+                            _input_name, address, _disassembler->errorText());
                 if (list) {
                     if (error)
-                        fprintf(list, "%s\n", _disassembler->errorText());
+                        fprintf(list, "%s:0x%04x: error: %s\n",
+                                _input_name, address, _disassembler->errorText());
                     do {
                         fprintf(list, "%s\n", listing.getLine());
                     } while (listing.hasNext());
@@ -126,7 +127,8 @@ int DisDriver::disassemble() {
                 }
                 if (output) {
                     if (error)
-                        fprintf(output, "; %s\n", _disassembler->errorText());
+                        fprintf(output, "; %s:0x%04x: error: %s\n",
+                                _input_name, address, _disassembler->errorText());
                     do {
                         fprintf(output, "%s\n", listing.getContent());
                     } while (listing.hasNext());
