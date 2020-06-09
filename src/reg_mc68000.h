@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REGISTER_MC68000_H__
-#define __REGISTER_MC68000_H__
+#ifndef __REG_MC68000_H__
+#define __REG_MC68000_H__
 
 #include "reg_base.h"
 
@@ -176,7 +176,7 @@ static const char *eaMode(EaMode mode) {
 } // namespace mc68000
 } // namespace libasm
 
-#endif // __REGISTER_MC68000_H__
+#endif // __REG_MC68000_H__
 
 // Local Variables:
 // mode: c++

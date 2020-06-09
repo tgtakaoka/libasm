@@ -16,8 +16,8 @@
 
 #include "reg_base.h"
 
-#ifndef __REGISTER_CDP1802_H__
-#define __REGISTER_CDP1802_H__
+#ifndef __REG_CDP1802_H__
+#define __REG_CDP1802_H__
 
 namespace libasm {
 namespace cdp1802 {
@@ -40,7 +40,7 @@ class RegCdp1802 : public RegBase {
 } // namespace cdp1802
 } // namespace libasm
 
-#endif // __REGISTER_CDP1802_H__
+#endif // __REG_CDP1802_H__
 
 // Local Variables:
 // mode: c++

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REGISTER_Z80_H__
-#define __REGISTER_Z80_H__
+#ifndef __REG_Z80_H__
+#define __REG_Z80_H__
 
 #include "insn_z80.h"
 #include "reg_base.h"
@@ -105,7 +105,7 @@ private:
 } // namespace z80
 } // namespace libasm
 
-#endif // __REGISTER_Z80_H__
+#endif // __REG_Z80_H__
 
 // Local Variables:
 // mode: c++

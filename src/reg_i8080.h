@@ -16,8 +16,8 @@
 
 #include "reg_base.h"
 
-#ifndef __REGISTER_I8080_H__
-#define __REGISTER_I8080_H__
+#ifndef __REG_I8080_H__
+#define __REG_I8080_H__
 
 namespace libasm {
 namespace i8080 {
@@ -70,7 +70,7 @@ private:
 } // namespace i8080
 } // namespace libasm
 
-#endif // __REGISTER_I8080_H__
+#endif // __REG_I8080_H__
 
 // Local Variables:
 // mode: c++

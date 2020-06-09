@@ -16,8 +16,8 @@
 
 #include "reg_base.h"
 
-#ifndef __REGISTER_INS8060_H__
-#define __REGISTER_INS8060_H__
+#ifndef __REG_INS8060_H__
+#define __REG_INS8060_H__
 
 namespace libasm {
 namespace ins8060 {
@@ -56,7 +56,7 @@ private:
 } // namespace ins8060
 } // namespace libasm
 
-#endif // __REGISTER_INS8060_H__
+#endif // __REG_INS8060_H__
 
 // Local Variables:
 // mode: c++
