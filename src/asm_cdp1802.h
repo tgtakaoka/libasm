@@ -20,7 +20,6 @@
 #include "asm_base.h"
 #include "config_cdp1802.h"
 #include "insn_cdp1802.h"
-#include "reg_cdp1802.h"
 #include "table_cdp1802.h"
 
 namespace libasm {
@@ -39,7 +38,6 @@ public:
 
 private:
     IntelValueParser _parser;
-    RegCdp1802 _regs;
 
     Error encodeRegn(InsnCdp1802 &insn);
     Error encodeImm8(InsnCdp1802 &insn);

@@ -98,7 +98,7 @@ int DisDriver::disassemble() {
         fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump(
-        [this, output, list, &listing, &memory]
+        [this, output, list, &listing]
         (uint32_t base, const uint8_t *data, size_t size) {
             if (list) {
                 fprintf(list, "%s\n", listing.origin(base, true));
