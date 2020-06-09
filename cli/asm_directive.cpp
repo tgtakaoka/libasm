@@ -81,10 +81,19 @@ AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
 
 std::string AsmCommonDirective::listCpu(const char *separator) const {
     std::string cpuList;
+    std::string buf = "";
     for (auto dir : _directives) {
-        if (!cpuList.empty()) cpuList += separator;
-        cpuList += dir->assembler().listCpu();
+        const char *list = dir->assembler().listCpu();
+        if (buf.size() + strlen(list) < 40) {
+            if (buf.size()) buf += ", ";
+            buf += list;
+        } else {
+            cpuList += separator;
+            cpuList += buf;
+            buf = list;
+        }
     }
+    cpuList += separator + buf;
     return cpuList;
 }
 

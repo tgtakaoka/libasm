@@ -35,7 +35,7 @@ int AsmDriver::usage() {
         cpuList += directive->assembler().listCpu();
     } else {
         const char *cpuSep = "\n                ";
-        cpuList = cpuSep + _commonDir.listCpu(cpuSep);
+        cpuList = _commonDir.listCpu(cpuSep);
     }
     fprintf(stderr,
             "libasm assembler (version " LIBASM_VERSION_STRING ")\n"

@@ -43,10 +43,19 @@ int DisDriver::usage() {
         cpuOption = "";
     } else {
         const char *cpuSep = "\n                ";
+        std::string buf = "";
         for (auto dis : _disassemblers) {
-            cpuList += cpuSep;
-            cpuList += dis->listCpu();
+            const char *list = dis->listCpu();
+            if (buf.size() + strlen(list) < 40) {
+                if (buf.size()) buf += ", ";
+                buf += list;
+            } else {
+                cpuList += cpuSep;
+                cpuList += buf;
+                buf = list;
+            }
         }
+        cpuList += cpuSep + buf;
     }
     fprintf(stderr,
             "libasm disassembler (version " LIBASM_VERSION_STRING ")\n"
