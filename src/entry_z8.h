@@ -25,46 +25,83 @@ namespace z8 {
 enum CpuType {
     Z8,
     Z86C,
+    SUPER8,
 };
 
 enum AddrMode {
+    // Those (0~3) happen all operands including extra.
     M_NO  = 0,   // No operand
-    M_R   = 1,   // Register: Rn
-    M_IR  = 2,   // Indirect Register: @Rn
-    M_r   = 3,   // Working register: rn
-    M_Ir  = 4,   // Indirect Working register: @rn
-    M_IRR = 5,   // Indirect Register Pair: @RRn
-    M_Irr = 6,   // Indirect Working Register Pair: @rrn
-    M_IM  = 7,   // Immediate: #nn
-    M_X   = 8,   // Indexed: nn(rn)
-    M_DA  = 9,   // Direct Address: nnnn
-    M_RA  = 10,  // Relative Address: nnnn
-    M_cc  = 11,  // Condition Code: cc
-    M_w   = 12,  // Register or Working register: Rxy x==RP
-    M_Iw  = 13,  // Indirect Register or Working register: @Rxy x==RP
-    M_Iww = 14,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
+    M_IM  = 1,   // Immediate: #nn
+    M_r   = 2,   // Working register: rn
+    M_RA  = 3,   // Relative Address: nnnn
+    M_IMb = 4,   // Bit position: #n
+    // Those (4~16)  happen on destination and source operands.
+    M_R   = 5,   // Register: Rn
+    M_IR  = 6,   // Indirect Register: @Rn
+    M_Ir  = 7,   // Indirect Working register: @rn
+    M_IRR = 8,   // Indirect Register Pair: @RRn
+    M_Irr = 9,   // Indirect Working Register Pair: @rrn
+    M_X   = 10,  // Indexed: nn(rn)
+    M_DA  = 11,  // Direct Address: nnnn
+    M_cc  = 12,  // Condition Code: cc
+    M_rr  = 13,  // Working register pair: rrn
+    // Super8
+    M_IML = 14,  // Immediate Long: #nnnn
+    M_RR  = 15,  // Register Pair: RRn
+    M_XS  = 16,  // Indexed Short: nn(rrn)
+    M_XL  = 17,  // Indexed Long: nnnn(rnn)
+    // Those (17~20) happen only in assembler internal.
+    M_W   = 18,  // Register or Working register: Rxy x==RP
+    M_IW  = 19,  // Indirect Register or Working register: @Rxy x==RP
+    M_IWW = 20,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
+    M_WW  = 21,  // Register or Working register pair: RRxy: x=RP
+};
+
+// Post byte format
+enum PostFormat {
+    P0   = 0,  // No Post Byte check necessary
+    P1_0 = 1,  // Least 1 bit is 0
+    P1_1 = 2,  // Least 1 bit is 1
+    P2_0 = 3,  // Least 2 bits are 00
+    P2_1 = 4,  // Least 2 bits are 01
+    P2_2 = 5,  // Least 2 bits are 10
+    P4_0 = 6,  // Least 4 bits are 0000
+    P4_1 = 7,  // Least 4 bits are 0001
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const uint8_t flags;
+    const uint16_t flags;
     const char *name;
 
-    static inline AddrMode _dstMode(uint8_t flags) {
+    static inline AddrMode _dstMode(uint16_t flags) {
         return AddrMode((flags >> dstMode_gp) & addrMode_gm);
     }
-    static inline AddrMode _srcMode(uint8_t flags) {
+    static inline AddrMode _srcMode(uint16_t flags) {
         return AddrMode((flags >> srcMode_gp) & addrMode_gm);
     }
-    static constexpr uint8_t _flags(AddrMode dst, AddrMode src) {
-        return (static_cast<uint8_t>(dst) << dstMode_gp)
-            | (static_cast<uint8_t>(src) << srcMode_gp);
+    static inline AddrMode _extMode(uint16_t flags) {
+        return AddrMode((flags >> extMode_gp) & extMode_gm);
+    }
+    static inline PostFormat _postFormat(uint16_t flags) {
+        return PostFormat((flags >> postFmt_gp) & postFmt_gm);
+    }
+    static constexpr uint16_t _flags(
+        AddrMode dst, AddrMode src, AddrMode ext, PostFormat post) {
+        return ((static_cast<uint16_t>(dst) & addrMode_gm) << dstMode_gp)
+            | ((static_cast<uint16_t>(src)  & addrMode_gm) << srcMode_gp)
+            | ((static_cast<uint16_t>(ext)  & extMode_gm)  << extMode_gp)
+            | ((static_cast<uint16_t>(post) & postFmt_gm)  << postFmt_gp);
     }
 
 private:
-    static constexpr uint8_t addrMode_gm = 0xf;
-    static constexpr uint8_t dstMode_gp = 0;
-    static constexpr uint8_t srcMode_gp = 4;
+    static constexpr uint8_t addrMode_gm = 0x1f;
+    static constexpr uint8_t extMode_gm  = 0x7;
+    static constexpr uint8_t postFmt_gm  = 0x7;
+    static constexpr uint8_t dstMode_gp  = 0;
+    static constexpr uint8_t srcMode_gp  = 5;
+    static constexpr uint8_t extMode_gp  = 10;
+    static constexpr uint8_t postFmt_gp  = 13;
 };
 
 } // namespace z8

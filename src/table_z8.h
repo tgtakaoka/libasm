@@ -18,6 +18,7 @@
 #define __TABLE_Z8_H__
 
 #include "config_z8.h"
+#include "dis_memory.h"
 #include "insn_z8.h"
 #include "table_base.h"
 
@@ -29,7 +30,8 @@ public:
     TableZ8();
 
     Error searchName(InsnZ8 &insn) const;
-    Error searchOpCode(InsnZ8 &insn) const;
+    Error searchOpCode(InsnZ8 &insn, DisMemory &memory) const;
+    bool isSuper8() const;
 
     const char *listCpu() override;
     bool setCpu(const char *cpu) override;
@@ -47,7 +49,8 @@ private:
     static Error searchName(
         InsnZ8 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchOpCode(
-        InsnZ8 &insn, const EntryPage *pages, const EntryPage *end);
+        InsnZ8 &insn, DisMemory &memory,
+        const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableZ8 TableZ8;

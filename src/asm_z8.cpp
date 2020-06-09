@@ -134,7 +134,7 @@ Error AsmZ8::processPseudo(InsnZ8 &insn, const char *line) {
     if (strcasecmp(insn.name(), "SETRP") == 0) {
         _scan = line;
         uint8_t rp = 0;
-        if (setError(getOperand(rp)) != OK || !setRegisterPointer(rp))
+        if (setError(getOperand(rp)) != OK || !setRegPointer(rp))
             setError(ILLEGAL_CONSTANT);
         return OK;
     }
@@ -145,7 +145,7 @@ Error AsmZ8::processPseudo(InsnZ8 &insn, const char *line) {
             if (*p == ':') {
                 _scan = p + 1;
                 uint8_t rp;
-                if (setError(getOperand(rp)) != OK || !setRegisterPointer(rp))
+                if (setError(getOperand(rp)) != OK || !setRegPointer(rp))
                     setError(ILLEGAL_CONSTANT);
                 return OK;
             } else setError(UNKNOWN_OPERAND);
@@ -224,7 +224,7 @@ Error AsmZ8::parseOperand(Operand &op) {
     if (indir) {
         if (op.val >= 0x100) return setError(OVERFLOW_RANGE);
         if (!forceRegAddr && _regs.isWorkReg(op.val)) {
-            op.mode = (op.val & 1) == 0 ? M_Iww : M_Iw;
+            op.mode = (op.val & 1) == 0 ? M_IWW : M_IW;
             op.reg = _regs.decodeRegNum(op.val & 0xF);
             return OK;
         }
@@ -241,7 +241,7 @@ Error AsmZ8::parseOperand(Operand &op) {
         return OK;
     }
     if (_regs.isWorkReg(op.val)) {
-        op.mode = M_w;
+        op.mode = (op.val & 1) == 0 ? M_WW : M_W;
         op.reg = _regs.decodeRegNum(op.val & 0xF);
         return OK;
     }
@@ -271,12 +271,11 @@ Error AsmZ8::encode(Insn &_insn) {
     setError(dstOp.getError());
     setErrorIf(srcOp.getError());
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode);
+    insn.setAddrMode(dstOp.mode, srcOp.mode, M_NO);
     if (TableZ8.searchName(insn))
         return setError(TableZ8.getError());
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
-
 
     if (insn.opCode() == 0x31) { // SRP
         if ((dstOp.val & 0xF) != 0)

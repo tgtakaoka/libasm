@@ -38,11 +38,10 @@ public:
     const char *getCpu() const override { return TableZ8.getCpu(); }
 
     void reset() override {
-        setRegisterPointer(0);
+        enableRegPointer(false);
     }
-    bool setRegisterPointer(uint8_t rp) {
-        return _regs.setRegPointer(rp);
-    }
+    void enableRegPointer(bool enable) { _regs.enableRegPointer(enable); }
+    bool setRegPointer(uint8_t rp) { return _regs.setRegPointer(rp); }
 
 private:
     IntelValueParser _parser;
