@@ -44,7 +44,7 @@ bytes    KEYWORD2
 name     KEYWORD2
 getError KEYWORD2
 errorAt  KEYWORD2
-
+errorText KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

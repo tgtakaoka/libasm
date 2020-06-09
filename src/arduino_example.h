@@ -170,10 +170,8 @@ private:
     void assemble(const char *line) {
         Insn insn;
         if (_assembler.encode(line, insn, _origin, this)) {
-            _cli.print(F("Error "));
-            _cli.print(_assembler.getError());
-            _cli.print(F(" at: "));
-            _cli.println(_assembler.errorAt());
+            _cli.print(F("Error: "));
+            _cli.println(_assembler.errorText());
         } else {
             printAddress(insn.address());
             _cli.print(':');
@@ -216,8 +214,8 @@ private:
         Insn insn;
         while (memory.hasNext()) {
             if (_disassembler.decode(memory, insn, operands, this, true)) {
-                _cli.print(F("Error "));
-                _cli.println(_disassembler.getError());
+                _cli.print(F("Error: "));
+                _cli.println(_disassembler.errorText());
             } else {
                 printAddress(insn.address());
                 _cli.print(':');
