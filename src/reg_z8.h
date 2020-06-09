@@ -79,6 +79,8 @@ enum CcName : int8_t {
 
 class RegZ8 : public RegBase {
 public:
+    RegZ8();
+
     RegName parseRegName(const char *line) const;
     static uint8_t regNameLen(RegName regName);
     static uint8_t encodeRegName(RegName regName);
@@ -92,7 +94,16 @@ public:
     static CcName decodeCcNum(uint8_t ccNum);
     char *outCcName(char *out, CcName ccName) const;
 
+    void enableRegPointer(bool enabled);
+    bool setRegPointer(uint8_t rp);
+    bool isWorkReg(uint8_t regAddr) const;
+    bool isWorkRegAlias(uint8_t regAddr) const;
+    uint8_t encodeWorkRegAddr(RegName regName) const;
+
 private:
+    bool _enableRegPointer;
+    uint8_t _regPointer;
+
     RegName parseRegName(
         const char *line, const RegName *table, const RegName *end) const;
     char regName1stChar(const RegName regName) const;

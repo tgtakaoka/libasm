@@ -37,7 +37,9 @@ public:
     bool setCpu(const char *cpu) override { return TableZ8.setCpu(cpu); }
     const char *getCpu() const override { return TableZ8.getCpu(); }
 
-    void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }
+    void preferWorkRegister(bool enabled) {
+        _preferWorkRegister = enabled;
+    }
 
 private:
     IntelValueFormatter _formatter;
@@ -47,9 +49,9 @@ private:
     RegBase &getRegister() override { return _regs; }
     void outCcName(Config::opcode_t opCode);
     void outIndexed(uint8_t base, RegName idx);
+    Error outWorkReg(uint8_t regNum, bool indir = false, bool pair = false);
+    Error outRegAddr(uint8_t regAddr, bool indir = false, bool pair = false);
 
-    Error decodeWorkReg(uint8_t regNum, bool indir = false, bool pair = false);
-    Error decodeRegister(uint8_t regAddr, bool indir = false, bool pair = false);
     Error decodeOperand(DisMemory &memory, InsnZ8 &insn, AddrMode mode);
     Error decodeAbsolute(DisMemory &memory, InsnZ8 &insn);
     Error decodeRelative(DisMemory &memory, InsnZ8 &insn);

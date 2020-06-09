@@ -24,6 +24,34 @@
 namespace libasm {
 namespace z8 {
 
+RegZ8::RegZ8()
+    : _enableRegPointer(false),
+      _regPointer(0)
+{}
+
+void RegZ8::enableRegPointer(bool enabled) {
+    _enableRegPointer = enabled;
+}
+
+bool RegZ8::setRegPointer(uint8_t rp) {
+    if (rp & 0x0F) return false;
+    _regPointer = rp;
+    _enableRegPointer = true;
+    return true;
+}
+
+bool RegZ8::isWorkReg(uint8_t regAddr) const {
+    return _enableRegPointer && (regAddr & 0xF0) == _regPointer;
+}
+
+bool RegZ8::isWorkRegAlias(uint8_t regAddr) const {
+    return (regAddr & 0xF0) == 0xE0;
+}
+
+uint8_t RegZ8::encodeWorkRegAddr(RegName regName) const {
+    return encodeRegName(regName) | 0xE0;
+}
+
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }

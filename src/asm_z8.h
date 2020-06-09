@@ -37,13 +37,16 @@ public:
     bool setCpu(const char *cpu) override { return TableZ8.setCpu(cpu); }
     const char *getCpu() const override { return TableZ8.getCpu(); }
 
-    void reset() override { _register_pointer = 0; }
-    Error setRegisterPointer(uint8_t rp);
+    void reset() override {
+        setRegisterPointer(0);
+    }
+    bool setRegisterPointer(uint8_t rp) {
+        return _regs.setRegPointer(rp);
+    }
 
 private:
     IntelValueParser _parser;
     RegZ8 _regs;
-    uint8_t _register_pointer = 0;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
