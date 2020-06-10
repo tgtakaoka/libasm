@@ -30,10 +30,11 @@
 
 #else  // AVR
 
-#include <string.h>
-#define PROGMEM
-// Teensy 3.x (ARM) predefined following macros.
+// Teensy (ARM) predefined following macros.
 #if !defined(pgm_read_byte)
+#include <string.h>
+
+#define PROGMEM
 namespace libasm {
 namespace host {
 typedef union {
@@ -42,6 +43,7 @@ typedef union {
 } read_ptr_t;
 } // host
 } //libasm
+
 #define pgm_read_byte(p) *(p)
 #define pgm_read_word(p) *(p)
 #define pgm_read_ptr(p) ((libasm::host::read_ptr_t *)(p))->i
@@ -50,6 +52,7 @@ typedef union {
 #define strncpy_P(d, s, n) strncpy((d), (s), (n))
 #define strcasecmp_P(d, s) strcasecmp((d), (s))
 #define strncasecmp_P(d, s, n) strncasecmp((d), (s), (n))
+
 #endif // !defined(pgm_read_byte)
 
 #endif // AVR
