@@ -19,6 +19,8 @@
 
 #include "reg_base.h"
 
+#include <stdint.h>
+
 namespace libasm {
 namespace w65c816 {
 

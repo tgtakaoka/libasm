@@ -11,14 +11,18 @@
       ORA  >$000E
       ASL  >$000F
       BPL  *+$0013
+      BPL  *-$007E
+      BPL  *
       ORA  ($12),Y
       ORA  $16,X
       ASL  $17,X
       CLC
       ORA  >$001A,Y
+      ORA  $0100,Y
       ORA  >$001E,X
       ASL  >$001F,X
       JSR  >$0021
+      JSR  $0100
       AND  ($22,X)
       BIT  $25
       AND  $26
@@ -30,11 +34,14 @@
       AND  >$002E
       ROL  >$002F
       BMI  *+$0033
+      BMI  *-$007E
+      BMI  *
       AND  ($32),Y
       AND  $36,X
       ROL  $37,X
       SEC
       AND  >$003A,Y
+      AND  $0100,Y
       AND  >$003E,X
       ROL  >$003F,X
       RTI
@@ -45,14 +52,18 @@
       EOR  #$4A
       LSR  A
       JMP  >$004D
+      JMP  $0100
       EOR  >$004E
       LSR  >$004F
       BVC  *+$0053
+      BVC  *-$007E
+      BVC  *
       EOR  ($52),Y
       EOR  $56,X
       LSR  $57,X
       CLI
       EOR  >$005A,Y
+      EOR  $0100,Y
       EOR  >$005E,X
       LSR  >$005F,X
       RTS
@@ -63,14 +74,18 @@
       ADC  #$6A
       ROR  A
       JMP  (>$006D)
+      JMP  ($0100)
       ADC  >$006E
       ROR  >$006F
       BVS  *+$0073
+      BVS  *-$007E
+      BVS  *
       ADC  ($72),Y
       ADC  $76,X
       ROR  $77,X
       SEI
       ADC  >$007A,Y
+      ADC  $0100,Y
       ADC  >$007E,X
       ROR  >$007F,X
       STA  ($82,X)
@@ -83,12 +98,15 @@
       STA  >$008E
       STX  >$008F
       BCC  *-$006D
+      BCC  *
+      BCC  *+1
       STA  ($92),Y
       STY  $95,X
       STA  $96,X
       STX  $97,Y
       TYA
       STA  >$009A,Y
+      STA  $0100,Y
       TXS
       STA  >$009E,X
       LDY  #$A1
@@ -104,12 +122,15 @@
       LDA  >$00AE
       LDX  >$00AF
       BCS  *-$004D
+      BCS  *
+      BCS  *+1
       LDA  ($B2),Y
       LDY  $B5,X
       LDA  $B6,X
       LDX  $B7,Y
       CLV
       LDA  >$00BA,Y
+      LDA  $0100,Y
       TSX
       LDY  >$00BD,X
       LDA  >$00BE,X
@@ -126,11 +147,14 @@
       CMP  >$00CE
       DEC  >$00CF
       BNE  *-$002D
+      BNE  *
+      BNE  *+1
       CMP  ($D2),Y
       CMP  $D6,X
       DEC  $D7,X
       CLD
       CMP  >$00DA,Y
+      CMP  $0100,Y
       CMP  >$00DE,X
       DEC  >$00DF,X
       CPX  #$E1
@@ -145,10 +169,13 @@
       SBC  >$00EE
       INC  >$00EF
       BEQ  *-13
+      BEQ  *
+      BEQ  *+1
       SBC  ($F2),Y
       SBC  $F6,X
       INC  $F7,X
       SED
       SBC  >$00FA,Y
+      SBC  $0100,Y
       SBC  >$00FE,X
       INC  >$00FF,X

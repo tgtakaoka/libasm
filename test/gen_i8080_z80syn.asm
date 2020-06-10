@@ -201,7 +201,6 @@
       CALL Z,00CDH
       CALL 00CEH
       ADC  A,0CFH
-      RST  08H
       RET  NC
       POP  DE
       JP   NC,00D3H
@@ -209,13 +208,11 @@
       CALL NC,00D5H
       PUSH DE
       SUB  A,0D7H
-      RST  10H
       RET  C
       JP   C,00DBH
       IN   A,(0DCH)
       CALL C,00DDH
       SBC  A,0DFH
-      RST  18H
       RET  PO
       POP  HL
       JP   PO,00E3H
@@ -223,14 +220,12 @@
       CALL PO,00E5H
       PUSH HL
       AND  A,0E7H
-      RST  20H
       RET  PE
       JP   (HL)
       JP   PE,00EBH
       EX   DE,HL
       CALL PE,00EDH
       XOR  A,0EFH
-      RST  28H
       RET  P
       POP  AF
       JP   P,00F3H
@@ -238,11 +233,9 @@
       CALL P,00F5H
       PUSH AF
       OR   A,0F7H
-      RST  30H
       RET  M
       LD   SP,HL
       JP   M,00FBH
       EI
       CALL M,00FDH
       CP   A,0FFH
-      RST  38H

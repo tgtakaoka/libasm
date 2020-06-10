@@ -134,12 +134,15 @@ gen: \
 	gen_mc6809  \
 	gen_mc6800  \
 	gen_mos6502 \
+	gen_w65c816 \
 	gen_i8080   \
 	gen_z80     \
 	gen_z8      \
 	gen_ins8060 \
 	gen_ins8070 \
-	gen_cdp1802
+	gen_cdp1802 \
+	gen_tms9900 \
+	gen_mc68000
 
 CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS    = -MMD
@@ -162,12 +165,15 @@ TEST_OBJS= \
 	gen_mc6809.o  \
 	gen_mc6800.o  \
 	gen_mos6502.o \
+	gen_w65c816.o \
 	gen_i8080.o   \
 	gen_z80.o     \
 	gen_z8.o      \
 	gen_ins8060.o \
 	gen_ins8070.o \
-	gen_cdp1802.o
+	gen_cdp1802.o \
+	gen_tms9900.o \
+	gen_mc68000.o
 
 TESTS=$(TEST_OBJS:.o=)
 
@@ -277,6 +283,9 @@ gen_mos6502: gen_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_gen)
 	./gen_mos6502 -u -C 65SC02  -o gen_w65sc02.asm
 	./gen_mos6502 -u -C 65C02   -o gen_r65c02.asm
 	./gen_mos6502 -u -C W65C02S -o gen_w65c02s.asm
+gen_w65c816: gen_w65c816.o dis_w65c816.o $(OBJS_w65c816) $(OBJS_gen)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_w65c816 -u -C 65816    -o gen_w65c816.asm
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_i8080 -u -C 8080 -o gen_i8080.asm
@@ -299,6 +308,14 @@ gen_ins8070: gen_ins8070.o dis_ins8070.o $(OBJS_ins8070) $(OBJS_gen)
 gen_cdp1802: gen_cdp1802.o dis_cdp1802.o $(OBJS_cdp1802) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_cdp1802 -u -C 1802 -o gen_cdp1802.asm
+gen_tms9900: gen_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_gen)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_tms9900 -u -C TMS9900  -o gen_tms9900.asm
+	./gen_tms9900 -u -C TMS9995  -o gen_tms9995.asm
+	./gen_tms9900 -u -C TMS99105 -o gen_tms99105.asm
+gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_gen)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_mc68000 -u -C 68000 -o gen_mc68000.asm
 
 clean: clean-obj
 	-rm -f $(TESTS)

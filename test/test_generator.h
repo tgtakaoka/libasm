@@ -22,6 +22,8 @@
 #include "text_buffer.h"
 
 #include <ctype.h>
+#include <unordered_map>
+#include <unordered_set>
 
 #if DEBUG_TEXT || DEBUG_TRACE
 #include <stdio.h>
@@ -247,98 +249,46 @@ private:
     const Endian _endian;
     const size_t _opcodeSize;
     uint8_t *_memory;
-    TestData<Conf> _data1;
-    TestData<Conf> _data2;
+    TestData<Conf> _data;
+    std::unordered_map<
+        std::string,
+        std::unordered_set<TokenizedText,
+                          TokenizedText::hash,
+                          TokenizedText::eq>
+        > _map;
 
     typename Conf::uintptr_t _addr;
     Printer *_printer;
-    TestData<Conf> *_data;
-    TestData<Conf> *_prev;
-    int _similarCount;
 
     TestGenerator<Conf> &generate(Printer &printer, DataGenerator &gen) {
         _printer = &printer;
-        _data = &_data1;
-        _prev = &_data2;
         generateTests(gen);
 
         return *this;
     }
 
-    void printInsn(const TestData<Conf> *data) {
-        _printer->print(data->insn(), data->operands().buffer());
-        _addr += data->insn().length();
+    void printInsn(const TestData<Conf> &data) {
+        _printer->print(data.insn(), data.operands().buffer());
+        _addr += data.insn().length();
     }
 
-    void swapBuffers() {
-        if (_data == &_data1) {
-            _prev = &_data1;
-            _data = &_data2;
-        } else {
-            _prev = &_data2;
-            _data = &_data1;
+    int meaningfulTestData() {
+        const std::string name(_data.insn().name());
+        auto seen = _map.find(name);
+        if (seen == _map.end()) {
+            _map.emplace(name, std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq>());
+            seen = _map.find(name);
         }
-    }
-
-    int meaningfulTestData(const DataGenerator &gen) {
-        if (strcmp(_data->insn().name(), _prev->insn().name())
-            || _data->insn().length() != _prev->insn().length()) {
-            _similarCount = 0;
-#if DEBUG_TEXT
-            printf("@@ %s : %s\n", _data->insn().name(), _data->operands().buffer());
-#endif
-            return -2;
+        auto &variants = seen->second;
+        const TokenizedText a(_data.operands().buffer());
+        auto found = variants.find(a);
+        if (found != variants.end()) {
+            if (found->count() >= 300)
+                return 2;
+            return 0;
         }
-
-        TextBuffer::analyze(_data->operands(), _prev->operands());
-        const TextBuffer &o = _data->operands();
-        const TextBuffer &p = _prev->operands();
-        int status = -1;
-        if (o.prefixLen() == o.length() && p.prefixLen() == p.length()) {
-            if (gen.size() == 4 && o.digitsInPrefix() >= 8) {
-                status = 4;
-            } else if (gen.size() == 2 && o.digitsInPrefix() >= 5
-                       && _similarCount >= 300) {
-                status = 2;
-            } else if (gen.size() == 2 && _similarCount >= 1000) {
-                status = 2;
-            } else if (o.length() > 0 && o.prefixLen() == o.length()
-                       && o.digitsInPrefix() > 0) {
-                status = 0;
-            } else if (o.prefixLen() > 0 && o.digitsInPrefix() >= 3) {
-                status = 0;
-            } else if (
-                strcmp(_data->operands().buffer(), _prev->operands().buffer()) == 0) {
-                status = 0;
-            }
-        }
-#if DEBUG_TEXT
-        bool print = true;
-        if (status < 0) printf("@@ ");
-        else if (status > 0)  printf("!! ");
-        else if (status == 0) {
-            if (_similarCount % 200 == 0)
-                printf("__ ");
-            else print = false;
-        }
-        if (print) {
-            printf("%s : {%.*s}%.*s{%s} {%.*s}%.*s{%s} {%d:%d %d:%d} {%d:%d %d:%d} %d %d\n",
-                   _data->insn().name(),
-                   o.prefixLen(), o.prefix(), o.trunkLen(), o.trunk(), o.suffix(),
-                   p.prefixLen(), p.prefix(), p.trunkLen(), p.trunk(), p.suffix(),
-                   o.prefixLen(), o.digitsInPrefix(), o.suffixLen(), o.digitsInSuffix(),
-                   p.prefixLen(), p.digitsInPrefix(), p.suffixLen(), p.digitsInSuffix(),
-                   gen.size(), _similarCount
-                );
-            fflush(stdout);
-        }
-#endif
-        if (status == 0) {
-            _similarCount++;
-        } else {
-            _similarCount = 0;
-        }
-        return status;
+        variants.insert(a);
+        return -2;
     }
 
     void generateTests(DataGenerator &gen) {
@@ -346,11 +296,11 @@ private:
         do {
             gen.next();
             gen.debugPrint("@@  loop", _memory);
-            _data->tryGenerate(
+            _data.tryGenerate(
                 _disassembler, _addr, _memory, _memorySize,
                 _printer->uppercase());
             if (_disassembler.getError() == OK) {
-                int size = _data->insn().length() - (gen.pos() + gen.size());
+                int size = _data.insn().length() - (gen.pos() + gen.size());
                 if (size > 0) {
                     if (size % 2 == 0 || size == 1) {
                         DataGenerator child(gen, size);
@@ -366,13 +316,11 @@ private:
                 } else if (size < 0) {
                     gen.debugPrint("@@  shrk", _memory);
                     printInsn(_data);
-                    swapBuffers();
                     return;
                 } else {
                     int abort;
-                    if ((abort = meaningfulTestData(gen)) < 0) {
+                    if ((abort = meaningfulTestData()) < 0) {
                         printInsn(_data);
-                        swapBuffers();
                     } else if (abort > 0) {
                         gen.debugPrint("@@ abort", _memory);
                         return;

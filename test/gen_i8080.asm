@@ -200,7 +200,6 @@
       CZ   00CDH
       CALL 00CEH
       ACI  0CFH
-      RST  1
       RNC
       POP  D
       JNC  00D3H
@@ -208,13 +207,11 @@
       CNC  00D5H
       PUSH D
       SUI  0D7H
-      RST  2
       RC
       JC   00DBH
       IN   0DCH
       CC   00DDH
       SBI  0DFH
-      RST  3
       RPO
       POP  H
       JPO  00E3H
@@ -222,14 +219,12 @@
       CPO  00E5H
       PUSH H
       ANI  0E7H
-      RST  4
       RPE
       PCHL
       JPE  00EBH
       XCHG
       CPE  00EDH
       XRI  0EFH
-      RST  5
       RP
       POP  PSW
       JP   00F3H
@@ -237,11 +232,9 @@
       CP   00F5H
       PUSH PSW
       ORI  0F7H
-      RST  6
       RM
       SPHL
       JM   00FBH
       EI
       CM   00FDH
       CPI  0FFH
-      RST  7

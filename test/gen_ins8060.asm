@@ -31,205 +31,131 @@
       CAE
       DLY  0x90
       JMP  $-0x006D
+      JMP  $
+      JMP  $+1
       JMP  E(PC)
-      JMP  $-0x007D
       JMP  -110(P1)
+      JMP  0(P1)
       JMP  E(P1)
-      JMP  -127(P1)
-      JMP  E(P2)
-      JMP  -127(P2)
-      JMP  E(P3)
-      JMP  -127(P3)
       JP   $-0x0069
+      JP   $
+      JP   $+1
       JP   E(PC)
-      JP   $-0x007D
       JP   -106(P1)
+      JP   0(P1)
       JP   E(P1)
-      JP   -127(P1)
-      JP   E(P2)
-      JP   -127(P2)
-      JP   E(P3)
-      JP   -127(P3)
       JZ   $-0x0065
+      JZ   $
+      JZ   $+1
       JZ   E(PC)
-      JZ   $-0x007D
       JZ   -102(P1)
+      JZ   0(P1)
       JZ   E(P1)
-      JZ   -127(P1)
-      JZ   E(P2)
-      JZ   -127(P2)
-      JZ   E(P3)
-      JZ   -127(P3)
       JNZ  $-0x0061
+      JNZ  $
+      JNZ  $+1
       JNZ  E(PC)
-      JNZ  $-0x007D
       JNZ  -98(P1)
+      JNZ  0(P1)
       JNZ  E(P1)
-      JNZ  -127(P1)
-      JNZ  E(P2)
-      JNZ  -127(P2)
-      JNZ  E(P3)
-      JNZ  -127(P3)
       ILD  $-0x0056
+      ILD  $
+      ILD  $+1
       ILD  E(PC)
-      ILD  $-0x007E
       ILD  -86(P1)
+      ILD  0(P1)
       ILD  E(P1)
-      ILD  -127(P1)
-      ILD  E(P2)
-      ILD  -127(P2)
-      ILD  E(P3)
-      ILD  -127(P3)
       DLD  $-0x0046
+      DLD  $
+      DLD  $+1
       DLD  E(PC)
-      DLD  $-0x007E
       DLD  -70(P1)
+      DLD  0(P1)
       DLD  E(P1)
-      DLD  -127(P1)
-      DLD  E(P2)
-      DLD  -127(P2)
-      DLD  E(P3)
-      DLD  -127(P3)
       LD   $-0x003E
+      LD   $
+      LD   $+1
       LD   E(PC)
-      LD   $-0x007E
       LD   -62(P1)
+      LD   0(P1)
       LD   E(P1)
-      LD   -127(P1)
-      LD   E(P2)
-      LD   -127(P2)
-      LD   E(P3)
-      LD   -127(P3)
       LDI  0xC5
       LD   @-58(P1)
+      LD   @0(P1)
       LD   @E(P1)
-      LD   @-127(P1)
-      LD   @E(P2)
-      LD   @-127(P2)
-      LD   @E(P3)
-      LD   @-127(P3)
       ST   $-0x0036
+      ST   $
+      ST   $+1
       ST   E(PC)
-      ST   $-0x007E
       ST   -54(P1)
+      ST   0(P1)
       ST   E(P1)
-      ST   -127(P1)
-      ST   E(P2)
-      ST   -127(P2)
-      ST   E(P3)
-      ST   -127(P3)
       ST   @-50(P1)
+      ST   @0(P1)
       ST   @E(P1)
-      ST   @-127(P1)
-      ST   @E(P2)
-      ST   @-127(P2)
-      ST   @E(P3)
-      ST   @-127(P3)
       AND  $-0x002E
+      AND  $
+      AND  $+1
       AND  E(PC)
-      AND  $-0x007E
       AND  -46(P1)
+      AND  0(P1)
       AND  E(P1)
-      AND  -127(P1)
-      AND  E(P2)
-      AND  -127(P2)
-      AND  E(P3)
-      AND  -127(P3)
       ANI  0xD5
       AND  @-42(P1)
+      AND  @0(P1)
       AND  @E(P1)
-      AND  @-127(P1)
-      AND  @E(P2)
-      AND  @-127(P2)
-      AND  @E(P3)
-      AND  @-127(P3)
       OR   $-0x0026
+      OR   $
+      OR   $+1
       OR   E(PC)
-      OR   $-0x007E
       OR   -38(P1)
+      OR   0(P1)
       OR   E(P1)
-      OR   -127(P1)
-      OR   E(P2)
-      OR   -127(P2)
-      OR   E(P3)
-      OR   -127(P3)
       ORI  0xDD
       OR   @-34(P1)
+      OR   @0(P1)
       OR   @E(P1)
-      OR   @-127(P1)
-      OR   @E(P2)
-      OR   @-127(P2)
-      OR   @E(P3)
-      OR   @-127(P3)
       XOR  $-0x001E
+      XOR  $
+      XOR  $+1
       XOR  E(PC)
-      XOR  $-0x007E
       XOR  -30(P1)
+      XOR  0(P1)
       XOR  E(P1)
-      XOR  -127(P1)
-      XOR  E(P2)
-      XOR  -127(P2)
-      XOR  E(P3)
-      XOR  -127(P3)
       XRI  0xE5
       XOR  @-26(P1)
+      XOR  @0(P1)
       XOR  @E(P1)
-      XOR  @-127(P1)
-      XOR  @E(P2)
-      XOR  @-127(P2)
-      XOR  @E(P3)
-      XOR  @-127(P3)
       DAD  $-0x0016
+      DAD  $
+      DAD  $+1
       DAD  E(PC)
-      DAD  $-0x007E
       DAD  -22(P1)
+      DAD  0(P1)
       DAD  E(P1)
-      DAD  -127(P1)
-      DAD  E(P2)
-      DAD  -127(P2)
-      DAD  E(P3)
-      DAD  -127(P3)
       DAI  0xED
       DAD  @-18(P1)
+      DAD  @0(P1)
       DAD  @E(P1)
-      DAD  @-127(P1)
-      DAD  @E(P2)
-      DAD  @-127(P2)
-      DAD  @E(P3)
-      DAD  @-127(P3)
       ADD  $-14
+      ADD  $
+      ADD  $+1
       ADD  E(PC)
-      ADD  $-0x007E
       ADD  -14(P1)
+      ADD  0(P1)
       ADD  E(P1)
-      ADD  -127(P1)
-      ADD  E(P2)
-      ADD  -127(P2)
-      ADD  E(P3)
-      ADD  -127(P3)
       ADI  0xF5
       ADD  @-10(P1)
+      ADD  @0(P1)
       ADD  @E(P1)
-      ADD  @-127(P1)
-      ADD  @E(P2)
-      ADD  @-127(P2)
-      ADD  @E(P3)
-      ADD  @-127(P3)
       CAD  $-6
+      CAD  $
+      CAD  $+1
       CAD  E(PC)
-      CAD  $-0x007E
       CAD  -6(P1)
+      CAD  0(P1)
       CAD  E(P1)
-      CAD  -127(P1)
-      CAD  E(P2)
-      CAD  -127(P2)
-      CAD  E(P3)
-      CAD  -127(P3)
       CAI  0xFD
       CAD  @-2(P1)
+      CAD  @0(P1)
       CAD  @E(P1)
-      CAD  @-127(P1)
-      CAD  @E(P2)
-      CAD  @-127(P2)
-      CAD  @E(P3)
-      CAD  @-127(P3)

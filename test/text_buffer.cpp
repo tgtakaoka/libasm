@@ -70,102 +70,43 @@ static bool isNumber(const char *p, const char *&r) {
 }
 
 static constexpr uint8_t TOKEN_DIGITS = 0x80;
-static uint8_t digitsToken(uint8_t length) {
-    return TOKEN_DIGITS | length;
-}
-static bool isDigitsToken(uint8_t token) {
-    return (token & TOKEN_DIGITS) == TOKEN_DIGITS;
-}
-static uint8_t digitsLength(uint8_t token) {
-    return token & ~TOKEN_DIGITS;
-}
 
-void TextBuffer::toTokens() {
-    const char *b = _buffer;
-    uint8_t *t = _tokens;
+TokenizedText::TokenizedText(const char *text)
+    : _tokens(tokenize(text)),
+      _count(0)
+{}
+
+std::vector<uint8_t> TokenizedText::tokenize(const char *text) {
+    std::vector<uint8_t> t;
+    const char *b = text;
     while (*b) {
         const char *tmp;
         if (isNumber(b, tmp)) {
-            *t++ = digitsToken(tmp - b);
+            t.push_back(TOKEN_DIGITS);
             b = tmp;
-        } else if ((*b == '+' || *b == '-') && isNumber(b + 1, tmp)) {
-            *t++ = digitsToken(tmp - b);
-            b = tmp;
-        } else if (*b == '>' && isNumber(b + 1, tmp)) {
-            *t++ = digitsToken(tmp - b);
-            b = tmp;
-        } else if (*b == '<' && isNumber(b + 1, tmp)) {
-            *t++ = digitsToken(tmp - b);
-            b = tmp;
-        } else if (*b == '<' && b[1] == '<' && isNumber(b + 2, tmp)) {
-            *t++ = digitsToken(tmp - b);
-            b = tmp;
-        } else if (*b == '<' && b[1] == '-' && isNumber(b + 2, tmp)) {
-            *t++ = digitsToken(tmp - b);
-            b = tmp;
-        } else if ((*b == '*' || *b == '$')
-                   && (b[1] == '+' || b[1] == '-')
-                   && isNumber(b + 2, tmp)) {
-            *t++ = digitsToken(tmp - b);
-            b = tmp;
-        } else if ((*b == '*' || *b == '$')
-                   && !isNumber(b + 1, tmp)) {
-            *t++ = digitsToken(1);
-            b++;
         } else {
-            *t++ = *b++;
+            t.push_back(*b++);
         }
     }
-    *t = 0;
-    _len = b - _buffer;
-    _tokenLen = t - _tokens;
-    _prefixLen = 0;
-    _digitsInPrefix = 0;
-    _suffixLen = 0;
-    _digitsInSuffix = 0;
+    return t;
 }
 
-void TextBuffer::analyze(TextBuffer &a, TextBuffer &b) {
-    a.toTokens();
-    b.toTokens();
-    const uint8_t *ap = a._tokens;
-    const uint8_t *bp = b._tokens;
-    while (*ap && *bp) {
-        if (isDigitsToken(*ap) && isDigitsToken(*bp)) {
-            int ad = digitsLength(*ap);
-            int bd = digitsLength(*bp);
-            a._prefixLen += ad;
-            a._digitsInPrefix += ad;
-            b._prefixLen += bd;
-            b._digitsInPrefix += bd;
-        } else if (*ap == *bp) {
-            a._prefixLen++;
-            b._prefixLen++;
-        } else {
-            break;
-        }
-        ap++;
-        bp++;
+std::size_t TokenizedText::hash::operator()(
+    const TokenizedText &it) const {
+    std::size_t seed = it.length();
+    for (auto t : it._tokens) {
+        seed ^= t + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
-    const uint8_t *as = a._tokens + a._tokenLen;
-    const uint8_t *bs = b._tokens + b._tokenLen;
-    while (as > ap && bs > bp) {
-        as--;
-        bs--;
-        if (isDigitsToken(*as) && isDigitsToken(*bs)) {
-            int ad = digitsLength(*as);
-            int bd = digitsLength(*bs);
-            a._suffixLen += ad;
-            a._digitsInSuffix += ad;
-            b._suffixLen += bd;
-            b._digitsInSuffix += bd;
-        } else if (*as == *bs) {
-            a._suffixLen++;
-            b._suffixLen++;
-        } else {
-            break;
-        }
+    return seed;
+}
+
+bool TokenizedText::eq::operator()(
+    const TokenizedText &a, const TokenizedText &b) const {
+    if (a.length() != b.length()) return false;
+    for (std::size_t i = 0; i < a.length(); i++) {
+        if (a._tokens.at(i) != b._tokens.at(i)) return false;
     }
+    return true;
 }
 
 } // namespace test

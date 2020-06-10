@@ -15,6 +15,8 @@
       ASL  >$000F
       BBR0 $10,*+3
       BPL  *+$0013
+      BPL  *-$007E
+      BPL  *
       ORA  ($12),Y
       ORA  ($13)
       TRB  $15
@@ -23,12 +25,14 @@
       RMB1 $18
       CLC
       ORA  >$001A,Y
+      ORA  $0100,Y
       INC  A
       TRB  >$001D
       ORA  >$001E,X
       ASL  >$001F,X
       BBR1 $20,*+3
       JSR  >$0021
+      JSR  $0100
       AND  ($22,X)
       BIT  $25
       AND  $26
@@ -42,6 +46,8 @@
       ROL  >$002F
       BBR2 $30,*+3
       BMI  *+$0033
+      BMI  *-$007E
+      BMI  *
       AND  ($32),Y
       AND  ($33)
       BIT  $35,X
@@ -50,6 +56,7 @@
       RMB3 $38
       SEC
       AND  >$003A,Y
+      AND  $0100,Y
       DEC  A
       BIT  >$003D,X
       AND  >$003E,X
@@ -64,10 +71,13 @@
       EOR  #$4A
       LSR  A
       JMP  >$004D
+      JMP  $0100
       EOR  >$004E
       LSR  >$004F
       BBR4 $50,*+3
       BVC  *+$0053
+      BVC  *-$007E
+      BVC  *
       EOR  ($52),Y
       EOR  ($53)
       EOR  $56,X
@@ -75,6 +85,7 @@
       RMB5 $58
       CLI
       EOR  >$005A,Y
+      EOR  $0100,Y
       PHY
       EOR  >$005E,X
       LSR  >$005F,X
@@ -89,10 +100,13 @@
       ADC  #$6A
       ROR  A
       JMP  (>$006D)
+      JMP  ($0100)
       ADC  >$006E
       ROR  >$006F
       BBR6 $70,*+3
       BVS  *+$0073
+      BVS  *-$007E
+      BVS  *
       ADC  ($72),Y
       ADC  ($73)
       STZ  $75,X
@@ -101,12 +115,16 @@
       RMB7 $78
       SEI
       ADC  >$007A,Y
+      ADC  $0100,Y
       PLY
       JMP  (>$007D,X)
+      JMP  ($0100,X)
       ADC  >$007E,X
       ROR  >$007F,X
       BBR7 $80,*+3
       BRA  *-$007D
+      BRA  *
+      BRA  *+1
       STA  ($82,X)
       STY  $85
       STA  $86
@@ -120,6 +138,8 @@
       STX  >$008F
       BBS0 $90,*+3
       BCC  *-$006D
+      BCC  *
+      BCC  *+1
       STA  ($92),Y
       STA  ($93)
       STY  $95,X
@@ -128,6 +148,7 @@
       SMB1 $98
       TYA
       STA  >$009A,Y
+      STA  $0100,Y
       TXS
       STZ  >$009D
       STA  >$009E,X
@@ -148,6 +169,8 @@
       LDX  >$00AF
       BBS2 $B0,*+3
       BCS  *-$004D
+      BCS  *
+      BCS  *+1
       LDA  ($B2),Y
       LDA  ($B3)
       LDY  $B5,X
@@ -156,6 +179,7 @@
       SMB3 $B8
       CLV
       LDA  >$00BA,Y
+      LDA  $0100,Y
       TSX
       LDY  >$00BD,X
       LDA  >$00BE,X
@@ -175,6 +199,8 @@
       DEC  >$00CF
       BBS4 $D0,*+3
       BNE  *-$002D
+      BNE  *
+      BNE  *+1
       CMP  ($D2),Y
       CMP  ($D3)
       CMP  $D6,X
@@ -182,6 +208,7 @@
       SMB5 $D8
       CLD
       CMP  >$00DA,Y
+      CMP  $0100,Y
       PHX
       CMP  >$00DE,X
       DEC  >$00DF,X
@@ -200,6 +227,8 @@
       INC  >$00EF
       BBS6 $F0,*+3
       BEQ  *-13
+      BEQ  *
+      BEQ  *+1
       SBC  ($F2),Y
       SBC  ($F3)
       SBC  $F6,X
@@ -207,6 +236,7 @@
       SMB7 $F8
       SED
       SBC  >$00FA,Y
+      SBC  $0100,Y
       PLX
       SBC  >$00FE,X
       INC  >$00FF,X
