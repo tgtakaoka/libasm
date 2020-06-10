@@ -14,31 +14,21 @@
  * limitations under the License.
  */
 
-#include "dis_mc6800.h"
+#include "dis_tms9900.h"
 #include "gen_driver.h"
 
-using namespace libasm::mc6800;
+using namespace libasm::tms9900;
 using namespace libasm::test;
 
 int main(int argc, const char **argv) {
-    DisMc6800 dis6800;
-    dis6800.setRelativeTarget(true);
-    dis6800.setAccumulatorDelimitor();
-    GenDriver<Config> driver(dis6800);
+    DisTms9900 dis9900;
+    dis9900.setRelativeTarget(true);
+    GenDriver<Config> driver(dis9900);
     if (driver.main(argc, argv))
         return 1;
-    const char *cpu = dis6800.getCpu();
 
-    TestGenerator<Config> generator(dis6800);
-    if (strcmp(cpu, "6811") == 0) {
-        generator
-            .generate(driver)
-            .generate(driver, 0x18)
-            .generate(driver, 0x1A)
-            .generate(driver, 0xCD);
-    } else {
-        generator.generate(driver);
-    }        
+    TestGenerator<Config> generator(dis9900);
+    generator.generate(driver);
 
     return driver.close();
 }

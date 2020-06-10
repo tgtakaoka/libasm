@@ -18,6 +18,12 @@
       SEI
       SBA
       CBA
+      BRSET $13,#0,*+$0018
+      BRSET $13,#0,*-$007C
+      BRSET $13,#0,*
+      BRCLR $14,#0,*+$0019
+      BRCLR $14,#0,*-$007C
+      BRCLR $14,#0,*
       BSET  $00,#$15
       BCLR  $00,#$16
       TAB
@@ -26,22 +32,60 @@
       ABA
       BSET  0,X,#$1D
       BCLR  0,X,#$1E
+      BRSET 31,X,#0,*+$0024
+      BRSET 31,X,#0,*-$007C
+      BRSET 31,X,#0,*
+      BRCLR 32,X,#0,*+$0025
+      BRCLR 32,X,#0,*-$007C
+      BRCLR 32,X,#0,*
       BRA   *+$0023
+      BRA   *-$007E
+      BRA   *
       BRN   *+$0024
+      BRN   *-$007E
+      BRN   *
       BHI   *+$0025
+      BHI   *-$007E
+      BHI   *
       BLS   *+$0026
+      BLS   *-$007E
+      BLS   *
       BHS   *+$0027
+      BHS   *-$007E
+      BHS   *
       BLO   *+$0028
+      BLO   *-$007E
+      BLO   *
       BNE   *+$0029
+      BNE   *-$007E
+      BNE   *
       BEQ   *+$002A
+      BEQ   *-$007E
+      BEQ   *
       BVC   *+$002B
+      BVC   *-$007E
+      BVC   *
       BVS   *+$002C
+      BVS   *-$007E
+      BVS   *
       BPL   *+$002D
+      BPL   *-$007E
+      BPL   *
       BMI   *+$002E
+      BMI   *-$007E
+      BMI   *
       BGE   *+$002F
+      BGE   *-$007E
+      BGE   *
       BLT   *+$0030
+      BLT   *-$007E
+      BLT   *
       BGT   *+$0031
+      BGT   *-$007E
+      BGT   *
       BLE   *+$0032
+      BLE   *-$007E
+      BLE   *
       TSX
       INS
       PULA
@@ -93,17 +137,29 @@
       JMP   111,X
       CLR   112,X
       NEG   >$0071
+      NEG   $0100
       COM   >$0074
+      COM   $0100
       LSR   >$0075
+      LSR   $0100
       ROR   >$0077
+      ROR   $0100
       ASR   >$0078
+      ASR   $0100
       ASL   >$0079
+      ASL   $0100
       ROL   >$007A
+      ROL   $0100
       DEC   >$007B
+      DEC   $0100
       INC   >$007D
+      INC   $0100
       TST   >$007E
+      TST   $0100
       JMP   >$007F
+      JMP   $0100
       CLR   >$0080
+      CLR   $0100
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
@@ -117,6 +173,8 @@
       ADDA  #$8C
       CPX   #$008D
       BSR   *-$0070
+      BSR   *
+      BSR   *+1
       LDS   #$008F
       XGDX
       SUBA  $91
@@ -228,15 +286,16 @@
       LDD   >$00FD
       STD   >$00FE
       LDX   >$00FF
-      STX   $0100
-      BRSET $13,#$14,*+4
-      BRCLR $14,#$15,*+4
-      BRSET 31,X,#$20,*+4
-      BRCLR 32,X,#$21,*+4
       INY
       DEY
       BSET  0,Y,#$1D
       BCLR  0,Y,#$1E
+      BRSET 31,Y,#0,*+$0025
+      BRSET 31,Y,#0,*-$007B
+      BRSET 31,Y,#0,*
+      BRCLR 32,Y,#0,*+$0026
+      BRCLR 32,Y,#0,*-$007B
+      BRCLR 32,Y,#0,*
       TSY
       TYS
       PULY
@@ -294,9 +353,6 @@
       LDY   239,Y
       STY   240,Y
       LDY   >$00FF
-      STY   $0100
-      BRSET 31,Y,#$20,*+5
-      BRCLR 32,Y,#$21,*+5
       CPD   #$0084
       CPD   $94
       CPD   164,X

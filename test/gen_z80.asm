@@ -18,6 +18,8 @@
       LD   C,15
       RRCA
       DJNZ $+0013H
+      DJNZ $-007EH
+      DJNZ $
       LD   DE,0012H
       LD   (DE),A
       INC  DE
@@ -26,6 +28,8 @@
       LD   D,17H
       RLA
       JR   $+001BH
+      JR   $-007EH
+      JR   $
       ADD  HL,DE
       LD   A,(DE)
       DEC  DE
@@ -34,6 +38,8 @@
       LD   E,1FH
       RRA
       JR   NZ,$+0023H
+      JR   NZ,$-007EH
+      JR   NZ,$
       LD   HL,0022H
       LD   (0023H),HL
       INC  HL
@@ -42,6 +48,8 @@
       LD   H,27H
       DAA
       JR   Z,$+002BH
+      JR   Z,$-007EH
+      JR   Z,$
       ADD  HL,HL
       LD   HL,(002BH)
       DEC  HL
@@ -50,6 +58,8 @@
       LD   L,2FH
       CPL
       JR   NC,$+0033H
+      JR   NC,$-007EH
+      JR   NC,$
       LD   SP,0032H
       LD   (0033H),A
       INC  SP
@@ -58,6 +68,8 @@
       LD   (HL),37H
       SCF
       JR   C,$+003BH
+      JR   C,$-007EH
+      JR   C,$
       ADD  HL,SP
       LD   A,(003BH)
       DEC  SP
@@ -207,7 +219,6 @@
       CALL Z,00CDH
       CALL 00CEH
       ADC  A,0CFH
-      RST  08H
       RET  NC
       POP  DE
       JP   NC,00D3H
@@ -215,14 +226,12 @@
       CALL NC,00D5H
       PUSH DE
       SUB  A,0D7H
-      RST  10H
       RET  C
       EXX
       JP   C,00DBH
       IN   A,(0DCH)
       CALL C,00DDH
       SBC  A,0DFH
-      RST  18H
       RET  PO
       POP  HL
       JP   PO,00E3H
@@ -230,14 +239,12 @@
       CALL PO,00E5H
       PUSH HL
       AND  A,0E7H
-      RST  20H
       RET  PE
       JP   (HL)
       JP   PE,00EBH
       EX   DE,HL
       CALL PE,00EDH
       XOR  A,0EFH
-      RST  28H
       RET  P
       POP  AF
       JP   P,00F3H
@@ -245,14 +252,12 @@
       CALL P,00F5H
       PUSH AF
       OR   A,0F7H
-      RST  30H
       RET  M
       LD   SP,HL
       JP   M,00FBH
       EI
       CALL M,00FDH
       CP   A,0FFH
-      RST  38H
       IN   B,(C)
       OUT  (C),B
       SBC  HL,BC
@@ -271,13 +276,11 @@
       OUT  (C),D
       SBC  HL,DE
       LD   (0054H),DE
-      IM   1
       LD   A,I
       IN   E,(C)
       OUT  (C),E
       ADC  HL,DE
       LD   DE,(005CH)
-      IM   2
       LD   A,R
       IN   H,(C)
       OUT  (C),H
@@ -318,31 +321,56 @@
       LD   IX,(002BH)
       DEC  IX
       INC  (IX+53)
+      INC  (IX-128)
       DEC  (IX+54)
+      DEC  (IX-128)
       LD   (IX+55),0
+      LD   (IX-128),0
       ADD  IX,SP
       LD   B,(IX+71)
+      LD   B,(IX-128)
       LD   C,(IX+79)
+      LD   C,(IX-128)
       LD   D,(IX+87)
+      LD   D,(IX-128)
       LD   E,(IX+95)
+      LD   E,(IX-128)
       LD   H,(IX+103)
+      LD   H,(IX-128)
       LD   L,(IX+111)
+      LD   L,(IX-128)
       LD   (IX+113),B
+      LD   (IX-128),B
       LD   (IX+114),C
+      LD   (IX-128),C
       LD   (IX+115),D
+      LD   (IX-128),D
       LD   (IX+116),E
+      LD   (IX-128),E
       LD   (IX+117),H
+      LD   (IX-128),H
       LD   (IX+118),L
+      LD   (IX-128),L
       LD   (IX+120),A
+      LD   (IX-128),A
       LD   A,(IX+127)
+      LD   A,(IX-128)
       ADD  A,(IX-121)
+      ADD  A,(IX+0)
       ADC  A,(IX-113)
+      ADC  A,(IX+0)
       SUB  A,(IX-105)
+      SUB  A,(IX+0)
       SBC  A,(IX-97)
+      SBC  A,(IX+0)
       AND  A,(IX-89)
+      AND  A,(IX+0)
       XOR  A,(IX-81)
+      XOR  A,(IX+0)
       OR   A,(IX-73)
+      OR   A,(IX+0)
       CP   A,(IX-65)
+      CP   A,(IX+0)
       POP  IX
       EX   (SP),IX
       PUSH IX
@@ -357,31 +385,56 @@
       LD   IY,(002BH)
       DEC  IY
       INC  (IY+53)
+      INC  (IY-128)
       DEC  (IY+54)
+      DEC  (IY-128)
       LD   (IY+55),0
+      LD   (IY-128),0
       ADD  IY,SP
       LD   B,(IY+71)
+      LD   B,(IY-128)
       LD   C,(IY+79)
+      LD   C,(IY-128)
       LD   D,(IY+87)
+      LD   D,(IY-128)
       LD   E,(IY+95)
+      LD   E,(IY-128)
       LD   H,(IY+103)
+      LD   H,(IY-128)
       LD   L,(IY+111)
+      LD   L,(IY-128)
       LD   (IY+113),B
+      LD   (IY-128),B
       LD   (IY+114),C
+      LD   (IY-128),C
       LD   (IY+115),D
+      LD   (IY-128),D
       LD   (IY+116),E
+      LD   (IY-128),E
       LD   (IY+117),H
+      LD   (IY-128),H
       LD   (IY+118),L
+      LD   (IY-128),L
       LD   (IY+120),A
+      LD   (IY-128),A
       LD   A,(IY+127)
+      LD   A,(IY-128)
       ADD  A,(IY-121)
+      ADD  A,(IY+0)
       ADC  A,(IY-113)
+      ADC  A,(IY+0)
       SUB  A,(IY-105)
+      SUB  A,(IY+0)
       SBC  A,(IY-97)
+      SBC  A,(IY+0)
       AND  A,(IY-89)
+      AND  A,(IY+0)
       XOR  A,(IY-81)
+      XOR  A,(IY+0)
       OR   A,(IY-73)
+      OR   A,(IY+0)
       CP   A,(IY-65)
+      CP   A,(IY+0)
       POP  IY
       EX   (SP),IY
       PUSH IY
@@ -451,62 +504,6 @@
       BIT  0,L
       BIT  0,(HL)
       BIT  0,A
-      BIT  1,B
-      BIT  1,C
-      BIT  1,D
-      BIT  1,E
-      BIT  1,H
-      BIT  1,L
-      BIT  1,(HL)
-      BIT  1,A
-      BIT  2,B
-      BIT  2,C
-      BIT  2,D
-      BIT  2,E
-      BIT  2,H
-      BIT  2,L
-      BIT  2,(HL)
-      BIT  2,A
-      BIT  3,B
-      BIT  3,C
-      BIT  3,D
-      BIT  3,E
-      BIT  3,H
-      BIT  3,L
-      BIT  3,(HL)
-      BIT  3,A
-      BIT  4,B
-      BIT  4,C
-      BIT  4,D
-      BIT  4,E
-      BIT  4,H
-      BIT  4,L
-      BIT  4,(HL)
-      BIT  4,A
-      BIT  5,B
-      BIT  5,C
-      BIT  5,D
-      BIT  5,E
-      BIT  5,H
-      BIT  5,L
-      BIT  5,(HL)
-      BIT  5,A
-      BIT  6,B
-      BIT  6,C
-      BIT  6,D
-      BIT  6,E
-      BIT  6,H
-      BIT  6,L
-      BIT  6,(HL)
-      BIT  6,A
-      BIT  7,B
-      BIT  7,C
-      BIT  7,D
-      BIT  7,E
-      BIT  7,H
-      BIT  7,L
-      BIT  7,(HL)
-      BIT  7,A
       RES  0,B
       RES  0,C
       RES  0,D
@@ -515,62 +512,6 @@
       RES  0,L
       RES  0,(HL)
       RES  0,A
-      RES  1,B
-      RES  1,C
-      RES  1,D
-      RES  1,E
-      RES  1,H
-      RES  1,L
-      RES  1,(HL)
-      RES  1,A
-      RES  2,B
-      RES  2,C
-      RES  2,D
-      RES  2,E
-      RES  2,H
-      RES  2,L
-      RES  2,(HL)
-      RES  2,A
-      RES  3,B
-      RES  3,C
-      RES  3,D
-      RES  3,E
-      RES  3,H
-      RES  3,L
-      RES  3,(HL)
-      RES  3,A
-      RES  4,B
-      RES  4,C
-      RES  4,D
-      RES  4,E
-      RES  4,H
-      RES  4,L
-      RES  4,(HL)
-      RES  4,A
-      RES  5,B
-      RES  5,C
-      RES  5,D
-      RES  5,E
-      RES  5,H
-      RES  5,L
-      RES  5,(HL)
-      RES  5,A
-      RES  6,B
-      RES  6,C
-      RES  6,D
-      RES  6,E
-      RES  6,H
-      RES  6,L
-      RES  6,(HL)
-      RES  6,A
-      RES  7,B
-      RES  7,C
-      RES  7,D
-      RES  7,E
-      RES  7,H
-      RES  7,L
-      RES  7,(HL)
-      RES  7,A
       SET  0,B
       SET  0,C
       SET  0,D
@@ -579,62 +520,6 @@
       SET  0,L
       SET  0,(HL)
       SET  0,A
-      SET  1,B
-      SET  1,C
-      SET  1,D
-      SET  1,E
-      SET  1,H
-      SET  1,L
-      SET  1,(HL)
-      SET  1,A
-      SET  2,B
-      SET  2,C
-      SET  2,D
-      SET  2,E
-      SET  2,H
-      SET  2,L
-      SET  2,(HL)
-      SET  2,A
-      SET  3,B
-      SET  3,C
-      SET  3,D
-      SET  3,E
-      SET  3,H
-      SET  3,L
-      SET  3,(HL)
-      SET  3,A
-      SET  4,B
-      SET  4,C
-      SET  4,D
-      SET  4,E
-      SET  4,H
-      SET  4,L
-      SET  4,(HL)
-      SET  4,A
-      SET  5,B
-      SET  5,C
-      SET  5,D
-      SET  5,E
-      SET  5,H
-      SET  5,L
-      SET  5,(HL)
-      SET  5,A
-      SET  6,B
-      SET  6,C
-      SET  6,D
-      SET  6,E
-      SET  6,H
-      SET  6,L
-      SET  6,(HL)
-      SET  6,A
-      SET  7,B
-      SET  7,C
-      SET  7,D
-      SET  7,E
-      SET  7,H
-      SET  7,L
-      SET  7,(HL)
-      SET  7,A
       RLC  (IX+127)
       RRC  (IX+127)
       RL   (IX+127)

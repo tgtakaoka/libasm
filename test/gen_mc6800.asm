@@ -19,20 +19,50 @@
       DAA
       ABA
       BRA   *+$0023
+      BRA   *-$007E
+      BRA   *
       BHI   *+$0025
+      BHI   *-$007E
+      BHI   *
       BLS   *+$0026
+      BLS   *-$007E
+      BLS   *
       BHS   *+$0027
+      BHS   *-$007E
+      BHS   *
       BLO   *+$0028
+      BLO   *-$007E
+      BLO   *
       BNE   *+$0029
+      BNE   *-$007E
+      BNE   *
       BEQ   *+$002A
+      BEQ   *-$007E
+      BEQ   *
       BVC   *+$002B
+      BVC   *-$007E
+      BVC   *
       BVS   *+$002C
+      BVS   *-$007E
+      BVS   *
       BPL   *+$002D
+      BPL   *-$007E
+      BPL   *
       BMI   *+$002E
+      BMI   *-$007E
+      BMI   *
       BGE   *+$002F
+      BGE   *-$007E
+      BGE   *
       BLT   *+$0030
+      BLT   *-$007E
+      BLT   *
       BGT   *+$0031
+      BGT   *-$007E
+      BGT   *
       BLE   *+$0032
+      BLE   *-$007E
+      BLE   *
       TSX
       INS
       PULA
@@ -80,17 +110,29 @@
       JMP   111,X
       CLR   112,X
       NEG   >$0071
+      NEG   $0100
       COM   >$0074
+      COM   $0100
       LSR   >$0075
+      LSR   $0100
       ROR   >$0077
+      ROR   $0100
       ASR   >$0078
+      ASR   $0100
       ASL   >$0079
+      ASL   $0100
       ROL   >$007A
+      ROL   $0100
       DEC   >$007B
+      DEC   $0100
       INC   >$007D
+      INC   $0100
       TST   >$007E
+      TST   $0100
       JMP   >$007F
+      JMP   $0100
       CLR   >$0080
+      CLR   $0100
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
@@ -103,6 +145,8 @@
       ADDA  #$8C
       CPX   #$008D
       BSR   *-$0070
+      BSR   *
+      BSR   *+1
       LDS   #$008F
       SUBA  $91
       CMPA  $92
@@ -146,6 +190,7 @@
       ADDA  >$00BC
       CPX   >$00BD
       JSR   >$00BE
+      JSR   $0100
       LDS   >$00BF
       STS   >$00C0
       SUBB  #$C1
@@ -197,4 +242,3 @@
       ORAB  >$00FB
       ADDB  >$00FC
       LDX   >$00FF
-      STX   $0100
