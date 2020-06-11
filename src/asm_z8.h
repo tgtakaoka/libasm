@@ -60,16 +60,19 @@ private:
         InsnZ8 &insn, const AddrMode mode, const Operand &op);
     Error encodeAbsolute(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeRelative(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    Error encodeRelative(InsnZ8 &insn, const Operand &op);
     Error encodeIndexed(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeIndirectRegPair(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeInOpCode(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeTwoOperands(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    Error encodeMultiOperands(
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
+        const Operand &extOp);
+    Error encodePostByte(
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
+        const Operand &extOp);
     Error processPseudo(InsnZ8 &insn, const char *line);
     Error encode(Insn &insn) override;
 };

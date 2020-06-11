@@ -553,6 +553,9 @@ static void test_error() {
     TEST(                  "DEC @>15H",  0x01, 0x15);
     ETEST(UNKNOWN_OPERAND, "DEC @ >15H");
     ETEST(UNKNOWN_OPERAND, "DEC @> 15H");
+    TEST(                  "LD  R12,0C9H(R8)",  0xC7, 0xC8, 0xC9);
+    ETEST(OVERFLOW_RANGE,  "LD  R12,-1(R8)");
+    ETEST(OVERFLOW_RANGE,  "LD  R12,256(R8)");
 }
 
 static void run_test(void (*test)(), const char *test_name) {

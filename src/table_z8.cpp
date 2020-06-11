@@ -207,6 +207,10 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
     P(0xA7, P4_1, LDE,   M_r,   M_DA,  M_NO)
     P(0xB7, P4_0, LDC,   M_DA,  M_r,   M_NO)
     P(0xB7, P4_1, LDE,   M_DA,  M_r,   M_NO)
+    P(0xE7, P1_0, LDC,   M_r,   M_XS,  M_NO)
+    P(0xE7, P1_1, LDE,   M_r,   M_XS,  M_NO)
+    P(0xF7, P1_0, LDC,   M_XS,  M_r,   M_NO)
+    P(0xF7, P1_1, LDE,   M_XS,  M_r,   M_NO)
     P(0xA7, P1_0, LDC,   M_r,   M_XL,  M_NO)
     P(0xA7, P1_1, LDE,   M_r,   M_XL,  M_NO)
     P(0xB7, P1_0, LDC,   M_XL,  M_r,   M_NO)
@@ -218,10 +222,6 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
     P(0xC3, P1_1, LDE,   M_r,   M_Irr, M_NO)
     P(0xD3, P1_0, LDC,   M_Irr, M_r,   M_NO)
     P(0xD3, P1_1, LDE,   M_Irr, M_r,   M_NO)
-    P(0xE7, P1_0, LDC,   M_r,   M_XS,  M_NO)
-    P(0xE7, P1_1, LDE,   M_r,   M_XS,  M_NO)
-    P(0xF7, P1_0, LDC,   M_XS,  M_r,   M_NO)
-    P(0xF7, P1_1, LDE,   M_XS,  M_r,   M_NO)
     P(0xE2, P1_0, LDCD,  M_r,   M_Irr, M_NO)
     P(0xE2, P1_1, LDED,  M_r,   M_Irr, M_NO)
     P(0xE3, P1_0, LDCI,  M_r,   M_Irr, M_NO)
@@ -288,6 +288,9 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IW)  return table == M_Ir || table == M_IR;
     if (opr == M_IWW) return table == M_Irr || table == M_IRR
                           || table == M_Ir  || table == M_Irr;
+    if (opr == M_Xmi) return table == M_X || table == M_XS;
+    if (opr == M_XS)  return table == M_X || table == M_XL;
+    if (opr == M_XL)  return table == M_X;
     return false;
 }
 

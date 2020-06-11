@@ -29,32 +29,33 @@ enum CpuType {
 };
 
 enum AddrMode {
-    // Those (0~3) happen all operands including extra.
+    // Those (0~7) happen all operands including extra.
     M_NO  = 0,   // No operand
     M_IM  = 1,   // Immediate: #nn
     M_r   = 2,   // Working register: rn
     M_RA  = 3,   // Relative Address: nnnn
     M_IMb = 4,   // Bit position: #n
-    // Those (4~16)  happen on destination and source operands.
-    M_R   = 5,   // Register: Rn
-    M_IR  = 6,   // Indirect Register: @Rn
-    M_Ir  = 7,   // Indirect Working register: @rn
-    M_IRR = 8,   // Indirect Register Pair: @RRn
-    M_Irr = 9,   // Indirect Working Register Pair: @rrn
-    M_X   = 10,  // Indexed: nn(rn)
-    M_DA  = 11,  // Direct Address: nnnn
-    M_cc  = 12,  // Condition Code: cc
-    M_rr  = 13,  // Working register pair: rrn
+    M_DA  = 5,   // Direct Address: nnnn
+    M_R   = 6,   // Register: Rn
+    M_RR  = 7,   // Register Pair: RRn
+    // Those (6~16)  happen on destination and source operands.
+    M_IR  = 8,   // Indirect Register: @Rn
+    M_Ir  = 9,   // Indirect Working register: @rn
+    M_IRR = 10,   // Indirect Register Pair: @RRn
+    M_Irr = 11,  // Indirect Working Register Pair: @rrn
+    M_X   = 12,  // Indexed: nn(rn)
+    M_cc  = 13,  // Condition Code: cc
+    M_rr  = 14,  // Working register pair: rrn
     // Super8
-    M_IML = 14,  // Immediate Long: #nnnn
-    M_RR  = 15,  // Register Pair: RRn
+    M_IML = 15,  // Immediate Long: #nnnn
     M_XS  = 16,  // Indexed Short: nn(rrn)
     M_XL  = 17,  // Indexed Long: nnnn(rnn)
-    // Those (17~20) happen only in assembler internal.
+    // Those (18-) happen only in assembler internal.
     M_W   = 18,  // Register or Working register: Rxy x==RP
     M_IW  = 19,  // Indirect Register or Working register: @Rxy x==RP
     M_IWW = 20,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
     M_WW  = 21,  // Register or Working register pair: RRxy: x=RP
+    M_Xmi = 22,  // Indexed disp >= -128 && disp < 0
 };
 
 // Post byte format

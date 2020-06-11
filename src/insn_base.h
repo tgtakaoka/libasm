@@ -181,6 +181,14 @@ public:
             : _insn.emitUint16Le(val);
     }
 
+    Error emitUint16Be(uint16_t val) {
+        return _insn.emitUint16Be(val);
+    }
+
+    Error emitUint16Le(uint16_t val) {
+        return _insn.emitUint16Le(val);
+    }
+
     Error emitUint32(uint32_t val) {
         return (Conf::ENDIAN == ENDIAN_BIG)
             ? _insn.emitUint32Be(val)
