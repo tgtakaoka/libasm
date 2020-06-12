@@ -22,6 +22,8 @@
         jp      @24H
         da      23H
         pop     23H
+        com     23H
+        push    23H
         decw    23H
         rl      23H
         incw    23H
@@ -36,6 +38,8 @@
         srp     #20h
         da      @24H
         pop     @24H
+        com     @24H
+        push    @24H
         decw    @24H
         rl      @24H
         incw    @24H
@@ -52,6 +56,8 @@
         jp      @rr2
         da      r2
         pop     r2
+        com     r2
+        push    r2
         decw    r2
         rl      r2
         incw    r2
