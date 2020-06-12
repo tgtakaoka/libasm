@@ -40,6 +40,7 @@ public:
     int disassemble();
 
 private:
+    bool _relativeTarget;
     bool _uppercase;
     bool _verbose;
     std::vector<Disassembler *> _disassemblers;

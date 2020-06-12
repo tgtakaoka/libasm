@@ -64,6 +64,7 @@ int DisDriver::usage() {
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  <input>     : file can be Motorola S-Record or Intel HEX format\n"
+            "  -r          : use program counter relative notation\n"
             "  -u          : use uppercase letter for output\n"
             "  -v          : print progress verbosely\n",
             _progname, cpuOption, cpuList.c_str());
@@ -83,6 +84,7 @@ int DisDriver::disassemble() {
         return 1;
     fclose(input);
 
+    _disassembler->setRelativeTarget(_relativeTarget);
     DisDirective listing(*_disassembler, memory, _uppercase);
     FILE *output = nullptr;
     if (_output_name) {
@@ -232,6 +234,7 @@ Disassembler *DisDriver::defaultDisassembler() {
 
 int DisDriver::parseOption(int argc, const char **argv) {
     _progname = basename(argv[0]);
+    _relativeTarget = false;
     _uppercase = false;
     _verbose = false;
     _input_name = nullptr;
@@ -276,6 +279,9 @@ int DisDriver::parseOption(int argc, const char **argv) {
                 _disassembler = disassembler;
                 break;
             }
+            case 'r':
+                _relativeTarget = true;
+                break;
             case 'u':
                 _uppercase = true;
                 break;
