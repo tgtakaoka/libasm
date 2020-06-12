@@ -38,11 +38,10 @@ public:
     const char *getCpu() const override { return TableZ8.getCpu(); }
 
     void reset() override {
-        setRegisterPointer(0);
+        enableRegPointer(false);
     }
-    bool setRegisterPointer(uint8_t rp) {
-        return _regs.setRegPointer(rp);
-    }
+    void enableRegPointer(bool enable) { _regs.enableRegPointer(enable); }
+    bool setRegPointer(uint8_t rp) { return _regs.setRegPointer(rp); }
 
 private:
     IntelValueParser _parser;
@@ -61,16 +60,19 @@ private:
         InsnZ8 &insn, const AddrMode mode, const Operand &op);
     Error encodeAbsolute(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeRelative(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    Error encodeRelative(InsnZ8 &insn, const Operand &op);
     Error encodeIndexed(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeIndirectRegPair(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeInOpCode(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeTwoOperands(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    Error encodeMultiOperands(
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
+        const Operand &extOp);
+    Error encodePostByte(
+        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
+        const Operand &extOp);
     Error processPseudo(InsnZ8 &insn, const char *line);
     Error encode(Insn &insn) override;
 };

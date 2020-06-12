@@ -30,24 +30,38 @@ public:
 
     AddrMode dstMode() const { return Entry::_dstMode(_flags); }
     AddrMode srcMode() const { return Entry::_srcMode(_flags); }
-
-    uint8_t flags() const { return _flags; }
-    void setFlags(uint8_t flags) {
+    AddrMode extMode() const { return Entry::_extMode(_flags); }
+    PostFormat postFormat() const { return Entry::_postFormat(_flags); }
+    uint16_t flags() const { return _flags; }
+    void setFlags(uint16_t flags) {
         _flags = flags;
     }
 
-    void setAddrMode(AddrMode dstMode, AddrMode srcMode) {
-        _flags = Entry::_flags(dstMode, srcMode);
+    void setAddrMode(AddrMode dstMode, AddrMode srcMode, AddrMode extMode) {
+        _flags = Entry::_flags(dstMode, srcMode, extMode, postFormat());
     }
 
     Config::opcode_t opCode() const { return _opCode; }
+    uint8_t post() const { return _insn.bytes()[1]; }
+
     static bool operandInOpCode(Config::opcode_t opCode) {
         const Config::opcode_t low4 = opCode & 0xF;
         return low4 >= 0x8 && low4 < 0xF;
     }
+    bool singleByteOpCode() const {
+        const Config::opcode_t low4 = _opCode & 0xF;
+        return low4 == 0x0E || low4 == 0xF;
+    }
+
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
+    Error readPost(DisMemory &memory) {
+        uint8_t post;
+        return readByte(memory, post) ? NO_MEMORY : OK;
+    }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
@@ -58,7 +72,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint8_t _flags;
+    uint16_t _flags;
 };
 
 } // namespace z8

@@ -24,8 +24,8 @@ namespace z8 {
 
 struct Config : ConfigImpl<
     ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, uint8_t, 3,
-    ENDIAN_BIG, 4>
+    OPCODE_8BIT, uint8_t, 4,
+    ENDIAN_BIG, 7>
 {};
 
 } // namespace z8

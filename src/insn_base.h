@@ -158,6 +158,12 @@ public:
             ? _insn.readUint16Be(memory, val)
             : _insn.readUint16Le(memory, val);
     }
+    Error readUint16Be(DisMemory &memory, uint16_t &val) {
+        return _insn.readUint16Be(memory, val);
+    }
+    Error readUint16Le(DisMemory &memory, uint16_t &val) {
+        return _insn.readUint16Le(memory, val);
+    }
 
     Error readUint32(DisMemory &memory, uint32_t &val) {
         return (Conf::ENDIAN == ENDIAN_BIG)
@@ -173,6 +179,14 @@ public:
         return (Conf::ENDIAN == ENDIAN_BIG)
             ? _insn.emitUint16Be(val)
             : _insn.emitUint16Le(val);
+    }
+
+    Error emitUint16Be(uint16_t val) {
+        return _insn.emitUint16Be(val);
+    }
+
+    Error emitUint16Le(uint16_t val) {
+        return _insn.emitUint16Le(val);
     }
 
     Error emitUint32(uint32_t val) {

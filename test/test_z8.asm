@@ -17,8 +17,10 @@
         org     0
         include "test_z8.inc"
 
+        align   32
+        include "test_z86.inc"
+
         end
-        ;; comment
 
 ;;; Local Variables:
 ;;; mode: asm

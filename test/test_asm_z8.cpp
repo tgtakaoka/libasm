@@ -133,7 +133,6 @@ static void test_relative() {
 
 static void test_operand_in_opcode() {
     TEST("LD R0,>09H",  0x08, 0x09);
-    TEST("LD R0,9",     0x08, 0xE9);
     TEST("LD R0,R9",    0x08, 0xE9);
     TEST("LD R1,>0FH",  0x18, 0x0F);
     TEST("LD R2,R0",    0x28, 0xE0);
@@ -152,9 +151,8 @@ static void test_operand_in_opcode() {
     TEST("LD R15,0F9H", 0xF8, 0xF9);
 
     TEST("LD >0AH,R0",  0x09, 0x0A);
-    TEST("LD 10,R0",    0xA8, 0xE0);
     TEST("LD >0FH,R1",  0x19, 0x0F);
-    TEST("LD R0,R2",    0x08, 0xE2);
+    TEST("LD >00H,R2",  0x29, 0x00);
     TEST("LD 10H,R3",   0x39, 0x10);
     TEST("LD 4AH,R4",   0x49, 0x4A);
     TEST("LD 5AH,R5",   0x59, 0x5A);
@@ -537,9 +535,9 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "JP   C,UNDEF", 0x7D, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JP   UNDEF",   0x8D, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "CALL UNDEF",   0xD6, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD R0,UNDEF",  0x08, 0xE0);
-    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,R0",  0x08, 0xE0);
-    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,UNDEF", 0x08, 0xE0);
+    ETEST(UNDEFINED_SYMBOL, "LD R0,UNDEF",  0x08, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,R0",  0x09, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD UNDEF,UNDEF", 0xE4, 0x00, 0x00);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",      0x8B, 0xFE);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JR Z,UNDEF",    0x6B, 0xFE);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ R0,UNDEF", 0x0A, 0xFE);
@@ -555,6 +553,9 @@ static void test_error() {
     TEST(                  "DEC @>15H",  0x01, 0x15);
     ETEST(UNKNOWN_OPERAND, "DEC @ >15H");
     ETEST(UNKNOWN_OPERAND, "DEC @> 15H");
+    TEST(                  "LD  R12,0C9H(R8)",  0xC7, 0xC8, 0xC9);
+    ETEST(OVERFLOW_RANGE,  "LD  R12,-1(R8)");
+    ETEST(OVERFLOW_RANGE,  "LD  R12,256(R8)");
 }
 
 static void run_test(void (*test)(), const char *test_name) {

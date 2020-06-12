@@ -17,7 +17,6 @@
 #include "config_z8.h"
 #include "reg_z8.h"
 #include "table_z8.h"
-#include "reg_z8.h"
 
 #include <ctype.h>
 
@@ -26,7 +25,8 @@ namespace z8 {
 
 RegZ8::RegZ8()
     : _enableRegPointer(false),
-      _regPointer(0)
+      _regPointer0(0),
+      _regPointer1(0)
 {}
 
 void RegZ8::enableRegPointer(bool enabled) {
@@ -34,22 +34,38 @@ void RegZ8::enableRegPointer(bool enabled) {
 }
 
 bool RegZ8::setRegPointer(uint8_t rp) {
-    if (rp & 0x0F) return false;
-    _regPointer = rp;
+    return setRegPointer0(rp) && setRegPointer1(rp + 8);
+}
+
+bool RegZ8::setRegPointer0(uint8_t rp0) {
+    if (rp0 & ~0xF8) return false;
+    _regPointer0 = rp0;
+    _enableRegPointer = true;
+    return true;
+}
+
+bool RegZ8::setRegPointer1(uint8_t rp1) {
+    if (rp1 & ~0xF8) return false;
+    _regPointer1 = rp1;
     _enableRegPointer = true;
     return true;
 }
 
 bool RegZ8::isWorkReg(uint8_t regAddr) const {
-    return _enableRegPointer && (regAddr & 0xF0) == _regPointer;
+    if (!_enableRegPointer) return false;
+    const uint8_t regPage = (regAddr & 0xF8);
+    return regPage == _regPointer0
+        || regPage == _regPointer1;
 }
 
 bool RegZ8::isWorkRegAlias(uint8_t regAddr) const {
-    return (regAddr & 0xF0) == 0xE0;
+    return (regAddr & 0xF0) ==
+        (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
 uint8_t RegZ8::encodeWorkRegAddr(RegName regName) const {
-    return encodeRegName(regName) | 0xE0;
+    return encodeRegName(regName)
+        | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
 static bool isidchar(const char c) {

@@ -48,17 +48,20 @@ private:
 
     RegBase &getRegister() override { return _regs; }
     void outCcName(Config::opcode_t opCode);
-    void outIndexed(uint8_t base, RegName idx);
+    void outIndexed(uint16_t base, RegName idx, AddrMode mode);
     Error outWorkReg(uint8_t regNum, bool indir = false, bool pair = false);
     Error outRegAddr(uint8_t regAddr, bool indir = false, bool pair = false);
+    Error outBitPos(uint8_t bitPos);
 
     Error decodeOperand(DisMemory &memory, InsnZ8 &insn, AddrMode mode);
-    Error decodeAbsolute(DisMemory &memory, InsnZ8 &insn);
+    Error decodeAbsolute(
+        DisMemory &memory, InsnZ8 &insn, Endian endian = ENDIAN_BIG);
     Error decodeRelative(DisMemory &memory, InsnZ8 &insn);
-    Error decodeIndexed(DisMemory &memory, InsnZ8 &insn);
+    Error decodeIndexed(DisMemory &memory, InsnZ8 &insn, uint8_t opr1);
     Error decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn);
     Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn);
     Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn);
+    Error decodePostByte(DisMemory &memory, InsnZ8 &insn);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 
