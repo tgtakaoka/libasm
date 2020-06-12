@@ -35,17 +35,17 @@ class Disassembler
       virtual public ConfigBase {
 public:
     Error decode(
-        DisMemory &memory, Insn &insn,
-        char *operands, SymbolTable *symtab, bool uppercase = false);
+        DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
 
     virtual ValueFormatter &getFormatter() = 0;
-
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
+    void setUppercase(bool uppercase) { _uppercase = uppercase; }
 
 protected:
     char *_operands;
     SymbolTable *_symtab;
     bool _relativeTarget = false;
+    bool _uppercase = false;
 
     void outText(const char *text);
 

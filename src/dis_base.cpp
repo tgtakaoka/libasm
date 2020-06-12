@@ -19,16 +19,15 @@
 namespace libasm {
 
 Error Disassembler::decode(
-    DisMemory &memory, Insn &insn,
-    char *operands, SymbolTable *symtab, bool uppercase) {
+    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     insn.resetAddress(memory.address());
     *(_operands = operands) = 0;
     _symtab = symtab;
     this->resetError();
-    getFormatter().setUppercase(uppercase);
-    getRegister().setUppercase(uppercase);
+    getFormatter().setUppercase(_uppercase);
+    getRegister().setUppercase(_uppercase);
     decode(memory, insn);
-    if (!uppercase) insn.toLowerName();
+    if (!_uppercase) insn.toLowerName();
     return getError();
 }
 

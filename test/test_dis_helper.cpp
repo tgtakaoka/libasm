@@ -33,7 +33,8 @@ void dis_assert(
     Disassembler &disassembler) {
     Insn insn;
     char actual_opr[40], message[80];
-    disassembler.decode(memory, insn, actual_opr, &symtab, true);
+    disassembler.setUppercase(true);
+    disassembler.decode(memory, insn, actual_opr, &symtab);
     sprintf(message, "%s:%d: %s: ", file, line, expected_name);
     memory.dump(message + strlen(message));
     asserter.equals(message, error, disassembler);

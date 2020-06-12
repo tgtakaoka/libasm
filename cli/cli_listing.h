@@ -57,7 +57,9 @@ public:
 
 class CliListing {
 public:
-    void reset(ListingLine &line, bool uppercase, bool lineNumner);
+    void reset(ListingLine &line);
+    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    void enableLineNumber(bool enable) { _lineNumber = enable; }
     bool hasNext() const;
     const char *getContent();
     const char *getLine();

@@ -199,7 +199,9 @@ public:
     DisExample(Disassembler &disassembler)
         : BaseExample(&disassembler, "Dis"),
           _disassembler(disassembler)
-    {}
+    {
+        _disassembler.setUppercase(true);
+    }
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
@@ -213,7 +215,7 @@ private:
         char operands[40];
         Insn insn;
         while (memory.hasNext()) {
-            if (_disassembler.decode(memory, insn, operands, this, true)) {
+            if (_disassembler.decode(memory, insn, operands, this)) {
                 _cli.print(F("Error: "));
                 _cli.println(_disassembler.errorText());
             } else {

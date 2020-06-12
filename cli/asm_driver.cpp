@@ -164,7 +164,9 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
 }
 
 void AsmDriver::printListing(CliMemory &memory, FILE *out) {
-    _listing.reset(_commonDir, _uppercase, _line_number);
+    _listing.setUppercase(_uppercase);
+    _listing.enableLineNumber(_line_number);
+    _listing.reset(_commonDir);
     do {
         fprintf(out, "%s\n", _listing.getLine());
     } while (_listing.hasNext());

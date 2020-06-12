@@ -150,15 +150,13 @@ public:
         Disassembler &dis,
         typename Conf::uintptr_t addr,
         uint8_t *memory,
-        int size,
-        bool uppercase) {
+        int size) {
         this->_address = addr;
         _memory = memory;
         _memorySize = size;
         _memoryIndex = 0;
 
-        return dis.decode(
-            *this, _insn, _operands.buffer(), nullptr, uppercase);
+        return dis.decode(*this, _insn, _operands.buffer(), nullptr);
     }
 
 private:
@@ -193,7 +191,6 @@ public:
 
     class Printer {
     public:
-        virtual bool uppercase() = 0;
         virtual void print(const Insn &insn, const char *operands) = 0;
         virtual void origin(typename Conf::uintptr_t addr) = 0;
     };
@@ -296,9 +293,7 @@ private:
         do {
             gen.next();
             gen.debugPrint("@@  loop", _memory);
-            _data.tryGenerate(
-                _disassembler, _addr, _memory, _memorySize,
-                _printer->uppercase());
+            _data.tryGenerate(_disassembler, _addr, _memory, _memorySize);
             if (_disassembler.getError() == OK) {
                 int size = _data.insn().length() - (gen.pos() + gen.size());
                 if (size > 0) {

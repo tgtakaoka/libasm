@@ -44,7 +44,6 @@ private:
     Disassembler &_disassembler;
     CliMemory &_memory;
     CliListing _listing;
-    bool _uppercase;
     int _labelWidth;
     int _operandWidth;
     uint32_t _address;

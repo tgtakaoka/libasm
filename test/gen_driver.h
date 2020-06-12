@@ -44,6 +44,8 @@ public:
         if (parseOption(argc, argv))
             return usage();
 
+        _disassembler.setUppercase(_uppercase);
+        _listing.setUppercase(_uppercase);
         _output = nullptr;
         if (_output_name) {
             _output = fopen(_output_name, "w");
@@ -93,14 +95,13 @@ private:
     const char *_instruction;
 
     // TestGenerator<Addr>::Printer
-    bool uppercase() override { return _uppercase; }
     void print(const Insn &insn, const char *operands) override {
         _insn = &insn;
         _address = insn.address();
         _generated_size = insn.length();
         _instruction = insn.name();
         _operands = operands;
-        _listing.reset(*this, _uppercase, false);
+        _listing.reset(*this);
         if (_list) {
             do {
                 fprintf(_list, "%s\n", _listing.getLine());
@@ -118,10 +119,10 @@ private:
         char operands[40];
         _disassembler.getFormatter().output(
             operands, addr, 16, false, _disassembler.addressWidth());
-        _listing.reset(*this, _uppercase, false);
+        _listing.reset(*this);
         _address = addr;
         _generated_size = 0;
-        _instruction = _uppercase ? "ORG" : "org";
+        _instruction = "ORG";
         _operands = operands;
         if (_list) {
             fprintf(_list, "%s\n", _listing.getLine());

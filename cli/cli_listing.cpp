@@ -21,10 +21,8 @@
 namespace libasm {
 namespace cli {
 
-void CliListing::reset(ListingLine &line, bool uppercase, bool lineNumner) {
+void CliListing::reset(ListingLine &line) {
     _line = &line;
-    _uppercase = uppercase;
-    _lineNumber = lineNumner;
     _next = 0;
 }
 
@@ -146,6 +144,14 @@ void CliListing::formatTab(size_t pos, int delta) {
         _out += ' ';
 }
 
+static void convertCase(const std::string &src, std::string &out, bool uppercase) {
+    for (char c : src) {
+        if (uppercase) c = toupper(c);
+        else c = tolower(c);
+        out += c;
+    }
+}
+
 void CliListing::formatContent(int pos) {
     if (!_line->hasLabel() && !_line->hasInstruction() && _line->hasComment()) {
         formatTab(pos);
@@ -158,7 +164,7 @@ void CliListing::formatContent(int pos) {
     }
     if (_line->hasInstruction()) {
         formatTab(pos + _line->labelWidth(), 8);
-        _out += _line->getInstruction();
+        convertCase(_line->getInstruction(), _out, _uppercase);
     }
     if (_line->hasOperand()) {
         formatTab(pos + _line->labelWidth()

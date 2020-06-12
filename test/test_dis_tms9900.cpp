@@ -356,7 +356,8 @@ static void assert_mid(
             bytes[pos + 2] = post >> 8;
             bytes[pos + 3] = post;
             memory.setMemory(bytes, sizeof(bytes));
-            disassembler.decode(memory, insn, operands, nullptr, true);
+            disassembler.setUppercase(true);
+            disassembler.decode(memory, insn, operands, nullptr);
             if (m && i > m->end) {
                 if (++m >= end)
                     m = nullptr;
