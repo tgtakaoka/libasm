@@ -25,6 +25,7 @@ AsmZ8 asmz8;
 Assembler &assembler(asmz8);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("Super8");
 }
 
@@ -532,42 +533,6 @@ static void test_bit_operation() {
 }
 
 static void test_setrp() {
-    TEST("SETRP 0");
-    TEST("LD  21H,R4",   0x49, 0x21);
-    TEST("LD  R4,21H",   0x48, 0x21);
-    TEST("LD  21H,#66H", 0xE6, 0x21, 0x66);
-    ETEST(UNKNOWN_OPERAND, "LD 21H,33H(R4)"); // LD R,X
-    ETEST(UNKNOWN_OPERAND, "LD 33H(R4),21H"); // LD X,R
-    TEST("LD  21H,24H",  0xE4, 0x24, 0x21);
-    TEST("LD  24H,21H",  0XE4, 0x21, 0x24);
-    TEST("LD  21H,@24H", 0xE5, 0x24, 0x21);
-    TEST("LD  @21H,24H", 0xF5, 0x24, 0x21);
-    TEST("ADD 21H,24H" , 0x04, 0x24, 0x21);
-    TEST("ADD 21H,@24H", 0x05, 0x24, 0x21);
-    TEST("LDE  R1,@RR4",  0xC3, 0x15);
-    TEST("LDE  @RR4,R1",  0xD3, 0x15);
-    TEST("DJNZ R1,$",     0x1A, 0xFE);
-    TEST("JP   @24H",     0x30, 0x24);
-    TEST("CALL @24H",     0xF4, 0x24);
-
-    TEST("SETRP 21H & 0F0H");
-    TEST("LD  21H,R4",   0x18, 0xC4);
-    TEST("LD  R4,21H",   0x48, 0xC1);
-    TEST("LD  21H,#66H", 0x1C, 0x66);
-    TEST("LD  21H,33H(R4)", 0x87, 0x14, 0x33); // LD r,X
-    TEST("LD  33H(R4),21H", 0x97, 0x14, 0x33); // LD X,r
-    TEST("LD  21H,24H",  0x18, 0xC4);
-    TEST("LD  24H,21H",  0X48, 0xC1);
-    TEST("LD  21H,@24H", 0xC7, 0x14);
-    TEST("LD  @21H,24H", 0xD7, 0x14);
-    TEST("ADD 21H,24H",  0x02, 0x14);
-    TEST("ADD 21H,@24H", 0x03, 0x14);
-    TEST("LDE  21H,@24H",  0xC3, 0x15);
-    TEST("LDE  @24H,21H",  0xD3, 0x15);
-    TEST("DJNZ 21H,$",     0x1A, 0xFE);
-    TEST("JP   @24H",      0x30, 0xC4);
-    TEST("CALL @24H",      0xF4, 0xC4);
-
     TEST(                   "SRP #10H", 0x31, 0x10);
     ETEST(ILLEGAL_CONSTANT, "SRP #11H");
     ETEST(ILLEGAL_CONSTANT, "SRP #12H");
@@ -585,6 +550,104 @@ static void test_setrp() {
     ETEST(ILLEGAL_CONSTANT, "SRP #1EH");
     ETEST(ILLEGAL_CONSTANT, "SRP #1FH");
     TEST(                   "SRP #20H", 0x31, 0x20);
+
+    TEST(                   "SRP0 #10H", 0x31, 0x12);
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #11H");
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #12H");
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #13H");
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #14H");
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #15H");
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #16H");
+    ETEST(ILLEGAL_CONSTANT, "SRP0 #17H");
+    TEST(                   "SRP0 #18H", 0x31, 0x1A);
+
+    TEST(                   "SRP1 #10H", 0x31, 0x11);
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #11H");
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #12H");
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #13H");
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #14H");
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #15H");
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #16H");
+    ETEST(ILLEGAL_CONSTANT, "SRP1 #17H");
+    TEST(                   "SRP1 #18H", 0x31, 0x19);
+
+    TEST("SETRP 0");
+    TEST("LD  22H,R10",  0xA9, 0x22);
+    TEST("LD  R10,22H",  0xA8, 0x22);
+    TEST("LD  22H,2AH",  0xE4, 0x2A, 0x22);
+    TEST("LD  2AH,22H",  0XE4, 0x22, 0x2A);
+    TEST("LD  22H,@2AH", 0xE5, 0x2A, 0x22);
+    TEST("LD  @22H,2AH", 0xF5, 0x2A, 0x22);
+    TEST("LD  22H,#66H", 0xE6, 0x22, 0x66);
+    TEST("LD  2AH,#66H", 0xE6, 0x2A, 0x66);
+    TEST("ADD 22H,2AH" , 0x04, 0x2A, 0x22);
+    TEST("ADD 2AH,@22H", 0x05, 0x22, 0x2A);
+    ETEST(UNKNOWN_OPERAND, "LD 22H,33H(R10)"); // LD R,dd(r)
+    ETEST(UNKNOWN_OPERAND, "LD 33H(22H),R10"); // LD dd(R),r
+    TEST("LDC R2,@RR10", 0xC3, 0x2A);
+    TEST("LDC @RR10,R2", 0xD3, 0x2A);
+    ETEST(UNKNOWN_OPERAND, "DJNZ 22H,$");
+    ETEST(UNKNOWN_OPERAND, "DJNZ 24H,$");
+
+    TEST("SETRP 22H & 0F0H");
+    TEST("LD  22H,R10",  0x28, 0xCA);
+    TEST("LD  R10,22H",  0xA8, 0xC2);
+    TEST("LD  22H,2AH",  0x28, 0xCA);
+    TEST("LD  2AH,22H",  0XA8, 0xC2);
+    TEST("LD  22H,@2AH", 0xC7, 0x2A);
+    TEST("LD  @22H,2AH", 0xD7, 0x2A);
+    TEST("LD  22H,#66H", 0x2C, 0x66);
+    TEST("LD  2AH,#66H", 0xAC, 0x66);
+    TEST("ADD 22H,2AH" , 0x02, 0x2A);
+    TEST("ADD 2AH,@22H", 0x03, 0xA2);
+    TEST("LD  22H,33H(2AH)", 0x87, 0x2A, 0x33); // LD R2,33H(R10)
+    TEST("LD  33H(2AH),22H", 0x97, 0x2A, 0x33); // LD 33H(R10),R2
+    TEST("LDC 22H,@2AH", 0xC3, 0x2A);
+    TEST("LDC @2AH,22H", 0xD3, 0x2A);
+    TEST("DJNZ 22H,$",   0x2A, 0xFE);
+    TEST("DJNZ 2AH,$",   0xAA, 0xFE);
+
+    TEST("SETRP0 20H");
+    TEST("SETRP1 00H");
+    TEST("LD  22H,R10",  0x28, 0xCA);
+    TEST("LD  R10,22H",  0xA8, 0xC2);
+    TEST("LD  22H,2AH",  0x28, 0x2A);
+    TEST("LD  2AH,22H",  0X29, 0x2A);
+    TEST("LD  22H,@2AH", 0xE5, 0x2A, 0xC2);
+    TEST("LD  @22H,2AH", 0xF5, 0x2A, 0xC2);
+    TEST("LD  22H,#66H", 0x2C, 0x66);
+    TEST("LD  2AH,#66H", 0xE6, 0x2A, 0x66);
+    TEST("ADD 22H,2AH" , 0x04, 0x2A, 0xC2);
+    TEST("ADD 2AH,@22H", 0x05, 0xC2, 0x2A);
+    TEST("LD  22H,33H(R10)", 0x87, 0x2A, 0x33); // LD R2,33H(R10)
+    TEST("LD  33H(R10),22H", 0x97, 0x2A, 0x33); // LD 33H(R10),R2
+    TEST("LD  R10,33H(22H)", 0x87, 0xA2, 0x33); // LD R10,33H(R2)
+    TEST("LD  33H(22H),R10", 0x97, 0xA2, 0x33); // LD 33H(R2),R10
+    TEST("LDC 22H,@RR10", 0xC3, 0x2A);
+    TEST("LDC @RR10,22H", 0xD3, 0x2A);
+    TEST("DJNZ 22H,$",   0x2A, 0xFE);
+    ETEST(UNKNOWN_OPERAND, "DJNZ 2AH,$");
+
+    TEST("SETRP0 00H");
+    TEST("SETRP1 28H");
+    TEST("LD  22H,R10",  0xA9, 0x22);
+    TEST("LD  R10,22H",  0xA8, 0x22);
+    TEST("LD  22H,2AH",  0xA9, 0x22);
+    TEST("LD  2AH,22H",  0XA8, 0x22);
+    TEST("LD  22H,@2AH", 0xE5, 0xCA, 0x22);
+    TEST("LD  @22H,2AH", 0xF5, 0xCA, 0x22);
+    TEST("LD  22H,#66H", 0xE6, 0x22, 0x66);
+    TEST("LD  2AH,#66H", 0xAC, 0x66);
+    TEST("ADD 22H,2AH" , 0x04, 0xCA, 0x22);
+    TEST("ADD 2AH,@22H", 0x05, 0x22, 0xCA);
+    TEST("LD  2AH,33H(R2)", 0x87, 0xA2, 0x33); // LD R10,33H(R2)
+    TEST("LD  33H(R2),2AH", 0x97, 0xA2, 0x33); // LD 33H(R2),R10
+    TEST("LD  R2,33H(2AH)", 0x87, 0x2A, 0x33); // LD R2,33H(R10)
+    TEST("LD  33H(2AH),R2", 0x97, 0x2A, 0x33); // LD 33H(R10),R2
+    TEST("LDC R2,@2AH", 0xC3, 0x2A);
+    TEST("LDC @2AH,R2", 0xD3, 0x2A);
+    ETEST(UNKNOWN_OPERAND, "DJNZ 22H,$");
+    TEST("DJNZ 2AH,$",   0xAA, 0xFE);
 }
 
 static void test_comment() {

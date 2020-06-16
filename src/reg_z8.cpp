@@ -75,7 +75,8 @@ static bool isidchar(const char c) {
 static int8_t parseRegNum(const char *line) {
     if (isdigit(*line) && !isidchar(line[1]))
         return *line - '0';
-    if (*line++ == '1' && *line >= '0' && *line < '6' && !isidchar(line[1]))
+    if (*line++ == '1'
+        && *line >= '0' && *line < '6' && !isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }

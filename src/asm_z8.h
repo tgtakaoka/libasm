@@ -42,6 +42,8 @@ public:
     }
     void enableRegPointer(bool enable) { _regs.enableRegPointer(enable); }
     bool setRegPointer(uint8_t rp) { return _regs.setRegPointer(rp); }
+    bool setRegPointer0(uint8_t rp) { return _regs.setRegPointer0(rp); }
+    bool setRegPointer1(uint8_t rp) { return _regs.setRegPointer1(rp); }
 
 private:
     IntelValueParser _parser;
@@ -73,6 +75,11 @@ private:
     Error encodePostByte(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
         const Operand &extOp);
+    Error setRp(
+        InsnZ8 &insn, const char *line, const char *name,
+        bool (AsmZ8::*)(uint8_t));
+    Error assumeRp(
+        const char *line, const char *name, bool (AsmZ8::*)(uint8_t));
     Error processPseudo(InsnZ8 &insn, const char *line);
     Error encode(Insn &insn) override;
 };

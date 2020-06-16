@@ -469,8 +469,8 @@ static void test_setrp() {
     TEST("LD  21H,R4",   0x49, 0x21);
     TEST("LD  R4,21H",   0x48, 0x21);
     TEST("LD  21H,#66H", 0xE6, 0x21, 0x66);
-    ETEST(UNKNOWN_OPERAND, "LD 21H,33H(R4)"); // LD R,X
-    ETEST(UNKNOWN_OPERAND, "LD 33H(R4),21H"); // LD X,R
+    ETEST(UNKNOWN_OPERAND, "LD 21H,33H(R4)"); // LD R,dd(r)
+    ETEST(UNKNOWN_OPERAND, "LD 33H(21H),R4"); // LD dd(R),r
     TEST("LD  21H,24H",  0xE4, 0x24, 0x21);
     TEST("LD  24H,21H",  0XE4, 0x21, 0x24);
     TEST("LD  21H,@24H", 0xE5, 0x24, 0x21);
@@ -489,8 +489,12 @@ static void test_setrp() {
     TEST("LD  21H,R4",   0x18, 0xE4);
     TEST("LD  R4,21H",   0x48, 0xE1);
     TEST("LD  21H,#66H", 0x1C, 0x66);
-    TEST("LD  21H,33H(R4)", 0xC7, 0x14, 0x33); // LD r,X
-    TEST("LD  33H(R4),21H", 0xD7, 0x14, 0x33); // LD X,r
+    TEST("LD  21H,33H(R4)",  0xC7, 0x14, 0x33); // LD R1,33H(R4)
+    TEST("LD  33H(R4),21H",  0xD7, 0x14, 0x33); // LD 33H(R4),R1
+    TEST("LD  R1,33H(24H)",  0xC7, 0x14, 0x33); // LD R1,33H(R4)
+    TEST("LD  33H(24H),R1",  0xD7, 0x14, 0x33); // LD 33H(R4),R1
+    TEST("LD  21H,33H(24H)", 0xC7, 0x14, 0x33); // LD R1,33H(R4)
+    TEST("LD  33H(24H),21H", 0xD7, 0x14, 0x33); // LD 33H(R4),R1
     TEST("LD  21H,24H",  0x18, 0xE4);
     TEST("LD  24H,21H",  0X48, 0xE1);
     TEST("LD  21H,@24H", 0xE3, 0x14);
