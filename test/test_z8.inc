@@ -48,25 +48,6 @@
         sra     @24H
         rr      @24H
         swap    @24H
-;;; one operand working register
-        align   32
-        dec     r2
-        rlc     r2
-        inc     r2
-        jp      @rr2
-        da      r2
-        pop     r2
-        com     r2
-        push    r2
-        decw    r2
-        rl      r2
-        incw    r2
-        clr     r2
-        rrc     r2
-        sra     r2
-        rr      r2
-        swap    r2
-        align   32
 ;;; two operands
         align   32
         add     r2,r3
@@ -257,11 +238,88 @@
         ld      23H,@45H
         ld      @23H,45H
         ld      23H,#45H
-;;; different instruction code
+;;; one operand working register
+        align   32
+        dec     r2
+        rlc     r2
+        inc     r2
+        jp      @rr2
+        da      r2
+        pop     r2
+        com     r2
+        push    r2
+        decw    r2
+        rl      r2
+        incw    r2
+        clr     r2
+        rrc     r2
+        sra     r2
+        rr      r2
+        swap    r2
+;;; two operands working register
+        align   32
+        add     r3,45H
+        adc     r3,45H
+        sub     r3,45H
+        sbc     r3,45H
+        or      r3,45H
+        and     r3,45H
+        tcm     r3,45H
+        tm      r3,45H
+        cp      r3,45H
+        xor     r3,45H
+        add     23H,r5
+        adc     23H,r5
+        sub     23H,r5
+        sbc     23H,r5
+        or      23H,r5
+        and     23H,r5
+        tcm     23H,r5
+        tm      23H,r5
+        cp      23H,r5
+        xor     23H,r5
+        add     r3,@45H
+        adc     r3,@45H
+        sub     r3,@45H
+        sbc     r3,@45H
+        or      r3,@45H
+        and     r3,@45H
+        tcm     r3,@45H
+        tm      r3,@45H
+        cp      r3,@45H
+        xor     r3,@45H
+        add     23H,@r5
+        adc     23H,@r5
+        sub     23H,@r5
+        sbc     23H,@r5
+        or      23H,@r5
+        and     23H,@r5
+        tcm     23H,@r5
+        tm      23H,@r5
+        cp      23H,@r5
+        xor     23H,@r5
+        add     r3,#45H
+        adc     r3,#45H
+        sub     r3,#45H
+        sbc     r3,#45H
+        or      r3,#45H
+        and     r3,#45H
+        tcm     r3,#45H
+        tm      r3,#45H
+        cp      r3,#45H
+        xor     r3,#45H
+;;; load instructions working register
+        align   32
+        ld      r3,r5
+        ld      r3,@45H
+        ld      23H,@r5
+        ld      @23H,r5
+;;; different instruction code between Z8 and Z88
         align   32
         ld      r2,@r4
         ld      @r2,r4
         ld      @23H,#45H
+        ld      @r3,#45H
         ld      r2,45H(r3)
         ld      45H(r3),r2
 
