@@ -55,7 +55,6 @@ enum AddrMode {
     M_IW  = 19,  // Indirect Register or Working register: @Rxy x==RP
     M_IWW = 20,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
     M_WW  = 21,  // Register or Working register pair: RRxy: x=RP
-    M_Xmi = 22,  // Indexed disp >= -128 && disp < 0
 };
 
 // Post byte format

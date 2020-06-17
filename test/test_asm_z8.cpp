@@ -442,10 +442,26 @@ static void test_two_operands() {
 static void test_indexed() {
     TEST("LD R12,0C9H(R8)", 0xC7, 0xC8, 0xC9);
     TEST("LD 0D9H(R8),R13", 0xD7, 0xD8, 0xD9);
+    ETEST(OVERFLOW_RANGE, "LD R12, -129(R8)");
+    TEST(                 "LD R12, -128(R8)", 0xC7, 0xC8, 0x80);
+    TEST(                 "LD R12,   -1(R8)", 0xC7, 0xC8, 0xFF);
+    TEST(                 "LD R12, +127(R8)", 0xC7, 0xC8, 0x7F);
+    TEST(                 "LD R12, +128(R8)", 0xC7, 0xC8, 0x80);
+    TEST(                 "LD R12, +255(R8)", 0xC7, 0xC8, 0xFF);
+    ETEST(OVERFLOW_RANGE, "LD R12, +256(R8)");
+    ETEST(OVERFLOW_RANGE, "LD -129(R8), R12");
+    TEST(                 "LD -128(R8), R12", 0xD7, 0xC8, 0x80);
+    TEST(                 "LD   -1(R8), R12", 0xD7, 0xC8, 0xFF);
+    TEST(                 "LD +127(R8), R12", 0xD7, 0xC8, 0x7F);
+    TEST(                 "LD +128(R8), R12", 0xD7, 0xC8, 0x80);
+    TEST(                 "LD +255(R8), R12", 0xD7, 0xC8, 0xFF);
+    ETEST(OVERFLOW_RANGE, "LD +256(R8), R12");
 
     symtab.intern(0xC9, "bufC9");
+    symtab.intern(-2,   "offm2");
 
     TEST("LD R12,bufC9(R8)", 0xC7, 0xC8, 0xC9);
+    TEST("LD R12,offm2(R8)", 0xC7, 0xC8, 0xFE);
 }
 
 static void test_setrp() {
@@ -553,9 +569,6 @@ static void test_error() {
     TEST(                  "DEC @>15H",  0x01, 0x15);
     ETEST(UNKNOWN_OPERAND, "DEC @ >15H");
     ETEST(UNKNOWN_OPERAND, "DEC @> 15H");
-    TEST(                  "LD  R12,0C9H(R8)",  0xC7, 0xC8, 0xC9);
-    ETEST(OVERFLOW_RANGE,  "LD  R12,-1(R8)");
-    ETEST(OVERFLOW_RANGE,  "LD  R12,256(R8)");
 }
 
 static void run_test(void (*test)(), const char *test_name) {

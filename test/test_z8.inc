@@ -320,8 +320,16 @@
         ld      @r2,r4
         ld      @23H,#45H
         ld      @r3,#45H
-        ld      r2,45H(r3)
-        ld      45H(r3),r2
+        ld      r12, -128(r8)
+        ld      r12,   -1(r8)
+        ld      r12, +127(r8)
+        ld      r12, +128(r8)
+        ld      r12, +255(r8)
+        ld      -128(r8), r12
+        ld        -1(r8), r12
+        ld      +127(r8), r12
+        ld      +128(r8), r12
+        ld      +255(r8), r12
 
         ldc     r2,@rr4
         lde     r2,@rr4

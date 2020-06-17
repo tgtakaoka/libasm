@@ -452,19 +452,54 @@ static void test_two_operands() {
 static void test_indexed() {
     TEST("LD  R12,0C9H(R8)",    0x87, 0xC8, 0xC9);
     TEST("LD  0D9H(R8),R13",    0x97, 0xD8, 0xD9);
-    TEST("LDC R14,+127(RR8)",   0xE7, 0xE8, 0x7F);
-    TEST("LDE R14,-128(RR8)",   0xE7, 0xE9, 0x80);
-    TEST("LDC 0(RR8),R15",      0xF7, 0xF8, 0x00);
-    TEST("LDE -1(RR8),R15",     0xF7, 0xF9, 0xFF);
-    TEST("LDC R10,0080H(RR8)",  0xA7, 0xA8, 0x80, 0x00);
-    TEST("LDE R10,0ABAAH(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
-    TEST("LDC 0FF80H(RR8),R11", 0xB7, 0xB8, 0x80, 0xFF);
-    TEST("LDE 0BBBAH(RR8),R11", 0xB7, 0xB9, 0xBA, 0xBB);
+    ETEST(OVERFLOW_RANGE, "LD R12, -129(R8)");
+    TEST(                 "LD R12, -128(R8)", 0x87, 0xC8, 0x80);
+    TEST(                 "LD R12,   -1(R8)", 0x87, 0xC8, 0xFF);
+    TEST(                 "LD R12, +127(R8)", 0x87, 0xC8, 0x7F);
+    TEST(                 "LD R12, +128(R8)", 0x87, 0xC8, 0x80);
+    TEST(                 "LD R12, +255(R8)", 0x87, 0xC8, 0xFF);
+    ETEST(OVERFLOW_RANGE, "LD R12, +256(R8)");
+    ETEST(OVERFLOW_RANGE, "LD -129(R8), R12");
+    TEST(                 "LD -128(R8), R12", 0x97, 0xC8, 0x80);
+    TEST(                 "LD   -1(R8), R12", 0x97, 0xC8, 0xFF);
+    TEST(                 "LD +127(R8), R12", 0x97, 0xC8, 0x7F);
+    TEST(                 "LD +128(R8), R12", 0x97, 0xC8, 0x80);
+    TEST(                 "LD +255(R8), R12", 0x97, 0xC8, 0xFF);
+    ETEST(OVERFLOW_RANGE, "LD +256(R8), R12");
+
+    TEST("LDC R14, -129(RR8)",  0xA7, 0xE8, 0x7F, 0xFF);
+    TEST("LDC R14, -128(RR8)",  0xE7, 0xE8, 0x80);
+    TEST("LDC R14,   -1(RR8)",  0xE7, 0xE8, 0xFF);
+    TEST("LDC R14,0FFFFH(RR8)", 0xE7, 0xE8, 0xFF);
+    TEST("LDC R14, +127(RR8)",  0xE7, 0xE8, 0x7F);
+    TEST("LDC R14, +128(RR8)",  0xA7, 0xE8, 0x80, 0x00);
+    TEST("LDC -129(RR8), R15",  0xB7, 0xF8, 0x7F, 0xFF);
+    TEST("LDC -128(RR8), R15",  0xF7, 0xF8, 0x80);
+    TEST("LDC   -1(RR8), R15",  0xF7, 0xF8, 0xFF);
+    TEST("LDC 0FFFFH(RR8),R15", 0xF7, 0xF8, 0xFF);
+    TEST("LDC +127(RR8), R15",  0xF7, 0xF8, 0x7F);
+    TEST("LDC +128(RR8), R15",  0xB7, 0xF8, 0x80, 0x00);
+    TEST("LDE R14, -129(RR8)",  0xA7, 0xE9, 0x7F, 0xFF);
+    TEST("LDE R14, -128(RR8)",  0xE7, 0xE9, 0x80);
+    TEST("LDE R14,   -1(RR8)",  0xE7, 0xE9, 0xFF);
+    TEST("LDE R14,0FFFFH(RR8)", 0xE7, 0xE9, 0xFF);
+    TEST("LDE R14, +127(RR8)",  0xE7, 0xE9, 0x7F);
+    TEST("LDE R14, +128(RR8)",  0xA7, 0xE9, 0x80, 0x00);
+    TEST("LDE -129(RR8), R15",  0xB7, 0xF9, 0x7F, 0xFF);
+    TEST("LDE -128(RR8), R15",  0xF7, 0xF9, 0x80);
+    TEST("LDE   -1(RR8), R15",  0xF7, 0xF9, 0xFF);
+    TEST("LDE 0FFFFH(RR8),R15", 0xF7, 0xF9, 0xFF);
+    TEST("LDE +127(RR8), R15",  0xF7, 0xF9, 0x7F);
+    TEST("LDE +128(RR8), R15",  0xB7, 0xF9, 0x80, 0x00);
 
     symtab.intern(0xC9,   "bufC9");
+    symtab.intern(-2,     "offm2");
     symtab.intern(0xABAA, "table");
 
     TEST("LD  R12,bufC9(R8)",  0x87, 0xC8, 0xC9);
+    TEST("LD  R12,offm2(R8)",  0x87, 0xC8, 0xFE);
+    TEST("LDE R10,bufC9(RR8)", 0xA7, 0xA9, 0xC9, 0x00);
+    TEST("LDE R10,offm2(RR8)", 0xE7, 0xA9, 0xFE);
     TEST("LDE R10,table(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
 }
 
@@ -605,14 +640,6 @@ static void test_error() {
     TEST(                  "DEC @>15H",  0x01, 0x15);
     ETEST(UNKNOWN_OPERAND, "DEC @ >15H");
     ETEST(UNKNOWN_OPERAND, "DEC @> 15H");
-    TEST(                  "LD  R12,0C9H(R8)",  0x87, 0xC8, 0xC9);
-    ETEST(OVERFLOW_RANGE,  "LD  R12,-1(R8)");
-    ETEST(OVERFLOW_RANGE,  "LD  R12,256(R8)");
-    TEST(                  "LDC R14,-128(RR8)", 0xE7, 0xE8, 0x80);
-    TEST(                  "LDC R14,+127(RR8)", 0xE7, 0xE8, 0x7F);
-    ETEST(OVERFLOW_RANGE,  "LDC R14,-129(RR8)");
-    TEST(                  "LDC R14,+128(RR8)", 0xA7, 0xE8, 0x80, 0x00);
-    ETEST(OVERFLOW_RANGE,  "LDC R14,65536(RR8)");
     ETEST(ILLEGAL_BIT_NUMBER, "BITS R8,#8");
     ETEST(ILLEGAL_BIT_NUMBER, "BXOR R2,R8,#8");
 }

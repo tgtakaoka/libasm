@@ -12,14 +12,30 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        ldc     r2,56H(rr4)
-        lde     r2,56H(rr4)
-        ldc     56H(rr4),r2
-        lde     56H(rr4),r2
-        ldc     r2,128(rr4)
-        lde     r2,5678H(rr4)
-        ldc     5678H(rr4),r2
-        lde     5678H(rr4),r2
+        ldc     r2,   -129(rr4)
+        ldc     r2,   -128(rr4) ; can be short indexed mode
+        ldc     r2,     -1(rr4) ; can be short indexed mode
+        ldc     r2, 0FFFFH(rr4) ; can be short indexed mode
+        ldc     r2,   +127(rr4)
+        ldc     r2,   +128(rr4) ; must be long indexed mode
+        lde     r2,   -129(rr4)
+        lde     r2,   -128(rr4) ; can be short indexed mode
+        lde     r2,     -1(rr4) ; can be short indexed mode
+        lde     r2, 0FFFFH(rr4) ; can be short indexed mode
+        lde     r2,   +127(rr4)
+        lde     r2,   +128(rr4) ; must be long indexed mode
+        ldc       -129(rr4), r2
+        ldc       -128(rr4), r2 ; can be short indexed mode
+        ldc         -1(rr4), r2 ; can be short indexed mode
+        ldc     0FFFFH(rr4), r2 ; can be short indexed mode
+        ldc       +127(rr4), r2
+        ldc       +128(rr4), r2 ; must be long indexed mode
+        lde       -129(rr4), r2
+        lde       -128(rr4), r2 ; can be short indexed mode
+        lde         -1(rr4), r2 ; can be short indexed mode
+        lde     0FFFFH(rr4), r2 ; can be short indexed mode
+        lde       +127(rr4), r2
+        lde       +128(rr4), r2 ; must be long indexed mode
         ldc     r2,5678H
         lde     r2,5678H
         ldc     5678H,r2
@@ -33,7 +49,6 @@
         ldcpi   @rr4,r2
         ldepi   @rr4,r2
 
-
         ldw     24H,46H
         ldw     24H,@45H
         ldw     24H,#4567H
@@ -45,13 +60,6 @@
 ;       ldw     24H,45H         ; should be error
 ;       ldw     23H,@45H        ; should be error
 ;       ldw     23H,#4567H      ; should be error
-
-        lde     r2,-128(rr4)    ; should be short indexed
-        lde     r2,-1(rr4)      ; should be short indexed
-        lde     r2,+128(rr4)    ; should be long indexed
-        lde     -128(rr4),r2    ; should be short indexed
-        lde     -1(rr4),r2      ; should be short indexed
-        lde     +128(rr4),r2    ; should be long indexed
 
         pushud  @23H,45H
         pushui  @23H,45H

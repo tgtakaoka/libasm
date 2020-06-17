@@ -58,14 +58,15 @@ Error AsmZ8::encodeIndexed(
     InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
     const AddrMode dst = insn.dstMode();
     const RegName index = (dst == M_X) ? dstOp.reg : srcOp.reg;
-    const uint16_t disp = (dst == M_X) ? dstOp.val : srcOp.val;
-    if (disp >= 0x100) return setError(OVERFLOW_RANGE);
+    const int16_t disp16 = static_cast<int16_t>(
+        (dst == M_X) ? dstOp.val : srcOp.val);
     const RegName reg = (dst == M_X) ? srcOp.reg : dstOp.reg;
+    if (disp16 < -128 || disp16 >= 0x100) return setError(OVERFLOW_RANGE);
     const uint8_t opr1 =
         RegZ8::encodeRegName(index) | (RegZ8::encodeRegName(reg) << 4);
     insn.emitInsn();
     insn.emitByte(opr1);
-    insn.emitByte(static_cast<uint8_t>(disp));
+    insn.emitByte(static_cast<uint8_t>(disp16));
     return getError();
 }
 
@@ -290,10 +291,8 @@ Error AsmZ8::parseOperand(Operand &op) {
         if (isspace(*p)) return setError(UNKNOWN_OPERAND);
     }
     _scan = p;
-    uint32_t val32;
-    if (getOperand(val32)) return getError();
+    if (getOperand(op.val)) return getError();
     op.setError(getError());
-    op.val = val32;
     p = skipSpaces(_scan);
     if (*p == '(') {
         if (indir || forceRegAddr) setError(UNKNOWN_OPERAND);
@@ -303,18 +302,13 @@ Error AsmZ8::parseOperand(Operand &op) {
         p = skipSpaces(p + RegZ8::regNameLen(op.reg));
         if (*p != ')') return setError(MISSING_CLOSING_PAREN);
         _scan = p + 1;
-        const int32_t disp32 = static_cast<int32_t>(val32);
-        if (disp32 >= -128 && disp32 < 0x10000) {
-            if (disp32 < 0) {
-                op.mode = M_Xmi;
-            } else if (op.val < 0x80) {
-                op.mode = M_XS;
-            } else {
-                op.mode = M_XL;
-            }
-            return OK;
+        const int16_t disp16 = static_cast<int16_t>(op.val);
+        if (disp16 >= -128 && disp16 < 128) {
+            op.mode = M_XS;
+        } else {
+            op.mode = M_XL;
         }
-        return setError(OVERFLOW_RANGE);
+        return OK;
     }
     if (indir) {
         if (op.val >= 0x100) return setError(OVERFLOW_RANGE);

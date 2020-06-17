@@ -287,9 +287,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
                           || table == M_r  || table == M_R;
     if (opr == M_IW)  return table == M_Ir || table == M_IR;
     if (opr == M_IWW) return table == M_Irr || table == M_IRR
-                          || table == M_Ir  || table == M_Irr;
-    if (opr == M_Xmi) return table == M_X || table == M_XS;
-    if (opr == M_XS)  return table == M_X || table == M_XL;
+                          || table == M_Ir  || table == M_IR;
+    if (opr == M_XS)  return table == M_X;
     if (opr == M_XL)  return table == M_X;
     return false;
 }
