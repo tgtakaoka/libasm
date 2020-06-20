@@ -94,18 +94,16 @@ public:
     static CcName decodeCcNum(uint8_t ccNum);
     char *outCcName(char *out, CcName ccName) const;
 
-    void enableRegPointer(bool enabled);
-    bool setRegPointer(uint8_t rp);
-    bool setRegPointer0(uint8_t rp0);
-    bool setRegPointer1(uint8_t rp1);
+    bool setRegPointer(int16_t rp);
+    bool setRegPointer0(int16_t rp0);
+    bool setRegPointer1(int16_t rp1);
     bool isWorkReg(uint8_t regAddr) const;
     bool isWorkRegAlias(uint8_t regAddr) const;
     uint8_t encodeWorkRegAddr(RegName regName) const;
 
 private:
-    bool _enableRegPointer;
-    uint8_t _regPointer0;
-    uint8_t _regPointer1;
+    int16_t _regPointer0;
+    int16_t _regPointer1;
 
     RegName parseRegName(
         const char *line, const RegName *table, const RegName *end) const;

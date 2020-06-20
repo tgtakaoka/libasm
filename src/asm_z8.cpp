@@ -221,25 +221,27 @@ Error AsmZ8::encodePostByte(
 
 Error AsmZ8::setRp(
     InsnZ8 &insn, const char *line,
-    const char *name, bool (AsmZ8::*set)(uint8_t)) {
+    const char *name, bool (AsmZ8::*set)(int16_t)) {
     if (strcasecmp(insn.name(), name)) return UNKNOWN_INSTRUCTION;
     _scan = line;
-    uint8_t rp = 0;
-    if (setError(getOperand(rp)) != OK || !(this->*set)(rp))
+    uint16_t rp = 0;
+    if (setError(getOperand(rp)) != OK
+        || !(this->*set)(static_cast<int16_t>(rp)))
         setError(ILLEGAL_CONSTANT);
     return OK;
 }
 
 Error AsmZ8::assumeRp(
-    const char *line, const char *name, bool (AsmZ8::*set)(uint8_t)) {
+    const char *line, const char *name, bool (AsmZ8::*set)(int16_t)) {
     const size_t length = strlen(name);
     const char *p = _parser.scanSymbol(line);
     if (line + length == p && strncasecmp(line, name, length) == 0) {
         p = skipSpaces(p);
         if (*p == ':') {
-            _scan = p + 1;
-            uint8_t rp;
-            if (setError(getOperand(rp)) != OK || !(this->*set)(rp))
+            _scan = p;
+            uint16_t rp;
+            if (setError(getOperand(rp)) != OK
+                || !(this->*set)(static_cast<int16_t>(rp)))
                 setError(ILLEGAL_CONSTANT);
             return OK;
         }

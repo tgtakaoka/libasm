@@ -55,6 +55,7 @@ public:
     Error openSource(const char *input_name, const char *end = nullptr);
     const char *readSourceLine();
 
+    bool compareDirective(const char *name, const char *directive_name) const;
     Error defineOrigin();
     Error alignOrigin();
     Error defineLabel(const char *&label, CliMemory &memory);

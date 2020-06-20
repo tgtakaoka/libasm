@@ -24,38 +24,35 @@ namespace libasm {
 namespace z8 {
 
 RegZ8::RegZ8()
-    : _enableRegPointer(false),
-      _regPointer0(0),
-      _regPointer1(0)
+    : _regPointer0(-1),
+      _regPointer1(-1)
 {}
 
-void RegZ8::enableRegPointer(bool enabled) {
-    _enableRegPointer = enabled;
-}
-
-bool RegZ8::setRegPointer(uint8_t rp) {
+bool RegZ8::setRegPointer(int16_t rp) {
     return setRegPointer0(rp) && setRegPointer1(rp + 8);
 }
 
-bool RegZ8::setRegPointer0(uint8_t rp0) {
-    if (rp0 & ~0xF8) return false;
+bool RegZ8::setRegPointer0(int16_t rp0) {
+    if (rp0 >= 0 && (rp0 & ~0xF8))
+        return false;
     _regPointer0 = rp0;
-    _enableRegPointer = true;
     return true;
 }
 
-bool RegZ8::setRegPointer1(uint8_t rp1) {
-    if (rp1 & ~0xF8) return false;
+bool RegZ8::setRegPointer1(int16_t rp1) {
+    if (rp1 >= 0 && (rp1 & ~0xF8))
+        return false;
     _regPointer1 = rp1;
-    _enableRegPointer = true;
     return true;
 }
 
 bool RegZ8::isWorkReg(uint8_t regAddr) const {
-    if (!_enableRegPointer) return false;
     const uint8_t regPage = (regAddr & 0xF8);
-    return regPage == _regPointer0
-        || regPage == _regPointer1;
+    if (_regPointer0 >= 0 && regPage == _regPointer0)
+        return true;
+    if (_regPointer1 >= 0 && regPage == _regPointer1)
+        return true;
+    return false;
 }
 
 bool RegZ8::isWorkRegAlias(uint8_t regAddr) const {

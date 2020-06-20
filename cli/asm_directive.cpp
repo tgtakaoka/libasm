@@ -271,23 +271,37 @@ Error AsmCommonDirective::closeSource() {
     return setError(OK);
 }
 
+bool AsmCommonDirective::compareDirective(
+    const char *name, const char *directive_name) const {
+    if (strcasecmp(name, directive_name) == 0) return true;
+    return *directive_name == '.' && strcasecmp(name, directive_name + 1) == 0;
+}
+
 Error AsmCommonDirective::processPseudo(
     const char *directive, const char *&label, CliMemory &memory) {
     if (_directive->processDirective(
             directive, label, memory, *this) != UNKNOWN_DIRECTIVE)
         return getError();
-    if (strcasecmp(directive, "org") == 0)
+    if (compareDirective(directive, ".org"))
         return defineOrigin();
-    if (strcasecmp(directive, "equ") == 0)
+    if (compareDirective(directive, ".equ"))
         return defineLabel(label, memory);
-    if (strcasecmp(directive, "include") == 0)
+    if (compareDirective(directive, ".include"))
         return includeFile();
     // TODO: implement listing after "end".
-    if (strcasecmp(directive, "end") == 0)
+    if (compareDirective(directive, ".end"))
         return closeSource();
-    if (strcasecmp(directive, "align") == 0)
+    if (compareDirective(directive, ".align"))
         return alignOrigin();
-    if (strcasecmp(directive, "cpu") == 0) {
+    if (compareDirective(directive, ".byte"))
+        return defineBytes(memory);
+    if (compareDirective(directive, ".ascii"))
+        return defineBytes(memory, /* terminator */true);
+    if (compareDirective(directive, ".word"))
+        return defineWords(memory);
+    if (compareDirective(directive, ".space"))
+        return defineSpaces();
+    if (compareDirective(directive, ".cpu")) {
         const char *p = _scan;
         while (*p && !isspace(*p))
             p++;
@@ -297,7 +311,7 @@ Error AsmCommonDirective::processPseudo(
         _scan = p;
         return setError(OK);
     }
-    if (strcasecmp(directive, "z80syntax") == 0) {
+    if (compareDirective(directive, ".z80syntax")) {
         const char *cpu = _assembler->getCpu();
         if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
             return setError(UNKNOWN_DIRECTIVE);
@@ -617,13 +631,13 @@ BinFormatter *AsmMotoDirective::defaultFormatter() const {
 Error AsmMotoDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory,
     AsmCommonDirective &common) {
-    if (strcasecmp(directive, "fcb") == 0)
+    if (common.compareDirective(directive, ".fcb"))
         return common.defineBytes(memory);
-    if (strcasecmp(directive, "fcc") == 0)
+    if (common.compareDirective(directive, ".fcc"))
         return common.defineBytes(memory, /* terminator */true);
-    if (strcasecmp(directive, "fdb") == 0)
+    if (common.compareDirective(directive, ".fdb"))
         return common.defineWords(memory);
-    if (strcasecmp(directive, "rmb") == 0)
+    if (common.compareDirective(directive, ".rmb"))
         return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }
@@ -639,15 +653,16 @@ BinFormatter *AsmMostekDirective::defaultFormatter() const {
 Error AsmMostekDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory,
     AsmCommonDirective &common) {
-    if (strcmp(directive, ":=") == 0
-        || strcmp(directive, "=") == 0) {
+    if (common.compareDirective(directive, ":=")
+        || common.compareDirective(directive, "="))
         return common.defineLabel(label, memory);
-    }
-    if (strcasecmp(directive, "fcb") == 0)
+    if (common.compareDirective(directive, ".fcb"))
         return common.defineBytes(memory);
-    if (strcasecmp(directive, "fdb") == 0)
+    if (common.compareDirective(directive, ".fcc"))
+        return common.defineBytes(memory, /* terminator */true);
+    if (common.compareDirective(directive, ".fdb"))
         return common.defineWords(memory);
-    if (strcasecmp(directive, "rmb") == 0)
+    if (common.compareDirective(directive, ".rmb"))
         return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }
@@ -663,11 +678,11 @@ BinFormatter *AsmIntelDirective::defaultFormatter() const {
 Error AsmIntelDirective::processDirective(
     const char *directive, const char *&label, CliMemory &memory,
     AsmCommonDirective &common) {
-    if (strcasecmp(directive, "db") == 0)
+    if (common.compareDirective(directive, ".db"))
         return common.defineBytes(memory);
-    if (strcasecmp(directive, "dw") == 0)
+    if (common.compareDirective(directive, ".dw"))
         return common.defineWords(memory);
-    if (strcasecmp(directive, "ds") == 0)
+    if (common.compareDirective(directive, ".ds"))
         return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }

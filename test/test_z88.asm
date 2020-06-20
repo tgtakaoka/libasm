@@ -13,6 +13,7 @@
 ;;; limitations under the License.
 
         cpu     z88c0020
+        assume  rp:nothing
 
         org     0
         include "test_z8.inc"
