@@ -238,20 +238,24 @@ static void test_one_operand() {
     TEST("PUSH @72H", 0x71, 0x72);
     TEST("PUSH @R2",  0x71, 0xC2);
 
-    TEST("DECW 81H",  0x80, 0x81);
-    TEST("DECW R1",   0x80, 0xC1);
-    TEST("DECW @82H", 0x81, 0x82);
-    TEST("DECW @R2",  0x81, 0xC2);
+    TEST("DECW 82H", 0x80, 0x82);
+    TEST("DECW RR2", 0x80, 0xC2);
+    ETEST(UNKNOWN_OPERAND,  "DECW 81H");
+    ETEST(UNDEFINED_SYMBOL, "DECW RR1", 0x80, 0x00);
+    TEST("DECW @81H", 0x81, 0x81);
+    TEST("DECW @R1",  0x81, 0xC1);
 
     TEST("RL   91H",  0x90, 0x91);
     TEST("RL   R1",   0x90, 0xC1);
     TEST("RL   @92H", 0x91, 0x92);
     TEST("RL   @R2",  0x91, 0xC2);
 
-    TEST("INCW 0A1H",  0xA0, 0xA1);
-    TEST("INCW R1",    0xA0, 0xC1);
-    TEST("INCW @0A2H", 0xA1, 0xA2);
-    TEST("INCW @R2",   0xA1, 0xC2);
+    TEST("INCW 0A2H",  0xA0, 0xA2);
+    TEST("INCW RR2",   0xA0, 0xC2);
+    ETEST(UNKNOWN_OPERAND,  "INCW 0A1H");
+    ETEST(UNDEFINED_SYMBOL, "INCW RR1", 0xA0, 0x00);
+    TEST("INCW @0A1H", 0xA1, 0xA1);
+    TEST("INCW @R1",   0xA1, 0xC1);
 
     TEST("CLR  0B1H",  0xB0, 0xB1);
     TEST("CLR  R1",    0xB0, 0xC1);

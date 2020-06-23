@@ -152,8 +152,6 @@
       JR      C,$-007EH
       JR      C,$
       JP      C,007EH
-      DECW    81H
-      DECW    >00H
       DECW    @82H
       PUSHUD  @83H,>00H
       PUSHUI  @84H,>00H
@@ -188,8 +186,6 @@
       JR      GE,$+1
       JP      GE,009EH
       EI
-      INCW    0A1H
-      INCW    >00H
       INCW    @0A2H
       CP      R10,R3
       CP      R10,@R4

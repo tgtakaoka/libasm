@@ -81,8 +81,8 @@ Error DisZ8::decodeOperand(DisMemory &memory, InsnZ8 &insn, AddrMode mode) {
         val = insn.post();
     } else if (insn.readByte(memory, val))
         return setError(NO_MEMORY);
-    if (mode == M_R || mode == M_IR || mode == M_IRR) {
-        const bool pair = (mode == M_IRR);
+    if (mode == M_R || mode == M_IR || mode == M_RR || mode == M_IRR) {
+        const bool pair = (mode == M_RR || mode == M_IRR);
         if (pair && (val & 1) != 0) return setError(ILLEGAL_REGISTER);
         const bool indir = (mode == M_IR || mode == M_IRR);
         return outRegAddr(val, indir, pair);

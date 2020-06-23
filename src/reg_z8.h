@@ -25,6 +25,7 @@ namespace z8 {
 
 enum RegName : int8_t {
     REG_UNDEF = -1,
+    REG_ILLEGAL = -2,
     REG_R0  = 0,
     REG_R1  = 1,
     REG_R2  = 2,

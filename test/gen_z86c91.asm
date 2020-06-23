@@ -130,8 +130,6 @@
       JR      C,$
       JP      C,007EH
       HALT
-      DECW    81H
-      DECW    >00H
       DECW    @82H
       LDE     R8,@RR4
       LDEI    @R8,@RR4
@@ -150,8 +148,6 @@
       JR      GE,$+1
       JP      GE,009EH
       EI
-      INCW    0A1H
-      INCW    >00H
       INCW    @0A2H
       CP      R10,R3
       CP      R10,@R4
