@@ -307,7 +307,7 @@ gen_z8:      gen_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_z8    -u -C Z8601  -o gen_z8.asm
 	./gen_z8    -u -C Z86C91 -o gen_z86c91.asm
-	./gen_z8    -u -C Z88C0020 -o gen_z88.asm
+	./gen_z8    -u -C Z88C00 -o gen_z88.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_ins8060 -u -C SC/MP -o gen_ins8060.asm

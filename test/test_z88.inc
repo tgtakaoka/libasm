@@ -13,29 +13,29 @@
 ;;; limitations under the License.
 
         ldc     r2,   -129(rr4)
-        ldc     r2,   -128(rr4) ; can be short indexed mode
-        ldc     r2,     -1(rr4) ; can be short indexed mode
+        ldc     r2,   -128(rr4)
+        ldc     r2,     -1(rr4)
         ldc     r2, 0FFFFH(rr4) ; can be short indexed mode
         ldc     r2,   +127(rr4)
-        ldc     r2,   +128(rr4) ; must be long indexed mode
+        ldc     r2,   +128(rr4)
         lde     r2,   -129(rr4)
-        lde     r2,   -128(rr4) ; can be short indexed mode
-        lde     r2,     -1(rr4) ; can be short indexed mode
+        lde     r2,   -128(rr4)
+        lde     r2,     -1(rr4)
         lde     r2, 0FFFFH(rr4) ; can be short indexed mode
         lde     r2,   +127(rr4)
-        lde     r2,   +128(rr4) ; must be long indexed mode
+        lde     r2,   +128(rr4)
         ldc       -129(rr4), r2
-        ldc       -128(rr4), r2 ; can be short indexed mode
-        ldc         -1(rr4), r2 ; can be short indexed mode
+        ldc       -128(rr4), r2
+        ldc         -1(rr4), r2
         ldc     0FFFFH(rr4), r2 ; can be short indexed mode
         ldc       +127(rr4), r2
-        ldc       +128(rr4), r2 ; must be long indexed mode
+        ldc       +128(rr4), r2
         lde       -129(rr4), r2
-        lde       -128(rr4), r2 ; can be short indexed mode
-        lde         -1(rr4), r2 ; can be short indexed mode
+        lde       -128(rr4), r2
+        lde         -1(rr4), r2
         lde     0FFFFH(rr4), r2 ; can be short indexed mode
         lde       +127(rr4), r2
-        lde       +128(rr4), r2 ; must be long indexed mode
+        lde       +128(rr4), r2
         ldc     r2,5678H
         lde     r2,5678H
         ldc     5678H,r2
@@ -55,11 +55,6 @@
         ldw     rr2,rr4
         ldw     rr2,@r3
         ldw     rr2,#4567H
-
-;       ldw     23H,46H         ; should be error
-;       ldw     24H,45H         ; should be error
-;       ldw     23H,@45H        ; should be error
-;       ldw     23H,#4567H      ; should be error
 
         pushud  @23H,45H
         pushui  @23H,45H
@@ -110,18 +105,10 @@
         mult    rr2,@r5
         mult    rr2,#45H
 
-;       div     23H,45H         ; should be error
-;       div     23H,@45H        ; should be error
-;       div     23H,#45H        ; should be error
-;       mult    23H,45H         ; should be error
-;       mult    23H,45H         ; should be error
-;       mult    23H,@45H        ; should be error
-;       mult    23H,#45H        ; should be error
+        srp0    #58H
+        srp1    #68H
 
-        srp0    #58H            ; should not be error
-        srp1    #68H            ; should not be error
-
-        call    #0D5H           ; wrong indirect address
+        call    #0D5H
 
         align   32
         assume  RP:00H
@@ -153,8 +140,9 @@
         ld      @21H,24H        ; ld @R4,R1
         add     21H,24H         ; add R1,R4
         add     21H,@24H        ; add R1,@R4
-;       lde     21H,@24H        ; lde R1,@RR4
-;       lde     @24H,21H        ; lde @RR4,R1
+        lde     R1,@24H         ; lde R1,@RR4
+        lde     R1,@RR4         ; lde R1,@RR4
+        lde     @24H,21H        ; lde @RR4,R1
         djnz    21H,$           ; djnz R1,$
 
 ;;; Local Variables:

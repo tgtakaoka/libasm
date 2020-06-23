@@ -18,15 +18,14 @@
         dec     23H
         rlc     23H
         inc     23H
-;       jp      @23H            ; should be error
         jp      @24H
         da      23H
         pop     23H
         com     23H
         push    23H
-        decw    23H
+        decw    24H
         rl      23H
-        incw    23H
+        incw    24H
         clr     23H
         rrc     23H
         sra     23H
@@ -248,9 +247,9 @@
         pop     r2
         com     r2
         push    r2
-        decw    r2
+        decw    rr2
         rl      r2
-        incw    r2
+        incw    rr2
         clr     r2
         rrc     r2
         sra     r2
@@ -337,9 +336,7 @@
         lde     @rr4,r2
 
         call    1234H
-;       call    @23H            ; should be warning
         call    @24H
-
 
 ;;; Local Variables:
 ;;; mode: asm

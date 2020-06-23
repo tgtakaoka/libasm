@@ -12,7 +12,7 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     z88c0020
+        cpu     z88c00
         assume  rp:nothing
 
         org     0
