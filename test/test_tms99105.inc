@@ -21,12 +21,9 @@
 ;;; 01X
         bind    @2223H(r1)
         evad    r5
-;       rtmp    1
-        word    0381H
-;       rtmp    2
-        word    0382H
-;       rtmp    4
-        word    0384H
+        rtwp    1
+        rtwp    2
+        rtwp    4
 ;;; 0CX
         tmb     @0123H(r15),7
         tcmb    r0,0
