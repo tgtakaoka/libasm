@@ -324,7 +324,8 @@ Error AsmZ8::parseOperand(Operand &op) {
         if (isspace(*p)) return setError(UNKNOWN_OPERAND);
     }
     _scan = p;
-    if (getOperand(op.val)) return getError();
+    uint32_t val32;
+    if (getOperand(val32)) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
     if (*p == '(') {
@@ -344,14 +345,17 @@ Error AsmZ8::parseOperand(Operand &op) {
         p = skipSpaces(p);
         if (*p != ')') return setError(MISSING_CLOSING_PAREN);
         _scan = p + 1;
-        const int16_t disp16 = static_cast<int16_t>(op.val);
-        if (disp16 >= -128 && disp16 < 128) {
+        const int32_t disp32 = static_cast<int32_t>(val32);
+        if (disp32 >= -128 && disp32 < 128) {
             op.mode = M_XS;
         } else {
             op.mode = M_XL;
         }
+        op.val = static_cast<uint16_t>(val32);
         return OK;
     }
+    if (static_cast<int32_t>(val32) < 0) return setError(OVERFLOW_RANGE);
+    op.val = val32;
     if (indir) {
         if (op.val >= 0x100) return setError(OVERFLOW_RANGE);
         if (!forceRegAddr && _regs.isWorkReg(op.val)) {

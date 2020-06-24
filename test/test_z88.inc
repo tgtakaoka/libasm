@@ -15,25 +15,25 @@
         ldc     r2,   -129(rr4)
         ldc     r2,   -128(rr4)
         ldc     r2,     -1(rr4)
-        ldc     r2, 0FFFFH(rr4) ; can be short indexed mode
+        ldc     r2, 0FFFFH(rr4)
         ldc     r2,   +127(rr4)
         ldc     r2,   +128(rr4)
         lde     r2,   -129(rr4)
         lde     r2,   -128(rr4)
         lde     r2,     -1(rr4)
-        lde     r2, 0FFFFH(rr4) ; can be short indexed mode
+        lde     r2, 0FFFFH(rr4)
         lde     r2,   +127(rr4)
         lde     r2,   +128(rr4)
         ldc       -129(rr4), r2
         ldc       -128(rr4), r2
         ldc         -1(rr4), r2
-        ldc     0FFFFH(rr4), r2 ; can be short indexed mode
+        ldc     0FFFFH(rr4), r2
         ldc       +127(rr4), r2
         ldc       +128(rr4), r2
         lde       -129(rr4), r2
         lde       -128(rr4), r2
         lde         -1(rr4), r2
-        lde     0FFFFH(rr4), r2 ; can be short indexed mode
+        lde     0FFFFH(rr4), r2
         lde       +127(rr4), r2
         lde       +128(rr4), r2
         ldc     r2,5678H
