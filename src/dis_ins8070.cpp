@@ -98,7 +98,7 @@ Error DisIns8070::decodeRelative(
         || (src == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (src == OPR_NO) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
-        outRelativeAddr(target, insn.address());
+        outRelativeAddr(target, insn.address(), 8);
         if (src == OPR_GN) {
             *_operands++ = ',';
             outRegister(REG_PC);

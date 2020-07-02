@@ -17,10 +17,10 @@
       LD      >0AH,R0
       LD      10H,R0
       DJNZ    R0,$+13
-      DJNZ    R0,$-007EH
+      DJNZ    R0,$-7EH
       DJNZ    R0,$
       JR      F,$+14
-      JR      F,$-007EH
+      JR      F,$-7EH
       JR      F,$
       LD      R0,#13
       JP      F,000EH
@@ -36,8 +36,8 @@
       ADC     >00H,@01H
       ADC     >00H,#17H
       ADC     @00H,#18H
-      JR      LT,$+001EH
-      JR      LT,$-007EH
+      JR      LT,$+1EH
+      JR      LT,$-7EH
       JR      LT,$
       JP      LT,001EH
       INC     21H
@@ -51,8 +51,8 @@
       SUB     >00H,@01H
       SUB     >00H,#27H
       SUB     @00H,#28H
-      JR      LE,$+002EH
-      JR      LE,$-007EH
+      JR      LE,$+2EH
+      JR      LE,$-7EH
       JR      LE,$
       JP      LE,002EH
       SRP     #32H
@@ -64,8 +64,8 @@
       SBC     >00H,@01H
       SBC     >00H,#37H
       SBC     @00H,#38H
-      JR      ULE,$+003EH
-      JR      ULE,$-007EH
+      JR      ULE,$+3EH
+      JR      ULE,$-7EH
       JR      ULE,$
       JP      ULE,003EH
       DA      41H
@@ -79,8 +79,8 @@
       OR      >00H,@01H
       OR      >00H,#47H
       OR      @00H,#48H
-      JR      OV,$+004EH
-      JR      OV,$-007EH
+      JR      OV,$+4EH
+      JR      OV,$-7EH
       JR      OV,$
       JP      OV,004EH
       POP     51H
@@ -94,8 +94,8 @@
       AND     >00H,@01H
       AND     >00H,#57H
       AND     @00H,#58H
-      JR      MI,$+005EH
-      JR      MI,$-007EH
+      JR      MI,$+5EH
+      JR      MI,$-7EH
       JR      MI,$
       JP      MI,005EH
       COM     61H
@@ -109,8 +109,8 @@
       TCM     >00H,@01H
       TCM     >00H,#67H
       TCM     @00H,#68H
-      JR      Z,$+006EH
-      JR      Z,$-007EH
+      JR      Z,$+6EH
+      JR      Z,$-7EH
       JR      Z,$
       JP      Z,006EH
       PUSH    71H
@@ -124,14 +124,14 @@
       TM      >00H,@01H
       TM      >00H,#77H
       TM      @00H,#78H
-      JR      C,$+007EH
-      JR      C,$-007EH
+      JR      C,$+7EH
+      JR      C,$-7EH
       JR      C,$
       JP      C,007EH
       DECW    @82H
       LDE     R8,@RR4
       LDEI    @R8,@RR4
-      JR      $-0072H
+      JR      $-72H
       JR      $
       JR      $+1
       JP      008EH
@@ -141,7 +141,7 @@
       RL      @92H
       LDE     @RR4,R9
       LDEI    @RR4,@R9
-      JR      GE,$-0062H
+      JR      GE,$-62H
       JR      GE,$
       JR      GE,$+1
       JP      GE,009EH
@@ -155,7 +155,7 @@
       CP      >00H,@01H
       CP      >00H,#0A7H
       CP      @00H,#0A8H
-      JR      GT,$-0052H
+      JR      GT,$-52H
       JR      GT,$
       JR      GT,$+1
       JP      GT,00AEH
@@ -171,7 +171,7 @@
       XOR     >00H,@01H
       XOR     >00H,#0B7H
       XOR     @00H,#0B8H
-      JR      UGT,$-0042H
+      JR      UGT,$-42H
       JR      UGT,$
       JR      UGT,$+1
       JP      UGT,00BEH
@@ -182,7 +182,7 @@
       LDC     R12,@RR4
       LDCI    @R12,@RR4
       LD      R0,0C8H(R0)
-      JR      NOV,$-0032H
+      JR      NOV,$-32H
       JR      NOV,$
       JR      NOV,$+1
       JP      NOV,00CEH
@@ -195,7 +195,7 @@
       CALL    @0D6H
       CALL    00D7H
       LD      0D8H(R0),R0
-      JR      PL,$-0022H
+      JR      PL,$-22H
       JR      PL,$
       JR      PL,$+1
       JP      PL,00DEH
@@ -210,7 +210,7 @@
       LD      >00H,@01H
       LD      >00H,#0E7H
       LD      @00H,#0E8H
-      JR      NZ,$-0012H
+      JR      NZ,$-12H
       JR      NZ,$
       JR      NZ,$+1
       JP      NZ,00EEH

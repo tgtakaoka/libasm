@@ -82,25 +82,21 @@ protected:
     }
 
     template<typename Addr>
-    void outRelativeAddr(Addr target, Addr origin, int8_t addressBits = 0) {
+    void outRelativeAddr(Addr target, Addr origin, int8_t deltaBits) {
         const char *label = lookup(target);
         if (label) {
             outText(label);
             return;
         }
-        if (_relativeTarget) {
-            const auto delta = static_cast<
-                typename make_signed<Addr>::type>(target - origin);
-            outText(getFormatter().currentOriginSymbol());
-            if (delta > 0) *_operands++ = '+';
-            if (delta != 0) outConstant(delta);
+        if (!_relativeTarget) {
+            outConstant(target, 16, false, true, addressWidth());
             return;
         }
-        if (addressBits == 0) {
-            outConstant(target, 16, false, true);
-        } else {
-            outConstant(target, 16, false, true, addressBits);
-        }
+        const auto delta = static_cast<
+            typename make_signed<Addr>::type>(target - origin);
+        outText(getFormatter().currentOriginSymbol());
+        if (delta > 0) *_operands++ = '+';
+        if (delta) outConstant(delta, 16, true, true, deltaBits + 1);
     }
 
 private:

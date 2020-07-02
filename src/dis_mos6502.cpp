@@ -119,7 +119,7 @@ Error DisMos6502::decodeRelative(DisMemory &memory, InsnMos6502 &insn) {
     const Config::uintptr_t target =
         insn.address() + (insn.addrMode() == ZPG_REL ? 3 : 2)
         + static_cast<int8_t>(val);
-    outRelativeAddr(target, insn.address());
+    outRelativeAddr(target, insn.address(), 8);
     return setOK();
 }
 

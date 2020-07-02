@@ -53,7 +53,7 @@ Error DisIns8060::decodeIndx(
         // Program space is paged by 4kB.
         const Config::uintptr_t target =
             (base & ~0xFFF) | ((base + disp + fetch) & 0xFFF);
-        outRelativeAddr(target, insn.address());
+        outRelativeAddr(target, insn.address(), 8);
         return setOK();
     }
     if (opr == 0x80) {         // E(Pn)

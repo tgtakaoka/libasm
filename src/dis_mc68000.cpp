@@ -73,7 +73,7 @@ Error DisMc68000::decodeEffectiveAddr(
         if (mode == M_PC_DISP) {
             const Config::uintptr_t target =
                 insn.address() + 2 + static_cast<int16_t>(val16);
-            outRelativeAddr(target, insn.address(), Config::addressBits());
+            outRelativeAddr(target, insn.address(), 16);
         } else {
             if (val16 & 0x8000) {
                 const uint16_t disp16 = 0x10000 - val16;
@@ -111,9 +111,9 @@ Error DisMc68000::decodeEffectiveAddr(
         if (insn.readUint16(memory, ext.word)) return setError(NO_MEMORY);
         const uint8_t val8 = ext.disp();
         if (mode == M_PC_INDX) {
-            const Config::uintptr_t addr =
+            const Config::uintptr_t target =
                 insn.address() + 2 + static_cast<int8_t>(val8);
-            outConstant(addr, 16, false, true, Config::addressBits());
+            outRelativeAddr(target, insn.address(), 8);
         } else {
             if (val8 & 0x80) {
                 const uint8_t disp8 = 0x100 - val8;
@@ -224,8 +224,8 @@ Error DisMc68000::decodeDataReg(
     uint16_t val16;
     if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
     const int16_t disp = static_cast<int16_t>(val16);
-    const Config::uintptr_t addr = insn.address() + 2 + disp;
-    outConstant(addr, 16, false, true, Config::addressBits());
+    const Config::uintptr_t target = insn.address() + 2 + disp;
+    outRelativeAddr(target, insn.address(), 16);
     return setOK();
 }
 
@@ -337,7 +337,7 @@ Error DisMc68000::decodeRelative(
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
         target += static_cast<int16_t>(val16);
     }
-    outRelativeAddr(target, insn.address(), Config::addressBits());
+    outRelativeAddr(target, insn.address(), val8 ? 8 : 16);
     return setOK();
 }
 

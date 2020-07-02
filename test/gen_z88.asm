@@ -20,10 +20,10 @@
       LD      >0AH,R0
       LD      10H,R0
       DJNZ    R0,$+13
-      DJNZ    R0,$-007EH
+      DJNZ    R0,$-7EH
       DJNZ    R0,$
       JR      F,$+14
-      JR      F,$-007EH
+      JR      F,$-7EH
       JR      F,$
       LD      R0,#13
       JP      F,000EH
@@ -39,8 +39,8 @@
       ADC     16H,@00H
       ADC     >00H,@01H
       ADC     >00H,#17H
-      JR      LT,$+001EH
-      JR      LT,$-007EH
+      JR      LT,$+1EH
+      JR      LT,$-7EH
       JR      LT,$
       JP      LT,001EH
       ENTER
@@ -58,8 +58,8 @@
       BXOR    >00H,#0,R0
       BXOR    10H,#0,R0
       BXOR    R0,>00H,#1
-      JR      LE,$+002EH
-      JR      LE,$-007EH
+      JR      LE,$+2EH
+      JR      LE,$-7EH
       JR      LE,$
       JP      LE,002EH
       EXIT
@@ -73,14 +73,14 @@
       SBC     36H,@00H
       SBC     >00H,@01H
       SBC     >00H,#37H
-      BTJRF   $+003BH,R0,#0
-      BTJRF   $-007DH,R0,#0
+      BTJRF   $+3BH,R0,#0
+      BTJRF   $-7DH,R0,#0
       BTJRF   $,R0,#0
       BTJRT   $+3,R0,#0
-      BTJRT   $-007DH,R0,#0
+      BTJRT   $-7DH,R0,#0
       BTJRT   $,R0,#0
-      JR      ULE,$+003EH
-      JR      ULE,$-007EH
+      JR      ULE,$+3EH
+      JR      ULE,$-7EH
       JR      ULE,$
       JP      ULE,003EH
       WFI
@@ -98,8 +98,8 @@
       LDB     >00H,#0,R0
       LDB     10H,#0,R0
       LDB     R0,>00H,#1
-      JR      OV,$+004EH
-      JR      OV,$-007EH
+      JR      OV,$+4EH
+      JR      OV,$-7EH
       JR      OV,$
       JP      OV,004EH
       SB0
@@ -113,8 +113,8 @@
       AND     56H,@00H
       AND     >00H,@01H
       AND     >00H,#57H
-      JR      MI,$+005EH
-      JR      MI,$-007EH
+      JR      MI,$+5EH
+      JR      MI,$-7EH
       JR      MI,$
       JP      MI,005EH
       SB1
@@ -132,8 +132,8 @@
       BAND    >00H,#0,R0
       BAND    10H,#0,R0
       BAND    R0,>00H,#1
-      JR      Z,$+006EH
-      JR      Z,$-007EH
+      JR      Z,$+6EH
+      JR      Z,$-7EH
       JR      Z,$
       JP      Z,006EH
       PUSH    71H
@@ -148,8 +148,8 @@
       TM      >00H,#77H
       BITR    R7,#4
       BITS    R7,#4
-      JR      C,$+007EH
-      JR      C,$-007EH
+      JR      C,$+7EH
+      JR      C,$-7EH
       JR      C,$
       JP      C,007EH
       DECW    @82H
@@ -162,7 +162,7 @@
       MULT    88H,#0
       MULT    >00H,#1
       LD      R0,88H(R0)
-      JR      $-0072H
+      JR      $-72H
       JR      $
       JR      $+1
       JP      008EH
@@ -181,7 +181,7 @@
       DIV     98H,#0
       DIV     >00H,#1
       LD      98H(R0),R0
-      JR      GE,$-0062H
+      JR      GE,$-62H
       JR      GE,$
       JR      GE,$+1
       JP      GE,009EH
@@ -198,7 +198,7 @@
       LDE     R10,0AA00H(RR8)
       LDC     R11,0B100H
       LDE     R11,0B200H
-      JR      GT,$-0052H
+      JR      GT,$-52H
       JR      GT,$
       JR      GT,$+1
       JP      GT,00AEH
@@ -217,7 +217,7 @@
       LDE     0BA00H(RR8),R11
       LDC     0C100H,R12
       LDE     0C200H,R12
-      JR      UGT,$-0042H
+      JR      UGT,$-42H
       JR      UGT,$
       JR      UGT,$+1
       JP      UGT,00BEH
@@ -225,7 +225,7 @@
       RRC     0C1H
       RRC     >00H
       RRC     @0C2H
-      CPIJE   R0,@R0,$-003AH
+      CPIJE   R0,@R0,$-3AH
       CPIJE   R0,@R0,$
       CPIJE   R0,@R0,$+1
       LDC     R12,@RR4
@@ -233,7 +233,7 @@
       LDW     0C8H,#00C9H
       LDW     >00H,#0101H
       LD      R12,@R8
-      JR      NOV,$-0032H
+      JR      NOV,$-32H
       JR      NOV,$
       JR      NOV,$+1
       JP      NOV,00CEH
@@ -241,7 +241,7 @@
       SRA     0D1H
       SRA     >00H
       SRA     @0D2H
-      CPIJNE  R0,@R0,$-002AH
+      CPIJNE  R0,@R0,$-2AH
       CPIJNE  R0,@R0,$
       CPIJNE  R0,@R0,$+1
       LDC     @RR4,R13
@@ -249,7 +249,7 @@
       CALL    #0D5H
       LD      @00H,#0D7H
       LD      @R13,R8
-      JR      PL,$-0022H
+      JR      PL,$-22H
       JR      PL,$
       JR      PL,$+1
       JP      PL,00DEH
@@ -267,7 +267,7 @@
       LD      >00H,@01H
       LD      >00H,#0E7H
       LDC     R0,-24(RR0)
-      JR      NZ,$-0012H
+      JR      NZ,$-12H
       JR      NZ,$
       JR      NZ,$+1
       JP      NZ,00EEH

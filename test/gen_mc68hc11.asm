@@ -18,11 +18,11 @@
       SEI
       SBA
       CBA
-      BRSET $13,#0,*+$0018
-      BRSET $13,#0,*-$007C
+      BRSET $13,#0,*+$18
+      BRSET $13,#0,*-$7C
       BRSET $13,#0,*
-      BRCLR $14,#0,*+$0019
-      BRCLR $14,#0,*-$007C
+      BRCLR $14,#0,*+$19
+      BRCLR $14,#0,*-$7C
       BRCLR $14,#0,*
       BSET  $00,#$15
       BCLR  $00,#$16
@@ -32,59 +32,59 @@
       ABA
       BSET  0,X,#$1D
       BCLR  0,X,#$1E
-      BRSET 31,X,#0,*+$0024
-      BRSET 31,X,#0,*-$007C
+      BRSET 31,X,#0,*+$24
+      BRSET 31,X,#0,*-$7C
       BRSET 31,X,#0,*
-      BRCLR 32,X,#0,*+$0025
-      BRCLR 32,X,#0,*-$007C
+      BRCLR 32,X,#0,*+$25
+      BRCLR 32,X,#0,*-$7C
       BRCLR 32,X,#0,*
-      BRA   *+$0023
-      BRA   *-$007E
+      BRA   *+$23
+      BRA   *-$7E
       BRA   *
-      BRN   *+$0024
-      BRN   *-$007E
+      BRN   *+$24
+      BRN   *-$7E
       BRN   *
-      BHI   *+$0025
-      BHI   *-$007E
+      BHI   *+$25
+      BHI   *-$7E
       BHI   *
-      BLS   *+$0026
-      BLS   *-$007E
+      BLS   *+$26
+      BLS   *-$7E
       BLS   *
-      BHS   *+$0027
-      BHS   *-$007E
+      BHS   *+$27
+      BHS   *-$7E
       BHS   *
-      BLO   *+$0028
-      BLO   *-$007E
+      BLO   *+$28
+      BLO   *-$7E
       BLO   *
-      BNE   *+$0029
-      BNE   *-$007E
+      BNE   *+$29
+      BNE   *-$7E
       BNE   *
-      BEQ   *+$002A
-      BEQ   *-$007E
+      BEQ   *+$2A
+      BEQ   *-$7E
       BEQ   *
-      BVC   *+$002B
-      BVC   *-$007E
+      BVC   *+$2B
+      BVC   *-$7E
       BVC   *
-      BVS   *+$002C
-      BVS   *-$007E
+      BVS   *+$2C
+      BVS   *-$7E
       BVS   *
-      BPL   *+$002D
-      BPL   *-$007E
+      BPL   *+$2D
+      BPL   *-$7E
       BPL   *
-      BMI   *+$002E
-      BMI   *-$007E
+      BMI   *+$2E
+      BMI   *-$7E
       BMI   *
-      BGE   *+$002F
-      BGE   *-$007E
+      BGE   *+$2F
+      BGE   *-$7E
       BGE   *
-      BLT   *+$0030
-      BLT   *-$007E
+      BLT   *+$30
+      BLT   *-$7E
       BLT   *
-      BGT   *+$0031
-      BGT   *-$007E
+      BGT   *+$31
+      BGT   *-$7E
       BGT   *
-      BLE   *+$0032
-      BLE   *-$007E
+      BLE   *+$32
+      BLE   *-$7E
       BLE   *
       TSX
       INS
@@ -172,7 +172,7 @@
       ORAA  #$8B
       ADDA  #$8C
       CPX   #$008D
-      BSR   *-$0070
+      BSR   *-$70
       BSR   *
       BSR   *+1
       LDS   #$008F
@@ -290,11 +290,11 @@
       DEY
       BSET  0,Y,#$1D
       BCLR  0,Y,#$1E
-      BRSET 31,Y,#0,*+$0025
-      BRSET 31,Y,#0,*-$007B
+      BRSET 31,Y,#0,*+$25
+      BRSET 31,Y,#0,*-$7B
       BRSET 31,Y,#0,*
-      BRCLR 32,Y,#0,*+$0026
-      BRCLR 32,Y,#0,*-$007B
+      BRCLR 32,Y,#0,*+$26
+      BRCLR 32,Y,#0,*-$7B
       BRCLR 32,Y,#0,*
       TSY
       TYS

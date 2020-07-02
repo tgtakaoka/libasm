@@ -131,8 +131,8 @@ static void test_relative() {
     ATEST(0x1000, DJNZ, "R15,0FFDH", 0xFA, 0xFB);
 
     disassembler.setRelativeTarget(true);
-    ATEST(0x1000, CPIJE,  "R3,@R12,$-0039H", 0xC2, 0xC3, 0xC4);
-    ATEST(0x1000, CPIJNE, "R3,@R13,$-0029H", 0xD2, 0xD3, 0xD4);
+    ATEST(0x1000, CPIJE,  "R3,@R12,$-39H", 0xC2, 0xC3, 0xC4);
+    ATEST(0x1000, CPIJNE, "R3,@R13,$-29H", 0xD2, 0xD3, 0xD4);
 }
 
 static void test_operand_in_opcode() {
@@ -498,8 +498,8 @@ static void test_bit_operation() {
     TEST(BAND, "0ABH,#4,R8",  0x67, 0x89, 0xAB);
     TEST(BAND, "R11,#4,R8",   0x67, 0x89, 0xCB);
 
-    TEST(BTJRF, "$+003CH,R3,#4", 0x37, 0x38, 0x39);
-    TEST(BTJRT, "$+003DH,R3,#4", 0x37, 0x39, 0x3A);
+    TEST(BTJRF, "$+3CH,R3,#4", 0x37, 0x38, 0x39);
+    TEST(BTJRT, "$+3DH,R3,#4", 0x37, 0x39, 0x3A);
 }
 
 static void assert_illegal(uint8_t opc) {

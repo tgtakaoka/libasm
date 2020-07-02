@@ -17,8 +17,8 @@
       ORA  >$000E
       ASL  >$000F
       ORA  >>$001110
-      BPL  *+$00000013
-      BPL  *-$00000023
+      BPL  *+$13
+      BPL  *-$23
       BPL  *
       ORA  ($12),Y
       ORA  ($13)
@@ -54,8 +54,8 @@
       AND  >$002E
       ROL  >$002F
       AND  >>$003130
-      BMI  *+$00000033
-      BMI  *-$00000079
+      BMI  *+$33
+      BMI  *-$79
       BMI  *
       AND  ($32),Y
       AND  ($33)
@@ -89,8 +89,8 @@
       EOR  >$004E
       LSR  >$004F
       EOR  >>$005150
-      BVC  *+$00000053
-      BVC  *-$0000007E
+      BVC  *+$53
+      BVC  *-$7E
       BVC  *
       EOR  ($52),Y
       EOR  ($53)
@@ -110,7 +110,7 @@
       EOR  >>$006160,X
       RTS
       ADC  ($62,X)
-      PER  *+$00000066
+      PER  *+$0066
       ADC  $64,S
       STZ  $65
       ADC  $66
@@ -125,8 +125,8 @@
       ADC  >$006E
       ROR  >$006F
       ADC  >>$007170
-      BVS  *+$00000073
-      BVS  *-$0000007E
+      BVS  *+$73
+      BVS  *-$7E
       BVS  *
       ADC  ($72),Y
       ADC  ($73)
@@ -145,11 +145,11 @@
       ADC  >$007E,X
       ROR  >$007F,X
       ADC  >>$008180,X
-      BRA  *-$0000007D
+      BRA  *-$7D
       BRA  *
       BRA  *+1
       STA  ($82,X)
-      BRL  *+$00000086
+      BRL  *+$0086
       STA  $84,S
       STY  $85
       STA  $86
@@ -163,7 +163,7 @@
       STA  >$008E
       STX  >$008F
       STA  >>$009190
-      BCC  *-$0000006D
+      BCC  *-$6D
       BCC  *
       BCC  *+1
       STA  ($92),Y
@@ -198,7 +198,7 @@
       LDA  >$00AE
       LDX  >$00AF
       LDA  >>$00B1B0
-      BCS  *-$0000004D
+      BCS  *-$4D
       BCS  *
       BCS  *+1
       LDA  ($B2),Y
@@ -233,7 +233,7 @@
       CMP  >$00CE
       DEC  >$00CF
       CMP  >>$00D1D0
-      BNE  *-$0000002D
+      BNE  *-$2D
       BNE  *
       BNE  *+1
       CMP  ($D2),Y

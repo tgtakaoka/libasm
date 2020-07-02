@@ -329,7 +329,7 @@ Error DisZ80::decodeRelative(InsnZ80 &insn, int8_t delta) {
         *_operands++ = ',';
     }
     const Config::uintptr_t target = insn.address() + 2 + delta;
-    outRelativeAddr(target, insn.address());
+    outRelativeAddr(target, insn.address(), 8);
     return setOK();
 }
 

@@ -165,7 +165,8 @@ Error DisW65C816::decodeRelative(
     DisMemory &memory, InsnW65C816 &insn) {
     const uint8_t bank = static_cast<uint8_t>(insn.address() >> 16);
     uint16_t addr = static_cast<uint16_t>(insn.address());
-    if (insn.addrMode() == REL_LONG) {
+    const AddrMode addrMode = insn.addrMode();
+    if (addrMode == REL_LONG) {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         addr += 3 + static_cast<int16_t>(val);
@@ -177,7 +178,7 @@ Error DisW65C816::decodeRelative(
     }
     const Config::uintptr_t target =
         (static_cast<Config::uintptr_t>(bank) << 16) + addr;
-    outRelativeAddr(target, insn.address(), Config::addressBits());
+    outRelativeAddr(target, insn.address(), addrMode == REL_LONG ? 16 : 8);
     return setOK();
 }
 

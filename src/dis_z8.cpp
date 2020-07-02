@@ -112,7 +112,7 @@ Error DisZ8::decodeRelative(DisMemory &memory, InsnZ8 &insn) {
     if (insn.readByte(memory, disp)) return setError(NO_MEMORY);
     const Config::uintptr_t target =
         insn.address() + insn.length() + static_cast<int8_t>(disp);
-    outRelativeAddr(target, insn.address());
+    outRelativeAddr(target, insn.address(), 8);
     return setOK();
 }
 

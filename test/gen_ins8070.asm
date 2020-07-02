@@ -21,8 +21,8 @@
       LD   SP,#0x0026
       LD   P2,#0x0027
       MPY  EA,T
-      BND  $+0x0030
-      BND  $-0x007E
+      BND  $+0x30
+      BND  $-0x7E
       BND  $
       SSM  P2
       LD   EA,PC
@@ -51,29 +51,29 @@
       RET
       POP  P2
       XOR  A,E
-      BP   $+0x0067
-      BP   $-0x007E
+      BP   $+0x67
+      BP   $-0x7E
       BP   $
       BP   103,P2
       BP   -128,P2
-      BZ   $+0x006F
-      BZ   $-0x007E
+      BZ   $+0x6F
+      BZ   $-0x7E
       BZ   $
       BZ   111,P2
       BZ   -128,P2
       ADD  A,E
-      BRA  $+0x0077
-      BRA  $-0x007E
+      BRA  $+0x77
+      BRA  $-0x7E
       BRA  $
       BRA  119,P2
       BRA  -128,P2
       SUB  A,E
-      BNZ  $+0x007F
-      BNZ  $-0x007E
+      BNZ  $+0x7F
+      BNZ  $-0x7E
       BNZ  $
       BNZ  127,P2
       BNZ  -128,P2
-      LD   EA,$-0x007E,PC
+      LD   EA,$-0x7E,PC
       LD   EA,$,PC
       LD   EA,$+1,PC
       LD   EA,-126,SP
@@ -84,7 +84,7 @@
       LD   EA,0xFF86
       LD   EA,@-121,P2
       LD   EA,@0,P2
-      ST   EA,$-0x0076,PC
+      ST   EA,$-0x76,PC
       ST   EA,$,PC
       ST   EA,$+1,PC
       ST   EA,-118,SP
@@ -94,7 +94,7 @@
       ST   EA,0xFF8E
       ST   EA,@-113,P2
       ST   EA,@0,P2
-      ILD  A,$-0x006E,PC
+      ILD  A,$-0x6E,PC
       ILD  A,$,PC
       ILD  A,$+1,PC
       ILD  A,-110,SP
@@ -104,7 +104,7 @@
       ILD  A,0xFF96
       ILD  A,@-105,P2
       ILD  A,@0,P2
-      DLD  A,$-0x0066,PC
+      DLD  A,$-0x66,PC
       DLD  A,$,PC
       DLD  A,$+1,PC
       DLD  A,-102,SP
@@ -114,7 +114,7 @@
       DLD  A,0xFF9E
       DLD  A,@-97,P2
       DLD  A,@0,P2
-      LD   T,$-0x005E,PC
+      LD   T,$-0x5E,PC
       LD   T,$,PC
       LD   T,$+1,PC
       LD   T,-94,SP
@@ -125,7 +125,7 @@
       LD   T,0xFFA6
       LD   T,@-89,P2
       LD   T,@0,P2
-      ADD  EA,$-0x004E,PC
+      ADD  EA,$-0x4E,PC
       ADD  EA,$,PC
       ADD  EA,$+1,PC
       ADD  EA,-78,SP
@@ -136,7 +136,7 @@
       ADD  EA,0xFFB6
       ADD  EA,@-73,P2
       ADD  EA,@0,P2
-      SUB  EA,$-0x0046,PC
+      SUB  EA,$-0x46,PC
       SUB  EA,$,PC
       SUB  EA,$+1,PC
       SUB  EA,-70,SP
@@ -147,7 +147,7 @@
       SUB  EA,0xFFBE
       SUB  EA,@-65,P2
       SUB  EA,@0,P2
-      LD   A,$-0x003E,PC
+      LD   A,$-0x3E,PC
       LD   A,$,PC
       LD   A,$+1,PC
       LD   A,-62,SP
@@ -158,7 +158,7 @@
       LD   A,0xFFC6
       LD   A,@-57,P2
       LD   A,@0,P2
-      ST   A,$-0x0036,PC
+      ST   A,$-0x36,PC
       ST   A,$,PC
       ST   A,$+1,PC
       ST   A,-54,SP
@@ -168,7 +168,7 @@
       ST   A,0xFFCE
       ST   A,@-49,P2
       ST   A,@0,P2
-      AND  A,$-0x002E,PC
+      AND  A,$-0x2E,PC
       AND  A,$,PC
       AND  A,$+1,PC
       AND  A,-46,SP
@@ -179,7 +179,7 @@
       AND  A,0xFFD6
       AND  A,@-41,P2
       AND  A,@0,P2
-      OR   A,$-0x0026,PC
+      OR   A,$-0x26,PC
       OR   A,$,PC
       OR   A,$+1,PC
       OR   A,-38,SP
@@ -190,7 +190,7 @@
       OR   A,0xFFDE
       OR   A,@-33,P2
       OR   A,@0,P2
-      XOR  A,$-0x001E,PC
+      XOR  A,$-0x1E,PC
       XOR  A,$,PC
       XOR  A,$+1,PC
       XOR  A,-30,SP

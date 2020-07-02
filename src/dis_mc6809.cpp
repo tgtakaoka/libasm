@@ -74,7 +74,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
             if (spec.base == REG_PCR) {
                 const Config::uintptr_t target =
                     insn.address() + insn.length() + offset;
-                outRelativeAddr(target, insn.address());
+                outRelativeAddr(target, insn.address(), spec.size);
             } else {
                 if (force) outText(force);
                 outConstant(offset, 10);
@@ -111,7 +111,8 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
 
 Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
     Config::ptrdiff_t delta;
-    if (insn.oprSize() == SZ_BYTE) {
+    const OprSize oprSize = insn.oprSize();
+    if (oprSize == SZ_BYTE) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         delta = static_cast<int8_t>(val);
@@ -121,7 +122,7 @@ Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
         delta = static_cast<Config::ptrdiff_t>(val);
     }
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
-    outRelativeAddr(target, insn.address());
+    outRelativeAddr(target, insn.address(), oprSize == SZ_BYTE ? 8 : 16);
     return setOK();
 }
 
