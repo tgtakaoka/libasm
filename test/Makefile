@@ -32,6 +32,7 @@ all: \
 	test_w65c816_m0x0.s28 \
 	test_w65c816_m1x0.s28 \
 	test_w65c816_m0x1.s28 \
+	test_i8051.hex \
 	test_i8080.hex \
 	test_i8085.hex \
 	test_i8080_z80syn.hex \
