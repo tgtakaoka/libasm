@@ -65,7 +65,7 @@ Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
     if (dstReg == REG_UNDEF)
         return setError(UNKNOWN_REGISTER);
     p = skipSpaces(p + _regs.regNameLen(dstReg));
-    if (*p != ',') return setError(UNKNOWN_OPERAND);
+    if (*p != ',') return setError(MISSING_COMMA);
     p = skipSpaces(p + 1);
     const RegName srcReg = _regs.parseDataReg(p);
     if (srcReg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
@@ -89,7 +89,7 @@ Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
 Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
     if (insn.insnFormat() != NO_FORMAT) {
         _scan = skipSpaces(_scan);
-        if (*_scan != ',') return setError(UNKNOWN_OPERAND);
+        if (*_scan != ',') return setError(MISSING_COMMA);
         _scan++;
     }
     if (insn.addrMode() == IMM8) {

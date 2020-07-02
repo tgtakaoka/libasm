@@ -22,7 +22,7 @@ namespace tms9900 {
 
 Error AsmTms9900::checkComma() {
     const char *p = skipSpaces(_scan);
-    if (*p != ',') return setErrorIf(UNKNOWN_OPERAND);
+    if (*p != ',') return setErrorIf(MISSING_COMMA);
     _scan = skipSpaces(p + 1);
     return OK;
 }
@@ -181,7 +181,7 @@ Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
     Config::opcode_t srcMode, dstMode = 0;
     uint16_t srcOpr, dstOpr = 0;
     if (encodeOpr(srcMode, srcOpr)) return getError();
-    if (*_scan != ',') setError(UNKNOWN_OPERAND);
+    if (*_scan != ',') setError(MISSING_COMMA);
     _scan = skipSpaces(_scan + 1);
 
     if (insn.addrMode() == DW_BIT_SRC) {

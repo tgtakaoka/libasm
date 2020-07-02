@@ -179,16 +179,14 @@ Error AsmIns8070::parseOperand(Operand &op) {
     p = skipSpaces(_scan);
     if (endOfLine(p))
         return setOK();
-    if (*p != ',')
-        return setError(UNKNOWN_OPERAND);
+    if (*p != ',') return setError(MISSING_COMMA);
     _scan = skipSpaces(p + 1);
     if (nextToken(op, op.src))
         return getError();
     p = skipSpaces(_scan);
     if (endOfLine(p))
         return setOK();
-    if (*p != ',')
-        return setError(UNKNOWN_OPERAND);
+    if (*p != ',') return setError(MISSING_COMMA);
     _scan = skipSpaces(p + 1);
     OprFormat extra;
     if (nextToken(op, extra)) return getError();

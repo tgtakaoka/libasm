@@ -368,8 +368,8 @@ static void test_error() {
     ETEST(UNKNOWN_OPERAND,  "LD A,@ 1,P3");
     ETEST(UNKNOWN_OPERAND,  "LD A,@#1");
     ETEST(UNKNOWN_OPERAND,  "LD A,@=1");
-    ETEST(UNKNOWN_OPERAND,  "LD A,1(P3)");  // SC/MP style
-    ETEST(UNKNOWN_OPERAND,  "LD A,@1(P3)"); // SC/MP style
+    ETEST(MISSING_COMMA,    "LD A,1(P3)");  // SC/MP style
+    ETEST(MISSING_COMMA,    "LD A,@1(P3)"); // SC/MP style
     ETEST(UNKNOWN_OPERAND,  "LD A,1,(EA)");
 }
 

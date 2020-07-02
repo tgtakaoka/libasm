@@ -317,7 +317,7 @@ Error AsmZ80::parseOperand(Operand &opr) {
             if (getOperand(opr.val)) return opr.setError(getError());
             opr.format = ADDR_16;
             p = skipSpaces(_scan);
-            if (*p != ')') return opr.setError(UNKNOWN_OPERAND);
+            if (*p != ')') return opr.setError(MISSING_CLOSING_PAREN);
             _scan = p + 1;
             return opr.setOK();
         }
@@ -344,7 +344,7 @@ Error AsmZ80::parseOperand(Operand &opr) {
                 if (getOperand(val8)) return opr.setError(getError());
                 opr.setError(getError());
                 p = skipSpaces(_scan);
-                if (*p != ')') return opr.setError(UNKNOWN_OPERAND);
+                if (*p != ')') return opr.setError(MISSING_CLOSING_PAREN);
                 opr.val = val8;
                 opr.format = IX_OFF;
                 if (opr.size == SZ_NONE) opr.size = SZ_BYTE;

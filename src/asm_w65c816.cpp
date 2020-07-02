@@ -136,7 +136,7 @@ Error AsmW65C816::parseOperand(Operand &op, Operand &extra) {
             }
             if (indir == ')' && *p == indir) {
                 p = skipSpaces(p + 1);
-                if (*p != ',') return setError(UNKNOWN_OPERAND);
+                if (*p != ',') return setError(MISSING_COMMA);
                 p = skipSpaces(p + 1);
                 if (_regs.compareRegName(p, REG_Y)) {
                     _scan = p + _regs.regNameLen(REG_Y);

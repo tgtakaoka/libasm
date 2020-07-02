@@ -46,6 +46,7 @@ const char *ErrorReporter::errorText(Error error) {
     case GARBAGE_AT_END:       return "Garbage at line end";
     case DUPLICATE_REGISTER:   return "Duplicate register";
     case REGISTER_NOT_ALLOWED: return "Register not allowed";
+    case MISSING_COMMA:        return "Missing comma";
 
     // ValueParser
     case ILLEGAL_CONSTANT:        return "Illegal constant";

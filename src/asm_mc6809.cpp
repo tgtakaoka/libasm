@@ -529,7 +529,7 @@ Error AsmMc6809::parseOperand(Operand &op, Operand &extra) {
         if (_token == VAL_IMM && nextToken() == EOL)
             return OK;
         if (_token != COMMA && _token != VAL_IMMC)
-            setError(UNKNOWN_OPERAND);
+            setError(MISSING_COMMA);
         extra = op;
         hasImmediate = true;
         nextToken();

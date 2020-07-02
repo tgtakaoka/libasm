@@ -823,8 +823,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                     return opr.setError(*this);
                 return setOK();
             }
-            if (*p != ',')
-                return opr.setError(UNKNOWN_OPERAND);
+            if (*p != ',') return opr.setError(MISSING_COMMA);
             p = skipSpaces(p + 1);
             opr.index = RegMc68000::parseRegName(p);
             if (!RegMc68000::isADreg(opr.index))

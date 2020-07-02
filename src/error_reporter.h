@@ -44,6 +44,7 @@ enum Error {
     GARBAGE_AT_END          = 27,
     DUPLICATE_REGISTER      = 28,
     REGISTER_NOT_ALLOWED    = 29,
+    MISSING_COMMA           = 30,
 
     // ValueParser
     ILLEGAL_CONSTANT        = 100,
