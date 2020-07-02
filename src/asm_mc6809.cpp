@@ -114,7 +114,7 @@ Error AsmMc6809::encodeRegisters(InsnMc6809 &insn, const Operand &op) {
     if (op.list.pair.getError()) return setError(op.list.pair);
     const int8_t num1 = _regs.encodeDataReg(reg1);
     const int8_t num2 = _regs.encodeDataReg(reg2);
-    if (num1 < 0 || num2 < 0) return setError(ILLEGAL_REGISTER);
+    if (num1 < 0 || num2 < 0) return setError(UNKNOWN_REGISTER);
     const OprSize size1 = RegMc6809::regSize(reg1);
     const OprSize size2 = RegMc6809::regSize(reg2);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
@@ -176,14 +176,14 @@ void AsmMc6809::RegList::add(const RegName reg) {
         if (stack == reg) {
             setErrorIf(DUPLICATE_REGISTER);
         } else if (stack != REG_UNDEF) {
-            setErrorIf(ILLEGAL_REGISTER);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         } else {
             stack = reg;
         }
     } else {
         const uint8_t bit = RegMc6809::encodeStackReg(reg, false);
         if (bit == 0) {
-            setErrorIf(ILLEGAL_REGISTER);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         } else if (post & bit) {
             setErrorIf(DUPLICATE_REGISTER);
         } else {
@@ -205,7 +205,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             const bool onUserStack = (insn.opCode() & 2) != 0;
             const int8_t bit =
                 _regs.encodeStackReg(op.list.stack, onUserStack);
-            if (bit == 0) return setError(ILLEGAL_REGISTER);
+            if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
             post |= bit;
         }
     }

@@ -71,14 +71,16 @@ Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
 
 Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
     uint16_t count;
-    if (acceptR0 && _regs.parseRegName(_scan) == REG_R0) {
+    const RegName reg = _regs.parseRegName(_scan);
+    if (reg != REG_UNDEF) {
+        if (reg != REG_R0 || !acceptR0) return setError(REGISTER_NOT_ALLOWED);
         _scan += 2;
         count = 0;
     } else {
         uint8_t val8;
         if (getOperand(val8)) return getError();
         if (val8 > 16 || (!accept16 && val8 == 16))
-            return setError(UNKNOWN_OPERAND);
+            return setError(OVERFLOW_RANGE);
         count = val8 & 0xf;
     }
     switch (insn.addrMode()) {
@@ -136,11 +138,10 @@ Error AsmTms9900::encodeOpr(Config::opcode_t &oprMode, uint16_t &operand) {
         if (*p == '(') {
             p = skipSpaces(p + 1);
             regName = _regs.parseRegName(p);
-            if (regName == REG_UNDEF || regName == REG_R0)
-                return setError(UNKNOWN_OPERAND);
+            if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+            if (regName == REG_R0) return setError(REGISTER_NOT_ALLOWED);
             p = skipSpaces(p + _regs.regNameLen(regName));
-            if (*p != ')')
-                return setError(UNKNOWN_OPERAND);
+            if (*p != ')') return setError(MISSING_CLOSING_PAREN);
             p++;
         } else {
             regName = REG_R0;
@@ -237,9 +238,9 @@ Error AsmTms9900::encode(Insn &_insn) {
         encodeReg(insn, true);
         break;
     case REG_IMM:
-        error = encodeReg(insn, true);
+        error = encodeReg(insn, false);
         if (checkComma()) return setError(UNKNOWN_OPERAND);
-        encodeImm(insn, false);
+        encodeImm(insn, true);
         break;
     case CNT_REG:
         error = encodeReg(insn, false);
@@ -284,6 +285,8 @@ Error AsmTms9900::encode(Insn &_insn) {
         return setError(INTERNAL_ERROR);
     }
     setErrorIf(error);
+    if (getError() != OK && getError() != UNDEFINED_SYMBOL)
+        _insn.resetAddress(insn.address());
     return checkLineEnd();
 }
 

@@ -123,6 +123,7 @@ static void test_cnt_reg() {
     TEST("SRL R4,12", 0x09C4);
     TEST("SLA R8,4",  0x0A48);
     TEST("SRC R9,15", 0x0BF9);
+    ETEST(OVERFLOW_RANGE, "SRC R9,16");
 }
 
 static void test_src() {
@@ -196,6 +197,8 @@ static void test_reg_src() {
 static void test_cnt_src() {
     TEST("LDCR *R13+,16",  0x303D);
     TEST("STCR @2(R4),15", 0x37E4, 0x0002);
+    ETEST(REGISTER_NOT_ALLOWED, "STCR @2(R4),R0");
+    ETEST(OVERFLOW_RANGE, "STCR @2(R4),17");
 
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
@@ -214,6 +217,8 @@ static void test_cnt_src() {
 static void test_xop_src() {
     TEST("XOP @9876H,0",  0x2C20, 0x9876);
     TEST("XOP @9876H,15", 0x2FE0, 0x9876);
+    ETEST(REGISTER_NOT_ALLOWED, "XOP @9876H,R0");
+    ETEST(OVERFLOW_RANGE, "XOP @9876H,16");
 
     symtab.intern(10, "xop10");
     symtab.intern(0x9876, "sym9876");

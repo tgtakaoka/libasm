@@ -185,7 +185,7 @@ Error AsmMc68000::encodeDestSiz(
             return encodeAregSiz(insn, op1, op2);
         }
         if (op2.reg == REG_CCR || op2.reg == REG_SR) {
-            if (alias) return setError(UNKNOWN_OPERAND);
+            if (alias) return setError(REGISTER_NOT_ALLOWED);
             insn.setSize(SZ_BYTE);
             insn.embed(0074);
             if (op2.reg == REG_SR) {
@@ -349,7 +349,7 @@ Error AsmMc68000::encodeDestOpr(
         return emitEffectiveAddr(insn, op1, -1);
     }
     if (!RegMc68000::isDreg(op2.reg))
-        return setError(UNKNOWN_OPERAND);
+        return setError(REGISTER_NOT_ALLOWED);
     // DREG_ROT
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     const uint8_t rotOpc = (insn.opCode() >> 9) & 3;
@@ -502,7 +502,7 @@ Error AsmMc68000::encodeDregDst(
     }
 
     // CHK, DIVU, DIVS, MULU, MULS
-    if (!RegMc68000::isDreg(op2.reg)) return setError(UNKNOWN_OPERAND);
+    if (!RegMc68000::isDreg(op2.reg)) return setError(REGISTER_NOT_ALLOWED);
     if (checkSize(insn, SZ_WORD)) return getError();
     if (!op1.satisfy(EaCat::DATA)) return setError(ILLEGAL_OPERAND_MODE);
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
@@ -735,7 +735,7 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
     for (;;) {
         RegName start = RegMc68000::parseRegName(p);
         if (!RegMc68000::isADreg(start))
-            return opr.setError(UNKNOWN_OPERAND);
+            return opr.setError(REGISTER_NOT_ALLOWED);
         p = skipSpaces(p + RegMc68000::regNameLen(start));
         uint8_t s = RegMc68000::encodeRegPos(start);
         uint8_t e = s;
@@ -743,7 +743,7 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
             p = skipSpaces(p + 1);
             RegName last = RegMc68000::parseRegName(p);
             if (!RegMc68000::isADreg(start))
-                return opr.setError(UNKNOWN_OPERAND);
+                return opr.setError(REGISTER_NOT_ALLOWED);
             e = RegMc68000::encodeRegPos(last);
             p = skipSpaces(p + RegMc68000::regNameLen(last));
         }
@@ -782,7 +782,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
         if (RegMc68000::isAreg(opr.reg)) {
             p = skipSpaces(p + RegMc68000::regNameLen(opr.reg));
             if (*p++ != ')')
-                return opr.setError(UNKNOWN_OPERAND);
+                return opr.setError(MISSING_CLOSING_PAREN);
             if (*p == '+') {
                 p++;
                 opr.mode = M_PINC;
@@ -814,7 +814,7 @@ Error AsmMc68000::parseOperand(Operand &opr) {
             p = skipSpaces(p + 1);
             opr.reg = RegMc68000::parseRegName(p);
             if (!RegMc68000::isAreg(opr.reg) && opr.reg != REG_PC)
-                return opr.setError(UNKNOWN_OPERAND);
+                return opr.setError(REGISTER_NOT_ALLOWED);
             p = skipSpaces(p + RegMc68000::regNameLen(opr.reg));
             if (*p == ')') {
                 opr.mode = (opr.reg == REG_PC) ? M_PC_DISP : M_DISP;
@@ -831,8 +831,8 @@ Error AsmMc68000::parseOperand(Operand &opr) {
                 return opr.setError(UNKNOWN_OPERAND);
             p += RegMc68000::regNameLen(opr.index);
             p = skipSpaces(parseSize(p, opr.size));
-            if (opr.size == SZ_INVALID || *p++ != ')')
-                return opr.setError(UNKNOWN_OPERAND);
+            if (opr.size == SZ_INVALID) return opr.setError(UNKNOWN_OPERAND);
+            if (*p++ != ')') return opr.setError(MISSING_CLOSING_PAREN);
             opr.mode = (opr.reg == REG_PC) ? M_PC_INDX : M_INDX;
             if (opr.mode == M_INDX && checkSize(opr.val32, SZ_BYTE, false))
                 return opr.setError(*this);

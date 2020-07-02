@@ -25,8 +25,9 @@ Error AsmCdp1802::encodeRegn(InsnCdp1802 &insn) {
     if (getOperand(regNo)) return getError();
     if (getError() == UNDEFINED_SYMBOL)
         regNo = 7; // first working register
-    if (regNo >= 16 || (insn.addrMode() == REG1 && regNo == 0))
-        return setError(ILLEGAL_REGISTER);
+    if (regNo >= 16) return setError(OVERFLOW_RANGE);
+    if (insn.addrMode() == REG1 && regNo == 0)
+        return setError(REGISTER_NOT_ALLOWED);
     insn.embed(regNo);
     insn.emitInsn();
     return OK;

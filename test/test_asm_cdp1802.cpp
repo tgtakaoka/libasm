@@ -76,7 +76,7 @@ static void test_indexed() {
 }
 
 static void test_register() {
-    ETEST(ILLEGAL_REGISTER, "LDN 0");
+    ETEST(REGISTER_NOT_ALLOWED, "LDN 0");
     TEST("LDN 1",  0x01);
     TEST("LDN 2",  0x02);
     TEST("LDN 3",  0x03);
@@ -92,7 +92,7 @@ static void test_register() {
     TEST("LDN 13", 0x0D);
     TEST("LDN 14", 0x0E);
     TEST("LDN 15", 0x0F);
-    ETEST(ILLEGAL_REGISTER, "LDN 16");
+    ETEST(OVERFLOW_RANGE, "LDN 16");
 
     TEST("INC 0",  0x10);
     TEST("INC 1",  0x11);
@@ -268,8 +268,8 @@ static void test_register() {
     symtab.intern(3, "PC");
     symtab.intern(16, "XX");
 
-    ETEST(ILLEGAL_REGISTER, "LDN R0");
-    ETEST(ILLEGAL_REGISTER, "LDN XX");
+    ETEST(REGISTER_NOT_ALLOWED, "LDN 0");
+    ETEST(OVERFLOW_RANGE,       "LDN 16");
     TEST("LDN PC", 0x03);
     TEST("SEP PC", 0xD3);
 }

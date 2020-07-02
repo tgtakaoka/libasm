@@ -23,7 +23,7 @@ namespace mc6800 {
 Error AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
     const InsnAdjust iAdjust = insn.insnAdjust();
     if (iAdjust == ADJ_ZERO)
-        return op.reg == REG_UNDEF ? OK : setError(UNKNOWN_OPERAND);
+        return op.reg == REG_UNDEF ? OK : setError(REGISTER_NOT_ALLOWED);
     if (op.reg == REG_A) return OK;
     if (op.reg == REG_B) {
         if (iAdjust == ADJ_AB01) {

@@ -36,15 +36,16 @@ const char *ErrorReporter::errorText(Error error) {
     case ILLEGAL_OPERAND_MODE: return "Illegal operand mode";
 
     // Assembler
-    case NO_INSTRUCTION:      return "No instruction found";
-    case UNKNOWN_INSTRUCTION: return "Unknown instruction";
-    case UNKNOWN_REGISTER:    return "Unknown register";
-    case UNKNOWN_OPERAND:     return "Unknown operand";
-    case OPERAND_NOT_ZP:      return "Operand isn't zero page";
-    case OPERAND_TOO_FAR:     return "Operand too far";
-    case ILLEGAL_BIT_NUMBER:  return "Illegal bit number";
-    case GARBAGE_AT_END:      return "Garbage at line end";
-    case DUPLICATE_REGISTER:  return "Duplicate register";
+    case NO_INSTRUCTION:       return "No instruction found";
+    case UNKNOWN_INSTRUCTION:  return "Unknown instruction";
+    case UNKNOWN_REGISTER:     return "Unknown register";
+    case UNKNOWN_OPERAND:      return "Unknown operand";
+    case OPERAND_NOT_ZP:       return "Operand isn't zero page";
+    case OPERAND_TOO_FAR:      return "Operand too far";
+    case ILLEGAL_BIT_NUMBER:   return "Illegal bit number";
+    case GARBAGE_AT_END:       return "Garbage at line end";
+    case DUPLICATE_REGISTER:   return "Duplicate register";
+    case REGISTER_NOT_ALLOWED: return "Register not allowed";
 
     // ValueParser
     case ILLEGAL_CONSTANT:        return "Illegal constant";

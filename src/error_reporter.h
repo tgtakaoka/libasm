@@ -43,6 +43,7 @@ enum Error {
     ILLEGAL_BIT_NUMBER      = 26,
     GARBAGE_AT_END          = 27,
     DUPLICATE_REGISTER      = 28,
+    REGISTER_NOT_ALLOWED    = 29,
 
     // ValueParser
     ILLEGAL_CONSTANT        = 100,
