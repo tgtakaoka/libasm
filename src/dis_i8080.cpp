@@ -65,7 +65,7 @@ Error DisI8080::decode(
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setOpCode(opCode);
     if (TableI8080.searchOpCode(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableI8080.getError());
 
     switch (insn.insnFormat()) {
     case POINTER_REG:
