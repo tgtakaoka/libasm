@@ -599,8 +599,8 @@ static constexpr TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
     { 0x8F, 0x81, AUTO_IDX,  2, REG_X, REG_UNDEF }, // ,X++ [,x++]
     { 0x9F, 0x82, AUTO_IDX, -1, REG_X, REG_UNDEF }, // ,-X
     { 0x8F, 0x83, AUTO_IDX, -2, REG_X, REG_UNDEF }, // ,--X [,--X]
-    { 0xEF, 0x8C, DISP_IDX,  8, REG_PCR, REG_UNDEF }, // n8,PCR [n8,PCR]
-    { 0xEF, 0x8D, DISP_IDX, 16, REG_PCR, REG_UNDEF }, // n16,PCR [n16,PCR]
+    { 0x8F, 0x8C, DISP_IDX,  8, REG_PCR, REG_UNDEF }, // n8,PCR [n8,PCR]
+    { 0x8F, 0x8D, DISP_IDX, 16, REG_PCR, REG_UNDEF }, // n16,PCR [n16,PCR]
     { 0xFF, 0x9F, ABS_IDIR, 16, REG_UNDEF, REG_UNDEF }, // [n16]
 };
 

@@ -3437,6 +3437,9 @@
       SUBA  16,Y
       SUBA  F,Y
       SUBA  D,Y
+      SUBA  *-$0050,PCR
+      SUBA  *,PCR
+      SUBA  *+1,PCR
       SUBA  W,Y
       SUBA  176,W
       SUBA  [177,W]
@@ -3451,6 +3454,9 @@
       SUBA  [1,Y]
       SUBA  [F,Y]
       SUBA  [D,Y]
+      SUBA  [*-$0040,PCR]
+      SUBA  [*,PCR]
+      SUBA  [*+1,PCR]
       SUBA  [W,Y]
       SUBA  ,U+
       SUBA  ,U++
@@ -3526,6 +3532,9 @@
       CMPA  16,Y
       CMPA  F,Y
       CMPA  D,Y
+      CMPA  *-$0050,PCR
+      CMPA  *,PCR
+      CMPA  *+1,PCR
       CMPA  W,Y
       CMPA  176,W
       CMPA  [177,W]
@@ -3540,6 +3549,9 @@
       CMPA  [1,Y]
       CMPA  [F,Y]
       CMPA  [D,Y]
+      CMPA  [*-$0040,PCR]
+      CMPA  [*,PCR]
+      CMPA  [*+1,PCR]
       CMPA  [W,Y]
       CMPA  ,U+
       CMPA  ,U++
@@ -3614,6 +3626,9 @@
       SBCA  16,Y
       SBCA  F,Y
       SBCA  D,Y
+      SBCA  *-$0050,PCR
+      SBCA  *,PCR
+      SBCA  *+1,PCR
       SBCA  W,Y
       SBCA  176,W
       SBCA  [177,W]
@@ -3628,6 +3643,9 @@
       SBCA  [1,Y]
       SBCA  [F,Y]
       SBCA  [D,Y]
+      SBCA  [*-$0040,PCR]
+      SBCA  [*,PCR]
+      SBCA  [*+1,PCR]
       SBCA  [W,Y]
       SBCA  ,U+
       SBCA  ,U++
@@ -3701,6 +3719,9 @@
       SUBD  16,Y
       SUBD  F,Y
       SUBD  D,Y
+      SUBD  *-$0050,PCR
+      SUBD  *,PCR
+      SUBD  *+1,PCR
       SUBD  W,Y
       SUBD  176,W
       SUBD  [177,W]
@@ -3715,6 +3736,9 @@
       SUBD  [1,Y]
       SUBD  [F,Y]
       SUBD  [D,Y]
+      SUBD  [*-$0040,PCR]
+      SUBD  [*,PCR]
+      SUBD  [*+1,PCR]
       SUBD  [W,Y]
       SUBD  ,U+
       SUBD  ,U++
@@ -3787,6 +3811,9 @@
       ANDA  16,Y
       ANDA  F,Y
       ANDA  D,Y
+      ANDA  *-$0050,PCR
+      ANDA  *,PCR
+      ANDA  *+1,PCR
       ANDA  W,Y
       ANDA  176,W
       ANDA  [177,W]
@@ -3801,6 +3828,9 @@
       ANDA  [1,Y]
       ANDA  [F,Y]
       ANDA  [D,Y]
+      ANDA  [*-$0040,PCR]
+      ANDA  [*,PCR]
+      ANDA  [*+1,PCR]
       ANDA  [W,Y]
       ANDA  ,U+
       ANDA  ,U++
@@ -3872,6 +3902,9 @@
       BITA  16,Y
       BITA  F,Y
       BITA  D,Y
+      BITA  *-$0050,PCR
+      BITA  *,PCR
+      BITA  *+1,PCR
       BITA  W,Y
       BITA  176,W
       BITA  [177,W]
@@ -3886,6 +3919,9 @@
       BITA  [1,Y]
       BITA  [F,Y]
       BITA  [D,Y]
+      BITA  [*-$0040,PCR]
+      BITA  [*,PCR]
+      BITA  [*+1,PCR]
       BITA  [W,Y]
       BITA  ,U+
       BITA  ,U++
@@ -3956,6 +3992,9 @@
       LDA   16,Y
       LDA   F,Y
       LDA   D,Y
+      LDA   *-$0050,PCR
+      LDA   *,PCR
+      LDA   *+1,PCR
       LDA   W,Y
       LDA   176,W
       LDA   [177,W]
@@ -3970,6 +4009,9 @@
       LDA   [1,Y]
       LDA   [F,Y]
       LDA   [D,Y]
+      LDA   [*-$0040,PCR]
+      LDA   [*,PCR]
+      LDA   [*+1,PCR]
       LDA   [W,Y]
       LDA   ,U+
       LDA   ,U++
@@ -4039,6 +4081,9 @@
       STA   16,Y
       STA   F,Y
       STA   D,Y
+      STA   *-$0050,PCR
+      STA   *,PCR
+      STA   *+1,PCR
       STA   W,Y
       STA   176,W
       STA   [177,W]
@@ -4053,6 +4098,9 @@
       STA   [1,Y]
       STA   [F,Y]
       STA   [D,Y]
+      STA   [*-$0040,PCR]
+      STA   [*,PCR]
+      STA   [*+1,PCR]
       STA   [W,Y]
       STA   ,U+
       STA   ,U++
@@ -4119,6 +4167,9 @@
       EORA  170,Y
       EORA  F,Y
       EORA  D,Y
+      EORA  *-$0050,PCR
+      EORA  *,PCR
+      EORA  *+1,PCR
       EORA  W,Y
       EORA  176,W
       EORA  [177,W]
@@ -4133,6 +4184,9 @@
       EORA  [1,Y]
       EORA  [F,Y]
       EORA  [D,Y]
+      EORA  [*-$0040,PCR]
+      EORA  [*,PCR]
+      EORA  [*+1,PCR]
       EORA  [W,Y]
       EORA  ,U+
       EORA  ,U++
@@ -4198,6 +4252,9 @@
       EORA  <<0,Y
       ADCA  F,Y
       ADCA  D,Y
+      ADCA  *-$0050,PCR
+      ADCA  *,PCR
+      ADCA  *+1,PCR
       ADCA  W,Y
       ADCA  176,W
       ADCA  [177,W]
@@ -4212,6 +4269,9 @@
       ADCA  [1,Y]
       ADCA  [F,Y]
       ADCA  [D,Y]
+      ADCA  [*-$0040,PCR]
+      ADCA  [*,PCR]
+      ADCA  [*+1,PCR]
       ADCA  [W,Y]
       ADCA  ,U+
       ADCA  ,U++
@@ -4279,6 +4339,9 @@
       ADCA  -16,Y
       ADCA  <<0,U
       ORA   D,Y
+      ORA   *-$0050,PCR
+      ORA   *,PCR
+      ORA   *+1,PCR
       ORA   W,Y
       ORA   176,W
       ORA   [177,W]
@@ -4293,6 +4356,9 @@
       ORA   [1,Y]
       ORA   [F,Y]
       ORA   [D,Y]
+      ORA   [*-$0040,PCR]
+      ORA   [*,PCR]
+      ORA   [*+1,PCR]
       ORA   [W,Y]
       ORA   ,U+
       ORA   ,U++
@@ -4359,6 +4425,9 @@
       ORA   1,Y
       ORA   -16,Y
       ORA   <<0,U
+      ADDA  *-$0050,PCR
+      ADDA  *,PCR
+      ADDA  *+1,PCR
       ADDA  W,Y
       ADDA  176,W
       ADDA  [177,W]
@@ -4373,6 +4442,9 @@
       ADDA  [1,Y]
       ADDA  [F,Y]
       ADDA  [D,Y]
+      ADDA  [*-$0040,PCR]
+      ADDA  [*,PCR]
+      ADDA  [*+1,PCR]
       ADDA  [W,Y]
       ADDA  ,U+
       ADDA  ,U++
@@ -4439,6 +4511,7 @@
       ADDA  1,Y
       ADDA  -16,Y
       ADDA  <<0,U
+      CMPX  *+$00B2,PCR
       CMPX  W,Y
       CMPX  176,W
       CMPX  [177,W]
@@ -4453,6 +4526,9 @@
       CMPX  [1,Y]
       CMPX  [F,Y]
       CMPX  [D,Y]
+      CMPX  [*-$0040,PCR]
+      CMPX  [*,PCR]
+      CMPX  [*+1,PCR]
       CMPX  [W,Y]
       CMPX  ,U+
       CMPX  ,U++
@@ -4468,6 +4544,8 @@
       CMPX  16,U
       CMPX  F,U
       CMPX  D,U
+      CMPX  *-$0030,PCR
+      CMPX  *,PCR
       CMPX  W,U
       CMPX  ,W++
       CMPX  [,W++]
@@ -4533,6 +4611,9 @@
       JSR   [1,Y]
       JSR   [F,Y]
       JSR   [D,Y]
+      JSR   [*-$0040,PCR]
+      JSR   [*,PCR]
+      JSR   [*+1,PCR]
       JSR   [W,Y]
       JSR   ,U+
       JSR   ,U++
@@ -4548,6 +4629,9 @@
       JSR   16,U
       JSR   F,U
       JSR   D,U
+      JSR   *-$0030,PCR
+      JSR   *,PCR
+      JSR   *+1,PCR
       JSR   W,U
       JSR   ,W++
       JSR   [,W++]
@@ -4612,6 +4696,9 @@
       LDX   [1,Y]
       LDX   [F,Y]
       LDX   [D,Y]
+      LDX   [*-$0040,PCR]
+      LDX   [*,PCR]
+      LDX   [*+1,PCR]
       LDX   [W,Y]
       LDX   ,U+
       LDX   ,U++
@@ -4627,6 +4714,9 @@
       LDX   16,U
       LDX   F,U
       LDX   D,U
+      LDX   *-$0030,PCR
+      LDX   *,PCR
+      LDX   *+1,PCR
       LDX   W,U
       LDX   ,W++
       LDX   [,W++]
@@ -4690,6 +4780,9 @@
       STX   [1,Y]
       STX   [F,Y]
       STX   [D,Y]
+      STX   [*-$0040,PCR]
+      STX   [*,PCR]
+      STX   [*+1,PCR]
       STX   [W,Y]
       STX   ,U+
       STX   ,U++
@@ -4705,6 +4798,9 @@
       STX   16,U
       STX   F,U
       STX   D,U
+      STX   *-$0030,PCR
+      STX   *,PCR
+      STX   *+1,PCR
       STX   W,U
       STX   ,W++
       STX   [,W++]
@@ -4815,6 +4911,9 @@
       SUBB  16,S
       SUBB  F,S
       SUBB  D,S
+      SUBB  *-16,PCR
+      SUBB  *,PCR
+      SUBB  *+1,PCR
       SUBB  W,S
       SUBB  ,--W
       SUBB  [,--W]
@@ -4829,6 +4928,9 @@
       SUBB  [1,S]
       SUBB  [F,S]
       SUBB  [D,S]
+      SUBB  [*,PCR]
+      SUBB  [*+1,PCR]
+      SUBB  [*-$007D,PCR]
       SUBB  [W,S]
       SUBB  <<0,X
       SUBB  1,X
@@ -4852,6 +4954,9 @@
       CMPB  16,S
       CMPB  F,S
       CMPB  D,S
+      CMPB  *-16,PCR
+      CMPB  *,PCR
+      CMPB  *+1,PCR
       CMPB  W,S
       CMPB  ,--W
       CMPB  [,--W]
@@ -4866,6 +4971,9 @@
       CMPB  [1,S]
       CMPB  [F,S]
       CMPB  [D,S]
+      CMPB  [*,PCR]
+      CMPB  [*+1,PCR]
+      CMPB  [*-$007D,PCR]
       CMPB  [W,S]
       CMPB  <<0,X
       CMPB  1,X
@@ -4888,6 +4996,9 @@
       SBCB  16,S
       SBCB  F,S
       SBCB  D,S
+      SBCB  *-16,PCR
+      SBCB  *,PCR
+      SBCB  *+1,PCR
       SBCB  W,S
       SBCB  ,--W
       SBCB  [,--W]
@@ -4902,6 +5013,9 @@
       SBCB  [1,S]
       SBCB  [F,S]
       SBCB  [D,S]
+      SBCB  [*,PCR]
+      SBCB  [*+1,PCR]
+      SBCB  [*-$007D,PCR]
       SBCB  [W,S]
       SBCB  <<0,X
       SBCB  1,X
@@ -4923,6 +5037,9 @@
       ADDD  16,S
       ADDD  F,S
       ADDD  D,S
+      ADDD  *-16,PCR
+      ADDD  *,PCR
+      ADDD  *+1,PCR
       ADDD  W,S
       ADDD  ,--W
       ADDD  [,--W]
@@ -4937,6 +5054,9 @@
       ADDD  [1,S]
       ADDD  [F,S]
       ADDD  [D,S]
+      ADDD  [*,PCR]
+      ADDD  [*+1,PCR]
+      ADDD  [*-$007D,PCR]
       ADDD  [W,S]
       ADDD  <<0,X
       ADDD  1,X
@@ -4957,6 +5077,9 @@
       ANDB  16,S
       ANDB  F,S
       ANDB  D,S
+      ANDB  *-16,PCR
+      ANDB  *,PCR
+      ANDB  *+1,PCR
       ANDB  W,S
       ANDB  ,--W
       ANDB  [,--W]
@@ -4971,6 +5094,9 @@
       ANDB  [1,S]
       ANDB  [F,S]
       ANDB  [D,S]
+      ANDB  [*,PCR]
+      ANDB  [*+1,PCR]
+      ANDB  [*-$007D,PCR]
       ANDB  [W,S]
       ANDB  <<0,X
       ANDB  1,X
@@ -4990,6 +5116,9 @@
       BITB  16,S
       BITB  F,S
       BITB  D,S
+      BITB  *-16,PCR
+      BITB  *,PCR
+      BITB  *+1,PCR
       BITB  W,S
       BITB  ,--W
       BITB  [,--W]
@@ -5004,6 +5133,9 @@
       BITB  [1,S]
       BITB  [F,S]
       BITB  [D,S]
+      BITB  [*,PCR]
+      BITB  [*+1,PCR]
+      BITB  [*-$007D,PCR]
       BITB  [W,S]
       BITB  <<0,X
       BITB  1,X
@@ -5022,6 +5154,9 @@
       LDB   16,S
       LDB   F,S
       LDB   D,S
+      LDB   *-16,PCR
+      LDB   *,PCR
+      LDB   *+1,PCR
       LDB   W,S
       LDB   ,--W
       LDB   [,--W]
@@ -5036,6 +5171,9 @@
       LDB   [1,S]
       LDB   [F,S]
       LDB   [D,S]
+      LDB   [*,PCR]
+      LDB   [*+1,PCR]
+      LDB   [*-$007D,PCR]
       LDB   [W,S]
       LDB   <<0,X
       LDB   1,X
@@ -5053,6 +5191,9 @@
       STB   16,S
       STB   F,S
       STB   D,S
+      STB   *-16,PCR
+      STB   *,PCR
+      STB   *+1,PCR
       STB   W,S
       STB   ,--W
       STB   [,--W]
@@ -5067,6 +5208,9 @@
       STB   [1,S]
       STB   [F,S]
       STB   [D,S]
+      STB   [*,PCR]
+      STB   [*+1,PCR]
+      STB   [*-$007D,PCR]
       STB   [W,S]
       STB   <<0,X
       STB   1,X
@@ -5081,6 +5225,9 @@
       EORB  234,S
       EORB  F,S
       EORB  D,S
+      EORB  *-16,PCR
+      EORB  *,PCR
+      EORB  *+1,PCR
       EORB  W,S
       EORB  ,--W
       EORB  [,--W]
@@ -5095,6 +5242,9 @@
       EORB  [1,S]
       EORB  [F,S]
       EORB  [D,S]
+      EORB  [*,PCR]
+      EORB  [*+1,PCR]
+      EORB  [*-$007D,PCR]
       EORB  [W,S]
       EORB  <<0,X
       EORB  1,X
@@ -5108,6 +5258,9 @@
       EORB  <<0,S
       ADCB  F,S
       ADCB  D,S
+      ADCB  *-16,PCR
+      ADCB  *,PCR
+      ADCB  *+1,PCR
       ADCB  W,S
       ADCB  ,--W
       ADCB  [,--W]
@@ -5122,6 +5275,9 @@
       ADCB  [1,S]
       ADCB  [F,S]
       ADCB  [D,S]
+      ADCB  [*,PCR]
+      ADCB  [*+1,PCR]
+      ADCB  [*-$007D,PCR]
       ADCB  [W,S]
       ADCB  <<0,X
       ADCB  1,X
@@ -5147,9 +5303,6 @@
       ADCB  <0,X
       ADCB  F,X
       ADCB  D,X
-      ADCB  *-$0070,PCR
-      ADCB  *,PCR
-      ADCB  *+1,PCR
       ADCB  W,X
       ADCB  ,W
       ADCB  [,W]
@@ -5164,9 +5317,6 @@
       ADCB  [1,X]
       ADCB  [F,X]
       ADCB  [D,X]
-      ADCB  [*-$0060,PCR]
-      ADCB  [*,PCR]
-      ADCB  [*+1,PCR]
       ADCB  [W,X]
       ADCB  [$01A0]
       ADCB  ,Y+
@@ -5234,6 +5384,9 @@
       ADCB  <-16,S
       ADCB  <0,S
       ORB   D,S
+      ORB   *-16,PCR
+      ORB   *,PCR
+      ORB   *+1,PCR
       ORB   W,S
       ORB   ,--W
       ORB   [,--W]
@@ -5248,6 +5401,9 @@
       ORB   [1,S]
       ORB   [F,S]
       ORB   [D,S]
+      ORB   [*,PCR]
+      ORB   [*+1,PCR]
+      ORB   [*-$007D,PCR]
       ORB   [W,S]
       ORB   <<0,X
       ORB   1,X
@@ -5273,9 +5429,6 @@
       ORB   <0,X
       ORB   F,X
       ORB   D,X
-      ORB   *-$0070,PCR
-      ORB   *,PCR
-      ORB   *+1,PCR
       ORB   W,X
       ORB   ,W
       ORB   [,W]
@@ -5290,9 +5443,6 @@
       ORB   [1,X]
       ORB   [F,X]
       ORB   [D,X]
-      ORB   [*-$0060,PCR]
-      ORB   [*,PCR]
-      ORB   [*+1,PCR]
       ORB   [W,X]
       ORB   [$01A0]
       ORB   ,Y+
@@ -5360,6 +5510,9 @@
       ORB   <-16,S
       ORB   <0,S
       ORB   F,S
+      ADDB  *-16,PCR
+      ADDB  *,PCR
+      ADDB  *+1,PCR
       ADDB  W,S
       ADDB  ,--W
       ADDB  [,--W]
@@ -5374,6 +5527,9 @@
       ADDB  [1,S]
       ADDB  [F,S]
       ADDB  [D,S]
+      ADDB  [*,PCR]
+      ADDB  [*+1,PCR]
+      ADDB  [*-$007D,PCR]
       ADDB  [W,S]
       ADDB  <<0,X
       ADDB  1,X
@@ -5399,9 +5555,6 @@
       ADDB  <0,X
       ADDB  F,X
       ADDB  D,X
-      ADDB  *-$0070,PCR
-      ADDB  *,PCR
-      ADDB  *+1,PCR
       ADDB  W,X
       ADDB  ,W
       ADDB  [,W]
@@ -5416,9 +5569,6 @@
       ADDB  [1,X]
       ADDB  [F,X]
       ADDB  [D,X]
-      ADDB  [*-$0060,PCR]
-      ADDB  [*,PCR]
-      ADDB  [*+1,PCR]
       ADDB  [W,X]
       ADDB  [$01A0]
       ADDB  ,Y+
@@ -5487,6 +5637,7 @@
       ADDB  <0,S
       ADDB  F,S
       ADDB  D,S
+      LDD   *+$00F2,PCR
       LDD   W,S
       LDD   ,--W
       LDD   [,--W]
@@ -5501,6 +5652,9 @@
       LDD   [1,S]
       LDD   [F,S]
       LDD   [D,S]
+      LDD   [*,PCR]
+      LDD   [*+1,PCR]
+      LDD   [*-$007D,PCR]
       LDD   [W,S]
       LDD   <<0,X
       LDD   1,X
@@ -5528,7 +5682,6 @@
       LDD   D,X
       LDD   *-$0070,PCR
       LDD   *,PCR
-      LDD   *+1,PCR
       LDD   W,X
       LDD   ,W
       LDD   [,W]
@@ -5543,9 +5696,6 @@
       LDD   [1,X]
       LDD   [F,X]
       LDD   [D,X]
-      LDD   [*-$0060,PCR]
-      LDD   [*,PCR]
-      LDD   [*+1,PCR]
       LDD   [W,X]
       LDD   [$01A0]
       LDD   ,Y+
@@ -5628,6 +5778,9 @@
       STD   [1,S]
       STD   [F,S]
       STD   [D,S]
+      STD   [*,PCR]
+      STD   [*+1,PCR]
+      STD   [*-$007D,PCR]
       STD   [W,S]
       STD   <<0,X
       STD   1,X
@@ -5670,9 +5823,6 @@
       STD   [1,X]
       STD   [F,X]
       STD   [D,X]
-      STD   [*-$0060,PCR]
-      STD   [*,PCR]
-      STD   [*+1,PCR]
       STD   [W,X]
       STD   [$01A0]
       STD   ,Y+
@@ -5754,6 +5904,9 @@
       LDU   [1,S]
       LDU   [F,S]
       LDU   [D,S]
+      LDU   [*,PCR]
+      LDU   [*+1,PCR]
+      LDU   [*-$007D,PCR]
       LDU   [W,S]
       LDU   <<0,X
       LDU   1,X
@@ -5796,9 +5949,6 @@
       LDU   [1,X]
       LDU   [F,X]
       LDU   [D,X]
-      LDU   [*-$0060,PCR]
-      LDU   [*,PCR]
-      LDU   [*+1,PCR]
       LDU   [W,X]
       LDU   [$01A0]
       LDU   ,Y+
@@ -5880,6 +6030,9 @@
       STU   [1,S]
       STU   [F,S]
       STU   [D,S]
+      STU   [*,PCR]
+      STU   [*+1,PCR]
+      STU   [*-$007D,PCR]
       STU   [W,S]
       STU   <<0,X
       STU   1,X
@@ -5922,9 +6075,6 @@
       STU   [1,X]
       STU   [F,X]
       STU   [D,X]
-      STU   [*-$0060,PCR]
-      STU   [*,PCR]
-      STU   [*+1,PCR]
       STU   [W,X]
       STU   [$01A0]
       STU   ,Y+
@@ -7122,6 +7272,9 @@
       SUBW  16,Y
       SUBW  F,Y
       SUBW  D,Y
+      SUBW  *-$004F,PCR
+      SUBW  *,PCR
+      SUBW  *+1,PCR
       SUBW  W,Y
       SUBW  176,W
       SUBW  [177,W]
@@ -7136,6 +7289,9 @@
       SUBW  [1,Y]
       SUBW  [F,Y]
       SUBW  [D,Y]
+      SUBW  [*-$003F,PCR]
+      SUBW  [*,PCR]
+      SUBW  [*+1,PCR]
       SUBW  [W,Y]
       SUBW  ,U+
       SUBW  ,U++
@@ -7211,6 +7367,9 @@
       CMPW  16,Y
       CMPW  F,Y
       CMPW  D,Y
+      CMPW  *-$004F,PCR
+      CMPW  *,PCR
+      CMPW  *+1,PCR
       CMPW  W,Y
       CMPW  176,W
       CMPW  [177,W]
@@ -7225,6 +7384,9 @@
       CMPW  [1,Y]
       CMPW  [F,Y]
       CMPW  [D,Y]
+      CMPW  [*-$003F,PCR]
+      CMPW  [*,PCR]
+      CMPW  [*+1,PCR]
       CMPW  [W,Y]
       CMPW  ,U+
       CMPW  ,U++
@@ -7299,6 +7461,9 @@
       SBCD  16,Y
       SBCD  F,Y
       SBCD  D,Y
+      SBCD  *-$004F,PCR
+      SBCD  *,PCR
+      SBCD  *+1,PCR
       SBCD  W,Y
       SBCD  176,W
       SBCD  [177,W]
@@ -7313,6 +7478,9 @@
       SBCD  [1,Y]
       SBCD  [F,Y]
       SBCD  [D,Y]
+      SBCD  [*-$003F,PCR]
+      SBCD  [*,PCR]
+      SBCD  [*+1,PCR]
       SBCD  [W,Y]
       SBCD  ,U+
       SBCD  ,U++
@@ -7386,6 +7554,9 @@
       CMPD  16,Y
       CMPD  F,Y
       CMPD  D,Y
+      CMPD  *-$004F,PCR
+      CMPD  *,PCR
+      CMPD  *+1,PCR
       CMPD  W,Y
       CMPD  176,W
       CMPD  [177,W]
@@ -7400,6 +7571,9 @@
       CMPD  [1,Y]
       CMPD  [F,Y]
       CMPD  [D,Y]
+      CMPD  [*-$003F,PCR]
+      CMPD  [*,PCR]
+      CMPD  [*+1,PCR]
       CMPD  [W,Y]
       CMPD  ,U+
       CMPD  ,U++
@@ -7472,6 +7646,9 @@
       ANDD  16,Y
       ANDD  F,Y
       ANDD  D,Y
+      ANDD  *-$004F,PCR
+      ANDD  *,PCR
+      ANDD  *+1,PCR
       ANDD  W,Y
       ANDD  176,W
       ANDD  [177,W]
@@ -7486,6 +7663,9 @@
       ANDD  [1,Y]
       ANDD  [F,Y]
       ANDD  [D,Y]
+      ANDD  [*-$003F,PCR]
+      ANDD  [*,PCR]
+      ANDD  [*+1,PCR]
       ANDD  [W,Y]
       ANDD  ,U+
       ANDD  ,U++
@@ -7557,6 +7737,9 @@
       BITD  16,Y
       BITD  F,Y
       BITD  D,Y
+      BITD  *-$004F,PCR
+      BITD  *,PCR
+      BITD  *+1,PCR
       BITD  W,Y
       BITD  176,W
       BITD  [177,W]
@@ -7571,6 +7754,9 @@
       BITD  [1,Y]
       BITD  [F,Y]
       BITD  [D,Y]
+      BITD  [*-$003F,PCR]
+      BITD  [*,PCR]
+      BITD  [*+1,PCR]
       BITD  [W,Y]
       BITD  ,U+
       BITD  ,U++
@@ -7641,6 +7827,9 @@
       LDW   16,Y
       LDW   F,Y
       LDW   D,Y
+      LDW   *-$004F,PCR
+      LDW   *,PCR
+      LDW   *+1,PCR
       LDW   W,Y
       LDW   176,W
       LDW   [177,W]
@@ -7655,6 +7844,9 @@
       LDW   [1,Y]
       LDW   [F,Y]
       LDW   [D,Y]
+      LDW   [*-$003F,PCR]
+      LDW   [*,PCR]
+      LDW   [*+1,PCR]
       LDW   [W,Y]
       LDW   ,U+
       LDW   ,U++
@@ -7724,6 +7916,9 @@
       STW   16,Y
       STW   F,Y
       STW   D,Y
+      STW   *-$004F,PCR
+      STW   *,PCR
+      STW   *+1,PCR
       STW   W,Y
       STW   176,W
       STW   [177,W]
@@ -7738,6 +7933,9 @@
       STW   [1,Y]
       STW   [F,Y]
       STW   [D,Y]
+      STW   [*-$003F,PCR]
+      STW   [*,PCR]
+      STW   [*+1,PCR]
       STW   [W,Y]
       STW   ,U+
       STW   ,U++
@@ -7804,6 +8002,9 @@
       EORD  170,Y
       EORD  F,Y
       EORD  D,Y
+      EORD  *-$004F,PCR
+      EORD  *,PCR
+      EORD  *+1,PCR
       EORD  W,Y
       EORD  176,W
       EORD  [177,W]
@@ -7818,6 +8019,9 @@
       EORD  [1,Y]
       EORD  [F,Y]
       EORD  [D,Y]
+      EORD  [*-$003F,PCR]
+      EORD  [*,PCR]
+      EORD  [*+1,PCR]
       EORD  [W,Y]
       EORD  ,U+
       EORD  ,U++
@@ -7883,6 +8087,9 @@
       EORD  <<0,Y
       ADCD  F,Y
       ADCD  D,Y
+      ADCD  *-$004F,PCR
+      ADCD  *,PCR
+      ADCD  *+1,PCR
       ADCD  W,Y
       ADCD  176,W
       ADCD  [177,W]
@@ -7897,6 +8104,9 @@
       ADCD  [1,Y]
       ADCD  [F,Y]
       ADCD  [D,Y]
+      ADCD  [*-$003F,PCR]
+      ADCD  [*,PCR]
+      ADCD  [*+1,PCR]
       ADCD  [W,Y]
       ADCD  ,U+
       ADCD  ,U++
@@ -7964,6 +8174,9 @@
       ADCD  -16,Y
       ADCD  <<0,U
       ORD   D,Y
+      ORD   *-$004F,PCR
+      ORD   *,PCR
+      ORD   *+1,PCR
       ORD   W,Y
       ORD   176,W
       ORD   [177,W]
@@ -7978,6 +8191,9 @@
       ORD   [1,Y]
       ORD   [F,Y]
       ORD   [D,Y]
+      ORD   [*-$003F,PCR]
+      ORD   [*,PCR]
+      ORD   [*+1,PCR]
       ORD   [W,Y]
       ORD   ,U+
       ORD   ,U++
@@ -8044,6 +8260,9 @@
       ORD   1,Y
       ORD   -16,Y
       ORD   <<0,U
+      ADDW  *-$004F,PCR
+      ADDW  *,PCR
+      ADDW  *+1,PCR
       ADDW  W,Y
       ADDW  176,W
       ADDW  [177,W]
@@ -8058,6 +8277,9 @@
       ADDW  [1,Y]
       ADDW  [F,Y]
       ADDW  [D,Y]
+      ADDW  [*-$003F,PCR]
+      ADDW  [*,PCR]
+      ADDW  [*+1,PCR]
       ADDW  [W,Y]
       ADDW  ,U+
       ADDW  ,U++
@@ -8124,6 +8346,7 @@
       ADDW  1,Y
       ADDW  -16,Y
       ADDW  <<0,U
+      CMPY  *+$00B3,PCR
       CMPY  W,Y
       CMPY  176,W
       CMPY  [177,W]
@@ -8138,6 +8361,9 @@
       CMPY  [1,Y]
       CMPY  [F,Y]
       CMPY  [D,Y]
+      CMPY  [*-$003F,PCR]
+      CMPY  [*,PCR]
+      CMPY  [*+1,PCR]
       CMPY  [W,Y]
       CMPY  ,U+
       CMPY  ,U++
@@ -8153,6 +8379,8 @@
       CMPY  16,U
       CMPY  F,U
       CMPY  D,U
+      CMPY  *-$002F,PCR
+      CMPY  *,PCR
       CMPY  W,U
       CMPY  ,W++
       CMPY  [,W++]
@@ -8217,6 +8445,9 @@
       LDY   [1,Y]
       LDY   [F,Y]
       LDY   [D,Y]
+      LDY   [*-$003F,PCR]
+      LDY   [*,PCR]
+      LDY   [*+1,PCR]
       LDY   [W,Y]
       LDY   ,U+
       LDY   ,U++
@@ -8232,6 +8463,9 @@
       LDY   16,U
       LDY   F,U
       LDY   D,U
+      LDY   *-$002F,PCR
+      LDY   *,PCR
+      LDY   *+1,PCR
       LDY   W,U
       LDY   ,W++
       LDY   [,W++]
@@ -8295,6 +8529,9 @@
       STY   [1,Y]
       STY   [F,Y]
       STY   [D,Y]
+      STY   [*-$003F,PCR]
+      STY   [*,PCR]
+      STY   [*+1,PCR]
       STY   [W,Y]
       STY   ,U+
       STY   ,U++
@@ -8310,6 +8547,9 @@
       STY   16,U
       STY   F,U
       STY   D,U
+      STY   *-$002F,PCR
+      STY   *,PCR
+      STY   *+1,PCR
       STY   W,U
       STY   ,W++
       STY   [,W++]
@@ -8381,6 +8621,7 @@
       STQ   $DE
       LDS   $DF
       STS   $E0
+      LDQ   *+$00F3,PCR
       LDQ   W,S
       LDQ   ,--W
       LDQ   [,--W]
@@ -8395,6 +8636,9 @@
       LDQ   [1,S]
       LDQ   [F,S]
       LDQ   [D,S]
+      LDQ   [*+1,PCR]
+      LDQ   [*-$007C,PCR]
+      LDQ   [*,PCR]
       LDQ   [W,S]
       LDQ   <<0,X
       LDQ   1,X
@@ -8422,7 +8666,6 @@
       LDQ   D,X
       LDQ   *-$006F,PCR
       LDQ   *,PCR
-      LDQ   *+1,PCR
       LDQ   W,X
       LDQ   ,W
       LDQ   [,W]
@@ -8437,9 +8680,6 @@
       LDQ   [1,X]
       LDQ   [F,X]
       LDQ   [D,X]
-      LDQ   [*-$005F,PCR]
-      LDQ   [*,PCR]
-      LDQ   [*+1,PCR]
       LDQ   [W,X]
       LDQ   [$01A0]
       LDQ   ,Y+
@@ -8522,6 +8762,9 @@
       STQ   [1,S]
       STQ   [F,S]
       STQ   [D,S]
+      STQ   [*+1,PCR]
+      STQ   [*-$007C,PCR]
+      STQ   [*,PCR]
       STQ   [W,S]
       STQ   <<0,X
       STQ   1,X
@@ -8564,9 +8807,6 @@
       STQ   [1,X]
       STQ   [F,X]
       STQ   [D,X]
-      STQ   [*-$005F,PCR]
-      STQ   [*,PCR]
-      STQ   [*+1,PCR]
       STQ   [W,X]
       STQ   [$01A0]
       STQ   ,Y+
@@ -8648,6 +8888,9 @@
       LDS   [1,S]
       LDS   [F,S]
       LDS   [D,S]
+      LDS   [*+1,PCR]
+      LDS   [*-$007C,PCR]
+      LDS   [*,PCR]
       LDS   [W,S]
       LDS   <<0,X
       LDS   1,X
@@ -8690,9 +8933,6 @@
       LDS   [1,X]
       LDS   [F,X]
       LDS   [D,X]
-      LDS   [*-$005F,PCR]
-      LDS   [*,PCR]
-      LDS   [*+1,PCR]
       LDS   [W,X]
       LDS   [$01A0]
       LDS   ,Y+
@@ -8774,6 +9014,9 @@
       STS   [1,S]
       STS   [F,S]
       STS   [D,S]
+      STS   [*+1,PCR]
+      STS   [*-$007C,PCR]
+      STS   [*,PCR]
       STS   [W,S]
       STS   <<0,X
       STS   1,X
@@ -8816,9 +9059,6 @@
       STS   [1,X]
       STS   [F,X]
       STS   [D,X]
-      STS   [*-$005F,PCR]
-      STS   [*,PCR]
-      STS   [*+1,PCR]
       STS   [W,X]
       STS   [$01A0]
       STS   ,Y+
@@ -9045,6 +9285,9 @@
       SUBE  16,Y
       SUBE  F,Y
       SUBE  D,Y
+      SUBE  *-$004F,PCR
+      SUBE  *,PCR
+      SUBE  *+1,PCR
       SUBE  W,Y
       SUBE  176,W
       SUBE  [177,W]
@@ -9059,6 +9302,9 @@
       SUBE  [1,Y]
       SUBE  [F,Y]
       SUBE  [D,Y]
+      SUBE  [*-$003F,PCR]
+      SUBE  [*,PCR]
+      SUBE  [*+1,PCR]
       SUBE  [W,Y]
       SUBE  ,U+
       SUBE  ,U++
@@ -9134,6 +9380,9 @@
       CMPE  16,Y
       CMPE  F,Y
       CMPE  D,Y
+      CMPE  *-$004F,PCR
+      CMPE  *,PCR
+      CMPE  *+1,PCR
       CMPE  W,Y
       CMPE  176,W
       CMPE  [177,W]
@@ -9148,6 +9397,9 @@
       CMPE  [1,Y]
       CMPE  [F,Y]
       CMPE  [D,Y]
+      CMPE  [*-$003F,PCR]
+      CMPE  [*,PCR]
+      CMPE  [*+1,PCR]
       CMPE  [W,Y]
       CMPE  ,U+
       CMPE  ,U++
@@ -9221,6 +9473,9 @@
       CMPU  16,Y
       CMPU  F,Y
       CMPU  D,Y
+      CMPU  *-$004F,PCR
+      CMPU  *,PCR
+      CMPU  *+1,PCR
       CMPU  W,Y
       CMPU  176,W
       CMPU  [177,W]
@@ -9235,6 +9490,9 @@
       CMPU  [1,Y]
       CMPU  [F,Y]
       CMPU  [D,Y]
+      CMPU  [*-$003F,PCR]
+      CMPU  [*,PCR]
+      CMPU  [*+1,PCR]
       CMPU  [W,Y]
       CMPU  ,U+
       CMPU  ,U++
@@ -9305,6 +9563,9 @@
       LDE   16,Y
       LDE   F,Y
       LDE   D,Y
+      LDE   *-$004F,PCR
+      LDE   *,PCR
+      LDE   *+1,PCR
       LDE   W,Y
       LDE   176,W
       LDE   [177,W]
@@ -9319,6 +9580,9 @@
       LDE   [1,Y]
       LDE   [F,Y]
       LDE   [D,Y]
+      LDE   [*-$003F,PCR]
+      LDE   [*,PCR]
+      LDE   [*+1,PCR]
       LDE   [W,Y]
       LDE   ,U+
       LDE   ,U++
@@ -9388,6 +9652,9 @@
       STE   16,Y
       STE   F,Y
       STE   D,Y
+      STE   *-$004F,PCR
+      STE   *,PCR
+      STE   *+1,PCR
       STE   W,Y
       STE   176,W
       STE   [177,W]
@@ -9402,6 +9669,9 @@
       STE   [1,Y]
       STE   [F,Y]
       STE   [D,Y]
+      STE   [*-$003F,PCR]
+      STE   [*,PCR]
+      STE   [*+1,PCR]
       STE   [W,Y]
       STE   ,U+
       STE   ,U++
@@ -9465,6 +9735,9 @@
       STE   1,X
       STE   -16,X
       STE   <<0,Y
+      ADDE  *-$004F,PCR
+      ADDE  *,PCR
+      ADDE  *+1,PCR
       ADDE  W,Y
       ADDE  176,W
       ADDE  [177,W]
@@ -9479,6 +9752,9 @@
       ADDE  [1,Y]
       ADDE  [F,Y]
       ADDE  [D,Y]
+      ADDE  [*-$003F,PCR]
+      ADDE  [*,PCR]
+      ADDE  [*+1,PCR]
       ADDE  [W,Y]
       ADDE  ,U+
       ADDE  ,U++
@@ -9545,6 +9821,7 @@
       ADDE  1,Y
       ADDE  -16,Y
       ADDE  <<0,U
+      CMPS  *+$00B3,PCR
       CMPS  W,Y
       CMPS  176,W
       CMPS  [177,W]
@@ -9559,6 +9836,9 @@
       CMPS  [1,Y]
       CMPS  [F,Y]
       CMPS  [D,Y]
+      CMPS  [*-$003F,PCR]
+      CMPS  [*,PCR]
+      CMPS  [*+1,PCR]
       CMPS  [W,Y]
       CMPS  ,U+
       CMPS  ,U++
@@ -9574,6 +9854,8 @@
       CMPS  16,U
       CMPS  F,U
       CMPS  D,U
+      CMPS  *-$002F,PCR
+      CMPS  *,PCR
       CMPS  W,U
       CMPS  ,W++
       CMPS  [,W++]
@@ -9639,6 +9921,9 @@
       DIVD  [1,Y]
       DIVD  [F,Y]
       DIVD  [D,Y]
+      DIVD  [*-$003F,PCR]
+      DIVD  [*,PCR]
+      DIVD  [*+1,PCR]
       DIVD  [W,Y]
       DIVD  ,U+
       DIVD  ,U++
@@ -9654,6 +9939,9 @@
       DIVD  16,U
       DIVD  F,U
       DIVD  D,U
+      DIVD  *-$002F,PCR
+      DIVD  *,PCR
+      DIVD  *+1,PCR
       DIVD  W,U
       DIVD  ,W++
       DIVD  [,W++]
@@ -9718,6 +10006,9 @@
       DIVQ  [1,Y]
       DIVQ  [F,Y]
       DIVQ  [D,Y]
+      DIVQ  [*-$003F,PCR]
+      DIVQ  [*,PCR]
+      DIVQ  [*+1,PCR]
       DIVQ  [W,Y]
       DIVQ  ,U+
       DIVQ  ,U++
@@ -9733,6 +10024,9 @@
       DIVQ  16,U
       DIVQ  F,U
       DIVQ  D,U
+      DIVQ  *-$002F,PCR
+      DIVQ  *,PCR
+      DIVQ  *+1,PCR
       DIVQ  W,U
       DIVQ  ,W++
       DIVQ  [,W++]
@@ -9796,6 +10090,9 @@
       MULD  [1,Y]
       MULD  [F,Y]
       MULD  [D,Y]
+      MULD  [*-$003F,PCR]
+      MULD  [*,PCR]
+      MULD  [*+1,PCR]
       MULD  [W,Y]
       MULD  ,U+
       MULD  ,U++
@@ -9811,6 +10108,9 @@
       MULD  16,U
       MULD  F,U
       MULD  D,U
+      MULD  *-$002F,PCR
+      MULD  *,PCR
+      MULD  *+1,PCR
       MULD  W,U
       MULD  ,W++
       MULD  [,W++]
@@ -9894,6 +10194,9 @@
       SUBF  16,S
       SUBF  F,S
       SUBF  D,S
+      SUBF  *-15,PCR
+      SUBF  *,PCR
+      SUBF  *+1,PCR
       SUBF  W,S
       SUBF  ,--W
       SUBF  [,--W]
@@ -9908,6 +10211,9 @@
       SUBF  [1,S]
       SUBF  [F,S]
       SUBF  [D,S]
+      SUBF  [*+1,PCR]
+      SUBF  [*-$007C,PCR]
+      SUBF  [*,PCR]
       SUBF  [W,S]
       SUBF  <<0,X
       SUBF  1,X
@@ -9931,6 +10237,9 @@
       CMPF  16,S
       CMPF  F,S
       CMPF  D,S
+      CMPF  *-15,PCR
+      CMPF  *,PCR
+      CMPF  *+1,PCR
       CMPF  W,S
       CMPF  ,--W
       CMPF  [,--W]
@@ -9945,6 +10254,9 @@
       CMPF  [1,S]
       CMPF  [F,S]
       CMPF  [D,S]
+      CMPF  [*+1,PCR]
+      CMPF  [*-$007C,PCR]
+      CMPF  [*,PCR]
       CMPF  [W,S]
       CMPF  <<0,X
       CMPF  1,X
@@ -9963,6 +10275,9 @@
       LDF   16,S
       LDF   F,S
       LDF   D,S
+      LDF   *-15,PCR
+      LDF   *,PCR
+      LDF   *+1,PCR
       LDF   W,S
       LDF   ,--W
       LDF   [,--W]
@@ -9977,6 +10292,9 @@
       LDF   [1,S]
       LDF   [F,S]
       LDF   [D,S]
+      LDF   [*+1,PCR]
+      LDF   [*-$007C,PCR]
+      LDF   [*,PCR]
       LDF   [W,S]
       LDF   <<0,X
       LDF   1,X
@@ -9994,6 +10312,9 @@
       STF   16,S
       STF   F,S
       STF   D,S
+      STF   *-15,PCR
+      STF   *,PCR
+      STF   *+1,PCR
       STF   W,S
       STF   ,--W
       STF   [,--W]
@@ -10008,6 +10329,9 @@
       STF   [1,S]
       STF   [F,S]
       STF   [D,S]
+      STF   [*+1,PCR]
+      STF   [*-$007C,PCR]
+      STF   [*,PCR]
       STF   [W,S]
       STF   <<0,X
       STF   1,X
@@ -10019,6 +10343,9 @@
       STF   1,U
       STF   -16,U
       STF   <<0,S
+      ADDF  *-15,PCR
+      ADDF  *,PCR
+      ADDF  *+1,PCR
       ADDF  W,S
       ADDF  ,--W
       ADDF  [,--W]
@@ -10033,6 +10360,9 @@
       ADDF  [1,S]
       ADDF  [F,S]
       ADDF  [D,S]
+      ADDF  [*+1,PCR]
+      ADDF  [*-$007C,PCR]
+      ADDF  [*,PCR]
       ADDF  [W,S]
       ADDF  <<0,X
       ADDF  1,X
@@ -10058,9 +10388,6 @@
       ADDF  <0,X
       ADDF  F,X
       ADDF  D,X
-      ADDF  *-$006F,PCR
-      ADDF  *,PCR
-      ADDF  *+1,PCR
       ADDF  W,X
       ADDF  ,W
       ADDF  [,W]
@@ -10075,9 +10402,6 @@
       ADDF  [1,X]
       ADDF  [F,X]
       ADDF  [D,X]
-      ADDF  [*-$005F,PCR]
-      ADDF  [*,PCR]
-      ADDF  [*+1,PCR]
       ADDF  [W,X]
       ADDF  [$01A0]
       ADDF  ,Y+
