@@ -45,6 +45,7 @@ enum Error {
     DUPLICATE_REGISTER      = 28,
     REGISTER_NOT_ALLOWED    = 29,
     MISSING_COMMA           = 30,
+    NOT_BIT_ADDRESSABLE     = 31,
 
     // ValueParser
     ILLEGAL_CONSTANT        = 100,

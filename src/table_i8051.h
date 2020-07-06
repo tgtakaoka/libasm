@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __TABLE_I8051_H__
+#define __TABLE_I8051_H__
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 11
-#define LIBASM_VERSION_STRING "1.4.11"
+#include "config_i8051.h"
+#include "insn_i8051.h"
+#include "table_base.h"
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace i8051 {
+
+class TableI8051 : public TableBase {
+public:
+    Error searchName(InsnI8051 &insn) const;
+    Error searchOpCode(InsnI8051 &insn) const;
+
+    const char *listCpu() override { return getCpu(); }
+    bool setCpu(const char *cpu) override;
+    const char *getCpu() override { return "8051"; }
+};
+
+extern TableI8051 TableI8051;
+
+} // namespace i8051
+} // namespace libasm
+
+#endif // __TABLE_I8051_H__
 
 // Local Variables:
 // mode: c++

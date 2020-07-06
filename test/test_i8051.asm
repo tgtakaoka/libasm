@@ -1,0 +1,293 @@
+;;; Copyright 2020 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+
+        cpu     8051
+;;; 0X
+        nop
+        ajmp    0002H
+        ljmp    0304H
+        rr      a
+        inc     a
+        inc     06H
+        inc     @r0
+        inc     @r1
+        inc     r0
+        inc     r1
+        inc     r2
+        inc     r3
+        inc     r4
+        inc     r5
+        inc     r6
+        inc     r7
+;;; 1X
+        jbc     22H.1,$+15H
+        acall   0012H
+        lcall   1314H
+        rrc     a
+        dec     a
+        dec     16H
+        dec     @r0
+        dec     @r1
+        dec     r0
+        dec     r1
+        dec     r2
+        dec     r3
+        dec     r4
+        dec     r5
+        dec     r6
+        dec     r7
+;;; 2X
+        jb      24H.1,$+25H
+        ajmp    0122H
+        ret
+        rl      a
+        add     a,#25H
+        add     a,26H
+        add     a,@r0
+        add     a,@r1
+        add     a,r0
+        add     a,r1
+        add     a,r2
+        add     a,r3
+        add     a,r4
+        add     a,r5
+        add     a,r6
+        add     a,r7
+;;; 3X
+        jnb     26H.1,$+35H
+        acall   0132H
+        reti
+        rlc     a
+        addc    a,#35H
+        addc    a,36H
+        addc    a,@r0
+        addc    a,@r1
+        addc    a,r0
+        addc    a,r1
+        addc    a,r2
+        addc    a,r3
+        addc    a,r4
+        addc    a,r5
+        addc    a,r6
+        addc    a,r7
+;;; 4X
+        jc      $+43H
+        ajmp    0242H
+        orl     43H,a
+        orl     44H,#45H
+        orl     a,#45H
+        orl     a,46H
+        orl     a,@r0
+        orl     a,@r1
+        orl     a,r0
+        orl     a,r1
+        orl     a,r2
+        orl     a,r3
+        orl     a,r4
+        orl     a,r5
+        orl     a,r6
+        orl     a,r7
+;;; 5X
+        jnc     $+53H
+        acall   0252H
+        anl     53H,a
+        anl     54H,#55H
+        anl     a,#55H
+        anl     a,56H
+        anl     a,@r0
+        anl     a,@r1
+        anl     a,r0
+        anl     a,r1
+        anl     a,r2
+        anl     a,r3
+        anl     a,r4
+        anl     a,r5
+        anl     a,r6
+        anl     a,r7
+;;; 6X
+        jz      $+63H
+        ajmp    0362H
+        xrl     63H,a
+        xrl     64H,#65H
+        xrl     a,#65H
+        xrl     a,66H
+        xrl     a,@r0
+        xrl     a,@r1
+        xrl     a,r0
+        xrl     a,r1
+        xrl     a,r2
+        xrl     a,r3
+        xrl     a,r4
+        xrl     a,r5
+        xrl     a,r6
+        xrl     a,r7
+;;; 7X
+        jnz     $+73H
+        acall   0372H
+        orl     c,2EH.3
+        jmp     @a+dptr
+        mov     a,#75H
+        mov     76H,#77H
+        mov     @r0,#77H
+        mov     @r1,#78H
+        mov     r0,#79H
+        mov     r1,#7AH
+        mov     r2,#7BH
+        mov     r3,#7CH
+        mov     r4,#7DH
+        mov     r5,#7EH
+        mov     r6,#7FH
+        mov     r7,#80H
+;;; 8X
+        sjmp    $-7DH
+        ajmp    0482H
+        anl     c,80H.3
+        movc    a,@a+pc
+        div     ab
+        mov     87H,86H
+        mov     87H,@r0
+        mov     88H,@r1
+        mov     89H,r0
+        mov     8AH,r1
+        mov     8BH,r2
+        mov     8CH,r3
+        mov     8DH,r4
+        mov     8EH,r5
+        mov     8FH,r6
+        mov     90H,r7
+;;; 9X
+        mov     dptr,#9192H
+        acall   0492H
+        mov     90H.3,c
+        movc    a,@a+dptr
+        subb    a,#95H
+        subb    a,96H
+        subb    a,@r0
+        subb    a,@r1
+        subb    a,r0
+        subb    a,r1
+        subb    a,r2
+        subb    a,r3
+        subb    a,r4
+        subb    a,r5
+        subb    a,r6
+        subb    a,r7
+;;; AX
+        orl     c,/0A0H.1
+        ajmp    05A2H
+        mov     c,0A0H.3
+        inc     dptr
+        mul     ab
+        mov     @r0,0A7H
+        mov     @r1,0A8H
+        mov     r0,0A9H
+        mov     r1,0AAH
+        mov     r2,0ABH
+        mov     r3,0ACH
+        mov     r4,0ADH
+        mov     r5,0AEH
+        mov     r6,0AFH
+        mov     r7,0B0H
+;;; BX
+        anl     c,/0B0H.1
+        acall   05B2H
+        cpl     0B0H.3
+        cpl     c
+        cjne    a,#0B5H,$-47H
+        cjne    a,0B6H,$-46H
+        cjne    @r0,#0B7H,$-45H
+        cjne    @r1,#0B8H,$-44H
+        cjne    r0,#0B9H,$-43H
+        cjne    r1,#0BAH,$-42H
+        cjne    r2,#0BBH,$-41H
+        cjne    r3,#0BCH,$-40H
+        cjne    r4,#0BDH,$-3FH
+        cjne    r5,#0BEH,$-3EH
+        cjne    r6,#0BFH,$-3DH
+        cjne    r7,#0C0H,$-3CH
+;;; CX
+        push    0C1H
+        ajmp    06C2H
+        clr     0C0H.3
+        clr     c
+        swap    a
+        xch     a,0C6H
+        xch     a,@r0
+        xch     a,@r1
+        xch     a,r0
+        xch     a,r1
+        xch     a,r2
+        xch     a,r3
+        xch     a,r4
+        xch     a,r5
+        xch     a,r6
+        xch     a,r7
+;;; DX
+        pop     0D1H
+        acall   06D2H
+        setb    0D0H.3
+        setb    c
+        da      a
+        djnz    0D6H,$-26H
+        xchd    a,@r0
+        xchd    a,@r1
+        djnz    r0,$-25H
+        djnz    r1,$-24H
+        djnz    r2,$-23H
+        djnz    r3,$-22H
+        djnz    r4,$-21H
+        djnz    r5,$-20H
+        djnz    r6,$-1FH
+        djnz    r7,$-1EH
+;;; EX
+        movx    a,@dptr
+        ajmp    07E2H
+        movx    a,@r0
+        movx    a,@r1
+        clr     a
+        mov     a,0E6H
+        mov     a,@r0
+        mov     a,@r1
+        mov     a,r0
+        mov     a,r1
+        mov     a,r2
+        mov     a,r3
+        mov     a,r4
+        mov     a,r5
+        mov     a,r6
+        mov     a,r7
+;;; FX
+        movx    @dptr,a
+        acall   07F2H
+        movx    @r0,a
+        movx    @r1,a
+        cpl     a
+        mov     0F6H,a
+        mov     @r0,a
+        mov     @r1,a
+        mov     r0,a
+        mov     r1,a
+        mov     r2,a
+        mov     r3,a
+        mov     r4,a
+        mov     r5,a
+        mov     r6,a
+        mov     r7,a
+
+        end
+
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:
