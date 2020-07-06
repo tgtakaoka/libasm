@@ -17,6 +17,7 @@
 #include "asm_cdp1802.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
+#include "asm_i8051.h"
 #include "asm_i8080.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
@@ -38,6 +39,7 @@ mos6502::AsmMos6502 asm6502;
 w65c816::AsmW65C816 asm65816;
 mc6800::AsmMc6800   asm6800;
 mc6809::AsmMc6809   asm6809;
+i8051::AsmI8051     asm8051;
 i8080::AsmI8080     asm8080;
 z80::AsmZ80         asmz80;
 z8::AsmZ8           asmz8;
@@ -51,6 +53,7 @@ AsmMostekDirective dir6502(asm6502);
 AsmMostekDirective dir65816(asm65816);
 AsmMotoDirective   dir6800(asm6800);
 AsmMotoDirective   dir6809(asm6809);
+AsmIntelDirective  dir8051(asm8051);
 AsmIntelDirective  dir8080(asm8080);
 AsmIntelDirective  dirz80(asmz80);
 AsmIntelDirective  dirz8(asmz8);
@@ -62,8 +65,9 @@ AsmMotoDirective   dir68000(asm68000);
 
 std::vector<AsmDirective *> directives = {
     &dir6809, &dir6800, &dir6502, &dir65816,
-    &dir8080, &dirz80,  &dirz8,   &dir1802,
-    &dir8060, &dir8070, &dir9900, &dir68000
+    &dir8051, &dir8080, &dirz80,  &dirz8,
+    &dir1802, &dir8060, &dir8070, &dir9900,
+    &dir68000
 };
 
 int main(int argc, const char **argv) {

@@ -10,6 +10,7 @@ small environment (less than 15kB on Arduino).
   - MC6800, MC6801, HD6301, MC68HC11
   - MOS6502, W65SC02, R65C02, W65C02S
   - W65816 (W65C816S)
+  - i8051
   - i8080, i8085 (Intel or Zilog syntax)
   - Z80 (Z84C)
   - Z8 (Z86), Z86C, Z88 (Super8)

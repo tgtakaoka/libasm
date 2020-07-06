@@ -146,6 +146,10 @@ static constexpr Entry TABLE_I8051[] PROGMEM = {
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
+    if (opr == IMM16) return table == IMM8;
+    if (opr == ADR16)
+        return table == ADR8 || table == ADR11 || table == REL
+            || table == BITAD;
     return false;
 }
 

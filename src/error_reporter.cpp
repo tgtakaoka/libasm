@@ -47,6 +47,7 @@ const char *ErrorReporter::errorText(Error error) {
     case DUPLICATE_REGISTER:   return "Duplicate register";
     case REGISTER_NOT_ALLOWED: return "Register not allowed";
     case MISSING_COMMA:        return "Missing comma";
+    case NOT_BIT_ADDRESSABLE:  return "Not bit addressable address";
 
     // ValueParser
     case ILLEGAL_CONSTANT:        return "Illegal constant";

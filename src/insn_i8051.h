@@ -45,13 +45,31 @@ public:
         _opCode |= data;
     }
 
-    void emitInsn() {
-        emitByte(_opCode);
+    Error emitInsn() {
+        return emitByte(_opCode, 0);
+    }
+
+    Error emitOperand(uint8_t val) {
+        uint8_t pos = _insn.length();
+        if (pos == 0) pos = 1;
+        return emitByte(val, pos);
+    }
+
+    Error emitOperand(uint16_t val) {
+        uint8_t pos = _insn.length();
+        if (pos == 0) pos = 1;
+        if (emitByte(static_cast<uint8_t>(val >> 8), pos))
+            return NO_MEMORY;
+        return emitByte(static_cast<uint8_t>(val), pos + 1);
     }
 
 private:
     Config::opcode_t _opCode;
     uint16_t _flags;
+
+    Error emitByte(uint8_t val, uint8_t pos) {
+        return _insn.emitByte(val, pos);
+    }
 };
 
 } // namespace i8051

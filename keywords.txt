@@ -18,6 +18,7 @@ AsmMos6502      KEYWORD1        libasm
 DisMos6502      KEYWORD1        libasm
 AsmW65C816      KEYWORD1        libasm
 DisW65C816      KEYWORD1        libasm
+AsmI8051        KEYWORD1        libasm
 DisI8051        KEYWORD1        libasm
 AsmI8080        KEYWORD1        libasm
 DisI8080        KEYWORD1        libasm
