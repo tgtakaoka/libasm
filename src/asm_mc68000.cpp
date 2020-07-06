@@ -115,9 +115,9 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode == M_INDX || mode == M_PC_INDX) {
         Config::ptrdiff_t disp;
         if (mode == M_PC_INDX) {
-            Config::uintptr_t addr = ea.val32;
-            if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-            disp = addr - (insn.address() + insn.length());
+            const Config::uintptr_t base = insn.address() + insn.length();
+            const Config::uintptr_t target = ea.getError() ? base : ea.val32;
+            disp = target - base;
         } else {
             disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
@@ -132,9 +132,9 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode == M_DISP || mode == M_PC_DISP || mode == M_ABS_SHORT) {
         Config::ptrdiff_t disp;
         if (mode == M_PC_DISP) {
-            Config::uintptr_t addr = ea.val32;
-            if (ea.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-            disp = addr - (insn.address() + insn.length());
+            const Config::uintptr_t base = insn.address() + insn.length();
+            const Config::uintptr_t target = ea.getError() ? base : ea.val32;
+            disp = target - base;
         } else {
             disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
@@ -250,10 +250,9 @@ Error AsmMc68000::encodeDataReg(
     // DBcc
     if (op2.mode == M_ABS_LONG || op2.mode == M_ABS_SHORT
         || op2.mode == M_LABEL) {
-        Config::uintptr_t addr = op2.val32;
-        if (op2.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-        const Config::ptrdiff_t disp =
-            addr - (insn.address() + sizeof(Config::opcode_t));
+        const Config::uintptr_t base = insn.address() + sizeof(Config::opcode_t);
+        const Config::uintptr_t target = op2.getError() ? base : op2.val32;
+        const Config::ptrdiff_t disp = target - base;
         if (checkSize(disp, SZ_WORD, false))
             return setError(OPERAND_TOO_FAR);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
@@ -391,10 +390,9 @@ Error AsmMc68000::encodeRelative(
     if (insn.size() == SZ_LONG) return setError(ILLEGAL_SIZE);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     if (op1.mode != M_LABEL) return setError(ILLEGAL_OPERAND_MODE);
-    Config::uintptr_t addr = op1.val32;
-    if (op1.getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    const Config::ptrdiff_t disp =
-        addr - (insn.address() + sizeof(Config::opcode_t));
+    const Config::uintptr_t base = insn.address() + sizeof(Config::opcode_t);
+    const Config::uintptr_t target = op1.getError() ? base : op1.val32;
+    const Config::ptrdiff_t disp = target - base;
     if (insn.size() == SZ_NONE)
         insn.setSize(checkSize(disp, SZ_BYTE, false) == OK ? SZ_BYTE : SZ_WORD);
     if (insn.size() == SZ_BYTE && checkSize(disp, SZ_BYTE, false))

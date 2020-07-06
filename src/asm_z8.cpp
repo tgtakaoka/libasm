@@ -46,8 +46,8 @@ Error AsmZ8::encodeAbsolute(
 }
 
 Error AsmZ8::encodeRelative(InsnZ8 &insn, const Operand &op) {
-    const Config::uintptr_t target = op.getError() ? insn.address() : op.val;
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
+    const Config::uintptr_t target = op.getError() ? base : op.val;
     const Config::ptrdiff_t delta = target - base;
     if (delta < -128 || delta >= 128) return setErrorIf(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));

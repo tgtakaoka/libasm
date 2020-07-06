@@ -92,14 +92,14 @@ Error AsmZ80::encodeIoaddr(
 
 Error AsmZ80::encodeRelative(
     InsnZ80 &insn, const Operand &dst, const Operand &src) {
-    Config::uintptr_t addr = dst.val;
-    if (dst.getError() == UNDEFINED_SYMBOL) addr = insn.address();
+    const Operand *t = &dst;
     if (insn.insnFormat() == CC4_FMT) {
         insn.embed(dst.val << 3);
-        addr = src.val;
-        if (src.getError() == UNDEFINED_SYMBOL) addr = insn.address();
+        t = &src;
     }
-    const Config::ptrdiff_t delta = addr - insn.address() - 2;
+    const Config::uintptr_t base = insn.address() + 2;
+    const Config::uintptr_t target = t->getError() ? base : t->val;
+    const Config::ptrdiff_t delta = target - base;
     if (delta < -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(delta));

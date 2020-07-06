@@ -27,11 +27,11 @@ namespace libasm {
 namespace mc6809 {
 
 Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
-    const Config::uintptr_t target = op.getError() ? insn.address()
-        : static_cast<Config::uintptr_t>(op.val32);
     const Config::uintptr_t base = insn.address()
         + (insn.hasPrefix() ? 2 : 1)
         + (insn.oprSize() == SZ_WORD ? 2 : 1);
+    const Config::uintptr_t target = op.getError() ? base
+        : static_cast<Config::uintptr_t>(op.val32);
     const Config::ptrdiff_t delta = target - base;
     if (insn.oprSize() == SZ_BYTE) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);

@@ -72,8 +72,7 @@ Error AsmIns8070::encodeRelative(
     const Config::uintptr_t base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
-    const Config::uintptr_t target =
-        (op.getError() ? insn.address() : op.val) - fetch;
+    const Config::uintptr_t target = (op.getError() ? base + fetch : op.val) - fetch;
     const Config::ptrdiff_t offset = target - base;
     if (offset < -128 || offset >= 128)
         return setError(OPERAND_TOO_FAR);

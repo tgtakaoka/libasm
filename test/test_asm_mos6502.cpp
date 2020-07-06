@@ -572,7 +572,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LDA (<UNDEF),Y", 0xB1, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JMP (UNDEF)",    0x6C, 0x00, 0x00);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BCC UNDEF",     0x90, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BCC UNDEF",     0x90, 0x00);
 
     // W65SC02
     assembler.setCpu("65sc02");
@@ -585,7 +585,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "JMP (UNDEF,X)",  0x7C, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JMP (>UNDEF,X)", 0x7C, 0x00, 0x00);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF",     0x80, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRA UNDEF",     0x80, 0x00);
 
     // R65C02
     assembler.setCpu("65c02");

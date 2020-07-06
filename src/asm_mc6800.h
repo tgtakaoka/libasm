@@ -67,7 +67,8 @@ private:
 
     Error adjustAccumulator(InsnMc6800 &insn, const Operand &op);
     Error parseOperand(Operand &op);
-    Error encodeRelative(InsnMc6800 &insn, Config::uintptr_t addr);
+    Error encodeRelative(
+        InsnMc6800 &insn, Config::uintptr_t target, Error error);
     Error encode(Insn &insn) override;
 };
 

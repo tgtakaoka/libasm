@@ -32,8 +32,8 @@ Error AsmIns8060::encodeRel8(
         // PC will be incremented before fetching next instruction.
         const uint8_t fetch = (insn.addrMode() == REL8) ? 1 : 0;
         // Program space is paged by 4kB.
-        const Config::uintptr_t target =
-            ((op.val & 0xFFF) | (base & ~0xFFF)) - fetch;
+        const Config::uintptr_t target = op.getError() ? base
+            : ((op.val & 0xFFF) | (base & ~0xFFF)) - fetch;
         delta = target - base;
         // delta -128 is for E reg.
         if (delta <= -128 || delta >= 128) return setError(OPERAND_TOO_FAR);

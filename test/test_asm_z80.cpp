@@ -811,9 +811,9 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "RES 7,(IX-UNDEF)",     0xDD, 0xCB, 0x00, 0xBE);
     ETEST(UNDEFINED_SYMBOL, "SET UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0xFE);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0xFE);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0xFE);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0x00);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0x00);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0x00);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

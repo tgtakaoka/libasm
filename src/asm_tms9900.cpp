@@ -157,12 +157,12 @@ bool AsmTms9900::needsOperandWord(Config::opcode_t oprMode) const {
 }
 
 Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
-    Config::uintptr_t addr;
-    if (getOperand(addr)) return getError();
-    if (getError() == UNDEFINED_SYMBOL) addr = insn.address();
-    if (addr % 2) return setError(ILLEGAL_OPERAND);
     const Config::uintptr_t base = insn.address() + 2;
-    const Config::ptrdiff_t delta = (addr - base) >> 1;
+    Config::uintptr_t target;
+    if (getOperand(target)) return getError();
+    if (getError()) target = base;
+    if (target % 2) return setError(ILLEGAL_OPERAND);
+    const Config::ptrdiff_t delta = (target - base) >> 1;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
     insn.emitInsn();

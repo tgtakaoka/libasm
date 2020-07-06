@@ -22,7 +22,7 @@ namespace mos6502 {
 
 Error AsmMos6502::encodeRelative(InsnMos6502 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
+    const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();

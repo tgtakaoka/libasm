@@ -26,7 +26,7 @@ Error AsmW65C816::encodeLongRelative(InsnW65C816 &insn, const Operand &op) {
     const uint8_t tbank = static_cast<uint8_t>(target >> 16);
     if (cbank != tbank) return setError(OPERAND_TOO_FAR);
     const Config::uintptr_t base = insn.address() + 3;
-    const Config::ptrdiff_t delta = target - base;
+    const Config::ptrdiff_t delta = op.getError() ? 0 : target - base;
     if (delta >= 32768L || delta < -32768L) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
     insn.emitUint16(static_cast<uint16_t>(delta));
@@ -35,7 +35,7 @@ Error AsmW65C816::encodeLongRelative(InsnW65C816 &insn, const Operand &op) {
 
 Error AsmW65C816::encodeRelative(InsnW65C816 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? insn.address() : op.val32;
+    const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
@@ -46,8 +46,7 @@ Error AsmW65C816::encodeRelative(InsnW65C816 &insn, const Operand &op) {
 Error AsmW65C816::encodeZeroPageRelative(
     InsnW65C816 &insn, const Operand &op, const Operand &extra) {
     const Config::uintptr_t base = insn.address() + 3;
-    const Config::uintptr_t target =
-        extra.getError() ? insn.address() : extra.val32;
+    const Config::uintptr_t target = extra.getError() ? base : extra.val32;
     const Config::ptrdiff_t delta = target - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitInsn();

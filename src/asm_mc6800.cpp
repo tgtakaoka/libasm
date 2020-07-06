@@ -38,9 +38,11 @@ Error AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error AsmMc6800::encodeRelative(InsnMc6800 &insn, Config::uintptr_t addr) {
+Error AsmMc6800::encodeRelative(
+    InsnMc6800 &insn, Config::uintptr_t target, Error error) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
-    const Config::ptrdiff_t delta = addr - base;
+    if (error) target = base;
+    const Config::ptrdiff_t delta = target - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
     return OK;
@@ -204,8 +206,7 @@ Error AsmMc6800::encode(Insn &_insn) {
         insn.emitUint16(op.opr);
         break;
     case REL:
-        op.addr = op.getError() ? insn.address() : op.opr;
-        encodeRelative(insn, op.addr);
+        encodeRelative(insn, op.opr, op.getError());
         break;
     case IMM:
         if (insn.oprSize() == SZ_BYTE)
@@ -237,8 +238,7 @@ Error AsmMc6800::encode(Insn &_insn) {
     case IDY_IMM_REL:
         insn.emitByte(static_cast<uint8_t>(op.opr));
         insn.emitByte(static_cast<uint8_t>(op.imm));
-        if (op.addrError) op.addr = insn.address();
-        encodeRelative(insn, op.addr);
+        encodeRelative(insn, op.addr, op.addrError);
         break;
     default:
         break;

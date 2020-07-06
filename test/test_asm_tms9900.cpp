@@ -339,8 +339,8 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "SZC  @UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
     ETEST(UNDEFINED_SYMBOL, "SBZ  UNDEF", 0x1E00);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x10FF);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JNE UNDEF", 0x16FF);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x1000);
+    EATEST(UNDEFINED_SYMBOL, 0x1000, "JNE UNDEF", 0x1600);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
