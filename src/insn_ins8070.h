@@ -21,8 +21,6 @@
 #include "entry_ins8070.h"
 #include "insn_base.h"
 
-#include <stdio.h>
-
 namespace libasm {
 namespace ins8070 {
 
