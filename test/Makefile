@@ -47,6 +47,8 @@ all: \
 	test_tms9900.hex \
 	test_tms9995.hex \
 	test_tms99105.hex \
+	test_z8001.hex \
+	test_z8002.hex \
 	test_mc68000.s28
 
 %.hex: %.asm
@@ -61,6 +63,20 @@ all: \
 %.s37: %.asm
 	asl $(ASL_FLAGS) $^
 	p2hex -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+test_z8001.hex: test_z8001.s
+	z8k-coff-as --warn -a=test_z8001.lst -o test_z8001.p $^
+	z8k-coff-ld -m z8001 --entry=0 -o test_z8001.o test_z8001.p \
+		--section-start=text=0x010000 \
+		--section-start=bss1=0x0A1234 \
+		--section-start=bss2=0x0B5678
+	z8k-coff-objcopy -I coff-z8k -O ihex test_z8001.o /dev/stdout | tr -d '\r' > $@
+test_z8002.hex: test_z8002.s
+	z8k-coff-as --warn -a=test_z8002.lst -o test_z8002.p $^
+	z8k-coff-ld -m z8002 --entry=0 -o test_z8002.o test_z8002.p \
+		--section-start=text=0x0000 \
+		--section-start=bss1=0x1234 \
+		--section-start=bss2=0x5678
+	z8k-coff-objcopy -I coff-z8k -O ihex test_z8002.o /dev/stdout | tr -d '\r' > $@
 
 .PHONY: clean clean-obj test \
 	test_mc6809  \
