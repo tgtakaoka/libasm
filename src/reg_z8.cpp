@@ -29,6 +29,11 @@ RegZ8::RegZ8()
 {}
 
 bool RegZ8::setRegPointer(int16_t rp) {
+    if (rp < 0) {
+        setRegPointer0(rp);
+        setRegPointer1(rp);
+        return true;
+    }
     return setRegPointer0(rp) && setRegPointer1(rp + 8);
 }
 

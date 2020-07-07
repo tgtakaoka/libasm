@@ -116,11 +116,9 @@ test_tms9900:test_asm_tms9900 test_dis_tms9900
 test_z80: test_asm_z80 test_dis_z80
 	./test_asm_z80
 	./test_dis_z80
-test_z8: test_asm_z8 test_asm_z88 test_dis_z8 test_dis_z88
+test_z8: test_asm_z8 test_dis_z8
 	./test_asm_z8
-	./test_asm_z88
 	./test_dis_z8
-	./test_dis_z88
 test_ins8060: test_asm_ins8060 test_dis_ins8060
 	./test_asm_ins8060
 	./test_dis_ins8060
@@ -165,7 +163,6 @@ TEST_OBJS= \
 	test_asm_i8080.o   test_dis_i8080.o   \
 	test_asm_z80.o     test_dis_z80.o     \
 	test_asm_z8.o      test_dis_z8.o      \
-	test_asm_z88.o     test_dis_z88.o     \
 	test_asm_ins8060.o test_dis_ins8060.o \
 	test_asm_ins8070.o test_dis_ins8070.o \
 	test_asm_cdp1802.o test_dis_cdp1802.o \
@@ -257,10 +254,6 @@ test_dis_z80:     test_dis_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_dis) $
 test_asm_z8:      test_asm_z8.o      asm_z8.o      $(OBJS_z8)      $(OBJS_asm) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_z8:      test_dis_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_dis) $(OBJS_test)
-	$(CXX) -o $@ $(CXXFLAGS) $^
-test_asm_z88:     test_asm_z88.o     asm_z8.o      $(OBJS_z8)      $(OBJS_asm) $(OBJS_test)
-	$(CXX) -o $@ $(CXXFLAGS) $^
-test_dis_z88:     test_dis_z88.o     dis_z8.o      $(OBJS_z8)      $(OBJS_dis) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_asm_ins8060: test_asm_ins8060.o asm_ins8060.o $(OBJS_ins8060) $(OBJS_asm) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
