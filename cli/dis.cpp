@@ -27,6 +27,7 @@
 #include "dis_tms9900.h"
 #include "dis_z8.h"
 #include "dis_z80.h"
+#include "dis_z8000.h"
 
 #include <vector>
 
@@ -45,10 +46,11 @@ ins8070::DisIns8070 dis8070;
 cdp1802::DisCdp1802 dis1802;
 tms9900::DisTms9900 dis9900;
 mc68000::DisMc68000 dis68000;
+z8000::DisZ8000     disz8000;
 
 std::vector<Disassembler *> disassemblers = {
     &dis6809, &dis6800, &dis6502, &dis8051, &dis8080, &disz80, &disz8,
-    &dis1802, &dis8060, &dis8070, &dis9900, &dis68000,
+    &dis1802, &dis8060, &dis8070, &dis9900, &dis68000, &disz8000,
 };
 
 int main(int argc, const char **argv) {

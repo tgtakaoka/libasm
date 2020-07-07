@@ -1,0 +1,547 @@
+
+test_z8002.o:     file format coff-z8k
+
+
+Disassembly of section .text:
+
+00000000 <.text>:
+   0:	8d28           	clr	r2
+   2:	0d28           	clr	@r2
+   4:	4d08 1234      	clr	0x1234
+   8:	4d28 1234      	clr	0x1234(r2)
+   c:	8c18           	clrb	rh1
+   e:	0c28           	clrb	@r2
+  10:	4c08 1234      	clrb	0x1234
+  14:	4c28 1234      	clrb	0x1234(r2)
+  18:	ad21           	ex	r1,r2
+  1a:	2d21           	ex	r1,@r2
+  1c:	6d01 1234      	ex	r1,0x1234
+  20:	6d21 1234      	ex	r1,0x1234(r2)
+  24:	ac29           	exb	rl1,rh2
+  26:	2c29           	exb	rl1,@r2
+  28:	6c09 1234      	exb	rl1,0x1234
+  2c:	6c29 1234      	exb	rl1,0x1234(r2)
+  30:	a121           	ld	r1,r2
+  32:	2121           	ld	r1,@r2
+  34:	6101 1234      	ld	r1,0x1234
+  38:	6121 1234      	ld	r1,0x1234(r2)
+  3c:	3121 1234      	ld	r1,r2(#0x1234)
+  40:	7121 0400      	ld	r1,r2(r4)
+  44:	2f21           	ld	@r2,r1
+  46:	6f01 1234      	ld	0x1234,r1
+  4a:	6f21 1234      	ld	0x1234(r2),r1
+  4e:	3321 1234      	ld	r2(#0x1234),r1
+  52:	7321 0400      	ld	r2(r4),r1
+  56:	2102 5678      	ld	r2,#0x5678
+  5a:	0d25 5678      	ld	@r2,#0x5678
+  5e:	4d05 1234 5678 	ld	0x1234,#0x5678
+  64:	4d25 1234 5678 	ld	0x1234(r2),#0x5678
+  6a:	a021           	ldb	rh1,rh2
+  6c:	2021           	ldb	rh1,@r2
+  6e:	6001 1234      	ldb	rh1,0x1234
+  72:	6021 1234      	ldb	rh1,0x1234(r2)
+  76:	3021 1234      	ldb	rh1,r2(#0x1234)
+  7a:	7021 0300      	ldb	rh1,r2(r3)
+  7e:	2e21           	ldb	@r2,rh1
+  80:	6e01 1234      	ldb	0x1234,rh1
+  84:	6e21 1234      	ldb	0x1234(r2),rh1
+  88:	3221 1234      	ldb	r2(#0x1234),rh1
+  8c:	7221 0300      	ldb	r2(r3),rh1
+  90:	c156           	ldb	rh1,#0x56
+  92:	0c25 5656      	ldb	@r2,#0x56
+  96:	4c05 1234 5656 	ldb	0x1234,#0x56
+  9c:	4c25 1234 5656 	ldb	0x1234(r2),#0x56
+  a2:	9442           	ldl	rr2,rr4
+  a4:	1442           	ldl	rr2,@r4
+  a6:	5402 1234      	ldl	rr2,0x1234
+  aa:	5442 1234      	ldl	rr2,0x1234(r4)
+  ae:	3542 1234      	ldl	rr2,r4(#0x1234)
+  b2:	7542 0600      	ldl	rr2,r4(r6)
+  b6:	1d42           	ldl	@r4,rr2
+  b8:	5d02 1234      	ldl	0x1234,rr2
+  bc:	5d42 1234      	ldl	0x1234(r4),rr2
+  c0:	3742 1234      	ldl	r4(#0x1234),rr2
+  c4:	7742 0500      	ldl	r4(r5),rr2
+  c8:	1402 1234 5678 	ldl	rr2,#0x12345678
+  ce:	7602 1234      	lda	r2,0x1234
+  d2:	7642 1234      	lda	r2,0x1234(r4)
+  d6:	3442 1234      	lda	r2,r4(#0x1234)
+  da:	7442 0600      	lda	r2,r4(r6)
+
+000000de <L0^A>:
+  de:	3402 fffc      	ldar	r2,0xde
+  e2:	bd1f           	ldk	r1,#0xf
+  e4:	1c21 000f      	ldm	r0,@r2,#0x10
+  e8:	5c01 000e 1234 	ldm	r0,0x1234,#0xf
+  ee:	5c21 000d 1234 	ldm	r0,0x1234(r2),#0xe
+  f4:	1c29 0100      	ldm	@r2,r1,#0x1
+  f8:	5c09 0101 1234 	ldm	0x1234,r1,#0x2
+  fe:	5c29 0102 1234 	ldm	0x1234(r2),r1,#0x3
+
+00000104 <L0^A>:
+ 104:	3101 fffc      	ldr	r1,0x104
+
+00000108 <L0^A>:
+ 108:	3301 fffc      	ldr	0x108,r1
+
+0000010c <L0^A>:
+ 10c:	3001 fffc      	ldrb	rh1,0x10c
+
+00000110 <L0^A>:
+ 110:	3201 fffc      	ldrb	0x110,rh1
+
+00000114 <L0^A>:
+ 114:	3502 fffc      	ldrl	rr2,0x114
+
+00000118 <L0^A>:
+ 118:	3702 fffc      	ldrl	0x118,rr2
+ 11c:	9741           	pop	r1,@r4
+ 11e:	1742           	pop	@r2,@r4
+ 120:	5740 1234      	pop	0x1234,@r4
+ 124:	5742 1234      	pop	0x1234(r2),@r4
+ 128:	9542           	popl	rr2,@r4
+ 12a:	1542           	popl	@r2,@r4
+ 12c:	5540 1234      	popl	0x1234,@r4
+ 130:	5542 1234      	popl	0x1234(r2),@r4
+ 134:	9341           	push	@r4,r1
+ 136:	0d49 1234      	push	@r4,#0x1234
+ 13a:	1342           	push	@r4,@r2
+ 13c:	5340 1234      	push	@r4,0x1234
+ 140:	5342 1234      	push	@r4,0x1234(r2)
+ 144:	9142           	pushl	@r4,rr2
+ 146:	1142           	pushl	@r4,@r2
+ 148:	5140 1234      	pushl	@r4,0x1234
+ 14c:	5142 1234      	pushl	@r4,0x1234(r2)
+ 150:	b521           	adc	r1,r2
+ 152:	b421           	adcb	rh1,rh2
+ 154:	8121           	add	r1,r2
+ 156:	0101 1234      	add	r1,#0x1234
+ 15a:	0121           	add	r1,@r2
+ 15c:	4101 1234      	add	r1,0x1234
+ 160:	4121 1234      	add	r1,0x1234(r2)
+ 164:	8021           	addb	rh1,rh2
+ 166:	0001 2323      	addb	rh1,#0x23
+ 16a:	0021           	addb	rh1,@r2
+ 16c:	4001 1234      	addb	rh1,0x1234
+ 170:	4021 1234      	addb	rh1,0x1234(r2)
+ 174:	9642           	addl	rr2,rr4
+ 176:	1602 1234 5678 	addl	rr2,#0x12345678
+ 17c:	1642           	addl	rr2,@r4
+ 17e:	5602 1234      	addl	rr2,0x1234
+ 182:	5642 1234      	addl	rr2,0x1234(r4)
+ 186:	8b21           	cp	r1,r2
+ 188:	0b01 1234      	cp	r1,#0x1234
+ 18c:	0b21           	cp	r1,@r2
+ 18e:	4b01 1234      	cp	r1,0x1234
+ 192:	4b21 1234      	cp	r1,0x1234(r2)
+ 196:	0d21 1234      	cp	@r2,#0x1234
+ 19a:	4d01 1234 1234 	cp	0x1234,#0x1234
+ 1a0:	4d21 1234 1234 	cp	0x1234(r2),#0x1234
+ 1a6:	8a21           	cpb	rh1,rh2
+ 1a8:	0a01 1212      	cpb	rh1,#0x12
+ 1ac:	0a21           	cpb	rh1,@r2
+ 1ae:	4a01 1234      	cpb	rh1,0x1234
+ 1b2:	4a21 1234      	cpb	rh1,0x1234(r2)
+ 1b6:	0c21 1212      	cpb	@r2,#0x12
+ 1ba:	4c01 1234 1212 	cpb	0x1234,#0x12
+ 1c0:	4c21 1234 1212 	cpb	0x1234(r2),#0x12
+ 1c6:	9042           	cpl	rr2,rr4
+ 1c8:	1002 1234 5678 	cpl	rr2,#0x12345678
+ 1ce:	1042           	cpl	rr2,@r4
+ 1d0:	5002 1234      	cpl	rr2,0x1234
+ 1d4:	5042 1234      	cpl	rr2,0x1234(r4)
+ 1d8:	b010           	dab	rh1
+ 1da:	ab1f           	dec	r1,#0x10
+ 1dc:	2b2e           	dec	@r2,#0xf
+ 1de:	6b0d 1234      	dec	0x1234,#0xe
+ 1e2:	6b2c 1234      	dec	0x1234(r2),#0xd
+ 1e6:	aa17           	decb	rh1,#0x8
+ 1e8:	2a26           	decb	@r2,#0x7
+ 1ea:	6a05 1234      	decb	0x1234,#0x6
+ 1ee:	6a24 1234      	decb	0x1234(r2),#0x5
+ 1f2:	9b42           	div	rr2,r4
+ 1f4:	1b02 1234      	div	rr2,#0x1234
+ 1f8:	1b42           	div	rr2,@r4
+ 1fa:	5b02 1234      	div	rr2,0x1234
+ 1fe:	5b42 1234      	div	rr2,0x1234(r4)
+ 202:	9a64           	divl	rq4,rr6
+ 204:	1a04 1234 5678 	divl	rq4,#0x12345678
+ 20a:	1a64           	divl	rq4,@r6
+ 20c:	5a04 1234      	divl	rq4,0x1234
+ 210:	5a64 1234      	divl	rq4,0x1234(r6)
+ 214:	b12a           	exts	rr2
+ 216:	b110           	extsb	r1
+ 218:	b147           	extsl	rq4
+ 21a:	a91f           	inc	r1,#0x10
+ 21c:	292e           	inc	@r2,#0xf
+ 21e:	690d 1234      	inc	0x1234,#0xe
+ 222:	692c 1234      	inc	0x1234(r2),#0xd
+ 226:	a817           	incb	rh1,#0x8
+ 228:	2826           	incb	@r2,#0x7
+ 22a:	6805 1234      	incb	0x1234,#0x6
+ 22e:	6824 1234      	incb	0x1234(r2),#0x5
+ 232:	9942           	mult	rr2,r4
+ 234:	1902 1234      	mult	rr2,#0x1234
+ 238:	1942           	mult	rr2,@r4
+ 23a:	5902 1234      	mult	rr2,0x1234
+ 23e:	5942 1234      	mult	rr2,0x1234(r4)
+ 242:	9864           	multl	rq4,rr6
+ 244:	1804 1234 5678 	multl	rq4,#0x12345678
+ 24a:	1864           	multl	rq4,@r6
+ 24c:	5804 1234      	multl	rq4,0x1234
+ 250:	5864 1234      	multl	rq4,0x1234(r6)
+ 254:	8d12           	neg	r1
+ 256:	0d22           	neg	@r2
+ 258:	4d02 1234      	neg	0x1234
+ 25c:	4d22 1234      	neg	0x1234(r2)
+ 260:	8c12           	negb	rh1
+ 262:	0c22           	negb	@r2
+ 264:	4c02 1234      	negb	0x1234
+ 268:	4c22 1234      	negb	0x1234(r2)
+ 26c:	b721           	sbc	r1,r2
+ 26e:	b621           	sbcb	rh1,rh2
+ 270:	8321           	sub	r1,r2
+ 272:	0301 1234      	sub	r1,#0x1234
+ 276:	0321           	sub	r1,@r2
+ 278:	4301 1234      	sub	r1,0x1234
+ 27c:	4321 1234      	sub	r1,0x1234(r2)
+ 280:	8221           	subb	rh1,rh2
+ 282:	0201 1212      	subb	rh1,#0x12
+ 286:	0221           	subb	rh1,@r2
+ 288:	4201 1234      	subb	rh1,0x1234
+ 28c:	4221 1234      	subb	rh1,0x1234(r2)
+ 290:	9242           	subl	rr2,rr4
+ 292:	1202 1234 5678 	subl	rr2,#0x12345678
+ 298:	1242           	subl	rr2,@r4
+ 29a:	5202 1234      	subl	rr2,0x1234
+ 29e:	5242 1234      	subl	rr2,0x1234(r4)
+ 2a2:	8721           	and	r1,r2
+ 2a4:	0701 1234      	and	r1,#0x1234
+ 2a8:	0721           	and	r1,@r2
+ 2aa:	4701 1234      	and	r1,0x1234
+ 2ae:	4721 1234      	and	r1,0x1234(r2)
+ 2b2:	8621           	andb	rh1,rh2
+ 2b4:	0601 1212      	andb	rh1,#0x12
+ 2b8:	0621           	andb	rh1,@r2
+ 2ba:	4601 1234      	andb	rh1,0x1234
+ 2be:	4621 1234      	andb	rh1,0x1234(r2)
+ 2c2:	8d10           	com	r1
+ 2c4:	0d20           	com	@r2
+ 2c6:	4d00 1234      	com	0x1234
+ 2ca:	4d20 1234      	com	0x1234(r2)
+ 2ce:	8c10           	comb	rh1
+ 2d0:	0c20           	comb	@r2
+ 2d2:	4c00 1234      	comb	0x1234
+ 2d6:	4c20 1234      	comb	0x1234(r2)
+ 2da:	8521           	or	r1,r2
+ 2dc:	0501 1234      	or	r1,#0x1234
+ 2e0:	0521           	or	r1,@r2
+ 2e2:	4501 1234      	or	r1,0x1234
+ 2e6:	4521 1234      	or	r1,0x1234(r2)
+ 2ea:	8421           	orb	rh1,rh2
+ 2ec:	0401 1212      	orb	rh1,#0x12
+ 2f0:	0421           	orb	rh1,@r2
+ 2f2:	4401 1234      	orb	rh1,0x1234
+ 2f6:	4421 1234      	orb	rh1,0x1234(r2)
+ 2fa:	8d14           	test	r1
+ 2fc:	0d24           	test	@r2
+ 2fe:	4d04 1234      	test	0x1234
+ 302:	4d24 1234      	test	0x1234(r2)
+ 306:	8c14           	testb	rh1
+ 308:	0c24           	testb	@r2
+ 30a:	4c04 1234      	testb	0x1234
+ 30e:	4c24 1234      	testb	0x1234(r2)
+ 312:	9c28           	testl	rr2
+ 314:	1c28           	testl	@r2
+ 316:	5c08 1234      	testl	0x1234
+ 31a:	5c28 1234      	testl	0x1234(r2)
+ 31e:	8921           	xor	r1,r2
+ 320:	0901 1234      	xor	r1,#0x1234
+ 324:	0921           	xor	r1,@r2
+ 326:	4901 1234      	xor	r1,0x1234
+ 32a:	4921 1234      	xor	r1,0x1234(r2)
+ 32e:	8821           	xorb	rh1,rh2
+ 330:	0801 1212      	xorb	rh1,#0x12
+ 334:	0821           	xorb	rh1,@r2
+ 336:	4801 1234      	xorb	rh1,0x1234
+ 33a:	4821 1234      	xorb	rh1,0x1234(r2)
+ 33e:	1f20           	call	@r2
+ 340:	5f00 1234      	call	0x1234
+ 344:	5f20 1234      	call	0x1234(r2)
+ 348:	d001           	calr	0x348
+ 34a:	f181           	djnz	r1,0x34a
+ 34c:	f101           	dbjnz	rh1,0x34c
+ 34e:	7b00           	iret	
+ 350:	1e28           	jp	t,@r2
+ 352:	5e08 1234      	jp	t,0x1234
+ 356:	5e28 1234      	jp	t,0x1234(r2)
+ 35a:	1e26           	jp	eq,@r2
+ 35c:	5e0e 1234      	jp	ne,0x1234
+ 360:	5e26 1234      	jp	eq,0x1234(r2)
+ 364:	e0ff           	jr	f,0x364
+ 366:	e1ff           	jr	lt,0x366
+ 368:	e2ff           	jr	le,0x368
+ 36a:	e3ff           	jr	ule,0x36a
+ 36c:	e4ff           	jr	ov/pe,0x36c
+ 36e:	e5ff           	jr	mi,0x36e
+ 370:	e6ff           	jr	eq,0x370
+ 372:	e6ff           	jr	eq,0x372
+ 374:	e7ff           	jr	c/ult,0x374
+ 376:	e7ff           	jr	c/ult,0x376
+ 378:	e8ff           	jr	t,0x378
+ 37a:	e9ff           	jr	ge,0x37a
+ 37c:	eaff           	jr	gt,0x37c
+ 37e:	ebff           	jr	ugt,0x37e
+ 380:	ecff           	jr	nov/po,0x380
+ 382:	edff           	jr	pl,0x382
+ 384:	eeff           	jr	ne,0x384
+ 386:	eeff           	jr	ne,0x386
+ 388:	efff           	jr	nc/uge,0x388
+ 38a:	efff           	jr	nc/uge,0x38a
+ 38c:	9e00           	ret	f
+ 38e:	9e01           	ret	lt
+ 390:	9e02           	ret	le
+ 392:	9e03           	ret	ule
+ 394:	9e04           	ret	ov/pe
+ 396:	9e05           	ret	mi
+ 398:	9e06           	ret	eq
+ 39a:	9e06           	ret	eq
+ 39c:	9e07           	ret	c/ult
+ 39e:	9e07           	ret	c/ult
+ 3a0:	9e08           	ret	t
+ 3a2:	9e09           	ret	ge
+ 3a4:	9e0a           	ret	gt
+ 3a6:	9e0b           	ret	ugt
+ 3a8:	9e0c           	ret	nov/po
+ 3aa:	9e0d           	ret	pl
+ 3ac:	9e0e           	ret	ne
+ 3ae:	9e0e           	ret	ne
+ 3b0:	9e0f           	ret	nc/uge
+ 3b2:	9e0f           	ret	nc/uge
+ 3b4:	7f03           	sc	#0x3
+ 3b6:	2702 0100      	bit	r1,r2
+ 3ba:	a71f           	bit	r1,#0xf
+ 3bc:	272e           	bit	@r2,#0xe
+ 3be:	670d 1234      	bit	0x1234,#0xd
+ 3c2:	672c 1234      	bit	0x1234(r2),#0xc
+ 3c6:	2602 0100      	bitb	rh1,r2
+ 3ca:	a617           	bitb	rh1,#0x7
+ 3cc:	2626           	bitb	@r2,#0x6
+ 3ce:	6605 1234      	bitb	0x1234,#0x5
+ 3d2:	6624 1234      	bitb	0x1234(r2),#0x4
+ 3d6:	2302 0100      	res	r1,r2
+ 3da:	a31f           	res	r1,#0xf
+ 3dc:	232e           	res	@r2,#0xe
+ 3de:	630d 1234      	res	0x1234,#0xd
+ 3e2:	632c 1234      	res	0x1234(r2),#0xc
+ 3e6:	2202 0100      	resb	rh1,r2
+ 3ea:	a217           	resb	rh1,#0x7
+ 3ec:	2226           	resb	@r2,#0x6
+ 3ee:	6205 1234      	resb	0x1234,#0x5
+ 3f2:	6224 1234      	resb	0x1234(r2),#0x4
+ 3f6:	2502 0100      	set	r1,r2
+ 3fa:	a51f           	set	r1,#0xf
+ 3fc:	252e           	set	@r2,#0xe
+ 3fe:	650d 1234      	set	0x1234,#0xd
+ 402:	652c 1234      	set	0x1234(r2),#0xc
+ 406:	2402 0100      	setb	rh1,r2
+ 40a:	a417           	setb	rh1,#0x7
+ 40c:	2426           	setb	@r2,#0x6
+ 40e:	6405 1234      	setb	0x1234,#0x5
+ 412:	6424 1234      	setb	0x1234(r2),#0x4
+ 416:	8d16           	tset	r1
+ 418:	0d26           	tset	@r2
+ 41a:	4d06 1234      	tset	0x1234
+ 41e:	4d24 1234      	test	0x1234(r2)
+ 422:	8c16           	tsetb	rh1
+ 424:	0c26           	tsetb	@r2
+ 426:	4c06 1234      	tsetb	0x1234
+ 42a:	4c26 1234      	tsetb	0x1234(r2)
+ 42e:	af10           	tcc	f,r1
+ 430:	af11           	tcc	lt,r1
+ 432:	af12           	tcc	le,r1
+ 434:	af13           	tcc	ule,r1
+ 436:	af14           	tcc	ov/pe,r1
+ 438:	af15           	tcc	mi,r1
+ 43a:	af16           	tcc	eq,r1
+ 43c:	af16           	tcc	eq,r1
+ 43e:	af17           	tcc	c/ult,r1
+ 440:	af17           	tcc	c/ult,r1
+ 442:	af18           	tcc	t,r1
+ 444:	af19           	tcc	ge,r1
+ 446:	af1a           	tcc	gt,r1
+ 448:	af1b           	tcc	ugt,r1
+ 44a:	af1c           	tcc	nov/po,r1
+ 44c:	af1d           	tcc	pl,r1
+ 44e:	af1e           	tcc	ne,r1
+ 450:	af1e           	tcc	ne,r1
+ 452:	af1f           	tcc	nc/uge,r1
+ 454:	af1f           	tcc	nc/uge,r1
+ 456:	ae10           	tccb	f,rh1
+ 458:	ae11           	tccb	lt,rh1
+ 45a:	ae12           	tccb	le,rh1
+ 45c:	ae13           	tccb	ule,rh1
+ 45e:	ae14           	tccb	ov/pe,rh1
+ 460:	ae15           	tccb	mi,rh1
+ 462:	ae16           	tccb	eq,rh1
+ 464:	ae16           	tccb	eq,rh1
+ 466:	ae17           	tccb	c/ult,rh1
+ 468:	ae17           	tccb	c/ult,rh1
+ 46a:	ae18           	tccb	t,rh1
+ 46c:	ae19           	tccb	ge,rh1
+ 46e:	ae1a           	tccb	gt,rh1
+ 470:	ae1b           	tccb	ugt,rh1
+ 472:	ae1c           	tccb	nov/po,rh1
+ 474:	ae1d           	tccb	pl,rh1
+ 476:	ae1e           	tccb	ne,rh1
+ 478:	ae1e           	tccb	ne,rh1
+ 47a:	ae1f           	tccb	nc/uge,rh1
+ 47c:	ae1f           	tccb	nc/uge,rh1
+ 47e:	b310           	rl	r1,#0x1
+ 480:	b212           	rlb	rh1,#0x2
+ 482:	b31a           	rlc	r1,#0x2
+ 484:	b218           	rlcb	rh1,#0x1
+ 486:	be21           	rldb	rh1,rh2
+ 488:	b316           	rr	r1,#0x2
+ 48a:	b214           	rrb	rh1,#0x1
+ 48c:	b31c           	rrc	r1,#0x1
+ 48e:	b21e           	rrcb	rh1,#0x2
+ 490:	bc21           	rrdb	rh1,rh2
+ 492:	b31b 0200      	sda	r1,r2
+ 496:	b21b 0200      	sdab	rh1,r2
+ 49a:	b34f 0200      	sdal	rr4,r2
+ 49e:	b313 0200      	sdl	r1,r2
+ 4a2:	b213 0200      	sdlb	rh1,r2
+ 4a6:	b347 0200      	sdll	rr4,r2
+ 4aa:	b319 0010      	sla	r1,#0x10
+ 4ae:	b219 0008      	slab	rh1,#0x8
+ 4b2:	b34d 0020      	slal	rr4,#0x20
+ 4b6:	b311 0001      	sll	r1,#0x1
+ 4ba:	b211 0001      	sllb	rh1,#0x1
+ 4be:	b345 0001      	slll	rr4,#0x1
+ 4c2:	b319 fffe      	sra	r1,#0x2
+ 4c6:	b219 00fe      	srab	rh1,#0x2
+ 4ca:	b34d fffe      	sral	rr4,#0x2
+ 4ce:	b311 fffd      	srl	r1,#0x3
+ 4d2:	b211 00fd      	srlb	rh1,#0x3
+ 4d6:	b345 fffd      	srll	rr4,#0x3
+ 4da:	bb28 0416      	cpd	r1,@r2,r4,eq
+ 4de:	ba28 041e      	cpdb	rh1,@r2,r4,ne
+ 4e2:	bb2c 0416      	cpdr	r1,@r2,r4,eq
+ 4e6:	ba2c 041e      	cpdrb	rh1,@r2,r4,ne
+ 4ea:	bb20 0416      	cpi	r1,@r2,r4,eq
+ 4ee:	ba20 041e      	cpib	rh1,@r2,r4,ne
+ 4f2:	bb24 0416      	cpir	r1,@r2,r4,eq
+ 4f6:	ba24 041e      	cpirb	rh1,@r2,r4,ne
+ 4fa:	bb4a 0626      	cpsd	@r2,@r4,r6,eq
+ 4fe:	ba4a 062e      	cpsdb	@r2,@r4,r6,ne
+ 502:	bb4e 0626      	cpsdr	@r2,@r4,r6,eq
+ 506:	ba4e 062e      	cpsdrb	@r2,@r4,r6,ne
+ 50a:	bb42 0626      	cpsi	@r2,@r4,r6,eq
+ 50e:	ba42 062e      	cpsib	@r2,@r4,r6,ne
+ 512:	bb46 0626      	cpsir	@r2,@r4,r6,eq
+ 516:	ba46 062e      	cpsirb	@r2,@r4,r6,ne
+ 51a:	bb49 0628      	ldd	@r2,@r4,r6
+ 51e:	ba49 0628      	lddb	@r2,@r4,r6
+ 522:	bb49 0620      	lddr	@r2,@r4,r6
+ 526:	ba49 0620      	lddrb	@r2,@r4,r6
+ 52a:	bb41 0628      	ldi	@r2,@r4,r6
+ 52e:	ba41 0628      	ldib	@r2,@r4,r6
+ 532:	bb41 0620      	ldir	@r2,@r4,r6
+ 536:	ba41 0620      	ldirb	@r2,@r4,r6
+ 53a:	b828 0640      	trdb	@r2,@r4,r6
+ 53e:	b82c 0640      	trdrb	@r2,@r4,r6
+ 542:	b820 0640      	trib	@r2,@r4,r6
+ 546:	b824 0640      	trirb	@r2,@r4,r6
+ 54a:	b82a 0640      	trtdb	@r2,@r4,r6
+ 54e:	b82e 064e      	trtdrb	@r2,@r4,r6
+ 552:	b822 0640      	trtib	@r2,@r4,r6
+ 556:	b826 064e      	trtirb	@r2,@r4,r6
+ 55a:	3d21           	in	r1,@r2
+ 55c:	3c21           	inb	rh1,@r2
+ 55e:	3b14 1234      	in	r1,#0x1234
+ 562:	3a14 1234      	inb	rh1,#0x1234
+ 566:	3b48 0628      	ind	@r2,@r4,r6
+ 56a:	3a48 0628      	indb	@r2,@r4,r6
+ 56e:	3b48 0620      	indr	@r2,@r4,r6
+ 572:	3a48 0620      	indrb	@r2,@r4,r6
+ 576:	3b40 0628      	ini	@r2,@r4,r6
+ 57a:	3a40 0628      	inib	@r2,@r4,r6
+ 57e:	3b40 0620      	inir	@r2,@r4,r6
+ 582:	3a40 0620      	inirb	@r2,@r4,r6
+ 586:	3b4a 0620      	otdr	@r2,@r4,r6
+ 58a:	3a4a 0620      	otdrb	@r2,@r4,r6
+ 58e:	3b42 0620      	otir	@r2,@r4,r6
+ 592:	3a42 0620      	otirb	@r2,@r4,r6
+ 596:	3f12           	out	@r1,r2
+ 598:	3e12           	outb	@r1,rh2
+ 59a:	3b26 1234      	out	#0x1234,r2
+ 59e:	3a26 1234      	outb	#0x1234,rh2
+ 5a2:	3b4a 0628      	outd	@r2,@r4,r6
+ 5a6:	3a4a 0628      	outdb	@r2,@r4,r6
+ 5aa:	3b42 0628      	outi	@r2,@r4,r6
+ 5ae:	3a42 0628      	outib	@r2,@r4,r6
+ 5b2:	3b15 1234      	sin	r1,#0x1234
+ 5b6:	3a15 1234      	sinb	rh1,#0x1234
+ 5ba:	3b49 0628      	sind	@r2,@r4,r6
+ 5be:	3a49 0628      	sindb	@r2,@r4,r6
+ 5c2:	3b49 0620      	sindr	@r2,@r4,r6
+ 5c6:	3a49 0620      	sindrb	@r2,@r4,r6
+ 5ca:	3b41 0628      	sini	@r2,@r4,r6
+ 5ce:	3a41 0628      	sinib	@r2,@r4,r6
+ 5d2:	3b41 0620      	sinir	@r2,@r4,r6
+ 5d6:	3a41 0620      	sinirb	@r2,@r4,r6
+ 5da:	3b4b 0620      	sotdr	@r2,@r4,r6
+ 5de:	3a4b 0620      	sotdrb	@r2,@r4,r6
+ 5e2:	3b43 0620      	sotir	@r2,@r4,r6
+ 5e6:	3a43 0620      	sotirb	@r2,@r4,r6
+ 5ea:	3b26 1234      	out	#0x1234,r2
+ 5ee:	3aa6 1234      	outb	#0x1234,rl2
+ 5f2:	3b4b 0628      	soutd	@r2,@r4,r6
+ 5f6:	3a4b 0628      	soutdb	@r2,@r4,r6
+ 5fa:	3b43 0628      	souti	@r2,@r4,r6
+ 5fe:	3a43 0628      	soutib	@r2,@r4,r6
+ 602:	8df5           	comflg	c,z,s,p
+ 604:	8df5           	comflg	c,z,s,p
+ 606:	8d85           	comflg	c
+ 608:	8d15           	comflg	p
+ 60a:	8d25           	comflg	s
+ 60c:	7c00           	di	vi,nvi
+ 60e:	7c02           	di	nvi
+ 610:	7c01           	di	vi
+ 612:	7c04           	ei	vi,nvi
+ 614:	7c06           	ei	nvi
+ 616:	7c05           	ei	vi
+ 618:	7a00           	halt	
+ 61a:	7d1a           	ldctl	fcw,r1
+ 61c:	7d1b           	ldctl	refresh,r1
+ 61e:	7d1c           	ldctl	psapseg,r1
+ 620:	7d1d           	ldctl	psapoff,r1
+ 622:	7d1e           	ldctl	nspseg,r1
+ 624:	7d1f           	ldctl	nspoff,r1
+ 626:	7d12           	ldctl	r1,fcw
+ 628:	7d13           	ldctl	r1,refresh
+ 62a:	7d14           	ldctl	r1,psapseg
+ 62c:	7d15           	ldctl	r1,psapoff
+ 62e:	7d16           	ldctl	r1,nspseg
+ 630:	7d17           	ldctl	r1,nspoff
+ 632:	8c11           	ldctlb	rh1,flags
+ 634:	8c29           	ldctlb	flags,rh2
+ 636:	3920           	ldps	@r2
+ 638:	7900 1234      	ldps	0x1234
+ 63c:	7920 1234      	ldps	0x1234(r2)
+ 640:	7b0a           	mbit	
+ 642:	7b1d           	mreq	r1
+ 644:	7b09           	mres	
+ 646:	7b08           	mset	
+ 648:	8d07           	nop	
+ 64a:	8df3           	resflg	c,z,s,p
+ 64c:	8df3           	resflg	c,z,s,p
+ 64e:	8d83           	resflg	c
+ 650:	8d13           	resflg	p
+ 652:	8d23           	resflg	s
+ 654:	8df1           	setflg	c,z,s,p
+ 656:	8df1           	setflg	c,z,s,p
+ 658:	8d81           	setflg	c
+ 65a:	8d11           	setflg	p
+ 65c:	8d21           	setflg	s

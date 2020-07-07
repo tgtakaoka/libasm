@@ -34,6 +34,7 @@ AsmTms9900      KEYWORD1        libasm
 DisTms9900      KEYWORD1        libasm
 AsmMc68000      KEYWORD1        libasm
 DisMc68000      KEYWORD1        libasm
+DisZ8000        KEYWORD1        libasm
 
 #######################################
 # Methods and Functions (KEYWORD2)

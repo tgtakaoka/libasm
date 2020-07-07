@@ -34,6 +34,7 @@ OBJS_ins8070  = table_ins8070.o reg_ins8070.o
 OBJS_cdp1802  = table_cdp1802.o
 OBJS_tms9900  = table_tms9900.o reg_tms9900.o
 OBJS_mc68000  = table_mc68000.o reg_mc68000.o
+OBJS_z8000    = table_z8000.o   reg_z8000.o
 
 OBJS = 	$(OBJS_common)  \
 	$(OBJS_asm)     \
@@ -48,7 +49,8 @@ OBJS = 	$(OBJS_common)  \
 	$(OBJS_ins8070) \
 	$(OBJS_cdp1802) \
 	$(OBJS_tms9900) \
-	$(OBJS_mc68000)
+	$(OBJS_mc68000) \
+	$(OBJS_z8000)
 
 OBJS_driver = asm.o dis.o
 
@@ -86,7 +88,8 @@ dis:    dis.o $(OBJS_dis) $(OBJS_common) \
 	dis_ins8070.o $(OBJS_ins8070) \
 	dis_cdp1802.o $(OBJS_cdp1802) \
 	dis_tms9900.o $(OBJS_tms9900) \
-	dis_mc68000.o $(OBJS_mc68000)
+	dis_mc68000.o $(OBJS_mc68000) \
+	dis_z8000.o   $(OBJS_z8000)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 install: $(DRIVERS)
