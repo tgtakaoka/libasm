@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-#include "asm_w65c816.h"
+#include "asm_mos6502.h"
 #include "test_asm_helper.h"
 
 using namespace libasm;
-using namespace libasm::w65c816;
+using namespace libasm::mos6502;
 using namespace libasm::test;
 
-AsmW65C816 as65816;
-Assembler &assembler(as65816);
+AsmMos6502 asm6502;
+Assembler &assembler(asm6502);
 
 static void set_up() {
     assembler.reset();
+    assembler.setCpu("65816");
 }
 
 static void tear_down() {

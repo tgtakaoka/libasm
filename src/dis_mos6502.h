@@ -33,9 +33,15 @@ public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
+    AddressWidth addressWidth() const { return TableMos6502.addressWidth(); }
     const char *listCpu() const override { return TableMos6502.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
     const char *getCpu() const override { return TableMos6502.getCpu(); }
+    void useIndirectLong(bool enable) {
+        TableMos6502.useIndirectLong(enable);
+    }
+    void longAccumlator(bool on) { TableMos6502.longAccumlator(on); }
+    void longIndex(bool on) { TableMos6502.longIndex(on); }
 
 private:
     MotoValueFormatter _formatter;
@@ -47,6 +53,7 @@ private:
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn);
     Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn);
     Error decodeRelative(DisMemory &memory, InsnMos6502 &insn);
+    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 

@@ -252,6 +252,105 @@ static constexpr Entry W65C02S_TABLE[] PROGMEM = {
     E(0xDB, STP,  IMPL)
 };
 
+static constexpr Entry W65C816_TABLE[] PROGMEM = {
+    E(0xCB, WAI,  IMPL)
+    E(0xDB, STP,  IMPL)
+    E(0x0B, PHD,  IMPL)
+    E(0x1B, TCS,  IMPL)
+    E(0x2B, PLD,  IMPL)
+    E(0x3B, TSC,  IMPL)
+    E(0x4B, PHK,  IMPL)
+    E(0x5B, TCD,  IMPL)
+    E(0x6B, RTL,  IMPL)
+    E(0x7B, TDC,  IMPL)
+    E(0x8B, PHB,  IMPL)
+    E(0x9B, TXY,  IMPL)
+    E(0xAB, PLB,  IMPL)
+    E(0xBB, TYX,  IMPL)
+    E(0xEB, XBA,  IMPL)
+    E(0xFB, XCE,  IMPL)
+    E(0x02, COP,  IMM8)
+    E(0x42, WDM,  IMM8)
+    E(0xC2, REP,  IMM8)
+    E(0xE2, SEP,  IMM8)
+    E(0x5C, JMP,  ABS_LONG)
+    E(0xDC, JMP,  ABS_IDIR_LONG)
+    E(0xFC, JSR,  ABS_IDX_IDIR)
+    E(0x22, JSL,  ABS_LONG)
+    E(0x62, PER,  REL_LONG)
+    E(0x82, BRL,  REL_LONG)
+    E(0xD4, PEI,  ZPG_IDIR)
+    E(0xF4, PEA,  ABS)
+    E(0x44, MVP,  BLOCK_MOVE)
+    E(0x54, MVN,  BLOCK_MOVE)
+    E(0x03, ORA,  SP_REL)
+    E(0x13, ORA,  SP_REL_IDIR_IDY)
+    E(0x07, ORA,  ZPG_IDIR_LONG)
+    E(0x17, ORA,  ZPG_IDIR_LONG_IDY)
+    E(0x0F, ORA,  ABS_LONG)
+    E(0x1F, ORA,  ABS_LONG_IDX)
+    E(0x23, AND,  SP_REL)
+    E(0x33, AND,  SP_REL_IDIR_IDY)
+    E(0x27, AND,  ZPG_IDIR_LONG)
+    E(0x37, AND,  ZPG_IDIR_LONG_IDY)
+    E(0x2F, AND,  ABS_LONG)
+    E(0x3F, AND,  ABS_LONG_IDX)
+    E(0x43, EOR,  SP_REL)
+    E(0x53, EOR,  SP_REL_IDIR_IDY)
+    E(0x47, EOR,  ZPG_IDIR_LONG)
+    E(0x57, EOR,  ZPG_IDIR_LONG_IDY)
+    E(0x4F, EOR,  ABS_LONG)
+    E(0x5F, EOR,  ABS_LONG_IDX)
+    E(0x63, ADC,  SP_REL)
+    E(0x73, ADC,  SP_REL_IDIR_IDY)
+    E(0x67, ADC,  ZPG_IDIR_LONG)
+    E(0x77, ADC,  ZPG_IDIR_LONG_IDY)
+    E(0x6F, ADC,  ABS_LONG)
+    E(0x7F, ADC,  ABS_LONG_IDX)
+    E(0x83, STA,  SP_REL)
+    E(0x93, STA,  SP_REL_IDIR_IDY)
+    E(0x87, STA,  ZPG_IDIR_LONG)
+    E(0x97, STA,  ZPG_IDIR_LONG_IDY)
+    E(0x8F, STA,  ABS_LONG)
+    E(0x9F, STA,  ABS_LONG_IDX)
+    E(0xA3, LDA,  SP_REL)
+    E(0xB3, LDA,  SP_REL_IDIR_IDY)
+    E(0xA7, LDA,  ZPG_IDIR_LONG)
+    E(0xB7, LDA,  ZPG_IDIR_LONG_IDY)
+    E(0xAF, LDA,  ABS_LONG)
+    E(0xBF, LDA,  ABS_LONG_IDX)
+    E(0xC3, CMP,  SP_REL)
+    E(0xD3, CMP,  SP_REL_IDIR_IDY)
+    E(0xC7, CMP,  ZPG_IDIR_LONG)
+    E(0xD7, CMP,  ZPG_IDIR_LONG_IDY)
+    E(0xCF, CMP,  ABS_LONG)
+    E(0xDF, CMP,  ABS_LONG_IDX)
+    E(0xE3, SBC,  SP_REL)
+    E(0xF3, SBC,  SP_REL_IDIR_IDY)
+    E(0xE7, SBC,  ZPG_IDIR_LONG)
+    E(0xF7, SBC,  ZPG_IDIR_LONG_IDY)
+    E(0xEF, SBC,  ABS_LONG)
+    E(0xFF, SBC,  ABS_LONG_IDX)
+
+    E(0xDC, JMPL, ABS_IDIR)
+    E(0x07, ORAL, ZPG_IDIR)
+    E(0x17, ORAL, ZPG_IDIR_IDY)
+    E(0x27, ANDL, ZPG_IDIR)
+    E(0x37, ANDL, ZPG_IDIR_IDY)
+    E(0x47, EORL, ZPG_IDIR)
+    E(0x57, EORL, ZPG_IDIR_IDY)
+    E(0x67, ADCL, ZPG_IDIR)
+    E(0x77, ADCL, ZPG_IDIR_IDY)
+    E(0x87, STAL, ZPG_IDIR)
+    E(0x97, STAL, ZPG_IDIR_IDY)
+    E(0xA7, LDAL, ZPG_IDIR)
+    E(0xB7, LDAL, ZPG_IDIR_IDY)
+    E(0xC7, CMPL, ZPG_IDIR)
+    E(0xD7, CMPL, ZPG_IDIR_IDY)
+    E(0xE7, SBCL, ZPG_IDIR)
+    E(0xF7, SBCL, ZPG_IDIR_IDY)
+};
+
 struct TableMos6502::EntryPage {
     const Entry *const table;
     const Entry *const end;
@@ -275,17 +374,28 @@ static constexpr TableMos6502::EntryPage PAGES_W65C02S[] PROGMEM = {
     { ARRAY_RANGE(R65C02_TABLE) },
     { ARRAY_RANGE(W65C02S_TABLE) },
 };
+static constexpr TableMos6502::EntryPage PAGES_W65C816[] PROGMEM = {
+    { ARRAY_RANGE(MOS6502_TABLE) },
+    { ARRAY_RANGE(W65SC02_TABLE) },
+    { ARRAY_RANGE(W65C02S_TABLE) },
+    { ARRAY_RANGE(W65C816_TABLE) },
+};
 
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
     if (opr == table) return true;
-    if (opr == IMMA) return table == IMMX;
-    if (opr == ZPG) return table == ABS || table == REL;
+    if (opr == IMMA) return table == IMMX || table == IMM8;
+    if (opr == ZPG) return table == ABS || table == REL
+                        || table == ABS_LONG || table == REL_LONG;
     if (opr == ZPG_IDX_IDIR) return table == ABS_IDX_IDIR;
     if (opr == ZPG_IDIR) return table == ABS_IDIR;
+    if (opr == ZPG_IDIR_LONG) return table == ABS_IDIR_LONG;
     if (opr == ZPG_IDX) return table == ABS_IDX;
     if (opr == ZPG_IDY) return table == ABS_IDY;
-    if (opr == ABS) return table == REL;
+    if (opr == ABS) return table == REL
+                        || table == ABS_LONG || table == REL_LONG;
+    if (opr == ABS_LONG) return table == REL || table == REL_LONG;
+    if (opr == ZPG_REL) return table == BLOCK_MOVE;
     return false;
 }
 
@@ -308,16 +418,29 @@ Error TableMos6502::searchName(
     return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
 }
 
+static bool acceptAddrMode(AddrMode addrMode, bool useIndirectLong) {
+    if (addrMode == ABS_IDIR_LONG
+        || addrMode == ZPG_IDIR_LONG
+        || addrMode == ZPG_IDIR_LONG_IDY)
+        return useIndirectLong;
+    return true;
+}
+
 Error TableMos6502::searchOpCode(
-    InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMos6502 &insn, bool useIndirectLong,
+    const EntryPage *pages, const EntryPage *end) {
     const Config::opcode_t opCode = insn.opCode();
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            opCode, table, end);
-        if (entry) {
+        for (const Entry *entry = table;
+             entry < end
+                 && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
+                         opCode, entry, end));
+             entry++) {
             insn.setFlags(pgm_read_byte(&entry->flags));
+            if (!acceptAddrMode(insn.addrMode(), useIndirectLong))
+                continue;
             const char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
             TableBase::setName(insn.insn(), name, Config::NAME_MAX);
@@ -332,11 +455,14 @@ Error TableMos6502::searchName(InsnMos6502 &insn) const {
 }
 
 Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
-    return _error.setError(searchOpCode(insn, _table, _end));
+    return _error.setError(
+        searchOpCode(insn, _useIndirectLong, _table, _end));
 }
 
 TableMos6502::TableMos6502() {
     setCpu(MOS6502);
+    _useIndirectLong = true;
+    _longAccumulator = _longIndex = false;
 }
 
 bool TableMos6502::setCpu(CpuType cpuType) {
@@ -361,13 +487,31 @@ bool TableMos6502::setCpu(CpuType cpuType) {
         _end = ARRAY_END(PAGES_W65C02S);
         return true;
     }
+    if (cpuType == W65C816) {
+        _table = ARRAY_BEGIN(PAGES_W65C816);
+        _end = ARRAY_END(PAGES_W65C816);
+        return true;
+    }
     return false;
+}
+
+AddressWidth TableMos6502::addressWidth() const {
+    return _cpuType == W65C816 ? ADDRESS_24BIT : ADDRESS_16BIT;
+}
+
+int8_t TableMos6502::addressBits() const {
+    return _cpuType == W65C816 ? 24 : 16;
+}
+
+const char *TableMos6502::listCpu() {
+    return "6502, 65SC02, 65C02, W65C02S, 65816";
 }
 
 const char *TableMos6502::getCpu() {
     if (_cpuType == MOS6502) return "6502";
     if (_cpuType == W65SC02) return "65SC02";
-    return _cpuType == R65C02 ? "65C02" : "W65C02S";
+    if (_cpuType == R65C02)  return "65C02";
+    return _cpuType == W65C02S ? "W65C02S" : "65816";
 }
 
 bool TableMos6502::setCpu(const char *cpu) {
@@ -375,15 +519,39 @@ bool TableMos6502::setCpu(const char *cpu) {
     p = cpu + (strncasecmp(cpu, "MOS", 3) ? 0 : 3);
     if (strcmp(p, "6502") == 0)
         return setCpu(MOS6502);
-    p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
-    if (strcasecmp(p, "65SC02") == 0)
-        return setCpu(W65SC02);
     p = cpu + (toupper(*cpu) == 'R' ? 1 : 0);
     if (strcasecmp(p, "65C02") == 0)
         return setCpu(R65C02);
-    if (strncasecmp(cpu, "W65C02", 6) == 0
-        && (cpu[6] == 0 || toupper(cpu[6]) == 'S'))
+    p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
+    if (strcasecmp(p, "65SC02") == 0)
+        return setCpu(W65SC02);
+    if (strcasecmp(p, "65C02") == 0
+        || strcasecmp(p, "65C02S") == 0)
         return setCpu(W65C02S);
+    if (strcmp(p, "65816") == 0
+        || strcasecmp(p, "65C816") == 0
+        || strcasecmp(p, "65C816S") == 0)
+        return setCpu(W65C816);
+    return false;
+}
+
+void TableMos6502::useIndirectLong(bool enable) {
+    _useIndirectLong = enable;
+}
+
+void TableMos6502::longAccumlator(bool on) {
+    _longAccumulator = on;
+}
+
+void TableMos6502::longIndex(bool on) {
+    _longIndex = on;
+}
+
+bool TableMos6502::longImmediate(AddrMode addrMode) const {
+    if (_cpuType == W65C816) {
+        if (addrMode == IMMA) return _longAccumulator;
+        if (addrMode == IMMX) return _longIndex;
+    }
     return false;
 }
 

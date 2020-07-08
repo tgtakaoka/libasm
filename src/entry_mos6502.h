@@ -27,6 +27,7 @@ enum CpuType {
     W65SC02,
     R65C02,
     W65C02S,
+    W65C816,
 };
 
 enum AddrMode {
@@ -50,6 +51,18 @@ enum AddrMode {
     ABS_IDX_IDIR = 14,  // Indexed Absolute Indirect: (abs,X)
     ZPG_IDIR     = 15,  // Zero Page Indirect: (zp)
     ZPG_REL      = 16,  // Zero Page Relative: zp,abs
+
+    // W65C816
+    ABS_LONG          = 17,  // Absolute Long: al
+    ABS_LONG_IDX      = 18,  // Absolute Long Indexed: al,x
+    ABS_IDIR_LONG     = 19,  // Absolute Indirect Long: [abs]
+    REL_LONG          = 20,  // Relative Long: rl
+    SP_REL            = 21,  // Stack Relative: off,s
+    SP_REL_IDIR_IDY   = 22,  // Stack Relative Indirect Indexed: (off,s),y
+    ZPG_IDIR_LONG     = 23,  // Zero Page Indirect Long: [zp]
+    ZPG_IDIR_LONG_IDY = 24,  // Zero Page Indirect Long Indexed: [zp],y
+    BLOCK_MOVE        = 25,  // Block Move: ss,dd
+    IMM8              = 26,  // Immediate Byte.
 };
 
 struct Entry {

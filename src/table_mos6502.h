@@ -30,25 +30,36 @@ public:
 
     Error searchName(InsnMos6502 &insn) const;
     Error searchOpCode(InsnMos6502 &insn) const;
+    void useIndirectLong(bool enable);
+    void longAccumlator(bool on);
+    void longIndex(bool on);
+    bool longImmediate(AddrMode addrMode) const;
 
-    const char *listCpu() override { return "6502, 65SC02, 65C02, W65C02S"; }
+    const char *listCpu() override;
     bool setCpu(const char *cpu) override;
     const char *getCpu() override;
-    bool is6502() const { return _cpuType == MOS6502; }
+    AddressWidth addressWidth() const;
+    int8_t addressBits() const;
+
+    static constexpr Config::opcode_t WDM = 0x42;
 
     struct EntryPage;
 
-protected:
+private:
     CpuType _cpuType;
     const EntryPage *_table;
     const EntryPage *_end;
+    bool _useIndirectLong;
+    bool _longAccumulator;
+    bool _longIndex;
 
     bool setCpu(CpuType cpuType);
 
     static Error searchName(
         InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end);
     static Error searchOpCode(
-        InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end);
+        InsnMos6502 &insn, bool useIndirectLong,
+        const EntryPage *pages, const EntryPage *end);
 };
 
 extern TableMos6502 TableMos6502;

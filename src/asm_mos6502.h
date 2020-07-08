@@ -37,21 +37,30 @@ public:
     bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
     const char *getCpu() const override { return TableMos6502.getCpu(); }
 
+    void reset() override { _long_acc = _long_idx = false; }
+
 private:
     MotoValueParser _parser;
     RegMos6502 _regs;
+    bool _long_acc = false;
+    bool _long_idx = false;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        uint16_t val16;
+        uint32_t val32;
     };
 
-    Error selectMode(char size, Operand &op, AddrMode abs, AddrMode zp);
+    Error parseOnOff(const char *line, bool &val);
+    Error parseZeroOne(const char *line, bool &val);
+    Error selectMode(
+        char size, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
     Error parseOperand(Operand &op, Operand &extra);
 
+    Error encodeLongRelative(InsnMos6502 &insn, const Operand &op);
     Error encodeRelative(InsnMos6502 &insn, const Operand &op);
     Error encodeZeroPageRelative(
         InsnMos6502 &insn, const Operand &op, const Operand &extra);
+    Error processPseudo(InsnMos6502 &insn, const char *line);
 
     Error encode(Insn &insn) override;
 };

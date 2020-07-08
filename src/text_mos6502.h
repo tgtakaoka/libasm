@@ -132,6 +132,46 @@ static const char TEXT_SMB7[] PROGMEM = "SMB7";
 static const char TEXT_STP[] PROGMEM  = "STP";
 static const char TEXT_WAI[] PROGMEM  = "WAI";
 
+// W65C816 instructions
+
+static const char TEXT_BRL[] PROGMEM  = "BRL";
+static const char TEXT_COP[] PROGMEM  = "COP";
+static const char TEXT_JML[] PROGMEM  = "JML";
+static const char TEXT_JSL[] PROGMEM  = "JSL";
+static const char TEXT_MVN[] PROGMEM  = "MVN";
+static const char TEXT_MVP[] PROGMEM  = "MVP";
+static const char TEXT_PEA[] PROGMEM  = "PEA";
+static const char TEXT_PEI[] PROGMEM  = "PEI";
+static const char TEXT_PER[] PROGMEM  = "PER";
+static const char TEXT_PHB[] PROGMEM  = "PHB";
+static const char TEXT_PHD[] PROGMEM  = "PHD";
+static const char TEXT_PHK[] PROGMEM  = "PHK";
+static const char TEXT_PLB[] PROGMEM  = "PLB";
+static const char TEXT_PLD[] PROGMEM  = "PLD";
+static const char TEXT_PSD[] PROGMEM  = "PSD";
+static const char TEXT_REP[] PROGMEM  = "REP";
+static const char TEXT_RTL[] PROGMEM  = "RTL";
+static const char TEXT_SEP[] PROGMEM  = "SEP";
+static const char TEXT_TCD[] PROGMEM  = "TCD";
+static const char TEXT_TCS[] PROGMEM  = "TCS";
+static const char TEXT_TDC[] PROGMEM  = "TDC";
+static const char TEXT_TSC[] PROGMEM  = "TSC";
+static const char TEXT_TXY[] PROGMEM  = "TXY";
+static const char TEXT_TYX[] PROGMEM  = "TYX";
+static const char TEXT_WDM[] PROGMEM  = "WDM";
+static const char TEXT_XBA[] PROGMEM  = "XBA";
+static const char TEXT_XCE[] PROGMEM  = "XCE";
+
+static const char TEXT_JMPL[] PROGMEM = "JMPL";
+static const char TEXT_ADCL[] PROGMEM = "ADCL";
+static const char TEXT_ANDL[] PROGMEM = "ANDL";
+static const char TEXT_CMPL[] PROGMEM = "CMPL";
+static const char TEXT_EORL[] PROGMEM = "EORL";
+static const char TEXT_LDAL[] PROGMEM = "LDAL";
+static const char TEXT_ORAL[] PROGMEM = "ORAL";
+static const char TEXT_SBCL[] PROGMEM = "SBCL";
+static const char TEXT_STAL[] PROGMEM = "STAL";
+
 } // namespace mos6502
 } // namespace libasm
 

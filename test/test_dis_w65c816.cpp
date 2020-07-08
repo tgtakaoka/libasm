@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-#include "dis_w65c816.h"
+#include "dis_mos6502.h"
 #include "test_dis_helper.h"
 
 using namespace libasm;
-using namespace libasm::w65c816;
+using namespace libasm::mos6502;
 using namespace libasm::test;
 
-DisW65C816 dis65c816;
-Disassembler &disassembler(dis65c816);
+DisMos6502 dis6502;
+Disassembler &disassembler(dis6502);
 
 static void set_up() {
-    dis65c816.acceptIndirectLong(true);
-    dis65c816.longAccumlator(false);
-    dis65c816.longIndex(false);
+    disassembler.setCpu("65816");
+    dis6502.useIndirectLong(true);
+    dis6502.longAccumlator(false);
+    dis6502.longIndex(false);
 }
 
 static void tear_down() {
@@ -165,8 +166,8 @@ static void test_imm() {
 }
 
 static void test_long_imm() {
-    dis65c816.longAccumlator(false);
-    dis65c816.longIndex(true);
+    dis6502.longAccumlator(false);
+    dis6502.longIndex(true);
 
     // MOS6502
     TEST(LDY, "#0",     0xA0, 0x00, 0x00);
@@ -175,8 +176,8 @@ static void test_long_imm() {
     TEST(CPX, "#$FFFF", 0xE0, 0xFF, 0xFF);
     TEST(ORA, "#9",   0x09, 0x09);
 
-    dis65c816.longAccumlator(true);
-    dis65c816.longIndex(false);
+    dis6502.longAccumlator(true);
+    dis6502.longIndex(false);
 
     TEST(ORA, "#9",     0x09, 0x09, 0x00);
     TEST(AND, "#$FFF0", 0x29, 0xF0, 0xFF);
@@ -194,8 +195,8 @@ static void test_long_imm() {
     symtab.intern(0x01FF, "zero1FF");
     symtab.intern(-1,     "minus1");
 
-    dis65c816.longAccumlator(true);
-    dis65c816.longIndex(true);
+    dis6502.longAccumlator(true);
+    dis6502.longIndex(true);
 
     TEST(LDX, "#zero10",  0xA2, 0x10, 0x00);
     TEST(CPY, "#zero1FF", 0xC0, 0xFF, 0x01);
@@ -317,7 +318,7 @@ static void test_zpg_long() {
     TEST(CMP, "[$10],Y", 0xD7, 0x10);
     TEST(SBC, "[$10],Y", 0xF7, 0x10);
 
-    dis65c816.acceptIndirectLong(false);
+    dis6502.useIndirectLong(false);
     TEST(ORAL, "($10)", 0x07, 0x10);
     TEST(ANDL, "($10)", 0x27, 0x10);
     TEST(EORL, "($10)", 0x47, 0x10);
@@ -338,11 +339,11 @@ static void test_zpg_long() {
 
     symtab.intern(0x10, "dir10");
 
-    dis65c816.acceptIndirectLong(true);
+    dis6502.useIndirectLong(true);
     TEST(ORA, "[<dir10]",   0x07, 0x10);
     TEST(ORA, "[<dir10],Y", 0x17, 0x10);
 
-    dis65c816.acceptIndirectLong(false);
+    dis6502.useIndirectLong(false);
     TEST(ORAL, "(<dir10)",  0x07, 0x10);
     TEST(ORAL, "(<dir10),Y", 0x17, 0x10);
 }
@@ -450,7 +451,7 @@ static void test_abs_long() {
     TEST(JSL, "$123456", 0x22, 0x56, 0x34, 0x12);
 
     TEST(JMP,  "[$1234]", 0xDC, 0x34, 0x12);
-    dis65c816.acceptIndirectLong(false);
+    dis6502.useIndirectLong(false);
     TEST(JMPL, "($1234)", 0xDC, 0x34, 0x12);
 
     TEST(MVP, "$120000,$340000", 0x44, 0x34, 0x12);
@@ -469,10 +470,10 @@ static void test_abs_long() {
 
     TEST(MVP, "bank12,bank34", 0x44, 0x34, 0x12);
 
-    dis65c816.acceptIndirectLong(true);
+    dis6502.useIndirectLong(true);
     TEST(JMP,  "[>sym1234]", 0xDC, 0x34, 0x12);
 
-    dis65c816.acceptIndirectLong(false);
+    dis6502.useIndirectLong(false);
     TEST(JMPL, "(>sym1234)", 0xDC, 0x34, 0x12);
 }
 

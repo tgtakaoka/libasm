@@ -64,7 +64,6 @@ asm:    asm.o $(OBJS_asm) $(OBJS_common) \
 	asm_mc6809.o  $(OBJS_mc6809)  \
 	asm_mc6800.o  $(OBJS_mc6800)  \
 	asm_mos6502.o $(OBJS_mos6502) \
-	asm_w65c816.o $(OBJS_w65c816) \
 	asm_i8051.o   $(OBJS_i8051)   \
 	asm_i8080.o   $(OBJS_i8080)   \
 	asm_z80.o     $(OBJS_z80)     \
@@ -79,7 +78,6 @@ dis:    dis.o $(OBJS_dis) $(OBJS_common) \
 	dis_mc6809.o  $(OBJS_mc6809)  \
 	dis_mc6800.o  $(OBJS_mc6800)  \
 	dis_mos6502.o $(OBJS_mos6502) \
-	dis_w65c816.o $(OBJS_w65c816) \
 	dis_i8051.o   $(OBJS_i8051)   \
 	dis_i8080.o   $(OBJS_i8080)   \
 	dis_z80.o     $(OBJS_z80)     \

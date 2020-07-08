@@ -25,7 +25,6 @@
 #include "dis_mc68000.h"
 #include "dis_mos6502.h"
 #include "dis_tms9900.h"
-#include "dis_w65c816.h"
 #include "dis_z8.h"
 #include "dis_z80.h"
 
@@ -35,7 +34,6 @@ using namespace libasm;
 using namespace libasm::cli;
 
 mos6502::DisMos6502 dis6502;
-w65c816::DisW65C816 dis65816;
 mc6800::DisMc6800   dis6800;
 mc6809::DisMc6809   dis6809;
 i8051::DisI8051     dis8051;
@@ -49,10 +47,8 @@ tms9900::DisTms9900 dis9900;
 mc68000::DisMc68000 dis68000;
 
 std::vector<Disassembler *> disassemblers = {
-    &dis6809, &dis6800, &dis6502, &dis65816,
-    &dis8051, &dis8080, &disz80,  &disz8,
-    &dis1802, &dis8060, &dis8070, &dis9900,
-    &dis68000,
+    &dis6809, &dis6800, &dis6502, &dis8051, &dis8080, &disz80, &disz8,
+    &dis1802, &dis8060, &dis8070, &dis9900, &dis68000,
 };
 
 int main(int argc, const char **argv) {

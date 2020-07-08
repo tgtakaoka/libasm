@@ -24,6 +24,26 @@ using namespace libasm::test;
 DisMos6502 dis6502;
 Disassembler &disassembler(dis6502);
 
+static bool is6502() {
+    return strcmp(disassembler.getCpu(), "6502") == 0;
+}
+
+static bool is65sc02() {
+    return strcmp(disassembler.getCpu(), "65SC02") == 0;
+}
+
+static bool is65c02() {
+    return strcmp(disassembler.getCpu(), "65C02") == 0;
+}
+
+static bool isW65c02s() {
+    return strcmp(disassembler.getCpu(), "W65C02S") == 0;
+}
+
+static bool is65816() {
+    return strcmp(disassembler.getCpu(), "65816") == 0;
+}
+
 static void set_up() {
     disassembler.setCpu("6502");
 }
@@ -156,9 +176,77 @@ static void test_imm() {
     TEST(CPY, "#zeroFF", 0xC0, 0xFF);
     TEST(SBC, "#zero90", 0xE9, 0x90);
 
-    // W65SC02
-    disassembler.setCpu("65SC02");
-    TEST(BIT, "#zero90", 0x89, 0x90);
+    if (is65sc02()) {
+        // W65SC02
+        TEST(BIT, "#zero90", 0x89, 0x90);
+    }
+}
+
+static void test_long_imm() {
+    dis6502.longAccumlator(false);
+    dis6502.longIndex(true);
+
+    if (is65816()) {
+        TEST(LDY, "#0",     0xA0, 0x00, 0x00);
+        TEST(LDX, "#$1000", 0xA2, 0x00, 0x10);
+        TEST(CPY, "#$00FF", 0xC0, 0xFF, 0x00);
+        TEST(CPX, "#$FFFF", 0xE0, 0xFF, 0xFF);
+        TEST(ORA, "#9",     0x09, 0x09);
+    } else {
+        TEST(LDY, "#0",   0xA0, 0x00);
+        TEST(LDX, "#0",   0xA2, 0x00);
+        TEST(CPY, "#$FF", 0xC0, 0xFF);
+        TEST(CPX, "#$FF", 0xE0, 0xFF);
+        TEST(ORA, "#9",   0x09, 0x09);
+    }
+
+    dis6502.longAccumlator(true);
+    dis6502.longIndex(false);
+
+    if (is65816()) {
+        TEST(ORA, "#9",     0x09, 0x09, 0x00);
+        TEST(AND, "#$FFF0", 0x29, 0xF0, 0xFF);
+        TEST(EOR, "#$007F", 0x49, 0x7F, 0x00);
+        TEST(ADC, "#$8000", 0x69, 0x00, 0x80);
+        TEST(LDA, "#$FFFF", 0xA9, 0xFF, 0xFF);
+        TEST(CMP, "#$8000", 0xC9, 0x00, 0x80);
+        TEST(SBC, "#$FFFF", 0xE9, 0xFF, 0xFF);
+        TEST(CPX, "#$FF",   0xE0, 0xFF);
+        // W65SC02
+        TEST(BIT, "#$1234", 0x89, 0x34, 0x12);
+    } else {
+        TEST(ORA, "#9",   0x09, 0x09);
+        TEST(AND, "#$F0", 0x29, 0xF0);
+        TEST(EOR, "#$7F", 0x49, 0x7F);
+        TEST(ADC, "#0",   0x69, 0x00);
+        TEST(LDA, "#$FF", 0xA9, 0xFF);
+        TEST(CMP, "#0",   0xC9, 0x00);
+        TEST(SBC, "#$FF", 0xE9, 0xFF);
+        TEST(CPX, "#$FF", 0xE0, 0xFF);
+        if (!is6502()) {
+            // W65SC02
+            TEST(BIT, "#$34", 0x89, 0x34);
+        }
+    }
+
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x01FF, "zero1FF");
+    symtab.intern(-1,     "minus1");
+
+    dis6502.longAccumlator(true);
+    dis6502.longIndex(true);
+
+    if (is65816()) {
+        TEST(LDX, "#zero10",  0xA2, 0x10, 0x00);
+        TEST(CPY, "#zero1FF", 0xC0, 0xFF, 0x01);
+        TEST(SBC, "#minus1",  0xE9, 0xFF, 0xFF);
+
+        // W65SC02
+        TEST(BIT, "#zero10",  0x89, 0x10, 0x00);
+
+        // always 8bit immediate
+        TEST(SEP, "#zero10",  0xE2, 0x10);
+    }
 }
 
 static void test_zpg() {
@@ -649,25 +737,37 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_impl);
-    RUN_TEST(test_accm);
-    RUN_TEST(test_imm);
-    RUN_TEST(test_zpg);
-    RUN_TEST(test_zpg_indexed);
-    RUN_TEST(test_abs);
-    RUN_TEST(test_abs_indexed);
-    RUN_TEST(test_abs_idir);
-    RUN_TEST(test_zpg_idir);
-    RUN_TEST(test_abs_indexed_idir);
-    RUN_TEST(test_zpg_indexed_idir);
-    RUN_TEST(test_zpg_idir_indexed);
-    RUN_TEST(test_rel);
-    RUN_TEST(test_bitop);
-    RUN_TEST(test_zpg_rel);
-    RUN_TEST(test_illegal_mos6502);
-    RUN_TEST(test_illegal_w65sc02);
-    RUN_TEST(test_illegal_r65c02);
-    RUN_TEST(test_illegal_w65c02s);
+    static const char *cpu_list[] = {
+        "6502", "65SC02", "65C02", "W65C02S", "65816",
+    };
+    for (auto i = 0; i < 4; i++) {
+        const char *cpu = cpu_list[i];
+        disassembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_impl);
+        RUN_TEST(test_accm);
+        RUN_TEST(test_imm);
+        RUN_TEST(test_long_imm);
+        RUN_TEST(test_zpg);
+        RUN_TEST(test_zpg_indexed);
+        if (is65816()) RUN_TEST(test_zpg_long);
+        if (is65816()) RUN_TEST(test_sp_rel);
+        RUN_TEST(test_abs);
+        if (is65816()) RUN_TEST(test_abs_long);
+        RUN_TEST(test_abs_indexed);
+        RUN_TEST(test_abs_idir);
+        RUN_TEST(test_zpg_idir);
+        RUN_TEST(test_abs_indexed_idir);
+        RUN_TEST(test_zpg_indexed_idir);
+        RUN_TEST(test_zpg_idir_indexed);
+        RUN_TEST(test_rel);
+        RUN_TEST(test_bitop);
+        RUN_TEST(test_zpg_rel);
+        if (is6502())    RUN_TEST(test_illegal_mos6502);
+        if (is65sc02())  RUN_TEST(test_illegal_w65sc02);
+        if (is65c02())   RUN_TEST(test_illegal_r65c02);
+        if (isW65c02s()) RUN_TEST(test_illegal_w65c02s);
+    }
     return 0;
 }
 
