@@ -75,6 +75,7 @@ const char *IntelHex::end() { return ":00000001FF"; }
 
 uint8_t *IntelHex::decode(
     const char *line, uint32_t &ela_addr, uint8_t &size) {
+    ensureData(32);
     if (*line++ != ':') return nullptr;
     size = 0;
     uint8_t len = 0;
