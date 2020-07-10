@@ -45,7 +45,7 @@ static uint8_t R(uint8_t n) {
 }
 
 static void set_up() {
-    disz8.preferWorkRegister(true);
+    disassembler.reset();
 }
 
 static void tear_down() {

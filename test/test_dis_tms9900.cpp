@@ -25,6 +25,7 @@ DisTms9900 dis9900;
 Disassembler &disassembler(dis9900);
 
 static void set_up() {
+    disassembler.reset();
     disassembler.setCpu("tms9900");
 }
 

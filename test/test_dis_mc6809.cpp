@@ -25,6 +25,7 @@ DisMc6809 dis6809;
 Disassembler &disassembler(dis6809);
 
 static void set_up() {
+    disassembler.reset();
     disassembler.setCpu("6809");
 }
 

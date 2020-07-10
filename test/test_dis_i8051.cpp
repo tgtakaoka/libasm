@@ -25,6 +25,7 @@ DisI8051 dis8051;
 Disassembler &disassembler(dis8051);
 
 static void set_up() {
+    disassembler.reset();
     disassembler.setCpu("8051");
 }
 

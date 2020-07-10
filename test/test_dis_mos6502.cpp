@@ -45,9 +45,7 @@ static bool w65c816() {
 }
 
 static void set_up() {
-    dis6502.useIndirectLong(true);
-    dis6502.longAccumlator(false);
-    dis6502.longIndex(false);
+    disassembler.reset();
 }
 
 static void tear_down() {

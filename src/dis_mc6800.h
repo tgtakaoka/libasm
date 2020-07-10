@@ -37,6 +37,7 @@ public:
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
     const char *getCpu() const override { return TableMc6800.getCpu(); }
 
+    void reset() override { setAccumulatorDelimitor(); }
     void setAccumulatorDelimitor(char delim = 0) { _accDelim = delim; }
 
 private:

@@ -40,6 +40,7 @@ public:
     virtual ValueFormatter &getFormatter() = 0;
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    virtual void reset() {}
 
 protected:
     char *_operands;

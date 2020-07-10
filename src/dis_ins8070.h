@@ -37,6 +37,7 @@ public:
     bool setCpu(const char *cpu) override { return TableIns8070.setCpu(cpu); }
     const char *getCpu() const override { return TableIns8070.getCpu(); }
 
+    void reset() override { setImmediateSymbol(false); }
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
 
 private:

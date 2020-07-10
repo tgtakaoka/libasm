@@ -37,6 +37,7 @@ public:
     bool setCpu(const char *cpu) override { return TableZ8.setCpu(cpu); }
     const char *getCpu() const override { return TableZ8.getCpu(); }
 
+    void reset() override { preferWorkRegister(true); }
     void preferWorkRegister(bool enabled) {
         _preferWorkRegister = enabled;
     }

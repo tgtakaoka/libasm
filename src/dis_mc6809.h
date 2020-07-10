@@ -36,12 +36,11 @@ public:
     bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
     const char *getCpu() const override { return TableMc6809.getCpu(); }
 
-protected:
-    RegBase &getRegister() override { return _regs; }
-
 private:
     MotoValueFormatter _formatter;
     RegMc6809 _regs;
+
+    RegBase &getRegister() override { return _regs; }
 
     void outRegister(RegName regName);
 

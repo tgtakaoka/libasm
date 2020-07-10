@@ -20,6 +20,12 @@
 namespace libasm {
 namespace mos6502 {
 
+void DisMos6502::reset() {
+    useIndirectLong(true);
+    longAccumlator(false);
+    longIndex(false);
+}
+
 Error DisMos6502::decodeImmediate(DisMemory& memory, InsnMos6502 &insn) {
     uint16_t val;
     const bool imm16 = TableMos6502.longImmediate(insn.addrMode());

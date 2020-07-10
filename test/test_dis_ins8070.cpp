@@ -25,6 +25,7 @@ DisIns8070 dis8070;
 Disassembler &disassembler(dis8070);
 
 static void set_up() {
+    disassembler.reset();
 }
 
 static void tear_down() {

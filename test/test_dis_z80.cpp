@@ -25,6 +25,7 @@ DisZ80 disz80;
 Disassembler &disassembler(disz80);
 
 static void set_up() {
+    disassembler.reset();
     disassembler.setCpu("8080");
 }
 

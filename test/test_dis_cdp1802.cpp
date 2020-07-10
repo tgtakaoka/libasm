@@ -25,6 +25,7 @@ DisCdp1802 dis1802;
 Disassembler &disassembler(dis1802);
 
 static void set_up() {
+    disassembler.reset();
 }
 
 static void tear_down() {

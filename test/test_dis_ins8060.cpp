@@ -25,6 +25,7 @@ DisIns8060 dis8060;
 Disassembler &disassembler(dis8060);
 
 static void set_up() {
+    disassembler.reset();
 }
 
 static void tear_down() {

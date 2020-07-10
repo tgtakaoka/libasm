@@ -25,6 +25,7 @@ DisMc68000 dis68000;
 Disassembler &disassembler(dis68000);
 
 static void set_up() {
+    disassembler.reset();
 }
 
 static void tear_down() {

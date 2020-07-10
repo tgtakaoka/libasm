@@ -37,6 +37,7 @@ public:
     const char *listCpu() const override { return TableMos6502.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
     const char *getCpu() const override { return TableMos6502.getCpu(); }
+    void reset() override;
     void useIndirectLong(bool enable) {
         TableMos6502.useIndirectLong(enable);
     }
