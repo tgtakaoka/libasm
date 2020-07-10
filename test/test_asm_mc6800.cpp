@@ -24,9 +24,24 @@ using namespace libasm::test;
 AsmMc6800 as6800;
 Assembler &assembler(as6800);
 
+static bool m6800() {
+    return strcmp(assembler.getCpu(), "6800") == 0;
+}
+
+static bool hd6301() {
+    return strcmp(assembler.getCpu(), "6301") == 0;
+}
+
+static bool m68hc11() {
+    return strcmp(assembler.getCpu(), "6811") == 0;
+}
+
+static bool m6801() {
+    return strcmp(assembler.getCpu(), "6801") == 0 || hd6301() || m68hc11();
+}
+
 static void set_up() {
     assembler.reset();
-    assembler.setCpu("6800");
 }
 
 static void tear_down() {
@@ -163,118 +178,209 @@ static void test_inherent() {
     TEST("TSTB", 0x5D);
     TEST("CLRB", 0x5F);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("LSRD", 0x04);
-    TEST("ASLD", 0x05);
-    TEST("LSLD", 0x05);
-    TEST("PULX", 0x38);
-    TEST("ABX",  0x3A);
-    TEST("PSHX", 0x3C);
-    TEST("MUL",  0x3D);
+    if (m6801()) {
+        // MC6801
+        TEST("LSRD", 0x04);
+        TEST("ASLD", 0x05);
+        TEST("LSLD", 0x05);
+        TEST("PULX", 0x38);
+        TEST("ABX",  0x3A);
+        TEST("PSHX", 0x3C);
+        TEST("MUL",  0x3D);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "LSRD");
+        ETEST(UNKNOWN_INSTRUCTION, "ASRD");
+        ETEST(UNKNOWN_INSTRUCTION, "LSLD");
+        ETEST(UNKNOWN_INSTRUCTION, "PULX");
+        ETEST(UNKNOWN_INSTRUCTION, "ABX");
+        ETEST(UNKNOWN_INSTRUCTION, "PSHX");
+        ETEST(UNKNOWN_INSTRUCTION, "MUL");
+    }
 
-    // HD6301
-    assembler.setCpu("6301");
-    TEST("XGDX", 0x18);
-    TEST("SLP",  0x1A);
+    if (hd6301()) {
+        // HD6301
+        TEST("XGDX", 0x18);
+        TEST("SLP",  0x1A);
+    } else {
+        if (!m68hc11())
+            ETEST(UNKNOWN_INSTRUCTION, "XGDX");
+        ETEST(UNKNOWN_INSTRUCTION, "SLP");
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("IDIV", 0x02);
-    TEST("FDIV", 0x03);
-    TEST("XGDX", 0x8F);
-    TEST("STOP", 0xCF);
-    TEST("INY",  0x18, 0x08);
-    TEST("DEY",  0x18, 0x09);
-    TEST("TSY",  0x18, 0x30);
-    TEST("TYS",  0x18, 0x35);
-    TEST("PULY", 0x18, 0x38);
-    TEST("ABY",  0x18, 0x3A);
-    TEST("PSHY", 0x18, 0x3C);
-    TEST("XGDY", 0x18, 0x8F);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("XGDX", 0x8F);
+        TEST("IDIV", 0x02);
+        TEST("FDIV", 0x03);
+        TEST("STOP", 0xCF);
+        TEST("INY",  0x18, 0x08);
+        TEST("DEY",  0x18, 0x09);
+        TEST("TSY",  0x18, 0x30);
+        TEST("TYS",  0x18, 0x35);
+        TEST("PULY", 0x18, 0x38);
+        TEST("ABY",  0x18, 0x3A);
+        TEST("PSHY", 0x18, 0x3C);
+        TEST("XGDY", 0x18, 0x8F);
+    } else {
+        if (!hd6301())
+            ETEST(UNKNOWN_INSTRUCTION, "XGDX");
+        ETEST(UNKNOWN_INSTRUCTION, "IDIV");
+        ETEST(UNKNOWN_INSTRUCTION, "FIDV");
+        ETEST(UNKNOWN_INSTRUCTION, "STOP");
+        ETEST(UNKNOWN_INSTRUCTION, "INY");
+        ETEST(UNKNOWN_INSTRUCTION, "DEY");
+        ETEST(UNKNOWN_INSTRUCTION, "TSY");
+        ETEST(UNKNOWN_INSTRUCTION, "TYS");
+        ETEST(UNKNOWN_INSTRUCTION, "PULY");
+        ETEST(UNKNOWN_INSTRUCTION, "ABY");
+        ETEST(UNKNOWN_INSTRUCTION, "PSHY");
+        ETEST(UNKNOWN_INSTRUCTION, "XGDY");
+    }
 }
 
 static void test_indexed_y() {
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("NEG Y",   0x18, 0x60, 0x00);
-    TEST("COM 0,Y", 0x18, 0x63, 0x00);
-    TEST("LSR 1,Y", 0x18, 0x64, 0x01);
-    TEST("ROR 2,Y", 0x18, 0x66, 0x02);
-    TEST("ASR 3,Y", 0x18, 0x67, 0x03);
-    TEST("ASL 4,Y", 0x18, 0x68, 0x04);
-    TEST("ROL 5,Y", 0x18, 0x69, 0x05);
-    TEST("DEC 6,Y", 0x18, 0x6A, 0x06);
-    TEST("INC 127,Y", 0x18, 0x6C, 0x7F);
-    TEST("TST 128,Y", 0x18, 0x6D, 0x80);
-    TEST("JMP 254,Y", 0x18, 0x6E, 0xFE);
-    TEST("CLR 255,Y", 0x18, 0x6F, 0xFF);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("NEG Y",   0x18, 0x60, 0x00);
+        TEST("COM 0,Y", 0x18, 0x63, 0x00);
+        TEST("LSR 1,Y", 0x18, 0x64, 0x01);
+        TEST("ROR 2,Y", 0x18, 0x66, 0x02);
+        TEST("ASR 3,Y", 0x18, 0x67, 0x03);
+        TEST("ASL 4,Y", 0x18, 0x68, 0x04);
+        TEST("ROL 5,Y", 0x18, 0x69, 0x05);
+        TEST("DEC 6,Y", 0x18, 0x6A, 0x06);
+        TEST("INC 127,Y", 0x18, 0x6C, 0x7F);
+        TEST("TST 128,Y", 0x18, 0x6D, 0x80);
+        TEST("JMP 254,Y", 0x18, 0x6E, 0xFE);
+        TEST("CLR 255,Y", 0x18, 0x6F, 0xFF);
 
-    TEST("SUB  A Y", 0x18, 0xA0, 0x00);
-    TEST("CMPA 0,Y", 0x18, 0xA1, 0x00);
-    TEST("SBCA 1,Y", 0x18, 0xA2, 0x01);
-    TEST("ANDA 2,Y", 0x18, 0xA4, 0x02);
-    TEST("BITA 3,Y", 0x18, 0xA5, 0x03);
-    TEST("LDAA 4,Y", 0x18, 0xA6, 0x04);
-    TEST("STAA 5,Y", 0x18, 0xA7, 0x05);
-    TEST("EORA 6,Y", 0x18, 0xA8, 0x06);
-    TEST("ADCA 127,Y", 0x18, 0xA9, 0x7F);
-    TEST("ORAA 128,Y", 0x18, 0xAA, 0x80);
-    TEST("ADDA 255,Y", 0x18, 0xAB, 0xFF);
+        TEST("SUB  A Y", 0x18, 0xA0, 0x00);
+        TEST("CMPA 0,Y", 0x18, 0xA1, 0x00);
+        TEST("SBCA 1,Y", 0x18, 0xA2, 0x01);
+        TEST("ANDA 2,Y", 0x18, 0xA4, 0x02);
+        TEST("BITA 3,Y", 0x18, 0xA5, 0x03);
+        TEST("LDAA 4,Y", 0x18, 0xA6, 0x04);
+        TEST("STAA 5,Y", 0x18, 0xA7, 0x05);
+        TEST("EORA 6,Y", 0x18, 0xA8, 0x06);
+        TEST("ADCA 127,Y", 0x18, 0xA9, 0x7F);
+        TEST("ORAA 128,Y", 0x18, 0xAA, 0x80);
+        TEST("ADDA 255,Y", 0x18, 0xAB, 0xFF);
 
-    TEST("SUBB 0,Y", 0x18, 0xE0, 0x00);
-    TEST("CMP  B,Y", 0x18, 0xE1, 0x00);
-    TEST("SBCB 1,Y", 0x18, 0xE2, 0x01);
-    TEST("ANDB 2,Y", 0x18, 0xE4, 0x02);
-    TEST("BITB 3,Y", 0x18, 0xE5, 0x03);
-    TEST("LDAB 4,Y", 0x18, 0xE6, 0x04);
-    TEST("STAB 5,Y", 0x18, 0xE7, 0x05);
-    TEST("EORB 6,Y", 0x18, 0xE8, 0x06);
-    TEST("ADCB 127,Y", 0x18, 0xE9, 0x7F);
-    TEST("ORAB 128,Y", 0x18, 0xEA, 0x80);
-    TEST("ADDB 255,Y", 0x18, 0xEB, 0xFF);
+        TEST("SUBB 0,Y", 0x18, 0xE0, 0x00);
+        TEST("CMP  B,Y", 0x18, 0xE1, 0x00);
+        TEST("SBCB 1,Y", 0x18, 0xE2, 0x01);
+        TEST("ANDB 2,Y", 0x18, 0xE4, 0x02);
+        TEST("BITB 3,Y", 0x18, 0xE5, 0x03);
+        TEST("LDAB 4,Y", 0x18, 0xE6, 0x04);
+        TEST("STAB 5,Y", 0x18, 0xE7, 0x05);
+        TEST("EORB 6,Y", 0x18, 0xE8, 0x06);
+        TEST("ADCB 127,Y", 0x18, 0xE9, 0x7F);
+        TEST("ORAB 128,Y", 0x18, 0xEA, 0x80);
+        TEST("ADDB 255,Y", 0x18, 0xEB, 0xFF);
 
-    TEST("CPY 0,Y", 0x18, 0xAC, 0x00);
-    TEST("LDY 0,Y", 0x18, 0xEE, 0x00);
-    TEST("STY 2,Y", 0x18, 0xEF, 0x02);
-    TEST("LDS 128,Y", 0x18, 0xAE, 0x80);
-    TEST("STS 255,Y", 0x18, 0xAF, 0xFF);
+        TEST("CPY 0,Y", 0x18, 0xAC, 0x00);
+        TEST("LDY 0,Y", 0x18, 0xEE, 0x00);
+        TEST("STY 2,Y", 0x18, 0xEF, 0x02);
+        TEST("LDS 128,Y", 0x18, 0xAE, 0x80);
+        TEST("STS 255,Y", 0x18, 0xAF, 0xFF);
 
-    TEST("JMP 0,Y",   0x18, 0x6E, 0x00);
-    TEST("JSR 255,Y", 0x18, 0xAD, 0xFF);
+        TEST("JMP 0,Y",   0x18, 0x6E, 0x00);
+        TEST("JSR 255,Y", 0x18, 0xAD, 0xFF);
 
-    TEST("SUBD 0,Y",   0x18, 0xA3, 0x00);
-    TEST("ADDD 128,Y", 0x18, 0xE3, 0x80);
-    TEST("LDD  255,Y", 0x18, 0xEC, 0xFF);
-    TEST("STD  0,Y",   0x18, 0xED, 0x00);
+        TEST("SUBD 0,Y",   0x18, 0xA3, 0x00);
+        TEST("ADDD 128,Y", 0x18, 0xE3, 0x80);
+        TEST("LDD  255,Y", 0x18, 0xEC, 0xFF);
+        TEST("STD  0,Y",   0x18, 0xED, 0x00);
 
-    TEST("CPD 0,Y",   0xCD, 0xA3, 0x00);
-    TEST("LDX 0,Y",   0xCD, 0xEE, 0x00);
-    TEST("STX 128,Y", 0xCD, 0xEF, 0x80);
-    TEST("CPX 255,Y", 0xCD, 0xAC, 0xFF);
+        TEST("CPD 0,Y",   0xCD, 0xA3, 0x00);
+        TEST("LDX 0,Y",   0xCD, 0xEE, 0x00);
+        TEST("STX 128,Y", 0xCD, 0xEF, 0x80);
+        TEST("CPX 255,Y", 0xCD, 0xAC, 0xFF);
 
-    symtab.intern(0,   "offset0");
-    symtab.intern(128, "offset128");
-    symtab.intern(255, "offset255");
+        symtab.intern(0,   "offset0");
+        symtab.intern(128, "offset128");
+        symtab.intern(255, "offset255");
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("NEG  offset0,Y",   0x18, 0x60, 0x00);
-    TEST("COM  offset255,Y", 0x18, 0x63, 0xFF);
-    TEST("CMPA offset0,Y",   0x18, 0xA1, 0x00);
-    TEST("ADDB offset255,Y", 0x18, 0xEB, 0xFF);
-    TEST("JMP  offset0,Y",   0x18, 0x6E, 0x00);
-    TEST("JSR  offset255,Y", 0x18, 0xAD, 0xFF);
+        // MC68HC11
+        TEST("NEG  offset0,Y",   0x18, 0x60, 0x00);
+        TEST("COM  offset255,Y", 0x18, 0x63, 0xFF);
+        TEST("CMPA offset0,Y",   0x18, 0xA1, 0x00);
+        TEST("ADDB offset255,Y", 0x18, 0xEB, 0xFF);
+        TEST("JMP  offset0,Y",   0x18, 0x6E, 0x00);
+        TEST("JSR  offset255,Y", 0x18, 0xAD, 0xFF);
 
-    TEST("SUBD offset0,Y",   0x18, 0xA3, 0x00);
-    TEST("ADDD offset255,Y", 0x18, 0xE3, 0xFF);
-    TEST("LDD  offset0,Y",   0x18, 0xEC, 0x00);
-    TEST("STD  offset255,Y", 0x18, 0xED, 0xFF);
+        TEST("SUBD offset0,Y",   0x18, 0xA3, 0x00);
+        TEST("ADDD offset255,Y", 0x18, 0xE3, 0xFF);
+        TEST("LDD  offset0,Y",   0x18, 0xEC, 0x00);
+        TEST("STD  offset255,Y", 0x18, 0xED, 0xFF);
 
-    TEST("CPD offset0,Y",   0xCD, 0xA3, 0x00);
-    TEST("LDX offset0,Y",   0xCD, 0xEE, 0x00);
-    TEST("STX offset128,Y", 0xCD, 0xEF, 0x80);
-    TEST("CPX offset255,Y", 0xCD, 0xAC, 0xFF);
+        TEST("CPD offset0,Y",   0xCD, 0xA3, 0x00);
+        TEST("LDX offset0,Y",   0xCD, 0xEE, 0x00);
+        TEST("STX offset128,Y", 0xCD, 0xEF, 0x80);
+        TEST("CPX offset255,Y", 0xCD, 0xAC, 0xFF);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "NEG 0,Y");
+        ETEST(UNKNOWN_OPERAND, "COM 0,Y");
+        ETEST(UNKNOWN_OPERAND, "LSR 1,Y");
+        ETEST(UNKNOWN_OPERAND, "ROR 2,Y");
+        ETEST(UNKNOWN_OPERAND, "ASR 3,Y");
+        ETEST(UNKNOWN_OPERAND, "ASL 4,Y");
+        ETEST(UNKNOWN_OPERAND, "ROL 5,Y");
+        ETEST(UNKNOWN_OPERAND, "DEC 6,Y");
+        ETEST(UNKNOWN_OPERAND, "INC 127,Y");
+        ETEST(UNKNOWN_OPERAND, "TST 128,Y");
+        ETEST(UNKNOWN_OPERAND, "JMP 254,Y");
+        ETEST(UNKNOWN_OPERAND, "CLR 255,Y");
+
+        ETEST(UNKNOWN_OPERAND, "SUBA ,Y");
+        ETEST(UNKNOWN_OPERAND, "CMPA 0,Y");
+        ETEST(UNKNOWN_OPERAND, "SBCA 1,Y");
+        ETEST(UNKNOWN_OPERAND, "ANDA 2,Y");
+        ETEST(UNKNOWN_OPERAND, "BITA 3,Y");
+        ETEST(UNKNOWN_OPERAND, "LDAA 4,Y");
+        ETEST(UNKNOWN_OPERAND, "STAA 5,Y");
+        ETEST(UNKNOWN_OPERAND, "EORA 6,Y");
+        ETEST(UNKNOWN_OPERAND, "ADCA 127,Y");
+        ETEST(UNKNOWN_OPERAND, "ORAA 128,Y");
+        ETEST(UNKNOWN_OPERAND, "ADDA 255,Y");
+
+        ETEST(UNKNOWN_OPERAND, "SUBB 0,Y");
+        ETEST(UNKNOWN_OPERAND, "CMPB ,Y");
+        ETEST(UNKNOWN_OPERAND, "SBCB 1,Y");
+        ETEST(UNKNOWN_OPERAND, "ANDB 2,Y");
+        ETEST(UNKNOWN_OPERAND, "BITB 3,Y");
+        ETEST(UNKNOWN_OPERAND, "LDAB 4,Y");
+        ETEST(UNKNOWN_OPERAND, "STAB 5,Y");
+        ETEST(UNKNOWN_OPERAND, "EORB 6,Y");
+        ETEST(UNKNOWN_OPERAND, "ADCB 127,Y");
+        ETEST(UNKNOWN_OPERAND, "ORAB 128,Y");
+        ETEST(UNKNOWN_OPERAND, "ADDB 255,Y");
+
+        ETEST(UNKNOWN_INSTRUCTION, "CPY 0,Y");
+        ETEST(UNKNOWN_INSTRUCTION, "LDY 0,Y");
+        ETEST(UNKNOWN_INSTRUCTION, "STY 2,Y");
+        ETEST(UNKNOWN_INSTRUCTION, "CPD  0,Y");
+        if (m6800()) {
+            ETEST(UNKNOWN_INSTRUCTION, "SUBD 0,Y");
+            ETEST(UNKNOWN_OPERAND,     "ADDD 128,Y");
+            ETEST(UNKNOWN_OPERAND,     "LDD  255,Y");
+            ETEST(UNKNOWN_INSTRUCTION, "STD  0,Y");
+        } else {
+            ETEST(UNKNOWN_OPERAND, "SUBD 0,Y");
+            ETEST(UNKNOWN_OPERAND, "ADDD 128,Y");
+            ETEST(UNKNOWN_OPERAND, "LDD  255,Y");
+            ETEST(UNKNOWN_OPERAND, "STD  0,Y");
+        }
+        ETEST(UNKNOWN_OPERAND, "LDS 128,Y");
+        ETEST(UNKNOWN_OPERAND, "STS 255,Y");
+
+        ETEST(UNKNOWN_OPERAND, "JMP 0,Y");
+        ETEST(UNKNOWN_OPERAND, "JSR 255,Y");
+
+        ETEST(UNKNOWN_OPERAND, "LDX 0,Y");
+        ETEST(UNKNOWN_OPERAND, "STX 128,Y");
+        ETEST(UNKNOWN_OPERAND, "CPX 255,Y");
+    }
 }
 
 static void test_relative() {
@@ -296,22 +402,25 @@ static void test_relative() {
 
     ATEST(0x1000, "BSR $1042", 0x8D, 0x40);
 
-    // MC6801
-    assembler.setCpu("6801");
-    ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
+    if (m6801()) {
+        // MC6801
+        ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "BRN $1081");
+    }
 
     symtab.intern(0x0F82, "sub0F82");
     symtab.intern(0x1081, "sub1081");
     symtab.intern(0x9002, "sub9002");
     symtab.intern(0x9003, "sub9003");
 
-    assembler.setCpu("6800");
     ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
     ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
 
-    // MC6801
-    assembler.setCpu("6801");
-    ATEST(0x1000, "BRN sub0F82", 0x21, 0x80);
+    if (m6801()) {
+        // MC6801
+        ATEST(0x1000, "BRN sub0F82", 0x21, 0x80);
+    }
 }
 
 static void test_immediate() {
@@ -361,22 +470,31 @@ static void test_immediate() {
     TEST("LDX #$90A0", 0xCE, 0x90, 0xA0);
     TEST("LDS #$90A0", 0x8E, 0x90, 0xA0);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
-    TEST("ADDD #$90A0", 0xC3, 0x90, 0xA0);
-    TEST("LDD  #$90A0", 0xCC, 0x90, 0xA0);
+    if (m6801()) {
+        // MC6801
+        TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
+        TEST("ADDD #$90A0", 0xC3, 0x90, 0xA0);
+        TEST("LDD  #$90A0", 0xCC, 0x90, 0xA0);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SUBD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "LDD  #$90A0");
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPY #$90A0", 0x18, 0x8C, 0x90, 0xA0);
-    TEST("LDY #$90A0", 0x18, 0xCE, 0x90, 0xA0);
-    TEST("CPD #$90A0", 0x1A, 0x83, 0x90, 0xA0);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPY #$90A0", 0x18, 0x8C, 0x90, 0xA0);
+        TEST("LDY #$90A0", 0x18, 0xCE, 0x90, 0xA0);
+        TEST("CPD #$90A0", 0x1A, 0x83, 0x90, 0xA0);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "CPY #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "LDY #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "CPD #$90A0");
+    }
 
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");
 
-    assembler.setCpu("6800");
     TEST("LDA A #$90", 0x86, 0x90);
     TEST("LDAA #$90",  0x86, 0x90);
     TEST("LDA B,#$90", 0xC6, 0x90);
@@ -384,16 +502,18 @@ static void test_immediate() {
     TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
     TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("LDD  #dir90A0", 0xCC, 0x90, 0xA0);
-    TEST("ADDD #dir90",   0xC3, 0x00, 0x90);
+    if (m6801()) {
+        // MC6801
+        TEST("LDD  #dir90A0", 0xCC, 0x90, 0xA0);
+        TEST("ADDD #dir90",   0xC3, 0x00, 0x90);
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPY #dir90A0", 0x18, 0x8C, 0x90, 0xA0);
-    TEST("LDY #dir90",   0x18, 0xCE, 0x00, 0x90);
-    TEST("CPD #dir90A0", 0x1A, 0x83, 0x90, 0xA0);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPY #dir90A0", 0x18, 0x8C, 0x90, 0xA0);
+        TEST("LDY #dir90",   0x18, 0xCE, 0x00, 0x90);
+        TEST("CPD #dir90A0", 0x1A, 0x83, 0x90, 0xA0);
+    }
 }
 
 static void test_direct() {
@@ -450,26 +570,38 @@ static void test_direct() {
     TEST("LDS $90", 0x9E, 0x90);
     TEST("STS $90", 0x9F, 0x90);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("SUBD $90", 0x93, 0x90);
-    TEST("ADDD $90", 0xD3, 0x90);
-    TEST("LDD  $90", 0xDC, 0x90);
-    TEST("STD  $90", 0xDD, 0x90);
-    TEST("JSR  $90", 0x9D, 0x90);
+    if (m6801()) {
+        // MC6801
+        TEST("SUBD $90", 0x93, 0x90);
+        TEST("ADDD $90", 0xD3, 0x90);
+        TEST("LDD  $90", 0xDC, 0x90);
+        TEST("STD  $90", 0xDD, 0x90);
+        TEST("JSR  $90", 0x9D, 0x90);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SUBD $90");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDD $90");
+        ETEST(UNKNOWN_INSTRUCTION, "LDD  $90");
+        ETEST(UNKNOWN_INSTRUCTION, "STD  $90");
+        TEST("JSR  $90", 0xBD, 0x00, 0x90);
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPY $90", 0x18, 0x9C, 0x90);
-    TEST("LDY $90", 0x18, 0xDE, 0x90);
-    TEST("STY $90", 0x18, 0xDF, 0x90);
-    TEST("CPD $90", 0x1A, 0x93, 0x90);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPY $90", 0x18, 0x9C, 0x90);
+        TEST("LDY $90", 0x18, 0xDE, 0x90);
+        TEST("STY $90", 0x18, 0xDF, 0x90);
+        TEST("CPD $90", 0x1A, 0x93, 0x90);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "CPY $90");
+        ETEST(UNKNOWN_INSTRUCTION, "LDY $90");
+        ETEST(UNKNOWN_INSTRUCTION, "STY $90");
+        ETEST(UNKNOWN_INSTRUCTION, "CPD $90");
+    }
 
     symtab.intern(0x10, "dir10");
     symtab.intern(0x22, "dir22");
     symtab.intern(0x90, "dir90");
 
-    assembler.setCpu("6800");
     TEST("LDA A <dir90", 0x96, 0x90);
     TEST("STA B,<dir90", 0xD7, 0x90);
     TEST("LDAA <dir90",  0x96, 0x90);
@@ -480,18 +612,20 @@ static void test_direct() {
     TEST("LDS  dir90", 0x9E, 0x90);
     TEST("STS <dir90", 0x9F, 0x90);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("LDD  <dir90", 0xDC, 0x90);
-    TEST("SUBD  dir90", 0x93, 0x90);
-    TEST("ADDD  dir22", 0xD3, 0x22);
-    TEST("JSR  <dir22", 0x9D, 0x22);
+    if (m6801()) {
+        // MC6801
+        TEST("LDD  <dir90", 0xDC, 0x90);
+        TEST("SUBD  dir90", 0x93, 0x90);
+        TEST("ADDD  dir22", 0xD3, 0x22);
+        TEST("JSR  <dir22", 0x9D, 0x22);
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPY <dir90", 0x18, 0x9C, 0x90);
-    TEST("STY <dir22", 0x18, 0xDF, 0x22);
-    TEST("CPD <dir90", 0x1A, 0x93, 0x90);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPY <dir90", 0x18, 0x9C, 0x90);
+        TEST("STY <dir22", 0x18, 0xDF, 0x22);
+        TEST("CPD <dir90", 0x1A, 0x93, 0x90);
+    }
 }
 
 static void test_extended() {
@@ -562,24 +696,35 @@ static void test_extended() {
     TEST("JMP $0034", 0x7E, 0x00, 0x34);
     TEST("JSR $1234", 0xBD, 0x12, 0x34);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("SUBD $1234", 0xB3, 0x12, 0x34);
-    TEST("ADDD $1234", 0xF3, 0x12, 0x34);
-    TEST("LDD  $1234", 0xFC, 0x12, 0x34);
-    TEST("STD  $1234", 0xFD, 0x12, 0x34);
+    if (m6801()) {
+        // MC6801
+        TEST("SUBD $1234", 0xB3, 0x12, 0x34);
+        TEST("ADDD $1234", 0xF3, 0x12, 0x34);
+        TEST("LDD  $1234", 0xFC, 0x12, 0x34);
+        TEST("STD  $1234", 0xFD, 0x12, 0x34);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SUBD $1234");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDD $1234");
+        ETEST(UNKNOWN_INSTRUCTION, "LDD  $1234");
+        ETEST(UNKNOWN_INSTRUCTION, "STD  $1234");
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPY $1234", 0x18, 0xBC, 0x12, 0x34);
-    TEST("LDY $1234", 0x18, 0xFE, 0x12, 0x34);
-    TEST("STY $1234", 0x18, 0xFF, 0x12, 0x34);
-    TEST("CPD $1234", 0x1A, 0xB3, 0x12, 0x34);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPY $1234", 0x18, 0xBC, 0x12, 0x34);
+        TEST("LDY $1234", 0x18, 0xFE, 0x12, 0x34);
+        TEST("STY $1234", 0x18, 0xFF, 0x12, 0x34);
+        TEST("CPD $1234", 0x1A, 0xB3, 0x12, 0x34);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "CPY $1234");
+        ETEST(UNKNOWN_INSTRUCTION, "LDY $1234");
+        ETEST(UNKNOWN_INSTRUCTION, "STY $1234");
+        ETEST(UNKNOWN_INSTRUCTION, "CPD $1234");
+    }
 
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x9ABC, "ext9ABC");
 
-    assembler.setCpu("6800");
     TEST("NEG   >ext0090", 0x70, 0x00, 0x90);
     TEST("LDA A  ext9ABC", 0xB6, 0x9A, 0xBC);
     TEST("STA B,>ext0090", 0xF7, 0x00, 0x90);
@@ -592,20 +737,26 @@ static void test_extended() {
     TEST("LDS  ext9ABC", 0xBE, 0x9A, 0xBC);
     TEST("STS >ext0090", 0xBF, 0x00, 0x90);
     TEST("JMP  ext9ABC", 0x7E, 0x9A, 0xBC);
-    TEST("JSR  ext0090", 0xBD, 0x00, 0x90);
+    if (m6800()) {
+        TEST("JSR  ext0090", 0xBD, 0x00, 0x90);
+    } else {
+        TEST("JSR  ext0090", 0x9D, 0x90);
+    }
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("SUBD >ext0090", 0xB3, 0x00, 0x90);
-    TEST("ADDD  ext9ABC", 0xF3, 0x9A, 0xBC);
-    TEST("LDD  >ext0090", 0xFC, 0x00, 0x90);
-    TEST("STD   ext9ABC", 0xFD, 0x9A, 0xBC);
+    if (m6801()) {
+        // MC6801
+        TEST("SUBD >ext0090", 0xB3, 0x00, 0x90);
+        TEST("ADDD  ext9ABC", 0xF3, 0x9A, 0xBC);
+        TEST("LDD  >ext0090", 0xFC, 0x00, 0x90);
+        TEST("STD   ext9ABC", 0xFD, 0x9A, 0xBC);
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("LDY >ext0090", 0x18, 0xFE, 0x00, 0x90);
-    TEST("STY ext9ABC",  0x18, 0xFF, 0x9A, 0xBC);
-    TEST("CPD ext9ABC",  0x1A, 0xB3, 0x9A, 0xBC);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("LDY >ext0090", 0x18, 0xFE, 0x00, 0x90);
+        TEST("STY ext9ABC",  0x18, 0xFF, 0x9A, 0xBC);
+        TEST("CPD ext9ABC",  0x1A, 0xB3, 0x9A, 0xBC);
+    }
 }
 
 static void test_indexed() {
@@ -684,26 +835,37 @@ static void test_indexed() {
     TEST("JMP 0,X",   0x6E, 0x00);
     TEST("JSR 255,X", 0xAD, 0xFF);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("SUBD     X", 0xA3, 0x00);
-    TEST("SUBD    ,X", 0xA3, 0x00);
-    TEST("ADDD 128,X", 0xE3, 0x80);
-    TEST("LDD  255,X", 0xEC, 0xFF);
-    TEST("STD    0,X", 0xED, 0x00);
+    if (m6801()) {
+        // MC6801
+        TEST("SUBD     X", 0xA3, 0x00);
+        TEST("SUBD    ,X", 0xA3, 0x00);
+        TEST("ADDD 128,X", 0xE3, 0x80);
+        TEST("LDD  255,X", 0xEC, 0xFF);
+        TEST("STD    0,X", 0xED, 0x00);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SUBD    ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDD 128,X");
+        ETEST(UNKNOWN_INSTRUCTION, "LDD  255,X");
+        ETEST(UNKNOWN_INSTRUCTION, "STD    0,X");
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPD 0,X",   0x1A, 0xA3, 0x00);
-    TEST("LDY 0,X",   0x1A, 0xEE, 0x00);
-    TEST("STY 128,X", 0x1A, 0xEF, 0x80);
-    TEST("CPY 255,X", 0x1A, 0xAC, 0xFF);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPD 0,X",   0x1A, 0xA3, 0x00);
+        TEST("LDY 0,X",   0x1A, 0xEE, 0x00);
+        TEST("STY 128,X", 0x1A, 0xEF, 0x80);
+        TEST("CPY 255,X", 0x1A, 0xAC, 0xFF);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "CPD 0,X");
+        ETEST(UNKNOWN_INSTRUCTION, "LDY 0,X");
+        ETEST(UNKNOWN_INSTRUCTION, "STY 128,X");
+        ETEST(UNKNOWN_INSTRUCTION, "CPY 255,X");
+    }
 
     symtab.intern(0,   "offset0");
     symtab.intern(128, "offset128");
     symtab.intern(255, "offset255");
 
-    assembler.setCpu("6800");
     TEST("NEG     offset0,X", 0x60, 0x00);
     TEST("COM   offset255,X", 0x63, 0xFF);
     TEST("CMP A   offset0,X", 0xA1, 0x00);
@@ -713,58 +875,85 @@ static void test_indexed() {
     TEST("JMP     offset0,X", 0x6E, 0x00);
     TEST("JSR   offset255,X", 0xAD, 0xFF);
 
-    // MC6801
-    assembler.setCpu("6801");
-    TEST("SUBD   offset0,X", 0xA3, 0x00);
-    TEST("ADDD offset255,X", 0xE3, 0xFF);
-    TEST("LDD    offset0,X", 0xEC, 0x00);
-    TEST("STD  offset255,X", 0xED, 0xFF);
+    if (m6801()) {
+        // MC6801
+        TEST("SUBD   offset0,X", 0xA3, 0x00);
+        TEST("ADDD offset255,X", 0xE3, 0xFF);
+        TEST("LDD    offset0,X", 0xEC, 0x00);
+        TEST("STD  offset255,X", 0xED, 0xFF);
+    }
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("CPD offset0,X",   0x1A, 0xA3, 0x00);
-    TEST("LDY offset0,X",   0x1A, 0xEE, 0x00);
-    TEST("STY offset128,X", 0x1A, 0xEF, 0x80);
-    TEST("CPY offset255,X", 0x1A, 0xAC, 0xFF);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("CPD offset0,X",   0x1A, 0xA3, 0x00);
+        TEST("LDY offset0,X",   0x1A, 0xEE, 0x00);
+        TEST("STY offset128,X", 0x1A, 0xEF, 0x80);
+        TEST("CPY offset255,X", 0x1A, 0xAC, 0xFF);
+    }
 }
 
 static void test_bit_ops() {
-    // MC68HC11
-    assembler.setCpu("6811");
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("BSET $90,#$88",   0x14, 0x90, 0x88);
+        TEST("BCLR $90,#$88",   0x15, 0x90, 0x88);
+        TEST("BSET X,#$88",     0x1C, 0x00, 0x88);
+        TEST("BCLR ,X,#$88",    0x1D, 0x00, 0x88);
+        TEST("BSET 255,Y,#$88", 0x18, 0x1C, 0xFF, 0x88);
+        TEST("BCLR 0,Y,#$88",   0x18, 0x1D, 0x00, 0x88);
 
-    TEST("BSET $90,#$88",   0x14, 0x90, 0x88);
-    TEST("BCLR $90,#$88",   0x15, 0x90, 0x88);
-    TEST("BSET X,#$88",     0x1C, 0x00, 0x88);
-    TEST("BCLR ,X,#$88",    0x1D, 0x00, 0x88);
-    TEST("BSET 255,Y,#$88", 0x18, 0x1C, 0xFF, 0x88);
-    TEST("BCLR 0,Y,#$88",   0x18, 0x1D, 0x00, 0x88);
+        ATEST(0x1000, "BRSET $90,#$88,$1083",   0x12, 0x90, 0x88, 0x7F);
+        ATEST(0x1000, "BRCLR $90,#$88,$0F84",   0x13, 0x90, 0x88, 0x80);
+        ATEST(0x1000, "BRSET 127,X,#$88,$1000", 0x1E, 0x7F, 0x88, 0xFC);
+        ATEST(0x1000, "BRCLR 128,X,#$88,$1006", 0x1F, 0x80, 0x88, 0x02);
+        ATEST(0x1000, "BRSET 255,Y,#$88,$0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
+        ATEST(0x1000, "BRCLR 0,Y,#$88,$1084",   0x18, 0x1F, 0x00, 0x88, 0x7F);
+    } else {
+        if (hd6301()) {
+            ETEST(UNKNOWN_OPERAND, "BSET $90,#$88");
+            ETEST(UNKNOWN_OPERAND, "BCLR $90,#$88");
+        } else {
+            ETEST(UNKNOWN_INSTRUCTION, "BSET $90,#$88");
+            ETEST(UNKNOWN_INSTRUCTION, "BCLR $90,#$88");
+        }
+        ETEST(UNKNOWN_INSTRUCTION, "BRSET $90,#$88,$1083");
+        ETEST(UNKNOWN_INSTRUCTION, "BRCLR $90,#$88,$0F84");
+    }
 
-    ATEST(0x1000, "BRSET $90,#$88,$1083",   0x12, 0x90, 0x88, 0x7F);
-    ATEST(0x1000, "BRCLR $90,#$88,$0F84",   0x13, 0x90, 0x88, 0x80);
-    ATEST(0x1000, "BRSET 127,X,#$88,$1000", 0x1E, 0x7F, 0x88, 0xFC);
-    ATEST(0x1000, "BRCLR 128,X,#$88,$1006", 0x1F, 0x80, 0x88, 0x02);
-    ATEST(0x1000, "BRSET 255,Y,#$88,$0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
-    ATEST(0x1000, "BRCLR 0,Y,#$88,$1084",   0x18, 0x1F, 0x00, 0x88, 0x7F);
+    if (hd6301()) {
+        // HD6301
+        TEST("AIM #$88,,X",    0x61, 0x88, 0x00);
+        TEST("OIM #$44,1,X",   0x62, 0x44, 0x01);
+        TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
+        TEST("TIM #$11,255,X", 0x6B, 0x11, 0xFF);
+        TEST("BCLR 0,1,X",     0x61, 0xFE, 0x01);
+        TEST("BSET 1,128,X",   0x62, 0x02, 0x80);
+        TEST("BTGL 6,255,X",   0x65, 0x40, 0xFF);
+        TEST("BTST 7,0,X",     0x6B, 0x80, 0x00);
 
-    // HD6301
-    assembler.setCpu("6301");
-    TEST("AIM #$88,,X",    0x61, 0x88, 0x00);
-    TEST("OIM #$44,1,X",   0x62, 0x44, 0x01);
-    TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
-    TEST("TIM #$11,255,X", 0x6B, 0x11, 0xFF);
-    TEST("BCLR 0,1,X",     0x61, 0xFE, 0x01);
-    TEST("BSET 1,128,X",   0x62, 0x02, 0x80);
-    TEST("BTGL 6,255,X",   0x65, 0x40, 0xFF);
-    TEST("BTST 7,0,X",     0x6B, 0x80, 0x00);
-
-    TEST("AIM #$88,$90", 0x71, 0x88, 0x90);
-    TEST("OIM #$44,$90", 0x72, 0x44, 0x90);
-    TEST("EIM #$22,$90", 0x75, 0x22, 0x90);
-    TEST("TIM #$11,$90", 0x7B, 0x11, 0x90);
-    TEST("BCLR 7,$90",   0x71, 0x7F, 0x90);
-    TEST("BSET 6,$90",   0x72, 0x40, 0x90);
-    TEST("BTGL 1,$90",   0x75, 0x02, 0x90);
-    TEST("BTST 0,$90",   0x7B, 0x01, 0x90);
+        TEST("AIM #$88,$90", 0x71, 0x88, 0x90);
+        TEST("OIM #$44,$90", 0x72, 0x44, 0x90);
+        TEST("EIM #$22,$90", 0x75, 0x22, 0x90);
+        TEST("TIM #$11,$90", 0x7B, 0x11, 0x90);
+        TEST("BCLR 7,$90",   0x71, 0x7F, 0x90);
+        TEST("BSET 6,$90",   0x72, 0x40, 0x90);
+        TEST("BTGL 1,$90",   0x75, 0x02, 0x90);
+        TEST("BTST 0,$90",   0x7B, 0x01, 0x90);
+    } else {
+        if (m68hc11()) {
+            ETEST(UNKNOWN_OPERAND, "BCLR 7,$90");
+            ETEST(UNKNOWN_OPERAND, "BSET 6,$90");
+        } else {
+            ETEST(UNKNOWN_INSTRUCTION, "BCLR 7,$90");
+            ETEST(UNKNOWN_INSTRUCTION, "BSET 6,$90");
+        }
+        ETEST(UNKNOWN_INSTRUCTION, "AIM #$88,$90");
+        ETEST(UNKNOWN_INSTRUCTION, "OIM #$44,$90");
+        ETEST(UNKNOWN_INSTRUCTION, "EIM #$22,$90");
+        ETEST(UNKNOWN_INSTRUCTION, "TIM #$11,$90");
+        ETEST(UNKNOWN_INSTRUCTION, "BTGL 1,$90");
+        ETEST(UNKNOWN_INSTRUCTION, "BTST 0,$90");
+    }
 
     symtab.intern(0x90, "dir90");
     symtab.intern(255,  "offset255");
@@ -773,40 +962,42 @@ static void test_bit_ops() {
     symtab.intern(0,    "offset0");
     symtab.intern(0x88, "data88");
 
-    // MC68HC11
-    assembler.setCpu("6811");
-    TEST("BSET <dir90,#data88", 0x14, 0x90, 0x88);
-    TEST("BCLR <dir90,#data88", 0x15, 0x90, 0x88);
-    TEST("BSET offset127,X,#data88", 0x1C, 0x7F, 0x88);
-    TEST("BCLR offset128,X,#data88", 0x1D, 0x80, 0x88);
-    TEST("BSET offset255,Y,#data88", 0x18, 0x1C, 0xFF, 0x88);
-    TEST("BCLR offset0,Y,#data88",   0x18, 0x1D, 0x00, 0x88);
+    if (m68hc11()) {
+        // MC68HC11
+        TEST("BSET <dir90,#data88", 0x14, 0x90, 0x88);
+        TEST("BCLR <dir90,#data88", 0x15, 0x90, 0x88);
+        TEST("BSET offset127,X,#data88", 0x1C, 0x7F, 0x88);
+        TEST("BCLR offset128,X,#data88", 0x1D, 0x80, 0x88);
+        TEST("BSET offset255,Y,#data88", 0x18, 0x1C, 0xFF, 0x88);
+        TEST("BCLR offset0,Y,#data88",   0x18, 0x1D, 0x00, 0x88);
 
-    symtab.intern(0x0F84, "sym0F84");
-    symtab.intern(0x0F85, "sym0F85");
-    symtab.intern(0x1000, "sym1000");
-    symtab.intern(0x1006, "sym1006");
-    symtab.intern(0x1083, "sym1083");
-    symtab.intern(0x1084, "sym1084");
-    ATEST(0x1000, "BRSET <dir90,#data88,sym1083",   0x12, 0x90, 0x88, 0x7F);
-    ATEST(0x1000, "BRCLR <dir90,#data88,sym0F84",   0x13, 0x90, 0x88, 0x80);
-    ATEST(0x1000, "BRSET offset127,X,#data88,sym1000", 0x1E, 0x7F, 0x88, 0xFC);
-    ATEST(0x1000, "BRCLR offset128,X,#data88,sym1006", 0x1F, 0x80, 0x88, 0x02);
-    ATEST(0x1000, "BRSET offset255,Y,#data88,sym0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
-    ATEST(0x1000, "BRCLR offset0,Y,#data88,sym1084",   0x18, 0x1F, 0x00, 0x88, 0x7F);
+        symtab.intern(0x0F84, "sym0F84");
+        symtab.intern(0x0F85, "sym0F85");
+        symtab.intern(0x1000, "sym1000");
+        symtab.intern(0x1006, "sym1006");
+        symtab.intern(0x1083, "sym1083");
+        symtab.intern(0x1084, "sym1084");
+        ATEST(0x1000, "BRSET <dir90,#data88,sym1083",   0x12, 0x90, 0x88, 0x7F);
+        ATEST(0x1000, "BRCLR <dir90,#data88,sym0F84",   0x13, 0x90, 0x88, 0x80);
+        ATEST(0x1000, "BRSET offset127,X,#data88,sym1000", 0x1E, 0x7F, 0x88, 0xFC);
+        ATEST(0x1000, "BRCLR offset128,X,#data88,sym1006", 0x1F, 0x80, 0x88, 0x02);
+        ATEST(0x1000, "BRSET offset255,Y,#data88,sym0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
+        ATEST(0x1000, "BRCLR offset0,Y,#data88,sym1084",   0x18, 0x1F, 0x00, 0x88, 0x7F);
+    }
 
-    // HD6301
-    assembler.setCpu("6301");
-    symtab.intern(0x10, "bm4");
-    symtab.intern(0x40, "bm6");
-    symtab.intern(4, "bp4");
-    symtab.intern(6, "bp6");
-    TEST("AIM #data88,offset0,X", 0x61, 0x88, 0x00);
-    TEST("OIM #bm4,<dir90",       0x72, 0x10, 0x90);
-    TEST("EIM #bm6,offset255,X",  0x65, 0x40, 0xFF);
-    TEST("BCLR bp4,offset0,X",    0x61, 0xEF, 0x00);
-    TEST("BSET bp4,<dir90",       0x72, 0x10, 0x90);
-    TEST("BTGL bp6,offset255,X",  0x65, 0x40, 0xFF);
+    if (hd6301()) {
+        // HD6301
+        symtab.intern(0x10, "bm4");
+        symtab.intern(0x40, "bm6");
+        symtab.intern(4, "bp4");
+        symtab.intern(6, "bp6");
+        TEST("AIM #data88,offset0,X", 0x61, 0x88, 0x00);
+        TEST("OIM #bm4,<dir90",       0x72, 0x10, 0x90);
+        TEST("EIM #bm6,offset255,X",  0x65, 0x40, 0xFF);
+        TEST("BCLR bp4,offset0,X",    0x61, 0xEF, 0x00);
+        TEST("BSET bp4,<dir90",       0x72, 0x10, 0x90);
+        TEST("BTGL bp6,offset255,X",  0x65, 0x40, 0xFF);
+    }
 }
 
 static void test_comment() {
@@ -846,7 +1037,11 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "SUBA  <UNDEF", 0x90, 0x00);
     ETEST(UNDEFINED_SYMBOL, "SUBB  >UNDEF", 0xF0, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "JMP    UNDEF", 0x7E, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JSR    UNDEF", 0xBD, 0x00, 0x00);
+    if (m6800()) {
+        ETEST(UNDEFINED_SYMBOL, "JSR    UNDEF", 0xBD, 0x00, 0x00);
+    } else {
+        ETEST(UNDEFINED_SYMBOL, "JSR    UNDEF", 0x9D, 0x00);
+    }
 
     ETEST(UNDEFINED_SYMBOL, "LDA A UNDEF,X", 0xA6, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LDA A,UNDEF,X", 0xA6, 0x00);
@@ -854,40 +1049,43 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "BRA UNDEF", 0x20, 0x00);
     ETEST(UNDEFINED_SYMBOL, "BSR UNDEF", 0x8D, 0x00);
 
-    // MC6801
-    assembler.setCpu("6801");
-    ETEST(UNDEFINED_SYMBOL, "SUBD #UNDEF", 0x83, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JSR   UNDEF", 0x9D, 0x00);
+    if (m6801()) {
+        // MC6801
+        ETEST(UNDEFINED_SYMBOL, "SUBD #UNDEF", 0x83, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "JSR   UNDEF", 0x9D, 0x00);
+    }
 
-    // MC6811
-    assembler.setCpu("6811");
-    ETEST(UNDEFINED_SYMBOL, "BSET UNDEF,#$88",     0x14, 0x00, 0x88);
-    ETEST(UNDEFINED_SYMBOL, "BSET $90,#UNDEF",     0x14, 0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "BSET UNDEF,#UNDEF",   0x14, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "BCLR UNDEF,X,#$88",   0x1D, 0x00, 0x88);
-    ETEST(UNDEFINED_SYMBOL, "BCLR $90,Y,#UNDEF",   0x18, 0x1D, 0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "BCLR UNDEF,X,#UNDEF", 0x1D, 0x00, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET UNDEF,#$88,$1083",     0x12, 0x00, 0x88, 0x7F);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET $90,#UNDEF,$0F84",     0x12, 0x90, 0x00, 0x80);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,#UNDEF,$0F84",   0x13, 0x00, 0x00, 0x80);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR $90,#$88,UNDEF",       0x13, 0x90, 0x88, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,#$88,UNDEF",     0x13, 0x00, 0x88, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR $90,#UNDEF,UNDEF",     0x13, 0x90, 0x00, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,#UNDEF,UNDEF",   0x13, 0x00, 0x00, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET UNDEF,X,#$88,$1000",   0x1E, 0x00, 0x88, 0xFC);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET 255,Y,#UNDEF,$0F85",   0x18, 0x1E, 0xFF, 0x00, 0x80);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,Y,#UNDEF,$1084", 0x18, 0x1F, 0x00, 0x00, 0x7F);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR 127,Y,#$88,UNDEF",     0x18, 0x1F, 0x7F, 0x88, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,Y,#$88,UNDEF",   0x18, 0x1F, 0x00, 0x88, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR 127,Y,#UNDEF,UNDEF",   0x18, 0x1F, 0x7F, 0x00, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,Y,#UNDEF,UNDEF", 0x18, 0x1F, 0x00, 0x00, 0x00);
+    if (m68hc11()) {
+        // MC6811
+        ETEST(UNDEFINED_SYMBOL, "BSET UNDEF,#$88",     0x14, 0x00, 0x88);
+        ETEST(UNDEFINED_SYMBOL, "BSET $90,#UNDEF",     0x14, 0x90, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "BSET UNDEF,#UNDEF",   0x14, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "BCLR UNDEF,X,#$88",   0x1D, 0x00, 0x88);
+        ETEST(UNDEFINED_SYMBOL, "BCLR $90,Y,#UNDEF",   0x18, 0x1D, 0x90, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "BCLR UNDEF,X,#UNDEF", 0x1D, 0x00, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET UNDEF,#$88,$1083",     0x12, 0x00, 0x88, 0x7F);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET $90,#UNDEF,$0F84",     0x12, 0x90, 0x00, 0x80);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,#UNDEF,$0F84",   0x13, 0x00, 0x00, 0x80);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR $90,#$88,UNDEF",       0x13, 0x90, 0x88, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,#$88,UNDEF",     0x13, 0x00, 0x88, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR $90,#UNDEF,UNDEF",     0x13, 0x90, 0x00, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,#UNDEF,UNDEF",   0x13, 0x00, 0x00, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET UNDEF,X,#$88,$1000",   0x1E, 0x00, 0x88, 0xFC);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRSET 255,Y,#UNDEF,$0F85",   0x18, 0x1E, 0xFF, 0x00, 0x80);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,Y,#UNDEF,$1084", 0x18, 0x1F, 0x00, 0x00, 0x7F);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR 127,Y,#$88,UNDEF",     0x18, 0x1F, 0x7F, 0x88, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,Y,#$88,UNDEF",   0x18, 0x1F, 0x00, 0x88, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR 127,Y,#UNDEF,UNDEF",   0x18, 0x1F, 0x7F, 0x00, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BRCLR UNDEF,Y,#UNDEF,UNDEF", 0x18, 0x1F, 0x00, 0x00, 0x00);
+    }
 
-    // HD6301
-    assembler.setCpu("6301");
-    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$10,X", 0x62, 0x00, 0x10);
-    ETEST(UNDEFINED_SYMBOL, "OIM #$10,UNDEF,X", 0x62, 0x10, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$30",   0x72, 0x00, 0x30);
-    ETEST(UNDEFINED_SYMBOL, "OIM #$30,UNDEF",   0x72, 0x30, 0x00);
+    if (hd6301()) {
+        // HD6301
+        ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$10,X", 0x62, 0x00, 0x10);
+        ETEST(UNDEFINED_SYMBOL, "OIM #$10,UNDEF,X", 0x62, 0x10, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$30",   0x72, 0x00, 0x30);
+        ETEST(UNDEFINED_SYMBOL, "OIM #$30,UNDEF",   0x72, 0x30, 0x00);
+    }
 }
 
 static void test_error() {
@@ -979,17 +1177,25 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_inherent);
-    RUN_TEST(test_immediate);
-    RUN_TEST(test_direct);
-    RUN_TEST(test_extended);
-    RUN_TEST(test_indexed);
-    RUN_TEST(test_indexed_y);
-    RUN_TEST(test_relative);
-    RUN_TEST(test_bit_ops);
-    RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
-    RUN_TEST(test_error);
+    static const char *cpus[] = {
+        "6800", "6801", "6301", "6811",
+    };
+    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+        const char *cpu = cpus[i];
+        assembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_inherent);
+        RUN_TEST(test_immediate);
+        RUN_TEST(test_direct);
+        RUN_TEST(test_extended);
+        RUN_TEST(test_indexed);
+        RUN_TEST(test_indexed_y);
+        RUN_TEST(test_relative);
+        RUN_TEST(test_bit_ops);
+        RUN_TEST(test_comment);
+        RUN_TEST(test_undefined_symbol);
+        RUN_TEST(test_error);
+    }
     return 0;
 }
 
