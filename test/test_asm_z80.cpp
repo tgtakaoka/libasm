@@ -24,9 +24,16 @@ using namespace libasm::test;
 AsmZ80 asz80;
 Assembler &assembler(asz80);
 
+static bool isZ80() {
+    return strcmp(assembler.getCpu(), "Z80") == 0;
+}
+
+static bool is8085() {
+    return strcmp(assembler.getCpu(), "8085") == 0;
+}
+
 static void set_up() {
     assembler.reset();
-    assembler.setCpu("8080");
 }
 
 static void tear_down() {
@@ -143,29 +150,52 @@ static void test_move_inherent() {
     TEST("LD A,(BC)", 0x0A);
     TEST("LD A,(DE)", 0x1A);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("LD I,A", 0xED, 0x47);
-    TEST("LD R,A", 0xED, 0x4F);
-    TEST("LD A,I", 0xED, 0x57);
-    TEST("LD A,R", 0xED, 0x5F);
+    if (isZ80()) {
+        // Z80
+        TEST("LD I,A", 0xED, 0x47);
+        TEST("LD R,A", 0xED, 0x4F);
+        TEST("LD A,I", 0xED, 0x57);
+        TEST("LD A,R", 0xED, 0x5F);
 
-    TEST("LDI",  0xED, 0xA0);
-    TEST("LDD",  0xED, 0xA8);
-    TEST("LDIR", 0xED, 0xB0);
-    TEST("LDDR", 0xED, 0xB8);
-    TEST("CPI",  0xED, 0xA1);
-    TEST("CPD",  0xED, 0xA9);
-    TEST("CPIR", 0xED, 0xB1);
-    TEST("CPDR", 0xED, 0xB9);
-    TEST("INI",  0xED, 0xA2);
-    TEST("IND",  0xED, 0xAA);
-    TEST("INIR", 0xED, 0xB2);
-    TEST("INDR", 0xED, 0xBA);
-    TEST("OUTI", 0xED, 0xA3);
-    TEST("OUTD", 0xED, 0xAB);
-    TEST("OTIR", 0xED, 0xB3);
-    TEST("OTDR", 0xED, 0xBB);
+        TEST("LDI",  0xED, 0xA0);
+        TEST("LDD",  0xED, 0xA8);
+        TEST("LDIR", 0xED, 0xB0);
+        TEST("LDDR", 0xED, 0xB8);
+        TEST("CPI",  0xED, 0xA1);
+        TEST("CPD",  0xED, 0xA9);
+        TEST("CPIR", 0xED, 0xB1);
+        TEST("CPDR", 0xED, 0xB9);
+        TEST("INI",  0xED, 0xA2);
+        TEST("IND",  0xED, 0xAA);
+        TEST("INIR", 0xED, 0xB2);
+        TEST("INDR", 0xED, 0xBA);
+        TEST("OUTI", 0xED, 0xA3);
+        TEST("OUTD", 0xED, 0xAB);
+        TEST("OTIR", 0xED, 0xB3);
+        TEST("OTDR", 0xED, 0xBB);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "LD I,A");
+        ETEST(UNKNOWN_OPERAND, "LD R,A");
+        ETEST(UNKNOWN_OPERAND, "LD A,I");
+        ETEST(UNKNOWN_OPERAND, "LD A,R");
+
+        ETEST(UNKNOWN_INSTRUCTION, "LDI");
+        ETEST(UNKNOWN_INSTRUCTION, "LDD");
+        ETEST(UNKNOWN_INSTRUCTION, "LDIR");
+        ETEST(UNKNOWN_INSTRUCTION, "LDDR");
+        ETEST(UNKNOWN_INSTRUCTION, "CPI");
+        ETEST(UNKNOWN_INSTRUCTION, "CPD");
+        ETEST(UNKNOWN_INSTRUCTION, "CPIR");
+        ETEST(UNKNOWN_INSTRUCTION, "CPDR");
+        ETEST(UNKNOWN_INSTRUCTION, "INI");
+        ETEST(UNKNOWN_INSTRUCTION, "IND");
+        ETEST(UNKNOWN_INSTRUCTION, "INIR");
+        ETEST(UNKNOWN_INSTRUCTION, "INDR");
+        ETEST(UNKNOWN_INSTRUCTION, "OUTI");
+        ETEST(UNKNOWN_INSTRUCTION, "OUTD");
+        ETEST(UNKNOWN_INSTRUCTION, "OTIR");
+        ETEST(UNKNOWN_INSTRUCTION, "OTDR");
+    }
 }
 
 static void test_move_immediate() {
@@ -191,16 +221,22 @@ static void test_move_direct() {
     TEST("LD (0ABCDH),HL", 0x22, 0xCD, 0xAB);
     TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("LD (0ABCDH),BC", 0xED, 0x43, 0xCD, 0xAB);
-    TEST("LD (0ABCDH),DE", 0xED, 0x53, 0xCD, 0xAB);
-    TEST("LD (0ABCDH),HL", 0x22, 0xCD, 0xAB);
-    TEST("LD (0ABCDH),SP", 0xED, 0x73, 0xCD, 0xAB);
-    TEST("LD BC,(5678H)",  0xED, 0x4B, 0x78, 0x56);
-    TEST("LD DE,(5678H)",  0xED, 0x5B, 0x78, 0x56);
-    TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
-    TEST("LD SP,(5678H)",  0xED, 0x7B, 0x78, 0x56);
+    if (isZ80()) {
+        // Z80
+        TEST("LD (0ABCDH),BC", 0xED, 0x43, 0xCD, 0xAB);
+        TEST("LD (0ABCDH),DE", 0xED, 0x53, 0xCD, 0xAB);
+        TEST("LD (0ABCDH),SP", 0xED, 0x73, 0xCD, 0xAB);
+        TEST("LD BC,(5678H)",  0xED, 0x4B, 0x78, 0x56);
+        TEST("LD DE,(5678H)",  0xED, 0x5B, 0x78, 0x56);
+        TEST("LD SP,(5678H)",  0xED, 0x7B, 0x78, 0x56);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "LD (0ABCDH),BC");
+        ETEST(UNKNOWN_OPERAND, "LD (0ABCDH),DE");
+        ETEST(UNKNOWN_OPERAND, "LD (0ABCDH),SP");
+        ETEST(UNKNOWN_OPERAND, "LD BC,(5678H)");
+        ETEST(UNKNOWN_OPERAND, "LD DE,(5678H)");
+        ETEST(UNKNOWN_OPERAND, "LD SP,(5678H)");
+    }
 }
 
 static void test_stack_op() {
@@ -218,10 +254,14 @@ static void test_stack_op() {
     TEST("LD SP,HL",   0xF9);
     TEST("EX DE,HL",   0xEB);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("EX AF,AF'",  0x08);
-    TEST("EXX",       0xD9);
+    if (isZ80()) {
+        // Z80
+        TEST("EX AF,AF'",  0x08);
+        TEST("EXX",       0xD9);
+    } else {
+        ETEST(UNKNOWN_OPERAND,     "EX AF,AF'");
+        ETEST(UNKNOWN_INSTRUCTION, "EXX");
+    }
 }
 
 static void test_jump_call() {
@@ -255,14 +295,19 @@ static void test_jump_call() {
     TEST("RET P",  0xF0);
     TEST("RET M",  0xF8);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("RETN", 0xED, 0x45);
-    TEST("RETI", 0xED, 0x4D);
+    if (isZ80()) {
+        // Z80
+        TEST("RETN", 0xED, 0x45);
+        TEST("RETI", 0xED, 0x4D);
 
-    TEST("IM 0", 0xED, 0x46);
-    TEST("IM 1", 0xED, 0x56);
-    TEST("IM 2", 0xED, 0x5E);
+        TEST("IM 0", 0xED, 0x46);
+        TEST("IM 1", 0xED, 0x56);
+        TEST("IM 2", 0xED, 0x5E);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "RETN");
+        ETEST(UNKNOWN_INSTRUCTION, "RETI");
+        ETEST(UNKNOWN_INSTRUCTION, "IM 0");
+    }
 }
 
 static void test_incr_decr() {
@@ -412,16 +457,26 @@ static void test_alu_register() {
     TEST("ADD HL,HL", 0x29);
     TEST("ADD HL,SP", 0x39);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("ADC HL,BC", 0xED, 0x4A);
-    TEST("ADC HL,DE", 0xED, 0x5A);
-    TEST("ADC HL,HL", 0xED, 0x6A);
-    TEST("ADC HL,SP", 0xED, 0x7A);
-    TEST("SBC HL,BC", 0xED, 0x42);
-    TEST("SBC HL,DE", 0xED, 0x52);
-    TEST("SBC HL,HL", 0xED, 0x62);
-    TEST("SBC HL,SP", 0xED, 0x72);
+    if (isZ80()) {
+        // Z80
+        TEST("ADC HL,BC", 0xED, 0x4A);
+        TEST("ADC HL,DE", 0xED, 0x5A);
+        TEST("ADC HL,HL", 0xED, 0x6A);
+        TEST("ADC HL,SP", 0xED, 0x7A);
+        TEST("SBC HL,BC", 0xED, 0x42);
+        TEST("SBC HL,DE", 0xED, 0x52);
+        TEST("SBC HL,HL", 0xED, 0x62);
+        TEST("SBC HL,SP", 0xED, 0x72);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "ADC HL,BC");
+        ETEST(UNKNOWN_OPERAND, "ADC HL,DE");
+        ETEST(UNKNOWN_OPERAND, "ADC HL,HL");
+        ETEST(UNKNOWN_OPERAND, "ADC HL,SP");
+        ETEST(UNKNOWN_OPERAND, "SBC HL,BC");
+        ETEST(UNKNOWN_OPERAND, "SBC HL,DE");
+        ETEST(UNKNOWN_OPERAND, "SBC HL,HL");
+        ETEST(UNKNOWN_OPERAND, "SBC HL,SP");
+    }
 }
 
 static void test_alu_immediate() {
@@ -444,23 +499,27 @@ static void test_io() {
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
     TEST("IN A,(0F0H)",  0xDB, 0xF0);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("IN B,(C)", 0xED, 0x40);
-    TEST("IN C,(C)", 0xED, 0x48);
-    TEST("IN D,(C)", 0xED, 0x50);
-    TEST("IN E,(C)", 0xED, 0x58);
-    TEST("IN H,(C)", 0xED, 0x60);
-    TEST("IN L,(C)", 0xED, 0x68);
-    TEST("IN A,(C)", 0xED, 0x78);
+    if (isZ80()) {
+        // Z80
+        TEST("IN B,(C)", 0xED, 0x40);
+        TEST("IN C,(C)", 0xED, 0x48);
+        TEST("IN D,(C)", 0xED, 0x50);
+        TEST("IN E,(C)", 0xED, 0x58);
+        TEST("IN H,(C)", 0xED, 0x60);
+        TEST("IN L,(C)", 0xED, 0x68);
+        TEST("IN A,(C)", 0xED, 0x78);
 
-    TEST("OUT (C),B", 0xED, 0x41);
-    TEST("OUT (C),C", 0xED, 0x49);
-    TEST("OUT (C),D", 0xED, 0x51);
-    TEST("OUT (C),E", 0xED, 0x59);
-    TEST("OUT (C),H", 0xED, 0x61);
-    TEST("OUT (C),L", 0xED, 0x69);
-    TEST("OUT (C),A", 0xED, 0x79);
+        TEST("OUT (C),B", 0xED, 0x41);
+        TEST("OUT (C),C", 0xED, 0x49);
+        TEST("OUT (C),D", 0xED, 0x51);
+        TEST("OUT (C),E", 0xED, 0x59);
+        TEST("OUT (C),H", 0xED, 0x61);
+        TEST("OUT (C),L", 0xED, 0x69);
+        TEST("OUT (C),A", 0xED, 0x79);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "IN  B,(C)");
+        ETEST(UNKNOWN_OPERAND, "OUT (C),A");
+    }
 }
 
 static void test_inherent() {
@@ -480,14 +539,21 @@ static void test_inherent() {
     TEST("SCF", 0x37);
     TEST("CCF", 0x3F);
 
-    // i8085
-    assembler.setCpu("8085");
-    TEST("LD A,IM", 0x20);
-    TEST("LD IM,A", 0x30);
+    if (is8085()) {
+        // i8085
+        TEST("LD A,IM", 0x20);
+        TEST("LD IM,A", 0x30);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "LD A,IM");
+        ETEST(UNKNOWN_OPERAND, "LD IM,A");
+    }
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("NEG", 0xED, 0x44);
+    if (isZ80()) {
+        // Z80
+        TEST("NEG", 0xED, 0x44);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "NEG");
+    }
 }
 
 static void test_restart() {
@@ -502,253 +568,329 @@ static void test_restart() {
 }
 
 static void test_relative() {
-    // Z80
-    assembler.setCpu("z80");
-    ATEST(0x1000, "DJNZ 1000H",  0x10, 0xFE);
-    ATEST(0x1000, "JR 1000H",    0x18, 0xFE);
-    ATEST(0x1000, "JR NZ,1004H", 0x20, 0x02);
-    ATEST(0x1000, "JR Z,1081H",  0x28, 0x7F);
-    ATEST(0x1000, "JR NC,0F82H", 0x30, 0x80);
-    ATEST(0x1000, "JR C,0F82H",  0x38, 0x80);
+    if (isZ80()) {
+        // Z80
+        ATEST(0x1000, "DJNZ 1000H",  0x10, 0xFE);
+        ATEST(0x1000, "JR 1000H",    0x18, 0xFE);
+        ATEST(0x1000, "JR NZ,1004H", 0x20, 0x02);
+        ATEST(0x1000, "JR Z,1081H",  0x28, 0x7F);
+        ATEST(0x1000, "JR NC,0F82H", 0x30, 0x80);
+        ATEST(0x1000, "JR C,0F82H",  0x38, 0x80);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "DJNZ 1000H");
+        ETEST(UNKNOWN_INSTRUCTION, "JR 1000H");
+        ETEST(UNKNOWN_INSTRUCTION, "JR NZ,1004H");
+    }
 }
 
 static void test_shift() {
-    // Z80
-    assembler.setCpu("z80");
-    TEST("RLC B", 0xCB, 0x00);
-    TEST("RLC C", 0xCB, 0x01);
-    TEST("RLC D", 0xCB, 0x02);
-    TEST("RLC E", 0xCB, 0x03);
-    TEST("RLC H", 0xCB, 0x04);
-    TEST("RLC L", 0xCB, 0x05);
-    TEST("RLC (HL)", 0xCB, 0x06);
-    TEST("RLC A", 0xCB, 0x07);
+    if (isZ80()) {
+        // Z80
+        TEST("RLC B", 0xCB, 0x00);
+        TEST("RLC C", 0xCB, 0x01);
+        TEST("RLC D", 0xCB, 0x02);
+        TEST("RLC E", 0xCB, 0x03);
+        TEST("RLC H", 0xCB, 0x04);
+        TEST("RLC L", 0xCB, 0x05);
+        TEST("RLC (HL)", 0xCB, 0x06);
+        TEST("RLC A", 0xCB, 0x07);
 
-    TEST("RRC B", 0xCB, 0x08);
-    TEST("RRC C", 0xCB, 0x09);
-    TEST("RRC D", 0xCB, 0x0A);
-    TEST("RRC E", 0xCB, 0x0B);
-    TEST("RRC H", 0xCB, 0x0C);
-    TEST("RRC L", 0xCB, 0x0D);
-    TEST("RRC (HL)", 0xCB, 0x0E);
-    TEST("RRC A", 0xCB, 0x0F);
+        TEST("RRC B", 0xCB, 0x08);
+        TEST("RRC C", 0xCB, 0x09);
+        TEST("RRC D", 0xCB, 0x0A);
+        TEST("RRC E", 0xCB, 0x0B);
+        TEST("RRC H", 0xCB, 0x0C);
+        TEST("RRC L", 0xCB, 0x0D);
+        TEST("RRC (HL)", 0xCB, 0x0E);
+        TEST("RRC A", 0xCB, 0x0F);
 
-    TEST("RL B", 0xCB, 0x10);
-    TEST("RL C", 0xCB, 0x11);
-    TEST("RL D", 0xCB, 0x12);
-    TEST("RL E", 0xCB, 0x13);
-    TEST("RL H", 0xCB, 0x14);
-    TEST("RL L", 0xCB, 0x15);
-    TEST("RL (HL)", 0xCB, 0x16);
-    TEST("RL A", 0xCB, 0x17);
+        TEST("RL B", 0xCB, 0x10);
+        TEST("RL C", 0xCB, 0x11);
+        TEST("RL D", 0xCB, 0x12);
+        TEST("RL E", 0xCB, 0x13);
+        TEST("RL H", 0xCB, 0x14);
+        TEST("RL L", 0xCB, 0x15);
+        TEST("RL (HL)", 0xCB, 0x16);
+        TEST("RL A", 0xCB, 0x17);
 
-    TEST("RR B", 0xCB, 0x18);
-    TEST("RR C", 0xCB, 0x19);
-    TEST("RR D", 0xCB, 0x1A);
-    TEST("RR E", 0xCB, 0x1B);
-    TEST("RR H", 0xCB, 0x1C);
-    TEST("RR L", 0xCB, 0x1D);
-    TEST("RR (HL)", 0xCB, 0x1E);
-    TEST("RR A", 0xCB, 0x1F);
+        TEST("RR B", 0xCB, 0x18);
+        TEST("RR C", 0xCB, 0x19);
+        TEST("RR D", 0xCB, 0x1A);
+        TEST("RR E", 0xCB, 0x1B);
+        TEST("RR H", 0xCB, 0x1C);
+        TEST("RR L", 0xCB, 0x1D);
+        TEST("RR (HL)", 0xCB, 0x1E);
+        TEST("RR A", 0xCB, 0x1F);
 
-    TEST("SLA B", 0xCB, 0x20);
-    TEST("SLA C", 0xCB, 0x21);
-    TEST("SLA D", 0xCB, 0x22);
-    TEST("SLA E", 0xCB, 0x23);
-    TEST("SLA H", 0xCB, 0x24);
-    TEST("SLA L", 0xCB, 0x25);
-    TEST("SLA (HL)", 0xCB, 0x26);
-    TEST("SLA A", 0xCB, 0x27);
+        TEST("SLA B", 0xCB, 0x20);
+        TEST("SLA C", 0xCB, 0x21);
+        TEST("SLA D", 0xCB, 0x22);
+        TEST("SLA E", 0xCB, 0x23);
+        TEST("SLA H", 0xCB, 0x24);
+        TEST("SLA L", 0xCB, 0x25);
+        TEST("SLA (HL)", 0xCB, 0x26);
+        TEST("SLA A", 0xCB, 0x27);
 
-    TEST("SRA B", 0xCB, 0x28);
-    TEST("SRA C", 0xCB, 0x29);
-    TEST("SRA D", 0xCB, 0x2A);
-    TEST("SRA E", 0xCB, 0x2B);
-    TEST("SRA H", 0xCB, 0x2C);
-    TEST("SRA L", 0xCB, 0x2D);
-    TEST("SRA (HL)", 0xCB, 0x2E);
-    TEST("SRA A", 0xCB, 0x2F);
+        TEST("SRA B", 0xCB, 0x28);
+        TEST("SRA C", 0xCB, 0x29);
+        TEST("SRA D", 0xCB, 0x2A);
+        TEST("SRA E", 0xCB, 0x2B);
+        TEST("SRA H", 0xCB, 0x2C);
+        TEST("SRA L", 0xCB, 0x2D);
+        TEST("SRA (HL)", 0xCB, 0x2E);
+        TEST("SRA A", 0xCB, 0x2F);
 
-    TEST("SRL B", 0xCB, 0x38);
-    TEST("SRL C", 0xCB, 0x39);
-    TEST("SRL D", 0xCB, 0x3A);
-    TEST("SRL E", 0xCB, 0x3B);
-    TEST("SRL H", 0xCB, 0x3C);
-    TEST("SRL L", 0xCB, 0x3D);
-    TEST("SRL (HL)", 0xCB, 0x3E);
-    TEST("SRL A", 0xCB, 0x3F);
+        TEST("SRL B", 0xCB, 0x38);
+        TEST("SRL C", 0xCB, 0x39);
+        TEST("SRL D", 0xCB, 0x3A);
+        TEST("SRL E", 0xCB, 0x3B);
+        TEST("SRL H", 0xCB, 0x3C);
+        TEST("SRL L", 0xCB, 0x3D);
+        TEST("SRL (HL)", 0xCB, 0x3E);
+        TEST("SRL A", 0xCB, 0x3F);
 
-    TEST("RRD", 0xED, 0x67);
-    TEST("RLD", 0xED, 0x6F);
+        TEST("RRD", 0xED, 0x67);
+        TEST("RLD", 0xED, 0x6F);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "RLC A");
+        ETEST(UNKNOWN_INSTRUCTION, "RRC B");
+        ETEST(UNKNOWN_INSTRUCTION, "RL  C");
+        ETEST(UNKNOWN_INSTRUCTION, "RR  D");
+        ETEST(UNKNOWN_INSTRUCTION, "SLA E");
+        ETEST(UNKNOWN_INSTRUCTION, "SRA H");
+        ETEST(UNKNOWN_INSTRUCTION, "SRL L");
+        ETEST(UNKNOWN_INSTRUCTION, "RLD");
+    }
 }
 
 static void test_bitop() {
-    // Z80
-    assembler.setCpu("z80");
-    TEST("BIT 0,B", 0xCB, 0x40);
-    TEST("BIT 1,C", 0xCB, 0x49);
-    TEST("BIT 2,D", 0xCB, 0x52);
-    TEST("BIT 3,E", 0xCB, 0x5B);
-    TEST("BIT 4,H", 0xCB, 0x64);
-    TEST("BIT 5,L", 0xCB, 0x6D);
-    TEST("BIT 6,(HL)", 0xCB, 0x76);
-    TEST("BIT 7,A", 0xCB, 0x7F);
+    if (isZ80()) {
+        // Z80
+        TEST("BIT 0,B", 0xCB, 0x40);
+        TEST("BIT 1,C", 0xCB, 0x49);
+        TEST("BIT 2,D", 0xCB, 0x52);
+        TEST("BIT 3,E", 0xCB, 0x5B);
+        TEST("BIT 4,H", 0xCB, 0x64);
+        TEST("BIT 5,L", 0xCB, 0x6D);
+        TEST("BIT 6,(HL)", 0xCB, 0x76);
+        TEST("BIT 7,A", 0xCB, 0x7F);
 
-    TEST("RES 0,B", 0xCB, 0x80);
-    TEST("RES 1,C", 0xCB, 0x89);
-    TEST("RES 2,D", 0xCB, 0x92);
-    TEST("RES 3,E", 0xCB, 0x9B);
-    TEST("RES 4,H", 0xCB, 0xA4);
-    TEST("RES 5,L", 0xCB, 0xAD);
-    TEST("RES 6,(HL)", 0xCB, 0xB6);
-    TEST("RES 7,A", 0xCB, 0xBF);
+        TEST("RES 0,B", 0xCB, 0x80);
+        TEST("RES 1,C", 0xCB, 0x89);
+        TEST("RES 2,D", 0xCB, 0x92);
+        TEST("RES 3,E", 0xCB, 0x9B);
+        TEST("RES 4,H", 0xCB, 0xA4);
+        TEST("RES 5,L", 0xCB, 0xAD);
+        TEST("RES 6,(HL)", 0xCB, 0xB6);
+        TEST("RES 7,A", 0xCB, 0xBF);
 
-    TEST("SET 0,B", 0xCB, 0xC0);
-    TEST("SET 1,C", 0xCB, 0xC9);
-    TEST("SET 2,D", 0xCB, 0xD2);
-    TEST("SET 3,E", 0xCB, 0xDB);
-    TEST("SET 4,H", 0xCB, 0xE4);
-    TEST("SET 5,L", 0xCB, 0xED);
-    TEST("SET 6,(HL)", 0xCB, 0xF6);
-    TEST("SET 7,A", 0xCB, 0xFF);
+        TEST("SET 0,B", 0xCB, 0xC0);
+        TEST("SET 1,C", 0xCB, 0xC9);
+        TEST("SET 2,D", 0xCB, 0xD2);
+        TEST("SET 3,E", 0xCB, 0xDB);
+        TEST("SET 4,H", 0xCB, 0xE4);
+        TEST("SET 5,L", 0xCB, 0xED);
+        TEST("SET 6,(HL)", 0xCB, 0xF6);
+        TEST("SET 7,A", 0xCB, 0xFF);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "BIT 0,B");
+        ETEST(UNKNOWN_INSTRUCTION, "RES 1,C");
+        ETEST(UNKNOWN_INSTRUCTION, "SET 2,D");
+    }
 }
 
 static void test_index_registers() {
-    // Z80
-    assembler.setCpu("z80");
-    TEST("ADD IX,BC", 0xDD, 0x09);
-    TEST("ADD IX,DE", 0xDD, 0x19);
-    TEST("ADD IX,IX", 0xDD, 0x29);
-    TEST("ADD IX,SP", 0xDD, 0x39);
-    TEST("LD (0ABCDH),IX", 0xDD, 0x22, 0xCD, 0xAB);
-    TEST("LD IX,(5678H)",  0xDD, 0x2A, 0x78, 0x56);
-    TEST("INC IX", 0xDD, 0x23);
-    TEST("DEC IX", 0xDD, 0x2B);
-    TEST("POP IX", 0xDD, 0xE1);
-    TEST("PUSH IX", 0xDD, 0xE5);
-    TEST("EX (SP),IX", 0xDD, 0xE3);
-    TEST("JP (IX)",    0xDD, 0xE9);
-    TEST("LD SP,IX",   0xDD, 0xF9);
+    if (isZ80()) {
+        // Z80
+        TEST("ADD IX,BC", 0xDD, 0x09);
+        TEST("ADD IX,DE", 0xDD, 0x19);
+        TEST("ADD IX,IX", 0xDD, 0x29);
+        TEST("ADD IX,SP", 0xDD, 0x39);
+        TEST("LD (0ABCDH),IX", 0xDD, 0x22, 0xCD, 0xAB);
+        TEST("LD IX,(5678H)",  0xDD, 0x2A, 0x78, 0x56);
+        TEST("INC IX", 0xDD, 0x23);
+        TEST("DEC IX", 0xDD, 0x2B);
+        TEST("POP IX", 0xDD, 0xE1);
+        TEST("PUSH IX", 0xDD, 0xE5);
+        TEST("EX (SP),IX", 0xDD, 0xE3);
+        TEST("JP (IX)",    0xDD, 0xE9);
+        TEST("LD SP,IX",   0xDD, 0xF9);
 
-    TEST("ADD IY,BC", 0xFD, 0x09);
-    TEST("ADD IY,DE", 0xFD, 0x19);
-    TEST("ADD IY,IY", 0xFD, 0x29);
-    TEST("ADD IY,SP", 0xFD, 0x39);
-    TEST("LD (0ABCDH),IY", 0xFD, 0x22, 0xCD, 0xAB);
-    TEST("LD IY,(5678H)",  0xFD, 0x2A, 0x78, 0x56);
-    TEST("INC IY", 0xFD, 0x23);
-    TEST("DEC IY", 0xFD, 0x2B);
-    TEST("POP IY", 0xFD, 0xE1);
-    TEST("PUSH IY", 0xFD, 0xE5);
-    TEST("EX (SP),IY", 0xFD, 0xE3);
-    TEST("JP (IY)",    0xFD, 0xE9);
-    TEST("LD SP,IY",   0xFD, 0xF9);
+        TEST("ADD IY,BC", 0xFD, 0x09);
+        TEST("ADD IY,DE", 0xFD, 0x19);
+        TEST("ADD IY,IY", 0xFD, 0x29);
+        TEST("ADD IY,SP", 0xFD, 0x39);
+        TEST("LD (0ABCDH),IY", 0xFD, 0x22, 0xCD, 0xAB);
+        TEST("LD IY,(5678H)",  0xFD, 0x2A, 0x78, 0x56);
+        TEST("INC IY", 0xFD, 0x23);
+        TEST("DEC IY", 0xFD, 0x2B);
+        TEST("POP IY", 0xFD, 0xE1);
+        TEST("PUSH IY", 0xFD, 0xE5);
+        TEST("EX (SP),IY", 0xFD, 0xE3);
+        TEST("JP (IY)",    0xFD, 0xE9);
+        TEST("LD SP,IY",   0xFD, 0xF9);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "ADD IX,BC");
+        ETEST(UNKNOWN_OPERAND, "ADD IX,DE");
+        ETEST(UNKNOWN_OPERAND, "ADD IX,IX");
+        ETEST(UNKNOWN_OPERAND, "ADD IX,SP");
+        ETEST(UNKNOWN_OPERAND, "LD (0ABCDH),IX");
+        ETEST(UNKNOWN_OPERAND, "LD IX,(5678H)");
+        ETEST(UNKNOWN_OPERAND, "INC IX");
+        ETEST(UNKNOWN_OPERAND, "DEC IX");
+        ETEST(UNKNOWN_OPERAND, "POP IX");
+        ETEST(UNKNOWN_OPERAND, "PUSH IX");
+        ETEST(UNKNOWN_OPERAND, "EX (SP),IX");
+        ETEST(UNKNOWN_OPERAND, "JP (IX)");
+        ETEST(UNKNOWN_OPERAND, "LD SP,IX");
+        ETEST(UNKNOWN_OPERAND, "ADD IY,BC");
+        ETEST(UNKNOWN_OPERAND, "ADD IY,DE");
+        ETEST(UNKNOWN_OPERAND, "ADD IY,IY");
+        ETEST(UNKNOWN_OPERAND, "ADD IY,SP");
+        ETEST(UNKNOWN_OPERAND, "LD (0ABCDH),IY");
+        ETEST(UNKNOWN_OPERAND, "LD IY,(5678H)");
+        ETEST(UNKNOWN_OPERAND, "INC IY");
+        ETEST(UNKNOWN_OPERAND, "DEC IY");
+        ETEST(UNKNOWN_OPERAND, "POP IY");
+        ETEST(UNKNOWN_OPERAND, "PUSH IY");
+        ETEST(UNKNOWN_OPERAND, "EX (SP),IY");
+        ETEST(UNKNOWN_OPERAND, "JP (IY)");
+        ETEST(UNKNOWN_OPERAND, "LD SP,IY");
+    }
 }
 
 static void test_indexed() {
-    // Z80
-    assembler.setCpu("z80");
-    TEST("INC (IX+2)", 0xDD, 0x34, 0x02);
-    TEST("DEC (IX+2)", 0xDD, 0x35, 0x02);
+    if (isZ80()) {
+        // Z80
+        TEST("INC (IX+2)", 0xDD, 0x34, 0x02);
+        TEST("DEC (IX+2)", 0xDD, 0x35, 0x02);
 
-    TEST("LD B,(IX+2)", 0xDD, 0x46, 0x02);
-    TEST("LD C,(IX+2)", 0xDD, 0x4E, 0x02);
-    TEST("LD D,(IX+2)", 0xDD, 0x56, 0x02);
-    TEST("LD E,(IX+2)", 0xDD, 0x5E, 0x02);
-    TEST("LD H,(IX+2)", 0xDD, 0x66, 0x02);
-    TEST("LD L,(IX+2)", 0xDD, 0x6E, 0x02);
-    TEST("LD A,(IX+2)", 0xDD, 0x7E, 0x02);
+        TEST("LD B,(IX+2)", 0xDD, 0x46, 0x02);
+        TEST("LD C,(IX+2)", 0xDD, 0x4E, 0x02);
+        TEST("LD D,(IX+2)", 0xDD, 0x56, 0x02);
+        TEST("LD E,(IX+2)", 0xDD, 0x5E, 0x02);
+        TEST("LD H,(IX+2)", 0xDD, 0x66, 0x02);
+        TEST("LD L,(IX+2)", 0xDD, 0x6E, 0x02);
+        TEST("LD A,(IX+2)", 0xDD, 0x7E, 0x02);
 
-    TEST("LD (IX+2),B", 0xDD, 0x70, 0x02);
-    TEST("LD (IX+2),C", 0xDD, 0x71, 0x02);
-    TEST("LD (IX+2),D", 0xDD, 0x72, 0x02);
-    TEST("LD (IX+0),E", 0xDD, 0x73, 0x00);
-    TEST("LD (IX+2),H", 0xDD, 0x74, 0x02);
-    TEST("LD (IX+2),L", 0xDD, 0x75, 0x02);
-    TEST("LD (IX+2),A", 0xDD, 0x77, 0x02);
+        TEST("LD (IX+2),B", 0xDD, 0x70, 0x02);
+        TEST("LD (IX+2),C", 0xDD, 0x71, 0x02);
+        TEST("LD (IX+2),D", 0xDD, 0x72, 0x02);
+        TEST("LD (IX+0),E", 0xDD, 0x73, 0x00);
+        TEST("LD (IX+2),H", 0xDD, 0x74, 0x02);
+        TEST("LD (IX+2),L", 0xDD, 0x75, 0x02);
+        TEST("LD (IX+2),A", 0xDD, 0x77, 0x02);
 
-    TEST("LD (IX+2),0F6H", 0xDD, 0x36, 0x02, 0xF6);
+        TEST("LD (IX+2),0F6H", 0xDD, 0x36, 0x02, 0xF6);
 
-    TEST("ADD A,(IX+2)", 0xDD, 0x86, 0x02);
-    TEST("ADC A,(IX+2)", 0xDD, 0x8E, 0x02);
-    TEST("SUB A,(IX+2)", 0xDD, 0x96, 0x02);
-    TEST("SBC A,(IX+2)", 0xDD, 0x9E, 0x02);
-    TEST("AND A,(IX+2)", 0xDD, 0xA6, 0x02);
-    TEST("XOR A,(IX+2)", 0xDD, 0xAE, 0x02);
-    TEST("OR  A,(IX+2)", 0xDD, 0xB6, 0x02);
-    TEST("CP  A,(IX+2)", 0xDD, 0xBE, 0x02);
-    TEST("SUB (IX+2)", 0xDD, 0x96, 0x02);
-    TEST("AND (IX+2)", 0xDD, 0xA6, 0x02);
-    TEST("XOR (IX+2)", 0xDD, 0xAE, 0x02);
-    TEST("OR  (IX+2)", 0xDD, 0xB6, 0x02);
-    TEST("CP  (IX+2)", 0xDD, 0xBE, 0x02);
+        TEST("ADD A,(IX+2)", 0xDD, 0x86, 0x02);
+        TEST("ADC A,(IX+2)", 0xDD, 0x8E, 0x02);
+        TEST("SUB A,(IX+2)", 0xDD, 0x96, 0x02);
+        TEST("SBC A,(IX+2)", 0xDD, 0x9E, 0x02);
+        TEST("AND A,(IX+2)", 0xDD, 0xA6, 0x02);
+        TEST("XOR A,(IX+2)", 0xDD, 0xAE, 0x02);
+        TEST("OR  A,(IX+2)", 0xDD, 0xB6, 0x02);
+        TEST("CP  A,(IX+2)", 0xDD, 0xBE, 0x02);
+        TEST("SUB (IX+2)", 0xDD, 0x96, 0x02);
+        TEST("AND (IX+2)", 0xDD, 0xA6, 0x02);
+        TEST("XOR (IX+2)", 0xDD, 0xAE, 0x02);
+        TEST("OR  (IX+2)", 0xDD, 0xB6, 0x02);
+        TEST("CP  (IX+2)", 0xDD, 0xBE, 0x02);
 
-    TEST("INC (IY-2)",0xFD, 0x34, 0xFE);
-    TEST("DEC (IY-2)",0xFD, 0x35, 0xFE);
+        TEST("INC (IY-2)",0xFD, 0x34, 0xFE);
+        TEST("DEC (IY-2)",0xFD, 0x35, 0xFE);
 
-    TEST("LD B,(IY-2)", 0xFD, 0x46, 0xFE);
-    TEST("LD C,(IY-2)", 0xFD, 0x4E, 0xFE);
-    TEST("LD D,(IY-2)", 0xFD, 0x56, 0xFE);
-    TEST("LD E,(IY-2)", 0xFD, 0x5E, 0xFE);
-    TEST("LD H,(IY-2)", 0xFD, 0x66, 0xFE);
-    TEST("LD L,(IY-2)", 0xFD, 0x6E, 0xFE);
-    TEST("LD A,(IY-2)", 0xFD, 0x7E, 0xFE);
+        TEST("LD B,(IY-2)", 0xFD, 0x46, 0xFE);
+        TEST("LD C,(IY-2)", 0xFD, 0x4E, 0xFE);
+        TEST("LD D,(IY-2)", 0xFD, 0x56, 0xFE);
+        TEST("LD E,(IY-2)", 0xFD, 0x5E, 0xFE);
+        TEST("LD H,(IY-2)", 0xFD, 0x66, 0xFE);
+        TEST("LD L,(IY-2)", 0xFD, 0x6E, 0xFE);
+        TEST("LD A,(IY-2)", 0xFD, 0x7E, 0xFE);
 
-    TEST("LD (IY-2),B", 0xFD, 0x70, 0xFE);
-    TEST("LD (IY-2),C", 0xFD, 0x71, 0xFE);
-    TEST("LD (IY-2),D", 0xFD, 0x72, 0xFE);
-    TEST("LD (IY-2),E", 0xFD, 0x73, 0xFE);
-    TEST("LD (IY-2),H", 0xFD, 0x74, 0xFE);
-    TEST("LD (IY-2),L", 0xFD, 0x75, 0xFE);
-    TEST("LD (IY-2),A", 0xFD, 0x77, 0xFE);
+        TEST("LD (IY-2),B", 0xFD, 0x70, 0xFE);
+        TEST("LD (IY-2),C", 0xFD, 0x71, 0xFE);
+        TEST("LD (IY-2),D", 0xFD, 0x72, 0xFE);
+        TEST("LD (IY-2),E", 0xFD, 0x73, 0xFE);
+        TEST("LD (IY-2),H", 0xFD, 0x74, 0xFE);
+        TEST("LD (IY-2),L", 0xFD, 0x75, 0xFE);
+        TEST("LD (IY-2),A", 0xFD, 0x77, 0xFE);
 
-    TEST("LD (IY-2),0F6H", 0xFD, 0x36, 0xFE, 0xF6);
+        TEST("LD (IY-2),0F6H", 0xFD, 0x36, 0xFE, 0xF6);
 
-    TEST("ADD A,(IY-2)", 0xFD, 0x86, 0xFE);
-    TEST("ADC A,(IY-2)", 0xFD, 0x8E, 0xFE);
-    TEST("SUB A,(IY-2)", 0xFD, 0x96, 0xFE);
-    TEST("SBC A,(IY-2)", 0xFD, 0x9E, 0xFE);
-    TEST("AND A,(IY-2)", 0xFD, 0xA6, 0xFE);
-    TEST("XOR A,(IY-2)", 0xFD, 0xAE, 0xFE);
-    TEST("OR  A,(IY-2)", 0xFD, 0xB6, 0xFE);
-    TEST("CP  A,(IY-2)", 0xFD, 0xBE, 0xFE);
-    TEST("SUB (IY-2)", 0xFD, 0x96, 0xFE);
-    TEST("AND (IY-2)", 0xFD, 0xA6, 0xFE);
-    TEST("XOR (IY-2)", 0xFD, 0xAE, 0xFE);
-    TEST("OR  (IY-2)", 0xFD, 0xB6, 0xFE);
-    TEST("CP  (IY-2)", 0xFD, 0xBE, 0xFE);
+        TEST("ADD A,(IY-2)", 0xFD, 0x86, 0xFE);
+        TEST("ADC A,(IY-2)", 0xFD, 0x8E, 0xFE);
+        TEST("SUB A,(IY-2)", 0xFD, 0x96, 0xFE);
+        TEST("SBC A,(IY-2)", 0xFD, 0x9E, 0xFE);
+        TEST("AND A,(IY-2)", 0xFD, 0xA6, 0xFE);
+        TEST("XOR A,(IY-2)", 0xFD, 0xAE, 0xFE);
+        TEST("OR  A,(IY-2)", 0xFD, 0xB6, 0xFE);
+        TEST("CP  A,(IY-2)", 0xFD, 0xBE, 0xFE);
+        TEST("SUB (IY-2)", 0xFD, 0x96, 0xFE);
+        TEST("AND (IY-2)", 0xFD, 0xA6, 0xFE);
+        TEST("XOR (IY-2)", 0xFD, 0xAE, 0xFE);
+        TEST("OR  (IY-2)", 0xFD, 0xB6, 0xFE);
+        TEST("CP  (IY-2)", 0xFD, 0xBE, 0xFE);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "INC (IX+2)");
+        ETEST(UNKNOWN_OPERAND, "INC (IY-2)");
+        ETEST(UNKNOWN_OPERAND, "DEC (IX+2)");
+        ETEST(UNKNOWN_OPERAND, "DEC (IY-2)");
+        ETEST(UNKNOWN_OPERAND, "LD B,(IX+2)");
+        ETEST(UNKNOWN_OPERAND, "LD C,(IY-2)");
+        ETEST(UNKNOWN_OPERAND, "LD (IX+2),D");
+        ETEST(UNKNOWN_OPERAND, "LD (IY-2),E");
+        ETEST(UNKNOWN_OPERAND, "ADD A,(IX+2)");
+        ETEST(UNKNOWN_OPERAND, "ADC A,(IY-2)");
+        ETEST(UNKNOWN_OPERAND, "AND (IX+2)");
+        ETEST(UNKNOWN_OPERAND, "SUB (IY-2)");
+    }
 }
 
 static void test_shift_indexed() {
-    // Z80
-    assembler.setCpu("z80");
-    TEST("RLC (IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
-    TEST("RRC (IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
-    TEST("RL  (IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
-    TEST("RR  (IX+127)", 0xDD, 0xCB, 0x7F, 0x1E);
-    TEST("SLA (IX+127)", 0xDD, 0xCB, 0x7F, 0x26);
-    TEST("SRA (IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
-    TEST("SRL (IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
+    if (isZ80()) {
+        // Z80
+        TEST("RLC (IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
+        TEST("RRC (IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
+        TEST("RL  (IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
+        TEST("RR  (IX+127)", 0xDD, 0xCB, 0x7F, 0x1E);
+        TEST("SLA (IX+127)", 0xDD, 0xCB, 0x7F, 0x26);
+        TEST("SRA (IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
+        TEST("SRL (IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
 
-    TEST("RLC (IY-128)", 0xFD, 0xCB, 0x80, 0x06);
-    TEST("RRC (IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
-    TEST("RL  (IY-128)", 0xFD, 0xCB, 0x80, 0x16);
-    TEST("RR  (IY-128)", 0xFD, 0xCB, 0x80, 0x1E);
-    TEST("SLA (IY-128)", 0xFD, 0xCB, 0x80, 0x26);
-    TEST("SRA (IY-128)", 0xFD, 0xCB, 0x80, 0x2E);
-    TEST("SRL (IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
+        TEST("RLC (IY-128)", 0xFD, 0xCB, 0x80, 0x06);
+        TEST("RRC (IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
+        TEST("RL  (IY-128)", 0xFD, 0xCB, 0x80, 0x16);
+        TEST("RR  (IY-128)", 0xFD, 0xCB, 0x80, 0x1E);
+        TEST("SLA (IY-128)", 0xFD, 0xCB, 0x80, 0x26);
+        TEST("SRA (IY-128)", 0xFD, 0xCB, 0x80, 0x2E);
+        TEST("SRL (IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "RLC (IY-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "RRC (IY-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "RL  (IY-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "RR  (IY-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "SLA (IY-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "SRA (IY-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "SRL (IY-128)");
+    }
 }
 
 static void test_bitop_indexed() {
-    // Z80
-    assembler.setCpu("z80");
-    TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
-    TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
-    TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
+    if (isZ80()) {
+        // Z80
+        TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
+        TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
+        TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
 
-    TEST("BIT 5,(IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
-    TEST("RES 6,(IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);
-    TEST("SET 7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
+        TEST("BIT 5,(IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
+        TEST("RES 6,(IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);
+        TEST("SET 7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "BIT 0,(IX-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "RES 1,(IX-128)");
+        ETEST(UNKNOWN_INSTRUCTION, "SET 2,(IX-128)");
+    }
 }
 
 static void test_comment() {
@@ -761,22 +903,23 @@ static void test_comment() {
     TEST("RET         ; comment", 0xC9);
     TEST("RET NZ      ; comment", 0xC0);
 
-    // Z80
-    assembler.setCpu("z80");
-    TEST("IM 2           ; comment", 0xED, 0x5E);
-    TEST("BIT 0 , B      ; comment", 0xCB, 0x40);
-    TEST("BIT 6 , ( HL ) ; comment", 0xCB, 0x76);
-    TEST("INC ( IX + 2 ) ; comment", 0xDD, 0x34, 0x02);
-    TEST("LD ( IY - 2 ) , B  ; comment", 0xFD, 0x70, 0xFE);
-    TEST("ADD A , ( IY - 2 ) ; comment", 0xFD, 0x86, 0xFE);
-    TEST("EX AF , AF'        ; comment", 0x08);
-    TEST("LD ( 0ABCDH ) , IX ; comment", 0xDD, 0x22, 0xCD, 0xAB);
-    TEST("LD IX , ( 5678H )  ; comment", 0xDD, 0x2A, 0x78, 0x56);
-    TEST("EX ( SP ) , IX     ; comment", 0xDD, 0xE3);
-    TEST("JP ( IX )          ; comment", 0xDD, 0xE9);
+    if (isZ80()) {
+        // Z80
+        TEST("IM 2           ; comment", 0xED, 0x5E);
+        TEST("BIT 0 , B      ; comment", 0xCB, 0x40);
+        TEST("BIT 6 , ( HL ) ; comment", 0xCB, 0x76);
+        TEST("INC ( IX + 2 ) ; comment", 0xDD, 0x34, 0x02);
+        TEST("LD ( IY - 2 ) , B  ; comment", 0xFD, 0x70, 0xFE);
+        TEST("ADD A , ( IY - 2 ) ; comment", 0xFD, 0x86, 0xFE);
+        TEST("EX AF , AF'        ; comment", 0x08);
+        TEST("LD ( 0ABCDH ) , IX ; comment", 0xDD, 0x22, 0xCD, 0xAB);
+        TEST("LD IX , ( 5678H )  ; comment", 0xDD, 0x2A, 0x78, 0x56);
+        TEST("EX ( SP ) , IX     ; comment", 0xDD, 0xE3);
+        TEST("JP ( IX )          ; comment", 0xDD, 0xE9);
 
-    ATEST(0x1000, "JR 1000H     ; comment", 0x18, 0xFE);
-    ATEST(0x1000, "JR NZ , 1004H; comment", 0x20, 0x02);
+        ATEST(0x1000, "JR 1000H     ; comment", 0x18, 0xFE);
+        ATEST(0x1000, "JR NZ , 1004H; comment", 0x20, 0x02);
+    }
 }
 
 static void test_undefined_symbol() {
@@ -795,25 +938,26 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "IN  A,(UNDEF)", 0xDB, 0x00);
     ETEST(UNDEFINED_SYMBOL, "RST UNDEF",     0xC7);
 
-    // Z80
-    assembler.setCpu("z80");
-    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),BC", 0xED, 0x43, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD BC,(UNDEF)", 0xED, 0x4B, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "IM UNDEF",      0xED, 0x46);
-    ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,B",   0xCB, 0x40);
-    ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),IY",   0xFD, 0x22, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD IY,(UNDEF)",   0xFD, 0x2A, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "INC (IX+UNDEF)",  0xDD, 0x34, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD (IY-UNDEF),B", 0xFD, 0x70, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD (IY-2),UNDEF", 0xFD, 0x36, 0xFE, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "RLC (IX+UNDEF)",  0xDD, 0xCB, 0x00, 0x06);
-    ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,(IX-128)",   0xDD, 0xCB, 0x80, 0x46);
-    ETEST(UNDEFINED_SYMBOL, "RES 7,(IX-UNDEF)",     0xDD, 0xCB, 0x00, 0xBE);
-    ETEST(UNDEFINED_SYMBOL, "SET UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
+    if (isZ80()) {
+        // Z80
+        ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),BC", 0xED, 0x43, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LD BC,(UNDEF)", 0xED, 0x4B, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "IM UNDEF",      0xED, 0x46);
+        ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,B",   0xCB, 0x40);
+        ETEST(UNDEFINED_SYMBOL, "LD (UNDEF),IY",   0xFD, 0x22, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LD IY,(UNDEF)",   0xFD, 0x2A, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "INC (IX+UNDEF)",  0xDD, 0x34, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LD (IY-UNDEF),B", 0xFD, 0x70, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LD (IY-2),UNDEF", 0xFD, 0x36, 0xFE, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "RLC (IX+UNDEF)",  0xDD, 0xCB, 0x00, 0x06);
+        ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,(IX-128)",   0xDD, 0xCB, 0x80, 0x46);
+        ETEST(UNDEFINED_SYMBOL, "RES 7,(IX-UNDEF)",     0xDD, 0xCB, 0x00, 0xBE);
+        ETEST(UNDEFINED_SYMBOL, "SET UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "JR UNDEF",    0x18, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "JR NZ,UNDEF", 0x20, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "DJNZ UNDEF",  0x10, 0x00);
+    }
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -826,26 +970,34 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_move_inherent);
-    RUN_TEST(test_move_immediate);
-    RUN_TEST(test_move_direct);
-    RUN_TEST(test_stack_op);
-    RUN_TEST(test_jump_call);
-    RUN_TEST(test_incr_decr);
-    RUN_TEST(test_alu_register);
-    RUN_TEST(test_alu_immediate);
-    RUN_TEST(test_io);
-    RUN_TEST(test_inherent);
-    RUN_TEST(test_restart);
-    RUN_TEST(test_relative);
-    RUN_TEST(test_shift);
-    RUN_TEST(test_bitop);
-    RUN_TEST(test_index_registers);
-    RUN_TEST(test_indexed);
-    RUN_TEST(test_shift_indexed);
-    RUN_TEST(test_bitop_indexed);
-    RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    static const char *cpus[] = {
+        "z80", "8080", "8085",
+    };
+    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+        const char *cpu = cpus[i];
+        assembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_move_inherent);
+        RUN_TEST(test_move_immediate);
+        RUN_TEST(test_move_direct);
+        RUN_TEST(test_stack_op);
+        RUN_TEST(test_jump_call);
+        RUN_TEST(test_incr_decr);
+        RUN_TEST(test_alu_register);
+        RUN_TEST(test_alu_immediate);
+        RUN_TEST(test_io);
+        RUN_TEST(test_inherent);
+        RUN_TEST(test_restart);
+        RUN_TEST(test_relative);
+        RUN_TEST(test_shift);
+        RUN_TEST(test_bitop);
+        RUN_TEST(test_index_registers);
+        RUN_TEST(test_indexed);
+        RUN_TEST(test_shift_indexed);
+        RUN_TEST(test_bitop_indexed);
+        RUN_TEST(test_comment);
+        RUN_TEST(test_undefined_symbol);
+    }
     return 0;
 }
 
