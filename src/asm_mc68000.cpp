@@ -103,11 +103,11 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode_gp >= 0) {
         insn.embed(EaMc68000::encodeMode(mode), mode_gp);
         if (mode == M_DREG && !RegMc68000::isDreg(ea.reg))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(REGISTER_NOT_ALLOWED);
         insn.embed(EaMc68000::encodeRegNo(mode, ea.reg), reg_gp);
     } else {
         if (!RegMc68000::isADreg(ea.reg))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(REGISTER_NOT_ALLOWED);
         insn.embed(RegMc68000::encodeRegNo(ea.reg), reg_gp);
     }
 
@@ -156,7 +156,7 @@ Error AsmMc68000::encodeImplied(
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
     constexpr Config::opcode_t STOP = 047162;
     if (insn.opCode() == STOP) {
-        if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
+        if (op1.mode != M_IMM_DATA) return setError(OPERAND_NOT_ALLOWED);
         insn.emitInsn();
         return emitImmediateData(insn, SZ_WORD, op1.val32, op1.getError());
     }
@@ -178,7 +178,7 @@ Error AsmMc68000::encodeDestSiz(
     if (opc == CMPI) alias = "CMPA";
     if ((insn.opCode() >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
         if (op1.mode != M_IMM_DATA)
-            return setError(UNKNOWN_OPERAND);
+            return setError(OPERAND_NOT_ALLOWED);
         if (op2.mode == M_AREG && alias) {
             if (TableMc68000.searchName(insn, alias))
                 return setError(TableMc68000.getError());
@@ -197,7 +197,7 @@ Error AsmMc68000::encodeDestSiz(
                 insn, insn.size(), op1.val32, op1.getError());
         }
         if (!op2.satisfy(EaCat::DATA | EaCat::ALTERABLE))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         const Error error = emitImmediateData(
             insn, insn.size(), op1.val32, op1.getError());
         emitEffectiveAddr(insn, op2);
@@ -209,7 +209,7 @@ Error AsmMc68000::encodeDestSiz(
     const EaCat categories = (opc == TST) ? EaCat::DATA
         : EaCat::DATA | EaCat::ALTERABLE;
     if (!op1.satisfy(categories))
-        return setError(ILLEGAL_OPERAND_MODE);
+        return setError(OPERAND_NOT_ALLOWED);
     return emitEffectiveAddr(insn, op1);
 }
 
@@ -218,7 +218,7 @@ Error AsmMc68000::encodeAddrReg(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.opCode() & 010) { // UNLK
         if (checkSize(insn, SZ_NONE)) return getError();
-        if (op1.mode != M_AREG) return setError(ILLEGAL_OPERAND_MODE);
+        if (op1.mode != M_AREG) return setError(OPERAND_NOT_ALLOWED);
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
         insn.embed(RegMc68000::encodeRegNo(op1.reg));
         insn.emitInsn();
@@ -226,8 +226,8 @@ Error AsmMc68000::encodeAddrReg(
     }
     // LINK
     if (checkSize(insn, SZ_WORD)) return getError();
-    if (op1.mode != M_AREG) return setError(ILLEGAL_OPERAND_MODE);
-    if (op2.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
+    if (op1.mode != M_AREG) return setError(OPERAND_NOT_ALLOWED);
+    if (op2.mode != M_IMM_DATA) return setError(OPERAND_NOT_ALLOWED);
     if (checkSize(op2.val32, SZ_WORD, false)) return getError();
     insn.embed(RegMc68000::encodeRegNo(op1.reg));
     insn.emitInsn();
@@ -238,7 +238,7 @@ Error AsmMc68000::encodeAddrReg(
 Error AsmMc68000::encodeDataReg(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_WORD)) return getError();
-    if (!RegMc68000::isDreg(op1.reg)) return setError(ILLEGAL_OPERAND_MODE);
+    if (!RegMc68000::isDreg(op1.reg)) return setError(REGISTER_NOT_ALLOWED);
     const uint8_t opc = (insn.opCode() >> 12) & 017;
     constexpr uint8_t SWAP = 004;
     if (opc == SWAP) {
@@ -259,7 +259,7 @@ Error AsmMc68000::encodeDataReg(
         insn.emitInsn();
         return emitImmediateData(insn, SZ_WORD, disp, op2.getError());
     }
-    return setError(ILLEGAL_OPERAND_MODE);
+    return setError(OPERAND_NOT_ALLOWED);
 }
 
 // TRAP
@@ -283,13 +283,13 @@ Error AsmMc68000::encodeDataDst(
     if (opc == PEA) {
         if (checkSize(insn, SZ_LONG)) return getError();
         if (!op1.satisfy(EaCat::CONTROL))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         return emitEffectiveAddr(insn, op1, -1);
     }
     // NBCD, TAS
     if (checkSize(insn, SZ_BYTE)) return getError();
     if (!op1.satisfy(EaCat::DATA | EaCat::ALTERABLE))
-        return setError(ILLEGAL_OPERAND_MODE);
+        return setError(OPERAND_NOT_ALLOWED);
     return emitEffectiveAddr(insn, op1, -1);
 }
 
@@ -304,7 +304,7 @@ Error AsmMc68000::encodeDestOpr(
         const EaCat categories = (opc == BTST) ? EaCat::DATA
             : EaCat::DATA | EaCat::ALTERABLE;
         if (!op2.satisfy(categories))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
 
         if (RegMc68000::isDreg(op1.reg))
             return encodeDregDst(insn, op1, op2);
@@ -330,21 +330,21 @@ Error AsmMc68000::encodeDestOpr(
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
         if (checkSize(insn, SZ_NONE)) return getError();
         if (!op1.satisfy(EaCat::CONTROL))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         return emitEffectiveAddr(insn, op1, -1);
     }
     if (opc == Scc) {
         if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
         if (checkSize(insn, SZ_BYTE)) return getError();
         if (!op1.satisfy(EaCat::DATA | EaCat::ALTERABLE))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         return emitEffectiveAddr(insn, op1, -1);
     }
     // ASd/LSd/ROXd/ROd
     if (op2.mode == M_NONE) {   // DEST_OPR <ea>
         if (checkSize(insn, SZ_WORD)) return getError();
         if (!op1.satisfy(EaCat::MEMORY | EaCat::ALTERABLE))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         return emitEffectiveAddr(insn, op1, -1);
     }
     if (!RegMc68000::isDreg(op2.reg))
@@ -368,7 +368,7 @@ Error AsmMc68000::encodeDestOpr(
         emitEffectiveAddr(insn, op2, 6, -1);
         return setError(op1.getError() ? op1.getError() : getError());
     }
-    return setError(ILLEGAL_OPERAND_MODE);
+    return setError(OPERAND_NOT_ALLOWED);
 }
 
 // EXT
@@ -377,7 +377,7 @@ Error AsmMc68000::encodeSignExt(
     if (insn.size() == SZ_BYTE) return setError(ILLEGAL_SIZE);
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
-    if (!RegMc68000::isDreg(op1.reg)) return setError(ILLEGAL_OPERAND_MODE);
+    if (!RegMc68000::isDreg(op1.reg)) return setError(REGISTER_NOT_ALLOWED);
     insn.embed(insn.size() == SZ_WORD ? 044200 : 044300);
     insn.embed(RegMc68000::encodeRegNo(op1.reg));
     insn.emitInsn();
@@ -389,7 +389,7 @@ Error AsmMc68000::encodeRelative(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (insn.size() == SZ_LONG) return setError(ILLEGAL_SIZE);
     if (op2.mode != M_NONE) return setError(UNKNOWN_OPERAND);
-    if (op1.mode != M_LABEL) return setError(ILLEGAL_OPERAND_MODE);
+    if (op1.mode != M_LABEL) return setError(OPERAND_NOT_ALLOWED);
     const Config::uintptr_t base = insn.address() + sizeof(Config::opcode_t);
     const Config::uintptr_t target = op1.getError() ? base : op1.val32;
     const Config::ptrdiff_t disp = target - base;
@@ -456,7 +456,7 @@ Error AsmMc68000::encodeMoveMlt(
         insn.emitOperand16(list);
         return emitEffectiveAddr(insn, op1, -1);
     }
-    return setError(ILLEGAL_OPERAND_MODE);
+    return setError(OPERAND_NOT_ALLOWED);
 }
 
 // AREG_LNG: LEA
@@ -468,13 +468,13 @@ Error AsmMc68000::encodeAregSiz(
     constexpr uint8_t LEA = 004;
     if (opc == LEA) {
         if (checkSize(insn, SZ_LONG)) return getError();
-        if (!op1.satisfy(EaCat::CONTROL)) return setError(ILLEGAL_OPERAND_MODE);
+        if (!op1.satisfy(EaCat::CONTROL)) return setError(OPERAND_NOT_ALLOWED);
     } else { // SUBA, CMPA, ADDA
         if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
         if (insn.size() == SZ_BYTE) return setError(ILLEGAL_SIZE);
         if (insn.size() == SZ_LONG) insn.embed(0400);
     }
-    if (op2.mode != M_AREG) return setError(ILLEGAL_OPERAND_MODE);
+    if (op2.mode != M_AREG) return setError(OPERAND_NOT_ALLOWED);
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
     return emitEffectiveAddr(insn, op1, -1);
 }
@@ -502,7 +502,7 @@ Error AsmMc68000::encodeDregDst(
     // CHK, DIVU, DIVS, MULU, MULS
     if (!RegMc68000::isDreg(op2.reg)) return setError(REGISTER_NOT_ALLOWED);
     if (checkSize(insn, SZ_WORD)) return getError();
-    if (!op1.satisfy(EaCat::DATA)) return setError(ILLEGAL_OPERAND_MODE);
+    if (!op1.satisfy(EaCat::DATA)) return setError(OPERAND_NOT_ALLOWED);
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
     return emitEffectiveAddr(insn, op1, -1);
 }
@@ -511,9 +511,9 @@ Error AsmMc68000::encodeDregDst(
 Error AsmMc68000::encodeMoveQic(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_LONG)) return getError();
-    if (op1.mode != M_IMM_DATA) return setError(ILLEGAL_OPERAND_MODE);
+    if (op1.mode != M_IMM_DATA) return setError(OPERAND_NOT_ALLOWED);
     if (checkSize(op1.val32, SZ_BYTE, false)) return getError();
-    if (!RegMc68000::isDreg(op2.reg)) return setError(ILLEGAL_OPERAND_MODE);
+    if (!RegMc68000::isDreg(op2.reg)) return setError(REGISTER_NOT_ALLOWED);
     const uint8_t data = static_cast<uint8_t>(op1.val32);
     insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
     insn.embed(data);
@@ -540,7 +540,7 @@ Error AsmMc68000::encodeMovePer(
         insn.emitInsn();
         return emitImmediateData(insn, SZ_WORD, op1.val32, op1.getError());
     }
-    return setError(ILLEGAL_OPERAND_MODE);
+    return setError(OPERAND_NOT_ALLOWED);
 }
 
 // ADDQ, SUBQ
@@ -549,13 +549,12 @@ Error AsmMc68000::encodeDataQic(
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (op2.mode == M_AREG && insn.size() == SZ_BYTE)
         return setError(ILLEGAL_SIZE);
-    if (op1.mode != M_IMM_DATA)
-        return setError(ILLEGAL_OPERAND_MODE);
+    if (op1.mode != M_IMM_DATA) return setError(OPERAND_NOT_ALLOWED);
     uint8_t data = static_cast<uint8_t>(op1.val32);
     if (op1.val32 > 8 || (op1.getError() == OK && op1.val32 == 0))
         return setError(OVERFLOW_RANGE);
     if (data == 8) data = 0;
-    if (!op2.satisfy(EaCat::ALTERABLE)) return setError(ILLEGAL_OPERAND_MODE);
+    if (!op2.satisfy(EaCat::ALTERABLE)) return setError(OPERAND_NOT_ALLOWED);
     insn.embed(data, 9);
     emitEffectiveAddr(insn, op2);
     return setError(op1.getError() ? op1.getError() : getError());
@@ -579,7 +578,7 @@ Error AsmMc68000::encodeDmemSiz(
             && (opc == CMP || op4 == SUB || op4 == ADD))
             return setError(ILLEGAL_SIZE);
         if (op1.mode == M_AREG && (op4 == OR || op4 == AND))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
         return emitEffectiveAddr(insn, op1);
     }
@@ -595,12 +594,12 @@ Error AsmMc68000::encodeDmemSiz(
         const EaCat categories = (opc == EOR ? EaCat::DATA : EaCat::MEMORY)
             | EaCat::ALTERABLE;
         if (!op2.satisfy(categories))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         insn.embed(0400);
         insn.embed(RegMc68000::encodeRegNo(op1.reg), 9);
         return emitEffectiveAddr(insn, op2);
     }
-    return setError(ILLEGAL_OPERAND_MODE);
+    return setError(OPERAND_NOT_ALLOWED);
 }
 
 // DMEM_DST: SBCD, ABCD
@@ -616,7 +615,7 @@ Error AsmMc68000::encodeDmemOpr(
     if (insn.size() == SZ_NONE) insn.setSize(SZ_WORD);
     if (opc == CMPM) {
         if (op1.mode != M_PINC || op2.mode != M_PINC)
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
         return emitEffectiveAddr(insn, op1, 6, -1);
     }
@@ -630,7 +629,7 @@ Error AsmMc68000::encodeDmemOpr(
         insn.embed(RegMc68000::encodeRegNo(op2.reg), 9);
         return emitEffectiveAddr(insn, op1, 6, -1);
     }
-    return setError(ILLEGAL_OPERAND_MODE);
+    return setError(OPERAND_NOT_ALLOWED);
 }
 
 // EXG
@@ -638,7 +637,7 @@ Error AsmMc68000::encodeRegsExg(
     InsnMc68000 &insn, const Operand &op1, const Operand &op2) {
     if (checkSize(insn, SZ_LONG)) return getError();
     if (!RegMc68000::isADreg(op1.reg) || !RegMc68000::isADreg(op2.reg))
-        return setError(ILLEGAL_OPERAND_MODE);
+        return setError(REGISTER_NOT_ALLOWED);
     insn.setOpCode(0xC100);
     if (op1.mode == M_AREG && op2.mode == M_AREG) {
         insn.embed(0110);
@@ -667,19 +666,19 @@ Error AsmMc68000::encodeMoveOpr(
     if (op1.reg == REG_SR) {
         if (checkSize(insn, SZ_WORD)) return getError();
         if (!op2.satisfy(EaCat::DATA | EaCat::ALTERABLE))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
         insn.setOpCode(040300);
         return emitEffectiveAddr(insn, op2);
     }
     if (op2.reg == REG_SR) {
         if (checkSize(insn, SZ_WORD)) return getError();
-        if (!op1.satisfy(EaCat::DATA)) return setError(ILLEGAL_OPERAND_MODE);
+        if (!op1.satisfy(EaCat::DATA)) return setError(OPERAND_NOT_ALLOWED);
         insn.setOpCode(043300);
         return emitEffectiveAddr(insn, op1);
     }
     if (op2.reg == REG_CCR) {
         if (checkSize(insn, SZ_BYTE)) return getError();
-        if (!op1.satisfy(EaCat::DATA)) return setError(ILLEGAL_OPERAND_MODE);
+        if (!op1.satisfy(EaCat::DATA)) return setError(OPERAND_NOT_ALLOWED);
         insn.setOpCode(042300);
         return emitEffectiveAddr(insn, op1);
     }
@@ -697,7 +696,7 @@ Error AsmMc68000::encodeMoveOpr(
             insn.emitInsn();
             return setOK();
         }
-        return setError(ILLEGAL_OPERAND_MODE);
+        return setError(OPERAND_NOT_ALLOWED);
     }
     EaSize size = insn.size();
     // MOVE.L #<data>,Dn => MOVEQ #<data>,Dn
@@ -716,7 +715,7 @@ Error AsmMc68000::encodeMoveOpr(
     } else {
         if (size == SZ_NONE) size = SZ_WORD;
         if (!op2.satisfy(EaCat::DATA | EaCat::ALTERABLE))
-            return setError(ILLEGAL_OPERAND_MODE);
+            return setError(OPERAND_NOT_ALLOWED);
     }
     insn.setSize(size);
     if (size == SZ_WORD) insn.setOpCode(030000);

@@ -291,8 +291,8 @@ static void test_one_operand() {
 
     TEST("DECW 82H", 0x80, 0x82);
     TEST("DECW RR2", 0x80, R(2));
-    ETEST(UNKNOWN_OPERAND,  "DECW 81H");
-    ETEST(UNDEFINED_SYMBOL, "DECW RR1", 0x80, 0x00);
+    ETEST(OPERAND_NOT_ALLOWED, "DECW 81H");
+    ETEST(UNDEFINED_SYMBOL,    "DECW RR1", 0x80, 0x00);
     TEST("DECW @81H", 0x81, 0x81);
     TEST("DECW @R1",  0x81, R(1));
 
@@ -303,8 +303,8 @@ static void test_one_operand() {
 
     TEST("INCW 0A2H",  0xA0, 0xA2);
     TEST("INCW RR2",   0xA0, R(2));
-    ETEST(UNKNOWN_OPERAND,  "INCW 0A1H");
-    ETEST(UNDEFINED_SYMBOL, "INCW RR1", 0xA0, 0x00);
+    ETEST(OPERAND_NOT_ALLOWED, "INCW 0A1H");
+    ETEST(UNDEFINED_SYMBOL,    "INCW RR1", 0xA0, 0x00);
     TEST("INCW @0A1H", 0xA1, 0xA1);
     TEST("INCW @R1",   0xA1, R(1));
 
@@ -339,8 +339,8 @@ static void test_one_operand() {
     TZ88("CALL @0D6H", 0xF4, 0xD6);
     TZ86("CALL @RR2",  0xD4, R(2));
     TZ88("CALL @RR2",  0xF4, R(2));
-    ETZ86(UNKNOWN_OPERAND, "CALL #0D6H");
-    ETZ88(OK,              "CALL #0D6H", 0xD4, 0xD6);
+    ETZ86(OPERAND_NOT_ALLOWED, "CALL #0D6H");
+    ETZ88(OK,                  "CALL #0D6H", 0xD4, 0xD6);
     TEST("SRP #30H",   0x31, 0x30);
     ETZ86(UNKNOWN_INSTRUCTION, "SRP0 #30H");
     ETZ88(OK,                  "SRP0 #30H",  0x31, 0x32);
@@ -359,10 +359,10 @@ static void test_two_operands() {
     TEST("ADD R7,@16H",   0x05, 0x16, R(7));
     TEST("ADD >07H,#8",   0x06, 0x07, 0x08);
     TEST("ADD R7,#8",     0x06, R(7), 0x08);
-    ETZ86(OK,              "ADD @18H,#9", 0x07, 0x18, 0x09);
-    ETZ88(UNKNOWN_OPERAND, "ADD @18H,#9");
-    ETZ86(OK,              "ADD @R8,#9",  0x07, R(8), 0x09);
-    ETZ88(UNKNOWN_OPERAND, "ADD @R8,#9");
+    ETZ86(OK,                  "ADD @18H,#9", 0x07, 0x18, 0x09);
+    ETZ88(OPERAND_NOT_ALLOWED, "ADD @18H,#9");
+    ETZ86(OK,                  "ADD @R8,#9",  0x07, R(8), 0x09);
+    ETZ88(OPERAND_NOT_ALLOWED, "ADD @R8,#9");
 
     TEST("ADC R3,R4",     0x12, 0x34);
     TEST("ADC R1,@R4",    0x13, 0x14);
@@ -374,10 +374,10 @@ static void test_two_operands() {
     TEST("ADC R7,@16H",   0x15, 0x16, R(7));
     TEST("ADC 17H,#18H",  0x16, 0x17, 0x18);
     TEST("ADC R7,#18H",   0x16, R(7), 0x18);
-    ETZ86(OK,              "ADC @18H,#19H", 0x17, 0x18, 0x19);
-    ETZ88(UNKNOWN_OPERAND, "ADC @18H,#19H");
-    ETZ86(OK,              "ADC @R8,#19H",  0x17, R(8), 0x19);
-    ETZ88(UNKNOWN_OPERAND, "ADC @R8,#19H");
+    ETZ86(OK,                  "ADC @18H,#19H", 0x17, 0x18, 0x19);
+    ETZ88(OPERAND_NOT_ALLOWED, "ADC @18H,#19H");
+    ETZ86(OK,                  "ADC @R8,#19H",  0x17, R(8), 0x19);
+    ETZ88(OPERAND_NOT_ALLOWED, "ADC @R8,#19H");
 
     TEST("SUB R2,R3",     0x22, 0x23);
     TEST("SUB R4,@R5",    0x23, 0x45);
@@ -389,10 +389,10 @@ static void test_two_operands() {
     TEST("SUB R7,@26H",   0x25, 0x26, R(7));
     TEST("SUB 27H,#28H",  0x26, 0x27, 0x28);
     TEST("SUB R7,#28H",   0x26, R(7), 0x28);
-    ETZ86(OK,              "SUB @28H,#29H", 0x27, 0x28, 0x29);
-    ETZ88(UNKNOWN_OPERAND, "SUB @28H,#29H");
-    ETZ86(OK,              "SUB @R8,#29H",  0x27, R(8), 0x29);
-    ETZ88(UNKNOWN_OPERAND, "SUB @R8,#29H");
+    ETZ86(OK,                  "SUB @28H,#29H", 0x27, 0x28, 0x29);
+    ETZ88(OPERAND_NOT_ALLOWED, "SUB @28H,#29H");
+    ETZ86(OK,                  "SUB @R8,#29H",  0x27, R(8), 0x29);
+    ETZ88(OPERAND_NOT_ALLOWED, "SUB @R8,#29H");
 
     TEST("SBC R3,R3",     0x32, 0x33);
     TEST("SBC R3,@R4",    0x33, 0x34);
@@ -404,10 +404,10 @@ static void test_two_operands() {
     TEST("SBC R7,@36H",   0x35, 0x36, R(7));
     TEST("SBC 37H,#38H",  0x36, 0x37, 0x38);
     TEST("SBC R7,#38H",   0x36, R(7), 0x38);
-    ETZ86(OK,              "SBC @38H,#39H", 0x37, 0x38, 0x39);
-    ETZ88(UNKNOWN_OPERAND, "SBC @38H,#39H");
-    ETZ86(OK,              "SBC @R8,#39H",  0x37, R(8), 0x39);
-    ETZ88(UNKNOWN_OPERAND, "SBC @R8,#39H");
+    ETZ86(OK,                  "SBC @38H,#39H", 0x37, 0x38, 0x39);
+    ETZ88(OPERAND_NOT_ALLOWED, "SBC @38H,#39H");
+    ETZ86(OK,                  "SBC @R8,#39H",  0x37, R(8), 0x39);
+    ETZ88(OPERAND_NOT_ALLOWED, "SBC @R8,#39H");
 
     TEST("OR R4,R3",     0x42, 0x43);
     TEST("OR R4,@R4",    0x43, 0x44);
@@ -419,10 +419,10 @@ static void test_two_operands() {
     TEST("OR R9,@67H",   0x45, 0x67, R(9));
     TEST("OR 47H,#48H",  0x46, 0x47, 0x48);
     TEST("OR R7,#48H",   0x46, R(7), 0x48);
-    ETZ86(OK,              "OR @48H,#49H", 0x47, 0x48, 0x49);
-    ETZ88(UNKNOWN_OPERAND, "OR @48H,#49H");
-    ETZ86(OK,              "OR @R8,#49H",  0x47, R(8), 0x49);
-    ETZ88(UNKNOWN_OPERAND, "OR @R8,#49H");
+    ETZ86(OK,                  "OR @48H,#49H", 0x47, 0x48, 0x49);
+    ETZ88(OPERAND_NOT_ALLOWED, "OR @48H,#49H");
+    ETZ86(OK,                  "OR @R8,#49H",  0x47, R(8), 0x49);
+    ETZ88(OPERAND_NOT_ALLOWED, "OR @R8,#49H");
 
     TEST("AND R5,R3",     0x52, 0x53);
     TEST("AND R5,@R4",    0x53, 0x54);
@@ -434,10 +434,10 @@ static void test_two_operands() {
     TEST("AND R7,@56H",   0x55, 0x56, R(7));
     TEST("AND 78H,#9AH",  0x56, 0x78, 0x9A);
     TEST("AND R8,#9AH",   0x56, R(8), 0x9A);
-    ETZ86(OK,              "AND @58H,#59H", 0x57, 0x58, 0x59);
-    ETZ88(UNKNOWN_OPERAND, "AND @58H,#59H");
-    ETZ86(OK,              "AND @R8,#59H",  0x57, R(8), 0x59);
-    ETZ88(UNKNOWN_OPERAND, "AND @R8,#59H");
+    ETZ86(OK,                  "AND @58H,#59H", 0x57, 0x58, 0x59);
+    ETZ88(OPERAND_NOT_ALLOWED, "AND @58H,#59H");
+    ETZ86(OK,                  "AND @R8,#59H",  0x57, R(8), 0x59);
+    ETZ88(OPERAND_NOT_ALLOWED, "AND @R8,#59H");
 
     TEST("TCM R6,R3",     0x62, 0x63);
     TEST("TCM R6,@R4",    0x63, 0x64);
@@ -449,10 +449,10 @@ static void test_two_operands() {
     TEST("TCM R7,@66H",   0x65, 0x66, R(7));
     TEST("TCM 67H,#68H",  0x66, 0x67, 0x68);
     TEST("TCM R7,#68H",   0x66, R(7), 0x68);
-    ETZ86(OK,              "TCM @89H,#0ABH",0x67, 0x89, 0xAB);
-    ETZ88(UNKNOWN_OPERAND, "TCM @89H,#0ABH");
-    ETZ86(OK,              "TCM @R9,#0ABH", 0x67, R(9), 0xAB);
-    ETZ88(UNKNOWN_OPERAND, "TCM @R9,#0ABH");
+    ETZ86(OK,                  "TCM @89H,#0ABH",0x67, 0x89, 0xAB);
+    ETZ88(OPERAND_NOT_ALLOWED, "TCM @89H,#0ABH");
+    ETZ86(OK,                  "TCM @R9,#0ABH", 0x67, R(9), 0xAB);
+    ETZ88(OPERAND_NOT_ALLOWED, "TCM @R9,#0ABH");
 
     TEST("TM R7,R3",     0x72, 0x73);
     TEST("TM R7,@R4",    0x73, 0x74);
@@ -464,10 +464,10 @@ static void test_two_operands() {
     TEST("TM R7,@76H",   0x75, 0x76, R(7));
     TEST("TM 77H,#78H",  0x76, 0x77, 0x78);
     TEST("TM R7,#78H",   0x76, R(7), 0x78);
-    ETZ86(OK,              "TM @78H,#79H", 0x77, 0x78, 0x79);
-    ETZ88(UNKNOWN_OPERAND, "TM @78H,#79H");
-    ETZ86(OK,              "TM @R8,#79H",  0x77, R(8), 0x79);
-    ETZ88(UNKNOWN_OPERAND, "TM @R8,#79H");
+    ETZ86(OK,                  "TM @78H,#79H", 0x77, 0x78, 0x79);
+    ETZ88(OPERAND_NOT_ALLOWED, "TM @78H,#79H");
+    ETZ86(OK,                  "TM @R8,#79H",  0x77, R(8), 0x79);
+    ETZ88(OPERAND_NOT_ALLOWED, "TM @R8,#79H");
 
     TEST("CP R10,R3",     0xA2, 0xA3);
     TEST("CP R10,@R4",    0xA3, 0xA4);
@@ -479,10 +479,10 @@ static void test_two_operands() {
     TEST("CP R7,@0A6H",   0xA5, 0xA6, R(7));
     TEST("CP 0A7H,#0A8H", 0xA6, 0xA7, 0xA8);
     TEST("CP R7,#0A8H",   0xA6, R(7), 0xA8);
-    ETZ86(OK,              "CP @0A8H,#0A9H",0xA7, 0xA8, 0xA9);
-    ETZ88(UNKNOWN_OPERAND, "CP @0A8H,#0A9H");
-    ETZ86(OK,              "CP @R8,#0A9H",  0xA7, R(8), 0xA9);
-    ETZ88(UNKNOWN_OPERAND, "CP @R8,#0A9H");
+    ETZ86(OK,                  "CP @0A8H,#0A9H",0xA7, 0xA8, 0xA9);
+    ETZ88(OPERAND_NOT_ALLOWED, "CP @0A8H,#0A9H");
+    ETZ86(OK,                  "CP @R8,#0A9H",  0xA7, R(8), 0xA9);
+    ETZ88(OPERAND_NOT_ALLOWED, "CP @R8,#0A9H");
 
     TEST("XOR R11,R3",     0xB2, 0xB3);
     TEST("XOR R11,@R4",    0xB3, 0xB4);
@@ -494,10 +494,10 @@ static void test_two_operands() {
     TEST("XOR R7,@0B6H",   0xB5, 0xB6, R(7));
     TEST("XOR 0B7H,#0B8H", 0xB6, 0xB7, 0xB8);
     TEST("XOR R7,#0B8H",   0xB6, R(7), 0xB8);
-    ETZ86(OK,              "XOR @0B8H,#0B9H",0xB7, 0xB8, 0xB9);
-    ETZ88(UNKNOWN_OPERAND, "XOR @0B8H,#0B9H");
-    ETZ86(OK,              "XOR @R8,#0B9H",  0xB7, R(8), 0xB9);
-    ETZ88(UNKNOWN_OPERAND, "XOR @R8,#0B9H");
+    ETZ86(OK,                  "XOR @0B8H,#0B9H",0xB7, 0xB8, 0xB9);
+    ETZ88(OPERAND_NOT_ALLOWED, "XOR @0B8H,#0B9H");
+    ETZ86(OK,                  "XOR @R8,#0B9H",  0xB7, R(8), 0xB9);
+    ETZ88(OPERAND_NOT_ALLOWED, "XOR @R8,#0B9H");
 
     TZ88("DIV  96H,95H",  0x94, 0x95, 0x96);
     TZ88("DIV  RR6,R5",   0x94, R(5), R(6));
@@ -542,21 +542,21 @@ static void test_two_operands() {
 
     TZ86("LDC R11,@RR4", 0xC2, 0xB4);
     TZ88("LDC R11,@RR4", 0xC3, 0xB4);
-    ETZ86(OK,              "LDCI @R11,@RR4", 0xC3, 0xB4);
-    ETZ88(UNKNOWN_OPERAND, "LDCI @R11,@RR4");
+    ETZ86(OK,                  "LDCI @R11,@RR4", 0xC3, 0xB4);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDCI @R11,@RR4");
     TZ86("LDC @RR4,R13", 0xD2, 0xD4);
     TZ88("LDC @RR4,R13", 0xD3, 0xD4);
-    ETZ86(OK,              "LDCI @RR4,@R13", 0xD3, 0xD4);
-    ETZ88(UNKNOWN_OPERAND, "LDCI @RR4,@R13");
+    ETZ86(OK,                  "LDCI @RR4,@R13", 0xD3, 0xD4);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDCI @RR4,@R13");
 
     TZ86("LDE R7,@RR4", 0x82, 0x74);
     TZ88("LDE R7,@RR4", 0xC3, 0x74 +1);
-    ETZ86(OK,              "LDEI @R7,@RR4", 0x83, 0x74);
-    ETZ88(UNKNOWN_OPERAND, "LDEI @R7,@RR4");
+    ETZ86(OK,                  "LDEI @R7,@RR4", 0x83, 0x74);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDEI @R7,@RR4");
     TZ86("LDE @RR4,R9", 0x92, 0x94);
     TZ88("LDE @RR4,R9", 0xD3, 0x94 +1);
-    ETZ86(OK,              "LDEI @RR4,@R9", 0x93, 0x94);
-    ETZ88(UNKNOWN_OPERAND, "LDEI @RR4,@R9");
+    ETZ86(OK,                  "LDEI @RR4,@R9", 0x93, 0x94);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDEI @RR4,@R9");
 
     TZ88("LDC R10,0A2A1H", 0xA7, 0xA0, 0xA1, 0xA2);
     TZ88("LDE R10,0A3A2H", 0xA7, 0xA1, 0xA2, 0xA3);
@@ -571,14 +571,14 @@ static void test_two_operands() {
     TZ88("LDCPI @RR4,R15", 0xF3, 0xF4);
     TZ88("LDEPI @RR4,R15", 0xF3, 0xF5);
 
-    ETZ86(UNKNOWN_OPERAND, "LDC R10,0A2A1H");
-    ETZ86(UNKNOWN_OPERAND, "LDE R10,0A3A2H");
-    ETZ86(UNKNOWN_OPERAND, "LDC 0B2B1H,R11");
-    ETZ86(UNKNOWN_OPERAND, "LDE 0B3B2H,R11");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDC R10,0A2A1H");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDE R10,0A3A2H");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDC 0B2B1H,R11");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDE 0B3B2H,R11");
     ETZ86(UNKNOWN_INSTRUCTION, "LDCD R15,@RR2");
     ETZ86(UNKNOWN_INSTRUCTION, "LDED R15,@RR2");
-    ETZ86(UNKNOWN_OPERAND, "LDCI R14,@RR4");
-    ETZ86(UNKNOWN_OPERAND, "LDEI R14,@RR4");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDCI R14,@RR4");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDEI R14,@RR4");
     ETZ86(UNKNOWN_INSTRUCTION, "LDCPD @RR2,R15");
     ETZ86(UNKNOWN_INSTRUCTION, "LDEPD @RR2,R15");
     ETZ86(UNKNOWN_INSTRUCTION, "LDCPI @RR4,R15");
@@ -640,10 +640,10 @@ static void test_indexed() {
     TZ88("LDE +127(RR8), R15",  0xF7, 0xF9, 0x7F);
     TZ88("LDE +128(RR8), R15",  0xB7, 0xF9, 0x80, 0x00);
 
-    ETZ86(UNKNOWN_OPERAND, "LDC R14,-128(RR8)");
-    ETZ86(UNKNOWN_OPERAND, "LDC R14,+128(RR8)");
-    ETZ86(UNKNOWN_OPERAND, "LDE R14,-128(RR8)");
-    ETZ86(UNKNOWN_OPERAND, "LDE R14,+128(RR8)");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDC R14,-128(RR8)");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDC R14,+128(RR8)");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDE R14,-128(RR8)");
+    ETZ86(OPERAND_NOT_ALLOWED, "LDE R14,+128(RR8)");
 
     symtab.intern(0xC9, "bufC9");
     symtab.intern(-2,   "offm2");
@@ -693,8 +693,8 @@ static void test_setrp() {
     TEST("LD  21H,R4",   0x49, 0x21);
     TEST("LD  R4,21H",   0x48, 0x21);
     TEST("LD  21H,#66H", 0xE6, 0x21, 0x66);
-    ETEST(UNKNOWN_OPERAND, "LD 21H,33H(R4)"); // LD R,dd(r)
-    ETEST(UNKNOWN_OPERAND, "LD 33H(21H),R4"); // LD dd(R),r
+    ETEST(OPERAND_NOT_ALLOWED, "LD 21H,33H(R4)"); // LD R,dd(r)
+    ETEST(UNKNOWN_OPERAND,     "LD 33H(21H),R4"); // LD dd(R),r
     TEST("LD  21H,24H",  0xE4, 0x24, 0x21);
     TEST("LD  24H,21H",  0XE4, 0x21, 0x24);
     TEST("LD  21H,@24H", 0xE5, 0x24, 0x21);
@@ -705,10 +705,10 @@ static void test_setrp() {
     TZ88("LDE  R1,@RR4", 0xC3, 0x14 +1);
     TZ86("LDE  @RR4,R1", 0x92, 0x14);
     TZ88("LDE  @RR4,R1", 0xD3, 0x14 +1);
-    ETZ86(OK,              "LDEI @R1,@RR4", 0x83, 0x14);
-    ETZ88(UNKNOWN_OPERAND, "LDEI @R1,@RR4");
-    ETZ86(OK,              "LDEI @RR4,@R1", 0x93, 0x14);
-    ETZ88(UNKNOWN_OPERAND, "LDEI @RR4,@R1");
+    ETZ86(OK,                  "LDEI @R1,@RR4", 0x83, 0x14);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDEI @R1,@RR4");
+    ETZ86(OK,                  "LDEI @RR4,@R1", 0x93, 0x14);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDEI @RR4,@R1");
     TEST("DJNZ R1,$",     0x1A, 0xFE);
     TEST("JP   @24H",     0x30, 0x24);
     TZ86("CALL @24H", 0xD4, 0x24);
@@ -742,10 +742,10 @@ static void test_setrp() {
     TZ88("LDE  21H,@24H",  0xC3, 0x14 +1);
     TZ86("LDE  @24H,21H",  0x92, 0x14);
     TZ88("LDE  @24H,21H",  0xD3, 0x14 +1);
-    ETZ86(OK,              "LDEI @21H,@24H", 0x83, 0x14);
-    ETZ88(UNKNOWN_OPERAND, "LDEI @21H,@24H");
-    ETZ86(OK,              "LDEI @24H,@21H", 0x93, 0x14);
-    ETZ88(UNKNOWN_OPERAND, "LDEI @24H,@21H");
+    ETZ86(OK,                  "LDEI @21H,@24H", 0x83, 0x14);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDEI @21H,@24H");
+    ETZ86(OK,                  "LDEI @24H,@21H", 0x93, 0x14);
+    ETZ88(OPERAND_NOT_ALLOWED, "LDEI @24H,@21H");
     TEST("DJNZ 21H,$", 0x1A, 0xFE);
     TEST("JP   @24H",  0x30, R(4));
     TZ86("CALL @24H", 0xD4, R(4));
@@ -839,10 +839,10 @@ static void test_undefined_symbol() {
 }
 
 static void test_error() {
-    ETEST(UNKNOWN_OPERAND, "JP   @11");
-    ETEST(UNKNOWN_OPERAND, "CALL @0e5h");
-    ETEST(UNKNOWN_OPERAND, "JP   @r0");
-    ETEST(UNKNOWN_OPERAND, "CALL @r4");
+    ETEST(OPERAND_NOT_ALLOWED, "JP   @11");
+    ETEST(OPERAND_NOT_ALLOWED, "CALL @0e5h");
+    ETEST(OPERAND_NOT_ALLOWED, "JP   @r0");
+    ETEST(OPERAND_NOT_ALLOWED, "CALL @r4");
     TEST(                  "LD >0FH,R1", 0x19, 0x0F);
     ETEST(UNKNOWN_OPERAND, "LD > 0FH,R1");
     TEST(                  "DEC @>15H",  0x01, 0x15);

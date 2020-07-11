@@ -41,7 +41,7 @@ Error AsmTms9900::encodeImmMod(InsnTms9900 &insn) {
         mode = 0;
     } else {
         if (getOperand(mode)) return getError();
-        if (mode == 3 || mode >= 5) return setError(ILLEGAL_OPERAND);
+        if (mode == 3 || mode >= 5) return setError(OPERAND_NOT_ALLOWED);
     }
     insn.embed(mode);
     insn.emitInsn();
@@ -161,7 +161,7 @@ Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
     Config::uintptr_t target;
     if (getOperand(target)) return getError();
     if (getError()) target = base;
-    if (target % 2) return setError(ILLEGAL_OPERAND);
+    if (target % 2) return setError(OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t delta = (target - base) >> 1;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
@@ -186,19 +186,22 @@ Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
 
     if (insn.addrMode() == DW_BIT_SRC) {
         if ((srcMode & 0x30) == 0x30)
-            return setError(ILLEGAL_OPERAND);
+            return setError(OPERAND_NOT_ALLOWED);
         if (getOperand(dstOpr)) return getError();
         if (dstOpr >= 16) return setError(ILLEGAL_BIT_NUMBER);
         dstMode = dstOpr;
     } else if (insn.addrMode() == DW_CNT_SRC) {
         const RegName reg = _regs.parseRegName(_scan);
-        if (reg == REG_R0) {
+        if (reg != REG_UNDEF) {
+            if (reg != REG_R0) return setError(REGISTER_NOT_ALLOWED);
             _scan += _regs.regNameLen(reg);
             dstOpr = 0;
         } else if (getOperand(dstOpr)) {
             return getError();
-        } else if (dstOpr == 0 || dstOpr >= 16) {
-            return setError(ILLEGAL_OPERAND);
+        } else if (dstOpr == 0) {
+            return setError(OPERAND_NOT_ALLOWED);
+        } else if (dstOpr >= 16) {
+            return setError(OVERFLOW_RANGE);
         }
         dstMode = dstOpr;
         srcMode |= 0x4000;

@@ -199,8 +199,8 @@ static void test_accm() {
     TEST("ROR A", 0x6A);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND, "INC A");
-        ETEST(UNKNOWN_OPERAND, "DEC A");
+        ETEST(OPERAND_NOT_ALLOWED, "INC A");
+        ETEST(OPERAND_NOT_ALLOWED, "DEC A");
     } else {
         // W65SC02
         TEST("INC A", 0x1A);
@@ -224,7 +224,7 @@ static void test_imm() {
     TEST("SBC #$90", 0xE9, 0x90);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND, "BIT #$90");
+        ETEST(OPERAND_NOT_ALLOWED, "BIT #$90");
     } else {
         // W65SC02
         TEST("BIT #$90", 0x89, 0x90);
@@ -252,7 +252,7 @@ static void test_imm() {
     TEST("SBC #zero90", 0xE9, 0x90);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND, "BIT #zero90");
+        ETEST(OPERAND_NOT_ALLOWED, "BIT #zero90");
     } else {
         // W65SC02
         TEST("BIT #zero90", 0x89, 0x90);
@@ -344,7 +344,7 @@ static void test_zpg_indexed() {
     TEST("ROR $10,X", 0x76, 0x10);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND,     "BIT $10,X");
+        ETEST(OPERAND_NOT_ALLOWED, "BIT $10,X");
         ETEST(UNKNOWN_INSTRUCTION, "STZ $10,X");
     } else {
         // W65SC02
@@ -365,7 +365,7 @@ static void test_zpg_indexed() {
     TEST("ROR zero90,X", 0x76, 0x90);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND, "BIT zero10,X");
+        ETEST(OPERAND_NOT_ALLOWED, "BIT zero10,X");
     } else {
         // W65SC02
         TEST("BIT zero10,X", 0x34, 0x10);
@@ -418,8 +418,8 @@ static void test_zpg_long() {
         TEST("ORAL (dir10)",   0x07, 0x10);
         TEST("ORAL (dir10),Y", 0x17, 0x10);
     } else {
-        ETEST(UNKNOWN_OPERAND, "ORA [$10]");
-        ETEST(UNKNOWN_OPERAND, "ORA [$10],Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA [$10]");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA [$10],Y");
         ETEST(UNKNOWN_INSTRUCTION, "ORAL ($10)");
     }
 }
@@ -445,8 +445,8 @@ static void test_sp_rel() {
         TEST("CMP ($10,S),Y", 0xD3, 0x10);
         TEST("SBC ($10,S),Y", 0xF3, 0x10);
     } else {
-        ETEST(UNKNOWN_OPERAND, "ORA $10,S");
-        ETEST(UNKNOWN_OPERAND, "ORA ($10,S),Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA $10,S");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA ($10,S),Y");
     }
 }
 
@@ -567,11 +567,11 @@ static void test_abs_long() {
         TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
         TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
     } else {
-        ETEST(UNKNOWN_OPERAND, "ORA $123456");
-        ETEST(UNKNOWN_OPERAND, "ORA $123456,X");
-        ETEST(UNKNOWN_OPERAND, "JMP $123456");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA $123456");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA $123456,X");
+        ETEST(OPERAND_NOT_ALLOWED, "JMP $123456");
         ETEST(UNKNOWN_INSTRUCTION, "JSL $123456");
-        ETEST(UNKNOWN_OPERAND,     "JMP  [$1234]");
+        ETEST(OPERAND_NOT_ALLOWED, "JMP  [$1234]");
         ETEST(UNKNOWN_INSTRUCTION, "JMPL ($1234)");
         ETEST(UNKNOWN_INSTRUCTION, "MVP $123456,$345678");
         ETEST(UNKNOWN_INSTRUCTION, "MVN $003456,$345678");
@@ -610,7 +610,7 @@ static void test_abs_indexed() {
     TEST("ROR $1234,X", 0x7E, 0x34, 0x12);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND,     "BIT $1234,X");
+        ETEST(OPERAND_NOT_ALLOWED, "BIT $1234,X");
         ETEST(UNKNOWN_INSTRUCTION, "STZ $1234,X");
     } else {
         // W65SC02
@@ -630,7 +630,7 @@ static void test_abs_indexed() {
     TEST("LSR abs0100,X",  0x5E, 0x00, 0x01);
 
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND,     "BIT abs1234,X");
+        ETEST(OPERAND_NOT_ALLOWED, "BIT abs1234,X");
         ETEST(UNKNOWN_INSTRUCTION, "STZ abs1234,X");
     } else {
         // W65SC02
@@ -653,7 +653,7 @@ static void test_abs_idir() {
 
 static void test_abs_indexed_idir() {
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND, "JMP ($1234,X)");
+        ETEST(OPERAND_NOT_ALLOWED, "JMP ($1234,X)");
     } else {
         // W65SC02
         TEST("JMP ($1234,X)", 0x7C, 0x34, 0x12);
@@ -670,21 +670,21 @@ static void test_abs_indexed_idir() {
         TEST("JSR ($1235,X)",    0xFC, 0x35, 0x12);
         TEST("JSR (>abs0010,X)", 0xFC, 0x10, 0x00);
     } else {
-        ETEST(UNKNOWN_OPERAND, "JSR ($1235,X)");
+        ETEST(OPERAND_NOT_ALLOWED, "JSR ($1235,X)");
         ETEST(UNKNOWN_OPERAND, "JSR (>abs0010),X");
     }
 }
 
 static void test_zpg_idir() {
     if (m6502()) {
-        ETEST(UNKNOWN_OPERAND, "ORA ($10)");
-        ETEST(UNKNOWN_OPERAND, "AND ($10)");
-        ETEST(UNKNOWN_OPERAND, "EOR ($10)");
-        ETEST(UNKNOWN_OPERAND, "ADC ($10)");
-        ETEST(UNKNOWN_OPERAND, "STA ($10)");
-        ETEST(UNKNOWN_OPERAND, "LDA ($10)");
-        ETEST(UNKNOWN_OPERAND, "CMP ($10)");
-        ETEST(UNKNOWN_OPERAND, "SBC ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "AND ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "EOR ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "ADC ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "STA ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "LDA ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "CMP ($10)");
+        ETEST(OPERAND_NOT_ALLOWED, "SBC ($10)");
     } else {
         // W65SC02
         TEST("ORA ($10)", 0x12, 0x10);
@@ -987,14 +987,14 @@ static void test_error() {
         ETEST(UNKNOWN_OPERAND, "ORA ($10,X),Y");
         ETEST(UNKNOWN_OPERAND, "ORA ($10,Y),X");
         ETEST(UNKNOWN_OPERAND, "ORA ($10,Y),Y");
-        ETEST(UNKNOWN_OPERAND, "ORA $123456,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ORA $123456,Y");
     }
     ETEST(UNKNOWN_OPERAND, "ORA ($10,Y)");
     ETEST(UNKNOWN_OPERAND, "ORA ($10),X");
     if (m6502()) {
         // MOS6502
         ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
-        ETEST(UNKNOWN_OPERAND, "JSR ($1234,X)");
+        ETEST(OPERAND_NOT_ALLOWED, "JSR ($1234,X)");
         ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
     } else if (w65c816()) {
         // W65C816
@@ -1003,7 +1003,7 @@ static void test_error() {
     } else {
         // W65SC02
         ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
-        ETEST(UNKNOWN_OPERAND, "JSR ($1234,X)");
+        ETEST(OPERAND_NOT_ALLOWED, "JSR ($1234,X)");
         ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
     }
 }

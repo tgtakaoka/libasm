@@ -49,7 +49,7 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
         return encodeRel8(insn, op);
     insn.embed(_regs.encodePointerReg(op.reg));
     if (op.mode == INDX) { // auto displacement mode
-        if (insn.addrMode() != INDX) return setError(ILLEGAL_OPERAND);
+        if (insn.addrMode() != INDX) return setError(OPERAND_NOT_ALLOWED);
         insn.embed(4);
     }
     insn.emitInsn();

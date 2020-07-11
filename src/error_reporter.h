@@ -38,7 +38,7 @@ enum Error {
     UNKNOWN_INSTRUCTION     = 21,
     UNKNOWN_REGISTER        = 22,
     UNKNOWN_OPERAND         = 23,
-    OPERAND_NOT_ZP          = 24,
+    OPERAND_NOT_ALLOWED     = 24,
     OPERAND_TOO_FAR         = 25,
     ILLEGAL_BIT_NUMBER      = 26,
     GARBAGE_AT_END          = 27,
@@ -46,6 +46,7 @@ enum Error {
     REGISTER_NOT_ALLOWED    = 29,
     MISSING_COMMA           = 30,
     NOT_BIT_ADDRESSABLE     = 31,
+    OPERAND_NOT_ALIGNED     = 32,
 
     // ValueParser
     ILLEGAL_CONSTANT        = 100,

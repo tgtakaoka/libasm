@@ -547,7 +547,7 @@ Error TableMc6809::searchName(
             return OK;
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
 Error TableMc6809::searchOpCode(

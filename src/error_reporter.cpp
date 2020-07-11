@@ -40,7 +40,7 @@ const char *ErrorReporter::errorText(Error error) {
     case UNKNOWN_INSTRUCTION:  return "Unknown instruction";
     case UNKNOWN_REGISTER:     return "Unknown register";
     case UNKNOWN_OPERAND:      return "Unknown operand";
-    case OPERAND_NOT_ZP:       return "Operand isn't zero page";
+    case OPERAND_NOT_ALLOWED:  return "Operand not allowed";
     case OPERAND_TOO_FAR:      return "Operand too far";
     case ILLEGAL_BIT_NUMBER:   return "Illegal bit number";
     case GARBAGE_AT_END:       return "Garbage at line end";
@@ -59,6 +59,7 @@ const char *ErrorReporter::errorText(Error error) {
     case DIVIDE_BY_ZERO:          return "Divided by zero";
     case UNDEFINED_SYMBOL:        return "Undefined symbol";
     case TOO_COMPLEX_EXPRESSION:  return "Too complex expression";
+    case OPERAND_NOT_ALIGNED:     return "Operand not aligned";
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:      return "Unknown directive";

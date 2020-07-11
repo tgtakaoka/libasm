@@ -132,7 +132,7 @@ Error TableIns8070::searchName(InsnIns8070 &insn) const {
         insn.setFlags(pgm_read_word(&entry->flags));
         return _error.setOK();
     }
-    return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND);
+    return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(

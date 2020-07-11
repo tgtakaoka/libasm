@@ -82,9 +82,11 @@ static void test_inh() {
 
     if (is99105()) {
         // TMS99105
+        TEST("RTWP 0", 0x0380);
         TEST("RTWP 1", 0x0381);
         TEST("RTWP 2", 0x0382);
         TEST("RTWP 4", 0x0384);
+        ETEST(OPERAND_NOT_ALLOWED, "RTWP 3");
     } else {
         ETEST(UNKNOWN_OPERAND, "RTWP 1");
     }
@@ -158,6 +160,7 @@ static void test_src() {
     TEST("SWPB *R1",    0x06D1);
     TEST("SETO R12",    0x070C);
     TEST("ABS  @8(R3)", 0x0763, 0x0008);
+    ETEST(REGISTER_NOT_ALLOWED, "ABS @8(R0)");
 
     if (is9995()) {
         // TMS9995
@@ -181,6 +184,9 @@ static void test_src() {
         TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
         TEST("BIND @2223H(R1)", 0x0161, 0x2223);
         TEST("EVAD R5",         0x0105);
+        ETEST(OPERAND_NOT_ALLOWED, "TMB  *R1+,7");
+        ETEST(OPERAND_NOT_ALLOWED, "TCMB *R1+,0");
+        ETEST(OPERAND_NOT_ALLOWED, "TSMB *R1+,15");
     } else {
         ETEST(UNKNOWN_INSTRUCTION, "TMB  @0123H(R15),7");
         ETEST(UNKNOWN_INSTRUCTION, "TCMB R0,0");
@@ -241,6 +247,9 @@ static void test_cnt_src() {
         TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
         TEST("SLAM R11,R0",          0x001D, 0x400B);
         TEST("SLAM *R13+,1",         0x001D, 0x407D);
+        ETEST(REGISTER_NOT_ALLOWED, "SRAM R11,R2");
+        ETEST(OPERAND_NOT_ALLOWED,  "SLAM R11,0");
+        ETEST(OVERFLOW_RANGE,       "SLAM R11,16");
     } else {
         ETEST(UNKNOWN_INSTRUCTION, "SRAM R11,R0");
         ETEST(UNKNOWN_INSTRUCTION, "SLAM *R13+,1");
@@ -315,6 +324,8 @@ static void test_rel() {
     ATEST(0x1000, "JL  0FFAH", 0x1AFC);
     ATEST(0x1000, "JH  0FF8H", 0x1BFB);
     ATEST(0x1000, "JOP 0FF6H", 0x1CFA);
+
+    ETEST(OPERAND_NOT_ALIGNED, "JMP 1001H");
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");

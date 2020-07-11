@@ -316,7 +316,7 @@ Error TableZ8::searchName(
             return OK;
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : UNKNOWN_OPERAND;
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
 static Config::opcode_t maskCode(

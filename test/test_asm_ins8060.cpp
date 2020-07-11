@@ -126,6 +126,8 @@ static void test_incr_decr() {
     // 4kB page boundary
     EATEST(OPERAND_TOO_FAR, 0x1000, "ILD 0x0F00");
     EATEST(OPERAND_TOO_FAR, 0x1FF0, "ILD 0x2010");
+    ETEST(OPERAND_NOT_ALLOWED, "ILD @1(P1)");
+    ETEST(OPERAND_NOT_ALLOWED, "DLD @E(P1)");
     TEST("ILD E(PC)",    0xA8, 0x80);
     TEST("ILD E(P1)",    0xA9, 0x80);
     TEST("ILD 127(P2)",  0xAA, 0x7F);
