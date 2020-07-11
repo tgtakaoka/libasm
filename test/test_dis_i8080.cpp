@@ -24,9 +24,16 @@ using namespace libasm::test;
 DisI8080 dis8080;
 Disassembler &disassembler(dis8080);
 
+static bool is8080() {
+    return strcmp(disassembler.getCpu(), "8080") == 0;
+}
+
+static bool is8085() {
+    return strcmp(disassembler.getCpu(), "8085") == 0;
+}
+
 static void set_up() {
     disassembler.reset();
-    disassembler.setCpu("8080");
 }
 
 static void tear_down() {
@@ -129,10 +136,14 @@ static void test_move_inherent() {
     TEST(LDAX, "B",   0x0A);
     TEST(LDAX, "D",   0x1A);
 
-    // i8085
-    disassembler.setCpu("8085");
-    TEST(RIM, "", 0x20);
-    TEST(SIM, "", 0x30);
+    if (is8085()) {
+        // i8085
+        TEST(RIM, "", 0x20);
+        TEST(SIM, "", 0x30);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
+        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
+    }
 }
 
 static void test_move_immediate() {
@@ -452,9 +463,9 @@ static void test_illegal() {
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x08);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x10);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
+    if (is8080()) ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
+    if (is8080()) ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
     ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);
@@ -472,18 +483,26 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_move_inherent);
-    RUN_TEST(test_move_immediate);
-    RUN_TEST(test_move_direct);
-    RUN_TEST(test_stack_op);
-    RUN_TEST(test_jump_call);
-    RUN_TEST(test_incr_decr);
-    RUN_TEST(test_alu_register);
-    RUN_TEST(test_alu_immediate);
-    RUN_TEST(test_io);
-    RUN_TEST(test_restart);
-    RUN_TEST(test_inherent);
-    RUN_TEST(test_illegal);
+    static const char *cpus[] = {
+        "8080", "8085",
+    };
+    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+        const char *cpu = cpus[i];
+        disassembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_move_inherent);
+        RUN_TEST(test_move_immediate);
+        RUN_TEST(test_move_direct);
+        RUN_TEST(test_stack_op);
+        RUN_TEST(test_jump_call);
+        RUN_TEST(test_incr_decr);
+        RUN_TEST(test_alu_register);
+        RUN_TEST(test_alu_immediate);
+        RUN_TEST(test_io);
+        RUN_TEST(test_restart);
+        RUN_TEST(test_inherent);
+        RUN_TEST(test_illegal);
+    }
     return 0;
 }
 

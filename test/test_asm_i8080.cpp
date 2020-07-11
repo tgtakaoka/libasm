@@ -24,9 +24,12 @@ using namespace libasm::test;
 AsmI8080 as8080;
 Assembler &assembler(as8080);
 
+static bool is8085() {
+    return strcmp(assembler.getCpu(), "8085") == 0;
+}
+
 static void set_up() {
     assembler.reset();
-    assembler.setCpu("8080");
 }
 
 static void tear_down() {
@@ -129,10 +132,14 @@ static void test_move_inherent() {
     TEST("LDAX B",  0x0A);
     TEST("LDAX D",  0x1A);
 
-    // i8085
-    assembler.setCpu("8085");
-    TEST("RIM", 0x20);
-    TEST("SIM", 0x30);
+    if (is8085()) {
+        // i8085
+        TEST("RIM", 0x20);
+        TEST("SIM", 0x30);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "RIM");
+        ETEST(UNKNOWN_INSTRUCTION, "SIM");
+    }
 }
 
 static void test_move_immediate() {
@@ -418,17 +425,25 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_move_inherent);
-    RUN_TEST(test_move_immediate);
-    RUN_TEST(test_move_direct);
-    RUN_TEST(test_stack_op);
-    RUN_TEST(test_jump_call);
-    RUN_TEST(test_incr_decr);
-    RUN_TEST(test_alu_register);
-    RUN_TEST(test_alu_immediate);
-    RUN_TEST(test_io);
-    RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    static const char *cpus[] = {
+        "8080", "8085",
+    };
+    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+        const char *cpu = cpus[i];
+        assembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_move_inherent);
+        RUN_TEST(test_move_immediate);
+        RUN_TEST(test_move_direct);
+        RUN_TEST(test_stack_op);
+        RUN_TEST(test_jump_call);
+        RUN_TEST(test_incr_decr);
+        RUN_TEST(test_alu_register);
+        RUN_TEST(test_alu_immediate);
+        RUN_TEST(test_io);
+        RUN_TEST(test_comment);
+        RUN_TEST(test_undefined_symbol);
+    }
     return 0;
 }
 
