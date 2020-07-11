@@ -597,6 +597,7 @@ Error AsmMc6809::parseOperand(Operand &op, Operand &extra) {
     }
 
     if (op.indir) {
+        if (_token == COMMA) return setError(UNKNOWN_OPERAND);
         if (_token != RBRKT) return setError(MISSING_CLOSING_PAREN);
         nextToken();
     } else if (!hasImmediate && op.list.pair.hasReg()) {

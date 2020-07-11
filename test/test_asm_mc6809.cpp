@@ -24,9 +24,16 @@ using namespace libasm::test;
 AsmMc6809 as6809;
 Assembler &assembler(as6809);
 
+static bool is6809() {
+    return strcmp(assembler.getCpu(), "6809") == 0;
+}
+
+static bool is6309() {
+    return strcmp(assembler.getCpu(), "6309") == 0;
+}
+
 static void set_up() {
     assembler.reset();
-    assembler.setCpu("6809");
 }
 
 static void tear_down() {
@@ -92,38 +99,65 @@ static void test_inherent() {
     TEST("TSTB", 0x5D);
     TEST("CLRB", 0x5F);
 
-    // HD6309
-    assembler.setCpu("6309");
+    if (is6309()) {
+        // HD6309
+        TEST("SEXW",  0x14);
+        TEST("PSHSW", 0x10, 0x38);
+        TEST("PULSW", 0x10, 0x39);
+        TEST("PSHUW", 0x10, 0x3A);
+        TEST("PULUW", 0x10, 0x3B);
 
-    TEST("SEXW",  0x14);
-    TEST("PSHSW", 0x10, 0x38);
-    TEST("PULSW", 0x10, 0x39);
-    TEST("PSHUW", 0x10, 0x3A);
-    TEST("PULUW", 0x10, 0x3B);
+        TEST("NEGD",  0x10, 0x40);
+        TEST("COMD",  0x10, 0x43);
+        TEST("LSRD",  0x10, 0x44);
+        TEST("RORD",  0x10, 0x46);
+        TEST("ASRD",  0x10, 0x47);
+        TEST("ASLD",  0x10, 0x48);
+        TEST("ROLD",  0x10, 0x49);
+        TEST("DECD",  0x10, 0x4A);
+        TEST("INCD",  0x10, 0x4C);
+        TEST("TSTD",  0x10, 0x4D);
+        TEST("CLRD",  0x10, 0x4F);
 
-    TEST("NEGD",  0x10, 0x40);
-    TEST("COMD",  0x10, 0x43);
-    TEST("LSRD",  0x10, 0x44);
-    TEST("RORD",  0x10, 0x46);
-    TEST("ASRD",  0x10, 0x47);
-    TEST("ASLD",  0x10, 0x48);
-    TEST("ROLD",  0x10, 0x49);
-    TEST("DECD",  0x10, 0x4A);
-    TEST("INCD",  0x10, 0x4C);
-    TEST("TSTD",  0x10, 0x4D);
-    TEST("CLRD",  0x10, 0x4F);
+        TEST("COME",  0x11, 0x43);
+        TEST("DECE",  0x11, 0x4A);
+        TEST("INCE",  0x11, 0x4C);
+        TEST("TSTE",  0x11, 0x4D);
+        TEST("CLRE",  0x11, 0x4F);
 
-    TEST("COME",  0x11, 0x43);
-    TEST("DECE",  0x11, 0x4A);
-    TEST("INCE",  0x11, 0x4C);
-    TEST("TSTE",  0x11, 0x4D);
-    TEST("CLRE",  0x11, 0x4F);
-
-    TEST("COMF",  0x11, 0x53);
-    TEST("DECF",  0x11, 0x5A);
-    TEST("INCF",  0x11, 0x5C);
-    TEST("TSTF",  0x11, 0x5D);
-    TEST("CLRF",  0x11, 0x5F);
+        TEST("COMF",  0x11, 0x53);
+        TEST("DECF",  0x11, 0x5A);
+        TEST("INCF",  0x11, 0x5C);
+        TEST("TSTF",  0x11, 0x5D);
+        TEST("CLRF",  0x11, 0x5F);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SEXW");
+        ETEST(UNKNOWN_INSTRUCTION, "PSHSW");
+        ETEST(UNKNOWN_INSTRUCTION, "PULSW");
+        ETEST(UNKNOWN_INSTRUCTION, "PSHUW");
+        ETEST(UNKNOWN_INSTRUCTION, "PULUW");
+        ETEST(UNKNOWN_INSTRUCTION, "NEGD");
+        ETEST(UNKNOWN_INSTRUCTION, "COMD");
+        ETEST(UNKNOWN_INSTRUCTION, "LSRD");
+        ETEST(UNKNOWN_INSTRUCTION, "RORD");
+        ETEST(UNKNOWN_INSTRUCTION, "ASRD");
+        ETEST(UNKNOWN_INSTRUCTION, "ASLD");
+        ETEST(UNKNOWN_INSTRUCTION, "ROLD");
+        ETEST(UNKNOWN_INSTRUCTION, "DECD");
+        ETEST(UNKNOWN_INSTRUCTION, "INCD");
+        ETEST(UNKNOWN_INSTRUCTION, "TSTD");
+        ETEST(UNKNOWN_INSTRUCTION, "CLRD");
+        ETEST(UNKNOWN_INSTRUCTION, "COME");
+        ETEST(UNKNOWN_INSTRUCTION, "DECE");
+        ETEST(UNKNOWN_INSTRUCTION, "INCE");
+        ETEST(UNKNOWN_INSTRUCTION, "TSTE");
+        ETEST(UNKNOWN_INSTRUCTION, "CLRE");
+        ETEST(UNKNOWN_INSTRUCTION, "COMF");
+        ETEST(UNKNOWN_INSTRUCTION, "DECF");
+        ETEST(UNKNOWN_INSTRUCTION, "INCF");
+        ETEST(UNKNOWN_INSTRUCTION, "TSTF");
+        ETEST(UNKNOWN_INSTRUCTION, "CLRF");
+    }
 }
 
 static void test_stack() {
@@ -179,17 +213,23 @@ static void test_stack() {
     ETEST(REGISTER_NOT_ALLOWED, "PSHS X,D,S");
     ETEST(DUPLICATE_REGISTER,   "PSHU S,D,S");
 
-    ETEST(UNKNOWN_OPERAND, "PULU W");
-    ETEST(UNKNOWN_OPERAND, "PULS E");
-    ETEST(UNKNOWN_OPERAND, "PSHU F");
-    ETEST(UNKNOWN_OPERAND, "PSHS V");
-
-    // HD6309
-    assembler.setCpu("6309");
-    ETEST(REGISTER_NOT_ALLOWED, "PULU W");
-    ETEST(REGISTER_NOT_ALLOWED, "PULS E,X");
-    ETEST(REGISTER_NOT_ALLOWED, "PSHU F,Y");
-    ETEST(REGISTER_NOT_ALLOWED, "PSHS V,S");
+    if (is6809()) {
+        ETEST(UNKNOWN_OPERAND, "PULS E");
+        ETEST(UNKNOWN_OPERAND, "PSHU F");
+        ETEST(UNKNOWN_OPERAND, "PSHS V");
+        ETEST(UNKNOWN_OPERAND, "PULU W");
+        ETEST(UNKNOWN_OPERAND, "PULS E,X");
+        ETEST(UNKNOWN_OPERAND, "PSHU F,Y");
+        ETEST(UNKNOWN_OPERAND, "PSHS V,S");
+    } else {
+        ETEST(REGISTER_NOT_ALLOWED, "PULS E");
+        ETEST(REGISTER_NOT_ALLOWED, "PSHU F");
+        ETEST(REGISTER_NOT_ALLOWED, "PSHS V");
+        ETEST(REGISTER_NOT_ALLOWED, "PULU W");
+        ETEST(REGISTER_NOT_ALLOWED, "PULS E,X");
+        ETEST(REGISTER_NOT_ALLOWED, "PSHU F,Y");
+        ETEST(REGISTER_NOT_ALLOWED, "PSHS V,S");
+    }
 }
 
 static void test_register() {
@@ -221,47 +261,77 @@ static void test_register() {
     ETEST(ILLEGAL_SIZE,    "EXG A,X");
     ETEST(UNKNOWN_OPERAND, "EXG A,X,Y");
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("ADDR A,B", 0x10, 0x30, 0x89);
-    TEST("ADCR A,B", 0x10, 0x31, 0x89);
-    TEST("SUBR A,B", 0x10, 0x32, 0x89);
-    TEST("SBCR A,B", 0x10, 0x33, 0x89);
-    TEST("ANDR A,B", 0x10, 0x34, 0x89);
-    TEST("ORR  A,B", 0x10, 0x35, 0x89);
-    TEST("EORR A,B", 0x10, 0x36, 0x89);
-    TEST("CMPR A,B", 0x10, 0x37, 0x89);
+    if (is6309()) {
+        // HD6309
+        TEST("ADDR A,B", 0x10, 0x30, 0x89);
+        TEST("ADCR A,B", 0x10, 0x31, 0x89);
+        TEST("SUBR A,B", 0x10, 0x32, 0x89);
+        TEST("SBCR A,B", 0x10, 0x33, 0x89);
+        TEST("ANDR A,B", 0x10, 0x34, 0x89);
+        TEST("ORR  A,B", 0x10, 0x35, 0x89);
+        TEST("EORR A,B", 0x10, 0x36, 0x89);
+        TEST("CMPR A,B", 0x10, 0x37, 0x89);
 
-    TEST("TFR A,E",  0x1F, 0x8E);
-    TEST("TFR A,F",  0x1F, 0x8F);
-    TEST("TFR E,A",  0x1F, 0xE8);
-    TEST("TFR F,A",  0x1F, 0xF8);
-    TEST("TFR A,Z",  0x1F, 0x8C);
-    TEST("TFR Z,A",  0x1F, 0xC8);
-    TEST("TFR A,0",  0x1F, 0x8C);
-    TEST("TFR 0,A",  0x1F, 0xC8);
-    TEST("TFR CC,0", 0x1F, 0xAC);
-    TEST("TFR 0,CC", 0x1F, 0xCA);
-    TEST("TFR D,W",  0x1F, 0x06);
-    TEST("TFR D,V",  0x1F, 0x07);
-    TEST("TFR W,D",  0x1F, 0x60);
-    TEST("TFR V,D",  0x1F, 0x70);
-    TEST("TFR W,PC", 0x1F, 0x65);
-    TEST("TFR S,W",  0x1F, 0x46);
-    TEST("TFR Z,V",  0x1F, 0xC7);
-    TEST("TFR X,Z",  0x1F, 0x1C);
-    TEST("TFR 0,V",  0x1F, 0xC7);
-    TEST("TFR X,0",  0x1F, 0x1C);
+        TEST("TFR A,E",  0x1F, 0x8E);
+        TEST("TFR A,F",  0x1F, 0x8F);
+        TEST("TFR E,A",  0x1F, 0xE8);
+        TEST("TFR F,A",  0x1F, 0xF8);
+        TEST("TFR A,Z",  0x1F, 0x8C);
+        TEST("TFR Z,A",  0x1F, 0xC8);
+        TEST("TFR A,0",  0x1F, 0x8C);
+        TEST("TFR 0,A",  0x1F, 0xC8);
+        TEST("TFR CC,0", 0x1F, 0xAC);
+        TEST("TFR 0,CC", 0x1F, 0xCA);
+        TEST("TFR D,W",  0x1F, 0x06);
+        TEST("TFR D,V",  0x1F, 0x07);
+        TEST("TFR W,D",  0x1F, 0x60);
+        TEST("TFR V,D",  0x1F, 0x70);
+        TEST("TFR W,PC", 0x1F, 0x65);
+        TEST("TFR S,W",  0x1F, 0x46);
+        TEST("TFR Z,V",  0x1F, 0xC7);
+        TEST("TFR X,Z",  0x1F, 0x1C);
+        TEST("TFR 0,V",  0x1F, 0xC7);
+        TEST("TFR X,0",  0x1F, 0x1C);
 
-    ETEST(UNKNOWN_OPERAND, "ADDR A");
-    ETEST(UNKNOWN_OPERAND, "ADDR A,");
-    ETEST(ILLEGAL_SIZE,    "ADDR A,X");
-    ETEST(UNKNOWN_OPERAND, "ADDR A,X,Y");
+        ETEST(UNKNOWN_OPERAND, "ADDR A");
+        ETEST(UNKNOWN_OPERAND, "ADDR A,");
+        ETEST(ILLEGAL_SIZE,    "ADDR A,X");
+        ETEST(UNKNOWN_OPERAND, "ADDR A,X,Y");
 
-    ETEST(UNKNOWN_OPERAND, "TFR E");
-    ETEST(UNKNOWN_OPERAND, "TFR E,");
-    ETEST(ILLEGAL_SIZE,    "TFR E,W");
-    ETEST(UNKNOWN_OPERAND, "TFR E,X,F");
+        ETEST(UNKNOWN_OPERAND, "TFR E");
+        ETEST(UNKNOWN_OPERAND, "TFR E,");
+        ETEST(ILLEGAL_SIZE,    "TFR E,W");
+        ETEST(UNKNOWN_OPERAND, "TFR E,X,F");
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "ADDR A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "ADCR A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBR A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "SBCR A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "ANDR A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "ORR  A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "EORR A,B");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPR A,B");
+        ETEST(UNKNOWN_REGISTER, "TFR A,E");
+        ETEST(UNKNOWN_REGISTER, "TFR A,F");
+        ETEST(UNKNOWN_REGISTER, "TFR E,A");
+        ETEST(UNKNOWN_REGISTER, "TFR F,A");
+        ETEST(UNKNOWN_REGISTER, "TFR A,Z");
+        ETEST(UNKNOWN_REGISTER, "TFR Z,A");
+        ETEST(UNKNOWN_REGISTER, "TFR A,0");
+        ETEST(UNKNOWN_REGISTER, "TFR 0,A");
+        ETEST(UNKNOWN_REGISTER, "TFR CC,0");
+        ETEST(UNKNOWN_REGISTER, "TFR 0,CC");
+        ETEST(UNKNOWN_REGISTER, "TFR D,W");
+        ETEST(UNKNOWN_REGISTER, "TFR D,V");
+        ETEST(UNKNOWN_REGISTER, "TFR W,D");
+        ETEST(UNKNOWN_REGISTER, "TFR V,D");
+        ETEST(UNKNOWN_OPERAND,  "TFR W,PC");
+        ETEST(UNKNOWN_REGISTER, "TFR S,W");
+        ETEST(UNKNOWN_OPERAND,  "TFR Z,V");
+        ETEST(UNKNOWN_REGISTER, "TFR X,Z");
+        ETEST(UNKNOWN_OPERAND,  "TFR 0,V");
+        ETEST(UNKNOWN_REGISTER, "TFR X,0");
+    }
 }
 
 static void test_relative() {
@@ -357,58 +427,83 @@ static void test_immediate() {
     TEST("CMPS #$90A0", 0x11, 0x8C, 0x90, 0xA0);
     TEST("LDS  #$90A0", 0x10, 0xCE, 0x90, 0xA0);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("LDMD  #$01", 0x11, 0x3D, 0x01);
-    TEST("BITMD #$80", 0x11, 0x3C, 0x80);
+    if (is6309()) {
+        // HD6309
+        TEST("LDMD  #$01", 0x11, 0x3D, 0x01);
+        TEST("BITMD #$80", 0x11, 0x3C, 0x80);
 
-    TEST("SBCD #$90A0", 0x10, 0x82, 0x90, 0xA0);
-    TEST("ANDD #$90A0", 0x10, 0x84, 0x90, 0xA0);
-    TEST("BITD #$90A0", 0x10, 0x85, 0x90, 0xA0);
-    TEST("EORD #$90A0", 0x10, 0x88, 0x90, 0xA0);
-    TEST("ADCD #$90A0", 0x10, 0x89, 0x90, 0xA0);
-    TEST("ORD  #$90A0", 0x10, 0x8A, 0x90, 0xA0);
+        TEST("SBCD #$90A0", 0x10, 0x82, 0x90, 0xA0);
+        TEST("ANDD #$90A0", 0x10, 0x84, 0x90, 0xA0);
+        TEST("BITD #$90A0", 0x10, 0x85, 0x90, 0xA0);
+        TEST("EORD #$90A0", 0x10, 0x88, 0x90, 0xA0);
+        TEST("ADCD #$90A0", 0x10, 0x89, 0x90, 0xA0);
+        TEST("ORD  #$90A0", 0x10, 0x8A, 0x90, 0xA0);
 
-    TEST("SUBE #$90", 0x11, 0x80, 0x90);
-    TEST("ADDE #$90", 0x11, 0x8B, 0x90);
-    TEST("LDE  #$90", 0x11, 0x86, 0x90);
-    TEST("CMPE #$90", 0x11, 0x81, 0x90);
+        TEST("SUBE #$90", 0x11, 0x80, 0x90);
+        TEST("ADDE #$90", 0x11, 0x8B, 0x90);
+        TEST("LDE  #$90", 0x11, 0x86, 0x90);
+        TEST("CMPE #$90", 0x11, 0x81, 0x90);
 
-    TEST("SUBF #$90", 0x11, 0xC0, 0x90);
-    TEST("ADDF #$90", 0x11, 0xCB, 0x90);
-    TEST("LDF  #$90", 0x11, 0xC6, 0x90);
-    TEST("CMPF #$90", 0x11, 0xC1, 0x90);
+        TEST("SUBF #$90", 0x11, 0xC0, 0x90);
+        TEST("ADDF #$90", 0x11, 0xCB, 0x90);
+        TEST("LDF  #$90", 0x11, 0xC6, 0x90);
+        TEST("CMPF #$90", 0x11, 0xC1, 0x90);
 
-    TEST("SUBW #$90A0", 0x10, 0x80, 0x90, 0xA0);
-    TEST("ADDW #$90A0", 0x10, 0x8B, 0x90, 0xA0);
-    TEST("LDW  #$90A0", 0x10, 0x86, 0x90, 0xA0);
-    TEST("CMPW #$90A0", 0x10, 0x81, 0x90, 0xA0);
+        TEST("SUBW #$90A0", 0x10, 0x80, 0x90, 0xA0);
+        TEST("ADDW #$90A0", 0x10, 0x8B, 0x90, 0xA0);
+        TEST("LDW  #$90A0", 0x10, 0x86, 0x90, 0xA0);
+        TEST("CMPW #$90A0", 0x10, 0x81, 0x90, 0xA0);
 
-    TEST("LDQ  #$12345678", 0xCD, 0x12, 0x34, 0x56, 0x78);
+        TEST("LDQ  #$12345678", 0xCD, 0x12, 0x34, 0x56, 0x78);
 
-    TEST("MULD #$90A0", 0x11, 0x8F, 0x90, 0xA0);
-    TEST("DIVD #$90A0", 0x11, 0x8D, 0x90, 0xA0);
-    TEST("DIVQ #$90A0", 0x11, 0x8E, 0x90, 0xA0);
+        TEST("MULD #$90A0", 0x11, 0x8F, 0x90, 0xA0);
+        TEST("DIVD #$90A0", 0x11, 0x8D, 0x90, 0xA0);
+        TEST("DIVQ #$90A0", 0x11, 0x8E, 0x90, 0xA0);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "LDMD  #$01");
+        ETEST(UNKNOWN_INSTRUCTION, "BITMD #$80");
+        ETEST(UNKNOWN_INSTRUCTION, "SBCD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "ANDD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "BITD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "EORD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "ADCD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "ORD  #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBE #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDE #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "LDE  #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPE #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBF #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDF #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "LDF  #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPF #$90");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBW #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDW #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "LDW  #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPW #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "LDQ  #$12345678");
+        ETEST(UNKNOWN_INSTRUCTION, "MULD #$90A0");
+        ETEST(UNKNOWN_INSTRUCTION, "DIVD #$90A0");
+    }
 
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "sym90A0");
     symtab.intern(-2, "minus2");
 
-    assembler.setCpu("6809");
     TEST("LDA  #dir90",   0x86, 0x90);
     TEST("CMPX #sym90A0", 0x8C, 0x90, 0xA0);
     TEST("LDY  #sym90A0", 0x10, 0x8E, 0x90, 0xA0);
     TEST("LDS  #sym90A0", 0x10, 0xCE, 0x90, 0xA0);
     TEST("LDA  # dir90",  0x86, 0x90);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("SBCD #sym90A0", 0x10, 0x82, 0x90, 0xA0);
-    TEST("LDE  #dir90",   0x11, 0x86, 0x90);
+    if (is6309()) {
+        // HD6309
+        TEST("SBCD #sym90A0", 0x10, 0x82, 0x90, 0xA0);
+        TEST("LDE  #dir90",   0x11, 0x86, 0x90);
 
-    TEST("LDQ  #sym90A0", 0xCD, 0x00, 0x00, 0x90, 0xA0);
-    TEST("LDQ  #minus2",  0xCD, 0xFF, 0xFF, 0xFF, 0xFE);
-    TEST("MULD #dir90",   0x11, 0x8F, 0x00, 0x90);
+        TEST("LDQ  #sym90A0", 0xCD, 0x00, 0x00, 0x90, 0xA0);
+        TEST("LDQ  #minus2",  0xCD, 0xFF, 0xFF, 0xFF, 0xFE);
+        TEST("MULD #dir90",   0x11, 0x8F, 0x00, 0x90);
+    }
 }
 
 static void test_direct() {
@@ -473,57 +568,87 @@ static void test_direct() {
     TEST("JMP $10",    0x0E, 0x10);
     TEST("JSR <$1290", 0x9D, 0x90);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("SBCD $90",    0x10, 0x92, 0x90);
-    TEST("ANDD $90",    0x10, 0x94, 0x90);
-    TEST("BITD $90",    0x10, 0x95, 0x90);
-    TEST("EORD <$1290", 0x10, 0x98, 0x90);
-    TEST("ADCD <$1290", 0x10, 0x99, 0x90);
-    TEST("ORD  <$1290", 0x10, 0x9A, 0x90);
+    if (is6309()) {
+        // HD6309
+        TEST("SBCD $90",    0x10, 0x92, 0x90);
+        TEST("ANDD $90",    0x10, 0x94, 0x90);
+        TEST("BITD $90",    0x10, 0x95, 0x90);
+        TEST("EORD <$1290", 0x10, 0x98, 0x90);
+        TEST("ADCD <$1290", 0x10, 0x99, 0x90);
+        TEST("ORD  <$1290", 0x10, 0x9A, 0x90);
 
-    TEST("SUBE $90", 0x11, 0x90, 0x90);
-    TEST("ADDE $90", 0x11, 0x9B, 0x90);
-    TEST("LDE  $90", 0x11, 0x96, 0x90);
-    TEST("STE  $90", 0x11, 0x97, 0x90);
-    TEST("CMPE $90", 0x11, 0x91, 0x90);
+        TEST("SUBE $90", 0x11, 0x90, 0x90);
+        TEST("ADDE $90", 0x11, 0x9B, 0x90);
+        TEST("LDE  $90", 0x11, 0x96, 0x90);
+        TEST("STE  $90", 0x11, 0x97, 0x90);
+        TEST("CMPE $90", 0x11, 0x91, 0x90);
 
-    TEST("SUBF <$1290", 0x11, 0xD0, 0x90);
-    TEST("ADDF <$1290", 0x11, 0xDB, 0x90);
-    TEST("LDF  <$1290", 0x11, 0xD6, 0x90);
-    TEST("STF  <$1290", 0x11, 0xD7, 0x90);
-    TEST("CMPF <$1290", 0x11, 0xD1, 0x90);
+        TEST("SUBF <$1290", 0x11, 0xD0, 0x90);
+        TEST("ADDF <$1290", 0x11, 0xDB, 0x90);
+        TEST("LDF  <$1290", 0x11, 0xD6, 0x90);
+        TEST("STF  <$1290", 0x11, 0xD7, 0x90);
+        TEST("CMPF <$1290", 0x11, 0xD1, 0x90);
 
-    TEST("SUBW $90",    0x10, 0x90, 0x90);
-    TEST("ADDW $90",    0x10, 0x9B, 0x90);
-    TEST("LDW  <$1290", 0x10, 0x96, 0x90);
-    TEST("STW  <$1290", 0x10, 0x97, 0x90);
-    TEST("CMPW <$1290", 0x10, 0x91, 0x90);
+        TEST("SUBW $90",    0x10, 0x90, 0x90);
+        TEST("ADDW $90",    0x10, 0x9B, 0x90);
+        TEST("LDW  <$1290", 0x10, 0x96, 0x90);
+        TEST("STW  <$1290", 0x10, 0x97, 0x90);
+        TEST("CMPW <$1290", 0x10, 0x91, 0x90);
 
-    TEST("LDQ  $90",    0x10, 0xDC, 0x90);
-    TEST("STQ  <$1290", 0x10, 0xDD, 0x90);
+        TEST("LDQ  $90",    0x10, 0xDC, 0x90);
+        TEST("STQ  <$1290", 0x10, 0xDD, 0x90);
 
-    TEST("MULD <$1290", 0x11, 0x9F, 0x90);
-    TEST("DIVD $90",    0x11, 0x9D, 0x90);
-    TEST("DIVQ <$1290", 0x11, 0x9E, 0x90);
+        TEST("MULD <$1290", 0x11, 0x9F, 0x90);
+        TEST("DIVD $90",    0x11, 0x9D, 0x90);
+        TEST("DIVQ <$1290", 0x11, 0x9E, 0x90);
 
-    TEST("OIM #$30,$10",    0x01, 0x30, 0x10);
-    TEST("AIM #$30,$10",    0x02, 0x30, 0x10);
-    TEST("EIM #$30,<$1290", 0x05, 0x30, 0x90);
-    TEST("TIM #$30,<$1290", 0x0B, 0x30, 0x90);
+        TEST("OIM #$30,$10",    0x01, 0x30, 0x10);
+        TEST("AIM #$30,$10",    0x02, 0x30, 0x10);
+        TEST("EIM #$30,<$1290", 0x05, 0x30, 0x90);
+        TEST("TIM #$30,<$1290", 0x0B, 0x30, 0x90);
 
-    TEST("OIM #$30,,W",     0x61, 0x30, 0x8F);
-    TEST("AIM #$30,W,X",    0x62, 0x30, 0x8E);
-    TEST("AIM #$30,[W,X]",  0x62, 0x30, 0x9E);
-    TEST("EIM #$30,,--X",   0x65, 0x30, 0x83);
-    ATEST(0x1000, "TIM #$30,$1020,PCR", 0x6B, 0x30, 0x8C, 0x1D);
+        TEST("OIM #$30,,W",     0x61, 0x30, 0x8F);
+        TEST("AIM #$30,W,X",    0x62, 0x30, 0x8E);
+        TEST("AIM #$30,[W,X]",  0x62, 0x30, 0x9E);
+        TEST("EIM #$30,,--X",   0x65, 0x30, 0x83);
+        ATEST(0x1000, "TIM #$30,$1020,PCR", 0x6B, 0x30, 0x8C, 0x1D);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SBCD $90");
+        ETEST(UNKNOWN_INSTRUCTION, "ANDD $90");
+        ETEST(UNKNOWN_INSTRUCTION, "BITD $90");
+        ETEST(UNKNOWN_INSTRUCTION, "EORD <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "ADCD <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "ORD  <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBE $90");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDE $90");
+        ETEST(UNKNOWN_INSTRUCTION, "LDE  $90");
+        ETEST(UNKNOWN_INSTRUCTION, "STE  $90");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPE $90");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBF <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDF <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "LDF  <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "STF  <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPF <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBW $90");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDW $90");
+        ETEST(UNKNOWN_INSTRUCTION, "LDW  <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "STW  <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPW <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "LDQ  $90");
+        ETEST(UNKNOWN_INSTRUCTION, "STQ  <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "MULD <$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "DIVD $90");
+        ETEST(UNKNOWN_INSTRUCTION, "OIM #$30,$10");
+        ETEST(UNKNOWN_INSTRUCTION, "AIM #$30,$10");
+        ETEST(UNKNOWN_INSTRUCTION, "EIM #$30,<$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "TIM #$30,<$1290");
+    }
 
     symtab.intern(0x10, "dir10");
     symtab.intern(0x90, "dir90");
     symtab.intern(0x1290, "sym1290");
     symtab.intern(0x90A0, "sym90A0");
 
-    assembler.setCpu("6809");
     TEST("NEG  dir10",    0x00, 0x10);
     TEST("LDA  dir10",    0x96, 0x10);
     TEST("STB  <sym1290", 0xD7, 0x90);
@@ -534,44 +659,42 @@ static void test_direct() {
     TEST("JMP  <sym1290", 0x0E, 0x90);
     TEST("JSR  dir90",    0x9D, 0x90);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("SBCD <sym90A0", 0x10, 0x92, 0xA0);
-    TEST("LDE  dir90",    0x11, 0x96, 0x90);
+    if (is6309()) {
+        // HD6309
+        TEST("SBCD <sym90A0", 0x10, 0x92, 0xA0);
+        TEST("LDE  dir90",    0x11, 0x96, 0x90);
 
-    TEST("LDQ  <sym1290", 0x10, 0xDC, 0x90);
-    TEST("MULD dir90",    0x11, 0x9F, 0x90);
+        TEST("LDQ  <sym1290", 0x10, 0xDC, 0x90);
+        TEST("MULD dir90",    0x11, 0x9F, 0x90);
 
-    TEST("OIM #$30,dir10",    0x01, 0x30, 0x10);
-    TEST("OIM #$30,<sym1290", 0x01, 0x30, 0x90);
+        TEST("OIM #$30,dir10",    0x01, 0x30, 0x10);
+        TEST("OIM #$30,<sym1290", 0x01, 0x30, 0x90);
 
-    assembler.setCpu("6809");
-    TEST("SETDP sym1290>>8");
-    TEST("NEG   dir10",    0x70, 0x00, 0x10);
-    TEST("LDA   dir10",    0xB6, 0x00, 0x10);
-    TEST("LDA   <dir10",   0x96, 0x10);
-    TEST("NEG   sym1290",  0x00, 0x90);
-    TEST("LDA   sym1290",  0x96, 0x90);
-    TEST("LDA   >sym1290", 0xB6, 0x12, 0x90);
+        TEST("SETDP sym1290>>8");
+        TEST("NEG   dir10",    0x70, 0x00, 0x10);
+        TEST("LDA   dir10",    0xB6, 0x00, 0x10);
+        TEST("LDA   <dir10",   0x96, 0x10);
+        TEST("NEG   sym1290",  0x00, 0x90);
+        TEST("LDA   sym1290",  0x96, 0x90);
+        TEST("LDA   >sym1290", 0xB6, 0x12, 0x90);
 
-    assembler.setCpu("6309");
-    TEST("LDE   dir90",      0x11, 0xB6, 0x00, 0x90);
-    TEST("LDQ   sym1290",    0x10, 0xDC, 0x90);
-    TEST("OIM #$30,sym1290", 0x01, 0x30, 0x90);
+        // HD6309
+        TEST("LDE   dir90",      0x11, 0xB6, 0x00, 0x90);
+        TEST("LDQ   sym1290",    0x10, 0xDC, 0x90);
+        TEST("OIM #$30,sym1290", 0x01, 0x30, 0x90);
 
-    assembler.setCpu("6809");
-    TEST("ASSUME DPR:sym90A0>>8");
-    TEST("STU   dir90",    0xFF, 0x00, 0x90);
-    TEST("LDY   dir90",    0x10, 0xBE, 0x00, 0x90);
-    TEST("LDY   <dir90",   0x10, 0x9E, 0x90);
-    TEST("LDS   sym90A0",  0x10, 0xDE, 0xA0);
-    TEST("JMP   sym90A0",  0x0E, 0xA0);
-    TEST("JMP   >sym90A0", 0x7E, 0x90, 0xA0);
+        TEST("ASSUME DPR:sym90A0>>8");
+        TEST("STU   dir90",    0xFF, 0x00, 0x90);
+        TEST("LDY   dir90",    0x10, 0xBE, 0x00, 0x90);
+        TEST("LDY   <dir90",   0x10, 0x9E, 0x90);
+        TEST("LDS   sym90A0",  0x10, 0xDE, 0xA0);
+        TEST("JMP   sym90A0",  0x0E, 0xA0);
+        TEST("JMP   >sym90A0", 0x7E, 0x90, 0xA0);
 
-    assembler.setCpu("6309");
-    TEST("SBCD  sym90A0",   0x10, 0x92, 0xA0);
-    TEST("MULD  dir90",     0x11, 0xBF, 0x00, 0x90);
-    TEST("OIM #$30,<dir10", 0x01, 0x30, 0x10);
+        TEST("SBCD  sym90A0",   0x10, 0x92, 0xA0);
+        TEST("MULD  dir90",     0x11, 0xBF, 0x00, 0x90);
+        TEST("OIM #$30,<dir10", 0x01, 0x30, 0x10);
+    }
 }
 
 static void test_extended() {
@@ -636,49 +759,79 @@ static void test_extended() {
     TEST("JMP $1234", 0x7E, 0x12, 0x34);
     TEST("JSR >$90",  0xBD, 0x00, 0x90);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("SBCD $9ABC", 0x10, 0xB2, 0x9A, 0xBC);
-    TEST("ANDD $9ABC", 0x10, 0xB4, 0x9A, 0xBC);
-    TEST("BITD $9ABC", 0x10, 0xB5, 0x9A, 0xBC);
-    TEST("EORD $9ABC", 0x10, 0xB8, 0x9A, 0xBC);
-    TEST("ORD  >$90",  0x10, 0xBA, 0x00, 0x90);
-    TEST("ADCD $9ABC", 0x10, 0xB9, 0x9A, 0xBC);
+    if (is6309()) {
+        // HD6309
+        TEST("SBCD $9ABC", 0x10, 0xB2, 0x9A, 0xBC);
+        TEST("ANDD $9ABC", 0x10, 0xB4, 0x9A, 0xBC);
+        TEST("BITD $9ABC", 0x10, 0xB5, 0x9A, 0xBC);
+        TEST("EORD $9ABC", 0x10, 0xB8, 0x9A, 0xBC);
+        TEST("ORD  >$90",  0x10, 0xBA, 0x00, 0x90);
+        TEST("ADCD $9ABC", 0x10, 0xB9, 0x9A, 0xBC);
 
-    TEST("SUBE $9ABC", 0x11, 0xB0, 0x9A, 0xBC);
-    TEST("ADDE $9ABC", 0x11, 0xBB, 0x9A, 0xBC);
-    TEST("LDE  >$90",  0x11, 0xB6, 0x00, 0x90);
-    TEST("STE  $9ABC", 0x11, 0xB7, 0x9A, 0xBC);
-    TEST("CMPE $9ABC", 0x11, 0xB1, 0x9A, 0xBC);
+        TEST("SUBE $9ABC", 0x11, 0xB0, 0x9A, 0xBC);
+        TEST("ADDE $9ABC", 0x11, 0xBB, 0x9A, 0xBC);
+        TEST("LDE  >$90",  0x11, 0xB6, 0x00, 0x90);
+        TEST("STE  $9ABC", 0x11, 0xB7, 0x9A, 0xBC);
+        TEST("CMPE $9ABC", 0x11, 0xB1, 0x9A, 0xBC);
 
-    TEST("SUBF $9ABC", 0x11, 0xF0, 0x9A, 0xBC);
-    TEST("ADDF $9ABC", 0x11, 0xFB, 0x9A, 0xBC);
-    TEST("LDF  >$90",  0x11, 0xF6, 0x00, 0x90);
-    TEST("STF  $9ABC", 0x11, 0xF7, 0x9A, 0xBC);
-    TEST("CMPF $9ABC", 0x11, 0xF1, 0x9A, 0xBC);
+        TEST("SUBF $9ABC", 0x11, 0xF0, 0x9A, 0xBC);
+        TEST("ADDF $9ABC", 0x11, 0xFB, 0x9A, 0xBC);
+        TEST("LDF  >$90",  0x11, 0xF6, 0x00, 0x90);
+        TEST("STF  $9ABC", 0x11, 0xF7, 0x9A, 0xBC);
+        TEST("CMPF $9ABC", 0x11, 0xF1, 0x9A, 0xBC);
 
-    TEST("SUBW $9ABC", 0x10, 0xB0, 0x9A, 0xBC);
-    TEST("ADDW $9ABC", 0x10, 0xBB, 0x9A, 0xBC);
-    TEST("LDW  >$90",  0x10, 0xB6, 0x00, 0x90);
-    TEST("STW  $9ABC", 0x10, 0xB7, 0x9A, 0xBC);
-    TEST("CMPW $9ABC", 0x10, 0xB1, 0x9A, 0xBC);
+        TEST("SUBW $9ABC", 0x10, 0xB0, 0x9A, 0xBC);
+        TEST("ADDW $9ABC", 0x10, 0xBB, 0x9A, 0xBC);
+        TEST("LDW  >$90",  0x10, 0xB6, 0x00, 0x90);
+        TEST("STW  $9ABC", 0x10, 0xB7, 0x9A, 0xBC);
+        TEST("CMPW $9ABC", 0x10, 0xB1, 0x9A, 0xBC);
 
-    TEST("LDQ  >$90",  0x10, 0xFC, 0x00, 0x90);
-    TEST("STQ  $1290", 0x10, 0xFD, 0x12, 0x90);
+        TEST("LDQ  >$90",  0x10, 0xFC, 0x00, 0x90);
+        TEST("STQ  $1290", 0x10, 0xFD, 0x12, 0x90);
 
-    TEST("MULD $1290", 0x11, 0xBF, 0x12, 0x90);
-    TEST("DIVD >$90",  0x11, 0xBD, 0x00, 0x90);
-    TEST("DIVQ $1290", 0x11, 0xBE, 0x12, 0x90);
+        TEST("MULD $1290", 0x11, 0xBF, 0x12, 0x90);
+        TEST("DIVD >$90",  0x11, 0xBD, 0x00, 0x90);
+        TEST("DIVQ $1290", 0x11, 0xBE, 0x12, 0x90);
 
-    TEST("OIM #$30,>$10",  0x71, 0x30, 0x00, 0x10);
-    TEST("AIM #$30,>$10",  0x72, 0x30, 0x00, 0x10);
-    TEST("EIM #$30,$1290", 0x75, 0x30, 0x12, 0x90);
-    TEST("TIM #$30,$1290", 0x7B, 0x30, 0x12, 0x90);
+        TEST("OIM #$30,>$10",  0x71, 0x30, 0x00, 0x10);
+        TEST("AIM #$30,>$10",  0x72, 0x30, 0x00, 0x10);
+        TEST("EIM #$30,$1290", 0x75, 0x30, 0x12, 0x90);
+        TEST("TIM #$30,$1290", 0x7B, 0x30, 0x12, 0x90);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SBCD $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "ANDD $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "BITD $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "EORD $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "ORD  >$90");
+        ETEST(UNKNOWN_INSTRUCTION, "ADCD $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBE $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDE $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "LDE  >$90");
+        ETEST(UNKNOWN_INSTRUCTION, "STE  $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPE $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBF $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDF $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "LDF  >$90");
+        ETEST(UNKNOWN_INSTRUCTION, "STF  $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPF $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBW $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDW $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "LDW  >$90");
+        ETEST(UNKNOWN_INSTRUCTION, "STW  $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPW $9ABC");
+        ETEST(UNKNOWN_INSTRUCTION, "LDQ  >$90");
+        ETEST(UNKNOWN_INSTRUCTION, "STQ  $1290");
+        ETEST(UNKNOWN_INSTRUCTION, "MULD $1290");
+        ETEST(UNKNOWN_INSTRUCTION, "DIVD >$90");
+        ETEST(UNKNOWN_INSTRUCTION, "OIM #$30,>$10");
+        ETEST(UNKNOWN_INSTRUCTION, "AIM #$30,>$10");
+        ETEST(UNKNOWN_INSTRUCTION, "EIM #$30,$1290");
+        ETEST(UNKNOWN_INSTRUCTION, "TIM #$30,$1290");
+    }
 
     symtab.intern(0x0090, "dir90");
     symtab.intern(0x1290, "sym1290");
 
-    assembler.setCpu("6809");
     TEST("NEG >dir90",   0x70, 0x00, 0x90);
     TEST("LDA  sym1290", 0xB6, 0x12, 0x90);
     TEST("STB >dir90",   0xF7, 0x00, 0x90);
@@ -689,15 +842,17 @@ static void test_extended() {
     TEST("JMP  sym1290", 0x7E, 0x12, 0x90);
     TEST("JSR >dir90",   0xBD, 0x00, 0x90);
 
-    assembler.setCpu("6309");
-    TEST("SBCD sym1290", 0x10, 0xB2, 0x12, 0x90);
-    TEST("LDE  >dir90",  0x11, 0xB6, 0x00, 0x90);
+    if (is6309()) {
+        // HD6309
+        TEST("SBCD sym1290", 0x10, 0xB2, 0x12, 0x90);
+        TEST("LDE  >dir90",  0x11, 0xB6, 0x00, 0x90);
 
-    TEST("LDQ  sym1290",  0x10, 0xFC, 0x12, 0x90);
-    TEST("MULD >dir90",   0x11, 0xBF, 0x00, 0x90);
+        TEST("LDQ  sym1290",  0x10, 0xFC, 0x12, 0x90);
+        TEST("MULD >dir90",   0x11, 0xBF, 0x00, 0x90);
 
-    TEST("OIM #$30,>dir90",  0x71, 0x30, 0x00, 0x90);
-    TEST("OIM #$30,sym1290", 0x71, 0x30, 0x12, 0x90);
+        TEST("OIM #$30,>dir90",  0x71, 0x30, 0x00, 0x90);
+        TEST("OIM #$30,sym1290", 0x71, 0x30, 0x12, 0x90);
+    }
 }
 
 static void test_indexed() {
@@ -767,44 +922,75 @@ static void test_indexed() {
     TEST("JMP  [,X]",   0x6E, 0x94);
     TEST("JSR  [,X++]", 0xAD, 0x91);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("SBCD ,W",   0x10, 0xA2, 0x8F);
-    TEST("ANDD ,W++", 0x10, 0xA4, 0xCF);
-    TEST("BITD ,--W", 0x10, 0xA5, 0xEF);
-    TEST("EORD [,W]", 0x10, 0xA8, 0x90);
-    TEST("ADCD [,W++]", 0x10, 0xA9, 0xD0);
-    TEST("ORD  [,--W]", 0x10, 0xAA, 0xF0);
+    if (is6309()) {
+        // HD6309
+        TEST("SBCD ,X",   0x10, 0xA2, 0x84);
+        TEST("ANDD ,X++", 0x10, 0xA4, 0x81);
+        TEST("BITD ,--X", 0x10, 0xA5, 0x83);
+        TEST("EORD [,X]", 0x10, 0xA8, 0x94);
+        TEST("ADCD [,X++]", 0x10, 0xA9, 0x91);
+        TEST("ORD  [,--X]", 0x10, 0xAA, 0x93);
 
-    TEST("SUBE ,X", 0x11, 0xA0, 0x84);
-    TEST("ADDE ,X", 0x11, 0xAB, 0x84);
-    TEST("LDE  ,X", 0x11, 0xA6, 0x84);
-    TEST("STE  ,X", 0x11, 0xA7, 0x84);
-    TEST("CMPE ,X", 0x11, 0xA1, 0x84);
+        TEST("SUBE ,X", 0x11, 0xA0, 0x84);
+        TEST("ADDE ,X", 0x11, 0xAB, 0x84);
+        TEST("LDE  ,X", 0x11, 0xA6, 0x84);
+        TEST("STE  ,X", 0x11, 0xA7, 0x84);
+        TEST("CMPE ,X", 0x11, 0xA1, 0x84);
 
-    TEST("SUBF ,X", 0x11, 0xE0, 0x84);
-    TEST("ADDF ,X", 0x11, 0xEB, 0x84);
-    TEST("LDF  ,X", 0x11, 0xE6, 0x84);
-    TEST("STF  ,X", 0x11, 0xE7, 0x84);
-    TEST("CMPF ,X", 0x11, 0xE1, 0x84);
+        TEST("SUBF ,X", 0x11, 0xE0, 0x84);
+        TEST("ADDF ,X", 0x11, 0xEB, 0x84);
+        TEST("LDF  ,X", 0x11, 0xE6, 0x84);
+        TEST("STF  ,X", 0x11, 0xE7, 0x84);
+        TEST("CMPF ,X", 0x11, 0xE1, 0x84);
 
-    TEST("SUBW ,X", 0x10, 0xA0, 0x84);
-    TEST("CMPW ,X", 0x10, 0xA1, 0x84);
-    TEST("LDW  ,X", 0x10, 0xA6, 0x84);
-    TEST("STW  ,X", 0x10, 0xA7, 0x84);
-    TEST("ADDW ,X", 0x10, 0xAB, 0x84);
+        TEST("SUBW ,X", 0x10, 0xA0, 0x84);
+        TEST("CMPW ,X", 0x10, 0xA1, 0x84);
+        TEST("LDW  ,X", 0x10, 0xA6, 0x84);
+        TEST("STW  ,X", 0x10, 0xA7, 0x84);
+        TEST("ADDW ,X", 0x10, 0xAB, 0x84);
 
-    TEST("LDQ  ,X", 0x10, 0xEC, 0x84);
-    TEST("STQ  ,X", 0x10, 0xED, 0x84);
+        TEST("LDQ  ,X", 0x10, 0xEC, 0x84);
+        TEST("STQ  ,X", 0x10, 0xED, 0x84);
 
-    TEST("MULD ,X",   0x11, 0xAF, 0x84);
-    TEST("DIVD -1,X", 0x11, 0xAD, 0x1F);
-    TEST("DIVQ 1,X",  0x11, 0xAE, 0x01);
+        TEST("MULD ,X",   0x11, 0xAF, 0x84);
+        TEST("DIVD -1,X", 0x11, 0xAD, 0x1F);
+        TEST("DIVQ 1,X",  0x11, 0xAE, 0x01);
 
-    TEST("OIM #$30,,X",     0x61, 0x30, 0x84);
-    TEST("AIM #$30,,X+",    0x62, 0x30, 0x80);
-    TEST("EIM #$30,[,--X]", 0x65, 0x30, 0x93);
-    TEST("TIM #$30,-2,X",   0x6B, 0x30, 0x1E);
+        TEST("OIM #$30,,X",     0x61, 0x30, 0x84);
+        TEST("AIM #$30,,X+",    0x62, 0x30, 0x80);
+        TEST("EIM #$30,[,--X]", 0x65, 0x30, 0x93);
+        TEST("TIM #$30,-2,X",   0x6B, 0x30, 0x1E);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SBCD ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "ANDD ,X++");
+        ETEST(UNKNOWN_INSTRUCTION, "BITD ,--X");
+        ETEST(UNKNOWN_INSTRUCTION, "EORD [,X]");
+        ETEST(UNKNOWN_INSTRUCTION, "ADCD [,X++]");
+        ETEST(UNKNOWN_INSTRUCTION, "ORD  [,--X]");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBE ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDE ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "LDE  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "STE  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPE ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBF ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDF ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "LDF  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "STF  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPF ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBW ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "CMPW ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "LDW  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "STW  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "ADDW ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "LDQ  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "STQ  ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "MULD ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "DIVD -1,X");
+        ETEST(UNKNOWN_INSTRUCTION, "OIM #$30,,X");
+        ETEST(UNKNOWN_INSTRUCTION, "AIM #$30,,X+");
+        ETEST(UNKNOWN_INSTRUCTION, "EIM #$30,[,--X]");
+        ETEST(UNKNOWN_INSTRUCTION, "TIM #$30,-2,X");
+    }
 }
 
 static void test_indexed_mode() {
@@ -1000,49 +1186,90 @@ static void test_indexed_mode() {
 
     TEST("LDA [$1234]", 0xA6, 0x9F, 0x12, 0x34);
 
-    assembler.setCpu("6309");
-    TEST("LDA E,X", 0xA6, 0x87);
-    TEST("LDA F,X", 0xA6, 0x8A);
-    TEST("LDA W,X", 0xA6, 0x8E);
-    TEST("LDA [E,X]", 0xA6, 0x97);
-    TEST("LDA [F,X]", 0xA6, 0x9A);
-    TEST("LDA [W,X]", 0xA6, 0x9E);
+    if (is6309()) {
+        // HD6309
+        TEST("LDA E,X", 0xA6, 0x87);
+        TEST("LDA F,X", 0xA6, 0x8A);
+        TEST("LDA W,X", 0xA6, 0x8E);
+        TEST("LDA [E,X]", 0xA6, 0x97);
+        TEST("LDA [F,X]", 0xA6, 0x9A);
+        TEST("LDA [W,X]", 0xA6, 0x9E);
 
-    TEST("LDA E,Y", 0xA6, 0xA7);
-    TEST("LDA F,Y", 0xA6, 0xAA);
-    TEST("LDA W,Y", 0xA6, 0xAE);
-    TEST("LDA [E,Y]", 0xA6, 0xB7);
-    TEST("LDA [F,Y]", 0xA6, 0xBA);
-    TEST("LDA [W,Y]", 0xA6, 0xBE);
+        TEST("LDA E,Y", 0xA6, 0xA7);
+        TEST("LDA F,Y", 0xA6, 0xAA);
+        TEST("LDA W,Y", 0xA6, 0xAE);
+        TEST("LDA [E,Y]", 0xA6, 0xB7);
+        TEST("LDA [F,Y]", 0xA6, 0xBA);
+        TEST("LDA [W,Y]", 0xA6, 0xBE);
 
-    TEST("LDA E,U", 0xA6, 0xC7);
-    TEST("LDA F,U", 0xA6, 0xCA);
-    TEST("LDA W,U", 0xA6, 0xCE);
-    TEST("LDA [E,U]", 0xA6, 0xD7);
-    TEST("LDA [F,U]", 0xA6, 0xDA);
-    TEST("LDA [W,U]", 0xA6, 0xDE);
+        TEST("LDA E,U", 0xA6, 0xC7);
+        TEST("LDA F,U", 0xA6, 0xCA);
+        TEST("LDA W,U", 0xA6, 0xCE);
+        TEST("LDA [E,U]", 0xA6, 0xD7);
+        TEST("LDA [F,U]", 0xA6, 0xDA);
+        TEST("LDA [W,U]", 0xA6, 0xDE);
 
-    TEST("LDA E,S", 0xA6, 0xE7);
-    TEST("LDA F,S", 0xA6, 0xEA);
-    TEST("LDA W,S", 0xA6, 0xEE);
-    TEST("LDA [E,S]", 0xA6, 0xF7);
-    TEST("LDA [F,S]", 0xA6, 0xFA);
-    TEST("LDA [W,S]", 0xA6, 0xFE);
+        TEST("LDA E,S", 0xA6, 0xE7);
+        TEST("LDA F,S", 0xA6, 0xEA);
+        TEST("LDA W,S", 0xA6, 0xEE);
+        TEST("LDA [E,S]", 0xA6, 0xF7);
+        TEST("LDA [F,S]", 0xA6, 0xFA);
+        TEST("LDA [W,S]", 0xA6, 0xFE);
 
-    TEST("LDA ,W",        0xA6, 0x8F);
-    TEST("LDA 0,W",       0xA6, 0x8F);
-    TEST("LDA >0,W",      0xA6, 0xAF, 0x00, 0x00);
-    TEST("LDA 32767,W",   0xA6, 0xAF, 0x7F, 0xFF);
-    TEST("LDA -32768,W",  0xA6, 0xAF, 0x80, 0x00);
-    TEST("LDA ,W++",      0xA6, 0xCF);
-    TEST("LDA ,--W",      0xA6, 0xEF);
-    TEST("LDA [,W]",      0xA6, 0x90);
-    TEST("LDA [0,W]",     0xA6, 0x90);
-    TEST("LDA [>0,W]",    0xA6, 0xB0, 0x00, 0x00);
-    TEST("LDA [32767,W]", 0xA6, 0xB0, 0x7F, 0xFF);
-    TEST("LDA [-32768,W]",0xA6, 0xB0, 0x80, 0x00);
-    TEST("LDA [,W++]",    0xA6, 0xD0);
-    TEST("LDA [,--W]",    0xA6, 0xF0);
+        TEST("LDA ,W",        0xA6, 0x8F);
+        TEST("LDA 0,W",       0xA6, 0x8F);
+        TEST("LDA >0,W",      0xA6, 0xAF, 0x00, 0x00);
+        TEST("LDA 32767,W",   0xA6, 0xAF, 0x7F, 0xFF);
+        TEST("LDA -32768,W",  0xA6, 0xAF, 0x80, 0x00);
+        TEST("LDA ,W++",      0xA6, 0xCF);
+        TEST("LDA ,--W",      0xA6, 0xEF);
+        TEST("LDA [,W]",      0xA6, 0x90);
+        TEST("LDA [0,W]",     0xA6, 0x90);
+        TEST("LDA [>0,W]",    0xA6, 0xB0, 0x00, 0x00);
+        TEST("LDA [32767,W]", 0xA6, 0xB0, 0x7F, 0xFF);
+        TEST("LDA [-32768,W]",0xA6, 0xB0, 0x80, 0x00);
+        TEST("LDA [,W++]",    0xA6, 0xD0);
+        TEST("LDA [,--W]",    0xA6, 0xF0);
+    } else {
+        ETEST(UNDEFINED_SYMBOL, "LDA E,X", 0xA6, 0x84);
+        ETEST(UNDEFINED_SYMBOL, "LDA F,X", 0xA6, 0x84);
+        ETEST(UNDEFINED_SYMBOL, "LDA W,X", 0xA6, 0x84);
+        ETEST(UNDEFINED_SYMBOL, "LDA [E,X]", 0xA6, 0x94);
+        ETEST(UNDEFINED_SYMBOL, "LDA [F,X]", 0xA6, 0x94);
+        ETEST(UNDEFINED_SYMBOL, "LDA [W,X]", 0xA6, 0x94);
+        ETEST(UNDEFINED_SYMBOL, "LDA E,Y", 0xA6, 0xA4);
+        ETEST(UNDEFINED_SYMBOL, "LDA F,Y", 0xA6, 0xA4);
+        ETEST(UNDEFINED_SYMBOL, "LDA W,Y", 0xA6, 0xA4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [E,Y]", 0xA6, 0xB4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [F,Y]", 0xA6, 0xB4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [W,Y]", 0xA6, 0xB4);
+        ETEST(UNDEFINED_SYMBOL, "LDA E,U", 0xA6, 0xC4);
+        ETEST(UNDEFINED_SYMBOL, "LDA F,U", 0xA6, 0xC4);
+        ETEST(UNDEFINED_SYMBOL, "LDA W,U", 0xA6, 0xC4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [E,U]", 0xA6, 0xD4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [F,U]", 0xA6, 0xD4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [W,U]", 0xA6, 0xD4);
+        ETEST(UNDEFINED_SYMBOL, "LDA E,S", 0xA6, 0xE4);
+        ETEST(UNDEFINED_SYMBOL, "LDA F,S", 0xA6, 0xE4);
+        ETEST(UNDEFINED_SYMBOL, "LDA W,S", 0xA6, 0xE4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [E,S]", 0xA6, 0xF4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [F,S]", 0xA6, 0xF4);
+        ETEST(UNDEFINED_SYMBOL, "LDA [W,S]", 0xA6, 0xF4);
+        ETEST(UNKNOWN_OPERAND, "LDA ,W");
+        ETEST(UNKNOWN_OPERAND, "LDA 0,W");
+        ETEST(UNKNOWN_OPERAND, "LDA >0,W");
+        ETEST(UNKNOWN_OPERAND, "LDA 32767,W");
+        ETEST(UNKNOWN_OPERAND, "LDA -32768,W");
+        ETEST(UNKNOWN_OPERAND, "LDA ,W++");
+        ETEST(UNKNOWN_OPERAND, "LDA ,--W");
+        ETEST(UNKNOWN_OPERAND, "LDA [,W]");
+        ETEST(UNKNOWN_OPERAND, "LDA [0,W]");
+        ETEST(UNKNOWN_OPERAND, "LDA [>0,W]");
+        ETEST(UNKNOWN_OPERAND, "LDA [32767,W]");
+        ETEST(UNKNOWN_OPERAND, "LDA [-32768,W]");
+        ETEST(UNKNOWN_OPERAND, "LDA [,W++]");
+        ETEST(UNKNOWN_OPERAND, "LDA [,--W]");
+    }
 
     symtab.intern(0x0F83, "label0F83");
     symtab.intern(0x1003, "label1003");
@@ -1052,7 +1279,6 @@ static void test_indexed_mode() {
     symtab.intern(0x9003, "label9003");
     symtab.intern(0x9004, "label9004");
 
-    assembler.setCpu("6809");
     ATEST(0x1000, "LDA label1003,PCR",   0xA6, 0x8C, 0x00);
     ATEST(0x1000, "LDA label1082,PCR",   0xA6, 0x8C, 0x7F);
     ATEST(0x1000, "LDA label0F83,PCR",   0xA6, 0x8C, 0x80);
@@ -1071,59 +1297,74 @@ static void test_indexed_mode() {
 }
 
 static void test_transfer() {
-    assembler.setCpu("6309");
-    TEST("TFM X+,Y+", 0x11, 0x38, 0x12);
-    TEST("TFM X-,Y-", 0x11, 0x39, 0x12);
-    TEST("TFM X+,Y",  0x11, 0x3A, 0x12);
-    TEST("TFM X,Y+",  0x11, 0x3B, 0x12);
+    if (is6309()) {
+        // HD6309
+        TEST("TFM X+,Y+", 0x11, 0x38, 0x12);
+        TEST("TFM X-,Y-", 0x11, 0x39, 0x12);
+        TEST("TFM X+,Y",  0x11, 0x3A, 0x12);
+        TEST("TFM X,Y+",  0x11, 0x3B, 0x12);
 
-    TEST("TFM D+,X+", 0x11, 0x38, 0x01);
-    TEST("TFM D-,X-", 0x11, 0x39, 0x01);
-    TEST("TFM D+,X",  0x11, 0x3A, 0x01);
-    TEST("TFM D,X+",  0x11, 0x3B, 0x01);
+        TEST("TFM D+,X+", 0x11, 0x38, 0x01);
+        TEST("TFM D-,X-", 0x11, 0x39, 0x01);
+        TEST("TFM D+,X",  0x11, 0x3A, 0x01);
+        TEST("TFM D,X+",  0x11, 0x3B, 0x01);
 
-    TEST("TFM D+,X+", 0x11, 0x38, 0x01);
-    TEST("TFM Y+,U+", 0x11, 0x38, 0x23);
-    TEST("TFM U+,S+", 0x11, 0x38, 0x34);
-    TEST("TFM S+,D+", 0x11, 0x38, 0x40);
+        TEST("TFM D+,X+", 0x11, 0x38, 0x01);
+        TEST("TFM Y+,U+", 0x11, 0x38, 0x23);
+        TEST("TFM U+,S+", 0x11, 0x38, 0x34);
+        TEST("TFM S+,D+", 0x11, 0x38, 0x40);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "TFM D,Y");
+        ETEST(UNKNOWN_OPERAND,     "TFM X+,Y+");
+    }
 }
 
 static void test_bit_position() {
-    assembler.setCpu("6309");
-    TEST("BAND  A.1,$34.2", 0x11, 0x30, 0x51, 0x34);
-    TEST("BIAND A.1,$34.2", 0x11, 0x31, 0x51, 0x34);
-    TEST("BOR   A.1,$34.2", 0x11, 0x32, 0x51, 0x34);
-    // ',' can be accepted as bit number separator.
-    TEST("BIOR  A,1,$34,2", 0x11, 0x33, 0x51, 0x34);
-    TEST("BEOR  A,1,$34,2", 0x11, 0x34, 0x51, 0x34);
-    TEST("SETDP $12");
-    TEST("BIEOR A.1,$1234.2", 0x11, 0x35, 0x51, 0x34);
-    TEST("LDBT  A,1,$1234,2", 0x11, 0x36, 0x51, 0x34);
-    TEST("STBT  A.1,<$5634.2", 0x11, 0x37, 0x51, 0x34);
-    TEST("STBT  B,0,<$5634.2", 0x11, 0x37, 0x90, 0x34);
+    if (is6309()) {
+        // HD6309
+        TEST("BAND  A.1,$34.2", 0x11, 0x30, 0x51, 0x34);
+        TEST("BIAND A.1,$34.2", 0x11, 0x31, 0x51, 0x34);
+        TEST("BOR   A.1,$34.2", 0x11, 0x32, 0x51, 0x34);
+        // ',' can be accepted as bit number separator.
+        TEST("BIOR  A,1,$34,2", 0x11, 0x33, 0x51, 0x34);
+        TEST("BEOR  A,1,$34,2", 0x11, 0x34, 0x51, 0x34);
+        TEST("SETDP $12");
+        TEST("BIEOR A.1,$1234.2", 0x11, 0x35, 0x51, 0x34);
+        TEST("LDBT  A,1,$1234,2", 0x11, 0x36, 0x51, 0x34);
+        TEST("STBT  A.1,<$5634.2", 0x11, 0x37, 0x51, 0x34);
+        TEST("STBT  B,0,<$5634.2", 0x11, 0x37, 0x90, 0x34);
 
-    TEST("SETDP 0");
-    TEST("LDBT CC,0,$34.7", 0x11, 0x36, 0x38, 0x34);
-    TEST("LDBT CC.1,$34.7", 0x11, 0x36, 0x39, 0x34);
-    TEST("LDBT CC.2,$34.7", 0x11, 0x36, 0x3A, 0x34);
-    // ',' can be accepted as bit number separator.
-    TEST("LDBT CC,3,$34.7", 0x11, 0x36, 0x3B, 0x34);
-    TEST("LDBT CC,4,$34,7", 0x11, 0x36, 0x3C, 0x34);
-    TEST("SETDP $12");
-    TEST("LDBT CC.5,$1234.7", 0x11, 0x36, 0x3D, 0x34);
-    TEST("LDBT CC,6,$1234,7", 0x11, 0x36, 0x3E, 0x34);
-    TEST("LDBT CC.7,<$5634.7", 0x11, 0x36, 0x3F, 0x34);
-    TEST("LDBT A,7,$1234,0",  0x11, 0x36, 0x47, 0x34);
-    TEST("LDBT B,2,<$5634,4",  0x11, 0x36, 0xA2, 0x34);
+        TEST("SETDP 0");
+        TEST("LDBT CC,0,$34.7", 0x11, 0x36, 0x38, 0x34);
+        TEST("LDBT CC.1,$34.7", 0x11, 0x36, 0x39, 0x34);
+        TEST("LDBT CC.2,$34.7", 0x11, 0x36, 0x3A, 0x34);
+        // ',' can be accepted as bit number separator.
+        TEST("LDBT CC,3,$34.7", 0x11, 0x36, 0x3B, 0x34);
+        TEST("LDBT CC,4,$34,7", 0x11, 0x36, 0x3C, 0x34);
+        TEST("SETDP $12");
+        TEST("LDBT CC.5,$1234.7", 0x11, 0x36, 0x3D, 0x34);
+        TEST("LDBT CC,6,$1234,7", 0x11, 0x36, 0x3E, 0x34);
+        TEST("LDBT CC.7,<$5634.7", 0x11, 0x36, 0x3F, 0x34);
+        TEST("LDBT A,7,$1234,0",  0x11, 0x36, 0x47, 0x34);
+        TEST("LDBT B,2,<$5634,4",  0x11, 0x36, 0xA2, 0x34);
 
-    symtab.intern(0x0034, "dir34");
-    symtab.intern(0x9030, "sym9030");
+        symtab.intern(0x0034, "dir34");
+        symtab.intern(0x9030, "sym9030");
 
-    TEST("SETDP 0");
-    TEST("LDBT  CC.0,dir34.7",   0x11, 0x36, 0x38, 0x34);
-    TEST("LDBT  B.2,<sym9030.4", 0x11, 0x36, 0xA2, 0x30);
-    TEST("SETDP $90");
-    TEST("LDBT  B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
+        TEST("SETDP 0");
+        TEST("LDBT  CC.0,dir34.7",   0x11, 0x36, 0x38, 0x34);
+        TEST("LDBT  B.2,<sym9030.4", 0x11, 0x36, 0xA2, 0x30);
+        TEST("SETDP $90");
+        TEST("LDBT  B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "BAND  A.1,$34.2");
+        ETEST(UNKNOWN_INSTRUCTION, "BIAND A.1,$34.2");
+        ETEST(UNKNOWN_INSTRUCTION, "BOR   A.1,$34.2");
+        ETEST(UNKNOWN_INSTRUCTION, "BIOR  A,1,$34,2");
+        ETEST(UNKNOWN_INSTRUCTION, "BEOR  A,1,$34,2");
+        ETEST(UNKNOWN_INSTRUCTION, "LDBT  A,1,$34,2");
+        ETEST(UNKNOWN_INSTRUCTION, "STBT  A.1,$34.2");
+    }
 }
 
 static void test_comment() {
@@ -1152,14 +1393,15 @@ static void test_comment() {
     ATEST(0x1000, "LDA $0F83 , PCR     ; comment", 0xA6, 0x8C, 0x80);
     ATEST(0x1000, "LDA [ $0F83 , PCR ] ; comment", 0xa6, 0x9C, 0x80);
 
-    // HD6309
-    assembler.setCpu("6309");
-    TEST("TFM S+ , D+  ; comment", 0x11, 0x38, 0x40);
-    TEST("TFM X- , Y-  ; comment", 0x11, 0x39, 0x12);
-    TEST("TFM X+ , Y   ; comment", 0x11, 0x3A, 0x12);
-    TEST("TFM X , Y+   ; comment", 0x11, 0x3B, 0x12);
-    TEST("BOR A.1   , $34.2   ; comment", 0x11, 0x32, 0x51, 0x34);
-    TEST("BOR A , 1 , $34 , 2 ; comment", 0x11, 0x32, 0x51, 0x34);
+    if (is6309()) {
+        // HD6309
+        TEST("TFM S+ , D+  ; comment", 0x11, 0x38, 0x40);
+        TEST("TFM X- , Y-  ; comment", 0x11, 0x39, 0x12);
+        TEST("TFM X+ , Y   ; comment", 0x11, 0x3A, 0x12);
+        TEST("TFM X , Y+   ; comment", 0x11, 0x3B, 0x12);
+        TEST("BOR A.1   , $34.2   ; comment", 0x11, 0x32, 0x51, 0x34);
+        TEST("BOR A , 1 , $34 , 2 ; comment", 0x11, 0x32, 0x51, 0x34);
+    }
 }
 
 static void test_error() {
@@ -1186,26 +1428,27 @@ static void test_error() {
     ETEST(UNKNOWN_OPERAND, "LDA ,X]");
     ETEST(MISSING_CLOSING_PAREN, "LDA [,X");
 
-    // HD6309
-    assembler.setCpu("6309");
-    ETEST(UNKNOWN_OPERAND, "LDA ,W+");
-    ETEST(UNKNOWN_OPERAND, "LDA ,-W");
-    ETEST(UNKNOWN_OPERAND, "LDA , W++");
-    ETEST(UNKNOWN_OPERAND, "LDA , --W");
-    ETEST(UNKNOWN_OPERAND, "LDA [ , W++ ]");
-    ETEST(UNKNOWN_OPERAND, "LDA [ , --W ]");
-    ETEST(UNKNOWN_OPERAND, "TIM #$30, < $1290");
+    if (is6309()) {
+        // HD6309
+        ETEST(UNKNOWN_OPERAND, "LDA ,W+");
+        ETEST(UNKNOWN_OPERAND, "LDA ,-W");
+        ETEST(UNKNOWN_OPERAND, "LDA , W++");
+        ETEST(UNKNOWN_OPERAND, "LDA , --W");
+        ETEST(UNKNOWN_OPERAND, "LDA [ , W++ ]");
+        ETEST(UNKNOWN_OPERAND, "LDA [ , --W ]");
+        ETEST(UNKNOWN_OPERAND, "TIM #$30, < $1290");
 
-    ETEST(UNKNOWN_OPERAND, "TFM D+,W+");
-    ETEST(UNKNOWN_OPERAND, "TFM D + , X+");
-    ETEST(UNKNOWN_OPERAND, "TFM D+ , X +");
-    ETEST(UNKNOWN_OPERAND, "TFM X - , Y-");
-    ETEST(UNKNOWN_OPERAND, "TFM X- , Y -");
-    ETEST(UNKNOWN_OPERAND, "BOR A .1  , $34.2");
-    ETEST(UNKNOWN_OPERAND, "BOR A. 1  , $34.2");
-    ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34 .2");
-    ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34. 2");
-    TEST(                  "BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
+        ETEST(UNKNOWN_OPERAND, "TFM D+,W+");
+        ETEST(UNKNOWN_OPERAND, "TFM D + , X+");
+        ETEST(UNKNOWN_OPERAND, "TFM D+ , X +");
+        ETEST(UNKNOWN_OPERAND, "TFM X - , Y-");
+        ETEST(UNKNOWN_OPERAND, "TFM X- , Y -");
+        ETEST(UNKNOWN_OPERAND, "BOR A .1  , $34.2");
+        ETEST(UNKNOWN_OPERAND, "BOR A. 1  , $34.2");
+        ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34 .2");
+        ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34. 2");
+        TEST(                  "BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
+    }
 }
 
 static void test_undefined_symbol() {
@@ -1230,24 +1473,25 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LDA  UNDEF,PCR",   0xA6, 0x8D, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LDA  [UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
 
-    // HD6309
-    assembler.setCpu("6309");
-    ETEST(UNDEFINED_SYMBOL, "BITMD #UNDEF",  0x11, 0x3C, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LDQ   #UNDEF",  0xCD, 0x00, 0x00, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "MULD  #UNDEF",  0x11, 0x8F, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LDA UNDEF,W",    0xA6, 0x8F);
-    ETEST(UNDEFINED_SYMBOL, "LDA >UNDEF,W",   0xA6, 0xAF, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LDA [UNDEF,W]",  0xA6, 0x90);
-    ETEST(UNDEFINED_SYMBOL, "LDA [>UNDEF,W]", 0xA6, 0xB0, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$10",       0x01, 0x00, 0x10);
-    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$1000",     0x71, 0x00, 0x10, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,[$1000,X]", 0x61, 0x00, 0x99, 0x10, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OIM #$30,UNDEF",       0x01, 0x30, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OIM #$30,>UNDEF",      0x71, 0x30, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OIM #$30,[UNDEF,X]",   0x61, 0x30, 0x94);
-    ETEST(UNDEFINED_SYMBOL, "BOR A.UNDEF,$34.2", 0x11, 0x32, 0x50, 0x34);
-    ETEST(UNDEFINED_SYMBOL, "BOR A.1,UNDEF.2",   0x11, 0x32, 0x51, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "BOR A.1,$34.UNDEF", 0x11, 0x32, 0x41, 0x34);
+    if (is6309()) {
+        // HD6309
+        ETEST(UNDEFINED_SYMBOL, "BITMD #UNDEF",  0x11, 0x3C, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LDQ   #UNDEF",  0xCD, 0x00, 0x00, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "MULD  #UNDEF",  0x11, 0x8F, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LDA UNDEF,W",    0xA6, 0x8F);
+        ETEST(UNDEFINED_SYMBOL, "LDA >UNDEF,W",   0xA6, 0xAF, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "LDA [UNDEF,W]",  0xA6, 0x90);
+        ETEST(UNDEFINED_SYMBOL, "LDA [>UNDEF,W]", 0xA6, 0xB0, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$10",       0x01, 0x00, 0x10);
+        ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,$1000",     0x71, 0x00, 0x10, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "OIM #UNDEF,[$1000,X]", 0x61, 0x00, 0x99, 0x10, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "OIM #$30,UNDEF",       0x01, 0x30, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "OIM #$30,>UNDEF",      0x71, 0x30, 0x00, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "OIM #$30,[UNDEF,X]",   0x61, 0x30, 0x94);
+        ETEST(UNDEFINED_SYMBOL, "BOR A.UNDEF,$34.2", 0x11, 0x32, 0x50, 0x34);
+        ETEST(UNDEFINED_SYMBOL, "BOR A.1,UNDEF.2",   0x11, 0x32, 0x51, 0x00);
+        ETEST(UNDEFINED_SYMBOL, "BOR A.1,$34.UNDEF", 0x11, 0x32, 0x41, 0x34);
+    }
 }
 
 static void run_test(void (*test)(), const char *test_name) {
@@ -1260,20 +1504,28 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_inherent);
-    RUN_TEST(test_immediate);
-    RUN_TEST(test_direct);
-    RUN_TEST(test_extended);
-    RUN_TEST(test_indexed);
-    RUN_TEST(test_indexed_mode);
-    RUN_TEST(test_relative);
-    RUN_TEST(test_stack);
-    RUN_TEST(test_register);
-    RUN_TEST(test_transfer);
-    RUN_TEST(test_bit_position);
-    RUN_TEST(test_comment);
-    RUN_TEST(test_error);
-    RUN_TEST(test_undefined_symbol);
+    static const char *cpus[] = {
+        "6809", "6309",
+    };
+    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+        const char *cpu = cpus[i];
+        assembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_inherent);
+        RUN_TEST(test_immediate);
+        RUN_TEST(test_direct);
+        RUN_TEST(test_extended);
+        RUN_TEST(test_indexed);
+        RUN_TEST(test_indexed_mode);
+        RUN_TEST(test_relative);
+        RUN_TEST(test_stack);
+        RUN_TEST(test_register);
+        RUN_TEST(test_transfer);
+        RUN_TEST(test_bit_position);
+        RUN_TEST(test_comment);
+        RUN_TEST(test_error);
+        RUN_TEST(test_undefined_symbol);
+    }
     return 0;
 }
 
