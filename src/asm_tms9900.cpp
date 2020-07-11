@@ -226,7 +226,8 @@ Error AsmTms9900::encode(Insn &_insn) {
     switch (insn.addrMode()) {
     case INH:
         insn.emitInsn();
-        setOK();
+        if (endOfLine(_scan)) setOK();
+        else setError(UNKNOWN_OPERAND);
         break;
     case IMM:
         encodeImm(insn, true);

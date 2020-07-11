@@ -24,9 +24,16 @@ using namespace libasm::test;
 AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
+static bool is99105() {
+    return strcmp(assembler.getCpu(), "TMS99105") == 0;
+}
+
+static bool is9995() {
+    return strcmp(assembler.getCpu(), "TMS9995") == 0 || is99105();
+}
+
 static void set_up() {
     assembler.reset();
-    assembler.setCpu("tms9900");
 }
 
 static void tear_down() {
@@ -73,11 +80,14 @@ static void test_inh() {
     TEST("CKOF", 0x03C0);
     TEST("LREX", 0x03E0);
 
-    // TMS99105
-    assembler.setCpu("TMS99105");
-    TEST("RTWP 1", 0x0381);
-    TEST("RTWP 2", 0x0382);
-    TEST("RTWP 4", 0x0384);
+    if (is99105()) {
+        // TMS99105
+        TEST("RTWP 1", 0x0381);
+        TEST("RTWP 2", 0x0382);
+        TEST("RTWP 4", 0x0384);
+    } else {
+        ETEST(UNKNOWN_OPERAND, "RTWP 1");
+    }
 }
 
 static void test_imm() {
@@ -95,10 +105,14 @@ static void test_reg() {
     TEST("STWP R14", 0x02AE);
     TEST("STST R15", 0x02CF);
 
-    // TMS9995
-    assembler.setCpu("tms9995");
-    TEST("LST  R0",  0x0080);
-    TEST("LWP  R1",  0x0091);
+    if (is9995()) {
+        // TMS9995
+        TEST("LST R0",  0x0080);
+        TEST("LWP R1",  0x0091);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "LST R0");
+        ETEST(UNKNOWN_INSTRUCTION, "LWP R1");
+    }
 }
 
 static void test_reg_imm() {
@@ -112,10 +126,13 @@ static void test_reg_imm() {
 
     TEST("LI R2,sym1234", 0x0202, 0x1234);
 
-    // TMS99105
-    assembler.setCpu("TMS99105");
-    TEST("BLSK R3,4567H",   0x00B3, 0x4567);
-    TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
+    if (is99105()) {
+        // TMS99105
+        TEST("BLSK R3,4567H",   0x00B3, 0x4567);
+        TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "BLSK R3,4567H");
+    }
 }
 
 static void test_cnt_reg() {
@@ -142,42 +159,54 @@ static void test_src() {
     TEST("SETO R12",    0x070C);
     TEST("ABS  @8(R3)", 0x0763, 0x0008);
 
-    // TMS9995
-    assembler.setCpu("tms9995");
-    TEST("DIVS R2",         0x0182);
-    TEST("DIVS *R3",        0x0193);
-    TEST("DIVS @1234H",     0x01A0, 0x1234);
-    TEST("DIVS @1000H(R4)", 0x01A4, 0x1000);
-    TEST("DIVS *R5+",       0x01B5);
-    TEST("MPYS R0",         0x01C0);
-    TEST("MPYS @2(R8)",     0x01E8, 0x0002);
-    TEST("MPYS *R15+",      0x01FF);
+    if (is9995()) {
+        // TMS9995
+        TEST("DIVS R2",         0x0182);
+        TEST("DIVS *R3",        0x0193);
+        TEST("DIVS @1234H",     0x01A0, 0x1234);
+        TEST("DIVS @1000H(R4)", 0x01A4, 0x1000);
+        TEST("DIVS *R5+",       0x01B5);
+        TEST("MPYS R0",         0x01C0);
+        TEST("MPYS @2(R8)",     0x01E8, 0x0002);
+        TEST("MPYS *R15+",      0x01FF);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "DIVS R2");
+        ETEST(UNKNOWN_INSTRUCTION, "MPYS R0");
+    }
 
-    // TMS99105
-    assembler.setCpu("tms99105");
-    TEST("TMB  @0123H(R15),7", 0x0C09, 0x01EF, 0x0123);
-    TEST("TCMB R0,0",          0x0C0A, 0x0000);
-    TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
-    TEST("BIND @2223H(R1)", 0x0161, 0x2223);
-    TEST("EVAD R5",         0x0105);
+    if (is99105()) {
+        // TMS99105
+        TEST("TMB  @0123H(R15),7", 0x0C09, 0x01EF, 0x0123);
+        TEST("TCMB R0,0",          0x0C0A, 0x0000);
+        TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
+        TEST("BIND @2223H(R1)", 0x0161, 0x2223);
+        TEST("EVAD R5",         0x0105);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "TMB  @0123H(R15),7");
+        ETEST(UNKNOWN_INSTRUCTION, "TCMB R0,0");
+        ETEST(UNKNOWN_INSTRUCTION, "TSMB *R2,15");
+        ETEST(UNKNOWN_INSTRUCTION, "BIND @2223H(R1)");
+        ETEST(UNKNOWN_INSTRUCTION, "EVAD R5");
+    }
 
     symtab.intern(-2, "neg2");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    assembler.setCpu("tms9900");
     TEST("BLWP @sym9876",     0x0420, 0x9876);
     TEST("DEC  @neg2(R7)",    0x0627, 0xFFFE);
 
-    // TMS9995
-    assembler.setCpu("tms9995");
-    TEST("DIVS @sym1234",     0x01A0, 0x1234);
-    TEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
+    if (is9995()) {
+        // TMS9995
+        TEST("DIVS @sym1234",     0x01A0, 0x1234);
+        TEST("DIVS @sym1000(R4)", 0x01A4, 0x1000);
+    }
 
-    // TMS99105
-    assembler.setCpu("tms99105");
-    TEST("BIND @sym1000(R1)", 0x0161, 0x1000);
+    if (is99105()) {
+        // TMS99105
+        TEST("BIND @sym1000(R1)", 0x0161, 0x1000);
+    }
 }
 
 static void test_reg_src() {
@@ -207,11 +236,15 @@ static void test_cnt_src() {
     TEST("STCR @offset2(R4),16",    0x3424, 0x0002);
     TEST("STCR @1000H(R4),size7",   0x35E4, 0x1000);
 
-    // TMS99105
-    assembler.setCpu("TMS99105");
-    TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
-    TEST("SLAM R11,R0",          0x001D, 0x400B);
-    TEST("SLAM *R13+,1",         0x001D, 0x407D);
+    if (is99105()) {
+        // TMS99105
+        TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
+        TEST("SLAM R11,R0",          0x001D, 0x400B);
+        TEST("SLAM *R13+,1",         0x001D, 0x407D);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SRAM R11,R0");
+        ETEST(UNKNOWN_INSTRUCTION, "SLAM *R13+,1");
+    }
 }
 
 static void test_xop_src() {
@@ -254,14 +287,18 @@ static void test_dst_src() {
     TEST("SOC  @sym1234,@sym5678(R11)", 0xEAE0, 0x1234, 0x5678);
     TEST("SOCB @sym1234(R10),@sym5678", 0xF82A, 0x1234, 0x5678);
 
-    // TMS99105
-    assembler.setCpu("TMS99105");
-    TEST("SM @sym1234(R10),@sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
-    TEST("SM @sym1234,@sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
-    TEST("SM R10,@sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
-    TEST("AM @zero(R10),@1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
-    TEST("AM @sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
-    TEST("AM @sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
+    if (is99105()) {
+        // TMS99105
+        TEST("SM @sym1234(R10),@sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
+        TEST("SM @sym1234,@sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
+        TEST("SM R10,@sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
+        TEST("AM @zero(R10),@1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
+        TEST("AM @sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
+        TEST("AM @sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "SM R10,@sym4000(R11)");
+        ETEST(UNKNOWN_INSTRUCTION, "AM @zero(R10),@1(R11)");
+    }
 }
 
 static void test_rel() {
@@ -353,20 +390,28 @@ static void run_test(void (*test)(), const char *test_name) {
 
 int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
-    RUN_TEST(test_inh);
-    RUN_TEST(test_imm);
-    RUN_TEST(test_reg);
-    RUN_TEST(test_reg_imm);
-    RUN_TEST(test_cnt_reg);
-    RUN_TEST(test_src);
-    RUN_TEST(test_reg_src);
-    RUN_TEST(test_cnt_src);
-    RUN_TEST(test_xop_src);
-    RUN_TEST(test_dst_src);
-    RUN_TEST(test_rel);
-    RUN_TEST(test_cru_off);
-    RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    static const char *cpus[] = {
+        "TMS9900", "TMS9995", "TMS99105",
+    };
+    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+        const char *cpu = cpus[i];
+        assembler.setCpu(cpu);
+        printf("  TEST CPU %s\n", cpu);
+        RUN_TEST(test_inh);
+        RUN_TEST(test_imm);
+        RUN_TEST(test_reg);
+        RUN_TEST(test_reg_imm);
+        RUN_TEST(test_cnt_reg);
+        RUN_TEST(test_src);
+        RUN_TEST(test_reg_src);
+        RUN_TEST(test_cnt_src);
+        RUN_TEST(test_xop_src);
+        RUN_TEST(test_dst_src);
+        RUN_TEST(test_rel);
+        RUN_TEST(test_cru_off);
+        RUN_TEST(test_comment);
+        RUN_TEST(test_undefined_symbol);
+    }
     return 0;
 }
 
