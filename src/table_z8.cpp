@@ -346,12 +346,13 @@ Error TableZ8::searchOpCode(
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         for (const Entry *entry =
                  reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-             (entry = TableBase::searchCode<Entry,Config::opcode_t>(
-                 insn.opCode(), entry, end, maskCode)) != nullptr;
+             entry < end
+                 && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
+                         insn.opCode(), entry, end, maskCode)) != nullptr;
              entry++) {
             insn.setFlags(pgm_read_word(&entry->flags));
             if (insn.postFormat()) {
-                if (insn.length() == 1 && insn.readPost(memory))
+                if (insn.length() < 2 && insn.readPost(memory))
                     return NO_MEMORY;
                 if (!matchPostByte(insn)) continue;
             }

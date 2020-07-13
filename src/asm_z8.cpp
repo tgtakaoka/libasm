@@ -413,10 +413,6 @@ Error AsmZ8::encode(Insn &_insn) {
     setErrorIf(extOp.getError());
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (insn.extMode() != extOp.mode) { // extra mode bit overflow.
-        insn.setAddrMode(dstOp.mode, srcOp.mode, M_NO);
-        extOp.setError(INTERNAL_ERROR);
-    }
     if (TableZ8.searchName(insn))
         return setError(TableZ8.getError());
     const AddrMode dst = insn.dstMode();

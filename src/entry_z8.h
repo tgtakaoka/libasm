@@ -55,6 +55,7 @@ enum AddrMode {
     M_IW  = 19,  // Indirect Register or Working register: @Rxy x==RP
     M_IWW = 20,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
     M_WW  = 21,  // Register or Working register pair: RRxy: x=RP
+    M_ERROR = 31,
 };
 
 // Post byte format
@@ -92,6 +93,11 @@ struct Entry {
             | ((static_cast<uint16_t>(src)  & addrMode_gm) << srcMode_gp)
             | ((static_cast<uint16_t>(ext)  & extMode_gm)  << extMode_gp)
             | ((static_cast<uint16_t>(post) & postFmt_gm)  << postFmt_gp);
+    }
+
+    static constexpr AddrMode addrExt(AddrMode mode) {
+        if (static_cast<uint8_t>(mode) < 8) return mode;
+        return M_ERROR;
     }
 
 private:
