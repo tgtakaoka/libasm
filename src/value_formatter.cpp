@@ -19,9 +19,9 @@
 namespace libasm {
 
 static int8_t constantWidth(uint8_t bitWidth, uint8_t base) {
-    if (base == 16) return bitWidth / 4;
+    if (base == 16) return bitWidth / 4 + (bitWidth % 4 ? 1 : 0);
     if (base == 2)  return bitWidth;
-    return (bitWidth + 2) / 3;  // base == 8
+    return bitWidth / 3 + (bitWidth % 3 ? 1 : 0);
 }
 
 static char *reverseStr(char *p, char *t) {
@@ -105,7 +105,7 @@ char *positiveValue(char *p, uint32_t &val, int8_t radix, int8_t bitWidth) {
 }
 
 const char *ValueFormatter::currentOriginSymbol() const {
-    return "$";
+    return ".";
 }
 
 char *ValueFormatter::output(
@@ -144,6 +144,10 @@ char *MotoValueFormatter::output(
     else if (base == 2) *p++ = '%';
     t = ValueFormatter::outputNumber(p, val, base, bitWidth);
     return reverseStr(p, t);
+}
+
+const char *IntelValueFormatter::currentOriginSymbol() const {
+    return "$";
 }
 
 char *IntelValueFormatter::output(

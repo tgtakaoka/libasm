@@ -3711,7 +3711,7 @@
       ADDQ.L  #8,($50B9).W
       ADDQ.L  #8,($000050BA).L
       ST      D0
-      DBT     D0,*+$50CB
+      DBT     D0,*+$50CC
       ST      (A0)
       ST      (A0)+
       ST      -(A0)
@@ -3751,7 +3751,7 @@
       SUBQ.L  #8,($51B9).W
       SUBQ.L  #8,($000051BA).L
       SF      D0
-      DBRA    D0,*+$51CB
+      DBRA    D0,*+$51CC
       SF      (A0)
       SF      (A0)+
       SF      -(A0)
@@ -3761,7 +3761,7 @@
       SF      ($51F9).W
       SF      ($000051FA).L
       SHI     D0
-      DBHI    D0,*+$52CB
+      DBHI    D0,*+$52CC
       SHI     (A0)
       SHI     (A0)+
       SHI     -(A0)
@@ -3771,7 +3771,7 @@
       SHI     ($52F9).W
       SHI     ($000052FA).L
       SLS     D0
-      DBLS    D0,*+$53CB
+      DBLS    D0,*+$53CC
       SLS     (A0)
       SLS     (A0)+
       SLS     -(A0)
@@ -3781,7 +3781,7 @@
       SLS     ($53F9).W
       SLS     ($000053FA).L
       SCC     D0
-      DBCC    D0,*+$54CB
+      DBCC    D0,*+$54CC
       SCC     (A0)
       SCC     (A0)+
       SCC     -(A0)
@@ -3791,7 +3791,7 @@
       SCC     ($54F9).W
       SCC     ($000054FA).L
       SCS     D0
-      DBCS    D0,*+$55CB
+      DBCS    D0,*+$55CC
       SCS     (A0)
       SCS     (A0)+
       SCS     -(A0)
@@ -3803,7 +3803,7 @@
       SCS     ($55F9).W
       SCS     ($000055FA).L
       SNE     D0
-      DBNE    D0,*+$56CB
+      DBNE    D0,*+$56CC
       SNE     (A0)
       SNE     (A0)+
       SNE     -(A0)
@@ -3815,7 +3815,7 @@
       SNE     ($56F9).W
       SNE     ($000056FA).L
       SEQ     D0
-      DBEQ    D0,*+$57CB
+      DBEQ    D0,*+$57CC
       SEQ     (A0)
       SEQ     (A0)+
       SEQ     -(A0)
@@ -3832,7 +3832,7 @@
       ADDQ.L  #4,(-$4F,A0,D5.L)
       ADDQ.L  #4,(0,A0,D5.L)
       SVC     D0
-      DBVC    D0,*+$58CB
+      DBVC    D0,*+$58CC
       SVC     (A0)
       SVC     (A0)+
       SVC     -(A0)
@@ -3848,7 +3848,7 @@
       SUBQ.L  #4,(-$4F,A0,D5.L)
       SUBQ.L  #4,(0,A0,D5.L)
       SVS     D0
-      DBVS    D0,*+$59CB
+      DBVS    D0,*+$59CC
       SVS     (A0)
       SVS     (A0)+
       SVS     -(A0)
@@ -3858,7 +3858,7 @@
       SVS     ($59F9).W
       SVS     ($000059FA).L
       SPL     D0
-      DBPL    D0,*+$5ACB
+      DBPL    D0,*+$5ACC
       SPL     (A0)
       SPL     (A0)+
       SPL     -(A0)
@@ -3868,7 +3868,7 @@
       SPL     ($5AF9).W
       SPL     ($00005AFA).L
       SMI     D0
-      DBMI    D0,*+$5BCB
+      DBMI    D0,*+$5BCC
       SMI     (A0)
       SMI     (A0)+
       SMI     -(A0)
@@ -3878,7 +3878,7 @@
       SMI     ($5BF9).W
       SMI     ($00005BFA).L
       SGE     D0
-      DBGE    D0,*+$5CCB
+      DBGE    D0,*+$5CCC
       SGE     (A0)
       SGE     (A0)+
       SGE     -(A0)
@@ -3888,7 +3888,7 @@
       SGE     ($5CF9).W
       SGE     ($00005CFA).L
       SLT     D0
-      DBLT    D0,*+$5DCB
+      DBLT    D0,*+$5DCC
       SLT     (A0)
       SLT     (A0)+
       SLT     -(A0)
@@ -3900,7 +3900,7 @@
       SLT     ($5DF9).W
       SLT     ($00005DFA).L
       SGT     D0
-      DBGT    D0,*+$5ECB
+      DBGT    D0,*+$5ECC
       SGT     (A0)
       SGT     (A0)+
       SGT     -(A0)
@@ -3912,7 +3912,7 @@
       SGT     ($5EF9).W
       SGT     ($00005EFA).L
       SLE     D0
-      DBLE    D0,*+$5FCB
+      DBLE    D0,*+$5FCC
       SLE     (A0)
       SLE     (A0)+
       SLE     -(A0)
@@ -3922,4 +3922,4 @@
       SLE     (-$80,A0,D6.W)
       SLE     ($5FF9).W
       SLE     ($00005FFA).L
-      BRA     *+$6003
+      BRA     *+$6004

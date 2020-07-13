@@ -1022,6 +1022,18 @@ static void test_formatter_32bit() {
     F32(-0xffffffff, -16, false, "0x00000001");
 }
 
+static void test_formatter_9bit() {
+    FN(9, -128 *2, -16, false, "-0x100");
+    FN(9,    0 *2, -16, false, "0x000");
+    FN(9, +127 *2, -16, false, "0x0fe");
+}
+
+static void test_formatter_13bit() {
+    FN(13, -2048 *2, -16, false, "-0x1000");
+    FN(13,     0 *2, -16, false, "0x0000");
+    FN(13, +2047 *2, -16, false, "0x0ffe");
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -1047,6 +1059,8 @@ int main(int argc, char **argv) {
     RUN_TEST(test_formatter_16bit);
     RUN_TEST(test_formatter_24bit);
     RUN_TEST(test_formatter_32bit);
+    RUN_TEST(test_formatter_9bit);
+    RUN_TEST(test_formatter_13bit);
     return 0;
 }
 

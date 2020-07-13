@@ -26,6 +26,7 @@ Disassembler &disassembler(dis68000);
 
 static void set_up() {
     disassembler.reset();
+    disassembler.setRelativeTarget(false);
 }
 
 static void tear_down() {
@@ -96,6 +97,34 @@ static void test_implied() {
     TEST(STOP,  "#$1234", 047162, 0x1234);
 }
 
+static void test_relative() {
+    disassembler.setRelativeTarget(true);
+    ATEST(0x100000, BRA, "*-$7FFE",   060000, 0x8000);
+    ATEST(0x100000, BRA, "*-$007E",   060000, 0xFF80);
+    ATEST(0x100000, BRA, "*-$7E",     060000 | 0x80);
+    ATEST(0x100000, BRA, "*",         060000 | 0xFE);
+    ATEST(0x100000, BRA, "*",         060000, 0xFFFE);
+    ATEST(0x100000, BRA, "*+2",       060000, 0x0000);
+    ATEST(0x100000, BRA, "*+$80",     060000 | 0x7E);
+    ATEST(0x100000, BRA, "*+$0080",   060000, 0x007E);
+    ATEST(0x100000, BRA, "*+$8000",   060000, 0x7FFE);
+    ETEST(OPERAND_NOT_ALIGNED, _, "", 060000, 0x8001);
+    ETEST(OPERAND_NOT_ALIGNED, _, "", 060000 | 0x81);
+    ETEST(OPERAND_NOT_ALIGNED, _, "", 060000 | 0xFF);
+    ETEST(OPERAND_NOT_ALIGNED, _, "", 060000 | 0x01);
+    ETEST(OPERAND_NOT_ALIGNED, _, "", 060000 | 0x7F);
+    ETEST(OPERAND_NOT_ALIGNED, _, "", 060000, 0x7FFF);
+
+    ATEST(0x100000, DBRA, "D0,*-$7FFE", 050710, 0x8000);
+    ATEST(0x100000, DBRA, "D0,*-$007E", 050710, 0xFF80);
+    ATEST(0x100000, DBRA, "D0,*",       050710, 0xFFFE);
+    ATEST(0x100000, DBRA, "D0,*+2",     050710, 0x0000);
+    ATEST(0x100000, DBRA, "D0,*+$0080", 050710, 0x007E);
+    ATEST(0x100000, DBRA, "D0,*+$8000", 050710, 0x7FFE);
+    ETEST(OPERAND_NOT_ALIGNED, _, "",   050710, 0x8001);
+    ETEST(OPERAND_NOT_ALIGNED, _, "",   050710, 0x7FFF);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -108,6 +137,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_cpu);
     RUN_TEST(test_dest_size);
     RUN_TEST(test_implied);
+    RUN_TEST(test_relative);
     return 0;
 }
 

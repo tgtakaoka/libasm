@@ -225,6 +225,7 @@ Error DisMc68000::decodeDataReg(
     if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
     const int16_t disp = static_cast<int16_t>(val16);
     const Config::uintptr_t target = insn.address() + 2 + disp;
+    if (target % 2) return setError(OPERAND_NOT_ALIGNED);
     outRelativeAddr(target, insn.address(), 16);
     return setOK();
 }
@@ -337,6 +338,7 @@ Error DisMc68000::decodeRelative(
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
         target += static_cast<int16_t>(val16);
     }
+    if (target % 2) return setError(OPERAND_NOT_ALIGNED);
     outRelativeAddr(target, insn.address(), val8 ? 8 : 16);
     return setOK();
 }

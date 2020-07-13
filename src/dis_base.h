@@ -93,11 +93,13 @@ protected:
             outConstant(target, 16, false, true, addressWidth());
             return;
         }
-        const auto delta = static_cast<
+        const int32_t delta = static_cast<
             typename make_signed<Addr>::type>(target - origin);
         outText(getFormatter().currentOriginSymbol());
         if (delta > 0) *_operands++ = '+';
-        if (delta) outConstant(delta, 16, true, true, deltaBits + 1);
+        if (delta < 0) *_operands++ = '-';
+        const uint32_t disp = (delta < 0) ? -delta : delta;
+        if (disp) outConstant(disp, 16, true, true, deltaBits);
     }
 
 private:

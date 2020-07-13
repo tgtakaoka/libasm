@@ -62,6 +62,8 @@ void fmt_assert(
     asserter.equals(msg, expected, actual);
 }
 
+#define FN(n, value, radix, relax, expected)                            \
+    fmt_assert<n>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
 #define F8(value, radix, relax, expected)                               \
     fmt_assert<8>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
 #define F16(value, radix, relax, expected)                              \

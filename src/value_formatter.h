@@ -68,6 +68,7 @@ public:
     char *output(
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t bitWidth) const override;
+    const char *currentOriginSymbol() const override;
 };
 
 } // namespace libasm

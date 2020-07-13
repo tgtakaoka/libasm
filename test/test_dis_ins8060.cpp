@@ -26,6 +26,7 @@ Disassembler &disassembler(dis8060);
 
 static void set_up() {
     disassembler.reset();
+    disassembler.setRelativeTarget(false);
 }
 
 static void tear_down() {
@@ -114,6 +115,14 @@ static void test_jump() {
     TEST(JMP, "disp0x7F(P1)", 0x91, 0x7F);
     TEST(JMP, "disp0x81(P2)", 0x92, 0x81);
     TEST(JMP, "E(P3)",        0x93, 0x80);
+
+    disassembler.setRelativeTarget(true);
+    ATEST(0x2800, JMP, ".-0x7D", 0x90, 0x81);
+    ATEST(0x2800, JMP, ".",      0x90, 0xFE);
+    ATEST(0x2800, JMP, ".+2",    0x90, 0x00);
+    ATEST(0x2800, JMP, ".+0x81", 0x90, 0x7F);
+    ATEST(0x2000, JMP, "0x2F83", 0x90, 0x81); // 4kB page boundary
+    ATEST(0x2FF0, JMP, "0x2071", 0x90, 0x7F); // 4kB page boundary
 }
 
 static void test_incr_decr() {
@@ -176,6 +185,14 @@ static void test_alu() {
     ATEST(0x1000, ST,  "label1000", 0xC8, 0xFF);
     TEST(AND, "@disp0x7F(P2)", 0xD6, 0x7F);
     TEST(OR,  "@disp0x81(P3)", 0xDF, 0x81);
+
+    disassembler.setRelativeTarget(true);
+    ATEST(0x2800, LD, ".-0x7E", 0xC0, 0x81);
+    ATEST(0x2800, LD, ".",      0xC0, 0xFF);
+    ATEST(0x2800, LD, ".+1",    0xC0, 0x00);
+    ATEST(0x2800, LD, ".+0x80", 0xC0, 0x7F);
+    ATEST(0x2000, LD, "0x2F82", 0xC0, 0x81); // 4kB page boundary
+    ATEST(0x2FF0, LD, "0x2070", 0xC0, 0x7F); // 4kB page boundary
 }
 
 static void test_alu_immediate() {

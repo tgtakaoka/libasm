@@ -46,6 +46,7 @@ static uint8_t R(uint8_t n) {
 
 static void set_up() {
     disassembler.reset();
+    disassembler.setRelativeTarget(false);
 }
 
 static void tear_down() {
@@ -149,8 +150,19 @@ static void test_relative() {
     ATEST(0x1000, DJNZ, "R15,0FFDH", 0xFA, 0xFB);
 
     disassembler.setRelativeTarget(true);
-    TZ88(CPIJE,  "R3,@R12,$", 0xC2, 0xC3, 0xFD);
-    TZ88(CPIJNE, "R3,@R12,$", 0xD2, 0xC3, 0xFD);
+    ATEST(0x2000, JR, "$-7EH", 0x8B, 0x80);
+    ATEST(0x2000, JR, "$",     0x8B, 0xFE);
+    ATEST(0x2000, JR, "$+2",   0x8B, 0x00);
+    ATEST(0x2000, JR, "$+81H", 0x8B, 0x7F);
+    ATEST(0x2000, DJNZ, "R0,$-7EH", 0x0A, 0x80);
+    ATEST(0x2000, DJNZ, "R0,$",     0x0A, 0xFE);
+    ATEST(0x2000, DJNZ, "R0,$+2",   0x0A, 0x00);
+    ATEST(0x2000, DJNZ, "R0,$+81H", 0x0A, 0x7F);
+    TZ88(CPIJE,  "R3,@R12,$-7DH", 0xC2, 0xC3, 0x80);
+    TZ88(CPIJE,  "R3,@R12,$",     0xC2, 0xC3, 0xFD);
+    TZ88(CPIJE,  "R3,@R12,$+3",   0xC2, 0xC3, 0x00);
+    TZ88(CPIJE,  "R3,@R12,$+82H", 0xC2, 0xC3, 0x7F);
+    TZ88(CPIJNE, "R3,@R12,$",     0xD2, 0xC3, 0xFD);
 }
 
 static void test_operand_in_opcode() {

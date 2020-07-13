@@ -26,6 +26,7 @@ Disassembler &disassembler(dis8070);
 
 static void set_up() {
     disassembler.reset();
+    disassembler.setRelativeTarget(false);
 }
 
 static void tear_down() {
@@ -196,6 +197,12 @@ static void test_relative() {
     ATEST(0x1100, BZ,  "sym1082", 0x6C, 0x80);
     ATEST(0x1000, BRA, "sym1081", 0x74, 0x7F);
     ATEST(0x1000, BNZ, "sym1005", 0x7C, 0x03);
+
+    disassembler.setRelativeTarget(true);
+    ATEST(0x2000, BRA, ".-0x7E",  0x74, 0x80);
+    ATEST(0x2000, BRA, ".",       0x74, 0xFE);
+    ATEST(0x2000, BRA, ".+2",     0x74, 0x00);
+    ATEST(0x2000, BRA, ".+0x81",  0x74, 0x7F);
 }
 
 static void test_indexed() {
@@ -281,6 +288,13 @@ static void test_indexed() {
     ATEST(0x1000, ADD, "EA,sym1005,PC", 0xB0, 0x04);
     TEST(         SUB, "A,neg128,SP",   0xF9, 0x80);
     TEST(         SUB, "A,pos127,P2",   0xFA, 0x7F);
+
+    symtab.reset();
+    disassembler.setRelativeTarget(true);
+    ATEST(0x2000, LD,  "EA,.-0x7F,PC", 0x80, 0x80);
+    ATEST(0x2000, LD,  "EA,.,PC",      0x80, 0xFF);
+    ATEST(0x2000, LD,  "EA,.+1,PC",    0x80, 0x00);
+    ATEST(0x2000, LD,  "EA,.+0x80,PC", 0x80, 0x7F);
 }
 
 static void test_auto_indexed() {

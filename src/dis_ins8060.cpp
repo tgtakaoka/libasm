@@ -47,13 +47,19 @@ Error DisIns8060::decodeIndx(
     if (reg == REG_PC && opr != 0x80) { // PC relative
         // PC points the last byte of instruction.
         const Config::uintptr_t base = insn.address() + 1;
+        const Config::uintptr_t page = (base & ~0xFFF);
         const int8_t disp = static_cast<int8_t>(opr);
         // PC will be incremented before fetching next instruction.
         const int8_t fetch = insn.addrMode() == REL8 ? 1 : 0;
         // Program space is paged by 4kB.
-        const Config::uintptr_t target =
-            (base & ~0xFFF) | ((base + disp + fetch) & 0xFFF);
-        outRelativeAddr(target, insn.address(), 8);
+        Config::uintptr_t target = base + disp + fetch;
+        if ((target & ~0xFFF) == page) {
+            outRelativeAddr(target, insn.address(), 8);
+        } else {
+            target &= 0xFFF;
+            target |= page;
+            outConstant(target, 16, false, true, addressWidth());
+        }
         return setOK();
     }
     if (opr == 0x80) {         // E(Pn)

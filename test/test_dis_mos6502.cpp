@@ -46,6 +46,7 @@ static bool w65c816() {
 
 static void set_up() {
     disassembler.reset();
+    disassembler.setRelativeTarget(false);
 }
 
 static void tear_down() {
@@ -811,6 +812,12 @@ static void test_rel() {
         // W65SC02
         ATEST(0x1000, BRA, "label1000", 0x80, 0xFE);
     }
+
+    disassembler.setRelativeTarget(true);
+    ATEST(0x2000, BPL, "*-$7E", 0x10, 0x80);
+    ATEST(0x2000, BPL, "*",     0x10, 0xFE);
+    ATEST(0x2000, BPL, "*+2",   0x10, 0x00);
+    ATEST(0x2000, BPL, "*+$81", 0x10, 0x7F);
 }
 
 static void test_bitop() {

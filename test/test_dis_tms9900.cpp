@@ -38,6 +38,7 @@ static bool is99105() {
 
 static void set_up() {
     disassembler.reset();
+    disassembler.setRelativeTarget(false);
 }
 
 static void tear_down() {
@@ -326,6 +327,12 @@ static void test_rel() {
     ATEST(0x1000, JLT, "sym1000", 0x11FF);
     ATEST(0x1000, JLE, "sym1100", 0x127F);
     ATEST(0x1000, JEQ, "sym0F02", 0x1380);
+
+    disassembler.setRelativeTarget(true);
+    TEST(JMP, "$-0FEH", 0x1080);
+    TEST(JMP, "$",      0x10FF);
+    TEST(JMP, "$+2",    0x1000);
+    TEST(JMP, "$+100H", 0x107F);
 }
 
 static void test_cru_off() {
