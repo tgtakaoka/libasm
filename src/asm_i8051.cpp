@@ -17,8 +17,6 @@
 #include "asm_i8051.h"
 #include "table_i8051.h"
 
-#include <stdio.h>
-
 namespace libasm {
 namespace i8051 {
 
