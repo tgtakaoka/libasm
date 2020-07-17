@@ -47,6 +47,7 @@ enum Error {
     MISSING_COMMA           = 30,
     NOT_BIT_ADDRESSABLE     = 31,
     OPERAND_NOT_ALIGNED     = 32,
+    OPCODE_HAS_NO_EFFECT    = 33,
 
     // ValueParser
     ILLEGAL_CONSTANT        = 100,

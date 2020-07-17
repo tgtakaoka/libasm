@@ -30,23 +30,25 @@ void DisMc68000::outEaSize(EaSize size) {
 
 Error DisMc68000::decodeImmediateData(
     DisMemory &memory, InsnMc68000 &insn, EaSize size) {
-    Error error = OK;
     if (size == SZ_BYTE) {
         uint16_t val16;
-        if (insn.readUint16(memory, val16)) error = NO_MEMORY;
-        else outConstant(static_cast<uint8_t>(val16));
-    } else if (size == SZ_WORD) {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) error = NO_MEMORY;
-        else outConstant(val16);
-    } else if (size == SZ_LONG) {
-        uint32_t val32;
-        if (insn.readUint32(memory, val32)) error = NO_MEMORY;
-        else outConstant(val32);
-    } else {
-        error = ILLEGAL_SIZE;
+        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
+        outConstant(static_cast<uint8_t>(val16));
+        return OK;
     }
-    return setError(error);
+    if (size == SZ_WORD) {
+        uint16_t val16;
+        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
+        outConstant(val16);
+        return OK;
+    }
+    if (size == SZ_LONG) {
+        uint32_t val32;
+        if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
+        outConstant(val32);
+        return OK;
+    }
+    return setError(ILLEGAL_SIZE);
 }
 
 Error DisMc68000::decodeEffectiveAddr(
@@ -73,6 +75,10 @@ Error DisMc68000::decodeEffectiveAddr(
         if (mode == M_PC_DISP) {
             const Config::uintptr_t target =
                 insn.address() + 2 + static_cast<int16_t>(val16);
+            if (ea.size == SZ_WORD && (target % 2) != 0)
+                return setError(OPERAND_NOT_ALIGNED);
+            if (ea.size == SZ_LONG && (target % 4) != 0)
+                return setError(OPERAND_NOT_ALIGNED);
             outRelativeAddr(target, insn.address(), 16);
         } else {
             if (val16 & 0x8000) {
@@ -89,21 +95,23 @@ Error DisMc68000::decodeEffectiveAddr(
     if (mode == M_AIND || mode == M_PINC || mode == M_PDEC) {
         outRegName(ea.reg);
     }
-    if (mode == M_ABS_SHORT) {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        if (val16 & 0x8000) {
+    if (mode == M_ABS_SHORT || mode == M_ABS_LONG) {
+        Config::uintptr_t target;
+        if (mode == M_ABS_SHORT) {
+            uint16_t val16;
+            if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
             const int16_t signed16 = static_cast<int16_t>(val16);
-            const int32_t signed32 = static_cast<int32_t>(signed16);
-            outConstant(signed32, -16, false, true, Config::addressBits());
+            target = static_cast<int32_t>(signed16);
         } else {
-            outConstant(val16, 16);
+            uint32_t val32;
+            if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
+            target = val32;
         }
-    }
-    if (mode == M_ABS_LONG) {
-        uint32_t val32;
-        if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
-        outConstant(val32, 16, false, Config::addressBits());
+        if (ea.size == SZ_WORD && (target % 2) != 0)
+            return setError(OPERAND_NOT_ALIGNED);
+        if (ea.size == SZ_LONG && (target % 4) != 0)
+            return setError(OPERAND_NOT_ALIGNED);
+        outConstant(target, 16, false, true, addressBits());
     }
     if (mode == M_INDX || mode == M_PC_INDX) {
         const RegName base = (mode == M_INDX) ? ea.reg : REG_PC;
@@ -153,36 +161,44 @@ Error DisMc68000::decodeDestSiz(
     const Config::opcode_t opCode = insn.opCode();
     const EaMc68000 ea(opCode);
     const uint8_t opc = (opCode >> 9) & 7;
+    if (ea.size == SZ_INVALID) return setError(ILLEGAL_SIZE);
 
     if ((opCode >> 12) == 0) { // ORI/ANDI/SUBI/ADDI/EORI/CMPI
-        *_operands++ = '#';
-        if (decodeImmediateData(memory, insn, ea.size))
-            return getError();
-        *_operands++ = ',';
         constexpr uint8_t ORI  = 00;
         constexpr uint8_t ANDI = 01;
         constexpr uint8_t EORI = 05;
         constexpr uint8_t CMPI = 06;
+        RegName reg = REG_UNDEF;
         if (opc == ORI || opc == ANDI || opc == EORI) {
             if (ea.mode == M_IMM_DATA) {
-                if (ea.size == SZ_BYTE) {
-                    outRegName(REG_CCR);
-                    return setOK();
-                } else if (ea.size == SZ_WORD) {
-                    outRegName(REG_SR);
-                    return setOK();
-                }
+                if (ea.size == SZ_BYTE) reg = REG_CCR;
+                if (ea.size == SZ_WORD) reg = REG_SR;
             }
         }
-        const EaCat categories = (opc == CMPI) ? EaCat::DATA
-            : EaCat::DATA | EaCat::ALTERABLE;
-        if (!ea.satisfy(categories))
-            return setError(ILLEGAL_OPERAND_MODE);
+        if (reg == REG_UNDEF) {
+            const EaCat categories = (opc == CMPI) ? EaCat::DATA
+                : EaCat::DATA | EaCat::ALTERABLE;
+            if (!ea.satisfy(categories))
+                return setError(ILLEGAL_OPERAND_MODE);
+            if (opc == CMPI && ea.mode == M_IMM_DATA)
+                return setError(ILLEGAL_OPERAND_MODE);
+            if (opc == CMPI
+                && (ea.mode == M_PC_INDX || ea.mode == M_PC_DISP))
+                return setError(ILLEGAL_OPERAND_MODE);
+        }
+        *_operands++ = '#';
+        if (decodeImmediateData(memory, insn, ea.size))
+            return getError();
+        *_operands++ = ',';
+        if (reg != REG_UNDEF) {
+            outRegName(reg);
+            return setOK();
+        }
     } else {                    // NEGX/CLR/NEG/NOT/TST
         constexpr uint8_t TST = 5;
         const EaCat categories = (opc == TST) ? EaCat::DATA
             : EaCat::DATA | EaCat::ALTERABLE;
-        if (!ea.satisfy(categories))
+        if (ea.mode == M_IMM_DATA || !ea.satisfy(categories))
             return setError(ILLEGAL_OPERAND_MODE);
     }
 
@@ -257,31 +273,25 @@ Error DisMc68000::decodeDataDst(
     DisMemory &memory, InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     const uint8_t opc = (opCode >> 6) & 077;
-    constexpr uint8_t NBCD = 040;
     constexpr uint8_t PEA = 041;
     EaSize size = (opc == PEA) ? SZ_LONG : SZ_BYTE;
     const EaMc68000 ea(size,  opCode >> 3, opCode);
-    if (opc == NBCD) {
-        if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
-            return setError(ILLEGAL_OPERAND_MODE);
-    } else if (opc == PEA) {
+    if (opc == PEA) {
         if (!ea.satisfy(EaCat::CONTROL))
             return setError(ILLEGAL_OPERAND_MODE);
-        size = SZ_NONE;
-    } else {                    // opc == TAS(053)
-        if (!ea.satisfy(EaCat::DATA))
+    } else {                    // NBCD, TAS
+        if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
     }
-    insn.appendSize(size, _regs);
     return decodeEffectiveAddr(memory, insn, ea);
 }
 
 // BTST, BCHG, BCLR, BSET
 // JSR, JMP, Scc,
-// ASR, ASL, LSR, LSL, ROXR, ROXL
+// ASR, ASL, LSR, LSL, ROR, ROL, ROXR, ROXL
 Error DisMc68000::decodeDestOpr(
     DisMemory &memory, InsnMc68000 &insn) {
-    const EaMc68000 ea(insn.opCode());
+    EaMc68000 ea(insn.opCode());
     EaSize size = ea.size;
 
     if ((insn.opCode() >> 12) == 0) { // BTST/BCHG/BCLR/BSET
@@ -289,14 +299,21 @@ Error DisMc68000::decodeDestOpr(
         constexpr uint8_t BTST = 0;
         const EaCat categories = (opc == BTST) ? EaCat::DATA
             : EaCat::DATA | EaCat::ALTERABLE;
-        if (!ea.satisfy(categories))
+        if (!ea.satisfy(categories) || ea.mode == M_IMM_DATA)
             return setError(ILLEGAL_OPERAND_MODE);
-        size = (ea.mode == M_DREG) ? SZ_LONG : SZ_BYTE;
+        uint16_t val16;
+        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
+        if (ea.mode == M_DREG) {
+            ea.size = size = SZ_LONG;
+            if (val16 >= 32) return setError(ILLEGAL_BIT_NUMBER);
+        } else {
+            ea.size = size = SZ_BYTE;
+            if (val16 >= 8) return setError(ILLEGAL_BIT_NUMBER);
+        }
         *_operands++ = '#';
-        if (decodeImmediateData(memory, insn, SZ_BYTE))
-            return getError();
+        outConstant(val16, 10);
         *_operands++ = ',';
-    } else {                    // JSR/JMP/Scc/ASx/LSx/ROXx
+    } else {                    // JSR/JMP/Scc/ASx/LSx/ROx/ROXx
         const uint8_t opc = (insn.opCode() >> 12) & 077;
         constexpr uint8_t JSR_JMP = 004;
         constexpr uint8_t Scc = 005;
@@ -304,13 +321,16 @@ Error DisMc68000::decodeDestOpr(
             if (!ea.satisfy(EaCat::CONTROL))
                 return setError(ILLEGAL_OPERAND_MODE);
             size = SZ_NONE;
+            ea.size = SZ_WORD;
         } else if (opc == Scc) {
             if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
                 return setError(ILLEGAL_OPERAND_MODE);
             size = SZ_NONE;
-        } else {
+            ea.size = SZ_BYTE;
+        } else {                // ASx/LSx/ROx/ROXx
             if (!ea.satisfy(EaCat::MEMORY | EaCat::ALTERABLE))
                 return setError(ILLEGAL_OPERAND_MODE);
+            ea.size = SZ_BYTE;
         }
     }
 
@@ -391,42 +411,39 @@ Error DisMc68000::decodeMoveMlt(
     const Config::opcode_t opCode = insn.opCode();
     const EaMc68000 ea(
         (opCode & 0100) ? SZ_LONG : SZ_WORD, opCode >> 3, opCode);
-    uint16_t list;
-    if (insn.readUint16(memory, list)) return setError(NO_MEMORY);
-    const bool pop = (opCode & 02000);
-    if (pop) {
-        if (!(ea.mode == M_PINC || ea.satisfy(EaCat::CONTROL)))
-            return setError(ILLEGAL_OPERAND_MODE);
-        decodeEffectiveAddr(memory, insn, ea);
-        *_operands++ = ',';
-        decodeMoveMltRegList(list, false, &DisMc68000::outMoveMltRegs);
-        *_operands++ = 0;
-    } else {
-        bool push;
-        if (ea.mode == M_PDEC) {
-            push = true;
-        } else if (ea.satisfy(EaCat::CONTROL | EaCat::ALTERABLE)) {
-            push = false;
-        } else {
-            return setError(ILLEGAL_OPERAND_MODE);
-        }
-        decodeMoveMltRegList(list, push, &DisMc68000::outMoveMltRegs);
-        *_operands++ = ',';
-        decodeEffectiveAddr(memory, insn, ea);
+    if (opCode & 02000) {       // Memory-to-Registers
+        if (ea.mode == M_PINC || ea.satisfy(EaCat::CONTROL)) {
+            uint16_t list;
+            if (insn.readUint16(memory, list)) return setError(NO_MEMORY);
+            if (list == 0) return setError(OPCODE_HAS_NO_EFFECT);
+            decodeEffectiveAddr(memory, insn, ea);
+            *_operands++ = ',';
+            decodeMoveMltRegList(list, false, &DisMc68000::outMoveMltRegs);
+            *_operands++ = 0;
+        } else return setError(ILLEGAL_OPERAND_MODE);
+    } else {                    // Registers-to-Memory
+        if (ea.mode == M_PDEC || ea.satisfy(EaCat::CONTROL|EaCat::ALTERABLE)) {
+            uint16_t list;
+            if (insn.readUint16(memory, list)) return setError(NO_MEMORY);
+            if (list == 0) return setError(OPCODE_HAS_NO_EFFECT);
+            decodeMoveMltRegList(
+                list, ea.mode == M_PDEC, &DisMc68000::outMoveMltRegs);
+            *_operands++ = ',';
+            decodeEffectiveAddr(memory, insn, ea);
+        } else return setError(ILLEGAL_OPERAND_MODE);
     }
     insn.appendSize(ea.size, _regs);
     return getError();
 }
 
-// MOVE fromSR, toSR, toCCR
+// MOVE from SR, to SR, to CCR
 Error DisMc68000::decodeMoveSr(
     DisMemory &memory, InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     const uint8_t opc = (opCode >> 8) & 017;
     constexpr uint8_t toCCR = 4;
     constexpr uint8_t fromSR = 0;
-    const EaSize size = (opc == toCCR) ? SZ_BYTE : SZ_WORD;
-    const EaMc68000 ea(size, opCode >> 3, opCode);
+    const EaMc68000 ea(SZ_WORD, opCode >> 3, opCode);
     if (opc == fromSR) {
         if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
             return setError(ILLEGAL_OPERAND_MODE);
@@ -480,10 +497,9 @@ Error DisMc68000::decodeAregSiz(
     DisMemory &memory, InsnMc68000 &insn) {
     const Config::opcode_t opCode = insn.opCode();
     EaSize size = (opCode & 0400) ? SZ_LONG : SZ_WORD;
+    if (insn.insnFormat() == AREG_LNG) size = SZ_NONE;
     const EaMc68000 ea(size, opCode >> 3, opCode);
-    const uint8_t opc = (opCode >> 12) & 017;
-    constexpr uint8_t LEA = 004;
-    if (opc == LEA) {
+    if (insn.insnFormat() == AREG_LNG) { // LEA
         if (size == SZ_WORD)
             return setError(ILLEGAL_SIZE);
         if (!ea.satisfy(EaCat::CONTROL))
@@ -515,7 +531,7 @@ Error DisMc68000::decodeDregDst(
         const EaMc68000 ea(size, mode, opCode);
         const EaCat categories = (opc == BTST) ? EaCat::DATA
             : EaCat::DATA | EaCat::ALTERABLE;
-        if (!ea.satisfy(categories))
+        if (!ea.satisfy(categories) || ea.mode == M_IMM_DATA)
             return setError(ILLEGAL_OPERAND_MODE);
         outRegName(dest);
         *_operands++ = ',';
@@ -551,6 +567,8 @@ Error DisMc68000::decodeDataQic(
     if (val == 0) val = 8;
     if (!ea.satisfy(EaCat::ALTERABLE))
         return setError(ILLEGAL_OPERAND_MODE);
+    if (ea.mode == M_AREG && ea.size == SZ_BYTE)
+        return setError(ILLEGAL_SIZE);
     insn.appendSize(ea.size, _regs);
     *_operands++ = '#';
     outConstant(val);
@@ -565,9 +583,13 @@ Error DisMc68000::decodeDmemSiz(
     const Config::opcode_t opCode = insn.opCode();
     const EaMc68000 ea(opCode);
     const RegName dreg = RegMc68000::decodeDataReg(opCode >> 9);
+    if (ea.mode == M_AREG && ea.size == SZ_BYTE)
+        return setError(ILLEGAL_SIZE);
     insn.appendSize(ea.size, _regs);
     if (opCode & 0400) {      // Dn,<ea>
         if (!ea.satisfy(EaCat::DATA | EaCat::ALTERABLE))
+            return setError(ILLEGAL_OPERAND_MODE);
+        if (ea.mode == M_DREG && insn.insnFormat() == DMEM_SIZ)
             return setError(ILLEGAL_OPERAND_MODE);
         outRegName(dreg);
         *_operands++ = ',';
@@ -654,6 +676,8 @@ Error DisMc68000::decodeMoveOpr(
     const EaSize size = moveSize(opCode >> 12);
     const EaMc68000 src(size, opCode >> 3, opCode);
     const EaMc68000 dst(size, opCode >> 6, opCode >> 9);
+    if (src.mode == M_AREG && size == SZ_BYTE)
+        return setError(ILLEGAL_SIZE);
     if (dst.mode == M_AREG) { // MOVEA
         if (size == SZ_BYTE) return setError(ILLEGAL_SIZE);
     } else {

@@ -48,6 +48,7 @@ const char *ErrorReporter::errorText(Error error) {
     case REGISTER_NOT_ALLOWED: return "Register not allowed";
     case MISSING_COMMA:        return "Missing comma";
     case NOT_BIT_ADDRESSABLE:  return "Not bit addressable address";
+    case OPCODE_HAS_NO_EFFECT: return "Opcode has no effect";
 
     // ValueParser
     case ILLEGAL_CONSTANT:        return "Illegal constant";
