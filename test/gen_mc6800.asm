@@ -178,21 +178,35 @@
       LDS   175,X
       STS   176,X
       SUBA  >$00B1
+      SUBA  $0100
       CMPA  >$00B2
+      CMPA  $0100
       SBCA  >$00B3
+      SBCA  $0100
       ANDA  >$00B5
+      ANDA  $0100
       BITA  >$00B6
+      BITA  $0100
       LDAA  >$00B7
+      LDAA  $0100
       STAA  >$00B8
+      STAA  $0100
       EORA  >$00B9
+      EORA  $0100
       ADCA  >$00BA
+      ADCA  $0100
       ORAA  >$00BB
+      ORAA  $0100
       ADDA  >$00BC
+      ADDA  $0100
       CPX   >$00BD
+      CPX   $0100
       JSR   >$00BE
       JSR   $0100
       LDS   >$00BF
+      LDS   $0100
       STS   >$00C0
+      STS   $0100
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
@@ -231,14 +245,27 @@
       LDX   239,X
       STX   240,X
       SUBB  >$00F1
+      SUBB  $0100
       CMPB  >$00F2
+      CMPB  $0100
       SBCB  >$00F3
+      SBCB  $0100
       ANDB  >$00F5
+      ANDB  $0100
       BITB  >$00F6
+      BITB  $0100
       LDAB  >$00F7
+      LDAB  $0100
       STAB  >$00F8
+      STAB  $0100
       EORB  >$00F9
+      EORB  $0100
       ADCB  >$00FA
+      ADCB  $0100
       ORAB  >$00FB
+      ORAB  $0100
       ADDB  >$00FC
+      ADDB  $0100
       LDX   >$00FF
+      LDX   $0100
+      STX   $0100

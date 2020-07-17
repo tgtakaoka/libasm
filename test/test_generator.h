@@ -270,7 +270,10 @@ private:
     }
 
     int meaningfulTestData() {
-        const std::string name(_data.insn().name());
+        const size_t size = _data.insn().length();
+        std::string name(_data.insn().name());
+        name += ':';
+        name += size + '0';
         auto seen = _map.find(name);
         if (seen == _map.end()) {
             _map.emplace(name, std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq>());

@@ -267,6 +267,11 @@
       LD      >00H,@01H
       LD      >00H,#0E7H
       LDC     R0,-24(RR0)
+      LDE     R0,0(RR0)
+      LDE     R0,+1(RR0)
+      LDE     R0,-128(RR0)
+      LDC     R0,0(RR2)
+      LDC     R0,+1(RR2)
       JR      NZ,$-12H
       JR      NZ,$
       JR      NZ,$+1
@@ -283,6 +288,11 @@
       LD      @0F6H,>00H
       CALL    00F7H
       LDC     -8(RR0),R0
+      LDE     0(RR0),R0
+      LDE     +1(RR0),R0
+      LDE     -128(RR0),R0
+      LDC     0(RR2),R0
+      LDC     +1(RR2),R0
       JR      NC,$-2
       JR      NC,$
       JR      NC,$+1
