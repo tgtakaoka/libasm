@@ -417,7 +417,7 @@ bool TableZ8::setCpu(const char *cpu) {
         || strncasecmp(cpu, "z86", 3) == 0)
         return setCpu(Z8);
     if (strcasecmp(cpu, "super8") == 0
-        || strncasecmp(cpu, "z88", 2) == 0)
+        || strncasecmp(cpu, "z88", 3) == 0)
         return setCpu(SUPER8);
     return false;
 }
