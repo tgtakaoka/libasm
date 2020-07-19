@@ -115,7 +115,7 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode == M_INDX || mode == M_PC_INDX) {
         Config::ptrdiff_t disp;
         if (mode == M_PC_INDX) {
-            const Config::uintptr_t base = insn.address() + insn.length();
+            const Config::uintptr_t base = insn.address() + 2;
             const Config::uintptr_t target = ea.getError() ? base : ea.val32;
             disp = target - base;
         } else {
@@ -132,17 +132,29 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode == M_DISP || mode == M_PC_DISP || mode == M_ABS_SHORT) {
         Config::ptrdiff_t disp;
         if (mode == M_PC_DISP) {
-            const Config::uintptr_t base = insn.address() + insn.length();
+            const Config::uintptr_t base = insn.address() + 2;
             const Config::uintptr_t target = ea.getError() ? base : ea.val32;
             disp = target - base;
         } else {
             disp = static_cast<Config::ptrdiff_t>(ea.val32);
         }
+        /* TODO
+        if (ea.size == SZ_WORD && (disp % 2))
+            return setError(OPERAND_NOT_ALIGNED);
+        if (ea.size == SZ_LONG && (disp % 4))
+            return setError(OPERAND_NOT_ALIGNED);
+        */
         if (checkSize(disp, SZ_WORD, false)) return getError();
         insn.emitOperand16(static_cast<uint16_t>(disp));
         return setError(ea);
     }
     if (mode == M_ABS_LONG) {
+        /* TODO
+        if (ea.size == SZ_WORD && (ea.val32 % 2))
+            return setError(OPERAND_NOT_ALIGNED);
+        if (ea.size == SZ_LONG && (ea.val32 % 4))
+            return setError(OPERAND_NOT_ALIGNED);
+        */
         insn.emitOperand32(ea.val32);
         return setError(ea);
     }
@@ -206,10 +218,13 @@ Error AsmMc68000::encodeDestSiz(
     // NEGX/CLR/NEG/NOT/TST
     if (op2.mode != M_NONE) setError(UNKNOWN_OPERAND);
     constexpr uint8_t TST = 5;
-    const EaCat categories = (opc == TST) ? EaCat::DATA
-        : EaCat::DATA | EaCat::ALTERABLE;
-    if (!op1.satisfy(categories))
-        return setError(OPERAND_NOT_ALLOWED);
+    if (opc == TST) {
+        if (op1.mode == M_IMM_DATA || !op1.satisfy(EaCat::DATA))
+            return setError(OPERAND_NOT_ALLOWED);
+    } else {
+        if (!op1.satisfy(EaCat::DATA | EaCat::ALTERABLE))
+            return setError(OPERAND_NOT_ALLOWED);
+    }
     return emitEffectiveAddr(insn, op1);
 }
 
@@ -252,6 +267,7 @@ Error AsmMc68000::encodeDataReg(
         || op2.mode == M_LABEL) {
         const Config::uintptr_t base = insn.address() + sizeof(Config::opcode_t);
         const Config::uintptr_t target = op2.getError() ? base : op2.val32;
+        if (target % 2) return setError(OPERAND_NOT_ALIGNED);
         const Config::ptrdiff_t disp = target - base;
         if (checkSize(disp, SZ_WORD, false))
             return setError(OPERAND_TOO_FAR);
@@ -303,7 +319,7 @@ Error AsmMc68000::encodeDestOpr(
         constexpr uint8_t BTST = 0;
         const EaCat categories = (opc == BTST) ? EaCat::DATA
             : EaCat::DATA | EaCat::ALTERABLE;
-        if (!op2.satisfy(categories))
+        if (!op2.satisfy(categories) || op2.mode == M_IMM_DATA)
             return setError(OPERAND_NOT_ALLOWED);
 
         if (RegMc68000::isDreg(op1.reg))
@@ -392,6 +408,7 @@ Error AsmMc68000::encodeRelative(
     if (op1.mode != M_LABEL) return setError(OPERAND_NOT_ALLOWED);
     const Config::uintptr_t base = insn.address() + sizeof(Config::opcode_t);
     const Config::uintptr_t target = op1.getError() ? base : op1.val32;
+    if (target % 2) return setError(OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t disp = target - base;
     if (insn.size() == SZ_NONE)
         insn.setSize(checkSize(disp, SZ_BYTE, false) == OK ? SZ_BYTE : SZ_WORD);
@@ -796,9 +813,11 @@ Error AsmMc68000::parseOperand(Operand &opr) {
         if (*p == ')') {
             p = parseSize(p + 1, opr.size);
             if (opr.size == SZ_NONE) {
+                if ((opr.val32 & 0xFF8000) == 0xFF8000) opr.val32 |= 0xFFFF0000;
                 opr.mode = checkSize(opr.val32, SZ_WORD, false) ? M_ABS_LONG : M_ABS_SHORT;
             } else if (opr.size == SZ_WORD) {
                 opr.mode = M_ABS_SHORT;
+                if ((opr.val32 & 0xFF8000) == 0xFF8000) opr.val32 |= 0xFFFF0000;
             } else if (opr.size == SZ_LONG) {
                 opr.mode = M_ABS_LONG;
             } else {
