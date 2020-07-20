@@ -57,25 +57,26 @@ static void test_data_move() {
     TEST(EXG, "D1,A2", 0141612); // 014|Dx|61|Ay
 
     // LEA ea,Ad: 004|An|7|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041702); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041702); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041712); // An
     TEST(LEA, "(A2),A1",               0041722);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041732); // (An)+
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041742); // -(An)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041732); // (An)+
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041742); // -(An)
     TEST(LEA, "($1234,A2),A1",         0041752, 0x1234);
     TEST(LEA, "($12,A2,D3.W),A1",      0041762, 0x3012);
     TEST(LEA, "($FFFF00).W,A1",        0041770, 0xFF00);
     TEST(LEA, "($001234).L,A1",        0041771, 0x0000, 0x1234);
     TEST(LEA, "(*+$1234,PC),A1",       0041772, 0x1232);
     TEST(LEA, "(*+$12,PC,A3.L),A1",    0041773, 0xB810);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041774); // #xxxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041774); // #xxxxx
 
     // LINK An,#nn: 004712|An
     TEST(LINK, "A3,#$1234", 0047123, 0x1234);
+    TEST(LINK, "A3,#-16",   0047123, 0xFFF0);
 
     // MOVE src,dst: 00|Sz|Rd|Md|Ms|Rs, Sz:B=1/W=3/L=2
     TEST(MOVE_B, "D2,D7",              0017002);
-    ETEST(ILLEGAL_SIZE, _, "",         0017012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0017012); // An
     TEST(MOVE_B, "(A2),D7",            0017022);
     TEST(MOVE_B, "(A2)+,D7",           0017032);
     TEST(MOVE_B, "-(A2),D7",           0017042);
@@ -111,7 +112,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),D7", 0027073, 0x3010);
     TEST(MOVE_L, "#$00345678,D7",      0027074, 0x0034, 0x5678);
     TEST(MOVE_B, "D2,(A6)",              0016202);
-    ETEST(ILLEGAL_SIZE, _, "",           0016212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0016212); // An
     TEST(MOVE_B, "(A2),(A6)",            0016222);
     TEST(MOVE_B, "(A2)+,(A6)",           0016232);
     TEST(MOVE_B, "-(A2),(A6)",           0016242);
@@ -147,7 +148,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),(A6)", 0026273, 0x3010);
     TEST(MOVE_L, "#$00345678,(A6)",      0026274, 0x0034, 0x5678);
     TEST(MOVE_B, "D2,(A6)+",              0016302);
-    ETEST(ILLEGAL_SIZE, _, "",            0016312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",     0016312); // An
     TEST(MOVE_B, "(A2),(A6)+",            0016322);
     TEST(MOVE_B, "(A2)+,(A6)+",           0016332);
     TEST(MOVE_B, "-(A2),(A6)+",           0016342);
@@ -183,7 +184,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),(A6)+", 0026373, 0x3010);
     TEST(MOVE_L, "#$00345678,(A6)+",      0026374, 0x0034, 0x5678);
     TEST(MOVE_B, "D2,-(A6)",              0016402);
-    ETEST(ILLEGAL_SIZE, _, "",            0016412); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",     0016412); // An
     TEST(MOVE_B, "(A2),-(A6)",            0016422);
     TEST(MOVE_B, "(A2)+,-(A6)",           0016432);
     TEST(MOVE_B, "-(A2),-(A6)",           0016442);
@@ -219,7 +220,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),-(A6)", 0026473, 0x3010);
     TEST(MOVE_L, "#$00345678,-(A6)",      0026474, 0x0034, 0x5678);
     TEST(MOVE_B, "D2,($5678,A6)",              0016502, 0x5678);
-    ETEST(ILLEGAL_SIZE, _, "",                 0016512); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",          0016512); // An
     TEST(MOVE_B, "(A2),($5678,A6)",            0016522, 0x5678);
     TEST(MOVE_B, "(A2)+,($5678,A6)",           0016532, 0x5678);
     TEST(MOVE_B, "-(A2),($5678,A6)",           0016542, 0x5678);
@@ -255,7 +256,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),($5678,A6)", 0026573, 0x3010, 0x5678);
     TEST(MOVE_L, "#$00345678,($5678,A6)",      0026574, 0x0034, 0x5678, 0x5678);
     TEST(MOVE_B, "D2,($56,A6,D5.W)",              0016602, 0x5056);
-    ETEST(ILLEGAL_SIZE, _, "",                    0016612); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",             0016612); // An
     TEST(MOVE_B, "(A2),($56,A6,D5.W)",            0016622, 0x5056);
     TEST(MOVE_B, "(A2)+,($56,A6,D5.W)",           0016632, 0x5056);
     TEST(MOVE_B, "-(A2),($56,A6,D5.W)",           0016642, 0x5056);
@@ -291,7 +292,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),($56,A6,D5.W)", 0026673, 0x3010, 0x5056);
     TEST(MOVE_L, "#$00345678,($56,A6,D5.W)",      0026674, 0x0034, 0x5678, 0x5056);
     TEST(MOVE_B, "D2,($005678).W",              0010702, 0x5678);
-    ETEST(ILLEGAL_SIZE, _, "",                  0010712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",           0010712); // An
     TEST(MOVE_B, "(A2),($005678).W",            0010722, 0x5678);
     TEST(MOVE_B, "(A2)+,($005678).W",           0010732, 0x5678);
     TEST(MOVE_B, "-(A2),($005678).W",           0010742, 0x5678);
@@ -327,7 +328,7 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$12,PC,D3.W),($005678).W", 0020773, 0x3010, 0x5678);
     TEST(MOVE_L, "#$00345678,($005678).W",      0020774, 0x0034, 0x5678, 0x5678);
     TEST(MOVE_B, "D2,($56789A).L",              0011702, 0x0056, 0x789A);
-    ETEST(ILLEGAL_SIZE, _, "",                  0011712);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",           0011712);
     TEST(MOVE_B, "(A2),($56789A).L",            0011722, 0x0056, 0x789A);
     TEST(MOVE_B, "(A2)+,($56789A).L",           0011732, 0x0056, 0x789A);
     TEST(MOVE_B, "-(A2),($56789A).L",           0011742, 0x0056, 0x789A);
@@ -362,9 +363,9 @@ static void test_data_move() {
     TEST(MOVE_L, "(*+$1234,PC),($567898).L",    0021772, 0x1232, 0x0056, 0x7898);
     TEST(MOVE_L, "(*+$12,PC,D3.W),($567898).L", 0021773, 0x3010, 0x0056, 0x7898);
     TEST(MOVE_L, "#$00345678,($567898).L",      0021774, 0x0034, 0x5678, 0x0056, 0x7898);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",          0012702); // MOVE.B D2,(d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",          0033702); // MOVE.W D2,(d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",          0024702); // MOVE.L D2,#nnnn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",           0012702); // MOVE.B D2,(d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",           0033702); // MOVE.W D2,(d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",           0024702); // MOVE.L D2,#nnnn
 
     // MOVEA src,An: 00|Sz|An|1|M|Rn, Sz:W=3/L=2
     TEST(MOVEA_W, "D2,A6",              0036102);
@@ -394,55 +395,71 @@ static void test_data_move() {
 
     // MOVEM list,dst: 0044|Sz|Md|Rd, Sz:W=2/L=3, list=A7|...|D0, -(An)=D0|...|A7
     TEST(EXT_W,   "D2",                  0044202); // EXT_W
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044212); // An
     TEST(MOVEM_W, "D0-D6,(A2)",          0044222, 0x007F);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044232); // (An)+
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044232); // (An)+
     TEST(MOVEM_W, "D0-D6,-(A2)",         0044242, 0xFE00);
     TEST(MOVEM_W, "D0-D6,($1234,A2)",    0044252, 0x007F, 0x1234);
     TEST(MOVEM_W, "D0-D6,($12,A2,A3.L)", 0044262, 0x007F, 0xB812);
     TEST(MOVEM_W, "D0-D6,($FFFEDC).W",   0044270, 0x007F, 0xFEDC);
     TEST(MOVEM_W, "D0-D6,($123456).L",   0044271, 0x007F, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044274); // #xxxx
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044310); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044274); // #xxxx
+    TEST(MOVEM_W, "D0,(A2)",             0044222, 0x0001);
+    TEST(MOVEM_W, "A0,(A2)",             0044222, 0x0100);
+    TEST(MOVEM_W, "D0,-(A2)",            0044242, 0x8000);
+    TEST(MOVEM_W, "A0,-(A2)",            0044242, 0x0080);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044310); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044312); // An
     TEST(MOVEM_L, "D1/A0,(A2)",          0044322, 0x0102);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044332); // (An)+
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044332); // (An)+
     TEST(MOVEM_L, "D1/A0,-(A2)",         0044342, 0x4080);
     TEST(MOVEM_L, "D1/A0,($1234,A2)",    0044352, 0x0102, 0x1234);
     TEST(MOVEM_L, "D1/A0,($12,A2,A3.L)", 0044362, 0x0102, 0xB812);
     TEST(MOVEM_L, "D1/A0,($FFFEDC).W",   0044370, 0x0102, 0xFEDC);
     TEST(MOVEM_L, "D1/A0,($123454).L",   0044371, 0x0102, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044373); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0044374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0044374); // #xxxx
+    TEST(MOVEM_L, "D0,(A2)",             0044322, 0x0001);
+    TEST(MOVEM_L, "A0,(A2)",             0044322, 0x0100);
+    TEST(MOVEM_L, "D0,-(A2)",            0044342, 0x8000);
+    TEST(MOVEM_L, "A0,-(A2)",            0044342, 0x0080);
 
     // MOVEM src,list: 0046|Sz|Md|Rd, Sz:W=2/L=3, list=A7|...|D0
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046202); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046202); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046212); // An
     TEST(MOVEM_W, "(A2),A3-A6",            0046222, 0x7800);
     TEST(MOVEM_W, "(A2)+,A3-A6",           0046232, 0x7800);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046242); // -(An)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046242); // -(An)
     TEST(MOVEM_W, "($1234,A2),A3-A6",      0046252, 0x7800, 0x1234);
     TEST(MOVEM_W, "($12,A2,D3.W),A3-A6",   0046262, 0x7800, 0x3012);
     TEST(MOVEM_W, "($FFFEDC).W,A3-A6",     0046270, 0x7800, 0xFEDC);
     TEST(MOVEM_W, "($123456).L,A3-A6",     0046271, 0x7800, 0x0012, 0x3456);
     TEST(MOVEM_W, "(*+$1234,PC),A3-A6",    0046272, 0x7800, 0x1232);
     TEST(MOVEM_W, "(*+$12,PC,D3.L),A3-A6", 0046273, 0x7800, 0x3810);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046274); // #xxxx
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046302); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046274); // #xxxx
+    TEST(MOVEM_W, "(A2),D0",               0046222, 0x0001);
+    TEST(MOVEM_W, "(A2),A0",               0046222, 0x0100);
+    TEST(MOVEM_W, "(A2)+,D0",              0046232, 0x0001);
+    TEST(MOVEM_W, "(A2)+,A0",              0046232, 0x0100);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046302); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046312); // An
     TEST(MOVEM_L, "(A2),A3-A6",            0046322, 0x7800);
     TEST(MOVEM_L, "(A2)+,A3-A6",           0046332, 0x7800);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046342); // -(An)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046342); // -(An)
     TEST(MOVEM_L, "($1234,A2),A3-A6",      0046352, 0x7800, 0x1234);
     TEST(MOVEM_L, "($12,A2,D3.W),A3-A6",   0046362, 0x7800, 0x3012);
     TEST(MOVEM_L, "($FFFEDC).W,A3-A6",     0046370, 0x7800, 0xFEDC);
     TEST(MOVEM_L, "($123454).L,A3-A6",     0046371, 0x7800, 0x0012, 0x3454);
     TEST(MOVEM_L, "(*+$1234,PC),A3-A6",    0046372, 0x7800, 0x1232);
     TEST(MOVEM_L, "(*+$12,PC,D3.L),A3-A6", 0046373, 0x7800, 0x3810);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0046374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0046374); // #xxxx
+    TEST(MOVEM_L, "(A2),D0",               0046322, 0x0001);
+    TEST(MOVEM_L, "(A2),A0",               0046322, 0x0100);
+    TEST(MOVEM_L, "(A2)+,D0",              0046332, 0x0001);
+    TEST(MOVEM_L, "(A2)+,A0",              0046332, 0x0100);
 
     // MOVEP Dn,(d16,An): 000|Dn|Sz|1|An, SZ:W=6/L=7
     TEST(MOVEP_W, "D7,($1234,A2)", 0007612, 0x1234);
@@ -460,17 +477,17 @@ static void test_data_move() {
 
     // PEA src: 00441|M|Rn
     TEST(SWAP, "D2",                   0044102); // SWAP
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044112); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044112); // An
     TEST(PEA, "(A2)",                  0044122);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044132); // (An)+
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044142); // -(An)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044132); // (An)+
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044142); // -(An)
     TEST(PEA, "($1234,A2)",            0044152, 0x1234);
     TEST(PEA, "($12,A2,D3.W)",         0044162, 0x3012);
     TEST(PEA, "($FFFF00).W",           0044170, 0xFF00);
     TEST(PEA, "($001234).L",           0044171, 0x0000, 0x1234);
     TEST(PEA, "(*+$1234,PC)",          0044172, 0x1232);
     TEST(PEA, "(*+$12,PC,A3.L)",       0044173, 0xB810);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044174); // #xxxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044174); // #xxxxx
 
     // UNLK An: 004713|An
     TEST(UNLK, "A0", 0047130);
@@ -488,9 +505,9 @@ static void test_integer() {
     TEST(ADD_B, "D7,($12,A2,D3.L)",    0157462, 0x3812);
     TEST(ADD_B, "D7,($FFFFFF).W",      0157470, 0xFFFF);
     TEST(ADD_B, "D7,($123456).L",      0157471, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157472); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157473); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157472); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157473); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157474); // #xxxx
     TEST(ADDX_W, "D2,D7",              0157502); // ADDX.W
     TEST(ADDX_W, "-(A2),-(A7)",        0157512); // ADDX.L
     TEST(ADD_W, "D7,(A2)",             0157522);
@@ -500,9 +517,9 @@ static void test_integer() {
     TEST(ADD_W, "D7,($12,A2,D3.L)",    0157562, 0x3812);
     TEST(ADD_W, "D7,($FFFFFE).W",      0157570, 0xFFFE);
     TEST(ADD_W, "D7,($123456).L",      0157571, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157572); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157573); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157572); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157573); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157574); // #xxxx
     TEST(ADDX_L, "D2,D7",              0157602); // ADDX.L
     TEST(ADDX_L, "-(A2),-(A7)",        0157612); // ADDX.L
     TEST(ADD_L, "D7,(A2)",             0157622);
@@ -512,13 +529,13 @@ static void test_integer() {
     TEST(ADD_L, "D7,($12,A2,D3.L)",    0157662, 0x3812);
     TEST(ADD_L, "D7,($FFFFFC).W",      0157670, 0xFFFC);
     TEST(ADD_L, "D7,($123454).L",      0157671, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157672); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157673); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0157674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157672); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157673); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0157674); // #xxxx
 
     // ADD src,Dn: 015|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(ADD_B, "D2,D7",              0157002);
-    ETEST(ILLEGAL_SIZE, _, "",        0157012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0157012); // An
     TEST(ADD_B, "(A2),D7",            0157022);
     TEST(ADD_B, "(A2)+,D7",           0157032);
     TEST(ADD_B, "-(A2),D7",           0157042);
@@ -582,7 +599,7 @@ static void test_integer() {
 
     // ADDI #xxxx,dst: 0003|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(ADDI_B, "#$12,D2",            0003002, 0x0012);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0003012, 0x0012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0003012, 0x0012); // An
     TEST(ADDI_B, "#$12,(A2)",          0003022, 0x0012);
     TEST(ADDI_B, "#$12,(A2)+",         0003032, 0x0012);
     TEST(ADDI_B, "#$12,-(A2)",         0003042, 0x0012);
@@ -590,11 +607,11 @@ static void test_integer() {
     TEST(ADDI_B, "#$12,($12,A2,D3.W)", 0003062, 0x0012, 0x3012);
     TEST(ADDI_B, "#$12,($001234).W",   0003070, 0x0012, 0x1234);
     TEST(ADDI_B, "#$12,($123456).L",   0003071, 0x0012, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0003072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0003073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0003074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0003072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0003073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0003074); // #xxxx
     TEST(ADDI_W, "#$5678,D2",            0003102, 0x5678);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0003112, 0x5678); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0003112, 0x5678); // An
     TEST(ADDI_W, "#$5678,(A2)",          0003122, 0x5678);
     TEST(ADDI_W, "#$5678,(A2)+",         0003132, 0x5678);
     TEST(ADDI_W, "#$5678,-(A2)",         0003142, 0x5678);
@@ -602,11 +619,11 @@ static void test_integer() {
     TEST(ADDI_W, "#$5678,($12,A2,D3.W)", 0003162, 0x5678, 0x3012);
     TEST(ADDI_W, "#$5678,($001234).W",   0003170, 0x5678, 0x1234);
     TEST(ADDI_W, "#$5678,($123456).L",   0003171, 0x5678, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0003172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0003173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0003174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0003172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0003173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0003174); // #xxxx
     TEST(ADDI_L, "#$3456789A,D2",            0003202, 0x3456, 0x789A);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0003212, 0x3456, 0x789A); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0003212, 0x3456, 0x789A); // An
     TEST(ADDI_L, "#$3456789A,(A2)",          0003222, 0x3456, 0x789A);
     TEST(ADDI_L, "#$3456789A,(A2)+",         0003232, 0x3456, 0x789A);
     TEST(ADDI_L, "#$3456789A,-(A2)",         0003242, 0x3456, 0x789A);
@@ -614,13 +631,13 @@ static void test_integer() {
     TEST(ADDI_L, "#$3456789A,($12,A2,D3.W)", 0003262, 0x3456, 0x789A, 0x3012);
     TEST(ADDI_L, "#$3456789A,($001234).W",   0003270, 0x3456, 0x789A, 0x1234);
     TEST(ADDI_L, "#$34567898,($123454).L",   0003271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0003272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0003273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0003274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0003272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0003273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0003274); // #xxxx
 
     // ADDQ #nn,dst: 005|nn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(ADDQ_B, "#8,D2",              0050002);
-    ETEST(ILLEGAL_SIZE, _, "",         0050012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050012); // An
     TEST(ADDQ_B, "#8,(A2)",            0050022);
     TEST(ADDQ_B, "#8,(A2)+",           0050032);
     TEST(ADDQ_B, "#8,-(A2)",           0050042);
@@ -628,9 +645,9 @@ static void test_integer() {
     TEST(ADDQ_B, "#8,($12,A2,D3.W)",   0050062, 0x3012);
     TEST(ADDQ_B, "#8,($001234).W",     0050070, 0x1234);
     TEST(ADDQ_B, "#8,($123456).L",     0050071, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050074); // #xxxx
     TEST(ADDQ_W, "#8,D2",              0050102);
     TEST(ADDQ_W, "#8,A2",              0050112);
     TEST(ADDQ_W, "#8,(A2)",            0050122);
@@ -640,9 +657,9 @@ static void test_integer() {
     TEST(ADDQ_W, "#8,($12,A2,D3.W)",   0050162, 0x3012);
     TEST(ADDQ_W, "#8,($001234).W",     0050170, 0x1234);
     TEST(ADDQ_W, "#8,($123456).L",     0050171, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050174); // #xxxx
     TEST(ADDQ_L, "#8,D2",              0050202);
     TEST(ADDQ_L, "#8,A2",              0050212);
     TEST(ADDQ_L, "#8,(A2)",            0050222);
@@ -652,23 +669,23 @@ static void test_integer() {
     TEST(ADDQ_L, "#8,($12,A2,D3.W)",   0050262, 0x3012);
     TEST(ADDQ_L, "#8,($001234).W",     0050270, 0x1234);
     TEST(ADDQ_L, "#8,($123454).L",     0050271, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050274); // #xxxx
 
-    // ADDX Dx,Dy: 015|Dx|Sz|0|Dy, Sz:B=4/W=5/L=6
+    // ADDX Dx,Dy: 015|Dy|Sz|0|Dx, Sz:B=4/W=5/L=6
     TEST(ADDX_B, "D2,D3", 0153402);
     TEST(ADDX_W, "D2,D3", 0153502);
     TEST(ADDX_L, "D2,D3", 0153602);
 
-    // ADDX -(Ax),-(Ay), 015|Ax|Sz|1|Ay, Sz:B=4/W=5/L=6
+    // ADDX -(Ax),-(Ay), 015|Ay|Sz|1|Ax, Sz:B=4/W=5/L=6
     TEST(ADDX_B, "-(A2),-(A3)", 0153412);
     TEST(ADDX_W, "-(A2),-(A3)", 0153512);
     TEST(ADDX_L, "-(A2),-(A3)", 0153612);
 
     // CLR dst: 0041|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(CLR_B, "D2",                  0041002);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041012); // An
     TEST(CLR_B, "(A2)",                0041022);
     TEST(CLR_B, "(A2)+",               0041032);
     TEST(CLR_B, "-(A2)",               0041042);
@@ -676,11 +693,11 @@ static void test_integer() {
     TEST(CLR_B, "($12,A2,D3.W)",       0041062, 0x3012);
     TEST(CLR_B, "($001234).W",         0041070, 0x1234);
     TEST(CLR_B, "($123456).L",         0041071, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041074); // #xxxx
     TEST(CLR_W, "D2",                  0041102);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041112); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041112); // An
     TEST(CLR_W, "(A2)",                0041122);
     TEST(CLR_W, "(A2)+",               0041132);
     TEST(CLR_W, "-(A2)",               0041142);
@@ -688,11 +705,11 @@ static void test_integer() {
     TEST(CLR_W, "($12,A2,D3.W)",       0041162, 0x3012);
     TEST(CLR_W, "($001234).W",         0041170, 0x1234);
     TEST(CLR_W, "($123456).L",         0041171, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041174); // #xxxx
     TEST(CLR_L, "D2",                  0041202);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041212); // An
     TEST(CLR_L, "(A2)",                0041222);
     TEST(CLR_L, "(A2)+",               0041232);
     TEST(CLR_L, "-(A2)",               0041242);
@@ -700,13 +717,13 @@ static void test_integer() {
     TEST(CLR_L, "($12,A2,D3.W)",       0041262, 0x3012);
     TEST(CLR_L, "($001234).W",         0041270, 0x1234);
     TEST(CLR_L, "($123454).L",         0041271, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0041274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0041274); // #xxxx
 
     // CMP src,Dn: 013|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(CMP_B, "D2,D7",              0137002);
-    ETEST(ILLEGAL_SIZE, _, "",        0137012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0137012); // An
     TEST(CMP_B, "(A2),D7",            0137022);
     TEST(CMP_B, "(A2)+,D7",           0137032);
     TEST(CMP_B, "-(A2),D7",           0137042);
@@ -770,7 +787,7 @@ static void test_integer() {
 
     // CMPI #nn,dst: 0006|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(CMPI_B, "#$12,D2",              0006002, 0x0012);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0006012, 0x0012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0006012, 0x0012); // An
     TEST(CMPI_B, "#$12,(A2)",            0006022, 0x0012);
     TEST(CMPI_B, "#$12,(A2)+",           0006032, 0x0012);
     TEST(CMPI_B, "#$12,-(A2)",           0006042, 0x0012);
@@ -778,11 +795,11 @@ static void test_integer() {
     TEST(CMPI_B, "#$12,($12,A2,D3.W)",   0006062, 0x0012, 0x3012);
     TEST(CMPI_B, "#$12,($001234).W",     0006070, 0x0012, 0x1234);
     TEST(CMPI_B, "#$12,($123456).L",     0006071, 0x0012, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0006072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0006073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0006074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0006072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0006073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0006074); // #xxxx
     TEST(CMPI_W, "#$5678,D2",              0006102, 0x5678);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0006112, 0x5678); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0006112, 0x5678); // An
     TEST(CMPI_W, "#$5678,(A2)",            0006122, 0x5678);
     TEST(CMPI_W, "#$5678,(A2)+",           0006132, 0x5678);
     TEST(CMPI_W, "#$5678,-(A2)",           0006142, 0x5678);
@@ -790,11 +807,11 @@ static void test_integer() {
     TEST(CMPI_W, "#$5678,($12,A2,D3.W)",   0006162, 0x5678, 0x3012);
     TEST(CMPI_W, "#$5678,($001234).W",     0006170, 0x5678, 0x1234);
     TEST(CMPI_W, "#$5678,($123456).L",     0006171, 0x5678, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0006172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0006173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",     0006174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0006172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0006173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",      0006174); // #xxxx
     TEST(CMPI_L, "#$3456789A,D2",              0006202, 0x3456, 0x789A);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",         0006212, 0x3456, 0x789A); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",          0006212, 0x3456, 0x789A); // An
     TEST(CMPI_L, "#$3456789A,(A2)",            0006222, 0x3456, 0x789A);
     TEST(CMPI_L, "#$3456789A,(A2)+",           0006232, 0x3456, 0x789A);
     TEST(CMPI_L, "#$3456789A,-(A2)",           0006242, 0x3456, 0x789A);
@@ -802,9 +819,9 @@ static void test_integer() {
     TEST(CMPI_L, "#$3456789A,($12,A2,D3.W)",   0006262, 0x3456, 0x789A, 0x3012);
     TEST(CMPI_L, "#$3456789A,($001234).W",     0006270, 0x3456, 0x789A, 0x1234);
     TEST(CMPI_L, "#$3456789A,($123454).L",     0006271, 0x3456, 0x789A, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",         0006272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",         0006273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",         0006274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",          0006272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",          0006273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",          0006274); // #xxxx
 
     // CMPM (Ay)+,(Ax)+: 013|Ax|Sz|1|Ay, Sz:B=4/W=5/L=6
     TEST(CMPM_B, "(A2)+,(A7)+", 0137412);
@@ -813,7 +830,7 @@ static void test_integer() {
 
     // DIVS src,Dn: 010|Dn|7|M|Rn
     TEST(DIVS_W, "D2,D7",              0107702);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107712); // An
     TEST(DIVS_W, "(A2),D7",            0107722);
     TEST(DIVS_W, "(A2)+,D7",           0107732);
     TEST(DIVS_W, "-(A2),D7",           0107742);
@@ -827,7 +844,7 @@ static void test_integer() {
 
     // DIVU src,Dn: 010|Dn|3|M|Rn
     TEST(DIVU_W, "D2,D7",              0107302);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107312); // An
     TEST(DIVU_W, "(A2),D7",            0107322);
     TEST(DIVU_W, "(A2)+,D7",           0107332);
     TEST(DIVU_W, "-(A2),D7",           0107342);
@@ -845,7 +862,7 @@ static void test_integer() {
 
     // MULS src,Dn: 014|Dn|7|M|Rn
     TEST(MULS_W, "D2,D7",              0147702);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147712); // An
     TEST(MULS_W, "(A2),D7",            0147722);
     TEST(MULS_W, "(A2)+,D7",           0147732);
     TEST(MULS_W, "-(A2),D7",           0147742);
@@ -859,7 +876,7 @@ static void test_integer() {
 
     // MULU src,Dn: 014|Dn|3|M|Rn
     TEST(MULU_W, "D2,D7",              0147302);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147312); // An
     TEST(MULU_W, "(A2),D7",            0147322);
     TEST(MULU_W, "(A2)+,D7",           0147332);
     TEST(MULU_W, "-(A2),D7",           0147342);
@@ -873,7 +890,7 @@ static void test_integer() {
 
     // NEG dst: 0042|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(NEG_B, "D2",                  0042002);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042012); // An
     TEST(NEG_B, "(A2)",                0042022);
     TEST(NEG_B, "(A2)+",               0042032);
     TEST(NEG_B, "-(A2)",               0042042);
@@ -881,11 +898,11 @@ static void test_integer() {
     TEST(NEG_B, "($12,A2,D3.W)",       0042062, 0x3012);
     TEST(NEG_B, "($001234).W",         0042070, 0x1234);
     TEST(NEG_B, "($123456).L",         0042071, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042074); // #xxxx
     TEST(NEG_W, "D2",                  0042102);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042112); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042112); // An
     TEST(NEG_W, "(A2)",                0042122);
     TEST(NEG_W, "(A2)+",               0042132);
     TEST(NEG_W, "-(A2)",               0042142);
@@ -893,11 +910,11 @@ static void test_integer() {
     TEST(NEG_W, "($12,A2,D3.W)",       0042162, 0x3012);
     TEST(NEG_W, "($001234).W",         0042170, 0x1234);
     TEST(NEG_W, "($123456).L",         0042171, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042174); // #xxxx
     TEST(NEG_L, "D2",                  0042202);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042212); // An
     TEST(NEG_L, "(A2)",                0042222);
     TEST(NEG_L, "(A2)+",               0042232);
     TEST(NEG_L, "-(A2)",               0042242);
@@ -905,13 +922,13 @@ static void test_integer() {
     TEST(NEG_L, "($12,A2,D3.W)",       0042262, 0x3012);
     TEST(NEG_L, "($001234).W",         0042270, 0x1234);
     TEST(NEG_L, "($123454).L",         0042271, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042274); // #xxxx
 
     // NEGX dst: 0040|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(NEGX_B, "D2",                 0040002);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040012); // An
     TEST(NEGX_B, "(A2)",               0040022);
     TEST(NEGX_B, "(A2)+",              0040032);
     TEST(NEGX_B, "-(A2)",              0040042);
@@ -919,11 +936,11 @@ static void test_integer() {
     TEST(NEGX_B, "($12,A2,D3.W)",      0040062, 0x3012);
     TEST(NEGX_B, "($001234).W",        0040070, 0x1234);
     TEST(NEGX_B, "($123456).L",        0040071, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040074); // #xxxx
     TEST(NEGX_W, "D2",                 0040102);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040112); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040112); // An
     TEST(NEGX_W, "(A2)",               0040122);
     TEST(NEGX_W, "(A2)+",              0040132);
     TEST(NEGX_W, "-(A2)",              0040142);
@@ -931,11 +948,11 @@ static void test_integer() {
     TEST(NEGX_W, "($12,A2,D3.W)",      0040162, 0x3012);
     TEST(NEGX_W, "($001234).W",        0040170, 0x1234);
     TEST(NEGX_W, "($123456).L",        0040171, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040174); // #xxxx
     TEST(NEGX_L, "D2",                 0040202);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040212); // An
     TEST(NEGX_L, "(A2)",               0040222);
     TEST(NEGX_L, "(A2)+",              0040232);
     TEST(NEGX_L, "-(A2)",              0040242);
@@ -943,13 +960,13 @@ static void test_integer() {
     TEST(NEGX_L, "($12,A2,D3.W)",      0040262, 0x3012);
     TEST(NEGX_L, "($001234).W",        0040270, 0x1234);
     TEST(NEGX_L, "($123454).L",        0040271, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040274); // #xxxx
 
     // SUB src,Dn: 011|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(SUB_B, "D2,D7",              0117002);
-    ETEST(ILLEGAL_SIZE, _, "",        0117012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0117012); // An
     TEST(SUB_B, "(A2),D7",            0117022);
     TEST(SUB_B, "(A2)+,D7",           0117032);
     TEST(SUB_B, "-(A2),D7",           0117042);
@@ -995,9 +1012,9 @@ static void test_integer() {
     TEST(SUB_B, "D7,($12,A2,D3.L)",    0117462, 0x3812);
     TEST(SUB_B, "D7,($FFFFFF).W",      0117470, 0xFFFF);
     TEST(SUB_B, "D7,($123456).L",      0117471, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117472); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117473); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117472); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117473); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117474); // #xxxx
     TEST(SUBX_W, "D2,D7",              0117502); // SUBX.W
     TEST(SUBX_W, "-(A2),-(A7)",        0117512); // SUBX.L
     TEST(SUB_W, "D7,(A2)",             0117522);
@@ -1007,9 +1024,9 @@ static void test_integer() {
     TEST(SUB_W, "D7,($12,A2,D3.L)",    0117562, 0x3812);
     TEST(SUB_W, "D7,($FFFFFE).W",      0117570, 0xFFFE);
     TEST(SUB_W, "D7,($123456).L",      0117571, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117572); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117573); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117572); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117573); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117574); // #xxxx
     TEST(SUBX_L, "D2,D7",              0117602); // SUBX.L
     TEST(SUBX_L, "-(A2),-(A7)",        0117612); // SUBX.L
     TEST(SUB_L, "D7,(A2)",             0117622);
@@ -1019,9 +1036,9 @@ static void test_integer() {
     TEST(SUB_L, "D7,($12,A2,D3.L)",    0117662, 0x3812);
     TEST(SUB_L, "D7,($FFFFFC).W",      0117670, 0xFFFC);
     TEST(SUB_L, "D7,($123454).L",      0117671, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117672); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117673); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0117674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117672); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117673); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0117674); // #xxxx
 
     // SUBA src,An: 011|An|Sz|M|Rn, Sz:W=3/L=7
     TEST(SUBA_W, "D2,A6",              0116302);
@@ -1051,7 +1068,7 @@ static void test_integer() {
 
     // SUBI #nn,dst: 0002|Sz|M|Rn, SZ:B=0/W=1/L=2
     TEST(SUBI_B, "#$12,D2",            0002002, 0x0012);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0002012, 0x0012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0002012, 0x0012); // An
     TEST(SUBI_B, "#$12,(A2)",          0002022, 0x0012);
     TEST(SUBI_B, "#$12,(A2)+",         0002032, 0x0012);
     TEST(SUBI_B, "#$12,-(A2)",         0002042, 0x0012);
@@ -1059,11 +1076,11 @@ static void test_integer() {
     TEST(SUBI_B, "#$12,($12,A2,D3.W)", 0002062, 0x0012, 0x3012);
     TEST(SUBI_B, "#$12,($001234).W",   0002070, 0x0012, 0x1234);
     TEST(SUBI_B, "#$12,($123456).L",   0002071, 0x0012, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0002072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0002073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0002074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0002072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0002073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0002074); // #xxxx
     TEST(SUBI_W, "#$5678,D2",            0002102, 0x5678);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0002112, 0x5678); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0002112, 0x5678); // An
     TEST(SUBI_W, "#$5678,(A2)",          0002122, 0x5678);
     TEST(SUBI_W, "#$5678,(A2)+",         0002132, 0x5678);
     TEST(SUBI_W, "#$5678,-(A2)",         0002142, 0x5678);
@@ -1071,11 +1088,11 @@ static void test_integer() {
     TEST(SUBI_W, "#$5678,($12,A2,D3.W)", 0002162, 0x5678, 0x3012);
     TEST(SUBI_W, "#$5678,($001234).W",   0002170, 0x5678, 0x1234);
     TEST(SUBI_W, "#$5678,($123456).L",   0002171, 0x5678, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0002172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0002173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0002174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0002172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0002173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0002174); // #xxxx
     TEST(SUBI_L, "#$3456789A,D2",            0002202, 0x3456, 0x789A);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0002212, 0x3456, 0x789A); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0002212, 0x3456, 0x789A); // An
     TEST(SUBI_L, "#$3456789A,(A2)",          0002222, 0x3456, 0x789A);
     TEST(SUBI_L, "#$3456789A,(A2)+",         0002232, 0x3456, 0x789A);
     TEST(SUBI_L, "#$3456789A,-(A2)",         0002242, 0x3456, 0x789A);
@@ -1083,13 +1100,13 @@ static void test_integer() {
     TEST(SUBI_L, "#$3456789A,($12,A2,D3.W)", 0002262, 0x3456, 0x789A, 0x3012);
     TEST(SUBI_L, "#$3456789A,($001234).W",   0002270, 0x3456, 0x789A, 0x1234);
     TEST(SUBI_L, "#$3456789A,($123454).L",   0002271, 0x3456, 0x789A, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0002272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0002273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0002274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0002272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0002273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0002274); // #xxxx
 
     // SUBQ #nn,dst: 005|nn|Sz|M\En, Sz:B=4/W=5/L=6
     TEST(SUBQ_B, "#8,D2",              0050402);
-    ETEST(ILLEGAL_SIZE, _, "",         0050412); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050412); // An
     TEST(SUBQ_B, "#8,(A2)",            0050422);
     TEST(SUBQ_B, "#8,(A2)+",           0050432);
     TEST(SUBQ_B, "#8,-(A2)",           0050442);
@@ -1097,9 +1114,9 @@ static void test_integer() {
     TEST(SUBQ_B, "#8,($12,A2,D3.W)",   0050462, 0x3012);
     TEST(SUBQ_B, "#8,($001234).W",     0050470, 0x1234);
     TEST(SUBQ_B, "#8,($123456).L",     0050471, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050472); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050473); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050472); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050473); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050474); // #xxxx
     TEST(SUBQ_W, "#8,D2",              0050502);
     TEST(SUBQ_W, "#8,A2",              0050512);
     TEST(SUBQ_W, "#8,(A2)",            0050522);
@@ -1109,9 +1126,9 @@ static void test_integer() {
     TEST(SUBQ_W, "#8,($12,A2,D3.W)",   0050562, 0x3012);
     TEST(SUBQ_W, "#8,($001234).W",     0050570, 0x1234);
     TEST(SUBQ_W, "#8,($123456).L",     0050571, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050572); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050573); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050572); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050573); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050574); // #xxxx
     TEST(SUBQ_L, "#8,D2",              0050602);
     TEST(SUBQ_L, "#8,A2",              0050612);
     TEST(SUBQ_L, "#8,(A2)",            0050622);
@@ -1121,9 +1138,9 @@ static void test_integer() {
     TEST(SUBQ_L, "#8,($12,A2,D3.W)",   0050662, 0x3012);
     TEST(SUBQ_L, "#8,($001234).W",     0050670, 0x1234);
     TEST(SUBQ_L, "#8,($123454).L",     0050671, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050672); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050673); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050672); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050673); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050674); // #xxxx
 
     // SUBX Dx,Dy: 011|Dy|Sz|0|Dx, Sz:B=4/W=5/L=6
     TEST(SUBX_B, "D2,D3", 0113402);
@@ -1139,7 +1156,7 @@ static void test_integer() {
 static void test_logical() {
     // AND src,Dn: 014|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(AND_B, "D2,D7",              0147002);
-    ETEST(ILLEGAL_SIZE, _, "",        0147012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0147012); // An
     TEST(AND_B, "(A2),D7",            0147022);
     TEST(AND_B, "(A2)+,D7",           0147032);
     TEST(AND_B, "-(A2),D7",           0147042);
@@ -1151,7 +1168,7 @@ static void test_logical() {
     TEST(AND_B, "(*+$12,PC,D3.W),D7", 0147073, 0x3010);
     TEST(AND_B, "#$34,D7",            0147074, 0x0034);
     TEST(AND_W, "D2,D7",              0147102);
-    TEST(AND_W, "A2,D7",              0147112);
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0147112); // An
     TEST(AND_W, "(A2),D7",            0147122);
     TEST(AND_W, "(A2)+,D7",           0147132);
     TEST(AND_W, "-(A2),D7",           0147142);
@@ -1163,7 +1180,7 @@ static void test_logical() {
     TEST(AND_W, "(*+$12,PC,D3.W),D7", 0147173, 0x3010);
     TEST(AND_W, "#$0034,D7",          0147174, 0x0034);
     TEST(AND_L, "D2,D7",              0147202);
-    TEST(AND_L, "A2,D7",              0147212);
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0147212); // An
     TEST(AND_L, "(A2),D7",            0147222);
     TEST(AND_L, "(A2)+,D7",           0147232);
     TEST(AND_L, "-(A2),D7",           0147242);
@@ -1185,9 +1202,9 @@ static void test_logical() {
     TEST(AND_B, "D7,($12,A2,D3.L)",    0147462, 0x3812);
     TEST(AND_B, "D7,($FFFFFF).W",      0147470, 0xFFFF);
     TEST(AND_B, "D7,($123456).L",      0147471, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147472); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147473); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147472); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147473); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147474); // #xxxx
     TEST(EXG,   "D7,D2",               0147502); // Dn
     TEST(EXG,   "A7,A2",               0147512); // An
     TEST(AND_W, "D7,(A2)",             0147522);
@@ -1197,10 +1214,10 @@ static void test_logical() {
     TEST(AND_W, "D7,($12,A2,D3.L)",    0147562, 0x3812);
     TEST(AND_W, "D7,($FFFFFE).W",      0147570, 0xFFFE);
     TEST(AND_W, "D7,($123456).L",      0147571, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147572); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147573); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147574); // #xxxx
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147602); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147572); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147573); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147602); // Dn
     TEST(EXG,   "D7,A2",               0147612); // An
     TEST(AND_L, "D7,(A2)",             0147622);
     TEST(AND_L, "D7,(A2)+",            0147632);
@@ -1209,13 +1226,13 @@ static void test_logical() {
     TEST(AND_L, "D7,($12,A2,D3.L)",    0147662, 0x3812);
     TEST(AND_L, "D7,($FFFFFC).W",      0147670, 0xFFFC);
     TEST(AND_L, "D7,($123454).L",      0147671, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147672); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147673); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0147674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147672); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147673); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0147674); // #xxxx
 
     // ANDI #nn,dst: 0001|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(ANDI_B, "#$12,D2",            0001002, 0x0012);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0001012, 0x0012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0001012, 0x0012); // An
     TEST(ANDI_B, "#$12,(A2)",          0001022, 0x0012);
     TEST(ANDI_B, "#$12,(A2)+",         0001032, 0x0012);
     TEST(ANDI_B, "#$12,-(A2)",         0001042, 0x0012);
@@ -1223,11 +1240,11 @@ static void test_logical() {
     TEST(ANDI_B, "#$12,($12,A2,D3.W)", 0001062, 0x0012, 0x3012);
     TEST(ANDI_B, "#$12,($001234).W",   0001070, 0x0012, 0x1234);
     TEST(ANDI_B, "#$12,($123456).L",   0001071, 0x0012, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0001072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0001073); // (d8,PC,Xn)
-    TEST(ANDI,   "#$12,CCR",           0001074, 0x0012); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0001072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0001073); // (d8,PC,Xn)
+    TEST(ANDI,   "#$0012,CCR",           0001074, 0x0012); // #xxxx
     TEST(ANDI_W, "#$5678,D2",            0001102, 0x5678);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0001112, 0x5678); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0001112, 0x5678); // An
     TEST(ANDI_W, "#$5678,(A2)",          0001122, 0x5678);
     TEST(ANDI_W, "#$5678,(A2)+",         0001132, 0x5678);
     TEST(ANDI_W, "#$5678,-(A2)",         0001142, 0x5678);
@@ -1235,11 +1252,11 @@ static void test_logical() {
     TEST(ANDI_W, "#$5678,($12,A2,D3.W)", 0001162, 0x5678, 0x3012);
     TEST(ANDI_W, "#$5678,($001234).W",   0001170, 0x5678, 0x1234);
     TEST(ANDI_W, "#$5678,($123456).L",   0001171, 0x5678, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0001172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0001173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0001172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0001173); // (d8,PC,Xn)
     TEST(ANDI,   "#$5678,SR",            0001174, 0x5678); // #xxxx
     TEST(ANDI_L, "#$3456789A,D2",            0001202, 0x3456, 0x789A);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0001212, 0x3456, 0x789A); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0001212, 0x3456, 0x789A); // An
     TEST(ANDI_L, "#$3456789A,(A2)",          0001222, 0x3456, 0x789A);
     TEST(ANDI_L, "#$3456789A,(A2)+",         0001232, 0x3456, 0x789A);
     TEST(ANDI_L, "#$3456789A,-(A2)",         0001242, 0x3456, 0x789A);
@@ -1247,9 +1264,9 @@ static void test_logical() {
     TEST(ANDI_L, "#$3456789A,($12,A2,D3.W)", 0001262, 0x3456, 0x789A, 0x3012);
     TEST(ANDI_L, "#$3456789A,($001234).W",   0001270, 0x3456, 0x789A, 0x1234);
     TEST(ANDI_L, "#$34567898,($123454).L",   0001271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0001272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0001273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0001274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0001272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0001273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0001274); // #xxxx
 
     // EOR Dn,dst: 013|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST(EOR_B, "D7,D2",               0137402);
@@ -1261,9 +1278,9 @@ static void test_logical() {
     TEST(EOR_B, "D7,($12,A2,D3.L)",    0137462, 0x3812);
     TEST(EOR_B, "D7,($FFFFFF).W",      0137470, 0xFFFF);
     TEST(EOR_B, "D7,($123456).L",      0137471, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137472); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137473); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137472); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137473); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137474); // #xxxx
     TEST(EOR_W,  "D7,D2",              0137502);
     TEST(CMPM_W, "(A2)+,(A7)+",        0137512); // An
     TEST(EOR_W, "D7,(A2)",             0137522);
@@ -1273,9 +1290,9 @@ static void test_logical() {
     TEST(EOR_W, "D7,($12,A2,D3.L)",    0137562, 0x3812);
     TEST(EOR_W, "D7,($FFFFFE).W",      0137570, 0xFFFE);
     TEST(EOR_W, "D7,($123456).L",      0137571, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137572); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137573); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137572); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137573); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137574); // #xxxx
     TEST(EOR_L,  "D7,D2",              0137602);
     TEST(CMPM_L, "(A2)+,(A7)+",        0137612); // An
     TEST(EOR_L, "D7,(A2)",             0137622);
@@ -1285,13 +1302,13 @@ static void test_logical() {
     TEST(EOR_L, "D7,($12,A2,D3.L)",    0137662, 0x3812);
     TEST(EOR_L, "D7,($FFFFFC).W",      0137670, 0xFFFC);
     TEST(EOR_L, "D7,($123454).L",      0137671, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137672); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137673); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0137674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137672); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137673); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0137674); // #xxxx
 
     // EORI #nn,dst: 0005|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(EORI_B, "#$12,D2",            0005002, 0x0012);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0005012, 0x0012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0005012, 0x0012); // An
     TEST(EORI_B, "#$12,(A2)",          0005022, 0x0012);
     TEST(EORI_B, "#$12,(A2)+",         0005032, 0x0012);
     TEST(EORI_B, "#$12,-(A2)",         0005042, 0x0012);
@@ -1299,11 +1316,11 @@ static void test_logical() {
     TEST(EORI_B, "#$12,($12,A2,D3.W)", 0005062, 0x0012, 0x3012);
     TEST(EORI_B, "#$12,($001234).W",   0005070, 0x0012, 0x1234);
     TEST(EORI_B, "#$12,($123456).L",   0005071, 0x0012, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0005072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0005073); // (d8,PC,Xn)
-    TEST(EORI,    "#$12,CCR",          0005074, 0x0012); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0005072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0005073); // (d8,PC,Xn)
+    TEST(EORI,   "#$0012,CCR",           0005074, 0x0012); // #xxxx
     TEST(EORI_W, "#$5678,D2",            0005102, 0x5678);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0005112, 0x5678); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0005112, 0x5678); // An
     TEST(EORI_W, "#$5678,(A2)",          0005122, 0x5678);
     TEST(EORI_W, "#$5678,(A2)+",         0005132, 0x5678);
     TEST(EORI_W, "#$5678,-(A2)",         0005142, 0x5678);
@@ -1311,11 +1328,11 @@ static void test_logical() {
     TEST(EORI_W, "#$5678,($12,A2,D3.W)", 0005162, 0x5678, 0x3012);
     TEST(EORI_W, "#$5678,($001234).W",   0005170, 0x5678, 0x1234);
     TEST(EORI_W, "#$5678,($123456).L",   0005171, 0x5678, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0005172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",   0005173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0005172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",    0005173); // (d8,PC,Xn)
     TEST(EORI,   "#$5678,SR",            0005174, 0x5678); // #xxxx
     TEST(EORI_L, "#$3456789A,D2",            0005202, 0x3456, 0x789A);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0005212, 0x3456, 0x789A); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0005212, 0x3456, 0x789A); // An
     TEST(EORI_L, "#$3456789A,(A2)",          0005222, 0x3456, 0x789A);
     TEST(EORI_L, "#$3456789A,(A2)+",         0005232, 0x3456, 0x789A);
     TEST(EORI_L, "#$3456789A,-(A2)",         0005242, 0x3456, 0x789A);
@@ -1323,13 +1340,13 @@ static void test_logical() {
     TEST(EORI_L, "#$3456789A,($12,A2,D3.W)", 0005262, 0x3456, 0x789A, 0x3012);
     TEST(EORI_L, "#$3456789A,($001234).W",   0005270, 0x3456, 0x789A, 0x1234);
     TEST(EORI_L, "#$34567898,($123454).L",   0005271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0005272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0005273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",       0005274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0005272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0005273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",        0005274); // #xxxx
 
     // NOT dst: 0043|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(NOT_B, "D2",                  0043002);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043012); // An
     TEST(NOT_B, "(A2)",                0043022);
     TEST(NOT_B, "(A2)+",               0043032);
     TEST(NOT_B, "-(A2)",               0043042);
@@ -1337,11 +1354,11 @@ static void test_logical() {
     TEST(NOT_B, "($12,A2,D3.W)",       0043062, 0x3012);
     TEST(NOT_B, "($001234).W",         0043070, 0x1234);
     TEST(NOT_B, "($123456).L",         0043071, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043074); // #xxxx
     TEST(NOT_W, "D2",                  0043102);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043112); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043112); // An
     TEST(NOT_W, "(A2)",                0043122);
     TEST(NOT_W, "(A2)+",               0043132);
     TEST(NOT_W, "-(A2)",               0043142);
@@ -1349,11 +1366,11 @@ static void test_logical() {
     TEST(NOT_W, "($12,A2,D3.W)",       0043162, 0x3012);
     TEST(NOT_W, "($001234).W",         0043170, 0x1234);
     TEST(NOT_W, "($123456).L",         0043171, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043174); // #xxxx
     TEST(NOT_L, "D2",                  0043202);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043212); // An
     TEST(NOT_L, "(A2)",                0043222);
     TEST(NOT_L, "(A2)+",               0043232);
     TEST(NOT_L, "-(A2)",               0043242);
@@ -1361,47 +1378,47 @@ static void test_logical() {
     TEST(NOT_L, "($12,A2,D3.W)",       0043262, 0x3012);
     TEST(NOT_L, "($001234).W",         0043270, 0x1234);
     TEST(NOT_L, "($123454).L",         0043271, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043274); // #xxxx
 
     // OR src,Dn, 010|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
-    TEST(OR_B, "D2,D7",              0107002);
-    ETEST(ILLEGAL_SIZE, _, "",       0107012); // An
-    TEST(OR_B, "(A2),D7",            0107022);
-    TEST(OR_B, "(A2)+,D7",           0107032);
-    TEST(OR_B, "-(A2),D7",           0107042);
-    TEST(OR_B, "($1234,A2),D7",      0107052, 0x1234);
-    TEST(OR_B, "($12,A2,D3.L),D7",   0107062, 0x3812);
-    TEST(OR_B, "($FFFFFF).W,D7",     0107070, 0xFFFF);
-    TEST(OR_B, "($123456).L,D7",     0107071, 0x0012, 0x3456);
-    TEST(OR_B, "(*+$1234,PC),D7",    0107072, 0x1232);
-    TEST(OR_B, "(*+$12,PC,D3.W),D7", 0107073, 0x3010);
-    TEST(OR_B, "#$34,D7",            0107074, 0x0034);
-    TEST(OR_W, "D2,D7",              0107102);
-    TEST(OR_W, "A2,D7",              0107112);
-    TEST(OR_W, "(A2),D7",            0107122);
-    TEST(OR_W, "(A2)+,D7",           0107132);
-    TEST(OR_W, "-(A2),D7",           0107142);
-    TEST(OR_W, "($1234,A2),D7",      0107152, 0x1234);
-    TEST(OR_W, "($12,A2,D3.L),D7",   0107162, 0x3812);
-    TEST(OR_W, "($FFFFFE).W,D7",     0107170, 0xFFFE);
-    TEST(OR_W, "($123456).L,D7",     0107171, 0x0012, 0x3456);
-    TEST(OR_W, "(*+$1234,PC),D7",    0107172, 0x1232);
-    TEST(OR_W, "(*+$12,PC,D3.W),D7", 0107173, 0x3010);
-    TEST(OR_W, "#$0034,D7",          0107174, 0x0034);
-    TEST(OR_L, "D2,D7",              0107202);
-    TEST(OR_L, "A2,D7",              0107212);
-    TEST(OR_L, "(A2),D7",            0107222);
-    TEST(OR_L, "(A2)+,D7",           0107232);
-    TEST(OR_L, "-(A2),D7",           0107242);
-    TEST(OR_L, "($1234,A2),D7",      0107252, 0x1234);
-    TEST(OR_L, "($12,A2,D3.L),D7",   0107262, 0x3812);
-    TEST(OR_L, "($FFFFFC).W,D7",     0107270, 0xFFFC);
-    TEST(OR_L, "($123454).L,D7",     0107271, 0x0012, 0x3454);
-    TEST(OR_L, "(*+$1234,PC),D7",    0107272, 0x1232);
-    TEST(OR_L, "(*+$12,PC,D3.W),D7", 0107273, 0x3010);
-    TEST(OR_L, "#$00345678,D7",      0107274, 0x0034, 0x5678);
+    TEST(OR_B, "D2,D7",               0107002);
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0107012); // An
+    TEST(OR_B, "(A2),D7",             0107022);
+    TEST(OR_B, "(A2)+,D7",            0107032);
+    TEST(OR_B, "-(A2),D7",            0107042);
+    TEST(OR_B, "($1234,A2),D7",       0107052, 0x1234);
+    TEST(OR_B, "($12,A2,D3.L),D7",    0107062, 0x3812);
+    TEST(OR_B, "($FFFFFF).W,D7",      0107070, 0xFFFF);
+    TEST(OR_B, "($123456).L,D7",      0107071, 0x0012, 0x3456);
+    TEST(OR_B, "(*+$1234,PC),D7",     0107072, 0x1232);
+    TEST(OR_B, "(*+$12,PC,D3.W),D7",  0107073, 0x3010);
+    TEST(OR_B, "#$34,D7",             0107074, 0x0034);
+    TEST(OR_W, "D2,D7",               0107102);
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0107112); // An
+    TEST(OR_W, "(A2),D7",             0107122);
+    TEST(OR_W, "(A2)+,D7",            0107132);
+    TEST(OR_W, "-(A2),D7",            0107142);
+    TEST(OR_W, "($1234,A2),D7",       0107152, 0x1234);
+    TEST(OR_W, "($12,A2,D3.L),D7",    0107162, 0x3812);
+    TEST(OR_W, "($FFFFFE).W,D7",      0107170, 0xFFFE);
+    TEST(OR_W, "($123456).L,D7",      0107171, 0x0012, 0x3456);
+    TEST(OR_W, "(*+$1234,PC),D7",     0107172, 0x1232);
+    TEST(OR_W, "(*+$12,PC,D3.W),D7",  0107173, 0x3010);
+    TEST(OR_W, "#$0034,D7",           0107174, 0x0034);
+    TEST(OR_L, "D2,D7",               0107202);
+    ETEST(OPERAND_NOT_ALLOWED, _, "", 0107212); // An
+    TEST(OR_L, "(A2),D7",             0107222);
+    TEST(OR_L, "(A2)+,D7",            0107232);
+    TEST(OR_L, "-(A2),D7",            0107242);
+    TEST(OR_L, "($1234,A2),D7",       0107252, 0x1234);
+    TEST(OR_L, "($12,A2,D3.L),D7",    0107262, 0x3812);
+    TEST(OR_L, "($FFFFFC).W,D7",      0107270, 0xFFFC);
+    TEST(OR_L, "($123454).L,D7",      0107271, 0x0012, 0x3454);
+    TEST(OR_L, "(*+$1234,PC),D7",     0107272, 0x1232);
+    TEST(OR_L, "(*+$12,PC,D3.W),D7",  0107273, 0x3010);
+    TEST(OR_L, "#$00345678,D7",       0107274, 0x0034, 0x5678);
 
     // OR Dn,dst: 010|Dn|Sz|M|Rn, Sz:B=4/W=5/L=6
     TEST(SBCD,  "D2,D7",               0107402); // Dn
@@ -1413,11 +1430,11 @@ static void test_logical() {
     TEST(OR_B, "D7,($12,A2,D3.L)",     0107462, 0x3812);
     TEST(OR_B, "D7,($FFFFFF).W",       0107470, 0xFFFF);
     TEST(OR_B, "D7,($123456).L",       0107471, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107472); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107473); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107474); // #xxxx
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107502); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107512); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107472); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107473); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107502); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107512); // An
     TEST(OR_W, "D7,(A2)",              0107522);
     TEST(OR_W, "D7,(A2)+",             0107532);
     TEST(OR_W, "D7,-(A2)",             0107542);
@@ -1425,11 +1442,11 @@ static void test_logical() {
     TEST(OR_W, "D7,($12,A2,D3.L)",     0107562, 0x3812);
     TEST(OR_W, "D7,($FFFFFE).W",       0107570, 0xFFFE);
     TEST(OR_W, "D7,($123456).L",       0107571, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107572); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107573); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107574); // #xxxx
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107602); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107612); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107572); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107573); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107602); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107612); // An
     TEST(OR_L, "D7,(A2)",              0107622);
     TEST(OR_L, "D7,(A2)+",             0107632);
     TEST(OR_L, "D7,-(A2)",             0107642);
@@ -1437,13 +1454,13 @@ static void test_logical() {
     TEST(OR_L, "D7,($12,A2,D3.L)",     0107662, 0x3812);
     TEST(OR_L, "D7,($FFFFFC).W",       0107670, 0xFFFC);
     TEST(OR_L, "D7,($123454).L",       0107671, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107672); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107673); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0107674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107672); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107673); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0107674); // #xxxx
 
     // ORI #nn,dst: 0000|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(ORI_B, "#$12,D2",             0000002, 0x0012);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0000012, 0x0012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0000012, 0x0012); // An
     TEST(ORI_B, "#$12,(A2)",           0000022, 0x0012);
     TEST(ORI_B, "#$12,(A2)+",          0000032, 0x0012);
     TEST(ORI_B, "#$12,-(A2)",          0000042, 0x0012);
@@ -1451,11 +1468,11 @@ static void test_logical() {
     TEST(ORI_B, "#$12,($12,A2,D3.W)",  0000062, 0x0012, 0x3012);
     TEST(ORI_B, "#$12,($001234).W",    0000070, 0x0012, 0x1234);
     TEST(ORI_B, "#$12,($123456).L",    0000071, 0x0012, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0000072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0000073); // (d8,PC,Xn)
-    TEST(ORI,    "#$12,CCR",           0000074, 0x0012); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0000072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0000073); // (d8,PC,Xn)
+    TEST(ORI,   "#$0012,CCR",           0000074, 0x0012); // #xxxx
     TEST(ORI_W, "#$5678,D2",            0000102, 0x5678);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",  0000112, 0x5678); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",   0000112, 0x5678); // An
     TEST(ORI_W, "#$5678,(A2)",          0000122, 0x5678);
     TEST(ORI_W, "#$5678,(A2)+",         0000132, 0x5678);
     TEST(ORI_W, "#$5678,-(A2)",         0000142, 0x5678);
@@ -1463,11 +1480,11 @@ static void test_logical() {
     TEST(ORI_W, "#$5678,($12,A2,D3.W)", 0000162, 0x5678, 0x3012);
     TEST(ORI_W, "#$5678,($001234).W",   0000170, 0x5678, 0x1234);
     TEST(ORI_W, "#$5678,($123456).L",   0000171, 0x5678, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",  0000172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",  0000173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",   0000172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",   0000173); // (d8,PC,Xn)
     TEST(ORI,   "#$5678,SR",            0000174, 0x5678); // #xxxx
     TEST(ORI_L, "#$3456789A,D2",            0000202, 0x3456, 0x789A);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",      0000212, 0x3456, 0x789A); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",       0000212, 0x3456, 0x789A); // An
     TEST(ORI_L, "#$3456789A,(A2)",          0000222, 0x3456, 0x789A);
     TEST(ORI_L, "#$3456789A,(A2)+",         0000232, 0x3456, 0x789A);
     TEST(ORI_L, "#$3456789A,-(A2)",         0000242, 0x3456, 0x789A);
@@ -1475,9 +1492,9 @@ static void test_logical() {
     TEST(ORI_L, "#$3456789A,($12,A2,D3.W)", 0000262, 0x3456, 0x789A, 0x3012);
     TEST(ORI_L, "#$3456789A,($001234).W",   0000270, 0x3456, 0x789A, 0x1234);
     TEST(ORI_L, "#$34567898,($123454).L",   0000271, 0x3456, 0x7898, 0x0012, 0x3454);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",      0000272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",      0000273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "",      0000274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",       0000272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",       0000273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",       0000274); // #xxxx
 }
 
 static void test_shift_rotate() {
@@ -1492,8 +1509,8 @@ static void test_shift_rotate() {
     TEST(ASL_L, "#8,D7", 0160607);
 
     // ASL dst: 01607|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160702); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160702); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160712); // An
     TEST(ASL, "(A2)",                  0160722);
     TEST(ASL, "(A2)+",                 0160732);
     TEST(ASL, "-(A2)",                 0160742);
@@ -1501,9 +1518,9 @@ static void test_shift_rotate() {
     TEST(ASL, "($23,A2,D3.L)",         0160762, 0x3823);
     TEST(ASL, "($002345).W",           0160770, 0x2345);
     TEST(ASL, "($234567).L",           0160771, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160772); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160773); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160774); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160772); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160773); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160774); // #xxxx
 
     // ASR Dx,Dy: 016|Dx|Sz|4|Dy, Sz:B=0/W=1/L=2
     TEST(ASR_B, "D2,D7", 0162047);
@@ -1516,8 +1533,8 @@ static void test_shift_rotate() {
     TEST(ASR_L, "#8,D7", 0160207);
 
     // ASR dst: 01603|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160302); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160302); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160312); // An
     TEST(ASR, "(A2)",                  0160322);
     TEST(ASR, "(A2)+",                 0160332);
     TEST(ASR, "-(A2)",                 0160342);
@@ -1525,9 +1542,9 @@ static void test_shift_rotate() {
     TEST(ASR, "($23,A2,D3.L)",         0160362, 0x3823);
     TEST(ASR, "($002345).W",           0160370, 0x2345);
     TEST(ASR, "($234567).L",           0160371, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160373); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0160374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0160374); // #xxxx
 
     // LSL Dx,Dy: 016|Dx|Sz|5|Dy, Sz:B=4/W=5/L=6
     TEST(LSL_B, "D2,D7", 0162457);
@@ -1540,8 +1557,8 @@ static void test_shift_rotate() {
     TEST(LSL_L, "#8,D7", 0160617);
 
     // LSL dst: 01617|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161702); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161702); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161712); // An
     TEST(LSL, "(A2)",                  0161722);
     TEST(LSL, "(A2)+",                 0161732);
     TEST(LSL, "-(A2)",                 0161742);
@@ -1549,9 +1566,9 @@ static void test_shift_rotate() {
     TEST(LSL, "($23,A2,D3.L)",         0161762, 0x3823);
     TEST(LSL, "($002345).W",           0161770, 0x2345);
     TEST(LSL, "($234567).L",           0161771, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161772); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161773); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161774); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161772); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161773); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161774); // #xxxx
 
     // LSR Dx,Dy: 016|Dx|Sz|5|Dy, Sz:B=0/W=1/L=2
     TEST(LSR_B, "D2,D7", 0162057);
@@ -1564,8 +1581,8 @@ static void test_shift_rotate() {
     TEST(LSR_L, "#8,D7", 0160217);
 
     // LSR dst: 01613|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161302); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161302); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161312); // An
     TEST(LSR, "(A2)",                  0161322);
     TEST(LSR, "(A2)+",                 0161332);
     TEST(LSR, "-(A2)",                 0161342);
@@ -1573,9 +1590,9 @@ static void test_shift_rotate() {
     TEST(LSR, "($23,A2,D3.L)",         0161362, 0x3823);
     TEST(LSR, "($002345).W",           0161370, 0x2345);
     TEST(LSR, "($234567).L",           0161371, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161373); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0161374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0161374); // #xxxx
 
     // ROL Dx,Dy: 016|Dx|Sz|7|Dy, Sz:B=4/W=5/L=6
     TEST(ROL_B, "D2,D7", 0162477);
@@ -1588,8 +1605,8 @@ static void test_shift_rotate() {
     TEST(ROL_L, "#8,D7", 0160637);
 
     // ROL dst: 01637|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163702); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163702); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163712); // An
     TEST(ROL, "(A2)",                  0163722);
     TEST(ROL, "(A2)+",                 0163732);
     TEST(ROL, "-(A2)",                 0163742);
@@ -1597,9 +1614,9 @@ static void test_shift_rotate() {
     TEST(ROL, "($23,A2,D3.L)",         0163762, 0x3823);
     TEST(ROL, "($002345).W",           0163770, 0x2345);
     TEST(ROL, "($234567).L",           0163771, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163772); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163773); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163774); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163772); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163773); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163774); // #xxxx
 
     // ROR Dx,Dy: 016|Dx|Sz|7|Dy, Sz:B=0/W=1/L=2
     TEST(ROR_B, "D2,D7", 0162077);
@@ -1612,8 +1629,8 @@ static void test_shift_rotate() {
     TEST(ROR_L, "#8,D7", 0160237);
 
     // ROR dst: 01633|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163302); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163302); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163312); // An
     TEST(ROR, "(A2)",                  0163322);
     TEST(ROR, "(A2)+",                 0163332);
     TEST(ROR, "-(A2)",                 0163342);
@@ -1621,9 +1638,9 @@ static void test_shift_rotate() {
     TEST(ROR, "($23,A2,D3.L)",         0163362, 0x3823);
     TEST(ROR, "($002345).W",           0163370, 0x2345);
     TEST(ROR, "($234567).L",           0163371, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163373); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0163374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0163374); // #xxxx
 
     // ROXL Dx,Dy: 016|Dx|Sz|6|Dy, Sz:B=4/W=5/L=6
     TEST(ROXL_B, "D2,D7", 0162467);
@@ -1636,8 +1653,8 @@ static void test_shift_rotate() {
     TEST(ROXL_L, "#8,D7", 0160627);
 
     // ROXL dst: 01627|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162702); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162712); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162702); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162712); // An
     TEST(ROXL, "(A2)",                 0162722);
     TEST(ROXL, "(A2)+",                0162732);
     TEST(ROXL, "-(A2)",                0162742);
@@ -1645,9 +1662,9 @@ static void test_shift_rotate() {
     TEST(ROXL, "($23,A2,D3.L)",        0162762, 0x3823);
     TEST(ROXL, "($002345).W",          0162770, 0x2345);
     TEST(ROXL, "($234567).L",          0162771, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162772); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162773); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162774); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162772); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162773); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162774); // #xxxx
 
     // ROXR Dx,Dy: 016|Dx|Sz|6|Dy, Sz:B=0/W=1/L=2
     TEST(ROXR_B, "D2,D7", 0162067);
@@ -1660,8 +1677,8 @@ static void test_shift_rotate() {
     TEST(ROXR_L, "#8,D7", 0160227);
 
     // ROXR dst: 01623|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162302); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162302); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162312); // An
     TEST(ROXR, "(A2)",                 0162322);
     TEST(ROXR, "(A2)+",                0162332);
     TEST(ROXR, "-(A2)",                0162342);
@@ -1669,9 +1686,9 @@ static void test_shift_rotate() {
     TEST(ROXR, "($23,A2,D3.L)",        0162362, 0x3823);
     TEST(ROXR, "($002345).W",          0162370, 0x2345);
     TEST(ROXR, "($234567).L",          0162371, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162373); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0162374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0162374); // #xxxx
 
     // SWAP Dn: 004410|Dn
     TEST(SWAP, "D0", 0044100);
@@ -1689,23 +1706,26 @@ static void test_bit() {
     TEST(BCHG_B, "D7,($12,A2,D3.W)",   0007562, 0x3012);
     TEST(BCHG_B, "D7,($001234).W",     0007570, 0x1234);
     TEST(BCHG_B, "D7,($012345).L",     0007571, 0x0001, 0x2345);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007572);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007573, 0x3821);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007574); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007572);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007573, 0x3821);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007574); // #xxxx
 
     // BCHG #n,dst: 00041|M|Rn
     TEST(BCHG_L, "#0,D2",              0004102, 0x0000);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004112); // An
+    TEST(BCHG_L, "#31,D2",             0004102, 0x001F);
+    ETEST(ILLEGAL_BIT_NUMBER, _, "",   0004102, 0x0020);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004112); // An
     TEST(BCHG_B, "#7,(A2)",            0004122, 0x0007);
+    ETEST(ILLEGAL_BIT_NUMBER, _, "",   0004122, 0x0008);
     TEST(BCHG_B, "#6,(A2)+",           0004132, 0x0006);
     TEST(BCHG_B, "#5,-(A2)",           0004142, 0x0005);
     TEST(BCHG_B, "#4,($1234,A2)",      0004152, 0x0004, 0x1234);
     TEST(BCHG_B, "#3,($12,A2,D3.W)",   0004162, 0x0003, 0x3012);
     TEST(BCHG_B, "#2,($001234).W",     0004170, 0x0002, 0x1234);
     TEST(BCHG_B, "#1,($012345).L",     0004171, 0x0001, 0x0001, 0x2345);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004172); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004173); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004172); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004173); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004174); // #xxxx
 
     // BCLR Dx,dst: 000|Dx|6|M|Rn
     TEST(BCLR_L, "D7,D2",              0007602);
@@ -1717,13 +1737,13 @@ static void test_bit() {
     TEST(BCLR_B, "D7,($12,A2,D3.W)",   0007662, 0x3012);
     TEST(BCLR_B, "D7,($001234).W",     0007670, 0x1234);
     TEST(BCLR_B, "D7,($012345).L",     0007671, 0x0001, 0x2345);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007672);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007673, 0x3821);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007674); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007672);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007673, 0x3821);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007674); // #xxxx
 
     // BCLR #n,dst: 00042|M|Rn
     TEST(BCLR_L, "#0,D2",              0004202, 0x0000);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004212); // An
     TEST(BCLR_B, "#7,(A2)",            0004222, 0x0007);
     TEST(BCLR_B, "#6,(A2)+",           0004232, 0x0006);
     TEST(BCLR_B, "#5,-(A2)",           0004242, 0x0005);
@@ -1731,9 +1751,9 @@ static void test_bit() {
     TEST(BCLR_B, "#3,($12,A2,D3.W)",   0004262, 0x0003, 0x3012);
     TEST(BCLR_B, "#2,($001234).W",     0004270, 0x0002, 0x1234);
     TEST(BCLR_B, "#1,($012345).L",     0004271, 0x0001, 0x0001, 0x2345);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004272); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004273); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004272); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004273); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004274); // #xxxx
 
     // BSET Dx,dst: 000|Dx|7|M|Rn
     TEST(BSET_L, "D7,D2",              0007702);
@@ -1745,13 +1765,13 @@ static void test_bit() {
     TEST(BSET_B, "D7,($12,A2,D3.W)",   0007762, 0x3012);
     TEST(BSET_B, "D7,($001234).W",     0007770, 0x1234);
     TEST(BSET_B, "D7,($012345).L",     0007771, 0x0001, 0x2345);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007772);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007773, 0x3821);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007774); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007772);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007773, 0x3821);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007774); // #xxxx
 
     // BSET #n,dst: 00043|M|Rn
     TEST(BSET_L, "#0,D2",              0004302, 0x0000);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004312); // An
     TEST(BSET_B, "#7,(A2)",            0004322, 0x0007);
     TEST(BSET_B, "#6,(A2)+",           0004332, 0x0006);
     TEST(BSET_B, "#5,-(A2)",           0004342, 0x0005);
@@ -1759,9 +1779,9 @@ static void test_bit() {
     TEST(BSET_B, "#3,($12,A2,D3.W)",   0004362, 0x0003, 0x3012);
     TEST(BSET_B, "#2,($001234).W",     0004370, 0x0002, 0x1234);
     TEST(BSET_B, "#1,($012345).L",     0004371, 0x0001, 0x0001, 0x2345);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004373); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004374); // #xxxx
 
     // BTST Dx,dst: 000|Dx|4|M|Rn
     TEST(BTST_L, "D7,D2",              0007402);
@@ -1775,11 +1795,11 @@ static void test_bit() {
     TEST(BTST_B, "D7,($012345).L",     0007471, 0x0001, 0x2345);
     TEST(BTST_B, "D7,(*+$1234,PC)",    0007472, 0x1232);
     TEST(BTST_B, "D7,(*+$23,PC,D3.L)", 0007473, 0x3821);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0007474); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0007474); // #xxxx
 
     // BTST #n,dst: 00040|M|Rn
     TEST(BTST_L, "#0,D2",              0004002, 0x0000);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004012);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004012);
     TEST(BTST_B, "#7,(A2)",            0004022, 0x0007);
     TEST(BTST_B, "#6,(A2)+",           0004032, 0x0006);
     TEST(BTST_B, "#5,-(A2)",           0004042, 0x0005);
@@ -1789,7 +1809,7 @@ static void test_bit() {
     TEST(BTST_B, "#1,($012345).L",     0004071, 0x0001, 0x0001, 0x2345);
     TEST(BTST_B, "#0,(*+$1234,PC)",    0004072, 0x0000, 0x1232);
     TEST(BTST_B, "#7,(*+$23,PC,D3.L)", 0004073, 0x0007, 0x3821);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0004074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0004074); // #xxxx
 }
 
 static void test_bcd() {
@@ -1801,7 +1821,7 @@ static void test_bcd() {
 
     // NBCD dst: 00440|M|Rn
     TEST(NBCD,   "D2",                 0044002);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044012); // An
     TEST(NBCD,   "(A2)",               0044022);
     TEST(NBCD,   "(A2)+",              0044032);
     TEST(NBCD,   "-(A2)",              0044042);
@@ -1809,9 +1829,9 @@ static void test_bcd() {
     TEST(NBCD,   "($12,A2,D3.W)",      0044062, 0x3012);
     TEST(NBCD,   "($001234).W",        0044070, 0x1234);
     TEST(NBCD,   "($123456).L",        0044071, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044072); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044073); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0044074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044072); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044073); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0044074); // #xxxx
 
     // SBCD Dx,Dy: 010|Dy|40|Dx
     TEST(SBCD, "D2,D7", 0107402);
@@ -1876,9 +1896,9 @@ static void test_program() {
     TEST(ST,    "($12,A2,D3.W)",       0050362 | 0x000, 0x3012);
     TEST(ST,    "($001234).W",         0050370 | 0x000, 0x1234);
     TEST(ST,    "($123456).L",         0050371 | 0x000, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x000); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x000); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x000); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x000); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x000); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x000); // #xxxx
     TEST(SF,    "D2",                  0050302 | 0x100);
     TEST(DBRA,  "D2,*+2",              0050312 | 0x100, 0); // An
     TEST(SF,    "(A2)",                0050322 | 0x100);
@@ -1888,9 +1908,9 @@ static void test_program() {
     TEST(SF,    "($12,A2,D3.W)",       0050362 | 0x100, 0x3012);
     TEST(SF,    "($001234).W",         0050370 | 0x100, 0x1234);
     TEST(SF,    "($123456).L",         0050371 | 0x100, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x100); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x100); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x100); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x100); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x100); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x100); // #xxxx
     TEST(SHI,   "D2",                  0050302 | 0x200);
     TEST(DBHI,  "D2,*+2",              0050312 | 0x200, 0); // An
     TEST(SHI,   "(A2)",                0050322 | 0x200);
@@ -1900,9 +1920,9 @@ static void test_program() {
     TEST(SHI,   "($12,A2,D3.W)",       0050362 | 0x200, 0x3012);
     TEST(SHI,   "($001234).W",         0050370 | 0x200, 0x1234);
     TEST(SHI,   "($123456).L",         0050371 | 0x200, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x200); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x200); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x200); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x200); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x200); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x200); // #xxxx
     TEST(SLS,   "D2",                  0050302 | 0x300);
     TEST(DBLS,  "D2,*+2",              0050312 | 0x300, 0); // An
     TEST(SLS,   "(A2)",                0050322 | 0x300);
@@ -1912,9 +1932,9 @@ static void test_program() {
     TEST(SLS,   "($12,A2,D3.W)",       0050362 | 0x300, 0x3012);
     TEST(SLS,   "($001234).W",         0050370 | 0x300, 0x1234);
     TEST(SLS,   "($123456).L",         0050371 | 0x300, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x300); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x300); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x300); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x300); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x300); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x300); // #xxxx
     TEST(SCC,   "D2",                  0050302 | 0x400);
     TEST(DBCC,  "D2,*+2",              0050312 | 0x400, 0); // An
     TEST(SCC,   "(A2)",                0050322 | 0x400);
@@ -1924,9 +1944,9 @@ static void test_program() {
     TEST(SCC,   "($12,A2,D3.W)",       0050362 | 0x400, 0x3012);
     TEST(SCC,   "($001234).W",         0050370 | 0x400, 0x1234);
     TEST(SCC,   "($123456).L",         0050371 | 0x400, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x400); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x400); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x400); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x400); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x400); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x400); // #xxxx
     TEST(SCS,   "D2",                  0050302 | 0x500);
     TEST(DBCS,  "D2,*+2",              0050312 | 0x500, 0); // An
     TEST(SCS,   "(A2)",                0050322 | 0x500);
@@ -1936,9 +1956,9 @@ static void test_program() {
     TEST(SCS,   "($12,A2,D3.W)",       0050362 | 0x500, 0x3012);
     TEST(SCS,   "($001234).W",         0050370 | 0x500, 0x1234);
     TEST(SCS,   "($123456).L",         0050371 | 0x500, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x500); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x500); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x500); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x500); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x500); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x500); // #xxxx
     TEST(SNE,   "D2",                  0050302 | 0x600);
     TEST(DBNE,  "D2,*+2",              0050312 | 0x600, 0); // An
     TEST(SNE,   "(A2)",                0050322 | 0x600);
@@ -1948,9 +1968,9 @@ static void test_program() {
     TEST(SNE,   "($12,A2,D3.W)",       0050362 | 0x600, 0x3012);
     TEST(SNE,   "($001234).W",         0050370 | 0x600, 0x1234);
     TEST(SNE,   "($123456).L",         0050371 | 0x600, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x600); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x600); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x600); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x600); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x600); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x600); // #xxxx
     TEST(SEQ,   "D2",                  0050302 | 0x700);
     TEST(DBEQ,  "D2,*+2",              0050312 | 0x700, 0); // An
     TEST(SEQ,   "(A2)",                0050322 | 0x700);
@@ -1960,9 +1980,9 @@ static void test_program() {
     TEST(SEQ,   "($12,A2,D3.W)",       0050362 | 0x700, 0x3012);
     TEST(SEQ,   "($001234).W",         0050370 | 0x700, 0x1234);
     TEST(SEQ,   "($123456).L",         0050371 | 0x700, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x700); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x700); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x700); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x700); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x700); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x700); // #xxxx
     TEST(SVC,   "D2",                  0050302 | 0x800);
     TEST(DBVC,  "D2,*+2",              0050312 | 0x800, 0); // An
     TEST(SVC,   "(A2)",                0050322 | 0x800);
@@ -1972,9 +1992,9 @@ static void test_program() {
     TEST(SVC,   "($12,A2,D3.W)",       0050362 | 0x800, 0x3012);
     TEST(SVC,   "($001234).W",         0050370 | 0x800, 0x1234);
     TEST(SVC,   "($123456).L",         0050371 | 0x800, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x800); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x800); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x800); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x800); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x800); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x800); // #xxxx
     TEST(SVS,   "D2",                  0050302 | 0x900);
     TEST(DBVS,  "D2,*+2",              0050312 | 0x900, 0); // An
     TEST(SVS,   "(A2)",                0050322 | 0x900);
@@ -1984,9 +2004,9 @@ static void test_program() {
     TEST(SVS,   "($12,A2,D3.W)",       0050362 | 0x900, 0x3012);
     TEST(SVS,   "($001234).W",         0050370 | 0x900, 0x1234);
     TEST(SVS,   "($123456).L",         0050371 | 0x900, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0x900); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0x900); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0x900); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0x900); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0x900); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0x900); // #xxxx
     TEST(SPL,   "D2",                  0050302 | 0xA00);
     TEST(DBPL,  "D2,*+2",              0050312 | 0xA00, 0); // An
     TEST(SPL,   "(A2)",                0050322 | 0xA00);
@@ -1996,9 +2016,9 @@ static void test_program() {
     TEST(SPL,   "($12,A2,D3.W)",       0050362 | 0xA00, 0x3012);
     TEST(SPL,   "($001234).W",         0050370 | 0xA00, 0x1234);
     TEST(SPL,   "($123456).L",         0050371 | 0xA00, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0xA00); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0xA00); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0xA00); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0xA00); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0xA00); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0xA00); // #xxxx
     TEST(SMI,   "D2",                  0050302 | 0xB00);
     TEST(DBMI,  "D2,*+2",              0050312 | 0xB00, 0); // An
     TEST(SMI,   "(A2)",                0050322 | 0xB00);
@@ -2008,9 +2028,9 @@ static void test_program() {
     TEST(SMI,   "($12,A2,D3.W)",       0050362 | 0xB00, 0x3012);
     TEST(SMI,   "($001234).W",         0050370 | 0xB00, 0x1234);
     TEST(SMI,   "($123456).L",         0050371 | 0xB00, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0xB00); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0xB00); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0xB00); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0xB00); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0xB00); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0xB00); // #xxxx
     TEST(SGE,   "D2",                  0050302 | 0xC00);
     TEST(DBGE,  "D2,*+2",              0050312 | 0xC00, 0); // An
     TEST(SGE,   "(A2)",                0050322 | 0xC00);
@@ -2020,9 +2040,9 @@ static void test_program() {
     TEST(SGE,   "($12,A2,D3.W)",       0050362 | 0xC00, 0x3012);
     TEST(SGE,   "($001234).W",         0050370 | 0xC00, 0x1234);
     TEST(SGE,   "($123456).L",         0050371 | 0xC00, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0xC00); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0xC00); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0xC00); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0xC00); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0xC00); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0xC00); // #xxxx
     TEST(SLT,   "D2",                  0050302 | 0xD00);
     TEST(DBLT,  "D2,*+2",              0050312 | 0xD00, 0); // An
     TEST(SLT,   "(A2)",                0050322 | 0xD00);
@@ -2032,9 +2052,9 @@ static void test_program() {
     TEST(SLT,   "($12,A2,D3.W)",       0050362 | 0xD00, 0x3012);
     TEST(SLT,   "($001234).W",         0050370 | 0xD00, 0x1234);
     TEST(SLT,   "($123456).L",         0050371 | 0xD00, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0xD00); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0xD00); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0xD00); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0xD00); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0xD00); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0xD00); // #xxxx
     TEST(SGT,   "D2",                  0050302 | 0xE00);
     TEST(DBGT,  "D2,*+2",              0050312 | 0xE00, 0); // An
     TEST(SGT,   "(A2)",                0050322 | 0xE00);
@@ -2044,9 +2064,9 @@ static void test_program() {
     TEST(SGT,   "($12,A2,D3.W)",       0050362 | 0xE00, 0x3012);
     TEST(SGT,   "($001234).W",         0050370 | 0xE00, 0x1234);
     TEST(SGT,   "($123456).L",         0050371 | 0xE00, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0xE00); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0xE00); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0xE00); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0xE00); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0xE00); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0xE00); // #xxxx
     TEST(SLE,   "D2",                  0050302 | 0xF00);
     TEST(DBLE,  "D2,*+2",              0050312 | 0xF00, 0); // An
     TEST(SLE,   "(A2)",                0050322 | 0xF00);
@@ -2056,9 +2076,9 @@ static void test_program() {
     TEST(SLE,   "($12,A2,D3.W)",       0050362 | 0xF00, 0x3012);
     TEST(SLE,   "($001234).W",         0050370 | 0xF00, 0x1234);
     TEST(SLE,   "($123456).L",         0050371 | 0xF00, 0x0012, 0x3456);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050372 | 0xF00); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050373 | 0xF00); // (d8,PC,Xn)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0050374 | 0xF00); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050372 | 0xF00); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050373 | 0xF00); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0050374 | 0xF00); // #xxxx
 
     // BRA label: 00600|disp
     TEST(BRA, "*-$7FFE",              0060000, 0x8000);
@@ -2095,32 +2115,32 @@ static void test_program() {
     ETEST(OPERAND_NOT_ALIGNED, _, "", 0060400, 0x7FFF);
 
     // JMP dst: 00473|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047302); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047302); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047312); // An
     TEST(JMP,   "(A2)",                0047322);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047332); // (An)+
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047342); // -(An)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047332); // (An)+
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047342); // -(An)
     TEST(JMP,   "($1234,A2)",          0047352, 0x1234);
     TEST(JMP,   "($12,A2,D3.W)",       0047362, 0x3012);
     TEST(JMP,   "($001234).W",         0047370, 0x1234);
     TEST(JMP,   "($123456).L",         0047371, 0x0012, 0x3456);
     TEST(JMP,   "(*+$1234,PC)",        0047372, 0x1232);
     TEST(JMP,   "(*+$12,PC,D3.L)",     0047373, 0x3810);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047374); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047374); // #xxxx
 
     // JSR dst, 00472|M|Rn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047202); // Dn
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047212); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047202); // Dn
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047212); // An
     TEST(JSR,   "(A2)",                0047222);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047232); // (An)+
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047242); // -(An)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047232); // (An)+
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047242); // -(An)
     TEST(JSR,   "($1234,A2)",          0047252, 0x1234);
     TEST(JSR,   "($12,A2,D3.W)",       0047262, 0x3012);
     TEST(JSR,   "($001234).W",         0047270, 0x1234);
     TEST(JSR,   "($123456).L",         0047271, 0x0012, 0x3456);
     TEST(JSR,   "(*+$1234,PC)",        0047272, 0x1232);
     TEST(JSR,   "(*+$12,PC,D3.L)",     0047273, 0x3810);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047274); // #xxxx
 
     // NOP
     TEST(NOP, "", 047161);
@@ -2133,7 +2153,7 @@ static void test_program() {
 
     // TST dst: 0045|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST(TST_B, "D2",                  0045002);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045012); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045012); // An
     TEST(TST_B, "(A2)",                0045022);
     TEST(TST_B, "(A2)+",               0045032);
     TEST(TST_B, "-(A2)",               0045042);
@@ -2143,9 +2163,9 @@ static void test_program() {
     TEST(TST_B, "($123456).L",         0045071, 0x0012, 0x3456);
     TEST(TST_B, "(*+$1234,PC)",        0045072, 0x1232);
     TEST(TST_B, "(*-16,PC,D3.L)",      0045073, 0x38EE);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045074); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045074); // #xxxx
     TEST(TST_W, "D2",                  0045102);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045112);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045112);
     TEST(TST_W, "(A2)",                0045122);
     TEST(TST_W, "(A2)+",               0045132);
     TEST(TST_W, "-(A2)",               0045142);
@@ -2155,9 +2175,9 @@ static void test_program() {
     TEST(TST_W, "($123456).L",         0045171, 0x0012, 0x3456);
     TEST(TST_W, "(*+$1234,PC)",        0045172, 0x1232);
     TEST(TST_W, "(*-16,PC,D3.L)",      0045173, 0x38EE);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045174); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045174); // #xxxx
     TEST(TST_L, "D2",                  0045202);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045212);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045212);
     TEST(TST_L, "(A2)",                0045222);
     TEST(TST_L, "(A2)+",               0045232);
     TEST(TST_L, "-(A2)",               0045242);
@@ -2167,7 +2187,7 @@ static void test_program() {
     TEST(TST_L, "($123454).L",         0045271, 0x0012, 0x3454);
     TEST(TST_L, "(*+$1234,PC)",        0045272, 0x1232);
     TEST(TST_L, "(*-16,PC,D3.L)",      0045273, 0x38EE);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045274); // #xxxx
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045274); // #xxxx
 }
 
 static void test_system() {
@@ -2179,7 +2199,7 @@ static void test_system() {
 
     // MOVE src,SR: 00433|M|Rn
     TEST(MOVE, "D2,SR",                0043302);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0043312);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0043312);
     TEST(MOVE, "(A2),SR",              0043322);
     TEST(MOVE, "(A2)+,SR",             0043332);
     TEST(MOVE, "-(A2),SR",             0043342);
@@ -2196,7 +2216,7 @@ static void test_system() {
 
     // MOVE SR,dst: 00403|M|Rn
     TEST(MOVE, "SR,D2",                0040302);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040312);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040312);
     TEST(MOVE, "SR,(A2)",              0040322);
     TEST(MOVE, "SR,(A2)+",             0040332);
     TEST(MOVE, "SR,-(A2)",             0040342);
@@ -2206,9 +2226,9 @@ static void test_system() {
     ETEST(OPERAND_NOT_ALIGNED, _, "",  0040370, 0x1233);
     TEST(MOVE, "SR,($234568).L",       0040371, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALIGNED, _, "",  0040371, 0x0023, 0x4567);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040372, 0x1232);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040373);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0040374);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040372, 0x1232);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040373);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0040374);
 
     // MOVE USP,An: 004715|An
     TEST(MOVE, "USP,A2", 0047152);
@@ -2230,7 +2250,7 @@ static void test_system() {
 
     // CHK src,Dn: 004|Dn|Sz|M|Rn, Sz:W=6/L=7
     TEST(CHK_W, "D2,D7",               0047602);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0047612); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0047612); // An
     TEST(CHK_W, "(A2),D7",             0047622);
     TEST(CHK_W, "(A2)+,D7",            0047632);
     TEST(CHK_W, "-(A2),D7",            0047642);
@@ -2253,14 +2273,14 @@ static void test_system() {
     TEST(TRAPV, "", 047166);
 
     // ANDI #nn,CCR
-    TEST(ANDI, "#$34,CCR", 0001074, 0x0034);
+    TEST(ANDI, "#$0034,CCR", 0001074, 0x0034);
 
     // EORI #nn,CCR
-    TEST(EORI, "#$34,CCR", 0005074, 0x0034);
+    TEST(EORI, "#$0034,CCR", 0005074, 0x0034);
 
     // MOVE src,CCR: 00423|M|R
     TEST(MOVE, "D2,CCR",               0042302);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0042312);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0042312);
     TEST(MOVE, "(A2),CCR",             0042322);
     TEST(MOVE, "(A2)+,CCR",            0042332);
     TEST(MOVE, "-(A2),CCR",            0042342);
@@ -2276,13 +2296,13 @@ static void test_system() {
     TEST(MOVE, "#$0034,CCR",           0042374, 0x0034);
 
     // ORI #nn,CCR
-    TEST(ORI, "#$34,CCR", 0000074, 0x0034);
+    TEST(ORI, "#$0034,CCR", 0000074, 0x0034);
 }
 
 static void test_multiproc() {
     // TAS dst: 00453|M|Rn
     TEST(TAS,   "D2",                  0045302);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045312); // An
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045312); // An
     TEST(TAS,   "(A2)",                0045322);
     TEST(TAS,   "(A2)+",               0045332);
     TEST(TAS,   "-(A2)",               0045342);
@@ -2290,8 +2310,8 @@ static void test_multiproc() {
     TEST(TAS,   "($12,A2,D3.W)",       0045362, 0x3012);
     TEST(TAS,   "($001235).W",         0045370, 0x1235);
     TEST(TAS,   "($123457).L",         0045371, 0x0012, 0x3457);
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045372); // (d16,PC)
-    ETEST(ILLEGAL_OPERAND_MODE, _, "", 0045373); // (d8,PC,Xn)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045372); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045373); // (d8,PC,Xn)
     TEST(ILLEGAL, "",                  0045374); // #xxxx
 }
 

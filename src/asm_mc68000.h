@@ -45,10 +45,10 @@ private:
 
 public:
     struct Operand : public ErrorReporter {
-        EaMode mode;
+        AddrMode mode;
         RegName reg;
         RegName index;          // index register
-        EaSize size;            // index size
+        OprSize size;            // index size
         uint32_t val32;
         bool satisfy(EaCat categories) const {
             return EaMc68000::satisfy(mode, categories);
@@ -63,13 +63,13 @@ public:
     };
 private:
 
-    Error checkSize(InsnMc68000 &insn, const EaSize size);
-    Error checkSize(const uint32_t val32, const EaSize size, bool uint);
+    Error checkSize(InsnMc68000 &insn, const OprSize size);
+    Error checkSize(const uint32_t val32, const OprSize size, bool uint);
     Error parseOperand(Operand &opr);
     Error parseMoveMultiRegList(Operand &opr);
 
     Error emitImmediateData(
-        InsnMc68000 &insn, EaSize size, uint32_t val, Error error);
+        InsnMc68000 &insn, OprSize size, uint32_t val, Error error);
     Error emitEffectiveAddr(
         InsnMc68000 &insn,
         const Operand &ea,

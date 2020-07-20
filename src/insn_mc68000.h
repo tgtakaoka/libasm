@@ -30,9 +30,19 @@ public:
     InsnMc68000(Insn &insn) : InsnBase(insn) {}
 
     InsnFormat insnFormat() const { return Entry::_insnFormat(_fmt); }
+    void setFmt(uint8_t fmt) { _fmt = fmt; }
 
-    void setFmt(uint8_t fmt) {
-        _fmt = fmt;
+    AddrMode srcMode() const { return Entry::_mode(_src); }
+    AddrMode dstMode() const { return Entry::_mode(_dst); }
+    OprPos srcPos() const { return Entry::_srcPos(_pos); }
+    OprPos dstPos() const { return Entry::_dstPos(_pos); }
+    OprSize  oprSize() const { return Entry::_oprSize(_size); }
+    InsnSize insnSize() const { return Entry::_insnSize(_size); }
+    void setFlags(uint32_t flags) {
+        _src = Entry::_src(flags);
+        _dst = Entry::_dst(flags);
+        _pos = Entry::_pos(flags);
+        _size = Entry::_size(flags);
     }
 
     Config::opcode_t opCode() const { return _opCode; }
@@ -43,12 +53,12 @@ public:
         _opCode |= (data << gp);
     }
 
-    void setSize(EaSize size) { _size = size; }
-    EaSize size() const { return _size; }
-    void appendSize(EaSize size, RegMc68000 regs) {
-        _size = size;
+    void setOprSize(OprSize size) {
+        _size = Entry::_size(size, Entry::_insnSize(_size));
+    }
+    void appendOprSize(OprSize size, RegMc68000 regs) {
         char suffix[4];
-        regs.outEaSize(suffix, size);
+        regs.outOprSize(suffix, size);
         _insn.appendName(suffix);
     }
 
@@ -70,7 +80,10 @@ public:
 private:
     Config::opcode_t _opCode;
     uint8_t _fmt;
-    EaSize _size;
+    uint8_t _src;
+    uint8_t _dst;
+    uint8_t _pos;
+    uint8_t _size;
 
     void emitUint16(uint16_t val, uint8_t pos) {
         _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);

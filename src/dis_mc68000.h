@@ -44,39 +44,25 @@ private:
     RegBase &getRegister() override { return _regs; }
 
     void outRegName(RegName regName);
-    void outEaSize(EaSize size);
+    void outOprSize(OprSize size);
 
     Error decodeImmediateData(
-        DisMemory &memory, InsnMc68000 &insn, EaSize eaSize);
+        DisMemory &memory, InsnMc68000 &insn, OprSize eaSize);
     Error decodeEffectiveAddr(
         DisMemory &memory, InsnMc68000 &insn, const EaMc68000 &ea);
-
-    Error decodeImplied(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDestSiz(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeAddrReg(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDataReg(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeMoveUsp(InsnMc68000 &insn);
-    Error decodeTrapVec(InsnMc68000 &insn);
-    Error decodeDataDst(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDestOpr(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeSignExt(InsnMc68000 &insn);
-    Error decodeRelative(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeRelative(
+        DisMemory &memory, InsnMc68000 &insn, uint8_t rel8);
     void  decodeMoveMltRegList(
         uint16_t list, bool pop,
         void (DisMc68000::*outRegs)(RegName, RegName, char));
     void  outMoveMltRegs(RegName start, RegName last, char suffix);
-    Error decodeMoveMlt(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeMoveSr(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeMoveQic(InsnMc68000 &insn);
-    Error decodeMovePer(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeAregSiz(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDregDst(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDataQic(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDmemSiz(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeDregRot(InsnMc68000 &insn);
-    Error decodeDmemOpr(DisMemory &memory, InsnMc68000 &insn);
-    Error decodeRegsExg(InsnMc68000 &insn);
-    Error decodeMoveOpr(DisMemory &memory, InsnMc68000 &insn);
+    Error decodeOperand(
+        DisMemory &memory, InsnMc68000 &insn,
+        AddrMode mode, uint8_t modePos, uint8_t regPos,
+        OprSize size, uint16_t opr16);
+    Error checkOperand(
+        const InsnMc68000 &insn, AddrMode mode,
+        uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decode(DisMemory &memory, Insn &insn) override;
 };

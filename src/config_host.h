@@ -46,6 +46,7 @@ typedef union {
 
 #define pgm_read_byte(p) *(p)
 #define pgm_read_word(p) *(p)
+#define pgm_read_dword(p) *(p)
 #define pgm_read_ptr(p) ((libasm::host::read_ptr_t *)(p))->i
 #define F(text) (text)
 #define strcpy_P(d, s) strcpy((d), (s))

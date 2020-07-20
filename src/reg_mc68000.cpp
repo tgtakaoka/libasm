@@ -61,7 +61,7 @@ char *RegMc68000::outRegName(char *out, RegName regName) const {
     return out;
 }
 
-char *RegMc68000::outEaSize(char *out, EaSize size) const {
+char *RegMc68000::outOprSize(char *out, OprSize size) const {
     char *p = out;
     *out++ = '.';
     switch (size) {
@@ -133,33 +133,33 @@ RegName RegMc68000::parseRegName(const char *line) {
     return REG_UNDEF;
 }
 
-static EaMode parseEaMode(uint8_t mode, uint8_t regno) {
+static AddrMode parseAddrMode(uint8_t mode, uint8_t regno) {
     if (mode == 7) {
         switch (regno) {
-        case 0: return M_ABS_SHORT;
-        case 1: return M_ABS_LONG;
-        case 2: return M_PC_DISP;
-        case 3: return M_PC_INDX;
-        case 4: return M_IMM_DATA;
-        default: return M_ILLEGAL;
+        case 0: return M_AWORD;
+        case 1: return M_ALONG;
+        case 2: return M_PCDSP;
+        case 3: return M_PCIDX;
+        case 4: return M_IMDAT;
+        default: return M_ERROR;
         }
     }
-    return EaMode(mode);
+    return AddrMode(mode);
 }
 
-Config::opcode_t EaMc68000::encodeMode(EaMode mode) {
+Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
     const uint8_t m = static_cast<uint8_t>(mode);
     return m >= 8 ? 7 : m;
 }
 
-Config::opcode_t EaMc68000::encodeRegNo(EaMode mode, RegName regName) {
+Config::opcode_t EaMc68000::encodeRegNo(AddrMode mode, RegName regName) {
     const uint8_t m = static_cast<uint8_t>(mode);
     if (m < 8) return RegMc68000::encodeRegNo(regName);
     if (m < 16) return m - 8;
     return 0;
 }
 
-static EaCat getCategories(EaMode mode) {
+static EaCat getCategories(AddrMode mode) {
     switch (mode) {
     case M_DREG:
         return EaCat::DATA | EaCat::ALTERABLE;
@@ -168,29 +168,29 @@ static EaCat getCategories(EaMode mode) {
     case M_AIND:
     case M_DISP:
     case M_INDX:
-    case M_ABS_SHORT:
-    case M_ABS_LONG:
+    case M_AWORD:
+    case M_ALONG:
     case M_LABEL:
         return EaCat::DATA | EaCat::MEMORY | EaCat::CONTROL | EaCat::ALTERABLE;
     case M_PINC:
     case M_PDEC:
         return EaCat::DATA | EaCat::MEMORY | EaCat::ALTERABLE;
-    case M_PC_DISP:
-    case M_PC_INDX:
+    case M_PCDSP:
+    case M_PCIDX:
         return EaCat::DATA | EaCat::MEMORY | EaCat::CONTROL;
-    case M_IMM_DATA:
+    case M_IMDAT:
         return EaCat::DATA;
     /* for assembler operand parsing */
     case M_NONE:
         return EaCat::NONE;
-    case M_MULT_REGS:
+    case M_MULT:
         return EaCat::ALTERABLE;
     default:
         return EaCat::NONE;
     }
 }
 
-const char *EaMc68000::eaCategory(EaMode mode) {
+const char *EaMc68000::eaCategory(AddrMode mode) {
     const EaCat categories = getCategories(mode);
     static char buf[5];
     buf[0] = (categories & EaCat::DATA) ? 'D' : '_';
@@ -201,15 +201,15 @@ const char *EaMc68000::eaCategory(EaMode mode) {
     return buf;
 }
 
-static RegName encodeRegName(EaMode mode, uint8_t regno) {
+static RegName encodeRegName(AddrMode mode, uint8_t regno) {
     switch (mode) {
     case M_DREG:
         return RegMc68000::decodeDataReg(regno);
-    case M_ABS_SHORT:
-    case M_ABS_LONG:
-    case M_PC_DISP:
-    case M_IMM_DATA:
-    case M_ILLEGAL:
+    case M_AWORD:
+    case M_ALONG:
+    case M_PCDSP:
+    case M_IMDAT:
+    case M_ERROR:
         return REG_UNDEF;
     default:
         return RegMc68000::decodeAddrReg(regno);
@@ -218,29 +218,29 @@ static RegName encodeRegName(EaMode mode, uint8_t regno) {
 
 EaMc68000::EaMc68000(Config::opcode_t insnCode) {
     const uint8_t regno = insnCode & 7;
-    size = EaSize((insnCode >> 6) & 3);
-    mode = parseEaMode((insnCode >> 3) & 7, regno);
+    size = OprSize((insnCode >> 6) & 3);
+    mode = parseAddrMode((insnCode >> 3) & 7, regno);
     reg = encodeRegName(mode, regno);
 }
 
-EaMc68000::EaMc68000(EaSize size_, uint8_t raw_mode, uint8_t regno) {
+EaMc68000::EaMc68000(OprSize size_, uint8_t raw_mode, uint8_t regno) {
     regno &= 7;
     size = size_;
-    mode = parseEaMode(raw_mode & 7, regno);
+    mode = parseAddrMode(raw_mode & 7, regno);
     reg = encodeRegName(mode, regno);
 }
 
-EaMc68000::EaMc68000(EaSize size_, EaMode mode_, uint8_t regno) {
+EaMc68000::EaMc68000(OprSize size_, AddrMode mode_, uint8_t regno) {
     size = size_;
     mode = mode_;
     reg = encodeRegName(mode, regno);
 }
 
-bool EaMc68000::satisfy(EaMode mode, EaCat categories) {
+bool EaMc68000::satisfy(AddrMode mode, EaCat categories) {
     return (getCategories(mode) & categories) == categories;
 }
 
-EaSize BriefExt::indexSize() const {
+OprSize BriefExt::indexSize() const {
     return (word & 0x800) ? SZ_LONG : SZ_WORD;
 }
 
