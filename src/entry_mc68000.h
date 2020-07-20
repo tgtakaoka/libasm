@@ -52,25 +52,15 @@ enum InsnFormat {
     MOVE_OPR = 26, // 1 1SS XXX MMM MMM YYY SS:01=B,11=W,10=L
 };
 
-enum ExtWord {
-    NO_EXT   = 0,  // No extension word
-    EXT_IMM  = 1,  // Immediate byte/word/long data
-    EXT_BIT  = 2,  // Bit number 0-7
-    EXT_DISP = 3,  // Word displacement
-    EXT_DBCC = 4,  // Word displacement for DBcc
-    EXT_BRA  = 5,  // Optional word displacement for Bcc
-    EXT_REGM = 6,  // Registers mask
-};
-
 struct Entry {
     const Config::opcode_t opCode;
-    const uint8_t flags;
+    const uint8_t fmt;
     const char *name;
 
-    static inline InsnFormat _insnFormat(uint8_t flags) {
-        return InsnFormat((flags >> insnFmt_gp) & insnFmt_gm);
+    static inline InsnFormat _insnFormat(uint8_t fmt) {
+        return InsnFormat((fmt >> insnFmt_gp) & insnFmt_gm);
     }
-    static constexpr uint8_t _flags(InsnFormat iformat) {
+    static constexpr uint8_t _fmt(InsnFormat iformat) {
         return (static_cast<uint8_t>(iformat) << insnFmt_gp);
     }
 

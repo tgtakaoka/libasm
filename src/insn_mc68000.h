@@ -29,10 +29,10 @@ class InsnMc68000 : public InsnBase<Config> {
 public:
     InsnMc68000(Insn &insn) : InsnBase(insn) {}
 
-    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
+    InsnFormat insnFormat() const { return Entry::_insnFormat(_fmt); }
 
-    void setFlags(uint8_t flags) {
-        _flags = flags;
+    void setFmt(uint8_t fmt) {
+        _fmt = fmt;
     }
 
     Config::opcode_t opCode() const { return _opCode; }
@@ -69,7 +69,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint8_t _flags;
+    uint8_t _fmt;
     EaSize _size;
 
     void emitUint16(uint16_t val, uint8_t pos) {

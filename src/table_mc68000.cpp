@@ -26,7 +26,7 @@ namespace libasm {
 namespace mc68000 {
 
 #define E(_opc, _name, _iformat)                        \
-    { _opc,  Entry::_flags(_iformat), TEXT_##_name },
+    { _opc, Entry::_fmt(_iformat), TEXT_##_name },
 
 static constexpr Entry TABLE_MC68000[] PROGMEM = {
     E(0000000, ORI,   DEST_SIZ)
@@ -214,15 +214,15 @@ Error TableMc68000::searchName(InsnMc68000 &insn, const char *name) const {
         TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_MC68000));
     if (entry) {
         insn.setOpCode(pgm_read_word(&entry->opCode));
-        insn.setFlags(pgm_read_byte(&entry->flags));
+        insn.setFmt(pgm_read_byte(&entry->fmt));
         return _error.setOK();
     }
     return _error.setError(UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const uint8_t flags = pgm_read_byte(&entry->flags);
-    const Config::opcode_t mask = getInsnMask(Entry::_insnFormat(flags));
+    const uint8_t fmt = pgm_read_byte(&entry->fmt);
+    const Config::opcode_t mask = getInsnMask(Entry::_insnFormat(fmt));
     return opCode & ~mask;
 }
 
@@ -231,7 +231,7 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
         opCode, ARRAY_RANGE(TABLE_MC68000), maskCode);
     if (entry) {
-        insn.setFlags(pgm_read_byte(&entry->flags));
+        insn.setFmt(pgm_read_byte(&entry->fmt));
         const char *name =
             reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
         TableBase::setName(insn.insn(), name, Config::NAME_MAX);
