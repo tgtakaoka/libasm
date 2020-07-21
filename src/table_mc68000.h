@@ -26,12 +26,19 @@ namespace mc68000 {
 
 class TableMc68000 : public TableBase {
 public:
-    Error searchName(InsnMc68000 &insn, const char *name) const;
+    TableMc68000();
+
+    Error searchName(InsnMc68000 &insn) const;
     Error searchOpCode(InsnMc68000 &insn) const;
 
     const char *listCpu() override { return getCpu(); }
     bool setCpu(const char *cpu) override;
     const char *getCpu() override { return "68000"; }
+
+    void setAlias(bool enable) { _aliasEnabled = enable; }
+
+private:
+    bool _aliasEnabled;
 };
 
 extern TableMc68000 TableMc68000;

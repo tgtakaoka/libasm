@@ -90,49 +90,11 @@ enum OprPos {
     OP___ = 4,  // ___|___|___|___
 };
 
-enum InsnFormat {
-    IMPLIED  = 0,  // 1 111 111 111 111 111
-    ADDR_REG = 1,  // 1 111 111 111 111 AAA
-    DATA_REG = 2,  // 1 111 111 111 111 DDD
-    MOVE_USP = 3,  // 1 111 111 111 11d AAA d:0=AtoU,1=UtoA
-    TRAP_VEC = 4,  // 1 111 111 111 11V VVV
-    DATA_DST = 5,  // 1 111 111 111 MMM DDD
-    DEST_OPR = 6,  // 1 111 111 111 MMM XXX
-    SIGN_EXT = 7,  // 1 111 111 11S 111 DDD S:0=W,1=L
-    RELATIVE = 8,  // 1 111 111 1dd ddd ddd
-    DEST_SIZ = 9,  // 1 111 111 1SS MMM XXX SS:00=B,01=W,10=L
-    MOVE_MLT = 10, // 1 111 1d1 11S MMM XXX d:0=RtoM,1=MtoR
-    MOVE_SR  = 11, // 1 111 1dd 111 MMM XXX dd:00=SRtoM,10=CCRtoM,11=MtoSR
-    AREG_LNG = 12, // 1 111 AAA 111 MMM XXX
-    AREG_SIZ = 13, // 1 111 AAA S11 MMM XXX S:0=W,1=L
-    DREG_DST = 14, // 1 111 DDD 111 MMM XXX
-    MOVE_QIC = 15, // 1 111 DDD 1dd ddd ddd
-    MOVE_PER = 16, // 1 111 DDD 1dS 111 AAA d:0=DtoM,1=MtoD S:0=W,1=L
-    DATA_QIC = 17, // 1 111 ddd 1SS MMM XXX ddd:0=8 SS:00=B,01=W,10=L
-    DREG_SIZ = 18, // 1 111 DDD 1SS MMM XXX SS:00=B,01=W,10=L
-    DMEM_SIZ = 19, // 1 111 DDD dSS MMM XXX d:0=toD,1=Dto SS:00=B,01=W,10=L
-    DREG_ROT = 20, // 1 111 rrr 1SS d11 DDD d:0=Ir/1=Dr
-    DMEM_DST = 21, // 1 111 XXX 111 11R YYY R:0=D,1=M
-    REGS_EXG = 22, // 1 111 XXX 1rr 11r YYY rrr:010=DD,011=AA,101=DA
-    CMPM_SIZ = 23, // 1 111 XXX 1SS 111 YYY SS:00=B,01=W,10=L
-    DMEM_OPR = 24, // 1 111 XXX 1SS 11R YYY R:0=D,1=M SS:00=B,01=W,10=L
-    MOVA_OPR = 25, // 1 1SS AAA 111 MMM XXX SS:11=W,10=L
-    MOVE_OPR = 26, // 1 1SS XXX MMM MMM YYY SS:01=B,11=W,10=L
-    FMT_NEW  = 31, // Ignore, new format entry
-};
-
 struct Entry {
     const Config::opcode_t opCode;
-    const uint8_t fmt;
     const uint32_t flags;
     const char *name;
 
-    static inline InsnFormat _insnFormat(uint8_t fmt) {
-        return InsnFormat((fmt >> insnFmt_gp) & insnFmt_gm);
-    }
-    static constexpr uint8_t _fmt(InsnFormat iformat) {
-        return (static_cast<uint8_t>(iformat) << insnFmt_gp);
-    }
     static inline AddrMode _mode(uint8_t opr) {
         return AddrMode((opr >> addrMode_gp) & addrMode_gm);
     }
@@ -145,9 +107,13 @@ struct Entry {
     static inline OprPos _dstPos(uint8_t pos) {
         return OprPos((pos >> dstPos_gp) & oprPos_gm);
     }
-    static constexpr uint8_t _pos(OprPos src, OprPos dst) {
+    static inline bool _alias(uint8_t pos) {
+        return ((pos >> alias_bp) & 1) ? true : false;
+    }
+    static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
         return (static_cast<uint8_t>(src) << srcPos_gp)
-            | (static_cast<uint8_t>(dst) << dstPos_gp);
+            | (static_cast<uint8_t>(dst) << dstPos_gp)
+            | (alias ? (1 << alias_bp) : 0);
     }
     static inline OprSize _oprSize(uint8_t size) {
         return OprSize((size >> oprSize_gp) & oprSize_gm);
@@ -180,15 +146,14 @@ struct Entry {
     }
 
 private:
-    static constexpr int insnFmt_gp = 0;
-    static constexpr uint8_t insnFmt_gm = 0x7f;
     // |src|, |dst|
-    static constexpr uint8_t addrMode_gm = 0x3f;
+    static constexpr uint8_t addrMode_gm = 0x7f;
     static constexpr int     addrMode_gp = 0;
     // |pos|
-    static constexpr uint8_t oprPos_gm = 0xf;
+    static constexpr uint8_t oprPos_gm = 0x7;
     static constexpr int     srcPos_gp = 0;
-    static constexpr int     dstPos_gp = 4;
+    static constexpr int     dstPos_gp = 3;
+    static constexpr int     alias_bp  = 7;
     // |size|
     static constexpr uint8_t oprSize_gm  = 0xf;
     static constexpr uint8_t insnSize_gm = 0xf;

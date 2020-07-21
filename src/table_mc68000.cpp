@@ -24,357 +24,299 @@
 namespace libasm {
 namespace mc68000 {
 
-#define X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize)  \
-    {                                                               \
-        _opc,                                                       \
-        Entry::_fmt(FMT_NEW),                                       \
-        Entry::_flags(Entry::_opr(_msrc),                           \
-                      Entry::_opr(_mdst),                           \
-                      Entry::_pos(OP_##_spos, OP_##_dpos),          \
-                      Entry::_size(SZ_##_osize, ISZ_##_isize)),     \
-        TEXT_##_name,                                               \
+#define X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, _alias) \
+    {                                                                   \
+        _opc,                                                           \
+        Entry::_flags(Entry::_opr(_msrc),                               \
+                      Entry::_opr(_mdst),                               \
+                      Entry::_pos(OP_##_spos, OP_##_dpos, _alias),      \
+                      Entry::_size(SZ_##_osize, ISZ_##_isize)),         \
+        TEXT_##_name,                                                   \
     },
+#define E(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize)      \
+    X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, false)
+#define A(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize)      \
+    X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, true)
 
 static constexpr Entry MC68000_TABLE[] PROGMEM = {
-    X(0000074, ORI,   NONE, M_IMDAT, M_CCR,   __, __, WORD)
-    X(0000174, ORI,   NONE, M_IMDAT, M_SR,    __, __, WORD)
-    X(0000000, ORI,   DATA, M_IMDAT, M_WDATA, __, 10, DATA)
-    X(0001074, ANDI,  NONE, M_IMDAT, M_CCR,   __, __, WORD)
-    X(0001174, ANDI,  NONE, M_IMDAT, M_SR,    __, __, WORD)
-    X(0001000, ANDI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
-    X(0002000, SUBI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
-    X(0003000, ADDI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
-    X(0005074, EORI,  NONE, M_IMDAT, M_CCR,   __, __, WORD)
-    X(0005174, EORI,  NONE, M_IMDAT, M_SR,    __, __, WORD)
-    X(0005000, EORI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
-    X(0006000, CMPI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
-    X(0004000, BTST,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
-    X(0004000, BTST,  BYTE, M_IMBIT, M_RMEM,  __, 10, BYTE)
-    X(0004100, BCHG,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
-    X(0004100, BCHG,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE)
-    X(0004200, BCLR,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
-    X(0004200, BCLR,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE)
-    X(0004300, BSET,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
-    X(0004300, BSET,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE)
-    X(0000410, MOVEP, DATA, M_DISP,  M_DREG,  _0, _3, ADR6)
-    X(0000610, MOVEP, DATA, M_DREG,  M_DISP,  _3, _0, ADR6)
-    X(0000400, BTST,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
-    X(0000400, BTST,  BYTE, M_DREG,  M_RMEM,  _3, 10, BYTE)
-    X(0000500, BCHG,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
-    X(0000500, BCHG,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE)
-    X(0000600, BCLR,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
-    X(0000600, BCLR,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE)
-    X(0000700, BSET,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
-    X(0000700, BSET,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE)
-    X(0020100, MOVEA, LONG, M_RADDR, M_AREG,  10, _3, LONG)
-    X(0030100, MOVEA, WORD, M_RADDR, M_AREG,  10, _3, WORD)
-    X(0042300, MOVE,  NONE, M_RDATA, M_CCR,   10, __, WORD)
-    X(0040300, MOVE,  NONE, M_SR,    M_WDATA, __, 10, WORD)
-    X(0043300, MOVE,  NONE, M_RDATA, M_SR,    10, __, WORD)
-    X(0010000, MOVE,  BYTE, M_RDATA, M_WDATA, 10, 23, BYTE)
-    X(0020000, MOVE,  LONG, M_RADDR, M_WDATA, 10, 23, LONG)
-    X(0030000, MOVE,  WORD, M_RADDR, M_WDATA, 10, 23, WORD)
-    X(0040000, NEGX,  DATA, M_WDATA, M_NONE,  10, __, DATA)
-    X(0041000, CLR,   DATA, M_WDATA, M_NONE,  10, __, DATA)
-    X(0042000, NEG,   DATA, M_WDATA, M_NONE,  10, __, DATA)
-    X(0043000, NOT,   DATA, M_WDATA, M_NONE,  10, __, DATA)
-    X(0044200, EXT,   DATA, M_DREG,  M_NONE,  _0, __, ADR6)
-    X(0044000, NBCD,  NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0044100, SWAP,  NONE, M_DREG,  M_NONE,  _0, __, NONE)
-    X(0044100, PEA,   NONE, M_JADDR, M_NONE,  10, __, NONE)
-    X(0045374, ILLEG, NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0045300, TAS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0045000, TST,   DATA, M_RMEM,  M_NONE,  10, __, DATA)
-    X(0047100, TRAP,  NONE, M_IMVEC, M_NONE,  __, __, NONE)
-    X(0047120, LINK,  NONE, M_AREG,  M_IMDSP, _0, __, WORD)
-    X(0047130, UNLK,  NONE, M_AREG,  M_NONE,  _0, __, NONE)
-    X(0047140, MOVE,  NONE, M_AREG,  M_USP,   _0, __, NONE)
-    X(0047150, MOVE,  NONE, M_USP,   M_AREG,  __, _0, NONE)
-    X(0047160, RESET, NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0047161, NOP,   NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0047162, STOP,  NONE, M_IMDAT, M_NONE,  __, __, WORD)
-    X(0047163, RTE,   NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0047165, RTS,   NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0047166, TRAPV, NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0047167, RTR,   NONE, M_NONE,  M_NONE,  __, __, NONE)
-    X(0047200, JSR,   NONE, M_JADDR, M_NONE,  10, __, WORD)
-    X(0047300, JMP,   NONE, M_JADDR, M_NONE,  10, __, WORD)
-    X(0044200, MOVEM, DATA, M_MULT,  M_DADDR, __, 10, ADR6)
-    X(0046200, MOVEM, DATA, M_IADDR, M_MULT,  10, __, ADR6)
-    X(0040700, LEA,   NONE, M_JADDR, M_AREG,  10, _3, NONE)
-    X(0040600, CHK,   WORD, M_RDATA, M_DREG,  10, _3, WORD)
-    X(0050310, DBT,   NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0050710, DBRA,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0050710, DBF,   NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0051310, DBHI,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0051710, DBLS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0052310, DBCC,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0052310, DBHS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0052710, DBCS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0052710, DBLO,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0053310, DBNE,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0053710, DBEQ,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0054310, DBVC,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0054710, DBVS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0055310, DBPL,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0055710, DBMI,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0056310, DBGE,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0056710, DBLT,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0057310, DBGT,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0057710, DBLE,  NONE, M_DREG,  M_REL16, _0, __, WORD)
-    X(0050300, ST,    NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0050700, SF,    NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0051300, SHI,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0051700, SLS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0052300, SCC,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0052300, SHS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0052700, SCS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0052700, SLO,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0053300, SNE,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0053700, SEQ,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0054300, SVC,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0054700, SVS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0055300, SPL,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0055700, SMI,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0056300, SGE,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0056700, SLT,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0057300, SGT,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0057700, SLE,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    X(0050000, ADDQ,  DATA, M_IM3,   M_WADDR, _3, 10, DATA)
-    X(0050400, SUBQ,  DATA, M_IM3,   M_WADDR, _3, 10, DATA)
-    X(0060000, BRA,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0060000, BT,    NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0060400, BSR,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0061000, BHI,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0061400, BLS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0062000, BCC,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0062000, BHS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0062400, BCS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0062400, BLO,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0063000, BNE,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0063400, BEQ,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0064000, BVC,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0064400, BVS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0065000, BPL,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0065400, BMI,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0066000, BGE,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0066400, BLT,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0067000, BGT,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0067400, BLE,   NONE, M_REL8,  M_NONE,  __, __, WORD)
-    X(0070000, MOVEQ, NONE, M_IM8,   M_DREG,  _0, _3, NONE)
-    X(0100300, DIVU,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
-    X(0100700, DIVS,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
-    X(0100000, OR,    DATA, M_RDATA, M_DREG,  10, _3, DATA)
-    X(0100400, SBCD,  NONE, M_DREG,  M_DREG,  _0, _3, BYTE)
-    X(0100410, SBCD,  NONE, M_PDEC,  M_PDEC,  _0, _3, BYTE)
-    X(0100400, OR,    DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
-    X(0110300, SUBA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8)
-    X(0110400, SUBX,  DATA, M_DREG,  M_DREG,  _0, _3, DATA)
-    X(0110410, SUBX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA)
-    X(0110000, SUB,   DATA, M_RADDR, M_DREG,  10, _3, DATA)
-    X(0110400, SUB,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
-    X(0130300, CMPA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8)
-    X(0130000, CMP,   DATA, M_RADDR, M_DREG,  10, _3, DATA)
-    X(0130410, CMPM,  DATA, M_PINC,  M_PINC,  _0, _3, DATA)
-    X(0130400, EOR,   DATA, M_DREG,  M_WDATA, _3, 10, DATA)
-    X(0140300, MULU,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
-    X(0140700, MULS,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
-    X(0140000, AND,   DATA, M_RDATA, M_DREG,  10, _3, DATA)
-    X(0140400, ABCD,  NONE, M_DREG,  M_DREG,  _0, _3, BYTE)
-    X(0140410, ABCD,  NONE, M_PDEC,  M_PDEC,  _0, _3, BYTE)
-    X(0140500, EXG,   NONE, M_DREG,  M_DREG,  _3, _0, NONE)
-    X(0140510, EXG,   NONE, M_AREG,  M_AREG,  _3, _0, NONE)
-    X(0140610, EXG,   NONE, M_DREG,  M_AREG,  _3, _0, NONE)
-    X(0140610, EXG,   NONE, M_AREG,  M_DREG,  _0, _3, NONE)
-    X(0140400, AND,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
-    X(0150300, ADDA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8)
-    X(0150400, ADDX,  DATA, M_DREG,  M_DREG,  _0, _3, DATA)
-    X(0150410, ADDX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA)
-    X(0150000, ADD,   DATA, M_RADDR, M_DREG,  10, _3, DATA)
-    X(0150400, ADD,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
-    X(0160300, ASR,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0160700, ASL,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0161300, LSR,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0161700, LSL,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0162300, ROXR,  NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0162700, ROXL,  NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0163300, ROR,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0163700, ROL,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
-    X(0160000, ASR,   DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160040, ASR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160400, ASL,   DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160440, ASL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160010, LSR,   DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160050, LSR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160410, LSL,   DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160450, LSL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160020, ROXR,  DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160060, ROXR,  DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160420, ROXL,  DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160460, ROXL,  DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160030, ROR,   DATA, M_IM3,   M_DREG,  _3, _0, DATA)
-    X(0160070, ROR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160470, ROL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
-    X(0160430, ROL,   DATA, M_IM3,   M_DREG,  _3, _0, DATA)
+    E(0000074, ORI,   NONE, M_IMDAT, M_CCR,   __, __, WORD)
+    E(0000174, ORI,   NONE, M_IMDAT, M_SR,    __, __, WORD)
+    E(0000000, ORI,   DATA, M_IMDAT, M_WDATA, __, 10, DATA)
+    E(0001074, ANDI,  NONE, M_IMDAT, M_CCR,   __, __, WORD)
+    E(0001174, ANDI,  NONE, M_IMDAT, M_SR,    __, __, WORD)
+    E(0001000, ANDI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
+    E(0002000, SUBI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
+    E(0003000, ADDI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
+    E(0005074, EORI,  NONE, M_IMDAT, M_CCR,   __, __, WORD)
+    E(0005174, EORI,  NONE, M_IMDAT, M_SR,    __, __, WORD)
+    E(0005000, EORI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
+    E(0006000, CMPI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA)
+    E(0004000, BTST,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
+    E(0004000, BTST,  BYTE, M_IMBIT, M_RMEM,  __, 10, BYTE)
+    E(0004100, BCHG,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
+    E(0004100, BCHG,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE)
+    E(0004200, BCLR,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
+    E(0004200, BCLR,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE)
+    E(0004300, BSET,  LONG, M_IMBIT, M_DREG,  __, _0, LONG)
+    E(0004300, BSET,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE)
+    E(0000410, MOVEP, DATA, M_DISP,  M_DREG,  _0, _3, ADR6)
+    E(0000610, MOVEP, DATA, M_DREG,  M_DISP,  _3, _0, ADR6)
+    E(0000400, BTST,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
+    E(0000400, BTST,  BYTE, M_DREG,  M_RMEM,  _3, 10, BYTE)
+    E(0000500, BCHG,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
+    E(0000500, BCHG,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE)
+    E(0000600, BCLR,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
+    E(0000600, BCLR,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE)
+    E(0000700, BSET,  LONG, M_DREG,  M_DREG,  _3, _0, LONG)
+    E(0000700, BSET,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE)
+    E(0020100, MOVEA, LONG, M_RADDR, M_AREG,  10, _3, LONG)
+    E(0030100, MOVEA, WORD, M_RADDR, M_AREG,  10, _3, WORD)
+    E(0042300, MOVE,  NONE, M_RDATA, M_CCR,   10, __, WORD)
+    E(0040300, MOVE,  NONE, M_SR,    M_WDATA, __, 10, WORD)
+    E(0043300, MOVE,  NONE, M_RDATA, M_SR,    10, __, WORD)
+    E(0010000, MOVE,  BYTE, M_RDATA, M_WDATA, 10, 23, BYTE)
+    E(0020000, MOVE,  LONG, M_RADDR, M_WDATA, 10, 23, LONG)
+    E(0030000, MOVE,  WORD, M_RADDR, M_WDATA, 10, 23, WORD)
+    E(0040000, NEGX,  DATA, M_WDATA, M_NONE,  10, __, DATA)
+    E(0041000, CLR,   DATA, M_WDATA, M_NONE,  10, __, DATA)
+    E(0042000, NEG,   DATA, M_WDATA, M_NONE,  10, __, DATA)
+    E(0043000, NOT,   DATA, M_WDATA, M_NONE,  10, __, DATA)
+    E(0044200, EXT,   DATA, M_DREG,  M_NONE,  _0, __, ADR6)
+    E(0044000, NBCD,  NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0044100, SWAP,  NONE, M_DREG,  M_NONE,  _0, __, NONE)
+    E(0044100, PEA,   NONE, M_JADDR, M_NONE,  10, __, NONE)
+    E(0045374, ILLEG, NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0045300, TAS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0045000, TST,   DATA, M_RMEM,  M_NONE,  10, __, DATA)
+    E(0047100, TRAP,  NONE, M_IMVEC, M_NONE,  __, __, NONE)
+    E(0047120, LINK,  NONE, M_AREG,  M_IMDSP, _0, __, WORD)
+    E(0047130, UNLK,  NONE, M_AREG,  M_NONE,  _0, __, NONE)
+    E(0047140, MOVE,  NONE, M_AREG,  M_USP,   _0, __, NONE)
+    E(0047150, MOVE,  NONE, M_USP,   M_AREG,  __, _0, NONE)
+    E(0047160, RESET, NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0047161, NOP,   NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0047162, STOP,  NONE, M_IMDAT, M_NONE,  __, __, WORD)
+    E(0047163, RTE,   NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0047165, RTS,   NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0047166, TRAPV, NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0047167, RTR,   NONE, M_NONE,  M_NONE,  __, __, NONE)
+    E(0047200, JSR,   NONE, M_JADDR, M_NONE,  10, __, WORD)
+    E(0047300, JMP,   NONE, M_JADDR, M_NONE,  10, __, WORD)
+    E(0044200, MOVEM, DATA, M_MULT,  M_DADDR, __, 10, ADR6)
+    E(0046200, MOVEM, DATA, M_IADDR, M_MULT,  10, __, ADR6)
+    E(0040700, LEA,   NONE, M_JADDR, M_AREG,  10, _3, NONE)
+    E(0040600, CHK,   WORD, M_RDATA, M_DREG,  10, _3, WORD)
+    E(0050310, DBT,   NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0050710, DBRA,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0050710, DBF,   NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0051310, DBHI,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0051710, DBLS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0052310, DBCC,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0052310, DBHS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0052710, DBCS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0052710, DBLO,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0053310, DBNE,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0053710, DBEQ,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0054310, DBVC,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0054710, DBVS,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0055310, DBPL,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0055710, DBMI,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0056310, DBGE,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0056710, DBLT,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0057310, DBGT,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0057710, DBLE,  NONE, M_DREG,  M_REL16, _0, __, WORD)
+    E(0050300, ST,    NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0050700, SF,    NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0051300, SHI,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0051700, SLS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0052300, SCC,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0052300, SHS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0052700, SCS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0052700, SLO,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0053300, SNE,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0053700, SEQ,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0054300, SVC,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0054700, SVS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0055300, SPL,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0055700, SMI,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0056300, SGE,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0056700, SLT,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0057300, SGT,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0057700, SLE,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
+    E(0050000, ADDQ,  DATA, M_IM3,   M_WADDR, __, 10, DATA)
+    E(0050400, SUBQ,  DATA, M_IM3,   M_WADDR, __, 10, DATA)
+    E(0060000, BRA,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0060000, BT,    NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0060400, BSR,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0061000, BHI,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0061400, BLS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0062000, BCC,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0062000, BHS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0062400, BCS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0062400, BLO,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0063000, BNE,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0063400, BEQ,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0064000, BVC,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0064400, BVS,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0065000, BPL,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0065400, BMI,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0066000, BGE,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0066400, BLT,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0067000, BGT,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0067400, BLE,   NONE, M_REL8,  M_NONE,  __, __, WORD)
+    E(0070000, MOVEQ, NONE, M_IM8,   M_DREG,  __, _3, NONE)
+    E(0100300, DIVU,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
+    E(0100700, DIVS,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
+    E(0100000, OR,    DATA, M_RDATA, M_DREG,  10, _3, DATA)
+    E(0100400, SBCD,  NONE, M_DREG,  M_DREG,  _0, _3, BYTE)
+    E(0100410, SBCD,  NONE, M_PDEC,  M_PDEC,  _0, _3, BYTE)
+    E(0100400, OR,    DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
+    E(0110300, SUBA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8)
+    A(0110300, SUB,   DATA, M_RADDR, M_AREG,  10, _3, ADR8)
+    A(0110374, SUBI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8)
+    E(0110400, SUBX,  DATA, M_DREG,  M_DREG,  _0, _3, DATA)
+    E(0110410, SUBX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA)
+    E(0110000, SUB,   DATA, M_RADDR, M_DREG,  10, _3, DATA)
+    E(0110400, SUB,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
+    E(0130300, CMPA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8)
+    A(0130374, CMPI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8)
+    E(0130000, CMP,   DATA, M_RADDR, M_DREG,  10, _3, DATA)
+    E(0130410, CMPM,  DATA, M_PINC,  M_PINC,  _0, _3, DATA)
+    E(0130400, EOR,   DATA, M_DREG,  M_WDATA, _3, 10, DATA)
+    E(0140300, MULU,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
+    E(0140700, MULS,  DATA, M_RDATA, M_DREG,  10, _3, WORD)
+    E(0140000, AND,   DATA, M_RDATA, M_DREG,  10, _3, DATA)
+    E(0140400, ABCD,  NONE, M_DREG,  M_DREG,  _0, _3, BYTE)
+    E(0140410, ABCD,  NONE, M_PDEC,  M_PDEC,  _0, _3, BYTE)
+    E(0140500, EXG,   NONE, M_DREG,  M_DREG,  _3, _0, NONE)
+    E(0140510, EXG,   NONE, M_AREG,  M_AREG,  _3, _0, NONE)
+    E(0140610, EXG,   NONE, M_DREG,  M_AREG,  _3, _0, NONE)
+    E(0140610, EXG,   NONE, M_AREG,  M_DREG,  _0, _3, NONE)
+    E(0140400, AND,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
+    E(0150300, ADDA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8)
+    A(0150300, ADD,   DATA, M_RADDR, M_AREG,  10, _3, ADR8)
+    A(0150374, ADDI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8)
+    E(0150400, ADDX,  DATA, M_DREG,  M_DREG,  _0, _3, DATA)
+    E(0150410, ADDX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA)
+    E(0150000, ADD,   DATA, M_RADDR, M_DREG,  10, _3, DATA)
+    E(0150400, ADD,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA)
+    E(0160300, ASR,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0160700, ASL,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0161300, LSR,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0161700, LSL,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0162300, ROXR,  NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0162700, ROXL,  NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0163300, ROR,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0163700, ROL,   NONE, M_WMEM,  M_NONE,  10, __, BYTE)
+    E(0160000, ASR,   DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160040, ASR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160400, ASL,   DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160440, ASL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160010, LSR,   DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160050, LSR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160410, LSL,   DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160450, LSL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160020, ROXR,  DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160060, ROXR,  DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160420, ROXL,  DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160460, ROXL,  DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160030, ROR,   DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160070, ROR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
+    E(0160430, ROL,   DATA, M_IM3,   M_DREG,  __, _0, DATA)
+    E(0160470, ROL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA)
 };
 
-#define E(_opc, _name, _iformat)                        \
-    { _opc, Entry::_fmt(_iformat), 0, TEXT_##_name },
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table) return true;
+    if (opr == M_DREG)
+        return table == M_RADDR || table == M_RDATA
+            || table == M_WADDR || table == M_WDATA
+            || table == M_RMEM  || table == M_MULT;
+    if (opr == M_AREG)
+        return table == M_RADDR || table == M_WADDR || table == M_MULT;
+    if (opr == M_AIND || opr == M_DISP || opr == M_INDX
+        || opr == M_AWORD || opr == M_ALONG)
+        return table == M_RADDR || table == M_RDATA
+            || table == M_WADDR || table == M_WDATA
+            || table == M_RMEM  || table == M_WMEM
+            || table == M_JADDR || table == M_IADDR
+            || table == M_DADDR;
+    if (opr == M_PINC)
+        return table == M_RADDR || table == M_RDATA
+            || table == M_WADDR || table == M_WDATA
+            || table == M_RMEM  || table == M_WMEM
+            || table == M_IADDR;
+    if (opr == M_PDEC)        
+        return table == M_RADDR || table == M_RDATA
+            || table == M_WADDR || table == M_WDATA
+            || table == M_RMEM  || table == M_WMEM
+            || table == M_DADDR;
+    if (opr == M_PCDSP || opr == M_PCIDX)
+        return table == M_RADDR || table == M_RDATA
+            || table == M_RMEM  || table == M_JADDR
+            || table == M_IADDR;
+    if (opr == M_IMDAT)
+        return table == M_RADDR || table == M_RDATA
+            || table == M_IMBIT || table == M_IM3
+            || table == M_IM8   || table == M_IMVEC
+            || table == M_IMDSP;
+    if (opr == M_LABEL)
+        return table == M_REL16 || table == M_REL8;
+    return false;
+}
 
-static constexpr Entry TABLE_MC68000[] PROGMEM = {
-    E(0000000, ORI,   DEST_SIZ)
-    E(0001000, ANDI,  DEST_SIZ)
-    E(0002000, SUBI,  DEST_SIZ)
-    E(0003000, ADDI,  DEST_SIZ)
-    E(0005000, EORI,  DEST_SIZ)
-    E(0006000, CMPI,  DEST_SIZ)
-    E(0004000, BTST,  DEST_OPR) // BTST #,<ea>
-    E(0004100, BCHG,  DEST_OPR) // BCHG #,<ea>
-    E(0004200, BCLR,  DEST_OPR) // BCLR #,<ea>
-    E(0004300, BSET,  DEST_OPR) // BSET #,<ea>
-    E(0000410, MOVEP, MOVE_PER)
-    E(0000400, BTST,  DREG_DST) // BTST Dn,<ea>
-    E(0000500, BCHG,  DREG_DST) // BCHG Dn,<ea>
-    E(0000600, BCLR,  DREG_DST) // BCLR Dn,<ea>
-    E(0000700, BSET,  DREG_DST) // BSET Dn,<ea>
-    E(0020100, MOVEA, MOVA_OPR) // MOVEA.L <ea>,An
-    E(0030100, MOVEA, MOVA_OPR) // MOVEA.W <ea>,An
-    E(0010000, MOVE,  MOVE_OPR) // MOVE.B <ea>,<ea>
-    E(0020000, MOVE,  MOVE_OPR) // MOVE.W <ea>,<ea>
-    E(0030000, MOVE,  MOVE_OPR) // MOVE.L <ea>,<ea>
-    E(0040300, MOVE,  MOVE_SR)  // MOVE   SR,<ea>
-    E(0042300, MOVE,  MOVE_SR)  // MOVE   <ea>,CCR
-    E(0043300, MOVE,  MOVE_SR)  // MOVE   <ea>,SR
-    E(0040000, NEGX,  DEST_SIZ)
-    E(0041000, CLR,   DEST_SIZ)
-    E(0042000, NEG,   DEST_SIZ)
-    E(0043000, NOT,   DEST_SIZ)
-    E(0044200, EXT,   SIGN_EXT)
-    E(0044000, NBCD,  DATA_DST)
-    E(0044100, SWAP,  DATA_REG)
-    E(0044100, PEA,   DATA_DST)
-    E(0045374, ILLEG, IMPLIED)
-    E(0045300, TAS,   DATA_DST)
-    E(0045000, TST,   DEST_SIZ)
-    E(0047100, TRAP,  TRAP_VEC)
-    E(0047120, LINK,  ADDR_REG)
-    E(0047130, UNLK,  ADDR_REG)
-    E(0047140, MOVE,  MOVE_USP)
-    E(0047160, RESET, IMPLIED)
-    E(0047161, NOP,   IMPLIED)
-    E(0047162, STOP,  IMPLIED)
-    E(0047163, RTE,   IMPLIED)
-    E(0047165, RTS,   IMPLIED)
-    E(0047166, TRAPV, IMPLIED)
-    E(0047167, RTR,   IMPLIED)
-    E(0047200, JSR,   DEST_OPR)
-    E(0047300, JMP,   DEST_OPR)
-    E(0044200, MOVEM, MOVE_MLT)
-    E(0040700, LEA,   AREG_LNG)
-    E(0040600, CHK,   DREG_DST)
-    E(0050310, DBT,   DATA_REG)
-    E(0050710, DBRA,  DATA_REG)
-    E(0050710, DBF,   DATA_REG)
-    E(0051310, DBHI,  DATA_REG)
-    E(0051710, DBLS,  DATA_REG)
-    E(0052310, DBCC,  DATA_REG)
-    E(0052310, DBHS,  DATA_REG)
-    E(0052710, DBCS,  DATA_REG)
-    E(0052710, DBLO,  DATA_REG)
-    E(0053310, DBNE,  DATA_REG)
-    E(0053710, DBEQ,  DATA_REG)
-    E(0054310, DBVC,  DATA_REG)
-    E(0054710, DBVS,  DATA_REG)
-    E(0055310, DBPL,  DATA_REG)
-    E(0055710, DBMI,  DATA_REG)
-    E(0056310, DBGE,  DATA_REG)
-    E(0056710, DBLT,  DATA_REG)
-    E(0057310, DBGT,  DATA_REG)
-    E(0057710, DBLE,  DATA_REG)
-    E(0050300, ST,    DEST_OPR)
-    E(0050700, SF,    DEST_OPR)
-    E(0051300, SHI,   DEST_OPR)
-    E(0051700, SLS,   DEST_OPR)
-    E(0052300, SCC,   DEST_OPR)
-    E(0052300, SHS,   DEST_OPR)
-    E(0052700, SCS,   DEST_OPR)
-    E(0052700, SLO,   DEST_OPR)
-    E(0053300, SNE,   DEST_OPR)
-    E(0053700, SEQ,   DEST_OPR)
-    E(0054300, SVC,   DEST_OPR)
-    E(0054700, SVS,   DEST_OPR)
-    E(0055300, SPL,   DEST_OPR)
-    E(0055700, SMI,   DEST_OPR)
-    E(0056300, SGE,   DEST_OPR)
-    E(0056700, SLT,   DEST_OPR)
-    E(0057300, SGT,   DEST_OPR)
-    E(0057700, SLE,   DEST_OPR)
-    E(0050000, ADDQ,  DATA_QIC)
-    E(0050400, SUBQ,  DATA_QIC)
-    E(0060000, BRA,   RELATIVE)
-    E(0060000, BT,    RELATIVE)
-    E(0060400, BSR,   RELATIVE)
-    E(0061000, BHI,   RELATIVE)
-    E(0061400, BLS,   RELATIVE)
-    E(0062000, BCC,   RELATIVE)
-    E(0062000, BHS,   RELATIVE)
-    E(0062400, BCS,   RELATIVE)
-    E(0062400, BLO,   RELATIVE)
-    E(0063000, BNE,   RELATIVE)
-    E(0063400, BEQ,   RELATIVE)
-    E(0064000, BVC,   RELATIVE)
-    E(0064400, BVS,   RELATIVE)
-    E(0065000, BPL,   RELATIVE)
-    E(0065400, BMI,   RELATIVE)
-    E(0066000, BGE,   RELATIVE)
-    E(0066400, BLT,   RELATIVE)
-    E(0067000, BGT,   RELATIVE)
-    E(0067400, BLE,   RELATIVE)
-    E(0070000, MOVEQ, MOVE_QIC)
-    E(0100400, SBCD,  DMEM_DST)
-    E(0100300, DIVU,  DREG_DST)
-    E(0100700, DIVS,  DREG_DST)
-    E(0100000, OR,    DMEM_SIZ)
-    E(0110300, SUBA,  AREG_SIZ)
-    E(0110400, SUBX,  DMEM_OPR)
-    E(0110000, SUB,   DMEM_SIZ)
-    E(0130300, CMPA,  AREG_SIZ)
-    E(0130410, CMPM,  CMPM_SIZ)
-    E(0130000, CMP,   DREG_SIZ)
-    E(0130400, EOR,   DREG_SIZ)
-    E(0140300, MULU,  DREG_DST)
-    E(0140700, MULS,  DREG_DST)
-    E(0140400, ABCD,  DMEM_DST)
-    E(0140500, EXG,   REGS_EXG) // EXG Dx,Dy
-    E(0140510, EXG,   REGS_EXG) // EXG Ax,Ay
-    E(0140610, EXG,   REGS_EXG) // EXG Dx,Ay
-    E(0140000, AND,   DMEM_SIZ)
-    E(0150300, ADDA,  AREG_SIZ)
-    E(0150400, ADDX,  DMEM_OPR)
-    E(0150000, ADD,   DMEM_SIZ)
-    E(0160300, ASR,   DEST_OPR) // ASR.W <ea>
-    E(0160700, ASL,   DEST_OPR) // ASL.W <ea>
-    E(0161300, LSR,   DEST_OPR) // LSR.W <ea>
-    E(0161700, LSL,   DEST_OPR) // LSL.W <ea>
-    E(0162300, ROXR,  DEST_OPR) // ROXR.W <ea>
-    E(0162700, ROXL,  DEST_OPR) // ROXL.W <ea>
-    E(0163300, ROR,   DEST_OPR) // ROR.W <ea>
-    E(0163700, ROL,   DEST_OPR) // ROL.W <ea>
-    E(0160000, ASR,   DREG_ROT) // ASR.BWL #/Dx,Dn
-    E(0160400, ASL,   DREG_ROT) // ASL.BWL #/Dx,Dn
-    E(0160010, LSR,   DREG_ROT) // LSR.BWL #/Dx,Dn
-    E(0160410, LSL,   DREG_ROT) // LSL.BWL #/Dx,Dn
-    E(0160020, ROXR,  DREG_ROT) // ROXR.BWL #/Dx,Dn
-    E(0160420, ROXL,  DREG_ROT) // ROXL.BWL #/Dx,Dn
-    E(0160030, ROR,   DREG_ROT) // ROR.BWL #/Dx,Dn
-    E(0160430, ROL,   DREG_ROT) // ROL.BWL #/Dx,Dn
-};
+static bool acceptSize(OprSize opr, OprSize table, InsnSize isize) {
+    if (opr == table) return true;
+    if (opr == SZ_BYTE)
+        return table == SZ_DATA;
+    if (opr == SZ_WORD)
+        return table == SZ_DATA || table == SZ_ADR6 || table == SZ_ADR8;
+    if (opr == SZ_LONG)
+        return table == SZ_DATA || table == SZ_ADR6 || table == SZ_ADR8;
+    if (opr == SZ_NONE)
+        return table == SZ_WORD || table == SZ_DATA || isize == ISZ_NONE
+            || table == SZ_ADR6 || table == SZ_ADR8;
+    return false;
+}
+
+static bool matchAddrMode(uint32_t flags, const Entry *entry) {
+    const uint32_t table = pgm_read_dword(&entry->flags);
+    return acceptMode(Entry::_mode(Entry::_src(flags)), Entry::_mode(Entry::_src(table)))
+        && acceptMode(Entry::_mode(Entry::_dst(flags)), Entry::_mode(Entry::_dst(table)))
+        && acceptSize(
+            Entry::_oprSize(Entry::_size(flags)),
+            Entry::_oprSize(Entry::_size(table)),
+            Entry::_insnSize(Entry::_size(table)));
+}
+
+Error TableMc68000::searchName(InsnMc68000 &insn) const {
+    const uint32_t flags = Entry::_flags(
+        Entry::_opr(insn.srcMode()), Entry::_opr(insn.dstMode()),
+        OP___, Entry::_size(insn.oprSize(), ISZ_NONE));
+    uint8_t count = 0;
+    const Entry *const end = ARRAY_END(MC68000_TABLE);
+    for (const Entry *entry = ARRAY_BEGIN(MC68000_TABLE);
+         entry < end
+             && (entry = TableBase::searchName<Entry,uint32_t>(
+                     insn.name(), flags, entry, end, matchAddrMode, count));
+         entry++) {
+        insn.setFlags(pgm_read_dword(&entry->flags));
+        if (insn.alias() && !_aliasEnabled)
+            continue;
+        insn.setOpCode(pgm_read_word(&entry->opCode));
+        return _error.setOK();
+    }
+    return _error.setError(
+        count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+}
 
 static Config::opcode_t getInsnMask(AddrMode srcMode) {
     if (srcMode == M_IM8 || srcMode == M_REL8)
         return 0xFF;
     if (srcMode == M_IMVEC)
         return 0xF;
+    if (srcMode == M_IM3)
+        return 07000;
     return 0;
 }
 
@@ -404,17 +346,6 @@ static Config::opcode_t getInsnMask(uint32_t flags) {
         | getInsnMask(Entry::_oprSize(Entry::_size(flags)));
 }
 
-Error TableMc68000::searchName(InsnMc68000 &insn, const char *name) const {
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_MC68000));
-    if (entry) {
-        insn.setOpCode(pgm_read_word(&entry->opCode));
-        insn.setFmt(pgm_read_byte(&entry->fmt));
-        return _error.setOK();
-    }
-    return _error.setError(UNKNOWN_INSTRUCTION);
-}
-
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     const uint32_t flags = pgm_read_dword(&entry->flags);
     const Config::opcode_t mask = getInsnMask(flags);
@@ -434,6 +365,10 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     }
     return _error.setError(UNKNOWN_INSTRUCTION);
 }
+
+TableMc68000::TableMc68000()
+    : _aliasEnabled(false)
+{}
 
 bool TableMc68000::setCpu(const char *cpu) {
     const char *p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);

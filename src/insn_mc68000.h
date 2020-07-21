@@ -29,13 +29,11 @@ class InsnMc68000 : public InsnBase<Config> {
 public:
     InsnMc68000(Insn &insn) : InsnBase(insn) {}
 
-    InsnFormat insnFormat() const { return Entry::_insnFormat(_fmt); }
-    void setFmt(uint8_t fmt) { _fmt = fmt; }
-
     AddrMode srcMode() const { return Entry::_mode(_src); }
     AddrMode dstMode() const { return Entry::_mode(_dst); }
     OprPos srcPos() const { return Entry::_srcPos(_pos); }
     OprPos dstPos() const { return Entry::_dstPos(_pos); }
+    bool alias() const { return Entry::_alias(_pos); }
     OprSize  oprSize() const { return Entry::_oprSize(_size); }
     InsnSize insnSize() const { return Entry::_insnSize(_size); }
     void setFlags(uint32_t flags) {
@@ -53,13 +51,20 @@ public:
         _opCode |= (data << gp);
     }
 
-    void setOprSize(OprSize size) {
-        _size = Entry::_size(size, Entry::_insnSize(_size));
+    void setInsnSize(InsnSize isize) {
+        _size = Entry::_size(Entry::_oprSize(_size), isize);
+    }
+    void setOprSize(OprSize osize) {
+        _size = Entry::_size(osize, Entry::_insnSize(_size));
     }
     void appendOprSize(OprSize size, RegMc68000 regs) {
         char suffix[4];
         regs.outOprSize(suffix, size);
         _insn.appendName(suffix);
+    }
+    void setAddrMode(AddrMode src, AddrMode dst) {
+        _src = Entry::_opr(src);
+        _dst = Entry::_opr(dst);
     }
 
     void emitInsn() {
@@ -79,7 +84,6 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint8_t _fmt;
     uint8_t _src;
     uint8_t _dst;
     uint8_t _pos;

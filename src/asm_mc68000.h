@@ -37,18 +37,18 @@ public:
     bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
     const char *getCpu() const override { return TableMc68000.getCpu(); }
 
-    void setOptimize(bool enabled) { _optimize = enabled; }
+    void reset() override { setAlias(false); }
+    void setAlias(bool enable) { TableMc68000.setAlias(enable); }
 
 private:
     MotoValueParser _parser;
-    bool _optimize = false;
 
 public:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         RegName reg;
-        RegName index;          // index register
-        OprSize size;            // index size
+        RegName indexReg;
+        OprSize indexSize;
         uint32_t val32;
         bool satisfy(EaCat categories) const {
             return EaMc68000::satisfy(mode, categories);
@@ -56,66 +56,28 @@ public:
         void reset() {
             setOK();
             mode = M_NONE;
-            reg = index = REG_UNDEF;
-            size = SZ_NONE;
+            reg = indexReg = REG_UNDEF;
+            indexSize = SZ_NONE;
             val32 = 0;
         }
     };
-private:
 
-    Error checkSize(InsnMc68000 &insn, const OprSize size);
-    Error checkSize(const uint32_t val32, const OprSize size, bool uint);
+private:
     Error parseOperand(Operand &opr);
     Error parseMoveMultiRegList(Operand &opr);
+    Error checkAlignment(OprSize size, Config::uintptr_t addr);
 
+    Error emitBriefExtension(
+        InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp);
+    Error emitDisplacement(InsnMc68000 &insn, Config::ptrdiff_t disp);
+    Error emitAbsoluteAddr(
+        InsnMc68000 &insn, OprSize size, AddrMode mode, Config::uintptr_t addr);
+    Error emitRelativeAddr(
+        InsnMc68000 &insn, AddrMode mode, const Operand &op);
     Error emitImmediateData(
-        InsnMc68000 &insn, OprSize size, uint32_t val, Error error);
+        InsnMc68000 &insn, OprSize size, uint32_t data);
     Error emitEffectiveAddr(
-        InsnMc68000 &insn,
-        const Operand &ea,
-        int8_t size_gp = 6,
-        int8_t mode_gp = 3,
-        uint8_t reg_gp = 0);
-
-    Error encodeImplied(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDestSiz(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeAddrReg(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDataReg(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeTrapVec(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDataDst(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDestOpr(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeSignExt(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeRelative(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeMoveMlt(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeMoveQic(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeMovePer(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeAregSiz(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDregDst(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDataQic(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDmemOpr(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeDmemSiz(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeRegsExg(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-    Error encodeMoveOpr(
-        InsnMc68000 &insn, const Operand &op1, const Operand &op2);
-
+        InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encode(Insn &insn) override;
 };
 
