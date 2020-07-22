@@ -21,9 +21,6 @@ namespace libasm {
 namespace i8051 {
 
 Error AsmI8051::parseOperand(Operand &op) {
-    setError(op.setOK());
-    op.mode = NONE;
-
     const char *p = _scan;
     if (endOfLine(p)) return OK;
 
@@ -183,8 +180,6 @@ Error AsmI8051::encode(Insn &_insn) {
     _scan = skipSpaces(endName);
 
     Operand dstOp, srcOp, extOp;
-    srcOp.setOK(); srcOp.mode = NONE;
-    extOp.setOK(); extOp.mode = NONE;
     if (parseOperand(dstOp)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {

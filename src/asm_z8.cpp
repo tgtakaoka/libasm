@@ -275,9 +275,6 @@ Error AsmZ8::processPseudo(InsnZ8 &insn, const char *line) {
 }
 
 Error AsmZ8::parseOperand(Operand &op) {
-    setError(op.setOK());
-    op.mode = M_NO;
-
     const char *p = _scan;
     if (endOfLine(p)) {
         op.mode = M_NO;
@@ -392,8 +389,6 @@ Error AsmZ8::encode(Insn &_insn) {
         return getError();
 
     Operand dstOp, srcOp, extOp;
-    srcOp.setOK(); srcOp.mode = M_NO;
-    extOp.setOK(); extOp.mode = M_NO;
     _scan = skipSpaces(endName);
     if (parseOperand(dstOp)) return getError();
     const char *p = skipSpaces(_scan);

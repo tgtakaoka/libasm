@@ -63,6 +63,15 @@ private:
         uint16_t opr;
         uint16_t addr;
         Error addrError;
+        Operand()
+            : ErrorReporter(),
+              mode(INH),
+              reg(REG_UNDEF),
+              imm(0),
+              opr(0),
+              addr(0),
+              addrError(OK)
+        {}
     };
 
     Error adjustAccumulator(InsnMc6800 &insn, const Operand &op);

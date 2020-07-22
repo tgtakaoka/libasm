@@ -48,6 +48,12 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val;
+        Operand()
+            : ErrorReporter(),
+              mode(UNDEF),
+              reg(REG_UNDEF),
+              val(0)
+        {}
     };
 
     Error parseOperand(Operand &opr);

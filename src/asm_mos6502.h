@@ -48,6 +48,11 @@ private:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         uint32_t val32;
+        Operand()
+            : ErrorReporter(),
+              mode(IMPL),
+              val32(0)
+        {}
     };
 
     Error parseOnOff(const char *line, bool &val);

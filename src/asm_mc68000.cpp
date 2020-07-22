@@ -289,7 +289,6 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
 }
 
 Error AsmMc68000::parseOperand(Operand &op) {
-    op.reset();
     const char *p = _scan;
     if (endOfLine(p))  return OK;
     if (*p == '#') {
@@ -416,8 +415,6 @@ Error AsmMc68000::encode(Insn &_insn) {
         if (parseOperand(dstOp)) return getError();
         setErrorIf(dstOp.getError());
         p = skipSpaces(_scan);
-    } else {
-        dstOp.reset();
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);
     insn.setAddrMode(srcOp.mode, dstOp.mode);

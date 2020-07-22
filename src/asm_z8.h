@@ -51,6 +51,13 @@ private:
         RegName reg;
         CcName  cc;
         uint16_t val;
+        Operand()
+            : ErrorReporter(),
+              mode(M_NO),
+              reg(REG_UNDEF),
+              cc(CC_UNDEF),
+              val(0)
+        {}
     };
 
     Error parseOperand(Operand &op);

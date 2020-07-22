@@ -46,6 +46,13 @@ private:
         RegName reg;
         uint16_t val;
         OprSize size;
+        Operand()
+            : ErrorReporter(),
+              format(NO_OPR),
+              reg(REG_UNDEF),
+              val(0),
+              size(SZ_NONE)
+        {}
     };
 
     Error parseOperand(Operand &opr);

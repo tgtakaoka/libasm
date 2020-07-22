@@ -78,10 +78,6 @@ AsmMc6800::Token AsmMc6800::nextToken() {
 }
 
 Error AsmMc6800::parseOperand(Operand &op) {
-    op.resetError();
-    op.reg = REG_UNDEF;
-    op.imm = op.opr = op.addr = 0;
-    op.addrError = OK;
     uint8_t comma = 0;
     if (nextToken() == REG_ACC) {
         op.reg = _reg;

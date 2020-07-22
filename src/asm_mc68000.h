@@ -53,13 +53,14 @@ public:
         bool satisfy(EaCat categories) const {
             return EaMc68000::satisfy(mode, categories);
         }
-        void reset() {
-            setOK();
-            mode = M_NONE;
-            reg = indexReg = REG_UNDEF;
-            indexSize = SZ_NONE;
-            val32 = 0;
-        }
+        Operand()
+            : ErrorReporter(),
+              mode(M_NONE),
+              reg(REG_UNDEF),
+              indexReg(REG_UNDEF),
+              indexSize(SZ_NONE),
+              val32(0)
+        {}
     };
 
 private:

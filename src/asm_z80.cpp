@@ -257,10 +257,6 @@ Error AsmZ80::encodeInherent(
 }
 
 Error AsmZ80::parseOperand(Operand &opr) {
-    opr.setOK();
-    opr.reg = REG_UNDEF;
-    opr.val = 0;
-
     const char *p = _scan;
     if (endOfLine(p)) {
         opr.format = NO_OPR;
@@ -367,7 +363,6 @@ Error AsmZ80::encode(Insn &_insn) {
     insn.setName(_scan, endName);
     _scan = skipSpaces(endName);
     Operand dst, src;
-    dst.size = SZ_NONE;
     if (parseOperand(dst)) return setError(dst);
     _scan = skipSpaces(_scan);
     if (*_scan == ',') {
@@ -375,9 +370,6 @@ Error AsmZ80::encode(Insn &_insn) {
         src.size = dst.size;
         if (parseOperand(src))
             return setError(src);
-    } else {
-        src.setOK();
-        src.format = NO_OPR;
     }
 
     insn.setOprFormats(dst.format, src.format);

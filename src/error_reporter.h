@@ -73,6 +73,10 @@ enum Error {
 
 class ErrorReporter {
 public:
+    ErrorReporter()
+        : _error(OK)
+    {}
+
     Error getError() const { return _error; }
 
     Error resetError() { return setOK(); }

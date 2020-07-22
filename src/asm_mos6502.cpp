@@ -75,9 +75,6 @@ Error AsmMos6502::selectMode(
 }
 
 Error AsmMos6502::parseOperand(Operand &op, Operand &extra) {
-    op.resetError();
-    extra.resetError();
-    op.mode = extra.mode = IMPL;
     const char *p = _scan;
 
     if (endOfLine(p)) {

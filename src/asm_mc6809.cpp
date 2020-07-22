@@ -482,9 +482,6 @@ AsmMc6809::Token AsmMc6809::nextToken() {
 }
 
 Error AsmMc6809::parseOperand(Operand &op, Operand &extra) {
-    op.resetError();
-    extra.resetError();
-    extra.mode = INH;
     if (nextToken() == EOL) {
         op.mode = INH;
         return OK;

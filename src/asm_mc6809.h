@@ -107,6 +107,17 @@ private:
         int8_t extra;
         uint32_t val32;
         RegList list;
+        Operand()
+            : ErrorReporter(),
+              mode(INH),
+              sub(PNTR_IDX),
+              index(REG_UNDEF),
+              base(REG_UNDEF),
+              indir(false),
+              extra(0),
+              val32(0),
+              list()
+        {}
     };
     void printOperand(const Operand &op, const Operand &extra);
     Error parseOperand(Operand &op, Operand &extra);

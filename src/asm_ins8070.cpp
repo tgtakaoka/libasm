@@ -164,12 +164,6 @@ Error AsmIns8070::nextToken(Operand &op, OprFormat &opr) {
 }
 
 Error AsmIns8070::parseOperand(Operand &op) {
-    op.setOK();
-    op.dst = op.src = OPR_NO;
-    op.reg = REG_UNDEF;
-    op.autoIndex = op.hasVal = false;
-    op.val = 0;
-
     const char *p = _scan;
     if (endOfLine(p))
         return setOK();

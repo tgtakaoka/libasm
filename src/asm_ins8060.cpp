@@ -58,8 +58,6 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
 }
 
 Error AsmIns8060::parseOperand(Operand &op) {
-    op.setOK();
-    op.mode = UNDEF;
     const char *p = _scan;
     const bool autoDisp = (*p == '@');
     if (autoDisp) {

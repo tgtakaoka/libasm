@@ -51,6 +51,15 @@ private:
         bool autoIndex;
         bool hasVal;
         uint16_t val;
+        Operand()
+            : ErrorReporter(),
+              dst(OPR_NO),
+              src(OPR_NO),
+              reg(REG_UNDEF),
+              autoIndex(false),
+              hasVal(false),
+              val(0)
+        {}
     };
 
     Error nextToken(Operand &op, OprFormat &opr);
