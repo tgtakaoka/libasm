@@ -62,39 +62,11 @@ public:
     static RegName decodeAddrReg(uint8_t regno);
 };
 
-// Effective Address Category
-class EaCat final {
-public:
-    enum Type : uint8_t {
-        NONE      = 1 << 0,
-        DATA      = 1 << 1,
-        MEMORY    = 1 << 2,
-        CONTROL   = 1 << 3,
-        ALTERABLE = 1 << 4,
-    };
-
-    constexpr EaCat(const uint8_t val) noexcept
-        : _val(static_cast<Type>(val))
-    {}
-
-    constexpr operator uint8_t() const { return _val; }
-
-private:
-    Type _val;
-};
-
 struct EaMc68000 {
-    EaMc68000(Config::opcode_t opCode);
     EaMc68000(OprSize size, uint8_t mode, uint8_t regno);
-    EaMc68000(OprSize size, AddrMode mode, uint8_t regno);
 
-    bool satisfy(EaCat categories) const {
-        return satisfy(mode, categories);
-    }
-    static bool satisfy(AddrMode mode, EaCat categories);
     static Config::opcode_t encodeMode(AddrMode mode);
     static Config::opcode_t encodeRegNo(AddrMode mode, RegName regName);
-    static const char *eaCategory(AddrMode mode);
 
     OprSize size;
     AddrMode mode;

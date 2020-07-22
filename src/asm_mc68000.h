@@ -50,9 +50,6 @@ public:
         RegName indexReg;
         OprSize indexSize;
         uint32_t val32;
-        bool satisfy(EaCat categories) const {
-            return EaMc68000::satisfy(mode, categories);
-        }
         Operand()
             : ErrorReporter(),
               mode(M_NONE),
