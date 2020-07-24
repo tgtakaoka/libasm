@@ -191,20 +191,6 @@ Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn) {
     return setOK();
 }
 
-Error DisMc6809::decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn) {
-    *_operands++ = '#';
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outConstant(val);
-    *_operands++ = ',';
-    switch (insn.addrMode()) {
-    case IM8_DIR: return decodeDirectPage(memory, insn);
-    case IM8_EXT: return decodeExtended(memory, insn);
-    case IM8_IDX: return decodeIndexed(memory, insn);
-    default:     return setError(INTERNAL_ERROR);
-    }
-}
-
 Error DisMc6809::decodeBitOperation(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
@@ -253,7 +239,7 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
         return setError(TableMc6809.getError());
 
     switch (insn.addrMode()) {
-    case INH: return setOK();
+    case NONE: return setOK();
     case DIR: return decodeDirectPage(memory, insn);
     case EXT: return decodeExtended(memory, insn);
     case IDX: return decodeIndexed(memory, insn);
@@ -261,16 +247,23 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
     case LREL: return decodeRelative(memory, insn);
     case IM8:
     case IM16:
-    case IM32: return decodeImmediate(memory, insn);
-    case PSH_PUL: return decodePushPull(memory, insn);
+    case IM32:
+        decodeImmediate(memory, insn);
+        break;
+    case REGLIST: return decodePushPull(memory, insn);
     case REG_REG: return decodeRegisters(memory, insn);
-    case IM8_DIR:
-    case IM8_EXT:
-    case IM8_IDX: return decodeImmediatePlus(memory, insn);
-    case BITOP:   return decodeBitOperation(memory, insn);
-    case TFR_MEM: return decodeTransferMemory(memory, insn);
-    default:      return setError(INTERNAL_ERROR);
+    case REG_BIT:  return decodeBitOperation(memory, insn);
+    case REG_TFM: return decodeTransferMemory(memory, insn);
+    default:     return setError(INTERNAL_ERROR);
     }
+    if (insn.extraMode() != NONE) *_operands++ = ',';
+    switch (insn.extraMode()) {
+    case DIR: return decodeDirectPage(memory, insn);
+    case EXT: return decodeExtended(memory, insn);
+    case IDX: return decodeIndexed(memory, insn);
+    default: break;
+    }
+    return setOK();
 }
 
 } // namespace mc6809

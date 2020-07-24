@@ -62,6 +62,7 @@ public:
     int8_t encodeDataReg(RegName regName) const;
     bool isIndexReg(RegName regName) const;
     bool isBaseReg(RegName regName) const;
+    bool isIndexedBase(RegName regName) const;
     static uint8_t encodeStackReg(RegName regName, bool onUserStack);
     RegName decodeBaseReg(uint8_t regNum) const;
     RegName decodeRegName(uint8_t regNum) const;

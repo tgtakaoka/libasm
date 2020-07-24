@@ -53,7 +53,6 @@ private:
     Error decodePushPull(DisMemory &memory, InsnMc6809 &insn);
     Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn);
     // HD6309
-    Error decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn);
     Error decodeBitOperation(DisMemory &memory, InsnMc6809 &insn);
     Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn);
 

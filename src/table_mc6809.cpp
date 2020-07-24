@@ -25,8 +25,10 @@
 namespace libasm {
 namespace mc6809 {
 
-#define E(_opc, _name,  _mode)                      \
-    { _opc,  Entry::_flags(_mode), TEXT_##_name },
+#define E(_opc, _name, _mode)                               \
+    { _opc,  Entry::_flags(_mode, NONE), TEXT_##_name },
+#define X(_opc, _name, _mode, _extra)                       \
+    { _opc,  Entry::_flags(_mode, _extra), TEXT_##_name },
 
 static constexpr Entry MC6809_P00[] PROGMEM = {
     E(0x00, NEG,   DIR)
@@ -42,14 +44,14 @@ static constexpr Entry MC6809_P00[] PROGMEM = {
     E(0x0D, TST,   DIR)
     E(0x0E, JMP,   DIR)
     E(0x0F, CLR,   DIR)
-    E(0x12, NOP,   INH)
-    E(0x13, SYNC,  INH)
+    E(0x12, NOP,   NONE)
+    E(0x13, SYNC,  NONE)
     E(0x16, LBRA,  LREL)
     E(0x17, LBSR,  LREL)
-    E(0x19, DAA,   INH)
+    E(0x19, DAA,   NONE)
     E(0x1A, ORCC,  IM8)
     E(0x1C, ANDCC, IM8)
-    E(0x1D, SEX,   INH)
+    E(0x1D, SEX,   NONE)
     E(0x1E, EXG,   REG_REG)
     E(0x1F, TFR,   REG_REG)
     E(0x20, BRA,   REL)
@@ -74,40 +76,40 @@ static constexpr Entry MC6809_P00[] PROGMEM = {
     E(0x31, LEAY,  IDX)
     E(0x32, LEAS,  IDX)
     E(0x33, LEAU,  IDX)
-    E(0x34, PSHS,  PSH_PUL)
-    E(0x35, PULS,  PSH_PUL)
-    E(0x36, PSHU,  PSH_PUL)
-    E(0x37, PULU,  PSH_PUL)
-    E(0x39, RTS,   INH)
-    E(0x3A, ABX,   INH)
-    E(0x3B, RTI,   INH)
+    E(0x34, PSHS,  REGLIST)
+    E(0x35, PULS,  REGLIST)
+    E(0x36, PSHU,  REGLIST)
+    E(0x37, PULU,  REGLIST)
+    E(0x39, RTS,   NONE)
+    E(0x3A, ABX,   NONE)
+    E(0x3B, RTI,   NONE)
     E(0x3C, CWAI,  IM8)
-    E(0x3D, MUL,   INH)
-    E(0x3F, SWI,   INH)
-    E(0x40, NEGA,  INH)
-    E(0x43, COMA,  INH)
-    E(0x44, LSRA,  INH)
-    E(0x46, RORA,  INH)
-    E(0x47, ASRA,  INH)
-    E(0x48, ASLA,  INH)
-    E(0x48, LSLA,  INH)
-    E(0x49, ROLA,  INH)
-    E(0x4A, DECA,  INH)
-    E(0x4C, INCA,  INH)
-    E(0x4D, TSTA,  INH)
-    E(0x4F, CLRA,  INH)
-    E(0x50, NEGB,  INH)
-    E(0x53, COMB,  INH)
-    E(0x54, LSRB,  INH)
-    E(0x56, RORB,  INH)
-    E(0x57, ASRB,  INH)
-    E(0x58, ASLB,  INH)
-    E(0x58, LSLB,  INH)
-    E(0x59, ROLB,  INH)
-    E(0x5A, DECB,  INH)
-    E(0x5C, INCB,  INH)
-    E(0x5D, TSTB,  INH)
-    E(0x5F, CLRB,  INH)
+    E(0x3D, MUL,   NONE)
+    E(0x3F, SWI,   NONE)
+    E(0x40, NEGA,  NONE)
+    E(0x43, COMA,  NONE)
+    E(0x44, LSRA,  NONE)
+    E(0x46, RORA,  NONE)
+    E(0x47, ASRA,  NONE)
+    E(0x48, ASLA,  NONE)
+    E(0x48, LSLA,  NONE)
+    E(0x49, ROLA,  NONE)
+    E(0x4A, DECA,  NONE)
+    E(0x4C, INCA,  NONE)
+    E(0x4D, TSTA,  NONE)
+    E(0x4F, CLRA,  NONE)
+    E(0x50, NEGB,  NONE)
+    E(0x53, COMB,  NONE)
+    E(0x54, LSRB,  NONE)
+    E(0x56, RORB,  NONE)
+    E(0x57, ASRB,  NONE)
+    E(0x58, ASLB,  NONE)
+    E(0x58, LSLB,  NONE)
+    E(0x59, ROLB,  NONE)
+    E(0x5A, DECB,  NONE)
+    E(0x5C, INCB,  NONE)
+    E(0x5D, TSTB,  NONE)
+    E(0x5F, CLRB,  NONE)
     E(0x60, NEG,   IDX)
     E(0x63, COM,   IDX)
     E(0x64, LSR,   IDX)
@@ -277,7 +279,7 @@ static constexpr Entry MC6809_P10[] PROGMEM = {
     E(0x2D, LBLT,  LREL)
     E(0x2E, LBGT,  LREL)
     E(0x2F, LBLE,  LREL)
-    E(0x3F, SWI2,  INH)
+    E(0x3F, SWI2,  NONE)
     E(0x83, CMPD,  IM16)
     E(0x8C, CMPY,  IM16)
     E(0x8E, LDY,   IM16)
@@ -303,7 +305,7 @@ static constexpr Entry MC6809_P10[] PROGMEM = {
 };
 
 static constexpr Entry MC6809_P11[] PROGMEM = {
-    E(0x3F, SWI3,  INH)
+    E(0x3F, SWI3,  NONE)
     E(0x83, CMPU,  IM16)
     E(0x8C, CMPS,  IM16)
     E(0x93, CMPU,  DIR)
@@ -315,19 +317,19 @@ static constexpr Entry MC6809_P11[] PROGMEM = {
 };
 
 static constexpr Entry HD6309_P00[] PROGMEM = {
-    E(0x01, OIM,   IM8_DIR)
-    E(0x02, AIM,   IM8_DIR)
-    E(0x05, EIM,   IM8_DIR)
-    E(0x0B, TIM,   IM8_DIR)
-    E(0x14, SEXW,  INH)
-    E(0x61, OIM,   IM8_IDX)
-    E(0x62, AIM,   IM8_IDX)
-    E(0x65, EIM,   IM8_IDX)
-    E(0x6B, TIM,   IM8_IDX)
-    E(0x71, OIM,   IM8_EXT)
-    E(0x72, AIM,   IM8_EXT)
-    E(0x75, EIM,   IM8_EXT)
-    E(0x7B, TIM,   IM8_EXT)
+    X(0x01, OIM,   IM8,  DIR)
+    X(0x02, AIM,   IM8,  DIR)
+    X(0x05, EIM,   IM8,  DIR)
+    X(0x0B, TIM,   IM8,  DIR)
+    E(0x14, SEXW,  NONE)
+    X(0x61, OIM,   IM8,  IDX)
+    X(0x62, AIM,   IM8,  IDX)
+    X(0x65, EIM,   IM8,  IDX)
+    X(0x6B, TIM,   IM8,  IDX)
+    X(0x71, OIM,   IM8,  EXT)
+    X(0x72, AIM,   IM8,  EXT)
+    X(0x75, EIM,   IM8,  EXT)
+    X(0x7B, TIM,   IM8,  EXT)
     E(0xCD, LDQ,   IM32)
 };
 
@@ -340,30 +342,30 @@ static constexpr Entry HD6309_P10[] PROGMEM = {
     E(0x35, ORR,   REG_REG)
     E(0x36, EORR,  REG_REG)
     E(0x37, CMPR,  REG_REG)
-    E(0x38, PSHSW, INH)
-    E(0x39, PULSW, INH)
-    E(0x3A, PSHUW, INH)
-    E(0x3B, PULUW, INH)
-    E(0x40, NEGD,  INH)
-    E(0x43, COMD,  INH)
-    E(0x44, LSRD,  INH)
-    E(0x46, RORD,  INH)
-    E(0x47, ASRD,  INH)
-    E(0x48, ASLD,  INH)
-    E(0x48, LSLD,  INH)
-    E(0x49, ROLD,  INH)
-    E(0x4A, DECD,  INH)
-    E(0x4C, INCD,  INH)
-    E(0x4D, TSTD,  INH)
-    E(0x4F, CLRD,  INH)
-    E(0x53, COMW,  INH)
-    E(0x54, LSRW,  INH)
-    E(0x56, RORW,  INH)
-    E(0x59, ROLW,  INH)
-    E(0x5A, DECW,  INH)
-    E(0x5C, INCW,  INH)
-    E(0x5D, TSTW,  INH)
-    E(0x5F, CLRW,  INH)
+    E(0x38, PSHSW, NONE)
+    E(0x39, PULSW, NONE)
+    E(0x3A, PSHUW, NONE)
+    E(0x3B, PULUW, NONE)
+    E(0x40, NEGD,  NONE)
+    E(0x43, COMD,  NONE)
+    E(0x44, LSRD,  NONE)
+    E(0x46, RORD,  NONE)
+    E(0x47, ASRD,  NONE)
+    E(0x48, ASLD,  NONE)
+    E(0x48, LSLD,  NONE)
+    E(0x49, ROLD,  NONE)
+    E(0x4A, DECD,  NONE)
+    E(0x4C, INCD,  NONE)
+    E(0x4D, TSTD,  NONE)
+    E(0x4F, CLRD,  NONE)
+    E(0x53, COMW,  NONE)
+    E(0x54, LSRW,  NONE)
+    E(0x56, RORW,  NONE)
+    E(0x59, ROLW,  NONE)
+    E(0x5A, DECW,  NONE)
+    E(0x5C, INCW,  NONE)
+    E(0x5D, TSTW,  NONE)
+    E(0x5F, CLRW,  NONE)
     E(0x80, SUBW,  IM16)
     E(0x81, CMPW,  IM16)
     E(0x82, SBCD,  IM16)
@@ -416,30 +418,30 @@ static constexpr Entry HD6309_P10[] PROGMEM = {
 };
 
 static constexpr Entry HD6309_P11[] PROGMEM = {
-    E(0x30, BAND,  BITOP)
-    E(0x31, BIAND, BITOP)
-    E(0x32, BOR,   BITOP)
-    E(0x33, BIOR,  BITOP)
-    E(0x34, BEOR,  BITOP)
-    E(0x35, BIEOR, BITOP)
-    E(0x36, LDBT,  BITOP)
-    E(0x37, STBT,  BITOP)
-    E(0x38, TFM,   TFR_MEM) /* R+,R+ */
-    E(0x39, TFM,   TFR_MEM) /* R-,R- */
-    E(0x3A, TFM,   TFR_MEM) /* R+,R */
-    E(0x3B, TFM,   TFR_MEM) /* R,R+ */
+    X(0x30, BAND,  REG_BIT, DIR_BIT)
+    X(0x31, BIAND, REG_BIT, DIR_BIT)
+    X(0x32, BOR,   REG_BIT, DIR_BIT)
+    X(0x33, BIOR,  REG_BIT, DIR_BIT)
+    X(0x34, BEOR,  REG_BIT, DIR_BIT)
+    X(0x35, BIEOR, REG_BIT, DIR_BIT)
+    X(0x36, LDBT,  REG_BIT, DIR_BIT)
+    X(0x37, STBT,  REG_BIT, DIR_BIT)
+    X(0x38, TFM,   REG_TFM, REG_TFM)  /* R+,R+ */
+    X(0x39, TFM,   REG_TFM, REG_TFM)  /* R-,R- */
+    X(0x3A, TFM,   REG_TFM, REG_TFM)  /* R+,R */
+    X(0x3B, TFM,   REG_TFM, REG_TFM)  /* R,R+ */
     E(0x3C, BITMD, IM8)
     E(0x3D, LDMD,  IM8)
-    E(0x43, COME,  INH)
-    E(0x4A, DECE,  INH)
-    E(0x4C, INCE,  INH)
-    E(0x4D, TSTE,  INH)
-    E(0x4F, CLRE,  INH)
-    E(0x53, COMF,  INH)
-    E(0x5A, DECF,  INH)
-    E(0x5C, INCF,  INH)
-    E(0x5D, TSTF,  INH)
-    E(0x5F, CLRF,  INH)
+    E(0x43, COME,  NONE)
+    E(0x4A, DECE,  NONE)
+    E(0x4C, INCE,  NONE)
+    E(0x4D, TSTE,  NONE)
+    E(0x4F, CLRE,  NONE)
+    E(0x53, COMF,  NONE)
+    E(0x5A, DECF,  NONE)
+    E(0x5C, INCF,  NONE)
+    E(0x5D, TSTF,  NONE)
+    E(0x5F, CLRF,  NONE)
     E(0x80, SUBE,  IM8)
     E(0x81, CMPE,  IM8)
     E(0x86, LDE,   IM8)
@@ -521,26 +523,32 @@ static constexpr TableMc6809::EntryPage HD6309_PAGES[] PROGMEM = {
     { PREFIX_P11, ARRAY_RANGE(HD6309_P11) },
 };
 
-static bool matchAddrMode(AddrMode opr, const Entry *entry) {
-    const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+static bool matchAddrMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
-    if (opr == IM32) return table == IM8 || table == IM16 || table == PSH_PUL;
-    if (opr == REG_REG) return table == IDX || table == PSH_PUL;
+    if (opr == IM32) return table == IM8 || table == IM16 || table == REGLIST;
+    if (opr == REG_REG) return table == IDX || table == REGLIST;
     if (opr == DIR) return table == REL || table == LREL;
     if (opr == EXT) return table == REL || table == LREL;
-    if (opr == INH) return table == PSH_PUL;
+    if (opr == REGLIST) return table == REG_TFM;
+    if (opr == NONE) return table == REGLIST;
     return false;
+}
+
+static bool matchAddrMode(uint8_t flags, const Entry *entry) {
+    const uint8_t table = pgm_read_byte(&entry->flags);
+    return matchAddrMode(Entry::_addrMode(flags), Entry::_addrMode(table))
+        && matchAddrMode(Entry::_extraMode(flags), Entry::_extraMode(table));
 }
 
 Error TableMc6809::searchName(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
-    const AddrMode addrMode = insn.addrMode();
+    const uint8_t flags = Entry::_flags(insn.addrMode(), insn.extraMode());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-            insn.name(), addrMode, table, end, matchAddrMode, count);
+        const Entry *entry = TableBase::searchName<Entry,uint8_t>(
+            insn.name(), flags, table, end, matchAddrMode, count);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);

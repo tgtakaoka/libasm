@@ -53,7 +53,6 @@ static bool regCharCaseEqual(char c, char regChar) {
 
 char RegMc6809::regName1stChar(const RegName regName) const {
     const char r = char(regName);
-    if (isdigit(r)) return '0';
     return _uppercase ? toupper(r) : tolower(r);
 }
 
@@ -262,6 +261,12 @@ bool RegMc6809::isBaseReg(RegName regName) const {
     return encodeBaseReg(regName) >= 0;
 }
 
+bool RegMc6809::isIndexedBase(RegName regName) const {
+    return encodeBaseReg(regName) >= 0
+        || regName == REG_PCR
+        || regName == REG_PC;
+}
+
 RegName RegMc6809::decodeBaseReg(uint8_t regNum) const {
     return TableMc6809.is6309()
         ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_BASE_REGS))
@@ -280,7 +285,7 @@ static constexpr RegName MC6809_REGS[] PROGMEM = {
 };
 
 static constexpr RegName HD6309_EXTRA_REGS[] PROGMEM = {
-    REG_E, REG_F, REG_W, REG_V, REG_Z
+    REG_E, REG_F, REG_W, REG_V, REG_Z, REG_0,
 };
 
 RegName RegMc6809::parseRegName(const char *line) const {

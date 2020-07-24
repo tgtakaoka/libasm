@@ -28,7 +28,7 @@ enum CpuType {
 };
 
 enum AddrMode {
-    INH     = 0,   // Inherent
+    NONE    = 0,
     DIR     = 1,   // Direct Page
     EXT     = 2,   // Extended
     IDX     = 3,   // Indexed
@@ -37,14 +37,11 @@ enum AddrMode {
     IM8     = 6,   // Immediate 8-bit
     IM16    = 7,   // Immediate 16-bit
     IM32    = 8,   // Immediate 32-bit
-    PSH_PUL = 9,   // Push Pull
-    REG_REG = 10,  // Inter register
-    // HD6309
-    IM8_DIR = 11,  // Immediate and Direct Page
-    IM8_EXT = 12,  // Immediate and Extended
-    IM8_IDX = 13,  // Immediate and Indexed
-    BITOP   = 14,  // Bit Operation
-    TFR_MEM = 15,  // Transfer Memory
+    REG_REG = 9,   // Register pair
+    REGLIST = 10,  // Register list
+    REG_BIT = 11,  // Register bit
+    DIR_BIT = 12,  // Direct Page bit
+    REG_TFM = 13,  // Transfer Memory Register
 };
 
 struct Entry {
@@ -56,13 +53,19 @@ struct Entry {
         return AddrMode((flags >> addrMode_gp) & addrMode_gm);
     }
 
-    static constexpr uint8_t _flags(AddrMode addrMode) {
-        return (static_cast<uint8_t>(addrMode) << addrMode_gp);
+    static inline AddrMode _extraMode(uint8_t flags) {
+        return AddrMode((flags >> extraMode_gp) & addrMode_gm);
+    }
+
+    static constexpr uint8_t _flags(AddrMode mode, AddrMode extra) {
+        return (static_cast<uint8_t>(mode) << addrMode_gp)
+            | (static_cast<uint8_t>(extra) << extraMode_gp);
     }
 
 private:
     static constexpr uint8_t addrMode_gm = 0xf;
     static constexpr int addrMode_gp = 0;
+    static constexpr int extraMode_gp = 4;
 };
 
 } // namespace mc6809
