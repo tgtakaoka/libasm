@@ -45,6 +45,12 @@ enum RegName : char {
     REG_0 =   '0', // "0" zero register
 };
 
+enum RegSize {
+    SZ_BYTE = 0,
+    SZ_WORD = 1,
+    SZ_NONE = 2,
+};
+
 class RegMc6809 : public RegBase {
 public:
     RegName parseRegName(const char *line) const;
@@ -78,7 +84,7 @@ public:
     static char tfmSrcModeChar(uint8_t mode);
     static char tfmDstModeChar(uint8_t mode);
 
-    static OprSize regSize(RegName regName);
+    static RegSize regSize(RegName regName);
 
 private:
     RegName parseRegName(

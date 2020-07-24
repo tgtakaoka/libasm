@@ -111,8 +111,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
 
 Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
     Config::ptrdiff_t delta;
-    const OprSize oprSize = insn.oprSize();
-    if (oprSize == SZ_BYTE) {
+    if (insn.addrMode() == REL) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         delta = static_cast<int8_t>(val);
@@ -122,13 +121,13 @@ Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn) {
         delta = static_cast<Config::ptrdiff_t>(val);
     }
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
-    outRelativeAddr(target, insn.address(), oprSize == SZ_BYTE ? 8 : 16);
+    outRelativeAddr(target, insn.address(), insn.addrMode() == REL ? 8 : 16);
     return setOK();
 }
 
 Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
     *_operands++ = '#';
-    if (insn.oprSize() == SZ_BYTE) {
+    if (insn.addrMode() == IM8) {
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         const Config::opcode_t opCode = insn.opCode();
@@ -142,11 +141,11 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn) {
         } else {
             outConstant(val);
         }
-    } else if (insn.oprSize() == SZ_WORD) {
+    } else if (insn.addrMode() == IM16) {
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         outConstant(val);
-    } else if (insn.oprSize() == SZ_LONG) {
+    } else if (insn.addrMode() == IM32) {
         uint32_t val;
         if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
         outConstant(val);
@@ -182,8 +181,8 @@ Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn) {
     const RegName dst = _regs.decodeRegName(post & 0xf);
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    const OprSize size1 = RegMc6809::regSize(src);
-    const OprSize size2 = RegMc6809::regSize(dst);
+    const RegSize size1 = RegMc6809::regSize(src);
+    const RegSize size2 = RegMc6809::regSize(dst);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     outRegister(src);
@@ -199,9 +198,9 @@ Error DisMc6809::decodeImmediatePlus(DisMemory &memory, InsnMc6809 &insn) {
     outConstant(val);
     *_operands++ = ',';
     switch (insn.addrMode()) {
-    case IMM_DIR: return decodeDirectPage(memory, insn);
-    case IMM_EXT: return decodeExtended(memory, insn);
-    case IMM_IDX: return decodeIndexed(memory, insn);
+    case IM8_DIR: return decodeDirectPage(memory, insn);
+    case IM8_EXT: return decodeExtended(memory, insn);
+    case IM8_IDX: return decodeIndexed(memory, insn);
     default:     return setError(INTERNAL_ERROR);
     }
 }
@@ -258,13 +257,16 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn) {
     case DIR: return decodeDirectPage(memory, insn);
     case EXT: return decodeExtended(memory, insn);
     case IDX: return decodeIndexed(memory, insn);
-    case REL: return decodeRelative(memory, insn);
-    case IMM: return decodeImmediate(memory, insn);
+    case REL:
+    case LREL: return decodeRelative(memory, insn);
+    case IM8:
+    case IM16:
+    case IM32: return decodeImmediate(memory, insn);
     case PSH_PUL: return decodePushPull(memory, insn);
     case REG_REG: return decodeRegisters(memory, insn);
-    case IMM_DIR:
-    case IMM_EXT:
-    case IMM_IDX: return decodeImmediatePlus(memory, insn);
+    case IM8_DIR:
+    case IM8_EXT:
+    case IM8_IDX: return decodeImmediatePlus(memory, insn);
     case BITOP:   return decodeBitOperation(memory, insn);
     case TFR_MEM: return decodeTransferMemory(memory, insn);
     default:      return setError(INTERNAL_ERROR);

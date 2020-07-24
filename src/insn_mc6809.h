@@ -29,14 +29,13 @@ public:
     InsnMc6809(Insn &insn) : InsnBase(insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    OprSize oprSize() const { return Entry::_oprSize(_flags); }
 
     void setFlags(uint8_t flags) {
         _flags = flags;
     }
 
     void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_set(_flags, addrMode);
+        _flags = Entry::_flags(addrMode);
     }
 
     void setOpCode(

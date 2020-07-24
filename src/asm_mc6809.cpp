@@ -29,11 +29,11 @@ namespace mc6809 {
 Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address()
         + (insn.hasPrefix() ? 2 : 1)
-        + (insn.oprSize() == SZ_WORD ? 2 : 1);
+        + (insn.addrMode() == LREL ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base
         : static_cast<Config::uintptr_t>(op.val32);
     const Config::ptrdiff_t delta = target - base;
-    if (insn.oprSize() == SZ_BYTE) {
+    if (insn.addrMode() == REL) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(delta));
@@ -46,12 +46,22 @@ Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
 
 Error AsmMc6809::encodeImmediate(InsnMc6809 &insn, const Operand &op) {
     insn.emitInsn();
-    if (insn.oprSize() == SZ_BYTE)
-            insn.emitByte(static_cast<uint8_t>(op.val32));
-    if (insn.oprSize() == SZ_WORD)
+    switch (insn.addrMode()) {
+    case IM8:
+    case IM8_DIR:
+    case IM8_EXT:
+    case IM8_IDX:
+        insn.emitByte(static_cast<uint8_t>(op.val32));
+        break;
+    case IM16:
         insn.emitUint16(static_cast<uint16_t>(op.val32));
-    if (insn.oprSize() == SZ_LONG)
+        break;
+    case IM32:
         insn.emitUint32(op.val32);
+        break;
+    default:
+        break;
+    }
     return OK;
 }
 
@@ -115,8 +125,8 @@ Error AsmMc6809::encodeRegisters(InsnMc6809 &insn, const Operand &op) {
     const int8_t num1 = _regs.encodeDataReg(reg1);
     const int8_t num2 = _regs.encodeDataReg(reg2);
     if (num1 < 0 || num2 < 0) return setError(UNKNOWN_REGISTER);
-    const OprSize size1 = RegMc6809::regSize(reg1);
-    const OprSize size2 = RegMc6809::regSize(reg2);
+    const RegSize size1 = RegMc6809::regSize(reg1);
+    const RegSize size2 = RegMc6809::regSize(reg2);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     insn.emitInsn();
@@ -196,7 +206,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
     uint8_t post = 0;
     if (op.mode == INH) {
         post = 0;
-    } else if (op.mode == IMM) {
+    } else if (op.mode == IM32) {
         post = static_cast<uint8_t>(op.val32);
     } else if (op.mode == REG_REG || op.mode == PSH_PUL) {
         if (op.list.getError()) return setError(op.list);
@@ -227,11 +237,11 @@ Error AsmMc6809::encodeBitOperation(
 Error AsmMc6809::encodeImmediatePlus(
     InsnMc6809 &insn, const Operand &op, const Operand &extra) {
     encodeImmediate(insn, extra);
-    if (op.mode == IMM_DIR)
+    if (op.mode == IM8_DIR)
         insn.emitByte(static_cast<uint8_t>(op.val32));
-    if (op.mode == IMM_EXT)
+    if (op.mode == IM8_EXT)
         insn.emitUint16(static_cast<uint16_t>(op.val32));
-    if (op.mode == IMM_IDX)
+    if (op.mode == IM8_IDX)
         encodeIndexed(insn, op, false);
     return OK;
 }
@@ -520,7 +530,7 @@ Error AsmMc6809::parseOperand(Operand &op, Operand &extra) {
     bool hasImmediate = false;
     if (_token == VAL_IMM || _token == VAL_IMMC) {
         op.setError(getError());
-        op.mode = IMM;
+        op.mode = IM32;
         op.val32 = _val32;
         op.extra = _extra;
         if (_token == VAL_IMM && nextToken() == EOL)
@@ -611,9 +621,9 @@ Error AsmMc6809::parseOperand(Operand &op, Operand &extra) {
 
     if (_token != EOL) return setError(UNKNOWN_OPERAND);
     if (hasImmediate) {
-        if (op.mode == DIR) op.mode = IMM_DIR;
-        else if (op.mode == EXT) op.mode = IMM_EXT;
-        else if (op.mode == IDX) op.mode = IMM_IDX;
+        if (op.mode == DIR) op.mode = IM8_DIR;
+        else if (op.mode == EXT) op.mode = IM8_EXT;
+        else if (op.mode == IDX) op.mode = IM8_IDX;
         else return setError(UNKNOWN_OPERAND);
     } else if (!op.indir) {
         if (op.mode == IDX && op.sub == ACCM_IDX)
@@ -676,9 +686,12 @@ Error AsmMc6809::encode(Insn &_insn) {
         insn.emitInsn();
         break;
     case REL:
+    case LREL:
         encodeRelative(insn, op);
         break;
-    case IMM:
+    case IM8:
+    case IM16:
+    case IM32:
         encodeImmediate(insn, op);
         break;
     case DIR:
@@ -704,9 +717,9 @@ Error AsmMc6809::encode(Insn &_insn) {
     case TFR_MEM:
         encodeTransferMemory(insn, op);
         break;
-    case IMM_DIR:
-    case IMM_EXT:
-    case IMM_IDX:
+    case IM8_DIR:
+    case IM8_EXT:
+    case IM8_IDX:
         encodeImmediatePlus(insn, op, extra);
         break;
     default:  return setError(UNKNOWN_OPERAND);

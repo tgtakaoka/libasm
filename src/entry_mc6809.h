@@ -27,28 +27,24 @@ enum CpuType {
     HD6309,
 };
 
-enum OprSize {
-    SZ_NONE = 0,
-    SZ_BYTE = 1, // 8 bit operation
-    SZ_WORD = 2, // 16 bit operation
-    SZ_LONG = 3, // 32 bit operation
-};
-
 enum AddrMode {
     INH     = 0,   // Inherent
     DIR     = 1,   // Direct Page
     EXT     = 2,   // Extended
     IDX     = 3,   // Indexed
     REL     = 4,   // Relative
-    IMM     = 5,   // Immediate
-    PSH_PUL = 6,   // Push Pull
-    REG_REG = 7,   // Inter register
+    LREL    = 5,   // Long Relative
+    IM8     = 6,   // Immediate 8-bit
+    IM16    = 7,   // Immediate 16-bit
+    IM32    = 8,   // Immediate 32-bit
+    PSH_PUL = 9,   // Push Pull
+    REG_REG = 10,  // Inter register
     // HD6309
-    IMM_DIR = 8,   // Immediate and Direct Page
-    IMM_EXT = 9,   // Immediate and Extended
-    IMM_IDX = 10,  // Immediate and Indexed
-    BITOP   = 11,  // Bit Operation
-    TFR_MEM = 12,  // Transfer Memory
+    IM8_DIR = 11,  // Immediate and Direct Page
+    IM8_EXT = 12,  // Immediate and Extended
+    IM8_IDX = 13,  // Immediate and Indexed
+    BITOP   = 14,  // Bit Operation
+    TFR_MEM = 15,  // Transfer Memory
 };
 
 struct Entry {
@@ -56,27 +52,16 @@ struct Entry {
     const uint8_t flags;
     const char *name;
 
-    static inline OprSize _oprSize(uint8_t flags) {
-        return OprSize((flags >> oprSize_gp) & oprSize_gm);
-    }
-
     static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode((flags >> addrMode_gp) & addrMode_gm);
     }
 
-    static constexpr uint8_t _flags(OprSize oprSize, AddrMode addrMode) {
-        return (static_cast<uint8_t>(oprSize) << oprSize_gp)
-            | (static_cast<uint8_t>(addrMode) << addrMode_gp);
-    }
-
-    static uint8_t _set(uint8_t flags, AddrMode addrMode) {
-        return (flags & ~addrMode_gm) | static_cast<uint8_t>(addrMode);
+    static constexpr uint8_t _flags(AddrMode addrMode) {
+        return (static_cast<uint8_t>(addrMode) << addrMode_gp);
     }
 
 private:
-    static constexpr uint8_t oprSize_gm = 0x3;
     static constexpr uint8_t addrMode_gm = 0xf;
-    static constexpr int oprSize_gp = 4;
     static constexpr int addrMode_gp = 0;
 };
 

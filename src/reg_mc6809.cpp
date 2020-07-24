@@ -297,7 +297,7 @@ static constexpr RegName WORD_REGS[] PROGMEM = {
     REG_D, REG_X, REG_Y, REG_U, REG_S, REG_PC, REG_W, REG_V
 };
 
-OprSize RegMc6809::regSize(RegName regName) {
+RegSize RegMc6809::regSize(RegName regName) {
     if (encodeRegNumber(regName, ARRAY_RANGE(BYTE_REGS)) >= 0)
         return SZ_BYTE;
     if (encodeRegNumber(regName, ARRAY_RANGE(WORD_REGS)) >= 0)
