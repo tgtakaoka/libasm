@@ -33,7 +33,8 @@ public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
     // Config
-    AddressWidth addressWidth() const { return TableMos6502.addressWidth(); }
+    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
+    int8_t addressBits() const override { return TableMos6502.addressBits(); }
     const char *listCpu() const override { return TableMos6502.listCpu(); }
     bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
     const char *getCpu() const override { return TableMos6502.getCpu(); }
