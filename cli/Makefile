@@ -74,7 +74,8 @@ asm:    asm.o $(OBJS_asm) $(OBJS_common) \
 	asm_ins8070.o $(OBJS_ins8070) \
 	asm_cdp1802.o $(OBJS_cdp1802) \
 	asm_tms9900.o $(OBJS_tms9900) \
-	asm_mc68000.o $(OBJS_mc68000)
+	asm_mc68000.o $(OBJS_mc68000) \
+	asm_z8000.o   $(OBJS_z8000)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 dis:    dis.o $(OBJS_dis) $(OBJS_common) \
 	dis_mc6809.o  $(OBJS_mc6809)  \

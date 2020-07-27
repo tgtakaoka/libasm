@@ -23,17 +23,6 @@
 namespace libasm {
 namespace z8000 {
 
-static const char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
-static const char TEXT_REG_FCW[]     PROGMEM = "FCW";
-static const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
-static const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
-static const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
-static const char TEXT_REG_NSPSEG[] PROGMEM  = "NSPSEG";
-static const char TEXT_REG_NSPOFF[] PROGMEM  = "NSPOFF";
-
-static const char TEXT_IT_VI[] PROGMEM  = "VI";
-static const char TEXT_IT_NVI[] PROGMEM = "NVI";
-
 static bool isidchar(const char c) {
     return isalnum(c) || c == '_';
 }
@@ -49,7 +38,7 @@ static int8_t parseRegNum(const char *line) {
 
 RegName RegZ8000::parseRegName(const char *line) const {
     if (toupper(*line++) == 'R') {
-        const char type = *line;
+        const char type = toupper(*line);
         if (type == 'H' || type == 'L' || type == 'R' || type == 'Q')
             line++;
         int8_t num = parseRegNum(line);
@@ -62,15 +51,18 @@ RegName RegZ8000::parseRegName(const char *line) const {
             return (num % 2) == 0 ? RegName(num + 32) : REG_ILLEGAL;
         if (type == 'Q')
             return (num % 4) == 0 ? RegName(num + 48) : REG_ILLEGAL;
+        return RegName(num);
     }
     return REG_UNDEF;
 }
 
 uint8_t RegZ8000::regNameLen(RegName regName) const {
-    if (isByteReg(regName))  return 3;
+    if (isCtlReg(regName)) return ctlRegLen(regName);
     const int8_t num = int8_t(regName);
     if (num < 0) return 0;
-    return (num & 0xF) < 10 ? 3 : 4;
+    if (isByteReg(regName)) return 3;
+    const uint8_t len = isWordReg(regName) ? 1 : 2;
+    return len + ((num & 0xF) < 10 ? 1 : 2);
 }
 
 uint8_t RegZ8000::encodeRegName(RegName regName) const {
@@ -111,11 +103,6 @@ RegName RegZ8000::decodeLongReg(uint8_t regNum) const {
 RegName RegZ8000::decodeQuadReg(uint8_t regNum) const {
     regNum &= 0x0f;
     return regNum % 4 == 0 ? RegName(regNum + 48) : REG_ILLEGAL;
-}
-
-RegName RegZ8000::decodeCtlReg(uint8_t ctlNum) const {
-    ctlNum &= 7;
-    return ctlNum == 0 ? REG_ILLEGAL : RegName(ctlNum + 64);
 }
 
 bool RegZ8000::isWordReg(RegName regName) const {
@@ -161,154 +148,129 @@ char *RegZ8000::outText(char *out, const char *text) const {
 
 char *RegZ8000::outRegName(char *out, RegName regName) const {
     int8_t num = int8_t(regName);
-    if (num >= 0) {
-        if (isCtlReg(regName)) {
-            if (regName == REG_FLAGS)   out = outText(out, TEXT_REG_FLAGS);
-            if (regName == REG_FCW)     out = outText(out, TEXT_REG_FCW);
-            if (regName == REG_REFRESH) out = outText(out, TEXT_REG_REFRESH);
-            if (regName == REG_PSAPSEG) out = outText(out, TEXT_REG_PSAPSEG);
-            if (regName == REG_PSAPOFF) out = outText(out, TEXT_REG_PSAPOFF);
-            if (regName == REG_NSPSEG)  out = outText(out, TEXT_REG_NSPSEG);
-            if (regName == REG_NSPOFF)  out = outText(out, TEXT_REG_NSPOFF);
+    if (num < 0) return out;
+    if (isCtlReg(regName)) return outCtlName(out, regName);
+
+    out = outChar(out, 'R');
+    if (isByteReg(regName)) {
+        num -= 16;
+        if (num < 8) {
+            out = outChar(out, 'H');
         } else {
-            out = outChar(out, 'R');
-            if (isByteReg(regName)) {
-                num -= 16;
-                if (num < 8) {
-                    out = outChar(out, 'H');
-                } else {
-                    num -= 8;
-                    out = outChar(out, 'L');
-                }
-            } else if (isLongReg(regName)) {
-                num -= 32;
-                out = outChar(out, 'R');
-            } else if (isQuadReg(regName)) {
-                num -= 48;
-                out = outChar(out, 'Q');
-            }
-            if (num >= 10) {
-                *out++ = '1';
-                num -= 10;
-            }
-            *out++ = num + '0';
+            num -= 8;
+            out = outChar(out, 'L');
         }
+    } else if (isLongReg(regName)) {
+        num -= 32;
+        out = outChar(out, 'R');
+    } else if (isQuadReg(regName)) {
+        num -= 48;
+        out = outChar(out, 'Q');
     }
+    if (num >= 10) {
+        *out++ = '1';
+        num -= 10;
+    }
+    *out++ = num + '0';
     *out = 0;
     return out;
 }
 
-#define CC_ENTRY(name, code, len, ...)                                  \
-    static_cast<uint8_t>(name), ((code) | ((len) << 4)), __VA_ARGS__
-static const uint8_t CC_TABLE[] PROGMEM = {
-        CC_ENTRY(CC_F,    0, 1, 'F'),
-        CC_ENTRY(CC_LT,   1, 2, 'L', 'T'),
-        CC_ENTRY(CC_LE,   2, 2, 'L', 'E'),
-        CC_ENTRY(CC_ULE,  3, 3, 'U', 'L', 'E'),
-        CC_ENTRY(CC_OV,   4, 2, 'O', 'V'),
-        CC_ENTRY(CC_MI,   5, 2, 'M', 'I'),
-        CC_ENTRY(CC_Z,    6, 1, 'Z'),
-        CC_ENTRY(CC_C,    7, 1, 'C'),
-        CC_ENTRY(CC_T,    8, 0)
-        CC_ENTRY(CC_GE,   9, 2, 'G', 'E'),
-        CC_ENTRY(CC_GT,  10, 2, 'G', 'T'),
-        CC_ENTRY(CC_UGT, 11, 3, 'U', 'G', 'T'),
-        CC_ENTRY(CC_NOV, 12, 3, 'N', 'O', 'V'),
-        CC_ENTRY(CC_PL,  13, 2, 'P', 'L'),
-        CC_ENTRY(CC_NZ,  14, 2, 'N', 'Z'),
-        CC_ENTRY(CC_NC,  15, 2, 'N', 'C'),
-        CC_ENTRY(CC_EQ,   6, 2, 'E', 'Q'),
-        CC_ENTRY(CC_ULT,  7, 3, 'U', 'L', 'T'),
-        CC_ENTRY(CC_NE,  14, 2, 'N', 'E'),
-        CC_ENTRY(CC_UGE, 15, 3, 'U', 'G', 'E'),
-        };
-static CcName CC_NAME(uint8_t idx) {
-    return CcName(pgm_read_byte(&CC_TABLE[idx]));
-}
-static uint8_t CC_CODE(uint8_t idx) {
-    return pgm_read_byte(&CC_TABLE[idx + 1]) & 0xf;
-}
-static uint8_t CC_LEN(uint8_t idx)  {
-    return pgm_read_byte(&CC_TABLE[idx + 1]) >> 4;
-}
-static const char *CC_TEXT(uint8_t idx) {
-    return reinterpret_cast<const char *>(&CC_TABLE[idx + 2]);
-}
-static uint8_t CC_NEXT(uint8_t idx) {
-    return idx + 2 + CC_LEN(idx);
+struct NameEntry {
+    uint8_t name;
+    uint8_t codeAndLen;
+    const char *text;
+
+    static const NameEntry *searchName(
+            uint8_t name, const NameEntry *begin, const NameEntry *end) {
+        for (const NameEntry *entry = begin; entry < end; entry++) {
+            const uint8_t n = pgm_read_byte(&entry->name);
+            if (name == n) return entry;
+        }
+        return nullptr;
+    }
+    static const NameEntry *searchCode(
+            uint8_t code, const NameEntry *begin, const NameEntry *end) {
+        for (const NameEntry *entry = begin; entry < end; entry++) {
+            const uint8_t c = (pgm_read_byte(&entry->codeAndLen) >> 4);
+            if (code == c) return entry;
+        }
+        return nullptr;
+    }
+    static const NameEntry *searchText(
+            const char *str, const NameEntry *begin, const NameEntry *end) {
+        for (const NameEntry *entry = begin; entry < end; entry++) {
+            const char *text = reinterpret_cast<const char *>(
+                    pgm_read_ptr(&entry->text));
+            const uint8_t len = pgm_read_byte(&entry->codeAndLen) & 0xF;
+            if (strncasecmp_P(str, text, len) == 0 && !isidchar(str[len]))
+                return entry;
+        }
+        return nullptr;
+    }
+    static uint8_t nameLen(
+            uint8_t name, const NameEntry *begin, const NameEntry *end) {
+        const NameEntry *entry = searchName(name, begin, end);
+        return entry ? (pgm_read_byte(&entry->codeAndLen) & 0xF) : 0;
+    }
+};
+
+static const char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
+static const char TEXT_REG_FCW[]     PROGMEM = "FCW";
+static const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
+static const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
+static const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
+static const char TEXT_REG_NSPSEG[] PROGMEM  = "NSPSEG";
+static const char TEXT_REG_NSPOFF[] PROGMEM  = "NSPOFF";
+static const NameEntry CTL_TABLE[] PROGMEM = {
+    { REG_FLAGS,   0x15, TEXT_REG_FLAGS   },
+    { REG_FCW,     0x23, TEXT_REG_FCW     },
+    { REG_REFRESH, 0x37, TEXT_REG_REFRESH },
+    { REG_PSAPSEG, 0x47, TEXT_REG_PSAPSEG },
+    { REG_PSAPOFF, 0x57, TEXT_REG_PSAPOFF },
+    { REG_NSPSEG,  0x66, TEXT_REG_NSPSEG  },
+    { REG_NSPOFF,  0x76, TEXT_REG_NSPOFF  },
+};
+
+RegName RegZ8000::parseCtlReg(const char *line) const {
+    const NameEntry *entry =
+        NameEntry::searchText(line, ARRAY_RANGE(CTL_TABLE));
+    return entry ? RegName(pgm_read_byte(&entry->name)) : REG_UNDEF;
 }
 
-CcName RegZ8000::parseCcName(const char *line) const {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        const uint8_t len = CC_LEN(idx);
-        const char *text = CC_TEXT(idx);
-        if (len && strncasecmp_P(line, text, len) == 0
-            && !isidchar(line[len]))
-            return CC_NAME(idx);
-    }
-    return CC_UNDEF;
+RegName RegZ8000::decodeCtlReg(uint8_t ctlNum) const {
+    const NameEntry *entry =
+        NameEntry::searchCode(ctlNum & 7, ARRAY_RANGE(CTL_TABLE));
+    return entry ? RegName(pgm_read_byte(&entry->name)) : REG_ILLEGAL;
 }
 
-uint8_t RegZ8000::ccNameLen(const CcName ccName) const {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccName == CC_NAME(idx))
-            return CC_LEN(idx);
-    }
-    return 0;
+uint8_t RegZ8000::ctlRegLen(RegName regName) const {
+    return NameEntry::nameLen(regName, ARRAY_RANGE(CTL_TABLE));
 }
 
-int8_t RegZ8000::encodeCcName(CcName ccName) const {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccName == CC_NAME(idx))
-            return CC_CODE(idx);
+char *RegZ8000::outCtlName(char *out, RegName regName) const {
+    const NameEntry *entry =
+        NameEntry::searchName(regName, ARRAY_RANGE(CTL_TABLE));
+    if (entry) {
+        const char *text = reinterpret_cast<const char *>(
+                pgm_read_ptr(&entry->text));
+        out = outText(out, text);
     }
-    return -1;
-}
-
-CcName RegZ8000::decodeCcNum(uint8_t ccNum) const {
-    ccNum &= 0xF;
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccNum == CC_CODE(idx))
-            return CC_NAME(idx);
-    }
-    return CC_UNDEF;
-}
-
-char *RegZ8000::outCcName(char *out, CcName ccName) const {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccName != CC_NAME(idx)) continue;
-        const char *text = CC_TEXT(idx);
-        const uint8_t len = CC_LEN(idx);
-        for (uint8_t i = 0; i < len; i++)
-            out = outChar(out, pgm_read_byte(&text[i]));
-        break;
-    }
-    *out = 0;
     return out;
 }
 
-char *RegZ8000::outFlagNames(char *out, uint8_t flagNames) const {
-    char c = 0;
-    if (flagNames & int8_t(FL_C)) {
-        out = outChar(out, 'C');
-        c = ',';
-    }
-    if (flagNames & int8_t(FL_Z)) {
-        if (c) *out++ = c;
-        out = outChar(out, 'Z');
-        c = ',';
-    }
-    if (flagNames & int8_t(FL_S)) {
-        if (c) *out++ = c;
-        out = outChar(out, 'S');
-        c = ',';
-    }
-    if (flagNames & int8_t(FL_P)) {
-        if (c) *out++ = c;
-        out = outChar(out, 'P');
-    }
-    return out;
+int8_t RegZ8000::encodeCtlReg(RegName ctlReg) const {
+    const NameEntry *entry =
+        NameEntry::searchName(ctlReg, ARRAY_RANGE(CTL_TABLE));
+    return entry ? (pgm_read_byte(&entry->codeAndLen) >> 4) : -1;
 }
+
+static const char TEXT_IT_VI[] PROGMEM  = "VI";
+static const char TEXT_IT_NVI[] PROGMEM = "NVI";
+static const NameEntry IT_TABLE[] PROGMEM = {
+    { IT_NVI, 0x13, TEXT_IT_NVI },
+    { IT_VI,  0x22, TEXT_IT_VI  },
+};
 
 char *RegZ8000::outIntrNames(char *out, uint8_t intrNames) const {
     char c = 0;
@@ -320,7 +282,149 @@ char *RegZ8000::outIntrNames(char *out, uint8_t intrNames) const {
         if (c) *out++ = c;
         out = outText(out, TEXT_IT_NVI);
     }
+    *out = 0;
     return out;
+}
+
+IntrName RegZ8000::parseIntrName(const char *p) const {
+    const NameEntry *entry =
+        NameEntry::searchText(p, ARRAY_RANGE(IT_TABLE));
+    return entry ? IntrName(pgm_read_byte(&entry->name)) : IT_UNDEF;
+}
+
+uint8_t RegZ8000::intrNameLen(IntrName intrName) const {
+    const NameEntry *entry =
+        NameEntry::searchName(intrName, ARRAY_RANGE(IT_TABLE));
+    return entry ? (pgm_read_byte(&entry->codeAndLen) & 0xF) : 0;
+}
+
+uint8_t RegZ8000::encodeIntrName(IntrName intrName) const {
+    const NameEntry *entry =
+        NameEntry::searchName(intrName, ARRAY_RANGE(IT_TABLE));
+    return entry ? (pgm_read_byte(&entry->codeAndLen) >> 4) : 0;
+}
+
+static const char *TEXT_CC_F   PROGMEM = "F";
+static const char *TEXT_CC_LT  PROGMEM = "LT";
+static const char *TEXT_CC_LE  PROGMEM = "LE";
+static const char *TEXT_CC_ULE PROGMEM = "ULE";
+static const char *TEXT_CC_OV  PROGMEM = "OV";
+static const char *TEXT_CC_MI  PROGMEM = "MI";
+static const char *TEXT_CC_Z   PROGMEM = "Z";
+static const char *TEXT_CC_C   PROGMEM = "C";
+static const char *TEXT_CC_T   PROGMEM = "";
+static const char *TEXT_CC_GE  PROGMEM = "GE";
+static const char *TEXT_CC_GT  PROGMEM = "GT";
+static const char *TEXT_CC_UGT PROGMEM = "UGT";
+static const char *TEXT_CC_NOV PROGMEM = "NOV";
+static const char *TEXT_CC_PL  PROGMEM = "PL";
+static const char *TEXT_CC_NZ  PROGMEM = "NZ";
+static const char *TEXT_CC_NC  PROGMEM = "NC";
+static const char *TEXT_CC_EQ  PROGMEM = "EQ";
+static const char *TEXT_CC_ULT PROGMEM = "ULT";
+static const char *TEXT_CC_NE  PROGMEM = "NE";
+static const char *TEXT_CC_UGE PROGMEM = "UGE";
+static const NameEntry CC_TABLE[] PROGMEM = {
+    { CC_F,   0x01, TEXT_CC_F   },
+    { CC_LT,  0x12, TEXT_CC_LT  },
+    { CC_LE,  0x22, TEXT_CC_LE  },
+    { CC_ULE, 0x33, TEXT_CC_ULE },
+    { CC_OV,  0x42, TEXT_CC_OV  },
+    { CC_MI,  0x52, TEXT_CC_MI  },
+    { CC_Z,   0x61, TEXT_CC_Z   },
+    { CC_C,   0x71, TEXT_CC_C   },
+    { CC_GE,  0x92, TEXT_CC_GE  },
+    { CC_GT,  0xA2, TEXT_CC_GT  },
+    { CC_UGT, 0xB3, TEXT_CC_UGT },
+    { CC_NOV, 0xC3, TEXT_CC_NOV },
+    { CC_PL,  0xD2, TEXT_CC_PL  },
+    { CC_NZ,  0xE2, TEXT_CC_NZ  },
+    { CC_NC,  0xF2, TEXT_CC_NC  },
+    { CC_EQ,  0x62, TEXT_CC_EQ  },
+    { CC_ULT, 0x73, TEXT_CC_ULT },
+    { CC_NE,  0xE2, TEXT_CC_NE  },
+    { CC_UGE, 0xF3, TEXT_CC_UGE },
+    { CC_T,   0x80, TEXT_CC_T   },
+};
+
+CcName RegZ8000::parseCcName(const char *line) const {
+    const NameEntry *entry =
+        NameEntry::searchText(line, ARRAY_RANGE(CC_TABLE));
+    const CcName cc = entry ? CcName(pgm_read_byte(&entry->name)) : CC_UNDEF;
+    return cc == CC_T ? CC_UNDEF : cc;
+}
+
+uint8_t RegZ8000::ccNameLen(const CcName ccName) const {
+    const NameEntry *entry =
+        NameEntry::searchName(ccName, ARRAY_RANGE(CC_TABLE));
+    return entry ? (pgm_read_byte(&entry->codeAndLen) & 0xF) : 0;
+}
+
+int8_t RegZ8000::encodeCcName(CcName ccName) const {
+    const NameEntry *entry =
+        NameEntry::searchName(ccName, ARRAY_RANGE(CC_TABLE));
+    return entry ? (pgm_read_byte(&entry->codeAndLen) >> 4) : -1;
+}
+
+CcName RegZ8000::decodeCcNum(uint8_t ccNum) const {
+    const NameEntry *entry =
+        NameEntry::searchCode(ccNum & 0xF, ARRAY_RANGE(CC_TABLE));
+    return entry ? CcName(pgm_read_byte(&entry->name)) : CC_UNDEF;
+}
+
+char *RegZ8000::outCcName(char *out, CcName ccName) const {
+    const NameEntry *entry =
+        NameEntry::searchName(ccName, ARRAY_RANGE(CC_TABLE));
+    const char *text =
+        reinterpret_cast<const char *>(pgm_read_ptr(&entry->text));
+    return outText(out, text);
+}
+
+static const char *TEXT_FL_C PROGMEM = "C";
+static const char *TEXT_FL_Z PROGMEM = "Z";
+static const char *TEXT_FL_S PROGMEM = "S";
+static const char *TEXT_FL_P PROGMEM = "P";
+static const char *TEXT_FL_O PROGMEM = "O";
+static const NameEntry FLAG_TABLE[] PROGMEM = {
+    { FL_C, 0x81, TEXT_FL_C },
+    { FL_Z, 0x41, TEXT_FL_Z },
+    { FL_S, 0x21, TEXT_FL_S },
+    { FL_P, 0x11, TEXT_FL_P },
+    { FL_O, 0x11, TEXT_FL_O },
+};
+
+char *RegZ8000::outFlagNames(char *out, uint8_t flags) const {
+    char c = 0;
+    for (uint8_t bit = 0x8; bit; bit >>= 1) {
+        if (flags & bit) {
+            if (c) *out++ = c;
+            c = ',';
+            const NameEntry *entry =
+                NameEntry::searchCode(bit, ARRAY_RANGE(FLAG_TABLE));
+            if (entry) {
+                const char *text = reinterpret_cast<const char *>(
+                        pgm_read_ptr(&entry->text));
+                out = outText(out, text);
+            }
+        }
+    }
+    return out;
+}
+
+FlagName RegZ8000::parseFlagName(const char *p) const {
+    const NameEntry *entry =
+        NameEntry::searchText(p, ARRAY_RANGE(FLAG_TABLE));
+    return entry ? FlagName(pgm_read_byte(&entry->name)) : FL_UNDEF;
+}
+
+uint8_t RegZ8000::flagNameLen(FlagName flag) const {
+    return flag == FL_UNDEF ? 0 : 1;
+}
+
+uint8_t RegZ8000::encodeFlagName(FlagName flag) const {
+    const NameEntry *entry =
+        NameEntry::searchName(flag, ARRAY_RANGE(FLAG_TABLE));
+    return entry ? (pgm_read_byte(&entry->codeAndLen) >> 4) : 0;
 }
 
 } // namespace z8000

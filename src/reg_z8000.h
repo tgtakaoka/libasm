@@ -110,6 +110,7 @@ enum CcName : int8_t {
 };
 
 enum FlagName : int8_t {
+    FL_UNDEF = 0,
     FL_C = 8,  // Carry
     FL_Z = 4,  // Zero
     FL_S = 2,  // Sign
@@ -119,6 +120,7 @@ enum FlagName : int8_t {
 };
 
 enum IntrName : int8_t {
+    IT_UNDEF = 0,
     IT_NVI = 1, // Non-Vectored Interrupt
     IT_VI  = 2, // Vectored Interrupt
 };
@@ -133,13 +135,16 @@ public:
     RegName decodeWordReg(uint8_t regNum) const;
     RegName decodeLongReg(uint8_t regNum) const;
     RegName decodeQuadReg(uint8_t regNum) const;
-    RegName decodeCtlReg(uint8_t ctlNum) const;
     bool isByteReg(RegName) const;
     bool isWordReg(RegName) const;
     bool isLongReg(RegName) const;
     bool isQuadReg(RegName) const;
-    bool isCtlReg(RegName) const;
     char *outRegName(char *out, RegName regName) const;
+
+    RegName parseCtlReg(const char *line) const;
+    RegName decodeCtlReg(uint8_t ctlNum) const;
+    bool isCtlReg(RegName) const;
+    int8_t encodeCtlReg(RegName ctlReg) const;
 
     CcName parseCcName(const char *line) const;
     uint8_t ccNameLen(const CcName ccName) const;
@@ -148,13 +153,21 @@ public:
     char *outCcName(char *out, CcName ccName) const;
 
     char *outFlagNames(char *out, uint8_t flagNames) const;
+    FlagName parseFlagName(const char *line) const;
+    uint8_t flagNameLen(FlagName flag) const;
+    uint8_t encodeFlagName(FlagName flag) const;
 
     char *outIntrNames(char *out, uint8_t intrNames) const;
+    IntrName parseIntrName(const char *line) const;
+    uint8_t intrNameLen(IntrName intrName) const;
+    uint8_t encodeIntrName(IntrName intrName) const;
 
 private:
-    CcName parseCcName(const char *line, int8_t max) const;
+    char *outCtlName(char *out, RegName regName) const;
+    uint8_t ctlRegLen(RegName) const;
     char *outChar(char *out, char c) const;
     char *outText(char *out, const char *text) const;
+    bool compareText(const char *p, const char *text) const;
 };
 
 } // namespace z8000

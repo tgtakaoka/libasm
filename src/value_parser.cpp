@@ -395,7 +395,7 @@ Value ValueParser::evalExpr(
 }
 
 bool ValueParser::isCurrentOriginSymbol(char c) const {
-    return c == '*' || c == '$';
+    return c == '.' || c == '*' || c == '$';
 }
 
 Error ValueParser::readNumber(Value &val) {

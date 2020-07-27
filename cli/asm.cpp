@@ -28,6 +28,7 @@
 #include "asm_tms9900.h"
 #include "asm_z8.h"
 #include "asm_z80.h"
+#include "asm_z8000.h"
 
 #include <vector>
 
@@ -46,6 +47,7 @@ ins8070::AsmIns8070 asm8070;
 cdp1802::AsmCdp1802 asm1802;
 tms9900::AsmTms9900 asm9900;
 mc68000::AsmMc68000 asm68000;
+z8000::AsmZ8000     asmz8000;
 
 AsmMostekDirective dir6502(asm6502);
 AsmMotoDirective   dir6800(asm6800);
@@ -59,10 +61,11 @@ AsmIntelDirective  dir8070(asm8070);
 AsmIntelDirective  dir1802(asm1802);
 AsmIntelDirective  dir9900(asm9900);
 AsmMotoDirective   dir68000(asm68000);
+AsmIntelDirective  dirz8000(asmz8000);
 
 std::vector<AsmDirective *> directives = {
     &dir6809, &dir6800, &dir6502, &dir8051, &dir8080, &dirz80, &dirz8,
-    &dir1802, &dir8060, &dir8070, &dir9900, &dir68000
+    &dir1802, &dir8060, &dir8070, &dir9900, &dir68000, &dirz8000,
 };
 
 int main(int argc, const char **argv) {

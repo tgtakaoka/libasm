@@ -50,11 +50,44 @@ public:
     Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
+        _post = 0;
+    }
+
+    void setAddrMode(
+            AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
+        _dst = Entry::_opr(dst, MF_NO);
+        _src = Entry::_opr(src, MF_NO);
+        _ext = Entry::_ext(ex1, ex2, P_NO);
     }
 
     uint16_t post() const { return _post; }
     Error readPost(DisMemory &memory) {
         return readUint16(memory, _post) ? NO_MEMORY : OK;
+    }
+
+    void embed(Config::opcode_t data) {
+        _opCode |= data;
+    }
+    void embedPost(Config::opcode_t data) {
+        _post |= data;
+    }
+    void emitInsn() {
+        emitUint16(_opCode, 0);
+        const PostMode mode = postMode();
+        if (mode == P_0XX8) _post |= 8;
+        if (mode == P_0XXE) _post |= 0xE;
+        if (mode != P_NO) emitUint16(_post, 2);
+    }
+
+    void emitOperand16(uint16_t val16) {
+        uint8_t pos = _insn.length();
+        if (pos == 0) pos = hasPost() ? 4 : 2;
+        emitUint16(val16, pos);
+    }
+
+    void emitOperand32(uint32_t val32) {
+        emitOperand16(static_cast<uint16_t>(val32 >> 16));
+        emitOperand16(static_cast<uint16_t>(val32));
     }
 
 private:
@@ -64,6 +97,11 @@ private:
     uint8_t _ext;
     uint8_t _size;
     Config::opcode_t _post;
+
+    void emitUint16(uint16_t val, uint8_t pos) {
+        _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
+        _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
+    }
 };
 
 } // namespace z8000

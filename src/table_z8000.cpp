@@ -48,6 +48,7 @@ static const Entry Z8000_TABLE[] PROGMEM = {
     E(0xC000, 0x0FFF, BYTE, LDB,    M_R,    M_IM8,  C8, C0)
     E(0xD000, 0x0FFF, NONE, CALR,   M_RA12, M_NO,   C0, NO)
     E(0xE000, 0x0FFF, NONE, JR,     M_CC,   M_RA8,  C8, C0)
+    E(0xE800, 0x00FF, NONE, JR,     M_RA8,  M_NO,   C0, NO)
     E(0xF000, 0x0F7F, BYTE, DBJNZ,  M_R,    M_RA7,  C8, C0)
     E(0xF080, 0x0F7F, WORD, DJNZ,   M_R,    M_RA7,  C8, C0)
     E(0x3000, 0x000F, BYTE, LDRB,   M_R,    M_RA,   C0, NO)
@@ -102,7 +103,9 @@ static const Entry Z8000_TABLE[] PROGMEM = {
     E(0x8D07, 0x0000, NONE, NOP,    M_NO,   M_NO,   NO, NO)
     E(0x9E00, 0x000F, NONE, RET,    M_CC,   M_NO,   C0, NO)
     E(0xAE00, 0x00FF, BYTE, TCCB,   M_CC,   M_R,    C0, C4)
+    E(0xAE08, 0x00F0, BYTE, TCCB,   M_R,    M_NO,   C4, NO)
     E(0xAF00, 0x00FF, WORD, TCC,    M_CC,   M_R,    C0, C4)
+    E(0xAF08, 0x00F0, WORD, TCC,    M_R,    M_NO,   C4, NO)
     E(0xB000, 0x00F0, BYTE, DAB,    M_R,    M_NO,   C4, NO)
     E(0xB100, 0x00F0, BYTE, EXTSB,  M_DR,   M_NO,   C4, NO)
     E(0xB107, 0x00F0, LONG, EXTSL,  M_DR,   M_NO,   C4, NO)
@@ -249,6 +252,7 @@ static const Entry Z8000_TABLE[] PROGMEM = {
     X(0x1C09, 0xC0F0, WORD, LDM,    M_GENA, M_R,    C4, P8, M_CNT, M_NO, P_0X0X)
     E(0x1D00, 0xC0FF, LONG, LDL,    M_GENA, M_R,    C4, C0)
     E(0x1E00, 0xC0FF, NONE, JP,     M_CC,   M_GENA, C0, C4)
+    E(0x1E08, 0xC0F0, NONE, JP,     M_GENA, M_NO,   C4, NO)
     E(0x1F00, 0xC0FF, NONE, CALL,   M_GENA, M_NO,   C4, NO)
     E(0x2000, 0xC0FF, BYTE, LDB,    M_R,    M_GENI, C0, C4)
     E(0x2100, 0xC0FF, WORD, LD,     M_R,    M_GENI, C0, C4)
@@ -277,6 +281,21 @@ static const Entry Z8000_TABLE[] PROGMEM = {
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
+    if (opr == M_R)
+        return table == M_GENI || table == M_GEND || table == M_WR07 || table == M_WR
+            || table == M_DR;
+    if (opr == M_IM)
+        return table == M_GENI || table == M_IO || table == M_IM8 || table == M_BIT
+            || table == M_CNT || table == M_QCNT || table == M_SCNT || table == M_NCNT;
+    if (opr == M_IR)
+        return table == M_GENI || table == M_GEND || table == M_GENA || table == M_IRIO;
+    if (opr == M_DA)
+        return table == M_GENI || table == M_GEND || table == M_GENA
+            || table == M_RA || table == M_RA12 || table == M_RA8 || table == M_RA7;
+    if (opr == M_X)
+        return table == M_GENI || table == M_GEND || table == M_GENA;
+    if (opr == M_CC) return table == M_FLAG; // C & Z
+    if (opr == M_NO) return table == M_CC || table == M_INTT || table == M_FLAG;
     return false;
 }
 
