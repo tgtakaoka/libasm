@@ -1770,7 +1770,7 @@ static void test_cpu_conrtol() {
     // Complement Flag
     ETEST(OPCODE_HAS_NO_EFFECT, "COMFLG");
     TEST("COMFLG P",       0x8D15);
-    TEST("COMFLG O",       0x8D15);
+    TEST("COMFLG V",       0x8D15);
     TEST("COMFLG S",       0x8D25);
     TEST("COMFLG S,P",     0x8D35);
     TEST("COMFLG Z",       0x8D45);
@@ -1785,7 +1785,7 @@ static void test_cpu_conrtol() {
     TEST("COMFLG C,Z,P",   0x8DD5);
     TEST("COMFLG C,Z,S",   0x8DE5);
     TEST("COMFLG C,Z,S,P", 0x8DF5);
-    TEST("COMFLG C,Z,S,O", 0x8DF5);
+    TEST("COMFLG C,Z,S,V", 0x8DF5);
 
     // Assembler Interrupt
     TEST("DI VI,NVI",  0x7C00);
@@ -1856,7 +1856,7 @@ static void test_cpu_conrtol() {
     // Reset Flag
     ETEST(OPCODE_HAS_NO_EFFECT, "RESFLG");
     TEST("RESFLG P",       0x8D13);
-    TEST("RESFLG O",       0x8D13);
+    TEST("RESFLG V",       0x8D13);
     TEST("RESFLG S",       0x8D23);
     TEST("RESFLG S,P",     0x8D33);
     TEST("RESFLG Z",       0x8D43);
@@ -1871,12 +1871,12 @@ static void test_cpu_conrtol() {
     TEST("RESFLG C,Z,P",   0x8DD3);
     TEST("RESFLG C,Z,S",   0x8DE3);
     TEST("RESFLG C,Z,S,P", 0x8DF3);
-    TEST("RESFLG C,Z,S,O", 0x8DF3);
+    TEST("RESFLG C,Z,S,V", 0x8DF3);
 
     // Set Flag
     ETEST(OPCODE_HAS_NO_EFFECT, "SETFLG");
     TEST("SETFLG P",       0x8D11);
-    TEST("SETFLG O",       0x8D11);
+    TEST("SETFLG V",       0x8D11);
     TEST("SETFLG S",       0x8D21);
     TEST("SETFLG S,P",     0x8D31);
     TEST("SETFLG Z",       0x8D41);
@@ -1891,7 +1891,7 @@ static void test_cpu_conrtol() {
     TEST("SETFLG C,Z,P",   0x8DD1);
     TEST("SETFLG C,Z,S",   0x8DE1);
     TEST("SETFLG C,Z,S,P", 0x8DF1);
-    TEST("SETFLG C,Z,S,O", 0x8DF1);
+    TEST("SETFLG C,Z,S,V", 0x8DF1);
 }
 
 static void test_comment() {
@@ -1905,7 +1905,7 @@ static void test_comment() {
         TEST(                   "PUSH @R4 , R2",  0x9342);
         ETEST(UNKNOWN_REGISTER, "PUSH @ R4 , R2");
     }
-    TEST("SETFLG C , Z , S , P , O", 0x8DF1);
+    TEST("SETFLG C , Z , S , P , V", 0x8DF1);
 }
 
 static void test_undefined_symbol() {

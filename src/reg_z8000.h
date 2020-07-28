@@ -116,7 +116,7 @@ enum FlagName : int8_t {
     FL_S = 2,  // Sign
     FL_P = 1,  // Parity
     // Alias
-    FL_O = 16, // O: Overflow
+    FL_V = 16, // Overflow
 };
 
 enum IntrName : int8_t {

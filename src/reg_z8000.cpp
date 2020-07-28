@@ -384,13 +384,13 @@ static const char *TEXT_FL_C PROGMEM = "C";
 static const char *TEXT_FL_Z PROGMEM = "Z";
 static const char *TEXT_FL_S PROGMEM = "S";
 static const char *TEXT_FL_P PROGMEM = "P";
-static const char *TEXT_FL_O PROGMEM = "O";
+static const char *TEXT_FL_V PROGMEM = "V";
 static const NameEntry FLAG_TABLE[] PROGMEM = {
     { FL_C, 0x81, TEXT_FL_C },
     { FL_Z, 0x41, TEXT_FL_Z },
     { FL_S, 0x21, TEXT_FL_S },
     { FL_P, 0x11, TEXT_FL_P },
-    { FL_O, 0x11, TEXT_FL_O },
+    { FL_V, 0x11, TEXT_FL_V },
 };
 
 char *RegZ8000::outFlagNames(char *out, uint8_t flags) const {
