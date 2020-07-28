@@ -49,7 +49,8 @@ all: \
 	test_tms99105.hex \
 	test_mc68000.s28 \
 	test_z8001.hex \
-	test_z8002.hex
+	test_z8002.hex \
+	test_ns32000.s28
 
 %.hex: %.asm
 	asl $(ASL_FLAGS) $^
@@ -77,6 +78,9 @@ test_z8002.hex: test_z8002.s
 		--section-start=bss1=0x1234 \
 		--section-start=bss2=0x5678
 	z8k-coff-objcopy -I coff-z8k -O ihex test_z8002.o /dev/stdout | tr -d '\r' > $@
+test_ns32000.s28: test_ns32000.s
+	ns32k-netbsd-as -m32032 --warn -a=test_ns32000.lst -o test_ns32000.p $^
+	ns32k-netbsd-ld -Ttext 0x10000 --oformat srec -o /dev/stdout test_ns32000.p | tr -d '\r' > $@
 
 .PHONY: clean clean-obj test \
 	test_mc6809  \
