@@ -1299,47 +1299,55 @@ static void test_block_transfer() {
 static void test_string_manipulation() {
     // Compare String and Decrement
     if (z8001()) {
-        TEST(CPSD,  "R1,@RR2,R0",     0xBB2A, 0x0018);
-        TEST(CPSDB, "RH1,@RR2,R4,GE", 0xBA2A, 0x0419);
+        TEST(CPSD,  "@RR4,@RR2,R0",    0xBB2A, 0x0048);
+        TEST(CPSDB, "@RR4,@RR2,R4,GE", 0xBA2A, 0x0449);
     } else {
-        TEST(CPSD,  "R0,@R1,R2",      0xBB1A, 0x0208);
-        TEST(CPSDB, "RL0,@R1,R2,GE",  0xBA1A, 0x0289);
+        TEST(CPSD,  "@R3,@R1,R2",    0xBB1A, 0x0238);
+        TEST(CPSDB, "@R3,@R1,R2,GE", 0xBA1A, 0x0239);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB0A, 0x0418);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA0A, 0x0419);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB0A, 0x0048);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB2A, 0x0008);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA0A, 0x0449);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA1A, 0x0409);
 
     // Compare String, Decrement, and Repeat
     if (z8001()) {
-        TEST(CPSDR,  "R2,@RR4,R5,GT",   0xBB4E, 0x052A);
-        TEST(CPSDRB, "RH2,@RR4,R5,UGT", 0xBA4E, 0x052B);
+        TEST(CPSDR,  "@RR2,@RR4,R5,GT",  0xBB4E, 0x052A);
+        TEST(CPSDRB, "@RR2,@RR4,R5,UGT", 0xBA4E, 0x052B);
     } else {
-        TEST(CPSDR,  "R3,@R4,R5,GT",    0xBB4E, 0x053A);
-        TEST(CPSDRB, "RL3,@R4,R0,UGT",  0xBA4E, 0x00BB);
+        TEST(CPSDR,  "@R3,@R4,R5,GT",  0xBB4E, 0x053A);
+        TEST(CPSDRB, "@R3,@R4,R0,UGT", 0xBA4E, 0x003B);
     }
     ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBB0E, 0x052A);
+    ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBB4E, 0x050A);
     ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBA0E, 0x052B);
+    ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBA4E, 0x000B);
 
     // Compare String and Increment
     if (z8001()) {
-        TEST(CPSI,  "R3,@RR6,R5,NOV", 0xBB62, 0x053C);
-        TEST(CPSIB, "RH3,@RR6,R5,PL", 0xBA62, 0x053D);
+        TEST(CPSI,  "@RR2,@RR6,R5,NOV", 0xBB62, 0x052C);
+        TEST(CPSIB, "@RR2,@RR6,R5,PL",  0xBA62, 0x052D);
     } else {
-        TEST(CPSI,  "R6,@R7,R8,NOV",  0xBB72, 0x086C);
-        TEST(CPSIB, "RL6,@R7,R8,PL",  0xBA72, 0x08ED);
+        TEST(CPSI,  "@R6,@R7,R8,NOV", 0xBB72, 0x086C);
+        TEST(CPSIB, "@R6,@R7,R8,PL",  0xBA72, 0x086D);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB02, 0x053C);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA02, 0x053D);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB02, 0x052C);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB62, 0x050C);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA02, 0x052D);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA62, 0x050D);
 
     // Compare String, Increment, and Repeat
     if (z8001()) {
-        TEST(CPSIR,  "R4,@RR8,R6,NZ",  0xBB86, 0x064E);
-        TEST(CPSIRB, "RH4,@RR8,R6,NC", 0xBA86, 0x064F);
+        TEST(CPSIR,  "@RR4,@RR8,R6,NZ", 0xBB86, 0x064E);
+        TEST(CPSIRB, "@RR4,@RR8,R6,NC", 0xBA86, 0x064F);
     } else {
-        TEST(CPSIR,  "R9,@R10,R11,NZ",  0xBBA6, 0x0B9E);
-        TEST(CPSIRB, "RH1,@R10,R11,NC", 0xBAA6, 0x0B1F);
+        TEST(CPSIR,  "@R9,@R10,R11,NZ", 0xBBA6, 0x0B9E);
+        TEST(CPSIRB, "@R9,@R10,R11,NC", 0xBAA6, 0x0B9F);
     }
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB06, 0x064E);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB86, 0x060E);
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA06, 0x064F);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA86, 0x060F);
 
     // Translate and Decrement
     if (z8001()) {
