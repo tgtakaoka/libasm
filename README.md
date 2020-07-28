@@ -19,6 +19,7 @@ small environment (less than 15kB on Arduino).
   - CDP1802
   - TMS9900, TMS9995, TMS99105
   - MC68000
+  - Z8001, Z8002
 
 * Supported host environment.
   - Arduino (AVR, ARM)

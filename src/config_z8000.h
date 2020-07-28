@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __CONFIG_Z8000_H__
+#define __CONFIG_Z8000_H__
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 12
-#define LIBASM_VERSION_STRING "1.4.12"
+#include "config_base.h"
 
-#endif // __VERSION_H__
+namespace libasm {
+namespace z8000 {
+
+struct Config : ConfigImpl<
+    ADDRESS_24BIT, uint32_t, int32_t,
+    OPCODE_16BIT, uint16_t, 10,
+    ENDIAN_BIG, 6>
+{};
+
+} // namespace z8000
+} // namespace libasm
+
+#endif // __CONFIG_Z8000_H__
 
 // Local Variables:
 // mode: c++

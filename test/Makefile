@@ -47,6 +47,8 @@ all: \
 	test_tms9900.hex \
 	test_tms9995.hex \
 	test_tms99105.hex \
+	test_z8001.hex \
+	test_z8002.hex \
 	test_mc68000.s28
 
 %.hex: %.asm
@@ -61,6 +63,20 @@ all: \
 %.s37: %.asm
 	asl $(ASL_FLAGS) $^
 	p2hex -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
+test_z8001.hex: test_z8001.s
+	z8k-coff-as --warn -a=test_z8001.lst -o test_z8001.p $^
+	z8k-coff-ld -m z8001 --entry=0 -o test_z8001.o test_z8001.p \
+		--section-start=text=0x010000 \
+		--section-start=bss1=0x0A1234 \
+		--section-start=bss2=0x0B5678
+	z8k-coff-objcopy -I coff-z8k -O ihex test_z8001.o /dev/stdout | tr -d '\r' > $@
+test_z8002.hex: test_z8002.s
+	z8k-coff-as --warn -a=test_z8002.lst -o test_z8002.p $^
+	z8k-coff-ld -m z8002 --entry=0 -o test_z8002.o test_z8002.p \
+		--section-start=text=0x0000 \
+		--section-start=bss1=0x1234 \
+		--section-start=bss2=0x5678
+	z8k-coff-objcopy -I coff-z8k -O ihex test_z8002.o /dev/stdout | tr -d '\r' > $@
 
 .PHONY: clean clean-obj test \
 	test_mc6809  \
@@ -74,6 +90,7 @@ all: \
 	test_cdp1802 \
 	test_tms9900 \
 	test_mc68000 \
+	test_z8000 \
 	test_expr
 
 test:   test_mc6809  \
@@ -126,6 +143,9 @@ test_cdp1802: test_asm_cdp1802 test_dis_cdp1802
 test_mc68000: test_asm_mc68000 test_dis_mc68000
 	./test_asm_mc68000
 	./test_dis_mc68000
+test_z8000: test_asm_z8000 test_dis_z8000
+	./test_asm_z8000
+	./test_dis_z8000
 test_expr: test_expr_moto test_expr_intel test_expr_base
 	./test_expr_moto
 	./test_expr_intel
@@ -143,7 +163,8 @@ gen: \
 	gen_ins8070 \
 	gen_cdp1802 \
 	gen_tms9900 \
-	gen_mc68000
+	gen_mc68000 \
+	gen_z8000
 
 CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS    = -MMD
@@ -161,6 +182,7 @@ TEST_OBJS= \
 	test_asm_cdp1802.o test_dis_cdp1802.o \
 	test_asm_tms9900.o test_dis_tms9900.o \
 	test_asm_mc68000.o test_dis_mc68000.o \
+	test_asm_z8000.o   test_dis_z8000.o \
 	test_expr_moto.o   test_expr_intel.o  \
 	test_expr_base.o \
 	gen_mc6809.o  \
@@ -174,7 +196,8 @@ TEST_OBJS= \
 	gen_ins8070.o \
 	gen_cdp1802.o \
 	gen_tms9900.o \
-	gen_mc68000.o
+	gen_mc68000.o \
+	gen_z8000.o
 
 TESTS=$(TEST_OBJS:.o=)
 
@@ -196,6 +219,7 @@ OBJS_ins8070 = table_ins8070.o reg_ins8070.o
 OBJS_cdp1802 = table_cdp1802.o
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o
 OBJS_mc68000 = table_mc68000.o reg_mc68000.o
+OBJS_z8000   = table_z8000.o   reg_z8000.o
 OBJS	 = \
 	$(TEST_OBJS) $(OBJS_test) $(OBJS_asm) $(OBJS_dis) $(OBJS_gen) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
@@ -209,7 +233,8 @@ OBJS	 = \
 	$(OBJS_ins8070) asm_ins8070.o dis_ins8070.o \
 	$(OBJS_cdp1802) asm_cdp1802.o dis_cdp1802.o \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
-	$(OBJS_mc68000) asm_mc68000.o dis_mc68000.o
+	$(OBJS_mc68000) asm_mc68000.o dis_mc68000.o \
+	$(OBJS_z8000)   asm_z8000.o   dis_z8000.o
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
@@ -260,6 +285,10 @@ test_dis_tms9900: test_dis_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_dis) $
 test_asm_mc68000: test_asm_mc68000.o asm_mc68000.o $(OBJS_mc68000) $(OBJS_asm) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_dis) $(OBJS_test)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_asm_z8000:   test_asm_z8000.o   asm_z8000.o   $(OBJS_z8000)   $(OBJS_asm) $(OBJS_test)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_dis_z8000:   test_dis_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_dis) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_expr_moto:   test_expr_moto.o  $(OBJS_expr) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
@@ -319,6 +348,10 @@ gen_tms9900: gen_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_gen)
 gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_mc68000 -u -C 68000 -o gen_mc68000.asm
+gen_z8000:   gen_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_gen)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+	./gen_z8000 -C Z8001 -o gen_z8001.asm
+	./gen_z8000 -C Z8002 -o gen_z8002.asm
 
 clean: clean-obj
 	-rm -f $(TESTS)

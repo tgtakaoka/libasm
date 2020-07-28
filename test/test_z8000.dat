@@ -1,0 +1,4 @@
+        .section        bss1
+data1234:
+        .section        bss2
+data5678:

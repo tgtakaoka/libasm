@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#include "dis_z8000.h"
+#include "gen_driver.h"
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 4
-#define LIBASM_VERSION_PATCH 12
-#define LIBASM_VERSION_STRING "1.4.12"
+using namespace libasm::z8000;
+using namespace libasm::test;
 
-#endif // __VERSION_H__
+int main(int argc, const char **argv) {
+    DisZ8000 dis8000;
+    dis8000.setRelativeTarget(true);
+    GenDriver<Config> driver(dis8000);
+    if (driver.main(argc, argv))
+        return 1;
+
+    TestGenerator<Config> generator(dis8000);
+    generator.generate(driver);
+
+    return driver.close();
+}
 
 // Local Variables:
 // mode: c++
