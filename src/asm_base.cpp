@@ -48,13 +48,13 @@ uint32_t Assembler::lookupSymbol(const char *symbol) const {
     return _symtab ? _symtab->lookupSymbol(symbol) : 0;
 }
 
-bool Assembler::endOfLine(const char *scan) {
+bool Assembler::endOfLine(const char *scan) const {
     return *scan == 0 || *scan == ';';
 }
 
 Error Assembler::checkLineEnd(const char *scan) {
     if (scan == nullptr) scan = _scan;
-    if (endOfLine(skipSpaces(scan)))
+    if (this->endOfLine(skipSpaces(scan)))
         return getError();
     return setErrorIf(GARBAGE_AT_END);
 }

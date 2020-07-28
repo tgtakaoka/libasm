@@ -131,7 +131,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     }
     skipSpaces();
 
-    if (*_scan && *_scan != ';') {
+    if (!_assembler->endOfLine(_scan)) {
         _list.instruction = _scan;
         const char *end = _list.instruction;
         while (*end && !isspace(*end)) end++;
@@ -168,7 +168,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         }
     }
 
-    if (*_scan == 0 || *_scan == ';') {
+    if (_assembler->endOfLine(_scan)) {
         _list.comment = _scan;
         return setError(OK); // skip comment
     }

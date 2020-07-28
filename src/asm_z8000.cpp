@@ -21,6 +21,10 @@
 namespace libasm {
 namespace z8000 {
 
+bool AsmZ8000::endOfLine(const char *scan) const {
+    return (*scan == '#') || Assembler::endOfLine(scan);
+}
+
 Error AsmZ8000::emitData(
         InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;
@@ -333,7 +337,6 @@ int8_t AsmZ8000::parseFlagNames(const char *&line) {
 
 Error AsmZ8000::parseOperand(Operand &op) {
     const char *p = _scan;
-    if (endOfLine(p)) return OK;
     if (*p == '#') {
         _scan = skipSpaces(p + 1);
         if (getOperand(op.val32)) return getError();
@@ -341,6 +344,7 @@ Error AsmZ8000::parseOperand(Operand &op) {
         op.mode = M_IM;
         return OK;
     }
+    if (endOfLine(p)) return OK;
     if (*p == '@') {
         p++;
         op.reg = _regs.parseRegName(p);

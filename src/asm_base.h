@@ -36,6 +36,7 @@ public:
 
     virtual ValueParser *getParser() = 0;
     const char *errorAt() const { return _scan; }
+    virtual bool endOfLine(const char *scan) const;
     virtual void reset() {}
 
 protected:
@@ -45,7 +46,6 @@ protected:
     void reset(const char *line, SymbolTable *symtab);
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;
-    bool endOfLine(const char *scan);
     Error checkLineEnd(const char *scan = nullptr);
     static const char *skipSpaces(const char *scan);
 

@@ -31,6 +31,7 @@ class AsmZ8000
       public Config {
 public:
     ValueParser *getParser() override { return &_parser; }
+    bool endOfLine(const char *scan) const override;
 
     // Config
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
