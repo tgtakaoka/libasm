@@ -38,12 +38,12 @@
         ld      r1,@rr2
         ld      r1,data1234
         ld      r1,data1234(r2)
-        ld      r1,r2(#data1234)
+        ld      r1,rr2(#data1234)
         ld      r1,rr2(r4)
         ld      @rr2,r1
         ld      data1234,r1
         ld      data1234(r2),r1
-        ld      r2(#data1234),r1
+        ld      rr2(#data1234),r1
         ld      rr2(r4),r1
         ld      r2,#0x5678
         ld      @rr2,#0x5678
@@ -53,12 +53,12 @@
         ldb     rh1,@rr2
         ldb     rh1,data1234
         ldb     rh1,data1234(r2)
-        ldb     rh1,r2(#data1234)
+        ldb     rh1,rr2(#data1234)
         ldb     rh1,rr2(r3)
         ldb     @rr2,rh1
         ldb     data1234,rh1
         ldb     data1234(r2),rh1
-        ldb     r2(#data1234),rh1
+        ldb     rr2(#data1234),rh1
         ldb     rr2(r3),rh1
         ldb     rh1,#0x56
         ldb     @rr2,#0x56
@@ -68,18 +68,18 @@
         ldl     rr2,@rr4
         ldl     rr2,data1234
         ldl     rr2,data1234(r4)
-        ldl     rr2,r4(#data1234)
+        ldl     rr2,rr4(#data1234)
         ldl     rr2,rr4(r6)
         ldl     @rr4,rr2
         ldl     data1234,rr2
         ldl     data1234(r4),rr2
-        ldl     r4(#data1234),rr2
+        ldl     rr4(#data1234),rr2
         ldl     rr4(r5),rr2
         ldl     rr2,#0x12345678
 # Load Address
         lda     rr2,data1234
         lda     rr2,data1234(r4)
-        lda     rr2,r4(#data1234)
+        lda     rr2,rr4(#data1234)
         lda     rr2,rr4(r6)
 # Load Address Relative
         ldar    rr2,.
