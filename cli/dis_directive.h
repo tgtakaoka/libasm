@@ -49,7 +49,7 @@ private:
     uint32_t _address;
     int _generated_size;
     const char *_instruction;
-    char _operands[40];
+    char _operands[128];
 
     // ListingLine
     uint32_t startAddress() const override;

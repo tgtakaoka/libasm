@@ -150,6 +150,8 @@ test_mc68000: test_asm_mc68000 test_dis_mc68000
 test_z8000: test_asm_z8000 test_dis_z8000
 	./test_asm_z8000
 	./test_dis_z8000
+test_ns32000: test_dis_ns32000
+	./test_dis_ns32000
 test_expr: test_expr_moto test_expr_intel test_expr_base
 	./test_expr_moto
 	./test_expr_intel
@@ -186,7 +188,8 @@ TEST_OBJS= \
 	test_asm_cdp1802.o test_dis_cdp1802.o \
 	test_asm_tms9900.o test_dis_tms9900.o \
 	test_asm_mc68000.o test_dis_mc68000.o \
-	test_asm_z8000.o   test_dis_z8000.o \
+	test_asm_z8000.o   test_dis_z8000.o   \
+	                   test_dis_ns32000.o \
 	test_expr_moto.o   test_expr_intel.o  \
 	test_expr_base.o \
 	gen_mc6809.o  \
@@ -224,6 +227,7 @@ OBJS_cdp1802 = table_cdp1802.o
 OBJS_tms9900 = table_tms9900.o reg_tms9900.o
 OBJS_mc68000 = table_mc68000.o reg_mc68000.o
 OBJS_z8000   = table_z8000.o   reg_z8000.o
+OBJS_ns32000 = table_ns32000.o reg_ns32000.o
 OBJS	 = \
 	$(TEST_OBJS) $(OBJS_test) $(OBJS_asm) $(OBJS_dis) $(OBJS_gen) \
 	$(OBJS_mc6809)  asm_mc6809.o  dis_mc6809.o  \
@@ -238,7 +242,8 @@ OBJS	 = \
 	$(OBJS_cdp1802) asm_cdp1802.o dis_cdp1802.o \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
 	$(OBJS_mc68000) asm_mc68000.o dis_mc68000.o \
-	$(OBJS_z8000)   asm_z8000.o   dis_z8000.o
+	$(OBJS_z8000)   asm_z8000.o   dis_z8000.o   \
+	$(OBJS_ns32000)               dis_ns23000.o
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
@@ -293,6 +298,8 @@ test_dis_mc68000: test_dis_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_dis) $
 test_asm_z8000:   test_asm_z8000.o   asm_z8000.o   $(OBJS_z8000)   $(OBJS_asm) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_dis_z8000:   test_dis_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_dis) $(OBJS_test)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+test_dis_ns32000: test_dis_ns32000.o dis_ns32000.o $(OBJS_ns32000) $(OBJS_dis) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 test_expr_moto:   test_expr_moto.o  $(OBJS_expr) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
