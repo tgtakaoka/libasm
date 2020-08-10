@@ -17,7 +17,6 @@
 #include "config_z8000.h"
 #include "entry_z8000.h"
 #include "table_z8000.h"
-#include "text_mos6502.h"
 #include "text_z8000.h"
 
 #include <string.h>
