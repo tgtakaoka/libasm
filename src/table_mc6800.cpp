@@ -455,7 +455,7 @@ static constexpr Config::opcode_t PREFIX_P18 = 0x18;
 static constexpr Config::opcode_t PREFIX_P1A = 0x1A;
 static constexpr Config::opcode_t PREFIX_PCD = 0xCD;
 
-bool TableMc6800::isPrefixCode(Config::opcode_t opCode) {
+bool TableMc6800::isPrefixCode(Config::opcode_t opCode) const {
     if (_cpuType == MC68HC11) {
         return opCode == PREFIX_P18 || opCode == PREFIX_P1A
             || opCode == PREFIX_PCD;
