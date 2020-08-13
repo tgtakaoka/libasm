@@ -51,17 +51,20 @@ static bool isNumber(const char *p, const char *&r) {
     if (*p == '$' && isXdigits(s, p + 1) && s - p >= 3) {
         r = s;
         return true;
-    } else if (*p == '%' && isBdigits(s, p + 1) && s - p >= 9) {
+    }
+    if (*p == '%' && isBdigits(s, p + 1) && s - p >= 9) {
         r = s;
         return true;
-    } else if (isXdigits(s, p) && toupper(*s) == 'H') {
+    }
+    if (isXdigits(s, p) && toupper(*s) == 'H') {
         r = s + 1;
         return true;
-    } else if (p[0] == '0' && toupper(p[1]) == 'X'
-               && isXdigits(s, p + 2) && s - p >= 3) {
+    }
+    if (p[0] == '0' && toupper(p[1]) == 'X' && isXdigits(s, p + 2)) {
         r = s;
         return true;
-    } else if (isDigits(s, p)) {
+    }
+    if (isDigits(s, p)) {
         r = s;
         return true;
     }

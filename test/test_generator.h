@@ -270,8 +270,8 @@ private:
     }
 
     int meaningfulTestData() {
-        const size_t size = _data.insn().length();
         std::string name(_data.insn().name());
+        const size_t size = _data.insn().length();
         name += ':';
         name += size + '0';
         auto seen = _map.find(name);
