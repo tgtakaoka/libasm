@@ -418,10 +418,8 @@ Error AsmMc68000::encode(Insn &_insn) {
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-//    printf("@@ search: name=%s sz=%d src=%d   dst=%d  \n", insn.name(), insn.oprSize(), insn.srcMode(), insn.dstMode());
     if (TableMc68000.searchName(insn))
         return setError(TableMc68000.getError());
-//    printf("@@  found: name=%s sz=%d src=%d:%d dst=%d:%d\n", insn.name(), insn.oprSize(), insn.srcMode(), insn.srcPos(), insn.dstMode(), insn.dstPos());
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     if (src == M_MULT) fixupMultiRegister(srcOp);

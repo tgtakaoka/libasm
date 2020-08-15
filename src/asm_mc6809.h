@@ -74,8 +74,6 @@ private:
     int8_t _extra;
     uint32_t _val32;
     Token nextToken(Token expect = EOL);
-    Token _nextToken(Token expect = EOL);
-    void printToken() const;
     bool tokenPointerIndex(const char *p);
     bool tokenTransferMemory(const char *p);
     bool tokenRegisterList(const char *p);

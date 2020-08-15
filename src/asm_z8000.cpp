@@ -475,10 +475,8 @@ Error AsmZ8000::encode(Insn &_insn) {
     setErrorIf(ex2Op.getError());
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, ex1Op.mode, ex2Op.mode);
-//    printf("@@ search: name=%-6s dst=%d src=%d ex1=%d ex2=%d\n", insn.name(), insn.dstMode(), insn.srcMode(), insn.ex1Mode(), insn.ex2Mode());
     if (TableZ8000.searchName(insn))
         return setError(TableZ8000.getError());
-//    printf("@@  found: name=%-6s dst=%d src=%d ex1=%d ex2=%d sz=%d opc=%04X\n", insn.name(), insn.dstMode(), insn.srcMode(), insn.ex1Mode(), insn.ex2Mode(), insn.oprSize(), insn.opCode());
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO) {
         if (emitOperand(insn, dst, dstOp, insn.dstField()))

@@ -17,11 +17,6 @@
 #include "asm_mc6809.h"
 #include "table_mc6809.h"
 
-//#define DEBUG_TOKEN
-#if defined(DEBUG_TOKEN)
-#include <stdio.h>
-#endif
-
 namespace libasm {
 namespace mc6809 {
 
@@ -404,42 +399,7 @@ bool AsmMc6809::tokenConstant(const char *p, const char immediate) {
     return true;
 }
 
-void AsmMc6809::printToken() const {
-#if defined(DEBUG_TOKEN)
-    switch (_token) {
-    case EOL: printf("EOL\n"); return;
-    case ERROR: printf("ERROR(%s)\n", errorText()); return;
-    case COMMA: printf("COMMA "); return;
-    case LBRKT: case RBRKT: printf("%c ", _token); return;
-    case IDX_PNTR: printf("IDX_PNTR(,%c) ", _reg); return;
-    case IDX_AUTO: printf("IDX_AUTO(%c%d) ", _reg, _extra); return;
-    case IDX_DISP: printf("IDX_DISP(%d %d:%c) ", _extra, _val32, _reg); return;
-    case TFM_MODE: printf("TFM_MODE(%c%c) ", _reg, _extra); return;
-    case REG_LIST: printf("REG_LIST(%d %c,%c,%02X,%c) ",
-                          _extra, _reg?_reg:'_', _reg2?_reg2:'_',
-                          _val32, _regStack?_regStack:'_'); return;
-    case REG_BITP: printf("REG_BITP(%c.%d) ", _reg, _extra); return;
-    case DIR_BITP: printf("DIR_BITP($%02X.%d) ", _val32, _extra); return;
-    case VAL_IMM:  printf("VAL_IMM(#$%X) ", _val32); return;
-    case VAL_ADDR: printf("VAL_ADDR(%d $%X) ", _extra, _val32); return;
-    }
-#endif
-}
-
-#if defined(DEBUG_TOKEN)
 AsmMc6809::Token AsmMc6809::nextToken(Token expect) {
-    _nextToken(expect);
-    printToken();
-    fflush(stdout);
-    return _token;
-}
-#else
-AsmMc6809::Token AsmMc6809::nextToken(Token expect) {
-    return _nextToken(expect);
-}
-#endif
-
-AsmMc6809::Token AsmMc6809::_nextToken(Token expect) {
     const char *p = skipSpaces(_scan);
     if (endOfLine(p))
         return _token = EOL;
@@ -617,15 +577,9 @@ Error AsmMc6809::encode(Insn &_insn) {
     _scan = endName;
 
     Operand op, extra;
-#if defined(DEBUG_TOKEN)
-    printf("@@ |operand \"%s\"; ", _scan);
-#endif
     if (parseOperand(op)) return getError();
     nextToken(COMMA);
     if (_token == COMMA) {
-#if defined(DEBUG_TOKEN)
-        printf(" |extra \"%s\"; ", _scan);
-#endif
         if (parseOperand(extra)) return getError();
         nextToken();
     }
