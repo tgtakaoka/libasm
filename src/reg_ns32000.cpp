@@ -116,6 +116,12 @@ RegName RegNs32000::decodeRegName(uint8_t num, bool floating) const {
     return RegName(num + (floating ? 'A' : '0'));
 }
 
+int8_t RegNs32000::encodeRegName(RegName name) const {
+    if (isGeneric(name)) return char(name) - '0';
+    if (isFloat(name)) return char(name) - 'A';
+    return -1;
+}
+
 uint8_t RegNs32000::regNameLen(RegName name) const {
     return NameEntry::nameLen(name, ARRAY_RANGE(REG_TABLE));
 }
@@ -168,6 +174,10 @@ PregName RegNs32000::decodePregName(uint8_t num) const {
     return entry ? PregName(pgm_read_byte(&entry->name)) : PREG_UNDEF;
 }
 
+int8_t RegNs32000::encodePregName(PregName name) const {
+    return name == PREG_UNDEF ? -1 : uint8_t(name);
+}
+
 uint8_t RegNs32000::pregNameLen(PregName name) const {
     return NameEntry::nameLen(name, ARRAY_RANGE(PREG_TABLE));
 }
@@ -211,6 +221,10 @@ MregName RegNs32000::decodeMregName(uint8_t num) const {
     const NameEntry *entry =
         NameEntry::searchName(num, ARRAY_RANGE(MREG_TABLE));
     return entry ? MregName(pgm_read_byte(&entry->name)) : MREG_UNDEF;
+}
+
+int8_t RegNs32000::encodeMregName(MregName name) const {
+    return name == MREG_UNDEF ? -1 : uint8_t(name);
 }
 
 uint8_t RegNs32000::mregNameLen(MregName name) const {

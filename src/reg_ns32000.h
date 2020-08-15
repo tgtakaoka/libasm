@@ -92,6 +92,7 @@ public:
 
     RegName parseRegName(const char *line) const;
     RegName decodeRegName(uint8_t num, bool floating = false) const;
+    int8_t encodeRegName(RegName name) const;
     uint8_t regNameLen(RegName name) const;
     char *outRegName(char *out, const RegName name) const;
     bool isGeneric(RegName name) const;
@@ -99,11 +100,13 @@ public:
 
     PregName parsePregName(const char *line) const;
     PregName decodePregName(uint8_t num) const;
+    int8_t encodePregName(PregName name) const;
     uint8_t pregNameLen(PregName name) const;
     char *outPregName(char *out, PregName name) const;
 
     MregName parseMregName(const char *line) const;
     MregName decodeMregName(uint8_t num) const;
+    int8_t encodeMregName(MregName name) const;
     uint8_t mregNameLen(MregName name) const;
     char *outMregName(char *out, MregName name) const;
 

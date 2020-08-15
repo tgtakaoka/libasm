@@ -236,6 +236,18 @@ static const Entry FORMAT_5_1[] PROGMEM = {
     E(0x0D, SKPSW,  WORD, M_SOPT, M_NONE, P_SHORT, P_NONE)
     E(0x0F, SKPSD,  LONG, M_SOPT, M_NONE, P_SHORT, P_NONE)
     E(0x8C, SKPST,  BYTE, M_SOPT, M_NONE, P_SHORT, P_NONE)
+    E(0x00, MOVSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x01, MOVSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x03, MOVSD,  LONG, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x80, MOVST,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x04, CMPSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x05, CMPSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x07, CMPSD,  LONG, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x84, CMPST,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x0C, SKPSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x0D, SKPSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x0F, SKPSD,  LONG, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x8C, SKPST,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
 };
 
 // Format 6: |gen1_|gen| |2_|_op_|ii| |0100|1110|
@@ -470,14 +482,47 @@ bool TableNs32000::isPrefixCode(Config::opcode_t opCode) const {
     return false;
 }
 
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table) return true;
+    if (opr == M_GREG)
+        return table == M_GENR || table == M_GENC || table == M_GENW
+            || table == M_PUSH || table == M_POP;
+    if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT
+        || opr == M_TOS || opr == M_MEM)
+        return table == M_GENR || table == M_GENC || table == M_GENW
+            || table == M_FENR || table == M_FENW;
+    if (opr == M_IMM)
+        return table == M_GENR || table == M_GENC || table == M_FENR
+            || table == M_DISP || table == M_INT4 || table == M_REL
+            || table == M_BFOFF || table == M_BFLEN || table == M_LEN32
+            || table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
+    if (opr == M_FREG) return table == M_FENR || table == M_FENW;
+    if (opr == M_PUSH) return table == M_POP;
+    return false;
+}
+
+static bool acceptModes(uint32_t flags, const Entry *entry) {
+    const uint32_t table = pgm_read_dword(&entry->flags);
+    return acceptMode(Entry::_mode(Entry::_src(flags)), Entry::_mode(Entry::_src(table)))
+        && acceptMode(Entry::_mode(Entry::_dst(flags)), Entry::_mode(Entry::_dst(table)))
+        && acceptMode(Entry::_mode(Entry::_ex1(flags)), Entry::_mode(Entry::_ex1(table)))
+        && acceptMode(Entry::_ex2Mode(Entry::_ex2(flags)), Entry::_ex2Mode(Entry::_ex2(table)));
+}
+
 Error TableNs32000::searchName(
     InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
+    const uint32_t flags = Entry::_flags(
+            Entry::_opr(insn.srcMode(), P_NONE),
+            Entry::_opr(insn.dstMode(), P_NONE),
+            Entry::_opr(insn.ex1Mode(), P_NONE),
+            Entry::_ex2(insn.ex2Mode(), P_NONE, SZ_NONE));
     for (const EntryPage *page = pages; page < end; page++) {
         const uint8_t post = pgm_read_byte(&page->post);
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry>(insn.name(), table, end);
+        const Entry *entry = TableBase::searchName<Entry, uint32_t>(
+                insn.name(), flags, table, end, acceptModes, count);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
             insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);

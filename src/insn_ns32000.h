@@ -69,6 +69,34 @@ public:
         return pos == P_GEN1 ? _indexByte1 : _indexByte2;
     }
 
+    void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
+        _src = Entry::_opr(src, P_NONE);
+        _dst = Entry::_opr(dst, P_NONE);
+        _ex1 = Entry::_opr(ex1, P_NONE);
+        _ex2 = Entry::_ex2(ex2, P_NONE, SZ_NONE);
+    }
+    void embed(Config::opcode_t data) {
+        _opCode |= data;
+    }
+    void embedPost(Config::opcode_t data) {
+        _post |= data;
+    }
+    void emitInsn() {
+        uint8_t pos = 0;
+        if (hasPrefix()) emitByte(_prefix, pos++);
+        emitByte(_opCode, pos++);
+        if (hasPost()) emitByte(_post, pos);
+    }
+    void emitOperand8(uint8_t val8) {
+        emitByte(val8, operandPos());
+    }
+    void emitOperand16(uint16_t val16) {
+        emitUint16(val16, operandPos());
+    }
+    void emitOperand32(uint32_t val32) {
+        emitUint32(val32, operandPos());
+    }
+
 private:
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
@@ -80,6 +108,27 @@ private:
     bool _hasPost;
     uint8_t _indexByte1;
     uint8_t _indexByte2;
+
+    uint8_t operandPos() {
+        uint8_t pos = _insn.length();
+        if (pos == 0) {
+            if (hasPrefix()) pos++;
+            pos++;
+            if (hasPost()) pos++;
+        }
+        return pos;
+    }
+    void emitByte(uint8_t val, uint8_t pos) {
+        _insn.emitByte(val, pos);
+    }
+    void emitUint16(uint16_t val, uint8_t pos) {
+        emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
+        emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
+    }
+    void emitUint32(uint32_t val, uint8_t pos) {
+        emitUint16(static_cast<uint16_t>(val >> 16), pos + 0);
+        emitUint16(static_cast<uint16_t>(val >> 0),  pos + 2);
+    }
 };
 
 } // namespace ns32000
