@@ -460,17 +460,19 @@ static void test_restart() {
 // 11 aaa 111 RST aaa
 
 static void test_illegal() {
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x08);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x10);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
-    if (is8080()) ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
-    if (is8080()) ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xED);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFD);
+    if (is8080()) {
+        ILLEGAL(0x20);
+        ILLEGAL(0x30);
+    }
+    ILLEGAL(0x08);
+    ILLEGAL(0x10);
+    ILLEGAL(0x18);
+    ILLEGAL(0x28);
+    ILLEGAL(0x38);
+    ILLEGAL(0xD9);
+    ILLEGAL(0xDD);
+    ILLEGAL(0xED);
+    ILLEGAL(0xFD);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

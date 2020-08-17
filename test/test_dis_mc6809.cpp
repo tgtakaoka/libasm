@@ -1045,36 +1045,6 @@ static void test_bit_position() {
     TEST(LDBT, "B.2,<dir34.4",  0x11, 0x36, 0xA2, 0x34);
 }
 
-static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
-    char operands[40];
-    Insn insn;
-    const uint8_t codes[] = { prefix, opc };
-    if (prefix == 0) {
-        memory.setMemory(&codes[1], 1);
-    } else {
-        memory.setMemory(&codes[0], 2);
-    }
-    disassembler.decode(memory, insn, operands, nullptr);
-    char message[40];
-    if (prefix == 0) {
-        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, opc);
-    } else {
-        sprintf(message, "%s opecode 0x%02x 0x%02x", __FUNCTION__, prefix, opc);
-    }
-    asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-}
-
-static void assert_postbyte(uint8_t opc, uint8_t post) {
-    char operands[40];
-    Insn insn;
-    const uint8_t codes[] = { opc, post, 0, 0 };
-    memory.setMemory(&codes[0], sizeof(codes));
-    disassembler.decode(memory, insn, operands, nullptr);
-    char message[40];
-    sprintf(message, "%s opecode 0x%02x 0x%02x", __FUNCTION__, opc, post);
-    asserter.equals(message, UNKNOWN_POSTBYTE, disassembler.getError());
-}
-
 static void test_illegal_mc6809() {
     const uint8_t p00_illegals[] = {
         0x01, 0x02, 0x05, 0x0b,
@@ -1088,7 +1058,7 @@ static void test_illegal_mc6809() {
         0xc7, 0xcd, 0xcf,
     };
     for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        assert_illegal(p00_illegals[idx]);
+        ILLEGAL(p00_illegals[idx]);
 
     const uint8_t p10_legals[] = {
         0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
@@ -1104,8 +1074,10 @@ static void test_illegal_mc6809() {
     };
     uint8_t idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
-            assert_illegal(opc++, 0x10);
+        if (idx == sizeof(p10_legals) || opc < p10_legals[idx]) {
+            ILLEGAL(0x10, uint8_t(opc));
+            opc++;
+        }
         else idx++;
     }
 
@@ -1118,8 +1090,10 @@ static void test_illegal_mc6809() {
     };
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
-            assert_illegal(opc++, 0x11);
+        if (idx == sizeof(p11_legals) || opc < p11_legals[idx]) {
+            ILLEGAL(0x11, uint8_t(opc));
+            opc++;
+        }
         else idx++;
     }
 
@@ -1138,7 +1112,7 @@ static void test_illegal_mc6809() {
         0xf7, 0xfa, 0xfe, 0xff,
     };
     for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
-        assert_postbyte(0xA6, post_illegals[idx]);
+        ETEST(UNKNOWN_POSTBYTE, _, "", 0xA6, post_illegals[idx], 0, 0);
 }
 
 static void test_illegal_hd6309() {
@@ -1151,7 +1125,7 @@ static void test_illegal_hd6309() {
         0xc7, 0xcf,
     };
     for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        assert_illegal(p00_illegals[idx]);
+        ILLEGAL(p00_illegals[idx]);
 
     const uint8_t p10_legals[] = {
         0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
@@ -1176,8 +1150,10 @@ static void test_illegal_hd6309() {
     };
     uint8_t idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
-            assert_illegal(opc++, 0x10);
+        if (idx == sizeof(p10_legals) || opc < p10_legals[idx]) {
+            ILLEGAL(0x10, uint8_t(opc));
+            opc++;
+        }
         else idx++;
     }
 
@@ -1197,8 +1173,10 @@ static void test_illegal_hd6309() {
     };
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
-            assert_illegal(opc++, 0x11);
+        if (idx == sizeof(p11_legals) || opc < p11_legals[idx]) {
+            ILLEGAL(0x11, uint8_t(opc));
+            opc++;
+        }
         else idx++;
     }
 
@@ -1206,7 +1184,7 @@ static void test_illegal_hd6309() {
         0x92, 0xb2, 0xbf, 0xd2, 0xdf, 0xf2, 0xff,
     };
     for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
-        assert_postbyte(0xA6, post_illegals[idx]);
+        ETEST(UNKNOWN_POSTBYTE, _, "", 0xA6, post_illegals[idx], 0, 0);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

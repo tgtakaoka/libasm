@@ -209,17 +209,6 @@ static void test_alu_immediate() {
     TEST(LDI, "minus1", 0xC4, 0xFF);
 }
 
-static void assert_illegal(uint8_t opc) {
-    char operands[40];
-    Insn insn;
-    const uint8_t codes[] = { opc };
-    memory.setMemory(&codes[0], 1);
-    disassembler.decode(memory, insn, operands, nullptr);
-    char message[40];
-    sprintf(message, "%s opecode 0x%02x", __FUNCTION__, opc);
-    asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-}
-
 static void test_illegal() {
     const uint8_t illegals[] = {
         0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
@@ -245,7 +234,7 @@ static void test_illegal() {
         0xCC,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

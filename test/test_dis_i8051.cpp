@@ -375,7 +375,7 @@ static void test_absolute() {
 }
 
 static void test_illegal() {
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xA5);
+    ILLEGAL(0xA5);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

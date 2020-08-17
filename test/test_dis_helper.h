@@ -52,6 +52,8 @@ void dis_assert(
     __VASSERT(__FILE__, __LINE__, error, 0x0000, name, opr, __VA_ARGS__)
 #define TEST(name, opr, ...) ETEST(OK, name, opr, __VA_ARGS__)
 
+#define ILLEGAL(...) ETEST(UNKNOWN_INSTRUCTION, _, "", __VA_ARGS__)
+
 #define RUN_TEST(test) run_test(test, #test)
 
 #endif

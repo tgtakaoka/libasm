@@ -48,7 +48,7 @@ static void test_inherent() {
     TEST(IDL,  "", 0x00);
     TEST(NOP,  "", 0xC4);
     TEST(IRX,  "", 0x60);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x68);
+    ILLEGAL(0x68);
     TEST(SAV,  "", 0x78);
     TEST(MARK, "", 0x79);
     TEST(REQ,  "", 0x7A);

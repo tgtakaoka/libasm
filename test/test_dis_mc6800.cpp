@@ -748,25 +748,6 @@ static void test_acc_delimitor() {
     TEST(EOR, "B,6,X",    0xE8, 0x06);
 }
 
-static void assert_illegal(uint8_t opc, uint8_t prefix = 0) {
-    char operands[40];
-    Insn insn;
-    const uint8_t codes[] = { prefix, opc, 0x00, 0x00, 0x00 };
-    if (prefix == 0) {
-        memory.setMemory(&codes[1], 4);
-    } else {
-        memory.setMemory(&codes[0], 5);
-    }
-    disassembler.decode(memory, insn, operands, nullptr);
-    char message[40];
-    if (prefix == 0) {
-        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, opc);
-    } else {
-        sprintf(message, "%s opecode 0x%02x 0x%02x", __FUNCTION__, prefix, opc);
-    }
-    asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-}
-
 static void test_illegal_mc6800() {
     const uint8_t illegals[] = {
         0x00, 0x02, 0x03, 0x04, 0x05,
@@ -779,7 +760,7 @@ static void test_illegal_mc6800() {
         0xE3, 0xEC, 0xED, 0xF3, 0xFC, 0xFD,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_mc6801() {
@@ -792,7 +773,7 @@ static void test_illegal_mc6801() {
         0xC7, 0xCD, 0xCF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_hd6301() {
@@ -804,7 +785,7 @@ static void test_illegal_hd6301() {
         0xC7, 0xCD, 0xCF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_mc68hc11() {
@@ -816,7 +797,7 @@ static void test_illegal_mc68hc11() {
         0xC7,
     };
     for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        assert_illegal(p00_illegals[idx]);
+        ILLEGAL(p00_illegals[idx]);
 
     const uint8_t p18_legals[] = {
         0x08, 0x09,
@@ -835,7 +816,7 @@ static void test_illegal_mc68hc11() {
     uint8_t idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
         if (idx == sizeof(p18_legals) || opc < p18_legals[idx])
-            assert_illegal(opc, 0x18);
+            ILLEGAL(0x18, uint8_t(opc));
         else idx++;
     }
 
@@ -845,7 +826,7 @@ static void test_illegal_mc68hc11() {
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
         if (idx == sizeof(p1a_legals) || opc < p1a_legals[idx])
-            assert_illegal(opc, 0x1a);
+            ILLEGAL(0x1A, uint8_t(opc));
         else idx++;
     }
 
@@ -855,7 +836,7 @@ static void test_illegal_mc68hc11() {
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
         if (idx == sizeof(pcd_legals) || opc < pcd_legals[idx])
-            assert_illegal(opc, 0xcd);
+            ILLEGAL(0xCD, uint8_t(opc));
         else idx++;
     }
 }

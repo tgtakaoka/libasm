@@ -766,41 +766,31 @@ static void test_bitop_indexed() {
 }
 
 static void test_illegal_i8080() {
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x08);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x10);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);
-    if (is8080()) ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x28);
-    if (is8080()) ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0x38);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD9);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDD);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xED);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFD);
-}
-
-static void assert_illegal(uint8_t prefix, uint8_t opc, uint8_t opr1 = 0, uint8_t opr2 = 0) {
-    char operands[40];
-    Insn insn;
-    const uint8_t codes[] = { prefix, opc, opr1, opr2 };
-    memory.setMemory(&codes[0], sizeof(codes));
-    disassembler.decode(memory, insn, operands, nullptr);
-    char message[40];
-    sprintf(message, "%s opecode %02X %02X %02X %02X",
-            __FUNCTION__, prefix, opc, opr1, opr2);
-    asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+    if (is8080()) {
+        ILLEGAL(0x20);
+        ILLEGAL(0x30);
+    }
+    ILLEGAL(0x08);
+    ILLEGAL(0x10);
+    ILLEGAL(0x18);
+    ILLEGAL(0x28);
+    ILLEGAL(0x38);
+    ILLEGAL(0xD9);
+    ILLEGAL(0xDD);
+    ILLEGAL(0xED);
+    ILLEGAL(0xFD);
 }
 
 static void test_illegal_z80() {
     for (uint8_t opc = 0x30; opc < 0x38; opc++)
-        assert_illegal(0xCB, opc);
+        ILLEGAL(0xCB, opc);
 
     for (uint8_t opc = 0x00; opc < 0x40; opc++)
-        assert_illegal(0xED, opc);
+        ILLEGAL(0xED, opc);
     for (uint8_t opc = 0x7C; opc < 0xA0; opc++)
-        assert_illegal(0xED, opc);
+        ILLEGAL(0xED, opc);
     for (uint8_t opc = 0xBC; opc; opc++)
-        assert_illegal(0xED, opc);
+        ILLEGAL(0xED, opc);
     const uint8_t ed_illegals[] = {
         0x4C, 0x4E,
         0x54, 0x55, 0x5C, 0x5D,
@@ -810,7 +800,7 @@ static void test_illegal_z80() {
         0xB4, 0xB5, 0xB6, 0xB7,
     };
     for (size_t idx = 0; idx < sizeof(ed_illegals); idx++)
-        assert_illegal(0xED, ed_illegals[idx]);
+        ILLEGAL(0xED, ed_illegals[idx], 0, 0);
 
     const uint8_t ddfd_legals[] = {
         0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B, 0x34, 0x35, 0x36, 0x39,
@@ -823,8 +813,10 @@ static void test_illegal_z80() {
     while (true) {
         int idx = 0;
         for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (idx == sizeof(ddfd_legals) || opc < ddfd_legals[idx])
-                assert_illegal(prefix, opc++);
+            if (idx == sizeof(ddfd_legals) || opc < ddfd_legals[idx]) {
+                ILLEGAL(prefix, uint8_t(opc), 0);
+                opc++;
+            }
             else idx++;
         }
         if (prefix == 0xfd) break;
@@ -841,8 +833,10 @@ static void test_illegal_z80() {
     while (true) {
         int idx = 0;
         for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (idx == sizeof(ddfdcb_legals) || opc < ddfdcb_legals[idx])
-                assert_illegal(prefix, 0xCB, 0x00, opc++);
+            if (idx == sizeof(ddfdcb_legals) || opc < ddfdcb_legals[idx]) {
+                ILLEGAL(prefix, 0xCB, 0x00, uint8_t(opc));
+                opc++;
+            }
             else idx++;
         }
         if (prefix == 0xfd) break;

@@ -917,9 +917,6 @@ static void test_zpg_rel() {
 }
 
 static void test_illegal_mos6502() {
-    Insn insn;
-    char operands[40];
-
     const uint8_t illegals[] = {
         0x80,
         0x02, 0x12, 0x22, 0x32, 0x42, 0x52, 0x62, 0x72, 0x82, 0x92, 0xB2, 0xC2, 0xD2, 0xE2, 0xF2,
@@ -933,19 +930,11 @@ static void test_illegal_mos6502() {
         0x9E,
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0xBF, 0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setMemory(&illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, illegals[idx]);
-        asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_w65sc02() {
-    Insn insn;
-    char operands[40];
-
     const uint8_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xA3, 0xB3, 0xC3, 0xD3, 0xE3, 0xF3,
@@ -955,19 +944,11 @@ static void test_illegal_w65sc02() {
         0x5C, 0xDC, 0xFC,
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0x7F, 0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setMemory(&illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, illegals[idx]);
-        asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_r65c02() {
-    Insn insn;
-    char operands[40];
-
     const uint8_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xA3, 0xB3, 0xC3, 0xD3, 0xE3, 0xF3,
@@ -975,19 +956,11 @@ static void test_illegal_r65c02() {
         0x0B, 0x1B, 0x2B, 0x3B, 0x4B, 0x5B, 0x6B, 0xBB, 0x8B, 0x9B, 0xAB, 0xBB, 0xCB, 0xDB, 0xEB, 0xFB,
         0x5C, 0xDC, 0xFC,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setMemory(&illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, illegals[idx]);
-        asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_w65c02s() {
-    Insn insn;
-    char operands[40];
-
     const uint8_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xA3, 0xB3, 0xC3, 0xD3, 0xE3, 0xF3,
@@ -995,13 +968,8 @@ static void test_illegal_w65c02s() {
         0x0B, 0x1B, 0x2B, 0x3B, 0x4B, 0x5B, 0x6B, 0xBB, 0x8B, 0x9B, 0xAB, 0xBB, 0xEB, 0xFB,
         0x5C, 0xDC, 0xFC,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++) {
-        memory.setMemory(&illegals[idx], 1);
-        disassembler.decode(memory, insn, operands, nullptr);
-        char message[40];
-        sprintf(message, "%s opecode 0x%02x", __FUNCTION__, illegals[idx]);
-        asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-    }
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        ILLEGAL(illegals[idx]);
 }
 
 static void run_test(void (*test)(), const char *test_name) {

@@ -572,17 +572,6 @@ static void test_bit_operation() {
     TEST(BTJRT, "$,R3,#4", 0x37, 0x39, 0xFD);
 }
 
-static void assert_illegal(uint8_t opc) {
-    char operands[40];
-    Insn insn;
-    const uint8_t codes[] = { opc };
-    memory.setMemory(&codes[0], 1);
-    disassembler.decode(memory, insn, operands, nullptr);
-    char message[40];
-    sprintf(message, "%s opecode 0x%02x", __FUNCTION__, opc);
-    asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-}
-
 static void test_illegal_z8() {
     const uint8_t illegals[] = {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0x7F,
@@ -594,7 +583,7 @@ static void test_illegal_z8() {
         0xF2, 0xF4, 0xF6, 0xF7,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_z86c() {
@@ -608,7 +597,7 @@ static void test_illegal_z86c() {
         0xF2, 0xF4, 0xF6, 0xF7,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void test_illegal_z88() {
@@ -616,7 +605,7 @@ static void test_illegal_z88() {
         0x6F, 0x7F, 0xD5,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        assert_illegal(illegals[idx]);
+        ILLEGAL(illegals[idx]);
 }
 
 static void run_test(void (*test)(), const char *test_name) {
