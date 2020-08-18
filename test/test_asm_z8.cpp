@@ -55,30 +55,20 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu z8", true, assembler.setCpu("z8"));
-    asserter.equals(
-        "get cpu", "Z8", assembler.getCpu());
+    EQUALS("cpu z8", true, assembler.setCpu("z8"));
+    EQUALS("cpu z8", "Z8", assembler.getCpu());
 
-    asserter.equals(
-        "cpu Z8601", true, assembler.setCpu("Z8601"));
-    asserter.equals(
-        "get cpu", "Z8", assembler.getCpu());
+    EQUALS("cpu Z8601", true, assembler.setCpu("Z8601"));
+    EQUALS("cpu Z8601", "Z8", assembler.getCpu());
 
-    asserter.equals(
-        "cpu Z86C91", true, assembler.setCpu("Z86C91"));
-    asserter.equals(
-        "get cpu", "Z86C", assembler.getCpu());
+    EQUALS("cpu Z86C91", true,   assembler.setCpu("Z86C91"));
+    EQUALS("cpu Z86C91", "Z86C", assembler.getCpu());
 
-    asserter.equals(
-        "cpu Super8", true, assembler.setCpu("Super8"));
-    asserter.equals(
-        "get cpu", "Z88", assembler.getCpu());
+    EQUALS("cpu Super8", true,  assembler.setCpu("Super8"));
+    EQUALS("cpu Super8", "Z88", assembler.getCpu());
 
-    asserter.equals(
-        "cpu Z88C00", true, assembler.setCpu("Z88C00"));
-    asserter.equals(
-        "get cpu", "Z88", assembler.getCpu());
+    EQUALS("cpu Z88C00", true,  assembler.setCpu("Z88C00"));
+    EQUALS("cpu Z88C00", "Z88", assembler.getCpu());
 }
 
 static void test_implied() {

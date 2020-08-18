@@ -33,15 +33,11 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 8051", true, assembler.setCpu("8051"));
-    asserter.equals(
-        "get cpu", "8051", assembler.getCpu());
+    EQUALS("cpu 8051", true,   assembler.setCpu("8051"));
+    EQUALS("cpu 8051", "8051", assembler.getCpu());
 
-    asserter.equals(
-        "cpu I8051", true, assembler.setCpu("I8051"));
-    asserter.equals(
-        "get cpu", "8051", assembler.getCpu());
+    EQUALS("cpu I8051", true,   assembler.setCpu("I8051"));
+    EQUALS("cpu I8051", "8051", assembler.getCpu());
 }
 
 static void test_implied() {

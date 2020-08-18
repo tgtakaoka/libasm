@@ -37,15 +37,11 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 8001", true, assembler.setCpu("Z8001"));
-    asserter.equals(
-        "get cpu", "Z8001", assembler.getCpu());
+    EQUALS("cpu 8001", true,    assembler.setCpu("Z8001"));
+    EQUALS("cpu 8001", "Z8001", assembler.getCpu());
 
-    asserter.equals(
-        "cpu Z8002", true, assembler.setCpu("Z8002"));
-    asserter.equals(
-        "get cpu", "Z8002", assembler.getCpu());
+    EQUALS("cpu Z8002", true,    assembler.setCpu("Z8002"));
+    EQUALS("cpu Z8002", "Z8002", assembler.getCpu());
 }
 
 static void test_load_and_exchange() {

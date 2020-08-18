@@ -42,6 +42,8 @@ void asm_assert(
 } // namespace test
 } // namespace libasm
 
+#define EQUALS(msg, expected, actual) \
+    asserter.equals(__FILE__, __LINE__, msg, expected, actual)
 #define __VASSERT(file, line, error, addr, src, ...)            \
     do {                                                        \
         const Config::opcode_t expected[] = { __VA_ARGS__ };    \

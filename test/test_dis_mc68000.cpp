@@ -34,20 +34,17 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 68000", true, disassembler.setCpu("68000"));
-    asserter.equals(
-        "get cpu", "68000", disassembler.getCpu());
+    EQUALS("cpu 68000", true,    disassembler.setCpu("68000"));
+    EQUALS("cpu 68000", "68000", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 68K", true, disassembler.setCpu("68K"));
-    asserter.equals(
-        "get cpu", "68000", disassembler.getCpu());
+    EQUALS("cpu MC68000", true,    disassembler.setCpu("MC68000"));
+    EQUALS("cpu MC68000", "68000", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu MC68000", true, disassembler.setCpu("MC68000"));
-    asserter.equals(
-        "get cpu", "68000", disassembler.getCpu());
+    EQUALS("cpu 68008", true,    disassembler.setCpu("68008"));
+    EQUALS("cpu 68008", "68000", disassembler.getCpu());
+
+    EQUALS("cpu MC68008", true,    disassembler.setCpu("MC68008"));
+    EQUALS("cpu MC68008", "68000", disassembler.getCpu());
 }
 
 static void test_data_move() {

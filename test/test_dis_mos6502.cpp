@@ -54,60 +54,38 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 6502", true, disassembler.setCpu("6502"));
-    asserter.equals(
-        "get cpu", "6502", disassembler.getCpu());
+    EQUALS("cpu 6502", true,   disassembler.setCpu("6502"));
+    EQUALS("cpu 6502", "6502", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 65SC02", true, disassembler.setCpu("65SC02"));
-    asserter.equals(
-        "get cpu", "65SC02", disassembler.getCpu());
+    EQUALS("cpu 65SC02", true,     disassembler.setCpu("65SC02"));
+    EQUALS("cpu 65SC02", "65SC02", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 65C02", true, disassembler.setCpu("65C02"));
-    asserter.equals(
-        "get cpu", "65C02", disassembler.getCpu());
+    EQUALS("cpu 65C02", true,    disassembler.setCpu("65C02"));
+    EQUALS("cpu 65C02", "65C02", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu MOS6502", true, disassembler.setCpu("MOS6502"));
-    asserter.equals(
-        "get cpu", "6502", disassembler.getCpu());
+    EQUALS("cpu MOS6502", true,   disassembler.setCpu("MOS6502"));
+    EQUALS("cpu MOS6502", "6502", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu W65SC02", true, disassembler.setCpu("W65SC02"));
-    asserter.equals(
-        "get cpu", "65SC02", disassembler.getCpu());
+    EQUALS("cpu W65SC02", true,     disassembler.setCpu("W65SC02"));
+    EQUALS("cpu W65SC02", "65SC02", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu R65C02", true, disassembler.setCpu("R65C02"));
-    asserter.equals(
-        "get cpu", "65C02", disassembler.getCpu());
+    EQUALS("cpu R65C02", true,    disassembler.setCpu("R65C02"));
+    EQUALS("cpu R65C02", "65C02", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu W65C02S", true, disassembler.setCpu("W65C02S"));
-    asserter.equals(
-        "get cpu", "W65C02S", disassembler.getCpu());
+    EQUALS("cpu W65C02S", true,      disassembler.setCpu("W65C02S"));
+    EQUALS("cpu W65C02S", "W65C02S", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 65816", true, disassembler.setCpu("65816"));
-    asserter.equals(
-        "get cpu", "65816", disassembler.getCpu());
+    EQUALS("cpu 65816", true,    disassembler.setCpu("65816"));
+    EQUALS("cpu 65816", "65816", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu W65816", true, disassembler.setCpu("W65816"));
-    asserter.equals(
-        "get cpu", "65816", disassembler.getCpu());
+    EQUALS("cpu W65816", true,    disassembler.setCpu("W65816"));
+    EQUALS("cpu W65816", "65816", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu W65C816", true, disassembler.setCpu("W65C816"));
-    asserter.equals(
-        "get cpu", "65816", disassembler.getCpu());
+    EQUALS("cpu W65C816", true,    disassembler.setCpu("W65C816"));
+    EQUALS("cpu W65C816", "65816", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu W65C816S", true, disassembler.setCpu("W65C816S"));
-    asserter.equals(
-        "get cpu", "65816", disassembler.getCpu());
+    EQUALS("cpu W65C816S", true,    disassembler.setCpu("W65C816S"));
+    EQUALS("cpu W65C816S", "65816", disassembler.getCpu());
 }
 
 static void test_impl() {

@@ -27,21 +27,23 @@ TestAsserter asserter;
 TestMemory memory;
 TestSymtab symtab;
 
+static char actual_opr[128];
+static char message[256];
+
 void dis_assert(
     const char *file, int line, Error error,
     const char *expected_name, const char *expected_opr,
     Disassembler &disassembler) {
     Insn insn;
-    char actual_opr[40], message[80];
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, actual_opr, &symtab);
-    sprintf(message, "%s:%d: %s: ", file, line, expected_name);
+    strcpy(message, expected_name);
     memory.dump(message + strlen(message));
-    asserter.equals(message, error, disassembler);
+    asserter.equals(file, line, expected_name, error, disassembler);
     if (error == OK) {
-        asserter.equals(message, expected_name, insn.name());
-        asserter.equals(message, expected_opr, actual_opr);
-        asserter.equals(message,
+        asserter.equals(file, line, expected_name, expected_name, insn.name());
+        asserter.equals(file, line, expected_name, expected_opr, actual_opr);
+        asserter.equals(file, line, expected_name,
                         memory.bytes(), memory.length(),
                         insn.bytes(), insn.length());
     }

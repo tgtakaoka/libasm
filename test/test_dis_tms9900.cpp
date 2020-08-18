@@ -46,35 +46,23 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 9900", true, disassembler.setCpu("9900"));
-    asserter.equals(
-        "get cpu", "TMS9900", disassembler.getCpu());
+    EQUALS("cpu 9900", true,      disassembler.setCpu("9900"));
+    EQUALS("cpu 9900", "TMS9900", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 9995", true, disassembler.setCpu("9995"));
-    asserter.equals(
-        "get cpu", "TMS9995", disassembler.getCpu());
+    EQUALS("cpu 9995", true,      disassembler.setCpu("9995"));
+    EQUALS("cpu 9995", "TMS9995", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 99105", true, disassembler.setCpu("99105"));
-    asserter.equals(
-        "get cpu", "TMS99105", disassembler.getCpu());
+    EQUALS("cpu 99105", true,       disassembler.setCpu("99105"));
+    EQUALS("cpu 99105", "TMS99105", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu TMS9900", true, disassembler.setCpu("TMS9900"));
-    asserter.equals(
-        "get cpu", "TMS9900", disassembler.getCpu());
+    EQUALS("cpu TMS9900", true,      disassembler.setCpu("TMS9900"));
+    EQUALS("cpu TMS9900", "TMS9900", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu TMS9995", true, disassembler.setCpu("TMS9995"));
-    asserter.equals(
-        "get cpu", "TMS9995", disassembler.getCpu());
+    EQUALS("cpu TMS9995", true,      disassembler.setCpu("TMS9995"));
+    EQUALS("cpu TMS9995", "TMS9995", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu TMS99105", true, disassembler.setCpu("TMS99105"));
-    asserter.equals(
-        "get cpu", "TMS99105", disassembler.getCpu());
+    EQUALS("cpu TMS99105", true,       disassembler.setCpu("TMS99105"));
+    EQUALS("cpu TMS99105", "TMS99105", disassembler.getCpu());
 }
 
 static void test_inh() {
@@ -386,14 +374,11 @@ static void assert_mid(
     const uint16_t prefix = 0, const mid_hole *hole = nullptr) {
     uint8_t bytes[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     Insn insn;
-    char operands[40], message[40], pre[8];
+    char operands[40], message[40];
     const mid_range *m = ranges;
     if (prefix) {
         bytes[0] = prefix >> 8;
         bytes[1] = prefix;
-        sprintf(pre, "%04X:", prefix);
-    } else {
-        pre[0] = 0;
     }
     const uint8_t pos = prefix ? 2 : 0;
 
@@ -414,15 +399,19 @@ static void assert_mid(
                     m = nullptr;
             }
             if (m && ((i >= m->start && i <= m->end) || (hole && hole->contains(i)))) {
-                sprintf(message, "%s: >%s%04X is MID", __FUNCTION__, pre, i);
-                asserter.equals(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-                asserter.equals(message, "MID", insn.name());
-                asserter.equals(message, i, opCode);
-                asserter.equals(message, pos + 2, insn.length());
+                if (prefix) {
+                    ETEST(UNKNOWN_INSTRUCTION, MID, "", prefix, Config::opcode_t(i));
+                } else {
+                    ETEST(UNKNOWN_INSTRUCTION, MID, "", Config::opcode_t(i));
+                }
             } else {
-                sprintf(message, "%s: >%s%04X is not MID", __FUNCTION__, pre, i);
-                asserter.equals(message, OK, disassembler.getError());
-                asserter.not_equals(message, "MID", insn.name());
+                if (prefix) {
+                    sprintf(message, "%04X,%04X is not MID", prefix, i);
+                } else {
+                    sprintf(message, "%04X is not MID", i);
+                }
+                EQUALS(message, OK, disassembler.getError());
+                NOT_EQUALS(message, "MID", insn.name());
             }
         }
     }

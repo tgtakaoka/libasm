@@ -30,12 +30,10 @@ void asm_assert(
     const uint8_t *expected, uint8_t length,
     Assembler &assembler) {
     Insn insn;
-    char message[80];
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
-    sprintf(message, "%s:%d: %s", file, line, src);
-    asserter.equals(message, error, assembler);
-    asserter.equals(message, expected, length,
+    asserter.equals(file, line, src, error, assembler);
+    asserter.equals(file, line, src, expected, length,
                     insn.bytes(), insn.length());
 }
 
@@ -45,12 +43,10 @@ void asm_assert(
     const uint16_t *expected, uint8_t length,
     Assembler &assembler) {
     Insn insn;
-    char message[80];
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
-    sprintf(message, "%s:%d: %s", file, line, src);
-    asserter.equals(message, error, assembler);
-    asserter.equals(message, expected, length,
+    asserter.equals(file, line, src, error, assembler);
+    asserter.equals(file, line, src, expected, length,
                     insn.bytes(), insn.length());
 }
 

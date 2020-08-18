@@ -41,35 +41,23 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 9900", true, assembler.setCpu("9900"));
-    asserter.equals(
-        "get cpu", "TMS9900", assembler.getCpu());
+    EQUALS("cpu 9900", true,      assembler.setCpu("9900"));
+    EQUALS("cpu 9900", "TMS9900", assembler.getCpu());
 
-    asserter.equals(
-        "cpu 9995", true, assembler.setCpu("9995"));
-    asserter.equals(
-        "get cpu", "TMS9995", assembler.getCpu());
+    EQUALS("cpu 9995", true,      assembler.setCpu("9995"));
+    EQUALS("cpu 9995", "TMS9995", assembler.getCpu());
 
-    asserter.equals(
-        "cpu 99105", true, assembler.setCpu("99105"));
-    asserter.equals(
-        "get cpu", "TMS99105", assembler.getCpu());
+    EQUALS("cpu 99105", true,       assembler.setCpu("99105"));
+    EQUALS("cpu 99105", "TMS99105", assembler.getCpu());
 
-    asserter.equals(
-        "cpu tms9900", true, assembler.setCpu("tms9900"));
-    asserter.equals(
-        "get cpu", "TMS9900", assembler.getCpu());
+    EQUALS("cpu tms9900", true,      assembler.setCpu("tms9900"));
+    EQUALS("cpu tms9900", "TMS9900", assembler.getCpu());
 
-    asserter.equals(
-        "cpu tms9995", true, assembler.setCpu("tms9995"));
-    asserter.equals(
-        "get cpu", "TMS9995", assembler.getCpu());
+    EQUALS("cpu tms9995", true,      assembler.setCpu("tms9995"));
+    EQUALS("cpu tms9995", "TMS9995", assembler.getCpu());
 
-    asserter.equals(
-        "cpu tms99105", true, assembler.setCpu("tms99105"));
-    asserter.equals(
-        "get cpu", "TMS99105", assembler.getCpu());
+    EQUALS("cpu tms99105", true,       assembler.setCpu("tms99105"));
+    EQUALS("cpu tms99105", "TMS99105", assembler.getCpu());
 }
 
 static void test_inh() {

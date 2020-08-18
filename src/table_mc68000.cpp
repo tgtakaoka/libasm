@@ -373,8 +373,7 @@ TableMc68000::TableMc68000()
 bool TableMc68000::setCpu(const char *cpu) {
     const char *p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
     return strcmp(p, "68000") == 0
-        || strcmp(p, "68008") == 0
-        || strcasecmp(p, "68k") == 0;
+        || strcmp(p, "68008") == 0;
 }
 
 class TableMc68000 TableMc68000;

@@ -37,25 +37,17 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 8080", true, assembler.setCpu("8080"));
-    asserter.equals(
-        "get cpu", "8080", assembler.getCpu());
+    EQUALS("cpu 8080", true,   assembler.setCpu("8080"));
+    EQUALS("cpu 8080", "8080", assembler.getCpu());
 
-    asserter.equals(
-        "cpu i8080", true, assembler.setCpu("i8080"));
-    asserter.equals(
-        "get cpu", "8080", assembler.getCpu());
+    EQUALS("cpu i8080", true,   assembler.setCpu("i8080"));
+    EQUALS("cpu i8080", "8080", assembler.getCpu());
 
-    asserter.equals(
-        "cpu 8085", true, assembler.setCpu("8085"));
-    asserter.equals(
-        "get cpu", "8085", assembler.getCpu());
+    EQUALS("cpu 8085", true,   assembler.setCpu("8085"));
+    EQUALS("cpu 8085", "8085", assembler.getCpu());
 
-    asserter.equals(
-        "cpu i8085", true, assembler.setCpu("i8085"));
-    asserter.equals(
-        "get cpu", "8085", assembler.getCpu());
+    EQUALS("cpu i8085", true,   assembler.setCpu("i8085"));
+    EQUALS("cpu i8085", "8085", assembler.getCpu());
 }
 
 static void test_move_inherent() {

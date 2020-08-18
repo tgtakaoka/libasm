@@ -33,13 +33,11 @@ void val_assert(
     const char *file, const int line, const char *expr,
     const T expected, const Error expected_error,
     ValueParser &parser) {
-    char msg[80];
-    sprintf(msg, "%s:%d: %s", file, line, expr);
     T actual;
     parser.eval(expr, actual, &symtab);
-    asserter.equals(msg, expected_error, parser);
+    asserter.equals(file, line, expr, expected_error, parser);
     if (parser.getError() == OK)
-        asserter.equals(msg,
+        asserter.equals(file, line, expr,
                         static_cast<uint32_t>(expected),
                         static_cast<uint32_t>(actual));
 }
@@ -56,10 +54,10 @@ void fmt_assert(
     const int8_t radix, const bool relax, const char *expected,
     ValueFormatter &formatter) {
     char msg[80];
-    sprintf(msg, "%s:%d: %d (%x)", file, line, value, value);
+    sprintf(msg, "%d (%x)", value, value);
     char actual[80];
     formatter.output(actual, value, radix, relax, BIT_WIDTH);
-    asserter.equals(msg, expected, actual);
+    asserter.equals(file, line, msg, expected, actual);
 }
 
 #define FN(n, value, radix, relax, expected)                            \

@@ -54,20 +54,20 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu z8", true, disassembler.setCpu("z8"));
-    asserter.equals(
-        "get cpu", "Z8", disassembler.getCpu());
+    EQUALS("cpu z8", true, disassembler.setCpu("z8"));
+    EQUALS("cpu z8", "Z8", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu Z8601", true, disassembler.setCpu("Z8601"));
-    asserter.equals(
-        "get cpu", "Z8", disassembler.getCpu());
+    EQUALS("cpu Z8601", true, disassembler.setCpu("Z8601"));
+    EQUALS("cpu Z8601", "Z8", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu Z86C91", true, disassembler.setCpu("Z86C91"));
-    asserter.equals(
-        "get cpu", "Z86C", disassembler.getCpu());
+    EQUALS("cpu Z86C91", true, disassembler.setCpu("Z86C91"));
+    EQUALS("cpu Z86C91", "Z86C", disassembler.getCpu());
+
+    EQUALS("cpu Super8", true,  disassembler.setCpu("Super8"));
+    EQUALS("cpu Super8", "Z88", disassembler.getCpu());
+
+    EQUALS("cpu Z88C00", true,  disassembler.setCpu("Z88C00"));
+    EQUALS("cpu Z88C00", "Z88", disassembler.getCpu());
 }
 
 static void test_implied() {

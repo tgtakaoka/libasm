@@ -33,15 +33,11 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 1802", true, disassembler.setCpu("1802"));
-    asserter.equals(
-        "get cpu", "1802", disassembler.getCpu());
+    EQUALS("cpu 1802", true,   disassembler.setCpu("1802"));
+    EQUALS("cpu 1802", "1802", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu CDP1802", true, disassembler.setCpu("CDP1802"));
-    asserter.equals(
-        "get cpu", "1802", disassembler.getCpu());
+    EQUALS("cpu CDP1802", true,   disassembler.setCpu("CDP1802"));
+    EQUALS("cpu CDP1802", "1802", disassembler.getCpu());
 }
 
 static void test_inherent() {

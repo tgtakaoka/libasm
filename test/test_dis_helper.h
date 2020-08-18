@@ -37,6 +37,10 @@ void dis_assert(
 } // test
 } // namespace
 
+#define EQUALS(msg, expected, actual) \
+    asserter.equals(__FILE__, __LINE__, msg, expected, actual)
+#define NOT_EQUALS(msg, expected, actual) \
+    asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
 #define __VASSERT(file, line, error, addr, name, opr, ...)          \
     do {                                                            \
         const Config::opcode_t name[] = { __VA_ARGS__ };            \

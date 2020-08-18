@@ -41,35 +41,23 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu 8080", true, assembler.setCpu("8080"));
-    asserter.equals(
-        "get cpu", "8080", assembler.getCpu());
+    EQUALS("cpu 8080", true, assembler.setCpu("8080"));
+    EQUALS("get cpu", "8080", assembler.getCpu());
 
-    asserter.equals(
-        "cpu 8085", true, assembler.setCpu("8085"));
-    asserter.equals(
-        "get cpu", "8085", assembler.getCpu());
+    EQUALS("cpu 8085", true, assembler.setCpu("8085"));
+    EQUALS("get cpu", "8085", assembler.getCpu());
 
-    asserter.equals(
-        "cpu i8080", true, assembler.setCpu("i8080"));
-    asserter.equals(
-        "get cpu", "8080", assembler.getCpu());
+    EQUALS("cpu i8080", true, assembler.setCpu("i8080"));
+    EQUALS("get cpu", "8080", assembler.getCpu());
 
-    asserter.equals(
-        "cpu i8085", true, assembler.setCpu("i8085"));
-    asserter.equals(
-        "get cpu", "8085", assembler.getCpu());
+    EQUALS("cpu i8085", true, assembler.setCpu("i8085"));
+    EQUALS("get cpu", "8085", assembler.getCpu());
 
-    asserter.equals(
-        "cpu z80", true, assembler.setCpu("z80"));
-    asserter.equals(
-        "get cpu", "Z80", assembler.getCpu());
+    EQUALS("cpu z80", true, assembler.setCpu("z80"));
+    EQUALS("get cpu", "Z80", assembler.getCpu());
 
-    asserter.equals(
-        "cpu z84c00", true, assembler.setCpu("z84c00"));
-    asserter.equals(
-        "get cpu", "Z80", assembler.getCpu());
+    EQUALS("cpu z84c00", true, assembler.setCpu("z84c00"));
+    EQUALS("get cpu", "Z80", assembler.getCpu());
 }
 
 static void test_move_inherent() {

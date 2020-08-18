@@ -34,20 +34,14 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    asserter.equals(
-        "cpu sc/mp", true, disassembler.setCpu("SC/MP"));
-    asserter.equals(
-        "get cpu", "SC/MP", disassembler.getCpu());
+    EQUALS("cpu sc/mp", true,    disassembler.setCpu("SC/MP"));
+    EQUALS("cpu sc/mp", "SC/MP", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu 8060", true, disassembler.setCpu("8060"));
-    asserter.equals(
-        "get cpu", "SC/MP", disassembler.getCpu());
+    EQUALS("cpu 8060", true,    disassembler.setCpu("8060"));
+    EQUALS("cpu 8060", "SC/MP", disassembler.getCpu());
 
-    asserter.equals(
-        "cpu INS8060", true, disassembler.setCpu("INS8060"));
-    asserter.equals(
-        "get cpu", "SC/MP", disassembler.getCpu());
+    EQUALS("cpu INS8060", true,    disassembler.setCpu("INS8060"));
+    EQUALS("cpu INS8060", "SC/MP", disassembler.getCpu());
 }
 
 static void test_inherent() {

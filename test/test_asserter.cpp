@@ -35,16 +35,19 @@ bool TestAsserter::check() const {
 }
 
 void TestAsserter::equals(
+    const char *file, const int line,
     const char *message, const uint32_t expected, const uint32_t actual) {
     if (expected == actual) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s: expected '%u': actual '%u'\n", message, expected, actual);
+    printf("%s:%d: %s: expected '%u': actual '%u'\n",
+           file, line, message, expected, actual);
 }
 
 void TestAsserter::equals(
+    const char *file, const int line,
     const char *message, const char *expected, const char *actual) {
     const char *e = expected;
     const char *a = actual;
@@ -57,21 +60,25 @@ void TestAsserter::equals(
         return;
     }
     _fail_count++;
-    printf("%s: expected '%s': actual '%s'\n", message, expected, actual);
+    printf("%s:%d: %s: expected '%s': actual '%s'\n",
+           file, line, message, expected, actual);
 }
 
 void TestAsserter::equals(
+    const char *file, const int line,
     const char *message, Error expected, const ErrorReporter &actual) {
     if (expected == actual.getError()) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s: expected '%s': actual '%s'\n", message,
+    printf("%s:%d: %s: expected '%s': actual '%s'\n",
+           file, line, message,
            ErrorReporter::errorText(expected), actual.errorText());
 }
 
 void TestAsserter::equals(
+    const char *file, const int line,
     const char *message,
     const uint8_t expected[], size_t expected_len,
     const uint8_t actual[], size_t actual_len) {
@@ -86,7 +93,7 @@ void TestAsserter::equals(
         }
     }
     _fail_count++;
-    printf("%s: expected [", message);
+    printf("%s:%d: %s: expected [", file, line, message);
     for (size_t i = 0; i < expected_len; i++) {
         if (i) printf(" ");
         printf("%02" PRIX8, expected[i]);
@@ -112,6 +119,7 @@ static void convert(const uint8_t *bytes, size_t blen,
 }
 
 void TestAsserter::equals(
+    const char *file, const int line,
     const char *message,
     const uint16_t expected[], size_t expected_len_b,
     const uint8_t actual_b[], size_t actual_len_b) {
@@ -130,7 +138,7 @@ void TestAsserter::equals(
         }
     }
     _fail_count++;
-    printf("%s: expected [", message);
+    printf("%s:%d: %s: expected [", file, line, message);
     for (size_t i = 0; i < expected_len; i++) {
         if (i) printf(" ");
         printf("%04" PRIX16, expected[i]);
@@ -144,13 +152,15 @@ void TestAsserter::equals(
 }
 
 void TestAsserter::not_equals(
+    const char *file, const int line,
     const char *message, const char *expected, const char *actual) {
     if (strcmp(expected, actual)) {
         _pass_count++;
         return;
     }
     _fail_count++;
-    printf("%s: not expected '%s': actual '%s'\n", message, expected, actual);
+    printf("%s:%d: %s: not expected '%s': actual '%s'\n",
+           file, line, message, expected, actual);
 }
 
 } // namespace test
