@@ -18,20 +18,20 @@
       SEI
       SBA
       CBA
-      BRSET $13,#0,*+$18
+      BRSET $13,#0,*+24
       BRSET $13,#0,*-$7C
       BRSET $13,#0,*
-      BRCLR $14,#0,*+$19
+      BRCLR $14,#0,*+25
       BRCLR $14,#0,*-$7C
       BRCLR $14,#0,*
-      BSET  $00,#$15
-      BCLR  $00,#$16
+      BSET  $00,#21
+      BCLR  $00,#22
       TAB
       TBA
       DAA
       ABA
-      BSET  0,X,#$1D
-      BCLR  0,X,#$1E
+      BSET  0,X,#29
+      BCLR  0,X,#30
       BRSET 31,X,#0,*+$24
       BRSET 31,X,#0,*-$7C
       BRSET 31,X,#0,*
@@ -320,8 +320,8 @@
       STX   $0100
       INY
       DEY
-      BSET  0,Y,#$1D
-      BCLR  0,Y,#$1E
+      BSET  0,Y,#29
+      BCLR  0,Y,#30
       BRSET 31,Y,#0,*+$25
       BRSET 31,Y,#0,*-$7B
       BRSET 31,Y,#0,*

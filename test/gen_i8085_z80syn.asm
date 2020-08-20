@@ -17,19 +17,19 @@
       DEC  C
       LD   C,15
       RRCA
-      LD   DE,0012H
+      LD   DE,18
       LD   (DE),A
       INC  DE
       INC  D
       DEC  D
-      LD   D,17H
+      LD   D,23
       RLA
       ADD  HL,DE
       LD   A,(DE)
       DEC  DE
       INC  E
       DEC  E
-      LD   E,1FH
+      LD   E,31
       RRA
       LD   A,IM
       LD   HL,0022H

@@ -115,7 +115,7 @@
       OR   @-34(P1)
       OR   @0(P1)
       OR   @E(P1)
-      XOR  .-0x1E
+      XOR  .-30
       XOR  .
       XOR  .+1
       XOR  E(PC)
@@ -126,7 +126,7 @@
       XOR  @-26(P1)
       XOR  @0(P1)
       XOR  @E(P1)
-      DAD  .-0x16
+      DAD  .-22
       DAD  .
       DAD  .+1
       DAD  E(PC)

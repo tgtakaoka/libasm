@@ -38,10 +38,10 @@
       cp     r0,#0x0b01
       cp     r0,@r1
       comb   @r1
-      cpb    @r1,#0x12
+      cpb    @r1,#18
       negb   @r1
       testb  @r1
-      ldb    @r1,#0x16
+      ldb    @r1,#22
       tsetb  @r1
       clrb   @r1
       com    @r1
@@ -194,10 +194,10 @@
       tsetb  0x4c07
       clrb   0x4c09
       comb   0x4c11(r1)
-      cpb    0x0000(r1),#0x12
+      cpb    0x0000(r1),#18
       negb   0x4c13(r1)
       testb  0x4c15(r1)
-      ldb    0x0000(r1),#0x16
+      ldb    0x0000(r1),#22
       tsetb  0x4c17(r1)
       clrb   0x4c19(r1)
       com    0x4d01

@@ -15,8 +15,8 @@
       CLR   $10
       NOP
       SYNC
-      LBRA  *+$001A
-      LBSR  *+$001B
+      LBRA  *+26
+      LBSR  *+27
       DAA
       ORCC  #%00011011
       ANDCC #%00011101

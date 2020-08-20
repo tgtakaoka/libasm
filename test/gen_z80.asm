@@ -17,17 +17,17 @@
       DEC  C
       LD   C,15
       RRCA
-      DJNZ $+13H
+      DJNZ $+19
       DJNZ $-7EH
       DJNZ $
-      LD   DE,0012H
+      LD   DE,18
       LD   (DE),A
       INC  DE
       INC  D
       DEC  D
-      LD   D,17H
+      LD   D,23
       RLA
-      JR   $+1BH
+      JR   $+27
       JR   $-7EH
       JR   $
       ADD  HL,DE
@@ -35,7 +35,7 @@
       DEC  DE
       INC  E
       DEC  E
-      LD   E,1FH
+      LD   E,31
       RRA
       JR   NZ,$+23H
       JR   NZ,$-7EH

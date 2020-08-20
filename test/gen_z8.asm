@@ -34,9 +34,9 @@
       ADC     >00H,>01H
       ADC     16H,@00H
       ADC     >00H,@01H
-      ADC     >00H,#17H
-      ADC     @00H,#18H
-      JR      LT,$+1EH
+      ADC     >00H,#23
+      ADC     @00H,#24
+      JR      LT,$+30
       JR      LT,$-7EH
       JR      LT,$
       JP      LT,001EH
@@ -210,7 +210,7 @@
       LD      >00H,@01H
       LD      >00H,#0E7H
       LD      @00H,#0E8H
-      JR      NZ,$-12H
+      JR      NZ,$-18
       JR      NZ,$
       JR      NZ,$+1
       JP      NZ,00EEH

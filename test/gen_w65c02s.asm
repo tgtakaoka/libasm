@@ -17,7 +17,7 @@
       ASL  >$000F
       ASL  $0100
       BBR0 $10,*+3
-      BPL  *+$13
+      BPL  *+19
       BPL  *-$26
       BPL  *
       ORA  ($12),Y

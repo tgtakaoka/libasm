@@ -194,10 +194,10 @@
       tsetb  0x4c0007
       clrb   0x4c0009
       comb   0x4c0011(r1)
-      cpb    0x000000(r1),#0x12
+      cpb    0x000000(r1),#18
       negb   0x4c0013(r1)
       testb  0x4c0015(r1)
-      ldb    0x000000(r1),#0x16
+      ldb    0x000000(r1),#22
       tsetb  0x4c0017(r1)
       clrb   0x4c0019(r1)
       com    0x4d0001

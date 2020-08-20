@@ -16,19 +16,19 @@
       DCR  C
       MVI  C,15
       RRC
-      LXI  D,0012H
+      LXI  D,18
       STAX D
       INX  D
       INR  D
       DCR  D
-      MVI  D,17H
+      MVI  D,23
       RAL
       DAD  D
       LDAX D
       DCX  D
       INR  E
       DCR  E
-      MVI  E,1FH
+      MVI  E,31
       RAR
       LXI  H,0022H
       SHLD 0023H

@@ -9,7 +9,7 @@
       INC   06H
       INC   @R0
       INC   R0
-      JBC   20H.0,$+14H
+      JBC   20H.0,$+20
       JBC   20H.0,$-7DH
       JBC   20H.0,$
       ACALL 0012H

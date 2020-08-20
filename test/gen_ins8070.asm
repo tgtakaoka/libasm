@@ -190,7 +190,7 @@
       OR   A,0xFFDE
       OR   A,@-33,P2
       OR   A,@0,P2
-      XOR  A,.-0x1E,PC
+      XOR  A,.-30,PC
       XOR  A,.,PC
       XOR  A,.+1,PC
       XOR  A,-30,SP
