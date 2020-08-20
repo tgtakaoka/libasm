@@ -98,9 +98,6 @@ struct Entry {
     static inline AddrMode _mode(uint8_t opr) {
         return AddrMode((opr >> addrMode_gp) & addrMode_gm);
     }
-    static constexpr uint8_t _opr(AddrMode mode) {
-        return (static_cast<uint8_t>(mode) << addrMode_gp);
-    }
     static inline OprPos _srcPos(uint8_t pos) {
         return OprPos((pos >> srcPos_gp) & oprPos_gm);
     }
@@ -110,16 +107,31 @@ struct Entry {
     static inline bool _alias(uint8_t pos) {
         return ((pos >> alias_bp) & 1) ? true : false;
     }
-    static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
-        return (static_cast<uint8_t>(src) << srcPos_gp)
-            | (static_cast<uint8_t>(dst) << dstPos_gp)
-            | (alias ? (1 << alias_bp) : 0);
-    }
     static inline OprSize _oprSize(uint8_t size) {
         return OprSize((size >> oprSize_gp) & oprSize_gm);
     }
     static inline InsnSize _insnSize(uint8_t size) {
         return InsnSize((size >> insnSize_gp) & insnSize_gm);
+    }
+    static inline uint8_t _src(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> src_gp);
+    }
+    static inline uint8_t _dst(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> dst_gp);
+    }
+    static constexpr uint8_t _pos(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> pos_gp);
+    }
+    static constexpr uint8_t _size(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> size_gp);
+    }
+    static constexpr uint8_t _opr(AddrMode mode) {
+        return (static_cast<uint8_t>(mode) << addrMode_gp);
+    }
+    static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
+        return (static_cast<uint8_t>(src) << srcPos_gp)
+            | (static_cast<uint8_t>(dst) << dstPos_gp)
+            | (alias ? (1 << alias_bp) : 0);
     }
     static constexpr uint8_t _size(OprSize opr, InsnSize insn) {
         return (static_cast<uint8_t>(opr) << oprSize_gp)
@@ -131,18 +143,6 @@ struct Entry {
             | (static_cast<uint32_t>(dst) << dst_gp)
             | (static_cast<uint32_t>(pos) << pos_gp)
             | (static_cast<uint32_t>(size) << size_gp);
-    }
-    static constexpr uint8_t _src(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> src_gp);
-    }
-    static constexpr uint8_t _dst(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> dst_gp);
-    }
-    static constexpr uint8_t _pos(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> pos_gp);
-    }
-    static constexpr uint8_t _size(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> size_gp);
     }
 
 private:

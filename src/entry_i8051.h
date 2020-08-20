@@ -57,7 +57,8 @@ struct Entry {
     static inline AddrMode _extMode(uint16_t flags) {
         return AddrMode((flags >> extMode_gp) & addrMode_gm);
     }
-    static constexpr uint16_t _flags(AddrMode dst, AddrMode src, AddrMode ext) {
+    static constexpr uint16_t _flags(
+        AddrMode dst, AddrMode src, AddrMode ext) {
         return (static_cast<uint16_t>(dst) << dstMode_gp)
             | (static_cast<uint16_t>(src) << srcMode_gp)
             | (static_cast<uint16_t>(ext) << extMode_gp);

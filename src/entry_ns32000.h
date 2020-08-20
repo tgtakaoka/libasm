@@ -96,6 +96,18 @@ struct Entry {
     static inline OprSize _oprSize(uint8_t ex2) {
         return OprSize((ex2 >> oprSize_gp) & oprSize_gm);
     }
+    static inline uint8_t _src(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> src_gp);
+    }
+    static inline uint8_t _dst(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> dst_gp);
+    }
+    static inline uint8_t _ex1(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> ex1_gp);
+    }
+    static inline uint8_t _ex2(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> ex2_gp);
+    }
     static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
         return (static_cast<uint8_t>(mode) << oprMode_gp)
             | (static_cast<uint8_t>(pos) << oprPos_gp);
@@ -111,18 +123,6 @@ struct Entry {
             | (static_cast<uint32_t>(dst) << dst_gp)
             | (static_cast<uint32_t>(ex1) << ex1_gp)
             | (static_cast<uint32_t>(ex2) << ex2_gp);
-    }
-    static constexpr uint8_t _src(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> src_gp);
-    }
-    static constexpr uint8_t _dst(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> dst_gp);
-    }
-    static constexpr uint8_t _ex1(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> ex1_gp);
-    }
-    static constexpr uint8_t _ex2(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> ex2_gp);
     }
 
 private:
@@ -140,6 +140,12 @@ private:
         EP2_ERROR = 3,
     };
     static constexpr Ex2Mode modeEx2(AddrMode mode) {
+        return mode == M_NONE ? EM2_NONE
+            : (mode == M_IMM  ? EM2_IMM
+            : (mode == M_BFLEN ? EM2_BFLEN
+            : (mode == M_LEN32 ? EM2_LEN32
+            : EM2_ERROR)));
+        /*
         switch (mode) {
         case M_NONE:  return EM2_NONE;
         case M_IMM:   return EM2_IMM;
@@ -147,22 +153,32 @@ private:
         case M_LEN32: return EM2_LEN32;
         default:      return EM2_ERROR;
         }
+        */
     }
     static constexpr Ex2Pos posEx2(OprPos pos) {
-        if (pos == P_NONE) return EP2_NONE;
-        if (pos == P_IMPL) return EP2_IMPL;
-        return (pos == P_DISP) ? EP2_DISP : EP2_ERROR;
+        return pos == P_NONE ? EP2_NONE
+            : (pos == P_IMPL ? EP2_IMPL
+            : (pos == P_DISP ? EP2_DISP
+            : EP2_ERROR));
+        /*
+        switch (pos) {
+        case P_NONE: return EP2_NONE;
+        case P_IMPL: return EP2_IMPL;
+        case P_DISP: return EP2_DISP;
+        default:     return EP2_ERROR;
+        }
+        */
     }
-    static constexpr AddrMode ex2Mode(Ex2Mode mode) {
+    static inline AddrMode ex2Mode(Ex2Mode mode) {
         switch (mode) {
         case EM2_NONE:  return M_NONE;
         case EM2_IMM:   return M_IMM;
         case EM2_BFLEN: return M_BFLEN;
         case EM2_LEN32: return M_LEN32;
-        default:        return M_NONE;;
+        default:        return M_NONE;
         }
     }
-    static constexpr OprPos ex2Pos(Ex2Pos pos) {
+    static inline OprPos ex2Pos(Ex2Pos pos) {
         if (pos == EP2_NONE) return P_NONE;
         if (pos == EP2_IMPL) return P_IMPL;
         return (pos == EP2_DISP) ? P_DISP : P_NONE;

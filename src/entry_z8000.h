@@ -109,42 +109,6 @@ struct Entry {
     const uint32_t flags;
     const char *name;
 
-private:
-    enum Ex1Mode {
-        E1_NO  = 0,
-        E1_CNT = 1,
-        E1_WR  = 2,
-        E1_ERROR = 3,
-    };
-    enum Ex2Mode {
-        E2_NO = 0,
-        E2_CC = 1,
-        E2_ERROR = 3,
-    };
-    static constexpr Ex1Mode modeEx1(AddrMode mode) {
-        if (mode == M_NO)  return E1_NO;
-        if (mode == M_CNT || mode == M_IM) return E1_CNT;
-        if (mode == M_WR || mode == M_R)  return E1_WR;
-        return E1_ERROR;
-    }
-    static constexpr AddrMode addrMode(Ex1Mode mode) {
-        if (mode == E1_NO)  return M_NO;
-        if (mode == E1_CNT) return M_CNT;
-        if (mode == E1_WR)  return M_WR;
-        return M_ERROR;
-    }
-    static constexpr Ex2Mode modeEx2(AddrMode mode) {
-        if (mode == M_NO) return E2_NO;
-        if (mode == M_CC) return E2_CC;
-        return E2_ERROR;
-    }
-    static constexpr AddrMode addrMode(Ex2Mode mode) {
-        if (mode == E2_NO) return M_NO;
-        if (mode == E2_CC) return M_CC;
-        return M_ERROR;
-    }
-
-public:
     static inline AddrMode _mode(uint8_t opr) {
         return AddrMode((opr >> addrMode_gp) & addrMode_gm);
     }
@@ -163,13 +127,13 @@ public:
     static inline OprSize _oprSize(uint8_t size) {
         return OprSize((size >> oprSize_gp) & oprSize_gm);
     }
-    static constexpr uint8_t _postVal(PostMode post) {
+    static inline uint8_t _postVal(PostMode post) {
         if (post == P_0XX0) return 0x0;
         if (post == P_0XX8) return 0x8;
         if (post == P_0XXE) return 0xE;
         return 0;
     }
-    static constexpr uint8_t _postMask(PostMode post) {
+    static inline uint8_t _postMask(PostMode post) {
         if (post == P_0XX0) return 0xF;
         if (post == P_0XX8) return 0xF;
         if (post == P_0XXE) return 0xF;
@@ -190,7 +154,18 @@ public:
         default: return 0;
         }
     }
-
+    static inline uint8_t _dst(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> dst_gp);
+    }
+    static inline uint8_t _src(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> src_gp);
+    }
+    static inline uint8_t _ext(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> ext_gp);
+    }
+    static inline uint8_t _size(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> size_gp);
+    }
     static constexpr uint8_t _opr(AddrMode mode, ModeField field) {
         return (static_cast<uint8_t>(mode) << addrMode_gp)
             | (static_cast<uint8_t>(field) << modeField_gp);
@@ -211,20 +186,59 @@ public:
             | (static_cast<uint32_t>(ext)  << ext_gp)
             | (static_cast<uint32_t>(size) << size_gp);
     }
-    static constexpr uint8_t _dst(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> dst_gp);
-    }
-    static constexpr uint8_t _src(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> src_gp);
-    }
-    static constexpr uint8_t _ext(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> ext_gp);
-    }
-    static constexpr uint8_t _size(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> size_gp);
-    }
 
 private:
+    enum Ex1Mode {
+        E1_NO  = 0,
+        E1_CNT = 1,
+        E1_WR  = 2,
+        E1_ERROR = 3,
+    };
+    enum Ex2Mode {
+        E2_NO = 0,
+        E2_CC = 1,
+        E2_ERROR = 3,
+    };
+    static constexpr Ex1Mode modeEx1(AddrMode mode) {
+        return mode == M_NO  ? E1_NO
+            : ((mode == M_CNT || mode == M_IM) ? E1_CNT
+            : ((mode == M_WR || mode == M_R) ? E1_WR
+            : E1_ERROR));
+        /*
+        switch (mode) {
+        case M_NO:  return E1_NO;
+        case M_CNT:
+        case M_IM:  return E1_CNT;
+        case M_WR:
+        case M_R:   return E1_WR;
+        default:    return E1_ERROR;
+        }
+        */
+    }
+    static inline AddrMode addrMode(Ex1Mode mode) {
+        if (mode == E1_NO)  return M_NO;
+        if (mode == E1_CNT) return M_CNT;
+        if (mode == E1_WR)  return M_WR;
+        return M_ERROR;
+    }
+    static constexpr Ex2Mode modeEx2(AddrMode mode) {
+        return mode == M_NO ? E2_NO
+            : (mode == M_CC ? E2_CC
+            : E2_ERROR);
+        /*
+        switch (mode) {
+        case M_NO: return E2_NO;
+        case M_CC: return E2_CC;
+        default:   return E2_ERROR;
+        }
+        */
+    }
+    static inline AddrMode addrMode(Ex2Mode mode) {
+        if (mode == E2_NO) return M_NO;
+        if (mode == E2_CC) return M_CC;
+        return M_ERROR;
+    }
+
     // |dst|, |src|
     static constexpr uint8_t addrMode_gm  = 0x1f;
     static constexpr uint8_t modeField_gm = 0x7;

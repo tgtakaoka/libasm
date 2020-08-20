@@ -72,24 +72,17 @@ struct Entry {
     static inline AddrMode _addrMode(uint8_t flags) {
         return AddrMode(flags & addrMode_gm);
     }
-
     static inline InsnAdjust _insnAdjust(uint8_t flags) {
         return InsnAdjust((flags >> insnAdjust_gp) & insnAdjust_gm);
     }
-
     static inline OprSize _oprSize(uint8_t flags) {
         return OprSize((flags >> oprSize_gp) & oprSize_gm);
     }
-
     static constexpr uint8_t _flags(
         AddrMode addrMode, InsnAdjust insnAdjust, OprSize oprSize) {
         return static_cast<uint8_t>(addrMode)
             | (static_cast<uint8_t>(insnAdjust) << insnAdjust_gp)
             | (static_cast<uint8_t>(oprSize)    << oprSize_gp);
-    }
-
-    static uint8_t _set(uint8_t flags, AddrMode addrMode) {
-        return (flags & ~addrMode_gm) | static_cast<uint8_t>(addrMode);
     }
 
 private:

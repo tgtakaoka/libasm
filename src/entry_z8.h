@@ -87,17 +87,16 @@ struct Entry {
     static inline PostFormat _postFormat(uint16_t flags) {
         return PostFormat((flags >> postFmt_gp) & postFmt_gm);
     }
+    static inline AddrMode addrExt(AddrMode mode) {
+        if (static_cast<uint8_t>(mode) < 8) return mode;
+        return M_ERROR;
+    }
     static constexpr uint16_t _flags(
         AddrMode dst, AddrMode src, AddrMode ext, PostFormat post) {
         return ((static_cast<uint16_t>(dst) & addrMode_gm) << dstMode_gp)
             | ((static_cast<uint16_t>(src)  & addrMode_gm) << srcMode_gp)
             | ((static_cast<uint16_t>(ext)  & extMode_gm)  << extMode_gp)
             | ((static_cast<uint16_t>(post) & postFmt_gm)  << postFmt_gp);
-    }
-
-    static constexpr AddrMode addrExt(AddrMode mode) {
-        if (static_cast<uint8_t>(mode) < 8) return mode;
-        return M_ERROR;
     }
 
 private:
