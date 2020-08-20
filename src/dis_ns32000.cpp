@@ -108,7 +108,8 @@ Error DisNs32000::decodeLength(
         if (len % 4) return setError(ILLEGAL_CONSTANT);
         len /= 4;
     }
-    outConstant(len + 1, 10);
+    len++;
+    outConstant(len, 10);
     return OK;
 }
 

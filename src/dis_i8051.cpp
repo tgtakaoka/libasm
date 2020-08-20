@@ -44,8 +44,7 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn) {
     return setOK();
 }
 
-Error DisI8051::decodeRReg(
-    DisMemory &memory, InsnI8051 &insn, const AddrMode mode) {
+Error DisI8051::decodeRReg(InsnI8051 &insn, const AddrMode mode) {
     const RegName reg = _regs.decodeRReg(insn.opCode() & (mode == IDIRR ? 1 : 7));
     if (mode == IDIRR) *_operands++ = '@';
     _operands = _regs.outRegName(_operands, reg);
@@ -100,7 +99,7 @@ Error DisI8051::decodeOperand(
         break;
     case RREG:
     case IDIRR:
-        return decodeRReg(memory, insn, mode);
+        return decodeRReg(insn, mode);
     case CREG:
         outRegister(REG_C);
         break;

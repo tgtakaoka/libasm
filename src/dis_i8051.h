@@ -46,8 +46,7 @@ private:
 
     Error decodeRelative(DisMemory &memory, InsnI8051 &insn);
     Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn);
-    Error decodeRReg(
-        DisMemory &memory, InsnI8051 &insn, const AddrMode mode);
+    Error decodeRReg(InsnI8051 &insn, const AddrMode mode);
     Error decodeAddress(
         DisMemory &memory, InsnI8051 &insn, const AddrMode mode);
     Error decodeImmediate(

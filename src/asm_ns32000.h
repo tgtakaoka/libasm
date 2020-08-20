@@ -71,8 +71,7 @@ private:
         InsnNs32000 &insn, AddrMode mode,
         const Operand *off, const Operand &len);
     Error emitImmediate(InsnNs32000 &insn, uint32_t val32, OprSize size);
-    Error emitIndexByte(
-        InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos) const;
+    Error emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
     Error emitGeneric(
         InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);

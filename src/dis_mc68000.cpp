@@ -287,8 +287,7 @@ Error DisMc68000::decodeOperand(
 }
 
 Error DisMc68000::checkOperand(
-    const InsnMc68000 &insn, AddrMode mode,
-    uint8_t m, uint8_t r, OprSize s) {
+        AddrMode mode, uint8_t m, uint8_t r, OprSize s) {
     EaMc68000 ea(s, m, r);
     switch (mode) {
     case M_WDATA:
@@ -392,10 +391,10 @@ Error DisMc68000::decode(
     const OprSize size = sizeVal(insn);
     if (size == SZ_ERROR) return setError(ILLEGAL_SIZE);
     const OprPos srcPos = insn.srcPos();
-    if (checkOperand(insn, src, modeVal(opCode, srcPos), regVal(opCode, srcPos), size))
+    if (checkOperand(src, modeVal(opCode, srcPos), regVal(opCode, srcPos), size))
         return getError();
     const OprPos dstPos = insn.dstPos();
-    if (checkOperand(insn, dst, modeVal(opCode, dstPos), regVal(opCode, dstPos), size))
+    if (checkOperand(dst, modeVal(opCode, dstPos), regVal(opCode, dstPos), size))
         return getError();
     uint16_t opr16 = 0;
     if (src == M_IMBIT || src == M_MULT || dst == M_MULT || dst == M_IMDSP) {

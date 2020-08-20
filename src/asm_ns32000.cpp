@@ -437,8 +437,7 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
     return 0;
 }
 
-Error AsmNs32000::emitIndexByte(
-    InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos) const {
+Error AsmNs32000::emitIndexByte(InsnNs32000 &insn, const Operand &op) const {
     if (op.index == REG_UNDEF) return OK;
     const uint8_t indexByte = (encodeGenericField(op.mode, op.reg) << 3)
         | _regs.encodeRegName(op.index);
@@ -582,12 +581,9 @@ Error AsmNs32000::encode(Insn &_insn) {
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     const AddrMode ex1 = insn.ex1Mode();
-    if (emitIndexByte(insn, src, srcOp, insn.srcPos()))
-        return getError();
-    if (emitIndexByte(insn, dst, dstOp, insn.dstPos()))
-        return getError();
-    if (emitIndexByte(insn, ex1, ex1Op, insn.ex1Pos()))
-        return getError();
+    if (emitIndexByte(insn, srcOp)) return getError();
+    if (emitIndexByte(insn, dstOp)) return getError();
+    if (emitIndexByte(insn, ex1Op)) return getError();
     if (src != M_NONE) {
         if (emitOperand(insn, src, srcOp, insn.srcPos()))
             return getError();

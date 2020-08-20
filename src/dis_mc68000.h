@@ -61,8 +61,7 @@ private:
         AddrMode mode, uint8_t modePos, uint8_t regPos,
         OprSize size, uint16_t opr16);
     Error checkOperand(
-        const InsnMc68000 &insn, AddrMode mode,
-        uint8_t modePos, uint8_t regPos, OprSize size);
+        AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decode(DisMemory &memory, Insn &insn) override;
 };
