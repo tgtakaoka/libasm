@@ -123,12 +123,12 @@ public:
     }
 
 private:
-    uint32_t     _address;
-    uint8_t _length;
-    static constexpr size_t CODE_MAX = 10;
-    uint8_t      _bytes[CODE_MAX];
+    uint32_t _address;
+    uint8_t  _length;
+    static constexpr size_t CODE_MAX = 24;
+    uint8_t  _bytes[CODE_MAX];
     static constexpr size_t NAME_MAX = 7;
-    char         _name[NAME_MAX + 1];
+    char     _name[NAME_MAX + 1];
 
     friend class TableBase;
 };
