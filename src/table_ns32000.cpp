@@ -236,18 +236,6 @@ static const Entry FORMAT_5_1[] PROGMEM = {
     E(0x0D, SKPSW,  WORD, M_SOPT, M_NONE, P_SHORT, P_NONE)
     E(0x0F, SKPSD,  LONG, M_SOPT, M_NONE, P_SHORT, P_NONE)
     E(0x8C, SKPST,  BYTE, M_SOPT, M_NONE, P_SHORT, P_NONE)
-    E(0x00, MOVSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x01, MOVSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x03, MOVSD,  LONG, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x80, MOVST,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x04, CMPSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x05, CMPSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x07, CMPSD,  LONG, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x84, CMPST,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x0C, SKPSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x0D, SKPSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x0F, SKPSD,  LONG, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x8C, SKPST,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
 };
 
 // Format 6: |gen1_|gen| |2_|_op_|ii| |0100|1110|
@@ -498,6 +486,9 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
             || table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
     if (opr == M_FREG) return table == M_FENR || table == M_FENW;
     if (opr == M_PUSH) return table == M_POP;
+    if (opr == M_EMPTY)
+        return table == M_PUSH || table == M_POP
+            || table == M_CONF || table == M_SOPT;
     return false;
 }
 

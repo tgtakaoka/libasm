@@ -60,9 +60,9 @@ private:
         {}
     };
 
-    Error parseConfigNames(const char *p, Operand &op, bool bracket);
-    Error parseStrOptNames(const char *p, Operand &op, bool bracket);
-    Error parseRegisterList(const char *p, Operand &op, bool bracket);
+    Error parseStrOptNames(const char *p, Operand &op);
+    Error parseConfigNames(const char *p, Operand &op);
+    Error parseRegisterList(const char *p, Operand &op);
     Error parseBaseOperand(Operand &op);
     Error parseOperand(Operand &op);
     Error emitDisplacement(InsnNs32000 &insn, uint32_t val32);
@@ -70,7 +70,7 @@ private:
     Error emitBitField(
         InsnNs32000 &insn, AddrMode mode,
         const Operand *off, const Operand &len);
-    Error emitImmediate(InsnNs32000 &insn, uint32_t val32, OprSize size);
+    Error emitImmediate(InsnNs32000 &insn, const Operand &op,  OprSize size);
     Error emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
     Error emitGeneric(

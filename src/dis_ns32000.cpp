@@ -121,7 +121,7 @@ Error DisNs32000::decodeBitField(
     const uint8_t len = (data & 0x1F) + 1;
     const uint8_t off = (data >> 5);
     outConstant(off, 10);  // M_BFOFF
-    *_operands++ = ',';
+    outText(", ");
     outConstant(len, 10);  // M_BFLEN
     return OK;
 }
@@ -149,7 +149,6 @@ Error DisNs32000::decodeImmediate(
         break;
     }
     case SZ_FLOAT: {
-        // TODO: float
         uint32_t val32;
         if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
         outConstant(val32);
@@ -195,31 +194,37 @@ Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn) {
 
 Error DisNs32000::decodeConfig(const InsnNs32000 &insn, OprPos pos) {
     const uint8_t config = getOprField(insn, pos);
+    *_operands++ = '[';
     char sep = 0;
     for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
         if (config & mask) {
             if (sep) *_operands++ = sep;
             _operands = _regs.outConfigName(
                     _operands, _regs.decodeConfigName(mask));
-            sep = '/';
+            sep = ',';
         }
     }
+    *_operands++ = ']';
+    *_operands = 0;
     return OK;
 }
 
 Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, OprPos pos) {
     const uint8_t strOpt = getOprField(insn, pos);
+    *_operands++ = '[';
     char sep = 0;
     StrOptName name = _regs.decodeStrOptName(strOpt & 0x02);
     if (name != STROPT_UNDEF) {
         _operands = _regs.outStrOptName(_operands, name);
-        sep = '/';
+        sep = ',';
     }
     name = _regs.decodeStrOptName(strOpt & 0x0C);
     if (name != STROPT_UNDEF) {
         if (sep) *_operands++ = sep;
         _operands = _regs.outStrOptName(_operands, name);
     }
+    *_operands++ = ']';
+    *_operands = 0;
     return OK;
 }
 
@@ -227,17 +232,21 @@ Error DisNs32000::decodeRegisterList(
         DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
     uint8_t list;
     if (insn.readByte(memory, list)) return setError(NO_MEMORY);
+    if (list == 0) return setError(OPCODE_HAS_NO_EFFECT);
     const uint8_t mask = (mode == M_POP) ? 0x80 : 0x01;
+    *_operands++ = '[';
     char sep = 0;
     for (uint8_t reg = 0; list; reg++) {
         if (list & mask) {
             if (sep) *_operands++ = sep;
             _operands = _regs.outRegName(_operands, _regs.decodeRegName(reg));
-            sep = '/';
+            sep = ',';
         }
         if (mode == M_POP) list <<= 1;
         else list >>= 1;
     }
+    *_operands++ = ']';
+    *_operands = 0;
     return OK;
 }
 

@@ -54,6 +54,7 @@ enum AddrMode {
     M_LEN16 = 27, // Length: 1~16
     M_LEN8  = 28, // Length: 1~8
     M_LEN4  = 29, // Length: 1~4
+    M_EMPTY = 30, // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
 };
 
 enum OprPos {

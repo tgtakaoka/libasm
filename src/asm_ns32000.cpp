@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-
 #include "asm_ns32000.h"
 #include "table_ns32000.h"
 #include "reg_ns32000.h"
@@ -27,7 +25,36 @@ bool AsmNs32000::endOfLine(const char *scan) const {
     return (*scan == '#') || Assembler::endOfLine(scan);
 }
 
-Error AsmNs32000::parseConfigNames(const char *p, Operand &op, bool bracket) {
+Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
+    uint8_t strOpt = 0;
+    while (true) {
+        if (*p == ']') {
+            p++;
+            break;
+        }
+        const StrOptName name = _regs.parseStrOptName(p);
+        if (name == STROPT_UNDEF) return UNKNOWN_OPERAND;
+        p += _regs.strOptNameLen(name);
+        if (strOpt & uint8_t(name)) return setError(ILLEGAL_OPERAND);
+        strOpt |= uint8_t(name);
+        p = skipSpaces(p);
+        if (*p == ',') {
+            p++;
+        } else if (*p == ']') {
+            p++;
+            break;
+        } else {
+            return UNKNOWN_OPERAND;
+        }
+        p = skipSpaces(p);
+    }
+    _scan = p;
+    op.val32 = strOpt;
+    op.mode = strOpt ? M_SOPT : M_EMPTY;
+    return setOK();
+}
+
+Error AsmNs32000::parseConfigNames(const char *p, Operand &op) {
     uint8_t configs = 0;
     while (true) {
         const ConfigName name = _regs.parseConfigName(p);
@@ -35,25 +62,15 @@ Error AsmNs32000::parseConfigNames(const char *p, Operand &op, bool bracket) {
         p += _regs.configNameLen(name);
         configs |= uint8_t(name);
         p = skipSpaces(p);
-        if (bracket) {
-            if (*p == ',') {
-                ;
-            } else if (*p == ']') {
-                p++;
-                break;
-            } else {
-                return UNKNOWN_OPERAND;
-            }
+        if (*p == ',') {
+            p++;
+        } else if (*p == ']') {
+            p++;
+            break;
         } else {
-            if (*p == '/') {
-                ;
-            } else if (endOfLine(p)) {
-                break;
-            } else {
-                return UNKNOWN_OPERAND;
-            }
+            return UNKNOWN_OPERAND;
         }
-        p = skipSpaces(p + 1);
+        p = skipSpaces(p);
     }
     _scan = p;
     op.val32 = configs;
@@ -61,42 +78,7 @@ Error AsmNs32000::parseConfigNames(const char *p, Operand &op, bool bracket) {
     return setOK();
 }
 
-Error AsmNs32000::parseStrOptNames(const char *p, Operand &op, bool bracket) {
-    uint8_t strOpt = 0;
-    while (true) {
-        const StrOptName name = _regs.parseStrOptName(p);
-        if (name == STROPT_UNDEF) return UNKNOWN_OPERAND;
-        p += _regs.strOptNameLen(name);
-        if (strOpt & uint8_t(name)) return setError(ILLEGAL_OPERAND);
-        strOpt |= uint8_t(name);
-        p = skipSpaces(p);
-        if (bracket) {
-            if (*p == ',') {
-                ;
-            } else if (*p == ']') {
-                p++;
-                break;
-            } else {
-                return UNKNOWN_OPERAND;
-            }
-        } else {
-            if (*p == '/') {
-                ;
-            } else if (endOfLine(p)) {
-                break;
-            } else {
-                return UNKNOWN_OPERAND;
-            }
-        }
-        p = skipSpaces(p + 1);
-    }
-    _scan = p;
-    op.val32 = strOpt;
-    op.mode = M_SOPT;
-    return setOK();
-}
-
-Error AsmNs32000::parseRegisterList(const char *p, Operand &op, bool bracket) {
+Error AsmNs32000::parseRegisterList(const char *p, Operand &op) {
     uint8_t list = 0;
     uint8_t n = 0;
     while (true) {
@@ -105,28 +87,16 @@ Error AsmNs32000::parseRegisterList(const char *p, Operand &op, bool bracket) {
         list |= (1 << _regs.encodeRegName(name));
         n++;
         p = skipSpaces(p + _regs.regNameLen(name));
-        if (bracket) {
-            if (*p == ',') {
-                ;
-            } else if (*p == ']') {
-                p++;
-                break;
-            } else {
-                return UNKNOWN_OPERAND;
-            }
+        if (*p == ',') {
+            p++;
+        } else if (*p == ']') {
+            p++;
+            break;
         } else {
-            if (*p == '/') {
-                ;
-            } else if (endOfLine(p) || *p == ',') {
-                break;
-            } else {
-                return UNKNOWN_OPERAND;
-            }
+            return UNKNOWN_OPERAND;
         }
-        p = skipSpaces(p + 1);
+        p = skipSpaces(p);
     }
-    if (!bracket && n == 1)     // a single register
-        return UNKNOWN_OPERAND;
     _scan = p;
     op.val32 = list;
     op.mode = M_PUSH;
@@ -143,15 +113,18 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         op.mode = M_ABS;
         return OK;
     }
-    const bool bracket = (*p == '[');
-    if (bracket) p = skipSpaces(p + 1);
-    if (parseConfigNames(p, op, bracket) != UNKNOWN_OPERAND)
-        return getError();
-    if (parseStrOptNames(p, op, bracket) != UNKNOWN_OPERAND)
-        return getError();
-    if (parseRegisterList(p, op, bracket) != UNKNOWN_OPERAND)
-        return getError();
-    if (bracket) return setError(MISSING_CLOSING_PAREN);
+
+    if (*p == '[') {
+        p = skipSpaces(p + 1);
+        // parseStrOpt can handle empty list "[]".
+        if (parseStrOptNames(p, op) != UNKNOWN_OPERAND)
+            return getError();
+        if (parseConfigNames(p, op) != UNKNOWN_OPERAND)
+            return getError();
+        if (parseRegisterList(p, op) != UNKNOWN_OPERAND)
+            return getError();
+        return setError(MISSING_CLOSING_PAREN);
+    }
 
     const PregName preg = _regs.parsePregName(p);
     if (preg != PREG_UNDEF) {
@@ -210,7 +183,17 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
     if (getOperand(op.val32)) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
-    if (endOfLine(p) || *p == ',' || *p == '[') {
+    if (*p == ':') { // 64-bit immediate
+        _scan = p + 1;
+        if (getOperand(op.disp2)) return getError();
+        op.setErrorIf(getError());
+        op.indexSize = SZ_DOUBLE;
+        p = skipSpaces(_scan);
+    } else {
+        op.disp2 = 0;
+        op.indexSize = SZ_LONG;
+    }
+    if (endOfLine(p) || *p == ',') {
         _scan = p;
         op.mode = M_IMM; // M_REL
         return OK;
@@ -387,25 +370,21 @@ Error AsmNs32000::emitBitField(
 }
 
 Error AsmNs32000::emitImmediate(
-    InsnNs32000 &insn, uint32_t val32, OprSize size) {
+    InsnNs32000 &insn, const Operand &op, OprSize size) {
     switch (size) {
     case SZ_BYTE:
-        insn.emitOperand8(static_cast<uint8_t>(val32));
+        insn.emitOperand8(static_cast<uint8_t>(op.val32));
         break;
     case SZ_WORD:
-        insn.emitOperand16(static_cast<uint16_t>(val32));
+        insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
     case SZ_LONG:
-        insn.emitOperand32(val32);
-        break;
     case SZ_FLOAT:
-        // TODO:
-        insn.emitOperand32(0);
+        insn.emitOperand32(op.val32);
         break;
     case SZ_DOUBLE:
-        // TODO;
-        insn.emitOperand32(0);
-        insn.emitOperand32(0);
+        insn.emitOperand32(op.val32);
+        insn.emitOperand32(op.indexSize == SZ_DOUBLE ? op.disp2 : 0);
         break;
     default: return setError(INTERNAL_ERROR);
     }
@@ -466,8 +445,7 @@ Error AsmNs32000::emitGeneric(
         return emitDisplacement(insn, op.disp2);
     case M_IMM:
         return emitImmediate(
-                insn, op.val32,
-                mode == M_GENC ? SZ_BYTE : insn.oprSize());
+                insn, op, mode == M_GENC ? SZ_BYTE : insn.oprSize());
     default:
         return OK;
     }
@@ -494,9 +472,11 @@ Error AsmNs32000::emitOperand(
         embedOprField(insn, pos, op.val32);
         break;
     case M_PUSH:
+        if (op.val32 == 0) return setError(OPCODE_HAS_NO_EFFECT);
         insn.emitOperand8(op.val32);
         break;
     case M_POP:
+        if (op.val32 == 0) return setError(OPCODE_HAS_NO_EFFECT);
         insn.emitOperand8(reverseBits(op.val32));
         break;
     case M_GENR:
@@ -566,18 +546,8 @@ Error AsmNs32000::encode(Insn &_insn) {
     setErrorIf(ex2Op.getError());
 
     insn.setAddrMode(srcOp.mode, dstOp.mode, ex1Op.mode, ex2Op.mode);
-#if 0
-    printf("@@ search: name=%-6s src=%d dst=%d ex1=%d ex2=%d\n", insn.name(), insn.srcMode(), insn.dstMode(), insn.ex1Mode(), insn.ex2Mode());
-#endif
     if (TableNs32000.searchName(insn))
         return setError(TableNs32000.getError());
-#if 0
-    printf("@@  found: name=%-6s src=%d dst=%d ex1=%d ex2=%d sz=%d opc=", insn.name(), insn.srcMode(), insn.dstMode(), insn.ex1Mode(), insn.ex2Mode(), insn.oprSize());
-    if (insn.hasPost()) printf("%02X:", insn.post());
-    printf("%02X", insn.opCode());
-    if (insn.hasPrefix()) printf(":%02X", insn.prefix());
-    printf("\n");
-#endif
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     const AddrMode ex1 = insn.ex1Mode();
