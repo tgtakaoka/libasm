@@ -73,23 +73,21 @@ static uint32_t makeUnsigned(uint32_t val, int8_t bitWidth) {
 }
 
 char *ValueFormatter::outputRelaxed(
-    char *p, uint32_t val, int8_t radix, int8_t &bitWidth) const {
-    const int8_t saved = bitWidth;
-    if (bitWidth > 0) bitWidth = -bitWidth;
+    char *p, uint32_t val, int8_t radix, int8_t bitWidth) const {
+    if (bitWidth >= 0) bitWidth = -bitWidth; // forcibly suppress leading zero.
     if (radix >= 0) {
         auto uval = makeUnsigned(val, bitWidth);
-        if (uval <= 16 || (uval <= 32 && bitWidth < -16))
+        if (uval <= 32)
             return reverseStr(p, outputNumber(p, uval, 10, bitWidth));
     } else {
         auto sval = makeSigned(val, bitWidth);
-        if (sval < 0 && sval >= -16) {
+        if (sval < 0 && sval >= -32) {
             *p++ = '-';
             return reverseStr(p, outputNumber(p, -sval, 10, bitWidth));
         }
-        if (sval >= 0 && sval <= 16)
+        if (sval >= 0 && sval <= 32)
             return reverseStr(p, outputNumber(p, sval, 10, bitWidth));
     }
-    bitWidth = saved;
     return nullptr;
 }
 

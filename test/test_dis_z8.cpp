@@ -346,10 +346,10 @@ static void test_two_operands() {
     TEST(ADC, "17H,@16H",  0x15, 0x16, 0x17);
     TEST(ADC, "17H,@R6",   0x15, R(6), 0x17);
     TEST(ADC, "R7,@16H",   0x15, 0x16, R(7));
-    TEST(ADC, "17H,#18H",  0x16, 0x17, 0x18);
-    TEST(ADC, "R7,#18H",   0x16, R(7), 0x18);
-    TZ86(ADC, "@18H,#19H", 0x17, 0x18, 0x19);
-    TZ86(ADC, "@R8,#19H",  0x17, R(8), 0x19);
+    TEST(ADC, "17H,#24",   0x16, 0x17, 0x18);
+    TEST(ADC, "R7,#24",    0x16, R(7), 0x18);
+    TZ86(ADC, "@18H,#25",  0x17, 0x18, 0x19);
+    TZ86(ADC, "@R8,#25",   0x17, R(8), 0x19);
 
     TEST(SUB, "R2,R3",     0x22, 0x23);
     TEST(SUB, "R4,@R5",    0x23, 0x45);

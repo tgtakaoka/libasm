@@ -279,7 +279,7 @@ static void test_relative() {
 
 static void test_bit_address() {
     dis8051.setRelativeTarget(true);
-    TEST(JBC, "22H.1,$+15H", 0x10, 0x11, 0x12);
+    TEST(JBC, "22H.1,$+21", 0x10, 0x11, 0x12);
     TEST(JB,  "24H.1,$+25H", 0x20, 0x21, 0x22);
     TEST(JNB, "26H.1,$+35H", 0x30, 0x31, 0x32);
 

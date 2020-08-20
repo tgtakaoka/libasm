@@ -269,7 +269,7 @@ static void test_immediate() {
     TEST(ADCI, "0ABH", 0x7C, 0xAB);
     TEST(SDBI, "0CDH", 0x7D, 0xCD);
     TEST(SMBI, "0EFH", 0x7F, 0xEF);
-    TEST(LDI,  "12H",  0xF8, 0x12);
+    TEST(LDI,  "18",   0xF8, 0x12);
     TEST(ORI,  "34H",  0xF9, 0x34);
     TEST(ANI,  "45H",  0xFA, 0x45);
     TEST(XRI,  "67H",  0xFB, 0x67);

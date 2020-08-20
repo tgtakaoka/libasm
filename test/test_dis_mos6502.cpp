@@ -201,7 +201,7 @@ static void test_imm() {
         // W65C816
         TEST(COP, "#16",  0x02, 0x10);
         ETEST(UNKNOWN_INSTRUCTION, WDM, "#$10", 0x42, 0x10);
-        TEST(REP, "#$20", 0xC2, 0x20);
+        TEST(REP, "#32",  0xC2, 0x20);
         TEST(SEP, "#16",  0xE2, 0x10);
     }
 

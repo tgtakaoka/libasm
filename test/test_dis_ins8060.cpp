@@ -84,7 +84,7 @@ static void test_pointer() {
 }
 
 static void test_immediate() {
-    TEST(DLY,  "0x12", 0x8F, 0x12);
+    TEST(DLY, "18", 0x8F, 0x12);
 }
 
 static void test_jump() {
@@ -195,7 +195,7 @@ static void test_alu_immediate() {
     TEST(ORI, "1",    0xDC, 0x01);
     TEST(XRI, "0x80", 0xE4, 0x80);
     TEST(DAI, "0x99", 0xEC, 0x99);
-    TEST(ADI, "0x12", 0xF4, 0x12);
+    TEST(ADI, "18",   0xF4, 0x12);
     TEST(CAI, "0x34", 0xFC, 0x34);
 
     symtab.intern(-1, "minus1");

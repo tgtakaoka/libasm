@@ -52,7 +52,7 @@ protected:
      * Otherwise return |nullptr|.
      */
     char *outputRelaxed(
-        char *p, uint32_t val, int8_t radix, int8_t &bitWidth) const;
+        char *p, uint32_t val, int8_t radix, int8_t bitWidth) const;
 };
 
 class MotoValueFormatter : public ValueFormatter {
