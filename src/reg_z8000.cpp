@@ -304,26 +304,26 @@ uint8_t RegZ8000::encodeIntrName(IntrName intrName) const {
     return entry ? (pgm_read_byte(&entry->codeAndLen) >> 4) : 0;
 }
 
-static const char *TEXT_CC_F   PROGMEM = "F";
-static const char *TEXT_CC_LT  PROGMEM = "LT";
-static const char *TEXT_CC_LE  PROGMEM = "LE";
-static const char *TEXT_CC_ULE PROGMEM = "ULE";
-static const char *TEXT_CC_OV  PROGMEM = "OV";
-static const char *TEXT_CC_MI  PROGMEM = "MI";
-static const char *TEXT_CC_Z   PROGMEM = "Z";
-static const char *TEXT_CC_C   PROGMEM = "C";
-static const char *TEXT_CC_T   PROGMEM = "";
-static const char *TEXT_CC_GE  PROGMEM = "GE";
-static const char *TEXT_CC_GT  PROGMEM = "GT";
-static const char *TEXT_CC_UGT PROGMEM = "UGT";
-static const char *TEXT_CC_NOV PROGMEM = "NOV";
-static const char *TEXT_CC_PL  PROGMEM = "PL";
-static const char *TEXT_CC_NZ  PROGMEM = "NZ";
-static const char *TEXT_CC_NC  PROGMEM = "NC";
-static const char *TEXT_CC_EQ  PROGMEM = "EQ";
-static const char *TEXT_CC_ULT PROGMEM = "ULT";
-static const char *TEXT_CC_NE  PROGMEM = "NE";
-static const char *TEXT_CC_UGE PROGMEM = "UGE";
+static const char TEXT_CC_F[]   PROGMEM = "F";
+static const char TEXT_CC_LT[]  PROGMEM = "LT";
+static const char TEXT_CC_LE[]  PROGMEM = "LE";
+static const char TEXT_CC_ULE[] PROGMEM = "ULE";
+static const char TEXT_CC_OV[]  PROGMEM = "OV";
+static const char TEXT_CC_MI[]  PROGMEM = "MI";
+static const char TEXT_CC_Z[]   PROGMEM = "Z";
+static const char TEXT_CC_C[]   PROGMEM = "C";
+static const char TEXT_CC_T[]   PROGMEM = "";
+static const char TEXT_CC_GE[]  PROGMEM = "GE";
+static const char TEXT_CC_GT[]  PROGMEM = "GT";
+static const char TEXT_CC_UGT[] PROGMEM = "UGT";
+static const char TEXT_CC_NOV[] PROGMEM = "NOV";
+static const char TEXT_CC_PL[]  PROGMEM = "PL";
+static const char TEXT_CC_NZ[]  PROGMEM = "NZ";
+static const char TEXT_CC_NC[]  PROGMEM = "NC";
+static const char TEXT_CC_EQ[]  PROGMEM = "EQ";
+static const char TEXT_CC_ULT[] PROGMEM = "ULT";
+static const char TEXT_CC_NE[]  PROGMEM = "NE";
+static const char TEXT_CC_UGE[] PROGMEM = "UGE";
 static const NameEntry CC_TABLE[] PROGMEM = {
     { CC_F,   0x01, TEXT_CC_F   },
     { CC_LT,  0x12, TEXT_CC_LT  },
@@ -380,11 +380,11 @@ char *RegZ8000::outCcName(char *out, CcName ccName) const {
     return outText(out, text);
 }
 
-static const char *TEXT_FL_C PROGMEM = "C";
-static const char *TEXT_FL_Z PROGMEM = "Z";
-static const char *TEXT_FL_S PROGMEM = "S";
-static const char *TEXT_FL_P PROGMEM = "P";
-static const char *TEXT_FL_V PROGMEM = "V";
+static const char TEXT_FL_C[] PROGMEM = "C";
+static const char TEXT_FL_Z[] PROGMEM = "Z";
+static const char TEXT_FL_S[] PROGMEM = "S";
+static const char TEXT_FL_P[] PROGMEM = "P";
+static const char TEXT_FL_V[] PROGMEM = "V";
 static const NameEntry FLAG_TABLE[] PROGMEM = {
     { FL_C, 0x81, TEXT_FL_C },
     { FL_Z, 0x41, TEXT_FL_Z },
