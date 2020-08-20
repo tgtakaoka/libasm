@@ -24,6 +24,10 @@
 namespace libasm {
 namespace mc68000 {
 
+#if defined(SPL)
+#undef SPL
+#endif
+
 #define X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, _alias) \
     {                                                                   \
         _opc,                                                           \
