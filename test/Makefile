@@ -94,7 +94,8 @@ test_ns32000.s28: test_ns32000.s
 	test_cdp1802 \
 	test_tms9900 \
 	test_mc68000 \
-	test_z8000 \
+	test_z8000   \
+	test_ns32000 \
 	test_expr
 
 test:   test_mc6809  \
@@ -109,6 +110,8 @@ test:   test_mc6809  \
 	test_cdp1802 \
 	test_tms9900 \
 	test_mc68000 \
+	test_z8000   \
+	test_ns32000 \
 	test_expr
 
 test_mc6809: test_asm_mc6809 test_dis_mc6809
