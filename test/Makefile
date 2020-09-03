@@ -44,6 +44,7 @@ all: \
 	test_ins8060.hex \
 	test_ins8070.hex \
 	test_cdp1802.hex \
+	test_i8086.hex \
 	test_tms9900.hex \
 	test_tms9995.hex \
 	test_tms99105.hex \
