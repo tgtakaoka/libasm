@@ -33,6 +33,7 @@ enum RegName : char {
     REG_R5 = '5',  // R5
     REG_R6 = '6',  // R6
     REG_R7 = '7',  // R7
+#ifdef ENABLE_FLOAT
     REG_F0 = 'A',  // F0
     REG_F1 = 'B',  // F1
     REG_F2 = 'C',  // F2
@@ -41,6 +42,7 @@ enum RegName : char {
     REG_F5 = 'F',  // F5
     REG_F6 = 'G',  // F6
     REG_F7 = 'H',  // F7
+#endif
     REG_FP = 'f',  // FP
     REG_SP = 's',  // SP
     REG_SB = 'b',  // SB
@@ -60,6 +62,7 @@ enum PregName : uint8_t {
     PREG_UNDEF   = 16,
 };
 
+#ifdef ENABLE_MMU
 enum MregName : uint8_t {
     MREG_BPR0  = 0,  // BPR0
     MREG_BPR1  = 1,  // BPR1
@@ -70,6 +73,7 @@ enum MregName : uint8_t {
     MREG_EIA   = 15, // EIA
     MREG_UNDEF = 16,
 };
+#endif
 
 enum ConfigName : uint8_t {
     CONFIG_UNDEF = 0,
@@ -94,7 +98,9 @@ public:
     uint8_t regNameLen(RegName name) const;
     char *outRegName(char *out, const RegName name) const;
     bool isGeneric(RegName name) const;
+#ifdef ENABLE_FLOAT
     bool isFloat(RegName name) const;
+#endif
 
     PregName parsePregName(const char *line) const;
     PregName decodePregName(uint8_t num) const;
@@ -102,11 +108,13 @@ public:
     uint8_t pregNameLen(PregName name) const;
     char *outPregName(char *out, PregName name) const;
 
+#ifdef ENABLE_MMU
     MregName parseMregName(const char *line) const;
     MregName decodeMregName(uint8_t num) const;
     int8_t encodeMregName(MregName name) const;
     uint8_t mregNameLen(MregName name) const;
     char *outMregName(char *out, MregName name) const;
+#endif
 
     ConfigName parseConfigName(const char *line) const;
     ConfigName decodeConfigName(uint8_t num) const;

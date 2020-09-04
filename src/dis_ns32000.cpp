@@ -22,7 +22,10 @@ namespace ns32000 {
 
 static bool isGenMode(AddrMode mode) {
     return mode == M_GENR || mode == M_GENW || mode == M_GENC
-        || mode == M_FENR || mode == M_FENW;
+#ifdef ENABLE_FLOAT
+        || mode == M_FENR || mode == M_FENW
+#endif
+        ;
 }
 
 static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
@@ -148,6 +151,7 @@ Error DisNs32000::decodeImmediate(
         outConstant(val32);
         break;
     }
+#ifdef ENABLE_FLOAT
     case SZ_FLOAT: {
         uint32_t val32;
         if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
@@ -164,6 +168,7 @@ Error DisNs32000::decodeImmediate(
         outConstant(lsb32);
         break;
     }
+#endif
     default:
         break;
     }
@@ -265,7 +270,11 @@ Error DisNs32000::decodeGeneric(
     RegName reg;
     switch (gen) {
     case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+#ifdef ENABLE_FLOAT
         reg = _regs.decodeRegName(gen, (mode == M_FENR || mode == M_FENW));
+#else
+        reg = _regs.decodeRegName(gen);
+#endif
         _operands = _regs.outRegName(_operands, reg);
         break;
     case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15:
@@ -351,9 +360,11 @@ Error DisNs32000::decodeOperand(
     case M_PREG:
         _operands = _regs.outPregName(_operands, _regs.decodePregName(field));
         break;
+#ifdef ENABLE_MMU
     case M_MREG:
         _operands = _regs.outMregName(_operands, _regs.decodeMregName(field));
         break;
+#endif
     case M_CONF:
         return decodeConfig(insn, pos);
     case M_SOPT:
@@ -364,8 +375,10 @@ Error DisNs32000::decodeOperand(
     case M_GENR:
     case M_GENC:
     case M_GENW:
+#ifdef ENABLE_FLOAT
     case M_FENW:
     case M_FENR:
+#endif
         return decodeGeneric(memory, insn, mode, pos);
     case M_INT4:
         outConstant(static_cast<int8_t>(getOprField(insn, pos)));

@@ -25,7 +25,9 @@ namespace ns32000 {
 enum AddrMode {
     M_NONE  = 0,
     M_GREG  = 1,  // Generic Register: Rn
+#ifdef ENABLE_FLOAT
     M_FREG  = 2,  // Floating Register: Fn
+#endif
     M_RREL  = 3,  // Register Relative: disp(Rn)
     M_MREL  = 4,  // Memory Relative: disp1(disp2(FP/SP/SB))
     M_IMM   = 5,  // Immediate: value
@@ -34,7 +36,9 @@ enum AddrMode {
     M_TOS   = 8,  // Top of Stack: TOS
     M_MEM   = 9,  // Memory Space: disp(FP/SP/SB/PC)
     M_PREG  = 10, // Dedicated Register
+#ifdef ENABLE_MMU
     M_MREG  = 11, // MMU Register
+#endif
     M_CONF  = 12, // Configuration
     M_SOPT  = 13, // String instruction option
     M_PUSH  = 14, // Register list for push
@@ -43,8 +47,10 @@ enum AddrMode {
     M_GENC  = 17, // Generic Count (incl. Immediate)
     M_GENW  = 18, // Generic (excl. Immediate)
     M_GENA  = M_GENW, // Generic (excl. Immediate)
+#ifdef ENABLE_FLOAT
     M_FENR  = 19, // Floating Generic (incl. Immediate)
     M_FENW  = 20, // Floating Generic (excl. Immediate)
+#endif
     M_DISP  = 21, // Displacement
     M_INT4  = 22, // 4-bit signed Integer
     M_REL   = 23, // Relative address
@@ -72,8 +78,10 @@ enum OprSize {
     SZ_WORD   = 1,  // 16-bit integer (Word)
     SZ_LONG   = 2,  // 32-bit integer (Double)
     SZ_QUAD   = 3,  // 64-bit integer (Quad)
+#ifdef ENABLE_FLOAT
     SZ_FLOAT  = 4,  // 32-bit float (Float)
     SZ_DOUBLE = 5,  // 64-bit float (Long)
+#endif
     SZ_NONE   = 6,
 };
 

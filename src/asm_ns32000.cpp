@@ -133,6 +133,7 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         op.mode = M_PREG;
         return OK;
     }
+#ifdef ENABLE_MMU
     const MregName mreg = _regs.parseMregName(p);
     if (mreg != MREG_UNDEF) {
         _scan = p + _regs.mregNameLen(mreg);
@@ -140,6 +141,7 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         op.mode = M_MREG;
         return OK;
     }
+#endif
     RegName reg = _regs.parseRegName(p);
     if (reg != REG_UNDEF) {
         p += _regs.regNameLen(reg);
@@ -149,12 +151,14 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
             op.mode = M_GREG;
             return OK;
         }
+#ifdef ENABLE_FLOAT
         if (_regs.isFloat(reg)) {
             _scan = p;
             op.reg = reg;
             op.mode = M_FREG;
             return OK;
         }
+#endif
         if (reg == REG_TOS) {
             _scan = p;
             op.mode = M_TOS;
@@ -183,6 +187,7 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
     if (getOperand(op.val32)) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
+#ifdef ENABLE_FLOAT
     if (*p == ':') { // 64-bit immediate
         _scan = p + 1;
         if (getOperand(op.disp2)) return getError();
@@ -190,9 +195,12 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         op.indexSize = SZ_DOUBLE;
         p = skipSpaces(_scan);
     } else {
+#endif
         op.disp2 = 0;
         op.indexSize = SZ_LONG;
+#ifdef ENABLE_FLOAT
     }
+#endif
     if (endOfLine(p) || *p == ',') {
         _scan = p;
         op.mode = M_IMM; // M_REL
@@ -379,13 +387,17 @@ Error AsmNs32000::emitImmediate(
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
     case SZ_LONG:
+#ifdef ENABLE_FLOAT
     case SZ_FLOAT:
+#endif
         insn.emitOperand32(op.val32);
         break;
+#ifdef ENABLE_FLOAT
     case SZ_DOUBLE:
         insn.emitOperand32(op.val32);
         insn.emitOperand32(op.indexSize == SZ_DOUBLE ? op.disp2 : 0);
         break;
+#endif
     default: return setError(INTERNAL_ERROR);
     }
     return OK;
@@ -394,7 +406,10 @@ Error AsmNs32000::emitImmediate(
 uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
     switch (mode) {
     case M_GREG:
-    case M_FREG: return _regs.encodeRegName(reg);
+#ifdef ENABLE_FLOAT
+    case M_FREG:
+#endif
+        return _regs.encodeRegName(reg);
     case M_RREL: return _regs.encodeRegName(reg) | 0x08;
     case M_MREL:
         if (reg == REG_FP) return 0x10;
@@ -466,7 +481,9 @@ Error AsmNs32000::emitOperand(
         embedOprField(insn, pos, _regs.encodeRegName(op.reg));
         break;
     case M_PREG:
+#ifdef ENABLE_MMU
     case M_MREG:
+#endif
     case M_CONF:
     case M_SOPT:
         embedOprField(insn, pos, op.val32);
@@ -482,8 +499,10 @@ Error AsmNs32000::emitOperand(
     case M_GENR:
     case M_GENC:
     case M_GENW:
+#ifdef ENABLE_FLOAT
     case M_FENR:
     case M_FENW:
+#endif
         return emitGeneric(insn, mode, op, pos);
     case M_INT4: {
         const int32_t val = static_cast<int32_t>(op.val32);

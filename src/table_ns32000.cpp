@@ -361,6 +361,7 @@ static const Entry FORMAT_8_4[] PROGMEM = {
     X(0x03, CHECKD, LONG, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, M_NONE, P_GEN2, P_NONE)
 };
 
+#ifdef ENABLE_FLOAT
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
 static const Entry FORMAT_9[] PROGMEM = {
     E(0x00, MOVBL,   BYTE,   M_GENR, M_FENW, P_GEN1, P_GEN2)
@@ -412,7 +413,9 @@ static const Entry FORMAT_11[] PROGMEM = {
     E(0x34, ABSL, DOUBLE, M_FENR, M_FENW, P_GEN1, P_GEN2)
     E(0x35, ABSF, FLOAT,  M_FENR, M_FENW, P_GEN1, P_GEN2)
 };
+#endif
 
+#ifdef ENABLE_MMU
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
 static const Entry FORMAT_14_1[] PROGMEM = {
     E(0x03, RDVAL, LONG, M_GENA, M_NONE, P_GEN1,  P_NONE)
@@ -422,6 +425,7 @@ static const Entry FORMAT_14_2[] PROGMEM = {
     E(0x0B, LMR,   LONG, M_MREG, M_GENR, P_SHORT, P_GEN1)
     E(0x0F, SMR,   LONG, M_MREG, M_GENW, P_SHORT, P_GEN1)
 };
+#endif
 
 struct TableNs32000::EntryPage {
     const Config::opcode_t prefix;
@@ -454,10 +458,14 @@ static const TableNs32000::EntryPage NS32000_PAGES[] PROGMEM = {
     { 0xAE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_3) },
     { 0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1) },
     { 0xEE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_4) },
+#ifdef ENABLE_FLOAT
     { 0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9)   },
     { 0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11)  },
+#endif
+#ifdef ENABLE_MMU
     { 0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1) },
     { 0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2) },
+#endif
 };
 
 bool TableNs32000::isPrefixCode(Config::opcode_t opCode) const {
@@ -478,13 +486,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT
         || opr == M_TOS || opr == M_MEM)
         return table == M_GENR || table == M_GENC || table == M_GENW
-            || table == M_FENR || table == M_FENW;
+#ifdef ENABLE_FLOAT
+            || table == M_FENR || table == M_FENW
+#endif
+            ;
     if (opr == M_IMM)
-        return table == M_GENR || table == M_GENC || table == M_FENR
+        return table == M_GENR || table == M_GENC
+#ifdef ENABLE_FLOAT
+            || table == M_FENR
+#endif
             || table == M_DISP || table == M_INT4 || table == M_REL
             || table == M_BFOFF || table == M_BFLEN || table == M_LEN32
             || table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
+#ifdef ENABLE_FLOAT
     if (opr == M_FREG) return table == M_FENR || table == M_FENW;
+#endif
     if (opr == M_PUSH) return table == M_POP;
     if (opr == M_EMPTY)
         return table == M_PUSH || table == M_POP

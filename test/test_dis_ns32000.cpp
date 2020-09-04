@@ -276,6 +276,7 @@ static void test_format_8() {
     TEST(MOVUSB, "9(SB), 5(SP)",        0xAE, 0x5C, 0xD6, 0x09, 0x05);
 }
 
+#ifdef ENABLE_FLOAT
 static void test_format_9() {
     TEST(MOVF,  "F0, 8(SB)",    0xBE, 0x85, 0x06, 0x08);
     TEST(MOVBF, "2, F0",        0x3E, 0x04, 0xA0, 0x02);
@@ -306,18 +307,23 @@ static void test_format_11() {
     TEST(SUBF, "F0, F7",         0xBE, 0xD1, 0x01);
     TEST(SUBL, "F2, 16(SB)",     0xBE, 0x90, 0x16, 0x10);
 }
+#endif
 
+#ifdef ENABLE_MMU
 static void test_format_14() {
     TEST(LMR,   "PTB1, R0",  0x1E, 0x8B, 0x06);
     TEST(SMR,   "PTB0, R0",  0x1E, 0x0F, 0x06);
     TEST(RDVAL, "0x200(R0)", 0x1E, 0x03, 0x40, 0x82, 0x00);
     TEST(WRVAL, "0x200(R0)", 0x1E, 0x07, 0x40, 0x82, 0x00);
 }
+#endif
 
 static void test_generic_addressing() {
     // Register
     TEST(ADDW, "R1, R2", 0x81, 0x08);
+#ifdef ENABLE_FLOAT
     TEST(ADDF, "F1, F2", 0xBE, 0x81, 0x08);
+#endif
     // Register Relative
     TEST(ADDW, "4(R1), R2",     0x81, 0x48, 0x04);
     TEST(ADDW, "4(R1), 32(R2)", 0x81, 0x4A, 0x04, 0x80, 0x20);
@@ -330,9 +336,11 @@ static void test_generic_addressing() {
     TEST(ADDB, "0x56, R1",       0x40, 0xA0, 0x56);
     TEST(ADDW, "0x1234, R1",     0x41, 0xA0, 0x12, 0x34);
     TEST(ADDD, "0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
+#ifdef ENABLE_FLOAT
     TEST(ADDF, "0x12345678, F1", 0xBE, 0x41, 0xA0, 0x12, 0x34, 0x56, 0x78);
     TEST(ADDL, "0x12345678:0x9ABCDEF0, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0);
+#endif
     // Absolute
     TEST(ADDW, "@0x1234, 4(R2)",   0x81, 0xAA, 0x92, 0x34, 0x04);
     TEST(ADDW, "@0x1234, @0x5678", 0x41, 0xAD, 0x92, 0x34, 0xC0, 0x00, 0x56, 0x78);
@@ -584,9 +592,13 @@ int main(int argc, char **argv) {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
+#ifdef ENABLE_FLOAT
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
+#endif
+#ifdef ENABLE_MMU
     RUN_TEST(test_format_14);
+#endif
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_illegal);
     return 0;

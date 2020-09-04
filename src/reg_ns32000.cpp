@@ -94,6 +94,7 @@ static const NameEntry REG_TABLE[] PROGMEM = {
     { REG_SB,   2, TEXT_REG_SB },
     { REG_PC,   2, TEXT_REG_PC },
     { REG_TOS,  3, TEXT_REG_TOS },
+#ifdef ENABLE_FLOAT
     { REG_F0,   2, TEXT_REG_F0 },
     { REG_F1,   2, TEXT_REG_F1 },
     { REG_F2,   2, TEXT_REG_F2 },
@@ -102,6 +103,7 @@ static const NameEntry REG_TABLE[] PROGMEM = {
     { REG_F5,   2, TEXT_REG_F5 },
     { REG_F6,   2, TEXT_REG_F6 },
     { REG_F7,   2, TEXT_REG_F7 },
+#endif
     { REG_EXT,  3, TEXT_REG_EXT },
 };
 
@@ -118,7 +120,9 @@ RegName RegNs32000::decodeRegName(uint8_t num, bool floating) const {
 
 int8_t RegNs32000::encodeRegName(RegName name) const {
     if (isGeneric(name)) return char(name) - '0';
+#ifdef ENABLE_FLOAT
     if (isFloat(name)) return char(name) - 'A';
+#endif
     return -1;
 }
 
@@ -141,9 +145,11 @@ bool RegNs32000::isGeneric(RegName name) const {
     return isdigit(char(name));
 }
 
+#ifdef ENABLE_FLOAT
 bool RegNs32000::isFloat(RegName name) const {
     return isupper(char(name));
 }
+#endif
 
 static const char TEXT_PREG_UPSR[]    PROGMEM = "UPSR";
 static const char TEXT_PREG_US[]      PROGMEM = "US";
@@ -193,6 +199,7 @@ char *RegNs32000::outPregName(char *out, PregName name) const {
     return out;
 }
 
+#ifdef ENABLE_MMU
 static const char TEXT_MREG_BPR0[] PROGMEM = "BPR0";
 static const char TEXT_MREG_BPR1[] PROGMEM = "BPR1";
 static const char TEXT_MREG_MSR[]  PROGMEM = "MSR";
@@ -241,6 +248,7 @@ char *RegNs32000::outMregName(char *out, MregName name) const {
     }
     return out;
 }
+#endif
 
 static const char TEXT_CONFIG_I[] PROGMEM = "I";
 static const char TEXT_CONFIG_F[] PROGMEM = "F";
