@@ -39,6 +39,7 @@ const char *MotoSrec::encode(
     switch (_addrWidth) {
     case ADDRESS_8BIT:
     case ADDRESS_16BIT: addrSize = 2; break;
+    case ADDRESS_20BIT:
     case ADDRESS_24BIT: addrSize = 3; break;
     case ADDRESS_32BIT: addrSize = 4; break;
     }
@@ -53,6 +54,7 @@ const char *MotoSrec::encode(
         addr &= ((uint32_t)1 << 16) - 1;
         p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
         break;
+    case ADDRESS_20BIT:
     case ADDRESS_24BIT:
         addr &= ((uint32_t)1 << 24) - 1;
         p += sprintf(p, "S2%02X%02X%04X", len,
@@ -78,6 +80,7 @@ const char *MotoSrec::end() {
     case ADDRESS_8BIT:
     case ADDRESS_16BIT:
         return "S9030000FC";
+    case ADDRESS_20BIT:
     case ADDRESS_24BIT:
         return "S804000000FB";
     case ADDRESS_32BIT:
@@ -101,6 +104,8 @@ uint8_t *MotoSrec::decode(
     if (type != '1' && type != '2' && type != '3')
         return nullptr;     // format error
     if (_addrWidth == ADDRESS_16BIT && (type == '2' || type == '3'))
+        return nullptr;     // address size overflow
+    if (_addrWidth == ADDRESS_20BIT && type == '3')
         return nullptr;     // address size overflow
     if (_addrWidth == ADDRESS_24BIT && type == '3')
         return nullptr;     // address size overflow

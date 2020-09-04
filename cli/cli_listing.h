@@ -76,6 +76,8 @@ private:
         uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint16(
         uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint20(
+        uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint24(
         uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint32(

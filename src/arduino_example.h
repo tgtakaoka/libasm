@@ -58,6 +58,8 @@ protected:
         const AddressWidth width = _config->addressWidth();
         if (width == ADDRESS_16BIT)
             _cli.printUint16(static_cast<uint16_t>(addr));
+        if (width == ADDRESS_20BIT)
+            _cli.printUint20(addr);
         if (width == ADDRESS_24BIT)
             _cli.printUint24(addr);
         if (width == ADDRESS_32BIT)

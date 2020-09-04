@@ -34,6 +34,7 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
     case ILLEGAL_OPERAND:      return PSTR("Illegal operand");
     case ILLEGAL_SIZE:         return PSTR("Illegal size");
     case ILLEGAL_OPERAND_MODE: return PSTR("Illegal operand mode");
+    case ILLEGAL_SEGMENT:      return PSTR("Illegal segment override");
 
     // Assembler
     case NO_INSTRUCTION:       return PSTR("No instruction found");
