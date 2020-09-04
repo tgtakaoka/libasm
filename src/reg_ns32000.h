@@ -88,8 +88,6 @@ enum StrOptName : uint8_t {
 
 class RegNs32000 : public RegBase {
 public:
-    bool compareRegName(const char *line, RegName name) const;
-
     RegName parseRegName(const char *line) const;
     RegName decodeRegName(uint8_t num, bool floating = false) const;
     int8_t encodeRegName(RegName name) const;
@@ -125,9 +123,6 @@ public:
     char indexSizeChar(OprSize size) const;
 
 private:
-    char regName1stChar(const RegName regName) const;
-    char regName2ndChar(const RegName regName) const;
-    char regName3rdChar(const RegName regName) const;
     char *outChar(char *out, char c) const;
     char *outText(char *out, const char *text) const;
 };
