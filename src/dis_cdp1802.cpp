@@ -47,12 +47,12 @@ Error DisCdp1802::decode(
         break;
     case ADDR:
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        outConstant(addr, 16, false);
+        outAddress(addr);
         break;
     case PAGE:
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         addr = ((insn.address() + 2) & ~0xFF) | val;
-        outConstant(addr, 16, false);
+        outAddress(addr);
         break;
     case IMPL:
         break;

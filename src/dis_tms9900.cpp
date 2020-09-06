@@ -29,7 +29,7 @@ Error DisTms9900::decodeOperand(
         uint16_t val;
         if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         *_operands++ = '@';
-        outConstant(val, 16);
+        outConstant(val);
         if (regno) {
             *_operands++ = '(';
             _operands = _regs.outRegName(_operands, regno);

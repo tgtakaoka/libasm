@@ -46,7 +46,7 @@ Error DisI8080::decodeDirect(
     DisMemory &memory, InsnI8080& insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    outConstant(addr, 16, false);
+    outAddress(addr);
     return setOK();
 }
 
@@ -54,7 +54,7 @@ Error DisI8080::decodeIoaddr(
     DisMemory &memory, InsnI8080& insn) {
     uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
-    outConstant(ioaddr, 16, false);
+    outAddress(ioaddr);
     return setOK();
 }
 

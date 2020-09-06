@@ -65,27 +65,17 @@ Error DisMos6502::decodeAbsolute(
         index = REG_UNDEF;
         break;
     }
+    if (indirect) *_operands++ = idirLong ? '[' : '(';
     uint16_t addr;
-    uint32_t target;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    target = addr;
-    if (absLong) {
+    if (!absLong) {
+        outAddress(addr, ">", addr < 0x100);
+    } else {
+        uint32_t target = addr;
         uint8_t bank;
         if (insn.readByte(memory, bank)) return setError(NO_MEMORY);
         target |= static_cast<uint32_t>(bank) << 16;
-    }
-    if (indirect) *_operands++ = idirLong ? '[' : '(';
-    const char *label = lookup(target);
-    if (label) {
-        *_operands++ = '>';
-        if (absLong) *_operands++ = '>';
-        outText(label);
-    } else if (!absLong) {
-        if (target < 0x100) *_operands++ = '>';
-        outConstant(addr, 16, false);
-    } else {
-        if (target < 0x10000) outText(">>");
-        outConstant(target, 16, false, true, ADDRESS_24BIT);
+        outAddress(target, ">>", target < 0x10000, addressWidth());
     }
     if (index != REG_UNDEF) {
         *_operands++ = ',';
@@ -129,13 +119,7 @@ Error DisMos6502::decodeZeroPage(
     uint8_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
     if (indirect) *_operands++ = zpLong ? '[' : '(';
-    const char *label = lookup(zp);
-    if (label) {
-        *_operands++ = '<';
-        outText(label);
-    } else {
-        outConstant(zp, 16, false);
-    }
+    outAddress(zp, "<");
     if (indirect && index == REG_Y) *_operands++ = zpLong ? ']' : ')';
     if (index != REG_UNDEF) {
         *_operands++ = ',';
@@ -178,9 +162,9 @@ Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn) {
     if (insn.readByte(memory, sbank)) return setError(NO_MEMORY);
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
-    outConstant(src, 16, false, true, Config::addressBits());
+    outAddress(src, nullptr, false, addressBits());
     *_operands++ = ',';
-    outConstant(dst, 16, false, true, Config::addressBits());
+    outAddress(dst, nullptr, false, addressBits());
     return setOK();
 }
 

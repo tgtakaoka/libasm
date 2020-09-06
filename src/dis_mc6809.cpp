@@ -27,21 +27,14 @@ void DisMc6809::outRegister(RegName regName) {
 Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
-    const char *label = lookup(dir);
-    if (label) {
-        *_operands ++ = '<';
-        outText(label);
-    } else {
-        outConstant(dir, 16, false);
-    }
+    outAddress(dir, "<");
     return setOK();
 }
 
 Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    if (addr < 0x100) *_operands++ = '>';
-    outConstant(addr, 16, false);
+    outAddress(addr, ">", addr < 0x100);
     return setOK();
 }
 
@@ -53,22 +46,22 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
     if (spec.indir) *_operands++ = '[';
     if (spec.mode == DISP_IDX || spec.mode == PNTR_IDX) {
         Config::ptrdiff_t offset = 0;
-        const char *force = nullptr;
+        char prefix = 0;
         if (spec.size == 5) {
             offset = post & 0x1F;
             if (post & 0x10) offset |= 0xFFE0;
-            if (offset == 0) force = "<<";
+            if (offset == 0) prefix = '{';
         } else if (spec.size == 8) {
             uint8_t val;
             if (insn.readByte(memory, val)) return setError(NO_MEMORY);
             offset = static_cast<int8_t>(val);
-            if (spec.indir && offset == 0) force = "<";
-            if (!spec.indir && offset >= -16 && offset < 16) force = "<";
+            if (spec.indir && offset == 0) prefix = '<';
+            if (!spec.indir && offset >= -16 && offset < 16) prefix = '<';
         } else if (spec.size == 16) {
             uint16_t val;
             if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
             offset = static_cast<int16_t>(val);
-            if (offset >= -128 && offset < 128) force = ">";
+            if (offset >= -128 && offset < 128) prefix = '>';
         }
         if (spec.size) {
             if (spec.base == REG_PCR) {
@@ -76,7 +69,10 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
                     insn.address() + insn.length() + offset;
                 outRelativeAddr(target, insn.address(), spec.size);
             } else {
-                if (force) outText(force);
+                if (prefix) {
+                    if (prefix == '{') *_operands++ = (prefix = '<');
+                    *_operands++ = prefix;
+                }
                 outConstant(offset, 10);
             }
         }
@@ -86,7 +82,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn) {
     if (spec.mode == ABS_IDIR) {
         Config::uintptr_t addr;
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        outConstant(addr, 16, false);
+        outAddress(addr);
     } else {
         *_operands++ = ',';
     }

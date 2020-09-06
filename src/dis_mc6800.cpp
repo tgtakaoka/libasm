@@ -56,13 +56,7 @@ Error DisMc6800::decodeDirectPage(
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = _accDelim;
-    const char *label = lookup(dir);
-    if (label) {
-        *_operands ++ = '<';
-        outText(label);
-    } else {
-        outConstant(dir, 16, false);
-    }
+    outAddress(dir, "<");
     return setOK();
 }
 
@@ -71,8 +65,7 @@ Error DisMc6800::decodeExtended(
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (outAccumulator(insn)) *_operands++ = _accDelim;
-    if (addr < 0x100) *_operands++ = '>';
-    outConstant(addr, 16, false);
+    outAddress(addr, ">", addr < 0x100);
     return setOK();
 }
 

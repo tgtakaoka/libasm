@@ -30,13 +30,13 @@ void DisZ8::outCcName(Config::opcode_t opCode) {
 
 void DisZ8::outIndexed(uint16_t base, RegName idx, AddrMode mode) {
     if (mode == M_XL) {
-        outConstant(base, 16, false);
+        outAddress(base);
     } else if (mode == M_XS) {
         const int8_t disp = static_cast<int8_t>(base);
         if (disp > 0) *_operands++ = '+';
         outConstant(disp, 10);
     } else { // M_X
-        outConstant(static_cast<uint8_t>(base), 16, false);
+        outAddress(static_cast<uint8_t>(base));
     }
     *_operands++ = '(';
     outWorkReg(idx, false, mode != M_X);
@@ -57,12 +57,7 @@ Error DisZ8::outRegAddr(uint8_t regAddr, bool indir, bool pair) {
     if (_preferWorkRegister && _regs.isWorkRegAlias(regAddr))
         return outWorkReg(regAddr & 0xF, indir, pair);
     if (indir) *_operands++ = '@';
-    const char *label = lookup(regAddr);
-    if (label) outText(label);
-    else {
-        if (regAddr < 16 && !indir) *_operands++ = '>';
-        outConstant(regAddr, 16, false);
-    }
+    outAddress(regAddr, ">", regAddr < 16 && !indir);
     return setOK();
 }
 
@@ -103,7 +98,7 @@ Error DisZ8::decodeAbsolute(
         return setError(NO_MEMORY);
     if (endian == ENDIAN_LITTLE && insn.readUint16Le(memory, addr))
         return setError(NO_MEMORY);
-    outConstant(addr, 16, false);
+    outAddress(addr);
     return setOK();
 }
 

@@ -37,6 +37,7 @@ const char *MotoSrec::encode(
     uint32_t addr, const uint8_t *data, uint8_t size) {
     uint8_t addrSize = 0;
     switch (_addrWidth) {
+    case ADDRESS_8BIT:
     case ADDRESS_16BIT: addrSize = 2; break;
     case ADDRESS_24BIT: addrSize = 3; break;
     case ADDRESS_32BIT: addrSize = 4; break;
@@ -47,6 +48,7 @@ const char *MotoSrec::encode(
     addSum(len);
     char *p = _line;
     switch (_addrWidth) {
+    case ADDRESS_8BIT:
     case ADDRESS_16BIT:
         addr &= ((uint32_t)1 << 16) - 1;
         p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
@@ -73,6 +75,7 @@ const char *MotoSrec::encode(
 
 const char *MotoSrec::end() {
     switch (_addrWidth) {
+    case ADDRESS_8BIT:
     case ADDRESS_16BIT:
         return "S9030000FC";
     case ADDRESS_24BIT:

@@ -63,7 +63,7 @@ Error DisZ8000::decodeImmediate(
     if (mode == M_IO) {
         uint16_t data;
         if (insn.readUint16(memory, data)) return setError(NO_MEMORY);
-        outConstant(data, 16);
+        outAddress(data);
         return OK;
     }
     if (size == SZ_BYTE) {
@@ -177,9 +177,9 @@ Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn) {
             if (insn.readUint16(memory, off)) return setError(NO_MEMORY);
         }
         const uint32_t linear = seg | off;
-        outConstant(linear, 16, false, true, addressBits());
+        outAddress(linear, nullptr, false, addressBits());
     } else {
-        outConstant(addr, 16, false, true, addressBits());
+        outAddress(addr, nullptr, false, addressBits());
     }
     return OK;
 }

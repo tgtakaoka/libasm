@@ -83,14 +83,23 @@ protected:
     }
 
     template<typename Addr>
-    void outRelativeAddr(Addr target, Addr origin, int8_t deltaBits) {
-        const char *label = lookup(target);
+    void outAddress(Addr val, const char *prefix = nullptr, bool needPrefix = false,
+                    uint8_t addrWidth = sizeof(Addr) * 8) {
+        const char *label = lookup(val);
         if (label) {
+            if (prefix) outText(prefix);
             outText(label);
             return;
         }
+        if (needPrefix && prefix) outText(prefix);
+        _operands = this->getFormatter().output(
+            _operands, val, 16, false, addrWidth);
+    }
+
+    template<typename Addr>
+    void outRelativeAddr(Addr target, Addr origin, int8_t deltaBits) {
         if (!_relativeTarget) {
-            outConstant(target, 16, false, true, addressWidth());
+            outAddress(target, nullptr, false, addressWidth());
             return;
         }
         const int32_t delta = static_cast<

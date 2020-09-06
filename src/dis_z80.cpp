@@ -21,10 +21,10 @@ namespace libasm {
 namespace z80 {
 
 template<typename T>
-void DisZ80::outAddress(T addr, bool indir) {
-    if (indir) *_operands++ = '(';
-    outConstant(addr, 16, false);
-    if (indir) *_operands++ = ')';
+void DisZ80::outAbsolute(T addr) {
+    *_operands++ = '(';
+    outAddress(addr);
+    *_operands++ = ')';
     *_operands = 0;
 }
 
@@ -242,7 +242,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
     RegName regName;
     switch (insn.dstFormat()) {
     case ADDR_16:
-        outAddress(addr);
+        outAbsolute(addr);
         break;
     case HL_REG:
         outRegister(REG_HL);
@@ -254,7 +254,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
         outConditionName((opc >> 3) & 7);
         break;
     case IMM_16:
-        outAddress(addr, false);
+        outAddress(addr);
         break;
     case REG_16:
         regName = RegZ80::decodePointerReg((opc >> 4) & 3);
@@ -274,13 +274,13 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
         outRegister(REG_HL);
         break;
     case ADDR_16:
-        outAddress(addr);
+        outAbsolute(addr);
         break;
     case A_REG:
         outRegister(REG_A);
         break;
     case IMM_16:
-        outAddress(addr, false);
+        outAddress(addr);
         break;
     case REG_16:
         regName = RegZ80::decodePointerReg((opc >> 4) & 3);
@@ -300,7 +300,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, Config::uintptr_t addr) {
 Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
     switch (insn.dstFormat()) {
     case ADDR_8:
-        outAddress(ioaddr);
+        outAbsolute(ioaddr);
         break;
     case A_REG:
         outRegister(REG_A);
@@ -311,7 +311,7 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr) {
     *_operands++ = ',';
     switch (insn.srcFormat()) {
     case ADDR_8:
-        outAddress(ioaddr);
+        outAbsolute(ioaddr);
         break;
     case A_REG:
         outRegister(REG_A);

@@ -83,7 +83,7 @@ Error DisIns8070::decodeAbsolute(
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = val + fetch;
-    outConstant(target, 16);
+    outAddress(target);
     return setOK();
 }
 
@@ -131,7 +131,7 @@ Error DisIns8070::decodeGeneric(
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         const Config::uintptr_t addr = 0xFF00 | val;
-        outConstant(addr, 16, false);
+        outAddress(addr);
         return setOK();
     }
     return UNKNOWN_INSTRUCTION;

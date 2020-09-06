@@ -58,7 +58,7 @@ Error DisIns8060::decodeIndx(
         } else {
             target &= 0xFFF;
             target |= page;
-            outConstant(target, 16, false, true, addressWidth());
+            outAddress(target);
         }
         return setOK();
     }

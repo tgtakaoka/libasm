@@ -43,7 +43,7 @@ private:
 
     RegBase &getRegister() override { return _regs; }
     template<typename U>
-    void outAddress(U addr, bool indir = true);
+    void outAbsolute(U addr);
     void outIndexOffset(const InsnZ80 &insn, int8_t offset);
     void outRegister(RegName regName);
     void outPointer(RegName regName);

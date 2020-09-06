@@ -38,7 +38,7 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn) {
     if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
     const uint8_t addr8 = (val8 & 0x80) ? (val8 & ~7) : ((val8 >> 3) + 0x20);
     val8 &= 7;
-    outConstant(addr8, 16, false, true);
+    outAddress(addr8);
     *_operands++ = '.';
     outConstant(val8, 10);
     return setOK();
@@ -56,18 +56,18 @@ Error DisI8051::decodeAddress(
     if (mode == ADR8) {
         uint8_t addr8;
         if (insn.readByte(memory, addr8)) return setError(NO_MEMORY);
-        outConstant(addr8, 16, false, true);
+        outAddress(addr8);
     } else if (mode == ADR11) {
         uint8_t val8;
         if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
         Config::uintptr_t addr = (insn.address() + insn.length()) & 0xF800;
         addr |= (insn.opCode() & 0xE0) << 3;
         addr |= val8;
-        outConstant(addr, 16, false, true);
+        outAddress(addr);
     } else {
         Config::uintptr_t addr16;
         if (insn.readUint16(memory, addr16)) return setError(NO_MEMORY);
-        outConstant(addr16, 16, false, true);
+        outAddress(addr16);
     }
     return setOK();
 }
@@ -155,9 +155,9 @@ Error DisI8051::decode(
         uint8_t src8, dst8;
         if (insn.readByte(memory, src8)) return setError(NO_MEMORY);
         if (insn.readByte(memory, dst8)) return setError(NO_MEMORY);
-        outConstant(dst8, 16, false);
+        outAddress(dst8);
         *_operands++ = ',';
-        outConstant(src8, 16, false);
+        outAddress(src8);
     } else {
         if (dst != NONE)
             if (decodeOperand(memory, insn, dst)) return getError();
