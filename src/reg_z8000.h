@@ -165,8 +165,6 @@ public:
 private:
     char *outCtlName(char *out, RegName regName) const;
     uint8_t ctlRegLen(RegName) const;
-    char *outChar(char *out, char c) const;
-    char *outText(char *out, const char *text) const;
     bool compareText(const char *p, const char *text) const;
 };
 

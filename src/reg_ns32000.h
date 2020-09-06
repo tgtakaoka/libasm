@@ -129,10 +129,6 @@ public:
     OprSize parseIndexSize(const char *line) const;
     uint8_t indexSizeLen(OprSize size) const;
     char indexSizeChar(OprSize size) const;
-
-private:
-    char *outChar(char *out, char c) const;
-    char *outText(char *out, const char *text) const;
 };
 
 } // namespace ns32000

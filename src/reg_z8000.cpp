@@ -130,22 +130,6 @@ bool RegZ8000::isCtlReg(RegName regName) const {
     return r >= 64 && r < 64 + 8;
 }
 
-char *RegZ8000::outChar(char *out, char c) const {
-    *out++ = _uppercase ? toupper(c) : tolower(c);
-    *out = 0;
-    return out;
-}
-
-char *RegZ8000::outText(char *out, const char *text) const {
-    while (true) {
-        const char c = pgm_read_byte(text);
-        if (c == 0) break;
-        out = outChar(out, c);
-        text++;
-    }
-    return out;
-}
-
 char *RegZ8000::outRegName(char *out, RegName regName) const {
     int8_t num = int8_t(regName);
     if (num < 0) return out;

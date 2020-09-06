@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+#include "config_host.h"
+
+#include <ctype.h>
+
 #ifndef __REG_BASE_H__
 #define __REG_BASE_H__
 
@@ -23,6 +27,22 @@ public:
 
 protected:
     bool _uppercase;
+
+    char *outChar(char *out, char c) const {
+        *out++ = _uppercase ? toupper(c) : tolower(c);
+        *out = 0;
+        return out;
+    }
+
+    char *outText(char *out, const char *text) const {
+        while (true) {
+            const char c = pgm_read_byte(text);
+            if (c == 0) break;
+            out = outChar(out, c);
+            text++;
+        }
+        return out;
+    }
 };
 
 #endif // __REG_BASE_H__

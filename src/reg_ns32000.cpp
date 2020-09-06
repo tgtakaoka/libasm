@@ -354,22 +354,6 @@ char RegNs32000::indexSizeChar(OprSize size) const {
     return _uppercase ? c : tolower(c);
 }
 
-char *RegNs32000::outChar(char *out, char c) const {
-    *out++ = _uppercase ? toupper(c) : tolower(c);
-    *out = 0;
-    return out;
-}
-
-char *RegNs32000::outText(char *out, const char *text) const {
-    while (true) {
-        const char c = pgm_read_byte(text);
-        if (c == 0) break;
-        out = outChar(out, c);
-        text++;
-    }
-    return out;
-}
-
 } // namespace ns32000
 } // namespace libasm
 
