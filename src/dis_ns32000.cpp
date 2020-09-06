@@ -116,6 +116,12 @@ Error DisNs32000::decodeLength(
     return OK;
 }
 
+static char *outComma(char *out) {
+    *out++ = ',';
+    *out++ = ' ';
+    return out;
+}
+
 Error DisNs32000::decodeBitField(
         DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
     if (mode == M_BFLEN) return OK;
@@ -124,7 +130,7 @@ Error DisNs32000::decodeBitField(
     const uint8_t len = (data & 0x1F) + 1;
     const uint8_t off = (data >> 5);
     outConstant(off, 10);  // M_BFOFF
-    outText(", ");
+    _operands = outComma(_operands);
     outConstant(len, 10);  // M_BFLEN
     return OK;
 }
@@ -296,7 +302,8 @@ Error DisNs32000::decodeGeneric(
         outDisplacement(disp);
         *_operands++ = '(';
         _operands = _regs.outRegName(_operands, reg);
-        outText("))");
+        *_operands++ = ')';
+        *_operands++ = ')';
         break;
     case 0x13:
         return setError(ILLEGAL_OPERAND_MODE);
@@ -313,7 +320,8 @@ Error DisNs32000::decodeGeneric(
         _operands = _regs.outRegName(_operands, REG_EXT);
         *_operands++ = '(';
         outDisplacement(disp);
-        outText(")+");
+        *_operands++ = ')';
+        *_operands++ = '+';
         if (disp2.val32 < 0) *_operands++ = '(';
         outDisplacement(disp2);
         if (disp2.val32 < 0) *_operands++ = ')';
@@ -427,17 +435,17 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn) {
         return getError();
     const AddrMode dst = insn.dstMode();
     if (dst == M_NONE) return setOK();
-    outText(", ");
+    _operands = outComma(_operands);
     if (decodeOperand(memory, insn, dst, insn.dstPos()))
         return getError();
     const AddrMode ex1 = insn.ex1Mode();
     if (ex1 == M_NONE) return setOK();
-    outText(", ");
+    _operands = outComma(_operands);
     if (decodeOperand(memory, insn, ex1, insn.ex1Pos()))
         return getError();
     const AddrMode ex2 = insn.ex2Mode();
     if (ex2 == M_NONE || ex2 == M_BFLEN) return setOK();
-    outText(", ");
+    _operands = outComma(_operands);
     if (decodeOperand(memory, insn, ex2, insn.ex2Pos()))
         return getError();
     return setOK();

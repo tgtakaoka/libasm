@@ -27,23 +27,15 @@ void DisMos6502::reset() {
 }
 
 Error DisMos6502::decodeImmediate(DisMemory& memory, InsnMos6502 &insn) {
-    uint16_t val;
-    const bool imm16 = TableMos6502.longImmediate(insn.addrMode());
-    if (imm16) {
-        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
+    *_operands++ = '#';
+    if (TableMos6502.longImmediate(insn.addrMode())) {
+        uint16_t val16;
+        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
+        outConstant(val16);
     } else {
         uint8_t val8;
         if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        val = val8;
-    }
-    *_operands++ = '#';
-    const char *label = lookup(val);
-    if (label) {
-        outText(label);
-    } else if (imm16) {
-        outConstant(val);
-    } else {
-        outConstant(static_cast<uint8_t>(val));
+        outConstant(val8);
     }
     if (insn.opCode() == TableMos6502::WDM)
         return setError(UNKNOWN_INSTRUCTION);
