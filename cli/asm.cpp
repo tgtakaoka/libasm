@@ -19,6 +19,7 @@
 #include "asm_driver.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
+#include "asm_i8086.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
 #include "asm_mc6800.h"
@@ -46,6 +47,7 @@ z8::AsmZ8           asmz8;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
 cdp1802::AsmCdp1802 asm1802;
+i8086::AsmI8086     asm8086;
 tms9900::AsmTms9900 asm9900;
 mc68000::AsmMc68000 asm68000;
 z8000::AsmZ8000     asmz8000;
@@ -61,6 +63,7 @@ AsmIntelDirective  dirz8(asmz8);
 AsmIntelDirective  dir8060(asm8060);
 AsmIntelDirective  dir8070(asm8070);
 AsmIntelDirective  dir1802(asm1802);
+AsmIntelDirective  dir8086(asm8086);
 AsmIntelDirective  dir9900(asm9900);
 AsmMotoDirective   dir68000(asm68000);
 AsmIntelDirective  dirz8000(asmz8000);
@@ -69,7 +72,7 @@ AsmIntelDirective  dir32000(asm32000);
 std::vector<AsmDirective *> directives = {
     &dir6800, &dir6809,
     &dir6502,
-    &dir8051, &dir8080,
+    &dir8051, &dir8080, &dir8086,
     &dirz80, &dirz8,
     &dir8060, &dir8070, &dir1802,
     &dir68000, &dir32000,

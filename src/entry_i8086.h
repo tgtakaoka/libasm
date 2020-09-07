@@ -60,6 +60,8 @@ enum AddrMode : uint8_t {
     M_IOA  = 20, // I/O Address
     M_FAR  = 21, // Far address: seg:off
     M_ISTR = 22, // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
+    M_MEM  = 23, // Memory address: [addr]
+    M_DIR  = 24, // Direct mode: [nnnn]
 };
 
 enum OprPos : uint8_t {

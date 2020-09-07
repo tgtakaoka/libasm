@@ -28,6 +28,7 @@ namespace i8086 {
 
 class TableI8086 : public TableBase {
 public:
+    Error searchName(InsnI8086 &insn) const;
     Error searchOpCode(InsnI8086 &insn) const;
     bool isRepeatPrefix(Config::opcode_t opcode) const;
     bool isSegmentPrefix(Config::opcode_t opcode) const;
@@ -42,6 +43,8 @@ public:
     struct EntryPage;
 
 private:
+    Error searchName(
+        InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(
         InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
 };

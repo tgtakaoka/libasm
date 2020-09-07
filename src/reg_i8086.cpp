@@ -107,6 +107,16 @@ static const NameEntry REG_TABLE[] PROGMEM = {
     { REG_WORD, 4, TEXT_WORD },
 };
 
+RegName RegI8086::parseRegName(const char *line) const {
+    const NameEntry *entry =
+        NameEntry::searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(pgm_read_byte(&entry->name)) : REG_UNDEF;
+}
+
+uint8_t RegI8086::regNameLen(RegName name) const {
+    return NameEntry::nameLen(name, ARRAY_RANGE(REG_TABLE));
+}
+
 RegName RegI8086::decodeByteReg(uint8_t num) const {
     num &= 7;
     return RegName(num + 8);
@@ -131,6 +141,33 @@ char *RegI8086::outRegName(char *out, RegName name) const {
         out = outText(out, text);
     }
     return out;
+}
+
+bool RegI8086::isGeneralReg(RegName name) const {
+    const uint8_t num = uint8_t(name);
+    return num >= 8 && num < 24;
+}
+
+bool RegI8086::isSegmentReg(RegName name) const {
+    const uint8_t num = uint8_t(name);
+    return num >= 24 && num < 28;
+}
+
+OprSize RegI8086::regSize(RegName name) const {
+    const uint8_t num = uint8_t(name);
+    if (num < 8) return SZ_NONE;
+    return (num >= 8 && num < 16) ? SZ_BYTE : SZ_WORD;
+}
+
+uint8_t RegI8086::encodeRegNum(RegName name) const {
+    switch (regSize(name)) {
+    case SZ_BYTE:
+        return uint8_t(name) - 8;
+    case SZ_WORD:
+        return uint8_t(name) - (isSegmentReg(name) ? 24 : 16);
+    default:
+        return 0;
+    }
 }
 
 } // namespace i8086

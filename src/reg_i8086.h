@@ -52,10 +52,16 @@ enum RegName : uint8_t {
 
 class RegI8086 : public RegBase {
 public:
+    RegName parseRegName(const char *line) const;
+    uint8_t regNameLen(RegName name) const;
     RegName decodeByteReg(uint8_t num) const;
     RegName decodeWordReg(uint8_t num) const;
     RegName decodeSegReg(uint8_t num) const;
     char *outRegName(char *out, const RegName name) const;
+    uint8_t encodeRegNum(RegName name) const;
+    bool isGeneralReg(RegName name) const;
+    bool isSegmentReg(RegName name) const;
+    OprSize regSize(RegName name) const;
 };
 
 } // namespace i8086

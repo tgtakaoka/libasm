@@ -34,20 +34,27 @@ namespace i8086 {
       TEXT_##_name },
 
 static const Entry TABLE_00[] PROGMEM = {
+    E(0xA0, MOV,    BYTE, M_AL,   M_BDIR, P_NONE, P_OPR)
+    E(0xA1, MOV,    WORD, M_AX,   M_WDIR, P_NONE, P_OPR)
+    E(0xA2, MOV,    BYTE, M_BDIR, M_AL,   P_OPR,  P_NONE)
+    E(0xA3, MOV,    WORD, M_WDIR, M_AX,   P_OPR,  P_NONE)
+    E(0x90, NOP,    NONE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0x90, XCHG,   WORD, M_AX,   M_WREG, P_NONE, P_OREG)
+    E(0x90, XCHG,   WORD, M_WREG, M_AX,   P_OREG, P_NONE)
+    E(0x04, ADD,    BYTE, M_AL,   M_IMM,  P_NONE, P_OPR)
+    E(0x05, ADD,    WORD, M_AX,   M_IMM,  P_NONE, P_OPR)
+    E(0x0C, OR,     BYTE, M_AL,   M_IMM,  P_NONE, P_OPR)
+    E(0x0D, OR,     WORD, M_AX,   M_IMM,  P_NONE, P_OPR)
     E(0x00, ADD,    BYTE, M_BMOD, M_BREG, P_MOD,  P_REG)
     E(0x01, ADD,    WORD, M_WMOD, M_WREG, P_MOD,  P_REG)
     E(0x02, ADD,    BYTE, M_BREG, M_BMOD, P_REG,  P_MOD)
     E(0x03, ADD,    WORD, M_WREG, M_WMOD, P_REG,  P_MOD)
-    E(0x04, ADD,    BYTE, M_AL,   M_IMM,  P_NONE, P_OPR)
-    E(0x05, ADD,    WORD, M_AX,   M_IMM,  P_NONE, P_OPR)
     E(0x06, PUSH,   WORD, M_SREG, M_NONE, P_OSEG, P_NONE)
     E(0x07, POP,    WORD, M_SREG, M_NONE, P_OSEG, P_NONE)
     E(0x08, OR,     BYTE, M_BMOD, M_BREG, P_MOD,  P_REG)
     E(0x09, OR,     WORD, M_WMOD, M_WREG, P_MOD,  P_REG)
     E(0x0A, OR,     BYTE, M_BREG, M_BMOD, P_REG,  P_MOD)
     E(0x0B, OR,     WORD, M_WREG, M_WMOD, P_REG,  P_MOD)
-    E(0x0C, OR,     BYTE, M_AL,   M_IMM,  P_NONE, P_OPR)
-    E(0x0D, OR,     WORD, M_AX,   M_IMM,  P_NONE, P_OPR)
     E(0x10, ADC,    BYTE, M_BMOD, M_BREG, P_MOD,  P_REG)
     E(0x11, ADC,    WORD, M_WMOD, M_WREG, P_MOD,  P_REG)
     E(0x12, ADC,    BYTE, M_BREG, M_BMOD, P_REG,  P_MOD)
@@ -138,9 +145,6 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0x8D, LEA,    WORD, M_WREG, M_BMEM, P_REG,  P_MOD)
     E(0x8D, LEA,    WORD, M_WREG, M_WMEM, P_REG,  P_MOD)
     E(0x8E, MOV,    WORD, M_SREG, M_WMOD, P_REG,  P_MOD)
-    E(0x90, NOP,    NONE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0x90, XCHG,   WORD, M_AX,   M_WREG, P_NONE, P_OREG)
-    E(0x90, XCHG,   WORD, M_WREG, M_AX,   P_OREG, P_NONE)
     E(0x98, CBW,    BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0x99, CWD,    WORD, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0x9A, CALLF,  NONE, M_FAR,  M_NONE, P_OPR,  P_NONE)
@@ -149,22 +153,38 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0x9D, POPF,   WORD, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0x9E, SAHF,   BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0x9F, LAHF,   BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
-    E(0xA0, MOV,    BYTE, M_AL,   M_BDIR, P_NONE, P_NONE)
-    E(0xA1, MOV,    WORD, M_AX,   M_WDIR, P_NONE, P_NONE)
-    E(0xA2, MOV,    BYTE, M_BDIR, M_AL,   P_NONE, P_NONE)
-    E(0xA3, MOV,    WORD, M_WDIR, M_AX,   P_NONE, P_NONE)
     S(0xA4, MOVSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     S(0xA5, MOVSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    S(0xA4, MOVSB,  BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE)
+    S(0xA5, MOVSW,  WORD, M_WMEM, M_WMEM, P_NONE, P_NONE)
+    S(0xA4, MOVS,   BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE)
+    S(0xA5, MOVS,   WORD, M_WMEM, M_WMEM, P_NONE, P_NONE)
     S(0xA6, CMPSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     S(0xA7, CMPSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    S(0xA6, CMPSB,  BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE)
+    S(0xA7, CMPSW,  WORD, M_WMEM, M_WMEM, P_NONE, P_NONE)
+    S(0xA6, CMPS,   BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE)
+    S(0xA7, CMPS,   WORD, M_WMEM, M_WMEM, P_NONE, P_NONE)
     E(0xA8, TEST,   BYTE, M_AL,   M_IMM,  P_NONE, P_OPR)
     E(0xA9, TEST,   WORD, M_AX,   M_IMM,  P_NONE, P_OPR)
     S(0xAA, STOSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     S(0xAB, STOSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    S(0xAA, STOSB,  NONE, M_BMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAB, STOSW,  NONE, M_WMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAA, STOS,   BYTE, M_BMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAB, STOS,   WORD, M_WMEM, M_NONE, P_NONE, P_NONE)
     S(0xAC, LODSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     S(0xAD, LODSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    S(0xAC, LODSB,  NONE, M_BMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAD, LODSW,  NONE, M_WMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAC, LODS,   BYTE, M_BMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAD, LODS,   WORD, M_WMEM, M_NONE, P_NONE, P_NONE)
     S(0xAE, SCASB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE)
     S(0xAF, SCASW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE)
+    S(0xAE, SCASB,  NONE, M_BMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAF, SCASW,  NONE, M_WMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAE, SCAS,   BYTE, M_BMEM, M_NONE, P_NONE, P_NONE)
+    S(0xAF, SCAS,   WORD, M_WMEM, M_NONE, P_NONE, P_NONE)
     E(0xB0, MOV,    BYTE, M_BREG, M_IMM,  P_OREG, P_OPR)
     E(0xB8, MOV,    WORD, M_WREG, M_IMM,  P_OREG, P_OPR)
     E(0xC2, RET,    WORD, M_IMM,  M_NONE, P_OPR,  P_NONE)
@@ -189,9 +209,9 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0xE6, OUT,    BYTE, M_IOA,  M_AL,   P_OPR,  P_NONE)
     E(0xE7, OUT,    WORD, M_IOA,  M_AX,   P_OPR,  P_NONE)
     E(0xE8, CALL,   NONE, M_REL,  M_NONE, P_OPR,  P_NONE)
-    E(0xE9, JMP,    NONE, M_REL,  M_NONE, P_OPR,  P_NONE)
+    E(0xEB, JMP,    NONE, M_REL8, M_NONE, P_OPR,  P_NONE) // M_REL8
+    E(0xE9, JMP,    NONE, M_REL,  M_NONE, P_OPR,  P_NONE) // M_REL
     E(0xEA, JMPF,   NONE, M_FAR,  M_NONE, P_OPR,  P_NONE)
-    E(0xEB, JMP,    NONE, M_REL8, M_NONE, P_OPR,  P_NONE)
     E(0xEC, IN,     BYTE, M_AL,   M_DX,   P_NONE, P_NONE)
     E(0xED, IN,     WORD, M_AX,   M_DX,   P_NONE, P_NONE)
     E(0xEE, OUT,    BYTE, M_DX,   M_AL,   P_NONE, P_NONE)
@@ -202,6 +222,11 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0xF3, REP,    NONE, M_ISTR, M_NONE, P_OPR,  P_NONE)
     E(0xF3, REPE,   NONE, M_ISTR, M_NONE, P_OPR,  P_NONE)
     E(0xF3, REPZ,   NONE, M_ISTR, M_NONE, P_OPR,  P_NONE)
+    E(0xF2, REPNE,  NONE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0xF2, REPNZ,  NONE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0xF3, REP,    NONE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0xF3, REPE,   NONE, M_NONE, M_NONE, P_NONE, P_NONE)
+    E(0xF3, REPZ,   NONE, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0xF4, HLT,    NONE, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0xF5, CMC,    NONE, M_NONE, M_NONE, P_NONE, P_NONE)
     E(0xF8, CLC,    NONE, M_NONE, M_NONE, P_NONE, P_NONE)
@@ -350,8 +375,8 @@ struct TableI8086::EntryPage {
 static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
     { 0x00, ARRAY_RANGE(TABLE_00) },
     { 0x80, ARRAY_RANGE(TABLE_80) },
-    { 0x81, ARRAY_RANGE(TABLE_81) },
-    { 0x83, ARRAY_RANGE(TABLE_83) },
+    { 0x83, ARRAY_RANGE(TABLE_83) }, // M_IMM8
+    { 0x81, ARRAY_RANGE(TABLE_81) }, // M_IMM
     { 0x8F, ARRAY_RANGE(TABLE_8F) },
     { 0xC6, ARRAY_RANGE(TABLE_C6) },
     { 0xC7, ARRAY_RANGE(TABLE_C7) },
@@ -366,6 +391,84 @@ static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
     { 0xFE, ARRAY_RANGE(TABLE_FE) },
     { 0xFF, ARRAY_RANGE(TABLE_FF) },
 };
+
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table) return true;
+    if (opr == M_AL || opr == M_CL)
+        return table == M_BREG || table == M_BMOD;
+    if (opr == M_AX || opr == M_DX)
+        return table == M_WREG || table == M_WMOD;
+    if (opr == M_BREG) return table == M_BMOD;
+    if (opr == M_WREG) return table == M_WMOD;
+    if (opr == M_MEM)           // checked by |acceptSize| later.
+        return table == M_BMOD || table == M_BMEM
+            || table == M_WMOD || table == M_WMEM;
+    if (opr == M_DIR)           // checked by |acceptSize| later.
+        return table == M_BMOD || table == M_BMEM || table == M_BDIR
+            || table == M_WMOD || table == M_WMEM || table == M_WDIR;
+    if (opr == M_VAL1 || opr == M_VAL3) opr = M_IMM;
+    if (opr == M_IMM)
+        return table == M_IOA || table == M_REL8 || table == M_REL;
+    if (opr == M_IMM8)
+        return table == M_IMM || table == M_IOA
+            || table == M_REL8 || table == M_REL;
+    if (opr == M_BMEM) return table == M_BMOD;
+    if (opr == M_WMEM) return table == M_WMOD;
+    if (opr == M_BDIR)
+        return table == M_BMOD || table == M_BMEM;
+    if (opr == M_WDIR)
+        return table == M_WMOD || table == M_WMEM;
+    return false;
+}
+
+static bool acceptModes(uint32_t flags, const Entry *entry) {
+    const uint32_t table = pgm_read_dword(&entry->flags);
+    return acceptMode(Entry::_mode(Entry::_dst(flags)), Entry::_mode(Entry::_dst(table)))
+        && acceptMode(Entry::_mode(Entry::_src(flags)), Entry::_mode(Entry::_src(table)));
+}
+
+static bool hasSize(AddrMode mode) {
+    return mode == M_AX || mode == M_DX || mode == M_WREG
+        || mode == M_AL || mode == M_CL || mode == M_BREG
+        || mode == M_SREG;
+}
+
+static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
+    const AddrMode dst = insn.dstMode();
+    const AddrMode src = insn.srcMode();
+    const uint32_t flags = pgm_read_dword(&entry->flags);
+    const bool strInst = Entry::_strInst(Entry::_size(flags));
+    if (dst == M_MEM || dst == M_DIR) {
+        if (src == M_NONE)
+            return Entry::_size(Entry::_size(flags)) == SZ_NONE;
+        return hasSize(src) || strInst;
+    }
+    if (src == M_MEM || src == M_DIR)
+        return hasSize(dst) || strInst;
+    return true;
+}
+
+Error TableI8086::searchName(
+    InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
+    uint8_t count = 0;
+    const uint32_t flags =
+        Entry::_flags(insn.dstMode(), insn.srcMode(), P_NONE, P_NONE, SZ_NONE, false);
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        for (const Entry *entry = table; entry < end
+                 && (entry = TableBase::searchName<Entry, uint32_t>(
+                             insn.name(), flags, entry, end, acceptModes, count));
+             entry++) {
+            if (!acceptSize(insn, entry)) continue;
+            const Config::opcode_t first = pgm_read_byte(&page->first);
+            insn.setOpCode(pgm_read_byte(&entry->opCode), first);
+            insn.setFlags(pgm_read_dword(&entry->flags));
+            return OK;
+        }
+    }
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+}
 
 bool TableI8086::isRepeatPrefix(Config::opcode_t opCode) const {
     return opCode == 0xF2 || opCode == 0xF3;
@@ -435,6 +538,10 @@ Error TableI8086::searchOpCode(
         }
     }
     return UNKNOWN_INSTRUCTION;
+}
+
+Error TableI8086::searchName(InsnI8086 &insn) const {
+    return _error.setError(searchName(insn, ARRAY_RANGE(I8086_PAGES)));
 }
 
 Error TableI8086::searchOpCode(InsnI8086 &insn) const {
