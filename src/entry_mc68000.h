@@ -33,7 +33,7 @@ enum OprSize : uint8_t {
     SZ_ERROR = 7,
 };
 
-enum InsnSize {
+enum InsnSize : uint8_t {
     ISZ_BYTE = SZ_BYTE,  // .B
     ISZ_WORD = SZ_WORD,  // .W
     ISZ_LONG = SZ_LONG,  // .L
@@ -41,7 +41,7 @@ enum InsnSize {
     ISZ_DATA = SZ_DATA,  // ==OprSize
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     M_DREG  = 0,    // Dn: Data Register Direct
     M_AREG  = 1,    // An: Address Register Direct
     M_AIND  = 2,    // (An): Address Register Indirect
@@ -82,7 +82,7 @@ enum AddrMode {
     M_IMDSP = 36,   // 16-bit Signed Displacement
 };
 
-enum OprPos {
+enum OprPos : uint8_t {
     OP_10 = 0,  // ___|___|mmm|rrr
     OP_23 = 1,  // rrr|mmm|___|___
     OP__0 = 2,  // ___|___|___|rrr

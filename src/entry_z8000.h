@@ -22,12 +22,12 @@
 namespace libasm {
 namespace z8000 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     Z8001,
     Z8002,
 };
 
-enum OprSize {
+enum OprSize : uint8_t {
     SZ_NONE = 0,
     SZ_BYTE = 1,
     SZ_WORD = 2,
@@ -36,7 +36,7 @@ enum OprSize {
     SZ_ADDR = 5,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     M_NO   = 0,
     M_R    = 1,  // Register: Rn/RHn/RLn/RRn/RQn
     M_IM   = 2,  // Immediate: #nn
@@ -70,7 +70,7 @@ enum AddrMode {
     M_ERROR = 31,
 };
 
-enum PostMode {
+enum PostMode : uint8_t {
     P_NO   = 0, // No Post Word
     P_0XX0 = 1, // 0 is part of instruction
     P_0XX8 = 2, // 8 is part of instruction
@@ -80,7 +80,7 @@ enum PostMode {
     P_0XXX = 6, // Any post word
 };
 
-enum CodeMask {
+enum CodeMask : uint8_t {
     CM_0x0000 = 0,
     CM_0x0003 = 1,
     CM_0x000F = 2,
@@ -94,7 +94,7 @@ enum CodeMask {
     CM_0xC0FF = 10,
 };
 
-enum ModeField {
+enum ModeField : uint8_t {
     MF_NO = 0,
     MF_C0 = 1,
     MF_C4 = 2,
@@ -188,13 +188,13 @@ struct Entry {
     }
 
 private:
-    enum Ex1Mode {
+    enum Ex1Mode : uint8_t {
         E1_NO  = 0,
         E1_CNT = 1,
         E1_WR  = 2,
         E1_ERROR = 3,
     };
-    enum Ex2Mode {
+    enum Ex2Mode : uint8_t {
         E2_NO = 0,
         E2_CC = 1,
         E2_ERROR = 3,

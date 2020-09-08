@@ -21,19 +21,19 @@
 
 namespace libasm {
 
-enum AddressWidth {
+enum AddressWidth : uint8_t {
     ADDRESS_8BIT  = 8,
     ADDRESS_16BIT = 16,
     ADDRESS_24BIT = 24,
     ADDRESS_32BIT = 32,
 };
 
-enum OpCodeWidth {
+enum OpCodeWidth : uint8_t {
     OPCODE_8BIT  = 8,
     OPCODE_16BIT = 16,
 };
 
-enum Endian {
+enum Endian : uint8_t {
     ENDIAN_BIG    = 0,
     ENDIAN_LITTLE = 1,
 };

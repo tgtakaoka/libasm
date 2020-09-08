@@ -59,7 +59,7 @@ public:
     }
 
 private:
-    enum ValueType {
+    enum ValueType : uint8_t {
         UNDEFINED = 0,
         SIGNED    = 1,
         UNSIGNED  = 2,
@@ -93,7 +93,7 @@ protected:
         const char *scan, const uint8_t base, char suffix = 0);
 
 private:
-    enum Op {
+    enum Op : uint8_t {
         OP_NONE,
         OP_ADD,
         OP_SUB,

@@ -22,7 +22,7 @@
 namespace libasm {
 namespace ns32000 {
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     M_NONE  = 0,
     M_GREG  = 1,  // Generic Register: Rn
 #ifdef ENABLE_FLOAT
@@ -63,7 +63,7 @@ enum AddrMode {
     M_EMPTY = 30, // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
 };
 
-enum OprPos {
+enum OprPos : uint8_t {
     P_NONE  = 0,
     P_GEN1  = 1,  // Generic operand 1
     P_GEN2  = 2,  // Generic operand 2
@@ -73,7 +73,7 @@ enum OprPos {
     P_DISP  = 6,  // Displacement
 };
 
-enum OprSize {
+enum OprSize : uint8_t {
     SZ_BYTE   = 0,  // 8-bit integer (Byte)
     SZ_WORD   = 1,  // 16-bit integer (Word)
     SZ_LONG   = 2,  // 32-bit integer (Double)
@@ -135,14 +135,14 @@ struct Entry {
     }
 
 private:
-    enum Ex2Mode {
+    enum Ex2Mode : uint8_t {
         EM2_NONE = 0,
         EM2_IMM  = 1,
         EM2_BFLEN = 2,
         EM2_LEN32 = 3,
         EM2_ERROR = 4,
     };
-    enum Ex2Pos {
+    enum Ex2Pos : uint8_t {
         EP2_NONE = 0,
         EP2_IMPL = 1,
         EP2_DISP = 2,

@@ -22,13 +22,13 @@
 namespace libasm {
 namespace ins8070 {
 
-enum OprSize {
+enum OprSize : uint8_t {
     SZ_NONE = 0,  // unknown
     SZ_BYTE = 1,
     SZ_WORD = 2,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     IMPLIED   = 1,  // Implied
     GENERIC   = 2,  // Generic; nnnn,PC/nn,SP/nn,Pn/@nn,Pn/0xFFnn/
     ABSOLUTE  = 3,  // Absolute; nnnn
@@ -37,7 +37,7 @@ enum AddrMode {
     UNDEF     = 0,  // Undefined instruction
 };
 
-enum OprFormat {
+enum OprFormat : uint8_t {
     OPR_NO = 0,
     OPR_A  = 1,  // A register
     OPR_E  = 2,  // E register

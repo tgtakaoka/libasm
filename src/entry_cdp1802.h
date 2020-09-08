@@ -22,7 +22,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     REGN = 1,  // Register number, 0~15
     REG1 = 2,  // Register number, 1~15
     IMPL = 3,  // Implied

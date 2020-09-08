@@ -22,19 +22,19 @@
 namespace libasm {
 namespace z80 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     Z80,
     I8080,
     I8085,
 };
 
-enum OprSize {
+enum OprSize : uint8_t {
     SZ_NONE = 0,  // unknown
     SZ_BYTE = 1,
     SZ_WORD = 2,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     INHR      = 0,  // Inherent
     IMM8      = 1,  // Immediate 8-bit
     IMM16     = 2,  // Immediate 16-bit
@@ -45,7 +45,7 @@ enum AddrMode {
     INDX_IMM8 = 7,  // Indexed and Immediate 8-bit
 };
 
-enum InsnFormat {
+enum InsnFormat : uint8_t {
     NO_FMT      = 0,
     PTR_FMT     = 1,  // **PP_****: BC/DE/HL/SP
                       // **PP_****: BC/DE/HL/AF
@@ -60,7 +60,7 @@ enum InsnFormat {
                       // **BB_BSSS: 0-7, B/C/D?E/H/L/(HL)/A
 };
 
-enum OprFormat {
+enum OprFormat : uint8_t {
     NO_OPR  = 0,
     REG_8   = 1,   // B/C/D/E/H/L/(HL)/A
     REG_16  = 2,   // BC/DE/HL/SP

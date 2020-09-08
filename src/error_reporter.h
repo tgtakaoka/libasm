@@ -21,7 +21,7 @@
 
 namespace libasm {
 
-enum Error {
+enum Error : uint8_t {
     OK                      = 0,
 
     // Disassembler

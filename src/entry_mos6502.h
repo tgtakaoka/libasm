@@ -22,7 +22,7 @@
 namespace libasm {
 namespace mos6502 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     MOS6502,
     W65SC02,
     R65C02,
@@ -30,7 +30,7 @@ enum CpuType {
     W65C816,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     // MOS6502
     IMPL         = 0,   // Implied
     ACCM         = 1,   // Accumulator A

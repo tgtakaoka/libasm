@@ -22,13 +22,13 @@
 namespace libasm {
 namespace z8 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     Z8,
     Z86C,
     SUPER8,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     // Those (0~7) happen all operands including extra.
     M_NO  = 0,   // No operand
     M_IM  = 1,   // Immediate: #nn
@@ -59,7 +59,7 @@ enum AddrMode {
 };
 
 // Post byte format
-enum PostFormat {
+enum PostFormat : uint8_t {
     P0   = 0,  // No Post Byte check necessary
     P1_0 = 1,  // Least 1 bit is 0
     P1_1 = 2,  // Least 1 bit is 1

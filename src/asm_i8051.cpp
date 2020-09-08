@@ -89,7 +89,7 @@ Error AsmI8051::parseOperand(Operand &op) {
     p = _scan;
     if (*p == '.') {
         if (op.getError()) op.val16 = 0x20;
-        uint8_t bitNo;
+        uint8_t bitNo = 0;
         _scan = p + 1;
         if (getOperand(bitNo)) return getError();
         if (getError()) {

@@ -22,13 +22,13 @@
 namespace libasm {
 namespace tms9900 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     TMS9900,
     TMS9995,
     TMS99105,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     INH     = 0,   // ---- ---- ---- ----
     IMM     = 1,   // ---- ---- ---- ---- + nnnn
     REG     = 2,   // ---- ---- ---- wwww

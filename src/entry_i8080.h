@@ -22,12 +22,12 @@
 namespace libasm {
 namespace i8080 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     I8080,
     I8085,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     INHR   = 0,
     IMM8   = 1,
     IMM16  = 2,
@@ -35,7 +35,7 @@ enum AddrMode {
     IOADR  = 4,
 };
 
-enum InsnFormat {
+enum InsnFormat : uint8_t {
     NO_FORMAT     = 0,
     POINTER_REG   = 1,  // **pp_****: B/D/H/SP
     STACK_REG     = 2,  // **PP_****: B/D/H/PSW

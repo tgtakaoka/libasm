@@ -22,14 +22,14 @@
 namespace libasm {
 namespace mc6800 {
 
-enum CpuType {
+enum CpuType : uint8_t {
     MC6800,
     MC6801,
     HD6301,
     MC68HC11,
 };
 
-enum AddrMode {
+enum AddrMode : uint8_t {
     INH         = 0,   // Inherent
     DIR         = 1,   // Direct page
     EXT         = 2,   // Extended
@@ -51,14 +51,14 @@ enum AddrMode {
     IDY_IMM_REL = 16,  // Indexed Y,Immediate,Relative
 };
 
-enum InsnAdjust {
+enum InsnAdjust : uint8_t {
     ADJ_ZERO = 0,
     ADJ_AB01 = 1,  // Accumulator A:+0, B:+1
     ADJ_AB16 = 2,  // Accumulator A:+0, B:+$10
     ADJ_AB64 = 3,  // Accumulator A:+0, B:+$40
 };
 
-enum OprSize {
+enum OprSize : uint8_t {
     SZ_BYTE = 0,
     SZ_WORD = 1,
     SZ_NONE = 2,   // unknown, in Table == SZ_BYTE

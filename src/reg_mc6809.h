@@ -45,7 +45,7 @@ enum RegName : char {
     REG_0 =   '0', // "0" zero register
 };
 
-enum RegSize {
+enum RegSize : uint8_t {
     SZ_BYTE = 0,
     SZ_WORD = 1,
     SZ_NONE = 2,
