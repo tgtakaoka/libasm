@@ -20,6 +20,9 @@
 namespace libasm {
 namespace i8051 {
 
+static const char TEXT_CPU_I8051[] PROGMEM = "i8051";
+static constexpr const char *TEXT_CPU_8051 = (TEXT_CPU_I8051 + 1);
+
 static const char TEXT_ACALL[] PROGMEM = "ACALL";
 static const char TEXT_ADD[]   PROGMEM = "ADD";
 static const char TEXT_ADDC[]  PROGMEM = "ADDC";

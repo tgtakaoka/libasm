@@ -22,6 +22,13 @@
 namespace libasm {
 namespace z8 {
 
+static const char TEXT_CPU_LIST[] PROGMEM = "Z8, Z86C, Z88";
+static const char TEXT_CPU_Z8[]   PROGMEM = "Z8";
+static const char TEXT_CPU_Z86[]  PROGMEM = "Z86";
+static const char TEXT_CPU_Z86C[] PROGMEM = "Z86C";
+static constexpr const char *TEXT_CPU_Z88 = (TEXT_CPU_LIST + 10);
+static const char TEXT_CPU_SUPER8[] PROGMEM = "Super8";
+
 // Z8
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";

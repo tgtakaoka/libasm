@@ -347,22 +347,22 @@ bool TableZ80::setCpu(CpuType cpuType) {
 }
 
 const char *TableZ80::listCpu() const {
-    return "Z80";
+    return TEXT_CPU_Z80;
 }
 
 const char *TableZ80::getCpu() const {
-    if (_cpuType == Z80) return "Z80";
-    return _cpuType == I8080 ? "8080" : "8085";
+    if (_cpuType == Z80) return TEXT_CPU_Z80;
+    return _cpuType == I8080 ? TEXT_CPU_8080 : TEXT_CPU_8085;
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    if (strcasecmp(cpu, "z80") == 0
-        || strncasecmp(cpu, "z84c", 4) == 0)
+    if (strcasecmp_P(cpu, TEXT_CPU_Z80) == 0
+        || strncasecmp_P(cpu, TEXT_CPU_Z84C, 4) == 0)
         return setCpu(Z80);
     if (toupper(*cpu) == 'I') cpu++;
-    if (strcmp(cpu, "8080") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_8080) == 0)
         return setCpu(I8080);
-    if (strcmp(cpu, "8085") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_8085) == 0)
         return setCpu(I8085);
     return false;
 }

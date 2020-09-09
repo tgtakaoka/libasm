@@ -375,17 +375,19 @@ TableMc68000::TableMc68000()
 {}
 
 const char *TableMc68000::listCpu() const {
-    return "MC68000, MC68008";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableMc68000::getCpu() const {
-    return "68000";
+    return TEXT_CPU_68000;
 }
 
 bool TableMc68000::setCpu(const char *cpu) {
-    const char *p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
-    return strcmp(p, "68000") == 0
-        || strcmp(p, "68008") == 0;
+    const char *p = cpu;
+    if (strncasecmp_P(cpu, TEXT_CPU_MC, 2) == 0)
+        p += 2;
+    return strcmp_P(p, TEXT_CPU_68000) == 0
+        || strcmp_P(p, TEXT_CPU_68008) == 0;
 }
 
 class TableMc68000 TableMc68000;

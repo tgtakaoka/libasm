@@ -598,28 +598,33 @@ bool TableMc6800::setCpu(CpuType cpuType) {
 }
 
 const char *TableMc6800::listCpu() const {
-    return "MC6800, MC6801, MC6811, HD6301";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableMc6800::getCpu() const {
     if (_cpuType == MC6800)
-        return "6800";
+        return TEXT_CPU_6800;
     if (_cpuType == MC68HC11)
-        return "6811";
-    return _cpuType == MC6801 ? "6801" : "6301";
+        return TEXT_CPU_6811;
+    return _cpuType == MC6801 ? TEXT_CPU_6801 : TEXT_CPU_6301;
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
     const char *p;
-    p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
-    if (strcmp(p, "6800") == 0)
+    p = cpu;
+    if (strncasecmp_P(p, TEXT_CPU_MC, 2) == 0)
+        p += 2;
+    if (strcasecmp_P(p, TEXT_CPU_6800) == 0)
         return setCpu(MC6800);
-    if (strcmp(p, "6801") == 0)
+    if (strcasecmp_P(p, TEXT_CPU_6801) == 0)
         return setCpu(MC6801);
-    if (strcmp(p, "6811") == 0 || strcasecmp(p, "68HC11") == 0)
+    if (strcasecmp_P(p, TEXT_CPU_6811) == 0
+        || strcasecmp_P(p, TEXT_CPU_HC11) == 0)
         return setCpu(MC68HC11);
-    p = cpu + (strncasecmp(cpu, "HD", 2) ? 0 : 2);
-    if (strcmp(p, "6301") == 0)
+    p = cpu;
+    if (strncasecmp_P(p, TEXT_CPU_HD, 2) == 0)
+        p += 2;
+    if (strcasecmp_P(p, TEXT_CPU_6301) == 0)
         return setCpu(HD6301);
     return false;
 }

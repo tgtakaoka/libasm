@@ -578,19 +578,19 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
 }
 
 const char *TableNs32000::listCpu() const {
-    return "NS32032, NS32016, NS32008";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableNs32000::getCpu() const {
-    return "32032";
+    return TEXT_CPU_32032;
 }
 
 bool TableNs32000::setCpu(const char *cpu) {
-    if (strncasecmp(cpu, "NS", 2) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_NS, 2) == 0)
         cpu += 2;
-    return strcmp(cpu, "32032") == 0
-        || strcmp(cpu, "32016") == 0
-        || strcmp(cpu, "32008") == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_32032) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_32016) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_32008) == 0;
 }
 
 class TableNs32000 TableNs32000;

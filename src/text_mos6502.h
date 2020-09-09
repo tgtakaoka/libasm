@@ -24,6 +24,19 @@ namespace mos6502 {
 
 // MOS6502 instructions
 
+static const char TEXT_CPU_LIST[] PROGMEM =
+    "MOS6502, R65C02, W65SC02, W65C02S, W65C816S";
+static const char TEXT_CPU_6502[]    PROGMEM = "6502";
+static const char TEXT_CPU_65C02[]   PROGMEM = "65C02";
+static const char TEXT_CPU_65C02S[]  PROGMEM = "65C02S";
+static const char TEXT_CPU_65SC02[]  PROGMEM = "65SC02";
+static const char TEXT_CPU_65SC02S[] PROGMEM = "65SC02S";
+static const char TEXT_CPU_W65C02S[] PROGMEM = "W65C02S";
+static const char TEXT_CPU_65816[]   PROGMEM = "65816";
+static const char TEXT_CPU_65C816[]  PROGMEM = "65C816";
+static const char TEXT_CPU_65C816S[] PROGMEM = "65C816S";
+static constexpr const char *TEXT_CPU_MOS = TEXT_CPU_LIST;
+
 static const char TEXT_ADC[] PROGMEM = "ADC";
 static const char TEXT_AND[] PROGMEM = "AND";
 static const char TEXT_ASL[] PROGMEM = "ASL";

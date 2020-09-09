@@ -20,6 +20,9 @@
 namespace libasm {
 namespace cdp1802 {
 
+static const char TEXT_CPU_CDP1802[] PROGMEM = "CDP1802";
+static constexpr const char *TEXT_CPU_1802 = &TEXT_CPU_CDP1802[3];
+
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADCI[] PROGMEM = "ADCI";
 static const char TEXT_ADD[]  PROGMEM = "ADD";

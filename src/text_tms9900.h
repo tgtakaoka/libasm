@@ -22,6 +22,12 @@ namespace tms9900 {
 
 // TMS9900
 
+static const char TEXT_CPU_LIST[] PROGMEM = "TMS9900, TMS9995, TMS99105";
+static constexpr const char *TEXT_CPU_TMS = TEXT_CPU_LIST;
+static const char TEXT_CPU_9900[] PROGMEM = "9900";
+static const char TEXT_CPU_9995[] PROGMEM = "9995";
+static constexpr const char *TEXT_CPU_99105 = (TEXT_CPU_LIST + 21);
+
 static const char TEXT_A[]    PROGMEM = "A";
 static const char TEXT_AB[]   PROGMEM = "AB";
 static const char TEXT_ABS[]  PROGMEM = "ABS";

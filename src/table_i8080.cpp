@@ -206,18 +206,18 @@ bool TableI8080::setCpu(CpuType cpuType) {
 }
 
 const char *TableI8080::listCpu() const {
-    return "i8080, i8085";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableI8080::getCpu() const {
-    return _cpuType == I8080 ? "8080" : "8085";
+    return _cpuType == I8080 ? TEXT_CPU_8080 : TEXT_CPU_8085;
 }
 
 bool TableI8080::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I') cpu++;
-    if (strcmp(cpu, "8080") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_8080) == 0)
         return setCpu(I8080);
-    if (strcmp(cpu, "8085") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_8085) == 0)
         return setCpu(I8085);
     return false;
 }

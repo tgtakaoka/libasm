@@ -701,37 +701,33 @@ TableMc6809::TableMc6809() {
     setCpu(MC6809);
 }
 
-void TableMc6809::setCpu(CpuType cpuType) {
+bool TableMc6809::setCpu(CpuType cpuType) {
     _cpuType = cpuType;
     if (cpuType == MC6809) {
         _table = ARRAY_BEGIN(MC6809_PAGES);
         _end = ARRAY_END(MC6809_PAGES);
-    } else {
-        _table = ARRAY_BEGIN(HD6309_PAGES);
-        _end = ARRAY_END(HD6309_PAGES);
+        return true;
     }
+    _table = ARRAY_BEGIN(HD6309_PAGES);
+    _end = ARRAY_END(HD6309_PAGES);
+    return true;
 }
 
 const char *TableMc6809::listCpu() const {
-    return "MC6809, HD6309";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableMc6809::getCpu() const {
-    return _cpuType == MC6809 ? "6809" : "6309";
+    return _cpuType == MC6809 ? TEXT_CPU_6809 : TEXT_CPU_6309;
 }
 
 bool TableMc6809::setCpu(const char *cpu) {
-    const char *p;
-    p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
-    if (strcmp(p, "6809") == 0) {
-        setCpu(MC6809);
-        return true;
-    }
-    p = cpu + (strncasecmp(cpu, "HD", 2) ? 0 : 2);
-    if (strcmp(p, "6309") == 0) {
-        setCpu(HD6309);
-        return true;
-    }
+    if (strcasecmp_P(cpu, TEXT_CPU_MC6809) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_6809) == 0)
+        return setCpu(MC6809);
+    if (strcasecmp_P(cpu, TEXT_CPU_HD6309) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_6309) == 0)
+        return setCpu(HD6309);
     return false;
 }
 

@@ -168,16 +168,15 @@ Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
 }
 
 const char *TableIns8070::listCpu() const {
-    return "INS8070";
+    return TEXT_CPU_INS8070;
 }
 const char *TableIns8070::getCpu() const {
-    return "8070";
+    return TEXT_CPU_8070;
 }
 
 bool TableIns8070::setCpu(const char *cpu) {
-    if (strncasecmp(cpu, "ins", 3) == 0)
-        cpu += 3;
-    return strcasecmp(cpu, "8070") == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_INS8070) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_8070) == 0;
 }
 
 class TableIns8070 TableIns8070;

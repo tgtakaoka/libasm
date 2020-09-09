@@ -235,22 +235,22 @@ bool TableTms9900::setCpu(CpuType cpuType) {
 }
 
 const char *TableTms9900::listCpu() const {
-    return "TMS9900, TMS9995, TMS99105";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableTms9900::getCpu() const {
-    if (_cpuType == TMS99105) return "99105";
-    return _cpuType == TMS9900 ? "9900" : "9995";
+    if (_cpuType == TMS99105) return TEXT_CPU_99105;
+    return _cpuType == TMS9900 ? TEXT_CPU_9900 : TEXT_CPU_9995;
 }
 
 bool TableTms9900::setCpu(const char *cpu) {
-    if (strncasecmp(cpu, "tms", 3) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_TMS, 3) == 0)
         cpu += 3;
-    if (strcmp(cpu, "9900") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_9900) == 0)
         return setCpu(TMS9900);
-    if (strcmp(cpu, "9995") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_9995) == 0)
         return setCpu(TMS9995);
-    if (strcmp(cpu, "99105") == 0)
+    if (strcmp_P(cpu, TEXT_CPU_99105) == 0)
         return setCpu(TMS99105);
     return false;
 }

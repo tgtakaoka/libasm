@@ -22,6 +22,12 @@
 namespace libasm {
 namespace mc6809 {
 
+static const char TEXT_CPU_LIST[] PROGMEM   = "MC6809, HD6309";
+static const char TEXT_CPU_MC6809[] PROGMEM = "MC6809";
+static constexpr const char *TEXT_CPU_HD6309 = (TEXT_CPU_LIST + 8);
+static constexpr const char *TEXT_CPU_6809 = (TEXT_CPU_MC6809 + 2);
+static constexpr const char *TEXT_CPU_6309 = (TEXT_CPU_HD6309 + 2);
+
 static const char TEXT_ABX[]   PROGMEM = "ABX";
 static const char TEXT_ADCA[]  PROGMEM = "ADCA";
 static const char TEXT_ADCB[]  PROGMEM = "ADCB";

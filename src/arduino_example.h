@@ -45,7 +45,7 @@ protected:
     Cli _cli;
     uint32_t _origin;
 
-    BaseExample(ConfigBase *config, const char *prompt)
+    BaseExample(ConfigBase *config, const __FlashStringHelper *prompt)
         : _cli(),
           _config(config),
           _prompt(prompt)
@@ -103,14 +103,14 @@ protected:
     }
 
     bool processPseudo(const char *line) {
-        if (strncasecmp(line, "CPU ", 4) == 0) {
+        if (strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
             const char *cpu = line + 4;
             while (isspace(*cpu)) cpu++;
             if (!_config->setCpu(cpu))
                 _cli.println(F("unknown CPU"));
             return true;
         }
-        if (strncasecmp(line, "ORG ", 4) == 0) {
+        if (strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
             const char *org = line + 4;
             char *end;
             const uint32_t origin = strtoul(org, &end, 0);
@@ -141,13 +141,14 @@ protected:
 
 private:
     ConfigBase *_config;
-    const char *_prompt;
+    const __FlashStringHelper *_prompt;
 
     static void printPrompt(Cli &cli, uintptr_t extra) {
         BaseExample *example = reinterpret_cast<BaseExample *>(extra);
         cli.print(example->_prompt);
         cli.print(':');
-        cli.print(example->_config->getCpu());
+        cli.print(reinterpret_cast<const __FlashStringHelper *>(
+                          example->_config->getCpu()));
         cli.print(F("> "));
     }
 };
@@ -155,7 +156,7 @@ private:
 class AsmExample : public BaseExample {
 public:
     AsmExample(Assembler &assembler)
-        : BaseExample(&assembler, "Asm"),
+        : BaseExample(&assembler, F("Asm")),
           _assembler(assembler)
     {}
 
@@ -197,7 +198,7 @@ private:
 class DisExample : public BaseExample {
 public:
     DisExample(Disassembler &disassembler)
-        : BaseExample(&disassembler, "Dis"),
+        : BaseExample(&disassembler, F("Dis")),
           _disassembler(disassembler)
     {
         _disassembler.setUppercase(true);

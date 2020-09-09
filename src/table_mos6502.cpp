@@ -504,33 +504,36 @@ int8_t TableMos6502::addressBits() const {
 }
 
 const char *TableMos6502::listCpu() const {
-    return "MOS6502, R65C02, W65SC02, W65C02S, W65C816S";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableMos6502::getCpu() const {
-    if (_cpuType == MOS6502) return "6502";
-    if (_cpuType == W65SC02) return "65SC02";
-    if (_cpuType == R65C02)  return "65C02";
-    return _cpuType == W65C02S ? "W65C02S" : "65816";
+    if (_cpuType == MOS6502) return TEXT_CPU_6502;
+    if (_cpuType == W65SC02) return TEXT_CPU_65SC02;
+    if (_cpuType == R65C02)  return TEXT_CPU_65C02;
+    return _cpuType == W65C02S ? TEXT_CPU_W65C02S : TEXT_CPU_65816;
 }
 
 bool TableMos6502::setCpu(const char *cpu) {
     const char *p;
-    p = cpu + (strncasecmp(cpu, "MOS", 3) ? 0 : 3);
-    if (strcmp(p, "6502") == 0)
+    p = cpu;
+    if (strncasecmp_P(cpu, TEXT_CPU_MOS, 3) == 0)
+        p += 3;
+    if (strcmp_P(p, TEXT_CPU_6502) == 0)
         return setCpu(MOS6502);
     p = cpu + (toupper(*cpu) == 'R' ? 1 : 0);
-    if (strcasecmp(p, "65C02") == 0)
+    if (strcasecmp_P(p, TEXT_CPU_65C02) == 0)
         return setCpu(R65C02);
     p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
-    if (strcasecmp(p, "65SC02") == 0)
+    if (strcasecmp_P(p, TEXT_CPU_65SC02) == 0
+        || strcasecmp_P(p, TEXT_CPU_65SC02S) == 0)
         return setCpu(W65SC02);
-    if (strcasecmp(p, "65C02") == 0
-        || strcasecmp(p, "65C02S") == 0)
+    if (strcasecmp_P(p, TEXT_CPU_65C02) == 0
+        || strcasecmp_P(p, TEXT_CPU_65C02S) == 0)
         return setCpu(W65C02S);
-    if (strcmp(p, "65816") == 0
-        || strcasecmp(p, "65C816") == 0
-        || strcasecmp(p, "65C816S") == 0)
+    if (strcasecmp_P(p, TEXT_CPU_65816) == 0
+        || strcasecmp_P(p, TEXT_CPU_65C816) == 0
+        || strcasecmp_P(p, TEXT_CPU_65C816S) == 0)
         return setCpu(W65C816);
     return false;
 }

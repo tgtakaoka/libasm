@@ -402,22 +402,22 @@ bool TableZ8::setCpu(CpuType cpuType) {
 }
 
 const char *TableZ8::listCpu() const {
-    return "Z8, Z86C, Z88";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableZ8::getCpu() const {
-    if (_cpuType == SUPER8) return "Z88";
-    return _cpuType == Z8 ? "Z8" : "Z86C";
+    if (_cpuType == SUPER8) return TEXT_CPU_Z88;
+    return _cpuType == Z8 ? TEXT_CPU_Z8 : TEXT_CPU_Z86C;
 }
 
 bool TableZ8::setCpu(const char *cpu) {
-    if (strncasecmp(cpu, "z86c", 4) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_Z86C, 4) == 0)
         return setCpu(Z86C);
-    if (strcasecmp(cpu, "z8") == 0
-        || strncasecmp(cpu, "z86", 3) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_Z86, 3) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_Z8) == 0)
         return setCpu(Z8);
-    if (strcasecmp(cpu, "super8") == 0
-        || strncasecmp(cpu, "z88", 3) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_Z88, 3) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_SUPER8) == 0)
         return setCpu(SUPER8);
     return false;
 }

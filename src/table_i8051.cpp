@@ -201,16 +201,16 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) const {
 }
 
 const char *TableI8051::listCpu() const {
-    return "i8051";
+    return TEXT_CPU_I8051;
 }
 
 const char *TableI8051::getCpu() const {
-    return "8051";
+    return TEXT_CPU_8051;
 }
 
 bool TableI8051::setCpu(const char *cpu) {
-    if (toupper(*cpu) == 'I') cpu++;
-    return strcmp(cpu, "8051") == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_8051) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_I8051) == 0;
 }
 
 class TableI8051 TableI8051;

@@ -157,17 +157,16 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
 }
 
 const char *TableCdp1802::listCpu() const {
-    return "CDP1802";
+    return TEXT_CPU_CDP1802;
 }
 
 const char *TableCdp1802::getCpu() const {
-    return "1802";
+    return TEXT_CPU_1802;
 }
 
 bool TableCdp1802::setCpu(const char *cpu) {
-    if (strncasecmp(cpu, "cdp", 3) == 0)
-        cpu += 3;
-    return strcasecmp(cpu, "1802") == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_1802) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_CDP1802) == 0;
 }
 
 class TableCdp1802 TableCdp1802;

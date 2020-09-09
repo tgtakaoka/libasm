@@ -385,19 +385,19 @@ TableZ8000::TableZ8000()
 }
 
 const char *TableZ8000::listCpu() const {
-    return "Z8001, Z8002";
+    return TEXT_CPU_LIST;
 }
 
 const char *TableZ8000::getCpu() const {
-    return _cpuType == Z8001 ? "Z8001" : "Z8002";
+    return _cpuType == Z8001 ? TEXT_CPU_Z8001 : TEXT_CPU_Z8002;
 }
 
 bool TableZ8000::setCpu(const char *cpu) {
-    if (strcasecmp(cpu, "z8001") == 0) {
+    if (strcasecmp_P(cpu, TEXT_CPU_Z8001) == 0) {
         _cpuType = Z8001;
         return true;
     }
-    if (strcasecmp(cpu, "z8002") == 0) {
+    if (strcasecmp_P(cpu, TEXT_CPU_Z8002) == 0) {
         _cpuType = Z8002;
         return true;
     }

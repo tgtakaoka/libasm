@@ -132,19 +132,17 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
 }
 
 const char *TableIns8060::listCpu() const {
-    return "INS8060";
+    return TEXT_CPU_INS8060;
 }
 
 const char *TableIns8060::getCpu() const {
-    return "SC/MP";
+    return TEXT_CPU_SCMP;
 }
 
 bool TableIns8060::setCpu(const char *cpu) {
-    if (strcasecmp(cpu, "sc/mp") == 0)
-        return true;
-    if (strncasecmp(cpu, "ins", 3) == 0)
-        cpu += 3;
-    return strcasecmp(cpu, "8060") == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_SCMP) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_INS8060) == 0
+        || strcasecmp_P(cpu, TEXT_CPU_8060) == 0;
 }
 
 class TableIns8060 TableIns8060;

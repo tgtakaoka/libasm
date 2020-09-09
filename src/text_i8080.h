@@ -20,6 +20,12 @@
 namespace libasm {
 namespace i8080 {
 
+static const char TEXT_CPU_LIST[]  PROGMEM = "i8080, i8085";
+static const char TEXT_CPU_I8080[] PROGMEM = "i8080";
+static constexpr const char *TEXT_CPU_8080 = &TEXT_CPU_I8080[1];
+static constexpr const char *TEXT_CPU_I8085 = &TEXT_CPU_LIST[7];
+static constexpr const char *TEXT_CPU_8085  = &TEXT_CPU_LIST[8];
+
 static const char TEXT_ACI[]  PROGMEM = "ACI";
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
