@@ -52,10 +52,10 @@ public:
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     Error searchPostSpec(PostSpec &spec, uint8_t &post) const;
 
-    const char *listCpu() override { return "6809, 6309"; }
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override;
-    bool is6309() const { return _cpuType == HD6309; }
+    const char *getCpu() const override;
+    CpuType cpuType() const { return _cpuType; }
 
     static bool isPrefixCode(Config::opcode_t opCode);
 

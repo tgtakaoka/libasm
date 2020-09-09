@@ -31,10 +31,10 @@ public:
     Error searchName(InsnZ80 &insn) const;
     Error searchOpCode(InsnZ80 &insn) const;
 
-    const char *listCpu() override { return "Z80"; }
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override;
-    bool isZ80() const { return _cpuType == Z80; }
+    const char *getCpu() const override;
+    CpuType cpuType() const { return _cpuType; }
 
     static bool isPrefixCode(Config::opcode_t opCode);
 

@@ -401,11 +401,11 @@ bool TableZ8::setCpu(CpuType cpuType) {
     return false;
 }
 
-const char *TableZ8::listCpu() {
+const char *TableZ8::listCpu() const {
     return "Z8, Z86C, Z88";
 }
 
-const char *TableZ8::getCpu() {
+const char *TableZ8::getCpu() const {
     if (_cpuType == SUPER8) return "Z88";
     return _cpuType == Z8 ? "Z8" : "Z86C";
 }

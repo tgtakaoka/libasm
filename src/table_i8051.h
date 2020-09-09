@@ -29,9 +29,9 @@ public:
     Error searchName(InsnI8051 &insn) const;
     Error searchOpCode(InsnI8051 &insn) const;
 
-    const char *listCpu() override { return getCpu(); }
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override { return "8051"; }
+    const char *getCpu() const override;
 };
 
 extern TableI8051 TableI8051;

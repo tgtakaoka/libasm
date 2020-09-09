@@ -683,7 +683,7 @@ Error TableMc6809::searchPostSpec(
 
 Error TableMc6809::searchPostByte(
     const uint8_t post, PostSpec &spec) const {
-    if (is6309()
+    if (_cpuType == HD6309
         && searchPostByte(post, spec, ARRAY_RANGE(HD6309_POSTBYTE)) == OK)
         return OK;
     return searchPostByte(post, spec, ARRAY_RANGE(MC6809_POSTBYTE));
@@ -691,7 +691,7 @@ Error TableMc6809::searchPostByte(
 
 Error TableMc6809::searchPostSpec(
     PostSpec &spec, uint8_t &post) const {
-    if (is6309()
+    if (_cpuType == HD6309
         && searchPostSpec(spec, post, ARRAY_RANGE(HD6309_POSTBYTE)) == OK)
         return OK;
     return searchPostSpec(spec, post, ARRAY_RANGE(MC6809_POSTBYTE));
@@ -712,7 +712,11 @@ void TableMc6809::setCpu(CpuType cpuType) {
     }
 }
 
-const char *TableMc6809::getCpu() {
+const char *TableMc6809::listCpu() const {
+    return "MC6809, HD6309";
+}
+
+const char *TableMc6809::getCpu() const {
     return _cpuType == MC6809 ? "6809" : "6309";
 }
 

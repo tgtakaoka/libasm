@@ -33,9 +33,9 @@ public:
     Error searchOpCode(InsnZ8 &insn, DisMemory &memory) const;
     bool isSuper8() const;
 
-    const char *listCpu() override;
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override;
+    const char *getCpu() const override;
 
     struct EntryPage;
 

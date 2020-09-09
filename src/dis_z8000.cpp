@@ -169,7 +169,7 @@ Error DisZ8000::decodeGenericAddressing(
 Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn) {
     uint16_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    if (TableZ8000.isSegmentModel()) {
+    if (TableZ8000.segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
         uint16_t off = static_cast<uint8_t>(addr);
         if (addr & 0x8000) {

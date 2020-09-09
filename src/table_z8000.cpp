@@ -384,11 +384,11 @@ TableZ8000::TableZ8000()
 {
 }
 
-const char *TableZ8000::listCpu() {
+const char *TableZ8000::listCpu() const {
     return "Z8001, Z8002";
 }
 
-const char *TableZ8000::getCpu() {
+const char *TableZ8000::getCpu() const {
     return _cpuType == Z8001 ? "Z8001" : "Z8002";
 }
 
@@ -402,6 +402,18 @@ bool TableZ8000::setCpu(const char *cpu) {
         return true;
     }
     return false;
+}
+
+AddressWidth TableZ8000::addressWidth() const {
+    return segmentedModel() ? ADDRESS_24BIT : ADDRESS_16BIT;
+}
+
+int8_t TableZ8000::addressBits() const {
+    return segmentedModel() ? 24 : 16;
+}
+
+bool TableZ8000::segmentedModel() const {
+    return _cpuType == Z8001;
 }
 
 class TableZ8000 TableZ8000;

@@ -200,6 +200,14 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) const {
     return _error.setOK();
 }
 
+const char *TableI8051::listCpu() const {
+    return "i8051";
+}
+
+const char *TableI8051::getCpu() const {
+    return "8051";
+}
+
 bool TableI8051::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I') cpu++;
     return strcmp(cpu, "8051") == 0;

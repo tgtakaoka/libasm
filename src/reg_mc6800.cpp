@@ -55,7 +55,8 @@ RegName RegMc6800::parseRegName(const char *line) const {
     if (compareRegName(line, REG_A)) return REG_A;
     if (compareRegName(line, REG_B)) return REG_B;
     if (compareRegName(line, REG_X)) return REG_X;
-    if (TableMc6800.is6811() && compareRegName(line, REG_Y)) return REG_Y;
+    if (TableMc6800.cpuType() == MC68HC11 && compareRegName(line, REG_Y))
+        return REG_Y;
     return REG_UNDEF;
 }
 

@@ -35,9 +35,9 @@ public:
     void longIndex(bool on);
     bool longImmediate(AddrMode addrMode) const;
 
-    const char *listCpu() override;
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override;
+    const char *getCpu() const override;
     AddressWidth addressWidth() const;
     int8_t addressBits() const;
 

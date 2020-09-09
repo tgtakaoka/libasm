@@ -44,7 +44,7 @@ Error AsmZ8000::emitRegister(
 
 Error AsmZ8000::emitIndirectRegister(
         InsnZ8000 &insn, ModeField field, RegName reg) {
-    if (TableZ8000.isSegmentModel()) {
+    if (TableZ8000.segmentedModel()) {
         if (!_regs.isLongReg(reg)) return setError(REGISTER_NOT_ALLOWED);
     } else {
         if (!_regs.isWordReg(reg)) return setError(REGISTER_NOT_ALLOWED);
@@ -132,7 +132,7 @@ Error AsmZ8000::emitImmediate(
 }
 
 Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, uint32_t addr) {
-    if (TableZ8000.isSegmentModel()) {
+    if (TableZ8000.segmentedModel()) {
         if (addr >= 0x800000L) return setError(OVERFLOW_RANGE);
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t off = static_cast<uint16_t>(addr);

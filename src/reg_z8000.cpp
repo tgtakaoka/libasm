@@ -79,7 +79,7 @@ RegName RegZ8000::decodeRegNum(uint8_t regNum, OprSize size) const {
     case SZ_WORD: return decodeWordReg(regNum);
     case SZ_LONG: return decodeLongReg(regNum);
     case SZ_QUAD: return decodeQuadReg(regNum);
-    case SZ_ADDR: return TableZ8000.isSegmentModel()
+    case SZ_ADDR: return TableZ8000.segmentedModel()
             ? decodeLongReg(regNum) : decodeWordReg(regNum);
     default: return REG_UNDEF;
     }

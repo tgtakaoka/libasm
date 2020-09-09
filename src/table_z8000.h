@@ -33,16 +33,12 @@ public:
     Error searchOpCode(InsnZ8000 &insn, DisMemory &memory) const;
     Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const;
 
-    const char *listCpu() override;
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override;
-    AddressWidth addressWidth() const {
-        return isSegmentModel() ? ADDRESS_24BIT : ADDRESS_16BIT;
-    }
-    int8_t addressBits() const {
-        return isSegmentModel() ? 24 : 16;
-    }
-    bool isSegmentModel() const { return _cpuType == Z8001; }
+    const char *getCpu() const override;
+    bool segmentedModel() const;
+    AddressWidth addressWidth() const;
+    int8_t addressBits() const;
 
 private:
     CpuType _cpuType;

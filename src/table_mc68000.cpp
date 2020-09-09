@@ -374,6 +374,14 @@ TableMc68000::TableMc68000()
     : _aliasEnabled(false)
 {}
 
+const char *TableMc68000::listCpu() const {
+    return "MC68000, MC68008";
+}
+
+const char *TableMc68000::getCpu() const {
+    return "68000";
+}
+
 bool TableMc68000::setCpu(const char *cpu) {
     const char *p = cpu + (strncasecmp(cpu, "MC", 2) ? 0 : 2);
     return strcmp(p, "68000") == 0

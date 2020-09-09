@@ -406,7 +406,7 @@ Error DisZ80::decode(
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
     insn.setInsnCode(0, opCode);
-    if (TableZ80.isZ80() && TableZ80::isPrefixCode(opCode)) {
+    if (TableZ80.cpuType() == Z80 && TableZ80::isPrefixCode(opCode)) {
         const Config::opcode_t prefix = opCode;
         if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
         insn.setInsnCode(prefix, opCode);

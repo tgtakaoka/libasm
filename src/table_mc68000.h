@@ -31,9 +31,9 @@ public:
     Error searchName(InsnMc68000 &insn) const;
     Error searchOpCode(InsnMc68000 &insn) const;
 
-    const char *listCpu() override { return getCpu(); }
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override { return "68000"; }
+    const char *getCpu() const override;
 
     void setAlias(bool enable) { _aliasEnabled = enable; }
 

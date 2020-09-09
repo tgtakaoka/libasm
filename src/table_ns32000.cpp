@@ -577,18 +577,20 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
         searchOpCode(insn, memory, ARRAY_RANGE(NS32000_PAGES)));
 }
 
-const char *TableNs32000::listCpu() {
-    return getCpu();
+const char *TableNs32000::listCpu() const {
+    return "NS32032, NS32016, NS32008";
 }
 
-const char *TableNs32000::getCpu() {
-    return "NS32032";
+const char *TableNs32000::getCpu() const {
+    return "32032";
 }
 
 bool TableNs32000::setCpu(const char *cpu) {
-    return strcasecmp(cpu, "NS32032") == 0
-        || strcasecmp(cpu, "NS32016") == 0
-        || strcasecmp(cpu, "NS32008") == 0;
+    if (strncasecmp(cpu, "NS", 2) == 0)
+        cpu += 2;
+    return strcmp(cpu, "32032") == 0
+        || strcmp(cpu, "32016") == 0
+        || strcmp(cpu, "32008") == 0;
 }
 
 class TableNs32000 TableNs32000;

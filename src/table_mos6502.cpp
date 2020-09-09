@@ -503,11 +503,11 @@ int8_t TableMos6502::addressBits() const {
     return _cpuType == W65C816 ? 24 : 16;
 }
 
-const char *TableMos6502::listCpu() {
-    return "6502, 65SC02, 65C02, W65C02S, 65816";
+const char *TableMos6502::listCpu() const {
+    return "MOS6502, R65C02, W65SC02, W65C02S, W65C816S";
 }
 
-const char *TableMos6502::getCpu() {
+const char *TableMos6502::getCpu() const {
     if (_cpuType == MOS6502) return "6502";
     if (_cpuType == W65SC02) return "65SC02";
     if (_cpuType == R65C02)  return "65C02";

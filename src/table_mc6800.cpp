@@ -597,7 +597,11 @@ bool TableMc6800::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableMc6800::getCpu() {
+const char *TableMc6800::listCpu() const {
+    return "MC6800, MC6801, MC6811, HD6301";
+}
+
+const char *TableMc6800::getCpu() const {
     if (_cpuType == MC6800)
         return "6800";
     if (_cpuType == MC68HC11)

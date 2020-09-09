@@ -25,15 +25,15 @@ DisTms9900 dis9900;
 Disassembler &disassembler(dis9900);
 
 static bool is9900() {
-    return strcmp(disassembler.getCpu(), "TMS9900") == 0;
+    return strcmp(disassembler.getCpu(), "9900") == 0;
 }
 
 static bool is9995() {
-    return strcmp(disassembler.getCpu(), "TMS9995") == 0;
+    return strcmp(disassembler.getCpu(), "9995") == 0;
 }
 
 static bool is99105() {
-    return strcmp(disassembler.getCpu(), "TMS99105") == 0;
+    return strcmp(disassembler.getCpu(), "99105") == 0;
 }
 
 static void set_up() {
@@ -46,23 +46,23 @@ static void tear_down() {
 }
 
 static void test_cpu() {
-    EQUALS("cpu 9900", true,      disassembler.setCpu("9900"));
-    EQUALS("cpu 9900", "TMS9900", disassembler.getCpu());
+    EQUALS("cpu 9900", true,   disassembler.setCpu("9900"));
+    EQUALS("cpu 9900", "9900", disassembler.getCpu());
 
-    EQUALS("cpu 9995", true,      disassembler.setCpu("9995"));
-    EQUALS("cpu 9995", "TMS9995", disassembler.getCpu());
+    EQUALS("cpu 9995", true,   disassembler.setCpu("9995"));
+    EQUALS("cpu 9995", "9995", disassembler.getCpu());
 
-    EQUALS("cpu 99105", true,       disassembler.setCpu("99105"));
-    EQUALS("cpu 99105", "TMS99105", disassembler.getCpu());
+    EQUALS("cpu 99105", true,    disassembler.setCpu("99105"));
+    EQUALS("cpu 99105", "99105", disassembler.getCpu());
 
-    EQUALS("cpu TMS9900", true,      disassembler.setCpu("TMS9900"));
-    EQUALS("cpu TMS9900", "TMS9900", disassembler.getCpu());
+    EQUALS("cpu TMS9900", true,   disassembler.setCpu("TMS9900"));
+    EQUALS("cpu TMS9900", "9900", disassembler.getCpu());
 
-    EQUALS("cpu TMS9995", true,      disassembler.setCpu("TMS9995"));
-    EQUALS("cpu TMS9995", "TMS9995", disassembler.getCpu());
+    EQUALS("cpu TMS9995", true,   disassembler.setCpu("TMS9995"));
+    EQUALS("cpu TMS9995", "9995", disassembler.getCpu());
 
-    EQUALS("cpu TMS99105", true,       disassembler.setCpu("TMS99105"));
-    EQUALS("cpu TMS99105", "TMS99105", disassembler.getCpu());
+    EQUALS("cpu TMS99105", true,    disassembler.setCpu("TMS99105"));
+    EQUALS("cpu TMS99105", "99105", disassembler.getCpu());
 }
 
 static void test_inh() {

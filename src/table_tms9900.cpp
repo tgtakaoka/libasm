@@ -234,9 +234,13 @@ bool TableTms9900::setCpu(CpuType cpuType) {
     return false;
 }
 
-const char *TableTms9900::getCpu() {
-    if (_cpuType == TMS99105) return "TMS99105";
-    return _cpuType == TMS9900 ? "TMS9900" : "TMS9995";
+const char *TableTms9900::listCpu() const {
+    return "TMS9900, TMS9995, TMS99105";
+}
+
+const char *TableTms9900::getCpu() const {
+    if (_cpuType == TMS99105) return "99105";
+    return _cpuType == TMS9900 ? "9900" : "9995";
 }
 
 bool TableTms9900::setCpu(const char *cpu) {

@@ -163,7 +163,7 @@ int8_t RegMc6809::encodeBitOpReg(RegName regName) {
 }
 
 bool RegMc6809::isTfmBaseReg(RegName regName) const {
-    return TableMc6809.is6309() && encodeTfmBaseReg(regName) >= 0;
+    return TableMc6809.cpuType() == HD6309 && encodeTfmBaseReg(regName) >= 0;
 }
 
 int8_t RegMc6809::encodeTfmBaseReg(RegName regName) {
@@ -216,37 +216,37 @@ static constexpr RegName HD6309_DATA_REGS[] PROGMEM = {
 };
 
 RegName RegMc6809::parseIndexReg(const char *line) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? parseRegName(line, ARRAY_RANGE(HD6309_INDEX_REGS))
         : parseRegName(line, ARRAY_RANGE(MC6809_INDEX_REGS));
 }
 
 RegName RegMc6809::parseBaseReg(const char *line) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? parseRegName(line, ARRAY_RANGE(HD6309_BASE_REGS))
         : parseRegName(line, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 RegName RegMc6809::parseDataReg(const char *line) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? parseRegName(line, ARRAY_RANGE(HD6309_DATA_REGS))
         : parseRegName(line, ARRAY_RANGE(MC6809_DATA_REGS));
 }
 
 int8_t RegMc6809::encodeIndexReg(RegName regName) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_INDEX_REGS))
         : encodeRegNumber(regName, ARRAY_RANGE(MC6809_INDEX_REGS));
 }
 
 int8_t RegMc6809::encodeBaseReg(RegName regName) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? encodeRegNumber(regName, ARRAY_RANGE(HD6309_BASE_REGS))
         : encodeRegNumber(regName, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 int8_t RegMc6809::encodeDataReg(RegName regName) const {
-    if (TableMc6809.is6309()) {
+    if (TableMc6809.cpuType() == HD6309) {
         if (regName == REG_0) regName = REG_Z;
         return encodeRegNumber(regName, ARRAY_RANGE(HD6309_DATA_REGS));
     } 
@@ -268,13 +268,13 @@ bool RegMc6809::isIndexedBase(RegName regName) const {
 }
 
 RegName RegMc6809::decodeBaseReg(uint8_t regNum) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_BASE_REGS))
         : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_BASE_REGS));
 }
 
 RegName RegMc6809::decodeRegName(uint8_t regNum) const {
-    return TableMc6809.is6309()
+    return TableMc6809.cpuType() == HD6309
         ? decodeRegNumber(regNum, ARRAY_RANGE(HD6309_DATA_REGS))
         : decodeRegNumber(regNum, ARRAY_RANGE(MC6809_DATA_REGS));
 }
@@ -290,7 +290,7 @@ static constexpr RegName HD6309_EXTRA_REGS[] PROGMEM = {
 
 RegName RegMc6809::parseRegName(const char *line) const {
     RegName regName = parseRegName(line, ARRAY_RANGE(MC6809_REGS));
-    if (regName == REG_UNDEF && TableMc6809.is6309())
+    if (regName == REG_UNDEF && TableMc6809.cpuType() == HD6309)
         regName = parseRegName(line, ARRAY_RANGE(HD6309_EXTRA_REGS));
     return regName;
 }

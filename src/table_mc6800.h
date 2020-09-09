@@ -34,10 +34,10 @@ public:
     Error searchOpCodeAlias(InsnMc6800 &insn) const;
     bool isPrefixCode(Config::opcode_t opCode) const;
 
-    const char *listCpu() override { return "6800, 6801, 6301, 6811"; }
+    const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() override;
-    bool is6811() const { return _cpuType == MC68HC11; }
+    const char *getCpu() const override;
+    CpuType cpuType() const { return _cpuType; }
 
     struct EntryPage;
 
