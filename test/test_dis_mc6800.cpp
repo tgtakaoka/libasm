@@ -698,38 +698,6 @@ static void test_bit_ops() {
     }
 }
 
-static void test_acc_delimitor() {
-    dis6800.setAccumulatorDelimitor();
-    TEST(SUBA, "#$90",   0x80, 0x90);
-    TEST(CMPB, "#$90",   0xC1, 0x90);
-    TEST(SBCA, "$90",    0x92, 0x90);
-    TEST(ANDB, "$90",    0xD4, 0x90);
-    TEST(BITA, ">$0090", 0xB5, 0x00, 0x90);
-    TEST(LDAB, "$9ABC",  0xF6, 0x9A, 0xBC);
-    TEST(STAA, "5,X",    0xA7, 0x05);
-    TEST(EORB, "6,X",    0xE8, 0x06);
-
-    dis6800.setAccumulatorDelimitor(' ');
-    TEST(SUB, "A #$90",   0x80, 0x90);
-    TEST(CMP, "B #$90",   0xC1, 0x90);
-    TEST(SBC, "A $90",    0x92, 0x90);
-    TEST(AND, "B $90",    0xD4, 0x90);
-    TEST(BIT, "A >$0090", 0xB5, 0x00, 0x90);
-    TEST(LDA, "B $9ABC",  0xF6, 0x9A, 0xBC);
-    TEST(STA, "A 5,X",    0xA7, 0x05);
-    TEST(EOR, "B 6,X",    0xE8, 0x06);
-
-    dis6800.setAccumulatorDelimitor(',');
-    TEST(SUB, "A,#$90",   0x80, 0x90);
-    TEST(CMP, "B,#$90",   0xC1, 0x90);
-    TEST(SBC, "A,$90",    0x92, 0x90);
-    TEST(AND, "B,$90",    0xD4, 0x90);
-    TEST(BIT, "A,>$0090", 0xB5, 0x00, 0x90);
-    TEST(LDA, "B,$9ABC",  0xF6, 0x9A, 0xBC);
-    TEST(STA, "A,5,X",    0xA7, 0x05);
-    TEST(EOR, "B,6,X",    0xE8, 0x06);
-}
-
 static void test_illegal_mc6800() {
     const uint8_t illegals[] = {
         0x00, 0x02, 0x03, 0x04, 0x05,
@@ -848,7 +816,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_indexed_y);
         RUN_TEST(test_relative);
         RUN_TEST(test_bit_ops);
-        RUN_TEST(test_acc_delimitor);
         if (m6800()) {
             RUN_TEST(test_illegal_mc6800);
         } else if (m68hc11()) {

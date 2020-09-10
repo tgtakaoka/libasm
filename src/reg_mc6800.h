@@ -24,8 +24,6 @@ namespace mc6800 {
 
 enum RegName : char {
     REG_UNDEF = 0,
-    REG_A = 'A',
-    REG_B = 'B',
     REG_X = 'X',
     // MC68HC11
     REG_Y = 'Y',
@@ -34,14 +32,11 @@ enum RegName : char {
 class RegMc6800 : public RegBase {
 public:
     RegName parseRegName(const char *line) const;
-
-    char *outRegName(char *out, const RegName regName) const;
-
-    bool compareRegName(const char *line, RegName regName) const;
-    uint8_t regNameLen(RegName regName) const;
-
+    char *outRegName(char *out, const RegName name) const;
+    uint8_t regNameLen(RegName name) const;
 private:
-    char regName1stChar(const RegName regName) const;
+    bool compareRegName(const char *line, RegName name) const;
+    char regName1stChar(const RegName name) const;
 };
 
 } // namespace mc6800

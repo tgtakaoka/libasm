@@ -37,27 +37,20 @@ public:
     bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
     const char *getCpu() const override { return TableMc6800.getCpu(); }
 
-    void reset() override { setAccumulatorDelimitor(); }
-    void setAccumulatorDelimitor(char delim = 0) { _accDelim = delim; }
-
 private:
     MotoValueFormatter _formatter;
     RegMc6800 _regs;
-    char _accDelim = 0;
 
     RegBase &getRegister() override { return _regs; }
     void outRegister(RegName regName);
-    bool outAccumulator(InsnMc6800 &insn);
 
-    // MC6800
-    Error decodeInherent(InsnMc6800 &insn);
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn);
     Error decodeExtended(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnMc6800 &insn);
     Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeBitOperation(DisMemory &memory, InsnMc6800 &insn);
-
+    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn);
+    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn) override;
 };
 

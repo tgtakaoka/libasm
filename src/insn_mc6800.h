@@ -29,31 +29,25 @@ class InsnMc6800 : public InsnBase<Config> {
 public:
     InsnMc6800(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    InsnAdjust insnAdjust() const { return Entry::_insnAdjust(_flags); }
-    OprSize oprSize() const { return Entry::_oprSize(_flags); }
+    AddrMode mode1() const { return Entry::_mode1(_flags); }
+    AddrMode mode2() const { return Entry::_mode2(_flags); }
+    AddrMode mode3() const { return Entry::_mode3(_flags); }
+    OprSize size() const { return Entry::_size(_flags); }
 
-    void setFlags(uint8_t flags) {
+    void setFlags(uint16_t flags) {
         _flags = flags;
     }
 
-    void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(
-                addrMode, Entry::_insnAdjust(_flags), Entry::_oprSize(_flags));
-    }
-
-    void appendRegister(RegName regName, RegMc6800 regs) {
-        char suffix[4];
-        regs.outRegName(suffix, regName);
-        _insn.appendName(suffix);
+    void setAddrMode(AddrMode op1, AddrMode op2, AddrMode op3) {
+        _flags = Entry::_flags(SZ_NONE, op1, op2, op3);
     }
 
     Config::opcode_t opCode() const { return _opCode; }
-    bool hasPrefix() const { return _prefixCode != 0; }
-    Config::opcode_t prefixCode() const { return _prefixCode; }
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefixCode = 0) {
+    bool hasPrefix() const { return _prefix != 0; }
+    Config::opcode_t prefix() const { return _prefix; }
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
-        _prefixCode = prefixCode;
+        _prefix = prefix;
     }
 
     void embed(Config::opcode_t data) {
@@ -61,14 +55,14 @@ public:
     }
     void emitInsn() {
         if (hasPrefix())
-            emitByte(prefixCode());
+            emitByte(prefix());
         emitByte(opCode());
     }
 
 private:
     Config::opcode_t _opCode;
-    Config::opcode_t _prefixCode;
-    uint8_t _flags;
+    Config::opcode_t _prefix;
+    uint16_t _flags;
 };
 
 } // namespace mc6800

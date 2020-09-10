@@ -30,67 +30,57 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    INH         = 0,   // Inherent
-    DIR         = 1,   // Direct page
-    EXT         = 2,   // Extended
-    IDX         = 3,   // Indexed
-    REL         = 4,   // Relative
-    IMM         = 5,   // Immediate
+    M_NO   = 0,
+    M_DIR  = 1,  // Direct page
+    M_EXT  = 2,  // Extended
+    M_IDX  = 3,  // Indexed
+    M_REL  = 4,  // Relative
+    M_IMM  = 5,  // Immediate
     // HD6301
-    IMM_DIR     = 6,   // Immediate,Direct Page
-    IMM_IDX     = 7,   // Immediate,Indexed
-    BIT_DIR     = 8,   // Bit number,Direct
-    BIT_IDX     = 9,   // Bit number,Indexed
+    M_BMM  = 6,  // Bit number or Immediate (for disassembler)
+    M_BIT  = 7,  // Bit number (for assembler)
     // MC68HC11
-    IDY         = 10,  // Indexed Y
-    DIR_IMM     = 11,  // Direct page,Immediate
-    IDX_IMM     = 12,  // Indexed X,Immediate
-    IDY_IMM     = 13,  // Indexed Y,Immediate
-    DIR_IMM_REL = 14,  // Direct page,Immediate,Relative
-    IDX_IMM_REL = 15,  // Indexed X,Immediate,Relative
-    IDY_IMM_REL = 16,  // Indexed Y,Immediate,Relative
-};
-
-enum InsnAdjust : uint8_t {
-    ADJ_ZERO = 0,
-    ADJ_AB01 = 1,  // Accumulator A:+0, B:+1
-    ADJ_AB16 = 2,  // Accumulator A:+0, B:+$10
-    ADJ_AB64 = 3,  // Accumulator A:+0, B:+$40
+    M_IDY  = 8,  // Indexed Y
 };
 
 enum OprSize : uint8_t {
-    SZ_BYTE = 0,
-    SZ_WORD = 1,
-    SZ_NONE = 2,   // unknown, in Table == SZ_BYTE
+    SZ_NONE = 0,
+    SZ_BYTE = 1,
+    SZ_WORD = 2,
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const uint8_t flags;
+    const uint16_t flags;
     const char *name;
 
-    static inline AddrMode _addrMode(uint8_t flags) {
-        return AddrMode(flags & addrMode_gm);
+    static inline AddrMode _mode1(uint16_t flags) {
+        return AddrMode((flags >> op1_gp) & mode_gm);
     }
-    static inline InsnAdjust _insnAdjust(uint8_t flags) {
-        return InsnAdjust((flags >> insnAdjust_gp) & insnAdjust_gm);
+    static inline AddrMode _mode2(uint16_t flags) {
+        return AddrMode((flags >> op2_gp) & mode_gm);
     }
-    static inline OprSize _oprSize(uint8_t flags) {
-        return OprSize((flags >> oprSize_gp) & oprSize_gm);
+    static inline AddrMode _mode3(uint16_t flags) {
+        return AddrMode((flags >> op3_gp) & mode_gm);
     }
-    static constexpr uint8_t _flags(
-        AddrMode addrMode, InsnAdjust insnAdjust, OprSize oprSize) {
-        return static_cast<uint8_t>(addrMode)
-            | (static_cast<uint8_t>(insnAdjust) << insnAdjust_gp)
-            | (static_cast<uint8_t>(oprSize)    << oprSize_gp);
+    static inline OprSize _size(uint16_t flags) {
+        return OprSize((flags >> size_gp) & size_gm);
+    }
+    static constexpr uint16_t _flags(
+        OprSize size, AddrMode op1, AddrMode op2, AddrMode op3) {
+        return (static_cast<uint16_t>(op1) << op1_gp)
+            | (static_cast<uint16_t>(op2) << op2_gp)
+            | (static_cast<uint16_t>(op3) << op3_gp)
+            | (static_cast<uint16_t>(size) << size_gp);
     }
 
 private:
-    static constexpr uint8_t addrMode_gm = 0x1F;
-    static constexpr uint8_t insnAdjust_gm = 0x3;
-    static constexpr uint8_t oprSize_gm = 0x1;
-    static constexpr int insnAdjust_gp = 5;
-    static constexpr int oprSize_gp = 7;
+    static constexpr int op1_gp  = 0;
+    static constexpr int op2_gp  = 4;
+    static constexpr int op3_gp  = 8;
+    static constexpr int size_gp = 12;
+    static constexpr uint8_t mode_gm = 0xF;
+    static constexpr uint8_t size_gm = 0x3;
 };
 
 } // namespace mc6800

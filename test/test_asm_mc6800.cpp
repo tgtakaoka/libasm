@@ -105,26 +105,11 @@ static void test_inherent() {
     TEST("WAI", 0x3E);
     TEST("SWI", 0x3F);
 
-    TEST("PUL A", 0x32);
-    TEST("PUL B", 0x33);
-    TEST("PSH A", 0x36);
-    TEST("PSH B", 0x37);
     TEST("PULA", 0x32);
     TEST("PULB", 0x33);
     TEST("PSHA", 0x36);
     TEST("PSHB", 0x37);
 
-    TEST("NEG A", 0x40);
-    TEST("COM A", 0x43);
-    TEST("LSR A", 0x44);
-    TEST("ROR A", 0x46);
-    TEST("ASR A", 0x47);
-    TEST("ASL A", 0x48);
-    TEST("ROL A", 0x49);
-    TEST("DEC A", 0x4A);
-    TEST("INC A", 0x4C);
-    TEST("TST A", 0x4D);
-    TEST("CLR A", 0x4F);
     TEST("NEGA", 0x40);
     TEST("COMA", 0x43);
     TEST("LSRA", 0x44);
@@ -137,17 +122,6 @@ static void test_inherent() {
     TEST("TSTA", 0x4D);
     TEST("CLRA", 0x4F);
 
-    TEST("NEG B", 0x50);
-    TEST("COM B", 0x53);
-    TEST("LSR B", 0x54);
-    TEST("ROR B", 0x56);
-    TEST("ASR B", 0x57);
-    TEST("ASL B", 0x58);
-    TEST("ROL B", 0x59);
-    TEST("DEC B", 0x5A);
-    TEST("INC B", 0x5C);
-    TEST("TST B", 0x5D);
-    TEST("CLR B", 0x5F);
     TEST("NEGB", 0x50);
     TEST("COMB", 0x53);
     TEST("LSRB", 0x54);
@@ -223,7 +197,7 @@ static void test_inherent() {
 static void test_indexed_y() {
     if (m68hc11()) {
         // MC68HC11
-        TEST("NEG Y",   0x18, 0x60, 0x00);
+        TEST("NEG 0,Y", 0x18, 0x60, 0x00);
         TEST("COM 0,Y", 0x18, 0x63, 0x00);
         TEST("LSR 1,Y", 0x18, 0x64, 0x01);
         TEST("ROR 2,Y", 0x18, 0x66, 0x02);
@@ -236,7 +210,7 @@ static void test_indexed_y() {
         TEST("JMP 254,Y", 0x18, 0x6E, 0xFE);
         TEST("CLR 255,Y", 0x18, 0x6F, 0xFF);
 
-        TEST("SUB  A Y", 0x18, 0xA0, 0x00);
+        TEST("SUBA 0,Y", 0x18, 0xA0, 0x00);
         TEST("CMPA 0,Y", 0x18, 0xA1, 0x00);
         TEST("SBCA 1,Y", 0x18, 0xA2, 0x01);
         TEST("ANDA 2,Y", 0x18, 0xA4, 0x02);
@@ -249,7 +223,7 @@ static void test_indexed_y() {
         TEST("ADDA 255,Y", 0x18, 0xAB, 0xFF);
 
         TEST("SUBB 0,Y", 0x18, 0xE0, 0x00);
-        TEST("CMP  B,Y", 0x18, 0xE1, 0x00);
+        TEST("CMPB 0,Y", 0x18, 0xE1, 0x00);
         TEST("SBCB 1,Y", 0x18, 0xE2, 0x01);
         TEST("ANDB 2,Y", 0x18, 0xE4, 0x02);
         TEST("BITB 3,Y", 0x18, 0xE5, 0x03);
@@ -309,12 +283,12 @@ static void test_indexed_y() {
         ETEST(OPERAND_NOT_ALLOWED, "ASL 4,Y");
         ETEST(OPERAND_NOT_ALLOWED, "ROL 5,Y");
         ETEST(OPERAND_NOT_ALLOWED, "DEC 6,Y");
-        ETEST(UNKNOWN_OPERAND, "INC 127,Y");
-        ETEST(UNKNOWN_OPERAND, "TST 128,Y");
-        ETEST(UNKNOWN_OPERAND, "JMP 254,Y");
-        ETEST(UNKNOWN_OPERAND, "CLR 255,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "INC 127,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "TST 128,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "JMP 254,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "CLR 255,Y");
 
-        ETEST(UNKNOWN_OPERAND, "SUBA ,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "SUBA 0,Y");
         ETEST(OPERAND_NOT_ALLOWED, "CMPA 0,Y");
         ETEST(OPERAND_NOT_ALLOWED, "SBCA 1,Y");
         ETEST(OPERAND_NOT_ALLOWED, "ANDA 2,Y");
@@ -322,46 +296,46 @@ static void test_indexed_y() {
         ETEST(OPERAND_NOT_ALLOWED, "LDAA 4,Y");
         ETEST(OPERAND_NOT_ALLOWED, "STAA 5,Y");
         ETEST(OPERAND_NOT_ALLOWED, "EORA 6,Y");
-        ETEST(UNKNOWN_OPERAND, "ADCA 127,Y");
-        ETEST(UNKNOWN_OPERAND, "ORAA 128,Y");
-        ETEST(UNKNOWN_OPERAND, "ADDA 255,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ADCA 127,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ORAA 128,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ADDA 255,Y");
 
         ETEST(OPERAND_NOT_ALLOWED, "SUBB 0,Y");
-        ETEST(UNKNOWN_OPERAND, "CMPB ,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "CMPB 0,Y");
         ETEST(OPERAND_NOT_ALLOWED, "SBCB 1,Y");
         ETEST(OPERAND_NOT_ALLOWED, "ANDB 2,Y");
         ETEST(OPERAND_NOT_ALLOWED, "BITB 3,Y");
         ETEST(OPERAND_NOT_ALLOWED, "LDAB 4,Y");
         ETEST(OPERAND_NOT_ALLOWED, "STAB 5,Y");
         ETEST(OPERAND_NOT_ALLOWED, "EORB 6,Y");
-        ETEST(UNKNOWN_OPERAND, "ADCB 127,Y");
-        ETEST(UNKNOWN_OPERAND, "ORAB 128,Y");
-        ETEST(UNKNOWN_OPERAND, "ADDB 255,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ADCB 127,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ORAB 128,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "ADDB 255,Y");
 
         ETEST(UNKNOWN_INSTRUCTION, "CPY 0,Y");
         ETEST(UNKNOWN_INSTRUCTION, "LDY 0,Y");
         ETEST(UNKNOWN_INSTRUCTION, "STY 2,Y");
-        ETEST(UNKNOWN_INSTRUCTION, "CPD  0,Y");
+        ETEST(UNKNOWN_INSTRUCTION, "CPD 0,Y");
         if (m6800()) {
             ETEST(UNKNOWN_INSTRUCTION, "SUBD 0,Y");
-            ETEST(UNKNOWN_OPERAND,     "ADDD 128,Y");
-            ETEST(UNKNOWN_OPERAND,     "LDD  255,Y");
+            ETEST(UNKNOWN_INSTRUCTION, "ADDD 128,Y");
+            ETEST(UNKNOWN_INSTRUCTION, "LDD  255,Y");
             ETEST(UNKNOWN_INSTRUCTION, "STD  0,Y");
         } else {
             ETEST(OPERAND_NOT_ALLOWED, "SUBD 0,Y");
-            ETEST(UNKNOWN_OPERAND, "ADDD 128,Y");
-            ETEST(UNKNOWN_OPERAND, "LDD  255,Y");
+            ETEST(OPERAND_NOT_ALLOWED, "ADDD 128,Y");
+            ETEST(OPERAND_NOT_ALLOWED, "LDD  255,Y");
             ETEST(OPERAND_NOT_ALLOWED, "STD  0,Y");
         }
-        ETEST(UNKNOWN_OPERAND, "LDS 128,Y");
-        ETEST(UNKNOWN_OPERAND, "STS 255,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "LDS 128,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "STS 255,Y");
 
         ETEST(OPERAND_NOT_ALLOWED, "JMP 0,Y");
-        ETEST(UNKNOWN_OPERAND, "JSR 255,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "JSR 255,Y");
 
         ETEST(OPERAND_NOT_ALLOWED, "LDX 0,Y");
-        ETEST(UNKNOWN_OPERAND, "STX 128,Y");
-        ETEST(UNKNOWN_OPERAND, "CPX 255,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "STX 128,Y");
+        ETEST(OPERAND_NOT_ALLOWED, "CPX 255,Y");
     }
 }
 
@@ -406,16 +380,6 @@ static void test_relative() {
 }
 
 static void test_immediate() {
-    TEST("SUB A #$90", 0x80, 0x90);
-    TEST("CMP A #$90", 0x81, 0x90);
-    TEST("SBC A #$90", 0x82, 0x90);
-    TEST("AND A #$90", 0x84, 0x90);
-    TEST("BIT A #$90", 0x85, 0x90);
-    TEST("LDA A #$90", 0x86, 0x90);
-    TEST("EOR A #$90", 0x88, 0x90);
-    TEST("ADC A #$90", 0x89, 0x90);
-    TEST("ORA A #$90", 0x8A, 0x90);
-    TEST("ADD A,#$90", 0x8B, 0x90);
     TEST("SUBA #$90", 0x80, 0x90);
     TEST("CMPA #$90", 0x81, 0x90);
     TEST("SBCA #$90", 0x82, 0x90);
@@ -427,16 +391,6 @@ static void test_immediate() {
     TEST("ORAA #$90", 0x8A, 0x90);
     TEST("ADDA #$90", 0x8B, 0x90);
 
-    TEST("SUB B #$90", 0xC0, 0x90);
-    TEST("CMP B #$90", 0xC1, 0x90);
-    TEST("SBC B #$90", 0xC2, 0x90);
-    TEST("AND B #$90", 0xC4, 0x90);
-    TEST("BIT B #$90", 0xC5, 0x90);
-    TEST("LDA B #$90", 0xC6, 0x90);
-    TEST("EOR B #$90", 0xC8, 0x90);
-    TEST("ADC B #$90", 0xC9, 0x90);
-    TEST("ORA B #$90", 0xCA, 0x90);
-    TEST("ADD B,#$90", 0xCB, 0x90);
     TEST("SUBB #$90", 0xC0, 0x90);
     TEST("CMPB #$90", 0xC1, 0x90);
     TEST("SBCB #$90", 0xC2, 0x90);
@@ -477,9 +431,7 @@ static void test_immediate() {
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");
 
-    TEST("LDA A #$90", 0x86, 0x90);
     TEST("LDAA #$90",  0x86, 0x90);
-    TEST("LDA B,#$90", 0xC6, 0x90);
     TEST("CPX #dir90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
     TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
@@ -499,18 +451,6 @@ static void test_immediate() {
 }
 
 static void test_direct() {
-    TEST("SUB A $90", 0x90, 0x90);
-    TEST("CMP A $90", 0x91, 0x90);
-    TEST("SBC A $90", 0x92, 0x90);
-    TEST("AND A $90", 0x94, 0x90);
-    TEST("BIT A $90", 0x95, 0x90);
-    TEST("LDA A $90", 0x96, 0x90);
-    TEST("STA A $90", 0x97, 0x90);
-    TEST("EOR A $90", 0x98, 0x90);
-    TEST("ADC A $90", 0x99, 0x90);
-    TEST("ORA A $90", 0x9A, 0x90);
-    TEST("ADD A $90", 0x9B, 0x90);
-    TEST("ADD A,$90", 0x9B, 0x90);
     TEST("SUBA $90", 0x90, 0x90);
     TEST("CMPA $90", 0x91, 0x90);
     TEST("SBCA $90", 0x92, 0x90);
@@ -523,17 +463,6 @@ static void test_direct() {
     TEST("ORAA $90", 0x9A, 0x90);
     TEST("ADDA $90", 0x9B, 0x90);
 
-    TEST("SUB B $90", 0xD0, 0x90);
-    TEST("CMP B $90", 0xD1, 0x90);
-    TEST("SBC B $90", 0xD2, 0x90);
-    TEST("AND B $90", 0xD4, 0x90);
-    TEST("BIT B $90", 0xD5, 0x90);
-    TEST("LDA B $90", 0xD6, 0x90);
-    TEST("STA B $90", 0xD7, 0x90);
-    TEST("EOR B $90", 0xD8, 0x90);
-    TEST("ADC B $90", 0xD9, 0x90);
-    TEST("ORA B $90", 0xDA, 0x90);
-    TEST("ADD B,$90", 0xDB, 0x90);
     TEST("SUBB $90", 0xD0, 0x90);
     TEST("CMPB $90", 0xD1, 0x90);
     TEST("SBCB $90", 0xD2, 0x90);
@@ -584,8 +513,6 @@ static void test_direct() {
     symtab.intern(0x22, "dir22");
     symtab.intern(0x90, "dir90");
 
-    TEST("LDA A <dir90", 0x96, 0x90);
-    TEST("STA B,<dir90", 0xD7, 0x90);
     TEST("LDAA <dir90",  0x96, 0x90);
     TEST("STAB dir90",   0xD7, 0x90);
     TEST("CPX <dir22", 0x9C, 0x22);
@@ -623,17 +550,6 @@ static void test_extended() {
     TEST("TST $1234",  0x7D, 0x12, 0x34);
     TEST("CLR $1234",  0x7F, 0x12, 0x34);
 
-    TEST("SUB A >$0090", 0xB0, 0x00, 0x90);
-    TEST("CMP A >$0090", 0xB1, 0x00, 0x90);
-    TEST("SBC A >$0090", 0xB2, 0x00, 0x90);
-    TEST("AND A >$0090", 0xB4, 0x00, 0x90);
-    TEST("BIT A >$0090", 0xB5, 0x00, 0x90);
-    TEST("LDA A >$0090", 0xB6, 0x00, 0x90);
-    TEST("STA A >$0090", 0xB7, 0x00, 0x90);
-    TEST("EOR A >$0090", 0xB8, 0x00, 0x90);
-    TEST("ADC A >$0090", 0xB9, 0x00, 0x90);
-    TEST("ORA A >$0090", 0xBA, 0x00, 0x90);
-    TEST("ADD A,>$0090", 0xBB, 0x00, 0x90);
     TEST("SUBA >$0090", 0xB0, 0x00, 0x90);
     TEST("CMPA >$0090", 0xB1, 0x00, 0x90);
     TEST("SBCA >$0090", 0xB2, 0x00, 0x90);
@@ -646,17 +562,6 @@ static void test_extended() {
     TEST("ORAA >$0090", 0xBA, 0x00, 0x90);
     TEST("ADDA >$0090", 0xBB, 0x00, 0x90);
 
-    TEST("SUB B $9ABC", 0xF0, 0x9A, 0xBC);
-    TEST("CMP B $9ABC", 0xF1, 0x9A, 0xBC);
-    TEST("SBC B $9ABC", 0xF2, 0x9A, 0xBC);
-    TEST("AND B $9ABC", 0xF4, 0x9A, 0xBC);
-    TEST("BIT B $9ABC", 0xF5, 0x9A, 0xBC);
-    TEST("LDA B $9ABC", 0xF6, 0x9A, 0xBC);
-    TEST("STA B $9ABC", 0xF7, 0x9A, 0xBC);
-    TEST("EOR B $9ABC", 0xF8, 0x9A, 0xBC);
-    TEST("ADC B $9ABC", 0xF9, 0x9A, 0xBC);
-    TEST("ORA B $9ABC", 0xFA, 0x9A, 0xBC);
-    TEST("ADD B,$9ABC", 0xFB, 0x9A, 0xBC);
     TEST("SUBB $9ABC", 0xF0, 0x9A, 0xBC);
     TEST("CMPB $9ABC", 0xF1, 0x9A, 0xBC);
     TEST("SBCB $9ABC", 0xF2, 0x9A, 0xBC);
@@ -708,8 +613,6 @@ static void test_extended() {
     symtab.intern(0x9ABC, "ext9ABC");
 
     TEST("NEG   >ext0090", 0x70, 0x00, 0x90);
-    TEST("LDA A  ext9ABC", 0xB6, 0x9A, 0xBC);
-    TEST("STA B,>ext0090", 0xF7, 0x00, 0x90);
     TEST("LDAA   ext9ABC", 0xB6, 0x9A, 0xBC);
     TEST("STAB  >ext0090", 0xF7, 0x00, 0x90);
 
@@ -742,8 +645,8 @@ static void test_extended() {
 }
 
 static void test_indexed() {
-    TEST("NEG X",   0x60, 0x00);
-    TEST("COM ,X",  0x63, 0x00);
+    TEST("NEG 0,X", 0x60, 0x00);
+    TEST("COM 0,X", 0x63, 0x00);
     TEST("LSR 0,X", 0x64, 0x00);
     TEST("ROR 2,X", 0x66, 0x02);
     TEST("ASR 3,X", 0x67, 0x03);
@@ -754,21 +657,8 @@ static void test_indexed() {
     TEST("TST 128,X", 0x6D, 0x80);
     TEST("CLR 255,X", 0x6F, 0xFF);
 
-    TEST("SUB A X",   0xA0, 0x00);
-    TEST("SUB A ,X",  0xA0, 0x00);
-    TEST("SUB A,,X",  0xA0, 0x00);
-    TEST("CMP A 0,X", 0xA1, 0x00);
-    TEST("SBC A 1,X", 0xA2, 0x01);
-    TEST("AND A 2,X", 0xA4, 0x02);
-    TEST("BIT A 3,X", 0xA5, 0x03);
-    TEST("LDA A 4,X", 0xA6, 0x04);
-    TEST("STA A 5,X", 0xA7, 0x05);
-    TEST("EOR A 6,X", 0xA8, 0x06);
-    TEST("ADC A 127,X", 0xA9, 0x7F);
-    TEST("ORA A 128,X", 0xAA, 0x80);
-    TEST("ADD A,255,X", 0xAB, 0xFF);
-    TEST("SUBA X",   0xA0, 0x00);
-    TEST("SUBA ,X",  0xA0, 0x00);
+    TEST("SUBA 0,X", 0xA0, 0x00);
+    TEST("SUBA 0,X", 0xA0, 0x00);
     TEST("CMPA 0,X", 0xA1, 0x00);
     TEST("SBCA 1,X", 0xA2, 0x01);
     TEST("ANDA 2,X", 0xA4, 0x02);
@@ -780,21 +670,8 @@ static void test_indexed() {
     TEST("ORAA 128,X", 0xAA, 0x80);
     TEST("ADDA 255,X", 0xAB, 0xFF);
 
-    TEST("SUB B X",   0xE0, 0x00);
-    TEST("SUB B ,X",  0xE0, 0x00);
-    TEST("SUB B,,X",  0xE0, 0x00);
-    TEST("CMP B 0,X", 0xE1, 0x00);
-    TEST("SBC B 1,X", 0xE2, 0x01);
-    TEST("AND B 2,X", 0xE4, 0x02);
-    TEST("BIT B 3,X", 0xE5, 0x03);
-    TEST("LDA B 4,X", 0xE6, 0x04);
-    TEST("STA B 5,X", 0xE7, 0x05);
-    TEST("EOR B 6,X", 0xE8, 0x06);
-    TEST("ADC B 127,X", 0xE9, 0x7F);
-    TEST("ORA B 128,X", 0xEA, 0x80);
-    TEST("ADD B,255,X", 0xEB, 0xFF);
-    TEST("SUBB X",   0xE0, 0x00);
-    TEST("SUBB ,X",  0xE0, 0x00);
+    TEST("SUBB 0,X", 0xE0, 0x00);
+    TEST("SUBB 0,X", 0xE0, 0x00);
     TEST("CMPB 0,X", 0xE1, 0x00);
     TEST("SBCB 1,X", 0xE2, 0x01);
     TEST("ANDB 2,X", 0xE4, 0x02);
@@ -806,26 +683,23 @@ static void test_indexed() {
     TEST("ORAB 128,X", 0xEA, 0x80);
     TEST("ADDB 255,X", 0xEB, 0xFF);
 
-    TEST("CPX X",   0xAC, 0x00);
-    TEST("CPX ,X",  0xAC, 0x00);
+    TEST("CPX 0,X", 0xAC, 0x00);
     TEST("LDX 0,X", 0xEE, 0x00);
     TEST("STX 2,X", 0xEF, 0x02);
     TEST("LDS 128,X", 0xAE, 0x80);
     TEST("STS 255,X", 0xAF, 0xFF);
 
-    TEST("JMP X",     0x6E, 0x00);
     TEST("JMP 0,X",   0x6E, 0x00);
     TEST("JSR 255,X", 0xAD, 0xFF);
 
     if (m6801()) {
         // MC6801
-        TEST("SUBD     X", 0xA3, 0x00);
-        TEST("SUBD    ,X", 0xA3, 0x00);
+        TEST("SUBD   0,X", 0xA3, 0x00);
         TEST("ADDD 128,X", 0xE3, 0x80);
         TEST("LDD  255,X", 0xEC, 0xFF);
         TEST("STD    0,X", 0xED, 0x00);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "SUBD    ,X");
+        ETEST(UNKNOWN_INSTRUCTION, "SUBD   0,X");
         ETEST(UNKNOWN_INSTRUCTION, "ADDD 128,X");
         ETEST(UNKNOWN_INSTRUCTION, "LDD  255,X");
         ETEST(UNKNOWN_INSTRUCTION, "STD    0,X");
@@ -850,8 +724,6 @@ static void test_indexed() {
 
     TEST("NEG     offset0,X", 0x60, 0x00);
     TEST("COM   offset255,X", 0x63, 0xFF);
-    TEST("CMP A   offset0,X", 0xA1, 0x00);
-    TEST("ADD B,offset255,X", 0xEB, 0xFF);
     TEST("CMPA    offset0,X", 0xA1, 0x00);
     TEST("ADDB  offset255,X", 0xEB, 0xFF);
     TEST("JMP     offset0,X", 0x6E, 0x00);
@@ -879,8 +751,8 @@ static void test_bit_ops() {
         // MC68HC11
         TEST("BSET $90,#$88",   0x14, 0x90, 0x88);
         TEST("BCLR $90,#$88",   0x15, 0x90, 0x88);
-        TEST("BSET X,#$88",     0x1C, 0x00, 0x88);
-        TEST("BCLR ,X,#$88",    0x1D, 0x00, 0x88);
+        TEST("BSET 0,X,#$88",   0x1C, 0x00, 0x88);
+        TEST("BCLR 0,X,#$88",   0x1D, 0x00, 0x88);
         TEST("BSET 255,Y,#$88", 0x18, 0x1C, 0xFF, 0x88);
         TEST("BCLR 0,Y,#$88",   0x18, 0x1D, 0x00, 0x88);
 
@@ -904,7 +776,7 @@ static void test_bit_ops() {
 
     if (hd6301()) {
         // HD6301
-        TEST("AIM #$88,,X",    0x61, 0x88, 0x00);
+        TEST("AIM #$88,0,X",   0x61, 0x88, 0x00);
         TEST("OIM #$44,1,X",   0x62, 0x44, 0x01);
         TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
         TEST("TIM #$11,255,X", 0x6B, 0x11, 0xFF);
@@ -986,35 +858,23 @@ static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
-    TEST("NOP       ; comment", 0x01);
-    TEST("PSH A     ; comment", 0x36);
-    TEST("PSHA      ; comment", 0x36);
-    TEST("SUB A #$90 ; comment", 0x80, 0x90);
-    TEST("SUBA  #$90 ; comment", 0x80, 0x90);
-    TEST("NEG > $0010; comment", 0x70, 0x00, 0x10);
-    TEST("SUB A >$90; comment",  0xB0, 0x00, 0x90);
-    TEST("SUB A sym255;comment ", 0x90, 0xFF);
-    TEST("SUB A > sym255;comment", 0xB0, 0x00, 0xFF);
-    TEST("SUB A sym1234;comment", 0xB0, 0x12, 0x34);
-    TEST("SUBA   >$90; comment", 0xB0, 0x00, 0x90);
-    TEST("SUBA sym255;comment ", 0x90, 0xFF);
-    TEST("SUBA >sym255;comment", 0xB0, 0x00, 0xFF);
-    TEST("SUBA sym1234;comment", 0xB0, 0x12, 0x34);
-    TEST("JMP sym255;comment ", 0x7E, 0x00, 0xFF);
-    TEST("JSR sym1234;comment", 0xBD, 0x12, 0x34);
-    TEST("LDA A X ; comment",     0xA6, 0x00);
-    TEST("LDA A , X ; comment",   0xA6, 0x00);
-    TEST("LDA A 0 , X ; comment", 0xA6, 0x00);
+    TEST("NOP          ; comment", 0x01);
+    TEST("PSHA         ; comment", 0x36);
+    TEST("SUBA  #$90   ; comment", 0x80, 0x90);
+    TEST("NEG > $0010  ; comment", 0x70, 0x00, 0x10);
+    TEST("SUBA   >$90  ; comment", 0xB0, 0x00, 0x90);
+    TEST("SUBA sym255  ; comment", 0x90, 0xFF);
+    TEST("SUBA >sym255 ; comment", 0xB0, 0x00, 0xFF);
+    TEST("SUBA sym1234 ; comment", 0xB0, 0x12, 0x34);
+    TEST("JMP sym255   ; comment", 0x7E, 0x00, 0xFF);
+    TEST("JSR sym1234  ; comment", 0xBD, 0x12, 0x34);
+    TEST("LDAA 0 , X   ; comment", 0xA6, 0x00);
 }
 
 static void test_undefined_symbol() {
-    ETEST(UNDEFINED_SYMBOL, "LDA A #UNDEF", 0x86, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LDAA  #UNDEF", 0x86, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LDS   #UNDEF", 0x8E, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "NEG    UNDEF", 0x70, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUB  A UNDEF", 0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUB A <UNDEF", 0x90, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SUB B >UNDEF", 0xF0, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "SUBA   UNDEF", 0x90, 0x00);
     ETEST(UNDEFINED_SYMBOL, "SUBA  <UNDEF", 0x90, 0x00);
     ETEST(UNDEFINED_SYMBOL, "SUBB  >UNDEF", 0xF0, 0x00, 0x00);
@@ -1025,8 +885,7 @@ static void test_undefined_symbol() {
         ETEST(UNDEFINED_SYMBOL, "JSR    UNDEF", 0x9D, 0x00);
     }
 
-    ETEST(UNDEFINED_SYMBOL, "LDA A UNDEF,X", 0xA6, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LDA A,UNDEF,X", 0xA6, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LDAA UNDEF,X", 0xA6, 0x00);
 
     ETEST(UNDEFINED_SYMBOL, "BRA UNDEF", 0x20, 0x00);
     ETEST(UNDEFINED_SYMBOL, "BSR UNDEF", 0x8D, 0x00);
@@ -1070,85 +929,6 @@ static void test_undefined_symbol() {
     }
 }
 
-static void test_error() {
-    // Missing accumulator
-    ETEST(UNKNOWN_INSTRUCTION, "PUL");
-    ETEST(UNKNOWN_INSTRUCTION, "PSH");
-    ETEST(UNKNOWN_INSTRUCTION, "NEG");
-    ETEST(UNKNOWN_INSTRUCTION, "COM");
-    ETEST(UNKNOWN_INSTRUCTION, "LSR");
-    ETEST(UNKNOWN_INSTRUCTION, "ROR");
-    ETEST(UNKNOWN_INSTRUCTION, "ASR");
-    ETEST(UNKNOWN_INSTRUCTION, "LSL");
-    ETEST(UNKNOWN_INSTRUCTION, "ROL");
-    ETEST(UNKNOWN_INSTRUCTION, "DEC");
-    ETEST(UNKNOWN_INSTRUCTION, "INC");
-    ETEST(UNKNOWN_INSTRUCTION, "TST");
-    ETEST(UNKNOWN_INSTRUCTION, "CLR");
-    ETEST(UNKNOWN_INSTRUCTION, "SUB #1");
-    ETEST(UNKNOWN_INSTRUCTION, "CMP #1");
-    ETEST(UNKNOWN_INSTRUCTION, "SBC #1");
-    ETEST(UNKNOWN_INSTRUCTION, "AND #1");
-    ETEST(UNKNOWN_INSTRUCTION, "BIT #1");
-    ETEST(UNKNOWN_INSTRUCTION, "LDA #1");
-    ETEST(UNKNOWN_INSTRUCTION, "EOR #1");
-    ETEST(UNKNOWN_INSTRUCTION, "ADC #1");
-    ETEST(UNKNOWN_INSTRUCTION, "ORA #1");
-    ETEST(UNKNOWN_INSTRUCTION, "ADD #1");
-    ETEST(UNKNOWN_INSTRUCTION, "SUB $10");
-    ETEST(UNKNOWN_INSTRUCTION, "CMP $10");
-    ETEST(UNKNOWN_INSTRUCTION, "SBC $10");
-    ETEST(UNKNOWN_INSTRUCTION, "AND $10");
-    ETEST(UNKNOWN_INSTRUCTION, "BIT $10");
-    ETEST(UNKNOWN_INSTRUCTION, "LDA $10");
-    ETEST(UNKNOWN_INSTRUCTION, "STA $10");
-    ETEST(UNKNOWN_INSTRUCTION, "EOR $10");
-    ETEST(UNKNOWN_INSTRUCTION, "ADC $10");
-    ETEST(UNKNOWN_INSTRUCTION, "ORA $10");
-    ETEST(UNKNOWN_INSTRUCTION, "ADD $10");
-    ETEST(UNKNOWN_INSTRUCTION, "SUB 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "CMP 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "SBC 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "AND 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "BIT 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "LDA 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "STA 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "EOR 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "ADC 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "ORA 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "ADD 0,X");
-    ETEST(UNKNOWN_INSTRUCTION, "SUB $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "CMP $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "SBC $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "AND $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "BIT $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "LDA $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "STA $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "EOR $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "ADC $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "ORA $1000");
-    ETEST(UNKNOWN_INSTRUCTION, "ADD $1000");
-
-    // Duplicate accumulator
-    ETEST(REGISTER_NOT_ALLOWED, "PULA A");
-    ETEST(REGISTER_NOT_ALLOWED, "PSHB A");
-    ETEST(REGISTER_NOT_ALLOWED, "NEGA B");
-    ETEST(REGISTER_NOT_ALLOWED, "COMB B");
-    ETEST(REGISTER_NOT_ALLOWED, "LSRA A");
-    ETEST(REGISTER_NOT_ALLOWED, "RORB A");
-    ETEST(REGISTER_NOT_ALLOWED, "ASRA B");
-    ETEST(REGISTER_NOT_ALLOWED, "LSLB B");
-    ETEST(REGISTER_NOT_ALLOWED, "ROLA A");
-    ETEST(REGISTER_NOT_ALLOWED, "DECB A");
-    ETEST(REGISTER_NOT_ALLOWED, "INCA B");
-    ETEST(REGISTER_NOT_ALLOWED, "TSTB B");
-    ETEST(REGISTER_NOT_ALLOWED, "CLRA A");
-    ETEST(REGISTER_NOT_ALLOWED, "SUBA B #1");
-    ETEST(REGISTER_NOT_ALLOWED, "ADDB A,$10");
-    ETEST(REGISTER_NOT_ALLOWED, "SUBA A, 0,X");
-    ETEST(REGISTER_NOT_ALLOWED, "STAB B,$1000");
-}
-
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -1176,7 +956,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_bit_ops);
         RUN_TEST(test_comment);
         RUN_TEST(test_undefined_symbol);
-        RUN_TEST(test_error);
     }
     return 0;
 }

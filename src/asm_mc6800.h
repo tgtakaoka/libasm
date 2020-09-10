@@ -41,43 +41,23 @@ private:
     MotoValueParser _parser;
     RegMc6800 _regs;
 
-    enum Token : char {
-        EOL = 0,
-        ERROR = '?',
-        COMMA = ',',
-        REG_ACC = 'A',
-        REG_IDX = 'x',
-        VAL_IMM = '#',
-        VAL_ADR = 'v',
-    };
-    Token _token;
-    RegName _reg;
-    uint16_t _val;
-    OprSize _valSize;
-    Token nextToken();
-
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        RegName reg;
-        uint16_t imm;
-        uint16_t opr;
-        uint16_t addr;
-        Error addrError;
+        OprSize  size;
+        uint16_t val16;
         Operand()
             : ErrorReporter(),
-              mode(INH),
-              reg(REG_UNDEF),
-              imm(0),
-              opr(0),
-              addr(0),
-              addrError(OK)
+              mode(M_NO),
+              size(SZ_NONE),
+              val16(0)
         {}
     };
 
-    Error adjustAccumulator(InsnMc6800 &insn, const Operand &op);
     Error parseOperand(Operand &op);
-    Error encodeRelative(
-        InsnMc6800 &insn, Config::uintptr_t target, Error error);
+    Error emitRelative(InsnMc6800 &insn, const Operand &op);
+    Error emitImmediate(InsnMc6800 &insn, const Operand &op);
+    Error emitBitNumber(InsnMc6800 &insn, const Operand &op);
+    Error emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

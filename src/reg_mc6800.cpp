@@ -31,29 +31,27 @@ static bool regCharCaseEqual(char c, char regChar) {
     return toupper(c) == toupper(regChar);
 }
 
-char RegMc6800::regName1stChar(const RegName regName) const {
-    const char r = char(regName);
+char RegMc6800::regName1stChar(const RegName name) const {
+    const char r = char(name);
     return _uppercase ? toupper(r) : tolower(r);
 }
 
-bool RegMc6800::compareRegName(const char *line, RegName regName) const {
-    if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
+bool RegMc6800::compareRegName(const char *line, RegName name) const {
+    if (!regCharCaseEqual(*line++, regName1stChar(name))) return false;
     return !isidchar(*line);
 }
 
-uint8_t RegMc6800::regNameLen(RegName regName) const {
-    return regName == REG_UNDEF ? 0 : 1;
+uint8_t RegMc6800::regNameLen(RegName name) const {
+    return name == REG_UNDEF ? 0 : 1;
 }
 
-char *RegMc6800::outRegName(char *out, const RegName regName) const {
-    *out++ = regName1stChar(regName);
+char *RegMc6800::outRegName(char *out, const RegName name) const {
+    *out++ = regName1stChar(name);
     *out = 0;
     return out;
 }
 
 RegName RegMc6800::parseRegName(const char *line) const {
-    if (compareRegName(line, REG_A)) return REG_A;
-    if (compareRegName(line, REG_B)) return REG_B;
     if (compareRegName(line, REG_X)) return REG_X;
     if (TableMc6800.cpuType() == MC68HC11 && compareRegName(line, REG_Y))
         return REG_Y;

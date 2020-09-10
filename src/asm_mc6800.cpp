@@ -20,226 +20,130 @@
 namespace libasm {
 namespace mc6800 {
 
-Error AsmMc6800::adjustAccumulator(InsnMc6800 &insn, const Operand &op) {
-    const InsnAdjust iAdjust = insn.insnAdjust();
-    if (iAdjust == ADJ_ZERO)
-        return op.reg == REG_UNDEF ? OK : setError(REGISTER_NOT_ALLOWED);
-    if (op.reg == REG_A) return OK;
-    if (op.reg == REG_B) {
-        if (iAdjust == ADJ_AB01) {
-            insn.embed(1);
-        } else if (iAdjust == ADJ_AB16) {
-            insn.embed(0x10);
-        } else if (iAdjust == ADJ_AB64) {
-            insn.embed(0x40);
-        }
+Error AsmMc6800::parseOperand(Operand &op) {
+    const char *p = _scan;
+    if (endOfLine(p) || *p == ',') {
+        op.mode = M_NO;
         return OK;
     }
-    return setError(UNKNOWN_INSTRUCTION);
+
+    const bool immediate = (*p == '#');
+    if (immediate) p++;
+    op.size = SZ_NONE;
+    if (*p == '<') {
+        p++;
+        op.size = SZ_BYTE;
+    } else if (*p == '>') {
+        p++;
+        op.size = SZ_WORD;
+    }
+    _scan = p;
+    if (getOperand(op.val16)) return getError();
+    op.setError(getError());
+    if (immediate) {
+        op.mode = M_IMM;
+        return OK;
+    }
+
+    p = skipSpaces(_scan);
+    if (*p == ',') {
+        p = skipSpaces(p + 1);
+        const RegName reg = _regs.parseRegName(p);
+        if (reg != REG_UNDEF) {
+            _scan = p + _regs.regNameLen(reg);
+            op.mode = (reg == REG_Y) ? M_IDY : M_IDX;
+            return OK;
+        }
+    }
+    if (op.size == SZ_NONE) {
+        if (op.val16 < 8) op.mode = M_BIT;
+        else if (op.val16 < 0x100) op.mode = M_DIR;
+        else op.mode = M_EXT;
+    } else {
+        op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
+    }
+    return OK;
 }
 
-Error AsmMc6800::encodeRelative(
-    InsnMc6800 &insn, Config::uintptr_t target, Error error) {
+Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
-    if (error) target = base;
+    const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
     return OK;
 }
 
-AsmMc6800::Token AsmMc6800::nextToken() {
-    const char *p = skipSpaces(_scan);
-    if (endOfLine(p))
-        return _token = EOL;
-    if (*p == ',') {
-        _scan = p + 1;
-        return _token = COMMA;
-    }
-    if ((_reg = _regs.parseRegName(p)) != REG_UNDEF) {
-        _scan = p + _regs.regNameLen(_reg);
-        return _token = (_reg == REG_X || _reg == REG_Y) ? REG_IDX : REG_ACC;
-    }
-
-    const bool imm = *p == '#';
-    if (imm) p = skipSpaces(p + 1);
-    _valSize = SZ_NONE;
-    if (*p == '<') {
-        p++;
-        _valSize = SZ_BYTE;
-    } else if (*p == '>') {
-        p++;
-        _valSize = SZ_WORD;
-    }
-    _scan = p;
-    if (getOperand(_val))
-        return _token = ERROR;
-    return _token = imm ? VAL_IMM : VAL_ADR;
+Error AsmMc6800::emitImmediate(InsnMc6800 &insn, const Operand &op) {
+    if (insn.size() == SZ_BYTE)
+        insn.emitByte(static_cast<uint8_t>(op.val16));
+    if (insn.size() == SZ_WORD)
+        insn.emitUint16(op.val16);
+    return OK;
 }
 
-Error AsmMc6800::parseOperand(Operand &op) {
-    uint8_t comma = 0;
-    if (nextToken() == REG_ACC) {
-        op.reg = _reg;
-        while (nextToken() == COMMA)
-            comma++;
+Error AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
+    const uint8_t imm = 1 << op.val16;
+    const bool aim = (insn.opCode() & 0xF) == 1;
+    insn.emitByte(aim ? ~imm : imm);
+    return OK;
+}
+
+Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+    switch (mode) {
+    case M_DIR:
+    case M_IDX:
+    case M_IDY:
+        insn.emitByte(static_cast<uint8_t>(op.val16));
+        return OK;
+    case M_EXT:
+        insn.emitUint16(op.val16);
+        return OK;
+    case M_REL:
+        return emitRelative(insn, op);
+    case M_IMM:
+    case M_BMM:
+        return emitImmediate(insn, op);
+    case M_BIT:
+        return emitBitNumber(insn, op);
+    default:
+        return OK;
     }
-    if (_token == EOL && comma == 0) {
-        op.mode = INH;
-        return setOK();
-    }
-    bool hasImmediate = false;
-    if (_token == VAL_IMM) {
-        if (comma >= 2)  return setError(UNKNOWN_OPERAND);
-        op.imm = _val;
-        op.setError(getError());
-        op.mode = IMM;
-        hasImmediate = true;
-        comma = 0;
-        while (nextToken() == COMMA)
-            comma++;
-        if (_token == EOL && comma == 0) return setOK();
-    }
-    bool hasBitNum = false;
-    OprSize opSize = SZ_NONE;
-    if (_token == VAL_ADR) {
-        if (comma >= 2) return setError(UNKNOWN_OPERAND);
-        op.opr = _val;
-        op.setErrorIf(getError());
-        opSize = _valSize;
-        op.mode = EXT;
-        comma = 0;
-        if (nextToken() == COMMA) {
-            comma = 1;
-            if (nextToken() == VAL_ADR) {
-                op.setErrorIf(getError());
-                if (op.reg == REG_UNDEF && !hasImmediate
-                    && opSize != SZ_WORD && op.opr < 8) {
-                    hasBitNum = true;
-                    op.imm = op.opr;
-                    op.opr = _val;
-                    opSize = _valSize;
-                } else return setError(UNKNOWN_OPERAND);
-                comma = 0;
-                nextToken();
-            }
-        }
-    }
-    if (_token == COMMA) {
-        comma++;
-        nextToken();
-    }
-    if (_token == REG_IDX) {
-        if (comma >= 3) return setError(UNKNOWN_OPERAND);
-        if (comma == 0 || comma == 2)
-            op.opr = 0;
-        if (hasImmediate || hasBitNum) {
-            op.mode = hasBitNum ? BIT_IDX : IMM_IDX;
-        } else {
-            op.mode = (_reg == REG_X) ? IDX : IDY;
-        }
-        if (nextToken() == EOL) return setOK();
-        if (_token == COMMA) nextToken();
-    }
-    bool hasImmSuffix = false;
-    if (_token == VAL_IMM) {
-        if (hasImmediate || hasBitNum) return setError(UNKNOWN_OPERAND);
-        op.setErrorIf(getError());
-        hasImmSuffix = true;
-        op.imm = _val;
-        nextToken();
-    }
-    bool hasAddress = false;
-    if (_token == COMMA) {
-        if (nextToken() != VAL_ADR) return setError(UNKNOWN_OPERAND);
-        op.setErrorIf(op.addrError = getError());
-        hasAddress = true;
-        op.addr = _val;
-        nextToken();
-    }
-    if (_token == EOL) {
-        if (hasImmediate || hasBitNum) {
-            op.mode = hasBitNum ? BIT_DIR : IMM_DIR;
-        } else if (hasImmSuffix) {
-            if (op.mode == EXT) op.mode = hasAddress ? DIR_IMM_REL : DIR_IMM;
-            else if (op.mode == IDX) op.mode = hasAddress ? IDX_IMM_REL : IDX_IMM;
-            else if (op.mode == IDY) op.mode = hasAddress ? IDY_IMM_REL : IDY_IMM;
-            else return setError(UNKNOWN_OPERAND);
-        } else if (opSize == SZ_WORD || (opSize == SZ_NONE && op.opr >= 0x100)) {
-            op.mode = EXT;
-        } else {
-            op.mode = DIR;
-        }
-        return setOK();
-    }
-    return setError(UNKNOWN_OPERAND);
 }
 
 Error AsmMc6800::encode(Insn &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    _scan = skipSpaces(endName);
-    Operand op;
-    if (parseOperand(op)) return getError();
-    setError(op);
 
-    insn.setAddrMode(op.mode);
+    Operand op1, op2, op3;
+    _scan = skipSpaces(endName);
+    if (parseOperand(op1)) return getError();
+    const char *p = skipSpaces(_scan);
+    if (*p == ',') {
+        _scan = skipSpaces(p + 1);
+        if (parseOperand(op2)) return getError();
+        p = skipSpaces(_scan);
+    }
+    if (*p == ',') {
+        _scan = skipSpaces(p + 1);
+        if (parseOperand(op3)) return getError();
+        p = skipSpaces(_scan);
+    }
+    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    setErrorIf(op1.getError());
+    setErrorIf(op2.getError());
+    setErrorIf(op3.getError());
+
+    insn.setAddrMode(op1.mode, op2.mode, op3.mode);
     if (TableMc6800.searchName(insn))
         return setError(TableMc6800.getError());
 
-    if (adjustAccumulator(insn, op)) return getError();
     insn.emitInsn();
-    switch (insn.addrMode()) {
-    case INH:
-        break;
-    case DIR:
-    case IDX:
-    case IDY:
-        insn.emitByte(static_cast<uint8_t>(op.opr));
-        break;
-    case EXT:
-        insn.emitUint16(op.opr);
-        break;
-    case REL:
-        encodeRelative(insn, op.opr, op.getError());
-        break;
-    case IMM:
-        if (insn.oprSize() == SZ_BYTE)
-            insn.emitByte(static_cast<uint8_t>(op.imm));
-        if (insn.oprSize() == SZ_WORD)
-            insn.emitUint16(op.imm);
-        break;
-    case IMM_IDX:
-    case IMM_DIR:
-        insn.emitByte(static_cast<uint8_t>(op.imm));
-        insn.emitByte(static_cast<uint8_t>(op.opr));
-        break;
-    case BIT_IDX:
-    case BIT_DIR:
-        op.imm = 1 << op.imm;
-        if ((insn.opCode() & 0xF) == 1) // AIM
-            op.imm = ~op.imm;
-        insn.emitByte(static_cast<uint8_t>(op.imm));
-        insn.emitByte(static_cast<uint8_t>(op.opr));
-        break;
-    case DIR_IMM:
-    case IDX_IMM:
-    case IDY_IMM:
-        insn.emitByte(static_cast<uint8_t>(op.opr));
-        insn.emitByte(static_cast<uint8_t>(op.imm));
-        break;
-    case DIR_IMM_REL:
-    case IDX_IMM_REL:
-    case IDY_IMM_REL:
-        insn.emitByte(static_cast<uint8_t>(op.opr));
-        insn.emitByte(static_cast<uint8_t>(op.imm));
-        encodeRelative(insn, op.addr, op.addrError);
-        break;
-    default:
-        break;
-    }
-    return checkLineEnd();
+    if (emitOperand(insn, insn.mode1(), op1)) return getError();
+    if (emitOperand(insn, insn.mode2(), op2)) return getError();
+    if (emitOperand(insn, insn.mode3(), op3)) return getError();
+    return getError();
 }
 
 } // namespace m6800
