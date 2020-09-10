@@ -46,7 +46,7 @@ int DisDriver::usage() {
         std::string buf = "";
         for (auto dis : _disassemblers) {
             const char *list = dis->listCpu();
-            if (buf.size() + strlen(list) < 40) {
+            if (buf.size() + strlen(list) < 47) {
                 if (buf.size()) buf += ", ";
                 buf += list;
             } else {

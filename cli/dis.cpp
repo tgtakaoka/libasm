@@ -51,9 +51,13 @@ z8000::DisZ8000     disz8000;
 ns32000::DisNs32000 dis32000;
 
 std::vector<Disassembler *> disassemblers = {
-    &dis6809, &dis6800, &dis6502, &dis8051, &dis8080, &disz80, &disz8,
-    &dis1802, &dis8060, &dis8070, &dis9900, &dis68000, &disz8000,
-    &dis32000,
+    &dis6800, &dis6809,
+    &dis6502,
+    &dis8051, &dis8080,
+    &disz80, &disz8,
+    &dis8060, &dis8070, &dis1802,
+    &dis68000, &dis32000,
+    &disz8000, &dis9900,
 };
 
 int main(int argc, const char **argv) {

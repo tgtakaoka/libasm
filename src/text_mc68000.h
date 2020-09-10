@@ -22,10 +22,10 @@
 namespace libasm {
 namespace mc68000 {
 
-static const char TEXT_CPU_LIST[]    PROGMEM = "MC68000, MC68008";
 static const char TEXT_CPU_MC68000[] PROGMEM = "MC68000";
-static constexpr const char *TEXT_CPU_MC  = TEXT_CPU_LIST;
-static constexpr const char *TEXT_CPU_MC68008 = (TEXT_CPU_LIST + 9);
+static const char TEXT_CPU_MC68008[] PROGMEM = "MC68008";
+static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_MC68000;
+static constexpr const char *TEXT_CPU_MC   = TEXT_CPU_MC68000;
 static constexpr const char *TEXT_CPU_68000 = (TEXT_CPU_MC68000 + 2);
 static constexpr const char *TEXT_CPU_68008 = (TEXT_CPU_MC68008 + 2);
 

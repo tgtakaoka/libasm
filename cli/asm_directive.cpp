@@ -84,7 +84,7 @@ std::string AsmCommonDirective::listCpu(const char *separator) const {
     std::string buf = "";
     for (auto dir : _directives) {
         const char *list = dir->assembler().listCpu();
-        if (buf.size() + strlen(list) < 40) {
+        if (buf.size() + strlen(list) < 47) {
             if (buf.size()) buf += ", ";
             buf += list;
         } else {
