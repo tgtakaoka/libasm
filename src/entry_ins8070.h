@@ -33,24 +33,27 @@ enum AddrMode : uint8_t {
     GENERIC   = 2,  // Generic; nnnn,PC/nn,SP/nn,Pn/@nn,Pn/0xFFnn/
     ABSOLUTE  = 3,  // Absolute; nnnn
     RELATIVE  = 4,  // Relative; nnnn
+
     IMMEDIATE = 5,  // Immediate; #nn
     UNDEF     = 0,  // Undefined instruction
 };
 
 enum OprFormat : uint8_t {
     OPR_NO = 0,
-    OPR_A  = 1,  // A register
-    OPR_E  = 2,  // E register
-    OPR_S  = 3,  // S register
-    OPR_EA = 4,  // EA register
-    OPR_IX = 5,  // P2/P3 register
-    OPR_SP = 6,  // SP register
-    OPR_PN = 7,  // PC/SP/P2/P3 register
-    OPR_T  = 8,  // T register
-    OPR_4  = 9,  // 4 bit constant
-    OPR_IM = 10, // Immediate constant
-    OPR_16 = 11, // 16 bit constant
-    OPR_GN = 12, // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
+    OPR_A  = 1,  // Accumulator: A
+    OPR_E  = 2,  // Extension register: E
+    OPR_EA = 3,  // Double precision Accumulator: EA
+    OPR_T  = 4,  // Temporary register: T
+    OPR_S  = 5,  // Status register: S
+    OPR_PN = 6,  // Pointer Register: P2/P3
+    OPR_SP = 7,  // SP register
+    OPR_BR = 8,  // Base Register: PC/SP/P2/P3
+    OPR_IM = 9,  // Immediate constant
+    OPR_16 = 10, // 16 bit constant
+    OPR_4  = 11, // 4 bit constant
+    OPR_PR = 12, // Pointer relative: nn,Pn
+    OPR_RL = 13, // PC Relative
+    OPR_GN = 14, // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
 };
 
 struct Entry {

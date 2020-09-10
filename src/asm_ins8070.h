@@ -42,32 +42,26 @@ private:
     TableBase &getTable() const override { return TableIns8070; }
 
     struct Operand : public ErrorReporter {
-        OprFormat dst;
-        OprFormat src;
+        OprFormat format;
         RegName reg;
         bool autoIndex;
-        bool hasVal;
-        uint16_t val;
+        uint16_t val16;
         Operand()
             : ErrorReporter(),
-              dst(OPR_NO),
-              src(OPR_NO),
+              format(OPR_NO),
               reg(REG_UNDEF),
               autoIndex(false),
-              hasVal(false),
-              val(0)
+              val16(0)
         {}
     };
 
-    Error nextToken(Operand &op, OprFormat &opr);
     Error parseOperand(Operand &op);
 
-    Error encodeImplied(InsnIns8070 &insn, const Operand &op);
-    Error encodeAbsolute(InsnIns8070 &insn, const Operand &op);
-    Error encodeImmediate(InsnIns8070 &insn, const Operand &op);
-    Error encodeRelative(InsnIns8070 &insn, const Operand &op);
-    Error encodeIndexed(InsnIns8070 &insn, const Operand &op);
-    Error encodeGeneric(InsnIns8070 &insn, const Operand &op);
+    Error emitAbsolute(InsnIns8070 &insn, const Operand &op);
+    Error emitImmediate(InsnIns8070 &insn, const Operand &op);
+    Error emitRelative(InsnIns8070 &insn, const Operand &op);
+    Error emitGeneric(InsnIns8070 &insn, const Operand &op);
+    Error emitOperand(InsnIns8070 &insn, OprFormat format, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

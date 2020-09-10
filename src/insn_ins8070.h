@@ -49,12 +49,25 @@ public:
         _opCode |= data;
     }
     void emitInsn() {
-        emitByte(_opCode);
+        emitByte(_opCode, 0);
+    }
+    void emitOperand8(uint8_t val8) {
+        uint8_t pos = _insn.length();
+        if (pos == 0) pos = 1;
+        emitByte(val8, pos);
+    }
+    void emitOperand16(uint16_t val16) {
+        emitOperand8(static_cast<uint8_t>(val16 >> 0));
+        emitOperand8(static_cast<uint8_t>(val16 >> 8));
     }
 
 private:
     Config::opcode_t _opCode;
     uint16_t _flags;
+
+    void emitByte(uint8_t val, uint8_t pos) {
+        _insn.emitByte(val, pos);
+    }
 };
 
 } // namespace ins8070

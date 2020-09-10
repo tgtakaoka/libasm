@@ -30,10 +30,10 @@ bool DisIns8070::outOperand(OprFormat opr, uint8_t value) {
     case OPR_E: outRegister(REG_E); break;
     case OPR_S: outRegister(REG_S); break;
     case OPR_EA: outRegister(REG_EA); break;
-    case OPR_IX:
+    case OPR_PN:
         outRegister((value & 1) ? REG_P3 : REG_P2);
         break;
-    case OPR_PN:
+    case OPR_BR:
         switch (value & 3) {
         case 0: outRegister(REG_PC); break;
         case 1: outRegister(REG_SP); break;
@@ -94,9 +94,9 @@ Error DisIns8070::decodeRelative(
     const Config::ptrdiff_t disp = static_cast<int8_t>(val);
     const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
-    if (src == OPR_NO
+    if (insn.dstOpr() == OPR_RL
         || (src == OPR_GN && base == REG_PC)) {
-        const uint8_t fetch = (src == OPR_NO) ? 1 : 0;
+        const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
         outRelativeAddr(target, insn.address(), 8);
         if (src == OPR_GN) {
@@ -106,10 +106,10 @@ Error DisIns8070::decodeRelative(
     } else {
         outConstant(disp, 10);
         *_operands++ = ',';
-        if (src == OPR_IX) {
+        if (src == OPR_PR) {
             outOperand(src, insn.opCode());
         } else {
-            outOperand(OPR_PN, insn.opCode());
+            outOperand(OPR_BR, insn.opCode());
         }
     }
     return setOK();

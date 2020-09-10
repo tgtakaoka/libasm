@@ -46,13 +46,13 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0x0F, SL,   OPR_EA, OPR_NO, WORD, IMPLIED)
     E(0x10, CALL, OPR_4,  OPR_NO, NONE, IMPLIED)
     E(0x20, JSR,  OPR_16, OPR_NO, WORD, ABSOLUTE)
-    E(0x22, PLI,  OPR_IX, OPR_IM, WORD, IMMEDIATE)
+    E(0x22, PLI,  OPR_PN, OPR_IM, WORD, IMMEDIATE)
     E(0x24, JMP,  OPR_16, OPR_NO, WORD, ABSOLUTE)
-    E(0x24, LD,   OPR_PN, OPR_IM, WORD, IMMEDIATE)
+    E(0x24, LD,   OPR_BR, OPR_IM, WORD, IMMEDIATE)
     E(0x2C, MPY,  OPR_EA, OPR_T,  WORD, IMPLIED)
-    E(0x2D, BND,  OPR_16, OPR_NO, NONE, RELATIVE)
-    E(0x2E, SSM,  OPR_IX, OPR_NO, BYTE, IMPLIED)
-    E(0x30, LD,   OPR_EA, OPR_PN, WORD, IMPLIED)
+    E(0x2D, BND,  OPR_RL, OPR_NO, NONE, RELATIVE)
+    E(0x2E, SSM,  OPR_PN, OPR_NO, BYTE, IMPLIED)
+    E(0x30, LD,   OPR_EA, OPR_BR, WORD, IMPLIED)
     E(0x38, POP,  OPR_A,  OPR_NO, BYTE, IMPLIED)
     E(0x39, AND,  OPR_S,  OPR_IM, BYTE, IMMEDIATE)
     E(0x3A, POP,  OPR_EA, OPR_NO, WORD, IMPLIED)
@@ -62,26 +62,26 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0x3E, RR,   OPR_A,  OPR_NO, BYTE, IMPLIED)
     E(0x3F, RRL,  OPR_A,  OPR_NO, BYTE, IMPLIED)
     E(0x40, LD,   OPR_A,  OPR_E,  BYTE, IMPLIED)
-    E(0x44, LD,   OPR_PN, OPR_EA, WORD, IMPLIED)
+    E(0x44, LD,   OPR_BR, OPR_EA, WORD, IMPLIED)
     E(0x48, LD,   OPR_E,  OPR_A,  BYTE, IMPLIED)
-    E(0x4C, XCH,  OPR_EA, OPR_PN, WORD, IMPLIED)
+    E(0x4C, XCH,  OPR_EA, OPR_BR, WORD, IMPLIED)
     E(0x50, AND,  OPR_A,  OPR_E,  BYTE, IMPLIED)
     E(0x55, PUSH, OPR_SP, OPR_NO, NONE, UNDEF)
-    E(0x54, PUSH, OPR_PN, OPR_NO, WORD, IMPLIED)
+    E(0x54, PUSH, OPR_BR, OPR_NO, WORD, IMPLIED)
     E(0x58, OR,   OPR_A,  OPR_E,  BYTE, IMPLIED)
     E(0x5C, RET,  OPR_NO, OPR_NO, NONE, IMPLIED)
-    E(0x5E, POP,  OPR_IX, OPR_NO, WORD, IMPLIED)
+    E(0x5E, POP,  OPR_PN, OPR_NO, WORD, IMPLIED)
     E(0x60, XOR,  OPR_A,  OPR_E,  BYTE, IMPLIED)
-    E(0x64, BP,   OPR_16, OPR_NO, NONE, RELATIVE)
-    E(0x66, BP,   OPR_16, OPR_IX, NONE, RELATIVE)
-    E(0x6C, BZ,   OPR_16, OPR_NO, NONE, RELATIVE)
-    E(0x6E, BZ,   OPR_16, OPR_IX, NONE, RELATIVE)
+    E(0x64, BP,   OPR_RL, OPR_NO, NONE, RELATIVE)
+    E(0x66, BP,   OPR_PR, OPR_NO, NONE, RELATIVE)
+    E(0x6C, BZ,   OPR_RL, OPR_NO, NONE, RELATIVE)
+    E(0x6E, BZ,   OPR_PR, OPR_NO, NONE, RELATIVE)
     E(0x70, ADD,  OPR_A,  OPR_E,  BYTE, IMPLIED)
-    E(0x74, BRA,  OPR_16, OPR_NO, NONE, RELATIVE)
-    E(0x76, BRA,  OPR_16, OPR_IX, NONE, RELATIVE)
+    E(0x74, BRA,  OPR_RL, OPR_NO, NONE, RELATIVE)
+    E(0x76, BRA,  OPR_PR, OPR_NO, NONE, RELATIVE)
     E(0x78, SUB,  OPR_A,  OPR_E,  BYTE, IMPLIED)
-    E(0x7C, BNZ,  OPR_16, OPR_NO, NONE, RELATIVE)
-    E(0x7E, BNZ,  OPR_16, OPR_IX, NONE, RELATIVE)
+    E(0x7C, BNZ,  OPR_RL, OPR_NO, NONE, RELATIVE)
+    E(0x7E, BNZ,  OPR_PR, OPR_NO, NONE, RELATIVE)
     E(0x80, LD,   OPR_EA, OPR_GN, WORD, GENERIC)
     E(0x8C, ST,   OPR_EA, OPR_IM, NONE, UNDEF)
     E(0x88, ST,   OPR_EA, OPR_GN, WORD, GENERIC)
@@ -105,13 +105,17 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
 static bool acceptOprFormat(OprFormat opr, OprFormat table) {
     if (opr == table) return true;
     if (opr == OPR_16)
-        return table == OPR_4 || table == OPR_GN;
+        return table == OPR_GN || table == OPR_RL;
+    if (opr == OPR_4)
+        return table == OPR_GN || table == OPR_RL || table == OPR_16;
+    if (opr == OPR_PR)
+        return table == OPR_GN;
     if (opr == OPR_IM)
         return table == OPR_GN;
-    if (opr == OPR_IX)
-        return table == OPR_PN;
+    if (opr == OPR_PN)
+        return table == OPR_BR;
     if (opr == OPR_SP)
-        return table == OPR_PN;
+        return table == OPR_BR;
     return false;
 }
 
@@ -135,21 +139,22 @@ Error TableIns8070::searchName(InsnIns8070 &insn) const {
     return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
+static Config::opcode_t maskCode(OprFormat format) {
+    switch (format) {
+    case OPR_4:  return 0x0F;
+    case OPR_PR:
+    case OPR_PN: return 0x01;
+    case OPR_BR: return 0x03;
+    case OPR_GN: return 0x07;
+    default:     return 0;
+    }
+}
+
 static Config::opcode_t tableCode(
     Config::opcode_t opCode, const Entry *entry) {
     const uint16_t flags = pgm_read_word(&entry->flags);
-    switch (Entry::_dstOpr(flags)) {
-    case OPR_4:  opCode &= ~0xF; break;
-    case OPR_IX: opCode &= ~1; break;
-    case OPR_PN: opCode &= ~3; break;
-    default: break;
-    }
-    switch (Entry::_srcOpr(flags)) {
-    case OPR_IX: opCode &= ~1; break;
-    case OPR_PN: opCode &= ~3; break;
-    case OPR_GN: opCode &= ~7; break;
-    default: break;
-    }
+    opCode &= ~maskCode(Entry::_dstOpr(flags));
+    opCode &= ~maskCode(Entry::_srcOpr(flags));
     return opCode;
 }
 
