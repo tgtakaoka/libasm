@@ -59,47 +59,47 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
 
 Error AsmIns8060::parseOperand(Operand &op) {
     const char *p = _scan;
-    const bool autoDisp = (*p == '@');
-    if (autoDisp) {
-        p++;
-        if (isspace(*p)) return setError(UNKNOWN_OPERAND);
-    }
-
-    if (!autoDisp && endOfLine(p)) {
+    if (endOfLine(p)) {
         op.mode = INHR;
         return OK;
-    } else if ((op.reg = _regs.parseRegister(p)) != REG_UNDEF) {
-        p += _regs.regNameLen(op.reg);
-        if (op.reg == REG_E) {
-            op.reg = REG_UNDEF;
-            op.val = 0x80;
-            if (*p != '(') return setError(UNKNOWN_OPERAND);
-        }
+    }
+
+    const bool autoDisp = (*p == '@');
+    if (autoDisp) p++;
+
+    const RegName reg = _regs.parseRegister(p);
+    if (reg == REG_E) {
+        p += _regs.regNameLen(reg);
+        op.val = 0x80;
+    } else if (reg != REG_UNDEF) {
+        _scan = p + _regs.regNameLen(reg);
+        op.mode = PNTR;
+        op.reg = reg;
+        return OK;
     } else {
-        if (*p == '(' && _regs.parseRegister(p + 1) != REG_UNDEF)
-            return setError(UNKNOWN_OPERAND);
         _scan = p;
         if (getOperand(op.val)) return getError();
         op.setError(getError());
         p = _scan;
     }
+    p = skipSpaces(p);
     if (*p == '(') {
-        p = skipSpaces(p + 1);
-        if (op.reg != REG_UNDEF) return setError(UNKNOWN_OPERAND);
-        op.reg = _regs.parsePointerReg(p);
-        if (op.reg == REG_UNDEF) return setError(UNKNOWN_OPERAND);
-        p = skipSpaces(p + _regs.regNameLen(op.reg));
+        p++;
+        const RegName base = _regs.parsePointerReg(p);
+        if (base == REG_UNDEF)
+            return setError(UNKNOWN_OPERAND);
+        p += _regs.regNameLen(base);
         if (*p != ')') return setError(MISSING_CLOSING_PAREN);
-        op.mode = autoDisp ? INDX : DISP;
         _scan = p + 1;
-        return OK;
-    } else if (!autoDisp) {
-        op.mode = (op.reg != REG_UNDEF) ? PNTR
-            : REL8; // May be IMM8 too
-        _scan = p;
+        op.reg = base;
+        op.mode = autoDisp ? INDX : DISP;
         return OK;
     }
-    return setError(UNKNOWN_OPERAND);
+
+    if (autoDisp || reg == REG_E) return setError(UNKNOWN_OPERAND);
+    _scan = p;
+    op.mode = REL8; // May be IMM8 too
+    return OK;
 }
 
 Error AsmIns8060::encode(Insn &_insn) {

@@ -207,11 +207,11 @@ static void test_comment() {
     TEST("XPPC P3   ; comment", 0x3F);
     TEST("DLY  0x12 ; comment", 0x8F, 0x12);
     ATEST(0x1000, "JMP 0x1000 ; comment", 0x90, 0xFE);
-    ATEST(0x1000, "JNZ E(PC) ; comment",  0x9C, 0x80);
-    TEST("JMP E(P1)    ; comment", 0x91, 0x80);
-    TEST("JMP p127(P2) ; comment", 0x92, 0x7F);
-    TEST("JMP m127(P3) ; comment", 0x93, 0x81);
-    TEST("LD @126(P3)  ; comment", 0xC7, 0x7E);
+    ATEST(0x1000, "JNZ E (PC) ; comment", 0x9C, 0x80);
+    TEST("JMP E (P1)    ; comment", 0x91, 0x80);
+    TEST("JMP p127 (P2) ; comment", 0x92, 0x7F);
+    TEST("JMP m127 (P3) ; comment", 0x93, 0x81);
+    TEST("LD @ 126 (P3) ; comment", 0xC7, 0x7E);
 }
 
 static void test_undefined_symbol() {
@@ -226,14 +226,8 @@ static void test_undefined_symbol() {
 }
 
 static void test_error() {
-    ETEST(UNKNOWN_OPERAND, "LD @ 126(P3)");
-    ETEST(UNKNOWN_OPERAND, "LD @126 (P3)");
-    ETEST(UNKNOWN_OPERAND, "LD @ E(P3)");
-    ETEST(UNKNOWN_OPERAND, "LD @E (P3)");
-    ETEST(GARBAGE_AT_END,  "LD 126 (P3)");
-    ETEST(UNKNOWN_OPERAND, "LD E (P3)");
-    ETEST(UNKNOWN_OPERAND, "LD (P3)");
-    ETEST(UNKNOWN_OPERAND, "LD (E)");
+    ETEST(UNDEFINED_SYMBOL, "LD (P3)", 0xC0, 0x00);
+    ETEST(UNDEFINED_SYMBOL, "LD (E)",  0xC0, 0x00);
     ETEST(UNKNOWN_OPERAND, "LD 1(E)");
     ETEST(MISSING_CLOSING_PAREN, "LD 1(P3");
     ETEST(ILLEGAL_CONSTANT, "LDI #1");
