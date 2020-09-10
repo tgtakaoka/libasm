@@ -32,16 +32,13 @@ class DisMc6800
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableMc6800.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
-    const char *getCpu() const override { return TableMc6800.getCpu(); }
-
 private:
     MotoValueFormatter _formatter;
     RegMc6800 _regs;
 
+    TableBase &getTable() const override { return TableMc6800; }
     RegBase &getRegister() override { return _regs; }
+
     void outRegister(RegName regName);
 
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn);

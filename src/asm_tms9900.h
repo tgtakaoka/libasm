@@ -32,14 +32,11 @@ class AsmTms9900
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableTms9900.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
-    const char *getCpu() const override { return TableTms9900.getCpu(); }
-
 private:
     IntelValueParser _parser;
     RegTms9900 _regs;
+
+    TableBase &getTable() const override { return TableTms9900; }
 
     Error checkComma();
 

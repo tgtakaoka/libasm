@@ -32,16 +32,13 @@ class DisI8051
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableI8051.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableI8051.setCpu(cpu); }
-    const char *getCpu() const override { return TableI8051.getCpu(); }
-
 private:
     IntelValueFormatter _formatter;
     RegI8051 _regs;
 
+    TableBase &getTable() const override { return TableI8051; }
     RegBase &getRegister() override { return _regs; }
+
     void outRegister(RegName regName);
 
     Error decodeRelative(DisMemory &memory, InsnI8051 &insn);

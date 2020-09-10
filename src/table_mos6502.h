@@ -39,7 +39,6 @@ public:
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
     AddressWidth addressWidth() const;
-    int8_t addressBits() const;
 
     static constexpr Config::opcode_t WDM = 0x42;
 

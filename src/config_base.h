@@ -40,15 +40,10 @@ enum Endian : uint8_t {
 
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
-    virtual int8_t addressBits() const = 0;
     virtual OpCodeWidth opCodeWidth() const = 0;
     virtual uint8_t codeMax() const = 0;
     virtual Endian endian() const = 0;
     virtual uint8_t nameMax() const = 0;
-
-    virtual const char *listCpu() const = 0;
-    virtual bool setCpu(const char *cpu) = 0;
-    virtual const char *getCpu() const = 0;
 };
 
 template<
@@ -71,7 +66,6 @@ struct ConfigImpl : virtual public ConfigBase {
     static constexpr uint8_t NAME_MAX = NameMax;
 
     AddressWidth addressWidth() const override { return AddrWE; }
-    int8_t addressBits() const override { return int8_t(AddrWE); }
     OpCodeWidth opCodeWidth() const override { return CodeWE; }
     uint8_t codeMax() const override { return CodeMax; }
     Endian endian() const override { return EndianE; }

@@ -31,13 +31,10 @@ class AsmCdp1802
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableCdp1802.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableCdp1802.setCpu(cpu); }
-    const char *getCpu() const override { return TableCdp1802.getCpu(); }
-
 private:
     IntelValueParser _parser;
+
+    TableBase &getTable() const override { return TableCdp1802; }
 
     Error encodeRegn(InsnCdp1802 &insn);
     Error encodeImm8(InsnCdp1802 &insn);

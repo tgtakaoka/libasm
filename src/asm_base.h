@@ -21,6 +21,7 @@
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "symbol_table.h"
+#include "table_base.h"
 #include "value_parser.h"
 
 #include <stdint.h>
@@ -38,6 +39,10 @@ public:
     const char *errorAt() const { return _scan; }
     virtual bool endOfLine(const char *scan) const;
     virtual void reset() {}
+
+    const char *listCpu() const { return getTable().listCpu(); }
+    bool setCpu(const char *cpu) { return getTable().setCpu(cpu); }
+    const char *getCpu() const { return getTable().getCpu(); }
 
 protected:
     const char *_scan;
@@ -60,6 +65,7 @@ protected:
 
 private:
     virtual Error encode(Insn &insn) = 0;
+    virtual TableBase &getTable() const = 0;
 };
 
 } // namespace libasm

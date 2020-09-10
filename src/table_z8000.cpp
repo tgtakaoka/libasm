@@ -408,10 +408,6 @@ AddressWidth TableZ8000::addressWidth() const {
     return segmentedModel() ? ADDRESS_24BIT : ADDRESS_16BIT;
 }
 
-int8_t TableZ8000::addressBits() const {
-    return segmentedModel() ? 24 : 16;
-}
-
 bool TableZ8000::segmentedModel() const {
     return _cpuType == Z8001;
 }

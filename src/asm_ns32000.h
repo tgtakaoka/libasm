@@ -33,14 +33,11 @@ public:
     ValueParser *getParser() override { return &_parser; }
     bool endOfLine(const char *scan) const override;
 
-    // Config
-    const char *listCpu() const override { return TableNs32000.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableNs32000.setCpu(cpu); }
-    const char *getCpu() const override { return TableNs32000.getCpu(); }
-
 private:
     ValueParser _parser;
     RegNs32000 _regs;
+
+    TableBase &getTable() const override { return TableNs32000; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

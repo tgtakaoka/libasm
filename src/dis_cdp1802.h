@@ -32,15 +32,11 @@ class DisCdp1802
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableCdp1802.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableCdp1802.setCpu(cpu); }
-    const char *getCpu() const override { return TableCdp1802.getCpu(); }
-
 private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
 
+    TableBase &getTable() const override { return TableCdp1802; }
     RegBase &getRegister() override { return _regs; }
 
     Error decode(DisMemory &memory, Insn &insn) override;

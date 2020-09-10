@@ -38,7 +38,6 @@ public:
     const char *getCpu() const override;
     bool segmentedModel() const;
     AddressWidth addressWidth() const;
-    int8_t addressBits() const;
 
 private:
     CpuType _cpuType;

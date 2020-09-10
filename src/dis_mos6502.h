@@ -32,12 +32,7 @@ class DisMos6502
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
-    int8_t addressBits() const override { return TableMos6502.addressBits(); }
-    const char *listCpu() const override { return TableMos6502.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
-    const char *getCpu() const override { return TableMos6502.getCpu(); }
     void reset() override;
     void useIndirectLong(bool enable) {
         TableMos6502.useIndirectLong(enable);
@@ -49,6 +44,7 @@ private:
     MotoValueFormatter _formatter;
     RegMos6502 _regs;
 
+    TableBase &getTable() const override { return TableMos6502; }
     RegBase &getRegister() override { return _regs; }
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn);

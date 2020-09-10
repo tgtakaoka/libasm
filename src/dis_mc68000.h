@@ -32,15 +32,11 @@ class DisMc68000
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableMc68000.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
-    const char *getCpu() const override { return TableMc68000.getCpu(); }
-
 private:
     MotoValueFormatter _formatter;
     RegMc68000 _regs;
 
+    TableBase &getTable() const override { return TableMc68000; }
     RegBase &getRegister() override { return _regs; }
 
     void outRegName(RegName regName);

@@ -32,16 +32,13 @@ class DisZ80
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableZ80.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
-    const char *getCpu() const override { return TableZ80.getCpu(); }
-
 private:
     IntelValueFormatter _formatter;
     RegZ80 _regs;
 
+    TableBase &getTable() const override { return TableZ80; }
     RegBase &getRegister() override { return _regs; }
+
     template<typename U>
     void outAbsolute(U addr);
     void outIndexOffset(const InsnZ80 &insn, int8_t offset);

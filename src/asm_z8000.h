@@ -33,16 +33,13 @@ public:
     ValueParser *getParser() override { return &_parser; }
     bool endOfLine(const char *scan) const override;
 
-    // Config
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
-    int8_t addressBits() const override { return TableZ8000.addressBits(); }
-    const char *listCpu() const override { return TableZ8000.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableZ8000.setCpu(cpu); }
-    const char *getCpu() const override { return TableZ8000.getCpu(); }
 
 private:
     ValueParser _parser;
     RegZ8000 _regs;
+
+    TableBase &getTable() const override { return TableZ8000; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

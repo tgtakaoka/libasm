@@ -51,6 +51,9 @@ protected:
           _prompt(prompt)
     {}
 
+    virtual const char *getCpu() const = 0;
+    virtual bool setCpu(const char *) = 0;
+
     void printAddress(uint32_t addr) {
         const AddressWidth width = _config->addressWidth();
         if (width == ADDRESS_16BIT)
@@ -106,7 +109,7 @@ protected:
         if (strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
             const char *cpu = line + 4;
             while (isspace(*cpu)) cpu++;
-            if (!_config->setCpu(cpu))
+            if (!setCpu(cpu))
                 _cli.println(F("unknown CPU"));
             return true;
         }
@@ -148,7 +151,7 @@ private:
         cli.print(example->_prompt);
         cli.print(':');
         cli.print(reinterpret_cast<const __FlashStringHelper *>(
-                          example->_config->getCpu()));
+                          example->getCpu()));
         cli.print(F("> "));
     }
 };
@@ -164,6 +167,10 @@ public:
         BaseExample::begin(console);
         _cli.readLine(handleLine, reinterpret_cast<uintptr_t>(this));
     }
+
+protected:
+    const char *getCpu() const override { return _assembler.getCpu(); }
+    bool setCpu(const char *cpu) override { return _assembler.setCpu(cpu); }
 
 private:
     Assembler &_assembler;
@@ -208,6 +215,10 @@ public:
         BaseExample::begin(console);
         _cli.readLine(handleLine, reinterpret_cast<uintptr_t>(this));
     }
+
+protected:
+    const char *getCpu() const override { return _disassembler.getCpu(); }
+    bool setCpu(const char *cpu) override { return _disassembler.setCpu(cpu); }
 
 private:
     Disassembler &_disassembler;

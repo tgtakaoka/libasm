@@ -32,16 +32,13 @@ class DisIns8060
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableIns8060.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableIns8060.setCpu(cpu); }
-    const char *getCpu() const override { return TableIns8060.getCpu(); }
-
 private:
     ValueFormatter _formatter;
     RegIns8060 _regs;
 
+    TableBase &getTable() const override { return TableIns8060; }
     RegBase &getRegister() override { return _regs; }
+
     void outRegister(RegName regName);
 
     Error decodePntr(InsnIns8060 &insn);

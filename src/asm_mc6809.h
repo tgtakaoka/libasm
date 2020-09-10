@@ -31,18 +31,14 @@ class AsmMc6809
       public Config {
 public:
     ValueParser *getParser() override { return &_parser; }
-
-    // Config
-    const char *listCpu() const override { return TableMc6809.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
-    const char *getCpu() const override { return TableMc6809.getCpu(); }
-
     void reset() override { _direct_page = 0; }
 
 private:
     MotoValueParser _parser;
     RegMc6809 _regs;
     uint8_t _direct_page;
+
+    TableBase &getTable() const override { return TableMc6809; }
 
     enum Token : char {
         EOL = 0,         // end of line

@@ -32,11 +32,6 @@ class DisZ8
 public:
     IntelValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableZ8.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableZ8.setCpu(cpu); }
-    const char *getCpu() const override { return TableZ8.getCpu(); }
-
     void reset() override { preferWorkRegister(true); }
     void preferWorkRegister(bool enabled) {
         _preferWorkRegister = enabled;
@@ -47,7 +42,9 @@ private:
     RegZ8 _regs;
     bool _preferWorkRegister = true;
 
+    TableBase &getTable() const override { return TableZ8; }
     RegBase &getRegister() override { return _regs; }
+
     void outCcName(Config::opcode_t opCode);
     void outIndexed(uint16_t base, RegName idx, AddrMode mode);
     Error outWorkReg(uint8_t regNum, bool indir = false, bool pair = false);

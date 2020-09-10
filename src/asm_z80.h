@@ -32,14 +32,11 @@ class AsmZ80
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableZ80.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableZ80.setCpu(cpu); }
-    const char *getCpu() const override { return TableZ80.getCpu(); }
-
 private:
     IntelValueParser _parser;
     RegZ80 _regs;
+
+    TableBase &getTable() const override { return TableZ80; }
 
     struct Operand : public ErrorReporter {
         OprFormat format;

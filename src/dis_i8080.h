@@ -32,16 +32,13 @@ class DisI8080
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableI8080.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
-    const char *getCpu() const override { return TableI8080.getCpu(); }
-
 private:
     IntelValueFormatter _formatter;
     RegI8080 _regs;
 
+    TableBase &getTable() const override { return TableI8080; }
     RegBase &getRegister() override { return _regs; }
+
     void outRegister(RegName regName);
 
     Error decodeImmediate8(DisMemory &memory, InsnI8080 &insn);

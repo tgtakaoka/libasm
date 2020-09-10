@@ -32,14 +32,12 @@ class AsmI8051
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableI8051.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableI8051.setCpu(cpu); }
-    const char *getCpu() const override { return TableI8051.getCpu(); }
 
 private:
     IntelValueParser _parser;
     RegI8051 _regs;
+
+    TableBase &getTable() const override { return TableI8051; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

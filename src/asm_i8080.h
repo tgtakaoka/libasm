@@ -32,14 +32,11 @@ class AsmI8080
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableI8080.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableI8080.setCpu(cpu); }
-    const char *getCpu() const override { return TableI8080.getCpu(); }
-
 private:
     IntelValueParser _parser;
     RegI8080 _regs;
+
+    TableBase &getTable() const override { return TableI8080; }
 
     Error encodePointerReg(InsnI8080 &insn);
     Error encodeStackReg(InsnI8080 &insn);

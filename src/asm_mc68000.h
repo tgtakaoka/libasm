@@ -32,18 +32,14 @@ class AsmMc68000
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableMc68000.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMc68000.setCpu(cpu); }
-    const char *getCpu() const override { return TableMc68000.getCpu(); }
-
     void reset() override { setAlias(false); }
     void setAlias(bool enable) { TableMc68000.setAlias(enable); }
 
 private:
     MotoValueParser _parser;
 
-public:
+    TableBase &getTable() const override { return TableMc68000; }
+
     struct Operand : public ErrorReporter {
         AddrMode mode;
         RegName reg;
@@ -58,9 +54,9 @@ public:
               indexSize(SZ_NONE),
               val32(0)
         {}
+        void fixupMultiRegister();
     };
 
-private:
     Error parseOperand(Operand &opr);
     Error parseMoveMultiRegList(Operand &opr);
     Error checkAlignment(OprSize size, Config::uintptr_t addr);

@@ -32,11 +32,6 @@ class AsmZ8
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableZ8.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableZ8.setCpu(cpu); }
-    const char *getCpu() const override { return TableZ8.getCpu(); }
-
     void reset() override { _regs.setRegPointer(-1); }
     bool setRegPointer(int16_t rp) { return _regs.setRegPointer(rp); }
     bool setRegPointer0(int16_t rp) { return _regs.setRegPointer0(rp); }
@@ -45,6 +40,8 @@ public:
 private:
     IntelValueParser _parser;
     RegZ8 _regs;
+
+    TableBase &getTable() const override { return TableZ8; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

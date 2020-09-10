@@ -249,10 +249,10 @@ static uint16_t reverseBits(uint16_t bits) {
     return reverse;
 }
 
-static void fixupMultiRegister(AsmMc68000::Operand &op) {
-    if (op.mode == M_DREG || op.mode == M_AREG) {
-        op.val32 = (1 << RegMc68000::encodeRegPos(op.reg));
-        op.mode = M_MULT;
+void AsmMc68000::Operand::fixupMultiRegister() {
+    if (mode == M_DREG || mode == M_AREG) {
+        val32 = (1 << RegMc68000::encodeRegPos(reg));
+        mode = M_MULT;
     }
 }
 
@@ -422,8 +422,8 @@ Error AsmMc68000::encode(Insn &_insn) {
         return setError(TableMc68000.getError());
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
-    if (src == M_MULT) fixupMultiRegister(srcOp);
-    if (dst == M_MULT) fixupMultiRegister(dstOp);
+    if (src == M_MULT) srcOp.fixupMultiRegister();
+    if (dst == M_MULT) dstOp.fixupMultiRegister();
     if (src == M_MULT && dstOp.mode == M_PDEC)
         srcOp.val32 = reverseBits(srcOp.val32);
     if (src == M_MULT)

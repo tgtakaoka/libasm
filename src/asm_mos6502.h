@@ -32,13 +32,7 @@ class AsmMos6502
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
-    int8_t addressBits() const override { return TableMos6502.addressBits(); }
-    const char *listCpu() const override { return TableMos6502.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMos6502.setCpu(cpu); }
-    const char *getCpu() const override { return TableMos6502.getCpu(); }
-
     void reset() override { _long_acc = _long_idx = false; }
 
 private:
@@ -46,6 +40,8 @@ private:
     RegMos6502 _regs;
     bool _long_acc = false;
     bool _long_idx = false;
+
+    TableBase &getTable() const override { return TableMos6502; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

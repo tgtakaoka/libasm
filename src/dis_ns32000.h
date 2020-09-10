@@ -32,21 +32,18 @@ class DisNs32000
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableNs32000.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableNs32000.setCpu(cpu); }
-    const char *getCpu() const override { return TableNs32000.getCpu(); }
-
 private:
     ValueFormatter _formatter;
     RegNs32000 _regs;
+
+    TableBase &getTable() const override { return TableNs32000; }
+    RegBase &getRegister() override { return _regs; }
 
     struct Displacement {
         int32_t val32;
         uint8_t bits;
     };
 
-    RegBase &getRegister() override { return _regs; }
     void outDisplacement(const Displacement &disp);
 
     Error readIndexByte(

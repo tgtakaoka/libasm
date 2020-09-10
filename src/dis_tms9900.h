@@ -32,15 +32,11 @@ class DisTms9900
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableTms9900.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableTms9900.setCpu(cpu); }
-    const char *getCpu() const override { return TableTms9900.getCpu(); }
-
 private:
     IntelValueFormatter _formatter;
     RegTms9900 _regs;
 
+    TableBase &getTable() const override { return TableTms9900; }
     RegBase &getRegister() override { return _regs; }
 
     Error decodeOperand(

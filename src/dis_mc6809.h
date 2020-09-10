@@ -32,14 +32,11 @@ class DisMc6809
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    const char *listCpu() const override { return TableMc6809.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMc6809.setCpu(cpu); }
-    const char *getCpu() const override { return TableMc6809.getCpu(); }
-
 private:
     MotoValueFormatter _formatter;
     RegMc6809 _regs;
 
+    TableBase &getTable() const override { return TableMc6809; }
     RegBase &getRegister() override { return _regs; }
 
     void outRegister(RegName regName);

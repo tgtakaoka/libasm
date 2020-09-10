@@ -23,6 +23,7 @@
 #include "insn_base.h"
 #include "reg_base.h"
 #include "symbol_table.h"
+#include "table_base.h"
 #include "type_traits.h"
 #include "value_formatter.h"
 
@@ -41,6 +42,10 @@ public:
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
     virtual void reset() {}
+
+    const char *listCpu() const { return getTable().listCpu(); }
+    bool setCpu(const char *cpu) { return getTable().setCpu(cpu); }
+    const char *getCpu() const { return getTable().getCpu(); }
 
 protected:
     char *_operands;
@@ -112,8 +117,9 @@ protected:
     }
 
 private:
-    virtual RegBase &getRegister() = 0;
     virtual Error decode(DisMemory &memory, Insn &insn) = 0;
+    virtual TableBase &getTable() const = 0;
+    virtual RegBase &getRegister() = 0;
 };
 
 } // namespace libasm

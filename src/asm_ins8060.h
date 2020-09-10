@@ -32,17 +32,14 @@ class AsmIns8060
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableIns8060.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableIns8060.setCpu(cpu); }
-    const char *getCpu() const override { return TableIns8060.getCpu(); }
-
 private:
     class _ValueParser : public ValueParser {
     protected:
         bool isCurrentOriginSymbol(char c) const override { return c == '$'; }
     } _parser;
     RegIns8060 _regs;
+
+    TableBase &getTable() const override { return TableIns8060; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

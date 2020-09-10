@@ -32,12 +32,7 @@ class DisZ8000
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
-    int8_t addressBits() const override { return TableZ8000.addressBits(); }
-    const char *listCpu() const override { return TableZ8000.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableZ8000.setCpu(cpu); }
-    const char *getCpu() const override { return TableZ8000.getCpu(); }
 
     void reset() override { preferWorkRegister(true); }
     void preferWorkRegister(bool enabled) {
@@ -49,6 +44,7 @@ private:
     RegZ8000 _regs;
     bool _preferWorkRegister = true;
 
+    TableBase &getTable() const override { return TableZ8000; }
     RegBase &getRegister() override { return _regs; }
 
     void outRegister(RegName regName);

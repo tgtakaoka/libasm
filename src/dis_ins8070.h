@@ -32,11 +32,6 @@ class DisIns8070
 public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
-    // Config
-    const char *listCpu() const override { return TableIns8070.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableIns8070.setCpu(cpu); }
-    const char *getCpu() const override { return TableIns8070.getCpu(); }
-
     void reset() override { setImmediateSymbol(false); }
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
 
@@ -45,7 +40,9 @@ private:
     RegIns8070 _regs;
     bool _immSym = false;
 
+    TableBase &getTable() const override { return TableIns8070; }
     RegBase &getRegister() override { return _regs; }
+
     void outRegister(RegName regName);
     bool outOperand(OprFormat opr, uint8_t value = 0);
 

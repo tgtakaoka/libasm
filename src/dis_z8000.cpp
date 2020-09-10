@@ -177,9 +177,9 @@ Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn) {
             if (insn.readUint16(memory, off)) return setError(NO_MEMORY);
         }
         const uint32_t linear = seg | off;
-        outAddress(linear, nullptr, false, addressBits());
+        outAddress(linear, nullptr, false, addressWidth());
     } else {
-        outAddress(addr, nullptr, false, addressBits());
+        outAddress(addr, nullptr, false, addressWidth());
     }
     return OK;
 }

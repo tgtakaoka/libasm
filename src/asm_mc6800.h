@@ -32,14 +32,11 @@ class AsmMc6800
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    // Config
-    const char *listCpu() const override { return TableMc6800.listCpu(); }
-    bool setCpu(const char *cpu) override { return TableMc6800.setCpu(cpu); }
-    const char *getCpu() const override { return TableMc6800.getCpu(); }
-
 private:
     MotoValueParser _parser;
     RegMc6800 _regs;
+
+    TableBase &getTable() const override { return TableMc6800; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

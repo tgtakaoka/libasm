@@ -162,9 +162,9 @@ Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn) {
     if (insn.readByte(memory, sbank)) return setError(NO_MEMORY);
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
-    outAddress(src, nullptr, false, addressBits());
+    outAddress(src, nullptr, false, addressWidth());
     *_operands++ = ',';
-    outAddress(dst, nullptr, false, addressBits());
+    outAddress(dst, nullptr, false, addressWidth());
     return setOK();
 }
 
