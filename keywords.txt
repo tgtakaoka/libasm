@@ -30,6 +30,8 @@ AsmIns8070      KEYWORD1        libasm
 DisIns8070      KEYWORD1        libasm
 AsmCdp1802      KEYWORD1        libasm
 DisCdp1802      KEYWORD1        libasm
+AsmI8086        KEYWORD1        libasm
+DisI8086        KEYWORD1        libasm
 AsmTms9900      KEYWORD1        libasm
 DisTms9900      KEYWORD1        libasm
 AsmMc68000      KEYWORD1        libasm

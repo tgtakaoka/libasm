@@ -32,6 +32,7 @@ OBJS_z8       = table_z8.o      reg_z8.o
 OBJS_ins8060  = table_ins8060.o reg_ins8060.o
 OBJS_ins8070  = table_ins8070.o reg_ins8070.o
 OBJS_cdp1802  = table_cdp1802.o
+OBJS_i8086    = table_i8086.o   reg_i8086.o
 OBJS_tms9900  = table_tms9900.o reg_tms9900.o
 OBJS_mc68000  = table_mc68000.o reg_mc68000.o
 OBJS_z8000    = table_z8000.o   reg_z8000.o
@@ -49,6 +50,7 @@ OBJS = 	$(OBJS_common)  \
 	$(OBJS_ins8060) \
 	$(OBJS_ins8070) \
 	$(OBJS_cdp1802) \
+	$(OBJS_i8086)   \
 	$(OBJS_tms9900) \
 	$(OBJS_mc68000) \
 	$(OBJS_z8000)   \
@@ -75,6 +77,7 @@ asm:    asm.o $(OBJS_asm) $(OBJS_common) \
 	asm_ins8060.o $(OBJS_ins8060) \
 	asm_ins8070.o $(OBJS_ins8070) \
 	asm_cdp1802.o $(OBJS_cdp1802) \
+	asm_i8086.o   $(OBJS_i8086)   \
 	asm_tms9900.o $(OBJS_tms9900) \
 	asm_mc68000.o $(OBJS_mc68000) \
 	asm_z8000.o   $(OBJS_z8000)   \
@@ -91,6 +94,7 @@ dis:    dis.o $(OBJS_dis) $(OBJS_common) \
 	dis_ins8060.o $(OBJS_ins8060) \
 	dis_ins8070.o $(OBJS_ins8070) \
 	dis_cdp1802.o $(OBJS_cdp1802) \
+	dis_i8086.o   $(OBJS_i8086)   \
 	dis_tms9900.o $(OBJS_tms9900) \
 	dis_mc68000.o $(OBJS_mc68000) \
 	dis_z8000.o   $(OBJS_z8000)   \

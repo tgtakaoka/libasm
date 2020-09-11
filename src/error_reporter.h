@@ -32,6 +32,7 @@ enum Error : uint8_t {
     ILLEGAL_OPERAND         = 6,
     ILLEGAL_SIZE            = 7,
     ILLEGAL_OPERAND_MODE    = 8,
+    ILLEGAL_SEGMENT         = 9,
 
     // Assembler
     NO_INSTRUCTION          = 20,
