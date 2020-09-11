@@ -26,8 +26,6 @@ static const char TEXT_CPU_NS32032[] PROGMEM = "NS32032";
 static constexpr const char *TEXT_CPU_LIST  = TEXT_CPU_NS32032;
 static constexpr const char *TEXT_CPU_NS    = TEXT_CPU_NS32032;
 static constexpr const char *TEXT_CPU_32032 = (TEXT_CPU_NS32032 + 2);
-static const char TEXT_CPU_32016[] PROGMEM = "32016";
-static const char TEXT_CPU_32008[] PROGMEM = "32008";
 
 static const char TEXT_ABSB[]    PROGMEM = "ABSB";
 static const char TEXT_ABSD[]    PROGMEM = "ABSD";

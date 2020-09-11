@@ -38,12 +38,6 @@ static void test_cpu() {
 
     EQUALS("cpu mc68000", true,    assembler.setCpu("mc68000"));
     EQUALS("cpu mc68000", "68000", assembler.getCpu());
-
-    EQUALS("cpu 68008", true,    assembler.setCpu("68008"));
-    EQUALS("cpu 68008", "68000", assembler.getCpu());
-
-    EQUALS("cpu mc68008", true,    assembler.setCpu("mc68008"));
-    EQUALS("cpu mc68008", "68000", assembler.getCpu());
 }
 
 static void test_data_move() {

@@ -59,9 +59,6 @@ static void test_cpu() {
 
     EQUALS("cpu Z80", true, disassembler.setCpu("Z80"));
     EQUALS("get cpu", "Z80", disassembler.getCpu());
-
-    EQUALS("cpu Z84C00", true, disassembler.setCpu("Z84C00"));
-    EQUALS("get cpu", "Z80", disassembler.getCpu());
 }
 
 static void test_move_inherent() {

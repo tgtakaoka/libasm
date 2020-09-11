@@ -14,7 +14,7 @@
 
 INSTALL_DIR ?= /usr/local/bin
 VPATH=../src
-CXXFLAGS=-Wall -g -O -std=c++17 -I../src
+CXXFLAGS=-Wall -g -O -std=c++14 -I../src
 CPPFLAGS=-MMD
 
 OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o \

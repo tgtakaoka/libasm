@@ -2,29 +2,30 @@
 
 # libasm: cross assemble/disassemble library
 
-The libasm allows for assembling and disassembling supported CPUs on a
-small environment (less than 15kB on Arduino).
+The libasm allows assembling and disassembling supported retro CPUs on
+a small environment (less than ~15kB Flash and ~700B RAM on AVR
+Arduino).
 
 * Supported target CPUs.
-  - MC6809, HD6309
   - MC6800, MC6801, HD6301, MC68HC11
+  - MC6809, HD6309
   - MOS6502, W65SC02, R65C02, W65C02S
   - W65816 (W65C816S)
   - i8051
   - i8080, i8085 (Intel or Zilog syntax)
-  - Z80 (Z84C)
+  - Z80
   - Z8 (Z86), Z86C, Z88 (Super8)
-  - SC/MP (INS8060)
+  - INS8060 (SC/MP)
   - INS8070
   - CDP1802
   - TMS9900, TMS9995, TMS99105
-  - MC68000 (MC68008)
+  - MC68000
   - Z8001, Z8002
-  - NS32032 (NS32016, NS32008)
+  - NS32032
 
 * Supported host environment.
-  - Arduino (AVR, ARM)
-  - Linux, macOS (`g++`, `clang++`)
+  - Arduino (AVR, Teensy)
+  - Linux, macOS (`C++14`: `g++`, `clang++`)
 
 More information about this library can be found at
 https://github.com/tgtakaoka/libasm

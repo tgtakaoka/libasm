@@ -37,20 +37,8 @@ static void test_cpu() {
     EQUALS("cpu ns32032", true,    disassembler.setCpu("NS32032"));
     EQUALS("cpu ns32032", "32032", disassembler.getCpu());
 
-    EQUALS("cpu ns32016", true,    disassembler.setCpu("NS32016"));
-    EQUALS("cpu ns32016", "32032", disassembler.getCpu());
-
-    EQUALS("cpu ns32008", true,    disassembler.setCpu("NS32008"));
-    EQUALS("cpu ns32008", "32032", disassembler.getCpu());
-
     EQUALS("cpu 32032", true,    disassembler.setCpu("32032"));
     EQUALS("cpu 32032", "32032", disassembler.getCpu());
-
-    EQUALS("cpu 32016", true,    disassembler.setCpu("32016"));
-    EQUALS("cpu 32016", "32032", disassembler.getCpu());
-
-    EQUALS("cpu 32008", true,    disassembler.setCpu("32008"));
-    EQUALS("cpu 32008", "32032", disassembler.getCpu());
 }
 
 static void test_format_0() {

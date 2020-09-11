@@ -356,8 +356,7 @@ const char *TableZ80::getCpu() const {
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    if (strcasecmp_P(cpu, TEXT_CPU_Z80) == 0
-        || strncasecmp_P(cpu, TEXT_CPU_Z84C, 4) == 0)
+    if (strcasecmp_P(cpu, TEXT_CPU_Z80) == 0)
         return setCpu(Z80);
     if (toupper(*cpu) == 'I') cpu++;
     if (strcmp_P(cpu, TEXT_CPU_8080) == 0)

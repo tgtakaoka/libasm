@@ -176,7 +176,7 @@ gen: \
 	gen_mc68000 \
 	gen_z8000
 
-CXXFLAGS    = -Wall -g -std=c++17 -O $(INCLUDES) $(DEBUG_FLAGS)
+CXXFLAGS    = -Wall -g -std=c++14 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS    = -MMD
 
 TEST_OBJS= \

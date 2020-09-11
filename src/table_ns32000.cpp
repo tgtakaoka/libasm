@@ -588,9 +588,7 @@ const char *TableNs32000::getCpu() const {
 bool TableNs32000::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_NS, 2) == 0)
         cpu += 2;
-    return strcasecmp_P(cpu, TEXT_CPU_32032) == 0
-        || strcasecmp_P(cpu, TEXT_CPU_32016) == 0
-        || strcasecmp_P(cpu, TEXT_CPU_32008) == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
 }
 
 class TableNs32000 TableNs32000;
