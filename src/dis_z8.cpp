@@ -57,7 +57,7 @@ Error DisZ8::outRegAddr(uint8_t regAddr, bool indir, bool pair) {
     if (_preferWorkRegister && _regs.isWorkRegAlias(regAddr))
         return outWorkReg(regAddr & 0xF, indir, pair);
     if (indir) *_operands++ = '@';
-    outAddress(regAddr, ">", regAddr < 16 && !indir);
+    outAddress(regAddr, PSTR(">"), regAddr < 16 && !indir);
     return setOK();
 }
 

@@ -51,7 +51,7 @@ protected:
           _prompt(prompt)
     {}
 
-    virtual const char *getCpu() const = 0;
+    virtual const /*PROGMEM*/ char *getCpu() const = 0;
     virtual bool setCpu(const char *) = 0;
 
     void printAddress(uint32_t addr) {
@@ -142,16 +142,19 @@ protected:
     }
     uint32_t currentOrigin() override { return _origin; }
 
+    static const __FlashStringHelper *fstr(const /*PROGMEM*/ char *pstr) {
+        return reinterpret_cast<const __FlashStringHelper *>(pstr);
+    }
+
 private:
     ConfigBase *_config;
     const /*PROGMEM*/ char *_prompt;
 
     static void printPrompt(Cli &cli, uintptr_t extra) {
         BaseExample *example = reinterpret_cast<BaseExample *>(extra);
-        cli.print(reinterpret_cast<const __FlashStringHelper *>(example->_prompt));
+        cli.print(fstr(example->_prompt));
         cli.print(':');
-        cli.print(reinterpret_cast<const __FlashStringHelper *>(
-                          example->getCpu()));
+        cli.print(fstr(example->getCpu()));
         cli.print(F("> "));
     }
 };
@@ -169,7 +172,9 @@ public:
     }
 
 protected:
-    const char *getCpu() const override { return _assembler.getCpu(); }
+    const /*PROGMEM */ char *getCpu() const override {
+        return _assembler.getCpu();
+    }
     bool setCpu(const char *cpu) override { return _assembler.setCpu(cpu); }
 
 private:
@@ -179,7 +184,7 @@ private:
         Insn insn;
         if (_assembler.encode(line, insn, _origin, this)) {
             _cli.print(F("Error: "));
-            _cli.println(_assembler.errorText());
+            _cli.println(fstr(_assembler.errorText()));
         } else {
             printAddress(insn.address());
             _cli.print(':');
@@ -217,7 +222,9 @@ public:
     }
 
 protected:
-    const char *getCpu() const override { return _disassembler.getCpu(); }
+    const /*PROGMEM*/ char *getCpu() const override {
+        return _disassembler.getCpu();
+    }
     bool setCpu(const char *cpu) override { return _disassembler.setCpu(cpu); }
 
 private:
@@ -229,7 +236,7 @@ private:
         while (memory.hasNext()) {
             if (_disassembler.decode(memory, insn, operands, this)) {
                 _cli.print(F("Error: "));
-                _cli.println(_disassembler.errorText());
+                _cli.println(fstr(_disassembler.errorText()));
             } else {
                 printAddress(insn.address());
                 _cli.print(':');

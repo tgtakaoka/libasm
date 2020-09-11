@@ -90,8 +90,8 @@ public:
         return _error;
     }
 
-    const char *errorText() const;
-    static const char *errorText(Error error);
+    const /*PROGMEM*/ char *errorText() const;
+    static const /*PROGMEM*/ char *errorText(Error error);
 
 private:
     Error _error;
