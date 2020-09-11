@@ -147,8 +147,10 @@ Error ValueParser::parseNumber(
 }
 
 void ValueParser::skipSpaces() {
-    while (isspace(*_next))
-        _next++;
+    const char *p = _next;
+    while (*p == ' ' || *p == '\t')
+        p++;
+    _next = p;
 }
 
 const char *ValueParser::eval(

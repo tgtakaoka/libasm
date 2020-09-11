@@ -60,7 +60,7 @@ Error Assembler::checkLineEnd(const char *scan) {
 }
 
 const char *Assembler::skipSpaces(const char *scan) {
-    while (isspace(*scan))
+    while (*scan == ' ' || *scan == '\t')
         scan++;
     return scan;
 }
