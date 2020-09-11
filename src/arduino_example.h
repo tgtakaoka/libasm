@@ -45,7 +45,7 @@ protected:
     Cli _cli;
     uint32_t _origin;
 
-    BaseExample(ConfigBase *config, const __FlashStringHelper *prompt)
+    BaseExample(ConfigBase *config, const /*PROGMEM*/ char *prompt)
         : _cli(),
           _config(config),
           _prompt(prompt)
@@ -144,11 +144,11 @@ protected:
 
 private:
     ConfigBase *_config;
-    const __FlashStringHelper *_prompt;
+    const /*PROGMEM*/ char *_prompt;
 
     static void printPrompt(Cli &cli, uintptr_t extra) {
         BaseExample *example = reinterpret_cast<BaseExample *>(extra);
-        cli.print(example->_prompt);
+        cli.print(reinterpret_cast<const __FlashStringHelper *>(example->_prompt));
         cli.print(':');
         cli.print(reinterpret_cast<const __FlashStringHelper *>(
                           example->getCpu()));
@@ -159,7 +159,7 @@ private:
 class AsmExample : public BaseExample {
 public:
     AsmExample(Assembler &assembler)
-        : BaseExample(&assembler, F("Asm")),
+        : BaseExample(&assembler, PSTR("Asm")),
           _assembler(assembler)
     {}
 
@@ -205,7 +205,7 @@ private:
 class DisExample : public BaseExample {
 public:
     DisExample(Disassembler &disassembler)
-        : BaseExample(&disassembler, F("Dis")),
+        : BaseExample(&disassembler, PSTR("Dis")),
           _disassembler(disassembler)
     {
         _disassembler.setUppercase(true);
