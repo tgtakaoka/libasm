@@ -54,6 +54,12 @@ protected:
     bool _uppercase = false;
 
     void outText(const char *text);
+    void outPstr(const /*PROGMEM*/ char *pstr) {
+        char *p = _operands;
+        while ((*p = pgm_read_byte(pstr++)) != 0)
+            p++;
+        _operands = p;
+    }
 
     template<typename Addr>
     const char *lookup(Addr addr) const {
@@ -70,11 +76,12 @@ protected:
     }
 
     template<typename T>
-    void outConstant(T val,
-                     int8_t radix = 16,
-                     bool relax = true,
-                     bool symbol = true,
-                     uint8_t bitWidth = sizeof(T) * 8) {
+    void outConstant(
+            T val,
+            int8_t radix = 16,
+            bool relax = true,
+            bool symbol = true,
+            uint8_t bitWidth = sizeof(T) * 8) {
         if (symbol) {
             const char *label = lookup(val);
             if (label) {
@@ -88,15 +95,18 @@ protected:
     }
 
     template<typename Addr>
-    void outAddress(Addr val, const char *prefix = nullptr, bool needPrefix = false,
-                    uint8_t addrWidth = sizeof(Addr) * 8) {
+    void outAddress(
+            Addr val,
+            const /*PROGMEM*/ char *prefix = nullptr,
+            bool needPrefix = false,
+            uint8_t addrWidth = sizeof(Addr) * 8) {
         const char *label = lookup(val);
         if (label) {
-            if (prefix) outText(prefix);
+            if (prefix) outPstr(prefix);
             outText(label);
             return;
         }
-        if (needPrefix && prefix) outText(prefix);
+        if (needPrefix && prefix) outPstr(prefix);
         _operands = this->getFormatter().output(
             _operands, val, 16, false, addrWidth);
     }

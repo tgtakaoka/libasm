@@ -27,14 +27,14 @@ void DisMc6809::outRegister(RegName regName) {
 Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t dir;
     if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
-    outAddress(dir, "<");
+    outAddress(dir, PSTR("<"));
     return setOK();
 }
 
 Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    outAddress(addr, ">", addr < 0x100);
+    outAddress(addr, PSTR(">"), addr < 0x100);
     return setOK();
 }
 

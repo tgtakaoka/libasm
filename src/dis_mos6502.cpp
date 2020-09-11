@@ -69,13 +69,13 @@ Error DisMos6502::decodeAbsolute(
     uint16_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (!absLong) {
-        outAddress(addr, ">", addr < 0x100);
+        outAddress(addr, PSTR(">"), addr < 0x100);
     } else {
         uint32_t target = addr;
         uint8_t bank;
         if (insn.readByte(memory, bank)) return setError(NO_MEMORY);
         target |= static_cast<uint32_t>(bank) << 16;
-        outAddress(target, ">>", target < 0x10000, addressWidth());
+        outAddress(target, PSTR(">>"), target < 0x10000, addressWidth());
     }
     if (index != REG_UNDEF) {
         *_operands++ = ',';
@@ -119,7 +119,7 @@ Error DisMos6502::decodeZeroPage(
     uint8_t zp;
     if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
     if (indirect) *_operands++ = zpLong ? '[' : '(';
-    outAddress(zp, "<");
+    outAddress(zp, PSTR("<"));
     if (indirect && index == REG_Y) *_operands++ = zpLong ? ']' : ')';
     if (index != REG_UNDEF) {
         *_operands++ = ',';
