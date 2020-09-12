@@ -1006,6 +1006,20 @@ static void test_logic() {
     TEST("TEST DX,[BX+SI]",       0x85, 0020);
     TEST("TEST BX,[BX+DI+52]",    0x85, 0131, 0x34);
     TEST("TEST SP,[BP+SI+1234H]", 0x85, 0242, 0x34, 0x12);
+    TEST("TEST [SI],DH",          0x84, 0064);
+    TEST("TEST [1234H],BH",       0x84, 0076, 0x34, 0x12);
+    TEST("TEST [DI-52],AL",       0x84, 0105, 0xCC);
+    TEST("TEST [BP+1234H],CL",    0x84, 0216, 0x34, 0x12);
+    TEST("TEST [BX+SI],DL",       0x84, 0020);
+    TEST("TEST [BX+DI-52],BL",    0x84, 0131, 0xCC);
+    TEST("TEST [BP+SI+1234H],AH", 0x84, 0242, 0x34, 0x12);
+    TEST("TEST [SI],SI",          0x85, 0064);
+    TEST("TEST [1234H],DI",       0x85, 0076, 0x34, 0x12);
+    TEST("TEST [DI+52],AX",       0x85, 0105, 0x34);
+    TEST("TEST [BP+1234H],CX",    0x85, 0216, 0x34, 0x12);
+    TEST("TEST [BX+SI],DX",       0x85, 0020);
+    TEST("TEST [BX+DI+52],BX",    0x85, 0131, 0x34);
+    TEST("TEST [BP+SI+1234H],SP", 0x85, 0242, 0x34, 0x12);
 
     TEST("TEST AL,56H",                       0xA8, 0x56);
     TEST("TEST CL,56H",                       0xF6, 0301, 0x56);
