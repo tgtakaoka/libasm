@@ -1344,6 +1344,7 @@ static void test_segment_override() {
     TEST("MOV DS:[SI],AH",          0x88, 0044);
     TEST("MOV DS:[DI],AH",          0x88, 0045);
     TEST("MOV DS:[1234H],AH",       0x88, 0046, 0x34, 0x12);
+    TEST("INC BYTE PTR SS:[SI]",    0x36, 0xFE, 0004);
 
     TEST("JMP ES:[SI]", 0x26, 0xFF, 0044);
     TEST("JMP CS:[SI]", 0x2E, 0xFF, 0044);
@@ -1459,6 +1460,7 @@ static void test_comment() {
     TEST("MOV [ BX + DI - 52 ] ,BL",    0x88, 0131, 0xCC);
     TEST("MOV [ BP + SI + 1234H ] ,AH", 0x88, 0242, 0x34, 0x12);
     TEST("MOV [ BP + SI - 1234H ] ,AH", 0x88, 0242, 0xCC, 0xED);
+    TEST("MOV ES : [ BX ] , AH",        0x26, 0x88, 0047);
 
     TEST("INC BYTE PTR SS : [ SI ]",    0x36, 0xFE, 0004);
     TEST("INC WORD PTR CS : [ 1234H ]", 0x2E, 0xFF, 0006, 0x34, 0x12);
