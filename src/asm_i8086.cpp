@@ -57,11 +57,11 @@ const char *AsmI8086::parseSegmentOverride(const char *scan, Operand &op) {
     const char *p = scan;
     const RegName reg = _regs.parseRegName(p);
     if (_regs.isSegmentReg(reg)) {
-        p += _regs.regNameLen(reg);
+        p = skipSpaces(p + _regs.regNameLen(reg));
         // Segment Override
         if (*p == ':') {
             op.seg = reg;
-            return p + 1;
+            return skipSpaces(p + 1);
         }
     }
     return scan;
@@ -72,7 +72,7 @@ const char *AsmI8086::parseBaseRegister(const char *scan, Operand &op) {
     const RegName reg = _regs.parseRegName(p);
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
-        return p + _regs.regNameLen(reg);
+        return skipSpaces(p + _regs.regNameLen(reg));
     }
     return scan;
 }
@@ -86,7 +86,7 @@ const char *AsmI8086::parseIndexRegister(const char *scan, Operand &op) {
     const RegName reg = _regs.parseRegName(p);
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
-        return p + _regs.regNameLen(reg);
+        return skipSpaces(p + _regs.regNameLen(reg));
     }
     return scan;
 }
@@ -104,7 +104,7 @@ const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
     if (getOperand(op.val32)) return nullptr;
     op.setError(getError());
     op.hasVal = true;
-    return _scan;
+    return skipSpaces(_scan);
 }
 
 Error AsmI8086::parseOperand(Operand &op) {
@@ -166,9 +166,10 @@ Error AsmI8086::parseOperand(Operand &op) {
 
     if (getOperand(op.val32)) return getError();
     op.setError(getError());
-    if (*_scan == ':') {
+    p = skipSpaces(_scan);
+    if (*p == ':') {
         op.seg16 = op.val32;
-        _scan++;
+        _scan = p + 1;
         if (getOperand(op.val32)) return getError();
         op.setErrorIf(getError());
         op.mode = M_FAR;

@@ -1460,6 +1460,30 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "INT UNDEF", 0xCD, 0x00);
 }
 
+static void test_comment() {
+    TEST("MOV AH , CH",                 0x88, 0354);
+    TEST("MOV [ SI ] , DH",             0x88, 0064);
+    TEST("MOV [ 1234H ] , BH",          0x88, 0076, 0x34, 0x12);
+    TEST("MOV [ DI + 52 ] ,AL",         0x88, 0105, 0x34);
+    TEST("MOV [ DI - 52 ] ,AL",         0x88, 0105, 0xCC);
+    TEST("MOV [ BP + 52 ] ,CL",         0x88, 0116, 0x34);
+    TEST("MOV [ BP - 52 ] ,CL",         0x88, 0116, 0xCC);
+    TEST("MOV [ DI + 1234H ] ,CL",      0x88, 0215, 0x34, 0x12);
+    TEST("MOV [ BP + 1234H ] ,CL",      0x88, 0216, 0x34, 0x12);
+    TEST("MOV [ DI - 1234H ] ,CL",      0x88, 0215, 0xCC, 0xED);
+    TEST("MOV [ BP - 1234H ] ,CL",      0x88, 0216, 0xCC, 0xED);
+    TEST("MOV [ BX + SI ] ,DL",         0x88, 0020);
+    TEST("MOV [ BX + DI + 52 ] ,BL",    0x88, 0131, 0x34);
+    TEST("MOV [ BX + DI - 52 ] ,BL",    0x88, 0131, 0xCC);
+    TEST("MOV [ BP + SI + 1234H ] ,AH", 0x88, 0242, 0x34, 0x12);
+    TEST("MOV [ BP + SI - 1234H ] ,AH", 0x88, 0242, 0xCC, 0xED);
+
+    TEST("INC BYTE PTR SS : [ SI ]",    0x36, 0xFE, 0004);
+    TEST("INC WORD PTR CS : [ 1234H ]", 0x2E, 0xFF, 0006, 0x34, 0x12);
+
+    TEST("CALLF 1234H : 5678H",         0x9A, 0x78, 0x56, 0x34, 0x12);
+}
+
 static void run_test(void (*test)(), const char *test_name) {
     asserter.clear(test_name);
     set_up();
@@ -1478,6 +1502,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_comment);
     return 0;
 }
 
