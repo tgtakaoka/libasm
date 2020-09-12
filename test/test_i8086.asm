@@ -1333,51 +1333,6 @@
 ;;; No operation
         nop
 
-;;; Addressing mode
-        mov     ax,1234H
-        mov     ax,bx
-        mov     ax,[1234H]
-        mov     ax,[bp]
-        mov     ax,[bx]
-        mov     ax,[si]
-        mov     ax,[di]
-        mov     ax,[bx+34H]
-        mov     ax,[bx+1234H]
-        mov     ax,[bp+34H]
-        mov     ax,[bp+1234H]
-        mov     ax,[si+34H]
-        mov     ax,[si+1234H]
-        mov     ax,[di+34H]
-        mov     ax,[di+1234H]
-        mov     ax,[bp+si]
-        mov     ax,[bp+di]
-        mov     ax,[bx+si]
-        mov     ax,[bx+di]
-        mov     ax,[bx+si+34H]
-        mov     ax,[bx+si+1234H]
-        mov     ax,[bx+di+34H]
-        mov     ax,[bx+di+1234H]
-        mov     [1234H],ax
-        mov     [bp],ax
-        mov     [bx],ax
-        mov     [si],ax
-        mov     [di],ax
-        mov     [bp+34H],ax
-        mov     [bp+1234H],ax
-        mov     [bx+34H],ax
-        mov     [bx+1234H],ax
-        mov     [si+34H],ax
-        mov     [si+1234H],ax
-        mov     [di+34H],ax
-        mov     [di+1234H],ax
-        mov     [bp+si],ax
-        mov     [bp+di],ax
-        mov     [bx+si],ax
-        mov     [bx+di],ax
-        mov     [bx+si+34H],ax
-        mov     [bx+si+1234H],ax
-        mov     [bx+di+34H],ax
-        mov     [bx+di+1234H],ax
 ;;; Segment override
         mov     es:[si],dh
         mov     es:[1234H],bh
