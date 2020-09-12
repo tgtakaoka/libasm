@@ -45,11 +45,15 @@ static void test_data_transfer() {
     TEST("MOV DL,BL",            0x88, 0332);
     TEST("MOV AH,CH",            0x88, 0354);
     TEST("MOV [SI],DH",          0x88, 0064);
+    TEST("MOV [SI+0],DH",        0x88, 0064);
     TEST("MOV [1234H],BH",       0x88, 0076, 0x34, 0x12);
     TEST("MOV [DI+52],AL",       0x88, 0105, 0x34);
     TEST("MOV [BP+1234H],CL",    0x88, 0216, 0x34, 0x12);
+    TEST("MOV [BP],CL",          0x88, 0116, 0x00);
+    TEST("MOV [BP+0],CL",        0x88, 0116, 0x00);
     TEST("MOV [BX+SI],DL",       0x88, 0020);
     TEST("MOV [BX+DI+52],BL",    0x88, 0131, 0x34);
+    TEST("MOV [BX+DI+0],BL",     0x88, 0031);
     TEST("MOV [BP+SI+1234H],AH", 0x88, 0242, 0x34, 0x12);
     TEST("MOV DH,[SI]",          0x8A, 0064);
     TEST("MOV BH,[1234H]",       0x8A, 0076, 0x34, 0x12);
