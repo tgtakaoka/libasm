@@ -1207,6 +1207,8 @@
 ;;; Control transfer
 ;;; Call procedure
         call    $
+        call    ax
+        call    si
         call    [si]
         call    [1234H]
         call    [di-34H]
@@ -1223,8 +1225,10 @@
         callf   [bx+di+34H]
         callf   [bp+si+1234H]
 ;;; Jump
-	jmp     $+1234H
+        jmp     $+1234H
         jmp     $
+        jmp     ax
+        jmp     si
         jmp     [si]
         jmp     [1234H]
         jmp     [di-34H]
@@ -1334,66 +1338,31 @@
         nop
 
 ;;; Segment override
-        mov     es:[si],dh
-        mov     es:[1234H],bh
-        mov     es:[di-34H],al
-        mov     es:[bp+1234H],cl
-        mov     es:[bx+si],dl
-        mov     es:[bx+di+34H],bl
-        mov     es:[bp+si+1234H],ah
-        mov     dh,es:[si]
-        mov     bh,es:[1234H]
-        mov     al,es:[di-34H]
-        mov     cl,es:[bp+1234H]
-        mov     dl,es:[bx+si]
-        mov     bl,es:[bx+di+34H]
-        mov     ah,es:[bp+si+1234H]
-        mov     es:[si],si
-        mov     es:[1234H],di
-        mov     es:[di-34H],ax
-        mov     es:[bp+1234H],cx
-        mov     es:[bx+si],dx
-        mov     es:[bx+di+34H],bx
-        mov     es:[bp+si+1234H],sp
-        mov     si,es:[si]
-        mov     di,es:[1234H]
-        mov     ax,es:[di-34H]
-        mov     cx,es:[bp+1234H]
-        mov     dx,es:[bx+si]
-        mov     bx,es:[bx+di+34H]
-        mov     sp,es:[bp+si+1234H]
-        mov     byte ptr es:[si],56h
-        mov     byte ptr es:[89abH],56h
-        mov     byte ptr es:[di-34H],56h
-        mov     byte ptr es:[bp+89abH],56h
-        mov     byte ptr es:[bx+si],56h
-        mov     byte ptr es:[bx+di+34H],56h
-        mov     byte ptr es:[bp+si+1234H],56h
-        mov     word ptr es:[si],5678h
-        mov     word ptr es:[1234H],5678h
-        mov     word ptr es:[di+34H],5678h
-        mov     word ptr es:[bp+1234H],5678h
-        mov     word ptr es:[bx+si],5678h
-        mov     word ptr es:[bx+di-34H],5678h
-        mov     word ptr es:[bp+si+89abH],5678h
-        mov     al,es:[1234h]
-        mov     ax,es:[1234h]
-        mov     es:[1234h],al
-        mov     es:[1234h],ax
-        mov     es:[si],cs
-        mov     es:[89abH],ss
-        mov     es:[di-34H],ds
-        mov     es:[bp+1234H],es
-        mov     es:[bx+si],cs
-        mov     es:[bx+di+34H],ss
-        mov     es:[bp+si+1234H],ds
-        mov     cs,es:[si]
-        mov     ss,es:[1234H]
-        mov     ds,es:[di-34H]
-        mov     es,es:[bp+1234H]
-        mov     cs,es:[bx+si]
-        mov     ss,es:[bx+di+34H]
-        mov     ds,es:[bp+si+1234H]
+        mov     es:[bx],ah
+        mov     es:[bp],ah
+        mov     es:[si],ah
+        mov     es:[di],ah
+        mov     es:[1234H],ah
+        mov     cs:[bx],ah
+        mov     cs:[bp],ah
+        mov     cs:[si],ah
+        mov     cs:[di],ah
+        mov     cs:[1234H],ah
+        mov     ss:[bx],ah
+        mov     ss:[bp],ah
+        mov     ss:[si],ah
+        mov     ss:[di],ah
+        mov     ss:[1234H],ah
+        mov     ds:[bx],ah
+        mov     ds:[bp],ah
+        mov     ds:[si],ah
+        mov     ds:[di],ah
+        mov     ds:[1234H],ah
+
+	jmp     es:[si]
+        jmp     cs:[si]
+        jmp     ss:[si]
+        jmp     ds:[si]
 
         end
 

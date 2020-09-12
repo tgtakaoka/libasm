@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-
 #include "asm_i8086.h"
 #include "table_i8086.h"
 #include "reg_i8086.h"
@@ -249,6 +247,14 @@ uint8_t AsmI8086::Operand::encodeR_m() const {
     return r_m;
 }
 
+Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) {
+    if (seg == REG_UNDEF) return 0;
+    const Config::opcode_t segPrefix = TableI8086.segOverridePrefix(seg);
+    if (base == REG_BP || base == REG_SP)
+        return seg == REG_SS ? 0 : segPrefix;
+    return seg == REG_DS ? 0 : segPrefix;
+}
+
 Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
     uint8_t mod;
     uint8_t modReg;
@@ -259,7 +265,7 @@ Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
     case M_BDIR: case M_WDIR: case M_DIR:
         return emitDirect(insn, op, pos);
     case M_BMEM: case M_WMEM: case M_MEM:
-        insn.setSegment(TableI8086.segOverridePrefix(op.seg));
+        insn.setSegment(encodeSegmentOverride(op.seg, op.reg));
         mod = op.encodeMod();
         modReg = mod << 6;
         modReg |= op.encodeR_m();
@@ -277,7 +283,7 @@ Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
 }
 
 Error AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
-    insn.setSegment(TableI8086.segOverridePrefix(op.seg));
+    insn.setSegment(encodeSegmentOverride(op.seg, REG_UNDEF));
     if (pos == P_MOD)  insn.embedModReg(0006);
     if (pos == P_OMOD) insn.embed(0006);
     return emitImmediate(insn, SZ_WORD, op.val32);
@@ -336,6 +342,7 @@ Error AsmI8086::encodeStringInst(
     InsnI8086 &insn, const Operand &dst, const Operand &src) {
     switch (insn.opCode() & ~1) {
     case 0xA4: // MOVS ES:[DI],DS:[SI]
+        if (emitStringOperand(insn, dst, REG_ES, REG_DI)) return getError();
         if (emitStringOperand(insn, src, REG_DS, REG_SI)) return getError();
         /* Fall-through */
     case 0xAA: // STOS ES:[DI]
@@ -344,6 +351,7 @@ Error AsmI8086::encodeStringInst(
         break;
     case 0xA6: // CMPS DS:[SI],ES:[DI]
         if (emitStringOperand(insn, src, REG_ES, REG_DI)) return getError();
+        /* Fall-through */
     case 0xAC: // LODS DS:[SI]
         if (emitStringOperand(insn, dst, REG_DS, REG_SI)) return getError();
         break;
@@ -351,21 +359,6 @@ Error AsmI8086::encodeStringInst(
     insn.emitInsn();
     return setOK();
 }
-
-#if 0
-void AsmI8086::Operand::print(const char *title) const {
-    printf("%s%d", title, mode);
-    if (ptr) printf(":p=%d", ptr);
-    if (seg) printf(":s=%d", seg);
-    if (reg) printf(":r=%d", reg);
-    if (index) printf(":i=%d", index);
-    if (hasVal) {
-        if (mode == M_FAR) printf(":d=%04X:%04X", seg16, val32);
-        else printf(":d=%04X", val32);
-    }
-    if (getError()) printf(":e=%d", getError());
-}
-#endif
 
 Error AsmI8086::encode(Insn &_insn) {
     InsnI8086 insn(_insn);
@@ -386,19 +379,8 @@ Error AsmI8086::encode(Insn &_insn) {
     setErrorIf(srcOp.getError());
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-#if 0
-    printf("@@ search: name=%-6s", insn.name());
-    dstOp.print(" dst=");
-    srcOp.print(" src=");
-    printf(" %s\n", endName);
-#endif
     if (TableI8086.searchName(insn))
         return setError(TableI8086.getError());
-#if 0
-    printf("@@  found: code=");
-    if (insn.first()) printf("%02X:", insn.first());
-    printf("%02X dst=%d:%d src=%d:%d size=%d\n", insn.opCode(), insn.dstMode(), insn.dstPos(), insn.srcMode(), insn.srcPos(), insn.oprSize());
-#endif
     insn.prepairModReg();
 
     if (insn.stringInst())

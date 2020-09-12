@@ -75,6 +75,7 @@ private:
     Error emitImmediate(InsnI8086 &insn, OprSize size, uint16_t val);
     Error emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);
     Error emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos);
+    Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);
     Error emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos);
     Error emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos);
     Error emitOperand(

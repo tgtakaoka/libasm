@@ -1199,23 +1199,41 @@ static void test_string_manipulation() {
 
     TEST("MOVSB", 0xA4);
     TEST("MOVSW", 0xA5);
+    TEST("MOVSB ES:[DI],DS:[SI]", 0xA4);
+    TEST("MOVSW ES:[DI],DS:[SI]", 0xA5);
+    TEST("MOVS BYTE PTR ES:[DI],DS:[SI]", 0xA4);
+    TEST("MOVS ES:[DI],WORD PTR DS:[SI]", 0xA5);
 
     TEST("CMPSB", 0xA6);
     TEST("CMPSW", 0xA7);
+    TEST("CMPSB DS:[SI],ES:[DI]", 0xA6);
+    TEST("CMPSW DS:[SI],ES:[DI]", 0xA7);
+    TEST("CMPS  DS:[SI],BYTE PTR ES:[DI]", 0xA6);
+    TEST("CMPS  WORD PTR DS:[SI],ES:[DI]", 0xA7);
 
     TEST("SCASB", 0xAE);
     TEST("SCASW", 0xAF);
+    TEST("SCASB ES:[DI]", 0xAE);
+    TEST("SCASW ES:[DI]", 0xAF);
+    TEST("SCAS  BYTE PTR ES:[DI]", 0xAE);
+    TEST("SCAS  WORD PTR ES:[DI]", 0xAF);
 
     TEST("LODSB", 0xAC);
     TEST("LODSW", 0xAD);
+    TEST("LODS BYTE PTR DS:[SI]", 0xAC);
+    TEST("LODS WORD PTR DS:[SI]", 0xAD);
 
     TEST("STOSB", 0xAA);
     TEST("STOSW", 0xAB);
+    TEST("STOS BYTE PTR ES:[DI]", 0xAA);
+    TEST("STOS WORD PTR ES:[DI]", 0xAB);
 }
 
 static void test_control_transfer() {
     TEST("CALL $", 0xE8, 0xFD, 0xFF);
 
+    TEST("CALL AX",            0xFF, 0320);
+    TEST("CALL SI",            0xFF, 0326);
     TEST("CALL [SI]",          0xFF, 0024);
     TEST("CALL [1234H]",       0xFF, 0026, 0x34, 0x12);
     TEST("CALL [DI-52]",       0xFF, 0125, 0xCC);
@@ -1238,6 +1256,8 @@ static void test_control_transfer() {
 
     TEST("JMP $",       0xEB, 0xFE);
 
+    TEST("JMP AX",            0xFF, 0340);
+    TEST("JMP SI",            0xFF, 0346);
     TEST("JMP [SI]",          0xFF, 0044);
     TEST("JMP [1234H]",       0xFF, 0046, 0x34, 0x12);
     TEST("JMP [DI-52]",       0xFF, 0145, 0xCC);
@@ -1304,79 +1324,36 @@ static void test_processor_control() {
 }
 
 static void test_segment_override() {
-    TEST("MOV ES:[SI],DH",          0x26, 0x88, 0064);
-    TEST("MOV ES:[1234H],BH",       0x26, 0x88, 0076, 0x34, 0x12);
-    TEST("MOV ES:[DI+52],AL",       0x26, 0x88, 0105, 0x34);
-    TEST("MOV ES:[BP+1234H],CL",    0x26, 0x88, 0216, 0x34, 0x12);
-    TEST("MOV ES:[BX+SI],DL",       0x26, 0x88, 0020);
-    TEST("MOV ES:[BX+DI+52],BL",    0x26, 0x88, 0131, 0x34);
-    TEST("MOV ES:[BP+SI+1234H],AH", 0x26, 0x88, 0242, 0x34, 0x12);
-    TEST("MOV DH,ES:[SI]",          0x26, 0x8A, 0064);
-    TEST("MOV BH,ES:[1234H]",       0x26, 0x8A, 0076, 0x34, 0x12);
-    TEST("MOV AL,ES:[DI-52]",       0x26, 0x8A, 0105, 0xCC);
-    TEST("MOV CL,ES:[BP+1234H]",    0x26, 0x8A, 0216, 0x34, 0x12);
-    TEST("MOV DL,ES:[BX+SI]",       0x26, 0x8A, 0020);
-    TEST("MOV BL,ES:[BX+DI-52]",    0x26, 0x8A, 0131, 0xCC);
-    TEST("MOV AH,ES:[BP+SI+1234H]", 0x26, 0x8A, 0242, 0x34, 0x12);
-    TEST("MOV ES:[SI],SI",          0x26, 0x89, 0064);
-    TEST("MOV ES:[1234H],DI",       0x26, 0x89, 0076, 0x34, 0x12);
-    TEST("MOV ES:[DI-52],AX",       0x26, 0x89, 0105, 0xCC);
-    TEST("MOV ES:[BP+1234H],CX",    0x26, 0x89, 0216, 0x34, 0x12);
-    TEST("MOV ES:[BX+SI],DX",       0x26, 0x89, 0020);
-    TEST("MOV ES:[BX+DI+52],BX",    0x26, 0x89, 0131, 0x34);
-    TEST("MOV ES:[BP+SI+1234H],SP", 0x26, 0x89, 0242, 0x34, 0x12);
-    TEST("MOV SI,ES:[SI]",          0x26, 0x8B, 0064);
-    TEST("MOV DI,ES:[1234H]",       0x26, 0x8B, 0076, 0x34, 0x12);
-    TEST("MOV AX,ES:[DI+52]",       0x26, 0x8B, 0105, 0x34);
-    TEST("MOV CX,ES:[BP+1234H]",    0x26, 0x8B, 0216, 0x34, 0x12);
-    TEST("MOV DX,ES:[BX+SI]",       0x26, 0x8B, 0020);
-    TEST("MOV BX,ES:[BX+DI+52]",    0x26, 0x8B, 0131, 0x34);
-    TEST("MOV SP,ES:[BP+SI+1234H]", 0x26, 0x8B, 0242, 0x34, 0x12);
+    TEST("MOV ES:[BX],AH",    0x26, 0x88, 0047);
+    TEST("MOV ES:[BP],AH",    0x26, 0x88, 0146, 0x00);
+    TEST("MOV ES:[SI],AH",    0x26, 0x88, 0044);
+    TEST("MOV ES:[DI],AH",    0x26, 0x88, 0045);
+    TEST("MOV ES:[1234H],AH", 0x26, 0x88, 0046, 0x34, 0x12);
+    TEST("MOV CS:[BX],AH",    0x2E, 0x88, 0047);
+    TEST("MOV CS:[BP],AH",    0x2E, 0x88, 0146, 0x00);
+    TEST("MOV CS:[SI],AH",    0x2E, 0x88, 0044);
+    TEST("MOV CS:[DI],AH",    0x2E, 0x88, 0045);
+    TEST("MOV CS:[1234H],AH", 0x2E, 0x88, 0046, 0x34, 0x12);
+    TEST("MOV SS:[BX],AH",    0x36, 0x88, 0047);
+    TEST("MOV SS:[BP],AH",          0x88, 0146, 0x00);
+    TEST("MOV SS:[SI],AH",    0x36, 0x88, 0044);
+    TEST("MOV SS:[DI],AH",    0x36, 0x88, 0045);
+    TEST("MOV SS:[1234H],AH", 0x36, 0x88, 0046, 0x34, 0x12);
+    TEST("MOV DS:[BX],AH",          0x88, 0047);
+    TEST("MOV DS:[BP],AH",    0x3E, 0x88, 0146, 0x00);
+    TEST("MOV DS:[SI],AH",          0x88, 0044);
+    TEST("MOV DS:[DI],AH",          0x88, 0045);
+    TEST("MOV DS:[1234H],AH",       0x88, 0046, 0x34, 0x12);
 
-    TEST("MOV BYTE PTR ES:[SI],56H",            0x26, 0xC6, 0004, 0x56);
-    TEST("MOV BYTE PTR ES:[89ABH],56H",         0x26, 0xC6, 0006, 0xAB, 0x89, 0x56);
-    TEST("MOV BYTE PTR ES:[DI-52],56H",         0x26, 0xC6, 0105, 0xCC, 0x56);
-    TEST("MOV BYTE PTR ES:[BP+89ABH],56H",      0x26, 0xC6, 0206, 0xAB, 0x89, 0x56);
-    TEST("MOV BYTE PTR ES:[BX+SI],56H",         0x26, 0xC6, 0000, 0x56);
-    TEST("MOV BYTE PTR ES:[BX+DI+52],56H",      0x26, 0xC6, 0101, 0x34, 0x56);
-    TEST("MOV BYTE PTR ES:[BP+SI+1234H],56H",   0x26, 0xC6, 0202, 0x34, 0x12, 0x56);
-    TEST("MOV WORD PTR ES:[SI],5678H",          0x26, 0xC7, 0004, 0x78, 0x56);
-    TEST("MOV WORD PTR ES:[1234H],5678H",       0x26, 0xC7, 0006, 0x34, 0x12, 0x78, 0x56);
-    TEST("MOV WORD PTR ES:[DI+52],5678H",       0x26, 0xC7, 0105, 0x34, 0x78, 0x56);
-    TEST("MOV WORD PTR ES:[BP+1234H],5678H",    0x26, 0xC7, 0206, 0x34, 0x12, 0x78, 0x56);
-    TEST("MOV WORD PTR ES:[BX+SI],5678H",       0x26, 0xC7, 0000, 0x78, 0x56);
-    TEST("MOV WORD PTR ES:[BX+DI-52],5678H",    0x26, 0xC7, 0101, 0xCC, 0x78, 0x56);
-    TEST("MOV WORD PTR ES:[BP+SI+89ABH],5678H", 0x26, 0xC7, 0202, 0xAB, 0x89, 0x78, 0x56);
-
-    TEST("MOV AL,ES:[1234H]", 0x26, 0xA0, 0x34, 0x12);
-    TEST("MOV AX,ES:[1234H]", 0x26, 0xA1, 0x34, 0x12);
-    TEST("MOV ES:[1234H],AL", 0x26, 0xA2, 0x34, 0x12);
-    TEST("MOV ES:[1234H],AX", 0x26, 0xA3, 0x34, 0x12);
-
-    TEST("MOV ES:[SI],CS",           0x26, 0x8C, 0014);
-    TEST("MOV ES:[89ABH],SS",        0x26, 0x8C, 0026, 0xAB, 0x89);
-    TEST("MOV ES:[DI-52],DS",        0x26, 0x8C, 0135, 0xCC);
-    TEST("MOV ES:[BP+89ABH],ES",     0x26, 0x8C, 0206, 0xAB, 0x89);
-    TEST("MOV ES:[BX+SI],CS",        0x26, 0x8C, 0010);
-    TEST("MOV ES:[BX+DI+52],SS",     0x26, 0x8C, 0121, 0x34);
-    TEST("MOV ES:[BP+SI+1234H],DS",  0x26, 0x8C, 0232, 0x34, 0x12);
-    TEST("MOV CS,ES:[SI]",           0x26, 0x8E, 0014);
-    TEST("MOV SS,ES:[89ABH]",        0x26, 0x8E, 0026, 0xAB, 0x89);
-    TEST("MOV DS,ES:[DI-52]",        0x26, 0x8E, 0135, 0xCC);
-    TEST("MOV ES,ES:[BP+89ABH]",     0x26, 0x8E, 0206, 0xAB, 0x89);
-    TEST("MOV CS,ES:[BX+SI]",        0x26, 0x8E, 0010);
-    TEST("MOV SS,ES:[BX+DI+52]",     0x26, 0x8E, 0121, 0x34);
-    TEST("MOV DS,ES:[BP+SI+1234H]",  0x26, 0x8E, 0232, 0x34, 0x12);
+    TEST("JMP ES:[SI]", 0x26, 0xFF, 0044);
+    TEST("JMP CS:[SI]", 0x2E, 0xFF, 0044);
+    TEST("JMP SS:[SI]", 0x36, 0xFF, 0044);
+    TEST("JMP DS:[SI]",       0xFF, 0044);
 
     TEST("MOVSB ES:[DI],ES:[SI]", 0x26, 0xA4);
     TEST("MOVSB ES:[DI],CS:[SI]", 0x2E, 0xA4);
     TEST("MOVSW ES:[DI],SS:[SI]", 0x36, 0xA5);
     TEST("MOVSW ES:[DI],DS:[SI]", 0xA5);
-    TEST("MOVS  BYTE PTR ES:[DI], ES:[SI]", 0x26, 0xA4);
-    TEST("MOVS  ES:[DI], BYTE PTR CS:[SI]", 0x2E, 0xA4);
-    TEST("MOVS  WORD PTR ES:[DI], SS:[SI]", 0x36, 0xA5);
-    TEST("MOVS  ES:[DI], WORD PTR DS:[SI]", 0xA5);
-    TEST(                  "MOVSB ES:[DI],DS:[SI]", 0xA4);
     ETEST(ILLEGAL_SEGMENT, "MOVSB CS:[DI],DS:[SI]");
     ETEST(ILLEGAL_SEGMENT, "MOVSW SS:[DI],DS:[SI]");
     ETEST(ILLEGAL_SEGMENT, "MOVSW DS:[DI],DS:[SI]");
@@ -1384,34 +1361,21 @@ static void test_segment_override() {
     TEST("CMPSB CS:[SI],ES:[DI]", 0x2E, 0xA6);
     TEST("CMPSW SS:[SI],ES:[DI]", 0x36, 0xA7);
     TEST("CMPSW DS:[SI],ES:[DI]", 0xA7);
-    TEST("CMPS  BYTE PTR ES:[SI], ES:[DI]", 0x26, 0xA6);
-    TEST("CMPS  CS:[SI], BYTE PTR ES:[DI]", 0x2E, 0xA6);
-    TEST("CMPS  WORD PTR SS:[SI], ES:[DI]", 0x36, 0xA7);
-    TEST("CMPS  DS:[SI], WORD PTR ES:[DI]", 0xA7);
-    TEST(                  "CMPSB DS:[SI],ES:[DI]", 0xA6);
     ETEST(ILLEGAL_SEGMENT, "CMPSB DS:[SI],CS:[DI]");
     ETEST(ILLEGAL_SEGMENT, "CMPSW DS:[SI],SS:[DI]");
     ETEST(ILLEGAL_SEGMENT, "CMPSW DS:[SI],DS:[DI]");
-    TEST(                  "STOSB ES:[DI]", 0xAA);
-    TEST(                  "STOS  BYTE PTR ES:[DI]", 0xAA);
-    TEST(                  "STOS  WORD PTR ES:[DI]", 0xAB);
-    ETEST(ILLEGAL_SEGMENT, "STOSB CS:[DI]");
-    ETEST(ILLEGAL_SEGMENT, "STOSW SS:[DI]");
-    ETEST(ILLEGAL_SEGMENT, "STOSW DS:[DI]");
     TEST("LODSB ES:[SI]", 0x26, 0xAC);
     TEST("LODSB CS:[SI]", 0x2E, 0xAC);
     TEST("LODSW SS:[SI]", 0x36, 0xAD);
     TEST("LODSW DS:[SI]", 0xAD);
-    TEST("LODS  BYTE PTR ES:[SI]", 0x26, 0xAC);
-    TEST("LODS  BYTE PTR CS:[SI]", 0x2E, 0xAC);
-    TEST("LODS  WORD PTR SS:[SI]", 0x36, 0xAD);
-    TEST("LODS  WORD PTR DS:[SI]", 0xAD);
+    TEST(                  "STOSB ES:[DI]", 0xAA);
+    ETEST(ILLEGAL_SEGMENT, "STOSB CS:[DI]");
+    ETEST(ILLEGAL_SEGMENT, "STOSW SS:[DI]");
+    ETEST(ILLEGAL_SEGMENT, "STOSW DS:[DI]");
     TEST(                  "SCASB ES:[DI]", 0xAE);
     ETEST(ILLEGAL_SEGMENT, "SCASB CS:[DI]");
     ETEST(ILLEGAL_SEGMENT, "SCASW SS:[DI]");
     ETEST(ILLEGAL_SEGMENT, "SCASW DS:[DI]");
-    TEST(                  "SCAS  BYTE PTR ES:[DI]", 0xAE);
-    TEST(                  "SCAS  WORD PTR ES:[DI]", 0xAF);
 }
 
 static void test_undefined_symbol() {
@@ -1506,6 +1470,9 @@ static void test_error() {
     ETEST(OPERAND_NOT_ALLOWED, "LEA BX,CX");
     ETEST(OPERAND_NOT_ALLOWED, "LDS BX,CX");
     ETEST(OPERAND_NOT_ALLOWED, "LES BX,CX");
+
+    ETEST(OPERAND_NOT_ALLOWED, "CALLF AX");
+    ETEST(OPERAND_NOT_ALLOWED, "JMPF  SI");
 
     ETEST(OPERAND_NOT_ALLOWED, "IN  AH,34H");
     ETEST(OPERAND_NOT_ALLOWED, "IN  AL,BX");
