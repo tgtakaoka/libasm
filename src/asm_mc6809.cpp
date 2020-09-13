@@ -144,8 +144,8 @@ Error AsmMc6809::encodeRegisters(InsnMc6809 &insn, Operand &op) {
     const int8_t num1 = _regs.encodeDataReg(reg1);
     const int8_t num2 = _regs.encodeDataReg(reg2);
     if (num1 < 0 || num2 < 0) return setError(UNKNOWN_REGISTER);
-    const RegSize size1 = RegMc6809::regSize(reg1);
-    const RegSize size2 = RegMc6809::regSize(reg2);
+    const RegSize size1 = _regs.regSize(reg1);
+    const RegSize size2 = _regs.regSize(reg2);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     insn.emitInsn();

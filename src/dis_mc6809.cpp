@@ -173,12 +173,12 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn) {
 Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn) {
     uint8_t post;
     if (insn.readByte(memory, post)) return setError(NO_MEMORY);
-    const RegName src = _regs.decodeRegName(post >> 4);
-    const RegName dst = _regs.decodeRegName(post & 0xf);
+    const RegName src = _regs.decodeDataReg(post >> 4);
+    const RegName dst = _regs.decodeDataReg(post & 0xf);
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    const RegSize size1 = RegMc6809::regSize(src);
-    const RegSize size2 = RegMc6809::regSize(dst);
+    const RegSize size1 = _regs.regSize(src);
+    const RegSize size2 = _regs.regSize(dst);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     outRegister(src);

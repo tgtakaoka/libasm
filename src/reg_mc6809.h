@@ -25,24 +25,24 @@ namespace mc6809 {
 
 enum RegName : char {
     REG_UNDEF = 0,
-    OFFSET =  'o', // Describe offset in indexed addressing
-    REG_D =   'D',
-    REG_X =   'X',
-    REG_Y =   'Y',
-    REG_U =   'U',
-    REG_S =   'S',
-    REG_PC =  'P',
-    REG_PCR = 'p', // Program counter relative addressing
-    REG_A =   'A',
-    REG_B =   'B',
-    REG_CC =  'c',
-    REG_DP =  'd',
-    REG_E =   'E',
-    REG_F =   'F',
-    REG_W =   'W',
-    REG_V =   'V',
-    REG_Z =   'Z', // "z" zero register
-    REG_0 =   '0', // "0" zero register
+    OFFSET =  1, // Describe offset in indexed addressing
+    REG_PCR = 2, // Program counter relative addressing
+    REG_D =   8+0,
+    REG_X =   8+1,
+    REG_Y =   8+2,
+    REG_U =   8+3,
+    REG_S =   8+4,
+    REG_PC =  8+5,
+    REG_W =   8+6,
+    REG_V =   8+7,
+    REG_A =   8+8,
+    REG_B =   8+9,
+    REG_CC =  8+10,
+    REG_DP =  8+11,
+    REG_Z =   8+12, // "z" zero register
+    REG_0 =   8+13, // "0" zero register
+    REG_E =   8+14,
+    REG_F =   8+15,
 };
 
 enum RegSize : uint8_t {
@@ -54,46 +54,35 @@ enum RegSize : uint8_t {
 class RegMc6809 : public RegBase {
 public:
     RegName parseRegName(const char *line) const;
-    RegName parseIndexReg(const char *line) const;
-    RegName parseBaseReg(const char *line) const;
-    RegName parseDataReg(const char *line) const;
-    int8_t encodeIndexReg(RegName regName) const;
-    int8_t encodeBaseReg(RegName regName) const;
-    int8_t encodeDataReg(RegName regName) const;
-    bool isIndexReg(RegName regName) const;
-    bool isBaseReg(RegName regName) const;
-    bool isIndexedBase(RegName regName) const;
-    static uint8_t encodeStackReg(RegName regName, bool onUserStack);
-    RegName decodeBaseReg(uint8_t regNum) const;
-    RegName decodeRegName(uint8_t regNum) const;
-    RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
+    uint8_t regNameLen(RegName name) const;
+    RegSize regSize(RegName name) const;
+    char *outRegName(char *out, const RegName name) const;
 
-    char *outRegName(char *out, const RegName regName) const;
+    RegName decodeDataReg(uint8_t num) const;
+    int8_t encodeDataReg(RegName ame) const;
+
+    RegName decodeBaseReg(uint8_t num) const;
+    int8_t encodeBaseReg(RegName name) const;
+    bool isBaseReg(RegName name) const;
+
+    int8_t encodeIndexReg(RegName name) const;
+    bool isIndexReg(RegName name) const;
+    bool isIndexedBase(RegName name) const;
+
+    RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
+    uint8_t encodeStackReg(RegName name, bool onUserStack) const;
+
     char *outCCRBits(char *out, uint8_t val) const;
 
-    bool compareRegName(const char *line, RegName regName) const;
-    uint8_t regNameLen(RegName regName) const;
+    RegName decodeBitOpReg(uint8_t num) const;
+    bool isBitOpReg(RegName name) const;
+    int8_t encodeBitOpReg(RegName name) const;
 
-    RegName parseBitOpReg(const char *line) const;
-    static int8_t encodeBitOpReg(RegName regName);
-
-    RegName parseTfmBaseReg(const char *line) const;
-    bool isTfmBaseReg(RegName regName) const;
-    static int8_t encodeTfmBaseReg(RegName regName);
-    static RegName decodeBitOpReg(uint8_t regNum);
-    static RegName decodeTfmBaseReg(uint8_t regNum);
-    static char tfmSrcModeChar(uint8_t mode);
-    static char tfmDstModeChar(uint8_t mode);
-
-    static RegSize regSize(RegName regName);
-
-private:
-    RegName parseRegName(
-        const char *line, const RegName *table, const RegName *end) const;
-
-    char regName1stChar(const RegName regName) const;
-    char regName2ndChar(const RegName regName) const;
-    char regName3rdChar(const RegName regName) const;
+    RegName decodeTfmBaseReg(uint8_t num) const;
+    bool isTfmBaseReg(RegName name) const;
+    char tfmSrcModeChar(uint8_t mode) const;
+    char tfmDstModeChar(uint8_t mode) const;
+    int8_t encodeTfmBaseReg(RegName name) const;
 };
 
 } // namespace mc6809
