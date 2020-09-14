@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-
 #include "dis_i8086.h"
 #include "table_i8086.h"
 
@@ -334,16 +332,10 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn) {
 Error DisI8086::decode(DisMemory &memory, Insn &_insn) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn)) return getError();
-#if 0
-    printf("@@@@@ search: opc=%02X first=%02X seg=%02X\n", insn.opCode(), insn.first(), insn.segment());
-#endif
     if (TableI8086.searchOpCode(insn))
         return setError(TableI8086.getError());
     if (insn.readModReg(memory)) return setError(NO_MEMORY);
 
-#if 0
-    printf("@@@@@  found: opc=%02X first=%02X seg=%02X name=%s dst=%d:%d src=%d:%d modReg=%02X\n", insn.opCode(), insn.first(), insn.segment(), insn.name(), insn.dstMode(), insn.dstPos(), insn.srcMode(), insn.srcPos(), insn.modReg());
-#endif
     if (!validSegOverride(insn)) return setError(ILLEGAL_SEGMENT);
 
     if (insn.stringInst())
