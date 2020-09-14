@@ -40,43 +40,6 @@ private:
 
     TableBase &getTable() const override { return TableMc6809; }
 
-    enum Token : char {
-        EOL = 0,         // end of line
-        ERROR = '?',
-        COMMA = ',',
-        LBRKT = '[',
-        RBRKT = ']',
-        IDX_PNTR = 'P',  // ,x where x=base register
-                         // _reg=x
-        IDX_AUTO = 'a',  // ,x+/,x++/,-x/,--x where x=base register
-                         // _reg=x _extra=1/2/-1/-2
-        IDX_DISP = 'D',  // disp,x where x=base/PC/PCR register
-                         // _val32=disp _reg=x _extra=0/5/8/16
-        TFM_MODE = 'T',  // x- where x=D/X/Y/U/S or x+ where x=D
-                         // _reg=x _extra=TFM mode
-        REG_BITP = 'B',  // r.b where r=A/B/CC
-                         // _reg=r _extra=b
-        DIR_BITP = 'b',  // nn.b where nn is direct page address
-                         // _val32=nn _extra=b
-        REG_LIST = 'L',  // r1,r2,... where rn is valid register
-                         // _reg=r1 _reg2=r2, _val32=post, _extra=n
-                         // _regs if there is a stack register in list
-        VAL_IMM  = '#',  // immediate value
-        VAL_ADDR = 'A'   // address value _extra=0/8/16
-    } _token;
-    RegName _reg;
-    RegName _reg2;
-    RegName _regStack;
-    int8_t _extra;
-    uint32_t _val32;
-    Token nextToken(Token expect = EOL);
-    bool tokenPointerIndex(const char *p);
-    bool tokenTransferMemory(const char *p);
-    bool tokenRegisterList(const char *p);
-    bool tokenDisplacementIndex(const char *p, int8_t size);
-    bool tokenBitPosition(const char *p);
-    bool tokenConstant(const char *p, const char immediate);
-
     struct Operand : public ErrorReporter {
         AddrMode mode;
         IndexedSubMode sub;
@@ -96,12 +59,15 @@ private:
               val32(0)
         {}
     };
-    void printOperand(const Operand &op, const Operand &extra);
+    bool parsePointerMode(Operand &op, const char *scan, bool indir);
+    bool parseIndexedMode(Operand &op, const char *scan, bool indir);
+    bool parseBitRegister(Operand &op, const char *scan);
+    bool parseBitPosition(Operand &op, const char *scan);
+    bool parseRegisterList(Operand &op, const char *scan, bool indir);
     Error parseOperand(Operand &op);
 
-    // MC6809
     Error encodePushPull(InsnMc6809 &insn, const Operand &op);
-    Error encodeRegisters(InsnMc6809 &insn, Operand &op);
+    Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
     Error encodeRelative(InsnMc6809 &insn, const Operand &op);
     Error encodeImmediate(
             InsnMc6809 &insn, const Operand &op, Operand &extra);
@@ -109,13 +75,12 @@ private:
             const InsnMc6809 &insn, const Operand &op) const;
     Error encodeIndexed(
             InsnMc6809 &insn, Operand &op, bool emitInsn = true);
-    // HD6309
     Error encodeBitOperation(
             InsnMc6809 &insn, const Operand &op, const Operand &extra);
     Error encodeTransferMemory(
             InsnMc6809 &insn, const Operand &op, const Operand &extra);
 
-    Error processPseudo(InsnMc6809 &insn, const char *line);
+    Error processPseudo(InsnMc6809 &insn);
     Error encode(Insn &insn) override;
 };
 

@@ -1306,9 +1306,9 @@ static void test_transfer() {
         TEST("TFM U+,S+", 0x11, 0x38, 0x34);
         TEST("TFM S+,D+", 0x11, 0x38, 0x40);
 
-        ETEST(UNKNOWN_OPERAND, "TFM X+,W");
-        ETEST(UNKNOWN_OPERAND, "TFM W+,X");
-        ETEST(UNKNOWN_OPERAND, "TFM W-,X-");
+        ETEST(OPERAND_NOT_ALLOWED, "TFM X+,W");
+        ETEST(OPERAND_NOT_ALLOWED, "TFM W+,X");
+        ETEST(OPERAND_NOT_ALLOWED, "TFM W-,X-");
     } else {
         ETEST(UNKNOWN_INSTRUCTION, "TFM D,Y");
         ETEST(UNKNOWN_INSTRUCTION, "TFM X+,Y+");
@@ -1401,28 +1401,21 @@ static void test_comment() {
 }
 
 static void test_error() {
-    ETEST(UNKNOWN_OPERAND, "SUBA > $90");
-    ETEST(UNKNOWN_OPERAND, "ADDB < $1290");
     ETEST(UNKNOWN_OPERAND, "LDA , S");
-    ETEST(UNKNOWN_OPERAND, "LDA << 0,S");
-    ETEST(UNKNOWN_OPERAND, "LDA < 0,X");
-    ETEST(UNKNOWN_OPERAND, "LDA > 0,X");
-    ETEST(UNKNOWN_OPERAND, "LDA [ < 0,X ]");
-    ETEST(UNKNOWN_OPERAND, "LDA [ > 0,X ]");
     ETEST(UNKNOWN_OPERAND, "LDA , X+");
     ETEST(UNKNOWN_OPERAND, "LDA , X++");
     ETEST(UNKNOWN_OPERAND, "LDA , -X");
     ETEST(UNKNOWN_OPERAND, "LDA , --X");
     ETEST(UNKNOWN_OPERAND, "LDA [ , X++ ]");
     ETEST(UNKNOWN_OPERAND, "LDA [ , --X ]");
-    ETEST(UNKNOWN_OPERAND, "LDA ,X +");
-    ETEST(UNKNOWN_OPERAND, "LDA ,X ++");
-    ETEST(UNKNOWN_OPERAND, "LDA ,X+ +");
+    ETEST(GARBAGE_AT_END,  "LDA ,X +");
+    ETEST(GARBAGE_AT_END,  "LDA ,X ++");
+    ETEST(GARBAGE_AT_END,  "LDA ,X+ +");
     ETEST(UNKNOWN_OPERAND, "LDA ,- X");
     ETEST(UNKNOWN_OPERAND, "LDA ,-- X");
     ETEST(UNKNOWN_OPERAND, "LDA ,- -X");
-    ETEST(UNKNOWN_OPERAND, "LDA ,X]");
-    ETEST(UNKNOWN_OPERAND, "LDA [,X");
+    ETEST(GARBAGE_AT_END,  "LDA ,X]");
+    ETEST(MISSING_CLOSING_PAREN, "LDA [,X");
 
     if (is6309()) {
         // HD6309
@@ -1432,18 +1425,17 @@ static void test_error() {
         ETEST(UNKNOWN_OPERAND, "LDA , --W");
         ETEST(UNKNOWN_OPERAND, "LDA [ , W++ ]");
         ETEST(UNKNOWN_OPERAND, "LDA [ , --W ]");
-        ETEST(UNKNOWN_OPERAND, "TIM #$30, < $1290");
 
-        ETEST(UNKNOWN_OPERAND, "TFM D+,W+");
-        ETEST(UNKNOWN_OPERAND, "TFM D + , X+");
-        ETEST(UNKNOWN_OPERAND, "TFM D+ , X +");
-        ETEST(UNKNOWN_OPERAND, "TFM X - , Y-");
-        ETEST(UNKNOWN_OPERAND, "TFM X- , Y -");
-        ETEST(UNKNOWN_OPERAND, "BOR A .1  , $34.2");
-        ETEST(UNKNOWN_OPERAND, "BOR A. 1  , $34.2");
-        ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34 .2");
-        ETEST(UNKNOWN_OPERAND, "BOR A.1   , $34. 2");
-        TEST(                  "BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
+        ETEST(OPERAND_NOT_ALLOWED, "TFM D+,W+");
+        ETEST(GARBAGE_AT_END,      "TFM D + , X+");
+        ETEST(GARBAGE_AT_END,      "TFM D+ , X +");
+        ETEST(GARBAGE_AT_END,      "TFM X - , Y-");
+        ETEST(GARBAGE_AT_END,      "TFM X- , Y -");
+        ETEST(GARBAGE_AT_END,      "BOR A .1  , $34.2");
+        ETEST(GARBAGE_AT_END,      "BOR A. 1  , $34.2");
+        TEST(     "BOR A.1   , $34 .2", 0x11, 0x32, 0x51, 0x34);
+        ETEST(GARBAGE_AT_END,      "BOR A.1   , $34. 2");
+        TEST(                      "BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
     }
 }
 

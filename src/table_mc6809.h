@@ -26,15 +26,6 @@
 namespace libasm {
 namespace mc6809 {
 
-enum IndexedSubMode : uint8_t {
-    PNTR_IDX = 0,  // ,X [,X}
-    DISP_IDX = 1,  // n5,X n8,X   n8,PCR   n16,X   n16,PCR
-                   //     [n8,X] [n8,PCR] [n16,X] [n16,PCR]
-    ACCM_IDX = 2,  // R,X [R,X]
-    AUTO_IDX = 3,  // ,X+ ,X++ ,-X, ,--X [,X++] [,--X]
-    ABS_IDIR = 4,  // [n16]
-};
-
 struct PostSpec {
     IndexedSubMode mode;
     RegName index;

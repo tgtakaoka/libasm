@@ -525,12 +525,15 @@ static constexpr TableMc6809::EntryPage HD6309_PAGES[] PROGMEM = {
 
 static bool matchAddrMode(AddrMode opr, AddrMode table) {
     if (opr == table) return true;
-    if (opr == IM32) return table == IM8 || table == IM16 || table == REGLIST;
-    if (opr == REG_REG) return table == IDX || table == REGLIST;
+    if (opr == IM32) return table == IM8 || table == IM16
+                         || table == REGLIST; // immediate register list
+    if (opr == REG_REG) return table == IDX // A,X
+                            || table == REGLIST; // 2-length register list
+    if (opr == REG_BIT) return table == REG_REG; // A,0
     if (opr == DIR) return table == REL || table == LREL;
     if (opr == EXT) return table == REL || table == LREL;
-    if (opr == REGLIST) return table == REG_TFM;
-    if (opr == NONE) return table == REGLIST;
+    if (opr == REGLIST) return table == REG_TFM; // X
+    if (opr == NONE) return table == REGLIST; // empty register list
     return false;
 }
 
