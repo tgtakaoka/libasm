@@ -45,22 +45,26 @@ private:
     TableBase &getTable() const override { return TableZ8; }
     RegBase &getRegister() override { return _regs; }
 
-    void outCcName(Config::opcode_t opCode);
-    void outIndexed(uint16_t base, RegName idx, AddrMode mode);
-    Error outWorkReg(uint8_t regNum, bool indir = false, bool pair = false);
-    Error outRegAddr(uint8_t regAddr, bool indir = false, bool pair = false);
-    Error outBitPos(uint8_t bitPos);
+    char *outCcName(char *out, Config::opcode_t opCode);
+    char *outIndexed(char *out, uint16_t base, RegName idx, AddrMode mode);
+    char *outWorkReg(char *out, uint8_t regNum, bool indir = false);
+    char *outPairReg(char *out, uint8_t regNum, bool indir = false);
+    char *outRegAddr(char *out, uint8_t regAddr, bool indir = false);
+    char *outPairAddr(char *out, uint8_t regAddr, bool indir = false);
+    char *outBitPos(char *out, uint8_t bitPos);
 
-    Error decodeOperand(DisMemory &memory, InsnZ8 &insn, AddrMode mode);
+    Error decodeOperand(
+        DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode);
     Error decodeAbsolute(
-        DisMemory &memory, InsnZ8 &insn, Endian endian = ENDIAN_BIG);
-    Error decodeRelative(DisMemory &memory, InsnZ8 &insn);
-    Error decodeIndexed(DisMemory &memory, InsnZ8 &insn, uint8_t opr1);
-    Error decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn);
-    Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn);
-    Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn);
-    Error decodePostByte(DisMemory &memory, InsnZ8 &insn);
-    Error decode(DisMemory &memory, Insn &insn) override;
+        DisMemory &memory, InsnZ8 &insn, char *out, Endian endian = ENDIAN_BIG);
+    Error decodeRelative(DisMemory &memory, InsnZ8 &insn, char *out);
+    Error decodeIndexed(
+        DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1);
+    Error decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, char *out);
+    Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn, char *out);
+    Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out);
+    Error decodePostByte(DisMemory &memory, InsnZ8 &insn, char *out);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace z8

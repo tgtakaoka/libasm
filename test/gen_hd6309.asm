@@ -23,8 +23,8 @@
       LBRA  *+26
       LBSR  *+27
       DAA
-      ORCC  #%00011011
-      ANDCC #%00011101
+      ORCC  #27
+      ANDCC #29
       SEX
       EXG   Y,D
       EXG   Y,X
@@ -1939,7 +1939,7 @@
       RTS
       ABX
       RTI
-      CWAI  #%00111101
+      CWAI  #$3D
       MUL
       SWI
       NEGA
@@ -12505,8 +12505,8 @@
       TFM   U,Y+
       TFM   U,U+
       TFM   U,S+
-      BITMD #%00111101
-      LDMD  #%00111110
+      BITMD #$3D
+      LDMD  #$3E
       SWI3
       COME
       DECE

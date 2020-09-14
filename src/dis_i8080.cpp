@@ -20,46 +20,45 @@
 namespace libasm {
 namespace i8080 {
 
-void DisI8080::outRegister(RegName regName) {
-    _operands = _regs.outRegName(_operands, regName);
+char *DisI8080::outRegister(char *out, RegName regName) {
+    return _regs.outRegName(out, regName);
 }
 
 Error DisI8080::decodeImmediate8(
-    DisMemory& memory, InsnI8080 &insn) {
+    DisMemory& memory, InsnI8080 &insn, char *out) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
-    outConstant(val);
+    if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
+    outConstant(out, val);
     return setOK();
 }
 
 Error DisI8080::decodeImmediate16(
-    DisMemory& memory, InsnI8080 &insn) {
+    DisMemory& memory, InsnI8080 &insn, char *out) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    if (insn.insnFormat() != NO_FORMAT) *_operands++ = ',';
-    outConstant(val);
+    if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
+    outConstant(out, val);
     return setOK();
 }
 
 Error DisI8080::decodeDirect(
-    DisMemory &memory, InsnI8080& insn) {
+    DisMemory &memory, InsnI8080& insn, char *out) {
     Config::uintptr_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    outAddress(addr);
+    outAddress(out, addr);
     return setOK();
 }
 
 Error DisI8080::decodeIoaddr(
-    DisMemory &memory, InsnI8080& insn) {
+    DisMemory &memory, InsnI8080& insn, char *out) {
     uint8_t ioaddr;
     if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
-    outAddress(ioaddr);
+    outAddress(out, ioaddr);
     return setOK();
 }
 
-Error DisI8080::decode(
-    DisMemory &memory, Insn &_insn) {
+Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnI8080 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
@@ -69,27 +68,27 @@ Error DisI8080::decode(
 
     switch (insn.insnFormat()) {
     case POINTER_REG:
-        outRegister(RegI8080::decodePointerReg((opCode >> 4) & 3));
+        out = outRegister(out, RegI8080::decodePointerReg((opCode >> 4) & 3));
         break;
     case STACK_REG:
-        outRegister(RegI8080::decodeStackReg((opCode >> 4) & 3));
+        out = outRegister(out, RegI8080::decodeStackReg((opCode >> 4) & 3));
         break;
     case INDEX_REG:
-        outRegister(RegI8080::decodeIndexReg((opCode >> 4) & 1));
+        out = outRegister(out, RegI8080::decodeIndexReg((opCode >> 4) & 1));
         break;
     case DATA_REG:
-        outRegister(RegI8080::decodeDataReg((opCode >> 3) & 7));
+        out = outRegister(out, RegI8080::decodeDataReg((opCode >> 3) & 7));
         break;
     case LOW_DATA_REG:
-        outRegister(RegI8080::decodeDataReg(opCode & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode & 7));
         break;
     case DATA_DATA_REG:
-        outRegister(RegI8080::decodeDataReg((opCode >> 3) & 7));
-        *_operands++ = ',';
-        outRegister(RegI8080::decodeDataReg(opCode & 7));
+        out = outRegister(out, RegI8080::decodeDataReg((opCode >> 3) & 7));
+        *out++ = ',';
+        out = outRegister(out, RegI8080::decodeDataReg(opCode & 7));
         break;
     case VECTOR_NO:
-        outConstant(static_cast<uint8_t>((opCode >> 3) & 7));
+        out = outConstant(out, static_cast<uint8_t>((opCode >> 3) & 7));
         break;
     default:
         break;
@@ -99,13 +98,13 @@ Error DisI8080::decode(
     case INHR:
         return setOK();
     case IMM8:
-        return decodeImmediate8(memory, insn);
+        return decodeImmediate8(memory, insn, out);
     case IMM16:
-        return decodeImmediate16(memory, insn);
+        return decodeImmediate16(memory, insn, out);
     case DIRECT:
-        return decodeDirect(memory, insn);
+        return decodeDirect(memory, insn, out);
     case IOADR:
-        return decodeIoaddr(memory, insn);
+        return decodeIoaddr(memory, insn, out);
     default:
         return setError(INTERNAL_ERROR);
     }

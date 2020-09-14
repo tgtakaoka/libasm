@@ -39,18 +39,18 @@ private:
     TableBase &getTable() const override { return TableI8051; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegister(RegName regName);
+    char *outRegister(char *out, RegName regName);
 
-    Error decodeRelative(DisMemory &memory, InsnI8051 &insn);
-    Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn);
-    Error decodeRReg(InsnI8051 &insn, const AddrMode mode);
+    Error decodeRelative(DisMemory &memory, InsnI8051 &insn, char *out);
+    Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out);
+    Error decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode);
     Error decodeAddress(
-        DisMemory &memory, InsnI8051 &insn, const AddrMode mode);
+        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
     Error decodeImmediate(
-        DisMemory &memory, InsnI8051 &insn, const AddrMode mode);
+        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
     Error decodeOperand(
-        DisMemory &memory, InsnI8051 &insn, const AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn) override;
+        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace i8051

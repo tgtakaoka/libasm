@@ -20,30 +20,30 @@
 namespace libasm {
 namespace ins8060 {
 
-void DisIns8060::outRegister(RegName regName) {
-    _operands = _regs.outRegName(_operands, regName);
+char *DisIns8060::outRegister(char *out, RegName regName) {
+    return _regs.outRegName(out, regName);
 }
 
-Error DisIns8060::decodePntr(InsnIns8060 &insn) {
-    outRegister(_regs.decodePointerReg(insn.opCode() & 3));
+Error DisIns8060::decodePntr(InsnIns8060 &insn, char *out) {
+    outRegister(out, _regs.decodePointerReg(insn.opCode() & 3));
     return setOK();
 }
 
 Error DisIns8060::decodeImm8(
-    DisMemory& memory, InsnIns8060 &insn) {
+        DisMemory& memory, InsnIns8060 &insn, char *out) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outConstant(val);
+    outConstant(out, val);
     return setOK();
 }
 
 Error DisIns8060::decodeIndx(
-    DisMemory &memory, InsnIns8060& insn, bool hasMode) {
+    DisMemory &memory, InsnIns8060& insn, char *out, bool hasMode) {
     const RegName reg = _regs.decodePointerReg(insn.opCode() & 3);
     uint8_t opr;
     if (insn.readByte(memory, opr)) return setError(NO_MEMORY);
     if (hasMode && (insn.opCode() & 4) != 0)
-        *_operands++ = '@';
+        *out++ = '@';
     if (reg == REG_PC && opr != 0x80) { // PC relative
         // PC points the last byte of instruction.
         const Config::uintptr_t base = insn.address() + 1;
@@ -54,29 +54,28 @@ Error DisIns8060::decodeIndx(
         // Program space is paged by 4kB.
         Config::uintptr_t target = base + disp + fetch;
         if ((target & ~0xFFF) == page) {
-            outRelativeAddr(target, insn.address(), 8);
+            outRelativeAddr(out, target, insn.address(), 8);
         } else {
             target &= 0xFFF;
             target |= page;
-            outAddress(target);
+            outAddress(out, target);
         }
         return setOK();
     }
     if (opr == 0x80) {         // E(Pn)
-        outRegister(REG_E);
+        out = outRegister(out, REG_E);
     } else {
         const int8_t disp = static_cast<int8_t>(opr);
-        outConstant(disp, 10);
+        out = outConstant(out, disp, 10);
     }
-    *_operands++ = '(';
-    outRegister(reg);
-    *_operands++ = ')';
-    *_operands = 0;
+    *out++ = '(';
+    out = outRegister(out, reg);
+    *out++ = ')';
+    *out = 0;
     return setOK();
 }
 
-Error DisIns8060::decode(
-    DisMemory &memory, Insn &_insn) {
+Error DisIns8060::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnIns8060 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
@@ -88,14 +87,14 @@ Error DisIns8060::decode(
     case INHR:
         return setOK();
     case PNTR:
-        return decodePntr(insn);
+        return decodePntr(insn, out);
     case IMM8:
-        return decodeImm8(memory, insn);
+        return decodeImm8(memory, insn, out);
     case REL8:
     case DISP:
-        return decodeIndx(memory, insn, false);
+        return decodeIndx(memory, insn, out, false);
     case INDX:
-        return decodeIndx(memory, insn, true);
+        return decodeIndx(memory, insn, out, true);
     default:
         return setError(INTERNAL_ERROR);
     }

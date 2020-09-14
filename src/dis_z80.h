@@ -39,29 +39,28 @@ private:
     TableBase &getTable() const override { return TableZ80; }
     RegBase &getRegister() override { return _regs; }
 
+    char *outRegister(char *out, RegName regName);
+    char *outPointer(char *out, RegName regName);
+    char *outDataRegister(char *out, RegName regName);
     template<typename U>
-    void outAbsolute(U addr);
-    void outIndexOffset(const InsnZ80 &insn, int8_t offset);
-    void outRegister(RegName regName);
-    void outPointer(RegName regName);
-    void outDataRegister(RegName regName);
-    void outConditionName(Config::opcode_t cc, bool cc8 = true);
+    char *outAbsolute(char *out, U addr);
+    char *outConditionName(char *out, Config::opcode_t cc, bool cc8 = true);
+    char *outIndexOffset(const InsnZ80 &insn, char *out, int8_t offset);
 
     Error decodeOperand(DisMemory &memory, Insn& insn);
 
-    Error decodeInherent(InsnZ80 &insn);
-    Error decodeImmediate8(InsnZ80 &insn, uint8_t val);
-    Error decodeImmediate16(InsnZ80 &insn, uint16_t val);
-    Error decodeDirect(InsnZ80 &insn, Config::uintptr_t addr);
-    Error decodeIoaddr(InsnZ80 &insn, uint8_t ioaddr);
-    Error decodeRelative(InsnZ80 &insn, int8_t delta);
-    Error decodeIndexed(InsnZ80 &insn, int8_t offset);
+    Error decodeInherent(InsnZ80 &insn, char *out);
+    Error decodeImmediate8(InsnZ80 &insn, char *out, uint8_t val);
+    Error decodeImmediate16(InsnZ80 &insn, char *out, uint16_t val);
+    Error decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr);
+    Error decodeIoaddr(InsnZ80 &insn, char *out, uint8_t ioaddr);
+    Error decodeRelative(InsnZ80 &insn, char *out, int8_t delta);
+    Error decodeIndexed(InsnZ80 &insn, char *out, int8_t offset);
     Error decodeIndexedImmediate8(
-        InsnZ80 &insn, int8_t offset, uint8_t val);
+        InsnZ80 &insn, char *out, int8_t offset, uint8_t val);
     Error decodeIndexedBitOp(
-        InsnZ80 &insn, int8_t offset, Config::opcode_t opCode);
-
-    Error decode(DisMemory &memory, Insn &insn) override;
+        InsnZ80 &insn, char *out, int8_t offset, Config::opcode_t opCode);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace z80

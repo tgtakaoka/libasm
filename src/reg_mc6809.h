@@ -72,8 +72,6 @@ public:
     RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
     uint8_t encodeStackReg(RegName name, bool onUserStack) const;
 
-    char *outCCRBits(char *out, uint8_t val) const;
-
     RegName decodeBitOpReg(uint8_t num) const;
     bool isBitOpReg(RegName name) const;
     int8_t encodeBitOpReg(RegName name) const;

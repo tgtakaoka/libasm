@@ -20,8 +20,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-Error DisCdp1802::decode(
-    DisMemory &memory, Insn &_insn) {
+Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnCdp1802 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
@@ -35,24 +34,24 @@ Error DisCdp1802::decode(
     case REGN:
     case REG1:
         val = insn.opCode() & 0xF;
-        outConstant(val, 10);
+        outConstant(out, val, 10);
         break;
     case IMM8:
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        outConstant(val, 16);
+        outConstant(out, val, 16);
         break;
     case IOAD:
         val = insn.opCode() & 7;
-        outConstant(val, 10);
+        outConstant(out, val, 10);
         break;
     case ADDR:
         if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-        outAddress(addr);
+        outAddress(out, addr);
         break;
     case PAGE:
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         addr = ((insn.address() + 2) & ~0xFF) | val;
-        outAddress(addr);
+        outAddress(out, addr);
         break;
     case IMPL:
         break;

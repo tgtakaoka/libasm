@@ -43,15 +43,15 @@ private:
     TableBase &getTable() const override { return TableIns8070; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegister(RegName regName);
-    bool outOperand(OprFormat opr, uint8_t value = 0);
+    char *outRegister(char *out, RegName regName);
+    bool outOperand(char *out, OprFormat opr, uint8_t value = 0);
 
-    Error decodeImplied(InsnIns8070 &insn);
-    Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn);
-    Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn);
-    Error decodeRelative(DisMemory &memory, InsnIns8070 &insn);
-    Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn);
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decodeImplied(InsnIns8070 &insn, char *out);
+    Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn, char *out);
+    Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, char *out);
+    Error decodeRelative(DisMemory &memory, InsnIns8070 &insn, char *out);
+    Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, char *out);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace ins8070

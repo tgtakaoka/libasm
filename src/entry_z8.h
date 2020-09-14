@@ -49,7 +49,7 @@ enum AddrMode : uint8_t {
     // Super8
     M_IML = 15,  // Immediate Long: #nnnn
     M_XS  = 16,  // Indexed Short: nn(rrn)
-    M_XL  = 17,  // Indexed Long: nnnn(rnn)
+    M_XL  = 17,  // Indexed Long: nnnn(rrn)
     // Those (18-) happen only in assembler internal.
     M_W   = 18,  // Register or Working register: Rxy x==RP
     M_IW  = 19,  // Indirect Register or Working register: @Rxy x==RP

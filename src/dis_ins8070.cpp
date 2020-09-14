@@ -20,30 +20,30 @@
 namespace libasm {
 namespace ins8070 {
 
-void DisIns8070::outRegister(RegName regName) {
-    _operands = _regs.outRegName(_operands, regName);
+char *DisIns8070::outRegister(char *out, RegName regName) {
+    return _regs.outRegName(out, regName);
 }
 
-bool DisIns8070::outOperand(OprFormat opr, uint8_t value) {
+bool DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
     switch (opr) {
-    case OPR_A: outRegister(REG_A); break;
-    case OPR_E: outRegister(REG_E); break;
-    case OPR_S: outRegister(REG_S); break;
-    case OPR_EA: outRegister(REG_EA); break;
+    case OPR_A: outRegister(out, REG_A); break;
+    case OPR_E: outRegister(out, REG_E); break;
+    case OPR_S: outRegister(out, REG_S); break;
+    case OPR_EA: outRegister(out, REG_EA); break;
     case OPR_PN:
-        outRegister((value & 1) ? REG_P3 : REG_P2);
+        outRegister(out, (value & 1) ? REG_P3 : REG_P2);
         break;
     case OPR_BR:
         switch (value & 3) {
-        case 0: outRegister(REG_PC); break;
-        case 1: outRegister(REG_SP); break;
-        case 2: outRegister(REG_P2); break;
-        case 3: outRegister(REG_P3); break;
+        case 0: outRegister(out, REG_PC); break;
+        case 1: outRegister(out, REG_SP); break;
+        case 2: outRegister(out, REG_P2); break;
+        case 3: outRegister(out, REG_P3); break;
         }
         break;
-    case OPR_T: outRegister(REG_T); break;
+    case OPR_T: outRegister(out, REG_T); break;
     case OPR_4:
-        outConstant(static_cast<uint8_t>(value & 15), 10);
+        outConstant(out, static_cast<uint8_t>(value & 15), 10);
         break;
     case OPR_NO: break;
     default:
@@ -52,11 +52,12 @@ bool DisIns8070::outOperand(OprFormat opr, uint8_t value) {
     return true;
 }
 
-Error DisIns8070::decodeImplied(InsnIns8070 &insn) {
-    if (outOperand(insn.dstOpr(), insn.opCode())) {
+Error DisIns8070::decodeImplied(InsnIns8070 &insn, char *out) {
+    if (outOperand(out, insn.dstOpr(), insn.opCode())) {
+        out += strlen(out);
         if (insn.srcOpr() != OPR_NO) {
-            *_operands++ = ',';
-            outOperand(insn.srcOpr(), insn.opCode());
+            *out++ = ',';
+            outOperand(out, insn.srcOpr(), insn.opCode());
         }
         return setOK();
     }
@@ -64,31 +65,32 @@ Error DisIns8070::decodeImplied(InsnIns8070 &insn) {
 }
 
 Error DisIns8070::decodeImmediate(
-    DisMemory &memory, InsnIns8070 &insn) {
-    outOperand(insn.dstOpr(), insn.opCode());
-    *_operands++ = ',';
-    *_operands++ = _immSym ? '#' : '=';
+    DisMemory &memory, InsnIns8070 &insn, char *out) {
+    outOperand(out, insn.dstOpr(), insn.opCode());
+    out += strlen(out);
+    *out++ = ',';
+    *out++ = _immSym ? '#' : '=';
     if (insn.oprSize() == SZ_WORD)
-        return decodeAbsolute(memory, insn);
+        return decodeAbsolute(memory, insn, out);
 
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outConstant(val, 16);
+    outConstant(out, val, 16);
     return setOK();
 }
 
 Error DisIns8070::decodeAbsolute(
-    DisMemory &memory, InsnIns8070 &insn) {
+    DisMemory &memory, InsnIns8070 &insn, char *out) {
     uint16_t val;
     if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = val + fetch;
-    outAddress(target);
+    outAddress(out, target);
     return setOK();
 }
 
 Error DisIns8070::decodeRelative(
-    DisMemory &memory, InsnIns8070 &insn) {
+        DisMemory &memory, InsnIns8070 &insn, char *out) {
     uint8_t val;
     if (insn.readByte(memory, val)) return setError(NO_MEMORY);
     const Config::ptrdiff_t disp = static_cast<int8_t>(val);
@@ -98,47 +100,47 @@ Error DisIns8070::decodeRelative(
         || (src == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
-        outRelativeAddr(target, insn.address(), 8);
+        out = outRelativeAddr(out, target, insn.address(), 8);
         if (src == OPR_GN) {
-            *_operands++ = ',';
-            outRegister(REG_PC);
+            *out++ = ',';
+            outRegister(out, REG_PC);
         }
     } else {
-        outConstant(disp, 10);
-        *_operands++ = ',';
+        out = outConstant(out, disp, 10);
+        *out++ = ',';
         if (src == OPR_PR) {
-            outOperand(src, insn.opCode());
+            outOperand(out, src, insn.opCode());
         } else {
-            outOperand(OPR_BR, insn.opCode());
+            outOperand(out, OPR_BR, insn.opCode());
         }
     }
     return setOK();
 }
 
 Error DisIns8070::decodeGeneric(
-    DisMemory &memory, InsnIns8070 &insn) {
+    DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t mode = insn.opCode() & 7;
-    if (mode == 4) return decodeImmediate(memory, insn);
+    if (mode == 4) return decodeImmediate(memory, insn, out);
 
-    outOperand(insn.dstOpr());
-    *_operands++ = ',';
-    if (mode < 4) return decodeRelative(memory, insn);
+    outOperand(out, insn.dstOpr());
+    out += strlen(out);
+    *out++ = ',';
+    if (mode < 4) return decodeRelative(memory, insn, out);
     if (mode >= 6) {
-        *_operands++ = '@';
-        return decodeRelative(memory, insn);
+        *out++ = '@';
+        return decodeRelative(memory, insn, out);
     }
     if (mode == 5) {            // DIRECT
         uint8_t val;
         if (insn.readByte(memory, val)) return setError(NO_MEMORY);
         const Config::uintptr_t addr = 0xFF00 | val;
-        outAddress(addr);
+        outAddress(out, addr);
         return setOK();
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-Error DisIns8070::decode(
-    DisMemory &memory, Insn &_insn) {
+Error DisIns8070::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnIns8070 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
@@ -148,15 +150,15 @@ Error DisIns8070::decode(
 
     switch (insn.addrMode()) {
     case IMPLIED:
-        return decodeImplied(insn);
+        return decodeImplied(insn, out);
     case IMMEDIATE:
-        return decodeImmediate(memory, insn);
+        return decodeImmediate(memory, insn, out);
     case ABSOLUTE:
-        return decodeAbsolute(memory, insn);
+        return decodeAbsolute(memory, insn, out);
     case RELATIVE:
-        return decodeRelative(memory, insn);
+        return decodeRelative(memory, insn, out);
     case GENERIC:
-        return decodeGeneric(memory, insn);
+        return decodeGeneric(memory, insn, out);
     default:
         return setError(INTERNAL_ERROR);
     }

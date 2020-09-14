@@ -20,24 +20,29 @@
 namespace libasm {
 namespace z8000 {
 
-void DisZ8000::outConditionCode(uint8_t num) {
-    const CcName cc = _regs.decodeCcNum(num);
-    _operands = _regs.outCcName(_operands, cc);
+char *DisZ8000::outRegister(char *out, RegName name) {
+    return _regs.outRegName(out, name);
 }
 
-void DisZ8000::outImmediate(uint8_t data, AddrMode mode) {
+char *DisZ8000::outConditionCode(char *out, uint8_t num) {
+    const CcName cc = _regs.decodeCcNum(num);
+    return _regs.outCcName(out, cc);
+}
+
+char *DisZ8000::outImmediate(char *out, uint8_t data, AddrMode mode) {
     uint8_t val = data;
     if (mode == M_CNT)
         val = data + 1;
     if (mode == M_QCNT)
         val = (data & 2) ? 2 : 1;
-    *_operands++ = '#';
-    outConstant(val, 16);
+    *out++ = '#';
+    return outConstant(out, val, 16);
 }
 
 Error DisZ8000::decodeImmediate(
-    DisMemory &memory, InsnZ8000 &insn, AddrMode mode, OprSize size) {
-    *_operands++ = '#';
+    DisMemory &memory, InsnZ8000 &insn, char *out,
+    AddrMode mode, OprSize size) {
+    *out++ = '#';
     if (mode == M_SCNT || mode == M_NCNT) {
         uint16_t data;
         if (insn.readUint16(memory, data)) return setError(NO_MEMORY);
@@ -57,116 +62,122 @@ Error DisZ8000::decodeImmediate(
             return setError(ILLEGAL_OPERAND);
         if (size == SZ_LONG && data > 32)
             return setError(ILLEGAL_OPERAND);
-        outConstant(data, 10);
+        outConstant(out, data, 10);
         return OK;
     }
     if (mode == M_IO) {
         uint16_t data;
         if (insn.readUint16(memory, data)) return setError(NO_MEMORY);
-        outAddress(data);
+        outAddress(out, data);
         return OK;
     }
     if (size == SZ_BYTE) {
         uint16_t data;
         if (insn.readUint16(memory, data)) return setError(NO_MEMORY);
-        outConstant(static_cast<uint8_t>(data), 16, true);
+        outConstant(out, static_cast<uint8_t>(data), 16, true);
         return OK;
     }
     if (size == SZ_WORD) {
         uint16_t data;
         if (insn.readUint16(memory, data)) return setError(NO_MEMORY);
-        outConstant(data, 16, true);
+        outConstant(out, data, 16, true);
         return OK;
     }
     // SZ_LONG
     uint32_t data;
     if (insn.readUint32(memory, data)) return setError(NO_MEMORY);
-    outConstant(data, 16, true);
+    outConstant(out, data, 16, true);
     return OK;
 }
 
-Error DisZ8000::decodeFlags(uint8_t flags) {
+Error DisZ8000::decodeFlags(char *out, uint8_t flags) {
     flags &= 0xF;
     if (flags == 0) return setError(OPCODE_HAS_NO_EFFECT);
-    _operands = _regs.outFlagNames(_operands, flags);
+    _regs.outFlagNames(out, flags);
     return OK;
 }
 
 Error DisZ8000::decodeGeneralRegister(
-    uint8_t num, OprSize size, bool indirect) {
+    char *out, uint8_t num, OprSize size, bool indirect) {
     const RegName reg = _regs.decodeRegNum(num, size);
     if (reg == REG_ILLEGAL) return setError(ILLEGAL_REGISTER);
-    if (indirect) *_operands++ = '@';
-    _operands = _regs.outRegName(_operands, reg);
+    if (indirect) *out++ = '@';
+    outRegister(out, reg);
     return OK;
 }
 
 Error DisZ8000::decodeDoubleSizedRegister(
-        uint8_t num, OprSize size) {
+    char *out, uint8_t num, OprSize size) {
     if (size == SZ_BYTE)
-        return decodeGeneralRegister(num, SZ_WORD);
+        return decodeGeneralRegister(out, num, SZ_WORD);
     if (size == SZ_WORD)
-        return decodeGeneralRegister(num, SZ_LONG);
+        return decodeGeneralRegister(out, num, SZ_LONG);
     if (size == SZ_LONG)
-        return decodeGeneralRegister(num, SZ_QUAD);
+        return decodeGeneralRegister(out, num, SZ_QUAD);
     return setError(INTERNAL_ERROR);
 }
 
-Error DisZ8000::decodeControlRegister(uint8_t ctlNum, OprSize size) {
+Error DisZ8000::decodeControlRegister(
+    char *out, uint8_t ctlNum, OprSize size) {
     const RegName reg = _regs.decodeCtlReg(ctlNum);
     if (reg == REG_ILLEGAL) return setError(ILLEGAL_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS) return setError(ILLEGAL_SIZE);
     if (size == SZ_WORD && reg == REG_FLAGS) return setError(ILLEGAL_SIZE);
-    _operands = _regs.outRegName(_operands, reg);
+    outRegister(out, reg);
     return OK;
 }
 
 Error DisZ8000::decodeBaseAddressing(
-    DisMemory &memory, InsnZ8000 &insn, AddrMode mode, uint8_t num) {
+    DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, uint8_t num) {
     num &= 0xf;
     if (num == 0) return setError(REGISTER_NOT_ALLOWED);
-    if (decodeGeneralRegister(num, SZ_ADDR)) return getError();
-    *_operands++ = '(';
+    if (decodeGeneralRegister(out, num, SZ_ADDR)) return getError();
+    out += strlen(out);
+    *out++ = '(';
     if (mode == M_BA) {
         uint16_t disp;
         if (insn.readUint16(memory, disp)) return setError(NO_MEMORY);
-        *_operands++ = '#';
-        outConstant(disp, -16, true);
+        *out++ = '#';
+        out = outConstant(out, disp, -16, true);
     } else { // M_BX
-        decodeGeneralRegister(insn.post() >> 8, SZ_WORD);
+        if (decodeGeneralRegister(out, insn.post() >> 8, SZ_WORD)) return getError();
+        out += strlen(out);
     }
-    *_operands++ = ')';
-    *_operands = 0;
+    *out++ = ')';
+    *out = 0;
     return OK;
 }
 
 Error DisZ8000::decodeGenericAddressing(
-    DisMemory &memory, InsnZ8000 &insn, AddrMode mode, uint8_t num) {
+    DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, uint8_t num) {
     num &= 0xF;
     const uint8_t addressing = insn.opCode() >> 14;
     if (addressing == 0 && num == 0 && mode == M_GENI) { // M_IM
-        return decodeImmediate(memory, insn, M_IM, insn.oprSize());
+        return decodeImmediate(memory, insn, out, M_IM, insn.oprSize());
     }
     if (addressing == 2 && num && (mode == M_GENI || mode == M_GEND)) { // M_R
-        return decodeGeneralRegister(num, insn.oprSize());
+        return decodeGeneralRegister(out, num, insn.oprSize());
     }
     if (addressing == 0 && num) { // M_IR
-        return decodeGeneralRegister(num, SZ_ADDR, true);
+        return decodeGeneralRegister(out, num, SZ_ADDR, true);
     }
     if (addressing == 1) { // M_DA/M_X
-        if (decodeDirectAddress(memory, insn)) return getError();
+        if (decodeDirectAddress(memory, insn, out)) return getError();
+        out += strlen(out);
         if (num) {
-            *_operands++ = '(';
-            if (decodeGeneralRegister(num, SZ_WORD)) return getError();
-            *_operands++ = ')';
+            *out++ = '(';
+            if (decodeGeneralRegister(out, num, SZ_WORD)) return getError();
+            out += strlen(out);
+            *out++ = ')';
         }
-        *_operands = 0;
+        *out = 0;
         return OK;
     }
     return setError(INTERNAL_ERROR);
 }
 
-Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn) {
+Error DisZ8000::decodeDirectAddress(
+    DisMemory &memory, InsnZ8000 &insn, char *out) {
     uint16_t addr;
     if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
     if (TableZ8000.segmentedModel()) {
@@ -177,15 +188,15 @@ Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn) {
             if (insn.readUint16(memory, off)) return setError(NO_MEMORY);
         }
         const uint32_t linear = seg | off;
-        outAddress(linear, nullptr, false, addressWidth());
+        outAddress(out, linear, nullptr, false, addressWidth());
     } else {
-        outAddress(addr, nullptr, false, addressWidth());
+        outAddress(out, addr, nullptr, false, addressWidth());
     }
     return OK;
 }
 
 Error DisZ8000::decodeRelativeAddressing(
-    DisMemory &memory, InsnZ8000 &insn, AddrMode mode) {
+    DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode) {
     int16_t delta = 0;
     if (mode == M_RA) {
         uint16_t disp;
@@ -210,7 +221,7 @@ Error DisZ8000::decodeRelativeAddressing(
     const Config::uintptr_t target = base + delta;
     if (mode == M_RA12 && (target % 2) != 0)
         return setError(OPERAND_NOT_ALIGNED);
-    outRelativeAddr(target, insn.address(), mode == M_RA ? 16 : 13);
+    outRelativeAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
     return OK;
 }
 
@@ -228,67 +239,67 @@ static uint8_t modeField(const InsnZ8000 &insn, ModeField field) {
 }
 
 Error DisZ8000::decodeOperand(
-        DisMemory &memory, InsnZ8000 &insn, AddrMode mode, ModeField field) {
+    DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, ModeField field) {
     uint8_t num = modeField(insn, field);
     switch (mode) {
     case M_NO:
         return OK;
     case M_BA: case M_BX:
-        return decodeBaseAddressing(memory, insn, mode, num);
+        return decodeBaseAddressing(memory, insn, out, mode, num);
     case M_CC:
-        outConditionCode(num);
+        outConditionCode(out, num);
         return OK;
     case M_CTL:
-        return decodeControlRegister(num, insn.oprSize());
+        return decodeControlRegister(out, num, insn.oprSize());
     case M_FLAG:
-        return decodeFlags(num);
+        return decodeFlags(out, num);
     case M_IM8:
-        outImmediate(insn.opCode(), mode);
+        outImmediate(out, insn.opCode(), mode);
         return OK;
     case M_IO:
-        return decodeImmediate(memory, insn, mode, SZ_WORD);
+        return decodeImmediate(memory, insn, out, mode, SZ_WORD);
     case M_IRIO:
         if (num == 0) return setError(REGISTER_NOT_ALLOWED);
-        return decodeGeneralRegister(num, SZ_WORD, true);
+        return decodeGeneralRegister(out, num, SZ_WORD, true);
     case M_IR:
         if (num == 0) return setError(REGISTER_NOT_ALLOWED);
-        return decodeGeneralRegister(num, SZ_ADDR, true);
+        return decodeGeneralRegister(out, num, SZ_ADDR, true);
     case M_INTT:
         num &= 3;
         if (num == 3) return setError(OPCODE_HAS_NO_EFFECT);
-        _operands = _regs.outIntrNames(_operands, num);
+        _regs.outIntrNames(out, num);
         return OK;
     case M_RA: case M_RA12: case M_RA8: case M_RA7:
-        return decodeRelativeAddressing(memory, insn, mode);
+        return decodeRelativeAddressing(memory, insn, out, mode);
     case M_DR:
-        return decodeDoubleSizedRegister(num, insn.oprSize());
+        return decodeDoubleSizedRegister(out, num, insn.oprSize());
     case M_R:
-        return decodeGeneralRegister(num, insn.oprSize());
+        return decodeGeneralRegister(out, num, insn.oprSize());
     case M_WR07:
         if (num >= 8) return setError(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_WR:
-        return decodeGeneralRegister(num, SZ_WORD);
+        return decodeGeneralRegister(out, num, SZ_WORD);
     case M_DA:
-        return decodeDirectAddress(memory, insn);
+        return decodeDirectAddress(memory, insn, out);
     case M_GENA:
     case M_GEND:
     case M_GENI:
-        return decodeGenericAddressing(memory, insn, mode, num);
+        return decodeGenericAddressing(memory, insn, out, mode, num);
     case M_BIT:
         if (insn.oprSize() == SZ_BYTE && num >= 8)
             return setError(ILLEGAL_BIT_NUMBER);
         /* Fall-through */
     case M_CNT:
     case M_QCNT:
-        outImmediate(num, mode);
+        outImmediate(out, num, mode);
         return OK;
     case M_IM:
     case M_SCNT:
     case M_NCNT:
-        return decodeImmediate(memory, insn, mode, insn.oprSize());
+        return decodeImmediate(memory, insn, out, mode, insn.oprSize());
     case M_X:
-        return decodeGenericAddressing(memory, insn, mode, num);
+        return decodeGenericAddressing(memory, insn, out, mode, num);
     default:
         return setError(UNKNOWN_INSTRUCTION);
     }
@@ -310,14 +321,16 @@ Error DisZ8000::checkPostWord(const InsnZ8000 &insn) {
     return OK;
 }
 
-void DisZ8000::outComma(
-    const InsnZ8000 &insn, AddrMode mode, ModeField field) {
+char *DisZ8000::outComma(
+    char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field) {
     if (mode == M_CC && _regs.decodeCcNum(modeField(insn, field)) == CC_T)
-        return;
-    *_operands++ = ',';
+        return out;
+    out += strlen(out);
+    *out++ = ',';
+    return out;
 }
 
-Error DisZ8000::decode(DisMemory &memory, Insn &_insn) {
+Error DisZ8000::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnZ8000 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readUint16(memory, opCode)) return setError(NO_MEMORY);
@@ -327,23 +340,23 @@ Error DisZ8000::decode(DisMemory &memory, Insn &_insn) {
     if (checkPostWord(insn)) return getError();
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO) return setOK();
-    if (decodeOperand(memory, insn, dst, insn.dstField()))
+    if (decodeOperand(memory, insn, out, dst, insn.dstField()))
         return getError();
     const AddrMode src = insn.srcMode();
     if (src == M_NO) return setOK();
-    outComma(insn, dst, insn.dstField());
-    if (decodeOperand(memory, insn, src, insn.srcField()))
+    out = outComma(out, insn, dst, insn.dstField());
+    if (decodeOperand(memory, insn, out, src, insn.srcField()))
         return getError();
     const AddrMode ex1 = insn.ex1Mode();
     if (ex1 == M_NO) return setOK();
     const ModeField ex1Field = (ex1 == M_CNT ? MF_P0 : MF_P8);
-    outComma(insn, ex1, ex1Field);
-    if (decodeOperand(memory, insn, ex1, ex1Field))
+    out = outComma(out, insn, ex1, ex1Field);
+    if (decodeOperand(memory, insn, out, ex1, ex1Field))
         return getError();
     const AddrMode ex2 = insn.ex2Mode();
     if (ex2 == M_NO) return setOK();
-    outComma(insn, ex2, MF_P0);
-    return decodeOperand(memory, insn, ex2, MF_P0);
+    out = outComma(out, insn, ex2, MF_P0);
+    return decodeOperand(memory, insn, out, ex2, MF_P0);
 }
 
 } // namespace z8000

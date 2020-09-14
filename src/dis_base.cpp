@@ -21,21 +21,14 @@ namespace libasm {
 Error Disassembler::decode(
     DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     insn.resetAddress(memory.address());
-    *(_operands = operands) = 0;
     _symtab = symtab;
     this->resetError();
     getFormatter().setUppercase(_uppercase);
     getRegister().setUppercase(_uppercase);
-    decode(memory, insn);
+    *operands = 0;
+    decode(memory, insn, operands);
     if (!_uppercase) insn.toLowerName();
     return getError();
-}
-
-void Disassembler::outText(const char *text) {
-    char *p = _operands;
-    while ((*p = *text++) != 0)
-        p++;
-    _operands = p;
 }
 
 } // namespace libasm

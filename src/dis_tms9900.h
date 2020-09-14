@@ -40,10 +40,10 @@ private:
     RegBase &getRegister() override { return _regs; }
 
     Error decodeOperand(
-        DisMemory &memory, InsnTms9900 &insn, uint8_t opr);
-    Error decodeImmediate(DisMemory &memory, InsnTms9900 &insn);
-    Error decodeRelative(InsnTms9900 &insn);
-    Error decode(DisMemory &memory, Insn &insn) override;
+        DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t opr);
+    Error decodeImmediate(DisMemory &memory, InsnTms9900 &insn, char *out);
+    Error decodeRelative(InsnTms9900 &insn, char *out);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace tms9900

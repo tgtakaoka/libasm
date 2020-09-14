@@ -48,17 +48,19 @@ public:
     const char *getCpu() const { return getTable().getCpu(); }
 
 protected:
-    char *_operands;
     SymbolTable *_symtab;
     bool _relativeTarget = false;
     bool _uppercase = false;
 
-    void outText(const char *text);
-    void outPstr(const /*PROGMEM*/ char *pstr) {
-        char *p = _operands;
-        while ((*p = pgm_read_byte(pstr++)) != 0)
-            p++;
-        _operands = p;
+    char *outText(char *out, const char *text) const {
+        while ((*out = *text++) != 0)
+            out++;
+        return out;
+    }
+    char *outPstr(char *out, const /*PROGMEM*/ char *pstr) const {
+        while ((*out = pgm_read_byte(pstr++)) != 0)
+            out++;
+        return out;
     }
 
     template<typename Addr>
@@ -76,7 +78,8 @@ protected:
     }
 
     template<typename T>
-    void outConstant(
+    char *outConstant(
+            char *out,
             T val,
             int8_t radix = 16,
             bool relax = true,
@@ -84,50 +87,45 @@ protected:
             uint8_t bitWidth = sizeof(T) * 8) {
         if (symbol) {
             const char *label = lookup(val);
-            if (label) {
-                outText(label);
-                return;
-            }
+            if (label) return outText(out, label);
         }
         const int8_t r = is_signed<T>::value ? -radix : radix;
-        _operands = this->getFormatter().output(
-            _operands, val, r, relax, bitWidth);
+        return this->getFormatter().output(out, val, r, relax, bitWidth);
     }
 
     template<typename Addr>
-    void outAddress(
+    char *outAddress(
+            char *out,
             Addr val,
             const /*PROGMEM*/ char *prefix = nullptr,
             bool needPrefix = false,
             uint8_t addrWidth = sizeof(Addr) * 8) {
         const char *label = lookup(val);
         if (label) {
-            if (prefix) outPstr(prefix);
-            outText(label);
-            return;
+            if (prefix) out = outPstr(out, prefix);
+            return outText(out, label);
         }
-        if (needPrefix && prefix) outPstr(prefix);
-        _operands = this->getFormatter().output(
-            _operands, val, 16, false, addrWidth);
+        if (needPrefix && prefix) out = outPstr(out, prefix);
+        return this->getFormatter().output(out, val, 16, false, addrWidth);
     }
 
     template<typename Addr>
-    void outRelativeAddr(Addr target, Addr origin, int8_t deltaBits) {
-        if (!_relativeTarget) {
-            outAddress(target, nullptr, false, addressWidth());
-            return;
-        }
+    char *outRelativeAddr(
+            char *out, Addr target, Addr origin, int8_t deltaBits) {
+        if (!_relativeTarget)
+            return outAddress(out, target, nullptr, false, addressWidth());
         const int32_t delta = static_cast<
             typename make_signed<Addr>::type>(target - origin);
-        outText(getFormatter().currentOriginSymbol());
-        if (delta > 0) *_operands++ = '+';
-        if (delta < 0) *_operands++ = '-';
+        out = outText(out, getFormatter().currentOriginSymbol());
+        if (delta > 0) *out++ = '+';
+        if (delta < 0) *out++ = '-';
         const uint32_t disp = (delta < 0) ? -delta : delta;
-        if (disp) outConstant(disp, 16, true, true, deltaBits);
+        if (disp) out = outConstant(out, disp, 16, true, true, deltaBits);
+        return out;
     }
 
 private:
-    virtual Error decode(DisMemory &memory, Insn &insn) = 0;
+    virtual Error decode(DisMemory &memory, Insn &insn, char *out) = 0;
     virtual TableBase &getTable() const = 0;
     virtual RegBase &getRegister() = 0;
 };

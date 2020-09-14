@@ -39,13 +39,13 @@ private:
     TableBase &getTable() const override { return TableI8080; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegister(RegName regName);
+    char *outRegister(char *out, RegName regName);
 
-    Error decodeImmediate8(DisMemory &memory, InsnI8080 &insn);
-    Error decodeImmediate16(DisMemory &memory, InsnI8080 &insn);
-    Error decodeDirect(DisMemory &memory, InsnI8080 &insn);
-    Error decodeIoaddr(DisMemory &memory, InsnI8080 &insn);
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decodeImmediate8(DisMemory &memory, InsnI8080 &insn, char *out);
+    Error decodeImmediate16(DisMemory &memory, InsnI8080 &insn, char *out);
+    Error decodeDirect(DisMemory &memory, InsnI8080 &insn, char *out);
+    Error decodeIoaddr(DisMemory &memory, InsnI8080 &insn, char *out);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace i8080

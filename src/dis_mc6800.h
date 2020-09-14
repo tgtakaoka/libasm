@@ -39,16 +39,18 @@ private:
     TableBase &getTable() const override { return TableMc6800; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegister(RegName regName);
+    char *outRegister(char *out, RegName regName);
 
-    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn, AddrMode mode);
-    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn);
-    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, char *out);
+    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, char *out);
+    Error decodeIndexed(
+        DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
+    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, char *out);
+    Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn, char *out);
+    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, char *out);
+    Error decodeOperand(
+        DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace mc6800

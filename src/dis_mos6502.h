@@ -47,12 +47,12 @@ private:
     TableBase &getTable() const override { return TableMos6502; }
     RegBase &getRegister() override { return _regs; }
 
-    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn);
-    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn);
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, char *out);
+    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, char *out);
+    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, char *out);
+    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, char *out);
+    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, char *out);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace mos6502

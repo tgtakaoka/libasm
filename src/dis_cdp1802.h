@@ -39,7 +39,7 @@ private:
     TableBase &getTable() const override { return TableCdp1802; }
     RegBase &getRegister() override { return _regs; }
 
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace cdp1802

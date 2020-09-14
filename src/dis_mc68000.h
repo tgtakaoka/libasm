@@ -39,27 +39,27 @@ private:
     TableBase &getTable() const override { return TableMc68000; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegName(RegName regName);
-    void outOprSize(OprSize size);
+    char *outRegName(char *out, RegName regName);
+    char *outOprSize(char *out, OprSize size);
+    char *outMoveMltRegs(char *out, RegName start, RegName last, char suffix);
+    char *outMoveMltRegList(
+        char *out, uint16_t list, bool pop,
+        char *(DisMc68000::*outRegs)(char *, RegName, RegName, char));
 
     Error decodeImmediateData(
-        DisMemory &memory, InsnMc68000 &insn, OprSize eaSize);
+        DisMemory &memory, InsnMc68000 &insn, char*out, OprSize eaSize);
     Error decodeEffectiveAddr(
-        DisMemory &memory, InsnMc68000 &insn, const EaMc68000 &ea);
+        DisMemory &memory, InsnMc68000 &insn, char *out, const EaMc68000 &ea);
     Error decodeRelative(
-        DisMemory &memory, InsnMc68000 &insn, uint8_t rel8);
-    void  decodeMoveMltRegList(
-        uint16_t list, bool pop,
-        void (DisMc68000::*outRegs)(RegName, RegName, char));
-    void  outMoveMltRegs(RegName start, RegName last, char suffix);
+        DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8);
     Error decodeOperand(
-        DisMemory &memory, InsnMc68000 &insn,
+        DisMemory &memory, InsnMc68000 &insn, char *out,
         AddrMode mode, uint8_t modePos, uint8_t regPos,
         OprSize size, uint16_t opr16);
     Error checkOperand(
         AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace mc68000

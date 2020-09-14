@@ -43,22 +43,26 @@ private:
     TableBase &getTable() const override { return TableI8086; }
     RegBase &getRegister() override { return _regs; }
 
-    Error outRegister(RegName name, const char prefix = 0);
+    char *outRegister(char *out, RegName name, const char prefix = 0);
     Error outMemReg(
-        DisMemory &memory, InsnI8086 &insn,
+        DisMemory &memory, InsnI8086 &insn, char *out,
         RegName seg, uint8_t mode, uint8_t r_m);
 
     RegName decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos pos);
-    Error decodeRelative(DisMemory &memory, InsnI8086 &insn, AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnI8086 &insn, AddrMode mode);
-    Error decodeRepeatStr(DisMemory &memory, InsnI8086 &insn);
+    Error decodeRelative(
+        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode);
+    Error decodeImmediate(
+        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode);
+    Error decodeRepeatStr(DisMemory &memory, InsnI8086 &insn, char *out);
     Error decodeMemReg(
-        DisMemory &memory, InsnI8086 &insn, AddrMode mode, OprPos pos);
+        DisMemory &memory, InsnI8086 &insn, char *out,
+        AddrMode mode, OprPos pos);
     Error decodeOperand(
-        DisMemory &memory, InsnI8086 &insn, AddrMode mode, OprPos pos);
+        DisMemory &memory, InsnI8086 &insn, char *out,
+        AddrMode mode, OprPos pos);
     Error readCodes(DisMemory &memory, InsnI8086 &insn);
-    Error decodeStringInst(DisMemory &memory, InsnI8086 &insn);
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decodeStringInst(DisMemory &memory, InsnI8086 &insn, char *out);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace i8086

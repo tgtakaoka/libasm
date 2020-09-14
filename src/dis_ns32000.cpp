@@ -60,8 +60,8 @@ Error DisNs32000::readIndexByte(
     return OK;
 }
 
-void DisNs32000::outDisplacement(const Displacement &disp) {
-    outConstant(disp.val32, 16, true, true, -disp.bits);
+char *DisNs32000::outDisplacement(char *out, const Displacement &disp) {
+    return outConstant(out, disp.val32, 16, true, true, -disp.bits);
 }
 
 Error DisNs32000::readDisplacement(
@@ -97,7 +97,7 @@ Error DisNs32000::readDisplacement(
 }
 
 Error DisNs32000::decodeLength(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
+    DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     Displacement disp;
     if (readDisplacement(memory, insn, disp)) return getError();
     if (disp.val32 < 0) return setError(ILLEGAL_CONSTANT);
@@ -112,56 +112,57 @@ Error DisNs32000::decodeLength(
         len /= 4;
     }
     len++;
-    outConstant(len, 10);
+    outConstant(out, len, 10);
     return OK;
 }
 
 static char *outComma(char *out) {
+    out += strlen(out);
     *out++ = ',';
     *out++ = ' ';
     return out;
 }
 
 Error DisNs32000::decodeBitField(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
+    DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     if (mode == M_BFLEN) return OK;
     uint8_t data;
     if (insn.readByte(memory, data)) return setError(NO_MEMORY);
     const uint8_t len = (data & 0x1F) + 1;
     const uint8_t off = (data >> 5);
-    outConstant(off, 10);  // M_BFOFF
-    _operands = outComma(_operands);
-    outConstant(len, 10);  // M_BFLEN
+    out = outConstant(out, off, 10);  // M_BFOFF
+    out = outComma(out);
+    outConstant(out, len, 10);  // M_BFLEN
     return OK;
 }
 
 Error DisNs32000::decodeImmediate(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
+    DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     const OprSize size = (mode == M_GENC) ? SZ_BYTE : insn.oprSize();
     switch (size) {
     case SZ_BYTE: {
         uint8_t val8;
         if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        outConstant(val8, mode == M_GENC ? -10 : 16);
+        outConstant(out, val8, mode == M_GENC ? -10 : 16);
         break;
     }
     case SZ_WORD: {
         uint16_t val16;
         if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        outConstant(val16);
+        outConstant(out, val16);
         break;
     }
     case SZ_LONG: {
         uint32_t val32;
         if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
-        outConstant(val32);
+        outConstant(out, val32);
         break;
     }
 #ifdef ENABLE_FLOAT
     case SZ_FLOAT: {
         uint32_t val32;
         if (insn.readUint32(memory, val32)) return setError(NO_MEMORY);
-        outConstant(val32);
+        outConstant(out, val32);
         break;
     }
     case SZ_DOUBLE: {
@@ -169,9 +170,9 @@ Error DisNs32000::decodeImmediate(
         uint32_t msb32, lsb32;
         if (insn.readUint32(memory, msb32)) return setError(NO_MEMORY);
         if (insn.readUint32(memory, lsb32)) return setError(NO_MEMORY);
-        outConstant(msb32);
-        *_operands++ = ':';
-        outConstant(lsb32);
+        out = outConstant(out, msb32);
+        *out++ = ':';
+        outConstant(out, lsb32);
         break;
     }
 #endif
@@ -182,87 +183,91 @@ Error DisNs32000::decodeImmediate(
 }
 
 Error DisNs32000::decodeDisplacement(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
+    DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     Displacement disp;
     if (readDisplacement(memory, insn, disp)) return getError();
     if (mode == M_LEN32) {
         if (disp.val32 <= 0) return setError(ILLEGAL_CONSTANT);
         if (disp.val32 > 32) return setError(OVERFLOW_RANGE);
         const uint8_t len = disp.val32;
-        outConstant(len, 10);
+        outConstant(out, len, 10);
     }
     if (mode == M_DISP)
-        outDisplacement(disp);
+        outDisplacement(out, disp);
     return OK;
 }
 
-Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn) {
+Error DisNs32000::decodeRelative(
+    DisMemory &memory, InsnNs32000 &insn, char *out) {
     Displacement disp;
     if (readDisplacement(memory, insn, disp)) return getError();
-    outRelativeAddr(insn.address() + disp.val32, insn.address(), -disp.bits);
+    const Config::uintptr_t target = insn.address() + disp.val32;
+    outRelativeAddr(out, target, insn.address(), -disp.bits);
     return OK;
 }
 
-Error DisNs32000::decodeConfig(const InsnNs32000 &insn, OprPos pos) {
+Error DisNs32000::decodeConfig(
+    const InsnNs32000 &insn, char *out, OprPos pos) {
     const uint8_t config = getOprField(insn, pos);
-    *_operands++ = '[';
+    *out++ = '[';
     char sep = 0;
     for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
         if (config & mask) {
-            if (sep) *_operands++ = sep;
-            _operands = _regs.outConfigName(
-                    _operands, _regs.decodeConfigName(mask));
+            if (sep) *out++ = sep;
+            out = _regs.outConfigName(out, _regs.decodeConfigName(mask));
             sep = ',';
         }
     }
-    *_operands++ = ']';
-    *_operands = 0;
+    *out++ = ']';
+    *out = 0;
     return OK;
 }
 
-Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, OprPos pos) {
+Error DisNs32000::decodeStrOpt(
+    const InsnNs32000 &insn, char *out, OprPos pos) {
     const uint8_t strOpt = getOprField(insn, pos);
-    *_operands++ = '[';
+    *out++ = '[';
     char sep = 0;
     StrOptName name = _regs.decodeStrOptName(strOpt & 0x02);
     if (name != STROPT_UNDEF) {
-        _operands = _regs.outStrOptName(_operands, name);
+        out = _regs.outStrOptName(out, name);
         sep = ',';
     }
     name = _regs.decodeStrOptName(strOpt & 0x0C);
     if (name != STROPT_UNDEF) {
-        if (sep) *_operands++ = sep;
-        _operands = _regs.outStrOptName(_operands, name);
+        if (sep) *out++ = sep;
+        out = _regs.outStrOptName(out, name);
     }
-    *_operands++ = ']';
-    *_operands = 0;
+    *out++ = ']';
+    *out = 0;
     return OK;
 }
 
 Error DisNs32000::decodeRegisterList(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode) {
+    DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     uint8_t list;
     if (insn.readByte(memory, list)) return setError(NO_MEMORY);
     if (list == 0) return setError(OPCODE_HAS_NO_EFFECT);
     const uint8_t mask = (mode == M_POP) ? 0x80 : 0x01;
-    *_operands++ = '[';
+    *out++ = '[';
     char sep = 0;
     for (uint8_t reg = 0; list; reg++) {
         if (list & mask) {
-            if (sep) *_operands++ = sep;
-            _operands = _regs.outRegName(_operands, _regs.decodeRegName(reg));
+            if (sep) *out++ = sep;
+            out = _regs.outRegName(out, _regs.decodeRegName(reg));
             sep = ',';
         }
         if (mode == M_POP) list <<= 1;
         else list >>= 1;
     }
-    *_operands++ = ']';
-    *_operands = 0;
+    *out++ = ']';
+    *out = 0;
     return OK;
 }
 
 Error DisNs32000::decodeGeneric(
-    DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos) {
+    DisMemory &memory, InsnNs32000 &insn, char *out,
+    AddrMode mode, OprPos pos) {
     uint8_t gen = getOprField(insn, pos);
     RegName index = REG_UNDEF;
     OprSize indexSize = SZ_NONE;
@@ -281,15 +286,15 @@ Error DisNs32000::decodeGeneric(
 #else
         reg = _regs.decodeRegName(gen);
 #endif
-        _operands = _regs.outRegName(_operands, reg);
+        out = _regs.outRegName(out, reg);
         break;
     case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15:
         reg = _regs.decodeRegName(gen);
         if (readDisplacement(memory, insn, disp)) return getError();
-        outDisplacement(disp);
-        *_operands++ = '(';
-        _operands = _regs.outRegName(_operands, reg);
-        *_operands++ = ')';
+        out = outDisplacement(out, disp);
+        *out++ = '(';
+        out = _regs.outRegName(out, reg);
+        *out++ = ')';
         break;
     case 0x10: reg = REG_FP; goto m_mrel;
     case 0x11: reg = REG_SP; goto m_mrel;
@@ -297,37 +302,37 @@ Error DisNs32000::decodeGeneric(
     m_mrel:
         if (readDisplacement(memory, insn, disp)) return getError();
         if (readDisplacement(memory, insn, disp2)) return getError();
-        outDisplacement(disp2);
-        *_operands++ = '(';
-        outDisplacement(disp);
-        *_operands++ = '(';
-        _operands = _regs.outRegName(_operands, reg);
-        *_operands++ = ')';
-        *_operands++ = ')';
+        out = outDisplacement(out, disp2);
+        *out++ = '(';
+        out = outDisplacement(out, disp);
+        *out++ = '(';
+        out = _regs.outRegName(out, reg);
+        *out++ = ')';
+        *out++ = ')';
         break;
     case 0x13:
         return setError(ILLEGAL_OPERAND_MODE);
     case 0x14:
-        return decodeImmediate(memory, insn, mode);
+        return decodeImmediate(memory, insn, out, mode);
     case 0x15:
         if (readDisplacement(memory, insn, disp)) return getError();
-        *_operands++ = '@';
-        outDisplacement(disp);
+        *out++ = '@';
+        out = outDisplacement(out, disp);
         break;
     case 0x16:
         if (readDisplacement(memory, insn, disp)) return getError();
         if (readDisplacement(memory, insn, disp2)) return getError();
-        _operands = _regs.outRegName(_operands, REG_EXT);
-        *_operands++ = '(';
-        outDisplacement(disp);
-        *_operands++ = ')';
-        *_operands++ = '+';
-        if (disp2.val32 < 0) *_operands++ = '(';
-        outDisplacement(disp2);
-        if (disp2.val32 < 0) *_operands++ = ')';
+        out = _regs.outRegName(out, REG_EXT);
+        *out++ = '(';
+        out = outDisplacement(out, disp);
+        *out++ = ')';
+        *out++ = '+';
+        if (disp2.val32 < 0) *out++ = '(';
+        out = outDisplacement(out, disp2);
+        if (disp2.val32 < 0) *out++ = ')';
         break;
     case 0x17:
-        _operands = _regs.outRegName(_operands, REG_TOS);
+        out = _regs.outRegName(out, REG_TOS);
         break;
     case 0x18: reg = REG_FP; goto m_mem;
     case 0x19: reg = REG_SP; goto m_mem;
@@ -336,50 +341,52 @@ Error DisNs32000::decodeGeneric(
     m_mem:
         if (readDisplacement(memory, insn, disp)) return getError();
         if (reg == REG_PC) {
-            outRelativeAddr(insn.address() + disp.val32, insn.address(), -disp.bits);
+            const Config::uintptr_t target = insn.address() + disp.val32;
+            out = outRelativeAddr(out, target, insn.address(), -disp.bits);
         } else {
-            outDisplacement(disp);
+            out = outDisplacement(out, disp);
         }
-        *_operands++ = '(';
-        _operands = _regs.outRegName(_operands, reg);
-        *_operands++ = ')';
+        *out++ = '(';
+        out = _regs.outRegName(out, reg);
+        *out++ = ')';
         break;
     default:
         return setError(ILLEGAL_OPERAND_MODE);
     }
     if (index != REG_UNDEF) {
-        *_operands++ = '[';
-        _operands = _regs.outRegName(_operands, index);
-        *_operands++ = ':';
-        *_operands++ = _regs.indexSizeChar(indexSize);
-        *_operands++ = ']';
+        *out++ = '[';
+        out = _regs.outRegName(out, index);
+        *out++ = ':';
+        *out++ = _regs.indexSizeChar(indexSize);
+        *out++ = ']';
     }
-    *_operands = 0;
+    *out = 0;
     return OK;
 }
 
 Error DisNs32000::decodeOperand(
-    DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos) {
+    DisMemory &memory, InsnNs32000 &insn, char*out,
+    AddrMode mode, OprPos pos) {
     const uint8_t field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
-        _operands = _regs.outRegName(_operands, _regs.decodeRegName(field));
+        out = _regs.outRegName(out, _regs.decodeRegName(field));
         break;
     case M_PREG:
-        _operands = _regs.outPregName(_operands, _regs.decodePregName(field));
+        out = _regs.outPregName(out, _regs.decodePregName(field));
         break;
 #ifdef ENABLE_MMU
     case M_MREG:
-        _operands = _regs.outMregName(_operands, _regs.decodeMregName(field));
+        out = _regs.outMregName(out, _regs.decodeMregName(field));
         break;
 #endif
     case M_CONF:
-        return decodeConfig(insn, pos);
+        return decodeConfig(insn, out, pos);
     case M_SOPT:
-        return decodeStrOpt(insn, pos);
+        return decodeStrOpt(insn, out, pos);
     case M_PUSH:
     case M_POP:
-        return decodeRegisterList(memory, insn, mode);
+        return decodeRegisterList(memory, insn, out, mode);
     case M_GENR:
     case M_GENC:
     case M_GENW:
@@ -387,29 +394,29 @@ Error DisNs32000::decodeOperand(
     case M_FENW:
     case M_FENR:
 #endif
-        return decodeGeneric(memory, insn, mode, pos);
+        return decodeGeneric(memory, insn, out, mode, pos);
     case M_INT4:
-        outConstant(static_cast<int8_t>(getOprField(insn, pos)));
+        outConstant(out, static_cast<int8_t>(getOprField(insn, pos)));
         break;
     case M_BFOFF:
     case M_BFLEN:
-        return decodeBitField(memory, insn, mode);
+        return decodeBitField(memory, insn, out, mode);
     case M_REL:
-        return decodeRelative(memory, insn);
+        return decodeRelative(memory, insn, out);
     case M_DISP:
     case M_LEN32:
-        return decodeDisplacement(memory, insn, mode);
+        return decodeDisplacement(memory, insn, out, mode);
     case M_LEN16:
     case M_LEN8:
     case M_LEN4:
-        return decodeLength(memory, insn, mode);
+        return decodeLength(memory, insn, out, mode);
     default:
         return setError(INTERNAL_ERROR);
     }
     return OK;
 }
 
-Error DisNs32000::decode(DisMemory &memory, Insn &_insn) {
+Error DisNs32000::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnNs32000 insn(_insn);
     Config::opcode_t opCode;
     if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
@@ -431,22 +438,22 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn) {
 
     const AddrMode src = insn.srcMode();
     if (src == M_NONE) return setOK();
-    if (decodeOperand(memory, insn, src, insn.srcPos()))
+    if (decodeOperand(memory, insn, out, src, insn.srcPos()))
         return getError();
     const AddrMode dst = insn.dstMode();
     if (dst == M_NONE) return setOK();
-    _operands = outComma(_operands);
-    if (decodeOperand(memory, insn, dst, insn.dstPos()))
+    out = outComma(out);
+    if (decodeOperand(memory, insn, out, dst, insn.dstPos()))
         return getError();
     const AddrMode ex1 = insn.ex1Mode();
     if (ex1 == M_NONE) return setOK();
-    _operands = outComma(_operands);
-    if (decodeOperand(memory, insn, ex1, insn.ex1Pos()))
+    out = outComma(out);
+    if (decodeOperand(memory, insn, out, ex1, insn.ex1Pos()))
         return getError();
     const AddrMode ex2 = insn.ex2Mode();
     if (ex2 == M_NONE || ex2 == M_BFLEN) return setOK();
-    _operands = outComma(_operands);
-    if (decodeOperand(memory, insn, ex2, insn.ex2Pos()))
+    out = outComma(out);
+    if (decodeOperand(memory, insn, out, ex2, insn.ex2Pos()))
         return getError();
     return setOK();
 }

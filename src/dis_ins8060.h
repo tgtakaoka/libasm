@@ -39,12 +39,13 @@ private:
     TableBase &getTable() const override { return TableIns8060; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegister(RegName regName);
+    char *outRegister(char *out, RegName regName);
 
-    Error decodePntr(InsnIns8060 &insn);
-    Error decodeImm8(DisMemory &memory, InsnIns8060 &insn);
-    Error decodeIndx(DisMemory &memory, InsnIns8060 &insn, bool hasMode);
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decodePntr(InsnIns8060 &insn, char *out);
+    Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, char *out);
+    Error decodeIndx(
+        DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode);
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace ins8060

@@ -39,21 +39,21 @@ private:
     TableBase &getTable() const override { return TableMc6809; }
     RegBase &getRegister() override { return _regs; }
 
-    void outRegister(RegName regName);
+    char *outRegister(char *out, RegName regName);
 
     // MC6809
-    Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeExtended(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn);
-    Error decodePushPull(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeExtended(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out);
     // HD6309
-    Error decodeBitOperation(DisMemory &memory, InsnMc6809 &insn);
-    Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn);
+    Error decodeBitOperation(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, char *out);
 
-    Error decode(DisMemory &memory, Insn &insn) override;
+    Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
 } // namespace mc6809
