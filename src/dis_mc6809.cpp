@@ -26,24 +26,21 @@ char *DisMc6809::outRegister(char *out, RegName regName) {
 
 Error DisMc6809::decodeDirectPage(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t dir;
-    if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
+    const uint8_t dir = insn.readByte(memory);
     outAddress(out, dir, PSTR("<"));
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decodeExtended(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    Config::uintptr_t addr;
-    if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
+    const Config::uintptr_t addr = insn.readUint16(memory);
     outAddress(out, addr, PSTR(">"), addr < 0x100);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decodeIndexed(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t post = 0;
-    if (insn.readByte(memory, post)) return setError(NO_MEMORY);
+    const uint8_t post = insn.readByte(memory);
     PostSpec spec;
     if (TableMc6809.searchPostByte(post, spec)) return setError(UNKNOWN_POSTBYTE);
     if (spec.indir) *out++ = '[';
@@ -55,15 +52,11 @@ Error DisMc6809::decodeIndexed(
             if (post & 0x10) offset |= 0xFFE0;
             if (offset == 0) prefix = '{';
         } else if (spec.size == 8) {
-            uint8_t val;
-            if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-            offset = static_cast<int8_t>(val);
+            offset = static_cast<int8_t>(insn.readByte(memory));
             if (spec.indir && offset == 0) prefix = '<';
             if (!spec.indir && offset >= -16 && offset < 16) prefix = '<';
         } else if (spec.size == 16) {
-            uint16_t val;
-            if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-            offset = static_cast<int16_t>(val);
+            offset = static_cast<int16_t>(insn.readUint16(memory));
             if (offset >= -128 && offset < 128) prefix = '>';
         }
         if (spec.size) {
@@ -83,8 +76,7 @@ Error DisMc6809::decodeIndexed(
     if (spec.mode == ACCM_IDX)
         out = outRegister(out, spec.index);
     if (spec.mode == ABS_IDIR) {
-        Config::uintptr_t addr;
-        if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
+        const Config::uintptr_t addr = insn.readUint16(memory);
         out = outAddress(out, addr);
     } else {
         *out++ = ',';
@@ -105,50 +97,40 @@ Error DisMc6809::decodeIndexed(
     }
     if (spec.indir) *out++ = ']';
     *out = 0;
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decodeRelative(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
     Config::ptrdiff_t delta;
-    if (insn.addrMode() == REL) {
-        uint8_t val;
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        delta = static_cast<int8_t>(val);
+    if (insn.mode1() == REL) {
+        delta = static_cast<int8_t>(insn.readByte(memory));
     } else {
-        uint16_t val;
-        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-        delta = static_cast<Config::ptrdiff_t>(val);
+        delta = static_cast<Config::ptrdiff_t>(insn.readUint16(memory));
     }
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
-    outRelativeAddr(out, target, insn.address(), insn.addrMode() == REL ? 8 : 16);
-    return setOK();
+    const uint8_t deltaWidth = insn.mode1() == REL ? 8 : 16;
+    outRelativeAddr(out, target, insn.address(), deltaWidth);
+    return setError(insn);
 }
 
 Error DisMc6809::decodeImmediate(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
     *out++ = '#';
-    const AddrMode mode = insn.addrMode();
+    const AddrMode mode = insn.mode1();
     if (mode == IM8) {
-        uint8_t val;
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        outConstant(out, val);
+        outConstant(out, insn.readByte(memory));
     } else if (mode == IM16) {
-        uint16_t val;
-        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-        outConstant(out, val);
+        outConstant(out, insn.readUint16(memory));
     } else {
-        uint32_t val;
-        if (insn.readUint32(memory, val)) return setError(NO_MEMORY);
-        outConstant(out, val);
+        outConstant(out, insn.readUint32(memory));
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decodePushPull(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t post;
-    if (insn.readByte(memory, post)) return setError(NO_MEMORY);
+    uint8_t post = insn.readByte(memory);
     const bool push = (insn.opCode() & 1) == 0;
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg) post &= ~0x02; // clear REG_A
@@ -162,13 +144,12 @@ Error DisMc6809::decodePushPull(
             n++;
         }
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decodeRegisters(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t post;
-    if (insn.readByte(memory, post)) return setError(NO_MEMORY);
+    const uint8_t post = insn.readByte(memory);
     const RegName src = _regs.decodeDataReg(post >> 4);
     const RegName dst = _regs.decodeDataReg(post & 0xf);
     if (src == REG_UNDEF || dst == REG_UNDEF)
@@ -180,13 +161,13 @@ Error DisMc6809::decodeRegisters(
     out = outRegister(out, src);
     *out++ = ',';
     outRegister(out, dst);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decodeBitOperation(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t post;
-    if (insn.readByte(memory, post)) return setError(NO_MEMORY);
+    const uint8_t post = insn.readByte(memory);
+    if (insn.getError()) return setError(insn);
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     out = outRegister(out, reg);
@@ -197,13 +178,13 @@ Error DisMc6809::decodeBitOperation(
     out += strlen(out);
     *out++ = '.';
     outConstant(out, static_cast<uint8_t>((post >> 3) & 7));
-    return setOK();
+    return OK;
 }
 
 Error DisMc6809::decodeTransferMemory(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t post;
-    if (insn.readByte(memory, post)) return setError(NO_MEMORY);
+    const uint8_t post = insn.readByte(memory);
+    if (insn.getError()) return setError(insn);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
     const RegName dst = _regs.decodeTfmBaseReg(post & 0xf);
     const uint8_t mode = insn.opCode() & 0x3;
@@ -216,50 +197,60 @@ Error DisMc6809::decodeTransferMemory(
     const char dstModeChar = _regs.tfmDstModeChar(mode);
     if (dstModeChar) *out++ = dstModeChar;
     *out = 0;
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6809::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnMc6809 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableMc6809::isPrefixCode(opCode)) {
+    if (TableMc6809::isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
-        if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+        opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
     }
+    if (setError(insn)) return getError();
 
     if (TableMc6809.searchOpCode(insn))
         return setError(TableMc6809.getError());
 
-    switch (insn.addrMode()) {
-    case NONE: return setOK();
-    case DIR: return decodeDirectPage(memory, insn, out);
-    case EXT: return decodeExtended(memory, insn, out);
-    case IDX: return decodeIndexed(memory, insn, out);
-    case REL:
-    case LREL: return decodeRelative(memory, insn, out);
-    case IM8:
-    case IM16:
-    case IM32:
+    switch (insn.mode1()) {
+    case DIR:
+        return decodeDirectPage(memory, insn, out);
+    case EXT:
+        return decodeExtended(memory, insn, out);
+    case IDX:
+        return decodeIndexed(memory, insn, out);
+    case REL: case LREL:
+        return decodeRelative(memory, insn, out);        
+    case IM8: case IM16: case IM32:
         decodeImmediate(memory, insn, out);
         break;
-    case REGLIST: return decodePushPull(memory, insn, out);
-    case REG_REG: return decodeRegisters(memory, insn, out);
-    case REG_BIT:  return decodeBitOperation(memory, insn, out);
-    case REG_TFM: return decodeTransferMemory(memory, insn, out);
-    default:     return setError(INTERNAL_ERROR);
+    case REGLIST:
+        return decodePushPull(memory, insn, out);
+    case REG_REG:
+        return decodeRegisters(memory, insn, out);
+    case REG_BIT:
+        return decodeBitOperation(memory, insn, out);
+    case REG_TFM:
+        return decodeTransferMemory(memory, insn, out);
+    default:
+        return OK;
     }
+
+    if (insn.mode2() == NONE) return OK;
     out += strlen(out);
-    if (insn.extraMode() != NONE) *out++ = ',';
-    switch (insn.extraMode()) {
-    case DIR: return decodeDirectPage(memory, insn, out);
-    case EXT: return decodeExtended(memory, insn, out);
-    case IDX: return decodeIndexed(memory, insn, out);
-    default: break;
+    *out++ = ',';
+    switch (insn.mode2()) {
+    case DIR:
+        return decodeDirectPage(memory, insn, out);
+    case EXT:
+        return decodeExtended(memory, insn, out);
+    case IDX:
+        return decodeIndexed(memory, insn, out);
+    default:
+        return OK;
     }
-    return setOK();
 }
 
 } // namespace mc6809

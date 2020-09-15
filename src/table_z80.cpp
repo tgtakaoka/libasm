@@ -266,7 +266,7 @@ Error TableZ80::searchName(
             name, flags, table, end, acceptOprFormats, count);
         if (entry) {
             const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setInsnCode(prefix, pgm_read_byte(&entry->opCode));
+            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
             insn.setFlags(pgm_read_word(&entry->flags));
             return OK;
         }
@@ -293,23 +293,24 @@ Error TableZ80::searchOpCode(
     InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-        if (insn.prefixCode() != prefix) continue;
+        if (insn.prefix() != prefix) continue;
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end, maskCode);
         if (entry) {
             insn.setFlags(pgm_read_word(&entry->flags));
-            const char *name =
+            const /*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            insn.setName_P(name);
             return OK;
         }
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-bool TableZ80::isPrefixCode(Config::opcode_t opCode) {
+bool TableZ80::isPrefix(Config::opcode_t opCode) const {
+    if (_cpuType != Z80) return false;
     return opCode == PREFIX_CB || opCode == PREFIX_ED
         || opCode == TableZ80::PREFIX_IX || opCode == TableZ80::PREFIX_IY;
 }

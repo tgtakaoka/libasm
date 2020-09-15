@@ -26,54 +26,45 @@ char *DisMc6800::outRegister(char *out, RegName regName) {
 
 Error DisMc6800::decodeDirectPage(
     DisMemory &memory, InsnMc6800& insn, char *out) {
-    uint8_t dir;
-    if (insn.readByte(memory, dir)) return setError(NO_MEMORY);
+    const uint8_t dir = insn.readByte(memory);
     outAddress(out, dir, PSTR("<"));
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6800::decodeExtended(
     DisMemory &memory, InsnMc6800 &insn, char *out) {
-    Config::uintptr_t addr;
-    if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
+    const Config::uintptr_t addr = insn.readUint16(memory);
     outAddress(out, addr, PSTR(">"), addr < 0x100);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6800::decodeIndexed(
     DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode) {
-    uint8_t disp8;
-    if (insn.readByte(memory, disp8)) return setError(NO_MEMORY);
+    const uint8_t disp8 = insn.readByte(memory);
     out = outConstant(out, disp8, 10);
     *out++ = ',';
     outRegister(out, mode == M_IDY ? REG_Y : REG_X);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6800::decodeRelative(
     DisMemory &memory, InsnMc6800 &insn, char *out) {
-    uint8_t delta8;
-    if (insn.readByte(memory, delta8)) return setError(NO_MEMORY);
+    const int8_t delta8 = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t base = insn.address() + insn.length();
-    const Config::uintptr_t target = base + static_cast<int8_t>(delta8);
+    const Config::uintptr_t target = base + delta8;
     outRelativeAddr(out, target, insn.address(), 8);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6800::decodeImmediate(
     DisMemory &memory, InsnMc6800 &insn,char *out) {
     *out++ = '#';
     if (insn.size() == SZ_BYTE) {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        outConstant(out, val8);
-        return setOK();
+        outConstant(out, insn.readByte(memory));
+    } else { // SZ_WORD
+        outConstant(out, insn.readUint16(memory));
     }
-    // SZ_WORD
-    uint16_t val16;
-    if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-    outConstant(out, val16);
-    return setOK();
+    return setError(insn);
 }
 
 static int8_t bitNumber(uint8_t val) {
@@ -85,19 +76,18 @@ static int8_t bitNumber(uint8_t val) {
 
 Error DisMc6800::decodeBitNumber(
     DisMemory &memory, InsnMc6800 &insn, char *out) {
-    uint8_t val8;
-    if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
+    const uint8_t val8 = insn.readByte(memory);
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
-        val8 = bitNum;
         if (TableMc6800.searchOpCodeAlias(insn))
             return setError(TableMc6800.getError());
+        outConstant(out, bitNum);
     } else {
         *out++ = '#';
+        outConstant(out, val8);
     }
-    outConstant(out, val8);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMc6800::decodeOperand(
@@ -116,14 +106,15 @@ Error DisMc6800::decodeOperand(
 
 Error DisMc6800::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnMc6800 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableMc6800.isPrefixCode(opCode)) {
+    if (TableMc6800.isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
-        if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+        opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
     }
+    if (setError(insn)) return getError();
+
     if (TableMc6800.searchOpCode(insn))
         return setError(TableMc6800.getError());
 
@@ -131,10 +122,12 @@ Error DisMc6800::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (mode1 == M_NO) return setOK();
     if (decodeOperand(memory, insn, out, mode1)) return getError();
     const AddrMode mode2 = insn.mode2();
+
     if (mode2 == M_NO) return setOK();
     out += strlen(out);
     *out++ = ',';
     if (decodeOperand(memory, insn, out, mode2)) return getError();
+
     const AddrMode mode3 = insn.mode3();
     if (mode3 == M_NO) return setOK();
     out += strlen(out);

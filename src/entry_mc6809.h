@@ -58,23 +58,23 @@ struct Entry {
     const uint8_t flags;
     const char *name;
 
-    static inline AddrMode _addrMode(uint8_t flags) {
-        return AddrMode((flags >> addrMode_gp) & addrMode_gm);
+    static inline AddrMode _mode1(uint8_t flags) {
+        return AddrMode((flags >> op1_gp) & mode_gm);
     }
 
-    static inline AddrMode _extraMode(uint8_t flags) {
-        return AddrMode((flags >> extraMode_gp) & addrMode_gm);
+    static inline AddrMode _mode2(uint8_t flags) {
+        return AddrMode((flags >> op2_gp) & mode_gm);
     }
 
-    static constexpr uint8_t _flags(AddrMode mode, AddrMode extra) {
-        return (static_cast<uint8_t>(mode) << addrMode_gp)
-            | (static_cast<uint8_t>(extra) << extraMode_gp);
+    static constexpr uint8_t _flags(AddrMode op1, AddrMode op2) {
+        return (static_cast<uint8_t>(op1) << op1_gp)
+            | (static_cast<uint8_t>(op2) << op2_gp);
     }
 
 private:
-    static constexpr uint8_t addrMode_gm = 0xf;
-    static constexpr int addrMode_gp = 0;
-    static constexpr int extraMode_gp = 4;
+    static constexpr uint8_t mode_gm = 0xf;
+    static constexpr int op1_gp = 0;
+    static constexpr int op2_gp = 4;
 };
 
 } // namespace mc6809

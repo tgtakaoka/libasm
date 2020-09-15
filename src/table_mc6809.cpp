@@ -498,7 +498,7 @@ static constexpr Config::opcode_t PREFIX_P00 = 0x00;
 static constexpr Config::opcode_t PREFIX_P10 = 0x10;
 static constexpr Config::opcode_t PREFIX_P11 = 0x11;
 
-bool TableMc6809::isPrefixCode(Config::opcode_t opCode) {
+bool TableMc6809::isPrefix(Config::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
@@ -539,13 +539,13 @@ static bool matchAddrMode(AddrMode opr, AddrMode table) {
 
 static bool matchAddrMode(uint8_t flags, const Entry *entry) {
     const uint8_t table = pgm_read_byte(&entry->flags);
-    return matchAddrMode(Entry::_addrMode(flags), Entry::_addrMode(table))
-        && matchAddrMode(Entry::_extraMode(flags), Entry::_extraMode(table));
+    return matchAddrMode(Entry::_mode1(flags), Entry::_mode1(table))
+        && matchAddrMode(Entry::_mode2(flags), Entry::_mode2(table));
 }
 
 Error TableMc6809::searchName(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
-    const uint8_t flags = Entry::_flags(insn.addrMode(), insn.extraMode());
+    const uint8_t flags = Entry::_flags(insn.mode1(), insn.mode2());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
@@ -566,15 +566,15 @@ Error TableMc6809::searchOpCode(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
     for (const EntryPage *page = pages; page < end; page++) {
         const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-        if (insn.prefixCode() != prefix) continue;
+        if (insn.prefix() != prefix) continue;
         const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end);
         if (entry) {
-            const char *name =
+            const /*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            insn.setName_P(name);
             insn.setFlags(pgm_read_byte(&entry->flags));
             return OK;
         }

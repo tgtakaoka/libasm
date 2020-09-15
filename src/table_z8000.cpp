@@ -348,15 +348,16 @@ const Entry *TableZ8000::searchOpCode(
          entry++) {
         insn.setFlags(pgm_read_dword(&entry->flags));
         if (insn.hasPost()) {
-            if (insn.length() < 4 && insn.readPost(memory)) {
-                _error.setError(NO_MEMORY);
-                return nullptr;
+            if (insn.length() < 4) {
+                insn.readPost(memory);
+                if (_error.setError(insn))
+                    return nullptr;
             }
             if (!matchPostWord(insn)) continue;
         }
-        const char *name =
+        const /*PROGMEM*/ char *name =
             reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+        insn.setName_P(name);
         return entry;
     }
     return nullptr;
@@ -372,9 +373,9 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
     if (entry) {
         entry++;
         insn.setFlags(pgm_read_dword(&entry->flags));
-        const char *name =
+        const /*PROGMEM*/ char *name =
             reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+        insn.setName_P(name);
     }
     return _error.setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }

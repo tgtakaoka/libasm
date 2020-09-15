@@ -88,9 +88,9 @@ Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
 
 Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
     if (insn.insnFormat() != NO_FORMAT) {
-        _scan = skipSpaces(_scan);
-        if (*_scan != ',') return setError(MISSING_COMMA);
-        _scan++;
+        const char *p = skipSpaces(_scan);
+        if (*p != ',') return setError(MISSING_COMMA);
+        _scan = p + 1;
     }
     if (insn.addrMode() == IMM8) {
         uint8_t val8;
@@ -122,8 +122,9 @@ Error AsmI8080::encode(Insn &_insn) {
     InsnI8080 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+
     if (TableI8080.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableI8080.getError());
     _scan = skipSpaces(endName);
 
     switch (insn.insnFormat()) {

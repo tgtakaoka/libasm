@@ -32,7 +32,7 @@ public:
     Error searchName(InsnMc6800 &insn) const;
     Error searchOpCode(InsnMc6800 &insn) const;
     Error searchOpCodeAlias(InsnMc6800 &insn) const;
-    bool isPrefixCode(Config::opcode_t opCode) const;
+    bool isPrefix(Config::opcode_t opCode) const;
 
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;

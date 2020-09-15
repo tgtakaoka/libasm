@@ -22,7 +22,7 @@
       ORA  >>$001110
       ORA  $010010
       BPL  *+19
-      BPL  *-$30
+      BPL  *-$7E
       BPL  *
       ORA  ($12),Y
       ORA  ($13)

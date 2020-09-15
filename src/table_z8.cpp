@@ -352,13 +352,15 @@ Error TableZ8::searchOpCode(
              entry++) {
             insn.setFlags(pgm_read_word(&entry->flags));
             if (insn.postFormat()) {
-                if (insn.length() < 2 && insn.readPost(memory))
-                    return NO_MEMORY;
+                if (insn.length() < 2) {
+                    insn.readPost(memory);
+                    if (insn.getError()) return NO_MEMORY;
+                }
                 if (!matchPostByte(insn)) continue;
             }
-            const char *name =
+            const /*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            insn.setName_P(name);
             return OK;
         }
     }

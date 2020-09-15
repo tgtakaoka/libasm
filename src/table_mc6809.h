@@ -48,7 +48,7 @@ public:
     const char *getCpu() const override;
     CpuType cpuType() const { return _cpuType; }
 
-    static bool isPrefixCode(Config::opcode_t opCode);
+    static bool isPrefix(Config::opcode_t opCode);
 
     struct EntryPage;
     struct PostEntry;

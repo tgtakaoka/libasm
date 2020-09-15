@@ -39,10 +39,6 @@ public:
     OprPos srcPos() const { return Entry::_srcPos(_pos); }
     OprSize oprSize() const { return Entry::_size(_size); }
     bool stringInst() const { return Entry::_strInst(_size); }
-    void setAddrMode(AddrMode dst, AddrMode src) {
-        _dst = Entry::_opr(dst);
-        _src = Entry::_opr(src);
-    }
 
     void setFlags(uint32_t flags) {
         _dst = Entry::_dst(flags);
@@ -51,35 +47,35 @@ public:
         _size = Entry::_size(flags);
     }
 
-    Config::opcode_t segment() const { return _segment; }
-    Config::opcode_t first() const { return _first; }
-    Config::opcode_t opCode() const { return _opCode; }
+    void setAddrMode(AddrMode dst, AddrMode src) {
+        _dst = Entry::_opr(dst);
+        _src = Entry::_opr(src);
+    }
+
     void setSegment(Config::opcode_t segment) {
         _segment = segment;
     }
+
     void setOpCode(Config::opcode_t opCode, Config::opcode_t first) {
         _first = first;
         _opCode = opCode;
     }
-    Config::opcode_t modReg() const { return _modReg; }
-    Error readModReg(DisMemory &memory) {
+
+    void readModReg(DisMemory &memory) {
         if (_first) {
             _modReg = _opCode;
-            return OK;
+        } else {
+            const OprPos dst = dstPos();
+            const OprPos src = srcPos();
+            if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
+                _modReg = readByte(memory);
         }
-        const OprPos dst = dstPos();
-        const OprPos src = srcPos();
-        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
-            return readByte(memory, _modReg);
-        return OK;
     }
-    void prepairModReg() {
-        if (_first) return;
-        const OprPos dst = dstPos();
-        const OprPos src = srcPos();
-        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
-            embedModReg(0);
-    }
+
+    Config::opcode_t segment() const { return _segment; }
+    Config::opcode_t first() const { return _first; }
+    Config::opcode_t opCode() const { return _opCode; }
+    Config::opcode_t modReg() const { return _modReg; }
 
     void embed(Config::opcode_t data) {
         _opCode |= data;
@@ -89,6 +85,14 @@ public:
         _hasModReg = true;
     }
 
+    void prepairModReg() {
+        if (_first) return;
+        const OprPos dst = dstPos();
+        const OprPos src = srcPos();
+        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
+            embedModReg(0);
+    }
+
     void emitInsn() {
         uint8_t pos = 0;
         if (_segment) emitByte(_segment, pos++);
@@ -96,9 +100,11 @@ public:
         emitByte(_opCode, pos++);
         if (_hasModReg) emitByte(_modReg, pos);
     }
+
     void emitOperand8(uint8_t val8) {
         emitByte(val8, operandPos());
     }
+
     void emitOperand16(uint16_t val16) {
         emitUint16(val16, operandPos());
     }
@@ -115,7 +121,7 @@ private:
     uint8_t _size;
 
     uint8_t operandPos() const {
-        uint8_t pos = _insn.length();
+        uint8_t pos = length();
         if (pos == 0) {
             if (_segment) pos++;
             if (_first) pos++;
@@ -123,13 +129,6 @@ private:
             if (_hasModReg) pos++;
         }
         return pos;
-    }
-    void emitByte(uint8_t val, uint8_t pos) {
-        _insn.emitByte(val, pos);
-    }
-    void emitUint16(uint16_t val, uint8_t pos) {
-        emitByte(static_cast<uint8_t>(val >> 0), pos + 0);
-        emitByte(static_cast<uint8_t>(val >> 8), pos + 1);
     }
 };
 

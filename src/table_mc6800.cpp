@@ -393,12 +393,9 @@ static constexpr Config::opcode_t PREFIX_P18 = 0x18;
 static constexpr Config::opcode_t PREFIX_P1A = 0x1A;
 static constexpr Config::opcode_t PREFIX_PCD = 0xCD;
 
-bool TableMc6800::isPrefixCode(Config::opcode_t opCode) const {
-    if (_cpuType == MC68HC11) {
-        return opCode == PREFIX_P18 || opCode == PREFIX_P1A
-            || opCode == PREFIX_PCD;
-    }
-    return false;
+bool TableMc6800::isPrefix(Config::opcode_t opCode) const {
+    if (_cpuType != MC68HC11) return false;
+    return opCode == PREFIX_P18 || opCode == PREFIX_P1A || opCode == PREFIX_PCD;
 }
 
 struct TableMc6800::EntryPage {
@@ -478,9 +475,9 @@ const Entry *TableMc6800::searchOpCode(
             insn.opCode(), table, end);
         if (entry) {
             insn.setFlags(pgm_read_word(&entry->flags));
-            const char *name =
+            const/*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            insn.setName_P(name);
             return entry;
         }
     }
@@ -503,9 +500,9 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     if (pgm_read_byte(&entry->opCode) != insn.opCode())
         return _error.setError(INTERNAL_ERROR);
     insn.setFlags(pgm_read_word(&entry->flags));
-    const char *name =
+    const /*PROGMEM*/ char *name =
         reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+    insn.setName_P(name);
     return _error.setOK();
 }
 

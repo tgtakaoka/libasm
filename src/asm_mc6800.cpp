@@ -115,9 +115,9 @@ Error AsmMc6800::encode(Insn &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+    _scan = skipSpaces(endName);
 
     Operand op1, op2, op3;
-    _scan = skipSpaces(endName);
     if (parseOperand(op1)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {

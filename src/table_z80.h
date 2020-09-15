@@ -36,7 +36,7 @@ public:
     const char *getCpu() const override;
     CpuType cpuType() const { return _cpuType; }
 
-    static bool isPrefixCode(Config::opcode_t opCode);
+    bool isPrefix(Config::opcode_t opCode) const;
 
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;

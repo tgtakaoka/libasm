@@ -32,27 +32,33 @@ public:
 
     void setFlags(uint8_t flags) { _flags = flags; }
 
-    Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
 
     void emitInsn() {
         emitUint16(_opCode, 0);
     }
 
-    void emitOperand(uint16_t val) {
-        uint8_t pos = _insn.length();
-        if (pos == 0) pos = 2;
-        emitUint16(val, pos);
+    void emitOperand16(uint16_t val) {
+        emitUint16(val, operandPos());
     }
 
 private:
-    Config::opcode_t _opCode;
     uint8_t _flags;
+    Config::opcode_t _opCode;
+
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (pos == 0) pos = 2;
+        return pos;
+    }
 };
 
 } // namespace tms9900

@@ -20,12 +20,13 @@ namespace libasm {
 
 Error Disassembler::decode(
     DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
-    insn.resetAddress(memory.address());
     _symtab = symtab;
-    this->resetError();
     getFormatter().setUppercase(_uppercase);
     getRegister().setUppercase(_uppercase);
+
+    resetError();
     *operands = 0;
+    insn.resetAddress(memory.address());
     decode(memory, insn, operands);
     if (!_uppercase) insn.toLowerName();
     return getError();

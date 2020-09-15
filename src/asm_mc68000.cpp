@@ -417,9 +417,11 @@ Error AsmMc68000::encode(Insn &_insn) {
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+
     insn.setAddrMode(srcOp.mode, dstOp.mode);
     if (TableMc68000.searchName(insn))
         return setError(TableMc68000.getError());
+
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     if (src == M_MULT) srcOp.fixupMultiRegister();

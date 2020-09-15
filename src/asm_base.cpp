@@ -24,12 +24,12 @@ namespace libasm {
 
 Error Assembler::encode(
     const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
-    this->resetError();
+    resetError();
+    _symtab = symtab;
     _scan = skipSpaces(line);
     if (checkLineEnd() == OK)
         return setError(NO_INSTRUCTION);
-    this->resetError();
-    _symtab = symtab;
+    resetError();
     insn.resetAddress(addr);
     return encode(insn);
 }
@@ -54,7 +54,7 @@ bool Assembler::endOfLine(const char *scan) const {
 
 Error Assembler::checkLineEnd(const char *scan) {
     if (scan == nullptr) scan = _scan;
-    if (this->endOfLine(skipSpaces(scan)))
+    if (endOfLine(skipSpaces(scan)))
         return getError();
     return setErrorIf(GARBAGE_AT_END);
 }

@@ -29,7 +29,7 @@ public:
     virtual bool setCpu(const char *cpu) = 0;
     virtual const char *getCpu() const = 0;
     Error getError() const { return _error.getError(); }
-    
+
 protected:
     mutable ErrorReporter _error;
 
@@ -76,10 +76,6 @@ protected:
             }
         }
         return nullptr;
-    }
-
-    static void setName(Insn &insn, const char *name, uint8_t max) {
-        strncpy_P(insn._name, name, max + 1);
     }
 };
 

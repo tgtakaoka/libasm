@@ -191,7 +191,7 @@ Error DisZ80::decodeInherent(InsnZ80 &insn, char *out) {
     }
 
     *out = 0;
-    return setOK();
+    return OK;
 }
 
 Error DisZ80::decodeImmediate8(InsnZ80 &insn, char *out, uint8_t val) {
@@ -213,7 +213,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, char *out, uint8_t val) {
         *out++ = ',';
         outConstant(out, val);
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeImmediate16(InsnZ80 &insn, char *out, uint16_t val) {
@@ -230,7 +230,7 @@ Error DisZ80::decodeImmediate16(InsnZ80 &insn, char *out, uint16_t val) {
     }
     *out++ = ',';
     outConstant(out, val);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr) {
@@ -290,7 +290,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr) {
     default:
         break;
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeIoaddr(InsnZ80 &insn, char *out, uint8_t ioaddr) {
@@ -315,7 +315,7 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, char *out, uint8_t ioaddr) {
     default:
         break;
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeRelative(InsnZ80 &insn, char *out, int8_t delta) {
@@ -326,7 +326,7 @@ Error DisZ80::decodeRelative(InsnZ80 &insn, char *out, int8_t delta) {
     }
     const Config::uintptr_t target = insn.address() + 2 + delta;
     outRelativeAddr(out, target, insn.address(), 8);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeIndexed(InsnZ80 &insn, char *out, int8_t offset) {
@@ -362,7 +362,7 @@ Error DisZ80::decodeIndexed(InsnZ80 &insn, char *out, int8_t offset) {
     default:
         break;
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeIndexedImmediate8(
@@ -370,16 +370,17 @@ Error DisZ80::decodeIndexedImmediate8(
     out = outIndexOffset(insn, out, offset);
     *out++ = ',';
     outConstant(out, val);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decodeIndexedBitOp(
     InsnZ80 &insn, char *out, int8_t offset, Config::opcode_t opCode) {
     InsnZ80 ixBit(insn);
-    ixBit.setInsnCode(insn.opCode(), opCode);
-    if (TableZ80.searchOpCode(ixBit)) 
+    ixBit.setOpCode(opCode, insn.opCode());
+    if (TableZ80.searchOpCode(ixBit))
         return setError(TableZ80.getError());
-    insn.setName(ixBit.name());
+    const char *name = ixBit.name();
+    insn.setName(name, name + strlen(name));
 
     const RegName regName = RegZ80::decodeDataReg(opCode);
     if (ixBit.dstFormat() == BIT_NO
@@ -393,54 +394,45 @@ Error DisZ80::decodeIndexedBitOp(
     } else {
         return setError(UNKNOWN_INSTRUCTION);
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ80::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnZ80 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-    insn.setInsnCode(0, opCode);
-    if (TableZ80.cpuType() == Z80 && TableZ80::isPrefixCode(opCode)) {
+    Config::opcode_t opCode = insn.readByte(memory);
+    insn.setOpCode(opCode);
+    if (TableZ80.isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
-        if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        insn.setInsnCode(prefix, opCode);
+        opCode = insn.readByte(memory);
+        insn.setOpCode(opCode, prefix);
     }
+    if (setError(insn)) return getError();
 
     if (TableZ80.searchOpCode(insn))
         return setError(TableZ80.getError());
-
-    uint8_t u8;
-    uint16_t u16;
-    uint8_t offset;
 
     switch (insn.addrMode()) {
     case INHR:
         return decodeInherent(insn, out);
     case IMM8:
-        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
-        return decodeImmediate8(insn, out, u8);
+        return decodeImmediate8(insn, out, insn.readByte(memory));
     case IMM16:
-        if (insn.readUint16(memory, u16)) return setError(NO_MEMORY);
-        return decodeImmediate16(insn, out, u16);
+        return decodeImmediate16(insn, out, insn.readUint16(memory));
     case DIRECT:
-        if (insn.readUint16(memory, u16)) return setError(NO_MEMORY);
-        return decodeDirect(insn, out, u16);
+        return decodeDirect(insn, out, insn.readUint16(memory));
     case IOADR:
-        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
-        return decodeIoaddr(insn, out, u8);
+        return decodeIoaddr(insn, out, insn.readByte(memory));
     case REL8:
-        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
-        return decodeRelative(insn, out, u8);
+        return decodeRelative(insn, out, insn.readByte(memory));
     case INDX:
-        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
-        return decodeIndexed(insn, out, u8);
-    case INDX_IMM8:
-        if (insn.readByte(memory, offset)) return setError(NO_MEMORY);
-        if (insn.readByte(memory, u8)) return setError(NO_MEMORY);
+        return decodeIndexed(insn, out, insn.readByte(memory));
+    case INDX_IMM8: {
+        const int8_t offset = static_cast<int8_t>(insn.readByte(memory));
+        const uint8_t u8 = insn.readByte(memory);
         if (insn.dstFormat() == IX_BIT)
             return decodeIndexedBitOp(insn, out, offset, u8);
         return decodeIndexedImmediate8(insn, out, offset, u8);
+    }
     default:
         return setError(INTERNAL_ERROR);
     }

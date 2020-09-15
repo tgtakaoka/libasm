@@ -23,11 +23,11 @@ namespace mc6809 {
 Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address()
         + (insn.hasPrefix() ? 2 : 1)
-        + (insn.addrMode() == LREL ? 2 : 1);
+        + (insn.mode1() == LREL ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base
         : static_cast<Config::uintptr_t>(op.val32);
     const Config::ptrdiff_t delta = target - base;
-    if (insn.addrMode() == REL) {
+    if (insn.mode1() == REL) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(delta));
@@ -39,9 +39,9 @@ Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
 }
 
 Error AsmMc6809::encodeImmediate(
-        InsnMc6809 &insn, const Operand &op, Operand &extra) {
+    InsnMc6809 &insn, const Operand &op, Operand &extra) {
     insn.emitInsn();
-    switch (insn.addrMode()) {
+    switch (insn.mode1()) {
     case IM8:
         insn.emitByte(static_cast<uint8_t>(op.val32));
         break;
@@ -54,7 +54,7 @@ Error AsmMc6809::encodeImmediate(
     default:
         break;
     }
-    switch (insn.extraMode()) {
+    switch (insn.mode2()) {
     case DIR:
         insn.emitByte(static_cast<uint8_t>(extra.val32));
         break;
@@ -498,58 +498,58 @@ Error AsmMc6809::encode(Insn &_insn) {
     if (processPseudo(insn) == OK)
         return getError();
 
-    Operand op, extra;
-    if (parseOperand(op))
+    Operand op1, op2;
+    if (parseOperand(op1))
         return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
         _scan = skipSpaces(p + 1);
-        if (parseOperand(extra)) return getError();
+        if (parseOperand(op2)) return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(op.getError());
-    setErrorIf(extra.getError());
+    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    setErrorIf(op1.getError());
+    setErrorIf(op2.getError());
 
-    insn.setAddrMode(op.mode, extra.mode);
+    insn.setAddrMode(op1.mode, op2.mode);
     if (TableMc6809.searchName(insn))
         return setError(TableMc6809.getError());
-    switch (insn.addrMode()) {
+
+    switch (insn.mode1()) {
     case NONE:
         insn.emitInsn();
         break;
     case REL:
     case LREL:
-        encodeRelative(insn, op);
+        encodeRelative(insn, op1);
         break;
     case IM8:
     case IM16:
     case IM32:
-        encodeImmediate(insn, op, extra);
+        encodeImmediate(insn, op1, op2);
         break;
     case DIR:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op.val32));
+        insn.emitByte(static_cast<uint8_t>(op1.val32));
         break;
     case EXT:
         insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
+        insn.emitUint16(static_cast<uint16_t>(op1.val32));
         break;
     case IDX:
-        encodeIndexed(insn, op);
+        encodeIndexed(insn, op1);
         break;
     case REG_REG:
-        encodeRegisters(insn, op);
+        encodeRegisters(insn, op1);
         break;
     case REGLIST:
-        encodePushPull(insn, op);
+        encodePushPull(insn, op1);
         break;
     case REG_BIT:
-        encodeBitOperation(insn, op, extra);
+        encodeBitOperation(insn, op1, op2);
         break;
     case REG_TFM:
-        encodeTransferMemory(insn, op, extra);
+        encodeTransferMemory(insn, op1, op2);
         break;
     default:
         return setError(UNKNOWN_OPERAND);

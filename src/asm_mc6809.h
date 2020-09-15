@@ -59,6 +59,7 @@ private:
               val32(0)
         {}
     };
+
     bool parsePointerMode(Operand &op, const char *scan, bool indir);
     bool parseIndexedMode(Operand &op, const char *scan, bool indir);
     bool parseBitRegister(Operand &op, const char *scan);
@@ -70,15 +71,15 @@ private:
     Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
     Error encodeRelative(InsnMc6809 &insn, const Operand &op);
     Error encodeImmediate(
-            InsnMc6809 &insn, const Operand &op, Operand &extra);
+        InsnMc6809 &insn, const Operand &op, Operand &extra);
     Config::ptrdiff_t calculateDisplacement(
-            const InsnMc6809 &insn, const Operand &op) const;
+        const InsnMc6809 &insn, const Operand &op) const;
     Error encodeIndexed(
-            InsnMc6809 &insn, Operand &op, bool emitInsn = true);
+        InsnMc6809 &insn, Operand &op, bool emitInsn = true);
     Error encodeBitOperation(
-            InsnMc6809 &insn, const Operand &op, const Operand &extra);
+        InsnMc6809 &insn, const Operand &op, const Operand &extra);
     Error encodeTransferMemory(
-            InsnMc6809 &insn, const Operand &op, const Operand &extra);
+        InsnMc6809 &insn, const Operand &op, const Operand &extra);
 
     Error processPseudo(InsnMc6809 &insn);
     Error encode(Insn &insn) override;

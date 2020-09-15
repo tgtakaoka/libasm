@@ -30,7 +30,6 @@ public:
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
 
-    uint8_t flags() const { return _flags; }
     void setFlags(uint8_t flags) {
         _flags = flags;
     }
@@ -39,17 +38,19 @@ public:
         _flags = Entry::_flags(addrMode);
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
+
     void emitInsn() {
         emitByte(_opCode);
     }
 
 private:
-    Config::opcode_t _opCode;
     uint8_t _flags;
+    Config::opcode_t _opCode;
 };
 
 } // namespace mos6502

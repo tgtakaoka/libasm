@@ -36,10 +36,12 @@ public:
         _flags = Entry::_flags(addrMode);
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
@@ -48,8 +50,8 @@ public:
     }
 
 private:
-    Config::opcode_t _opCode;
     uint8_t _flags;
+    Config::opcode_t _opCode;
 };
 
 } // namespace ins8060

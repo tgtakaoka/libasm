@@ -69,7 +69,6 @@ static const char TEXT_LI[]   PROGMEM = "LI";
 static const char TEXT_LIMI[] PROGMEM = "LIMI";
 static const char TEXT_LREX[] PROGMEM = "LREX";
 static const char TEXT_LWPI[] PROGMEM = "LWPI";
-static const char TEXT_MID[]  PROGMEM = "MID";
 static const char TEXT_MOV[]  PROGMEM = "MOV";
 static const char TEXT_MOVB[] PROGMEM = "MOVB";
 static const char TEXT_MPY[]  PROGMEM = "MPY";

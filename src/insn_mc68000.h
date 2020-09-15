@@ -20,7 +20,6 @@
 #include "config_mc68000.h"
 #include "entry_mc68000.h"
 #include "insn_base.h"
-#include "reg_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
@@ -36,6 +35,7 @@ public:
     bool alias() const { return Entry::_alias(_pos); }
     OprSize  oprSize() const { return Entry::_oprSize(_size); }
     InsnSize insnSize() const { return Entry::_insnSize(_size); }
+
     void setFlags(uint32_t flags) {
         _src = Entry::_src(flags);
         _dst = Entry::_dst(flags);
@@ -43,43 +43,39 @@ public:
         _size = Entry::_size(flags);
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
-    void embed(Config::opcode_t data, uint8_t gp = 0) {
-        _opCode |= (data << gp);
+    void setAddrMode(AddrMode src, AddrMode dst) {
+        _src = Entry::_opr(src);
+        _dst = Entry::_opr(dst);
     }
 
     void setInsnSize(InsnSize isize) {
         _size = Entry::_size(Entry::_oprSize(_size), isize);
     }
+
     void setOprSize(OprSize osize) {
         _size = Entry::_size(osize, Entry::_insnSize(_size));
     }
-    void appendOprSize(OprSize size, RegMc68000 regs) {
-        char suffix[4];
-        regs.outOprSize(suffix, size);
-        _insn.appendName(suffix);
+
+    void setOpCode(Config::opcode_t opCode) {
+        _opCode = opCode;
     }
-    void setAddrMode(AddrMode src, AddrMode dst) {
-        _src = Entry::_opr(src);
-        _dst = Entry::_opr(dst);
+
+    void embed(Config::opcode_t data) {
+        _opCode |= data;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
 
     void emitInsn() {
         emitUint16(_opCode, 0);
     }
 
     void emitOperand16(uint16_t val16) {
-        uint8_t pos = _insn.length();
-        if (pos == 0) pos = 2;
-        emitUint16(val16, pos);
+        emitUint16(val16, operandPos());
     }
 
     void emitOperand32(uint32_t val32) {
-        emitOperand16(static_cast<uint16_t>(val32 >> 16));
-        emitOperand16(static_cast<uint16_t>(val32));
+        emitUint32(val32, operandPos());
     }
 
 private:
@@ -89,9 +85,10 @@ private:
     uint8_t _pos;
     uint8_t _size;
 
-    void emitUint16(uint16_t val, uint8_t pos) {
-        _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
-        _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (pos == 0) pos = sizeof(Config::opcode_t);
+        return pos;
     }
 };
 

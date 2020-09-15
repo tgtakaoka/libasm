@@ -44,11 +44,12 @@ private:
     RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName regName);
-    bool outOperand(char *out, OprFormat opr, uint8_t value = 0);
+    char *outOperand(char *out, OprFormat opr, uint8_t value = 0);
 
     Error decodeImplied(InsnIns8070 &insn, char *out);
     Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn, char *out);
     Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, char *out);
+    Error decodeDirect(DisMemory &memory, InsnIns8070 &insn, char *out);
     Error decodeRelative(DisMemory &memory, InsnIns8070 &insn, char *out);
     Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, char *out);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;

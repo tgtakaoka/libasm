@@ -33,6 +33,7 @@ public:
     ValueFormatter &getFormatter() override { return _formatter; }
 
 private:
+//    InsnI8080 _insn;
     IntelValueFormatter _formatter;
     RegI8080 _regs;
 
@@ -41,10 +42,6 @@ private:
 
     char *outRegister(char *out, RegName regName);
 
-    Error decodeImmediate8(DisMemory &memory, InsnI8080 &insn, char *out);
-    Error decodeImmediate16(DisMemory &memory, InsnI8080 &insn, char *out);
-    Error decodeDirect(DisMemory &memory, InsnI8080 &insn, char *out);
-    Error decodeIoaddr(DisMemory &memory, InsnI8080 &insn, char *out);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

@@ -144,7 +144,7 @@ Error AsmZ80::encodeIndexed(
 Error AsmZ80::encodeIndexedImmediate8(
     InsnZ80 &insn, const Operand &dst, const Operand &src) {
     Config::opcode_t opc = insn.opCode();
-    insn.setInsnCode(0, insn.prefixCode());
+    insn.setOpCode(insn.prefix());
     if (dst.format == IX_OFF)
         RegZ80::encodeIndexReg(insn, dst.reg);
     if (src.format == IX_OFF)

@@ -364,9 +364,9 @@ Error AsmI8086::encode(Insn &_insn) {
     InsnI8086 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+    _scan = skipSpaces(endName);
 
     Operand dstOp, srcOp;
-    _scan = skipSpaces(endName);
     if (parseOperand(dstOp)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {

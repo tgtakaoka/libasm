@@ -477,6 +477,7 @@ Error AsmZ8000::encode(Insn &_insn) {
     insn.setAddrMode(dstOp.mode, srcOp.mode, ex1Op.mode, ex2Op.mode);
     if (TableZ8000.searchName(insn))
         return setError(TableZ8000.getError());
+
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO) {
         if (emitOperand(insn, dst, dstOp, insn.dstField()))

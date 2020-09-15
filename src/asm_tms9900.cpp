@@ -31,7 +31,7 @@ Error AsmTms9900::encodeImm(InsnTms9900 &insn, bool emitInsn) {
     uint16_t val;
     if (getOperand(val)) return getError();
     if (emitInsn) insn.emitInsn();
-    insn.emitOperand(val);
+    insn.emitOperand16(val);
     return OK;
 }
 
@@ -107,7 +107,7 @@ Error AsmTms9900::encodeOpr(
     if (emitInsn)
         insn.emitInsn();
     if (needsOperandWord(opCode))
-        insn.emitOperand(operand);
+        insn.emitOperand16(operand);
     return getError();
 }
 
@@ -211,9 +211,9 @@ Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
     } else setError(INTERNAL_ERROR);
 
     insn.emitInsn();
-    insn.emitOperand(srcMode | (dstMode << 6));
-    if (needsOperandWord(srcMode)) insn.emitOperand(srcOpr);
-    if (needsOperandWord(dstMode)) insn.emitOperand(dstOpr);
+    insn.emitOperand16(srcMode | (dstMode << 6));
+    if (needsOperandWord(srcMode)) insn.emitOperand16(srcOpr);
+    if (needsOperandWord(dstMode)) insn.emitOperand16(dstOpr);
     return getError();
 }
 
@@ -221,6 +221,7 @@ Error AsmTms9900::encode(Insn &_insn) {
     InsnTms9900 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+
     if (TableTms9900.searchName(insn))
         return setError(TableTms9900.getError());
     _scan = skipSpaces(endName);
