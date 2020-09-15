@@ -23,7 +23,7 @@
 
 #include <libcli.h>
 
-#include <stdlib.h>
+#include <ctype.h>
 
 namespace libasm {
 namespace arduino {
@@ -117,13 +117,9 @@ protected:
         }
         if (strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
             const char *org = line + 4;
-            char *end;
-            const uint32_t origin = strtoul(org, &end, 0);
-            if (*org && *end == 0) {
-                _origin = origin;
-            } else {
+            const char *p = StrMemory::readNumber(org, &_origin);
+            if (p == org)
                 _cli.println(F("unknown ORG"));
-            }
             return true;
         }
         return false;

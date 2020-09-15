@@ -27,111 +27,66 @@ class StrMemory : public DisMemory {
 public:
     StrMemory(uint32_t addr, const char *line)
         : DisMemory(addr),
-          _next(line) {
-        skipSpaces();
-    }
+          _next(line)
+    {}
     
     bool hasNext() const override {
-        const char *saved_next = _next;
-        if (readNumber(nullptr)) {
-            _next = saved_next;
-            return true;
+        return readNumber(_next, nullptr) != _next;
+    }
+
+    static const char *readNumber(const char *p, uint32_t *val) {
+        // Intel style
+        if (scanNumberEnd(p, 'H'))
+            return parseNumber(p, val, 'H');
+
+        // Motorola style
+        if (*p == '$' && scanNumberEnd(p + 1))
+            return parseNumber(p + 1, val);
+
+        // C-style
+        if (*p == '0') {
+            const char c = toupper(p[1]);
+            if (c == 'X' && scanNumberEnd(p + 2))
+                return parseNumber(p + 2, val);
         }
-        return false;
+        return p;
     }
 
 protected:
     uint8_t nextByte() override {
-        uint8_t val8 = 0;
-        readNumber(&val8);
-        skipSpaces();
-        return val8;
+        uint32_t val32 = 0;
+        _next = readNumber(_next, &val32);
+        return val32;
     }
 
 private:
     mutable const char *_next;
 
-    static bool isValidDigit(const char c, const uint8_t base) {
-        if (base == 16) return isxdigit(c);
-        return c >= '0' && c < '0' + base;
+    static bool scanNumberEnd(const char *scan, const char suffix = 0) {
+        return parseNumber(scan, nullptr, suffix) != scan;
     }
 
-    static uint8_t toNumber(const char c, const uint8_t base) {
-        if (base == 16 && !isdigit(c))
-            return toupper(c) - 'A' + 10;
-        return c - '0';
-    }
-
-    static bool scanNumberEnd(
-        const char *p, const uint8_t base, char suffix = 0) {
-        if (!isValidDigit(*p, base))
-            return false;
-        while (isValidDigit(*p, base))
-            p++;
-        if (suffix && toupper(*p++) != suffix)
-            return false;
-        return isspace(*p) || *p == 0;
-    }
-
-    bool parseNumber(
-        const char *p, uint8_t *val, const uint8_t base,
-        const char suffix = 0) const {
-        if (!isValidDigit(*p, base))
-            return false;
-        uint8_t v = 0;
-        while (isValidDigit(*p, base)) {
-            v *= base;
-            v += toNumber(*p, base);
+    static char *parseNumber(const char *scan, uint32_t *val, char suffix = 0) {
+        const char *p = skipSpaces(scan);
+        uint32_t v = 0;
+        while (isxdigit(*p)) {
+            v <<= 4;;
+            v += isdigit(*p) ? *p - '0' : toupper(*p) - 'A' + 10;
             p++;
         }
         if (suffix && toupper(*p++) != suffix)
-            return false;
+            return scan;
         if (isspace(*p) || *p == 0) {
-            _next = p;
             if (val) *val = v;
-            return true;
+            return p;
         }
-        return false;
+        return scan;
     }
 
-    void skipSpaces() {
-        while (isspace(*_next))
-            _next++;
-    }
-
-    bool readNumber(uint8_t *val) const {
-        const char *p = _next;
-
-        // Intel style
-        if (scanNumberEnd(p, 16, 'H'))
-            return parseNumber(p, val, 16, 'H');
-        if (scanNumberEnd(p, 8, 'O'))
-            return parseNumber(p, val, 8, 'O');
-        if (scanNumberEnd(p, 2, 'B'))
-            return parseNumber(p, val, 2, 'B');
-        if (scanNumberEnd(p, 10))
-            return parseNumber(p, val, 10);
-
-        // Motorola style
-        if (*p == '$' && scanNumberEnd(p + 1, 16))
-            return parseNumber(p + 1, val, 16);
-        if (*p == '@' && scanNumberEnd(p + 1, 8))
-            return parseNumber(p + 1, val, 8);
-        if (*p == '%' && scanNumberEnd(p + 1, 2))
-            return parseNumber(p + 1, val, 2);
-
-        // C-style
-        if (*p == '0') {
-            const char c = toupper(p[1]);
-            if (c == 'X' && scanNumberEnd(p + 2, 16))
-                return parseNumber(p + 2, val, 16);
-            if (isValidDigit(c, 8) && scanNumberEnd(p + 1, 8))
-                return parseNumber(p + 1, val, 8);
-            if (c == 'B' && scanNumberEnd(p + 2, 2))
-                return parseNumber(p + 2, val, 2);
-        }
-
-        return false;
+    static char *skipSpaces(char *p) {
+        while (isspace(*p))
+            p++;
+        return p;
     }
 };
 
