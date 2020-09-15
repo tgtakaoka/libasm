@@ -28,11 +28,11 @@ CliMemory::CliMemory() : DisMemory(0) {
 }
 
 void CliMemory::setAddress(uint32_t addr) {
-    this->_address = addr;
+    resetAddress(addr);
 }
 
 bool CliMemory::hasNext() const {
-    uint32_t addr = this->_address;
+    const uint32_t addr = address();
     if (insideOf(_read_cache, addr)) return true;
     for (auto segment = _segments.cbegin();
          segment != _segments.cend();
@@ -48,7 +48,7 @@ bool CliMemory::hasNext() const {
 
 uint8_t CliMemory::nextByte() {
     uint8_t val = 0;
-    readByte(this->_address, val);
+    readByte(address(), val);
     return val;
 }
 

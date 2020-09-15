@@ -32,10 +32,12 @@ public:
     }
 
 protected:
-    uint32_t _address;
-
     DisMemory(uint32_t address) : _address(address) {}
+    void resetAddress(uint32_t address) { _address = address; }
     virtual uint8_t nextByte() = 0;
+
+private:
+    uint32_t _address;
 };
 
 } // namespace libasm

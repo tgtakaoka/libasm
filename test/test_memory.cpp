@@ -66,8 +66,8 @@ bool TestMemory::hasNext() const {
 }
 
 void TestMemory::setAddress(uint32_t addr) {
-    _address = addr;
     _origin = addr;
+    resetAddress(addr);
 }
 
 const uint8_t *TestMemory::bytes() const {

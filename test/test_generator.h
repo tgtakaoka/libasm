@@ -151,7 +151,7 @@ public:
         typename Conf::uintptr_t addr,
         uint8_t *memory,
         int size) {
-        this->_address = addr;
+        resetAddress(addr);
         _memory = memory;
         _memorySize = size;
         _memoryIndex = 0;
