@@ -108,7 +108,7 @@ static void test_jump() {
 
     ATEST(0x1000, "JMP label1000",    0x90, 0xFE);
     EATEST(OPERAND_TOO_FAR, 0x1000, "JMP label0FF0");
-    
+
     TEST("JMP E(PC)",        0x90, 0x80);
     TEST("JMP disp0x7F(P1)", 0x91, 0x7F);
     TEST("JMP disp0x81(P2)", 0x92, 0x81);
@@ -228,7 +228,7 @@ static void test_undefined_symbol() {
 static void test_error() {
     ETEST(UNDEFINED_SYMBOL, "LD (P3)", 0xC0, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LD (E)",  0xC0, 0x00);
-    ETEST(UNKNOWN_OPERAND, "LD 1(E)");
+    ETEST(UNKNOWN_OPERAND,  "LD 1(E)");
     ETEST(MISSING_CLOSING_PAREN, "LD 1(P3");
     ETEST(ILLEGAL_CONSTANT, "LDI #1");
 }

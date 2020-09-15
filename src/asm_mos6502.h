@@ -37,7 +37,6 @@ public:
 
 private:
     MotoValueParser _parser;
-    RegMos6502 _regs;
     bool _long_acc = false;
     bool _long_idx = false;
 
@@ -56,7 +55,7 @@ private:
     Error parseOnOff(const char *line, bool &val);
     Error parseZeroOne(const char *line, bool &val);
     Error selectMode(
-        char size, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp);
+        char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
     Error parseOperand(Operand &op, Operand &extra);
 
     Error encodeLongRelative(InsnMos6502 &insn, const Operand &op);
@@ -64,7 +63,6 @@ private:
     Error encodeZeroPageRelative(
         InsnMos6502 &insn, const Operand &op, const Operand &extra);
     Error processPseudo(InsnMos6502 &insn, const char *line);
-
     Error encode(Insn &insn) override;
 };
 

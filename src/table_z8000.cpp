@@ -82,8 +82,8 @@ static const Entry Z8000_TABLE[] PROGMEM = {
     E(0x7B09, 0x0000, NONE, MRES,   M_NO,   M_NO,   NO, NO)
     E(0x7B0A, 0x0000, NONE, MBIT,   M_NO,   M_NO,   NO, NO)
     E(0x7B0D, 0x00F0, WORD, MREQ,   M_R,    M_NO,   C4, NO)
-    E(0x7C00, 0x0003, NONE, DI,     M_INTT, M_NO,   C0, NO)
-    E(0x7C04, 0x0003, NONE, EI,     M_INTT, M_NO,   C0, NO)
+    E(0x7C00, 0x0003, NONE, DI,     M_INTR, M_NO,   C0, NO)
+    E(0x7C04, 0x0003, NONE, EI,     M_INTR, M_NO,   C0, NO)
     E(0x7D00, 0x00F7, WORD, LDCTL,  M_R,    M_CTL,  C4, C0)
     E(0x7D08, 0x00F7, WORD, LDCTL,  M_CTL,  M_R,    C0, C4)
     E(0x7F00, 0x00FF, NONE, SC,     M_IM8,  M_NO,   C0, C0)
@@ -294,7 +294,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_X)
         return table == M_GENI || table == M_GEND || table == M_GENA;
     if (opr == M_CC) return table == M_FLAG; // C & Z
-    if (opr == M_NO) return table == M_CC || table == M_INTT || table == M_FLAG;
+    if (opr == M_NO) return table == M_CC || table == M_INTR || table == M_FLAG;
     return false;
 }
 

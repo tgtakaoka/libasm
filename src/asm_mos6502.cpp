@@ -57,7 +57,7 @@ Error AsmMos6502::encodeZeroPageRelative(
 }
 
 Error AsmMos6502::selectMode(
-    char size, Operand &op, AddrMode labs, AddrMode abs, AddrMode zp) {
+    char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) {
     if (size == '}') {
         if (labs == IMPL) return setError(UNKNOWN_OPERAND);
         op.mode = labs;
@@ -70,107 +70,146 @@ Error AsmMos6502::selectMode(
     } else {
         op.mode = (op.val32 < 0x100) ? zp : abs;
     }
-    if (endOfLine(skipSpaces(_scan))) return OK;
-    return setError(UNKNOWN_OPERAND);
+    return OK;
+}
+
+static char parseIndirect(const char *p) {
+    if (*p == '(') return ')';
+    if (*p == '[') return ']';
+    return 0;
+}
+
+static char parseSizeOverride(const char *p) {
+    if (*p == '<') return *p;
+    if (*p++ == '>') {
+        if (*p == '>') return '}'; // >>
+        return '>';
+    }
+    return 0;
 }
 
 Error AsmMos6502::parseOperand(Operand &op, Operand &extra) {
     const char *p = _scan;
+    if (endOfLine(p)) return OK;
 
-    if (endOfLine(p)) {
-        op.mode = IMPL;
-        return OK;
-    }
     if (*p == '#') {            // #nn
         _scan = p + 1;
         if (getOperand(op.val32)) return getError();
         op.setError(getError());
-        p = skipSpaces(_scan);
-        if (endOfLine(p)) {
-            op.mode = IMMA;
-            return OK;
-        }
-        return setError(UNKNOWN_OPERAND);
-    }
-    if (_regs.compareRegName(p, REG_A)) { // A
-        _scan = p + _regs.regNameLen(REG_A);
-        op.mode = ACCM;
+        op.mode = IMMA;
         return OK;
     }
+    const RegName reg = RegMos6502::parseRegName(p);
+    if (reg != REG_UNDEF) {
+        _scan = p + RegMos6502::regNameLen(reg);
+        if (reg == REG_A) {
+            op.mode = ACCM;
+            return OK;
+        }
+        return setError(REGISTER_NOT_ALLOWED);
+    }
 
-    const char indir = ((*p == '(') ? ')' : (*p == '[' ? ']' : 0));
+    const char indir = parseIndirect(p);
     if (indir) p = skipSpaces(p + 1);
-    char size = (*p == '>' || *p == '<') ? *p++ : 0;
-    if (*p == '>') { size = '}'; p++; }
+    const char size = parseSizeOverride(p);
+    if (size) p += (size == '}') ? 2 : 1;
     _scan = p;
     if (getOperand(op.val32)) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
-    if (*p == ',') {
+
+    RegName base  = REG_UNDEF;
+    RegName index = REG_UNDEF;
+    bool hasExtra = false;
+    if (*p == ',') { // val,extra val,base (val,base) (val,base),index
         p = skipSpaces(p + 1);
-        if (_regs.compareRegName(p, REG_X)) { // al,X abs,X zp,X (abs,X) (zp,X)
-            p = skipSpaces(p + _regs.regNameLen(REG_X));
-            if (indir) {
-                if (*p == ')') {
-                    _scan = p + 1;
-                    return selectMode(size, op, IMPL, ABS_IDX_IDIR, ZPG_IDX_IDIR);
-                }
-                return setError(MISSING_CLOSING_PAREN);
-            }
+        base = RegMos6502::parseRegName(p);
+        p = skipSpaces(p + RegMos6502::regNameLen(base));
+        if (base == REG_UNDEF) {
             _scan = p;
-            return selectMode(size, op, ABS_LONG_IDX, ABS_IDX, ZPG_IDX);
+            if (getOperand(extra.val32)) return getError();
+            extra.setError(getError());
+            p = skipSpaces(_scan);
+            hasExtra = true;
         }
-        if (_regs.compareRegName(p, REG_Y)) { // abs,Y zp,Y
-            if (indir) return setError(UNKNOWN_OPERAND);
-            _scan = p + _regs.regNameLen(REG_Y);
-            return selectMode(size, op, IMPL, ABS_IDY, ZPG_IDY);
+        if (indir) {
+            if (*p != indir) return setError(MISSING_CLOSING_PAREN);
+            p = skipSpaces(p + 1);
         }
-        if (_regs.compareRegName(p, REG_S)) { // off,S (off,S),Y
-            p = skipSpaces(p + _regs.regNameLen(REG_S));
-            if (indir == 0) {
-                _scan = p;
-                op.mode = SP_REL;
-                return OK;
-            }
-            if (indir == ')' && *p == indir) {
-                p = skipSpaces(p + 1);
-                if (*p != ',') return setError(MISSING_COMMA);
-                p = skipSpaces(p + 1);
-                if (_regs.compareRegName(p, REG_Y)) {
-                    _scan = p + _regs.regNameLen(REG_Y);
-                    op.mode = SP_REL_IDIR_IDY;
-                    return OK;
-                }
-            }
-            return setError(UNKNOWN_OPERAND);
+        if (*p == ',') {
+            p = skipSpaces(p + 1);
+            index = RegMos6502::parseRegName(p);
+            if (index == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+            p = skipSpaces(p + RegMos6502::regNameLen(index));
         }
-        _scan = p;
-        if (getOperand(extra.val32)) return getError();
-        extra.setError(getError());
-        op.mode = ZPG_REL;
-        return OK;
-    }
-    if (indir) {
+    } else if (indir) { // (val) (val),index
         if (*p != indir) return setError(MISSING_CLOSING_PAREN);
         p = skipSpaces(p + 1);
-        if (*p == ',') {        // (zp),Y [zp],Y
+        if (*p == ',') {
             p = skipSpaces(p + 1);
-            if (_regs.compareRegName(p, REG_Y)) {
-                _scan = p + _regs.regNameLen(REG_Y);
-                op.mode = (indir == ']') ? ZPG_IDIR_LONG_IDY : ZPG_IDIR_IDY;
+            index = RegMos6502::parseRegName(p);
+            if (index == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+            p = skipSpaces(p + RegMos6502::regNameLen(index));
+        }
+    }
+
+    _scan = p;
+    if (base == REG_UNDEF) {
+        if (index == REG_UNDEF) {
+            switch (indir) {
+            case ')':  // (abs) (zp)
+                return selectMode(size, op, ZPG_IDIR, ABS_IDIR);
+            case ']':  // [abs] [zp]
+                return selectMode(size, op, ZPG_IDIR_LONG, ABS_IDIR_LONG);
+            default:
+                if (hasExtra) {
+                    op.mode = ZPG_REL;  // zp,rel
+                    return OK;
+                }
+                // labs abs zp
+                return selectMode(size, op, ZPG, ABS, ABS_LONG);
+            }
+        }
+        if (indir == 0) return setError(UNKNOWN_OPERAND);
+        if (index == REG_Y) {   // (zp),Y [zp],Y
+            op.mode = (indir == ']') ? ZPG_IDIR_LONG_IDY : ZPG_IDIR_IDY;
+            return OK;
+        }
+        return setError(REGISTER_NOT_ALLOWED);
+    }
+    switch (indir) {
+    case 0:
+        if (index != REG_UNDEF) return setError(REGISTER_NOT_ALLOWED);
+        switch (base) {
+        case REG_X:  // labs,X abs,X zp,X
+            return selectMode(size, op, ZPG_IDX, ABS_IDX, ABS_LONG_IDX);
+        case REG_Y:  // abs,Y zp,Y
+            return selectMode(size, op, ZPG_IDY, ABS_IDY);
+        case REG_S:  // off,S
+            op.mode = SP_REL;
+            return OK;
+        default:
+            return setError(REGISTER_NOT_ALLOWED);
+        }
+    case ')':
+        switch (base) {
+        case REG_X:  // (abs,X) (zp,X)
+            if (index == REG_UNDEF)
+                return selectMode(size, op, ZPG_IDX_IDIR, ABS_IDX_IDIR);
+            return setError(REGISTER_NOT_ALLOWED);
+        case REG_S:  // (off,S),Y
+            if (index == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+            if (index == REG_Y) {
+                op.mode = SP_REL_IDIR_IDY;
                 return OK;
             }
-            return setError(UNKNOWN_OPERAND);
+            /* Fall-through */
+        default:
+            return setError(REGISTER_NOT_ALLOWED);
         }
-        // (abs) (zp) [abs] [zp]
-        _scan = p;
-        return selectMode(size, op, IMPL,
-                          indir == ']' ? ABS_IDIR_LONG : ABS_IDIR,
-                          indir == ']' ? ZPG_IDIR_LONG : ZPG_IDIR);
+    default:
+        return setError(UNKNOWN_OPERAND);
     }
-    // al abs zp
-    _scan = p;
-    return selectMode(size, op, ABS_LONG, ABS, ZPG);
 }
 
 static const char TEXT_M[]      PROGMEM = "M";
@@ -198,11 +237,11 @@ Error AsmMos6502::parseOnOff(const char *line, bool &val) {
 Error AsmMos6502::parseZeroOne(const char *line, bool &val) {
     line = skipSpaces(line);
     if (*line == ':') {
-        uint32_t val32;
+        uint8_t val8;
         _scan = line + 1;
-        if (getOperand(val32) == OK) {
-            if (val32 == 1) val = false;
-            else if (val32 == 0) val = true;
+        if (getOperand(val8) == OK) {
+            if (val8 == 1) val = false;
+            else if (val8 == 0) val = true;
             else setError(UNKNOWN_OPERAND);
             checkLineEnd();
         } else {
@@ -220,9 +259,9 @@ Error AsmMos6502::processPseudo(InsnMos6502 &insn, const char *line) {
         return parseOnOff(line, _long_idx);
     if (strcasecmp_P(insn.name(), TEXT_ASSUME) == 0) {
         const char *end = _parser.scanSymbol(line);
-        if (strncasecmp(line, TEXT_M, end - line) == 0)
+        if (strncasecmp_P(line, TEXT_M, end - line) == 0)
             return parseZeroOne(end, _long_acc);
-        if (strncasecmp(line, TEXT_X, end - line) == 0)
+        if (strncasecmp_P(line, TEXT_X, end - line) == 0)
             return parseZeroOne(end, _long_idx);
         setError(UNKNOWN_OPERAND);
         return OK;
@@ -235,13 +274,21 @@ Error AsmMos6502::encode(Insn &_insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
     _scan = skipSpaces(endName);
+
     if (processPseudo(insn, _scan) == OK)
         return getError();
+
     Operand op, extra;
-    if (parseOperand(op, extra)) return getError();
+    if (parseOperand(op, extra))
+        return getError();
+    if (!endOfLine(skipSpaces(_scan))) return setError(GARBAGE_AT_END);
+    setErrorIf(op.getError());
+    setErrorIf(extra.getError());
+
     insn.setAddrMode(op.mode);
     if (TableMos6502.searchName(insn))
         return setError(TableMos6502.getError());
+
     switch (insn.addrMode()) {
     case IMPL:
     case ACCM:
@@ -258,23 +305,23 @@ Error AsmMos6502::encode(Insn &_insn) {
         break;
     case BLOCK_MOVE:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(extra.val32 >> 16));;
-        insn.emitByte(static_cast<uint8_t>(op.val32 >> 16));
+        insn.emitByte(extra.val32 >> 16);;
+        insn.emitByte(op.val32 >> 16);
         break;
     case IMMA:
         insn.emitInsn();
         if (_long_acc) {
-            insn.emitUint16(static_cast<uint16_t>(op.val32));
+            insn.emitUint16(op.val32);
         } else {
-            insn.emitByte(static_cast<uint8_t>(op.val32));
+            insn.emitByte(op.val32);
         }
         break;
     case IMMX:
         insn.emitInsn();
         if (_long_idx) {
-            insn.emitUint16(static_cast<uint16_t>(op.val32));
+            insn.emitUint16(op.val32);
         } else {
-            insn.emitByte(static_cast<uint8_t>(op.val32));
+            insn.emitByte(op.val32);
         }
         break;
     case IMM8:
@@ -289,7 +336,7 @@ Error AsmMos6502::encode(Insn &_insn) {
     case ZPG_IDIR_LONG:
     case ZPG_IDIR_LONG_IDY:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op.val32));
+        insn.emitByte(op.val32);
         break;
     case ABS:
     case ABS_IDX:
@@ -298,21 +345,16 @@ Error AsmMos6502::encode(Insn &_insn) {
     case ABS_IDX_IDIR:
     case ABS_IDIR_LONG:
         insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
+        insn.emitUint16(op.val32);
         break;
     case ABS_LONG:
     case ABS_LONG_IDX:
         insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
-        insn.emitByte(static_cast<uint8_t>(op.val32 >> 16));
+        insn.emitUint16(op.val32);
+        insn.emitByte(op.val32 >> 16);
         break;
-    default:
-        return setError(INTERNAL_ERROR);
     }
-    setErrorIf(op.getError());
-    setErrorIf(extra.getError());
-
-    return checkLineEnd();
+    return getError();
 }
 
 } // namespace mos6502

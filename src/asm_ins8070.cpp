@@ -65,7 +65,7 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     const Config::ptrdiff_t offset = static_cast<Config::uintptr_t>(op.val16);
     if (offset < -128 || offset >= 128)
         return setError(OVERFLOW_RANGE);
-    insn.embed(_regs.encodePointerReg(op.reg));
+    insn.embed(RegIns8070::encodePointerReg(op.reg));
     if (op.autoIndex) insn.embed(4);
     insn.emitOperand8(static_cast<uint8_t>(offset));
     return OK;
@@ -76,7 +76,7 @@ Error AsmIns8070::emitOperand(
     switch (format) {
     case OPR_PN:
     case OPR_BR:
-        insn.embed(_regs.encodePointerReg(op.reg));
+        insn.embed(RegIns8070::encodePointerReg(op.reg));
         break;
     case OPR_4:
         insn.embed(op.val16 & 0x0F);
@@ -109,9 +109,9 @@ Error AsmIns8070::parseOperand(Operand &op) {
         return OK;
     }
 
-    const RegName reg = _regs.parseRegister(p);
+    const RegName reg = RegIns8070::parseRegName(p);
     if (reg != REG_UNDEF) {
-        _scan = p + _regs.regNameLen(reg);
+        _scan = p + RegIns8070::regNameLen(reg);
         OprFormat opr;
         switch (reg) {
         case REG_A:  opr = OPR_A;  break;
@@ -143,11 +143,11 @@ Error AsmIns8070::parseOperand(Operand &op) {
             autoIndex = true;
             p++;
         }
-        const RegName ptr = _regs.parsePointerReg(p);
-        if (ptr == REG_UNDEF) return setError(UNKNOWN_OPERAND);
+        const RegName ptr = RegIns8070::parseRegName(p);
+        if (!RegIns8070::isPointerReg(ptr)) setError(UNKNOWN_OPERAND);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
             return setError(REGISTER_NOT_ALLOWED);
-        _scan = p + _regs.regNameLen(ptr);
+        _scan = p + RegIns8070::regNameLen(ptr);
         op.reg = ptr;
         op.autoIndex = autoIndex;
         op.format = (autoIndex || ptr == REG_SP || ptr == REG_PC)

@@ -35,24 +35,24 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
 
     switch (insn.insnFormat()) {
     case POINTER_REG:
-        out = outRegister(out, RegI8080::decodePointerReg((opCode >> 4) & 3));
+        out = outRegister(out, RegI8080::decodePointerReg(opCode >> 4));
         break;
     case STACK_REG:
-        out = outRegister(out, RegI8080::decodeStackReg((opCode >> 4) & 3));
+        out = outRegister(out, RegI8080::decodeStackReg(opCode >> 4));
         break;
     case INDEX_REG:
-        out = outRegister(out, RegI8080::decodeIndexReg((opCode >> 4) & 1));
+        out = outRegister(out, RegI8080::decodeIndexReg(opCode >> 4));
         break;
     case DATA_REG:
-        out = outRegister(out, RegI8080::decodeDataReg((opCode >> 3) & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode >> 3));
         break;
     case LOW_DATA_REG:
-        out = outRegister(out, RegI8080::decodeDataReg(opCode & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode));
         break;
     case DATA_DATA_REG:
-        out = outRegister(out, RegI8080::decodeDataReg((opCode >> 3) & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode >> 3));
         *out++ = ',';
-        out = outRegister(out, RegI8080::decodeDataReg(opCode & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode));
         break;
     case VECTOR_NO:
         out = outConstant(out, static_cast<uint8_t>((opCode >> 3) & 7));

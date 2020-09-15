@@ -22,35 +22,27 @@
 namespace libasm {
 namespace ins8060 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_P0 = '0',
-    REG_P1 = '1',
-    REG_P2 = '2',
-    REG_P3 = '3',
-    REG_E  = 'E',
-    REG_PC = 'P',
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // Pointer registers.
+    REG_PC = 0,
+    REG_P1 = 1,
+    REG_P2 = 2,
+    REG_P3 = 3,
+    // Other registers.
+    REG_P0 = 0 + 4, // Alias of PC
+    REG_E  = 1 + 4,
 };
 
 class RegIns8060 : public RegBase {
 public:
-    RegName parseRegister(const char *line) const;
-    RegName parsePointerReg(const char *line) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, const RegName name) const;
 
-    static int8_t encodePointerReg(RegName regName);
-
-    static RegName decodePointerReg(uint8_t regNum);
-
-    bool compareRegName(const char *line, RegName regName) const;
-    uint8_t regNameLen(RegName regName) const;
-
-    char *outRegName(char *out, const RegName regName) const;
-
-private:
-    RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end) const;
-    char regName1stChar(RegName regName) const;
-    char regName2ndChar(RegName regName) const;
+    static bool isPointerReg(RegName name);
+    static uint8_t encodePointerReg(RegName name);
+    static RegName decodePointerReg(uint8_t num);
 };
 
 } // namespace ins8060

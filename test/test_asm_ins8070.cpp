@@ -365,7 +365,7 @@ static void test_error() {
     ETEST(ILLEGAL_CONSTANT, "LD A,@=1");
     ETEST(MISSING_COMMA,    "LD A,1(P3)");  // SC/MP style
     ETEST(MISSING_COMMA,    "LD A,@1(P3)"); // SC/MP style
-    ETEST(UNKNOWN_OPERAND,  "LD A,1,(EA)");
+    ETEST(GARBAGE_AT_END,   "LD A,1,(EA)");
 }
 
 void run_tests() {

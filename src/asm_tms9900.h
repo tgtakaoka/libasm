@@ -34,7 +34,6 @@ public:
 
 private:
     IntelValueParser _parser;
-    RegTms9900 _regs;
 
     TableBase &getTable() const override { return TableTms9900; }
 

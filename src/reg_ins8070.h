@@ -22,38 +22,30 @@
 namespace libasm {
 namespace ins8070 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_PC = 'P',
-    REG_SP = 'S',
-    REG_P2 = '2',
-    REG_P3 = '3',
-    REG_A  = 'A',
-    REG_E  = 'E',
-    REG_EA = 'e',
-    REG_T  = 'T',
-    REG_S  = 's',
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // Pointer registers.
+    REG_PC = 0,
+    REG_SP = 1,
+    REG_P2 = 2,
+    REG_P3 = 3,
+    // Other registers.
+    REG_A  = 0 + 4,
+    REG_E  = 1 + 4,
+    REG_EA = 2 + 4,
+    REG_T  = 3 + 4,
+    REG_S  = 5 + 4,
 };
 
 class RegIns8070 : public RegBase {
 public:
-    RegName parseRegister(const char *line) const;
-    RegName parsePointerReg(const char *line) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, const RegName name) const;
 
-    static int8_t encodePointerReg(RegName regName);
-
-    static RegName decodePointerReg(uint8_t regNum);
-
-    bool compareRegName(const char *line, RegName regName) const;
-    uint8_t regNameLen(RegName regName) const;
-
-    char *outRegName(char *out, const RegName regName) const;
-
-private:
-    RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end) const;
-    char regName1stChar(RegName regName) const;
-    char regName2ndChar(RegName regName) const;
+    static bool isPointerReg(RegName name);
+    static uint8_t encodePointerReg(RegName name);
+    static RegName decodePointerReg(uint8_t num);
 };
 
 } // namespace ins8070

@@ -23,50 +23,57 @@
 namespace libasm {
 namespace mc68000 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_D0 = '0',
-    REG_D1 = '1',
-    REG_D2 = '2',
-    REG_D3 = '3',
-    REG_D4 = '4',
-    REG_D5 = '5',
-    REG_D6 = '6',
-    REG_D7 = '7',
-    REG_A0 = 'a',
-    REG_A1 = 'b',
-    REG_A2 = 'c',
-    REG_A3 = 'd',
-    REG_A4 = 'e',
-    REG_A5 = 'f',
-    REG_A6 = 'g',
-    REG_A7 = 'h',
-    REG_CCR = 'C',
-    REG_PC = 'P',
-    REG_SR = 'S',
-    REG_USP = 'U',
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // Data registers.
+    REG_D0 = 0 + 0,
+    REG_D1 = 1 + 0,
+    REG_D2 = 2 + 0,
+    REG_D3 = 3 + 0,
+    REG_D4 = 4 + 0,
+    REG_D5 = 5 + 0,
+    REG_D6 = 6 + 0,
+    REG_D7 = 7 + 0,
+    // Address registers.
+    REG_A0 = 0 + 8,
+    REG_A1 = 1 + 8,
+    REG_A2 = 2 + 8,
+    REG_A3 = 3 + 8,
+    REG_A4 = 4 + 8,
+    REG_A5 = 5 + 8,
+    REG_A6 = 6 + 8,
+    REG_A7 = 7 + 8,
+    // Other registers.
+    REG_CCR = 0 + 16,
+    REG_PC  = 1 + 16,
+    REG_SR  = 2 + 16,
+    REG_USP = 3 + 16,
 };
 
 class RegMc68000 : public RegBase {
 public:
-    static uint8_t regNameLen(RegName);
     static RegName parseRegName(const char *line);
-    char *outRegName(char *out, RegName regName) const;
-    char *outOprSize(char *out, OprSize size) const;
-    static bool isDreg(RegName reg);
-    static bool isAreg(RegName reg);
-    static bool isADreg(RegName reg);
-    static Config::opcode_t encodeRegNo(RegName reg);
-    static uint8_t encodeRegPos(RegName reg);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, RegName name);
+    static bool isDataReg(RegName name);
+    static bool isAddrReg(RegName name);
+    static bool isGeneralReg(RegName name);
+    static Config::opcode_t encodeGeneralRegNo(RegName name);
+    static uint8_t encodeGeneralRegPos(RegName name);
+    static RegName decodeGeneralReg(uint8_t regno);
     static RegName decodeDataReg(uint8_t regno);
     static RegName decodeAddrReg(uint8_t regno);
+
+    static OprSize parseSize(const char *line);
+    static uint8_t sizeNameLen(OprSize size);
+    char sizeSuffix(OprSize size) const;
 };
 
 struct EaMc68000 {
     EaMc68000(OprSize size, uint8_t mode, uint8_t regno);
 
     static Config::opcode_t encodeMode(AddrMode mode);
-    static Config::opcode_t encodeRegNo(AddrMode mode, RegName regName);
+    static Config::opcode_t encodeRegNo(AddrMode mode, RegName reg);
 
     OprSize size;
     AddrMode mode;

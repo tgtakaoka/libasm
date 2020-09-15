@@ -35,7 +35,6 @@ public:
 
 private:
     ValueParser _parser;
-    RegNs32000 _regs;
 
     TableBase &getTable() const override { return TableNs32000; }
 

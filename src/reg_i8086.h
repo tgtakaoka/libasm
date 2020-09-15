@@ -23,11 +23,18 @@
 namespace libasm {
 namespace i8086 {
 
-enum RegName : uint8_t {
-    REG_UNDEF = 0,
-    REG_BYTE  = 1,
-    REG_WORD  = 2,
-    REG_PTR   = 3,
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // General word registers.
+    REG_AX = 0 + 0,
+    REG_CX = 1 + 0,
+    REG_DX = 2 + 0,
+    REG_BX = 3 + 0,
+    REG_SP = 4 + 0,
+    REG_BP = 5 + 0,
+    REG_SI = 6 + 0,
+    REG_DI = 7 + 0,
+    // General byte registers.
     REG_AL = 0 + 8,
     REG_CL = 1 + 8,
     REG_DL = 2 + 8,
@@ -36,32 +43,30 @@ enum RegName : uint8_t {
     REG_CH = 5 + 8,
     REG_DH = 6 + 8,
     REG_BH = 7 + 8,
-    REG_AX = 0 + 16,
-    REG_CX = 1 + 16,
-    REG_DX = 2 + 16,
-    REG_BX = 3 + 16,
-    REG_SP = 4 + 16,
-    REG_BP = 5 + 16,
-    REG_SI = 6 + 16,
-    REG_DI = 7 + 16,
-    REG_ES = 0 + 24,
-    REG_CS = 1 + 24,
-    REG_SS = 2 + 24,
-    REG_DS = 3 + 24,
+    // Segment registers.
+    REG_ES = 0 + 16,
+    REG_CS = 1 + 16,
+    REG_SS = 2 + 16,
+    REG_DS = 3 + 16,
+    // Other registers.
+    REG_BYTE = 0 + 20,
+    REG_WORD = 1 + 20,
+    REG_PTR  = 2 + 20,
 };
 
 class RegI8086 : public RegBase {
 public:
-    RegName parseRegName(const char *line) const;
-    uint8_t regNameLen(RegName name) const;
-    RegName decodeByteReg(uint8_t num) const;
-    RegName decodeWordReg(uint8_t num) const;
-    RegName decodeSegReg(uint8_t num) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
     char *outRegName(char *out, const RegName name) const;
-    uint8_t encodeRegNum(RegName name) const;
-    bool isGeneralReg(RegName name) const;
-    bool isSegmentReg(RegName name) const;
-    OprSize regSize(RegName name) const;
+
+    static RegName decodeByteReg(uint8_t num);
+    static RegName decodeWordReg(uint8_t num);
+    static RegName decodeSegReg(uint8_t num);
+    static uint8_t encodeRegNum(RegName name);
+    static bool isGeneralReg(RegName name);
+    static bool isSegmentReg(RegName name);
+    static OprSize generalRegSize(RegName name);
 };
 
 } // namespace i8086

@@ -49,10 +49,10 @@ Error AsmTms9900::encodeImmMod(InsnTms9900 &insn) {
 }
 
 Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
-    RegName regName = _regs.parseRegName(_scan);
+    RegName regName = RegTms9900::parseRegName(_scan);
     if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
-    _scan += _regs.regNameLen(regName);
-    const uint16_t regNo = _regs.encodeRegNumber(regName);
+    _scan += RegTms9900::regNameLen(regName);
+    const uint16_t regNo = RegTms9900::encodeRegNumber(regName);
     switch (insn.addrMode()) {
     case REG:
     case REG_IMM:
@@ -71,7 +71,7 @@ Error AsmTms9900::encodeReg(InsnTms9900 &insn, bool emitInsn) {
 
 Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
     uint16_t count;
-    const RegName reg = _regs.parseRegName(_scan);
+    const RegName reg = RegTms9900::parseRegName(_scan);
     if (reg != REG_UNDEF) {
         if (reg != REG_R0 || !acceptR0) return setError(REGISTER_NOT_ALLOWED);
         _scan += 2;
@@ -115,16 +115,16 @@ Error AsmTms9900::encodeOpr(Config::opcode_t &oprMode, uint16_t &operand) {
     const char *p = _scan;
     RegName regName;
     uint8_t mode = 0;
-    if ((regName = _regs.parseRegName(p)) != REG_UNDEF) {
-        p += _regs.regNameLen(regName);
+    if ((regName = RegTms9900::parseRegName(p)) != REG_UNDEF) {
+        p += RegTms9900::regNameLen(regName);
         mode = 0;
         setOK();
     } else if (*p == '*') {
         p = skipSpaces(p + 1);
         mode = 1;
-        if ((regName = _regs.parseRegName(p)) == REG_UNDEF)
+        if ((regName = RegTms9900::parseRegName(p)) == REG_UNDEF)
             return setError(UNKNOWN_OPERAND);
-        p += _regs.regNameLen(regName);
+        p += RegTms9900::regNameLen(regName);
         if (*p == '+') {
             p++;
             mode = 3;
@@ -137,10 +137,10 @@ Error AsmTms9900::encodeOpr(Config::opcode_t &oprMode, uint16_t &operand) {
         p = skipSpaces(_scan);
         if (*p == '(') {
             p = skipSpaces(p + 1);
-            regName = _regs.parseRegName(p);
+            regName = RegTms9900::parseRegName(p);
             if (regName == REG_UNDEF) return setError(UNKNOWN_OPERAND);
             if (regName == REG_R0) return setError(REGISTER_NOT_ALLOWED);
-            p = skipSpaces(p + _regs.regNameLen(regName));
+            p = skipSpaces(p + RegTms9900::regNameLen(regName));
             if (*p != ')') return setError(MISSING_CLOSING_PAREN);
             p++;
         } else {
@@ -148,7 +148,7 @@ Error AsmTms9900::encodeOpr(Config::opcode_t &oprMode, uint16_t &operand) {
         }
     }
     _scan = p;
-    oprMode = (mode << 4) | _regs.encodeRegNumber(regName);
+    oprMode = (mode << 4) | RegTms9900::encodeRegNumber(regName);
     return OK;
 }
 
@@ -191,10 +191,10 @@ Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
         if (dstOpr >= 16) return setError(ILLEGAL_BIT_NUMBER);
         dstMode = dstOpr;
     } else if (insn.addrMode() == DW_CNT_SRC) {
-        const RegName reg = _regs.parseRegName(_scan);
+        const RegName reg = RegTms9900::parseRegName(_scan);
         if (reg != REG_UNDEF) {
             if (reg != REG_R0) return setError(REGISTER_NOT_ALLOWED);
-            _scan += _regs.regNameLen(reg);
+            _scan += RegTms9900::regNameLen(reg);
             dstOpr = 0;
         } else if (getOperand(dstOpr)) {
             return getError();

@@ -25,7 +25,7 @@ char *DisIns8060::outRegister(char *out, RegName regName) {
 }
 
 Error DisIns8060::decodePntr(InsnIns8060 &insn, char *out) {
-    outRegister(out, _regs.decodePointerReg(insn.opCode() & 3));
+    outRegister(out, _regs.decodePointerReg(insn.opCode()));
     return setOK();
 }
 
@@ -37,7 +37,7 @@ Error DisIns8060::decodeImm8(
 
 Error DisIns8060::decodeIndx(
     DisMemory &memory, InsnIns8060& insn, char *out, bool hasMode) {
-    const RegName reg = _regs.decodePointerReg(insn.opCode() & 3);
+    const RegName reg = _regs.decodePointerReg(insn.opCode());
     const uint8_t opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)
         *out++ = '@';

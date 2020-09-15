@@ -25,6 +25,26 @@ class RegBase {
 public:
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
 
+    static bool isidchar(const char c) {
+        return isalnum(c) || c == '_';
+    }
+
+    struct NameEntry {
+        const uint8_t _name;
+        const char *const _text;
+#define NAME_ENTRY(name) { name, TEXT_##name },
+
+        inline uint8_t name() const {
+            return pgm_read_byte(&this->_name);
+        }
+        inline const /*PROGMEM*/ char *text() const {
+            return reinterpret_cast<const char *>(pgm_read_ptr(&this->_text));
+        }
+        inline uint8_t len() const {
+            return strlen_P(text());
+        }
+    };
+
 protected:
     bool _uppercase;
 
@@ -34,7 +54,7 @@ protected:
         return out;
     }
 
-    char *outText(char *out, const char *text) const {
+    char *outText(char *out, const /*PROGMEM*/ char *text) const {
         while (true) {
             const char c = pgm_read_byte(text);
             if (c == 0) break;
@@ -42,6 +62,32 @@ protected:
             text++;
         }
         return out;
+    }
+
+    static const NameEntry *searchName(
+        uint8_t name, const NameEntry *begin, const NameEntry *end) {
+        for (const NameEntry *entry = begin; entry < end; entry++) {
+            if (name == entry->name())
+                return entry;
+        }
+        return nullptr;
+    }
+
+    static uint8_t nameLen(
+        uint8_t name, const NameEntry *begin, const NameEntry *end) {
+        const NameEntry *entry = searchName(name, begin, end);
+        return entry ? entry->len() : 0;
+    }
+
+    static const NameEntry *searchText(
+        const char *str, const NameEntry *begin, const NameEntry *end) {
+        for (const NameEntry *entry = begin; entry < end; entry++) {
+            const /*PROGMEM*/ char *text = entry->text();
+            const uint8_t len = entry->len();
+            if (strncasecmp_P(str, text, len) == 0 && !isidchar(str[len]))
+                return entry;
+        }
+        return nullptr;
     }
 };
 

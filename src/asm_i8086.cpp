@@ -37,13 +37,13 @@ bool AsmI8086::parseStringInst(const char *scan, Operand &op) {
 
 const char *AsmI8086::parsePointerSize(const char *scan, Operand &op) {
     const char *p = scan;
-    const RegName reg = _regs.parseRegName(p);
+    const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_BYTE || reg == REG_WORD) {
-        p = skipSpaces(p + _regs.regNameLen(reg));
+        p = skipSpaces(p + RegI8086::regNameLen(reg));
         // Pointer size override
-        if (_regs.parseRegName(p) == REG_PTR) {
+        if (RegI8086::parseRegName(p) == REG_PTR) {
             op.ptr = reg;
-            return skipSpaces(p + _regs.regNameLen(REG_PTR));
+            return skipSpaces(p + RegI8086::regNameLen(REG_PTR));
         }
         setError(UNKNOWN_OPERAND);
         return nullptr;
@@ -53,9 +53,9 @@ const char *AsmI8086::parsePointerSize(const char *scan, Operand &op) {
 
 const char *AsmI8086::parseSegmentOverride(const char *scan, Operand &op) {
     const char *p = scan;
-    const RegName reg = _regs.parseRegName(p);
-    if (_regs.isSegmentReg(reg)) {
-        p = skipSpaces(p + _regs.regNameLen(reg));
+    const RegName reg = RegI8086::parseRegName(p);
+    if (RegI8086::isSegmentReg(reg)) {
+        p = skipSpaces(p + RegI8086::regNameLen(reg));
         // Segment Override
         if (*p == ':') {
             op.seg = reg;
@@ -67,10 +67,10 @@ const char *AsmI8086::parseSegmentOverride(const char *scan, Operand &op) {
 
 const char *AsmI8086::parseBaseRegister(const char *scan, Operand &op) {
     const char *p = scan;
-    const RegName reg = _regs.parseRegName(p);
+    const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
-        return skipSpaces(p + _regs.regNameLen(reg));
+        return skipSpaces(p + RegI8086::regNameLen(reg));
     }
     return scan;
 }
@@ -81,10 +81,10 @@ const char *AsmI8086::parseIndexRegister(const char *scan, Operand &op) {
         if (*p != '+') return scan;
         p = skipSpaces(p + 1);
     }
-    const RegName reg = _regs.parseRegName(p);
+    const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
-        return skipSpaces(p + _regs.regNameLen(reg));
+        return skipSpaces(p + RegI8086::regNameLen(reg));
     }
     return scan;
 }
@@ -139,9 +139,9 @@ Error AsmI8086::parseOperand(Operand &op) {
     if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
         return setError(UNKNOWN_OPERAND);
 
-    const RegName reg = _regs.parseRegName(p);
-    if (_regs.isGeneralReg(reg)) {
-        _scan = p + _regs.regNameLen(reg);
+    const RegName reg = RegI8086::parseRegName(p);
+    if (RegI8086::isGeneralReg(reg)) {
+        _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
         switch (reg) {
         case REG_AL: op.mode = M_AL; break;
@@ -149,13 +149,13 @@ Error AsmI8086::parseOperand(Operand &op) {
         case REG_AX: op.mode = M_AX; break;
         case REG_DX: op.mode = M_DX; break;
         default:
-            op.mode = (_regs.regSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
+            op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
             break;
         }
         return OK;
     }
-    if (_regs.isSegmentReg(reg)) {
-        _scan = p + _regs.regNameLen(reg);
+    if (RegI8086::isSegmentReg(reg)) {
+        _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
         op.mode = M_SREG;
         return OK;
@@ -212,7 +212,7 @@ Error AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) 
 }
 
 Error AsmI8086::emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos) {
-    const uint8_t num = _regs.encodeRegNum(op.reg);
+    const uint8_t num = RegI8086::encodeRegNum(op.reg);
     switch (pos) {
     case P_OREG: insn.embed(num); break;
     case P_OSEG: insn.embed(num << 3); break;

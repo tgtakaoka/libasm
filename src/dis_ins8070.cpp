@@ -31,7 +31,7 @@ char *DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
     case OPR_S:  return outRegister(out, REG_S);
     case OPR_EA: return outRegister(out, REG_EA);
     case OPR_PN: return outRegister(out, (value & 1) ? REG_P3 : REG_P2);
-    case OPR_BR: return outRegister(out, RegIns8070::decodePointerReg(value & 3));
+    case OPR_BR: return outRegister(out, RegIns8070::decodePointerReg(value));
     case OPR_T:  return outRegister(out, REG_T);
     case OPR_4:  return outConstant(out, static_cast<uint8_t>(value & 15), 10);
     default:     return out;
@@ -78,7 +78,7 @@ Error DisIns8070::decodeRelative(
         DisMemory &memory, InsnIns8070 &insn, char *out) {
     const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
     const OprFormat src = insn.srcOpr();
-    const RegName base = _regs.decodePointerReg(insn.opCode() & 3);
+    const RegName base = _regs.decodePointerReg(insn.opCode());
     if (insn.dstOpr() == OPR_RL
         || (src == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;

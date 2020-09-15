@@ -23,83 +23,79 @@
 namespace libasm {
 namespace z80 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_HL = 'h',
-    REG_BC = 'b',
-    REG_DE = 'd',
-    REG_SP = 's',
-    REG_AF = 'a',
-    REG_AFP = 'f',              // AF'
-    REG_IX = 'x',
-    REG_IY = 'y',
-    REG_B = 'B',
-    REG_C = 'C',
-    REG_D = 'D',
-    REG_E = 'E',
-    REG_H = 'H',
-    REG_L = 'L',
-    REG_A = 'A',
-    REG_I = 'I',
-    REG_R = 'R',
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // 16-bit registers
+    // Pointer registers
+    REG_BC  = 0 + 0,
+    REG_DE  = 1 + 0,
+    REG_HL  = 2 + 0,
+    REG_SP  = 3 + 0,
+    REG_IX  = 4 + 0,
+    REG_IY  = 5 + 0,
+    REG_AF  = 6 + 0,
+    REG_AFP = 7 + 0,
+    // 8-bit registers
+    // Data registers
+    REG_B = 0 + 8,
+    REG_C = 1 + 8,
+    REG_D = 2 + 8,
+    REG_E = 3 + 8,
+    REG_H = 4 + 8,
+    REG_L = 5 + 8,
+    REG_A = 7 + 8,
+    // Other registers
+    REG_I  = 0 + 16,
+    REG_R  = 1 + 16,
     // 8085
-    REG_IM = 'i',
+    REG_IM = 0 + 18,
 };
 
-enum CcName : char {
-    CC_UNDEF = 0,
-    CC_Z  = 'Z',
-    CC_NZ = 'z',
-    CC_C  = 'C',
-    CC_NC = 'c',
-    CC_PO = 'o',
-    CC_PE = 'e',
-    CC_P  = 'P',
-    CC_M  = 'M',
+enum CcName : int8_t {
+    CC_UNDEF = -1,
+    CC_NZ = 0,
+    CC_Z  = 1,
+    CC_NC = 2,
+    CC_C  = 3,
+    CC_PO = 4,
+    CC_PE = 5,
+    CC_P  = 6,
+    CC_M  = 7,
 };
 
 class RegZ80 : public RegBase {
 public:
-    CcName parseCc4Name(const char *line) const;
-    CcName parseCc8Name(const char *line) const;
-    bool compareRegName(const char *line, RegName regName) const;
-    static uint8_t ccNameLen(const CcName ccName);
-    static int8_t encodeCcName(CcName ccName);
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(const RegName name);
+    char *outRegName(char *out, const RegName name) const;
+    static OprSize regSize(const RegName name);
 
-    RegName parseRegister(const char *line) const;
-    static OprSize registerSize(const RegName regName);
-    static uint8_t regNameLen(const RegName regName);
-    static int8_t encodePointerReg(RegName regName);
-    static int8_t encodePointerRegIx(RegName regName, RegName ix);
-    static int8_t encodeStackReg(RegName regName);
-    static int8_t encodeIndirectBase(RegName regName);
-    static void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
-    static int8_t encodeIrReg(RegName regName);
-    static int8_t encodeDataReg(RegName regName);
+    static uint8_t encodeDataReg(RegName name);
+    static RegName decodeDataReg(uint8_t num);
 
+    static uint8_t encodePointerReg(RegName name);
+    static uint8_t encodePointerRegIx(RegName name, RegName ix);
     static RegName decodePointerReg(
-        uint8_t regNum, const InsnZ80 *insn = nullptr);
-    static RegName decodeStackReg(uint8_t regNum);
-    static RegName decodeIndirectBase(uint8_t regNum);
+        uint8_t num, const InsnZ80 *insn = nullptr);
+
+    static uint8_t encodeStackReg(RegName name);
+    static RegName decodeStackReg(uint8_t num);
+
+    static uint8_t encodeIndirectBase(RegName name);
+    static RegName decodeIndirectBase(uint8_t num);
+
+    static void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
     static RegName decodeIndexReg(const InsnZ80 &insn);
-    static RegName decodeIrReg(uint8_t regNum);
-    static RegName decodeDataReg(uint8_t regNum);
 
-    char *outRegName(char *out, const RegName regName) const;
-    char *outCc4Name(char *out, Config::opcode_t cc4) const;
-    char *outCc8Name(char *out, Config::opcode_t cc8) const;
+    static uint8_t encodeIrReg(RegName name);
+    static RegName decodeIrReg(uint8_t num);
 
-private:
-    RegName parseRegName(
-        const char *line, const RegName *table, const RegName *end) const;
-    char regName1stChar(const RegName regName) const;
-    char regName2ndChar(const RegName regName) const;
-    char regName3rdChar(const RegName regName) const;
-    char ccName1stChar(const CcName ccName) const;
-    char ccName2ndChar(const CcName ccName) const;
-    char *outCcName(char *out, CcName ccName) const;
-    bool compareCcName(const char *line, CcName ccName) const;
-    CcName parseCcName(const char *line, int8_t max) const;
+    static CcName parseCcName(const char *line);
+    static uint8_t ccNameLen(const CcName name);
+    char *outCcName(char *out, CcName cc) const;
+    static bool isCc4Name(CcName name);
+    static uint8_t encodeCcName(CcName name);
+    static CcName decodeCcName(uint8_t num);
 };
 
 } // namespace z80

@@ -32,16 +32,20 @@ class AsmZ8
 public:
     ValueParser *getParser() override { return &_parser; }
 
-    void reset() override { _regs.setRegPointer(-1); }
-    bool setRegPointer(int16_t rp) { return _regs.setRegPointer(rp); }
-    bool setRegPointer0(int16_t rp) { return _regs.setRegPointer0(rp); }
-    bool setRegPointer1(int16_t rp) { return _regs.setRegPointer1(rp); }
+    void reset() override { setRegPointer(-1); }
+    bool setRegPointer(int16_t rp);
+    bool setRegPointer0(int16_t rp0);
+    bool setRegPointer1(int16_t rp1);
 
 private:
     IntelValueParser _parser;
     RegZ8 _regs;
+    int16_t _regPointer0;
+    int16_t _regPointer1;
 
     TableBase &getTable() const override { return TableZ8; }
+
+    bool isWorkReg(uint8_t regAddr) const;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

@@ -38,14 +38,14 @@ Error AsmI8051::parseOperand(Operand &op) {
         if (isspace(*p)) return setError(UNKNOWN_OPERAND);
     }
 
-    op.reg = _regs.parseRegister(p);
+    op.reg = RegI8051::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        p += _regs.regNameLen(op.reg);
+        p += RegI8051::regNameLen(op.reg);
         if (indir && op.reg == REG_A && *p == '+') {
             p++;
-            const RegName base = _regs.parseRegister(p);
+            const RegName base = RegI8051::parseRegName(p);
             if (base == REG_DPTR || base == REG_PC) {
-                _scan = p + _regs.regNameLen(base);
+                _scan = p + RegI8051::regNameLen(base);
                 op.mode = (base == REG_DPTR) ? INDXD : INDXP;
                 return OK;
             }
@@ -65,7 +65,7 @@ Error AsmI8051::parseOperand(Operand &op) {
         }
         if (op.reg == REG_A) {
             op.mode = AREG;
-        } else if (_regs.isRReg(op.reg)) {
+        } else if (RegI8051::isRReg(op.reg)) {
             op.mode = RREG;
         } else if (op.reg == REG_C) {
             op.mode = CREG;
@@ -126,7 +126,7 @@ Error AsmI8051::encodeOperand(
         }
     }
     if (mode == RREG || mode == IDIRR) {
-        insn.embed(_regs.encodeRReg(op.reg));
+        insn.embed(RegI8051::encodeRReg(op.reg));
         return OK;
     }
     if (mode == ADR8) {

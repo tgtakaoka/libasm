@@ -22,35 +22,24 @@
 namespace libasm {
 namespace mos6502 {
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
+RegName RegMos6502::parseRegName(const char *line) {
+    const char r = *line++;
+    if (isidchar(*line)) return REG_UNDEF;
+    switch (toupper(r)) {
+    case 'A': return REG_A;
+    case 'X': return REG_X;
+    case 'Y': return REG_Y;
+    case 'S': return REG_S;
+    default:  return REG_UNDEF;
+    }
 }
 
-static bool regCharCaseEqual(char c, char regChar) {
-    return toupper(c) == toupper(regChar);
+uint8_t RegMos6502::regNameLen(RegName name) {
+    return name == REG_UNDEF ? 0 : 1;
 }
 
-uint8_t RegMos6502::regNameLen(RegName regName) const {
-    return regName == REG_UNDEF ? 0 : 1;
-}
-
-bool RegMos6502::compareRegName(const char *line, RegName regName) const {
-    if (!regCharCaseEqual(*line++, char(regName)))
-        return false;
-    return !isidchar(*line);
-}
-
-RegName RegMos6502::parseIndexReg(const char *line) const {
-    if (compareRegName(line, REG_X)) return REG_X;
-    if (compareRegName(line, REG_Y)) return REG_Y;
-    return REG_UNDEF;
-}
-
-char *RegMos6502::outRegName(char *out, const RegName regName) const {
-    const char r = char(regName);
-    *out++ = _uppercase ? r : tolower(r);
-    *out = 0;
-    return out;
+char *RegMos6502::outRegName(char *out, const RegName name) const {
+    return outChar(out, char(name));
 }
 
 } // namespace mos6502

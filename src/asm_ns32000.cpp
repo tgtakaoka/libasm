@@ -32,9 +32,9 @@ Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
             p++;
             break;
         }
-        const StrOptName name = _regs.parseStrOptName(p);
+        const StrOptName name = RegNs32000::parseStrOptName(p);
         if (name == STROPT_UNDEF) return UNKNOWN_OPERAND;
-        p += _regs.strOptNameLen(name);
+        p += RegNs32000::strOptNameLen(name);
         if (strOpt & uint8_t(name)) return setError(ILLEGAL_OPERAND);
         strOpt |= uint8_t(name);
         p = skipSpaces(p);
@@ -57,9 +57,9 @@ Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
 Error AsmNs32000::parseConfigNames(const char *p, Operand &op) {
     uint8_t configs = 0;
     while (true) {
-        const ConfigName name = _regs.parseConfigName(p);
+        const ConfigName name = RegNs32000::parseConfigName(p);
         if (name == CONFIG_UNDEF) return UNKNOWN_OPERAND;
-        p += _regs.configNameLen(name);
+        p += RegNs32000::configNameLen(name);
         configs |= uint8_t(name);
         p = skipSpaces(p);
         if (*p == ',') {
@@ -82,11 +82,11 @@ Error AsmNs32000::parseRegisterList(const char *p, Operand &op) {
     uint8_t list = 0;
     uint8_t n = 0;
     while (true) {
-        const RegName name = _regs.parseRegName(p);
-        if (!_regs.isGeneric(name)) return UNKNOWN_OPERAND;
-        list |= (1 << _regs.encodeRegName(name));
+        const RegName name = RegNs32000::parseRegName(p);
+        if (!RegNs32000::isGeneric(name)) return UNKNOWN_OPERAND;
+        list |= (1 << RegNs32000::encodeRegName(name));
         n++;
-        p = skipSpaces(p + _regs.regNameLen(name));
+        p = skipSpaces(p + RegNs32000::regNameLen(name));
         if (*p == ',') {
             p++;
         } else if (*p == ']') {
@@ -126,33 +126,33 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         return setError(MISSING_CLOSING_PAREN);
     }
 
-    const PregName preg = _regs.parsePregName(p);
+    const PregName preg = RegNs32000::parsePregName(p);
     if (preg != PREG_UNDEF) {
-        _scan = p + _regs.pregNameLen(preg);
-        op.val32 = _regs.encodePregName(preg);
+        _scan = p + RegNs32000::pregNameLen(preg);
+        op.val32 = RegNs32000::encodePregName(preg);
         op.mode = M_PREG;
         return OK;
     }
 #ifdef ENABLE_MMU
-    const MregName mreg = _regs.parseMregName(p);
+    const MregName mreg = RegNs32000::parseMregName(p);
     if (mreg != MREG_UNDEF) {
-        _scan = p + _regs.mregNameLen(mreg);
-        op.val32 = _regs.encodeMregName(mreg);
+        _scan = p + RegNs32000::mregNameLen(mreg);
+        op.val32 = RegNs32000::encodeMregName(mreg);
         op.mode = M_MREG;
         return OK;
     }
 #endif
-    RegName reg = _regs.parseRegName(p);
+    RegName reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += _regs.regNameLen(reg);
-        if (_regs.isGeneric(reg)) {
+        p += RegNs32000::regNameLen(reg);
+        if (RegNs32000::isGeneric(reg)) {
             _scan = p;
             op.reg = reg;
             op.mode = M_GREG;
             return OK;
         }
 #ifdef ENABLE_FLOAT
-        if (_regs.isFloat(reg)) {
+        if (RegNs32000::isFloat(reg)) {
             _scan = p;
             op.reg = reg;
             op.mode = M_FREG;
@@ -207,12 +207,12 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         return OK;
     }
     if (*p++ != '(') return setError(UNKNOWN_OPERAND);
-    reg = _regs.parseRegName(p);
+    reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += _regs.regNameLen(reg);
+        p += RegNs32000::regNameLen(reg);
         if (*p++ != ')')
             return setError(MISSING_CLOSING_PAREN);
-        if (_regs.isGeneric(reg)) {
+        if (RegNs32000::isGeneric(reg)) {
             _scan = p;
             op.reg = reg;
             op.mode = M_RREL;
@@ -233,9 +233,9 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
     p = skipSpaces(_scan);
     if (*p++ != '(')
         return setError(UNKNOWN_OPERAND);
-    reg = _regs.parseRegName(p);
+    reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += _regs.regNameLen(reg);
+        p += RegNs32000::regNameLen(reg);
         if (*p++ != ')')
             return setError(MISSING_CLOSING_PAREN);
         if (*(p = skipSpaces(p)) != ')')
@@ -259,13 +259,13 @@ Error AsmNs32000::parseOperand(Operand &op) {
         || op.mode == M_MEM) {
         const char *p = skipSpaces(_scan);
         if (*p++ != '[') return OK;
-        const RegName index = _regs.parseRegName(p);
-        if (!_regs.isGeneric(index)) return setError(UNKNOWN_OPERAND);
-        p += _regs.regNameLen(index);
+        const RegName index = RegNs32000::parseRegName(p);
+        if (!RegNs32000::isGeneric(index)) return setError(UNKNOWN_OPERAND);
+        p += RegNs32000::regNameLen(index);
         if (*p++ != ':') return setError(UNKNOWN_OPERAND);
-        const OprSize indexSize = _regs.parseIndexSize(p);
+        const OprSize indexSize = RegNs32000::parseIndexSize(p);
         if (indexSize == SZ_NONE) return setError(UNKNOWN_OPERAND);
-        p += _regs.indexSizeLen(indexSize);
+        p += RegNs32000::indexSizeLen(indexSize);
         if (*p++ != ']') return setError(MISSING_CLOSING_PAREN);
         _scan = p;
         op.index = index;
@@ -409,8 +409,8 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
 #ifdef ENABLE_FLOAT
     case M_FREG:
 #endif
-        return _regs.encodeRegName(reg);
-    case M_RREL: return _regs.encodeRegName(reg) | 0x08;
+        return RegNs32000::encodeRegName(reg);
+    case M_RREL: return RegNs32000::encodeRegName(reg) | 0x08;
     case M_MREL:
         if (reg == REG_FP) return 0x10;
         if (reg == REG_SP) return 0x11;
@@ -434,7 +434,7 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
 Error AsmNs32000::emitIndexByte(InsnNs32000 &insn, const Operand &op) const {
     if (op.index == REG_UNDEF) return OK;
     const uint8_t indexByte = (encodeGenericField(op.mode, op.reg) << 3)
-        | _regs.encodeRegName(op.index);
+        | RegNs32000::encodeRegName(op.index);
     insn.emitOperand8(indexByte);
     return OK;
 }
@@ -478,7 +478,7 @@ Error AsmNs32000::emitOperand(
     const Operand *prevOp) {
     switch (mode) {
     case M_GREG:
-        embedOprField(insn, pos, _regs.encodeRegName(op.reg));
+        embedOprField(insn, pos, RegNs32000::encodeRegName(op.reg));
         break;
     case M_PREG:
 #ifdef ENABLE_MMU

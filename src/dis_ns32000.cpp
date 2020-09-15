@@ -184,38 +184,15 @@ Error DisNs32000::decodeRelative(
 
 Error DisNs32000::decodeConfig(
     const InsnNs32000 &insn, char *out, OprPos pos) {
-    const uint8_t config = getOprField(insn, pos);
-    *out++ = '[';
-    char sep = 0;
-    for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
-        if (config & mask) {
-            if (sep) *out++ = sep;
-            out = _regs.outConfigName(out, _regs.decodeConfigName(mask));
-            sep = ',';
-        }
-    }
-    *out++ = ']';
-    *out = 0;
+    const uint8_t configs = getOprField(insn, pos);
+    _regs.outConfigNames(out, configs);
     return OK;
 }
 
 Error DisNs32000::decodeStrOpt(
     const InsnNs32000 &insn, char *out, OprPos pos) {
-    const uint8_t strOpt = getOprField(insn, pos);
-    *out++ = '[';
-    char sep = 0;
-    StrOptName name = _regs.decodeStrOptName(strOpt & 0x02);
-    if (name != STROPT_UNDEF) {
-        out = _regs.outStrOptName(out, name);
-        sep = ',';
-    }
-    name = _regs.decodeStrOptName(strOpt & 0x0C);
-    if (name != STROPT_UNDEF) {
-        if (sep) *out++ = sep;
-        out = _regs.outStrOptName(out, name);
-    }
-    *out++ = ']';
-    *out = 0;
+    const uint8_t strOpts = getOprField(insn, pos);
+    _regs.outStrOptNames(out, strOpts);
     return OK;
 }
 

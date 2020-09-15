@@ -23,41 +23,6 @@
 namespace libasm {
 namespace ns32000 {
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
-}
-
-struct NameEntry {
-    uint8_t name;
-    uint8_t len;
-    const char *text;
-
-    static const NameEntry *searchName(
-            uint8_t name, const NameEntry *begin, const NameEntry *end) {
-        for (const NameEntry *entry = begin; entry < end; entry++) {
-            const uint8_t n = pgm_read_byte(&entry->name);
-            if (name == n) return entry;
-        }
-        return nullptr;
-    }
-    static const NameEntry *searchText(
-            const char *str, const NameEntry *begin, const NameEntry *end) {
-        for (const NameEntry *entry = begin; entry < end; entry++) {
-            const char *text = reinterpret_cast<const char *>(
-                    pgm_read_ptr(&entry->text));
-            const uint8_t len = pgm_read_byte(&entry->len);
-            if (strncasecmp_P(str, text, len) == 0 && !isidchar(str[len]))
-                return entry;
-        }
-        return nullptr;
-    }
-    static uint8_t nameLen(
-            uint8_t name, const NameEntry *begin, const NameEntry *end) {
-        const NameEntry *entry = searchName(name, begin, end);
-        return entry ? pgm_read_byte(&entry->len) : 0;
-    }
-};
-
 static const char TEXT_REG_R0[] PROGMEM = "R0";
 static const char TEXT_REG_R1[] PROGMEM = "R1";
 static const char TEXT_REG_R2[] PROGMEM = "R2";
@@ -80,74 +45,82 @@ static const char TEXT_REG_SB[] PROGMEM = "SB";
 static const char TEXT_REG_PC[] PROGMEM = "PC";
 static const char TEXT_REG_TOS[] PROGMEM = "TOS";
 static const char TEXT_REG_EXT[] PROGMEM = "EXT";
-static const NameEntry REG_TABLE[] PROGMEM = {
-    { REG_R0,   2, TEXT_REG_R0 },
-    { REG_R1,   2, TEXT_REG_R1 },
-    { REG_R2,   2, TEXT_REG_R2 },
-    { REG_R3,   2, TEXT_REG_R3 },
-    { REG_R4,   2, TEXT_REG_R4 },
-    { REG_R5,   2, TEXT_REG_R5 },
-    { REG_R6,   2, TEXT_REG_R6 },
-    { REG_R7,   2, TEXT_REG_R7 },
-    { REG_FP,   2, TEXT_REG_FP },
-    { REG_SP,   2, TEXT_REG_SP },
-    { REG_SB,   2, TEXT_REG_SB },
-    { REG_PC,   2, TEXT_REG_PC },
-    { REG_TOS,  3, TEXT_REG_TOS },
+static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
+    NAME_ENTRY(REG_R0)
+    NAME_ENTRY(REG_R1)
+    NAME_ENTRY(REG_R2)
+    NAME_ENTRY(REG_R3)
+    NAME_ENTRY(REG_R4)
+    NAME_ENTRY(REG_R5)
+    NAME_ENTRY(REG_R6)
+    NAME_ENTRY(REG_R7)
+    NAME_ENTRY(REG_FP)
+    NAME_ENTRY(REG_SP)
+    NAME_ENTRY(REG_SB)
+    NAME_ENTRY(REG_PC)
+    NAME_ENTRY(REG_TOS)
 #ifdef ENABLE_FLOAT
-    { REG_F0,   2, TEXT_REG_F0 },
-    { REG_F1,   2, TEXT_REG_F1 },
-    { REG_F2,   2, TEXT_REG_F2 },
-    { REG_F3,   2, TEXT_REG_F3 },
-    { REG_F4,   2, TEXT_REG_F4 },
-    { REG_F5,   2, TEXT_REG_F5 },
-    { REG_F6,   2, TEXT_REG_F6 },
-    { REG_F7,   2, TEXT_REG_F7 },
+    NAME_ENTRY(REG_F0)
+    NAME_ENTRY(REG_F1)
+    NAME_ENTRY(REG_F2)
+    NAME_ENTRY(REG_F3)
+    NAME_ENTRY(REG_F4)
+    NAME_ENTRY(REG_F5)
+    NAME_ENTRY(REG_F6)
+    NAME_ENTRY(REG_F7)
 #endif
-    { REG_EXT,  3, TEXT_REG_EXT },
+    NAME_ENTRY(REG_EXT)
 };
 
-RegName RegNs32000::parseRegName(const char *line) const {
-    const NameEntry *entry =
-        NameEntry::searchText(line, ARRAY_RANGE(REG_TABLE));
-    return entry ? RegName(pgm_read_byte(&entry->name)) : REG_UNDEF;
+RegName RegNs32000::parseRegName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-RegName RegNs32000::decodeRegName(uint8_t num, bool floating) const {
-    num &= 7;
-    return RegName(num + (floating ? 'A' : '0'));
-}
-
-int8_t RegNs32000::encodeRegName(RegName name) const {
-    if (isGeneric(name)) return char(name) - '0';
-#ifdef ENABLE_FLOAT
-    if (isFloat(name)) return char(name) - 'A';
-#endif
-    return -1;
-}
-
-uint8_t RegNs32000::regNameLen(RegName name) const {
-    return NameEntry::nameLen(name, ARRAY_RANGE(REG_TABLE));
+uint8_t RegNs32000::regNameLen(RegName name) {
+    switch (name) {
+    case REG_UNDEF:
+        return 0;
+    case REG_TOS: case REG_EXT:
+        return 3;
+    default:
+        return 2;
+    }
 }
 
 char *RegNs32000::outRegName(char *out, RegName name) const {
-    const NameEntry *entry =
-        NameEntry::searchName(name, ARRAY_RANGE(REG_TABLE));
-    if (entry) {
-        const char *text = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->text));
-        out = outText(out, text);
-    }
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
 }
 
-bool RegNs32000::isGeneric(RegName name) const {
-    return isdigit(char(name));
+#ifdef ENABLE_FLOAT
+RegName RegNs32000::decodeRegName(uint8_t num, bool floating) {
+    return RegName((num & 7) + (floating ? 8 : 0));
+}
+#else
+RegName RegNs32000::decodeRegName(uint8_t num) {
+    return RegName(num & 7);
+}
+#endif
+
+uint8_t RegNs32000::encodeRegName(RegName name) {
+#ifdef ENABLE_FLOAT
+    if (isFloat(name)) return uint8_t(name) - 8;
+#endif
+    return uint8_t(name);
+}
+
+bool RegNs32000::isGeneric(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= 0 && num < 8;
 }
 
 #ifdef ENABLE_FLOAT
-bool RegNs32000::isFloat(RegName name) const {
-    return isupper(char(name));
+bool RegNs32000::isFloat(RegName name) {
+    const int8_t num = int8_t(name) - 8;
+    return num >= 0 && num < 8;
 }
 #endif
 
@@ -156,47 +129,41 @@ static const char TEXT_PREG_US[]      PROGMEM = "US";
 static const char TEXT_PREG_PSR[]     PROGMEM = "PSR";
 static const char TEXT_PREG_INTBASE[] PROGMEM = "INTBASE";
 static const char TEXT_PREG_MOD[]     PROGMEM = "MOD";
-static const NameEntry PREG_TABLE[] PROGMEM = {
-    { PREG_UPSR,    4, TEXT_PREG_UPSR },
-    { PREG_UPSR,    2, TEXT_PREG_US },
-    { PREG_FP,      2, TEXT_REG_FP },
-    { PREG_SP,      2, TEXT_REG_SP },
-    { PREG_SB,      2, TEXT_REG_SB },
-    { PREG_PSR,     3, TEXT_PREG_PSR },
-    { PREG_INTBASE, 7, TEXT_PREG_INTBASE },
-    { PREG_MOD,     3, TEXT_PREG_MOD },
+static const RegBase::NameEntry PREG_TABLE[] PROGMEM = {
+    NAME_ENTRY(PREG_UPSR)
+    { PREG_UPSR, TEXT_PREG_US },
+    { PREG_FP,   TEXT_REG_FP },
+    { PREG_SP,   TEXT_REG_SP },
+    { PREG_SB,   TEXT_REG_SB },
+    NAME_ENTRY(PREG_PSR)
+    NAME_ENTRY(PREG_INTBASE)
+    NAME_ENTRY(PREG_MOD)
 };
 
-PregName RegNs32000::parsePregName(const char *line) const {
-    const NameEntry *entry =
-        NameEntry::searchText(line, ARRAY_RANGE(PREG_TABLE));
-    return entry ? PregName(pgm_read_byte(&entry->name)) : PREG_UNDEF;
+PregName RegNs32000::parsePregName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(PREG_TABLE));
+    return entry ? PregName(entry->name()) : PREG_UNDEF;
 }
 
-PregName RegNs32000::decodePregName(uint8_t num) const {
-    num &= 0xF;
-    const NameEntry *entry =
-        NameEntry::searchName(num, ARRAY_RANGE(PREG_TABLE));
-    return entry ? PregName(pgm_read_byte(&entry->name)) : PREG_UNDEF;
-}
-
-int8_t RegNs32000::encodePregName(PregName name) const {
-    return name == PREG_UNDEF ? -1 : uint8_t(name);
-}
-
-uint8_t RegNs32000::pregNameLen(PregName name) const {
-    return NameEntry::nameLen(name, ARRAY_RANGE(PREG_TABLE));
+uint8_t RegNs32000::pregNameLen(PregName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
 }
 
 char *RegNs32000::outPregName(char *out, PregName name) const {
-    const NameEntry *entry =
-        NameEntry::searchName(name, ARRAY_RANGE(PREG_TABLE));
-    if (entry) {
-        const char *text = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->text));
-        out = outText(out, text);
-    }
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
+}
+
+PregName RegNs32000::decodePregName(uint8_t num) {
+    num &= 0xF;
+    if (num >= 1 && num < 8) return PREG_UNDEF;
+    return PregName(num);
+}
+
+uint8_t RegNs32000::encodePregName(PregName name) {
+    return uint8_t(name);
 }
 
 #ifdef ENABLE_MMU
@@ -207,46 +174,40 @@ static const char TEXT_MREG_BCNT[] PROGMEM = "BCNT";
 static const char TEXT_MREG_PTB0[] PROGMEM = "PTB0";
 static const char TEXT_MREG_PTB1[] PROGMEM = "PTB1";
 static const char TEXT_MREG_EIA[]  PROGMEM = "EIA";
-static const NameEntry MREG_TABLE[] PROGMEM = {
-    { MREG_BPR0, 4, TEXT_MREG_BPR0 },
-    { MREG_BPR1, 4, TEXT_MREG_BPR1 },
-    { MREG_MSR,  3, TEXT_MREG_MSR  },
-    { MREG_BCNT, 4, TEXT_MREG_BCNT },
-    { MREG_PTB0, 4, TEXT_MREG_PTB0 },
-    { MREG_PTB1, 4, TEXT_MREG_PTB1 },
-    { MREG_EIA,  3, TEXT_MREG_EIA  },
+static const RegBase::NameEntry MREG_TABLE[] PROGMEM = {
+    NAME_ENTRY(MREG_BPR0)
+    NAME_ENTRY(MREG_BPR1)
+    NAME_ENTRY(MREG_MSR)
+    NAME_ENTRY(MREG_BCNT)
+    NAME_ENTRY(MREG_PTB0)
+    NAME_ENTRY(MREG_PTB1)
+    NAME_ENTRY(MREG_EIA)
 };
 
-MregName RegNs32000::parseMregName(const char *line) const {
-    const NameEntry *entry =
-        NameEntry::searchText(line, ARRAY_RANGE(MREG_TABLE));
-    return entry ? MregName(pgm_read_byte(&entry->name)) : MREG_UNDEF;
+MregName RegNs32000::parseMregName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(MREG_TABLE));
+    return entry ? MregName(entry->name()) : MREG_UNDEF;
 }
 
-MregName RegNs32000::decodeMregName(uint8_t num) const {
-    num &= 0xF;
-    const NameEntry *entry =
-        NameEntry::searchName(num, ARRAY_RANGE(MREG_TABLE));
-    return entry ? MregName(pgm_read_byte(&entry->name)) : MREG_UNDEF;
-}
-
-int8_t RegNs32000::encodeMregName(MregName name) const {
-    return name == MREG_UNDEF ? -1 : uint8_t(name);
-}
-
-uint8_t RegNs32000::mregNameLen(MregName name) const {
-    return NameEntry::nameLen(name, ARRAY_RANGE(MREG_TABLE));
+uint8_t RegNs32000::mregNameLen(MregName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
 }
 
 char *RegNs32000::outMregName(char *out, MregName name) const {
-    const NameEntry *entry =
-        NameEntry::searchName(name, ARRAY_RANGE(MREG_TABLE));
-    if (entry) {
-        const char *text = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->text));
-        out = outText(out, text);
-    }
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
+}
+
+MregName RegNs32000::decodeMregName(uint8_t num) {
+    num &= 0xF;
+    if (num == 14 || (num >= 2 && num < 10)) return MREG_UNDEF;
+    return MregName(num);
+}
+
+uint8_t RegNs32000::encodeMregName(MregName name) {
+    return uint8_t(name);
 }
 #endif
 
@@ -254,79 +215,74 @@ static const char TEXT_CONFIG_I[] PROGMEM = "I";
 static const char TEXT_CONFIG_F[] PROGMEM = "F";
 static const char TEXT_CONFIG_M[] PROGMEM = "M";
 static const char TEXT_CONFIG_C[] PROGMEM = "C";
-static const NameEntry CONFIG_TABLE[] PROGMEM = {
-    { CONFIG_I, 1, TEXT_CONFIG_I },
-    { CONFIG_M, 1, TEXT_CONFIG_M },
-    { CONFIG_F, 1, TEXT_CONFIG_F },
-    { CONFIG_C, 1, TEXT_CONFIG_C },
+static const RegBase::NameEntry CONFIG_TABLE[] PROGMEM = {
+    NAME_ENTRY(CONFIG_I)
+    NAME_ENTRY(CONFIG_M)
+    NAME_ENTRY(CONFIG_F)
+    NAME_ENTRY(CONFIG_C)
 };
 
-ConfigName RegNs32000::parseConfigName(const char *line) const {
-    const NameEntry *entry =
-        NameEntry::searchText(line, ARRAY_RANGE(CONFIG_TABLE));
-    return entry ? ConfigName(pgm_read_byte(&entry->name)) : CONFIG_UNDEF;
+ConfigName RegNs32000::parseConfigName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(CONFIG_TABLE));
+    return entry ? ConfigName(entry->name()) : CONFIG_UNDEF;
 }
 
-ConfigName RegNs32000::decodeConfigName(uint8_t num) const {
-    num &= 0xF;
-    const NameEntry *entry =
-        NameEntry::searchName(num, ARRAY_RANGE(CONFIG_TABLE));
-    return entry ? ConfigName(pgm_read_byte(&entry->name)) : CONFIG_UNDEF;
-}
-
-uint8_t RegNs32000::configNameLen(ConfigName name) const {
+uint8_t RegNs32000::configNameLen(ConfigName name) {
     return name == CONFIG_UNDEF ? 0 : 1;
 }
 
-char *RegNs32000::outConfigName(char *out, ConfigName name) const {
-    const NameEntry *entry =
-        NameEntry::searchName(name, ARRAY_RANGE(CONFIG_TABLE));
-    if (entry) {
-        const char *text = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->text));
-        out = outText(out, text);
+char *RegNs32000::outConfigNames(char *out, uint8_t configs) const {
+    *out++ = '[';
+    char sep = 0;
+    for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
+        if (configs & mask) {
+            if (sep) *out++ = sep;
+            const NameEntry *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
+            out = outText(out, entry->text());
+            sep = ',';
+        }
     }
+    *out++ = ']';
+    *out = 0;
     return out;
 }
 
 static const char TEXT_STROPT_B[] PROGMEM = "B";
 static const char TEXT_STROPT_W[] PROGMEM = "W";
 static const char TEXT_STROPT_U[] PROGMEM = "U";
-static const NameEntry STROPT_TABLE[] PROGMEM = {
-    { STROPT_B, 1, TEXT_STROPT_B },
-    { STROPT_W, 1, TEXT_STROPT_W },
-    { STROPT_U, 1, TEXT_STROPT_U },
+static const RegBase::NameEntry STROPT_TABLE[] PROGMEM = {
+    NAME_ENTRY(STROPT_B)
+    NAME_ENTRY(STROPT_W)
+    NAME_ENTRY(STROPT_U)
 };
 
-StrOptName RegNs32000::parseStrOptName(const char *line) const {
-    const NameEntry *entry =
-        NameEntry::searchText(line, ARRAY_RANGE(STROPT_TABLE));
-    return entry ? StrOptName(pgm_read_byte(&entry->name)) : STROPT_UNDEF;
+StrOptName RegNs32000::parseStrOptName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(STROPT_TABLE));
+    return entry ? StrOptName(entry->name()) : STROPT_UNDEF;
 }
 
-StrOptName RegNs32000::decodeStrOptName(uint8_t num) const {
-    num &= 0xE;
-    const NameEntry *entry =
-        NameEntry::searchName(num, ARRAY_RANGE(STROPT_TABLE));
-    return entry ? StrOptName(pgm_read_byte(&entry->name)) : STROPT_UNDEF;
-}
-
-uint8_t RegNs32000::strOptNameLen(StrOptName name) const {
+uint8_t RegNs32000::strOptNameLen(StrOptName name) {
     return name == STROPT_UNDEF ? 0 : 1;
 }
 
-char *RegNs32000::outStrOptName(char *out, StrOptName name) const {
-    const NameEntry *entry =
-        NameEntry::searchName(name, ARRAY_RANGE(STROPT_TABLE));
-    if (entry) {
-        const char *text = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->text));
-        out = outText(out, text);
+char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
+    *out++ = '[';
+    char sep = 0;
+    if (strOpts & uint8_t(STROPT_B)) {
+        out = outText(out, TEXT_STROPT_B);
+        sep = ',';
     }
+    const NameEntry *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
+    if (entry) {
+        if (sep) *out++ = sep;
+        out = outText(out, entry->text());
+    }
+    *out++ = ']';
+    *out = 0;
     return out;
 }
 
-OprSize RegNs32000::parseIndexSize(const char *line) const {
+OprSize RegNs32000::parseIndexSize(const char *line) {
     OprSize size = SZ_NONE;
     switch (toupper(*line)) {
     case 'B': size = SZ_BYTE; break;
@@ -338,7 +294,7 @@ OprSize RegNs32000::parseIndexSize(const char *line) const {
     return isidchar(line[1]) ? SZ_NONE : size;
 }
 
-uint8_t RegNs32000::indexSizeLen(OprSize size) const {
+uint8_t RegNs32000::indexSizeLen(OprSize size) {
     return size == SZ_NONE ? 0 : 1;
 }
 

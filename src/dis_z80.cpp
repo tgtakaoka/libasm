@@ -56,10 +56,6 @@ char *DisZ80::outDataRegister(char *out, RegName regName) {
         : outRegister(out, regName);
 }
 
-char *DisZ80::outConditionName(char *out, Config::opcode_t cc, bool cc8) {
-    return cc8 ? _regs.outCc8Name(out, cc) : _regs.outCc4Name(out, cc);
-}
-
 Error DisZ80::decodeInherent(InsnZ80 &insn, char *out) {
     const Config::opcode_t opc = insn.opCode();
     switch (insn.dstFormat()) {
@@ -104,7 +100,7 @@ Error DisZ80::decodeInherent(InsnZ80 &insn, char *out) {
         out = outRegister(out, RegZ80::decodeIndexReg(insn));
         break;
     case COND_8:
-        out = outConditionName(out, (opc >> 3) & 7);
+        out = _regs.outCcName(out, _regs.decodeCcName((opc >> 3) & 7));
         break;
     case C_PTR:
         if (insn.srcFormat() == REG_8 && insn.insnFormat() == DST_FMT
@@ -247,7 +243,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr) {
         out = outRegister(out, REG_A);
         break;
     case COND_8:
-        out = outConditionName(out, (opc >> 3) & 7);
+        out = _regs.outCcName(out, _regs.decodeCcName((opc >> 3) & 7));
         break;
     case IMM_16:
         out = outAddress(out, addr);
@@ -321,7 +317,7 @@ Error DisZ80::decodeIoaddr(InsnZ80 &insn, char *out, uint8_t ioaddr) {
 Error DisZ80::decodeRelative(InsnZ80 &insn, char *out, int8_t delta) {
     if (insn.dstFormat() == COND_4) {
         const Config::opcode_t opc = insn.opCode();
-        out = outConditionName(out, (opc >> 3) & 3, false);
+        out = _regs.outCcName(out, _regs.decodeCcName((opc >> 3) & 3));
         *out++ = ',';
     }
     const Config::uintptr_t target = insn.address() + 2 + delta;

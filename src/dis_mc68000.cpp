@@ -25,7 +25,12 @@ char *DisMc68000::outRegName(char *out, RegName regName) {
 }
 
 char *DisMc68000::outOprSize(char *out, OprSize size) {
-    return _regs.outOprSize(out, size);
+    const char suffix = _regs.sizeSuffix(size);
+    if (suffix) {
+        *out++ = '.';
+        *out++ = suffix;
+    }
+    return out;
 }
 
 Error DisMc68000::decodeImmediateData(
@@ -391,11 +396,10 @@ Error DisMc68000::decode(DisMemory &memory, Insn &_insn, char *out) {
 
     const InsnSize iSize = insn.insnSize();
     const OprSize oSize = (iSize == ISZ_DATA) ? size : OprSize(iSize);
-    if (oSize != SZ_NONE) {
-        char suffix[4];
-        outOprSize(suffix, oSize);
-        for (const char *p = suffix; *p; p++)
-            insn.appendName(*p);
+    const char suffix = _regs.sizeSuffix(oSize);
+    if (suffix) {
+        insn.appendName('.');
+        insn.appendName(suffix);
     }
 
     if (src == M_NONE) return setOK();

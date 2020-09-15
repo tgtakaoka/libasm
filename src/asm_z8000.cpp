@@ -39,17 +39,17 @@ Error AsmZ8000::emitData(
 
 Error AsmZ8000::emitRegister(
         InsnZ8000 &insn, ModeField field, RegName reg) {
-    return emitData(insn, field, _regs.encodeRegName(reg));
+    return emitData(insn, field, RegZ8000::encodeGeneralRegName(reg));
 }
 
 Error AsmZ8000::emitIndirectRegister(
         InsnZ8000 &insn, ModeField field, RegName reg) {
     if (TableZ8000.segmentedModel()) {
-        if (!_regs.isLongReg(reg)) return setError(REGISTER_NOT_ALLOWED);
+        if (!RegZ8000::isLongReg(reg)) return setError(REGISTER_NOT_ALLOWED);
     } else {
-        if (!_regs.isWordReg(reg)) return setError(REGISTER_NOT_ALLOWED);
+        if (!RegZ8000::isWordReg(reg)) return setError(REGISTER_NOT_ALLOWED);
     }
-    const uint8_t data = _regs.encodeRegName(reg);
+    const uint8_t data = RegZ8000::encodeGeneralRegName(reg);
     if (data == 0) return setError(REGISTER_NOT_ALLOWED);
     return emitData(insn, field, data);
 }
@@ -179,7 +179,7 @@ Error AsmZ8000::emitRelative(
 
 Error AsmZ8000::emitIndexed(
         InsnZ8000 &insn, ModeField field, const Operand &op) {
-    if (!_regs.isWordReg(op.reg) || op.reg == REG_R0)
+    if (!RegZ8000::isWordReg(op.reg) || op.reg == REG_R0)
         return setError(REGISTER_NOT_ALLOWED);
     if (emitRegister(insn, field, op.reg)) return getError();
     return emitDirectAddress(insn, op.val32);
@@ -196,7 +196,7 @@ Error AsmZ8000::emitBaseAddress(
 
 Error AsmZ8000::emitBaseIndexed(
         InsnZ8000 &insn, ModeField field, const Operand &op) {
-    if (!_regs.isWordReg(op.reg) || _regs.encodeRegName(op.reg) == 0)
+    if (!RegZ8000::isWordReg(op.reg) || RegZ8000::encodeGeneralRegName(op.reg) == 0)
         return setError(REGISTER_NOT_ALLOWED);
     if (emitIndirectRegister(insn, field, op.base)) return getError();
     return emitRegister(insn, MF_P8, op.reg);
@@ -205,8 +205,8 @@ Error AsmZ8000::emitBaseIndexed(
 Error AsmZ8000::emitFlags(
         InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (op.mode == M_CC) {
-        if (op.cc == CC_Z) return emitData(insn, field, FL_Z);
-        if (op.cc == CC_C) return emitData(insn, field, FL_C);
+        if (op.cc == CC_Z) return emitData(insn, field, FLAG_Z);
+        if (op.cc == CC_C) return emitData(insn, field, FLAG_C);
         return setError(UNKNOWN_OPERAND);
     }
     if (op.val32 == 0) return setError(OPCODE_HAS_NO_EFFECT);
@@ -219,31 +219,31 @@ Error AsmZ8000::emitCtlRegister(
         return setError(ILLEGAL_SIZE);
     if (insn.oprSize() == SZ_WORD && op.reg == REG_FLAGS)
         return setError(ILLEGAL_SIZE);
-    return emitData(insn, field, _regs.decodeCtlReg(op.reg));
+    return emitData(insn, field, RegZ8000::decodeCtlReg(op.reg));
 }
 
 Error AsmZ8000::emitOperand(
         InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field) {
     switch (mode) {
     case M_DR:
-        if (insn.oprSize() == SZ_WORD && !_regs.isLongReg(op.reg))
+        if (insn.oprSize() == SZ_WORD && !RegZ8000::isLongReg(op.reg))
             return setError(REGISTER_NOT_ALLOWED);
-        if (insn.oprSize() == SZ_LONG && !_regs.isQuadReg(op.reg))
+        if (insn.oprSize() == SZ_LONG && !RegZ8000::isQuadReg(op.reg))
             return setError(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_R:
         return emitRegister(insn, field, op.reg);
     case M_WR07:
-        if (_regs.encodeRegName(op.reg) >= 8)
+        if (RegZ8000::encodeGeneralRegName(op.reg) >= 8)
             return setError(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_WR:
-        if (!_regs.isWordReg(op.reg)) return setError(REGISTER_NOT_ALLOWED);
+        if (!RegZ8000::isWordReg(op.reg)) return setError(REGISTER_NOT_ALLOWED);
         return emitRegister(insn, field, op.reg);
     case M_IR:
         return emitIndirectRegister(insn, field, op.reg);
     case M_IRIO:
-        if (!_regs.isWordReg(op.reg) || _regs.encodeRegName(op.reg) == 0)
+        if (!RegZ8000::isWordReg(op.reg) || RegZ8000::encodeGeneralRegName(op.reg) == 0)
             return setError(REGISTER_NOT_ALLOWED);
         return emitRegister(insn, field, op.reg);
     case M_GENI:
@@ -278,8 +278,8 @@ Error AsmZ8000::emitOperand(
         return emitImmediate(insn, field, mode, op);
     case M_CC:
         if (op.mode == M_NO) return emitData(insn, field, CC_T);
-        return emitData(insn, field, _regs.encodeCcName(op.cc));
-    case M_INTT:
+        return emitData(insn, field, RegZ8000::encodeCcName(op.cc));
+    case M_INTR:
         if (op.val32 == 0) return setError(OPCODE_HAS_NO_EFFECT);
         return emitData(insn, field, static_cast<uint16_t>(3 ^ op.val32));
     case M_FLAG:
@@ -302,10 +302,10 @@ int8_t AsmZ8000::parseIntrNames(const char *&line) {
     if (endOfLine(p)) return 0;
     int8_t num = 0;
     while (true) {
-        const IntrName intr = _regs.parseIntrName(p);
-        if (intr == IT_UNDEF) return -1;
-        p += _regs.intrNameLen(intr);
-        num |= _regs.encodeIntrName(intr);
+        const IntrName intr = RegZ8000::parseIntrName(p);
+        if (intr == INTR_UNDEF) return -1;
+        p += RegZ8000::intrNameLen(intr);
+        num |= RegZ8000::encodeIntrName(intr);
         p = skipSpaces(p);
         if (endOfLine(p)) {
             line = p;
@@ -321,10 +321,10 @@ int8_t AsmZ8000::parseFlagNames(const char *&line) {
     if (endOfLine(p)) return 0;
     int8_t num = 0;
     while (true) {
-        const FlagName flag = _regs.parseFlagName(p);
-        if (flag == FL_UNDEF) return -1;
-        p += _regs.flagNameLen(flag);
-        num |= _regs.encodeFlagName(flag);
+        const FlagName flag = RegZ8000::parseFlagName(p);
+        if (flag == FLAG_UNDEF) return -1;
+        p += RegZ8000::flagNameLen(flag);
+        num |= RegZ8000::encodeFlagName(flag);
         p = skipSpaces(p);
         if (endOfLine(p)) {
             line = p;
@@ -347,19 +347,19 @@ Error AsmZ8000::parseOperand(Operand &op) {
     if (endOfLine(p)) return OK;
     if (*p == '@') {
         p++;
-        op.reg = _regs.parseRegName(p);
+        op.reg = RegZ8000::parseRegName(p);
         if (op.reg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
         if (op.reg == REG_ILLEGAL) return setError(ILLEGAL_REGISTER);
-        p += _regs.regNameLen(op.reg);
+        p += RegZ8000::regNameLen(op.reg);
         _scan = p;
         op.mode = M_IR;
         return OK;
     }
 
-    op.reg = _regs.parseRegName(p);
+    op.reg = RegZ8000::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (op.reg == REG_ILLEGAL) return setError(ILLEGAL_REGISTER);
-        p += _regs.regNameLen(op.reg);
+        p += RegZ8000::regNameLen(op.reg);
         p = skipSpaces(p);
         if (*p == '(') {
             op.base = op.reg;
@@ -374,9 +374,9 @@ Error AsmZ8000::parseOperand(Operand &op) {
                 op.mode = M_BA;
                 return OK;
             }
-            op.reg = _regs.parseRegName(p);
+            op.reg = RegZ8000::parseRegName(p);
             if (op.reg != REG_UNDEF) {
-                p += _regs.regNameLen(op.reg);
+                p += RegZ8000::regNameLen(op.reg);
                 p = skipSpaces(p);
                 if (*p != ')') return setError(UNKNOWN_OPERAND);
                 _scan = p + 1;
@@ -389,16 +389,16 @@ Error AsmZ8000::parseOperand(Operand &op) {
         op.mode = M_R;
         return OK;
     }
-    op.reg = _regs.parseCtlReg(p);
+    op.reg = RegZ8000::parseCtlReg(p);
     if (op.reg != REG_UNDEF) {
-        _scan = p + _regs.regNameLen(op.reg);
+        _scan = p + RegZ8000::regNameLen(op.reg);
         op.mode = M_CTL;
         return OK;
     }
-    op.cc = _regs.parseCcName(p);
+    op.cc = RegZ8000::parseCcName(p);
     if (op.cc != CC_UNDEF) {
         const char *f = p;
-        p += _regs.ccNameLen(op.cc);
+        p += RegZ8000::ccNameLen(op.cc);
         const int8_t num = parseFlagNames(f);
         if (num > 0 && f > p) {
             _scan = f;
@@ -421,7 +421,7 @@ Error AsmZ8000::parseOperand(Operand &op) {
     if (num >= 0) {
         _scan = p;
         op.val32 = num;
-        op.mode = M_INTT;
+        op.mode = M_INTR;
         return OK;
     }
     _scan = p;
@@ -430,9 +430,9 @@ Error AsmZ8000::parseOperand(Operand &op) {
     p = skipSpaces(_scan);
     if (*p == '(') {
         p = skipSpaces(p + 1);
-        op.reg = _regs.parseRegName(p);
+        op.reg = RegZ8000::parseRegName(p);
         if (op.reg == REG_UNDEF) return setError(UNKNOWN_OPERAND);
-        p += _regs.regNameLen(op.reg);
+        p += RegZ8000::regNameLen(op.reg);
         p = skipSpaces(p);
         if (*p != ')') return setError(UNKNOWN_OPERAND);
         _scan = p + 1;

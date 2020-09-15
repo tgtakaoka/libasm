@@ -86,7 +86,7 @@ Error DisMc6809::decodeIndexed(
         if (spec.size == -2) *out++ = '-';
     }
     if (spec.base == REG_X) {
-        const RegName base = _regs.decodeBaseReg((post >> 5) & 3);
+        const RegName base = _regs.decodeBaseReg(post >> 5);
         out = outRegister(out, base);
     } else if (spec.base != REG_UNDEF) {
         out = outRegister(out, spec.base);
@@ -150,12 +150,12 @@ Error DisMc6809::decodePushPull(
 Error DisMc6809::decodeRegisters(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
     const uint8_t post = insn.readByte(memory);
+    const RegName dst = _regs.decodeDataReg(post);
     const RegName src = _regs.decodeDataReg(post >> 4);
-    const RegName dst = _regs.decodeDataReg(post & 0xf);
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    const RegSize size1 = _regs.regSize(src);
     const RegSize size2 = _regs.regSize(dst);
+    const RegSize size1 = _regs.regSize(src);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     out = outRegister(out, src);
@@ -186,7 +186,7 @@ Error DisMc6809::decodeTransferMemory(
     const uint8_t post = insn.readByte(memory);
     if (insn.getError()) return setError(insn);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
-    const RegName dst = _regs.decodeTfmBaseReg(post & 0xf);
+    const RegName dst = _regs.decodeTfmBaseReg(post);
     const uint8_t mode = insn.opCode() & 0x3;
     if (src == REG_UNDEF || dst == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     out = outRegister(out, src);

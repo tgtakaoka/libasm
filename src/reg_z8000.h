@@ -103,69 +103,68 @@ enum CcName : int8_t {
     CC_NZ  = 14, // Not zero
     CC_NC  = 15, // No carry
     // Alias
-    CC_EQ  = 16,  // Z: Equal
-    CC_ULT = 17,  // C: Unsigned less than
-    CC_NE  = 18,  // NZ: Nor equal
-    CC_UGE = 19,  // NC: Unsigned greater than or equal
+    CC_EQ  = 6+16,   // Z: Equal
+    CC_ULT = 7+16,   // C: Unsigned less than
+    CC_NE  = 14+16,  // NZ: Nor equal
+    CC_UGE = 15+16,  // NC: Unsigned greater than or equal
 };
 
 enum FlagName : int8_t {
-    FL_UNDEF = 0,
-    FL_C = 8,  // Carry
-    FL_Z = 4,  // Zero
-    FL_S = 2,  // Sign
-    FL_P = 1,  // Parity
+    FLAG_UNDEF = 0,
+    FLAG_C = 8,  // Carry
+    FLAG_Z = 4,  // Zero
+    FLAG_S = 2,  // Sign
+    FLAG_P = 1,  // Parity
     // Alias
-    FL_V = 16, // Overflow
+    FLAG_V = 1+16, // Overflow
 };
 
 enum IntrName : int8_t {
-    IT_UNDEF = 0,
-    IT_NVI = 1, // Non-Vectored Interrupt
-    IT_VI  = 2, // Vectored Interrupt
+    INTR_UNDEF = 0,
+    INTR_NVI = 1, // Non-Vectored Interrupt
+    INTR_VI  = 2, // Vectored Interrupt
 };
 
 class RegZ8000 : public RegBase {
 public:
-    RegName parseRegName(const char *line) const;
-    uint8_t regNameLen(RegName regName) const;
-    uint8_t encodeRegName(RegName regName) const;
-    RegName decodeRegNum(uint8_t regNum, OprSize size) const;
-    RegName decodeByteReg(uint8_t regNum) const;
-    RegName decodeWordReg(uint8_t regNum) const;
-    RegName decodeLongReg(uint8_t regNum) const;
-    RegName decodeQuadReg(uint8_t regNum) const;
-    bool isByteReg(RegName) const;
-    bool isWordReg(RegName) const;
-    bool isLongReg(RegName) const;
-    bool isQuadReg(RegName) const;
-    char *outRegName(char *out, RegName regName) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, RegName name) const;
+    static uint8_t encodeGeneralRegName(RegName name);
+    static RegName decodeRegNum(uint8_t num, OprSize size);
+    static RegName decodeByteReg(uint8_t num);
+    static RegName decodeWordReg(uint8_t num);
+    static RegName decodeLongReg(uint8_t num);
+    static RegName decodeQuadReg(uint8_t num);
+    static bool isByteReg(RegName name);
+    static bool isWordReg(RegName name);
+    static bool isLongReg(RegName name);
+    static bool isQuadReg(RegName name);
 
-    RegName parseCtlReg(const char *line) const;
-    RegName decodeCtlReg(uint8_t ctlNum) const;
-    bool isCtlReg(RegName) const;
-    int8_t encodeCtlReg(RegName ctlReg) const;
+    static RegName parseCtlReg(const char *line);
+    static RegName decodeCtlReg(uint8_t num);
+    static bool isCtlReg(RegName name);
+    static uint8_t encodeCtlReg(RegName name);
 
-    CcName parseCcName(const char *line) const;
-    uint8_t ccNameLen(const CcName ccName) const;
-    int8_t encodeCcName(CcName ccName) const;
-    CcName decodeCcNum(uint8_t ccNum) const;
-    char *outCcName(char *out, CcName ccName) const;
+    static CcName parseCcName(const char *line);
+    static uint8_t ccNameLen(const CcName name);
+    char *outCcName(char *out, CcName name) const;
+    static uint8_t encodeCcName(CcName name);
+    static CcName decodeCcNum(uint8_t num);
 
-    char *outFlagNames(char *out, uint8_t flagNames) const;
-    FlagName parseFlagName(const char *line) const;
-    uint8_t flagNameLen(FlagName flag) const;
-    uint8_t encodeFlagName(FlagName flag) const;
+    static FlagName parseFlagName(const char *line);
+    static uint8_t flagNameLen(FlagName name);
+    char *outFlagNames(char *out, uint8_t flags) const;
+    static uint8_t encodeFlagName(FlagName name);
 
-    char *outIntrNames(char *out, uint8_t intrNames) const;
-    IntrName parseIntrName(const char *line) const;
-    uint8_t intrNameLen(IntrName intrName) const;
-    uint8_t encodeIntrName(IntrName intrName) const;
+    static IntrName parseIntrName(const char *line);
+    static uint8_t intrNameLen(IntrName name);
+    char *outIntrNames(char *out, uint8_t intrs) const;
+    static uint8_t encodeIntrName(IntrName name);
 
 private:
-    char *outCtlName(char *out, RegName regName) const;
-    uint8_t ctlRegLen(RegName) const;
-    bool compareText(const char *p, const char *text) const;
+    char *outCtlName(char *out, RegName name) const;
+    static uint8_t ctlRegLen(RegName name);
 };
 
 } // namespace z8000

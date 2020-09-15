@@ -22,101 +22,62 @@
 namespace libasm {
 namespace i8051 {
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
+static const char TEXT_REG_A[]  PROGMEM = "A";
+static const char TEXT_REG_C[]  PROGMEM = "C";
+static const char TEXT_REG_AB[] PROGMEM = "AB";
+static const char TEXT_REG_R0[] PROGMEM = "R0";
+static const char TEXT_REG_R1[] PROGMEM = "R1";
+static const char TEXT_REG_R2[] PROGMEM = "R2";
+static const char TEXT_REG_R3[] PROGMEM = "R3";
+static const char TEXT_REG_R4[] PROGMEM = "R4";
+static const char TEXT_REG_R5[] PROGMEM = "R5";
+static const char TEXT_REG_R6[] PROGMEM = "R6";
+static const char TEXT_REG_R7[] PROGMEM = "R7";
+static const char TEXT_REG_PC[] PROGMEM = "PC";
+static const char TEXT_REG_DPTR[] PROGMEM = "DPTR";
+static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+    NAME_ENTRY(REG_A)
+    NAME_ENTRY(REG_C)
+    NAME_ENTRY(REG_AB)
+    NAME_ENTRY(REG_R0)
+    NAME_ENTRY(REG_R1)
+    NAME_ENTRY(REG_R2)
+    NAME_ENTRY(REG_R3)
+    NAME_ENTRY(REG_R4)
+    NAME_ENTRY(REG_R5)
+    NAME_ENTRY(REG_R6)
+    NAME_ENTRY(REG_R7)
+    NAME_ENTRY(REG_PC)
+    NAME_ENTRY(REG_DPTR)
+};
+
+RegName RegI8051::parseRegName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-static bool regCharCaseEqual(char c, char regChar) {
-    return toupper(c) == toupper(regChar);
+uint8_t RegI8051::regNameLen(RegName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
-char RegI8051::regName1stChar(const RegName regName) const {
-    char r = char(regName);
-    if (isdigit(r)) r = 'R';
-    return _uppercase ? toupper(r) : tolower(r);
-}
-
-char RegI8051::regName2ndChar(const RegName regName) const {
-    char r = char(regName);
-    if (isdigit(r)) return r;
-    if (isupper(r)) return 0;
-    if (regName == REG_AB) r = 'B';
-    if (regName == REG_PC) r = 'C';
-    if (regName == REG_DPTR) r = 'P';
-    return _uppercase ? toupper(r) : tolower(r);
-}
-
-char RegI8051::regName3rdChar(const RegName regName) const {
-    if (regName != REG_DPTR) return 0;
-    return _uppercase ? 'T' : 't';
-}
-
-char RegI8051::regName4thChar(const RegName regName) const {
-    if (regName != REG_DPTR) return 0;
-    return _uppercase ? 'R' : 'r';
-}
-
-bool RegI8051::compareRegName(const char *line, RegName regName) const {
-    if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
-    const char r2 = regName2ndChar(regName);
-    if (r2 && !regCharCaseEqual(*line++, r2)) return false;
-    const char r3 = regName3rdChar(regName);
-    if (r3 && !regCharCaseEqual(*line++, r3)) return false;
-    const char r4 = regName4thChar(regName);
-    if (r4 && !regCharCaseEqual(*line++, r4)) return false;
-    return !isidchar(*line);
-}
-
-uint8_t RegI8051::regNameLen(RegName regName) const {
-    return regName2ndChar(regName) == 0 ? 1
-        : (regName4thChar(regName) == 0 ? 2 : 4);
-}
-
-char *RegI8051::outRegName(char *out, const RegName regName) const {
-    *out++ = regName1stChar(regName);
-    const char r2 = regName2ndChar(regName);
-    if (r2) {
-        *out++ = r2;
-        const char r3 = regName3rdChar(regName);
-        if (r3) {
-            *out++ = r3;
-            const char r4 = regName4thChar(regName);
-            if (r4) *out++ = r4;
-        }
-    }
-    *out = 0;
+char *RegI8051::outRegName(char *out, const RegName name) const {
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
 }
 
-RegName RegI8051::parseRegName(
-    const char *line, const RegName *table, const RegName *end) const {
-    for (const RegName *p = table; p < end; p++) {
-        const RegName regName = RegName(pgm_read_byte(p));
-        if (compareRegName(line, regName)) return regName;
-    }
-    return REG_UNDEF;
+bool RegI8051::isRReg(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= 0 && num < 8;
 }
 
-static constexpr RegName ALL_REGISTERS[] PROGMEM = {
-    REG_A, REG_C, REG_DPTR, REG_AB, REG_PC,
-    REG_R0, REG_R1, REG_R2, REG_R3, REG_R4, REG_R5, REG_R6, REG_R7,
-};
-
-RegName RegI8051::parseRegister(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(ALL_REGISTERS));
+uint8_t RegI8051::encodeRReg(RegName name) {
+    return uint8_t(name);
 }
 
-bool RegI8051::isRReg(RegName regName) const {
-    return isdigit(char(regName));
-}
-
-int8_t RegI8051::encodeRReg(RegName regName) const {
-    const char r = char(regName);
-    return isdigit(r) ? r - '0' : -1;
-}
-
-RegName RegI8051::decodeRReg(const uint8_t regNum) const {
-    return RegName(regNum + '0');
+RegName RegI8051::decodeRReg(const uint8_t num) {
+    return RegName(num);
 }
 
 } // namespace i8051

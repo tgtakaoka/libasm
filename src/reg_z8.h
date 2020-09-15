@@ -80,40 +80,22 @@ enum CcName : int8_t {
 
 class RegZ8 : public RegBase {
 public:
-    RegZ8();
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, RegName name) const;
+    static bool isPairReg(RegName);
+    static uint8_t encodeRegName(RegName name);
+    static RegName decodeRegNum(uint8_t num);
+    static RegName decodePairRegNum(uint8_t num);
 
-    RegName parseRegName(const char *line) const;
-    static uint8_t regNameLen(RegName regName);
-    static uint8_t encodeRegName(RegName regName);
-    static RegName decodeRegNum(uint8_t regNum, bool pair = false);
-    static bool isRegPair(RegName);
-    char *outRegName(char *out, RegName regName) const;
+    static CcName parseCcName(const char *line);
+    char *outCcName(char *out, CcName name) const;
+    static uint8_t ccNameLen(const CcName name);
+    static uint8_t encodeCcName(CcName name);
+    static CcName decodeCcNum(uint8_t num);
 
-    CcName parseCcName(const char *line) const;
-    static uint8_t ccNameLen(const CcName ccName);
-    static int8_t encodeCcName(CcName ccName);
-    static CcName decodeCcNum(uint8_t ccNum);
-    char *outCcName(char *out, CcName ccName) const;
-
-    bool setRegPointer(int16_t rp);
-    bool setRegPointer0(int16_t rp0);
-    bool setRegPointer1(int16_t rp1);
-    bool isWorkReg(uint8_t regAddr) const;
-    bool isWorkRegAlias(uint8_t regAddr) const;
-    uint8_t encodeWorkRegAddr(RegName regName) const;
-
-private:
-    int16_t _regPointer0;
-    int16_t _regPointer1;
-
-    RegName parseRegName(
-        const char *line, const RegName *table, const RegName *end) const;
-    char regName1stChar(const RegName regName) const;
-    char regName2ndChar(const RegName regName) const;
-    char regName3rdChar(const RegName regName) const;
-    char ccName1stChar(const CcName ccName) const;
-    char ccName2ndChar(const CcName ccName) const;
-    CcName parseCcName(const char *line, int8_t max) const;
+    static bool isWorkRegAlias(uint8_t addr);
+    static uint8_t encodeWorkRegAddr(RegName name);
 };
 
 } // namespace z8

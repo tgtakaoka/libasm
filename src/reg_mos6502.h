@@ -32,10 +32,9 @@ enum RegName : char {
 
 class RegMos6502 : public RegBase {
 public:
-    uint8_t regNameLen(RegName regName) const;
-    bool compareRegName(const char *line, RegName regName) const;
-    RegName parseIndexReg(const char *line) const;
-    char *outRegName(char *out, const RegName regName) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, const RegName name) const;
 };
 
 } // namespace mos6502

@@ -29,30 +29,30 @@ char *DisZ8::outCcName(char *out, Config::opcode_t opCode) {
     return out;
 }
 
-char *DisZ8::outWorkReg(char *out, uint8_t regNum, bool indir) {
-    const RegName reg = _regs.decodeRegNum(regNum);
+char *DisZ8::outWorkReg(char *out, uint8_t num, bool indir) {
+    const RegName reg = _regs.decodeRegNum(num);
     if (indir) *out++ = '@';
     return _regs.outRegName(out, reg);
 }
 
-char *DisZ8::outPairReg(char *out, uint8_t regNum, bool indir) {
-    const RegName reg = _regs.decodeRegNum(regNum, true);
+char *DisZ8::outPairReg(char *out, uint8_t num, bool indir) {
+    const RegName reg = _regs.decodePairRegNum(num);
     if (indir) *out++ = '@';
     return _regs.outRegName(out, reg);
 }
 
-char *DisZ8::outRegAddr(char *out, uint8_t regAddr, bool indir) {
-    if (_preferWorkRegister && _regs.isWorkRegAlias(regAddr))
-        return outWorkReg(out, regAddr & 0xF, indir);
+char *DisZ8::outRegAddr(char *out, uint8_t addr, bool indir) {
+    if (_preferWorkRegister && _regs.isWorkRegAlias(addr))
+        return outWorkReg(out, addr & 0xF, indir);
     if (indir) *out++ = '@';
-    return outAddress(out, regAddr, PSTR(">"), regAddr < 16 && !indir);
+    return outAddress(out, addr, PSTR(">"), addr < 16 && !indir);
 }
 
-char *DisZ8::outPairAddr(char *out, uint8_t regAddr, bool indir) {
-    if (_preferWorkRegister && _regs.isWorkRegAlias(regAddr))
-        return outPairReg(out, regAddr & 0xF, indir);
+char *DisZ8::outPairAddr(char *out, uint8_t addr, bool indir) {
+    if (_preferWorkRegister && _regs.isWorkRegAlias(addr))
+        return outPairReg(out, addr & 0xF, indir);
     if (indir) *out++ = '@';
-    return outAddress(out, regAddr, PSTR(">"), regAddr < 16 && !indir);
+    return outAddress(out, addr, PSTR(">"), addr < 16 && !indir);
 }
 
 char *DisZ8::outBitPos(char *out, uint8_t bitPos) {
@@ -133,7 +133,8 @@ Error DisZ8::decodeIndexed(
     }  else {
         base16 = insn.readByte(memory);
     }
-    const RegName idx = _regs.decodeRegNum(opr1 & 0xF, pair);
+    const RegName idx = pair ? _regs.decodePairRegNum(opr1)
+        : _regs.decodeRegNum(opr1);
     if (idx == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     out = (dst == M_r) ? outWorkReg(out, opr1 >> 4)
         : outIndexed(out, base16, idx, dst);
@@ -288,12 +289,12 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, char *out) {
         return setOK();
     }
     // P1: LDB, BAND, BOR, BXOR
-    const uint8_t regAddr = insn.readByte(memory);
-    out = (dst == M_r) ? outWorkReg(out, post >> 4) : outRegAddr(out, regAddr);
+    const uint8_t addr = insn.readByte(memory);
+    out = (dst == M_r) ? outWorkReg(out, post >> 4) : outRegAddr(out, addr);
     if (src == M_IMb) out = outBitPos(out, post >> 1);
     else {
         *out++ = ',';
-        out = outRegAddr(out, regAddr);
+        out = outRegAddr(out, addr);
     }
     if (ext == M_IMb) out = outBitPos(out, post >> 1);
     else {

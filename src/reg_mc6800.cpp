@@ -23,39 +23,22 @@
 namespace libasm {
 namespace mc6800 {
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
+RegName RegMc6800::parseRegName(const char *line) {
+    const char r = *line++;
+    if (isidchar(*line)) return REG_UNDEF;
+    switch (toupper(r)) {
+    case 'X': return REG_X;
+    case 'Y': return REG_Y;
+    default:  return REG_UNDEF;
+    }
 }
 
-static bool regCharCaseEqual(char c, char regChar) {
-    return toupper(c) == toupper(regChar);
-}
-
-char RegMc6800::regName1stChar(const RegName name) const {
-    const char r = char(name);
-    return _uppercase ? toupper(r) : tolower(r);
-}
-
-bool RegMc6800::compareRegName(const char *line, RegName name) const {
-    if (!regCharCaseEqual(*line++, regName1stChar(name))) return false;
-    return !isidchar(*line);
-}
-
-uint8_t RegMc6800::regNameLen(RegName name) const {
+uint8_t RegMc6800::regNameLen(RegName name) {
     return name == REG_UNDEF ? 0 : 1;
 }
 
 char *RegMc6800::outRegName(char *out, const RegName name) const {
-    *out++ = regName1stChar(name);
-    *out = 0;
-    return out;
-}
-
-RegName RegMc6800::parseRegName(const char *line) const {
-    if (compareRegName(line, REG_X)) return REG_X;
-    if (TableMc6800.cpuType() == MC68HC11 && compareRegName(line, REG_Y))
-        return REG_Y;
-    return REG_UNDEF;
+    return outChar(out, char(name));
 }
 
 } // namespace mc6800

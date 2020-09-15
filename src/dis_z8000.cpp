@@ -243,7 +243,7 @@ Error DisZ8000::decodeOperand(
     case M_IR:
         if (num == 0) return setError(REGISTER_NOT_ALLOWED);
         return decodeGeneralRegister(out, num, SZ_ADDR, true);
-    case M_INTT:
+    case M_INTR:
         num &= 3;
         if (num == 3) return setError(OPCODE_HAS_NO_EFFECT);
         _regs.outIntrNames(out, num);
