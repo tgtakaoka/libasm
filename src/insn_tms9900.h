@@ -53,11 +53,6 @@ public:
 private:
     Config::opcode_t _opCode;
     uint8_t _flags;
-
-    void emitUint16(uint16_t val, uint8_t pos) {
-        _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
-        _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
-    }
 };
 
 } // namespace tms9900

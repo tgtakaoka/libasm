@@ -118,17 +118,6 @@ private:
         }
         return pos;
     }
-    void emitByte(uint8_t val, uint8_t pos) {
-        _insn.emitByte(val, pos);
-    }
-    void emitUint16(uint16_t val, uint8_t pos) {
-        emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
-        emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
-    }
-    void emitUint32(uint32_t val, uint8_t pos) {
-        emitUint16(static_cast<uint16_t>(val >> 16), pos + 0);
-        emitUint16(static_cast<uint16_t>(val >> 0),  pos + 2);
-    }
 };
 
 } // namespace ns32000

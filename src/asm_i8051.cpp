@@ -122,7 +122,7 @@ Error AsmI8051::encodeOperand(
         if (delta < -128 || delta >= 128) {
             error = OPERAND_TOO_FAR;
         } else {
-            insn.emitOperand(static_cast<uint8_t>(delta));
+            insn.emitOperand8(delta);
         }
     }
     if (mode == RREG || mode == IDIRR) {
@@ -133,7 +133,7 @@ Error AsmI8051::encodeOperand(
         if (op.val16 >= 0x100) {
             error = OVERFLOW_RANGE;
         } else {
-            insn.emitOperand(static_cast<uint8_t>(op.val16));
+            insn.emitOperand8(op.val16);
         }
     }
     if (mode == IMM8) {
@@ -141,7 +141,7 @@ Error AsmI8051::encodeOperand(
         if (val < -128 || val >= 256) {
             error = OVERFLOW_RANGE;
         } else {
-            insn.emitOperand(static_cast<uint8_t>(op.val16));
+            insn.emitOperand8(op.val16);
         }
     }
     if (mode == ADR11) {
@@ -151,19 +151,19 @@ Error AsmI8051::encodeOperand(
         if ((base & ~0x7FF) != (target & ~0x7FF)) {
             error = OPERAND_TOO_FAR;
         } else {
-            insn.embed(static_cast<uint8_t>((target & 0x700) >> 3));
-            insn.emitOperand(static_cast<uint8_t>(target));
+            insn.embed((target & 0x700) >> 3);
+            insn.emitOperand8(target);
         }
     }
     if (mode == ADR16 || mode == IMM16) {
-        insn.emitOperand(op.val16);
+        insn.emitOperand16(op.val16);
         return OK;
     }
     if (mode == BITAD || mode == NOTAD) {
         if (op.val16 >= 0x100) {
             error = NOT_BIT_ADDRESSABLE;
         } else {
-            insn.emitOperand(static_cast<uint8_t>(op.val16));
+            insn.emitOperand8(op.val16);
         }
     }
     if (error) {

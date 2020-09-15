@@ -80,14 +80,11 @@ public:
     }
 
     void emitOperand16(uint16_t val16) {
-        uint8_t pos = _insn.length();
-        if (pos == 0) pos = hasPost() ? 4 : 2;
-        emitUint16(val16, pos);
+        emitUint16(val16, operandPos());
     }
 
     void emitOperand32(uint32_t val32) {
-        emitOperand16(static_cast<uint16_t>(val32 >> 16));
-        emitOperand16(static_cast<uint16_t>(val32));
+        emitUint32(val32, operandPos());
     }
 
 private:
@@ -98,9 +95,10 @@ private:
     uint8_t _size;
     Config::opcode_t _post;
 
-    void emitUint16(uint16_t val, uint8_t pos) {
-        _insn.emitByte(static_cast<uint8_t>(val >> 8), pos + 0);
-        _insn.emitByte(static_cast<uint8_t>(val >> 0), pos + 1);
+    uint8_t operandPos() {
+        uint8_t pos = length();
+        if (pos == 0) pos = hasPost() ? 4 : 2;
+        return pos;
     }
 };
 

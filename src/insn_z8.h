@@ -70,6 +70,11 @@ public:
         emitByte(_opCode);
     }
 
+    void emitUint16Le(uint16_t val) {
+        emitByte(val >> 0);
+        emitByte(val >> 8);
+    }
+
 private:
     Config::opcode_t _opCode;
     uint16_t _flags;
