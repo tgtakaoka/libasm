@@ -102,10 +102,6 @@ char *positiveValue(char *p, uint32_t &val, int8_t radix, int8_t bitWidth) {
     return p;
 }
 
-const char *ValueFormatter::currentOriginSymbol() const {
-    return ".";
-}
-
 char *ValueFormatter::output(
     char *p, uint32_t val, int8_t radix, bool relax, int8_t bitWidth) const {
     char *t;
@@ -126,10 +122,6 @@ char *ValueFormatter::output(
     return reverseStr(p, t);
 }
 
-const char *MotoValueFormatter::currentOriginSymbol() const {
-    return "*";
-}
-
 char *MotoValueFormatter::output(
     char *p, uint32_t val, int8_t radix, bool relax, int8_t bitWidth) const {
     char *t;
@@ -138,14 +130,10 @@ char *MotoValueFormatter::output(
     p = positiveValue(p, val, radix, bitWidth);
     const uint8_t base = (radix < 0) ? -radix : radix;
     if (base == 16) *p++ = '$';
-    else if (base == 8) *p++ = '@';
-    else if (base == 2) *p++ = '%';
+    if (base == 8)  *p++ = '@';
+    if (base == 2)  *p++ = '%';
     t = ValueFormatter::outputNumber(p, val, base, bitWidth);
     return reverseStr(p, t);
-}
-
-const char *IntelValueFormatter::currentOriginSymbol() const {
-    return "$";
 }
 
 char *IntelValueFormatter::output(
@@ -159,9 +147,11 @@ char *IntelValueFormatter::output(
     if (base == 16 && t[-1] > '9')
         *t++ = '0';
     t = reverseStr(p, t);
-    if (base == 16) *t++ = _uppercase ? 'H' : 'h';
-    if (base == 8) *t++ = _uppercase ? 'O' : 'o';
-    if (base == 2) *t++ = _uppercase ? 'B' : 'b';
+    char suffix = 0;
+    if (base == 16) suffix = 'H';
+    if (base == 8)  suffix = 'O';
+    if (base == 2)  suffix = 'B';
+    if (suffix) *t++ = _uppercase ? suffix : (suffix | 0x40);
     *t = 0;
     return t;
 }

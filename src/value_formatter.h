@@ -34,7 +34,7 @@ public:
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t bitWidth) const;
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
-    virtual const char *currentOriginSymbol() const;
+    virtual const char currentOriginSymbol() const { return '.'; }
 
 protected:
     bool _uppercase;
@@ -60,7 +60,7 @@ public:
     char *output(
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t bitWidth) const override;
-    const char *currentOriginSymbol() const override;
+    const char currentOriginSymbol() const override { return '*'; }
 };
 
 class IntelValueFormatter : public ValueFormatter {
@@ -68,7 +68,7 @@ public:
     char *output(
         char *p, uint32_t val, int8_t radix,
         bool relax, int8_t bitWidth) const override;
-    const char *currentOriginSymbol() const override;
+    const char currentOriginSymbol() const override { return '$'; }
 };
 
 } // namespace libasm

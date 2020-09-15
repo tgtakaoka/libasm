@@ -90,7 +90,7 @@ protected:
             if (label) return outText(out, label);
         }
         const int8_t r = is_signed<T>::value ? -radix : radix;
-        return this->getFormatter().output(out, val, r, relax, bitWidth);
+        return getFormatter().output(out, val, r, relax, bitWidth);
     }
 
     template<typename Addr>
@@ -106,7 +106,7 @@ protected:
             return outText(out, label);
         }
         if (needPrefix && prefix) out = outPstr(out, prefix);
-        return this->getFormatter().output(out, val, 16, false, addrWidth);
+        return getFormatter().output(out, val, 16, false, addrWidth);
     }
 
     template<typename Addr>
@@ -116,11 +116,12 @@ protected:
             return outAddress(out, target, nullptr, false, addressWidth());
         const int32_t delta = static_cast<
             typename make_signed<Addr>::type>(target - origin);
-        out = outText(out, getFormatter().currentOriginSymbol());
+        *out++ = getFormatter().currentOriginSymbol();
         if (delta > 0) *out++ = '+';
         if (delta < 0) *out++ = '-';
         const uint32_t disp = (delta < 0) ? -delta : delta;
         if (disp) out = outConstant(out, disp, 16, true, true, deltaBits);
+        *out = 0;
         return out;
     }
 
