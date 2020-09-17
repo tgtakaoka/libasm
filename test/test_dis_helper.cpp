@@ -51,8 +51,27 @@ void dis_assert(
     }
 }
 
+bool test_failed;
+
+void run_test(
+    void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {
+    asserter.clear(name);
+    set_up();
+    test();
+    tear_down();
+    if (!asserter.check()) test_failed = true;
+}
+
 } // namespace test
 } // namespace libasm
+
+using namespace libasm::test;
+
+int main(int argc, char **argv) {
+    test_failed = false;
+    run_tests();
+    return test_failed ? 2 : 0;
+}
 
 // Local Variables:
 // mode: c++

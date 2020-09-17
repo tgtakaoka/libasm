@@ -986,15 +986,7 @@ static void test_error() {
     }
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "6502", "65SC02", "65C02", "W65C02S", "65816",
@@ -1025,7 +1017,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_undefined_symbol);
         RUN_TEST(test_error);
     }
-    return 0;
 }
 
 // Local Variables:

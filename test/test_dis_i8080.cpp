@@ -390,67 +390,6 @@ static void test_restart() {
     TEST(RST, "7", 0xFF);
 }
 
-// 00 xxx 000 NOP*
-// 00 pp0 001 LXI p
-// 00 pp1 001 DAD p
-// 00 0p0 010 STAX B/D
-// 00 0p1 010 LDAX B/D
-// 00 100 010 SHLD nnnn
-// 00 101 010 LHLD nnnn
-// 00 110 010 STA nnnn
-// 00 111 010 LDA nnnn
-// 00 pp0 011 INX p
-// 00 pp1 011 DCX p
-// 00 rrr 100 INR r
-// 00 rrr 101 DCR r
-// 00 rrr 110 MVI nn
-// 00 000 111 RLC
-// 00 001 111 RRC
-// 00 010 111 RAL
-// 00 011 111 RAR
-// 00 100 111 DAA
-// 00 101 111 CMA
-// 00 110 111 STC
-// 00 111 111 CMC
-
-// 01 rrr sss MOV r,r
-// 01 110 110 HLT (MOV M,M)
-
-// 10 000 sss ADD r
-// 10 001 sss ADC r
-// 10 010 sss SUB r
-// 10 011 sss SBB r
-// 10 100 sss ANA r
-// 10 101 sss XRA r
-// 10 110 sss ORA r
-// 10 111 sss CMP r
-
-// 11 ccc 000 Rccc
-// 11 pp0 001 POP p
-// 11 0x1 001 RET*
-// 11 101 001 PCHL
-// 11 111 001 SPHL
-// 11 ccc 010 Jccc
-// 11 00x 011 JMP* nnnn
-// 11 010 011 OUT nn
-// 11 011 011 IN  nn
-// 11 100 011 XTHL
-// 11 101 011 XCHG
-// 11 110 011 DI
-// 11 111 011 EI
-// 11 ccc 100 Cxxx
-// 11 pp0 101 PUSH
-// 11 xx1 101 CALL* nnnn
-// 11 000 110 ADI nn
-// 11 001 110 ACI nn
-// 11 010 110 SUI nn
-// 11 011 110 SBI nn
-// 11 100 110 ANI nn
-// 11 101 110 XRI nn
-// 11 110 110 ORI nn
-// 11 111 110 CPI nn
-// 11 aaa 111 RST aaa
-
 static void test_illegal() {
     if (is8080()) {
         ILLEGAL(0x20);
@@ -467,15 +406,7 @@ static void test_illegal() {
     ILLEGAL(0xFD);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "8080", "8085",
@@ -497,7 +428,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_inherent);
         RUN_TEST(test_illegal);
     }
-    return 0;
 }
 
 // Local Variables:

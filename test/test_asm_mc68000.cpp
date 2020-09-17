@@ -2445,15 +2445,7 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "MOVEA (UNDEF,PC,D1.L),A1", 0031173, 0x1800);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_data_move);
     RUN_TEST(test_integer);
@@ -2467,7 +2459,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_alias);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
-    return 0;
 }
 
 // Local Variables:

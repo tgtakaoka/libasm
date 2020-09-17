@@ -1980,15 +1980,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "OUT #UNDEF,R1", 0x3B16, 0x0000);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "Z8001", "Z8002",
@@ -2012,7 +2004,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_comment);
         RUN_TEST(test_undefined_symbol);
     }
-    return 0;
 }
 
 // Local Variables:

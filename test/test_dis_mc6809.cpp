@@ -1179,15 +1179,7 @@ static void test_illegal_hd6309() {
         ETEST(UNKNOWN_POSTBYTE, _, "", 0xA6, post_illegals[idx], 0, 0);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "6809", "6309",
@@ -1211,7 +1203,6 @@ int main(int argc, char **argv) {
         if (is6809()) RUN_TEST(test_illegal_mc6809);
         if (is6309()) RUN_TEST(test_illegal_hd6309);
     }
-    return 0;
 }
 
 // Local Variables:

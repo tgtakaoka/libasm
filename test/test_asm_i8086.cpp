@@ -1528,15 +1528,7 @@ static void test_error() {
     ETEST(ILLEGAL_OPERAND, "STOSB ES:[BX]");
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_data_transfer);
     RUN_TEST(test_arithmetic);
@@ -1548,7 +1540,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_comment);
     RUN_TEST(test_error);
-    return 0;
 }
 
 // Local Variables:

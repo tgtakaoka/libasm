@@ -21,6 +21,8 @@
 #include "test_asserter.h"
 #include "test_symtab.h"
 
+void run_tests();
+
 namespace libasm {
 namespace test {
 
@@ -38,6 +40,12 @@ void asm_assert(
     uint32_t addr, const char *src,
     const uint16_t *expected, uint8_t length,
     Assembler &assembler);
+
+void run_test(
+        void (*test)(),
+        const char *name,
+        void (*set_up)(),
+        void (*tear_down)());
 
 } // namespace test
 } // namespace libasm
@@ -59,7 +67,7 @@ void asm_assert(
     __VASSERT(__FILE__, __LINE__, error, 0x0000, src, __VA_ARGS__)
 #define TEST(src, ...) ETEST(OK, src, __VA_ARGS__)
 
-#define RUN_TEST(test) run_test(test, #test)
+#define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 
 #endif
 

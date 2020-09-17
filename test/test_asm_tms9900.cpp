@@ -379,15 +379,7 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JNE UNDEF", 0x1600);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "TMS9900", "TMS9995", "TMS99105",
@@ -411,7 +403,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_comment);
         RUN_TEST(test_undefined_symbol);
     }
-    return 0;
 }
 
 // Local Variables:

@@ -2306,15 +2306,7 @@ static void test_multiproc() {
     TEST(ILLEGAL, "",                  0045374); // #xxxx
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_data_move);
     RUN_TEST(test_integer);
@@ -2325,7 +2317,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_program);
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
-    return 0;
 }
 
 // Local Variables:

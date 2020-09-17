@@ -950,15 +950,7 @@ static void test_illegal_w65c02s() {
         ILLEGAL(illegals[idx]);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "6502", "65SC02", "65C02", "W65C02S", "65816",
@@ -991,7 +983,6 @@ int main(int argc, char **argv) {
         if (r65c02())  RUN_TEST(test_illegal_r65c02);
         if (w65c02s()) RUN_TEST(test_illegal_w65c02s);
     }
-    return 0;
 }
 
 // Local Variables:

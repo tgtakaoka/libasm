@@ -151,7 +151,7 @@ char *IntelValueFormatter::output(
     if (base == 16) suffix = 'H';
     if (base == 8)  suffix = 'O';
     if (base == 2)  suffix = 'B';
-    if (suffix) *t++ = _uppercase ? suffix : (suffix | 0x40);
+    if (suffix) *t++ = _uppercase ? suffix : (suffix | 0x20);
     *t = 0;
     return t;
 }

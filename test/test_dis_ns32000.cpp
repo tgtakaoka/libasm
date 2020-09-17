@@ -570,15 +570,7 @@ static void test_illegal() {
     }
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_format_0);
     RUN_TEST(test_format_1);
@@ -598,7 +590,6 @@ int main(int argc, char **argv) {
 #endif
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_illegal);
-    return 0;
 }
 
 // Local Variables:

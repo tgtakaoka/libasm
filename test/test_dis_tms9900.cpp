@@ -477,15 +477,7 @@ static void test_mid_tms99105() {
     assert_mid(ARRAY_RANGE(dp_bit_2nd), TSMB, &dp_bit_hole);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "TMS9900", "TMS9995", "TMS99105",
@@ -510,7 +502,6 @@ int main(int argc, char **argv) {
         if (is9995())  RUN_TEST(test_mid_tms9995);
         if (is99105()) RUN_TEST(test_mid_tms99105);
     }
-    return 0;
 }
 
 // Local Variables:

@@ -352,15 +352,7 @@ static void test_branch() {
     TEST(LSDF, "", 0xCF);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_inherent);
     RUN_TEST(test_indexed);
@@ -368,7 +360,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_immediate);
     RUN_TEST(test_io);
     RUN_TEST(test_branch);
-    return 0;
 }
 
 // Local Variables:

@@ -22,6 +22,8 @@
 #include "test_memory.h"
 #include "test_symtab.h"
 
+void run_tests();
+
 namespace libasm {
 namespace test {
 
@@ -33,6 +35,12 @@ void dis_assert(
     const char *file, int line, Error error,
     const char *expected_name, const char *expected_opr,
     Disassembler &disassembler);
+
+void run_test(
+        void (*test)(),
+        const char *name,
+        void (*set_up)(),
+        void (*tear_down)());
 
 } // test
 } // namespace
@@ -58,7 +66,7 @@ void dis_assert(
 
 #define ILLEGAL(...) ETEST(UNKNOWN_INSTRUCTION, _, "", __VA_ARGS__)
 
-#define RUN_TEST(test) run_test(test, #test)
+#define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 
 #endif
 

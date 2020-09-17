@@ -776,15 +776,7 @@ static void test_formatter_32bit() {
     F32(-0xffffffff, -16, false, "$00000001");
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_hex_constant);
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
@@ -794,7 +786,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_formatter_16bit);
     RUN_TEST(test_formatter_24bit);
     RUN_TEST(test_formatter_32bit);
-    return 0;
 }
 
 // Local Variables:

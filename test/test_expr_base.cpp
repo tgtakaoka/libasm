@@ -1034,15 +1034,7 @@ static void test_formatter_13bit() {
     FN(13, +2047 *2, -16, false, "0x0ffe");
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_char_constant);
     RUN_TEST(test_dec_constant);
     RUN_TEST(test_hex_constant);
@@ -1061,7 +1053,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_formatter_32bit);
     RUN_TEST(test_formatter_9bit);
     RUN_TEST(test_formatter_13bit);
-    return 0;
 }
 
 // Local Variables:

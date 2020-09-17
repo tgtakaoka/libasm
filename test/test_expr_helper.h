@@ -22,6 +22,8 @@
 #include "value_formatter.h"
 #include "value_parser.h"
 
+void run_tests();
+
 namespace libasm {
 namespace test {
 
@@ -41,12 +43,6 @@ void val_assert(
                         static_cast<uint32_t>(expected),
                         static_cast<uint32_t>(actual));
 }
-#define E8(expr, expected, expected_error)                              \
-    val_assert<uint8_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
-#define E16(expr, expected, expected_error)                             \
-    val_assert<uint16_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
-#define E32(expr, expected, expected_error)                             \
-    val_assert<uint32_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
 
 template<int BIT_WIDTH>
 void fmt_assert(
@@ -60,6 +56,22 @@ void fmt_assert(
     asserter.equals(file, line, msg, expected, actual);
 }
 
+void run_test(
+        void (*test)(),
+        const char *name,
+        void (*set_up)(),
+        void (*tear_down)());
+
+} // namespace test
+} // namespace libasm
+
+#define E8(expr, expected, expected_error)                              \
+    val_assert<uint8_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+#define E16(expr, expected, expected_error)                             \
+    val_assert<uint16_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+#define E32(expr, expected, expected_error)                             \
+    val_assert<uint32_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+
 #define FN(n, value, radix, relax, expected)                            \
     fmt_assert<n>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
 #define F8(value, radix, relax, expected)                               \
@@ -71,10 +83,8 @@ void fmt_assert(
 #define F32(value, radix, relax, expected)                              \
     fmt_assert<32>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
 
-#define RUN_TEST(test) run_test(test, #test)
+#define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 
-} // namespace test
-} // namespace libasm
 
 #endif
 

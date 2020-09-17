@@ -507,15 +507,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LCALL UNDEF", 0x12, 0x00, 0x00);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_implied);
     RUN_TEST(test_regs);
@@ -529,7 +521,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_absolute);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
-    return 0;
 }
 
 // Local Variables:

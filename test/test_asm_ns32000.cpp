@@ -492,15 +492,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "INSB R1,UNDEF,2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x00, 0x02, 0x00);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     RUN_TEST(test_format_0);
     RUN_TEST(test_format_1);
@@ -521,7 +513,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
-    return 0;
 }
 
 // Local Variables:

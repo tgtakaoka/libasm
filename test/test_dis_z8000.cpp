@@ -1764,15 +1764,7 @@ static void test_cpu_conrtol() {
     TEST(SETFLG, "C,Z,S,P", 0x8DF1);
 }
 
-static void run_test(void (*test)(), const char *test_name) {
-    asserter.clear(test_name);
-    set_up();
-    test();
-    tear_down();
-    asserter.check();
-}
-
-int main(int argc, char **argv) {
+void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
         "Z8001", "Z8002",
@@ -1794,7 +1786,6 @@ int main(int argc, char **argv) {
         RUN_TEST(test_output);
         RUN_TEST(test_cpu_conrtol);
     }
-    return 0;
 }
 
 // Local Variables:
