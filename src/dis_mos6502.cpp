@@ -30,17 +30,13 @@ Error DisMos6502::decodeImmediate(
     DisMemory& memory, InsnMos6502 &insn, char *out) {
     *out++ = '#';
     if (TableMos6502.longImmediate(insn.addrMode())) {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        outConstant(out, val16);
+        outConstant(out, insn.readUint16(memory));
     } else {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        outConstant(out, val8);
+        outConstant(out, insn.readByte(memory));
     }
     if (insn.opCode() == TableMos6502::WDM)
         return setError(UNKNOWN_INSTRUCTION);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMos6502::decodeAbsolute(
@@ -67,14 +63,12 @@ Error DisMos6502::decodeAbsolute(
         break;
     }
     if (indirect) *out++ = idirLong ? '[' : '(';
-    uint16_t addr;
-    if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
+    const uint16_t addr = insn.readUint16(memory);
     if (!absLong) {
         out = outAddress(out, addr, PSTR(">"), addr < 0x100);
     } else {
         uint32_t target = addr;
-        uint8_t bank;
-        if (insn.readByte(memory, bank)) return setError(NO_MEMORY);
+        const uint8_t bank = insn.readByte(memory);
         target |= static_cast<uint32_t>(bank) << 16;
         out = outAddress(
             out, target, PSTR(">>"), target < 0x10000, addressWidth());
@@ -85,7 +79,7 @@ Error DisMos6502::decodeAbsolute(
     }
     if (indirect) *out++ = idirLong ? ']' : ')';
     *out = 0;
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMos6502::decodeZeroPage(
@@ -118,8 +112,7 @@ Error DisMos6502::decodeZeroPage(
         index = REG_UNDEF;
         break;
     }
-    uint8_t zp;
-    if (insn.readByte(memory, zp)) return setError(NO_MEMORY);
+    const uint8_t zp = insn.readByte(memory);
     if (indirect) *out++ = zpLong ? '[' : '(';
     out = outAddress(out, zp, PSTR("<"));
     if (indirect && index == REG_Y) *out++ = zpLong ? ']' : ')';
@@ -137,35 +130,35 @@ Error DisMos6502::decodeZeroPage(
         *out++ = ',';
         return decodeRelative(memory, insn, out);
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisMos6502::decodeRelative(
     DisMemory &memory, InsnMos6502 &insn, char *out) {
+    const AddrMode mode = insn.addrMode();
     const uint8_t bank = static_cast<uint8_t>(insn.address() >> 16);
-    uint16_t addr = static_cast<uint16_t>(insn.address());
-    const AddrMode addrMode = insn.addrMode();
-    if (addrMode == REL_LONG) {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        addr += 3 + static_cast<int16_t>(val16);
+    const uint16_t base = static_cast<uint16_t>(insn.address())
+        + (mode == REL ? 2 : 3);
+    int16_t delta;
+    uint8_t deltaWidth;
+    if (mode == REL_LONG) {
+        deltaWidth = 16;
+        delta = static_cast<int16_t>(insn.readUint16(memory));
     } else {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        addr += ((addrMode == ZPG_REL) ? 3 : 2) + static_cast<int8_t>(val8);
+        deltaWidth = 8;
+        delta = static_cast<int8_t>(insn.readByte(memory));
     }
-    const uint32_t target = (static_cast<uint32_t>(bank) << 16) + addr;
-    outRelativeAddr(out, target, insn.address(), addrMode == REL_LONG ? 16 : 8);
-    return setOK();
+    const uint32_t target = (static_cast<uint32_t>(bank) << 16) + base + delta;
+    outRelativeAddr(out, target, insn.address(), deltaWidth);
+    return setError(insn);
 }
 
 Error DisMos6502::decodeBlockMove(
     DisMemory &memory, InsnMos6502 &insn, char *out) {
-    uint8_t sbank, dbank;
-    if (insn.readByte(memory, dbank)) return setError(NO_MEMORY);
-    if (insn.readByte(memory, sbank)) return setError(NO_MEMORY);
-    const uint32_t src = static_cast<uint32_t>(sbank) << 16;
+    const uint8_t dbank = insn.readByte(memory);
+    const uint8_t sbank = insn.readByte(memory);
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
+    const uint32_t src = static_cast<uint32_t>(sbank) << 16;
     out = outAddress(out, src, nullptr, false, addressWidth());
     *out++ = ',';
     outAddress(out, dst, nullptr, false, addressWidth());
@@ -174,8 +167,8 @@ Error DisMos6502::decodeBlockMove(
 
 Error DisMos6502::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnMos6502 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
+    if (setError(insn)) return getError();
     insn.setOpCode(opCode);
 
     if (TableMos6502.searchOpCode(insn))

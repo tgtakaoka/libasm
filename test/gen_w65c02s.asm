@@ -18,7 +18,7 @@
       ASL  $0100
       BBR0 $10,*+3
       BPL  *+19
-      BPL  *-$26
+      BPL  *-$7E
       BPL  *
       ORA  ($12),Y
       ORA  ($13)

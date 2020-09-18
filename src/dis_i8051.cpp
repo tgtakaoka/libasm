@@ -25,23 +25,20 @@ char *DisI8051::outRegister(char *out, RegName regName) {
 }
 
 Error DisI8051::decodeRelative(DisMemory &memory, InsnI8051 &insn, char *out) {
-    uint8_t val8;
-    if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-    const Config::ptrdiff_t delta = static_cast<int8_t>(val8);
+    const Config::ptrdiff_t delta = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
     outRelativeAddr(out, target, insn.address(), 8);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out) {
-    uint8_t val8;
-    if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
+    uint8_t val8 = insn.readByte(memory);
     const uint8_t addr8 = (val8 & 0x80) ? (val8 & ~7) : ((val8 >> 3) + 0x20);
     val8 &= 7;
     out = outAddress(out, addr8);
     *out++ = '.';
     outConstant(out, val8, 10);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisI8051::decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode) {
@@ -54,37 +51,28 @@ Error DisI8051::decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode) {
 Error DisI8051::decodeAddress(
     DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     if (mode == ADR8) {
-        uint8_t addr8;
-        if (insn.readByte(memory, addr8)) return setError(NO_MEMORY);
-        outAddress(out, addr8);
+        outAddress(out, insn.readByte(memory));
     } else if (mode == ADR11) {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
+        const uint8_t val8 = insn.readByte(memory);
         Config::uintptr_t addr = (insn.address() + insn.length()) & 0xF800;
         addr |= (insn.opCode() & 0xE0) << 3;
         addr |= val8;
         outAddress(out, addr);
     } else {
-        Config::uintptr_t addr16;
-        if (insn.readUint16(memory, addr16)) return setError(NO_MEMORY);
-        outAddress(out, addr16);
+        outAddress(out, insn.readUint16(memory));
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisI8051::decodeImmediate(
     DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     *out++ = '#';
     if (mode == IMM8) {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        outConstant(out, val8, 16);
+        outConstant(out, insn.readByte(memory));
     } else {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        outConstant(out, val16, 16);
+        outConstant(out, insn.readUint16(memory));
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisI8051::decodeOperand(
@@ -142,18 +130,18 @@ Error DisI8051::decodeOperand(
 
 Error DisI8051::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnI8051 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
+    if (setError(insn)) return getError();
+
     if (TableI8051.searchOpCode(insn))
         return setError(TableI8051.getError());
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     if (dst == ADR8 && src == ADR8) { // MOV dst,src
-        uint8_t src8, dst8;
-        if (insn.readByte(memory, src8)) return setError(NO_MEMORY);
-        if (insn.readByte(memory, dst8)) return setError(NO_MEMORY);
+        const uint8_t src8 = insn.readByte(memory);
+        const uint8_t dst8 = insn.readByte(memory);
         out = outAddress(out, dst8);
         *out++ = ',';
         out = outAddress(out, src8);
@@ -173,7 +161,7 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, char *out) {
         *out++ = ',';
         if (decodeOperand(memory, insn, out, ext)) return getError();
     }
-    return setOK();
+    return setError(insn);
 }
 
 } // namespace i8051

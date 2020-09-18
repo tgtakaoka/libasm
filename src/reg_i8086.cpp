@@ -23,151 +23,103 @@
 namespace libasm {
 namespace i8086 {
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
-}
-
-struct NameEntry {
-    uint8_t name;
-    uint8_t len;
-    const char *text;
-
-    static const NameEntry *searchName(
-            uint8_t name, const NameEntry *begin, const NameEntry *end) {
-        for (const NameEntry *entry = begin; entry < end; entry++) {
-            const uint8_t n = pgm_read_byte(&entry->name);
-            if (name == n) return entry;
-        }
-        return nullptr;
-    }
-    static const NameEntry *searchText(
-            const char *str, const NameEntry *begin, const NameEntry *end) {
-        for (const NameEntry *entry = begin; entry < end; entry++) {
-            const char *text = reinterpret_cast<const char *>(
-                    pgm_read_ptr(&entry->text));
-            const uint8_t len = pgm_read_byte(&entry->len);
-            if (strncasecmp_P(str, text, len) == 0 && !isidchar(str[len]))
-                return entry;
-        }
-        return nullptr;
-    }
-    static uint8_t nameLen(
-            uint8_t name, const NameEntry *begin, const NameEntry *end) {
-        const NameEntry *entry = searchName(name, begin, end);
-        return entry ? pgm_read_byte(&entry->len) : 0;
-    }
+static const char TEXT_REG_AL[]   PROGMEM = "AL";
+static const char TEXT_REG_BL[]   PROGMEM = "BL";
+static const char TEXT_REG_CL[]   PROGMEM = "CL";
+static const char TEXT_REG_DL[]   PROGMEM = "DL";
+static const char TEXT_REG_AH[]   PROGMEM = "AH";
+static const char TEXT_REG_BH[]   PROGMEM = "BH";
+static const char TEXT_REG_CH[]   PROGMEM = "CH";
+static const char TEXT_REG_DH[]   PROGMEM = "DH";
+static const char TEXT_REG_AX[]   PROGMEM = "AX";
+static const char TEXT_REG_BX[]   PROGMEM = "BX";
+static const char TEXT_REG_CX[]   PROGMEM = "CX";
+static const char TEXT_REG_DX[]   PROGMEM = "DX";
+static const char TEXT_REG_SP[]   PROGMEM = "SP";
+static const char TEXT_REG_BP[]   PROGMEM = "BP";
+static const char TEXT_REG_SI[]   PROGMEM = "SI";
+static const char TEXT_REG_DI[]   PROGMEM = "DI";
+static const char TEXT_REG_CS[]   PROGMEM = "CS";
+static const char TEXT_REG_DS[]   PROGMEM = "DS";
+static const char TEXT_REG_ES[]   PROGMEM = "ES";
+static const char TEXT_REG_SS[]   PROGMEM = "SS";
+static const char TEXT_REG_PTR[]  PROGMEM = "PTR";
+static const char TEXT_REG_BYTE[] PROGMEM = "BYTE";
+static const char TEXT_REG_WORD[] PROGMEM = "WORD";
+static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
+    NAME_ENTRY(REG_AL)
+    NAME_ENTRY(REG_AH)
+    NAME_ENTRY(REG_AX)
+    NAME_ENTRY(REG_BL)
+    NAME_ENTRY(REG_BH)
+    NAME_ENTRY(REG_BX)
+    NAME_ENTRY(REG_CL)
+    NAME_ENTRY(REG_CH)
+    NAME_ENTRY(REG_CX)
+    NAME_ENTRY(REG_DL)
+    NAME_ENTRY(REG_DH)
+    NAME_ENTRY(REG_DX)
+    NAME_ENTRY(REG_BP)
+    NAME_ENTRY(REG_SP)
+    NAME_ENTRY(REG_SI)
+    NAME_ENTRY(REG_DI)
+    NAME_ENTRY(REG_CS)
+    NAME_ENTRY(REG_DS)
+    NAME_ENTRY(REG_ES)
+    NAME_ENTRY(REG_SS)
+    NAME_ENTRY(REG_PTR)
+    NAME_ENTRY(REG_BYTE)
+    NAME_ENTRY(REG_WORD)
 };
 
-static const char TEXT_AL[]   PROGMEM = "AL";
-static const char TEXT_BL[]   PROGMEM = "BL";
-static const char TEXT_CL[]   PROGMEM = "CL";
-static const char TEXT_DL[]   PROGMEM = "DL";
-static const char TEXT_AH[]   PROGMEM = "AH";
-static const char TEXT_BH[]   PROGMEM = "BH";
-static const char TEXT_CH[]   PROGMEM = "CH";
-static const char TEXT_DH[]   PROGMEM = "DH";
-static const char TEXT_AX[]   PROGMEM = "AX";
-static const char TEXT_BX[]   PROGMEM = "BX";
-static const char TEXT_CX[]   PROGMEM = "CX";
-static const char TEXT_DX[]   PROGMEM = "DX";
-static const char TEXT_SP[]   PROGMEM = "SP";
-static const char TEXT_BP[]   PROGMEM = "BP";
-static const char TEXT_SI[]   PROGMEM = "SI";
-static const char TEXT_DI[]   PROGMEM = "DI";
-static const char TEXT_CS[]   PROGMEM = "CS";
-static const char TEXT_DS[]   PROGMEM = "DS";
-static const char TEXT_ES[]   PROGMEM = "ES";
-static const char TEXT_SS[]   PROGMEM = "SS";
-static const char TEXT_PTR[]  PROGMEM = "PTR";
-static const char TEXT_BYTE[] PROGMEM = "BYTE";
-static const char TEXT_WORD[] PROGMEM = "WORD";
-static const NameEntry REG_TABLE[] PROGMEM = {
-    { REG_AL,   2, TEXT_AL },
-    { REG_AH,   2, TEXT_AH },
-    { REG_AX,   2, TEXT_AX },
-    { REG_BL,   2, TEXT_BL },
-    { REG_BH,   2, TEXT_BH },
-    { REG_BX,   2, TEXT_BX },
-    { REG_CL,   2, TEXT_CL },
-    { REG_CH,   2, TEXT_CH },
-    { REG_CX,   2, TEXT_CX },
-    { REG_DL,   2, TEXT_DL },
-    { REG_DH,   2, TEXT_DH },
-    { REG_DX,   2, TEXT_DX },
-    { REG_BP,   2, TEXT_BP },
-    { REG_SP,   2, TEXT_SP },
-    { REG_SI,   2, TEXT_SI },
-    { REG_DI,   2, TEXT_DI },
-    { REG_CS,   2, TEXT_CS },
-    { REG_DS,   2, TEXT_DS },
-    { REG_ES,   2, TEXT_ES },
-    { REG_SS,   2, TEXT_SS },
-    { REG_PTR,  3, TEXT_PTR  },
-    { REG_BYTE, 4, TEXT_BYTE },
-    { REG_WORD, 4, TEXT_WORD },
-};
-
-RegName RegI8086::parseRegName(const char *line) const {
-    const NameEntry *entry =
-        NameEntry::searchText(line, ARRAY_RANGE(REG_TABLE));
-    return entry ? RegName(pgm_read_byte(&entry->name)) : REG_UNDEF;
+RegName RegI8086::parseRegName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-uint8_t RegI8086::regNameLen(RegName name) const {
-    return NameEntry::nameLen(name, ARRAY_RANGE(REG_TABLE));
-}
-
-RegName RegI8086::decodeByteReg(uint8_t num) const {
-    num &= 7;
-    return RegName(num + 8);
-}
-
-RegName RegI8086::decodeWordReg(uint8_t num) const {
-    num &= 7;
-    return RegName(num + 16);
-}
-
-RegName RegI8086::decodeSegReg(uint8_t num) const {
-    num &= 3;
-    return RegName(num + 24);
+uint8_t RegI8086::regNameLen(RegName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 char *RegI8086::outRegName(char *out, RegName name) const {
-    const NameEntry *entry =
-        NameEntry::searchName(name, ARRAY_RANGE(REG_TABLE));
-    if (entry) {
-        const char *text = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->text));
-        out = outText(out, text);
-    }
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
 }
 
-bool RegI8086::isGeneralReg(RegName name) const {
-    const uint8_t num = uint8_t(name);
-    return num >= 8 && num < 24;
+RegName RegI8086::decodeByteReg(uint8_t num) {
+    return RegName((num & 7) + 8);
 }
 
-bool RegI8086::isSegmentReg(RegName name) const {
-    const uint8_t num = uint8_t(name);
-    return num >= 24 && num < 28;
+RegName RegI8086::decodeWordReg(uint8_t num) {
+    return RegName(num & 7);
 }
 
-OprSize RegI8086::regSize(RegName name) const {
-    const uint8_t num = uint8_t(name);
-    if (num < 8) return SZ_NONE;
-    return (num >= 8 && num < 16) ? SZ_BYTE : SZ_WORD;
+RegName RegI8086::decodeSegReg(uint8_t num) {
+    return RegName((num & 3) + 16);
 }
 
-uint8_t RegI8086::encodeRegNum(RegName name) const {
-    switch (regSize(name)) {
-    case SZ_BYTE:
-        return uint8_t(name) - 8;
-    case SZ_WORD:
-        return uint8_t(name) - (isSegmentReg(name) ? 24 : 16);
-    default:
-        return 0;
-    }
+bool RegI8086::isGeneralReg(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= 0 && num < 16;
+}
+
+bool RegI8086::isSegmentReg(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= 16 && num < 20;
+}
+
+OprSize RegI8086::generalRegSize(RegName name) {
+    const int8_t num = int8_t(name);
+    return num < 8 ? SZ_WORD : SZ_BYTE;
+}
+
+uint8_t RegI8086::encodeRegNum(RegName name) {
+    const uint8_t num = uint8_t(name);
+    if (num < 8) return num;
+    if (num < 16) return num - 8;
+    return num - 16;
 }
 
 } // namespace i8086

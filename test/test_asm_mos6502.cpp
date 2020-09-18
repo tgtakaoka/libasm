@@ -239,7 +239,7 @@ static void test_imm() {
         // W65C816
         TEST("REP #zero10", 0xC2, 0x10);
         TEST("SEP #zeroFF", 0xE2, 0xFF);
-    }        
+    }
 }
 
 static void test_zpg() {
@@ -648,8 +648,8 @@ static void test_abs_indexed_idir() {
         TEST("JSR ($1235,X)",    0xFC, 0x35, 0x12);
         TEST("JSR (>abs0010,X)", 0xFC, 0x10, 0x00);
     } else {
-        ETEST(OPERAND_NOT_ALLOWED, "JSR ($1235,X)");
-        ETEST(UNKNOWN_OPERAND, "JSR (>abs0010),X");
+        ETEST(OPERAND_NOT_ALLOWED,  "JSR ($1235,X)");
+        ETEST(REGISTER_NOT_ALLOWED, "JSR (>abs0010),X");
     }
 }
 
@@ -958,31 +958,31 @@ static void test_undefined_symbol() {
 
 static void test_error() {
     if (w65c816()) {
-        ETEST(UNKNOWN_OPERAND, "SBC [$10],X");
-        ETEST(UNKNOWN_OPERAND, "ORAL ($10),X");
-        ETEST(UNKNOWN_OPERAND, "ORA ($10,S),X");
-        ETEST(UNKNOWN_OPERAND, "ORA ($10,X),X");
-        ETEST(UNKNOWN_OPERAND, "ORA ($10,X),Y");
-        ETEST(UNKNOWN_OPERAND, "ORA ($10,Y),X");
-        ETEST(UNKNOWN_OPERAND, "ORA ($10,Y),Y");
-        ETEST(OPERAND_NOT_ALLOWED, "ORA $123456,Y");
+        ETEST(REGISTER_NOT_ALLOWED, "SBC  [$10],X");
+        ETEST(REGISTER_NOT_ALLOWED, "ORAL ($10),X");
+        ETEST(REGISTER_NOT_ALLOWED, "ORA  ($10,S),X");
+        ETEST(REGISTER_NOT_ALLOWED, "ORA  ($10,X),X");
+        ETEST(REGISTER_NOT_ALLOWED, "ORA  ($10,X),Y");
+        ETEST(REGISTER_NOT_ALLOWED, "ORA  ($10,Y),X");
+        ETEST(REGISTER_NOT_ALLOWED, "ORA  ($10,Y),Y");
+        ETEST(OPERAND_NOT_ALLOWED,  "ORA  $123456,Y");
     }
-    ETEST(UNKNOWN_OPERAND, "ORA ($10,Y)");
-    ETEST(UNKNOWN_OPERAND, "ORA ($10),X");
+    ETEST(REGISTER_NOT_ALLOWED, "ORA ($10,Y)");
+    ETEST(REGISTER_NOT_ALLOWED, "ORA ($10),X");
     if (m6502()) {
         // MOS6502
-        ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
-        ETEST(OPERAND_NOT_ALLOWED, "JSR ($1234,X)");
-        ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
+        ETEST(REGISTER_NOT_ALLOWED, "JSR ($1234,Y)");
+        ETEST(OPERAND_NOT_ALLOWED,  "JSR ($1234,X)");
+        ETEST(REGISTER_NOT_ALLOWED, "JMP ($1234,Y)");
     } else if (w65c816()) {
         // W65C816
-        ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
-        ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
+        ETEST(REGISTER_NOT_ALLOWED, "JMP ($1234,Y)");
+        ETEST(REGISTER_NOT_ALLOWED, "JSR ($1234,Y)");
     } else {
         // W65SC02
-        ETEST(UNKNOWN_OPERAND, "JSR ($1234,Y)");
-        ETEST(OPERAND_NOT_ALLOWED, "JSR ($1234,X)");
-        ETEST(UNKNOWN_OPERAND, "JMP ($1234,Y)");
+        ETEST(REGISTER_NOT_ALLOWED, "JSR ($1234,Y)");
+        ETEST(OPERAND_NOT_ALLOWED,  "JSR ($1234,X)");
+        ETEST(REGISTER_NOT_ALLOWED, "JMP ($1234,Y)");
     }
 }
 

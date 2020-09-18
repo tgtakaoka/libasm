@@ -16,7 +16,7 @@
       ASL  >$000F
       ASL  $0100
       BPL  *+19
-      BPL  *-$21
+      BPL  *-$7E
       BPL  *
       ORA  ($12),Y
       ORA  ($13)
@@ -49,7 +49,7 @@
       ROL  >$002F
       ROL  $0100
       BMI  *+$33
-      BMI  *-$6F
+      BMI  *-$7E
       BMI  *
       AND  ($32),Y
       AND  ($33)

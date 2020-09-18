@@ -25,23 +25,20 @@ char *DisIns8060::outRegister(char *out, RegName regName) {
 }
 
 Error DisIns8060::decodePntr(InsnIns8060 &insn, char *out) {
-    outRegister(out, _regs.decodePointerReg(insn.opCode() & 3));
+    outRegister(out, _regs.decodePointerReg(insn.opCode()));
     return setOK();
 }
 
 Error DisIns8060::decodeImm8(
         DisMemory& memory, InsnIns8060 &insn, char *out) {
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outConstant(out, val);
-    return setOK();
+    outConstant(out, insn.readByte(memory));
+    return setError(insn);
 }
 
 Error DisIns8060::decodeIndx(
     DisMemory &memory, InsnIns8060& insn, char *out, bool hasMode) {
-    const RegName reg = _regs.decodePointerReg(insn.opCode() & 3);
-    uint8_t opr;
-    if (insn.readByte(memory, opr)) return setError(NO_MEMORY);
+    const RegName reg = _regs.decodePointerReg(insn.opCode());
+    const uint8_t opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)
         *out++ = '@';
     if (reg == REG_PC && opr != 0x80) { // PC relative
@@ -60,31 +57,32 @@ Error DisIns8060::decodeIndx(
             target |= page;
             outAddress(out, target);
         }
-        return setOK();
-    }
-    if (opr == 0x80) {         // E(Pn)
-        out = outRegister(out, REG_E);
     } else {
-        const int8_t disp = static_cast<int8_t>(opr);
-        out = outConstant(out, disp, 10);
+        if (opr == 0x80) {         // E(Pn)
+            out = outRegister(out, REG_E);
+        } else {
+            const int8_t disp = static_cast<int8_t>(opr);
+            out = outConstant(out, disp, 10);
+        }
+        *out++ = '(';
+        out = outRegister(out, reg);
+        *out++ = ')';
+        *out = 0;
     }
-    *out++ = '(';
-    out = outRegister(out, reg);
-    *out++ = ')';
-    *out = 0;
-    return setOK();
+    return setError(insn);
 }
 
 Error DisIns8060::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnIns8060 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
+    if (setError(insn)) return getError();
     insn.setOpCode(opCode);
+
     if (TableIns8060.searchOpCode(insn))
         return setError(TableIns8060.getError());
 
     switch (insn.addrMode()) {
-    case INHR:
+    default:
         return setOK();
     case PNTR:
         return decodePntr(insn, out);
@@ -95,8 +93,6 @@ Error DisIns8060::decode(DisMemory &memory, Insn &_insn, char *out) {
         return decodeIndx(memory, insn, out, false);
     case INDX:
         return decodeIndx(memory, insn, out, true);
-    default:
-        return setError(INTERNAL_ERROR);
     }
 }
 

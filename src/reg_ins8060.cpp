@@ -22,78 +22,53 @@
 namespace libasm {
 namespace ins8060 {
 
-static constexpr RegName ALL_REGS[] PROGMEM = {
-    REG_P0, REG_P1, REG_P2, REG_P3, REG_PC, REG_E,
+static const char TEXT_REG_E[]  PROGMEM = "E";
+static const char TEXT_REG_P0[] PROGMEM = "P0";
+static const char TEXT_REG_P1[] PROGMEM = "P1";
+static const char TEXT_REG_P2[] PROGMEM = "P2";
+static const char TEXT_REG_P3[] PROGMEM = "P3";
+static const char TEXT_REG_PC[] PROGMEM = "PC";
+static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+    NAME_ENTRY(REG_E)
+    NAME_ENTRY(REG_P1)
+    NAME_ENTRY(REG_P2)
+    NAME_ENTRY(REG_P3)
+    NAME_ENTRY(REG_PC)
+    NAME_ENTRY(REG_P0)
 };
 
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
+RegName RegIns8060::parseRegName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-static bool regCharCaseEqual(char c, char regChar) {
-    return toupper(c) == toupper(regChar);
+uint8_t RegIns8060::regNameLen(RegName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
-char RegIns8060::regName1stChar(const RegName regName) const {
-    const char r = char(regName);
-    if (isdigit(r)) return _uppercase ? 'P' : 'p';
-    return _uppercase ? r : tolower(r);
-}
-
-char RegIns8060::regName2ndChar(const RegName regName) const {
-    const char r = char(regName);
-    if (isdigit(r)) return r;
-    if (regName == REG_PC)
-        return _uppercase ? 'C' : 'c';
-    return 0;
-}
-
-bool RegIns8060::compareRegName(const char *line, RegName regName) const {
-    if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
-    const char r2 = regName2ndChar(regName);
-    if (r2 && !regCharCaseEqual(*line++, r2)) return false;
-    return !isidchar(*line);
-}
-
-uint8_t RegIns8060::regNameLen(RegName regName) const {
-    if (regName == REG_UNDEF) return 0;
-    return regName2ndChar(regName) ? 2 : 1;
-}
-
-char *RegIns8060::outRegName(char *out, const RegName regName) const {
-    *out++ = regName1stChar(regName);
-    const char r2 = regName2ndChar(regName);
-    if (r2) *out++ = r2;
-    *out = 0;
+char *RegIns8060::outRegName(char *out, const RegName name) const {
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
 }
 
-RegName RegIns8060::parseRegName(
-    const char *line, const RegName *table, const RegName *end) const {
-    for (const RegName *p = table; p < end; p++) {
-        const RegName regName = RegName(pgm_read_byte(p));
-        if (compareRegName(line, regName)) return regName;
+bool RegIns8060::isPointerReg(RegName name) {
+    switch (name) {
+    case REG_PC: case REG_P1: case REG_P2: case REG_P3: case REG_P0:
+        return true;
+    default:
+        return false;
     }
-    return REG_UNDEF;
 }
 
-RegName RegIns8060::parseRegister(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(ALL_REGS));
+uint8_t RegIns8060::encodePointerReg(RegName name) {
+    if (name == REG_P0) return 0;
+    return uint8_t(name);
 }
 
-RegName RegIns8060::parsePointerReg(const char *line) const {
-    const RegName regNam = parseRegister(line);
-    return (regNam == REG_E) ? REG_UNDEF : regNam;
-}
-
-int8_t RegIns8060::encodePointerReg(RegName regName) {
-    if (regName == REG_PC) return 0;
-    return char(regName) - '0';
-}
-
-RegName RegIns8060::decodePointerReg(uint8_t regNum) {
-    if (regNum == 0) return REG_PC;
-    return RegName(regNum + '0');
+RegName RegIns8060::decodePointerReg(uint8_t num) {
+    return RegName(num & 3);
 }
 
 } // namespace ins8060

@@ -50,47 +50,32 @@ Error DisI8086::decodeRelative(
     DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
     int16_t disp;
     if (mode == M_REL8) {
-        uint8_t disp8;
-        if (insn.readByte(memory, disp8)) return setError(NO_MEMORY);
-        disp = static_cast<int8_t>(disp8);
+        disp = static_cast<int8_t>(insn.readByte(memory));
     } else {
-        uint16_t disp16;
-        if (insn.readUint16(memory, disp16)) return setError(NO_MEMORY);
-        disp = static_cast<int16_t>(disp16);
+        disp = static_cast<int16_t>(insn.readUint16(memory));
     }
     const Config::uintptr_t target = insn.address() + insn.length() + disp;
     outRelativeAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
-    return OK;
+    return setError(insn);
 }
 
 Error DisI8086::decodeImmediate(
     DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
     if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
-        outConstant(out, val16);
-        return OK;
+        outConstant(out, insn.readUint16(memory));
+    } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
+        outConstant(out, insn.readByte(memory));
+    } else if (mode == M_IMM8) {
+        outConstant(out, insn.readByte(memory), -16);
+    } else {
+        // M_FAR
+        const uint16_t offset  = insn.readUint16(memory);
+        const uint16_t segment = insn.readUint16(memory);
+        out = outAddress(out, segment);
+        *out++ = ':';
+        outAddress(out, offset);
     }
-    if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        outConstant(out, val8);
-        return OK;
-    }
-    if (mode == M_IMM8) {
-        uint8_t val8;
-        if (insn.readByte(memory, val8)) return setError(NO_MEMORY);
-        outConstant(out, val8, -16);
-        return OK;
-    }
-    // M_FAR
-    uint16_t segment, offset;
-    if (insn.readUint16(memory, offset)) return setError(NO_MEMORY);
-    if (insn.readUint16(memory, segment)) return setError(NO_MEMORY);
-    out = outAddress(out, segment);
-    *out++ = ':';
-    outAddress(out, offset);
-    return OK;
+    return setError(insn);
 }
 
 static RegName getBaseReg(uint8_t mod, uint8_t r_m) {
@@ -174,21 +159,17 @@ Error DisI8086::outMemReg(
     out = outRegister(out, index, sep);
     if (index != REG_UNDEF) sep = '+';
     if (mod == 1) {
-        uint8_t disp;
-        if (insn.readByte(memory, disp)) return setError(NO_MEMORY);
-        const int8_t disp8 = static_cast<int8_t>(disp);
+        const int8_t disp8 = static_cast<int8_t>(insn.readByte(memory));
         if (disp8 >= 0) *out++ = sep;
         out = outConstant(out, disp8, 10);
     }
     if (mod == 2 || (mod == 0 && r_m == 6)) {
-        uint16_t disp;
-        if (insn.readUint16(memory, disp)) return setError(NO_MEMORY);
         if (sep) *out++ = sep;
-        out = outAddress(out, disp);
+        out = outAddress(out, insn.readUint16(memory));
     }
     *out++ = ']';
     *out = 0;
-    return OK;
+    return setError(insn);
 }
 
 Error DisI8086::decodeMemReg(
@@ -207,10 +188,9 @@ Error DisI8086::decodeMemReg(
 
 Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, char *out) {
     if (_repeatHasStringInst) {
-        Config::opcode_t opc;
         Insn _istr;
         InsnI8086 istr(_istr);
-        if (rep.readByte(memory, opc)) return setError(NO_MEMORY);
+        const Config::opcode_t opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
         if (TableI8086.searchOpCode(istr))
             setError(TableI8086.getError());
@@ -287,25 +267,6 @@ static bool validSegOverride(const InsnI8086 &insn) {
         || validSegOverride(insn.srcMode(), mod);
 }
 
-Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
-    while (true) {
-        Config::opcode_t opCode;
-        if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        if (TableI8086.isSegmentPrefix(opCode)) {
-            if (insn.segment()) return setError(ILLEGAL_SEGMENT);
-            insn.setSegment(opCode);
-            continue;
-        }
-        Config::opcode_t firstByte = 0;
-        if (TableI8086.isFirstByte(opCode)) {
-            firstByte = opCode;
-            if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
-        }
-        insn.setOpCode(opCode, firstByte);
-        return OK;
-    }
-}
-
 Error DisI8086::decodeStringInst(
     DisMemory &memory, InsnI8086 &insn, char *out) {
     if (insn.segment()) {
@@ -333,13 +294,32 @@ Error DisI8086::decodeStringInst(
     return setOK();
 }
 
+Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
+    while (true) {
+        Config::opcode_t opCode = insn.readByte(memory);
+        if (TableI8086.isSegmentPrefix(opCode)) {
+            if (insn.segment()) return setError(ILLEGAL_SEGMENT);
+            insn.setSegment(opCode);
+            continue;
+        }
+        Config::opcode_t firstByte = 0;
+        if (TableI8086.isFirstByte(opCode)) {
+            firstByte = opCode;
+            opCode = insn.readByte(memory);
+        }
+        insn.setOpCode(opCode, firstByte);
+        return setError(insn);
+    }
+}
+
 Error DisI8086::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn)) return getError();
     if (TableI8086.searchOpCode(insn))
         return setError(TableI8086.getError());
-    if (insn.readModReg(memory)) return setError(NO_MEMORY);
 
+    insn.readModReg(memory);
+    if (setError(insn)) return getError();
     if (!validSegOverride(insn)) return setError(ILLEGAL_SEGMENT);
 
     if (insn.stringInst())
@@ -348,6 +328,7 @@ Error DisI8086::decode(DisMemory &memory, Insn &_insn, char *out) {
         return getError();
     if (insn.srcMode() == M_NONE)
         return setOK();
+
     out += strlen(out);
     *out++ = ',';
     if (decodeOperand(memory, insn, out, insn.srcMode(), insn.srcPos()))

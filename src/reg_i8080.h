@@ -22,49 +22,41 @@
 namespace libasm {
 namespace i8080 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_B = 'B',
-    REG_C = 'C',
-    REG_D = 'D',
-    REG_E = 'E',
-    REG_H = 'H',
-    REG_L = 'L',
-    REG_M = 'M',
-    REG_A = 'A',
-    REG_SP = 'S',
-    REG_PSW = 'P',
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // Data registers.
+    REG_B   = 0,
+    REG_C   = 1,
+    REG_D   = 2,
+    REG_E   = 3,
+    REG_H   = 4,
+    REG_L   = 5,
+    REG_M   = 6,
+    REG_A   = 7,
+    // Other registers
+    REG_SP  = 0 + 8,
+    REG_PSW = 1 + 8,
 };
 
 class RegI8080 : public RegBase {
 public:
-    RegName parseRegister(const char *line) const;
-    RegName parsePointerReg(const char *line) const;
-    RegName parseStackReg(const char *line) const;
-    RegName parseIndexReg(const char *line) const;
-    RegName parseDataReg(const char *line) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName regName);
+    char *outRegName(char *out, const RegName name) const;
 
-    static int8_t encodePointerReg(RegName regName);
-    static int8_t encodeStackReg(RegName regName);
-    static int8_t encodeIndexReg(RegName regName);
-    static int8_t encodeDataReg(RegName regName);
+    static bool isPointerReg(RegName name);
+    static uint8_t encodePointerReg(RegName name);
+    static bool isStackReg(RegName name);
+    static uint8_t encodeStackReg(RegName name);
+    static bool isIndexReg(RegName name);
+    static uint8_t encodeIndexReg(RegName name);
+    static bool isDataReg(RegName name);
+    static uint8_t encodeDataReg(RegName name);
 
-    static RegName decodePointerReg(uint8_t regNum);
-    static RegName decodeStackReg(uint8_t regNum);
-    static RegName decodeIndexReg(uint8_t regNum);
-    static RegName decodeDataReg(uint8_t regNum);
-
-    bool compareRegName(const char *line, RegName regName) const;
-    uint8_t regNameLen(RegName regName) const;
-
-    char *outRegName(char *out, const RegName regName) const;
-
-private:
-    RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end) const;
-    char regName1stChar(RegName regName) const;
-    char regName2ndChar(RegName regName) const;
-    char regName3rdChar(RegName regName) const;
+    static RegName decodePointerReg(uint8_t num);
+    static RegName decodeStackReg(uint8_t num);
+    static RegName decodeIndexReg(uint8_t num);
+    static RegName decodeDataReg(uint8_t num);
 };
 
 } // namespace i8080

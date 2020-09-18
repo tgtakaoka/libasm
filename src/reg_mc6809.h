@@ -23,26 +23,27 @@
 namespace libasm {
 namespace mc6809 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    OFFSET =  1, // Describe offset in indexed addressing
-    REG_PCR = 2, // Program counter relative addressing
-    REG_D =   8+0,
-    REG_X =   8+1,
-    REG_Y =   8+2,
-    REG_U =   8+3,
-    REG_S =   8+4,
-    REG_PC =  8+5,
-    REG_W =   8+6,
-    REG_V =   8+7,
-    REG_A =   8+8,
-    REG_B =   8+9,
-    REG_CC =  8+10,
-    REG_DP =  8+11,
-    REG_Z =   8+12, // "z" zero register
-    REG_0 =   8+13, // "0" zero register
-    REG_E =   8+14,
-    REG_F =   8+15,
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // Data registers.
+    REG_D =   0,
+    REG_X =   1,
+    REG_Y =   2,
+    REG_U =   3,
+    REG_S =   4,
+    REG_PC =  5,
+    REG_W =   6,  // 6309
+    REG_V =   7,  // 6309
+    REG_A =   8,
+    REG_B =   9,
+    REG_CC =  10,
+    REG_DP =  11,
+    REG_Z =   12, // 6309: "z" zero register
+    REG_0 =   13, // 6309: "0" zero register
+    REG_E =   14, // 6309
+    REG_F =   15, // 6309
+    // Other registers.
+    REG_PCR = 0 + 16, // Program counter relative addressing
 };
 
 enum RegSize : uint8_t {
@@ -53,34 +54,33 @@ enum RegSize : uint8_t {
 
 class RegMc6809 : public RegBase {
 public:
-    RegName parseRegName(const char *line) const;
-    uint8_t regNameLen(RegName name) const;
-    RegSize regSize(RegName name) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    static RegSize regSize(RegName name);
     char *outRegName(char *out, const RegName name) const;
 
-    RegName decodeDataReg(uint8_t num) const;
-    int8_t encodeDataReg(RegName ame) const;
+    static RegName decodeDataReg(uint8_t num);
+    static bool isDataReg(RegName name);
+    static uint8_t encodeDataReg(RegName name);
 
-    RegName decodeBaseReg(uint8_t num) const;
-    int8_t encodeBaseReg(RegName name) const;
-    bool isBaseReg(RegName name) const;
+    static RegName decodeBaseReg(uint8_t num);
+    static bool isBaseReg(RegName name);
+    static bool isIndexedBase(RegName name);
+    static bool isIndexReg(RegName name);
+    static uint8_t encodeBaseReg(RegName name);
 
-    int8_t encodeIndexReg(RegName name) const;
-    bool isIndexReg(RegName name) const;
-    bool isIndexedBase(RegName name) const;
+    static RegName decodeStackReg(uint8_t bitPos, bool onUserStack);
+    static uint8_t encodeStackReg(RegName name, bool onUserStack);
 
-    RegName decodeStackReg(uint8_t bitPos, bool onUserStack) const;
-    uint8_t encodeStackReg(RegName name, bool onUserStack) const;
+    static RegName decodeBitOpReg(uint8_t num);
+    static bool isBitOpReg(RegName name);
+    static uint8_t encodeBitOpReg(RegName name);
 
-    RegName decodeBitOpReg(uint8_t num) const;
-    bool isBitOpReg(RegName name) const;
-    int8_t encodeBitOpReg(RegName name) const;
-
-    RegName decodeTfmBaseReg(uint8_t num) const;
-    bool isTfmBaseReg(RegName name) const;
-    char tfmSrcModeChar(uint8_t mode) const;
-    char tfmDstModeChar(uint8_t mode) const;
-    int8_t encodeTfmBaseReg(RegName name) const;
+    static RegName decodeTfmBaseReg(uint8_t num);
+    static bool isTfmBaseReg(RegName name);
+    static uint8_t encodeTfmBaseReg(RegName name);
+    static char tfmSrcModeChar(uint8_t mode);
+    static char tfmDstModeChar(uint8_t mode);
 };
 
 } // namespace mc6809

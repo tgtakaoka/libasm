@@ -42,9 +42,6 @@ public:
         _flags = Entry::_flags(SZ_NONE, op1, op2, op3);
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
-    bool hasPrefix() const { return _prefix != 0; }
-    Config::opcode_t prefix() const { return _prefix; }
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;
@@ -53,6 +50,11 @@ public:
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
+
+    bool hasPrefix() const { return _prefix != 0; }
+    Config::opcode_t opCode() const { return _opCode; }
+    Config::opcode_t prefix() const { return _prefix; }
+
     void emitInsn() {
         if (hasPrefix())
             emitByte(prefix());
@@ -60,9 +62,9 @@ public:
     }
 
 private:
+    uint16_t _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
-    uint16_t _flags;
 };
 
 } // namespace mc6800

@@ -22,43 +22,34 @@
 namespace libasm {
 namespace i8051 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_R0 = '0',
-    REG_R1 = '1',
-    REG_R2 = '2',
-    REG_R3 = '3',
-    REG_R4 = '4',
-    REG_R5 = '5',
-    REG_R6 = '6',
-    REG_R7 = '7',
-    REG_A  = 'A',
-    REG_AB = 'a',
-    REG_C  = 'C',
-    REG_DPTR = 'd',
-    REG_PC = 'p',
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // R registers.
+    REG_R0   = 0,
+    REG_R1   = 1,
+    REG_R2   = 2,
+    REG_R3   = 3,
+    REG_R4   = 4,
+    REG_R5   = 5,
+    REG_R6   = 6,
+    REG_R7   = 7,
+    // Other registers.
+    REG_A    = 0 + 8,
+    REG_AB   = 1 + 8,
+    REG_C    = 2 + 8,
+    REG_PC   = 3 + 8,
+    REG_DPTR = 4 + 8,
 };
 
 class RegI8051 : public RegBase {
 public:
-    RegName parseRegister(const char *line) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    char *outRegName(char *out, const RegName name) const;
 
-    bool isRReg(RegName regName) const;
-    int8_t encodeRReg(RegName regName) const;
-    RegName decodeRReg(uint8_t regNum) const;
-
-    bool compareRegName(const char *line, RegName regName) const;
-    uint8_t regNameLen(RegName regName) const;
-
-    char *outRegName(char *out, const RegName regName) const;
-
-private:
-    RegName parseRegName(
-        const char *line, const RegName *tabel, const RegName *end) const;
-    char regName1stChar(RegName regName) const;
-    char regName2ndChar(RegName regName) const;
-    char regName3rdChar(RegName regName) const;
-    char regName4thChar(RegName regName) const;
+    static bool isRReg(RegName name);
+    static uint8_t encodeRReg(RegName name);
+    static RegName decodeRReg(uint8_t num);
 };
 
 } // namespace i8051

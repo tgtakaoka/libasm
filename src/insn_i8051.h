@@ -31,39 +31,44 @@ public:
     AddrMode dstMode() const { return Entry::_dstMode(_flags); }
     AddrMode srcMode() const { return Entry::_srcMode(_flags); }
     AddrMode extMode() const { return Entry::_extMode(_flags); }
+
+    void setFlags(uint16_t flags) { _flags = flags; }
+
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
         _flags = Entry::_flags(dst, src, ext);
     }
 
-    void setFlags(uint16_t flags) { _flags = flags; }
-
-    Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
 
     void emitInsn() {
         emitByte(_opCode, 0);
     }
 
     void emitOperand8(uint8_t val) {
-        uint8_t pos = _insn.length();
-        if (pos == 0) pos = 1;
-        emitByte(val, pos);
+        emitByte(val, operandPos());
     }
 
     void emitOperand16(uint16_t val) {
-        uint8_t pos = _insn.length();
-        if (pos == 0) pos = 1;
-        emitUint16(val, pos);
+        emitUint16(val, operandPos());
     }
 
 private:
-    Config::opcode_t _opCode;
     uint16_t _flags;
+    Config::opcode_t _opCode;
+
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (pos == 0) pos = 1;
+        return pos;
+    }
 };
 
 } // namespace i8051

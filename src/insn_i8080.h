@@ -33,17 +33,19 @@ public:
 
     void setFlags(uint8_t flags) { _flags = flags; }
 
-    Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
 
+    Config::opcode_t opCode() const { return _opCode; }
+
 private:
-    Config::opcode_t _opCode;
     uint8_t _flags;
+    Config::opcode_t _opCode;
 };
 
 } // namespace i8080

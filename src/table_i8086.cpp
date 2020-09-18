@@ -531,9 +531,9 @@ Error TableI8086::searchOpCode(
             insn.opCode(), table, end, maskCode);
         if (entry) {
             insn.setFlags(pgm_read_dword(&entry->flags));
-            const char *name =
+            const /*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            insn.setName_P(name);
             return OK;
         }
     }

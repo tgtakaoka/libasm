@@ -22,149 +22,114 @@
 namespace libasm {
 namespace i8080 {
 
-static constexpr RegName ALL_REGS[] PROGMEM = {
-    REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_SP, REG_PSW
+static const char TEXT_REG_A[]   PROGMEM = "A";
+static const char TEXT_REG_B[]   PROGMEM = "B";
+static const char TEXT_REG_C[]   PROGMEM = "C";
+static const char TEXT_REG_D[]   PROGMEM = "D";
+static const char TEXT_REG_E[]   PROGMEM = "E";
+static const char TEXT_REG_H[]   PROGMEM = "H";
+static const char TEXT_REG_L[]   PROGMEM = "L";
+static const char TEXT_REG_M[]   PROGMEM = "M";
+static const char TEXT_REG_SP[]  PROGMEM = "SP";
+static const char TEXT_REG_PSW[] PROGMEM = "PSW";
+static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+    NAME_ENTRY(REG_A)
+    NAME_ENTRY(REG_B)
+    NAME_ENTRY(REG_C)
+    NAME_ENTRY(REG_D)
+    NAME_ENTRY(REG_E)
+    NAME_ENTRY(REG_H)
+    NAME_ENTRY(REG_L)
+    NAME_ENTRY(REG_M)
+    NAME_ENTRY(REG_SP)
+    NAME_ENTRY(REG_PSW)
 };
 
-static constexpr RegName POINTER_REGS[] PROGMEM = {
-    REG_B, REG_D, REG_H, REG_SP
-};
-static constexpr RegName STACK_REGS[] PROGMEM = {
-    REG_B, REG_D, REG_H, REG_PSW
-};
-static constexpr RegName INDEX_REGS[] PROGMEM = {
-    REG_B, REG_D
-};
-static constexpr RegName DATA_REGS[] PROGMEM = {
-    REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_M, REG_A
-};
-
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
+RegName RegI8080::parseRegName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-static bool regCharCaseEqual(char c, char regChar) {
-    return toupper(c) == toupper(regChar);
+uint8_t RegI8080::regNameLen(RegName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
-char RegI8080::regName1stChar(const RegName regName) const {
-    const char r = char(regName);
-    return _uppercase ? r : tolower(r);
-}
-
-char RegI8080::regName2ndChar(const RegName regName) const {
-    if (regName == REG_SP)
-        return _uppercase ? 'P' : 'p';
-    if (regName == REG_PSW)
-        return _uppercase ? 'S' : 's';
-    return 0;
-}
-
-char RegI8080::regName3rdChar(const RegName regName) const {
-    if (regName == REG_PSW)
-        return _uppercase ? 'W' : 'w';
-    return 0;
-}
-
-bool RegI8080::compareRegName(const char *line, RegName regName) const {
-    if (!regCharCaseEqual(*line++, regName1stChar(regName))) return false;
-    const char r2 = regName2ndChar(regName);
-    if (r2 && !regCharCaseEqual(*line++, r2)) return false;
-    const char r3 = regName3rdChar(regName);
-    if (r3 && !regCharCaseEqual(*line++, r3)) return false;
-    return !isidchar(*line);
-}
-
-uint8_t RegI8080::regNameLen(RegName regName) const {
-    return regName2ndChar(regName) == 0 ? 1
-        : (regName3rdChar(regName) == 0 ? 2 : 3);
-}
-
-char *RegI8080::outRegName(char *out, const RegName regName) const {
-    *out++ = regName1stChar(regName);
-    const char r2 = regName2ndChar(regName);
-    if (r2) {
-        *out++ = r2;
-        const char r3 = regName3rdChar(regName);
-        if (r3) *out++ = r3;
-    }
-    *out = 0;
+char *RegI8080::outRegName(char *out, const RegName name) const {
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
 }
 
-static int8_t encodeRegNumber(
-    RegName regName, const RegName *table, const RegName *end) {
-    for (const RegName *p = table; p < end; p++) {
-        if (pgm_read_byte(p) == regName) return p - table;
+bool RegI8080::isPointerReg(RegName name) {
+    switch (name) {
+    case REG_B: case REG_D: case REG_H: case REG_SP:
+        return true;
+    default:
+        return false;
     }
-    return -1;
 }
 
-RegName RegI8080::parseRegName(
-    const char *line, const RegName *table, const RegName *end) const {
-    for (const RegName *p = table; p < end; p++) {
-        const RegName regName = RegName(pgm_read_byte(p));
-        if (compareRegName(line, regName)) return regName;
+uint8_t RegI8080::encodePointerReg(RegName name) {
+    if (name == REG_SP) return 3 << 4;
+    return (uint8_t(name) >> 1) << 4;
+}
+
+bool RegI8080::isStackReg(RegName name) {
+    switch (name) {
+    case REG_B: case REG_D: case REG_H: case REG_PSW:
+        return true;
+    default:
+        return false;
     }
-    return REG_UNDEF;
 }
 
-static RegName decodeRegNumber(
-    const uint8_t regNum, const RegName *table, const RegName *end) {
-    const RegName *entry = &table[regNum];
-    return entry < end ? RegName(pgm_read_byte(entry)) : REG_UNDEF;
+uint8_t RegI8080::encodeStackReg(RegName name) {
+    if (name == REG_PSW) return 3 << 4;
+    return (uint8_t(name) >> 1) << 4;
 }
 
-RegName RegI8080::parseRegister(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(ALL_REGS));
+bool RegI8080::isIndexReg(RegName name) {
+    return name == REG_B || name == REG_D;
 }
 
-RegName RegI8080::parsePointerReg(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(POINTER_REGS));
+uint8_t RegI8080::encodeIndexReg(RegName name) {
+    return (uint8_t(name) >> 1) << 4;
 }
 
-RegName RegI8080::parseStackReg(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(STACK_REGS));
+bool RegI8080::isDataReg(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= 0 && num < 8;
 }
 
-RegName RegI8080::parseIndexReg(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(INDEX_REGS));
+uint8_t RegI8080::encodeDataReg(RegName name) {
+    return uint8_t(name);
 }
 
-RegName RegI8080::parseDataReg(const char *line) const {
-    return parseRegName(line, ARRAY_RANGE(DATA_REGS));
+RegName RegI8080::decodePointerReg(uint8_t num) {
+    switch (num & 3) {
+    case 0:  return REG_B;
+    case 1:  return REG_D;
+    case 2:  return REG_H;
+    default: return REG_SP;
+    }
 }
 
-int8_t RegI8080::encodePointerReg(RegName regName) {
-    return encodeRegNumber(regName, ARRAY_RANGE(POINTER_REGS));
+RegName RegI8080::decodeStackReg(uint8_t num) {
+    switch (num & 3) {
+    case 0:  return REG_B;
+    case 1:  return REG_D;
+    case 2:  return REG_H;
+    default: return REG_PSW;
+    }
 }
 
-int8_t RegI8080::encodeStackReg(RegName regName) {
-    return encodeRegNumber(regName, ARRAY_RANGE(STACK_REGS));
+RegName RegI8080::decodeIndexReg(uint8_t num) {
+    return RegName((num & 1) << 1);
 }
 
-int8_t RegI8080::encodeIndexReg(RegName regName) {
-    return encodeRegNumber(regName, ARRAY_RANGE(INDEX_REGS));
-}
-
-int8_t RegI8080::encodeDataReg(RegName regName) {
-    return encodeRegNumber(regName, ARRAY_RANGE(DATA_REGS));
-}
-
-RegName RegI8080::decodePointerReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(POINTER_REGS));
-}
-
-RegName RegI8080::decodeStackReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(STACK_REGS));
-}
-
-RegName RegI8080::decodeIndexReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(INDEX_REGS));
-}
-
-RegName RegI8080::decodeDataReg(uint8_t regNum) {
-    return decodeRegNumber(regNum, ARRAY_RANGE(DATA_REGS));
+RegName RegI8080::decodeDataReg(uint8_t num) {
+    return RegName(num & 7);
 }
 
 } // namespace i8080

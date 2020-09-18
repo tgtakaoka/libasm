@@ -21,61 +21,57 @@ namespace libasm {
 namespace i8080 {
 
 Error AsmI8080::encodePointerReg(InsnI8080 &insn) {
-    const RegName regName = _regs.parsePointerReg(_scan);
-    const int8_t num = _regs.encodePointerReg(regName);
-    if (num < 0) return setError(UNKNOWN_REGISTER);
-    insn.embed(num << 4);
-    _scan += _regs.regNameLen(regName);
-    return setOK();
+    const RegName reg = RegI8080::parseRegName(_scan);
+    if (!RegI8080::isPointerReg(reg)) return setError(UNKNOWN_REGISTER);
+    insn.embed(RegI8080::encodePointerReg(reg));
+    _scan += RegI8080::regNameLen(reg);
+    return OK;
 }
 
 Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
-    const RegName regName = _regs.parseStackReg(_scan);
-    const int8_t num = _regs.encodeStackReg(regName);
-    if (num < 0) return setError(UNKNOWN_REGISTER);
-    insn.embed(num << 4);
-    _scan += _regs.regNameLen(regName);
-    return setOK();
+    const RegName reg = RegI8080::parseRegName(_scan);
+    if (!RegI8080::isStackReg(reg)) return setError(UNKNOWN_REGISTER);
+    insn.embed(RegI8080::encodeStackReg(reg));
+    _scan += RegI8080::regNameLen(reg);
+    return OK;
 }
 
 Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
-    const RegName regName = _regs.parseIndexReg(_scan);
-    const int8_t num = _regs.encodeIndexReg(regName);
-    if (num < 0) return setError(UNKNOWN_REGISTER);
-    insn.embed(num << 4);
-    _scan += _regs.regNameLen(regName);
+    const RegName reg = RegI8080::parseRegName(_scan);
+    if (!RegI8080::isIndexReg(reg)) return setError(UNKNOWN_REGISTER);
+    insn.embed(RegI8080::encodeIndexReg(reg));
+    _scan += RegI8080::regNameLen(reg);
     return setOK();
 }
 
 Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
-    const RegName regName = _regs.parseDataReg(_scan);
-    const int8_t num = _regs.encodeDataReg(regName);
-    if (num < 0) return setError(UNKNOWN_REGISTER);
+    const RegName reg = RegI8080::parseRegName(_scan);
+    if (!RegI8080::isDataReg(reg)) return setError(UNKNOWN_REGISTER);
+    const uint8_t num = RegI8080::encodeDataReg(reg);
     if (insn.insnFormat() == DATA_REG)
         insn.embed(num << 3);
     if (insn.insnFormat() == LOW_DATA_REG)
         insn.embed(num);
-    _scan += _regs.regNameLen(regName);
-    return setOK();
+    _scan += RegI8080::regNameLen(reg);
+    return OK;
 }
 
 Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
     const char *p = _scan;
-    const RegName dstReg = _regs.parseDataReg(p);
-    if (dstReg == REG_UNDEF)
-        return setError(UNKNOWN_REGISTER);
-    p = skipSpaces(p + _regs.regNameLen(dstReg));
+    const RegName dst = RegI8080::parseRegName(p);
+    if (!RegI8080::isDataReg(dst)) return setError(UNKNOWN_REGISTER);
+    const uint8_t dstNum = RegI8080::encodeDataReg(dst);
+    p = skipSpaces(p + RegI8080::regNameLen(dst));
     if (*p != ',') return setError(MISSING_COMMA);
     p = skipSpaces(p + 1);
-    const RegName srcReg = _regs.parseDataReg(p);
-    if (srcReg == REG_UNDEF) return setError(UNKNOWN_REGISTER);
-    _scan = p + _regs.regNameLen(srcReg);
+    const RegName src = RegI8080::parseRegName(p);
+    if (!RegI8080::isDataReg(src)) return setError(UNKNOWN_REGISTER);
+    const uint8_t srcNum = RegI8080::encodeDataReg(src);
+    _scan = skipSpaces(p + RegI8080::regNameLen(src));
 
-    const uint8_t dstNum = _regs.encodeDataReg(dstReg);
-    const uint8_t srcNum = _regs.encodeDataReg(srcReg);
     insn.embed(dstNum << 3);
     insn.embed(srcNum);
-    return setOK();
+    return OK;
 }
 
 Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
@@ -83,14 +79,14 @@ Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
     if (getOperand(vecNo)) return getError();
     if (vecNo >= 8) return setError(OVERFLOW_RANGE);
     insn.embed(vecNo << 3);
-    return setOK();
+    return OK;
 }
 
 Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
     if (insn.insnFormat() != NO_FORMAT) {
-        _scan = skipSpaces(_scan);
-        if (*_scan != ',') return setError(MISSING_COMMA);
-        _scan++;
+        const char *p = skipSpaces(_scan);
+        if (*p != ',') return setError(MISSING_COMMA);
+        _scan = p + 1;
     }
     if (insn.addrMode() == IMM8) {
         uint8_t val8;
@@ -122,8 +118,9 @@ Error AsmI8080::encode(Insn &_insn) {
     InsnI8080 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+
     if (TableI8080.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableI8080.getError());
     _scan = skipSpaces(endName);
 
     switch (insn.insnFormat()) {

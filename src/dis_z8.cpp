@@ -29,30 +29,30 @@ char *DisZ8::outCcName(char *out, Config::opcode_t opCode) {
     return out;
 }
 
-char *DisZ8::outWorkReg(char *out, uint8_t regNum, bool indir) {
-    const RegName reg = _regs.decodeRegNum(regNum);
+char *DisZ8::outWorkReg(char *out, uint8_t num, bool indir) {
+    const RegName reg = _regs.decodeRegNum(num);
     if (indir) *out++ = '@';
     return _regs.outRegName(out, reg);
 }
 
-char *DisZ8::outPairReg(char *out, uint8_t regNum, bool indir) {
-    const RegName reg = _regs.decodeRegNum(regNum, true);
+char *DisZ8::outPairReg(char *out, uint8_t num, bool indir) {
+    const RegName reg = _regs.decodePairRegNum(num);
     if (indir) *out++ = '@';
     return _regs.outRegName(out, reg);
 }
 
-char *DisZ8::outRegAddr(char *out, uint8_t regAddr, bool indir) {
-    if (_preferWorkRegister && _regs.isWorkRegAlias(regAddr))
-        return outWorkReg(out, regAddr & 0xF, indir);
+char *DisZ8::outRegAddr(char *out, uint8_t addr, bool indir) {
+    if (_preferWorkRegister && _regs.isWorkRegAlias(addr))
+        return outWorkReg(out, addr & 0xF, indir);
     if (indir) *out++ = '@';
-    return outAddress(out, regAddr, PSTR(">"), regAddr < 16 && !indir);
+    return outAddress(out, addr, PSTR(">"), addr < 16 && !indir);
 }
 
-char *DisZ8::outPairAddr(char *out, uint8_t regAddr, bool indir) {
-    if (_preferWorkRegister && _regs.isWorkRegAlias(regAddr))
-        return outPairReg(out, regAddr & 0xF, indir);
+char *DisZ8::outPairAddr(char *out, uint8_t addr, bool indir) {
+    if (_preferWorkRegister && _regs.isWorkRegAlias(addr))
+        return outPairReg(out, addr & 0xF, indir);
     if (indir) *out++ = '@';
-    return outAddress(out, regAddr, PSTR(">"), regAddr < 16 && !indir);
+    return outAddress(out, addr, PSTR(">"), addr < 16 && !indir);
 }
 
 char *DisZ8::outBitPos(char *out, uint8_t bitPos) {
@@ -64,12 +64,9 @@ char *DisZ8::outBitPos(char *out, uint8_t bitPos) {
 
 Error DisZ8::decodeOperand(
     DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode) {
-    uint8_t val;
     const PostFormat post = insn.postFormat();
-    if (post) {
-        val = insn.post();
-    } else if (insn.readByte(memory, val))
-        return setError(NO_MEMORY);
+    uint8_t val = post ? insn.post() : insn.readByte(memory);
+    if (setError(insn)) return getError();
     if (mode == M_R || mode == M_IR || mode == M_RR || mode == M_IRR) {
         const bool pair = (mode == M_RR || mode == M_IRR);
         const bool indir = (mode == M_IR || mode == M_IRR);
@@ -79,35 +76,27 @@ Error DisZ8::decodeOperand(
         } else {
             outRegAddr(out, val, indir);
         }
-        return setOK();
-    }
-    if (mode == M_IM) {
+    } if (mode == M_IM) {
         if (post == P2_0 || post == P2_1 || post == P2_2) val &= ~3;
         *out++ = '#';
         outConstant(out, val, 16);
-        return setOK();
     }
-    return setError(ILLEGAL_OPERAND);
+    return setOK();
 }
 
 Error DisZ8::decodeAbsolute(
     DisMemory &memory, InsnZ8 &insn, char *out, Endian endian) {
-    Config::uintptr_t addr = 0;
-    if (endian == ENDIAN_BIG && insn.readUint16Be(memory, addr))
-        return setError(NO_MEMORY);
-    if (endian == ENDIAN_LITTLE && insn.readUint16Le(memory, addr))
-        return setError(NO_MEMORY);
+    const Config::uintptr_t addr = (endian == ENDIAN_LITTLE)
+        ? insn.readUint16Le(memory) : insn.readUint16(memory);
     outAddress(out, addr);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ8::decodeRelative(DisMemory &memory, InsnZ8 &insn, char *out) {
-    uint8_t disp;
-    if (insn.readByte(memory, disp)) return setError(NO_MEMORY);
-    const Config::uintptr_t target =
-        insn.address() + insn.length() + static_cast<int8_t>(disp);
+    const int8_t disp = static_cast<int8_t>(insn.readByte(memory));
+    const Config::uintptr_t target = insn.address() + insn.length() + disp;
     outRelativeAddr(out, target, insn.address(), 8);
-    return setOK();
+    return setError(insn);
 }
 
 static char *outComma(char *out) {
@@ -140,26 +129,24 @@ Error DisZ8::decodeIndexed(
     const bool pair = !(dst == M_X || src == M_X);
     uint16_t base16;
     if (dst == M_XL || src == M_XL) {
-        if (insn.readUint16Le(memory, base16)) return setError(NO_MEMORY);
+        base16 = insn.readUint16Le(memory);
     }  else {
-        uint8_t base8;
-        if (insn.readByte(memory, base8)) return setError(NO_MEMORY);
-        base16 = base8;
+        base16 = insn.readByte(memory);
     }
-    const RegName idx = _regs.decodeRegNum(opr1 & 0xF, pair);
+    const RegName idx = pair ? _regs.decodePairRegNum(opr1)
+        : _regs.decodeRegNum(opr1);
     if (idx == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     out = (dst == M_r) ? outWorkReg(out, opr1 >> 4)
         : outIndexed(out, base16, idx, dst);
     out = outComma(out);
     out = (src == M_r) ? outWorkReg(out, opr1 >> 4)
         : outIndexed(out, base16, idx, src);
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ8::decodeIndirectRegPair(
     DisMemory &memory, InsnZ8 &insn, char *out) {
-    uint8_t opr;
-    if (insn.readByte(memory, opr)) return setError(NO_MEMORY);
+    const uint8_t opr = insn.readByte(memory);
     const uint8_t reg1 = opr & 0xF;
     const uint8_t reg2 = opr >> 4;
     if (reg1 % 2) return setError(ILLEGAL_REGISTER);
@@ -168,15 +155,15 @@ Error DisZ8::decodeIndirectRegPair(
         out = outPairReg(out, reg1, true);
     } else if (dst == M_r || dst == M_Ir) {
         out = outWorkReg(out, reg2, dst == M_Ir);
-    } else return setError(INTERNAL_ERROR);
+    }
     out = outComma(out);
     const AddrMode src = insn.srcMode();
     if (src == M_Irr) {
         outPairReg(out, reg1, true);
     } else if (src == M_r || src == M_Ir) {
         outWorkReg(out, reg2, src == M_Ir);
-    } else return setError(INTERNAL_ERROR);
-    return setOK();
+    }
+    return setError(insn);
 }
 
 Error DisZ8::decodeInOpCode(DisMemory &memory, InsnZ8 &insn, char *out) {
@@ -194,17 +181,15 @@ Error DisZ8::decodeInOpCode(DisMemory &memory, InsnZ8 &insn, char *out) {
         return setOK();
     }
     if (src == M_R) {
-        uint8_t val = 0;
-        if (insn.readByte(memory, val)) setError(NO_MEMORY);
-        outRegAddr(out, val);
-        return setOK();
+        outRegAddr(out, insn.readByte(memory));
+        return setError(insn);
     }
     return decodeOperand(memory, insn, out, src);
 }
 
 Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out) {
-    uint8_t opr1;
-    if (insn.readByte(memory, opr1)) return setError(NO_MEMORY);
+    const uint8_t opr1 = insn.readByte(memory);
+    if (setError(insn)) return getError();
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     if (src == M_Ir && insn.extMode() == M_RA) {
@@ -215,14 +200,13 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out) {
         return decodeRelative(memory, insn, out);
     }
     if (dst == M_RR && src == M_IML) {
-        uint16_t val16;
-        if (insn.readUint16(memory, val16)) return setError(NO_MEMORY);
+        const uint16_t val16 = insn.readUint16(memory);
         if (opr1 % 2) return setError(ILLEGAL_REGISTER);
         out = outPairAddr(out, opr1);
         *out++ = ',';
         *out++ = '#';
         outConstant(out, val16);
-        return setOK();
+        return setError(insn);
     }
     if (dst == M_r || dst == M_Ir) {
         out = outWorkReg(out, opr1 >> 4, dst == M_Ir);
@@ -230,8 +214,8 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out) {
         outWorkReg(out, opr1 & 0xF, src == M_Ir);
         return setOK();
     }
-    uint8_t opr2;
-    if (insn.readByte(memory, opr2)) return setError(NO_MEMORY);
+    const uint8_t opr2 = insn.readByte(memory);
+    if (setError(insn)) return getError();
     const bool dstSrc = ((dst == M_R || dst == M_IR) && src == M_IM);
     const uint8_t dstReg = dstSrc ? opr1 : opr2;
     const uint8_t srcReg = dstSrc ? opr2 : opr1;
@@ -305,29 +289,30 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, char *out) {
         return setOK();
     }
     // P1: LDB, BAND, BOR, BXOR
-    uint8_t regAddr;
-    if (insn.readByte(memory, regAddr)) return setError(NO_MEMORY);
-    out = (dst == M_r) ? outWorkReg(out, post >> 4) : outRegAddr(out, regAddr);
+    const uint8_t addr = insn.readByte(memory);
+    out = (dst == M_r) ? outWorkReg(out, post >> 4) : outRegAddr(out, addr);
     if (src == M_IMb) out = outBitPos(out, post >> 1);
     else {
         *out++ = ',';
-        out = outRegAddr(out, regAddr);
+        out = outRegAddr(out, addr);
     }
     if (ext == M_IMb) out = outBitPos(out, post >> 1);
     else {
         *out++ = ',';
         outWorkReg(out, post >> 4);
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisZ8::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnZ8 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
+    if (setError(insn)) return getError();
     insn.setOpCode(opCode);
+
     if (TableZ8.searchOpCode(insn, memory))
         return setError(TableZ8.getError());
+
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     if (dst == M_NO)
@@ -335,20 +320,19 @@ Error DisZ8::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (insn.postFormat() != P0)
         return decodePostByte(memory, insn, out);
     if (dst == M_DA || src == M_DA) {
-        if (dst == M_cc) out = outCcName(out, insn.opCode());
+        if (dst == M_cc) out = outCcName(out, opCode);
         return decodeAbsolute(memory, insn, out);
     }
     if (dst == M_RA || src == M_RA) {
-        if (dst == M_cc) out = outCcName(out, insn.opCode());
+        if (dst == M_cc) out = outCcName(out, opCode);
         else if (dst == M_r)  {
-            out = outWorkReg(out, insn.opCode() >> 4);
+            out = outWorkReg(out, opCode >> 4);
             *out++ = ',';
         }
         return decodeRelative(memory, insn, out);
     }
     if (dst == M_X || src == M_X) {
-        uint8_t opr1;
-        if (insn.readByte(memory, opr1)) return setError(NO_MEMORY);
+        const uint8_t opr1 = insn.readByte(memory);
         return decodeIndexed(memory, insn, out, opr1);
     }
     if (dst == M_Irr || src == M_Irr)

@@ -37,7 +37,6 @@ public:
 
 private:
     ValueParser _parser;
-    RegZ8000 _regs;
 
     TableBase &getTable() const override { return TableZ8000; }
 

@@ -144,7 +144,7 @@ Error AsmZ80::encodeIndexed(
 Error AsmZ80::encodeIndexedImmediate8(
     InsnZ80 &insn, const Operand &dst, const Operand &src) {
     Config::opcode_t opc = insn.opCode();
-    insn.setInsnCode(0, insn.prefixCode());
+    insn.setOpCode(insn.prefix());
     if (dst.format == IX_OFF)
         RegZ80::encodeIndexReg(insn, dst.reg);
     if (src.format == IX_OFF)
@@ -264,7 +264,8 @@ Error AsmZ80::parseOperand(Operand &opr) {
     }
 
     // 'C' is either C-reg or C-condition
-    if (_regs.compareRegName(p, REG_C)) {
+    const RegName reg = RegZ80::parseRegName(p);
+    if (reg == REG_C) {
         _scan = p + RegZ80::regNameLen(REG_C);
         opr.reg = REG_C;
         opr.size = SZ_BYTE;
@@ -273,17 +274,15 @@ Error AsmZ80::parseOperand(Operand &opr) {
         return opr.setOK();
     }
 
-    CcName ccName = _regs.parseCc8Name(p);
-    if (ccName != CC_UNDEF) {
-        opr.format = COND_8;
-        if (_regs.parseCc4Name(p) != CC_UNDEF)
-            opr.format = COND_4;
-        opr.val = RegZ80::encodeCcName(ccName);
-        _scan = p + RegZ80::ccNameLen(ccName);
+    const CcName cc = RegZ80::parseCcName(p);
+    if (cc != CC_UNDEF) {
+        opr.format = RegZ80::isCc4Name(cc) ? COND_4 : COND_8;
+        opr.val = RegZ80::encodeCcName(cc);
+        _scan = p + RegZ80::ccNameLen(cc);
         return opr.setOK();
     }
 
-    opr.reg = _regs.parseRegister(p);
+    opr.reg = RegZ80::parseRegName(p);
     if (opr.reg != REG_UNDEF) {
         _scan = p + RegZ80::regNameLen(opr.reg);
         switch (opr.reg) {
@@ -302,12 +301,12 @@ Error AsmZ80::parseOperand(Operand &opr) {
         default:      opr.format = REG_8; break;
         }
         if (opr.size == SZ_NONE)
-            opr.size = RegZ80::registerSize(opr.reg);
+            opr.size = RegZ80::regSize(opr.reg);
         return opr.setOK();
     }
     if (*p == '(') {
         p = skipSpaces(p + 1);
-        opr.reg = _regs.parseRegister(p);
+        opr.reg = RegZ80::parseRegName(p);
         if (opr.reg == REG_UNDEF) {
             _scan = p;
             if (getOperand(opr.val)) return opr.setError(getError());

@@ -24,68 +24,35 @@ char *DisI8080::outRegister(char *out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisI8080::decodeImmediate8(
-    DisMemory& memory, InsnI8080 &insn, char *out) {
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
-    outConstant(out, val);
-    return setOK();
-}
-
-Error DisI8080::decodeImmediate16(
-    DisMemory& memory, InsnI8080 &insn, char *out) {
-    uint16_t val;
-    if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
-    outConstant(out, val);
-    return setOK();
-}
-
-Error DisI8080::decodeDirect(
-    DisMemory &memory, InsnI8080& insn, char *out) {
-    Config::uintptr_t addr;
-    if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
-    outAddress(out, addr);
-    return setOK();
-}
-
-Error DisI8080::decodeIoaddr(
-    DisMemory &memory, InsnI8080& insn, char *out) {
-    uint8_t ioaddr;
-    if (insn.readByte(memory, ioaddr)) return setError(NO_MEMORY);
-    outAddress(out, ioaddr);
-    return setOK();
-}
-
 Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnI8080 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
+    if (setError(insn)) return getError();
+
     insn.setOpCode(opCode);
     if (TableI8080.searchOpCode(insn))
         return setError(TableI8080.getError());
 
     switch (insn.insnFormat()) {
     case POINTER_REG:
-        out = outRegister(out, RegI8080::decodePointerReg((opCode >> 4) & 3));
+        out = outRegister(out, RegI8080::decodePointerReg(opCode >> 4));
         break;
     case STACK_REG:
-        out = outRegister(out, RegI8080::decodeStackReg((opCode >> 4) & 3));
+        out = outRegister(out, RegI8080::decodeStackReg(opCode >> 4));
         break;
     case INDEX_REG:
-        out = outRegister(out, RegI8080::decodeIndexReg((opCode >> 4) & 1));
+        out = outRegister(out, RegI8080::decodeIndexReg(opCode >> 4));
         break;
     case DATA_REG:
-        out = outRegister(out, RegI8080::decodeDataReg((opCode >> 3) & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode >> 3));
         break;
     case LOW_DATA_REG:
-        out = outRegister(out, RegI8080::decodeDataReg(opCode & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode));
         break;
     case DATA_DATA_REG:
-        out = outRegister(out, RegI8080::decodeDataReg((opCode >> 3) & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode >> 3));
         *out++ = ',';
-        out = outRegister(out, RegI8080::decodeDataReg(opCode & 7));
+        out = outRegister(out, RegI8080::decodeDataReg(opCode));
         break;
     case VECTOR_NO:
         out = outConstant(out, static_cast<uint8_t>((opCode >> 3) & 7));
@@ -95,19 +62,24 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
     }
 
     switch (insn.addrMode()) {
-    case INHR:
-        return setOK();
     case IMM8:
-        return decodeImmediate8(memory, insn, out);
+        if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
+        outConstant(out, insn.readByte(memory));
+        break;
     case IMM16:
-        return decodeImmediate16(memory, insn, out);
+        if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
+        outConstant(out, insn.readUint16(memory));
+        break;
     case DIRECT:
-        return decodeDirect(memory, insn, out);
+        outAddress(out, insn.readUint16(memory));
+        break;
     case IOADR:
-        return decodeIoaddr(memory, insn, out);
+        outAddress(out, insn.readByte(memory));
+        break;
     default:
-        return setError(INTERNAL_ERROR);
+        break;
     }
+    return setError(insn);
 }
 
 } // namespace i8080

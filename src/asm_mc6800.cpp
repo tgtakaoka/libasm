@@ -48,9 +48,9 @@ Error AsmMc6800::parseOperand(Operand &op) {
     p = skipSpaces(_scan);
     if (*p == ',') {
         p = skipSpaces(p + 1);
-        const RegName reg = _regs.parseRegName(p);
+        const RegName reg = RegMc6800::parseRegName(p);
         if (reg != REG_UNDEF) {
-            _scan = p + _regs.regNameLen(reg);
+            _scan = p + RegMc6800::regNameLen(reg);
             op.mode = (reg == REG_Y) ? M_IDY : M_IDX;
             return OK;
         }
@@ -115,9 +115,9 @@ Error AsmMc6800::encode(Insn &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+    _scan = skipSpaces(endName);
 
     Operand op1, op2, op3;
-    _scan = skipSpaces(endName);
     if (parseOperand(op1)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {

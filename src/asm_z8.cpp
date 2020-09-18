@@ -21,6 +21,38 @@
 namespace libasm {
 namespace z8 {
 
+bool AsmZ8::setRegPointer(int16_t rp) {
+    if (rp < 0) {
+        setRegPointer0(rp);
+        setRegPointer1(rp);
+        return true;
+    }
+    return setRegPointer0(rp) && setRegPointer1(rp + 8);
+}
+
+bool AsmZ8::setRegPointer0(int16_t rp0) {
+    if (rp0 >= 0 && (rp0 & ~0xF8))
+        return false;
+    _regPointer0 = rp0;
+    return true;
+}
+
+bool AsmZ8::setRegPointer1(int16_t rp1) {
+    if (rp1 >= 0 && (rp1 & ~0xF8))
+        return false;
+    _regPointer1 = rp1;
+    return true;
+}
+
+bool AsmZ8::isWorkReg(uint8_t regAddr) const {
+    const uint8_t regPage = (regAddr & 0xF8);
+    if (_regPointer0 >= 0 && regPage == _regPointer0)
+        return true;
+    if (_regPointer1 >= 0 && regPage == _regPointer1)
+        return true;
+    return false;
+}
+
 Error AsmZ8::encodeOperand(
     InsnZ8 &insn, const AddrMode mode, const Operand &op) {
     if (mode == M_NO) return getError();
@@ -313,7 +345,7 @@ Error AsmZ8::parseOperand(Operand &op) {
     op.reg = _regs.parseRegName(p);
     if (op.reg != REG_UNDEF) {
         _scan = p + RegZ8::regNameLen(op.reg);
-        const bool pair = RegZ8::isRegPair(op.reg);
+        const bool pair = RegZ8::isPairReg(op.reg);
         if (indir) {
             op.mode = pair ? M_Irr : M_Ir;
         } else {
@@ -343,7 +375,7 @@ Error AsmZ8::parseOperand(Operand &op) {
             _scan = p;
             uint16_t val16;
             if (getOperand(val16)) return getError();
-            if (!_regs.isWorkReg(val16)) return setError(UNKNOWN_OPERAND);
+            if (!isWorkReg(val16)) return setError(UNKNOWN_OPERAND);
             p = _scan;
             op.reg = _regs.decodeRegNum(val16 & 0xF);
         }
@@ -363,7 +395,7 @@ Error AsmZ8::parseOperand(Operand &op) {
     op.val = val32;
     if (indir) {
         if (op.val >= 0x100) return setError(OVERFLOW_RANGE);
-        if (!forceRegAddr && _regs.isWorkReg(op.val)) {
+        if (!forceRegAddr && isWorkReg(op.val)) {
             op.mode = (op.val & 1) == 0 ? M_IWW : M_IW;
             op.reg = _regs.decodeRegNum(op.val & 0xF);
             return OK;
@@ -380,7 +412,7 @@ Error AsmZ8::parseOperand(Operand &op) {
         op.mode = M_DA;
         return OK;
     }
-    if (_regs.isWorkReg(op.val)) {
+    if (isWorkReg(op.val)) {
         op.mode = (op.val & 1) == 0 ? M_WW : M_W;
         op.reg = _regs.decodeRegNum(op.val & 0xF);
         return OK;

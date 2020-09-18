@@ -31,12 +31,9 @@ enum RegName : char {
 
 class RegMc6800 : public RegBase {
 public:
-    RegName parseRegName(const char *line) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
     char *outRegName(char *out, const RegName name) const;
-    uint8_t regNameLen(RegName name) const;
-private:
-    bool compareRegName(const char *line, RegName name) const;
-    char regName1stChar(const RegName name) const;
 };
 
 } // namespace mc6800

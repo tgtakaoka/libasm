@@ -47,12 +47,6 @@ public:
         _size = Entry::_size(flags);
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-        _post = 0;
-    }
-
     void setAddrMode(
             AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
         _dst = Entry::_opr(dst, MF_NO);
@@ -60,17 +54,26 @@ public:
         _ext = Entry::_ext(ex1, ex2, P_NO);
     }
 
-    uint16_t post() const { return _post; }
-    Error readPost(DisMemory &memory) {
-        return readUint16(memory, _post) ? NO_MEMORY : OK;
+    void setOpCode(Config::opcode_t opCode) {
+        _opCode = opCode;
+        _post = 0;
+    }
+
+    void readPost(DisMemory &memory) {
+        _post = readUint16(memory);
     }
 
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
+
     void embedPost(Config::opcode_t data) {
         _post |= data;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
+    uint16_t post() const { return _post; }
+
     void emitInsn() {
         emitUint16(_opCode, 0);
         const PostMode mode = postMode();
@@ -89,11 +92,11 @@ public:
 
 private:
     Config::opcode_t _opCode;
+    Config::opcode_t _post;
     uint8_t _dst;
     uint8_t _src;
     uint8_t _ext;
     uint8_t _size;
-    Config::opcode_t _post;
 
     uint8_t operandPos() {
         uint8_t pos = length();

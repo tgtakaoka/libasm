@@ -38,72 +38,9 @@ public:
         _length = 0;
     }
 
-    void setName(const char *name, size_t len) {
-        if (len >= NAME_MAX) len = NAME_MAX;
-        strncpy(_name, name, len);
-        _name[len] = 0;
-    }
-
-    void appendName(const char *suffix) {
-        strncat(_name, suffix, NAME_MAX - strlen(_name));
-    }
-
-    void toLowerName() {
-        for (char *p = _name; *p; p++)
-            *p = tolower(*p);
-    }
-
-    void emitByte(uint8_t val) {
-        emitByte(val, _length);
-    }
-
-    void emitByte(uint8_t val, uint8_t pos) {
-        if (pos < CODE_MAX) {
-            _bytes[pos++] = val;
-            if (_length < pos) _length = pos;
-        }
-    }
-
-    Error readByte(DisMemory &memory, uint8_t &val) {
-        if (!memory.hasNext()) return NO_MEMORY;
-        val = memory.readByte();
-        emitByte(val);
-        return OK;
-    }
-
-    Error readUint16Be(DisMemory &memory, uint16_t &val) {
-        uint8_t msb, lsb;
-        if (readByte(memory, msb)) return NO_MEMORY;
-        if (readByte(memory, lsb)) return NO_MEMORY;
-        val = static_cast<uint16_t>(msb) << 8 | lsb;
-        return OK;
-    }
-
-    Error readUint16Le(DisMemory &memory, uint16_t &val) {
-        uint8_t msb, lsb;
-        if (readByte(memory, lsb)) return NO_MEMORY;
-        if (readByte(memory, msb)) return NO_MEMORY;
-        val = static_cast<uint16_t>(msb) << 8 | lsb;
-        return OK;
-    }
-
-    Error readUint32Be(DisMemory &memory, uint32_t &val) {
-        uint16_t msw, lsw;
-        if (readUint16Be(memory, msw)) return NO_MEMORY;
-        if (readUint16Be(memory, lsw)) return NO_MEMORY;
-        val = static_cast<uint32_t>(msw) << 16 | lsw;
-        return OK;
-    }
-
-    Error readUint32Le(DisMemory &memory, uint32_t &val) {
-        uint16_t msw, lsw;
-        if (readUint16Le(memory, lsw)) return NO_MEMORY;
-        if (readUint16Le(memory, msw)) return NO_MEMORY;
-        val = static_cast<uint32_t>(msw) << 16 | lsw;
-        return OK;
-    }
-
 private:
+    template<typename T>
+    friend class InsnBase;
     uint32_t _address;
     uint8_t  _length;
     static constexpr size_t CODE_MAX = 24;
@@ -111,13 +48,18 @@ private:
     static constexpr size_t NAME_MAX = 7;
     char     _name[NAME_MAX + 1];
 
-    friend class TableBase;
+    friend class Disassembler;
+    void toLowerName() {
+        for (char *p = _name; *p; p++)
+            *p = tolower(*p);
+    }
 };
 
 template<typename Conf>
-class InsnBase {
+class InsnBase : public ErrorReporter {
 public:
-    Insn &insn() { return _insn; }
+    InsnBase(Insn &insn) : _insn(insn) {}
+
     typename Conf::uintptr_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
@@ -125,84 +67,162 @@ public:
 
     void resetAddress(typename Conf::uintptr_t addr) {
         _insn.resetAddress(addr);
-    }
-    void setName(const char *name, const char *end = nullptr) {
-        _insn.setName(name, end ? end - name : strlen(name));
+        resetError();
     }
 
-    Error readByte(DisMemory &memory, uint8_t &val) {
-        return _insn.readByte(memory, val);
+    void setName_P(const /*PROGMEM*/ char *name) {
+        strncpy_P(_insn._name, name, Insn::NAME_MAX);
+        _insn._name[Insn::NAME_MAX] = 0;
     }
 
-    Error readUint16(DisMemory &memory, uint16_t &val) {
-        return (Conf::ENDIAN == ENDIAN_BIG)
-            ? _insn.readUint16Be(memory, val)
-            : _insn.readUint16Le(memory, val);
-    }
-    Error readUint16Be(DisMemory &memory, uint16_t &val) {
-        return _insn.readUint16Be(memory, val);
-    }
-    Error readUint16Le(DisMemory &memory, uint16_t &val) {
-        return _insn.readUint16Le(memory, val);
+    void setName(const char *name, const char *end) {
+        uint8_t len = end - name;
+        if (len >= Insn::NAME_MAX) len = Insn::NAME_MAX;
+        strncpy(_insn._name, name, len);
+        _insn._name[len] = 0;
     }
 
-    Error readUint32(DisMemory &memory, uint32_t &val) {
-        return (Conf::ENDIAN == ENDIAN_BIG)
-            ? _insn.readUint32Be(memory, val)
-            : _insn.readUint32Le(memory, val);
+    void appendName(const char c) {
+        uint8_t len = strlen(_insn._name);
+        if (len < Insn::NAME_MAX) {
+            _insn._name[len++] = c;
+            _insn._name[len] = 0;
+        }
     }
 
-    void emitByte(uint8_t val) {
-        _insn.emitByte(val);
+    uint8_t emitByte(uint8_t val) {
+        return emitByte(val, _insn._length);
     }
 
-    void emitByte(uint8_t val, uint8_t pos) {
-        _insn.emitByte(val, pos);
+    uint8_t emitByte(uint8_t val, uint8_t pos) {
+        if (pos < Insn::CODE_MAX) {
+            _insn._bytes[pos++] = val;
+            if (_insn._length < pos) _insn._length = pos;
+        }
+        return val;
+    }
+
+    uint8_t readByte(DisMemory &memory) {
+        if (!memory.hasNext()) {
+            setError(NO_MEMORY);
+            return 0;
+        }
+        return emitByte(memory.readByte());
+    }
+
+    void emitUint16Be(uint16_t val) {
+        emitByte(val >> 8);
+        emitByte(val >> 0);
+    }
+
+    void emitUint16Le(uint16_t val) {
+        emitByte(val >> 0);
+        emitByte(val >> 8);
+    }
+
+    void emitUint16Be(uint16_t val, uint8_t pos) {
+        emitByte(val >> 8, pos + 0);
+        emitByte(val >> 0, pos + 1);
+    }
+
+    void emitUint16Le(uint16_t val, uint8_t pos) {
+        emitByte(val >> 0, pos + 0);
+        emitByte(val >> 8, pos + 1);
+    }
+
+    void emitUint32Be(uint32_t val) {
+        emitUint16Be(val >> 16);
+        emitUint16Be(val >>  0);
+    }
+
+    void emitUint32Le(uint32_t val) {
+        emitUint16Le(val >>  0);
+        emitUint16Le(val >> 16);
+    }
+
+    void emitUint32Be(uint32_t val, uint8_t pos) {
+        emitUint16Be(val >> 16, pos + 0);
+        emitUint16Be(val >>  0, pos + 2);
+    }
+
+    void emitUint32Le(uint32_t val, uint8_t pos) {
+        emitUint16(val >>  0, pos + 0);
+        emitUint16(val >> 16, pos + 2);
+    }
+
+    uint16_t readUint16Be(DisMemory &memory) {
+        const uint8_t msb = readByte(memory);
+        const uint8_t lsb = readByte(memory);
+        return static_cast<uint16_t>(msb) << 8 | lsb;
+    }
+
+    uint16_t readUint16Le(DisMemory &memory) {
+        const uint8_t lsb = readByte(memory);
+        const uint8_t msb = readByte(memory);
+        return static_cast<uint16_t>(msb) << 8 | lsb;
+    }
+
+    uint32_t readUint32Be(DisMemory &memory) {
+        const uint16_t msw = readUint16Be(memory);
+        const uint16_t lsw = readUint16Be(memory);
+        return static_cast<uint32_t>(msw) << 16 | lsw;
+    }
+
+    uint32_t readUint32Le(DisMemory &memory) {
+        const uint16_t lsw = readUint16Le(memory);
+        const uint16_t msw = readUint16Le(memory);
+        return static_cast<uint32_t>(msw) << 16 | lsw;
     }
 
     void emitUint16(uint16_t val) {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitByte(val >> 8);
-            emitByte(val >> 0);
+            emitUint16Be(val);
         } else {
-            emitByte(val >> 0);
-            emitByte(val >> 8);
+            emitUint16Le(val);
         }
     }
 
     void emitUint16(uint16_t val, uint8_t pos) {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitByte(val >> 8, pos + 0);
-            emitByte(val >> 0, pos + 1);
+            emitUint16Be(val, pos);
         } else {
-            emitByte(val >> 0, pos + 0);
-            emitByte(val >> 8, pos + 1);
+            emitUint16Le(val, pos);
         }
     }
 
     void emitUint32(uint32_t val) {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint16(val >> 16);
-            emitUint16(val >>  0);
+            emitUint32Be(val);
         } else {
-            emitUint16(val >>  0);
-            emitUint16(val >> 16);
+            emitUint32Le(val);
         }
     }
 
     void emitUint32(uint32_t val, uint8_t pos) {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint16(val >> 16, pos + 0);
-            emitUint16(val >>  0, pos + 2);
+            emitUint32Be(val, pos);
         } else {
-            emitUint16(val >>  0, pos + 0);
-            emitUint16(val >> 16, pos + 2);
+            emitUint32Le(val, pos);
         }
     }
 
-protected:
-    InsnBase(Insn &insn) : _insn(insn) {}
+    uint16_t readUint16(DisMemory &memory) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            return readUint16Be(memory);
+        } else {
+            return readUint16Le(memory);
+        }
+    }
 
+    uint32_t readUint32(DisMemory &memory) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            return readUint32Be(memory);
+        } else {
+            return readUint32Le(memory);
+        }
+    }
+
+private:
     Insn &_insn;
 };
 

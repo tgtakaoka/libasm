@@ -26,10 +26,8 @@ Error DisTms9900::decodeOperand(
     const uint8_t mode = (opr >> 4) & 0x3;
     if (mode == 1 || mode == 3) *out++ = '*';
     if (mode == 2) {
-        uint16_t val;
-        if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
         *out++ = '@';
-        out = outConstant(out, val);
+        out = outConstant(out, insn.readUint16(memory));
         if (regno) {
             *out++ = '(';
             out = _regs.outRegName(out, regno);
@@ -41,15 +39,13 @@ Error DisTms9900::decodeOperand(
             *out++ = '+';
     }
     *out = 0;
-    return setOK();
+    return setError(insn);
 }
 
 Error DisTms9900::decodeImmediate(
     DisMemory& memory, InsnTms9900 &insn, char *out) {
-    uint16_t val;
-    if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
-    outConstant(out, val, 16);
-    return setOK();
+    outConstant(out, insn.readUint16(memory));
+    return setError(insn);
 }
 
 Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
@@ -66,14 +62,17 @@ static char *outComma(char *out) {
     return out;
 }
 
+static const char TEXT_MID[]  PROGMEM = "MID";
+
 Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnTms9900 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readUint16(memory, opCode)) return setError(NO_MEMORY);
+    Config::opcode_t opCode = insn.readUint16(memory);
+    if (setError(insn)) return getError();
+
     insn.setOpCode(opCode);
     if (TableTms9900.searchOpCode(insn)) {
     mid:
-        insn.setName("MID");
+        insn.setName_P(TEXT_MID);
         return setError(UNKNOWN_INSTRUCTION);
     }
 
@@ -103,8 +102,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
         else outConstant(out, count, 10);
         break;
     case DW_BIT_SRC:
-        if (insn.readUint16(memory, opCode))
-            return setError(NO_MEMORY);
+        opCode = insn.readUint16(memory);
         count = (opCode >> 6) & 0x0f;
         if ((opCode & 0xFC00) != 0x0000) goto mid;
         if ((opCode & 0x0030) == 0x0030) goto mid; // no auto increment mode
@@ -121,8 +119,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
         _regs.outRegName(out, opCode >> 6);
         break;
     case DW_CNT_SRC:
-        if (insn.readUint16(memory, opCode))
-            return setError(NO_MEMORY);
+        opCode = insn.readUint16(memory);
         if ((opCode & 0xFC00) != 0x4000) goto mid;
         if (decodeOperand(memory, insn, out, opCode))
             return getError();
@@ -142,8 +139,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
         outConstant(out, count, 10);
         break;
     case DW_DST_SRC:
-        if (insn.readUint16(memory, opCode))
-            return setError(NO_MEMORY);
+        opCode = insn.readUint16(memory);
         if ((opCode & 0xF000) != 0x4000) goto mid;
         /* Fall-through */
     case DST_SRC:
@@ -163,7 +159,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    return setOK();
+    return setError(insn);
 }
 
 } // namespace tms9900

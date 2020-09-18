@@ -23,11 +23,11 @@ namespace mc6809 {
 Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address()
         + (insn.hasPrefix() ? 2 : 1)
-        + (insn.addrMode() == LREL ? 2 : 1);
+        + (insn.mode1() == LREL ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base
         : static_cast<Config::uintptr_t>(op.val32);
     const Config::ptrdiff_t delta = target - base;
-    if (insn.addrMode() == REL) {
+    if (insn.mode1() == REL) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitInsn();
         insn.emitByte(static_cast<uint8_t>(delta));
@@ -39,9 +39,9 @@ Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
 }
 
 Error AsmMc6809::encodeImmediate(
-        InsnMc6809 &insn, const Operand &op, Operand &extra) {
+    InsnMc6809 &insn, const Operand &op, Operand &extra) {
     insn.emitInsn();
-    switch (insn.addrMode()) {
+    switch (insn.mode1()) {
     case IM8:
         insn.emitByte(static_cast<uint8_t>(op.val32));
         break;
@@ -54,7 +54,7 @@ Error AsmMc6809::encodeImmediate(
     default:
         break;
     }
-    switch (insn.extraMode()) {
+    switch (insn.mode2()) {
     case DIR:
         insn.emitByte(static_cast<uint8_t>(extra.val32));
         break;
@@ -86,11 +86,11 @@ Error AsmMc6809::encodeIndexed(
     InsnMc6809 &insn, Operand &op, bool emitInsn) {
     PostSpec spec;
     if (op.mode == REG_REG) {
-        if (!_regs.isIndexedBase(op.base)) return setError(UNKNOWN_OPERAND);
+        if (!RegMc6809::isIndexedBase(op.base)) return setError(UNKNOWN_OPERAND);
         if (op.index == REG_0) {
             op.index = REG_UNDEF;
             op.sub = DISP_IDX;
-        } else if (_regs.isIndexReg(op.index)) {
+        } else if (RegMc6809::isIndexReg(op.index)) {
             op.sub = ACCM_IDX;
         } else {
             return setError(REGISTER_NOT_ALLOWED);
@@ -124,7 +124,7 @@ Error AsmMc6809::encodeIndexed(
     if (TableMc6809.searchPostSpec(spec, post))
         return setError(UNKNOWN_OPERAND);
     if (spec.base == REG_X)
-        post |= (_regs.encodeBaseReg(op.base) << 5);
+        post |= (RegMc6809::encodeBaseReg(op.base) << 5);
     if (spec.mode == DISP_IDX && spec.size == 5)
         post |= static_cast<uint8_t>(disp & 0x1F);
     if (emitInsn) insn.emitInsn();
@@ -137,14 +137,15 @@ Error AsmMc6809::encodeIndexed(
 Error AsmMc6809::encodeRegisters(InsnMc6809 &insn, const Operand &op) {
     const RegName reg1 = op.mode == REG_BIT ? op.base : op.index;
     const RegName reg2 = op.mode == REG_BIT ? REG_0 : op.base;
-    const int8_t num1 = _regs.encodeDataReg(reg1);
-    const int8_t num2 = _regs.encodeDataReg(reg2);
-    if (num1 < 0 || num2 < 0) return setError(UNKNOWN_REGISTER);
-    const RegSize size1 = _regs.regSize(reg1);
-    const RegSize size2 = _regs.regSize(reg2);
+    if (!RegMc6809::isDataReg(reg1) || !RegMc6809::isDataReg(reg2))
+        return setError(UNKNOWN_REGISTER);
+    const RegSize size1 = RegMc6809::regSize(reg1);
+    const RegSize size2 = RegMc6809::regSize(reg2);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     insn.emitInsn();
+    const uint8_t num1 = RegMc6809::encodeDataReg(reg1);
+    const uint8_t num2 = RegMc6809::encodeDataReg(reg2);
     insn.emitByte((num1 << 4) | num2);
     return setOK();
 }
@@ -167,7 +168,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             stack = reg;
             if (reg == REG_S) reg = REG_U;
         }
-        uint8_t bit = _regs.encodeStackReg(reg, false);
+        uint8_t bit = RegMc6809::encodeStackReg(reg, false);
         if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
         post = bit;
         reg = op.base;
@@ -176,7 +177,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             if (stack != reg) return setError(REGISTER_NOT_ALLOWED);
             if (reg == REG_S) reg = REG_U;
         }
-        bit = _regs.encodeStackReg(reg, false);
+        bit = RegMc6809::encodeStackReg(reg, false);
         if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
         if (post & bit) return setError(DUPLICATE_REGISTER);
         post |= bit;
@@ -195,7 +196,7 @@ Error AsmMc6809::encodeBitOperation(
     InsnMc6809 &insn, const Operand &op, const Operand &extra) {
     const uint8_t opbit = op.extra;
     const uint8_t exbit = extra.extra;
-    const uint8_t post = (_regs.encodeBitOpReg(op.base) << 6)
+    const uint8_t post = (RegMc6809::encodeBitOpReg(op.base) << 6)
         | (exbit << 3) | opbit;
     insn.emitInsn();
     insn.emitByte(post);
@@ -212,18 +213,18 @@ Error AsmMc6809::encodeTransferMemory(
     } else if (op.mode == REG_TFM && extra.mode == REGLIST) {
         if (op.extra != '+') return setError(UNKNOWN_OPERAND);
         if (extra.extra != 1) return setError(UNKNOWN_OPERAND);
-        if (!_regs.isTfmBaseReg(extra.index)) return setError(OPERAND_NOT_ALLOWED);
+        if (!RegMc6809::isTfmBaseReg(extra.index)) return setError(OPERAND_NOT_ALLOWED);
         mode = 2;
     } else if (op.mode == REGLIST && extra.mode == REG_TFM) {
         if (op.extra != 1) return setError(UNKNOWN_OPERAND);
-        if (!_regs.isTfmBaseReg(op.index)) return setError(OPERAND_NOT_ALLOWED);
+        if (!RegMc6809::isTfmBaseReg(op.index)) return setError(OPERAND_NOT_ALLOWED);
         if (extra.extra != '+') return setError(UNKNOWN_OPERAND);
         mode = 3;
     } else return setError(UNKNOWN_OPERAND);
 
     insn.embed(mode);
-    const uint8_t post = (_regs.encodeTfmBaseReg(op.index) << 4)
-        | _regs.encodeTfmBaseReg(extra.index);
+    const uint8_t post = (RegMc6809::encodeTfmBaseReg(op.index) << 4)
+        | RegMc6809::encodeTfmBaseReg(extra.index);
     insn.emitInsn();
     insn.emitByte(post);
     return OK;
@@ -238,9 +239,9 @@ bool AsmMc6809::parsePointerMode(Operand &op, const char *p, bool indir) {
             p++; autoIndex = -2;
         }
     }
-    const RegName reg = _regs.parseRegName(p);
-    if (!_regs.isBaseReg(reg)) return false;
-    p += _regs.regNameLen(reg);
+    const RegName reg = RegMc6809::parseRegName(p);
+    if (!RegMc6809::isBaseReg(reg)) return false;
+    p += RegMc6809::regNameLen(reg);
     if (autoIndex == 0 && *p == '+') {
         p++; autoIndex = 1;
         if (*p == '+') {
@@ -266,9 +267,9 @@ bool AsmMc6809::parsePointerMode(Operand &op, const char *p, bool indir) {
 
 bool AsmMc6809::parseIndexedMode(Operand &op, const char *p, bool indir) {
     p = skipSpaces(p);
-    const RegName base = _regs.parseRegName(p);
-    if (!_regs.isIndexedBase(base)) return false;
-    p = skipSpaces(p + _regs.regNameLen(base));
+    const RegName base = RegMc6809::parseRegName(p);
+    if (!RegMc6809::isIndexedBase(base)) return false;
+    p = skipSpaces(p + RegMc6809::regNameLen(base));
     if (indir) {
         if (*p == ']') {
             p++;
@@ -294,7 +295,7 @@ bool AsmMc6809::parseBitPosition(Operand &op, const char *p) {
         // bit position separator ',' can have spaces around it.
         p = skipSpaces(a + 1);
     } else return false;
-    const RegName reg = _regs.parseRegName(p);
+    const RegName reg = RegMc6809::parseRegName(p);
     if (reg != REG_0 && reg != REG_UNDEF) return false;
     const char *saved = _scan;
     _scan = p;
@@ -316,11 +317,11 @@ bool AsmMc6809::parseRegisterList(Operand &op, const char *p, bool indir) {
     uint8_t post = 0;
     const char *lastComma = p;
     while (true) {
-        RegName reg = _regs.parseRegName(p);
+        RegName reg = RegMc6809::parseRegName(p);
         if (reg == REG_UNDEF) return false;
-        p += _regs.regNameLen(reg);
+        p += RegMc6809::regNameLen(reg);
         if (*p == '+' || *p == '-') {
-            if (!_regs.isTfmBaseReg(reg)) {
+            if (!RegMc6809::isTfmBaseReg(reg)) {
                 op.setError(REGISTER_NOT_ALLOWED);
                 _scan = p + 1;
                 return true;
@@ -343,7 +344,7 @@ bool AsmMc6809::parseRegisterList(Operand &op, const char *p, bool indir) {
             if (stack != reg) push_pull = false;
             if (reg == REG_S) reg = REG_U;
         }
-        const uint8_t bit = _regs.encodeStackReg(reg, false);
+        const uint8_t bit = RegMc6809::encodeStackReg(reg, false);
         if (bit == 0) push_pull = false;
         if (post & bit) op.setError(DUPLICATE_REGISTER);
         post |= bit;
@@ -393,9 +394,9 @@ Error AsmMc6809::parseOperand(Operand &op) {
 
     if (parsePointerMode(op, p, indir))
         return getError();
-    const RegName reg = _regs.parseRegName(p);
-    if (!indir && _regs.isBitOpReg(reg)) {
-        const char *a = p + _regs.regNameLen(reg);
+    const RegName reg = RegMc6809::parseRegName(p);
+    if (!indir && RegMc6809::isBitOpReg(reg)) {
+        const char *a = p + RegMc6809::regNameLen(reg);
         if (parseBitPosition(op, a)) {
             op.mode = REG_BIT;
             op.base = reg;
@@ -498,58 +499,58 @@ Error AsmMc6809::encode(Insn &_insn) {
     if (processPseudo(insn) == OK)
         return getError();
 
-    Operand op, extra;
-    if (parseOperand(op))
+    Operand op1, op2;
+    if (parseOperand(op1))
         return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
         _scan = skipSpaces(p + 1);
-        if (parseOperand(extra)) return getError();
+        if (parseOperand(op2)) return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(op.getError());
-    setErrorIf(extra.getError());
+    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    setErrorIf(op1.getError());
+    setErrorIf(op2.getError());
 
-    insn.setAddrMode(op.mode, extra.mode);
+    insn.setAddrMode(op1.mode, op2.mode);
     if (TableMc6809.searchName(insn))
         return setError(TableMc6809.getError());
-    switch (insn.addrMode()) {
+
+    switch (insn.mode1()) {
     case NONE:
         insn.emitInsn();
         break;
     case REL:
     case LREL:
-        encodeRelative(insn, op);
+        encodeRelative(insn, op1);
         break;
     case IM8:
     case IM16:
     case IM32:
-        encodeImmediate(insn, op, extra);
+        encodeImmediate(insn, op1, op2);
         break;
     case DIR:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op.val32));
+        insn.emitByte(static_cast<uint8_t>(op1.val32));
         break;
     case EXT:
         insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
+        insn.emitUint16(static_cast<uint16_t>(op1.val32));
         break;
     case IDX:
-        encodeIndexed(insn, op);
+        encodeIndexed(insn, op1);
         break;
     case REG_REG:
-        encodeRegisters(insn, op);
+        encodeRegisters(insn, op1);
         break;
     case REGLIST:
-        encodePushPull(insn, op);
+        encodePushPull(insn, op1);
         break;
     case REG_BIT:
-        encodeBitOperation(insn, op, extra);
+        encodeBitOperation(insn, op1, op2);
         break;
     case REG_TFM:
-        encodeTransferMemory(insn, op, extra);
+        encodeTransferMemory(insn, op1, op2);
         break;
     default:
         return setError(UNKNOWN_OPERAND);

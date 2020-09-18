@@ -34,7 +34,6 @@ public:
 
 private:
     MotoValueParser _parser;
-    RegMc6800 _regs;
 
     TableBase &getTable() const override { return TableMc6800; }
 

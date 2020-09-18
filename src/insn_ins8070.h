@@ -41,32 +41,36 @@ public:
         _flags = Entry::_flags(addrMode(), dst, src, oprSize());
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
     }
+
+    Config::opcode_t opCode() const { return _opCode; }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
+
     void emitInsn() {
         emitByte(_opCode, 0);
     }
+
     void emitOperand8(uint8_t val8) {
-        uint8_t pos = _insn.length();
-        if (pos == 0) pos = 1;
-        emitByte(val8, pos);
+        emitByte(val8, operandPos());
     }
+
     void emitOperand16(uint16_t val16) {
-        emitOperand8(static_cast<uint8_t>(val16 >> 0));
-        emitOperand8(static_cast<uint8_t>(val16 >> 8));
+        emitUint16(val16, operandPos());
     }
 
 private:
     Config::opcode_t _opCode;
     uint16_t _flags;
 
-    void emitByte(uint8_t val, uint8_t pos) {
-        _insn.emitByte(val, pos);
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (pos == 0) pos = 1;
+        return pos;
     }
 };
 

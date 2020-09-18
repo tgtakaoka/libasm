@@ -22,43 +22,37 @@ namespace cdp1802 {
 
 Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnCdp1802 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
+    if (setError(insn)) return getError();
     insn.setOpCode(opCode);
+
     if (TableCdp1802.searchOpCode(insn))
         return setError(TableCdp1802.getError());
 
-    uint8_t val;
-    Config::uintptr_t addr;
     switch (insn.addrMode()) {
     case REGN:
     case REG1:
-        val = insn.opCode() & 0xF;
-        outConstant(out, val, 10);
+        outConstant(out, static_cast<uint8_t>(opCode & 0xF), 10);
         break;
     case IMM8:
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        outConstant(out, val, 16);
+        outConstant(out, insn.readByte(memory));
         break;
     case IOAD:
-        val = insn.opCode() & 7;
-        outConstant(out, val, 10);
+        outConstant(out, static_cast<uint8_t>(opCode & 7), 10);
         break;
     case ADDR:
-        if (insn.readUint16(memory, addr)) return setError(NO_MEMORY);
+        outAddress(out, insn.readUint16(memory));
+        break;
+    case PAGE: {
+        const uint8_t val = insn.readByte(memory);
+        const uint16_t addr = ((insn.address() + 2) & ~0xFF) | val;
         outAddress(out, addr);
         break;
-    case PAGE:
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        addr = ((insn.address() + 2) & ~0xFF) | val;
-        outAddress(out, addr);
-        break;
-    case IMPL:
-        break;
-    default:
-        return setError(INTERNAL_ERROR);
     }
-    return setOK();
+    default:
+        break;
+    }
+    return setError(insn);
 }
 
 } // namespace cdp1802

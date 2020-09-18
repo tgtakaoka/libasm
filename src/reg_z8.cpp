@@ -23,67 +23,25 @@
 namespace libasm {
 namespace z8 {
 
-RegZ8::RegZ8()
-    : _regPointer0(-1),
-      _regPointer1(-1)
-{}
-
-bool RegZ8::setRegPointer(int16_t rp) {
-    if (rp < 0) {
-        setRegPointer0(rp);
-        setRegPointer1(rp);
-        return true;
-    }
-    return setRegPointer0(rp) && setRegPointer1(rp + 8);
+bool RegZ8::isWorkRegAlias(uint8_t addr) {
+    return (addr & 0xF0) == (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
-bool RegZ8::setRegPointer0(int16_t rp0) {
-    if (rp0 >= 0 && (rp0 & ~0xF8))
-        return false;
-    _regPointer0 = rp0;
-    return true;
+uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
+    return encodeRegName(name) | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
-bool RegZ8::setRegPointer1(int16_t rp1) {
-    if (rp1 >= 0 && (rp1 & ~0xF8))
-        return false;
-    _regPointer1 = rp1;
-    return true;
-}
-
-bool RegZ8::isWorkReg(uint8_t regAddr) const {
-    const uint8_t regPage = (regAddr & 0xF8);
-    if (_regPointer0 >= 0 && regPage == _regPointer0)
-        return true;
-    if (_regPointer1 >= 0 && regPage == _regPointer1)
-        return true;
-    return false;
-}
-
-bool RegZ8::isWorkRegAlias(uint8_t regAddr) const {
-    return (regAddr & 0xF0) ==
-        (TableZ8.isSuper8() ? 0xC0 : 0xE0);
-}
-
-uint8_t RegZ8::encodeWorkRegAddr(RegName regName) const {
-    return encodeRegName(regName)
-        | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
-}
-
-static bool isidchar(const char c) {
-    return isalnum(c) || c == '_';
-}
 
 static int8_t parseRegNum(const char *line) {
-    if (isdigit(*line) && !isidchar(line[1]))
+    if (isdigit(*line) && !RegBase::isidchar(line[1]))
         return *line - '0';
     if (*line++ == '1'
-        && *line >= '0' && *line < '6' && !isidchar(line[1]))
+        && *line >= '0' && *line < '6' && !RegBase::isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }
 
-RegName RegZ8::parseRegName(const char *line) const {
+RegName RegZ8::parseRegName(const char *line) {
     if (toupper(*line++) == 'R') {
         if (toupper(*line) == 'R') {
             const int8_t regNum = parseRegNum(line + 1);
@@ -98,139 +56,116 @@ RegName RegZ8::parseRegName(const char *line) const {
     return REG_UNDEF;
 }
 
-uint8_t RegZ8::regNameLen(RegName regName) {
-    const int8_t num = int8_t(regName);
+uint8_t RegZ8::regNameLen(RegName name) {
+    const int8_t num = int8_t(name);
     if (num >= 16 + 10) return 4; // RR1n
     if (num >= 10)      return 3; // RRn, R1n
     if (num >= 0)       return 2; // Rn
     return 0;
 }
 
-uint8_t RegZ8::encodeRegName(RegName regName) {
-    const int8_t num = int8_t(regName);
-    if (num >= 16) return num - 16; // RRn
-    if (num >= 0)  return num;      // Rn
-    return 0;
+uint8_t RegZ8::encodeRegName(RegName name) {
+    return uint8_t(name) & 0xF;
 }
 
-RegName RegZ8::decodeRegNum(uint8_t regNum, bool pair) {
-    regNum &= 0x0f;
-    if (pair)
-        return regNum % 2 == 0 ? RegName(regNum + 16) : REG_UNDEF;
-    return RegName(regNum);
+RegName RegZ8::decodeRegNum(uint8_t num) {
+    return RegName(num & 0xF);
 }
 
-bool RegZ8::isRegPair(RegName regName) {
-    return int8_t(regName) >= 16;
+RegName RegZ8::decodePairRegNum(uint8_t num) {
+    if (num % 2) return REG_UNDEF;
+    return RegName((num & 0xF) + 16);
 }
 
-char *RegZ8::outRegName(char *out, RegName regName) const {
-    int8_t num = int8_t(regName);
-    if (num >= 0) {
-        const char r = _uppercase ? 'R' : 'r';
+bool RegZ8::isPairReg(RegName name) {
+    return int8_t(name) >= 16;
+}
+
+char *RegZ8::outRegName(char *out, RegName name) const {
+    uint8_t num = uint8_t(name);
+    const char r = _uppercase ? 'R' : 'r';
+    *out++ = r;
+    if (num >= 16) {
         *out++ = r;
-        if (num >= 16) {
-            *out++ = r;
-            num -= 16;
-        }
-        if (num >= 10) {
-            *out++ = '1';
-            num -= 10;
-        }
-        *out++ = num + '0';
+        num -= 16;
     }
+    if (num >= 10) {
+        *out++ = '1';
+        num -= 10;
+    }
+    *out++ = num + '0';
     *out = 0;
     return out;
 }
 
-#define CC_ENTRY(name, code, len, ...) \
-    static_cast<uint8_t>(name), ((code) | ((len) << 4)), __VA_ARGS__
-static const uint8_t CC_TABLE[] PROGMEM = {
-    CC_ENTRY(CC_F,    0, 1, 'F'),
-    CC_ENTRY(CC_LT,   1, 2, 'L', 'T'),
-    CC_ENTRY(CC_LE,   2, 2, 'L', 'E'),
-    CC_ENTRY(CC_ULE,  3, 3, 'U', 'L', 'E'),
-    CC_ENTRY(CC_OV,   4, 2, 'O', 'V'),
-    CC_ENTRY(CC_MI,   5, 2, 'M', 'I'),
-    CC_ENTRY(CC_Z,    6, 1, 'Z'),
-    CC_ENTRY(CC_C,    7, 1, 'C'),
-    CC_ENTRY(CC_T,    8, 0)
-    CC_ENTRY(CC_GE,   9, 2, 'G', 'E'),
-    CC_ENTRY(CC_GT,  10, 2, 'G', 'T'),
-    CC_ENTRY(CC_UGT, 11, 3, 'U', 'G', 'T'),
-    CC_ENTRY(CC_NOV, 12, 3, 'N', 'O', 'V'),
-    CC_ENTRY(CC_PL,  13, 2, 'P', 'L'),
-    CC_ENTRY(CC_NZ,  14, 2, 'N', 'Z'),
-    CC_ENTRY(CC_NC,  15, 2, 'N', 'C'),
-    CC_ENTRY(CC_EQ,   6, 2, 'E', 'Q'),
-    CC_ENTRY(CC_ULT,  7, 3, 'U', 'L', 'T'),
-    CC_ENTRY(CC_NE,  14, 2, 'N', 'E'),
-    CC_ENTRY(CC_UGE, 15, 3, 'U', 'G', 'E'),
+static const char TEXT_CC_F[]   PROGMEM = "F";
+static const char TEXT_CC_LT[]  PROGMEM = "LT";
+static const char TEXT_CC_LE[]  PROGMEM = "LE";
+static const char TEXT_CC_ULE[] PROGMEM = "ULE";
+static const char TEXT_CC_OV[]  PROGMEM = "OV";
+static const char TEXT_CC_MI[]  PROGMEM = "MI";
+static const char TEXT_CC_Z[]   PROGMEM = "Z";
+static const char TEXT_CC_C[]   PROGMEM = "C";
+static const char TEXT_CC_T[]   PROGMEM = "";
+static const char TEXT_CC_GE[]  PROGMEM = "GE";
+static const char TEXT_CC_GT[]  PROGMEM = "GT";
+static const char TEXT_CC_UGT[] PROGMEM = "UGT";
+static const char TEXT_CC_NOV[] PROGMEM = "NOV";
+static const char TEXT_CC_PL[]  PROGMEM = "PL";
+static const char TEXT_CC_NZ[]  PROGMEM = "NZ";
+static const char TEXT_CC_NC[]  PROGMEM = "NC";
+static const char TEXT_CC_EQ[]  PROGMEM = "EQ";
+static const char TEXT_CC_ULT[] PROGMEM = "ULT";
+static const char TEXT_CC_NE[]  PROGMEM = "NE";
+static const char TEXT_CC_UGE[] PROGMEM = "UGE";
+static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
+    NAME_ENTRY(CC_F)
+    NAME_ENTRY(CC_LT)
+    NAME_ENTRY(CC_LE)
+    NAME_ENTRY(CC_ULE)
+    NAME_ENTRY(CC_OV)
+    NAME_ENTRY(CC_MI)
+    NAME_ENTRY(CC_Z)
+    NAME_ENTRY(CC_C)
+    NAME_ENTRY(CC_GE)
+    NAME_ENTRY(CC_GT)
+    NAME_ENTRY(CC_UGT)
+    NAME_ENTRY(CC_NOV)
+    NAME_ENTRY(CC_PL)
+    NAME_ENTRY(CC_NZ)
+    NAME_ENTRY(CC_NC)
+    // Aliases
+    NAME_ENTRY(CC_EQ)
+    NAME_ENTRY(CC_ULT)
+    NAME_ENTRY(CC_NE)
+    NAME_ENTRY(CC_UGE)
+    // Empty text
+    NAME_ENTRY(CC_T)
 };
-static CcName CC_NAME(uint8_t idx) {
-    return CcName(pgm_read_byte(&CC_TABLE[idx]));
-}
-static uint8_t CC_CODE(uint8_t idx) {
-    return pgm_read_byte(&CC_TABLE[idx + 1]) & 0xf;
-}
-static uint8_t CC_LEN(uint8_t idx)  {
-    return pgm_read_byte(&CC_TABLE[idx + 1]) >> 4;
-}
-static const char *CC_TEXT(uint8_t idx) {
-    return reinterpret_cast<const char *>(&CC_TABLE[idx + 2]);
-}
-static uint8_t CC_NEXT(uint8_t idx) {
-    return idx + 2 + CC_LEN(idx);
+
+CcName RegZ8::parseCcName(const char *line) {
+    const NameEntry *entry = searchText(line, ARRAY_RANGE(CC_TABLE));
+    const CcName name = entry ? CcName(entry->name()) : CC_UNDEF;
+    return name == CC_T ? CC_UNDEF : name;
 }
 
-CcName RegZ8::parseCcName(const char *line) const {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        const uint8_t len = CC_LEN(idx);
-        const char *text = CC_TEXT(idx);
-        if (len && strncasecmp_P(line, text, len) == 0
-            && !isidchar(line[len]))
-            return CC_NAME(idx);
-    }
-    return CC_UNDEF;
+uint8_t RegZ8::ccNameLen(const CcName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
-uint8_t RegZ8::ccNameLen(const CcName ccName) {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccName == CC_NAME(idx))
-            return CC_LEN(idx);
-    }
-    return 0;
-}
-
-int8_t RegZ8::encodeCcName(CcName ccName) {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccName == CC_NAME(idx))
-            return CC_CODE(idx);
-    }
-    return -1;
-}
-
-CcName RegZ8::decodeCcNum(uint8_t ccNum) {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccNum == CC_CODE(idx))
-            return CC_NAME(idx);
-    }
-    return CC_UNDEF;
-}
-
-char *RegZ8::outCcName(char *out, CcName ccName) const {
-    for (uint8_t idx = 0; idx < sizeof(CC_TABLE); idx = CC_NEXT(idx)) {
-        if (ccName != CC_NAME(idx)) continue;
-        const char *text = CC_TEXT(idx);
-        const uint8_t len = CC_LEN(idx);
-        for (uint8_t i = 0; i < len; i++) {
-            const char c = pgm_read_byte(&text[i]);
-            *out++ = _uppercase ? c : tolower(c);
-        }
-        break;
-    }
-    *out = 0;
+char *RegZ8::outCcName(char *out, CcName name) const {
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
+    if (entry)
+        out = outText(out, entry->text());
     return out;
+}
+
+uint8_t RegZ8::encodeCcName(CcName name) {
+    return uint8_t(name);
+}
+
+CcName RegZ8::decodeCcNum(uint8_t num) {
+    return CcName(num);
 }
 
 } // namespace z8

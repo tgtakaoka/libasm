@@ -57,7 +57,7 @@ enum AddrMode : uint8_t {
     M_SCNT = 17, // Signed Count: #-32~32
     M_NCNT = 18, // Signed Negative Count: #-32~32
     M_CC   = 19, // Condition Code: F/Z/NZ/C/NC/PL/MI/NE/EQ/OV/NOV/PE/PO/GE/LT/GT/LE/UGE/ULT/UGT/ULE
-    M_INTT = 20, // Interrupt type: VI/NVI
+    M_INTR = 20, // Interrupt type: VI/NVI
     M_CTL  = 21, // Control Register: FCW/REFRESH/NSPSRG/NSPOFF/PSAPSEG/PSAPOFF/FLAGS
     M_FLAG = 22, // Flags: C/Z/S/P/V
     M_RA12 = 23, // 12-bit Relative: (-2048~+2047)*22

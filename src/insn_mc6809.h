@@ -28,39 +28,40 @@ class InsnMc6809 : public InsnBase<Config> {
 public:
     InsnMc6809(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    AddrMode extraMode() const { return Entry::_extraMode(_flags); }
+    AddrMode mode1() const { return Entry::_mode1(_flags); }
+    AddrMode mode2() const { return Entry::_mode2(_flags); }
 
     void setFlags(uint8_t flags) {
         _flags = flags;
     }
 
-    void setAddrMode(AddrMode mode, AddrMode extra) {
-        _flags = Entry::_flags(mode, extra);
+    void setAddrMode(AddrMode op1, AddrMode op2) {
+        _flags = Entry::_flags(op1, op2);
     }
 
-    void setOpCode(
-        Config::opcode_t opCode, Config::opcode_t prefixCode = 0) {
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
-        _prefixCode = prefixCode;
+        _prefix = prefix;
     }
-    void embed(Config::opcode_t opCode) {
-        _opCode |= opCode;
+
+    void embed(Config::opcode_t data) {
+        _opCode |= data;
     }
-    bool hasPrefix() const { return prefixCode() != 0; }
-    Config::opcode_t prefixCode() const { return _prefixCode; }
+
+    bool hasPrefix() const { return prefix() != 0; }
+    Config::opcode_t prefix() const { return _prefix; }
     Config::opcode_t opCode() const { return _opCode; }
 
     void emitInsn() {
         if (hasPrefix())
-            emitByte(prefixCode());
+            emitByte(prefix());
         emitByte(opCode());
     }
 
 private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefixCode;
     uint8_t _flags;
+    Config::opcode_t _opCode;
+    Config::opcode_t _prefix;
 };
 
 } // namespace mc6809

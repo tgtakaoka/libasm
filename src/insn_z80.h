@@ -27,50 +27,53 @@ namespace z80 {
 class InsnZ80 : public InsnBase<Config> {
 public:
     InsnZ80(Insn &insn) : InsnBase(insn) {}
-    InsnZ80(InsnZ80 &other) : InsnBase(other._insn) {}
 
     AddrMode addrMode() const { return Entry::_addrMode(_flags); }
     InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
     OprFormat dstFormat() const { return Entry::_dstFormat(_flags); }
     OprFormat srcFormat() const { return Entry::_srcFormat(_flags); }
-    void setOprFormats(OprFormat dst, OprFormat src) {
-        _flags = Entry::_flags(insnFormat(), addrMode(), dst, src);
-    }
 
     void setFlags(uint16_t flags) {
         _flags = flags;
     }
+
     void setFlags(const InsnZ80 &other) {
         _flags = other._flags;
     }
 
-    uint16_t insnCode() const { return _insnCode; }
-    void setInsnCode(uint16_t insnCode) {
-        _insnCode = insnCode;
+    void setOprFormats(OprFormat dst, OprFormat src) {
+        _flags = Entry::_flags(insnFormat(), addrMode(), dst, src);
     }
+
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
+        _opCode = opCode;
+        _prefix = prefix;
+    }
+
     void embed(Config::opcode_t data) {
-        _insnCode |= data;
+        _opCode |= data;
     }
-    void setInsnCode(Config::opcode_t prefixCode, Config::opcode_t opCode) {
-        _insnCode = (static_cast<uint16_t>(prefixCode) << 8) | opCode;
+
+    bool hasPrefix() const { return prefix() != 0; }
+
+    Config::opcode_t prefix() const {
+        return _prefix;
     }
-    bool hasPrefix() const { return prefixCode() != 0; }
-    Config::opcode_t prefixCode() const {
-        return static_cast<Config::opcode_t>(_insnCode >> 8);
-    }
+
     Config::opcode_t opCode() const {
-        return static_cast<Config::opcode_t>(_insnCode);
+        return _opCode;
     }
 
     void emitInsn() {
         if (hasPrefix())
-            emitByte(prefixCode());
+            emitByte(prefix());
         emitByte(opCode());
     }
 
 private:
-    uint16_t _insnCode;
     uint16_t _flags;
+    Config::opcode_t _opCode;
+    Config::opcode_t _prefix;
 };
 
 } // namespace z80

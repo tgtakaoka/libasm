@@ -24,76 +24,59 @@ char *DisIns8070::outRegister(char *out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-bool DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
+char *DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
     switch (opr) {
-    case OPR_A: outRegister(out, REG_A); break;
-    case OPR_E: outRegister(out, REG_E); break;
-    case OPR_S: outRegister(out, REG_S); break;
-    case OPR_EA: outRegister(out, REG_EA); break;
-    case OPR_PN:
-        outRegister(out, (value & 1) ? REG_P3 : REG_P2);
-        break;
-    case OPR_BR:
-        switch (value & 3) {
-        case 0: outRegister(out, REG_PC); break;
-        case 1: outRegister(out, REG_SP); break;
-        case 2: outRegister(out, REG_P2); break;
-        case 3: outRegister(out, REG_P3); break;
-        }
-        break;
-    case OPR_T: outRegister(out, REG_T); break;
-    case OPR_4:
-        outConstant(out, static_cast<uint8_t>(value & 15), 10);
-        break;
-    case OPR_NO: break;
-    default:
-        return false;
+    case OPR_A:  return outRegister(out, REG_A);
+    case OPR_E:  return outRegister(out, REG_E);
+    case OPR_S:  return outRegister(out, REG_S);
+    case OPR_EA: return outRegister(out, REG_EA);
+    case OPR_PN: return outRegister(out, (value & 1) ? REG_P3 : REG_P2);
+    case OPR_BR: return outRegister(out, RegIns8070::decodePointerReg(value));
+    case OPR_T:  return outRegister(out, REG_T);
+    case OPR_4:  return outConstant(out, static_cast<uint8_t>(value & 15), 10);
+    default:     return out;
     }
-    return true;
 }
 
 Error DisIns8070::decodeImplied(InsnIns8070 &insn, char *out) {
-    if (outOperand(out, insn.dstOpr(), insn.opCode())) {
-        out += strlen(out);
-        if (insn.srcOpr() != OPR_NO) {
-            *out++ = ',';
-            outOperand(out, insn.srcOpr(), insn.opCode());
-        }
-        return setOK();
+    out = outOperand(out, insn.dstOpr(), insn.opCode());
+    if (insn.srcOpr() != OPR_NO) {
+        *out++ = ',';
+        outOperand(out, insn.srcOpr(), insn.opCode());
     }
-    return setError(ILLEGAL_OPERAND);
+    return setOK();
 }
 
 Error DisIns8070::decodeImmediate(
     DisMemory &memory, InsnIns8070 &insn, char *out) {
-    outOperand(out, insn.dstOpr(), insn.opCode());
-    out += strlen(out);
+    out = outOperand(out, insn.dstOpr(), insn.opCode());
     *out++ = ',';
     *out++ = _immSym ? '#' : '=';
     if (insn.oprSize() == SZ_WORD)
         return decodeAbsolute(memory, insn, out);
 
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    outConstant(out, val, 16);
-    return setOK();
+    outConstant(out, insn.readByte(memory));
+    return setError(insn);
 }
 
 Error DisIns8070::decodeAbsolute(
     DisMemory &memory, InsnIns8070 &insn, char *out) {
-    uint16_t val;
-    if (insn.readUint16(memory, val)) return setError(NO_MEMORY);
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
-    const Config::uintptr_t target = val + fetch;
+    const Config::uintptr_t target = insn.readUint16(memory) + fetch;
     outAddress(out, target);
-    return setOK();
+    return setError(insn);
+}
+
+Error DisIns8070::decodeDirect(
+    DisMemory &memory, InsnIns8070 &insn, char *out) {
+    const Config::uintptr_t target = 0xFF00 | insn.readByte(memory);
+    outAddress(out, target);
+    return setError(insn);
 }
 
 Error DisIns8070::decodeRelative(
         DisMemory &memory, InsnIns8070 &insn, char *out) {
-    uint8_t val;
-    if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-    const Config::ptrdiff_t disp = static_cast<int8_t>(val);
+    const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
     const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
     if (insn.dstOpr() == OPR_RL
@@ -114,37 +97,35 @@ Error DisIns8070::decodeRelative(
             outOperand(out, OPR_BR, insn.opCode());
         }
     }
-    return setOK();
+    return setError(insn);
 }
 
 Error DisIns8070::decodeGeneric(
     DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t mode = insn.opCode() & 7;
-    if (mode == 4) return decodeImmediate(memory, insn, out);
-
-    outOperand(out, insn.dstOpr());
-    out += strlen(out);
-    *out++ = ',';
-    if (mode < 4) return decodeRelative(memory, insn, out);
-    if (mode >= 6) {
+    if (mode != 4) {
+       out = outOperand(out, insn.dstOpr());
+       *out++ = ',';
+    }
+    switch (mode) {
+    case 4:
+        return decodeImmediate(memory, insn, out);
+    case 5:
+        return decodeDirect(memory, insn, out);
+    case 6: case 7:
         *out++ = '@';
         return decodeRelative(memory, insn, out);
+    default:
+        return decodeRelative(memory, insn, out);
     }
-    if (mode == 5) {            // DIRECT
-        uint8_t val;
-        if (insn.readByte(memory, val)) return setError(NO_MEMORY);
-        const Config::uintptr_t addr = 0xFF00 | val;
-        outAddress(out, addr);
-        return setOK();
-    }
-    return UNKNOWN_INSTRUCTION;
 }
 
 Error DisIns8070::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnIns8070 insn(_insn);
-    Config::opcode_t opCode;
-    if (insn.readByte(memory, opCode)) return setError(NO_MEMORY);
+    const Config::opcode_t opCode = insn.readByte(memory);
+    if (setError(insn)) return getError();
     insn.setOpCode(opCode);
+
     if (TableIns8070.searchOpCode(insn))
         return setError(TableIns8070.getError());
 

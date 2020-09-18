@@ -34,7 +34,6 @@ public:
 
 private:
     IntelValueParser _parser;
-    RegZ80 _regs;
 
     TableBase &getTable() const override { return TableZ80; }
 

@@ -194,9 +194,9 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) const {
             opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
     if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(pgm_read_word(&entry->flags));
-    const char *name =
+    const /*PROGMEM*/ char *name =
         reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+    insn.setName_P(name);
     return _error.setOK();
 }
 

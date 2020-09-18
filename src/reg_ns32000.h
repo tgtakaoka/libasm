@@ -23,35 +23,38 @@
 namespace libasm {
 namespace ns32000 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_R0 = '0',  // R0
-    REG_R1 = '1',  // R1
-    REG_R2 = '2',  // R2
-    REG_R3 = '3',  // R3
-    REG_R4 = '4',  // R4
-    REG_R5 = '5',  // R5
-    REG_R6 = '6',  // R6
-    REG_R7 = '7',  // R7
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    // General registers.
+    REG_R0 = 0 + 0,
+    REG_R1 = 1 + 0,
+    REG_R2 = 2 + 0,
+    REG_R3 = 3 + 0,
+    REG_R4 = 4 + 0,
+    REG_R5 = 5 + 0,
+    REG_R6 = 6 + 0,
+    REG_R7 = 7 + 0,
 #ifdef ENABLE_FLOAT
-    REG_F0 = 'A',  // F0
-    REG_F1 = 'B',  // F1
-    REG_F2 = 'C',  // F2
-    REG_F3 = 'D',  // F3
-    REG_F4 = 'E',  // F4
-    REG_F5 = 'F',  // F5
-    REG_F6 = 'G',  // F6
-    REG_F7 = 'H',  // F7
+    // Floating point registers.
+    REG_F0 = 0 + 8,
+    REG_F1 = 1 + 8,
+    REG_F2 = 2 + 8,
+    REG_F3 = 3 + 8,
+    REG_F4 = 4 + 8,
+    REG_F5 = 5 + 8,
+    REG_F6 = 6 + 8,
+    REG_F7 = 7 + 8,
 #endif
-    REG_FP = 'f',  // FP
-    REG_SP = 's',  // SP
-    REG_SB = 'b',  // SB
-    REG_PC = 'p',  // PC
-    REG_TOS = 't', // TOS
-    REG_EXT = 'e', // EXT
+    REG_FP = 'F',  // FP
+    REG_SP = 'S',  // SP
+    REG_SB = 'B',  // SB
+    REG_PC = 'P',  // PC
+    REG_TOS = 'T', // TOS
+    REG_EXT = 'E', // EXT
 };
 
-enum PregName : uint8_t {
+enum PregName : int8_t {
+    PREG_UNDEF   = -1,
     PREG_UPSR    = 0,  // UPSR/US
     PREG_FP      = 8,  // FP
     PREG_SP      = 9,  // SP
@@ -59,11 +62,11 @@ enum PregName : uint8_t {
     PREG_PSR     = 13, // PSR
     PREG_INTBASE = 14, // INTBASE
     PREG_MOD     = 15, // MOD
-    PREG_UNDEF   = 16,
 };
 
 #ifdef ENABLE_MMU
-enum MregName : uint8_t {
+enum MregName : int8_t {
+    MREG_UNDEF = -1,
     MREG_BPR0  = 0,  // BPR0
     MREG_BPR1  = 1,  // BPR1
     MREG_MSR   = 10, // MSR
@@ -71,7 +74,6 @@ enum MregName : uint8_t {
     MREG_PTB0  = 12, // PTB0
     MREG_PTB1  = 13, // PTB1
     MREG_EIA   = 15, // EIA
-    MREG_UNDEF = 16,
 };
 #endif
 
@@ -85,49 +87,49 @@ enum ConfigName : uint8_t {
 
 enum StrOptName : uint8_t {
     STROPT_UNDEF = 0,
-    STROPT_B = 2,  // Backward
-    STROPT_W = 4,  // While Match
-    STROPT_U = 12, // Until Match
+    STROPT_B     = 0x2,  // Backward
+    STROPT_W     = 0x4,  // While Match
+    STROPT_U     = 0xC, // Until Match
 };
 
 class RegNs32000 : public RegBase {
 public:
-    RegName parseRegName(const char *line) const;
-    RegName decodeRegName(uint8_t num, bool floating = false) const;
-    int8_t encodeRegName(RegName name) const;
-    uint8_t regNameLen(RegName name) const;
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
     char *outRegName(char *out, const RegName name) const;
-    bool isGeneric(RegName name) const;
+    static uint8_t encodeRegName(RegName name);
+    static bool isGeneric(RegName name);
 #ifdef ENABLE_FLOAT
-    bool isFloat(RegName name) const;
+    static RegName decodeRegName(uint8_t num, bool floating = false);
+    static bool isFloat(RegName name);
+#else
+    static RegName decodeRegName(uint8_t num);
 #endif
 
-    PregName parsePregName(const char *line) const;
-    PregName decodePregName(uint8_t num) const;
-    int8_t encodePregName(PregName name) const;
-    uint8_t pregNameLen(PregName name) const;
+    static PregName parsePregName(const char *line);
+    static uint8_t pregNameLen(PregName name);
     char *outPregName(char *out, PregName name) const;
+    static PregName decodePregName(uint8_t num);
+    static uint8_t encodePregName(PregName name);
 
 #ifdef ENABLE_MMU
-    MregName parseMregName(const char *line) const;
-    MregName decodeMregName(uint8_t num) const;
-    int8_t encodeMregName(MregName name) const;
-    uint8_t mregNameLen(MregName name) const;
+    static MregName parseMregName(const char *line);
+    static uint8_t mregNameLen(MregName name);
     char *outMregName(char *out, MregName name) const;
+    static MregName decodeMregName(uint8_t num);
+    static uint8_t encodeMregName(MregName name);
 #endif
 
-    ConfigName parseConfigName(const char *line) const;
-    ConfigName decodeConfigName(uint8_t num) const;
-    uint8_t configNameLen(ConfigName name) const;
-    char *outConfigName(char *out, ConfigName name) const;
+    static ConfigName parseConfigName(const char *line);
+    static uint8_t configNameLen(ConfigName name);
+    char *outConfigNames(char *out, uint8_t configs) const;
 
-    StrOptName parseStrOptName(const char *line) const;
-    StrOptName decodeStrOptName(uint8_t num) const;
-    uint8_t strOptNameLen(StrOptName name) const;
-    char *outStrOptName(char *out, StrOptName name) const;
+    static StrOptName parseStrOptName(const char *line);
+    static uint8_t strOptNameLen(StrOptName name);
+    char *outStrOptNames(char *out, uint8_t strOpts) const;
 
-    OprSize parseIndexSize(const char *line) const;
-    uint8_t indexSizeLen(OprSize size) const;
+    static OprSize parseIndexSize(const char *line);
+    static uint8_t indexSizeLen(OprSize size);
     char indexSizeChar(OprSize size) const;
 };
 

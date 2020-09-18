@@ -556,12 +556,13 @@ Error TableNs32000::searchOpCode(
         if (entry) {
             insn.setFlags(pgm_read_dword(&entry->flags));
             if (post) {
-                if (insn.readPost(memory)) return NO_MEMORY;
+                insn.readPost(memory);
+                if (_error.setError(insn)) return getError();
                 insn.setHasPost();
             }
-            const char *name =
+            const /*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+            insn.setName_P(name);
             return OK;
         }
     }

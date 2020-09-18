@@ -150,9 +150,9 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
     if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(pgm_read_byte(&entry->flags));
     if (insn.addrMode() == UNDF) return _error.setError(UNKNOWN_INSTRUCTION);
-    const char *name =
+    const /*PROGMEM*/ char *name =
         reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+    insn.setName_P(name);
     return _error.setOK();
 }
 

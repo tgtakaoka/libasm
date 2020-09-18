@@ -46,28 +46,6 @@ public:
         _ex2 = Entry::_ex2(flags);
         _hasPost = false;
     }
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-        _post = 0;
-    }
-    void setHasPost() { _hasPost = true; }
-    void setIndexByte(uint8_t data, OprPos pos) {
-        if (pos == P_GEN1) _indexByte1 = data;
-        if (pos == P_GEN2) _indexByte2 = data;
-    }
-
-    Config::opcode_t opCode() const { return _opCode; }
-    bool hasPrefix() const { return _prefix != 0; }
-    Config::opcode_t prefix() const { return _prefix; }
-    bool hasPost() const { return _hasPost; }
-    uint8_t post() const { return _post; }
-    Error readPost(DisMemory &memory) {
-        return readByte(memory, _post) ? NO_MEMORY : OK;
-    }
-    uint8_t indexByte(OprPos pos) const {
-        return pos == P_GEN1 ? _indexByte1 : _indexByte2;
-    }
 
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
         _src = Entry::_opr(src, P_NONE);
@@ -75,24 +53,56 @@ public:
         _ex1 = Entry::_opr(ex1, P_NONE);
         _ex2 = Entry::_ex2(ex2, P_NONE, SZ_NONE);
     }
+
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
+        _opCode = opCode;
+        _prefix = prefix;
+        _post = 0;
+    }
+
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
+
     void embedPost(Config::opcode_t data) {
         _post |= data;
     }
+
+    void setIndexByte(uint8_t data, OprPos pos) {
+        if (pos == P_GEN1) _indexByte1 = data;
+        if (pos == P_GEN2) _indexByte2 = data;
+    }
+
+    void readPost(DisMemory &memory) {
+        _post = readByte(memory);
+    }
+
+    void setHasPost() { _hasPost = true; }
+
+    Config::opcode_t opCode() const { return _opCode; }
+    bool hasPrefix() const { return _prefix != 0; }
+    Config::opcode_t prefix() const { return _prefix; }
+    bool hasPost() const { return _hasPost; }
+    uint8_t post() const { return _post; }
+    uint8_t indexByte(OprPos pos) const {
+        return pos == P_GEN1 ? _indexByte1 : _indexByte2;
+    }
+
     void emitInsn() {
         uint8_t pos = 0;
         if (hasPrefix()) emitByte(_prefix, pos++);
         emitByte(_opCode, pos++);
         if (hasPost()) emitByte(_post, pos);
     }
+
     void emitOperand8(uint8_t val8) {
         emitByte(val8, operandPos());
     }
+
     void emitOperand16(uint16_t val16) {
         emitUint16(val16, operandPos());
     }
+
     void emitOperand32(uint32_t val32) {
         emitUint32(val32, operandPos());
     }
@@ -110,7 +120,7 @@ private:
     uint8_t _indexByte2;
 
     uint8_t operandPos() {
-        uint8_t pos = _insn.length();
+        uint8_t pos = length();
         if (pos == 0) {
             if (hasPrefix()) pos++;
             pos++;

@@ -250,7 +250,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
             || table == M_WADDR || table == M_WDATA
             || table == M_RMEM  || table == M_WMEM
             || table == M_IADDR;
-    if (opr == M_PDEC)        
+    if (opr == M_PDEC)
         return table == M_RADDR || table == M_RDATA
             || table == M_WADDR || table == M_WDATA
             || table == M_RMEM  || table == M_WMEM
@@ -362,9 +362,9 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
         opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
     if (entry) {
         insn.setFlags(pgm_read_dword(&entry->flags));
-        const char *name =
+        const /*PROGMEM*/ char *name =
             reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        TableBase::setName(insn.insn(), name, Config::NAME_MAX);
+        insn.setName_P(name);
         return _error.setOK();
     }
     return _error.setError(UNKNOWN_INSTRUCTION);

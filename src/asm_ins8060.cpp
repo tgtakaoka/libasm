@@ -25,7 +25,7 @@ Error AsmIns8060::encodeRel8(
     Config::ptrdiff_t delta;
     if (op.mode == DISP) {
         delta = op.val;     // E(Pn)
-        insn.embed(_regs.encodePointerReg(op.reg));
+        insn.embed(RegIns8060::encodePointerReg(op.reg));
     } else {
         // PC points the last byte of instruction.
         const Config::uintptr_t base = insn.address() + 1;
@@ -37,7 +37,7 @@ Error AsmIns8060::encodeRel8(
         delta = target - base;
         // delta -128 is for E reg.
         if (delta <= -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
-        insn.embed(_regs.encodePointerReg(REG_PC));
+        insn.embed(RegIns8060::encodePointerReg(REG_PC));
     }
     insn.emitInsn();
     insn.emitByte(static_cast<uint8_t>(delta));
@@ -47,7 +47,7 @@ Error AsmIns8060::encodeRel8(
 Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
     if (op.mode == REL8)
         return encodeRel8(insn, op);
-    insn.embed(_regs.encodePointerReg(op.reg));
+    insn.embed(RegIns8060::encodePointerReg(op.reg));
     if (op.mode == INDX) { // auto displacement mode
         if (insn.addrMode() != INDX) return setError(OPERAND_NOT_ALLOWED);
         insn.embed(4);
@@ -67,12 +67,12 @@ Error AsmIns8060::parseOperand(Operand &op) {
     const bool autoDisp = (*p == '@');
     if (autoDisp) p++;
 
-    const RegName reg = _regs.parseRegister(p);
+    const RegName reg = RegIns8060::parseRegName(p);
     if (reg == REG_E) {
-        p += _regs.regNameLen(reg);
+        p += RegIns8060::regNameLen(reg);
         op.val = 0x80;
     } else if (reg != REG_UNDEF) {
-        _scan = p + _regs.regNameLen(reg);
+        _scan = p + RegIns8060::regNameLen(reg);
         op.mode = PNTR;
         op.reg = reg;
         return OK;
@@ -85,10 +85,10 @@ Error AsmIns8060::parseOperand(Operand &op) {
     p = skipSpaces(p);
     if (*p == '(') {
         p++;
-        const RegName base = _regs.parsePointerReg(p);
-        if (base == REG_UNDEF)
+        const RegName base = RegIns8060::parseRegName(p);
+        if (!RegIns8060::isPointerReg(base))
             return setError(UNKNOWN_OPERAND);
-        p += _regs.regNameLen(base);
+        p += RegIns8060::regNameLen(base);
         if (*p != ')') return setError(MISSING_CLOSING_PAREN);
         _scan = p + 1;
         op.reg = base;
@@ -126,7 +126,7 @@ Error AsmIns8060::encode(Insn &_insn) {
         encodeRel8(insn, op);
         break;
     case PNTR:
-        insn.embed(_regs.encodePointerReg(op.reg));
+        insn.embed(RegIns8060::encodePointerReg(op.reg));
         insn.emitInsn();
         break;
     case DISP:
