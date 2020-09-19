@@ -462,11 +462,11 @@ static void test_inherent() {
 }
 
 static void test_restart() {
-    TEST(RST, "00H", 0xC7);
-    TEST(RST, "08H", 0xCF);
-    TEST(RST, "10H", 0xD7);
-    TEST(RST, "18H", 0xDF);
-    TEST(RST, "20H", 0xE7);
+    TEST(RST, "0",   0xC7);
+    TEST(RST, "8",   0xCF);
+    TEST(RST, "16",  0xD7);
+    TEST(RST, "24",  0xDF);
+    TEST(RST, "32",  0xE7);
     TEST(RST, "28H", 0xEF);
     TEST(RST, "30H", 0xF7);
     TEST(RST, "38H", 0xFF);
@@ -483,10 +483,10 @@ static void test_relative() {
         ATEST(0x1000, JR,   "C,0F82H",  0x38, 0x80);
 
         disassembler.setRelativeTarget(true);
-        ATEST(0x2000, JR, "$-7EH", 0x18, 0x80);
+        ATEST(0x2000, JR, "$-126", 0x18, 0x80);
         ATEST(0x2000, JR, "$",     0x18, 0xFE);
         ATEST(0x2000, JR, "$+2",   0x18, 0x00);
-        ATEST(0x2000, JR, "$+81H", 0x18, 0x7F);
+        ATEST(0x2000, JR, "$+129", 0x18, 0x7F);
     } else {
         ETEST(UNKNOWN_INSTRUCTION, _, "", 0x10);
         ETEST(UNKNOWN_INSTRUCTION, _, "", 0x18);

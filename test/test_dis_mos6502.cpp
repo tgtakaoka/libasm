@@ -792,10 +792,10 @@ static void test_rel() {
     }
 
     disassembler.setRelativeTarget(true);
-    ATEST(0x2000, BPL, "*-$7E", 0x10, 0x80);
+    ATEST(0x2000, BPL, "*-126", 0x10, 0x80);
     ATEST(0x2000, BPL, "*",     0x10, 0xFE);
     ATEST(0x2000, BPL, "*+2",   0x10, 0x00);
-    ATEST(0x2000, BPL, "*+$81", 0x10, 0x7F);
+    ATEST(0x2000, BPL, "*+129", 0x10, 0x7F);
 }
 
 static void test_bitop() {

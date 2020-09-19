@@ -16,7 +16,7 @@
       ASL  >$000F
       ASL  $0100
       BPL  *+19
-      BPL  *-$7E
+      BPL  *-126
       BPL  *
       ORA  ($12),Y
       ORA  ($13)
@@ -48,8 +48,8 @@
       AND  $0100
       ROL  >$002F
       ROL  $0100
-      BMI  *+$33
-      BMI  *-$7E
+      BMI  *+51
+      BMI  *-126
       BMI  *
       AND  ($32),Y
       AND  ($33)
@@ -79,8 +79,8 @@
       EOR  $0100
       LSR  >$004F
       LSR  $0100
-      BVC  *+$53
-      BVC  *-$7E
+      BVC  *+83
+      BVC  *-126
       BVC  *
       EOR  ($52),Y
       EOR  ($53)
@@ -108,8 +108,8 @@
       ADC  $0100
       ROR  >$006F
       ROR  $0100
-      BVS  *+$73
-      BVS  *-$7E
+      BVS  *+115
+      BVS  *-126
       BVS  *
       ADC  ($72),Y
       ADC  ($73)
@@ -126,7 +126,7 @@
       ADC  $0100,X
       ROR  >$007F,X
       ROR  $0100,X
-      BRA  *-$7D
+      BRA  *-125
       BRA  *
       BRA  *+1
       STA  ($82,X)
@@ -142,7 +142,7 @@
       STA  $0100
       STX  >$008F
       STX  $0100
-      BCC  *-$6D
+      BCC  *-109
       BCC  *
       BCC  *+1
       STA  ($92),Y
@@ -175,7 +175,7 @@
       LDA  $0100
       LDX  >$00AF
       LDX  $0100
-      BCS  *-$4D
+      BCS  *-77
       BCS  *
       BCS  *+1
       LDA  ($B2),Y
@@ -207,7 +207,7 @@
       CMP  $0100
       DEC  >$00CF
       DEC  $0100
-      BNE  *-$2D
+      BNE  *-45
       BNE  *
       BNE  *+1
       CMP  ($D2),Y

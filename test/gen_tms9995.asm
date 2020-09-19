@@ -107,43 +107,43 @@
       SRC  R0,R0
       SRC  R0,1
       JMP  $+2
-      JMP  $-0FEH
+      JMP  $-254
       JMP  $
       JLT  $+2
-      JLT  $-0FEH
+      JLT  $-254
       JLT  $
       JLE  $+2
-      JLE  $-0FEH
+      JLE  $-254
       JLE  $
       JEQ  $+2
-      JEQ  $-0FEH
+      JEQ  $-254
       JEQ  $
       JHE  $+2
-      JHE  $-0FEH
+      JHE  $-254
       JHE  $
       JGT  $+2
-      JGT  $-0FEH
+      JGT  $-254
       JGT  $
       JNE  $+2
-      JNE  $-0FEH
+      JNE  $-254
       JNE  $
       JNC  $+2
-      JNC  $-0FEH
+      JNC  $-254
       JNC  $
       JOC  $+2
-      JOC  $-0FEH
+      JOC  $-254
       JOC  $
       JNO  $+2
-      JNO  $-0FEH
+      JNO  $-254
       JNO  $
       JL   $+2
-      JL   $-0FEH
+      JL   $-254
       JL   $
       JH   $+2
-      JH   $-0FEH
+      JH   $-254
       JH   $
       JOP  $+2
-      JOP  $-0FEH
+      JOP  $-254
       JOP  $
       SBO  0
       SBO  -128

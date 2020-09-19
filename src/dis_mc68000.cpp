@@ -36,11 +36,11 @@ char *DisMc68000::outOprSize(char *out, OprSize size) {
 Error DisMc68000::decodeImmediateData(
     DisMemory &memory, InsnMc68000 &insn, char *out, OprSize size) {
     if (size == SZ_BYTE) {
-        outConstant(out, static_cast<uint8_t>(insn.readUint16(memory)));
+        outHex(out, insn.readUint16(memory), 8);
     } else if (size == SZ_WORD) {
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
     } else if (size == SZ_LONG) {
-        outConstant(out, insn.readUint32(memory));
+        outHex(out, insn.readUint32(memory), 32);
     }
     return setError(insn);
 }
@@ -72,15 +72,9 @@ Error DisMc68000::decodeEffectiveAddr(
                 return setError(OPERAND_NOT_ALIGNED);
             if (ea.size == SZ_LONG && (target % 4) != 0)
                 return setError(OPERAND_NOT_ALIGNED);
-            out = outRelativeAddr(out, target, insn.address(), 16);
+            out = outRelAddr(out, target, insn.address(), 16);
         } else {
-            if (val16 & 0x8000) {
-                const uint16_t disp16 = 0x10000 - val16;
-                *out++ = '-';
-                out = outConstant(out, disp16);
-            } else {
-                out = outConstant(out, val16);
-            }
+            out = outHex(out, val16, -16);
         }
         *out++ = ',';
         out = outRegName(out, base);
@@ -99,7 +93,7 @@ Error DisMc68000::decodeEffectiveAddr(
             return setError(OPERAND_NOT_ALIGNED);
         if (ea.size == SZ_LONG && (target % 4) != 0)
             return setError(OPERAND_NOT_ALIGNED);
-        out = outAddress(out, target, nullptr, false, addressWidth());
+        out = outAbsAddr(out, target, addressWidth());
     }
     if (mode == M_INDX || mode == M_PCIDX) {
         const RegName base = (mode == M_INDX) ? ea.reg : REG_PC;
@@ -109,15 +103,9 @@ Error DisMc68000::decodeEffectiveAddr(
         if (mode == M_PCIDX) {
             const Config::uintptr_t target =
                 insn.address() + 2 + static_cast<int8_t>(val8);
-            out = outRelativeAddr(out, target, insn.address(), 8);
+            out = outRelAddr(out, target, insn.address(), 8);
         } else {
-            if (val8 & 0x80) {
-                const uint8_t disp8 = 0x100 - val8;
-                *out++ = '-';
-                out = outConstant(out, disp8);
-            } else {
-                out = outConstant(out, val8);
-            }
+            out = outHex(out, val8, -8);
         }
         *out++ = ',';
         out = outRegName(out, base);
@@ -142,7 +130,7 @@ Error DisMc68000::decodeRelative(
         target += static_cast<int16_t>(insn.readUint16(memory));
     }
     if (target % 2) return setError(OPERAND_NOT_ALIGNED);
-    outRelativeAddr(out, target, insn.address(), rel8 ? 8 : 16);
+    outRelAddr(out, target, insn.address(), rel8 ? 8 : 16);
     return setError(insn);
 }
 
@@ -223,29 +211,29 @@ Error DisMc68000::decodeOperand(
         r = (insn.opCode() >> 9) & 7;
         if (r == 0) r = 8;
         *out++ = '#';
-        outConstant(out, r, 10);
+        outDec(out, r, 4);
         break;
     case M_IM8:
         *out++ = '#';
-        outConstant(out, static_cast<uint8_t>(insn.opCode()), -16);
+        outHex(out, insn.opCode(), -8);
         break;
     case M_IMBIT:
         if (s == SZ_BYTE && opr16 >= 8) return setError(ILLEGAL_BIT_NUMBER);
         if (s == SZ_WORD && opr16 >= 16) return setError(ILLEGAL_BIT_NUMBER);
         if (s == SZ_LONG && opr16 >= 32) return setError(ILLEGAL_BIT_NUMBER);
         *out++ = '#';
-        outConstant(out, static_cast<uint8_t>(opr16), 10);
+        outDec(out, opr16, 5);
         break;
     case M_IMDAT:
         *out++ = '#';
         return decodeImmediateData(memory, insn, out, s);
     case M_IMVEC:
         *out++ = '#';
-        outConstant(out, static_cast<uint8_t>(insn.opCode() & 0xF), 10);
+        outDec(out, insn.opCode() & 0xF, 4);
         break;
     case M_IMDSP:
         *out++ = '#';
-        outConstant(out, opr16, -16);
+        outHex(out, opr16, -16);
         break;
     case M_MULT:
         if (opr16 == 0) return setError(OPCODE_HAS_NO_EFFECT);

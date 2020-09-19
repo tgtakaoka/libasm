@@ -27,7 +27,7 @@ char *DisI8051::outRegister(char *out, RegName regName) {
 Error DisI8051::decodeRelative(DisMemory &memory, InsnI8051 &insn, char *out) {
     const Config::ptrdiff_t delta = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
-    outRelativeAddr(out, target, insn.address(), 8);
+    outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }
 
@@ -35,9 +35,9 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out) {
     uint8_t val8 = insn.readByte(memory);
     const uint8_t addr8 = (val8 & 0x80) ? (val8 & ~7) : ((val8 >> 3) + 0x20);
     val8 &= 7;
-    out = outAddress(out, addr8);
+    out = outAbsAddr(out, addr8);
     *out++ = '.';
-    outConstant(out, val8, 10);
+    outHex(out, val8, 3);
     return setError(insn);
 }
 
@@ -51,15 +51,15 @@ Error DisI8051::decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode) {
 Error DisI8051::decodeAddress(
     DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     if (mode == ADR8) {
-        outAddress(out, insn.readByte(memory));
+        outAbsAddr(out, insn.readByte(memory));
     } else if (mode == ADR11) {
         const uint8_t val8 = insn.readByte(memory);
         Config::uintptr_t addr = (insn.address() + insn.length()) & 0xF800;
         addr |= (insn.opCode() & 0xE0) << 3;
         addr |= val8;
-        outAddress(out, addr);
+        outAbsAddr(out, addr);
     } else {
-        outAddress(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory));
     }
     return setError(insn);
 }
@@ -68,9 +68,9 @@ Error DisI8051::decodeImmediate(
     DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     *out++ = '#';
     if (mode == IMM8) {
-        outConstant(out, insn.readByte(memory));
+        outHex(out, insn.readByte(memory), 8);
     } else {
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
     }
     return setError(insn);
 }
@@ -142,9 +142,9 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (dst == ADR8 && src == ADR8) { // MOV dst,src
         const uint8_t src8 = insn.readByte(memory);
         const uint8_t dst8 = insn.readByte(memory);
-        out = outAddress(out, dst8);
+        out = outAbsAddr(out, dst8);
         *out++ = ',';
-        out = outAddress(out, src8);
+        out = outAbsAddr(out, src8);
     } else {
         if (dst != NONE) {
             if (decodeOperand(memory, insn, out, dst)) return getError();

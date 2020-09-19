@@ -6624,52 +6624,52 @@
       POP    BP
       POP    SI
       POP    DI
-      JO     $+73H
-      JO     $-7EH
+      JO     $+115
+      JO     $-126
       JO     $
-      JNO    $+74H
-      JNO    $-7EH
+      JNO    $+116
+      JNO    $-126
       JNO    $
-      JB     $+75H
-      JB     $-7EH
+      JB     $+117
+      JB     $-126
       JB     $
-      JAE    $+76H
-      JAE    $-7EH
+      JAE    $+118
+      JAE    $-126
       JAE    $
-      JE     $+77H
-      JE     $-7EH
+      JE     $+119
+      JE     $-126
       JE     $
-      JNE    $+78H
-      JNE    $-7EH
+      JNE    $+120
+      JNE    $-126
       JNE    $
-      JBE    $+79H
-      JBE    $-7EH
+      JBE    $+121
+      JBE    $-126
       JBE    $
-      JA     $+7AH
-      JA     $-7EH
+      JA     $+122
+      JA     $-126
       JA     $
-      JS     $+7BH
-      JS     $-7EH
+      JS     $+123
+      JS     $-126
       JS     $
-      JNS    $+7CH
-      JNS    $-7EH
+      JNS    $+124
+      JNS    $-126
       JNS    $
-      JPE    $+7DH
-      JPE    $-7EH
+      JPE    $+125
+      JPE    $-126
       JPE    $
-      JPO    $+7EH
-      JPO    $-7EH
+      JPO    $+126
+      JPO    $-126
       JPO    $
-      JL     $+7FH
-      JL     $-7EH
+      JL     $+127
+      JL     $-126
       JL     $
-      JGE    $+80H
-      JGE    $-7EH
+      JGE    $+128
+      JGE    $-126
       JGE    $
-      JLE    $+81H
-      JLE    $-7EH
+      JLE    $+129
+      JLE    $-126
       JLE    $
-      JG     $-7EH
+      JG     $-126
       JG     $
       JG     $+1
       ADD    BYTE PTR [BX+DI+8200H],0

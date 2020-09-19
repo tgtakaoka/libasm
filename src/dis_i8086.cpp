@@ -55,25 +55,25 @@ Error DisI8086::decodeRelative(
         disp = static_cast<int16_t>(insn.readUint16(memory));
     }
     const Config::uintptr_t target = insn.address() + insn.length() + disp;
-    outRelativeAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
+    outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
     return setError(insn);
 }
 
 Error DisI8086::decodeImmediate(
     DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
     if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
     } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
-        outConstant(out, insn.readByte(memory));
+        outHex(out, insn.readByte(memory), 8);
     } else if (mode == M_IMM8) {
-        outConstant(out, insn.readByte(memory), -16);
+        outHex(out, insn.readByte(memory), -8);
     } else {
         // M_FAR
         const uint16_t offset  = insn.readUint16(memory);
         const uint16_t segment = insn.readUint16(memory);
-        out = outAddress(out, segment);
+        out = outAbsAddr(out, segment);
         *out++ = ':';
-        outAddress(out, offset);
+        outAbsAddr(out, offset);
     }
     return setError(insn);
 }
@@ -161,11 +161,11 @@ Error DisI8086::outMemReg(
     if (mod == 1) {
         const int8_t disp8 = static_cast<int8_t>(insn.readByte(memory));
         if (disp8 >= 0) *out++ = sep;
-        out = outConstant(out, disp8, 10);
+        out = outDec(out, disp8, -8);
     }
     if (mod == 2 || (mod == 0 && r_m == 6)) {
         if (sep) *out++ = sep;
-        out = outAddress(out, insn.readUint16(memory));
+        out = outAbsAddr(out, insn.readUint16(memory));
     }
     *out++ = ']';
     *out = 0;
@@ -223,8 +223,8 @@ Error DisI8086::decodeOperand(
     case M_BMEM:
     case M_WMEM:
         return decodeMemReg(memory, insn, out, mode, pos);
-    case M_VAL1: outConstant(out, static_cast<uint8_t>(1)); break;
-    case M_VAL3: outConstant(out, static_cast<uint8_t>(3)); break;
+    case M_VAL1: outHex(out, 1, 3); break;
+    case M_VAL3: outHex(out, 3, 3); break;
     case M_IMM:
     case M_IMM8:
     case M_FAR:

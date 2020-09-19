@@ -54,8 +54,8 @@ const char *DisDirective::getCpu( bool withBytes) {
 }
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {
-    _disassembler.getFormatter().output(
-        _operands, origin, 16, false, _disassembler.addressWidth());
+    _disassembler.getFormatter().formatHex(
+        _operands, origin, _disassembler.addressWidth(), false);
     _listing.reset(*this);
     _address = origin;
     _generated_size = 0;

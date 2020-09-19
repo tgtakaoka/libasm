@@ -36,7 +36,7 @@ char *DisZ8000::outImmediate(char *out, uint8_t data, AddrMode mode) {
     if (mode == M_QCNT)
         val = (data & 2) ? 2 : 1;
     *out++ = '#';
-    return outConstant(out, val, 16);
+    return outHex(out, val, 8);
 }
 
 Error DisZ8000::decodeImmediate(
@@ -61,15 +61,15 @@ Error DisZ8000::decodeImmediate(
             return setError(ILLEGAL_OPERAND);
         if (size == SZ_LONG && data > 32)
             return setError(ILLEGAL_OPERAND);
-        outConstant(out, data, 10);
+        outDec(out, data, 6);
     } else if (mode == M_IO) {
-        outAddress(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory));
     } else if (size == SZ_BYTE) {
-        outConstant(out, static_cast<uint8_t>(insn.readUint16(memory)));
+        outHex(out, insn.readUint16(memory), 8);
     } else if (size == SZ_WORD) {
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
     } else if (size == SZ_LONG) {
-        outConstant(out, insn.readUint32(memory));
+        outHex(out, insn.readUint32(memory), 32);
     }
     return setError(insn);
 }
@@ -120,9 +120,10 @@ Error DisZ8000::decodeBaseAddressing(
     *out++ = '(';
     if (mode == M_BA) {
         *out++ = '#';
-        out = outConstant(out, insn.readUint16(memory), -16);
+        out = outHex(out, insn.readUint16(memory), -16);
     } else { // M_BX
-        if (decodeGeneralRegister(out, insn.post() >> 8, SZ_WORD)) return getError();
+        if (decodeGeneralRegister(out, insn.post() >> 8, SZ_WORD))
+            return getError();
         out += strlen(out);
     }
     *out++ = ')';
@@ -169,9 +170,9 @@ Error DisZ8000::decodeDirectAddress(
             off = insn.readUint16(memory);
         }
         const uint32_t linear = seg | off;
-        outAddress(out, linear, nullptr, false, addressWidth());
+        outAbsAddr(out, linear, addressWidth());
     } else {
-        outAddress(out, addr, nullptr, false, addressWidth());
+        outAbsAddr(out, addr);
     }
     return setError(insn);
 }
@@ -200,7 +201,7 @@ Error DisZ8000::decodeRelativeAddressing(
     const Config::uintptr_t target = base + delta;
     if (mode == M_RA12 && (target % 2) != 0)
         return setError(OPERAND_NOT_ALIGNED);
-    outRelativeAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
+    outRelAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
     return setError(insn);
 }
 

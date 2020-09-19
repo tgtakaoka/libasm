@@ -27,21 +27,21 @@ char *DisMc6800::outRegister(char *out, RegName regName) {
 Error DisMc6800::decodeDirectPage(
     DisMemory &memory, InsnMc6800& insn, char *out) {
     const uint8_t dir = insn.readByte(memory);
-    outAddress(out, dir, PSTR("<"));
+    outAbsAddr(out, dir, 8, PSTR("<"));
     return setError(insn);
 }
 
 Error DisMc6800::decodeExtended(
     DisMemory &memory, InsnMc6800 &insn, char *out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    outAddress(out, addr, PSTR(">"), addr < 0x100);
+    outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     return setError(insn);
 }
 
 Error DisMc6800::decodeIndexed(
     DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode) {
     const uint8_t disp8 = insn.readByte(memory);
-    out = outConstant(out, disp8, 10);
+    out = outDec(out, disp8, 8);
     *out++ = ',';
     outRegister(out, mode == M_IDY ? REG_Y : REG_X);
     return setError(insn);
@@ -52,7 +52,7 @@ Error DisMc6800::decodeRelative(
     const int8_t delta8 = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t base = insn.address() + insn.length();
     const Config::uintptr_t target = base + delta8;
-    outRelativeAddr(out, target, insn.address(), 8);
+    outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }
 
@@ -60,9 +60,9 @@ Error DisMc6800::decodeImmediate(
     DisMemory &memory, InsnMc6800 &insn,char *out) {
     *out++ = '#';
     if (insn.size() == SZ_BYTE) {
-        outConstant(out, insn.readByte(memory));
+        outHex(out, insn.readByte(memory), 8);
     } else { // SZ_WORD
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
     }
     return setError(insn);
 }
@@ -82,10 +82,10 @@ Error DisMc6800::decodeBitNumber(
     if (bitNum >= 0) {
         if (TableMc6800.searchOpCodeAlias(insn))
             return setError(TableMc6800.getError());
-        outConstant(out, bitNum);
+        outHex(out, bitNum, 3);
     } else {
         *out++ = '#';
-        outConstant(out, val8);
+        outHex(out, val8, 8);
     }
     return setError(insn);
 }

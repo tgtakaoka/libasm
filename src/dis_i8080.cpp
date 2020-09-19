@@ -55,7 +55,7 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
         out = outRegister(out, RegI8080::decodeDataReg(opCode));
         break;
     case VECTOR_NO:
-        out = outConstant(out, static_cast<uint8_t>((opCode >> 3) & 7));
+        out = outHex(out, (opCode >> 3) & 7, 3);
         break;
     default:
         break;
@@ -64,17 +64,17 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
     switch (insn.addrMode()) {
     case IMM8:
         if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
-        outConstant(out, insn.readByte(memory));
+        outHex(out, insn.readByte(memory), 8);
         break;
     case IMM16:
         if (insn.insnFormat() != NO_FORMAT) *out++ = ',';
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
         break;
     case DIRECT:
-        outAddress(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory));
         break;
     case IOADR:
-        outAddress(out, insn.readByte(memory));
+        outAbsAddr(out, insn.readByte(memory));
         break;
     default:
         break;

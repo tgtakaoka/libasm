@@ -40,8 +40,8 @@
       BTST.B  D0,($000139).W
       BTST.B  D0,($00013A).L
       BTST.B  D0,(*+$013D,PC)
-      BTST.B  D0,(*+$3E,PC,D0.W)
-      BTST.B  D0,(*-$7E,PC,D0.W)
+      BTST.B  D0,(*+62,PC,D0.W)
+      BTST.B  D0,(*-126,PC,D0.W)
       BTST.B  D0,(*,PC,D0.W)
       BCHG.L  D0,D0
       MOVEP.L ($0149,A0),D0
@@ -167,8 +167,8 @@
       BTST.B  #0,($000839).W
       BTST.B  #0,($3A0000).L
       BTST.B  #0,(*+$083D,PC)
-      BTST.B  #0,(*+$3E,PC,D0.L)
-      BTST.B  #0,(*-$7E,PC,D0.L)
+      BTST.B  #0,(*+62,PC,D0.L)
+      BTST.B  #0,(*-126,PC,D0.L)
       BTST.B  #0,(*,PC,D0.L)
       BCHG.L  #0,D0
       BCHG.B  #0,(A0)
@@ -199,8 +199,8 @@
       BSET.B  #0,($FA0000).L
       BTST.B  D4,($31,A0,D0.L)
       BTST.B  D4,(-$80,A0,D0.L)
-      BTST.B  D4,(*+$3E,PC,D0.L)
-      BTST.B  D4,(*-$7E,PC,D0.L)
+      BTST.B  D4,(*+62,PC,D0.L)
+      BTST.B  D4,(*-126,PC,D0.L)
       BTST.B  D4,(*,PC,D0.L)
       BCHG.B  D4,($71,A0,D0.L)
       BCHG.B  D4,(-$80,A0,D0.L)
@@ -272,8 +272,8 @@
       MOVE.B  ($001039).W,D0
       MOVE.B  ($00103A).L,D0
       MOVE.B  (*+$103D,PC),D0
-      MOVE.B  (*+$3E,PC,D1.W),D0
-      MOVE.B  (*-$7E,PC,D1.W),D0
+      MOVE.B  (*+62,PC,D1.W),D0
+      MOVE.B  (*-126,PC,D1.W),D0
       MOVE.B  (*,PC,D1.W),D0
       MOVE.B  #$3D,D0
       MOVE.B  D0,(A0)
@@ -286,7 +286,7 @@
       MOVE.B  ($0010B9).W,(A0)
       MOVE.B  ($0010BA).L,(A0)
       MOVE.B  (*+$10BD,PC),(A0)
-      MOVE.B  (*-$42,PC,D1.W),(A0)
+      MOVE.B  (*-66,PC,D1.W),(A0)
       MOVE.B  (*,PC,D1.W),(A0)
       MOVE.B  (*+1,PC,D1.W),(A0)
       MOVE.B  #$BD,(A0)
@@ -314,8 +314,8 @@
       MOVE.B  ($001139).W,-(A0)
       MOVE.B  ($00113A).L,-(A0)
       MOVE.B  (*+$113D,PC),-(A0)
-      MOVE.B  (*+$3E,PC,D1.W),-(A0)
-      MOVE.B  (*-$7E,PC,D1.W),-(A0)
+      MOVE.B  (*+62,PC,D1.W),-(A0)
+      MOVE.B  (*-126,PC,D1.W),-(A0)
       MOVE.B  (*,PC,D1.W),-(A0)
       MOVE.B  #$3D,-(A0)
       MOVE.B  D0,($1141,A0)
@@ -374,12 +374,12 @@
       MOVE.B  #0,($FD0000).L
       MOVE.B  ($31,A0,D1.L),D4
       MOVE.B  (-$80,A0,D1.L),D4
-      MOVE.B  (*+$3E,PC,D1.L),D4
-      MOVE.B  (*-$7E,PC,D1.L),D4
+      MOVE.B  (*+62,PC,D1.L),D4
+      MOVE.B  (*-126,PC,D1.L),D4
       MOVE.B  (*,PC,D1.L),D4
       MOVE.B  (-$4F,A0,D1.L),(A4)
       MOVE.B  (0,A0,D1.L),(A4)
-      MOVE.B  (*-$42,PC,D1.L),(A4)
+      MOVE.B  (*-66,PC,D1.L),(A4)
       MOVE.B  (*,PC,D1.L),(A4)
       MOVE.B  (*+1,PC,D1.L),(A4)
       MOVE.B  (-15,A0,D1.L),(A4)+
@@ -389,8 +389,8 @@
       MOVE.B  (*+1,PC,D1.L),(A4)+
       MOVE.B  ($31,A0,D1.L),-(A4)
       MOVE.B  (-$80,A0,D1.L),-(A4)
-      MOVE.B  (*+$3E,PC,D1.L),-(A4)
-      MOVE.B  (*-$7E,PC,D1.L),-(A4)
+      MOVE.B  (*+62,PC,D1.L),-(A4)
+      MOVE.B  (*-126,PC,D1.L),-(A4)
       MOVE.B  (*,PC,D1.L),-(A4)
       MOVE.B  D0,(-$7F,A4,D1.L)
       MOVE.B  D0,(0,A4,D1.L)
@@ -421,8 +421,8 @@
       MOVE.L  ($31,A0,D2.W),D0
       MOVE.L  (-$80,A0,D2.W),D0
       MOVE.L  ($00203C).W,D0
-      MOVE.L  (*+$3E,PC,D2.W),D0
-      MOVE.L  (*-$7E,PC,D2.W),D0
+      MOVE.L  (*+62,PC,D2.W),D0
+      MOVE.L  (*-126,PC,D2.W),D0
       MOVE.L  (*,PC,D2.W),D0
       MOVE.L  #$0000203D,D0
       MOVEA.L D0,A0
@@ -434,8 +434,8 @@
       MOVEA.L ($71,A0,D2.W),A0
       MOVEA.L (-$80,A0,D2.W),A0
       MOVEA.L ($00207C).W,A0
-      MOVEA.L (*+$7E,PC,D2.W),A0
-      MOVEA.L (*-$7E,PC,D2.W),A0
+      MOVEA.L (*+126,PC,D2.W),A0
+      MOVEA.L (*-126,PC,D2.W),A0
       MOVEA.L (*,PC,D2.W),A0
       MOVEA.L #$0000207D,A0
       MOVE.L  D0,(A0)
@@ -447,7 +447,7 @@
       MOVE.L  (-$4F,A0,D2.W),(A0)
       MOVE.L  (0,A0,D2.W),(A0)
       MOVE.L  ($0020BC).W,(A0)
-      MOVE.L  (*-$42,PC,D2.W),(A0)
+      MOVE.L  (*-66,PC,D2.W),(A0)
       MOVE.L  (*,PC,D2.W),(A0)
       MOVE.L  (*+1,PC,D2.W),(A0)
       MOVE.L  #$000020BD,(A0)
@@ -473,8 +473,8 @@
       MOVE.L  ($31,A0,D2.W),-(A0)
       MOVE.L  (-$80,A0,D2.W),-(A0)
       MOVE.L  ($00213C).W,-(A0)
-      MOVE.L  (*+$3E,PC,D2.W),-(A0)
-      MOVE.L  (*-$7E,PC,D2.W),-(A0)
+      MOVE.L  (*+62,PC,D2.W),-(A0)
+      MOVE.L  (*-126,PC,D2.W),-(A0)
       MOVE.L  (*,PC,D2.W),-(A0)
       MOVE.L  #$0000213D,-(A0)
       MOVE.L  D0,($2141,A0)
@@ -527,17 +527,17 @@
       MOVE.L  #$000023FD,($000000).L
       MOVE.L  ($31,A0,D2.L),D4
       MOVE.L  (-$80,A0,D2.L),D4
-      MOVE.L  (*+$3E,PC,D2.L),D4
-      MOVE.L  (*-$7E,PC,D2.L),D4
+      MOVE.L  (*+62,PC,D2.L),D4
+      MOVE.L  (*-126,PC,D2.L),D4
       MOVE.L  (*,PC,D2.L),D4
       MOVEA.L ($71,A0,D2.L),A4
       MOVEA.L (-$80,A0,D2.L),A4
-      MOVEA.L (*+$7E,PC,D2.L),A4
-      MOVEA.L (*-$7E,PC,D2.L),A4
+      MOVEA.L (*+126,PC,D2.L),A4
+      MOVEA.L (*-126,PC,D2.L),A4
       MOVEA.L (*,PC,D2.L),A4
       MOVE.L  (-$4F,A0,D2.L),(A4)
       MOVE.L  (0,A0,D2.L),(A4)
-      MOVE.L  (*-$42,PC,D2.L),(A4)
+      MOVE.L  (*-66,PC,D2.L),(A4)
       MOVE.L  (*,PC,D2.L),(A4)
       MOVE.L  (*+1,PC,D2.L),(A4)
       MOVE.L  (-15,A0,D2.L),(A4)+
@@ -547,8 +547,8 @@
       MOVE.L  (*+1,PC,D2.L),(A4)+
       MOVE.L  ($31,A0,D2.L),-(A4)
       MOVE.L  (-$80,A0,D2.L),-(A4)
-      MOVE.L  (*+$3E,PC,D2.L),-(A4)
-      MOVE.L  (*-$7E,PC,D2.L),-(A4)
+      MOVE.L  (*+62,PC,D2.L),-(A4)
+      MOVE.L  (*-126,PC,D2.L),-(A4)
       MOVE.L  (*,PC,D2.L),-(A4)
       MOVE.L  D0,(-$7F,A4,D2.L)
       MOVE.L  D0,(0,A4,D2.L)
@@ -579,8 +579,8 @@
       MOVE.W  (-$80,A0,D3.W),D0
       MOVE.W  ($00303A).W,D0
       MOVE.W  (*+$303E,PC),D0
-      MOVE.W  (*+$3E,PC,D3.W),D0
-      MOVE.W  (*-$7E,PC,D3.W),D0
+      MOVE.W  (*+62,PC,D3.W),D0
+      MOVE.W  (*-126,PC,D3.W),D0
       MOVE.W  (*,PC,D3.W),D0
       MOVE.W  #$303D,D0
       MOVEA.W D0,A0
@@ -593,8 +593,8 @@
       MOVEA.W (-$80,A0,D3.W),A0
       MOVEA.W ($00307A).W,A0
       MOVEA.W (*+$307E,PC),A0
-      MOVEA.W (*+$7E,PC,D3.W),A0
-      MOVEA.W (*-$7E,PC,D3.W),A0
+      MOVEA.W (*+126,PC,D3.W),A0
+      MOVEA.W (*-126,PC,D3.W),A0
       MOVEA.W (*,PC,D3.W),A0
       MOVEA.W #$307D,A0
       MOVE.W  D0,(A0)
@@ -607,7 +607,7 @@
       MOVE.W  (0,A0,D3.W),(A0)
       MOVE.W  ($0030BA).W,(A0)
       MOVE.W  (*+$30BE,PC),(A0)
-      MOVE.W  (*-$42,PC,D3.W),(A0)
+      MOVE.W  (*-66,PC,D3.W),(A0)
       MOVE.W  (*,PC,D3.W),(A0)
       MOVE.W  (*+1,PC,D3.W),(A0)
       MOVE.W  #$30BD,(A0)
@@ -635,8 +635,8 @@
       MOVE.W  (-$80,A0,D3.W),-(A0)
       MOVE.W  ($00313A).W,-(A0)
       MOVE.W  (*+$313E,PC),-(A0)
-      MOVE.W  (*+$3E,PC,D3.W),-(A0)
-      MOVE.W  (*-$7E,PC,D3.W),-(A0)
+      MOVE.W  (*+62,PC,D3.W),-(A0)
+      MOVE.W  (*-126,PC,D3.W),-(A0)
       MOVE.W  (*,PC,D3.W),-(A0)
       MOVE.W  #$313D,-(A0)
       MOVE.W  D0,($3141,A0)
@@ -685,17 +685,17 @@
       MOVE.W  #0,($FD0000).L
       MOVE.W  ($31,A0,D3.L),D4
       MOVE.W  (-$80,A0,D3.L),D4
-      MOVE.W  (*+$3E,PC,D3.L),D4
-      MOVE.W  (*-$7E,PC,D3.L),D4
+      MOVE.W  (*+62,PC,D3.L),D4
+      MOVE.W  (*-126,PC,D3.L),D4
       MOVE.W  (*,PC,D3.L),D4
       MOVEA.W ($71,A0,D3.L),A4
       MOVEA.W (-$80,A0,D3.L),A4
-      MOVEA.W (*+$7E,PC,D3.L),A4
-      MOVEA.W (*-$7E,PC,D3.L),A4
+      MOVEA.W (*+126,PC,D3.L),A4
+      MOVEA.W (*-126,PC,D3.L),A4
       MOVEA.W (*,PC,D3.L),A4
       MOVE.W  (-$4F,A0,D3.L),(A4)
       MOVE.W  (0,A0,D3.L),(A4)
-      MOVE.W  (*-$42,PC,D3.L),(A4)
+      MOVE.W  (*-66,PC,D3.L),(A4)
       MOVE.W  (*,PC,D3.L),(A4)
       MOVE.W  (*+1,PC,D3.L),(A4)
       MOVE.W  (-15,A0,D3.L),(A4)+
@@ -705,8 +705,8 @@
       MOVE.W  (*+1,PC,D3.L),(A4)+
       MOVE.W  ($31,A0,D3.L),-(A4)
       MOVE.W  (-$80,A0,D3.L),-(A4)
-      MOVE.W  (*+$3E,PC,D3.L),-(A4)
-      MOVE.W  (*-$7E,PC,D3.L),-(A4)
+      MOVE.W  (*+62,PC,D3.L),-(A4)
+      MOVE.W  (*-126,PC,D3.L),-(A4)
       MOVE.W  (*,PC,D3.L),-(A4)
       MOVE.W  D0,(-$7F,A4,D3.L)
       MOVE.W  D0,(0,A4,D3.L)
@@ -775,7 +775,7 @@
       CHK.W   ($0041BA).W,D0
       CHK.W   ($0041BA).L,D0
       CHK.W   (*+$41BE,PC),D0
-      CHK.W   (*-$42,PC,D4.W),D0
+      CHK.W   (*-66,PC,D4.W),D0
       CHK.W   (*,PC,D4.W),D0
       CHK.W   (*+1,PC,D4.W),D0
       CHK.W   #$41BD,D0
@@ -903,7 +903,7 @@
       MOVE    (*,PC,D4.W),SR
       MOVE    (*+1,PC,D4.W),SR
       MOVE    (*+2,PC,D4.L),SR
-      MOVE    (*-$7E,PC,D4.L),SR
+      MOVE    (*-126,PC,D4.L),SR
       MOVE    (*,PC,D4.L),SR
       MOVE    #$46FD,SR
       NBCD    D0
@@ -923,8 +923,8 @@
       PEA     ($004879).W
       PEA     ($00487A).L
       PEA     (*+$487D,PC)
-      PEA     (*+$7E,PC,D4.L)
-      PEA     (*-$7E,PC,D4.L)
+      PEA     (*+126,PC,D4.L)
+      PEA     (*-126,PC,D4.L)
       PEA     (*,PC,D4.L)
       EXT.W   D0
       MOVEM.W D0/D4/D7/A3/A6,(A0)
@@ -2208,7 +2208,7 @@
       MOVEM.L D0,($000000).L
       CHK.W   (-$4F,A0,D4.L),D4
       CHK.W   (0,A0,D4.L),D4
-      CHK.W   (*-$42,PC,D4.L),D4
+      CHK.W   (*-66,PC,D4.L),D4
       CHK.W   (*,PC,D4.L),D4
       CHK.W   (*+1,PC,D4.L),D4
       LEA     (-15,A0,D4.L),A4
@@ -2226,8 +2226,8 @@
       TST.B   ($004A39).W
       TST.B   ($004A3A).L
       TST.B   (*+$4A3D,PC)
-      TST.B   (*+$3E,PC,D4.L)
-      TST.B   (*-$7E,PC,D4.L)
+      TST.B   (*+62,PC,D4.L)
+      TST.B   (*-126,PC,D4.L)
       TST.B   (*,PC,D4.L)
       TST.W   D0
       TST.W   (A0)
@@ -2239,8 +2239,8 @@
       TST.W   ($004A7A).W
       TST.W   ($004A7A).L
       TST.W   (*+$4A7E,PC)
-      TST.W   (*+$7E,PC,D4.L)
-      TST.W   (*-$7E,PC,D4.L)
+      TST.W   (*+126,PC,D4.L)
+      TST.W   (*-126,PC,D4.L)
       TST.W   (*,PC,D4.L)
       TST.L   D0
       TST.L   (A0)
@@ -2251,7 +2251,7 @@
       TST.L   (0,A0,D4.L)
       TST.L   ($004ABC).W
       TST.L   (*+$4ABE,PC)
-      TST.L   (*-$42,PC,D4.L)
+      TST.L   (*-66,PC,D4.L)
       TST.L   (*,PC,D4.L)
       TST.L   (*+1,PC,D4.L)
       TAS     D0
@@ -2905,7 +2905,7 @@
       MOVEM.W ($000000).L,D0
       MOVEM.W (*+2,PC),D0
       MOVEM.W (*+2,PC,D0.W),D0
-      MOVEM.W (*-$7E,PC,D0.W),D0
+      MOVEM.W (*-126,PC,D0.W),D0
       MOVEM.W (*,PC,D0.W),D0
       MOVEM.L (A0),D0/D4/D6-D7/A2-A3/A6
       MOVEM.L (A0),D0-D1/D4/D6-D7/A2-A3/A6
@@ -3548,7 +3548,7 @@
       MOVEM.L ($000000).L,D0
       MOVEM.L (*+2,PC),D0
       MOVEM.L (*+2,PC,D0.W),D0
-      MOVEM.L (*-$7E,PC,D0.W),D0
+      MOVEM.L (*-126,PC,D0.W),D0
       MOVEM.L (*,PC,D0.W),D0
       TRAP    #0
       LINK    A0,#$4E51
@@ -3571,11 +3571,11 @@
       JSR     ($004EBA).W
       JSR     ($004EBA).L
       JSR     (*+$4EBE,PC)
-      JSR     (*-$42,PC,D4.L)
+      JSR     (*-66,PC,D4.L)
       JSR     (*,PC,D4.L)
       JSR     (*+1,PC,D4.L)
       JSR     (*+2,PC,D5.W)
-      JSR     (*-$7E,PC,D5.W)
+      JSR     (*-126,PC,D5.W)
       JSR     (*,PC,D5.W)
       JMP     (A0)
       JMP     ($4EE9,A0)
@@ -3590,7 +3590,7 @@
       JMP     (*,PC,D4.L)
       JMP     (*+1,PC,D4.L)
       JMP     (*+2,PC,D5.W)
-      JMP     (*-$7E,PC,D5.W)
+      JMP     (*-126,PC,D5.W)
       JMP     (*,PC,D5.W)
       ADDQ.B  #8,D0
       ADDQ.B  #8,(A0)
@@ -3832,67 +3832,67 @@
       SLE     ($005FFA).L
       BRA     *+$6004
       BRA     *+4
-      BRA     *-$7E
+      BRA     *-126
       BRA     *
       BSR     *+$6104
       BSR     *+4
-      BSR     *-$7E
+      BSR     *-126
       BSR     *
       BHI     *+$6204
       BHI     *+4
-      BHI     *-$7E
+      BHI     *-126
       BHI     *
       BLS     *+$6304
       BLS     *+4
-      BLS     *-$7E
+      BLS     *-126
       BLS     *
       BCC     *+$6404
       BCC     *+4
-      BCC     *-$7E
+      BCC     *-126
       BCC     *
       BCS     *+$6504
       BCS     *+4
-      BCS     *-$7E
+      BCS     *-126
       BCS     *
       BNE     *+$6604
       BNE     *+4
-      BNE     *-$7E
+      BNE     *-126
       BNE     *
       BEQ     *+$6704
       BEQ     *+4
-      BEQ     *-$7E
+      BEQ     *-126
       BEQ     *
       BVC     *+$6804
       BVC     *+4
-      BVC     *-$7E
+      BVC     *-126
       BVC     *
       BVS     *+$6904
       BVS     *+4
-      BVS     *-$7E
+      BVS     *-126
       BVS     *
       BPL     *+$6A04
       BPL     *+4
-      BPL     *-$7E
+      BPL     *-126
       BPL     *
       BMI     *+$6B04
       BMI     *+4
-      BMI     *-$7E
+      BMI     *-126
       BMI     *
       BGE     *+$6C04
       BGE     *+4
-      BGE     *-$7E
+      BGE     *-126
       BGE     *
       BLT     *+$6D04
       BLT     *+4
-      BLT     *-$7E
+      BLT     *-126
       BLT     *
       BGT     *+$6E04
       BGT     *+4
-      BGT     *-$7E
+      BGT     *-126
       BGT     *
       BLE     *+$6F04
       BLE     *+4
-      BLE     *-$7E
+      BLE     *-126
       BLE     *
       MOVEQ   #0,D0
       MOVEQ   #-$80,D0

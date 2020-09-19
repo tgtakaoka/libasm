@@ -30,49 +30,49 @@
       ADE
       CAE
       DLY  0x90
-      JMP  .-0x6D
+      JMP  .-109
       JMP  .
       JMP  .+1
       JMP  E(PC)
       JMP  -110(P1)
       JMP  0(P1)
       JMP  E(P1)
-      JP   .-0x69
+      JP   .-105
       JP   .
       JP   .+1
       JP   E(PC)
       JP   -106(P1)
       JP   0(P1)
       JP   E(P1)
-      JZ   .-0x65
+      JZ   .-101
       JZ   .
       JZ   .+1
       JZ   E(PC)
       JZ   -102(P1)
       JZ   0(P1)
       JZ   E(P1)
-      JNZ  .-0x61
+      JNZ  .-97
       JNZ  .
       JNZ  .+1
       JNZ  E(PC)
       JNZ  -98(P1)
       JNZ  0(P1)
       JNZ  E(P1)
-      ILD  .-0x56
+      ILD  .-86
       ILD  .
       ILD  .+1
       ILD  E(PC)
       ILD  -86(P1)
       ILD  0(P1)
       ILD  E(P1)
-      DLD  .-0x46
+      DLD  .-70
       DLD  .
       DLD  .+1
       DLD  E(PC)
       DLD  -70(P1)
       DLD  0(P1)
       DLD  E(P1)
-      LD   .-0x3E
+      LD   .-62
       LD   .
       LD   .+1
       LD   E(PC)
@@ -83,7 +83,7 @@
       LD   @-58(P1)
       LD   @0(P1)
       LD   @E(P1)
-      ST   .-0x36
+      ST   .-54
       ST   .
       ST   .+1
       ST   E(PC)
@@ -93,7 +93,7 @@
       ST   @-50(P1)
       ST   @0(P1)
       ST   @E(P1)
-      AND  .-0x2E
+      AND  .-46
       AND  .
       AND  .+1
       AND  E(PC)
@@ -104,7 +104,7 @@
       AND  @-42(P1)
       AND  @0(P1)
       AND  @E(P1)
-      OR   .-0x26
+      OR   .-38
       OR   .
       OR   .+1
       OR   E(PC)

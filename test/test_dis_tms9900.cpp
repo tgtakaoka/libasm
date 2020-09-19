@@ -317,10 +317,10 @@ static void test_rel() {
     ATEST(0x1000, JEQ, "sym0F02", 0x1380);
 
     disassembler.setRelativeTarget(true);
-    TEST(JMP, "$-0FEH", 0x1080);
-    TEST(JMP, "$",      0x10FF);
-    TEST(JMP, "$+2",    0x1000);
-    TEST(JMP, "$+100H", 0x107F);
+    TEST(JMP, "$-254", 0x1080);
+    TEST(JMP, "$",     0x10FF);
+    TEST(JMP, "$+2",   0x1000);
+    TEST(JMP, "$+256", 0x107F);
 }
 
 static void test_cru_off() {
