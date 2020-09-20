@@ -24,13 +24,12 @@ Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address()
         + (insn.hasPrefix() ? 2 : 1)
         + (insn.mode1() == LREL ? 2 : 1);
-    const Config::uintptr_t target = op.getError() ? base
-        : static_cast<Config::uintptr_t>(op.val32);
+    const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
     if (insn.mode1() == REL) {
         if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(delta));
+        insn.emitByte(delta);
     } else {
         insn.emitInsn();
         insn.emitUint16(delta);
@@ -43,10 +42,10 @@ Error AsmMc6809::encodeImmediate(
     insn.emitInsn();
     switch (insn.mode1()) {
     case IM8:
-        insn.emitByte(static_cast<uint8_t>(op.val32));
+        insn.emitByte(op.val32);
         break;
     case IM16:
-        insn.emitUint16(static_cast<uint16_t>(op.val32));
+        insn.emitUint16(op.val32);
         break;
     case IM32:
         insn.emitUint32(op.val32);
@@ -56,10 +55,10 @@ Error AsmMc6809::encodeImmediate(
     }
     switch (insn.mode2()) {
     case DIR:
-        insn.emitByte(static_cast<uint8_t>(extra.val32));
+        insn.emitByte(extra.val32);
         break;
     case EXT:
-        insn.emitUint16(static_cast<uint16_t>(extra.val32));
+        insn.emitUint16(extra.val32);
         break;
     case IDX:
         return encodeIndexed(insn, extra, false);
@@ -71,41 +70,37 @@ Error AsmMc6809::encodeImmediate(
 
 Config::ptrdiff_t AsmMc6809::calculateDisplacement(
     const InsnMc6809 &insn, const Operand &op) const {
-    Config::ptrdiff_t disp = static_cast<Config::ptrdiff_t>(op.val32);
-    if (op.base == REG_PCR) {
+    const Config::ptrdiff_t disp = static_cast<Config::ptrdiff_t>(op.val32);
+    if (op.base == REG_PCR && op.getError() == OK) {
         const Config::uintptr_t base = insn.address()
             + (insn.hasPrefix() ? 3 : 2) + 1; // assuming 8-bit displacement
-        const Config::uintptr_t target = op.getError()
-            ? insn.address() : static_cast<Config::uintptr_t>(disp);
-        disp = target - base;
+        const Config::uintptr_t target = op.val32;
+        return target - base;
     }
     return disp;
 }
 
 Error AsmMc6809::encodeIndexed(
-    InsnMc6809 &insn, Operand &op, bool emitInsn) {
-    PostSpec spec;
+    InsnMc6809 &insn, const Operand &op, bool emitInsn) {
+    PostSpec spec = { op.idxMode, op.index, op.base, op.extra, op.indir };
     if (op.mode == REG_REG) {
-        if (!RegMc6809::isIndexedBase(op.base)) return setError(UNKNOWN_OPERAND);
-        if (op.index == REG_0) {
-            op.index = REG_UNDEF;
-            op.sub = DISP_IDX;
-        } else if (RegMc6809::isIndexReg(op.index)) {
-            op.sub = ACCM_IDX;
+        if (!RegMc6809::isIndexedBase(op.base))
+            return setError(UNKNOWN_OPERAND);
+        if (spec.index == REG_0) {
+            spec.mode = DISP_IDX;
+            spec.index = REG_UNDEF;
+        } else if (RegMc6809::isIndexReg(spec.index)) {
+            spec.mode = ACCM_IDX;
         } else {
             return setError(REGISTER_NOT_ALLOWED);
         }
     }
-    spec.mode = op.sub;
-    spec.index = op.index;
-    spec.base =  op.base;
-    spec.size = (op.base == REG_PCR) ? 0 : op.extra;
-    spec.indir = op.indir;
-    if (op.sub == ABS_IDIR) spec.size = 16;
+    if (spec.mode == ABS_IDIR) spec.size = 16;
+
     Config::ptrdiff_t disp = calculateDisplacement(insn, op);
     if (spec.mode == DISP_IDX && spec.size == 0) {
         const bool pc = (spec.base == REG_PC || spec.base == REG_PCR);
-        if (spec.base == REG_PCR && op.getError()) {
+        if (op.getError()) {
             disp = 0;
             spec.size = 16;
         } else if (!pc && disp == 0) {
@@ -120,16 +115,17 @@ Error AsmMc6809::encodeIndexed(
             spec.size = 16;
         }
     }
-    uint8_t post;
-    if (TableMc6809.searchPostSpec(spec, post))
+    const int16_t _post = TableMc6809.searchPostSpec(spec);
+    if (_post < 0)
         return setError(UNKNOWN_OPERAND);
+    uint8_t post = _post;
     if (spec.base == REG_X)
         post |= (RegMc6809::encodeBaseReg(op.base) << 5);
     if (spec.mode == DISP_IDX && spec.size == 5)
-        post |= static_cast<uint8_t>(disp & 0x1F);
+        post |= disp & 0x1F;
     if (emitInsn) insn.emitInsn();
     insn.emitByte(post);
-    if (spec.size == 8) insn.emitByte(static_cast<uint8_t>(disp));
+    if (spec.size == 8) insn.emitByte(disp);
     if (spec.size == 16) insn.emitUint16(disp);
     return OK;
 }
@@ -156,13 +152,14 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
     if (op.mode == NONE) {
         post = 0;
     } else if (op.mode == IM32) {
-        post = static_cast<uint8_t>(op.val32);
+        post = op.val32;
     } else if (op.mode == REGLIST) {
         if (op.getError()) return setError(op);
-        if (static_cast<int32_t>(op.val32) < 0) return setError(REGISTER_NOT_ALLOWED);
+        if (static_cast<int32_t>(op.val32) < 0)
+            return setError(REGISTER_NOT_ALLOWED);
         post = op.val32;
         stack = op.base;
-    } else if (op.mode == REG_REG || (op.mode == IDX && op.sub == ACCM_IDX)) {
+    } else if (op.mode == REG_REG || op.idxMode == ACCM_IDX) {
         RegName reg = op.index;
         if (reg == REG_S || reg == REG_U) {
             stack = reg;
@@ -200,7 +197,7 @@ Error AsmMc6809::encodeBitOperation(
         | (exbit << 3) | opbit;
     insn.emitInsn();
     insn.emitByte(post);
-    insn.emitByte(static_cast<uint8_t>(extra.val32));
+    insn.emitByte(extra.val32);
     return OK;
 }
 
@@ -232,21 +229,24 @@ Error AsmMc6809::encodeTransferMemory(
 
 bool AsmMc6809::parsePointerMode(Operand &op, const char *p, bool indir) {
     if (*p++ != ',') return false;
-    int8_t autoIndex = 0;
+    uint8_t size = 0;
+    IndexMode sub = PNTR_IDX;
     if (*p == '-') {
-        p++; autoIndex = -1;
+        p++; size = 1;
         if (*p == '-') {
-            p++; autoIndex = -2;
+            p++; size = 2;
         }
+        sub = AUTO_DEC;
     }
     const RegName reg = RegMc6809::parseRegName(p);
     if (!RegMc6809::isBaseReg(reg)) return false;
     p += RegMc6809::regNameLen(reg);
-    if (autoIndex == 0 && *p == '+') {
-        p++; autoIndex = 1;
+    if (size == 0 && *p == '+') {
+        p++; size = 1;
         if (*p == '+') {
-            p++; autoIndex = 2;
+            p++; size = 2;
         }
+        sub = AUTO_INC;
     }
     p = skipSpaces(p);
     if (indir) {
@@ -259,8 +259,8 @@ bool AsmMc6809::parsePointerMode(Operand &op, const char *p, bool indir) {
     _scan = p;
     op.base = reg;
     op.mode = IDX;
-    op.sub = autoIndex ? AUTO_IDX : PNTR_IDX;
-    op.extra = autoIndex;
+    op.idxMode = sub;
+    op.extra = size;
     op.indir = indir;
     return true;
 }
@@ -280,7 +280,7 @@ bool AsmMc6809::parseIndexedMode(Operand &op, const char *p, bool indir) {
     _scan = p;
     op.base = base;
     op.mode = IDX;
-    op.sub = DISP_IDX;
+    op.idxMode = DISP_IDX;
     op.indir = indir;
     return true;
 }
@@ -364,9 +364,9 @@ bool AsmMc6809::parseRegisterList(Operand &op, const char *p, bool indir) {
         op.mode = IDX;
         if (op.index == REG_0) {
             op.index = REG_UNDEF;
-            op.sub = DISP_IDX;
+            op.idxMode = DISP_IDX;
         } else {
-            op.sub = ACCM_IDX;
+            op.idxMode = ACCM_IDX;
         }
         op.indir = true;
         return true;
@@ -458,7 +458,7 @@ Error AsmMc6809::parseOperand(Operand &op) {
         }
         _scan = p;
         op.mode = IDX;
-        op.sub = ABS_IDIR;
+        op.idxMode = ABS_IDIR;
         return OK;
     }
 
@@ -531,11 +531,11 @@ Error AsmMc6809::encode(Insn &_insn) {
         break;
     case DIR:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op1.val32));
+        insn.emitByte(op1.val32);
         break;
     case EXT:
         insn.emitInsn();
-        insn.emitUint16(static_cast<uint16_t>(op1.val32));
+        insn.emitUint16(op1.val32);
         break;
     case IDX:
         encodeIndexed(insn, op1);

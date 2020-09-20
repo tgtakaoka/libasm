@@ -27,11 +27,25 @@ namespace libasm {
 namespace mc6809 {
 
 struct PostSpec {
-    IndexedSubMode mode;
+    IndexMode mode;
     RegName index;
     RegName base;
     int8_t size;
     bool indir;
+
+    PostSpec() {}
+
+    constexpr PostSpec(
+            IndexMode _mode,
+            RegName _index,
+            RegName _base,
+            int8_t _size,
+            bool _indir) :
+        mode(_mode),
+        index(_index),
+        base(_base),
+        size(_size),
+        indir(_indir) {}
 };
 
 class TableMc6809 : public TableBase {
@@ -41,7 +55,7 @@ public:
     Error searchName(InsnMc6809 &insn) const;
     Error searchOpCode(InsnMc6809 &insn) const;
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
-    Error searchPostSpec(PostSpec &spec, uint8_t &post) const;
+    int16_t searchPostSpec(PostSpec &spec) const;
 
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
@@ -60,16 +74,15 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    static Error searchName(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchOpCode(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchPostByte(
+    Error searchName(
+      InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(
+        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchPostByte(
         const uint8_t post, PostSpec &spec,
-        const PostEntry *table, const PostEntry *end);
-    static Error searchPostSpec(
-        PostSpec &spec, uint8_t &post,
-        const PostEntry *table, const PostEntry *end);
+        const PostEntry *table, const PostEntry *end) const;
+    int16_t searchPostSpec(
+        PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
 };
 
 extern TableMc6809 TableMc6809;

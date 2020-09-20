@@ -58,7 +58,7 @@ Error AsmZ8::encodeOperand(
     if (mode == M_NO) return getError();
     if (op.reg != REG_UNDEF
         && (mode == M_R || mode == M_IR || mode == M_IRR)) {
-        insn.emitByte(_regs.encodeWorkRegAddr(op.reg));
+        insn.emitByte(RegZ8::encodeWorkRegAddr(op.reg));
         return getError();
     }
     if (op.val >= 0x100) return setError(OVERFLOW_RANGE);
@@ -157,9 +157,9 @@ Error AsmZ8::encodeMultiOperands(
     }
     const bool dstSrc = ((dst == M_R || dst == M_IR) && src == M_IM);
     const uint8_t dstVal = (dstOp.reg == REG_UNDEF) ? dstOp.val
-        : _regs.encodeWorkRegAddr(dstOp.reg);
+        : RegZ8::encodeWorkRegAddr(dstOp.reg);
     const uint8_t srcVal = (srcOp.reg == REG_UNDEF || src == M_IM) ? srcOp.val
-        : _regs.encodeWorkRegAddr(srcOp.reg);
+        : RegZ8::encodeWorkRegAddr(srcOp.reg);
     insn.emitByte(dstSrc ? dstVal : srcVal);
     insn.emitByte(dstSrc ? srcVal : dstVal);
     return getError();
@@ -321,7 +321,7 @@ Error AsmZ8::parseOperand(Operand &op) {
         return OK;
     }
 
-    op.cc = _regs.parseCcName(p);
+    op.cc = RegZ8::parseCcName(p);
     if (op.cc != CC_UNDEF) {
         _scan = p + RegZ8::ccNameLen(op.cc);
         op.mode = M_cc;
@@ -342,7 +342,7 @@ Error AsmZ8::parseOperand(Operand &op) {
         if (isspace(*p)) return setError(UNKNOWN_OPERAND);
     }
 
-    op.reg = _regs.parseRegName(p);
+    op.reg = RegZ8::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         _scan = p + RegZ8::regNameLen(op.reg);
         const bool pair = RegZ8::isPairReg(op.reg);
@@ -351,7 +351,7 @@ Error AsmZ8::parseOperand(Operand &op) {
         } else {
             op.mode = pair ? M_rr : M_r;
         }
-        op.val = _regs.encodeWorkRegAddr(op.reg);
+        op.val = RegZ8::encodeWorkRegAddr(op.reg);
         return OK;
     }
 
@@ -368,7 +368,7 @@ Error AsmZ8::parseOperand(Operand &op) {
     if (*p == '(') {
         if (indir || forceRegAddr) setError(UNKNOWN_OPERAND);
         p++;
-        op.reg = _regs.parseRegName(p);
+        op.reg = RegZ8::parseRegName(p);
         if (op.reg != REG_UNDEF) {
             p += RegZ8::regNameLen(op.reg);
         } else {
@@ -377,7 +377,7 @@ Error AsmZ8::parseOperand(Operand &op) {
             if (getOperand(val16)) return getError();
             if (!isWorkReg(val16)) return setError(UNKNOWN_OPERAND);
             p = _scan;
-            op.reg = _regs.decodeRegNum(val16 & 0xF);
+            op.reg = RegZ8::decodeRegNum(val16 & 0xF);
         }
         p = skipSpaces(p);
         if (*p != ')') return setError(MISSING_CLOSING_PAREN);
@@ -397,7 +397,7 @@ Error AsmZ8::parseOperand(Operand &op) {
         if (op.val >= 0x100) return setError(OVERFLOW_RANGE);
         if (!forceRegAddr && isWorkReg(op.val)) {
             op.mode = (op.val & 1) == 0 ? M_IWW : M_IW;
-            op.reg = _regs.decodeRegNum(op.val & 0xF);
+            op.reg = RegZ8::decodeRegNum(op.val & 0xF);
             return OK;
         }
         op.mode = (op.val & 1) == 0 ? M_IRR : M_IR;
@@ -414,7 +414,7 @@ Error AsmZ8::parseOperand(Operand &op) {
     }
     if (isWorkReg(op.val)) {
         op.mode = (op.val & 1) == 0 ? M_WW : M_W;
-        op.reg = _regs.decodeRegNum(op.val & 0xF);
+        op.reg = RegZ8::decodeRegNum(op.val & 0xF);
         return OK;
     }
     op.mode = (op.val & 1) == 0 ? M_RR : M_R;

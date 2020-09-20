@@ -50,10 +50,10 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    static Error searchName(
-        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchOpCode(
-        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end);
+    Error searchName(
+        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(
+        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableZ80 TableZ80;

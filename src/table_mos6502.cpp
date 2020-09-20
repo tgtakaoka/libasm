@@ -400,12 +400,13 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 }
 
 Error TableMos6502::searchName(
-    InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) const {
     const char *name = insn.name();
     const AddrMode addrMode = insn.addrMode();
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry, AddrMode>(
             name, addrMode, table, end, acceptAddrMode, count);
@@ -428,10 +429,11 @@ static bool acceptAddrMode(AddrMode addrMode, bool useIndirectLong) {
 
 Error TableMos6502::searchOpCode(
     InsnMos6502 &insn, bool useIndirectLong,
-    const EntryPage *pages, const EntryPage *end) {
+    const EntryPage *pages, const EntryPage *end) const {
     const Config::opcode_t opCode = insn.opCode();
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         for (const Entry *entry = table;
              entry < end

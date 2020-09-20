@@ -39,7 +39,7 @@ private:
     TableBase &getTable() const override { return TableMc6809; }
     RegBase &getRegister() override { return _regs; }
 
-    char *outRegister(char *out, RegName regName);
+    char *outRegister(char *out, RegName regName) __attribute__((noinline));
 
     // MC6809
     Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, char *out);

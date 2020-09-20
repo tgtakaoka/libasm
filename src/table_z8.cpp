@@ -301,10 +301,11 @@ static bool acceptModes(uint16_t flags, const Entry *entry) {
 }
 
 Error TableZ8::searchName(
-    InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const uint16_t flags = Entry::_flags(
             insn.dstMode(), insn.srcMode(), insn.extMode(), insn.postFormat());
@@ -341,7 +342,7 @@ static bool matchPostByte(const InsnZ8 &insn) {
 
 Error TableZ8::searchOpCode(
     InsnZ8 &insn, DisMemory &memory,
-    const EntryPage *pages, const EntryPage *end) {
+    const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         for (const Entry *entry =

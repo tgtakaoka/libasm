@@ -54,11 +54,11 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    static Error searchName(
-        InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end);
-    static Error searchOpCode(
+    Error searchName(
+        InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(
         InsnMos6502 &insn, bool useIndirectLong,
-        const EntryPage *pages, const EntryPage *end);
+        const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableMos6502 TableMos6502;

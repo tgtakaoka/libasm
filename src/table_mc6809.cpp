@@ -544,7 +544,7 @@ static bool matchAddrMode(uint8_t flags, const Entry *entry) {
 }
 
 Error TableMc6809::searchName(
-    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
     const uint8_t flags = Entry::_flags(insn.mode1(), insn.mode2());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
@@ -563,7 +563,7 @@ Error TableMc6809::searchName(
 }
 
 Error TableMc6809::searchOpCode(
-    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
         if (insn.prefix() != prefix) continue;
@@ -590,58 +590,66 @@ Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
     return _error.setError(searchOpCode(insn, _table, _end));
 }
 
-struct TableMc6809::PostEntry {
+struct TableMc6809::PostEntry : public PostSpec {
     uint8_t mask;
     uint8_t byte;
-    IndexedSubMode mode;
-    int8_t size;
-    RegName base;
-    RegName index;
+
+    constexpr PostEntry(
+            IndexMode _mode,
+            RegName _index,
+            RegName _base,
+            int8_t _size,
+            bool _indir,
+            uint8_t _mask,
+            uint8_t _byte) :
+        PostSpec(_mode, _index, _base, _size, _indir),
+        mask(_mask),
+        byte(_byte) {}
 };
 
-static constexpr TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
-    { 0x8F, 0x84, PNTR_IDX,  0, REG_X, REG_UNDEF }, // ,X [,X]
-    { 0x80, 0x00, DISP_IDX,  5, REG_X, REG_UNDEF }, // n5,X
-    { 0x8F, 0x88, DISP_IDX,  8, REG_X, REG_UNDEF }, // n8,X [n8,X]
-    { 0x8F, 0x89, DISP_IDX, 16, REG_X, REG_UNDEF }, // n16,X [n16,X]
-    { 0x8F, 0x86, ACCM_IDX,  0, REG_X, REG_A },     // A,X [A,X]
-    { 0x8F, 0x85, ACCM_IDX,  0, REG_X, REG_B },     // B,X [B,X]
-    { 0x8F, 0x8B, ACCM_IDX,  0, REG_X, REG_D },     // D,X [D,X]
-    { 0x9F, 0x80, AUTO_IDX,  1, REG_X, REG_UNDEF }, // ,X+
-    { 0x8F, 0x81, AUTO_IDX,  2, REG_X, REG_UNDEF }, // ,X++ [,x++]
-    { 0x9F, 0x82, AUTO_IDX, -1, REG_X, REG_UNDEF }, // ,-X
-    { 0x8F, 0x83, AUTO_IDX, -2, REG_X, REG_UNDEF }, // ,--X [,--X]
-    { 0x8F, 0x8C, DISP_IDX,  8, REG_PCR, REG_UNDEF }, // n8,PCR [n8,PCR]
-    { 0x8F, 0x8D, DISP_IDX, 16, REG_PCR, REG_UNDEF }, // n16,PCR [n16,PCR]
-    { 0xFF, 0x9F, ABS_IDIR, 16, REG_UNDEF, REG_UNDEF }, // [n16]
+static const TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
+    { PNTR_IDX, REG_UNDEF, REG_X,   0, true,  0x8F, 0x84 }, // ,X [,X]
+    { DISP_IDX, REG_UNDEF, REG_X,   5, false, 0x80, 0x00 }, // n5,X
+    { DISP_IDX, REG_UNDEF, REG_X,   8, true,  0x8F, 0x88 }, // n8,X [n8,X]
+    { DISP_IDX, REG_UNDEF, REG_X,  16, true,  0x8F, 0x89 }, // n16,X [n16,X]
+    { ACCM_IDX, REG_A,     REG_X,   0, true,  0x8F, 0x86 }, // A,X [A,X]
+    { ACCM_IDX, REG_B,     REG_X,   0, true,  0x8F, 0x85 }, // B,X [B,X]
+    { ACCM_IDX, REG_D,     REG_X,   0, true,  0x8F, 0x8B }, // D,X [D,X]
+    { AUTO_INC, REG_UNDEF, REG_X,   1, false, 0x9F, 0x80 }, // ,X+
+    { AUTO_INC, REG_UNDEF, REG_X,   2, true,  0x8F, 0x81 }, // ,X++ [,x++]
+    { AUTO_DEC, REG_UNDEF, REG_X,   1, false, 0x9F, 0x82 }, // ,-X
+    { AUTO_DEC, REG_UNDEF, REG_X,   2, true,  0x8F, 0x83 }, // ,--X [,--X]
+    { DISP_IDX, REG_UNDEF, REG_PCR,    8, true, 0x8F, 0x8C }, // n8,PCR [n8,PCR]
+    { DISP_IDX, REG_UNDEF, REG_PCR,   16, true, 0x8F, 0x8D }, // n16,PCR [n16,PCR]
+    { ABS_IDIR, REG_UNDEF, REG_UNDEF, 16, true, 0xFF, 0x9F }, // [n16]
 };
 
-static constexpr TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
-    { 0x8F, 0x87, ACCM_IDX,  0, REG_X, REG_E },     // E,X [E,X]
-    { 0x8F, 0x8A, ACCM_IDX,  0, REG_X, REG_F },     // F,X [F,X]
-    { 0x8F, 0x8E, ACCM_IDX,  0, REG_X, REG_W },     // W,X [W,X]
-    { 0xFF, 0x8F, PNTR_IDX,  0, REG_W, REG_UNDEF }, // ,W
-    { 0xFF, 0x90, PNTR_IDX,  0, REG_W, REG_UNDEF }, // [,W]
-    { 0xFF, 0xAF, DISP_IDX, 16, REG_W, REG_UNDEF }, // n16,W
-    { 0xFF, 0xB0, DISP_IDX, 16, REG_W, REG_UNDEF }, // [n16,W]
-    { 0xFF, 0xCF, AUTO_IDX,  2, REG_W, REG_UNDEF }, // ,W++
-    { 0xFF, 0xD0, AUTO_IDX,  2, REG_W, REG_UNDEF }, // [,W++]
-    { 0xFF, 0xEF, AUTO_IDX, -2, REG_W, REG_UNDEF }, // ,--W
-    { 0xFF, 0xF0, AUTO_IDX, -2, REG_W, REG_UNDEF }, // [,--W]
+static const TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
+    { ACCM_IDX, REG_E,     REG_X,   0, true,  0x8F, 0x87 }, // E,X [E,X]
+    { ACCM_IDX, REG_F,     REG_X,   0, true,  0x8F, 0x8A }, // F,X [F,X]
+    { ACCM_IDX, REG_W,     REG_X,   0, true,  0x8F, 0x8E }, // W,X [W,X]
+    { PNTR_IDX, REG_UNDEF, REG_W,   0, false, 0xFF, 0x8F }, // ,W
+    { PNTR_IDX, REG_UNDEF, REG_W,   0, true,  0xFF, 0x90 }, // [,W]
+    { DISP_IDX, REG_UNDEF, REG_W,  16, false, 0xFF, 0xAF }, // n16,W
+    { DISP_IDX, REG_UNDEF, REG_W,  16, true,  0xFF, 0xB0 }, // [n16,W]
+    { AUTO_INC, REG_UNDEF, REG_W,   2, false, 0xFF, 0xCF }, // ,W++
+    { AUTO_INC, REG_UNDEF, REG_W,   2, true,  0xFF, 0xD0 }, // [,W++]
+    { AUTO_DEC, REG_UNDEF, REG_W,   2, false, 0xFF, 0xEF }, // ,--W
+    { AUTO_DEC, REG_UNDEF, REG_W,   2, true,  0xFF, 0xF0 }, // [,--W]
 };
 
 Error TableMc6809::searchPostByte(
     const uint8_t post, PostSpec &spec,
-    const PostEntry *table, const PostEntry *end) {
+    const PostEntry *table, const PostEntry *end) const {
     for (const PostEntry *entry = table; entry < end; entry++) {
         const uint8_t mask = pgm_read_byte(&entry->mask);
         const uint8_t byte = post & mask;
         if (byte == pgm_read_byte(&entry->byte)) {
-            spec.mode = IndexedSubMode(pgm_read_byte(&entry->mode));
-            spec.size = pgm_read_byte(&entry->size);
-            spec.base = RegName(pgm_read_byte(&entry->base));
+            spec.mode = IndexMode(pgm_read_byte(&entry->mode));
             spec.index = RegName(pgm_read_byte(&entry->index));
-            spec.indir = (mask != 0x80 && mask != 0x9F && (post & 0x10) != 0);
+            spec.base = RegName(pgm_read_byte(&entry->base));
+            spec.size = pgm_read_byte(&entry->size);
+            spec.indir = (mask != 0x80) && (post & 0x10);
             return OK;
         }
     }
@@ -658,30 +666,26 @@ static RegName baseRegName(const RegName base) {
     return REG_UNDEF;
 }
 
-Error TableMc6809::searchPostSpec(
-    PostSpec &spec, uint8_t &post,
-    const PostEntry *table, const PostEntry *end) {
+int16_t TableMc6809::searchPostSpec(
+    PostSpec &spec, const PostEntry *table, const PostEntry *end) const {
     const RegName specBase = baseRegName(spec.base);
     for (const PostEntry *entry = table; entry < end; entry++) {
         const RegName base = RegName(pgm_read_byte(&entry->base));
         const int8_t size = static_cast<int8_t>(pgm_read_byte(&entry->size));
-        if (spec.mode == IndexedSubMode(pgm_read_byte(&entry->mode))
+        if (spec.mode == IndexMode(pgm_read_byte(&entry->mode))
             && specBase == base
-            && spec.index == RegName(pgm_read_byte(&entry->index))
-            && spec.size == size) {
-            const uint8_t mask = pgm_read_byte(&entry->mask);
-            const uint8_t byte = pgm_read_byte(&entry->byte);
-            const bool indir = (mask == 0x8F || mask == 0xEF)
-                || (mask == 0xFF && (mask & byte & 0x10));
-            if (spec.indir && !indir) continue;
-            post = byte;
-            if (spec.indir) post |= 0x10;
-            spec.size = (spec.mode == AUTO_IDX) ? 0 : size;
-            spec.base = RegName(pgm_read_byte(&entry->base));
-            return OK;
+            && spec.size == size
+            && spec.index == RegName(pgm_read_byte(&entry->index))) {
+            uint8_t byte = pgm_read_byte(&entry->byte);
+            if (spec.indir) {
+                if (pgm_read_byte(&entry->indir) == 0) continue;
+                byte |= 0x10;
+            }
+            spec.base = base;
+            return byte;
         }
     }
-    return UNKNOWN_POSTBYTE;
+    return -1;
 }
 
 Error TableMc6809::searchPostByte(
@@ -692,12 +696,11 @@ Error TableMc6809::searchPostByte(
     return searchPostByte(post, spec, ARRAY_RANGE(MC6809_POSTBYTE));
 }
 
-Error TableMc6809::searchPostSpec(
-    PostSpec &spec, uint8_t &post) const {
-    if (_cpuType == HD6309
-        && searchPostSpec(spec, post, ARRAY_RANGE(HD6309_POSTBYTE)) == OK)
-        return OK;
-    return searchPostSpec(spec, post, ARRAY_RANGE(MC6809_POSTBYTE));
+int16_t TableMc6809::searchPostSpec(PostSpec &spec) const {
+    int16_t post = searchPostSpec(spec, ARRAY_RANGE(MC6809_POSTBYTE));
+    if (post < 0 && _cpuType == HD6309)
+        post = searchPostSpec(spec, ARRAY_RANGE(HD6309_POSTBYTE));
+    return post;
 }
 
 TableMc6809::TableMc6809() {

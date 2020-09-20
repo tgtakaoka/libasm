@@ -146,11 +146,13 @@ static constexpr TableTms9900::EntryPage TMS99105_PAGES[] PROGMEM = {
 };
 
 Error TableTms9900::searchName(
-    InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry>(insn.name(), table, end);
+        const Entry *entry =
+            TableBase::searchName<Entry>(insn.name(), table, end);
         if (entry) {
             insn.setOpCode(pgm_read_word(&entry->opCode));
             insn.setFlags(pgm_read_byte(&entry->flags));
@@ -185,9 +187,10 @@ static Config::opcode_t maskCode(
 }
 
 Error TableTms9900::searchOpCode(
-    InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end, maskCode);

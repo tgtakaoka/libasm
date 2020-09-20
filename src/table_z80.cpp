@@ -254,13 +254,14 @@ static bool acceptOprFormats(uint16_t flags, const Entry *entry) {
 }
 
 Error TableZ80::searchName(
-    InsnZ80 &insn,  const EntryPage *pages, const EntryPage *end) {
+    InsnZ80 &insn,  const EntryPage *pages, const EntryPage *end) const {
     const char *name = insn.name();
     const uint16_t flags =
         Entry::_flags(NO_FMT, INHR, insn.dstFormat(), insn.srcFormat());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry,uint16_t>(
             name, flags, table, end, acceptOprFormats, count);
@@ -276,7 +277,8 @@ Error TableZ80::searchName(
 
 static Config::opcode_t maskCode(
     Config::opcode_t opCode, const Entry *entry) {
-    const InsnFormat iformat = Entry::_insnFormat(pgm_read_word(&entry->flags));
+    const InsnFormat iformat =
+        Entry::_insnFormat(pgm_read_word(&entry->flags));
     switch (iformat) {
     case PTR_FMT: return opCode & ~0x30;
     case CC4_FMT: return opCode & ~0x18;
@@ -290,11 +292,12 @@ static Config::opcode_t maskCode(
 }
 
 Error TableZ80::searchOpCode(
-    InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         Config::opcode_t prefix = pgm_read_byte(&page->prefix);
         if (insn.prefix() != prefix) continue;
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end, maskCode);

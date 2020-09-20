@@ -37,7 +37,6 @@ private:
     protected:
         bool isCurrentOriginSymbol(char c) const override { return c == '$'; }
     } _parser;
-    RegIns8070 _regs;
 
     TableBase &getTable() const override { return TableIns8070; }
 

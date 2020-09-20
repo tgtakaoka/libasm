@@ -41,7 +41,7 @@ private:
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        IndexedSubMode sub;
+        IndexMode idxMode;
         RegName index;
         RegName base;
         bool indir;
@@ -50,7 +50,7 @@ private:
         Operand()
             : ErrorReporter(),
               mode(NONE),
-              sub(PNTR_IDX),
+              idxMode(PNTR_IDX),
               index(REG_UNDEF),
               base(REG_UNDEF),
               indir(false),
@@ -74,7 +74,7 @@ private:
     Config::ptrdiff_t calculateDisplacement(
         const InsnMc6809 &insn, const Operand &op) const;
     Error encodeIndexed(
-        InsnMc6809 &insn, Operand &op, bool emitInsn = true);
+        InsnMc6809 &insn, const Operand &op, bool emitInsn = true);
     Error encodeBitOperation(
         InsnMc6809 &insn, const Operand &op, const Operand &extra);
     Error encodeTransferMemory(

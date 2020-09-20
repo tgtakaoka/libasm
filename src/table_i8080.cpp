@@ -129,9 +129,10 @@ static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
 };
 
 Error TableI8080::searchName(
-    InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry =
             TableBase::searchName<Entry>(insn.name(), table, end);
@@ -167,9 +168,10 @@ static Config::opcode_t tableCode(
 }
 
 Error TableI8080::searchOpCode(
-    InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end, tableCode);

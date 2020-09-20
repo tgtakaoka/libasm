@@ -445,12 +445,13 @@ static bool acceptAddrMode(uint16_t flags, const Entry *entry) {
 }
 
 Error TableMc6800::searchName(
-    InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const{
     const uint16_t flags =
         Entry::_flags(SZ_NONE, insn.mode1(), insn.mode2(), insn.mode3());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry,uint16_t>(
             insn.name(), flags, table, end, acceptAddrMode, count);
@@ -465,11 +466,12 @@ Error TableMc6800::searchName(
 }
 
 const Entry *TableMc6800::searchOpCode(
-    InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) {
+    InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
         if (insn.prefix() != prefix) continue;
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *table =
+            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end);

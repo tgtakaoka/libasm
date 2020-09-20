@@ -47,10 +47,10 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    static Error searchName(
-        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end);
-    static const Entry *searchOpCode(
-        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end);
+    Error searchName(
+        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const;
+    const Entry *searchOpCode(
+        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableMc6800 TableMc6800;

@@ -44,7 +44,7 @@ Error DisMc6809::decodeIndexed(
     PostSpec spec;
     if (TableMc6809.searchPostByte(post, spec)) return setError(UNKNOWN_POSTBYTE);
     if (spec.indir) *out++ = '[';
-    if (spec.mode == DISP_IDX || spec.mode == PNTR_IDX) {
+    if (spec.mode == DISP_IDX) {
         Config::ptrdiff_t offset = 0;
         char prefix = 0;
         if (spec.size == 5) {
@@ -55,22 +55,20 @@ Error DisMc6809::decodeIndexed(
             offset = static_cast<int8_t>(insn.readByte(memory));
             if (spec.indir && offset == 0) prefix = '<';
             if (!spec.indir && offset >= -16 && offset < 16) prefix = '<';
-        } else if (spec.size == 16) {
+        } else {
             offset = static_cast<int16_t>(insn.readUint16(memory));
             if (offset >= -128 && offset < 128) prefix = '>';
         }
-        if (spec.size) {
-            if (spec.base == REG_PCR) {
-                const Config::uintptr_t target =
-                    insn.address() + insn.length() + offset;
-                out = outRelativeAddr(out, target, insn.address(), spec.size);
-            } else {
-                if (prefix) {
-                    if (prefix == '{') *out++ = (prefix = '<');
-                    *out++ = prefix;
-                }
-                out = outConstant(out, offset, 10);
+        if (spec.base == REG_PCR) {
+            const Config::uintptr_t target =
+                insn.address() + insn.length() + offset;
+            out = outRelativeAddr(out, target, insn.address(), spec.size);
+        } else {
+            if (prefix) {
+                if (prefix == '{') *out++ = (prefix = '<');
+                *out++ = prefix;
             }
+            out = outConstant(out, offset, 10);
         }
     }
     if (spec.mode == ACCM_IDX)
@@ -81,9 +79,9 @@ Error DisMc6809::decodeIndexed(
     } else {
         *out++ = ',';
     }
-    if (spec.mode == AUTO_IDX && spec.size < 0) {
+    if (spec.mode == AUTO_DEC) {
         *out++ = '-';
-        if (spec.size == -2) *out++ = '-';
+        if (spec.size == 2) *out++ = '-';
     }
     if (spec.base == REG_X) {
         const RegName base = _regs.decodeBaseReg(post >> 5);
@@ -91,7 +89,7 @@ Error DisMc6809::decodeIndexed(
     } else if (spec.base != REG_UNDEF) {
         out = outRegister(out, spec.base);
     }
-    if (spec.mode == AUTO_IDX && spec.size > 0) {
+    if (spec.mode == AUTO_INC) {
         *out++ = '+';
         if (spec.size == 2) *out++ = '+';
     }

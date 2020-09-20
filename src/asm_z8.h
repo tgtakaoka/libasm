@@ -39,7 +39,6 @@ public:
 
 private:
     IntelValueParser _parser;
-    RegZ8 _regs;
     int16_t _regPointer0;
     int16_t _regPointer1;
 

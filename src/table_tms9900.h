@@ -43,10 +43,10 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    static Error searchName(
-        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end);
-    static Error searchOpCode(
-        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end);
+    Error searchName(
+        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end) const;
+    Error searchOpCode(
+        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end) const;
 };
 
 extern TableTms9900 TableTms9900;
