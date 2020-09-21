@@ -30,9 +30,9 @@ Error DisMos6502::decodeImmediate(
     DisMemory& memory, InsnMos6502 &insn, char *out) {
     *out++ = '#';
     if (TableMos6502.longImmediate(insn.addrMode())) {
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
     } else {
-        outConstant(out, insn.readByte(memory));
+        outHex(out, insn.readByte(memory), 8);
     }
     if (insn.opCode() == TableMos6502::WDM)
         return setError(UNKNOWN_INSTRUCTION);
@@ -65,13 +65,13 @@ Error DisMos6502::decodeAbsolute(
     if (indirect) *out++ = idirLong ? '[' : '(';
     const uint16_t addr = insn.readUint16(memory);
     if (!absLong) {
-        out = outAddress(out, addr, PSTR(">"), addr < 0x100);
+        out = outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     } else {
         uint32_t target = addr;
         const uint8_t bank = insn.readByte(memory);
         target |= static_cast<uint32_t>(bank) << 16;
-        out = outAddress(
-            out, target, PSTR(">>"), target < 0x10000, addressWidth());
+        out = outAbsAddr(
+            out, target, addressWidth(), PSTR(">>"), target < 0x10000);
     }
     if (index != REG_UNDEF) {
         *out++ = ',';
@@ -114,7 +114,7 @@ Error DisMos6502::decodeZeroPage(
     }
     const uint8_t zp = insn.readByte(memory);
     if (indirect) *out++ = zpLong ? '[' : '(';
-    out = outAddress(out, zp, PSTR("<"));
+    out = outAbsAddr(out, zp, 8, PSTR("<"));
     if (indirect && index == REG_Y) *out++ = zpLong ? ']' : ')';
     if (index != REG_UNDEF) {
         *out++ = ',';
@@ -149,7 +149,7 @@ Error DisMos6502::decodeRelative(
         delta = static_cast<int8_t>(insn.readByte(memory));
     }
     const uint32_t target = (static_cast<uint32_t>(bank) << 16) + base + delta;
-    outRelativeAddr(out, target, insn.address(), deltaWidth);
+    outRelAddr(out, target, insn.address(), deltaWidth);
     return setError(insn);
 }
 
@@ -159,9 +159,9 @@ Error DisMos6502::decodeBlockMove(
     const uint8_t sbank = insn.readByte(memory);
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
-    out = outAddress(out, src, nullptr, false, addressWidth());
+    out = outAbsAddr(out, src, addressWidth());
     *out++ = ',';
-    outAddress(out, dst, nullptr, false, addressWidth());
+    outAbsAddr(out, dst, addressWidth());
     return setOK();
 }
 

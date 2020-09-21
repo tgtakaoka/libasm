@@ -10,7 +10,7 @@
       INC   @R0
       INC   R0
       JBC   20H.0,$+20
-      JBC   20H.0,$-7DH
+      JBC   20H.0,$-125
       JBC   20H.0,$
       ACALL 0012H
       LCALL 0013H
@@ -19,8 +19,8 @@
       DEC   16H
       DEC   @R0
       DEC   R0
-      JB    20H.0,$+24H
-      JB    20H.0,$-7DH
+      JB    20H.0,$+36
+      JB    20H.0,$-125
       JB    20H.0,$
       RET
       RL    A
@@ -28,8 +28,8 @@
       ADD   A,26H
       ADD   A,@R0
       ADD   A,R0
-      JNB   20H.0,$+34H
-      JNB   20H.0,$-7DH
+      JNB   20H.0,$+52
+      JNB   20H.0,$-125
       JNB   20H.0,$
       RETI
       RLC   A
@@ -37,8 +37,8 @@
       ADDC  A,36H
       ADDC  A,@R0
       ADDC  A,R0
-      JC    $+43H
-      JC    $-7EH
+      JC    $+67
+      JC    $-126
       JC    $
       ORL   43H,A
       ORL   00H,#44H
@@ -46,8 +46,8 @@
       ORL   A,46H
       ORL   A,@R0
       ORL   A,R0
-      JNC   $+53H
-      JNC   $-7EH
+      JNC   $+83
+      JNC   $-126
       JNC   $
       ANL   53H,A
       ANL   00H,#54H
@@ -55,8 +55,8 @@
       ANL   A,56H
       ANL   A,@R0
       ANL   A,R0
-      JZ    $+63H
-      JZ    $-7EH
+      JZ    $+99
+      JZ    $-126
       JZ    $
       XRL   63H,A
       XRL   00H,#64H
@@ -64,8 +64,8 @@
       XRL   A,66H
       XRL   A,@R0
       XRL   A,R0
-      JNZ   $+73H
-      JNZ   $-7EH
+      JNZ   $+115
+      JNZ   $-126
       JNZ   $
       ORL   C,2EH.3
       JMP   @A+DPTR
@@ -73,7 +73,7 @@
       MOV   00H,#76H
       MOV   @R0,#77H
       MOV   R0,#79H
-      SJMP  $-7DH
+      SJMP  $-125
       SJMP  $
       SJMP  $+1
       ANL   C,80H.3
@@ -98,16 +98,16 @@
       ANL   C,/0B0H.1
       CPL   0B0H.3
       CPL   C
-      CJNE  A,#0,$-48H
+      CJNE  A,#0,$-72
       CJNE  A,#0,$
       CJNE  A,#0,$+1
-      CJNE  A,00H,$-47H
+      CJNE  A,00H,$-71
       CJNE  A,00H,$
       CJNE  A,00H,$+1
-      CJNE  @R0,#0,$-46H
+      CJNE  @R0,#0,$-70
       CJNE  @R0,#0,$
       CJNE  @R0,#0,$+1
-      CJNE  R0,#0,$-44H
+      CJNE  R0,#0,$-68
       CJNE  R0,#0,$
       CJNE  R0,#0,$+1
       PUSH  0C1H
@@ -121,11 +121,11 @@
       SETB  0D0H.3
       SETB  C
       DA    A
-      DJNZ  00H,$-27H
+      DJNZ  00H,$-39
       DJNZ  00H,$
       DJNZ  00H,$+1
       XCHD  A,@R0
-      DJNZ  R0,$-25H
+      DJNZ  R0,$-37
       DJNZ  R0,$
       DJNZ  R0,$+1
       MOVX  A,@DPTR

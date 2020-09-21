@@ -23,7 +23,7 @@ namespace z80 {
 template<typename T>
 char *DisZ80::outAbsolute(char *out, T addr) {
     *out++ = '(';
-    out = outAddress(out, addr);
+    out = outAbsAddr(out, addr);
     *out++ = ')';
     *out = 0;
     return out;
@@ -33,7 +33,7 @@ char *DisZ80::outIndexOffset(const InsnZ80 &insn, char *out, int8_t offset) {
     *out++ = '(';
     out = outRegister(out, RegZ80::decodeIndexReg(insn));
     if (offset >= 0) *out++ = '+';
-    out = outConstant(out, offset, 10);
+    out = outDec(out, offset, -8);
     *out++ = ')';
     *out = 0;
     return out;
@@ -121,10 +121,10 @@ Error DisZ80::decodeInherent(InsnZ80 &insn, char *out) {
         out = outPointer(out, RegZ80::decodeIndexReg(insn));
         break;
     case VEC_NO:
-        out = outConstant(out, static_cast<uint8_t>(opc & 0x38), 16, false);
+        out = outHex(out, opc & 0x38, 8);
         break;
     case BIT_NO:
-        out = outConstant(out, static_cast<uint8_t>((opc >> 3) & 7));
+        out = outHex(out, (opc >> 3) & 7, 3);
         break;
     case IMM_NO:
         switch (opc) {
@@ -197,7 +197,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, char *out, uint8_t val) {
         out = outRegister(out, REG_A);
         break;
     case IMM_8:
-        out = outConstant(out, val);
+        out = outHex(out, val, 8);
         break;
     case REG_8:
         out = outDataRegister(out, RegZ80::decodeDataReg(opc >> 3));
@@ -207,7 +207,7 @@ Error DisZ80::decodeImmediate8(InsnZ80 &insn, char *out, uint8_t val) {
     }
     if (insn.srcFormat() == IMM_8) {
         *out++ = ',';
-        outConstant(out, val);
+        outHex(out, val, 8);
     }
     return setError(insn);
 }
@@ -225,7 +225,7 @@ Error DisZ80::decodeImmediate16(InsnZ80 &insn, char *out, uint16_t val) {
         break;
     }
     *out++ = ',';
-    outConstant(out, val);
+    outHex(out, val, 16);
     return setError(insn);
 }
 
@@ -246,7 +246,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr) {
         out = _regs.outCcName(out, _regs.decodeCcName((opc >> 3) & 7));
         break;
     case IMM_16:
-        out = outAddress(out, addr);
+        out = outAbsAddr(out, addr);
         break;
     case REG_16:
         regName = RegZ80::decodePointerReg((opc >> 4) & 3);
@@ -272,7 +272,7 @@ Error DisZ80::decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr) {
         out = outRegister(out, REG_A);
         break;
     case IMM_16:
-        out = outAddress(out, addr);
+        out = outAbsAddr(out, addr);
         break;
     case REG_16:
         regName = RegZ80::decodePointerReg((opc >> 4) & 3);
@@ -321,7 +321,7 @@ Error DisZ80::decodeRelative(InsnZ80 &insn, char *out, int8_t delta) {
         *out++ = ',';
     }
     const Config::uintptr_t target = insn.address() + 2 + delta;
-    outRelativeAddr(out, target, insn.address(), 8);
+    outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }
 
@@ -365,7 +365,7 @@ Error DisZ80::decodeIndexedImmediate8(
     InsnZ80 &insn, char *out, int8_t offset, uint8_t val) {
     out = outIndexOffset(insn, out, offset);
     *out++ = ',';
-    outConstant(out, val);
+    outHex(out, val, 8);
     return setError(insn);
 }
 
@@ -381,7 +381,7 @@ Error DisZ80::decodeIndexedBitOp(
     const RegName regName = RegZ80::decodeDataReg(opCode);
     if (ixBit.dstFormat() == BIT_NO
         && ixBit.srcFormat() == REG_8 && regName == REG_UNDEF) {
-        out = outConstant(out, static_cast<uint8_t>((opCode >> 3) & 7));
+        out = outHex(out, (opCode >> 3) & 7, 3);
         *out++ = ',';
         out = outIndexOffset(insn, out, offset);
     } else if (ixBit.dstFormat() == REG_8 && regName == REG_UNDEF

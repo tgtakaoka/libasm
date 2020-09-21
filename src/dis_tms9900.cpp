@@ -27,7 +27,7 @@ Error DisTms9900::decodeOperand(
     if (mode == 1 || mode == 3) *out++ = '*';
     if (mode == 2) {
         *out++ = '@';
-        out = outConstant(out, insn.readUint16(memory));
+        out = outHex(out, insn.readUint16(memory), 16);
         if (regno) {
             *out++ = '(';
             out = _regs.outRegName(out, regno);
@@ -44,7 +44,7 @@ Error DisTms9900::decodeOperand(
 
 Error DisTms9900::decodeImmediate(
     DisMemory& memory, InsnTms9900 &insn, char *out) {
-    outConstant(out, insn.readUint16(memory));
+    outHex(out, insn.readUint16(memory), 16);
     return setError(insn);
 }
 
@@ -52,7 +52,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
     int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
     delta <<= 1;
     const Config::uintptr_t target = insn.address() + 2 + delta;
-    outRelativeAddr(out, target, insn.address(), 9);
+    outRelAddr(out, target, insn.address(), 9);
     return setOK();
 }
 
@@ -81,7 +81,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     case IMM_MOD:
         count = insn.opCode() & 7;
         if (count == 1 || count == 2 || count == 4)
-            outConstant(out, count, 10);
+            outHex(out, count, 3);
         break;
     case INH:
         break;
@@ -97,18 +97,18 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     case CNT_REG:
         out = _regs.outRegName(out, opCode);
         out = outComma(out);
-        count = (opCode >> 4) & 0x0f;
+        count = (opCode >> 4) & 0xF;
         if (count == 0) _regs.outRegName(out, 0);
-        else outConstant(out, count, 10);
+        else outDec(out, count, 4);
         break;
     case DW_BIT_SRC:
         opCode = insn.readUint16(memory);
-        count = (opCode >> 6) & 0x0f;
+        count = (opCode >> 6) & 0xF;
         if ((opCode & 0xFC00) != 0x0000) goto mid;
         if ((opCode & 0x0030) == 0x0030) goto mid; // no auto increment mode
         if (decodeOperand(memory, insn, out, opCode)) return getError();
         out = outComma(out);
-        outConstant(out, count, 10);
+        outDec(out, count, 4);
         break;
     case SRC:
         return decodeOperand(memory, insn, out, opCode);
@@ -124,19 +124,19 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
         if (decodeOperand(memory, insn, out, opCode))
             return getError();
         out = outComma(out);
-        count = (opCode >> 6) & 0xf;
+        count = (opCode >> 6) & 0xF;
         if (count == 0) _regs.outRegName(out, 0);
-        else outConstant(out, count, 10);
+        else outDec(out, count, 4);
         break;
     case CNT_SRC:
     case XOP_SRC:
         if (decodeOperand(memory, insn, out, opCode))
             return getError();
         out = outComma(out);
-        count = (opCode >> 6) & 0xf;
+        count = (opCode >> 6) & 0xF;
         if (insn.addrMode() == CNT_SRC && count == 0)
             count = 16;
-        outConstant(out, count, 10);
+        outDec(out, count, 5);
         break;
     case DW_DST_SRC:
         opCode = insn.readUint16(memory);
@@ -153,7 +153,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
         break;
     case CRU_OFF: {
         const int8_t offset = static_cast<int8_t>(opCode & 0xff);
-        outConstant(out, offset, 10);
+        outDec(out, offset, -8);
         break;
     }
     default:

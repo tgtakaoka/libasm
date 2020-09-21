@@ -608,10 +608,10 @@ static void test_relative() {
     }
 
     disassembler.setRelativeTarget(true);
-    ATEST(0x2000, BSR, "*-$7E", 0x8D, 0x80);
+    ATEST(0x2000, BSR, "*-126", 0x8D, 0x80);
     ATEST(0x2000, BSR, "*",     0x8D, 0xFE);
     ATEST(0x2000, BSR, "*+2",   0x8D, 0x00);
-    ATEST(0x2000, BSR, "*+$81", 0x8D, 0x7F);
+    ATEST(0x2000, BSR, "*+129", 0x8D, 0x7F);
 }
 
 static void test_bit_ops() {

@@ -22,53 +22,53 @@
       DAA
       SLP
       ABA
-      BRA   *+$23
-      BRA   *-$7E
+      BRA   *+35
+      BRA   *-126
       BRA   *
-      BRN   *+$24
-      BRN   *-$7E
+      BRN   *+36
+      BRN   *-126
       BRN   *
-      BHI   *+$25
-      BHI   *-$7E
+      BHI   *+37
+      BHI   *-126
       BHI   *
-      BLS   *+$26
-      BLS   *-$7E
+      BLS   *+38
+      BLS   *-126
       BLS   *
-      BHS   *+$27
-      BHS   *-$7E
+      BHS   *+39
+      BHS   *-126
       BHS   *
-      BLO   *+$28
-      BLO   *-$7E
+      BLO   *+40
+      BLO   *-126
       BLO   *
-      BNE   *+$29
-      BNE   *-$7E
+      BNE   *+41
+      BNE   *-126
       BNE   *
-      BEQ   *+$2A
-      BEQ   *-$7E
+      BEQ   *+42
+      BEQ   *-126
       BEQ   *
-      BVC   *+$2B
-      BVC   *-$7E
+      BVC   *+43
+      BVC   *-126
       BVC   *
-      BVS   *+$2C
-      BVS   *-$7E
+      BVS   *+44
+      BVS   *-126
       BVS   *
-      BPL   *+$2D
-      BPL   *-$7E
+      BPL   *+45
+      BPL   *-126
       BPL   *
-      BMI   *+$2E
-      BMI   *-$7E
+      BMI   *+46
+      BMI   *-126
       BMI   *
-      BGE   *+$2F
-      BGE   *-$7E
+      BGE   *+47
+      BGE   *-126
       BGE   *
-      BLT   *+$30
-      BLT   *-$7E
+      BLT   *+48
+      BLT   *-126
       BLT   *
-      BGT   *+$31
-      BGT   *-$7E
+      BGT   *+49
+      BGT   *-126
       BGT   *
-      BLE   *+$32
-      BLE   *-$7E
+      BLE   *+50
+      BLE   *-126
       BLE   *
       TSX
       INS
@@ -170,7 +170,7 @@
       ORAA  #$8B
       ADDA  #$8C
       CPX   #$008D
-      BSR   *-$70
+      BSR   *-112
       BSR   *
       BSR   *+1
       LDS   #$008F

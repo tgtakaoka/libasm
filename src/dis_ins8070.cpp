@@ -33,7 +33,7 @@ char *DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
     case OPR_PN: return outRegister(out, (value & 1) ? REG_P3 : REG_P2);
     case OPR_BR: return outRegister(out, RegIns8070::decodePointerReg(value));
     case OPR_T:  return outRegister(out, REG_T);
-    case OPR_4:  return outConstant(out, static_cast<uint8_t>(value & 15), 10);
+    case OPR_4:  return outDec(out, value & 15, 4);
     default:     return out;
     }
 }
@@ -55,7 +55,7 @@ Error DisIns8070::decodeImmediate(
     if (insn.oprSize() == SZ_WORD)
         return decodeAbsolute(memory, insn, out);
 
-    outConstant(out, insn.readByte(memory));
+    outHex(out, insn.readByte(memory), 8);
     return setError(insn);
 }
 
@@ -63,14 +63,14 @@ Error DisIns8070::decodeAbsolute(
     DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = insn.readUint16(memory) + fetch;
-    outAddress(out, target);
+    outAbsAddr(out, target);
     return setError(insn);
 }
 
 Error DisIns8070::decodeDirect(
     DisMemory &memory, InsnIns8070 &insn, char *out) {
     const Config::uintptr_t target = 0xFF00 | insn.readByte(memory);
-    outAddress(out, target);
+    outAbsAddr(out, target);
     return setError(insn);
 }
 
@@ -83,13 +83,13 @@ Error DisIns8070::decodeRelative(
         || (src == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
-        out = outRelativeAddr(out, target, insn.address(), 8);
+        out = outRelAddr(out, target, insn.address(), 8);
         if (src == OPR_GN) {
             *out++ = ',';
             outRegister(out, REG_PC);
         }
     } else {
-        out = outConstant(out, disp, 10);
+        out = outDec(out, disp, -8);
         *out++ = ',';
         if (src == OPR_PR) {
             outOperand(out, src, insn.opCode());

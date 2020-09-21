@@ -18,7 +18,7 @@
       LD   C,15
       RRCA
       DJNZ $+19
-      DJNZ $-7EH
+      DJNZ $-126
       DJNZ $
       LD   DE,18
       LD   (DE),A
@@ -28,7 +28,7 @@
       LD   D,23
       RLA
       JR   $+27
-      JR   $-7EH
+      JR   $-126
       JR   $
       ADD  HL,DE
       LD   A,(DE)
@@ -37,8 +37,8 @@
       DEC  E
       LD   E,31
       RRA
-      JR   NZ,$+23H
-      JR   NZ,$-7EH
+      JR   NZ,$+35
+      JR   NZ,$-126
       JR   NZ,$
       LD   HL,0022H
       LD   (0023H),HL
@@ -47,8 +47,8 @@
       DEC  H
       LD   H,27H
       DAA
-      JR   Z,$+2BH
-      JR   Z,$-7EH
+      JR   Z,$+43
+      JR   Z,$-126
       JR   Z,$
       ADD  HL,HL
       LD   HL,(002BH)
@@ -57,8 +57,8 @@
       DEC  L
       LD   L,2FH
       CPL
-      JR   NC,$+33H
-      JR   NC,$-7EH
+      JR   NC,$+51
+      JR   NC,$-126
       JR   NC,$
       LD   SP,0032H
       LD   (0033H),A
@@ -67,8 +67,8 @@
       DEC  (HL)
       LD   (HL),37H
       SCF
-      JR   C,$+3BH
-      JR   C,$-7EH
+      JR   C,$+59
+      JR   C,$-126
       JR   C,$
       ADD  HL,SP
       LD   A,(003BH)
@@ -212,7 +212,7 @@
       CALL NZ,00C5H
       PUSH BC
       ADD  A,0C7H
-      RST  00H
+      RST  0
       RET  Z
       RET
       JP   Z,00CBH

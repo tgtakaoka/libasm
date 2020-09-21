@@ -32,21 +32,21 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     switch (insn.addrMode()) {
     case REGN:
     case REG1:
-        outConstant(out, static_cast<uint8_t>(opCode & 0xF), 10);
+        outDec(out, opCode & 0xF, 4);
         break;
     case IMM8:
-        outConstant(out, insn.readByte(memory));
+        outHex(out, insn.readByte(memory), 8);
         break;
     case IOAD:
-        outConstant(out, static_cast<uint8_t>(opCode & 7), 10);
+        outHex(out, opCode & 7, 3);
         break;
     case ADDR:
-        outAddress(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory));
         break;
     case PAGE: {
         const uint8_t val = insn.readByte(memory);
         const uint16_t addr = ((insn.address() + 2) & ~0xFF) | val;
-        outAddress(out, addr);
+        outAbsAddr(out, addr);
         break;
     }
     default:

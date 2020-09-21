@@ -1785,7 +1785,7 @@ static void test_bit() {
     TEST(BTST_B, "D7,($001234).W",     0007470, 0x1234);
     TEST(BTST_B, "D7,($012345).L",     0007471, 0x0001, 0x2345);
     TEST(BTST_B, "D7,(*+$1234,PC)",    0007472, 0x1232);
-    TEST(BTST_B, "D7,(*+$23,PC,D3.L)", 0007473, 0x3821);
+    TEST(BTST_B, "D7,(*+35,PC,D3.L)",  0007473, 0x3821);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0007474); // #xxxx
 
     // BTST #n,dst: 00040|M|Rn
@@ -1799,7 +1799,7 @@ static void test_bit() {
     TEST(BTST_B, "#2,($001234).W",     0004070, 0x0002, 0x1234);
     TEST(BTST_B, "#1,($012345).L",     0004071, 0x0001, 0x0001, 0x2345);
     TEST(BTST_B, "#0,(*+$1234,PC)",    0004072, 0x0000, 0x1232);
-    TEST(BTST_B, "#7,(*+$23,PC,D3.L)", 0004073, 0x0007, 0x3821);
+    TEST(BTST_B, "#7,(*+35,PC,D3.L)",  0004073, 0x0007, 0x3821);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0004074); // #xxxx
 }
 
@@ -2074,11 +2074,11 @@ static void test_program() {
     // BRA label: 00600|disp
     TEST(BRA, "*-$7FFE",              0060000, 0x8000);
     TEST(BRA, "*-$007E",              0060000, 0xFF80);
-    TEST(BRA, "*-$7E",                0060000 | 0x80);
+    TEST(BRA, "*-126",                0060000 | 0x80);
     TEST(BRA, "*",                    0060000 | 0xFE);
     TEST(BRA, "*",                    0060000, 0xFFFE);
     TEST(BRA, "*+2",                  0060000, 0x0000);
-    TEST(BRA, "*+$80",                0060000 | 0x7E);
+    TEST(BRA, "*+128",                0060000 | 0x7E);
     TEST(BRA, "*+$0080",              0060000, 0x007E);
     TEST(BRA, "*+$8000",              0060000, 0x7FFE);
     ETEST(OPERAND_NOT_ALIGNED, _, "", 0060000, 0x8001);
@@ -2091,11 +2091,11 @@ static void test_program() {
     // BSR label: 00604|disp
     TEST(BSR, "*-$7FFE",              0060400, 0x8000);
     TEST(BSR, "*-$007E",              0060400, 0xFF80);
-    TEST(BSR, "*-$7E",                0060400 | 0x80);
+    TEST(BSR, "*-126",                0060400 | 0x80);
     TEST(BSR, "*",                    0060400 | 0xFE);
     TEST(BSR, "*",                    0060400, 0xFFFE);
     TEST(BSR, "*+2",                  0060400, 0x0000);
-    TEST(BSR, "*+$80",                0060400 | 0x7E);
+    TEST(BSR, "*+128",                0060400 | 0x7E);
     TEST(BSR, "*+$0080",              0060400, 0x007E);
     TEST(BSR, "*+$8000",              0060400, 0x7FFE);
     ETEST(OPERAND_NOT_ALIGNED, _, "", 0060400, 0x8001);

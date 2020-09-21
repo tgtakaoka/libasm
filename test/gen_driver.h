@@ -117,8 +117,8 @@ private:
     }
     void origin(typename Conf::uintptr_t addr) override {
         char operands[40];
-        _disassembler.getFormatter().output(
-            operands, addr, 16, false, _disassembler.addressWidth());
+        _disassembler.getFormatter().formatHex(
+            operands, addr, _disassembler.addressWidth(), false);
         _listing.reset(*this);
         _address = addr;
         _generated_size = 0;

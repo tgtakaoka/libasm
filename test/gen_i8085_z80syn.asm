@@ -196,7 +196,7 @@
       CALL NZ,00C5H
       PUSH BC
       ADD  A,0C7H
-      RST  00H
+      RST  0
       RET  Z
       RET
       JP   Z,00CBH

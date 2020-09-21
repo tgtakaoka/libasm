@@ -58,7 +58,18 @@ Error DisNs32000::readIndexByte(
 }
 
 char *DisNs32000::outDisplacement(char *out, const Displacement &disp) {
-    return outConstant(out, disp.val32, 16, true, true, -disp.bits);
+    switch (disp.bits) {
+    case 7:
+        out = outDec(out, static_cast<int8_t>(disp.val32), -8);
+        break;
+    case 14:
+        out = outHex(out, static_cast<int16_t>(disp.val32), -16);
+        break;
+    default:
+        out = outHex(out, disp.val32, disp.bits);
+        break;
+    }
+    return out;
 }
 
 Error DisNs32000::readDisplacement(
@@ -105,7 +116,7 @@ Error DisNs32000::decodeLength(
         len /= 4;
     }
     len++;
-    outConstant(out, len, 10);
+    outDec(out, len, 5);
     return OK;
 }
 
@@ -122,9 +133,9 @@ Error DisNs32000::decodeBitField(
     const uint8_t data = insn.readByte(memory);
     const uint8_t len = (data & 0x1F) + 1;
     const uint8_t off = (data >> 5);
-    out = outConstant(out, off, 10);  // M_BFOFF
+    out = outHex(out, off, 3);  // M_BFOFF
     out = outComma(out);
-    outConstant(out, len, 10);  // M_BFLEN
+    outDec(out, len, 6);  // M_BFLEN
     return setError(insn);
 }
 
@@ -133,23 +144,27 @@ Error DisNs32000::decodeImmediate(
     const OprSize size = (mode == M_GENC) ? SZ_BYTE : insn.oprSize();
     switch (size) {
     case SZ_BYTE:
-        outConstant(out, insn.readByte(memory), mode == M_GENC ? -10 : 16);
+        if (mode == M_GENC) {
+            outDec(out, static_cast<int8_t>(insn.readByte(memory)), -8);
+        } else {
+            outHex(out, insn.readByte(memory), 8);
+        }
         break;
     case SZ_WORD:
-        outConstant(out, insn.readUint16(memory));
+        outHex(out, insn.readUint16(memory), 16);
         break;
     case SZ_LONG:
-        outConstant(out, insn.readUint32(memory));
+        outHex(out, insn.readUint32(memory), 32);
         break;
 #ifdef ENABLE_FLOAT
     case SZ_FLOAT:
-        outConstant(out, insn.readUint32(memory));
+        outHex(out, insn.readUint32(memory), 32);
         break;
     case SZ_DOUBLE:
         // TODO: double
-        out = outConstant(out, insn.readUint32(memory));
+        out = outHex(out, insn.readUint32(memory), 32);
         *out++ = ':';
-        outConstant(out, insn.readUint32(memory));
+        outHex(out, insn.readUint32(memory), 32);
         break;
 #endif
     default:
@@ -165,8 +180,7 @@ Error DisNs32000::decodeDisplacement(
     if (mode == M_LEN32) {
         if (disp.val32 <= 0) return setError(ILLEGAL_CONSTANT);
         if (disp.val32 > 32) return setError(OVERFLOW_RANGE);
-        const uint8_t len = disp.val32;
-        outConstant(out, len, 10);
+        outDec(out, disp.val32, 6);
     }
     if (mode == M_DISP)
         outDisplacement(out, disp);
@@ -178,7 +192,7 @@ Error DisNs32000::decodeRelative(
     Displacement disp;
     if (readDisplacement(memory, insn, disp)) return getError();
     const Config::uintptr_t target = insn.address() + disp.val32;
-    outRelativeAddr(out, target, insn.address(), -disp.bits);
+    outRelAddr(out, target, insn.address(), disp.bits);
     return OK;
 }
 
@@ -207,7 +221,7 @@ Error DisNs32000::decodeRegisterList(
     for (uint8_t reg = 0; list; reg++) {
         if (list & mask) {
             if (sep) *out++ = sep;
-            out = _regs.outRegName(out, _regs.decodeRegName(reg));
+            out = _regs.outRegName(out, RegNs32000::decodeRegName(reg));
             sep = ',';
         }
         if (mode == M_POP) list <<= 1;
@@ -227,7 +241,7 @@ Error DisNs32000::decodeGeneric(
     if (isScaledIndex(gen)) {
         indexSize = OprSize(gen & 0x3);
         const uint8_t indexByte = insn.indexByte(pos);
-        index = _regs.decodeRegName(indexByte);
+        index = RegNs32000::decodeRegName(indexByte);
         gen = indexByte >> 3;
     }
     Displacement disp, disp2;
@@ -235,14 +249,14 @@ Error DisNs32000::decodeGeneric(
     switch (gen) {
     case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
 #ifdef ENABLE_FLOAT
-        reg = _regs.decodeRegName(gen, (mode == M_FENR || mode == M_FENW));
+        reg = RegNs32000::decodeRegName(gen, (mode == M_FENR || mode == M_FENW));
 #else
-        reg = _regs.decodeRegName(gen);
+        reg = RegNs32000::decodeRegName(gen);
 #endif
         out = _regs.outRegName(out, reg);
         break;
     case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15:
-        reg = _regs.decodeRegName(gen);
+        reg = RegNs32000::decodeRegName(gen);
         if (readDisplacement(memory, insn, disp)) return getError();
         out = outDisplacement(out, disp);
         *out++ = '(';
@@ -295,7 +309,7 @@ Error DisNs32000::decodeGeneric(
         if (readDisplacement(memory, insn, disp)) return getError();
         if (reg == REG_PC) {
             const Config::uintptr_t target = insn.address() + disp.val32;
-            out = outRelativeAddr(out, target, insn.address(), -disp.bits);
+            out = outRelAddr(out, target, insn.address(), disp.bits);
         } else {
             out = outDisplacement(out, disp);
         }
@@ -323,14 +337,14 @@ Error DisNs32000::decodeOperand(
     const uint8_t field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
-        out = _regs.outRegName(out, _regs.decodeRegName(field));
+        out = _regs.outRegName(out, RegNs32000::decodeRegName(field));
         break;
     case M_PREG:
-        out = _regs.outPregName(out, _regs.decodePregName(field));
+        out = _regs.outPregName(out, RegNs32000::decodePregName(field));
         break;
 #ifdef ENABLE_MMU
     case M_MREG:
-        out = _regs.outMregName(out, _regs.decodeMregName(field));
+        out = _regs.outMregName(out, RegNs32000::decodeMregName(field));
         break;
 #endif
     case M_CONF:
@@ -349,7 +363,7 @@ Error DisNs32000::decodeOperand(
 #endif
         return decodeGeneric(memory, insn, out, mode, pos);
     case M_INT4:
-        outConstant(out, static_cast<int8_t>(getOprField(insn, pos)));
+        outDec(out, static_cast<int8_t>(getOprField(insn, pos)), -4);
         break;
     case M_BFOFF:
     case M_BFLEN:

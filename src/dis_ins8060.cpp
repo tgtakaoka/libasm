@@ -31,7 +31,7 @@ Error DisIns8060::decodePntr(InsnIns8060 &insn, char *out) {
 
 Error DisIns8060::decodeImm8(
         DisMemory& memory, InsnIns8060 &insn, char *out) {
-    outConstant(out, insn.readByte(memory));
+    outHex(out, insn.readByte(memory), 8);
     return setError(insn);
 }
 
@@ -51,18 +51,18 @@ Error DisIns8060::decodeIndx(
         // Program space is paged by 4kB.
         Config::uintptr_t target = base + disp + fetch;
         if ((target & ~0xFFF) == page) {
-            outRelativeAddr(out, target, insn.address(), 8);
+            outRelAddr(out, target, insn.address(), 8);
         } else {
             target &= 0xFFF;
             target |= page;
-            outAddress(out, target);
+            outAbsAddr(out, target);
         }
     } else {
         if (opr == 0x80) {         // E(Pn)
             out = outRegister(out, REG_E);
         } else {
             const int8_t disp = static_cast<int8_t>(opr);
-            out = outConstant(out, disp, 10);
+            out = outDec(out, disp, -8);
         }
         *out++ = '(';
         out = outRegister(out, reg);

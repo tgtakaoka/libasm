@@ -78,50 +78,51 @@ protected:
     }
 
     template<typename T>
-    char *outConstant(
-            char *out,
-            T val,
-            int8_t radix = 16,
-            bool relax = true,
-            bool symbol = true,
-            uint8_t bitWidth = sizeof(T) * 8) {
-        if (symbol) {
-            const char *label = lookup(val);
-            if (label) return outText(out, label);
-        }
-        const int8_t r = is_signed<T>::value ? -radix : radix;
-        return getFormatter().output(out, val, r, relax, bitWidth);
+    char *outHex(char *out, T val, int8_t bits) {
+        const char *label = lookup(val);
+        if (label) return outText(out, label);
+        return getFormatter().formatHex(out, val, bits, /*relax*/true);
     }
 
+    char *outDec(char *out, uint8_t val, int8_t bits);
+
     template<typename Addr>
-    char *outAddress(
-            char *out,
-            Addr val,
-            const /*PROGMEM*/ char *prefix = nullptr,
-            bool needPrefix = false,
-            uint8_t addrWidth = sizeof(Addr) * 8) {
+    char *outAbsAddr(
+        char *out, Addr val, uint8_t addrWidth = 0,
+        const /*PROGMEM*/ char *prefix = nullptr, bool needPrefix = false) {
         const char *label = lookup(val);
         if (label) {
             if (prefix) out = outPstr(out, prefix);
             return outText(out, label);
         }
         if (needPrefix && prefix) out = outPstr(out, prefix);
-        return getFormatter().output(out, val, 16, false, addrWidth);
+        if (addrWidth == 0) addrWidth = sizeof(Addr) * 8;
+        return getFormatter().formatHex(out, val, addrWidth, false);
     }
 
     template<typename Addr>
-    char *outRelativeAddr(
-            char *out, Addr target, Addr origin, int8_t deltaBits) {
+    char *outRelAddr(
+        char *out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
-            return outAddress(out, target, nullptr, false, addressWidth());
-        const int32_t delta = static_cast<
-            typename make_signed<Addr>::type>(target - origin);
+            return outAbsAddr(out, target, addressWidth());
         *out++ = getFormatter().currentOriginSymbol();
-        if (delta > 0) *out++ = '+';
-        if (delta < 0) *out++ = '-';
-        const uint32_t disp = (delta < 0) ? -delta : delta;
-        if (disp) out = outConstant(out, disp, 16, true, true, deltaBits);
         *out = 0;
+        const auto delta = static_cast<
+            typename make_signed<Addr>::type>(target - origin);
+        if (delta == 0) return out;
+        Addr val;
+        if (delta < 0) {
+            *out++ = '-';
+            val = static_cast<Addr>(-delta);
+        } else {
+            *out++ = '+';
+            val = static_cast<Addr>(delta);
+        }
+        if (deltaBits <= 14) {
+            out = getFormatter().formatDec(out, val, deltaBits);
+        } else {
+            out = getFormatter().formatHex(out, val, deltaBits);
+        }
         return out;
     }
 

@@ -44,17 +44,13 @@ void val_assert(
                         static_cast<uint32_t>(actual));
 }
 
-template<int BIT_WIDTH>
-void fmt_assert(
-    const char *file, const int line, const uint32_t value,
-    const int8_t radix, const bool relax, const char *expected,
-    ValueFormatter &formatter) {
-    char msg[80];
-    sprintf(msg, "%d (%x)", value, value);
-    char actual[80];
-    formatter.output(actual, value, radix, relax, BIT_WIDTH);
-    asserter.equals(file, line, msg, expected, actual);
-}
+void dec_assert(
+    const char *file, const int line, const uint32_t value, int8_t bitWidth,
+    const char *expected, ValueFormatter &formatter);
+
+void hex_assert(
+    const char *file, const int line, const uint32_t value, int8_t bitWidth,
+    const bool relax, const char *expected, ValueFormatter &formatter);
 
 void run_test(
         void (*test)(),
@@ -72,16 +68,10 @@ void run_test(
 #define E32(expr, expected, expected_error)                             \
     val_assert<uint32_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
 
-#define FN(n, value, radix, relax, expected)                            \
-    fmt_assert<n>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
-#define F8(value, radix, relax, expected)                               \
-    fmt_assert<8>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
-#define F16(value, radix, relax, expected)                              \
-    fmt_assert<16>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
-#define F24(value, radix, relax, expected)                              \
-    fmt_assert<24>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
-#define F32(value, radix, relax, expected)                              \
-    fmt_assert<32>(__FILE__, __LINE__, value, radix, relax, expected, formatter)
+#define DEC(value, bits, expected)                               \
+    dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
+#define HEX(value, bits, relax, expected)                               \
+    hex_assert(__FILE__, __LINE__, value, bits, relax, expected, formatter)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 
