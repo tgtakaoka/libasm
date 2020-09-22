@@ -48,13 +48,13 @@ private:
         AddrMode mode;
         RegName reg;
         CcName  cc;
-        uint16_t val;
+        uint16_t val16;
         Operand()
             : ErrorReporter(),
               mode(M_NO),
               reg(REG_UNDEF),
               cc(CC_UNDEF),
-              val(0)
+              val16(0)
         {}
     };
 

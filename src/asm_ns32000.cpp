@@ -107,8 +107,8 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
     const char *p = _scan;
     if (endOfLine(p)) return OK;
     if (*p == '@') {
-        _scan = p + 1;
-        if (getOperand(op.val32)) return getError();
+        op.val32 = parseExpr32(p + 1);
+        if (parserError()) return getError();
         op.setError(getError());
         op.mode = M_ABS;
         return OK;
@@ -167,16 +167,16 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         if (reg == REG_EXT) {
             if (*p != '(')
                 return setError(UNKNOWN_OPERAND);
-            _scan = p + 1;
-            if (getOperand(op.val32)) return getError();
+            op.val32 = parseExpr32(p + 1);
+            if (parserError()) return getError();
             op.setError(getError());
             p = skipSpaces(_scan);
             if (*p++ != ')')
                 return setError(MISSING_CLOSING_PAREN);
             if (*(p = skipSpaces(p)) != '+')
                 return setError(UNKNOWN_OPERAND);
-            _scan = p + 1;
-            if (getOperand(op.disp2)) return getError();
+            op.disp2 = parseExpr32(p + 1);
+            if (parserError()) return getError();
             op.setErrorIf(getError());
             op.mode = M_EXT;
             return OK;
@@ -184,13 +184,14 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         return setError(UNKNOWN_REGISTER);
     }
 
-    if (getOperand(op.val32)) return getError();
+    op.val32 = parseExpr32(p);
+    if (parserError()) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
 #ifdef ENABLE_FLOAT
     if (*p == ':') { // 64-bit immediate
-        _scan = p + 1;
-        if (getOperand(op.disp2)) return getError();
+        op.disp2 = parseExpr32(p + 1);
+        if (parserError()) return getError();
         op.setErrorIf(getError());
         op.indexSize = SZ_DOUBLE;
         p = skipSpaces(_scan);
@@ -227,8 +228,8 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
         return setError(UNKNOWN_OPERAND);
     }
 
-    _scan = p;
-    if (getOperand(op.disp2)) return getError();
+    op.disp2 = parseExpr32(p);
+    if (parserError()) return getError();
     op.setErrorIf(getError());
     p = skipSpaces(_scan);
     if (*p++ != '(')

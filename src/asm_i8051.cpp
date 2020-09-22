@@ -25,8 +25,8 @@ Error AsmI8051::parseOperand(Operand &op) {
     if (endOfLine(p)) return OK;
 
     if (*p == '#') {
-        _scan = skipSpaces(p + 1);
-        if (getOperand(op.val16)) return getError();
+        op.val16 = parseExpr16(p + 1);
+        if (parserError()) return getError();
         op.setError(getError());
         op.mode = IMM16;
         return OK;
@@ -83,19 +83,15 @@ Error AsmI8051::parseOperand(Operand &op) {
     const bool bitNot = (*p == '/');
     if (bitNot) p = skipSpaces(p + 1);
 
-    _scan = p;
-    if (getOperand(op.val16)) return getError();
+    op.val16 = parseExpr16(p);
+    if (parserError()) return getError();
     op.setError(getError());
     p = _scan;
     if (*p == '.') {
         if (op.getError()) op.val16 = 0x20;
-        uint8_t bitNo = 0;
-        _scan = p + 1;
-        if (getOperand(bitNo)) return getError();
-        if (getError()) {
-            op.setErrorIf(getError());
-            bitNo = 0;
-        }
+        uint16_t bitNo = parseExpr16(p + 1);
+        if (parserError()) return getError();
+        op.setErrorIf(getError());
         if (bitNo >= 8) return setError(ILLEGAL_BIT_NUMBER);
         if ((op.val16 & ~0x0F) == 0x20 || (op.val16 & ~0x78) == 0x80) {
             op.mode = bitNot ? NOTAD : BITAD;

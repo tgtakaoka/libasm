@@ -24,7 +24,7 @@ Error AsmIns8060::encodeRel8(
     InsnIns8060 &insn, const Operand &op) {
     Config::ptrdiff_t delta;
     if (op.mode == DISP) {
-        delta = op.val;     // E(Pn)
+        delta = op.val16;       // E(Pn)
         insn.embed(RegIns8060::encodePointerReg(op.reg));
     } else {
         // PC points the last byte of instruction.
@@ -33,14 +33,14 @@ Error AsmIns8060::encodeRel8(
         const uint8_t fetch = (insn.addrMode() == REL8) ? 1 : 0;
         // Program space is paged by 4kB.
         const Config::uintptr_t target = op.getError() ? base
-            : ((op.val & 0xFFF) | (base & ~0xFFF)) - fetch;
+            : ((op.val16 & 0xFFF) | (base & ~0xFFF)) - fetch;
         delta = target - base;
         // delta -128 is for E reg.
         if (delta <= -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
         insn.embed(RegIns8060::encodePointerReg(REG_PC));
     }
     insn.emitInsn();
-    insn.emitByte(static_cast<uint8_t>(delta));
+    insn.emitByte(delta);
     return getError();
 }
 
@@ -53,7 +53,7 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
         insn.embed(4);
     }
     insn.emitInsn();
-    insn.emitByte(static_cast<uint8_t>(op.val));
+    insn.emitByte(op.val16);
     return getError();
 }
 
@@ -70,15 +70,15 @@ Error AsmIns8060::parseOperand(Operand &op) {
     const RegName reg = RegIns8060::parseRegName(p);
     if (reg == REG_E) {
         p += RegIns8060::regNameLen(reg);
-        op.val = 0x80;
+        op.val16 = 0x80;
     } else if (reg != REG_UNDEF) {
         _scan = p + RegIns8060::regNameLen(reg);
         op.mode = PNTR;
         op.reg = reg;
         return OK;
     } else {
-        _scan = p;
-        if (getOperand(op.val)) return getError();
+        op.val16 = parseExpr16(p);
+        if (parserError()) return getError();
         op.setError(getError());
         p = _scan;
     }
@@ -135,7 +135,7 @@ Error AsmIns8060::encode(Insn &_insn) {
         break;
     case IMM8:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op.val));
+        insn.emitByte(op.val16);
         break;
     default:
         return setError(INTERNAL_ERROR);

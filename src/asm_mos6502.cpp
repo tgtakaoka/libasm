@@ -93,8 +93,8 @@ Error AsmMos6502::parseOperand(Operand &op, Operand &extra) {
     if (endOfLine(p)) return OK;
 
     if (*p == '#') {            // #nn
-        _scan = p + 1;
-        if (getOperand(op.val32)) return getError();
+        op.val32 = parseExpr32(p + 1);
+        if (parserError()) return getError();
         op.setError(getError());
         op.mode = IMMA;
         return OK;
@@ -113,8 +113,8 @@ Error AsmMos6502::parseOperand(Operand &op, Operand &extra) {
     if (indir) p = skipSpaces(p + 1);
     const char size = parseSizeOverride(p);
     if (size) p += (size == '}') ? 2 : 1;
-    _scan = p;
-    if (getOperand(op.val32)) return getError();
+    op.val32 = parseExpr32(p);
+    if (parserError()) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
 
@@ -126,8 +126,8 @@ Error AsmMos6502::parseOperand(Operand &op, Operand &extra) {
         base = RegMos6502::parseRegName(p);
         p = skipSpaces(p + RegMos6502::regNameLen(base));
         if (base == REG_UNDEF) {
-            _scan = p;
-            if (getOperand(extra.val32)) return getError();
+            extra.val32 = parseExpr32(p);
+            if (parserError()) return getError();
             extra.setError(getError());
             p = skipSpaces(_scan);
             hasExtra = true;
@@ -237,11 +237,10 @@ Error AsmMos6502::parseOnOff(const char *line, bool &val) {
 Error AsmMos6502::parseZeroOne(const char *line, bool &val) {
     line = skipSpaces(line);
     if (*line == ':') {
-        uint8_t val8;
-        _scan = line + 1;
-        if (getOperand(val8) == OK) {
-            if (val8 == 1) val = false;
-            else if (val8 == 0) val = true;
+        uint32_t val32 = parseExpr32(line + 1);
+        if (getError() == OK) {
+            if (val32 == 1) val = false;
+            else if (val32 == 0) val = true;
             else setError(UNKNOWN_OPERAND);
             checkLineEnd();
         } else {

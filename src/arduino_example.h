@@ -23,8 +23,6 @@
 
 #include <libcli.h>
 
-#include <ctype.h>
-
 namespace libasm {
 namespace arduino {
 
@@ -109,8 +107,7 @@ protected:
 
     bool processPseudo(const char *line) {
         if (strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
-            const char *cpu = line + 4;
-            while (isspace(*cpu)) cpu++;
+            const char *cpu = skipSpaces(line + 4);
             if (!setCpu(cpu))
                 _cli.println(F("unknown CPU"));
             return true;
@@ -130,17 +127,28 @@ protected:
         (void)value;
         return nullptr;
     }
+
     bool hasSymbol(const char *symbol, const char *end) override {
         (void)symbol; (void)end;
         return false;
     }
+
     uint32_t lookupSymbol(const char *symbol, const char *end) override {
         (void)symbol; (void)end;
         return 0;
     }
     uint32_t currentOrigin() override { return _origin; }
 
-    static const __FlashStringHelper *fstr(const /*PROGMEM*/ char *pstr) {
+    static bool isSpace(char c) {
+        return c == ' ' || c == '\t';
+    }
+
+    static const char *skipSpaces(const char *p) {
+        while (isSpace(*p)) p++;
+        return p;
+    }
+
+    static const __FlashStringHelper *FSTR(const /*PROGMEM*/ char *pstr) {
         return reinterpret_cast<const __FlashStringHelper *>(pstr);
     }
 
@@ -150,9 +158,9 @@ private:
 
     static void printPrompt(Cli &cli, uintptr_t extra) {
         BaseExample *example = reinterpret_cast<BaseExample *>(extra);
-        cli.print(fstr(example->_prompt));
+        cli.print(FSTR(example->_prompt));
         cli.print(':');
-        cli.print(fstr(example->getCpu()));
+        cli.print(FSTR(example->getCpu()));
         cli.print(F("> "));
     }
 };
@@ -173,7 +181,9 @@ protected:
     const /*PROGMEM */ char *getCpu() const override {
         return _assembler.getCpu();
     }
-    bool setCpu(const char *cpu) override { return _assembler.setCpu(cpu); }
+    bool setCpu(const char *cpu) override {
+        return _assembler.setCpu(cpu);
+    }
 
 private:
     Assembler &_assembler;
@@ -182,7 +192,7 @@ private:
         Insn insn;
         if (_assembler.encode(line, insn, _origin, this)) {
             _cli.print(F("Error: "));
-            _cli.println(fstr(_assembler.errorText()));
+            _cli.println(FSTR(_assembler.errorText()));
         } else {
             printAddress(insn.address());
             _cli.print(':');
@@ -195,10 +205,10 @@ private:
     static bool handleLine(Cli::State state, char *line, uintptr_t extra) {
         (void)state;
         AsmExample *example = reinterpret_cast<AsmExample *>(extra);
-        while (isspace(*line)) line++;
-        if (*line) {
-            if (!example->processPseudo(line))
-                example->assemble(line);
+        const char *scan = skipSpaces(line);
+        if (*scan) {
+            if (!example->processPseudo(scan))
+                example->assemble(scan);
         }
         example->_cli.readLine(handleLine, extra);
         return true;
@@ -229,12 +239,12 @@ private:
     Disassembler &_disassembler;
 
     void disassemble(DisMemory &memory) {
-        char operands[40];
+        char operands[80];
         Insn insn;
         while (memory.hasNext()) {
             if (_disassembler.decode(memory, insn, operands, this)) {
                 _cli.print(F("Error: "));
-                _cli.println(fstr(_disassembler.errorText()));
+                _cli.println(FSTR(_disassembler.errorText()));
             } else {
                 printAddress(insn.address());
                 _cli.print(':');
@@ -250,10 +260,10 @@ private:
     static bool handleLine(Cli::State state, char *line, uintptr_t extra) {
         (void)state;
         DisExample *example = reinterpret_cast<DisExample *>(extra);
-        while (isspace(*line)) line++;
-        if (*line) {
-            if (!example->processPseudo(line)) {
-                StrMemory memory(example->_origin, line);
+        const char *scan = skipSpaces(line);
+        if (*scan) {
+            if (!example->processPseudo(scan)) {
+                StrMemory memory(example->_origin, scan);
                 example->disassemble(memory);
             }
         }

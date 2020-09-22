@@ -98,8 +98,8 @@ const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
             return nullptr;
         }
     }
-    _scan = p;
-    if (getOperand(op.val32)) return nullptr;
+    op.val32 = parseExpr32(p);
+    if (parserError()) return nullptr;
     op.setError(getError());
     op.hasVal = true;
     return skipSpaces(_scan);
@@ -162,13 +162,14 @@ Error AsmI8086::parseOperand(Operand &op) {
     }
     if (reg != REG_UNDEF) return setError(UNKNOWN_OPERAND);
 
-    if (getOperand(op.val32)) return getError();
+    op.val32 = parseExpr32(p);
+    if (parserError()) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
     if (*p == ':') {
         op.seg16 = op.val32;
-        _scan = p + 1;
-        if (getOperand(op.val32)) return getError();
+        op.val32 = parseExpr32(p + 1);
+        if (parserError()) return getError();
         op.setErrorIf(getError());
         op.mode = M_FAR;
         return OK;

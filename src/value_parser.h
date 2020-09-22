@@ -58,6 +58,16 @@ public:
         return _value;
     }
 
+    Value &complement() {
+        _value = ~_value;
+        return *this;
+    }
+
+    Value &negate() {
+        if (!isUndefined()) setSigned(-getSigned());
+        return *this;
+    }
+
 private:
     enum ValueType : uint8_t {
         UNDEFINED = 0,
@@ -72,27 +82,36 @@ private:
         : _value(value), _type(type) {}
 };
 
-class ValueParser : public ErrorReporter {
+class ValueParser : protected ErrorReporter {
 public:
-    const char *eval(const char *expr, uint32_t &val32, SymbolTable *symtab);
-    const char *eval(const char *expr, uint16_t &val16, SymbolTable *symtab);
-    const char *eval(const char *expr, uint8_t &val8, SymbolTable *symtab);
-    virtual bool isSymbolLetter(char c, bool head = false) const;
+    Error error() const { return getError(); }
+    /*
+     * Parse |scan| text and convert expression to |val|.
+     * Undefined symbol reference in expression should be checked by
+     * |val.isUndefined()|. Other error should be checked by |error()|.
+     */
+    const char *eval(const char *scan, Value &val, SymbolTable *symtab);
+    /*
+     * Parse |scan| text and convert character constant to |val|.
+     * Error should be checked by |error()|.
+     */
+    const char *readChar(const char *scan, char &val);
+
+    bool isSymbolLetter(char c, bool head = false) const;
     const char *scanSymbol(const char *scan) const;
-    const char *readChar(const char *scan, char &c);
 
 protected:
-    const char *_next;
-
     virtual bool isCurrentOriginSymbol(char c) const;
-    virtual Error readNumber(Value &val);
+    virtual Error readNumber(const char *scan, Value &val);
     Error parseNumber(
-        const char *p, Value &val, const uint8_t base,
+        const char *scan, Value &val, const uint8_t base,
         const char suffix = 0);
     Error scanNumberEnd(
         const char *scan, const uint8_t base, char suffix = 0);
 
 private:
+    const char *_next;
+
     enum Op : uint8_t {
         OP_NONE,
         OP_ADD,
@@ -108,7 +127,7 @@ private:
     };
 
     struct Operator {
-        Operator(Op op, int precedence)
+        Operator(Op op, uint8_t precedence)
             : _op(op),
               _precedence(precedence)
         {}
@@ -144,25 +163,23 @@ private:
     SymbolTable *_symtab;
     Stack<OprAndLval> _stack;
 
-    void skipSpaces();
-    const char *eval(const char *expr, Value &value, SymbolTable *symtab);
-    Value parseExpr();
-    Value readAtom();
-    Value readCharacterConstant();
-    Operator readOperator();
+    Value parseExpr(const char *scan);
+    Value readAtom(const char *scan);
+    Value readCharacterConstant(const char *scan);
+    Operator readOperator(const char *scan);
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
 };
 
 class MotoValueParser : public ValueParser {
 protected:
     bool isCurrentOriginSymbol(char c) const override;
-    Error readNumber(Value &val) override;
+    Error readNumber(const char *scan, Value &val) override;
 };
 
 class IntelValueParser : public ValueParser {
 protected:
     bool isCurrentOriginSymbol(char c) const override;
-    Error readNumber(Value &val) override;
+    Error readNumber(const char *scan, Value &val) override;
 };
 
 } // namespace libasm

@@ -75,41 +75,39 @@ Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
 }
 
 Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
-    uint8_t vecNo;
-    if (getOperand(vecNo)) return getError();
+    const uint16_t vecNo = parseExpr16(_scan);
+    if (parserError()) return getError();
     if (vecNo >= 8) return setError(OVERFLOW_RANGE);
     insn.embed(vecNo << 3);
     return OK;
 }
 
 Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
+    const char *p = skipSpaces(_scan);
     if (insn.insnFormat() != NO_FORMAT) {
-        const char *p = skipSpaces(_scan);
         if (*p != ',') return setError(MISSING_COMMA);
-        _scan = p + 1;
+        p++;
     }
+    const uint16_t val = parseExpr16(p);
+    if (parserError()) return getError();
     if (insn.addrMode() == IMM8) {
-        uint8_t val8;
-        if (getOperand(val8)) return getError();
-        insn.emitByte(val8);
+        insn.emitByte(val);
     } else if (insn.addrMode() == IMM16) {
-        uint16_t val16;
-        if (getOperand(val16)) return getError();
-        insn.emitUint16(val16);
+        insn.emitUint16(val);
     }
     return checkLineEnd();
 }
 
 Error AsmI8080::encodeDirect(InsnI8080 &insn) {
-    uint16_t addr;
-    if (getOperand(addr)) return getError();
+    const uint16_t addr = parseExpr16(_scan);
+    if (parserError()) return getError();
     insn.emitUint16(addr);
     return checkLineEnd();
 }
 
 Error AsmI8080::encodeIoaddr(InsnI8080 &insn) {
-    uint8_t addr;
-    if (getOperand(addr)) return getError();
+    const uint16_t addr = parseExpr16(_scan);
+    if (parserError()) return getError();
     insn.emitByte(addr);
     return checkLineEnd();
 }

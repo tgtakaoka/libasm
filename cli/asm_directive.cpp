@@ -35,7 +35,6 @@ AsmCommonDirective::AsmCommonDirective(
     }
     _directive = _directives.front();
     _assembler = &_directive->assembler();
-    _parser = &_assembler->getParser();
     _line_len = 128;
     _line = static_cast<char *>(malloc(_line_len));
     _scan = nullptr;
@@ -67,7 +66,6 @@ AsmDirective *AsmCommonDirective::switchDirective(AsmDirective *dir) {
     _directive = dir;
     _assembler = &dir->assembler();
     _assembler->reset();
-    _parser = &_assembler->getParser();
     return dir;
 }
 
@@ -120,9 +118,10 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     const char *label = nullptr;
     std::string label_buf;
     _list.label_len = 0;
-    if (_parser->isSymbolLetter(*_scan, true)) {
+    ValueParser &parser = _assembler->getParser();
+    if (parser.isSymbolLetter(*_scan, true)) {
         _list.label = _scan;
-        const char *end = _parser->scanSymbol(_list.label);
+        const char *end = parser.scanSymbol(_list.label);
         label_buf = std::string(_list.label, end);
         if (*end == ':') end++; // optional trailing ':' for label.
         _list.label_len = end - _list.label;
@@ -315,7 +314,7 @@ Error AsmCommonDirective::processPseudo(
         const char *cpu = _assembler->getCpu();
         if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
             return setError(UNKNOWN_DIRECTIVE);
-        const char *p = _parser->scanSymbol(_scan);
+        const char *p = _assembler->getParser().scanSymbol(_scan);
         std::string val(_scan, p);
         bool value = false;
         if (strcasecmp(val.c_str(), "exclusive") == 0) {
@@ -334,27 +333,36 @@ Error AsmCommonDirective::processPseudo(
 }
 
 Error AsmCommonDirective::defineOrigin() {
-    uint32_t value;
-    const char *scan = _parser->eval(_scan, value, this);
-    if (_parser->getError())
-        return setError(*_parser);
+    ValueParser &parser = _assembler->getParser();
+    Value value;
+    const char *scan = parser.eval(_scan, value, this);
+    if (setError(parser.error()))
+        return getError();
+    if (_reportUndef && value.isUndefined())
+        return setError(UNDEFINED_SYMBOL);
     _scan = scan;
     // TODO line end check
-    _list.address = _origin = value;
+    _list.address = _origin = value.getUnsigned();
     return setError(OK);
 }
 
 Error AsmCommonDirective::alignOrigin() {
-    uint32_t value;
-    const char *scan = _parser->eval(_scan, value, this);
-    if (_parser->getError())
-        return setError(*_parser);
-    if (static_cast<int32_t>(value) <= 0) setError(ILLEGAL_OPERAND);
+    ValueParser &parser = _assembler->getParser();
+    Value value;
+    const char *scan = parser.eval(_scan, value, this);
+    if (setError(parser.error()))
+        return getError();
+    if (_reportUndef && value.isUndefined())
+        return setError(UNDEFINED_SYMBOL);
+    if (value.overflowUint16())
+        return setError(OVERFLOW_RANGE);
+    const uint16_t val16 = value.getUnsigned();
+    if (val16 > 0x1000) setError(ILLEGAL_OPERAND);
     _scan = scan;
     // TODO line end check
     _list.address = _origin;
-    _origin += value - 1;
-    _origin -= _origin % value;
+    _origin += val16 - 1;
+    _origin -= _origin % val16;
     return setError(OK);
 }
 
@@ -363,18 +371,17 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
         return setError(MISSING_LABEL);
     if (_reportDuplicate && hasSymbol(label))
         return setError(DUPLICATE_LABEL);
-    uint32_t value;
-    const char *scan = _parser->eval(_scan, value, this);
-    const Error error = setError(*_parser);
-    if (!_reportUndef && error == UNDEFINED_SYMBOL) {
-        value = 0;
-        setError(OK);
-    }
-    if (getError()) return getError();
+    ValueParser &parser = _assembler->getParser();
+    Value value;
+    const char *scan = parser.eval(_scan, value, this);
+    if (setError(parser.error()))
+        return getError();
+    if (_reportUndef && value.isUndefined())
+        return setError(UNDEFINED_SYMBOL);
     _scan = scan;
     // TODO line end check
-    internSymbol(value, label);
-    _list.value = value;
+    internSymbol(value.getUnsigned(), label);
+    _list.value = value.getUnsigned();
     _list.value_defined = true;
     label = nullptr;
     return getError();
@@ -395,6 +402,7 @@ Error AsmCommonDirective::includeFile() {
 Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
     _list.address = _origin;
     _list.length = 0;
+    ValueParser &parser = _assembler->getParser();
     do {
         skipSpaces();
         if (terminator || *_scan == '"') {
@@ -404,8 +412,8 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
                 if (*p == 0) return setError(MISSING_CLOSING_DQUOTE);
                 if (*p == delim) break;
                 char c = 0;
-                p = _parser->readChar(p, c);
-                if (setError(*_parser)) {
+                p = parser.readChar(p, c);
+                if (setError(parser.error())) {
                     _scan = p;
                     return getError();
                 }
@@ -414,15 +422,15 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
             }
             _scan = p + 1;
         } else {
-            uint8_t val8;
-            _scan = _parser->eval(_scan, val8, this);
-            const Error error = setError(*_parser);
-            if (!_reportUndef && error == UNDEFINED_SYMBOL) {
-                val8 = 0;
-                setError(OK);
-            }
-            if (getError()) return getError();
-            memory.writeByte(_origin++, val8);
+            Value value;
+            _scan = parser.eval(_scan, value, this);
+            if (setError(parser.error()))
+                return getError();
+            if (_reportUndef && value.isUndefined())
+                return setError(UNDEFINED_SYMBOL);
+            if (value.overflowUint8())
+                return setError(OVERFLOW_RANGE);
+            memory.writeByte(_origin++, value.getUnsigned());
             _list.length++;
         }
         const char *save = _scan;
@@ -438,16 +446,18 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
 Error AsmCommonDirective::defineWords(CliMemory &memory) {
     _list.address = _origin;
     _list.length = 0;
+    ValueParser &parser = _assembler->getParser();
     do {
         skipSpaces();
-        uint16_t val16;
-        _scan = _parser->eval(_scan, val16, this);
-        const Error error = setError(*_parser);
-        if (!_reportUndef && error == UNDEFINED_SYMBOL) {
-            val16 = 0;
-            setError(OK);
-        }
-        if (getError()) return getError();
+        Value value;
+        _scan = parser.eval(_scan, value, this);
+        if (setError(parser.error()))
+            return getError();
+        if (_reportUndef && value.isUndefined())
+            return setError(UNDEFINED_SYMBOL);
+        if (value.overflowUint16())
+            return setError(OVERFLOW_RANGE);
+        const uint16_t val16 = value.getUnsigned();
         if (_assembler->endian() == ENDIAN_BIG) {
             memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
             memory.writeByte(_origin++, static_cast<uint8_t>(val16));
@@ -467,9 +477,16 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
 }
 
 Error AsmCommonDirective::defineSpaces() {
-    uint16_t val16;
-    _scan = _parser->eval(_scan, val16, this);
-    if (setError(*_parser)) return getError();
+    ValueParser &parser = _assembler->getParser();
+    Value value;
+    _scan = parser.eval(_scan, value, this);
+    if (setError(parser.error()))
+        return getError();
+    if (_reportUndef && value.isUndefined())
+        return setError(UNDEFINED_SYMBOL);
+    if (value.overflowUint16())
+        return setError(OVERFLOW_RANGE);
+    const uint16_t val16 = value.getUnsigned();
     if (_origin + val16 < _origin) return setError(OVERFLOW_RANGE);
     _origin += val16;
     return setError(OK);

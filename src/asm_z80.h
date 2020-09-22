@@ -38,13 +38,13 @@ private:
     struct Operand : public ErrorReporter {
         OprFormat format;
         RegName reg;
-        uint16_t val;
+        uint16_t val16;
         OprSize size;
         Operand()
             : ErrorReporter(),
               format(NO_OPR),
               reg(REG_UNDEF),
-              val(0),
+              val16(0),
               size(SZ_NONE)
         {}
     };

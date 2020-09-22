@@ -28,8 +28,8 @@ Error AsmTms9900::checkComma() {
 }
 
 Error AsmTms9900::encodeImm(InsnTms9900 &insn, bool emitInsn) {
-    uint16_t val;
-    if (getOperand(val)) return getError();
+    const uint16_t val = parseExpr16(_scan);
+    if (parserError()) return getError();
     if (emitInsn) insn.emitInsn();
     insn.emitOperand16(val);
     return OK;
@@ -40,10 +40,11 @@ Error AsmTms9900::encodeImmMod(InsnTms9900 &insn) {
     if (endOfLine(_scan)) {
         mode = 0;
     } else {
-        if (getOperand(mode)) return getError();
+        mode = parseExpr32(_scan);
+        if (getError()) return getError();
         if (mode == 3 || mode >= 5) return setError(OPERAND_NOT_ALLOWED);
     }
-    insn.embed(mode);
+    insn.embed(mode & 7);
     insn.emitInsn();
     return OK;
 }
@@ -77,11 +78,11 @@ Error AsmTms9900::encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16) {
         _scan += 2;
         count = 0;
     } else {
-        uint8_t val8;
-        if (getOperand(val8)) return getError();
-        if (val8 > 16 || (!accept16 && val8 == 16))
+        const uint16_t val16 = parseExpr16(_scan);
+        if (parserError()) return getError();
+        if (val16 > 16 || (!accept16 && val16 == 16))
             return setError(OVERFLOW_RANGE);
-        count = val8 & 0xf;
+        count = val16 & 0xf;
     }
     switch (insn.addrMode()) {
     case CNT_REG:
@@ -132,8 +133,8 @@ Error AsmTms9900::encodeOpr(Config::opcode_t &oprMode, uint16_t &operand) {
         setOK();
     } else if (*p == '@') {
         mode = 2;
-        _scan = skipSpaces(p + 1);
-        if (getOperand(operand)) return getError();
+        operand = parseExpr16(p + 1);
+        if (parserError()) return getError();
         p = skipSpaces(_scan);
         if (*p == '(') {
             p = skipSpaces(p + 1);
@@ -158,8 +159,8 @@ bool AsmTms9900::needsOperandWord(Config::opcode_t oprMode) const {
 
 Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
     const Config::uintptr_t base = insn.address() + 2;
-    Config::uintptr_t target;
-    if (getOperand(target)) return getError();
+    Config::uintptr_t target = parseExpr16(_scan);
+    if (parserError()) return getError();
     if (getError()) target = base;
     if (target % 2) return setError(OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t delta = (target - base) >> 1;
@@ -170,9 +171,9 @@ Error AsmTms9900::encodeRel(InsnTms9900 &insn) {
 }
 
 Error AsmTms9900::encodeCruOff(InsnTms9900 &insn) {
-    uint8_t val8;
-    if (getOperand(val8)) return getError();
-    insn.embed(val8);
+    const uint16_t val16 = parseExpr16(_scan);
+    if (parserError()) return getError();
+    insn.embed(val16 & 0xFF);
     insn.emitInsn();
     return getError();
 }
@@ -187,7 +188,8 @@ Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
     if (insn.addrMode() == DW_BIT_SRC) {
         if ((srcMode & 0x30) == 0x30)
             return setError(OPERAND_NOT_ALLOWED);
-        if (getOperand(dstOpr)) return getError();
+        dstOpr = parseExpr16(_scan);
+        if (parserError()) return getError();
         if (dstOpr >= 16) return setError(ILLEGAL_BIT_NUMBER);
         dstMode = dstOpr;
     } else if (insn.addrMode() == DW_CNT_SRC) {
@@ -196,12 +198,14 @@ Error AsmTms9900::encodeDoubleWords(InsnTms9900 &insn) {
             if (reg != REG_R0) return setError(REGISTER_NOT_ALLOWED);
             _scan += RegTms9900::regNameLen(reg);
             dstOpr = 0;
-        } else if (getOperand(dstOpr)) {
-            return getError();
-        } else if (dstOpr == 0) {
-            return setError(OPERAND_NOT_ALLOWED);
-        } else if (dstOpr >= 16) {
-            return setError(OVERFLOW_RANGE);
+        } else {
+            dstOpr = parseExpr16(_scan);
+            if (parserError()) return getError();
+            if (getError()) dstOpr = 1;
+            if (dstOpr == 0)
+                return setError(OPERAND_NOT_ALLOWED);
+            if (dstOpr >= 16)
+                return setError(OVERFLOW_RANGE);
         }
         dstMode = dstOpr;
         srcMode |= 0x4000;

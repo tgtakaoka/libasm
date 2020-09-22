@@ -70,7 +70,6 @@ private:
     AsmDirective *_asmI8080;
     AsmDirective *_directive;
     Assembler *_assembler;
-    ValueParser *_parser;
     size_t _line_len;
     char *_line;
     const char *_scan;

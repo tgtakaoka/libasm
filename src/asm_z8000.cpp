@@ -26,7 +26,7 @@ bool AsmZ8000::endOfLine(const char *scan) const {
 }
 
 Error AsmZ8000::emitData(
-        InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
+    InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;
     if (field == MF_C4 || field == MF_P4) data <<= 4;
     if (field == MF_C8 || field == MF_P8) data <<= 8;
@@ -38,12 +38,12 @@ Error AsmZ8000::emitData(
 }
 
 Error AsmZ8000::emitRegister(
-        InsnZ8000 &insn, ModeField field, RegName reg) {
+    InsnZ8000 &insn, ModeField field, RegName reg) {
     return emitData(insn, field, RegZ8000::encodeGeneralRegName(reg));
 }
 
 Error AsmZ8000::emitIndirectRegister(
-        InsnZ8000 &insn, ModeField field, RegName reg) {
+    InsnZ8000 &insn, ModeField field, RegName reg) {
     if (TableZ8000.segmentedModel()) {
         if (!RegZ8000::isLongReg(reg)) return setError(REGISTER_NOT_ALLOWED);
     } else {
@@ -55,7 +55,7 @@ Error AsmZ8000::emitIndirectRegister(
 }
 
 Error AsmZ8000::emitImmediate(
-        InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op) {
+    InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op) {
     if (mode == M_IM8) {
         const int32_t sval = static_cast<int32_t>(op.val32);
         if ((sval >= -0x80 && sval < 0x80) || op.val32 < 0x100) {
@@ -150,7 +150,7 @@ Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, uint32_t addr) {
 }
 
 Error AsmZ8000::emitRelative(
-        InsnZ8000 &insn, AddrMode mode, const Operand &op) {
+    InsnZ8000 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + (mode == M_RA ? 4 : 2);
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     Config::ptrdiff_t delta = target - base;
@@ -178,7 +178,7 @@ Error AsmZ8000::emitRelative(
 }
 
 Error AsmZ8000::emitIndexed(
-        InsnZ8000 &insn, ModeField field, const Operand &op) {
+    InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (!RegZ8000::isWordReg(op.reg) || op.reg == REG_R0)
         return setError(REGISTER_NOT_ALLOWED);
     if (emitRegister(insn, field, op.reg)) return getError();
@@ -186,7 +186,7 @@ Error AsmZ8000::emitIndexed(
 }
 
 Error AsmZ8000::emitBaseAddress(
-        InsnZ8000 &insn, ModeField field, const Operand &op) {
+    InsnZ8000 &insn, ModeField field, const Operand &op) {
     const int32_t disp = static_cast<int32_t>(op.val32);
     if (disp < -0x8000 || disp >= 0x8000) return setError(OVERFLOW_RANGE);
     if (emitIndirectRegister(insn, field, op.base)) return getError();
@@ -195,7 +195,7 @@ Error AsmZ8000::emitBaseAddress(
 }
 
 Error AsmZ8000::emitBaseIndexed(
-        InsnZ8000 &insn, ModeField field, const Operand &op) {
+    InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (!RegZ8000::isWordReg(op.reg) || RegZ8000::encodeGeneralRegName(op.reg) == 0)
         return setError(REGISTER_NOT_ALLOWED);
     if (emitIndirectRegister(insn, field, op.base)) return getError();
@@ -203,7 +203,7 @@ Error AsmZ8000::emitBaseIndexed(
 }
 
 Error AsmZ8000::emitFlags(
-        InsnZ8000 &insn, ModeField field, const Operand &op) {
+    InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (op.mode == M_CC) {
         if (op.cc == CC_Z) return emitData(insn, field, FLAG_Z);
         if (op.cc == CC_C) return emitData(insn, field, FLAG_C);
@@ -214,7 +214,7 @@ Error AsmZ8000::emitFlags(
 }
 
 Error AsmZ8000::emitCtlRegister(
-        InsnZ8000 &insn, ModeField field, const Operand &op) {
+    InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (insn.oprSize() == SZ_BYTE && op.reg != REG_FLAGS)
         return setError(ILLEGAL_SIZE);
     if (insn.oprSize() == SZ_WORD && op.reg == REG_FLAGS)
@@ -223,7 +223,7 @@ Error AsmZ8000::emitCtlRegister(
 }
 
 Error AsmZ8000::emitOperand(
-        InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field) {
+    InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field) {
     switch (mode) {
     case M_DR:
         if (insn.oprSize() == SZ_WORD && !RegZ8000::isLongReg(op.reg))
@@ -338,8 +338,8 @@ int8_t AsmZ8000::parseFlagNames(const char *&line) {
 Error AsmZ8000::parseOperand(Operand &op) {
     const char *p = _scan;
     if (*p == '#') {
-        _scan = skipSpaces(p + 1);
-        if (getOperand(op.val32)) return getError();
+        op.val32 = parseExpr32(p + 1);
+        if (parserError()) return getError();
         op.setError(getError());
         op.mode = M_IM;
         return OK;
@@ -365,8 +365,8 @@ Error AsmZ8000::parseOperand(Operand &op) {
             op.base = op.reg;
             p = skipSpaces(p + 1);
             if (*p == '#') {
-                _scan = p + 1;
-                if (getOperand(op.val32)) return getError();
+                op.val32 = parseExpr32(p + 1);
+                if (parserError()) return getError();
                 op.setError(getError());
                 p = skipSpaces(_scan);
                 if (*p != ')') return setError(UNKNOWN_OPERAND);
@@ -424,8 +424,8 @@ Error AsmZ8000::parseOperand(Operand &op) {
         op.mode = M_INTR;
         return OK;
     }
-    _scan = p;
-    if (getOperand(op.val32)) return getError();
+    op.val32 = parseExpr32(p);
+    if (parserError()) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
     if (*p == '(') {

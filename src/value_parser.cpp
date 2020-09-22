@@ -28,63 +28,24 @@ bool Value::overflowUint16() const {
     return getSigned() < -32768L || (getSigned() >= 0 && getUnsigned() >= 0x10000L);
 }
 
-const char *ValueParser::eval(
-    const char *expr, uint32_t &val32, SymbolTable *symtab) {
-    Value val;
-    const char *next = eval(expr, val, symtab);
-    val32 = val.getUnsigned();
-    return next;
-}
-
-const char *ValueParser::eval(
-    const char *expr, uint16_t &val16, SymbolTable *symtab) {
-    Value val;
-    const char *next = eval(expr, val, symtab);
-    if (val.overflowUint16()) {
-        setError(OVERFLOW_RANGE);
-    } else {
-        val16 = val.getUnsigned();
-    }
-    return next;
-}
-
-const char *ValueParser::eval(
-    const char *expr, uint8_t &val8, SymbolTable *symtab) {
-    Value val;
-    const char *next = eval(expr, val, symtab);
-    if (val.overflowUint8()) {
-        setError(OVERFLOW_RANGE);
-    } else {
-        val8 = val.getUnsigned();
-    }
-    return next;
-}
-
-static bool isValidDigit(const char c, const uint8_t base) {
-    if (base == 16) return isxdigit(c);
-    return c >= '0' && c < '0' + base;
-}
-
-const char *ValueParser::readChar(const char *scan, char &c) {
+const char *ValueParser::readChar(const char *scan, char &val) {
     setOK();
-    if (*scan == '\\') {
-        uint8_t base = 0;
-        if (toupper(scan[1]) == 'X') base = 16;
-        if (isValidDigit(scan[1], 8)) base = 8;
-        if (base) {
-            Value val;
-            parseNumber(base == 16 ? scan + 2 : scan + 1, val, base);
-            if (getError()) return scan;
-            if (val.getSigned() >= 0x100 || val.getSigned() < -0x80) {
-                setError(OVERFLOW_RANGE);
-                return scan;
-            }
-            c = val.getUnsigned();
-            return _next;
-        }
-        switch (scan[1]) {
+    const char *p = scan;
+    char c = *p++;
+    if (c != '\\') {
+        val = c;
+        return p;
+    }
+    uint8_t base = 0;
+    c = *p++;
+    if (c == 'x' || c == 'X') {
+        base = 16;
+    } else if (c >= '0' && c < '8') {
+        --p;
+        base = 8;
+    } else {
+        switch (c) {
         case '\'': case '"': case '?': case '\\':
-            c = scan[1];
             break;
         case 'b': c = 0x08; break;
         case 't': c = 0x09; break;
@@ -94,33 +55,29 @@ const char *ValueParser::readChar(const char *scan, char &c) {
             setError(UNKNOWN_ESCAPE_SEQUENCE);
             return scan;
         }
-        return scan + 2;
+        val = c;
+        return p;
     }
-    c = *scan;
-    return scan + 1;
+    Value value;
+    parseNumber(p, value, base);
+    if (getError()) return scan;
+    if (value.overflowUint8()) {
+        setError(OVERFLOW_RANGE);
+        return scan;
+    }
+    val = value.getUnsigned();
+    return _next;
+}
+
+static bool isValidDigit(const char c, const uint8_t base) {
+    if (base == 16) return isxdigit(c);
+    return c >= '0' && c < '0' + base;
 }
 
 static uint8_t toNumber(const char c, const uint8_t base) {
-    if (base == 16 && !isdigit(c))
-        return toupper(c) - 'A' + 10;
+    if (base == 16 && c >= 'A')
+        return (c & ~0x20) - 'A' + 10;
     return c - '0';
-}
-
-static bool checkOverflow(
-    uint32_t &val, const uint8_t digit, const uint8_t base) {
-    if (base == 16) {
-        if (val >= 0x10000000) return true;
-    } else if (base == 8) {
-        if (val >= 0x20000000) return true;
-    } else if (base == 2) {
-        if (val >= 0x80000000) return true;
-    } else {
-        if (val >= 429496730)  return true;
-        if (val >= 429496729 && digit >= 6) return true;
-    }
-    val *= base;
-    val += digit;
-    return false;
 }
 
 Error ValueParser::parseNumber(
@@ -129,7 +86,10 @@ Error ValueParser::parseNumber(
         return setError(ILLEGAL_CONSTANT);
     uint32_t v = 0;
     while (isValidDigit(*p, base)) {
-        if (checkOverflow(v, toNumber(*p, base), base))
+        const uint32_t prev = v;
+        v *= base;
+        v += toNumber(*p, base);
+        if (v < prev)
             return setError(OVERFLOW_RANGE);
         p++;
     }
@@ -146,27 +106,23 @@ Error ValueParser::parseNumber(
     return setOK();
 }
 
-void ValueParser::skipSpaces() {
-    const char *p = _next;
+static const char *skipSpaces(const char *p) {
     while (*p == ' ' || *p == '\t')
         p++;
-    _next = p;
+    return p;
 }
 
 const char *ValueParser::eval(
-    const char *expr, Value &value, SymbolTable *symtab) {
+    const char *scan, Value &value, SymbolTable *symtab) {
     _symtab = symtab;
-    _next = expr;
     _stack.clear();
     setOK();
-    value = parseExpr();
-    if (getError() == OK && value.isUndefined())
-        setError(UNDEFINED_SYMBOL);
+    value = parseExpr(scan);
     return _next;
 }
 
-Value ValueParser::parseExpr() {
-    Value value(readAtom());
+Value ValueParser::parseExpr(const char *scan) {
+    Value value(readAtom(scan));
     if (getError()) return Value();
     if (_stack.full()) {
         setError(TOO_COMPLEX_EXPRESSION);
@@ -174,7 +130,7 @@ Value ValueParser::parseExpr() {
     }
     _stack.push(OprAndLval());
     while (!_stack.empty()) {
-        Operator opr(readOperator());
+        Operator opr(readOperator(_next));
         while (opr._precedence <= _stack.top().precedence()) {
             if (_stack.top().isEnd()) {
                 _stack.pop();
@@ -185,34 +141,36 @@ Value ValueParser::parseExpr() {
             _stack.pop();
         }
         _stack.push(OprAndLval(opr, value));
-        value = readAtom();
+        value = readAtom(_next);
         if (getError()) return Value();
     }
     return Value();
 }
 
-Value ValueParser::readAtom() {
-    skipSpaces();
-    const char c = *_next++;
+Value ValueParser::readAtom(const char *scan) {
+    const char *p = skipSpaces(scan);
+    const char c = *p++;
 
     if (c == '(' || c == '[') {
-        Value value(parseExpr());
+        Value value(parseExpr(p));
         if (getError() == OK) {
-            skipSpaces();
+            p = skipSpaces(_next);
             const char expected = (c == '(') ? ')' : ']';
-            if (*_next != expected) {
-                setError(MISSING_CLOSING_PAREN);
-                return Value();
+            if (*p == expected) {
+                _next = p +1;
+                return value;
             }
-            _next++;
+            setError(MISSING_CLOSING_PAREN);
+            return Value();
         }
         return value;
     }
     if (c == '\'') {
-        Value value(readCharacterConstant());
+        Value value(readCharacterConstant(p));
+        p = _next;
         if (getError() == OK) {
-            if (*_next == '\'') {
-                _next++;
+            if (*p == '\'') {
+                _next = p + 1;
             } else {
                 setError(MISSING_CLOSING_QUOTE);
             }
@@ -220,35 +178,32 @@ Value ValueParser::readAtom() {
         return value;
     }
     if (c == '~') {
-        Value value(readAtom());
-        if (getError() == OK) {
-            if (value.isSigned())   value.setSigned(~value.getSigned());
-            if (value.isUnsigned()) value.setUnsigned(~value.getUnsigned());
-        }
+        Value value(readAtom(p));
+        if (getError() == OK) return value.complement();
         return value;
     }
     if (c == '-' || c == '+') {
-        if (*_next == '-' || *_next == '+') {
+        if (*p == '-' || *p == '+') {
             setError(UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
-        const char op = c;
-        Value value(readAtom());
+        if (c == '+') return readAtom(p);
+        Value value(readAtom(p));
         if (getError() == OK) {
-            if (op == '+') return value;
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(OVERFLOW_RANGE);
-            if (!value.isUndefined()) value.setSigned(-value.getSigned());
+            return value.negate();
         }
         return value;
     }
     if (_symtab && isCurrentOriginSymbol(c)) {
+        _next = p;
         return Value::makeUnsigned(_symtab->currentOrigin());
     }
 
-    _next--;
+    p--;
     if (_symtab && isSymbolLetter(c, true)) {
-        const char *symbol = _next;
+        const char *symbol = p;
         const char *end = scanSymbol(symbol);
         _next = end;
         if (_symtab->hasSymbol(symbol, end)) {
@@ -263,47 +218,51 @@ Value ValueParser::readAtom() {
     }
 
     Value val;
-    if (readNumber(val))
+    if (readNumber(p, val))
         return Value();
     return val;
 }
 
-Value ValueParser::readCharacterConstant() {
+Value ValueParser::readCharacterConstant(const char *scan) {
     char c = 0;
-    _next = readChar(_next, c);
+    _next = readChar(scan, c);
     if (getError()) return Value();
     return Value::makeSigned(c);
 }
 
 // Operator precedence (larger value means higher precedence).
 // The same order of C/C++ language.
-ValueParser::Operator ValueParser::readOperator() {
-    const char *saved_next = _next;
-    skipSpaces();
-    switch (*_next) {
-    case '*': _next++; return Operator(OP_MUL, 13);
-    case '/': _next++; return Operator(OP_DIV, 13);
-    case '%': _next++; return Operator(OP_MOD, 13);
-    case '+': _next++; return Operator(OP_ADD, 12);
-    case '-': _next++; return Operator(OP_SUB, 12);
+ValueParser::Operator ValueParser::readOperator(const char *scan) {
+    const char *p = skipSpaces(scan);
+    const char c = *p++;
+    _next = p;
+    switch (c) {
+    case '*': return Operator(OP_MUL, 13);
+    case '/': return Operator(OP_DIV, 13);
+    case '%': return Operator(OP_MOD, 13);
+    case '+': return Operator(OP_ADD, 12);
+    case '-': return Operator(OP_SUB, 12);
     case '<':
-        if (_next[1] == '<') {
-            _next += 2; return Operator(OP_BIT_SHL, 11);
+        if (*p++ == '<') {
+            _next = p;
+            return Operator(OP_BIT_SHL, 11);
         }
         setError(UNKNOWN_EXPR_OPERATOR);
         break;
     case '>':
-        if (_next[1] == '>') {
-            _next += 2; return Operator(OP_BIT_SHR, 11);
+        if (*p++ == '>') {
+            _next = p;
+            return Operator(OP_BIT_SHR, 11);
         }
         setError(UNKNOWN_EXPR_OPERATOR);
         break;
-    case '&': _next++; return Operator(OP_BIT_AND, 8);
-    case '^': _next++; return Operator(OP_BIT_XOR, 7);
-    case '|': _next++; return Operator(OP_BIT_OR,  6);
-    default: break;
+    case '&': return Operator(OP_BIT_AND, 8);
+    case '^': return Operator(OP_BIT_XOR, 7);
+    case '|': return Operator(OP_BIT_OR,  6);
+    default:
+        break;
     }
-    _next = saved_next;
+    _next = scan;
     return Operator(OP_NONE, 0);
 }
 
@@ -396,66 +355,68 @@ Value ValueParser::evalExpr(
     }
 }
 
-bool ValueParser::isCurrentOriginSymbol(char c) const {
-    return c == '.' || c == '*' || c == '$';
-}
-
-Error ValueParser::readNumber(Value &val) {
-    const char *p = _next;
-    if (*p == '0') {
-        const char c = toupper(p[1]);
-        if (c == 'X' && scanNumberEnd(p + 2, 16) == OK)
-            return parseNumber(p + 2, val, 16);
-        if (isValidDigit(c, 8) && scanNumberEnd(p + 1, 8) == OK)
-            return parseNumber(p + 1, val, 8);
-        if (c == 'B' && scanNumberEnd(p + 2, 2) == OK)
-            return parseNumber(p + 2, val, 2);
-    }
-    if (isdigit(*p) && scanNumberEnd(p, 10) == OK)
-        return parseNumber(p, val, 10);
-    return setError(ILLEGAL_CONSTANT);
-}
-
 Error ValueParser::scanNumberEnd(
-    const char *p, const uint8_t base, char suffix) {
-    while (isValidDigit(*p, base))
-        p++;
-    if (suffix && toupper(*p++) != suffix)
+    const char *scan, const uint8_t base, char suffix) {
+    while (isValidDigit(*scan, base))
+        scan++;
+    if (suffix && toupper(*scan++) != suffix)
         return ILLEGAL_CONSTANT;
     return OK;
+}
+
+bool ValueParser::isCurrentOriginSymbol(char c) const {
+    return c == '.';
+}
+
+Error ValueParser::readNumber(const char *scan, Value &val) {
+    if (*scan == '0') {
+        scan++;
+        const char c = toupper(*scan);
+        if (c >= '0' && c < '8' && scanNumberEnd(scan, 8) == OK)
+            return parseNumber(scan, val, 8);
+        scan++;
+        if (c == 'X' && scanNumberEnd(scan, 16) == OK)
+            return parseNumber(scan, val, 16);
+        if (c == 'B' && scanNumberEnd(scan, 2) == OK)
+            return parseNumber(scan, val, 2);
+        scan -= 2;
+    }
+    if (*scan >= '0' && *scan <= '9' && scanNumberEnd(scan, 10) == OK)
+        return parseNumber(scan, val, 10);
+    return setError(ILLEGAL_CONSTANT);
 }
 
 bool MotoValueParser::isCurrentOriginSymbol(char c) const {
     return c == '*';
 }
 
-Error MotoValueParser::readNumber(Value &val) {
-    const char *p = _next;
-    if (*p == '$' && scanNumberEnd(p + 1, 16) == OK)
-        return parseNumber(p + 1, val, 16);
-    if (*p == '@' && scanNumberEnd(p + 1, 8) == OK)
-        return parseNumber(p + 1, val, 8);
-    if (*p == '%' && scanNumberEnd(p + 1, 2) == OK)
-        return parseNumber(p + 1, val, 2);
-    if (scanNumberEnd(_next, 10) == OK)
-        return parseNumber(p, val, 10);
-    return ValueParser::readNumber(val);
+Error MotoValueParser::readNumber(const char *scan, Value &val) {
+    const char c = *scan++;
+    if (c == '$' && scanNumberEnd(scan, 16) == OK)
+        return parseNumber(scan, val, 16);
+    if (c == '@' && scanNumberEnd(scan, 8) == OK)
+        return parseNumber(scan, val, 8);
+    if (c == '%' && scanNumberEnd(scan, 2) == OK)
+        return parseNumber(scan, val, 2);
+    if (scanNumberEnd(--scan, 10) == OK)
+        return parseNumber(scan, val, 10);
+    return setError(ILLEGAL_CONSTANT);
 }
 
 bool IntelValueParser::isCurrentOriginSymbol(char c) const {
     return c == '$';
 }
 
-Error IntelValueParser::readNumber(Value &val) {
-    if (scanNumberEnd(_next, 16, 'H') == OK)
-        return parseNumber(_next, val, 16, 'H');
-    if (scanNumberEnd(_next, 8, 'O') == OK)
-        return parseNumber(_next, val, 8, 'O');
-    if (scanNumberEnd(_next, 2, 'B') == OK)
-        return parseNumber(_next, val, 2, 'B');
-    if (scanNumberEnd(_next, 10) == OK)
-        return parseNumber(_next, val, 10);
-    return ValueParser::readNumber(val);
+Error IntelValueParser::readNumber(const char *scan, Value &val) {
+    if (scanNumberEnd(scan, 16, 'H') == OK)
+        return parseNumber(scan, val, 16, 'H');
+    if (scanNumberEnd(scan, 8, 'O') == OK)
+        return parseNumber(scan, val, 8, 'O');
+    if (scanNumberEnd(scan, 2, 'B') == OK)
+        return parseNumber(scan, val, 2, 'B');
+    if (scanNumberEnd(scan, 10) == OK)
+        return parseNumber(scan, val, 10);
+    return setError(ILLEGAL_CONSTANT);
 }
 
 } // namespace libasm

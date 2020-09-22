@@ -37,8 +37,8 @@ Error AsmMc6800::parseOperand(Operand &op) {
         p++;
         op.size = SZ_WORD;
     }
-    _scan = p;
-    if (getOperand(op.val16)) return getError();
+    op.val16 = parseExpr16(p);
+    if (parserError()) return getError();
     op.setError(getError());
     if (immediate) {
         op.mode = M_IMM;

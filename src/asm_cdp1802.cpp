@@ -21,8 +21,8 @@ namespace libasm {
 namespace cdp1802 {
 
 Error AsmCdp1802::encodeRegn(InsnCdp1802 &insn) {
-    uint8_t regNo;
-    if (getOperand(regNo)) return getError();
+    uint8_t regNo = parseExpr16(_scan);
+    if (parserError()) return getError();
     if (getError() == UNDEFINED_SYMBOL)
         regNo = 7; // first working register
     if (regNo >= 16) return setError(OVERFLOW_RANGE);
@@ -34,16 +34,16 @@ Error AsmCdp1802::encodeRegn(InsnCdp1802 &insn) {
 }
 
 Error AsmCdp1802::encodeImm8(InsnCdp1802 &insn) {
-    uint8_t val = 0;
-    if (getOperand(val)) return getError();
+    const uint16_t val = parseExpr16(_scan);
+    if (parserError()) return getError();
     insn.emitInsn();
     insn.emitByte(val);
     return OK;
 }
 
 Error AsmCdp1802::encodePage(InsnCdp1802 &insn) {
-    Config::uintptr_t addr;
-    if (getOperand(addr)) return getError();
+    Config::uintptr_t addr = parseExpr16(_scan);
+    if (parserError()) return getError();
     if (getError() == UNDEFINED_SYMBOL)
         addr = insn.address() + 2;
     const Config::uintptr_t base = (insn.address() + 2) & ~0xFF;
@@ -55,16 +55,16 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn) {
 }
 
 Error AsmCdp1802::encodeAddr(InsnCdp1802 &insn) {
-    Config::uintptr_t addr;
-    if (getOperand(addr)) return getError();
+    const Config::uintptr_t addr = parseExpr16(_scan);
+    if (parserError()) return getError();
     insn.emitInsn();
     insn.emitUint16(addr);
     return OK;
 }
 
 Error AsmCdp1802::encodeIoad(InsnCdp1802 &insn) {
-    uint8_t ioAddr;
-    if (getOperand(ioAddr)) return getError();
+    uint8_t ioAddr = parseExpr16(_scan);
+    if (parserError()) return getError();
     if (getError() == UNDEFINED_SYMBOL)
         ioAddr = 1;
     if (ioAddr == 0 || ioAddr >= 8)

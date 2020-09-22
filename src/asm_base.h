@@ -61,12 +61,28 @@ protected:
     Error checkLineEnd(const char *scan = nullptr);
     static const char *skipSpaces(const char *scan);
 
-    template<typename T>
-    Error getOperand(T &val) {
-        _scan = _parser.eval(_scan, val, _symtab);
-        if (setError(_parser) == UNDEFINED_SYMBOL)
-            return OK;
-        return getError();
+    Error parserError() {
+        return _parser.error();
+    }
+
+    uint16_t parseExpr16(const char *scan) {
+        Value value;
+        _scan = _parser.eval(scan, value, _symtab);
+        setError(_parser.error());
+        if (value.overflowUint16())
+            setErrorIf(OVERFLOW_RANGE);
+        if (value.isUndefined())
+            setErrorIf(UNDEFINED_SYMBOL);
+        return value.getUnsigned();
+    }
+
+    uint32_t parseExpr32(const char *scan) {
+        Value value;
+        _scan = _parser.eval(scan, value, _symtab);
+        setError(_parser.error());
+        if (value.isUndefined())
+            setErrorIf(UNDEFINED_SYMBOL);
+        return value.getUnsigned();
     }
 
 private:

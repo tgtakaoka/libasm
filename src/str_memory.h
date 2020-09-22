@@ -31,25 +31,25 @@ public:
     {}
     
     bool hasNext() const override {
-        return readNumber(_next, nullptr) != _next;
+        const char *scan = _next;
+        return readNumber(scan, nullptr) != scan;
     }
 
-    static const char *readNumber(const char *p, uint32_t *val) {
+    static const char *readNumber(const char *scan, uint32_t *val) {
         // Intel style
-        if (scanNumberEnd(p, 'H'))
-            return parseNumber(p, val, 'H');
+        if (scanNumberEnd(scan, 'H'))
+            return parseNumber(scan, val, 'H');
 
         // Motorola style
-        if (*p == '$' && scanNumberEnd(p + 1))
-            return parseNumber(p + 1, val);
+        if (*scan == '$' && scanNumberEnd(scan + 1))
+            return parseNumber(scan + 1, val);
 
         // C-style
-        if (*p == '0') {
-            const char c = toupper(p[1]);
-            if (c == 'X' && scanNumberEnd(p + 2))
-                return parseNumber(p + 2, val);
+        if (*scan == '0') {
+            if (toupper(scan[1]) == 'X' && scanNumberEnd(scan + 2))
+                return parseNumber(scan + 2, val);
         }
-        return p;
+        return scan;
     }
 
 protected:
@@ -66,7 +66,8 @@ private:
         return parseNumber(scan, nullptr, suffix) != scan;
     }
 
-    static char *parseNumber(const char *scan, uint32_t *val, char suffix = 0) {
+    static const char *parseNumber(
+        const char *scan, uint32_t *val, char suffix = 0) {
         const char *p = skipSpaces(scan);
         uint32_t v = 0;
         while (isxdigit(*p)) {
@@ -76,15 +77,19 @@ private:
         }
         if (suffix && toupper(*p++) != suffix)
             return scan;
-        if (isspace(*p) || *p == 0) {
+        if (isSpace(*p) || *p == 0) {
             if (val) *val = v;
             return p;
         }
         return scan;
     }
 
-    static char *skipSpaces(char *p) {
-        while (isspace(*p))
+    static bool isSpace(char c) {
+        return c == ' ' || c == '\t';
+    }
+
+    static const char *skipSpaces(const char *p) {
+        while (isSpace(*p))
             p++;
         return p;
     }

@@ -41,12 +41,12 @@ private:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         RegName reg;
-        uint16_t val;
+        uint16_t val16;
         Operand()
             : ErrorReporter(),
               mode(UNDEF),
               reg(REG_UNDEF),
-              val(0)
+              val16(0)
         {}
     };
 

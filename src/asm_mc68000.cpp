@@ -268,8 +268,8 @@ Error AsmMc68000::parseOperand(Operand &op) {
     const char *p = _scan;
     if (endOfLine(p))  return OK;
     if (*p == '#') {
-        _scan = skipSpaces(p + 1);
-        if (getOperand(op.val32)) return getError();
+        op.val32 = parseExpr32(p + 1);
+        if (parserError()) return getError();
         op.setError(getError());
         op.mode = M_IMDAT;
         return OK;
@@ -294,8 +294,8 @@ Error AsmMc68000::parseOperand(Operand &op) {
             _scan = p;
             return OK;
         }
-        _scan = p;
-        if (getOperand(op.val32)) return getError();
+        op.val32 = parseExpr32(p);
+        if (parserError()) return getError();
         op.setErrorIf(getError());
         p = skipSpaces(_scan);
         if (*p == ')') {
@@ -366,8 +366,8 @@ Error AsmMc68000::parseOperand(Operand &op) {
         _scan = p;
         return OK;
     }
-    _scan = p;
-    if (getOperand(op.val32)) return getError();
+    op.val32 = parseExpr32(p);
+    if (parserError()) return getError();
     op.setErrorIf(getError());
     op.mode = M_LABEL;
     return OK;

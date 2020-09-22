@@ -35,13 +35,21 @@ void val_assert(
     const char *file, const int line, const char *expr,
     const T expected, const Error expected_error,
     ValueParser &parser) {
-    T actual;
-    parser.eval(expr, actual, &symtab);
-    asserter.equals(file, line, expr, expected_error, parser);
-    if (parser.getError() == OK)
+    Value val;
+    ErrorReporter error;
+    parser.eval(expr, val, &symtab);
+    error.setError(parser.error());
+    if (sizeof(T) == 1 && val.overflowUint8())
+        error.setErrorIf(OVERFLOW_RANGE);
+    if (sizeof(T) == 2 && val.overflowUint16())
+        error.setErrorIf(OVERFLOW_RANGE);
+    if (val.isUndefined())
+        error.setErrorIf(UNDEFINED_SYMBOL);
+    asserter.equals(file, line, expr, expected_error, error);
+    if (error.getError() == OK)
         asserter.equals(file, line, expr,
                         static_cast<uint32_t>(expected),
-                        static_cast<uint32_t>(actual));
+                        static_cast<T>(val.getUnsigned()));
 }
 
 void dec_assert(

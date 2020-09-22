@@ -102,8 +102,8 @@ Error AsmIns8070::parseOperand(Operand &op) {
         return OK;
 
     if (*p == '#' || *p == '=') {
-        _scan = p + 1;
-        if (getOperand(op.val16)) return getError();
+        op.val16 = parseExpr16(p + 1);
+        if (parserError()) return getError();
         op.setError(getError());
         op.format = OPR_IM;
         return OK;
@@ -130,8 +130,8 @@ Error AsmIns8070::parseOperand(Operand &op) {
 
     bool autoIndex = (*p == '@');
     if (autoIndex) p++;
-    _scan = p;
-    if (getOperand(op.val16)) return getError();
+    op.val16 = parseExpr16(p);
+    if (parserError()) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
 
