@@ -35,7 +35,7 @@ AsmCommonDirective::AsmCommonDirective(
     }
     _directive = _directives.front();
     _assembler = &_directive->assembler();
-    _parser = _assembler->getParser();
+    _parser = &_assembler->getParser();
     _line_len = 128;
     _line = static_cast<char *>(malloc(_line_len));
     _scan = nullptr;
@@ -67,7 +67,7 @@ AsmDirective *AsmCommonDirective::switchDirective(AsmDirective *dir) {
     _directive = dir;
     _assembler = &dir->assembler();
     _assembler->reset();
-    _parser = _assembler->getParser();
+    _parser = &_assembler->getParser();
     return dir;
 }
 

@@ -30,7 +30,7 @@ class DisZ8000
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000) {}
 
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
 
@@ -43,9 +43,6 @@ private:
     ValueFormatter _formatter;
     RegZ8000 _regs;
     bool _preferWorkRegister = true;
-
-    TableBase &getTable() const override { return TableZ8000; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName regName);
     char *outConditionCode(char *out, uint8_t ccNum);

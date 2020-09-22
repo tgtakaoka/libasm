@@ -21,8 +21,8 @@ namespace libasm {
 Error Disassembler::decode(
     DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     _symtab = symtab;
-    getFormatter().setUppercase(_uppercase);
-    getRegister().setUppercase(_uppercase);
+    _formatter.setUppercase(_uppercase);
+    _regBase.setUppercase(_uppercase);
 
     resetError();
     *operands = 0;
@@ -35,7 +35,7 @@ Error Disassembler::decode(
 char *Disassembler::outDec(char *out, uint8_t val, int8_t bits) {
     const char *label = lookup(val);
     if (label) return outText(out, label);
-    return getFormatter().formatDec(out, val, bits);
+    return _formatter.formatDec(out, val, bits);
 }
 
 } // namespace libasm

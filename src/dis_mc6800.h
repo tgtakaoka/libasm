@@ -30,14 +30,11 @@ class DisMc6800
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800) {}
 
 private:
     MotoValueFormatter _formatter;
     RegMc6800 _regs;
-
-    TableBase &getTable() const override { return TableMc6800; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName regName);
 

@@ -30,7 +30,7 @@ class DisZ8
     : public Disassembler,
       public Config {
 public:
-    IntelValueFormatter &getFormatter() override { return _formatter; }
+    DisZ8() : Disassembler(_formatter, _regs, TableZ8) {}
 
     void reset() override { preferWorkRegister(true); }
     void preferWorkRegister(bool enabled) {
@@ -41,9 +41,6 @@ private:
     IntelValueFormatter _formatter;
     RegZ8 _regs;
     bool _preferWorkRegister = true;
-
-    TableBase &getTable() const override { return TableZ8; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outCcName(char *out, Config::opcode_t opCode);
     char *outIndexed(char *out, uint16_t base, RegName idx, AddrMode mode);

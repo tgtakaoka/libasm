@@ -30,15 +30,13 @@ class AsmMc68000
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmMc68000() : Assembler(_parser, TableMc68000) {}
 
     void reset() override { setAlias(false); }
     void setAlias(bool enable) { TableMc68000.setAlias(enable); }
 
 private:
     MotoValueParser _parser;
-
-    TableBase &getTable() const override { return TableMc68000; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

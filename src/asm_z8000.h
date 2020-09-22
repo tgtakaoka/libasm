@@ -30,15 +30,14 @@ class AsmZ8000
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmZ8000() : Assembler(_parser, TableZ8000) {}
+
     bool endOfLine(const char *scan) const override;
 
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
 
 private:
     ValueParser _parser;
-
-    TableBase &getTable() const override { return TableZ8000; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

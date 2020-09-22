@@ -30,12 +30,10 @@ class AsmI8080
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmI8080() : Assembler(_parser, TableI8080) {}
 
 private:
     IntelValueParser _parser;
-
-    TableBase &getTable() const override { return TableI8080; }
 
     Error encodePointerReg(InsnI8080 &insn);
     Error encodeStackReg(InsnI8080 &insn);

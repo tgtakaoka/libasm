@@ -30,14 +30,11 @@ class DisCdp1802
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802) {}
 
 private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
-
-    TableBase &getTable() const override { return TableCdp1802; }
-    RegBase &getRegister() override { return _regs; }
 
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };

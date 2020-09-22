@@ -30,14 +30,11 @@ class DisZ80
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisZ80() : Disassembler(_formatter, _regs, TableZ80) {}
 
 private:
     IntelValueFormatter _formatter;
     RegZ80 _regs;
-
-    TableBase &getTable() const override { return TableZ80; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName regName);
     char *outPointer(char *out, RegName regName);

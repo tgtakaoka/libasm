@@ -32,20 +32,27 @@ class Assembler
     : public ErrorReporter,
       virtual public ConfigBase {
 public:
+    Assembler(ValueParser &parser, TableBase &table)
+        : _parser(parser),
+          _table(table)
+    {}
+
     Error encode(
         const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
-    virtual ValueParser *getParser() = 0;
+    ValueParser &getParser() const { return _parser; }
     const char *errorAt() const { return _scan; }
     virtual bool endOfLine(const char *scan) const;
     virtual void reset() {}
 
-    const char *listCpu() const { return getTable().listCpu(); }
-    bool setCpu(const char *cpu) { return getTable().setCpu(cpu); }
-    const char *getCpu() const { return getTable().getCpu(); }
+    const char *listCpu() const { return _table.listCpu(); }
+    bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
+    const char *getCpu() const { return _table.getCpu(); }
 
 protected:
     const char *_scan;
+    ValueParser &_parser;
+    TableBase &_table;
     SymbolTable  *_symtab;
 
     void reset(const char *line, SymbolTable *symtab);
@@ -56,16 +63,14 @@ protected:
 
     template<typename T>
     Error getOperand(T &val) {
-        ValueParser *parser = getParser();
-        _scan = parser->eval(_scan, val, _symtab);
-        if (setError(*parser) == UNDEFINED_SYMBOL)
+        _scan = _parser.eval(_scan, val, _symtab);
+        if (setError(_parser) == UNDEFINED_SYMBOL)
             return OK;
         return getError();
     }
 
 private:
     virtual Error encode(Insn &insn) = 0;
-    virtual TableBase &getTable() const = 0;
 };
 
 } // namespace libasm

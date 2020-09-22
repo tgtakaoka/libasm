@@ -30,12 +30,10 @@ class AsmMc6800
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmMc6800() : Assembler(_parser, TableMc6800) {}
 
 private:
     MotoValueParser _parser;
-
-    TableBase &getTable() const override { return TableMc6800; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

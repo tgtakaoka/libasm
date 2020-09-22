@@ -35,19 +35,27 @@ class Disassembler
     : public ErrorReporter,
       virtual public ConfigBase {
 public:
+    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
+        : _formatter(formatter),
+          _regBase(regs),
+          _table(table)
+    {}
+
     Error decode(
         DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
-
-    virtual ValueFormatter &getFormatter() = 0;
+    ValueFormatter &getFormatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
     virtual void reset() {}
 
-    const char *listCpu() const { return getTable().listCpu(); }
-    bool setCpu(const char *cpu) { return getTable().setCpu(cpu); }
-    const char *getCpu() const { return getTable().getCpu(); }
+    const char *listCpu() const { return _table.listCpu(); }
+    bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
+    const char *getCpu() const { return _table.getCpu(); }
 
 protected:
+    ValueFormatter &_formatter;
+    RegBase &_regBase;
+    TableBase &_table;
     SymbolTable *_symtab;
     bool _relativeTarget = false;
     bool _uppercase = false;
@@ -81,7 +89,7 @@ protected:
     char *outHex(char *out, T val, int8_t bits) {
         const char *label = lookup(val);
         if (label) return outText(out, label);
-        return getFormatter().formatHex(out, val, bits, /*relax*/true);
+        return _formatter.formatHex(out, val, bits, /*relax*/true);
     }
 
     char *outDec(char *out, uint8_t val, int8_t bits);
@@ -97,7 +105,7 @@ protected:
         }
         if (needPrefix && prefix) out = outPstr(out, prefix);
         if (addrWidth == 0) addrWidth = sizeof(Addr) * 8;
-        return getFormatter().formatHex(out, val, addrWidth, false);
+        return _formatter.formatHex(out, val, addrWidth, false);
     }
 
     template<typename Addr>
@@ -105,7 +113,7 @@ protected:
         char *out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
             return outAbsAddr(out, target, addressWidth());
-        *out++ = getFormatter().currentOriginSymbol();
+        *out++ = _formatter.currentOriginSymbol();
         *out = 0;
         const auto delta = static_cast<
             typename make_signed<Addr>::type>(target - origin);
@@ -119,17 +127,15 @@ protected:
             val = static_cast<Addr>(delta);
         }
         if (deltaBits <= 14) {
-            out = getFormatter().formatDec(out, val, deltaBits);
+            out = _formatter.formatDec(out, val, deltaBits);
         } else {
-            out = getFormatter().formatHex(out, val, deltaBits);
+            out = _formatter.formatHex(out, val, deltaBits);
         }
         return out;
     }
 
 private:
     virtual Error decode(DisMemory &memory, Insn &insn, char *out) = 0;
-    virtual TableBase &getTable() const = 0;
-    virtual RegBase &getRegister() = 0;
 };
 
 } // namespace libasm

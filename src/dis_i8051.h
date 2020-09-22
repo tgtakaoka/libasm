@@ -30,14 +30,11 @@ class DisI8051
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisI8051() : Disassembler(_formatter, _regs, TableI8051) {}
 
 private:
     IntelValueFormatter _formatter;
     RegI8051 _regs;
-
-    TableBase &getTable() const override { return TableI8051; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName regName);
 

@@ -30,12 +30,10 @@ class AsmTms9900
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmTms9900() : Assembler(_parser, TableTms9900) {}
 
 private:
     IntelValueParser _parser;
-
-    TableBase &getTable() const override { return TableTms9900; }
 
     Error checkComma();
 

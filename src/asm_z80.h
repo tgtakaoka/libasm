@@ -30,12 +30,10 @@ class AsmZ80
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmZ80() : Assembler(_parser, TableZ80) {}
 
 private:
     IntelValueParser _parser;
-
-    TableBase &getTable() const override { return TableZ80; }
 
     struct Operand : public ErrorReporter {
         OprFormat format;

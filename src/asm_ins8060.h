@@ -30,15 +30,13 @@ class AsmIns8060
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmIns8060() : Assembler(_parser, TableIns8060) {}
 
 private:
     class _ValueParser : public ValueParser {
     protected:
         bool isCurrentOriginSymbol(char c) const override { return c == '$'; }
     } _parser;
-
-    TableBase &getTable() const override { return TableIns8060; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

@@ -30,14 +30,11 @@ class DisNs32000
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000) {}
 
 private:
     ValueFormatter _formatter;
     RegNs32000 _regs;
-
-    TableBase &getTable() const override { return TableNs32000; }
-    RegBase &getRegister() override { return _regs; }
 
     struct Displacement {
         int32_t val32;

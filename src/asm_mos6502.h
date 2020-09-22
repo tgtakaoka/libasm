@@ -30,7 +30,7 @@ class AsmMos6502
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmMos6502() : Assembler(_parser, TableMos6502) {}
 
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override { _long_acc = _long_idx = false; }
@@ -39,8 +39,6 @@ private:
     MotoValueParser _parser;
     bool _long_acc = false;
     bool _long_idx = false;
-
-    TableBase &getTable() const override { return TableMos6502; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

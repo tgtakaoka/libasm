@@ -30,7 +30,7 @@ class DisMos6502
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisMos6502() : Disassembler(_formatter, _regs, TableMos6502) {}
 
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override;
@@ -43,9 +43,6 @@ public:
 private:
     MotoValueFormatter _formatter;
     RegMos6502 _regs;
-
-    TableBase &getTable() const override { return TableMos6502; }
-    RegBase &getRegister() override { return _regs; }
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, char *out);
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, char *out);

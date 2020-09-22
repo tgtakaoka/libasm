@@ -30,14 +30,11 @@ class DisTms9900
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisTms9900() : Disassembler(_formatter, _regs, TableTms9900) {}
 
 private:
     IntelValueFormatter _formatter;
     RegTms9900 _regs;
-
-    TableBase &getTable() const override { return TableTms9900; }
-    RegBase &getRegister() override { return _regs; }
 
     Error decodeOperand(
         DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t opr);

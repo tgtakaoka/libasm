@@ -30,7 +30,7 @@ class DisIns8070
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070) {}
 
     void reset() override { setImmediateSymbol(false); }
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
@@ -39,9 +39,6 @@ private:
     ValueFormatter _formatter;
     RegIns8070 _regs;
     bool _immSym = false;
-
-    TableBase &getTable() const override { return TableIns8070; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName regName);
     char *outOperand(char *out, OprFormat opr, uint8_t value = 0);

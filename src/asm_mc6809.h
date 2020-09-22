@@ -30,14 +30,13 @@ class AsmMc6809
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmMc6809() : Assembler(_parser, TableMc6809) {}
+
     void reset() override { _direct_page = 0; }
 
 private:
     MotoValueParser _parser;
     uint8_t _direct_page;
-
-    TableBase &getTable() const override { return TableMc6809; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

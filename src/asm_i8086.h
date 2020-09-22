@@ -30,12 +30,10 @@ class AsmI8086
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmI8086() : Assembler(_parser, TableI8086) {}
 
 private:
     IntelValueParser _parser;
-
-    TableBase &getTable() const override { return TableI8086; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

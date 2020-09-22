@@ -30,7 +30,7 @@ class AsmZ8
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmZ8() : Assembler(_parser, TableZ8) {}
 
     void reset() override { setRegPointer(-1); }
     bool setRegPointer(int16_t rp);
@@ -41,8 +41,6 @@ private:
     IntelValueParser _parser;
     int16_t _regPointer0;
     int16_t _regPointer1;
-
-    TableBase &getTable() const override { return TableZ8; }
 
     bool isWorkReg(uint8_t regAddr) const;
 

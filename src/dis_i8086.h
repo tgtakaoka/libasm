@@ -30,7 +30,7 @@ class DisI8086
     : public Disassembler,
       public Config {
 public:
-    ValueFormatter &getFormatter() override { return _formatter; }
+    DisI8086() : Disassembler(_formatter, _regs, TableI8086) {}
 
     void setRepeatHasStringInstruction(bool yes) { _repeatHasStringInst = yes; }
     void reset() override { setRepeatHasStringInstruction(false); }
@@ -39,9 +39,6 @@ private:
     IntelValueFormatter _formatter;
     RegI8086 _regs;
     bool _repeatHasStringInst;
-
-    TableBase &getTable() const override { return TableI8086; }
-    RegBase &getRegister() override { return _regs; }
 
     char *outRegister(char *out, RegName name, const char prefix = 0);
     Error outMemReg(

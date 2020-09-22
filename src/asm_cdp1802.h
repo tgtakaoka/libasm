@@ -29,12 +29,10 @@ class AsmCdp1802
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmCdp1802() : Assembler(_parser, TableCdp1802) {}
 
 private:
     IntelValueParser _parser;
-
-    TableBase &getTable() const override { return TableCdp1802; }
 
     Error encodeRegn(InsnCdp1802 &insn);
     Error encodeImm8(InsnCdp1802 &insn);

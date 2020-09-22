@@ -30,13 +30,12 @@ class AsmNs32000
     : public Assembler,
       public Config {
 public:
-    ValueParser *getParser() override { return &_parser; }
+    AsmNs32000() : Assembler(_parser, TableNs32000) {}
+
     bool endOfLine(const char *scan) const override;
 
 private:
     ValueParser _parser;
-
-    TableBase &getTable() const override { return TableNs32000; }
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
