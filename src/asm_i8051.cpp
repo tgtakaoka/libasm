@@ -64,20 +64,18 @@ Error AsmI8051::parseOperand(const char *scan, Operand &op) {
             }
             return setError(UNKNOWN_OPERAND);
         }
-        if (op.reg == REG_A) {
-            op.mode = AREG;
-        } else if (RegI8051::isRReg(op.reg)) {
+        if (RegI8051::isRReg(op.reg)) {
             op.mode = RREG;
-        } else if (op.reg == REG_C) {
-            op.mode = CREG;
-        } else if (op.reg == REG_DPTR) {
-            op.mode = DREG;
-        } else if (op.reg == REG_AB) {
-            op.mode = ABREG;
-        } else {
+            return OK;
+        }
+        switch (op.reg) {
+        case REG_A: op.mode = AREG; return OK;
+        case REG_C: op.mode = CREG; return OK;
+        case REG_DPTR: op.mode = DREG; return OK;
+        case REG_AB: op.mode = ABREG; return OK;
+        default:
             return setError(UNKNOWN_OPERAND);
         }
-        return OK;
     }
     if (indir) return setError(UNKNOWN_OPERAND);
 
@@ -94,10 +92,11 @@ Error AsmI8051::parseOperand(const char *scan, Operand &op) {
         if (parserError()) return getError();
         op.setErrorIf(getError());
         if (bitNo >= 8) return setError(ILLEGAL_BIT_NUMBER);
-        if ((op.val16 & ~0x0F) == 0x20 || (op.val16 & ~0x78) == 0x80) {
+        uint16_t val16 = op.val16;
+        if ((val16 & ~0x0F) == 0x20 || (val16 & ~0x78) == 0x80) {
             op.mode = bitNot ? NOTAD : BITAD;
-            if ((op.val16 & 0x80) == 0)
-                op.val16 = (op.val16 & 0xF) << 3;
+            if ((val16 & 0x80) == 0)
+                op.val16 = (val16 & 0xF) << 3;
             op.val16 |= bitNo;
             return OK;
         }
@@ -109,65 +108,54 @@ Error AsmI8051::parseOperand(const char *scan, Operand &op) {
 
 Error AsmI8051::encodeOperand(
     InsnI8051 &insn, const AddrMode mode, const Operand &op) {
-    Error error = OK;
-    if (mode == REL) {
+    switch (mode) {
+    case REL: {
         uint8_t len = insn.length();
         if (len == 0) len = 1;
         const Config::uintptr_t base = insn.address() + len + 1;
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         const Config::ptrdiff_t delta = target - base;
-        if (delta < -128 || delta >= 128) {
-            error = OPERAND_TOO_FAR;
-        } else {
-            insn.emitOperand8(delta);
-        }
-    }
-    if (mode == RREG || mode == IDIRR) {
-        insn.embed(RegI8051::encodeRReg(op.reg));
+        if (delta < -128 || delta >= 128)
+            return setError(OPERAND_TOO_FAR);
+        insn.emitOperand8(delta);
         return OK;
     }
-    if (mode == ADR8) {
-        if (op.val16 >= 0x100) {
-            error = OVERFLOW_RANGE;
-        } else {
-            insn.emitOperand8(op.val16);
-        }
-    }
-    if (mode == IMM8) {
+    case RREG: case IDIRR:
+        insn.embed(RegI8051::encodeRReg(op.reg));
+        return OK;
+    case ADR8:
+        if (op.val16 >= 0x100)
+            return setError(OVERFLOW_RANGE);
+        insn.emitOperand8(op.val16);
+        return OK;
+    case IMM8: {
         const int16_t val = static_cast<int16_t>(op.val16);
-        if (val < -128 || val >= 256) {
-            error = OVERFLOW_RANGE;
-        } else {
-            insn.emitOperand8(op.val16);
-        }
+        if (val < -128 || val >= 256)
+            return setError(OVERFLOW_RANGE);
+        insn.emitOperand8(op.val16);
+        return OK;
     }
-    if (mode == ADR11) {
+    case ADR11: {
         const Config::uintptr_t base = insn.address() + 2;
         const Config::uintptr_t target =
             op.getError() ? (base & ~0x7FF) : op.val16;
-        if ((base & ~0x7FF) != (target & ~0x7FF)) {
-            error = OPERAND_TOO_FAR;
-        } else {
-            insn.embed((target & 0x700) >> 3);
-            insn.emitOperand8(target);
-        }
-    }
-    if (mode == ADR16 || mode == IMM16) {
-        insn.emitOperand16(op.val16);
+        if ((base & ~0x7FF) != (target & ~0x7FF))
+            return setError(OPERAND_TOO_FAR);
+        insn.embed((target & 0x700) >> 3);
+        insn.emitOperand8(target);
         return OK;
     }
-    if (mode == BITAD || mode == NOTAD) {
-        if (op.val16 >= 0x100) {
-            error = NOT_BIT_ADDRESSABLE;
-        } else {
-            insn.emitOperand8(op.val16);
-        }
+    case ADR16: case IMM16:
+        insn.emitOperand16(op.val16);
+        return OK;
+    case BITAD: case NOTAD:
+        if (op.val16 >= 0x100)
+            return setError(NOT_BIT_ADDRESSABLE);
+        insn.emitOperand8(op.val16);
+        return OK;
+    default:
+        return OK;
     }
-    if (error) {
-        insn.resetAddress(insn.address());
-        return setError(error);
-    }
-    return OK;
 }
 
 Error AsmI8051::encode(Insn &_insn) {
@@ -181,10 +169,10 @@ Error AsmI8051::encode(Insn &_insn) {
     if (*p == ',') {
         if (parseOperand(p + 1, srcOp)) return getError();
         p = skipSpaces(_scan);
-        if (*p == ',') {
-            if (parseOperand(p + 1, extOp)) return getError();
-            p = skipSpaces(_scan);
-        }
+    }
+    if (*p == ',') {
+        if (parseOperand(p + 1, extOp)) return getError();
+        p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);
     setError(dstOp.getError());
@@ -199,12 +187,19 @@ Error AsmI8051::encode(Insn &_insn) {
     const AddrMode src = insn.srcMode();
     const AddrMode ext = insn.extMode();
     if (dst == ADR8 && src == ADR8) {
-        if (encodeOperand(insn, src, srcOp)) return getError();
-        if (encodeOperand(insn, dst, dstOp)) return getError();
+        if (encodeOperand(insn, src, srcOp))
+            return getError();
+        if (encodeOperand(insn, dst, dstOp))
+            return getError();
     } else {
-        if (dst && encodeOperand(insn, dst, dstOp)) return getError();
-        if (src && encodeOperand(insn, src, srcOp)) return getError();
-        if (ext && encodeOperand(insn, ext, extOp)) return getError();
+        if (dst && encodeOperand(insn, dst, dstOp))
+            return getError();
+        if (src && encodeOperand(insn, src, srcOp)) {
+            insn.resetAddress(insn.address());
+            return getError();
+        }
+        if (ext && encodeOperand(insn, ext, extOp))
+            return getError();
     }
     insn.emitInsn();
     return getError();
