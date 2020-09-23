@@ -22,7 +22,7 @@ namespace cdp1802 {
 
 Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnCdp1802 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn)) return getError();
     insn.setOpCode(opCode);
 
@@ -30,8 +30,8 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
         return setError(TableCdp1802.getError());
 
     switch (insn.addrMode()) {
-    case REGN:
     case REG1:
+    case REGN:
         outDec(out, opCode & 0xF, 4);
         break;
     case IMM8:
@@ -45,7 +45,7 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
         break;
     case PAGE: {
         const uint8_t val = insn.readByte(memory);
-        const uint16_t addr = ((insn.address() + 2) & ~0xFF) | val;
+        const Config::uintptr_t addr = ((insn.address() + 2) & ~0xFF) | val;
         outAbsAddr(out, addr);
         break;
     }

@@ -23,14 +23,14 @@ namespace libasm {
 namespace cdp1802 {
 
 enum AddrMode : uint8_t {
+    NONE = 0,
     REGN = 1,  // Register number, 0~15
     REG1 = 2,  // Register number, 1~15
-    IMPL = 3,  // Implied
-    IMM8 = 4,  // Immediate, 0~15
-    PAGE = 5,  // Page offset
-    ADDR = 6,  // Absolute address
-    IOAD = 7,  // IO address, 1~7
-    UNDF = 0,  // Undefined instruction
+    IMM8 = 3,  // Immediate, 0~15
+    PAGE = 4,  // Page offset
+    ADDR = 5,  // Absolute address
+    IOAD = 6,  // IO address, 1~7
+    UNDF = 7,  // Undefined instruction
 };
 
 struct Entry {

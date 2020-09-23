@@ -30,7 +30,7 @@ namespace cdp1802 {
     { _opc, Entry::_flags(_amode), TEXT_##_name },
 
 static constexpr Entry TABLE_CDP1802[] PROGMEM = {
-    E(0x00, IDL,  IMPL)
+    E(0x00, IDL,  NONE)
     E(0x00, LDN,  REG1)
     E(0x10, INC,  REGN)
     E(0x20, DEC,  REGN)
@@ -44,7 +44,7 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0x35, B2,   PAGE)
     E(0x36, B3,   PAGE)
     E(0x37, B4,   PAGE)
-    E(0x38, SKP,  IMPL)
+    E(0x38, SKP,  NONE)
     E(0x38, NBR,  PAGE)
     E(0x39, BNQ,  PAGE)
     E(0x3A, BNZ,  PAGE)
@@ -57,27 +57,27 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0x3F, BN4,  PAGE)
     E(0x40, LDA,  REGN)
     E(0x50, STR,  REGN)
-    E(0x60, IRX,  IMPL)
+    E(0x60, IRX,  NONE)
     E(0x60, OUT,  IOAD)
     E(0x68, IDL,  UNDF)   // reuse IDL for undefined instruction
     E(0x68, INP,  IOAD)
-    E(0x70, RET,  IMPL)
-    E(0x71, DIS,  IMPL)
-    E(0x72, LDXA, IMPL)
-    E(0x73, STXD, IMPL)
-    E(0x74, ADC,  IMPL)
-    E(0x75, SDB,  IMPL)
-    E(0x76, SHRC, IMPL)
-    E(0x76, RSHR, IMPL)
-    E(0x77, SMB,  IMPL)
-    E(0x78, SAV,  IMPL)
-    E(0x79, MARK, IMPL)
-    E(0x7A, REQ,  IMPL)
-    E(0x7B, SEQ,  IMPL)
+    E(0x70, RET,  NONE)
+    E(0x71, DIS,  NONE)
+    E(0x72, LDXA, NONE)
+    E(0x73, STXD, NONE)
+    E(0x74, ADC,  NONE)
+    E(0x75, SDB,  NONE)
+    E(0x76, SHRC, NONE)
+    E(0x76, RSHR, NONE)
+    E(0x77, SMB,  NONE)
+    E(0x78, SAV,  NONE)
+    E(0x79, MARK, NONE)
+    E(0x7A, REQ,  NONE)
+    E(0x7B, SEQ,  NONE)
     E(0x7C, ADCI, IMM8)
     E(0x7D, SDBI, IMM8)
-    E(0x7E, SHLC, IMPL)
-    E(0x7E, RSHL, IMPL)
+    E(0x7E, SHLC, NONE)
+    E(0x7E, RSHL, NONE)
     E(0x7F, SMBI, IMM8)
     E(0x80, GLO,  REGN)
     E(0x90, GHI,  REGN)
@@ -87,49 +87,60 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0xC1, LBQ,  ADDR)
     E(0xC2, LBZ,  ADDR)
     E(0xC3, LBDF, ADDR)
-    E(0xC4, NOP,  IMPL)
-    E(0xC5, LSNQ, IMPL)
-    E(0xC6, LSNZ, IMPL)
-    E(0xC7, LSNF, IMPL)
-    E(0xC8, LSKP, IMPL)
+    E(0xC4, NOP,  NONE)
+    E(0xC5, LSNQ, NONE)
+    E(0xC6, LSNZ, NONE)
+    E(0xC7, LSNF, NONE)
+    E(0xC8, LSKP, NONE)
     E(0xC8, NLBR, ADDR)
     E(0xC9, LBNQ, ADDR)
     E(0xCA, LBNZ, ADDR)
     E(0xCB, LBNF, ADDR)
-    E(0xCC, LSIE, IMPL)
-    E(0xCD, LSQ,  IMPL)
-    E(0xCE, LSZ,  IMPL)
-    E(0xCF, LSDF, IMPL)
+    E(0xCC, LSIE, NONE)
+    E(0xCD, LSQ,  NONE)
+    E(0xCE, LSZ,  NONE)
+    E(0xCF, LSDF, NONE)
     E(0xD0, SEP,  REGN)
     E(0xE0, SEX,  REGN)
-    E(0xF0, LDX,  IMPL)
-    E(0xF1, OR,   IMPL)
-    E(0xF2, AND,  IMPL)
-    E(0xF3, XOR,  IMPL)
-    E(0xF4, ADD,  IMPL)
-    E(0xF5, SD,   IMPL)
-    E(0xF6, SHR,  IMPL)
-    E(0xF7, SM,   IMPL)
+    E(0xF0, LDX,  NONE)
+    E(0xF1, OR,   NONE)
+    E(0xF2, AND,  NONE)
+    E(0xF3, XOR,  NONE)
+    E(0xF4, ADD,  NONE)
+    E(0xF5, SD,   NONE)
+    E(0xF6, SHR,  NONE)
+    E(0xF7, SM,   NONE)
     E(0xF8, LDI,  IMM8)
     E(0xF9, ORI,  IMM8)
     E(0xFA, ANI,  IMM8)
     E(0xFB, XRI,  IMM8)
     E(0xFC, ADI,  IMM8)
     E(0xFD, SDI,  IMM8)
-    E(0xFE, SHL,  IMPL)
+    E(0xFE, SHL,  NONE)
     E(0xFF, SMI,  IMM8)
 };
 
+static bool acceptMode(AddrMode opr, const Entry *entry) {
+    const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+    if (opr == table) return true;
+    if (opr == ADDR)
+        return table == REGN || table == REG1 || table == IMM8
+            || table == PAGE || table == IOAD;
+    return false;
+}
+
 Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
     const char *name = insn.name();
-    const Entry *entry =
-        TableBase::searchName<Entry>(name, ARRAY_RANGE(TABLE_CDP1802));
+    const AddrMode mode = insn.addrMode();
+    uint8_t count = 0;
+    const Entry *entry = TableBase::searchName<Entry,AddrMode>(
+        name, mode, ARRAY_RANGE(TABLE_CDP1802), acceptMode, count);
     if (entry) {
         insn.setOpCode(pgm_read_byte(&entry->opCode));
         insn.setFlags(pgm_read_byte(&entry->flags));
         return _error.setOK();
     }
-    return _error.setError(UNKNOWN_INSTRUCTION);
+    return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(

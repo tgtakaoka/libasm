@@ -34,12 +34,19 @@ public:
 private:
     IntelValueParser _parser;
 
-    Error encodeRegn(InsnCdp1802 &insn);
-    Error encodeImm8(InsnCdp1802 &insn);
-    Error encodePage(InsnCdp1802 &insn);
-    Error encodeAddr(InsnCdp1802 &insn);
-    Error encodeIoad(InsnCdp1802 &insn);
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        uint16_t val16;
+        Operand()
+            : ErrorReporter(),
+              mode(NONE),
+              val16(0)
+        {}
+    };
 
+    Error parseOperand(const char *scan, Operand &op);
+
+    Error encodePage(InsnCdp1802 &insn, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

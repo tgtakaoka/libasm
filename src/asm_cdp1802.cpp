@@ -20,57 +20,26 @@
 namespace libasm {
 namespace cdp1802 {
 
-Error AsmCdp1802::encodeRegn(InsnCdp1802 &insn) {
-    uint8_t regNo = parseExpr16(_scan);
-    if (parserError()) return getError();
-    if (getError() == UNDEFINED_SYMBOL)
-        regNo = 7; // first working register
-    if (regNo >= 16) return setError(OVERFLOW_RANGE);
-    if (insn.addrMode() == REG1 && regNo == 0)
-        return setError(REGISTER_NOT_ALLOWED);
-    insn.embed(regNo);
-    insn.emitInsn();
-    return OK;
-}
-
-Error AsmCdp1802::encodeImm8(InsnCdp1802 &insn) {
-    const uint16_t val = parseExpr16(_scan);
-    if (parserError()) return getError();
-    insn.emitInsn();
-    insn.emitByte(val);
-    return OK;
-}
-
-Error AsmCdp1802::encodePage(InsnCdp1802 &insn) {
-    Config::uintptr_t addr = parseExpr16(_scan);
-    if (parserError()) return getError();
-    if (getError() == UNDEFINED_SYMBOL)
-        addr = insn.address() + 2;
-    const Config::uintptr_t base = (insn.address() + 2) & ~0xFF;
-    if ((addr & ~0xFF) != base)
+Error AsmCdp1802::encodePage(InsnCdp1802 &insn, const Operand &op) {
+    const Config::uintptr_t base = insn.address() + 2;
+    const Config::uintptr_t target = op.getError() ? base : op.val16;
+    const Config::uintptr_t page = base & ~0xFF;
+    if ((target & ~0xFF) != page)
         return setError(OPERAND_TOO_FAR);
     insn.emitInsn();
-    insn.emitByte(static_cast<uint8_t>(addr));
+    insn.emitByte(target);
     return OK;
 }
 
-Error AsmCdp1802::encodeAddr(InsnCdp1802 &insn) {
-    const Config::uintptr_t addr = parseExpr16(_scan);
-    if (parserError()) return getError();
-    insn.emitInsn();
-    insn.emitUint16(addr);
-    return OK;
-}
+Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
+    if (endOfLine(p)) return OK;
 
-Error AsmCdp1802::encodeIoad(InsnCdp1802 &insn) {
-    uint8_t ioAddr = parseExpr16(_scan);
+    op.val16 = parseExpr16(p);
     if (parserError()) return getError();
-    if (getError() == UNDEFINED_SYMBOL)
-        ioAddr = 1;
-    if (ioAddr == 0 || ioAddr >= 8)
-        return setError(OVERFLOW_RANGE);
-    insn.embed(ioAddr);
-    insn.emitInsn();
+    op.setError(getError());
+    op.mode = ADDR;
     return OK;
 }
 
@@ -79,21 +48,51 @@ Error AsmCdp1802::encode(Insn &_insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
+    Operand op;
+    if (parseOperand(endName, op)) return getError();
+    const char *p = skipSpaces(_scan);
+    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    setErrorIf(op.getError());
+
+    insn.setAddrMode(op.mode);
     if (TableCdp1802.searchName(insn))
         return setError(TableCdp1802.getError());
-    _scan = skipSpaces(endName);
 
+    uint16_t val16 = op.val16;
     switch (insn.addrMode()) {
-    case IMPL: insn.emitInsn(); break;
+    case REG1:
+        if (op.getError()) val16 = 7; // default work register.
+        if (val16 == 0) return setError(REGISTER_NOT_ALLOWED);
+        /* Fall-through */
     case REGN:
-    case REG1: encodeRegn(insn); break;
-    case IMM8: encodeImm8(insn); break;
-    case PAGE: encodePage(insn); break;
-    case ADDR: encodeAddr(insn); break;
-    case IOAD: encodeIoad(insn); break;
-    default: return setError(INTERNAL_ERROR);
+        if (val16 >= 16) return setError(ILLEGAL_REGISTER);
+        insn.embed(val16);
+        insn.emitInsn();
+        return OK;
+    case IMM8:
+        if (static_cast<int16_t>(val16) < -128
+            || (static_cast<int16_t>(val16) >= 0 && val16 >= 0x100))
+            return setError(OVERFLOW_RANGE);
+        insn.emitInsn();
+        insn.emitByte(val16);
+        return OK;
+    case PAGE:
+        return encodePage(insn, op);
+    case ADDR:
+        insn.emitInsn();
+        insn.emitUint16(val16);
+        return OK;
+    case IOAD:
+        if (op.getError()) val16 = 1; // default IO address
+        if (val16 == 0 || val16 >= 8) return setError(OPERAND_NOT_ALLOWED);
+        insn.embed(val16);
+        insn.emitInsn();
+        return OK;
+    default:
+        insn.emitInsn();
+        return OK;
     }
-    return checkLineEnd();
+    return OK;
 }
 
 } // namespace cdp1802

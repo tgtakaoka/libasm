@@ -32,8 +32,8 @@ public:
 
     void setFlags(uint8_t flags) { _flags = flags; }
 
-    void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(addrMode);
+    void setAddrMode(AddrMode mode) {
+        _flags = Entry::_flags(mode);
     }
 
     void setOpCode(Config::opcode_t opCode) {

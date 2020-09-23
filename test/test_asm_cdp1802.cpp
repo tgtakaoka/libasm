@@ -88,7 +88,7 @@ static void test_register() {
     TEST("LDN 13", 0x0D);
     TEST("LDN 14", 0x0E);
     TEST("LDN 15", 0x0F);
-    ETEST(OVERFLOW_RANGE, "LDN 16");
+    ETEST(ILLEGAL_REGISTER, "LDN 16");
 
     TEST("INC 0",  0x10);
     TEST("INC 1",  0x11);
@@ -265,7 +265,7 @@ static void test_register() {
     symtab.intern(16, "XX");
 
     ETEST(REGISTER_NOT_ALLOWED, "LDN 0");
-    ETEST(OVERFLOW_RANGE,       "LDN 16");
+    ETEST(ILLEGAL_REGISTER,     "LDN 16");
     TEST("LDN PC", 0x03);
     TEST("SEP PC", 0xD3);
 }
@@ -289,7 +289,7 @@ static void test_immediate() {
 }
 
 static void test_io() {
-    ETEST(OVERFLOW_RANGE, "OUT 0");
+    ETEST(OPERAND_NOT_ALLOWED, "OUT 0");
     TEST("OUT 1", 0x61);
     TEST("OUT 2", 0x62);
     TEST("OUT 3", 0x63);
@@ -297,8 +297,8 @@ static void test_io() {
     TEST("OUT 5", 0x65);
     TEST("OUT 6", 0x66);
     TEST("OUT 7", 0x67);
-    ETEST(OVERFLOW_RANGE, "OUT 8");
-    ETEST(OVERFLOW_RANGE, "INP 0");
+    ETEST(OPERAND_NOT_ALLOWED, "OUT 8");
+    ETEST(OPERAND_NOT_ALLOWED, "INP 0");
     TEST("INP 1", 0x69);
     TEST("INP 2", 0x6A);
     TEST("INP 3", 0x6B);
@@ -306,7 +306,7 @@ static void test_io() {
     TEST("INP 5", 0x6D);
     TEST("INP 6", 0x6E);
     TEST("INP 7", 0x6F);
-    ETEST(OVERFLOW_RANGE, "INP 8");
+    ETEST(OPERAND_NOT_ALLOWED, "INP 8");
 
     symtab.intern(1, "STDOUT");
     symtab.intern(2, "STDIN");
