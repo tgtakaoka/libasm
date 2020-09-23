@@ -35,17 +35,21 @@ public:
 private:
     IntelValueParser _parser;
 
-    Error encodePointerReg(InsnI8080 &insn);
-    Error encodeStackReg(InsnI8080 &insn);
-    Error encodeIndexReg(InsnI8080 &insn);
-    Error encodeDataReg(InsnI8080 &insn);
-    Error encodeDataDataReg(InsnI8080 &insn);
-    Error encodeVectorNo(InsnI8080 &insn);
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        RegName reg;
+        uint16_t val16;
+        Operand()
+            : ErrorReporter(),
+              mode(M_NO),
+              reg(REG_UNDEF),
+              val16(0)
+        {}
+    };
 
-    Error encodeImmediate(InsnI8080 &insn);
-    Error encodeDirect(InsnI8080 &insn);
-    Error encodeIoaddr(InsnI8080 &insn);
+    Error parseOperand(const char *scan, Operand &op);
 
+    Error encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode);
     Error encode(Insn &insn) override;
 };
 

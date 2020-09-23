@@ -20,96 +20,61 @@
 namespace libasm {
 namespace i8080 {
 
-Error AsmI8080::encodePointerReg(InsnI8080 &insn) {
-    const RegName reg = RegI8080::parseRegName(_scan);
-    if (!RegI8080::isPointerReg(reg)) return setError(UNKNOWN_REGISTER);
-    insn.embed(RegI8080::encodePointerReg(reg));
-    _scan += RegI8080::regNameLen(reg);
-    return OK;
-}
-
-Error AsmI8080::encodeStackReg(InsnI8080 &insn) {
-    const RegName reg = RegI8080::parseRegName(_scan);
-    if (!RegI8080::isStackReg(reg)) return setError(UNKNOWN_REGISTER);
-    insn.embed(RegI8080::encodeStackReg(reg));
-    _scan += RegI8080::regNameLen(reg);
-    return OK;
-}
-
-Error AsmI8080::encodeIndexReg(InsnI8080 &insn) {
-    const RegName reg = RegI8080::parseRegName(_scan);
-    if (!RegI8080::isIndexReg(reg)) return setError(UNKNOWN_REGISTER);
-    insn.embed(RegI8080::encodeIndexReg(reg));
-    _scan += RegI8080::regNameLen(reg);
-    return setOK();
-}
-
-Error AsmI8080::encodeDataReg(InsnI8080 &insn) {
-    const RegName reg = RegI8080::parseRegName(_scan);
-    if (!RegI8080::isDataReg(reg)) return setError(UNKNOWN_REGISTER);
-    const uint8_t num = RegI8080::encodeDataReg(reg);
-    if (insn.insnFormat() == DATA_REG)
-        insn.embed(num << 3);
-    if (insn.insnFormat() == LOW_DATA_REG)
-        insn.embed(num);
-    _scan += RegI8080::regNameLen(reg);
-    return OK;
-}
-
-Error AsmI8080::encodeDataDataReg(InsnI8080 &insn) {
-    const char *p = _scan;
-    const RegName dst = RegI8080::parseRegName(p);
-    if (!RegI8080::isDataReg(dst)) return setError(UNKNOWN_REGISTER);
-    const uint8_t dstNum = RegI8080::encodeDataReg(dst);
-    p = skipSpaces(p + RegI8080::regNameLen(dst));
-    if (*p != ',') return setError(MISSING_COMMA);
-    p = skipSpaces(p + 1);
-    const RegName src = RegI8080::parseRegName(p);
-    if (!RegI8080::isDataReg(src)) return setError(UNKNOWN_REGISTER);
-    const uint8_t srcNum = RegI8080::encodeDataReg(src);
-    _scan = skipSpaces(p + RegI8080::regNameLen(src));
-
-    insn.embed(dstNum << 3);
-    insn.embed(srcNum);
-    return OK;
-}
-
-Error AsmI8080::encodeVectorNo(InsnI8080 &insn) {
-    const uint16_t vecNo = parseExpr16(_scan);
-    if (parserError()) return getError();
-    if (vecNo >= 8) return setError(OVERFLOW_RANGE);
-    insn.embed(vecNo << 3);
-    return OK;
-}
-
-Error AsmI8080::encodeImmediate(InsnI8080 &insn) {
-    const char *p = skipSpaces(_scan);
-    if (insn.insnFormat() != NO_FORMAT) {
-        if (*p != ',') return setError(MISSING_COMMA);
-        p++;
+Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
+    switch (mode) {
+    case M_IM8: case M_IOA:
+        insn.emitOperand8(op.val16);
+        return OK;
+    case M_IM16: case M_ABS:
+        insn.emitOperand16(op.val16);
+        return OK;
+    case M_PTR:
+        insn.embed(RegI8080::encodePointerReg(op.reg) << 4);
+        return OK;
+    case M_STK:
+        insn.embed(RegI8080::encodeStackReg(op.reg) << 4);
+        return OK;
+    case M_IDX:
+        insn.embed(RegI8080::encodeIndexReg(op.reg) << 4);
+        return OK;
+    case M_REG:
+        insn.embed(RegI8080::encodeDataReg(op.reg));
+        return OK;
+    case M_DST:
+        insn.embed(RegI8080::encodeDataReg(op.reg) << 3);
+        return OK;
+    case M_VEC:
+        if (op.val16 >= 8) return setError(OVERFLOW_RANGE);
+        insn.embed((op.val16 & 7) << 3);
+        return OK;
+    default:
+        return OK;
     }
-    const uint16_t val = parseExpr16(p);
-    if (parserError()) return getError();
-    if (insn.addrMode() == IMM8) {
-        insn.emitByte(val);
-    } else if (insn.addrMode() == IMM16) {
-        insn.emitUint16(val);
+}
+
+Error AsmI8080::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
+    if (endOfLine(p)) return OK;
+
+    op.reg = RegI8080::parseRegName(p);
+    if (op.reg != REG_UNDEF) {
+        _scan = p + RegI8080::regNameLen(op.reg);
+        switch (op.reg) {
+        case REG_H:   op.mode = M_REGH; break;
+        case REG_SP:  op.mode = M_PTR;  break;
+        case REG_PSW: op.mode = M_STK;  break;
+        case REG_B:
+        case REG_D:   op.mode = M_IDX;  break;
+        default:      op.mode = M_REG;  break;
+        }
+        return OK;
     }
-    return checkLineEnd();
-}
-
-Error AsmI8080::encodeDirect(InsnI8080 &insn) {
-    const uint16_t addr = parseExpr16(_scan);
+    op.val16 = parseExpr16(p);
     if (parserError()) return getError();
-    insn.emitUint16(addr);
-    return checkLineEnd();
-}
-
-Error AsmI8080::encodeIoaddr(InsnI8080 &insn) {
-    const uint16_t addr = parseExpr16(_scan);
-    if (parserError()) return getError();
-    insn.emitByte(addr);
-    return checkLineEnd();
+    op.setError(getError());
+    op.mode = M_IM16;
+    return OK;
 }
 
 Error AsmI8080::encode(Insn &_insn) {
@@ -117,32 +82,29 @@ Error AsmI8080::encode(Insn &_insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
+    Operand dstOp, srcOp;
+    if (parseOperand(endName, dstOp)) return getError();
+    const char *p = skipSpaces(_scan);
+    if (*p == ',') {
+        if (parseOperand(p + 1, srcOp)) return getError();
+        p = skipSpaces(_scan);
+    }
+    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    setErrorIf(dstOp.getError());
+    setErrorIf(srcOp.getError());
+
+    insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableI8080.searchName(insn))
         return setError(TableI8080.getError());
-    _scan = skipSpaces(endName);
 
-    switch (insn.insnFormat()) {
-    case NO_FORMAT:     setOK(); break;
-    case POINTER_REG:   encodePointerReg(insn); break;
-    case STACK_REG:     encodeStackReg(insn); break;
-    case INDEX_REG:     encodeIndexReg(insn); break;
-    case DATA_REG:
-    case LOW_DATA_REG:  encodeDataReg(insn); break;
-    case DATA_DATA_REG: encodeDataDataReg(insn); break;
-    case VECTOR_NO:     encodeVectorNo(insn); break;
-    default: break;
-    }
-    if (getError()) return getError();
-
-    insn.emitByte(insn.opCode());
-    switch (insn.addrMode()) {
-    case INHR:   return checkLineEnd();
-    case IMM8:
-    case IMM16:  return encodeImmediate(insn);
-    case DIRECT: return encodeDirect(insn);
-    case IOADR:  return encodeIoaddr(insn);
-    default:     return setError(UNKNOWN_OPERAND);
-    }
+    const AddrMode dst = insn.dstMode();
+    if (dst != M_NO && encodeOperand(insn, dstOp, dst))
+        return getError();
+    const AddrMode src = insn.srcMode();
+    if (src != M_NO && encodeOperand(insn, srcOp, src))
+        return getError();
+    insn.emitInsn();
+    return getError();
 }
 
 } // namespace i8080

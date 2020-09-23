@@ -28,10 +28,14 @@ class InsnI8080 : public InsnBase<Config> {
 public:
     InsnI8080(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
+    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
+    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
 
     void setFlags(uint8_t flags) { _flags = flags; }
+
+    void setAddrMode(AddrMode dst, AddrMode src) {
+        _flags = Entry::_flags(dst, src);
+    }
 
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
@@ -42,6 +46,18 @@ public:
     }
 
     Config::opcode_t opCode() const { return _opCode; }
+
+    void emitInsn() {
+        emitByte(_opCode, 0);
+    }
+
+    void emitOperand8(uint8_t val8) {
+        emitByte(val8, 1);
+    }
+
+    void emitOperand16(uint16_t val16) {
+        emitUint16(val16, 1);
+    }
 
 private:
     uint8_t _flags;

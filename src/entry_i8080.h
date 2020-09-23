@@ -28,44 +28,40 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    INHR   = 0,
-    IMM8   = 1,
-    IMM16  = 2,
-    DIRECT = 3,
-    IOADR  = 4,
-};
-
-enum InsnFormat : uint8_t {
-    NO_FORMAT     = 0,
-    POINTER_REG   = 1,  // **pp_****: B/D/H/SP
-    STACK_REG     = 2,  // **PP_****: B/D/H/PSW
-    INDEX_REG     = 3,  // ***I_****: B/D
-    DATA_REG      = 4,  // **DD_D***: B/C/D/E/H/L/M/A
-    LOW_DATA_REG  = 5,  // ****_*DDD: B/C/D/E/H/L/M/A
-    DATA_DATA_REG = 6,  // **DD_DSSS: B/C/D/E/H/L/M/A
-    VECTOR_NO     = 7,  // **VV_V***: 0~7
+    M_NO   = 0,
+    M_IM8  = 1,
+    M_IM16 = 2,
+    M_ABS  = 3,
+    M_IOA  = 4,
+    M_PTR  = 5,   // |..|pp|....|: B/D/H/SP
+    M_STK  = 6,   // |..|pp|....|: B/D/H/PSW
+    M_IDX  = 7,   // |...|i|....|: B/D
+    M_REG  = 8,   // |......|rrr|: B/C/D/E/H/L/M/A
+    M_DST  = 9,   // |..|rrr|...|: B/C/D/E/H/L/M/A
+    M_VEC  = 10,  // |..|vvv|...|: 0~7
+    M_REGH = 11,  // H register
 };
 
 struct Entry {
     const Config::opcode_t opCode;
     const uint8_t flags;
-    const char *name;
+    const /*PROGMEM*/ char *name;
 
-    static inline InsnFormat _insnFormat(uint8_t flags) {
-        return InsnFormat((flags >> insnFormat_gp) & insnFormat_gm);
+    static inline AddrMode _dstMode(uint8_t flags) {
+        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
     }
-    static inline AddrMode _addrMode(uint8_t flags) {
-        return AddrMode(flags & addrMode_gm);
+    static inline AddrMode _srcMode(uint8_t flags) {
+        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
     }
-    static constexpr uint8_t _flags(AddrMode addrMode, InsnFormat iformat) {
-        return (static_cast<uint8_t>(iformat) << insnFormat_gp)
-            | static_cast<uint8_t>(addrMode);
+    static constexpr uint8_t _flags(AddrMode dst, AddrMode src) {
+        return (static_cast<uint8_t>(dst) << dstMode_gp)
+            | (static_cast<uint8_t>(src) << srcMode_gp);
     }
 
 private:
-    static constexpr int     insnFormat_gp = 4;
-    static constexpr uint8_t insnFormat_gm = 0x7;
-    static constexpr uint8_t addrMode_gm   = 0x07;
+    static constexpr int dstMode_gp = 0;
+    static constexpr int srcMode_gp = 4;
+    static constexpr uint8_t addrMode_gm = 0xF;
 };
 
 } // namespace i8080

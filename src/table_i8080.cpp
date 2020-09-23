@@ -26,93 +26,93 @@
 namespace libasm {
 namespace i8080 {
 
-#define E(_opc, _name, _amode, _iformat)                        \
-    { _opc, Entry::_flags(_amode, _iformat), TEXT_##_name },
+#define E(_opc, _name, _dst, _src)                         \
+    { _opc, Entry::_flags(_dst, _src), TEXT_##_name },
 
 static constexpr Entry TABLE_I8080[] PROGMEM = {
-    E(0x00, NOP,  INHR,   NO_FORMAT)
-    E(0x01, LXI,  IMM16,  POINTER_REG)
-    E(0x09, DAD,  INHR,   POINTER_REG)
-    E(0x02, STAX, INHR,   INDEX_REG)
-    E(0x22, SHLD, DIRECT, NO_FORMAT)
-    E(0x32, STA,  DIRECT, NO_FORMAT)
-    E(0x0A, LDAX, INHR,   INDEX_REG)
-    E(0x2A, LHLD, DIRECT, NO_FORMAT)
-    E(0x3A, LDA,  DIRECT, NO_FORMAT)
-    E(0x03, INX,  INHR,   POINTER_REG)
-    E(0x0B, DCX,  INHR,   POINTER_REG)
-    E(0x04, INR,  INHR,   DATA_REG)
-    E(0x05, DCR,  INHR,   DATA_REG)
-    E(0x06, MVI,  IMM8,   DATA_REG)
-    E(0x07, RLC,  INHR,   NO_FORMAT)
-    E(0x0F, RRC,  INHR,   NO_FORMAT)
-    E(0x17, RAL,  INHR,   NO_FORMAT)
-    E(0x1F, RAR,  INHR,   NO_FORMAT)
-    E(0x27, DAA,  INHR,   NO_FORMAT)
-    E(0x2F, CMA,  INHR,   NO_FORMAT)
-    E(0x37, STC,  INHR,   NO_FORMAT)
-    E(0x3F, CMC,  INHR,   NO_FORMAT)
-    E(0x76, HLT,  INHR,   NO_FORMAT)
-    E(0x40, MOV,  INHR,   DATA_DATA_REG)
-    E(0x80, ADD,  INHR,   LOW_DATA_REG)
-    E(0x88, ADC,  INHR,   LOW_DATA_REG)
-    E(0x90, SUB,  INHR,   LOW_DATA_REG)
-    E(0x98, SBB,  INHR,   LOW_DATA_REG)
-    E(0xA0, ANA,  INHR,   LOW_DATA_REG)
-    E(0xA8, XRA,  INHR,   LOW_DATA_REG)
-    E(0xB0, ORA,  INHR,   LOW_DATA_REG)
-    E(0xB8, CMP,  INHR,   LOW_DATA_REG)
-    E(0xC0, RNZ,  INHR,   NO_FORMAT)
-    E(0xC8, RZ,   INHR,   NO_FORMAT)
-    E(0xD0, RNC,  INHR,   NO_FORMAT)
-    E(0xD8, RC,   INHR,   NO_FORMAT)
-    E(0xE0, RPO,  INHR,   NO_FORMAT)
-    E(0xE8, RPE,  INHR,   NO_FORMAT)
-    E(0xF0, RP,   INHR,   NO_FORMAT)
-    E(0xF8, RM,   INHR,   NO_FORMAT)
-    E(0xC1, POP,  INHR,   STACK_REG)
-    E(0xC9, RET,  INHR,   NO_FORMAT)
-    E(0xE9, PCHL, INHR,   NO_FORMAT)
-    E(0xF9, SPHL, INHR,   NO_FORMAT)
-    E(0xC2, JNZ,  DIRECT, NO_FORMAT)
-    E(0xCA, JZ,   DIRECT, NO_FORMAT)
-    E(0xD2, JNC,  DIRECT, NO_FORMAT)
-    E(0xDA, JC,   DIRECT, NO_FORMAT)
-    E(0xE2, JPO,  DIRECT, NO_FORMAT)
-    E(0xEA, JPE,  DIRECT, NO_FORMAT)
-    E(0xF2, JP,   DIRECT, NO_FORMAT)
-    E(0xFA, JM,   DIRECT, NO_FORMAT)
-    E(0xC3, JMP,  DIRECT, NO_FORMAT)
-    E(0xD3, OUT,  IOADR,  NO_FORMAT)
-    E(0xDB, IN,   IOADR,  NO_FORMAT)
-    E(0xE3, XTHL, INHR,   NO_FORMAT)
-    E(0xEB, XCHG, INHR,   NO_FORMAT)
-    E(0xF3, DI,   INHR,   NO_FORMAT)
-    E(0xFB, EI,   INHR,   NO_FORMAT)
-    E(0xC4, CNZ,  DIRECT, NO_FORMAT)
-    E(0xCC, CZ,   DIRECT, NO_FORMAT)
-    E(0xD4, CNC,  DIRECT, NO_FORMAT)
-    E(0xDC, CC,   DIRECT, NO_FORMAT)
-    E(0xE4, CPO,  DIRECT, NO_FORMAT)
-    E(0xEC, CPE,  DIRECT, NO_FORMAT)
-    E(0xF4, CP,   DIRECT, NO_FORMAT)
-    E(0xFC, CM,   DIRECT, NO_FORMAT)
-    E(0xC5, PUSH, INHR,   STACK_REG)
-    E(0xCD, CALL, DIRECT, NO_FORMAT)
-    E(0xC6, ADI,  IMM8,   NO_FORMAT)
-    E(0xCE, ACI,  IMM8,   NO_FORMAT)
-    E(0xD6, SUI,  IMM8,   NO_FORMAT)
-    E(0xDE, SBI,  IMM8,   NO_FORMAT)
-    E(0xE6, ANI,  IMM8,   NO_FORMAT)
-    E(0xEE, XRI,  IMM8,   NO_FORMAT)
-    E(0xF6, ORI,  IMM8,   NO_FORMAT)
-    E(0xFE, CPI,  IMM8,   NO_FORMAT)
-    E(0xC7, RST,  INHR,   VECTOR_NO)
+    E(0x00, NOP,  M_NO,   M_NO)
+    E(0x01, LXI,  M_PTR,  M_IM16)
+    E(0x09, DAD,  M_PTR,  M_NO)
+    E(0x02, STAX, M_IDX,  M_NO)
+    E(0x22, SHLD, M_ABS,  M_NO)
+    E(0x32, STA,  M_ABS,  M_NO)
+    E(0x0A, LDAX, M_IDX,  M_NO)
+    E(0x2A, LHLD, M_ABS,  M_NO)
+    E(0x3A, LDA,  M_ABS,  M_NO)
+    E(0x03, INX,  M_PTR,  M_NO)
+    E(0x0B, DCX,  M_PTR,  M_NO)
+    E(0x04, INR,  M_DST,  M_NO)
+    E(0x05, DCR,  M_DST,  M_NO)
+    E(0x06, MVI,  M_DST,  M_IM8)
+    E(0x07, RLC,  M_NO,   M_NO)
+    E(0x0F, RRC,  M_NO,   M_NO)
+    E(0x17, RAL,  M_NO,   M_NO)
+    E(0x1F, RAR,  M_NO,   M_NO)
+    E(0x27, DAA,  M_NO,   M_NO)
+    E(0x2F, CMA,  M_NO,   M_NO)
+    E(0x37, STC,  M_NO,   M_NO)
+    E(0x3F, CMC,  M_NO,   M_NO)
+    E(0x76, HLT,  M_NO,   M_NO)
+    E(0x40, MOV,  M_DST,  M_REG)
+    E(0x80, ADD,  M_REG,  M_NO)
+    E(0x88, ADC,  M_REG,  M_NO)
+    E(0x90, SUB,  M_REG,  M_NO)
+    E(0x98, SBB,  M_REG,  M_NO)
+    E(0xA0, ANA,  M_REG,  M_NO)
+    E(0xA8, XRA,  M_REG,  M_NO)
+    E(0xB0, ORA,  M_REG,  M_NO)
+    E(0xB8, CMP,  M_REG,  M_NO)
+    E(0xC0, RNZ,  M_NO,   M_NO)
+    E(0xC8, RZ,   M_NO,   M_NO)
+    E(0xD0, RNC,  M_NO,   M_NO)
+    E(0xD8, RC,   M_NO,   M_NO)
+    E(0xE0, RPO,  M_NO,   M_NO)
+    E(0xE8, RPE,  M_NO,   M_NO)
+    E(0xF0, RP,   M_NO,   M_NO)
+    E(0xF8, RM,   M_NO,   M_NO)
+    E(0xC1, POP,  M_STK,  M_NO)
+    E(0xC9, RET,  M_NO,   M_NO)
+    E(0xE9, PCHL, M_NO,   M_NO)
+    E(0xF9, SPHL, M_NO,   M_NO)
+    E(0xC2, JNZ,  M_ABS,  M_NO)
+    E(0xCA, JZ,   M_ABS,  M_NO)
+    E(0xD2, JNC,  M_ABS,  M_NO)
+    E(0xDA, JC,   M_ABS,  M_NO)
+    E(0xE2, JPO,  M_ABS,  M_NO)
+    E(0xEA, JPE,  M_ABS,  M_NO)
+    E(0xF2, JP,   M_ABS,  M_NO)
+    E(0xFA, JM,   M_ABS,  M_NO)
+    E(0xC3, JMP,  M_ABS,  M_NO)
+    E(0xD3, OUT,  M_IOA,  M_NO)
+    E(0xDB, IN,   M_IOA,  M_NO)
+    E(0xE3, XTHL, M_NO,   M_NO)
+    E(0xEB, XCHG, M_NO,   M_NO)
+    E(0xF3, DI,   M_NO,   M_NO)
+    E(0xFB, EI,   M_NO,   M_NO)
+    E(0xC4, CNZ,  M_ABS,  M_NO)
+    E(0xCC, CZ,   M_ABS,  M_NO)
+    E(0xD4, CNC,  M_ABS,  M_NO)
+    E(0xDC, CC,   M_ABS,  M_NO)
+    E(0xE4, CPO,  M_ABS,  M_NO)
+    E(0xEC, CPE,  M_ABS,  M_NO)
+    E(0xF4, CP,   M_ABS,  M_NO)
+    E(0xFC, CM,   M_ABS,  M_NO)
+    E(0xC5, PUSH, M_STK,  M_NO)
+    E(0xCD, CALL, M_ABS,  M_NO)
+    E(0xC6, ADI,  M_IM8,  M_NO)
+    E(0xCE, ACI,  M_IM8,  M_NO)
+    E(0xD6, SUI,  M_IM8,  M_NO)
+    E(0xDE, SBI,  M_IM8,  M_NO)
+    E(0xE6, ANI,  M_IM8,  M_NO)
+    E(0xEE, XRI,  M_IM8,  M_NO)
+    E(0xF6, ORI,  M_IM8,  M_NO)
+    E(0xFE, CPI,  M_IM8,  M_NO)
+    E(0xC7, RST,  M_VEC,  M_NO)
 };
 
 static constexpr Entry TABLE_I8085[] PROGMEM = {
-    E(0x20, RIM,  INHR,   NO_FORMAT)
-    E(0x30, SIM,  INHR,   NO_FORMAT)
+    E(0x20, RIM,  M_NO,   M_NO)
+    E(0x30, SIM,  M_NO,   M_NO)
 };
 
 struct TableI8080::EntryPage {
@@ -128,43 +128,56 @@ static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
     { ARRAY_RANGE(TABLE_I8085) },
 };
 
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table)
+        return true;
+    if (opr == M_REG)
+        return table == M_DST;
+    if (opr == M_IDX || opr == M_REGH)
+        return table == M_PTR || table == M_STK
+            || table == M_REG || table == M_DST;
+    if (opr == M_IM16)
+        return table == M_IM8 || table == M_ABS || table == M_IOA
+            || table == M_VEC;
+    return false;
+}
+
+static bool acceptModes(uint8_t flags, const Entry *entry) {
+    const uint8_t table = pgm_read_byte(&entry->flags);
+    return acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table))
+        && acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table));
+}
+
 Error TableI8080::searchName(
     InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
+    const uint8_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
+    uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table =
             reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry =
-            TableBase::searchName<Entry>(insn.name(), table, end);
+        const Entry *entry = TableBase::searchName<Entry,uint8_t>(
+            insn.name(), flags, table, end, acceptModes, count);
         if (entry) {
             insn.setOpCode(pgm_read_byte(&entry->opCode));
             insn.setFlags(pgm_read_byte(&entry->flags));
             return OK;
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
 static Config::opcode_t tableCode(
     Config::opcode_t opCode, const Entry *entry) {
-    const InsnFormat iformat =
-        Entry::_insnFormat(pgm_read_byte(&entry->flags));
-    switch (iformat) {
-    case INDEX_REG:
-        return opCode & ~0x10;
-    case POINTER_REG:
-    case STACK_REG:
-        return opCode & ~0x30;
-    case DATA_REG:
-    case VECTOR_NO:
-        return opCode & ~0x38;
-    case LOW_DATA_REG:
-        return opCode & ~0x07;
-    case DATA_DATA_REG:
-        return opCode & ~0x3F;
-    default:
-        return opCode;
-    }
+    const uint8_t flags = pgm_read_byte(&entry->flags);
+    const AddrMode dst = Entry::_dstMode(flags);
+    const AddrMode src = Entry::_srcMode(flags);
+    Config::opcode_t mask = 0;
+    if (dst == M_REG || src == M_REG) mask |= 07;
+    if (dst == M_DST || dst == M_VEC) mask |= 070;
+    if (dst == M_PTR || dst == M_STK) mask |= 0x30;
+    if (dst == M_IDX) mask |= 0x10;
+    return opCode & ~mask;
 }
 
 Error TableI8080::searchOpCode(

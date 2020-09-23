@@ -71,8 +71,8 @@ bool RegI8080::isPointerReg(RegName name) {
 }
 
 uint8_t RegI8080::encodePointerReg(RegName name) {
-    if (name == REG_SP) return 3 << 4;
-    return (uint8_t(name) >> 1) << 4;
+    if (name == REG_SP) return 3;
+    return (uint8_t(name) >> 1);
 }
 
 bool RegI8080::isStackReg(RegName name) {
@@ -85,8 +85,8 @@ bool RegI8080::isStackReg(RegName name) {
 }
 
 uint8_t RegI8080::encodeStackReg(RegName name) {
-    if (name == REG_PSW) return 3 << 4;
-    return (uint8_t(name) >> 1) << 4;
+    if (name == REG_PSW) return 3;
+    return (uint8_t(name) >> 1);
 }
 
 bool RegI8080::isIndexReg(RegName name) {
@@ -94,7 +94,7 @@ bool RegI8080::isIndexReg(RegName name) {
 }
 
 uint8_t RegI8080::encodeIndexReg(RegName name) {
-    return (uint8_t(name) >> 1) << 4;
+    return (uint8_t(name) >> 1);
 }
 
 bool RegI8080::isDataReg(RegName name) {
