@@ -47,7 +47,7 @@ private:
         {}
     };
 
-    Error parseOperand(Operand &op);
+    Error parseOperand(const char *scan, Operand &op);
     Error emitRelative(InsnMc6800 &insn, const Operand &op);
     Error emitImmediate(InsnMc6800 &insn, const Operand &op);
     Error emitBitNumber(InsnMc6800 &insn, const Operand &op);

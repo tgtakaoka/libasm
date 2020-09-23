@@ -50,7 +50,7 @@ private:
         {}
     };
 
-    Error parseOperand(Operand &opr);
+    Error parseOperand(const char *scan, Operand &opr);
 
     Error encodeRel8(InsnIns8060 &insn, const Operand &opr);
     Error encodeIndx(InsnIns8060 &insn, const Operand &opr);

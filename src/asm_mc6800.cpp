@@ -20,8 +20,9 @@
 namespace libasm {
 namespace mc6800 {
 
-Error AsmMc6800::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (endOfLine(p) || *p == ',') {
         op.mode = M_NO;
         return OK;
@@ -115,19 +116,16 @@ Error AsmMc6800::encode(Insn &_insn) {
     InsnMc6800 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    _scan = skipSpaces(endName);
 
     Operand op1, op2, op3;
-    if (parseOperand(op1)) return getError();
+    if (parseOperand(endName, op1)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(op2)) return getError();
+        if (parseOperand(p + 1, op2)) return getError();
         p = skipSpaces(_scan);
     }
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(op3)) return getError();
+        if (parseOperand(p + 1, op3)) return getError();
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);

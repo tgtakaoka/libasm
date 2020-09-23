@@ -96,8 +96,9 @@ Error AsmIns8070::emitOperand(
     return OK;
 }
 
-Error AsmIns8070::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (endOfLine(p) || *p == ',')
         return OK;
 
@@ -163,14 +164,12 @@ Error AsmIns8070::encode(Insn &_insn) {
     InsnIns8070 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    _scan = skipSpaces(endName);
 
     Operand dst, src;
-    if (parseOperand(dst)) return getError();
+    if (parseOperand(endName, dst)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(src)) return getError();
+        if (parseOperand(p + 1, src)) return getError();
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);

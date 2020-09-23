@@ -297,8 +297,8 @@ Error AsmZ8000::emitOperand(
     return setError(INTERNAL_ERROR);
 }
 
-int8_t AsmZ8000::parseIntrNames(const char *&line) {
-    const char *p = line;
+int8_t AsmZ8000::parseIntrNames(const char *scan) {
+    const char *p = scan;
     if (endOfLine(p)) return 0;
     int8_t num = 0;
     while (true) {
@@ -308,7 +308,7 @@ int8_t AsmZ8000::parseIntrNames(const char *&line) {
         num |= RegZ8000::encodeIntrName(intr);
         p = skipSpaces(p);
         if (endOfLine(p)) {
-            line = p;
+            _scan = p;
             return num;
         }
         if (*p != ',') return -1;
@@ -316,8 +316,9 @@ int8_t AsmZ8000::parseIntrNames(const char *&line) {
     }
 }
 
-int8_t AsmZ8000::parseFlagNames(const char *&line) {
-    const char *p = line;
+int8_t AsmZ8000::parseFlagNames(const char *scan) {
+    const char *p = scan;
+    _scan = p;
     if (endOfLine(p)) return 0;
     int8_t num = 0;
     while (true) {
@@ -327,7 +328,7 @@ int8_t AsmZ8000::parseFlagNames(const char *&line) {
         num |= RegZ8000::encodeFlagName(flag);
         p = skipSpaces(p);
         if (endOfLine(p)) {
-            line = p;
+            _scan = p;
             return num;
         }
         if (*p != ',') return -1;
@@ -335,8 +336,9 @@ int8_t AsmZ8000::parseFlagNames(const char *&line) {
     }
 }
 
-Error AsmZ8000::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmZ8000::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (*p == '#') {
         op.val32 = parseExpr32(p + 1);
         if (parserError()) return getError();
@@ -397,11 +399,9 @@ Error AsmZ8000::parseOperand(Operand &op) {
     }
     op.cc = RegZ8000::parseCcName(p);
     if (op.cc != CC_UNDEF) {
-        const char *f = p;
+        const int8_t num = parseFlagNames(p);
         p += RegZ8000::ccNameLen(op.cc);
-        const int8_t num = parseFlagNames(f);
-        if (num > 0 && f > p) {
-            _scan = f;
+        if (num > 0 && _scan > p) {
             op.val32 = num;
             op.mode = M_FLAG;
             return OK;
@@ -412,14 +412,12 @@ Error AsmZ8000::parseOperand(Operand &op) {
     }
     int8_t num = parseFlagNames(p);
     if (num >= 0) {
-        _scan = p;
         op.val32 = num;
         op.mode = M_FLAG;
         return OK;
     }
     num = parseIntrNames(p);
     if (num >= 0) {
-        _scan = p;
         op.val32 = num;
         op.mode = M_INTR;
         return OK;
@@ -450,22 +448,18 @@ Error AsmZ8000::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand dstOp, srcOp, ex1Op, ex2Op;
-    _scan = skipSpaces(endName);
-    if (parseOperand(dstOp)) return getError();
+    if (parseOperand(endName, dstOp)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(srcOp)) return getError();
+        if (parseOperand(p + 1, srcOp)) return getError();
         p = skipSpaces(_scan);
     }
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(ex1Op)) return getError();
+        if (parseOperand(p + 1, ex1Op)) return getError();
         p = skipSpaces(_scan);
     }
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(ex2Op)) return getError();
+        if (parseOperand(p + 1, ex2Op)) return getError();
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);

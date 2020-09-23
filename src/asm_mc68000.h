@@ -55,8 +55,8 @@ private:
         void fixupMultiRegister();
     };
 
-    Error parseOperand(Operand &opr);
-    Error parseMoveMultiRegList(Operand &opr);
+    Error parseMoveMultiRegList(const char *scan, Operand &opr);
+    Error parseOperand(const char *scan, Operand &opr);
     Error checkAlignment(OprSize size, Config::uintptr_t addr);
 
     Error emitBriefExtension(

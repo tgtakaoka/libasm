@@ -103,8 +103,9 @@ Error AsmNs32000::parseRegisterList(const char *p, Operand &op) {
     return setOK();
 }
 
-Error AsmNs32000::parseBaseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
+    const char *p = scan;
+    _scan = p;
     if (endOfLine(p)) return OK;
     if (*p == '@') {
         op.val32 = parseExpr32(p + 1);
@@ -253,8 +254,8 @@ Error AsmNs32000::parseBaseOperand(Operand &op) {
     return setError(UNKNOWN_OPERAND);
 }
 
-Error AsmNs32000::parseOperand(Operand &op) {
-    if (parseBaseOperand(op)) return getError();
+Error AsmNs32000::parseOperand(const char *scan, Operand &op) {
+    if (parseBaseOperand(skipSpaces(scan), op)) return getError();
     if (op.mode == M_GREG || op.mode == M_RREL || op.mode == M_MREL
         || op.mode == M_ABS || op.mode == M_EXT || op.mode == M_TOS
         || op.mode == M_MEM) {
@@ -541,22 +542,18 @@ Error AsmNs32000::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand srcOp, dstOp, ex1Op, ex2Op;
-    _scan = skipSpaces(endName);
-    if (parseOperand(srcOp)) return getError();
+    if (parseOperand(endName, srcOp)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(dstOp)) return getError();
+        if (parseOperand(p + 1, dstOp)) return getError();
         p = skipSpaces(_scan);
     }
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(ex1Op)) return getError();
+        if (parseOperand(p + 1, ex1Op)) return getError();
         p = skipSpaces(_scan);
     }
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(ex2Op)) return getError();
+        if (parseOperand(p + 1, ex2Op)) return getError();
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);

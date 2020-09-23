@@ -58,7 +58,14 @@ private:
         {}
     };
 
-    Error parseOperand(Operand &op);
+    Error parseOperand(const char *scan, Operand &op);
+    Error setRp(
+        const char *scan, InsnZ8 &insn, const /*PROGMEM*/ char *name,
+        bool (AsmZ8::*)(int16_t));
+    Error assumeRp(
+        const char *scan, const /*PROGMEM*/ char *name,
+        bool (AsmZ8::*)(int16_t));
+    Error processPseudo(const char *scan, InsnZ8 &insn);
 
     Error encodeOperand(
         InsnZ8 &insn, const AddrMode mode, const Operand &op);
@@ -77,12 +84,6 @@ private:
     Error encodePostByte(
         InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
         const Operand &extOp);
-    Error setRp(
-        InsnZ8 &insn, const char *line, const char *name,
-        bool (AsmZ8::*)(int16_t));
-    Error assumeRp(
-        const char *line, const char *name, bool (AsmZ8::*)(int16_t));
-    Error processPseudo(InsnZ8 &insn, const char *line);
     Error encode(Insn &insn) override;
 };
 

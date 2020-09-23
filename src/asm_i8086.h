@@ -67,7 +67,7 @@ private:
     const char *parseBaseRegister(const char *scan, Operand &op);
     const char *parseIndexRegister(const char *scan, Operand &op);
     const char *parseDisplacement(const char *scan, Operand &op);
-    Error parseOperand(Operand &opr);
+    Error parseOperand(const char *scan, Operand &opr);
 
     Error emitImmediate(InsnI8086 &insn, OprSize size, uint16_t val);
     Error emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);

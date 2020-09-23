@@ -55,9 +55,9 @@ private:
         {}
     };
 
-    int8_t parseIntrNames(const char *&line);
-    int8_t parseFlagNames(const char *&line);
-    Error parseOperand(Operand &opr);
+    int8_t parseIntrNames(const char *scan);
+    int8_t parseFlagNames(const char *scan);
+    Error parseOperand(const char *scan, Operand &opr);
 
     Error emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
     Error emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);

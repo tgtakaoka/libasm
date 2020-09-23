@@ -105,8 +105,9 @@ const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
     return skipSpaces(_scan);
 }
 
-Error AsmI8086::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmI8086::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (endOfLine(p)) return OK;
 
     if (parseStringInst(p, op))
@@ -365,14 +366,12 @@ Error AsmI8086::encode(Insn &_insn) {
     InsnI8086 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    _scan = skipSpaces(endName);
 
     Operand dstOp, srcOp;
-    if (parseOperand(dstOp)) return getError();
+    if (parseOperand(endName, dstOp)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(srcOp)) return getError();
+        if (parseOperand(p + 1, srcOp)) return getError();
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);

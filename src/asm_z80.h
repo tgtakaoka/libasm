@@ -49,7 +49,7 @@ private:
         {}
     };
 
-    Error parseOperand(Operand &opr);
+    Error parseOperand(const char *scan, Operand &op);
 
     Error encodeImmediate(
         InsnZ80 &insn, const Operand &dst, const Operand &src);

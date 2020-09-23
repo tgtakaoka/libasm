@@ -50,17 +50,17 @@ private:
         {}
     };
 
-    Error parseOnOff(const char *line, bool &val);
-    Error parseZeroOne(const char *line, bool &val);
+    Error parseOnOff(const char *scan, bool &val);
+    Error parseZeroOne(const char *scan, bool &val);
+    Error processPseudo(const char *scan, InsnMos6502 &insn);
     Error selectMode(
         char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
-    Error parseOperand(Operand &op, Operand &extra);
+    Error parseOperand(const char *scan, Operand &op, Operand &extra);
 
     Error encodeLongRelative(InsnMos6502 &insn, const Operand &op);
     Error encodeRelative(InsnMos6502 &insn, const Operand &op);
     Error encodeZeroPageRelative(
         InsnMos6502 &insn, const Operand &op, const Operand &extra);
-    Error processPseudo(InsnMos6502 &insn, const char *line);
     Error encode(Insn &insn) override;
 };
 

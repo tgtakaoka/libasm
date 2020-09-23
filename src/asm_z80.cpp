@@ -256,11 +256,12 @@ Error AsmZ80::encodeInherent(
     return checkLineEnd();
 }
 
-Error AsmZ80::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmZ80::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (endOfLine(p)) {
         op.format = NO_OPR;
-        return op.setOK();
+        return OK;
     }
 
     // 'C' is either C-reg or C-condition
@@ -271,7 +272,7 @@ Error AsmZ80::parseOperand(Operand &op) {
         op.size = SZ_BYTE;
         op.val16 = RegZ80::encodeCcName(CC_C);
         op.format = C_REG;
-        return op.setOK();
+        return OK;
     }
 
     const CcName cc = RegZ80::parseCcName(p);
@@ -279,7 +280,7 @@ Error AsmZ80::parseOperand(Operand &op) {
         op.format = RegZ80::isCc4Name(cc) ? COND_4 : COND_8;
         op.val16 = RegZ80::encodeCcName(cc);
         _scan = p + RegZ80::ccNameLen(cc);
-        return op.setOK();
+        return OK;
     }
 
     op.reg = RegZ80::parseRegName(p);
@@ -302,19 +303,20 @@ Error AsmZ80::parseOperand(Operand &op) {
         }
         if (op.size == SZ_NONE)
             op.size = RegZ80::regSize(op.reg);
-        return op.setOK();
+        return OK;
     }
     if (*p == '(') {
         p = skipSpaces(p + 1);
         op.reg = RegZ80::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p);
-            if (parserError()) return op.setError(getError());
+            if (parserError()) return getError();
+            op.setError(getError());
             op.format = ADDR_16;
             p = skipSpaces(_scan);
-            if (*p != ')') return op.setError(MISSING_CLOSING_PAREN);
+            if (*p != ')') return setError(MISSING_CLOSING_PAREN);
             _scan = p + 1;
-            return op.setOK();
+            return OK;
         }
         p = skipSpaces(p + RegZ80::regNameLen(op.reg));
         if (*p == ')') {
@@ -326,29 +328,29 @@ Error AsmZ80::parseOperand(Operand &op) {
             case REG_IX:
             case REG_IY: op.format = IX_PTR; break;
             case REG_C:  op.format = C_PTR; break;
-            default:     return op.setError(UNKNOWN_OPERAND);
+            default:     return setError(UNKNOWN_OPERAND);
             }
             if (op.size == SZ_NONE) op.size = SZ_BYTE;
             _scan = p + 1;
-            return op.setOK();
+            return OK;
         }
         if (*p == '+' || *p == '-') {
             if (op.reg == REG_IX || op.reg == REG_IY) {
                 op.val16 = parseExpr16(p);
-                if (parserError()) return op.setError(getError());
+                if (parserError()) return getError();
                 op.setError(getError());
                 p = skipSpaces(_scan);
-                if (*p != ')') return op.setError(MISSING_CLOSING_PAREN);
+                if (*p != ')') return setError(MISSING_CLOSING_PAREN);
                 _scan = p + 1;
                 op.format = IX_OFF;
                 if (op.size == SZ_NONE) op.size = SZ_BYTE;
                 return OK;
             }
         }
-        return op.setError(UNKNOWN_OPERAND);
+        return setError(UNKNOWN_OPERAND);
     }
     op.val16 = parseExpr16(p);
-    if (parserError()) return op.setError(getError());
+    if (parserError()) return getError();
     op.setError(getError());
     op.format = IMM_16;
     return OK;;
@@ -358,14 +360,13 @@ Error AsmZ80::encode(Insn &_insn) {
     InsnZ80 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    _scan = skipSpaces(endName);
+
     Operand dst, src;
-    if (parseOperand(dst)) return setError(dst);
-    _scan = skipSpaces(_scan);
-    if (*_scan == ',') {
-        _scan = skipSpaces(_scan + 1);
+    if (parseOperand(endName, dst)) return setError(dst);
+    const char *p = skipSpaces(_scan);
+    if (*p == ',') {
         src.size = dst.size;
-        if (parseOperand(src))
+        if (parseOperand(p + 1, src))
             return setError(src);
     }
 

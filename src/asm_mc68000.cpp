@@ -232,8 +232,8 @@ void AsmMc68000::Operand::fixupMultiRegister() {
     }
 }
 
-Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
-    const char *p = _scan;
+Error AsmMc68000::parseMoveMultiRegList(const char *scan, Operand &opr) {
+    const char *p = skipSpaces(scan);
     Error error = OK;
     for (;;) {
         RegName start = RegMc68000::parseRegName(p);
@@ -264,8 +264,9 @@ Error AsmMc68000::parseMoveMultiRegList(Operand &opr) {
     return opr.setError(error);
 }
 
-Error AsmMc68000::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmMc68000::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (endOfLine(p))  return OK;
     if (*p == '#') {
         op.val32 = parseExpr32(p + 1);
@@ -348,10 +349,9 @@ Error AsmMc68000::parseOperand(Operand &op) {
 
     op.reg = RegMc68000::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        p += RegMc68000::regNameLen(op.reg);
-        p = skipSpaces(p);
-        if ((*p == '/' || *p == '-') && RegMc68000::isGeneralReg(op.reg))
-            return parseMoveMultiRegList(op);
+        const char *a = skipSpaces(p + RegMc68000::regNameLen(op.reg));
+        if ((*a == '/' || *a == '-') && RegMc68000::isGeneralReg(op.reg))
+            return parseMoveMultiRegList(p, op);
         if (RegMc68000::isAddrReg(op.reg)) {
             op.mode = M_AREG;
         } else if (RegMc68000::isDataReg(op.reg)) {
@@ -363,7 +363,7 @@ Error AsmMc68000::parseOperand(Operand &op) {
         } else if (op.reg == REG_SR) {
             op.mode = M_SR;
         } else return setError(REGISTER_NOT_ALLOWED);
-        _scan = p;
+        _scan = a;
         return OK;
     }
     op.val32 = parseExpr32(p);
@@ -380,21 +380,19 @@ Error AsmMc68000::encode(Insn &_insn) {
 
     const OprSize isize = RegMc68000::parseSize(endName);
     if (isize == SZ_ERROR) return setError(ILLEGAL_SIZE);
-    const char *endSize = endName + RegMc68000::sizeNameLen(isize);
     insn.setOprSize(isize);
+    endName += RegMc68000::sizeNameLen(isize);
 
-    _scan = skipSpaces(endSize);
     Operand srcOp, dstOp;
-    if (parseOperand(srcOp)) return getError();
-    setErrorIf(srcOp.getError());
+    if (parseOperand(endName, srcOp)) return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        _scan = skipSpaces(p + 1);
-        if (parseOperand(dstOp)) return getError();
-        setErrorIf(dstOp.getError());
+        if (parseOperand(p + 1, dstOp)) return getError();
         p = skipSpaces(_scan);
     }
     if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    setErrorIf(srcOp.getError());
+    setErrorIf(dstOp.getError());
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
     if (TableMc68000.searchName(insn))

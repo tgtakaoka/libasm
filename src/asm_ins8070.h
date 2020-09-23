@@ -52,7 +52,7 @@ private:
         {}
     };
 
-    Error parseOperand(Operand &op);
+    Error parseOperand(const char *scan, Operand &op);
 
     Error emitAbsolute(InsnIns8070 &insn, const Operand &op);
     Error emitImmediate(InsnIns8070 &insn, const Operand &op);

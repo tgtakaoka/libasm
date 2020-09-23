@@ -58,12 +58,12 @@ private:
         {}
     };
 
-    bool parsePointerMode(Operand &op, const char *scan, bool indir);
-    bool parseIndexedMode(Operand &op, const char *scan, bool indir);
-    bool parseBitRegister(Operand &op, const char *scan);
-    bool parseBitPosition(Operand &op, const char *scan);
-    bool parseRegisterList(Operand &op, const char *scan, bool indir);
-    Error parseOperand(Operand &op);
+    bool parsePointerMode(const char *scan, Operand &op, bool indir);
+    bool parseIndexedMode(const char *scan, Operand &op, bool indir);
+    bool parseBitRegister(const char *scan, Operand &op);
+    bool parseBitPosition(const char *scan, Operand &op);
+    bool parseRegisterList(const char *scan, Operand &op, bool indir);
+    Error parseOperand(const char *scan, Operand &op);
 
     Error encodePushPull(InsnMc6809 &insn, const Operand &op);
     Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
@@ -79,7 +79,7 @@ private:
     Error encodeTransferMemory(
         InsnMc6809 &insn, const Operand &op, const Operand &extra);
 
-    Error processPseudo(InsnMc6809 &insn);
+    Error processPseudo(const char *scan, InsnMc6809 &insn);
     Error encode(Insn &insn) override;
 };
 

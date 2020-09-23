@@ -57,8 +57,9 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
     return getError();
 }
 
-Error AsmIns8060::parseOperand(Operand &op) {
-    const char *p = _scan;
+Error AsmIns8060::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
     if (endOfLine(p)) {
         op.mode = INHR;
         return OK;
@@ -106,12 +107,11 @@ Error AsmIns8060::encode(Insn &_insn) {
     InsnIns8060 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
-    _scan = skipSpaces(endName);
 
     Operand op;
-    if (parseOperand(op)) return getError();
-    _scan = skipSpaces(_scan);
-    if (!endOfLine(_scan)) return setError(GARBAGE_AT_END);
+    if (parseOperand(endName, op)) return getError();
+    const char *p = skipSpaces(_scan);
+    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
     setErrorIf(op.getError());
 
     insn.setAddrMode(op.mode);
