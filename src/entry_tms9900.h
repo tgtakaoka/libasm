@@ -29,38 +29,51 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    INH     = 0,   // ---- ---- ---- ----
-    IMM     = 1,   // ---- ---- ---- ---- + nnnn
-    REG     = 2,   // ---- ---- ---- wwww
-    REG_IMM = 3,   // ---- ---- ---- wwww + nnnn
-    CNT_REG = 4,   // ---- ---- cccc wwww
-    SRC     = 5,   // ---- ---- --SS ssss
-    CNT_SRC = 6,   // ---- --cc ccSS ssss
-    XOP_SRC = 7,   // ---- --vv vvSS ssss
-    REG_SRC = 8,   // ---- --dd ddSS ssss
-    DST_SRC = 9,   // ---- DDdd ddSS ssss
-    REL     = 10,  // ---- ---- nnnn nnnn
-    CRU_OFF = 11,  // ---- ---- nnnn nnnn
-    DW_DST_SRC = 12,  // 0100 DDdd ddSS ssss in 2nd word
-    DW_CNT_SRC = 13,  // 0100 00cc ccSS ssss in 2nd word
-    DW_BIT_SRC = 14,  // 0000 00bb bbSS ssss in 2nd word
-    IMM_MOD = 15,  // ---- ---- ---- -nnn RTWP mode
+    M_NO   = 0,
+    M_IMM  = 1,   // 16-bit Immediate data
+    M_REG  = 2,   // ---- ---- ---- wwww: Work Register Addressing
+    M_SCNT = 3,   // ---- ---- cccc ----
+    M_SRC  = 4,   // ---- ---- --SS ssss
+    M_CNT  = 5,   // ---- --cc cc-- ----
+    M_XOP  = 6,   // ---- --vv vv-- ----
+    M_DREG = 7,   // ---- --dd dd-- ----
+    M_DST  = 8,   // ---- DDdd dd-- ----
+    M_REL  = 10,  // ---- ---- nnnn nnnn
+    M_CRU  = 11,  // ---- ---- nnnn nnnn
+    M_RTWP = 12,  // ---- ---- ---- -nnn RTWP mode
+    M_DST2 = 13,  // 0100 DDdd dd-- ---- in 2nd word
+    M_CNT2 = 14,  // 0100 00cc cc-- ---- in 2nd word
+    M_BIT2 = 15,  // 0000 00bb bb-- ---- in 2nd word
+    M_SRC2 = 16,  // ---- ---- --SS ssss in 2nd word
+    //Only for assembler.
+    M_IREG = 17,  // Work Register Indirect Addressing: *Rn
+    M_INCR = 18,  // Work Register Indirect Auto Increment Addressing: *Rn+
+    M_SYBL = 19,  // Symbol (Direct) Addressing: @LABEL
+    M_INDX = 20,  // Indexed Addressing: @TABLE(Rn)
 };
 
 struct Entry {
     const Config::opcode_t opCode;
-    const uint8_t flags;
+    const uint16_t flags;
     const char *name;
 
-    static inline AddrMode _addrMode(uint8_t flags) {
-        return AddrMode(flags & addrMode_gm);
+    static inline AddrMode _srcMode(uint16_t flags) {
+        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
     }
-    static constexpr uint8_t _flags(AddrMode addrMode) {
-        return static_cast<uint8_t>(addrMode);
+
+    static inline AddrMode _dstMode(uint16_t flags) {
+        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
+    }
+
+    static constexpr uint16_t _flags(AddrMode src, AddrMode dst) {
+        return (static_cast<uint16_t>(src) << srcMode_gp)
+            | (static_cast<uint16_t>(dst) << dstMode_gp);
     }
 
 private:
-    static constexpr uint8_t addrMode_gm = 0xf;
+    static constexpr int srcMode_gp = 0;
+    static constexpr int dstMode_gp = 8;
+    static constexpr uint8_t addrMode_gm = 0x1F;
 };
 
 } // namespace tms9900

@@ -36,10 +36,14 @@ private:
     IntelValueFormatter _formatter;
     RegTms9900 _regs;
 
-    Error decodeOperand(
-        DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t opr);
-    Error decodeImmediate(DisMemory &memory, InsnTms9900 &insn, char *out);
     Error decodeRelative(InsnTms9900 &insn, char *out);
+    Error checkPostWord(InsnTms9900 &insn);
+    Error decodeMactoInstructionDetect(InsnTms9900 &insn);
+    Error decodeModeReg(
+        DisMemory &memory, InsnTms9900 &insn, char *out,
+        uint8_t mode, uint8_t reg);
+    Error decodeOperand(
+        DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

@@ -28,22 +28,39 @@ class InsnTms9900 : public InsnBase<Config> {
 public:
     InsnTms9900(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
+    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
+    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
 
-    void setFlags(uint8_t flags) { _flags = flags; }
+    void setFlags(uint16_t flags) { _flags = flags; }
+
+    void setAddrMode(AddrMode src, AddrMode dst) {
+        _flags = Entry::_flags(src, dst);
+    }
 
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
+        _post = 0;
     }
 
     void embed(Config::opcode_t data) {
         _opCode |= data;
     }
 
+    void embedPost(Config::opcode_t data) {
+        _post |= data;
+    }
+
+    void readPost(DisMemory &memory) {
+        if (srcMode() == M_SRC2)
+            _post = readUint16(memory);
+    }
+
     Config::opcode_t opCode() const { return _opCode; }
+    Config::opcode_t post() const { return _post; }
 
     void emitInsn() {
         emitUint16(_opCode, 0);
+        if (srcMode() == M_SRC2) emitUint16(_post, 2);
     }
 
     void emitOperand16(uint16_t val) {
@@ -51,12 +68,14 @@ public:
     }
 
 private:
-    uint8_t _flags;
+    uint16_t _flags;
     Config::opcode_t _opCode;
+    Config::opcode_t _post;
 
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0) pos = 2;
+        if (srcMode() == M_SRC2 && pos < 4) pos = 4;
         return pos;
     }
 };

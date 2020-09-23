@@ -20,31 +20,55 @@
 namespace libasm {
 namespace tms9900 {
 
-Error DisTms9900::decodeOperand(
-    DisMemory &memory, InsnTms9900 &insn, char *out, const uint8_t opr) {
-    const uint8_t regno = opr & 0xf;
-    const uint8_t mode = (opr >> 4) & 0x3;
-    if (mode == 1 || mode == 3) *out++ = '*';
-    if (mode == 2) {
-        *out++ = '@';
-        out = outHex(out, insn.readUint16(memory), 16);
-        if (regno) {
-            *out++ = '(';
-            out = _regs.outRegName(out, regno);
-            *out++ = ')';
-        }
-    } else {
-        out = _regs.outRegName(out, regno);
-        if (mode == 3)
-            *out++ = '+';
+Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
+    const Config::opcode_t post = insn.post();
+    const uint8_t srcMode = (post >> 4 & 3);
+    switch (insn.dstMode()) {
+    case M_DST2:
+        if ((post & 0xF000) == 0x4000) return OK;
+        break;
+    case M_CNT2:
+        if ((post & 0xFC00) == 0x4000) return OK;
+        break;
+    case M_BIT2:
+        // no auto increment mode.
+        if ((post & 0xFC00) == 0x0000 && srcMode != 3) return OK;
+        break;
+    default:
+        return OK;
     }
-    *out = 0;
-    return setError(insn);
+    return decodeMactoInstructionDetect(insn);
 }
 
-Error DisTms9900::decodeImmediate(
-    DisMemory& memory, InsnTms9900 &insn, char *out) {
-    outHex(out, insn.readUint16(memory), 16);
+static const char TEXT_MID[]  PROGMEM = "MID";
+
+Error DisTms9900::decodeMactoInstructionDetect(InsnTms9900 &insn) {
+    insn.setName_P(TEXT_MID);
+    return setError(UNKNOWN_INSTRUCTION);
+}
+
+Error DisTms9900::decodeModeReg(
+    DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t mode, uint8_t reg) {
+    switch (mode &= 3) {
+    case 1: case 3:
+        *out++ = '*';
+        /* Fall-through */
+    case 0:
+        out = _regs.outRegName(out, reg);
+        if (mode == 3)
+            *out++ = '+';
+        break;
+    default:
+        *out++ = '@';
+        out = outHex(out, insn.readUint16(memory), 16);
+        if (reg & 0xF) {
+            *out++ = '(';
+            out = _regs.outRegName(out, reg);
+            *out++ = ')';
+        }
+        break;
+    }
+    *out = 0;
     return setError(insn);
 }
 
@@ -53,113 +77,91 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
     delta <<= 1;
     const Config::uintptr_t target = insn.address() + 2 + delta;
     outRelAddr(out, target, insn.address(), 9);
-    return setOK();
+    return OK;
 }
 
-static char *outComma(char *out) {
-    out += strlen(out);
-    *out++ = ',';
-    return out;
+Error DisTms9900::decodeOperand(
+    DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode) {
+    const Config::opcode_t opc = insn.opCode();
+    const Config::opcode_t post = insn.post();
+    uint8_t val8;
+    switch (mode) {
+    case M_IMM:
+        outHex(out, insn.readUint16(memory), 16);
+        return setError(insn);
+    case M_REG:
+        _regs.outRegName(out, opc);
+        return OK;
+    case M_DREG:
+        _regs.outRegName(out, opc >> 6);
+        return OK;
+    case M_SRC2:
+        if (checkPostWord(insn)) return getError();
+        /* Fall-through */
+    case M_SRC:
+        val8 = (mode == M_SRC) ? opc : post;
+        return decodeModeReg(memory, insn, out, val8 >> 4, val8);
+    case M_DST2:
+    case M_DST:
+        val8 = ((mode == M_DST) ? opc : post) >> 6;
+        return decodeModeReg(memory, insn, out, val8 >> 4, val8);
+    case M_CNT2:
+    case M_XOP:
+    case M_CNT:
+        val8 = (((mode == M_CNT2) ? post : opc) >> 6) & 0xF;
+        if (mode == M_CNT2 && val8 == 0) {
+            _regs.outRegName(out, 0);
+            return OK;
+        }
+        if (mode == M_CNT && val8 == 0) val8 = 16;
+        outDec(out, val8, 5);
+        return OK;
+    case M_BIT2:
+        val8 = (post >> 6) & 0xF;
+        outDec(out, val8, 4);
+        return OK;
+    case M_REL:
+        return decodeRelative(insn, out);
+    case M_SCNT:
+        val8 = (opc >> 4) & 0xF;
+        if (val8 == 0) _regs.outRegName(out, 0);
+        else outDec(out, val8, 4);
+        return OK;
+    case M_CRU:
+        val8 = opc & 0xFF;
+        outDec(out, val8, -8);
+        return OK;
+    case M_RTWP:
+        val8 = opc & 7;
+        if (val8 == 0 || val8 == 1 || val8 == 2 || val8 == 4) {
+            if (val8) outHex(out, val8, 7);
+            return OK;
+        }
+        return decodeMactoInstructionDetect(insn);
+    default:
+        return OK;
+    }
 }
-
-static const char TEXT_MID[]  PROGMEM = "MID";
 
 Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnTms9900 insn(_insn);
     Config::opcode_t opCode = insn.readUint16(memory);
-    if (setError(insn)) return getError();
 
     insn.setOpCode(opCode);
-    if (TableTms9900.searchOpCode(insn)) {
-    mid:
-        insn.setName_P(TEXT_MID);
-        return setError(UNKNOWN_INSTRUCTION);
-    }
+    if (TableTms9900.searchOpCode(insn))
+        return decodeMactoInstructionDetect(insn);
+    insn.readPost(memory);
+    if (setError(insn)) return getError();
 
-    uint8_t count;
-    switch (insn.addrMode()) {
-    case IMM_MOD:
-        count = insn.opCode() & 7;
-        if (count == 1 || count == 2 || count == 4)
-            outHex(out, count, 3);
-        break;
-    case INH:
-        break;
-    case IMM:
-        return decodeImmediate(memory, insn, out);
-    case REG:
-        _regs.outRegName(out, opCode);
-        break;
-    case REG_IMM:
-        out = _regs.outRegName(out, opCode);
-        out = outComma(out);
-        return decodeImmediate(memory, insn, out);
-    case CNT_REG:
-        out = _regs.outRegName(out, opCode);
-        out = outComma(out);
-        count = (opCode >> 4) & 0xF;
-        if (count == 0) _regs.outRegName(out, 0);
-        else outDec(out, count, 4);
-        break;
-    case DW_BIT_SRC:
-        opCode = insn.readUint16(memory);
-        count = (opCode >> 6) & 0xF;
-        if ((opCode & 0xFC00) != 0x0000) goto mid;
-        if ((opCode & 0x0030) == 0x0030) goto mid; // no auto increment mode
-        if (decodeOperand(memory, insn, out, opCode)) return getError();
-        out = outComma(out);
-        outDec(out, count, 4);
-        break;
-    case SRC:
-        return decodeOperand(memory, insn, out, opCode);
-    case REG_SRC:
-        if (decodeOperand(memory, insn, out, opCode))
-            return getError();
-        out = outComma(out);
-        _regs.outRegName(out, opCode >> 6);
-        break;
-    case DW_CNT_SRC:
-        opCode = insn.readUint16(memory);
-        if ((opCode & 0xFC00) != 0x4000) goto mid;
-        if (decodeOperand(memory, insn, out, opCode))
-            return getError();
-        out = outComma(out);
-        count = (opCode >> 6) & 0xF;
-        if (count == 0) _regs.outRegName(out, 0);
-        else outDec(out, count, 4);
-        break;
-    case CNT_SRC:
-    case XOP_SRC:
-        if (decodeOperand(memory, insn, out, opCode))
-            return getError();
-        out = outComma(out);
-        count = (opCode >> 6) & 0xF;
-        if (insn.addrMode() == CNT_SRC && count == 0)
-            count = 16;
-        outDec(out, count, 5);
-        break;
-    case DW_DST_SRC:
-        opCode = insn.readUint16(memory);
-        if ((opCode & 0xF000) != 0x4000) goto mid;
-        /* Fall-through */
-    case DST_SRC:
-        if (decodeOperand(memory, insn, out, opCode))
-            return getError();
-        out = outComma(out);
-        decodeOperand(memory, insn, out, opCode >> 6);
+    const AddrMode src = insn.srcMode();
+    if (src == M_NO) return OK;
+    if (decodeOperand(memory, insn, out, src))
         return getError();
-    case REL:
-        decodeRelative(insn, out);
-        break;
-    case CRU_OFF: {
-        const int8_t offset = static_cast<int8_t>(opCode & 0xff);
-        outDec(out, offset, -8);
-        break;
-    }
-    default:
-        return setError(INTERNAL_ERROR);
-    }
-    return setError(insn);
+    const AddrMode dst = insn.dstMode();
+    if (dst == M_NO) return OK;
+    out += strlen(out);
+    *out++ = ',';
+    return decodeOperand(memory, insn, out, dst);
 }
 
 } // namespace tms9900

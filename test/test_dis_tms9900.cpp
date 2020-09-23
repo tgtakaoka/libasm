@@ -400,10 +400,12 @@ static void assert_mid(
             }
             if (m && ((i >= m->start && i <= m->end) || (hole && hole->contains(i)))) {
                 if (prefix) {
-                    ETEST(UNKNOWN_INSTRUCTION, MID, "", prefix, Config::opcode_t(i));
+                    sprintf(message, "%04X,%04X is MID", prefix, i);
                 } else {
-                    ETEST(UNKNOWN_INSTRUCTION, MID, "", Config::opcode_t(i));
+                    sprintf(message, "%04X is MID", i);
                 }
+                EQUALS(message, UNKNOWN_INSTRUCTION, disassembler.getError());
+                EQUALS(message, "MID", insn.name());
             } else {
                 if (prefix) {
                     sprintf(message, "%04X,%04X is not MID", prefix, i);

@@ -26,103 +26,100 @@
 namespace libasm {
 namespace tms9900 {
 
-#define E(_insn, _name, _amode)                     \
-    { _insn, Entry::_flags(_amode), TEXT_##_name },
+#define E(_insn, _name, _src, _dst)                     \
+    { _insn, Entry::_flags(_src, _dst), TEXT_##_name },
 
 static constexpr Entry TABLE_TMS9900[] PROGMEM = {
-    E(0x0200, LI,   REG_IMM)
-    E(0x0220, AI,   REG_IMM)
-    E(0x0240, ANDI, REG_IMM)
-    E(0x0260, ORI,  REG_IMM)
-    E(0x0280, CI,   REG_IMM)
-    E(0x02A0, STWP, REG)
-    E(0x02C0, STST, REG)
-    E(0x02E0, LWPI, IMM)
-    E(0x0300, LIMI, IMM)
-    E(0x0340, IDLE, INH)
-    E(0x0360, RSET, INH)
-    E(0x0380, RTWP, INH)
-    E(0x03A0, CKON, INH)
-    E(0x03C0, CKOF, INH)
-    E(0x03E0, LREX, INH)
-    E(0x0400, BLWP, SRC)
-    E(0x0440, B,    SRC)
-    E(0x0480, X,    SRC)
-    E(0x04C0, CLR,  SRC)
-    E(0x0500, NEG,  SRC)
-    E(0x0540, INV,  SRC)
-    E(0x0580, INC,  SRC)
-    E(0x05C0, INCT, SRC)
-    E(0x0600, DEC,  SRC)
-    E(0x0640, DECT, SRC)
-    E(0x0680, BL,   SRC)
-    E(0x06C0, SWPB, SRC)
-    E(0x0700, SETO, SRC)
-    E(0X0740, ABS,  SRC)
-    E(0x0800, SRA,  CNT_REG)
-    E(0x0900, SRL,  CNT_REG)
-    E(0x0A00, SLA,  CNT_REG)
-    E(0x0B00, SRC,  CNT_REG)
-    E(0x1000, JMP,  REL)
-    E(0x1100, JLT,  REL)
-    E(0x1200, JLE,  REL)
-    E(0x1300, JEQ,  REL)
-    E(0x1400, JHE,  REL)
-    E(0x1500, JGT,  REL)
-    E(0x1600, JNE,  REL)
-    E(0x1700, JNC,  REL)
-    E(0x1800, JOC,  REL)
-    E(0x1900, JNO,  REL)
-    E(0x1A00, JL,   REL)
-    E(0x1B00, JH,   REL)
-    E(0x1C00, JOP,  REL)
-    E(0x1D00, SBO,  CRU_OFF)
-    E(0x1E00, SBZ,  CRU_OFF)
-    E(0x1F00, TB,   CRU_OFF)
-    E(0x2000, COC,  REG_SRC)
-    E(0x2400, CZC,  REG_SRC)
-    E(0x2800, XOR,  REG_SRC)
-    E(0x2C00, XOP,  XOP_SRC)
-    E(0x3000, LDCR, CNT_SRC)
-    E(0x3400, STCR, CNT_SRC)
-    E(0x3800, MPY,  REG_SRC)
-    E(0x3C00, DIV,  REG_SRC)
-    E(0x4000, SZC,  DST_SRC)
-    E(0x5000, SZCB, DST_SRC)
-    E(0x6000, S,    DST_SRC)
-    E(0x7000, SB,   DST_SRC)
-    E(0x8000, C,    DST_SRC)
-    E(0x9000, CB,   DST_SRC)
-    E(0xA000, A,    DST_SRC)
-    E(0xB000, AB,   DST_SRC)
-    E(0xC000, MOV,  DST_SRC)
-    E(0xD000, MOVB, DST_SRC)
-    E(0xE000, SOC,  DST_SRC)
-    E(0xF000, SOCB, DST_SRC)
+    E(0x0200, LI,   M_REG,  M_IMM)
+    E(0x0220, AI,   M_REG,  M_IMM)
+    E(0x0240, ANDI, M_REG,  M_IMM)
+    E(0x0260, ORI,  M_REG,  M_IMM)
+    E(0x0280, CI,   M_REG,  M_IMM)
+    E(0x02A0, STWP, M_REG,  M_NO)
+    E(0x02C0, STST, M_REG,  M_NO)
+    E(0x02E0, LWPI, M_IMM,  M_NO)
+    E(0x0300, LIMI, M_IMM,  M_NO)
+    E(0x0340, IDLE, M_NO,   M_NO)
+    E(0x0360, RSET, M_NO,   M_NO)
+    E(0x0380, RTWP, M_NO,   M_NO)
+    E(0x03A0, CKON, M_NO,   M_NO)
+    E(0x03C0, CKOF, M_NO,   M_NO)
+    E(0x03E0, LREX, M_NO,   M_NO)
+    E(0x0400, BLWP, M_SRC,  M_NO)
+    E(0x0440, B,    M_SRC,  M_NO)
+    E(0x0480, X,    M_SRC,  M_NO)
+    E(0x04C0, CLR,  M_SRC,  M_NO)
+    E(0x0500, NEG,  M_SRC,  M_NO)
+    E(0x0540, INV,  M_SRC,  M_NO)
+    E(0x0580, INC,  M_SRC,  M_NO)
+    E(0x05C0, INCT, M_SRC,  M_NO)
+    E(0x0600, DEC,  M_SRC,  M_NO)
+    E(0x0640, DECT, M_SRC,  M_NO)
+    E(0x0680, BL,   M_SRC,  M_NO)
+    E(0x06C0, SWPB, M_SRC,  M_NO)
+    E(0x0700, SETO, M_SRC,  M_NO)
+    E(0X0740, ABS,  M_SRC,  M_NO)
+    E(0x0800, SRA,  M_REG,  M_SCNT)
+    E(0x0900, SRL,  M_REG,  M_SCNT)
+    E(0x0A00, SLA,  M_REG,  M_SCNT)
+    E(0x0B00, SRC,  M_REG,  M_SCNT)
+    E(0x1000, JMP,  M_REL,  M_NO)
+    E(0x1100, JLT,  M_REL,  M_NO)
+    E(0x1200, JLE,  M_REL,  M_NO)
+    E(0x1300, JEQ,  M_REL,  M_NO)
+    E(0x1400, JHE,  M_REL,  M_NO)
+    E(0x1500, JGT,  M_REL,  M_NO)
+    E(0x1600, JNE,  M_REL,  M_NO)
+    E(0x1700, JNC,  M_REL,  M_NO)
+    E(0x1800, JOC,  M_REL,  M_NO)
+    E(0x1900, JNO,  M_REL,  M_NO)
+    E(0x1A00, JL,   M_REL,  M_NO)
+    E(0x1B00, JH,   M_REL,  M_NO)
+    E(0x1C00, JOP,  M_REL,  M_NO)
+    E(0x1D00, SBO,  M_CRU,  M_NO)
+    E(0x1E00, SBZ,  M_CRU,  M_NO)
+    E(0x1F00, TB,   M_CRU,  M_NO)
+    E(0x2000, COC,  M_SRC,  M_DREG)
+    E(0x2400, CZC,  M_SRC,  M_DREG)
+    E(0x2800, XOR,  M_SRC,  M_DREG)
+    E(0x2C00, XOP,  M_SRC,  M_XOP)
+    E(0x3000, LDCR, M_SRC,  M_CNT)
+    E(0x3400, STCR, M_SRC,  M_CNT)
+    E(0x3800, MPY,  M_SRC,  M_DREG)
+    E(0x3C00, DIV,  M_SRC,  M_DREG)
+    E(0x4000, SZC,  M_SRC,  M_DST)
+    E(0x5000, SZCB, M_SRC,  M_DST)
+    E(0x6000, S,    M_SRC,  M_DST)
+    E(0x7000, SB,   M_SRC,  M_DST)
+    E(0x8000, C,    M_SRC,  M_DST)
+    E(0x9000, CB,   M_SRC,  M_DST)
+    E(0xA000, A,    M_SRC,  M_DST)
+    E(0xB000, AB,   M_SRC,  M_DST)
+    E(0xC000, MOV,  M_SRC,  M_DST)
+    E(0xD000, MOVB, M_SRC,  M_DST)
+    E(0xE000, SOC,  M_SRC,  M_DST)
+    E(0xF000, SOCB, M_SRC,  M_DST)
 };
 
 static constexpr Entry TABLE_TMS9995[] PROGMEM = {
-    E(0x0080, LST,  REG)
-    E(0x0090, LWP,  REG)
-    E(0x0180, DIVS, SRC)
-    E(0x01C0, MPYS, SRC)
+    E(0x0080, LST,  M_REG,  M_NO)
+    E(0x0090, LWP,  M_REG,  M_NO)
+    E(0x0180, DIVS, M_SRC,  M_NO)
+    E(0x01C0, MPYS, M_SRC,  M_NO)
 };
 
 static constexpr Entry TABLE_TMS99105[] PROGMEM = {
-    E(0x001C, SRAM, DW_CNT_SRC)
-    E(0x001D, SLAM, DW_CNT_SRC)
-    E(0x0029, SM,   DW_DST_SRC)
-    E(0x002A, AM,   DW_DST_SRC)
-    E(0x00B0, BLSK, REG_IMM)
-    E(0x0140, BIND, SRC)
-    E(0x0C09, TMB,  DW_BIT_SRC)
-    E(0x0C0A, TCMB, DW_BIT_SRC)
-    E(0x0C0B, TSMB, DW_BIT_SRC)
-    E(0x0100, EVAD, SRC)
-    E(0x0380, RTWP, IMM_MOD)
-    E(0x0381, RTWP, IMM_MOD)
-    E(0x0382, RTWP, IMM_MOD)
-    E(0x0384, RTWP, IMM_MOD)
+    E(0x001C, SRAM, M_SRC2, M_CNT2)
+    E(0x001D, SLAM, M_SRC2, M_CNT2)
+    E(0x0029, SM,   M_SRC2, M_DST2)
+    E(0x002A, AM,   M_SRC2, M_DST2)
+    E(0x00B0, BLSK, M_REG,  M_IMM)
+    E(0x0140, BIND, M_SRC,  M_NO)
+    E(0x0C09, TMB,  M_SRC2, M_BIT2)
+    E(0x0C0A, TCMB, M_SRC2, M_BIT2)
+    E(0x0C0B, TSMB, M_SRC2, M_BIT2)
+    E(0x0100, EVAD, M_SRC,  M_NO)
+    E(0x0380, RTWP, M_RTWP, M_NO)
 };
 
 struct TableTms9900::EntryPage {
@@ -145,45 +142,63 @@ static constexpr TableTms9900::EntryPage TMS99105_PAGES[] PROGMEM = {
     { ARRAY_RANGE(TABLE_TMS9995) },
 };
 
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table)
+        return true;
+    if (opr == M_IREG || opr == M_INCR || opr == M_SYBL || opr == M_INDX)
+        return table == M_SRC  || table == M_DST
+            || table == M_SRC2 || table == M_DST2;
+    if (opr == M_REG)
+        return table == M_SRC  || table == M_DST
+            || table == M_SRC2 || table == M_DST2
+            || table == M_DREG || table == M_SCNT
+            || table == M_CNT2;
+    if (opr == M_IMM)
+        return table == M_REL || table == M_SCNT
+            || table == M_CNT || table == M_CNT2
+            || table == M_CRU || table == M_BIT2
+            || table == M_XOP || table == M_RTWP;
+    return false;
+}
+
+static bool acceptModes(uint16_t flags, const Entry *entry) {
+    const uint16_t table = pgm_read_word(&entry->flags);
+    return acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table))
+        && acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table));
+}
+
 Error TableTms9900::searchName(
     InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
+    const uint16_t flags = Entry::_flags(insn.srcMode(), insn.dstMode());
+    uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *table =
             reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
         const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry =
-            TableBase::searchName<Entry>(insn.name(), table, end);
+        const Entry *entry = TableBase::searchName<Entry,uint16_t>(
+            insn.name(), flags, table, end, acceptModes, count);
         if (entry) {
             insn.setOpCode(pgm_read_word(&entry->opCode));
-            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setFlags(pgm_read_word(&entry->flags));
             return OK;
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
-static Config::opcode_t maskCode(
-    Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
-    switch (addrMode) {
-    case REG:
-    case REG_IMM:
-        return opCode & ~0x000f;
-    case SRC:
-        return opCode & ~0x003f;
-    case REL:
-    case CNT_REG:
-    case CRU_OFF:
-        return opCode & ~0x00ff;
-    case CNT_SRC:
-    case XOP_SRC:
-    case REG_SRC:
-        return opCode & ~0x03ff;
-    case DST_SRC:
-        return opCode & ~0x0fff;
-    default:
-        return opCode;
-    }
+static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
+    const uint16_t flags = pgm_read_word(&entry->flags);
+    const AddrMode src = Entry::_srcMode(flags);
+    const AddrMode dst = Entry::_dstMode(flags);
+    Config::opcode_t mask = 0;
+    if (src == M_REG || dst == M_REG) mask |= 0xF;
+    if (src == M_SRC) mask |= 0x3F;
+    if (dst == M_DST) mask |= 0xFC0;
+    if (dst == M_SCNT) mask |= 0xF0;
+    if (dst == M_CNT || dst == M_XOP || dst == M_DREG) mask |= 0x3C0;
+    if (src == M_REL || src == M_CRU) mask |= 0xFF;
+    if (src == M_RTWP) mask |= 7;
+    return opCode & ~mask;
 }
 
 Error TableTms9900::searchOpCode(
@@ -195,7 +210,7 @@ Error TableTms9900::searchOpCode(
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
             insn.opCode(), table, end, maskCode);
         if (entry) {
-            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setFlags(pgm_read_word(&entry->flags));
             const /*PROGMEM*/ char *name =
                 reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
             insn.setName_P(name);

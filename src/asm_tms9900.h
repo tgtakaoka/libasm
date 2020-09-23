@@ -35,21 +35,24 @@ public:
 private:
     IntelValueParser _parser;
 
-    Error checkComma();
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        RegName reg;
+        uint16_t val16;
+        Operand()
+            : ErrorReporter(),
+              mode(M_NO),
+              reg(REG_UNDEF),
+              val16(0)
+        {}
+    };
 
-    Error encodeImm(InsnTms9900 &insn, bool emitInsn);
-    Error encodeImmMod(InsnTms9900 &insn);
-    Error encodeReg(InsnTms9900 &insn, bool emitInsn);
-    Error encodeCnt(InsnTms9900 &insn, bool acceptR0, bool accept16);
-    Error encodeOpr(
-        InsnTms9900 &insn, bool emitInsn, bool destination = false);
-    Error encodeOpr(Config::opcode_t &opCode, uint16_t &operand);
-    bool needsOperandWord(Config::opcode_t opCode) const;
-    Error encodeRel(InsnTms9900 &insn);
-    Error encodeCruOff(InsnTms9900 &insn);
-    Error encodeIoaddr(InsnTms9900 &insn);
-    Error encodeDoubleWords(InsnTms9900 &insn);
+    Error parseOperand(const char *scan, Operand &op);
 
+    Error encodeRelative(InsnTms9900 &insn, const Operand &op);
+    Error encodeCruOffset(InsnTms9900 &insn, const Operand &op);
+    Error encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
+    Error encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
     Error encode(Insn &insn) override;
 };
 
