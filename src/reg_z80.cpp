@@ -79,20 +79,16 @@ char *RegZ80::outRegName(char *out, RegName name) const {
     return out;
 }
 
-OprSize RegZ80::regSize(const RegName name) {
-    return int8_t(name) < 8 ? SZ_WORD : SZ_BYTE;
-}
-
 uint8_t RegZ80::encodeDataReg(RegName name) {
-    // (HL) is parsed as HL_PTR, then looked up as format=REG_8
-    // reg=REG_HL.  So we have to map REG_HL to register number 6
-    // which is encoded by REG_UNDEF in DATA_REG[].
+    // (HL) is parsed as I_HL, then looked up as M_REG(reg=REG_HL), so
+    // we have to map REG_HL to register number 6.
     if (name == REG_HL) return 6;
     return int8_t(name) - 8;
 }
 
 RegName RegZ80::decodeDataReg(uint8_t num) {
-    if ((num &= 7) == 6) return REG_UNDEF;
+    // REG_HL represents (HL).
+    if ((num &= 7) == 6) return REG_HL;
     return RegName(num + 8);
 }
 
@@ -104,9 +100,12 @@ uint8_t RegZ80::encodePointerRegIx(RegName name, RegName ix) {
     return encodePointerReg(name == ix ? REG_HL : name);
 }
 
-RegName RegZ80::decodePointerReg(uint8_t num, const InsnZ80 *insn) {
+RegName RegZ80::decodePointerReg(uint8_t num, const InsnZ80 &insn) {
     const RegName name = RegName(num & 3);
-    if (insn && name == REG_HL) return decodeIndexReg(*insn);
+    if (name == REG_HL) {
+        const RegName ix = decodeIndexReg(insn);
+        return ix == REG_UNDEF ? name : ix;
+    }
     return name;
 }
 

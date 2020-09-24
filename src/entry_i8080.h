@@ -29,10 +29,10 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     M_NO   = 0,
-    M_IM8  = 1,
-    M_IM16 = 2,
-    M_ABS  = 3,
-    M_IOA  = 4,
+    M_IM8  = 1,   // Immediate 8-bit
+    M_IM16 = 2,   // Immediate 16-bit
+    M_ABS  = 3,   // Direct address 16-bit
+    M_IOA  = 4,   // I/O address 8-bit
     M_PTR  = 5,   // |..|pp|....|: B/D/H/SP
     M_STK  = 6,   // |..|pp|....|: B/D/H/PSW
     M_IDX  = 7,   // |...|i|....|: B/D

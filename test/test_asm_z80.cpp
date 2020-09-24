@@ -235,9 +235,11 @@ static void test_stack_op() {
     TEST("POP AF", 0xF1);
 
     TEST("EX (SP),HL", 0xE3);
+    TEST("EX HL,(SP)", 0xE3);
     TEST("JP (HL)",    0xE9);
     TEST("LD SP,HL",   0xF9);
     TEST("EX DE,HL",   0xEB);
+    TEST("EX HL,DE",   0xEB);
 
     if (isZ80()) {
         // Z80
@@ -691,6 +693,7 @@ static void test_index_registers() {
         TEST("ADD IX,DE", 0xDD, 0x19);
         TEST("ADD IX,IX", 0xDD, 0x29);
         TEST("ADD IX,SP", 0xDD, 0x39);
+        TEST("LD IX,0ABCDH",   0xDD, 0x21, 0xCD, 0xAB);
         TEST("LD (0ABCDH),IX", 0xDD, 0x22, 0xCD, 0xAB);
         TEST("LD IX,(5678H)",  0xDD, 0x2A, 0x78, 0x56);
         TEST("INC IX", 0xDD, 0x23);
@@ -705,6 +708,7 @@ static void test_index_registers() {
         TEST("ADD IY,DE", 0xFD, 0x19);
         TEST("ADD IY,IY", 0xFD, 0x29);
         TEST("ADD IY,SP", 0xFD, 0x39);
+        TEST("LD IY,0ABCDH",   0xFD, 0x21, 0xCD, 0xAB);
         TEST("LD (0ABCDH),IY", 0xFD, 0x22, 0xCD, 0xAB);
         TEST("LD IY,(5678H)",  0xFD, 0x2A, 0x78, 0x56);
         TEST("INC IY", 0xFD, 0x23);

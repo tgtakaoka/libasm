@@ -28,71 +28,42 @@ enum CpuType : uint8_t {
     I8085,
 };
 
-enum OprSize : uint8_t {
-    SZ_NONE = 0,  // unknown
-    SZ_BYTE = 1,
-    SZ_WORD = 2,
-};
-
 enum AddrMode : uint8_t {
-    INHR      = 0,  // Inherent
-    IMM8      = 1,  // Immediate 8-bit
-    IMM16     = 2,  // Immediate 16-bit
-    DIRECT    = 3,  // Direct address 16-bit
-    IOADR     = 4,  // I/O address 8-bit
-    REL8      = 5,  // PC-Relative
-    INDX      = 6,  // Indexed
-    INDX_IMM8 = 7,  // Indexed and Immediate 8-bit
-};
-
-enum InsnFormat : uint8_t {
-    NO_FMT      = 0,
-    PTR_FMT     = 1,  // **PP_****: BC/DE/HL/SP
-                      // **PP_****: BC/DE/HL/AF
-    CC4_FMT     = 2,  // ***C_C***: NZ/Z/NC/C
-    IDX_FMT     = 3,  // ***I_****: BC/DE, 0/1
-    IR_FMT      = 4,  // ****_R***: I/R
-    DST_FMT     = 5,  // **DD_D***: B/C/D/E/H/L/(HL)/A
-                      // **VV_V***: [0123][08]H
-                      // **CC_C***: NZ/Z/NC/C/PO/PE/P/M
-    SRC_FMT     = 6,  // ****_*SSS: B/C/D/E/H/L/(HL)/A
-    DST_SRC_FMT = 7,  // **DD_DSSS: B/C/D/E/H/L/(HL)/A
-                      // **BB_BSSS: 0-7, B/C/D?E/H/L/(HL)/A
-};
-
-enum OprFormat : uint8_t {
-    NO_OPR  = 0,
-    REG_8   = 1,   // B/C/D/E/H/L/(HL)/A
-    REG_16  = 2,   // BC/DE/HL/SP
-    REG_16X = 3,   // BC/DE/IX/SP, BC/DE/IY/SP
-    A_REG   = 4,   // A
-    C_REG   = 5,   // C-register or Carry-condition
-    BC_REG  = 6,   // BC
-    DE_REG  = 7,   // DE
-    HL_REG  = 8,   // HL
-    SP_REG  = 9,   // SP
-    IX_REG  = 10,  // IX/IY
-    IR_REG  = 11,  // I/R
-    AF_REG  = 12,  // AF
-    AFPREG  = 13,  // AF'
-    STK_16  = 14,  // BC/DE/HL/AF
-    BC_PTR  = 15,  // (BC)/(DE)
-    HL_PTR  = 16,  // (HL)
-    IX_PTR  = 17,  // (IX)/(IY)
-    SP_PTR  = 18,  // (SP)
-    C_PTR   = 19,  // (C)
-    IMM_8   = 20,  // nn
-    IMM_16  = 21,  // nnnn
-    ADDR_8  = 22,  // (nn)
-    ADDR_16 = 23,  // (nnnn)
-    COND_4  = 24,  // Z/NZ/C/NC
-    COND_8  = 25,  // Z/NZ/C/NC/PO/PE/P/M
-    BIT_NO  = 26,  // 0~7
-    IMM_NO  = 27,  // 0,1,2
-    VEC_NO  = 28,  // [0123][08]H
-    IX_OFF  = 29,  // (IX/IY+nn)
-    IX_BIT  = 30,  // DD/FD CB nn xx
-    IM_REG  = 31,  // 8080/IM
+    M_NO   = 0,
+    M_IM8  = 1,   // Immediate 8-bit: nn
+    M_IM16 = 2,   // Immediate 16-bit: nnnn
+    M_ABS  = 3,   // Direct address 16-bit: (nnnn)
+    M_IOA  = 4,   // I/O address 8-bit: (nn)
+    M_REL  = 5,   // PC-Relative: nnnn
+    M_INDX = 6,   // Indexed: (IX/IY+nn)
+    M_CC4  = 7,   // |...|cc|...|: NZ/Z/NC/C
+    M_CC8  = 8,   // |..|ccc|...|: NZ/Z/NC/C/PO/PE/P/M
+    M_PTR  = 9,   // |..|pp|....|: BC/DE/HL/SP
+    M_PIX  = 10,  // |..|pp|....|: BC/DE/Ix/SP
+    M_STK  = 11,  // |..|pp|....|: BC/DE/HL/AF
+    I_BCDE = 12,  // |...|i|....|: (BC)/(DE)
+    M_REG  = 13,  // |......|rrr|: B/C/D/E/H/L/(HL)/A
+    M_DST  = 14,  // |..|rrr|...|: B/C/D/E/H/L/(HL)/A
+    M_VEC  = 15,  // |..|vvv|...|: vector 0~7
+    M_BIT  = 17,  // |..|bbb|...|: bit 0-7
+    M_IMMD = 18,  // |...|mm|...|: interrupt mode 0-2
+    R_IR   = 19,  // |....|r|...|: I/R
+    I_HL   = 20,  // (HL)
+    I_SP   = 21,  // (SP)
+    I_IXIY = 22,  // (IX)/(IY)
+    I_C    = 23,  // (C)
+    T_IXB  = 24,  // DD/FD CB nn xx
+    R_IXIY = 25,  // IX/IY
+    R_BC   = 26 + 0,  // REG_BC
+    R_DE   = 26 + 1,  // REG_DE
+    R_HL   = 26 + 2,  // REG_HL
+    R_SP   = 26 + 3,  // REG_SP
+    R_AF   = 26 + 6,  // REG_AF
+    R_AFP  = 26 + 7,  // REG_AFP
+    R_C    = 26 + 8,  // REG_C  or Carry-condition
+    R_A    = 26 + 15, // REG_A
+    R_IM   = 26 + 18, // REG_IM (8085)
+    M_UNKI = 50,      // Undefined instruction
 };
 
 struct Entry {
@@ -100,35 +71,27 @@ struct Entry {
     const uint16_t flags;
     const char *name;
 
-    static inline InsnFormat _insnFormat(uint16_t flags) {
-        return InsnFormat((flags >> insnFormat_gp) & insnFormat_gm);
+    static inline AddrMode _dstMode(uint16_t flags) {
+        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
     }
-    static inline OprFormat _dstFormat(uint16_t flags) {
-        return OprFormat((flags >> dstFormat_gp) & oprFormat_gm);
+    static inline AddrMode _srcMode(uint16_t flags) {
+        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
     }
-    static inline OprFormat _srcFormat(uint16_t flags) {
-        return OprFormat((flags >> srcFormat_gp) & oprFormat_gm);
-    }
-    static inline AddrMode _addrMode(uint16_t flags) {
-        return AddrMode((flags >> addrMode_gp) & addrMode_gm);
+    static inline bool _indexBit(uint16_t flags) {
+        return flags & (1 << indexBit_bp);
     }
     static constexpr uint16_t _flags(
-        InsnFormat iformat, AddrMode addrMode,
-        OprFormat dstFormat, OprFormat srcFormat) {
-        return (static_cast<uint16_t>(iformat) << insnFormat_gp)
-            | (static_cast<uint16_t>(dstFormat) << dstFormat_gp)
-            | (static_cast<uint16_t>(addrMode) << addrMode_gp)
-            | (static_cast<uint16_t>(srcFormat) << srcFormat_gp);
+        AddrMode dst, AddrMode src, bool indexBit = false) {
+        return (static_cast<uint16_t>(dst) << dstMode_gp)
+            | (static_cast<uint16_t>(src) << srcMode_gp)
+            | (indexBit ? (1 << indexBit_bp) : 0);
     }
 
 private:
-    static constexpr uint8_t insnFormat_gm = 0x7;
-    static constexpr uint8_t addrMode_gm = 0x7;
-    static constexpr uint8_t oprFormat_gm = 0x1f;
-    static constexpr int insnFormat_gp = 0;
-    static constexpr int dstFormat_gp = 3;
-    static constexpr int addrMode_gp = 8;
-    static constexpr int srcFormat_gp = 11;
+    static constexpr int dstMode_gp = 0;
+    static constexpr int srcMode_gp = 8;
+    static constexpr int indexBit_bp = 7;
+    static constexpr uint8_t addrMode_gm = 0x3F;
 };
 
 } // namespace z80

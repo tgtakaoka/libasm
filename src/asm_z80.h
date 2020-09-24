@@ -36,36 +36,23 @@ private:
     IntelValueParser _parser;
 
     struct Operand : public ErrorReporter {
-        OprFormat format;
+        AddrMode mode;
         RegName reg;
         uint16_t val16;
-        OprSize size;
         Operand()
             : ErrorReporter(),
-              format(NO_OPR),
+              mode(M_NO),
               reg(REG_UNDEF),
-              val16(0),
-              size(SZ_NONE)
+              val16(0)
         {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
 
-    Error encodeImmediate(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-    Error encodeInherent(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-    Error encodeDirect(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-    Error encodeIoaddr(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-    Error encodeRelative(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-    Error encodeIndexed(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-    Error encodeIndexedImmediate8(
-        InsnZ80 &insn, const Operand &dst, const Operand &src);
-
+    Error encodeRelative(InsnZ80 &insn, const Operand &op);
+    Error encodeIndexedBitOp(InsnZ80 &insn, const Operand &op);
+    Error encodeOperand(
+        InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other);
     Error encode(Insn &insn) override;
 };
 

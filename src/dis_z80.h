@@ -36,27 +36,16 @@ private:
     IntelValueFormatter _formatter;
     RegZ80 _regs;
 
-    char *outRegister(char *out, RegName regName);
-    char *outPointer(char *out, RegName regName);
-    char *outDataRegister(char *out, RegName regName);
-    template<typename U>
-    char *outAbsolute(char *out, U addr);
-    char *outConditionName(char *out, Config::opcode_t cc, bool cc8 = true);
-    char *outIndexOffset(const InsnZ80 &insn, char *out, int8_t offset);
+    char *outIndirectAddr(char *out, uint16_t addr, uint8_t bits);
+    char *outRegister(char *out, RegName reg);
+    char *outIndirectReg(char *out, RegName reg);
+    char *outIndexOffset(char *out, RegName reg, int8_t offset);
+    char *outDataReg(char *out, RegName reg);
 
-    Error decodeOperand(DisMemory &memory, Insn& insn);
-
-    Error decodeInherent(InsnZ80 &insn, char *out);
-    Error decodeImmediate8(InsnZ80 &insn, char *out, uint8_t val);
-    Error decodeImmediate16(InsnZ80 &insn, char *out, uint16_t val);
-    Error decodeDirect(InsnZ80 &insn, char *out, Config::uintptr_t addr);
-    Error decodeIoaddr(InsnZ80 &insn, char *out, uint8_t ioaddr);
-    Error decodeRelative(InsnZ80 &insn, char *out, int8_t delta);
-    Error decodeIndexed(InsnZ80 &insn, char *out, int8_t offset);
-    Error decodeIndexedImmediate8(
-        InsnZ80 &insn, char *out, int8_t offset, uint8_t val);
-    Error decodeIndexedBitOp(
-        InsnZ80 &insn, char *out, int8_t offset, Config::opcode_t opCode);
+    Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out);
+    Error decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out);
+    Error decodeOperand(
+        DisMemory &memory, InsnZ80& insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

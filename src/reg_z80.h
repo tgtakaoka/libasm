@@ -68,15 +68,13 @@ public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(const RegName name);
     char *outRegName(char *out, const RegName name) const;
-    static OprSize regSize(const RegName name);
 
     static uint8_t encodeDataReg(RegName name);
     static RegName decodeDataReg(uint8_t num);
 
     static uint8_t encodePointerReg(RegName name);
     static uint8_t encodePointerRegIx(RegName name, RegName ix);
-    static RegName decodePointerReg(
-        uint8_t num, const InsnZ80 *insn = nullptr);
+    static RegName decodePointerReg(uint8_t num, const InsnZ80 &xinsn);
 
     static uint8_t encodeStackReg(RegName name);
     static RegName decodeStackReg(uint8_t num);

@@ -28,21 +28,16 @@ class InsnZ80 : public InsnBase<Config> {
 public:
     InsnZ80(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    InsnFormat insnFormat() const { return Entry::_insnFormat(_flags); }
-    OprFormat dstFormat() const { return Entry::_dstFormat(_flags); }
-    OprFormat srcFormat() const { return Entry::_srcFormat(_flags); }
+    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
+    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
+    bool indexBit() const { return Entry::_indexBit(_flags); }
 
     void setFlags(uint16_t flags) {
         _flags = flags;
     }
 
-    void setFlags(const InsnZ80 &other) {
-        _flags = other._flags;
-    }
-
-    void setOprFormats(OprFormat dst, OprFormat src) {
-        _flags = Entry::_flags(insnFormat(), addrMode(), dst, src);
+    void setAddrMode(AddrMode dst, AddrMode src) {
+        _flags = Entry::_flags(dst, src);
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -55,25 +50,38 @@ public:
     }
 
     bool hasPrefix() const { return prefix() != 0; }
-
-    Config::opcode_t prefix() const {
-        return _prefix;
-    }
-
-    Config::opcode_t opCode() const {
-        return _opCode;
-    }
+    Config::opcode_t prefix() const { return _prefix; }
+    Config::opcode_t opCode() const { return _opCode; }
 
     void emitInsn() {
+        uint8_t pos = 0;
         if (hasPrefix())
-            emitByte(prefix());
-        emitByte(opCode());
+            emitByte(prefix(), pos++);
+        emitByte(opCode(), pos);
+    }
+
+    void emitOperand8(uint8_t val8) {
+        emitByte(val8, operandPos());
+    }
+
+    void emitOperand16(uint16_t val16) {
+        emitUint16(val16, operandPos());
     }
 
 private:
     uint16_t _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
+
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (hasPrefix() && pos < 2) {
+            return 2;
+        } else if (pos == 0) {
+            return 1;
+        }
+        return pos;
+    }
 };
 
 } // namespace z80
