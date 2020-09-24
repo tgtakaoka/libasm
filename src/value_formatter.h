@@ -24,7 +24,7 @@ namespace libasm {
 class ValueFormatter {
 public:
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
-    virtual const char currentOriginSymbol() const { return '.'; }
+    virtual char currentOriginSymbol() const { return '.'; }
 
     /*
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed
@@ -53,14 +53,14 @@ protected:
 
 class MotoValueFormatter : public ValueFormatter {
 public:
-    const char currentOriginSymbol() const override { return '*'; }
+    char currentOriginSymbol() const override { return '*'; }
     char *formatHex(
         char *out, uint32_t val, int8_t bits, bool relax) const override;
 };
 
 class IntelValueFormatter : public ValueFormatter {
 public:
-    const char currentOriginSymbol() const override { return '$'; }
+    char currentOriginSymbol() const override { return '$'; }
     char *formatHex(
         char *out, uint32_t val, int8_t bits, bool relax) const override;
 };
