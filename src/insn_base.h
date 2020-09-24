@@ -90,16 +90,15 @@ public:
         }
     }
 
-    uint8_t emitByte(uint8_t val) {
-        return emitByte(val, _insn._length);
+    void emitByte(uint8_t val) {
+        emitByte(val, _insn._length);
     }
 
-    uint8_t emitByte(uint8_t val, uint8_t pos) {
+    void emitByte(uint8_t val, uint8_t pos) {
         if (pos < Insn::CODE_MAX) {
             _insn._bytes[pos++] = val;
             if (_insn._length < pos) _insn._length = pos;
         }
-        return val;
     }
 
     uint8_t readByte(DisMemory &memory) {
@@ -107,7 +106,9 @@ public:
             setError(NO_MEMORY);
             return 0;
         }
-        return emitByte(memory.readByte());
+        const uint8_t val = memory.readByte();
+        emitByte(val);
+        return val;
     }
 
     void emitUint16Be(uint16_t val) {
