@@ -39,8 +39,6 @@ public:
     }
 
 private:
-    template<typename T>
-    friend class InsnBase;
     uint32_t _address;
     uint8_t  _length;
     static constexpr size_t CODE_MAX = 24;
@@ -48,7 +46,42 @@ private:
     static constexpr size_t NAME_MAX = 7;
     char     _name[NAME_MAX + 1];
 
+    template<typename Conf>
+    friend class InsnBase;
+
+    void emitByte(uint8_t val) {
+        emitByte(val, _length);
+    }
+
+    void emitByte(uint8_t val, uint8_t pos) {
+        if (pos < CODE_MAX) {
+            _bytes[pos++] = val;
+            if (_length < pos) _length = pos;
+        }
+    }
+
+    void setName_P(const /*PROGMEM*/ char *name) {
+        strncpy_P(_name, name, NAME_MAX);
+        _name[NAME_MAX] = 0;
+    }
+
+    void setName(const char *name, const char *end) {
+        uint8_t len = end - name;
+        if (len >= NAME_MAX) len = NAME_MAX;
+        strncpy(_name, name, len);
+        _name[len] = 0;
+    }
+
+    void appendName(const char c) {
+        uint8_t len = strlen(_name);
+        if (len < NAME_MAX) {
+            _name[len++] = c;
+            _name[len] = 0;
+        }
+    }
+
     friend class Disassembler;
+
     void toLowerName() {
         for (char *p = _name; *p; p++)
             *p = tolower(*p);
@@ -58,8 +91,6 @@ private:
 template<typename Conf>
 class InsnBase : public ErrorReporter {
 public:
-    InsnBase(Insn &insn) : _insn(insn) {}
-
     typename Conf::uintptr_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
@@ -71,44 +102,23 @@ public:
     }
 
     void setName_P(const /*PROGMEM*/ char *name) {
-        strncpy_P(_insn._name, name, Insn::NAME_MAX);
-        _insn._name[Insn::NAME_MAX] = 0;
+        _insn.setName_P(name);
     }
 
     void setName(const char *name, const char *end) {
-        uint8_t len = end - name;
-        if (len >= Insn::NAME_MAX) len = Insn::NAME_MAX;
-        strncpy(_insn._name, name, len);
-        _insn._name[len] = 0;
+        _insn.setName(name, end);
     }
 
     void appendName(const char c) {
-        uint8_t len = strlen(_insn._name);
-        if (len < Insn::NAME_MAX) {
-            _insn._name[len++] = c;
-            _insn._name[len] = 0;
-        }
+        _insn.appendName(c);
     }
 
     void emitByte(uint8_t val) {
-        emitByte(val, _insn._length);
+        _insn.emitByte(val);
     }
 
     void emitByte(uint8_t val, uint8_t pos) {
-        if (pos < Insn::CODE_MAX) {
-            _insn._bytes[pos++] = val;
-            if (_insn._length < pos) _insn._length = pos;
-        }
-    }
-
-    uint8_t readByte(DisMemory &memory) {
-        if (!memory.hasNext()) {
-            setError(NO_MEMORY);
-            return 0;
-        }
-        const uint8_t val = memory.readByte();
-        emitByte(val);
-        return val;
+        _insn.emitByte(val, pos);
     }
 
     void emitUint16Be(uint16_t val) {
@@ -149,6 +159,16 @@ public:
     void emitUint32Le(uint32_t val, uint8_t pos) {
         emitUint16(val >>  0, pos + 0);
         emitUint16(val >> 16, pos + 2);
+    }
+
+    uint8_t readByte(DisMemory &memory) {
+        if (!memory.hasNext()) {
+            setError(NO_MEMORY);
+            return 0;
+        }
+        const uint8_t val = memory.readByte();
+        emitByte(val);
+        return val;
     }
 
     uint16_t readUint16Be(DisMemory &memory) {
@@ -222,6 +242,12 @@ public:
             return readUint32Le(memory);
         }
     }
+
+protected:
+    InsnBase(Insn &insn)
+        : ErrorReporter(),
+          _insn(insn)
+    {}
 
 private:
     Insn &_insn;

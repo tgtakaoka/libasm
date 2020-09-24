@@ -32,11 +32,6 @@ class Assembler
     : public ErrorReporter,
       virtual public ConfigBase {
 public:
-    Assembler(ValueParser &parser, TableBase &table)
-        : _parser(parser),
-          _table(table)
-    {}
-
     Error encode(
         const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
@@ -54,6 +49,11 @@ protected:
     ValueParser &_parser;
     TableBase &_table;
     SymbolTable  *_symtab;
+
+    Assembler(ValueParser &parser, TableBase &table)
+        : _parser(parser),
+          _table(table)
+    {}
 
     void reset(const char *line, SymbolTable *symtab);
     bool hasSymbol(const char *symbol) const;

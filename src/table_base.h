@@ -33,6 +33,8 @@ public:
 protected:
     mutable ErrorReporter _error;
 
+    TableBase() {}
+
     template<typename E>
     static const E *searchName(
         const char *name, const E *begin, const E *end) {

@@ -35,12 +35,6 @@ class Disassembler
     : public ErrorReporter,
       virtual public ConfigBase {
 public:
-    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
-        : _formatter(formatter),
-          _regBase(regs),
-          _table(table)
-    {}
-
     Error decode(
         DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
     ValueFormatter &getFormatter() { return _formatter; }
@@ -60,11 +54,18 @@ protected:
     bool _relativeTarget = false;
     bool _uppercase = false;
 
+    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
+        : _formatter(formatter),
+          _regBase(regs),
+          _table(table)
+    {}
+
     char *outText(char *out, const char *text) const {
         while ((*out = *text++) != 0)
             out++;
         return out;
     }
+
     char *outPstr(char *out, const /*PROGMEM*/ char *pstr) const {
         while ((*out = pgm_read_byte(pstr++)) != 0)
             out++;

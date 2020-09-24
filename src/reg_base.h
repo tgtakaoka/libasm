@@ -48,6 +48,8 @@ public:
 protected:
     bool _uppercase;
 
+    RegBase() {}
+
     char *outChar(char *out, char c) const {
         *out++ = _uppercase ? toupper(c) : tolower(c);
         *out = 0;
