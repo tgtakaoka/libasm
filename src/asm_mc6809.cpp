@@ -82,29 +82,16 @@ Config::ptrdiff_t AsmMc6809::calculateDisplacement(
 
 Error AsmMc6809::encodeIndexed(
     InsnMc6809 &insn, const Operand &op, bool emitInsn) {
-    PostSpec spec = { op.idxMode, op.index, op.base, op.extra, op.indir };
-    if (op.mode == REG_REG) {
-        if (!RegMc6809::isIndexedBase(op.base))
-            return setError(UNKNOWN_OPERAND);
-        if (spec.index == REG_0) {
-            spec.mode = DISP_IDX;
-            spec.index = REG_UNDEF;
-        } else if (RegMc6809::isIndexReg(spec.index)) {
-            spec.mode = ACCM_IDX;
-        } else {
-            return setError(REGISTER_NOT_ALLOWED);
-        }
-    }
-    if (spec.mode == ABS_IDIR) spec.size = 16;
+    PostSpec spec = { op.index, op.base, op.extra, op.indir };
+    if (op.mode == REG_REG && spec.index == REG_0)  // 0,X
+        spec.index = REG_UNDEF;
 
     Config::ptrdiff_t disp = calculateDisplacement(insn, op);
-    if (spec.mode == DISP_IDX && spec.size == 0) {
+    if (spec.size == 0) {
         const bool pc = (spec.base == REG_PC || spec.base == REG_PCR);
         if (op.getError()) {
-            disp = 0;
-            spec.size = 16;
-        } else if (!pc && disp == 0) {
-            spec.mode = PNTR_IDX;
+            spec.size = 16; // assume 16-bit displacement for undefined symbol.
+        } else if (!pc && disp == 0) { // ,X
             spec.size = 0;
         } else if (!pc && !spec.indir && disp >= -16 && disp < 16) {
             spec.size = 5;
@@ -121,7 +108,7 @@ Error AsmMc6809::encodeIndexed(
     uint8_t post = _post;
     if (spec.base == REG_X)
         post |= (RegMc6809::encodeBaseReg(op.base) << 5);
-    if (spec.mode == DISP_IDX && spec.size == 5)
+    if (spec.size == 5)
         post |= disp & 0x1F;
     if (emitInsn) insn.emitInsn();
     insn.emitByte(post);
@@ -159,7 +146,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             return setError(REGISTER_NOT_ALLOWED);
         post = op.val32;
         stack = op.base;
-    } else if (op.mode == REG_REG || op.idxMode == ACCM_IDX) {
+    } else if (op.mode == REG_REG || op.mode == IDX) {
         RegName reg = op.index;
         if (reg == REG_S || reg == REG_U) {
             stack = reg;
@@ -229,24 +216,21 @@ Error AsmMc6809::encodeTransferMemory(
 
 bool AsmMc6809::parsePointerMode(const char *p, Operand &op, bool indir) {
     if (*p++ != ',') return false;
-    uint8_t size = 0;
-    IndexMode sub = PNTR_IDX;
+    int8_t size = 0;
     if (*p == '-') {
-        p++; size = 1;
+        p++; size--;
         if (*p == '-') {
-            p++; size = 2;
+            p++; size--;;
         }
-        sub = AUTO_DEC;
     }
     const RegName reg = RegMc6809::parseRegName(p);
     if (!RegMc6809::isBaseReg(reg)) return false;
     p += RegMc6809::regNameLen(reg);
     if (size == 0 && *p == '+') {
-        p++; size = 1;
+        p++; size++;
         if (*p == '+') {
-            p++; size = 2;
+            p++; size++;
         }
-        sub = AUTO_INC;
     }
     p = skipSpaces(p);
     if (indir) {
@@ -259,7 +243,6 @@ bool AsmMc6809::parsePointerMode(const char *p, Operand &op, bool indir) {
     _scan = p;
     op.base = reg;
     op.mode = IDX;
-    op.idxMode = sub;
     op.extra = size;
     op.indir = indir;
     return true;
@@ -280,7 +263,6 @@ bool AsmMc6809::parseIndexedMode(const char *scan, Operand &op, bool indir) {
     _scan = p;
     op.base = base;
     op.mode = IDX;
-    op.idxMode = DISP_IDX;
     op.indir = indir;
     return true;
 }
@@ -297,11 +279,9 @@ bool AsmMc6809::parseBitPosition(const char *p, Operand &op) {
     } else return false;
     const RegName reg = RegMc6809::parseRegName(p);
     if (reg != REG_0 && reg != REG_UNDEF) return false;
-//    const char *saved = _scan;
     const uint32_t bitp = parseExpr32(p);
     op.setErrorIf(getError());
     if (parserError() || bitp >= 8) {
-//        _scan = saved;
         setOK();
         return false;
     }
@@ -360,13 +340,9 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
         }
         if (n != 2) setErrorIf(UNKNOWN_OPERAND);
         _scan = p;
-        op.mode = IDX;
-        if (op.index == REG_0) {
+        op.mode = IDX;          // [A,X] [0,X]
+        if (op.index == REG_0)
             op.index = REG_UNDEF;
-            op.idxMode = DISP_IDX;
-        } else {
-            op.idxMode = ACCM_IDX;
-        }
         op.indir = true;
         return true;
     }
@@ -457,8 +433,8 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
             return setError(MISSING_CLOSING_PAREN);
         }
         _scan = p;
-        op.mode = IDX;
-        op.idxMode = ABS_IDIR;
+        op.mode = IDX; // [nnnn]
+        op.extra = 16;
         return OK;
     }
 

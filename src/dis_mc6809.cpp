@@ -44,7 +44,7 @@ Error DisMc6809::decodeIndexed(
     PostSpec spec;
     if (TableMc6809.searchPostByte(post, spec)) return setError(UNKNOWN_POSTBYTE);
     if (spec.indir) *out++ = '[';
-    if (spec.mode == DISP_IDX) {
+    if (spec.base != REG_UNDEF && spec.size > 2) { // n,X
         Config::ptrdiff_t offset = 0;
         char prefix = 0;
         if (spec.size == 5) {
@@ -75,17 +75,16 @@ Error DisMc6809::decodeIndexed(
             }
         }
     }
-    if (spec.mode == ACCM_IDX)
+    if (spec.index != REG_UNDEF) // A,X
         out = outRegister(out, spec.index);
-    if (spec.mode == ABS_IDIR) {
-        const Config::uintptr_t addr = insn.readUint16(memory);
-        out = outAbsAddr(out, addr);
+    if (spec.base == REG_UNDEF) { // [nnnn]
+        out = outAbsAddr(out, insn.readUint16(memory));
     } else {
         *out++ = ',';
     }
-    if (spec.mode == AUTO_DEC) {
+    if (spec.size < 0) { // ,-X ,--X
         *out++ = '-';
-        if (spec.size == 2) *out++ = '-';
+        if (spec.size == -2) *out++ = '-';
     }
     if (spec.base == REG_X) {
         const RegName base = _regs.decodeBaseReg(post >> 5);
@@ -93,7 +92,7 @@ Error DisMc6809::decodeIndexed(
     } else if (spec.base != REG_UNDEF) {
         out = outRegister(out, spec.base);
     }
-    if (spec.mode == AUTO_INC) {
+    if (spec.size == 1 || spec.size == 2) { // ,X+ ,X++
         *out++ = '+';
         if (spec.size == 2) *out++ = '+';
     }

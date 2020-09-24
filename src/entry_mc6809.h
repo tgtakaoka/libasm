@@ -44,16 +44,6 @@ enum AddrMode : uint8_t {
     REG_TFM = 13,  // Transfer Memory Register
 };
 
-enum IndexMode : uint8_t {
-    PNTR_IDX = 0,  // ,X [,X}
-    DISP_IDX = 1,  // n5,X n8,X   n8,PCR   n16,X   n16,PCR
-                   //     [n8,X] [n8,PCR] [n16,X] [n16,PCR]
-    ACCM_IDX = 2,  // R,X [R,X]
-    AUTO_INC = 3,  // ,X+ ,X++ [,X++]
-    AUTO_DEC = 4,  // ,-X, ,--X [,--X]
-    ABS_IDIR = 5,  // [n16]
-};
-
 struct Entry {
     const Config::opcode_t opCode;
     const uint8_t flags;

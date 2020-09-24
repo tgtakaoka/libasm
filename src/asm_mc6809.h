@@ -40,7 +40,6 @@ private:
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        IndexMode idxMode;
         RegName index;
         RegName base;
         bool indir;
@@ -49,7 +48,6 @@ private:
         Operand()
             : ErrorReporter(),
               mode(NONE),
-              idxMode(PNTR_IDX),
               index(REG_UNDEF),
               base(REG_UNDEF),
               indir(false),
@@ -58,9 +56,9 @@ private:
         {}
     };
 
-    bool parsePointerMode(const char *scan, Operand &op, bool indir);
+    bool parsePointerMode(const char *scan, Operand &op, bool indir)
+        __attribute__((noinline));
     bool parseIndexedMode(const char *scan, Operand &op, bool indir);
-    bool parseBitRegister(const char *scan, Operand &op);
     bool parseBitPosition(const char *scan, Operand &op);
     bool parseRegisterList(const char *scan, Operand &op, bool indir);
     Error parseOperand(const char *scan, Operand &op);

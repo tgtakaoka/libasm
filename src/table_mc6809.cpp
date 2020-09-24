@@ -595,47 +595,46 @@ struct TableMc6809::PostEntry : public PostSpec {
     uint8_t byte;
 
     constexpr PostEntry(
-            IndexMode _mode,
             RegName _index,
             RegName _base,
             int8_t _size,
             bool _indir,
             uint8_t _mask,
             uint8_t _byte) :
-        PostSpec(_mode, _index, _base, _size, _indir),
+        PostSpec(_index, _base, _size, _indir),
         mask(_mask),
         byte(_byte) {}
 };
 
 static const TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
-    { PNTR_IDX, REG_UNDEF, REG_X,   0, true,  0x8F, 0x84 }, // ,X [,X]
-    { DISP_IDX, REG_UNDEF, REG_X,   5, false, 0x80, 0x00 }, // n5,X
-    { DISP_IDX, REG_UNDEF, REG_X,   8, true,  0x8F, 0x88 }, // n8,X [n8,X]
-    { DISP_IDX, REG_UNDEF, REG_X,  16, true,  0x8F, 0x89 }, // n16,X [n16,X]
-    { ACCM_IDX, REG_A,     REG_X,   0, true,  0x8F, 0x86 }, // A,X [A,X]
-    { ACCM_IDX, REG_B,     REG_X,   0, true,  0x8F, 0x85 }, // B,X [B,X]
-    { ACCM_IDX, REG_D,     REG_X,   0, true,  0x8F, 0x8B }, // D,X [D,X]
-    { AUTO_INC, REG_UNDEF, REG_X,   1, false, 0x9F, 0x80 }, // ,X+
-    { AUTO_INC, REG_UNDEF, REG_X,   2, true,  0x8F, 0x81 }, // ,X++ [,x++]
-    { AUTO_DEC, REG_UNDEF, REG_X,   1, false, 0x9F, 0x82 }, // ,-X
-    { AUTO_DEC, REG_UNDEF, REG_X,   2, true,  0x8F, 0x83 }, // ,--X [,--X]
-    { DISP_IDX, REG_UNDEF, REG_PCR,    8, true, 0x8F, 0x8C }, // n8,PCR [n8,PCR]
-    { DISP_IDX, REG_UNDEF, REG_PCR,   16, true, 0x8F, 0x8D }, // n16,PCR [n16,PCR]
-    { ABS_IDIR, REG_UNDEF, REG_UNDEF, 16, true, 0xFF, 0x9F }, // [n16]
+    { REG_UNDEF, REG_X,      0, true,  0x8F, 0x84 }, // ,X [,X]
+    { REG_UNDEF, REG_X,      5, false, 0x80, 0x00 }, // n5,X
+    { REG_UNDEF, REG_X,      8, true,  0x8F, 0x88 }, // n8,X [n8,X]
+    { REG_UNDEF, REG_X,     16, true,  0x8F, 0x89 }, // n16,X [n16,X]
+    { REG_A,     REG_X,      0, true,  0x8F, 0x86 }, // A,X [A,X]
+    { REG_B,     REG_X,      0, true,  0x8F, 0x85 }, // B,X [B,X]
+    { REG_D,     REG_X,      0, true,  0x8F, 0x8B }, // D,X [D,X]
+    { REG_UNDEF, REG_X,      1, false, 0x9F, 0x80 }, // ,X+
+    { REG_UNDEF, REG_X,      2, true,  0x8F, 0x81 }, // ,X++ [,X++]
+    { REG_UNDEF, REG_X,     -1, false, 0x9F, 0x82 }, // ,-X
+    { REG_UNDEF, REG_X,     -2, true,  0x8F, 0x83 }, // ,--X [,--X]
+    { REG_UNDEF, REG_PCR,    8, true,  0x8F, 0x8C }, // n8,PCR [n8,PCR]
+    { REG_UNDEF, REG_PCR,   16, true,  0x8F, 0x8D }, // n16,PCR [n16,PCR]
+    { REG_UNDEF, REG_UNDEF, 16, true,  0xFF, 0x9F }, // [n16]
 };
 
 static const TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
-    { ACCM_IDX, REG_E,     REG_X,   0, true,  0x8F, 0x87 }, // E,X [E,X]
-    { ACCM_IDX, REG_F,     REG_X,   0, true,  0x8F, 0x8A }, // F,X [F,X]
-    { ACCM_IDX, REG_W,     REG_X,   0, true,  0x8F, 0x8E }, // W,X [W,X]
-    { PNTR_IDX, REG_UNDEF, REG_W,   0, false, 0xFF, 0x8F }, // ,W
-    { PNTR_IDX, REG_UNDEF, REG_W,   0, true,  0xFF, 0x90 }, // [,W]
-    { DISP_IDX, REG_UNDEF, REG_W,  16, false, 0xFF, 0xAF }, // n16,W
-    { DISP_IDX, REG_UNDEF, REG_W,  16, true,  0xFF, 0xB0 }, // [n16,W]
-    { AUTO_INC, REG_UNDEF, REG_W,   2, false, 0xFF, 0xCF }, // ,W++
-    { AUTO_INC, REG_UNDEF, REG_W,   2, true,  0xFF, 0xD0 }, // [,W++]
-    { AUTO_DEC, REG_UNDEF, REG_W,   2, false, 0xFF, 0xEF }, // ,--W
-    { AUTO_DEC, REG_UNDEF, REG_W,   2, true,  0xFF, 0xF0 }, // [,--W]
+    { REG_E,     REG_X,   0, true,  0x8F, 0x87 }, // E,X [E,X]
+    { REG_F,     REG_X,   0, true,  0x8F, 0x8A }, // F,X [F,X]
+    { REG_W,     REG_X,   0, true,  0x8F, 0x8E }, // W,X [W,X]
+    { REG_UNDEF, REG_W,   0, false, 0xFF, 0x8F }, // ,W
+    { REG_UNDEF, REG_W,   0, true,  0xFF, 0x90 }, // [,W]
+    { REG_UNDEF, REG_W,  16, false, 0xFF, 0xAF }, // n16,W
+    { REG_UNDEF, REG_W,  16, true,  0xFF, 0xB0 }, // [n16,W]
+    { REG_UNDEF, REG_W,   2, false, 0xFF, 0xCF }, // ,W++
+    { REG_UNDEF, REG_W,   2, true,  0xFF, 0xD0 }, // [,W++]
+    { REG_UNDEF, REG_W,  -2, false, 0xFF, 0xEF }, // ,--W
+    { REG_UNDEF, REG_W,  -2, true,  0xFF, 0xF0 }, // [,--W]
 };
 
 Error TableMc6809::searchPostByte(
@@ -645,7 +644,6 @@ Error TableMc6809::searchPostByte(
         const uint8_t mask = pgm_read_byte(&entry->mask);
         const uint8_t byte = post & mask;
         if (byte == pgm_read_byte(&entry->byte)) {
-            spec.mode = IndexMode(pgm_read_byte(&entry->mode));
             spec.index = RegName(pgm_read_byte(&entry->index));
             spec.base = RegName(pgm_read_byte(&entry->base));
             spec.size = pgm_read_byte(&entry->size);
@@ -672,8 +670,7 @@ int16_t TableMc6809::searchPostSpec(
     for (const PostEntry *entry = table; entry < end; entry++) {
         const RegName base = RegName(pgm_read_byte(&entry->base));
         const int8_t size = static_cast<int8_t>(pgm_read_byte(&entry->size));
-        if (spec.mode == IndexMode(pgm_read_byte(&entry->mode))
-            && specBase == base
+        if (specBase == base
             && spec.size == size
             && spec.index == RegName(pgm_read_byte(&entry->index))) {
             uint8_t byte = pgm_read_byte(&entry->byte);

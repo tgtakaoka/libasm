@@ -27,21 +27,17 @@ namespace libasm {
 namespace mc6809 {
 
 struct PostSpec {
-    IndexMode mode;
     RegName index;
     RegName base;
     int8_t size;
     bool indir;
 
     PostSpec() {}
-
     constexpr PostSpec(
-            IndexMode _mode,
             RegName _index,
             RegName _base,
             int8_t _size,
             bool _indir) :
-        mode(_mode),
         index(_index),
         base(_base),
         size(_size),
