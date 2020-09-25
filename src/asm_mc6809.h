@@ -62,6 +62,7 @@ private:
     bool parseBitPosition(const char *scan, Operand &op);
     bool parseRegisterList(const char *scan, Operand &op, bool indir);
     Error parseOperand(const char *scan, Operand &op);
+    Error processPseudo(const char *scan, InsnMc6809 &insn);
 
     Error encodePushPull(InsnMc6809 &insn, const Operand &op);
     Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
@@ -77,7 +78,6 @@ private:
     Error encodeTransferMemory(
         InsnMc6809 &insn, const Operand &op, const Operand &extra);
 
-    Error processPseudo(const char *scan, InsnMc6809 &insn);
     Error encode(Insn &insn) override;
 };
 

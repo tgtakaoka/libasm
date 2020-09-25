@@ -188,18 +188,18 @@ static void test_accm() {
 
 static void test_imm() {
     // MOS6502
-    TEST("LDY #0",   0xA0, 0x00);
-    TEST("LDX #16",  0xA2, 0x10);
+    TEST("LDY #0",    0xA0, 0x00);
+    TEST("LDX #16",   0xA2, 0x10);
     TEST("CPY #+255", 0xC0, 0xFF);
-    TEST("CPX #-1",  0xE0, 0xFF);
+    TEST("CPX #-1",   0xE0, 0xFF);
 
     TEST("ORA #%1001", 0x09, 0x09);
-    TEST("AND #~$0F", 0x29, 0xF0);
-    TEST("EOR #@177", 0x49, 0x7F);
-    TEST("ADC #$90", 0x69, 0x90);
-    TEST("LDA #$90", 0xA9, 0x90);
-    TEST("CMP #$90", 0xC9, 0x90);
-    TEST("SBC #$90", 0xE9, 0x90);
+    TEST("AND #~$0F",  0x29, 0xF0);
+    TEST("EOR #@177",  0x49, 0x7F);
+    TEST("ADC #$90",   0x69, 0x90);
+    TEST("LDA #$90",   0xA9, 0x90);
+    TEST("CMP #$90",   0xC9, 0x90);
+    TEST("SBC #$90",   0xE9, 0x90);
 
     if (m6502()) {
         ETEST(OPERAND_NOT_ALLOWED, "BIT #$90");
@@ -218,6 +218,28 @@ static void test_imm() {
         ETEST(UNKNOWN_INSTRUCTION, "WDM #$10");
         ETEST(UNKNOWN_INSTRUCTION, "REP #$20");
         ETEST(UNKNOWN_INSTRUCTION, "SEP #$10");
+    }
+
+    if (w65c816()) {
+        TEST("LONGA ON");
+        TEST("LONGI ON");
+        TEST("LDA #$1234", 0xA9, 0x34, 0x12);
+        TEST("LDX #$1234", 0xA2, 0x34, 0x12);
+
+        TEST("LONGA OFF");
+        TEST("LONGI ON");
+        TEST("LDA #$1234", 0xA9, 0x34);
+        TEST("LDX #$1234", 0xA2, 0x34, 0x12);
+
+        TEST("LONGA ON");
+        TEST("LONGI OFF");
+        TEST("LDA #$1234", 0xA9, 0x34, 0x12);
+        TEST("LDX #$1234", 0xA2, 0x34);
+
+        TEST("LONGA OFF");
+        TEST("LONGI OFF");
+        TEST("LDA #$1234", 0xA9, 0x34);
+        TEST("LDX #$1234", 0xA2, 0x34);
     }
 
     symtab.intern(0x0010, "zero10");

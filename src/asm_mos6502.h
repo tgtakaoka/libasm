@@ -51,7 +51,6 @@ private:
     };
 
     Error parseOnOff(const char *scan, bool &val);
-    Error parseZeroOne(const char *scan, bool &val);
     Error processPseudo(const char *scan, InsnMos6502 &insn);
     Error selectMode(
         char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);

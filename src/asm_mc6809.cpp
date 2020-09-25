@@ -443,8 +443,6 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
 }
 
 static const char TEXT_SETDP[]  PROGMEM = "SETDP";
-static const char TEXT_ASSUME[] PROGMEM = "ASSUME";
-static const char TEXT_DPR[]    PROGMEM = "DPR";
 
 Error AsmMc6809::processPseudo(const char *scan, InsnMc6809 &insn) {
     const char *p = skipSpaces(scan);
@@ -453,18 +451,6 @@ Error AsmMc6809::processPseudo(const char *scan, InsnMc6809 &insn) {
         const uint32_t val = parseExpr32(p);
         if (getError() == OK)
             _direct_page = val;
-        return OK;
-    }
-    if (strcasecmp_P(insn.name(), TEXT_ASSUME) == 0) {
-        const char *endName = _parser.scanSymbol(p);
-        if (endName - p == 3 && strncasecmp_P(p, TEXT_DPR, 3) == 0) {
-            p = skipSpaces(endName);
-            if (*p == ':') {
-                const uint32_t val = parseExpr32(p + 1);
-                if (getError() == OK)
-                    _direct_page = val;
-            } else setError(UNKNOWN_OPERAND);
-        } else setError(UNKNOWN_REGISTER);
         return OK;
     }
     return UNKNOWN_INSTRUCTION;

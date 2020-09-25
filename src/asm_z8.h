@@ -62,9 +62,6 @@ private:
     Error setRp(
         const char *scan, InsnZ8 &insn, const /*PROGMEM*/ char *name,
         bool (AsmZ8::*)(int16_t));
-    Error assumeRp(
-        const char *scan, const /*PROGMEM*/ char *name,
-        bool (AsmZ8::*)(int16_t));
     Error processPseudo(const char *scan, InsnZ8 &insn);
 
     Error encodeOperand(
