@@ -48,12 +48,8 @@ public:
         _dst = Entry::_opr(dst);
     }
 
-    void setInsnSize(InsnSize isize) {
-        _size = Entry::_size(Entry::_oprSize(_size), isize);
-    }
-
     void setOprSize(OprSize osize) {
-        _size = Entry::_size(osize, Entry::_insnSize(_size));
+        _size = Entry::_size(osize, ISZ_NONE);
     }
 
     void setOpCode(Config::opcode_t opCode) {
