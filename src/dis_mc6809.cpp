@@ -132,16 +132,18 @@ Error DisMc6809::decodeImmediate(
 Error DisMc6809::decodePushPull(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
     uint8_t post = insn.readByte(memory);
-    const bool push = (insn.opCode() & 1) == 0;
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg) post &= ~0x02; // clear REG_A
     const bool onUserStack = (insn.opCode() & 2) != 0;
+    const bool push = (insn.opCode() & 1) == 0;
     for (uint8_t i = 0, n = 0; i < 8; i++) {
         const uint8_t bitPos = push ? 7 - i : i;
         if (post & (1 << bitPos)) {
             if (n != 0) *out++ = ',';
-            const RegName regName = _regs.decodeStackReg(bitPos, onUserStack);
-            out = outRegister(out, (hasDreg && regName == REG_B) ? REG_D : regName);
+            RegName reg = _regs.decodeStackReg(bitPos);
+            if (reg == REG_U && onUserStack) reg = REG_S;
+            if (reg == REG_B && hasDreg) reg = REG_D;
+            out = outRegister(out, reg);
             n++;
         }
     }

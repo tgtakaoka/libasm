@@ -152,7 +152,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             stack = reg;
             if (reg == REG_S) reg = REG_U;
         }
-        uint8_t bit = RegMc6809::encodeStackReg(reg, false);
+        uint8_t bit = RegMc6809::encodeStackReg(reg);
         if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
         post = bit;
         reg = op.base;
@@ -161,7 +161,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             if (stack != reg) return setError(REGISTER_NOT_ALLOWED);
             if (reg == REG_S) reg = REG_U;
         }
-        bit = RegMc6809::encodeStackReg(reg, false);
+        bit = RegMc6809::encodeStackReg(reg);
         if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
         if (post & bit) return setError(DUPLICATE_REGISTER);
         post |= bit;
@@ -323,7 +323,7 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
             if (stack != reg) push_pull = false;
             if (reg == REG_S) reg = REG_U;
         }
-        const uint8_t bit = RegMc6809::encodeStackReg(reg, false);
+        const uint8_t bit = RegMc6809::encodeStackReg(reg);
         if (bit == 0) push_pull = false;
         if (post & bit) op.setError(DUPLICATE_REGISTER);
         post |= bit;

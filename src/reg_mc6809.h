@@ -56,7 +56,8 @@ class RegMc6809 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    static RegSize regSize(RegName name);
+    static RegSize regSize(RegName name)
+        __attribute__((noinline));
     char *outRegName(char *out, const RegName name) const;
 
     static RegName decodeDataReg(uint8_t num);
@@ -66,11 +67,11 @@ public:
     static RegName decodeBaseReg(uint8_t num);
     static bool isBaseReg(RegName name);
     static bool isIndexedBase(RegName name);
-    static bool isIndexReg(RegName name);
     static uint8_t encodeBaseReg(RegName name);
 
-    static RegName decodeStackReg(uint8_t bitPos, bool onUserStack);
-    static uint8_t encodeStackReg(RegName name, bool onUserStack);
+    static RegName decodeStackReg(uint8_t bitPos);
+    static uint8_t encodeStackReg(RegName name)
+        __attribute__((noinline));
 
     static RegName decodeBitOpReg(uint8_t num);
     static bool isBitOpReg(RegName name);
