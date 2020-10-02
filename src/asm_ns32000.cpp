@@ -134,7 +134,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
         op.mode = M_PREG;
         return OK;
     }
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
     const MregName mreg = RegNs32000::parseMregName(p);
     if (mreg != MREG_UNDEF) {
         _scan = p + RegNs32000::mregNameLen(mreg);
@@ -152,7 +152,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
             op.mode = M_GREG;
             return OK;
         }
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
         if (RegNs32000::isFloat(reg)) {
             _scan = p;
             op.reg = reg;
@@ -189,7 +189,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
     if (parserError()) return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     if (*p == ':') { // 64-bit immediate
         op.disp2 = parseExpr32(p + 1);
         if (parserError()) return getError();
@@ -200,7 +200,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
 #endif
         op.disp2 = 0;
         op.indexSize = SZ_LONG;
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     }
 #endif
     if (endOfLine(p) || *p == ',') {
@@ -389,12 +389,12 @@ Error AsmNs32000::emitImmediate(
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
     case SZ_LONG:
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     case SZ_FLOAT:
 #endif
         insn.emitOperand32(op.val32);
         break;
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     case SZ_DOUBLE:
         insn.emitOperand32(op.val32);
         insn.emitOperand32(op.indexSize == SZ_DOUBLE ? op.disp2 : 0);
@@ -408,7 +408,7 @@ Error AsmNs32000::emitImmediate(
 uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
     switch (mode) {
     case M_GREG:
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     case M_FREG:
 #endif
         return RegNs32000::encodeRegName(reg);
@@ -483,7 +483,7 @@ Error AsmNs32000::emitOperand(
         embedOprField(insn, pos, RegNs32000::encodeRegName(op.reg));
         break;
     case M_PREG:
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
     case M_MREG:
 #endif
     case M_CONF:
@@ -501,7 +501,7 @@ Error AsmNs32000::emitOperand(
     case M_GENR:
     case M_GENC:
     case M_GENW:
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     case M_FENR:
     case M_FENW:
 #endif

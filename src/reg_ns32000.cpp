@@ -31,6 +31,7 @@ static const char TEXT_REG_R4[] PROGMEM = "R4";
 static const char TEXT_REG_R5[] PROGMEM = "R5";
 static const char TEXT_REG_R6[] PROGMEM = "R6";
 static const char TEXT_REG_R7[] PROGMEM = "R7";
+#ifdef NS32000_ENABLE_FLOAT
 static const char TEXT_REG_F0[] PROGMEM = "F0";
 static const char TEXT_REG_F1[] PROGMEM = "F1";
 static const char TEXT_REG_F2[] PROGMEM = "F2";
@@ -39,6 +40,7 @@ static const char TEXT_REG_F4[] PROGMEM = "F4";
 static const char TEXT_REG_F5[] PROGMEM = "F5";
 static const char TEXT_REG_F6[] PROGMEM = "F6";
 static const char TEXT_REG_F7[] PROGMEM = "F7";
+#endif
 static const char TEXT_REG_FP[] PROGMEM = "FP";
 static const char TEXT_REG_SP[] PROGMEM = "SP";
 static const char TEXT_REG_SB[] PROGMEM = "SB";
@@ -59,7 +61,7 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
     NAME_ENTRY(REG_SB)
     NAME_ENTRY(REG_PC)
     NAME_ENTRY(REG_TOS)
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     NAME_ENTRY(REG_F0)
     NAME_ENTRY(REG_F1)
     NAME_ENTRY(REG_F2)
@@ -95,7 +97,7 @@ char *RegNs32000::outRegName(char *out, RegName name) const {
     return out;
 }
 
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
 RegName RegNs32000::decodeRegName(uint8_t num, bool floating) {
     return RegName((num & 7) + (floating ? 8 : 0));
 }
@@ -106,7 +108,7 @@ RegName RegNs32000::decodeRegName(uint8_t num) {
 #endif
 
 uint8_t RegNs32000::encodeRegName(RegName name) {
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     if (isFloat(name)) return uint8_t(name) - 8;
 #endif
     return uint8_t(name);
@@ -117,7 +119,7 @@ bool RegNs32000::isGeneric(RegName name) {
     return num >= 0 && num < 8;
 }
 
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
 bool RegNs32000::isFloat(RegName name) {
     const int8_t num = int8_t(name) - 8;
     return num >= 0 && num < 8;
@@ -166,7 +168,7 @@ uint8_t RegNs32000::encodePregName(PregName name) {
     return uint8_t(name);
 }
 
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
 static const char TEXT_MREG_BPR0[] PROGMEM = "BPR0";
 static const char TEXT_MREG_BPR1[] PROGMEM = "BPR1";
 static const char TEXT_MREG_MSR[]  PROGMEM = "MSR";

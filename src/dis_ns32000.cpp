@@ -22,7 +22,7 @@ namespace ns32000 {
 
 static bool isGenMode(AddrMode mode) {
     return mode == M_GENR || mode == M_GENW || mode == M_GENC
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
         || mode == M_FENR || mode == M_FENW
 #endif
         ;
@@ -156,7 +156,7 @@ Error DisNs32000::decodeImmediate(
     case SZ_LONG:
         outHex(out, insn.readUint32(memory), 32);
         break;
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     case SZ_FLOAT:
         outHex(out, insn.readUint32(memory), 32);
         break;
@@ -248,7 +248,7 @@ Error DisNs32000::decodeGeneric(
     RegName reg;
     switch (gen) {
     case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
         reg = RegNs32000::decodeRegName(gen, (mode == M_FENR || mode == M_FENW));
 #else
         reg = RegNs32000::decodeRegName(gen);
@@ -342,7 +342,7 @@ Error DisNs32000::decodeOperand(
     case M_PREG:
         out = _regs.outPregName(out, RegNs32000::decodePregName(field));
         break;
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
     case M_MREG:
         out = _regs.outMregName(out, RegNs32000::decodeMregName(field));
         break;
@@ -357,7 +357,7 @@ Error DisNs32000::decodeOperand(
     case M_GENR:
     case M_GENC:
     case M_GENW:
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     case M_FENW:
     case M_FENR:
 #endif

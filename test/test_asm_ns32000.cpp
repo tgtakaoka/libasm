@@ -276,7 +276,7 @@ static void test_format_8() {
     TEST("MOVUSB 9(SB),5(SP)", 0xAE, 0x5C, 0xD6, 0x09, 0x05);
 }
 
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
 static void test_format_9() {
     TEST("MOVF F0,8(SB)",   0xBE, 0x85, 0x06, 0x08);
     TEST("MOVBF 2,F0",      0x3E, 0x04, 0xA0, 0x02);
@@ -309,7 +309,7 @@ static void test_format_11() {
 }
 #endif
 
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
 static void test_format_14() {
     TEST("LMR PTB1,R0", 0x1E, 0x8B, 0x06);
     TEST("SMR PTB0,R0", 0x1E, 0x0F, 0x06);
@@ -321,7 +321,7 @@ static void test_format_14() {
 static void test_generic_addressing() {
     // Register
     TEST("ADDW R1, R2", 0x81, 0x08);
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     TEST("ADDF F1, F2", 0xBE, 0x81, 0x08);
 #endif
     // Register Relative
@@ -336,7 +336,7 @@ static void test_generic_addressing() {
     TEST("ADDB 0x56,       R1", 0x40, 0xA0, 0x56);
     TEST("ADDW 0x1234,     R1", 0x41, 0xA0, 0x12, 0x34);
     TEST("ADDD 0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     TEST("ADDF 0x12345678, F1",
          0xBE, 0x41, 0xA0, 0x12, 0x34, 0x56, 0x78);
     TEST("ADDL 0x12345678, F1",
@@ -428,12 +428,12 @@ static void test_comment() {
     TEST("ADDB TOS[R3:B] , R0          ; comment",     0x00, 0xE0, 0xBB);
     TEST("ADDB 2 (SP)[R3:B] , R0       ; comment",     0x00, 0xE0, 0xCB, 0x02);
 
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     TEST("ADDL 0x12345678 : 0x9ABCDEF0, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0);
 #endif
     TEST("LPRB UPSR , R0 ; comment", 0x6C, 0x00);
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
     TEST("LMR  PTB0 , R0 ; comment", 0x1E, 0x0B, 0x06);
 #endif
 
@@ -503,11 +503,11 @@ void run_tests() {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
 #endif
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
     RUN_TEST(test_format_14);
 #endif
     RUN_TEST(test_generic_addressing);

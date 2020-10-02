@@ -284,7 +284,7 @@ static const char TEXT_WAIT[]    PROGMEM = "WAIT";
 static const char TEXT_XORB[]    PROGMEM = "XORB";
 static const char TEXT_XORD[]    PROGMEM = "XORD";
 static const char TEXT_XORW[]    PROGMEM = "XORW";
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
 static const char TEXT_ABSF[]    PROGMEM = "ABSF";
 static const char TEXT_ABSL[]    PROGMEM = "ABSL";
 static const char TEXT_ADDF[]    PROGMEM = "ADDF";
@@ -328,7 +328,7 @@ static const char TEXT_TRUNCLB[] PROGMEM = "TRUNCLB";
 static const char TEXT_TRUNCLD[] PROGMEM = "TRUNCLD";
 static const char TEXT_TRUNCLW[] PROGMEM = "TRUNCLW";
 #endif
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
 static const char TEXT_LMR[]     PROGMEM = "LMR";
 static const char TEXT_RDVAL[]   PROGMEM = "RDVAL";
 static const char TEXT_SMR[]     PROGMEM = "SMR";

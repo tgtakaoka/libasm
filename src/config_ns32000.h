@@ -22,8 +22,8 @@
 namespace libasm {
 namespace ns32000 {
 
-//#define ENABLE_FLOAT
-//#define ENABLE_MMU
+//#define NS32000_ENABLE_FLOAT
+//#define NS32000_ENABLE_MMU
 
 struct Config : ConfigImpl<
     ADDRESS_24BIT, uint32_t, int32_t,

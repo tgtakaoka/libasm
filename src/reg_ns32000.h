@@ -34,7 +34,7 @@ enum RegName : int8_t {
     REG_R5 = 5 + 0,
     REG_R6 = 6 + 0,
     REG_R7 = 7 + 0,
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     // Floating point registers.
     REG_F0 = 0 + 8,
     REG_F1 = 1 + 8,
@@ -64,7 +64,7 @@ enum PregName : int8_t {
     PREG_MOD     = 15, // MOD
 };
 
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
 enum MregName : int8_t {
     MREG_UNDEF = -1,
     MREG_BPR0  = 0,  // BPR0
@@ -99,7 +99,7 @@ public:
     char *outRegName(char *out, const RegName name) const;
     static uint8_t encodeRegName(RegName name);
     static bool isGeneric(RegName name);
-#ifdef ENABLE_FLOAT
+#ifdef NS32000_ENABLE_FLOAT
     static RegName decodeRegName(uint8_t num, bool floating = false);
     static bool isFloat(RegName name);
 #else
@@ -112,7 +112,7 @@ public:
     static PregName decodePregName(uint8_t num);
     static uint8_t encodePregName(PregName name);
 
-#ifdef ENABLE_MMU
+#ifdef NS32000_ENABLE_MMU
     static MregName parseMregName(const char *line);
     static uint8_t mregNameLen(MregName name);
     char *outMregName(char *out, MregName name) const;
