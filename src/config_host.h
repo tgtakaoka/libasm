@@ -54,6 +54,7 @@ typedef union {
 #define strcpy_P(d, s) strcpy((d), (s))
 #define strncpy_P(d, s, n) strncpy((d), (s), (n))
 #define strcmp_P(d, s) strcmp((d), (s))
+#include <strings.h>
 #define strcasecmp_P(d, s) strcasecmp((d), (s))
 #define strncasecmp_P(d, s, n) strncasecmp((d), (s), (n))
 

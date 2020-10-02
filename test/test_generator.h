@@ -178,7 +178,7 @@ public:
         Disassembler &disassembler,
         typename Conf::uintptr_t addr = 0)
         : _disassembler(disassembler),
-          _memorySize(Conf::CODE_MAX),
+          _memorySize(Conf::MAX_CODE),
           _endian(Conf::ENDIAN),
           _opcodeSize(sizeof(typename Conf::opcode_t)) {
         _memory = new uint8_t[_memorySize];

@@ -41,10 +41,10 @@ public:
 private:
     uint32_t _address;
     uint8_t  _length;
-    static constexpr size_t CODE_MAX = 24;
-    uint8_t  _bytes[CODE_MAX];
-    static constexpr size_t NAME_MAX = 7;
-    char     _name[NAME_MAX + 1];
+    static constexpr size_t MAX_CODE = 24;
+    uint8_t  _bytes[MAX_CODE];
+    static constexpr size_t MAX_NAME = 7;
+    char     _name[MAX_NAME + 1];
 
     template<typename Conf>
     friend class InsnBase;
@@ -54,27 +54,27 @@ private:
     }
 
     void emitByte(uint8_t val, uint8_t pos) {
-        if (pos < CODE_MAX) {
+        if (pos < MAX_CODE) {
             _bytes[pos++] = val;
             if (_length < pos) _length = pos;
         }
     }
 
     void setName_P(const /*PROGMEM*/ char *name) {
-        strncpy_P(_name, name, NAME_MAX);
-        _name[NAME_MAX] = 0;
+        strncpy_P(_name, name, MAX_NAME);
+        _name[MAX_NAME] = 0;
     }
 
     void setName(const char *name, const char *end) {
         uint8_t len = end - name;
-        if (len >= NAME_MAX) len = NAME_MAX;
+        if (len >= MAX_NAME) len = MAX_NAME;
         strncpy(_name, name, len);
         _name[len] = 0;
     }
 
     void appendName(const char c) {
         uint8_t len = strlen(_name);
-        if (len < NAME_MAX) {
+        if (len < MAX_NAME) {
             _name[len++] = c;
             _name[len] = 0;
         }

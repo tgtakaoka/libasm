@@ -53,24 +53,24 @@ template<
     typename DiffT,
     OpCodeWidth CodeWE,
     typename OpCodeT,
-    uint8_t CodeMax,
+    uint8_t MaxCode,
     Endian EndianE,
-    uint8_t NameMax
+    uint8_t MaxName
     >
 struct ConfigImpl : virtual public ConfigBase {
     typedef AddrT   uintptr_t;
     typedef DiffT   ptrdiff_t;
     typedef OpCodeT opcode_t;
 
-    static constexpr uint8_t CODE_MAX = CodeMax;
+    static constexpr uint8_t MAX_CODE = MaxCode;
     static constexpr Endian ENDIAN = EndianE;
-    static constexpr uint8_t NAME_MAX = NameMax;
+    static constexpr uint8_t MAX_NAME = MaxName;
 
     AddressWidth addressWidth() const override { return AddrWE; }
     OpCodeWidth opCodeWidth() const override { return CodeWE; }
-    uint8_t codeMax() const override { return CodeMax; }
+    uint8_t codeMax() const override { return MaxCode; }
     Endian endian() const override { return EndianE; }
-    uint8_t nameMax() const override { return NameMax; }
+    uint8_t nameMax() const override { return MaxName; }
 };
 
 } // namespace libasm
