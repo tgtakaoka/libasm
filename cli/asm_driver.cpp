@@ -95,7 +95,7 @@ int AsmDriver::assemble() {
             [this, output, formatter]
             (uint32_t addr, const uint8_t *data, size_t data_size) {
                 if (_verbose)
-                    fprintf(stderr, "%s: Write %4lu bytes %04x-%04x\n",
+                    fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n",
                             _output_name,
                             data_size, addr, (uint32_t)(addr + data_size - 1));
                 for (size_t i = 0; i < data_size; i += _record_bytes) {
