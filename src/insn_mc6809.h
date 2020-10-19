@@ -42,6 +42,15 @@ public:
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;
+        _hasPost = false;
+    }
+
+    Config::opcode_t readPost(DisMemory &memory) {
+        if (!_hasPost) {
+            _post = readByte(memory);
+            _hasPost = true;
+        }
+        return _post;
     }
 
     void embed(Config::opcode_t data) {
@@ -62,6 +71,8 @@ private:
     uint8_t _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
+    Config::opcode_t _post;
+    bool _hasPost;
 };
 
 } // namespace mc6809

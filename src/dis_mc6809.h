@@ -42,14 +42,18 @@ private:
     Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeExtended(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeRelative(
+        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
+    Error decodeImmediate(
+        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
     Error decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out);
     // HD6309
-    Error decodeBitOperation(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeRegBit(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeDirBit(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, char *out);
 
+    Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

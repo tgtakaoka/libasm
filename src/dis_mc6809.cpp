@@ -40,7 +40,7 @@ Error DisMc6809::decodeExtended(
 
 Error DisMc6809::decodeIndexed(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    const uint8_t post = insn.readByte(memory);
+    const uint8_t post = insn.readPost(memory);
     PostSpec spec;
     if (TableMc6809.searchPostByte(post, spec)) return setError(UNKNOWN_POSTBYTE);
     if (spec.indir) *out++ = '[';
@@ -102,23 +102,22 @@ Error DisMc6809::decodeIndexed(
 }
 
 Error DisMc6809::decodeRelative(
-    DisMemory &memory, InsnMc6809 &insn, char *out) {
+    DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
     Config::ptrdiff_t delta;
-    if (insn.mode1() == REL) {
+    if (mode == REL) {
         delta = static_cast<int8_t>(insn.readByte(memory));
     } else {
         delta = static_cast<Config::ptrdiff_t>(insn.readUint16(memory));
     }
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
-    const uint8_t deltaWidth = insn.mode1() == REL ? 8 : 16;
+    const uint8_t deltaWidth = mode == REL ? 8 : 16;
     outRelAddr(out, target, insn.address(), deltaWidth);
     return setError(insn);
 }
 
 Error DisMc6809::decodeImmediate(
-    DisMemory &memory, InsnMc6809 &insn, char *out) {
+    DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
     *out++ = '#';
-    const AddrMode mode = insn.mode1();
     if (mode == IM8) {
         outHex(out, insn.readByte(memory), 8);
     } else if (mode == IM16) {
@@ -131,7 +130,7 @@ Error DisMc6809::decodeImmediate(
 
 Error DisMc6809::decodePushPull(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    uint8_t post = insn.readByte(memory);
+    uint8_t post = insn.readPost(memory);
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg) post &= ~0x02; // clear REG_A
     const bool onUserStack = (insn.opCode() & 2) != 0;
@@ -152,7 +151,7 @@ Error DisMc6809::decodePushPull(
 
 Error DisMc6809::decodeRegisters(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    const uint8_t post = insn.readByte(memory);
+    const uint8_t post = insn.readPost(memory);
     const RegName dst = _regs.decodeDataReg(post);
     const RegName src = _regs.decodeDataReg(post >> 4);
     if (src == REG_UNDEF || dst == REG_UNDEF)
@@ -167,27 +166,27 @@ Error DisMc6809::decodeRegisters(
     return setError(insn);
 }
 
-Error DisMc6809::decodeBitOperation(
-    DisMemory &memory, InsnMc6809 &insn, char *out) {
-    const uint8_t post = insn.readByte(memory);
-    if (insn.getError()) return setError(insn);
+Error DisMc6809::decodeRegBit(DisMemory &memory, InsnMc6809 &insn, char *out) {
+    const uint8_t post = insn.readPost(memory);
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF) return setError(ILLEGAL_REGISTER);
     out = outRegister(out, reg);
     *out++ = '.';
     out = outHex(out, post & 7, 3);
-    *out++ = ',';
+    return OK;
+}
+
+Error DisMc6809::decodeDirBit(DisMemory &memory, InsnMc6809 &insn, char *out) {
     if (decodeDirectPage(memory, insn, out)) return getError();
     out += strlen(out);
     *out++ = '.';
-    outHex(out, (post >> 3) & 7, 3);
+    outHex(out, (insn.readPost(memory) >> 3) & 7, 3);
     return OK;
 }
 
 Error DisMc6809::decodeTransferMemory(
     DisMemory &memory, InsnMc6809 &insn, char *out) {
-    const uint8_t post = insn.readByte(memory);
-    if (insn.getError()) return setError(insn);
+    const uint8_t post = insn.readPost(memory);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
     const RegName dst = _regs.decodeTfmBaseReg(post);
     const uint8_t mode = insn.opCode() & 0x3;
@@ -201,6 +200,34 @@ Error DisMc6809::decodeTransferMemory(
     if (dstModeChar) *out++ = dstModeChar;
     *out = 0;
     return setError(insn);
+}
+
+Error DisMc6809::decodeOperand(
+    DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
+    switch (mode) {
+    case DIR:
+        return decodeDirectPage(memory, insn, out);
+    case EXT:
+        return decodeExtended(memory, insn, out);
+    case IDX:
+        return decodeIndexed(memory, insn, out);
+    case REL: case LREL:
+        return decodeRelative(memory, insn, out, mode);
+    case IM8: case IM16: case IM32:
+        return decodeImmediate(memory, insn, out, mode);
+    case REGLIST:
+        return decodePushPull(memory, insn, out);
+    case REG_REG:
+        return decodeRegisters(memory, insn, out);
+    case REG_BIT:
+        return decodeRegBit(memory, insn, out);
+    case DIR_BIT:
+        return decodeDirBit(memory, insn, out);
+    case REG_TFM:
+        return decodeTransferMemory(memory, insn, out);
+    default:
+        return OK;
+    }
 }
 
 Error DisMc6809::decode(DisMemory &memory, Insn &_insn, char *out) {
@@ -217,43 +244,14 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (TableMc6809.searchOpCode(insn))
         return setError(TableMc6809.getError());
 
-    switch (insn.mode1()) {
-    case DIR:
-        return decodeDirectPage(memory, insn, out);
-    case EXT:
-        return decodeExtended(memory, insn, out);
-    case IDX:
-        return decodeIndexed(memory, insn, out);
-    case REL: case LREL:
-        return decodeRelative(memory, insn, out);        
-    case IM8: case IM16: case IM32:
-        decodeImmediate(memory, insn, out);
-        break;
-    case REGLIST:
-        return decodePushPull(memory, insn, out);
-    case REG_REG:
-        return decodeRegisters(memory, insn, out);
-    case REG_BIT:
-        return decodeBitOperation(memory, insn, out);
-    case REG_TFM:
-        return decodeTransferMemory(memory, insn, out);
-    default:
-        return OK;
-    }
-
-    if (insn.mode2() == NONE) return OK;
+    if (decodeOperand(memory, insn, out, insn.mode1()))
+        return getError();
+    const AddrMode mode2 = insn.mode2();
+    if (mode2 == NONE) return OK;
+    if (mode2 == REG_TFM) return OK;
     out += strlen(out);
     *out++ = ',';
-    switch (insn.mode2()) {
-    case DIR:
-        return decodeDirectPage(memory, insn, out);
-    case EXT:
-        return decodeExtended(memory, insn, out);
-    case IDX:
-        return decodeIndexed(memory, insn, out);
-    default:
-        return OK;
-    }
+    return decodeOperand(memory, insn, out, mode2);
 }
 
 } // namespace mc6809
