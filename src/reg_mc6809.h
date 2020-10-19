@@ -80,6 +80,7 @@ public:
     static RegName decodeTfmBaseReg(uint8_t num);
     static bool isTfmBaseReg(RegName name);
     static uint8_t encodeTfmBaseReg(RegName name);
+    static int8_t encodeTfmMode(char src, char dst);
     static char tfmSrcModeChar(uint8_t mode);
     static char tfmDstModeChar(uint8_t mode);
 };

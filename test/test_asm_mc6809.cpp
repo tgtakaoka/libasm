@@ -603,7 +603,10 @@ static void test_direct() {
         TEST("AIM #$30,W,X",    0x62, 0x30, 0x8E);
         TEST("AIM #$30,[W,X]",  0x62, 0x30, 0x9E);
         TEST("EIM #$30,,--X",   0x65, 0x30, 0x83);
-        ATEST(0x1000, "TIM #$30,$1020,PCR", 0x6B, 0x30, 0x8C, 0x1D);
+        TEST("TIM #$30,*+$20,PCR",    0x6B, 0x30, 0x8C, 0x1C);
+        TEST("TIM #$30,*+$120,PCR",   0x6B, 0x30, 0x8D, 0x01, 0x1B);
+        TEST("TIM #$30,[*+$20,PCR]",  0x6B, 0x30, 0x9C, 0x1C);
+        TEST("TIM #$30,[*+$120,PCR]", 0x6B, 0x30, 0x9D, 0x01, 0x1B);
     } else {
         ETEST(UNKNOWN_INSTRUCTION, "SBCD $90");
         ETEST(UNKNOWN_INSTRUCTION, "ANDD $90");

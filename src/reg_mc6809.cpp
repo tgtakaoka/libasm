@@ -197,6 +197,16 @@ uint8_t RegMc6809::encodeTfmBaseReg(RegName name) {
     return uint8_t(name);
 }
 
+int8_t RegMc6809::encodeTfmMode(char src, char dst) {
+    if (src && src == dst)
+        return src == '-' ? 1 : 0;
+    if (src == '+' && dst == 0)
+        return 2;
+    if (src == 0 && dst == '+')
+        return 3;
+    return -1;
+}
+
 char RegMc6809::tfmSrcModeChar(uint8_t mode) {
     if (mode == 0 || mode == 2) return '+';
     return mode == 1 ? '-' : 0;

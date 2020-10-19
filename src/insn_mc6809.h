@@ -45,6 +45,10 @@ public:
         _hasPost = false;
     }
 
+    void setPost(Config::opcode_t post) {
+        _post = post;
+    }
+
     Config::opcode_t readPost(DisMemory &memory) {
         if (!_hasPost) {
             _post = readByte(memory);
@@ -57,9 +61,14 @@ public:
         _opCode |= data;
     }
 
+    void embedPost(Config::opcode_t data) {
+        _post |= data;
+    }
+
     bool hasPrefix() const { return prefix() != 0; }
     Config::opcode_t prefix() const { return _prefix; }
     Config::opcode_t opCode() const { return _opCode; }
+    Config::opcode_t post() const { return _post; }
 
     void emitInsn() {
         if (hasPrefix())
