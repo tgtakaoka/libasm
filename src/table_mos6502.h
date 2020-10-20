@@ -41,6 +41,7 @@ public:
     AddressWidth addressWidth() const;
 
     static constexpr Config::opcode_t WDM = 0x42;
+    static constexpr Config::opcode_t JSL = 0x22;
 
     struct EntryPage;
 

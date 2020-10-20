@@ -70,8 +70,13 @@ Error DisMos6502::decodeAbsolute(
         uint32_t target = addr;
         const uint8_t bank = insn.readByte(memory);
         target |= static_cast<uint32_t>(bank) << 16;
-        out = outAbsAddr(
-            out, target, addressWidth(), PSTR(">>"), target < 0x10000);
+        // JSL has only ABS_LONG addressing
+        if (insn.opCode() == TableMos6502::JSL) {
+            out = outAbsAddr(out, target, addressWidth());
+        } else {
+            out = outAbsAddr(
+                    out, target, addressWidth(), PSTR(">>"), target < 0x10000);
+        }
     }
     if (index != REG_UNDEF) {
         *out++ = ',';
