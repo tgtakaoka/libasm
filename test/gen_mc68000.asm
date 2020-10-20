@@ -10,7 +10,7 @@
       ORI.B   #0,(-$80,A0,D0.W)
       ORI.B   #0,($000039).W
       ORI.B   #0,($3A0000).L
-      ORI     #$003D,CCR
+      ORI     #$3D,CCR
       ORI.W   #$0041,D0
       ORI.W   #$0051,(A0)
       ORI.W   #$0059,(A0)+
@@ -82,7 +82,7 @@
       ANDI.B  #0,(-$80,A0,D0.W)
       ANDI.B  #0,($000239).W
       ANDI.B  #0,($3A0000).L
-      ANDI    #$023D,CCR
+      ANDI    #$3D,CCR
       ANDI.W  #$0241,D0
       ANDI.W  #$0251,(A0)
       ANDI.W  #$0259,(A0)+
@@ -217,7 +217,7 @@
       EORI.B  #0,(-$80,A0,D0.L)
       EORI.B  #0,($000A39).W
       EORI.B  #0,($3A0000).L
-      EORI    #$0A3D,CCR
+      EORI    #$3D,CCR
       EORI.W  #$0A41,D0
       EORI.W  #$0A51,(A0)
       EORI.W  #$0A59,(A0)+
@@ -854,7 +854,7 @@
       MOVE    (*-2,PC,D4.W),CCR
       MOVE    (*,PC,D4.W),CCR
       MOVE    (*+1,PC,D4.W),CCR
-      MOVE    #$44FD,CCR
+      MOVE    #$FD,CCR
       NOT.B   D0
       NOT.B   (A0)
       NOT.B   (A0)+
@@ -2225,10 +2225,6 @@
       TST.B   (-$80,A0,D4.L)
       TST.B   ($004A39).W
       TST.B   ($004A3A).L
-      TST.B   (*+$4A3D,PC)
-      TST.B   (*+62,PC,D4.L)
-      TST.B   (*-126,PC,D4.L)
-      TST.B   (*,PC,D4.L)
       TST.W   D0
       TST.W   (A0)
       TST.W   (A0)+
@@ -2238,10 +2234,6 @@
       TST.W   (-$80,A0,D4.L)
       TST.W   ($004A7A).W
       TST.W   ($004A7A).L
-      TST.W   (*+$4A7E,PC)
-      TST.W   (*+126,PC,D4.L)
-      TST.W   (*-126,PC,D4.L)
-      TST.W   (*,PC,D4.L)
       TST.L   D0
       TST.L   (A0)
       TST.L   (A0)+
@@ -2250,10 +2242,6 @@
       TST.L   (-$4F,A0,D4.L)
       TST.L   (0,A0,D4.L)
       TST.L   ($004ABC).W
-      TST.L   (*+$4ABE,PC)
-      TST.L   (*-66,PC,D4.L)
-      TST.L   (*,PC,D4.L)
-      TST.L   (*+1,PC,D4.L)
       TAS     D0
       TAS     (A0)
       TAS     (A0)+

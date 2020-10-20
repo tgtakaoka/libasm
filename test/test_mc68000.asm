@@ -909,6 +909,7 @@
         tst.b   (8,a7,d3)
         tst.b   (-4).w
         tst.b   (8).l
+;       tst.b   #$45
 ;       tst.b   (*,pc)
 ;       tst.b   (*,pc,d3)
         tst.w   d1
@@ -920,6 +921,7 @@
         tst.w   (8,a7,d3)
         tst.w   (-4).w
         tst.w   (8).l
+;       tst.w   #$1234
 ;       tst.w   (*,pc)
 ;       tst.w   (*,pc,d3)
         tst.l   d1
@@ -931,6 +933,7 @@
         tst.l   (8,a7,d3)
         tst.l   (-4).w
         tst.l   (8).l
+;       tst.l   #$12345678
 ;       tst.l   (*,pc)
 ;       tst.l   (*,pc,d3)
 

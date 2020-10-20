@@ -2152,8 +2152,8 @@ static void test_program() {
     TEST(TST_B, "(18,A2,D3.W)",        0045062, 0x3012);
     TEST(TST_B, "($001234).W",         0045070, 0x1234);
     TEST(TST_B, "($123456).L",         0045071, 0x0012, 0x3456);
-    TEST(TST_B, "(*+$1234,PC)",        0045072, 0x1232);
-    TEST(TST_B, "(*-16,PC,D3.L)",      0045073, 0x38EE);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045072, 0x1232); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045073, 0x38EE); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0045074); // #xxxx
     TEST(TST_W, "D2",                  0045102);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0045112);
@@ -2164,8 +2164,8 @@ static void test_program() {
     TEST(TST_W, "(18,A2,D3.W)",        0045162, 0x3012);
     TEST(TST_W, "($001234).W",         0045170, 0x1234);
     TEST(TST_W, "($123456).L",         0045171, 0x0012, 0x3456);
-    TEST(TST_W, "(*+$1234,PC)",        0045172, 0x1232);
-    TEST(TST_W, "(*-16,PC,D3.L)",      0045173, 0x38EE);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045172, 0x1232); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045173, 0x38EE); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0045174); // #xxxx
     TEST(TST_L, "D2",                  0045202);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0045212);
@@ -2176,8 +2176,8 @@ static void test_program() {
     TEST(TST_L, "(18,A2,D3.W)",        0045262, 0x3012);
     TEST(TST_L, "($001234).W",         0045270, 0x1234);
     TEST(TST_L, "($123454).L",         0045271, 0x0012, 0x3454);
-    TEST(TST_L, "(*+$1234,PC)",        0045272, 0x1232);
-    TEST(TST_L, "(*-16,PC,D3.L)",      0045273, 0x38EE);
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045272, 0x1232); // (d16,PC)
+    ETEST(OPERAND_NOT_ALLOWED, _, "",  0045273, 0x38EE); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0045274); // #xxxx
 }
 
@@ -2264,10 +2264,10 @@ static void test_system() {
     TEST(TRAPV, "", 047166);
 
     // ANDI #nn,CCR
-    TEST(ANDI, "#$0034,CCR", 0001074, 0x0034);
+    TEST(ANDI, "#$34,CCR", 0001074, 0x0034);
 
     // EORI #nn,CCR
-    TEST(EORI, "#$0034,CCR", 0005074, 0x0034);
+    TEST(EORI, "#$34,CCR", 0005074, 0x0034);
 
     // MOVE src,CCR: 00423|M|R
     TEST(MOVE, "D2,CCR",               0042302);
@@ -2284,10 +2284,10 @@ static void test_system() {
     TEST(MOVE, "(*+$1234,PC),CCR",     0042372, 0x1232);
     ETEST(OPERAND_NOT_ALIGNED, _, "",  0042372, 0x1233);
     TEST(MOVE, "(*-16,PC,D3.L),CCR",   0042373, 0x38EE);
-    TEST(MOVE, "#$0034,CCR",           0042374, 0x0034);
+    TEST(MOVE, "#$34,CCR",             0042374, 0x0034);
 
     // ORI #nn,CCR
-    TEST(ORI, "#$0034,CCR", 0000074, 0x0034);
+    TEST(ORI, "#$34,CCR", 0000074, 0x0034);
 }
 
 static void test_multiproc() {

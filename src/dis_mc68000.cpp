@@ -36,9 +36,13 @@ char *DisMc68000::outOprSize(char *out, OprSize size) {
 Error DisMc68000::decodeImmediateData(
     DisMemory &memory, InsnMc68000 &insn, char *out, OprSize size) {
     if (size == SZ_BYTE) {
-        outHex(out, insn.readUint16(memory), 8);
+        outHex(out, insn.readUint16(memory) & 0xFF, 8);
     } else if (size == SZ_WORD) {
-        outHex(out, insn.readUint16(memory), 16);
+        if (insn.srcMode() == M_CCR || insn.dstMode() == M_CCR) {
+            outHex(out, insn.readUint16(memory) & 0xFF, 8);
+        } else {
+            outHex(out, insn.readUint16(memory), 16);
+        }
     } else if (size == SZ_LONG) {
         outHex(out, insn.readUint32(memory), 32);
     }

@@ -91,7 +91,7 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0044100, PEA,   NONE, M_JADDR, M_NONE,  10, __, NONE)
     E(0045374, ILLEG, NONE, M_NONE,  M_NONE,  __, __, NONE)
     E(0045300, TAS,   NONE, M_WDATA, M_NONE,  10, __, BYTE)
-    E(0045000, TST,   DATA, M_RMEM,  M_NONE,  10, __, DATA)
+    E(0045000, TST,   DATA, M_WDATA, M_NONE,  10, __, DATA)
     E(0047100, TRAP,  NONE, M_IMVEC, M_NONE,  __, __, NONE)
     E(0047120, LINK,  NONE, M_AREG,  M_IMDSP, _0, __, WORD)
     E(0047130, UNLK,  NONE, M_AREG,  M_NONE,  _0, __, NONE)
