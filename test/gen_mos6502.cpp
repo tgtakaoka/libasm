@@ -23,11 +23,12 @@ using namespace libasm::test;
 int main(int argc, const char **argv) {
     DisMos6502 dis6502;
     dis6502.setRelativeTarget(true);
+    dis6502.useIndirectLong(false);
     GenDriver<Config> driver(dis6502);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis6502);
+    TestGenerator<Config> generator(dis6502, 0x0200);
     generator.generate(driver);
 
     return driver.close();

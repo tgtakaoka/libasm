@@ -28,7 +28,7 @@ int main(int argc, const char **argv) {
         return 1;
     const char *cpu = dis6800.getCpu();
 
-    TestGenerator<Config> generator(dis6800);
+    TestGenerator<Config> generator(dis6800, 0x0100);
     if (strcmp(cpu, "6811") == 0) {
         generator
             .generate(driver)

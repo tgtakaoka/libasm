@@ -26,7 +26,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis1802);
+    TestGenerator<Config> generator(dis1802, 0x0100);
     generator.generate(driver);
 
     return driver.close();

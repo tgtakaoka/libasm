@@ -15,7 +15,7 @@
 INCLUDES=-I ../src -I ../cli
 VPATH=../src:../cli
 
-ASL_FLAGS = -gnuerrors -L +t 0x1e -q
+ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w
 
 all: \
 	test_mc6809.s19 \
@@ -361,7 +361,7 @@ gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 gen_z8:      gen_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 	./gen_z8    -u -C Z8601  -o gen_z8.asm
-	./gen_z8    -u -C Z86C91 -o gen_z86c91.asm
+	./gen_z8    -u -C Z86C40 -o gen_z86c40.asm
 	./gen_z8    -u -C Z88C00 -o gen_z88.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
@@ -385,8 +385,8 @@ gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_gen)
 	./gen_mc68000 -u -C 68000 -o gen_mc68000.asm
 gen_z8000:   gen_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z8000 -C Z8001 -o gen_z8001.asm
-	./gen_z8000 -C Z8002 -o gen_z8002.asm
+	./gen_z8000 -C Z8001 -o gen_z8001.s
+	./gen_z8000 -C Z8002 -o gen_z8002.s
 
 clean: clean-obj
 	-rm -f $(TESTS)
