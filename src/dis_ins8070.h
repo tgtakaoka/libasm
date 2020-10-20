@@ -36,7 +36,9 @@ public:
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
 
 private:
-    ValueFormatter _formatter;
+    class _ValueFormatter : public ValueFormatter {
+        char currentOriginSymbol() const override { return '$'; }
+    } _formatter;
     RegIns8070 _regs;
     bool _immSym = false;
 
