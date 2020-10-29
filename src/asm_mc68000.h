@@ -32,7 +32,7 @@ class AsmMc68000
 public:
     AsmMc68000() : Assembler(_parser, TableMc68000) {}
 
-    void reset() override { setAlias(false); }
+    void reset() override { setAlias(true); }
     void setAlias(bool enable) { TableMc68000.setAlias(enable); }
 
 private:

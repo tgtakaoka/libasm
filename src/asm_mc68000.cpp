@@ -201,7 +201,6 @@ Error AsmMc68000::emitEffectiveAddr(
             insn.emitOperand16(static_cast<uint16_t>(op.val32));
             return OK;
         }
-        if (size == SZ_NONE) size = insn.oprSize();
         return emitImmediateData(insn, size, op.val32);
     case M_LABEL:
         if (size == SZ_LONG || (size == SZ_BYTE && mode == M_REL16))
@@ -380,7 +379,7 @@ Error AsmMc68000::encode(Insn &_insn) {
 
     const OprSize isize = RegMc68000::parseSize(endName);
     if (isize == SZ_ERROR) return setError(ILLEGAL_SIZE);
-    insn.setOprSize(isize);
+    insn.setInsnSize(isize);
     endName += RegMc68000::sizeNameLen(isize);
 
     Operand srcOp, dstOp;
@@ -417,9 +416,11 @@ Error AsmMc68000::encode(Insn &_insn) {
         insn.emitOperand16(static_cast<uint16_t>(srcOp.val32));
     }
     emitOprSize(insn, isize);
-    if (emitEffectiveAddr(insn, isize, srcOp, src, insn.srcPos()))
+    insn.setInsnSize(isize);
+    const OprSize osize = (isize == SZ_NONE) ? insn.oprSize() : isize;
+    if (emitEffectiveAddr(insn, osize, srcOp, src, insn.srcPos()))
         return getError();
-    if (emitEffectiveAddr(insn, isize, dstOp, dst, insn.dstPos()))
+    if (emitEffectiveAddr(insn, osize, dstOp, dst, insn.dstPos()))
         return getError();
     insn.emitInsn();
     return getError();

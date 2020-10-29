@@ -360,7 +360,7 @@
         movea.l (-4).w,a2
         movea.l (8).l,a2
         movea.l #5,a2
-        movea.l (*,pc),a2
+        movea.l (*-2,pc),a2
         movea.l (*,pc,d3),a2
 
         align   32
@@ -377,18 +377,18 @@
 ;       move.w  sr,(*,pc,d3)
 
         align   32
-        move.b  d1,ccr
-;       move.b  a2,ccr
-        move.b  (a3),ccr
-        move.b  (a4)+,ccr
-        move.b  -(a5),ccr
-        move.b  (4,a6),ccr
-        move.b  (8,a7,d3),ccr
-        move.b  (-4).w,ccr
-        move.b  (8).l,ccr
-        move.b  #5,ccr
-        move.b  (*,pc),ccr
-        move.b  (*,pc,d3),ccr
+        move.w  d1,ccr
+;       move.w  a2,ccr
+        move.w  (a3),ccr
+        move.w  (a4)+,ccr
+        move.w  -(a5),ccr
+        move.w  (4,a6),ccr
+        move.w  (8,a7,d3),ccr
+        move.w  (-4).w,ccr
+        move.w  (8).l,ccr
+        move.w  #5,ccr
+        move.w  (*,pc),ccr
+        move.w  (*,pc,d3),ccr
 
         align   32
         move.w  d1,sr
@@ -658,7 +658,7 @@
         move.l  (-4).l,(a4)+
         move.l  (8).l,(a4)+
         move.l  #5,(a4)+
-        move.l  (*,pc),(a4)+
+        move.l  (*-18,pc),(a4)+
         move.l  (*,pc,d3),(a4)+
         move.l  a4,-(a5)
         move.l  (a3),-(a5)
@@ -702,7 +702,7 @@
         move.l  (-4).l,(-4).l
         move.l  (8).l,(-4).l
         move.l  #5,(-4).l
-        move.l  (*,pc),(-4).l
+        move.l  (*+6,pc),(-4).l
         move.l  (*,pc,d3),(-4).l
         move.l  a4,(8).l
         move.l  (a3),(8).l
@@ -875,10 +875,12 @@
 
         align   32
         swap    d1
+        swap.l  d1
 
         align   32
 ;       pea.l   d1
 ;       pea.l   a2
+        pea     (a3)
         pea.l   (a3)
 ;       pea.l   (a4)+
 ;       pea.l   -(a5)
@@ -887,7 +889,7 @@
         pea.l   (-4).w
         pea.l   (8).l
 ;       pea.l   #5
-        pea.l   (*,pc)
+        pea.l   (*-6,pc)
         pea.l   (*,pc,d3)
 
         align   32
@@ -1623,7 +1625,7 @@
         suba.l  (-4).w,a2
         suba.l  (8).l,a2
         suba.l  #5,a2
-        suba.l  (*,pc),a2
+        suba.l  (*-10,pc),a2
         suba.l  (*,pc,d3),a2
 
         align   32
@@ -1730,7 +1732,7 @@
         cmpa.l  (-4).w,a2
         cmpa.l  (8).l,a2
         cmpa.l  #5,a2
-        cmpa.l  (*,pc),a2
+        cmpa.l  (*+14,pc),a2
         cmpa.l  (*,pc,d3),a2
 
         align   32
@@ -1941,7 +1943,7 @@
         adda.l  (-4).w,a2
         adda.l  (8).l,a2
         adda.l  #5,a2
-        adda.l  (*,pc),a2
+        adda.l  (*+18,pc),a2
         adda.l  (*,pc,d3),a2
 
         align   32

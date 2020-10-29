@@ -1507,8 +1507,8 @@ static void test_shift_rotate() {
     TEST(ASL, "-(A2)",                 0160742);
     TEST(ASL, "($2345,A2)",            0160752, 0x2345);
     TEST(ASL, "($23,A2,D3.L)",         0160762, 0x3823);
-    TEST(ASL, "($002345).W",           0160770, 0x2345);
-    TEST(ASL, "($234567).L",           0160771, 0x0023, 0x4567);
+    TEST(ASL, "($002346).W",           0160770, 0x2346);
+    TEST(ASL, "($234568).L",           0160771, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0160772); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0160773); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0160774); // #xxxx
@@ -1531,8 +1531,8 @@ static void test_shift_rotate() {
     TEST(ASR, "-(A2)",                 0160342);
     TEST(ASR, "($2345,A2)",            0160352, 0x2345);
     TEST(ASR, "($23,A2,D3.L)",         0160362, 0x3823);
-    TEST(ASR, "($002345).W",           0160370, 0x2345);
-    TEST(ASR, "($234567).L",           0160371, 0x0023, 0x4567);
+    TEST(ASR, "($002346).W",           0160370, 0x2346);
+    TEST(ASR, "($234568).L",           0160371, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0160372); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0160373); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0160374); // #xxxx
@@ -1555,8 +1555,8 @@ static void test_shift_rotate() {
     TEST(LSL, "-(A2)",                 0161742);
     TEST(LSL, "($2345,A2)",            0161752, 0x2345);
     TEST(LSL, "($23,A2,D3.L)",         0161762, 0x3823);
-    TEST(LSL, "($002345).W",           0161770, 0x2345);
-    TEST(LSL, "($234567).L",           0161771, 0x0023, 0x4567);
+    TEST(LSL, "($002346).W",           0161770, 0x2346);
+    TEST(LSL, "($234568).L",           0161771, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0161772); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0161773); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0161774); // #xxxx
@@ -1579,8 +1579,8 @@ static void test_shift_rotate() {
     TEST(LSR, "-(A2)",                 0161342);
     TEST(LSR, "($2345,A2)",            0161352, 0x2345);
     TEST(LSR, "($23,A2,D3.L)",         0161362, 0x3823);
-    TEST(LSR, "($002345).W",           0161370, 0x2345);
-    TEST(LSR, "($234567).L",           0161371, 0x0023, 0x4567);
+    TEST(LSR, "($002346).W",           0161370, 0x2346);
+    TEST(LSR, "($234568).L",           0161371, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0161372); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0161373); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0161374); // #xxxx
@@ -1603,8 +1603,8 @@ static void test_shift_rotate() {
     TEST(ROL, "-(A2)",                 0163742);
     TEST(ROL, "($2345,A2)",            0163752, 0x2345);
     TEST(ROL, "($23,A2,D3.L)",         0163762, 0x3823);
-    TEST(ROL, "($002345).W",           0163770, 0x2345);
-    TEST(ROL, "($234567).L",           0163771, 0x0023, 0x4567);
+    TEST(ROL, "($002346).W",           0163770, 0x2346);
+    TEST(ROL, "($234568).L",           0163771, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0163772); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0163773); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0163774); // #xxxx
@@ -1627,8 +1627,8 @@ static void test_shift_rotate() {
     TEST(ROR, "-(A2)",                 0163342);
     TEST(ROR, "($2345,A2)",            0163352, 0x2345);
     TEST(ROR, "($23,A2,D3.L)",         0163362, 0x3823);
-    TEST(ROR, "($002345).W",           0163370, 0x2345);
-    TEST(ROR, "($234567).L",           0163371, 0x0023, 0x4567);
+    TEST(ROR, "($002346).W",           0163370, 0x2346);
+    TEST(ROR, "($234568).L",           0163371, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0163372); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0163373); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0163374); // #xxxx
@@ -1651,8 +1651,8 @@ static void test_shift_rotate() {
     TEST(ROXL, "-(A2)",                0162742);
     TEST(ROXL, "($2345,A2)",           0162752, 0x2345);
     TEST(ROXL, "($23,A2,D3.L)",        0162762, 0x3823);
-    TEST(ROXL, "($002345).W",          0162770, 0x2345);
-    TEST(ROXL, "($234567).L",          0162771, 0x0023, 0x4567);
+    TEST(ROXL, "($002346).W",          0162770, 0x2346);
+    TEST(ROXL, "($234568).L",          0162771, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0162772); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0162773); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0162774); // #xxxx
@@ -1675,8 +1675,8 @@ static void test_shift_rotate() {
     TEST(ROXR, "-(A2)",                0162342);
     TEST(ROXR, "($2345,A2)",           0162352, 0x2345);
     TEST(ROXR, "($23,A2,D3.L)",        0162362, 0x3823);
-    TEST(ROXR, "($002345).W",          0162370, 0x2345);
-    TEST(ROXR, "($234567).L",          0162371, 0x0023, 0x4567);
+    TEST(ROXR, "($002346).W",          0162370, 0x2346);
+    TEST(ROXR, "($234568).L",          0162371, 0x0023, 0x4568);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0162372); // (d16,PC)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0162373); // (d8,PC,Xn)
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0162374); // #xxxx

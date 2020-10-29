@@ -783,9 +783,7 @@
       LEA     ($41E9,A0),A0
       LEA     (-15,A0,D4.W),A0
       LEA     (0,A0,D4.W),A0
-      LEA     ($0041F9).W,A0
-      LEA     ($0041FA).L,A0
-      LEA     (*+$41FD,PC),A0
+      LEA     ($0041FC).W,A0
       LEA     (*-2,PC,D4.W),A0
       LEA     (*,PC,D4.W),A0
       LEA     (*+1,PC,D4.W),A0
@@ -855,6 +853,7 @@
       MOVE    (*,PC,D4.W),CCR
       MOVE    (*+1,PC,D4.W),CCR
       MOVE    #$FD,CCR
+      LEA     (*+$45FE,PC),A2
       NOT.B   D0
       NOT.B   (A0)
       NOT.B   (A0)+
@@ -920,9 +919,8 @@
       PEA     ($4869,A0)
       PEA     ($71,A0,D4.L)
       PEA     (-$80,A0,D4.L)
-      PEA     ($004879).W
-      PEA     ($00487A).L
-      PEA     (*+$487D,PC)
+      PEA     ($00487C).W
+      PEA     (*+$487E,PC)
       PEA     (*+126,PC,D4.L)
       PEA     (*-126,PC,D4.L)
       PEA     (*,PC,D4.L)
