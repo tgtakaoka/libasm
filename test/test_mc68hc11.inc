@@ -43,7 +43,7 @@
         aby
         pshy
 ;;; 186X
-        neg     ,y
+        neg     0,y
         com     0,y
         lsr     1,y
         ror     6,y
@@ -62,9 +62,9 @@
 ;;; 189X
         cpy     $9d
 ;;; 18AX
-        suba    ,y
+        suba    0,y
         cmpa    0,y
-        sbca    ,y
+        sbca    0,y
         subd    1,y
         anda    2,y
         bita    3,y
@@ -74,7 +74,7 @@
         adca    127,y
         oraa    128,y
         adda    255,y
-        cpy     ,y
+        cpy     0,y
         jsr     2,y
         lds     4,y
         sts     6,y

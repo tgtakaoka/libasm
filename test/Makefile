@@ -17,7 +17,7 @@ VPATH=../src:../cli
 
 ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w
 
-all: \
+TEST_OUT=\
 	test_mc6809.s19 \
 	test_hd6309.s19 \
 	test_mc6800.s19 \
@@ -53,6 +53,8 @@ all: \
 	test_z8001.hex \
 	test_z8002.hex \
 	test_ns32000.s28
+
+all: $(TEST_OUT)
 
 %.hex: %.asm
 	asl $(ASL_FLAGS) $^

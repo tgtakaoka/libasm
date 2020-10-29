@@ -89,7 +89,7 @@
         tstb
         clrb
 ;;; 6X
-        neg     ,x
+        neg     0,x
         com     0,x
         lsr     1,x
         ror     6,x
@@ -146,7 +146,7 @@
         lds     $9f
         sts     $a0
 ;;; AX
-        suba    ,x
+        suba    0,x
         cmpa    0,x
         sbca    1,x
         anda    2,x
@@ -157,7 +157,7 @@
         adca    127,x
         oraa    128,x
         adda    255,x
-        cpx     ,x
+        cpx     0,x
         jsr     2,x
         lds     4,x
         sts     6,x
@@ -205,14 +205,14 @@
         ldx     $df
         stx     $e0
 ;;; EX
-        subb    ,x
+        subb    0,x
         cmpb    0,x
         sbcb    1,x
         andb    2,x
         bitb    3,x
         ldab    4,x
         stab    5,x
-        eorb    ,x
+        eorb    0,x
         adcb    127,x
         orab    128,x
         addb    255,x
