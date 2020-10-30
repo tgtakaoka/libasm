@@ -137,6 +137,13 @@ Error AsmMc68000::emitImmediateData(
     return setError(OVERFLOW_RANGE);
 }
 
+Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
+    if (getError()) return 0;
+    uint8_t len = insn.length();
+    if (len == 0) len = sizeof(Config::opcode_t);
+    return val32 - (insn.address() + len);
+}
+
 Error AsmMc68000::emitEffectiveAddr(
     InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) {
     if (mode == M_NONE) return op.mode == M_NONE ? OK : UNKNOWN_OPERAND;
@@ -163,15 +170,13 @@ Error AsmMc68000::emitEffectiveAddr(
             static_cast<Config::ptrdiff_t>(op.val32));
     case M_PCIDX:
         return emitBriefExtension(
-            insn, op.indexReg, op.indexSize,
-            op.getError() ? 0 : op.val32 - (insn.address() + 2));
+            insn, op.indexReg, op.indexSize, op.offset(insn));
     case M_DISP:
         return emitDisplacement(
             insn, static_cast<Config::ptrdiff_t>(op.val32));
     case M_PCDSP:
         if (checkAlignment(size, op.val32)) return getError();
-        return emitDisplacement(
-            insn, op.getError() ? 0 : op.val32 - (insn.address() + 2));
+        return emitDisplacement(insn, op.offset(insn));
     case M_AWORD:
     case M_ALONG:
         return emitAbsoluteAddr(insn, size, op.mode, op.val32);

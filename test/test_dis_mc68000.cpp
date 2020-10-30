@@ -428,8 +428,8 @@ static void test_data_move() {
     TEST(MOVEM_W, "(18,A2,D3.W),A3-A6",    0046262, 0x7800, 0x3012);
     TEST(MOVEM_W, "($FFFEDC).W,A3-A6",     0046270, 0x7800, 0xFEDC);
     TEST(MOVEM_W, "($123456).L,A3-A6",     0046271, 0x7800, 0x0012, 0x3456);
-    TEST(MOVEM_W, "(*+$1234,PC),A3-A6",    0046272, 0x7800, 0x1232);
-    TEST(MOVEM_W, "(*+18,PC,D3.L),A3-A6",  0046273, 0x7800, 0x3810);
+    TEST(MOVEM_W, "(*+$1234,PC),A3-A6",    0046272, 0x7800, 0x1230);
+    TEST(MOVEM_W, "(*+18,PC,D3.L),A3-A6",  0046273, 0x7800, 0x380E);
     ETEST(OPERAND_NOT_ALLOWED, _, "",      0046274); // #xxxx
     TEST(MOVEM_W, "(A2),D0",               0046222, 0x0001);
     TEST(MOVEM_W, "(A2),A0",               0046222, 0x0100);
@@ -444,8 +444,8 @@ static void test_data_move() {
     TEST(MOVEM_L, "(18,A2,D3.W),A3-A6",    0046362, 0x7800, 0x3012);
     TEST(MOVEM_L, "($FFFEDC).W,A3-A6",     0046370, 0x7800, 0xFEDC);
     TEST(MOVEM_L, "($123454).L,A3-A6",     0046371, 0x7800, 0x0012, 0x3454);
-    TEST(MOVEM_L, "(*+$1234,PC),A3-A6",    0046372, 0x7800, 0x1232);
-    TEST(MOVEM_L, "(*+18,PC,D3.L),A3-A6",  0046373, 0x7800, 0x3810);
+    TEST(MOVEM_L, "(*+$1234,PC),A3-A6",    0046372, 0x7800, 0x1230);
+    TEST(MOVEM_L, "(*+18,PC,D3.L),A3-A6",  0046373, 0x7800, 0x380E);
     ETEST(OPERAND_NOT_ALLOWED, _, "",      0046374); // #xxxx
     TEST(MOVEM_L, "(A2),D0",               0046322, 0x0001);
     TEST(MOVEM_L, "(A2),A0",               0046322, 0x0100);
@@ -1798,8 +1798,8 @@ static void test_bit() {
     TEST(BTST_B, "#3,(18,A2,D3.W)",    0004062, 0x0003, 0x3012);
     TEST(BTST_B, "#2,($001234).W",     0004070, 0x0002, 0x1234);
     TEST(BTST_B, "#1,($012345).L",     0004071, 0x0001, 0x0001, 0x2345);
-    TEST(BTST_B, "#0,(*+$1234,PC)",    0004072, 0x0000, 0x1232);
-    TEST(BTST_B, "#7,(*+35,PC,D3.L)",  0004073, 0x0007, 0x3821);
+    TEST(BTST_B, "#0,(*+$1234,PC)",    0004072, 0x0000, 0x1230);
+    TEST(BTST_B, "#7,(*+35,PC,D3.L)",  0004073, 0x0007, 0x381F);
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0004074); // #xxxx
 }
 

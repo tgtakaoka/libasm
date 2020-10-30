@@ -71,7 +71,7 @@ Error DisMc68000::decodeEffectiveAddr(
         const uint16_t val16 = insn.readUint16(memory);
         if (mode == M_PCDSP) {
             const Config::uintptr_t target =
-                insn.address() + 2 + static_cast<int16_t>(val16);
+                insn.address() + insn.length() - 2 + static_cast<int16_t>(val16);
             if (ea.size == SZ_WORD && (target % 2) != 0)
                 return setError(OPERAND_NOT_ALIGNED);
             if (ea.size == SZ_LONG && (target % 4) != 0)
@@ -106,7 +106,7 @@ Error DisMc68000::decodeEffectiveAddr(
         const uint8_t val8 = ext.disp();
         if (mode == M_PCIDX) {
             const Config::uintptr_t target =
-                insn.address() + 2 + static_cast<int8_t>(val8);
+                insn.address() + insn.length() - 2 + static_cast<int8_t>(val8);
             out = outRelAddr(out, target, insn.address(), 8);
         } else {
             out = outHex(out, val8, -8);

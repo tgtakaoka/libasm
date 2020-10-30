@@ -53,6 +53,7 @@ private:
               val32(0)
         {}
         void fixupMultiRegister();
+        Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
 
     Error parseMoveMultiRegList(const char *scan, Operand &opr);

@@ -166,9 +166,9 @@
       BTST.B  #0,(-$80,A0,D0.L)
       BTST.B  #0,($000839).W
       BTST.B  #0,($3A0000).L
-      BTST.B  #0,(*+$083D,PC)
-      BTST.B  #0,(*+62,PC,D0.L)
-      BTST.B  #0,(*-126,PC,D0.L)
+      BTST.B  #0,(*+$083F,PC)
+      BTST.B  #0,(*+64,PC,D0.L)
+      BTST.B  #0,(*-124,PC,D0.L)
       BTST.B  #0,(*,PC,D0.L)
       BCHG.L  #0,D0
       BCHG.B  #0,(A0)
@@ -2889,9 +2889,9 @@
       MOVEM.W (-$80,A0,D0.W),D0
       MOVEM.W ($000000).W,D0
       MOVEM.W ($000000).L,D0
-      MOVEM.W (*+2,PC),D0
-      MOVEM.W (*+2,PC,D0.W),D0
-      MOVEM.W (*-126,PC,D0.W),D0
+      MOVEM.W (*+4,PC),D0
+      MOVEM.W (*+4,PC,D0.W),D0
+      MOVEM.W (*-124,PC,D0.W),D0
       MOVEM.W (*,PC,D0.W),D0
       MOVEM.L (A0),D0/D4/D6-D7/A2-A3/A6
       MOVEM.L (A0),D0-D1/D4/D6-D7/A2-A3/A6
@@ -3532,9 +3532,8 @@
       MOVEM.L (-$80,A0,D0.W),D0
       MOVEM.L ($000000).W,D0
       MOVEM.L ($000000).L,D0
-      MOVEM.L (*+2,PC),D0
-      MOVEM.L (*+2,PC,D0.W),D0
-      MOVEM.L (*-126,PC,D0.W),D0
+      MOVEM.L (*+4,PC,D0.W),D0
+      MOVEM.L (*-124,PC,D0.W),D0
       MOVEM.L (*,PC,D0.W),D0
       TRAP    #0
       LINK    A0,#$4E51
