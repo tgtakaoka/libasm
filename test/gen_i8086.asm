@@ -1847,6 +1847,7 @@
       OR     CX,[BP+SI]
       OR     CX,[BP+DI]
       OR     AX,14
+      PUSH   CS
       ADC    [BX+DI],DL
       ADC    [BP+SI],DL
       ADC    [BP+DI],DL

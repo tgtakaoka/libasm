@@ -133,6 +133,9 @@ static void test_data_transfer() {
     TEST("PUSH [BX+DI+52]",    0xFF, 0161, 0x34);
     TEST("PUSH [BP+SI+1234H]", 0xFF, 0262, 0x34, 0x12);
     TEST("PUSH ES",            0006);
+    TEST("PUSH CS",            0016);
+    TEST("PUSH SS",            0026);
+    TEST("PUSH DS",            0036);
 
     TEST("POP  BP",            0135);
     TEST("POP  [SI]",          0x8F, 0004);
@@ -142,7 +145,10 @@ static void test_data_transfer() {
     TEST("POP  [BX+SI]",       0x8F, 0000);
     TEST("POP  [BX+DI+52]",    0x8F, 0101, 0x34);
     TEST("POP  [BP+SI+1234H]", 0x8F, 0202, 0x34, 0x12);
+    TEST("POP  ES",            0007);
+    ETEST(REGISTER_NOT_ALLOWED, "POP  CS");
     TEST("POP  SS",            0027);
+    TEST("POP  DS",            0037);
 
     TEST("XCHG AL,CH",            0x86, 0305);
     TEST("XCHG [SI],CL",          0x86, 0014);

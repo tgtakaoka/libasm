@@ -62,6 +62,7 @@ enum AddrMode : uint8_t {
     M_ISTR = 22, // String instruction: MOVSi/CMPSi/STOSi/LODSi/SCASi
     M_MEM  = 23, // Memory address: [addr]
     M_DIR  = 24, // Direct mode: [nnnn]
+    M_CS   = 25, // Code Segment Register: CS
 };
 
 enum OprPos : uint8_t {

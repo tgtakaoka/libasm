@@ -210,11 +210,12 @@ Error DisI8086::decodeOperand(
     case M_CL:  outRegister(out, REG_CL); break;
     case M_AX:  outRegister(out, REG_AX); break;
     case M_DX:  outRegister(out, REG_DX); break;
+    case M_CS:
     case M_BREG:
     case M_WREG:
     case M_SREG:
         name = decodeRegister(insn, mode, pos);
-        if (pos == P_OSEG && name == REG_CS) // PUSH/POP CS
+        if (mode == M_CS && pos == P_NONE) // POP CS
             return setError(REGISTER_NOT_ALLOWED);
         outRegister(out, name);
         break;

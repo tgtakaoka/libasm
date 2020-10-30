@@ -96,7 +96,10 @@
         push    [bx+si]
         push    [bx+di+34H]
         push    [bp+si+1234H]
+        push    es
         push    cs
+        push    ss
+        push    ds
 ;;; Pop data from stack
         pop     bp
         pop     [si]
@@ -106,7 +109,10 @@
         pop     [bx+si]
         pop     [bx+di+34H]
         pop     [bp+si+1234H]
-        pop     cs
+	pop     es
+;       pop     cs
+	pop     ss
+        pop     ds
 ;;; Exchange data
         xchg    al,ch
         xchg    [si],cl

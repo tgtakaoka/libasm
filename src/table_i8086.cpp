@@ -50,6 +50,7 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0x03, ADD,    WORD, M_WREG, M_WMOD, P_REG,  P_MOD)
     E(0x01, ADD,    WORD, M_WMOD, M_WREG, P_MOD,  P_REG)
     E(0x06, PUSH,   WORD, M_SREG, M_NONE, P_OSEG, P_NONE)
+    E(0x0F, POP,    WORD, M_CS,   M_NONE, P_NONE, P_NONE)
     E(0x07, POP,    WORD, M_SREG, M_NONE, P_OSEG, P_NONE)
     E(0x0A, OR,     BYTE, M_BREG, M_BMOD, P_REG,  P_MOD)
     E(0x08, OR,     BYTE, M_BMOD, M_BREG, P_MOD,  P_REG)
@@ -421,6 +422,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_BMOD || table == M_BMEM;
     if (opr == M_WDIR)
         return table == M_WMOD || table == M_WMEM;
+    if (opr == M_CS) return table == M_SREG;
     return false;
 }
 
@@ -433,7 +435,7 @@ static bool acceptModes(uint32_t flags, const Entry *entry) {
 static bool hasSize(AddrMode mode) {
     return mode == M_AX || mode == M_DX || mode == M_WREG
         || mode == M_AL || mode == M_CL || mode == M_BREG
-        || mode == M_SREG;
+        || mode == M_CS || mode == M_SREG;
 }
 
 static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {

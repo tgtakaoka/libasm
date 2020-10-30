@@ -158,7 +158,7 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
     if (RegI8086::isSegmentReg(reg)) {
         _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
-        op.mode = M_SREG;
+        op.mode = (reg == REG_CS) ? M_CS: M_SREG;
         return OK;
     }
     if (reg != REG_UNDEF) return setError(UNKNOWN_OPERAND);
@@ -297,6 +297,10 @@ Error AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
 Error AsmI8086::emitOperand(
     InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
     switch (mode) {
+    case M_CS:
+        if (pos == P_NONE)      // POP CS
+            return setError(REGISTER_NOT_ALLOWED);
+        /* Fall-through */
     case M_BREG:
     case M_WREG:
     case M_SREG:
