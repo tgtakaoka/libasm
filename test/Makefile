@@ -50,6 +50,7 @@ TEST_OUT=\
 	test_tms9995.hex \
 	test_tms99105.hex \
 	test_mc68000.s28 \
+	test_m68k.s28 \
 	test_z8001.hex \
 	test_z8002.hex \
 	test_ns32000.s28
@@ -74,17 +75,28 @@ test_z8001.hex: test_z8001.s
 		--section-start=text=0x010000 \
 		--section-start=bss1=0x0A1234 \
 		--section-start=bss2=0x0B5678
-	z8k-coff-objcopy -I coff-z8k -O ihex test_z8001.o /dev/stdout | tr -d '\r' > $@
+	z8k-coff-objcopy -I coff-z8k -O ihex test_z8001.o /dev/stdout | \
+		tr -d '\r' > $@
 test_z8002.hex: test_z8002.s
 	z8k-coff-as --warn -a=test_z8002.lst -o test_z8002.p $^
 	z8k-coff-ld -m z8002 --entry=0 -o test_z8002.o test_z8002.p \
 		--section-start=text=0x0000 \
 		--section-start=bss1=0x1234 \
 		--section-start=bss2=0x5678
-	z8k-coff-objcopy -I coff-z8k -O ihex test_z8002.o /dev/stdout | tr -d '\r' > $@
+	z8k-coff-objcopy -I coff-z8k -O ihex test_z8002.o /dev/stdout | \
+		tr -d '\r' > $@
 test_ns32000.s28: test_ns32000.s
 	ns32k-netbsd-as -m32032 --warn -a=test_ns32000.lst -o test_ns32000.p $^
-	ns32k-netbsd-ld -Ttext 0x10000 --oformat srec -o /dev/stdout test_ns32000.p | tr -d '\r' > $@
+	ns32k-netbsd-ld -Ttext 0x10000 --oformat srec -o /dev/stdout test_ns32000.p | \
+		tr -d '\r' > $@
+test_m68k.s28: test_m68k.s
+	m68k-elf-as -m68000 --warn --register-prefix-optional --base-size-default-16 \
+		-a=test_m68k.lst -o test_m68k.p $^
+	m68k-elf-ld --entry=0 -o test_m68k.o test_m68k.p
+	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len 32 \
+		--adjust-section-vma .text=0x10000 \
+		test_m68k.o /dev/stdout | \
+		tr -d '\r' > $@
 test_m6811.s19: test_m6811.s
 	m6811-elf-as -m68hc11 --warn -a=test_m6811.lst -o test_m6811.p $^
 	m6811-elf-ld -m m68hc11elf --entry=0 -o test_m6811.o test_m6811.p
