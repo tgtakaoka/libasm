@@ -144,22 +144,22 @@ static void test_data_transfer() {
     TEST(POP,  "BP",            0135);
     TEST(POP,  "SS",            0027);
 
-    TEST(XCHG, "AL,CH",            0x86, 0350);
-    TEST(XCHG, "[SI],CL",          0x86, 0014);
-    TEST(XCHG, "[1234H],DL",       0x86, 0026, 0x34, 0x12);
-    TEST(XCHG, "[DI-52],BL",       0x86, 0135, 0xCC);
-    TEST(XCHG, "[BP+1234H],AH",    0x86, 0246, 0x34, 0x12);
-    TEST(XCHG, "[BX+SI],CH",       0x86, 0050);
-    TEST(XCHG, "[BX+DI+52],DH",    0x86, 0161, 0x34);
-    TEST(XCHG, "[BP+SI+1234H],BH", 0x86, 0272, 0x34, 0x12);
-    TEST(XCHG, "AX,BP",            0x87, 0350);
-    TEST(XCHG, "[SI],CX",          0x87, 0014);
-    TEST(XCHG, "[1234H],DX",       0x87, 0026, 0x34, 0x12);
-    TEST(XCHG, "[DI-52],BX",       0x87, 0135, 0xCC);
-    TEST(XCHG, "[BP+1234H],SP",    0x87, 0246, 0x34, 0x12);
-    TEST(XCHG, "[BX+SI],BP",       0x87, 0050);
-    TEST(XCHG, "[BX+DI+52],SI",    0x87, 0161, 0x34);
-    TEST(XCHG, "[BP+SI+1234H],DI", 0x87, 0272, 0x34, 0x12);
+    TEST(XCHG, "AL,CH",            0x86, 0305);
+    TEST(XCHG, "CL,[SI]",          0x86, 0014);
+    TEST(XCHG, "DL,[1234H]",       0x86, 0026, 0x34, 0x12);
+    TEST(XCHG, "BL,[DI-52]",       0x86, 0135, 0xCC);
+    TEST(XCHG, "AH,[BP+1234H]",    0x86, 0246, 0x34, 0x12);
+    TEST(XCHG, "CH,[BX+SI]",       0x86, 0050);
+    TEST(XCHG, "DH,[BX+DI+52]",    0x86, 0161, 0x34);
+    TEST(XCHG, "BH,[BP+SI+1234H]", 0x86, 0272, 0x34, 0x12);
+    TEST(XCHG, "BP,AX",            0x87, 0350);
+    TEST(XCHG, "CX,[SI]",          0x87, 0014);
+    TEST(XCHG, "DX,[1234H]",       0x87, 0026, 0x34, 0x12);
+    TEST(XCHG, "BX,[DI-52]",       0x87, 0135, 0xCC);
+    TEST(XCHG, "SP,[BP+1234H]",    0x87, 0246, 0x34, 0x12);
+    TEST(XCHG, "BP,[BX+SI]",       0x87, 0050);
+    TEST(XCHG, "SI,[BX+DI+52]",    0x87, 0161, 0x34);
+    TEST(XCHG, "DI,[BP+SI+1234H]", 0x87, 0272, 0x34, 0x12);
     TEST(XCHG, "AX,BP",            0225);
 
     TEST(IN,   "AL,34H", 0xE4, 0x34);
@@ -984,6 +984,17 @@ static void test_logic() {
     TEST(AND, "WORD PTR [BX+SI],5678H",       0x81, 0040, 0x78, 0x56);
     TEST(AND, "WORD PTR [BX+DI-52],5678H",    0x81, 0141, 0xCC, 0x78, 0x56);
     TEST(AND, "WORD PTR [BP+SI+89ABH],5678H", 0x81, 0242, 0xAB, 0x89, 0x78, 0x56);
+    TEST(AND, "AX,56H",                       0x83, 0340, 0x56);
+    TEST(AND, "AX,-16",                       0x83, 0340, 0xF0);
+    TEST(AND, "CX,56H",                       0x83, 0341, 0x56);
+    TEST(AND, "CX,-16",                       0x83, 0341, 0xF0);
+    TEST(AND, "WORD PTR [SI],56H",            0x83, 0044, 0x56);
+    TEST(AND, "WORD PTR [1234H],56H",         0x83, 0046, 0x34, 0x12, 0x56);
+    TEST(AND, "WORD PTR [DI+52],56H",         0x83, 0145, 0x34, 0x56);
+    TEST(AND, "WORD PTR [BP+1234H],56H",      0x83, 0246, 0x34, 0x12, 0x56);
+    TEST(AND, "WORD PTR [BX+SI],56H",         0x83, 0040, 0x56);
+    TEST(AND, "WORD PTR [BX+DI-52],56H",      0x83, 0141, 0xCC, 0x56);
+    TEST(AND, "WORD PTR [BP+SI+89ABH],56H",   0x83, 0242, 0xAB, 0x89, 0x56);
 
     TEST(AND, "AL,56H",   0x24, 0x56);
     TEST(AND, "AX,5678H", 0x25, 0x78, 0x56);
@@ -1084,6 +1095,17 @@ static void test_logic() {
     TEST(OR, "WORD PTR [BX+SI],5678H",       0x81, 0010, 0x78, 0x56);
     TEST(OR, "WORD PTR [BX+DI-52],5678H",    0x81, 0111, 0xCC, 0x78, 0x56);
     TEST(OR, "WORD PTR [BP+SI+89ABH],5678H", 0x81, 0212, 0xAB, 0x89, 0x78, 0x56);
+    TEST(OR, "AX,56H",                       0x83, 0310, 0x56);
+    TEST(OR, "AX,-16",                       0x83, 0310, 0xF0);
+    TEST(OR, "CX,56H",                       0x83, 0311, 0x56);
+    TEST(OR, "CX,-16",                       0x83, 0311, 0xF0);
+    TEST(OR, "WORD PTR [SI],56H",            0x83, 0014, 0x56);
+    TEST(OR, "WORD PTR [1234H],56H",         0x83, 0016, 0x34, 0x12, 0x56);
+    TEST(OR, "WORD PTR [DI+52],56H",         0x83, 0115, 0x34, 0x56);
+    TEST(OR, "WORD PTR [BP+1234H],56H",      0x83, 0216, 0x34, 0x12, 0x56);
+    TEST(OR, "WORD PTR [BX+SI],56H",         0x83, 0010, 0x56);
+    TEST(OR, "WORD PTR [BX+DI-52],56H",      0x83, 0111, 0xCC, 0x56);
+    TEST(OR, "WORD PTR [BP+SI+89ABH],56H",   0x83, 0212, 0xAB, 0x89, 0x56);
 
     TEST(OR, "AL,56H",   0x0C, 0x56);
     TEST(OR, "AX,5678H", 0x0D, 0x78, 0x56);
@@ -1141,6 +1163,17 @@ static void test_logic() {
     TEST(XOR, "WORD PTR [BX+SI],5678H",       0x81, 0060, 0x78, 0x56);
     TEST(XOR, "WORD PTR [BX+DI-52],5678H",    0x81, 0161, 0xCC, 0x78, 0x56);
     TEST(XOR, "WORD PTR [BP+SI+89ABH],5678H", 0x81, 0262, 0xAB, 0x89, 0x78, 0x56);
+    TEST(XOR, "AX,56H",                       0x83, 0360, 0x56);
+    TEST(XOR, "AX,-16",                       0x83, 0360, 0xF0);
+    TEST(XOR, "CX,56H",                       0x83, 0361, 0x56);
+    TEST(XOR, "CX,-16",                       0x83, 0361, 0xF0);
+    TEST(XOR, "WORD PTR [SI],56H",            0x83, 0064, 0x56);
+    TEST(XOR, "WORD PTR [1234H],56H",         0x83, 0066, 0x34, 0x12, 0x56);
+    TEST(XOR, "WORD PTR [DI+52],56H",         0x83, 0165, 0x34, 0x56);
+    TEST(XOR, "WORD PTR [BP+1234H],56H",      0x83, 0266, 0x34, 0x12, 0x56);
+    TEST(XOR, "WORD PTR [BX+SI],56H",         0x83, 0060, 0x56);
+    TEST(XOR, "WORD PTR [BX+DI-52],56H",      0x83, 0161, 0xCC, 0x56);
+    TEST(XOR, "WORD PTR [BP+SI+89ABH],56H",   0x83, 0262, 0xAB, 0x89, 0x56);
 
     TEST(XOR, "AL,56H",   0x34, 0x56);
     TEST(XOR, "AX,5678H", 0x35, 0x78, 0x56);
@@ -1352,8 +1385,6 @@ static void test_illegal() {
                 }
                 if (reg == 7)
                     ILLEGAL(0xFF, modReg);
-                if (reg == 1 || reg == 4 || reg == 6)
-                    ILLEGAL(0x83, modReg);
                 if (reg != 0 && reg != 1)
                     ILLEGAL(0xFE, modReg);
                 if (reg != 0) {

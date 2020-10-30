@@ -32,8 +32,12 @@ class AsmI8086
 public:
     AsmI8086() : Assembler(_parser, TableI8086) {}
 
+    void reset() override { setOptimizeSegment(false); }
+    void setOptimizeSegment(bool enable) { _optimizeSegment = enable; }
+
 private:
     IntelValueParser _parser;
+    bool _optimizeSegment;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

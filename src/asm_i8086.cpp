@@ -252,9 +252,12 @@ uint8_t AsmI8086::Operand::encodeR_m() const {
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) {
     if (seg == REG_UNDEF) return 0;
     const Config::opcode_t segPrefix = TableI8086.segOverridePrefix(seg);
-    if (base == REG_BP || base == REG_SP)
-        return seg == REG_SS ? 0 : segPrefix;
-    return seg == REG_DS ? 0 : segPrefix;
+    if (_optimizeSegment) {
+        if (base == REG_BP || base == REG_SP)
+            return seg == REG_SS ? 0 : segPrefix;
+        return seg == REG_DS ? 0 : segPrefix;
+    }
+    return segPrefix;
 }
 
 Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {

@@ -41,9 +41,9 @@ static void test_cpu() {
 }
 
 static void test_data_transfer() {
-    TEST("MOV AL,CL",            0x88, 0310);
-    TEST("MOV DL,BL",            0x88, 0332);
-    TEST("MOV AH,CH",            0x88, 0354);
+    TEST("MOV AL,CL",            0x8A, 0301);
+    TEST("MOV DL,BL",            0x8A, 0323);
+    TEST("MOV AH,CH",            0x8A, 0345);
     TEST("MOV [SI],DH",          0x88, 0064);
     TEST("MOV [SI+0],DH",        0x88, 0064);
     TEST("MOV [1234H],BH",       0x88, 0076, 0x34, 0x12);
@@ -62,9 +62,9 @@ static void test_data_transfer() {
     TEST("MOV DL,[BX+SI]",       0x8A, 0020);
     TEST("MOV BL,[BX+DI-52]",    0x8A, 0131, 0xCC);
     TEST("MOV AH,[BP+SI+1234H]", 0x8A, 0242, 0x34, 0x12);
-    TEST("MOV AX,CX",            0x89, 0310);
-    TEST("MOV DX,BX",            0x89, 0332);
-    TEST("MOV SP,BP",            0x89, 0354);
+    TEST("MOV AX,CX",            0x8B, 0301);
+    TEST("MOV DX,BX",            0x8B, 0323);
+    TEST("MOV SP,BP",            0x8B, 0345);
     TEST("MOV [SI],SI",          0x89, 0064);
     TEST("MOV [1234H],DI",       0x89, 0076, 0x34, 0x12);
     TEST("MOV [DI-52],AX",       0x89, 0105, 0xCC);
@@ -144,7 +144,7 @@ static void test_data_transfer() {
     TEST("POP  [BP+SI+1234H]", 0x8F, 0202, 0x34, 0x12);
     TEST("POP  SS",            0027);
 
-    TEST("XCHG AL,CH",            0x86, 0350);
+    TEST("XCHG AL,CH",            0x86, 0305);
     TEST("XCHG [SI],CL",          0x86, 0014);
     TEST("XCHG [1234H],DL",       0x86, 0026, 0x34, 0x12);
     TEST("XCHG [DI-52],BL",       0x86, 0135, 0xCC);
@@ -205,9 +205,9 @@ static void test_data_transfer() {
 }
 
 static void test_arithmetic() {
-    TEST("ADD AL,CL",            0x00, 0310);
-    TEST("ADD DL,BL",            0x00, 0332);
-    TEST("ADD AH,CH",            0x00, 0354);
+    TEST("ADD AL,CL",            0x02, 0301);
+    TEST("ADD DL,BL",            0x02, 0323);
+    TEST("ADD AH,CH",            0x02, 0345);
     TEST("ADD [SI],DH",          0x00, 0064);
     TEST("ADD [1234H],BH",       0x00, 0076, 0x34, 0x12);
     TEST("ADD [DI+52],AL",       0x00, 0105, 0x34);
@@ -222,9 +222,9 @@ static void test_arithmetic() {
     TEST("ADD DL,[BX+SI]",       0x02, 0020);
     TEST("ADD BL,[BX+DI-52]",    0x02, 0131, 0xCC);
     TEST("ADD AH,[BP+SI+1234H]", 0x02, 0242, 0x34, 0x12);
-    TEST("ADD AX,CX",            0x01, 0310);
-    TEST("ADD DX,BX",            0x01, 0332);
-    TEST("ADD SP,BP",            0x01, 0354);
+    TEST("ADD AX,CX",            0x03, 0301);
+    TEST("ADD DX,BX",            0x03, 0323);
+    TEST("ADD SP,BP",            0x03, 0345);
     TEST("ADD [SI],SI",          0x01, 0064);
     TEST("ADD [1234H],DI",       0x01, 0076, 0x34, 0x12);
     TEST("ADD [DI-52],AX",       0x01, 0105, 0xCC);
@@ -273,9 +273,9 @@ static void test_arithmetic() {
     TEST("ADD AL,56H",   0x04, 0x56);
     TEST("ADD AX,5678H", 0x05, 0x78, 0x56);
 
-    TEST("ADC AL,CL",            0x10, 0310);
-    TEST("ADC DL,BL",            0x10, 0332);
-    TEST("ADC AH,CH",            0x10, 0354);
+    TEST("ADC AL,CL",            0x12, 0301);
+    TEST("ADC DL,BL",            0x12, 0323);
+    TEST("ADC AH,CH",            0x12, 0345);
     TEST("ADC [SI],DH",          0x10, 0064);
     TEST("ADC [1234H],BH",       0x10, 0076, 0x34, 0x12);
     TEST("ADC [DI+52],AL",       0x10, 0105, 0x34);
@@ -290,9 +290,9 @@ static void test_arithmetic() {
     TEST("ADC DL,[BX+SI]",       0x12, 0020);
     TEST("ADC BL,[BX+DI-52]",    0x12, 0131, 0xCC);
     TEST("ADC AH,[BP+SI+1234H]", 0x12, 0242, 0x34, 0x12);
-    TEST("ADC AX,CX",            0x11, 0310);
-    TEST("ADC DX,BX",            0x11, 0332);
-    TEST("ADC SP,BP",            0x11, 0354);
+    TEST("ADC AX,CX",            0x13, 0301);
+    TEST("ADC DX,BX",            0x13, 0323);
+    TEST("ADC SP,BP",            0x13, 0345);
     TEST("ADC [SI],SI",          0x11, 0064);
     TEST("ADC [1234H],DI",       0x11, 0076, 0x34, 0x12);
     TEST("ADC [DI-52],AX",       0x11, 0105, 0xCC);
@@ -363,9 +363,9 @@ static void test_arithmetic() {
     TEST("AAA", 0x37);
     TEST("DAA", 0x27);
 
-    TEST("SUB AL,CL",            0x28, 0310);
-    TEST("SUB DL,BL",            0x28, 0332);
-    TEST("SUB AH,CH",            0x28, 0354);
+    TEST("SUB AL,CL",            0x2A, 0301);
+    TEST("SUB DL,BL",            0x2A, 0323);
+    TEST("SUB AH,CH",            0x2A, 0345);
     TEST("SUB [SI],DH",          0x28, 0064);
     TEST("SUB [1234H],BH",       0x28, 0076, 0x34, 0x12);
     TEST("SUB [DI+52],AL",       0x28, 0105, 0x34);
@@ -380,9 +380,9 @@ static void test_arithmetic() {
     TEST("SUB DL,[BX+SI]",       0x2A, 0020);
     TEST("SUB BL,[BX+DI-52]",    0x2A, 0131, 0xCC);
     TEST("SUB AH,[BP+SI+1234H]", 0x2A, 0242, 0x34, 0x12);
-    TEST("SUB AX,CX",            0x29, 0310);
-    TEST("SUB DX,BX",            0x29, 0332);
-    TEST("SUB SP,BP",            0x29, 0354);
+    TEST("SUB AX,CX",            0x2B, 0301);
+    TEST("SUB DX,BX",            0x2B, 0323);
+    TEST("SUB SP,BP",            0x2B, 0345);
     TEST("SUB [SI],SI",          0x29, 0064);
     TEST("SUB [1234H],DI",       0x29, 0076, 0x34, 0x12);
     TEST("SUB [DI-52],AX",       0x29, 0105, 0xCC);
@@ -431,9 +431,9 @@ static void test_arithmetic() {
     TEST("SUB AL,56H",   0x2C, 0x56);
     TEST("SUB AX,5678H", 0x2D, 0x78, 0x56);
 
-    TEST("SBB AL,CL",            0x18, 0310);
-    TEST("SBB DL,BL",            0x18, 0332);
-    TEST("SBB AH,CH",            0x18, 0354);
+    TEST("SBB AL,CL",            0x1A, 0301);
+    TEST("SBB DL,BL",            0x1A, 0323);
+    TEST("SBB AH,CH",            0x1A, 0345);
     TEST("SBB [SI],DH",          0x18, 0064);
     TEST("SBB [1234H],BH",       0x18, 0076, 0x34, 0x12);
     TEST("SBB [DI+52],AL",       0x18, 0105, 0x34);
@@ -448,9 +448,9 @@ static void test_arithmetic() {
     TEST("SBB DL,[BX+SI]",       0x1A, 0020);
     TEST("SBB BL,[BX+DI-52]",    0x1A, 0131, 0xCC);
     TEST("SBB AH,[BP+SI+1234H]", 0x1A, 0242, 0x34, 0x12);
-    TEST("SBB AX,CX",            0x19, 0310);
-    TEST("SBB DX,BX",            0x19, 0332);
-    TEST("SBB SP,BP",            0x19, 0354);
+    TEST("SBB AX,CX",            0x1B, 0301);
+    TEST("SBB DX,BX",            0x1B, 0323);
+    TEST("SBB SP,BP",            0x1B, 0345);
     TEST("SBB [SI],SI",          0x19, 0064);
     TEST("SBB [1234H],DI",       0x19, 0076, 0x34, 0x12);
     TEST("SBB [DI-52],AX",       0x19, 0105, 0xCC);
@@ -535,9 +535,9 @@ static void test_arithmetic() {
     TEST("NEG WORD PTR [BX+DI+52]",    0xF7, 0131, 0x34);
     TEST("NEG WORD PTR [BP+SI+1234H]", 0xF7, 0232, 0x34, 0x12);
 
-    TEST("CMP AL,CL",            0x38, 0310);
-    TEST("CMP DL,BL",            0x38, 0332);
-    TEST("CMP AH,CH",            0x38, 0354);
+    TEST("CMP AL,CL",            0x3A, 0301);
+    TEST("CMP DL,BL",            0x3A, 0323);
+    TEST("CMP AH,CH",            0x3A, 0345);
     TEST("CMP [SI],DH",          0x38, 0064);
     TEST("CMP [1234H],BH",       0x38, 0076, 0x34, 0x12);
     TEST("CMP [DI+52],AL",       0x38, 0105, 0x34);
@@ -552,9 +552,9 @@ static void test_arithmetic() {
     TEST("CMP DL,[BX+SI]",       0x3A, 0020);
     TEST("CMP BL,[BX+DI-52]",    0x3A, 0131, 0xCC);
     TEST("CMP AH,[BP+SI+1234H]", 0x3A, 0242, 0x34, 0x12);
-    TEST("CMP AX,CX",            0x39, 0310);
-    TEST("CMP DX,BX",            0x39, 0332);
-    TEST("CMP SP,BP",            0x39, 0354);
+    TEST("CMP AX,CX",            0x3B, 0301);
+    TEST("CMP DX,BX",            0x3B, 0323);
+    TEST("CMP SP,BP",            0x3B, 0345);
     TEST("CMP [SI],SI",          0x39, 0064);
     TEST("CMP [1234H],DI",       0x39, 0076, 0x34, 0x12);
     TEST("CMP [DI-52],AX",       0x39, 0105, 0xCC);
@@ -931,9 +931,9 @@ static void test_logic() {
     TEST("RCR WORD PTR [BX+DI+52],CL",    0xD3, 0131, 0x34);
     TEST("RCR WORD PTR [BP+SI+1234H],CL", 0xD3, 0232, 0x34, 0x12);
 
-    TEST("AND AL,CL",            0x20, 0310);
-    TEST("AND DL,BL",            0x20, 0332);
-    TEST("AND AH,CH",            0x20, 0354);
+    TEST("AND AL,CL",            0x22, 0301);
+    TEST("AND DL,BL",            0x22, 0323);
+    TEST("AND AH,CH",            0x22, 0345);
     TEST("AND [SI],DH",          0x20, 0064);
     TEST("AND [1234H],BH",       0x20, 0076, 0x34, 0x12);
     TEST("AND [DI+52],AL",       0x20, 0105, 0x34);
@@ -948,9 +948,9 @@ static void test_logic() {
     TEST("AND DL,[BX+SI]",       0x22, 0020);
     TEST("AND BL,[BX+DI-52]",    0x22, 0131, 0xCC);
     TEST("AND AH,[BP+SI+1234H]", 0x22, 0242, 0x34, 0x12);
-    TEST("AND AX,CX",            0x21, 0310);
-    TEST("AND DX,BX",            0x21, 0332);
-    TEST("AND SP,BP",            0x21, 0354);
+    TEST("AND AX,CX",            0x23, 0301);
+    TEST("AND DX,BX",            0x23, 0323);
+    TEST("AND SP,BP",            0x23, 0345);
     TEST("AND [SI],SI",          0x21, 0064);
     TEST("AND [1234H],DI",       0x21, 0076, 0x34, 0x12);
     TEST("AND [DI-52],AX",       0x21, 0105, 0xCC);
@@ -978,7 +978,7 @@ static void test_logic() {
     TEST("AND AX,5678H",                     0x25, 0x78, 0x56);
     TEST("AND AX,-16",                       0x25, 0xF0, 0xFF);
     TEST("AND CX,5678H",                     0x81, 0341, 0x78, 0x56);
-    TEST("AND CX,-16",                       0x81, 0341, 0xF0, 0xFF);
+    TEST("AND CX,-16",                       0x83, 0341, 0xF0);
     TEST("AND WORD PTR [SI],5678H",          0x81, 0044, 0x78, 0x56);
     TEST("AND WORD PTR [1234H],5678H",       0x81, 0046, 0x34, 0x12, 0x78, 0x56);
     TEST("AND WORD PTR [DI+52],5678H",       0x81, 0145, 0x34, 0x78, 0x56);
@@ -1049,9 +1049,9 @@ static void test_logic() {
     TEST("TEST AL,56H",   0xA8, 0x56);
     TEST("TEST AX,5678H", 0xA9, 0x78, 0x56);
 
-    TEST("OR AL,CL",            0x08, 0310);
-    TEST("OR DL,BL",            0x08, 0332);
-    TEST("OR AH,CH",            0x08, 0354);
+    TEST("OR AL,CL",            0x0A, 0301);
+    TEST("OR DL,BL",            0x0A, 0323);
+    TEST("OR AH,CH",            0x0A, 0345);
     TEST("OR [SI],DH",          0x08, 0064);
     TEST("OR [1234H],BH",       0x08, 0076, 0x34, 0x12);
     TEST("OR [DI+52],AL",       0x08, 0105, 0x34);
@@ -1066,9 +1066,9 @@ static void test_logic() {
     TEST("OR DL,[BX+SI]",       0x0A, 0020);
     TEST("OR BL,[BX+DI-52]",    0x0A, 0131, 0xCC);
     TEST("OR AH,[BP+SI+1234H]", 0x0A, 0242, 0x34, 0x12);
-    TEST("OR AX,CX",            0x09, 0310);
-    TEST("OR DX,BX",            0x09, 0332);
-    TEST("OR SP,BP",            0x09, 0354);
+    TEST("OR AX,CX",            0x0B, 0301);
+    TEST("OR DX,BX",            0x0B, 0323);
+    TEST("OR SP,BP",            0x0B, 0345);
     TEST("OR [SI],SI",          0x09, 0064);
     TEST("OR [1234H],DI",       0x09, 0076, 0x34, 0x12);
     TEST("OR [DI-52],AX",       0x09, 0105, 0xCC);
@@ -1096,7 +1096,7 @@ static void test_logic() {
     TEST("OR AX,5678H",                     0x0D, 0x78, 0x56);
     TEST("OR AX,-16",                       0x0D, 0xF0, 0xFF);
     TEST("OR CX,5678H",                     0x81, 0311, 0x78, 0x56);
-    TEST("OR CX,-16",                       0x81, 0311, 0xF0, 0xFF);
+    TEST("OR CX,-16",                       0x83, 0311, 0xF0);
     TEST("OR WORD PTR [SI],5678H",          0x81, 0014, 0x78, 0x56);
     TEST("OR WORD PTR [1234H],5678H",       0x81, 0016, 0x34, 0x12, 0x78, 0x56);
     TEST("OR WORD PTR [DI+52],5678H",       0x81, 0115, 0x34, 0x78, 0x56);
@@ -1108,9 +1108,9 @@ static void test_logic() {
     TEST("OR AL,56H",   0x0C, 0x56);
     TEST("OR AX,5678H", 0x0D, 0x78, 0x56);
 
-    TEST("XOR AL,CL",            0x30, 0310);
-    TEST("XOR DL,BL",            0x30, 0332);
-    TEST("XOR AH,CH",            0x30, 0354);
+    TEST("XOR AL,CL",            0x32, 0301);
+    TEST("XOR DL,BL",            0x32, 0323);
+    TEST("XOR AH,CH",            0x32, 0345);
     TEST("XOR [SI],DH",          0x30, 0064);
     TEST("XOR [1234H],BH",       0x30, 0076, 0x34, 0x12);
     TEST("XOR [DI+52],AL",       0x30, 0105, 0x34);
@@ -1125,9 +1125,9 @@ static void test_logic() {
     TEST("XOR DL,[BX+SI]",       0x32, 0020);
     TEST("XOR BL,[BX+DI-52]",    0x32, 0131, 0xCC);
     TEST("XOR AH,[BP+SI+1234H]", 0x32, 0242, 0x34, 0x12);
-    TEST("XOR AX,CX",            0x31, 0310);
-    TEST("XOR DX,BX",            0x31, 0332);
-    TEST("XOR SP,BP",            0x31, 0354);
+    TEST("XOR AX,CX",            0x33, 0301);
+    TEST("XOR DX,BX",            0x33, 0323);
+    TEST("XOR SP,BP",            0x33, 0345);
     TEST("XOR [SI],SI",          0x31, 0064);
     TEST("XOR [1234H],DI",       0x31, 0076, 0x34, 0x12);
     TEST("XOR [DI-52],AX",       0x31, 0105, 0xCC);
@@ -1155,7 +1155,7 @@ static void test_logic() {
     TEST("XOR AX,5678H",                     0x35, 0x78, 0x56);
     TEST("XOR AX,-16",                       0x35, 0xF0, 0xFF);
     TEST("XOR CX,5678H",                     0x81, 0361, 0x78, 0x56);
-    TEST("XOR CX,-16",                       0x81, 0361, 0xF0, 0xFF);
+    TEST("XOR CX,-16",                       0x83, 0361, 0xF0);
     TEST("XOR WORD PTR [SI],5678H",          0x81, 0064, 0x78, 0x56);
     TEST("XOR WORD PTR [1234H],5678H",       0x81, 0066, 0x34, 0x12, 0x78, 0x56);
     TEST("XOR WORD PTR [DI+52],5678H",       0x81, 0165, 0x34, 0x78, 0x56);
@@ -1335,21 +1335,21 @@ static void test_segment_override() {
     TEST("MOV CS:[DI],AH",    0x2E, 0x88, 0045);
     TEST("MOV CS:[1234H],AH", 0x2E, 0x88, 0046, 0x34, 0x12);
     TEST("MOV SS:[BX],AH",    0x36, 0x88, 0047);
-    TEST("MOV SS:[BP],AH",          0x88, 0146, 0x00);
+    TEST("MOV SS:[BP],AH",    0x36, 0x88, 0146, 0x00);
     TEST("MOV SS:[SI],AH",    0x36, 0x88, 0044);
     TEST("MOV SS:[DI],AH",    0x36, 0x88, 0045);
     TEST("MOV SS:[1234H],AH", 0x36, 0x88, 0046, 0x34, 0x12);
-    TEST("MOV DS:[BX],AH",          0x88, 0047);
+    TEST("MOV DS:[BX],AH",    0x3E, 0x88, 0047);
     TEST("MOV DS:[BP],AH",    0x3E, 0x88, 0146, 0x00);
-    TEST("MOV DS:[SI],AH",          0x88, 0044);
-    TEST("MOV DS:[DI],AH",          0x88, 0045);
-    TEST("MOV DS:[1234H],AH",       0x88, 0046, 0x34, 0x12);
+    TEST("MOV DS:[SI],AH",    0x3E, 0x88, 0044);
+    TEST("MOV DS:[DI],AH",    0x3E, 0x88, 0045);
+    TEST("MOV DS:[1234H],AH", 0x3E, 0x88, 0046, 0x34, 0x12);
     TEST("INC BYTE PTR SS:[SI]",    0x36, 0xFE, 0004);
 
     TEST("JMP ES:[SI]", 0x26, 0xFF, 0044);
     TEST("JMP CS:[SI]", 0x2E, 0xFF, 0044);
     TEST("JMP SS:[SI]", 0x36, 0xFF, 0044);
-    TEST("JMP DS:[SI]",       0xFF, 0044);
+    TEST("JMP DS:[SI]", 0x3E, 0xFF, 0044);
 
     TEST("MOVSB ES:[DI],ES:[SI]", 0x26, 0xA4);
     TEST("MOVSB ES:[DI],CS:[SI]", 0x2E, 0xA4);
@@ -1377,6 +1377,14 @@ static void test_segment_override() {
     ETEST(ILLEGAL_SEGMENT, "SCASB CS:[DI]");
     ETEST(ILLEGAL_SEGMENT, "SCASW SS:[DI]");
     ETEST(ILLEGAL_SEGMENT, "SCASW DS:[DI]");
+
+    asm8086.setOptimizeSegment(true);
+    TEST("MOV SS:[BP],AH",    0x88, 0146, 0x00);
+    TEST("MOV DS:[BX],AH",    0x88, 0047);
+    TEST("MOV DS:[SI],AH",    0x88, 0044);
+    TEST("MOV DS:[DI],AH",    0x88, 0045);
+    TEST("MOV DS:[1234H],AH", 0x88, 0046, 0x34, 0x12);
+    TEST("JMP DS:[SI]",       0xFF, 0044);
 }
 
 static void test_undefined_symbol() {
@@ -1444,7 +1452,7 @@ static void test_undefined_symbol() {
 }
 
 static void test_comment() {
-    TEST("MOV AH , CH",                 0x88, 0354);
+    TEST("MOV AH , CH",                 0x8A, 0345);
     TEST("MOV [ SI ] , DH",             0x88, 0064);
     TEST("MOV [ 1234H ] , BH",          0x88, 0076, 0x34, 0x12);
     TEST("MOV [ DI + 52 ] ,AL",         0x88, 0105, 0x34);
