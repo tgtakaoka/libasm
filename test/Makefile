@@ -46,6 +46,7 @@ TEST_OUT=\
 	test_ins8070.hex \
 	test_cdp1802.hex \
 	test_i8086.hex \
+	test_i386.hex \
 	test_tms9900.hex \
 	test_tms9995.hex \
 	test_tms99105.hex \
@@ -89,6 +90,13 @@ test_ns32000.s28: test_ns32000.s
 	ns32k-netbsd-as -m32032 --warn -a=test_ns32000.lst -o test_ns32000.p $^
 	ns32k-netbsd-ld -Ttext 0x10000 --oformat srec -o /dev/stdout test_ns32000.p | \
 		tr -d '\r' > $@
+test_i386.hex: test_i386.s
+	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel -mmnemonic=intel \
+		-a=test_i386.lst -o test_i386.p $^
+	i386-elf-ld --entry=0 -o test_i386.o test_i386.p \
+		--section-start=.text=0x1000
+	i386-elf-objcopy -I elf32-i386 -O ihex test_i386.o /dev/stdout | \
+		srec_cat /dev/stdin -intel -output $@ -Intel -line-length=76
 test_m68k.s28: test_m68k.s
 	m68k-elf-as -m68000 --warn --register-prefix-optional --base-size-default-16 \
 		-a=test_m68k.lst -o test_m68k.p $^
