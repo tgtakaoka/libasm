@@ -1,0 +1,375 @@
+;;; Copyright 2020 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+
+;        include "test_mc6800.inc"
+;;; 0X
+        nop
+        tap
+        tpa
+        inx
+        dex
+        clv
+        sev
+        clc
+        sec
+        cli
+        sei
+;;; 1X
+        sba
+        cba
+        tab
+        tba
+        daa
+        aba
+;;; 2X
+        bra     (.+0x23)
+        bhi     (.+0x25)
+        bls     (.+0x26)
+        bcc     (.+0x27)
+        bcs     (.+0x28)
+        bhs     (.+0x27)
+        blo     (.+0x28)
+        bne     (.+0x29)
+        beq     (.+0x2a)
+        bvc     (.+0x2b)
+        bvs     (.+0x2c)
+        bpl     (.+0x2d)
+        bmi     (.+0x2e)
+        bge     (.+0x2f)
+        blt     (.+0x30)
+        bge     (.+0x31)
+        ble     (.+0x32)
+;;; 3X
+        tsx
+        ins
+        pula
+        pulb
+        des
+        txs
+        psha
+        pshb
+        rts
+        rti
+        wai
+        swi
+;;; 4X
+        nega
+        coma
+        lsra
+        rora
+        asra
+        lsla
+        asla
+        rola
+        deca
+        inca
+        tsta
+        clra
+;;; 5X
+        negb
+        comb
+        lsrb
+        rorb
+        asrb
+        lslb
+        aslb
+        rolb
+        decb
+        incb
+        tstb
+        clrb
+;;; 6X
+        neg     0,x
+        com     0,x
+        lsr     1,x
+        ror     6,x
+        asr     8,x
+        lsl     9,x
+        asl     9,x
+        rol     10,x
+        dec     11,x
+        inc     13,x
+        tst     14,x
+        jmp     15,x
+        clr     255,x
+;;; 7X
+        neg     0x7172
+        com     0x7475
+        lsr     0x7576
+        ror     0x7778
+        asr     0x7879
+        lsl     0x797a
+        asl     0x797a
+        rol     0x7a7b
+        dec     0x7b7c
+        inc     0x7d7e
+        tst     0x7e7f
+        jmp     0x7f80
+        clr     0x8081
+;;; 8X
+        suba    #0x81
+        cmpa    #0x82
+        sbca    #0x83
+        anda    #0x85
+        bita    #0x86
+        ldaa    #0x87
+        eora    #0x89
+        adca    #0x8a
+        oraa    #0x8b
+        adda    #0x8c
+        cpx     #0x8d8e
+        bsr     (.-0x70)
+        lds     #0x8f90
+;;; 9X
+        suba    *0x91
+        cmpa    *0x92
+        sbca    *0x93
+        anda    *0x95
+        bita    *0x96
+        ldaa    *0x97
+        staa    *0x98
+        eora    *0x99
+        adca    *0x9a
+        oraa    *0x9b
+        adda    *0x9c
+        cpx     *0x9d
+        lds     *0x9f
+        sts     *0xa0
+;;; AX
+        suba    0,x
+        cmpa    0,x
+        sbca    1,x
+        anda    2,x
+        bita    3,x
+        ldaa    4,x
+        staa    5,x
+        eora    6,x
+        adca    127,x
+        oraa    128,x
+        adda    255,x
+        cpx     0,x
+        jsr     2,x
+        lds     4,x
+        sts     6,x
+;;; BX
+        suba    0xb1b2
+        suba    0xb1b2
+        cmpa    0xb2b3
+        sbca    0xb3b4
+        anda    0xb5b6
+        bita    0xb6b7
+        ldaa    0xb7b9
+        staa    0xb8b9
+        eora    0xb9ba
+        adca    0xbabb
+        oraa    0xbbbc
+        adda    0xbcbd
+        cpx     0xbdbe
+        jsr     0xbebf
+        lds     0xbfc0
+        sts     0xc0c1
+;;; CX
+        subb    #0xc1
+        cmpb    #0xc2
+        sbcb    #0xc3
+        andb    #0xc5
+        bitb    #0xc6
+        ldab    #0xc7
+        eorb    #0xc8
+        adcb    #0xc9
+        orab    #0xca
+        addb    #0xcb
+        ldx     #0xcdce
+;;; DX
+        subb    *0xd1
+        cmpb    *0xd2
+        sbcb    *0xd3
+        andb    *0xd5
+        bitb    *0xd6
+        ldab    *0xd7
+        stab    *0xd8
+        eorb    *0xd9
+        adcb    *0xda
+        orab    *0xdb
+        addb    *0xdc
+        ldx     *0xdf
+        stx     *0xe0
+;;; EX
+        subb    0,x
+        cmpb    0,x
+        sbcb    1,x
+        andb    2,x
+        bitb    3,x
+        ldab    4,x
+        stab    5,x
+        eorb    0,x
+        adcb    127,x
+        orab    128,x
+        addb    255,x
+        ldx     4,x
+        stx     6,x
+;;; FX
+        subb    0xf1f2
+        cmpb    0xf2f3
+        sbcb    0xf3f4
+        andb    0xf5f6
+        bitb    0xf6f7
+        ldab    0xf7f8
+        stab    0xf8f9
+        eorb    0xf9fa
+        adcb    0xfafb
+        orab    0xfbfc
+        addb    0xfcfd
+        ldx     0xff00
+        stx     0x0001
+
+        .align  5
+;        include "test_mc6801.inc"
+;;; 0X
+        lsrd
+        asld
+        lsld
+;;; 2X
+        brn     (.+0x24)
+;;; 3X
+        pulx
+        abx
+        pshx
+        mul
+;;; 8X
+        subd    #0x8485
+;;; 9X
+        subd    *0x94
+        jsr     *0x9e
+;;; AX
+        subd    164,x
+;;; BX
+        subd    0xb4b5
+;;; CX
+        addd    #0xc4c5
+        ldd     #0xcdce
+;;; DX
+        addd    *0xd4
+        ldd     *0xdd
+        std     *0xde
+;;; EX
+        addd    228,x
+        ldd     237,x
+        std     238,x
+;;; FX
+        addd    0xf4f5
+        ldd     0xfdfe
+        std     0xfeff
+
+        .align  5
+;        include "test_mc68hc11.inc"
+;;; 0X
+        idiv
+        fdiv
+;;; 1X
+        brset   *0x13 #0x14 (.+0x19)
+        brclr   *0x14 #0x15 (.+0x1A)
+        bset    *0x15 #0x16
+        bclr    *0x16 #0x17
+        bset    0x1D,x #0x1E
+        bclr    0x1E,x #0x1F
+        brset   0x1F,x #0x20 (.+0x25)
+        brclr   0x20,x #0x21 (.+0x26)
+;;; 8X
+        xgdx
+;;; CX
+        stop
+;;; 180X
+        iny
+        dey
+;;; 181X
+        bset    *0x1D,y #0x1E
+        bclr    *0x1E,y #0x1F
+        brset   0x1F,y #0x20 (.+0x25)
+        brclr   0x20,y #0x21 (.+0x26)
+;;; 183X
+        tsy
+        tys
+        puly
+        aby
+        pshy
+;;; 186X
+        neg     0,y
+        com     0,y
+        lsr     1,y
+        ror     6,y
+        asr     8,y
+        lsl     9,y
+        asl     9,y
+        rol     10,y
+        dec     11,y
+        inc     13,y
+	tst     14,y
+        jmp     15,y
+        clr     255,y
+;;; 188X
+        cpy     #0x8d8e
+        xgdy
+;;; 189X
+        cpy     *0x9d
+;;; 18AX
+        suba    0,y
+        cmpa    0,y
+        sbca    0,y
+        subd    1,y
+        anda    2,y
+        bita    3,y
+        ldaa    4,y
+        staa    5,y
+        eora    6,y
+        adca    127,y
+        oraa    128,y
+        adda    255,y
+        cpy     0,y
+        jsr     2,y
+        lds     4,y
+        sts     6,y
+;;; 18BX
+        cpy     0xbdbe
+;;; 18CX
+        ldy     #0xcfd0
+;;; 18DX
+        ldy     *0xdf
+        sty     *0xe0
+;;; 18EX
+        addd    0xe4,y
+        ldd     0xed,y
+        ldy     0xef,y
+        sty     0xf0,y
+;;; 10FX
+        ldy     0xff00
+        sty     0x1234
+;;; 1AXX
+        cpd     #0x8485
+        cpd     *0x94
+        cpd     0xa4,x
+        cpy     0xad,x
+        cpd     0xb4b5
+        ldy     0xef,x
+        sty     0xf0,x
+;;; CDXX
+        cpd     0xa4,y
+        cpx     0xad,y
+        ldx     0xef,y
+        stx     0xf0,y
+
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:

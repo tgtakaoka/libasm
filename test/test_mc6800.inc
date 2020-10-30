@@ -128,7 +128,7 @@
         oraa    #$8b
         adda    #$8c
         cpx     #$8d8e
-        bsr     $008e
+        bsr     *-$70
         lds     #$8f90
 ;;; 9X
         suba    $91

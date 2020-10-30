@@ -24,6 +24,7 @@ all: \
 	test_mc6801.s19 \
 	test_hd6301.s19 \
 	test_mc68hc11.s19 \
+	test_m6811.s19 \
 	test_mos6502.s19 \
 	test_w65sc02.s19 \
 	test_r65c02.s19 \
@@ -82,6 +83,13 @@ test_z8002.hex: test_z8002.s
 test_ns32000.s28: test_ns32000.s
 	ns32k-netbsd-as -m32032 --warn -a=test_ns32000.lst -o test_ns32000.p $^
 	ns32k-netbsd-ld -Ttext 0x10000 --oformat srec -o /dev/stdout test_ns32000.p | tr -d '\r' > $@
+test_m6811.s19: test_m6811.s
+	m6811-elf-as -m68hc11 --warn -a=test_m6811.lst -o test_m6811.p $^
+	m6811-elf-ld -m m68hc11elf --entry=0 -o test_m6811.o test_m6811.p
+	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len 32 \
+		--adjust-section-vma .text=0 \
+		test_m6811.o /dev/stdout | \
+		tr -d '\r' > $@
 
 .PHONY: clean clean-obj test \
 	test_mc6809  \
