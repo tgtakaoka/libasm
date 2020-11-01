@@ -410,10 +410,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_DIR)           // checked by |acceptSize| later.
         return table == M_BMOD || table == M_BMEM || table == M_BDIR
             || table == M_WMOD || table == M_WMEM || table == M_WDIR;
-    if (opr == M_VAL1 || opr == M_VAL3) opr = M_IMM;
-    if (opr == M_IMM)
-        return table == M_IOA || table == M_REL8 || table == M_REL;
-    if (opr == M_IMM8)
+    if (opr == M_IMM || opr == M_IMM8 || opr == M_VAL1 || opr == M_VAL3)
         return table == M_IMM || table == M_IOA
             || table == M_REL8 || table == M_REL;
     if (opr == M_BMEM) return table == M_BMOD;

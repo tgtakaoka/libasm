@@ -107,6 +107,12 @@ static void test_data_transfer() {
     TEST("MOV [1234H],AL", 0xA2, 0x34, 0x12);
     TEST("MOV [1234H],AX", 0xA3, 0x34, 0x12);
 
+    // 1 and 3 are special values for rotate/shift and INT.
+    TEST("MOV BL,1", 0263, 0x01);
+    TEST("MOV CL,3", 0261, 0x03);
+    TEST("IN  AL,1", 0xE4, 0x01);
+    TEST("OUT 3,AL", 0xE6, 0x03);
+
     TEST("MOV AX,ES",              0x8C, 0300);
     TEST("MOV [SI],CS",            0x8C, 0014);
     TEST("MOV [89ABH],SS",         0x8C, 0026, 0xAB, 0x89);
