@@ -12,13 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	cpu     8080
-        z80syntax exclusive
+        cpu     TMS9900
 
-        include "test_i8080_z80syn.inc"
+        include "test_tms9900.inc"
 
         end
-
+        
 ;;; Local Variables:
 ;;; mode: asm
 ;;; End:

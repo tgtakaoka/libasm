@@ -12,7 +12,7 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	cpu     8085
+        cpu     8085
         z80syntax exclusive
 
         include "test_i8080_z80syn.inc"

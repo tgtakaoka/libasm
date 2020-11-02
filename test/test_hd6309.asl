@@ -12,12 +12,16 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	cpu     TMS9900
+        cpu     6309
+        assume  dpr:$00
 
-        include "test_tms9900.inc"
+        include "test_mc6809.inc"
+
+        align   32
+        include "test_hd6309.inc"
 
         end
-        
+
 ;;; Local Variables:
 ;;; mode: asm
 ;;; End:

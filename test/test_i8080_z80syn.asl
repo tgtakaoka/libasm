@@ -12,13 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	cpu     6309
-        assume  dpr:$00
+        cpu     8080
+        z80syntax exclusive
 
-	include "test_mc6809.inc"
-
-        align   32
-	include "test_hd6309.inc"
+        include "test_i8080_z80syn.inc"
 
         end
 

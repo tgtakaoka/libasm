@@ -12,8 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     8080
-	include "test_i8080.inc"
+        cpu     6809
+        assume  dpr:$00
+
+        include "test_mc6809.inc"
 
         end
 

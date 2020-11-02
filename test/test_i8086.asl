@@ -109,9 +109,9 @@
         pop     [bx+si]
         pop     [bx+di+34H]
         pop     [bp+si+1234H]
-	pop     es
+        pop     es
 ;       pop     cs
-	pop     ss
+        pop     ss
         pop     ds
 ;;; Exchange data
         xchg    al,ch
@@ -1365,7 +1365,7 @@
         mov     ds:[di],ah
         mov     ds:[1234H],ah
 
-	jmp     es:[si]
+        jmp     es:[si]
         jmp     cs:[si]
         jmp     ss:[si]
         jmp     ds:[si]

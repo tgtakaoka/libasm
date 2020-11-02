@@ -12,12 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-	cpu     6809
-        assume  dpr:$00
+        cpu     8080
+        include "test_i8080.inc"
 
-        include "test_mc6809.inc"
-
-	end
+        end
 
 ;;; Local Variables:
 ;;; mode: asm

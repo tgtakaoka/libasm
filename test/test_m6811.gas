@@ -315,7 +315,7 @@
         rol     10,y
         dec     11,y
         inc     13,y
-	tst     14,y
+        tst     14,y
         jmp     15,y
         clr     255,y
 ;;; 188X

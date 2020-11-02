@@ -363,7 +363,7 @@
         movusw  r2, r3
         movusd  r4, r5
 # Longest instruction
-	extd    r1, 0x112233(0x334455(fp))[r3:w], 0x556677(0x778899(sb))[r4:w], 32
+        extd    r1, 0x112233(0x334455(fp))[r3:w], 0x556677(0x778899(sb))[r4:w], 32
 # Register
         addw    r1, r2
         addf    f1, f2
