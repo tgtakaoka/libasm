@@ -18,17 +18,20 @@
 
 namespace libasm {
 
+void Disassembler::setUppercase(bool uppercase) {
+    _formatter.setUppercase(uppercase);
+    _regBase.setUppercase(uppercase);
+}
+
 Error Disassembler::decode(
     DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     _symtab = symtab;
-    _formatter.setUppercase(_uppercase);
-    _regBase.setUppercase(_uppercase);
 
     resetError();
     *operands = 0;
     insn.resetAddress(memory.address());
     decode(memory, insn, operands);
-    if (!_uppercase) insn.toLowerName();
+    if (!_regBase.isUppercase()) insn.toLowerName();
     return getError();
 }
 

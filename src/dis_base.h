@@ -39,7 +39,7 @@ public:
         DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
     ValueFormatter &getFormatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
-    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    void setUppercase(bool uppercase);
     virtual void reset() {}
 
     const char *listCpu() const { return _table.listCpu(); }
@@ -52,7 +52,6 @@ protected:
     TableBase &_table;
     SymbolTable *_symtab;
     bool _relativeTarget = false;
-    bool _uppercase = false;
 
     Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
         : _formatter(formatter),

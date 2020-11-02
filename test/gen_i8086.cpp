@@ -32,11 +32,16 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis8086);
+    TestGenerator<Config> generator(dis8086, 0x1000);
     generator
         .generate(driver, filterRepeat)
         .generate(driver, 0xF2)
-        .generate(driver, 0xF3);
+        .generate(driver, 0xF3)
+        // segment override prefixes
+        .generate(driver, 0x26)
+        .generate(driver, 0x2E)
+        .generate(driver, 0x36)
+        .generate(driver, 0x3E);
 
     return driver.close();
 }

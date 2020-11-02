@@ -24,6 +24,7 @@
 class RegBase {
 public:
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    bool isUppercase() const { return _uppercase; }
 
     static bool isidchar(const char c) {
         return isalnum(c) || c == '_';
