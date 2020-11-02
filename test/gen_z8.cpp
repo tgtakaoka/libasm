@@ -29,7 +29,9 @@ int main(int argc, const char **argv) {
         return 1;
 
     TestGenerator<Config> generator(disz8, 0x0100);
-    generator.generate(driver);
+    generator
+        .generate(driver)
+        .generate(driver, TableZ8::SRP);
 
     return driver.close();
 }

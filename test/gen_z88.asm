@@ -65,8 +65,8 @@
       JP      LE,002EH
       EXIT
       SRP0    #30H
-      SRP     #34H
-      SRP1    #34H
+      SRP1    #38H
+      SRP     #40H
       SBC     R3,R3
       SBC     R3,@R4
       SBC     35H,>00H

@@ -175,10 +175,10 @@ Error AsmZ8::encodePostByte(
         uint8_t srp = dstOp.val16;
         if (post == P2_0) {     // SRP
             if (srp & 0xf)
-                return setError(ILLEGAL_CONSTANT); // TODO: Should be warning.
+                return setError(OPERAND_NOT_ALLOWED); // TODO: Should be warning.
         } else {                // SRP0, SRP1
             if (srp & 0x7)
-                return setError(ILLEGAL_CONSTANT); // TODO: Should be warning.
+                return setError(OPERAND_NOT_ALLOWED); // TODO: Should be warning.
             if (post == P2_1) srp |= 1;
             if (post == P2_2) srp |= 2;
         }
@@ -257,7 +257,7 @@ Error AsmZ8::setRp(
     if (strcasecmp_P(insn.name(), name)) return UNKNOWN_INSTRUCTION;
     const uint16_t rp = parseExpr16(scan);
     if (getError() != OK || !(this->*set)(rp))
-        setError(ILLEGAL_CONSTANT);
+        setError(OPERAND_NOT_ALLOWED);
     return OK;
 }
 
@@ -421,8 +421,8 @@ Error AsmZ8::encode(Insn &_insn) {
     if (insn.postFormat() != P0)
         return encodePostByte(insn, dstOp, srcOp, extOp);
     // TODO: This should be warning
-    if (insn.opCode() == 0x31 && (dstOp.val16 & 0xF) != 0)
-        return setError(ILLEGAL_CONSTANT);
+    if (insn.opCode() == TableZ8::SRP && (dstOp.val16 & 0xF) != 0)
+        return setError(OPERAND_NOT_ALLOWED);
     if (dst == M_DA || src == M_DA)
         return encodeAbsolute(insn, dstOp, srcOp);
     if (dst == M_RA || src == M_RA) {

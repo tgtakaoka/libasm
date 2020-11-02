@@ -78,6 +78,8 @@ Error DisZ8::decodeOperand(
         }
     } if (mode == M_IM) {
         if (post == P2_0 || post == P2_1 || post == P2_2) val &= ~3;
+        if (post == P0 && insn.opCode() == TableZ8::SRP && (val & ~0xF0) != 0)
+            return setError(OPERAND_NOT_ALLOWED);
         *out++ = '#';
         outHex(out, val, 8);
     }
@@ -244,8 +246,11 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, char *out) {
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     const uint8_t post = insn.post();
-    if (dst == M_IM && src == M_NO) { // P2: SRP, SPR0, SRP1
-        // TODO: Warning
+    if (insn.opCode() == TableZ8::SRP) {
+        const PostFormat pfmt = insn.postFormat();
+        if (pfmt == P2_0 && (post & ~0xF0) != 0x00) return setError(OPERAND_NOT_ALLOWED);
+        if (pfmt == P2_1 && (post & ~0xF8) != 0x01) return setError(OPERAND_NOT_ALLOWED);
+        if (pfmt == P2_2 && (post & ~0xF8) != 0x02) return setError(OPERAND_NOT_ALLOWED);
         return decodeOperand(memory, insn, out, dst);
     }
     if (dst == M_DA || src == M_DA) { // P4: LDC, LDE

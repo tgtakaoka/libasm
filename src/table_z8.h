@@ -37,6 +37,8 @@ public:
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
 
+    static constexpr Config::opcode_t SRP = 0x31;
+
     struct EntryPage;
 
 private:

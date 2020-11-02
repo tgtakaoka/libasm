@@ -56,7 +56,6 @@
       JR      LE,$-126
       JR      LE,$
       JP      LE,002EH
-      SRP     #32H
       SBC     R3,R3
       SBC     R3,@R4
       SBC     35H,>00H
@@ -226,3 +225,4 @@
       JR      NC,$+1
       JP      NC,00FEH
       NOP
+      SRP     #0

@@ -36,8 +36,10 @@ static bool z88() {
     return strcmp(disassembler.getCpu(), "Z88") == 0;
 }
 
-#define TZ86(name, opr, ...)  if (z86()) TEST(name, opr, __VA_ARGS__)
-#define TZ88(name, opr, ...)  if (z88())  TEST(name, opr, __VA_ARGS__)
+#define TZ86(name, opr, ...) if (z86()) TEST(name, opr, __VA_ARGS__)
+#define TZ88(name, opr, ...) if (z88()) TEST(name, opr, __VA_ARGS__)
+#define ETZ86(error, name, opr, ...) if (z86()) ETEST(error, name, opr, __VA_ARGS__)
+#define ETZ88(error, name, opr, ...) if (z88()) ETEST(error, name, opr, __VA_ARGS__)
 
 static uint8_t R(uint8_t n) {
     if (z88()) return 0xC0 + n;
@@ -317,11 +319,7 @@ static void test_one_operand() {
     TZ88(CALL, "@0D6H", 0xF4, 0xD6);
     TZ86(CALL, "@RR2",  0xD4, R(2));
     TZ88(CALL, "@RR2",  0xF4, R(2));
-    TZ86(SRP,  "#30H",  0x31, 0x30);
-    TZ88(SRP,  "#38H",  0x31, 0x38);
     TZ88(CALL, "#0D6H", 0xD4, 0xD6);
-    TZ88(SRP0, "#38H",  0x31, 0x3A);
-    TZ88(SRP1, "#38H",  0x31, 0x39);
 }
 
 static void test_two_operands() {
@@ -543,6 +541,44 @@ static void test_indexed() {
     TZ88(LDE, "R10,table(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
 }
 
+static void test_setrp() {
+    TZ86(SRP, "#30H",                 0x31, 0x30);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x31);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x32);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x33);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x34);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x35);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x36);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x37);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x38);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x39);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3A);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3B);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3C);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3D);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3E);
+    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3F);
+    TZ86(SRP, "#40H",                 0x31, 0x40);
+
+    TZ88(SRP,  "#30H",                0x31, 0x30);
+    TZ88(SRP1, "#30H",                0x31, 0x31);
+    TZ88(SRP0, "#30H",                0x31, 0x32);
+    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x33);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x34);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x35);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x36);
+    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x37);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x38);
+    TZ88(SRP1, "#38H",                0x31, 0x39);
+    TZ88(SRP0, "#38H",                0x31, 0x3A);
+    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x3B);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3C);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3D);
+    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3E);
+    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x3F);
+    TZ88(SRP, "#40H",                 0x31, 0x40);
+}
+
 static void test_bit_operation() {
     TEST(BITC, "R5,#4",       0x57, 0x58);
     TEST(BITR, "R7,#4",       0x77, 0x78);
@@ -624,6 +660,7 @@ void run_tests() {
         RUN_TEST(test_one_operand);
         RUN_TEST(test_two_operands);
         RUN_TEST(test_indexed);
+        RUN_TEST(test_setrp);
         if (z88()) RUN_TEST(test_bit_operation);
         if (z86c()) {
             RUN_TEST(test_illegal_z86c);
