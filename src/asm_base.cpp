@@ -24,20 +24,13 @@ namespace libasm {
 
 Error Assembler::encode(
     const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
-    resetError();
     _symtab = symtab;
-    _scan = skipSpaces(line);
-    if (checkLineEnd() == OK)
-        return setError(NO_INSTRUCTION);
     resetError();
     insn.resetAddress(addr);
+    const char *scan = skipSpaces(line);
+    if (endOfLine(scan)) return OK;
+    _scan = scan;
     return encode(insn);
-}
-
-void Assembler::reset(const char *line, SymbolTable *symtab) {
-    _scan = line;
-    _symtab = symtab;
-    resetError();
 }
 
 bool Assembler::hasSymbol(const char *symbol) const {
@@ -50,13 +43,6 @@ uint32_t Assembler::lookupSymbol(const char *symbol) const {
 
 bool Assembler::endOfLine(const char *scan) const {
     return *scan == 0 || *scan == ';';
-}
-
-Error Assembler::checkLineEnd(const char *scan) {
-    if (scan == nullptr) scan = _scan;
-    if (endOfLine(skipSpaces(scan)))
-        return getError();
-    return setErrorIf(GARBAGE_AT_END);
 }
 
 const char *Assembler::skipSpaces(const char *scan) {

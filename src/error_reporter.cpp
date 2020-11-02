@@ -37,7 +37,6 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
     case ILLEGAL_SEGMENT:      return PSTR("Illegal segment override");
 
     // Assembler
-    case NO_INSTRUCTION:       return PSTR("No instruction found");
     case UNKNOWN_INSTRUCTION:  return PSTR("Unknown instruction");
     case UNKNOWN_REGISTER:     return PSTR("Unknown register");
     case UNKNOWN_OPERAND:      return PSTR("Unknown operand");

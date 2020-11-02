@@ -35,7 +35,6 @@ enum Error : uint8_t {
     ILLEGAL_SEGMENT         = 9,
 
     // Assembler
-    NO_INSTRUCTION          = 20,
     UNKNOWN_INSTRUCTION     = 21,
     UNKNOWN_REGISTER        = 22,
     UNKNOWN_OPERAND         = 23,

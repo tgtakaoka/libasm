@@ -222,10 +222,8 @@ Error AsmMos6502::parseOnOff(const char *scan, bool &val) {
     const char *end = _parser.scanSymbol(scan);
     if (strncasecmp_P(scan, TEXT_ON, end - scan) == 0) {
         val = true;
-        checkLineEnd(end);
     } else if (strncasecmp_P(scan, TEXT_OFF, end - scan) == 0) {
         val = false;
-        checkLineEnd(end);
     } else {
         setError(UNKNOWN_OPERAND);
     }
