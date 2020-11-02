@@ -13,14 +13,17 @@
 ;;; limitations under the License.
 
         cpu     z88c00
+        org     0100h
         assume  rp:nothing
-
-        org     0
         include "test_z8.inc"
-
         align   32
         include "test_z88.inc"
-
+        align   32
+        assume  rp:00h
+        include "test_z88_rp00.inc"
+        align   32
+        assume  rp:20h
+        include "test_z88_rp20.inc"
         end
 
 ;;; Local Variables:

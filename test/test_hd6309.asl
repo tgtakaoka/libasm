@@ -13,13 +13,11 @@
 ;;; limitations under the License.
 
         cpu     6309
+        org     $0100
         assume  dpr:$00
-
         include "test_mc6809.inc"
-
         align   32
         include "test_hd6309.inc"
-
         end
 
 ;;; Local Variables:

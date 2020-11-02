@@ -13,22 +13,16 @@
 ;;; limitations under the License.
 
         cpu     65816
-
+        org     $100000
         assume  m:0
         assume  x:1
-
-        org     $100000
         include "test_mos6502.inc"
-
         align   32
         include "test_w65sc02.inc"
-
         align   32
         include "test_w65c02s.inc"
-
         align   32
         include "test_w65c816.inc"
-
         end
 
 ;;; Local Variables:

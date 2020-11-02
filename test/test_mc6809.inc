@@ -138,7 +138,7 @@
         ora     #$8b
         adda    #$8c
         cmpx    #$8d8e
-        bsr     $8e
+        bsr     *-120
         ldx     #$8f90
 ;;; 9X
         suba    $91

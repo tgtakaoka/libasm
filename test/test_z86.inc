@@ -13,7 +13,6 @@
 ;;; limitations under the License.
 
 ;;; @Rn,#IM
-        align   32
         add     @23H,#45H
         adc     @23H,#45H
         sub     @23H,#45H
@@ -29,44 +28,6 @@
         ldei    @rr4,@r2
         ldci    @r2,@rr4
         ldci    @rr4,@r2
-
-        align   32
-        assume  RP:00H
-        ld      21H,R4
-        ld      R4,21H
-        ld      21H,#66H
-        ld      R1,33H(R4)
-        ld      33H(R4),R1
-        ld      21H,24H
-        ld      24H,21H
-        ld      21H,@24H
-        ld      @21H,24H
-        add     21H,24H
-        add     21H,@24H
-        lde     R1,@RR4
-        lde     @RR4,R1
-        ldei    @R1,@RR4
-        ldei    @RR4,@R1
-        djnz    R1,$
-
-        align   32
-        assume  RP:20H
-        ld      21H,R4          ; ld R1,R4
-        ld      R4,21H          ; ld R4,R1
-        ld      21H,#66H        ; ld R1,#66H
-        ld      21H,33H(R4)     ; ld R1,33H(R4)
-        ld      33H(R4),21H     ; ld 33H(R4),R1
-        ld      21H,24H         ; ld R1,R4
-        ld      24H,21H         ; ld R4,R1
-        ld      21H,@24H        ; ld R1,@R4
-        ld      @21H,24H        ; ld @R4,R1
-        add     21H,24H         ; add R1,R4
-        add     21H,@24H        ; add R1,@R4
-;       lde     21H,@24H        ; lde R1,@RR4
-;       lde     @24H,21H        ; lde @RR4,R1
-;       ldei    @21H,@24H       ; ldei @R1,@RR4
-;       ldei    @24H,@21H       ; ldei @RR4,@R1
-        djnz    21H,$           ; djnz R1,$
 
 ;;; Local Variables:
 ;;; mode: asm

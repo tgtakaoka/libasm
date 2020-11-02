@@ -13,16 +13,14 @@
 ;;; limitations under the License.
 
         cpu     TMS99105
-
+        org     0100h
+        supmode on
         include "test_tms9900.inc"
-
         align   32
         include "test_tms9995.inc"
-
         align   32
         include "test_tms99105.inc"
-
-        end                     ; comment
+        end
 
 ;;; Local Variables:
 ;;; mode: asm

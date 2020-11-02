@@ -13,7 +13,6 @@
 ;;; limitations under the License.
 
         align   32
-
 ;;; one operand
         dec     23H
         rlc     23H

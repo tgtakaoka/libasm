@@ -13,14 +13,11 @@
 ;;; limitations under the License.
 
         cpu     8085
+        org     0100h
         z80syntax exclusive
-
         include "test_i8080_z80syn.inc"
-
         align   32
-        ld      a,im
-        ld      im,a
-
+        include "test_i8085_z80syn.inc"
         end
 
 ;;; Local Variables:

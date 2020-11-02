@@ -13,9 +13,8 @@
 ;;; limitations under the License.
 
         cpu     TMS9900
-
+        org     0100h
         include "test_tms9900.inc"
-
         end
         
 ;;; Local Variables:

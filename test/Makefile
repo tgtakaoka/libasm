@@ -298,7 +298,7 @@ OBJS	 = \
 	$(OBJS_tms9900) asm_tms9900.o dis_tms9900.o \
 	$(OBJS_mc68000) asm_mc68000.o dis_mc68000.o \
 	$(OBJS_z8000)   asm_z8000.o   dis_z8000.o   \
-	$(OBJS_ns32000) asm_ns32000.o dis_ns23000.o
+	$(OBJS_ns32000) asm_ns32000.o dis_ns32000.o
 
 -include $(OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 

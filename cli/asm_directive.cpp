@@ -317,7 +317,7 @@ Error AsmCommonDirective::processPseudo(
         const char *p = _assembler->getParser().scanSymbol(_scan);
         std::string val(_scan, p);
         bool value = false;
-        if (strcasecmp(val.c_str(), "exclusive") == 0) {
+        if (strcasecmp(val.c_str(), "on") == 0) {
             value = true;
         } else if (strcasecmp(val.c_str(), "off") == 0) {
             value = false;

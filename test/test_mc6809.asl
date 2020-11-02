@@ -13,10 +13,9 @@
 ;;; limitations under the License.
 
         cpu     6809
+        org     $0100
         assume  dpr:$00
-
         include "test_mc6809.inc"
-
         end
 
 ;;; Local Variables:
