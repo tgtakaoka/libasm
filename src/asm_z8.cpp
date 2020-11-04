@@ -155,7 +155,7 @@ Error AsmZ8::encodeMultiOperands(
         insn.emitByte(opr1);
         return setOK();
     }
-    const bool dstSrc = ((dst == M_R || dst == M_IR) && src == M_IM);
+    const bool dstSrc = insn.dstSrc();
     const uint8_t dstVal = (dstOp.reg == REG_UNDEF) ? dstOp.val16
         : RegZ8::encodeWorkRegAddr(dstOp.reg);
     const uint8_t srcVal = (srcOp.reg == REG_UNDEF || src == M_IM) ? srcOp.val16

@@ -578,6 +578,15 @@ static void test_two_operands() {
     ETZ86(UNKNOWN_INSTRUCTION, "LDEPD @RR2,R15");
     ETZ86(UNKNOWN_INSTRUCTION, "LDCPI @RR4,R15");
     ETZ86(UNKNOWN_INSTRUCTION, "LDEPI @RR4,R15");
+
+    TZ88("PUSHUD @23H,45H", 0x82, 0x23, 0x45);
+    TZ88("PUSHUI @23H,45H", 0x83, 0x23, 0x45);
+    TZ88("PUSHUD @R2, R3",  0x82, 0xC2, 0xC3);
+    TZ88("PUSHUI @R2, R3",  0x83, 0xC2, 0xC3);
+    TZ88("POPUD  23H,@45H", 0x92, 0x45, 0x23);
+    TZ88("POPUI  23H,@45H", 0x93, 0x45, 0x23);
+    TZ88("POPUD  R2, @R3",  0x92, 0xC3, 0xC2);
+    TZ88("POPUI  R2, @R3",  0x93, 0xC3, 0xC2);
 }
 
 static void test_indexed() {

@@ -55,7 +55,6 @@ enum AddrMode : uint8_t {
     M_IW  = 19,  // Indirect Register or Working register: @Rxy x==RP
     M_IWW = 20,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
     M_WW  = 21,  // Register or Working register pair: RRxy: x=RP
-    M_ERROR = 31,
 };
 
 // Post byte format
@@ -70,43 +69,64 @@ enum PostFormat : uint8_t {
     P4_1 = 7,  // Least 4 bits are 0001
 };
 
+// Destination and Source order
+enum DstSrc : uint8_t {
+    DS_NO   = 0, // one or no operand.
+    DST_SRC = 0, // destination first, source second.
+    SRC_DST = 1, // source first, destination second.
+};
+
 struct Entry {
     const Config::opcode_t opCode;
-    const uint16_t flags;
+    const uint32_t flags;
     const char *name;
 
-    static inline AddrMode _dstMode(uint16_t flags) {
-        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
+    static inline AddrMode _mode(uint8_t opr) {
+        return AddrMode(opr & addrMode_gm);
     }
-    static inline AddrMode _srcMode(uint16_t flags) {
-        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
+    static inline PostFormat _postFmt(uint8_t fmt) {
+        return PostFormat(fmt & postFmt_gm);
     }
-    static inline AddrMode _extMode(uint16_t flags) {
-        return AddrMode((flags >> extMode_gp) & extMode_gm);
+    static inline bool _dstSrc(uint8_t fmt) {
+        return DstSrc((fmt >> dstSrc_gp) & dstSrc_gm) == DST_SRC;
     }
-    static inline PostFormat _postFormat(uint16_t flags) {
-        return PostFormat((flags >> postFmt_gp) & postFmt_gm);
+    static inline uint8_t _dst(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> dst_gp);
     }
-    static inline AddrMode addrExt(AddrMode mode) {
-        if (static_cast<uint8_t>(mode) < 8) return mode;
-        return M_ERROR;
+    static inline uint8_t _src(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> src_gp);
     }
-    static constexpr uint16_t _flags(
-        AddrMode dst, AddrMode src, AddrMode ext, PostFormat post) {
-        return ((static_cast<uint16_t>(dst) & addrMode_gm) << dstMode_gp)
-            | ((static_cast<uint16_t>(src)  & addrMode_gm) << srcMode_gp)
-            | ((static_cast<uint16_t>(ext)  & extMode_gm)  << extMode_gp)
-            | ((static_cast<uint16_t>(post) & postFmt_gm)  << postFmt_gp);
+    static inline uint8_t _ext(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> ext_gp);
     }
-
+    static inline uint8_t _fmt(uint32_t flags) {
+        return static_cast<uint8_t>(flags >> fmt_gp);
+    }
+    static constexpr uint8_t _opr(AddrMode mode) {
+        return static_cast<uint8_t>(mode & addrMode_gm);
+    }
+    static constexpr uint8_t _fmt(DstSrc dstSrc, PostFormat postFmt) {
+        return static_cast<uint8_t>(postFmt & postFmt_gm)
+            | (static_cast<uint8_t>(dstSrc & dstSrc_gm) << dstSrc_gp);
+    }
+    static constexpr uint32_t _flags(
+            uint8_t dst, uint8_t src, uint8_t ext, uint8_t fmt) {
+        return (static_cast<uint32_t>(dst) << dst_gp)
+            | (static_cast<uint32_t>(src) << src_gp)
+            | (static_cast<uint32_t>(ext) << ext_gp)
+            | (static_cast<uint32_t>(fmt) << fmt_gp);
+    }
 private:
+    // |dst|, |src|, |ext|
+    static constexpr int8_t dst_gp = 0;
+    static constexpr int8_t src_gp = 8;
+    static constexpr int8_t ext_gp = 16;
     static constexpr uint8_t addrMode_gm = 0x1f;
-    static constexpr uint8_t extMode_gm  = 0x7;
-    static constexpr uint8_t postFmt_gm  = 0x7;
-    static constexpr uint8_t dstMode_gp  = 0;
-    static constexpr uint8_t srcMode_gp  = 5;
-    static constexpr uint8_t extMode_gp  = 10;
-    static constexpr uint8_t postFmt_gp  = 13;
+    // |fmt|
+    static constexpr int8_t fmt_gp = 24;
+    static constexpr uint8_t postFmt_gm = 0x7;
+    static constexpr uint8_t dstSrc_gm  = 0x1;
+    static constexpr int8_t dstSrc_gp   = 7;
 };
 
 } // namespace z8

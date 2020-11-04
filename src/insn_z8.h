@@ -28,17 +28,23 @@ class InsnZ8 : public InsnBase<Config> {
 public:
     InsnZ8(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
-    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
-    AddrMode extMode() const { return Entry::_extMode(_flags); }
-    PostFormat postFormat() const { return Entry::_postFormat(_flags); }
+    AddrMode dstMode() const { return Entry::_mode(_dst); }
+    AddrMode srcMode() const { return Entry::_mode(_src); }
+    AddrMode extMode() const { return Entry::_mode(_ext); }
+    PostFormat postFormat() const { return Entry::_postFmt(_fmt); }
+    bool dstSrc() const { return Entry::_dstSrc(_fmt); }
 
-    void setFlags(uint16_t flags) {
-        _flags = flags;
+    void setFlags(uint32_t flags) {
+        _dst = Entry::_dst(flags);
+        _src = Entry::_src(flags);
+        _ext = Entry::_ext(flags);
+        _fmt = Entry::_fmt(flags);
     }
 
-    void setAddrMode(AddrMode dstMode, AddrMode srcMode, AddrMode extMode) {
-        _flags = Entry::_flags(dstMode, srcMode, extMode, postFormat());
+    void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
+        _dst = Entry::_opr(dst);
+        _src = Entry::_opr(src);
+        _ext = Entry::_opr(ext);
     }
 
     void setOpCode(Config::opcode_t opCode) {
@@ -78,7 +84,10 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint16_t _flags;
+    uint8_t _dst;
+    uint8_t _src;
+    uint8_t _ext;
+    uint8_t _fmt;
 };
 
 } // namespace z8

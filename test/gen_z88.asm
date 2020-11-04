@@ -154,8 +154,10 @@
       JR      C,$
       JP      C,007EH
       DECW    @82H
-      PUSHUD  @83H,>00H
-      PUSHUI  @84H,>00H
+      PUSHUD  @00H,83H
+      PUSHUD  @01H,>00H
+      PUSHUI  @00H,84H
+      PUSHUI  @01H,>00H
       MULT    86H,>00H
       MULT    >00H,>01H
       MULT    86H,@00H

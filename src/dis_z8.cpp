@@ -218,7 +218,7 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out) {
     }
     const uint8_t opr2 = insn.readByte(memory);
     if (setError(insn)) return getError();
-    const bool dstSrc = ((dst == M_R || dst == M_IR) && src == M_IM);
+    const bool dstSrc = insn.dstSrc();
     const uint8_t dstReg = dstSrc ? opr1 : opr2;
     const uint8_t srcReg = dstSrc ? opr2 : opr1;
     if (dst == M_RR) {
