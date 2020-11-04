@@ -196,7 +196,7 @@ Value ValueParser::readAtom(const char *scan) {
         }
         return value;
     }
-    if (_symtab && isCurrentOriginSymbol(c)) {
+    if (_symtab && c == _curSym) {
         _next = p;
         return Value::makeUnsigned(_symtab->currentOrigin());
     }
@@ -364,10 +364,6 @@ Error ValueParser::scanNumberEnd(
     return OK;
 }
 
-bool ValueParser::isCurrentOriginSymbol(char c) const {
-    return c == '.';
-}
-
 Error ValueParser::readNumber(const char *scan, Value &val) {
     if (*scan == '0') {
         scan++;
@@ -386,10 +382,6 @@ Error ValueParser::readNumber(const char *scan, Value &val) {
     return setError(ILLEGAL_CONSTANT);
 }
 
-bool MotoValueParser::isCurrentOriginSymbol(char c) const {
-    return c == '*';
-}
-
 Error MotoValueParser::readNumber(const char *scan, Value &val) {
     const char c = *scan++;
     if (c == '$' && scanNumberEnd(scan, 16) == OK)
@@ -400,11 +392,7 @@ Error MotoValueParser::readNumber(const char *scan, Value &val) {
         return parseNumber(scan, val, 2);
     if (scanNumberEnd(--scan, 10) == OK)
         return parseNumber(scan, val, 10);
-    return setError(ILLEGAL_CONSTANT);
-}
-
-bool IntelValueParser::isCurrentOriginSymbol(char c) const {
-    return c == '$';
+    return ValueParser::readNumber(scan, val);
 }
 
 Error IntelValueParser::readNumber(const char *scan, Value &val) {
@@ -416,7 +404,7 @@ Error IntelValueParser::readNumber(const char *scan, Value &val) {
         return parseNumber(scan, val, 2, 'B');
     if (scanNumberEnd(scan, 10) == OK)
         return parseNumber(scan, val, 10);
-    return setError(ILLEGAL_CONSTANT);
+    return ValueParser::readNumber(scan, val);
 }
 
 } // namespace libasm

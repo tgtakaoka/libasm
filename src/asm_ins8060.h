@@ -33,10 +33,7 @@ public:
     AsmIns8060() : Assembler(_parser, TableIns8060) {}
 
 private:
-    class _ValueParser : public ValueParser {
-    protected:
-        bool isCurrentOriginSymbol(char c) const override { return c == '$'; }
-    } _parser;
+    ValueParser _parser{'$'};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

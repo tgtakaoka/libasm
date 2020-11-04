@@ -84,6 +84,11 @@ private:
 
 class ValueParser : protected ErrorReporter {
 public:
+    ValueParser(char curSym = '.')
+        : ErrorReporter(),
+          _curSym(curSym)
+    {}
+
     Error error() const { return getError(); }
     /*
      * Parse |scan| text and convert expression to |val|.
@@ -101,7 +106,6 @@ public:
     const char *scanSymbol(const char *scan) const;
 
 protected:
-    virtual bool isCurrentOriginSymbol(char c) const;
     virtual Error readNumber(const char *scan, Value &val);
     Error parseNumber(
         const char *scan, Value &val, const uint8_t base,
@@ -110,6 +114,7 @@ protected:
         const char *scan, const uint8_t base, char suffix = 0);
 
 private:
+    const char _curSym;
     const char *_next;
 
     enum Op : uint8_t {
@@ -171,14 +176,16 @@ private:
 };
 
 class MotoValueParser : public ValueParser {
+public:
+    MotoValueParser() : ValueParser('*') {}
 protected:
-    bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(const char *scan, Value &val) override;
 };
 
 class IntelValueParser : public ValueParser {
+public:
+    IntelValueParser() : ValueParser('$') {}
 protected:
-    bool isCurrentOriginSymbol(char c) const override;
     Error readNumber(const char *scan, Value &val) override;
 };
 
