@@ -77,7 +77,7 @@ test_z8001.hex: test_z8001.gas
 		--section-start=bss1=0x0A1234 \
 		--section-start=bss2=0x0B5678
 	z8k-coff-objcopy -I coff-z8k -O ihex test_z8001.o /dev/stdout \
-		--adjust-section-vma .text=0x01000 | \
+		--adjust-section-vma .text=0x010000 | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
 #	z8k-coff-objdump -m z8001 -D test_z8001.hex
 test_z8002.hex: test_z8002.gas
