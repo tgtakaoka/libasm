@@ -123,6 +123,16 @@ test_m6811.s19: test_m6811.gas
 		srec_cat /dev/stdin -HEAder "" -output $@
 #	m6811-elf-objdump -m m68hc11 -D test_m6811.s19
 
+asm-test:
+	@for s in test_*.asm; do \
+	    x=$${s%.asm}; \
+	    [ -f $$x.hex ] && o=$$x.hex; \
+	    [ -f $$x.s19 ] && o=$$x.s19; \
+	    [ -f $$x.s28 ] && o=$$x.s28; \
+	    echo asm $$s -o $$o; \
+	    asm $$s -o $$o; \
+	done
+
 .PHONY: clean clean-obj test \
 	test_mc6809  \
 	test_mc6800  \
