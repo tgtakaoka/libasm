@@ -33,9 +33,7 @@ public:
     DisIns8060() : Disassembler(_formatter, _regs, TableIns8060) {}
 
 private:
-    class _ValueFormatter : public ValueFormatter {
-        char currentOriginSymbol() const override { return '$'; }
-    } _formatter;
+    ValueFormatter _formatter{'$'};
     RegIns8060 _regs;
 
     char *outRegister(char *out, RegName regName);

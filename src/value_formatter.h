@@ -23,8 +23,15 @@ namespace libasm {
 
 class ValueFormatter {
 public:
+    ValueFormatter(char curSym = '.', bool cstyle = true) :
+        _curSym(curSym),
+        _cstyle(cstyle),
+        _uppercase(false)
+    {}
+
+    void setCStyleHex(bool enable) { _cstyle = enable; }
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
-    virtual char currentOriginSymbol() const { return '.'; }
+    char currentOriginSymbol() const { return _curSym; }
 
     /*
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed
@@ -38,14 +45,16 @@ public:
      * suppress when |relax| is true and |val| is less than 32 in
      * absolute value.
      */
-    virtual char *formatHex(
-        char *out, uint32_t val, int8_t bits, bool relax = true) const;
+    char *formatHex(char *out, uint32_t val, int8_t bits, bool relax = true) const;
 
 protected:
+    const char _curSym;
+    bool _cstyle;
     bool _uppercase;
 
     uint32_t makePositive(char *out, uint32_t val, int8_t bits) const
         __attribute__((noinline));
+    virtual char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const;
     char *outHex(char *out, uint32_t val, int8_t bits) const;
     char *outDec(char *out, uint32_t val) const
         __attribute__((noinline));
@@ -53,16 +62,16 @@ protected:
 
 class MotoValueFormatter : public ValueFormatter {
 public:
-    char currentOriginSymbol() const override { return '*'; }
-    char *formatHex(
-        char *out, uint32_t val, int8_t bits, bool relax) const override;
+    MotoValueFormatter() : ValueFormatter('*', false) {}
+protected:
+    char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const override;
 };
 
 class IntelValueFormatter : public ValueFormatter {
 public:
-    char currentOriginSymbol() const override { return '$'; }
-    char *formatHex(
-        char *out, uint32_t val, int8_t bits, bool relax) const override;
+    IntelValueFormatter() : ValueFormatter('$', false) {}
+protected:
+    char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const override;
 };
 
 } // namespace libasm
