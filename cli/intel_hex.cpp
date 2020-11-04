@@ -31,6 +31,7 @@ uint8_t IntelHex::getSum() const {
 }
 
 const char *IntelHex::begin() {
+    _ela = 0;
     return nullptr;
 }
 
@@ -39,27 +40,31 @@ const char *IntelHex::prepare(uint32_t addr) {
     if (_addrWidth == ADDRESS_16BIT) return nullptr;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
     if (_ela == ela) return nullptr;
+    _ela = ela;
     const uint8_t len = sizeof(ela);
     const uint16_t dummy = 0;
+    const uint8_t type = 4;
     // :LLdddd04EEEESS
     ensureLine(1 + (1 + sizeof(dummy) + 1 + len + 1) * 2);
     resetSum();
     addSum(len);
     addSum(dummy);
+    addSum(type);
     addSum(ela);
     char *p = _line;
-    p += sprintf(p, ":%02X%04X04%04X%2X",
-                 len, dummy, ela, getSum());
+    p += sprintf(p, ":%02X%04X%02X%04X%2X",
+                 len, dummy, type, ela, getSum());
     return _line;
 }
 
 const char *IntelHex::encode(
     uint32_t ela_addr, const uint8_t *data, uint8_t size) {
     const uint16_t addr = static_cast<uint16_t>(ela_addr);
+    const uint8_t type = 0;
     // :LLaaaa00dd....ddSS
     ensureLine(1 + (1 + sizeof(addr) + 1 + size + 1) * 2);
     char *p = _line;
-    p += sprintf(p, ":%02X%04X00", static_cast<uint8_t>(size), addr);
+    p += sprintf(p, ":%02X%04X%02X", static_cast<uint8_t>(size), addr, type);
     resetSum();
     addSum(static_cast<uint8_t>(size));
     addSum(addr);
