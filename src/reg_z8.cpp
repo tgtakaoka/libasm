@@ -161,7 +161,9 @@ char *RegZ8::outCcName(char *out, CcName name) const {
 }
 
 uint8_t RegZ8::encodeCcName(CcName name) {
-    return uint8_t(name);
+    const uint8_t cc = uint8_t(name);
+    if (cc < 16) return cc;
+    return cc - 16;             // Aliases
 }
 
 CcName RegZ8::decodeCcNum(uint8_t num) {

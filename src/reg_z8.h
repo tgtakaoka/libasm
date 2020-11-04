@@ -72,10 +72,10 @@ enum CcName : int8_t {
     CC_NZ  = 14,
     CC_NC  = 15,
     // Aliases
-    CC_EQ  = 16,  // == Z(6)
-    CC_ULT = 17,  // == C(7)
-    CC_NE  = 18,  // == NZ(14)
-    CC_UGE = 19,  // == NC(15)
+    CC_EQ  = 6 + 16,  // == Z(6)
+    CC_ULT = 7 + 16,  // == C(7)
+    CC_NE  = 14 + 16, // == NZ(14)
+    CC_UGE = 15 + 16, // == NC(15)
 };
 
 class RegZ8 : public RegBase {
