@@ -21,10 +21,6 @@
 namespace libasm {
 namespace z8000 {
 
-bool AsmZ8000::endOfLine(const char *scan) const {
-    return (*scan == '#') || Assembler::endOfLine(scan);
-}
-
 Error AsmZ8000::emitData(
     InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;

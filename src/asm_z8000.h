@@ -30,9 +30,7 @@ class AsmZ8000
     : public Assembler,
       public Config {
 public:
-    AsmZ8000() : Assembler(_parser, TableZ8000) {}
-
-    bool endOfLine(const char *scan) const override;
+    AsmZ8000() : Assembler(_parser, TableZ8000, '#') {}
 
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
 

@@ -21,10 +21,6 @@
 namespace libasm {
 namespace ns32000 {
 
-bool AsmNs32000::endOfLine(const char *scan) const {
-    return (*scan == '#') || Assembler::endOfLine(scan);
-}
-
 Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
     uint8_t strOpt = 0;
     while (true) {

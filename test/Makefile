@@ -425,8 +425,8 @@ gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_gen)
 	./gen_mc68000 -u -C 68000 -o gen_mc68000.asm
 gen_z8000:   gen_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z8000 -C z8001 -o gen_z8001.s
-	./gen_z8000 -C z8002 -o gen_z8002.s
+	./gen_z8000 -C z8001 -c -o gen_z8001.inc
+	./gen_z8000 -C z8002 -c -o gen_z8002.inc
 
 clean: clean-obj
 	-rm -f $(TESTS)

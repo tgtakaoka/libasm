@@ -30,9 +30,7 @@ class AsmNs32000
     : public Assembler,
       public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000) {}
-
-    bool endOfLine(const char *scan) const override;
+    AsmNs32000() : Assembler(_parser, TableNs32000, '#') {}
 
 private:
     ValueParser _parser;

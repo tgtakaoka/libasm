@@ -30,7 +30,7 @@ class DisZ8000
     : public Disassembler,
       public Config {
 public:
-    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000) {}
+    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000, '#') {}
 
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
 

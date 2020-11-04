@@ -37,7 +37,7 @@ public:
 
     ValueParser &getParser() const { return _parser; }
     const char *errorAt() const { return _scan; }
-    virtual bool endOfLine(const char *scan) const;
+    bool endOfLine(const char *scan) const;
     virtual void reset() {}
 
     const char *listCpu() const { return _table.listCpu(); }
@@ -45,14 +45,16 @@ public:
     const char *getCpu() const { return _table.getCpu(); }
 
 protected:
-    const char *_scan;
     ValueParser &_parser;
     TableBase &_table;
+    const char _commentChar;
+    const char *_scan;
     SymbolTable  *_symtab;
 
-    Assembler(ValueParser &parser, TableBase &table)
+    Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
         : _parser(parser),
-          _table(table)
+          _table(table),
+          _commentChar(commentChar)
     {}
 
     bool hasSymbol(const char *symbol) const;

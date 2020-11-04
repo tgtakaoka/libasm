@@ -42,7 +42,7 @@ uint32_t Assembler::lookupSymbol(const char *symbol) const {
 }
 
 bool Assembler::endOfLine(const char *scan) const {
-    return *scan == 0 || *scan == ';';
+    return *scan == 0 || *scan == ';' || *scan == _commentChar;
 }
 
 const char *Assembler::skipSpaces(const char *scan) {
