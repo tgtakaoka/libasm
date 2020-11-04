@@ -71,7 +71,7 @@ all: $(TEST_OUT)
 	asl $(ASL_FLAGS) $^
 	p2hex -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@ > /dev/null
 test_z8001.hex: test_z8001.gas
-	z8k-coff-as --warn -a=test_z8001.lst -o test_z8001.p $^
+	z8k-coff-as --warn -o test_z8001.p $^
 	z8k-coff-ld -m z8001 --entry=0 -o test_z8001.o test_z8001.p \
 		--section-start=text=0x010000 \
 		--section-start=bss1=0x0A1234 \
@@ -79,9 +79,9 @@ test_z8001.hex: test_z8001.gas
 	z8k-coff-objcopy -I coff-z8k -O ihex test_z8001.o /dev/stdout \
 		--adjust-section-vma .text=0x010000 | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
-#	z8k-coff-objdump -m z8001 -D test_z8001.hex
+	z8k-coff-objdump -m z8001 -D test_z8001.hex > test_z8001.lst
 test_z8002.hex: test_z8002.gas
-	z8k-coff-as --warn -a=test_z8002.lst -o test_z8002.p $^
+	z8k-coff-as --warn -o test_z8002.p $^
 	z8k-coff-ld -m z8002 --entry=0 -o test_z8002.o test_z8002.p \
 		--section-start=text=0x1000 \
 		--section-start=bss1=0x1234 \
@@ -89,39 +89,39 @@ test_z8002.hex: test_z8002.gas
 	z8k-coff-objcopy -I coff-z8k -O ihex test_z8002.o /dev/stdout \
 		--adjust-section-vma .text=0x1000 | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
-#	z8k-coff-objdump -m z8002 -D test_z8002.hex
+	z8k-coff-objdump -m z8002 -D test_z8002.hex > test_z8002.lst
 test_ns32000.hex: test_ns32000.gas
-	ns32k-netbsd-as -m32032 --warn -a=test_ns32000.lst -o test_ns32000.o $^
+	ns32k-netbsd-as -m32032 --warn -o test_ns32000.o $^
 	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
 		--adjust-section-vma .text=0x10000 \
 		test_ns32000.o /dev/stdout | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
-#	ns32k-netbsd-objdump -m ns32k:32032 -D test_ns32000.hex
+	ns32k-netbsd-objdump -m ns32k:32032 -D test_ns32000.hex > test_ns32000.lst
 test_i386.hex: test_i386.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel -mmnemonic=intel \
-		-a=test_i386.lst -o test_i386.p $^
+		-o test_i386.p $^
 	i386-elf-ld --entry=0 -o test_i386.o test_i386.p \
 		--section-start=.text=0x1000
 	i386-elf-objcopy -I elf32-i386 -O ihex test_i386.o /dev/stdout | \
 		srec_cat /dev/stdin -intel -output $@ -Intel -line-length=76
-#	i386-elf-objdump -m i8086 -M intel -D test_i386.hex
+	i386-elf-objdump -m i8086 -M intel -D test_i386.hex > test_i386.lst
 test_m68k.s28: test_m68k.gas
 	m68k-elf-as -m68000 --warn --register-prefix-optional --base-size-default-16 \
-		-a=test_m68k.lst -o test_m68k.p $^
+		-o test_m68k.p $^
 	m68k-elf-ld --entry=0 -o test_m68k.o test_m68k.p
 	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len 32 \
 		--adjust-section-vma .text=0x10000 \
 		test_m68k.o /dev/stdout | \
 		srec_cat /dev/stdin -HEAder "" -output $@
-#	m68k-elf-objdump -m 68000 -D test_mc68000.s28
+	m68k-elf-objdump -m 68000 -D test_mc68000.s28 > test_mc68000.lst
 test_m6811.s19: test_m6811.gas
-	m6811-elf-as -m68hc11 --warn -a=test_m6811.lst -o test_m6811.p $^
+	m6811-elf-as -m68hc11 --warn -o test_m6811.p $^
 	m6811-elf-ld -m m68hc11elf --entry=0 -o test_m6811.o test_m6811.p
 	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len 32 \
 		--adjust-section-vma .text=0x0100 \
 		test_m6811.o /dev/stdout | \
 		srec_cat /dev/stdin -HEAder "" -output $@
-#	m6811-elf-objdump -m m68hc11 -D test_m6811.s19
+	m6811-elf-objdump -m m68hc11 -D test_m6811.s19 > test_m6811.lst
 
 asm-test:
 	@for s in test_*.asm; do \

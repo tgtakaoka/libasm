@@ -162,13 +162,14 @@
         sfsw    18(fp)
         sfcw    19(sp)
         slow    10(sb)
-        shsw    .+21(pc)
+        shsw    label0(pc)
         sltw    22(r0)[r7:b]
         sgew    23(r1)[r6:w]
         seqd    24(r2)[r5:d]
         sned    25(r3)[r4:q]
         scsd    -1(r5)
         sccd    -2(r6)
+label0:
         shid    tos
         slsd    -4(-5(fp))
         sgtd    -6(-7(sp))
@@ -178,7 +179,7 @@
         slod    -12(fp)
         shsd    -13(sp)
         sltd    -14(sb)
-        sged    .+(-15)(pc)
+        sged    label0(pc)
 # Test Bit: TBITi offset/gen, base/gen
         tbitb   r0, r1
         tbitw   r0, 0(r1)
@@ -262,39 +263,42 @@
 # Jump: JUMP dest/gen
         jump     0(-8(fp))
 # Conditional Branch: Bcc dest/disp
-        beq     .
-        bne     .
-        bcs     .
-        bcc     .
-        bhi     .
-        bls     .
-        bgt     .
-        ble     .
-        bfs     .
-        bfc     .
-        blo     .+(-154)
-        bhs     .
-        blt     .
-        bge     .
+        beq     label1
+        bne     label1
+        bcs     label1
+        bcc     label1
+        bhi     label1
+        bls     label1
+        bgt     label1
+label1:
+        ble     label1
+        bfs     label1
+        bfc     label1
+        blo     label0
+        bhs     label1
+        blt     label1
+        bge     label1
 # Unconditional Branch: BR dest/disp
-        br      .
-        br      .+(-154)
+        br      label2
+        br      label0
 # Case Branch: CASEi src/gen
-        caseb   .+4(pc)[r7:b]
+        caseb   label2(pc)[r7:b]
         casew   r1
         cased   r2
+label2:
 # Add,  Compare and Branch: ACBi inc/quick, index/gen, dest/disp
-        acbb    -1, r0, .+(-3)
-        acbw    -2, r1, .+(-2)
-        acbd    4, r2, .+2
+        acbb    -1, r0, label2
+        acbw    -2, r1, label2
+        acbd    4, r2, label3
 # Jump to Subroutine: JSR dest/gen
         jsr     0(4(sb))
 # Branch to Subroutine: BSR dest/disp
-        bsr     .+16
+        bsr     label3
 # Return from Subroutine: RET constant/disp
         ret     16
 # Call External Procedure: CXP index/disp
         cxp     1
+label3:
 # Call External Procedure with Descriptor: CXPD desc/gen
         cxpd    8(sb)
 # Return from External Procedure: RXP constant/disp
@@ -397,15 +401,15 @@
         addw    4(fp), 6(r2)
         addw    4(sp), 6(r2)
         addw    4(sb), 6(r2)
-        addw    .+4(pc), 6(r2)
+        addw    label4(pc), 6(r2)
         addw    6(r2), 4(fp)
         addw    6(r2), 4(sp)
         addw    6(r2), 4(sb)
-        addw    6(r2), .+4(pc)
+        addw    6(r2), label4(pc)
         addw    4(fp), 6(sb)
         addw    6(sb), 8(sp)
-        addw    8(sp), .+10(pc)
-        addw    .+2(pc), .+12(pc)
+        addw    8(sp), label4(pc)
+        addw    label4(pc), label3(pc)
 # Scaled Indexing
         addw    r1[r3:b], 8(r2)
         addw    4(r1)[r3:b], 8(r2)
@@ -414,15 +418,16 @@
         addw    ext(4)+6[r3:b], 8(r2)
         addw    tos[r3:b], 8(r2)
         addw    4(sp)[r3:b], 8(r2)
-        addw    .+4(pc)[r3:b], 8(r2)
+        addw    label4(pc)[r3:b], 8(r2)
         addw    8(r2), r1[r3:w]
+label4:
         addw    8(r2), 4(r1)[r3:w]
         addw    8(r2), 6(4(fp))[r3:w]
         addw    8(r2), @0x1234[r3:w]
         addw    8(r2), ext(4)+6[r3:w]
         addw    8(r2), tos[r3:w]
         addw    8(r2), 4(sp)[r3:w]
-        addw    8(r2), .+4(pc)[r3:w]
+        addw    8(r2), label4(pc)[r3:w]
         addw    8(r2)[r3:d], r1[r5:w]
         addw    8(r2)[r3:d], 4(r1)[r5:w]
         addw    8(r2)[r3:d], 6(4(fp))[r5:w]
@@ -430,7 +435,7 @@
         addw    8(r2)[r3:q], ext(4)+6[r5:w]
         addw    8(r2)[r3:q], tos[r5:w]
         addw    8(r2)[r3:q], 4(sp)[r5:w]
-        addw    8(r2)[r3:q], .+4(pc)[r5:w]
+        addw    8(r2)[r3:q], label4(pc)[r5:w]
 
 # Local Variables:
 # mode: asm
