@@ -54,7 +54,7 @@ TEST_OUT=\
 	test_m68k.s28 \
 	test_z8001.hex \
 	test_z8002.hex \
-	test_ns32000.s28
+	test_ns32000.hex
 
 all: $(TEST_OUT)
 
@@ -90,13 +90,13 @@ test_z8002.hex: test_z8002.gas
 		--adjust-section-vma .text=0x1000 | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
 #	z8k-coff-objdump -m z8002 -D test_z8002.hex
-test_ns32000.s28: test_ns32000.gas
+test_ns32000.hex: test_ns32000.gas
 	ns32k-netbsd-as -m32032 --warn -a=test_ns32000.lst -o test_ns32000.o $^
-	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O srec --srec-len 32 -j .text \
+	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
 		--adjust-section-vma .text=0x10000 \
 		test_ns32000.o /dev/stdout | \
-		srec_cat /dev/stdin -HEAder "" -output $@
-#	ns32k-netbsd-objdump -m ns32k:32032 -D test_ns32000.s28
+		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
+#	ns32k-netbsd-objdump -m ns32k:32032 -D test_ns32000.hex
 test_i386.hex: test_i386.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel -mmnemonic=intel \
 		-a=test_i386.lst -o test_i386.p $^
