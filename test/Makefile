@@ -54,7 +54,7 @@ TEST_OUTS=\
 	test_m68k.s28 \
 	test_z8001.hex \
 	test_z8002.hex \
-	test_ns32000.hex
+	test_ns32032.hex
 
 all: $(TEST_OUTS)
 
@@ -93,13 +93,13 @@ test_z8002.hex: test_z8002.gas
 		--adjust-section-vma .text=0x1000 | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
 	z8k-coff-objdump -m z8002 -D test_z8002.hex > test_z8002.lst
-test_ns32000.hex: test_ns32000.gas
-	ns32k-netbsd-as -m32032 --warn -o test_ns32000.o $^
+test_ns32032.hex: test_ns32032.gas
+	ns32k-netbsd-as -m32032 --warn -o test_ns32032.o $^
 	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
 		--adjust-section-vma .text=0x10000 \
-		test_ns32000.o /dev/stdout | \
+		test_ns32032.o /dev/stdout | \
 		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
-	ns32k-netbsd-objdump -m ns32k:32032 -D test_ns32000.hex > test_ns32000.lst
+	ns32k-netbsd-objdump -m ns32k:32032 -D test_ns32032.hex > test_ns32032.lst
 test_i386.hex: test_i386.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel -mmnemonic=intel \
 		-o test_i386.p $^
@@ -127,7 +127,7 @@ test_m6811.s19: test_m6811.gas
 	m6811-elf-objdump -m m68hc11 -D test_m6811.s19 > test_m6811.lst
 
 asm-test:
-	@for s in test_*.asm; do \
+	for s in test_*.asm; do \
 	    x=$${s%.asm}; \
 	    [ -f $$x.hex ] && o=$$x.hex; \
 	    [ -f $$x.s19 ] && o=$$x.s19; \
@@ -352,7 +352,8 @@ GEN_OBJS=\
 	gen_i8086.o   \
 	gen_tms9900.o \
 	gen_mc68000.o \
-	gen_z8000.o
+	gen_z8000.o   \
+	gen_ns32000.o
 
 GEN_OUTS=\
 	gen_mc6809.asm gen_hd6309.asm \
@@ -368,7 +369,8 @@ GEN_OUTS=\
 	gen_i8086.asm \
 	gen_tms9900.asm gen_tms9995.asm gen_tms99105.asm \
 	gen_mc68000.asm \
-	gen_z8001.inc gen_z8002.inc
+	gen_z8001.inc gen_z8002.inc \
+	gen_ns32032.inc
 
 GENS=$(GEN_OBJS:.o=)
 OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing.o
@@ -415,6 +417,8 @@ gen_tms9900: gen_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_gen)
 gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 gen_z8000:   gen_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_gen)
+	$(CXX) -o $@ $(CXXFLAGS) $^
+gen_ns32000: gen_ns32000.o dis_ns32000.o $(OBJS_ns32000) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
 gen_mc6809.asm: gen_mc6809
@@ -477,6 +481,8 @@ gen_z8001.inc: gen_z8000
 	./$^ -c -C z8001 -o $@ -l $(@:.inc=.lst)
 gen_z8002.inc: gen_z8000
 	./$^ -c -C z8002 -o $@ -l $(@:.inc=.lst)
+gen_ns32032.inc: gen_ns32000
+	./$^ -c -C 32032 -o $@ -l $(@:.inc=.lst)
 
 clean: clean-obj
 	-rm -f $(TEST_OBJS:.o=) $(GENS)
