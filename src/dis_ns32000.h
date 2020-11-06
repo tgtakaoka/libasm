@@ -30,7 +30,7 @@ class DisNs32000
     : public Disassembler,
       public Config {
 public:
-    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000) {}
+    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '#') {}
 
 private:
     ValueFormatter _formatter;

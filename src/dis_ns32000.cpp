@@ -280,6 +280,13 @@ Error DisNs32000::decodeGeneric(
     case 0x13:
         return setError(ILLEGAL_OPERAND_MODE);
     case 0x14:
+#ifdef NS32000_ENABLE_FLOAT
+        if (mode == M_GENW || mode == M_FENW)
+            return setError(OPERAND_NOT_ALLOWED);
+#else
+        if (mode == M_GENW)
+            return setError(OPERAND_NOT_ALLOWED);
+#endif
         return decodeImmediate(memory, insn, out, mode);
     case 0x15:
         if (readDisplacement(memory, insn, disp)) return getError();
