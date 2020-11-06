@@ -83,6 +83,17 @@ static void test_format_1() {
     ETEST(OPCODE_HAS_NO_EFFECT, "RESTORE [ ]");
     ETEST(OPCODE_HAS_NO_EFFECT, "ENTER   [], 16");
     ETEST(OPCODE_HAS_NO_EFFECT, "EXIT    []");
+
+    // Various displacement.
+    TEST("RET 0",          0x12, 0x00);
+    TEST("RET 63",         0x12, 0x3F);
+    TEST("RET -64",        0x12, 0x40);
+    TEST("RET 8191",       0x12, 0x9F, 0xFF);
+    TEST("RET -8192",      0x12, 0xA0, 0x00);
+    TEST("RET 536870911",  0x12, 0xDF, 0xFF, 0xFF, 0xFF);
+    TEST("RET -520093696", 0x12, 0xE1, 0x00, 0x00, 0x00);
+    ETEST(OVERFLOW_RANGE, "RET 536870912");
+    ETEST(OVERFLOW_RANGE, "RET -520093697");
 }
 
 static void test_format_2() {

@@ -66,7 +66,7 @@ char *DisNs32000::outDisplacement(char *out, const Displacement &disp) {
         out = outHex(out, static_cast<int16_t>(disp.val32), -16);
         break;
     default:
-        out = outHex(out, disp.val32, disp.bits);
+        out = outHex(out, disp.val32, -30);
         break;
     }
     return out;
@@ -74,17 +74,16 @@ char *DisNs32000::outDisplacement(char *out, const Displacement &disp) {
 
 Error DisNs32000::readDisplacement(
         DisMemory &memory, InsnNs32000 &insn, Displacement &disp) {
-    uint8_t head = insn.readByte(memory);
+    const uint8_t head = insn.readByte(memory);
     // 0xxx|xxxx
     if ((head & 0x80) == 0) {
-        if (head & 0x40) head |= 0x80;
-        disp.val32 = static_cast<int8_t>(head);
+        const int8_t val8 = (head & 0x40) ? (head | 0x80) : head;
+        disp.val32 = val8;
         disp.bits = 7;
     } else {
-        int16_t val16 = static_cast<int8_t>(
-                (head & 0x20) ? (head | 0xC0) : (head & ~0xC0));
-        val16 <<= 8;
-        val16 |= insn.readByte(memory);
+        const int8_t val8 = (head & 0x20) ? (head | 0xC0) : (head & ~0xC0);
+        const int16_t val16 = (static_cast<int16_t>(val8) << 8)
+            | insn.readByte(memory);
         // 10xx|xxxx
         if ((head & 0x40) == 0) {
             disp.val32 = static_cast<int32_t>(val16);
@@ -92,8 +91,11 @@ Error DisNs32000::readDisplacement(
         } else {
             // 1110|0000 is reserved
             if (head == 0xE0) return setError(ILLEGAL_CONSTANT);
-            disp.val32 = (static_cast<int32_t>(val16) << 16)
+            const int32_t val32 = (static_cast<int32_t>(val16) << 16)
                 | insn.readUint16(memory);
+            if (val32 < -0x1F000000L || val32 >= 0x20000000L)
+                return setError(OVERFLOW_RANGE);
+            disp.val32 = val32;
             disp.bits = 30;
         }
     }

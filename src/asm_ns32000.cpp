@@ -330,7 +330,7 @@ Error AsmNs32000::emitDisplacement(InsnNs32000 &insn, uint32_t val32) {
     }
     if (val >= -0x1F000000L && val < 0x20000000L) {
         const uint32_t disp =
-            (static_cast<uint32_t>(val) & 0x3FFFFFFF) | 0xC0000000;
+            (static_cast<uint32_t>(val) & 0x3FFFFFFFL) | 0xC0000000L;
         insn.emitOperand32(disp);
         return OK;
     }
