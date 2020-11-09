@@ -91,6 +91,7 @@ private:
     bool _uppercase;
     const char *_cpu;
     bool _generateCpu;
+    bool _dump;
     FILE *_output;
     FILE *_list;
     const Insn *_insn;
@@ -106,7 +107,10 @@ private:
         _generated_size = insn.length();
         print(insn.name(), operands);
     }
+
     void origin(typename Conf::uintptr_t addr) override {
+        if (!_generateCpu)
+            return;
         char operands[40];
         _disassembler.getFormatter().formatHex(
             operands, addr, _disassembler.addressWidth(), false);
@@ -114,6 +118,7 @@ private:
         _generated_size = 0;
         print("ORG", operands);
     }
+
     void print(const char *inst, const char *operands) {
         _listing.reset(*this);
         _instruction = inst;
@@ -131,6 +136,8 @@ private:
             fflush(_output);
         }
     }
+
+    FILE *dumpOut() { return _dump ? _list : nullptr; }
 
     // ListingLine
     AddressWidth addressWidth() const override { return _disassembler.addressWidth(); }
@@ -161,6 +168,7 @@ private:
         _uppercase = false;
         _cpu = nullptr;
         _generateCpu = true;
+        _dump = false;
         for (int i = 1; i < argc; i++) {
             const char *opt = argv[i];
             if (*opt == '-') {
@@ -196,6 +204,9 @@ private:
                 case 'u':
                     _uppercase = true;
                     break;
+                case 'd':
+                    _dump = true;
+                    break;
                 default:
                     fprintf(stderr, "unknown option: %s\n", opt);
                     return 1;
@@ -214,7 +225,8 @@ private:
                 "  -l <list>   : list file\n"
                 "  -C          : CPU variant: %s\n"
                 "  -c          : do not output cpu directive\n"
-                "  -u          : use uppercase letter for output\n",
+                "  -u          : use uppercase letter for output\n"
+                "  -d          : dump debug info\n",
                 _progname, _disassembler.listCpu());
         return 2;
     }

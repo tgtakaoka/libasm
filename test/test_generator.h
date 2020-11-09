@@ -25,9 +25,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#if DEBUG_TEXT || DEBUG_TRACE
 #include <stdio.h>
-#endif
 
 namespace libasm {
 namespace test {
@@ -74,15 +72,19 @@ public:
         _buffer[_pos + offset] = val8;
     }
 
-    void debugPrint(const char *msg, const uint8_t *memory) const {
+    void dump(FILE *out, const char *msg, int pos, int size) const {
+        fprintf(out, "%s %d/%d: ", msg, pos, size);
+        for (int i = 0; i < pos; i++)
+            fprintf(out, " %02X", _buffer[i]);
+        for (int i = 0; i < size; i++)
+            fprintf(out, "%c%02X", i == 0 ? '|' : ' ', _buffer[pos + i]);
+        fprintf(out, "\n");
+        fflush(out);
+    }
+
+    void debugPrint(const char *msg) const {
 #if DEBUG_TRACE
-        printf("%s %d/%d%c: ", msg, _pos, _size, _endian == ENDIAN_BIG? 'B' : 'L');
-        for (int i = 0; i < _pos; i++)
-            printf(" %02X", memory[i]);
-        for (int i = 0; i < _size; i++)
-            printf("%c%02X", i == 0 ? '|' : ' ', memory[_pos + i]);
-        printf("\n");
-        fflush(stdout);
+        dump(stdout, msg, _pos, _size);
 #endif
     }
 
@@ -193,6 +195,7 @@ public:
     public:
         virtual void print(const Insn &insn, const char *operands) = 0;
         virtual void origin(typename Conf::uintptr_t addr) = 0;
+        virtual FILE* dumpOut() = 0;
     };
     typedef bool (*Filter)(uint8_t);
 
@@ -292,27 +295,38 @@ private:
     }
 
     void generateTests(DataGenerator &gen) {
-        gen.debugPrint("@@ enter", _memory);
+        FILE *dumpOut = _printer->dumpOut();
+        gen.debugPrint("@@ enter");
         do {
             gen.next();
-            gen.debugPrint("@@  loop", _memory);
+            gen.debugPrint("@@  loop");
             _data.tryGenerate(_disassembler, _addr, _memory, _memorySize);
             if (_disassembler.getError() == OK) {
-                int size = _data.insn().length() - (gen.pos() + gen.size());
-                if (size > 0) {
-                    if (size % 2 == 0 || size == 1) {
-                        DataGenerator child(gen, size);
-                        child.debugPrint("@@  long", _memory);
+                const int len = gen.pos() + gen.size();
+                const int newLen = _data.insn().length();
+                const int delta = newLen - len;
+                if (delta && dumpOut) {
+                    fprintf(dumpOut,  "@@  delta: %d (%d <- %d)\n",
+                            delta, newLen, len);
+                    gen.dump(dumpOut, "@@   ", len, delta);
+                    fprintf(dumpOut,  "@@       : %s %s\n",
+                            _data.insn().name(), _data.operands().buffer());
+                    fflush(dumpOut);
+                }
+                if (delta > 0) {
+                    if (delta % 2 == 0 || delta == 1) {
+                        DataGenerator child(gen, delta);
+                        child.debugPrint("@@  long");
                         generateTests(child);
-                        gen.debugPrint("@@  cont", _memory);
+                        gen.debugPrint("@@  cont");
                     } else {
                         DataGenerator child(gen, 1);
-                        child.debugPrint("@@  odd1", _memory);
+                        child.debugPrint("@@  odd1");
                         generateTests(child);
-                        gen.debugPrint("@@  cont", _memory);
+                        gen.debugPrint("@@  cont");
                     }
-                } else if (size < 0) {
-                    gen.debugPrint("@@  shrk", _memory);
+                } else if (delta < 0) {
+                    gen.debugPrint("@@  shrk");
                     printInsn(_data);
                     return;
                 } else {
@@ -320,13 +334,13 @@ private:
                     if ((abort = meaningfulTestData()) < 0) {
                         printInsn(_data);
                     } else if (abort > 0) {
-                        gen.debugPrint("@@ abort", _memory);
+                        gen.debugPrint("@@ abort");
                         return;
                     }
                 }
             }
         } while (gen.hasNext());
-        gen.debugPrint("@@ leave", _memory);
+        gen.debugPrint("@@ leave");
     }
 };
 
