@@ -17,7 +17,7 @@ VPATH=../src:../cli
 
 ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w
 
-TEST_OUT=\
+TEST_OUTS=\
 	test_mc6809.s19 \
 	test_hd6309.s19 \
 	test_mc6800.s19 \
@@ -56,7 +56,7 @@ TEST_OUT=\
 	test_z8002.hex \
 	test_ns32000.hex
 
-all: $(TEST_OUT)
+all: $(TEST_OUTS)
 
 %.hex: %.asl
 	asl $(ASL_FLAGS) $^
@@ -133,7 +133,7 @@ asm-test:
 	    asm $$s -o $$o; \
 	done
 
-.PHONY: clean clean-obj test \
+TESTS=\
 	test_mc6809  \
 	test_mc6800  \
 	test_mos6502 \
@@ -150,22 +150,9 @@ asm-test:
 	test_ns32000 \
 	test_expr
 
-test:   test_mc6809  \
-	test_mc6800  \
-	test_mos6502 \
-	test_i8051   \
-	test_i8080   \
-	test_z80     \
-	test_z8      \
-	test_ins8060 \
-	test_ins8070 \
-	test_cdp1802 \
-	test_i8086   \
-	test_tms9900 \
-	test_mc68000 \
-	test_z8000   \
-	test_ns32000 \
-	test_expr
+.PHONY: clean clean-obj test $(TESTS)
+
+test: $(TESTS)
 
 test_mc6809: test_asm_mc6809 test_dis_mc6809
 	./test_asm_mc6809
@@ -217,22 +204,6 @@ test_expr: test_expr_moto test_expr_intel test_expr_base
 	./test_expr_intel
 	./test_expr_base
 
-gen: \
-	gen_mc6809  \
-	gen_mc6800  \
-	gen_mos6502 \
-	gen_i8051   \
-	gen_i8080   \
-	gen_z80     \
-	gen_z8      \
-	gen_ins8060 \
-	gen_ins8070 \
-	gen_cdp1802 \
-	gen_i8086   \
-	gen_tms9900 \
-	gen_mc68000 \
-	gen_z8000
-
 CXXFLAGS    = -Wall -g -std=c++14 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS    = -MMD
 
@@ -253,21 +224,7 @@ TEST_OBJS= \
 	test_asm_z8000.o   test_dis_z8000.o   \
 	test_asm_ns32000.o test_dis_ns32000.o \
 	test_expr_moto.o   test_expr_intel.o  \
-	test_expr_base.o \
-	gen_mc6809.o  \
-	gen_mc6800.o  \
-	gen_mos6502.o \
-	gen_i8051.o   \
-	gen_i8080.o   \
-	gen_z80.o     \
-	gen_z8.o      \
-	gen_ins8060.o \
-	gen_ins8070.o \
-	gen_cdp1802.o \
-	gen_i8086.o   \
-	gen_tms9900.o \
-	gen_mc68000.o \
-	gen_z8000.o
+	test_expr_base.o
 
 TESTS=$(TEST_OBJS:.o=)
 
@@ -276,7 +233,6 @@ OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o
 OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o test_memory.o
 OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \
             value_parser.o value_formatter.o
-OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing.o
 OBJS_mc6809  = table_mc6809.o  reg_mc6809.o
 OBJS_mc6800  = table_mc6800.o  reg_mc6800.o
 OBJS_mos6502 = table_mos6502.o reg_mos6502.o
@@ -379,67 +335,138 @@ test_expr_intel:  test_expr_intel.o $(OBJS_expr) $(OBJS_test)
 test_expr_base:   test_expr_base.o  $(OBJS_expr) $(OBJS_test)
 	$(CXX) -o $@ $(CXXFLAGS) $^
 
+GEN_OBJS=\
+	gen_mc6809.o  \
+	gen_mc6800.o  \
+	gen_mos6502.o \
+	gen_i8051.o   \
+	gen_i8080.o   \
+	gen_z80.o     \
+	gen_z8.o      \
+	gen_ins8060.o \
+	gen_ins8070.o \
+	gen_cdp1802.o \
+	gen_i8086.o   \
+	gen_tms9900.o \
+	gen_mc68000.o \
+	gen_z8000.o
+
+GEN_OUTS=\
+	gen_mc6809.asm gen_hd6309.asm \
+	gen_mc6800.asm gen_mc6801.asm gen_hd6309.asm gen_mc68hc11.asm \
+	gen_mos6502.asm gen_w65sc02.asm gen_r65c02.asm gen_w65c02s.asm gen_w65c816.asm \
+	gen_i8051.asm \
+	gen_i8080.asm gen_i8085.asm \
+	gen_z80.asm gen_i8080_z80syn.asm gen_i8085_z80syn.asm \
+	gen_z8.asm gen_z86c40.asm gen_z88.asm \
+	gen_ins8060.asm \
+	gen_ins8070.asm \
+	gen_cdp1802.asm \
+	gen_i8086.asm \
+	gen_tms9900.asm gen_tms9995.asm gen_tms99105.asm \
+	gen_mc68000.asm \
+	gen_z8001.asm gen_z8002.asm
+
+
+GENS=$(GEN_OBJS:.o=)
+OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing.o
+
+gen: $(GENS)
+
+generate: $(GEN_OUTS)
+
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mc6809 -u -C 6809 -o gen_mc6809.asm
-	./gen_mc6809 -u -C 6309 -o gen_hd6309.asm
 gen_mc6800:  gen_mc6800.o  dis_mc6800.o  $(OBJS_mc6800)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mc6800 -u -C 6800 -o gen_mc6800.asm
-	./gen_mc6800 -u -C 6801 -o gen_mc6801.asm
-	./gen_mc6800 -u -C 6301 -o gen_hd6301.asm
-	./gen_mc6800 -u -C 6811 -o gen_mc68hc11.asm
 gen_mos6502: gen_mos6502.o dis_mos6502.o $(OBJS_mos6502) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mos6502 -u -C 6502    -o gen_mos6502.asm
-	./gen_mos6502 -u -C 65SC02  -o gen_w65sc02.asm
-	./gen_mos6502 -u -C 65C02   -o gen_r65c02.asm
-	./gen_mos6502 -u -C W65C02S -o gen_w65c02s.asm
-	./gen_mos6502 -u -C 65816   -o gen_w65c816.asm
 gen_i8051:   gen_i8051.o   dis_i8051.o   $(OBJS_i8051)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_i8051 -u -C 8051 -o gen_i8051.asm
 gen_i8080:   gen_i8080.o   dis_i8080.o   $(OBJS_i8080)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_i8080 -u -C 8080 -o gen_i8080.asm
-	./gen_i8080 -u -C 8085 -o gen_i8085.asm
 gen_z80:     gen_z80.o     dis_z80.o     $(OBJS_z80)     $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z80   -u -C Z80  -o gen_z80.asm
-	./gen_z80   -u -C 8080 -o gen_i8080_z80syn.asm
-	./gen_z80   -u -C 8085 -o gen_i8085_z80syn.asm
 gen_z8:      gen_z8.o      dis_z8.o      $(OBJS_z8)      $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z8    -u -C Z8601  -o gen_z8.asm
-	./gen_z8    -u -C Z86C40 -o gen_z86c40.asm
-	./gen_z8    -u -C Z88C00 -o gen_z88.asm
 gen_ins8060: gen_ins8060.o dis_ins8060.o $(OBJS_ins8060) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_ins8060 -u -C SC/MP -o gen_ins8060.asm
 gen_ins8070: gen_ins8070.o dis_ins8070.o $(OBJS_ins8070) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_ins8070 -u -C 8070 -o gen_ins8070.asm
 gen_cdp1802: gen_cdp1802.o dis_cdp1802.o $(OBJS_cdp1802) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_cdp1802 -u -C 1802 -o gen_cdp1802.asm
 gen_i8086:   gen_i8086.o   dis_i8086.o   $(OBJS_i8086)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_i8086   -u -C 8086  -o gen_i8086.asm
 gen_tms9900: gen_tms9900.o dis_tms9900.o $(OBJS_tms9900) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_tms9900 -u -C TMS9900  -o gen_tms9900.asm
-	./gen_tms9900 -u -C TMS9995  -o gen_tms9995.asm
-	./gen_tms9900 -u -C TMS99105 -o gen_tms99105.asm
 gen_mc68000: gen_mc68000.o dis_mc68000.o $(OBJS_mc68000) $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_mc68000 -u -C 68000 -o gen_mc68000.asm
 gen_z8000:   gen_z8000.o   dis_z8000.o   $(OBJS_z8000)   $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
-	./gen_z8000 -C z8001 -c -o gen_z8001.inc
-	./gen_z8000 -C z8002 -c -o gen_z8002.inc
+
+gen_mc6809.asm: gen_mc6809
+	./$^ -u -C 6809 -o $@ -l $(@:.asm=.lst)
+gen_hd6309.asm: gen_mc6809
+	./$^ -u -C 6309 -o $@ -l $(@:.asm=.lst)
+gen_mc6800.asm: gen_mc6800
+	./$^ -u -C 6800 -o $@ -l $(@:.asm=.lst)
+gen_mc6801.asm: gen_mc6800
+	./$^ -u -C 6801 -o $@ -l $(@:.asm=.lst)
+gen_hd6301.asm: gen_mc6800
+	./$^ -u -C 6300 -o $@ -l $(@:.asm=.lst)
+gen_mc68hc11.asm: gen_mc6800
+	./$^ -u -C 6811 -o $@ -l $(@:.asm=.lst)
+gen_mos6502.asm: gen_mos6502
+	./$^ -u -C 6502 -o $@ -l $(@:.asm=.lst)
+gen_w65sc02.asm: gen_mos6502
+	./$^ -u -C 65SC02 -o $@ -l $(@:.asm=.lst)
+gen_r65c02.asm: gen_mos6502
+	./$^ -u -C 65C02 -o $@ -l $(@:.asm=.lst)
+gen_w65c02s.asm: gen_mos6502
+	./$^ -u -C W65C02S -o $@ -l $(@:.asm=.lst)
+gen_w65c816.asm: gen_mos6502
+	./$^ -u -C 65816 -o $@ -l $(@:.asm=.lst)
+gen_i8051.asm: gen_i8051
+	./$^ -u -C 8051 -o $@ -l $(@:.asm=.lst)
+gen_i8080.asm: gen_i8080
+	./$^ -u -C 8080 -o $@ -l $(@:.asm=.lst)
+gen_i8085.asm: gen_i8080
+	./$^ -u -C 8085 -o $@ -l $(@:.asm=.lst)
+gen_z80.asm: gen_z80
+	./$^ -u -C Z80 -o $@ -l $(@:.asm=.lst)
+gen_i8080_z80syn.asm: gen_z80
+	./$^ -u -C 8080 -o $@ -l $(@:.asm=.lst)
+gen_i8085_z80syn.asm: gen_z80
+	./$^ -u -C 8085 -o $@ -l $(@:.asm=.lst)
+gen_z8.asm: gen_z8
+	./$^ -u -C Z8601 -o $@ -l $(@:.asm=.lst)
+gen_z86c40.asm: gen_z8
+	./$^ -u -C Z86C40 -o $@ -l $(@:.asm=.lst)
+gen_z88.asm: gen_z8
+	./$^ -u -C Z88C00 -o $@ -l $(@:.asm=.lst)
+gen_ins8060.asm: gen_ins8060
+	./$^ -u -C SC/MP -o $@ -l $(@:.asm=.lst)
+gen_ins8070.asm: gen_ins8070
+	./$^ -u -C 8070 -o $@ -l $(@:.asm=.lst)
+gen_cdp1802.asm: gen_cdp1802
+	./$^ -u -C 1802 -o $@ -l $(@:.asm=.lst)
+gen_i8086.asm: gen_i8086
+	./$^ -u -C 8086 -o $@ -l $(@:.asm=.lst)
+gen_tms9900.asm: gen_tms9900
+	./$^ -u -C TMS9900 -o $@ -l $(@:.asm=.lst)
+gen_tms9995.asm: gen_tms9900
+	./$^ -u -C TMS9995 -o $@ -l $(@:.asm=.lst)
+gen_tms99105.asm: gen_tms9900
+	./$^ -u -C TMS99105 -o $@ -l $(@:.asm=.lst)
+gen_mc68000.asm: gen_mc68000
+	./$^ -u -C 68000 -o $@ -l $(@:.asm=.lst)
+gen_z8001.inc: gen_z8000
+	./$^ -c -C z8001 -o $@ -l $(@:.inc=.lst)
+gen_z8002.inc: gen_z8000
+	./$^ -c -C z8002 -o $@ -l $(@:.inc=.lst)
 
 clean: clean-obj
-	-rm -f $(TESTS)
+	-rm -f $(TEST_OBJS:.o=) $(GENS)
 clean-obj:
 	-rm -f *.o *.d *.p *.lst
 
