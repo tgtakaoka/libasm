@@ -4,7 +4,7 @@
       Z80SYNTAX    ON
       ORG  0100H
       NOP
-      LD   BC,2
+      LD   BC,0302H
       LD   (BC),A
       INC  BC
       INC  B
@@ -18,7 +18,7 @@
       DEC  C
       LD   C,15
       RRCA
-      LD   DE,18
+      LD   DE,1312H
       LD   (DE),A
       INC  DE
       INC  D
@@ -33,30 +33,30 @@
       LD   E,31
       RRA
       LD   A,IM
-      LD   HL,0022H
-      LD   (0023H),HL
+      LD   HL,2322H
+      LD   (2423H),HL
       INC  HL
       INC  H
       DEC  H
       LD   H,27H
       DAA
       ADD  HL,HL
-      LD   HL,(002BH)
+      LD   HL,(2C2BH)
       DEC  HL
       INC  L
       DEC  L
       LD   L,2FH
       CPL
       LD   IM,A
-      LD   SP,0032H
-      LD   (0033H),A
+      LD   SP,3332H
+      LD   (3433H),A
       INC  SP
       INC  (HL)
       DEC  (HL)
       LD   (HL),37H
       SCF
       ADD  HL,SP
-      LD   A,(003BH)
+      LD   A,(3C3BH)
       DEC  SP
       INC  A
       DEC  A
@@ -192,53 +192,53 @@
       CP   A,A
       RET  NZ
       POP  BC
-      JP   NZ,00C3H
-      JP   00C4H
-      CALL NZ,00C5H
+      JP   NZ,0C4C3H
+      JP   0C5C4H
+      CALL NZ,0C6C5H
       PUSH BC
       ADD  A,0C7H
       RST  0
       RET  Z
       RET
-      JP   Z,00CBH
-      CALL Z,00CDH
-      CALL 00CEH
+      JP   Z,0CCCBH
+      CALL Z,0CECDH
+      CALL 0CFCEH
       ADC  A,0CFH
       RET  NC
       POP  DE
-      JP   NC,00D3H
+      JP   NC,0D4D3H
       OUT  (0D4H),A
-      CALL NC,00D5H
+      CALL NC,0D6D5H
       PUSH DE
       SUB  A,0D7H
       RET  C
-      JP   C,00DBH
+      JP   C,0DCDBH
       IN   A,(0DCH)
-      CALL C,00DDH
+      CALL C,0DEDDH
       SBC  A,0DFH
       RET  PO
       POP  HL
-      JP   PO,00E3H
+      JP   PO,0E4E3H
       EX   (SP),HL
-      CALL PO,00E5H
+      CALL PO,0E6E5H
       PUSH HL
       AND  A,0E7H
       RET  PE
       JP   (HL)
-      JP   PE,00EBH
+      JP   PE,0ECEBH
       EX   DE,HL
-      CALL PE,00EDH
+      CALL PE,0EEEDH
       XOR  A,0EFH
       RET  P
       POP  AF
-      JP   P,00F3H
+      JP   P,0F4F3H
       DI
-      CALL P,00F5H
+      CALL P,0F6F5H
       PUSH AF
       OR   A,0F7H
       RET  M
       LD   SP,HL
-      JP   M,00FBH
+      JP   M,0FCFBH
       EI
-      CALL M,00FDH
+      CALL M,0FEFDH
       CP   A,0FFH

@@ -365,8 +365,7 @@ GEN_OUTS=\
 	gen_i8086.asm \
 	gen_tms9900.asm gen_tms9995.asm gen_tms99105.asm \
 	gen_mc68000.asm \
-	gen_z8001.asm gen_z8002.asm
-
+	gen_z8001.inc gen_z8002.inc
 
 GENS=$(GEN_OBJS:.o=)
 OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing.o

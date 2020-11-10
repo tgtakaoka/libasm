@@ -7,7 +7,7 @@
       ADD    [BP+DI],AL
       ADD    [SI],AL
       ADD    [DI],AL
-      ADD    [0007H],AL
+      ADD    [0807H],AL
       ADD    [BX],AL
       ADD    [BX+SI],CL
       ADD    [BX+DI],CL
@@ -15,7 +15,7 @@
       ADD    [BP+DI],CL
       ADD    [SI],CL
       ADD    [DI],CL
-      ADD    [000FH],CL
+      ADD    [100FH],CL
       ADD    [BX],CL
       ADD    [BX+SI],DL
       ADD    [BX+DI],DL
@@ -23,7 +23,7 @@
       ADD    [BP+DI],DL
       ADD    [SI],DL
       ADD    [DI],DL
-      ADD    [0017H],DL
+      ADD    [1817H],DL
       ADD    [BX],DL
       ADD    [BX+SI],BL
       ADD    [BX+DI],BL
@@ -31,7 +31,7 @@
       ADD    [BP+DI],BL
       ADD    [SI],BL
       ADD    [DI],BL
-      ADD    [001FH],BL
+      ADD    [201FH],BL
       ADD    [BX],BL
       ADD    [BX+SI],AH
       ADD    [BX+DI],AH
@@ -39,159 +39,13 @@
       ADD    [BP+DI],AH
       ADD    [SI],AH
       ADD    [DI],AH
-      ADD    [0027H],AH
+      ADD    [2827H],AH
       ADD    [BX],AH
-      ADD    [BX+SI+65],AL
-      ADD    [BX+SI-128],AL
-      ADD    [BX+DI+66],AL
-      ADD    [BX+DI-128],AL
-      ADD    [BP+SI+67],AL
-      ADD    [BP+SI-128],AL
-      ADD    [BP+DI+68],AL
-      ADD    [BP+DI-128],AL
-      ADD    [SI+69],AL
-      ADD    [SI-128],AL
-      ADD    [DI+70],AL
-      ADD    [DI-128],AL
-      ADD    [BP+71],AL
-      ADD    [BP-128],AL
-      ADD    [BX+72],AL
-      ADD    [BX-128],AL
-      ADD    [BX+SI+73],CL
-      ADD    [BX+SI-128],CL
-      ADD    [BX+DI+74],CL
-      ADD    [BX+DI-128],CL
-      ADD    [BP+SI+75],CL
-      ADD    [BP+SI-128],CL
-      ADD    [BP+DI+76],CL
-      ADD    [BP+DI-128],CL
-      ADD    [SI+77],CL
-      ADD    [SI-128],CL
-      ADD    [DI+78],CL
-      ADD    [DI-128],CL
-      ADD    [BP+79],CL
-      ADD    [BP-128],CL
-      ADD    [BX+80],CL
-      ADD    [BX-128],CL
-      ADD    [BX+SI+81],DL
-      ADD    [BX+SI-128],DL
-      ADD    [BX+DI+82],DL
-      ADD    [BX+DI-128],DL
-      ADD    [BP+SI+83],DL
-      ADD    [BP+SI-128],DL
-      ADD    [BP+DI+84],DL
-      ADD    [BP+DI-128],DL
-      ADD    [SI+85],DL
-      ADD    [SI-128],DL
-      ADD    [DI+86],DL
-      ADD    [DI-128],DL
-      ADD    [BP+87],DL
-      ADD    [BP-128],DL
-      ADD    [BX+88],DL
-      ADD    [BX-128],DL
-      ADD    [BX+SI+89],BL
-      ADD    [BX+SI-128],BL
-      ADD    [BX+DI+90],BL
-      ADD    [BX+DI-128],BL
-      ADD    [BP+SI+91],BL
-      ADD    [BP+SI-128],BL
-      ADD    [BP+DI+92],BL
-      ADD    [BP+DI-128],BL
-      ADD    [SI+93],BL
-      ADD    [SI-128],BL
-      ADD    [DI+94],BL
-      ADD    [DI-128],BL
-      ADD    [BP+95],BL
-      ADD    [BP-128],BL
-      ADD    [BX+96],BL
-      ADD    [BX-128],BL
-      ADD    [BX+SI+97],AH
-      ADD    [BX+SI-128],AH
-      ADD    [BX+DI+98],AH
-      ADD    [BX+DI-128],AH
-      ADD    [BP+SI+99],AH
-      ADD    [BP+SI-128],AH
-      ADD    [BP+DI+100],AH
-      ADD    [BP+DI-128],AH
-      ADD    [SI+101],AH
-      ADD    [SI-128],AH
-      ADD    [DI+102],AH
-      ADD    [DI-128],AH
-      ADD    [BP+103],AH
-      ADD    [BP-128],AH
-      ADD    [BX+104],AH
-      ADD    [BX-128],AH
-      ADD    [BX+SI+0081H],AL
-      ADD    [BX+DI+0082H],AL
-      ADD    [BP+SI+0083H],AL
-      ADD    [BP+DI+0084H],AL
-      ADD    [SI+0085H],AL
-      ADD    [DI+0086H],AL
-      ADD    [BP+0087H],AL
-      ADD    [BX+0088H],AL
-      ADD    [BX+SI+0089H],CL
-      ADD    [BX+DI+008AH],CL
-      ADD    [BP+SI+008BH],CL
-      ADD    [BP+DI+008CH],CL
-      ADD    [SI+008DH],CL
-      ADD    [DI+008EH],CL
-      ADD    [BP+008FH],CL
-      ADD    [BX+0090H],CL
-      ADD    [BX+SI+0091H],DL
-      ADD    [BX+DI+0092H],DL
-      ADD    [BP+SI+0093H],DL
-      ADD    [BP+DI+0094H],DL
-      ADD    [SI+0095H],DL
-      ADD    [DI+0096H],DL
-      ADD    [BP+0097H],DL
-      ADD    [BX+0098H],DL
-      ADD    [BX+SI+0099H],BL
-      ADD    [BX+DI+009AH],BL
-      ADD    [BP+SI+009BH],BL
-      ADD    [BP+DI+009CH],BL
-      ADD    [SI+009DH],BL
-      ADD    [DI+009EH],BL
-      ADD    [BP+009FH],BL
-      ADD    [BX+00A0H],BL
-      ADD    [BX+SI+00A1H],AH
-      ADD    [BX+DI+00A2H],AH
-      ADD    [BP+SI+00A3H],AH
-      ADD    [BP+DI+00A4H],AH
-      ADD    [SI+00A5H],AH
-      ADD    [DI+00A6H],AH
-      ADD    [BP+00A7H],AH
-      ADD    [BX+00A8H],AH
-      ADD    AL,AL
-      ADD    CL,AL
-      ADD    DL,AL
-      ADD    BL,AL
-      ADD    AH,AL
-      ADD    AL,CL
-      ADD    CL,CL
-      ADD    DL,CL
-      ADD    BL,CL
-      ADD    AH,CL
-      ADD    AL,DL
-      ADD    CL,DL
-      ADD    DL,DL
-      ADD    BL,DL
-      ADD    AH,DL
-      ADD    AL,BL
-      ADD    CL,BL
-      ADD    DL,BL
-      ADD    BL,BL
-      ADD    AH,BL
-      ADD    AL,AH
-      ADD    CL,AH
-      ADD    DL,AH
-      ADD    BL,AH
-      ADD    AH,AH
-      ADD    [BX+SI],AL
       ADD    [BP+SI],AX
       ADD    [BP+DI],AX
       ADD    [SI],AX
       ADD    [DI],AX
-      ADD    [0007H],AX
+      ADD    [0807H],AX
       ADD    [BX],AX
       ADD    [BX+SI],CX
       ADD    [BX+DI],CX
@@ -199,7 +53,7 @@
       ADD    [BP+DI],CX
       ADD    [SI],CX
       ADD    [DI],CX
-      ADD    [000FH],CX
+      ADD    [100FH],CX
       ADD    [BX],CX
       ADD    [BX+SI],DX
       ADD    [BX+DI],DX
@@ -207,7 +61,7 @@
       ADD    [BP+DI],DX
       ADD    [SI],DX
       ADD    [DI],DX
-      ADD    [0017H],DX
+      ADD    [1817H],DX
       ADD    [BX],DX
       ADD    [BX+SI],BX
       ADD    [BX+DI],BX
@@ -215,7 +69,7 @@
       ADD    [BP+DI],BX
       ADD    [SI],BX
       ADD    [DI],BX
-      ADD    [001FH],BX
+      ADD    [201FH],BX
       ADD    [BX],BX
       ADD    [BX+SI],SP
       ADD    [BX+DI],SP
@@ -223,7 +77,7 @@
       ADD    [BP+DI],SP
       ADD    [SI],SP
       ADD    [DI],SP
-      ADD    [0027H],SP
+      ADD    [2827H],SP
       ADD    [BX],SP
       ADD    [BX+SI],BP
       ADD    [BX+DI],BP
@@ -231,7 +85,7 @@
       ADD    [BP+DI],BP
       ADD    [SI],BP
       ADD    [DI],BP
-      ADD    [002FH],BP
+      ADD    [302FH],BP
       ADD    [BX],BP
       ADD    [BX+SI],SI
       ADD    [BX+DI],SI
@@ -239,7 +93,7 @@
       ADD    [BP+DI],SI
       ADD    [SI],SI
       ADD    [DI],SI
-      ADD    [0037H],SI
+      ADD    [3837H],SI
       ADD    [BX],SI
       ADD    [BX+SI],DI
       ADD    [BX+DI],DI
@@ -247,7 +101,7 @@
       ADD    [BP+DI],DI
       ADD    [SI],DI
       ADD    [DI],DI
-      ADD    [003FH],DI
+      ADD    [403FH],DI
       ADD    [BX],DI
       ADD    [BX+SI+65],AX
       ADD    [BX+SI-128],AX
@@ -377,70 +231,70 @@
       ADD    [BP-128],DI
       ADD    [BX-128],DI
       ADD    [BX+0],DI
-      ADD    [BX+SI+0081H],AX
-      ADD    [BX+DI+0082H],AX
-      ADD    [BP+SI+0083H],AX
-      ADD    [BP+DI+0084H],AX
-      ADD    [SI+0085H],AX
-      ADD    [DI+0086H],AX
-      ADD    [BP+0087H],AX
-      ADD    [BX+0088H],AX
-      ADD    [BX+SI+0089H],CX
-      ADD    [BX+DI+008AH],CX
-      ADD    [BP+SI+008BH],CX
-      ADD    [BP+DI+008CH],CX
-      ADD    [SI+008DH],CX
-      ADD    [DI+008EH],CX
-      ADD    [BP+008FH],CX
-      ADD    [BX+0090H],CX
-      ADD    [BX+SI+0091H],DX
-      ADD    [BX+DI+0092H],DX
-      ADD    [BP+SI+0093H],DX
-      ADD    [BP+DI+0094H],DX
-      ADD    [SI+0095H],DX
-      ADD    [DI+0096H],DX
-      ADD    [BP+0097H],DX
-      ADD    [BX+0098H],DX
-      ADD    [BX+SI+0099H],BX
-      ADD    [BX+DI+009AH],BX
-      ADD    [BP+SI+009BH],BX
-      ADD    [BP+DI+009CH],BX
-      ADD    [SI+009DH],BX
-      ADD    [DI+009EH],BX
-      ADD    [BP+009FH],BX
-      ADD    [BX+00A0H],BX
-      ADD    [BX+SI+00A1H],SP
-      ADD    [BX+DI+00A2H],SP
-      ADD    [BP+SI+00A3H],SP
-      ADD    [BP+DI+00A4H],SP
-      ADD    [SI+00A5H],SP
-      ADD    [DI+00A6H],SP
-      ADD    [BP+00A7H],SP
-      ADD    [BX+00A8H],SP
-      ADD    [BX+SI+00A9H],BP
-      ADD    [BX+DI+00AAH],BP
-      ADD    [BP+SI+00ABH],BP
-      ADD    [BP+DI+00ACH],BP
-      ADD    [SI+00ADH],BP
-      ADD    [DI+00AEH],BP
-      ADD    [BP+00AFH],BP
-      ADD    [BX+00B0H],BP
-      ADD    [BX+SI+00B1H],SI
-      ADD    [BX+DI+00B2H],SI
-      ADD    [BP+SI+00B3H],SI
-      ADD    [BP+DI+00B4H],SI
-      ADD    [SI+00B5H],SI
-      ADD    [DI+00B6H],SI
-      ADD    [BP+00B7H],SI
-      ADD    [BX+00B8H],SI
-      ADD    [BX+SI+00B9H],DI
-      ADD    [BX+DI+00BAH],DI
-      ADD    [BP+SI+00BBH],DI
-      ADD    [BP+DI+00BCH],DI
-      ADD    [SI+00BDH],DI
-      ADD    [DI+00BEH],DI
-      ADD    [BP+00BFH],DI
-      ADD    [BX+00C0H],DI
+      ADD    [BX+SI+8281H],AX
+      ADD    [BX+DI+8382H],AX
+      ADD    [BP+SI+8483H],AX
+      ADD    [BP+DI+8584H],AX
+      ADD    [SI+8685H],AX
+      ADD    [DI+8786H],AX
+      ADD    [BP+8887H],AX
+      ADD    [BX+8988H],AX
+      ADD    [BX+SI+8A89H],CX
+      ADD    [BX+DI+8B8AH],CX
+      ADD    [BP+SI+8C8BH],CX
+      ADD    [BP+DI+8D8CH],CX
+      ADD    [SI+8E8DH],CX
+      ADD    [DI+8F8EH],CX
+      ADD    [BP+908FH],CX
+      ADD    [BX+9190H],CX
+      ADD    [BX+SI+9291H],DX
+      ADD    [BX+DI+9392H],DX
+      ADD    [BP+SI+9493H],DX
+      ADD    [BP+DI+9594H],DX
+      ADD    [SI+9695H],DX
+      ADD    [DI+9796H],DX
+      ADD    [BP+9897H],DX
+      ADD    [BX+9998H],DX
+      ADD    [BX+SI+9A99H],BX
+      ADD    [BX+DI+9B9AH],BX
+      ADD    [BP+SI+9C9BH],BX
+      ADD    [BP+DI+9D9CH],BX
+      ADD    [SI+9E9DH],BX
+      ADD    [DI+9F9EH],BX
+      ADD    [BP+0A09FH],BX
+      ADD    [BX+0A1A0H],BX
+      ADD    [BX+SI+0A2A1H],SP
+      ADD    [BX+DI+0A3A2H],SP
+      ADD    [BP+SI+0A4A3H],SP
+      ADD    [BP+DI+0A5A4H],SP
+      ADD    [SI+0A6A5H],SP
+      ADD    [DI+0A7A6H],SP
+      ADD    [BP+0A8A7H],SP
+      ADD    [BX+0A9A8H],SP
+      ADD    [BX+SI+0AAA9H],BP
+      ADD    [BX+DI+0ABAAH],BP
+      ADD    [BP+SI+0ACABH],BP
+      ADD    [BP+DI+0ADACH],BP
+      ADD    [SI+0AEADH],BP
+      ADD    [DI+0AFAEH],BP
+      ADD    [BP+0B0AFH],BP
+      ADD    [BX+0B1B0H],BP
+      ADD    [BX+SI+0B2B1H],SI
+      ADD    [BX+DI+0B3B2H],SI
+      ADD    [BP+SI+0B4B3H],SI
+      ADD    [BP+DI+0B5B4H],SI
+      ADD    [SI+0B6B5H],SI
+      ADD    [DI+0B7B6H],SI
+      ADD    [BP+0B8B7H],SI
+      ADD    [BX+0B9B8H],SI
+      ADD    [BX+SI+0BAB9H],DI
+      ADD    [BX+DI+0BBBAH],DI
+      ADD    [BP+SI+0BCBBH],DI
+      ADD    [BP+DI+0BDBCH],DI
+      ADD    [SI+0BEBDH],DI
+      ADD    [DI+0BFBEH],DI
+      ADD    [BP+0C0BFH],DI
+      ADD    [BX+0C1C0H],DI
       ADD    AX,AX
       ADD    CX,AX
       ADD    DX,AX
@@ -510,7 +364,7 @@
       ADD    AL,[BP+DI]
       ADD    AL,[SI]
       ADD    AL,[DI]
-      ADD    AL,[0007H]
+      ADD    AL,[0807H]
       ADD    AL,[BX]
       ADD    CL,[BX+SI]
       ADD    CL,[BX+DI]
@@ -518,7 +372,7 @@
       ADD    CL,[BP+DI]
       ADD    CL,[SI]
       ADD    CL,[DI]
-      ADD    CL,[000FH]
+      ADD    CL,[100FH]
       ADD    CL,[BX]
       ADD    DL,[BX+SI]
       ADD    DL,[BX+DI]
@@ -526,7 +380,7 @@
       ADD    DL,[BP+DI]
       ADD    DL,[SI]
       ADD    DL,[DI]
-      ADD    DL,[0017H]
+      ADD    DL,[1817H]
       ADD    DL,[BX]
       ADD    BL,[BX+SI]
       ADD    BL,[BX+DI]
@@ -534,7 +388,7 @@
       ADD    BL,[BP+DI]
       ADD    BL,[SI]
       ADD    BL,[DI]
-      ADD    BL,[001FH]
+      ADD    BL,[201FH]
       ADD    BL,[BX]
       ADD    AH,[BX+SI]
       ADD    AH,[BX+DI]
@@ -542,134 +396,11 @@
       ADD    AH,[BP+DI]
       ADD    AH,[SI]
       ADD    AH,[DI]
-      ADD    AH,[0027H]
+      ADD    AH,[2827H]
       ADD    AH,[BX]
-      ADD    AL,[BX+SI+65]
-      ADD    AL,[BX+SI-128]
-      ADD    AL,[BX+DI+66]
-      ADD    AL,[BX+DI-128]
-      ADD    AL,[BP+SI+67]
-      ADD    AL,[BP+SI-128]
-      ADD    AL,[BP+DI+68]
-      ADD    AL,[BP+DI-128]
-      ADD    AL,[SI+69]
-      ADD    AL,[SI-128]
-      ADD    AL,[DI+70]
-      ADD    AL,[DI-128]
-      ADD    AL,[BP+71]
-      ADD    AL,[BP-128]
-      ADD    AL,[BX+72]
-      ADD    AL,[BX-128]
-      ADD    CL,[BX+SI+73]
-      ADD    CL,[BX+SI-128]
-      ADD    CL,[BX+DI+74]
-      ADD    CL,[BX+DI-128]
-      ADD    CL,[BP+SI+75]
-      ADD    CL,[BP+SI-128]
-      ADD    CL,[BP+DI+76]
-      ADD    CL,[BP+DI-128]
-      ADD    CL,[SI+77]
-      ADD    CL,[SI-128]
-      ADD    CL,[DI+78]
-      ADD    CL,[DI-128]
-      ADD    CL,[BP+79]
-      ADD    CL,[BP-128]
-      ADD    CL,[BX+80]
-      ADD    CL,[BX-128]
-      ADD    DL,[BX+SI+81]
-      ADD    DL,[BX+SI-128]
-      ADD    DL,[BX+DI+82]
-      ADD    DL,[BX+DI-128]
-      ADD    DL,[BP+SI+83]
-      ADD    DL,[BP+SI-128]
-      ADD    DL,[BP+DI+84]
-      ADD    DL,[BP+DI-128]
-      ADD    DL,[SI+85]
-      ADD    DL,[SI-128]
-      ADD    DL,[DI+86]
-      ADD    DL,[DI-128]
-      ADD    DL,[BP+87]
-      ADD    DL,[BP-128]
-      ADD    DL,[BX+88]
-      ADD    DL,[BX-128]
-      ADD    BL,[BX+SI+89]
-      ADD    BL,[BX+SI-128]
-      ADD    BL,[BX+DI+90]
-      ADD    BL,[BX+DI-128]
-      ADD    BL,[BP+SI+91]
-      ADD    BL,[BP+SI-128]
-      ADD    BL,[BP+DI+92]
-      ADD    BL,[BP+DI-128]
-      ADD    BL,[SI+93]
-      ADD    BL,[SI-128]
-      ADD    BL,[DI+94]
-      ADD    BL,[DI-128]
-      ADD    BL,[BP+95]
-      ADD    BL,[BP-128]
-      ADD    BL,[BX+96]
-      ADD    BL,[BX-128]
-      ADD    AH,[BX+SI+97]
-      ADD    AH,[BX+SI-128]
-      ADD    AH,[BX+DI+98]
-      ADD    AH,[BX+DI-128]
-      ADD    AH,[BP+SI+99]
-      ADD    AH,[BP+SI-128]
-      ADD    AH,[BP+DI+100]
-      ADD    AH,[BP+DI-128]
-      ADD    AH,[SI+101]
-      ADD    AH,[SI-128]
-      ADD    AH,[DI+102]
-      ADD    AH,[DI-128]
-      ADD    AH,[BP+103]
-      ADD    AH,[BP-128]
-      ADD    AH,[BX+104]
-      ADD    AH,[BX-128]
-      ADD    AL,[BX+SI+0081H]
-      ADD    AL,[BX+DI+0082H]
-      ADD    AL,[BP+SI+0083H]
-      ADD    AL,[BP+DI+0084H]
-      ADD    AL,[SI+0085H]
-      ADD    AL,[DI+0086H]
-      ADD    AL,[BP+0087H]
-      ADD    AL,[BX+0088H]
-      ADD    CL,[BX+SI+0089H]
-      ADD    CL,[BX+DI+008AH]
-      ADD    CL,[BP+SI+008BH]
-      ADD    CL,[BP+DI+008CH]
-      ADD    CL,[SI+008DH]
-      ADD    CL,[DI+008EH]
-      ADD    CL,[BP+008FH]
-      ADD    CL,[BX+0090H]
-      ADD    DL,[BX+SI+0091H]
-      ADD    DL,[BX+DI+0092H]
-      ADD    DL,[BP+SI+0093H]
-      ADD    DL,[BP+DI+0094H]
-      ADD    DL,[SI+0095H]
-      ADD    DL,[DI+0096H]
-      ADD    DL,[BP+0097H]
-      ADD    DL,[BX+0098H]
-      ADD    BL,[BX+SI+0099H]
-      ADD    BL,[BX+DI+009AH]
-      ADD    BL,[BP+SI+009BH]
-      ADD    BL,[BP+DI+009CH]
-      ADD    BL,[SI+009DH]
-      ADD    BL,[DI+009EH]
-      ADD    BL,[BP+009FH]
-      ADD    BL,[BX+00A0H]
-      ADD    AH,[BX+SI+00A1H]
-      ADD    AH,[BX+DI+00A2H]
-      ADD    AH,[BP+SI+00A3H]
-      ADD    AH,[BP+DI+00A4H]
-      ADD    AH,[SI+00A5H]
-      ADD    AH,[DI+00A6H]
-      ADD    AH,[BP+00A7H]
-      ADD    AH,[BX+00A8H]
-      ADD    AL,[BX+SI]
-      ADD    AL,[BX+DI]
-      ADD    AL,[BP+SI]
       ADD    AX,[SI]
       ADD    AX,[DI]
-      ADD    AX,[0007H]
+      ADD    AX,[0807H]
       ADD    AX,[BX]
       ADD    CX,[BX+SI]
       ADD    CX,[BX+DI]
@@ -677,7 +408,7 @@
       ADD    CX,[BP+DI]
       ADD    CX,[SI]
       ADD    CX,[DI]
-      ADD    CX,[000FH]
+      ADD    CX,[100FH]
       ADD    CX,[BX]
       ADD    DX,[BX+SI]
       ADD    DX,[BX+DI]
@@ -685,7 +416,7 @@
       ADD    DX,[BP+DI]
       ADD    DX,[SI]
       ADD    DX,[DI]
-      ADD    DX,[0017H]
+      ADD    DX,[1817H]
       ADD    DX,[BX]
       ADD    BX,[BX+SI]
       ADD    BX,[BX+DI]
@@ -693,7 +424,7 @@
       ADD    BX,[BP+DI]
       ADD    BX,[SI]
       ADD    BX,[DI]
-      ADD    BX,[001FH]
+      ADD    BX,[201FH]
       ADD    BX,[BX]
       ADD    SP,[BX+SI]
       ADD    SP,[BX+DI]
@@ -701,7 +432,7 @@
       ADD    SP,[BP+DI]
       ADD    SP,[SI]
       ADD    SP,[DI]
-      ADD    SP,[0027H]
+      ADD    SP,[2827H]
       ADD    SP,[BX]
       ADD    BP,[BX+SI]
       ADD    BP,[BX+DI]
@@ -709,7 +440,7 @@
       ADD    BP,[BP+DI]
       ADD    BP,[SI]
       ADD    BP,[DI]
-      ADD    BP,[002FH]
+      ADD    BP,[302FH]
       ADD    BP,[BX]
       ADD    SI,[BX+SI]
       ADD    SI,[BX+DI]
@@ -717,7 +448,7 @@
       ADD    SI,[BP+DI]
       ADD    SI,[SI]
       ADD    SI,[DI]
-      ADD    SI,[0037H]
+      ADD    SI,[3837H]
       ADD    SI,[BX]
       ADD    DI,[BX+SI]
       ADD    DI,[BX+DI]
@@ -725,7 +456,7 @@
       ADD    DI,[BP+DI]
       ADD    DI,[SI]
       ADD    DI,[DI]
-      ADD    DI,[003FH]
+      ADD    DI,[403FH]
       ADD    DI,[BX]
       ADD    AX,[BX+SI+65]
       ADD    AX,[BX+SI-128]
@@ -855,75 +586,76 @@
       ADD    DI,[BP-128]
       ADD    DI,[BX-128]
       ADD    DI,[BX+0]
-      ADD    AX,[BX+SI+0081H]
-      ADD    AX,[BX+DI+0082H]
-      ADD    AX,[BP+SI+0083H]
-      ADD    AX,[BP+DI+0084H]
-      ADD    AX,[SI+0085H]
-      ADD    AX,[DI+0086H]
-      ADD    AX,[BP+0087H]
-      ADD    AX,[BX+0088H]
-      ADD    CX,[BX+SI+0089H]
-      ADD    CX,[BX+DI+008AH]
-      ADD    CX,[BP+SI+008BH]
-      ADD    CX,[BP+DI+008CH]
-      ADD    CX,[SI+008DH]
-      ADD    CX,[DI+008EH]
-      ADD    CX,[BP+008FH]
-      ADD    CX,[BX+0090H]
-      ADD    DX,[BX+SI+0091H]
-      ADD    DX,[BX+DI+0092H]
-      ADD    DX,[BP+SI+0093H]
-      ADD    DX,[BP+DI+0094H]
-      ADD    DX,[SI+0095H]
-      ADD    DX,[DI+0096H]
-      ADD    DX,[BP+0097H]
-      ADD    DX,[BX+0098H]
-      ADD    BX,[BX+SI+0099H]
-      ADD    BX,[BX+DI+009AH]
-      ADD    BX,[BP+SI+009BH]
-      ADD    BX,[BP+DI+009CH]
-      ADD    BX,[SI+009DH]
-      ADD    BX,[DI+009EH]
-      ADD    BX,[BP+009FH]
-      ADD    BX,[BX+00A0H]
-      ADD    SP,[BX+SI+00A1H]
-      ADD    SP,[BX+DI+00A2H]
-      ADD    SP,[BP+SI+00A3H]
-      ADD    SP,[BP+DI+00A4H]
-      ADD    SP,[SI+00A5H]
-      ADD    SP,[DI+00A6H]
-      ADD    SP,[BP+00A7H]
-      ADD    SP,[BX+00A8H]
-      ADD    BP,[BX+SI+00A9H]
-      ADD    BP,[BX+DI+00AAH]
-      ADD    BP,[BP+SI+00ABH]
-      ADD    BP,[BP+DI+00ACH]
-      ADD    BP,[SI+00ADH]
-      ADD    BP,[DI+00AEH]
-      ADD    BP,[BP+00AFH]
-      ADD    BP,[BX+00B0H]
-      ADD    SI,[BX+SI+00B1H]
-      ADD    SI,[BX+DI+00B2H]
-      ADD    SI,[BP+SI+00B3H]
-      ADD    SI,[BP+DI+00B4H]
-      ADD    SI,[SI+00B5H]
-      ADD    SI,[DI+00B6H]
-      ADD    SI,[BP+00B7H]
-      ADD    SI,[BX+00B8H]
-      ADD    DI,[BX+SI+00B9H]
-      ADD    DI,[BX+DI+00BAH]
-      ADD    DI,[BP+SI+00BBH]
-      ADD    DI,[BP+DI+00BCH]
-      ADD    DI,[SI+00BDH]
-      ADD    DI,[DI+00BEH]
-      ADD    DI,[BP+00BFH]
-      ADD    DI,[BX+00C0H]
+      ADD    AX,[BX+SI+8281H]
+      ADD    AX,[BX+DI+8382H]
+      ADD    AX,[BP+SI+8483H]
+      ADD    AX,[BP+DI+8584H]
+      ADD    AX,[SI+8685H]
+      ADD    AX,[DI+8786H]
+      ADD    AX,[BP+8887H]
+      ADD    AX,[BX+8988H]
+      ADD    CX,[BX+SI+8A89H]
+      ADD    CX,[BX+DI+8B8AH]
+      ADD    CX,[BP+SI+8C8BH]
+      ADD    CX,[BP+DI+8D8CH]
+      ADD    CX,[SI+8E8DH]
+      ADD    CX,[DI+8F8EH]
+      ADD    CX,[BP+908FH]
+      ADD    CX,[BX+9190H]
+      ADD    DX,[BX+SI+9291H]
+      ADD    DX,[BX+DI+9392H]
+      ADD    DX,[BP+SI+9493H]
+      ADD    DX,[BP+DI+9594H]
+      ADD    DX,[SI+9695H]
+      ADD    DX,[DI+9796H]
+      ADD    DX,[BP+9897H]
+      ADD    DX,[BX+9998H]
+      ADD    BX,[BX+SI+9A99H]
+      ADD    BX,[BX+DI+9B9AH]
+      ADD    BX,[BP+SI+9C9BH]
+      ADD    BX,[BP+DI+9D9CH]
+      ADD    BX,[SI+9E9DH]
+      ADD    BX,[DI+9F9EH]
+      ADD    BX,[BP+0A09FH]
+      ADD    BX,[BX+0A1A0H]
+      ADD    SP,[BX+SI+0A2A1H]
+      ADD    SP,[BX+DI+0A3A2H]
+      ADD    SP,[BP+SI+0A4A3H]
+      ADD    SP,[BP+DI+0A5A4H]
+      ADD    SP,[SI+0A6A5H]
+      ADD    SP,[DI+0A7A6H]
+      ADD    SP,[BP+0A8A7H]
+      ADD    SP,[BX+0A9A8H]
+      ADD    BP,[BX+SI+0AAA9H]
+      ADD    BP,[BX+DI+0ABAAH]
+      ADD    BP,[BP+SI+0ACABH]
+      ADD    BP,[BP+DI+0ADACH]
+      ADD    BP,[SI+0AEADH]
+      ADD    BP,[DI+0AFAEH]
+      ADD    BP,[BP+0B0AFH]
+      ADD    BP,[BX+0B1B0H]
+      ADD    SI,[BX+SI+0B2B1H]
+      ADD    SI,[BX+DI+0B3B2H]
+      ADD    SI,[BP+SI+0B4B3H]
+      ADD    SI,[BP+DI+0B5B4H]
+      ADD    SI,[SI+0B6B5H]
+      ADD    SI,[DI+0B7B6H]
+      ADD    SI,[BP+0B8B7H]
+      ADD    SI,[BX+0B9B8H]
+      ADD    DI,[BX+SI+0BAB9H]
+      ADD    DI,[BX+DI+0BBBAH]
+      ADD    DI,[BP+SI+0BCBBH]
+      ADD    DI,[BP+DI+0BDBCH]
+      ADD    DI,[SI+0BEBDH]
+      ADD    DI,[DI+0BFBEH]
+      ADD    DI,[BP+0C0BFH]
+      ADD    DI,[BX+0C1C0H]
       ADD    AX,[BX+SI]
       ADD    AX,[BX+DI]
       ADD    AX,[BP+SI]
       ADD    AX,[BP+DI]
-      ADD    AX,6
+      ADD    AL,5
+      ADD    AX,0706H
       PUSH   ES
       POP    ES
       OR     [BX+DI],CL
@@ -931,7 +663,7 @@
       OR     [BP+DI],CL
       OR     [SI],CL
       OR     [DI],CL
-      OR     [000FH],CL
+      OR     [100FH],CL
       OR     [BX],CL
       OR     [BX+SI],DL
       OR     [BX+DI],DL
@@ -939,7 +671,7 @@
       OR     [BP+DI],DL
       OR     [SI],DL
       OR     [DI],DL
-      OR     [0017H],DL
+      OR     [1817H],DL
       OR     [BX],DL
       OR     [BX+SI],BL
       OR     [BX+DI],BL
@@ -947,7 +679,7 @@
       OR     [BP+DI],BL
       OR     [SI],BL
       OR     [DI],BL
-      OR     [001FH],BL
+      OR     [201FH],BL
       OR     [BX],BL
       OR     [BX+SI],AH
       OR     [BX+DI],AH
@@ -955,167 +687,13 @@
       OR     [BP+DI],AH
       OR     [SI],AH
       OR     [DI],AH
-      OR     [0027H],AH
+      OR     [2827H],AH
       OR     [BX],AH
-      OR     [BX+SI+65],AL
-      OR     [BX+SI-128],AL
-      OR     [BX+DI+66],AL
-      OR     [BX+DI-128],AL
-      OR     [BP+SI+67],AL
-      OR     [BP+SI-128],AL
-      OR     [BP+DI+68],AL
-      OR     [BP+DI-128],AL
-      OR     [SI+69],AL
-      OR     [SI-128],AL
-      OR     [DI+70],AL
-      OR     [DI-128],AL
-      OR     [BP+71],AL
-      OR     [BP-128],AL
-      OR     [BX+72],AL
-      OR     [BX-128],AL
-      OR     [BX+SI+73],CL
-      OR     [BX+SI-128],CL
-      OR     [BX+DI+74],CL
-      OR     [BX+DI-128],CL
-      OR     [BP+SI+75],CL
-      OR     [BP+SI-128],CL
-      OR     [BP+DI+76],CL
-      OR     [BP+DI-128],CL
-      OR     [SI+77],CL
-      OR     [SI-128],CL
-      OR     [DI+78],CL
-      OR     [DI-128],CL
-      OR     [BP+79],CL
-      OR     [BP-128],CL
-      OR     [BX+80],CL
-      OR     [BX-128],CL
-      OR     [BX+SI+81],DL
-      OR     [BX+SI-128],DL
-      OR     [BX+DI+82],DL
-      OR     [BX+DI-128],DL
-      OR     [BP+SI+83],DL
-      OR     [BP+SI-128],DL
-      OR     [BP+DI+84],DL
-      OR     [BP+DI-128],DL
-      OR     [SI+85],DL
-      OR     [SI-128],DL
-      OR     [DI+86],DL
-      OR     [DI-128],DL
-      OR     [BP+87],DL
-      OR     [BP-128],DL
-      OR     [BX+88],DL
-      OR     [BX-128],DL
-      OR     [BX+SI+89],BL
-      OR     [BX+SI-128],BL
-      OR     [BX+DI+90],BL
-      OR     [BX+DI-128],BL
-      OR     [BP+SI+91],BL
-      OR     [BP+SI-128],BL
-      OR     [BP+DI+92],BL
-      OR     [BP+DI-128],BL
-      OR     [SI+93],BL
-      OR     [SI-128],BL
-      OR     [DI+94],BL
-      OR     [DI-128],BL
-      OR     [BP+95],BL
-      OR     [BP-128],BL
-      OR     [BX+96],BL
-      OR     [BX-128],BL
-      OR     [BX+SI+97],AH
-      OR     [BX+SI-128],AH
-      OR     [BX+DI+98],AH
-      OR     [BX+DI-128],AH
-      OR     [BP+SI+99],AH
-      OR     [BP+SI-128],AH
-      OR     [BP+DI+100],AH
-      OR     [BP+DI-128],AH
-      OR     [SI+101],AH
-      OR     [SI-128],AH
-      OR     [DI+102],AH
-      OR     [DI-128],AH
-      OR     [BP+103],AH
-      OR     [BP-128],AH
-      OR     [BX+104],AH
-      OR     [BX-128],AH
-      OR     [BX+SI+0081H],AL
-      OR     [BX+DI+0082H],AL
-      OR     [BP+SI+0083H],AL
-      OR     [BP+DI+0084H],AL
-      OR     [SI+0085H],AL
-      OR     [DI+0086H],AL
-      OR     [BP+0087H],AL
-      OR     [BX+0088H],AL
-      OR     [BX+SI+0089H],CL
-      OR     [BX+DI+008AH],CL
-      OR     [BP+SI+008BH],CL
-      OR     [BP+DI+008CH],CL
-      OR     [SI+008DH],CL
-      OR     [DI+008EH],CL
-      OR     [BP+008FH],CL
-      OR     [BX+0090H],CL
-      OR     [BX+SI+0091H],DL
-      OR     [BX+DI+0092H],DL
-      OR     [BP+SI+0093H],DL
-      OR     [BP+DI+0094H],DL
-      OR     [SI+0095H],DL
-      OR     [DI+0096H],DL
-      OR     [BP+0097H],DL
-      OR     [BX+0098H],DL
-      OR     [BX+SI+0099H],BL
-      OR     [BX+DI+009AH],BL
-      OR     [BP+SI+009BH],BL
-      OR     [BP+DI+009CH],BL
-      OR     [SI+009DH],BL
-      OR     [DI+009EH],BL
-      OR     [BP+009FH],BL
-      OR     [BX+00A0H],BL
-      OR     [BX+SI+00A1H],AH
-      OR     [BX+DI+00A2H],AH
-      OR     [BP+SI+00A3H],AH
-      OR     [BP+DI+00A4H],AH
-      OR     [SI+00A5H],AH
-      OR     [DI+00A6H],AH
-      OR     [BP+00A7H],AH
-      OR     [BX+00A8H],AH
-      OR     AL,AL
-      OR     CL,AL
-      OR     DL,AL
-      OR     BL,AL
-      OR     AH,AL
-      OR     AL,CL
-      OR     CL,CL
-      OR     DL,CL
-      OR     BL,CL
-      OR     AH,CL
-      OR     AL,DL
-      OR     CL,DL
-      OR     DL,DL
-      OR     BL,DL
-      OR     AH,DL
-      OR     AL,BL
-      OR     CL,BL
-      OR     DL,BL
-      OR     BL,BL
-      OR     AH,BL
-      OR     AL,AH
-      OR     CL,AH
-      OR     DL,AH
-      OR     BL,AH
-      OR     AH,AH
-      OR     [BX+SI],AL
-      OR     [BX+DI],AL
-      OR     [BP+SI],AL
-      OR     [BP+DI],AL
-      OR     [SI],AL
-      OR     [DI],AL
-      OR     [0107H],AL
-      OR     [BX],AL
-      OR     [BX+SI],CL
       OR     [BP+SI],CX
       OR     [BP+DI],CX
       OR     [SI],CX
       OR     [DI],CX
-      OR     [000FH],CX
+      OR     [100FH],CX
       OR     [BX],CX
       OR     [BX+SI],DX
       OR     [BX+DI],DX
@@ -1123,7 +701,7 @@
       OR     [BP+DI],DX
       OR     [SI],DX
       OR     [DI],DX
-      OR     [0017H],DX
+      OR     [1817H],DX
       OR     [BX],DX
       OR     [BX+SI],BX
       OR     [BX+DI],BX
@@ -1131,7 +709,7 @@
       OR     [BP+DI],BX
       OR     [SI],BX
       OR     [DI],BX
-      OR     [001FH],BX
+      OR     [201FH],BX
       OR     [BX],BX
       OR     [BX+SI],SP
       OR     [BX+DI],SP
@@ -1139,7 +717,7 @@
       OR     [BP+DI],SP
       OR     [SI],SP
       OR     [DI],SP
-      OR     [0027H],SP
+      OR     [2827H],SP
       OR     [BX],SP
       OR     [BX+SI],BP
       OR     [BX+DI],BP
@@ -1147,7 +725,7 @@
       OR     [BP+DI],BP
       OR     [SI],BP
       OR     [DI],BP
-      OR     [002FH],BP
+      OR     [302FH],BP
       OR     [BX],BP
       OR     [BX+SI],SI
       OR     [BX+DI],SI
@@ -1155,7 +733,7 @@
       OR     [BP+DI],SI
       OR     [SI],SI
       OR     [DI],SI
-      OR     [0037H],SI
+      OR     [3837H],SI
       OR     [BX],SI
       OR     [BX+SI],DI
       OR     [BX+DI],DI
@@ -1163,7 +741,7 @@
       OR     [BP+DI],DI
       OR     [SI],DI
       OR     [DI],DI
-      OR     [003FH],DI
+      OR     [403FH],DI
       OR     [BX],DI
       OR     [BX+SI+65],AX
       OR     [BX+SI-128],AX
@@ -1293,70 +871,70 @@
       OR     [BP-128],DI
       OR     [BX-128],DI
       OR     [BX+0],DI
-      OR     [BX+SI+0081H],AX
-      OR     [BX+DI+0082H],AX
-      OR     [BP+SI+0083H],AX
-      OR     [BP+DI+0084H],AX
-      OR     [SI+0085H],AX
-      OR     [DI+0086H],AX
-      OR     [BP+0087H],AX
-      OR     [BX+0088H],AX
-      OR     [BX+SI+0089H],CX
-      OR     [BX+DI+008AH],CX
-      OR     [BP+SI+008BH],CX
-      OR     [BP+DI+008CH],CX
-      OR     [SI+008DH],CX
-      OR     [DI+008EH],CX
-      OR     [BP+008FH],CX
-      OR     [BX+0090H],CX
-      OR     [BX+SI+0091H],DX
-      OR     [BX+DI+0092H],DX
-      OR     [BP+SI+0093H],DX
-      OR     [BP+DI+0094H],DX
-      OR     [SI+0095H],DX
-      OR     [DI+0096H],DX
-      OR     [BP+0097H],DX
-      OR     [BX+0098H],DX
-      OR     [BX+SI+0099H],BX
-      OR     [BX+DI+009AH],BX
-      OR     [BP+SI+009BH],BX
-      OR     [BP+DI+009CH],BX
-      OR     [SI+009DH],BX
-      OR     [DI+009EH],BX
-      OR     [BP+009FH],BX
-      OR     [BX+00A0H],BX
-      OR     [BX+SI+00A1H],SP
-      OR     [BX+DI+00A2H],SP
-      OR     [BP+SI+00A3H],SP
-      OR     [BP+DI+00A4H],SP
-      OR     [SI+00A5H],SP
-      OR     [DI+00A6H],SP
-      OR     [BP+00A7H],SP
-      OR     [BX+00A8H],SP
-      OR     [BX+SI+00A9H],BP
-      OR     [BX+DI+00AAH],BP
-      OR     [BP+SI+00ABH],BP
-      OR     [BP+DI+00ACH],BP
-      OR     [SI+00ADH],BP
-      OR     [DI+00AEH],BP
-      OR     [BP+00AFH],BP
-      OR     [BX+00B0H],BP
-      OR     [BX+SI+00B1H],SI
-      OR     [BX+DI+00B2H],SI
-      OR     [BP+SI+00B3H],SI
-      OR     [BP+DI+00B4H],SI
-      OR     [SI+00B5H],SI
-      OR     [DI+00B6H],SI
-      OR     [BP+00B7H],SI
-      OR     [BX+00B8H],SI
-      OR     [BX+SI+00B9H],DI
-      OR     [BX+DI+00BAH],DI
-      OR     [BP+SI+00BBH],DI
-      OR     [BP+DI+00BCH],DI
-      OR     [SI+00BDH],DI
-      OR     [DI+00BEH],DI
-      OR     [BP+00BFH],DI
-      OR     [BX+00C0H],DI
+      OR     [BX+SI+8281H],AX
+      OR     [BX+DI+8382H],AX
+      OR     [BP+SI+8483H],AX
+      OR     [BP+DI+8584H],AX
+      OR     [SI+8685H],AX
+      OR     [DI+8786H],AX
+      OR     [BP+8887H],AX
+      OR     [BX+8988H],AX
+      OR     [BX+SI+8A89H],CX
+      OR     [BX+DI+8B8AH],CX
+      OR     [BP+SI+8C8BH],CX
+      OR     [BP+DI+8D8CH],CX
+      OR     [SI+8E8DH],CX
+      OR     [DI+8F8EH],CX
+      OR     [BP+908FH],CX
+      OR     [BX+9190H],CX
+      OR     [BX+SI+9291H],DX
+      OR     [BX+DI+9392H],DX
+      OR     [BP+SI+9493H],DX
+      OR     [BP+DI+9594H],DX
+      OR     [SI+9695H],DX
+      OR     [DI+9796H],DX
+      OR     [BP+9897H],DX
+      OR     [BX+9998H],DX
+      OR     [BX+SI+9A99H],BX
+      OR     [BX+DI+9B9AH],BX
+      OR     [BP+SI+9C9BH],BX
+      OR     [BP+DI+9D9CH],BX
+      OR     [SI+9E9DH],BX
+      OR     [DI+9F9EH],BX
+      OR     [BP+0A09FH],BX
+      OR     [BX+0A1A0H],BX
+      OR     [BX+SI+0A2A1H],SP
+      OR     [BX+DI+0A3A2H],SP
+      OR     [BP+SI+0A4A3H],SP
+      OR     [BP+DI+0A5A4H],SP
+      OR     [SI+0A6A5H],SP
+      OR     [DI+0A7A6H],SP
+      OR     [BP+0A8A7H],SP
+      OR     [BX+0A9A8H],SP
+      OR     [BX+SI+0AAA9H],BP
+      OR     [BX+DI+0ABAAH],BP
+      OR     [BP+SI+0ACABH],BP
+      OR     [BP+DI+0ADACH],BP
+      OR     [SI+0AEADH],BP
+      OR     [DI+0AFAEH],BP
+      OR     [BP+0B0AFH],BP
+      OR     [BX+0B1B0H],BP
+      OR     [BX+SI+0B2B1H],SI
+      OR     [BX+DI+0B3B2H],SI
+      OR     [BP+SI+0B4B3H],SI
+      OR     [BP+DI+0B5B4H],SI
+      OR     [SI+0B6B5H],SI
+      OR     [DI+0B7B6H],SI
+      OR     [BP+0B8B7H],SI
+      OR     [BX+0B9B8H],SI
+      OR     [BX+SI+0BAB9H],DI
+      OR     [BX+DI+0BBBAH],DI
+      OR     [BP+SI+0BCBBH],DI
+      OR     [BP+DI+0BDBCH],DI
+      OR     [SI+0BEBDH],DI
+      OR     [DI+0BFBEH],DI
+      OR     [BP+0C0BFH],DI
+      OR     [BX+0C1C0H],DI
       OR     AX,AX
       OR     CX,AX
       OR     DX,AX
@@ -1427,14 +1005,14 @@
       OR     [BP+DI],AX
       OR     [SI],AX
       OR     [DI],AX
-      OR     [0107H],AX
+      OR     [0807H],AX
       OR     [BX],AX
       OR     [BX+SI],CX
       OR     [BX+DI],CX
       OR     CL,[BP+DI]
       OR     CL,[SI]
       OR     CL,[DI]
-      OR     CL,[000FH]
+      OR     CL,[100FH]
       OR     CL,[BX]
       OR     DL,[BX+SI]
       OR     DL,[BX+DI]
@@ -1442,7 +1020,7 @@
       OR     DL,[BP+DI]
       OR     DL,[SI]
       OR     DL,[DI]
-      OR     DL,[0017H]
+      OR     DL,[1817H]
       OR     DL,[BX]
       OR     BL,[BX+SI]
       OR     BL,[BX+DI]
@@ -1450,7 +1028,7 @@
       OR     BL,[BP+DI]
       OR     BL,[SI]
       OR     BL,[DI]
-      OR     BL,[001FH]
+      OR     BL,[201FH]
       OR     BL,[BX]
       OR     AH,[BX+SI]
       OR     AH,[BX+DI]
@@ -1458,142 +1036,11 @@
       OR     AH,[BP+DI]
       OR     AH,[SI]
       OR     AH,[DI]
-      OR     AH,[0027H]
+      OR     AH,[2827H]
       OR     AH,[BX]
-      OR     AL,[BX+SI+65]
-      OR     AL,[BX+SI-128]
-      OR     AL,[BX+DI+66]
-      OR     AL,[BX+DI-128]
-      OR     AL,[BP+SI+67]
-      OR     AL,[BP+SI-128]
-      OR     AL,[BP+DI+68]
-      OR     AL,[BP+DI-128]
-      OR     AL,[SI+69]
-      OR     AL,[SI-128]
-      OR     AL,[DI+70]
-      OR     AL,[DI-128]
-      OR     AL,[BP+71]
-      OR     AL,[BP-128]
-      OR     AL,[BX+72]
-      OR     AL,[BX-128]
-      OR     CL,[BX+SI+73]
-      OR     CL,[BX+SI-128]
-      OR     CL,[BX+DI+74]
-      OR     CL,[BX+DI-128]
-      OR     CL,[BP+SI+75]
-      OR     CL,[BP+SI-128]
-      OR     CL,[BP+DI+76]
-      OR     CL,[BP+DI-128]
-      OR     CL,[SI+77]
-      OR     CL,[SI-128]
-      OR     CL,[DI+78]
-      OR     CL,[DI-128]
-      OR     CL,[BP+79]
-      OR     CL,[BP-128]
-      OR     CL,[BX+80]
-      OR     CL,[BX-128]
-      OR     DL,[BX+SI+81]
-      OR     DL,[BX+SI-128]
-      OR     DL,[BX+DI+82]
-      OR     DL,[BX+DI-128]
-      OR     DL,[BP+SI+83]
-      OR     DL,[BP+SI-128]
-      OR     DL,[BP+DI+84]
-      OR     DL,[BP+DI-128]
-      OR     DL,[SI+85]
-      OR     DL,[SI-128]
-      OR     DL,[DI+86]
-      OR     DL,[DI-128]
-      OR     DL,[BP+87]
-      OR     DL,[BP-128]
-      OR     DL,[BX+88]
-      OR     DL,[BX-128]
-      OR     BL,[BX+SI+89]
-      OR     BL,[BX+SI-128]
-      OR     BL,[BX+DI+90]
-      OR     BL,[BX+DI-128]
-      OR     BL,[BP+SI+91]
-      OR     BL,[BP+SI-128]
-      OR     BL,[BP+DI+92]
-      OR     BL,[BP+DI-128]
-      OR     BL,[SI+93]
-      OR     BL,[SI-128]
-      OR     BL,[DI+94]
-      OR     BL,[DI-128]
-      OR     BL,[BP+95]
-      OR     BL,[BP-128]
-      OR     BL,[BX+96]
-      OR     BL,[BX-128]
-      OR     AH,[BX+SI+97]
-      OR     AH,[BX+SI-128]
-      OR     AH,[BX+DI+98]
-      OR     AH,[BX+DI-128]
-      OR     AH,[BP+SI+99]
-      OR     AH,[BP+SI-128]
-      OR     AH,[BP+DI+100]
-      OR     AH,[BP+DI-128]
-      OR     AH,[SI+101]
-      OR     AH,[SI-128]
-      OR     AH,[DI+102]
-      OR     AH,[DI-128]
-      OR     AH,[BP+103]
-      OR     AH,[BP-128]
-      OR     AH,[BX+104]
-      OR     AH,[BX-128]
-      OR     AL,[BX+SI+0081H]
-      OR     AL,[BX+DI+0082H]
-      OR     AL,[BP+SI+0083H]
-      OR     AL,[BP+DI+0084H]
-      OR     AL,[SI+0085H]
-      OR     AL,[DI+0086H]
-      OR     AL,[BP+0087H]
-      OR     AL,[BX+0088H]
-      OR     CL,[BX+SI+0089H]
-      OR     CL,[BX+DI+008AH]
-      OR     CL,[BP+SI+008BH]
-      OR     CL,[BP+DI+008CH]
-      OR     CL,[SI+008DH]
-      OR     CL,[DI+008EH]
-      OR     CL,[BP+008FH]
-      OR     CL,[BX+0090H]
-      OR     DL,[BX+SI+0091H]
-      OR     DL,[BX+DI+0092H]
-      OR     DL,[BP+SI+0093H]
-      OR     DL,[BP+DI+0094H]
-      OR     DL,[SI+0095H]
-      OR     DL,[DI+0096H]
-      OR     DL,[BP+0097H]
-      OR     DL,[BX+0098H]
-      OR     BL,[BX+SI+0099H]
-      OR     BL,[BX+DI+009AH]
-      OR     BL,[BP+SI+009BH]
-      OR     BL,[BP+DI+009CH]
-      OR     BL,[SI+009DH]
-      OR     BL,[DI+009EH]
-      OR     BL,[BP+009FH]
-      OR     BL,[BX+00A0H]
-      OR     AH,[BX+SI+00A1H]
-      OR     AH,[BX+DI+00A2H]
-      OR     AH,[BP+SI+00A3H]
-      OR     AH,[BP+DI+00A4H]
-      OR     AH,[SI+00A5H]
-      OR     AH,[DI+00A6H]
-      OR     AH,[BP+00A7H]
-      OR     AH,[BX+00A8H]
-      OR     AL,[BX+SI]
-      OR     AL,[BX+DI]
-      OR     AL,[BP+SI]
-      OR     AL,[BP+DI]
-      OR     AL,[SI]
-      OR     AL,[DI]
-      OR     AL,[0107H]
-      OR     AL,[BX]
-      OR     CL,[BX+SI]
-      OR     CL,[BX+DI]
-      OR     CL,[BP+SI]
       OR     CX,[SI]
       OR     CX,[DI]
-      OR     CX,[000FH]
+      OR     CX,[100FH]
       OR     CX,[BX]
       OR     DX,[BX+SI]
       OR     DX,[BX+DI]
@@ -1601,7 +1048,7 @@
       OR     DX,[BP+DI]
       OR     DX,[SI]
       OR     DX,[DI]
-      OR     DX,[0017H]
+      OR     DX,[1817H]
       OR     DX,[BX]
       OR     BX,[BX+SI]
       OR     BX,[BX+DI]
@@ -1609,7 +1056,7 @@
       OR     BX,[BP+DI]
       OR     BX,[SI]
       OR     BX,[DI]
-      OR     BX,[001FH]
+      OR     BX,[201FH]
       OR     BX,[BX]
       OR     SP,[BX+SI]
       OR     SP,[BX+DI]
@@ -1617,7 +1064,7 @@
       OR     SP,[BP+DI]
       OR     SP,[SI]
       OR     SP,[DI]
-      OR     SP,[0027H]
+      OR     SP,[2827H]
       OR     SP,[BX]
       OR     BP,[BX+SI]
       OR     BP,[BX+DI]
@@ -1625,7 +1072,7 @@
       OR     BP,[BP+DI]
       OR     BP,[SI]
       OR     BP,[DI]
-      OR     BP,[002FH]
+      OR     BP,[302FH]
       OR     BP,[BX]
       OR     SI,[BX+SI]
       OR     SI,[BX+DI]
@@ -1633,7 +1080,7 @@
       OR     SI,[BP+DI]
       OR     SI,[SI]
       OR     SI,[DI]
-      OR     SI,[0037H]
+      OR     SI,[3837H]
       OR     SI,[BX]
       OR     DI,[BX+SI]
       OR     DI,[BX+DI]
@@ -1641,7 +1088,7 @@
       OR     DI,[BP+DI]
       OR     DI,[SI]
       OR     DI,[DI]
-      OR     DI,[003FH]
+      OR     DI,[403FH]
       OR     DI,[BX]
       OR     AX,[BX+SI+65]
       OR     AX,[BX+SI-128]
@@ -1771,90 +1218,91 @@
       OR     DI,[BP-128]
       OR     DI,[BX-128]
       OR     DI,[BX+0]
-      OR     AX,[BX+SI+0081H]
-      OR     AX,[BX+DI+0082H]
-      OR     AX,[BP+SI+0083H]
-      OR     AX,[BP+DI+0084H]
-      OR     AX,[SI+0085H]
-      OR     AX,[DI+0086H]
-      OR     AX,[BP+0087H]
-      OR     AX,[BX+0088H]
-      OR     CX,[BX+SI+0089H]
-      OR     CX,[BX+DI+008AH]
-      OR     CX,[BP+SI+008BH]
-      OR     CX,[BP+DI+008CH]
-      OR     CX,[SI+008DH]
-      OR     CX,[DI+008EH]
-      OR     CX,[BP+008FH]
-      OR     CX,[BX+0090H]
-      OR     DX,[BX+SI+0091H]
-      OR     DX,[BX+DI+0092H]
-      OR     DX,[BP+SI+0093H]
-      OR     DX,[BP+DI+0094H]
-      OR     DX,[SI+0095H]
-      OR     DX,[DI+0096H]
-      OR     DX,[BP+0097H]
-      OR     DX,[BX+0098H]
-      OR     BX,[BX+SI+0099H]
-      OR     BX,[BX+DI+009AH]
-      OR     BX,[BP+SI+009BH]
-      OR     BX,[BP+DI+009CH]
-      OR     BX,[SI+009DH]
-      OR     BX,[DI+009EH]
-      OR     BX,[BP+009FH]
-      OR     BX,[BX+00A0H]
-      OR     SP,[BX+SI+00A1H]
-      OR     SP,[BX+DI+00A2H]
-      OR     SP,[BP+SI+00A3H]
-      OR     SP,[BP+DI+00A4H]
-      OR     SP,[SI+00A5H]
-      OR     SP,[DI+00A6H]
-      OR     SP,[BP+00A7H]
-      OR     SP,[BX+00A8H]
-      OR     BP,[BX+SI+00A9H]
-      OR     BP,[BX+DI+00AAH]
-      OR     BP,[BP+SI+00ABH]
-      OR     BP,[BP+DI+00ACH]
-      OR     BP,[SI+00ADH]
-      OR     BP,[DI+00AEH]
-      OR     BP,[BP+00AFH]
-      OR     BP,[BX+00B0H]
-      OR     SI,[BX+SI+00B1H]
-      OR     SI,[BX+DI+00B2H]
-      OR     SI,[BP+SI+00B3H]
-      OR     SI,[BP+DI+00B4H]
-      OR     SI,[SI+00B5H]
-      OR     SI,[DI+00B6H]
-      OR     SI,[BP+00B7H]
-      OR     SI,[BX+00B8H]
-      OR     DI,[BX+SI+00B9H]
-      OR     DI,[BX+DI+00BAH]
-      OR     DI,[BP+SI+00BBH]
-      OR     DI,[BP+DI+00BCH]
-      OR     DI,[SI+00BDH]
-      OR     DI,[DI+00BEH]
-      OR     DI,[BP+00BFH]
-      OR     DI,[BX+00C0H]
+      OR     AX,[BX+SI+8281H]
+      OR     AX,[BX+DI+8382H]
+      OR     AX,[BP+SI+8483H]
+      OR     AX,[BP+DI+8584H]
+      OR     AX,[SI+8685H]
+      OR     AX,[DI+8786H]
+      OR     AX,[BP+8887H]
+      OR     AX,[BX+8988H]
+      OR     CX,[BX+SI+8A89H]
+      OR     CX,[BX+DI+8B8AH]
+      OR     CX,[BP+SI+8C8BH]
+      OR     CX,[BP+DI+8D8CH]
+      OR     CX,[SI+8E8DH]
+      OR     CX,[DI+8F8EH]
+      OR     CX,[BP+908FH]
+      OR     CX,[BX+9190H]
+      OR     DX,[BX+SI+9291H]
+      OR     DX,[BX+DI+9392H]
+      OR     DX,[BP+SI+9493H]
+      OR     DX,[BP+DI+9594H]
+      OR     DX,[SI+9695H]
+      OR     DX,[DI+9796H]
+      OR     DX,[BP+9897H]
+      OR     DX,[BX+9998H]
+      OR     BX,[BX+SI+9A99H]
+      OR     BX,[BX+DI+9B9AH]
+      OR     BX,[BP+SI+9C9BH]
+      OR     BX,[BP+DI+9D9CH]
+      OR     BX,[SI+9E9DH]
+      OR     BX,[DI+9F9EH]
+      OR     BX,[BP+0A09FH]
+      OR     BX,[BX+0A1A0H]
+      OR     SP,[BX+SI+0A2A1H]
+      OR     SP,[BX+DI+0A3A2H]
+      OR     SP,[BP+SI+0A4A3H]
+      OR     SP,[BP+DI+0A5A4H]
+      OR     SP,[SI+0A6A5H]
+      OR     SP,[DI+0A7A6H]
+      OR     SP,[BP+0A8A7H]
+      OR     SP,[BX+0A9A8H]
+      OR     BP,[BX+SI+0AAA9H]
+      OR     BP,[BX+DI+0ABAAH]
+      OR     BP,[BP+SI+0ACABH]
+      OR     BP,[BP+DI+0ADACH]
+      OR     BP,[SI+0AEADH]
+      OR     BP,[DI+0AFAEH]
+      OR     BP,[BP+0B0AFH]
+      OR     BP,[BX+0B1B0H]
+      OR     SI,[BX+SI+0B2B1H]
+      OR     SI,[BX+DI+0B3B2H]
+      OR     SI,[BP+SI+0B4B3H]
+      OR     SI,[BP+DI+0B5B4H]
+      OR     SI,[SI+0B6B5H]
+      OR     SI,[DI+0B7B6H]
+      OR     SI,[BP+0B8B7H]
+      OR     SI,[BX+0B9B8H]
+      OR     DI,[BX+SI+0BAB9H]
+      OR     DI,[BX+DI+0BBBAH]
+      OR     DI,[BP+SI+0BCBBH]
+      OR     DI,[BP+DI+0BDBCH]
+      OR     DI,[SI+0BEBDH]
+      OR     DI,[DI+0BFBEH]
+      OR     DI,[BP+0C0BFH]
+      OR     DI,[BX+0C1C0H]
       OR     AX,[BX+SI]
       OR     AX,[BX+DI]
       OR     AX,[BP+SI]
       OR     AX,[BP+DI]
       OR     AX,[SI]
       OR     AX,[DI]
-      OR     AX,[0107H]
+      OR     AX,[0807H]
       OR     AX,[BX]
       OR     CX,[BX+SI]
       OR     CX,[BX+DI]
       OR     CX,[BP+SI]
       OR     CX,[BP+DI]
-      OR     AX,14
+      OR     AL,13
+      OR     AX,0F0EH
       PUSH   CS
       ADC    [BX+DI],DL
       ADC    [BP+SI],DL
       ADC    [BP+DI],DL
       ADC    [SI],DL
       ADC    [DI],DL
-      ADC    [0017H],DL
+      ADC    [1817H],DL
       ADC    [BX],DL
       ADC    [BX+SI],BL
       ADC    [BX+DI],BL
@@ -1862,7 +1310,7 @@
       ADC    [BP+DI],BL
       ADC    [SI],BL
       ADC    [DI],BL
-      ADC    [001FH],BL
+      ADC    [201FH],BL
       ADC    [BX],BL
       ADC    [BX+SI],AH
       ADC    [BX+DI],AH
@@ -1870,175 +1318,13 @@
       ADC    [BP+DI],AH
       ADC    [SI],AH
       ADC    [DI],AH
-      ADC    [0027H],AH
+      ADC    [2827H],AH
       ADC    [BX],AH
-      ADC    [BX+SI+65],AL
-      ADC    [BX+SI-128],AL
-      ADC    [BX+DI+66],AL
-      ADC    [BX+DI-128],AL
-      ADC    [BP+SI+67],AL
-      ADC    [BP+SI-128],AL
-      ADC    [BP+DI+68],AL
-      ADC    [BP+DI-128],AL
-      ADC    [SI+69],AL
-      ADC    [SI-128],AL
-      ADC    [DI+70],AL
-      ADC    [DI-128],AL
-      ADC    [BP+71],AL
-      ADC    [BP-128],AL
-      ADC    [BX+72],AL
-      ADC    [BX-128],AL
-      ADC    [BX+SI+73],CL
-      ADC    [BX+SI-128],CL
-      ADC    [BX+DI+74],CL
-      ADC    [BX+DI-128],CL
-      ADC    [BP+SI+75],CL
-      ADC    [BP+SI-128],CL
-      ADC    [BP+DI+76],CL
-      ADC    [BP+DI-128],CL
-      ADC    [SI+77],CL
-      ADC    [SI-128],CL
-      ADC    [DI+78],CL
-      ADC    [DI-128],CL
-      ADC    [BP+79],CL
-      ADC    [BP-128],CL
-      ADC    [BX+80],CL
-      ADC    [BX-128],CL
-      ADC    [BX+SI+81],DL
-      ADC    [BX+SI-128],DL
-      ADC    [BX+DI+82],DL
-      ADC    [BX+DI-128],DL
-      ADC    [BP+SI+83],DL
-      ADC    [BP+SI-128],DL
-      ADC    [BP+DI+84],DL
-      ADC    [BP+DI-128],DL
-      ADC    [SI+85],DL
-      ADC    [SI-128],DL
-      ADC    [DI+86],DL
-      ADC    [DI-128],DL
-      ADC    [BP+87],DL
-      ADC    [BP-128],DL
-      ADC    [BX+88],DL
-      ADC    [BX-128],DL
-      ADC    [BX+SI+89],BL
-      ADC    [BX+SI-128],BL
-      ADC    [BX+DI+90],BL
-      ADC    [BX+DI-128],BL
-      ADC    [BP+SI+91],BL
-      ADC    [BP+SI-128],BL
-      ADC    [BP+DI+92],BL
-      ADC    [BP+DI-128],BL
-      ADC    [SI+93],BL
-      ADC    [SI-128],BL
-      ADC    [DI+94],BL
-      ADC    [DI-128],BL
-      ADC    [BP+95],BL
-      ADC    [BP-128],BL
-      ADC    [BX+96],BL
-      ADC    [BX-128],BL
-      ADC    [BX+SI+97],AH
-      ADC    [BX+SI-128],AH
-      ADC    [BX+DI+98],AH
-      ADC    [BX+DI-128],AH
-      ADC    [BP+SI+99],AH
-      ADC    [BP+SI-128],AH
-      ADC    [BP+DI+100],AH
-      ADC    [BP+DI-128],AH
-      ADC    [SI+101],AH
-      ADC    [SI-128],AH
-      ADC    [DI+102],AH
-      ADC    [DI-128],AH
-      ADC    [BP+103],AH
-      ADC    [BP-128],AH
-      ADC    [BX+104],AH
-      ADC    [BX-128],AH
-      ADC    [BX+SI+0081H],AL
-      ADC    [BX+DI+0082H],AL
-      ADC    [BP+SI+0083H],AL
-      ADC    [BP+DI+0084H],AL
-      ADC    [SI+0085H],AL
-      ADC    [DI+0086H],AL
-      ADC    [BP+0087H],AL
-      ADC    [BX+0088H],AL
-      ADC    [BX+SI+0089H],CL
-      ADC    [BX+DI+008AH],CL
-      ADC    [BP+SI+008BH],CL
-      ADC    [BP+DI+008CH],CL
-      ADC    [SI+008DH],CL
-      ADC    [DI+008EH],CL
-      ADC    [BP+008FH],CL
-      ADC    [BX+0090H],CL
-      ADC    [BX+SI+0091H],DL
-      ADC    [BX+DI+0092H],DL
-      ADC    [BP+SI+0093H],DL
-      ADC    [BP+DI+0094H],DL
-      ADC    [SI+0095H],DL
-      ADC    [DI+0096H],DL
-      ADC    [BP+0097H],DL
-      ADC    [BX+0098H],DL
-      ADC    [BX+SI+0099H],BL
-      ADC    [BX+DI+009AH],BL
-      ADC    [BP+SI+009BH],BL
-      ADC    [BP+DI+009CH],BL
-      ADC    [SI+009DH],BL
-      ADC    [DI+009EH],BL
-      ADC    [BP+009FH],BL
-      ADC    [BX+00A0H],BL
-      ADC    [BX+SI+00A1H],AH
-      ADC    [BX+DI+00A2H],AH
-      ADC    [BP+SI+00A3H],AH
-      ADC    [BP+DI+00A4H],AH
-      ADC    [SI+00A5H],AH
-      ADC    [DI+00A6H],AH
-      ADC    [BP+00A7H],AH
-      ADC    [BX+00A8H],AH
-      ADC    AL,AL
-      ADC    CL,AL
-      ADC    DL,AL
-      ADC    BL,AL
-      ADC    AH,AL
-      ADC    AL,CL
-      ADC    CL,CL
-      ADC    DL,CL
-      ADC    BL,CL
-      ADC    AH,CL
-      ADC    AL,DL
-      ADC    CL,DL
-      ADC    DL,DL
-      ADC    BL,DL
-      ADC    AH,DL
-      ADC    AL,BL
-      ADC    CL,BL
-      ADC    DL,BL
-      ADC    BL,BL
-      ADC    AH,BL
-      ADC    AL,AH
-      ADC    CL,AH
-      ADC    DL,AH
-      ADC    BL,AH
-      ADC    AH,AH
-      ADC    [BX+SI],AL
-      ADC    [BX+DI],AL
-      ADC    [BP+SI],AL
-      ADC    [BP+DI],AL
-      ADC    [SI],AL
-      ADC    [DI],AL
-      ADC    [0107H],AL
-      ADC    [BX],AL
-      ADC    [BX+SI],CL
-      ADC    [BX+DI],CL
-      ADC    [BP+SI],CL
-      ADC    [BP+DI],CL
-      ADC    [SI],CL
-      ADC    [DI],CL
-      ADC    [010FH],CL
-      ADC    [BX],CL
-      ADC    [BX+SI],DL
       ADC    [BP+SI],DX
       ADC    [BP+DI],DX
       ADC    [SI],DX
       ADC    [DI],DX
-      ADC    [0017H],DX
+      ADC    [1817H],DX
       ADC    [BX],DX
       ADC    [BX+SI],BX
       ADC    [BX+DI],BX
@@ -2046,7 +1332,7 @@
       ADC    [BP+DI],BX
       ADC    [SI],BX
       ADC    [DI],BX
-      ADC    [001FH],BX
+      ADC    [201FH],BX
       ADC    [BX],BX
       ADC    [BX+SI],SP
       ADC    [BX+DI],SP
@@ -2054,7 +1340,7 @@
       ADC    [BP+DI],SP
       ADC    [SI],SP
       ADC    [DI],SP
-      ADC    [0027H],SP
+      ADC    [2827H],SP
       ADC    [BX],SP
       ADC    [BX+SI],BP
       ADC    [BX+DI],BP
@@ -2062,7 +1348,7 @@
       ADC    [BP+DI],BP
       ADC    [SI],BP
       ADC    [DI],BP
-      ADC    [002FH],BP
+      ADC    [302FH],BP
       ADC    [BX],BP
       ADC    [BX+SI],SI
       ADC    [BX+DI],SI
@@ -2070,7 +1356,7 @@
       ADC    [BP+DI],SI
       ADC    [SI],SI
       ADC    [DI],SI
-      ADC    [0037H],SI
+      ADC    [3837H],SI
       ADC    [BX],SI
       ADC    [BX+SI],DI
       ADC    [BX+DI],DI
@@ -2078,7 +1364,7 @@
       ADC    [BP+DI],DI
       ADC    [SI],DI
       ADC    [DI],DI
-      ADC    [003FH],DI
+      ADC    [403FH],DI
       ADC    [BX],DI
       ADC    [BX+SI+65],AX
       ADC    [BX+SI-128],AX
@@ -2208,70 +1494,70 @@
       ADC    [BP-128],DI
       ADC    [BX-128],DI
       ADC    [BX+0],DI
-      ADC    [BX+SI+0081H],AX
-      ADC    [BX+DI+0082H],AX
-      ADC    [BP+SI+0083H],AX
-      ADC    [BP+DI+0084H],AX
-      ADC    [SI+0085H],AX
-      ADC    [DI+0086H],AX
-      ADC    [BP+0087H],AX
-      ADC    [BX+0088H],AX
-      ADC    [BX+SI+0089H],CX
-      ADC    [BX+DI+008AH],CX
-      ADC    [BP+SI+008BH],CX
-      ADC    [BP+DI+008CH],CX
-      ADC    [SI+008DH],CX
-      ADC    [DI+008EH],CX
-      ADC    [BP+008FH],CX
-      ADC    [BX+0090H],CX
-      ADC    [BX+SI+0091H],DX
-      ADC    [BX+DI+0092H],DX
-      ADC    [BP+SI+0093H],DX
-      ADC    [BP+DI+0094H],DX
-      ADC    [SI+0095H],DX
-      ADC    [DI+0096H],DX
-      ADC    [BP+0097H],DX
-      ADC    [BX+0098H],DX
-      ADC    [BX+SI+0099H],BX
-      ADC    [BX+DI+009AH],BX
-      ADC    [BP+SI+009BH],BX
-      ADC    [BP+DI+009CH],BX
-      ADC    [SI+009DH],BX
-      ADC    [DI+009EH],BX
-      ADC    [BP+009FH],BX
-      ADC    [BX+00A0H],BX
-      ADC    [BX+SI+00A1H],SP
-      ADC    [BX+DI+00A2H],SP
-      ADC    [BP+SI+00A3H],SP
-      ADC    [BP+DI+00A4H],SP
-      ADC    [SI+00A5H],SP
-      ADC    [DI+00A6H],SP
-      ADC    [BP+00A7H],SP
-      ADC    [BX+00A8H],SP
-      ADC    [BX+SI+00A9H],BP
-      ADC    [BX+DI+00AAH],BP
-      ADC    [BP+SI+00ABH],BP
-      ADC    [BP+DI+00ACH],BP
-      ADC    [SI+00ADH],BP
-      ADC    [DI+00AEH],BP
-      ADC    [BP+00AFH],BP
-      ADC    [BX+00B0H],BP
-      ADC    [BX+SI+00B1H],SI
-      ADC    [BX+DI+00B2H],SI
-      ADC    [BP+SI+00B3H],SI
-      ADC    [BP+DI+00B4H],SI
-      ADC    [SI+00B5H],SI
-      ADC    [DI+00B6H],SI
-      ADC    [BP+00B7H],SI
-      ADC    [BX+00B8H],SI
-      ADC    [BX+SI+00B9H],DI
-      ADC    [BX+DI+00BAH],DI
-      ADC    [BP+SI+00BBH],DI
-      ADC    [BP+DI+00BCH],DI
-      ADC    [SI+00BDH],DI
-      ADC    [DI+00BEH],DI
-      ADC    [BP+00BFH],DI
-      ADC    [BX+00C0H],DI
+      ADC    [BX+SI+8281H],AX
+      ADC    [BX+DI+8382H],AX
+      ADC    [BP+SI+8483H],AX
+      ADC    [BP+DI+8584H],AX
+      ADC    [SI+8685H],AX
+      ADC    [DI+8786H],AX
+      ADC    [BP+8887H],AX
+      ADC    [BX+8988H],AX
+      ADC    [BX+SI+8A89H],CX
+      ADC    [BX+DI+8B8AH],CX
+      ADC    [BP+SI+8C8BH],CX
+      ADC    [BP+DI+8D8CH],CX
+      ADC    [SI+8E8DH],CX
+      ADC    [DI+8F8EH],CX
+      ADC    [BP+908FH],CX
+      ADC    [BX+9190H],CX
+      ADC    [BX+SI+9291H],DX
+      ADC    [BX+DI+9392H],DX
+      ADC    [BP+SI+9493H],DX
+      ADC    [BP+DI+9594H],DX
+      ADC    [SI+9695H],DX
+      ADC    [DI+9796H],DX
+      ADC    [BP+9897H],DX
+      ADC    [BX+9998H],DX
+      ADC    [BX+SI+9A99H],BX
+      ADC    [BX+DI+9B9AH],BX
+      ADC    [BP+SI+9C9BH],BX
+      ADC    [BP+DI+9D9CH],BX
+      ADC    [SI+9E9DH],BX
+      ADC    [DI+9F9EH],BX
+      ADC    [BP+0A09FH],BX
+      ADC    [BX+0A1A0H],BX
+      ADC    [BX+SI+0A2A1H],SP
+      ADC    [BX+DI+0A3A2H],SP
+      ADC    [BP+SI+0A4A3H],SP
+      ADC    [BP+DI+0A5A4H],SP
+      ADC    [SI+0A6A5H],SP
+      ADC    [DI+0A7A6H],SP
+      ADC    [BP+0A8A7H],SP
+      ADC    [BX+0A9A8H],SP
+      ADC    [BX+SI+0AAA9H],BP
+      ADC    [BX+DI+0ABAAH],BP
+      ADC    [BP+SI+0ACABH],BP
+      ADC    [BP+DI+0ADACH],BP
+      ADC    [SI+0AEADH],BP
+      ADC    [DI+0AFAEH],BP
+      ADC    [BP+0B0AFH],BP
+      ADC    [BX+0B1B0H],BP
+      ADC    [BX+SI+0B2B1H],SI
+      ADC    [BX+DI+0B3B2H],SI
+      ADC    [BP+SI+0B4B3H],SI
+      ADC    [BP+DI+0B5B4H],SI
+      ADC    [SI+0B6B5H],SI
+      ADC    [DI+0B7B6H],SI
+      ADC    [BP+0B8B7H],SI
+      ADC    [BX+0B9B8H],SI
+      ADC    [BX+SI+0BAB9H],DI
+      ADC    [BX+DI+0BBBAH],DI
+      ADC    [BP+SI+0BCBBH],DI
+      ADC    [BP+DI+0BDBCH],DI
+      ADC    [SI+0BEBDH],DI
+      ADC    [DI+0BFBEH],DI
+      ADC    [BP+0C0BFH],DI
+      ADC    [BX+0C1C0H],DI
       ADC    AX,AX
       ADC    CX,AX
       ADC    DX,AX
@@ -2342,7 +1628,7 @@
       ADC    [BP+DI],AX
       ADC    [SI],AX
       ADC    [DI],AX
-      ADC    [0107H],AX
+      ADC    [0807H],AX
       ADC    [BX],AX
       ADC    [BX+SI],CX
       ADC    [BX+DI],CX
@@ -2350,14 +1636,14 @@
       ADC    [BP+DI],CX
       ADC    [SI],CX
       ADC    [DI],CX
-      ADC    [010FH],CX
+      ADC    [100FH],CX
       ADC    [BX],CX
       ADC    [BX+SI],DX
       ADC    [BX+DI],DX
       ADC    DL,[BP+DI]
       ADC    DL,[SI]
       ADC    DL,[DI]
-      ADC    DL,[0017H]
+      ADC    DL,[1817H]
       ADC    DL,[BX]
       ADC    BL,[BX+SI]
       ADC    BL,[BX+DI]
@@ -2365,7 +1651,7 @@
       ADC    BL,[BP+DI]
       ADC    BL,[SI]
       ADC    BL,[DI]
-      ADC    BL,[001FH]
+      ADC    BL,[201FH]
       ADC    BL,[BX]
       ADC    AH,[BX+SI]
       ADC    AH,[BX+DI]
@@ -2373,150 +1659,11 @@
       ADC    AH,[BP+DI]
       ADC    AH,[SI]
       ADC    AH,[DI]
-      ADC    AH,[0027H]
+      ADC    AH,[2827H]
       ADC    AH,[BX]
-      ADC    AL,[BX+SI+65]
-      ADC    AL,[BX+SI-128]
-      ADC    AL,[BX+DI+66]
-      ADC    AL,[BX+DI-128]
-      ADC    AL,[BP+SI+67]
-      ADC    AL,[BP+SI-128]
-      ADC    AL,[BP+DI+68]
-      ADC    AL,[BP+DI-128]
-      ADC    AL,[SI+69]
-      ADC    AL,[SI-128]
-      ADC    AL,[DI+70]
-      ADC    AL,[DI-128]
-      ADC    AL,[BP+71]
-      ADC    AL,[BP-128]
-      ADC    AL,[BX+72]
-      ADC    AL,[BX-128]
-      ADC    CL,[BX+SI+73]
-      ADC    CL,[BX+SI-128]
-      ADC    CL,[BX+DI+74]
-      ADC    CL,[BX+DI-128]
-      ADC    CL,[BP+SI+75]
-      ADC    CL,[BP+SI-128]
-      ADC    CL,[BP+DI+76]
-      ADC    CL,[BP+DI-128]
-      ADC    CL,[SI+77]
-      ADC    CL,[SI-128]
-      ADC    CL,[DI+78]
-      ADC    CL,[DI-128]
-      ADC    CL,[BP+79]
-      ADC    CL,[BP-128]
-      ADC    CL,[BX+80]
-      ADC    CL,[BX-128]
-      ADC    DL,[BX+SI+81]
-      ADC    DL,[BX+SI-128]
-      ADC    DL,[BX+DI+82]
-      ADC    DL,[BX+DI-128]
-      ADC    DL,[BP+SI+83]
-      ADC    DL,[BP+SI-128]
-      ADC    DL,[BP+DI+84]
-      ADC    DL,[BP+DI-128]
-      ADC    DL,[SI+85]
-      ADC    DL,[SI-128]
-      ADC    DL,[DI+86]
-      ADC    DL,[DI-128]
-      ADC    DL,[BP+87]
-      ADC    DL,[BP-128]
-      ADC    DL,[BX+88]
-      ADC    DL,[BX-128]
-      ADC    BL,[BX+SI+89]
-      ADC    BL,[BX+SI-128]
-      ADC    BL,[BX+DI+90]
-      ADC    BL,[BX+DI-128]
-      ADC    BL,[BP+SI+91]
-      ADC    BL,[BP+SI-128]
-      ADC    BL,[BP+DI+92]
-      ADC    BL,[BP+DI-128]
-      ADC    BL,[SI+93]
-      ADC    BL,[SI-128]
-      ADC    BL,[DI+94]
-      ADC    BL,[DI-128]
-      ADC    BL,[BP+95]
-      ADC    BL,[BP-128]
-      ADC    BL,[BX+96]
-      ADC    BL,[BX-128]
-      ADC    AH,[BX+SI+97]
-      ADC    AH,[BX+SI-128]
-      ADC    AH,[BX+DI+98]
-      ADC    AH,[BX+DI-128]
-      ADC    AH,[BP+SI+99]
-      ADC    AH,[BP+SI-128]
-      ADC    AH,[BP+DI+100]
-      ADC    AH,[BP+DI-128]
-      ADC    AH,[SI+101]
-      ADC    AH,[SI-128]
-      ADC    AH,[DI+102]
-      ADC    AH,[DI-128]
-      ADC    AH,[BP+103]
-      ADC    AH,[BP-128]
-      ADC    AH,[BX+104]
-      ADC    AH,[BX-128]
-      ADC    AL,[BX+SI+0081H]
-      ADC    AL,[BX+DI+0082H]
-      ADC    AL,[BP+SI+0083H]
-      ADC    AL,[BP+DI+0084H]
-      ADC    AL,[SI+0085H]
-      ADC    AL,[DI+0086H]
-      ADC    AL,[BP+0087H]
-      ADC    AL,[BX+0088H]
-      ADC    CL,[BX+SI+0089H]
-      ADC    CL,[BX+DI+008AH]
-      ADC    CL,[BP+SI+008BH]
-      ADC    CL,[BP+DI+008CH]
-      ADC    CL,[SI+008DH]
-      ADC    CL,[DI+008EH]
-      ADC    CL,[BP+008FH]
-      ADC    CL,[BX+0090H]
-      ADC    DL,[BX+SI+0091H]
-      ADC    DL,[BX+DI+0092H]
-      ADC    DL,[BP+SI+0093H]
-      ADC    DL,[BP+DI+0094H]
-      ADC    DL,[SI+0095H]
-      ADC    DL,[DI+0096H]
-      ADC    DL,[BP+0097H]
-      ADC    DL,[BX+0098H]
-      ADC    BL,[BX+SI+0099H]
-      ADC    BL,[BX+DI+009AH]
-      ADC    BL,[BP+SI+009BH]
-      ADC    BL,[BP+DI+009CH]
-      ADC    BL,[SI+009DH]
-      ADC    BL,[DI+009EH]
-      ADC    BL,[BP+009FH]
-      ADC    BL,[BX+00A0H]
-      ADC    AH,[BX+SI+00A1H]
-      ADC    AH,[BX+DI+00A2H]
-      ADC    AH,[BP+SI+00A3H]
-      ADC    AH,[BP+DI+00A4H]
-      ADC    AH,[SI+00A5H]
-      ADC    AH,[DI+00A6H]
-      ADC    AH,[BP+00A7H]
-      ADC    AH,[BX+00A8H]
-      ADC    AL,[BX+SI]
-      ADC    AL,[BX+DI]
-      ADC    AL,[BP+SI]
-      ADC    AL,[BP+DI]
-      ADC    AL,[SI]
-      ADC    AL,[DI]
-      ADC    AL,[0107H]
-      ADC    AL,[BX]
-      ADC    CL,[BX+SI]
-      ADC    CL,[BX+DI]
-      ADC    CL,[BP+SI]
-      ADC    CL,[BP+DI]
-      ADC    CL,[SI]
-      ADC    CL,[DI]
-      ADC    CL,[010FH]
-      ADC    CL,[BX]
-      ADC    DL,[BX+SI]
-      ADC    DL,[BX+DI]
-      ADC    DL,[BP+SI]
       ADC    DX,[SI]
       ADC    DX,[DI]
-      ADC    DX,[0017H]
+      ADC    DX,[1817H]
       ADC    DX,[BX]
       ADC    BX,[BX+SI]
       ADC    BX,[BX+DI]
@@ -2524,7 +1671,7 @@
       ADC    BX,[BP+DI]
       ADC    BX,[SI]
       ADC    BX,[DI]
-      ADC    BX,[001FH]
+      ADC    BX,[201FH]
       ADC    BX,[BX]
       ADC    SP,[BX+SI]
       ADC    SP,[BX+DI]
@@ -2532,7 +1679,7 @@
       ADC    SP,[BP+DI]
       ADC    SP,[SI]
       ADC    SP,[DI]
-      ADC    SP,[0027H]
+      ADC    SP,[2827H]
       ADC    SP,[BX]
       ADC    BP,[BX+SI]
       ADC    BP,[BX+DI]
@@ -2540,7 +1687,7 @@
       ADC    BP,[BP+DI]
       ADC    BP,[SI]
       ADC    BP,[DI]
-      ADC    BP,[002FH]
+      ADC    BP,[302FH]
       ADC    BP,[BX]
       ADC    SI,[BX+SI]
       ADC    SI,[BX+DI]
@@ -2548,7 +1695,7 @@
       ADC    SI,[BP+DI]
       ADC    SI,[SI]
       ADC    SI,[DI]
-      ADC    SI,[0037H]
+      ADC    SI,[3837H]
       ADC    SI,[BX]
       ADC    DI,[BX+SI]
       ADC    DI,[BX+DI]
@@ -2556,7 +1703,7 @@
       ADC    DI,[BP+DI]
       ADC    DI,[SI]
       ADC    DI,[DI]
-      ADC    DI,[003FH]
+      ADC    DI,[403FH]
       ADC    DI,[BX]
       ADC    AX,[BX+SI+65]
       ADC    AX,[BX+SI-128]
@@ -2686,77 +1833,77 @@
       ADC    DI,[BP-128]
       ADC    DI,[BX-128]
       ADC    DI,[BX+0]
-      ADC    AX,[BX+SI+0081H]
-      ADC    AX,[BX+DI+0082H]
-      ADC    AX,[BP+SI+0083H]
-      ADC    AX,[BP+DI+0084H]
-      ADC    AX,[SI+0085H]
-      ADC    AX,[DI+0086H]
-      ADC    AX,[BP+0087H]
-      ADC    AX,[BX+0088H]
-      ADC    CX,[BX+SI+0089H]
-      ADC    CX,[BX+DI+008AH]
-      ADC    CX,[BP+SI+008BH]
-      ADC    CX,[BP+DI+008CH]
-      ADC    CX,[SI+008DH]
-      ADC    CX,[DI+008EH]
-      ADC    CX,[BP+008FH]
-      ADC    CX,[BX+0090H]
-      ADC    DX,[BX+SI+0091H]
-      ADC    DX,[BX+DI+0092H]
-      ADC    DX,[BP+SI+0093H]
-      ADC    DX,[BP+DI+0094H]
-      ADC    DX,[SI+0095H]
-      ADC    DX,[DI+0096H]
-      ADC    DX,[BP+0097H]
-      ADC    DX,[BX+0098H]
-      ADC    BX,[BX+SI+0099H]
-      ADC    BX,[BX+DI+009AH]
-      ADC    BX,[BP+SI+009BH]
-      ADC    BX,[BP+DI+009CH]
-      ADC    BX,[SI+009DH]
-      ADC    BX,[DI+009EH]
-      ADC    BX,[BP+009FH]
-      ADC    BX,[BX+00A0H]
-      ADC    SP,[BX+SI+00A1H]
-      ADC    SP,[BX+DI+00A2H]
-      ADC    SP,[BP+SI+00A3H]
-      ADC    SP,[BP+DI+00A4H]
-      ADC    SP,[SI+00A5H]
-      ADC    SP,[DI+00A6H]
-      ADC    SP,[BP+00A7H]
-      ADC    SP,[BX+00A8H]
-      ADC    BP,[BX+SI+00A9H]
-      ADC    BP,[BX+DI+00AAH]
-      ADC    BP,[BP+SI+00ABH]
-      ADC    BP,[BP+DI+00ACH]
-      ADC    BP,[SI+00ADH]
-      ADC    BP,[DI+00AEH]
-      ADC    BP,[BP+00AFH]
-      ADC    BP,[BX+00B0H]
-      ADC    SI,[BX+SI+00B1H]
-      ADC    SI,[BX+DI+00B2H]
-      ADC    SI,[BP+SI+00B3H]
-      ADC    SI,[BP+DI+00B4H]
-      ADC    SI,[SI+00B5H]
-      ADC    SI,[DI+00B6H]
-      ADC    SI,[BP+00B7H]
-      ADC    SI,[BX+00B8H]
-      ADC    DI,[BX+SI+00B9H]
-      ADC    DI,[BX+DI+00BAH]
-      ADC    DI,[BP+SI+00BBH]
-      ADC    DI,[BP+DI+00BCH]
-      ADC    DI,[SI+00BDH]
-      ADC    DI,[DI+00BEH]
-      ADC    DI,[BP+00BFH]
-      ADC    DI,[BX+00C0H]
+      ADC    AX,[BX+SI+8281H]
+      ADC    AX,[BX+DI+8382H]
+      ADC    AX,[BP+SI+8483H]
+      ADC    AX,[BP+DI+8584H]
+      ADC    AX,[SI+8685H]
+      ADC    AX,[DI+8786H]
+      ADC    AX,[BP+8887H]
+      ADC    AX,[BX+8988H]
+      ADC    CX,[BX+SI+8A89H]
+      ADC    CX,[BX+DI+8B8AH]
+      ADC    CX,[BP+SI+8C8BH]
+      ADC    CX,[BP+DI+8D8CH]
+      ADC    CX,[SI+8E8DH]
+      ADC    CX,[DI+8F8EH]
+      ADC    CX,[BP+908FH]
+      ADC    CX,[BX+9190H]
+      ADC    DX,[BX+SI+9291H]
+      ADC    DX,[BX+DI+9392H]
+      ADC    DX,[BP+SI+9493H]
+      ADC    DX,[BP+DI+9594H]
+      ADC    DX,[SI+9695H]
+      ADC    DX,[DI+9796H]
+      ADC    DX,[BP+9897H]
+      ADC    DX,[BX+9998H]
+      ADC    BX,[BX+SI+9A99H]
+      ADC    BX,[BX+DI+9B9AH]
+      ADC    BX,[BP+SI+9C9BH]
+      ADC    BX,[BP+DI+9D9CH]
+      ADC    BX,[SI+9E9DH]
+      ADC    BX,[DI+9F9EH]
+      ADC    BX,[BP+0A09FH]
+      ADC    BX,[BX+0A1A0H]
+      ADC    SP,[BX+SI+0A2A1H]
+      ADC    SP,[BX+DI+0A3A2H]
+      ADC    SP,[BP+SI+0A4A3H]
+      ADC    SP,[BP+DI+0A5A4H]
+      ADC    SP,[SI+0A6A5H]
+      ADC    SP,[DI+0A7A6H]
+      ADC    SP,[BP+0A8A7H]
+      ADC    SP,[BX+0A9A8H]
+      ADC    BP,[BX+SI+0AAA9H]
+      ADC    BP,[BX+DI+0ABAAH]
+      ADC    BP,[BP+SI+0ACABH]
+      ADC    BP,[BP+DI+0ADACH]
+      ADC    BP,[SI+0AEADH]
+      ADC    BP,[DI+0AFAEH]
+      ADC    BP,[BP+0B0AFH]
+      ADC    BP,[BX+0B1B0H]
+      ADC    SI,[BX+SI+0B2B1H]
+      ADC    SI,[BX+DI+0B3B2H]
+      ADC    SI,[BP+SI+0B4B3H]
+      ADC    SI,[BP+DI+0B5B4H]
+      ADC    SI,[SI+0B6B5H]
+      ADC    SI,[DI+0B7B6H]
+      ADC    SI,[BP+0B8B7H]
+      ADC    SI,[BX+0B9B8H]
+      ADC    DI,[BX+SI+0BAB9H]
+      ADC    DI,[BX+DI+0BBBAH]
+      ADC    DI,[BP+SI+0BCBBH]
+      ADC    DI,[BP+DI+0BDBCH]
+      ADC    DI,[SI+0BEBDH]
+      ADC    DI,[DI+0BFBEH]
+      ADC    DI,[BP+0C0BFH]
+      ADC    DI,[BX+0C1C0H]
       ADC    AX,[BX+SI]
       ADC    AX,[BX+DI]
       ADC    AX,[BP+SI]
       ADC    AX,[BP+DI]
       ADC    AX,[SI]
       ADC    AX,[DI]
-      ADC    AX,[0107H]
+      ADC    AX,[0807H]
       ADC    AX,[BX]
       ADC    CX,[BX+SI]
       ADC    CX,[BX+DI]
@@ -2764,21 +1911,36 @@
       ADC    CX,[BP+DI]
       ADC    CX,[SI]
       ADC    CX,[DI]
-      ADC    CX,[010FH]
+      ADC    CX,[100FH]
       ADC    CX,[BX]
       ADC    DX,[BX+SI]
       ADC    DX,[BX+DI]
       ADC    DX,[BP+SI]
       ADC    DX,[BP+DI]
-      ADC    AX,22
+      ADC    AL,21
+      ADC    AX,1716H
       PUSH   SS
       POP    SS
       SBB    [BX+DI],BL
+      SBB    [BP+SI],BL
+      SBB    [BP+DI],BL
+      SBB    [SI],BL
+      SBB    [DI],BL
+      SBB    [201FH],BL
+      SBB    [BX],BL
+      SBB    [BX+SI],AH
+      SBB    [BX+DI],AH
+      SBB    [BP+SI],AH
+      SBB    [BP+DI],AH
+      SBB    [SI],AH
+      SBB    [DI],AH
+      SBB    [2827H],AH
+      SBB    [BX],AH
       SBB    [BP+SI],BX
       SBB    [BP+DI],BX
       SBB    [SI],BX
       SBB    [DI],BX
-      SBB    [001FH],BX
+      SBB    [201FH],BX
       SBB    [BX],BX
       SBB    [BX+SI],SP
       SBB    [BX+DI],SP
@@ -2786,7 +1948,7 @@
       SBB    [BP+DI],SP
       SBB    [SI],SP
       SBB    [DI],SP
-      SBB    [0027H],SP
+      SBB    [2827H],SP
       SBB    [BX],SP
       SBB    [BX+SI],BP
       SBB    [BX+DI],BP
@@ -2794,7 +1956,7 @@
       SBB    [BP+DI],BP
       SBB    [SI],BP
       SBB    [DI],BP
-      SBB    [002FH],BP
+      SBB    [302FH],BP
       SBB    [BX],BP
       SBB    [BX+SI],SI
       SBB    [BX+DI],SI
@@ -2802,7 +1964,7 @@
       SBB    [BP+DI],SI
       SBB    [SI],SI
       SBB    [DI],SI
-      SBB    [0037H],SI
+      SBB    [3837H],SI
       SBB    [BX],SI
       SBB    [BX+SI],DI
       SBB    [BX+DI],DI
@@ -2810,7 +1972,7 @@
       SBB    [BP+DI],DI
       SBB    [SI],DI
       SBB    [DI],DI
-      SBB    [003FH],DI
+      SBB    [403FH],DI
       SBB    [BX],DI
       SBB    [BX+SI+65],AX
       SBB    [BX+SI-128],AX
@@ -2940,70 +2102,70 @@
       SBB    [BP-128],DI
       SBB    [BX-128],DI
       SBB    [BX+0],DI
-      SBB    [BX+SI+0081H],AX
-      SBB    [BX+DI+0082H],AX
-      SBB    [BP+SI+0083H],AX
-      SBB    [BP+DI+0084H],AX
-      SBB    [SI+0085H],AX
-      SBB    [DI+0086H],AX
-      SBB    [BP+0087H],AX
-      SBB    [BX+0088H],AX
-      SBB    [BX+SI+0089H],CX
-      SBB    [BX+DI+008AH],CX
-      SBB    [BP+SI+008BH],CX
-      SBB    [BP+DI+008CH],CX
-      SBB    [SI+008DH],CX
-      SBB    [DI+008EH],CX
-      SBB    [BP+008FH],CX
-      SBB    [BX+0090H],CX
-      SBB    [BX+SI+0091H],DX
-      SBB    [BX+DI+0092H],DX
-      SBB    [BP+SI+0093H],DX
-      SBB    [BP+DI+0094H],DX
-      SBB    [SI+0095H],DX
-      SBB    [DI+0096H],DX
-      SBB    [BP+0097H],DX
-      SBB    [BX+0098H],DX
-      SBB    [BX+SI+0099H],BX
-      SBB    [BX+DI+009AH],BX
-      SBB    [BP+SI+009BH],BX
-      SBB    [BP+DI+009CH],BX
-      SBB    [SI+009DH],BX
-      SBB    [DI+009EH],BX
-      SBB    [BP+009FH],BX
-      SBB    [BX+00A0H],BX
-      SBB    [BX+SI+00A1H],SP
-      SBB    [BX+DI+00A2H],SP
-      SBB    [BP+SI+00A3H],SP
-      SBB    [BP+DI+00A4H],SP
-      SBB    [SI+00A5H],SP
-      SBB    [DI+00A6H],SP
-      SBB    [BP+00A7H],SP
-      SBB    [BX+00A8H],SP
-      SBB    [BX+SI+00A9H],BP
-      SBB    [BX+DI+00AAH],BP
-      SBB    [BP+SI+00ABH],BP
-      SBB    [BP+DI+00ACH],BP
-      SBB    [SI+00ADH],BP
-      SBB    [DI+00AEH],BP
-      SBB    [BP+00AFH],BP
-      SBB    [BX+00B0H],BP
-      SBB    [BX+SI+00B1H],SI
-      SBB    [BX+DI+00B2H],SI
-      SBB    [BP+SI+00B3H],SI
-      SBB    [BP+DI+00B4H],SI
-      SBB    [SI+00B5H],SI
-      SBB    [DI+00B6H],SI
-      SBB    [BP+00B7H],SI
-      SBB    [BX+00B8H],SI
-      SBB    [BX+SI+00B9H],DI
-      SBB    [BX+DI+00BAH],DI
-      SBB    [BP+SI+00BBH],DI
-      SBB    [BP+DI+00BCH],DI
-      SBB    [SI+00BDH],DI
-      SBB    [DI+00BEH],DI
-      SBB    [BP+00BFH],DI
-      SBB    [BX+00C0H],DI
+      SBB    [BX+SI+8281H],AX
+      SBB    [BX+DI+8382H],AX
+      SBB    [BP+SI+8483H],AX
+      SBB    [BP+DI+8584H],AX
+      SBB    [SI+8685H],AX
+      SBB    [DI+8786H],AX
+      SBB    [BP+8887H],AX
+      SBB    [BX+8988H],AX
+      SBB    [BX+SI+8A89H],CX
+      SBB    [BX+DI+8B8AH],CX
+      SBB    [BP+SI+8C8BH],CX
+      SBB    [BP+DI+8D8CH],CX
+      SBB    [SI+8E8DH],CX
+      SBB    [DI+8F8EH],CX
+      SBB    [BP+908FH],CX
+      SBB    [BX+9190H],CX
+      SBB    [BX+SI+9291H],DX
+      SBB    [BX+DI+9392H],DX
+      SBB    [BP+SI+9493H],DX
+      SBB    [BP+DI+9594H],DX
+      SBB    [SI+9695H],DX
+      SBB    [DI+9796H],DX
+      SBB    [BP+9897H],DX
+      SBB    [BX+9998H],DX
+      SBB    [BX+SI+9A99H],BX
+      SBB    [BX+DI+9B9AH],BX
+      SBB    [BP+SI+9C9BH],BX
+      SBB    [BP+DI+9D9CH],BX
+      SBB    [SI+9E9DH],BX
+      SBB    [DI+9F9EH],BX
+      SBB    [BP+0A09FH],BX
+      SBB    [BX+0A1A0H],BX
+      SBB    [BX+SI+0A2A1H],SP
+      SBB    [BX+DI+0A3A2H],SP
+      SBB    [BP+SI+0A4A3H],SP
+      SBB    [BP+DI+0A5A4H],SP
+      SBB    [SI+0A6A5H],SP
+      SBB    [DI+0A7A6H],SP
+      SBB    [BP+0A8A7H],SP
+      SBB    [BX+0A9A8H],SP
+      SBB    [BX+SI+0AAA9H],BP
+      SBB    [BX+DI+0ABAAH],BP
+      SBB    [BP+SI+0ACABH],BP
+      SBB    [BP+DI+0ADACH],BP
+      SBB    [SI+0AEADH],BP
+      SBB    [DI+0AFAEH],BP
+      SBB    [BP+0B0AFH],BP
+      SBB    [BX+0B1B0H],BP
+      SBB    [BX+SI+0B2B1H],SI
+      SBB    [BX+DI+0B3B2H],SI
+      SBB    [BP+SI+0B4B3H],SI
+      SBB    [BP+DI+0B5B4H],SI
+      SBB    [SI+0B6B5H],SI
+      SBB    [DI+0B7B6H],SI
+      SBB    [BP+0B8B7H],SI
+      SBB    [BX+0B9B8H],SI
+      SBB    [BX+SI+0BAB9H],DI
+      SBB    [BX+DI+0BBBAH],DI
+      SBB    [BP+SI+0BCBBH],DI
+      SBB    [BP+DI+0BDBCH],DI
+      SBB    [SI+0BEBDH],DI
+      SBB    [DI+0BFBEH],DI
+      SBB    [BP+0C0BFH],DI
+      SBB    [BX+0C1C0H],DI
       SBB    AX,AX
       SBB    CX,AX
       SBB    DX,AX
@@ -3074,7 +2236,7 @@
       SBB    [BP+DI],AX
       SBB    [SI],AX
       SBB    [DI],AX
-      SBB    [0107H],AX
+      SBB    [0807H],AX
       SBB    [BX],AX
       SBB    [BX+SI],CX
       SBB    [BX+DI],CX
@@ -3082,7 +2244,7 @@
       SBB    [BP+DI],CX
       SBB    [SI],CX
       SBB    [DI],CX
-      SBB    [010FH],CX
+      SBB    [100FH],CX
       SBB    [BX],CX
       SBB    [BX+SI],DX
       SBB    [BX+DI],DX
@@ -3090,14 +2252,14 @@
       SBB    [BP+DI],DX
       SBB    [SI],DX
       SBB    [DI],DX
-      SBB    [0117H],DX
+      SBB    [1817H],DX
       SBB    [BX],DX
       SBB    [BX+SI],BX
       SBB    [BX+DI],BX
       SBB    BL,[BP+DI]
       SBB    BL,[SI]
       SBB    BL,[DI]
-      SBB    BL,[001FH]
+      SBB    BL,[201FH]
       SBB    BL,[BX]
       SBB    AH,[BX+SI]
       SBB    AH,[BX+DI]
@@ -3105,183 +2267,11 @@
       SBB    AH,[BP+DI]
       SBB    AH,[SI]
       SBB    AH,[DI]
-      SBB    AH,[0027H]
+      SBB    AH,[2827H]
       SBB    AH,[BX]
-      SBB    AL,[BX+SI+65]
-      SBB    AL,[BX+SI-128]
-      SBB    AL,[BX+DI+66]
-      SBB    AL,[BX+DI-128]
-      SBB    AL,[BP+SI+67]
-      SBB    AL,[BP+SI-128]
-      SBB    AL,[BP+DI+68]
-      SBB    AL,[BP+DI-128]
-      SBB    AL,[SI+69]
-      SBB    AL,[SI-128]
-      SBB    AL,[DI+70]
-      SBB    AL,[DI-128]
-      SBB    AL,[BP+71]
-      SBB    AL,[BP-128]
-      SBB    AL,[BX+72]
-      SBB    AL,[BX-128]
-      SBB    CL,[BX+SI+73]
-      SBB    CL,[BX+SI-128]
-      SBB    CL,[BX+DI+74]
-      SBB    CL,[BX+DI-128]
-      SBB    CL,[BP+SI+75]
-      SBB    CL,[BP+SI-128]
-      SBB    CL,[BP+DI+76]
-      SBB    CL,[BP+DI-128]
-      SBB    CL,[SI+77]
-      SBB    CL,[SI-128]
-      SBB    CL,[DI+78]
-      SBB    CL,[DI-128]
-      SBB    CL,[BP+79]
-      SBB    CL,[BP-128]
-      SBB    CL,[BX+80]
-      SBB    CL,[BX-128]
-      SBB    DL,[BX+SI+81]
-      SBB    DL,[BX+SI-128]
-      SBB    DL,[BX+DI+82]
-      SBB    DL,[BX+DI-128]
-      SBB    DL,[BP+SI+83]
-      SBB    DL,[BP+SI-128]
-      SBB    DL,[BP+DI+84]
-      SBB    DL,[BP+DI-128]
-      SBB    DL,[SI+85]
-      SBB    DL,[SI-128]
-      SBB    DL,[DI+86]
-      SBB    DL,[DI-128]
-      SBB    DL,[BP+87]
-      SBB    DL,[BP-128]
-      SBB    DL,[BX+88]
-      SBB    DL,[BX-128]
-      SBB    BL,[BX+SI+89]
-      SBB    BL,[BX+SI-128]
-      SBB    BL,[BX+DI+90]
-      SBB    BL,[BX+DI-128]
-      SBB    BL,[BP+SI+91]
-      SBB    BL,[BP+SI-128]
-      SBB    BL,[BP+DI+92]
-      SBB    BL,[BP+DI-128]
-      SBB    BL,[SI+93]
-      SBB    BL,[SI-128]
-      SBB    BL,[DI+94]
-      SBB    BL,[DI-128]
-      SBB    BL,[BP+95]
-      SBB    BL,[BP-128]
-      SBB    BL,[BX+96]
-      SBB    BL,[BX-128]
-      SBB    AH,[BX+SI+97]
-      SBB    AH,[BX+SI-128]
-      SBB    AH,[BX+DI+98]
-      SBB    AH,[BX+DI-128]
-      SBB    AH,[BP+SI+99]
-      SBB    AH,[BP+SI-128]
-      SBB    AH,[BP+DI+100]
-      SBB    AH,[BP+DI-128]
-      SBB    AH,[SI+101]
-      SBB    AH,[SI-128]
-      SBB    AH,[DI+102]
-      SBB    AH,[DI-128]
-      SBB    AH,[BP+103]
-      SBB    AH,[BP-128]
-      SBB    AH,[BX+104]
-      SBB    AH,[BX-128]
-      SBB    AL,[BX+SI+0081H]
-      SBB    AL,[BX+DI+0082H]
-      SBB    AL,[BP+SI+0083H]
-      SBB    AL,[BP+DI+0084H]
-      SBB    AL,[SI+0085H]
-      SBB    AL,[DI+0086H]
-      SBB    AL,[BP+0087H]
-      SBB    AL,[BX+0088H]
-      SBB    CL,[BX+SI+0089H]
-      SBB    CL,[BX+DI+008AH]
-      SBB    CL,[BP+SI+008BH]
-      SBB    CL,[BP+DI+008CH]
-      SBB    CL,[SI+008DH]
-      SBB    CL,[DI+008EH]
-      SBB    CL,[BP+008FH]
-      SBB    CL,[BX+0090H]
-      SBB    DL,[BX+SI+0091H]
-      SBB    DL,[BX+DI+0092H]
-      SBB    DL,[BP+SI+0093H]
-      SBB    DL,[BP+DI+0094H]
-      SBB    DL,[SI+0095H]
-      SBB    DL,[DI+0096H]
-      SBB    DL,[BP+0097H]
-      SBB    DL,[BX+0098H]
-      SBB    BL,[BX+SI+0099H]
-      SBB    BL,[BX+DI+009AH]
-      SBB    BL,[BP+SI+009BH]
-      SBB    BL,[BP+DI+009CH]
-      SBB    BL,[SI+009DH]
-      SBB    BL,[DI+009EH]
-      SBB    BL,[BP+009FH]
-      SBB    BL,[BX+00A0H]
-      SBB    AH,[BX+SI+00A1H]
-      SBB    AH,[BX+DI+00A2H]
-      SBB    AH,[BP+SI+00A3H]
-      SBB    AH,[BP+DI+00A4H]
-      SBB    AH,[SI+00A5H]
-      SBB    AH,[DI+00A6H]
-      SBB    AH,[BP+00A7H]
-      SBB    AH,[BX+00A8H]
-      SBB    AL,AL
-      SBB    AL,CL
-      SBB    AL,DL
-      SBB    AL,BL
-      SBB    AL,AH
-      SBB    CL,AL
-      SBB    CL,CL
-      SBB    CL,DL
-      SBB    CL,BL
-      SBB    CL,AH
-      SBB    DL,AL
-      SBB    DL,CL
-      SBB    DL,DL
-      SBB    DL,BL
-      SBB    DL,AH
-      SBB    BL,AL
-      SBB    BL,CL
-      SBB    BL,DL
-      SBB    BL,BL
-      SBB    BL,AH
-      SBB    AH,AL
-      SBB    AH,CL
-      SBB    AH,DL
-      SBB    AH,BL
-      SBB    AH,AH
-      SBB    AL,[BX+SI]
-      SBB    AL,[BX+DI]
-      SBB    AL,[BP+SI]
-      SBB    AL,[BP+DI]
-      SBB    AL,[SI]
-      SBB    AL,[DI]
-      SBB    AL,[0107H]
-      SBB    AL,[BX]
-      SBB    CL,[BX+SI]
-      SBB    CL,[BX+DI]
-      SBB    CL,[BP+SI]
-      SBB    CL,[BP+DI]
-      SBB    CL,[SI]
-      SBB    CL,[DI]
-      SBB    CL,[010FH]
-      SBB    CL,[BX]
-      SBB    DL,[BX+SI]
-      SBB    DL,[BX+DI]
-      SBB    DL,[BP+SI]
-      SBB    DL,[BP+DI]
-      SBB    DL,[SI]
-      SBB    DL,[DI]
-      SBB    DL,[0117H]
-      SBB    DL,[BX]
-      SBB    BL,[BX+SI]
-      SBB    BL,[BX+DI]
-      SBB    BL,[BP+SI]
       SBB    BX,[SI]
       SBB    BX,[DI]
-      SBB    BX,[001FH]
+      SBB    BX,[201FH]
       SBB    BX,[BX]
       SBB    SP,[BX+SI]
       SBB    SP,[BX+DI]
@@ -3289,7 +2279,7 @@
       SBB    SP,[BP+DI]
       SBB    SP,[SI]
       SBB    SP,[DI]
-      SBB    SP,[0027H]
+      SBB    SP,[2827H]
       SBB    SP,[BX]
       SBB    BP,[BX+SI]
       SBB    BP,[BX+DI]
@@ -3297,7 +2287,7 @@
       SBB    BP,[BP+DI]
       SBB    BP,[SI]
       SBB    BP,[DI]
-      SBB    BP,[002FH]
+      SBB    BP,[302FH]
       SBB    BP,[BX]
       SBB    SI,[BX+SI]
       SBB    SI,[BX+DI]
@@ -3305,7 +2295,7 @@
       SBB    SI,[BP+DI]
       SBB    SI,[SI]
       SBB    SI,[DI]
-      SBB    SI,[0037H]
+      SBB    SI,[3837H]
       SBB    SI,[BX]
       SBB    DI,[BX+SI]
       SBB    DI,[BX+DI]
@@ -3313,7 +2303,7 @@
       SBB    DI,[BP+DI]
       SBB    DI,[SI]
       SBB    DI,[DI]
-      SBB    DI,[003FH]
+      SBB    DI,[403FH]
       SBB    DI,[BX]
       SBB    AX,[BX+SI+65]
       SBB    AX,[BX+SI-128]
@@ -3443,77 +2433,77 @@
       SBB    DI,[BP-128]
       SBB    DI,[BX-128]
       SBB    DI,[BX+0]
-      SBB    AX,[BX+SI+0081H]
-      SBB    AX,[BX+DI+0082H]
-      SBB    AX,[BP+SI+0083H]
-      SBB    AX,[BP+DI+0084H]
-      SBB    AX,[SI+0085H]
-      SBB    AX,[DI+0086H]
-      SBB    AX,[BP+0087H]
-      SBB    AX,[BX+0088H]
-      SBB    CX,[BX+SI+0089H]
-      SBB    CX,[BX+DI+008AH]
-      SBB    CX,[BP+SI+008BH]
-      SBB    CX,[BP+DI+008CH]
-      SBB    CX,[SI+008DH]
-      SBB    CX,[DI+008EH]
-      SBB    CX,[BP+008FH]
-      SBB    CX,[BX+0090H]
-      SBB    DX,[BX+SI+0091H]
-      SBB    DX,[BX+DI+0092H]
-      SBB    DX,[BP+SI+0093H]
-      SBB    DX,[BP+DI+0094H]
-      SBB    DX,[SI+0095H]
-      SBB    DX,[DI+0096H]
-      SBB    DX,[BP+0097H]
-      SBB    DX,[BX+0098H]
-      SBB    BX,[BX+SI+0099H]
-      SBB    BX,[BX+DI+009AH]
-      SBB    BX,[BP+SI+009BH]
-      SBB    BX,[BP+DI+009CH]
-      SBB    BX,[SI+009DH]
-      SBB    BX,[DI+009EH]
-      SBB    BX,[BP+009FH]
-      SBB    BX,[BX+00A0H]
-      SBB    SP,[BX+SI+00A1H]
-      SBB    SP,[BX+DI+00A2H]
-      SBB    SP,[BP+SI+00A3H]
-      SBB    SP,[BP+DI+00A4H]
-      SBB    SP,[SI+00A5H]
-      SBB    SP,[DI+00A6H]
-      SBB    SP,[BP+00A7H]
-      SBB    SP,[BX+00A8H]
-      SBB    BP,[BX+SI+00A9H]
-      SBB    BP,[BX+DI+00AAH]
-      SBB    BP,[BP+SI+00ABH]
-      SBB    BP,[BP+DI+00ACH]
-      SBB    BP,[SI+00ADH]
-      SBB    BP,[DI+00AEH]
-      SBB    BP,[BP+00AFH]
-      SBB    BP,[BX+00B0H]
-      SBB    SI,[BX+SI+00B1H]
-      SBB    SI,[BX+DI+00B2H]
-      SBB    SI,[BP+SI+00B3H]
-      SBB    SI,[BP+DI+00B4H]
-      SBB    SI,[SI+00B5H]
-      SBB    SI,[DI+00B6H]
-      SBB    SI,[BP+00B7H]
-      SBB    SI,[BX+00B8H]
-      SBB    DI,[BX+SI+00B9H]
-      SBB    DI,[BX+DI+00BAH]
-      SBB    DI,[BP+SI+00BBH]
-      SBB    DI,[BP+DI+00BCH]
-      SBB    DI,[SI+00BDH]
-      SBB    DI,[DI+00BEH]
-      SBB    DI,[BP+00BFH]
-      SBB    DI,[BX+00C0H]
+      SBB    AX,[BX+SI+8281H]
+      SBB    AX,[BX+DI+8382H]
+      SBB    AX,[BP+SI+8483H]
+      SBB    AX,[BP+DI+8584H]
+      SBB    AX,[SI+8685H]
+      SBB    AX,[DI+8786H]
+      SBB    AX,[BP+8887H]
+      SBB    AX,[BX+8988H]
+      SBB    CX,[BX+SI+8A89H]
+      SBB    CX,[BX+DI+8B8AH]
+      SBB    CX,[BP+SI+8C8BH]
+      SBB    CX,[BP+DI+8D8CH]
+      SBB    CX,[SI+8E8DH]
+      SBB    CX,[DI+8F8EH]
+      SBB    CX,[BP+908FH]
+      SBB    CX,[BX+9190H]
+      SBB    DX,[BX+SI+9291H]
+      SBB    DX,[BX+DI+9392H]
+      SBB    DX,[BP+SI+9493H]
+      SBB    DX,[BP+DI+9594H]
+      SBB    DX,[SI+9695H]
+      SBB    DX,[DI+9796H]
+      SBB    DX,[BP+9897H]
+      SBB    DX,[BX+9998H]
+      SBB    BX,[BX+SI+9A99H]
+      SBB    BX,[BX+DI+9B9AH]
+      SBB    BX,[BP+SI+9C9BH]
+      SBB    BX,[BP+DI+9D9CH]
+      SBB    BX,[SI+9E9DH]
+      SBB    BX,[DI+9F9EH]
+      SBB    BX,[BP+0A09FH]
+      SBB    BX,[BX+0A1A0H]
+      SBB    SP,[BX+SI+0A2A1H]
+      SBB    SP,[BX+DI+0A3A2H]
+      SBB    SP,[BP+SI+0A4A3H]
+      SBB    SP,[BP+DI+0A5A4H]
+      SBB    SP,[SI+0A6A5H]
+      SBB    SP,[DI+0A7A6H]
+      SBB    SP,[BP+0A8A7H]
+      SBB    SP,[BX+0A9A8H]
+      SBB    BP,[BX+SI+0AAA9H]
+      SBB    BP,[BX+DI+0ABAAH]
+      SBB    BP,[BP+SI+0ACABH]
+      SBB    BP,[BP+DI+0ADACH]
+      SBB    BP,[SI+0AEADH]
+      SBB    BP,[DI+0AFAEH]
+      SBB    BP,[BP+0B0AFH]
+      SBB    BP,[BX+0B1B0H]
+      SBB    SI,[BX+SI+0B2B1H]
+      SBB    SI,[BX+DI+0B3B2H]
+      SBB    SI,[BP+SI+0B4B3H]
+      SBB    SI,[BP+DI+0B5B4H]
+      SBB    SI,[SI+0B6B5H]
+      SBB    SI,[DI+0B7B6H]
+      SBB    SI,[BP+0B8B7H]
+      SBB    SI,[BX+0B9B8H]
+      SBB    DI,[BX+SI+0BAB9H]
+      SBB    DI,[BX+DI+0BBBAH]
+      SBB    DI,[BP+SI+0BCBBH]
+      SBB    DI,[BP+DI+0BDBCH]
+      SBB    DI,[SI+0BEBDH]
+      SBB    DI,[DI+0BFBEH]
+      SBB    DI,[BP+0C0BFH]
+      SBB    DI,[BX+0C1C0H]
       SBB    AX,[BX+SI]
       SBB    AX,[BX+DI]
       SBB    AX,[BP+SI]
       SBB    AX,[BP+DI]
       SBB    AX,[SI]
       SBB    AX,[DI]
-      SBB    AX,[0107H]
+      SBB    AX,[0807H]
       SBB    AX,[BX]
       SBB    CX,[BX+SI]
       SBB    CX,[BX+DI]
@@ -3521,7 +2511,7 @@
       SBB    CX,[BP+DI]
       SBB    CX,[SI]
       SBB    CX,[DI]
-      SBB    CX,[010FH]
+      SBB    CX,[100FH]
       SBB    CX,[BX]
       SBB    DX,[BX+SI]
       SBB    DX,[BX+DI]
@@ -3529,21 +2519,29 @@
       SBB    DX,[BP+DI]
       SBB    DX,[SI]
       SBB    DX,[DI]
-      SBB    DX,[0117H]
+      SBB    DX,[1817H]
       SBB    DX,[BX]
       SBB    BX,[BX+SI]
       SBB    BX,[BX+DI]
       SBB    BX,[BP+SI]
       SBB    BX,[BP+DI]
-      SBB    AX,30
+      SBB    AL,29
+      SBB    AX,1F1EH
       PUSH   DS
       POP    DS
       AND    [BX+DI],AH
+      AND    [BP+SI],AH
+      AND    [BP+DI],AH
+      AND    [SI],AH
+      AND    [DI],AH
+      AND    [2827H],AH
+      AND    [BX],AH
+      AND    [BX+SI],CH
       AND    [BP+SI],SP
       AND    [BP+DI],SP
       AND    [SI],SP
       AND    [DI],SP
-      AND    [0027H],SP
+      AND    [2827H],SP
       AND    [BX],SP
       AND    [BX+SI],BP
       AND    [BX+DI],BP
@@ -3551,7 +2549,7 @@
       AND    [BP+DI],BP
       AND    [SI],BP
       AND    [DI],BP
-      AND    [002FH],BP
+      AND    [302FH],BP
       AND    [BX],BP
       AND    [BX+SI],SI
       AND    [BX+DI],SI
@@ -3559,7 +2557,7 @@
       AND    [BP+DI],SI
       AND    [SI],SI
       AND    [DI],SI
-      AND    [0037H],SI
+      AND    [3837H],SI
       AND    [BX],SI
       AND    [BX+SI],DI
       AND    [BX+DI],DI
@@ -3567,7 +2565,7 @@
       AND    [BP+DI],DI
       AND    [SI],DI
       AND    [DI],DI
-      AND    [003FH],DI
+      AND    [403FH],DI
       AND    [BX],DI
       AND    [BX+SI+65],AX
       AND    [BX+SI-128],AX
@@ -3697,70 +2695,70 @@
       AND    [BP-128],DI
       AND    [BX-128],DI
       AND    [BX+0],DI
-      AND    [BX+SI+0081H],AX
-      AND    [BX+DI+0082H],AX
-      AND    [BP+SI+0083H],AX
-      AND    [BP+DI+0084H],AX
-      AND    [SI+0085H],AX
-      AND    [DI+0086H],AX
-      AND    [BP+0087H],AX
-      AND    [BX+0088H],AX
-      AND    [BX+SI+0089H],CX
-      AND    [BX+DI+008AH],CX
-      AND    [BP+SI+008BH],CX
-      AND    [BP+DI+008CH],CX
-      AND    [SI+008DH],CX
-      AND    [DI+008EH],CX
-      AND    [BP+008FH],CX
-      AND    [BX+0090H],CX
-      AND    [BX+SI+0091H],DX
-      AND    [BX+DI+0092H],DX
-      AND    [BP+SI+0093H],DX
-      AND    [BP+DI+0094H],DX
-      AND    [SI+0095H],DX
-      AND    [DI+0096H],DX
-      AND    [BP+0097H],DX
-      AND    [BX+0098H],DX
-      AND    [BX+SI+0099H],BX
-      AND    [BX+DI+009AH],BX
-      AND    [BP+SI+009BH],BX
-      AND    [BP+DI+009CH],BX
-      AND    [SI+009DH],BX
-      AND    [DI+009EH],BX
-      AND    [BP+009FH],BX
-      AND    [BX+00A0H],BX
-      AND    [BX+SI+00A1H],SP
-      AND    [BX+DI+00A2H],SP
-      AND    [BP+SI+00A3H],SP
-      AND    [BP+DI+00A4H],SP
-      AND    [SI+00A5H],SP
-      AND    [DI+00A6H],SP
-      AND    [BP+00A7H],SP
-      AND    [BX+00A8H],SP
-      AND    [BX+SI+00A9H],BP
-      AND    [BX+DI+00AAH],BP
-      AND    [BP+SI+00ABH],BP
-      AND    [BP+DI+00ACH],BP
-      AND    [SI+00ADH],BP
-      AND    [DI+00AEH],BP
-      AND    [BP+00AFH],BP
-      AND    [BX+00B0H],BP
-      AND    [BX+SI+00B1H],SI
-      AND    [BX+DI+00B2H],SI
-      AND    [BP+SI+00B3H],SI
-      AND    [BP+DI+00B4H],SI
-      AND    [SI+00B5H],SI
-      AND    [DI+00B6H],SI
-      AND    [BP+00B7H],SI
-      AND    [BX+00B8H],SI
-      AND    [BX+SI+00B9H],DI
-      AND    [BX+DI+00BAH],DI
-      AND    [BP+SI+00BBH],DI
-      AND    [BP+DI+00BCH],DI
-      AND    [SI+00BDH],DI
-      AND    [DI+00BEH],DI
-      AND    [BP+00BFH],DI
-      AND    [BX+00C0H],DI
+      AND    [BX+SI+8281H],AX
+      AND    [BX+DI+8382H],AX
+      AND    [BP+SI+8483H],AX
+      AND    [BP+DI+8584H],AX
+      AND    [SI+8685H],AX
+      AND    [DI+8786H],AX
+      AND    [BP+8887H],AX
+      AND    [BX+8988H],AX
+      AND    [BX+SI+8A89H],CX
+      AND    [BX+DI+8B8AH],CX
+      AND    [BP+SI+8C8BH],CX
+      AND    [BP+DI+8D8CH],CX
+      AND    [SI+8E8DH],CX
+      AND    [DI+8F8EH],CX
+      AND    [BP+908FH],CX
+      AND    [BX+9190H],CX
+      AND    [BX+SI+9291H],DX
+      AND    [BX+DI+9392H],DX
+      AND    [BP+SI+9493H],DX
+      AND    [BP+DI+9594H],DX
+      AND    [SI+9695H],DX
+      AND    [DI+9796H],DX
+      AND    [BP+9897H],DX
+      AND    [BX+9998H],DX
+      AND    [BX+SI+9A99H],BX
+      AND    [BX+DI+9B9AH],BX
+      AND    [BP+SI+9C9BH],BX
+      AND    [BP+DI+9D9CH],BX
+      AND    [SI+9E9DH],BX
+      AND    [DI+9F9EH],BX
+      AND    [BP+0A09FH],BX
+      AND    [BX+0A1A0H],BX
+      AND    [BX+SI+0A2A1H],SP
+      AND    [BX+DI+0A3A2H],SP
+      AND    [BP+SI+0A4A3H],SP
+      AND    [BP+DI+0A5A4H],SP
+      AND    [SI+0A6A5H],SP
+      AND    [DI+0A7A6H],SP
+      AND    [BP+0A8A7H],SP
+      AND    [BX+0A9A8H],SP
+      AND    [BX+SI+0AAA9H],BP
+      AND    [BX+DI+0ABAAH],BP
+      AND    [BP+SI+0ACABH],BP
+      AND    [BP+DI+0ADACH],BP
+      AND    [SI+0AEADH],BP
+      AND    [DI+0AFAEH],BP
+      AND    [BP+0B0AFH],BP
+      AND    [BX+0B1B0H],BP
+      AND    [BX+SI+0B2B1H],SI
+      AND    [BX+DI+0B3B2H],SI
+      AND    [BP+SI+0B4B3H],SI
+      AND    [BP+DI+0B5B4H],SI
+      AND    [SI+0B6B5H],SI
+      AND    [DI+0B7B6H],SI
+      AND    [BP+0B8B7H],SI
+      AND    [BX+0B9B8H],SI
+      AND    [BX+SI+0BAB9H],DI
+      AND    [BX+DI+0BBBAH],DI
+      AND    [BP+SI+0BCBBH],DI
+      AND    [BP+DI+0BDBCH],DI
+      AND    [SI+0BEBDH],DI
+      AND    [DI+0BFBEH],DI
+      AND    [BP+0C0BFH],DI
+      AND    [BX+0C1C0H],DI
       AND    AX,AX
       AND    CX,AX
       AND    DX,AX
@@ -3831,7 +2829,7 @@
       AND    [BP+DI],AX
       AND    [SI],AX
       AND    [DI],AX
-      AND    [0107H],AX
+      AND    [0807H],AX
       AND    [BX],AX
       AND    [BX+SI],CX
       AND    [BX+DI],CX
@@ -3839,7 +2837,7 @@
       AND    [BP+DI],CX
       AND    [SI],CX
       AND    [DI],CX
-      AND    [010FH],CX
+      AND    [100FH],CX
       AND    [BX],CX
       AND    [BX+SI],DX
       AND    [BX+DI],DX
@@ -3847,7 +2845,7 @@
       AND    [BP+DI],DX
       AND    [SI],DX
       AND    [DI],DX
-      AND    [0117H],DX
+      AND    [1817H],DX
       AND    [BX],DX
       AND    [BX+SI],BX
       AND    [BX+DI],BX
@@ -3855,198 +2853,21 @@
       AND    [BP+DI],BX
       AND    [SI],BX
       AND    [DI],BX
-      AND    [011FH],BX
+      AND    [201FH],BX
       AND    [BX],BX
       AND    [BX+SI],SP
       AND    [BX+DI],SP
       AND    AH,[BP+DI]
       AND    AH,[SI]
       AND    AH,[DI]
-      AND    AH,[0027H]
+      AND    AH,[2827H]
       AND    AH,[BX]
       AND    CH,[BX+SI]
       AND    CH,[BX+DI]
       AND    CH,[BP+SI]
-      AND    AL,[BX+SI+65]
-      AND    AL,[BX+SI-128]
-      AND    AL,[BX+DI+66]
-      AND    AL,[BX+DI-128]
-      AND    AL,[BP+SI+67]
-      AND    AL,[BP+SI-128]
-      AND    AL,[BP+DI+68]
-      AND    AL,[BP+DI-128]
-      AND    AL,[SI+69]
-      AND    AL,[SI-128]
-      AND    AL,[DI+70]
-      AND    AL,[DI-128]
-      AND    AL,[BP+71]
-      AND    AL,[BP-128]
-      AND    AL,[BX+72]
-      AND    AL,[BX-128]
-      AND    CL,[BX+SI+73]
-      AND    CL,[BX+SI-128]
-      AND    CL,[BX+DI+74]
-      AND    CL,[BX+DI-128]
-      AND    CL,[BP+SI+75]
-      AND    CL,[BP+SI-128]
-      AND    CL,[BP+DI+76]
-      AND    CL,[BP+DI-128]
-      AND    CL,[SI+77]
-      AND    CL,[SI-128]
-      AND    CL,[DI+78]
-      AND    CL,[DI-128]
-      AND    CL,[BP+79]
-      AND    CL,[BP-128]
-      AND    CL,[BX+80]
-      AND    CL,[BX-128]
-      AND    DL,[BX+SI+81]
-      AND    DL,[BX+SI-128]
-      AND    DL,[BX+DI+82]
-      AND    DL,[BX+DI-128]
-      AND    DL,[BP+SI+83]
-      AND    DL,[BP+SI-128]
-      AND    DL,[BP+DI+84]
-      AND    DL,[BP+DI-128]
-      AND    DL,[SI+85]
-      AND    DL,[SI-128]
-      AND    DL,[DI+86]
-      AND    DL,[DI-128]
-      AND    DL,[BP+87]
-      AND    DL,[BP-128]
-      AND    DL,[BX+88]
-      AND    DL,[BX-128]
-      AND    BL,[BX+SI+89]
-      AND    BL,[BX+SI-128]
-      AND    BL,[BX+DI+90]
-      AND    BL,[BX+DI-128]
-      AND    BL,[BP+SI+91]
-      AND    BL,[BP+SI-128]
-      AND    BL,[BP+DI+92]
-      AND    BL,[BP+DI-128]
-      AND    BL,[SI+93]
-      AND    BL,[SI-128]
-      AND    BL,[DI+94]
-      AND    BL,[DI-128]
-      AND    BL,[BP+95]
-      AND    BL,[BP-128]
-      AND    BL,[BX+96]
-      AND    BL,[BX-128]
-      AND    AH,[BX+SI+97]
-      AND    AH,[BX+SI-128]
-      AND    AH,[BX+DI+98]
-      AND    AH,[BX+DI-128]
-      AND    AH,[BP+SI+99]
-      AND    AH,[BP+SI-128]
-      AND    AH,[BP+DI+100]
-      AND    AH,[BP+DI-128]
-      AND    AH,[SI+101]
-      AND    AH,[SI-128]
-      AND    AH,[DI+102]
-      AND    AH,[DI-128]
-      AND    AH,[BP+103]
-      AND    AH,[BP-128]
-      AND    AH,[BX+104]
-      AND    AH,[BX-128]
-      AND    AL,[BX+SI+0081H]
-      AND    AL,[BX+DI+0082H]
-      AND    AL,[BP+SI+0083H]
-      AND    AL,[BP+DI+0084H]
-      AND    AL,[SI+0085H]
-      AND    AL,[DI+0086H]
-      AND    AL,[BP+0087H]
-      AND    AL,[BX+0088H]
-      AND    CL,[BX+SI+0089H]
-      AND    CL,[BX+DI+008AH]
-      AND    CL,[BP+SI+008BH]
-      AND    CL,[BP+DI+008CH]
-      AND    CL,[SI+008DH]
-      AND    CL,[DI+008EH]
-      AND    CL,[BP+008FH]
-      AND    CL,[BX+0090H]
-      AND    DL,[BX+SI+0091H]
-      AND    DL,[BX+DI+0092H]
-      AND    DL,[BP+SI+0093H]
-      AND    DL,[BP+DI+0094H]
-      AND    DL,[SI+0095H]
-      AND    DL,[DI+0096H]
-      AND    DL,[BP+0097H]
-      AND    DL,[BX+0098H]
-      AND    BL,[BX+SI+0099H]
-      AND    BL,[BX+DI+009AH]
-      AND    BL,[BP+SI+009BH]
-      AND    BL,[BP+DI+009CH]
-      AND    BL,[SI+009DH]
-      AND    BL,[DI+009EH]
-      AND    BL,[BP+009FH]
-      AND    BL,[BX+00A0H]
-      AND    AH,[BX+SI+00A1H]
-      AND    AH,[BX+DI+00A2H]
-      AND    AH,[BP+SI+00A3H]
-      AND    AH,[BP+DI+00A4H]
-      AND    AH,[SI+00A5H]
-      AND    AH,[DI+00A6H]
-      AND    AH,[BP+00A7H]
-      AND    AH,[BX+00A8H]
-      AND    AL,AL
-      AND    AL,CL
-      AND    AL,DL
-      AND    AL,BL
-      AND    AL,AH
-      AND    CL,AL
-      AND    CL,CL
-      AND    CL,DL
-      AND    CL,BL
-      AND    CL,AH
-      AND    DL,AL
-      AND    DL,CL
-      AND    DL,DL
-      AND    DL,BL
-      AND    DL,AH
-      AND    BL,AL
-      AND    BL,CL
-      AND    BL,DL
-      AND    BL,BL
-      AND    BL,AH
-      AND    AH,AL
-      AND    AH,CL
-      AND    AH,DL
-      AND    AH,BL
-      AND    AH,AH
-      AND    AL,[BX+SI]
-      AND    AL,[BX+DI]
-      AND    AL,[BP+SI]
-      AND    AL,[BP+DI]
-      AND    AL,[SI]
-      AND    AL,[DI]
-      AND    AL,[0107H]
-      AND    AL,[BX]
-      AND    CL,[BX+SI]
-      AND    CL,[BX+DI]
-      AND    CL,[BP+SI]
-      AND    CL,[BP+DI]
-      AND    CL,[SI]
-      AND    CL,[DI]
-      AND    CL,[010FH]
-      AND    CL,[BX]
-      AND    DL,[BX+SI]
-      AND    DL,[BX+DI]
-      AND    DL,[BP+SI]
-      AND    DL,[BP+DI]
-      AND    DL,[SI]
-      AND    DL,[DI]
-      AND    DL,[0117H]
-      AND    DL,[BX]
-      AND    BL,[BX+SI]
-      AND    BL,[BX+DI]
-      AND    BL,[BP+SI]
-      AND    BL,[BP+DI]
-      AND    BL,[SI]
-      AND    BL,[DI]
-      AND    BL,[011FH]
-      AND    BL,[BX]
       AND    SP,[SI]
       AND    SP,[DI]
-      AND    SP,[0027H]
+      AND    SP,[2827H]
       AND    SP,[BX]
       AND    BP,[BX+SI]
       AND    BP,[BX+DI]
@@ -4054,7 +2875,7 @@
       AND    BP,[BP+DI]
       AND    BP,[SI]
       AND    BP,[DI]
-      AND    BP,[002FH]
+      AND    BP,[302FH]
       AND    BP,[BX]
       AND    SI,[BX+SI]
       AND    SI,[BX+DI]
@@ -4062,7 +2883,7 @@
       AND    SI,[BP+DI]
       AND    SI,[SI]
       AND    SI,[DI]
-      AND    SI,[0037H]
+      AND    SI,[3837H]
       AND    SI,[BX]
       AND    DI,[BX+SI]
       AND    DI,[BX+DI]
@@ -4070,7 +2891,7 @@
       AND    DI,[BP+DI]
       AND    DI,[SI]
       AND    DI,[DI]
-      AND    DI,[003FH]
+      AND    DI,[403FH]
       AND    DI,[BX]
       AND    AX,[BX+SI+65]
       AND    AX,[BX+SI-128]
@@ -4200,77 +3021,77 @@
       AND    DI,[BP-128]
       AND    DI,[BX-128]
       AND    DI,[BX+0]
-      AND    AX,[BX+SI+0081H]
-      AND    AX,[BX+DI+0082H]
-      AND    AX,[BP+SI+0083H]
-      AND    AX,[BP+DI+0084H]
-      AND    AX,[SI+0085H]
-      AND    AX,[DI+0086H]
-      AND    AX,[BP+0087H]
-      AND    AX,[BX+0088H]
-      AND    CX,[BX+SI+0089H]
-      AND    CX,[BX+DI+008AH]
-      AND    CX,[BP+SI+008BH]
-      AND    CX,[BP+DI+008CH]
-      AND    CX,[SI+008DH]
-      AND    CX,[DI+008EH]
-      AND    CX,[BP+008FH]
-      AND    CX,[BX+0090H]
-      AND    DX,[BX+SI+0091H]
-      AND    DX,[BX+DI+0092H]
-      AND    DX,[BP+SI+0093H]
-      AND    DX,[BP+DI+0094H]
-      AND    DX,[SI+0095H]
-      AND    DX,[DI+0096H]
-      AND    DX,[BP+0097H]
-      AND    DX,[BX+0098H]
-      AND    BX,[BX+SI+0099H]
-      AND    BX,[BX+DI+009AH]
-      AND    BX,[BP+SI+009BH]
-      AND    BX,[BP+DI+009CH]
-      AND    BX,[SI+009DH]
-      AND    BX,[DI+009EH]
-      AND    BX,[BP+009FH]
-      AND    BX,[BX+00A0H]
-      AND    SP,[BX+SI+00A1H]
-      AND    SP,[BX+DI+00A2H]
-      AND    SP,[BP+SI+00A3H]
-      AND    SP,[BP+DI+00A4H]
-      AND    SP,[SI+00A5H]
-      AND    SP,[DI+00A6H]
-      AND    SP,[BP+00A7H]
-      AND    SP,[BX+00A8H]
-      AND    BP,[BX+SI+00A9H]
-      AND    BP,[BX+DI+00AAH]
-      AND    BP,[BP+SI+00ABH]
-      AND    BP,[BP+DI+00ACH]
-      AND    BP,[SI+00ADH]
-      AND    BP,[DI+00AEH]
-      AND    BP,[BP+00AFH]
-      AND    BP,[BX+00B0H]
-      AND    SI,[BX+SI+00B1H]
-      AND    SI,[BX+DI+00B2H]
-      AND    SI,[BP+SI+00B3H]
-      AND    SI,[BP+DI+00B4H]
-      AND    SI,[SI+00B5H]
-      AND    SI,[DI+00B6H]
-      AND    SI,[BP+00B7H]
-      AND    SI,[BX+00B8H]
-      AND    DI,[BX+SI+00B9H]
-      AND    DI,[BX+DI+00BAH]
-      AND    DI,[BP+SI+00BBH]
-      AND    DI,[BP+DI+00BCH]
-      AND    DI,[SI+00BDH]
-      AND    DI,[DI+00BEH]
-      AND    DI,[BP+00BFH]
-      AND    DI,[BX+00C0H]
+      AND    AX,[BX+SI+8281H]
+      AND    AX,[BX+DI+8382H]
+      AND    AX,[BP+SI+8483H]
+      AND    AX,[BP+DI+8584H]
+      AND    AX,[SI+8685H]
+      AND    AX,[DI+8786H]
+      AND    AX,[BP+8887H]
+      AND    AX,[BX+8988H]
+      AND    CX,[BX+SI+8A89H]
+      AND    CX,[BX+DI+8B8AH]
+      AND    CX,[BP+SI+8C8BH]
+      AND    CX,[BP+DI+8D8CH]
+      AND    CX,[SI+8E8DH]
+      AND    CX,[DI+8F8EH]
+      AND    CX,[BP+908FH]
+      AND    CX,[BX+9190H]
+      AND    DX,[BX+SI+9291H]
+      AND    DX,[BX+DI+9392H]
+      AND    DX,[BP+SI+9493H]
+      AND    DX,[BP+DI+9594H]
+      AND    DX,[SI+9695H]
+      AND    DX,[DI+9796H]
+      AND    DX,[BP+9897H]
+      AND    DX,[BX+9998H]
+      AND    BX,[BX+SI+9A99H]
+      AND    BX,[BX+DI+9B9AH]
+      AND    BX,[BP+SI+9C9BH]
+      AND    BX,[BP+DI+9D9CH]
+      AND    BX,[SI+9E9DH]
+      AND    BX,[DI+9F9EH]
+      AND    BX,[BP+0A09FH]
+      AND    BX,[BX+0A1A0H]
+      AND    SP,[BX+SI+0A2A1H]
+      AND    SP,[BX+DI+0A3A2H]
+      AND    SP,[BP+SI+0A4A3H]
+      AND    SP,[BP+DI+0A5A4H]
+      AND    SP,[SI+0A6A5H]
+      AND    SP,[DI+0A7A6H]
+      AND    SP,[BP+0A8A7H]
+      AND    SP,[BX+0A9A8H]
+      AND    BP,[BX+SI+0AAA9H]
+      AND    BP,[BX+DI+0ABAAH]
+      AND    BP,[BP+SI+0ACABH]
+      AND    BP,[BP+DI+0ADACH]
+      AND    BP,[SI+0AEADH]
+      AND    BP,[DI+0AFAEH]
+      AND    BP,[BP+0B0AFH]
+      AND    BP,[BX+0B1B0H]
+      AND    SI,[BX+SI+0B2B1H]
+      AND    SI,[BX+DI+0B3B2H]
+      AND    SI,[BP+SI+0B4B3H]
+      AND    SI,[BP+DI+0B5B4H]
+      AND    SI,[SI+0B6B5H]
+      AND    SI,[DI+0B7B6H]
+      AND    SI,[BP+0B8B7H]
+      AND    SI,[BX+0B9B8H]
+      AND    DI,[BX+SI+0BAB9H]
+      AND    DI,[BX+DI+0BBBAH]
+      AND    DI,[BP+SI+0BCBBH]
+      AND    DI,[BP+DI+0BDBCH]
+      AND    DI,[SI+0BEBDH]
+      AND    DI,[DI+0BFBEH]
+      AND    DI,[BP+0C0BFH]
+      AND    DI,[BX+0C1C0H]
       AND    AX,[BX+SI]
       AND    AX,[BX+DI]
       AND    AX,[BP+SI]
       AND    AX,[BP+DI]
       AND    AX,[SI]
       AND    AX,[DI]
-      AND    AX,[0107H]
+      AND    AX,[0807H]
       AND    AX,[BX]
       AND    CX,[BX+SI]
       AND    CX,[BX+DI]
@@ -4278,7 +3099,7 @@
       AND    CX,[BP+DI]
       AND    CX,[SI]
       AND    CX,[DI]
-      AND    CX,[010FH]
+      AND    CX,[100FH]
       AND    CX,[BX]
       AND    DX,[BX+SI]
       AND    DX,[BX+DI]
@@ -4286,7 +3107,7 @@
       AND    DX,[BP+DI]
       AND    DX,[SI]
       AND    DX,[DI]
-      AND    DX,[0117H]
+      AND    DX,[1817H]
       AND    DX,[BX]
       AND    BX,[BX+SI]
       AND    BX,[BX+DI]
@@ -4294,20 +3115,28 @@
       AND    BX,[BP+DI]
       AND    BX,[SI]
       AND    BX,[DI]
-      AND    BX,[011FH]
+      AND    BX,[201FH]
       AND    BX,[BX]
       AND    SP,[BX+SI]
       AND    SP,[BX+DI]
       AND    SP,[BP+SI]
       AND    SP,[BP+DI]
-      AND    AX,0026H
+      AND    AL,25H
+      AND    AX,2726H
       DAA
       SUB    [BX+DI],CH
+      SUB    [BP+SI],CH
+      SUB    [BP+DI],CH
+      SUB    [SI],CH
+      SUB    [DI],CH
+      SUB    [302FH],CH
+      SUB    [BX],CH
+      SUB    [BX+SI],DH
       SUB    [BP+SI],BP
       SUB    [BP+DI],BP
       SUB    [SI],BP
       SUB    [DI],BP
-      SUB    [002FH],BP
+      SUB    [302FH],BP
       SUB    [BX],BP
       SUB    [BX+SI],SI
       SUB    [BX+DI],SI
@@ -4315,7 +3144,7 @@
       SUB    [BP+DI],SI
       SUB    [SI],SI
       SUB    [DI],SI
-      SUB    [0037H],SI
+      SUB    [3837H],SI
       SUB    [BX],SI
       SUB    [BX+SI],DI
       SUB    [BX+DI],DI
@@ -4323,7 +3152,7 @@
       SUB    [BP+DI],DI
       SUB    [SI],DI
       SUB    [DI],DI
-      SUB    [003FH],DI
+      SUB    [403FH],DI
       SUB    [BX],DI
       SUB    [BX+SI+65],AX
       SUB    [BX+SI-128],AX
@@ -4453,70 +3282,70 @@
       SUB    [BP-128],DI
       SUB    [BX-128],DI
       SUB    [BX+0],DI
-      SUB    [BX+SI+0081H],AX
-      SUB    [BX+DI+0082H],AX
-      SUB    [BP+SI+0083H],AX
-      SUB    [BP+DI+0084H],AX
-      SUB    [SI+0085H],AX
-      SUB    [DI+0086H],AX
-      SUB    [BP+0087H],AX
-      SUB    [BX+0088H],AX
-      SUB    [BX+SI+0089H],CX
-      SUB    [BX+DI+008AH],CX
-      SUB    [BP+SI+008BH],CX
-      SUB    [BP+DI+008CH],CX
-      SUB    [SI+008DH],CX
-      SUB    [DI+008EH],CX
-      SUB    [BP+008FH],CX
-      SUB    [BX+0090H],CX
-      SUB    [BX+SI+0091H],DX
-      SUB    [BX+DI+0092H],DX
-      SUB    [BP+SI+0093H],DX
-      SUB    [BP+DI+0094H],DX
-      SUB    [SI+0095H],DX
-      SUB    [DI+0096H],DX
-      SUB    [BP+0097H],DX
-      SUB    [BX+0098H],DX
-      SUB    [BX+SI+0099H],BX
-      SUB    [BX+DI+009AH],BX
-      SUB    [BP+SI+009BH],BX
-      SUB    [BP+DI+009CH],BX
-      SUB    [SI+009DH],BX
-      SUB    [DI+009EH],BX
-      SUB    [BP+009FH],BX
-      SUB    [BX+00A0H],BX
-      SUB    [BX+SI+00A1H],SP
-      SUB    [BX+DI+00A2H],SP
-      SUB    [BP+SI+00A3H],SP
-      SUB    [BP+DI+00A4H],SP
-      SUB    [SI+00A5H],SP
-      SUB    [DI+00A6H],SP
-      SUB    [BP+00A7H],SP
-      SUB    [BX+00A8H],SP
-      SUB    [BX+SI+00A9H],BP
-      SUB    [BX+DI+00AAH],BP
-      SUB    [BP+SI+00ABH],BP
-      SUB    [BP+DI+00ACH],BP
-      SUB    [SI+00ADH],BP
-      SUB    [DI+00AEH],BP
-      SUB    [BP+00AFH],BP
-      SUB    [BX+00B0H],BP
-      SUB    [BX+SI+00B1H],SI
-      SUB    [BX+DI+00B2H],SI
-      SUB    [BP+SI+00B3H],SI
-      SUB    [BP+DI+00B4H],SI
-      SUB    [SI+00B5H],SI
-      SUB    [DI+00B6H],SI
-      SUB    [BP+00B7H],SI
-      SUB    [BX+00B8H],SI
-      SUB    [BX+SI+00B9H],DI
-      SUB    [BX+DI+00BAH],DI
-      SUB    [BP+SI+00BBH],DI
-      SUB    [BP+DI+00BCH],DI
-      SUB    [SI+00BDH],DI
-      SUB    [DI+00BEH],DI
-      SUB    [BP+00BFH],DI
-      SUB    [BX+00C0H],DI
+      SUB    [BX+SI+8281H],AX
+      SUB    [BX+DI+8382H],AX
+      SUB    [BP+SI+8483H],AX
+      SUB    [BP+DI+8584H],AX
+      SUB    [SI+8685H],AX
+      SUB    [DI+8786H],AX
+      SUB    [BP+8887H],AX
+      SUB    [BX+8988H],AX
+      SUB    [BX+SI+8A89H],CX
+      SUB    [BX+DI+8B8AH],CX
+      SUB    [BP+SI+8C8BH],CX
+      SUB    [BP+DI+8D8CH],CX
+      SUB    [SI+8E8DH],CX
+      SUB    [DI+8F8EH],CX
+      SUB    [BP+908FH],CX
+      SUB    [BX+9190H],CX
+      SUB    [BX+SI+9291H],DX
+      SUB    [BX+DI+9392H],DX
+      SUB    [BP+SI+9493H],DX
+      SUB    [BP+DI+9594H],DX
+      SUB    [SI+9695H],DX
+      SUB    [DI+9796H],DX
+      SUB    [BP+9897H],DX
+      SUB    [BX+9998H],DX
+      SUB    [BX+SI+9A99H],BX
+      SUB    [BX+DI+9B9AH],BX
+      SUB    [BP+SI+9C9BH],BX
+      SUB    [BP+DI+9D9CH],BX
+      SUB    [SI+9E9DH],BX
+      SUB    [DI+9F9EH],BX
+      SUB    [BP+0A09FH],BX
+      SUB    [BX+0A1A0H],BX
+      SUB    [BX+SI+0A2A1H],SP
+      SUB    [BX+DI+0A3A2H],SP
+      SUB    [BP+SI+0A4A3H],SP
+      SUB    [BP+DI+0A5A4H],SP
+      SUB    [SI+0A6A5H],SP
+      SUB    [DI+0A7A6H],SP
+      SUB    [BP+0A8A7H],SP
+      SUB    [BX+0A9A8H],SP
+      SUB    [BX+SI+0AAA9H],BP
+      SUB    [BX+DI+0ABAAH],BP
+      SUB    [BP+SI+0ACABH],BP
+      SUB    [BP+DI+0ADACH],BP
+      SUB    [SI+0AEADH],BP
+      SUB    [DI+0AFAEH],BP
+      SUB    [BP+0B0AFH],BP
+      SUB    [BX+0B1B0H],BP
+      SUB    [BX+SI+0B2B1H],SI
+      SUB    [BX+DI+0B3B2H],SI
+      SUB    [BP+SI+0B4B3H],SI
+      SUB    [BP+DI+0B5B4H],SI
+      SUB    [SI+0B6B5H],SI
+      SUB    [DI+0B7B6H],SI
+      SUB    [BP+0B8B7H],SI
+      SUB    [BX+0B9B8H],SI
+      SUB    [BX+SI+0BAB9H],DI
+      SUB    [BX+DI+0BBBAH],DI
+      SUB    [BP+SI+0BCBBH],DI
+      SUB    [BP+DI+0BDBCH],DI
+      SUB    [SI+0BEBDH],DI
+      SUB    [DI+0BFBEH],DI
+      SUB    [BP+0C0BFH],DI
+      SUB    [BX+0C1C0H],DI
       SUB    AX,AX
       SUB    CX,AX
       SUB    DX,AX
@@ -4587,7 +3416,7 @@
       SUB    [BP+DI],AX
       SUB    [SI],AX
       SUB    [DI],AX
-      SUB    [0107H],AX
+      SUB    [0807H],AX
       SUB    [BX],AX
       SUB    [BX+SI],CX
       SUB    [BX+DI],CX
@@ -4595,7 +3424,7 @@
       SUB    [BP+DI],CX
       SUB    [SI],CX
       SUB    [DI],CX
-      SUB    [010FH],CX
+      SUB    [100FH],CX
       SUB    [BX],CX
       SUB    [BX+SI],DX
       SUB    [BX+DI],DX
@@ -4603,7 +3432,7 @@
       SUB    [BP+DI],DX
       SUB    [SI],DX
       SUB    [DI],DX
-      SUB    [0117H],DX
+      SUB    [1817H],DX
       SUB    [BX],DX
       SUB    [BX+SI],BX
       SUB    [BX+DI],BX
@@ -4611,7 +3440,7 @@
       SUB    [BP+DI],BX
       SUB    [SI],BX
       SUB    [DI],BX
-      SUB    [011FH],BX
+      SUB    [201FH],BX
       SUB    [BX],BX
       SUB    [BX+SI],SP
       SUB    [BX+DI],SP
@@ -4619,198 +3448,21 @@
       SUB    [BP+DI],SP
       SUB    [SI],SP
       SUB    [DI],SP
-      SUB    [0127H],SP
+      SUB    [2827H],SP
       SUB    [BX],SP
       SUB    [BX+SI],BP
       SUB    [BX+DI],BP
       SUB    CH,[BP+DI]
       SUB    CH,[SI]
       SUB    CH,[DI]
-      SUB    CH,[002FH]
+      SUB    CH,[302FH]
       SUB    CH,[BX]
       SUB    DH,[BX+SI]
       SUB    DH,[BX+DI]
       SUB    DH,[BP+SI]
-      SUB    AL,[BX+SI+65]
-      SUB    AL,[BX+SI-128]
-      SUB    AL,[BX+DI+66]
-      SUB    AL,[BX+DI-128]
-      SUB    AL,[BP+SI+67]
-      SUB    AL,[BP+SI-128]
-      SUB    AL,[BP+DI+68]
-      SUB    AL,[BP+DI-128]
-      SUB    AL,[SI+69]
-      SUB    AL,[SI-128]
-      SUB    AL,[DI+70]
-      SUB    AL,[DI-128]
-      SUB    AL,[BP+71]
-      SUB    AL,[BP-128]
-      SUB    AL,[BX+72]
-      SUB    AL,[BX-128]
-      SUB    CL,[BX+SI+73]
-      SUB    CL,[BX+SI-128]
-      SUB    CL,[BX+DI+74]
-      SUB    CL,[BX+DI-128]
-      SUB    CL,[BP+SI+75]
-      SUB    CL,[BP+SI-128]
-      SUB    CL,[BP+DI+76]
-      SUB    CL,[BP+DI-128]
-      SUB    CL,[SI+77]
-      SUB    CL,[SI-128]
-      SUB    CL,[DI+78]
-      SUB    CL,[DI-128]
-      SUB    CL,[BP+79]
-      SUB    CL,[BP-128]
-      SUB    CL,[BX+80]
-      SUB    CL,[BX-128]
-      SUB    DL,[BX+SI+81]
-      SUB    DL,[BX+SI-128]
-      SUB    DL,[BX+DI+82]
-      SUB    DL,[BX+DI-128]
-      SUB    DL,[BP+SI+83]
-      SUB    DL,[BP+SI-128]
-      SUB    DL,[BP+DI+84]
-      SUB    DL,[BP+DI-128]
-      SUB    DL,[SI+85]
-      SUB    DL,[SI-128]
-      SUB    DL,[DI+86]
-      SUB    DL,[DI-128]
-      SUB    DL,[BP+87]
-      SUB    DL,[BP-128]
-      SUB    DL,[BX+88]
-      SUB    DL,[BX-128]
-      SUB    BL,[BX+SI+89]
-      SUB    BL,[BX+SI-128]
-      SUB    BL,[BX+DI+90]
-      SUB    BL,[BX+DI-128]
-      SUB    BL,[BP+SI+91]
-      SUB    BL,[BP+SI-128]
-      SUB    BL,[BP+DI+92]
-      SUB    BL,[BP+DI-128]
-      SUB    BL,[SI+93]
-      SUB    BL,[SI-128]
-      SUB    BL,[DI+94]
-      SUB    BL,[DI-128]
-      SUB    BL,[BP+95]
-      SUB    BL,[BP-128]
-      SUB    BL,[BX+96]
-      SUB    BL,[BX-128]
-      SUB    AH,[BX+SI+97]
-      SUB    AH,[BX+SI-128]
-      SUB    AH,[BX+DI+98]
-      SUB    AH,[BX+DI-128]
-      SUB    AH,[BP+SI+99]
-      SUB    AH,[BP+SI-128]
-      SUB    AH,[BP+DI+100]
-      SUB    AH,[BP+DI-128]
-      SUB    AH,[SI+101]
-      SUB    AH,[SI-128]
-      SUB    AH,[DI+102]
-      SUB    AH,[DI-128]
-      SUB    AH,[BP+103]
-      SUB    AH,[BP-128]
-      SUB    AH,[BX+104]
-      SUB    AH,[BX-128]
-      SUB    AL,[BX+SI+0081H]
-      SUB    AL,[BX+DI+0082H]
-      SUB    AL,[BP+SI+0083H]
-      SUB    AL,[BP+DI+0084H]
-      SUB    AL,[SI+0085H]
-      SUB    AL,[DI+0086H]
-      SUB    AL,[BP+0087H]
-      SUB    AL,[BX+0088H]
-      SUB    CL,[BX+SI+0089H]
-      SUB    CL,[BX+DI+008AH]
-      SUB    CL,[BP+SI+008BH]
-      SUB    CL,[BP+DI+008CH]
-      SUB    CL,[SI+008DH]
-      SUB    CL,[DI+008EH]
-      SUB    CL,[BP+008FH]
-      SUB    CL,[BX+0090H]
-      SUB    DL,[BX+SI+0091H]
-      SUB    DL,[BX+DI+0092H]
-      SUB    DL,[BP+SI+0093H]
-      SUB    DL,[BP+DI+0094H]
-      SUB    DL,[SI+0095H]
-      SUB    DL,[DI+0096H]
-      SUB    DL,[BP+0097H]
-      SUB    DL,[BX+0098H]
-      SUB    BL,[BX+SI+0099H]
-      SUB    BL,[BX+DI+009AH]
-      SUB    BL,[BP+SI+009BH]
-      SUB    BL,[BP+DI+009CH]
-      SUB    BL,[SI+009DH]
-      SUB    BL,[DI+009EH]
-      SUB    BL,[BP+009FH]
-      SUB    BL,[BX+00A0H]
-      SUB    AH,[BX+SI+00A1H]
-      SUB    AH,[BX+DI+00A2H]
-      SUB    AH,[BP+SI+00A3H]
-      SUB    AH,[BP+DI+00A4H]
-      SUB    AH,[SI+00A5H]
-      SUB    AH,[DI+00A6H]
-      SUB    AH,[BP+00A7H]
-      SUB    AH,[BX+00A8H]
-      SUB    AL,AL
-      SUB    AL,CL
-      SUB    AL,DL
-      SUB    AL,BL
-      SUB    AL,AH
-      SUB    CL,AL
-      SUB    CL,CL
-      SUB    CL,DL
-      SUB    CL,BL
-      SUB    CL,AH
-      SUB    DL,AL
-      SUB    DL,CL
-      SUB    DL,DL
-      SUB    DL,BL
-      SUB    DL,AH
-      SUB    BL,AL
-      SUB    BL,CL
-      SUB    BL,DL
-      SUB    BL,BL
-      SUB    BL,AH
-      SUB    AH,AL
-      SUB    AH,CL
-      SUB    AH,DL
-      SUB    AH,BL
-      SUB    AH,AH
-      SUB    AL,[BX+SI]
-      SUB    AL,[BX+DI]
-      SUB    AL,[BP+SI]
-      SUB    AL,[BP+DI]
-      SUB    AL,[SI]
-      SUB    AL,[DI]
-      SUB    AL,[0107H]
-      SUB    AL,[BX]
-      SUB    CL,[BX+SI]
-      SUB    CL,[BX+DI]
-      SUB    CL,[BP+SI]
-      SUB    CL,[BP+DI]
-      SUB    CL,[SI]
-      SUB    CL,[DI]
-      SUB    CL,[010FH]
-      SUB    CL,[BX]
-      SUB    DL,[BX+SI]
-      SUB    DL,[BX+DI]
-      SUB    DL,[BP+SI]
-      SUB    DL,[BP+DI]
-      SUB    DL,[SI]
-      SUB    DL,[DI]
-      SUB    DL,[0117H]
-      SUB    DL,[BX]
-      SUB    BL,[BX+SI]
-      SUB    BL,[BX+DI]
-      SUB    BL,[BP+SI]
-      SUB    BL,[BP+DI]
-      SUB    BL,[SI]
-      SUB    BL,[DI]
-      SUB    BL,[011FH]
-      SUB    BL,[BX]
       SUB    BP,[SI]
       SUB    BP,[DI]
-      SUB    BP,[002FH]
+      SUB    BP,[302FH]
       SUB    BP,[BX]
       SUB    SI,[BX+SI]
       SUB    SI,[BX+DI]
@@ -4818,7 +3470,7 @@
       SUB    SI,[BP+DI]
       SUB    SI,[SI]
       SUB    SI,[DI]
-      SUB    SI,[0037H]
+      SUB    SI,[3837H]
       SUB    SI,[BX]
       SUB    DI,[BX+SI]
       SUB    DI,[BX+DI]
@@ -4826,7 +3478,7 @@
       SUB    DI,[BP+DI]
       SUB    DI,[SI]
       SUB    DI,[DI]
-      SUB    DI,[003FH]
+      SUB    DI,[403FH]
       SUB    DI,[BX]
       SUB    AX,[BX+SI+65]
       SUB    AX,[BX+SI-128]
@@ -4956,77 +3608,77 @@
       SUB    DI,[BP-128]
       SUB    DI,[BX-128]
       SUB    DI,[BX+0]
-      SUB    AX,[BX+SI+0081H]
-      SUB    AX,[BX+DI+0082H]
-      SUB    AX,[BP+SI+0083H]
-      SUB    AX,[BP+DI+0084H]
-      SUB    AX,[SI+0085H]
-      SUB    AX,[DI+0086H]
-      SUB    AX,[BP+0087H]
-      SUB    AX,[BX+0088H]
-      SUB    CX,[BX+SI+0089H]
-      SUB    CX,[BX+DI+008AH]
-      SUB    CX,[BP+SI+008BH]
-      SUB    CX,[BP+DI+008CH]
-      SUB    CX,[SI+008DH]
-      SUB    CX,[DI+008EH]
-      SUB    CX,[BP+008FH]
-      SUB    CX,[BX+0090H]
-      SUB    DX,[BX+SI+0091H]
-      SUB    DX,[BX+DI+0092H]
-      SUB    DX,[BP+SI+0093H]
-      SUB    DX,[BP+DI+0094H]
-      SUB    DX,[SI+0095H]
-      SUB    DX,[DI+0096H]
-      SUB    DX,[BP+0097H]
-      SUB    DX,[BX+0098H]
-      SUB    BX,[BX+SI+0099H]
-      SUB    BX,[BX+DI+009AH]
-      SUB    BX,[BP+SI+009BH]
-      SUB    BX,[BP+DI+009CH]
-      SUB    BX,[SI+009DH]
-      SUB    BX,[DI+009EH]
-      SUB    BX,[BP+009FH]
-      SUB    BX,[BX+00A0H]
-      SUB    SP,[BX+SI+00A1H]
-      SUB    SP,[BX+DI+00A2H]
-      SUB    SP,[BP+SI+00A3H]
-      SUB    SP,[BP+DI+00A4H]
-      SUB    SP,[SI+00A5H]
-      SUB    SP,[DI+00A6H]
-      SUB    SP,[BP+00A7H]
-      SUB    SP,[BX+00A8H]
-      SUB    BP,[BX+SI+00A9H]
-      SUB    BP,[BX+DI+00AAH]
-      SUB    BP,[BP+SI+00ABH]
-      SUB    BP,[BP+DI+00ACH]
-      SUB    BP,[SI+00ADH]
-      SUB    BP,[DI+00AEH]
-      SUB    BP,[BP+00AFH]
-      SUB    BP,[BX+00B0H]
-      SUB    SI,[BX+SI+00B1H]
-      SUB    SI,[BX+DI+00B2H]
-      SUB    SI,[BP+SI+00B3H]
-      SUB    SI,[BP+DI+00B4H]
-      SUB    SI,[SI+00B5H]
-      SUB    SI,[DI+00B6H]
-      SUB    SI,[BP+00B7H]
-      SUB    SI,[BX+00B8H]
-      SUB    DI,[BX+SI+00B9H]
-      SUB    DI,[BX+DI+00BAH]
-      SUB    DI,[BP+SI+00BBH]
-      SUB    DI,[BP+DI+00BCH]
-      SUB    DI,[SI+00BDH]
-      SUB    DI,[DI+00BEH]
-      SUB    DI,[BP+00BFH]
-      SUB    DI,[BX+00C0H]
+      SUB    AX,[BX+SI+8281H]
+      SUB    AX,[BX+DI+8382H]
+      SUB    AX,[BP+SI+8483H]
+      SUB    AX,[BP+DI+8584H]
+      SUB    AX,[SI+8685H]
+      SUB    AX,[DI+8786H]
+      SUB    AX,[BP+8887H]
+      SUB    AX,[BX+8988H]
+      SUB    CX,[BX+SI+8A89H]
+      SUB    CX,[BX+DI+8B8AH]
+      SUB    CX,[BP+SI+8C8BH]
+      SUB    CX,[BP+DI+8D8CH]
+      SUB    CX,[SI+8E8DH]
+      SUB    CX,[DI+8F8EH]
+      SUB    CX,[BP+908FH]
+      SUB    CX,[BX+9190H]
+      SUB    DX,[BX+SI+9291H]
+      SUB    DX,[BX+DI+9392H]
+      SUB    DX,[BP+SI+9493H]
+      SUB    DX,[BP+DI+9594H]
+      SUB    DX,[SI+9695H]
+      SUB    DX,[DI+9796H]
+      SUB    DX,[BP+9897H]
+      SUB    DX,[BX+9998H]
+      SUB    BX,[BX+SI+9A99H]
+      SUB    BX,[BX+DI+9B9AH]
+      SUB    BX,[BP+SI+9C9BH]
+      SUB    BX,[BP+DI+9D9CH]
+      SUB    BX,[SI+9E9DH]
+      SUB    BX,[DI+9F9EH]
+      SUB    BX,[BP+0A09FH]
+      SUB    BX,[BX+0A1A0H]
+      SUB    SP,[BX+SI+0A2A1H]
+      SUB    SP,[BX+DI+0A3A2H]
+      SUB    SP,[BP+SI+0A4A3H]
+      SUB    SP,[BP+DI+0A5A4H]
+      SUB    SP,[SI+0A6A5H]
+      SUB    SP,[DI+0A7A6H]
+      SUB    SP,[BP+0A8A7H]
+      SUB    SP,[BX+0A9A8H]
+      SUB    BP,[BX+SI+0AAA9H]
+      SUB    BP,[BX+DI+0ABAAH]
+      SUB    BP,[BP+SI+0ACABH]
+      SUB    BP,[BP+DI+0ADACH]
+      SUB    BP,[SI+0AEADH]
+      SUB    BP,[DI+0AFAEH]
+      SUB    BP,[BP+0B0AFH]
+      SUB    BP,[BX+0B1B0H]
+      SUB    SI,[BX+SI+0B2B1H]
+      SUB    SI,[BX+DI+0B3B2H]
+      SUB    SI,[BP+SI+0B4B3H]
+      SUB    SI,[BP+DI+0B5B4H]
+      SUB    SI,[SI+0B6B5H]
+      SUB    SI,[DI+0B7B6H]
+      SUB    SI,[BP+0B8B7H]
+      SUB    SI,[BX+0B9B8H]
+      SUB    DI,[BX+SI+0BAB9H]
+      SUB    DI,[BX+DI+0BBBAH]
+      SUB    DI,[BP+SI+0BCBBH]
+      SUB    DI,[BP+DI+0BDBCH]
+      SUB    DI,[SI+0BEBDH]
+      SUB    DI,[DI+0BFBEH]
+      SUB    DI,[BP+0C0BFH]
+      SUB    DI,[BX+0C1C0H]
       SUB    AX,[BX+SI]
       SUB    AX,[BX+DI]
       SUB    AX,[BP+SI]
       SUB    AX,[BP+DI]
       SUB    AX,[SI]
       SUB    AX,[DI]
-      SUB    AX,[0107H]
+      SUB    AX,[0807H]
       SUB    AX,[BX]
       SUB    CX,[BX+SI]
       SUB    CX,[BX+DI]
@@ -5034,7 +3686,7 @@
       SUB    CX,[BP+DI]
       SUB    CX,[SI]
       SUB    CX,[DI]
-      SUB    CX,[010FH]
+      SUB    CX,[100FH]
       SUB    CX,[BX]
       SUB    DX,[BX+SI]
       SUB    DX,[BX+DI]
@@ -5042,7 +3694,7 @@
       SUB    DX,[BP+DI]
       SUB    DX,[SI]
       SUB    DX,[DI]
-      SUB    DX,[0117H]
+      SUB    DX,[1817H]
       SUB    DX,[BX]
       SUB    BX,[BX+SI]
       SUB    BX,[BX+DI]
@@ -5050,7 +3702,7 @@
       SUB    BX,[BP+DI]
       SUB    BX,[SI]
       SUB    BX,[DI]
-      SUB    BX,[011FH]
+      SUB    BX,[201FH]
       SUB    BX,[BX]
       SUB    SP,[BX+SI]
       SUB    SP,[BX+DI]
@@ -5058,20 +3710,28 @@
       SUB    SP,[BP+DI]
       SUB    SP,[SI]
       SUB    SP,[DI]
-      SUB    SP,[0127H]
+      SUB    SP,[2827H]
       SUB    SP,[BX]
       SUB    BP,[BX+SI]
       SUB    BP,[BX+DI]
       SUB    BP,[BP+SI]
       SUB    BP,[BP+DI]
-      SUB    AX,002EH
+      SUB    AL,2DH
+      SUB    AX,2F2EH
       DAS
       XOR    [BX+DI],DH
+      XOR    [BP+SI],DH
+      XOR    [BP+DI],DH
+      XOR    [SI],DH
+      XOR    [DI],DH
+      XOR    [3837H],DH
+      XOR    [BX],DH
+      XOR    [BX+SI],BH
       XOR    [BP+SI],SI
       XOR    [BP+DI],SI
       XOR    [SI],SI
       XOR    [DI],SI
-      XOR    [0037H],SI
+      XOR    [3837H],SI
       XOR    [BX],SI
       XOR    [BX+SI],DI
       XOR    [BX+DI],DI
@@ -5079,7 +3739,7 @@
       XOR    [BP+DI],DI
       XOR    [SI],DI
       XOR    [DI],DI
-      XOR    [003FH],DI
+      XOR    [403FH],DI
       XOR    [BX],DI
       XOR    [BX+SI+65],AX
       XOR    [BX+SI-128],AX
@@ -5209,70 +3869,70 @@
       XOR    [BP-128],DI
       XOR    [BX-128],DI
       XOR    [BX+0],DI
-      XOR    [BX+SI+0081H],AX
-      XOR    [BX+DI+0082H],AX
-      XOR    [BP+SI+0083H],AX
-      XOR    [BP+DI+0084H],AX
-      XOR    [SI+0085H],AX
-      XOR    [DI+0086H],AX
-      XOR    [BP+0087H],AX
-      XOR    [BX+0088H],AX
-      XOR    [BX+SI+0089H],CX
-      XOR    [BX+DI+008AH],CX
-      XOR    [BP+SI+008BH],CX
-      XOR    [BP+DI+008CH],CX
-      XOR    [SI+008DH],CX
-      XOR    [DI+008EH],CX
-      XOR    [BP+008FH],CX
-      XOR    [BX+0090H],CX
-      XOR    [BX+SI+0091H],DX
-      XOR    [BX+DI+0092H],DX
-      XOR    [BP+SI+0093H],DX
-      XOR    [BP+DI+0094H],DX
-      XOR    [SI+0095H],DX
-      XOR    [DI+0096H],DX
-      XOR    [BP+0097H],DX
-      XOR    [BX+0098H],DX
-      XOR    [BX+SI+0099H],BX
-      XOR    [BX+DI+009AH],BX
-      XOR    [BP+SI+009BH],BX
-      XOR    [BP+DI+009CH],BX
-      XOR    [SI+009DH],BX
-      XOR    [DI+009EH],BX
-      XOR    [BP+009FH],BX
-      XOR    [BX+00A0H],BX
-      XOR    [BX+SI+00A1H],SP
-      XOR    [BX+DI+00A2H],SP
-      XOR    [BP+SI+00A3H],SP
-      XOR    [BP+DI+00A4H],SP
-      XOR    [SI+00A5H],SP
-      XOR    [DI+00A6H],SP
-      XOR    [BP+00A7H],SP
-      XOR    [BX+00A8H],SP
-      XOR    [BX+SI+00A9H],BP
-      XOR    [BX+DI+00AAH],BP
-      XOR    [BP+SI+00ABH],BP
-      XOR    [BP+DI+00ACH],BP
-      XOR    [SI+00ADH],BP
-      XOR    [DI+00AEH],BP
-      XOR    [BP+00AFH],BP
-      XOR    [BX+00B0H],BP
-      XOR    [BX+SI+00B1H],SI
-      XOR    [BX+DI+00B2H],SI
-      XOR    [BP+SI+00B3H],SI
-      XOR    [BP+DI+00B4H],SI
-      XOR    [SI+00B5H],SI
-      XOR    [DI+00B6H],SI
-      XOR    [BP+00B7H],SI
-      XOR    [BX+00B8H],SI
-      XOR    [BX+SI+00B9H],DI
-      XOR    [BX+DI+00BAH],DI
-      XOR    [BP+SI+00BBH],DI
-      XOR    [BP+DI+00BCH],DI
-      XOR    [SI+00BDH],DI
-      XOR    [DI+00BEH],DI
-      XOR    [BP+00BFH],DI
-      XOR    [BX+00C0H],DI
+      XOR    [BX+SI+8281H],AX
+      XOR    [BX+DI+8382H],AX
+      XOR    [BP+SI+8483H],AX
+      XOR    [BP+DI+8584H],AX
+      XOR    [SI+8685H],AX
+      XOR    [DI+8786H],AX
+      XOR    [BP+8887H],AX
+      XOR    [BX+8988H],AX
+      XOR    [BX+SI+8A89H],CX
+      XOR    [BX+DI+8B8AH],CX
+      XOR    [BP+SI+8C8BH],CX
+      XOR    [BP+DI+8D8CH],CX
+      XOR    [SI+8E8DH],CX
+      XOR    [DI+8F8EH],CX
+      XOR    [BP+908FH],CX
+      XOR    [BX+9190H],CX
+      XOR    [BX+SI+9291H],DX
+      XOR    [BX+DI+9392H],DX
+      XOR    [BP+SI+9493H],DX
+      XOR    [BP+DI+9594H],DX
+      XOR    [SI+9695H],DX
+      XOR    [DI+9796H],DX
+      XOR    [BP+9897H],DX
+      XOR    [BX+9998H],DX
+      XOR    [BX+SI+9A99H],BX
+      XOR    [BX+DI+9B9AH],BX
+      XOR    [BP+SI+9C9BH],BX
+      XOR    [BP+DI+9D9CH],BX
+      XOR    [SI+9E9DH],BX
+      XOR    [DI+9F9EH],BX
+      XOR    [BP+0A09FH],BX
+      XOR    [BX+0A1A0H],BX
+      XOR    [BX+SI+0A2A1H],SP
+      XOR    [BX+DI+0A3A2H],SP
+      XOR    [BP+SI+0A4A3H],SP
+      XOR    [BP+DI+0A5A4H],SP
+      XOR    [SI+0A6A5H],SP
+      XOR    [DI+0A7A6H],SP
+      XOR    [BP+0A8A7H],SP
+      XOR    [BX+0A9A8H],SP
+      XOR    [BX+SI+0AAA9H],BP
+      XOR    [BX+DI+0ABAAH],BP
+      XOR    [BP+SI+0ACABH],BP
+      XOR    [BP+DI+0ADACH],BP
+      XOR    [SI+0AEADH],BP
+      XOR    [DI+0AFAEH],BP
+      XOR    [BP+0B0AFH],BP
+      XOR    [BX+0B1B0H],BP
+      XOR    [BX+SI+0B2B1H],SI
+      XOR    [BX+DI+0B3B2H],SI
+      XOR    [BP+SI+0B4B3H],SI
+      XOR    [BP+DI+0B5B4H],SI
+      XOR    [SI+0B6B5H],SI
+      XOR    [DI+0B7B6H],SI
+      XOR    [BP+0B8B7H],SI
+      XOR    [BX+0B9B8H],SI
+      XOR    [BX+SI+0BAB9H],DI
+      XOR    [BX+DI+0BBBAH],DI
+      XOR    [BP+SI+0BCBBH],DI
+      XOR    [BP+DI+0BDBCH],DI
+      XOR    [SI+0BEBDH],DI
+      XOR    [DI+0BFBEH],DI
+      XOR    [BP+0C0BFH],DI
+      XOR    [BX+0C1C0H],DI
       XOR    AX,AX
       XOR    CX,AX
       XOR    DX,AX
@@ -5343,7 +4003,7 @@
       XOR    [BP+DI],AX
       XOR    [SI],AX
       XOR    [DI],AX
-      XOR    [0107H],AX
+      XOR    [0807H],AX
       XOR    [BX],AX
       XOR    [BX+SI],CX
       XOR    [BX+DI],CX
@@ -5351,7 +4011,7 @@
       XOR    [BP+DI],CX
       XOR    [SI],CX
       XOR    [DI],CX
-      XOR    [010FH],CX
+      XOR    [100FH],CX
       XOR    [BX],CX
       XOR    [BX+SI],DX
       XOR    [BX+DI],DX
@@ -5359,7 +4019,7 @@
       XOR    [BP+DI],DX
       XOR    [SI],DX
       XOR    [DI],DX
-      XOR    [0117H],DX
+      XOR    [1817H],DX
       XOR    [BX],DX
       XOR    [BX+SI],BX
       XOR    [BX+DI],BX
@@ -5367,7 +4027,7 @@
       XOR    [BP+DI],BX
       XOR    [SI],BX
       XOR    [DI],BX
-      XOR    [011FH],BX
+      XOR    [201FH],BX
       XOR    [BX],BX
       XOR    [BX+SI],SP
       XOR    [BX+DI],SP
@@ -5375,7 +4035,7 @@
       XOR    [BP+DI],SP
       XOR    [SI],SP
       XOR    [DI],SP
-      XOR    [0127H],SP
+      XOR    [2827H],SP
       XOR    [BX],SP
       XOR    [BX+SI],BP
       XOR    [BX+DI],BP
@@ -5383,198 +4043,21 @@
       XOR    [BP+DI],BP
       XOR    [SI],BP
       XOR    [DI],BP
-      XOR    [012FH],BP
+      XOR    [302FH],BP
       XOR    [BX],BP
       XOR    [BX+SI],SI
       XOR    [BX+DI],SI
       XOR    DH,[BP+DI]
       XOR    DH,[SI]
       XOR    DH,[DI]
-      XOR    DH,[0037H]
+      XOR    DH,[3837H]
       XOR    DH,[BX]
       XOR    BH,[BX+SI]
       XOR    BH,[BX+DI]
       XOR    BH,[BP+SI]
-      XOR    AL,[BX+SI+65]
-      XOR    AL,[BX+SI-128]
-      XOR    AL,[BX+DI+66]
-      XOR    AL,[BX+DI-128]
-      XOR    AL,[BP+SI+67]
-      XOR    AL,[BP+SI-128]
-      XOR    AL,[BP+DI+68]
-      XOR    AL,[BP+DI-128]
-      XOR    AL,[SI+69]
-      XOR    AL,[SI-128]
-      XOR    AL,[DI+70]
-      XOR    AL,[DI-128]
-      XOR    AL,[BP+71]
-      XOR    AL,[BP-128]
-      XOR    AL,[BX+72]
-      XOR    AL,[BX-128]
-      XOR    CL,[BX+SI+73]
-      XOR    CL,[BX+SI-128]
-      XOR    CL,[BX+DI+74]
-      XOR    CL,[BX+DI-128]
-      XOR    CL,[BP+SI+75]
-      XOR    CL,[BP+SI-128]
-      XOR    CL,[BP+DI+76]
-      XOR    CL,[BP+DI-128]
-      XOR    CL,[SI+77]
-      XOR    CL,[SI-128]
-      XOR    CL,[DI+78]
-      XOR    CL,[DI-128]
-      XOR    CL,[BP+79]
-      XOR    CL,[BP-128]
-      XOR    CL,[BX+80]
-      XOR    CL,[BX-128]
-      XOR    DL,[BX+SI+81]
-      XOR    DL,[BX+SI-128]
-      XOR    DL,[BX+DI+82]
-      XOR    DL,[BX+DI-128]
-      XOR    DL,[BP+SI+83]
-      XOR    DL,[BP+SI-128]
-      XOR    DL,[BP+DI+84]
-      XOR    DL,[BP+DI-128]
-      XOR    DL,[SI+85]
-      XOR    DL,[SI-128]
-      XOR    DL,[DI+86]
-      XOR    DL,[DI-128]
-      XOR    DL,[BP+87]
-      XOR    DL,[BP-128]
-      XOR    DL,[BX+88]
-      XOR    DL,[BX-128]
-      XOR    BL,[BX+SI+89]
-      XOR    BL,[BX+SI-128]
-      XOR    BL,[BX+DI+90]
-      XOR    BL,[BX+DI-128]
-      XOR    BL,[BP+SI+91]
-      XOR    BL,[BP+SI-128]
-      XOR    BL,[BP+DI+92]
-      XOR    BL,[BP+DI-128]
-      XOR    BL,[SI+93]
-      XOR    BL,[SI-128]
-      XOR    BL,[DI+94]
-      XOR    BL,[DI-128]
-      XOR    BL,[BP+95]
-      XOR    BL,[BP-128]
-      XOR    BL,[BX+96]
-      XOR    BL,[BX-128]
-      XOR    AH,[BX+SI+97]
-      XOR    AH,[BX+SI-128]
-      XOR    AH,[BX+DI+98]
-      XOR    AH,[BX+DI-128]
-      XOR    AH,[BP+SI+99]
-      XOR    AH,[BP+SI-128]
-      XOR    AH,[BP+DI+100]
-      XOR    AH,[BP+DI-128]
-      XOR    AH,[SI+101]
-      XOR    AH,[SI-128]
-      XOR    AH,[DI+102]
-      XOR    AH,[DI-128]
-      XOR    AH,[BP+103]
-      XOR    AH,[BP-128]
-      XOR    AH,[BX+104]
-      XOR    AH,[BX-128]
-      XOR    AL,[BX+SI+0081H]
-      XOR    AL,[BX+DI+0082H]
-      XOR    AL,[BP+SI+0083H]
-      XOR    AL,[BP+DI+0084H]
-      XOR    AL,[SI+0085H]
-      XOR    AL,[DI+0086H]
-      XOR    AL,[BP+0087H]
-      XOR    AL,[BX+0088H]
-      XOR    CL,[BX+SI+0089H]
-      XOR    CL,[BX+DI+008AH]
-      XOR    CL,[BP+SI+008BH]
-      XOR    CL,[BP+DI+008CH]
-      XOR    CL,[SI+008DH]
-      XOR    CL,[DI+008EH]
-      XOR    CL,[BP+008FH]
-      XOR    CL,[BX+0090H]
-      XOR    DL,[BX+SI+0091H]
-      XOR    DL,[BX+DI+0092H]
-      XOR    DL,[BP+SI+0093H]
-      XOR    DL,[BP+DI+0094H]
-      XOR    DL,[SI+0095H]
-      XOR    DL,[DI+0096H]
-      XOR    DL,[BP+0097H]
-      XOR    DL,[BX+0098H]
-      XOR    BL,[BX+SI+0099H]
-      XOR    BL,[BX+DI+009AH]
-      XOR    BL,[BP+SI+009BH]
-      XOR    BL,[BP+DI+009CH]
-      XOR    BL,[SI+009DH]
-      XOR    BL,[DI+009EH]
-      XOR    BL,[BP+009FH]
-      XOR    BL,[BX+00A0H]
-      XOR    AH,[BX+SI+00A1H]
-      XOR    AH,[BX+DI+00A2H]
-      XOR    AH,[BP+SI+00A3H]
-      XOR    AH,[BP+DI+00A4H]
-      XOR    AH,[SI+00A5H]
-      XOR    AH,[DI+00A6H]
-      XOR    AH,[BP+00A7H]
-      XOR    AH,[BX+00A8H]
-      XOR    AL,AL
-      XOR    AL,CL
-      XOR    AL,DL
-      XOR    AL,BL
-      XOR    AL,AH
-      XOR    CL,AL
-      XOR    CL,CL
-      XOR    CL,DL
-      XOR    CL,BL
-      XOR    CL,AH
-      XOR    DL,AL
-      XOR    DL,CL
-      XOR    DL,DL
-      XOR    DL,BL
-      XOR    DL,AH
-      XOR    BL,AL
-      XOR    BL,CL
-      XOR    BL,DL
-      XOR    BL,BL
-      XOR    BL,AH
-      XOR    AH,AL
-      XOR    AH,CL
-      XOR    AH,DL
-      XOR    AH,BL
-      XOR    AH,AH
-      XOR    AL,[BX+SI]
-      XOR    AL,[BX+DI]
-      XOR    AL,[BP+SI]
-      XOR    AL,[BP+DI]
-      XOR    AL,[SI]
-      XOR    AL,[DI]
-      XOR    AL,[0107H]
-      XOR    AL,[BX]
-      XOR    CL,[BX+SI]
-      XOR    CL,[BX+DI]
-      XOR    CL,[BP+SI]
-      XOR    CL,[BP+DI]
-      XOR    CL,[SI]
-      XOR    CL,[DI]
-      XOR    CL,[010FH]
-      XOR    CL,[BX]
-      XOR    DL,[BX+SI]
-      XOR    DL,[BX+DI]
-      XOR    DL,[BP+SI]
-      XOR    DL,[BP+DI]
-      XOR    DL,[SI]
-      XOR    DL,[DI]
-      XOR    DL,[0117H]
-      XOR    DL,[BX]
-      XOR    BL,[BX+SI]
-      XOR    BL,[BX+DI]
-      XOR    BL,[BP+SI]
-      XOR    BL,[BP+DI]
-      XOR    BL,[SI]
-      XOR    BL,[DI]
-      XOR    BL,[011FH]
-      XOR    BL,[BX]
       XOR    SI,[SI]
       XOR    SI,[DI]
-      XOR    SI,[0037H]
+      XOR    SI,[3837H]
       XOR    SI,[BX]
       XOR    DI,[BX+SI]
       XOR    DI,[BX+DI]
@@ -5582,7 +4065,7 @@
       XOR    DI,[BP+DI]
       XOR    DI,[SI]
       XOR    DI,[DI]
-      XOR    DI,[003FH]
+      XOR    DI,[403FH]
       XOR    DI,[BX]
       XOR    AX,[BX+SI+65]
       XOR    AX,[BX+SI-128]
@@ -5712,77 +4195,77 @@
       XOR    DI,[BP-128]
       XOR    DI,[BX-128]
       XOR    DI,[BX+0]
-      XOR    AX,[BX+SI+0081H]
-      XOR    AX,[BX+DI+0082H]
-      XOR    AX,[BP+SI+0083H]
-      XOR    AX,[BP+DI+0084H]
-      XOR    AX,[SI+0085H]
-      XOR    AX,[DI+0086H]
-      XOR    AX,[BP+0087H]
-      XOR    AX,[BX+0088H]
-      XOR    CX,[BX+SI+0089H]
-      XOR    CX,[BX+DI+008AH]
-      XOR    CX,[BP+SI+008BH]
-      XOR    CX,[BP+DI+008CH]
-      XOR    CX,[SI+008DH]
-      XOR    CX,[DI+008EH]
-      XOR    CX,[BP+008FH]
-      XOR    CX,[BX+0090H]
-      XOR    DX,[BX+SI+0091H]
-      XOR    DX,[BX+DI+0092H]
-      XOR    DX,[BP+SI+0093H]
-      XOR    DX,[BP+DI+0094H]
-      XOR    DX,[SI+0095H]
-      XOR    DX,[DI+0096H]
-      XOR    DX,[BP+0097H]
-      XOR    DX,[BX+0098H]
-      XOR    BX,[BX+SI+0099H]
-      XOR    BX,[BX+DI+009AH]
-      XOR    BX,[BP+SI+009BH]
-      XOR    BX,[BP+DI+009CH]
-      XOR    BX,[SI+009DH]
-      XOR    BX,[DI+009EH]
-      XOR    BX,[BP+009FH]
-      XOR    BX,[BX+00A0H]
-      XOR    SP,[BX+SI+00A1H]
-      XOR    SP,[BX+DI+00A2H]
-      XOR    SP,[BP+SI+00A3H]
-      XOR    SP,[BP+DI+00A4H]
-      XOR    SP,[SI+00A5H]
-      XOR    SP,[DI+00A6H]
-      XOR    SP,[BP+00A7H]
-      XOR    SP,[BX+00A8H]
-      XOR    BP,[BX+SI+00A9H]
-      XOR    BP,[BX+DI+00AAH]
-      XOR    BP,[BP+SI+00ABH]
-      XOR    BP,[BP+DI+00ACH]
-      XOR    BP,[SI+00ADH]
-      XOR    BP,[DI+00AEH]
-      XOR    BP,[BP+00AFH]
-      XOR    BP,[BX+00B0H]
-      XOR    SI,[BX+SI+00B1H]
-      XOR    SI,[BX+DI+00B2H]
-      XOR    SI,[BP+SI+00B3H]
-      XOR    SI,[BP+DI+00B4H]
-      XOR    SI,[SI+00B5H]
-      XOR    SI,[DI+00B6H]
-      XOR    SI,[BP+00B7H]
-      XOR    SI,[BX+00B8H]
-      XOR    DI,[BX+SI+00B9H]
-      XOR    DI,[BX+DI+00BAH]
-      XOR    DI,[BP+SI+00BBH]
-      XOR    DI,[BP+DI+00BCH]
-      XOR    DI,[SI+00BDH]
-      XOR    DI,[DI+00BEH]
-      XOR    DI,[BP+00BFH]
-      XOR    DI,[BX+00C0H]
+      XOR    AX,[BX+SI+8281H]
+      XOR    AX,[BX+DI+8382H]
+      XOR    AX,[BP+SI+8483H]
+      XOR    AX,[BP+DI+8584H]
+      XOR    AX,[SI+8685H]
+      XOR    AX,[DI+8786H]
+      XOR    AX,[BP+8887H]
+      XOR    AX,[BX+8988H]
+      XOR    CX,[BX+SI+8A89H]
+      XOR    CX,[BX+DI+8B8AH]
+      XOR    CX,[BP+SI+8C8BH]
+      XOR    CX,[BP+DI+8D8CH]
+      XOR    CX,[SI+8E8DH]
+      XOR    CX,[DI+8F8EH]
+      XOR    CX,[BP+908FH]
+      XOR    CX,[BX+9190H]
+      XOR    DX,[BX+SI+9291H]
+      XOR    DX,[BX+DI+9392H]
+      XOR    DX,[BP+SI+9493H]
+      XOR    DX,[BP+DI+9594H]
+      XOR    DX,[SI+9695H]
+      XOR    DX,[DI+9796H]
+      XOR    DX,[BP+9897H]
+      XOR    DX,[BX+9998H]
+      XOR    BX,[BX+SI+9A99H]
+      XOR    BX,[BX+DI+9B9AH]
+      XOR    BX,[BP+SI+9C9BH]
+      XOR    BX,[BP+DI+9D9CH]
+      XOR    BX,[SI+9E9DH]
+      XOR    BX,[DI+9F9EH]
+      XOR    BX,[BP+0A09FH]
+      XOR    BX,[BX+0A1A0H]
+      XOR    SP,[BX+SI+0A2A1H]
+      XOR    SP,[BX+DI+0A3A2H]
+      XOR    SP,[BP+SI+0A4A3H]
+      XOR    SP,[BP+DI+0A5A4H]
+      XOR    SP,[SI+0A6A5H]
+      XOR    SP,[DI+0A7A6H]
+      XOR    SP,[BP+0A8A7H]
+      XOR    SP,[BX+0A9A8H]
+      XOR    BP,[BX+SI+0AAA9H]
+      XOR    BP,[BX+DI+0ABAAH]
+      XOR    BP,[BP+SI+0ACABH]
+      XOR    BP,[BP+DI+0ADACH]
+      XOR    BP,[SI+0AEADH]
+      XOR    BP,[DI+0AFAEH]
+      XOR    BP,[BP+0B0AFH]
+      XOR    BP,[BX+0B1B0H]
+      XOR    SI,[BX+SI+0B2B1H]
+      XOR    SI,[BX+DI+0B3B2H]
+      XOR    SI,[BP+SI+0B4B3H]
+      XOR    SI,[BP+DI+0B5B4H]
+      XOR    SI,[SI+0B6B5H]
+      XOR    SI,[DI+0B7B6H]
+      XOR    SI,[BP+0B8B7H]
+      XOR    SI,[BX+0B9B8H]
+      XOR    DI,[BX+SI+0BAB9H]
+      XOR    DI,[BX+DI+0BBBAH]
+      XOR    DI,[BP+SI+0BCBBH]
+      XOR    DI,[BP+DI+0BDBCH]
+      XOR    DI,[SI+0BEBDH]
+      XOR    DI,[DI+0BFBEH]
+      XOR    DI,[BP+0C0BFH]
+      XOR    DI,[BX+0C1C0H]
       XOR    AX,[BX+SI]
       XOR    AX,[BX+DI]
       XOR    AX,[BP+SI]
       XOR    AX,[BP+DI]
       XOR    AX,[SI]
       XOR    AX,[DI]
-      XOR    AX,[0107H]
+      XOR    AX,[0807H]
       XOR    AX,[BX]
       XOR    CX,[BX+SI]
       XOR    CX,[BX+DI]
@@ -5790,7 +4273,7 @@
       XOR    CX,[BP+DI]
       XOR    CX,[SI]
       XOR    CX,[DI]
-      XOR    CX,[010FH]
+      XOR    CX,[100FH]
       XOR    CX,[BX]
       XOR    DX,[BX+SI]
       XOR    DX,[BX+DI]
@@ -5798,7 +4281,7 @@
       XOR    DX,[BP+DI]
       XOR    DX,[SI]
       XOR    DX,[DI]
-      XOR    DX,[0117H]
+      XOR    DX,[1817H]
       XOR    DX,[BX]
       XOR    BX,[BX+SI]
       XOR    BX,[BX+DI]
@@ -5806,7 +4289,7 @@
       XOR    BX,[BP+DI]
       XOR    BX,[SI]
       XOR    BX,[DI]
-      XOR    BX,[011FH]
+      XOR    BX,[201FH]
       XOR    BX,[BX]
       XOR    SP,[BX+SI]
       XOR    SP,[BX+DI]
@@ -5814,7 +4297,7 @@
       XOR    SP,[BP+DI]
       XOR    SP,[SI]
       XOR    SP,[DI]
-      XOR    SP,[0127H]
+      XOR    SP,[2827H]
       XOR    SP,[BX]
       XOR    BP,[BX+SI]
       XOR    BP,[BX+DI]
@@ -5822,20 +4305,147 @@
       XOR    BP,[BP+DI]
       XOR    BP,[SI]
       XOR    BP,[DI]
-      XOR    BP,[012FH]
+      XOR    BP,[302FH]
       XOR    BP,[BX]
       XOR    SI,[BX+SI]
       XOR    SI,[BX+DI]
       XOR    SI,[BP+SI]
       XOR    SI,[BP+DI]
-      XOR    AX,0036H
+      XOR    AL,35H
+      XOR    AX,3736H
       AAA
       CMP    [BX+DI],BH
+      CMP    [BP+SI],BH
+      CMP    [BP+DI],BH
+      CMP    [SI],BH
+      CMP    [DI],BH
+      CMP    [403FH],BH
+      CMP    [BX],BH
+      CMP    [BX+SI+65],AL
+      CMP    [BX+SI-128],AL
+      CMP    [BX+DI+66],AL
+      CMP    [BX+DI-128],AL
+      CMP    [BP+SI+67],AL
+      CMP    [BP+SI-128],AL
+      CMP    [BP+DI+68],AL
+      CMP    [BP+DI-128],AL
+      CMP    [SI+69],AL
+      CMP    [SI-128],AL
+      CMP    [DI+70],AL
+      CMP    [DI-128],AL
+      CMP    [BP+71],AL
+      CMP    [BP-128],AL
+      CMP    [BX+72],AL
+      CMP    [BX-128],AL
+      CMP    [BX+SI+73],CL
+      CMP    [BX+SI-128],CL
+      CMP    [BX+DI+74],CL
+      CMP    [BX+DI-128],CL
+      CMP    [BP+SI+75],CL
+      CMP    [BP+SI-128],CL
+      CMP    [BP+DI+76],CL
+      CMP    [BP+DI-128],CL
+      CMP    [SI+77],CL
+      CMP    [SI-128],CL
+      CMP    [DI+78],CL
+      CMP    [DI-128],CL
+      CMP    [BP+79],CL
+      CMP    [BP-128],CL
+      CMP    [BX+80],CL
+      CMP    [BX-128],CL
+      CMP    [BX+SI+81],DL
+      CMP    [BX+SI-128],DL
+      CMP    [BX+DI+82],DL
+      CMP    [BX+DI-128],DL
+      CMP    [BP+SI+83],DL
+      CMP    [BP+SI-128],DL
+      CMP    [BP+DI+84],DL
+      CMP    [BP+DI-128],DL
+      CMP    [SI+85],DL
+      CMP    [SI-128],DL
+      CMP    [DI+86],DL
+      CMP    [DI-128],DL
+      CMP    [BP+87],DL
+      CMP    [BP-128],DL
+      CMP    [BX+88],DL
+      CMP    [BX-128],DL
+      CMP    [BX+SI+89],BL
+      CMP    [BX+SI-128],BL
+      CMP    [BX+DI+90],BL
+      CMP    [BX+DI-128],BL
+      CMP    [BP+SI+91],BL
+      CMP    [BP+SI-128],BL
+      CMP    [BP+DI+92],BL
+      CMP    [BP+DI-128],BL
+      CMP    [SI+93],BL
+      CMP    [SI-128],BL
+      CMP    [DI+94],BL
+      CMP    [DI-128],BL
+      CMP    [BP+95],BL
+      CMP    [BP-128],BL
+      CMP    [BX+96],BL
+      CMP    [BX-128],BL
+      CMP    [BX+SI+97],AH
+      CMP    [BX+SI-128],AH
+      CMP    [BX+DI+98],AH
+      CMP    [BX+DI-128],AH
+      CMP    [BP+SI+99],AH
+      CMP    [BP+SI-128],AH
+      CMP    [BP+DI+100],AH
+      CMP    [BP+DI-128],AH
+      CMP    [SI+101],AH
+      CMP    [SI-128],AH
+      CMP    [DI+102],AH
+      CMP    [DI-128],AH
+      CMP    [BP+103],AH
+      CMP    [BP-128],AH
+      CMP    [BX+104],AH
+      CMP    [BX-128],AH
+      CMP    [BX+SI+8281H],AL
+      CMP    [BX+DI+8382H],AL
+      CMP    [BP+SI+8483H],AL
+      CMP    [BP+DI+8584H],AL
+      CMP    [SI+8685H],AL
+      CMP    [DI+8786H],AL
+      CMP    [BP+8887H],AL
+      CMP    [BX+8988H],AL
+      CMP    [BX+SI+8A89H],CL
+      CMP    [BX+DI+8B8AH],CL
+      CMP    [BP+SI+8C8BH],CL
+      CMP    [BP+DI+8D8CH],CL
+      CMP    [SI+8E8DH],CL
+      CMP    [DI+8F8EH],CL
+      CMP    [BP+908FH],CL
+      CMP    [BX+9190H],CL
+      CMP    [BX+SI+9291H],DL
+      CMP    [BX+DI+9392H],DL
+      CMP    [BP+SI+9493H],DL
+      CMP    [BP+DI+9594H],DL
+      CMP    [SI+9695H],DL
+      CMP    [DI+9796H],DL
+      CMP    [BP+9897H],DL
+      CMP    [BX+9998H],DL
+      CMP    [BX+SI+9A99H],BL
+      CMP    [BX+DI+9B9AH],BL
+      CMP    [BP+SI+9C9BH],BL
+      CMP    [BP+DI+9D9CH],BL
+      CMP    [SI+9E9DH],BL
+      CMP    [DI+9F9EH],BL
+      CMP    [BP+0A09FH],BL
+      CMP    [BX+0A1A0H],BL
+      CMP    [BX+SI+0A2A1H],AH
+      CMP    [BX+DI+0A3A2H],AH
+      CMP    [BP+SI+0A4A3H],AH
+      CMP    [BP+DI+0A5A4H],AH
+      CMP    [SI+0A6A5H],AH
+      CMP    [DI+0A7A6H],AH
+      CMP    [BP+0A8A7H],AH
+      CMP    [BX+0A9A8H],AH
       CMP    [BP+SI],DI
       CMP    [BP+DI],DI
       CMP    [SI],DI
       CMP    [DI],DI
-      CMP    [003FH],DI
+      CMP    [403FH],DI
       CMP    [BX],DI
       CMP    [BX+SI+65],AX
       CMP    [BX+SI-128],AX
@@ -5965,70 +4575,70 @@
       CMP    [BP-128],DI
       CMP    [BX-128],DI
       CMP    [BX+0],DI
-      CMP    [BX+SI+0081H],AX
-      CMP    [BX+DI+0082H],AX
-      CMP    [BP+SI+0083H],AX
-      CMP    [BP+DI+0084H],AX
-      CMP    [SI+0085H],AX
-      CMP    [DI+0086H],AX
-      CMP    [BP+0087H],AX
-      CMP    [BX+0088H],AX
-      CMP    [BX+SI+0089H],CX
-      CMP    [BX+DI+008AH],CX
-      CMP    [BP+SI+008BH],CX
-      CMP    [BP+DI+008CH],CX
-      CMP    [SI+008DH],CX
-      CMP    [DI+008EH],CX
-      CMP    [BP+008FH],CX
-      CMP    [BX+0090H],CX
-      CMP    [BX+SI+0091H],DX
-      CMP    [BX+DI+0092H],DX
-      CMP    [BP+SI+0093H],DX
-      CMP    [BP+DI+0094H],DX
-      CMP    [SI+0095H],DX
-      CMP    [DI+0096H],DX
-      CMP    [BP+0097H],DX
-      CMP    [BX+0098H],DX
-      CMP    [BX+SI+0099H],BX
-      CMP    [BX+DI+009AH],BX
-      CMP    [BP+SI+009BH],BX
-      CMP    [BP+DI+009CH],BX
-      CMP    [SI+009DH],BX
-      CMP    [DI+009EH],BX
-      CMP    [BP+009FH],BX
-      CMP    [BX+00A0H],BX
-      CMP    [BX+SI+00A1H],SP
-      CMP    [BX+DI+00A2H],SP
-      CMP    [BP+SI+00A3H],SP
-      CMP    [BP+DI+00A4H],SP
-      CMP    [SI+00A5H],SP
-      CMP    [DI+00A6H],SP
-      CMP    [BP+00A7H],SP
-      CMP    [BX+00A8H],SP
-      CMP    [BX+SI+00A9H],BP
-      CMP    [BX+DI+00AAH],BP
-      CMP    [BP+SI+00ABH],BP
-      CMP    [BP+DI+00ACH],BP
-      CMP    [SI+00ADH],BP
-      CMP    [DI+00AEH],BP
-      CMP    [BP+00AFH],BP
-      CMP    [BX+00B0H],BP
-      CMP    [BX+SI+00B1H],SI
-      CMP    [BX+DI+00B2H],SI
-      CMP    [BP+SI+00B3H],SI
-      CMP    [BP+DI+00B4H],SI
-      CMP    [SI+00B5H],SI
-      CMP    [DI+00B6H],SI
-      CMP    [BP+00B7H],SI
-      CMP    [BX+00B8H],SI
-      CMP    [BX+SI+00B9H],DI
-      CMP    [BX+DI+00BAH],DI
-      CMP    [BP+SI+00BBH],DI
-      CMP    [BP+DI+00BCH],DI
-      CMP    [SI+00BDH],DI
-      CMP    [DI+00BEH],DI
-      CMP    [BP+00BFH],DI
-      CMP    [BX+00C0H],DI
+      CMP    [BX+SI+8281H],AX
+      CMP    [BX+DI+8382H],AX
+      CMP    [BP+SI+8483H],AX
+      CMP    [BP+DI+8584H],AX
+      CMP    [SI+8685H],AX
+      CMP    [DI+8786H],AX
+      CMP    [BP+8887H],AX
+      CMP    [BX+8988H],AX
+      CMP    [BX+SI+8A89H],CX
+      CMP    [BX+DI+8B8AH],CX
+      CMP    [BP+SI+8C8BH],CX
+      CMP    [BP+DI+8D8CH],CX
+      CMP    [SI+8E8DH],CX
+      CMP    [DI+8F8EH],CX
+      CMP    [BP+908FH],CX
+      CMP    [BX+9190H],CX
+      CMP    [BX+SI+9291H],DX
+      CMP    [BX+DI+9392H],DX
+      CMP    [BP+SI+9493H],DX
+      CMP    [BP+DI+9594H],DX
+      CMP    [SI+9695H],DX
+      CMP    [DI+9796H],DX
+      CMP    [BP+9897H],DX
+      CMP    [BX+9998H],DX
+      CMP    [BX+SI+9A99H],BX
+      CMP    [BX+DI+9B9AH],BX
+      CMP    [BP+SI+9C9BH],BX
+      CMP    [BP+DI+9D9CH],BX
+      CMP    [SI+9E9DH],BX
+      CMP    [DI+9F9EH],BX
+      CMP    [BP+0A09FH],BX
+      CMP    [BX+0A1A0H],BX
+      CMP    [BX+SI+0A2A1H],SP
+      CMP    [BX+DI+0A3A2H],SP
+      CMP    [BP+SI+0A4A3H],SP
+      CMP    [BP+DI+0A5A4H],SP
+      CMP    [SI+0A6A5H],SP
+      CMP    [DI+0A7A6H],SP
+      CMP    [BP+0A8A7H],SP
+      CMP    [BX+0A9A8H],SP
+      CMP    [BX+SI+0AAA9H],BP
+      CMP    [BX+DI+0ABAAH],BP
+      CMP    [BP+SI+0ACABH],BP
+      CMP    [BP+DI+0ADACH],BP
+      CMP    [SI+0AEADH],BP
+      CMP    [DI+0AFAEH],BP
+      CMP    [BP+0B0AFH],BP
+      CMP    [BX+0B1B0H],BP
+      CMP    [BX+SI+0B2B1H],SI
+      CMP    [BX+DI+0B3B2H],SI
+      CMP    [BP+SI+0B4B3H],SI
+      CMP    [BP+DI+0B5B4H],SI
+      CMP    [SI+0B6B5H],SI
+      CMP    [DI+0B7B6H],SI
+      CMP    [BP+0B8B7H],SI
+      CMP    [BX+0B9B8H],SI
+      CMP    [BX+SI+0BAB9H],DI
+      CMP    [BX+DI+0BBBAH],DI
+      CMP    [BP+SI+0BCBBH],DI
+      CMP    [BP+DI+0BDBCH],DI
+      CMP    [SI+0BEBDH],DI
+      CMP    [DI+0BFBEH],DI
+      CMP    [BP+0C0BFH],DI
+      CMP    [BX+0C1C0H],DI
       CMP    AX,AX
       CMP    CX,AX
       CMP    DX,AX
@@ -6099,7 +4709,7 @@
       CMP    [BP+DI],AX
       CMP    [SI],AX
       CMP    [DI],AX
-      CMP    [0107H],AX
+      CMP    [0807H],AX
       CMP    [BX],AX
       CMP    [BX+SI],CX
       CMP    [BX+DI],CX
@@ -6107,7 +4717,7 @@
       CMP    [BP+DI],CX
       CMP    [SI],CX
       CMP    [DI],CX
-      CMP    [010FH],CX
+      CMP    [100FH],CX
       CMP    [BX],CX
       CMP    [BX+SI],DX
       CMP    [BX+DI],DX
@@ -6115,7 +4725,7 @@
       CMP    [BP+DI],DX
       CMP    [SI],DX
       CMP    [DI],DX
-      CMP    [0117H],DX
+      CMP    [1817H],DX
       CMP    [BX],DX
       CMP    [BX+SI],BX
       CMP    [BX+DI],BX
@@ -6123,7 +4733,7 @@
       CMP    [BP+DI],BX
       CMP    [SI],BX
       CMP    [DI],BX
-      CMP    [011FH],BX
+      CMP    [201FH],BX
       CMP    [BX],BX
       CMP    [BX+SI],SP
       CMP    [BX+DI],SP
@@ -6131,7 +4741,7 @@
       CMP    [BP+DI],SP
       CMP    [SI],SP
       CMP    [DI],SP
-      CMP    [0127H],SP
+      CMP    [2827H],SP
       CMP    [BX],SP
       CMP    [BX+SI],BP
       CMP    [BX+DI],BP
@@ -6139,7 +4749,7 @@
       CMP    [BP+DI],BP
       CMP    [SI],BP
       CMP    [DI],BP
-      CMP    [012FH],BP
+      CMP    [302FH],BP
       CMP    [BX],BP
       CMP    [BX+SI],SI
       CMP    [BX+DI],SI
@@ -6147,14 +4757,14 @@
       CMP    [BP+DI],SI
       CMP    [SI],SI
       CMP    [DI],SI
-      CMP    [0137H],SI
+      CMP    [3837H],SI
       CMP    [BX],SI
       CMP    [BX+SI],DI
       CMP    [BX+DI],DI
       CMP    BH,[BP+DI]
       CMP    BH,[SI]
       CMP    BH,[DI]
-      CMP    BH,[003FH]
+      CMP    BH,[403FH]
       CMP    BH,[BX]
       CMP    AL,[BX+SI+65]
       CMP    AL,[BX+SI-128]
@@ -6236,109 +4846,49 @@
       CMP    AH,[BP-128]
       CMP    AH,[BX+104]
       CMP    AH,[BX-128]
-      CMP    AL,[BX+SI+0081H]
-      CMP    AL,[BX+DI+0082H]
-      CMP    AL,[BP+SI+0083H]
-      CMP    AL,[BP+DI+0084H]
-      CMP    AL,[SI+0085H]
-      CMP    AL,[DI+0086H]
-      CMP    AL,[BP+0087H]
-      CMP    AL,[BX+0088H]
-      CMP    CL,[BX+SI+0089H]
-      CMP    CL,[BX+DI+008AH]
-      CMP    CL,[BP+SI+008BH]
-      CMP    CL,[BP+DI+008CH]
-      CMP    CL,[SI+008DH]
-      CMP    CL,[DI+008EH]
-      CMP    CL,[BP+008FH]
-      CMP    CL,[BX+0090H]
-      CMP    DL,[BX+SI+0091H]
-      CMP    DL,[BX+DI+0092H]
-      CMP    DL,[BP+SI+0093H]
-      CMP    DL,[BP+DI+0094H]
-      CMP    DL,[SI+0095H]
-      CMP    DL,[DI+0096H]
-      CMP    DL,[BP+0097H]
-      CMP    DL,[BX+0098H]
-      CMP    BL,[BX+SI+0099H]
-      CMP    BL,[BX+DI+009AH]
-      CMP    BL,[BP+SI+009BH]
-      CMP    BL,[BP+DI+009CH]
-      CMP    BL,[SI+009DH]
-      CMP    BL,[DI+009EH]
-      CMP    BL,[BP+009FH]
-      CMP    BL,[BX+00A0H]
-      CMP    AH,[BX+SI+00A1H]
-      CMP    AH,[BX+DI+00A2H]
-      CMP    AH,[BP+SI+00A3H]
-      CMP    AH,[BP+DI+00A4H]
-      CMP    AH,[SI+00A5H]
-      CMP    AH,[DI+00A6H]
-      CMP    AH,[BP+00A7H]
-      CMP    AH,[BX+00A8H]
-      CMP    AL,AL
-      CMP    AL,CL
-      CMP    AL,DL
-      CMP    AL,BL
-      CMP    AL,AH
-      CMP    CL,AL
-      CMP    CL,CL
-      CMP    CL,DL
-      CMP    CL,BL
-      CMP    CL,AH
-      CMP    DL,AL
-      CMP    DL,CL
-      CMP    DL,DL
-      CMP    DL,BL
-      CMP    DL,AH
-      CMP    BL,AL
-      CMP    BL,CL
-      CMP    BL,DL
-      CMP    BL,BL
-      CMP    BL,AH
-      CMP    AH,AL
-      CMP    AH,CL
-      CMP    AH,DL
-      CMP    AH,BL
-      CMP    AH,AH
-      CMP    AL,[BX+SI]
-      CMP    AL,[BX+DI]
-      CMP    AL,[BP+SI]
-      CMP    AL,[BP+DI]
-      CMP    AL,[SI]
-      CMP    AL,[DI]
-      CMP    AL,[0107H]
-      CMP    AL,[BX]
-      CMP    CL,[BX+SI]
-      CMP    CL,[BX+DI]
-      CMP    CL,[BP+SI]
-      CMP    CL,[BP+DI]
-      CMP    CL,[SI]
-      CMP    CL,[DI]
-      CMP    CL,[010FH]
-      CMP    CL,[BX]
-      CMP    DL,[BX+SI]
-      CMP    DL,[BX+DI]
-      CMP    DL,[BP+SI]
-      CMP    DL,[BP+DI]
-      CMP    DL,[SI]
-      CMP    DL,[DI]
-      CMP    DL,[0117H]
-      CMP    DL,[BX]
-      CMP    BL,[BX+SI]
-      CMP    BL,[BX+DI]
-      CMP    BL,[BP+SI]
-      CMP    BL,[BP+DI]
-      CMP    BL,[SI]
-      CMP    BL,[DI]
-      CMP    BL,[011FH]
-      CMP    BL,[BX]
-      CMP    AH,[BX+SI]
-      CMP    AH,[BX+DI]
-      CMP    AH,[BP+SI]
+      CMP    AL,[BX+SI+8281H]
+      CMP    AL,[BX+DI+8382H]
+      CMP    AL,[BP+SI+8483H]
+      CMP    AL,[BP+DI+8584H]
+      CMP    AL,[SI+8685H]
+      CMP    AL,[DI+8786H]
+      CMP    AL,[BP+8887H]
+      CMP    AL,[BX+8988H]
+      CMP    CL,[BX+SI+8A89H]
+      CMP    CL,[BX+DI+8B8AH]
+      CMP    CL,[BP+SI+8C8BH]
+      CMP    CL,[BP+DI+8D8CH]
+      CMP    CL,[SI+8E8DH]
+      CMP    CL,[DI+8F8EH]
+      CMP    CL,[BP+908FH]
+      CMP    CL,[BX+9190H]
+      CMP    DL,[BX+SI+9291H]
+      CMP    DL,[BX+DI+9392H]
+      CMP    DL,[BP+SI+9493H]
+      CMP    DL,[BP+DI+9594H]
+      CMP    DL,[SI+9695H]
+      CMP    DL,[DI+9796H]
+      CMP    DL,[BP+9897H]
+      CMP    DL,[BX+9998H]
+      CMP    BL,[BX+SI+9A99H]
+      CMP    BL,[BX+DI+9B9AH]
+      CMP    BL,[BP+SI+9C9BH]
+      CMP    BL,[BP+DI+9D9CH]
+      CMP    BL,[SI+9E9DH]
+      CMP    BL,[DI+9F9EH]
+      CMP    BL,[BP+0A09FH]
+      CMP    BL,[BX+0A1A0H]
+      CMP    AH,[BX+SI+0A2A1H]
+      CMP    AH,[BX+DI+0A3A2H]
+      CMP    AH,[BP+SI+0A4A3H]
+      CMP    AH,[BP+DI+0A5A4H]
+      CMP    AH,[SI+0A6A5H]
+      CMP    AH,[DI+0A7A6H]
+      CMP    AH,[BP+0A8A7H]
+      CMP    AH,[BX+0A9A8H]
       CMP    DI,[SI]
       CMP    DI,[DI]
-      CMP    DI,[003FH]
+      CMP    DI,[403FH]
       CMP    DI,[BX]
       CMP    AX,[BX+SI+65]
       CMP    AX,[BX+SI-128]
@@ -6468,77 +5018,77 @@
       CMP    DI,[BP-128]
       CMP    DI,[BX-128]
       CMP    DI,[BX+0]
-      CMP    AX,[BX+SI+0081H]
-      CMP    AX,[BX+DI+0082H]
-      CMP    AX,[BP+SI+0083H]
-      CMP    AX,[BP+DI+0084H]
-      CMP    AX,[SI+0085H]
-      CMP    AX,[DI+0086H]
-      CMP    AX,[BP+0087H]
-      CMP    AX,[BX+0088H]
-      CMP    CX,[BX+SI+0089H]
-      CMP    CX,[BX+DI+008AH]
-      CMP    CX,[BP+SI+008BH]
-      CMP    CX,[BP+DI+008CH]
-      CMP    CX,[SI+008DH]
-      CMP    CX,[DI+008EH]
-      CMP    CX,[BP+008FH]
-      CMP    CX,[BX+0090H]
-      CMP    DX,[BX+SI+0091H]
-      CMP    DX,[BX+DI+0092H]
-      CMP    DX,[BP+SI+0093H]
-      CMP    DX,[BP+DI+0094H]
-      CMP    DX,[SI+0095H]
-      CMP    DX,[DI+0096H]
-      CMP    DX,[BP+0097H]
-      CMP    DX,[BX+0098H]
-      CMP    BX,[BX+SI+0099H]
-      CMP    BX,[BX+DI+009AH]
-      CMP    BX,[BP+SI+009BH]
-      CMP    BX,[BP+DI+009CH]
-      CMP    BX,[SI+009DH]
-      CMP    BX,[DI+009EH]
-      CMP    BX,[BP+009FH]
-      CMP    BX,[BX+00A0H]
-      CMP    SP,[BX+SI+00A1H]
-      CMP    SP,[BX+DI+00A2H]
-      CMP    SP,[BP+SI+00A3H]
-      CMP    SP,[BP+DI+00A4H]
-      CMP    SP,[SI+00A5H]
-      CMP    SP,[DI+00A6H]
-      CMP    SP,[BP+00A7H]
-      CMP    SP,[BX+00A8H]
-      CMP    BP,[BX+SI+00A9H]
-      CMP    BP,[BX+DI+00AAH]
-      CMP    BP,[BP+SI+00ABH]
-      CMP    BP,[BP+DI+00ACH]
-      CMP    BP,[SI+00ADH]
-      CMP    BP,[DI+00AEH]
-      CMP    BP,[BP+00AFH]
-      CMP    BP,[BX+00B0H]
-      CMP    SI,[BX+SI+00B1H]
-      CMP    SI,[BX+DI+00B2H]
-      CMP    SI,[BP+SI+00B3H]
-      CMP    SI,[BP+DI+00B4H]
-      CMP    SI,[SI+00B5H]
-      CMP    SI,[DI+00B6H]
-      CMP    SI,[BP+00B7H]
-      CMP    SI,[BX+00B8H]
-      CMP    DI,[BX+SI+00B9H]
-      CMP    DI,[BX+DI+00BAH]
-      CMP    DI,[BP+SI+00BBH]
-      CMP    DI,[BP+DI+00BCH]
-      CMP    DI,[SI+00BDH]
-      CMP    DI,[DI+00BEH]
-      CMP    DI,[BP+00BFH]
-      CMP    DI,[BX+00C0H]
+      CMP    AX,[BX+SI+8281H]
+      CMP    AX,[BX+DI+8382H]
+      CMP    AX,[BP+SI+8483H]
+      CMP    AX,[BP+DI+8584H]
+      CMP    AX,[SI+8685H]
+      CMP    AX,[DI+8786H]
+      CMP    AX,[BP+8887H]
+      CMP    AX,[BX+8988H]
+      CMP    CX,[BX+SI+8A89H]
+      CMP    CX,[BX+DI+8B8AH]
+      CMP    CX,[BP+SI+8C8BH]
+      CMP    CX,[BP+DI+8D8CH]
+      CMP    CX,[SI+8E8DH]
+      CMP    CX,[DI+8F8EH]
+      CMP    CX,[BP+908FH]
+      CMP    CX,[BX+9190H]
+      CMP    DX,[BX+SI+9291H]
+      CMP    DX,[BX+DI+9392H]
+      CMP    DX,[BP+SI+9493H]
+      CMP    DX,[BP+DI+9594H]
+      CMP    DX,[SI+9695H]
+      CMP    DX,[DI+9796H]
+      CMP    DX,[BP+9897H]
+      CMP    DX,[BX+9998H]
+      CMP    BX,[BX+SI+9A99H]
+      CMP    BX,[BX+DI+9B9AH]
+      CMP    BX,[BP+SI+9C9BH]
+      CMP    BX,[BP+DI+9D9CH]
+      CMP    BX,[SI+9E9DH]
+      CMP    BX,[DI+9F9EH]
+      CMP    BX,[BP+0A09FH]
+      CMP    BX,[BX+0A1A0H]
+      CMP    SP,[BX+SI+0A2A1H]
+      CMP    SP,[BX+DI+0A3A2H]
+      CMP    SP,[BP+SI+0A4A3H]
+      CMP    SP,[BP+DI+0A5A4H]
+      CMP    SP,[SI+0A6A5H]
+      CMP    SP,[DI+0A7A6H]
+      CMP    SP,[BP+0A8A7H]
+      CMP    SP,[BX+0A9A8H]
+      CMP    BP,[BX+SI+0AAA9H]
+      CMP    BP,[BX+DI+0ABAAH]
+      CMP    BP,[BP+SI+0ACABH]
+      CMP    BP,[BP+DI+0ADACH]
+      CMP    BP,[SI+0AEADH]
+      CMP    BP,[DI+0AFAEH]
+      CMP    BP,[BP+0B0AFH]
+      CMP    BP,[BX+0B1B0H]
+      CMP    SI,[BX+SI+0B2B1H]
+      CMP    SI,[BX+DI+0B3B2H]
+      CMP    SI,[BP+SI+0B4B3H]
+      CMP    SI,[BP+DI+0B5B4H]
+      CMP    SI,[SI+0B6B5H]
+      CMP    SI,[DI+0B7B6H]
+      CMP    SI,[BP+0B8B7H]
+      CMP    SI,[BX+0B9B8H]
+      CMP    DI,[BX+SI+0BAB9H]
+      CMP    DI,[BX+DI+0BBBAH]
+      CMP    DI,[BP+SI+0BCBBH]
+      CMP    DI,[BP+DI+0BDBCH]
+      CMP    DI,[SI+0BEBDH]
+      CMP    DI,[DI+0BFBEH]
+      CMP    DI,[BP+0C0BFH]
+      CMP    DI,[BX+0C1C0H]
       CMP    AX,[BX+SI]
       CMP    AX,[BX+DI]
       CMP    AX,[BP+SI]
       CMP    AX,[BP+DI]
       CMP    AX,[SI]
       CMP    AX,[DI]
-      CMP    AX,[0107H]
+      CMP    AX,[0807H]
       CMP    AX,[BX]
       CMP    CX,[BX+SI]
       CMP    CX,[BX+DI]
@@ -6546,7 +5096,7 @@
       CMP    CX,[BP+DI]
       CMP    CX,[SI]
       CMP    CX,[DI]
-      CMP    CX,[010FH]
+      CMP    CX,[100FH]
       CMP    CX,[BX]
       CMP    DX,[BX+SI]
       CMP    DX,[BX+DI]
@@ -6554,7 +5104,7 @@
       CMP    DX,[BP+DI]
       CMP    DX,[SI]
       CMP    DX,[DI]
-      CMP    DX,[0117H]
+      CMP    DX,[1817H]
       CMP    DX,[BX]
       CMP    BX,[BX+SI]
       CMP    BX,[BX+DI]
@@ -6562,7 +5112,7 @@
       CMP    BX,[BP+DI]
       CMP    BX,[SI]
       CMP    BX,[DI]
-      CMP    BX,[011FH]
+      CMP    BX,[201FH]
       CMP    BX,[BX]
       CMP    SP,[BX+SI]
       CMP    SP,[BX+DI]
@@ -6570,7 +5120,7 @@
       CMP    SP,[BP+DI]
       CMP    SP,[SI]
       CMP    SP,[DI]
-      CMP    SP,[0127H]
+      CMP    SP,[2827H]
       CMP    SP,[BX]
       CMP    BP,[BX+SI]
       CMP    BP,[BX+DI]
@@ -6578,7 +5128,7 @@
       CMP    BP,[BP+DI]
       CMP    BP,[SI]
       CMP    BP,[DI]
-      CMP    BP,[012FH]
+      CMP    BP,[302FH]
       CMP    BP,[BX]
       CMP    SI,[BX+SI]
       CMP    SI,[BX+DI]
@@ -6586,13 +5136,14 @@
       CMP    SI,[BP+DI]
       CMP    SI,[SI]
       CMP    SI,[DI]
-      CMP    SI,[0137H]
+      CMP    SI,[3837H]
       CMP    SI,[BX]
       CMP    DI,[BX+SI]
       CMP    DI,[BX+DI]
       CMP    DI,[BP+SI]
       CMP    DI,[BP+DI]
-      CMP    AX,003EH
+      CMP    AL,3DH
+      CMP    AX,3F3EH
       AAS
       INC    AX
       INC    CX
@@ -6674,3105 +5225,665 @@
       JG     $-126
       JG     $
       JG     $+1
-      ADD    BYTE PTR [BX+DI+8200H],0
-      ADD    BYTE PTR [BP+SI+8300H],0
-      ADD    BYTE PTR [BP+DI+8400H],0
-      ADD    BYTE PTR [SI+8500H],0
-      ADD    BYTE PTR [DI+8600H],0
-      ADD    BYTE PTR [BP+8700H],0
-      ADD    BYTE PTR [BX+8800H],0
-      OR     BYTE PTR [BX+SI+8900H],0
-      OR     BYTE PTR [BX+DI+8A00H],0
-      OR     BYTE PTR [BP+SI+8B00H],0
-      OR     BYTE PTR [BP+DI+8C00H],0
-      OR     BYTE PTR [SI+8D00H],0
-      OR     BYTE PTR [DI+8E00H],0
-      OR     BYTE PTR [BP+8F00H],0
-      OR     BYTE PTR [BX+9000H],0
-      ADC    BYTE PTR [BX+SI+9100H],0
-      ADC    BYTE PTR [BX+DI+9200H],0
-      ADC    BYTE PTR [BP+SI+9300H],0
-      ADC    BYTE PTR [BP+DI+9400H],0
-      ADC    BYTE PTR [SI+9500H],0
-      ADC    BYTE PTR [DI+9600H],0
-      ADC    BYTE PTR [BP+9700H],0
-      ADC    BYTE PTR [BX+9800H],0
-      SBB    BYTE PTR [BX+SI+9900H],0
-      SBB    BYTE PTR [BX+DI+9A00H],0
-      SBB    BYTE PTR [BP+SI+9B00H],0
-      SBB    BYTE PTR [BP+DI+9C00H],0
-      SBB    BYTE PTR [SI+9D00H],0
-      SBB    BYTE PTR [DI+9E00H],0
-      SBB    BYTE PTR [BP+9F00H],0
-      SBB    BYTE PTR [BX+0A000H],0
-      AND    BYTE PTR [BX+SI+0A100H],0
-      AND    BYTE PTR [BX+DI+0A200H],0
-      AND    BYTE PTR [BP+SI+0A300H],0
-      AND    BYTE PTR [BP+DI+0A400H],0
-      AND    BYTE PTR [SI+0A500H],0
-      AND    BYTE PTR [DI+0A600H],0
-      AND    BYTE PTR [BP+0A700H],0
-      AND    BYTE PTR [BX+0A800H],0
-      SUB    BYTE PTR [BX+SI+0A900H],0
-      SUB    BYTE PTR [BX+DI+0AA00H],0
-      SUB    BYTE PTR [BP+SI+0AB00H],0
-      SUB    BYTE PTR [BP+DI+0AC00H],0
-      SUB    BYTE PTR [SI+0AD00H],0
-      SUB    BYTE PTR [DI+0AE00H],0
-      SUB    BYTE PTR [BP+0AF00H],0
-      SUB    BYTE PTR [BX+0B000H],0
-      XOR    BYTE PTR [BX+SI+0B100H],0
-      XOR    BYTE PTR [BX+DI+0B200H],0
-      XOR    BYTE PTR [BP+SI+0B300H],0
-      XOR    BYTE PTR [BP+DI+0B400H],0
-      XOR    BYTE PTR [SI+0B500H],0
-      XOR    BYTE PTR [DI+0B600H],0
-      XOR    BYTE PTR [BP+0B700H],0
-      XOR    BYTE PTR [BX+0B800H],0
-      CMP    BYTE PTR [BX+SI+0B900H],0
-      CMP    BYTE PTR [BX+DI+0BA00H],0
-      CMP    BYTE PTR [BP+SI+0BB00H],0
-      CMP    BYTE PTR [BP+DI+0BC00H],0
-      CMP    BYTE PTR [SI+0BD00H],0
-      CMP    BYTE PTR [DI+0BE00H],0
-      CMP    BYTE PTR [BP+0BF00H],0
-      CMP    BYTE PTR [BX+0C000H],0
-      ADD    AL,0
-      ADD    CL,0
-      ADD    DL,0
-      ADD    BL,0
-      ADD    AH,0
-      OR     AL,0
-      OR     CL,0
-      OR     DL,0
-      OR     BL,0
-      OR     AH,0
-      ADC    AL,0
-      ADC    CL,0
-      ADC    DL,0
-      ADC    BL,0
-      ADC    AH,0
-      SBB    AL,0
-      SBB    CL,0
-      SBB    DL,0
-      SBB    BL,0
-      SBB    AH,0
-      AND    AL,0
-      AND    CL,0
-      AND    DL,0
-      AND    BL,0
-      AND    AH,0
-      SUB    AL,0
-      SUB    CL,0
-      SUB    DL,0
-      SUB    BL,0
-      SUB    AH,0
-      XOR    AL,0
-      XOR    CL,0
-      XOR    DL,0
-      XOR    BL,0
-      XOR    AH,0
-      CMP    AL,0
-      CMP    CL,0
-      CMP    DL,0
-      CMP    BL,0
-      CMP    AH,0
-      ADD    BYTE PTR [BX+SI],1
-      ADD    BYTE PTR [BX+DI],1
-      ADD    BYTE PTR [BP+SI],1
-      ADD    BYTE PTR [BP+DI],1
-      ADD    BYTE PTR [SI],1
-      ADD    BYTE PTR [DI],1
-      ADD    BYTE PTR [0701H],1
-      ADD    BYTE PTR [BX],1
-      OR     BYTE PTR [BX+SI],1
-      OR     BYTE PTR [BX+DI],1
-      OR     BYTE PTR [BP+SI],1
-      OR     BYTE PTR [BP+DI],1
-      OR     BYTE PTR [SI],1
-      OR     BYTE PTR [DI],1
-      OR     BYTE PTR [0F01H],1
-      OR     BYTE PTR [BX],1
-      ADC    BYTE PTR [BX+SI],1
-      ADC    BYTE PTR [BX+DI],1
-      ADC    BYTE PTR [BP+SI],1
-      ADC    BYTE PTR [BP+DI],1
-      ADC    BYTE PTR [SI],1
-      ADC    BYTE PTR [DI],1
-      ADC    BYTE PTR [1701H],1
-      ADC    BYTE PTR [BX],1
-      SBB    BYTE PTR [BX+SI],1
-      SBB    BYTE PTR [BX+DI],1
-      SBB    BYTE PTR [BP+SI],1
-      SBB    BYTE PTR [BP+DI],1
-      SBB    BYTE PTR [SI],1
-      SBB    BYTE PTR [DI],1
-      SBB    BYTE PTR [1F01H],1
-      SBB    BYTE PTR [BX],1
-      AND    BYTE PTR [BX+SI],1
-      AND    BYTE PTR [BX+DI],1
-      AND    BYTE PTR [BP+SI],1
-      AND    BYTE PTR [BP+DI],1
-      AND    BYTE PTR [SI],1
-      AND    BYTE PTR [DI],1
-      AND    BYTE PTR [2701H],1
-      AND    BYTE PTR [BX],1
-      SUB    BYTE PTR [BX+SI],1
-      SUB    BYTE PTR [BX+DI],1
-      SUB    BYTE PTR [BP+SI],1
-      SUB    BYTE PTR [BP+DI],1
-      SUB    BYTE PTR [SI],1
-      SUB    BYTE PTR [DI],1
-      SUB    BYTE PTR [2F01H],1
-      SUB    BYTE PTR [BX],1
-      XOR    BYTE PTR [BX+SI],1
-      XOR    BYTE PTR [BX+DI],1
-      XOR    BYTE PTR [BP+SI],1
-      XOR    BYTE PTR [BP+DI],1
-      XOR    BYTE PTR [SI],1
-      XOR    BYTE PTR [DI],1
-      XOR    BYTE PTR [3701H],1
-      XOR    BYTE PTR [BX],1
-      CMP    BYTE PTR [BX+SI],1
-      CMP    BYTE PTR [BX+DI],1
-      CMP    BYTE PTR [BP+SI],1
-      CMP    BYTE PTR [BP+DI],1
-      CMP    BYTE PTR [SI],1
-      CMP    BYTE PTR [DI],1
-      CMP    BYTE PTR [3F01H],1
-      CMP    BYTE PTR [BX],1
-      ADD    BYTE PTR [BX+SI+1],41H
-      ADD    BYTE PTR [BX+DI+1],42H
-      ADD    BYTE PTR [BP+SI+1],43H
-      ADD    BYTE PTR [BP+DI+1],44H
-      ADD    BYTE PTR [SI+1],45H
-      ADD    BYTE PTR [DI+1],46H
-      ADD    BYTE PTR [BP+1],47H
-      ADD    BYTE PTR [BX+1],48H
-      OR     BYTE PTR [BX+SI+1],49H
-      OR     BYTE PTR [BX+DI+1],4AH
-      OR     BYTE PTR [BP+SI+1],4BH
-      OR     BYTE PTR [BP+DI+1],4CH
-      OR     BYTE PTR [SI+1],4DH
-      OR     BYTE PTR [DI+1],4EH
-      OR     BYTE PTR [BP+1],4FH
-      OR     BYTE PTR [BX+1],50H
-      ADC    BYTE PTR [BX+SI+1],51H
-      ADC    BYTE PTR [BX+DI+1],52H
-      ADC    BYTE PTR [BP+SI+1],53H
-      ADC    BYTE PTR [BP+DI+1],54H
-      ADC    BYTE PTR [SI+1],55H
-      ADC    BYTE PTR [DI+1],56H
-      ADC    BYTE PTR [BP+1],57H
-      ADC    BYTE PTR [BX+1],58H
-      SBB    BYTE PTR [BX+SI+1],59H
-      SBB    BYTE PTR [BX+DI+1],5AH
-      SBB    BYTE PTR [BP+SI+1],5BH
-      SBB    BYTE PTR [BP+DI+1],5CH
-      SBB    BYTE PTR [SI+1],5DH
-      SBB    BYTE PTR [DI+1],5EH
-      SBB    BYTE PTR [BP+1],5FH
-      SBB    BYTE PTR [BX+1],60H
-      AND    BYTE PTR [BX+SI+1],61H
-      AND    BYTE PTR [BX+DI+1],62H
-      AND    BYTE PTR [BP+SI+1],63H
-      AND    BYTE PTR [BP+DI+1],64H
-      AND    BYTE PTR [SI+1],65H
-      AND    BYTE PTR [DI+1],66H
-      AND    BYTE PTR [BP+1],67H
-      AND    BYTE PTR [BX+1],68H
-      SUB    BYTE PTR [BX+SI+1],69H
-      SUB    BYTE PTR [BX+DI+1],6AH
-      SUB    BYTE PTR [BP+SI+1],6BH
-      SUB    BYTE PTR [BP+DI+1],6CH
-      SUB    BYTE PTR [SI+1],6DH
-      SUB    BYTE PTR [DI+1],6EH
-      SUB    BYTE PTR [BP+1],6FH
-      SUB    BYTE PTR [BX+1],70H
-      XOR    BYTE PTR [BX+SI+1],71H
-      XOR    BYTE PTR [BX+DI+1],72H
-      XOR    BYTE PTR [BP+SI+1],73H
-      XOR    BYTE PTR [BP+DI+1],74H
-      XOR    BYTE PTR [SI+1],75H
-      XOR    BYTE PTR [DI+1],76H
-      XOR    BYTE PTR [BP+1],77H
-      XOR    BYTE PTR [BX+1],78H
-      CMP    BYTE PTR [BX+SI+1],79H
-      CMP    BYTE PTR [BX+DI+1],7AH
-      CMP    BYTE PTR [BP+SI+1],7BH
-      CMP    BYTE PTR [BP+DI+1],7CH
-      CMP    BYTE PTR [SI+1],7DH
-      CMP    BYTE PTR [DI+1],7EH
-      CMP    BYTE PTR [BP+1],7FH
-      CMP    BYTE PTR [BX+1],80H
-      ADD    BYTE PTR [BX+SI+8101H],1
-      ADD    WORD PTR [BP+SI+0083H],0
-      ADD    WORD PTR [BP+DI+0084H],0
-      ADD    WORD PTR [SI+0085H],0
-      ADD    WORD PTR [DI+0086H],0
-      ADD    WORD PTR [BP+0087H],0
-      ADD    WORD PTR [BX+0088H],0
-      OR     WORD PTR [BX+SI+0089H],0
-      OR     WORD PTR [BX+DI+008AH],0
-      OR     WORD PTR [BP+SI+008BH],0
-      OR     WORD PTR [BP+DI+008CH],0
-      OR     WORD PTR [SI+008DH],0
-      OR     WORD PTR [DI+008EH],0
-      OR     WORD PTR [BP+008FH],0
-      OR     WORD PTR [BX+0090H],0
-      ADC    WORD PTR [BX+SI+0091H],0
-      ADC    WORD PTR [BX+DI+0092H],0
-      ADC    WORD PTR [BP+SI+0093H],0
-      ADC    WORD PTR [BP+DI+0094H],0
-      ADC    WORD PTR [SI+0095H],0
-      ADC    WORD PTR [DI+0096H],0
-      ADC    WORD PTR [BP+0097H],0
-      ADC    WORD PTR [BX+0098H],0
-      SBB    WORD PTR [BX+SI+0099H],0
-      SBB    WORD PTR [BX+DI+009AH],0
-      SBB    WORD PTR [BP+SI+009BH],0
-      SBB    WORD PTR [BP+DI+009CH],0
-      SBB    WORD PTR [SI+009DH],0
-      SBB    WORD PTR [DI+009EH],0
-      SBB    WORD PTR [BP+009FH],0
-      SBB    WORD PTR [BX+00A0H],0
-      AND    WORD PTR [BX+SI+00A1H],0
-      AND    WORD PTR [BX+DI+00A2H],0
-      AND    WORD PTR [BP+SI+00A3H],0
-      AND    WORD PTR [BP+DI+00A4H],0
-      AND    WORD PTR [SI+00A5H],0
-      AND    WORD PTR [DI+00A6H],0
-      AND    WORD PTR [BP+00A7H],0
-      AND    WORD PTR [BX+00A8H],0
-      SUB    WORD PTR [BX+SI+00A9H],0
-      SUB    WORD PTR [BX+DI+00AAH],0
-      SUB    WORD PTR [BP+SI+00ABH],0
-      SUB    WORD PTR [BP+DI+00ACH],0
-      SUB    WORD PTR [SI+00ADH],0
-      SUB    WORD PTR [DI+00AEH],0
-      SUB    WORD PTR [BP+00AFH],0
-      SUB    WORD PTR [BX+00B0H],0
-      XOR    WORD PTR [BX+SI+00B1H],0
-      XOR    WORD PTR [BX+DI+00B2H],0
-      XOR    WORD PTR [BP+SI+00B3H],0
-      XOR    WORD PTR [BP+DI+00B4H],0
-      XOR    WORD PTR [SI+00B5H],0
-      XOR    WORD PTR [DI+00B6H],0
-      XOR    WORD PTR [BP+00B7H],0
-      XOR    WORD PTR [BX+00B8H],0
-      CMP    WORD PTR [BX+SI+00B9H],0
-      CMP    WORD PTR [BX+DI+00BAH],0
-      CMP    WORD PTR [BP+SI+00BBH],0
-      CMP    WORD PTR [BP+DI+00BCH],0
-      CMP    WORD PTR [SI+00BDH],0
-      CMP    WORD PTR [DI+00BEH],0
-      CMP    WORD PTR [BP+00BFH],0
-      CMP    WORD PTR [BX+00C0H],0
-      ADD    AX,00C1H
-      ADD    CX,00C2H
-      ADD    DX,00C3H
-      ADD    BX,00C4H
-      ADD    SP,00C5H
-      ADD    BP,00C6H
-      ADD    SI,00C7H
-      ADD    DI,00C8H
-      OR     AX,00C9H
-      OR     CX,00CAH
-      OR     DX,00CBH
-      OR     BX,00CCH
-      OR     SP,00CDH
-      OR     BP,00CEH
-      OR     SI,00CFH
-      OR     DI,00D0H
-      ADC    AX,00D1H
-      ADC    CX,00D2H
-      ADC    DX,00D3H
-      ADC    BX,00D4H
-      ADC    SP,00D5H
-      ADC    BP,00D6H
-      ADC    SI,00D7H
-      ADC    DI,00D8H
-      SBB    AX,00D9H
-      SBB    CX,00DAH
-      SBB    DX,00DBH
-      SBB    BX,00DCH
-      SBB    SP,00DDH
-      SBB    BP,00DEH
-      SBB    SI,00DFH
-      SBB    DI,00E0H
-      AND    AX,00E1H
-      AND    CX,00E2H
-      AND    DX,00E3H
-      AND    BX,00E4H
-      AND    SP,00E5H
-      AND    BP,00E6H
-      AND    SI,00E7H
-      AND    DI,00E8H
-      SUB    AX,00E9H
-      SUB    CX,00EAH
-      SUB    DX,00EBH
-      SUB    BX,00ECH
-      SUB    SP,00EDH
-      SUB    BP,00EEH
-      SUB    SI,00EFH
-      SUB    DI,00F0H
-      XOR    AX,00F1H
-      XOR    CX,00F2H
-      XOR    DX,00F3H
-      XOR    BX,00F4H
-      XOR    SP,00F5H
-      XOR    BP,00F6H
-      XOR    SI,00F7H
-      XOR    DI,00F8H
-      CMP    AX,00F9H
-      CMP    CX,00FAH
-      CMP    DX,00FBH
-      CMP    BX,00FCH
-      CMP    SP,00FDH
-      CMP    BP,00FEH
-      CMP    SI,00FFH
-      CMP    DI,0100H
-      ADD    WORD PTR [BX+SI],0101H
-      ADD    WORD PTR [BX+DI],0102H
-      ADD    WORD PTR [BP+SI],0103H
-      ADD    WORD PTR [BP+DI],0104H
-      ADD    WORD PTR [SI],0105H
-      ADD    WORD PTR [DI],0106H
-      ADD    WORD PTR [0107H],0
-      ADD    WORD PTR [BX],0108H
-      OR     WORD PTR [BX+SI],0109H
-      OR     WORD PTR [BX+DI],010AH
-      OR     WORD PTR [BP+SI],010BH
-      OR     WORD PTR [BP+DI],010CH
-      OR     WORD PTR [SI],010DH
-      OR     WORD PTR [DI],010EH
-      OR     WORD PTR [010FH],0
-      OR     WORD PTR [BX],0110H
-      ADC    WORD PTR [BX+SI],0111H
-      ADC    WORD PTR [BX+DI],0112H
-      ADC    WORD PTR [BP+SI],0113H
-      ADC    WORD PTR [BP+DI],0114H
-      ADC    WORD PTR [SI],0115H
-      ADC    WORD PTR [DI],0116H
-      ADC    WORD PTR [0117H],0
-      ADC    WORD PTR [BX],0118H
-      SBB    WORD PTR [BX+SI],0119H
-      SBB    WORD PTR [BX+DI],011AH
-      SBB    WORD PTR [BP+SI],011BH
-      SBB    WORD PTR [BP+DI],011CH
-      SBB    WORD PTR [SI],011DH
-      SBB    WORD PTR [DI],011EH
-      SBB    WORD PTR [011FH],0
-      SBB    WORD PTR [BX],0120H
-      AND    WORD PTR [BX+SI],0121H
-      AND    WORD PTR [BX+DI],0122H
-      AND    WORD PTR [BP+SI],0123H
-      AND    WORD PTR [BP+DI],0124H
-      AND    WORD PTR [SI],0125H
-      AND    WORD PTR [DI],0126H
-      AND    WORD PTR [0127H],0
-      AND    WORD PTR [BX],0128H
-      SUB    WORD PTR [BX+SI],0129H
-      SUB    WORD PTR [BX+DI],012AH
-      SUB    WORD PTR [BP+SI],012BH
-      SUB    WORD PTR [BP+DI],012CH
-      SUB    WORD PTR [SI],012DH
-      SUB    WORD PTR [DI],012EH
-      SUB    WORD PTR [012FH],0
-      SUB    WORD PTR [BX],0130H
-      XOR    WORD PTR [BX+SI],0131H
-      XOR    WORD PTR [BX+DI],0132H
-      XOR    WORD PTR [BP+SI],0133H
-      XOR    WORD PTR [BP+DI],0134H
-      XOR    WORD PTR [SI],0135H
-      XOR    WORD PTR [DI],0136H
-      XOR    WORD PTR [0137H],0
-      XOR    WORD PTR [BX],0138H
-      CMP    WORD PTR [BX+SI],0139H
-      CMP    WORD PTR [BX+DI],013AH
-      CMP    WORD PTR [BP+SI],013BH
-      CMP    WORD PTR [BP+DI],013CH
-      CMP    WORD PTR [SI],013DH
-      CMP    WORD PTR [DI],013EH
-      CMP    WORD PTR [013FH],0
-      CMP    WORD PTR [BX],0140H
-      ADD    WORD PTR [BX+SI+65],0142H
-      ADD    WORD PTR [BX+SI-128],0181H
-      ADD    WORD PTR [BX+DI+66],0143H
-      ADD    WORD PTR [BX+DI-128],0181H
-      ADD    WORD PTR [BP+SI+67],0144H
-      ADD    WORD PTR [BP+SI-128],0181H
-      ADD    WORD PTR [BP+DI+68],0145H
-      ADD    WORD PTR [BP+DI-128],0181H
-      ADD    WORD PTR [SI+69],0146H
-      ADD    WORD PTR [SI-128],0181H
-      ADD    WORD PTR [DI+70],0147H
-      ADD    WORD PTR [DI-128],0181H
-      ADD    WORD PTR [BP+71],0148H
-      ADD    WORD PTR [BP-128],0181H
-      ADD    WORD PTR [BX+72],0149H
-      ADD    WORD PTR [BX-128],0181H
-      OR     WORD PTR [BX+SI+73],014AH
-      OR     WORD PTR [BX+SI-128],0181H
-      OR     WORD PTR [BX+DI+74],014BH
-      OR     WORD PTR [BX+DI-128],0181H
-      OR     WORD PTR [BP+SI+75],014CH
-      OR     WORD PTR [BP+SI-128],0181H
-      OR     WORD PTR [BP+DI+76],014DH
-      OR     WORD PTR [BP+DI-128],0181H
-      OR     WORD PTR [SI+77],014EH
-      OR     WORD PTR [SI-128],0181H
-      OR     WORD PTR [DI+78],014FH
-      OR     WORD PTR [DI-128],0181H
-      OR     WORD PTR [BP+79],0150H
-      OR     WORD PTR [BP-128],0181H
-      OR     WORD PTR [BX+80],0151H
-      OR     WORD PTR [BX-128],0181H
-      ADC    WORD PTR [BX+SI+81],0152H
-      ADC    WORD PTR [BX+SI-128],0181H
-      ADC    WORD PTR [BX+DI+82],0153H
-      ADC    WORD PTR [BX+DI-128],0181H
-      ADC    WORD PTR [BP+SI+83],0154H
-      ADC    WORD PTR [BP+SI-128],0181H
-      ADC    WORD PTR [BP+DI+84],0155H
-      ADC    WORD PTR [BP+DI-128],0181H
-      ADC    WORD PTR [SI+85],0156H
-      ADC    WORD PTR [SI-128],0181H
-      ADC    WORD PTR [DI+86],0157H
-      ADC    WORD PTR [DI-128],0181H
-      ADC    WORD PTR [BP+87],0158H
-      ADC    WORD PTR [BP-128],0181H
-      ADC    WORD PTR [BX+88],0159H
-      ADC    WORD PTR [BX-128],0181H
-      SBB    WORD PTR [BX+SI+89],015AH
-      SBB    WORD PTR [BX+SI-128],0181H
-      SBB    WORD PTR [BX+DI+90],015BH
-      SBB    WORD PTR [BX+DI-128],0181H
-      SBB    WORD PTR [BP+SI+91],015CH
-      SBB    WORD PTR [BP+SI-128],0181H
-      SBB    WORD PTR [BP+DI+92],015DH
-      SBB    WORD PTR [BP+DI-128],0181H
-      SBB    WORD PTR [SI+93],015EH
-      SBB    WORD PTR [SI-128],0181H
-      SBB    WORD PTR [DI+94],015FH
-      SBB    WORD PTR [DI-128],0181H
-      SBB    WORD PTR [BP+95],0160H
-      SBB    WORD PTR [BP-128],0181H
-      SBB    WORD PTR [BX+96],0161H
-      SBB    WORD PTR [BX-128],0181H
-      AND    WORD PTR [BX+SI+97],0162H
-      AND    WORD PTR [BX+SI-128],0181H
-      AND    WORD PTR [BX+DI+98],0163H
-      AND    WORD PTR [BX+DI-128],0181H
-      AND    WORD PTR [BP+SI+99],0164H
-      AND    WORD PTR [BP+SI-128],0181H
-      AND    WORD PTR [BP+DI+100],0165H
-      AND    WORD PTR [BP+DI-128],0181H
-      AND    WORD PTR [SI+101],0166H
-      AND    WORD PTR [SI-128],0181H
-      AND    WORD PTR [DI+102],0167H
-      AND    WORD PTR [DI-128],0181H
-      AND    WORD PTR [BP+103],0168H
-      AND    WORD PTR [BP-128],0181H
-      AND    WORD PTR [BX+104],0169H
-      AND    WORD PTR [BX-128],0181H
-      SUB    WORD PTR [BX+SI+105],016AH
-      SUB    WORD PTR [BX+SI-128],0181H
-      SUB    WORD PTR [BX+DI+106],016BH
-      SUB    WORD PTR [BX+DI-128],0181H
-      SUB    WORD PTR [BP+SI+107],016CH
-      SUB    WORD PTR [BP+SI-128],0181H
-      SUB    WORD PTR [BP+DI+108],016DH
-      SUB    WORD PTR [BP+DI-128],0181H
-      SUB    WORD PTR [SI+109],016EH
-      SUB    WORD PTR [SI-128],0181H
-      SUB    WORD PTR [DI+110],016FH
-      SUB    WORD PTR [DI-128],0181H
-      SUB    WORD PTR [BP+111],0170H
-      SUB    WORD PTR [BP-128],0181H
-      SUB    WORD PTR [BX+112],0171H
-      SUB    WORD PTR [BX-128],0181H
-      XOR    WORD PTR [BX+SI+113],0172H
-      XOR    WORD PTR [BX+SI-128],0181H
-      XOR    WORD PTR [BX+DI+114],0173H
-      XOR    WORD PTR [BX+DI-128],0181H
-      XOR    WORD PTR [BP+SI+115],0174H
-      XOR    WORD PTR [BP+SI-128],0181H
-      XOR    WORD PTR [BP+DI+116],0175H
-      XOR    WORD PTR [BP+DI-128],0181H
-      XOR    WORD PTR [SI+117],0176H
-      XOR    WORD PTR [SI-128],0181H
-      XOR    WORD PTR [DI+118],0177H
-      XOR    WORD PTR [DI-128],0181H
-      XOR    WORD PTR [BP+119],0178H
-      XOR    WORD PTR [BP-128],0181H
-      XOR    WORD PTR [BX+120],0179H
-      XOR    WORD PTR [BX-128],0181H
-      CMP    WORD PTR [BX+SI+121],017AH
-      CMP    WORD PTR [BX+SI-128],0181H
-      CMP    WORD PTR [BX+DI+122],017BH
-      CMP    WORD PTR [BX+DI-128],0181H
-      CMP    WORD PTR [BP+SI+123],017CH
-      CMP    WORD PTR [BP+SI-128],0181H
-      CMP    WORD PTR [BP+DI+124],017DH
-      CMP    WORD PTR [BP+DI-128],0181H
-      CMP    WORD PTR [SI+125],017EH
-      CMP    WORD PTR [SI-128],0181H
-      CMP    WORD PTR [DI+126],017FH
-      CMP    WORD PTR [DI-128],0181H
-      CMP    WORD PTR [BP+127],0180H
-      CMP    WORD PTR [BP-128],0181H
-      CMP    WORD PTR [BX-128],0181H
-      CMP    WORD PTR [BX+0],0201H
-      ADD    WORD PTR [BX+SI+0181H],0
-      ADD    WORD PTR [BX+DI+0182H],0
-      TEST   AL,[DI+0086H]
-      TEST   AL,[BP+0087H]
-      TEST   AL,[BX+0088H]
-      TEST   CL,[BX+SI+0089H]
-      TEST   CL,[BX+DI+008AH]
-      TEST   CL,[BP+SI+008BH]
-      TEST   CL,[BP+DI+008CH]
-      TEST   CL,[SI+008DH]
-      TEST   CL,[DI+008EH]
-      TEST   CL,[BP+008FH]
-      TEST   CL,[BX+0090H]
-      TEST   DL,[BX+SI+0091H]
-      TEST   DL,[BX+DI+0092H]
-      TEST   DL,[BP+SI+0093H]
-      TEST   DL,[BP+DI+0094H]
-      TEST   DL,[SI+0095H]
-      TEST   DL,[DI+0096H]
-      TEST   DL,[BP+0097H]
-      TEST   DL,[BX+0098H]
-      TEST   BL,[BX+SI+0099H]
-      TEST   BL,[BX+DI+009AH]
-      TEST   BL,[BP+SI+009BH]
-      TEST   BL,[BP+DI+009CH]
-      TEST   BL,[SI+009DH]
-      TEST   BL,[DI+009EH]
-      TEST   BL,[BP+009FH]
-      TEST   BL,[BX+00A0H]
-      TEST   AH,[BX+SI+00A1H]
-      TEST   AH,[BX+DI+00A2H]
-      TEST   AH,[BP+SI+00A3H]
-      TEST   AH,[BP+DI+00A4H]
-      TEST   AH,[SI+00A5H]
-      TEST   AH,[DI+00A6H]
-      TEST   AH,[BP+00A7H]
-      TEST   AH,[BX+00A8H]
+      ADD    BYTE PTR [BX+DI+8382H],84H
+      ADD    BYTE PTR [BP+SI+8382H],84H
+      ADD    BYTE PTR [BP+DI+8382H],84H
+      ADD    BYTE PTR [SI+8382H],84H
+      ADD    BYTE PTR [DI+8382H],84H
+      ADD    BYTE PTR [BP+8382H],84H
+      ADD    BYTE PTR [BX+8382H],84H
+      OR     BYTE PTR [BX+SI+8382H],84H
+      OR     BYTE PTR [BX+DI+8382H],84H
+      OR     BYTE PTR [BP+SI+8382H],84H
+      OR     BYTE PTR [BP+DI+8382H],84H
+      OR     BYTE PTR [SI+8382H],84H
+      OR     BYTE PTR [DI+8382H],84H
+      OR     BYTE PTR [BP+8382H],84H
+      OR     BYTE PTR [BX+8382H],84H
+      ADC    BYTE PTR [BX+SI+8382H],84H
+      ADC    BYTE PTR [BX+DI+8382H],84H
+      ADC    BYTE PTR [BP+SI+8382H],84H
+      ADC    BYTE PTR [BP+DI+8382H],84H
+      ADC    BYTE PTR [SI+8382H],84H
+      ADC    BYTE PTR [DI+8382H],84H
+      ADC    BYTE PTR [BP+8382H],84H
+      ADC    BYTE PTR [BX+8382H],84H
+      SBB    BYTE PTR [BX+SI+8382H],84H
+      SBB    BYTE PTR [BX+DI+8382H],84H
+      SBB    BYTE PTR [BP+SI+8382H],84H
+      SBB    BYTE PTR [BP+DI+8382H],84H
+      SBB    BYTE PTR [SI+8382H],84H
+      SBB    BYTE PTR [DI+8382H],84H
+      SBB    BYTE PTR [BP+8382H],84H
+      SBB    BYTE PTR [BX+8382H],84H
+      AND    BYTE PTR [BX+SI+8382H],84H
+      AND    BYTE PTR [BX+DI+8382H],84H
+      AND    BYTE PTR [BP+SI+8382H],84H
+      AND    BYTE PTR [BP+DI+8382H],84H
+      AND    BYTE PTR [SI+8382H],84H
+      AND    BYTE PTR [DI+8382H],84H
+      AND    BYTE PTR [BP+8382H],84H
+      AND    BYTE PTR [BX+8382H],84H
+      SUB    BYTE PTR [BX+SI+8382H],84H
+      SUB    BYTE PTR [BX+DI+8382H],84H
+      SUB    BYTE PTR [BP+SI+8382H],84H
+      SUB    BYTE PTR [BP+DI+8382H],84H
+      SUB    BYTE PTR [SI+8382H],84H
+      SUB    BYTE PTR [DI+8382H],84H
+      SUB    BYTE PTR [BP+8382H],84H
+      SUB    BYTE PTR [BX+8382H],84H
+      XOR    BYTE PTR [BX+SI+8382H],84H
+      XOR    BYTE PTR [BX+DI+8382H],84H
+      XOR    BYTE PTR [BP+SI+8382H],84H
+      XOR    BYTE PTR [BP+DI+8382H],84H
+      XOR    BYTE PTR [SI+8382H],84H
+      XOR    BYTE PTR [DI+8382H],84H
+      XOR    BYTE PTR [BP+8382H],84H
+      XOR    BYTE PTR [BX+8382H],84H
+      CMP    BYTE PTR [BX+SI+8382H],84H
+      CMP    BYTE PTR [BX+DI+8382H],84H
+      CMP    BYTE PTR [BP+SI+8382H],84H
+      CMP    BYTE PTR [BP+DI+8382H],84H
+      CMP    BYTE PTR [SI+8382H],84H
+      CMP    BYTE PTR [DI+8382H],84H
+      CMP    BYTE PTR [BP+8382H],84H
+      CMP    BYTE PTR [BX+8382H],84H
+      ADD    AL,82H
+      ADD    WORD PTR [BP+SI+8483H],8685H
+      ADD    WORD PTR [BP+DI+8483H],8685H
+      ADD    WORD PTR [SI+8483H],8685H
+      ADD    WORD PTR [DI+8483H],8685H
+      ADD    WORD PTR [BP+8483H],8685H
+      ADD    WORD PTR [BX+8483H],8685H
+      OR     WORD PTR [BX+SI+8483H],8685H
+      OR     WORD PTR [BX+DI+8483H],8685H
+      OR     WORD PTR [BP+SI+8483H],8685H
+      OR     WORD PTR [BP+DI+8483H],8685H
+      OR     WORD PTR [SI+8483H],8685H
+      OR     WORD PTR [DI+8483H],8685H
+      OR     WORD PTR [BP+8483H],8685H
+      OR     WORD PTR [BX+8483H],8685H
+      ADC    WORD PTR [BX+SI+8483H],8685H
+      ADC    WORD PTR [BX+DI+8483H],8685H
+      ADC    WORD PTR [BP+SI+8483H],8685H
+      ADC    WORD PTR [BP+DI+8483H],8685H
+      ADC    WORD PTR [SI+8483H],8685H
+      ADC    WORD PTR [DI+8483H],8685H
+      ADC    WORD PTR [BP+8483H],8685H
+      ADC    WORD PTR [BX+8483H],8685H
+      SBB    WORD PTR [BX+SI+8483H],8685H
+      SBB    WORD PTR [BX+DI+8483H],8685H
+      SBB    WORD PTR [BP+SI+8483H],8685H
+      SBB    WORD PTR [BP+DI+8483H],8685H
+      SBB    WORD PTR [SI+8483H],8685H
+      SBB    WORD PTR [DI+8483H],8685H
+      SBB    WORD PTR [BP+8483H],8685H
+      SBB    WORD PTR [BX+8483H],8685H
+      AND    WORD PTR [BX+SI+8483H],8685H
+      AND    WORD PTR [BX+DI+8483H],8685H
+      AND    WORD PTR [BP+SI+8483H],8685H
+      AND    WORD PTR [BP+DI+8483H],8685H
+      AND    WORD PTR [SI+8483H],8685H
+      AND    WORD PTR [DI+8483H],8685H
+      AND    WORD PTR [BP+8483H],8685H
+      AND    WORD PTR [BX+8483H],8685H
+      SUB    WORD PTR [BX+SI+8483H],8685H
+      SUB    WORD PTR [BX+DI+8483H],8685H
+      SUB    WORD PTR [BP+SI+8483H],8685H
+      SUB    WORD PTR [BP+DI+8483H],8685H
+      SUB    WORD PTR [SI+8483H],8685H
+      SUB    WORD PTR [DI+8483H],8685H
+      SUB    WORD PTR [BP+8483H],8685H
+      SUB    WORD PTR [BX+8483H],8685H
+      XOR    WORD PTR [BX+SI+8483H],8685H
+      XOR    WORD PTR [BX+DI+8483H],8685H
+      XOR    WORD PTR [BP+SI+8483H],8685H
+      XOR    WORD PTR [BP+DI+8483H],8685H
+      XOR    WORD PTR [SI+8483H],8685H
+      XOR    WORD PTR [DI+8483H],8685H
+      XOR    WORD PTR [BP+8483H],8685H
+      XOR    WORD PTR [BX+8483H],8685H
+      CMP    WORD PTR [BX+SI+8483H],8685H
+      CMP    WORD PTR [BX+DI+8483H],8685H
+      CMP    WORD PTR [BP+SI+8483H],8685H
+      CMP    WORD PTR [BP+DI+8483H],8685H
+      CMP    WORD PTR [SI+8483H],8685H
+      CMP    WORD PTR [DI+8483H],8685H
+      CMP    WORD PTR [BP+8483H],8685H
+      CMP    WORD PTR [BX+8483H],8685H
+      ADD    AX,8483H
+      ADD    WORD PTR [SI+8685H],-79H
+      ADD    WORD PTR [DI+8685H],-79H
+      ADD    WORD PTR [BP+8685H],-79H
+      ADD    WORD PTR [BX+8685H],-79H
+      OR     WORD PTR [BX+SI+8685H],-79H
+      OR     WORD PTR [BX+DI+8685H],-79H
+      OR     WORD PTR [BP+SI+8685H],-79H
+      OR     WORD PTR [BP+DI+8685H],-79H
+      OR     WORD PTR [SI+8685H],-79H
+      OR     WORD PTR [DI+8685H],-79H
+      OR     WORD PTR [BP+8685H],-79H
+      OR     WORD PTR [BX+8685H],-79H
+      ADC    WORD PTR [BX+SI+8685H],-79H
+      ADC    WORD PTR [BX+DI+8685H],-79H
+      ADC    WORD PTR [BP+SI+8685H],-79H
+      ADC    WORD PTR [BP+DI+8685H],-79H
+      ADC    WORD PTR [SI+8685H],-79H
+      ADC    WORD PTR [DI+8685H],-79H
+      ADC    WORD PTR [BP+8685H],-79H
+      ADC    WORD PTR [BX+8685H],-79H
+      SBB    WORD PTR [BX+SI+8685H],-79H
+      SBB    WORD PTR [BX+DI+8685H],-79H
+      SBB    WORD PTR [BP+SI+8685H],-79H
+      SBB    WORD PTR [BP+DI+8685H],-79H
+      SBB    WORD PTR [SI+8685H],-79H
+      SBB    WORD PTR [DI+8685H],-79H
+      SBB    WORD PTR [BP+8685H],-79H
+      SBB    WORD PTR [BX+8685H],-79H
+      AND    WORD PTR [BX+SI+8685H],-79H
+      AND    WORD PTR [BX+DI+8685H],-79H
+      AND    WORD PTR [BP+SI+8685H],-79H
+      AND    WORD PTR [BP+DI+8685H],-79H
+      AND    WORD PTR [SI+8685H],-79H
+      AND    WORD PTR [DI+8685H],-79H
+      AND    WORD PTR [BP+8685H],-79H
+      AND    WORD PTR [BX+8685H],-79H
+      SUB    WORD PTR [BX+SI+8685H],-79H
+      SUB    WORD PTR [BX+DI+8685H],-79H
+      SUB    WORD PTR [BP+SI+8685H],-79H
+      SUB    WORD PTR [BP+DI+8685H],-79H
+      SUB    WORD PTR [SI+8685H],-79H
+      SUB    WORD PTR [DI+8685H],-79H
+      SUB    WORD PTR [BP+8685H],-79H
+      SUB    WORD PTR [BX+8685H],-79H
+      XOR    WORD PTR [BX+SI+8685H],-79H
+      XOR    WORD PTR [BX+DI+8685H],-79H
+      XOR    WORD PTR [BP+SI+8685H],-79H
+      XOR    WORD PTR [BP+DI+8685H],-79H
+      XOR    WORD PTR [SI+8685H],-79H
+      XOR    WORD PTR [DI+8685H],-79H
+      XOR    WORD PTR [BP+8685H],-79H
+      XOR    WORD PTR [BX+8685H],-79H
+      CMP    WORD PTR [BX+SI+8685H],-79H
+      CMP    WORD PTR [BX+DI+8685H],-79H
+      CMP    WORD PTR [BP+SI+8685H],-79H
+      CMP    WORD PTR [BP+DI+8685H],-79H
+      CMP    WORD PTR [SI+8685H],-79H
+      CMP    WORD PTR [DI+8685H],-79H
+      CMP    WORD PTR [BP+8685H],-79H
+      CMP    WORD PTR [BX+8685H],-79H
+      ADD    AX,-7BH
+      TEST   AL,[DI+8786H]
+      TEST   AL,[BP+8786H]
+      TEST   AL,[BX+8786H]
+      TEST   CL,[BX+SI+8786H]
+      TEST   CL,[BX+DI+8786H]
+      TEST   CL,[BP+SI+8786H]
+      TEST   CL,[BP+DI+8786H]
+      TEST   CL,[SI+8786H]
+      TEST   CL,[DI+8786H]
+      TEST   CL,[BP+8786H]
+      TEST   CL,[BX+8786H]
+      TEST   DL,[BX+SI+8786H]
+      TEST   DL,[BX+DI+8786H]
+      TEST   DL,[BP+SI+8786H]
+      TEST   DL,[BP+DI+8786H]
+      TEST   DL,[SI+8786H]
+      TEST   DL,[DI+8786H]
+      TEST   DL,[BP+8786H]
+      TEST   DL,[BX+8786H]
+      TEST   BL,[BX+SI+8786H]
+      TEST   BL,[BX+DI+8786H]
+      TEST   BL,[BP+SI+8786H]
+      TEST   BL,[BP+DI+8786H]
+      TEST   BL,[SI+8786H]
+      TEST   BL,[DI+8786H]
+      TEST   BL,[BP+8786H]
+      TEST   BL,[BX+8786H]
+      TEST   AH,[BX+SI+8786H]
+      TEST   AH,[BX+DI+8786H]
+      TEST   AH,[BP+SI+8786H]
+      TEST   AH,[BP+DI+8786H]
+      TEST   AH,[SI+8786H]
+      TEST   AH,[DI+8786H]
+      TEST   AH,[BP+8786H]
+      TEST   AH,[BX+8786H]
       TEST   AL,AL
-      TEST   AL,CL
-      TEST   AL,DL
-      TEST   AL,BL
-      TEST   AL,AH
-      TEST   CL,AL
-      TEST   CL,CL
-      TEST   CL,DL
-      TEST   CL,BL
-      TEST   CL,AH
-      TEST   DL,AL
-      TEST   DL,CL
-      TEST   DL,DL
-      TEST   DL,BL
-      TEST   DL,AH
-      TEST   BL,AL
-      TEST   BL,CL
-      TEST   BL,DL
-      TEST   BL,BL
-      TEST   BL,AH
-      TEST   AH,AL
-      TEST   AH,CL
-      TEST   AH,DL
-      TEST   AH,BL
-      TEST   AH,AH
-      TEST   AL,[BX+SI]
-      TEST   AL,[BX+DI]
-      TEST   AL,[BP+SI]
-      TEST   AL,[BP+DI]
-      TEST   AL,[SI]
-      TEST   AL,[DI]
-      TEST   AL,[0107H]
-      TEST   AL,[BX]
-      TEST   CL,[BX+SI]
-      TEST   CL,[BX+DI]
-      TEST   CL,[BP+SI]
-      TEST   CL,[BP+DI]
-      TEST   CL,[SI]
-      TEST   CL,[DI]
-      TEST   CL,[010FH]
-      TEST   CL,[BX]
-      TEST   DL,[BX+SI]
-      TEST   DL,[BX+DI]
-      TEST   DL,[BP+SI]
-      TEST   DL,[BP+DI]
-      TEST   DL,[SI]
-      TEST   DL,[DI]
-      TEST   DL,[0117H]
-      TEST   DL,[BX]
-      TEST   BL,[BX+SI]
-      TEST   BL,[BX+DI]
-      TEST   BL,[BP+SI]
-      TEST   BL,[BP+DI]
-      TEST   BL,[SI]
-      TEST   BL,[DI]
-      TEST   BL,[011FH]
-      TEST   BL,[BX]
-      TEST   AH,[BX+SI]
-      TEST   AH,[BX+DI]
-      TEST   AH,[BP+SI]
-      TEST   AH,[BP+DI]
-      TEST   AH,[SI]
-      TEST   AH,[DI]
-      TEST   AH,[0127H]
-      TEST   AH,[BX]
-      TEST   AL,[BX+SI+65]
-      TEST   AL,[BX+SI-128]
-      TEST   AL,[BX+DI+66]
-      TEST   AL,[BX+DI-128]
-      TEST   AL,[BP+SI+67]
-      TEST   AL,[BP+SI-128]
-      TEST   AL,[BP+DI+68]
-      TEST   AL,[BP+DI-128]
-      TEST   AL,[SI+69]
-      TEST   AL,[SI-128]
-      TEST   AL,[DI+70]
-      TEST   AL,[DI-128]
-      TEST   AL,[BP+71]
-      TEST   AL,[BP-128]
-      TEST   AL,[BX+72]
-      TEST   AL,[BX-128]
-      TEST   CL,[BX+SI+73]
-      TEST   CL,[BX+SI-128]
-      TEST   CL,[BX+DI+74]
-      TEST   CL,[BX+DI-128]
-      TEST   CL,[BP+SI+75]
-      TEST   CL,[BP+SI-128]
-      TEST   CL,[BP+DI+76]
-      TEST   CL,[BP+DI-128]
-      TEST   CL,[SI+77]
-      TEST   CL,[SI-128]
-      TEST   CL,[DI+78]
-      TEST   CL,[DI-128]
-      TEST   CL,[BP+79]
-      TEST   CL,[BP-128]
-      TEST   CL,[BX+80]
-      TEST   CL,[BX-128]
-      TEST   DL,[BX+SI+81]
-      TEST   DL,[BX+SI-128]
-      TEST   DL,[BX+DI+82]
-      TEST   DL,[BX+DI-128]
-      TEST   DL,[BP+SI+83]
-      TEST   DL,[BP+SI-128]
-      TEST   DL,[BP+DI+84]
-      TEST   DL,[BP+DI-128]
-      TEST   DL,[SI+85]
-      TEST   DL,[SI-128]
-      TEST   DL,[DI+86]
-      TEST   DL,[DI-128]
-      TEST   DL,[BP+87]
-      TEST   DL,[BP-128]
-      TEST   DL,[BX+88]
-      TEST   DL,[BX-128]
-      TEST   BL,[BX+SI+89]
-      TEST   BL,[BX+SI-128]
-      TEST   BL,[BX+DI+90]
-      TEST   BL,[BX+DI-128]
-      TEST   BL,[BP+SI+91]
-      TEST   BL,[BP+SI-128]
-      TEST   BL,[BP+DI+92]
-      TEST   BL,[BP+DI-128]
-      TEST   BL,[SI+93]
-      TEST   BL,[SI-128]
-      TEST   BL,[DI+94]
-      TEST   BL,[DI-128]
-      TEST   BL,[BP+95]
-      TEST   BL,[BP-128]
-      TEST   BL,[BX+96]
-      TEST   BL,[BX-128]
-      TEST   AH,[BX+SI+97]
-      TEST   AH,[BX+SI-128]
-      TEST   AH,[BX+DI+98]
-      TEST   AH,[BX+DI-128]
-      TEST   AH,[BP+SI+99]
-      TEST   AH,[BP+SI-128]
-      TEST   AH,[BP+DI+100]
-      TEST   AH,[BP+DI-128]
-      TEST   AH,[SI+101]
-      TEST   AH,[SI-128]
-      TEST   AH,[DI+102]
-      TEST   AH,[DI-128]
-      TEST   AH,[BP+103]
-      TEST   AH,[BP-128]
-      TEST   AH,[BX+104]
-      TEST   AH,[BX-128]
-      TEST   AL,[BX+SI+0181H]
-      TEST   AL,[BX+DI+0182H]
-      TEST   AL,[BP+SI+0183H]
-      TEST   AL,[BP+DI+0184H]
-      TEST   AL,[SI+0185H]
-      TEST   AX,[BP+0087H]
-      TEST   AX,[BX+0088H]
-      TEST   CX,[BX+SI+0089H]
-      TEST   CX,[BX+DI+008AH]
-      TEST   CX,[BP+SI+008BH]
-      TEST   CX,[BP+DI+008CH]
-      TEST   CX,[SI+008DH]
-      TEST   CX,[DI+008EH]
-      TEST   CX,[BP+008FH]
-      TEST   CX,[BX+0090H]
-      TEST   DX,[BX+SI+0091H]
-      TEST   DX,[BX+DI+0092H]
-      TEST   DX,[BP+SI+0093H]
-      TEST   DX,[BP+DI+0094H]
-      TEST   DX,[SI+0095H]
-      TEST   DX,[DI+0096H]
-      TEST   DX,[BP+0097H]
-      TEST   DX,[BX+0098H]
-      TEST   BX,[BX+SI+0099H]
-      TEST   BX,[BX+DI+009AH]
-      TEST   BX,[BP+SI+009BH]
-      TEST   BX,[BP+DI+009CH]
-      TEST   BX,[SI+009DH]
-      TEST   BX,[DI+009EH]
-      TEST   BX,[BP+009FH]
-      TEST   BX,[BX+00A0H]
-      TEST   SP,[BX+SI+00A1H]
-      TEST   SP,[BX+DI+00A2H]
-      TEST   SP,[BP+SI+00A3H]
-      TEST   SP,[BP+DI+00A4H]
-      TEST   SP,[SI+00A5H]
-      TEST   SP,[DI+00A6H]
-      TEST   SP,[BP+00A7H]
-      TEST   SP,[BX+00A8H]
-      TEST   BP,[BX+SI+00A9H]
-      TEST   BP,[BX+DI+00AAH]
-      TEST   BP,[BP+SI+00ABH]
-      TEST   BP,[BP+DI+00ACH]
-      TEST   BP,[SI+00ADH]
-      TEST   BP,[DI+00AEH]
-      TEST   BP,[BP+00AFH]
-      TEST   BP,[BX+00B0H]
-      TEST   SI,[BX+SI+00B1H]
-      TEST   SI,[BX+DI+00B2H]
-      TEST   SI,[BP+SI+00B3H]
-      TEST   SI,[BP+DI+00B4H]
-      TEST   SI,[SI+00B5H]
-      TEST   SI,[DI+00B6H]
-      TEST   SI,[BP+00B7H]
-      TEST   SI,[BX+00B8H]
-      TEST   DI,[BX+SI+00B9H]
-      TEST   DI,[BX+DI+00BAH]
-      TEST   DI,[BP+SI+00BBH]
-      TEST   DI,[BP+DI+00BCH]
-      TEST   DI,[SI+00BDH]
-      TEST   DI,[DI+00BEH]
-      TEST   DI,[BP+00BFH]
-      TEST   DI,[BX+00C0H]
+      TEST   AX,[BP+8887H]
+      TEST   AX,[BX+8887H]
+      TEST   CX,[BX+SI+8887H]
+      TEST   CX,[BX+DI+8887H]
+      TEST   CX,[BP+SI+8887H]
+      TEST   CX,[BP+DI+8887H]
+      TEST   CX,[SI+8887H]
+      TEST   CX,[DI+8887H]
+      TEST   CX,[BP+8887H]
+      TEST   CX,[BX+8887H]
+      TEST   DX,[BX+SI+8887H]
+      TEST   DX,[BX+DI+8887H]
+      TEST   DX,[BP+SI+8887H]
+      TEST   DX,[BP+DI+8887H]
+      TEST   DX,[SI+8887H]
+      TEST   DX,[DI+8887H]
+      TEST   DX,[BP+8887H]
+      TEST   DX,[BX+8887H]
+      TEST   BX,[BX+SI+8887H]
+      TEST   BX,[BX+DI+8887H]
+      TEST   BX,[BP+SI+8887H]
+      TEST   BX,[BP+DI+8887H]
+      TEST   BX,[SI+8887H]
+      TEST   BX,[DI+8887H]
+      TEST   BX,[BP+8887H]
+      TEST   BX,[BX+8887H]
+      TEST   SP,[BX+SI+8887H]
+      TEST   SP,[BX+DI+8887H]
+      TEST   SP,[BP+SI+8887H]
+      TEST   SP,[BP+DI+8887H]
+      TEST   SP,[SI+8887H]
+      TEST   SP,[DI+8887H]
+      TEST   SP,[BP+8887H]
+      TEST   SP,[BX+8887H]
+      TEST   BP,[BX+SI+8887H]
+      TEST   BP,[BX+DI+8887H]
+      TEST   BP,[BP+SI+8887H]
+      TEST   BP,[BP+DI+8887H]
+      TEST   BP,[SI+8887H]
+      TEST   BP,[DI+8887H]
+      TEST   BP,[BP+8887H]
+      TEST   BP,[BX+8887H]
+      TEST   SI,[BX+SI+8887H]
+      TEST   SI,[BX+DI+8887H]
+      TEST   SI,[BP+SI+8887H]
+      TEST   SI,[BP+DI+8887H]
+      TEST   SI,[SI+8887H]
+      TEST   SI,[DI+8887H]
+      TEST   SI,[BP+8887H]
+      TEST   SI,[BX+8887H]
+      TEST   DI,[BX+SI+8887H]
+      TEST   DI,[BX+DI+8887H]
+      TEST   DI,[BP+SI+8887H]
+      TEST   DI,[BP+DI+8887H]
+      TEST   DI,[SI+8887H]
+      TEST   DI,[DI+8887H]
+      TEST   DI,[BP+8887H]
+      TEST   DI,[BX+8887H]
       TEST   AX,AX
-      TEST   AX,CX
-      TEST   AX,DX
-      TEST   AX,BX
-      TEST   AX,SP
-      TEST   AX,BP
-      TEST   AX,SI
-      TEST   AX,DI
-      TEST   CX,AX
-      TEST   CX,CX
-      TEST   CX,DX
-      TEST   CX,BX
-      TEST   CX,SP
-      TEST   CX,BP
-      TEST   CX,SI
-      TEST   CX,DI
-      TEST   DX,AX
-      TEST   DX,CX
-      TEST   DX,DX
-      TEST   DX,BX
-      TEST   DX,SP
-      TEST   DX,BP
-      TEST   DX,SI
-      TEST   DX,DI
-      TEST   BX,AX
-      TEST   BX,CX
-      TEST   BX,DX
-      TEST   BX,BX
-      TEST   BX,SP
-      TEST   BX,BP
-      TEST   BX,SI
-      TEST   BX,DI
-      TEST   SP,AX
-      TEST   SP,CX
-      TEST   SP,DX
-      TEST   SP,BX
-      TEST   SP,SP
-      TEST   SP,BP
-      TEST   SP,SI
-      TEST   SP,DI
-      TEST   BP,AX
-      TEST   BP,CX
-      TEST   BP,DX
-      TEST   BP,BX
-      TEST   BP,SP
-      TEST   BP,BP
-      TEST   BP,SI
-      TEST   BP,DI
-      TEST   SI,AX
-      TEST   SI,CX
-      TEST   SI,DX
-      TEST   SI,BX
-      TEST   SI,SP
-      TEST   SI,BP
-      TEST   SI,SI
-      TEST   SI,DI
-      TEST   DI,AX
-      TEST   DI,CX
-      TEST   DI,DX
-      TEST   DI,BX
-      TEST   DI,SP
-      TEST   DI,BP
-      TEST   DI,SI
-      TEST   DI,DI
-      TEST   AX,[BX+SI]
-      TEST   AX,[BX+DI]
-      TEST   AX,[BP+SI]
-      TEST   AX,[BP+DI]
-      TEST   AX,[SI]
-      TEST   AX,[DI]
-      TEST   AX,[0107H]
-      TEST   AX,[BX]
-      TEST   CX,[BX+SI]
-      TEST   CX,[BX+DI]
-      TEST   CX,[BP+SI]
-      TEST   CX,[BP+DI]
-      TEST   CX,[SI]
-      TEST   CX,[DI]
-      TEST   CX,[010FH]
-      TEST   CX,[BX]
-      TEST   DX,[BX+SI]
-      TEST   DX,[BX+DI]
-      TEST   DX,[BP+SI]
-      TEST   DX,[BP+DI]
-      TEST   DX,[SI]
-      TEST   DX,[DI]
-      TEST   DX,[0117H]
-      TEST   DX,[BX]
-      TEST   BX,[BX+SI]
-      TEST   BX,[BX+DI]
-      TEST   BX,[BP+SI]
-      TEST   BX,[BP+DI]
-      TEST   BX,[SI]
-      TEST   BX,[DI]
-      TEST   BX,[011FH]
-      TEST   BX,[BX]
-      TEST   SP,[BX+SI]
-      TEST   SP,[BX+DI]
-      TEST   SP,[BP+SI]
-      TEST   SP,[BP+DI]
-      TEST   SP,[SI]
-      TEST   SP,[DI]
-      TEST   SP,[0127H]
-      TEST   SP,[BX]
-      TEST   BP,[BX+SI]
-      TEST   BP,[BX+DI]
-      TEST   BP,[BP+SI]
-      TEST   BP,[BP+DI]
-      TEST   BP,[SI]
-      TEST   BP,[DI]
-      TEST   BP,[012FH]
-      TEST   BP,[BX]
-      TEST   SI,[BX+SI]
-      TEST   SI,[BX+DI]
-      TEST   SI,[BP+SI]
-      TEST   SI,[BP+DI]
-      TEST   SI,[SI]
-      TEST   SI,[DI]
-      TEST   SI,[0137H]
-      TEST   SI,[BX]
-      TEST   DI,[BX+SI]
-      TEST   DI,[BX+DI]
-      TEST   DI,[BP+SI]
-      TEST   DI,[BP+DI]
-      TEST   DI,[SI]
-      TEST   DI,[DI]
-      TEST   DI,[013FH]
-      TEST   DI,[BX]
-      TEST   AX,[BX+SI+65]
-      TEST   AX,[BX+SI-128]
-      TEST   AX,[BX+DI+66]
-      TEST   AX,[BX+DI-128]
-      TEST   AX,[BP+SI+67]
-      TEST   AX,[BP+SI-128]
-      TEST   AX,[BP+DI+68]
-      TEST   AX,[BP+DI-128]
-      TEST   AX,[SI+69]
-      TEST   AX,[SI-128]
-      TEST   AX,[DI+70]
-      TEST   AX,[DI-128]
-      TEST   AX,[BP+71]
-      TEST   AX,[BP-128]
-      TEST   AX,[BX+72]
-      TEST   AX,[BX-128]
-      TEST   CX,[BX+SI+73]
-      TEST   CX,[BX+SI-128]
-      TEST   CX,[BX+DI+74]
-      TEST   CX,[BX+DI-128]
-      TEST   CX,[BP+SI+75]
-      TEST   CX,[BP+SI-128]
-      TEST   CX,[BP+DI+76]
-      TEST   CX,[BP+DI-128]
-      TEST   CX,[SI+77]
-      TEST   CX,[SI-128]
-      TEST   CX,[DI+78]
-      TEST   CX,[DI-128]
-      TEST   CX,[BP+79]
-      TEST   CX,[BP-128]
-      TEST   CX,[BX+80]
-      TEST   CX,[BX-128]
-      TEST   DX,[BX+SI+81]
-      TEST   DX,[BX+SI-128]
-      TEST   DX,[BX+DI+82]
-      TEST   DX,[BX+DI-128]
-      TEST   DX,[BP+SI+83]
-      TEST   DX,[BP+SI-128]
-      TEST   DX,[BP+DI+84]
-      TEST   DX,[BP+DI-128]
-      TEST   DX,[SI+85]
-      TEST   DX,[SI-128]
-      TEST   DX,[DI+86]
-      TEST   DX,[DI-128]
-      TEST   DX,[BP+87]
-      TEST   DX,[BP-128]
-      TEST   DX,[BX+88]
-      TEST   DX,[BX-128]
-      TEST   BX,[BX+SI+89]
-      TEST   BX,[BX+SI-128]
-      TEST   BX,[BX+DI+90]
-      TEST   BX,[BX+DI-128]
-      TEST   BX,[BP+SI+91]
-      TEST   BX,[BP+SI-128]
-      TEST   BX,[BP+DI+92]
-      TEST   BX,[BP+DI-128]
-      TEST   BX,[SI+93]
-      TEST   BX,[SI-128]
-      TEST   BX,[DI+94]
-      TEST   BX,[DI-128]
-      TEST   BX,[BP+95]
-      TEST   BX,[BP-128]
-      TEST   BX,[BX+96]
-      TEST   BX,[BX-128]
-      TEST   SP,[BX+SI+97]
-      TEST   SP,[BX+SI-128]
-      TEST   SP,[BX+DI+98]
-      TEST   SP,[BX+DI-128]
-      TEST   SP,[BP+SI+99]
-      TEST   SP,[BP+SI-128]
-      TEST   SP,[BP+DI+100]
-      TEST   SP,[BP+DI-128]
-      TEST   SP,[SI+101]
-      TEST   SP,[SI-128]
-      TEST   SP,[DI+102]
-      TEST   SP,[DI-128]
-      TEST   SP,[BP+103]
-      TEST   SP,[BP-128]
-      TEST   SP,[BX+104]
-      TEST   SP,[BX-128]
-      TEST   BP,[BX+SI+105]
-      TEST   BP,[BX+SI-128]
-      TEST   BP,[BX+DI+106]
-      TEST   BP,[BX+DI-128]
-      TEST   BP,[BP+SI+107]
-      TEST   BP,[BP+SI-128]
-      TEST   BP,[BP+DI+108]
-      TEST   BP,[BP+DI-128]
-      TEST   BP,[SI+109]
-      TEST   BP,[SI-128]
-      TEST   BP,[DI+110]
-      TEST   BP,[DI-128]
-      TEST   BP,[BP+111]
-      TEST   BP,[BP-128]
-      TEST   BP,[BX+112]
-      TEST   BP,[BX-128]
-      TEST   SI,[BX+SI+113]
-      TEST   SI,[BX+SI-128]
-      TEST   SI,[BX+DI+114]
-      TEST   SI,[BX+DI-128]
-      TEST   SI,[BP+SI+115]
-      TEST   SI,[BP+SI-128]
-      TEST   SI,[BP+DI+116]
-      TEST   SI,[BP+DI-128]
-      TEST   SI,[SI+117]
-      TEST   SI,[SI-128]
-      TEST   SI,[DI+118]
-      TEST   SI,[DI-128]
-      TEST   SI,[BP+119]
-      TEST   SI,[BP-128]
-      TEST   SI,[BX+120]
-      TEST   SI,[BX-128]
-      TEST   DI,[BX+SI+121]
-      TEST   DI,[BX+SI-128]
-      TEST   DI,[BX+DI+122]
-      TEST   DI,[BX+DI-128]
-      TEST   DI,[BP+SI+123]
-      TEST   DI,[BP+SI-128]
-      TEST   DI,[BP+DI+124]
-      TEST   DI,[BP+DI-128]
-      TEST   DI,[SI+125]
-      TEST   DI,[SI-128]
-      TEST   DI,[DI+126]
-      TEST   DI,[DI-128]
-      TEST   DI,[BP+127]
-      TEST   DI,[BP-128]
-      TEST   DI,[BX-128]
-      TEST   DI,[BX+0]
-      TEST   AX,[BX+SI+0181H]
-      TEST   AX,[BX+DI+0182H]
-      TEST   AX,[BP+SI+0183H]
-      TEST   AX,[BP+DI+0184H]
-      TEST   AX,[SI+0185H]
-      TEST   AX,[DI+0186H]
-      XCHG   AL,[BX+0088H]
-      XCHG   CL,[BX+SI+0089H]
-      XCHG   CL,[BX+DI+008AH]
-      XCHG   CL,[BP+SI+008BH]
-      XCHG   CL,[BP+DI+008CH]
-      XCHG   CL,[SI+008DH]
-      XCHG   CL,[DI+008EH]
-      XCHG   CL,[BP+008FH]
-      XCHG   CL,[BX+0090H]
-      XCHG   DL,[BX+SI+0091H]
-      XCHG   DL,[BX+DI+0092H]
-      XCHG   DL,[BP+SI+0093H]
-      XCHG   DL,[BP+DI+0094H]
-      XCHG   DL,[SI+0095H]
-      XCHG   DL,[DI+0096H]
-      XCHG   DL,[BP+0097H]
-      XCHG   DL,[BX+0098H]
-      XCHG   BL,[BX+SI+0099H]
-      XCHG   BL,[BX+DI+009AH]
-      XCHG   BL,[BP+SI+009BH]
-      XCHG   BL,[BP+DI+009CH]
-      XCHG   BL,[SI+009DH]
-      XCHG   BL,[DI+009EH]
-      XCHG   BL,[BP+009FH]
-      XCHG   BL,[BX+00A0H]
-      XCHG   AH,[BX+SI+00A1H]
-      XCHG   AH,[BX+DI+00A2H]
-      XCHG   AH,[BP+SI+00A3H]
-      XCHG   AH,[BP+DI+00A4H]
-      XCHG   AH,[SI+00A5H]
-      XCHG   AH,[DI+00A6H]
-      XCHG   AH,[BP+00A7H]
-      XCHG   AH,[BX+00A8H]
+      XCHG   AL,[BX+8988H]
+      XCHG   CL,[BX+SI+8988H]
+      XCHG   CL,[BX+DI+8988H]
+      XCHG   CL,[BP+SI+8988H]
+      XCHG   CL,[BP+DI+8988H]
+      XCHG   CL,[SI+8988H]
+      XCHG   CL,[DI+8988H]
+      XCHG   CL,[BP+8988H]
+      XCHG   CL,[BX+8988H]
+      XCHG   DL,[BX+SI+8988H]
+      XCHG   DL,[BX+DI+8988H]
+      XCHG   DL,[BP+SI+8988H]
+      XCHG   DL,[BP+DI+8988H]
+      XCHG   DL,[SI+8988H]
+      XCHG   DL,[DI+8988H]
+      XCHG   DL,[BP+8988H]
+      XCHG   DL,[BX+8988H]
+      XCHG   BL,[BX+SI+8988H]
+      XCHG   BL,[BX+DI+8988H]
+      XCHG   BL,[BP+SI+8988H]
+      XCHG   BL,[BP+DI+8988H]
+      XCHG   BL,[SI+8988H]
+      XCHG   BL,[DI+8988H]
+      XCHG   BL,[BP+8988H]
+      XCHG   BL,[BX+8988H]
+      XCHG   AH,[BX+SI+8988H]
+      XCHG   AH,[BX+DI+8988H]
+      XCHG   AH,[BP+SI+8988H]
+      XCHG   AH,[BP+DI+8988H]
+      XCHG   AH,[SI+8988H]
+      XCHG   AH,[DI+8988H]
+      XCHG   AH,[BP+8988H]
+      XCHG   AH,[BX+8988H]
       XCHG   AL,AL
-      XCHG   AL,CL
-      XCHG   AL,DL
-      XCHG   AL,BL
-      XCHG   AL,AH
-      XCHG   CL,AL
-      XCHG   CL,CL
-      XCHG   CL,DL
-      XCHG   CL,BL
-      XCHG   CL,AH
-      XCHG   DL,AL
-      XCHG   DL,CL
-      XCHG   DL,DL
-      XCHG   DL,BL
-      XCHG   DL,AH
-      XCHG   BL,AL
-      XCHG   BL,CL
-      XCHG   BL,DL
-      XCHG   BL,BL
-      XCHG   BL,AH
-      XCHG   AH,AL
-      XCHG   AH,CL
-      XCHG   AH,DL
-      XCHG   AH,BL
-      XCHG   AH,AH
-      XCHG   AL,[BX+SI]
-      XCHG   AL,[BX+DI]
-      XCHG   AL,[BP+SI]
-      XCHG   AL,[BP+DI]
-      XCHG   AL,[SI]
-      XCHG   AL,[DI]
-      XCHG   AL,[0107H]
-      XCHG   AL,[BX]
-      XCHG   CL,[BX+SI]
-      XCHG   CL,[BX+DI]
-      XCHG   CL,[BP+SI]
-      XCHG   CL,[BP+DI]
-      XCHG   CL,[SI]
-      XCHG   CL,[DI]
-      XCHG   CL,[010FH]
-      XCHG   CL,[BX]
-      XCHG   DL,[BX+SI]
-      XCHG   DL,[BX+DI]
-      XCHG   DL,[BP+SI]
-      XCHG   DL,[BP+DI]
-      XCHG   DL,[SI]
-      XCHG   DL,[DI]
-      XCHG   DL,[0117H]
-      XCHG   DL,[BX]
-      XCHG   BL,[BX+SI]
-      XCHG   BL,[BX+DI]
-      XCHG   BL,[BP+SI]
-      XCHG   BL,[BP+DI]
-      XCHG   BL,[SI]
-      XCHG   BL,[DI]
-      XCHG   BL,[011FH]
-      XCHG   BL,[BX]
-      XCHG   AH,[BX+SI]
-      XCHG   AH,[BX+DI]
-      XCHG   AH,[BP+SI]
-      XCHG   AH,[BP+DI]
-      XCHG   AH,[SI]
-      XCHG   AH,[DI]
-      XCHG   AH,[0127H]
-      XCHG   AH,[BX]
-      XCHG   AL,[BX+SI+65]
-      XCHG   AL,[BX+SI-128]
-      XCHG   AL,[BX+DI+66]
-      XCHG   AL,[BX+DI-128]
-      XCHG   AL,[BP+SI+67]
-      XCHG   AL,[BP+SI-128]
-      XCHG   AL,[BP+DI+68]
-      XCHG   AL,[BP+DI-128]
-      XCHG   AL,[SI+69]
-      XCHG   AL,[SI-128]
-      XCHG   AL,[DI+70]
-      XCHG   AL,[DI-128]
-      XCHG   AL,[BP+71]
-      XCHG   AL,[BP-128]
-      XCHG   AL,[BX+72]
-      XCHG   AL,[BX-128]
-      XCHG   CL,[BX+SI+73]
-      XCHG   CL,[BX+SI-128]
-      XCHG   CL,[BX+DI+74]
-      XCHG   CL,[BX+DI-128]
-      XCHG   CL,[BP+SI+75]
-      XCHG   CL,[BP+SI-128]
-      XCHG   CL,[BP+DI+76]
-      XCHG   CL,[BP+DI-128]
-      XCHG   CL,[SI+77]
-      XCHG   CL,[SI-128]
-      XCHG   CL,[DI+78]
-      XCHG   CL,[DI-128]
-      XCHG   CL,[BP+79]
-      XCHG   CL,[BP-128]
-      XCHG   CL,[BX+80]
-      XCHG   CL,[BX-128]
-      XCHG   DL,[BX+SI+81]
-      XCHG   DL,[BX+SI-128]
-      XCHG   DL,[BX+DI+82]
-      XCHG   DL,[BX+DI-128]
-      XCHG   DL,[BP+SI+83]
-      XCHG   DL,[BP+SI-128]
-      XCHG   DL,[BP+DI+84]
-      XCHG   DL,[BP+DI-128]
-      XCHG   DL,[SI+85]
-      XCHG   DL,[SI-128]
-      XCHG   DL,[DI+86]
-      XCHG   DL,[DI-128]
-      XCHG   DL,[BP+87]
-      XCHG   DL,[BP-128]
-      XCHG   DL,[BX+88]
-      XCHG   DL,[BX-128]
-      XCHG   BL,[BX+SI+89]
-      XCHG   BL,[BX+SI-128]
-      XCHG   BL,[BX+DI+90]
-      XCHG   BL,[BX+DI-128]
-      XCHG   BL,[BP+SI+91]
-      XCHG   BL,[BP+SI-128]
-      XCHG   BL,[BP+DI+92]
-      XCHG   BL,[BP+DI-128]
-      XCHG   BL,[SI+93]
-      XCHG   BL,[SI-128]
-      XCHG   BL,[DI+94]
-      XCHG   BL,[DI-128]
-      XCHG   BL,[BP+95]
-      XCHG   BL,[BP-128]
-      XCHG   BL,[BX+96]
-      XCHG   BL,[BX-128]
-      XCHG   AH,[BX+SI+97]
-      XCHG   AH,[BX+SI-128]
-      XCHG   AH,[BX+DI+98]
-      XCHG   AH,[BX+DI-128]
-      XCHG   AH,[BP+SI+99]
-      XCHG   AH,[BP+SI-128]
-      XCHG   AH,[BP+DI+100]
-      XCHG   AH,[BP+DI-128]
-      XCHG   AH,[SI+101]
-      XCHG   AH,[SI-128]
-      XCHG   AH,[DI+102]
-      XCHG   AH,[DI-128]
-      XCHG   AH,[BP+103]
-      XCHG   AH,[BP-128]
-      XCHG   AH,[BX+104]
-      XCHG   AH,[BX-128]
-      XCHG   AL,[BX+SI+0181H]
-      XCHG   AL,[BX+DI+0182H]
-      XCHG   AL,[BP+SI+0183H]
-      XCHG   AL,[BP+DI+0184H]
-      XCHG   AL,[SI+0185H]
-      XCHG   AL,[DI+0186H]
-      XCHG   AL,[BP+0187H]
-      XCHG   CX,[BX+SI+0089H]
-      XCHG   CX,[BX+DI+008AH]
-      XCHG   CX,[BP+SI+008BH]
-      XCHG   CX,[BP+DI+008CH]
-      XCHG   CX,[SI+008DH]
-      XCHG   CX,[DI+008EH]
-      XCHG   CX,[BP+008FH]
-      XCHG   CX,[BX+0090H]
-      XCHG   DX,[BX+SI+0091H]
-      XCHG   DX,[BX+DI+0092H]
-      XCHG   DX,[BP+SI+0093H]
-      XCHG   DX,[BP+DI+0094H]
-      XCHG   DX,[SI+0095H]
-      XCHG   DX,[DI+0096H]
-      XCHG   DX,[BP+0097H]
-      XCHG   DX,[BX+0098H]
-      XCHG   BX,[BX+SI+0099H]
-      XCHG   BX,[BX+DI+009AH]
-      XCHG   BX,[BP+SI+009BH]
-      XCHG   BX,[BP+DI+009CH]
-      XCHG   BX,[SI+009DH]
-      XCHG   BX,[DI+009EH]
-      XCHG   BX,[BP+009FH]
-      XCHG   BX,[BX+00A0H]
-      XCHG   SP,[BX+SI+00A1H]
-      XCHG   SP,[BX+DI+00A2H]
-      XCHG   SP,[BP+SI+00A3H]
-      XCHG   SP,[BP+DI+00A4H]
-      XCHG   SP,[SI+00A5H]
-      XCHG   SP,[DI+00A6H]
-      XCHG   SP,[BP+00A7H]
-      XCHG   SP,[BX+00A8H]
-      XCHG   BP,[BX+SI+00A9H]
-      XCHG   BP,[BX+DI+00AAH]
-      XCHG   BP,[BP+SI+00ABH]
-      XCHG   BP,[BP+DI+00ACH]
-      XCHG   BP,[SI+00ADH]
-      XCHG   BP,[DI+00AEH]
-      XCHG   BP,[BP+00AFH]
-      XCHG   BP,[BX+00B0H]
-      XCHG   SI,[BX+SI+00B1H]
-      XCHG   SI,[BX+DI+00B2H]
-      XCHG   SI,[BP+SI+00B3H]
-      XCHG   SI,[BP+DI+00B4H]
-      XCHG   SI,[SI+00B5H]
-      XCHG   SI,[DI+00B6H]
-      XCHG   SI,[BP+00B7H]
-      XCHG   SI,[BX+00B8H]
-      XCHG   DI,[BX+SI+00B9H]
-      XCHG   DI,[BX+DI+00BAH]
-      XCHG   DI,[BP+SI+00BBH]
-      XCHG   DI,[BP+DI+00BCH]
-      XCHG   DI,[SI+00BDH]
-      XCHG   DI,[DI+00BEH]
-      XCHG   DI,[BP+00BFH]
-      XCHG   DI,[BX+00C0H]
+      XCHG   CX,[BX+SI+8A89H]
+      XCHG   CX,[BX+DI+8A89H]
+      XCHG   CX,[BP+SI+8A89H]
+      XCHG   CX,[BP+DI+8A89H]
+      XCHG   CX,[SI+8A89H]
+      XCHG   CX,[DI+8A89H]
+      XCHG   CX,[BP+8A89H]
+      XCHG   CX,[BX+8A89H]
+      XCHG   DX,[BX+SI+8A89H]
+      XCHG   DX,[BX+DI+8A89H]
+      XCHG   DX,[BP+SI+8A89H]
+      XCHG   DX,[BP+DI+8A89H]
+      XCHG   DX,[SI+8A89H]
+      XCHG   DX,[DI+8A89H]
+      XCHG   DX,[BP+8A89H]
+      XCHG   DX,[BX+8A89H]
+      XCHG   BX,[BX+SI+8A89H]
+      XCHG   BX,[BX+DI+8A89H]
+      XCHG   BX,[BP+SI+8A89H]
+      XCHG   BX,[BP+DI+8A89H]
+      XCHG   BX,[SI+8A89H]
+      XCHG   BX,[DI+8A89H]
+      XCHG   BX,[BP+8A89H]
+      XCHG   BX,[BX+8A89H]
+      XCHG   SP,[BX+SI+8A89H]
+      XCHG   SP,[BX+DI+8A89H]
+      XCHG   SP,[BP+SI+8A89H]
+      XCHG   SP,[BP+DI+8A89H]
+      XCHG   SP,[SI+8A89H]
+      XCHG   SP,[DI+8A89H]
+      XCHG   SP,[BP+8A89H]
+      XCHG   SP,[BX+8A89H]
+      XCHG   BP,[BX+SI+8A89H]
+      XCHG   BP,[BX+DI+8A89H]
+      XCHG   BP,[BP+SI+8A89H]
+      XCHG   BP,[BP+DI+8A89H]
+      XCHG   BP,[SI+8A89H]
+      XCHG   BP,[DI+8A89H]
+      XCHG   BP,[BP+8A89H]
+      XCHG   BP,[BX+8A89H]
+      XCHG   SI,[BX+SI+8A89H]
+      XCHG   SI,[BX+DI+8A89H]
+      XCHG   SI,[BP+SI+8A89H]
+      XCHG   SI,[BP+DI+8A89H]
+      XCHG   SI,[SI+8A89H]
+      XCHG   SI,[DI+8A89H]
+      XCHG   SI,[BP+8A89H]
+      XCHG   SI,[BX+8A89H]
+      XCHG   DI,[BX+SI+8A89H]
+      XCHG   DI,[BX+DI+8A89H]
+      XCHG   DI,[BP+SI+8A89H]
+      XCHG   DI,[BP+DI+8A89H]
+      XCHG   DI,[SI+8A89H]
+      XCHG   DI,[DI+8A89H]
+      XCHG   DI,[BP+8A89H]
+      XCHG   DI,[BX+8A89H]
       XCHG   AX,AX
-      XCHG   AX,CX
-      XCHG   AX,DX
-      XCHG   AX,BX
-      XCHG   AX,SP
-      XCHG   AX,BP
-      XCHG   AX,SI
-      XCHG   AX,DI
-      XCHG   CX,AX
-      XCHG   CX,CX
-      XCHG   CX,DX
-      XCHG   CX,BX
-      XCHG   CX,SP
-      XCHG   CX,BP
-      XCHG   CX,SI
-      XCHG   CX,DI
-      XCHG   DX,AX
-      XCHG   DX,CX
-      XCHG   DX,DX
-      XCHG   DX,BX
-      XCHG   DX,SP
-      XCHG   DX,BP
-      XCHG   DX,SI
-      XCHG   DX,DI
-      XCHG   BX,AX
-      XCHG   BX,CX
-      XCHG   BX,DX
-      XCHG   BX,BX
-      XCHG   BX,SP
-      XCHG   BX,BP
-      XCHG   BX,SI
-      XCHG   BX,DI
-      XCHG   SP,AX
-      XCHG   SP,CX
-      XCHG   SP,DX
-      XCHG   SP,BX
-      XCHG   SP,SP
-      XCHG   SP,BP
-      XCHG   SP,SI
-      XCHG   SP,DI
-      XCHG   BP,AX
-      XCHG   BP,CX
-      XCHG   BP,DX
-      XCHG   BP,BX
-      XCHG   BP,SP
-      XCHG   BP,BP
-      XCHG   BP,SI
-      XCHG   BP,DI
-      XCHG   SI,AX
-      XCHG   SI,CX
-      XCHG   SI,DX
-      XCHG   SI,BX
-      XCHG   SI,SP
-      XCHG   SI,BP
-      XCHG   SI,SI
-      XCHG   SI,DI
-      XCHG   DI,AX
-      XCHG   DI,CX
-      XCHG   DI,DX
-      XCHG   DI,BX
-      XCHG   DI,SP
-      XCHG   DI,BP
-      XCHG   DI,SI
-      XCHG   DI,DI
-      XCHG   AX,[BX+SI]
-      XCHG   AX,[BX+DI]
-      XCHG   AX,[BP+SI]
-      XCHG   AX,[BP+DI]
-      XCHG   AX,[SI]
-      XCHG   AX,[DI]
-      XCHG   AX,[0107H]
-      XCHG   AX,[BX]
-      XCHG   CX,[BX+SI]
-      XCHG   CX,[BX+DI]
-      XCHG   CX,[BP+SI]
-      XCHG   CX,[BP+DI]
-      XCHG   CX,[SI]
-      XCHG   CX,[DI]
-      XCHG   CX,[010FH]
-      XCHG   CX,[BX]
-      XCHG   DX,[BX+SI]
-      XCHG   DX,[BX+DI]
-      XCHG   DX,[BP+SI]
-      XCHG   DX,[BP+DI]
-      XCHG   DX,[SI]
-      XCHG   DX,[DI]
-      XCHG   DX,[0117H]
-      XCHG   DX,[BX]
-      XCHG   BX,[BX+SI]
-      XCHG   BX,[BX+DI]
-      XCHG   BX,[BP+SI]
-      XCHG   BX,[BP+DI]
-      XCHG   BX,[SI]
-      XCHG   BX,[DI]
-      XCHG   BX,[011FH]
-      XCHG   BX,[BX]
-      XCHG   SP,[BX+SI]
-      XCHG   SP,[BX+DI]
-      XCHG   SP,[BP+SI]
-      XCHG   SP,[BP+DI]
-      XCHG   SP,[SI]
-      XCHG   SP,[DI]
-      XCHG   SP,[0127H]
-      XCHG   SP,[BX]
-      XCHG   BP,[BX+SI]
-      XCHG   BP,[BX+DI]
-      XCHG   BP,[BP+SI]
-      XCHG   BP,[BP+DI]
-      XCHG   BP,[SI]
-      XCHG   BP,[DI]
-      XCHG   BP,[012FH]
-      XCHG   BP,[BX]
-      XCHG   SI,[BX+SI]
-      XCHG   SI,[BX+DI]
-      XCHG   SI,[BP+SI]
-      XCHG   SI,[BP+DI]
-      XCHG   SI,[SI]
-      XCHG   SI,[DI]
-      XCHG   SI,[0137H]
-      XCHG   SI,[BX]
-      XCHG   DI,[BX+SI]
-      XCHG   DI,[BX+DI]
-      XCHG   DI,[BP+SI]
-      XCHG   DI,[BP+DI]
-      XCHG   DI,[SI]
-      XCHG   DI,[DI]
-      XCHG   DI,[013FH]
-      XCHG   DI,[BX]
-      XCHG   AX,[BX+SI+65]
-      XCHG   AX,[BX+SI-128]
-      XCHG   AX,[BX+DI+66]
-      XCHG   AX,[BX+DI-128]
-      XCHG   AX,[BP+SI+67]
-      XCHG   AX,[BP+SI-128]
-      XCHG   AX,[BP+DI+68]
-      XCHG   AX,[BP+DI-128]
-      XCHG   AX,[SI+69]
-      XCHG   AX,[SI-128]
-      XCHG   AX,[DI+70]
-      XCHG   AX,[DI-128]
-      XCHG   AX,[BP+71]
-      XCHG   AX,[BP-128]
-      XCHG   AX,[BX+72]
-      XCHG   AX,[BX-128]
-      XCHG   CX,[BX+SI+73]
-      XCHG   CX,[BX+SI-128]
-      XCHG   CX,[BX+DI+74]
-      XCHG   CX,[BX+DI-128]
-      XCHG   CX,[BP+SI+75]
-      XCHG   CX,[BP+SI-128]
-      XCHG   CX,[BP+DI+76]
-      XCHG   CX,[BP+DI-128]
-      XCHG   CX,[SI+77]
-      XCHG   CX,[SI-128]
-      XCHG   CX,[DI+78]
-      XCHG   CX,[DI-128]
-      XCHG   CX,[BP+79]
-      XCHG   CX,[BP-128]
-      XCHG   CX,[BX+80]
-      XCHG   CX,[BX-128]
-      XCHG   DX,[BX+SI+81]
-      XCHG   DX,[BX+SI-128]
-      XCHG   DX,[BX+DI+82]
-      XCHG   DX,[BX+DI-128]
-      XCHG   DX,[BP+SI+83]
-      XCHG   DX,[BP+SI-128]
-      XCHG   DX,[BP+DI+84]
-      XCHG   DX,[BP+DI-128]
-      XCHG   DX,[SI+85]
-      XCHG   DX,[SI-128]
-      XCHG   DX,[DI+86]
-      XCHG   DX,[DI-128]
-      XCHG   DX,[BP+87]
-      XCHG   DX,[BP-128]
-      XCHG   DX,[BX+88]
-      XCHG   DX,[BX-128]
-      XCHG   BX,[BX+SI+89]
-      XCHG   BX,[BX+SI-128]
-      XCHG   BX,[BX+DI+90]
-      XCHG   BX,[BX+DI-128]
-      XCHG   BX,[BP+SI+91]
-      XCHG   BX,[BP+SI-128]
-      XCHG   BX,[BP+DI+92]
-      XCHG   BX,[BP+DI-128]
-      XCHG   BX,[SI+93]
-      XCHG   BX,[SI-128]
-      XCHG   BX,[DI+94]
-      XCHG   BX,[DI-128]
-      XCHG   BX,[BP+95]
-      XCHG   BX,[BP-128]
-      XCHG   BX,[BX+96]
-      XCHG   BX,[BX-128]
-      XCHG   SP,[BX+SI+97]
-      XCHG   SP,[BX+SI-128]
-      XCHG   SP,[BX+DI+98]
-      XCHG   SP,[BX+DI-128]
-      XCHG   SP,[BP+SI+99]
-      XCHG   SP,[BP+SI-128]
-      XCHG   SP,[BP+DI+100]
-      XCHG   SP,[BP+DI-128]
-      XCHG   SP,[SI+101]
-      XCHG   SP,[SI-128]
-      XCHG   SP,[DI+102]
-      XCHG   SP,[DI-128]
-      XCHG   SP,[BP+103]
-      XCHG   SP,[BP-128]
-      XCHG   SP,[BX+104]
-      XCHG   SP,[BX-128]
-      XCHG   BP,[BX+SI+105]
-      XCHG   BP,[BX+SI-128]
-      XCHG   BP,[BX+DI+106]
-      XCHG   BP,[BX+DI-128]
-      XCHG   BP,[BP+SI+107]
-      XCHG   BP,[BP+SI-128]
-      XCHG   BP,[BP+DI+108]
-      XCHG   BP,[BP+DI-128]
-      XCHG   BP,[SI+109]
-      XCHG   BP,[SI-128]
-      XCHG   BP,[DI+110]
-      XCHG   BP,[DI-128]
-      XCHG   BP,[BP+111]
-      XCHG   BP,[BP-128]
-      XCHG   BP,[BX+112]
-      XCHG   BP,[BX-128]
-      XCHG   SI,[BX+SI+113]
-      XCHG   SI,[BX+SI-128]
-      XCHG   SI,[BX+DI+114]
-      XCHG   SI,[BX+DI-128]
-      XCHG   SI,[BP+SI+115]
-      XCHG   SI,[BP+SI-128]
-      XCHG   SI,[BP+DI+116]
-      XCHG   SI,[BP+DI-128]
-      XCHG   SI,[SI+117]
-      XCHG   SI,[SI-128]
-      XCHG   SI,[DI+118]
-      XCHG   SI,[DI-128]
-      XCHG   SI,[BP+119]
-      XCHG   SI,[BP-128]
-      XCHG   SI,[BX+120]
-      XCHG   SI,[BX-128]
-      XCHG   DI,[BX+SI+121]
-      XCHG   DI,[BX+SI-128]
-      XCHG   DI,[BX+DI+122]
-      XCHG   DI,[BX+DI-128]
-      XCHG   DI,[BP+SI+123]
-      XCHG   DI,[BP+SI-128]
-      XCHG   DI,[BP+DI+124]
-      XCHG   DI,[BP+DI-128]
-      XCHG   DI,[SI+125]
-      XCHG   DI,[SI-128]
-      XCHG   DI,[DI+126]
-      XCHG   DI,[DI-128]
-      XCHG   DI,[BP+127]
-      XCHG   DI,[BP-128]
-      XCHG   DI,[BX-128]
-      XCHG   DI,[BX+0]
-      XCHG   AX,[BX+SI+0181H]
-      XCHG   AX,[BX+DI+0182H]
-      XCHG   AX,[BP+SI+0183H]
-      XCHG   AX,[BP+DI+0184H]
-      XCHG   AX,[SI+0185H]
-      XCHG   AX,[DI+0186H]
-      XCHG   AX,[BP+0187H]
-      XCHG   AX,[BX+0188H]
-      MOV    [BX+DI+008AH],CL
-      MOV    [BP+SI+008BH],CL
-      MOV    [BP+DI+008CH],CL
-      MOV    [SI+008DH],CL
-      MOV    [DI+008EH],CL
-      MOV    [BP+008FH],CL
-      MOV    [BX+0090H],CL
-      MOV    [BX+SI+0091H],DL
-      MOV    [BX+DI+0092H],DL
-      MOV    [BP+SI+0093H],DL
-      MOV    [BP+DI+0094H],DL
-      MOV    [SI+0095H],DL
-      MOV    [DI+0096H],DL
-      MOV    [BP+0097H],DL
-      MOV    [BX+0098H],DL
-      MOV    [BX+SI+0099H],BL
-      MOV    [BX+DI+009AH],BL
-      MOV    [BP+SI+009BH],BL
-      MOV    [BP+DI+009CH],BL
-      MOV    [SI+009DH],BL
-      MOV    [DI+009EH],BL
-      MOV    [BP+009FH],BL
-      MOV    [BX+00A0H],BL
-      MOV    [BX+SI+00A1H],AH
-      MOV    [BX+DI+00A2H],AH
-      MOV    [BP+SI+00A3H],AH
-      MOV    [BP+DI+00A4H],AH
-      MOV    [SI+00A5H],AH
-      MOV    [DI+00A6H],AH
-      MOV    [BP+00A7H],AH
-      MOV    [BX+00A8H],AH
+      MOV    [BX+DI+8B8AH],CL
+      MOV    [BP+SI+8B8AH],CL
+      MOV    [BP+DI+8B8AH],CL
+      MOV    [SI+8B8AH],CL
+      MOV    [DI+8B8AH],CL
+      MOV    [BP+8B8AH],CL
+      MOV    [BX+8B8AH],CL
+      MOV    [BX+SI+8B8AH],DL
+      MOV    [BX+DI+8B8AH],DL
+      MOV    [BP+SI+8B8AH],DL
+      MOV    [BP+DI+8B8AH],DL
+      MOV    [SI+8B8AH],DL
+      MOV    [DI+8B8AH],DL
+      MOV    [BP+8B8AH],DL
+      MOV    [BX+8B8AH],DL
+      MOV    [BX+SI+8B8AH],BL
+      MOV    [BX+DI+8B8AH],BL
+      MOV    [BP+SI+8B8AH],BL
+      MOV    [BP+DI+8B8AH],BL
+      MOV    [SI+8B8AH],BL
+      MOV    [DI+8B8AH],BL
+      MOV    [BP+8B8AH],BL
+      MOV    [BX+8B8AH],BL
+      MOV    [BX+SI+8B8AH],AH
+      MOV    [BX+DI+8B8AH],AH
+      MOV    [BP+SI+8B8AH],AH
+      MOV    [BP+DI+8B8AH],AH
+      MOV    [SI+8B8AH],AH
+      MOV    [DI+8B8AH],AH
+      MOV    [BP+8B8AH],AH
+      MOV    [BX+8B8AH],AH
       MOV    AL,AL
-      MOV    CL,AL
-      MOV    DL,AL
-      MOV    BL,AL
-      MOV    AH,AL
-      MOV    AL,CL
-      MOV    CL,CL
-      MOV    DL,CL
-      MOV    BL,CL
-      MOV    AH,CL
-      MOV    AL,DL
-      MOV    CL,DL
-      MOV    DL,DL
-      MOV    BL,DL
-      MOV    AH,DL
-      MOV    AL,BL
-      MOV    CL,BL
-      MOV    DL,BL
-      MOV    BL,BL
-      MOV    AH,BL
-      MOV    AL,AH
-      MOV    CL,AH
-      MOV    DL,AH
-      MOV    BL,AH
-      MOV    AH,AH
-      MOV    [BX+SI],AL
-      MOV    [BX+DI],AL
-      MOV    [BP+SI],AL
-      MOV    [BP+DI],AL
-      MOV    [SI],AL
-      MOV    [DI],AL
-      MOV    [0107H],AL
-      MOV    [BX],AL
-      MOV    [BX+SI],CL
-      MOV    [BX+DI],CL
-      MOV    [BP+SI],CL
-      MOV    [BP+DI],CL
-      MOV    [SI],CL
-      MOV    [DI],CL
-      MOV    [010FH],CL
-      MOV    [BX],CL
-      MOV    [BX+SI],DL
-      MOV    [BX+DI],DL
-      MOV    [BP+SI],DL
-      MOV    [BP+DI],DL
-      MOV    [SI],DL
-      MOV    [DI],DL
-      MOV    [0117H],DL
-      MOV    [BX],DL
-      MOV    [BX+SI],BL
-      MOV    [BX+DI],BL
-      MOV    [BP+SI],BL
-      MOV    [BP+DI],BL
-      MOV    [SI],BL
-      MOV    [DI],BL
-      MOV    [011FH],BL
-      MOV    [BX],BL
-      MOV    [BX+SI],AH
-      MOV    [BX+DI],AH
-      MOV    [BP+SI],AH
-      MOV    [BP+DI],AH
-      MOV    [SI],AH
-      MOV    [DI],AH
-      MOV    [0127H],AH
-      MOV    [BX],AH
-      MOV    [BX+SI+65],AL
-      MOV    [BX+SI-128],AL
-      MOV    [BX+DI+66],AL
-      MOV    [BX+DI-128],AL
-      MOV    [BP+SI+67],AL
-      MOV    [BP+SI-128],AL
-      MOV    [BP+DI+68],AL
-      MOV    [BP+DI-128],AL
-      MOV    [SI+69],AL
-      MOV    [SI-128],AL
-      MOV    [DI+70],AL
-      MOV    [DI-128],AL
-      MOV    [BP+71],AL
-      MOV    [BP-128],AL
-      MOV    [BX+72],AL
-      MOV    [BX-128],AL
-      MOV    [BX+SI+73],CL
-      MOV    [BX+SI-128],CL
-      MOV    [BX+DI+74],CL
-      MOV    [BX+DI-128],CL
-      MOV    [BP+SI+75],CL
-      MOV    [BP+SI-128],CL
-      MOV    [BP+DI+76],CL
-      MOV    [BP+DI-128],CL
-      MOV    [SI+77],CL
-      MOV    [SI-128],CL
-      MOV    [DI+78],CL
-      MOV    [DI-128],CL
-      MOV    [BP+79],CL
-      MOV    [BP-128],CL
-      MOV    [BX+80],CL
-      MOV    [BX-128],CL
-      MOV    [BX+SI+81],DL
-      MOV    [BX+SI-128],DL
-      MOV    [BX+DI+82],DL
-      MOV    [BX+DI-128],DL
-      MOV    [BP+SI+83],DL
-      MOV    [BP+SI-128],DL
-      MOV    [BP+DI+84],DL
-      MOV    [BP+DI-128],DL
-      MOV    [SI+85],DL
-      MOV    [SI-128],DL
-      MOV    [DI+86],DL
-      MOV    [DI-128],DL
-      MOV    [BP+87],DL
-      MOV    [BP-128],DL
-      MOV    [BX+88],DL
-      MOV    [BX-128],DL
-      MOV    [BX+SI+89],BL
-      MOV    [BX+SI-128],BL
-      MOV    [BX+DI+90],BL
-      MOV    [BX+DI-128],BL
-      MOV    [BP+SI+91],BL
-      MOV    [BP+SI-128],BL
-      MOV    [BP+DI+92],BL
-      MOV    [BP+DI-128],BL
-      MOV    [SI+93],BL
-      MOV    [SI-128],BL
-      MOV    [DI+94],BL
-      MOV    [DI-128],BL
-      MOV    [BP+95],BL
-      MOV    [BP-128],BL
-      MOV    [BX+96],BL
-      MOV    [BX-128],BL
-      MOV    [BX+SI+97],AH
-      MOV    [BX+SI-128],AH
-      MOV    [BX+DI+98],AH
-      MOV    [BX+DI-128],AH
-      MOV    [BP+SI+99],AH
-      MOV    [BP+SI-128],AH
-      MOV    [BP+DI+100],AH
-      MOV    [BP+DI-128],AH
-      MOV    [SI+101],AH
-      MOV    [SI-128],AH
-      MOV    [DI+102],AH
-      MOV    [DI-128],AH
-      MOV    [BP+103],AH
-      MOV    [BP-128],AH
-      MOV    [BX+104],AH
-      MOV    [BX-128],AH
-      MOV    [BX+SI+0181H],AL
-      MOV    [BX+DI+0182H],AL
-      MOV    [BP+SI+0183H],AL
-      MOV    [BP+DI+0184H],AL
-      MOV    [SI+0185H],AL
-      MOV    [DI+0186H],AL
-      MOV    [BP+0187H],AL
-      MOV    [BX+0188H],AL
-      MOV    [BX+SI+0189H],CL
-      MOV    [BP+SI+008BH],CX
-      MOV    [BP+DI+008CH],CX
-      MOV    [SI+008DH],CX
-      MOV    [DI+008EH],CX
-      MOV    [BP+008FH],CX
-      MOV    [BX+0090H],CX
-      MOV    [BX+SI+0091H],DX
-      MOV    [BX+DI+0092H],DX
-      MOV    [BP+SI+0093H],DX
-      MOV    [BP+DI+0094H],DX
-      MOV    [SI+0095H],DX
-      MOV    [DI+0096H],DX
-      MOV    [BP+0097H],DX
-      MOV    [BX+0098H],DX
-      MOV    [BX+SI+0099H],BX
-      MOV    [BX+DI+009AH],BX
-      MOV    [BP+SI+009BH],BX
-      MOV    [BP+DI+009CH],BX
-      MOV    [SI+009DH],BX
-      MOV    [DI+009EH],BX
-      MOV    [BP+009FH],BX
-      MOV    [BX+00A0H],BX
-      MOV    [BX+SI+00A1H],SP
-      MOV    [BX+DI+00A2H],SP
-      MOV    [BP+SI+00A3H],SP
-      MOV    [BP+DI+00A4H],SP
-      MOV    [SI+00A5H],SP
-      MOV    [DI+00A6H],SP
-      MOV    [BP+00A7H],SP
-      MOV    [BX+00A8H],SP
-      MOV    [BX+SI+00A9H],BP
-      MOV    [BX+DI+00AAH],BP
-      MOV    [BP+SI+00ABH],BP
-      MOV    [BP+DI+00ACH],BP
-      MOV    [SI+00ADH],BP
-      MOV    [DI+00AEH],BP
-      MOV    [BP+00AFH],BP
-      MOV    [BX+00B0H],BP
-      MOV    [BX+SI+00B1H],SI
-      MOV    [BX+DI+00B2H],SI
-      MOV    [BP+SI+00B3H],SI
-      MOV    [BP+DI+00B4H],SI
-      MOV    [SI+00B5H],SI
-      MOV    [DI+00B6H],SI
-      MOV    [BP+00B7H],SI
-      MOV    [BX+00B8H],SI
-      MOV    [BX+SI+00B9H],DI
-      MOV    [BX+DI+00BAH],DI
-      MOV    [BP+SI+00BBH],DI
-      MOV    [BP+DI+00BCH],DI
-      MOV    [SI+00BDH],DI
-      MOV    [DI+00BEH],DI
-      MOV    [BP+00BFH],DI
-      MOV    [BX+00C0H],DI
+      MOV    [BP+SI+8C8BH],CX
+      MOV    [BP+DI+8C8BH],CX
+      MOV    [SI+8C8BH],CX
+      MOV    [DI+8C8BH],CX
+      MOV    [BP+8C8BH],CX
+      MOV    [BX+8C8BH],CX
+      MOV    [BX+SI+8C8BH],DX
+      MOV    [BX+DI+8C8BH],DX
+      MOV    [BP+SI+8C8BH],DX
+      MOV    [BP+DI+8C8BH],DX
+      MOV    [SI+8C8BH],DX
+      MOV    [DI+8C8BH],DX
+      MOV    [BP+8C8BH],DX
+      MOV    [BX+8C8BH],DX
+      MOV    [BX+SI+8C8BH],BX
+      MOV    [BX+DI+8C8BH],BX
+      MOV    [BP+SI+8C8BH],BX
+      MOV    [BP+DI+8C8BH],BX
+      MOV    [SI+8C8BH],BX
+      MOV    [DI+8C8BH],BX
+      MOV    [BP+8C8BH],BX
+      MOV    [BX+8C8BH],BX
+      MOV    [BX+SI+8C8BH],SP
+      MOV    [BX+DI+8C8BH],SP
+      MOV    [BP+SI+8C8BH],SP
+      MOV    [BP+DI+8C8BH],SP
+      MOV    [SI+8C8BH],SP
+      MOV    [DI+8C8BH],SP
+      MOV    [BP+8C8BH],SP
+      MOV    [BX+8C8BH],SP
+      MOV    [BX+SI+8C8BH],BP
+      MOV    [BX+DI+8C8BH],BP
+      MOV    [BP+SI+8C8BH],BP
+      MOV    [BP+DI+8C8BH],BP
+      MOV    [SI+8C8BH],BP
+      MOV    [DI+8C8BH],BP
+      MOV    [BP+8C8BH],BP
+      MOV    [BX+8C8BH],BP
+      MOV    [BX+SI+8C8BH],SI
+      MOV    [BX+DI+8C8BH],SI
+      MOV    [BP+SI+8C8BH],SI
+      MOV    [BP+DI+8C8BH],SI
+      MOV    [SI+8C8BH],SI
+      MOV    [DI+8C8BH],SI
+      MOV    [BP+8C8BH],SI
+      MOV    [BX+8C8BH],SI
+      MOV    [BX+SI+8C8BH],DI
+      MOV    [BX+DI+8C8BH],DI
+      MOV    [BP+SI+8C8BH],DI
+      MOV    [BP+DI+8C8BH],DI
+      MOV    [SI+8C8BH],DI
+      MOV    [DI+8C8BH],DI
+      MOV    [BP+8C8BH],DI
+      MOV    [BX+8C8BH],DI
       MOV    AX,AX
-      MOV    CX,AX
-      MOV    DX,AX
-      MOV    BX,AX
-      MOV    SP,AX
-      MOV    BP,AX
-      MOV    SI,AX
-      MOV    DI,AX
-      MOV    AX,CX
-      MOV    CX,CX
-      MOV    DX,CX
-      MOV    BX,CX
-      MOV    SP,CX
-      MOV    BP,CX
-      MOV    SI,CX
-      MOV    DI,CX
-      MOV    AX,DX
-      MOV    CX,DX
-      MOV    DX,DX
-      MOV    BX,DX
-      MOV    SP,DX
-      MOV    BP,DX
-      MOV    SI,DX
-      MOV    DI,DX
-      MOV    AX,BX
-      MOV    CX,BX
-      MOV    DX,BX
-      MOV    BX,BX
-      MOV    SP,BX
-      MOV    BP,BX
-      MOV    SI,BX
-      MOV    DI,BX
-      MOV    AX,SP
-      MOV    CX,SP
-      MOV    DX,SP
-      MOV    BX,SP
-      MOV    SP,SP
-      MOV    BP,SP
-      MOV    SI,SP
-      MOV    DI,SP
-      MOV    AX,BP
-      MOV    CX,BP
-      MOV    DX,BP
-      MOV    BX,BP
-      MOV    SP,BP
-      MOV    BP,BP
-      MOV    SI,BP
-      MOV    DI,BP
-      MOV    AX,SI
-      MOV    CX,SI
-      MOV    DX,SI
-      MOV    BX,SI
-      MOV    SP,SI
-      MOV    BP,SI
-      MOV    SI,SI
-      MOV    DI,SI
-      MOV    AX,DI
-      MOV    CX,DI
-      MOV    DX,DI
-      MOV    BX,DI
-      MOV    SP,DI
-      MOV    BP,DI
-      MOV    SI,DI
-      MOV    DI,DI
-      MOV    [BX+SI],AX
-      MOV    [BX+DI],AX
-      MOV    [BP+SI],AX
-      MOV    [BP+DI],AX
-      MOV    [SI],AX
-      MOV    [DI],AX
-      MOV    [0107H],AX
-      MOV    [BX],AX
-      MOV    [BX+SI],CX
-      MOV    [BX+DI],CX
-      MOV    [BP+SI],CX
-      MOV    [BP+DI],CX
-      MOV    [SI],CX
-      MOV    [DI],CX
-      MOV    [010FH],CX
-      MOV    [BX],CX
-      MOV    [BX+SI],DX
-      MOV    [BX+DI],DX
-      MOV    [BP+SI],DX
-      MOV    [BP+DI],DX
-      MOV    [SI],DX
-      MOV    [DI],DX
-      MOV    [0117H],DX
-      MOV    [BX],DX
-      MOV    [BX+SI],BX
-      MOV    [BX+DI],BX
-      MOV    [BP+SI],BX
-      MOV    [BP+DI],BX
-      MOV    [SI],BX
-      MOV    [DI],BX
-      MOV    [011FH],BX
-      MOV    [BX],BX
-      MOV    [BX+SI],SP
-      MOV    [BX+DI],SP
-      MOV    [BP+SI],SP
-      MOV    [BP+DI],SP
-      MOV    [SI],SP
-      MOV    [DI],SP
-      MOV    [0127H],SP
-      MOV    [BX],SP
-      MOV    [BX+SI],BP
-      MOV    [BX+DI],BP
-      MOV    [BP+SI],BP
-      MOV    [BP+DI],BP
-      MOV    [SI],BP
-      MOV    [DI],BP
-      MOV    [012FH],BP
-      MOV    [BX],BP
-      MOV    [BX+SI],SI
-      MOV    [BX+DI],SI
-      MOV    [BP+SI],SI
-      MOV    [BP+DI],SI
-      MOV    [SI],SI
-      MOV    [DI],SI
-      MOV    [0137H],SI
-      MOV    [BX],SI
-      MOV    [BX+SI],DI
-      MOV    [BX+DI],DI
-      MOV    [BP+SI],DI
-      MOV    [BP+DI],DI
-      MOV    [SI],DI
-      MOV    [DI],DI
-      MOV    [013FH],DI
-      MOV    [BX],DI
-      MOV    [BX+SI+65],AX
-      MOV    [BX+SI-128],AX
-      MOV    [BX+DI+66],AX
-      MOV    [BX+DI-128],AX
-      MOV    [BP+SI+67],AX
-      MOV    [BP+SI-128],AX
-      MOV    [BP+DI+68],AX
-      MOV    [BP+DI-128],AX
-      MOV    [SI+69],AX
-      MOV    [SI-128],AX
-      MOV    [DI+70],AX
-      MOV    [DI-128],AX
-      MOV    [BP+71],AX
-      MOV    [BP-128],AX
-      MOV    [BX+72],AX
-      MOV    [BX-128],AX
-      MOV    [BX+SI+73],CX
-      MOV    [BX+SI-128],CX
-      MOV    [BX+DI+74],CX
-      MOV    [BX+DI-128],CX
-      MOV    [BP+SI+75],CX
-      MOV    [BP+SI-128],CX
-      MOV    [BP+DI+76],CX
-      MOV    [BP+DI-128],CX
-      MOV    [SI+77],CX
-      MOV    [SI-128],CX
-      MOV    [DI+78],CX
-      MOV    [DI-128],CX
-      MOV    [BP+79],CX
-      MOV    [BP-128],CX
-      MOV    [BX+80],CX
-      MOV    [BX-128],CX
-      MOV    [BX+SI+81],DX
-      MOV    [BX+SI-128],DX
-      MOV    [BX+DI+82],DX
-      MOV    [BX+DI-128],DX
-      MOV    [BP+SI+83],DX
-      MOV    [BP+SI-128],DX
-      MOV    [BP+DI+84],DX
-      MOV    [BP+DI-128],DX
-      MOV    [SI+85],DX
-      MOV    [SI-128],DX
-      MOV    [DI+86],DX
-      MOV    [DI-128],DX
-      MOV    [BP+87],DX
-      MOV    [BP-128],DX
-      MOV    [BX+88],DX
-      MOV    [BX-128],DX
-      MOV    [BX+SI+89],BX
-      MOV    [BX+SI-128],BX
-      MOV    [BX+DI+90],BX
-      MOV    [BX+DI-128],BX
-      MOV    [BP+SI+91],BX
-      MOV    [BP+SI-128],BX
-      MOV    [BP+DI+92],BX
-      MOV    [BP+DI-128],BX
-      MOV    [SI+93],BX
-      MOV    [SI-128],BX
-      MOV    [DI+94],BX
-      MOV    [DI-128],BX
-      MOV    [BP+95],BX
-      MOV    [BP-128],BX
-      MOV    [BX+96],BX
-      MOV    [BX-128],BX
-      MOV    [BX+SI+97],SP
-      MOV    [BX+SI-128],SP
-      MOV    [BX+DI+98],SP
-      MOV    [BX+DI-128],SP
-      MOV    [BP+SI+99],SP
-      MOV    [BP+SI-128],SP
-      MOV    [BP+DI+100],SP
-      MOV    [BP+DI-128],SP
-      MOV    [SI+101],SP
-      MOV    [SI-128],SP
-      MOV    [DI+102],SP
-      MOV    [DI-128],SP
-      MOV    [BP+103],SP
-      MOV    [BP-128],SP
-      MOV    [BX+104],SP
-      MOV    [BX-128],SP
-      MOV    [BX+SI+105],BP
-      MOV    [BX+SI-128],BP
-      MOV    [BX+DI+106],BP
-      MOV    [BX+DI-128],BP
-      MOV    [BP+SI+107],BP
-      MOV    [BP+SI-128],BP
-      MOV    [BP+DI+108],BP
-      MOV    [BP+DI-128],BP
-      MOV    [SI+109],BP
-      MOV    [SI-128],BP
-      MOV    [DI+110],BP
-      MOV    [DI-128],BP
-      MOV    [BP+111],BP
-      MOV    [BP-128],BP
-      MOV    [BX+112],BP
-      MOV    [BX-128],BP
-      MOV    [BX+SI+113],SI
-      MOV    [BX+SI-128],SI
-      MOV    [BX+DI+114],SI
-      MOV    [BX+DI-128],SI
-      MOV    [BP+SI+115],SI
-      MOV    [BP+SI-128],SI
-      MOV    [BP+DI+116],SI
-      MOV    [BP+DI-128],SI
-      MOV    [SI+117],SI
-      MOV    [SI-128],SI
-      MOV    [DI+118],SI
-      MOV    [DI-128],SI
-      MOV    [BP+119],SI
-      MOV    [BP-128],SI
-      MOV    [BX+120],SI
-      MOV    [BX-128],SI
-      MOV    [BX+SI+121],DI
-      MOV    [BX+SI-128],DI
-      MOV    [BX+DI+122],DI
-      MOV    [BX+DI-128],DI
-      MOV    [BP+SI+123],DI
-      MOV    [BP+SI-128],DI
-      MOV    [BP+DI+124],DI
-      MOV    [BP+DI-128],DI
-      MOV    [SI+125],DI
-      MOV    [SI-128],DI
-      MOV    [DI+126],DI
-      MOV    [DI-128],DI
-      MOV    [BP+127],DI
-      MOV    [BP-128],DI
-      MOV    [BX-128],DI
-      MOV    [BX+0],DI
-      MOV    [BX+SI+0181H],AX
-      MOV    [BX+DI+0182H],AX
-      MOV    [BP+SI+0183H],AX
-      MOV    [BP+DI+0184H],AX
-      MOV    [SI+0185H],AX
-      MOV    [DI+0186H],AX
-      MOV    [BP+0187H],AX
-      MOV    [BX+0188H],AX
-      MOV    [BX+SI+0189H],CX
-      MOV    [BX+DI+018AH],CX
-      MOV    CL,[BP+DI+008CH]
-      MOV    CL,[SI+008DH]
-      MOV    CL,[DI+008EH]
-      MOV    CL,[BP+008FH]
-      MOV    CL,[BX+0090H]
-      MOV    DL,[BX+SI+0091H]
-      MOV    DL,[BX+DI+0092H]
-      MOV    DL,[BP+SI+0093H]
-      MOV    DL,[BP+DI+0094H]
-      MOV    DL,[SI+0095H]
-      MOV    DL,[DI+0096H]
-      MOV    DL,[BP+0097H]
-      MOV    DL,[BX+0098H]
-      MOV    BL,[BX+SI+0099H]
-      MOV    BL,[BX+DI+009AH]
-      MOV    BL,[BP+SI+009BH]
-      MOV    BL,[BP+DI+009CH]
-      MOV    BL,[SI+009DH]
-      MOV    BL,[DI+009EH]
-      MOV    BL,[BP+009FH]
-      MOV    BL,[BX+00A0H]
-      MOV    AH,[BX+SI+00A1H]
-      MOV    AH,[BX+DI+00A2H]
-      MOV    AH,[BP+SI+00A3H]
-      MOV    AH,[BP+DI+00A4H]
-      MOV    AH,[SI+00A5H]
-      MOV    AH,[DI+00A6H]
-      MOV    AH,[BP+00A7H]
-      MOV    AH,[BX+00A8H]
-      MOV    AL,[BX+SI]
-      MOV    AL,[BX+DI]
-      MOV    AL,[BP+SI]
-      MOV    AL,[BP+DI]
-      MOV    AL,[SI]
-      MOV    AL,[DI]
-      MOV    AL,[0107H]
-      MOV    AL,[BX]
-      MOV    CL,[BX+SI]
-      MOV    CL,[BX+DI]
-      MOV    CL,[BP+SI]
-      MOV    CL,[BP+DI]
-      MOV    CL,[SI]
-      MOV    CL,[DI]
-      MOV    CL,[010FH]
-      MOV    CL,[BX]
-      MOV    DL,[BX+SI]
-      MOV    DL,[BX+DI]
-      MOV    DL,[BP+SI]
-      MOV    DL,[BP+DI]
-      MOV    DL,[SI]
-      MOV    DL,[DI]
-      MOV    DL,[0117H]
-      MOV    DL,[BX]
-      MOV    BL,[BX+SI]
-      MOV    BL,[BX+DI]
-      MOV    BL,[BP+SI]
-      MOV    BL,[BP+DI]
-      MOV    BL,[SI]
-      MOV    BL,[DI]
-      MOV    BL,[011FH]
-      MOV    BL,[BX]
-      MOV    AH,[BX+SI]
-      MOV    AH,[BX+DI]
-      MOV    AH,[BP+SI]
-      MOV    AH,[BP+DI]
-      MOV    AH,[SI]
-      MOV    AH,[DI]
-      MOV    AH,[0127H]
-      MOV    AH,[BX]
-      MOV    AL,[BX+SI+65]
-      MOV    AL,[BX+SI-128]
-      MOV    AL,[BX+DI+66]
-      MOV    AL,[BX+DI-128]
-      MOV    AL,[BP+SI+67]
-      MOV    AL,[BP+SI-128]
-      MOV    AL,[BP+DI+68]
-      MOV    AL,[BP+DI-128]
-      MOV    AL,[SI+69]
-      MOV    AL,[SI-128]
-      MOV    AL,[DI+70]
-      MOV    AL,[DI-128]
-      MOV    AL,[BP+71]
-      MOV    AL,[BP-128]
-      MOV    AL,[BX+72]
-      MOV    AL,[BX-128]
-      MOV    CL,[BX+SI+73]
-      MOV    CL,[BX+SI-128]
-      MOV    CL,[BX+DI+74]
-      MOV    CL,[BX+DI-128]
-      MOV    CL,[BP+SI+75]
-      MOV    CL,[BP+SI-128]
-      MOV    CL,[BP+DI+76]
-      MOV    CL,[BP+DI-128]
-      MOV    CL,[SI+77]
-      MOV    CL,[SI-128]
-      MOV    CL,[DI+78]
-      MOV    CL,[DI-128]
-      MOV    CL,[BP+79]
-      MOV    CL,[BP-128]
-      MOV    CL,[BX+80]
-      MOV    CL,[BX-128]
-      MOV    DL,[BX+SI+81]
-      MOV    DL,[BX+SI-128]
-      MOV    DL,[BX+DI+82]
-      MOV    DL,[BX+DI-128]
-      MOV    DL,[BP+SI+83]
-      MOV    DL,[BP+SI-128]
-      MOV    DL,[BP+DI+84]
-      MOV    DL,[BP+DI-128]
-      MOV    DL,[SI+85]
-      MOV    DL,[SI-128]
-      MOV    DL,[DI+86]
-      MOV    DL,[DI-128]
-      MOV    DL,[BP+87]
-      MOV    DL,[BP-128]
-      MOV    DL,[BX+88]
-      MOV    DL,[BX-128]
-      MOV    BL,[BX+SI+89]
-      MOV    BL,[BX+SI-128]
-      MOV    BL,[BX+DI+90]
-      MOV    BL,[BX+DI-128]
-      MOV    BL,[BP+SI+91]
-      MOV    BL,[BP+SI-128]
-      MOV    BL,[BP+DI+92]
-      MOV    BL,[BP+DI-128]
-      MOV    BL,[SI+93]
-      MOV    BL,[SI-128]
-      MOV    BL,[DI+94]
-      MOV    BL,[DI-128]
-      MOV    BL,[BP+95]
-      MOV    BL,[BP-128]
-      MOV    BL,[BX+96]
-      MOV    BL,[BX-128]
-      MOV    AH,[BX+SI+97]
-      MOV    AH,[BX+SI-128]
-      MOV    AH,[BX+DI+98]
-      MOV    AH,[BX+DI-128]
-      MOV    AH,[BP+SI+99]
-      MOV    AH,[BP+SI-128]
-      MOV    AH,[BP+DI+100]
-      MOV    AH,[BP+DI-128]
-      MOV    AH,[SI+101]
-      MOV    AH,[SI-128]
-      MOV    AH,[DI+102]
-      MOV    AH,[DI-128]
-      MOV    AH,[BP+103]
-      MOV    AH,[BP-128]
-      MOV    AH,[BX+104]
-      MOV    AH,[BX-128]
-      MOV    AL,[BX+SI+0181H]
-      MOV    AL,[BX+DI+0182H]
-      MOV    AL,[BP+SI+0183H]
-      MOV    AL,[BP+DI+0184H]
-      MOV    AL,[SI+0185H]
-      MOV    AL,[DI+0186H]
-      MOV    AL,[BP+0187H]
-      MOV    AL,[BX+0188H]
-      MOV    CL,[BX+SI+0189H]
-      MOV    CL,[BX+DI+018AH]
-      MOV    CL,[BP+SI+018BH]
-      MOV    CX,[SI+008DH]
-      MOV    CX,[DI+008EH]
-      MOV    CX,[BP+008FH]
-      MOV    CX,[BX+0090H]
-      MOV    DX,[BX+SI+0091H]
-      MOV    DX,[BX+DI+0092H]
-      MOV    DX,[BP+SI+0093H]
-      MOV    DX,[BP+DI+0094H]
-      MOV    DX,[SI+0095H]
-      MOV    DX,[DI+0096H]
-      MOV    DX,[BP+0097H]
-      MOV    DX,[BX+0098H]
-      MOV    BX,[BX+SI+0099H]
-      MOV    BX,[BX+DI+009AH]
-      MOV    BX,[BP+SI+009BH]
-      MOV    BX,[BP+DI+009CH]
-      MOV    BX,[SI+009DH]
-      MOV    BX,[DI+009EH]
-      MOV    BX,[BP+009FH]
-      MOV    BX,[BX+00A0H]
-      MOV    SP,[BX+SI+00A1H]
-      MOV    SP,[BX+DI+00A2H]
-      MOV    SP,[BP+SI+00A3H]
-      MOV    SP,[BP+DI+00A4H]
-      MOV    SP,[SI+00A5H]
-      MOV    SP,[DI+00A6H]
-      MOV    SP,[BP+00A7H]
-      MOV    SP,[BX+00A8H]
-      MOV    BP,[BX+SI+00A9H]
-      MOV    BP,[BX+DI+00AAH]
-      MOV    BP,[BP+SI+00ABH]
-      MOV    BP,[BP+DI+00ACH]
-      MOV    BP,[SI+00ADH]
-      MOV    BP,[DI+00AEH]
-      MOV    BP,[BP+00AFH]
-      MOV    BP,[BX+00B0H]
-      MOV    SI,[BX+SI+00B1H]
-      MOV    SI,[BX+DI+00B2H]
-      MOV    SI,[BP+SI+00B3H]
-      MOV    SI,[BP+DI+00B4H]
-      MOV    SI,[SI+00B5H]
-      MOV    SI,[DI+00B6H]
-      MOV    SI,[BP+00B7H]
-      MOV    SI,[BX+00B8H]
-      MOV    DI,[BX+SI+00B9H]
-      MOV    DI,[BX+DI+00BAH]
-      MOV    DI,[BP+SI+00BBH]
-      MOV    DI,[BP+DI+00BCH]
-      MOV    DI,[SI+00BDH]
-      MOV    DI,[DI+00BEH]
-      MOV    DI,[BP+00BFH]
-      MOV    DI,[BX+00C0H]
-      MOV    AX,[BX+SI]
-      MOV    AX,[BX+DI]
-      MOV    AX,[BP+SI]
-      MOV    AX,[BP+DI]
-      MOV    AX,[SI]
-      MOV    AX,[DI]
-      MOV    AX,[0107H]
-      MOV    AX,[BX]
-      MOV    CX,[BX+SI]
-      MOV    CX,[BX+DI]
-      MOV    CX,[BP+SI]
-      MOV    CX,[BP+DI]
-      MOV    CX,[SI]
-      MOV    CX,[DI]
-      MOV    CX,[010FH]
-      MOV    CX,[BX]
-      MOV    DX,[BX+SI]
-      MOV    DX,[BX+DI]
-      MOV    DX,[BP+SI]
-      MOV    DX,[BP+DI]
-      MOV    DX,[SI]
-      MOV    DX,[DI]
-      MOV    DX,[0117H]
-      MOV    DX,[BX]
-      MOV    BX,[BX+SI]
-      MOV    BX,[BX+DI]
-      MOV    BX,[BP+SI]
-      MOV    BX,[BP+DI]
-      MOV    BX,[SI]
-      MOV    BX,[DI]
-      MOV    BX,[011FH]
-      MOV    BX,[BX]
-      MOV    SP,[BX+SI]
-      MOV    SP,[BX+DI]
-      MOV    SP,[BP+SI]
-      MOV    SP,[BP+DI]
-      MOV    SP,[SI]
-      MOV    SP,[DI]
-      MOV    SP,[0127H]
-      MOV    SP,[BX]
-      MOV    BP,[BX+SI]
-      MOV    BP,[BX+DI]
-      MOV    BP,[BP+SI]
-      MOV    BP,[BP+DI]
-      MOV    BP,[SI]
-      MOV    BP,[DI]
-      MOV    BP,[012FH]
-      MOV    BP,[BX]
-      MOV    SI,[BX+SI]
-      MOV    SI,[BX+DI]
-      MOV    SI,[BP+SI]
-      MOV    SI,[BP+DI]
-      MOV    SI,[SI]
-      MOV    SI,[DI]
-      MOV    SI,[0137H]
-      MOV    SI,[BX]
-      MOV    DI,[BX+SI]
-      MOV    DI,[BX+DI]
-      MOV    DI,[BP+SI]
-      MOV    DI,[BP+DI]
-      MOV    DI,[SI]
-      MOV    DI,[DI]
-      MOV    DI,[013FH]
-      MOV    DI,[BX]
-      MOV    AX,[BX+SI+65]
-      MOV    AX,[BX+SI-128]
-      MOV    AX,[BX+DI+66]
-      MOV    AX,[BX+DI-128]
-      MOV    AX,[BP+SI+67]
-      MOV    AX,[BP+SI-128]
-      MOV    AX,[BP+DI+68]
-      MOV    AX,[BP+DI-128]
-      MOV    AX,[SI+69]
-      MOV    AX,[SI-128]
-      MOV    AX,[DI+70]
-      MOV    AX,[DI-128]
-      MOV    AX,[BP+71]
-      MOV    AX,[BP-128]
-      MOV    AX,[BX+72]
-      MOV    AX,[BX-128]
-      MOV    CX,[BX+SI+73]
-      MOV    CX,[BX+SI-128]
-      MOV    CX,[BX+DI+74]
-      MOV    CX,[BX+DI-128]
-      MOV    CX,[BP+SI+75]
-      MOV    CX,[BP+SI-128]
-      MOV    CX,[BP+DI+76]
-      MOV    CX,[BP+DI-128]
-      MOV    CX,[SI+77]
-      MOV    CX,[SI-128]
-      MOV    CX,[DI+78]
-      MOV    CX,[DI-128]
-      MOV    CX,[BP+79]
-      MOV    CX,[BP-128]
-      MOV    CX,[BX+80]
-      MOV    CX,[BX-128]
-      MOV    DX,[BX+SI+81]
-      MOV    DX,[BX+SI-128]
-      MOV    DX,[BX+DI+82]
-      MOV    DX,[BX+DI-128]
-      MOV    DX,[BP+SI+83]
-      MOV    DX,[BP+SI-128]
-      MOV    DX,[BP+DI+84]
-      MOV    DX,[BP+DI-128]
-      MOV    DX,[SI+85]
-      MOV    DX,[SI-128]
-      MOV    DX,[DI+86]
-      MOV    DX,[DI-128]
-      MOV    DX,[BP+87]
-      MOV    DX,[BP-128]
-      MOV    DX,[BX+88]
-      MOV    DX,[BX-128]
-      MOV    BX,[BX+SI+89]
-      MOV    BX,[BX+SI-128]
-      MOV    BX,[BX+DI+90]
-      MOV    BX,[BX+DI-128]
-      MOV    BX,[BP+SI+91]
-      MOV    BX,[BP+SI-128]
-      MOV    BX,[BP+DI+92]
-      MOV    BX,[BP+DI-128]
-      MOV    BX,[SI+93]
-      MOV    BX,[SI-128]
-      MOV    BX,[DI+94]
-      MOV    BX,[DI-128]
-      MOV    BX,[BP+95]
-      MOV    BX,[BP-128]
-      MOV    BX,[BX+96]
-      MOV    BX,[BX-128]
-      MOV    SP,[BX+SI+97]
-      MOV    SP,[BX+SI-128]
-      MOV    SP,[BX+DI+98]
-      MOV    SP,[BX+DI-128]
-      MOV    SP,[BP+SI+99]
-      MOV    SP,[BP+SI-128]
-      MOV    SP,[BP+DI+100]
-      MOV    SP,[BP+DI-128]
-      MOV    SP,[SI+101]
-      MOV    SP,[SI-128]
-      MOV    SP,[DI+102]
-      MOV    SP,[DI-128]
-      MOV    SP,[BP+103]
-      MOV    SP,[BP-128]
-      MOV    SP,[BX+104]
-      MOV    SP,[BX-128]
-      MOV    BP,[BX+SI+105]
-      MOV    BP,[BX+SI-128]
-      MOV    BP,[BX+DI+106]
-      MOV    BP,[BX+DI-128]
-      MOV    BP,[BP+SI+107]
-      MOV    BP,[BP+SI-128]
-      MOV    BP,[BP+DI+108]
-      MOV    BP,[BP+DI-128]
-      MOV    BP,[SI+109]
-      MOV    BP,[SI-128]
-      MOV    BP,[DI+110]
-      MOV    BP,[DI-128]
-      MOV    BP,[BP+111]
-      MOV    BP,[BP-128]
-      MOV    BP,[BX+112]
-      MOV    BP,[BX-128]
-      MOV    SI,[BX+SI+113]
-      MOV    SI,[BX+SI-128]
-      MOV    SI,[BX+DI+114]
-      MOV    SI,[BX+DI-128]
-      MOV    SI,[BP+SI+115]
-      MOV    SI,[BP+SI-128]
-      MOV    SI,[BP+DI+116]
-      MOV    SI,[BP+DI-128]
-      MOV    SI,[SI+117]
-      MOV    SI,[SI-128]
-      MOV    SI,[DI+118]
-      MOV    SI,[DI-128]
-      MOV    SI,[BP+119]
-      MOV    SI,[BP-128]
-      MOV    SI,[BX+120]
-      MOV    SI,[BX-128]
-      MOV    DI,[BX+SI+121]
-      MOV    DI,[BX+SI-128]
-      MOV    DI,[BX+DI+122]
-      MOV    DI,[BX+DI-128]
-      MOV    DI,[BP+SI+123]
-      MOV    DI,[BP+SI-128]
-      MOV    DI,[BP+DI+124]
-      MOV    DI,[BP+DI-128]
-      MOV    DI,[SI+125]
-      MOV    DI,[SI-128]
-      MOV    DI,[DI+126]
-      MOV    DI,[DI-128]
-      MOV    DI,[BP+127]
-      MOV    DI,[BP-128]
-      MOV    DI,[BX-128]
-      MOV    DI,[BX+0]
-      MOV    AX,[BX+SI+0181H]
-      MOV    AX,[BX+DI+0182H]
-      MOV    AX,[BP+SI+0183H]
-      MOV    AX,[BP+DI+0184H]
-      MOV    AX,[SI+0185H]
-      MOV    AX,[DI+0186H]
-      MOV    AX,[BP+0187H]
-      MOV    AX,[BX+0188H]
-      MOV    CX,[BX+SI+0189H]
-      MOV    CX,[BX+DI+018AH]
-      MOV    CX,[BP+SI+018BH]
-      MOV    CX,[BP+DI+018CH]
-      MOV    [DI+008EH],CS
-      MOV    [BP+008FH],CS
-      MOV    [BX+0090H],CS
-      MOV    [BX+SI+0091H],SS
-      MOV    [BX+DI+0092H],SS
-      MOV    [BP+SI+0093H],SS
-      MOV    [BP+DI+0094H],SS
-      MOV    [SI+0095H],SS
-      MOV    [DI+0096H],SS
-      MOV    [BP+0097H],SS
-      MOV    [BX+0098H],SS
-      MOV    [BX+SI+0099H],DS
-      MOV    [BX+DI+009AH],DS
-      MOV    [BP+SI+009BH],DS
-      MOV    [BP+DI+009CH],DS
-      MOV    [SI+009DH],DS
-      MOV    [DI+009EH],DS
-      MOV    [BP+009FH],DS
-      MOV    [BX+00A0H],DS
-      MOV    [BX+SI+00A1H],ES
-      MOV    [BX+DI+00A2H],ES
-      MOV    [BP+SI+00A3H],ES
-      MOV    [BP+DI+00A4H],ES
-      MOV    [SI+00A5H],ES
-      MOV    [DI+00A6H],ES
-      MOV    [BP+00A7H],ES
-      MOV    [BX+00A8H],ES
-      MOV    [BX+SI+00A9H],CS
-      MOV    [BX+DI+00AAH],CS
-      MOV    [BP+SI+00ABH],CS
-      MOV    [BP+DI+00ACH],CS
-      MOV    [SI+00ADH],CS
+      MOV    CL,[BP+DI+8D8CH]
+      MOV    CL,[SI+8D8CH]
+      MOV    CL,[DI+8D8CH]
+      MOV    CL,[BP+8D8CH]
+      MOV    CL,[BX+8D8CH]
+      MOV    DL,[BX+SI+8D8CH]
+      MOV    DL,[BX+DI+8D8CH]
+      MOV    DL,[BP+SI+8D8CH]
+      MOV    DL,[BP+DI+8D8CH]
+      MOV    DL,[SI+8D8CH]
+      MOV    DL,[DI+8D8CH]
+      MOV    DL,[BP+8D8CH]
+      MOV    DL,[BX+8D8CH]
+      MOV    BL,[BX+SI+8D8CH]
+      MOV    BL,[BX+DI+8D8CH]
+      MOV    BL,[BP+SI+8D8CH]
+      MOV    BL,[BP+DI+8D8CH]
+      MOV    BL,[SI+8D8CH]
+      MOV    BL,[DI+8D8CH]
+      MOV    BL,[BP+8D8CH]
+      MOV    BL,[BX+8D8CH]
+      MOV    AH,[BX+SI+8D8CH]
+      MOV    AH,[BX+DI+8D8CH]
+      MOV    AH,[BP+SI+8D8CH]
+      MOV    AH,[BP+DI+8D8CH]
+      MOV    AH,[SI+8D8CH]
+      MOV    AH,[DI+8D8CH]
+      MOV    AH,[BP+8D8CH]
+      MOV    AH,[BX+8D8CH]
+      MOV    CX,[SI+8E8DH]
+      MOV    CX,[DI+8E8DH]
+      MOV    CX,[BP+8E8DH]
+      MOV    CX,[BX+8E8DH]
+      MOV    DX,[BX+SI+8E8DH]
+      MOV    DX,[BX+DI+8E8DH]
+      MOV    DX,[BP+SI+8E8DH]
+      MOV    DX,[BP+DI+8E8DH]
+      MOV    DX,[SI+8E8DH]
+      MOV    DX,[DI+8E8DH]
+      MOV    DX,[BP+8E8DH]
+      MOV    DX,[BX+8E8DH]
+      MOV    BX,[BX+SI+8E8DH]
+      MOV    BX,[BX+DI+8E8DH]
+      MOV    BX,[BP+SI+8E8DH]
+      MOV    BX,[BP+DI+8E8DH]
+      MOV    BX,[SI+8E8DH]
+      MOV    BX,[DI+8E8DH]
+      MOV    BX,[BP+8E8DH]
+      MOV    BX,[BX+8E8DH]
+      MOV    SP,[BX+SI+8E8DH]
+      MOV    SP,[BX+DI+8E8DH]
+      MOV    SP,[BP+SI+8E8DH]
+      MOV    SP,[BP+DI+8E8DH]
+      MOV    SP,[SI+8E8DH]
+      MOV    SP,[DI+8E8DH]
+      MOV    SP,[BP+8E8DH]
+      MOV    SP,[BX+8E8DH]
+      MOV    BP,[BX+SI+8E8DH]
+      MOV    BP,[BX+DI+8E8DH]
+      MOV    BP,[BP+SI+8E8DH]
+      MOV    BP,[BP+DI+8E8DH]
+      MOV    BP,[SI+8E8DH]
+      MOV    BP,[DI+8E8DH]
+      MOV    BP,[BP+8E8DH]
+      MOV    BP,[BX+8E8DH]
+      MOV    SI,[BX+SI+8E8DH]
+      MOV    SI,[BX+DI+8E8DH]
+      MOV    SI,[BP+SI+8E8DH]
+      MOV    SI,[BP+DI+8E8DH]
+      MOV    SI,[SI+8E8DH]
+      MOV    SI,[DI+8E8DH]
+      MOV    SI,[BP+8E8DH]
+      MOV    SI,[BX+8E8DH]
+      MOV    DI,[BX+SI+8E8DH]
+      MOV    DI,[BX+DI+8E8DH]
+      MOV    DI,[BP+SI+8E8DH]
+      MOV    DI,[BP+DI+8E8DH]
+      MOV    DI,[SI+8E8DH]
+      MOV    DI,[DI+8E8DH]
+      MOV    DI,[BP+8E8DH]
+      MOV    DI,[BX+8E8DH]
+      MOV    [DI+8F8EH],CS
+      MOV    [BP+8F8EH],CS
+      MOV    [BX+8F8EH],CS
+      MOV    [BX+SI+8F8EH],SS
+      MOV    [BX+DI+8F8EH],SS
+      MOV    [BP+SI+8F8EH],SS
+      MOV    [BP+DI+8F8EH],SS
+      MOV    [SI+8F8EH],SS
+      MOV    [DI+8F8EH],SS
+      MOV    [BP+8F8EH],SS
+      MOV    [BX+8F8EH],SS
+      MOV    [BX+SI+8F8EH],DS
+      MOV    [BX+DI+8F8EH],DS
+      MOV    [BP+SI+8F8EH],DS
+      MOV    [BP+DI+8F8EH],DS
+      MOV    [SI+8F8EH],DS
+      MOV    [DI+8F8EH],DS
+      MOV    [BP+8F8EH],DS
+      MOV    [BX+8F8EH],DS
+      MOV    [BX+SI+8F8EH],ES
+      MOV    [BX+DI+8F8EH],ES
+      MOV    [BP+SI+8F8EH],ES
+      MOV    [BP+DI+8F8EH],ES
+      MOV    [SI+8F8EH],ES
+      MOV    [DI+8F8EH],ES
+      MOV    [BP+8F8EH],ES
+      MOV    [BX+8F8EH],ES
+      MOV    [BX+SI+8F8EH],CS
+      MOV    [BX+DI+8F8EH],CS
+      MOV    [BP+SI+8F8EH],CS
+      MOV    [BP+DI+8F8EH],CS
+      MOV    [SI+8F8EH],CS
       MOV    AX,ES
-      MOV    CX,ES
-      MOV    DX,ES
-      MOV    BX,ES
-      MOV    SP,ES
-      MOV    BP,ES
-      MOV    SI,ES
-      MOV    DI,ES
-      MOV    AX,CS
-      MOV    CX,CS
-      MOV    DX,CS
-      MOV    BX,CS
-      MOV    SP,CS
-      MOV    BP,CS
-      MOV    SI,CS
-      MOV    DI,CS
-      MOV    AX,SS
-      MOV    CX,SS
-      MOV    DX,SS
-      MOV    BX,SS
-      MOV    SP,SS
-      MOV    BP,SS
-      MOV    SI,SS
-      MOV    DI,SS
-      MOV    AX,DS
-      MOV    CX,DS
-      MOV    DX,DS
-      MOV    BX,DS
-      MOV    SP,DS
-      MOV    BP,DS
-      MOV    SI,DS
-      MOV    DI,DS
-      MOV    [BX+SI],ES
-      MOV    [BX+DI],ES
-      MOV    [BP+SI],ES
-      MOV    [BP+DI],ES
-      MOV    [SI],ES
-      MOV    [DI],ES
-      MOV    [0107H],ES
-      MOV    [BX],ES
-      MOV    [BX+SI],CS
-      MOV    [BX+DI],CS
-      MOV    [BP+SI],CS
-      MOV    [BP+DI],CS
-      MOV    [SI],CS
-      MOV    [DI],CS
-      MOV    [010FH],CS
-      MOV    [BX],CS
-      MOV    [BX+SI],SS
-      MOV    [BX+DI],SS
-      MOV    [BP+SI],SS
-      MOV    [BP+DI],SS
-      MOV    [SI],SS
-      MOV    [DI],SS
-      MOV    [0117H],SS
-      MOV    [BX],SS
-      MOV    [BX+SI],DS
-      MOV    [BX+DI],DS
-      MOV    [BP+SI],DS
-      MOV    [BP+DI],DS
-      MOV    [SI],DS
-      MOV    [DI],DS
-      MOV    [011FH],DS
-      MOV    [BX],DS
-      MOV    [BX+SI+65],ES
-      MOV    [BX+SI-128],ES
-      MOV    [BX+DI+66],ES
-      MOV    [BX+DI-128],ES
-      MOV    [BP+SI+67],ES
-      MOV    [BP+SI-128],ES
-      MOV    [BP+DI+68],ES
-      MOV    [BP+DI-128],ES
-      MOV    [SI+69],ES
-      MOV    [SI-128],ES
-      MOV    [DI+70],ES
-      MOV    [DI-128],ES
-      MOV    [BP+71],ES
-      MOV    [BP-128],ES
-      MOV    [BX+72],ES
-      MOV    [BX-128],ES
-      MOV    [BX+SI+73],CS
-      MOV    [BX+SI-128],CS
-      MOV    [BX+DI+74],CS
-      MOV    [BX+DI-128],CS
-      MOV    [BP+SI+75],CS
-      MOV    [BP+SI-128],CS
-      MOV    [BP+DI+76],CS
-      MOV    [BP+DI-128],CS
-      MOV    [SI+77],CS
-      MOV    [SI-128],CS
-      MOV    [DI+78],CS
-      MOV    [DI-128],CS
-      MOV    [BP+79],CS
-      MOV    [BP-128],CS
-      MOV    [BX+80],CS
-      MOV    [BX-128],CS
-      MOV    [BX+SI+81],SS
-      MOV    [BX+SI-128],SS
-      MOV    [BX+DI+82],SS
-      MOV    [BX+DI-128],SS
-      MOV    [BP+SI+83],SS
-      MOV    [BP+SI-128],SS
-      MOV    [BP+DI+84],SS
-      MOV    [BP+DI-128],SS
-      MOV    [SI+85],SS
-      MOV    [SI-128],SS
-      MOV    [DI+86],SS
-      MOV    [DI-128],SS
-      MOV    [BP+87],SS
-      MOV    [BP-128],SS
-      MOV    [BX+88],SS
-      MOV    [BX-128],SS
-      MOV    [BX+SI+89],DS
-      MOV    [BX+SI-128],DS
-      MOV    [BX+DI+90],DS
-      MOV    [BX+DI-128],DS
-      MOV    [BP+SI+91],DS
-      MOV    [BP+SI-128],DS
-      MOV    [BP+DI+92],DS
-      MOV    [BP+DI-128],DS
-      MOV    [SI+93],DS
-      MOV    [SI-128],DS
-      MOV    [DI+94],DS
-      MOV    [DI-128],DS
-      MOV    [BP+95],DS
-      MOV    [BP-128],DS
-      MOV    [BX+96],DS
-      MOV    [BX-128],DS
-      LEA    CX,[BP+008FH]
-      LEA    CX,[BX+0090H]
-      LEA    DX,[BX+SI+0091H]
-      LEA    DX,[BX+DI+0092H]
-      LEA    DX,[BP+SI+0093H]
-      LEA    DX,[BP+DI+0094H]
-      LEA    DX,[SI+0095H]
-      LEA    DX,[DI+0096H]
-      LEA    DX,[BP+0097H]
-      LEA    DX,[BX+0098H]
-      LEA    BX,[BX+SI+0099H]
-      LEA    BX,[BX+DI+009AH]
-      LEA    BX,[BP+SI+009BH]
-      LEA    BX,[BP+DI+009CH]
-      LEA    BX,[SI+009DH]
-      LEA    BX,[DI+009EH]
-      LEA    BX,[BP+009FH]
-      LEA    BX,[BX+00A0H]
-      LEA    SP,[BX+SI+00A1H]
-      LEA    SP,[BX+DI+00A2H]
-      LEA    SP,[BP+SI+00A3H]
-      LEA    SP,[BP+DI+00A4H]
-      LEA    SP,[SI+00A5H]
-      LEA    SP,[DI+00A6H]
-      LEA    SP,[BP+00A7H]
-      LEA    SP,[BX+00A8H]
-      LEA    BP,[BX+SI+00A9H]
-      LEA    BP,[BX+DI+00AAH]
-      LEA    BP,[BP+SI+00ABH]
-      LEA    BP,[BP+DI+00ACH]
-      LEA    BP,[SI+00ADH]
-      LEA    BP,[DI+00AEH]
-      LEA    BP,[BP+00AFH]
-      LEA    BP,[BX+00B0H]
-      LEA    SI,[BX+SI+00B1H]
-      LEA    SI,[BX+DI+00B2H]
-      LEA    SI,[BP+SI+00B3H]
-      LEA    SI,[BP+DI+00B4H]
-      LEA    SI,[SI+00B5H]
-      LEA    SI,[DI+00B6H]
-      LEA    SI,[BP+00B7H]
-      LEA    SI,[BX+00B8H]
-      LEA    DI,[BX+SI+00B9H]
-      LEA    DI,[BX+DI+00BAH]
-      LEA    DI,[BP+SI+00BBH]
-      LEA    DI,[BP+DI+00BCH]
-      LEA    DI,[SI+00BDH]
-      LEA    DI,[DI+00BEH]
-      LEA    DI,[BP+00BFH]
-      LEA    DI,[BX+00C0H]
+      LEA    CX,[BP+908FH]
+      LEA    CX,[BX+908FH]
+      LEA    DX,[BX+SI+908FH]
+      LEA    DX,[BX+DI+908FH]
+      LEA    DX,[BP+SI+908FH]
+      LEA    DX,[BP+DI+908FH]
+      LEA    DX,[SI+908FH]
+      LEA    DX,[DI+908FH]
+      LEA    DX,[BP+908FH]
+      LEA    DX,[BX+908FH]
+      LEA    BX,[BX+SI+908FH]
+      LEA    BX,[BX+DI+908FH]
+      LEA    BX,[BP+SI+908FH]
+      LEA    BX,[BP+DI+908FH]
+      LEA    BX,[SI+908FH]
+      LEA    BX,[DI+908FH]
+      LEA    BX,[BP+908FH]
+      LEA    BX,[BX+908FH]
+      LEA    SP,[BX+SI+908FH]
+      LEA    SP,[BX+DI+908FH]
+      LEA    SP,[BP+SI+908FH]
+      LEA    SP,[BP+DI+908FH]
+      LEA    SP,[SI+908FH]
+      LEA    SP,[DI+908FH]
+      LEA    SP,[BP+908FH]
+      LEA    SP,[BX+908FH]
+      LEA    BP,[BX+SI+908FH]
+      LEA    BP,[BX+DI+908FH]
+      LEA    BP,[BP+SI+908FH]
+      LEA    BP,[BP+DI+908FH]
+      LEA    BP,[SI+908FH]
+      LEA    BP,[DI+908FH]
+      LEA    BP,[BP+908FH]
+      LEA    BP,[BX+908FH]
+      LEA    SI,[BX+SI+908FH]
+      LEA    SI,[BX+DI+908FH]
+      LEA    SI,[BP+SI+908FH]
+      LEA    SI,[BP+DI+908FH]
+      LEA    SI,[SI+908FH]
+      LEA    SI,[DI+908FH]
+      LEA    SI,[BP+908FH]
+      LEA    SI,[BX+908FH]
+      LEA    DI,[BX+SI+908FH]
+      LEA    DI,[BX+DI+908FH]
+      LEA    DI,[BP+SI+908FH]
+      LEA    DI,[BP+DI+908FH]
+      LEA    DI,[SI+908FH]
+      LEA    DI,[DI+908FH]
+      LEA    DI,[BP+908FH]
+      LEA    DI,[BX+908FH]
       LEA    AX,[BX+SI]
-      LEA    AX,[BX+DI]
-      LEA    AX,[BP+SI]
-      LEA    AX,[BP+DI]
-      LEA    AX,[SI]
-      LEA    AX,[DI]
-      LEA    AX,[0107H]
-      LEA    AX,[BX]
-      LEA    CX,[BX+SI]
-      LEA    CX,[BX+DI]
-      LEA    CX,[BP+SI]
-      LEA    CX,[BP+DI]
-      LEA    CX,[SI]
-      LEA    CX,[DI]
-      LEA    CX,[010FH]
-      LEA    CX,[BX]
-      LEA    DX,[BX+SI]
-      LEA    DX,[BX+DI]
-      LEA    DX,[BP+SI]
-      LEA    DX,[BP+DI]
-      LEA    DX,[SI]
-      LEA    DX,[DI]
-      LEA    DX,[0117H]
-      LEA    DX,[BX]
-      LEA    BX,[BX+SI]
-      LEA    BX,[BX+DI]
-      LEA    BX,[BP+SI]
-      LEA    BX,[BP+DI]
-      LEA    BX,[SI]
-      LEA    BX,[DI]
-      LEA    BX,[011FH]
-      LEA    BX,[BX]
-      LEA    SP,[BX+SI]
-      LEA    SP,[BX+DI]
-      LEA    SP,[BP+SI]
-      LEA    SP,[BP+DI]
-      LEA    SP,[SI]
-      LEA    SP,[DI]
-      LEA    SP,[0127H]
-      LEA    SP,[BX]
-      LEA    BP,[BX+SI]
-      LEA    BP,[BX+DI]
-      LEA    BP,[BP+SI]
-      LEA    BP,[BP+DI]
-      LEA    BP,[SI]
-      LEA    BP,[DI]
-      LEA    BP,[012FH]
-      LEA    BP,[BX]
-      LEA    SI,[BX+SI]
-      LEA    SI,[BX+DI]
-      LEA    SI,[BP+SI]
-      LEA    SI,[BP+DI]
-      LEA    SI,[SI]
-      LEA    SI,[DI]
-      LEA    SI,[0137H]
-      LEA    SI,[BX]
-      LEA    DI,[BX+SI]
-      LEA    DI,[BX+DI]
-      LEA    DI,[BP+SI]
-      LEA    DI,[BP+DI]
-      LEA    DI,[SI]
-      LEA    DI,[DI]
-      LEA    DI,[013FH]
-      LEA    DI,[BX]
-      LEA    AX,[BX+SI+65]
-      LEA    AX,[BX+SI-128]
-      LEA    AX,[BX+DI+66]
-      LEA    AX,[BX+DI-128]
-      LEA    AX,[BP+SI+67]
-      LEA    AX,[BP+SI-128]
-      LEA    AX,[BP+DI+68]
-      LEA    AX,[BP+DI-128]
-      LEA    AX,[SI+69]
-      LEA    AX,[SI-128]
-      LEA    AX,[DI+70]
-      LEA    AX,[DI-128]
-      LEA    AX,[BP+71]
-      LEA    AX,[BP-128]
-      LEA    AX,[BX+72]
-      LEA    AX,[BX-128]
-      LEA    CX,[BX+SI+73]
-      LEA    CX,[BX+SI-128]
-      LEA    CX,[BX+DI+74]
-      LEA    CX,[BX+DI-128]
-      LEA    CX,[BP+SI+75]
-      LEA    CX,[BP+SI-128]
-      LEA    CX,[BP+DI+76]
-      LEA    CX,[BP+DI-128]
-      LEA    CX,[SI+77]
-      LEA    CX,[SI-128]
-      LEA    CX,[DI+78]
-      LEA    CX,[DI-128]
-      LEA    CX,[BP+79]
-      LEA    CX,[BP-128]
-      LEA    CX,[BX+80]
-      LEA    CX,[BX-128]
-      LEA    DX,[BX+SI+81]
-      LEA    DX,[BX+SI-128]
-      LEA    DX,[BX+DI+82]
-      LEA    DX,[BX+DI-128]
-      LEA    DX,[BP+SI+83]
-      LEA    DX,[BP+SI-128]
-      LEA    DX,[BP+DI+84]
-      LEA    DX,[BP+DI-128]
-      LEA    DX,[SI+85]
-      LEA    DX,[SI-128]
-      LEA    DX,[DI+86]
-      LEA    DX,[DI-128]
-      LEA    DX,[BP+87]
-      LEA    DX,[BP-128]
-      LEA    DX,[BX+88]
-      LEA    DX,[BX-128]
-      LEA    BX,[BX+SI+89]
-      LEA    BX,[BX+SI-128]
-      LEA    BX,[BX+DI+90]
-      LEA    BX,[BX+DI-128]
-      LEA    BX,[BP+SI+91]
-      LEA    BX,[BP+SI-128]
-      LEA    BX,[BP+DI+92]
-      LEA    BX,[BP+DI-128]
-      LEA    BX,[SI+93]
-      LEA    BX,[SI-128]
-      LEA    BX,[DI+94]
-      LEA    BX,[DI-128]
-      LEA    BX,[BP+95]
-      LEA    BX,[BP-128]
-      LEA    BX,[BX+96]
-      LEA    BX,[BX-128]
-      LEA    SP,[BX+SI+97]
-      LEA    SP,[BX+SI-128]
-      LEA    SP,[BX+DI+98]
-      LEA    SP,[BX+DI-128]
-      LEA    SP,[BP+SI+99]
-      LEA    SP,[BP+SI-128]
-      LEA    SP,[BP+DI+100]
-      LEA    SP,[BP+DI-128]
-      LEA    SP,[SI+101]
-      LEA    SP,[SI-128]
-      LEA    SP,[DI+102]
-      LEA    SP,[DI-128]
-      LEA    SP,[BP+103]
-      LEA    SP,[BP-128]
-      LEA    SP,[BX+104]
-      LEA    SP,[BX-128]
-      LEA    BP,[BX+SI+105]
-      LEA    BP,[BX+SI-128]
-      LEA    BP,[BX+DI+106]
-      LEA    BP,[BX+DI-128]
-      LEA    BP,[BP+SI+107]
-      LEA    BP,[BP+SI-128]
-      LEA    BP,[BP+DI+108]
-      LEA    BP,[BP+DI-128]
-      LEA    BP,[SI+109]
-      LEA    BP,[SI-128]
-      LEA    BP,[DI+110]
-      LEA    BP,[DI-128]
-      LEA    BP,[BP+111]
-      LEA    BP,[BP-128]
-      LEA    BP,[BX+112]
-      LEA    BP,[BX-128]
-      LEA    SI,[BX+SI+113]
-      LEA    SI,[BX+SI-128]
-      LEA    SI,[BX+DI+114]
-      LEA    SI,[BX+DI-128]
-      LEA    SI,[BP+SI+115]
-      LEA    SI,[BP+SI-128]
-      LEA    SI,[BP+DI+116]
-      LEA    SI,[BP+DI-128]
-      LEA    SI,[SI+117]
-      LEA    SI,[SI-128]
-      LEA    SI,[DI+118]
-      LEA    SI,[DI-128]
-      LEA    SI,[BP+119]
-      LEA    SI,[BP-128]
-      LEA    SI,[BX+120]
-      LEA    SI,[BX-128]
-      LEA    DI,[BX+SI+121]
-      LEA    DI,[BX+SI-128]
-      LEA    DI,[BX+DI+122]
-      LEA    DI,[BX+DI-128]
-      LEA    DI,[BP+SI+123]
-      LEA    DI,[BP+SI-128]
-      LEA    DI,[BP+DI+124]
-      LEA    DI,[BP+DI-128]
-      LEA    DI,[SI+125]
-      LEA    DI,[SI-128]
-      LEA    DI,[DI+126]
-      LEA    DI,[DI-128]
-      LEA    DI,[BP+127]
-      LEA    DI,[BP-128]
-      LEA    DI,[BX-128]
-      LEA    DI,[BX+0]
-      LEA    AX,[BX+SI+0181H]
-      LEA    AX,[BX+DI+0182H]
-      LEA    AX,[BP+SI+0183H]
-      LEA    AX,[BP+DI+0184H]
-      LEA    AX,[SI+0185H]
-      LEA    AX,[DI+0186H]
-      LEA    AX,[BP+0187H]
-      LEA    AX,[BX+0188H]
-      LEA    CX,[BX+SI+0189H]
-      LEA    CX,[BX+DI+018AH]
-      LEA    CX,[BP+SI+018BH]
-      LEA    CX,[BP+DI+018CH]
-      LEA    CX,[SI+018DH]
-      LEA    CX,[DI+018EH]
-      MOV    CS,[BX+0090H]
-      MOV    SS,[BX+SI+0091H]
-      MOV    SS,[BX+DI+0092H]
-      MOV    SS,[BP+SI+0093H]
-      MOV    SS,[BP+DI+0094H]
-      MOV    SS,[SI+0095H]
-      MOV    SS,[DI+0096H]
-      MOV    SS,[BP+0097H]
-      MOV    SS,[BX+0098H]
-      MOV    DS,[BX+SI+0099H]
-      MOV    DS,[BX+DI+009AH]
-      MOV    DS,[BP+SI+009BH]
-      MOV    DS,[BP+DI+009CH]
-      MOV    DS,[SI+009DH]
-      MOV    DS,[DI+009EH]
-      MOV    DS,[BP+009FH]
-      MOV    DS,[BX+00A0H]
-      MOV    ES,[BX+SI+00A1H]
-      MOV    ES,[BX+DI+00A2H]
-      MOV    ES,[BP+SI+00A3H]
-      MOV    ES,[BP+DI+00A4H]
-      MOV    ES,[SI+00A5H]
-      MOV    ES,[DI+00A6H]
-      MOV    ES,[BP+00A7H]
-      MOV    ES,[BX+00A8H]
-      MOV    CS,[BX+SI+00A9H]
-      MOV    CS,[BX+DI+00AAH]
-      MOV    CS,[BP+SI+00ABH]
-      MOV    CS,[BP+DI+00ACH]
-      MOV    CS,[SI+00ADH]
-      MOV    CS,[DI+00AEH]
-      MOV    CS,[BP+00AFH]
+      MOV    CS,[BX+9190H]
+      MOV    SS,[BX+SI+9190H]
+      MOV    SS,[BX+DI+9190H]
+      MOV    SS,[BP+SI+9190H]
+      MOV    SS,[BP+DI+9190H]
+      MOV    SS,[SI+9190H]
+      MOV    SS,[DI+9190H]
+      MOV    SS,[BP+9190H]
+      MOV    SS,[BX+9190H]
+      MOV    DS,[BX+SI+9190H]
+      MOV    DS,[BX+DI+9190H]
+      MOV    DS,[BP+SI+9190H]
+      MOV    DS,[BP+DI+9190H]
+      MOV    DS,[SI+9190H]
+      MOV    DS,[DI+9190H]
+      MOV    DS,[BP+9190H]
+      MOV    DS,[BX+9190H]
+      MOV    ES,[BX+SI+9190H]
+      MOV    ES,[BX+DI+9190H]
+      MOV    ES,[BP+SI+9190H]
+      MOV    ES,[BP+DI+9190H]
+      MOV    ES,[SI+9190H]
+      MOV    ES,[DI+9190H]
+      MOV    ES,[BP+9190H]
+      MOV    ES,[BX+9190H]
+      MOV    CS,[BX+SI+9190H]
+      MOV    CS,[BX+DI+9190H]
+      MOV    CS,[BP+SI+9190H]
+      MOV    CS,[BP+DI+9190H]
+      MOV    CS,[SI+9190H]
+      MOV    CS,[DI+9190H]
+      MOV    CS,[BP+9190H]
       MOV    ES,AX
-      MOV    ES,CX
-      MOV    ES,DX
-      MOV    ES,BX
-      MOV    ES,SP
-      MOV    ES,BP
-      MOV    ES,SI
-      MOV    ES,DI
-      MOV    CS,AX
-      MOV    CS,CX
-      MOV    CS,DX
-      MOV    CS,BX
-      MOV    CS,SP
-      MOV    CS,BP
-      MOV    CS,SI
-      MOV    CS,DI
-      MOV    SS,AX
-      MOV    SS,CX
-      MOV    SS,DX
-      MOV    SS,BX
-      MOV    SS,SP
-      MOV    SS,BP
-      MOV    SS,SI
-      MOV    SS,DI
-      MOV    DS,AX
-      MOV    DS,CX
-      MOV    DS,DX
-      MOV    DS,BX
-      MOV    DS,SP
-      MOV    DS,BP
-      MOV    DS,SI
-      MOV    DS,DI
-      MOV    ES,[BX+SI]
-      MOV    ES,[BX+DI]
-      MOV    ES,[BP+SI]
-      MOV    ES,[BP+DI]
-      MOV    ES,[SI]
-      MOV    ES,[DI]
-      MOV    ES,[0107H]
-      MOV    ES,[BX]
-      MOV    CS,[BX+SI]
-      MOV    CS,[BX+DI]
-      MOV    CS,[BP+SI]
-      MOV    CS,[BP+DI]
-      MOV    CS,[SI]
-      MOV    CS,[DI]
-      MOV    CS,[010FH]
-      MOV    CS,[BX]
-      MOV    SS,[BX+SI]
-      MOV    SS,[BX+DI]
-      MOV    SS,[BP+SI]
-      MOV    SS,[BP+DI]
-      MOV    SS,[SI]
-      MOV    SS,[DI]
-      MOV    SS,[0117H]
-      MOV    SS,[BX]
-      MOV    DS,[BX+SI]
-      MOV    DS,[BX+DI]
-      MOV    DS,[BP+SI]
-      MOV    DS,[BP+DI]
-      MOV    DS,[SI]
-      MOV    DS,[DI]
-      MOV    DS,[011FH]
-      MOV    DS,[BX]
-      MOV    ES,[BX+SI+65]
-      MOV    ES,[BX+SI-128]
-      MOV    ES,[BX+DI+66]
-      MOV    ES,[BX+DI-128]
-      MOV    ES,[BP+SI+67]
-      MOV    ES,[BP+SI-128]
-      MOV    ES,[BP+DI+68]
-      MOV    ES,[BP+DI-128]
-      MOV    ES,[SI+69]
-      MOV    ES,[SI-128]
-      MOV    ES,[DI+70]
-      MOV    ES,[DI-128]
-      MOV    ES,[BP+71]
-      MOV    ES,[BP-128]
-      MOV    ES,[BX+72]
-      MOV    ES,[BX-128]
-      MOV    CS,[BX+SI+73]
-      MOV    CS,[BX+SI-128]
-      MOV    CS,[BX+DI+74]
-      MOV    CS,[BX+DI-128]
-      MOV    CS,[BP+SI+75]
-      MOV    CS,[BP+SI-128]
-      MOV    CS,[BP+DI+76]
-      MOV    CS,[BP+DI-128]
-      MOV    CS,[SI+77]
-      MOV    CS,[SI-128]
-      MOV    CS,[DI+78]
-      MOV    CS,[DI-128]
-      MOV    CS,[BP+79]
-      MOV    CS,[BP-128]
-      MOV    CS,[BX+80]
-      MOV    CS,[BX-128]
-      MOV    SS,[BX+SI+81]
-      MOV    SS,[BX+SI-128]
-      MOV    SS,[BX+DI+82]
-      MOV    SS,[BX+DI-128]
-      MOV    SS,[BP+SI+83]
-      MOV    SS,[BP+SI-128]
-      MOV    SS,[BP+DI+84]
-      MOV    SS,[BP+DI-128]
-      MOV    SS,[SI+85]
-      MOV    SS,[SI-128]
-      MOV    SS,[DI+86]
-      MOV    SS,[DI-128]
-      MOV    SS,[BP+87]
-      MOV    SS,[BP-128]
-      MOV    SS,[BX+88]
-      MOV    SS,[BX-128]
-      MOV    DS,[BX+SI+89]
-      MOV    DS,[BX+SI-128]
-      MOV    DS,[BX+DI+90]
-      MOV    DS,[BX+DI-128]
-      MOV    DS,[BP+SI+91]
-      MOV    DS,[BP+SI-128]
-      MOV    DS,[BP+DI+92]
-      MOV    DS,[BP+DI-128]
-      MOV    DS,[SI+93]
-      MOV    DS,[SI-128]
-      MOV    DS,[DI+94]
-      MOV    DS,[DI-128]
-      MOV    DS,[BP+95]
-      MOV    DS,[BP-128]
-      MOV    DS,[BX+96]
-      MOV    DS,[BX-128]
-      POP    AX
-      POP    CX
-      POP    DX
-      POP    BX
-      POP    SP
-      POP    BP
-      POP    SI
-      POP    DI
-      POP    [BX+SI]
-      POP    [BX+DI]
-      POP    [BP+SI]
-      POP    [BP+DI]
-      POP    [SI]
-      POP    [DI]
-      POP    [0107H]
-      POP    [BX]
-      POP    [BX+SI+65]
-      POP    [BX+SI-128]
-      POP    [BX+DI+66]
-      POP    [BX+DI-128]
-      POP    [BP+SI+67]
-      POP    [BP+SI-128]
-      POP    [BP+DI+68]
-      POP    [BP+DI-128]
-      POP    [SI+69]
-      POP    [SI-128]
-      POP    [DI+70]
-      POP    [DI-128]
-      POP    [BP+71]
-      POP    [BP-128]
-      POP    [BX+72]
-      POP    [BX-128]
-      POP    [BX+SI+0181H]
-      POP    [BX+DI+0182H]
-      POP    [BP+SI+0183H]
-      POP    [BP+DI+0184H]
-      POP    [SI+0185H]
-      POP    [DI+0186H]
-      POP    [BP+0187H]
-      POP    [BX+0188H]
       NOP
       XCHG   AX,CX
       XCHG   AX,DX
@@ -9783,38 +5894,73 @@
       XCHG   AX,DI
       CBW
       CWD
-      CALLF  0000H:009BH
+      CALLF  9E9DH:9C9BH
       WAIT
       PUSHF
       POPF
       SAHF
       LAHF
-      MOV    AL,[00A1H]
-      MOV    AX,[00A2H]
-      MOV    [00A3H],AL
-      MOV    [00A4H],AX
+      MOV    AL,[0A2A1H]
+      MOV    AX,[0A3A2H]
+      MOV    [0A4A3H],AL
+      MOV    [0A5A4H],AX
       MOVSB
       MOVSW
       CMPSB
       CMPSW
-      TEST   AX,00AAH
+      TEST   AL,0A9H
+      TEST   AX,0ABAAH
       STOSB
       STOSW
       LODSB
       LODSW
       SCASB
       SCASW
-      MOV    AX,00B9H
-      MOV    CX,00BAH
-      MOV    DX,00BBH
-      MOV    BX,00BCH
-      MOV    SP,00BDH
-      MOV    BP,00BEH
-      MOV    SI,00BFH
-      MOV    DI,00C0H
-      RET    00C3H
+      MOV    AL,0B1H
+      MOV    CL,0B2H
+      MOV    DL,0B3H
+      MOV    BL,0B4H
+      MOV    AH,0B5H
+      MOV    AX,0BAB9H
+      MOV    CX,0BBBAH
+      MOV    DX,0BCBBH
+      MOV    BX,0BDBCH
+      MOV    SP,0BEBDH
+      MOV    BP,0BFBEH
+      MOV    SI,0C0BFH
+      MOV    DI,0C1C0H
+      RET    0C4C3H
       RET
-      RETF   00CBH
+      MOV    BH,0C8H
+      MOV    BYTE PTR [BX+SI],0C8H
+      MOV    BYTE PTR [BX+DI],0C8H
+      MOV    BYTE PTR [BP+SI],0C8H
+      MOV    BYTE PTR [BP+DI],0C8H
+      MOV    BYTE PTR [SI],0C8H
+      MOV    BYTE PTR [DI],0C8H
+      MOV    BYTE PTR [0C9C8H],0CAH
+      MOV    BYTE PTR [BX],0C8H
+      MOV    BYTE PTR [BX+SI-56],0C9H
+      MOV    BYTE PTR [BX+DI-56],0C9H
+      MOV    BYTE PTR [BP+SI-56],0C9H
+      MOV    BYTE PTR [BP+DI-56],0C9H
+      MOV    BYTE PTR [SI-56],0C9H
+      MOV    BYTE PTR [DI-56],0C9H
+      MOV    BYTE PTR [BP-56],0C9H
+      MOV    BYTE PTR [BX-56],0C9H
+      MOV    BYTE PTR [BX+SI+0C9C8H],0CAH
+      MOV    BYTE PTR [BX+DI+0C9C8H],0CAH
+      MOV    BYTE PTR [BP+SI+0C9C8H],0CAH
+      MOV    BYTE PTR [BP+DI+0C9C8H],0CAH
+      MOV    BYTE PTR [SI+0C9C8H],0CAH
+      MOV    BYTE PTR [DI+0C9C8H],0CAH
+      MOV    BYTE PTR [BP+0C9C8H],0CAH
+      MOV    BYTE PTR [BX+0C9C8H],0CAH
+      MOV    AL,0C8H
+      MOV    CL,0C8H
+      MOV    DL,0C8H
+      MOV    BL,0C8H
+      RETF   0CCCBH
       RETF
       INT    3
       INT    0CEH
@@ -9850,7 +5996,7 @@
       ROL    BYTE PTR [BP+DI],1
       ROL    BYTE PTR [SI],1
       ROL    BYTE PTR [DI],1
-      ROL    BYTE PTR [0107H],1
+      ROL    BYTE PTR [0807H],1
       ROL    BYTE PTR [BX],1
       ROR    BYTE PTR [BX+SI],1
       ROR    BYTE PTR [BX+DI],1
@@ -9858,7 +6004,7 @@
       ROR    BYTE PTR [BP+DI],1
       ROR    BYTE PTR [SI],1
       ROR    BYTE PTR [DI],1
-      ROR    BYTE PTR [010FH],1
+      ROR    BYTE PTR [100FH],1
       ROR    BYTE PTR [BX],1
       RCL    BYTE PTR [BX+SI],1
       RCL    BYTE PTR [BX+DI],1
@@ -9866,7 +6012,7 @@
       RCL    BYTE PTR [BP+DI],1
       RCL    BYTE PTR [SI],1
       RCL    BYTE PTR [DI],1
-      RCL    BYTE PTR [0117H],1
+      RCL    BYTE PTR [1817H],1
       RCL    BYTE PTR [BX],1
       RCR    BYTE PTR [BX+SI],1
       RCR    BYTE PTR [BX+DI],1
@@ -9874,7 +6020,7 @@
       RCR    BYTE PTR [BP+DI],1
       RCR    BYTE PTR [SI],1
       RCR    BYTE PTR [DI],1
-      RCR    BYTE PTR [011FH],1
+      RCR    BYTE PTR [201FH],1
       RCR    BYTE PTR [BX],1
       SHL    BYTE PTR [BX+SI],1
       SHL    BYTE PTR [BX+DI],1
@@ -9882,7 +6028,7 @@
       SHL    BYTE PTR [BP+DI],1
       SHL    BYTE PTR [SI],1
       SHL    BYTE PTR [DI],1
-      SHL    BYTE PTR [0127H],1
+      SHL    BYTE PTR [2827H],1
       SHL    BYTE PTR [BX],1
       SHR    BYTE PTR [BX+SI],1
       SHR    BYTE PTR [BX+DI],1
@@ -9890,7 +6036,7 @@
       SHR    BYTE PTR [BP+DI],1
       SHR    BYTE PTR [SI],1
       SHR    BYTE PTR [DI],1
-      SHR    BYTE PTR [012FH],1
+      SHR    BYTE PTR [302FH],1
       SHR    BYTE PTR [BX],1
       SAR    BYTE PTR [BX+SI],1
       SAR    BYTE PTR [BX+DI],1
@@ -9898,7 +6044,7 @@
       SAR    BYTE PTR [BP+DI],1
       SAR    BYTE PTR [SI],1
       SAR    BYTE PTR [DI],1
-      SAR    BYTE PTR [013FH],1
+      SAR    BYTE PTR [403FH],1
       SAR    BYTE PTR [BX],1
       ROL    BYTE PTR [BX+SI+65],1
       ROL    BYTE PTR [BX+SI-128],1
@@ -10012,62 +6158,62 @@
       SAR    BYTE PTR [BP-128],1
       SAR    BYTE PTR [BX-128],1
       SAR    BYTE PTR [BX+0],1
-      ROL    BYTE PTR [BX+SI+0181H],1
-      ROL    BYTE PTR [BX+DI+0182H],1
-      ROL    BYTE PTR [BP+SI+0183H],1
-      ROL    BYTE PTR [BP+DI+0184H],1
-      ROL    BYTE PTR [SI+0185H],1
-      ROL    BYTE PTR [DI+0186H],1
-      ROL    BYTE PTR [BP+0187H],1
-      ROL    BYTE PTR [BX+0188H],1
-      ROR    BYTE PTR [BX+SI+0189H],1
-      ROR    BYTE PTR [BX+DI+018AH],1
-      ROR    BYTE PTR [BP+SI+018BH],1
-      ROR    BYTE PTR [BP+DI+018CH],1
-      ROR    BYTE PTR [SI+018DH],1
-      ROR    BYTE PTR [DI+018EH],1
-      ROR    BYTE PTR [BP+018FH],1
-      ROR    BYTE PTR [BX+0190H],1
-      RCL    BYTE PTR [BX+SI+0191H],1
-      RCL    BYTE PTR [BX+DI+0192H],1
-      RCL    BYTE PTR [BP+SI+0193H],1
-      RCL    BYTE PTR [BP+DI+0194H],1
-      RCL    BYTE PTR [SI+0195H],1
-      RCL    BYTE PTR [DI+0196H],1
-      RCL    BYTE PTR [BP+0197H],1
-      RCL    BYTE PTR [BX+0198H],1
-      RCR    BYTE PTR [BX+SI+0199H],1
-      RCR    BYTE PTR [BX+DI+019AH],1
-      RCR    BYTE PTR [BP+SI+019BH],1
-      RCR    BYTE PTR [BP+DI+019CH],1
-      RCR    BYTE PTR [SI+019DH],1
-      RCR    BYTE PTR [DI+019EH],1
-      RCR    BYTE PTR [BP+019FH],1
-      RCR    BYTE PTR [BX+01A0H],1
-      SHL    BYTE PTR [BX+SI+01A1H],1
-      SHL    BYTE PTR [BX+DI+01A2H],1
-      SHL    BYTE PTR [BP+SI+01A3H],1
-      SHL    BYTE PTR [BP+DI+01A4H],1
-      SHL    BYTE PTR [SI+01A5H],1
-      SHL    BYTE PTR [DI+01A6H],1
-      SHL    BYTE PTR [BP+01A7H],1
-      SHL    BYTE PTR [BX+01A8H],1
-      SHR    BYTE PTR [BX+SI+01A9H],1
-      SHR    BYTE PTR [BX+DI+01AAH],1
-      SHR    BYTE PTR [BP+SI+01ABH],1
-      SHR    BYTE PTR [BP+DI+01ACH],1
-      SHR    BYTE PTR [SI+01ADH],1
-      SHR    BYTE PTR [DI+01AEH],1
-      SHR    BYTE PTR [BP+01AFH],1
-      SHR    BYTE PTR [BX+01B0H],1
-      SAR    BYTE PTR [BX+SI+01B9H],1
-      SAR    BYTE PTR [BX+DI+01BAH],1
-      SAR    BYTE PTR [BP+SI+01BBH],1
-      SAR    BYTE PTR [BP+DI+01BCH],1
-      SAR    BYTE PTR [SI+01BDH],1
-      SAR    BYTE PTR [DI+01BEH],1
-      SAR    BYTE PTR [BP+01BFH],1
-      SAR    BYTE PTR [BX+01C0H],1
+      ROL    BYTE PTR [BX+SI+8281H],1
+      ROL    BYTE PTR [BX+DI+8382H],1
+      ROL    BYTE PTR [BP+SI+8483H],1
+      ROL    BYTE PTR [BP+DI+8584H],1
+      ROL    BYTE PTR [SI+8685H],1
+      ROL    BYTE PTR [DI+8786H],1
+      ROL    BYTE PTR [BP+8887H],1
+      ROL    BYTE PTR [BX+8988H],1
+      ROR    BYTE PTR [BX+SI+8A89H],1
+      ROR    BYTE PTR [BX+DI+8B8AH],1
+      ROR    BYTE PTR [BP+SI+8C8BH],1
+      ROR    BYTE PTR [BP+DI+8D8CH],1
+      ROR    BYTE PTR [SI+8E8DH],1
+      ROR    BYTE PTR [DI+8F8EH],1
+      ROR    BYTE PTR [BP+908FH],1
+      ROR    BYTE PTR [BX+9190H],1
+      RCL    BYTE PTR [BX+SI+9291H],1
+      RCL    BYTE PTR [BX+DI+9392H],1
+      RCL    BYTE PTR [BP+SI+9493H],1
+      RCL    BYTE PTR [BP+DI+9594H],1
+      RCL    BYTE PTR [SI+9695H],1
+      RCL    BYTE PTR [DI+9796H],1
+      RCL    BYTE PTR [BP+9897H],1
+      RCL    BYTE PTR [BX+9998H],1
+      RCR    BYTE PTR [BX+SI+9A99H],1
+      RCR    BYTE PTR [BX+DI+9B9AH],1
+      RCR    BYTE PTR [BP+SI+9C9BH],1
+      RCR    BYTE PTR [BP+DI+9D9CH],1
+      RCR    BYTE PTR [SI+9E9DH],1
+      RCR    BYTE PTR [DI+9F9EH],1
+      RCR    BYTE PTR [BP+0A09FH],1
+      RCR    BYTE PTR [BX+0A1A0H],1
+      SHL    BYTE PTR [BX+SI+0A2A1H],1
+      SHL    BYTE PTR [BX+DI+0A3A2H],1
+      SHL    BYTE PTR [BP+SI+0A4A3H],1
+      SHL    BYTE PTR [BP+DI+0A5A4H],1
+      SHL    BYTE PTR [SI+0A6A5H],1
+      SHL    BYTE PTR [DI+0A7A6H],1
+      SHL    BYTE PTR [BP+0A8A7H],1
+      SHL    BYTE PTR [BX+0A9A8H],1
+      SHR    BYTE PTR [BX+SI+0AAA9H],1
+      SHR    BYTE PTR [BX+DI+0ABAAH],1
+      SHR    BYTE PTR [BP+SI+0ACABH],1
+      SHR    BYTE PTR [BP+DI+0ADACH],1
+      SHR    BYTE PTR [SI+0AEADH],1
+      SHR    BYTE PTR [DI+0AFAEH],1
+      SHR    BYTE PTR [BP+0B0AFH],1
+      SHR    BYTE PTR [BX+0B1B0H],1
+      SAR    BYTE PTR [BX+SI+0BAB9H],1
+      SAR    BYTE PTR [BX+DI+0BBBAH],1
+      SAR    BYTE PTR [BP+SI+0BCBBH],1
+      SAR    BYTE PTR [BP+DI+0BDBCH],1
+      SAR    BYTE PTR [SI+0BEBDH],1
+      SAR    BYTE PTR [DI+0BFBEH],1
+      SAR    BYTE PTR [BP+0C0BFH],1
+      SAR    BYTE PTR [BX+0C1C0H],1
       ROL    AL,1
       ROL    CL,1
       ROL    DL,1
@@ -10123,7 +6269,7 @@
       ROL    WORD PTR [BP+DI],1
       ROL    WORD PTR [SI],1
       ROL    WORD PTR [DI],1
-      ROL    WORD PTR [0107H],1
+      ROL    WORD PTR [0807H],1
       ROL    WORD PTR [BX],1
       ROR    WORD PTR [BX+SI],1
       ROR    WORD PTR [BX+DI],1
@@ -10131,7 +6277,7 @@
       ROR    WORD PTR [BP+DI],1
       ROR    WORD PTR [SI],1
       ROR    WORD PTR [DI],1
-      ROR    WORD PTR [010FH],1
+      ROR    WORD PTR [100FH],1
       ROR    WORD PTR [BX],1
       RCL    WORD PTR [BX+SI],1
       RCL    WORD PTR [BX+DI],1
@@ -10139,7 +6285,7 @@
       RCL    WORD PTR [BP+DI],1
       RCL    WORD PTR [SI],1
       RCL    WORD PTR [DI],1
-      RCL    WORD PTR [0117H],1
+      RCL    WORD PTR [1817H],1
       RCL    WORD PTR [BX],1
       RCR    WORD PTR [BX+SI],1
       RCR    WORD PTR [BX+DI],1
@@ -10147,7 +6293,7 @@
       RCR    WORD PTR [BP+DI],1
       RCR    WORD PTR [SI],1
       RCR    WORD PTR [DI],1
-      RCR    WORD PTR [011FH],1
+      RCR    WORD PTR [201FH],1
       RCR    WORD PTR [BX],1
       SHL    WORD PTR [BX+SI],1
       SHL    WORD PTR [BX+DI],1
@@ -10155,7 +6301,7 @@
       SHL    WORD PTR [BP+DI],1
       SHL    WORD PTR [SI],1
       SHL    WORD PTR [DI],1
-      SHL    WORD PTR [0127H],1
+      SHL    WORD PTR [2827H],1
       SHL    WORD PTR [BX],1
       SHR    WORD PTR [BX+SI],1
       SHR    WORD PTR [BX+DI],1
@@ -10163,7 +6309,7 @@
       SHR    WORD PTR [BP+DI],1
       SHR    WORD PTR [SI],1
       SHR    WORD PTR [DI],1
-      SHR    WORD PTR [012FH],1
+      SHR    WORD PTR [302FH],1
       SHR    WORD PTR [BX],1
       SAR    WORD PTR [BX+SI],1
       SAR    WORD PTR [BX+DI],1
@@ -10171,7 +6317,7 @@
       SAR    WORD PTR [BP+DI],1
       SAR    WORD PTR [SI],1
       SAR    WORD PTR [DI],1
-      SAR    WORD PTR [013FH],1
+      SAR    WORD PTR [403FH],1
       SAR    WORD PTR [BX],1
       ROL    WORD PTR [BX+SI+65],1
       ROL    WORD PTR [BX+SI-128],1
@@ -10285,62 +6431,62 @@
       SAR    WORD PTR [BP-128],1
       SAR    WORD PTR [BX-128],1
       SAR    WORD PTR [BX+0],1
-      ROL    WORD PTR [BX+SI+0181H],1
-      ROL    WORD PTR [BX+DI+0182H],1
-      ROL    WORD PTR [BP+SI+0183H],1
-      ROL    WORD PTR [BP+DI+0184H],1
-      ROL    WORD PTR [SI+0185H],1
-      ROL    WORD PTR [DI+0186H],1
-      ROL    WORD PTR [BP+0187H],1
-      ROL    WORD PTR [BX+0188H],1
-      ROR    WORD PTR [BX+SI+0189H],1
-      ROR    WORD PTR [BX+DI+018AH],1
-      ROR    WORD PTR [BP+SI+018BH],1
-      ROR    WORD PTR [BP+DI+018CH],1
-      ROR    WORD PTR [SI+018DH],1
-      ROR    WORD PTR [DI+018EH],1
-      ROR    WORD PTR [BP+018FH],1
-      ROR    WORD PTR [BX+0190H],1
-      RCL    WORD PTR [BX+SI+0191H],1
-      RCL    WORD PTR [BX+DI+0192H],1
-      RCL    WORD PTR [BP+SI+0193H],1
-      RCL    WORD PTR [BP+DI+0194H],1
-      RCL    WORD PTR [SI+0195H],1
-      RCL    WORD PTR [DI+0196H],1
-      RCL    WORD PTR [BP+0197H],1
-      RCL    WORD PTR [BX+0198H],1
-      RCR    WORD PTR [BX+SI+0199H],1
-      RCR    WORD PTR [BX+DI+019AH],1
-      RCR    WORD PTR [BP+SI+019BH],1
-      RCR    WORD PTR [BP+DI+019CH],1
-      RCR    WORD PTR [SI+019DH],1
-      RCR    WORD PTR [DI+019EH],1
-      RCR    WORD PTR [BP+019FH],1
-      RCR    WORD PTR [BX+01A0H],1
-      SHL    WORD PTR [BX+SI+01A1H],1
-      SHL    WORD PTR [BX+DI+01A2H],1
-      SHL    WORD PTR [BP+SI+01A3H],1
-      SHL    WORD PTR [BP+DI+01A4H],1
-      SHL    WORD PTR [SI+01A5H],1
-      SHL    WORD PTR [DI+01A6H],1
-      SHL    WORD PTR [BP+01A7H],1
-      SHL    WORD PTR [BX+01A8H],1
-      SHR    WORD PTR [BX+SI+01A9H],1
-      SHR    WORD PTR [BX+DI+01AAH],1
-      SHR    WORD PTR [BP+SI+01ABH],1
-      SHR    WORD PTR [BP+DI+01ACH],1
-      SHR    WORD PTR [SI+01ADH],1
-      SHR    WORD PTR [DI+01AEH],1
-      SHR    WORD PTR [BP+01AFH],1
-      SHR    WORD PTR [BX+01B0H],1
-      SAR    WORD PTR [BX+SI+01B9H],1
-      SAR    WORD PTR [BX+DI+01BAH],1
-      SAR    WORD PTR [BP+SI+01BBH],1
-      SAR    WORD PTR [BP+DI+01BCH],1
-      SAR    WORD PTR [SI+01BDH],1
-      SAR    WORD PTR [DI+01BEH],1
-      SAR    WORD PTR [BP+01BFH],1
-      SAR    WORD PTR [BX+01C0H],1
+      ROL    WORD PTR [BX+SI+8281H],1
+      ROL    WORD PTR [BX+DI+8382H],1
+      ROL    WORD PTR [BP+SI+8483H],1
+      ROL    WORD PTR [BP+DI+8584H],1
+      ROL    WORD PTR [SI+8685H],1
+      ROL    WORD PTR [DI+8786H],1
+      ROL    WORD PTR [BP+8887H],1
+      ROL    WORD PTR [BX+8988H],1
+      ROR    WORD PTR [BX+SI+8A89H],1
+      ROR    WORD PTR [BX+DI+8B8AH],1
+      ROR    WORD PTR [BP+SI+8C8BH],1
+      ROR    WORD PTR [BP+DI+8D8CH],1
+      ROR    WORD PTR [SI+8E8DH],1
+      ROR    WORD PTR [DI+8F8EH],1
+      ROR    WORD PTR [BP+908FH],1
+      ROR    WORD PTR [BX+9190H],1
+      RCL    WORD PTR [BX+SI+9291H],1
+      RCL    WORD PTR [BX+DI+9392H],1
+      RCL    WORD PTR [BP+SI+9493H],1
+      RCL    WORD PTR [BP+DI+9594H],1
+      RCL    WORD PTR [SI+9695H],1
+      RCL    WORD PTR [DI+9796H],1
+      RCL    WORD PTR [BP+9897H],1
+      RCL    WORD PTR [BX+9998H],1
+      RCR    WORD PTR [BX+SI+9A99H],1
+      RCR    WORD PTR [BX+DI+9B9AH],1
+      RCR    WORD PTR [BP+SI+9C9BH],1
+      RCR    WORD PTR [BP+DI+9D9CH],1
+      RCR    WORD PTR [SI+9E9DH],1
+      RCR    WORD PTR [DI+9F9EH],1
+      RCR    WORD PTR [BP+0A09FH],1
+      RCR    WORD PTR [BX+0A1A0H],1
+      SHL    WORD PTR [BX+SI+0A2A1H],1
+      SHL    WORD PTR [BX+DI+0A3A2H],1
+      SHL    WORD PTR [BP+SI+0A4A3H],1
+      SHL    WORD PTR [BP+DI+0A5A4H],1
+      SHL    WORD PTR [SI+0A6A5H],1
+      SHL    WORD PTR [DI+0A7A6H],1
+      SHL    WORD PTR [BP+0A8A7H],1
+      SHL    WORD PTR [BX+0A9A8H],1
+      SHR    WORD PTR [BX+SI+0AAA9H],1
+      SHR    WORD PTR [BX+DI+0ABAAH],1
+      SHR    WORD PTR [BP+SI+0ACABH],1
+      SHR    WORD PTR [BP+DI+0ADACH],1
+      SHR    WORD PTR [SI+0AEADH],1
+      SHR    WORD PTR [DI+0AFAEH],1
+      SHR    WORD PTR [BP+0B0AFH],1
+      SHR    WORD PTR [BX+0B1B0H],1
+      SAR    WORD PTR [BX+SI+0BAB9H],1
+      SAR    WORD PTR [BX+DI+0BBBAH],1
+      SAR    WORD PTR [BP+SI+0BCBBH],1
+      SAR    WORD PTR [BP+DI+0BDBCH],1
+      SAR    WORD PTR [SI+0BEBDH],1
+      SAR    WORD PTR [DI+0BFBEH],1
+      SAR    WORD PTR [BP+0C0BFH],1
+      SAR    WORD PTR [BX+0C1C0H],1
       ROL    AX,1
       ROL    CX,1
       ROL    DX,1
@@ -10387,7 +6533,7 @@
       ROL    BYTE PTR [BP+DI],CL
       ROL    BYTE PTR [SI],CL
       ROL    BYTE PTR [DI],CL
-      ROL    BYTE PTR [0107H],CL
+      ROL    BYTE PTR [0807H],CL
       ROL    BYTE PTR [BX],CL
       ROR    BYTE PTR [BX+SI],CL
       ROR    BYTE PTR [BX+DI],CL
@@ -10395,7 +6541,7 @@
       ROR    BYTE PTR [BP+DI],CL
       ROR    BYTE PTR [SI],CL
       ROR    BYTE PTR [DI],CL
-      ROR    BYTE PTR [010FH],CL
+      ROR    BYTE PTR [100FH],CL
       ROR    BYTE PTR [BX],CL
       RCL    BYTE PTR [BX+SI],CL
       RCL    BYTE PTR [BX+DI],CL
@@ -10403,7 +6549,7 @@
       RCL    BYTE PTR [BP+DI],CL
       RCL    BYTE PTR [SI],CL
       RCL    BYTE PTR [DI],CL
-      RCL    BYTE PTR [0117H],CL
+      RCL    BYTE PTR [1817H],CL
       RCL    BYTE PTR [BX],CL
       RCR    BYTE PTR [BX+SI],CL
       RCR    BYTE PTR [BX+DI],CL
@@ -10411,7 +6557,7 @@
       RCR    BYTE PTR [BP+DI],CL
       RCR    BYTE PTR [SI],CL
       RCR    BYTE PTR [DI],CL
-      RCR    BYTE PTR [011FH],CL
+      RCR    BYTE PTR [201FH],CL
       RCR    BYTE PTR [BX],CL
       SHL    BYTE PTR [BX+SI],CL
       SHL    BYTE PTR [BX+DI],CL
@@ -10419,7 +6565,7 @@
       SHL    BYTE PTR [BP+DI],CL
       SHL    BYTE PTR [SI],CL
       SHL    BYTE PTR [DI],CL
-      SHL    BYTE PTR [0127H],CL
+      SHL    BYTE PTR [2827H],CL
       SHL    BYTE PTR [BX],CL
       SHR    BYTE PTR [BX+SI],CL
       SHR    BYTE PTR [BX+DI],CL
@@ -10427,7 +6573,7 @@
       SHR    BYTE PTR [BP+DI],CL
       SHR    BYTE PTR [SI],CL
       SHR    BYTE PTR [DI],CL
-      SHR    BYTE PTR [012FH],CL
+      SHR    BYTE PTR [302FH],CL
       SHR    BYTE PTR [BX],CL
       SAR    BYTE PTR [BX+SI],CL
       SAR    BYTE PTR [BX+DI],CL
@@ -10435,7 +6581,7 @@
       SAR    BYTE PTR [BP+DI],CL
       SAR    BYTE PTR [SI],CL
       SAR    BYTE PTR [DI],CL
-      SAR    BYTE PTR [013FH],CL
+      SAR    BYTE PTR [403FH],CL
       SAR    BYTE PTR [BX],CL
       ROL    BYTE PTR [BX+SI+65],CL
       ROL    BYTE PTR [BX+SI-128],CL
@@ -10549,62 +6695,62 @@
       SAR    BYTE PTR [BP-128],CL
       SAR    BYTE PTR [BX-128],CL
       SAR    BYTE PTR [BX+0],CL
-      ROL    BYTE PTR [BX+SI+0181H],CL
-      ROL    BYTE PTR [BX+DI+0182H],CL
-      ROL    BYTE PTR [BP+SI+0183H],CL
-      ROL    BYTE PTR [BP+DI+0184H],CL
-      ROL    BYTE PTR [SI+0185H],CL
-      ROL    BYTE PTR [DI+0186H],CL
-      ROL    BYTE PTR [BP+0187H],CL
-      ROL    BYTE PTR [BX+0188H],CL
-      ROR    BYTE PTR [BX+SI+0189H],CL
-      ROR    BYTE PTR [BX+DI+018AH],CL
-      ROR    BYTE PTR [BP+SI+018BH],CL
-      ROR    BYTE PTR [BP+DI+018CH],CL
-      ROR    BYTE PTR [SI+018DH],CL
-      ROR    BYTE PTR [DI+018EH],CL
-      ROR    BYTE PTR [BP+018FH],CL
-      ROR    BYTE PTR [BX+0190H],CL
-      RCL    BYTE PTR [BX+SI+0191H],CL
-      RCL    BYTE PTR [BX+DI+0192H],CL
-      RCL    BYTE PTR [BP+SI+0193H],CL
-      RCL    BYTE PTR [BP+DI+0194H],CL
-      RCL    BYTE PTR [SI+0195H],CL
-      RCL    BYTE PTR [DI+0196H],CL
-      RCL    BYTE PTR [BP+0197H],CL
-      RCL    BYTE PTR [BX+0198H],CL
-      RCR    BYTE PTR [BX+SI+0199H],CL
-      RCR    BYTE PTR [BX+DI+019AH],CL
-      RCR    BYTE PTR [BP+SI+019BH],CL
-      RCR    BYTE PTR [BP+DI+019CH],CL
-      RCR    BYTE PTR [SI+019DH],CL
-      RCR    BYTE PTR [DI+019EH],CL
-      RCR    BYTE PTR [BP+019FH],CL
-      RCR    BYTE PTR [BX+01A0H],CL
-      SHL    BYTE PTR [BX+SI+01A1H],CL
-      SHL    BYTE PTR [BX+DI+01A2H],CL
-      SHL    BYTE PTR [BP+SI+01A3H],CL
-      SHL    BYTE PTR [BP+DI+01A4H],CL
-      SHL    BYTE PTR [SI+01A5H],CL
-      SHL    BYTE PTR [DI+01A6H],CL
-      SHL    BYTE PTR [BP+01A7H],CL
-      SHL    BYTE PTR [BX+01A8H],CL
-      SHR    BYTE PTR [BX+SI+01A9H],CL
-      SHR    BYTE PTR [BX+DI+01AAH],CL
-      SHR    BYTE PTR [BP+SI+01ABH],CL
-      SHR    BYTE PTR [BP+DI+01ACH],CL
-      SHR    BYTE PTR [SI+01ADH],CL
-      SHR    BYTE PTR [DI+01AEH],CL
-      SHR    BYTE PTR [BP+01AFH],CL
-      SHR    BYTE PTR [BX+01B0H],CL
-      SAR    BYTE PTR [BX+SI+01B9H],CL
-      SAR    BYTE PTR [BX+DI+01BAH],CL
-      SAR    BYTE PTR [BP+SI+01BBH],CL
-      SAR    BYTE PTR [BP+DI+01BCH],CL
-      SAR    BYTE PTR [SI+01BDH],CL
-      SAR    BYTE PTR [DI+01BEH],CL
-      SAR    BYTE PTR [BP+01BFH],CL
-      SAR    BYTE PTR [BX+01C0H],CL
+      ROL    BYTE PTR [BX+SI+8281H],CL
+      ROL    BYTE PTR [BX+DI+8382H],CL
+      ROL    BYTE PTR [BP+SI+8483H],CL
+      ROL    BYTE PTR [BP+DI+8584H],CL
+      ROL    BYTE PTR [SI+8685H],CL
+      ROL    BYTE PTR [DI+8786H],CL
+      ROL    BYTE PTR [BP+8887H],CL
+      ROL    BYTE PTR [BX+8988H],CL
+      ROR    BYTE PTR [BX+SI+8A89H],CL
+      ROR    BYTE PTR [BX+DI+8B8AH],CL
+      ROR    BYTE PTR [BP+SI+8C8BH],CL
+      ROR    BYTE PTR [BP+DI+8D8CH],CL
+      ROR    BYTE PTR [SI+8E8DH],CL
+      ROR    BYTE PTR [DI+8F8EH],CL
+      ROR    BYTE PTR [BP+908FH],CL
+      ROR    BYTE PTR [BX+9190H],CL
+      RCL    BYTE PTR [BX+SI+9291H],CL
+      RCL    BYTE PTR [BX+DI+9392H],CL
+      RCL    BYTE PTR [BP+SI+9493H],CL
+      RCL    BYTE PTR [BP+DI+9594H],CL
+      RCL    BYTE PTR [SI+9695H],CL
+      RCL    BYTE PTR [DI+9796H],CL
+      RCL    BYTE PTR [BP+9897H],CL
+      RCL    BYTE PTR [BX+9998H],CL
+      RCR    BYTE PTR [BX+SI+9A99H],CL
+      RCR    BYTE PTR [BX+DI+9B9AH],CL
+      RCR    BYTE PTR [BP+SI+9C9BH],CL
+      RCR    BYTE PTR [BP+DI+9D9CH],CL
+      RCR    BYTE PTR [SI+9E9DH],CL
+      RCR    BYTE PTR [DI+9F9EH],CL
+      RCR    BYTE PTR [BP+0A09FH],CL
+      RCR    BYTE PTR [BX+0A1A0H],CL
+      SHL    BYTE PTR [BX+SI+0A2A1H],CL
+      SHL    BYTE PTR [BX+DI+0A3A2H],CL
+      SHL    BYTE PTR [BP+SI+0A4A3H],CL
+      SHL    BYTE PTR [BP+DI+0A5A4H],CL
+      SHL    BYTE PTR [SI+0A6A5H],CL
+      SHL    BYTE PTR [DI+0A7A6H],CL
+      SHL    BYTE PTR [BP+0A8A7H],CL
+      SHL    BYTE PTR [BX+0A9A8H],CL
+      SHR    BYTE PTR [BX+SI+0AAA9H],CL
+      SHR    BYTE PTR [BX+DI+0ABAAH],CL
+      SHR    BYTE PTR [BP+SI+0ACABH],CL
+      SHR    BYTE PTR [BP+DI+0ADACH],CL
+      SHR    BYTE PTR [SI+0AEADH],CL
+      SHR    BYTE PTR [DI+0AFAEH],CL
+      SHR    BYTE PTR [BP+0B0AFH],CL
+      SHR    BYTE PTR [BX+0B1B0H],CL
+      SAR    BYTE PTR [BX+SI+0BAB9H],CL
+      SAR    BYTE PTR [BX+DI+0BBBAH],CL
+      SAR    BYTE PTR [BP+SI+0BCBBH],CL
+      SAR    BYTE PTR [BP+DI+0BDBCH],CL
+      SAR    BYTE PTR [SI+0BEBDH],CL
+      SAR    BYTE PTR [DI+0BFBEH],CL
+      SAR    BYTE PTR [BP+0C0BFH],CL
+      SAR    BYTE PTR [BX+0C1C0H],CL
       ROL    AL,CL
       ROL    CL,CL
       ROL    DL,CL
@@ -10660,7 +6806,7 @@
       ROL    WORD PTR [BP+DI],CL
       ROL    WORD PTR [SI],CL
       ROL    WORD PTR [DI],CL
-      ROL    WORD PTR [0107H],CL
+      ROL    WORD PTR [0807H],CL
       ROL    WORD PTR [BX],CL
       ROR    WORD PTR [BX+SI],CL
       ROR    WORD PTR [BX+DI],CL
@@ -10668,7 +6814,7 @@
       ROR    WORD PTR [BP+DI],CL
       ROR    WORD PTR [SI],CL
       ROR    WORD PTR [DI],CL
-      ROR    WORD PTR [010FH],CL
+      ROR    WORD PTR [100FH],CL
       ROR    WORD PTR [BX],CL
       RCL    WORD PTR [BX+SI],CL
       RCL    WORD PTR [BX+DI],CL
@@ -10676,7 +6822,7 @@
       RCL    WORD PTR [BP+DI],CL
       RCL    WORD PTR [SI],CL
       RCL    WORD PTR [DI],CL
-      RCL    WORD PTR [0117H],CL
+      RCL    WORD PTR [1817H],CL
       RCL    WORD PTR [BX],CL
       RCR    WORD PTR [BX+SI],CL
       RCR    WORD PTR [BX+DI],CL
@@ -10684,7 +6830,7 @@
       RCR    WORD PTR [BP+DI],CL
       RCR    WORD PTR [SI],CL
       RCR    WORD PTR [DI],CL
-      RCR    WORD PTR [011FH],CL
+      RCR    WORD PTR [201FH],CL
       RCR    WORD PTR [BX],CL
       SHL    WORD PTR [BX+SI],CL
       SHL    WORD PTR [BX+DI],CL
@@ -10692,7 +6838,7 @@
       SHL    WORD PTR [BP+DI],CL
       SHL    WORD PTR [SI],CL
       SHL    WORD PTR [DI],CL
-      SHL    WORD PTR [0127H],CL
+      SHL    WORD PTR [2827H],CL
       SHL    WORD PTR [BX],CL
       SHR    WORD PTR [BX+SI],CL
       SHR    WORD PTR [BX+DI],CL
@@ -10700,7 +6846,7 @@
       SHR    WORD PTR [BP+DI],CL
       SHR    WORD PTR [SI],CL
       SHR    WORD PTR [DI],CL
-      SHR    WORD PTR [012FH],CL
+      SHR    WORD PTR [302FH],CL
       SHR    WORD PTR [BX],CL
       SAR    WORD PTR [BX+SI],CL
       SAR    WORD PTR [BX+DI],CL
@@ -10708,7 +6854,7 @@
       SAR    WORD PTR [BP+DI],CL
       SAR    WORD PTR [SI],CL
       SAR    WORD PTR [DI],CL
-      SAR    WORD PTR [013FH],CL
+      SAR    WORD PTR [403FH],CL
       SAR    WORD PTR [BX],CL
       ROL    WORD PTR [BX+SI+65],CL
       ROL    WORD PTR [BX+SI-128],CL
@@ -10822,62 +6968,62 @@
       SAR    WORD PTR [BP-128],CL
       SAR    WORD PTR [BX-128],CL
       SAR    WORD PTR [BX+0],CL
-      ROL    WORD PTR [BX+SI+0181H],CL
-      ROL    WORD PTR [BX+DI+0182H],CL
-      ROL    WORD PTR [BP+SI+0183H],CL
-      ROL    WORD PTR [BP+DI+0184H],CL
-      ROL    WORD PTR [SI+0185H],CL
-      ROL    WORD PTR [DI+0186H],CL
-      ROL    WORD PTR [BP+0187H],CL
-      ROL    WORD PTR [BX+0188H],CL
-      ROR    WORD PTR [BX+SI+0189H],CL
-      ROR    WORD PTR [BX+DI+018AH],CL
-      ROR    WORD PTR [BP+SI+018BH],CL
-      ROR    WORD PTR [BP+DI+018CH],CL
-      ROR    WORD PTR [SI+018DH],CL
-      ROR    WORD PTR [DI+018EH],CL
-      ROR    WORD PTR [BP+018FH],CL
-      ROR    WORD PTR [BX+0190H],CL
-      RCL    WORD PTR [BX+SI+0191H],CL
-      RCL    WORD PTR [BX+DI+0192H],CL
-      RCL    WORD PTR [BP+SI+0193H],CL
-      RCL    WORD PTR [BP+DI+0194H],CL
-      RCL    WORD PTR [SI+0195H],CL
-      RCL    WORD PTR [DI+0196H],CL
-      RCL    WORD PTR [BP+0197H],CL
-      RCL    WORD PTR [BX+0198H],CL
-      RCR    WORD PTR [BX+SI+0199H],CL
-      RCR    WORD PTR [BX+DI+019AH],CL
-      RCR    WORD PTR [BP+SI+019BH],CL
-      RCR    WORD PTR [BP+DI+019CH],CL
-      RCR    WORD PTR [SI+019DH],CL
-      RCR    WORD PTR [DI+019EH],CL
-      RCR    WORD PTR [BP+019FH],CL
-      RCR    WORD PTR [BX+01A0H],CL
-      SHL    WORD PTR [BX+SI+01A1H],CL
-      SHL    WORD PTR [BX+DI+01A2H],CL
-      SHL    WORD PTR [BP+SI+01A3H],CL
-      SHL    WORD PTR [BP+DI+01A4H],CL
-      SHL    WORD PTR [SI+01A5H],CL
-      SHL    WORD PTR [DI+01A6H],CL
-      SHL    WORD PTR [BP+01A7H],CL
-      SHL    WORD PTR [BX+01A8H],CL
-      SHR    WORD PTR [BX+SI+01A9H],CL
-      SHR    WORD PTR [BX+DI+01AAH],CL
-      SHR    WORD PTR [BP+SI+01ABH],CL
-      SHR    WORD PTR [BP+DI+01ACH],CL
-      SHR    WORD PTR [SI+01ADH],CL
-      SHR    WORD PTR [DI+01AEH],CL
-      SHR    WORD PTR [BP+01AFH],CL
-      SHR    WORD PTR [BX+01B0H],CL
-      SAR    WORD PTR [BX+SI+01B9H],CL
-      SAR    WORD PTR [BX+DI+01BAH],CL
-      SAR    WORD PTR [BP+SI+01BBH],CL
-      SAR    WORD PTR [BP+DI+01BCH],CL
-      SAR    WORD PTR [SI+01BDH],CL
-      SAR    WORD PTR [DI+01BEH],CL
-      SAR    WORD PTR [BP+01BFH],CL
-      SAR    WORD PTR [BX+01C0H],CL
+      ROL    WORD PTR [BX+SI+8281H],CL
+      ROL    WORD PTR [BX+DI+8382H],CL
+      ROL    WORD PTR [BP+SI+8483H],CL
+      ROL    WORD PTR [BP+DI+8584H],CL
+      ROL    WORD PTR [SI+8685H],CL
+      ROL    WORD PTR [DI+8786H],CL
+      ROL    WORD PTR [BP+8887H],CL
+      ROL    WORD PTR [BX+8988H],CL
+      ROR    WORD PTR [BX+SI+8A89H],CL
+      ROR    WORD PTR [BX+DI+8B8AH],CL
+      ROR    WORD PTR [BP+SI+8C8BH],CL
+      ROR    WORD PTR [BP+DI+8D8CH],CL
+      ROR    WORD PTR [SI+8E8DH],CL
+      ROR    WORD PTR [DI+8F8EH],CL
+      ROR    WORD PTR [BP+908FH],CL
+      ROR    WORD PTR [BX+9190H],CL
+      RCL    WORD PTR [BX+SI+9291H],CL
+      RCL    WORD PTR [BX+DI+9392H],CL
+      RCL    WORD PTR [BP+SI+9493H],CL
+      RCL    WORD PTR [BP+DI+9594H],CL
+      RCL    WORD PTR [SI+9695H],CL
+      RCL    WORD PTR [DI+9796H],CL
+      RCL    WORD PTR [BP+9897H],CL
+      RCL    WORD PTR [BX+9998H],CL
+      RCR    WORD PTR [BX+SI+9A99H],CL
+      RCR    WORD PTR [BX+DI+9B9AH],CL
+      RCR    WORD PTR [BP+SI+9C9BH],CL
+      RCR    WORD PTR [BP+DI+9D9CH],CL
+      RCR    WORD PTR [SI+9E9DH],CL
+      RCR    WORD PTR [DI+9F9EH],CL
+      RCR    WORD PTR [BP+0A09FH],CL
+      RCR    WORD PTR [BX+0A1A0H],CL
+      SHL    WORD PTR [BX+SI+0A2A1H],CL
+      SHL    WORD PTR [BX+DI+0A3A2H],CL
+      SHL    WORD PTR [BP+SI+0A4A3H],CL
+      SHL    WORD PTR [BP+DI+0A5A4H],CL
+      SHL    WORD PTR [SI+0A6A5H],CL
+      SHL    WORD PTR [DI+0A7A6H],CL
+      SHL    WORD PTR [BP+0A8A7H],CL
+      SHL    WORD PTR [BX+0A9A8H],CL
+      SHR    WORD PTR [BX+SI+0AAA9H],CL
+      SHR    WORD PTR [BX+DI+0ABAAH],CL
+      SHR    WORD PTR [BP+SI+0ACABH],CL
+      SHR    WORD PTR [BP+DI+0ADACH],CL
+      SHR    WORD PTR [SI+0AEADH],CL
+      SHR    WORD PTR [DI+0AFAEH],CL
+      SHR    WORD PTR [BP+0B0AFH],CL
+      SHR    WORD PTR [BX+0B1B0H],CL
+      SAR    WORD PTR [BX+SI+0BAB9H],CL
+      SAR    WORD PTR [BX+DI+0BBBAH],CL
+      SAR    WORD PTR [BP+SI+0BCBBH],CL
+      SAR    WORD PTR [BP+DI+0BDBCH],CL
+      SAR    WORD PTR [SI+0BEBDH],CL
+      SAR    WORD PTR [DI+0BFBEH],CL
+      SAR    WORD PTR [BP+0C0BFH],CL
+      SAR    WORD PTR [BX+0C1C0H],CL
       ROL    AX,CL
       ROL    CX,CL
       ROL    DX,CL
@@ -10915,9 +7061,11 @@
       IN     AX,0E6H
       OUT    0E7H,AL
       OUT    0E8H,AX
-      CALL   $+00ECH
-      JMP    $+00EDH
-      JMPF   0000H:00EBH
+      CALL   $-1514H
+      CALL   $+00EBH
+      JMP    $-1413H
+      JMP    $+00ECH
+      JMPF   0EEEDH:0ECEBH
       JMP    $-18
       JMP    $
       JMP    $+1
@@ -10929,6 +7077,240 @@
       HLT
       CMC
       DIV    BH
+      IDIV   AL
+      IDIV   CL
+      IDIV   DL
+      IDIV   BL
+      IDIV   AH
+      TEST   BYTE PTR [BX+SI],1
+      TEST   BYTE PTR [BX+DI],2
+      TEST   BYTE PTR [BP+SI],3
+      TEST   BYTE PTR [BP+DI],4
+      TEST   BYTE PTR [SI],5
+      TEST   BYTE PTR [DI],6
+      TEST   BYTE PTR [0807H],9
+      TEST   BYTE PTR [BX],8
+      NOT    BYTE PTR [BX+SI]
+      NOT    BYTE PTR [BX+DI]
+      NOT    BYTE PTR [BP+SI]
+      NOT    BYTE PTR [BP+DI]
+      NOT    BYTE PTR [SI]
+      NOT    BYTE PTR [DI]
+      NOT    BYTE PTR [1817H]
+      NOT    BYTE PTR [BX]
+      NEG    BYTE PTR [BX+SI]
+      NEG    BYTE PTR [BX+DI]
+      NEG    BYTE PTR [BP+SI]
+      NEG    BYTE PTR [BP+DI]
+      NEG    BYTE PTR [SI]
+      NEG    BYTE PTR [DI]
+      NEG    BYTE PTR [201FH]
+      NEG    BYTE PTR [BX]
+      MUL    BYTE PTR [BX+SI]
+      MUL    BYTE PTR [BX+DI]
+      MUL    BYTE PTR [BP+SI]
+      MUL    BYTE PTR [BP+DI]
+      MUL    BYTE PTR [SI]
+      MUL    BYTE PTR [DI]
+      MUL    BYTE PTR [2827H]
+      MUL    BYTE PTR [BX]
+      IMUL   BYTE PTR [BX+SI]
+      IMUL   BYTE PTR [BX+DI]
+      IMUL   BYTE PTR [BP+SI]
+      IMUL   BYTE PTR [BP+DI]
+      IMUL   BYTE PTR [SI]
+      IMUL   BYTE PTR [DI]
+      IMUL   BYTE PTR [302FH]
+      IMUL   BYTE PTR [BX]
+      DIV    BYTE PTR [BX+SI]
+      DIV    BYTE PTR [BX+DI]
+      DIV    BYTE PTR [BP+SI]
+      DIV    BYTE PTR [BP+DI]
+      DIV    BYTE PTR [SI]
+      DIV    BYTE PTR [DI]
+      DIV    BYTE PTR [3837H]
+      DIV    BYTE PTR [BX]
+      IDIV   BYTE PTR [BX+SI]
+      IDIV   BYTE PTR [BX+DI]
+      IDIV   BYTE PTR [BP+SI]
+      IDIV   BYTE PTR [BP+DI]
+      IDIV   BYTE PTR [SI]
+      IDIV   BYTE PTR [DI]
+      IDIV   BYTE PTR [403FH]
+      IDIV   BYTE PTR [BX]
+      TEST   BYTE PTR [BX+SI+65],42H
+      TEST   BYTE PTR [BX+SI-128],42H
+      TEST   BYTE PTR [BX+DI+66],43H
+      TEST   BYTE PTR [BX+DI-128],43H
+      TEST   BYTE PTR [BP+SI+67],44H
+      TEST   BYTE PTR [BP+SI-128],44H
+      TEST   BYTE PTR [BP+DI+68],45H
+      TEST   BYTE PTR [BP+DI-128],45H
+      TEST   BYTE PTR [SI+69],46H
+      TEST   BYTE PTR [SI-128],46H
+      TEST   BYTE PTR [DI+70],47H
+      TEST   BYTE PTR [DI-128],47H
+      TEST   BYTE PTR [BP+71],48H
+      TEST   BYTE PTR [BP-128],48H
+      TEST   BYTE PTR [BX+72],49H
+      TEST   BYTE PTR [BX-128],49H
+      NOT    BYTE PTR [BX+SI+81]
+      NOT    BYTE PTR [BX+SI-128]
+      NOT    BYTE PTR [BX+DI+82]
+      NOT    BYTE PTR [BX+DI-128]
+      NOT    BYTE PTR [BP+SI+83]
+      NOT    BYTE PTR [BP+SI-128]
+      NOT    BYTE PTR [BP+DI+84]
+      NOT    BYTE PTR [BP+DI-128]
+      NOT    BYTE PTR [SI+85]
+      NOT    BYTE PTR [SI-128]
+      NOT    BYTE PTR [DI+86]
+      NOT    BYTE PTR [DI-128]
+      NOT    BYTE PTR [BP+87]
+      NOT    BYTE PTR [BP-128]
+      NOT    BYTE PTR [BX+88]
+      NOT    BYTE PTR [BX-128]
+      NEG    BYTE PTR [BX+SI+89]
+      NEG    BYTE PTR [BX+SI-128]
+      NEG    BYTE PTR [BX+DI+90]
+      NEG    BYTE PTR [BX+DI-128]
+      NEG    BYTE PTR [BP+SI+91]
+      NEG    BYTE PTR [BP+SI-128]
+      NEG    BYTE PTR [BP+DI+92]
+      NEG    BYTE PTR [BP+DI-128]
+      NEG    BYTE PTR [SI+93]
+      NEG    BYTE PTR [SI-128]
+      NEG    BYTE PTR [DI+94]
+      NEG    BYTE PTR [DI-128]
+      NEG    BYTE PTR [BP+95]
+      NEG    BYTE PTR [BP-128]
+      NEG    BYTE PTR [BX+96]
+      NEG    BYTE PTR [BX-128]
+      MUL    BYTE PTR [BX+SI+97]
+      MUL    BYTE PTR [BX+SI-128]
+      MUL    BYTE PTR [BX+DI+98]
+      MUL    BYTE PTR [BX+DI-128]
+      MUL    BYTE PTR [BP+SI+99]
+      MUL    BYTE PTR [BP+SI-128]
+      MUL    BYTE PTR [BP+DI+100]
+      MUL    BYTE PTR [BP+DI-128]
+      MUL    BYTE PTR [SI+101]
+      MUL    BYTE PTR [SI-128]
+      MUL    BYTE PTR [DI+102]
+      MUL    BYTE PTR [DI-128]
+      MUL    BYTE PTR [BP+103]
+      MUL    BYTE PTR [BP-128]
+      MUL    BYTE PTR [BX+104]
+      MUL    BYTE PTR [BX-128]
+      IMUL   BYTE PTR [BX+SI+105]
+      IMUL   BYTE PTR [BX+SI-128]
+      IMUL   BYTE PTR [BX+DI+106]
+      IMUL   BYTE PTR [BX+DI-128]
+      IMUL   BYTE PTR [BP+SI+107]
+      IMUL   BYTE PTR [BP+SI-128]
+      IMUL   BYTE PTR [BP+DI+108]
+      IMUL   BYTE PTR [BP+DI-128]
+      IMUL   BYTE PTR [SI+109]
+      IMUL   BYTE PTR [SI-128]
+      IMUL   BYTE PTR [DI+110]
+      IMUL   BYTE PTR [DI-128]
+      IMUL   BYTE PTR [BP+111]
+      IMUL   BYTE PTR [BP-128]
+      IMUL   BYTE PTR [BX+112]
+      IMUL   BYTE PTR [BX-128]
+      DIV    BYTE PTR [BX+SI+113]
+      DIV    BYTE PTR [BX+SI-128]
+      DIV    BYTE PTR [BX+DI+114]
+      DIV    BYTE PTR [BX+DI-128]
+      DIV    BYTE PTR [BP+SI+115]
+      DIV    BYTE PTR [BP+SI-128]
+      DIV    BYTE PTR [BP+DI+116]
+      DIV    BYTE PTR [BP+DI-128]
+      DIV    BYTE PTR [SI+117]
+      DIV    BYTE PTR [SI-128]
+      DIV    BYTE PTR [DI+118]
+      DIV    BYTE PTR [DI-128]
+      DIV    BYTE PTR [BP+119]
+      DIV    BYTE PTR [BP-128]
+      DIV    BYTE PTR [BX+120]
+      DIV    BYTE PTR [BX-128]
+      IDIV   BYTE PTR [BX+SI+121]
+      IDIV   BYTE PTR [BX+SI-128]
+      IDIV   BYTE PTR [BX+DI+122]
+      IDIV   BYTE PTR [BX+DI-128]
+      IDIV   BYTE PTR [BP+SI+123]
+      IDIV   BYTE PTR [BP+SI-128]
+      IDIV   BYTE PTR [BP+DI+124]
+      IDIV   BYTE PTR [BP+DI-128]
+      IDIV   BYTE PTR [SI+125]
+      IDIV   BYTE PTR [SI-128]
+      IDIV   BYTE PTR [DI+126]
+      IDIV   BYTE PTR [DI-128]
+      IDIV   BYTE PTR [BP+127]
+      IDIV   BYTE PTR [BP-128]
+      IDIV   BYTE PTR [BX-128]
+      IDIV   BYTE PTR [BX+0]
+      TEST   BYTE PTR [BX+SI+8281H],83H
+      TEST   BYTE PTR [BX+DI+8382H],84H
+      TEST   BYTE PTR [BP+SI+8483H],85H
+      TEST   BYTE PTR [BP+DI+8584H],86H
+      TEST   BYTE PTR [SI+8685H],87H
+      TEST   BYTE PTR [DI+8786H],88H
+      TEST   BYTE PTR [BP+8887H],89H
+      TEST   BYTE PTR [BX+8988H],8AH
+      NOT    BYTE PTR [BX+SI+9291H]
+      NOT    BYTE PTR [BX+DI+9392H]
+      NOT    BYTE PTR [BP+SI+9493H]
+      NOT    BYTE PTR [BP+DI+9594H]
+      NOT    BYTE PTR [SI+9695H]
+      NOT    BYTE PTR [DI+9796H]
+      NOT    BYTE PTR [BP+9897H]
+      NOT    BYTE PTR [BX+9998H]
+      NEG    BYTE PTR [BX+SI+9A99H]
+      NEG    BYTE PTR [BX+DI+9B9AH]
+      NEG    BYTE PTR [BP+SI+9C9BH]
+      NEG    BYTE PTR [BP+DI+9D9CH]
+      NEG    BYTE PTR [SI+9E9DH]
+      NEG    BYTE PTR [DI+9F9EH]
+      NEG    BYTE PTR [BP+0A09FH]
+      NEG    BYTE PTR [BX+0A1A0H]
+      MUL    BYTE PTR [BX+SI+0A2A1H]
+      MUL    BYTE PTR [BX+DI+0A3A2H]
+      MUL    BYTE PTR [BP+SI+0A4A3H]
+      MUL    BYTE PTR [BP+DI+0A5A4H]
+      MUL    BYTE PTR [SI+0A6A5H]
+      MUL    BYTE PTR [DI+0A7A6H]
+      MUL    BYTE PTR [BP+0A8A7H]
+      MUL    BYTE PTR [BX+0A9A8H]
+      IMUL   BYTE PTR [BX+SI+0AAA9H]
+      IMUL   BYTE PTR [BX+DI+0ABAAH]
+      IMUL   BYTE PTR [BP+SI+0ACABH]
+      IMUL   BYTE PTR [BP+DI+0ADACH]
+      IMUL   BYTE PTR [SI+0AEADH]
+      IMUL   BYTE PTR [DI+0AFAEH]
+      IMUL   BYTE PTR [BP+0B0AFH]
+      IMUL   BYTE PTR [BX+0B1B0H]
+      DIV    BYTE PTR [BX+SI+0B2B1H]
+      DIV    BYTE PTR [BX+DI+0B3B2H]
+      DIV    BYTE PTR [BP+SI+0B4B3H]
+      DIV    BYTE PTR [BP+DI+0B5B4H]
+      DIV    BYTE PTR [SI+0B6B5H]
+      DIV    BYTE PTR [DI+0B7B6H]
+      DIV    BYTE PTR [BP+0B8B7H]
+      DIV    BYTE PTR [BX+0B9B8H]
+      IDIV   BYTE PTR [BX+SI+0BAB9H]
+      IDIV   BYTE PTR [BX+DI+0BBBAH]
+      IDIV   BYTE PTR [BP+SI+0BCBBH]
+      IDIV   BYTE PTR [BP+DI+0BDBCH]
+      IDIV   BYTE PTR [SI+0BEBDH]
+      IDIV   BYTE PTR [DI+0BFBEH]
+      IDIV   BYTE PTR [BP+0C0BFH]
+      IDIV   BYTE PTR [BX+0C1C0H]
+      TEST   AL,0C1H
+      TEST   CL,0C2H
+      TEST   DL,0C3H
+      TEST   BL,0C4H
+      TEST   AH,0C5H
       IDIV   AX
       IDIV   CX
       IDIV   DX
@@ -10937,21 +7319,21 @@
       IDIV   BP
       IDIV   SI
       IDIV   DI
-      TEST   WORD PTR [BX+SI],0101H
-      TEST   WORD PTR [BX+DI],0102H
-      TEST   WORD PTR [BP+SI],0103H
-      TEST   WORD PTR [BP+DI],0104H
-      TEST   WORD PTR [SI],0105H
-      TEST   WORD PTR [DI],0106H
-      TEST   WORD PTR [0107H],0
-      TEST   WORD PTR [BX],0108H
+      TEST   WORD PTR [BX+SI],0201H
+      TEST   WORD PTR [BX+DI],0302H
+      TEST   WORD PTR [BP+SI],0403H
+      TEST   WORD PTR [BP+DI],0504H
+      TEST   WORD PTR [SI],0605H
+      TEST   WORD PTR [DI],0706H
+      TEST   WORD PTR [0807H],0A09H
+      TEST   WORD PTR [BX],0908H
       NOT    WORD PTR [BX+SI]
       NOT    WORD PTR [BX+DI]
       NOT    WORD PTR [BP+SI]
       NOT    WORD PTR [BP+DI]
       NOT    WORD PTR [SI]
       NOT    WORD PTR [DI]
-      NOT    WORD PTR [0117H]
+      NOT    WORD PTR [1817H]
       NOT    WORD PTR [BX]
       NEG    WORD PTR [BX+SI]
       NEG    WORD PTR [BX+DI]
@@ -10959,7 +7341,7 @@
       NEG    WORD PTR [BP+DI]
       NEG    WORD PTR [SI]
       NEG    WORD PTR [DI]
-      NEG    WORD PTR [011FH]
+      NEG    WORD PTR [201FH]
       NEG    WORD PTR [BX]
       MUL    WORD PTR [BX+SI]
       MUL    WORD PTR [BX+DI]
@@ -10967,7 +7349,7 @@
       MUL    WORD PTR [BP+DI]
       MUL    WORD PTR [SI]
       MUL    WORD PTR [DI]
-      MUL    WORD PTR [0127H]
+      MUL    WORD PTR [2827H]
       MUL    WORD PTR [BX]
       IMUL   WORD PTR [BX+SI]
       IMUL   WORD PTR [BX+DI]
@@ -10975,7 +7357,7 @@
       IMUL   WORD PTR [BP+DI]
       IMUL   WORD PTR [SI]
       IMUL   WORD PTR [DI]
-      IMUL   WORD PTR [012FH]
+      IMUL   WORD PTR [302FH]
       IMUL   WORD PTR [BX]
       DIV    WORD PTR [BX+SI]
       DIV    WORD PTR [BX+DI]
@@ -10983,7 +7365,7 @@
       DIV    WORD PTR [BP+DI]
       DIV    WORD PTR [SI]
       DIV    WORD PTR [DI]
-      DIV    WORD PTR [0137H]
+      DIV    WORD PTR [3837H]
       DIV    WORD PTR [BX]
       IDIV   WORD PTR [BX+SI]
       IDIV   WORD PTR [BX+DI]
@@ -10991,24 +7373,24 @@
       IDIV   WORD PTR [BP+DI]
       IDIV   WORD PTR [SI]
       IDIV   WORD PTR [DI]
-      IDIV   WORD PTR [013FH]
+      IDIV   WORD PTR [403FH]
       IDIV   WORD PTR [BX]
-      TEST   WORD PTR [BX+SI+65],0142H
-      TEST   WORD PTR [BX+SI-128],0181H
-      TEST   WORD PTR [BX+DI+66],0143H
-      TEST   WORD PTR [BX+DI-128],0181H
-      TEST   WORD PTR [BP+SI+67],0144H
-      TEST   WORD PTR [BP+SI-128],0181H
-      TEST   WORD PTR [BP+DI+68],0145H
-      TEST   WORD PTR [BP+DI-128],0181H
-      TEST   WORD PTR [SI+69],0146H
-      TEST   WORD PTR [SI-128],0181H
-      TEST   WORD PTR [DI+70],0147H
-      TEST   WORD PTR [DI-128],0181H
-      TEST   WORD PTR [BP+71],0148H
-      TEST   WORD PTR [BP-128],0181H
-      TEST   WORD PTR [BX+72],0149H
-      TEST   WORD PTR [BX-128],0181H
+      TEST   WORD PTR [BX+SI+65],4342H
+      TEST   WORD PTR [BX+SI-128],4342H
+      TEST   WORD PTR [BX+DI+66],4443H
+      TEST   WORD PTR [BX+DI-128],4443H
+      TEST   WORD PTR [BP+SI+67],4544H
+      TEST   WORD PTR [BP+SI-128],4544H
+      TEST   WORD PTR [BP+DI+68],4645H
+      TEST   WORD PTR [BP+DI-128],4645H
+      TEST   WORD PTR [SI+69],4746H
+      TEST   WORD PTR [SI-128],4746H
+      TEST   WORD PTR [DI+70],4847H
+      TEST   WORD PTR [DI-128],4847H
+      TEST   WORD PTR [BP+71],4948H
+      TEST   WORD PTR [BP-128],4948H
+      TEST   WORD PTR [BX+72],4A49H
+      TEST   WORD PTR [BX-128],4A49H
       NOT    WORD PTR [BX+SI+81]
       NOT    WORD PTR [BX+SI-128]
       NOT    WORD PTR [BX+DI+82]
@@ -11105,70 +7487,70 @@
       IDIV   WORD PTR [BP-128]
       IDIV   WORD PTR [BX-128]
       IDIV   WORD PTR [BX+0]
-      TEST   WORD PTR [BX+SI+0181H],0
-      TEST   WORD PTR [BX+DI+0182H],0
-      TEST   WORD PTR [BP+SI+0183H],0
-      TEST   WORD PTR [BP+DI+0184H],0
-      TEST   WORD PTR [SI+0185H],0
-      TEST   WORD PTR [DI+0186H],0
-      TEST   WORD PTR [BP+0187H],0
-      TEST   WORD PTR [BX+0188H],0
-      NOT    WORD PTR [BX+SI+0191H]
-      NOT    WORD PTR [BX+DI+0192H]
-      NOT    WORD PTR [BP+SI+0193H]
-      NOT    WORD PTR [BP+DI+0194H]
-      NOT    WORD PTR [SI+0195H]
-      NOT    WORD PTR [DI+0196H]
-      NOT    WORD PTR [BP+0197H]
-      NOT    WORD PTR [BX+0198H]
-      NEG    WORD PTR [BX+SI+0199H]
-      NEG    WORD PTR [BX+DI+019AH]
-      NEG    WORD PTR [BP+SI+019BH]
-      NEG    WORD PTR [BP+DI+019CH]
-      NEG    WORD PTR [SI+019DH]
-      NEG    WORD PTR [DI+019EH]
-      NEG    WORD PTR [BP+019FH]
-      NEG    WORD PTR [BX+01A0H]
-      MUL    WORD PTR [BX+SI+01A1H]
-      MUL    WORD PTR [BX+DI+01A2H]
-      MUL    WORD PTR [BP+SI+01A3H]
-      MUL    WORD PTR [BP+DI+01A4H]
-      MUL    WORD PTR [SI+01A5H]
-      MUL    WORD PTR [DI+01A6H]
-      MUL    WORD PTR [BP+01A7H]
-      MUL    WORD PTR [BX+01A8H]
-      IMUL   WORD PTR [BX+SI+01A9H]
-      IMUL   WORD PTR [BX+DI+01AAH]
-      IMUL   WORD PTR [BP+SI+01ABH]
-      IMUL   WORD PTR [BP+DI+01ACH]
-      IMUL   WORD PTR [SI+01ADH]
-      IMUL   WORD PTR [DI+01AEH]
-      IMUL   WORD PTR [BP+01AFH]
-      IMUL   WORD PTR [BX+01B0H]
-      DIV    WORD PTR [BX+SI+01B1H]
-      DIV    WORD PTR [BX+DI+01B2H]
-      DIV    WORD PTR [BP+SI+01B3H]
-      DIV    WORD PTR [BP+DI+01B4H]
-      DIV    WORD PTR [SI+01B5H]
-      DIV    WORD PTR [DI+01B6H]
-      DIV    WORD PTR [BP+01B7H]
-      DIV    WORD PTR [BX+01B8H]
-      IDIV   WORD PTR [BX+SI+01B9H]
-      IDIV   WORD PTR [BX+DI+01BAH]
-      IDIV   WORD PTR [BP+SI+01BBH]
-      IDIV   WORD PTR [BP+DI+01BCH]
-      IDIV   WORD PTR [SI+01BDH]
-      IDIV   WORD PTR [DI+01BEH]
-      IDIV   WORD PTR [BP+01BFH]
-      IDIV   WORD PTR [BX+01C0H]
-      TEST   AX,01C1H
-      TEST   CX,01C2H
-      TEST   DX,01C3H
-      TEST   BX,01C4H
-      TEST   SP,01C5H
-      TEST   BP,01C6H
-      TEST   SI,01C7H
-      TEST   DI,01C8H
+      TEST   WORD PTR [BX+SI+8281H],8483H
+      TEST   WORD PTR [BX+DI+8382H],8584H
+      TEST   WORD PTR [BP+SI+8483H],8685H
+      TEST   WORD PTR [BP+DI+8584H],8786H
+      TEST   WORD PTR [SI+8685H],8887H
+      TEST   WORD PTR [DI+8786H],8988H
+      TEST   WORD PTR [BP+8887H],8A89H
+      TEST   WORD PTR [BX+8988H],8B8AH
+      NOT    WORD PTR [BX+SI+9291H]
+      NOT    WORD PTR [BX+DI+9392H]
+      NOT    WORD PTR [BP+SI+9493H]
+      NOT    WORD PTR [BP+DI+9594H]
+      NOT    WORD PTR [SI+9695H]
+      NOT    WORD PTR [DI+9796H]
+      NOT    WORD PTR [BP+9897H]
+      NOT    WORD PTR [BX+9998H]
+      NEG    WORD PTR [BX+SI+9A99H]
+      NEG    WORD PTR [BX+DI+9B9AH]
+      NEG    WORD PTR [BP+SI+9C9BH]
+      NEG    WORD PTR [BP+DI+9D9CH]
+      NEG    WORD PTR [SI+9E9DH]
+      NEG    WORD PTR [DI+9F9EH]
+      NEG    WORD PTR [BP+0A09FH]
+      NEG    WORD PTR [BX+0A1A0H]
+      MUL    WORD PTR [BX+SI+0A2A1H]
+      MUL    WORD PTR [BX+DI+0A3A2H]
+      MUL    WORD PTR [BP+SI+0A4A3H]
+      MUL    WORD PTR [BP+DI+0A5A4H]
+      MUL    WORD PTR [SI+0A6A5H]
+      MUL    WORD PTR [DI+0A7A6H]
+      MUL    WORD PTR [BP+0A8A7H]
+      MUL    WORD PTR [BX+0A9A8H]
+      IMUL   WORD PTR [BX+SI+0AAA9H]
+      IMUL   WORD PTR [BX+DI+0ABAAH]
+      IMUL   WORD PTR [BP+SI+0ACABH]
+      IMUL   WORD PTR [BP+DI+0ADACH]
+      IMUL   WORD PTR [SI+0AEADH]
+      IMUL   WORD PTR [DI+0AFAEH]
+      IMUL   WORD PTR [BP+0B0AFH]
+      IMUL   WORD PTR [BX+0B1B0H]
+      DIV    WORD PTR [BX+SI+0B2B1H]
+      DIV    WORD PTR [BX+DI+0B3B2H]
+      DIV    WORD PTR [BP+SI+0B4B3H]
+      DIV    WORD PTR [BP+DI+0B5B4H]
+      DIV    WORD PTR [SI+0B6B5H]
+      DIV    WORD PTR [DI+0B7B6H]
+      DIV    WORD PTR [BP+0B8B7H]
+      DIV    WORD PTR [BX+0B9B8H]
+      IDIV   WORD PTR [BX+SI+0BAB9H]
+      IDIV   WORD PTR [BX+DI+0BBBAH]
+      IDIV   WORD PTR [BP+SI+0BCBBH]
+      IDIV   WORD PTR [BP+DI+0BDBCH]
+      IDIV   WORD PTR [SI+0BEBDH]
+      IDIV   WORD PTR [DI+0BFBEH]
+      IDIV   WORD PTR [BP+0C0BFH]
+      IDIV   WORD PTR [BX+0C1C0H]
+      TEST   AX,0C2C1H
+      TEST   CX,0C3C2H
+      TEST   DX,0C4C3H
+      TEST   BX,0C5C4H
+      TEST   SP,0C6C5H
+      TEST   BP,0C7C6H
+      TEST   SI,0C8C7H
+      TEST   DI,0C9C8H
       NOT    AX
       NOT    CX
       NOT    DX
@@ -11215,87 +7597,13 @@
       STI
       CLD
       STD
-      INC    BYTE PTR [BX+SI]
-      INC    BYTE PTR [BX+DI]
-      INC    BYTE PTR [BP+SI]
-      INC    BYTE PTR [BP+DI]
-      INC    BYTE PTR [SI]
-      INC    BYTE PTR [DI]
-      INC    BYTE PTR [0107H]
-      INC    BYTE PTR [BX]
-      DEC    BYTE PTR [BX+SI]
-      DEC    BYTE PTR [BX+DI]
-      DEC    BYTE PTR [BP+SI]
-      DEC    BYTE PTR [BP+DI]
-      DEC    BYTE PTR [SI]
-      DEC    BYTE PTR [DI]
-      DEC    BYTE PTR [010FH]
-      DEC    BYTE PTR [BX]
-      INC    BYTE PTR [BX+SI+65]
-      INC    BYTE PTR [BX+SI-128]
-      INC    BYTE PTR [BX+DI+66]
-      INC    BYTE PTR [BX+DI-128]
-      INC    BYTE PTR [BP+SI+67]
-      INC    BYTE PTR [BP+SI-128]
-      INC    BYTE PTR [BP+DI+68]
-      INC    BYTE PTR [BP+DI-128]
-      INC    BYTE PTR [SI+69]
-      INC    BYTE PTR [SI-128]
-      INC    BYTE PTR [DI+70]
-      INC    BYTE PTR [DI-128]
-      INC    BYTE PTR [BP+71]
-      INC    BYTE PTR [BP-128]
-      INC    BYTE PTR [BX+72]
-      INC    BYTE PTR [BX-128]
-      DEC    BYTE PTR [BX+SI+73]
-      DEC    BYTE PTR [BX+SI-128]
-      DEC    BYTE PTR [BX+DI+74]
-      DEC    BYTE PTR [BX+DI-128]
-      DEC    BYTE PTR [BP+SI+75]
-      DEC    BYTE PTR [BP+SI-128]
-      DEC    BYTE PTR [BP+DI+76]
-      DEC    BYTE PTR [BP+DI-128]
-      DEC    BYTE PTR [SI+77]
-      DEC    BYTE PTR [SI-128]
-      DEC    BYTE PTR [DI+78]
-      DEC    BYTE PTR [DI-128]
-      DEC    BYTE PTR [BP+79]
-      DEC    BYTE PTR [BP-128]
-      DEC    BYTE PTR [BX+80]
-      DEC    BYTE PTR [BX-128]
-      INC    BYTE PTR [BX+SI+0181H]
-      INC    BYTE PTR [BX+DI+0182H]
-      INC    BYTE PTR [BP+SI+0183H]
-      INC    BYTE PTR [BP+DI+0184H]
-      INC    BYTE PTR [SI+0185H]
-      INC    BYTE PTR [DI+0186H]
-      INC    BYTE PTR [BP+0187H]
-      INC    BYTE PTR [BX+0188H]
-      DEC    BYTE PTR [BX+SI+0189H]
-      DEC    BYTE PTR [BX+DI+018AH]
-      DEC    BYTE PTR [BP+SI+018BH]
-      DEC    BYTE PTR [BP+DI+018CH]
-      DEC    BYTE PTR [SI+018DH]
-      DEC    BYTE PTR [DI+018EH]
-      DEC    BYTE PTR [BP+018FH]
-      DEC    BYTE PTR [BX+0190H]
-      INC    AL
-      INC    CL
-      INC    DL
-      INC    BL
-      INC    AH
-      DEC    AL
-      DEC    CL
-      DEC    DL
-      DEC    BL
-      DEC    AH
       INC    WORD PTR [BX+SI]
       INC    WORD PTR [BX+DI]
       INC    WORD PTR [BP+SI]
       INC    WORD PTR [BP+DI]
       INC    WORD PTR [SI]
       INC    WORD PTR [DI]
-      INC    WORD PTR [0107H]
+      INC    WORD PTR [0807H]
       INC    WORD PTR [BX]
       DEC    WORD PTR [BX+SI]
       DEC    WORD PTR [BX+DI]
@@ -11303,7 +7611,7 @@
       DEC    WORD PTR [BP+DI]
       DEC    WORD PTR [SI]
       DEC    WORD PTR [DI]
-      DEC    WORD PTR [010FH]
+      DEC    WORD PTR [100FH]
       DEC    WORD PTR [BX]
       CALL   [BX+SI]
       CALL   [BX+DI]
@@ -11311,7 +7619,7 @@
       CALL   [BP+DI]
       CALL   [SI]
       CALL   [DI]
-      CALL   [0117H]
+      CALL   [1817H]
       CALL   [BX]
       CALLF  [BX+SI]
       CALLF  [BX+DI]
@@ -11319,7 +7627,7 @@
       CALLF  [BP+DI]
       CALLF  [SI]
       CALLF  [DI]
-      CALLF  [011FH]
+      CALLF  [201FH]
       CALLF  [BX]
       JMP    [BX+SI]
       JMP    [BX+DI]
@@ -11327,7 +7635,7 @@
       JMP    [BP+DI]
       JMP    [SI]
       JMP    [DI]
-      JMP    [0127H]
+      JMP    [2827H]
       JMP    [BX]
       JMPF   [BX+SI]
       JMPF   [BX+DI]
@@ -11335,7 +7643,7 @@
       JMPF   [BP+DI]
       JMPF   [SI]
       JMPF   [DI]
-      JMPF   [012FH]
+      JMPF   [302FH]
       JMPF   [BX]
       PUSH   [BX+SI]
       PUSH   [BX+DI]
@@ -11343,7 +7651,7 @@
       PUSH   [BP+DI]
       PUSH   [SI]
       PUSH   [DI]
-      PUSH   [0137H]
+      PUSH   [3837H]
       PUSH   [BX]
       INC    WORD PTR [BX+SI+65]
       INC    WORD PTR [BX+SI-128]
@@ -11457,62 +7765,62 @@
       PUSH   [BP-128]
       PUSH   [BX+120]
       PUSH   [BX-128]
-      INC    WORD PTR [BX+SI+0181H]
-      INC    WORD PTR [BX+DI+0182H]
-      INC    WORD PTR [BP+SI+0183H]
-      INC    WORD PTR [BP+DI+0184H]
-      INC    WORD PTR [SI+0185H]
-      INC    WORD PTR [DI+0186H]
-      INC    WORD PTR [BP+0187H]
-      INC    WORD PTR [BX+0188H]
-      DEC    WORD PTR [BX+SI+0189H]
-      DEC    WORD PTR [BX+DI+018AH]
-      DEC    WORD PTR [BP+SI+018BH]
-      DEC    WORD PTR [BP+DI+018CH]
-      DEC    WORD PTR [SI+018DH]
-      DEC    WORD PTR [DI+018EH]
-      DEC    WORD PTR [BP+018FH]
-      DEC    WORD PTR [BX+0190H]
-      CALL   [BX+SI+0191H]
-      CALL   [BX+DI+0192H]
-      CALL   [BP+SI+0193H]
-      CALL   [BP+DI+0194H]
-      CALL   [SI+0195H]
-      CALL   [DI+0196H]
-      CALL   [BP+0197H]
-      CALL   [BX+0198H]
-      CALLF  [BX+SI+0199H]
-      CALLF  [BX+DI+019AH]
-      CALLF  [BP+SI+019BH]
-      CALLF  [BP+DI+019CH]
-      CALLF  [SI+019DH]
-      CALLF  [DI+019EH]
-      CALLF  [BP+019FH]
-      CALLF  [BX+01A0H]
-      JMP    [BX+SI+01A1H]
-      JMP    [BX+DI+01A2H]
-      JMP    [BP+SI+01A3H]
-      JMP    [BP+DI+01A4H]
-      JMP    [SI+01A5H]
-      JMP    [DI+01A6H]
-      JMP    [BP+01A7H]
-      JMP    [BX+01A8H]
-      JMPF   [BX+SI+01A9H]
-      JMPF   [BX+DI+01AAH]
-      JMPF   [BP+SI+01ABH]
-      JMPF   [BP+DI+01ACH]
-      JMPF   [SI+01ADH]
-      JMPF   [DI+01AEH]
-      JMPF   [BP+01AFH]
-      JMPF   [BX+01B0H]
-      PUSH   [BX+SI+01B1H]
-      PUSH   [BX+DI+01B2H]
-      PUSH   [BP+SI+01B3H]
-      PUSH   [BP+DI+01B4H]
-      PUSH   [SI+01B5H]
-      PUSH   [DI+01B6H]
-      PUSH   [BP+01B7H]
-      PUSH   [BX+01B8H]
+      INC    WORD PTR [BX+SI+8281H]
+      INC    WORD PTR [BX+DI+8382H]
+      INC    WORD PTR [BP+SI+8483H]
+      INC    WORD PTR [BP+DI+8584H]
+      INC    WORD PTR [SI+8685H]
+      INC    WORD PTR [DI+8786H]
+      INC    WORD PTR [BP+8887H]
+      INC    WORD PTR [BX+8988H]
+      DEC    WORD PTR [BX+SI+8A89H]
+      DEC    WORD PTR [BX+DI+8B8AH]
+      DEC    WORD PTR [BP+SI+8C8BH]
+      DEC    WORD PTR [BP+DI+8D8CH]
+      DEC    WORD PTR [SI+8E8DH]
+      DEC    WORD PTR [DI+8F8EH]
+      DEC    WORD PTR [BP+908FH]
+      DEC    WORD PTR [BX+9190H]
+      CALL   [BX+SI+9291H]
+      CALL   [BX+DI+9392H]
+      CALL   [BP+SI+9493H]
+      CALL   [BP+DI+9594H]
+      CALL   [SI+9695H]
+      CALL   [DI+9796H]
+      CALL   [BP+9897H]
+      CALL   [BX+9998H]
+      CALLF  [BX+SI+9A99H]
+      CALLF  [BX+DI+9B9AH]
+      CALLF  [BP+SI+9C9BH]
+      CALLF  [BP+DI+9D9CH]
+      CALLF  [SI+9E9DH]
+      CALLF  [DI+9F9EH]
+      CALLF  [BP+0A09FH]
+      CALLF  [BX+0A1A0H]
+      JMP    [BX+SI+0A2A1H]
+      JMP    [BX+DI+0A3A2H]
+      JMP    [BP+SI+0A4A3H]
+      JMP    [BP+DI+0A5A4H]
+      JMP    [SI+0A6A5H]
+      JMP    [DI+0A7A6H]
+      JMP    [BP+0A8A7H]
+      JMP    [BX+0A9A8H]
+      JMPF   [BX+SI+0AAA9H]
+      JMPF   [BX+DI+0ABAAH]
+      JMPF   [BP+SI+0ACABH]
+      JMPF   [BP+DI+0ADACH]
+      JMPF   [SI+0AEADH]
+      JMPF   [DI+0AFAEH]
+      JMPF   [BP+0B0AFH]
+      JMPF   [BX+0B1B0H]
+      PUSH   [BX+SI+0B2B1H]
+      PUSH   [BX+DI+0B3B2H]
+      PUSH   [BP+SI+0B4B3H]
+      PUSH   [BP+DI+0B5B4H]
+      PUSH   [SI+0B6B5H]
+      PUSH   [DI+0B7B6H]
+      PUSH   [BP+0B8B7H]
+      PUSH   [BX+0B9B8H]
       INC    AX
       INC    CX
       INC    DX
@@ -11573,43 +7881,21999 @@
       REP    LODSW
       REP    SCASB
       REP    SCASW
-      MOV    AL,ES:[00A1H]
-      MOV    AX,ES:[00A2H]
-      MOV    ES:[00A3H],AL
-      MOV    ES:[00A4H],AX
+      SUB    ES:[BX+DI],CH
+      SUB    ES:[BP+SI],CH
+      SUB    ES:[BP+DI],CH
+      SUB    ES:[SI],CH
+      SUB    ES:[DI],CH
+      SUB    ES:[302FH],CH
+      SUB    ES:[BX],CH
+      SUB    ES:[BX+SI],DH
+      SUB    ES:[BP+SI],BP
+      SUB    ES:[BP+DI],BP
+      SUB    ES:[SI],BP
+      SUB    ES:[DI],BP
+      SUB    ES:[302FH],BP
+      SUB    ES:[BX],BP
+      SUB    ES:[BX+SI],SI
+      SUB    ES:[BX+DI],SI
+      SUB    ES:[BP+SI],SI
+      SUB    ES:[BP+DI],SI
+      SUB    ES:[SI],SI
+      SUB    ES:[DI],SI
+      SUB    ES:[3837H],SI
+      SUB    ES:[BX],SI
+      SUB    ES:[BX+SI],DI
+      SUB    ES:[BX+DI],DI
+      SUB    ES:[BP+SI],DI
+      SUB    ES:[BP+DI],DI
+      SUB    ES:[SI],DI
+      SUB    ES:[DI],DI
+      SUB    ES:[403FH],DI
+      SUB    ES:[BX],DI
+      SUB    ES:[BX+SI+65],AX
+      SUB    ES:[BX+SI-128],AX
+      SUB    ES:[BX+DI+66],AX
+      SUB    ES:[BX+DI-128],AX
+      SUB    ES:[BP+SI+67],AX
+      SUB    ES:[BP+SI-128],AX
+      SUB    ES:[BP+DI+68],AX
+      SUB    ES:[BP+DI-128],AX
+      SUB    ES:[SI+69],AX
+      SUB    ES:[SI-128],AX
+      SUB    ES:[DI+70],AX
+      SUB    ES:[DI-128],AX
+      SUB    ES:[BP+71],AX
+      SUB    ES:[BP-128],AX
+      SUB    ES:[BX+72],AX
+      SUB    ES:[BX-128],AX
+      SUB    ES:[BX+SI+73],CX
+      SUB    ES:[BX+SI-128],CX
+      SUB    ES:[BX+DI+74],CX
+      SUB    ES:[BX+DI-128],CX
+      SUB    ES:[BP+SI+75],CX
+      SUB    ES:[BP+SI-128],CX
+      SUB    ES:[BP+DI+76],CX
+      SUB    ES:[BP+DI-128],CX
+      SUB    ES:[SI+77],CX
+      SUB    ES:[SI-128],CX
+      SUB    ES:[DI+78],CX
+      SUB    ES:[DI-128],CX
+      SUB    ES:[BP+79],CX
+      SUB    ES:[BP-128],CX
+      SUB    ES:[BX+80],CX
+      SUB    ES:[BX-128],CX
+      SUB    ES:[BX+SI+81],DX
+      SUB    ES:[BX+SI-128],DX
+      SUB    ES:[BX+DI+82],DX
+      SUB    ES:[BX+DI-128],DX
+      SUB    ES:[BP+SI+83],DX
+      SUB    ES:[BP+SI-128],DX
+      SUB    ES:[BP+DI+84],DX
+      SUB    ES:[BP+DI-128],DX
+      SUB    ES:[SI+85],DX
+      SUB    ES:[SI-128],DX
+      SUB    ES:[DI+86],DX
+      SUB    ES:[DI-128],DX
+      SUB    ES:[BP+87],DX
+      SUB    ES:[BP-128],DX
+      SUB    ES:[BX+88],DX
+      SUB    ES:[BX-128],DX
+      SUB    ES:[BX+SI+89],BX
+      SUB    ES:[BX+SI-128],BX
+      SUB    ES:[BX+DI+90],BX
+      SUB    ES:[BX+DI-128],BX
+      SUB    ES:[BP+SI+91],BX
+      SUB    ES:[BP+SI-128],BX
+      SUB    ES:[BP+DI+92],BX
+      SUB    ES:[BP+DI-128],BX
+      SUB    ES:[SI+93],BX
+      SUB    ES:[SI-128],BX
+      SUB    ES:[DI+94],BX
+      SUB    ES:[DI-128],BX
+      SUB    ES:[BP+95],BX
+      SUB    ES:[BP-128],BX
+      SUB    ES:[BX+96],BX
+      SUB    ES:[BX-128],BX
+      SUB    ES:[BX+SI+97],SP
+      SUB    ES:[BX+SI-128],SP
+      SUB    ES:[BX+DI+98],SP
+      SUB    ES:[BX+DI-128],SP
+      SUB    ES:[BP+SI+99],SP
+      SUB    ES:[BP+SI-128],SP
+      SUB    ES:[BP+DI+100],SP
+      SUB    ES:[BP+DI-128],SP
+      SUB    ES:[SI+101],SP
+      SUB    ES:[SI-128],SP
+      SUB    ES:[DI+102],SP
+      SUB    ES:[DI-128],SP
+      SUB    ES:[BP+103],SP
+      SUB    ES:[BP-128],SP
+      SUB    ES:[BX+104],SP
+      SUB    ES:[BX-128],SP
+      SUB    ES:[BX+SI+105],BP
+      SUB    ES:[BX+SI-128],BP
+      SUB    ES:[BX+DI+106],BP
+      SUB    ES:[BX+DI-128],BP
+      SUB    ES:[BP+SI+107],BP
+      SUB    ES:[BP+SI-128],BP
+      SUB    ES:[BP+DI+108],BP
+      SUB    ES:[BP+DI-128],BP
+      SUB    ES:[SI+109],BP
+      SUB    ES:[SI-128],BP
+      SUB    ES:[DI+110],BP
+      SUB    ES:[DI-128],BP
+      SUB    ES:[BP+111],BP
+      SUB    ES:[BP-128],BP
+      SUB    ES:[BX+112],BP
+      SUB    ES:[BX-128],BP
+      SUB    ES:[BX+SI+113],SI
+      SUB    ES:[BX+SI-128],SI
+      SUB    ES:[BX+DI+114],SI
+      SUB    ES:[BX+DI-128],SI
+      SUB    ES:[BP+SI+115],SI
+      SUB    ES:[BP+SI-128],SI
+      SUB    ES:[BP+DI+116],SI
+      SUB    ES:[BP+DI-128],SI
+      SUB    ES:[SI+117],SI
+      SUB    ES:[SI-128],SI
+      SUB    ES:[DI+118],SI
+      SUB    ES:[DI-128],SI
+      SUB    ES:[BP+119],SI
+      SUB    ES:[BP-128],SI
+      SUB    ES:[BX+120],SI
+      SUB    ES:[BX-128],SI
+      SUB    ES:[BX+SI+121],DI
+      SUB    ES:[BX+SI-128],DI
+      SUB    ES:[BX+DI+122],DI
+      SUB    ES:[BX+DI-128],DI
+      SUB    ES:[BP+SI+123],DI
+      SUB    ES:[BP+SI-128],DI
+      SUB    ES:[BP+DI+124],DI
+      SUB    ES:[BP+DI-128],DI
+      SUB    ES:[SI+125],DI
+      SUB    ES:[SI-128],DI
+      SUB    ES:[DI+126],DI
+      SUB    ES:[DI-128],DI
+      SUB    ES:[BP+127],DI
+      SUB    ES:[BP-128],DI
+      SUB    ES:[BX-128],DI
+      SUB    ES:[BX+0],DI
+      SUB    ES:[BX+SI+8281H],AX
+      SUB    ES:[BX+DI+8382H],AX
+      SUB    ES:[BP+SI+8483H],AX
+      SUB    ES:[BP+DI+8584H],AX
+      SUB    ES:[SI+8685H],AX
+      SUB    ES:[DI+8786H],AX
+      SUB    ES:[BP+8887H],AX
+      SUB    ES:[BX+8988H],AX
+      SUB    ES:[BX+SI+8A89H],CX
+      SUB    ES:[BX+DI+8B8AH],CX
+      SUB    ES:[BP+SI+8C8BH],CX
+      SUB    ES:[BP+DI+8D8CH],CX
+      SUB    ES:[SI+8E8DH],CX
+      SUB    ES:[DI+8F8EH],CX
+      SUB    ES:[BP+908FH],CX
+      SUB    ES:[BX+9190H],CX
+      SUB    ES:[BX+SI+9291H],DX
+      SUB    ES:[BX+DI+9392H],DX
+      SUB    ES:[BP+SI+9493H],DX
+      SUB    ES:[BP+DI+9594H],DX
+      SUB    ES:[SI+9695H],DX
+      SUB    ES:[DI+9796H],DX
+      SUB    ES:[BP+9897H],DX
+      SUB    ES:[BX+9998H],DX
+      SUB    ES:[BX+SI+9A99H],BX
+      SUB    ES:[BX+DI+9B9AH],BX
+      SUB    ES:[BP+SI+9C9BH],BX
+      SUB    ES:[BP+DI+9D9CH],BX
+      SUB    ES:[SI+9E9DH],BX
+      SUB    ES:[DI+9F9EH],BX
+      SUB    ES:[BP+0A09FH],BX
+      SUB    ES:[BX+0A1A0H],BX
+      SUB    ES:[BX+SI+0A2A1H],SP
+      SUB    ES:[BX+DI+0A3A2H],SP
+      SUB    ES:[BP+SI+0A4A3H],SP
+      SUB    ES:[BP+DI+0A5A4H],SP
+      SUB    ES:[SI+0A6A5H],SP
+      SUB    ES:[DI+0A7A6H],SP
+      SUB    ES:[BP+0A8A7H],SP
+      SUB    ES:[BX+0A9A8H],SP
+      SUB    ES:[BX+SI+0AAA9H],BP
+      SUB    ES:[BX+DI+0ABAAH],BP
+      SUB    ES:[BP+SI+0ACABH],BP
+      SUB    ES:[BP+DI+0ADACH],BP
+      SUB    ES:[SI+0AEADH],BP
+      SUB    ES:[DI+0AFAEH],BP
+      SUB    ES:[BP+0B0AFH],BP
+      SUB    ES:[BX+0B1B0H],BP
+      SUB    ES:[BX+SI+0B2B1H],SI
+      SUB    ES:[BX+DI+0B3B2H],SI
+      SUB    ES:[BP+SI+0B4B3H],SI
+      SUB    ES:[BP+DI+0B5B4H],SI
+      SUB    ES:[SI+0B6B5H],SI
+      SUB    ES:[DI+0B7B6H],SI
+      SUB    ES:[BP+0B8B7H],SI
+      SUB    ES:[BX+0B9B8H],SI
+      SUB    ES:[BX+SI+0BAB9H],DI
+      SUB    ES:[BX+DI+0BBBAH],DI
+      SUB    ES:[BP+SI+0BCBBH],DI
+      SUB    ES:[BP+DI+0BDBCH],DI
+      SUB    ES:[SI+0BEBDH],DI
+      SUB    ES:[DI+0BFBEH],DI
+      SUB    ES:[BP+0C0BFH],DI
+      SUB    ES:[BX+0C1C0H],DI
+      SUB    ES:[BX+SI],AX
+      SUB    ES:[BX+DI],AX
+      SUB    ES:[BP+SI],AX
+      SUB    ES:[BP+DI],AX
+      SUB    ES:[SI],AX
+      SUB    ES:[DI],AX
+      SUB    ES:[0807H],AX
+      SUB    ES:[BX],AX
+      SUB    ES:[BX+SI],CX
+      SUB    ES:[BX+DI],CX
+      SUB    ES:[BP+SI],CX
+      SUB    ES:[BP+DI],CX
+      SUB    ES:[SI],CX
+      SUB    ES:[DI],CX
+      SUB    ES:[100FH],CX
+      SUB    ES:[BX],CX
+      SUB    ES:[BX+SI],DX
+      SUB    ES:[BX+DI],DX
+      SUB    ES:[BP+SI],DX
+      SUB    ES:[BP+DI],DX
+      SUB    ES:[SI],DX
+      SUB    ES:[DI],DX
+      SUB    ES:[1817H],DX
+      SUB    ES:[BX],DX
+      SUB    ES:[BX+SI],BX
+      SUB    ES:[BX+DI],BX
+      SUB    ES:[BP+SI],BX
+      SUB    ES:[BP+DI],BX
+      SUB    ES:[SI],BX
+      SUB    ES:[DI],BX
+      SUB    ES:[201FH],BX
+      SUB    ES:[BX],BX
+      SUB    ES:[BX+SI],SP
+      SUB    ES:[BX+DI],SP
+      SUB    ES:[BP+SI],SP
+      SUB    ES:[BP+DI],SP
+      SUB    ES:[SI],SP
+      SUB    ES:[DI],SP
+      SUB    ES:[2827H],SP
+      SUB    ES:[BX],SP
+      SUB    ES:[BX+SI],BP
+      SUB    ES:[BX+DI],BP
+      SUB    CH,ES:[BP+DI]
+      SUB    CH,ES:[SI]
+      SUB    CH,ES:[DI]
+      SUB    CH,ES:[302FH]
+      SUB    CH,ES:[BX]
+      SUB    DH,ES:[BX+SI]
+      SUB    DH,ES:[BX+DI]
+      SUB    DH,ES:[BP+SI]
+      SUB    BP,ES:[SI]
+      SUB    BP,ES:[DI]
+      SUB    BP,ES:[302FH]
+      SUB    BP,ES:[BX]
+      SUB    SI,ES:[BX+SI]
+      SUB    SI,ES:[BX+DI]
+      SUB    SI,ES:[BP+SI]
+      SUB    SI,ES:[BP+DI]
+      SUB    SI,ES:[SI]
+      SUB    SI,ES:[DI]
+      SUB    SI,ES:[3837H]
+      SUB    SI,ES:[BX]
+      SUB    DI,ES:[BX+SI]
+      SUB    DI,ES:[BX+DI]
+      SUB    DI,ES:[BP+SI]
+      SUB    DI,ES:[BP+DI]
+      SUB    DI,ES:[SI]
+      SUB    DI,ES:[DI]
+      SUB    DI,ES:[403FH]
+      SUB    DI,ES:[BX]
+      SUB    AX,ES:[BX+SI+65]
+      SUB    AX,ES:[BX+SI-128]
+      SUB    AX,ES:[BX+DI+66]
+      SUB    AX,ES:[BX+DI-128]
+      SUB    AX,ES:[BP+SI+67]
+      SUB    AX,ES:[BP+SI-128]
+      SUB    AX,ES:[BP+DI+68]
+      SUB    AX,ES:[BP+DI-128]
+      SUB    AX,ES:[SI+69]
+      SUB    AX,ES:[SI-128]
+      SUB    AX,ES:[DI+70]
+      SUB    AX,ES:[DI-128]
+      SUB    AX,ES:[BP+71]
+      SUB    AX,ES:[BP-128]
+      SUB    AX,ES:[BX+72]
+      SUB    AX,ES:[BX-128]
+      SUB    CX,ES:[BX+SI+73]
+      SUB    CX,ES:[BX+SI-128]
+      SUB    CX,ES:[BX+DI+74]
+      SUB    CX,ES:[BX+DI-128]
+      SUB    CX,ES:[BP+SI+75]
+      SUB    CX,ES:[BP+SI-128]
+      SUB    CX,ES:[BP+DI+76]
+      SUB    CX,ES:[BP+DI-128]
+      SUB    CX,ES:[SI+77]
+      SUB    CX,ES:[SI-128]
+      SUB    CX,ES:[DI+78]
+      SUB    CX,ES:[DI-128]
+      SUB    CX,ES:[BP+79]
+      SUB    CX,ES:[BP-128]
+      SUB    CX,ES:[BX+80]
+      SUB    CX,ES:[BX-128]
+      SUB    DX,ES:[BX+SI+81]
+      SUB    DX,ES:[BX+SI-128]
+      SUB    DX,ES:[BX+DI+82]
+      SUB    DX,ES:[BX+DI-128]
+      SUB    DX,ES:[BP+SI+83]
+      SUB    DX,ES:[BP+SI-128]
+      SUB    DX,ES:[BP+DI+84]
+      SUB    DX,ES:[BP+DI-128]
+      SUB    DX,ES:[SI+85]
+      SUB    DX,ES:[SI-128]
+      SUB    DX,ES:[DI+86]
+      SUB    DX,ES:[DI-128]
+      SUB    DX,ES:[BP+87]
+      SUB    DX,ES:[BP-128]
+      SUB    DX,ES:[BX+88]
+      SUB    DX,ES:[BX-128]
+      SUB    BX,ES:[BX+SI+89]
+      SUB    BX,ES:[BX+SI-128]
+      SUB    BX,ES:[BX+DI+90]
+      SUB    BX,ES:[BX+DI-128]
+      SUB    BX,ES:[BP+SI+91]
+      SUB    BX,ES:[BP+SI-128]
+      SUB    BX,ES:[BP+DI+92]
+      SUB    BX,ES:[BP+DI-128]
+      SUB    BX,ES:[SI+93]
+      SUB    BX,ES:[SI-128]
+      SUB    BX,ES:[DI+94]
+      SUB    BX,ES:[DI-128]
+      SUB    BX,ES:[BP+95]
+      SUB    BX,ES:[BP-128]
+      SUB    BX,ES:[BX+96]
+      SUB    BX,ES:[BX-128]
+      SUB    SP,ES:[BX+SI+97]
+      SUB    SP,ES:[BX+SI-128]
+      SUB    SP,ES:[BX+DI+98]
+      SUB    SP,ES:[BX+DI-128]
+      SUB    SP,ES:[BP+SI+99]
+      SUB    SP,ES:[BP+SI-128]
+      SUB    SP,ES:[BP+DI+100]
+      SUB    SP,ES:[BP+DI-128]
+      SUB    SP,ES:[SI+101]
+      SUB    SP,ES:[SI-128]
+      SUB    SP,ES:[DI+102]
+      SUB    SP,ES:[DI-128]
+      SUB    SP,ES:[BP+103]
+      SUB    SP,ES:[BP-128]
+      SUB    SP,ES:[BX+104]
+      SUB    SP,ES:[BX-128]
+      SUB    BP,ES:[BX+SI+105]
+      SUB    BP,ES:[BX+SI-128]
+      SUB    BP,ES:[BX+DI+106]
+      SUB    BP,ES:[BX+DI-128]
+      SUB    BP,ES:[BP+SI+107]
+      SUB    BP,ES:[BP+SI-128]
+      SUB    BP,ES:[BP+DI+108]
+      SUB    BP,ES:[BP+DI-128]
+      SUB    BP,ES:[SI+109]
+      SUB    BP,ES:[SI-128]
+      SUB    BP,ES:[DI+110]
+      SUB    BP,ES:[DI-128]
+      SUB    BP,ES:[BP+111]
+      SUB    BP,ES:[BP-128]
+      SUB    BP,ES:[BX+112]
+      SUB    BP,ES:[BX-128]
+      SUB    SI,ES:[BX+SI+113]
+      SUB    SI,ES:[BX+SI-128]
+      SUB    SI,ES:[BX+DI+114]
+      SUB    SI,ES:[BX+DI-128]
+      SUB    SI,ES:[BP+SI+115]
+      SUB    SI,ES:[BP+SI-128]
+      SUB    SI,ES:[BP+DI+116]
+      SUB    SI,ES:[BP+DI-128]
+      SUB    SI,ES:[SI+117]
+      SUB    SI,ES:[SI-128]
+      SUB    SI,ES:[DI+118]
+      SUB    SI,ES:[DI-128]
+      SUB    SI,ES:[BP+119]
+      SUB    SI,ES:[BP-128]
+      SUB    SI,ES:[BX+120]
+      SUB    SI,ES:[BX-128]
+      SUB    DI,ES:[BX+SI+121]
+      SUB    DI,ES:[BX+SI-128]
+      SUB    DI,ES:[BX+DI+122]
+      SUB    DI,ES:[BX+DI-128]
+      SUB    DI,ES:[BP+SI+123]
+      SUB    DI,ES:[BP+SI-128]
+      SUB    DI,ES:[BP+DI+124]
+      SUB    DI,ES:[BP+DI-128]
+      SUB    DI,ES:[SI+125]
+      SUB    DI,ES:[SI-128]
+      SUB    DI,ES:[DI+126]
+      SUB    DI,ES:[DI-128]
+      SUB    DI,ES:[BP+127]
+      SUB    DI,ES:[BP-128]
+      SUB    DI,ES:[BX-128]
+      SUB    DI,ES:[BX+0]
+      SUB    AX,ES:[BX+SI+8281H]
+      SUB    AX,ES:[BX+DI+8382H]
+      SUB    AX,ES:[BP+SI+8483H]
+      SUB    AX,ES:[BP+DI+8584H]
+      SUB    AX,ES:[SI+8685H]
+      SUB    AX,ES:[DI+8786H]
+      SUB    AX,ES:[BP+8887H]
+      SUB    AX,ES:[BX+8988H]
+      SUB    CX,ES:[BX+SI+8A89H]
+      SUB    CX,ES:[BX+DI+8B8AH]
+      SUB    CX,ES:[BP+SI+8C8BH]
+      SUB    CX,ES:[BP+DI+8D8CH]
+      SUB    CX,ES:[SI+8E8DH]
+      SUB    CX,ES:[DI+8F8EH]
+      SUB    CX,ES:[BP+908FH]
+      SUB    CX,ES:[BX+9190H]
+      SUB    DX,ES:[BX+SI+9291H]
+      SUB    DX,ES:[BX+DI+9392H]
+      SUB    DX,ES:[BP+SI+9493H]
+      SUB    DX,ES:[BP+DI+9594H]
+      SUB    DX,ES:[SI+9695H]
+      SUB    DX,ES:[DI+9796H]
+      SUB    DX,ES:[BP+9897H]
+      SUB    DX,ES:[BX+9998H]
+      SUB    BX,ES:[BX+SI+9A99H]
+      SUB    BX,ES:[BX+DI+9B9AH]
+      SUB    BX,ES:[BP+SI+9C9BH]
+      SUB    BX,ES:[BP+DI+9D9CH]
+      SUB    BX,ES:[SI+9E9DH]
+      SUB    BX,ES:[DI+9F9EH]
+      SUB    BX,ES:[BP+0A09FH]
+      SUB    BX,ES:[BX+0A1A0H]
+      SUB    SP,ES:[BX+SI+0A2A1H]
+      SUB    SP,ES:[BX+DI+0A3A2H]
+      SUB    SP,ES:[BP+SI+0A4A3H]
+      SUB    SP,ES:[BP+DI+0A5A4H]
+      SUB    SP,ES:[SI+0A6A5H]
+      SUB    SP,ES:[DI+0A7A6H]
+      SUB    SP,ES:[BP+0A8A7H]
+      SUB    SP,ES:[BX+0A9A8H]
+      SUB    BP,ES:[BX+SI+0AAA9H]
+      SUB    BP,ES:[BX+DI+0ABAAH]
+      SUB    BP,ES:[BP+SI+0ACABH]
+      SUB    BP,ES:[BP+DI+0ADACH]
+      SUB    BP,ES:[SI+0AEADH]
+      SUB    BP,ES:[DI+0AFAEH]
+      SUB    BP,ES:[BP+0B0AFH]
+      SUB    BP,ES:[BX+0B1B0H]
+      SUB    SI,ES:[BX+SI+0B2B1H]
+      SUB    SI,ES:[BX+DI+0B3B2H]
+      SUB    SI,ES:[BP+SI+0B4B3H]
+      SUB    SI,ES:[BP+DI+0B5B4H]
+      SUB    SI,ES:[SI+0B6B5H]
+      SUB    SI,ES:[DI+0B7B6H]
+      SUB    SI,ES:[BP+0B8B7H]
+      SUB    SI,ES:[BX+0B9B8H]
+      SUB    DI,ES:[BX+SI+0BAB9H]
+      SUB    DI,ES:[BX+DI+0BBBAH]
+      SUB    DI,ES:[BP+SI+0BCBBH]
+      SUB    DI,ES:[BP+DI+0BDBCH]
+      SUB    DI,ES:[SI+0BEBDH]
+      SUB    DI,ES:[DI+0BFBEH]
+      SUB    DI,ES:[BP+0C0BFH]
+      SUB    DI,ES:[BX+0C1C0H]
+      SUB    AX,ES:[BX+SI]
+      SUB    AX,ES:[BX+DI]
+      SUB    AX,ES:[BP+SI]
+      SUB    AX,ES:[BP+DI]
+      SUB    AX,ES:[SI]
+      SUB    AX,ES:[DI]
+      SUB    AX,ES:[0807H]
+      SUB    AX,ES:[BX]
+      SUB    CX,ES:[BX+SI]
+      SUB    CX,ES:[BX+DI]
+      SUB    CX,ES:[BP+SI]
+      SUB    CX,ES:[BP+DI]
+      SUB    CX,ES:[SI]
+      SUB    CX,ES:[DI]
+      SUB    CX,ES:[100FH]
+      SUB    CX,ES:[BX]
+      SUB    DX,ES:[BX+SI]
+      SUB    DX,ES:[BX+DI]
+      SUB    DX,ES:[BP+SI]
+      SUB    DX,ES:[BP+DI]
+      SUB    DX,ES:[SI]
+      SUB    DX,ES:[DI]
+      SUB    DX,ES:[1817H]
+      SUB    DX,ES:[BX]
+      SUB    BX,ES:[BX+SI]
+      SUB    BX,ES:[BX+DI]
+      SUB    BX,ES:[BP+SI]
+      SUB    BX,ES:[BP+DI]
+      SUB    BX,ES:[SI]
+      SUB    BX,ES:[DI]
+      SUB    BX,ES:[201FH]
+      SUB    BX,ES:[BX]
+      SUB    SP,ES:[BX+SI]
+      SUB    SP,ES:[BX+DI]
+      SUB    SP,ES:[BP+SI]
+      SUB    SP,ES:[BP+DI]
+      SUB    SP,ES:[SI]
+      SUB    SP,ES:[DI]
+      SUB    SP,ES:[2827H]
+      SUB    SP,ES:[BX]
+      SUB    BP,ES:[BX+SI]
+      SUB    BP,ES:[BX+DI]
+      SUB    BP,ES:[BP+SI]
+      SUB    BP,ES:[BP+DI]
+      XOR    ES:[BX+DI],DH
+      XOR    ES:[BP+SI],DH
+      XOR    ES:[BP+DI],DH
+      XOR    ES:[SI],DH
+      XOR    ES:[DI],DH
+      XOR    ES:[3837H],DH
+      XOR    ES:[BX],DH
+      XOR    ES:[BX+SI],BH
+      XOR    ES:[BP+SI],SI
+      XOR    ES:[BP+DI],SI
+      XOR    ES:[SI],SI
+      XOR    ES:[DI],SI
+      XOR    ES:[3837H],SI
+      XOR    ES:[BX],SI
+      XOR    ES:[BX+SI],DI
+      XOR    ES:[BX+DI],DI
+      XOR    ES:[BP+SI],DI
+      XOR    ES:[BP+DI],DI
+      XOR    ES:[SI],DI
+      XOR    ES:[DI],DI
+      XOR    ES:[403FH],DI
+      XOR    ES:[BX],DI
+      XOR    ES:[BX+SI+65],AX
+      XOR    ES:[BX+SI-128],AX
+      XOR    ES:[BX+DI+66],AX
+      XOR    ES:[BX+DI-128],AX
+      XOR    ES:[BP+SI+67],AX
+      XOR    ES:[BP+SI-128],AX
+      XOR    ES:[BP+DI+68],AX
+      XOR    ES:[BP+DI-128],AX
+      XOR    ES:[SI+69],AX
+      XOR    ES:[SI-128],AX
+      XOR    ES:[DI+70],AX
+      XOR    ES:[DI-128],AX
+      XOR    ES:[BP+71],AX
+      XOR    ES:[BP-128],AX
+      XOR    ES:[BX+72],AX
+      XOR    ES:[BX-128],AX
+      XOR    ES:[BX+SI+73],CX
+      XOR    ES:[BX+SI-128],CX
+      XOR    ES:[BX+DI+74],CX
+      XOR    ES:[BX+DI-128],CX
+      XOR    ES:[BP+SI+75],CX
+      XOR    ES:[BP+SI-128],CX
+      XOR    ES:[BP+DI+76],CX
+      XOR    ES:[BP+DI-128],CX
+      XOR    ES:[SI+77],CX
+      XOR    ES:[SI-128],CX
+      XOR    ES:[DI+78],CX
+      XOR    ES:[DI-128],CX
+      XOR    ES:[BP+79],CX
+      XOR    ES:[BP-128],CX
+      XOR    ES:[BX+80],CX
+      XOR    ES:[BX-128],CX
+      XOR    ES:[BX+SI+81],DX
+      XOR    ES:[BX+SI-128],DX
+      XOR    ES:[BX+DI+82],DX
+      XOR    ES:[BX+DI-128],DX
+      XOR    ES:[BP+SI+83],DX
+      XOR    ES:[BP+SI-128],DX
+      XOR    ES:[BP+DI+84],DX
+      XOR    ES:[BP+DI-128],DX
+      XOR    ES:[SI+85],DX
+      XOR    ES:[SI-128],DX
+      XOR    ES:[DI+86],DX
+      XOR    ES:[DI-128],DX
+      XOR    ES:[BP+87],DX
+      XOR    ES:[BP-128],DX
+      XOR    ES:[BX+88],DX
+      XOR    ES:[BX-128],DX
+      XOR    ES:[BX+SI+89],BX
+      XOR    ES:[BX+SI-128],BX
+      XOR    ES:[BX+DI+90],BX
+      XOR    ES:[BX+DI-128],BX
+      XOR    ES:[BP+SI+91],BX
+      XOR    ES:[BP+SI-128],BX
+      XOR    ES:[BP+DI+92],BX
+      XOR    ES:[BP+DI-128],BX
+      XOR    ES:[SI+93],BX
+      XOR    ES:[SI-128],BX
+      XOR    ES:[DI+94],BX
+      XOR    ES:[DI-128],BX
+      XOR    ES:[BP+95],BX
+      XOR    ES:[BP-128],BX
+      XOR    ES:[BX+96],BX
+      XOR    ES:[BX-128],BX
+      XOR    ES:[BX+SI+97],SP
+      XOR    ES:[BX+SI-128],SP
+      XOR    ES:[BX+DI+98],SP
+      XOR    ES:[BX+DI-128],SP
+      XOR    ES:[BP+SI+99],SP
+      XOR    ES:[BP+SI-128],SP
+      XOR    ES:[BP+DI+100],SP
+      XOR    ES:[BP+DI-128],SP
+      XOR    ES:[SI+101],SP
+      XOR    ES:[SI-128],SP
+      XOR    ES:[DI+102],SP
+      XOR    ES:[DI-128],SP
+      XOR    ES:[BP+103],SP
+      XOR    ES:[BP-128],SP
+      XOR    ES:[BX+104],SP
+      XOR    ES:[BX-128],SP
+      XOR    ES:[BX+SI+105],BP
+      XOR    ES:[BX+SI-128],BP
+      XOR    ES:[BX+DI+106],BP
+      XOR    ES:[BX+DI-128],BP
+      XOR    ES:[BP+SI+107],BP
+      XOR    ES:[BP+SI-128],BP
+      XOR    ES:[BP+DI+108],BP
+      XOR    ES:[BP+DI-128],BP
+      XOR    ES:[SI+109],BP
+      XOR    ES:[SI-128],BP
+      XOR    ES:[DI+110],BP
+      XOR    ES:[DI-128],BP
+      XOR    ES:[BP+111],BP
+      XOR    ES:[BP-128],BP
+      XOR    ES:[BX+112],BP
+      XOR    ES:[BX-128],BP
+      XOR    ES:[BX+SI+113],SI
+      XOR    ES:[BX+SI-128],SI
+      XOR    ES:[BX+DI+114],SI
+      XOR    ES:[BX+DI-128],SI
+      XOR    ES:[BP+SI+115],SI
+      XOR    ES:[BP+SI-128],SI
+      XOR    ES:[BP+DI+116],SI
+      XOR    ES:[BP+DI-128],SI
+      XOR    ES:[SI+117],SI
+      XOR    ES:[SI-128],SI
+      XOR    ES:[DI+118],SI
+      XOR    ES:[DI-128],SI
+      XOR    ES:[BP+119],SI
+      XOR    ES:[BP-128],SI
+      XOR    ES:[BX+120],SI
+      XOR    ES:[BX-128],SI
+      XOR    ES:[BX+SI+121],DI
+      XOR    ES:[BX+SI-128],DI
+      XOR    ES:[BX+DI+122],DI
+      XOR    ES:[BX+DI-128],DI
+      XOR    ES:[BP+SI+123],DI
+      XOR    ES:[BP+SI-128],DI
+      XOR    ES:[BP+DI+124],DI
+      XOR    ES:[BP+DI-128],DI
+      XOR    ES:[SI+125],DI
+      XOR    ES:[SI-128],DI
+      XOR    ES:[DI+126],DI
+      XOR    ES:[DI-128],DI
+      XOR    ES:[BP+127],DI
+      XOR    ES:[BP-128],DI
+      XOR    ES:[BX-128],DI
+      XOR    ES:[BX+0],DI
+      XOR    ES:[BX+SI+8281H],AX
+      XOR    ES:[BX+DI+8382H],AX
+      XOR    ES:[BP+SI+8483H],AX
+      XOR    ES:[BP+DI+8584H],AX
+      XOR    ES:[SI+8685H],AX
+      XOR    ES:[DI+8786H],AX
+      XOR    ES:[BP+8887H],AX
+      XOR    ES:[BX+8988H],AX
+      XOR    ES:[BX+SI+8A89H],CX
+      XOR    ES:[BX+DI+8B8AH],CX
+      XOR    ES:[BP+SI+8C8BH],CX
+      XOR    ES:[BP+DI+8D8CH],CX
+      XOR    ES:[SI+8E8DH],CX
+      XOR    ES:[DI+8F8EH],CX
+      XOR    ES:[BP+908FH],CX
+      XOR    ES:[BX+9190H],CX
+      XOR    ES:[BX+SI+9291H],DX
+      XOR    ES:[BX+DI+9392H],DX
+      XOR    ES:[BP+SI+9493H],DX
+      XOR    ES:[BP+DI+9594H],DX
+      XOR    ES:[SI+9695H],DX
+      XOR    ES:[DI+9796H],DX
+      XOR    ES:[BP+9897H],DX
+      XOR    ES:[BX+9998H],DX
+      XOR    ES:[BX+SI+9A99H],BX
+      XOR    ES:[BX+DI+9B9AH],BX
+      XOR    ES:[BP+SI+9C9BH],BX
+      XOR    ES:[BP+DI+9D9CH],BX
+      XOR    ES:[SI+9E9DH],BX
+      XOR    ES:[DI+9F9EH],BX
+      XOR    ES:[BP+0A09FH],BX
+      XOR    ES:[BX+0A1A0H],BX
+      XOR    ES:[BX+SI+0A2A1H],SP
+      XOR    ES:[BX+DI+0A3A2H],SP
+      XOR    ES:[BP+SI+0A4A3H],SP
+      XOR    ES:[BP+DI+0A5A4H],SP
+      XOR    ES:[SI+0A6A5H],SP
+      XOR    ES:[DI+0A7A6H],SP
+      XOR    ES:[BP+0A8A7H],SP
+      XOR    ES:[BX+0A9A8H],SP
+      XOR    ES:[BX+SI+0AAA9H],BP
+      XOR    ES:[BX+DI+0ABAAH],BP
+      XOR    ES:[BP+SI+0ACABH],BP
+      XOR    ES:[BP+DI+0ADACH],BP
+      XOR    ES:[SI+0AEADH],BP
+      XOR    ES:[DI+0AFAEH],BP
+      XOR    ES:[BP+0B0AFH],BP
+      XOR    ES:[BX+0B1B0H],BP
+      XOR    ES:[BX+SI+0B2B1H],SI
+      XOR    ES:[BX+DI+0B3B2H],SI
+      XOR    ES:[BP+SI+0B4B3H],SI
+      XOR    ES:[BP+DI+0B5B4H],SI
+      XOR    ES:[SI+0B6B5H],SI
+      XOR    ES:[DI+0B7B6H],SI
+      XOR    ES:[BP+0B8B7H],SI
+      XOR    ES:[BX+0B9B8H],SI
+      XOR    ES:[BX+SI+0BAB9H],DI
+      XOR    ES:[BX+DI+0BBBAH],DI
+      XOR    ES:[BP+SI+0BCBBH],DI
+      XOR    ES:[BP+DI+0BDBCH],DI
+      XOR    ES:[SI+0BEBDH],DI
+      XOR    ES:[DI+0BFBEH],DI
+      XOR    ES:[BP+0C0BFH],DI
+      XOR    ES:[BX+0C1C0H],DI
+      XOR    ES:[BX+SI],AX
+      XOR    ES:[BX+DI],AX
+      XOR    ES:[BP+SI],AX
+      XOR    ES:[BP+DI],AX
+      XOR    ES:[SI],AX
+      XOR    ES:[DI],AX
+      XOR    ES:[0807H],AX
+      XOR    ES:[BX],AX
+      XOR    ES:[BX+SI],CX
+      XOR    ES:[BX+DI],CX
+      XOR    ES:[BP+SI],CX
+      XOR    ES:[BP+DI],CX
+      XOR    ES:[SI],CX
+      XOR    ES:[DI],CX
+      XOR    ES:[100FH],CX
+      XOR    ES:[BX],CX
+      XOR    ES:[BX+SI],DX
+      XOR    ES:[BX+DI],DX
+      XOR    ES:[BP+SI],DX
+      XOR    ES:[BP+DI],DX
+      XOR    ES:[SI],DX
+      XOR    ES:[DI],DX
+      XOR    ES:[1817H],DX
+      XOR    ES:[BX],DX
+      XOR    ES:[BX+SI],BX
+      XOR    ES:[BX+DI],BX
+      XOR    ES:[BP+SI],BX
+      XOR    ES:[BP+DI],BX
+      XOR    ES:[SI],BX
+      XOR    ES:[DI],BX
+      XOR    ES:[201FH],BX
+      XOR    ES:[BX],BX
+      XOR    ES:[BX+SI],SP
+      XOR    ES:[BX+DI],SP
+      XOR    ES:[BP+SI],SP
+      XOR    ES:[BP+DI],SP
+      XOR    ES:[SI],SP
+      XOR    ES:[DI],SP
+      XOR    ES:[2827H],SP
+      XOR    ES:[BX],SP
+      XOR    ES:[BX+SI],BP
+      XOR    ES:[BX+DI],BP
+      XOR    ES:[BP+SI],BP
+      XOR    ES:[BP+DI],BP
+      XOR    ES:[SI],BP
+      XOR    ES:[DI],BP
+      XOR    ES:[302FH],BP
+      XOR    ES:[BX],BP
+      XOR    ES:[BX+SI],SI
+      XOR    ES:[BX+DI],SI
+      XOR    DH,ES:[BP+DI]
+      XOR    DH,ES:[SI]
+      XOR    DH,ES:[DI]
+      XOR    DH,ES:[3837H]
+      XOR    DH,ES:[BX]
+      XOR    BH,ES:[BX+SI]
+      XOR    BH,ES:[BX+DI]
+      XOR    BH,ES:[BP+SI]
+      XOR    SI,ES:[SI]
+      XOR    SI,ES:[DI]
+      XOR    SI,ES:[3837H]
+      XOR    SI,ES:[BX]
+      XOR    DI,ES:[BX+SI]
+      XOR    DI,ES:[BX+DI]
+      XOR    DI,ES:[BP+SI]
+      XOR    DI,ES:[BP+DI]
+      XOR    DI,ES:[SI]
+      XOR    DI,ES:[DI]
+      XOR    DI,ES:[403FH]
+      XOR    DI,ES:[BX]
+      XOR    AX,ES:[BX+SI+65]
+      XOR    AX,ES:[BX+SI-128]
+      XOR    AX,ES:[BX+DI+66]
+      XOR    AX,ES:[BX+DI-128]
+      XOR    AX,ES:[BP+SI+67]
+      XOR    AX,ES:[BP+SI-128]
+      XOR    AX,ES:[BP+DI+68]
+      XOR    AX,ES:[BP+DI-128]
+      XOR    AX,ES:[SI+69]
+      XOR    AX,ES:[SI-128]
+      XOR    AX,ES:[DI+70]
+      XOR    AX,ES:[DI-128]
+      XOR    AX,ES:[BP+71]
+      XOR    AX,ES:[BP-128]
+      XOR    AX,ES:[BX+72]
+      XOR    AX,ES:[BX-128]
+      XOR    CX,ES:[BX+SI+73]
+      XOR    CX,ES:[BX+SI-128]
+      XOR    CX,ES:[BX+DI+74]
+      XOR    CX,ES:[BX+DI-128]
+      XOR    CX,ES:[BP+SI+75]
+      XOR    CX,ES:[BP+SI-128]
+      XOR    CX,ES:[BP+DI+76]
+      XOR    CX,ES:[BP+DI-128]
+      XOR    CX,ES:[SI+77]
+      XOR    CX,ES:[SI-128]
+      XOR    CX,ES:[DI+78]
+      XOR    CX,ES:[DI-128]
+      XOR    CX,ES:[BP+79]
+      XOR    CX,ES:[BP-128]
+      XOR    CX,ES:[BX+80]
+      XOR    CX,ES:[BX-128]
+      XOR    DX,ES:[BX+SI+81]
+      XOR    DX,ES:[BX+SI-128]
+      XOR    DX,ES:[BX+DI+82]
+      XOR    DX,ES:[BX+DI-128]
+      XOR    DX,ES:[BP+SI+83]
+      XOR    DX,ES:[BP+SI-128]
+      XOR    DX,ES:[BP+DI+84]
+      XOR    DX,ES:[BP+DI-128]
+      XOR    DX,ES:[SI+85]
+      XOR    DX,ES:[SI-128]
+      XOR    DX,ES:[DI+86]
+      XOR    DX,ES:[DI-128]
+      XOR    DX,ES:[BP+87]
+      XOR    DX,ES:[BP-128]
+      XOR    DX,ES:[BX+88]
+      XOR    DX,ES:[BX-128]
+      XOR    BX,ES:[BX+SI+89]
+      XOR    BX,ES:[BX+SI-128]
+      XOR    BX,ES:[BX+DI+90]
+      XOR    BX,ES:[BX+DI-128]
+      XOR    BX,ES:[BP+SI+91]
+      XOR    BX,ES:[BP+SI-128]
+      XOR    BX,ES:[BP+DI+92]
+      XOR    BX,ES:[BP+DI-128]
+      XOR    BX,ES:[SI+93]
+      XOR    BX,ES:[SI-128]
+      XOR    BX,ES:[DI+94]
+      XOR    BX,ES:[DI-128]
+      XOR    BX,ES:[BP+95]
+      XOR    BX,ES:[BP-128]
+      XOR    BX,ES:[BX+96]
+      XOR    BX,ES:[BX-128]
+      XOR    SP,ES:[BX+SI+97]
+      XOR    SP,ES:[BX+SI-128]
+      XOR    SP,ES:[BX+DI+98]
+      XOR    SP,ES:[BX+DI-128]
+      XOR    SP,ES:[BP+SI+99]
+      XOR    SP,ES:[BP+SI-128]
+      XOR    SP,ES:[BP+DI+100]
+      XOR    SP,ES:[BP+DI-128]
+      XOR    SP,ES:[SI+101]
+      XOR    SP,ES:[SI-128]
+      XOR    SP,ES:[DI+102]
+      XOR    SP,ES:[DI-128]
+      XOR    SP,ES:[BP+103]
+      XOR    SP,ES:[BP-128]
+      XOR    SP,ES:[BX+104]
+      XOR    SP,ES:[BX-128]
+      XOR    BP,ES:[BX+SI+105]
+      XOR    BP,ES:[BX+SI-128]
+      XOR    BP,ES:[BX+DI+106]
+      XOR    BP,ES:[BX+DI-128]
+      XOR    BP,ES:[BP+SI+107]
+      XOR    BP,ES:[BP+SI-128]
+      XOR    BP,ES:[BP+DI+108]
+      XOR    BP,ES:[BP+DI-128]
+      XOR    BP,ES:[SI+109]
+      XOR    BP,ES:[SI-128]
+      XOR    BP,ES:[DI+110]
+      XOR    BP,ES:[DI-128]
+      XOR    BP,ES:[BP+111]
+      XOR    BP,ES:[BP-128]
+      XOR    BP,ES:[BX+112]
+      XOR    BP,ES:[BX-128]
+      XOR    SI,ES:[BX+SI+113]
+      XOR    SI,ES:[BX+SI-128]
+      XOR    SI,ES:[BX+DI+114]
+      XOR    SI,ES:[BX+DI-128]
+      XOR    SI,ES:[BP+SI+115]
+      XOR    SI,ES:[BP+SI-128]
+      XOR    SI,ES:[BP+DI+116]
+      XOR    SI,ES:[BP+DI-128]
+      XOR    SI,ES:[SI+117]
+      XOR    SI,ES:[SI-128]
+      XOR    SI,ES:[DI+118]
+      XOR    SI,ES:[DI-128]
+      XOR    SI,ES:[BP+119]
+      XOR    SI,ES:[BP-128]
+      XOR    SI,ES:[BX+120]
+      XOR    SI,ES:[BX-128]
+      XOR    DI,ES:[BX+SI+121]
+      XOR    DI,ES:[BX+SI-128]
+      XOR    DI,ES:[BX+DI+122]
+      XOR    DI,ES:[BX+DI-128]
+      XOR    DI,ES:[BP+SI+123]
+      XOR    DI,ES:[BP+SI-128]
+      XOR    DI,ES:[BP+DI+124]
+      XOR    DI,ES:[BP+DI-128]
+      XOR    DI,ES:[SI+125]
+      XOR    DI,ES:[SI-128]
+      XOR    DI,ES:[DI+126]
+      XOR    DI,ES:[DI-128]
+      XOR    DI,ES:[BP+127]
+      XOR    DI,ES:[BP-128]
+      XOR    DI,ES:[BX-128]
+      XOR    DI,ES:[BX+0]
+      XOR    AX,ES:[BX+SI+8281H]
+      XOR    AX,ES:[BX+DI+8382H]
+      XOR    AX,ES:[BP+SI+8483H]
+      XOR    AX,ES:[BP+DI+8584H]
+      XOR    AX,ES:[SI+8685H]
+      XOR    AX,ES:[DI+8786H]
+      XOR    AX,ES:[BP+8887H]
+      XOR    AX,ES:[BX+8988H]
+      XOR    CX,ES:[BX+SI+8A89H]
+      XOR    CX,ES:[BX+DI+8B8AH]
+      XOR    CX,ES:[BP+SI+8C8BH]
+      XOR    CX,ES:[BP+DI+8D8CH]
+      XOR    CX,ES:[SI+8E8DH]
+      XOR    CX,ES:[DI+8F8EH]
+      XOR    CX,ES:[BP+908FH]
+      XOR    CX,ES:[BX+9190H]
+      XOR    DX,ES:[BX+SI+9291H]
+      XOR    DX,ES:[BX+DI+9392H]
+      XOR    DX,ES:[BP+SI+9493H]
+      XOR    DX,ES:[BP+DI+9594H]
+      XOR    DX,ES:[SI+9695H]
+      XOR    DX,ES:[DI+9796H]
+      XOR    DX,ES:[BP+9897H]
+      XOR    DX,ES:[BX+9998H]
+      XOR    BX,ES:[BX+SI+9A99H]
+      XOR    BX,ES:[BX+DI+9B9AH]
+      XOR    BX,ES:[BP+SI+9C9BH]
+      XOR    BX,ES:[BP+DI+9D9CH]
+      XOR    BX,ES:[SI+9E9DH]
+      XOR    BX,ES:[DI+9F9EH]
+      XOR    BX,ES:[BP+0A09FH]
+      XOR    BX,ES:[BX+0A1A0H]
+      XOR    SP,ES:[BX+SI+0A2A1H]
+      XOR    SP,ES:[BX+DI+0A3A2H]
+      XOR    SP,ES:[BP+SI+0A4A3H]
+      XOR    SP,ES:[BP+DI+0A5A4H]
+      XOR    SP,ES:[SI+0A6A5H]
+      XOR    SP,ES:[DI+0A7A6H]
+      XOR    SP,ES:[BP+0A8A7H]
+      XOR    SP,ES:[BX+0A9A8H]
+      XOR    BP,ES:[BX+SI+0AAA9H]
+      XOR    BP,ES:[BX+DI+0ABAAH]
+      XOR    BP,ES:[BP+SI+0ACABH]
+      XOR    BP,ES:[BP+DI+0ADACH]
+      XOR    BP,ES:[SI+0AEADH]
+      XOR    BP,ES:[DI+0AFAEH]
+      XOR    BP,ES:[BP+0B0AFH]
+      XOR    BP,ES:[BX+0B1B0H]
+      XOR    SI,ES:[BX+SI+0B2B1H]
+      XOR    SI,ES:[BX+DI+0B3B2H]
+      XOR    SI,ES:[BP+SI+0B4B3H]
+      XOR    SI,ES:[BP+DI+0B5B4H]
+      XOR    SI,ES:[SI+0B6B5H]
+      XOR    SI,ES:[DI+0B7B6H]
+      XOR    SI,ES:[BP+0B8B7H]
+      XOR    SI,ES:[BX+0B9B8H]
+      XOR    DI,ES:[BX+SI+0BAB9H]
+      XOR    DI,ES:[BX+DI+0BBBAH]
+      XOR    DI,ES:[BP+SI+0BCBBH]
+      XOR    DI,ES:[BP+DI+0BDBCH]
+      XOR    DI,ES:[SI+0BEBDH]
+      XOR    DI,ES:[DI+0BFBEH]
+      XOR    DI,ES:[BP+0C0BFH]
+      XOR    DI,ES:[BX+0C1C0H]
+      XOR    AX,ES:[BX+SI]
+      XOR    AX,ES:[BX+DI]
+      XOR    AX,ES:[BP+SI]
+      XOR    AX,ES:[BP+DI]
+      XOR    AX,ES:[SI]
+      XOR    AX,ES:[DI]
+      XOR    AX,ES:[0807H]
+      XOR    AX,ES:[BX]
+      XOR    CX,ES:[BX+SI]
+      XOR    CX,ES:[BX+DI]
+      XOR    CX,ES:[BP+SI]
+      XOR    CX,ES:[BP+DI]
+      XOR    CX,ES:[SI]
+      XOR    CX,ES:[DI]
+      XOR    CX,ES:[100FH]
+      XOR    CX,ES:[BX]
+      XOR    DX,ES:[BX+SI]
+      XOR    DX,ES:[BX+DI]
+      XOR    DX,ES:[BP+SI]
+      XOR    DX,ES:[BP+DI]
+      XOR    DX,ES:[SI]
+      XOR    DX,ES:[DI]
+      XOR    DX,ES:[1817H]
+      XOR    DX,ES:[BX]
+      XOR    BX,ES:[BX+SI]
+      XOR    BX,ES:[BX+DI]
+      XOR    BX,ES:[BP+SI]
+      XOR    BX,ES:[BP+DI]
+      XOR    BX,ES:[SI]
+      XOR    BX,ES:[DI]
+      XOR    BX,ES:[201FH]
+      XOR    BX,ES:[BX]
+      XOR    SP,ES:[BX+SI]
+      XOR    SP,ES:[BX+DI]
+      XOR    SP,ES:[BP+SI]
+      XOR    SP,ES:[BP+DI]
+      XOR    SP,ES:[SI]
+      XOR    SP,ES:[DI]
+      XOR    SP,ES:[2827H]
+      XOR    SP,ES:[BX]
+      XOR    BP,ES:[BX+SI]
+      XOR    BP,ES:[BX+DI]
+      XOR    BP,ES:[BP+SI]
+      XOR    BP,ES:[BP+DI]
+      XOR    BP,ES:[SI]
+      XOR    BP,ES:[DI]
+      XOR    BP,ES:[302FH]
+      XOR    BP,ES:[BX]
+      XOR    SI,ES:[BX+SI]
+      XOR    SI,ES:[BX+DI]
+      XOR    SI,ES:[BP+SI]
+      XOR    SI,ES:[BP+DI]
+      CMP    ES:[BX+DI],BH
+      CMP    ES:[BP+SI],BH
+      CMP    ES:[BP+DI],BH
+      CMP    ES:[SI],BH
+      CMP    ES:[DI],BH
+      CMP    ES:[403FH],BH
+      CMP    ES:[BX],BH
+      CMP    ES:[BX+SI+65],AL
+      CMP    ES:[BX+SI-128],AL
+      CMP    ES:[BX+DI+66],AL
+      CMP    ES:[BX+DI-128],AL
+      CMP    ES:[BP+SI+67],AL
+      CMP    ES:[BP+SI-128],AL
+      CMP    ES:[BP+DI+68],AL
+      CMP    ES:[BP+DI-128],AL
+      CMP    ES:[SI+69],AL
+      CMP    ES:[SI-128],AL
+      CMP    ES:[DI+70],AL
+      CMP    ES:[DI-128],AL
+      CMP    ES:[BP+71],AL
+      CMP    ES:[BP-128],AL
+      CMP    ES:[BX+72],AL
+      CMP    ES:[BX-128],AL
+      CMP    ES:[BX+SI+73],CL
+      CMP    ES:[BX+SI-128],CL
+      CMP    ES:[BX+DI+74],CL
+      CMP    ES:[BX+DI-128],CL
+      CMP    ES:[BP+SI+75],CL
+      CMP    ES:[BP+SI-128],CL
+      CMP    ES:[BP+DI+76],CL
+      CMP    ES:[BP+DI-128],CL
+      CMP    ES:[SI+77],CL
+      CMP    ES:[SI-128],CL
+      CMP    ES:[DI+78],CL
+      CMP    ES:[DI-128],CL
+      CMP    ES:[BP+79],CL
+      CMP    ES:[BP-128],CL
+      CMP    ES:[BX+80],CL
+      CMP    ES:[BX-128],CL
+      CMP    ES:[BX+SI+81],DL
+      CMP    ES:[BX+SI-128],DL
+      CMP    ES:[BX+DI+82],DL
+      CMP    ES:[BX+DI-128],DL
+      CMP    ES:[BP+SI+83],DL
+      CMP    ES:[BP+SI-128],DL
+      CMP    ES:[BP+DI+84],DL
+      CMP    ES:[BP+DI-128],DL
+      CMP    ES:[SI+85],DL
+      CMP    ES:[SI-128],DL
+      CMP    ES:[DI+86],DL
+      CMP    ES:[DI-128],DL
+      CMP    ES:[BP+87],DL
+      CMP    ES:[BP-128],DL
+      CMP    ES:[BX+88],DL
+      CMP    ES:[BX-128],DL
+      CMP    ES:[BX+SI+89],BL
+      CMP    ES:[BX+SI-128],BL
+      CMP    ES:[BX+DI+90],BL
+      CMP    ES:[BX+DI-128],BL
+      CMP    ES:[BP+SI+91],BL
+      CMP    ES:[BP+SI-128],BL
+      CMP    ES:[BP+DI+92],BL
+      CMP    ES:[BP+DI-128],BL
+      CMP    ES:[SI+93],BL
+      CMP    ES:[SI-128],BL
+      CMP    ES:[DI+94],BL
+      CMP    ES:[DI-128],BL
+      CMP    ES:[BP+95],BL
+      CMP    ES:[BP-128],BL
+      CMP    ES:[BX+96],BL
+      CMP    ES:[BX-128],BL
+      CMP    ES:[BX+SI+97],AH
+      CMP    ES:[BX+SI-128],AH
+      CMP    ES:[BX+DI+98],AH
+      CMP    ES:[BX+DI-128],AH
+      CMP    ES:[BP+SI+99],AH
+      CMP    ES:[BP+SI-128],AH
+      CMP    ES:[BP+DI+100],AH
+      CMP    ES:[BP+DI-128],AH
+      CMP    ES:[SI+101],AH
+      CMP    ES:[SI-128],AH
+      CMP    ES:[DI+102],AH
+      CMP    ES:[DI-128],AH
+      CMP    ES:[BP+103],AH
+      CMP    ES:[BP-128],AH
+      CMP    ES:[BX+104],AH
+      CMP    ES:[BX-128],AH
+      CMP    ES:[BX+SI+8281H],AL
+      CMP    ES:[BX+DI+8382H],AL
+      CMP    ES:[BP+SI+8483H],AL
+      CMP    ES:[BP+DI+8584H],AL
+      CMP    ES:[SI+8685H],AL
+      CMP    ES:[DI+8786H],AL
+      CMP    ES:[BP+8887H],AL
+      CMP    ES:[BX+8988H],AL
+      CMP    ES:[BX+SI+8A89H],CL
+      CMP    ES:[BX+DI+8B8AH],CL
+      CMP    ES:[BP+SI+8C8BH],CL
+      CMP    ES:[BP+DI+8D8CH],CL
+      CMP    ES:[SI+8E8DH],CL
+      CMP    ES:[DI+8F8EH],CL
+      CMP    ES:[BP+908FH],CL
+      CMP    ES:[BX+9190H],CL
+      CMP    ES:[BX+SI+9291H],DL
+      CMP    ES:[BX+DI+9392H],DL
+      CMP    ES:[BP+SI+9493H],DL
+      CMP    ES:[BP+DI+9594H],DL
+      CMP    ES:[SI+9695H],DL
+      CMP    ES:[DI+9796H],DL
+      CMP    ES:[BP+9897H],DL
+      CMP    ES:[BX+9998H],DL
+      CMP    ES:[BX+SI+9A99H],BL
+      CMP    ES:[BX+DI+9B9AH],BL
+      CMP    ES:[BP+SI+9C9BH],BL
+      CMP    ES:[BP+DI+9D9CH],BL
+      CMP    ES:[SI+9E9DH],BL
+      CMP    ES:[DI+9F9EH],BL
+      CMP    ES:[BP+0A09FH],BL
+      CMP    ES:[BX+0A1A0H],BL
+      CMP    ES:[BX+SI+0A2A1H],AH
+      CMP    ES:[BX+DI+0A3A2H],AH
+      CMP    ES:[BP+SI+0A4A3H],AH
+      CMP    ES:[BP+DI+0A5A4H],AH
+      CMP    ES:[SI+0A6A5H],AH
+      CMP    ES:[DI+0A7A6H],AH
+      CMP    ES:[BP+0A8A7H],AH
+      CMP    ES:[BX+0A9A8H],AH
+      CMP    ES:[BP+SI],DI
+      CMP    ES:[BP+DI],DI
+      CMP    ES:[SI],DI
+      CMP    ES:[DI],DI
+      CMP    ES:[403FH],DI
+      CMP    ES:[BX],DI
+      CMP    ES:[BX+SI+65],AX
+      CMP    ES:[BX+SI-128],AX
+      CMP    ES:[BX+DI+66],AX
+      CMP    ES:[BX+DI-128],AX
+      CMP    ES:[BP+SI+67],AX
+      CMP    ES:[BP+SI-128],AX
+      CMP    ES:[BP+DI+68],AX
+      CMP    ES:[BP+DI-128],AX
+      CMP    ES:[SI+69],AX
+      CMP    ES:[SI-128],AX
+      CMP    ES:[DI+70],AX
+      CMP    ES:[DI-128],AX
+      CMP    ES:[BP+71],AX
+      CMP    ES:[BP-128],AX
+      CMP    ES:[BX+72],AX
+      CMP    ES:[BX-128],AX
+      CMP    ES:[BX+SI+73],CX
+      CMP    ES:[BX+SI-128],CX
+      CMP    ES:[BX+DI+74],CX
+      CMP    ES:[BX+DI-128],CX
+      CMP    ES:[BP+SI+75],CX
+      CMP    ES:[BP+SI-128],CX
+      CMP    ES:[BP+DI+76],CX
+      CMP    ES:[BP+DI-128],CX
+      CMP    ES:[SI+77],CX
+      CMP    ES:[SI-128],CX
+      CMP    ES:[DI+78],CX
+      CMP    ES:[DI-128],CX
+      CMP    ES:[BP+79],CX
+      CMP    ES:[BP-128],CX
+      CMP    ES:[BX+80],CX
+      CMP    ES:[BX-128],CX
+      CMP    ES:[BX+SI+81],DX
+      CMP    ES:[BX+SI-128],DX
+      CMP    ES:[BX+DI+82],DX
+      CMP    ES:[BX+DI-128],DX
+      CMP    ES:[BP+SI+83],DX
+      CMP    ES:[BP+SI-128],DX
+      CMP    ES:[BP+DI+84],DX
+      CMP    ES:[BP+DI-128],DX
+      CMP    ES:[SI+85],DX
+      CMP    ES:[SI-128],DX
+      CMP    ES:[DI+86],DX
+      CMP    ES:[DI-128],DX
+      CMP    ES:[BP+87],DX
+      CMP    ES:[BP-128],DX
+      CMP    ES:[BX+88],DX
+      CMP    ES:[BX-128],DX
+      CMP    ES:[BX+SI+89],BX
+      CMP    ES:[BX+SI-128],BX
+      CMP    ES:[BX+DI+90],BX
+      CMP    ES:[BX+DI-128],BX
+      CMP    ES:[BP+SI+91],BX
+      CMP    ES:[BP+SI-128],BX
+      CMP    ES:[BP+DI+92],BX
+      CMP    ES:[BP+DI-128],BX
+      CMP    ES:[SI+93],BX
+      CMP    ES:[SI-128],BX
+      CMP    ES:[DI+94],BX
+      CMP    ES:[DI-128],BX
+      CMP    ES:[BP+95],BX
+      CMP    ES:[BP-128],BX
+      CMP    ES:[BX+96],BX
+      CMP    ES:[BX-128],BX
+      CMP    ES:[BX+SI+97],SP
+      CMP    ES:[BX+SI-128],SP
+      CMP    ES:[BX+DI+98],SP
+      CMP    ES:[BX+DI-128],SP
+      CMP    ES:[BP+SI+99],SP
+      CMP    ES:[BP+SI-128],SP
+      CMP    ES:[BP+DI+100],SP
+      CMP    ES:[BP+DI-128],SP
+      CMP    ES:[SI+101],SP
+      CMP    ES:[SI-128],SP
+      CMP    ES:[DI+102],SP
+      CMP    ES:[DI-128],SP
+      CMP    ES:[BP+103],SP
+      CMP    ES:[BP-128],SP
+      CMP    ES:[BX+104],SP
+      CMP    ES:[BX-128],SP
+      CMP    ES:[BX+SI+105],BP
+      CMP    ES:[BX+SI-128],BP
+      CMP    ES:[BX+DI+106],BP
+      CMP    ES:[BX+DI-128],BP
+      CMP    ES:[BP+SI+107],BP
+      CMP    ES:[BP+SI-128],BP
+      CMP    ES:[BP+DI+108],BP
+      CMP    ES:[BP+DI-128],BP
+      CMP    ES:[SI+109],BP
+      CMP    ES:[SI-128],BP
+      CMP    ES:[DI+110],BP
+      CMP    ES:[DI-128],BP
+      CMP    ES:[BP+111],BP
+      CMP    ES:[BP-128],BP
+      CMP    ES:[BX+112],BP
+      CMP    ES:[BX-128],BP
+      CMP    ES:[BX+SI+113],SI
+      CMP    ES:[BX+SI-128],SI
+      CMP    ES:[BX+DI+114],SI
+      CMP    ES:[BX+DI-128],SI
+      CMP    ES:[BP+SI+115],SI
+      CMP    ES:[BP+SI-128],SI
+      CMP    ES:[BP+DI+116],SI
+      CMP    ES:[BP+DI-128],SI
+      CMP    ES:[SI+117],SI
+      CMP    ES:[SI-128],SI
+      CMP    ES:[DI+118],SI
+      CMP    ES:[DI-128],SI
+      CMP    ES:[BP+119],SI
+      CMP    ES:[BP-128],SI
+      CMP    ES:[BX+120],SI
+      CMP    ES:[BX-128],SI
+      CMP    ES:[BX+SI+121],DI
+      CMP    ES:[BX+SI-128],DI
+      CMP    ES:[BX+DI+122],DI
+      CMP    ES:[BX+DI-128],DI
+      CMP    ES:[BP+SI+123],DI
+      CMP    ES:[BP+SI-128],DI
+      CMP    ES:[BP+DI+124],DI
+      CMP    ES:[BP+DI-128],DI
+      CMP    ES:[SI+125],DI
+      CMP    ES:[SI-128],DI
+      CMP    ES:[DI+126],DI
+      CMP    ES:[DI-128],DI
+      CMP    ES:[BP+127],DI
+      CMP    ES:[BP-128],DI
+      CMP    ES:[BX-128],DI
+      CMP    ES:[BX+0],DI
+      CMP    ES:[BX+SI+8281H],AX
+      CMP    ES:[BX+DI+8382H],AX
+      CMP    ES:[BP+SI+8483H],AX
+      CMP    ES:[BP+DI+8584H],AX
+      CMP    ES:[SI+8685H],AX
+      CMP    ES:[DI+8786H],AX
+      CMP    ES:[BP+8887H],AX
+      CMP    ES:[BX+8988H],AX
+      CMP    ES:[BX+SI+8A89H],CX
+      CMP    ES:[BX+DI+8B8AH],CX
+      CMP    ES:[BP+SI+8C8BH],CX
+      CMP    ES:[BP+DI+8D8CH],CX
+      CMP    ES:[SI+8E8DH],CX
+      CMP    ES:[DI+8F8EH],CX
+      CMP    ES:[BP+908FH],CX
+      CMP    ES:[BX+9190H],CX
+      CMP    ES:[BX+SI+9291H],DX
+      CMP    ES:[BX+DI+9392H],DX
+      CMP    ES:[BP+SI+9493H],DX
+      CMP    ES:[BP+DI+9594H],DX
+      CMP    ES:[SI+9695H],DX
+      CMP    ES:[DI+9796H],DX
+      CMP    ES:[BP+9897H],DX
+      CMP    ES:[BX+9998H],DX
+      CMP    ES:[BX+SI+9A99H],BX
+      CMP    ES:[BX+DI+9B9AH],BX
+      CMP    ES:[BP+SI+9C9BH],BX
+      CMP    ES:[BP+DI+9D9CH],BX
+      CMP    ES:[SI+9E9DH],BX
+      CMP    ES:[DI+9F9EH],BX
+      CMP    ES:[BP+0A09FH],BX
+      CMP    ES:[BX+0A1A0H],BX
+      CMP    ES:[BX+SI+0A2A1H],SP
+      CMP    ES:[BX+DI+0A3A2H],SP
+      CMP    ES:[BP+SI+0A4A3H],SP
+      CMP    ES:[BP+DI+0A5A4H],SP
+      CMP    ES:[SI+0A6A5H],SP
+      CMP    ES:[DI+0A7A6H],SP
+      CMP    ES:[BP+0A8A7H],SP
+      CMP    ES:[BX+0A9A8H],SP
+      CMP    ES:[BX+SI+0AAA9H],BP
+      CMP    ES:[BX+DI+0ABAAH],BP
+      CMP    ES:[BP+SI+0ACABH],BP
+      CMP    ES:[BP+DI+0ADACH],BP
+      CMP    ES:[SI+0AEADH],BP
+      CMP    ES:[DI+0AFAEH],BP
+      CMP    ES:[BP+0B0AFH],BP
+      CMP    ES:[BX+0B1B0H],BP
+      CMP    ES:[BX+SI+0B2B1H],SI
+      CMP    ES:[BX+DI+0B3B2H],SI
+      CMP    ES:[BP+SI+0B4B3H],SI
+      CMP    ES:[BP+DI+0B5B4H],SI
+      CMP    ES:[SI+0B6B5H],SI
+      CMP    ES:[DI+0B7B6H],SI
+      CMP    ES:[BP+0B8B7H],SI
+      CMP    ES:[BX+0B9B8H],SI
+      CMP    ES:[BX+SI+0BAB9H],DI
+      CMP    ES:[BX+DI+0BBBAH],DI
+      CMP    ES:[BP+SI+0BCBBH],DI
+      CMP    ES:[BP+DI+0BDBCH],DI
+      CMP    ES:[SI+0BEBDH],DI
+      CMP    ES:[DI+0BFBEH],DI
+      CMP    ES:[BP+0C0BFH],DI
+      CMP    ES:[BX+0C1C0H],DI
+      CMP    ES:[BX+SI],AX
+      CMP    ES:[BX+DI],AX
+      CMP    ES:[BP+SI],AX
+      CMP    ES:[BP+DI],AX
+      CMP    ES:[SI],AX
+      CMP    ES:[DI],AX
+      CMP    ES:[0807H],AX
+      CMP    ES:[BX],AX
+      CMP    ES:[BX+SI],CX
+      CMP    ES:[BX+DI],CX
+      CMP    ES:[BP+SI],CX
+      CMP    ES:[BP+DI],CX
+      CMP    ES:[SI],CX
+      CMP    ES:[DI],CX
+      CMP    ES:[100FH],CX
+      CMP    ES:[BX],CX
+      CMP    ES:[BX+SI],DX
+      CMP    ES:[BX+DI],DX
+      CMP    ES:[BP+SI],DX
+      CMP    ES:[BP+DI],DX
+      CMP    ES:[SI],DX
+      CMP    ES:[DI],DX
+      CMP    ES:[1817H],DX
+      CMP    ES:[BX],DX
+      CMP    ES:[BX+SI],BX
+      CMP    ES:[BX+DI],BX
+      CMP    ES:[BP+SI],BX
+      CMP    ES:[BP+DI],BX
+      CMP    ES:[SI],BX
+      CMP    ES:[DI],BX
+      CMP    ES:[201FH],BX
+      CMP    ES:[BX],BX
+      CMP    ES:[BX+SI],SP
+      CMP    ES:[BX+DI],SP
+      CMP    ES:[BP+SI],SP
+      CMP    ES:[BP+DI],SP
+      CMP    ES:[SI],SP
+      CMP    ES:[DI],SP
+      CMP    ES:[2827H],SP
+      CMP    ES:[BX],SP
+      CMP    ES:[BX+SI],BP
+      CMP    ES:[BX+DI],BP
+      CMP    ES:[BP+SI],BP
+      CMP    ES:[BP+DI],BP
+      CMP    ES:[SI],BP
+      CMP    ES:[DI],BP
+      CMP    ES:[302FH],BP
+      CMP    ES:[BX],BP
+      CMP    ES:[BX+SI],SI
+      CMP    ES:[BX+DI],SI
+      CMP    ES:[BP+SI],SI
+      CMP    ES:[BP+DI],SI
+      CMP    ES:[SI],SI
+      CMP    ES:[DI],SI
+      CMP    ES:[3837H],SI
+      CMP    ES:[BX],SI
+      CMP    ES:[BX+SI],DI
+      CMP    ES:[BX+DI],DI
+      CMP    BH,ES:[BP+DI]
+      CMP    BH,ES:[SI]
+      CMP    BH,ES:[DI]
+      CMP    BH,ES:[403FH]
+      CMP    BH,ES:[BX]
+      CMP    AL,ES:[BX+SI+65]
+      CMP    AL,ES:[BX+SI-128]
+      CMP    AL,ES:[BX+DI+66]
+      CMP    AL,ES:[BX+DI-128]
+      CMP    AL,ES:[BP+SI+67]
+      CMP    AL,ES:[BP+SI-128]
+      CMP    AL,ES:[BP+DI+68]
+      CMP    AL,ES:[BP+DI-128]
+      CMP    AL,ES:[SI+69]
+      CMP    AL,ES:[SI-128]
+      CMP    AL,ES:[DI+70]
+      CMP    AL,ES:[DI-128]
+      CMP    AL,ES:[BP+71]
+      CMP    AL,ES:[BP-128]
+      CMP    AL,ES:[BX+72]
+      CMP    AL,ES:[BX-128]
+      CMP    CL,ES:[BX+SI+73]
+      CMP    CL,ES:[BX+SI-128]
+      CMP    CL,ES:[BX+DI+74]
+      CMP    CL,ES:[BX+DI-128]
+      CMP    CL,ES:[BP+SI+75]
+      CMP    CL,ES:[BP+SI-128]
+      CMP    CL,ES:[BP+DI+76]
+      CMP    CL,ES:[BP+DI-128]
+      CMP    CL,ES:[SI+77]
+      CMP    CL,ES:[SI-128]
+      CMP    CL,ES:[DI+78]
+      CMP    CL,ES:[DI-128]
+      CMP    CL,ES:[BP+79]
+      CMP    CL,ES:[BP-128]
+      CMP    CL,ES:[BX+80]
+      CMP    CL,ES:[BX-128]
+      CMP    DL,ES:[BX+SI+81]
+      CMP    DL,ES:[BX+SI-128]
+      CMP    DL,ES:[BX+DI+82]
+      CMP    DL,ES:[BX+DI-128]
+      CMP    DL,ES:[BP+SI+83]
+      CMP    DL,ES:[BP+SI-128]
+      CMP    DL,ES:[BP+DI+84]
+      CMP    DL,ES:[BP+DI-128]
+      CMP    DL,ES:[SI+85]
+      CMP    DL,ES:[SI-128]
+      CMP    DL,ES:[DI+86]
+      CMP    DL,ES:[DI-128]
+      CMP    DL,ES:[BP+87]
+      CMP    DL,ES:[BP-128]
+      CMP    DL,ES:[BX+88]
+      CMP    DL,ES:[BX-128]
+      CMP    BL,ES:[BX+SI+89]
+      CMP    BL,ES:[BX+SI-128]
+      CMP    BL,ES:[BX+DI+90]
+      CMP    BL,ES:[BX+DI-128]
+      CMP    BL,ES:[BP+SI+91]
+      CMP    BL,ES:[BP+SI-128]
+      CMP    BL,ES:[BP+DI+92]
+      CMP    BL,ES:[BP+DI-128]
+      CMP    BL,ES:[SI+93]
+      CMP    BL,ES:[SI-128]
+      CMP    BL,ES:[DI+94]
+      CMP    BL,ES:[DI-128]
+      CMP    BL,ES:[BP+95]
+      CMP    BL,ES:[BP-128]
+      CMP    BL,ES:[BX+96]
+      CMP    BL,ES:[BX-128]
+      CMP    AH,ES:[BX+SI+97]
+      CMP    AH,ES:[BX+SI-128]
+      CMP    AH,ES:[BX+DI+98]
+      CMP    AH,ES:[BX+DI-128]
+      CMP    AH,ES:[BP+SI+99]
+      CMP    AH,ES:[BP+SI-128]
+      CMP    AH,ES:[BP+DI+100]
+      CMP    AH,ES:[BP+DI-128]
+      CMP    AH,ES:[SI+101]
+      CMP    AH,ES:[SI-128]
+      CMP    AH,ES:[DI+102]
+      CMP    AH,ES:[DI-128]
+      CMP    AH,ES:[BP+103]
+      CMP    AH,ES:[BP-128]
+      CMP    AH,ES:[BX+104]
+      CMP    AH,ES:[BX-128]
+      CMP    AL,ES:[BX+SI+8281H]
+      CMP    AL,ES:[BX+DI+8382H]
+      CMP    AL,ES:[BP+SI+8483H]
+      CMP    AL,ES:[BP+DI+8584H]
+      CMP    AL,ES:[SI+8685H]
+      CMP    AL,ES:[DI+8786H]
+      CMP    AL,ES:[BP+8887H]
+      CMP    AL,ES:[BX+8988H]
+      CMP    CL,ES:[BX+SI+8A89H]
+      CMP    CL,ES:[BX+DI+8B8AH]
+      CMP    CL,ES:[BP+SI+8C8BH]
+      CMP    CL,ES:[BP+DI+8D8CH]
+      CMP    CL,ES:[SI+8E8DH]
+      CMP    CL,ES:[DI+8F8EH]
+      CMP    CL,ES:[BP+908FH]
+      CMP    CL,ES:[BX+9190H]
+      CMP    DL,ES:[BX+SI+9291H]
+      CMP    DL,ES:[BX+DI+9392H]
+      CMP    DL,ES:[BP+SI+9493H]
+      CMP    DL,ES:[BP+DI+9594H]
+      CMP    DL,ES:[SI+9695H]
+      CMP    DL,ES:[DI+9796H]
+      CMP    DL,ES:[BP+9897H]
+      CMP    DL,ES:[BX+9998H]
+      CMP    BL,ES:[BX+SI+9A99H]
+      CMP    BL,ES:[BX+DI+9B9AH]
+      CMP    BL,ES:[BP+SI+9C9BH]
+      CMP    BL,ES:[BP+DI+9D9CH]
+      CMP    BL,ES:[SI+9E9DH]
+      CMP    BL,ES:[DI+9F9EH]
+      CMP    BL,ES:[BP+0A09FH]
+      CMP    BL,ES:[BX+0A1A0H]
+      CMP    AH,ES:[BX+SI+0A2A1H]
+      CMP    AH,ES:[BX+DI+0A3A2H]
+      CMP    AH,ES:[BP+SI+0A4A3H]
+      CMP    AH,ES:[BP+DI+0A5A4H]
+      CMP    AH,ES:[SI+0A6A5H]
+      CMP    AH,ES:[DI+0A7A6H]
+      CMP    AH,ES:[BP+0A8A7H]
+      CMP    AH,ES:[BX+0A9A8H]
+      CMP    DI,ES:[SI]
+      CMP    DI,ES:[DI]
+      CMP    DI,ES:[403FH]
+      CMP    DI,ES:[BX]
+      CMP    AX,ES:[BX+SI+65]
+      CMP    AX,ES:[BX+SI-128]
+      CMP    AX,ES:[BX+DI+66]
+      CMP    AX,ES:[BX+DI-128]
+      CMP    AX,ES:[BP+SI+67]
+      CMP    AX,ES:[BP+SI-128]
+      CMP    AX,ES:[BP+DI+68]
+      CMP    AX,ES:[BP+DI-128]
+      CMP    AX,ES:[SI+69]
+      CMP    AX,ES:[SI-128]
+      CMP    AX,ES:[DI+70]
+      CMP    AX,ES:[DI-128]
+      CMP    AX,ES:[BP+71]
+      CMP    AX,ES:[BP-128]
+      CMP    AX,ES:[BX+72]
+      CMP    AX,ES:[BX-128]
+      CMP    CX,ES:[BX+SI+73]
+      CMP    CX,ES:[BX+SI-128]
+      CMP    CX,ES:[BX+DI+74]
+      CMP    CX,ES:[BX+DI-128]
+      CMP    CX,ES:[BP+SI+75]
+      CMP    CX,ES:[BP+SI-128]
+      CMP    CX,ES:[BP+DI+76]
+      CMP    CX,ES:[BP+DI-128]
+      CMP    CX,ES:[SI+77]
+      CMP    CX,ES:[SI-128]
+      CMP    CX,ES:[DI+78]
+      CMP    CX,ES:[DI-128]
+      CMP    CX,ES:[BP+79]
+      CMP    CX,ES:[BP-128]
+      CMP    CX,ES:[BX+80]
+      CMP    CX,ES:[BX-128]
+      CMP    DX,ES:[BX+SI+81]
+      CMP    DX,ES:[BX+SI-128]
+      CMP    DX,ES:[BX+DI+82]
+      CMP    DX,ES:[BX+DI-128]
+      CMP    DX,ES:[BP+SI+83]
+      CMP    DX,ES:[BP+SI-128]
+      CMP    DX,ES:[BP+DI+84]
+      CMP    DX,ES:[BP+DI-128]
+      CMP    DX,ES:[SI+85]
+      CMP    DX,ES:[SI-128]
+      CMP    DX,ES:[DI+86]
+      CMP    DX,ES:[DI-128]
+      CMP    DX,ES:[BP+87]
+      CMP    DX,ES:[BP-128]
+      CMP    DX,ES:[BX+88]
+      CMP    DX,ES:[BX-128]
+      CMP    BX,ES:[BX+SI+89]
+      CMP    BX,ES:[BX+SI-128]
+      CMP    BX,ES:[BX+DI+90]
+      CMP    BX,ES:[BX+DI-128]
+      CMP    BX,ES:[BP+SI+91]
+      CMP    BX,ES:[BP+SI-128]
+      CMP    BX,ES:[BP+DI+92]
+      CMP    BX,ES:[BP+DI-128]
+      CMP    BX,ES:[SI+93]
+      CMP    BX,ES:[SI-128]
+      CMP    BX,ES:[DI+94]
+      CMP    BX,ES:[DI-128]
+      CMP    BX,ES:[BP+95]
+      CMP    BX,ES:[BP-128]
+      CMP    BX,ES:[BX+96]
+      CMP    BX,ES:[BX-128]
+      CMP    SP,ES:[BX+SI+97]
+      CMP    SP,ES:[BX+SI-128]
+      CMP    SP,ES:[BX+DI+98]
+      CMP    SP,ES:[BX+DI-128]
+      CMP    SP,ES:[BP+SI+99]
+      CMP    SP,ES:[BP+SI-128]
+      CMP    SP,ES:[BP+DI+100]
+      CMP    SP,ES:[BP+DI-128]
+      CMP    SP,ES:[SI+101]
+      CMP    SP,ES:[SI-128]
+      CMP    SP,ES:[DI+102]
+      CMP    SP,ES:[DI-128]
+      CMP    SP,ES:[BP+103]
+      CMP    SP,ES:[BP-128]
+      CMP    SP,ES:[BX+104]
+      CMP    SP,ES:[BX-128]
+      CMP    BP,ES:[BX+SI+105]
+      CMP    BP,ES:[BX+SI-128]
+      CMP    BP,ES:[BX+DI+106]
+      CMP    BP,ES:[BX+DI-128]
+      CMP    BP,ES:[BP+SI+107]
+      CMP    BP,ES:[BP+SI-128]
+      CMP    BP,ES:[BP+DI+108]
+      CMP    BP,ES:[BP+DI-128]
+      CMP    BP,ES:[SI+109]
+      CMP    BP,ES:[SI-128]
+      CMP    BP,ES:[DI+110]
+      CMP    BP,ES:[DI-128]
+      CMP    BP,ES:[BP+111]
+      CMP    BP,ES:[BP-128]
+      CMP    BP,ES:[BX+112]
+      CMP    BP,ES:[BX-128]
+      CMP    SI,ES:[BX+SI+113]
+      CMP    SI,ES:[BX+SI-128]
+      CMP    SI,ES:[BX+DI+114]
+      CMP    SI,ES:[BX+DI-128]
+      CMP    SI,ES:[BP+SI+115]
+      CMP    SI,ES:[BP+SI-128]
+      CMP    SI,ES:[BP+DI+116]
+      CMP    SI,ES:[BP+DI-128]
+      CMP    SI,ES:[SI+117]
+      CMP    SI,ES:[SI-128]
+      CMP    SI,ES:[DI+118]
+      CMP    SI,ES:[DI-128]
+      CMP    SI,ES:[BP+119]
+      CMP    SI,ES:[BP-128]
+      CMP    SI,ES:[BX+120]
+      CMP    SI,ES:[BX-128]
+      CMP    DI,ES:[BX+SI+121]
+      CMP    DI,ES:[BX+SI-128]
+      CMP    DI,ES:[BX+DI+122]
+      CMP    DI,ES:[BX+DI-128]
+      CMP    DI,ES:[BP+SI+123]
+      CMP    DI,ES:[BP+SI-128]
+      CMP    DI,ES:[BP+DI+124]
+      CMP    DI,ES:[BP+DI-128]
+      CMP    DI,ES:[SI+125]
+      CMP    DI,ES:[SI-128]
+      CMP    DI,ES:[DI+126]
+      CMP    DI,ES:[DI-128]
+      CMP    DI,ES:[BP+127]
+      CMP    DI,ES:[BP-128]
+      CMP    DI,ES:[BX-128]
+      CMP    DI,ES:[BX+0]
+      CMP    AX,ES:[BX+SI+8281H]
+      CMP    AX,ES:[BX+DI+8382H]
+      CMP    AX,ES:[BP+SI+8483H]
+      CMP    AX,ES:[BP+DI+8584H]
+      CMP    AX,ES:[SI+8685H]
+      CMP    AX,ES:[DI+8786H]
+      CMP    AX,ES:[BP+8887H]
+      CMP    AX,ES:[BX+8988H]
+      CMP    CX,ES:[BX+SI+8A89H]
+      CMP    CX,ES:[BX+DI+8B8AH]
+      CMP    CX,ES:[BP+SI+8C8BH]
+      CMP    CX,ES:[BP+DI+8D8CH]
+      CMP    CX,ES:[SI+8E8DH]
+      CMP    CX,ES:[DI+8F8EH]
+      CMP    CX,ES:[BP+908FH]
+      CMP    CX,ES:[BX+9190H]
+      CMP    DX,ES:[BX+SI+9291H]
+      CMP    DX,ES:[BX+DI+9392H]
+      CMP    DX,ES:[BP+SI+9493H]
+      CMP    DX,ES:[BP+DI+9594H]
+      CMP    DX,ES:[SI+9695H]
+      CMP    DX,ES:[DI+9796H]
+      CMP    DX,ES:[BP+9897H]
+      CMP    DX,ES:[BX+9998H]
+      CMP    BX,ES:[BX+SI+9A99H]
+      CMP    BX,ES:[BX+DI+9B9AH]
+      CMP    BX,ES:[BP+SI+9C9BH]
+      CMP    BX,ES:[BP+DI+9D9CH]
+      CMP    BX,ES:[SI+9E9DH]
+      CMP    BX,ES:[DI+9F9EH]
+      CMP    BX,ES:[BP+0A09FH]
+      CMP    BX,ES:[BX+0A1A0H]
+      CMP    SP,ES:[BX+SI+0A2A1H]
+      CMP    SP,ES:[BX+DI+0A3A2H]
+      CMP    SP,ES:[BP+SI+0A4A3H]
+      CMP    SP,ES:[BP+DI+0A5A4H]
+      CMP    SP,ES:[SI+0A6A5H]
+      CMP    SP,ES:[DI+0A7A6H]
+      CMP    SP,ES:[BP+0A8A7H]
+      CMP    SP,ES:[BX+0A9A8H]
+      CMP    BP,ES:[BX+SI+0AAA9H]
+      CMP    BP,ES:[BX+DI+0ABAAH]
+      CMP    BP,ES:[BP+SI+0ACABH]
+      CMP    BP,ES:[BP+DI+0ADACH]
+      CMP    BP,ES:[SI+0AEADH]
+      CMP    BP,ES:[DI+0AFAEH]
+      CMP    BP,ES:[BP+0B0AFH]
+      CMP    BP,ES:[BX+0B1B0H]
+      CMP    SI,ES:[BX+SI+0B2B1H]
+      CMP    SI,ES:[BX+DI+0B3B2H]
+      CMP    SI,ES:[BP+SI+0B4B3H]
+      CMP    SI,ES:[BP+DI+0B5B4H]
+      CMP    SI,ES:[SI+0B6B5H]
+      CMP    SI,ES:[DI+0B7B6H]
+      CMP    SI,ES:[BP+0B8B7H]
+      CMP    SI,ES:[BX+0B9B8H]
+      CMP    DI,ES:[BX+SI+0BAB9H]
+      CMP    DI,ES:[BX+DI+0BBBAH]
+      CMP    DI,ES:[BP+SI+0BCBBH]
+      CMP    DI,ES:[BP+DI+0BDBCH]
+      CMP    DI,ES:[SI+0BEBDH]
+      CMP    DI,ES:[DI+0BFBEH]
+      CMP    DI,ES:[BP+0C0BFH]
+      CMP    DI,ES:[BX+0C1C0H]
+      CMP    AX,ES:[BX+SI]
+      CMP    AX,ES:[BX+DI]
+      CMP    AX,ES:[BP+SI]
+      CMP    AX,ES:[BP+DI]
+      CMP    AX,ES:[SI]
+      CMP    AX,ES:[DI]
+      CMP    AX,ES:[0807H]
+      CMP    AX,ES:[BX]
+      CMP    CX,ES:[BX+SI]
+      CMP    CX,ES:[BX+DI]
+      CMP    CX,ES:[BP+SI]
+      CMP    CX,ES:[BP+DI]
+      CMP    CX,ES:[SI]
+      CMP    CX,ES:[DI]
+      CMP    CX,ES:[100FH]
+      CMP    CX,ES:[BX]
+      CMP    DX,ES:[BX+SI]
+      CMP    DX,ES:[BX+DI]
+      CMP    DX,ES:[BP+SI]
+      CMP    DX,ES:[BP+DI]
+      CMP    DX,ES:[SI]
+      CMP    DX,ES:[DI]
+      CMP    DX,ES:[1817H]
+      CMP    DX,ES:[BX]
+      CMP    BX,ES:[BX+SI]
+      CMP    BX,ES:[BX+DI]
+      CMP    BX,ES:[BP+SI]
+      CMP    BX,ES:[BP+DI]
+      CMP    BX,ES:[SI]
+      CMP    BX,ES:[DI]
+      CMP    BX,ES:[201FH]
+      CMP    BX,ES:[BX]
+      CMP    SP,ES:[BX+SI]
+      CMP    SP,ES:[BX+DI]
+      CMP    SP,ES:[BP+SI]
+      CMP    SP,ES:[BP+DI]
+      CMP    SP,ES:[SI]
+      CMP    SP,ES:[DI]
+      CMP    SP,ES:[2827H]
+      CMP    SP,ES:[BX]
+      CMP    BP,ES:[BX+SI]
+      CMP    BP,ES:[BX+DI]
+      CMP    BP,ES:[BP+SI]
+      CMP    BP,ES:[BP+DI]
+      CMP    BP,ES:[SI]
+      CMP    BP,ES:[DI]
+      CMP    BP,ES:[302FH]
+      CMP    BP,ES:[BX]
+      CMP    SI,ES:[BX+SI]
+      CMP    SI,ES:[BX+DI]
+      CMP    SI,ES:[BP+SI]
+      CMP    SI,ES:[BP+DI]
+      CMP    SI,ES:[SI]
+      CMP    SI,ES:[DI]
+      CMP    SI,ES:[3837H]
+      CMP    SI,ES:[BX]
+      CMP    DI,ES:[BX+SI]
+      CMP    DI,ES:[BX+DI]
+      CMP    DI,ES:[BP+SI]
+      CMP    DI,ES:[BP+DI]
+      ADD    BYTE PTR ES:[BX+DI+8382H],84H
+      ADD    BYTE PTR ES:[BP+SI+8382H],84H
+      ADD    BYTE PTR ES:[BP+DI+8382H],84H
+      ADD    BYTE PTR ES:[SI+8382H],84H
+      ADD    BYTE PTR ES:[DI+8382H],84H
+      ADD    BYTE PTR ES:[BP+8382H],84H
+      ADD    BYTE PTR ES:[BX+8382H],84H
+      OR     BYTE PTR ES:[BX+SI+8382H],84H
+      OR     BYTE PTR ES:[BX+DI+8382H],84H
+      OR     BYTE PTR ES:[BP+SI+8382H],84H
+      OR     BYTE PTR ES:[BP+DI+8382H],84H
+      OR     BYTE PTR ES:[SI+8382H],84H
+      OR     BYTE PTR ES:[DI+8382H],84H
+      OR     BYTE PTR ES:[BP+8382H],84H
+      OR     BYTE PTR ES:[BX+8382H],84H
+      ADC    BYTE PTR ES:[BX+SI+8382H],84H
+      ADC    BYTE PTR ES:[BX+DI+8382H],84H
+      ADC    BYTE PTR ES:[BP+SI+8382H],84H
+      ADC    BYTE PTR ES:[BP+DI+8382H],84H
+      ADC    BYTE PTR ES:[SI+8382H],84H
+      ADC    BYTE PTR ES:[DI+8382H],84H
+      ADC    BYTE PTR ES:[BP+8382H],84H
+      ADC    BYTE PTR ES:[BX+8382H],84H
+      SBB    BYTE PTR ES:[BX+SI+8382H],84H
+      SBB    BYTE PTR ES:[BX+DI+8382H],84H
+      SBB    BYTE PTR ES:[BP+SI+8382H],84H
+      SBB    BYTE PTR ES:[BP+DI+8382H],84H
+      SBB    BYTE PTR ES:[SI+8382H],84H
+      SBB    BYTE PTR ES:[DI+8382H],84H
+      SBB    BYTE PTR ES:[BP+8382H],84H
+      SBB    BYTE PTR ES:[BX+8382H],84H
+      AND    BYTE PTR ES:[BX+SI+8382H],84H
+      AND    BYTE PTR ES:[BX+DI+8382H],84H
+      AND    BYTE PTR ES:[BP+SI+8382H],84H
+      AND    BYTE PTR ES:[BP+DI+8382H],84H
+      AND    BYTE PTR ES:[SI+8382H],84H
+      AND    BYTE PTR ES:[DI+8382H],84H
+      AND    BYTE PTR ES:[BP+8382H],84H
+      AND    BYTE PTR ES:[BX+8382H],84H
+      SUB    BYTE PTR ES:[BX+SI+8382H],84H
+      SUB    BYTE PTR ES:[BX+DI+8382H],84H
+      SUB    BYTE PTR ES:[BP+SI+8382H],84H
+      SUB    BYTE PTR ES:[BP+DI+8382H],84H
+      SUB    BYTE PTR ES:[SI+8382H],84H
+      SUB    BYTE PTR ES:[DI+8382H],84H
+      SUB    BYTE PTR ES:[BP+8382H],84H
+      SUB    BYTE PTR ES:[BX+8382H],84H
+      XOR    BYTE PTR ES:[BX+SI+8382H],84H
+      XOR    BYTE PTR ES:[BX+DI+8382H],84H
+      XOR    BYTE PTR ES:[BP+SI+8382H],84H
+      XOR    BYTE PTR ES:[BP+DI+8382H],84H
+      XOR    BYTE PTR ES:[SI+8382H],84H
+      XOR    BYTE PTR ES:[DI+8382H],84H
+      XOR    BYTE PTR ES:[BP+8382H],84H
+      XOR    BYTE PTR ES:[BX+8382H],84H
+      CMP    BYTE PTR ES:[BX+SI+8382H],84H
+      CMP    BYTE PTR ES:[BX+DI+8382H],84H
+      CMP    BYTE PTR ES:[BP+SI+8382H],84H
+      CMP    BYTE PTR ES:[BP+DI+8382H],84H
+      CMP    BYTE PTR ES:[SI+8382H],84H
+      CMP    BYTE PTR ES:[DI+8382H],84H
+      CMP    BYTE PTR ES:[BP+8382H],84H
+      CMP    BYTE PTR ES:[BX+8382H],84H
+      ADD    BYTE PTR ES:[BX+SI],82H
+      ADD    WORD PTR ES:[BP+SI+8483H],8685H
+      ADD    WORD PTR ES:[BP+DI+8483H],8685H
+      ADD    WORD PTR ES:[SI+8483H],8685H
+      ADD    WORD PTR ES:[DI+8483H],8685H
+      ADD    WORD PTR ES:[BP+8483H],8685H
+      ADD    WORD PTR ES:[BX+8483H],8685H
+      OR     WORD PTR ES:[BX+SI+8483H],8685H
+      OR     WORD PTR ES:[BX+DI+8483H],8685H
+      OR     WORD PTR ES:[BP+SI+8483H],8685H
+      OR     WORD PTR ES:[BP+DI+8483H],8685H
+      OR     WORD PTR ES:[SI+8483H],8685H
+      OR     WORD PTR ES:[DI+8483H],8685H
+      OR     WORD PTR ES:[BP+8483H],8685H
+      OR     WORD PTR ES:[BX+8483H],8685H
+      ADC    WORD PTR ES:[BX+SI+8483H],8685H
+      ADC    WORD PTR ES:[BX+DI+8483H],8685H
+      ADC    WORD PTR ES:[BP+SI+8483H],8685H
+      ADC    WORD PTR ES:[BP+DI+8483H],8685H
+      ADC    WORD PTR ES:[SI+8483H],8685H
+      ADC    WORD PTR ES:[DI+8483H],8685H
+      ADC    WORD PTR ES:[BP+8483H],8685H
+      ADC    WORD PTR ES:[BX+8483H],8685H
+      SBB    WORD PTR ES:[BX+SI+8483H],8685H
+      SBB    WORD PTR ES:[BX+DI+8483H],8685H
+      SBB    WORD PTR ES:[BP+SI+8483H],8685H
+      SBB    WORD PTR ES:[BP+DI+8483H],8685H
+      SBB    WORD PTR ES:[SI+8483H],8685H
+      SBB    WORD PTR ES:[DI+8483H],8685H
+      SBB    WORD PTR ES:[BP+8483H],8685H
+      SBB    WORD PTR ES:[BX+8483H],8685H
+      AND    WORD PTR ES:[BX+SI+8483H],8685H
+      AND    WORD PTR ES:[BX+DI+8483H],8685H
+      AND    WORD PTR ES:[BP+SI+8483H],8685H
+      AND    WORD PTR ES:[BP+DI+8483H],8685H
+      AND    WORD PTR ES:[SI+8483H],8685H
+      AND    WORD PTR ES:[DI+8483H],8685H
+      AND    WORD PTR ES:[BP+8483H],8685H
+      AND    WORD PTR ES:[BX+8483H],8685H
+      SUB    WORD PTR ES:[BX+SI+8483H],8685H
+      SUB    WORD PTR ES:[BX+DI+8483H],8685H
+      SUB    WORD PTR ES:[BP+SI+8483H],8685H
+      SUB    WORD PTR ES:[BP+DI+8483H],8685H
+      SUB    WORD PTR ES:[SI+8483H],8685H
+      SUB    WORD PTR ES:[DI+8483H],8685H
+      SUB    WORD PTR ES:[BP+8483H],8685H
+      SUB    WORD PTR ES:[BX+8483H],8685H
+      XOR    WORD PTR ES:[BX+SI+8483H],8685H
+      XOR    WORD PTR ES:[BX+DI+8483H],8685H
+      XOR    WORD PTR ES:[BP+SI+8483H],8685H
+      XOR    WORD PTR ES:[BP+DI+8483H],8685H
+      XOR    WORD PTR ES:[SI+8483H],8685H
+      XOR    WORD PTR ES:[DI+8483H],8685H
+      XOR    WORD PTR ES:[BP+8483H],8685H
+      XOR    WORD PTR ES:[BX+8483H],8685H
+      CMP    WORD PTR ES:[BX+SI+8483H],8685H
+      CMP    WORD PTR ES:[BX+DI+8483H],8685H
+      CMP    WORD PTR ES:[BP+SI+8483H],8685H
+      CMP    WORD PTR ES:[BP+DI+8483H],8685H
+      CMP    WORD PTR ES:[SI+8483H],8685H
+      CMP    WORD PTR ES:[DI+8483H],8685H
+      CMP    WORD PTR ES:[BP+8483H],8685H
+      CMP    WORD PTR ES:[BX+8483H],8685H
+      ADD    WORD PTR ES:[BX+SI],8483H
+      ADD    WORD PTR ES:[SI+8685H],-79H
+      ADD    WORD PTR ES:[DI+8685H],-79H
+      ADD    WORD PTR ES:[BP+8685H],-79H
+      ADD    WORD PTR ES:[BX+8685H],-79H
+      OR     WORD PTR ES:[BX+SI+8685H],-79H
+      OR     WORD PTR ES:[BX+DI+8685H],-79H
+      OR     WORD PTR ES:[BP+SI+8685H],-79H
+      OR     WORD PTR ES:[BP+DI+8685H],-79H
+      OR     WORD PTR ES:[SI+8685H],-79H
+      OR     WORD PTR ES:[DI+8685H],-79H
+      OR     WORD PTR ES:[BP+8685H],-79H
+      OR     WORD PTR ES:[BX+8685H],-79H
+      ADC    WORD PTR ES:[BX+SI+8685H],-79H
+      ADC    WORD PTR ES:[BX+DI+8685H],-79H
+      ADC    WORD PTR ES:[BP+SI+8685H],-79H
+      ADC    WORD PTR ES:[BP+DI+8685H],-79H
+      ADC    WORD PTR ES:[SI+8685H],-79H
+      ADC    WORD PTR ES:[DI+8685H],-79H
+      ADC    WORD PTR ES:[BP+8685H],-79H
+      ADC    WORD PTR ES:[BX+8685H],-79H
+      SBB    WORD PTR ES:[BX+SI+8685H],-79H
+      SBB    WORD PTR ES:[BX+DI+8685H],-79H
+      SBB    WORD PTR ES:[BP+SI+8685H],-79H
+      SBB    WORD PTR ES:[BP+DI+8685H],-79H
+      SBB    WORD PTR ES:[SI+8685H],-79H
+      SBB    WORD PTR ES:[DI+8685H],-79H
+      SBB    WORD PTR ES:[BP+8685H],-79H
+      SBB    WORD PTR ES:[BX+8685H],-79H
+      AND    WORD PTR ES:[BX+SI+8685H],-79H
+      AND    WORD PTR ES:[BX+DI+8685H],-79H
+      AND    WORD PTR ES:[BP+SI+8685H],-79H
+      AND    WORD PTR ES:[BP+DI+8685H],-79H
+      AND    WORD PTR ES:[SI+8685H],-79H
+      AND    WORD PTR ES:[DI+8685H],-79H
+      AND    WORD PTR ES:[BP+8685H],-79H
+      AND    WORD PTR ES:[BX+8685H],-79H
+      SUB    WORD PTR ES:[BX+SI+8685H],-79H
+      SUB    WORD PTR ES:[BX+DI+8685H],-79H
+      SUB    WORD PTR ES:[BP+SI+8685H],-79H
+      SUB    WORD PTR ES:[BP+DI+8685H],-79H
+      SUB    WORD PTR ES:[SI+8685H],-79H
+      SUB    WORD PTR ES:[DI+8685H],-79H
+      SUB    WORD PTR ES:[BP+8685H],-79H
+      SUB    WORD PTR ES:[BX+8685H],-79H
+      XOR    WORD PTR ES:[BX+SI+8685H],-79H
+      XOR    WORD PTR ES:[BX+DI+8685H],-79H
+      XOR    WORD PTR ES:[BP+SI+8685H],-79H
+      XOR    WORD PTR ES:[BP+DI+8685H],-79H
+      XOR    WORD PTR ES:[SI+8685H],-79H
+      XOR    WORD PTR ES:[DI+8685H],-79H
+      XOR    WORD PTR ES:[BP+8685H],-79H
+      XOR    WORD PTR ES:[BX+8685H],-79H
+      CMP    WORD PTR ES:[BX+SI+8685H],-79H
+      CMP    WORD PTR ES:[BX+DI+8685H],-79H
+      CMP    WORD PTR ES:[BP+SI+8685H],-79H
+      CMP    WORD PTR ES:[BP+DI+8685H],-79H
+      CMP    WORD PTR ES:[SI+8685H],-79H
+      CMP    WORD PTR ES:[DI+8685H],-79H
+      CMP    WORD PTR ES:[BP+8685H],-79H
+      CMP    WORD PTR ES:[BX+8685H],-79H
+      ADD    WORD PTR ES:[BX+SI],-7BH
+      TEST   AL,ES:[DI+8786H]
+      TEST   AL,ES:[BP+8786H]
+      TEST   AL,ES:[BX+8786H]
+      TEST   CL,ES:[BX+SI+8786H]
+      TEST   CL,ES:[BX+DI+8786H]
+      TEST   CL,ES:[BP+SI+8786H]
+      TEST   CL,ES:[BP+DI+8786H]
+      TEST   CL,ES:[SI+8786H]
+      TEST   CL,ES:[DI+8786H]
+      TEST   CL,ES:[BP+8786H]
+      TEST   CL,ES:[BX+8786H]
+      TEST   DL,ES:[BX+SI+8786H]
+      TEST   DL,ES:[BX+DI+8786H]
+      TEST   DL,ES:[BP+SI+8786H]
+      TEST   DL,ES:[BP+DI+8786H]
+      TEST   DL,ES:[SI+8786H]
+      TEST   DL,ES:[DI+8786H]
+      TEST   DL,ES:[BP+8786H]
+      TEST   DL,ES:[BX+8786H]
+      TEST   BL,ES:[BX+SI+8786H]
+      TEST   BL,ES:[BX+DI+8786H]
+      TEST   BL,ES:[BP+SI+8786H]
+      TEST   BL,ES:[BP+DI+8786H]
+      TEST   BL,ES:[SI+8786H]
+      TEST   BL,ES:[DI+8786H]
+      TEST   BL,ES:[BP+8786H]
+      TEST   BL,ES:[BX+8786H]
+      TEST   AH,ES:[BX+SI+8786H]
+      TEST   AH,ES:[BX+DI+8786H]
+      TEST   AH,ES:[BP+SI+8786H]
+      TEST   AH,ES:[BP+DI+8786H]
+      TEST   AH,ES:[SI+8786H]
+      TEST   AH,ES:[DI+8786H]
+      TEST   AH,ES:[BP+8786H]
+      TEST   AH,ES:[BX+8786H]
+      TEST   AL,ES:[BX+SI]
+      TEST   AX,ES:[BP+8887H]
+      TEST   AX,ES:[BX+8887H]
+      TEST   CX,ES:[BX+SI+8887H]
+      TEST   CX,ES:[BX+DI+8887H]
+      TEST   CX,ES:[BP+SI+8887H]
+      TEST   CX,ES:[BP+DI+8887H]
+      TEST   CX,ES:[SI+8887H]
+      TEST   CX,ES:[DI+8887H]
+      TEST   CX,ES:[BP+8887H]
+      TEST   CX,ES:[BX+8887H]
+      TEST   DX,ES:[BX+SI+8887H]
+      TEST   DX,ES:[BX+DI+8887H]
+      TEST   DX,ES:[BP+SI+8887H]
+      TEST   DX,ES:[BP+DI+8887H]
+      TEST   DX,ES:[SI+8887H]
+      TEST   DX,ES:[DI+8887H]
+      TEST   DX,ES:[BP+8887H]
+      TEST   DX,ES:[BX+8887H]
+      TEST   BX,ES:[BX+SI+8887H]
+      TEST   BX,ES:[BX+DI+8887H]
+      TEST   BX,ES:[BP+SI+8887H]
+      TEST   BX,ES:[BP+DI+8887H]
+      TEST   BX,ES:[SI+8887H]
+      TEST   BX,ES:[DI+8887H]
+      TEST   BX,ES:[BP+8887H]
+      TEST   BX,ES:[BX+8887H]
+      TEST   SP,ES:[BX+SI+8887H]
+      TEST   SP,ES:[BX+DI+8887H]
+      TEST   SP,ES:[BP+SI+8887H]
+      TEST   SP,ES:[BP+DI+8887H]
+      TEST   SP,ES:[SI+8887H]
+      TEST   SP,ES:[DI+8887H]
+      TEST   SP,ES:[BP+8887H]
+      TEST   SP,ES:[BX+8887H]
+      TEST   BP,ES:[BX+SI+8887H]
+      TEST   BP,ES:[BX+DI+8887H]
+      TEST   BP,ES:[BP+SI+8887H]
+      TEST   BP,ES:[BP+DI+8887H]
+      TEST   BP,ES:[SI+8887H]
+      TEST   BP,ES:[DI+8887H]
+      TEST   BP,ES:[BP+8887H]
+      TEST   BP,ES:[BX+8887H]
+      TEST   SI,ES:[BX+SI+8887H]
+      TEST   SI,ES:[BX+DI+8887H]
+      TEST   SI,ES:[BP+SI+8887H]
+      TEST   SI,ES:[BP+DI+8887H]
+      TEST   SI,ES:[SI+8887H]
+      TEST   SI,ES:[DI+8887H]
+      TEST   SI,ES:[BP+8887H]
+      TEST   SI,ES:[BX+8887H]
+      TEST   DI,ES:[BX+SI+8887H]
+      TEST   DI,ES:[BX+DI+8887H]
+      TEST   DI,ES:[BP+SI+8887H]
+      TEST   DI,ES:[BP+DI+8887H]
+      TEST   DI,ES:[SI+8887H]
+      TEST   DI,ES:[DI+8887H]
+      TEST   DI,ES:[BP+8887H]
+      TEST   DI,ES:[BX+8887H]
+      TEST   AX,ES:[BX+SI]
+      XCHG   AL,ES:[BX+8988H]
+      XCHG   CL,ES:[BX+SI+8988H]
+      XCHG   CL,ES:[BX+DI+8988H]
+      XCHG   CL,ES:[BP+SI+8988H]
+      XCHG   CL,ES:[BP+DI+8988H]
+      XCHG   CL,ES:[SI+8988H]
+      XCHG   CL,ES:[DI+8988H]
+      XCHG   CL,ES:[BP+8988H]
+      XCHG   CL,ES:[BX+8988H]
+      XCHG   DL,ES:[BX+SI+8988H]
+      XCHG   DL,ES:[BX+DI+8988H]
+      XCHG   DL,ES:[BP+SI+8988H]
+      XCHG   DL,ES:[BP+DI+8988H]
+      XCHG   DL,ES:[SI+8988H]
+      XCHG   DL,ES:[DI+8988H]
+      XCHG   DL,ES:[BP+8988H]
+      XCHG   DL,ES:[BX+8988H]
+      XCHG   BL,ES:[BX+SI+8988H]
+      XCHG   BL,ES:[BX+DI+8988H]
+      XCHG   BL,ES:[BP+SI+8988H]
+      XCHG   BL,ES:[BP+DI+8988H]
+      XCHG   BL,ES:[SI+8988H]
+      XCHG   BL,ES:[DI+8988H]
+      XCHG   BL,ES:[BP+8988H]
+      XCHG   BL,ES:[BX+8988H]
+      XCHG   AH,ES:[BX+SI+8988H]
+      XCHG   AH,ES:[BX+DI+8988H]
+      XCHG   AH,ES:[BP+SI+8988H]
+      XCHG   AH,ES:[BP+DI+8988H]
+      XCHG   AH,ES:[SI+8988H]
+      XCHG   AH,ES:[DI+8988H]
+      XCHG   AH,ES:[BP+8988H]
+      XCHG   AH,ES:[BX+8988H]
+      XCHG   AL,ES:[BX+SI]
+      XCHG   CX,ES:[BX+SI+8A89H]
+      XCHG   CX,ES:[BX+DI+8A89H]
+      XCHG   CX,ES:[BP+SI+8A89H]
+      XCHG   CX,ES:[BP+DI+8A89H]
+      XCHG   CX,ES:[SI+8A89H]
+      XCHG   CX,ES:[DI+8A89H]
+      XCHG   CX,ES:[BP+8A89H]
+      XCHG   CX,ES:[BX+8A89H]
+      XCHG   DX,ES:[BX+SI+8A89H]
+      XCHG   DX,ES:[BX+DI+8A89H]
+      XCHG   DX,ES:[BP+SI+8A89H]
+      XCHG   DX,ES:[BP+DI+8A89H]
+      XCHG   DX,ES:[SI+8A89H]
+      XCHG   DX,ES:[DI+8A89H]
+      XCHG   DX,ES:[BP+8A89H]
+      XCHG   DX,ES:[BX+8A89H]
+      XCHG   BX,ES:[BX+SI+8A89H]
+      XCHG   BX,ES:[BX+DI+8A89H]
+      XCHG   BX,ES:[BP+SI+8A89H]
+      XCHG   BX,ES:[BP+DI+8A89H]
+      XCHG   BX,ES:[SI+8A89H]
+      XCHG   BX,ES:[DI+8A89H]
+      XCHG   BX,ES:[BP+8A89H]
+      XCHG   BX,ES:[BX+8A89H]
+      XCHG   SP,ES:[BX+SI+8A89H]
+      XCHG   SP,ES:[BX+DI+8A89H]
+      XCHG   SP,ES:[BP+SI+8A89H]
+      XCHG   SP,ES:[BP+DI+8A89H]
+      XCHG   SP,ES:[SI+8A89H]
+      XCHG   SP,ES:[DI+8A89H]
+      XCHG   SP,ES:[BP+8A89H]
+      XCHG   SP,ES:[BX+8A89H]
+      XCHG   BP,ES:[BX+SI+8A89H]
+      XCHG   BP,ES:[BX+DI+8A89H]
+      XCHG   BP,ES:[BP+SI+8A89H]
+      XCHG   BP,ES:[BP+DI+8A89H]
+      XCHG   BP,ES:[SI+8A89H]
+      XCHG   BP,ES:[DI+8A89H]
+      XCHG   BP,ES:[BP+8A89H]
+      XCHG   BP,ES:[BX+8A89H]
+      XCHG   SI,ES:[BX+SI+8A89H]
+      XCHG   SI,ES:[BX+DI+8A89H]
+      XCHG   SI,ES:[BP+SI+8A89H]
+      XCHG   SI,ES:[BP+DI+8A89H]
+      XCHG   SI,ES:[SI+8A89H]
+      XCHG   SI,ES:[DI+8A89H]
+      XCHG   SI,ES:[BP+8A89H]
+      XCHG   SI,ES:[BX+8A89H]
+      XCHG   DI,ES:[BX+SI+8A89H]
+      XCHG   DI,ES:[BX+DI+8A89H]
+      XCHG   DI,ES:[BP+SI+8A89H]
+      XCHG   DI,ES:[BP+DI+8A89H]
+      XCHG   DI,ES:[SI+8A89H]
+      XCHG   DI,ES:[DI+8A89H]
+      XCHG   DI,ES:[BP+8A89H]
+      XCHG   DI,ES:[BX+8A89H]
+      XCHG   AX,ES:[BX+SI]
+      MOV    ES:[BX+DI+8B8AH],CL
+      MOV    ES:[BP+SI+8B8AH],CL
+      MOV    ES:[BP+DI+8B8AH],CL
+      MOV    ES:[SI+8B8AH],CL
+      MOV    ES:[DI+8B8AH],CL
+      MOV    ES:[BP+8B8AH],CL
+      MOV    ES:[BX+8B8AH],CL
+      MOV    ES:[BX+SI+8B8AH],DL
+      MOV    ES:[BX+DI+8B8AH],DL
+      MOV    ES:[BP+SI+8B8AH],DL
+      MOV    ES:[BP+DI+8B8AH],DL
+      MOV    ES:[SI+8B8AH],DL
+      MOV    ES:[DI+8B8AH],DL
+      MOV    ES:[BP+8B8AH],DL
+      MOV    ES:[BX+8B8AH],DL
+      MOV    ES:[BX+SI+8B8AH],BL
+      MOV    ES:[BX+DI+8B8AH],BL
+      MOV    ES:[BP+SI+8B8AH],BL
+      MOV    ES:[BP+DI+8B8AH],BL
+      MOV    ES:[SI+8B8AH],BL
+      MOV    ES:[DI+8B8AH],BL
+      MOV    ES:[BP+8B8AH],BL
+      MOV    ES:[BX+8B8AH],BL
+      MOV    ES:[BX+SI+8B8AH],AH
+      MOV    ES:[BX+DI+8B8AH],AH
+      MOV    ES:[BP+SI+8B8AH],AH
+      MOV    ES:[BP+DI+8B8AH],AH
+      MOV    ES:[SI+8B8AH],AH
+      MOV    ES:[DI+8B8AH],AH
+      MOV    ES:[BP+8B8AH],AH
+      MOV    ES:[BX+8B8AH],AH
+      MOV    ES:[BX+SI],AL
+      MOV    ES:[BP+SI+8C8BH],CX
+      MOV    ES:[BP+DI+8C8BH],CX
+      MOV    ES:[SI+8C8BH],CX
+      MOV    ES:[DI+8C8BH],CX
+      MOV    ES:[BP+8C8BH],CX
+      MOV    ES:[BX+8C8BH],CX
+      MOV    ES:[BX+SI+8C8BH],DX
+      MOV    ES:[BX+DI+8C8BH],DX
+      MOV    ES:[BP+SI+8C8BH],DX
+      MOV    ES:[BP+DI+8C8BH],DX
+      MOV    ES:[SI+8C8BH],DX
+      MOV    ES:[DI+8C8BH],DX
+      MOV    ES:[BP+8C8BH],DX
+      MOV    ES:[BX+8C8BH],DX
+      MOV    ES:[BX+SI+8C8BH],BX
+      MOV    ES:[BX+DI+8C8BH],BX
+      MOV    ES:[BP+SI+8C8BH],BX
+      MOV    ES:[BP+DI+8C8BH],BX
+      MOV    ES:[SI+8C8BH],BX
+      MOV    ES:[DI+8C8BH],BX
+      MOV    ES:[BP+8C8BH],BX
+      MOV    ES:[BX+8C8BH],BX
+      MOV    ES:[BX+SI+8C8BH],SP
+      MOV    ES:[BX+DI+8C8BH],SP
+      MOV    ES:[BP+SI+8C8BH],SP
+      MOV    ES:[BP+DI+8C8BH],SP
+      MOV    ES:[SI+8C8BH],SP
+      MOV    ES:[DI+8C8BH],SP
+      MOV    ES:[BP+8C8BH],SP
+      MOV    ES:[BX+8C8BH],SP
+      MOV    ES:[BX+SI+8C8BH],BP
+      MOV    ES:[BX+DI+8C8BH],BP
+      MOV    ES:[BP+SI+8C8BH],BP
+      MOV    ES:[BP+DI+8C8BH],BP
+      MOV    ES:[SI+8C8BH],BP
+      MOV    ES:[DI+8C8BH],BP
+      MOV    ES:[BP+8C8BH],BP
+      MOV    ES:[BX+8C8BH],BP
+      MOV    ES:[BX+SI+8C8BH],SI
+      MOV    ES:[BX+DI+8C8BH],SI
+      MOV    ES:[BP+SI+8C8BH],SI
+      MOV    ES:[BP+DI+8C8BH],SI
+      MOV    ES:[SI+8C8BH],SI
+      MOV    ES:[DI+8C8BH],SI
+      MOV    ES:[BP+8C8BH],SI
+      MOV    ES:[BX+8C8BH],SI
+      MOV    ES:[BX+SI+8C8BH],DI
+      MOV    ES:[BX+DI+8C8BH],DI
+      MOV    ES:[BP+SI+8C8BH],DI
+      MOV    ES:[BP+DI+8C8BH],DI
+      MOV    ES:[SI+8C8BH],DI
+      MOV    ES:[DI+8C8BH],DI
+      MOV    ES:[BP+8C8BH],DI
+      MOV    ES:[BX+8C8BH],DI
+      MOV    ES:[BX+SI],AX
+      MOV    CL,ES:[BP+DI+8D8CH]
+      MOV    CL,ES:[SI+8D8CH]
+      MOV    CL,ES:[DI+8D8CH]
+      MOV    CL,ES:[BP+8D8CH]
+      MOV    CL,ES:[BX+8D8CH]
+      MOV    DL,ES:[BX+SI+8D8CH]
+      MOV    DL,ES:[BX+DI+8D8CH]
+      MOV    DL,ES:[BP+SI+8D8CH]
+      MOV    DL,ES:[BP+DI+8D8CH]
+      MOV    DL,ES:[SI+8D8CH]
+      MOV    DL,ES:[DI+8D8CH]
+      MOV    DL,ES:[BP+8D8CH]
+      MOV    DL,ES:[BX+8D8CH]
+      MOV    BL,ES:[BX+SI+8D8CH]
+      MOV    BL,ES:[BX+DI+8D8CH]
+      MOV    BL,ES:[BP+SI+8D8CH]
+      MOV    BL,ES:[BP+DI+8D8CH]
+      MOV    BL,ES:[SI+8D8CH]
+      MOV    BL,ES:[DI+8D8CH]
+      MOV    BL,ES:[BP+8D8CH]
+      MOV    BL,ES:[BX+8D8CH]
+      MOV    AH,ES:[BX+SI+8D8CH]
+      MOV    AH,ES:[BX+DI+8D8CH]
+      MOV    AH,ES:[BP+SI+8D8CH]
+      MOV    AH,ES:[BP+DI+8D8CH]
+      MOV    AH,ES:[SI+8D8CH]
+      MOV    AH,ES:[DI+8D8CH]
+      MOV    AH,ES:[BP+8D8CH]
+      MOV    AH,ES:[BX+8D8CH]
+      MOV    AL,ES:[BX+SI]
+      MOV    CX,ES:[SI+8E8DH]
+      MOV    CX,ES:[DI+8E8DH]
+      MOV    CX,ES:[BP+8E8DH]
+      MOV    CX,ES:[BX+8E8DH]
+      MOV    DX,ES:[BX+SI+8E8DH]
+      MOV    DX,ES:[BX+DI+8E8DH]
+      MOV    DX,ES:[BP+SI+8E8DH]
+      MOV    DX,ES:[BP+DI+8E8DH]
+      MOV    DX,ES:[SI+8E8DH]
+      MOV    DX,ES:[DI+8E8DH]
+      MOV    DX,ES:[BP+8E8DH]
+      MOV    DX,ES:[BX+8E8DH]
+      MOV    BX,ES:[BX+SI+8E8DH]
+      MOV    BX,ES:[BX+DI+8E8DH]
+      MOV    BX,ES:[BP+SI+8E8DH]
+      MOV    BX,ES:[BP+DI+8E8DH]
+      MOV    BX,ES:[SI+8E8DH]
+      MOV    BX,ES:[DI+8E8DH]
+      MOV    BX,ES:[BP+8E8DH]
+      MOV    BX,ES:[BX+8E8DH]
+      MOV    SP,ES:[BX+SI+8E8DH]
+      MOV    SP,ES:[BX+DI+8E8DH]
+      MOV    SP,ES:[BP+SI+8E8DH]
+      MOV    SP,ES:[BP+DI+8E8DH]
+      MOV    SP,ES:[SI+8E8DH]
+      MOV    SP,ES:[DI+8E8DH]
+      MOV    SP,ES:[BP+8E8DH]
+      MOV    SP,ES:[BX+8E8DH]
+      MOV    BP,ES:[BX+SI+8E8DH]
+      MOV    BP,ES:[BX+DI+8E8DH]
+      MOV    BP,ES:[BP+SI+8E8DH]
+      MOV    BP,ES:[BP+DI+8E8DH]
+      MOV    BP,ES:[SI+8E8DH]
+      MOV    BP,ES:[DI+8E8DH]
+      MOV    BP,ES:[BP+8E8DH]
+      MOV    BP,ES:[BX+8E8DH]
+      MOV    SI,ES:[BX+SI+8E8DH]
+      MOV    SI,ES:[BX+DI+8E8DH]
+      MOV    SI,ES:[BP+SI+8E8DH]
+      MOV    SI,ES:[BP+DI+8E8DH]
+      MOV    SI,ES:[SI+8E8DH]
+      MOV    SI,ES:[DI+8E8DH]
+      MOV    SI,ES:[BP+8E8DH]
+      MOV    SI,ES:[BX+8E8DH]
+      MOV    DI,ES:[BX+SI+8E8DH]
+      MOV    DI,ES:[BX+DI+8E8DH]
+      MOV    DI,ES:[BP+SI+8E8DH]
+      MOV    DI,ES:[BP+DI+8E8DH]
+      MOV    DI,ES:[SI+8E8DH]
+      MOV    DI,ES:[DI+8E8DH]
+      MOV    DI,ES:[BP+8E8DH]
+      MOV    DI,ES:[BX+8E8DH]
+      MOV    AX,ES:[BX+SI]
+      MOV    ES:[DI+8F8EH],CS
+      MOV    ES:[BP+8F8EH],CS
+      MOV    ES:[BX+8F8EH],CS
+      MOV    ES:[BX+SI+8F8EH],SS
+      MOV    ES:[BX+DI+8F8EH],SS
+      MOV    ES:[BP+SI+8F8EH],SS
+      MOV    ES:[BP+DI+8F8EH],SS
+      MOV    ES:[SI+8F8EH],SS
+      MOV    ES:[DI+8F8EH],SS
+      MOV    ES:[BP+8F8EH],SS
+      MOV    ES:[BX+8F8EH],SS
+      MOV    ES:[BX+SI+8F8EH],DS
+      MOV    ES:[BX+DI+8F8EH],DS
+      MOV    ES:[BP+SI+8F8EH],DS
+      MOV    ES:[BP+DI+8F8EH],DS
+      MOV    ES:[SI+8F8EH],DS
+      MOV    ES:[DI+8F8EH],DS
+      MOV    ES:[BP+8F8EH],DS
+      MOV    ES:[BX+8F8EH],DS
+      MOV    ES:[BX+SI+8F8EH],ES
+      MOV    ES:[BX+DI+8F8EH],ES
+      MOV    ES:[BP+SI+8F8EH],ES
+      MOV    ES:[BP+DI+8F8EH],ES
+      MOV    ES:[SI+8F8EH],ES
+      MOV    ES:[DI+8F8EH],ES
+      MOV    ES:[BP+8F8EH],ES
+      MOV    ES:[BX+8F8EH],ES
+      MOV    ES:[BX+SI+8F8EH],CS
+      MOV    ES:[BX+DI+8F8EH],CS
+      MOV    ES:[BP+SI+8F8EH],CS
+      MOV    ES:[BP+DI+8F8EH],CS
+      MOV    ES:[SI+8F8EH],CS
+      MOV    ES:[BX+SI],ES
+      LEA    CX,ES:[BP+908FH]
+      LEA    CX,ES:[BX+908FH]
+      LEA    DX,ES:[BX+SI+908FH]
+      LEA    DX,ES:[BX+DI+908FH]
+      LEA    DX,ES:[BP+SI+908FH]
+      LEA    DX,ES:[BP+DI+908FH]
+      LEA    DX,ES:[SI+908FH]
+      LEA    DX,ES:[DI+908FH]
+      LEA    DX,ES:[BP+908FH]
+      LEA    DX,ES:[BX+908FH]
+      LEA    BX,ES:[BX+SI+908FH]
+      LEA    BX,ES:[BX+DI+908FH]
+      LEA    BX,ES:[BP+SI+908FH]
+      LEA    BX,ES:[BP+DI+908FH]
+      LEA    BX,ES:[SI+908FH]
+      LEA    BX,ES:[DI+908FH]
+      LEA    BX,ES:[BP+908FH]
+      LEA    BX,ES:[BX+908FH]
+      LEA    SP,ES:[BX+SI+908FH]
+      LEA    SP,ES:[BX+DI+908FH]
+      LEA    SP,ES:[BP+SI+908FH]
+      LEA    SP,ES:[BP+DI+908FH]
+      LEA    SP,ES:[SI+908FH]
+      LEA    SP,ES:[DI+908FH]
+      LEA    SP,ES:[BP+908FH]
+      LEA    SP,ES:[BX+908FH]
+      LEA    BP,ES:[BX+SI+908FH]
+      LEA    BP,ES:[BX+DI+908FH]
+      LEA    BP,ES:[BP+SI+908FH]
+      LEA    BP,ES:[BP+DI+908FH]
+      LEA    BP,ES:[SI+908FH]
+      LEA    BP,ES:[DI+908FH]
+      LEA    BP,ES:[BP+908FH]
+      LEA    BP,ES:[BX+908FH]
+      LEA    SI,ES:[BX+SI+908FH]
+      LEA    SI,ES:[BX+DI+908FH]
+      LEA    SI,ES:[BP+SI+908FH]
+      LEA    SI,ES:[BP+DI+908FH]
+      LEA    SI,ES:[SI+908FH]
+      LEA    SI,ES:[DI+908FH]
+      LEA    SI,ES:[BP+908FH]
+      LEA    SI,ES:[BX+908FH]
+      LEA    DI,ES:[BX+SI+908FH]
+      LEA    DI,ES:[BX+DI+908FH]
+      LEA    DI,ES:[BP+SI+908FH]
+      LEA    DI,ES:[BP+DI+908FH]
+      LEA    DI,ES:[SI+908FH]
+      LEA    DI,ES:[DI+908FH]
+      LEA    DI,ES:[BP+908FH]
+      LEA    DI,ES:[BX+908FH]
+      LEA    AX,ES:[BX+SI]
+      MOV    CS,ES:[BX+9190H]
+      MOV    SS,ES:[BX+SI+9190H]
+      MOV    SS,ES:[BX+DI+9190H]
+      MOV    SS,ES:[BP+SI+9190H]
+      MOV    SS,ES:[BP+DI+9190H]
+      MOV    SS,ES:[SI+9190H]
+      MOV    SS,ES:[DI+9190H]
+      MOV    SS,ES:[BP+9190H]
+      MOV    SS,ES:[BX+9190H]
+      MOV    DS,ES:[BX+SI+9190H]
+      MOV    DS,ES:[BX+DI+9190H]
+      MOV    DS,ES:[BP+SI+9190H]
+      MOV    DS,ES:[BP+DI+9190H]
+      MOV    DS,ES:[SI+9190H]
+      MOV    DS,ES:[DI+9190H]
+      MOV    DS,ES:[BP+9190H]
+      MOV    DS,ES:[BX+9190H]
+      MOV    ES,ES:[BX+SI+9190H]
+      MOV    ES,ES:[BX+DI+9190H]
+      MOV    ES,ES:[BP+SI+9190H]
+      MOV    ES,ES:[BP+DI+9190H]
+      MOV    ES,ES:[SI+9190H]
+      MOV    ES,ES:[DI+9190H]
+      MOV    ES,ES:[BP+9190H]
+      MOV    ES,ES:[BX+9190H]
+      MOV    CS,ES:[BX+SI+9190H]
+      MOV    CS,ES:[BX+DI+9190H]
+      MOV    CS,ES:[BP+SI+9190H]
+      MOV    CS,ES:[BP+DI+9190H]
+      MOV    CS,ES:[SI+9190H]
+      MOV    CS,ES:[DI+9190H]
+      MOV    CS,ES:[BP+9190H]
+      MOV    ES,ES:[BX+SI]
+      MOV    AL,ES:[0A2A1H]
+      MOV    AX,ES:[0A3A2H]
+      MOV    ES:[0A4A3H],AL
+      MOV    ES:[0A5A4H],AX
       MOVSB  ES:[DI],ES:[SI]
       MOVSW  ES:[DI],ES:[SI]
       CMPSB  ES:[SI],ES:[DI]
       CMPSW  ES:[SI],ES:[DI]
       LODSB  ES:[SI]
       LODSW  ES:[SI]
-      MOV    AL,CS:[00A1H]
-      MOV    AX,CS:[00A2H]
-      MOV    CS:[00A3H],AL
-      MOV    CS:[00A4H],AX
+      INC    WORD PTR ES:[BX+SI]
+      INC    WORD PTR ES:[BX+DI]
+      INC    WORD PTR ES:[BP+SI]
+      INC    WORD PTR ES:[BP+DI]
+      INC    WORD PTR ES:[SI]
+      INC    WORD PTR ES:[DI]
+      INC    WORD PTR ES:[0807H]
+      INC    WORD PTR ES:[BX]
+      DEC    WORD PTR ES:[BX+SI]
+      DEC    WORD PTR ES:[BX+DI]
+      DEC    WORD PTR ES:[BP+SI]
+      DEC    WORD PTR ES:[BP+DI]
+      DEC    WORD PTR ES:[SI]
+      DEC    WORD PTR ES:[DI]
+      DEC    WORD PTR ES:[100FH]
+      DEC    WORD PTR ES:[BX]
+      CALL   ES:[BX+SI]
+      CALL   ES:[BX+DI]
+      CALL   ES:[BP+SI]
+      CALL   ES:[BP+DI]
+      CALL   ES:[SI]
+      CALL   ES:[DI]
+      CALL   ES:[1817H]
+      CALL   ES:[BX]
+      CALLF  ES:[BX+SI]
+      CALLF  ES:[BX+DI]
+      CALLF  ES:[BP+SI]
+      CALLF  ES:[BP+DI]
+      CALLF  ES:[SI]
+      CALLF  ES:[DI]
+      CALLF  ES:[201FH]
+      CALLF  ES:[BX]
+      JMP    ES:[BX+SI]
+      JMP    ES:[BX+DI]
+      JMP    ES:[BP+SI]
+      JMP    ES:[BP+DI]
+      JMP    ES:[SI]
+      JMP    ES:[DI]
+      JMP    ES:[2827H]
+      JMP    ES:[BX]
+      JMPF   ES:[BX+SI]
+      JMPF   ES:[BX+DI]
+      JMPF   ES:[BP+SI]
+      JMPF   ES:[BP+DI]
+      JMPF   ES:[SI]
+      JMPF   ES:[DI]
+      JMPF   ES:[302FH]
+      JMPF   ES:[BX]
+      PUSH   ES:[BX+SI]
+      PUSH   ES:[BX+DI]
+      PUSH   ES:[BP+SI]
+      PUSH   ES:[BP+DI]
+      PUSH   ES:[SI]
+      PUSH   ES:[DI]
+      PUSH   ES:[3837H]
+      PUSH   ES:[BX]
+      INC    WORD PTR ES:[BX+SI+65]
+      INC    WORD PTR ES:[BX+SI-128]
+      INC    WORD PTR ES:[BX+DI+66]
+      INC    WORD PTR ES:[BX+DI-128]
+      INC    WORD PTR ES:[BP+SI+67]
+      INC    WORD PTR ES:[BP+SI-128]
+      INC    WORD PTR ES:[BP+DI+68]
+      INC    WORD PTR ES:[BP+DI-128]
+      INC    WORD PTR ES:[SI+69]
+      INC    WORD PTR ES:[SI-128]
+      INC    WORD PTR ES:[DI+70]
+      INC    WORD PTR ES:[DI-128]
+      INC    WORD PTR ES:[BP+71]
+      INC    WORD PTR ES:[BP-128]
+      INC    WORD PTR ES:[BX+72]
+      INC    WORD PTR ES:[BX-128]
+      DEC    WORD PTR ES:[BX+SI+73]
+      DEC    WORD PTR ES:[BX+SI-128]
+      DEC    WORD PTR ES:[BX+DI+74]
+      DEC    WORD PTR ES:[BX+DI-128]
+      DEC    WORD PTR ES:[BP+SI+75]
+      DEC    WORD PTR ES:[BP+SI-128]
+      DEC    WORD PTR ES:[BP+DI+76]
+      DEC    WORD PTR ES:[BP+DI-128]
+      DEC    WORD PTR ES:[SI+77]
+      DEC    WORD PTR ES:[SI-128]
+      DEC    WORD PTR ES:[DI+78]
+      DEC    WORD PTR ES:[DI-128]
+      DEC    WORD PTR ES:[BP+79]
+      DEC    WORD PTR ES:[BP-128]
+      DEC    WORD PTR ES:[BX+80]
+      DEC    WORD PTR ES:[BX-128]
+      CALL   ES:[BX+SI+81]
+      CALL   ES:[BX+SI-128]
+      CALL   ES:[BX+DI+82]
+      CALL   ES:[BX+DI-128]
+      CALL   ES:[BP+SI+83]
+      CALL   ES:[BP+SI-128]
+      CALL   ES:[BP+DI+84]
+      CALL   ES:[BP+DI-128]
+      CALL   ES:[SI+85]
+      CALL   ES:[SI-128]
+      CALL   ES:[DI+86]
+      CALL   ES:[DI-128]
+      CALL   ES:[BP+87]
+      CALL   ES:[BP-128]
+      CALL   ES:[BX+88]
+      CALL   ES:[BX-128]
+      CALLF  ES:[BX+SI+89]
+      CALLF  ES:[BX+SI-128]
+      CALLF  ES:[BX+DI+90]
+      CALLF  ES:[BX+DI-128]
+      CALLF  ES:[BP+SI+91]
+      CALLF  ES:[BP+SI-128]
+      CALLF  ES:[BP+DI+92]
+      CALLF  ES:[BP+DI-128]
+      CALLF  ES:[SI+93]
+      CALLF  ES:[SI-128]
+      CALLF  ES:[DI+94]
+      CALLF  ES:[DI-128]
+      CALLF  ES:[BP+95]
+      CALLF  ES:[BP-128]
+      CALLF  ES:[BX+96]
+      CALLF  ES:[BX-128]
+      JMP    ES:[BX+SI+97]
+      JMP    ES:[BX+SI-128]
+      JMP    ES:[BX+DI+98]
+      JMP    ES:[BX+DI-128]
+      JMP    ES:[BP+SI+99]
+      JMP    ES:[BP+SI-128]
+      JMP    ES:[BP+DI+100]
+      JMP    ES:[BP+DI-128]
+      JMP    ES:[SI+101]
+      JMP    ES:[SI-128]
+      JMP    ES:[DI+102]
+      JMP    ES:[DI-128]
+      JMP    ES:[BP+103]
+      JMP    ES:[BP-128]
+      JMP    ES:[BX+104]
+      JMP    ES:[BX-128]
+      JMPF   ES:[BX+SI+105]
+      JMPF   ES:[BX+SI-128]
+      JMPF   ES:[BX+DI+106]
+      JMPF   ES:[BX+DI-128]
+      JMPF   ES:[BP+SI+107]
+      JMPF   ES:[BP+SI-128]
+      JMPF   ES:[BP+DI+108]
+      JMPF   ES:[BP+DI-128]
+      JMPF   ES:[SI+109]
+      JMPF   ES:[SI-128]
+      JMPF   ES:[DI+110]
+      JMPF   ES:[DI-128]
+      JMPF   ES:[BP+111]
+      JMPF   ES:[BP-128]
+      JMPF   ES:[BX+112]
+      JMPF   ES:[BX-128]
+      PUSH   ES:[BX+SI+113]
+      PUSH   ES:[BX+SI-128]
+      PUSH   ES:[BX+DI+114]
+      PUSH   ES:[BX+DI-128]
+      PUSH   ES:[BP+SI+115]
+      PUSH   ES:[BP+SI-128]
+      PUSH   ES:[BP+DI+116]
+      PUSH   ES:[BP+DI-128]
+      PUSH   ES:[SI+117]
+      PUSH   ES:[SI-128]
+      PUSH   ES:[DI+118]
+      PUSH   ES:[DI-128]
+      PUSH   ES:[BP+119]
+      PUSH   ES:[BP-128]
+      PUSH   ES:[BX+120]
+      PUSH   ES:[BX-128]
+      INC    WORD PTR ES:[BX+SI+8281H]
+      INC    WORD PTR ES:[BX+DI+8382H]
+      INC    WORD PTR ES:[BP+SI+8483H]
+      INC    WORD PTR ES:[BP+DI+8584H]
+      INC    WORD PTR ES:[SI+8685H]
+      INC    WORD PTR ES:[DI+8786H]
+      INC    WORD PTR ES:[BP+8887H]
+      INC    WORD PTR ES:[BX+8988H]
+      DEC    WORD PTR ES:[BX+SI+8A89H]
+      DEC    WORD PTR ES:[BX+DI+8B8AH]
+      DEC    WORD PTR ES:[BP+SI+8C8BH]
+      DEC    WORD PTR ES:[BP+DI+8D8CH]
+      DEC    WORD PTR ES:[SI+8E8DH]
+      DEC    WORD PTR ES:[DI+8F8EH]
+      DEC    WORD PTR ES:[BP+908FH]
+      DEC    WORD PTR ES:[BX+9190H]
+      CALL   ES:[BX+SI+9291H]
+      CALL   ES:[BX+DI+9392H]
+      CALL   ES:[BP+SI+9493H]
+      CALL   ES:[BP+DI+9594H]
+      CALL   ES:[SI+9695H]
+      CALL   ES:[DI+9796H]
+      CALL   ES:[BP+9897H]
+      CALL   ES:[BX+9998H]
+      CALLF  ES:[BX+SI+9A99H]
+      CALLF  ES:[BX+DI+9B9AH]
+      CALLF  ES:[BP+SI+9C9BH]
+      CALLF  ES:[BP+DI+9D9CH]
+      CALLF  ES:[SI+9E9DH]
+      CALLF  ES:[DI+9F9EH]
+      CALLF  ES:[BP+0A09FH]
+      CALLF  ES:[BX+0A1A0H]
+      JMP    ES:[BX+SI+0A2A1H]
+      JMP    ES:[BX+DI+0A3A2H]
+      JMP    ES:[BP+SI+0A4A3H]
+      JMP    ES:[BP+DI+0A5A4H]
+      JMP    ES:[SI+0A6A5H]
+      JMP    ES:[DI+0A7A6H]
+      JMP    ES:[BP+0A8A7H]
+      JMP    ES:[BX+0A9A8H]
+      JMPF   ES:[BX+SI+0AAA9H]
+      JMPF   ES:[BX+DI+0ABAAH]
+      JMPF   ES:[BP+SI+0ACABH]
+      JMPF   ES:[BP+DI+0ADACH]
+      JMPF   ES:[SI+0AEADH]
+      JMPF   ES:[DI+0AFAEH]
+      JMPF   ES:[BP+0B0AFH]
+      JMPF   ES:[BX+0B1B0H]
+      PUSH   ES:[BX+SI+0B2B1H]
+      PUSH   ES:[BX+DI+0B3B2H]
+      PUSH   ES:[BP+SI+0B4B3H]
+      PUSH   ES:[BP+DI+0B5B4H]
+      PUSH   ES:[SI+0B6B5H]
+      PUSH   ES:[DI+0B7B6H]
+      PUSH   ES:[BP+0B8B7H]
+      PUSH   ES:[BX+0B9B8H]
+      ADD    ES:[BX+DI],AL
+      ADD    ES:[BP+SI],AL
+      ADD    ES:[BP+DI],AL
+      ADD    ES:[SI],AL
+      ADD    ES:[DI],AL
+      ADD    ES:[0807H],AL
+      ADD    ES:[BX],AL
+      ADD    ES:[BX+SI],CL
+      ADD    ES:[BX+DI],CL
+      ADD    ES:[BP+SI],CL
+      ADD    ES:[BP+DI],CL
+      ADD    ES:[SI],CL
+      ADD    ES:[DI],CL
+      ADD    ES:[100FH],CL
+      ADD    ES:[BX],CL
+      ADD    ES:[BX+SI],DL
+      ADD    ES:[BX+DI],DL
+      ADD    ES:[BP+SI],DL
+      ADD    ES:[BP+DI],DL
+      ADD    ES:[SI],DL
+      ADD    ES:[DI],DL
+      ADD    ES:[1817H],DL
+      ADD    ES:[BX],DL
+      ADD    ES:[BX+SI],BL
+      ADD    ES:[BX+DI],BL
+      ADD    ES:[BP+SI],BL
+      ADD    ES:[BP+DI],BL
+      ADD    ES:[SI],BL
+      ADD    ES:[DI],BL
+      ADD    ES:[201FH],BL
+      ADD    ES:[BX],BL
+      ADD    ES:[BX+SI],AH
+      ADD    ES:[BX+DI],AH
+      ADD    ES:[BP+SI],AH
+      ADD    ES:[BP+DI],AH
+      ADD    ES:[SI],AH
+      ADD    ES:[DI],AH
+      ADD    ES:[2827H],AH
+      ADD    ES:[BX],AH
+      ADD    ES:[BP+SI],AX
+      ADD    ES:[BP+DI],AX
+      ADD    ES:[SI],AX
+      ADD    ES:[DI],AX
+      ADD    ES:[0807H],AX
+      ADD    ES:[BX],AX
+      ADD    ES:[BX+SI],CX
+      ADD    ES:[BX+DI],CX
+      ADD    ES:[BP+SI],CX
+      ADD    ES:[BP+DI],CX
+      ADD    ES:[SI],CX
+      ADD    ES:[DI],CX
+      ADD    ES:[100FH],CX
+      ADD    ES:[BX],CX
+      ADD    ES:[BX+SI],DX
+      ADD    ES:[BX+DI],DX
+      ADD    ES:[BP+SI],DX
+      ADD    ES:[BP+DI],DX
+      ADD    ES:[SI],DX
+      ADD    ES:[DI],DX
+      ADD    ES:[1817H],DX
+      ADD    ES:[BX],DX
+      ADD    ES:[BX+SI],BX
+      ADD    ES:[BX+DI],BX
+      ADD    ES:[BP+SI],BX
+      ADD    ES:[BP+DI],BX
+      ADD    ES:[SI],BX
+      ADD    ES:[DI],BX
+      ADD    ES:[201FH],BX
+      ADD    ES:[BX],BX
+      ADD    ES:[BX+SI],SP
+      ADD    ES:[BX+DI],SP
+      ADD    ES:[BP+SI],SP
+      ADD    ES:[BP+DI],SP
+      ADD    ES:[SI],SP
+      ADD    ES:[DI],SP
+      ADD    ES:[2827H],SP
+      ADD    ES:[BX],SP
+      ADD    ES:[BX+SI],BP
+      ADD    ES:[BX+DI],BP
+      ADD    ES:[BP+SI],BP
+      ADD    ES:[BP+DI],BP
+      ADD    ES:[SI],BP
+      ADD    ES:[DI],BP
+      ADD    ES:[302FH],BP
+      ADD    ES:[BX],BP
+      ADD    ES:[BX+SI],SI
+      ADD    ES:[BX+DI],SI
+      ADD    ES:[BP+SI],SI
+      ADD    ES:[BP+DI],SI
+      ADD    ES:[SI],SI
+      ADD    ES:[DI],SI
+      ADD    ES:[3837H],SI
+      ADD    ES:[BX],SI
+      ADD    ES:[BX+SI],DI
+      ADD    ES:[BX+DI],DI
+      ADD    ES:[BP+SI],DI
+      ADD    ES:[BP+DI],DI
+      ADD    ES:[SI],DI
+      ADD    ES:[DI],DI
+      ADD    ES:[403FH],DI
+      ADD    ES:[BX],DI
+      ADD    ES:[BX+SI+65],AX
+      ADD    ES:[BX+SI-128],AX
+      ADD    ES:[BX+DI+66],AX
+      ADD    ES:[BX+DI-128],AX
+      ADD    ES:[BP+SI+67],AX
+      ADD    ES:[BP+SI-128],AX
+      ADD    ES:[BP+DI+68],AX
+      ADD    ES:[BP+DI-128],AX
+      ADD    ES:[SI+69],AX
+      ADD    ES:[SI-128],AX
+      ADD    ES:[DI+70],AX
+      ADD    ES:[DI-128],AX
+      ADD    ES:[BP+71],AX
+      ADD    ES:[BP-128],AX
+      ADD    ES:[BX+72],AX
+      ADD    ES:[BX-128],AX
+      ADD    ES:[BX+SI+73],CX
+      ADD    ES:[BX+SI-128],CX
+      ADD    ES:[BX+DI+74],CX
+      ADD    ES:[BX+DI-128],CX
+      ADD    ES:[BP+SI+75],CX
+      ADD    ES:[BP+SI-128],CX
+      ADD    ES:[BP+DI+76],CX
+      ADD    ES:[BP+DI-128],CX
+      ADD    ES:[SI+77],CX
+      ADD    ES:[SI-128],CX
+      ADD    ES:[DI+78],CX
+      ADD    ES:[DI-128],CX
+      ADD    ES:[BP+79],CX
+      ADD    ES:[BP-128],CX
+      ADD    ES:[BX+80],CX
+      ADD    ES:[BX-128],CX
+      ADD    ES:[BX+SI+81],DX
+      ADD    ES:[BX+SI-128],DX
+      ADD    ES:[BX+DI+82],DX
+      ADD    ES:[BX+DI-128],DX
+      ADD    ES:[BP+SI+83],DX
+      ADD    ES:[BP+SI-128],DX
+      ADD    ES:[BP+DI+84],DX
+      ADD    ES:[BP+DI-128],DX
+      ADD    ES:[SI+85],DX
+      ADD    ES:[SI-128],DX
+      ADD    ES:[DI+86],DX
+      ADD    ES:[DI-128],DX
+      ADD    ES:[BP+87],DX
+      ADD    ES:[BP-128],DX
+      ADD    ES:[BX+88],DX
+      ADD    ES:[BX-128],DX
+      ADD    ES:[BX+SI+89],BX
+      ADD    ES:[BX+SI-128],BX
+      ADD    ES:[BX+DI+90],BX
+      ADD    ES:[BX+DI-128],BX
+      ADD    ES:[BP+SI+91],BX
+      ADD    ES:[BP+SI-128],BX
+      ADD    ES:[BP+DI+92],BX
+      ADD    ES:[BP+DI-128],BX
+      ADD    ES:[SI+93],BX
+      ADD    ES:[SI-128],BX
+      ADD    ES:[DI+94],BX
+      ADD    ES:[DI-128],BX
+      ADD    ES:[BP+95],BX
+      ADD    ES:[BP-128],BX
+      ADD    ES:[BX+96],BX
+      ADD    ES:[BX-128],BX
+      ADD    ES:[BX+SI+97],SP
+      ADD    ES:[BX+SI-128],SP
+      ADD    ES:[BX+DI+98],SP
+      ADD    ES:[BX+DI-128],SP
+      ADD    ES:[BP+SI+99],SP
+      ADD    ES:[BP+SI-128],SP
+      ADD    ES:[BP+DI+100],SP
+      ADD    ES:[BP+DI-128],SP
+      ADD    ES:[SI+101],SP
+      ADD    ES:[SI-128],SP
+      ADD    ES:[DI+102],SP
+      ADD    ES:[DI-128],SP
+      ADD    ES:[BP+103],SP
+      ADD    ES:[BP-128],SP
+      ADD    ES:[BX+104],SP
+      ADD    ES:[BX-128],SP
+      ADD    ES:[BX+SI+105],BP
+      ADD    ES:[BX+SI-128],BP
+      ADD    ES:[BX+DI+106],BP
+      ADD    ES:[BX+DI-128],BP
+      ADD    ES:[BP+SI+107],BP
+      ADD    ES:[BP+SI-128],BP
+      ADD    ES:[BP+DI+108],BP
+      ADD    ES:[BP+DI-128],BP
+      ADD    ES:[SI+109],BP
+      ADD    ES:[SI-128],BP
+      ADD    ES:[DI+110],BP
+      ADD    ES:[DI-128],BP
+      ADD    ES:[BP+111],BP
+      ADD    ES:[BP-128],BP
+      ADD    ES:[BX+112],BP
+      ADD    ES:[BX-128],BP
+      ADD    ES:[BX+SI+113],SI
+      ADD    ES:[BX+SI-128],SI
+      ADD    ES:[BX+DI+114],SI
+      ADD    ES:[BX+DI-128],SI
+      ADD    ES:[BP+SI+115],SI
+      ADD    ES:[BP+SI-128],SI
+      ADD    ES:[BP+DI+116],SI
+      ADD    ES:[BP+DI-128],SI
+      ADD    ES:[SI+117],SI
+      ADD    ES:[SI-128],SI
+      ADD    ES:[DI+118],SI
+      ADD    ES:[DI-128],SI
+      ADD    ES:[BP+119],SI
+      ADD    ES:[BP-128],SI
+      ADD    ES:[BX+120],SI
+      ADD    ES:[BX-128],SI
+      ADD    ES:[BX+SI+121],DI
+      ADD    ES:[BX+SI-128],DI
+      ADD    ES:[BX+DI+122],DI
+      ADD    ES:[BX+DI-128],DI
+      ADD    ES:[BP+SI+123],DI
+      ADD    ES:[BP+SI-128],DI
+      ADD    ES:[BP+DI+124],DI
+      ADD    ES:[BP+DI-128],DI
+      ADD    ES:[SI+125],DI
+      ADD    ES:[SI-128],DI
+      ADD    ES:[DI+126],DI
+      ADD    ES:[DI-128],DI
+      ADD    ES:[BP+127],DI
+      ADD    ES:[BP-128],DI
+      ADD    ES:[BX-128],DI
+      ADD    ES:[BX+0],DI
+      ADD    ES:[BX+SI+8281H],AX
+      ADD    ES:[BX+DI+8382H],AX
+      ADD    ES:[BP+SI+8483H],AX
+      ADD    ES:[BP+DI+8584H],AX
+      ADD    ES:[SI+8685H],AX
+      ADD    ES:[DI+8786H],AX
+      ADD    ES:[BP+8887H],AX
+      ADD    ES:[BX+8988H],AX
+      ADD    ES:[BX+SI+8A89H],CX
+      ADD    ES:[BX+DI+8B8AH],CX
+      ADD    ES:[BP+SI+8C8BH],CX
+      ADD    ES:[BP+DI+8D8CH],CX
+      ADD    ES:[SI+8E8DH],CX
+      ADD    ES:[DI+8F8EH],CX
+      ADD    ES:[BP+908FH],CX
+      ADD    ES:[BX+9190H],CX
+      ADD    ES:[BX+SI+9291H],DX
+      ADD    ES:[BX+DI+9392H],DX
+      ADD    ES:[BP+SI+9493H],DX
+      ADD    ES:[BP+DI+9594H],DX
+      ADD    ES:[SI+9695H],DX
+      ADD    ES:[DI+9796H],DX
+      ADD    ES:[BP+9897H],DX
+      ADD    ES:[BX+9998H],DX
+      ADD    ES:[BX+SI+9A99H],BX
+      ADD    ES:[BX+DI+9B9AH],BX
+      ADD    ES:[BP+SI+9C9BH],BX
+      ADD    ES:[BP+DI+9D9CH],BX
+      ADD    ES:[SI+9E9DH],BX
+      ADD    ES:[DI+9F9EH],BX
+      ADD    ES:[BP+0A09FH],BX
+      ADD    ES:[BX+0A1A0H],BX
+      ADD    ES:[BX+SI+0A2A1H],SP
+      ADD    ES:[BX+DI+0A3A2H],SP
+      ADD    ES:[BP+SI+0A4A3H],SP
+      ADD    ES:[BP+DI+0A5A4H],SP
+      ADD    ES:[SI+0A6A5H],SP
+      ADD    ES:[DI+0A7A6H],SP
+      ADD    ES:[BP+0A8A7H],SP
+      ADD    ES:[BX+0A9A8H],SP
+      ADD    ES:[BX+SI+0AAA9H],BP
+      ADD    ES:[BX+DI+0ABAAH],BP
+      ADD    ES:[BP+SI+0ACABH],BP
+      ADD    ES:[BP+DI+0ADACH],BP
+      ADD    ES:[SI+0AEADH],BP
+      ADD    ES:[DI+0AFAEH],BP
+      ADD    ES:[BP+0B0AFH],BP
+      ADD    ES:[BX+0B1B0H],BP
+      ADD    ES:[BX+SI+0B2B1H],SI
+      ADD    ES:[BX+DI+0B3B2H],SI
+      ADD    ES:[BP+SI+0B4B3H],SI
+      ADD    ES:[BP+DI+0B5B4H],SI
+      ADD    ES:[SI+0B6B5H],SI
+      ADD    ES:[DI+0B7B6H],SI
+      ADD    ES:[BP+0B8B7H],SI
+      ADD    ES:[BX+0B9B8H],SI
+      ADD    ES:[BX+SI+0BAB9H],DI
+      ADD    ES:[BX+DI+0BBBAH],DI
+      ADD    ES:[BP+SI+0BCBBH],DI
+      ADD    ES:[BP+DI+0BDBCH],DI
+      ADD    ES:[SI+0BEBDH],DI
+      ADD    ES:[DI+0BFBEH],DI
+      ADD    ES:[BP+0C0BFH],DI
+      ADD    ES:[BX+0C1C0H],DI
+      ADD    ES:[BX+SI],AX
+      ADD    ES:[BX+DI],AX
+      ADD    AL,ES:[BP+DI]
+      ADD    AL,ES:[SI]
+      ADD    AL,ES:[DI]
+      ADD    AL,ES:[0807H]
+      ADD    AL,ES:[BX]
+      ADD    CL,ES:[BX+SI]
+      ADD    CL,ES:[BX+DI]
+      ADD    CL,ES:[BP+SI]
+      ADD    CL,ES:[BP+DI]
+      ADD    CL,ES:[SI]
+      ADD    CL,ES:[DI]
+      ADD    CL,ES:[100FH]
+      ADD    CL,ES:[BX]
+      ADD    DL,ES:[BX+SI]
+      ADD    DL,ES:[BX+DI]
+      ADD    DL,ES:[BP+SI]
+      ADD    DL,ES:[BP+DI]
+      ADD    DL,ES:[SI]
+      ADD    DL,ES:[DI]
+      ADD    DL,ES:[1817H]
+      ADD    DL,ES:[BX]
+      ADD    BL,ES:[BX+SI]
+      ADD    BL,ES:[BX+DI]
+      ADD    BL,ES:[BP+SI]
+      ADD    BL,ES:[BP+DI]
+      ADD    BL,ES:[SI]
+      ADD    BL,ES:[DI]
+      ADD    BL,ES:[201FH]
+      ADD    BL,ES:[BX]
+      ADD    AH,ES:[BX+SI]
+      ADD    AH,ES:[BX+DI]
+      ADD    AH,ES:[BP+SI]
+      ADD    AH,ES:[BP+DI]
+      ADD    AH,ES:[SI]
+      ADD    AH,ES:[DI]
+      ADD    AH,ES:[2827H]
+      ADD    AH,ES:[BX]
+      ADD    AX,ES:[SI]
+      ADD    AX,ES:[DI]
+      ADD    AX,ES:[0807H]
+      ADD    AX,ES:[BX]
+      ADD    CX,ES:[BX+SI]
+      ADD    CX,ES:[BX+DI]
+      ADD    CX,ES:[BP+SI]
+      ADD    CX,ES:[BP+DI]
+      ADD    CX,ES:[SI]
+      ADD    CX,ES:[DI]
+      ADD    CX,ES:[100FH]
+      ADD    CX,ES:[BX]
+      ADD    DX,ES:[BX+SI]
+      ADD    DX,ES:[BX+DI]
+      ADD    DX,ES:[BP+SI]
+      ADD    DX,ES:[BP+DI]
+      ADD    DX,ES:[SI]
+      ADD    DX,ES:[DI]
+      ADD    DX,ES:[1817H]
+      ADD    DX,ES:[BX]
+      ADD    BX,ES:[BX+SI]
+      ADD    BX,ES:[BX+DI]
+      ADD    BX,ES:[BP+SI]
+      ADD    BX,ES:[BP+DI]
+      ADD    BX,ES:[SI]
+      ADD    BX,ES:[DI]
+      ADD    BX,ES:[201FH]
+      ADD    BX,ES:[BX]
+      ADD    SP,ES:[BX+SI]
+      ADD    SP,ES:[BX+DI]
+      ADD    SP,ES:[BP+SI]
+      ADD    SP,ES:[BP+DI]
+      ADD    SP,ES:[SI]
+      ADD    SP,ES:[DI]
+      ADD    SP,ES:[2827H]
+      ADD    SP,ES:[BX]
+      ADD    BP,ES:[BX+SI]
+      ADD    BP,ES:[BX+DI]
+      ADD    BP,ES:[BP+SI]
+      ADD    BP,ES:[BP+DI]
+      ADD    BP,ES:[SI]
+      ADD    BP,ES:[DI]
+      ADD    BP,ES:[302FH]
+      ADD    BP,ES:[BX]
+      ADD    SI,ES:[BX+SI]
+      ADD    SI,ES:[BX+DI]
+      ADD    SI,ES:[BP+SI]
+      ADD    SI,ES:[BP+DI]
+      ADD    SI,ES:[SI]
+      ADD    SI,ES:[DI]
+      ADD    SI,ES:[3837H]
+      ADD    SI,ES:[BX]
+      ADD    DI,ES:[BX+SI]
+      ADD    DI,ES:[BX+DI]
+      ADD    DI,ES:[BP+SI]
+      ADD    DI,ES:[BP+DI]
+      ADD    DI,ES:[SI]
+      ADD    DI,ES:[DI]
+      ADD    DI,ES:[403FH]
+      ADD    DI,ES:[BX]
+      ADD    AX,ES:[BX+SI+65]
+      ADD    AX,ES:[BX+SI-128]
+      ADD    AX,ES:[BX+DI+66]
+      ADD    AX,ES:[BX+DI-128]
+      ADD    AX,ES:[BP+SI+67]
+      ADD    AX,ES:[BP+SI-128]
+      ADD    AX,ES:[BP+DI+68]
+      ADD    AX,ES:[BP+DI-128]
+      ADD    AX,ES:[SI+69]
+      ADD    AX,ES:[SI-128]
+      ADD    AX,ES:[DI+70]
+      ADD    AX,ES:[DI-128]
+      ADD    AX,ES:[BP+71]
+      ADD    AX,ES:[BP-128]
+      ADD    AX,ES:[BX+72]
+      ADD    AX,ES:[BX-128]
+      ADD    CX,ES:[BX+SI+73]
+      ADD    CX,ES:[BX+SI-128]
+      ADD    CX,ES:[BX+DI+74]
+      ADD    CX,ES:[BX+DI-128]
+      ADD    CX,ES:[BP+SI+75]
+      ADD    CX,ES:[BP+SI-128]
+      ADD    CX,ES:[BP+DI+76]
+      ADD    CX,ES:[BP+DI-128]
+      ADD    CX,ES:[SI+77]
+      ADD    CX,ES:[SI-128]
+      ADD    CX,ES:[DI+78]
+      ADD    CX,ES:[DI-128]
+      ADD    CX,ES:[BP+79]
+      ADD    CX,ES:[BP-128]
+      ADD    CX,ES:[BX+80]
+      ADD    CX,ES:[BX-128]
+      ADD    DX,ES:[BX+SI+81]
+      ADD    DX,ES:[BX+SI-128]
+      ADD    DX,ES:[BX+DI+82]
+      ADD    DX,ES:[BX+DI-128]
+      ADD    DX,ES:[BP+SI+83]
+      ADD    DX,ES:[BP+SI-128]
+      ADD    DX,ES:[BP+DI+84]
+      ADD    DX,ES:[BP+DI-128]
+      ADD    DX,ES:[SI+85]
+      ADD    DX,ES:[SI-128]
+      ADD    DX,ES:[DI+86]
+      ADD    DX,ES:[DI-128]
+      ADD    DX,ES:[BP+87]
+      ADD    DX,ES:[BP-128]
+      ADD    DX,ES:[BX+88]
+      ADD    DX,ES:[BX-128]
+      ADD    BX,ES:[BX+SI+89]
+      ADD    BX,ES:[BX+SI-128]
+      ADD    BX,ES:[BX+DI+90]
+      ADD    BX,ES:[BX+DI-128]
+      ADD    BX,ES:[BP+SI+91]
+      ADD    BX,ES:[BP+SI-128]
+      ADD    BX,ES:[BP+DI+92]
+      ADD    BX,ES:[BP+DI-128]
+      ADD    BX,ES:[SI+93]
+      ADD    BX,ES:[SI-128]
+      ADD    BX,ES:[DI+94]
+      ADD    BX,ES:[DI-128]
+      ADD    BX,ES:[BP+95]
+      ADD    BX,ES:[BP-128]
+      ADD    BX,ES:[BX+96]
+      ADD    BX,ES:[BX-128]
+      ADD    SP,ES:[BX+SI+97]
+      ADD    SP,ES:[BX+SI-128]
+      ADD    SP,ES:[BX+DI+98]
+      ADD    SP,ES:[BX+DI-128]
+      ADD    SP,ES:[BP+SI+99]
+      ADD    SP,ES:[BP+SI-128]
+      ADD    SP,ES:[BP+DI+100]
+      ADD    SP,ES:[BP+DI-128]
+      ADD    SP,ES:[SI+101]
+      ADD    SP,ES:[SI-128]
+      ADD    SP,ES:[DI+102]
+      ADD    SP,ES:[DI-128]
+      ADD    SP,ES:[BP+103]
+      ADD    SP,ES:[BP-128]
+      ADD    SP,ES:[BX+104]
+      ADD    SP,ES:[BX-128]
+      ADD    BP,ES:[BX+SI+105]
+      ADD    BP,ES:[BX+SI-128]
+      ADD    BP,ES:[BX+DI+106]
+      ADD    BP,ES:[BX+DI-128]
+      ADD    BP,ES:[BP+SI+107]
+      ADD    BP,ES:[BP+SI-128]
+      ADD    BP,ES:[BP+DI+108]
+      ADD    BP,ES:[BP+DI-128]
+      ADD    BP,ES:[SI+109]
+      ADD    BP,ES:[SI-128]
+      ADD    BP,ES:[DI+110]
+      ADD    BP,ES:[DI-128]
+      ADD    BP,ES:[BP+111]
+      ADD    BP,ES:[BP-128]
+      ADD    BP,ES:[BX+112]
+      ADD    BP,ES:[BX-128]
+      ADD    SI,ES:[BX+SI+113]
+      ADD    SI,ES:[BX+SI-128]
+      ADD    SI,ES:[BX+DI+114]
+      ADD    SI,ES:[BX+DI-128]
+      ADD    SI,ES:[BP+SI+115]
+      ADD    SI,ES:[BP+SI-128]
+      ADD    SI,ES:[BP+DI+116]
+      ADD    SI,ES:[BP+DI-128]
+      ADD    SI,ES:[SI+117]
+      ADD    SI,ES:[SI-128]
+      ADD    SI,ES:[DI+118]
+      ADD    SI,ES:[DI-128]
+      ADD    SI,ES:[BP+119]
+      ADD    SI,ES:[BP-128]
+      ADD    SI,ES:[BX+120]
+      ADD    SI,ES:[BX-128]
+      ADD    DI,ES:[BX+SI+121]
+      ADD    DI,ES:[BX+SI-128]
+      ADD    DI,ES:[BX+DI+122]
+      ADD    DI,ES:[BX+DI-128]
+      ADD    DI,ES:[BP+SI+123]
+      ADD    DI,ES:[BP+SI-128]
+      ADD    DI,ES:[BP+DI+124]
+      ADD    DI,ES:[BP+DI-128]
+      ADD    DI,ES:[SI+125]
+      ADD    DI,ES:[SI-128]
+      ADD    DI,ES:[DI+126]
+      ADD    DI,ES:[DI-128]
+      ADD    DI,ES:[BP+127]
+      ADD    DI,ES:[BP-128]
+      ADD    DI,ES:[BX-128]
+      ADD    DI,ES:[BX+0]
+      ADD    AX,ES:[BX+SI+8281H]
+      ADD    AX,ES:[BX+DI+8382H]
+      ADD    AX,ES:[BP+SI+8483H]
+      ADD    AX,ES:[BP+DI+8584H]
+      ADD    AX,ES:[SI+8685H]
+      ADD    AX,ES:[DI+8786H]
+      ADD    AX,ES:[BP+8887H]
+      ADD    AX,ES:[BX+8988H]
+      ADD    CX,ES:[BX+SI+8A89H]
+      ADD    CX,ES:[BX+DI+8B8AH]
+      ADD    CX,ES:[BP+SI+8C8BH]
+      ADD    CX,ES:[BP+DI+8D8CH]
+      ADD    CX,ES:[SI+8E8DH]
+      ADD    CX,ES:[DI+8F8EH]
+      ADD    CX,ES:[BP+908FH]
+      ADD    CX,ES:[BX+9190H]
+      ADD    DX,ES:[BX+SI+9291H]
+      ADD    DX,ES:[BX+DI+9392H]
+      ADD    DX,ES:[BP+SI+9493H]
+      ADD    DX,ES:[BP+DI+9594H]
+      ADD    DX,ES:[SI+9695H]
+      ADD    DX,ES:[DI+9796H]
+      ADD    DX,ES:[BP+9897H]
+      ADD    DX,ES:[BX+9998H]
+      ADD    BX,ES:[BX+SI+9A99H]
+      ADD    BX,ES:[BX+DI+9B9AH]
+      ADD    BX,ES:[BP+SI+9C9BH]
+      ADD    BX,ES:[BP+DI+9D9CH]
+      ADD    BX,ES:[SI+9E9DH]
+      ADD    BX,ES:[DI+9F9EH]
+      ADD    BX,ES:[BP+0A09FH]
+      ADD    BX,ES:[BX+0A1A0H]
+      ADD    SP,ES:[BX+SI+0A2A1H]
+      ADD    SP,ES:[BX+DI+0A3A2H]
+      ADD    SP,ES:[BP+SI+0A4A3H]
+      ADD    SP,ES:[BP+DI+0A5A4H]
+      ADD    SP,ES:[SI+0A6A5H]
+      ADD    SP,ES:[DI+0A7A6H]
+      ADD    SP,ES:[BP+0A8A7H]
+      ADD    SP,ES:[BX+0A9A8H]
+      ADD    BP,ES:[BX+SI+0AAA9H]
+      ADD    BP,ES:[BX+DI+0ABAAH]
+      ADD    BP,ES:[BP+SI+0ACABH]
+      ADD    BP,ES:[BP+DI+0ADACH]
+      ADD    BP,ES:[SI+0AEADH]
+      ADD    BP,ES:[DI+0AFAEH]
+      ADD    BP,ES:[BP+0B0AFH]
+      ADD    BP,ES:[BX+0B1B0H]
+      ADD    SI,ES:[BX+SI+0B2B1H]
+      ADD    SI,ES:[BX+DI+0B3B2H]
+      ADD    SI,ES:[BP+SI+0B4B3H]
+      ADD    SI,ES:[BP+DI+0B5B4H]
+      ADD    SI,ES:[SI+0B6B5H]
+      ADD    SI,ES:[DI+0B7B6H]
+      ADD    SI,ES:[BP+0B8B7H]
+      ADD    SI,ES:[BX+0B9B8H]
+      ADD    DI,ES:[BX+SI+0BAB9H]
+      ADD    DI,ES:[BX+DI+0BBBAH]
+      ADD    DI,ES:[BP+SI+0BCBBH]
+      ADD    DI,ES:[BP+DI+0BDBCH]
+      ADD    DI,ES:[SI+0BEBDH]
+      ADD    DI,ES:[DI+0BFBEH]
+      ADD    DI,ES:[BP+0C0BFH]
+      ADD    DI,ES:[BX+0C1C0H]
+      ADD    AX,ES:[BX+SI]
+      ADD    AX,ES:[BX+DI]
+      ADD    AX,ES:[BP+SI]
+      ADD    AX,ES:[BP+DI]
+      OR     ES:[BX+DI],CL
+      OR     ES:[BP+SI],CL
+      OR     ES:[BP+DI],CL
+      OR     ES:[SI],CL
+      OR     ES:[DI],CL
+      OR     ES:[100FH],CL
+      OR     ES:[BX],CL
+      OR     ES:[BX+SI],DL
+      OR     ES:[BX+DI],DL
+      OR     ES:[BP+SI],DL
+      OR     ES:[BP+DI],DL
+      OR     ES:[SI],DL
+      OR     ES:[DI],DL
+      OR     ES:[1817H],DL
+      OR     ES:[BX],DL
+      OR     ES:[BX+SI],BL
+      OR     ES:[BX+DI],BL
+      OR     ES:[BP+SI],BL
+      OR     ES:[BP+DI],BL
+      OR     ES:[SI],BL
+      OR     ES:[DI],BL
+      OR     ES:[201FH],BL
+      OR     ES:[BX],BL
+      OR     ES:[BX+SI],AH
+      OR     ES:[BX+DI],AH
+      OR     ES:[BP+SI],AH
+      OR     ES:[BP+DI],AH
+      OR     ES:[SI],AH
+      OR     ES:[DI],AH
+      OR     ES:[2827H],AH
+      OR     ES:[BX],AH
+      OR     ES:[BP+SI],CX
+      OR     ES:[BP+DI],CX
+      OR     ES:[SI],CX
+      OR     ES:[DI],CX
+      OR     ES:[100FH],CX
+      OR     ES:[BX],CX
+      OR     ES:[BX+SI],DX
+      OR     ES:[BX+DI],DX
+      OR     ES:[BP+SI],DX
+      OR     ES:[BP+DI],DX
+      OR     ES:[SI],DX
+      OR     ES:[DI],DX
+      OR     ES:[1817H],DX
+      OR     ES:[BX],DX
+      OR     ES:[BX+SI],BX
+      OR     ES:[BX+DI],BX
+      OR     ES:[BP+SI],BX
+      OR     ES:[BP+DI],BX
+      OR     ES:[SI],BX
+      OR     ES:[DI],BX
+      OR     ES:[201FH],BX
+      OR     ES:[BX],BX
+      OR     ES:[BX+SI],SP
+      OR     ES:[BX+DI],SP
+      OR     ES:[BP+SI],SP
+      OR     ES:[BP+DI],SP
+      OR     ES:[SI],SP
+      OR     ES:[DI],SP
+      OR     ES:[2827H],SP
+      OR     ES:[BX],SP
+      OR     ES:[BX+SI],BP
+      OR     ES:[BX+DI],BP
+      OR     ES:[BP+SI],BP
+      OR     ES:[BP+DI],BP
+      OR     ES:[SI],BP
+      OR     ES:[DI],BP
+      OR     ES:[302FH],BP
+      OR     ES:[BX],BP
+      OR     ES:[BX+SI],SI
+      OR     ES:[BX+DI],SI
+      OR     ES:[BP+SI],SI
+      OR     ES:[BP+DI],SI
+      OR     ES:[SI],SI
+      OR     ES:[DI],SI
+      OR     ES:[3837H],SI
+      OR     ES:[BX],SI
+      OR     ES:[BX+SI],DI
+      OR     ES:[BX+DI],DI
+      OR     ES:[BP+SI],DI
+      OR     ES:[BP+DI],DI
+      OR     ES:[SI],DI
+      OR     ES:[DI],DI
+      OR     ES:[403FH],DI
+      OR     ES:[BX],DI
+      OR     ES:[BX+SI+65],AX
+      OR     ES:[BX+SI-128],AX
+      OR     ES:[BX+DI+66],AX
+      OR     ES:[BX+DI-128],AX
+      OR     ES:[BP+SI+67],AX
+      OR     ES:[BP+SI-128],AX
+      OR     ES:[BP+DI+68],AX
+      OR     ES:[BP+DI-128],AX
+      OR     ES:[SI+69],AX
+      OR     ES:[SI-128],AX
+      OR     ES:[DI+70],AX
+      OR     ES:[DI-128],AX
+      OR     ES:[BP+71],AX
+      OR     ES:[BP-128],AX
+      OR     ES:[BX+72],AX
+      OR     ES:[BX-128],AX
+      OR     ES:[BX+SI+73],CX
+      OR     ES:[BX+SI-128],CX
+      OR     ES:[BX+DI+74],CX
+      OR     ES:[BX+DI-128],CX
+      OR     ES:[BP+SI+75],CX
+      OR     ES:[BP+SI-128],CX
+      OR     ES:[BP+DI+76],CX
+      OR     ES:[BP+DI-128],CX
+      OR     ES:[SI+77],CX
+      OR     ES:[SI-128],CX
+      OR     ES:[DI+78],CX
+      OR     ES:[DI-128],CX
+      OR     ES:[BP+79],CX
+      OR     ES:[BP-128],CX
+      OR     ES:[BX+80],CX
+      OR     ES:[BX-128],CX
+      OR     ES:[BX+SI+81],DX
+      OR     ES:[BX+SI-128],DX
+      OR     ES:[BX+DI+82],DX
+      OR     ES:[BX+DI-128],DX
+      OR     ES:[BP+SI+83],DX
+      OR     ES:[BP+SI-128],DX
+      OR     ES:[BP+DI+84],DX
+      OR     ES:[BP+DI-128],DX
+      OR     ES:[SI+85],DX
+      OR     ES:[SI-128],DX
+      OR     ES:[DI+86],DX
+      OR     ES:[DI-128],DX
+      OR     ES:[BP+87],DX
+      OR     ES:[BP-128],DX
+      OR     ES:[BX+88],DX
+      OR     ES:[BX-128],DX
+      OR     ES:[BX+SI+89],BX
+      OR     ES:[BX+SI-128],BX
+      OR     ES:[BX+DI+90],BX
+      OR     ES:[BX+DI-128],BX
+      OR     ES:[BP+SI+91],BX
+      OR     ES:[BP+SI-128],BX
+      OR     ES:[BP+DI+92],BX
+      OR     ES:[BP+DI-128],BX
+      OR     ES:[SI+93],BX
+      OR     ES:[SI-128],BX
+      OR     ES:[DI+94],BX
+      OR     ES:[DI-128],BX
+      OR     ES:[BP+95],BX
+      OR     ES:[BP-128],BX
+      OR     ES:[BX+96],BX
+      OR     ES:[BX-128],BX
+      OR     ES:[BX+SI+97],SP
+      OR     ES:[BX+SI-128],SP
+      OR     ES:[BX+DI+98],SP
+      OR     ES:[BX+DI-128],SP
+      OR     ES:[BP+SI+99],SP
+      OR     ES:[BP+SI-128],SP
+      OR     ES:[BP+DI+100],SP
+      OR     ES:[BP+DI-128],SP
+      OR     ES:[SI+101],SP
+      OR     ES:[SI-128],SP
+      OR     ES:[DI+102],SP
+      OR     ES:[DI-128],SP
+      OR     ES:[BP+103],SP
+      OR     ES:[BP-128],SP
+      OR     ES:[BX+104],SP
+      OR     ES:[BX-128],SP
+      OR     ES:[BX+SI+105],BP
+      OR     ES:[BX+SI-128],BP
+      OR     ES:[BX+DI+106],BP
+      OR     ES:[BX+DI-128],BP
+      OR     ES:[BP+SI+107],BP
+      OR     ES:[BP+SI-128],BP
+      OR     ES:[BP+DI+108],BP
+      OR     ES:[BP+DI-128],BP
+      OR     ES:[SI+109],BP
+      OR     ES:[SI-128],BP
+      OR     ES:[DI+110],BP
+      OR     ES:[DI-128],BP
+      OR     ES:[BP+111],BP
+      OR     ES:[BP-128],BP
+      OR     ES:[BX+112],BP
+      OR     ES:[BX-128],BP
+      OR     ES:[BX+SI+113],SI
+      OR     ES:[BX+SI-128],SI
+      OR     ES:[BX+DI+114],SI
+      OR     ES:[BX+DI-128],SI
+      OR     ES:[BP+SI+115],SI
+      OR     ES:[BP+SI-128],SI
+      OR     ES:[BP+DI+116],SI
+      OR     ES:[BP+DI-128],SI
+      OR     ES:[SI+117],SI
+      OR     ES:[SI-128],SI
+      OR     ES:[DI+118],SI
+      OR     ES:[DI-128],SI
+      OR     ES:[BP+119],SI
+      OR     ES:[BP-128],SI
+      OR     ES:[BX+120],SI
+      OR     ES:[BX-128],SI
+      OR     ES:[BX+SI+121],DI
+      OR     ES:[BX+SI-128],DI
+      OR     ES:[BX+DI+122],DI
+      OR     ES:[BX+DI-128],DI
+      OR     ES:[BP+SI+123],DI
+      OR     ES:[BP+SI-128],DI
+      OR     ES:[BP+DI+124],DI
+      OR     ES:[BP+DI-128],DI
+      OR     ES:[SI+125],DI
+      OR     ES:[SI-128],DI
+      OR     ES:[DI+126],DI
+      OR     ES:[DI-128],DI
+      OR     ES:[BP+127],DI
+      OR     ES:[BP-128],DI
+      OR     ES:[BX-128],DI
+      OR     ES:[BX+0],DI
+      OR     ES:[BX+SI+8281H],AX
+      OR     ES:[BX+DI+8382H],AX
+      OR     ES:[BP+SI+8483H],AX
+      OR     ES:[BP+DI+8584H],AX
+      OR     ES:[SI+8685H],AX
+      OR     ES:[DI+8786H],AX
+      OR     ES:[BP+8887H],AX
+      OR     ES:[BX+8988H],AX
+      OR     ES:[BX+SI+8A89H],CX
+      OR     ES:[BX+DI+8B8AH],CX
+      OR     ES:[BP+SI+8C8BH],CX
+      OR     ES:[BP+DI+8D8CH],CX
+      OR     ES:[SI+8E8DH],CX
+      OR     ES:[DI+8F8EH],CX
+      OR     ES:[BP+908FH],CX
+      OR     ES:[BX+9190H],CX
+      OR     ES:[BX+SI+9291H],DX
+      OR     ES:[BX+DI+9392H],DX
+      OR     ES:[BP+SI+9493H],DX
+      OR     ES:[BP+DI+9594H],DX
+      OR     ES:[SI+9695H],DX
+      OR     ES:[DI+9796H],DX
+      OR     ES:[BP+9897H],DX
+      OR     ES:[BX+9998H],DX
+      OR     ES:[BX+SI+9A99H],BX
+      OR     ES:[BX+DI+9B9AH],BX
+      OR     ES:[BP+SI+9C9BH],BX
+      OR     ES:[BP+DI+9D9CH],BX
+      OR     ES:[SI+9E9DH],BX
+      OR     ES:[DI+9F9EH],BX
+      OR     ES:[BP+0A09FH],BX
+      OR     ES:[BX+0A1A0H],BX
+      OR     ES:[BX+SI+0A2A1H],SP
+      OR     ES:[BX+DI+0A3A2H],SP
+      OR     ES:[BP+SI+0A4A3H],SP
+      OR     ES:[BP+DI+0A5A4H],SP
+      OR     ES:[SI+0A6A5H],SP
+      OR     ES:[DI+0A7A6H],SP
+      OR     ES:[BP+0A8A7H],SP
+      OR     ES:[BX+0A9A8H],SP
+      OR     ES:[BX+SI+0AAA9H],BP
+      OR     ES:[BX+DI+0ABAAH],BP
+      OR     ES:[BP+SI+0ACABH],BP
+      OR     ES:[BP+DI+0ADACH],BP
+      OR     ES:[SI+0AEADH],BP
+      OR     ES:[DI+0AFAEH],BP
+      OR     ES:[BP+0B0AFH],BP
+      OR     ES:[BX+0B1B0H],BP
+      OR     ES:[BX+SI+0B2B1H],SI
+      OR     ES:[BX+DI+0B3B2H],SI
+      OR     ES:[BP+SI+0B4B3H],SI
+      OR     ES:[BP+DI+0B5B4H],SI
+      OR     ES:[SI+0B6B5H],SI
+      OR     ES:[DI+0B7B6H],SI
+      OR     ES:[BP+0B8B7H],SI
+      OR     ES:[BX+0B9B8H],SI
+      OR     ES:[BX+SI+0BAB9H],DI
+      OR     ES:[BX+DI+0BBBAH],DI
+      OR     ES:[BP+SI+0BCBBH],DI
+      OR     ES:[BP+DI+0BDBCH],DI
+      OR     ES:[SI+0BEBDH],DI
+      OR     ES:[DI+0BFBEH],DI
+      OR     ES:[BP+0C0BFH],DI
+      OR     ES:[BX+0C1C0H],DI
+      OR     ES:[BX+SI],AX
+      OR     ES:[BX+DI],AX
+      OR     ES:[BP+SI],AX
+      OR     ES:[BP+DI],AX
+      OR     ES:[SI],AX
+      OR     ES:[DI],AX
+      OR     ES:[0807H],AX
+      OR     ES:[BX],AX
+      OR     ES:[BX+SI],CX
+      OR     ES:[BX+DI],CX
+      OR     CL,ES:[BP+DI]
+      OR     CL,ES:[SI]
+      OR     CL,ES:[DI]
+      OR     CL,ES:[100FH]
+      OR     CL,ES:[BX]
+      OR     DL,ES:[BX+SI]
+      OR     DL,ES:[BX+DI]
+      OR     DL,ES:[BP+SI]
+      OR     DL,ES:[BP+DI]
+      OR     DL,ES:[SI]
+      OR     DL,ES:[DI]
+      OR     DL,ES:[1817H]
+      OR     DL,ES:[BX]
+      OR     BL,ES:[BX+SI]
+      OR     BL,ES:[BX+DI]
+      OR     BL,ES:[BP+SI]
+      OR     BL,ES:[BP+DI]
+      OR     BL,ES:[SI]
+      OR     BL,ES:[DI]
+      OR     BL,ES:[201FH]
+      OR     BL,ES:[BX]
+      OR     AH,ES:[BX+SI]
+      OR     AH,ES:[BX+DI]
+      OR     AH,ES:[BP+SI]
+      OR     AH,ES:[BP+DI]
+      OR     AH,ES:[SI]
+      OR     AH,ES:[DI]
+      OR     AH,ES:[2827H]
+      OR     AH,ES:[BX]
+      OR     CX,ES:[SI]
+      OR     CX,ES:[DI]
+      OR     CX,ES:[100FH]
+      OR     CX,ES:[BX]
+      OR     DX,ES:[BX+SI]
+      OR     DX,ES:[BX+DI]
+      OR     DX,ES:[BP+SI]
+      OR     DX,ES:[BP+DI]
+      OR     DX,ES:[SI]
+      OR     DX,ES:[DI]
+      OR     DX,ES:[1817H]
+      OR     DX,ES:[BX]
+      OR     BX,ES:[BX+SI]
+      OR     BX,ES:[BX+DI]
+      OR     BX,ES:[BP+SI]
+      OR     BX,ES:[BP+DI]
+      OR     BX,ES:[SI]
+      OR     BX,ES:[DI]
+      OR     BX,ES:[201FH]
+      OR     BX,ES:[BX]
+      OR     SP,ES:[BX+SI]
+      OR     SP,ES:[BX+DI]
+      OR     SP,ES:[BP+SI]
+      OR     SP,ES:[BP+DI]
+      OR     SP,ES:[SI]
+      OR     SP,ES:[DI]
+      OR     SP,ES:[2827H]
+      OR     SP,ES:[BX]
+      OR     BP,ES:[BX+SI]
+      OR     BP,ES:[BX+DI]
+      OR     BP,ES:[BP+SI]
+      OR     BP,ES:[BP+DI]
+      OR     BP,ES:[SI]
+      OR     BP,ES:[DI]
+      OR     BP,ES:[302FH]
+      OR     BP,ES:[BX]
+      OR     SI,ES:[BX+SI]
+      OR     SI,ES:[BX+DI]
+      OR     SI,ES:[BP+SI]
+      OR     SI,ES:[BP+DI]
+      OR     SI,ES:[SI]
+      OR     SI,ES:[DI]
+      OR     SI,ES:[3837H]
+      OR     SI,ES:[BX]
+      OR     DI,ES:[BX+SI]
+      OR     DI,ES:[BX+DI]
+      OR     DI,ES:[BP+SI]
+      OR     DI,ES:[BP+DI]
+      OR     DI,ES:[SI]
+      OR     DI,ES:[DI]
+      OR     DI,ES:[403FH]
+      OR     DI,ES:[BX]
+      OR     AX,ES:[BX+SI+65]
+      OR     AX,ES:[BX+SI-128]
+      OR     AX,ES:[BX+DI+66]
+      OR     AX,ES:[BX+DI-128]
+      OR     AX,ES:[BP+SI+67]
+      OR     AX,ES:[BP+SI-128]
+      OR     AX,ES:[BP+DI+68]
+      OR     AX,ES:[BP+DI-128]
+      OR     AX,ES:[SI+69]
+      OR     AX,ES:[SI-128]
+      OR     AX,ES:[DI+70]
+      OR     AX,ES:[DI-128]
+      OR     AX,ES:[BP+71]
+      OR     AX,ES:[BP-128]
+      OR     AX,ES:[BX+72]
+      OR     AX,ES:[BX-128]
+      OR     CX,ES:[BX+SI+73]
+      OR     CX,ES:[BX+SI-128]
+      OR     CX,ES:[BX+DI+74]
+      OR     CX,ES:[BX+DI-128]
+      OR     CX,ES:[BP+SI+75]
+      OR     CX,ES:[BP+SI-128]
+      OR     CX,ES:[BP+DI+76]
+      OR     CX,ES:[BP+DI-128]
+      OR     CX,ES:[SI+77]
+      OR     CX,ES:[SI-128]
+      OR     CX,ES:[DI+78]
+      OR     CX,ES:[DI-128]
+      OR     CX,ES:[BP+79]
+      OR     CX,ES:[BP-128]
+      OR     CX,ES:[BX+80]
+      OR     CX,ES:[BX-128]
+      OR     DX,ES:[BX+SI+81]
+      OR     DX,ES:[BX+SI-128]
+      OR     DX,ES:[BX+DI+82]
+      OR     DX,ES:[BX+DI-128]
+      OR     DX,ES:[BP+SI+83]
+      OR     DX,ES:[BP+SI-128]
+      OR     DX,ES:[BP+DI+84]
+      OR     DX,ES:[BP+DI-128]
+      OR     DX,ES:[SI+85]
+      OR     DX,ES:[SI-128]
+      OR     DX,ES:[DI+86]
+      OR     DX,ES:[DI-128]
+      OR     DX,ES:[BP+87]
+      OR     DX,ES:[BP-128]
+      OR     DX,ES:[BX+88]
+      OR     DX,ES:[BX-128]
+      OR     BX,ES:[BX+SI+89]
+      OR     BX,ES:[BX+SI-128]
+      OR     BX,ES:[BX+DI+90]
+      OR     BX,ES:[BX+DI-128]
+      OR     BX,ES:[BP+SI+91]
+      OR     BX,ES:[BP+SI-128]
+      OR     BX,ES:[BP+DI+92]
+      OR     BX,ES:[BP+DI-128]
+      OR     BX,ES:[SI+93]
+      OR     BX,ES:[SI-128]
+      OR     BX,ES:[DI+94]
+      OR     BX,ES:[DI-128]
+      OR     BX,ES:[BP+95]
+      OR     BX,ES:[BP-128]
+      OR     BX,ES:[BX+96]
+      OR     BX,ES:[BX-128]
+      OR     SP,ES:[BX+SI+97]
+      OR     SP,ES:[BX+SI-128]
+      OR     SP,ES:[BX+DI+98]
+      OR     SP,ES:[BX+DI-128]
+      OR     SP,ES:[BP+SI+99]
+      OR     SP,ES:[BP+SI-128]
+      OR     SP,ES:[BP+DI+100]
+      OR     SP,ES:[BP+DI-128]
+      OR     SP,ES:[SI+101]
+      OR     SP,ES:[SI-128]
+      OR     SP,ES:[DI+102]
+      OR     SP,ES:[DI-128]
+      OR     SP,ES:[BP+103]
+      OR     SP,ES:[BP-128]
+      OR     SP,ES:[BX+104]
+      OR     SP,ES:[BX-128]
+      OR     BP,ES:[BX+SI+105]
+      OR     BP,ES:[BX+SI-128]
+      OR     BP,ES:[BX+DI+106]
+      OR     BP,ES:[BX+DI-128]
+      OR     BP,ES:[BP+SI+107]
+      OR     BP,ES:[BP+SI-128]
+      OR     BP,ES:[BP+DI+108]
+      OR     BP,ES:[BP+DI-128]
+      OR     BP,ES:[SI+109]
+      OR     BP,ES:[SI-128]
+      OR     BP,ES:[DI+110]
+      OR     BP,ES:[DI-128]
+      OR     BP,ES:[BP+111]
+      OR     BP,ES:[BP-128]
+      OR     BP,ES:[BX+112]
+      OR     BP,ES:[BX-128]
+      OR     SI,ES:[BX+SI+113]
+      OR     SI,ES:[BX+SI-128]
+      OR     SI,ES:[BX+DI+114]
+      OR     SI,ES:[BX+DI-128]
+      OR     SI,ES:[BP+SI+115]
+      OR     SI,ES:[BP+SI-128]
+      OR     SI,ES:[BP+DI+116]
+      OR     SI,ES:[BP+DI-128]
+      OR     SI,ES:[SI+117]
+      OR     SI,ES:[SI-128]
+      OR     SI,ES:[DI+118]
+      OR     SI,ES:[DI-128]
+      OR     SI,ES:[BP+119]
+      OR     SI,ES:[BP-128]
+      OR     SI,ES:[BX+120]
+      OR     SI,ES:[BX-128]
+      OR     DI,ES:[BX+SI+121]
+      OR     DI,ES:[BX+SI-128]
+      OR     DI,ES:[BX+DI+122]
+      OR     DI,ES:[BX+DI-128]
+      OR     DI,ES:[BP+SI+123]
+      OR     DI,ES:[BP+SI-128]
+      OR     DI,ES:[BP+DI+124]
+      OR     DI,ES:[BP+DI-128]
+      OR     DI,ES:[SI+125]
+      OR     DI,ES:[SI-128]
+      OR     DI,ES:[DI+126]
+      OR     DI,ES:[DI-128]
+      OR     DI,ES:[BP+127]
+      OR     DI,ES:[BP-128]
+      OR     DI,ES:[BX-128]
+      OR     DI,ES:[BX+0]
+      OR     AX,ES:[BX+SI+8281H]
+      OR     AX,ES:[BX+DI+8382H]
+      OR     AX,ES:[BP+SI+8483H]
+      OR     AX,ES:[BP+DI+8584H]
+      OR     AX,ES:[SI+8685H]
+      OR     AX,ES:[DI+8786H]
+      OR     AX,ES:[BP+8887H]
+      OR     AX,ES:[BX+8988H]
+      OR     CX,ES:[BX+SI+8A89H]
+      OR     CX,ES:[BX+DI+8B8AH]
+      OR     CX,ES:[BP+SI+8C8BH]
+      OR     CX,ES:[BP+DI+8D8CH]
+      OR     CX,ES:[SI+8E8DH]
+      OR     CX,ES:[DI+8F8EH]
+      OR     CX,ES:[BP+908FH]
+      OR     CX,ES:[BX+9190H]
+      OR     DX,ES:[BX+SI+9291H]
+      OR     DX,ES:[BX+DI+9392H]
+      OR     DX,ES:[BP+SI+9493H]
+      OR     DX,ES:[BP+DI+9594H]
+      OR     DX,ES:[SI+9695H]
+      OR     DX,ES:[DI+9796H]
+      OR     DX,ES:[BP+9897H]
+      OR     DX,ES:[BX+9998H]
+      OR     BX,ES:[BX+SI+9A99H]
+      OR     BX,ES:[BX+DI+9B9AH]
+      OR     BX,ES:[BP+SI+9C9BH]
+      OR     BX,ES:[BP+DI+9D9CH]
+      OR     BX,ES:[SI+9E9DH]
+      OR     BX,ES:[DI+9F9EH]
+      OR     BX,ES:[BP+0A09FH]
+      OR     BX,ES:[BX+0A1A0H]
+      OR     SP,ES:[BX+SI+0A2A1H]
+      OR     SP,ES:[BX+DI+0A3A2H]
+      OR     SP,ES:[BP+SI+0A4A3H]
+      OR     SP,ES:[BP+DI+0A5A4H]
+      OR     SP,ES:[SI+0A6A5H]
+      OR     SP,ES:[DI+0A7A6H]
+      OR     SP,ES:[BP+0A8A7H]
+      OR     SP,ES:[BX+0A9A8H]
+      OR     BP,ES:[BX+SI+0AAA9H]
+      OR     BP,ES:[BX+DI+0ABAAH]
+      OR     BP,ES:[BP+SI+0ACABH]
+      OR     BP,ES:[BP+DI+0ADACH]
+      OR     BP,ES:[SI+0AEADH]
+      OR     BP,ES:[DI+0AFAEH]
+      OR     BP,ES:[BP+0B0AFH]
+      OR     BP,ES:[BX+0B1B0H]
+      OR     SI,ES:[BX+SI+0B2B1H]
+      OR     SI,ES:[BX+DI+0B3B2H]
+      OR     SI,ES:[BP+SI+0B4B3H]
+      OR     SI,ES:[BP+DI+0B5B4H]
+      OR     SI,ES:[SI+0B6B5H]
+      OR     SI,ES:[DI+0B7B6H]
+      OR     SI,ES:[BP+0B8B7H]
+      OR     SI,ES:[BX+0B9B8H]
+      OR     DI,ES:[BX+SI+0BAB9H]
+      OR     DI,ES:[BX+DI+0BBBAH]
+      OR     DI,ES:[BP+SI+0BCBBH]
+      OR     DI,ES:[BP+DI+0BDBCH]
+      OR     DI,ES:[SI+0BEBDH]
+      OR     DI,ES:[DI+0BFBEH]
+      OR     DI,ES:[BP+0C0BFH]
+      OR     DI,ES:[BX+0C1C0H]
+      OR     AX,ES:[BX+SI]
+      OR     AX,ES:[BX+DI]
+      OR     AX,ES:[BP+SI]
+      OR     AX,ES:[BP+DI]
+      OR     AX,ES:[SI]
+      OR     AX,ES:[DI]
+      OR     AX,ES:[0807H]
+      OR     AX,ES:[BX]
+      OR     CX,ES:[BX+SI]
+      OR     CX,ES:[BX+DI]
+      OR     CX,ES:[BP+SI]
+      OR     CX,ES:[BP+DI]
+      ADC    ES:[BX+DI],DL
+      ADC    ES:[BP+SI],DL
+      ADC    ES:[BP+DI],DL
+      ADC    ES:[SI],DL
+      ADC    ES:[DI],DL
+      ADC    ES:[1817H],DL
+      ADC    ES:[BX],DL
+      ADC    ES:[BX+SI],BL
+      ADC    ES:[BX+DI],BL
+      ADC    ES:[BP+SI],BL
+      ADC    ES:[BP+DI],BL
+      ADC    ES:[SI],BL
+      ADC    ES:[DI],BL
+      ADC    ES:[201FH],BL
+      ADC    ES:[BX],BL
+      ADC    ES:[BX+SI],AH
+      ADC    ES:[BX+DI],AH
+      ADC    ES:[BP+SI],AH
+      ADC    ES:[BP+DI],AH
+      ADC    ES:[SI],AH
+      ADC    ES:[DI],AH
+      ADC    ES:[2827H],AH
+      ADC    ES:[BX],AH
+      ADC    ES:[BP+SI],DX
+      ADC    ES:[BP+DI],DX
+      ADC    ES:[SI],DX
+      ADC    ES:[DI],DX
+      ADC    ES:[1817H],DX
+      ADC    ES:[BX],DX
+      ADC    ES:[BX+SI],BX
+      ADC    ES:[BX+DI],BX
+      ADC    ES:[BP+SI],BX
+      ADC    ES:[BP+DI],BX
+      ADC    ES:[SI],BX
+      ADC    ES:[DI],BX
+      ADC    ES:[201FH],BX
+      ADC    ES:[BX],BX
+      ADC    ES:[BX+SI],SP
+      ADC    ES:[BX+DI],SP
+      ADC    ES:[BP+SI],SP
+      ADC    ES:[BP+DI],SP
+      ADC    ES:[SI],SP
+      ADC    ES:[DI],SP
+      ADC    ES:[2827H],SP
+      ADC    ES:[BX],SP
+      ADC    ES:[BX+SI],BP
+      ADC    ES:[BX+DI],BP
+      ADC    ES:[BP+SI],BP
+      ADC    ES:[BP+DI],BP
+      ADC    ES:[SI],BP
+      ADC    ES:[DI],BP
+      ADC    ES:[302FH],BP
+      ADC    ES:[BX],BP
+      ADC    ES:[BX+SI],SI
+      ADC    ES:[BX+DI],SI
+      ADC    ES:[BP+SI],SI
+      ADC    ES:[BP+DI],SI
+      ADC    ES:[SI],SI
+      ADC    ES:[DI],SI
+      ADC    ES:[3837H],SI
+      ADC    ES:[BX],SI
+      ADC    ES:[BX+SI],DI
+      ADC    ES:[BX+DI],DI
+      ADC    ES:[BP+SI],DI
+      ADC    ES:[BP+DI],DI
+      ADC    ES:[SI],DI
+      ADC    ES:[DI],DI
+      ADC    ES:[403FH],DI
+      ADC    ES:[BX],DI
+      ADC    ES:[BX+SI+65],AX
+      ADC    ES:[BX+SI-128],AX
+      ADC    ES:[BX+DI+66],AX
+      ADC    ES:[BX+DI-128],AX
+      ADC    ES:[BP+SI+67],AX
+      ADC    ES:[BP+SI-128],AX
+      ADC    ES:[BP+DI+68],AX
+      ADC    ES:[BP+DI-128],AX
+      ADC    ES:[SI+69],AX
+      ADC    ES:[SI-128],AX
+      ADC    ES:[DI+70],AX
+      ADC    ES:[DI-128],AX
+      ADC    ES:[BP+71],AX
+      ADC    ES:[BP-128],AX
+      ADC    ES:[BX+72],AX
+      ADC    ES:[BX-128],AX
+      ADC    ES:[BX+SI+73],CX
+      ADC    ES:[BX+SI-128],CX
+      ADC    ES:[BX+DI+74],CX
+      ADC    ES:[BX+DI-128],CX
+      ADC    ES:[BP+SI+75],CX
+      ADC    ES:[BP+SI-128],CX
+      ADC    ES:[BP+DI+76],CX
+      ADC    ES:[BP+DI-128],CX
+      ADC    ES:[SI+77],CX
+      ADC    ES:[SI-128],CX
+      ADC    ES:[DI+78],CX
+      ADC    ES:[DI-128],CX
+      ADC    ES:[BP+79],CX
+      ADC    ES:[BP-128],CX
+      ADC    ES:[BX+80],CX
+      ADC    ES:[BX-128],CX
+      ADC    ES:[BX+SI+81],DX
+      ADC    ES:[BX+SI-128],DX
+      ADC    ES:[BX+DI+82],DX
+      ADC    ES:[BX+DI-128],DX
+      ADC    ES:[BP+SI+83],DX
+      ADC    ES:[BP+SI-128],DX
+      ADC    ES:[BP+DI+84],DX
+      ADC    ES:[BP+DI-128],DX
+      ADC    ES:[SI+85],DX
+      ADC    ES:[SI-128],DX
+      ADC    ES:[DI+86],DX
+      ADC    ES:[DI-128],DX
+      ADC    ES:[BP+87],DX
+      ADC    ES:[BP-128],DX
+      ADC    ES:[BX+88],DX
+      ADC    ES:[BX-128],DX
+      ADC    ES:[BX+SI+89],BX
+      ADC    ES:[BX+SI-128],BX
+      ADC    ES:[BX+DI+90],BX
+      ADC    ES:[BX+DI-128],BX
+      ADC    ES:[BP+SI+91],BX
+      ADC    ES:[BP+SI-128],BX
+      ADC    ES:[BP+DI+92],BX
+      ADC    ES:[BP+DI-128],BX
+      ADC    ES:[SI+93],BX
+      ADC    ES:[SI-128],BX
+      ADC    ES:[DI+94],BX
+      ADC    ES:[DI-128],BX
+      ADC    ES:[BP+95],BX
+      ADC    ES:[BP-128],BX
+      ADC    ES:[BX+96],BX
+      ADC    ES:[BX-128],BX
+      ADC    ES:[BX+SI+97],SP
+      ADC    ES:[BX+SI-128],SP
+      ADC    ES:[BX+DI+98],SP
+      ADC    ES:[BX+DI-128],SP
+      ADC    ES:[BP+SI+99],SP
+      ADC    ES:[BP+SI-128],SP
+      ADC    ES:[BP+DI+100],SP
+      ADC    ES:[BP+DI-128],SP
+      ADC    ES:[SI+101],SP
+      ADC    ES:[SI-128],SP
+      ADC    ES:[DI+102],SP
+      ADC    ES:[DI-128],SP
+      ADC    ES:[BP+103],SP
+      ADC    ES:[BP-128],SP
+      ADC    ES:[BX+104],SP
+      ADC    ES:[BX-128],SP
+      ADC    ES:[BX+SI+105],BP
+      ADC    ES:[BX+SI-128],BP
+      ADC    ES:[BX+DI+106],BP
+      ADC    ES:[BX+DI-128],BP
+      ADC    ES:[BP+SI+107],BP
+      ADC    ES:[BP+SI-128],BP
+      ADC    ES:[BP+DI+108],BP
+      ADC    ES:[BP+DI-128],BP
+      ADC    ES:[SI+109],BP
+      ADC    ES:[SI-128],BP
+      ADC    ES:[DI+110],BP
+      ADC    ES:[DI-128],BP
+      ADC    ES:[BP+111],BP
+      ADC    ES:[BP-128],BP
+      ADC    ES:[BX+112],BP
+      ADC    ES:[BX-128],BP
+      ADC    ES:[BX+SI+113],SI
+      ADC    ES:[BX+SI-128],SI
+      ADC    ES:[BX+DI+114],SI
+      ADC    ES:[BX+DI-128],SI
+      ADC    ES:[BP+SI+115],SI
+      ADC    ES:[BP+SI-128],SI
+      ADC    ES:[BP+DI+116],SI
+      ADC    ES:[BP+DI-128],SI
+      ADC    ES:[SI+117],SI
+      ADC    ES:[SI-128],SI
+      ADC    ES:[DI+118],SI
+      ADC    ES:[DI-128],SI
+      ADC    ES:[BP+119],SI
+      ADC    ES:[BP-128],SI
+      ADC    ES:[BX+120],SI
+      ADC    ES:[BX-128],SI
+      ADC    ES:[BX+SI+121],DI
+      ADC    ES:[BX+SI-128],DI
+      ADC    ES:[BX+DI+122],DI
+      ADC    ES:[BX+DI-128],DI
+      ADC    ES:[BP+SI+123],DI
+      ADC    ES:[BP+SI-128],DI
+      ADC    ES:[BP+DI+124],DI
+      ADC    ES:[BP+DI-128],DI
+      ADC    ES:[SI+125],DI
+      ADC    ES:[SI-128],DI
+      ADC    ES:[DI+126],DI
+      ADC    ES:[DI-128],DI
+      ADC    ES:[BP+127],DI
+      ADC    ES:[BP-128],DI
+      ADC    ES:[BX-128],DI
+      ADC    ES:[BX+0],DI
+      ADC    ES:[BX+SI+8281H],AX
+      ADC    ES:[BX+DI+8382H],AX
+      ADC    ES:[BP+SI+8483H],AX
+      ADC    ES:[BP+DI+8584H],AX
+      ADC    ES:[SI+8685H],AX
+      ADC    ES:[DI+8786H],AX
+      ADC    ES:[BP+8887H],AX
+      ADC    ES:[BX+8988H],AX
+      ADC    ES:[BX+SI+8A89H],CX
+      ADC    ES:[BX+DI+8B8AH],CX
+      ADC    ES:[BP+SI+8C8BH],CX
+      ADC    ES:[BP+DI+8D8CH],CX
+      ADC    ES:[SI+8E8DH],CX
+      ADC    ES:[DI+8F8EH],CX
+      ADC    ES:[BP+908FH],CX
+      ADC    ES:[BX+9190H],CX
+      ADC    ES:[BX+SI+9291H],DX
+      ADC    ES:[BX+DI+9392H],DX
+      ADC    ES:[BP+SI+9493H],DX
+      ADC    ES:[BP+DI+9594H],DX
+      ADC    ES:[SI+9695H],DX
+      ADC    ES:[DI+9796H],DX
+      ADC    ES:[BP+9897H],DX
+      ADC    ES:[BX+9998H],DX
+      ADC    ES:[BX+SI+9A99H],BX
+      ADC    ES:[BX+DI+9B9AH],BX
+      ADC    ES:[BP+SI+9C9BH],BX
+      ADC    ES:[BP+DI+9D9CH],BX
+      ADC    ES:[SI+9E9DH],BX
+      ADC    ES:[DI+9F9EH],BX
+      ADC    ES:[BP+0A09FH],BX
+      ADC    ES:[BX+0A1A0H],BX
+      ADC    ES:[BX+SI+0A2A1H],SP
+      ADC    ES:[BX+DI+0A3A2H],SP
+      ADC    ES:[BP+SI+0A4A3H],SP
+      ADC    ES:[BP+DI+0A5A4H],SP
+      ADC    ES:[SI+0A6A5H],SP
+      ADC    ES:[DI+0A7A6H],SP
+      ADC    ES:[BP+0A8A7H],SP
+      ADC    ES:[BX+0A9A8H],SP
+      ADC    ES:[BX+SI+0AAA9H],BP
+      ADC    ES:[BX+DI+0ABAAH],BP
+      ADC    ES:[BP+SI+0ACABH],BP
+      ADC    ES:[BP+DI+0ADACH],BP
+      ADC    ES:[SI+0AEADH],BP
+      ADC    ES:[DI+0AFAEH],BP
+      ADC    ES:[BP+0B0AFH],BP
+      ADC    ES:[BX+0B1B0H],BP
+      ADC    ES:[BX+SI+0B2B1H],SI
+      ADC    ES:[BX+DI+0B3B2H],SI
+      ADC    ES:[BP+SI+0B4B3H],SI
+      ADC    ES:[BP+DI+0B5B4H],SI
+      ADC    ES:[SI+0B6B5H],SI
+      ADC    ES:[DI+0B7B6H],SI
+      ADC    ES:[BP+0B8B7H],SI
+      ADC    ES:[BX+0B9B8H],SI
+      ADC    ES:[BX+SI+0BAB9H],DI
+      ADC    ES:[BX+DI+0BBBAH],DI
+      ADC    ES:[BP+SI+0BCBBH],DI
+      ADC    ES:[BP+DI+0BDBCH],DI
+      ADC    ES:[SI+0BEBDH],DI
+      ADC    ES:[DI+0BFBEH],DI
+      ADC    ES:[BP+0C0BFH],DI
+      ADC    ES:[BX+0C1C0H],DI
+      ADC    ES:[BX+SI],AX
+      ADC    ES:[BX+DI],AX
+      ADC    ES:[BP+SI],AX
+      ADC    ES:[BP+DI],AX
+      ADC    ES:[SI],AX
+      ADC    ES:[DI],AX
+      ADC    ES:[0807H],AX
+      ADC    ES:[BX],AX
+      ADC    ES:[BX+SI],CX
+      ADC    ES:[BX+DI],CX
+      ADC    ES:[BP+SI],CX
+      ADC    ES:[BP+DI],CX
+      ADC    ES:[SI],CX
+      ADC    ES:[DI],CX
+      ADC    ES:[100FH],CX
+      ADC    ES:[BX],CX
+      ADC    ES:[BX+SI],DX
+      ADC    ES:[BX+DI],DX
+      ADC    DL,ES:[BP+DI]
+      ADC    DL,ES:[SI]
+      ADC    DL,ES:[DI]
+      ADC    DL,ES:[1817H]
+      ADC    DL,ES:[BX]
+      ADC    BL,ES:[BX+SI]
+      ADC    BL,ES:[BX+DI]
+      ADC    BL,ES:[BP+SI]
+      ADC    BL,ES:[BP+DI]
+      ADC    BL,ES:[SI]
+      ADC    BL,ES:[DI]
+      ADC    BL,ES:[201FH]
+      ADC    BL,ES:[BX]
+      ADC    AH,ES:[BX+SI]
+      ADC    AH,ES:[BX+DI]
+      ADC    AH,ES:[BP+SI]
+      ADC    AH,ES:[BP+DI]
+      ADC    AH,ES:[SI]
+      ADC    AH,ES:[DI]
+      ADC    AH,ES:[2827H]
+      ADC    AH,ES:[BX]
+      ADC    DX,ES:[SI]
+      ADC    DX,ES:[DI]
+      ADC    DX,ES:[1817H]
+      ADC    DX,ES:[BX]
+      ADC    BX,ES:[BX+SI]
+      ADC    BX,ES:[BX+DI]
+      ADC    BX,ES:[BP+SI]
+      ADC    BX,ES:[BP+DI]
+      ADC    BX,ES:[SI]
+      ADC    BX,ES:[DI]
+      ADC    BX,ES:[201FH]
+      ADC    BX,ES:[BX]
+      ADC    SP,ES:[BX+SI]
+      ADC    SP,ES:[BX+DI]
+      ADC    SP,ES:[BP+SI]
+      ADC    SP,ES:[BP+DI]
+      ADC    SP,ES:[SI]
+      ADC    SP,ES:[DI]
+      ADC    SP,ES:[2827H]
+      ADC    SP,ES:[BX]
+      ADC    BP,ES:[BX+SI]
+      ADC    BP,ES:[BX+DI]
+      ADC    BP,ES:[BP+SI]
+      ADC    BP,ES:[BP+DI]
+      ADC    BP,ES:[SI]
+      ADC    BP,ES:[DI]
+      ADC    BP,ES:[302FH]
+      ADC    BP,ES:[BX]
+      ADC    SI,ES:[BX+SI]
+      ADC    SI,ES:[BX+DI]
+      ADC    SI,ES:[BP+SI]
+      ADC    SI,ES:[BP+DI]
+      ADC    SI,ES:[SI]
+      ADC    SI,ES:[DI]
+      ADC    SI,ES:[3837H]
+      ADC    SI,ES:[BX]
+      ADC    DI,ES:[BX+SI]
+      ADC    DI,ES:[BX+DI]
+      ADC    DI,ES:[BP+SI]
+      ADC    DI,ES:[BP+DI]
+      ADC    DI,ES:[SI]
+      ADC    DI,ES:[DI]
+      ADC    DI,ES:[403FH]
+      ADC    DI,ES:[BX]
+      ADC    AX,ES:[BX+SI+65]
+      ADC    AX,ES:[BX+SI-128]
+      ADC    AX,ES:[BX+DI+66]
+      ADC    AX,ES:[BX+DI-128]
+      ADC    AX,ES:[BP+SI+67]
+      ADC    AX,ES:[BP+SI-128]
+      ADC    AX,ES:[BP+DI+68]
+      ADC    AX,ES:[BP+DI-128]
+      ADC    AX,ES:[SI+69]
+      ADC    AX,ES:[SI-128]
+      ADC    AX,ES:[DI+70]
+      ADC    AX,ES:[DI-128]
+      ADC    AX,ES:[BP+71]
+      ADC    AX,ES:[BP-128]
+      ADC    AX,ES:[BX+72]
+      ADC    AX,ES:[BX-128]
+      ADC    CX,ES:[BX+SI+73]
+      ADC    CX,ES:[BX+SI-128]
+      ADC    CX,ES:[BX+DI+74]
+      ADC    CX,ES:[BX+DI-128]
+      ADC    CX,ES:[BP+SI+75]
+      ADC    CX,ES:[BP+SI-128]
+      ADC    CX,ES:[BP+DI+76]
+      ADC    CX,ES:[BP+DI-128]
+      ADC    CX,ES:[SI+77]
+      ADC    CX,ES:[SI-128]
+      ADC    CX,ES:[DI+78]
+      ADC    CX,ES:[DI-128]
+      ADC    CX,ES:[BP+79]
+      ADC    CX,ES:[BP-128]
+      ADC    CX,ES:[BX+80]
+      ADC    CX,ES:[BX-128]
+      ADC    DX,ES:[BX+SI+81]
+      ADC    DX,ES:[BX+SI-128]
+      ADC    DX,ES:[BX+DI+82]
+      ADC    DX,ES:[BX+DI-128]
+      ADC    DX,ES:[BP+SI+83]
+      ADC    DX,ES:[BP+SI-128]
+      ADC    DX,ES:[BP+DI+84]
+      ADC    DX,ES:[BP+DI-128]
+      ADC    DX,ES:[SI+85]
+      ADC    DX,ES:[SI-128]
+      ADC    DX,ES:[DI+86]
+      ADC    DX,ES:[DI-128]
+      ADC    DX,ES:[BP+87]
+      ADC    DX,ES:[BP-128]
+      ADC    DX,ES:[BX+88]
+      ADC    DX,ES:[BX-128]
+      ADC    BX,ES:[BX+SI+89]
+      ADC    BX,ES:[BX+SI-128]
+      ADC    BX,ES:[BX+DI+90]
+      ADC    BX,ES:[BX+DI-128]
+      ADC    BX,ES:[BP+SI+91]
+      ADC    BX,ES:[BP+SI-128]
+      ADC    BX,ES:[BP+DI+92]
+      ADC    BX,ES:[BP+DI-128]
+      ADC    BX,ES:[SI+93]
+      ADC    BX,ES:[SI-128]
+      ADC    BX,ES:[DI+94]
+      ADC    BX,ES:[DI-128]
+      ADC    BX,ES:[BP+95]
+      ADC    BX,ES:[BP-128]
+      ADC    BX,ES:[BX+96]
+      ADC    BX,ES:[BX-128]
+      ADC    SP,ES:[BX+SI+97]
+      ADC    SP,ES:[BX+SI-128]
+      ADC    SP,ES:[BX+DI+98]
+      ADC    SP,ES:[BX+DI-128]
+      ADC    SP,ES:[BP+SI+99]
+      ADC    SP,ES:[BP+SI-128]
+      ADC    SP,ES:[BP+DI+100]
+      ADC    SP,ES:[BP+DI-128]
+      ADC    SP,ES:[SI+101]
+      ADC    SP,ES:[SI-128]
+      ADC    SP,ES:[DI+102]
+      ADC    SP,ES:[DI-128]
+      ADC    SP,ES:[BP+103]
+      ADC    SP,ES:[BP-128]
+      ADC    SP,ES:[BX+104]
+      ADC    SP,ES:[BX-128]
+      ADC    BP,ES:[BX+SI+105]
+      ADC    BP,ES:[BX+SI-128]
+      ADC    BP,ES:[BX+DI+106]
+      ADC    BP,ES:[BX+DI-128]
+      ADC    BP,ES:[BP+SI+107]
+      ADC    BP,ES:[BP+SI-128]
+      ADC    BP,ES:[BP+DI+108]
+      ADC    BP,ES:[BP+DI-128]
+      ADC    BP,ES:[SI+109]
+      ADC    BP,ES:[SI-128]
+      ADC    BP,ES:[DI+110]
+      ADC    BP,ES:[DI-128]
+      ADC    BP,ES:[BP+111]
+      ADC    BP,ES:[BP-128]
+      ADC    BP,ES:[BX+112]
+      ADC    BP,ES:[BX-128]
+      ADC    SI,ES:[BX+SI+113]
+      ADC    SI,ES:[BX+SI-128]
+      ADC    SI,ES:[BX+DI+114]
+      ADC    SI,ES:[BX+DI-128]
+      ADC    SI,ES:[BP+SI+115]
+      ADC    SI,ES:[BP+SI-128]
+      ADC    SI,ES:[BP+DI+116]
+      ADC    SI,ES:[BP+DI-128]
+      ADC    SI,ES:[SI+117]
+      ADC    SI,ES:[SI-128]
+      ADC    SI,ES:[DI+118]
+      ADC    SI,ES:[DI-128]
+      ADC    SI,ES:[BP+119]
+      ADC    SI,ES:[BP-128]
+      ADC    SI,ES:[BX+120]
+      ADC    SI,ES:[BX-128]
+      ADC    DI,ES:[BX+SI+121]
+      ADC    DI,ES:[BX+SI-128]
+      ADC    DI,ES:[BX+DI+122]
+      ADC    DI,ES:[BX+DI-128]
+      ADC    DI,ES:[BP+SI+123]
+      ADC    DI,ES:[BP+SI-128]
+      ADC    DI,ES:[BP+DI+124]
+      ADC    DI,ES:[BP+DI-128]
+      ADC    DI,ES:[SI+125]
+      ADC    DI,ES:[SI-128]
+      ADC    DI,ES:[DI+126]
+      ADC    DI,ES:[DI-128]
+      ADC    DI,ES:[BP+127]
+      ADC    DI,ES:[BP-128]
+      ADC    DI,ES:[BX-128]
+      ADC    DI,ES:[BX+0]
+      ADC    AX,ES:[BX+SI+8281H]
+      ADC    AX,ES:[BX+DI+8382H]
+      ADC    AX,ES:[BP+SI+8483H]
+      ADC    AX,ES:[BP+DI+8584H]
+      ADC    AX,ES:[SI+8685H]
+      ADC    AX,ES:[DI+8786H]
+      ADC    AX,ES:[BP+8887H]
+      ADC    AX,ES:[BX+8988H]
+      ADC    CX,ES:[BX+SI+8A89H]
+      ADC    CX,ES:[BX+DI+8B8AH]
+      ADC    CX,ES:[BP+SI+8C8BH]
+      ADC    CX,ES:[BP+DI+8D8CH]
+      ADC    CX,ES:[SI+8E8DH]
+      ADC    CX,ES:[DI+8F8EH]
+      ADC    CX,ES:[BP+908FH]
+      ADC    CX,ES:[BX+9190H]
+      ADC    DX,ES:[BX+SI+9291H]
+      ADC    DX,ES:[BX+DI+9392H]
+      ADC    DX,ES:[BP+SI+9493H]
+      ADC    DX,ES:[BP+DI+9594H]
+      ADC    DX,ES:[SI+9695H]
+      ADC    DX,ES:[DI+9796H]
+      ADC    DX,ES:[BP+9897H]
+      ADC    DX,ES:[BX+9998H]
+      ADC    BX,ES:[BX+SI+9A99H]
+      ADC    BX,ES:[BX+DI+9B9AH]
+      ADC    BX,ES:[BP+SI+9C9BH]
+      ADC    BX,ES:[BP+DI+9D9CH]
+      ADC    BX,ES:[SI+9E9DH]
+      ADC    BX,ES:[DI+9F9EH]
+      ADC    BX,ES:[BP+0A09FH]
+      ADC    BX,ES:[BX+0A1A0H]
+      ADC    SP,ES:[BX+SI+0A2A1H]
+      ADC    SP,ES:[BX+DI+0A3A2H]
+      ADC    SP,ES:[BP+SI+0A4A3H]
+      ADC    SP,ES:[BP+DI+0A5A4H]
+      ADC    SP,ES:[SI+0A6A5H]
+      ADC    SP,ES:[DI+0A7A6H]
+      ADC    SP,ES:[BP+0A8A7H]
+      ADC    SP,ES:[BX+0A9A8H]
+      ADC    BP,ES:[BX+SI+0AAA9H]
+      ADC    BP,ES:[BX+DI+0ABAAH]
+      ADC    BP,ES:[BP+SI+0ACABH]
+      ADC    BP,ES:[BP+DI+0ADACH]
+      ADC    BP,ES:[SI+0AEADH]
+      ADC    BP,ES:[DI+0AFAEH]
+      ADC    BP,ES:[BP+0B0AFH]
+      ADC    BP,ES:[BX+0B1B0H]
+      ADC    SI,ES:[BX+SI+0B2B1H]
+      ADC    SI,ES:[BX+DI+0B3B2H]
+      ADC    SI,ES:[BP+SI+0B4B3H]
+      ADC    SI,ES:[BP+DI+0B5B4H]
+      ADC    SI,ES:[SI+0B6B5H]
+      ADC    SI,ES:[DI+0B7B6H]
+      ADC    SI,ES:[BP+0B8B7H]
+      ADC    SI,ES:[BX+0B9B8H]
+      ADC    DI,ES:[BX+SI+0BAB9H]
+      ADC    DI,ES:[BX+DI+0BBBAH]
+      ADC    DI,ES:[BP+SI+0BCBBH]
+      ADC    DI,ES:[BP+DI+0BDBCH]
+      ADC    DI,ES:[SI+0BEBDH]
+      ADC    DI,ES:[DI+0BFBEH]
+      ADC    DI,ES:[BP+0C0BFH]
+      ADC    DI,ES:[BX+0C1C0H]
+      ADC    AX,ES:[BX+SI]
+      ADC    AX,ES:[BX+DI]
+      ADC    AX,ES:[BP+SI]
+      ADC    AX,ES:[BP+DI]
+      ADC    AX,ES:[SI]
+      ADC    AX,ES:[DI]
+      ADC    AX,ES:[0807H]
+      ADC    AX,ES:[BX]
+      ADC    CX,ES:[BX+SI]
+      ADC    CX,ES:[BX+DI]
+      ADC    CX,ES:[BP+SI]
+      ADC    CX,ES:[BP+DI]
+      ADC    CX,ES:[SI]
+      ADC    CX,ES:[DI]
+      ADC    CX,ES:[100FH]
+      ADC    CX,ES:[BX]
+      ADC    DX,ES:[BX+SI]
+      ADC    DX,ES:[BX+DI]
+      ADC    DX,ES:[BP+SI]
+      ADC    DX,ES:[BP+DI]
+      SBB    ES:[BX+DI],BL
+      SBB    ES:[BP+SI],BL
+      SBB    ES:[BP+DI],BL
+      SBB    ES:[SI],BL
+      SBB    ES:[DI],BL
+      SBB    ES:[201FH],BL
+      SBB    ES:[BX],BL
+      SBB    ES:[BX+SI],AH
+      SBB    ES:[BX+DI],AH
+      SBB    ES:[BP+SI],AH
+      SBB    ES:[BP+DI],AH
+      SBB    ES:[SI],AH
+      SBB    ES:[DI],AH
+      SBB    ES:[2827H],AH
+      SBB    ES:[BX],AH
+      SBB    ES:[BP+SI],BX
+      SBB    ES:[BP+DI],BX
+      SBB    ES:[SI],BX
+      SBB    ES:[DI],BX
+      SBB    ES:[201FH],BX
+      SBB    ES:[BX],BX
+      SBB    ES:[BX+SI],SP
+      SBB    ES:[BX+DI],SP
+      SBB    ES:[BP+SI],SP
+      SBB    ES:[BP+DI],SP
+      SBB    ES:[SI],SP
+      SBB    ES:[DI],SP
+      SBB    ES:[2827H],SP
+      SBB    ES:[BX],SP
+      SBB    ES:[BX+SI],BP
+      SBB    ES:[BX+DI],BP
+      SBB    ES:[BP+SI],BP
+      SBB    ES:[BP+DI],BP
+      SBB    ES:[SI],BP
+      SBB    ES:[DI],BP
+      SBB    ES:[302FH],BP
+      SBB    ES:[BX],BP
+      SBB    ES:[BX+SI],SI
+      SBB    ES:[BX+DI],SI
+      SBB    ES:[BP+SI],SI
+      SBB    ES:[BP+DI],SI
+      SBB    ES:[SI],SI
+      SBB    ES:[DI],SI
+      SBB    ES:[3837H],SI
+      SBB    ES:[BX],SI
+      SBB    ES:[BX+SI],DI
+      SBB    ES:[BX+DI],DI
+      SBB    ES:[BP+SI],DI
+      SBB    ES:[BP+DI],DI
+      SBB    ES:[SI],DI
+      SBB    ES:[DI],DI
+      SBB    ES:[403FH],DI
+      SBB    ES:[BX],DI
+      SBB    ES:[BX+SI+65],AX
+      SBB    ES:[BX+SI-128],AX
+      SBB    ES:[BX+DI+66],AX
+      SBB    ES:[BX+DI-128],AX
+      SBB    ES:[BP+SI+67],AX
+      SBB    ES:[BP+SI-128],AX
+      SBB    ES:[BP+DI+68],AX
+      SBB    ES:[BP+DI-128],AX
+      SBB    ES:[SI+69],AX
+      SBB    ES:[SI-128],AX
+      SBB    ES:[DI+70],AX
+      SBB    ES:[DI-128],AX
+      SBB    ES:[BP+71],AX
+      SBB    ES:[BP-128],AX
+      SBB    ES:[BX+72],AX
+      SBB    ES:[BX-128],AX
+      SBB    ES:[BX+SI+73],CX
+      SBB    ES:[BX+SI-128],CX
+      SBB    ES:[BX+DI+74],CX
+      SBB    ES:[BX+DI-128],CX
+      SBB    ES:[BP+SI+75],CX
+      SBB    ES:[BP+SI-128],CX
+      SBB    ES:[BP+DI+76],CX
+      SBB    ES:[BP+DI-128],CX
+      SBB    ES:[SI+77],CX
+      SBB    ES:[SI-128],CX
+      SBB    ES:[DI+78],CX
+      SBB    ES:[DI-128],CX
+      SBB    ES:[BP+79],CX
+      SBB    ES:[BP-128],CX
+      SBB    ES:[BX+80],CX
+      SBB    ES:[BX-128],CX
+      SBB    ES:[BX+SI+81],DX
+      SBB    ES:[BX+SI-128],DX
+      SBB    ES:[BX+DI+82],DX
+      SBB    ES:[BX+DI-128],DX
+      SBB    ES:[BP+SI+83],DX
+      SBB    ES:[BP+SI-128],DX
+      SBB    ES:[BP+DI+84],DX
+      SBB    ES:[BP+DI-128],DX
+      SBB    ES:[SI+85],DX
+      SBB    ES:[SI-128],DX
+      SBB    ES:[DI+86],DX
+      SBB    ES:[DI-128],DX
+      SBB    ES:[BP+87],DX
+      SBB    ES:[BP-128],DX
+      SBB    ES:[BX+88],DX
+      SBB    ES:[BX-128],DX
+      SBB    ES:[BX+SI+89],BX
+      SBB    ES:[BX+SI-128],BX
+      SBB    ES:[BX+DI+90],BX
+      SBB    ES:[BX+DI-128],BX
+      SBB    ES:[BP+SI+91],BX
+      SBB    ES:[BP+SI-128],BX
+      SBB    ES:[BP+DI+92],BX
+      SBB    ES:[BP+DI-128],BX
+      SBB    ES:[SI+93],BX
+      SBB    ES:[SI-128],BX
+      SBB    ES:[DI+94],BX
+      SBB    ES:[DI-128],BX
+      SBB    ES:[BP+95],BX
+      SBB    ES:[BP-128],BX
+      SBB    ES:[BX+96],BX
+      SBB    ES:[BX-128],BX
+      SBB    ES:[BX+SI+97],SP
+      SBB    ES:[BX+SI-128],SP
+      SBB    ES:[BX+DI+98],SP
+      SBB    ES:[BX+DI-128],SP
+      SBB    ES:[BP+SI+99],SP
+      SBB    ES:[BP+SI-128],SP
+      SBB    ES:[BP+DI+100],SP
+      SBB    ES:[BP+DI-128],SP
+      SBB    ES:[SI+101],SP
+      SBB    ES:[SI-128],SP
+      SBB    ES:[DI+102],SP
+      SBB    ES:[DI-128],SP
+      SBB    ES:[BP+103],SP
+      SBB    ES:[BP-128],SP
+      SBB    ES:[BX+104],SP
+      SBB    ES:[BX-128],SP
+      SBB    ES:[BX+SI+105],BP
+      SBB    ES:[BX+SI-128],BP
+      SBB    ES:[BX+DI+106],BP
+      SBB    ES:[BX+DI-128],BP
+      SBB    ES:[BP+SI+107],BP
+      SBB    ES:[BP+SI-128],BP
+      SBB    ES:[BP+DI+108],BP
+      SBB    ES:[BP+DI-128],BP
+      SBB    ES:[SI+109],BP
+      SBB    ES:[SI-128],BP
+      SBB    ES:[DI+110],BP
+      SBB    ES:[DI-128],BP
+      SBB    ES:[BP+111],BP
+      SBB    ES:[BP-128],BP
+      SBB    ES:[BX+112],BP
+      SBB    ES:[BX-128],BP
+      SBB    ES:[BX+SI+113],SI
+      SBB    ES:[BX+SI-128],SI
+      SBB    ES:[BX+DI+114],SI
+      SBB    ES:[BX+DI-128],SI
+      SBB    ES:[BP+SI+115],SI
+      SBB    ES:[BP+SI-128],SI
+      SBB    ES:[BP+DI+116],SI
+      SBB    ES:[BP+DI-128],SI
+      SBB    ES:[SI+117],SI
+      SBB    ES:[SI-128],SI
+      SBB    ES:[DI+118],SI
+      SBB    ES:[DI-128],SI
+      SBB    ES:[BP+119],SI
+      SBB    ES:[BP-128],SI
+      SBB    ES:[BX+120],SI
+      SBB    ES:[BX-128],SI
+      SBB    ES:[BX+SI+121],DI
+      SBB    ES:[BX+SI-128],DI
+      SBB    ES:[BX+DI+122],DI
+      SBB    ES:[BX+DI-128],DI
+      SBB    ES:[BP+SI+123],DI
+      SBB    ES:[BP+SI-128],DI
+      SBB    ES:[BP+DI+124],DI
+      SBB    ES:[BP+DI-128],DI
+      SBB    ES:[SI+125],DI
+      SBB    ES:[SI-128],DI
+      SBB    ES:[DI+126],DI
+      SBB    ES:[DI-128],DI
+      SBB    ES:[BP+127],DI
+      SBB    ES:[BP-128],DI
+      SBB    ES:[BX-128],DI
+      SBB    ES:[BX+0],DI
+      SBB    ES:[BX+SI+8281H],AX
+      SBB    ES:[BX+DI+8382H],AX
+      SBB    ES:[BP+SI+8483H],AX
+      SBB    ES:[BP+DI+8584H],AX
+      SBB    ES:[SI+8685H],AX
+      SBB    ES:[DI+8786H],AX
+      SBB    ES:[BP+8887H],AX
+      SBB    ES:[BX+8988H],AX
+      SBB    ES:[BX+SI+8A89H],CX
+      SBB    ES:[BX+DI+8B8AH],CX
+      SBB    ES:[BP+SI+8C8BH],CX
+      SBB    ES:[BP+DI+8D8CH],CX
+      SBB    ES:[SI+8E8DH],CX
+      SBB    ES:[DI+8F8EH],CX
+      SBB    ES:[BP+908FH],CX
+      SBB    ES:[BX+9190H],CX
+      SBB    ES:[BX+SI+9291H],DX
+      SBB    ES:[BX+DI+9392H],DX
+      SBB    ES:[BP+SI+9493H],DX
+      SBB    ES:[BP+DI+9594H],DX
+      SBB    ES:[SI+9695H],DX
+      SBB    ES:[DI+9796H],DX
+      SBB    ES:[BP+9897H],DX
+      SBB    ES:[BX+9998H],DX
+      SBB    ES:[BX+SI+9A99H],BX
+      SBB    ES:[BX+DI+9B9AH],BX
+      SBB    ES:[BP+SI+9C9BH],BX
+      SBB    ES:[BP+DI+9D9CH],BX
+      SBB    ES:[SI+9E9DH],BX
+      SBB    ES:[DI+9F9EH],BX
+      SBB    ES:[BP+0A09FH],BX
+      SBB    ES:[BX+0A1A0H],BX
+      SBB    ES:[BX+SI+0A2A1H],SP
+      SBB    ES:[BX+DI+0A3A2H],SP
+      SBB    ES:[BP+SI+0A4A3H],SP
+      SBB    ES:[BP+DI+0A5A4H],SP
+      SBB    ES:[SI+0A6A5H],SP
+      SBB    ES:[DI+0A7A6H],SP
+      SBB    ES:[BP+0A8A7H],SP
+      SBB    ES:[BX+0A9A8H],SP
+      SBB    ES:[BX+SI+0AAA9H],BP
+      SBB    ES:[BX+DI+0ABAAH],BP
+      SBB    ES:[BP+SI+0ACABH],BP
+      SBB    ES:[BP+DI+0ADACH],BP
+      SBB    ES:[SI+0AEADH],BP
+      SBB    ES:[DI+0AFAEH],BP
+      SBB    ES:[BP+0B0AFH],BP
+      SBB    ES:[BX+0B1B0H],BP
+      SBB    ES:[BX+SI+0B2B1H],SI
+      SBB    ES:[BX+DI+0B3B2H],SI
+      SBB    ES:[BP+SI+0B4B3H],SI
+      SBB    ES:[BP+DI+0B5B4H],SI
+      SBB    ES:[SI+0B6B5H],SI
+      SBB    ES:[DI+0B7B6H],SI
+      SBB    ES:[BP+0B8B7H],SI
+      SBB    ES:[BX+0B9B8H],SI
+      SBB    ES:[BX+SI+0BAB9H],DI
+      SBB    ES:[BX+DI+0BBBAH],DI
+      SBB    ES:[BP+SI+0BCBBH],DI
+      SBB    ES:[BP+DI+0BDBCH],DI
+      SBB    ES:[SI+0BEBDH],DI
+      SBB    ES:[DI+0BFBEH],DI
+      SBB    ES:[BP+0C0BFH],DI
+      SBB    ES:[BX+0C1C0H],DI
+      SBB    ES:[BX+SI],AX
+      SBB    ES:[BX+DI],AX
+      SBB    ES:[BP+SI],AX
+      SBB    ES:[BP+DI],AX
+      SBB    ES:[SI],AX
+      SBB    ES:[DI],AX
+      SBB    ES:[0807H],AX
+      SBB    ES:[BX],AX
+      SBB    ES:[BX+SI],CX
+      SBB    ES:[BX+DI],CX
+      SBB    ES:[BP+SI],CX
+      SBB    ES:[BP+DI],CX
+      SBB    ES:[SI],CX
+      SBB    ES:[DI],CX
+      SBB    ES:[100FH],CX
+      SBB    ES:[BX],CX
+      SBB    ES:[BX+SI],DX
+      SBB    ES:[BX+DI],DX
+      SBB    ES:[BP+SI],DX
+      SBB    ES:[BP+DI],DX
+      SBB    ES:[SI],DX
+      SBB    ES:[DI],DX
+      SBB    ES:[1817H],DX
+      SBB    ES:[BX],DX
+      SBB    ES:[BX+SI],BX
+      SBB    ES:[BX+DI],BX
+      SBB    BL,ES:[BP+DI]
+      SBB    BL,ES:[SI]
+      SBB    BL,ES:[DI]
+      SBB    BL,ES:[201FH]
+      SBB    BL,ES:[BX]
+      SBB    AH,ES:[BX+SI]
+      SBB    AH,ES:[BX+DI]
+      SBB    AH,ES:[BP+SI]
+      SBB    AH,ES:[BP+DI]
+      SBB    AH,ES:[SI]
+      SBB    AH,ES:[DI]
+      SBB    AH,ES:[2827H]
+      SBB    AH,ES:[BX]
+      SBB    BX,ES:[SI]
+      SBB    BX,ES:[DI]
+      SBB    BX,ES:[201FH]
+      SBB    BX,ES:[BX]
+      SBB    SP,ES:[BX+SI]
+      SBB    SP,ES:[BX+DI]
+      SBB    SP,ES:[BP+SI]
+      SBB    SP,ES:[BP+DI]
+      SBB    SP,ES:[SI]
+      SBB    SP,ES:[DI]
+      SBB    SP,ES:[2827H]
+      SBB    SP,ES:[BX]
+      SBB    BP,ES:[BX+SI]
+      SBB    BP,ES:[BX+DI]
+      SBB    BP,ES:[BP+SI]
+      SBB    BP,ES:[BP+DI]
+      SBB    BP,ES:[SI]
+      SBB    BP,ES:[DI]
+      SBB    BP,ES:[302FH]
+      SBB    BP,ES:[BX]
+      SBB    SI,ES:[BX+SI]
+      SBB    SI,ES:[BX+DI]
+      SBB    SI,ES:[BP+SI]
+      SBB    SI,ES:[BP+DI]
+      SBB    SI,ES:[SI]
+      SBB    SI,ES:[DI]
+      SBB    SI,ES:[3837H]
+      SBB    SI,ES:[BX]
+      SBB    DI,ES:[BX+SI]
+      SBB    DI,ES:[BX+DI]
+      SBB    DI,ES:[BP+SI]
+      SBB    DI,ES:[BP+DI]
+      SBB    DI,ES:[SI]
+      SBB    DI,ES:[DI]
+      SBB    DI,ES:[403FH]
+      SBB    DI,ES:[BX]
+      SBB    AX,ES:[BX+SI+65]
+      SBB    AX,ES:[BX+SI-128]
+      SBB    AX,ES:[BX+DI+66]
+      SBB    AX,ES:[BX+DI-128]
+      SBB    AX,ES:[BP+SI+67]
+      SBB    AX,ES:[BP+SI-128]
+      SBB    AX,ES:[BP+DI+68]
+      SBB    AX,ES:[BP+DI-128]
+      SBB    AX,ES:[SI+69]
+      SBB    AX,ES:[SI-128]
+      SBB    AX,ES:[DI+70]
+      SBB    AX,ES:[DI-128]
+      SBB    AX,ES:[BP+71]
+      SBB    AX,ES:[BP-128]
+      SBB    AX,ES:[BX+72]
+      SBB    AX,ES:[BX-128]
+      SBB    CX,ES:[BX+SI+73]
+      SBB    CX,ES:[BX+SI-128]
+      SBB    CX,ES:[BX+DI+74]
+      SBB    CX,ES:[BX+DI-128]
+      SBB    CX,ES:[BP+SI+75]
+      SBB    CX,ES:[BP+SI-128]
+      SBB    CX,ES:[BP+DI+76]
+      SBB    CX,ES:[BP+DI-128]
+      SBB    CX,ES:[SI+77]
+      SBB    CX,ES:[SI-128]
+      SBB    CX,ES:[DI+78]
+      SBB    CX,ES:[DI-128]
+      SBB    CX,ES:[BP+79]
+      SBB    CX,ES:[BP-128]
+      SBB    CX,ES:[BX+80]
+      SBB    CX,ES:[BX-128]
+      SBB    DX,ES:[BX+SI+81]
+      SBB    DX,ES:[BX+SI-128]
+      SBB    DX,ES:[BX+DI+82]
+      SBB    DX,ES:[BX+DI-128]
+      SBB    DX,ES:[BP+SI+83]
+      SBB    DX,ES:[BP+SI-128]
+      SBB    DX,ES:[BP+DI+84]
+      SBB    DX,ES:[BP+DI-128]
+      SBB    DX,ES:[SI+85]
+      SBB    DX,ES:[SI-128]
+      SBB    DX,ES:[DI+86]
+      SBB    DX,ES:[DI-128]
+      SBB    DX,ES:[BP+87]
+      SBB    DX,ES:[BP-128]
+      SBB    DX,ES:[BX+88]
+      SBB    DX,ES:[BX-128]
+      SBB    BX,ES:[BX+SI+89]
+      SBB    BX,ES:[BX+SI-128]
+      SBB    BX,ES:[BX+DI+90]
+      SBB    BX,ES:[BX+DI-128]
+      SBB    BX,ES:[BP+SI+91]
+      SBB    BX,ES:[BP+SI-128]
+      SBB    BX,ES:[BP+DI+92]
+      SBB    BX,ES:[BP+DI-128]
+      SBB    BX,ES:[SI+93]
+      SBB    BX,ES:[SI-128]
+      SBB    BX,ES:[DI+94]
+      SBB    BX,ES:[DI-128]
+      SBB    BX,ES:[BP+95]
+      SBB    BX,ES:[BP-128]
+      SBB    BX,ES:[BX+96]
+      SBB    BX,ES:[BX-128]
+      SBB    SP,ES:[BX+SI+97]
+      SBB    SP,ES:[BX+SI-128]
+      SBB    SP,ES:[BX+DI+98]
+      SBB    SP,ES:[BX+DI-128]
+      SBB    SP,ES:[BP+SI+99]
+      SBB    SP,ES:[BP+SI-128]
+      SBB    SP,ES:[BP+DI+100]
+      SBB    SP,ES:[BP+DI-128]
+      SBB    SP,ES:[SI+101]
+      SBB    SP,ES:[SI-128]
+      SBB    SP,ES:[DI+102]
+      SBB    SP,ES:[DI-128]
+      SBB    SP,ES:[BP+103]
+      SBB    SP,ES:[BP-128]
+      SBB    SP,ES:[BX+104]
+      SBB    SP,ES:[BX-128]
+      SBB    BP,ES:[BX+SI+105]
+      SBB    BP,ES:[BX+SI-128]
+      SBB    BP,ES:[BX+DI+106]
+      SBB    BP,ES:[BX+DI-128]
+      SBB    BP,ES:[BP+SI+107]
+      SBB    BP,ES:[BP+SI-128]
+      SBB    BP,ES:[BP+DI+108]
+      SBB    BP,ES:[BP+DI-128]
+      SBB    BP,ES:[SI+109]
+      SBB    BP,ES:[SI-128]
+      SBB    BP,ES:[DI+110]
+      SBB    BP,ES:[DI-128]
+      SBB    BP,ES:[BP+111]
+      SBB    BP,ES:[BP-128]
+      SBB    BP,ES:[BX+112]
+      SBB    BP,ES:[BX-128]
+      SBB    SI,ES:[BX+SI+113]
+      SBB    SI,ES:[BX+SI-128]
+      SBB    SI,ES:[BX+DI+114]
+      SBB    SI,ES:[BX+DI-128]
+      SBB    SI,ES:[BP+SI+115]
+      SBB    SI,ES:[BP+SI-128]
+      SBB    SI,ES:[BP+DI+116]
+      SBB    SI,ES:[BP+DI-128]
+      SBB    SI,ES:[SI+117]
+      SBB    SI,ES:[SI-128]
+      SBB    SI,ES:[DI+118]
+      SBB    SI,ES:[DI-128]
+      SBB    SI,ES:[BP+119]
+      SBB    SI,ES:[BP-128]
+      SBB    SI,ES:[BX+120]
+      SBB    SI,ES:[BX-128]
+      SBB    DI,ES:[BX+SI+121]
+      SBB    DI,ES:[BX+SI-128]
+      SBB    DI,ES:[BX+DI+122]
+      SBB    DI,ES:[BX+DI-128]
+      SBB    DI,ES:[BP+SI+123]
+      SBB    DI,ES:[BP+SI-128]
+      SBB    DI,ES:[BP+DI+124]
+      SBB    DI,ES:[BP+DI-128]
+      SBB    DI,ES:[SI+125]
+      SBB    DI,ES:[SI-128]
+      SBB    DI,ES:[DI+126]
+      SBB    DI,ES:[DI-128]
+      SBB    DI,ES:[BP+127]
+      SBB    DI,ES:[BP-128]
+      SBB    DI,ES:[BX-128]
+      SBB    DI,ES:[BX+0]
+      SBB    AX,ES:[BX+SI+8281H]
+      SBB    AX,ES:[BX+DI+8382H]
+      SBB    AX,ES:[BP+SI+8483H]
+      SBB    AX,ES:[BP+DI+8584H]
+      SBB    AX,ES:[SI+8685H]
+      SBB    AX,ES:[DI+8786H]
+      SBB    AX,ES:[BP+8887H]
+      SBB    AX,ES:[BX+8988H]
+      SBB    CX,ES:[BX+SI+8A89H]
+      SBB    CX,ES:[BX+DI+8B8AH]
+      SBB    CX,ES:[BP+SI+8C8BH]
+      SBB    CX,ES:[BP+DI+8D8CH]
+      SBB    CX,ES:[SI+8E8DH]
+      SBB    CX,ES:[DI+8F8EH]
+      SBB    CX,ES:[BP+908FH]
+      SBB    CX,ES:[BX+9190H]
+      SBB    DX,ES:[BX+SI+9291H]
+      SBB    DX,ES:[BX+DI+9392H]
+      SBB    DX,ES:[BP+SI+9493H]
+      SBB    DX,ES:[BP+DI+9594H]
+      SBB    DX,ES:[SI+9695H]
+      SBB    DX,ES:[DI+9796H]
+      SBB    DX,ES:[BP+9897H]
+      SBB    DX,ES:[BX+9998H]
+      SBB    BX,ES:[BX+SI+9A99H]
+      SBB    BX,ES:[BX+DI+9B9AH]
+      SBB    BX,ES:[BP+SI+9C9BH]
+      SBB    BX,ES:[BP+DI+9D9CH]
+      SBB    BX,ES:[SI+9E9DH]
+      SBB    BX,ES:[DI+9F9EH]
+      SBB    BX,ES:[BP+0A09FH]
+      SBB    BX,ES:[BX+0A1A0H]
+      SBB    SP,ES:[BX+SI+0A2A1H]
+      SBB    SP,ES:[BX+DI+0A3A2H]
+      SBB    SP,ES:[BP+SI+0A4A3H]
+      SBB    SP,ES:[BP+DI+0A5A4H]
+      SBB    SP,ES:[SI+0A6A5H]
+      SBB    SP,ES:[DI+0A7A6H]
+      SBB    SP,ES:[BP+0A8A7H]
+      SBB    SP,ES:[BX+0A9A8H]
+      SBB    BP,ES:[BX+SI+0AAA9H]
+      SBB    BP,ES:[BX+DI+0ABAAH]
+      SBB    BP,ES:[BP+SI+0ACABH]
+      SBB    BP,ES:[BP+DI+0ADACH]
+      SBB    BP,ES:[SI+0AEADH]
+      SBB    BP,ES:[DI+0AFAEH]
+      SBB    BP,ES:[BP+0B0AFH]
+      SBB    BP,ES:[BX+0B1B0H]
+      SBB    SI,ES:[BX+SI+0B2B1H]
+      SBB    SI,ES:[BX+DI+0B3B2H]
+      SBB    SI,ES:[BP+SI+0B4B3H]
+      SBB    SI,ES:[BP+DI+0B5B4H]
+      SBB    SI,ES:[SI+0B6B5H]
+      SBB    SI,ES:[DI+0B7B6H]
+      SBB    SI,ES:[BP+0B8B7H]
+      SBB    SI,ES:[BX+0B9B8H]
+      SBB    DI,ES:[BX+SI+0BAB9H]
+      SBB    DI,ES:[BX+DI+0BBBAH]
+      SBB    DI,ES:[BP+SI+0BCBBH]
+      SBB    DI,ES:[BP+DI+0BDBCH]
+      SBB    DI,ES:[SI+0BEBDH]
+      SBB    DI,ES:[DI+0BFBEH]
+      SBB    DI,ES:[BP+0C0BFH]
+      SBB    DI,ES:[BX+0C1C0H]
+      SBB    AX,ES:[BX+SI]
+      SBB    AX,ES:[BX+DI]
+      SBB    AX,ES:[BP+SI]
+      SBB    AX,ES:[BP+DI]
+      SBB    AX,ES:[SI]
+      SBB    AX,ES:[DI]
+      SBB    AX,ES:[0807H]
+      SBB    AX,ES:[BX]
+      SBB    CX,ES:[BX+SI]
+      SBB    CX,ES:[BX+DI]
+      SBB    CX,ES:[BP+SI]
+      SBB    CX,ES:[BP+DI]
+      SBB    CX,ES:[SI]
+      SBB    CX,ES:[DI]
+      SBB    CX,ES:[100FH]
+      SBB    CX,ES:[BX]
+      SBB    DX,ES:[BX+SI]
+      SBB    DX,ES:[BX+DI]
+      SBB    DX,ES:[BP+SI]
+      SBB    DX,ES:[BP+DI]
+      SBB    DX,ES:[SI]
+      SBB    DX,ES:[DI]
+      SBB    DX,ES:[1817H]
+      SBB    DX,ES:[BX]
+      SBB    BX,ES:[BX+SI]
+      SBB    BX,ES:[BX+DI]
+      SBB    BX,ES:[BP+SI]
+      SBB    BX,ES:[BP+DI]
+      AND    ES:[BX+DI],AH
+      AND    ES:[BP+SI],AH
+      AND    ES:[BP+DI],AH
+      AND    ES:[SI],AH
+      AND    ES:[DI],AH
+      AND    ES:[2827H],AH
+      AND    ES:[BX],AH
+      AND    ES:[BX+SI],CH
+      AND    ES:[BP+SI],SP
+      AND    ES:[BP+DI],SP
+      AND    ES:[SI],SP
+      AND    ES:[DI],SP
+      AND    ES:[2827H],SP
+      AND    ES:[BX],SP
+      AND    ES:[BX+SI],BP
+      AND    ES:[BX+DI],BP
+      AND    ES:[BP+SI],BP
+      AND    ES:[BP+DI],BP
+      AND    ES:[SI],BP
+      AND    ES:[DI],BP
+      AND    ES:[302FH],BP
+      AND    ES:[BX],BP
+      AND    ES:[BX+SI],SI
+      AND    ES:[BX+DI],SI
+      AND    ES:[BP+SI],SI
+      AND    ES:[BP+DI],SI
+      AND    ES:[SI],SI
+      AND    ES:[DI],SI
+      AND    ES:[3837H],SI
+      AND    ES:[BX],SI
+      AND    ES:[BX+SI],DI
+      AND    ES:[BX+DI],DI
+      AND    ES:[BP+SI],DI
+      AND    ES:[BP+DI],DI
+      AND    ES:[SI],DI
+      AND    ES:[DI],DI
+      AND    ES:[403FH],DI
+      AND    ES:[BX],DI
+      AND    ES:[BX+SI+65],AX
+      AND    ES:[BX+SI-128],AX
+      AND    ES:[BX+DI+66],AX
+      AND    ES:[BX+DI-128],AX
+      AND    ES:[BP+SI+67],AX
+      AND    ES:[BP+SI-128],AX
+      AND    ES:[BP+DI+68],AX
+      AND    ES:[BP+DI-128],AX
+      AND    ES:[SI+69],AX
+      AND    ES:[SI-128],AX
+      AND    ES:[DI+70],AX
+      AND    ES:[DI-128],AX
+      AND    ES:[BP+71],AX
+      AND    ES:[BP-128],AX
+      AND    ES:[BX+72],AX
+      AND    ES:[BX-128],AX
+      AND    ES:[BX+SI+73],CX
+      AND    ES:[BX+SI-128],CX
+      AND    ES:[BX+DI+74],CX
+      AND    ES:[BX+DI-128],CX
+      AND    ES:[BP+SI+75],CX
+      AND    ES:[BP+SI-128],CX
+      AND    ES:[BP+DI+76],CX
+      AND    ES:[BP+DI-128],CX
+      AND    ES:[SI+77],CX
+      AND    ES:[SI-128],CX
+      AND    ES:[DI+78],CX
+      AND    ES:[DI-128],CX
+      AND    ES:[BP+79],CX
+      AND    ES:[BP-128],CX
+      AND    ES:[BX+80],CX
+      AND    ES:[BX-128],CX
+      AND    ES:[BX+SI+81],DX
+      AND    ES:[BX+SI-128],DX
+      AND    ES:[BX+DI+82],DX
+      AND    ES:[BX+DI-128],DX
+      AND    ES:[BP+SI+83],DX
+      AND    ES:[BP+SI-128],DX
+      AND    ES:[BP+DI+84],DX
+      AND    ES:[BP+DI-128],DX
+      AND    ES:[SI+85],DX
+      AND    ES:[SI-128],DX
+      AND    ES:[DI+86],DX
+      AND    ES:[DI-128],DX
+      AND    ES:[BP+87],DX
+      AND    ES:[BP-128],DX
+      AND    ES:[BX+88],DX
+      AND    ES:[BX-128],DX
+      AND    ES:[BX+SI+89],BX
+      AND    ES:[BX+SI-128],BX
+      AND    ES:[BX+DI+90],BX
+      AND    ES:[BX+DI-128],BX
+      AND    ES:[BP+SI+91],BX
+      AND    ES:[BP+SI-128],BX
+      AND    ES:[BP+DI+92],BX
+      AND    ES:[BP+DI-128],BX
+      AND    ES:[SI+93],BX
+      AND    ES:[SI-128],BX
+      AND    ES:[DI+94],BX
+      AND    ES:[DI-128],BX
+      AND    ES:[BP+95],BX
+      AND    ES:[BP-128],BX
+      AND    ES:[BX+96],BX
+      AND    ES:[BX-128],BX
+      AND    ES:[BX+SI+97],SP
+      AND    ES:[BX+SI-128],SP
+      AND    ES:[BX+DI+98],SP
+      AND    ES:[BX+DI-128],SP
+      AND    ES:[BP+SI+99],SP
+      AND    ES:[BP+SI-128],SP
+      AND    ES:[BP+DI+100],SP
+      AND    ES:[BP+DI-128],SP
+      AND    ES:[SI+101],SP
+      AND    ES:[SI-128],SP
+      AND    ES:[DI+102],SP
+      AND    ES:[DI-128],SP
+      AND    ES:[BP+103],SP
+      AND    ES:[BP-128],SP
+      AND    ES:[BX+104],SP
+      AND    ES:[BX-128],SP
+      AND    ES:[BX+SI+105],BP
+      AND    ES:[BX+SI-128],BP
+      AND    ES:[BX+DI+106],BP
+      AND    ES:[BX+DI-128],BP
+      AND    ES:[BP+SI+107],BP
+      AND    ES:[BP+SI-128],BP
+      AND    ES:[BP+DI+108],BP
+      AND    ES:[BP+DI-128],BP
+      AND    ES:[SI+109],BP
+      AND    ES:[SI-128],BP
+      AND    ES:[DI+110],BP
+      AND    ES:[DI-128],BP
+      AND    ES:[BP+111],BP
+      AND    ES:[BP-128],BP
+      AND    ES:[BX+112],BP
+      AND    ES:[BX-128],BP
+      AND    ES:[BX+SI+113],SI
+      AND    ES:[BX+SI-128],SI
+      AND    ES:[BX+DI+114],SI
+      AND    ES:[BX+DI-128],SI
+      AND    ES:[BP+SI+115],SI
+      AND    ES:[BP+SI-128],SI
+      AND    ES:[BP+DI+116],SI
+      AND    ES:[BP+DI-128],SI
+      AND    ES:[SI+117],SI
+      AND    ES:[SI-128],SI
+      AND    ES:[DI+118],SI
+      AND    ES:[DI-128],SI
+      AND    ES:[BP+119],SI
+      AND    ES:[BP-128],SI
+      AND    ES:[BX+120],SI
+      AND    ES:[BX-128],SI
+      AND    ES:[BX+SI+121],DI
+      AND    ES:[BX+SI-128],DI
+      AND    ES:[BX+DI+122],DI
+      AND    ES:[BX+DI-128],DI
+      AND    ES:[BP+SI+123],DI
+      AND    ES:[BP+SI-128],DI
+      AND    ES:[BP+DI+124],DI
+      AND    ES:[BP+DI-128],DI
+      AND    ES:[SI+125],DI
+      AND    ES:[SI-128],DI
+      AND    ES:[DI+126],DI
+      AND    ES:[DI-128],DI
+      AND    ES:[BP+127],DI
+      AND    ES:[BP-128],DI
+      AND    ES:[BX-128],DI
+      AND    ES:[BX+0],DI
+      AND    ES:[BX+SI+8281H],AX
+      AND    ES:[BX+DI+8382H],AX
+      AND    ES:[BP+SI+8483H],AX
+      AND    ES:[BP+DI+8584H],AX
+      AND    ES:[SI+8685H],AX
+      AND    ES:[DI+8786H],AX
+      AND    ES:[BP+8887H],AX
+      AND    ES:[BX+8988H],AX
+      AND    ES:[BX+SI+8A89H],CX
+      AND    ES:[BX+DI+8B8AH],CX
+      AND    ES:[BP+SI+8C8BH],CX
+      AND    ES:[BP+DI+8D8CH],CX
+      AND    ES:[SI+8E8DH],CX
+      AND    ES:[DI+8F8EH],CX
+      AND    ES:[BP+908FH],CX
+      AND    ES:[BX+9190H],CX
+      AND    ES:[BX+SI+9291H],DX
+      AND    ES:[BX+DI+9392H],DX
+      AND    ES:[BP+SI+9493H],DX
+      AND    ES:[BP+DI+9594H],DX
+      AND    ES:[SI+9695H],DX
+      AND    ES:[DI+9796H],DX
+      AND    ES:[BP+9897H],DX
+      AND    ES:[BX+9998H],DX
+      AND    ES:[BX+SI+9A99H],BX
+      AND    ES:[BX+DI+9B9AH],BX
+      AND    ES:[BP+SI+9C9BH],BX
+      AND    ES:[BP+DI+9D9CH],BX
+      AND    ES:[SI+9E9DH],BX
+      AND    ES:[DI+9F9EH],BX
+      AND    ES:[BP+0A09FH],BX
+      AND    ES:[BX+0A1A0H],BX
+      AND    ES:[BX+SI+0A2A1H],SP
+      AND    ES:[BX+DI+0A3A2H],SP
+      AND    ES:[BP+SI+0A4A3H],SP
+      AND    ES:[BP+DI+0A5A4H],SP
+      AND    ES:[SI+0A6A5H],SP
+      AND    ES:[DI+0A7A6H],SP
+      AND    ES:[BP+0A8A7H],SP
+      AND    ES:[BX+0A9A8H],SP
+      AND    ES:[BX+SI+0AAA9H],BP
+      AND    ES:[BX+DI+0ABAAH],BP
+      AND    ES:[BP+SI+0ACABH],BP
+      AND    ES:[BP+DI+0ADACH],BP
+      AND    ES:[SI+0AEADH],BP
+      AND    ES:[DI+0AFAEH],BP
+      AND    ES:[BP+0B0AFH],BP
+      AND    ES:[BX+0B1B0H],BP
+      AND    ES:[BX+SI+0B2B1H],SI
+      AND    ES:[BX+DI+0B3B2H],SI
+      AND    ES:[BP+SI+0B4B3H],SI
+      AND    ES:[BP+DI+0B5B4H],SI
+      AND    ES:[SI+0B6B5H],SI
+      AND    ES:[DI+0B7B6H],SI
+      AND    ES:[BP+0B8B7H],SI
+      AND    ES:[BX+0B9B8H],SI
+      AND    ES:[BX+SI+0BAB9H],DI
+      AND    ES:[BX+DI+0BBBAH],DI
+      AND    ES:[BP+SI+0BCBBH],DI
+      AND    ES:[BP+DI+0BDBCH],DI
+      AND    ES:[SI+0BEBDH],DI
+      AND    ES:[DI+0BFBEH],DI
+      AND    ES:[BP+0C0BFH],DI
+      AND    ES:[BX+0C1C0H],DI
+      AND    ES:[BX+SI],AX
+      AND    ES:[BX+DI],AX
+      AND    ES:[BP+SI],AX
+      AND    ES:[BP+DI],AX
+      AND    ES:[SI],AX
+      AND    ES:[DI],AX
+      AND    ES:[0807H],AX
+      AND    ES:[BX],AX
+      AND    ES:[BX+SI],CX
+      AND    ES:[BX+DI],CX
+      AND    ES:[BP+SI],CX
+      AND    ES:[BP+DI],CX
+      AND    ES:[SI],CX
+      AND    ES:[DI],CX
+      AND    ES:[100FH],CX
+      AND    ES:[BX],CX
+      AND    ES:[BX+SI],DX
+      AND    ES:[BX+DI],DX
+      AND    ES:[BP+SI],DX
+      AND    ES:[BP+DI],DX
+      AND    ES:[SI],DX
+      AND    ES:[DI],DX
+      AND    ES:[1817H],DX
+      AND    ES:[BX],DX
+      AND    ES:[BX+SI],BX
+      AND    ES:[BX+DI],BX
+      AND    ES:[BP+SI],BX
+      AND    ES:[BP+DI],BX
+      AND    ES:[SI],BX
+      AND    ES:[DI],BX
+      AND    ES:[201FH],BX
+      AND    ES:[BX],BX
+      AND    ES:[BX+SI],SP
+      AND    ES:[BX+DI],SP
+      AND    AH,ES:[BP+DI]
+      AND    AH,ES:[SI]
+      AND    AH,ES:[DI]
+      AND    AH,ES:[2827H]
+      AND    AH,ES:[BX]
+      AND    CH,ES:[BX+SI]
+      AND    CH,ES:[BX+DI]
+      AND    CH,ES:[BP+SI]
+      AND    SP,ES:[SI]
+      AND    SP,ES:[DI]
+      AND    SP,ES:[2827H]
+      AND    SP,ES:[BX]
+      AND    BP,ES:[BX+SI]
+      AND    BP,ES:[BX+DI]
+      AND    BP,ES:[BP+SI]
+      AND    BP,ES:[BP+DI]
+      AND    BP,ES:[SI]
+      AND    BP,ES:[DI]
+      AND    BP,ES:[302FH]
+      AND    BP,ES:[BX]
+      AND    SI,ES:[BX+SI]
+      AND    SI,ES:[BX+DI]
+      AND    SI,ES:[BP+SI]
+      AND    SI,ES:[BP+DI]
+      AND    SI,ES:[SI]
+      AND    SI,ES:[DI]
+      AND    SI,ES:[3837H]
+      AND    SI,ES:[BX]
+      AND    DI,ES:[BX+SI]
+      AND    DI,ES:[BX+DI]
+      AND    DI,ES:[BP+SI]
+      AND    DI,ES:[BP+DI]
+      AND    DI,ES:[SI]
+      AND    DI,ES:[DI]
+      AND    DI,ES:[403FH]
+      AND    DI,ES:[BX]
+      AND    AX,ES:[BX+SI+65]
+      AND    AX,ES:[BX+SI-128]
+      AND    AX,ES:[BX+DI+66]
+      AND    AX,ES:[BX+DI-128]
+      AND    AX,ES:[BP+SI+67]
+      AND    AX,ES:[BP+SI-128]
+      AND    AX,ES:[BP+DI+68]
+      AND    AX,ES:[BP+DI-128]
+      AND    AX,ES:[SI+69]
+      AND    AX,ES:[SI-128]
+      AND    AX,ES:[DI+70]
+      AND    AX,ES:[DI-128]
+      AND    AX,ES:[BP+71]
+      AND    AX,ES:[BP-128]
+      AND    AX,ES:[BX+72]
+      AND    AX,ES:[BX-128]
+      AND    CX,ES:[BX+SI+73]
+      AND    CX,ES:[BX+SI-128]
+      AND    CX,ES:[BX+DI+74]
+      AND    CX,ES:[BX+DI-128]
+      AND    CX,ES:[BP+SI+75]
+      AND    CX,ES:[BP+SI-128]
+      AND    CX,ES:[BP+DI+76]
+      AND    CX,ES:[BP+DI-128]
+      AND    CX,ES:[SI+77]
+      AND    CX,ES:[SI-128]
+      AND    CX,ES:[DI+78]
+      AND    CX,ES:[DI-128]
+      AND    CX,ES:[BP+79]
+      AND    CX,ES:[BP-128]
+      AND    CX,ES:[BX+80]
+      AND    CX,ES:[BX-128]
+      AND    DX,ES:[BX+SI+81]
+      AND    DX,ES:[BX+SI-128]
+      AND    DX,ES:[BX+DI+82]
+      AND    DX,ES:[BX+DI-128]
+      AND    DX,ES:[BP+SI+83]
+      AND    DX,ES:[BP+SI-128]
+      AND    DX,ES:[BP+DI+84]
+      AND    DX,ES:[BP+DI-128]
+      AND    DX,ES:[SI+85]
+      AND    DX,ES:[SI-128]
+      AND    DX,ES:[DI+86]
+      AND    DX,ES:[DI-128]
+      AND    DX,ES:[BP+87]
+      AND    DX,ES:[BP-128]
+      AND    DX,ES:[BX+88]
+      AND    DX,ES:[BX-128]
+      AND    BX,ES:[BX+SI+89]
+      AND    BX,ES:[BX+SI-128]
+      AND    BX,ES:[BX+DI+90]
+      AND    BX,ES:[BX+DI-128]
+      AND    BX,ES:[BP+SI+91]
+      AND    BX,ES:[BP+SI-128]
+      AND    BX,ES:[BP+DI+92]
+      AND    BX,ES:[BP+DI-128]
+      AND    BX,ES:[SI+93]
+      AND    BX,ES:[SI-128]
+      AND    BX,ES:[DI+94]
+      AND    BX,ES:[DI-128]
+      AND    BX,ES:[BP+95]
+      AND    BX,ES:[BP-128]
+      AND    BX,ES:[BX+96]
+      AND    BX,ES:[BX-128]
+      AND    SP,ES:[BX+SI+97]
+      AND    SP,ES:[BX+SI-128]
+      AND    SP,ES:[BX+DI+98]
+      AND    SP,ES:[BX+DI-128]
+      AND    SP,ES:[BP+SI+99]
+      AND    SP,ES:[BP+SI-128]
+      AND    SP,ES:[BP+DI+100]
+      AND    SP,ES:[BP+DI-128]
+      AND    SP,ES:[SI+101]
+      AND    SP,ES:[SI-128]
+      AND    SP,ES:[DI+102]
+      AND    SP,ES:[DI-128]
+      AND    SP,ES:[BP+103]
+      AND    SP,ES:[BP-128]
+      AND    SP,ES:[BX+104]
+      AND    SP,ES:[BX-128]
+      AND    BP,ES:[BX+SI+105]
+      AND    BP,ES:[BX+SI-128]
+      AND    BP,ES:[BX+DI+106]
+      AND    BP,ES:[BX+DI-128]
+      AND    BP,ES:[BP+SI+107]
+      AND    BP,ES:[BP+SI-128]
+      AND    BP,ES:[BP+DI+108]
+      AND    BP,ES:[BP+DI-128]
+      AND    BP,ES:[SI+109]
+      AND    BP,ES:[SI-128]
+      AND    BP,ES:[DI+110]
+      AND    BP,ES:[DI-128]
+      AND    BP,ES:[BP+111]
+      AND    BP,ES:[BP-128]
+      AND    BP,ES:[BX+112]
+      AND    BP,ES:[BX-128]
+      AND    SI,ES:[BX+SI+113]
+      AND    SI,ES:[BX+SI-128]
+      AND    SI,ES:[BX+DI+114]
+      AND    SI,ES:[BX+DI-128]
+      AND    SI,ES:[BP+SI+115]
+      AND    SI,ES:[BP+SI-128]
+      AND    SI,ES:[BP+DI+116]
+      AND    SI,ES:[BP+DI-128]
+      AND    SI,ES:[SI+117]
+      AND    SI,ES:[SI-128]
+      AND    SI,ES:[DI+118]
+      AND    SI,ES:[DI-128]
+      AND    SI,ES:[BP+119]
+      AND    SI,ES:[BP-128]
+      AND    SI,ES:[BX+120]
+      AND    SI,ES:[BX-128]
+      AND    DI,ES:[BX+SI+121]
+      AND    DI,ES:[BX+SI-128]
+      AND    DI,ES:[BX+DI+122]
+      AND    DI,ES:[BX+DI-128]
+      AND    DI,ES:[BP+SI+123]
+      AND    DI,ES:[BP+SI-128]
+      AND    DI,ES:[BP+DI+124]
+      AND    DI,ES:[BP+DI-128]
+      AND    DI,ES:[SI+125]
+      AND    DI,ES:[SI-128]
+      AND    DI,ES:[DI+126]
+      AND    DI,ES:[DI-128]
+      AND    DI,ES:[BP+127]
+      AND    DI,ES:[BP-128]
+      AND    DI,ES:[BX-128]
+      AND    DI,ES:[BX+0]
+      AND    AX,ES:[BX+SI+8281H]
+      AND    AX,ES:[BX+DI+8382H]
+      AND    AX,ES:[BP+SI+8483H]
+      AND    AX,ES:[BP+DI+8584H]
+      AND    AX,ES:[SI+8685H]
+      AND    AX,ES:[DI+8786H]
+      AND    AX,ES:[BP+8887H]
+      AND    AX,ES:[BX+8988H]
+      AND    CX,ES:[BX+SI+8A89H]
+      AND    CX,ES:[BX+DI+8B8AH]
+      AND    CX,ES:[BP+SI+8C8BH]
+      AND    CX,ES:[BP+DI+8D8CH]
+      AND    CX,ES:[SI+8E8DH]
+      AND    CX,ES:[DI+8F8EH]
+      AND    CX,ES:[BP+908FH]
+      AND    CX,ES:[BX+9190H]
+      AND    DX,ES:[BX+SI+9291H]
+      AND    DX,ES:[BX+DI+9392H]
+      AND    DX,ES:[BP+SI+9493H]
+      AND    DX,ES:[BP+DI+9594H]
+      AND    DX,ES:[SI+9695H]
+      AND    DX,ES:[DI+9796H]
+      AND    DX,ES:[BP+9897H]
+      AND    DX,ES:[BX+9998H]
+      AND    BX,ES:[BX+SI+9A99H]
+      AND    BX,ES:[BX+DI+9B9AH]
+      AND    BX,ES:[BP+SI+9C9BH]
+      AND    BX,ES:[BP+DI+9D9CH]
+      AND    BX,ES:[SI+9E9DH]
+      AND    BX,ES:[DI+9F9EH]
+      AND    BX,ES:[BP+0A09FH]
+      AND    BX,ES:[BX+0A1A0H]
+      AND    SP,ES:[BX+SI+0A2A1H]
+      AND    SP,ES:[BX+DI+0A3A2H]
+      AND    SP,ES:[BP+SI+0A4A3H]
+      AND    SP,ES:[BP+DI+0A5A4H]
+      AND    SP,ES:[SI+0A6A5H]
+      AND    SP,ES:[DI+0A7A6H]
+      AND    SP,ES:[BP+0A8A7H]
+      AND    SP,ES:[BX+0A9A8H]
+      AND    BP,ES:[BX+SI+0AAA9H]
+      AND    BP,ES:[BX+DI+0ABAAH]
+      AND    BP,ES:[BP+SI+0ACABH]
+      AND    BP,ES:[BP+DI+0ADACH]
+      AND    BP,ES:[SI+0AEADH]
+      AND    BP,ES:[DI+0AFAEH]
+      AND    BP,ES:[BP+0B0AFH]
+      AND    BP,ES:[BX+0B1B0H]
+      AND    SI,ES:[BX+SI+0B2B1H]
+      AND    SI,ES:[BX+DI+0B3B2H]
+      AND    SI,ES:[BP+SI+0B4B3H]
+      AND    SI,ES:[BP+DI+0B5B4H]
+      AND    SI,ES:[SI+0B6B5H]
+      AND    SI,ES:[DI+0B7B6H]
+      AND    SI,ES:[BP+0B8B7H]
+      AND    SI,ES:[BX+0B9B8H]
+      AND    DI,ES:[BX+SI+0BAB9H]
+      AND    DI,ES:[BX+DI+0BBBAH]
+      AND    DI,ES:[BP+SI+0BCBBH]
+      AND    DI,ES:[BP+DI+0BDBCH]
+      AND    DI,ES:[SI+0BEBDH]
+      AND    DI,ES:[DI+0BFBEH]
+      AND    DI,ES:[BP+0C0BFH]
+      AND    DI,ES:[BX+0C1C0H]
+      AND    AX,ES:[BX+SI]
+      AND    AX,ES:[BX+DI]
+      AND    AX,ES:[BP+SI]
+      AND    AX,ES:[BP+DI]
+      AND    AX,ES:[SI]
+      AND    AX,ES:[DI]
+      AND    AX,ES:[0807H]
+      AND    AX,ES:[BX]
+      AND    CX,ES:[BX+SI]
+      AND    CX,ES:[BX+DI]
+      AND    CX,ES:[BP+SI]
+      AND    CX,ES:[BP+DI]
+      AND    CX,ES:[SI]
+      AND    CX,ES:[DI]
+      AND    CX,ES:[100FH]
+      AND    CX,ES:[BX]
+      AND    DX,ES:[BX+SI]
+      AND    DX,ES:[BX+DI]
+      AND    DX,ES:[BP+SI]
+      AND    DX,ES:[BP+DI]
+      AND    DX,ES:[SI]
+      AND    DX,ES:[DI]
+      AND    DX,ES:[1817H]
+      AND    DX,ES:[BX]
+      AND    BX,ES:[BX+SI]
+      AND    BX,ES:[BX+DI]
+      AND    BX,ES:[BP+SI]
+      AND    BX,ES:[BP+DI]
+      AND    BX,ES:[SI]
+      AND    BX,ES:[DI]
+      AND    BX,ES:[201FH]
+      AND    BX,ES:[BX]
+      AND    SP,ES:[BX+SI]
+      AND    SP,ES:[BX+DI]
+      AND    SP,ES:[BP+SI]
+      AND    SP,ES:[BP+DI]
+      XOR    CS:[BX+DI],DH
+      XOR    CS:[BP+SI],DH
+      XOR    CS:[BP+DI],DH
+      XOR    CS:[SI],DH
+      XOR    CS:[DI],DH
+      XOR    CS:[3837H],DH
+      XOR    CS:[BX],DH
+      XOR    CS:[BX+SI],BH
+      XOR    CS:[BP+SI],SI
+      XOR    CS:[BP+DI],SI
+      XOR    CS:[SI],SI
+      XOR    CS:[DI],SI
+      XOR    CS:[3837H],SI
+      XOR    CS:[BX],SI
+      XOR    CS:[BX+SI],DI
+      XOR    CS:[BX+DI],DI
+      XOR    CS:[BP+SI],DI
+      XOR    CS:[BP+DI],DI
+      XOR    CS:[SI],DI
+      XOR    CS:[DI],DI
+      XOR    CS:[403FH],DI
+      XOR    CS:[BX],DI
+      XOR    CS:[BX+SI+65],AX
+      XOR    CS:[BX+SI-128],AX
+      XOR    CS:[BX+DI+66],AX
+      XOR    CS:[BX+DI-128],AX
+      XOR    CS:[BP+SI+67],AX
+      XOR    CS:[BP+SI-128],AX
+      XOR    CS:[BP+DI+68],AX
+      XOR    CS:[BP+DI-128],AX
+      XOR    CS:[SI+69],AX
+      XOR    CS:[SI-128],AX
+      XOR    CS:[DI+70],AX
+      XOR    CS:[DI-128],AX
+      XOR    CS:[BP+71],AX
+      XOR    CS:[BP-128],AX
+      XOR    CS:[BX+72],AX
+      XOR    CS:[BX-128],AX
+      XOR    CS:[BX+SI+73],CX
+      XOR    CS:[BX+SI-128],CX
+      XOR    CS:[BX+DI+74],CX
+      XOR    CS:[BX+DI-128],CX
+      XOR    CS:[BP+SI+75],CX
+      XOR    CS:[BP+SI-128],CX
+      XOR    CS:[BP+DI+76],CX
+      XOR    CS:[BP+DI-128],CX
+      XOR    CS:[SI+77],CX
+      XOR    CS:[SI-128],CX
+      XOR    CS:[DI+78],CX
+      XOR    CS:[DI-128],CX
+      XOR    CS:[BP+79],CX
+      XOR    CS:[BP-128],CX
+      XOR    CS:[BX+80],CX
+      XOR    CS:[BX-128],CX
+      XOR    CS:[BX+SI+81],DX
+      XOR    CS:[BX+SI-128],DX
+      XOR    CS:[BX+DI+82],DX
+      XOR    CS:[BX+DI-128],DX
+      XOR    CS:[BP+SI+83],DX
+      XOR    CS:[BP+SI-128],DX
+      XOR    CS:[BP+DI+84],DX
+      XOR    CS:[BP+DI-128],DX
+      XOR    CS:[SI+85],DX
+      XOR    CS:[SI-128],DX
+      XOR    CS:[DI+86],DX
+      XOR    CS:[DI-128],DX
+      XOR    CS:[BP+87],DX
+      XOR    CS:[BP-128],DX
+      XOR    CS:[BX+88],DX
+      XOR    CS:[BX-128],DX
+      XOR    CS:[BX+SI+89],BX
+      XOR    CS:[BX+SI-128],BX
+      XOR    CS:[BX+DI+90],BX
+      XOR    CS:[BX+DI-128],BX
+      XOR    CS:[BP+SI+91],BX
+      XOR    CS:[BP+SI-128],BX
+      XOR    CS:[BP+DI+92],BX
+      XOR    CS:[BP+DI-128],BX
+      XOR    CS:[SI+93],BX
+      XOR    CS:[SI-128],BX
+      XOR    CS:[DI+94],BX
+      XOR    CS:[DI-128],BX
+      XOR    CS:[BP+95],BX
+      XOR    CS:[BP-128],BX
+      XOR    CS:[BX+96],BX
+      XOR    CS:[BX-128],BX
+      XOR    CS:[BX+SI+97],SP
+      XOR    CS:[BX+SI-128],SP
+      XOR    CS:[BX+DI+98],SP
+      XOR    CS:[BX+DI-128],SP
+      XOR    CS:[BP+SI+99],SP
+      XOR    CS:[BP+SI-128],SP
+      XOR    CS:[BP+DI+100],SP
+      XOR    CS:[BP+DI-128],SP
+      XOR    CS:[SI+101],SP
+      XOR    CS:[SI-128],SP
+      XOR    CS:[DI+102],SP
+      XOR    CS:[DI-128],SP
+      XOR    CS:[BP+103],SP
+      XOR    CS:[BP-128],SP
+      XOR    CS:[BX+104],SP
+      XOR    CS:[BX-128],SP
+      XOR    CS:[BX+SI+105],BP
+      XOR    CS:[BX+SI-128],BP
+      XOR    CS:[BX+DI+106],BP
+      XOR    CS:[BX+DI-128],BP
+      XOR    CS:[BP+SI+107],BP
+      XOR    CS:[BP+SI-128],BP
+      XOR    CS:[BP+DI+108],BP
+      XOR    CS:[BP+DI-128],BP
+      XOR    CS:[SI+109],BP
+      XOR    CS:[SI-128],BP
+      XOR    CS:[DI+110],BP
+      XOR    CS:[DI-128],BP
+      XOR    CS:[BP+111],BP
+      XOR    CS:[BP-128],BP
+      XOR    CS:[BX+112],BP
+      XOR    CS:[BX-128],BP
+      XOR    CS:[BX+SI+113],SI
+      XOR    CS:[BX+SI-128],SI
+      XOR    CS:[BX+DI+114],SI
+      XOR    CS:[BX+DI-128],SI
+      XOR    CS:[BP+SI+115],SI
+      XOR    CS:[BP+SI-128],SI
+      XOR    CS:[BP+DI+116],SI
+      XOR    CS:[BP+DI-128],SI
+      XOR    CS:[SI+117],SI
+      XOR    CS:[SI-128],SI
+      XOR    CS:[DI+118],SI
+      XOR    CS:[DI-128],SI
+      XOR    CS:[BP+119],SI
+      XOR    CS:[BP-128],SI
+      XOR    CS:[BX+120],SI
+      XOR    CS:[BX-128],SI
+      XOR    CS:[BX+SI+121],DI
+      XOR    CS:[BX+SI-128],DI
+      XOR    CS:[BX+DI+122],DI
+      XOR    CS:[BX+DI-128],DI
+      XOR    CS:[BP+SI+123],DI
+      XOR    CS:[BP+SI-128],DI
+      XOR    CS:[BP+DI+124],DI
+      XOR    CS:[BP+DI-128],DI
+      XOR    CS:[SI+125],DI
+      XOR    CS:[SI-128],DI
+      XOR    CS:[DI+126],DI
+      XOR    CS:[DI-128],DI
+      XOR    CS:[BP+127],DI
+      XOR    CS:[BP-128],DI
+      XOR    CS:[BX-128],DI
+      XOR    CS:[BX+0],DI
+      XOR    CS:[BX+SI+8281H],AX
+      XOR    CS:[BX+DI+8382H],AX
+      XOR    CS:[BP+SI+8483H],AX
+      XOR    CS:[BP+DI+8584H],AX
+      XOR    CS:[SI+8685H],AX
+      XOR    CS:[DI+8786H],AX
+      XOR    CS:[BP+8887H],AX
+      XOR    CS:[BX+8988H],AX
+      XOR    CS:[BX+SI+8A89H],CX
+      XOR    CS:[BX+DI+8B8AH],CX
+      XOR    CS:[BP+SI+8C8BH],CX
+      XOR    CS:[BP+DI+8D8CH],CX
+      XOR    CS:[SI+8E8DH],CX
+      XOR    CS:[DI+8F8EH],CX
+      XOR    CS:[BP+908FH],CX
+      XOR    CS:[BX+9190H],CX
+      XOR    CS:[BX+SI+9291H],DX
+      XOR    CS:[BX+DI+9392H],DX
+      XOR    CS:[BP+SI+9493H],DX
+      XOR    CS:[BP+DI+9594H],DX
+      XOR    CS:[SI+9695H],DX
+      XOR    CS:[DI+9796H],DX
+      XOR    CS:[BP+9897H],DX
+      XOR    CS:[BX+9998H],DX
+      XOR    CS:[BX+SI+9A99H],BX
+      XOR    CS:[BX+DI+9B9AH],BX
+      XOR    CS:[BP+SI+9C9BH],BX
+      XOR    CS:[BP+DI+9D9CH],BX
+      XOR    CS:[SI+9E9DH],BX
+      XOR    CS:[DI+9F9EH],BX
+      XOR    CS:[BP+0A09FH],BX
+      XOR    CS:[BX+0A1A0H],BX
+      XOR    CS:[BX+SI+0A2A1H],SP
+      XOR    CS:[BX+DI+0A3A2H],SP
+      XOR    CS:[BP+SI+0A4A3H],SP
+      XOR    CS:[BP+DI+0A5A4H],SP
+      XOR    CS:[SI+0A6A5H],SP
+      XOR    CS:[DI+0A7A6H],SP
+      XOR    CS:[BP+0A8A7H],SP
+      XOR    CS:[BX+0A9A8H],SP
+      XOR    CS:[BX+SI+0AAA9H],BP
+      XOR    CS:[BX+DI+0ABAAH],BP
+      XOR    CS:[BP+SI+0ACABH],BP
+      XOR    CS:[BP+DI+0ADACH],BP
+      XOR    CS:[SI+0AEADH],BP
+      XOR    CS:[DI+0AFAEH],BP
+      XOR    CS:[BP+0B0AFH],BP
+      XOR    CS:[BX+0B1B0H],BP
+      XOR    CS:[BX+SI+0B2B1H],SI
+      XOR    CS:[BX+DI+0B3B2H],SI
+      XOR    CS:[BP+SI+0B4B3H],SI
+      XOR    CS:[BP+DI+0B5B4H],SI
+      XOR    CS:[SI+0B6B5H],SI
+      XOR    CS:[DI+0B7B6H],SI
+      XOR    CS:[BP+0B8B7H],SI
+      XOR    CS:[BX+0B9B8H],SI
+      XOR    CS:[BX+SI+0BAB9H],DI
+      XOR    CS:[BX+DI+0BBBAH],DI
+      XOR    CS:[BP+SI+0BCBBH],DI
+      XOR    CS:[BP+DI+0BDBCH],DI
+      XOR    CS:[SI+0BEBDH],DI
+      XOR    CS:[DI+0BFBEH],DI
+      XOR    CS:[BP+0C0BFH],DI
+      XOR    CS:[BX+0C1C0H],DI
+      XOR    CS:[BX+SI],AX
+      XOR    CS:[BX+DI],AX
+      XOR    CS:[BP+SI],AX
+      XOR    CS:[BP+DI],AX
+      XOR    CS:[SI],AX
+      XOR    CS:[DI],AX
+      XOR    CS:[0807H],AX
+      XOR    CS:[BX],AX
+      XOR    CS:[BX+SI],CX
+      XOR    CS:[BX+DI],CX
+      XOR    CS:[BP+SI],CX
+      XOR    CS:[BP+DI],CX
+      XOR    CS:[SI],CX
+      XOR    CS:[DI],CX
+      XOR    CS:[100FH],CX
+      XOR    CS:[BX],CX
+      XOR    CS:[BX+SI],DX
+      XOR    CS:[BX+DI],DX
+      XOR    CS:[BP+SI],DX
+      XOR    CS:[BP+DI],DX
+      XOR    CS:[SI],DX
+      XOR    CS:[DI],DX
+      XOR    CS:[1817H],DX
+      XOR    CS:[BX],DX
+      XOR    CS:[BX+SI],BX
+      XOR    CS:[BX+DI],BX
+      XOR    CS:[BP+SI],BX
+      XOR    CS:[BP+DI],BX
+      XOR    CS:[SI],BX
+      XOR    CS:[DI],BX
+      XOR    CS:[201FH],BX
+      XOR    CS:[BX],BX
+      XOR    CS:[BX+SI],SP
+      XOR    CS:[BX+DI],SP
+      XOR    CS:[BP+SI],SP
+      XOR    CS:[BP+DI],SP
+      XOR    CS:[SI],SP
+      XOR    CS:[DI],SP
+      XOR    CS:[2827H],SP
+      XOR    CS:[BX],SP
+      XOR    CS:[BX+SI],BP
+      XOR    CS:[BX+DI],BP
+      XOR    CS:[BP+SI],BP
+      XOR    CS:[BP+DI],BP
+      XOR    CS:[SI],BP
+      XOR    CS:[DI],BP
+      XOR    CS:[302FH],BP
+      XOR    CS:[BX],BP
+      XOR    CS:[BX+SI],SI
+      XOR    CS:[BX+DI],SI
+      XOR    DH,CS:[BP+DI]
+      XOR    DH,CS:[SI]
+      XOR    DH,CS:[DI]
+      XOR    DH,CS:[3837H]
+      XOR    DH,CS:[BX]
+      XOR    BH,CS:[BX+SI]
+      XOR    BH,CS:[BX+DI]
+      XOR    BH,CS:[BP+SI]
+      XOR    SI,CS:[SI]
+      XOR    SI,CS:[DI]
+      XOR    SI,CS:[3837H]
+      XOR    SI,CS:[BX]
+      XOR    DI,CS:[BX+SI]
+      XOR    DI,CS:[BX+DI]
+      XOR    DI,CS:[BP+SI]
+      XOR    DI,CS:[BP+DI]
+      XOR    DI,CS:[SI]
+      XOR    DI,CS:[DI]
+      XOR    DI,CS:[403FH]
+      XOR    DI,CS:[BX]
+      XOR    AX,CS:[BX+SI+65]
+      XOR    AX,CS:[BX+SI-128]
+      XOR    AX,CS:[BX+DI+66]
+      XOR    AX,CS:[BX+DI-128]
+      XOR    AX,CS:[BP+SI+67]
+      XOR    AX,CS:[BP+SI-128]
+      XOR    AX,CS:[BP+DI+68]
+      XOR    AX,CS:[BP+DI-128]
+      XOR    AX,CS:[SI+69]
+      XOR    AX,CS:[SI-128]
+      XOR    AX,CS:[DI+70]
+      XOR    AX,CS:[DI-128]
+      XOR    AX,CS:[BP+71]
+      XOR    AX,CS:[BP-128]
+      XOR    AX,CS:[BX+72]
+      XOR    AX,CS:[BX-128]
+      XOR    CX,CS:[BX+SI+73]
+      XOR    CX,CS:[BX+SI-128]
+      XOR    CX,CS:[BX+DI+74]
+      XOR    CX,CS:[BX+DI-128]
+      XOR    CX,CS:[BP+SI+75]
+      XOR    CX,CS:[BP+SI-128]
+      XOR    CX,CS:[BP+DI+76]
+      XOR    CX,CS:[BP+DI-128]
+      XOR    CX,CS:[SI+77]
+      XOR    CX,CS:[SI-128]
+      XOR    CX,CS:[DI+78]
+      XOR    CX,CS:[DI-128]
+      XOR    CX,CS:[BP+79]
+      XOR    CX,CS:[BP-128]
+      XOR    CX,CS:[BX+80]
+      XOR    CX,CS:[BX-128]
+      XOR    DX,CS:[BX+SI+81]
+      XOR    DX,CS:[BX+SI-128]
+      XOR    DX,CS:[BX+DI+82]
+      XOR    DX,CS:[BX+DI-128]
+      XOR    DX,CS:[BP+SI+83]
+      XOR    DX,CS:[BP+SI-128]
+      XOR    DX,CS:[BP+DI+84]
+      XOR    DX,CS:[BP+DI-128]
+      XOR    DX,CS:[SI+85]
+      XOR    DX,CS:[SI-128]
+      XOR    DX,CS:[DI+86]
+      XOR    DX,CS:[DI-128]
+      XOR    DX,CS:[BP+87]
+      XOR    DX,CS:[BP-128]
+      XOR    DX,CS:[BX+88]
+      XOR    DX,CS:[BX-128]
+      XOR    BX,CS:[BX+SI+89]
+      XOR    BX,CS:[BX+SI-128]
+      XOR    BX,CS:[BX+DI+90]
+      XOR    BX,CS:[BX+DI-128]
+      XOR    BX,CS:[BP+SI+91]
+      XOR    BX,CS:[BP+SI-128]
+      XOR    BX,CS:[BP+DI+92]
+      XOR    BX,CS:[BP+DI-128]
+      XOR    BX,CS:[SI+93]
+      XOR    BX,CS:[SI-128]
+      XOR    BX,CS:[DI+94]
+      XOR    BX,CS:[DI-128]
+      XOR    BX,CS:[BP+95]
+      XOR    BX,CS:[BP-128]
+      XOR    BX,CS:[BX+96]
+      XOR    BX,CS:[BX-128]
+      XOR    SP,CS:[BX+SI+97]
+      XOR    SP,CS:[BX+SI-128]
+      XOR    SP,CS:[BX+DI+98]
+      XOR    SP,CS:[BX+DI-128]
+      XOR    SP,CS:[BP+SI+99]
+      XOR    SP,CS:[BP+SI-128]
+      XOR    SP,CS:[BP+DI+100]
+      XOR    SP,CS:[BP+DI-128]
+      XOR    SP,CS:[SI+101]
+      XOR    SP,CS:[SI-128]
+      XOR    SP,CS:[DI+102]
+      XOR    SP,CS:[DI-128]
+      XOR    SP,CS:[BP+103]
+      XOR    SP,CS:[BP-128]
+      XOR    SP,CS:[BX+104]
+      XOR    SP,CS:[BX-128]
+      XOR    BP,CS:[BX+SI+105]
+      XOR    BP,CS:[BX+SI-128]
+      XOR    BP,CS:[BX+DI+106]
+      XOR    BP,CS:[BX+DI-128]
+      XOR    BP,CS:[BP+SI+107]
+      XOR    BP,CS:[BP+SI-128]
+      XOR    BP,CS:[BP+DI+108]
+      XOR    BP,CS:[BP+DI-128]
+      XOR    BP,CS:[SI+109]
+      XOR    BP,CS:[SI-128]
+      XOR    BP,CS:[DI+110]
+      XOR    BP,CS:[DI-128]
+      XOR    BP,CS:[BP+111]
+      XOR    BP,CS:[BP-128]
+      XOR    BP,CS:[BX+112]
+      XOR    BP,CS:[BX-128]
+      XOR    SI,CS:[BX+SI+113]
+      XOR    SI,CS:[BX+SI-128]
+      XOR    SI,CS:[BX+DI+114]
+      XOR    SI,CS:[BX+DI-128]
+      XOR    SI,CS:[BP+SI+115]
+      XOR    SI,CS:[BP+SI-128]
+      XOR    SI,CS:[BP+DI+116]
+      XOR    SI,CS:[BP+DI-128]
+      XOR    SI,CS:[SI+117]
+      XOR    SI,CS:[SI-128]
+      XOR    SI,CS:[DI+118]
+      XOR    SI,CS:[DI-128]
+      XOR    SI,CS:[BP+119]
+      XOR    SI,CS:[BP-128]
+      XOR    SI,CS:[BX+120]
+      XOR    SI,CS:[BX-128]
+      XOR    DI,CS:[BX+SI+121]
+      XOR    DI,CS:[BX+SI-128]
+      XOR    DI,CS:[BX+DI+122]
+      XOR    DI,CS:[BX+DI-128]
+      XOR    DI,CS:[BP+SI+123]
+      XOR    DI,CS:[BP+SI-128]
+      XOR    DI,CS:[BP+DI+124]
+      XOR    DI,CS:[BP+DI-128]
+      XOR    DI,CS:[SI+125]
+      XOR    DI,CS:[SI-128]
+      XOR    DI,CS:[DI+126]
+      XOR    DI,CS:[DI-128]
+      XOR    DI,CS:[BP+127]
+      XOR    DI,CS:[BP-128]
+      XOR    DI,CS:[BX-128]
+      XOR    DI,CS:[BX+0]
+      XOR    AX,CS:[BX+SI+8281H]
+      XOR    AX,CS:[BX+DI+8382H]
+      XOR    AX,CS:[BP+SI+8483H]
+      XOR    AX,CS:[BP+DI+8584H]
+      XOR    AX,CS:[SI+8685H]
+      XOR    AX,CS:[DI+8786H]
+      XOR    AX,CS:[BP+8887H]
+      XOR    AX,CS:[BX+8988H]
+      XOR    CX,CS:[BX+SI+8A89H]
+      XOR    CX,CS:[BX+DI+8B8AH]
+      XOR    CX,CS:[BP+SI+8C8BH]
+      XOR    CX,CS:[BP+DI+8D8CH]
+      XOR    CX,CS:[SI+8E8DH]
+      XOR    CX,CS:[DI+8F8EH]
+      XOR    CX,CS:[BP+908FH]
+      XOR    CX,CS:[BX+9190H]
+      XOR    DX,CS:[BX+SI+9291H]
+      XOR    DX,CS:[BX+DI+9392H]
+      XOR    DX,CS:[BP+SI+9493H]
+      XOR    DX,CS:[BP+DI+9594H]
+      XOR    DX,CS:[SI+9695H]
+      XOR    DX,CS:[DI+9796H]
+      XOR    DX,CS:[BP+9897H]
+      XOR    DX,CS:[BX+9998H]
+      XOR    BX,CS:[BX+SI+9A99H]
+      XOR    BX,CS:[BX+DI+9B9AH]
+      XOR    BX,CS:[BP+SI+9C9BH]
+      XOR    BX,CS:[BP+DI+9D9CH]
+      XOR    BX,CS:[SI+9E9DH]
+      XOR    BX,CS:[DI+9F9EH]
+      XOR    BX,CS:[BP+0A09FH]
+      XOR    BX,CS:[BX+0A1A0H]
+      XOR    SP,CS:[BX+SI+0A2A1H]
+      XOR    SP,CS:[BX+DI+0A3A2H]
+      XOR    SP,CS:[BP+SI+0A4A3H]
+      XOR    SP,CS:[BP+DI+0A5A4H]
+      XOR    SP,CS:[SI+0A6A5H]
+      XOR    SP,CS:[DI+0A7A6H]
+      XOR    SP,CS:[BP+0A8A7H]
+      XOR    SP,CS:[BX+0A9A8H]
+      XOR    BP,CS:[BX+SI+0AAA9H]
+      XOR    BP,CS:[BX+DI+0ABAAH]
+      XOR    BP,CS:[BP+SI+0ACABH]
+      XOR    BP,CS:[BP+DI+0ADACH]
+      XOR    BP,CS:[SI+0AEADH]
+      XOR    BP,CS:[DI+0AFAEH]
+      XOR    BP,CS:[BP+0B0AFH]
+      XOR    BP,CS:[BX+0B1B0H]
+      XOR    SI,CS:[BX+SI+0B2B1H]
+      XOR    SI,CS:[BX+DI+0B3B2H]
+      XOR    SI,CS:[BP+SI+0B4B3H]
+      XOR    SI,CS:[BP+DI+0B5B4H]
+      XOR    SI,CS:[SI+0B6B5H]
+      XOR    SI,CS:[DI+0B7B6H]
+      XOR    SI,CS:[BP+0B8B7H]
+      XOR    SI,CS:[BX+0B9B8H]
+      XOR    DI,CS:[BX+SI+0BAB9H]
+      XOR    DI,CS:[BX+DI+0BBBAH]
+      XOR    DI,CS:[BP+SI+0BCBBH]
+      XOR    DI,CS:[BP+DI+0BDBCH]
+      XOR    DI,CS:[SI+0BEBDH]
+      XOR    DI,CS:[DI+0BFBEH]
+      XOR    DI,CS:[BP+0C0BFH]
+      XOR    DI,CS:[BX+0C1C0H]
+      XOR    AX,CS:[BX+SI]
+      XOR    AX,CS:[BX+DI]
+      XOR    AX,CS:[BP+SI]
+      XOR    AX,CS:[BP+DI]
+      XOR    AX,CS:[SI]
+      XOR    AX,CS:[DI]
+      XOR    AX,CS:[0807H]
+      XOR    AX,CS:[BX]
+      XOR    CX,CS:[BX+SI]
+      XOR    CX,CS:[BX+DI]
+      XOR    CX,CS:[BP+SI]
+      XOR    CX,CS:[BP+DI]
+      XOR    CX,CS:[SI]
+      XOR    CX,CS:[DI]
+      XOR    CX,CS:[100FH]
+      XOR    CX,CS:[BX]
+      XOR    DX,CS:[BX+SI]
+      XOR    DX,CS:[BX+DI]
+      XOR    DX,CS:[BP+SI]
+      XOR    DX,CS:[BP+DI]
+      XOR    DX,CS:[SI]
+      XOR    DX,CS:[DI]
+      XOR    DX,CS:[1817H]
+      XOR    DX,CS:[BX]
+      XOR    BX,CS:[BX+SI]
+      XOR    BX,CS:[BX+DI]
+      XOR    BX,CS:[BP+SI]
+      XOR    BX,CS:[BP+DI]
+      XOR    BX,CS:[SI]
+      XOR    BX,CS:[DI]
+      XOR    BX,CS:[201FH]
+      XOR    BX,CS:[BX]
+      XOR    SP,CS:[BX+SI]
+      XOR    SP,CS:[BX+DI]
+      XOR    SP,CS:[BP+SI]
+      XOR    SP,CS:[BP+DI]
+      XOR    SP,CS:[SI]
+      XOR    SP,CS:[DI]
+      XOR    SP,CS:[2827H]
+      XOR    SP,CS:[BX]
+      XOR    BP,CS:[BX+SI]
+      XOR    BP,CS:[BX+DI]
+      XOR    BP,CS:[BP+SI]
+      XOR    BP,CS:[BP+DI]
+      XOR    BP,CS:[SI]
+      XOR    BP,CS:[DI]
+      XOR    BP,CS:[302FH]
+      XOR    BP,CS:[BX]
+      XOR    SI,CS:[BX+SI]
+      XOR    SI,CS:[BX+DI]
+      XOR    SI,CS:[BP+SI]
+      XOR    SI,CS:[BP+DI]
+      CMP    CS:[BX+DI],BH
+      CMP    CS:[BP+SI],BH
+      CMP    CS:[BP+DI],BH
+      CMP    CS:[SI],BH
+      CMP    CS:[DI],BH
+      CMP    CS:[403FH],BH
+      CMP    CS:[BX],BH
+      CMP    CS:[BX+SI+65],AL
+      CMP    CS:[BX+SI-128],AL
+      CMP    CS:[BX+DI+66],AL
+      CMP    CS:[BX+DI-128],AL
+      CMP    CS:[BP+SI+67],AL
+      CMP    CS:[BP+SI-128],AL
+      CMP    CS:[BP+DI+68],AL
+      CMP    CS:[BP+DI-128],AL
+      CMP    CS:[SI+69],AL
+      CMP    CS:[SI-128],AL
+      CMP    CS:[DI+70],AL
+      CMP    CS:[DI-128],AL
+      CMP    CS:[BP+71],AL
+      CMP    CS:[BP-128],AL
+      CMP    CS:[BX+72],AL
+      CMP    CS:[BX-128],AL
+      CMP    CS:[BX+SI+73],CL
+      CMP    CS:[BX+SI-128],CL
+      CMP    CS:[BX+DI+74],CL
+      CMP    CS:[BX+DI-128],CL
+      CMP    CS:[BP+SI+75],CL
+      CMP    CS:[BP+SI-128],CL
+      CMP    CS:[BP+DI+76],CL
+      CMP    CS:[BP+DI-128],CL
+      CMP    CS:[SI+77],CL
+      CMP    CS:[SI-128],CL
+      CMP    CS:[DI+78],CL
+      CMP    CS:[DI-128],CL
+      CMP    CS:[BP+79],CL
+      CMP    CS:[BP-128],CL
+      CMP    CS:[BX+80],CL
+      CMP    CS:[BX-128],CL
+      CMP    CS:[BX+SI+81],DL
+      CMP    CS:[BX+SI-128],DL
+      CMP    CS:[BX+DI+82],DL
+      CMP    CS:[BX+DI-128],DL
+      CMP    CS:[BP+SI+83],DL
+      CMP    CS:[BP+SI-128],DL
+      CMP    CS:[BP+DI+84],DL
+      CMP    CS:[BP+DI-128],DL
+      CMP    CS:[SI+85],DL
+      CMP    CS:[SI-128],DL
+      CMP    CS:[DI+86],DL
+      CMP    CS:[DI-128],DL
+      CMP    CS:[BP+87],DL
+      CMP    CS:[BP-128],DL
+      CMP    CS:[BX+88],DL
+      CMP    CS:[BX-128],DL
+      CMP    CS:[BX+SI+89],BL
+      CMP    CS:[BX+SI-128],BL
+      CMP    CS:[BX+DI+90],BL
+      CMP    CS:[BX+DI-128],BL
+      CMP    CS:[BP+SI+91],BL
+      CMP    CS:[BP+SI-128],BL
+      CMP    CS:[BP+DI+92],BL
+      CMP    CS:[BP+DI-128],BL
+      CMP    CS:[SI+93],BL
+      CMP    CS:[SI-128],BL
+      CMP    CS:[DI+94],BL
+      CMP    CS:[DI-128],BL
+      CMP    CS:[BP+95],BL
+      CMP    CS:[BP-128],BL
+      CMP    CS:[BX+96],BL
+      CMP    CS:[BX-128],BL
+      CMP    CS:[BX+SI+97],AH
+      CMP    CS:[BX+SI-128],AH
+      CMP    CS:[BX+DI+98],AH
+      CMP    CS:[BX+DI-128],AH
+      CMP    CS:[BP+SI+99],AH
+      CMP    CS:[BP+SI-128],AH
+      CMP    CS:[BP+DI+100],AH
+      CMP    CS:[BP+DI-128],AH
+      CMP    CS:[SI+101],AH
+      CMP    CS:[SI-128],AH
+      CMP    CS:[DI+102],AH
+      CMP    CS:[DI-128],AH
+      CMP    CS:[BP+103],AH
+      CMP    CS:[BP-128],AH
+      CMP    CS:[BX+104],AH
+      CMP    CS:[BX-128],AH
+      CMP    CS:[BX+SI+8281H],AL
+      CMP    CS:[BX+DI+8382H],AL
+      CMP    CS:[BP+SI+8483H],AL
+      CMP    CS:[BP+DI+8584H],AL
+      CMP    CS:[SI+8685H],AL
+      CMP    CS:[DI+8786H],AL
+      CMP    CS:[BP+8887H],AL
+      CMP    CS:[BX+8988H],AL
+      CMP    CS:[BX+SI+8A89H],CL
+      CMP    CS:[BX+DI+8B8AH],CL
+      CMP    CS:[BP+SI+8C8BH],CL
+      CMP    CS:[BP+DI+8D8CH],CL
+      CMP    CS:[SI+8E8DH],CL
+      CMP    CS:[DI+8F8EH],CL
+      CMP    CS:[BP+908FH],CL
+      CMP    CS:[BX+9190H],CL
+      CMP    CS:[BX+SI+9291H],DL
+      CMP    CS:[BX+DI+9392H],DL
+      CMP    CS:[BP+SI+9493H],DL
+      CMP    CS:[BP+DI+9594H],DL
+      CMP    CS:[SI+9695H],DL
+      CMP    CS:[DI+9796H],DL
+      CMP    CS:[BP+9897H],DL
+      CMP    CS:[BX+9998H],DL
+      CMP    CS:[BX+SI+9A99H],BL
+      CMP    CS:[BX+DI+9B9AH],BL
+      CMP    CS:[BP+SI+9C9BH],BL
+      CMP    CS:[BP+DI+9D9CH],BL
+      CMP    CS:[SI+9E9DH],BL
+      CMP    CS:[DI+9F9EH],BL
+      CMP    CS:[BP+0A09FH],BL
+      CMP    CS:[BX+0A1A0H],BL
+      CMP    CS:[BX+SI+0A2A1H],AH
+      CMP    CS:[BX+DI+0A3A2H],AH
+      CMP    CS:[BP+SI+0A4A3H],AH
+      CMP    CS:[BP+DI+0A5A4H],AH
+      CMP    CS:[SI+0A6A5H],AH
+      CMP    CS:[DI+0A7A6H],AH
+      CMP    CS:[BP+0A8A7H],AH
+      CMP    CS:[BX+0A9A8H],AH
+      CMP    CS:[BP+SI],DI
+      CMP    CS:[BP+DI],DI
+      CMP    CS:[SI],DI
+      CMP    CS:[DI],DI
+      CMP    CS:[403FH],DI
+      CMP    CS:[BX],DI
+      CMP    CS:[BX+SI+65],AX
+      CMP    CS:[BX+SI-128],AX
+      CMP    CS:[BX+DI+66],AX
+      CMP    CS:[BX+DI-128],AX
+      CMP    CS:[BP+SI+67],AX
+      CMP    CS:[BP+SI-128],AX
+      CMP    CS:[BP+DI+68],AX
+      CMP    CS:[BP+DI-128],AX
+      CMP    CS:[SI+69],AX
+      CMP    CS:[SI-128],AX
+      CMP    CS:[DI+70],AX
+      CMP    CS:[DI-128],AX
+      CMP    CS:[BP+71],AX
+      CMP    CS:[BP-128],AX
+      CMP    CS:[BX+72],AX
+      CMP    CS:[BX-128],AX
+      CMP    CS:[BX+SI+73],CX
+      CMP    CS:[BX+SI-128],CX
+      CMP    CS:[BX+DI+74],CX
+      CMP    CS:[BX+DI-128],CX
+      CMP    CS:[BP+SI+75],CX
+      CMP    CS:[BP+SI-128],CX
+      CMP    CS:[BP+DI+76],CX
+      CMP    CS:[BP+DI-128],CX
+      CMP    CS:[SI+77],CX
+      CMP    CS:[SI-128],CX
+      CMP    CS:[DI+78],CX
+      CMP    CS:[DI-128],CX
+      CMP    CS:[BP+79],CX
+      CMP    CS:[BP-128],CX
+      CMP    CS:[BX+80],CX
+      CMP    CS:[BX-128],CX
+      CMP    CS:[BX+SI+81],DX
+      CMP    CS:[BX+SI-128],DX
+      CMP    CS:[BX+DI+82],DX
+      CMP    CS:[BX+DI-128],DX
+      CMP    CS:[BP+SI+83],DX
+      CMP    CS:[BP+SI-128],DX
+      CMP    CS:[BP+DI+84],DX
+      CMP    CS:[BP+DI-128],DX
+      CMP    CS:[SI+85],DX
+      CMP    CS:[SI-128],DX
+      CMP    CS:[DI+86],DX
+      CMP    CS:[DI-128],DX
+      CMP    CS:[BP+87],DX
+      CMP    CS:[BP-128],DX
+      CMP    CS:[BX+88],DX
+      CMP    CS:[BX-128],DX
+      CMP    CS:[BX+SI+89],BX
+      CMP    CS:[BX+SI-128],BX
+      CMP    CS:[BX+DI+90],BX
+      CMP    CS:[BX+DI-128],BX
+      CMP    CS:[BP+SI+91],BX
+      CMP    CS:[BP+SI-128],BX
+      CMP    CS:[BP+DI+92],BX
+      CMP    CS:[BP+DI-128],BX
+      CMP    CS:[SI+93],BX
+      CMP    CS:[SI-128],BX
+      CMP    CS:[DI+94],BX
+      CMP    CS:[DI-128],BX
+      CMP    CS:[BP+95],BX
+      CMP    CS:[BP-128],BX
+      CMP    CS:[BX+96],BX
+      CMP    CS:[BX-128],BX
+      CMP    CS:[BX+SI+97],SP
+      CMP    CS:[BX+SI-128],SP
+      CMP    CS:[BX+DI+98],SP
+      CMP    CS:[BX+DI-128],SP
+      CMP    CS:[BP+SI+99],SP
+      CMP    CS:[BP+SI-128],SP
+      CMP    CS:[BP+DI+100],SP
+      CMP    CS:[BP+DI-128],SP
+      CMP    CS:[SI+101],SP
+      CMP    CS:[SI-128],SP
+      CMP    CS:[DI+102],SP
+      CMP    CS:[DI-128],SP
+      CMP    CS:[BP+103],SP
+      CMP    CS:[BP-128],SP
+      CMP    CS:[BX+104],SP
+      CMP    CS:[BX-128],SP
+      CMP    CS:[BX+SI+105],BP
+      CMP    CS:[BX+SI-128],BP
+      CMP    CS:[BX+DI+106],BP
+      CMP    CS:[BX+DI-128],BP
+      CMP    CS:[BP+SI+107],BP
+      CMP    CS:[BP+SI-128],BP
+      CMP    CS:[BP+DI+108],BP
+      CMP    CS:[BP+DI-128],BP
+      CMP    CS:[SI+109],BP
+      CMP    CS:[SI-128],BP
+      CMP    CS:[DI+110],BP
+      CMP    CS:[DI-128],BP
+      CMP    CS:[BP+111],BP
+      CMP    CS:[BP-128],BP
+      CMP    CS:[BX+112],BP
+      CMP    CS:[BX-128],BP
+      CMP    CS:[BX+SI+113],SI
+      CMP    CS:[BX+SI-128],SI
+      CMP    CS:[BX+DI+114],SI
+      CMP    CS:[BX+DI-128],SI
+      CMP    CS:[BP+SI+115],SI
+      CMP    CS:[BP+SI-128],SI
+      CMP    CS:[BP+DI+116],SI
+      CMP    CS:[BP+DI-128],SI
+      CMP    CS:[SI+117],SI
+      CMP    CS:[SI-128],SI
+      CMP    CS:[DI+118],SI
+      CMP    CS:[DI-128],SI
+      CMP    CS:[BP+119],SI
+      CMP    CS:[BP-128],SI
+      CMP    CS:[BX+120],SI
+      CMP    CS:[BX-128],SI
+      CMP    CS:[BX+SI+121],DI
+      CMP    CS:[BX+SI-128],DI
+      CMP    CS:[BX+DI+122],DI
+      CMP    CS:[BX+DI-128],DI
+      CMP    CS:[BP+SI+123],DI
+      CMP    CS:[BP+SI-128],DI
+      CMP    CS:[BP+DI+124],DI
+      CMP    CS:[BP+DI-128],DI
+      CMP    CS:[SI+125],DI
+      CMP    CS:[SI-128],DI
+      CMP    CS:[DI+126],DI
+      CMP    CS:[DI-128],DI
+      CMP    CS:[BP+127],DI
+      CMP    CS:[BP-128],DI
+      CMP    CS:[BX-128],DI
+      CMP    CS:[BX+0],DI
+      CMP    CS:[BX+SI+8281H],AX
+      CMP    CS:[BX+DI+8382H],AX
+      CMP    CS:[BP+SI+8483H],AX
+      CMP    CS:[BP+DI+8584H],AX
+      CMP    CS:[SI+8685H],AX
+      CMP    CS:[DI+8786H],AX
+      CMP    CS:[BP+8887H],AX
+      CMP    CS:[BX+8988H],AX
+      CMP    CS:[BX+SI+8A89H],CX
+      CMP    CS:[BX+DI+8B8AH],CX
+      CMP    CS:[BP+SI+8C8BH],CX
+      CMP    CS:[BP+DI+8D8CH],CX
+      CMP    CS:[SI+8E8DH],CX
+      CMP    CS:[DI+8F8EH],CX
+      CMP    CS:[BP+908FH],CX
+      CMP    CS:[BX+9190H],CX
+      CMP    CS:[BX+SI+9291H],DX
+      CMP    CS:[BX+DI+9392H],DX
+      CMP    CS:[BP+SI+9493H],DX
+      CMP    CS:[BP+DI+9594H],DX
+      CMP    CS:[SI+9695H],DX
+      CMP    CS:[DI+9796H],DX
+      CMP    CS:[BP+9897H],DX
+      CMP    CS:[BX+9998H],DX
+      CMP    CS:[BX+SI+9A99H],BX
+      CMP    CS:[BX+DI+9B9AH],BX
+      CMP    CS:[BP+SI+9C9BH],BX
+      CMP    CS:[BP+DI+9D9CH],BX
+      CMP    CS:[SI+9E9DH],BX
+      CMP    CS:[DI+9F9EH],BX
+      CMP    CS:[BP+0A09FH],BX
+      CMP    CS:[BX+0A1A0H],BX
+      CMP    CS:[BX+SI+0A2A1H],SP
+      CMP    CS:[BX+DI+0A3A2H],SP
+      CMP    CS:[BP+SI+0A4A3H],SP
+      CMP    CS:[BP+DI+0A5A4H],SP
+      CMP    CS:[SI+0A6A5H],SP
+      CMP    CS:[DI+0A7A6H],SP
+      CMP    CS:[BP+0A8A7H],SP
+      CMP    CS:[BX+0A9A8H],SP
+      CMP    CS:[BX+SI+0AAA9H],BP
+      CMP    CS:[BX+DI+0ABAAH],BP
+      CMP    CS:[BP+SI+0ACABH],BP
+      CMP    CS:[BP+DI+0ADACH],BP
+      CMP    CS:[SI+0AEADH],BP
+      CMP    CS:[DI+0AFAEH],BP
+      CMP    CS:[BP+0B0AFH],BP
+      CMP    CS:[BX+0B1B0H],BP
+      CMP    CS:[BX+SI+0B2B1H],SI
+      CMP    CS:[BX+DI+0B3B2H],SI
+      CMP    CS:[BP+SI+0B4B3H],SI
+      CMP    CS:[BP+DI+0B5B4H],SI
+      CMP    CS:[SI+0B6B5H],SI
+      CMP    CS:[DI+0B7B6H],SI
+      CMP    CS:[BP+0B8B7H],SI
+      CMP    CS:[BX+0B9B8H],SI
+      CMP    CS:[BX+SI+0BAB9H],DI
+      CMP    CS:[BX+DI+0BBBAH],DI
+      CMP    CS:[BP+SI+0BCBBH],DI
+      CMP    CS:[BP+DI+0BDBCH],DI
+      CMP    CS:[SI+0BEBDH],DI
+      CMP    CS:[DI+0BFBEH],DI
+      CMP    CS:[BP+0C0BFH],DI
+      CMP    CS:[BX+0C1C0H],DI
+      CMP    CS:[BX+SI],AX
+      CMP    CS:[BX+DI],AX
+      CMP    CS:[BP+SI],AX
+      CMP    CS:[BP+DI],AX
+      CMP    CS:[SI],AX
+      CMP    CS:[DI],AX
+      CMP    CS:[0807H],AX
+      CMP    CS:[BX],AX
+      CMP    CS:[BX+SI],CX
+      CMP    CS:[BX+DI],CX
+      CMP    CS:[BP+SI],CX
+      CMP    CS:[BP+DI],CX
+      CMP    CS:[SI],CX
+      CMP    CS:[DI],CX
+      CMP    CS:[100FH],CX
+      CMP    CS:[BX],CX
+      CMP    CS:[BX+SI],DX
+      CMP    CS:[BX+DI],DX
+      CMP    CS:[BP+SI],DX
+      CMP    CS:[BP+DI],DX
+      CMP    CS:[SI],DX
+      CMP    CS:[DI],DX
+      CMP    CS:[1817H],DX
+      CMP    CS:[BX],DX
+      CMP    CS:[BX+SI],BX
+      CMP    CS:[BX+DI],BX
+      CMP    CS:[BP+SI],BX
+      CMP    CS:[BP+DI],BX
+      CMP    CS:[SI],BX
+      CMP    CS:[DI],BX
+      CMP    CS:[201FH],BX
+      CMP    CS:[BX],BX
+      CMP    CS:[BX+SI],SP
+      CMP    CS:[BX+DI],SP
+      CMP    CS:[BP+SI],SP
+      CMP    CS:[BP+DI],SP
+      CMP    CS:[SI],SP
+      CMP    CS:[DI],SP
+      CMP    CS:[2827H],SP
+      CMP    CS:[BX],SP
+      CMP    CS:[BX+SI],BP
+      CMP    CS:[BX+DI],BP
+      CMP    CS:[BP+SI],BP
+      CMP    CS:[BP+DI],BP
+      CMP    CS:[SI],BP
+      CMP    CS:[DI],BP
+      CMP    CS:[302FH],BP
+      CMP    CS:[BX],BP
+      CMP    CS:[BX+SI],SI
+      CMP    CS:[BX+DI],SI
+      CMP    CS:[BP+SI],SI
+      CMP    CS:[BP+DI],SI
+      CMP    CS:[SI],SI
+      CMP    CS:[DI],SI
+      CMP    CS:[3837H],SI
+      CMP    CS:[BX],SI
+      CMP    CS:[BX+SI],DI
+      CMP    CS:[BX+DI],DI
+      CMP    BH,CS:[BP+DI]
+      CMP    BH,CS:[SI]
+      CMP    BH,CS:[DI]
+      CMP    BH,CS:[403FH]
+      CMP    BH,CS:[BX]
+      CMP    AL,CS:[BX+SI+65]
+      CMP    AL,CS:[BX+SI-128]
+      CMP    AL,CS:[BX+DI+66]
+      CMP    AL,CS:[BX+DI-128]
+      CMP    AL,CS:[BP+SI+67]
+      CMP    AL,CS:[BP+SI-128]
+      CMP    AL,CS:[BP+DI+68]
+      CMP    AL,CS:[BP+DI-128]
+      CMP    AL,CS:[SI+69]
+      CMP    AL,CS:[SI-128]
+      CMP    AL,CS:[DI+70]
+      CMP    AL,CS:[DI-128]
+      CMP    AL,CS:[BP+71]
+      CMP    AL,CS:[BP-128]
+      CMP    AL,CS:[BX+72]
+      CMP    AL,CS:[BX-128]
+      CMP    CL,CS:[BX+SI+73]
+      CMP    CL,CS:[BX+SI-128]
+      CMP    CL,CS:[BX+DI+74]
+      CMP    CL,CS:[BX+DI-128]
+      CMP    CL,CS:[BP+SI+75]
+      CMP    CL,CS:[BP+SI-128]
+      CMP    CL,CS:[BP+DI+76]
+      CMP    CL,CS:[BP+DI-128]
+      CMP    CL,CS:[SI+77]
+      CMP    CL,CS:[SI-128]
+      CMP    CL,CS:[DI+78]
+      CMP    CL,CS:[DI-128]
+      CMP    CL,CS:[BP+79]
+      CMP    CL,CS:[BP-128]
+      CMP    CL,CS:[BX+80]
+      CMP    CL,CS:[BX-128]
+      CMP    DL,CS:[BX+SI+81]
+      CMP    DL,CS:[BX+SI-128]
+      CMP    DL,CS:[BX+DI+82]
+      CMP    DL,CS:[BX+DI-128]
+      CMP    DL,CS:[BP+SI+83]
+      CMP    DL,CS:[BP+SI-128]
+      CMP    DL,CS:[BP+DI+84]
+      CMP    DL,CS:[BP+DI-128]
+      CMP    DL,CS:[SI+85]
+      CMP    DL,CS:[SI-128]
+      CMP    DL,CS:[DI+86]
+      CMP    DL,CS:[DI-128]
+      CMP    DL,CS:[BP+87]
+      CMP    DL,CS:[BP-128]
+      CMP    DL,CS:[BX+88]
+      CMP    DL,CS:[BX-128]
+      CMP    BL,CS:[BX+SI+89]
+      CMP    BL,CS:[BX+SI-128]
+      CMP    BL,CS:[BX+DI+90]
+      CMP    BL,CS:[BX+DI-128]
+      CMP    BL,CS:[BP+SI+91]
+      CMP    BL,CS:[BP+SI-128]
+      CMP    BL,CS:[BP+DI+92]
+      CMP    BL,CS:[BP+DI-128]
+      CMP    BL,CS:[SI+93]
+      CMP    BL,CS:[SI-128]
+      CMP    BL,CS:[DI+94]
+      CMP    BL,CS:[DI-128]
+      CMP    BL,CS:[BP+95]
+      CMP    BL,CS:[BP-128]
+      CMP    BL,CS:[BX+96]
+      CMP    BL,CS:[BX-128]
+      CMP    AH,CS:[BX+SI+97]
+      CMP    AH,CS:[BX+SI-128]
+      CMP    AH,CS:[BX+DI+98]
+      CMP    AH,CS:[BX+DI-128]
+      CMP    AH,CS:[BP+SI+99]
+      CMP    AH,CS:[BP+SI-128]
+      CMP    AH,CS:[BP+DI+100]
+      CMP    AH,CS:[BP+DI-128]
+      CMP    AH,CS:[SI+101]
+      CMP    AH,CS:[SI-128]
+      CMP    AH,CS:[DI+102]
+      CMP    AH,CS:[DI-128]
+      CMP    AH,CS:[BP+103]
+      CMP    AH,CS:[BP-128]
+      CMP    AH,CS:[BX+104]
+      CMP    AH,CS:[BX-128]
+      CMP    AL,CS:[BX+SI+8281H]
+      CMP    AL,CS:[BX+DI+8382H]
+      CMP    AL,CS:[BP+SI+8483H]
+      CMP    AL,CS:[BP+DI+8584H]
+      CMP    AL,CS:[SI+8685H]
+      CMP    AL,CS:[DI+8786H]
+      CMP    AL,CS:[BP+8887H]
+      CMP    AL,CS:[BX+8988H]
+      CMP    CL,CS:[BX+SI+8A89H]
+      CMP    CL,CS:[BX+DI+8B8AH]
+      CMP    CL,CS:[BP+SI+8C8BH]
+      CMP    CL,CS:[BP+DI+8D8CH]
+      CMP    CL,CS:[SI+8E8DH]
+      CMP    CL,CS:[DI+8F8EH]
+      CMP    CL,CS:[BP+908FH]
+      CMP    CL,CS:[BX+9190H]
+      CMP    DL,CS:[BX+SI+9291H]
+      CMP    DL,CS:[BX+DI+9392H]
+      CMP    DL,CS:[BP+SI+9493H]
+      CMP    DL,CS:[BP+DI+9594H]
+      CMP    DL,CS:[SI+9695H]
+      CMP    DL,CS:[DI+9796H]
+      CMP    DL,CS:[BP+9897H]
+      CMP    DL,CS:[BX+9998H]
+      CMP    BL,CS:[BX+SI+9A99H]
+      CMP    BL,CS:[BX+DI+9B9AH]
+      CMP    BL,CS:[BP+SI+9C9BH]
+      CMP    BL,CS:[BP+DI+9D9CH]
+      CMP    BL,CS:[SI+9E9DH]
+      CMP    BL,CS:[DI+9F9EH]
+      CMP    BL,CS:[BP+0A09FH]
+      CMP    BL,CS:[BX+0A1A0H]
+      CMP    AH,CS:[BX+SI+0A2A1H]
+      CMP    AH,CS:[BX+DI+0A3A2H]
+      CMP    AH,CS:[BP+SI+0A4A3H]
+      CMP    AH,CS:[BP+DI+0A5A4H]
+      CMP    AH,CS:[SI+0A6A5H]
+      CMP    AH,CS:[DI+0A7A6H]
+      CMP    AH,CS:[BP+0A8A7H]
+      CMP    AH,CS:[BX+0A9A8H]
+      CMP    DI,CS:[SI]
+      CMP    DI,CS:[DI]
+      CMP    DI,CS:[403FH]
+      CMP    DI,CS:[BX]
+      CMP    AX,CS:[BX+SI+65]
+      CMP    AX,CS:[BX+SI-128]
+      CMP    AX,CS:[BX+DI+66]
+      CMP    AX,CS:[BX+DI-128]
+      CMP    AX,CS:[BP+SI+67]
+      CMP    AX,CS:[BP+SI-128]
+      CMP    AX,CS:[BP+DI+68]
+      CMP    AX,CS:[BP+DI-128]
+      CMP    AX,CS:[SI+69]
+      CMP    AX,CS:[SI-128]
+      CMP    AX,CS:[DI+70]
+      CMP    AX,CS:[DI-128]
+      CMP    AX,CS:[BP+71]
+      CMP    AX,CS:[BP-128]
+      CMP    AX,CS:[BX+72]
+      CMP    AX,CS:[BX-128]
+      CMP    CX,CS:[BX+SI+73]
+      CMP    CX,CS:[BX+SI-128]
+      CMP    CX,CS:[BX+DI+74]
+      CMP    CX,CS:[BX+DI-128]
+      CMP    CX,CS:[BP+SI+75]
+      CMP    CX,CS:[BP+SI-128]
+      CMP    CX,CS:[BP+DI+76]
+      CMP    CX,CS:[BP+DI-128]
+      CMP    CX,CS:[SI+77]
+      CMP    CX,CS:[SI-128]
+      CMP    CX,CS:[DI+78]
+      CMP    CX,CS:[DI-128]
+      CMP    CX,CS:[BP+79]
+      CMP    CX,CS:[BP-128]
+      CMP    CX,CS:[BX+80]
+      CMP    CX,CS:[BX-128]
+      CMP    DX,CS:[BX+SI+81]
+      CMP    DX,CS:[BX+SI-128]
+      CMP    DX,CS:[BX+DI+82]
+      CMP    DX,CS:[BX+DI-128]
+      CMP    DX,CS:[BP+SI+83]
+      CMP    DX,CS:[BP+SI-128]
+      CMP    DX,CS:[BP+DI+84]
+      CMP    DX,CS:[BP+DI-128]
+      CMP    DX,CS:[SI+85]
+      CMP    DX,CS:[SI-128]
+      CMP    DX,CS:[DI+86]
+      CMP    DX,CS:[DI-128]
+      CMP    DX,CS:[BP+87]
+      CMP    DX,CS:[BP-128]
+      CMP    DX,CS:[BX+88]
+      CMP    DX,CS:[BX-128]
+      CMP    BX,CS:[BX+SI+89]
+      CMP    BX,CS:[BX+SI-128]
+      CMP    BX,CS:[BX+DI+90]
+      CMP    BX,CS:[BX+DI-128]
+      CMP    BX,CS:[BP+SI+91]
+      CMP    BX,CS:[BP+SI-128]
+      CMP    BX,CS:[BP+DI+92]
+      CMP    BX,CS:[BP+DI-128]
+      CMP    BX,CS:[SI+93]
+      CMP    BX,CS:[SI-128]
+      CMP    BX,CS:[DI+94]
+      CMP    BX,CS:[DI-128]
+      CMP    BX,CS:[BP+95]
+      CMP    BX,CS:[BP-128]
+      CMP    BX,CS:[BX+96]
+      CMP    BX,CS:[BX-128]
+      CMP    SP,CS:[BX+SI+97]
+      CMP    SP,CS:[BX+SI-128]
+      CMP    SP,CS:[BX+DI+98]
+      CMP    SP,CS:[BX+DI-128]
+      CMP    SP,CS:[BP+SI+99]
+      CMP    SP,CS:[BP+SI-128]
+      CMP    SP,CS:[BP+DI+100]
+      CMP    SP,CS:[BP+DI-128]
+      CMP    SP,CS:[SI+101]
+      CMP    SP,CS:[SI-128]
+      CMP    SP,CS:[DI+102]
+      CMP    SP,CS:[DI-128]
+      CMP    SP,CS:[BP+103]
+      CMP    SP,CS:[BP-128]
+      CMP    SP,CS:[BX+104]
+      CMP    SP,CS:[BX-128]
+      CMP    BP,CS:[BX+SI+105]
+      CMP    BP,CS:[BX+SI-128]
+      CMP    BP,CS:[BX+DI+106]
+      CMP    BP,CS:[BX+DI-128]
+      CMP    BP,CS:[BP+SI+107]
+      CMP    BP,CS:[BP+SI-128]
+      CMP    BP,CS:[BP+DI+108]
+      CMP    BP,CS:[BP+DI-128]
+      CMP    BP,CS:[SI+109]
+      CMP    BP,CS:[SI-128]
+      CMP    BP,CS:[DI+110]
+      CMP    BP,CS:[DI-128]
+      CMP    BP,CS:[BP+111]
+      CMP    BP,CS:[BP-128]
+      CMP    BP,CS:[BX+112]
+      CMP    BP,CS:[BX-128]
+      CMP    SI,CS:[BX+SI+113]
+      CMP    SI,CS:[BX+SI-128]
+      CMP    SI,CS:[BX+DI+114]
+      CMP    SI,CS:[BX+DI-128]
+      CMP    SI,CS:[BP+SI+115]
+      CMP    SI,CS:[BP+SI-128]
+      CMP    SI,CS:[BP+DI+116]
+      CMP    SI,CS:[BP+DI-128]
+      CMP    SI,CS:[SI+117]
+      CMP    SI,CS:[SI-128]
+      CMP    SI,CS:[DI+118]
+      CMP    SI,CS:[DI-128]
+      CMP    SI,CS:[BP+119]
+      CMP    SI,CS:[BP-128]
+      CMP    SI,CS:[BX+120]
+      CMP    SI,CS:[BX-128]
+      CMP    DI,CS:[BX+SI+121]
+      CMP    DI,CS:[BX+SI-128]
+      CMP    DI,CS:[BX+DI+122]
+      CMP    DI,CS:[BX+DI-128]
+      CMP    DI,CS:[BP+SI+123]
+      CMP    DI,CS:[BP+SI-128]
+      CMP    DI,CS:[BP+DI+124]
+      CMP    DI,CS:[BP+DI-128]
+      CMP    DI,CS:[SI+125]
+      CMP    DI,CS:[SI-128]
+      CMP    DI,CS:[DI+126]
+      CMP    DI,CS:[DI-128]
+      CMP    DI,CS:[BP+127]
+      CMP    DI,CS:[BP-128]
+      CMP    DI,CS:[BX-128]
+      CMP    DI,CS:[BX+0]
+      CMP    AX,CS:[BX+SI+8281H]
+      CMP    AX,CS:[BX+DI+8382H]
+      CMP    AX,CS:[BP+SI+8483H]
+      CMP    AX,CS:[BP+DI+8584H]
+      CMP    AX,CS:[SI+8685H]
+      CMP    AX,CS:[DI+8786H]
+      CMP    AX,CS:[BP+8887H]
+      CMP    AX,CS:[BX+8988H]
+      CMP    CX,CS:[BX+SI+8A89H]
+      CMP    CX,CS:[BX+DI+8B8AH]
+      CMP    CX,CS:[BP+SI+8C8BH]
+      CMP    CX,CS:[BP+DI+8D8CH]
+      CMP    CX,CS:[SI+8E8DH]
+      CMP    CX,CS:[DI+8F8EH]
+      CMP    CX,CS:[BP+908FH]
+      CMP    CX,CS:[BX+9190H]
+      CMP    DX,CS:[BX+SI+9291H]
+      CMP    DX,CS:[BX+DI+9392H]
+      CMP    DX,CS:[BP+SI+9493H]
+      CMP    DX,CS:[BP+DI+9594H]
+      CMP    DX,CS:[SI+9695H]
+      CMP    DX,CS:[DI+9796H]
+      CMP    DX,CS:[BP+9897H]
+      CMP    DX,CS:[BX+9998H]
+      CMP    BX,CS:[BX+SI+9A99H]
+      CMP    BX,CS:[BX+DI+9B9AH]
+      CMP    BX,CS:[BP+SI+9C9BH]
+      CMP    BX,CS:[BP+DI+9D9CH]
+      CMP    BX,CS:[SI+9E9DH]
+      CMP    BX,CS:[DI+9F9EH]
+      CMP    BX,CS:[BP+0A09FH]
+      CMP    BX,CS:[BX+0A1A0H]
+      CMP    SP,CS:[BX+SI+0A2A1H]
+      CMP    SP,CS:[BX+DI+0A3A2H]
+      CMP    SP,CS:[BP+SI+0A4A3H]
+      CMP    SP,CS:[BP+DI+0A5A4H]
+      CMP    SP,CS:[SI+0A6A5H]
+      CMP    SP,CS:[DI+0A7A6H]
+      CMP    SP,CS:[BP+0A8A7H]
+      CMP    SP,CS:[BX+0A9A8H]
+      CMP    BP,CS:[BX+SI+0AAA9H]
+      CMP    BP,CS:[BX+DI+0ABAAH]
+      CMP    BP,CS:[BP+SI+0ACABH]
+      CMP    BP,CS:[BP+DI+0ADACH]
+      CMP    BP,CS:[SI+0AEADH]
+      CMP    BP,CS:[DI+0AFAEH]
+      CMP    BP,CS:[BP+0B0AFH]
+      CMP    BP,CS:[BX+0B1B0H]
+      CMP    SI,CS:[BX+SI+0B2B1H]
+      CMP    SI,CS:[BX+DI+0B3B2H]
+      CMP    SI,CS:[BP+SI+0B4B3H]
+      CMP    SI,CS:[BP+DI+0B5B4H]
+      CMP    SI,CS:[SI+0B6B5H]
+      CMP    SI,CS:[DI+0B7B6H]
+      CMP    SI,CS:[BP+0B8B7H]
+      CMP    SI,CS:[BX+0B9B8H]
+      CMP    DI,CS:[BX+SI+0BAB9H]
+      CMP    DI,CS:[BX+DI+0BBBAH]
+      CMP    DI,CS:[BP+SI+0BCBBH]
+      CMP    DI,CS:[BP+DI+0BDBCH]
+      CMP    DI,CS:[SI+0BEBDH]
+      CMP    DI,CS:[DI+0BFBEH]
+      CMP    DI,CS:[BP+0C0BFH]
+      CMP    DI,CS:[BX+0C1C0H]
+      CMP    AX,CS:[BX+SI]
+      CMP    AX,CS:[BX+DI]
+      CMP    AX,CS:[BP+SI]
+      CMP    AX,CS:[BP+DI]
+      CMP    AX,CS:[SI]
+      CMP    AX,CS:[DI]
+      CMP    AX,CS:[0807H]
+      CMP    AX,CS:[BX]
+      CMP    CX,CS:[BX+SI]
+      CMP    CX,CS:[BX+DI]
+      CMP    CX,CS:[BP+SI]
+      CMP    CX,CS:[BP+DI]
+      CMP    CX,CS:[SI]
+      CMP    CX,CS:[DI]
+      CMP    CX,CS:[100FH]
+      CMP    CX,CS:[BX]
+      CMP    DX,CS:[BX+SI]
+      CMP    DX,CS:[BX+DI]
+      CMP    DX,CS:[BP+SI]
+      CMP    DX,CS:[BP+DI]
+      CMP    DX,CS:[SI]
+      CMP    DX,CS:[DI]
+      CMP    DX,CS:[1817H]
+      CMP    DX,CS:[BX]
+      CMP    BX,CS:[BX+SI]
+      CMP    BX,CS:[BX+DI]
+      CMP    BX,CS:[BP+SI]
+      CMP    BX,CS:[BP+DI]
+      CMP    BX,CS:[SI]
+      CMP    BX,CS:[DI]
+      CMP    BX,CS:[201FH]
+      CMP    BX,CS:[BX]
+      CMP    SP,CS:[BX+SI]
+      CMP    SP,CS:[BX+DI]
+      CMP    SP,CS:[BP+SI]
+      CMP    SP,CS:[BP+DI]
+      CMP    SP,CS:[SI]
+      CMP    SP,CS:[DI]
+      CMP    SP,CS:[2827H]
+      CMP    SP,CS:[BX]
+      CMP    BP,CS:[BX+SI]
+      CMP    BP,CS:[BX+DI]
+      CMP    BP,CS:[BP+SI]
+      CMP    BP,CS:[BP+DI]
+      CMP    BP,CS:[SI]
+      CMP    BP,CS:[DI]
+      CMP    BP,CS:[302FH]
+      CMP    BP,CS:[BX]
+      CMP    SI,CS:[BX+SI]
+      CMP    SI,CS:[BX+DI]
+      CMP    SI,CS:[BP+SI]
+      CMP    SI,CS:[BP+DI]
+      CMP    SI,CS:[SI]
+      CMP    SI,CS:[DI]
+      CMP    SI,CS:[3837H]
+      CMP    SI,CS:[BX]
+      CMP    DI,CS:[BX+SI]
+      CMP    DI,CS:[BX+DI]
+      CMP    DI,CS:[BP+SI]
+      CMP    DI,CS:[BP+DI]
+      ADD    BYTE PTR CS:[BX+DI+8382H],84H
+      ADD    BYTE PTR CS:[BP+SI+8382H],84H
+      ADD    BYTE PTR CS:[BP+DI+8382H],84H
+      ADD    BYTE PTR CS:[SI+8382H],84H
+      ADD    BYTE PTR CS:[DI+8382H],84H
+      ADD    BYTE PTR CS:[BP+8382H],84H
+      ADD    BYTE PTR CS:[BX+8382H],84H
+      OR     BYTE PTR CS:[BX+SI+8382H],84H
+      OR     BYTE PTR CS:[BX+DI+8382H],84H
+      OR     BYTE PTR CS:[BP+SI+8382H],84H
+      OR     BYTE PTR CS:[BP+DI+8382H],84H
+      OR     BYTE PTR CS:[SI+8382H],84H
+      OR     BYTE PTR CS:[DI+8382H],84H
+      OR     BYTE PTR CS:[BP+8382H],84H
+      OR     BYTE PTR CS:[BX+8382H],84H
+      ADC    BYTE PTR CS:[BX+SI+8382H],84H
+      ADC    BYTE PTR CS:[BX+DI+8382H],84H
+      ADC    BYTE PTR CS:[BP+SI+8382H],84H
+      ADC    BYTE PTR CS:[BP+DI+8382H],84H
+      ADC    BYTE PTR CS:[SI+8382H],84H
+      ADC    BYTE PTR CS:[DI+8382H],84H
+      ADC    BYTE PTR CS:[BP+8382H],84H
+      ADC    BYTE PTR CS:[BX+8382H],84H
+      SBB    BYTE PTR CS:[BX+SI+8382H],84H
+      SBB    BYTE PTR CS:[BX+DI+8382H],84H
+      SBB    BYTE PTR CS:[BP+SI+8382H],84H
+      SBB    BYTE PTR CS:[BP+DI+8382H],84H
+      SBB    BYTE PTR CS:[SI+8382H],84H
+      SBB    BYTE PTR CS:[DI+8382H],84H
+      SBB    BYTE PTR CS:[BP+8382H],84H
+      SBB    BYTE PTR CS:[BX+8382H],84H
+      AND    BYTE PTR CS:[BX+SI+8382H],84H
+      AND    BYTE PTR CS:[BX+DI+8382H],84H
+      AND    BYTE PTR CS:[BP+SI+8382H],84H
+      AND    BYTE PTR CS:[BP+DI+8382H],84H
+      AND    BYTE PTR CS:[SI+8382H],84H
+      AND    BYTE PTR CS:[DI+8382H],84H
+      AND    BYTE PTR CS:[BP+8382H],84H
+      AND    BYTE PTR CS:[BX+8382H],84H
+      SUB    BYTE PTR CS:[BX+SI+8382H],84H
+      SUB    BYTE PTR CS:[BX+DI+8382H],84H
+      SUB    BYTE PTR CS:[BP+SI+8382H],84H
+      SUB    BYTE PTR CS:[BP+DI+8382H],84H
+      SUB    BYTE PTR CS:[SI+8382H],84H
+      SUB    BYTE PTR CS:[DI+8382H],84H
+      SUB    BYTE PTR CS:[BP+8382H],84H
+      SUB    BYTE PTR CS:[BX+8382H],84H
+      XOR    BYTE PTR CS:[BX+SI+8382H],84H
+      XOR    BYTE PTR CS:[BX+DI+8382H],84H
+      XOR    BYTE PTR CS:[BP+SI+8382H],84H
+      XOR    BYTE PTR CS:[BP+DI+8382H],84H
+      XOR    BYTE PTR CS:[SI+8382H],84H
+      XOR    BYTE PTR CS:[DI+8382H],84H
+      XOR    BYTE PTR CS:[BP+8382H],84H
+      XOR    BYTE PTR CS:[BX+8382H],84H
+      CMP    BYTE PTR CS:[BX+SI+8382H],84H
+      CMP    BYTE PTR CS:[BX+DI+8382H],84H
+      CMP    BYTE PTR CS:[BP+SI+8382H],84H
+      CMP    BYTE PTR CS:[BP+DI+8382H],84H
+      CMP    BYTE PTR CS:[SI+8382H],84H
+      CMP    BYTE PTR CS:[DI+8382H],84H
+      CMP    BYTE PTR CS:[BP+8382H],84H
+      CMP    BYTE PTR CS:[BX+8382H],84H
+      ADD    BYTE PTR CS:[BX+SI],82H
+      ADD    WORD PTR CS:[BP+SI+8483H],8685H
+      ADD    WORD PTR CS:[BP+DI+8483H],8685H
+      ADD    WORD PTR CS:[SI+8483H],8685H
+      ADD    WORD PTR CS:[DI+8483H],8685H
+      ADD    WORD PTR CS:[BP+8483H],8685H
+      ADD    WORD PTR CS:[BX+8483H],8685H
+      OR     WORD PTR CS:[BX+SI+8483H],8685H
+      OR     WORD PTR CS:[BX+DI+8483H],8685H
+      OR     WORD PTR CS:[BP+SI+8483H],8685H
+      OR     WORD PTR CS:[BP+DI+8483H],8685H
+      OR     WORD PTR CS:[SI+8483H],8685H
+      OR     WORD PTR CS:[DI+8483H],8685H
+      OR     WORD PTR CS:[BP+8483H],8685H
+      OR     WORD PTR CS:[BX+8483H],8685H
+      ADC    WORD PTR CS:[BX+SI+8483H],8685H
+      ADC    WORD PTR CS:[BX+DI+8483H],8685H
+      ADC    WORD PTR CS:[BP+SI+8483H],8685H
+      ADC    WORD PTR CS:[BP+DI+8483H],8685H
+      ADC    WORD PTR CS:[SI+8483H],8685H
+      ADC    WORD PTR CS:[DI+8483H],8685H
+      ADC    WORD PTR CS:[BP+8483H],8685H
+      ADC    WORD PTR CS:[BX+8483H],8685H
+      SBB    WORD PTR CS:[BX+SI+8483H],8685H
+      SBB    WORD PTR CS:[BX+DI+8483H],8685H
+      SBB    WORD PTR CS:[BP+SI+8483H],8685H
+      SBB    WORD PTR CS:[BP+DI+8483H],8685H
+      SBB    WORD PTR CS:[SI+8483H],8685H
+      SBB    WORD PTR CS:[DI+8483H],8685H
+      SBB    WORD PTR CS:[BP+8483H],8685H
+      SBB    WORD PTR CS:[BX+8483H],8685H
+      AND    WORD PTR CS:[BX+SI+8483H],8685H
+      AND    WORD PTR CS:[BX+DI+8483H],8685H
+      AND    WORD PTR CS:[BP+SI+8483H],8685H
+      AND    WORD PTR CS:[BP+DI+8483H],8685H
+      AND    WORD PTR CS:[SI+8483H],8685H
+      AND    WORD PTR CS:[DI+8483H],8685H
+      AND    WORD PTR CS:[BP+8483H],8685H
+      AND    WORD PTR CS:[BX+8483H],8685H
+      SUB    WORD PTR CS:[BX+SI+8483H],8685H
+      SUB    WORD PTR CS:[BX+DI+8483H],8685H
+      SUB    WORD PTR CS:[BP+SI+8483H],8685H
+      SUB    WORD PTR CS:[BP+DI+8483H],8685H
+      SUB    WORD PTR CS:[SI+8483H],8685H
+      SUB    WORD PTR CS:[DI+8483H],8685H
+      SUB    WORD PTR CS:[BP+8483H],8685H
+      SUB    WORD PTR CS:[BX+8483H],8685H
+      XOR    WORD PTR CS:[BX+SI+8483H],8685H
+      XOR    WORD PTR CS:[BX+DI+8483H],8685H
+      XOR    WORD PTR CS:[BP+SI+8483H],8685H
+      XOR    WORD PTR CS:[BP+DI+8483H],8685H
+      XOR    WORD PTR CS:[SI+8483H],8685H
+      XOR    WORD PTR CS:[DI+8483H],8685H
+      XOR    WORD PTR CS:[BP+8483H],8685H
+      XOR    WORD PTR CS:[BX+8483H],8685H
+      CMP    WORD PTR CS:[BX+SI+8483H],8685H
+      CMP    WORD PTR CS:[BX+DI+8483H],8685H
+      CMP    WORD PTR CS:[BP+SI+8483H],8685H
+      CMP    WORD PTR CS:[BP+DI+8483H],8685H
+      CMP    WORD PTR CS:[SI+8483H],8685H
+      CMP    WORD PTR CS:[DI+8483H],8685H
+      CMP    WORD PTR CS:[BP+8483H],8685H
+      CMP    WORD PTR CS:[BX+8483H],8685H
+      ADD    WORD PTR CS:[BX+SI],8483H
+      ADD    WORD PTR CS:[SI+8685H],-79H
+      ADD    WORD PTR CS:[DI+8685H],-79H
+      ADD    WORD PTR CS:[BP+8685H],-79H
+      ADD    WORD PTR CS:[BX+8685H],-79H
+      OR     WORD PTR CS:[BX+SI+8685H],-79H
+      OR     WORD PTR CS:[BX+DI+8685H],-79H
+      OR     WORD PTR CS:[BP+SI+8685H],-79H
+      OR     WORD PTR CS:[BP+DI+8685H],-79H
+      OR     WORD PTR CS:[SI+8685H],-79H
+      OR     WORD PTR CS:[DI+8685H],-79H
+      OR     WORD PTR CS:[BP+8685H],-79H
+      OR     WORD PTR CS:[BX+8685H],-79H
+      ADC    WORD PTR CS:[BX+SI+8685H],-79H
+      ADC    WORD PTR CS:[BX+DI+8685H],-79H
+      ADC    WORD PTR CS:[BP+SI+8685H],-79H
+      ADC    WORD PTR CS:[BP+DI+8685H],-79H
+      ADC    WORD PTR CS:[SI+8685H],-79H
+      ADC    WORD PTR CS:[DI+8685H],-79H
+      ADC    WORD PTR CS:[BP+8685H],-79H
+      ADC    WORD PTR CS:[BX+8685H],-79H
+      SBB    WORD PTR CS:[BX+SI+8685H],-79H
+      SBB    WORD PTR CS:[BX+DI+8685H],-79H
+      SBB    WORD PTR CS:[BP+SI+8685H],-79H
+      SBB    WORD PTR CS:[BP+DI+8685H],-79H
+      SBB    WORD PTR CS:[SI+8685H],-79H
+      SBB    WORD PTR CS:[DI+8685H],-79H
+      SBB    WORD PTR CS:[BP+8685H],-79H
+      SBB    WORD PTR CS:[BX+8685H],-79H
+      AND    WORD PTR CS:[BX+SI+8685H],-79H
+      AND    WORD PTR CS:[BX+DI+8685H],-79H
+      AND    WORD PTR CS:[BP+SI+8685H],-79H
+      AND    WORD PTR CS:[BP+DI+8685H],-79H
+      AND    WORD PTR CS:[SI+8685H],-79H
+      AND    WORD PTR CS:[DI+8685H],-79H
+      AND    WORD PTR CS:[BP+8685H],-79H
+      AND    WORD PTR CS:[BX+8685H],-79H
+      SUB    WORD PTR CS:[BX+SI+8685H],-79H
+      SUB    WORD PTR CS:[BX+DI+8685H],-79H
+      SUB    WORD PTR CS:[BP+SI+8685H],-79H
+      SUB    WORD PTR CS:[BP+DI+8685H],-79H
+      SUB    WORD PTR CS:[SI+8685H],-79H
+      SUB    WORD PTR CS:[DI+8685H],-79H
+      SUB    WORD PTR CS:[BP+8685H],-79H
+      SUB    WORD PTR CS:[BX+8685H],-79H
+      XOR    WORD PTR CS:[BX+SI+8685H],-79H
+      XOR    WORD PTR CS:[BX+DI+8685H],-79H
+      XOR    WORD PTR CS:[BP+SI+8685H],-79H
+      XOR    WORD PTR CS:[BP+DI+8685H],-79H
+      XOR    WORD PTR CS:[SI+8685H],-79H
+      XOR    WORD PTR CS:[DI+8685H],-79H
+      XOR    WORD PTR CS:[BP+8685H],-79H
+      XOR    WORD PTR CS:[BX+8685H],-79H
+      CMP    WORD PTR CS:[BX+SI+8685H],-79H
+      CMP    WORD PTR CS:[BX+DI+8685H],-79H
+      CMP    WORD PTR CS:[BP+SI+8685H],-79H
+      CMP    WORD PTR CS:[BP+DI+8685H],-79H
+      CMP    WORD PTR CS:[SI+8685H],-79H
+      CMP    WORD PTR CS:[DI+8685H],-79H
+      CMP    WORD PTR CS:[BP+8685H],-79H
+      CMP    WORD PTR CS:[BX+8685H],-79H
+      ADD    WORD PTR CS:[BX+SI],-7BH
+      TEST   AL,CS:[DI+8786H]
+      TEST   AL,CS:[BP+8786H]
+      TEST   AL,CS:[BX+8786H]
+      TEST   CL,CS:[BX+SI+8786H]
+      TEST   CL,CS:[BX+DI+8786H]
+      TEST   CL,CS:[BP+SI+8786H]
+      TEST   CL,CS:[BP+DI+8786H]
+      TEST   CL,CS:[SI+8786H]
+      TEST   CL,CS:[DI+8786H]
+      TEST   CL,CS:[BP+8786H]
+      TEST   CL,CS:[BX+8786H]
+      TEST   DL,CS:[BX+SI+8786H]
+      TEST   DL,CS:[BX+DI+8786H]
+      TEST   DL,CS:[BP+SI+8786H]
+      TEST   DL,CS:[BP+DI+8786H]
+      TEST   DL,CS:[SI+8786H]
+      TEST   DL,CS:[DI+8786H]
+      TEST   DL,CS:[BP+8786H]
+      TEST   DL,CS:[BX+8786H]
+      TEST   BL,CS:[BX+SI+8786H]
+      TEST   BL,CS:[BX+DI+8786H]
+      TEST   BL,CS:[BP+SI+8786H]
+      TEST   BL,CS:[BP+DI+8786H]
+      TEST   BL,CS:[SI+8786H]
+      TEST   BL,CS:[DI+8786H]
+      TEST   BL,CS:[BP+8786H]
+      TEST   BL,CS:[BX+8786H]
+      TEST   AH,CS:[BX+SI+8786H]
+      TEST   AH,CS:[BX+DI+8786H]
+      TEST   AH,CS:[BP+SI+8786H]
+      TEST   AH,CS:[BP+DI+8786H]
+      TEST   AH,CS:[SI+8786H]
+      TEST   AH,CS:[DI+8786H]
+      TEST   AH,CS:[BP+8786H]
+      TEST   AH,CS:[BX+8786H]
+      TEST   AL,CS:[BX+SI]
+      TEST   AX,CS:[BP+8887H]
+      TEST   AX,CS:[BX+8887H]
+      TEST   CX,CS:[BX+SI+8887H]
+      TEST   CX,CS:[BX+DI+8887H]
+      TEST   CX,CS:[BP+SI+8887H]
+      TEST   CX,CS:[BP+DI+8887H]
+      TEST   CX,CS:[SI+8887H]
+      TEST   CX,CS:[DI+8887H]
+      TEST   CX,CS:[BP+8887H]
+      TEST   CX,CS:[BX+8887H]
+      TEST   DX,CS:[BX+SI+8887H]
+      TEST   DX,CS:[BX+DI+8887H]
+      TEST   DX,CS:[BP+SI+8887H]
+      TEST   DX,CS:[BP+DI+8887H]
+      TEST   DX,CS:[SI+8887H]
+      TEST   DX,CS:[DI+8887H]
+      TEST   DX,CS:[BP+8887H]
+      TEST   DX,CS:[BX+8887H]
+      TEST   BX,CS:[BX+SI+8887H]
+      TEST   BX,CS:[BX+DI+8887H]
+      TEST   BX,CS:[BP+SI+8887H]
+      TEST   BX,CS:[BP+DI+8887H]
+      TEST   BX,CS:[SI+8887H]
+      TEST   BX,CS:[DI+8887H]
+      TEST   BX,CS:[BP+8887H]
+      TEST   BX,CS:[BX+8887H]
+      TEST   SP,CS:[BX+SI+8887H]
+      TEST   SP,CS:[BX+DI+8887H]
+      TEST   SP,CS:[BP+SI+8887H]
+      TEST   SP,CS:[BP+DI+8887H]
+      TEST   SP,CS:[SI+8887H]
+      TEST   SP,CS:[DI+8887H]
+      TEST   SP,CS:[BP+8887H]
+      TEST   SP,CS:[BX+8887H]
+      TEST   BP,CS:[BX+SI+8887H]
+      TEST   BP,CS:[BX+DI+8887H]
+      TEST   BP,CS:[BP+SI+8887H]
+      TEST   BP,CS:[BP+DI+8887H]
+      TEST   BP,CS:[SI+8887H]
+      TEST   BP,CS:[DI+8887H]
+      TEST   BP,CS:[BP+8887H]
+      TEST   BP,CS:[BX+8887H]
+      TEST   SI,CS:[BX+SI+8887H]
+      TEST   SI,CS:[BX+DI+8887H]
+      TEST   SI,CS:[BP+SI+8887H]
+      TEST   SI,CS:[BP+DI+8887H]
+      TEST   SI,CS:[SI+8887H]
+      TEST   SI,CS:[DI+8887H]
+      TEST   SI,CS:[BP+8887H]
+      TEST   SI,CS:[BX+8887H]
+      TEST   DI,CS:[BX+SI+8887H]
+      TEST   DI,CS:[BX+DI+8887H]
+      TEST   DI,CS:[BP+SI+8887H]
+      TEST   DI,CS:[BP+DI+8887H]
+      TEST   DI,CS:[SI+8887H]
+      TEST   DI,CS:[DI+8887H]
+      TEST   DI,CS:[BP+8887H]
+      TEST   DI,CS:[BX+8887H]
+      TEST   AX,CS:[BX+SI]
+      XCHG   AL,CS:[BX+8988H]
+      XCHG   CL,CS:[BX+SI+8988H]
+      XCHG   CL,CS:[BX+DI+8988H]
+      XCHG   CL,CS:[BP+SI+8988H]
+      XCHG   CL,CS:[BP+DI+8988H]
+      XCHG   CL,CS:[SI+8988H]
+      XCHG   CL,CS:[DI+8988H]
+      XCHG   CL,CS:[BP+8988H]
+      XCHG   CL,CS:[BX+8988H]
+      XCHG   DL,CS:[BX+SI+8988H]
+      XCHG   DL,CS:[BX+DI+8988H]
+      XCHG   DL,CS:[BP+SI+8988H]
+      XCHG   DL,CS:[BP+DI+8988H]
+      XCHG   DL,CS:[SI+8988H]
+      XCHG   DL,CS:[DI+8988H]
+      XCHG   DL,CS:[BP+8988H]
+      XCHG   DL,CS:[BX+8988H]
+      XCHG   BL,CS:[BX+SI+8988H]
+      XCHG   BL,CS:[BX+DI+8988H]
+      XCHG   BL,CS:[BP+SI+8988H]
+      XCHG   BL,CS:[BP+DI+8988H]
+      XCHG   BL,CS:[SI+8988H]
+      XCHG   BL,CS:[DI+8988H]
+      XCHG   BL,CS:[BP+8988H]
+      XCHG   BL,CS:[BX+8988H]
+      XCHG   AH,CS:[BX+SI+8988H]
+      XCHG   AH,CS:[BX+DI+8988H]
+      XCHG   AH,CS:[BP+SI+8988H]
+      XCHG   AH,CS:[BP+DI+8988H]
+      XCHG   AH,CS:[SI+8988H]
+      XCHG   AH,CS:[DI+8988H]
+      XCHG   AH,CS:[BP+8988H]
+      XCHG   AH,CS:[BX+8988H]
+      XCHG   AL,CS:[BX+SI]
+      XCHG   CX,CS:[BX+SI+8A89H]
+      XCHG   CX,CS:[BX+DI+8A89H]
+      XCHG   CX,CS:[BP+SI+8A89H]
+      XCHG   CX,CS:[BP+DI+8A89H]
+      XCHG   CX,CS:[SI+8A89H]
+      XCHG   CX,CS:[DI+8A89H]
+      XCHG   CX,CS:[BP+8A89H]
+      XCHG   CX,CS:[BX+8A89H]
+      XCHG   DX,CS:[BX+SI+8A89H]
+      XCHG   DX,CS:[BX+DI+8A89H]
+      XCHG   DX,CS:[BP+SI+8A89H]
+      XCHG   DX,CS:[BP+DI+8A89H]
+      XCHG   DX,CS:[SI+8A89H]
+      XCHG   DX,CS:[DI+8A89H]
+      XCHG   DX,CS:[BP+8A89H]
+      XCHG   DX,CS:[BX+8A89H]
+      XCHG   BX,CS:[BX+SI+8A89H]
+      XCHG   BX,CS:[BX+DI+8A89H]
+      XCHG   BX,CS:[BP+SI+8A89H]
+      XCHG   BX,CS:[BP+DI+8A89H]
+      XCHG   BX,CS:[SI+8A89H]
+      XCHG   BX,CS:[DI+8A89H]
+      XCHG   BX,CS:[BP+8A89H]
+      XCHG   BX,CS:[BX+8A89H]
+      XCHG   SP,CS:[BX+SI+8A89H]
+      XCHG   SP,CS:[BX+DI+8A89H]
+      XCHG   SP,CS:[BP+SI+8A89H]
+      XCHG   SP,CS:[BP+DI+8A89H]
+      XCHG   SP,CS:[SI+8A89H]
+      XCHG   SP,CS:[DI+8A89H]
+      XCHG   SP,CS:[BP+8A89H]
+      XCHG   SP,CS:[BX+8A89H]
+      XCHG   BP,CS:[BX+SI+8A89H]
+      XCHG   BP,CS:[BX+DI+8A89H]
+      XCHG   BP,CS:[BP+SI+8A89H]
+      XCHG   BP,CS:[BP+DI+8A89H]
+      XCHG   BP,CS:[SI+8A89H]
+      XCHG   BP,CS:[DI+8A89H]
+      XCHG   BP,CS:[BP+8A89H]
+      XCHG   BP,CS:[BX+8A89H]
+      XCHG   SI,CS:[BX+SI+8A89H]
+      XCHG   SI,CS:[BX+DI+8A89H]
+      XCHG   SI,CS:[BP+SI+8A89H]
+      XCHG   SI,CS:[BP+DI+8A89H]
+      XCHG   SI,CS:[SI+8A89H]
+      XCHG   SI,CS:[DI+8A89H]
+      XCHG   SI,CS:[BP+8A89H]
+      XCHG   SI,CS:[BX+8A89H]
+      XCHG   DI,CS:[BX+SI+8A89H]
+      XCHG   DI,CS:[BX+DI+8A89H]
+      XCHG   DI,CS:[BP+SI+8A89H]
+      XCHG   DI,CS:[BP+DI+8A89H]
+      XCHG   DI,CS:[SI+8A89H]
+      XCHG   DI,CS:[DI+8A89H]
+      XCHG   DI,CS:[BP+8A89H]
+      XCHG   DI,CS:[BX+8A89H]
+      XCHG   AX,CS:[BX+SI]
+      MOV    CS:[BX+DI+8B8AH],CL
+      MOV    CS:[BP+SI+8B8AH],CL
+      MOV    CS:[BP+DI+8B8AH],CL
+      MOV    CS:[SI+8B8AH],CL
+      MOV    CS:[DI+8B8AH],CL
+      MOV    CS:[BP+8B8AH],CL
+      MOV    CS:[BX+8B8AH],CL
+      MOV    CS:[BX+SI+8B8AH],DL
+      MOV    CS:[BX+DI+8B8AH],DL
+      MOV    CS:[BP+SI+8B8AH],DL
+      MOV    CS:[BP+DI+8B8AH],DL
+      MOV    CS:[SI+8B8AH],DL
+      MOV    CS:[DI+8B8AH],DL
+      MOV    CS:[BP+8B8AH],DL
+      MOV    CS:[BX+8B8AH],DL
+      MOV    CS:[BX+SI+8B8AH],BL
+      MOV    CS:[BX+DI+8B8AH],BL
+      MOV    CS:[BP+SI+8B8AH],BL
+      MOV    CS:[BP+DI+8B8AH],BL
+      MOV    CS:[SI+8B8AH],BL
+      MOV    CS:[DI+8B8AH],BL
+      MOV    CS:[BP+8B8AH],BL
+      MOV    CS:[BX+8B8AH],BL
+      MOV    CS:[BX+SI+8B8AH],AH
+      MOV    CS:[BX+DI+8B8AH],AH
+      MOV    CS:[BP+SI+8B8AH],AH
+      MOV    CS:[BP+DI+8B8AH],AH
+      MOV    CS:[SI+8B8AH],AH
+      MOV    CS:[DI+8B8AH],AH
+      MOV    CS:[BP+8B8AH],AH
+      MOV    CS:[BX+8B8AH],AH
+      MOV    CS:[BX+SI],AL
+      MOV    CS:[BP+SI+8C8BH],CX
+      MOV    CS:[BP+DI+8C8BH],CX
+      MOV    CS:[SI+8C8BH],CX
+      MOV    CS:[DI+8C8BH],CX
+      MOV    CS:[BP+8C8BH],CX
+      MOV    CS:[BX+8C8BH],CX
+      MOV    CS:[BX+SI+8C8BH],DX
+      MOV    CS:[BX+DI+8C8BH],DX
+      MOV    CS:[BP+SI+8C8BH],DX
+      MOV    CS:[BP+DI+8C8BH],DX
+      MOV    CS:[SI+8C8BH],DX
+      MOV    CS:[DI+8C8BH],DX
+      MOV    CS:[BP+8C8BH],DX
+      MOV    CS:[BX+8C8BH],DX
+      MOV    CS:[BX+SI+8C8BH],BX
+      MOV    CS:[BX+DI+8C8BH],BX
+      MOV    CS:[BP+SI+8C8BH],BX
+      MOV    CS:[BP+DI+8C8BH],BX
+      MOV    CS:[SI+8C8BH],BX
+      MOV    CS:[DI+8C8BH],BX
+      MOV    CS:[BP+8C8BH],BX
+      MOV    CS:[BX+8C8BH],BX
+      MOV    CS:[BX+SI+8C8BH],SP
+      MOV    CS:[BX+DI+8C8BH],SP
+      MOV    CS:[BP+SI+8C8BH],SP
+      MOV    CS:[BP+DI+8C8BH],SP
+      MOV    CS:[SI+8C8BH],SP
+      MOV    CS:[DI+8C8BH],SP
+      MOV    CS:[BP+8C8BH],SP
+      MOV    CS:[BX+8C8BH],SP
+      MOV    CS:[BX+SI+8C8BH],BP
+      MOV    CS:[BX+DI+8C8BH],BP
+      MOV    CS:[BP+SI+8C8BH],BP
+      MOV    CS:[BP+DI+8C8BH],BP
+      MOV    CS:[SI+8C8BH],BP
+      MOV    CS:[DI+8C8BH],BP
+      MOV    CS:[BP+8C8BH],BP
+      MOV    CS:[BX+8C8BH],BP
+      MOV    CS:[BX+SI+8C8BH],SI
+      MOV    CS:[BX+DI+8C8BH],SI
+      MOV    CS:[BP+SI+8C8BH],SI
+      MOV    CS:[BP+DI+8C8BH],SI
+      MOV    CS:[SI+8C8BH],SI
+      MOV    CS:[DI+8C8BH],SI
+      MOV    CS:[BP+8C8BH],SI
+      MOV    CS:[BX+8C8BH],SI
+      MOV    CS:[BX+SI+8C8BH],DI
+      MOV    CS:[BX+DI+8C8BH],DI
+      MOV    CS:[BP+SI+8C8BH],DI
+      MOV    CS:[BP+DI+8C8BH],DI
+      MOV    CS:[SI+8C8BH],DI
+      MOV    CS:[DI+8C8BH],DI
+      MOV    CS:[BP+8C8BH],DI
+      MOV    CS:[BX+8C8BH],DI
+      MOV    CS:[BX+SI],AX
+      MOV    CL,CS:[BP+DI+8D8CH]
+      MOV    CL,CS:[SI+8D8CH]
+      MOV    CL,CS:[DI+8D8CH]
+      MOV    CL,CS:[BP+8D8CH]
+      MOV    CL,CS:[BX+8D8CH]
+      MOV    DL,CS:[BX+SI+8D8CH]
+      MOV    DL,CS:[BX+DI+8D8CH]
+      MOV    DL,CS:[BP+SI+8D8CH]
+      MOV    DL,CS:[BP+DI+8D8CH]
+      MOV    DL,CS:[SI+8D8CH]
+      MOV    DL,CS:[DI+8D8CH]
+      MOV    DL,CS:[BP+8D8CH]
+      MOV    DL,CS:[BX+8D8CH]
+      MOV    BL,CS:[BX+SI+8D8CH]
+      MOV    BL,CS:[BX+DI+8D8CH]
+      MOV    BL,CS:[BP+SI+8D8CH]
+      MOV    BL,CS:[BP+DI+8D8CH]
+      MOV    BL,CS:[SI+8D8CH]
+      MOV    BL,CS:[DI+8D8CH]
+      MOV    BL,CS:[BP+8D8CH]
+      MOV    BL,CS:[BX+8D8CH]
+      MOV    AH,CS:[BX+SI+8D8CH]
+      MOV    AH,CS:[BX+DI+8D8CH]
+      MOV    AH,CS:[BP+SI+8D8CH]
+      MOV    AH,CS:[BP+DI+8D8CH]
+      MOV    AH,CS:[SI+8D8CH]
+      MOV    AH,CS:[DI+8D8CH]
+      MOV    AH,CS:[BP+8D8CH]
+      MOV    AH,CS:[BX+8D8CH]
+      MOV    AL,CS:[BX+SI]
+      MOV    CX,CS:[SI+8E8DH]
+      MOV    CX,CS:[DI+8E8DH]
+      MOV    CX,CS:[BP+8E8DH]
+      MOV    CX,CS:[BX+8E8DH]
+      MOV    DX,CS:[BX+SI+8E8DH]
+      MOV    DX,CS:[BX+DI+8E8DH]
+      MOV    DX,CS:[BP+SI+8E8DH]
+      MOV    DX,CS:[BP+DI+8E8DH]
+      MOV    DX,CS:[SI+8E8DH]
+      MOV    DX,CS:[DI+8E8DH]
+      MOV    DX,CS:[BP+8E8DH]
+      MOV    DX,CS:[BX+8E8DH]
+      MOV    BX,CS:[BX+SI+8E8DH]
+      MOV    BX,CS:[BX+DI+8E8DH]
+      MOV    BX,CS:[BP+SI+8E8DH]
+      MOV    BX,CS:[BP+DI+8E8DH]
+      MOV    BX,CS:[SI+8E8DH]
+      MOV    BX,CS:[DI+8E8DH]
+      MOV    BX,CS:[BP+8E8DH]
+      MOV    BX,CS:[BX+8E8DH]
+      MOV    SP,CS:[BX+SI+8E8DH]
+      MOV    SP,CS:[BX+DI+8E8DH]
+      MOV    SP,CS:[BP+SI+8E8DH]
+      MOV    SP,CS:[BP+DI+8E8DH]
+      MOV    SP,CS:[SI+8E8DH]
+      MOV    SP,CS:[DI+8E8DH]
+      MOV    SP,CS:[BP+8E8DH]
+      MOV    SP,CS:[BX+8E8DH]
+      MOV    BP,CS:[BX+SI+8E8DH]
+      MOV    BP,CS:[BX+DI+8E8DH]
+      MOV    BP,CS:[BP+SI+8E8DH]
+      MOV    BP,CS:[BP+DI+8E8DH]
+      MOV    BP,CS:[SI+8E8DH]
+      MOV    BP,CS:[DI+8E8DH]
+      MOV    BP,CS:[BP+8E8DH]
+      MOV    BP,CS:[BX+8E8DH]
+      MOV    SI,CS:[BX+SI+8E8DH]
+      MOV    SI,CS:[BX+DI+8E8DH]
+      MOV    SI,CS:[BP+SI+8E8DH]
+      MOV    SI,CS:[BP+DI+8E8DH]
+      MOV    SI,CS:[SI+8E8DH]
+      MOV    SI,CS:[DI+8E8DH]
+      MOV    SI,CS:[BP+8E8DH]
+      MOV    SI,CS:[BX+8E8DH]
+      MOV    DI,CS:[BX+SI+8E8DH]
+      MOV    DI,CS:[BX+DI+8E8DH]
+      MOV    DI,CS:[BP+SI+8E8DH]
+      MOV    DI,CS:[BP+DI+8E8DH]
+      MOV    DI,CS:[SI+8E8DH]
+      MOV    DI,CS:[DI+8E8DH]
+      MOV    DI,CS:[BP+8E8DH]
+      MOV    DI,CS:[BX+8E8DH]
+      MOV    AX,CS:[BX+SI]
+      MOV    CS:[DI+8F8EH],CS
+      MOV    CS:[BP+8F8EH],CS
+      MOV    CS:[BX+8F8EH],CS
+      MOV    CS:[BX+SI+8F8EH],SS
+      MOV    CS:[BX+DI+8F8EH],SS
+      MOV    CS:[BP+SI+8F8EH],SS
+      MOV    CS:[BP+DI+8F8EH],SS
+      MOV    CS:[SI+8F8EH],SS
+      MOV    CS:[DI+8F8EH],SS
+      MOV    CS:[BP+8F8EH],SS
+      MOV    CS:[BX+8F8EH],SS
+      MOV    CS:[BX+SI+8F8EH],DS
+      MOV    CS:[BX+DI+8F8EH],DS
+      MOV    CS:[BP+SI+8F8EH],DS
+      MOV    CS:[BP+DI+8F8EH],DS
+      MOV    CS:[SI+8F8EH],DS
+      MOV    CS:[DI+8F8EH],DS
+      MOV    CS:[BP+8F8EH],DS
+      MOV    CS:[BX+8F8EH],DS
+      MOV    CS:[BX+SI+8F8EH],ES
+      MOV    CS:[BX+DI+8F8EH],ES
+      MOV    CS:[BP+SI+8F8EH],ES
+      MOV    CS:[BP+DI+8F8EH],ES
+      MOV    CS:[SI+8F8EH],ES
+      MOV    CS:[DI+8F8EH],ES
+      MOV    CS:[BP+8F8EH],ES
+      MOV    CS:[BX+8F8EH],ES
+      MOV    CS:[BX+SI+8F8EH],CS
+      MOV    CS:[BX+DI+8F8EH],CS
+      MOV    CS:[BP+SI+8F8EH],CS
+      MOV    CS:[BP+DI+8F8EH],CS
+      MOV    CS:[SI+8F8EH],CS
+      MOV    CS:[BX+SI],ES
+      LEA    CX,CS:[BP+908FH]
+      LEA    CX,CS:[BX+908FH]
+      LEA    DX,CS:[BX+SI+908FH]
+      LEA    DX,CS:[BX+DI+908FH]
+      LEA    DX,CS:[BP+SI+908FH]
+      LEA    DX,CS:[BP+DI+908FH]
+      LEA    DX,CS:[SI+908FH]
+      LEA    DX,CS:[DI+908FH]
+      LEA    DX,CS:[BP+908FH]
+      LEA    DX,CS:[BX+908FH]
+      LEA    BX,CS:[BX+SI+908FH]
+      LEA    BX,CS:[BX+DI+908FH]
+      LEA    BX,CS:[BP+SI+908FH]
+      LEA    BX,CS:[BP+DI+908FH]
+      LEA    BX,CS:[SI+908FH]
+      LEA    BX,CS:[DI+908FH]
+      LEA    BX,CS:[BP+908FH]
+      LEA    BX,CS:[BX+908FH]
+      LEA    SP,CS:[BX+SI+908FH]
+      LEA    SP,CS:[BX+DI+908FH]
+      LEA    SP,CS:[BP+SI+908FH]
+      LEA    SP,CS:[BP+DI+908FH]
+      LEA    SP,CS:[SI+908FH]
+      LEA    SP,CS:[DI+908FH]
+      LEA    SP,CS:[BP+908FH]
+      LEA    SP,CS:[BX+908FH]
+      LEA    BP,CS:[BX+SI+908FH]
+      LEA    BP,CS:[BX+DI+908FH]
+      LEA    BP,CS:[BP+SI+908FH]
+      LEA    BP,CS:[BP+DI+908FH]
+      LEA    BP,CS:[SI+908FH]
+      LEA    BP,CS:[DI+908FH]
+      LEA    BP,CS:[BP+908FH]
+      LEA    BP,CS:[BX+908FH]
+      LEA    SI,CS:[BX+SI+908FH]
+      LEA    SI,CS:[BX+DI+908FH]
+      LEA    SI,CS:[BP+SI+908FH]
+      LEA    SI,CS:[BP+DI+908FH]
+      LEA    SI,CS:[SI+908FH]
+      LEA    SI,CS:[DI+908FH]
+      LEA    SI,CS:[BP+908FH]
+      LEA    SI,CS:[BX+908FH]
+      LEA    DI,CS:[BX+SI+908FH]
+      LEA    DI,CS:[BX+DI+908FH]
+      LEA    DI,CS:[BP+SI+908FH]
+      LEA    DI,CS:[BP+DI+908FH]
+      LEA    DI,CS:[SI+908FH]
+      LEA    DI,CS:[DI+908FH]
+      LEA    DI,CS:[BP+908FH]
+      LEA    DI,CS:[BX+908FH]
+      LEA    AX,CS:[BX+SI]
+      MOV    CS,CS:[BX+9190H]
+      MOV    SS,CS:[BX+SI+9190H]
+      MOV    SS,CS:[BX+DI+9190H]
+      MOV    SS,CS:[BP+SI+9190H]
+      MOV    SS,CS:[BP+DI+9190H]
+      MOV    SS,CS:[SI+9190H]
+      MOV    SS,CS:[DI+9190H]
+      MOV    SS,CS:[BP+9190H]
+      MOV    SS,CS:[BX+9190H]
+      MOV    DS,CS:[BX+SI+9190H]
+      MOV    DS,CS:[BX+DI+9190H]
+      MOV    DS,CS:[BP+SI+9190H]
+      MOV    DS,CS:[BP+DI+9190H]
+      MOV    DS,CS:[SI+9190H]
+      MOV    DS,CS:[DI+9190H]
+      MOV    DS,CS:[BP+9190H]
+      MOV    DS,CS:[BX+9190H]
+      MOV    ES,CS:[BX+SI+9190H]
+      MOV    ES,CS:[BX+DI+9190H]
+      MOV    ES,CS:[BP+SI+9190H]
+      MOV    ES,CS:[BP+DI+9190H]
+      MOV    ES,CS:[SI+9190H]
+      MOV    ES,CS:[DI+9190H]
+      MOV    ES,CS:[BP+9190H]
+      MOV    ES,CS:[BX+9190H]
+      MOV    CS,CS:[BX+SI+9190H]
+      MOV    CS,CS:[BX+DI+9190H]
+      MOV    CS,CS:[BP+SI+9190H]
+      MOV    CS,CS:[BP+DI+9190H]
+      MOV    CS,CS:[SI+9190H]
+      MOV    CS,CS:[DI+9190H]
+      MOV    CS,CS:[BP+9190H]
+      MOV    ES,CS:[BX+SI]
+      MOV    AL,CS:[0A2A1H]
+      MOV    AX,CS:[0A3A2H]
+      MOV    CS:[0A4A3H],AL
+      MOV    CS:[0A5A4H],AX
       MOVSB  ES:[DI],CS:[SI]
       MOVSW  ES:[DI],CS:[SI]
       CMPSB  CS:[SI],ES:[DI]
       CMPSW  CS:[SI],ES:[DI]
       LODSB  CS:[SI]
       LODSW  CS:[SI]
-      MOV    AL,SS:[00A1H]
-      MOV    AX,SS:[00A2H]
-      MOV    SS:[00A3H],AL
-      MOV    SS:[00A4H],AX
+      INC    WORD PTR CS:[BX+SI]
+      INC    WORD PTR CS:[BX+DI]
+      INC    WORD PTR CS:[BP+SI]
+      INC    WORD PTR CS:[BP+DI]
+      INC    WORD PTR CS:[SI]
+      INC    WORD PTR CS:[DI]
+      INC    WORD PTR CS:[0807H]
+      INC    WORD PTR CS:[BX]
+      DEC    WORD PTR CS:[BX+SI]
+      DEC    WORD PTR CS:[BX+DI]
+      DEC    WORD PTR CS:[BP+SI]
+      DEC    WORD PTR CS:[BP+DI]
+      DEC    WORD PTR CS:[SI]
+      DEC    WORD PTR CS:[DI]
+      DEC    WORD PTR CS:[100FH]
+      DEC    WORD PTR CS:[BX]
+      CALL   CS:[BX+SI]
+      CALL   CS:[BX+DI]
+      CALL   CS:[BP+SI]
+      CALL   CS:[BP+DI]
+      CALL   CS:[SI]
+      CALL   CS:[DI]
+      CALL   CS:[1817H]
+      CALL   CS:[BX]
+      CALLF  CS:[BX+SI]
+      CALLF  CS:[BX+DI]
+      CALLF  CS:[BP+SI]
+      CALLF  CS:[BP+DI]
+      CALLF  CS:[SI]
+      CALLF  CS:[DI]
+      CALLF  CS:[201FH]
+      CALLF  CS:[BX]
+      JMP    CS:[BX+SI]
+      JMP    CS:[BX+DI]
+      JMP    CS:[BP+SI]
+      JMP    CS:[BP+DI]
+      JMP    CS:[SI]
+      JMP    CS:[DI]
+      JMP    CS:[2827H]
+      JMP    CS:[BX]
+      JMPF   CS:[BX+SI]
+      JMPF   CS:[BX+DI]
+      JMPF   CS:[BP+SI]
+      JMPF   CS:[BP+DI]
+      JMPF   CS:[SI]
+      JMPF   CS:[DI]
+      JMPF   CS:[302FH]
+      JMPF   CS:[BX]
+      PUSH   CS:[BX+SI]
+      PUSH   CS:[BX+DI]
+      PUSH   CS:[BP+SI]
+      PUSH   CS:[BP+DI]
+      PUSH   CS:[SI]
+      PUSH   CS:[DI]
+      PUSH   CS:[3837H]
+      PUSH   CS:[BX]
+      INC    WORD PTR CS:[BX+SI+65]
+      INC    WORD PTR CS:[BX+SI-128]
+      INC    WORD PTR CS:[BX+DI+66]
+      INC    WORD PTR CS:[BX+DI-128]
+      INC    WORD PTR CS:[BP+SI+67]
+      INC    WORD PTR CS:[BP+SI-128]
+      INC    WORD PTR CS:[BP+DI+68]
+      INC    WORD PTR CS:[BP+DI-128]
+      INC    WORD PTR CS:[SI+69]
+      INC    WORD PTR CS:[SI-128]
+      INC    WORD PTR CS:[DI+70]
+      INC    WORD PTR CS:[DI-128]
+      INC    WORD PTR CS:[BP+71]
+      INC    WORD PTR CS:[BP-128]
+      INC    WORD PTR CS:[BX+72]
+      INC    WORD PTR CS:[BX-128]
+      DEC    WORD PTR CS:[BX+SI+73]
+      DEC    WORD PTR CS:[BX+SI-128]
+      DEC    WORD PTR CS:[BX+DI+74]
+      DEC    WORD PTR CS:[BX+DI-128]
+      DEC    WORD PTR CS:[BP+SI+75]
+      DEC    WORD PTR CS:[BP+SI-128]
+      DEC    WORD PTR CS:[BP+DI+76]
+      DEC    WORD PTR CS:[BP+DI-128]
+      DEC    WORD PTR CS:[SI+77]
+      DEC    WORD PTR CS:[SI-128]
+      DEC    WORD PTR CS:[DI+78]
+      DEC    WORD PTR CS:[DI-128]
+      DEC    WORD PTR CS:[BP+79]
+      DEC    WORD PTR CS:[BP-128]
+      DEC    WORD PTR CS:[BX+80]
+      DEC    WORD PTR CS:[BX-128]
+      CALL   CS:[BX+SI+81]
+      CALL   CS:[BX+SI-128]
+      CALL   CS:[BX+DI+82]
+      CALL   CS:[BX+DI-128]
+      CALL   CS:[BP+SI+83]
+      CALL   CS:[BP+SI-128]
+      CALL   CS:[BP+DI+84]
+      CALL   CS:[BP+DI-128]
+      CALL   CS:[SI+85]
+      CALL   CS:[SI-128]
+      CALL   CS:[DI+86]
+      CALL   CS:[DI-128]
+      CALL   CS:[BP+87]
+      CALL   CS:[BP-128]
+      CALL   CS:[BX+88]
+      CALL   CS:[BX-128]
+      CALLF  CS:[BX+SI+89]
+      CALLF  CS:[BX+SI-128]
+      CALLF  CS:[BX+DI+90]
+      CALLF  CS:[BX+DI-128]
+      CALLF  CS:[BP+SI+91]
+      CALLF  CS:[BP+SI-128]
+      CALLF  CS:[BP+DI+92]
+      CALLF  CS:[BP+DI-128]
+      CALLF  CS:[SI+93]
+      CALLF  CS:[SI-128]
+      CALLF  CS:[DI+94]
+      CALLF  CS:[DI-128]
+      CALLF  CS:[BP+95]
+      CALLF  CS:[BP-128]
+      CALLF  CS:[BX+96]
+      CALLF  CS:[BX-128]
+      JMP    CS:[BX+SI+97]
+      JMP    CS:[BX+SI-128]
+      JMP    CS:[BX+DI+98]
+      JMP    CS:[BX+DI-128]
+      JMP    CS:[BP+SI+99]
+      JMP    CS:[BP+SI-128]
+      JMP    CS:[BP+DI+100]
+      JMP    CS:[BP+DI-128]
+      JMP    CS:[SI+101]
+      JMP    CS:[SI-128]
+      JMP    CS:[DI+102]
+      JMP    CS:[DI-128]
+      JMP    CS:[BP+103]
+      JMP    CS:[BP-128]
+      JMP    CS:[BX+104]
+      JMP    CS:[BX-128]
+      JMPF   CS:[BX+SI+105]
+      JMPF   CS:[BX+SI-128]
+      JMPF   CS:[BX+DI+106]
+      JMPF   CS:[BX+DI-128]
+      JMPF   CS:[BP+SI+107]
+      JMPF   CS:[BP+SI-128]
+      JMPF   CS:[BP+DI+108]
+      JMPF   CS:[BP+DI-128]
+      JMPF   CS:[SI+109]
+      JMPF   CS:[SI-128]
+      JMPF   CS:[DI+110]
+      JMPF   CS:[DI-128]
+      JMPF   CS:[BP+111]
+      JMPF   CS:[BP-128]
+      JMPF   CS:[BX+112]
+      JMPF   CS:[BX-128]
+      PUSH   CS:[BX+SI+113]
+      PUSH   CS:[BX+SI-128]
+      PUSH   CS:[BX+DI+114]
+      PUSH   CS:[BX+DI-128]
+      PUSH   CS:[BP+SI+115]
+      PUSH   CS:[BP+SI-128]
+      PUSH   CS:[BP+DI+116]
+      PUSH   CS:[BP+DI-128]
+      PUSH   CS:[SI+117]
+      PUSH   CS:[SI-128]
+      PUSH   CS:[DI+118]
+      PUSH   CS:[DI-128]
+      PUSH   CS:[BP+119]
+      PUSH   CS:[BP-128]
+      PUSH   CS:[BX+120]
+      PUSH   CS:[BX-128]
+      INC    WORD PTR CS:[BX+SI+8281H]
+      INC    WORD PTR CS:[BX+DI+8382H]
+      INC    WORD PTR CS:[BP+SI+8483H]
+      INC    WORD PTR CS:[BP+DI+8584H]
+      INC    WORD PTR CS:[SI+8685H]
+      INC    WORD PTR CS:[DI+8786H]
+      INC    WORD PTR CS:[BP+8887H]
+      INC    WORD PTR CS:[BX+8988H]
+      DEC    WORD PTR CS:[BX+SI+8A89H]
+      DEC    WORD PTR CS:[BX+DI+8B8AH]
+      DEC    WORD PTR CS:[BP+SI+8C8BH]
+      DEC    WORD PTR CS:[BP+DI+8D8CH]
+      DEC    WORD PTR CS:[SI+8E8DH]
+      DEC    WORD PTR CS:[DI+8F8EH]
+      DEC    WORD PTR CS:[BP+908FH]
+      DEC    WORD PTR CS:[BX+9190H]
+      CALL   CS:[BX+SI+9291H]
+      CALL   CS:[BX+DI+9392H]
+      CALL   CS:[BP+SI+9493H]
+      CALL   CS:[BP+DI+9594H]
+      CALL   CS:[SI+9695H]
+      CALL   CS:[DI+9796H]
+      CALL   CS:[BP+9897H]
+      CALL   CS:[BX+9998H]
+      CALLF  CS:[BX+SI+9A99H]
+      CALLF  CS:[BX+DI+9B9AH]
+      CALLF  CS:[BP+SI+9C9BH]
+      CALLF  CS:[BP+DI+9D9CH]
+      CALLF  CS:[SI+9E9DH]
+      CALLF  CS:[DI+9F9EH]
+      CALLF  CS:[BP+0A09FH]
+      CALLF  CS:[BX+0A1A0H]
+      JMP    CS:[BX+SI+0A2A1H]
+      JMP    CS:[BX+DI+0A3A2H]
+      JMP    CS:[BP+SI+0A4A3H]
+      JMP    CS:[BP+DI+0A5A4H]
+      JMP    CS:[SI+0A6A5H]
+      JMP    CS:[DI+0A7A6H]
+      JMP    CS:[BP+0A8A7H]
+      JMP    CS:[BX+0A9A8H]
+      JMPF   CS:[BX+SI+0AAA9H]
+      JMPF   CS:[BX+DI+0ABAAH]
+      JMPF   CS:[BP+SI+0ACABH]
+      JMPF   CS:[BP+DI+0ADACH]
+      JMPF   CS:[SI+0AEADH]
+      JMPF   CS:[DI+0AFAEH]
+      JMPF   CS:[BP+0B0AFH]
+      JMPF   CS:[BX+0B1B0H]
+      PUSH   CS:[BX+SI+0B2B1H]
+      PUSH   CS:[BX+DI+0B3B2H]
+      PUSH   CS:[BP+SI+0B4B3H]
+      PUSH   CS:[BP+DI+0B5B4H]
+      PUSH   CS:[SI+0B6B5H]
+      PUSH   CS:[DI+0B7B6H]
+      PUSH   CS:[BP+0B8B7H]
+      PUSH   CS:[BX+0B9B8H]
+      ADD    CS:[BX+DI],AL
+      ADD    CS:[BP+SI],AL
+      ADD    CS:[BP+DI],AL
+      ADD    CS:[SI],AL
+      ADD    CS:[DI],AL
+      ADD    CS:[0807H],AL
+      ADD    CS:[BX],AL
+      ADD    CS:[BX+SI],CL
+      ADD    CS:[BX+DI],CL
+      ADD    CS:[BP+SI],CL
+      ADD    CS:[BP+DI],CL
+      ADD    CS:[SI],CL
+      ADD    CS:[DI],CL
+      ADD    CS:[100FH],CL
+      ADD    CS:[BX],CL
+      ADD    CS:[BX+SI],DL
+      ADD    CS:[BX+DI],DL
+      ADD    CS:[BP+SI],DL
+      ADD    CS:[BP+DI],DL
+      ADD    CS:[SI],DL
+      ADD    CS:[DI],DL
+      ADD    CS:[1817H],DL
+      ADD    CS:[BX],DL
+      ADD    CS:[BX+SI],BL
+      ADD    CS:[BX+DI],BL
+      ADD    CS:[BP+SI],BL
+      ADD    CS:[BP+DI],BL
+      ADD    CS:[SI],BL
+      ADD    CS:[DI],BL
+      ADD    CS:[201FH],BL
+      ADD    CS:[BX],BL
+      ADD    CS:[BX+SI],AH
+      ADD    CS:[BX+DI],AH
+      ADD    CS:[BP+SI],AH
+      ADD    CS:[BP+DI],AH
+      ADD    CS:[SI],AH
+      ADD    CS:[DI],AH
+      ADD    CS:[2827H],AH
+      ADD    CS:[BX],AH
+      ADD    CS:[BP+SI],AX
+      ADD    CS:[BP+DI],AX
+      ADD    CS:[SI],AX
+      ADD    CS:[DI],AX
+      ADD    CS:[0807H],AX
+      ADD    CS:[BX],AX
+      ADD    CS:[BX+SI],CX
+      ADD    CS:[BX+DI],CX
+      ADD    CS:[BP+SI],CX
+      ADD    CS:[BP+DI],CX
+      ADD    CS:[SI],CX
+      ADD    CS:[DI],CX
+      ADD    CS:[100FH],CX
+      ADD    CS:[BX],CX
+      ADD    CS:[BX+SI],DX
+      ADD    CS:[BX+DI],DX
+      ADD    CS:[BP+SI],DX
+      ADD    CS:[BP+DI],DX
+      ADD    CS:[SI],DX
+      ADD    CS:[DI],DX
+      ADD    CS:[1817H],DX
+      ADD    CS:[BX],DX
+      ADD    CS:[BX+SI],BX
+      ADD    CS:[BX+DI],BX
+      ADD    CS:[BP+SI],BX
+      ADD    CS:[BP+DI],BX
+      ADD    CS:[SI],BX
+      ADD    CS:[DI],BX
+      ADD    CS:[201FH],BX
+      ADD    CS:[BX],BX
+      ADD    CS:[BX+SI],SP
+      ADD    CS:[BX+DI],SP
+      ADD    CS:[BP+SI],SP
+      ADD    CS:[BP+DI],SP
+      ADD    CS:[SI],SP
+      ADD    CS:[DI],SP
+      ADD    CS:[2827H],SP
+      ADD    CS:[BX],SP
+      ADD    CS:[BX+SI],BP
+      ADD    CS:[BX+DI],BP
+      ADD    CS:[BP+SI],BP
+      ADD    CS:[BP+DI],BP
+      ADD    CS:[SI],BP
+      ADD    CS:[DI],BP
+      ADD    CS:[302FH],BP
+      ADD    CS:[BX],BP
+      ADD    CS:[BX+SI],SI
+      ADD    CS:[BX+DI],SI
+      ADD    CS:[BP+SI],SI
+      ADD    CS:[BP+DI],SI
+      ADD    CS:[SI],SI
+      ADD    CS:[DI],SI
+      ADD    CS:[3837H],SI
+      ADD    CS:[BX],SI
+      ADD    CS:[BX+SI],DI
+      ADD    CS:[BX+DI],DI
+      ADD    CS:[BP+SI],DI
+      ADD    CS:[BP+DI],DI
+      ADD    CS:[SI],DI
+      ADD    CS:[DI],DI
+      ADD    CS:[403FH],DI
+      ADD    CS:[BX],DI
+      ADD    CS:[BX+SI+65],AX
+      ADD    CS:[BX+SI-128],AX
+      ADD    CS:[BX+DI+66],AX
+      ADD    CS:[BX+DI-128],AX
+      ADD    CS:[BP+SI+67],AX
+      ADD    CS:[BP+SI-128],AX
+      ADD    CS:[BP+DI+68],AX
+      ADD    CS:[BP+DI-128],AX
+      ADD    CS:[SI+69],AX
+      ADD    CS:[SI-128],AX
+      ADD    CS:[DI+70],AX
+      ADD    CS:[DI-128],AX
+      ADD    CS:[BP+71],AX
+      ADD    CS:[BP-128],AX
+      ADD    CS:[BX+72],AX
+      ADD    CS:[BX-128],AX
+      ADD    CS:[BX+SI+73],CX
+      ADD    CS:[BX+SI-128],CX
+      ADD    CS:[BX+DI+74],CX
+      ADD    CS:[BX+DI-128],CX
+      ADD    CS:[BP+SI+75],CX
+      ADD    CS:[BP+SI-128],CX
+      ADD    CS:[BP+DI+76],CX
+      ADD    CS:[BP+DI-128],CX
+      ADD    CS:[SI+77],CX
+      ADD    CS:[SI-128],CX
+      ADD    CS:[DI+78],CX
+      ADD    CS:[DI-128],CX
+      ADD    CS:[BP+79],CX
+      ADD    CS:[BP-128],CX
+      ADD    CS:[BX+80],CX
+      ADD    CS:[BX-128],CX
+      ADD    CS:[BX+SI+81],DX
+      ADD    CS:[BX+SI-128],DX
+      ADD    CS:[BX+DI+82],DX
+      ADD    CS:[BX+DI-128],DX
+      ADD    CS:[BP+SI+83],DX
+      ADD    CS:[BP+SI-128],DX
+      ADD    CS:[BP+DI+84],DX
+      ADD    CS:[BP+DI-128],DX
+      ADD    CS:[SI+85],DX
+      ADD    CS:[SI-128],DX
+      ADD    CS:[DI+86],DX
+      ADD    CS:[DI-128],DX
+      ADD    CS:[BP+87],DX
+      ADD    CS:[BP-128],DX
+      ADD    CS:[BX+88],DX
+      ADD    CS:[BX-128],DX
+      ADD    CS:[BX+SI+89],BX
+      ADD    CS:[BX+SI-128],BX
+      ADD    CS:[BX+DI+90],BX
+      ADD    CS:[BX+DI-128],BX
+      ADD    CS:[BP+SI+91],BX
+      ADD    CS:[BP+SI-128],BX
+      ADD    CS:[BP+DI+92],BX
+      ADD    CS:[BP+DI-128],BX
+      ADD    CS:[SI+93],BX
+      ADD    CS:[SI-128],BX
+      ADD    CS:[DI+94],BX
+      ADD    CS:[DI-128],BX
+      ADD    CS:[BP+95],BX
+      ADD    CS:[BP-128],BX
+      ADD    CS:[BX+96],BX
+      ADD    CS:[BX-128],BX
+      ADD    CS:[BX+SI+97],SP
+      ADD    CS:[BX+SI-128],SP
+      ADD    CS:[BX+DI+98],SP
+      ADD    CS:[BX+DI-128],SP
+      ADD    CS:[BP+SI+99],SP
+      ADD    CS:[BP+SI-128],SP
+      ADD    CS:[BP+DI+100],SP
+      ADD    CS:[BP+DI-128],SP
+      ADD    CS:[SI+101],SP
+      ADD    CS:[SI-128],SP
+      ADD    CS:[DI+102],SP
+      ADD    CS:[DI-128],SP
+      ADD    CS:[BP+103],SP
+      ADD    CS:[BP-128],SP
+      ADD    CS:[BX+104],SP
+      ADD    CS:[BX-128],SP
+      ADD    CS:[BX+SI+105],BP
+      ADD    CS:[BX+SI-128],BP
+      ADD    CS:[BX+DI+106],BP
+      ADD    CS:[BX+DI-128],BP
+      ADD    CS:[BP+SI+107],BP
+      ADD    CS:[BP+SI-128],BP
+      ADD    CS:[BP+DI+108],BP
+      ADD    CS:[BP+DI-128],BP
+      ADD    CS:[SI+109],BP
+      ADD    CS:[SI-128],BP
+      ADD    CS:[DI+110],BP
+      ADD    CS:[DI-128],BP
+      ADD    CS:[BP+111],BP
+      ADD    CS:[BP-128],BP
+      ADD    CS:[BX+112],BP
+      ADD    CS:[BX-128],BP
+      ADD    CS:[BX+SI+113],SI
+      ADD    CS:[BX+SI-128],SI
+      ADD    CS:[BX+DI+114],SI
+      ADD    CS:[BX+DI-128],SI
+      ADD    CS:[BP+SI+115],SI
+      ADD    CS:[BP+SI-128],SI
+      ADD    CS:[BP+DI+116],SI
+      ADD    CS:[BP+DI-128],SI
+      ADD    CS:[SI+117],SI
+      ADD    CS:[SI-128],SI
+      ADD    CS:[DI+118],SI
+      ADD    CS:[DI-128],SI
+      ADD    CS:[BP+119],SI
+      ADD    CS:[BP-128],SI
+      ADD    CS:[BX+120],SI
+      ADD    CS:[BX-128],SI
+      ADD    CS:[BX+SI+121],DI
+      ADD    CS:[BX+SI-128],DI
+      ADD    CS:[BX+DI+122],DI
+      ADD    CS:[BX+DI-128],DI
+      ADD    CS:[BP+SI+123],DI
+      ADD    CS:[BP+SI-128],DI
+      ADD    CS:[BP+DI+124],DI
+      ADD    CS:[BP+DI-128],DI
+      ADD    CS:[SI+125],DI
+      ADD    CS:[SI-128],DI
+      ADD    CS:[DI+126],DI
+      ADD    CS:[DI-128],DI
+      ADD    CS:[BP+127],DI
+      ADD    CS:[BP-128],DI
+      ADD    CS:[BX-128],DI
+      ADD    CS:[BX+0],DI
+      ADD    CS:[BX+SI+8281H],AX
+      ADD    CS:[BX+DI+8382H],AX
+      ADD    CS:[BP+SI+8483H],AX
+      ADD    CS:[BP+DI+8584H],AX
+      ADD    CS:[SI+8685H],AX
+      ADD    CS:[DI+8786H],AX
+      ADD    CS:[BP+8887H],AX
+      ADD    CS:[BX+8988H],AX
+      ADD    CS:[BX+SI+8A89H],CX
+      ADD    CS:[BX+DI+8B8AH],CX
+      ADD    CS:[BP+SI+8C8BH],CX
+      ADD    CS:[BP+DI+8D8CH],CX
+      ADD    CS:[SI+8E8DH],CX
+      ADD    CS:[DI+8F8EH],CX
+      ADD    CS:[BP+908FH],CX
+      ADD    CS:[BX+9190H],CX
+      ADD    CS:[BX+SI+9291H],DX
+      ADD    CS:[BX+DI+9392H],DX
+      ADD    CS:[BP+SI+9493H],DX
+      ADD    CS:[BP+DI+9594H],DX
+      ADD    CS:[SI+9695H],DX
+      ADD    CS:[DI+9796H],DX
+      ADD    CS:[BP+9897H],DX
+      ADD    CS:[BX+9998H],DX
+      ADD    CS:[BX+SI+9A99H],BX
+      ADD    CS:[BX+DI+9B9AH],BX
+      ADD    CS:[BP+SI+9C9BH],BX
+      ADD    CS:[BP+DI+9D9CH],BX
+      ADD    CS:[SI+9E9DH],BX
+      ADD    CS:[DI+9F9EH],BX
+      ADD    CS:[BP+0A09FH],BX
+      ADD    CS:[BX+0A1A0H],BX
+      ADD    CS:[BX+SI+0A2A1H],SP
+      ADD    CS:[BX+DI+0A3A2H],SP
+      ADD    CS:[BP+SI+0A4A3H],SP
+      ADD    CS:[BP+DI+0A5A4H],SP
+      ADD    CS:[SI+0A6A5H],SP
+      ADD    CS:[DI+0A7A6H],SP
+      ADD    CS:[BP+0A8A7H],SP
+      ADD    CS:[BX+0A9A8H],SP
+      ADD    CS:[BX+SI+0AAA9H],BP
+      ADD    CS:[BX+DI+0ABAAH],BP
+      ADD    CS:[BP+SI+0ACABH],BP
+      ADD    CS:[BP+DI+0ADACH],BP
+      ADD    CS:[SI+0AEADH],BP
+      ADD    CS:[DI+0AFAEH],BP
+      ADD    CS:[BP+0B0AFH],BP
+      ADD    CS:[BX+0B1B0H],BP
+      ADD    CS:[BX+SI+0B2B1H],SI
+      ADD    CS:[BX+DI+0B3B2H],SI
+      ADD    CS:[BP+SI+0B4B3H],SI
+      ADD    CS:[BP+DI+0B5B4H],SI
+      ADD    CS:[SI+0B6B5H],SI
+      ADD    CS:[DI+0B7B6H],SI
+      ADD    CS:[BP+0B8B7H],SI
+      ADD    CS:[BX+0B9B8H],SI
+      ADD    CS:[BX+SI+0BAB9H],DI
+      ADD    CS:[BX+DI+0BBBAH],DI
+      ADD    CS:[BP+SI+0BCBBH],DI
+      ADD    CS:[BP+DI+0BDBCH],DI
+      ADD    CS:[SI+0BEBDH],DI
+      ADD    CS:[DI+0BFBEH],DI
+      ADD    CS:[BP+0C0BFH],DI
+      ADD    CS:[BX+0C1C0H],DI
+      ADD    CS:[BX+SI],AX
+      ADD    CS:[BX+DI],AX
+      ADD    AL,CS:[BP+DI]
+      ADD    AL,CS:[SI]
+      ADD    AL,CS:[DI]
+      ADD    AL,CS:[0807H]
+      ADD    AL,CS:[BX]
+      ADD    CL,CS:[BX+SI]
+      ADD    CL,CS:[BX+DI]
+      ADD    CL,CS:[BP+SI]
+      ADD    CL,CS:[BP+DI]
+      ADD    CL,CS:[SI]
+      ADD    CL,CS:[DI]
+      ADD    CL,CS:[100FH]
+      ADD    CL,CS:[BX]
+      ADD    DL,CS:[BX+SI]
+      ADD    DL,CS:[BX+DI]
+      ADD    DL,CS:[BP+SI]
+      ADD    DL,CS:[BP+DI]
+      ADD    DL,CS:[SI]
+      ADD    DL,CS:[DI]
+      ADD    DL,CS:[1817H]
+      ADD    DL,CS:[BX]
+      ADD    BL,CS:[BX+SI]
+      ADD    BL,CS:[BX+DI]
+      ADD    BL,CS:[BP+SI]
+      ADD    BL,CS:[BP+DI]
+      ADD    BL,CS:[SI]
+      ADD    BL,CS:[DI]
+      ADD    BL,CS:[201FH]
+      ADD    BL,CS:[BX]
+      ADD    AH,CS:[BX+SI]
+      ADD    AH,CS:[BX+DI]
+      ADD    AH,CS:[BP+SI]
+      ADD    AH,CS:[BP+DI]
+      ADD    AH,CS:[SI]
+      ADD    AH,CS:[DI]
+      ADD    AH,CS:[2827H]
+      ADD    AH,CS:[BX]
+      ADD    AX,CS:[SI]
+      ADD    AX,CS:[DI]
+      ADD    AX,CS:[0807H]
+      ADD    AX,CS:[BX]
+      ADD    CX,CS:[BX+SI]
+      ADD    CX,CS:[BX+DI]
+      ADD    CX,CS:[BP+SI]
+      ADD    CX,CS:[BP+DI]
+      ADD    CX,CS:[SI]
+      ADD    CX,CS:[DI]
+      ADD    CX,CS:[100FH]
+      ADD    CX,CS:[BX]
+      ADD    DX,CS:[BX+SI]
+      ADD    DX,CS:[BX+DI]
+      ADD    DX,CS:[BP+SI]
+      ADD    DX,CS:[BP+DI]
+      ADD    DX,CS:[SI]
+      ADD    DX,CS:[DI]
+      ADD    DX,CS:[1817H]
+      ADD    DX,CS:[BX]
+      ADD    BX,CS:[BX+SI]
+      ADD    BX,CS:[BX+DI]
+      ADD    BX,CS:[BP+SI]
+      ADD    BX,CS:[BP+DI]
+      ADD    BX,CS:[SI]
+      ADD    BX,CS:[DI]
+      ADD    BX,CS:[201FH]
+      ADD    BX,CS:[BX]
+      ADD    SP,CS:[BX+SI]
+      ADD    SP,CS:[BX+DI]
+      ADD    SP,CS:[BP+SI]
+      ADD    SP,CS:[BP+DI]
+      ADD    SP,CS:[SI]
+      ADD    SP,CS:[DI]
+      ADD    SP,CS:[2827H]
+      ADD    SP,CS:[BX]
+      ADD    BP,CS:[BX+SI]
+      ADD    BP,CS:[BX+DI]
+      ADD    BP,CS:[BP+SI]
+      ADD    BP,CS:[BP+DI]
+      ADD    BP,CS:[SI]
+      ADD    BP,CS:[DI]
+      ADD    BP,CS:[302FH]
+      ADD    BP,CS:[BX]
+      ADD    SI,CS:[BX+SI]
+      ADD    SI,CS:[BX+DI]
+      ADD    SI,CS:[BP+SI]
+      ADD    SI,CS:[BP+DI]
+      ADD    SI,CS:[SI]
+      ADD    SI,CS:[DI]
+      ADD    SI,CS:[3837H]
+      ADD    SI,CS:[BX]
+      ADD    DI,CS:[BX+SI]
+      ADD    DI,CS:[BX+DI]
+      ADD    DI,CS:[BP+SI]
+      ADD    DI,CS:[BP+DI]
+      ADD    DI,CS:[SI]
+      ADD    DI,CS:[DI]
+      ADD    DI,CS:[403FH]
+      ADD    DI,CS:[BX]
+      ADD    AX,CS:[BX+SI+65]
+      ADD    AX,CS:[BX+SI-128]
+      ADD    AX,CS:[BX+DI+66]
+      ADD    AX,CS:[BX+DI-128]
+      ADD    AX,CS:[BP+SI+67]
+      ADD    AX,CS:[BP+SI-128]
+      ADD    AX,CS:[BP+DI+68]
+      ADD    AX,CS:[BP+DI-128]
+      ADD    AX,CS:[SI+69]
+      ADD    AX,CS:[SI-128]
+      ADD    AX,CS:[DI+70]
+      ADD    AX,CS:[DI-128]
+      ADD    AX,CS:[BP+71]
+      ADD    AX,CS:[BP-128]
+      ADD    AX,CS:[BX+72]
+      ADD    AX,CS:[BX-128]
+      ADD    CX,CS:[BX+SI+73]
+      ADD    CX,CS:[BX+SI-128]
+      ADD    CX,CS:[BX+DI+74]
+      ADD    CX,CS:[BX+DI-128]
+      ADD    CX,CS:[BP+SI+75]
+      ADD    CX,CS:[BP+SI-128]
+      ADD    CX,CS:[BP+DI+76]
+      ADD    CX,CS:[BP+DI-128]
+      ADD    CX,CS:[SI+77]
+      ADD    CX,CS:[SI-128]
+      ADD    CX,CS:[DI+78]
+      ADD    CX,CS:[DI-128]
+      ADD    CX,CS:[BP+79]
+      ADD    CX,CS:[BP-128]
+      ADD    CX,CS:[BX+80]
+      ADD    CX,CS:[BX-128]
+      ADD    DX,CS:[BX+SI+81]
+      ADD    DX,CS:[BX+SI-128]
+      ADD    DX,CS:[BX+DI+82]
+      ADD    DX,CS:[BX+DI-128]
+      ADD    DX,CS:[BP+SI+83]
+      ADD    DX,CS:[BP+SI-128]
+      ADD    DX,CS:[BP+DI+84]
+      ADD    DX,CS:[BP+DI-128]
+      ADD    DX,CS:[SI+85]
+      ADD    DX,CS:[SI-128]
+      ADD    DX,CS:[DI+86]
+      ADD    DX,CS:[DI-128]
+      ADD    DX,CS:[BP+87]
+      ADD    DX,CS:[BP-128]
+      ADD    DX,CS:[BX+88]
+      ADD    DX,CS:[BX-128]
+      ADD    BX,CS:[BX+SI+89]
+      ADD    BX,CS:[BX+SI-128]
+      ADD    BX,CS:[BX+DI+90]
+      ADD    BX,CS:[BX+DI-128]
+      ADD    BX,CS:[BP+SI+91]
+      ADD    BX,CS:[BP+SI-128]
+      ADD    BX,CS:[BP+DI+92]
+      ADD    BX,CS:[BP+DI-128]
+      ADD    BX,CS:[SI+93]
+      ADD    BX,CS:[SI-128]
+      ADD    BX,CS:[DI+94]
+      ADD    BX,CS:[DI-128]
+      ADD    BX,CS:[BP+95]
+      ADD    BX,CS:[BP-128]
+      ADD    BX,CS:[BX+96]
+      ADD    BX,CS:[BX-128]
+      ADD    SP,CS:[BX+SI+97]
+      ADD    SP,CS:[BX+SI-128]
+      ADD    SP,CS:[BX+DI+98]
+      ADD    SP,CS:[BX+DI-128]
+      ADD    SP,CS:[BP+SI+99]
+      ADD    SP,CS:[BP+SI-128]
+      ADD    SP,CS:[BP+DI+100]
+      ADD    SP,CS:[BP+DI-128]
+      ADD    SP,CS:[SI+101]
+      ADD    SP,CS:[SI-128]
+      ADD    SP,CS:[DI+102]
+      ADD    SP,CS:[DI-128]
+      ADD    SP,CS:[BP+103]
+      ADD    SP,CS:[BP-128]
+      ADD    SP,CS:[BX+104]
+      ADD    SP,CS:[BX-128]
+      ADD    BP,CS:[BX+SI+105]
+      ADD    BP,CS:[BX+SI-128]
+      ADD    BP,CS:[BX+DI+106]
+      ADD    BP,CS:[BX+DI-128]
+      ADD    BP,CS:[BP+SI+107]
+      ADD    BP,CS:[BP+SI-128]
+      ADD    BP,CS:[BP+DI+108]
+      ADD    BP,CS:[BP+DI-128]
+      ADD    BP,CS:[SI+109]
+      ADD    BP,CS:[SI-128]
+      ADD    BP,CS:[DI+110]
+      ADD    BP,CS:[DI-128]
+      ADD    BP,CS:[BP+111]
+      ADD    BP,CS:[BP-128]
+      ADD    BP,CS:[BX+112]
+      ADD    BP,CS:[BX-128]
+      ADD    SI,CS:[BX+SI+113]
+      ADD    SI,CS:[BX+SI-128]
+      ADD    SI,CS:[BX+DI+114]
+      ADD    SI,CS:[BX+DI-128]
+      ADD    SI,CS:[BP+SI+115]
+      ADD    SI,CS:[BP+SI-128]
+      ADD    SI,CS:[BP+DI+116]
+      ADD    SI,CS:[BP+DI-128]
+      ADD    SI,CS:[SI+117]
+      ADD    SI,CS:[SI-128]
+      ADD    SI,CS:[DI+118]
+      ADD    SI,CS:[DI-128]
+      ADD    SI,CS:[BP+119]
+      ADD    SI,CS:[BP-128]
+      ADD    SI,CS:[BX+120]
+      ADD    SI,CS:[BX-128]
+      ADD    DI,CS:[BX+SI+121]
+      ADD    DI,CS:[BX+SI-128]
+      ADD    DI,CS:[BX+DI+122]
+      ADD    DI,CS:[BX+DI-128]
+      ADD    DI,CS:[BP+SI+123]
+      ADD    DI,CS:[BP+SI-128]
+      ADD    DI,CS:[BP+DI+124]
+      ADD    DI,CS:[BP+DI-128]
+      ADD    DI,CS:[SI+125]
+      ADD    DI,CS:[SI-128]
+      ADD    DI,CS:[DI+126]
+      ADD    DI,CS:[DI-128]
+      ADD    DI,CS:[BP+127]
+      ADD    DI,CS:[BP-128]
+      ADD    DI,CS:[BX-128]
+      ADD    DI,CS:[BX+0]
+      ADD    AX,CS:[BX+SI+8281H]
+      ADD    AX,CS:[BX+DI+8382H]
+      ADD    AX,CS:[BP+SI+8483H]
+      ADD    AX,CS:[BP+DI+8584H]
+      ADD    AX,CS:[SI+8685H]
+      ADD    AX,CS:[DI+8786H]
+      ADD    AX,CS:[BP+8887H]
+      ADD    AX,CS:[BX+8988H]
+      ADD    CX,CS:[BX+SI+8A89H]
+      ADD    CX,CS:[BX+DI+8B8AH]
+      ADD    CX,CS:[BP+SI+8C8BH]
+      ADD    CX,CS:[BP+DI+8D8CH]
+      ADD    CX,CS:[SI+8E8DH]
+      ADD    CX,CS:[DI+8F8EH]
+      ADD    CX,CS:[BP+908FH]
+      ADD    CX,CS:[BX+9190H]
+      ADD    DX,CS:[BX+SI+9291H]
+      ADD    DX,CS:[BX+DI+9392H]
+      ADD    DX,CS:[BP+SI+9493H]
+      ADD    DX,CS:[BP+DI+9594H]
+      ADD    DX,CS:[SI+9695H]
+      ADD    DX,CS:[DI+9796H]
+      ADD    DX,CS:[BP+9897H]
+      ADD    DX,CS:[BX+9998H]
+      ADD    BX,CS:[BX+SI+9A99H]
+      ADD    BX,CS:[BX+DI+9B9AH]
+      ADD    BX,CS:[BP+SI+9C9BH]
+      ADD    BX,CS:[BP+DI+9D9CH]
+      ADD    BX,CS:[SI+9E9DH]
+      ADD    BX,CS:[DI+9F9EH]
+      ADD    BX,CS:[BP+0A09FH]
+      ADD    BX,CS:[BX+0A1A0H]
+      ADD    SP,CS:[BX+SI+0A2A1H]
+      ADD    SP,CS:[BX+DI+0A3A2H]
+      ADD    SP,CS:[BP+SI+0A4A3H]
+      ADD    SP,CS:[BP+DI+0A5A4H]
+      ADD    SP,CS:[SI+0A6A5H]
+      ADD    SP,CS:[DI+0A7A6H]
+      ADD    SP,CS:[BP+0A8A7H]
+      ADD    SP,CS:[BX+0A9A8H]
+      ADD    BP,CS:[BX+SI+0AAA9H]
+      ADD    BP,CS:[BX+DI+0ABAAH]
+      ADD    BP,CS:[BP+SI+0ACABH]
+      ADD    BP,CS:[BP+DI+0ADACH]
+      ADD    BP,CS:[SI+0AEADH]
+      ADD    BP,CS:[DI+0AFAEH]
+      ADD    BP,CS:[BP+0B0AFH]
+      ADD    BP,CS:[BX+0B1B0H]
+      ADD    SI,CS:[BX+SI+0B2B1H]
+      ADD    SI,CS:[BX+DI+0B3B2H]
+      ADD    SI,CS:[BP+SI+0B4B3H]
+      ADD    SI,CS:[BP+DI+0B5B4H]
+      ADD    SI,CS:[SI+0B6B5H]
+      ADD    SI,CS:[DI+0B7B6H]
+      ADD    SI,CS:[BP+0B8B7H]
+      ADD    SI,CS:[BX+0B9B8H]
+      ADD    DI,CS:[BX+SI+0BAB9H]
+      ADD    DI,CS:[BX+DI+0BBBAH]
+      ADD    DI,CS:[BP+SI+0BCBBH]
+      ADD    DI,CS:[BP+DI+0BDBCH]
+      ADD    DI,CS:[SI+0BEBDH]
+      ADD    DI,CS:[DI+0BFBEH]
+      ADD    DI,CS:[BP+0C0BFH]
+      ADD    DI,CS:[BX+0C1C0H]
+      ADD    AX,CS:[BX+SI]
+      ADD    AX,CS:[BX+DI]
+      ADD    AX,CS:[BP+SI]
+      ADD    AX,CS:[BP+DI]
+      OR     CS:[BX+DI],CL
+      OR     CS:[BP+SI],CL
+      OR     CS:[BP+DI],CL
+      OR     CS:[SI],CL
+      OR     CS:[DI],CL
+      OR     CS:[100FH],CL
+      OR     CS:[BX],CL
+      OR     CS:[BX+SI],DL
+      OR     CS:[BX+DI],DL
+      OR     CS:[BP+SI],DL
+      OR     CS:[BP+DI],DL
+      OR     CS:[SI],DL
+      OR     CS:[DI],DL
+      OR     CS:[1817H],DL
+      OR     CS:[BX],DL
+      OR     CS:[BX+SI],BL
+      OR     CS:[BX+DI],BL
+      OR     CS:[BP+SI],BL
+      OR     CS:[BP+DI],BL
+      OR     CS:[SI],BL
+      OR     CS:[DI],BL
+      OR     CS:[201FH],BL
+      OR     CS:[BX],BL
+      OR     CS:[BX+SI],AH
+      OR     CS:[BX+DI],AH
+      OR     CS:[BP+SI],AH
+      OR     CS:[BP+DI],AH
+      OR     CS:[SI],AH
+      OR     CS:[DI],AH
+      OR     CS:[2827H],AH
+      OR     CS:[BX],AH
+      OR     CS:[BP+SI],CX
+      OR     CS:[BP+DI],CX
+      OR     CS:[SI],CX
+      OR     CS:[DI],CX
+      OR     CS:[100FH],CX
+      OR     CS:[BX],CX
+      OR     CS:[BX+SI],DX
+      OR     CS:[BX+DI],DX
+      OR     CS:[BP+SI],DX
+      OR     CS:[BP+DI],DX
+      OR     CS:[SI],DX
+      OR     CS:[DI],DX
+      OR     CS:[1817H],DX
+      OR     CS:[BX],DX
+      OR     CS:[BX+SI],BX
+      OR     CS:[BX+DI],BX
+      OR     CS:[BP+SI],BX
+      OR     CS:[BP+DI],BX
+      OR     CS:[SI],BX
+      OR     CS:[DI],BX
+      OR     CS:[201FH],BX
+      OR     CS:[BX],BX
+      OR     CS:[BX+SI],SP
+      OR     CS:[BX+DI],SP
+      OR     CS:[BP+SI],SP
+      OR     CS:[BP+DI],SP
+      OR     CS:[SI],SP
+      OR     CS:[DI],SP
+      OR     CS:[2827H],SP
+      OR     CS:[BX],SP
+      OR     CS:[BX+SI],BP
+      OR     CS:[BX+DI],BP
+      OR     CS:[BP+SI],BP
+      OR     CS:[BP+DI],BP
+      OR     CS:[SI],BP
+      OR     CS:[DI],BP
+      OR     CS:[302FH],BP
+      OR     CS:[BX],BP
+      OR     CS:[BX+SI],SI
+      OR     CS:[BX+DI],SI
+      OR     CS:[BP+SI],SI
+      OR     CS:[BP+DI],SI
+      OR     CS:[SI],SI
+      OR     CS:[DI],SI
+      OR     CS:[3837H],SI
+      OR     CS:[BX],SI
+      OR     CS:[BX+SI],DI
+      OR     CS:[BX+DI],DI
+      OR     CS:[BP+SI],DI
+      OR     CS:[BP+DI],DI
+      OR     CS:[SI],DI
+      OR     CS:[DI],DI
+      OR     CS:[403FH],DI
+      OR     CS:[BX],DI
+      OR     CS:[BX+SI+65],AX
+      OR     CS:[BX+SI-128],AX
+      OR     CS:[BX+DI+66],AX
+      OR     CS:[BX+DI-128],AX
+      OR     CS:[BP+SI+67],AX
+      OR     CS:[BP+SI-128],AX
+      OR     CS:[BP+DI+68],AX
+      OR     CS:[BP+DI-128],AX
+      OR     CS:[SI+69],AX
+      OR     CS:[SI-128],AX
+      OR     CS:[DI+70],AX
+      OR     CS:[DI-128],AX
+      OR     CS:[BP+71],AX
+      OR     CS:[BP-128],AX
+      OR     CS:[BX+72],AX
+      OR     CS:[BX-128],AX
+      OR     CS:[BX+SI+73],CX
+      OR     CS:[BX+SI-128],CX
+      OR     CS:[BX+DI+74],CX
+      OR     CS:[BX+DI-128],CX
+      OR     CS:[BP+SI+75],CX
+      OR     CS:[BP+SI-128],CX
+      OR     CS:[BP+DI+76],CX
+      OR     CS:[BP+DI-128],CX
+      OR     CS:[SI+77],CX
+      OR     CS:[SI-128],CX
+      OR     CS:[DI+78],CX
+      OR     CS:[DI-128],CX
+      OR     CS:[BP+79],CX
+      OR     CS:[BP-128],CX
+      OR     CS:[BX+80],CX
+      OR     CS:[BX-128],CX
+      OR     CS:[BX+SI+81],DX
+      OR     CS:[BX+SI-128],DX
+      OR     CS:[BX+DI+82],DX
+      OR     CS:[BX+DI-128],DX
+      OR     CS:[BP+SI+83],DX
+      OR     CS:[BP+SI-128],DX
+      OR     CS:[BP+DI+84],DX
+      OR     CS:[BP+DI-128],DX
+      OR     CS:[SI+85],DX
+      OR     CS:[SI-128],DX
+      OR     CS:[DI+86],DX
+      OR     CS:[DI-128],DX
+      OR     CS:[BP+87],DX
+      OR     CS:[BP-128],DX
+      OR     CS:[BX+88],DX
+      OR     CS:[BX-128],DX
+      OR     CS:[BX+SI+89],BX
+      OR     CS:[BX+SI-128],BX
+      OR     CS:[BX+DI+90],BX
+      OR     CS:[BX+DI-128],BX
+      OR     CS:[BP+SI+91],BX
+      OR     CS:[BP+SI-128],BX
+      OR     CS:[BP+DI+92],BX
+      OR     CS:[BP+DI-128],BX
+      OR     CS:[SI+93],BX
+      OR     CS:[SI-128],BX
+      OR     CS:[DI+94],BX
+      OR     CS:[DI-128],BX
+      OR     CS:[BP+95],BX
+      OR     CS:[BP-128],BX
+      OR     CS:[BX+96],BX
+      OR     CS:[BX-128],BX
+      OR     CS:[BX+SI+97],SP
+      OR     CS:[BX+SI-128],SP
+      OR     CS:[BX+DI+98],SP
+      OR     CS:[BX+DI-128],SP
+      OR     CS:[BP+SI+99],SP
+      OR     CS:[BP+SI-128],SP
+      OR     CS:[BP+DI+100],SP
+      OR     CS:[BP+DI-128],SP
+      OR     CS:[SI+101],SP
+      OR     CS:[SI-128],SP
+      OR     CS:[DI+102],SP
+      OR     CS:[DI-128],SP
+      OR     CS:[BP+103],SP
+      OR     CS:[BP-128],SP
+      OR     CS:[BX+104],SP
+      OR     CS:[BX-128],SP
+      OR     CS:[BX+SI+105],BP
+      OR     CS:[BX+SI-128],BP
+      OR     CS:[BX+DI+106],BP
+      OR     CS:[BX+DI-128],BP
+      OR     CS:[BP+SI+107],BP
+      OR     CS:[BP+SI-128],BP
+      OR     CS:[BP+DI+108],BP
+      OR     CS:[BP+DI-128],BP
+      OR     CS:[SI+109],BP
+      OR     CS:[SI-128],BP
+      OR     CS:[DI+110],BP
+      OR     CS:[DI-128],BP
+      OR     CS:[BP+111],BP
+      OR     CS:[BP-128],BP
+      OR     CS:[BX+112],BP
+      OR     CS:[BX-128],BP
+      OR     CS:[BX+SI+113],SI
+      OR     CS:[BX+SI-128],SI
+      OR     CS:[BX+DI+114],SI
+      OR     CS:[BX+DI-128],SI
+      OR     CS:[BP+SI+115],SI
+      OR     CS:[BP+SI-128],SI
+      OR     CS:[BP+DI+116],SI
+      OR     CS:[BP+DI-128],SI
+      OR     CS:[SI+117],SI
+      OR     CS:[SI-128],SI
+      OR     CS:[DI+118],SI
+      OR     CS:[DI-128],SI
+      OR     CS:[BP+119],SI
+      OR     CS:[BP-128],SI
+      OR     CS:[BX+120],SI
+      OR     CS:[BX-128],SI
+      OR     CS:[BX+SI+121],DI
+      OR     CS:[BX+SI-128],DI
+      OR     CS:[BX+DI+122],DI
+      OR     CS:[BX+DI-128],DI
+      OR     CS:[BP+SI+123],DI
+      OR     CS:[BP+SI-128],DI
+      OR     CS:[BP+DI+124],DI
+      OR     CS:[BP+DI-128],DI
+      OR     CS:[SI+125],DI
+      OR     CS:[SI-128],DI
+      OR     CS:[DI+126],DI
+      OR     CS:[DI-128],DI
+      OR     CS:[BP+127],DI
+      OR     CS:[BP-128],DI
+      OR     CS:[BX-128],DI
+      OR     CS:[BX+0],DI
+      OR     CS:[BX+SI+8281H],AX
+      OR     CS:[BX+DI+8382H],AX
+      OR     CS:[BP+SI+8483H],AX
+      OR     CS:[BP+DI+8584H],AX
+      OR     CS:[SI+8685H],AX
+      OR     CS:[DI+8786H],AX
+      OR     CS:[BP+8887H],AX
+      OR     CS:[BX+8988H],AX
+      OR     CS:[BX+SI+8A89H],CX
+      OR     CS:[BX+DI+8B8AH],CX
+      OR     CS:[BP+SI+8C8BH],CX
+      OR     CS:[BP+DI+8D8CH],CX
+      OR     CS:[SI+8E8DH],CX
+      OR     CS:[DI+8F8EH],CX
+      OR     CS:[BP+908FH],CX
+      OR     CS:[BX+9190H],CX
+      OR     CS:[BX+SI+9291H],DX
+      OR     CS:[BX+DI+9392H],DX
+      OR     CS:[BP+SI+9493H],DX
+      OR     CS:[BP+DI+9594H],DX
+      OR     CS:[SI+9695H],DX
+      OR     CS:[DI+9796H],DX
+      OR     CS:[BP+9897H],DX
+      OR     CS:[BX+9998H],DX
+      OR     CS:[BX+SI+9A99H],BX
+      OR     CS:[BX+DI+9B9AH],BX
+      OR     CS:[BP+SI+9C9BH],BX
+      OR     CS:[BP+DI+9D9CH],BX
+      OR     CS:[SI+9E9DH],BX
+      OR     CS:[DI+9F9EH],BX
+      OR     CS:[BP+0A09FH],BX
+      OR     CS:[BX+0A1A0H],BX
+      OR     CS:[BX+SI+0A2A1H],SP
+      OR     CS:[BX+DI+0A3A2H],SP
+      OR     CS:[BP+SI+0A4A3H],SP
+      OR     CS:[BP+DI+0A5A4H],SP
+      OR     CS:[SI+0A6A5H],SP
+      OR     CS:[DI+0A7A6H],SP
+      OR     CS:[BP+0A8A7H],SP
+      OR     CS:[BX+0A9A8H],SP
+      OR     CS:[BX+SI+0AAA9H],BP
+      OR     CS:[BX+DI+0ABAAH],BP
+      OR     CS:[BP+SI+0ACABH],BP
+      OR     CS:[BP+DI+0ADACH],BP
+      OR     CS:[SI+0AEADH],BP
+      OR     CS:[DI+0AFAEH],BP
+      OR     CS:[BP+0B0AFH],BP
+      OR     CS:[BX+0B1B0H],BP
+      OR     CS:[BX+SI+0B2B1H],SI
+      OR     CS:[BX+DI+0B3B2H],SI
+      OR     CS:[BP+SI+0B4B3H],SI
+      OR     CS:[BP+DI+0B5B4H],SI
+      OR     CS:[SI+0B6B5H],SI
+      OR     CS:[DI+0B7B6H],SI
+      OR     CS:[BP+0B8B7H],SI
+      OR     CS:[BX+0B9B8H],SI
+      OR     CS:[BX+SI+0BAB9H],DI
+      OR     CS:[BX+DI+0BBBAH],DI
+      OR     CS:[BP+SI+0BCBBH],DI
+      OR     CS:[BP+DI+0BDBCH],DI
+      OR     CS:[SI+0BEBDH],DI
+      OR     CS:[DI+0BFBEH],DI
+      OR     CS:[BP+0C0BFH],DI
+      OR     CS:[BX+0C1C0H],DI
+      OR     CS:[BX+SI],AX
+      OR     CS:[BX+DI],AX
+      OR     CS:[BP+SI],AX
+      OR     CS:[BP+DI],AX
+      OR     CS:[SI],AX
+      OR     CS:[DI],AX
+      OR     CS:[0807H],AX
+      OR     CS:[BX],AX
+      OR     CS:[BX+SI],CX
+      OR     CS:[BX+DI],CX
+      OR     CL,CS:[BP+DI]
+      OR     CL,CS:[SI]
+      OR     CL,CS:[DI]
+      OR     CL,CS:[100FH]
+      OR     CL,CS:[BX]
+      OR     DL,CS:[BX+SI]
+      OR     DL,CS:[BX+DI]
+      OR     DL,CS:[BP+SI]
+      OR     DL,CS:[BP+DI]
+      OR     DL,CS:[SI]
+      OR     DL,CS:[DI]
+      OR     DL,CS:[1817H]
+      OR     DL,CS:[BX]
+      OR     BL,CS:[BX+SI]
+      OR     BL,CS:[BX+DI]
+      OR     BL,CS:[BP+SI]
+      OR     BL,CS:[BP+DI]
+      OR     BL,CS:[SI]
+      OR     BL,CS:[DI]
+      OR     BL,CS:[201FH]
+      OR     BL,CS:[BX]
+      OR     AH,CS:[BX+SI]
+      OR     AH,CS:[BX+DI]
+      OR     AH,CS:[BP+SI]
+      OR     AH,CS:[BP+DI]
+      OR     AH,CS:[SI]
+      OR     AH,CS:[DI]
+      OR     AH,CS:[2827H]
+      OR     AH,CS:[BX]
+      OR     CX,CS:[SI]
+      OR     CX,CS:[DI]
+      OR     CX,CS:[100FH]
+      OR     CX,CS:[BX]
+      OR     DX,CS:[BX+SI]
+      OR     DX,CS:[BX+DI]
+      OR     DX,CS:[BP+SI]
+      OR     DX,CS:[BP+DI]
+      OR     DX,CS:[SI]
+      OR     DX,CS:[DI]
+      OR     DX,CS:[1817H]
+      OR     DX,CS:[BX]
+      OR     BX,CS:[BX+SI]
+      OR     BX,CS:[BX+DI]
+      OR     BX,CS:[BP+SI]
+      OR     BX,CS:[BP+DI]
+      OR     BX,CS:[SI]
+      OR     BX,CS:[DI]
+      OR     BX,CS:[201FH]
+      OR     BX,CS:[BX]
+      OR     SP,CS:[BX+SI]
+      OR     SP,CS:[BX+DI]
+      OR     SP,CS:[BP+SI]
+      OR     SP,CS:[BP+DI]
+      OR     SP,CS:[SI]
+      OR     SP,CS:[DI]
+      OR     SP,CS:[2827H]
+      OR     SP,CS:[BX]
+      OR     BP,CS:[BX+SI]
+      OR     BP,CS:[BX+DI]
+      OR     BP,CS:[BP+SI]
+      OR     BP,CS:[BP+DI]
+      OR     BP,CS:[SI]
+      OR     BP,CS:[DI]
+      OR     BP,CS:[302FH]
+      OR     BP,CS:[BX]
+      OR     SI,CS:[BX+SI]
+      OR     SI,CS:[BX+DI]
+      OR     SI,CS:[BP+SI]
+      OR     SI,CS:[BP+DI]
+      OR     SI,CS:[SI]
+      OR     SI,CS:[DI]
+      OR     SI,CS:[3837H]
+      OR     SI,CS:[BX]
+      OR     DI,CS:[BX+SI]
+      OR     DI,CS:[BX+DI]
+      OR     DI,CS:[BP+SI]
+      OR     DI,CS:[BP+DI]
+      OR     DI,CS:[SI]
+      OR     DI,CS:[DI]
+      OR     DI,CS:[403FH]
+      OR     DI,CS:[BX]
+      OR     AX,CS:[BX+SI+65]
+      OR     AX,CS:[BX+SI-128]
+      OR     AX,CS:[BX+DI+66]
+      OR     AX,CS:[BX+DI-128]
+      OR     AX,CS:[BP+SI+67]
+      OR     AX,CS:[BP+SI-128]
+      OR     AX,CS:[BP+DI+68]
+      OR     AX,CS:[BP+DI-128]
+      OR     AX,CS:[SI+69]
+      OR     AX,CS:[SI-128]
+      OR     AX,CS:[DI+70]
+      OR     AX,CS:[DI-128]
+      OR     AX,CS:[BP+71]
+      OR     AX,CS:[BP-128]
+      OR     AX,CS:[BX+72]
+      OR     AX,CS:[BX-128]
+      OR     CX,CS:[BX+SI+73]
+      OR     CX,CS:[BX+SI-128]
+      OR     CX,CS:[BX+DI+74]
+      OR     CX,CS:[BX+DI-128]
+      OR     CX,CS:[BP+SI+75]
+      OR     CX,CS:[BP+SI-128]
+      OR     CX,CS:[BP+DI+76]
+      OR     CX,CS:[BP+DI-128]
+      OR     CX,CS:[SI+77]
+      OR     CX,CS:[SI-128]
+      OR     CX,CS:[DI+78]
+      OR     CX,CS:[DI-128]
+      OR     CX,CS:[BP+79]
+      OR     CX,CS:[BP-128]
+      OR     CX,CS:[BX+80]
+      OR     CX,CS:[BX-128]
+      OR     DX,CS:[BX+SI+81]
+      OR     DX,CS:[BX+SI-128]
+      OR     DX,CS:[BX+DI+82]
+      OR     DX,CS:[BX+DI-128]
+      OR     DX,CS:[BP+SI+83]
+      OR     DX,CS:[BP+SI-128]
+      OR     DX,CS:[BP+DI+84]
+      OR     DX,CS:[BP+DI-128]
+      OR     DX,CS:[SI+85]
+      OR     DX,CS:[SI-128]
+      OR     DX,CS:[DI+86]
+      OR     DX,CS:[DI-128]
+      OR     DX,CS:[BP+87]
+      OR     DX,CS:[BP-128]
+      OR     DX,CS:[BX+88]
+      OR     DX,CS:[BX-128]
+      OR     BX,CS:[BX+SI+89]
+      OR     BX,CS:[BX+SI-128]
+      OR     BX,CS:[BX+DI+90]
+      OR     BX,CS:[BX+DI-128]
+      OR     BX,CS:[BP+SI+91]
+      OR     BX,CS:[BP+SI-128]
+      OR     BX,CS:[BP+DI+92]
+      OR     BX,CS:[BP+DI-128]
+      OR     BX,CS:[SI+93]
+      OR     BX,CS:[SI-128]
+      OR     BX,CS:[DI+94]
+      OR     BX,CS:[DI-128]
+      OR     BX,CS:[BP+95]
+      OR     BX,CS:[BP-128]
+      OR     BX,CS:[BX+96]
+      OR     BX,CS:[BX-128]
+      OR     SP,CS:[BX+SI+97]
+      OR     SP,CS:[BX+SI-128]
+      OR     SP,CS:[BX+DI+98]
+      OR     SP,CS:[BX+DI-128]
+      OR     SP,CS:[BP+SI+99]
+      OR     SP,CS:[BP+SI-128]
+      OR     SP,CS:[BP+DI+100]
+      OR     SP,CS:[BP+DI-128]
+      OR     SP,CS:[SI+101]
+      OR     SP,CS:[SI-128]
+      OR     SP,CS:[DI+102]
+      OR     SP,CS:[DI-128]
+      OR     SP,CS:[BP+103]
+      OR     SP,CS:[BP-128]
+      OR     SP,CS:[BX+104]
+      OR     SP,CS:[BX-128]
+      OR     BP,CS:[BX+SI+105]
+      OR     BP,CS:[BX+SI-128]
+      OR     BP,CS:[BX+DI+106]
+      OR     BP,CS:[BX+DI-128]
+      OR     BP,CS:[BP+SI+107]
+      OR     BP,CS:[BP+SI-128]
+      OR     BP,CS:[BP+DI+108]
+      OR     BP,CS:[BP+DI-128]
+      OR     BP,CS:[SI+109]
+      OR     BP,CS:[SI-128]
+      OR     BP,CS:[DI+110]
+      OR     BP,CS:[DI-128]
+      OR     BP,CS:[BP+111]
+      OR     BP,CS:[BP-128]
+      OR     BP,CS:[BX+112]
+      OR     BP,CS:[BX-128]
+      OR     SI,CS:[BX+SI+113]
+      OR     SI,CS:[BX+SI-128]
+      OR     SI,CS:[BX+DI+114]
+      OR     SI,CS:[BX+DI-128]
+      OR     SI,CS:[BP+SI+115]
+      OR     SI,CS:[BP+SI-128]
+      OR     SI,CS:[BP+DI+116]
+      OR     SI,CS:[BP+DI-128]
+      OR     SI,CS:[SI+117]
+      OR     SI,CS:[SI-128]
+      OR     SI,CS:[DI+118]
+      OR     SI,CS:[DI-128]
+      OR     SI,CS:[BP+119]
+      OR     SI,CS:[BP-128]
+      OR     SI,CS:[BX+120]
+      OR     SI,CS:[BX-128]
+      OR     DI,CS:[BX+SI+121]
+      OR     DI,CS:[BX+SI-128]
+      OR     DI,CS:[BX+DI+122]
+      OR     DI,CS:[BX+DI-128]
+      OR     DI,CS:[BP+SI+123]
+      OR     DI,CS:[BP+SI-128]
+      OR     DI,CS:[BP+DI+124]
+      OR     DI,CS:[BP+DI-128]
+      OR     DI,CS:[SI+125]
+      OR     DI,CS:[SI-128]
+      OR     DI,CS:[DI+126]
+      OR     DI,CS:[DI-128]
+      OR     DI,CS:[BP+127]
+      OR     DI,CS:[BP-128]
+      OR     DI,CS:[BX-128]
+      OR     DI,CS:[BX+0]
+      OR     AX,CS:[BX+SI+8281H]
+      OR     AX,CS:[BX+DI+8382H]
+      OR     AX,CS:[BP+SI+8483H]
+      OR     AX,CS:[BP+DI+8584H]
+      OR     AX,CS:[SI+8685H]
+      OR     AX,CS:[DI+8786H]
+      OR     AX,CS:[BP+8887H]
+      OR     AX,CS:[BX+8988H]
+      OR     CX,CS:[BX+SI+8A89H]
+      OR     CX,CS:[BX+DI+8B8AH]
+      OR     CX,CS:[BP+SI+8C8BH]
+      OR     CX,CS:[BP+DI+8D8CH]
+      OR     CX,CS:[SI+8E8DH]
+      OR     CX,CS:[DI+8F8EH]
+      OR     CX,CS:[BP+908FH]
+      OR     CX,CS:[BX+9190H]
+      OR     DX,CS:[BX+SI+9291H]
+      OR     DX,CS:[BX+DI+9392H]
+      OR     DX,CS:[BP+SI+9493H]
+      OR     DX,CS:[BP+DI+9594H]
+      OR     DX,CS:[SI+9695H]
+      OR     DX,CS:[DI+9796H]
+      OR     DX,CS:[BP+9897H]
+      OR     DX,CS:[BX+9998H]
+      OR     BX,CS:[BX+SI+9A99H]
+      OR     BX,CS:[BX+DI+9B9AH]
+      OR     BX,CS:[BP+SI+9C9BH]
+      OR     BX,CS:[BP+DI+9D9CH]
+      OR     BX,CS:[SI+9E9DH]
+      OR     BX,CS:[DI+9F9EH]
+      OR     BX,CS:[BP+0A09FH]
+      OR     BX,CS:[BX+0A1A0H]
+      OR     SP,CS:[BX+SI+0A2A1H]
+      OR     SP,CS:[BX+DI+0A3A2H]
+      OR     SP,CS:[BP+SI+0A4A3H]
+      OR     SP,CS:[BP+DI+0A5A4H]
+      OR     SP,CS:[SI+0A6A5H]
+      OR     SP,CS:[DI+0A7A6H]
+      OR     SP,CS:[BP+0A8A7H]
+      OR     SP,CS:[BX+0A9A8H]
+      OR     BP,CS:[BX+SI+0AAA9H]
+      OR     BP,CS:[BX+DI+0ABAAH]
+      OR     BP,CS:[BP+SI+0ACABH]
+      OR     BP,CS:[BP+DI+0ADACH]
+      OR     BP,CS:[SI+0AEADH]
+      OR     BP,CS:[DI+0AFAEH]
+      OR     BP,CS:[BP+0B0AFH]
+      OR     BP,CS:[BX+0B1B0H]
+      OR     SI,CS:[BX+SI+0B2B1H]
+      OR     SI,CS:[BX+DI+0B3B2H]
+      OR     SI,CS:[BP+SI+0B4B3H]
+      OR     SI,CS:[BP+DI+0B5B4H]
+      OR     SI,CS:[SI+0B6B5H]
+      OR     SI,CS:[DI+0B7B6H]
+      OR     SI,CS:[BP+0B8B7H]
+      OR     SI,CS:[BX+0B9B8H]
+      OR     DI,CS:[BX+SI+0BAB9H]
+      OR     DI,CS:[BX+DI+0BBBAH]
+      OR     DI,CS:[BP+SI+0BCBBH]
+      OR     DI,CS:[BP+DI+0BDBCH]
+      OR     DI,CS:[SI+0BEBDH]
+      OR     DI,CS:[DI+0BFBEH]
+      OR     DI,CS:[BP+0C0BFH]
+      OR     DI,CS:[BX+0C1C0H]
+      OR     AX,CS:[BX+SI]
+      OR     AX,CS:[BX+DI]
+      OR     AX,CS:[BP+SI]
+      OR     AX,CS:[BP+DI]
+      OR     AX,CS:[SI]
+      OR     AX,CS:[DI]
+      OR     AX,CS:[0807H]
+      OR     AX,CS:[BX]
+      OR     CX,CS:[BX+SI]
+      OR     CX,CS:[BX+DI]
+      OR     CX,CS:[BP+SI]
+      OR     CX,CS:[BP+DI]
+      ADC    CS:[BX+DI],DL
+      ADC    CS:[BP+SI],DL
+      ADC    CS:[BP+DI],DL
+      ADC    CS:[SI],DL
+      ADC    CS:[DI],DL
+      ADC    CS:[1817H],DL
+      ADC    CS:[BX],DL
+      ADC    CS:[BX+SI],BL
+      ADC    CS:[BX+DI],BL
+      ADC    CS:[BP+SI],BL
+      ADC    CS:[BP+DI],BL
+      ADC    CS:[SI],BL
+      ADC    CS:[DI],BL
+      ADC    CS:[201FH],BL
+      ADC    CS:[BX],BL
+      ADC    CS:[BX+SI],AH
+      ADC    CS:[BX+DI],AH
+      ADC    CS:[BP+SI],AH
+      ADC    CS:[BP+DI],AH
+      ADC    CS:[SI],AH
+      ADC    CS:[DI],AH
+      ADC    CS:[2827H],AH
+      ADC    CS:[BX],AH
+      ADC    CS:[BP+SI],DX
+      ADC    CS:[BP+DI],DX
+      ADC    CS:[SI],DX
+      ADC    CS:[DI],DX
+      ADC    CS:[1817H],DX
+      ADC    CS:[BX],DX
+      ADC    CS:[BX+SI],BX
+      ADC    CS:[BX+DI],BX
+      ADC    CS:[BP+SI],BX
+      ADC    CS:[BP+DI],BX
+      ADC    CS:[SI],BX
+      ADC    CS:[DI],BX
+      ADC    CS:[201FH],BX
+      ADC    CS:[BX],BX
+      ADC    CS:[BX+SI],SP
+      ADC    CS:[BX+DI],SP
+      ADC    CS:[BP+SI],SP
+      ADC    CS:[BP+DI],SP
+      ADC    CS:[SI],SP
+      ADC    CS:[DI],SP
+      ADC    CS:[2827H],SP
+      ADC    CS:[BX],SP
+      ADC    CS:[BX+SI],BP
+      ADC    CS:[BX+DI],BP
+      ADC    CS:[BP+SI],BP
+      ADC    CS:[BP+DI],BP
+      ADC    CS:[SI],BP
+      ADC    CS:[DI],BP
+      ADC    CS:[302FH],BP
+      ADC    CS:[BX],BP
+      ADC    CS:[BX+SI],SI
+      ADC    CS:[BX+DI],SI
+      ADC    CS:[BP+SI],SI
+      ADC    CS:[BP+DI],SI
+      ADC    CS:[SI],SI
+      ADC    CS:[DI],SI
+      ADC    CS:[3837H],SI
+      ADC    CS:[BX],SI
+      ADC    CS:[BX+SI],DI
+      ADC    CS:[BX+DI],DI
+      ADC    CS:[BP+SI],DI
+      ADC    CS:[BP+DI],DI
+      ADC    CS:[SI],DI
+      ADC    CS:[DI],DI
+      ADC    CS:[403FH],DI
+      ADC    CS:[BX],DI
+      ADC    CS:[BX+SI+65],AX
+      ADC    CS:[BX+SI-128],AX
+      ADC    CS:[BX+DI+66],AX
+      ADC    CS:[BX+DI-128],AX
+      ADC    CS:[BP+SI+67],AX
+      ADC    CS:[BP+SI-128],AX
+      ADC    CS:[BP+DI+68],AX
+      ADC    CS:[BP+DI-128],AX
+      ADC    CS:[SI+69],AX
+      ADC    CS:[SI-128],AX
+      ADC    CS:[DI+70],AX
+      ADC    CS:[DI-128],AX
+      ADC    CS:[BP+71],AX
+      ADC    CS:[BP-128],AX
+      ADC    CS:[BX+72],AX
+      ADC    CS:[BX-128],AX
+      ADC    CS:[BX+SI+73],CX
+      ADC    CS:[BX+SI-128],CX
+      ADC    CS:[BX+DI+74],CX
+      ADC    CS:[BX+DI-128],CX
+      ADC    CS:[BP+SI+75],CX
+      ADC    CS:[BP+SI-128],CX
+      ADC    CS:[BP+DI+76],CX
+      ADC    CS:[BP+DI-128],CX
+      ADC    CS:[SI+77],CX
+      ADC    CS:[SI-128],CX
+      ADC    CS:[DI+78],CX
+      ADC    CS:[DI-128],CX
+      ADC    CS:[BP+79],CX
+      ADC    CS:[BP-128],CX
+      ADC    CS:[BX+80],CX
+      ADC    CS:[BX-128],CX
+      ADC    CS:[BX+SI+81],DX
+      ADC    CS:[BX+SI-128],DX
+      ADC    CS:[BX+DI+82],DX
+      ADC    CS:[BX+DI-128],DX
+      ADC    CS:[BP+SI+83],DX
+      ADC    CS:[BP+SI-128],DX
+      ADC    CS:[BP+DI+84],DX
+      ADC    CS:[BP+DI-128],DX
+      ADC    CS:[SI+85],DX
+      ADC    CS:[SI-128],DX
+      ADC    CS:[DI+86],DX
+      ADC    CS:[DI-128],DX
+      ADC    CS:[BP+87],DX
+      ADC    CS:[BP-128],DX
+      ADC    CS:[BX+88],DX
+      ADC    CS:[BX-128],DX
+      ADC    CS:[BX+SI+89],BX
+      ADC    CS:[BX+SI-128],BX
+      ADC    CS:[BX+DI+90],BX
+      ADC    CS:[BX+DI-128],BX
+      ADC    CS:[BP+SI+91],BX
+      ADC    CS:[BP+SI-128],BX
+      ADC    CS:[BP+DI+92],BX
+      ADC    CS:[BP+DI-128],BX
+      ADC    CS:[SI+93],BX
+      ADC    CS:[SI-128],BX
+      ADC    CS:[DI+94],BX
+      ADC    CS:[DI-128],BX
+      ADC    CS:[BP+95],BX
+      ADC    CS:[BP-128],BX
+      ADC    CS:[BX+96],BX
+      ADC    CS:[BX-128],BX
+      ADC    CS:[BX+SI+97],SP
+      ADC    CS:[BX+SI-128],SP
+      ADC    CS:[BX+DI+98],SP
+      ADC    CS:[BX+DI-128],SP
+      ADC    CS:[BP+SI+99],SP
+      ADC    CS:[BP+SI-128],SP
+      ADC    CS:[BP+DI+100],SP
+      ADC    CS:[BP+DI-128],SP
+      ADC    CS:[SI+101],SP
+      ADC    CS:[SI-128],SP
+      ADC    CS:[DI+102],SP
+      ADC    CS:[DI-128],SP
+      ADC    CS:[BP+103],SP
+      ADC    CS:[BP-128],SP
+      ADC    CS:[BX+104],SP
+      ADC    CS:[BX-128],SP
+      ADC    CS:[BX+SI+105],BP
+      ADC    CS:[BX+SI-128],BP
+      ADC    CS:[BX+DI+106],BP
+      ADC    CS:[BX+DI-128],BP
+      ADC    CS:[BP+SI+107],BP
+      ADC    CS:[BP+SI-128],BP
+      ADC    CS:[BP+DI+108],BP
+      ADC    CS:[BP+DI-128],BP
+      ADC    CS:[SI+109],BP
+      ADC    CS:[SI-128],BP
+      ADC    CS:[DI+110],BP
+      ADC    CS:[DI-128],BP
+      ADC    CS:[BP+111],BP
+      ADC    CS:[BP-128],BP
+      ADC    CS:[BX+112],BP
+      ADC    CS:[BX-128],BP
+      ADC    CS:[BX+SI+113],SI
+      ADC    CS:[BX+SI-128],SI
+      ADC    CS:[BX+DI+114],SI
+      ADC    CS:[BX+DI-128],SI
+      ADC    CS:[BP+SI+115],SI
+      ADC    CS:[BP+SI-128],SI
+      ADC    CS:[BP+DI+116],SI
+      ADC    CS:[BP+DI-128],SI
+      ADC    CS:[SI+117],SI
+      ADC    CS:[SI-128],SI
+      ADC    CS:[DI+118],SI
+      ADC    CS:[DI-128],SI
+      ADC    CS:[BP+119],SI
+      ADC    CS:[BP-128],SI
+      ADC    CS:[BX+120],SI
+      ADC    CS:[BX-128],SI
+      ADC    CS:[BX+SI+121],DI
+      ADC    CS:[BX+SI-128],DI
+      ADC    CS:[BX+DI+122],DI
+      ADC    CS:[BX+DI-128],DI
+      ADC    CS:[BP+SI+123],DI
+      ADC    CS:[BP+SI-128],DI
+      ADC    CS:[BP+DI+124],DI
+      ADC    CS:[BP+DI-128],DI
+      ADC    CS:[SI+125],DI
+      ADC    CS:[SI-128],DI
+      ADC    CS:[DI+126],DI
+      ADC    CS:[DI-128],DI
+      ADC    CS:[BP+127],DI
+      ADC    CS:[BP-128],DI
+      ADC    CS:[BX-128],DI
+      ADC    CS:[BX+0],DI
+      ADC    CS:[BX+SI+8281H],AX
+      ADC    CS:[BX+DI+8382H],AX
+      ADC    CS:[BP+SI+8483H],AX
+      ADC    CS:[BP+DI+8584H],AX
+      ADC    CS:[SI+8685H],AX
+      ADC    CS:[DI+8786H],AX
+      ADC    CS:[BP+8887H],AX
+      ADC    CS:[BX+8988H],AX
+      ADC    CS:[BX+SI+8A89H],CX
+      ADC    CS:[BX+DI+8B8AH],CX
+      ADC    CS:[BP+SI+8C8BH],CX
+      ADC    CS:[BP+DI+8D8CH],CX
+      ADC    CS:[SI+8E8DH],CX
+      ADC    CS:[DI+8F8EH],CX
+      ADC    CS:[BP+908FH],CX
+      ADC    CS:[BX+9190H],CX
+      ADC    CS:[BX+SI+9291H],DX
+      ADC    CS:[BX+DI+9392H],DX
+      ADC    CS:[BP+SI+9493H],DX
+      ADC    CS:[BP+DI+9594H],DX
+      ADC    CS:[SI+9695H],DX
+      ADC    CS:[DI+9796H],DX
+      ADC    CS:[BP+9897H],DX
+      ADC    CS:[BX+9998H],DX
+      ADC    CS:[BX+SI+9A99H],BX
+      ADC    CS:[BX+DI+9B9AH],BX
+      ADC    CS:[BP+SI+9C9BH],BX
+      ADC    CS:[BP+DI+9D9CH],BX
+      ADC    CS:[SI+9E9DH],BX
+      ADC    CS:[DI+9F9EH],BX
+      ADC    CS:[BP+0A09FH],BX
+      ADC    CS:[BX+0A1A0H],BX
+      ADC    CS:[BX+SI+0A2A1H],SP
+      ADC    CS:[BX+DI+0A3A2H],SP
+      ADC    CS:[BP+SI+0A4A3H],SP
+      ADC    CS:[BP+DI+0A5A4H],SP
+      ADC    CS:[SI+0A6A5H],SP
+      ADC    CS:[DI+0A7A6H],SP
+      ADC    CS:[BP+0A8A7H],SP
+      ADC    CS:[BX+0A9A8H],SP
+      ADC    CS:[BX+SI+0AAA9H],BP
+      ADC    CS:[BX+DI+0ABAAH],BP
+      ADC    CS:[BP+SI+0ACABH],BP
+      ADC    CS:[BP+DI+0ADACH],BP
+      ADC    CS:[SI+0AEADH],BP
+      ADC    CS:[DI+0AFAEH],BP
+      ADC    CS:[BP+0B0AFH],BP
+      ADC    CS:[BX+0B1B0H],BP
+      ADC    CS:[BX+SI+0B2B1H],SI
+      ADC    CS:[BX+DI+0B3B2H],SI
+      ADC    CS:[BP+SI+0B4B3H],SI
+      ADC    CS:[BP+DI+0B5B4H],SI
+      ADC    CS:[SI+0B6B5H],SI
+      ADC    CS:[DI+0B7B6H],SI
+      ADC    CS:[BP+0B8B7H],SI
+      ADC    CS:[BX+0B9B8H],SI
+      ADC    CS:[BX+SI+0BAB9H],DI
+      ADC    CS:[BX+DI+0BBBAH],DI
+      ADC    CS:[BP+SI+0BCBBH],DI
+      ADC    CS:[BP+DI+0BDBCH],DI
+      ADC    CS:[SI+0BEBDH],DI
+      ADC    CS:[DI+0BFBEH],DI
+      ADC    CS:[BP+0C0BFH],DI
+      ADC    CS:[BX+0C1C0H],DI
+      ADC    CS:[BX+SI],AX
+      ADC    CS:[BX+DI],AX
+      ADC    CS:[BP+SI],AX
+      ADC    CS:[BP+DI],AX
+      ADC    CS:[SI],AX
+      ADC    CS:[DI],AX
+      ADC    CS:[0807H],AX
+      ADC    CS:[BX],AX
+      ADC    CS:[BX+SI],CX
+      ADC    CS:[BX+DI],CX
+      ADC    CS:[BP+SI],CX
+      ADC    CS:[BP+DI],CX
+      ADC    CS:[SI],CX
+      ADC    CS:[DI],CX
+      ADC    CS:[100FH],CX
+      ADC    CS:[BX],CX
+      ADC    CS:[BX+SI],DX
+      ADC    CS:[BX+DI],DX
+      ADC    DL,CS:[BP+DI]
+      ADC    DL,CS:[SI]
+      ADC    DL,CS:[DI]
+      ADC    DL,CS:[1817H]
+      ADC    DL,CS:[BX]
+      ADC    BL,CS:[BX+SI]
+      ADC    BL,CS:[BX+DI]
+      ADC    BL,CS:[BP+SI]
+      ADC    BL,CS:[BP+DI]
+      ADC    BL,CS:[SI]
+      ADC    BL,CS:[DI]
+      ADC    BL,CS:[201FH]
+      ADC    BL,CS:[BX]
+      ADC    AH,CS:[BX+SI]
+      ADC    AH,CS:[BX+DI]
+      ADC    AH,CS:[BP+SI]
+      ADC    AH,CS:[BP+DI]
+      ADC    AH,CS:[SI]
+      ADC    AH,CS:[DI]
+      ADC    AH,CS:[2827H]
+      ADC    AH,CS:[BX]
+      ADC    DX,CS:[SI]
+      ADC    DX,CS:[DI]
+      ADC    DX,CS:[1817H]
+      ADC    DX,CS:[BX]
+      ADC    BX,CS:[BX+SI]
+      ADC    BX,CS:[BX+DI]
+      ADC    BX,CS:[BP+SI]
+      ADC    BX,CS:[BP+DI]
+      ADC    BX,CS:[SI]
+      ADC    BX,CS:[DI]
+      ADC    BX,CS:[201FH]
+      ADC    BX,CS:[BX]
+      ADC    SP,CS:[BX+SI]
+      ADC    SP,CS:[BX+DI]
+      ADC    SP,CS:[BP+SI]
+      ADC    SP,CS:[BP+DI]
+      ADC    SP,CS:[SI]
+      ADC    SP,CS:[DI]
+      ADC    SP,CS:[2827H]
+      ADC    SP,CS:[BX]
+      ADC    BP,CS:[BX+SI]
+      ADC    BP,CS:[BX+DI]
+      ADC    BP,CS:[BP+SI]
+      ADC    BP,CS:[BP+DI]
+      ADC    BP,CS:[SI]
+      ADC    BP,CS:[DI]
+      ADC    BP,CS:[302FH]
+      ADC    BP,CS:[BX]
+      ADC    SI,CS:[BX+SI]
+      ADC    SI,CS:[BX+DI]
+      ADC    SI,CS:[BP+SI]
+      ADC    SI,CS:[BP+DI]
+      ADC    SI,CS:[SI]
+      ADC    SI,CS:[DI]
+      ADC    SI,CS:[3837H]
+      ADC    SI,CS:[BX]
+      ADC    DI,CS:[BX+SI]
+      ADC    DI,CS:[BX+DI]
+      ADC    DI,CS:[BP+SI]
+      ADC    DI,CS:[BP+DI]
+      ADC    DI,CS:[SI]
+      ADC    DI,CS:[DI]
+      ADC    DI,CS:[403FH]
+      ADC    DI,CS:[BX]
+      ADC    AX,CS:[BX+SI+65]
+      ADC    AX,CS:[BX+SI-128]
+      ADC    AX,CS:[BX+DI+66]
+      ADC    AX,CS:[BX+DI-128]
+      ADC    AX,CS:[BP+SI+67]
+      ADC    AX,CS:[BP+SI-128]
+      ADC    AX,CS:[BP+DI+68]
+      ADC    AX,CS:[BP+DI-128]
+      ADC    AX,CS:[SI+69]
+      ADC    AX,CS:[SI-128]
+      ADC    AX,CS:[DI+70]
+      ADC    AX,CS:[DI-128]
+      ADC    AX,CS:[BP+71]
+      ADC    AX,CS:[BP-128]
+      ADC    AX,CS:[BX+72]
+      ADC    AX,CS:[BX-128]
+      ADC    CX,CS:[BX+SI+73]
+      ADC    CX,CS:[BX+SI-128]
+      ADC    CX,CS:[BX+DI+74]
+      ADC    CX,CS:[BX+DI-128]
+      ADC    CX,CS:[BP+SI+75]
+      ADC    CX,CS:[BP+SI-128]
+      ADC    CX,CS:[BP+DI+76]
+      ADC    CX,CS:[BP+DI-128]
+      ADC    CX,CS:[SI+77]
+      ADC    CX,CS:[SI-128]
+      ADC    CX,CS:[DI+78]
+      ADC    CX,CS:[DI-128]
+      ADC    CX,CS:[BP+79]
+      ADC    CX,CS:[BP-128]
+      ADC    CX,CS:[BX+80]
+      ADC    CX,CS:[BX-128]
+      ADC    DX,CS:[BX+SI+81]
+      ADC    DX,CS:[BX+SI-128]
+      ADC    DX,CS:[BX+DI+82]
+      ADC    DX,CS:[BX+DI-128]
+      ADC    DX,CS:[BP+SI+83]
+      ADC    DX,CS:[BP+SI-128]
+      ADC    DX,CS:[BP+DI+84]
+      ADC    DX,CS:[BP+DI-128]
+      ADC    DX,CS:[SI+85]
+      ADC    DX,CS:[SI-128]
+      ADC    DX,CS:[DI+86]
+      ADC    DX,CS:[DI-128]
+      ADC    DX,CS:[BP+87]
+      ADC    DX,CS:[BP-128]
+      ADC    DX,CS:[BX+88]
+      ADC    DX,CS:[BX-128]
+      ADC    BX,CS:[BX+SI+89]
+      ADC    BX,CS:[BX+SI-128]
+      ADC    BX,CS:[BX+DI+90]
+      ADC    BX,CS:[BX+DI-128]
+      ADC    BX,CS:[BP+SI+91]
+      ADC    BX,CS:[BP+SI-128]
+      ADC    BX,CS:[BP+DI+92]
+      ADC    BX,CS:[BP+DI-128]
+      ADC    BX,CS:[SI+93]
+      ADC    BX,CS:[SI-128]
+      ADC    BX,CS:[DI+94]
+      ADC    BX,CS:[DI-128]
+      ADC    BX,CS:[BP+95]
+      ADC    BX,CS:[BP-128]
+      ADC    BX,CS:[BX+96]
+      ADC    BX,CS:[BX-128]
+      ADC    SP,CS:[BX+SI+97]
+      ADC    SP,CS:[BX+SI-128]
+      ADC    SP,CS:[BX+DI+98]
+      ADC    SP,CS:[BX+DI-128]
+      ADC    SP,CS:[BP+SI+99]
+      ADC    SP,CS:[BP+SI-128]
+      ADC    SP,CS:[BP+DI+100]
+      ADC    SP,CS:[BP+DI-128]
+      ADC    SP,CS:[SI+101]
+      ADC    SP,CS:[SI-128]
+      ADC    SP,CS:[DI+102]
+      ADC    SP,CS:[DI-128]
+      ADC    SP,CS:[BP+103]
+      ADC    SP,CS:[BP-128]
+      ADC    SP,CS:[BX+104]
+      ADC    SP,CS:[BX-128]
+      ADC    BP,CS:[BX+SI+105]
+      ADC    BP,CS:[BX+SI-128]
+      ADC    BP,CS:[BX+DI+106]
+      ADC    BP,CS:[BX+DI-128]
+      ADC    BP,CS:[BP+SI+107]
+      ADC    BP,CS:[BP+SI-128]
+      ADC    BP,CS:[BP+DI+108]
+      ADC    BP,CS:[BP+DI-128]
+      ADC    BP,CS:[SI+109]
+      ADC    BP,CS:[SI-128]
+      ADC    BP,CS:[DI+110]
+      ADC    BP,CS:[DI-128]
+      ADC    BP,CS:[BP+111]
+      ADC    BP,CS:[BP-128]
+      ADC    BP,CS:[BX+112]
+      ADC    BP,CS:[BX-128]
+      ADC    SI,CS:[BX+SI+113]
+      ADC    SI,CS:[BX+SI-128]
+      ADC    SI,CS:[BX+DI+114]
+      ADC    SI,CS:[BX+DI-128]
+      ADC    SI,CS:[BP+SI+115]
+      ADC    SI,CS:[BP+SI-128]
+      ADC    SI,CS:[BP+DI+116]
+      ADC    SI,CS:[BP+DI-128]
+      ADC    SI,CS:[SI+117]
+      ADC    SI,CS:[SI-128]
+      ADC    SI,CS:[DI+118]
+      ADC    SI,CS:[DI-128]
+      ADC    SI,CS:[BP+119]
+      ADC    SI,CS:[BP-128]
+      ADC    SI,CS:[BX+120]
+      ADC    SI,CS:[BX-128]
+      ADC    DI,CS:[BX+SI+121]
+      ADC    DI,CS:[BX+SI-128]
+      ADC    DI,CS:[BX+DI+122]
+      ADC    DI,CS:[BX+DI-128]
+      ADC    DI,CS:[BP+SI+123]
+      ADC    DI,CS:[BP+SI-128]
+      ADC    DI,CS:[BP+DI+124]
+      ADC    DI,CS:[BP+DI-128]
+      ADC    DI,CS:[SI+125]
+      ADC    DI,CS:[SI-128]
+      ADC    DI,CS:[DI+126]
+      ADC    DI,CS:[DI-128]
+      ADC    DI,CS:[BP+127]
+      ADC    DI,CS:[BP-128]
+      ADC    DI,CS:[BX-128]
+      ADC    DI,CS:[BX+0]
+      ADC    AX,CS:[BX+SI+8281H]
+      ADC    AX,CS:[BX+DI+8382H]
+      ADC    AX,CS:[BP+SI+8483H]
+      ADC    AX,CS:[BP+DI+8584H]
+      ADC    AX,CS:[SI+8685H]
+      ADC    AX,CS:[DI+8786H]
+      ADC    AX,CS:[BP+8887H]
+      ADC    AX,CS:[BX+8988H]
+      ADC    CX,CS:[BX+SI+8A89H]
+      ADC    CX,CS:[BX+DI+8B8AH]
+      ADC    CX,CS:[BP+SI+8C8BH]
+      ADC    CX,CS:[BP+DI+8D8CH]
+      ADC    CX,CS:[SI+8E8DH]
+      ADC    CX,CS:[DI+8F8EH]
+      ADC    CX,CS:[BP+908FH]
+      ADC    CX,CS:[BX+9190H]
+      ADC    DX,CS:[BX+SI+9291H]
+      ADC    DX,CS:[BX+DI+9392H]
+      ADC    DX,CS:[BP+SI+9493H]
+      ADC    DX,CS:[BP+DI+9594H]
+      ADC    DX,CS:[SI+9695H]
+      ADC    DX,CS:[DI+9796H]
+      ADC    DX,CS:[BP+9897H]
+      ADC    DX,CS:[BX+9998H]
+      ADC    BX,CS:[BX+SI+9A99H]
+      ADC    BX,CS:[BX+DI+9B9AH]
+      ADC    BX,CS:[BP+SI+9C9BH]
+      ADC    BX,CS:[BP+DI+9D9CH]
+      ADC    BX,CS:[SI+9E9DH]
+      ADC    BX,CS:[DI+9F9EH]
+      ADC    BX,CS:[BP+0A09FH]
+      ADC    BX,CS:[BX+0A1A0H]
+      ADC    SP,CS:[BX+SI+0A2A1H]
+      ADC    SP,CS:[BX+DI+0A3A2H]
+      ADC    SP,CS:[BP+SI+0A4A3H]
+      ADC    SP,CS:[BP+DI+0A5A4H]
+      ADC    SP,CS:[SI+0A6A5H]
+      ADC    SP,CS:[DI+0A7A6H]
+      ADC    SP,CS:[BP+0A8A7H]
+      ADC    SP,CS:[BX+0A9A8H]
+      ADC    BP,CS:[BX+SI+0AAA9H]
+      ADC    BP,CS:[BX+DI+0ABAAH]
+      ADC    BP,CS:[BP+SI+0ACABH]
+      ADC    BP,CS:[BP+DI+0ADACH]
+      ADC    BP,CS:[SI+0AEADH]
+      ADC    BP,CS:[DI+0AFAEH]
+      ADC    BP,CS:[BP+0B0AFH]
+      ADC    BP,CS:[BX+0B1B0H]
+      ADC    SI,CS:[BX+SI+0B2B1H]
+      ADC    SI,CS:[BX+DI+0B3B2H]
+      ADC    SI,CS:[BP+SI+0B4B3H]
+      ADC    SI,CS:[BP+DI+0B5B4H]
+      ADC    SI,CS:[SI+0B6B5H]
+      ADC    SI,CS:[DI+0B7B6H]
+      ADC    SI,CS:[BP+0B8B7H]
+      ADC    SI,CS:[BX+0B9B8H]
+      ADC    DI,CS:[BX+SI+0BAB9H]
+      ADC    DI,CS:[BX+DI+0BBBAH]
+      ADC    DI,CS:[BP+SI+0BCBBH]
+      ADC    DI,CS:[BP+DI+0BDBCH]
+      ADC    DI,CS:[SI+0BEBDH]
+      ADC    DI,CS:[DI+0BFBEH]
+      ADC    DI,CS:[BP+0C0BFH]
+      ADC    DI,CS:[BX+0C1C0H]
+      ADC    AX,CS:[BX+SI]
+      ADC    AX,CS:[BX+DI]
+      ADC    AX,CS:[BP+SI]
+      ADC    AX,CS:[BP+DI]
+      ADC    AX,CS:[SI]
+      ADC    AX,CS:[DI]
+      ADC    AX,CS:[0807H]
+      ADC    AX,CS:[BX]
+      ADC    CX,CS:[BX+SI]
+      ADC    CX,CS:[BX+DI]
+      ADC    CX,CS:[BP+SI]
+      ADC    CX,CS:[BP+DI]
+      ADC    CX,CS:[SI]
+      ADC    CX,CS:[DI]
+      ADC    CX,CS:[100FH]
+      ADC    CX,CS:[BX]
+      ADC    DX,CS:[BX+SI]
+      ADC    DX,CS:[BX+DI]
+      ADC    DX,CS:[BP+SI]
+      ADC    DX,CS:[BP+DI]
+      SBB    CS:[BX+DI],BL
+      SBB    CS:[BP+SI],BL
+      SBB    CS:[BP+DI],BL
+      SBB    CS:[SI],BL
+      SBB    CS:[DI],BL
+      SBB    CS:[201FH],BL
+      SBB    CS:[BX],BL
+      SBB    CS:[BX+SI],AH
+      SBB    CS:[BX+DI],AH
+      SBB    CS:[BP+SI],AH
+      SBB    CS:[BP+DI],AH
+      SBB    CS:[SI],AH
+      SBB    CS:[DI],AH
+      SBB    CS:[2827H],AH
+      SBB    CS:[BX],AH
+      SBB    CS:[BP+SI],BX
+      SBB    CS:[BP+DI],BX
+      SBB    CS:[SI],BX
+      SBB    CS:[DI],BX
+      SBB    CS:[201FH],BX
+      SBB    CS:[BX],BX
+      SBB    CS:[BX+SI],SP
+      SBB    CS:[BX+DI],SP
+      SBB    CS:[BP+SI],SP
+      SBB    CS:[BP+DI],SP
+      SBB    CS:[SI],SP
+      SBB    CS:[DI],SP
+      SBB    CS:[2827H],SP
+      SBB    CS:[BX],SP
+      SBB    CS:[BX+SI],BP
+      SBB    CS:[BX+DI],BP
+      SBB    CS:[BP+SI],BP
+      SBB    CS:[BP+DI],BP
+      SBB    CS:[SI],BP
+      SBB    CS:[DI],BP
+      SBB    CS:[302FH],BP
+      SBB    CS:[BX],BP
+      SBB    CS:[BX+SI],SI
+      SBB    CS:[BX+DI],SI
+      SBB    CS:[BP+SI],SI
+      SBB    CS:[BP+DI],SI
+      SBB    CS:[SI],SI
+      SBB    CS:[DI],SI
+      SBB    CS:[3837H],SI
+      SBB    CS:[BX],SI
+      SBB    CS:[BX+SI],DI
+      SBB    CS:[BX+DI],DI
+      SBB    CS:[BP+SI],DI
+      SBB    CS:[BP+DI],DI
+      SBB    CS:[SI],DI
+      SBB    CS:[DI],DI
+      SBB    CS:[403FH],DI
+      SBB    CS:[BX],DI
+      SBB    CS:[BX+SI+65],AX
+      SBB    CS:[BX+SI-128],AX
+      SBB    CS:[BX+DI+66],AX
+      SBB    CS:[BX+DI-128],AX
+      SBB    CS:[BP+SI+67],AX
+      SBB    CS:[BP+SI-128],AX
+      SBB    CS:[BP+DI+68],AX
+      SBB    CS:[BP+DI-128],AX
+      SBB    CS:[SI+69],AX
+      SBB    CS:[SI-128],AX
+      SBB    CS:[DI+70],AX
+      SBB    CS:[DI-128],AX
+      SBB    CS:[BP+71],AX
+      SBB    CS:[BP-128],AX
+      SBB    CS:[BX+72],AX
+      SBB    CS:[BX-128],AX
+      SBB    CS:[BX+SI+73],CX
+      SBB    CS:[BX+SI-128],CX
+      SBB    CS:[BX+DI+74],CX
+      SBB    CS:[BX+DI-128],CX
+      SBB    CS:[BP+SI+75],CX
+      SBB    CS:[BP+SI-128],CX
+      SBB    CS:[BP+DI+76],CX
+      SBB    CS:[BP+DI-128],CX
+      SBB    CS:[SI+77],CX
+      SBB    CS:[SI-128],CX
+      SBB    CS:[DI+78],CX
+      SBB    CS:[DI-128],CX
+      SBB    CS:[BP+79],CX
+      SBB    CS:[BP-128],CX
+      SBB    CS:[BX+80],CX
+      SBB    CS:[BX-128],CX
+      SBB    CS:[BX+SI+81],DX
+      SBB    CS:[BX+SI-128],DX
+      SBB    CS:[BX+DI+82],DX
+      SBB    CS:[BX+DI-128],DX
+      SBB    CS:[BP+SI+83],DX
+      SBB    CS:[BP+SI-128],DX
+      SBB    CS:[BP+DI+84],DX
+      SBB    CS:[BP+DI-128],DX
+      SBB    CS:[SI+85],DX
+      SBB    CS:[SI-128],DX
+      SBB    CS:[DI+86],DX
+      SBB    CS:[DI-128],DX
+      SBB    CS:[BP+87],DX
+      SBB    CS:[BP-128],DX
+      SBB    CS:[BX+88],DX
+      SBB    CS:[BX-128],DX
+      SBB    CS:[BX+SI+89],BX
+      SBB    CS:[BX+SI-128],BX
+      SBB    CS:[BX+DI+90],BX
+      SBB    CS:[BX+DI-128],BX
+      SBB    CS:[BP+SI+91],BX
+      SBB    CS:[BP+SI-128],BX
+      SBB    CS:[BP+DI+92],BX
+      SBB    CS:[BP+DI-128],BX
+      SBB    CS:[SI+93],BX
+      SBB    CS:[SI-128],BX
+      SBB    CS:[DI+94],BX
+      SBB    CS:[DI-128],BX
+      SBB    CS:[BP+95],BX
+      SBB    CS:[BP-128],BX
+      SBB    CS:[BX+96],BX
+      SBB    CS:[BX-128],BX
+      SBB    CS:[BX+SI+97],SP
+      SBB    CS:[BX+SI-128],SP
+      SBB    CS:[BX+DI+98],SP
+      SBB    CS:[BX+DI-128],SP
+      SBB    CS:[BP+SI+99],SP
+      SBB    CS:[BP+SI-128],SP
+      SBB    CS:[BP+DI+100],SP
+      SBB    CS:[BP+DI-128],SP
+      SBB    CS:[SI+101],SP
+      SBB    CS:[SI-128],SP
+      SBB    CS:[DI+102],SP
+      SBB    CS:[DI-128],SP
+      SBB    CS:[BP+103],SP
+      SBB    CS:[BP-128],SP
+      SBB    CS:[BX+104],SP
+      SBB    CS:[BX-128],SP
+      SBB    CS:[BX+SI+105],BP
+      SBB    CS:[BX+SI-128],BP
+      SBB    CS:[BX+DI+106],BP
+      SBB    CS:[BX+DI-128],BP
+      SBB    CS:[BP+SI+107],BP
+      SBB    CS:[BP+SI-128],BP
+      SBB    CS:[BP+DI+108],BP
+      SBB    CS:[BP+DI-128],BP
+      SBB    CS:[SI+109],BP
+      SBB    CS:[SI-128],BP
+      SBB    CS:[DI+110],BP
+      SBB    CS:[DI-128],BP
+      SBB    CS:[BP+111],BP
+      SBB    CS:[BP-128],BP
+      SBB    CS:[BX+112],BP
+      SBB    CS:[BX-128],BP
+      SBB    CS:[BX+SI+113],SI
+      SBB    CS:[BX+SI-128],SI
+      SBB    CS:[BX+DI+114],SI
+      SBB    CS:[BX+DI-128],SI
+      SBB    CS:[BP+SI+115],SI
+      SBB    CS:[BP+SI-128],SI
+      SBB    CS:[BP+DI+116],SI
+      SBB    CS:[BP+DI-128],SI
+      SBB    CS:[SI+117],SI
+      SBB    CS:[SI-128],SI
+      SBB    CS:[DI+118],SI
+      SBB    CS:[DI-128],SI
+      SBB    CS:[BP+119],SI
+      SBB    CS:[BP-128],SI
+      SBB    CS:[BX+120],SI
+      SBB    CS:[BX-128],SI
+      SBB    CS:[BX+SI+121],DI
+      SBB    CS:[BX+SI-128],DI
+      SBB    CS:[BX+DI+122],DI
+      SBB    CS:[BX+DI-128],DI
+      SBB    CS:[BP+SI+123],DI
+      SBB    CS:[BP+SI-128],DI
+      SBB    CS:[BP+DI+124],DI
+      SBB    CS:[BP+DI-128],DI
+      SBB    CS:[SI+125],DI
+      SBB    CS:[SI-128],DI
+      SBB    CS:[DI+126],DI
+      SBB    CS:[DI-128],DI
+      SBB    CS:[BP+127],DI
+      SBB    CS:[BP-128],DI
+      SBB    CS:[BX-128],DI
+      SBB    CS:[BX+0],DI
+      SBB    CS:[BX+SI+8281H],AX
+      SBB    CS:[BX+DI+8382H],AX
+      SBB    CS:[BP+SI+8483H],AX
+      SBB    CS:[BP+DI+8584H],AX
+      SBB    CS:[SI+8685H],AX
+      SBB    CS:[DI+8786H],AX
+      SBB    CS:[BP+8887H],AX
+      SBB    CS:[BX+8988H],AX
+      SBB    CS:[BX+SI+8A89H],CX
+      SBB    CS:[BX+DI+8B8AH],CX
+      SBB    CS:[BP+SI+8C8BH],CX
+      SBB    CS:[BP+DI+8D8CH],CX
+      SBB    CS:[SI+8E8DH],CX
+      SBB    CS:[DI+8F8EH],CX
+      SBB    CS:[BP+908FH],CX
+      SBB    CS:[BX+9190H],CX
+      SBB    CS:[BX+SI+9291H],DX
+      SBB    CS:[BX+DI+9392H],DX
+      SBB    CS:[BP+SI+9493H],DX
+      SBB    CS:[BP+DI+9594H],DX
+      SBB    CS:[SI+9695H],DX
+      SBB    CS:[DI+9796H],DX
+      SBB    CS:[BP+9897H],DX
+      SBB    CS:[BX+9998H],DX
+      SBB    CS:[BX+SI+9A99H],BX
+      SBB    CS:[BX+DI+9B9AH],BX
+      SBB    CS:[BP+SI+9C9BH],BX
+      SBB    CS:[BP+DI+9D9CH],BX
+      SBB    CS:[SI+9E9DH],BX
+      SBB    CS:[DI+9F9EH],BX
+      SBB    CS:[BP+0A09FH],BX
+      SBB    CS:[BX+0A1A0H],BX
+      SBB    CS:[BX+SI+0A2A1H],SP
+      SBB    CS:[BX+DI+0A3A2H],SP
+      SBB    CS:[BP+SI+0A4A3H],SP
+      SBB    CS:[BP+DI+0A5A4H],SP
+      SBB    CS:[SI+0A6A5H],SP
+      SBB    CS:[DI+0A7A6H],SP
+      SBB    CS:[BP+0A8A7H],SP
+      SBB    CS:[BX+0A9A8H],SP
+      SBB    CS:[BX+SI+0AAA9H],BP
+      SBB    CS:[BX+DI+0ABAAH],BP
+      SBB    CS:[BP+SI+0ACABH],BP
+      SBB    CS:[BP+DI+0ADACH],BP
+      SBB    CS:[SI+0AEADH],BP
+      SBB    CS:[DI+0AFAEH],BP
+      SBB    CS:[BP+0B0AFH],BP
+      SBB    CS:[BX+0B1B0H],BP
+      SBB    CS:[BX+SI+0B2B1H],SI
+      SBB    CS:[BX+DI+0B3B2H],SI
+      SBB    CS:[BP+SI+0B4B3H],SI
+      SBB    CS:[BP+DI+0B5B4H],SI
+      SBB    CS:[SI+0B6B5H],SI
+      SBB    CS:[DI+0B7B6H],SI
+      SBB    CS:[BP+0B8B7H],SI
+      SBB    CS:[BX+0B9B8H],SI
+      SBB    CS:[BX+SI+0BAB9H],DI
+      SBB    CS:[BX+DI+0BBBAH],DI
+      SBB    CS:[BP+SI+0BCBBH],DI
+      SBB    CS:[BP+DI+0BDBCH],DI
+      SBB    CS:[SI+0BEBDH],DI
+      SBB    CS:[DI+0BFBEH],DI
+      SBB    CS:[BP+0C0BFH],DI
+      SBB    CS:[BX+0C1C0H],DI
+      SBB    CS:[BX+SI],AX
+      SBB    CS:[BX+DI],AX
+      SBB    CS:[BP+SI],AX
+      SBB    CS:[BP+DI],AX
+      SBB    CS:[SI],AX
+      SBB    CS:[DI],AX
+      SBB    CS:[0807H],AX
+      SBB    CS:[BX],AX
+      SBB    CS:[BX+SI],CX
+      SBB    CS:[BX+DI],CX
+      SBB    CS:[BP+SI],CX
+      SBB    CS:[BP+DI],CX
+      SBB    CS:[SI],CX
+      SBB    CS:[DI],CX
+      SBB    CS:[100FH],CX
+      SBB    CS:[BX],CX
+      SBB    CS:[BX+SI],DX
+      SBB    CS:[BX+DI],DX
+      SBB    CS:[BP+SI],DX
+      SBB    CS:[BP+DI],DX
+      SBB    CS:[SI],DX
+      SBB    CS:[DI],DX
+      SBB    CS:[1817H],DX
+      SBB    CS:[BX],DX
+      SBB    CS:[BX+SI],BX
+      SBB    CS:[BX+DI],BX
+      SBB    BL,CS:[BP+DI]
+      SBB    BL,CS:[SI]
+      SBB    BL,CS:[DI]
+      SBB    BL,CS:[201FH]
+      SBB    BL,CS:[BX]
+      SBB    AH,CS:[BX+SI]
+      SBB    AH,CS:[BX+DI]
+      SBB    AH,CS:[BP+SI]
+      SBB    AH,CS:[BP+DI]
+      SBB    AH,CS:[SI]
+      SBB    AH,CS:[DI]
+      SBB    AH,CS:[2827H]
+      SBB    AH,CS:[BX]
+      SBB    BX,CS:[SI]
+      SBB    BX,CS:[DI]
+      SBB    BX,CS:[201FH]
+      SBB    BX,CS:[BX]
+      SBB    SP,CS:[BX+SI]
+      SBB    SP,CS:[BX+DI]
+      SBB    SP,CS:[BP+SI]
+      SBB    SP,CS:[BP+DI]
+      SBB    SP,CS:[SI]
+      SBB    SP,CS:[DI]
+      SBB    SP,CS:[2827H]
+      SBB    SP,CS:[BX]
+      SBB    BP,CS:[BX+SI]
+      SBB    BP,CS:[BX+DI]
+      SBB    BP,CS:[BP+SI]
+      SBB    BP,CS:[BP+DI]
+      SBB    BP,CS:[SI]
+      SBB    BP,CS:[DI]
+      SBB    BP,CS:[302FH]
+      SBB    BP,CS:[BX]
+      SBB    SI,CS:[BX+SI]
+      SBB    SI,CS:[BX+DI]
+      SBB    SI,CS:[BP+SI]
+      SBB    SI,CS:[BP+DI]
+      SBB    SI,CS:[SI]
+      SBB    SI,CS:[DI]
+      SBB    SI,CS:[3837H]
+      SBB    SI,CS:[BX]
+      SBB    DI,CS:[BX+SI]
+      SBB    DI,CS:[BX+DI]
+      SBB    DI,CS:[BP+SI]
+      SBB    DI,CS:[BP+DI]
+      SBB    DI,CS:[SI]
+      SBB    DI,CS:[DI]
+      SBB    DI,CS:[403FH]
+      SBB    DI,CS:[BX]
+      SBB    AX,CS:[BX+SI+65]
+      SBB    AX,CS:[BX+SI-128]
+      SBB    AX,CS:[BX+DI+66]
+      SBB    AX,CS:[BX+DI-128]
+      SBB    AX,CS:[BP+SI+67]
+      SBB    AX,CS:[BP+SI-128]
+      SBB    AX,CS:[BP+DI+68]
+      SBB    AX,CS:[BP+DI-128]
+      SBB    AX,CS:[SI+69]
+      SBB    AX,CS:[SI-128]
+      SBB    AX,CS:[DI+70]
+      SBB    AX,CS:[DI-128]
+      SBB    AX,CS:[BP+71]
+      SBB    AX,CS:[BP-128]
+      SBB    AX,CS:[BX+72]
+      SBB    AX,CS:[BX-128]
+      SBB    CX,CS:[BX+SI+73]
+      SBB    CX,CS:[BX+SI-128]
+      SBB    CX,CS:[BX+DI+74]
+      SBB    CX,CS:[BX+DI-128]
+      SBB    CX,CS:[BP+SI+75]
+      SBB    CX,CS:[BP+SI-128]
+      SBB    CX,CS:[BP+DI+76]
+      SBB    CX,CS:[BP+DI-128]
+      SBB    CX,CS:[SI+77]
+      SBB    CX,CS:[SI-128]
+      SBB    CX,CS:[DI+78]
+      SBB    CX,CS:[DI-128]
+      SBB    CX,CS:[BP+79]
+      SBB    CX,CS:[BP-128]
+      SBB    CX,CS:[BX+80]
+      SBB    CX,CS:[BX-128]
+      SBB    DX,CS:[BX+SI+81]
+      SBB    DX,CS:[BX+SI-128]
+      SBB    DX,CS:[BX+DI+82]
+      SBB    DX,CS:[BX+DI-128]
+      SBB    DX,CS:[BP+SI+83]
+      SBB    DX,CS:[BP+SI-128]
+      SBB    DX,CS:[BP+DI+84]
+      SBB    DX,CS:[BP+DI-128]
+      SBB    DX,CS:[SI+85]
+      SBB    DX,CS:[SI-128]
+      SBB    DX,CS:[DI+86]
+      SBB    DX,CS:[DI-128]
+      SBB    DX,CS:[BP+87]
+      SBB    DX,CS:[BP-128]
+      SBB    DX,CS:[BX+88]
+      SBB    DX,CS:[BX-128]
+      SBB    BX,CS:[BX+SI+89]
+      SBB    BX,CS:[BX+SI-128]
+      SBB    BX,CS:[BX+DI+90]
+      SBB    BX,CS:[BX+DI-128]
+      SBB    BX,CS:[BP+SI+91]
+      SBB    BX,CS:[BP+SI-128]
+      SBB    BX,CS:[BP+DI+92]
+      SBB    BX,CS:[BP+DI-128]
+      SBB    BX,CS:[SI+93]
+      SBB    BX,CS:[SI-128]
+      SBB    BX,CS:[DI+94]
+      SBB    BX,CS:[DI-128]
+      SBB    BX,CS:[BP+95]
+      SBB    BX,CS:[BP-128]
+      SBB    BX,CS:[BX+96]
+      SBB    BX,CS:[BX-128]
+      SBB    SP,CS:[BX+SI+97]
+      SBB    SP,CS:[BX+SI-128]
+      SBB    SP,CS:[BX+DI+98]
+      SBB    SP,CS:[BX+DI-128]
+      SBB    SP,CS:[BP+SI+99]
+      SBB    SP,CS:[BP+SI-128]
+      SBB    SP,CS:[BP+DI+100]
+      SBB    SP,CS:[BP+DI-128]
+      SBB    SP,CS:[SI+101]
+      SBB    SP,CS:[SI-128]
+      SBB    SP,CS:[DI+102]
+      SBB    SP,CS:[DI-128]
+      SBB    SP,CS:[BP+103]
+      SBB    SP,CS:[BP-128]
+      SBB    SP,CS:[BX+104]
+      SBB    SP,CS:[BX-128]
+      SBB    BP,CS:[BX+SI+105]
+      SBB    BP,CS:[BX+SI-128]
+      SBB    BP,CS:[BX+DI+106]
+      SBB    BP,CS:[BX+DI-128]
+      SBB    BP,CS:[BP+SI+107]
+      SBB    BP,CS:[BP+SI-128]
+      SBB    BP,CS:[BP+DI+108]
+      SBB    BP,CS:[BP+DI-128]
+      SBB    BP,CS:[SI+109]
+      SBB    BP,CS:[SI-128]
+      SBB    BP,CS:[DI+110]
+      SBB    BP,CS:[DI-128]
+      SBB    BP,CS:[BP+111]
+      SBB    BP,CS:[BP-128]
+      SBB    BP,CS:[BX+112]
+      SBB    BP,CS:[BX-128]
+      SBB    SI,CS:[BX+SI+113]
+      SBB    SI,CS:[BX+SI-128]
+      SBB    SI,CS:[BX+DI+114]
+      SBB    SI,CS:[BX+DI-128]
+      SBB    SI,CS:[BP+SI+115]
+      SBB    SI,CS:[BP+SI-128]
+      SBB    SI,CS:[BP+DI+116]
+      SBB    SI,CS:[BP+DI-128]
+      SBB    SI,CS:[SI+117]
+      SBB    SI,CS:[SI-128]
+      SBB    SI,CS:[DI+118]
+      SBB    SI,CS:[DI-128]
+      SBB    SI,CS:[BP+119]
+      SBB    SI,CS:[BP-128]
+      SBB    SI,CS:[BX+120]
+      SBB    SI,CS:[BX-128]
+      SBB    DI,CS:[BX+SI+121]
+      SBB    DI,CS:[BX+SI-128]
+      SBB    DI,CS:[BX+DI+122]
+      SBB    DI,CS:[BX+DI-128]
+      SBB    DI,CS:[BP+SI+123]
+      SBB    DI,CS:[BP+SI-128]
+      SBB    DI,CS:[BP+DI+124]
+      SBB    DI,CS:[BP+DI-128]
+      SBB    DI,CS:[SI+125]
+      SBB    DI,CS:[SI-128]
+      SBB    DI,CS:[DI+126]
+      SBB    DI,CS:[DI-128]
+      SBB    DI,CS:[BP+127]
+      SBB    DI,CS:[BP-128]
+      SBB    DI,CS:[BX-128]
+      SBB    DI,CS:[BX+0]
+      SBB    AX,CS:[BX+SI+8281H]
+      SBB    AX,CS:[BX+DI+8382H]
+      SBB    AX,CS:[BP+SI+8483H]
+      SBB    AX,CS:[BP+DI+8584H]
+      SBB    AX,CS:[SI+8685H]
+      SBB    AX,CS:[DI+8786H]
+      SBB    AX,CS:[BP+8887H]
+      SBB    AX,CS:[BX+8988H]
+      SBB    CX,CS:[BX+SI+8A89H]
+      SBB    CX,CS:[BX+DI+8B8AH]
+      SBB    CX,CS:[BP+SI+8C8BH]
+      SBB    CX,CS:[BP+DI+8D8CH]
+      SBB    CX,CS:[SI+8E8DH]
+      SBB    CX,CS:[DI+8F8EH]
+      SBB    CX,CS:[BP+908FH]
+      SBB    CX,CS:[BX+9190H]
+      SBB    DX,CS:[BX+SI+9291H]
+      SBB    DX,CS:[BX+DI+9392H]
+      SBB    DX,CS:[BP+SI+9493H]
+      SBB    DX,CS:[BP+DI+9594H]
+      SBB    DX,CS:[SI+9695H]
+      SBB    DX,CS:[DI+9796H]
+      SBB    DX,CS:[BP+9897H]
+      SBB    DX,CS:[BX+9998H]
+      SBB    BX,CS:[BX+SI+9A99H]
+      SBB    BX,CS:[BX+DI+9B9AH]
+      SBB    BX,CS:[BP+SI+9C9BH]
+      SBB    BX,CS:[BP+DI+9D9CH]
+      SBB    BX,CS:[SI+9E9DH]
+      SBB    BX,CS:[DI+9F9EH]
+      SBB    BX,CS:[BP+0A09FH]
+      SBB    BX,CS:[BX+0A1A0H]
+      SBB    SP,CS:[BX+SI+0A2A1H]
+      SBB    SP,CS:[BX+DI+0A3A2H]
+      SBB    SP,CS:[BP+SI+0A4A3H]
+      SBB    SP,CS:[BP+DI+0A5A4H]
+      SBB    SP,CS:[SI+0A6A5H]
+      SBB    SP,CS:[DI+0A7A6H]
+      SBB    SP,CS:[BP+0A8A7H]
+      SBB    SP,CS:[BX+0A9A8H]
+      SBB    BP,CS:[BX+SI+0AAA9H]
+      SBB    BP,CS:[BX+DI+0ABAAH]
+      SBB    BP,CS:[BP+SI+0ACABH]
+      SBB    BP,CS:[BP+DI+0ADACH]
+      SBB    BP,CS:[SI+0AEADH]
+      SBB    BP,CS:[DI+0AFAEH]
+      SBB    BP,CS:[BP+0B0AFH]
+      SBB    BP,CS:[BX+0B1B0H]
+      SBB    SI,CS:[BX+SI+0B2B1H]
+      SBB    SI,CS:[BX+DI+0B3B2H]
+      SBB    SI,CS:[BP+SI+0B4B3H]
+      SBB    SI,CS:[BP+DI+0B5B4H]
+      SBB    SI,CS:[SI+0B6B5H]
+      SBB    SI,CS:[DI+0B7B6H]
+      SBB    SI,CS:[BP+0B8B7H]
+      SBB    SI,CS:[BX+0B9B8H]
+      SBB    DI,CS:[BX+SI+0BAB9H]
+      SBB    DI,CS:[BX+DI+0BBBAH]
+      SBB    DI,CS:[BP+SI+0BCBBH]
+      SBB    DI,CS:[BP+DI+0BDBCH]
+      SBB    DI,CS:[SI+0BEBDH]
+      SBB    DI,CS:[DI+0BFBEH]
+      SBB    DI,CS:[BP+0C0BFH]
+      SBB    DI,CS:[BX+0C1C0H]
+      SBB    AX,CS:[BX+SI]
+      SBB    AX,CS:[BX+DI]
+      SBB    AX,CS:[BP+SI]
+      SBB    AX,CS:[BP+DI]
+      SBB    AX,CS:[SI]
+      SBB    AX,CS:[DI]
+      SBB    AX,CS:[0807H]
+      SBB    AX,CS:[BX]
+      SBB    CX,CS:[BX+SI]
+      SBB    CX,CS:[BX+DI]
+      SBB    CX,CS:[BP+SI]
+      SBB    CX,CS:[BP+DI]
+      SBB    CX,CS:[SI]
+      SBB    CX,CS:[DI]
+      SBB    CX,CS:[100FH]
+      SBB    CX,CS:[BX]
+      SBB    DX,CS:[BX+SI]
+      SBB    DX,CS:[BX+DI]
+      SBB    DX,CS:[BP+SI]
+      SBB    DX,CS:[BP+DI]
+      SBB    DX,CS:[SI]
+      SBB    DX,CS:[DI]
+      SBB    DX,CS:[1817H]
+      SBB    DX,CS:[BX]
+      SBB    BX,CS:[BX+SI]
+      SBB    BX,CS:[BX+DI]
+      SBB    BX,CS:[BP+SI]
+      SBB    BX,CS:[BP+DI]
+      AND    CS:[BX+DI],AH
+      AND    CS:[BP+SI],AH
+      AND    CS:[BP+DI],AH
+      AND    CS:[SI],AH
+      AND    CS:[DI],AH
+      AND    CS:[2827H],AH
+      AND    CS:[BX],AH
+      AND    CS:[BX+SI],CH
+      AND    CS:[BP+SI],SP
+      AND    CS:[BP+DI],SP
+      AND    CS:[SI],SP
+      AND    CS:[DI],SP
+      AND    CS:[2827H],SP
+      AND    CS:[BX],SP
+      AND    CS:[BX+SI],BP
+      AND    CS:[BX+DI],BP
+      AND    CS:[BP+SI],BP
+      AND    CS:[BP+DI],BP
+      AND    CS:[SI],BP
+      AND    CS:[DI],BP
+      AND    CS:[302FH],BP
+      AND    CS:[BX],BP
+      AND    CS:[BX+SI],SI
+      AND    CS:[BX+DI],SI
+      AND    CS:[BP+SI],SI
+      AND    CS:[BP+DI],SI
+      AND    CS:[SI],SI
+      AND    CS:[DI],SI
+      AND    CS:[3837H],SI
+      AND    CS:[BX],SI
+      AND    CS:[BX+SI],DI
+      AND    CS:[BX+DI],DI
+      AND    CS:[BP+SI],DI
+      AND    CS:[BP+DI],DI
+      AND    CS:[SI],DI
+      AND    CS:[DI],DI
+      AND    CS:[403FH],DI
+      AND    CS:[BX],DI
+      AND    CS:[BX+SI+65],AX
+      AND    CS:[BX+SI-128],AX
+      AND    CS:[BX+DI+66],AX
+      AND    CS:[BX+DI-128],AX
+      AND    CS:[BP+SI+67],AX
+      AND    CS:[BP+SI-128],AX
+      AND    CS:[BP+DI+68],AX
+      AND    CS:[BP+DI-128],AX
+      AND    CS:[SI+69],AX
+      AND    CS:[SI-128],AX
+      AND    CS:[DI+70],AX
+      AND    CS:[DI-128],AX
+      AND    CS:[BP+71],AX
+      AND    CS:[BP-128],AX
+      AND    CS:[BX+72],AX
+      AND    CS:[BX-128],AX
+      AND    CS:[BX+SI+73],CX
+      AND    CS:[BX+SI-128],CX
+      AND    CS:[BX+DI+74],CX
+      AND    CS:[BX+DI-128],CX
+      AND    CS:[BP+SI+75],CX
+      AND    CS:[BP+SI-128],CX
+      AND    CS:[BP+DI+76],CX
+      AND    CS:[BP+DI-128],CX
+      AND    CS:[SI+77],CX
+      AND    CS:[SI-128],CX
+      AND    CS:[DI+78],CX
+      AND    CS:[DI-128],CX
+      AND    CS:[BP+79],CX
+      AND    CS:[BP-128],CX
+      AND    CS:[BX+80],CX
+      AND    CS:[BX-128],CX
+      AND    CS:[BX+SI+81],DX
+      AND    CS:[BX+SI-128],DX
+      AND    CS:[BX+DI+82],DX
+      AND    CS:[BX+DI-128],DX
+      AND    CS:[BP+SI+83],DX
+      AND    CS:[BP+SI-128],DX
+      AND    CS:[BP+DI+84],DX
+      AND    CS:[BP+DI-128],DX
+      AND    CS:[SI+85],DX
+      AND    CS:[SI-128],DX
+      AND    CS:[DI+86],DX
+      AND    CS:[DI-128],DX
+      AND    CS:[BP+87],DX
+      AND    CS:[BP-128],DX
+      AND    CS:[BX+88],DX
+      AND    CS:[BX-128],DX
+      AND    CS:[BX+SI+89],BX
+      AND    CS:[BX+SI-128],BX
+      AND    CS:[BX+DI+90],BX
+      AND    CS:[BX+DI-128],BX
+      AND    CS:[BP+SI+91],BX
+      AND    CS:[BP+SI-128],BX
+      AND    CS:[BP+DI+92],BX
+      AND    CS:[BP+DI-128],BX
+      AND    CS:[SI+93],BX
+      AND    CS:[SI-128],BX
+      AND    CS:[DI+94],BX
+      AND    CS:[DI-128],BX
+      AND    CS:[BP+95],BX
+      AND    CS:[BP-128],BX
+      AND    CS:[BX+96],BX
+      AND    CS:[BX-128],BX
+      AND    CS:[BX+SI+97],SP
+      AND    CS:[BX+SI-128],SP
+      AND    CS:[BX+DI+98],SP
+      AND    CS:[BX+DI-128],SP
+      AND    CS:[BP+SI+99],SP
+      AND    CS:[BP+SI-128],SP
+      AND    CS:[BP+DI+100],SP
+      AND    CS:[BP+DI-128],SP
+      AND    CS:[SI+101],SP
+      AND    CS:[SI-128],SP
+      AND    CS:[DI+102],SP
+      AND    CS:[DI-128],SP
+      AND    CS:[BP+103],SP
+      AND    CS:[BP-128],SP
+      AND    CS:[BX+104],SP
+      AND    CS:[BX-128],SP
+      AND    CS:[BX+SI+105],BP
+      AND    CS:[BX+SI-128],BP
+      AND    CS:[BX+DI+106],BP
+      AND    CS:[BX+DI-128],BP
+      AND    CS:[BP+SI+107],BP
+      AND    CS:[BP+SI-128],BP
+      AND    CS:[BP+DI+108],BP
+      AND    CS:[BP+DI-128],BP
+      AND    CS:[SI+109],BP
+      AND    CS:[SI-128],BP
+      AND    CS:[DI+110],BP
+      AND    CS:[DI-128],BP
+      AND    CS:[BP+111],BP
+      AND    CS:[BP-128],BP
+      AND    CS:[BX+112],BP
+      AND    CS:[BX-128],BP
+      AND    CS:[BX+SI+113],SI
+      AND    CS:[BX+SI-128],SI
+      AND    CS:[BX+DI+114],SI
+      AND    CS:[BX+DI-128],SI
+      AND    CS:[BP+SI+115],SI
+      AND    CS:[BP+SI-128],SI
+      AND    CS:[BP+DI+116],SI
+      AND    CS:[BP+DI-128],SI
+      AND    CS:[SI+117],SI
+      AND    CS:[SI-128],SI
+      AND    CS:[DI+118],SI
+      AND    CS:[DI-128],SI
+      AND    CS:[BP+119],SI
+      AND    CS:[BP-128],SI
+      AND    CS:[BX+120],SI
+      AND    CS:[BX-128],SI
+      AND    CS:[BX+SI+121],DI
+      AND    CS:[BX+SI-128],DI
+      AND    CS:[BX+DI+122],DI
+      AND    CS:[BX+DI-128],DI
+      AND    CS:[BP+SI+123],DI
+      AND    CS:[BP+SI-128],DI
+      AND    CS:[BP+DI+124],DI
+      AND    CS:[BP+DI-128],DI
+      AND    CS:[SI+125],DI
+      AND    CS:[SI-128],DI
+      AND    CS:[DI+126],DI
+      AND    CS:[DI-128],DI
+      AND    CS:[BP+127],DI
+      AND    CS:[BP-128],DI
+      AND    CS:[BX-128],DI
+      AND    CS:[BX+0],DI
+      AND    CS:[BX+SI+8281H],AX
+      AND    CS:[BX+DI+8382H],AX
+      AND    CS:[BP+SI+8483H],AX
+      AND    CS:[BP+DI+8584H],AX
+      AND    CS:[SI+8685H],AX
+      AND    CS:[DI+8786H],AX
+      AND    CS:[BP+8887H],AX
+      AND    CS:[BX+8988H],AX
+      AND    CS:[BX+SI+8A89H],CX
+      AND    CS:[BX+DI+8B8AH],CX
+      AND    CS:[BP+SI+8C8BH],CX
+      AND    CS:[BP+DI+8D8CH],CX
+      AND    CS:[SI+8E8DH],CX
+      AND    CS:[DI+8F8EH],CX
+      AND    CS:[BP+908FH],CX
+      AND    CS:[BX+9190H],CX
+      AND    CS:[BX+SI+9291H],DX
+      AND    CS:[BX+DI+9392H],DX
+      AND    CS:[BP+SI+9493H],DX
+      AND    CS:[BP+DI+9594H],DX
+      AND    CS:[SI+9695H],DX
+      AND    CS:[DI+9796H],DX
+      AND    CS:[BP+9897H],DX
+      AND    CS:[BX+9998H],DX
+      AND    CS:[BX+SI+9A99H],BX
+      AND    CS:[BX+DI+9B9AH],BX
+      AND    CS:[BP+SI+9C9BH],BX
+      AND    CS:[BP+DI+9D9CH],BX
+      AND    CS:[SI+9E9DH],BX
+      AND    CS:[DI+9F9EH],BX
+      AND    CS:[BP+0A09FH],BX
+      AND    CS:[BX+0A1A0H],BX
+      AND    CS:[BX+SI+0A2A1H],SP
+      AND    CS:[BX+DI+0A3A2H],SP
+      AND    CS:[BP+SI+0A4A3H],SP
+      AND    CS:[BP+DI+0A5A4H],SP
+      AND    CS:[SI+0A6A5H],SP
+      AND    CS:[DI+0A7A6H],SP
+      AND    CS:[BP+0A8A7H],SP
+      AND    CS:[BX+0A9A8H],SP
+      AND    CS:[BX+SI+0AAA9H],BP
+      AND    CS:[BX+DI+0ABAAH],BP
+      AND    CS:[BP+SI+0ACABH],BP
+      AND    CS:[BP+DI+0ADACH],BP
+      AND    CS:[SI+0AEADH],BP
+      AND    CS:[DI+0AFAEH],BP
+      AND    CS:[BP+0B0AFH],BP
+      AND    CS:[BX+0B1B0H],BP
+      AND    CS:[BX+SI+0B2B1H],SI
+      AND    CS:[BX+DI+0B3B2H],SI
+      AND    CS:[BP+SI+0B4B3H],SI
+      AND    CS:[BP+DI+0B5B4H],SI
+      AND    CS:[SI+0B6B5H],SI
+      AND    CS:[DI+0B7B6H],SI
+      AND    CS:[BP+0B8B7H],SI
+      AND    CS:[BX+0B9B8H],SI
+      AND    CS:[BX+SI+0BAB9H],DI
+      AND    CS:[BX+DI+0BBBAH],DI
+      AND    CS:[BP+SI+0BCBBH],DI
+      AND    CS:[BP+DI+0BDBCH],DI
+      AND    CS:[SI+0BEBDH],DI
+      AND    CS:[DI+0BFBEH],DI
+      AND    CS:[BP+0C0BFH],DI
+      AND    CS:[BX+0C1C0H],DI
+      AND    CS:[BX+SI],AX
+      AND    CS:[BX+DI],AX
+      AND    CS:[BP+SI],AX
+      AND    CS:[BP+DI],AX
+      AND    CS:[SI],AX
+      AND    CS:[DI],AX
+      AND    CS:[0807H],AX
+      AND    CS:[BX],AX
+      AND    CS:[BX+SI],CX
+      AND    CS:[BX+DI],CX
+      AND    CS:[BP+SI],CX
+      AND    CS:[BP+DI],CX
+      AND    CS:[SI],CX
+      AND    CS:[DI],CX
+      AND    CS:[100FH],CX
+      AND    CS:[BX],CX
+      AND    CS:[BX+SI],DX
+      AND    CS:[BX+DI],DX
+      AND    CS:[BP+SI],DX
+      AND    CS:[BP+DI],DX
+      AND    CS:[SI],DX
+      AND    CS:[DI],DX
+      AND    CS:[1817H],DX
+      AND    CS:[BX],DX
+      AND    CS:[BX+SI],BX
+      AND    CS:[BX+DI],BX
+      AND    CS:[BP+SI],BX
+      AND    CS:[BP+DI],BX
+      AND    CS:[SI],BX
+      AND    CS:[DI],BX
+      AND    CS:[201FH],BX
+      AND    CS:[BX],BX
+      AND    CS:[BX+SI],SP
+      AND    CS:[BX+DI],SP
+      AND    AH,CS:[BP+DI]
+      AND    AH,CS:[SI]
+      AND    AH,CS:[DI]
+      AND    AH,CS:[2827H]
+      AND    AH,CS:[BX]
+      AND    CH,CS:[BX+SI]
+      AND    CH,CS:[BX+DI]
+      AND    CH,CS:[BP+SI]
+      AND    SP,CS:[SI]
+      AND    SP,CS:[DI]
+      AND    SP,CS:[2827H]
+      AND    SP,CS:[BX]
+      AND    BP,CS:[BX+SI]
+      AND    BP,CS:[BX+DI]
+      AND    BP,CS:[BP+SI]
+      AND    BP,CS:[BP+DI]
+      AND    BP,CS:[SI]
+      AND    BP,CS:[DI]
+      AND    BP,CS:[302FH]
+      AND    BP,CS:[BX]
+      AND    SI,CS:[BX+SI]
+      AND    SI,CS:[BX+DI]
+      AND    SI,CS:[BP+SI]
+      AND    SI,CS:[BP+DI]
+      AND    SI,CS:[SI]
+      AND    SI,CS:[DI]
+      AND    SI,CS:[3837H]
+      AND    SI,CS:[BX]
+      AND    DI,CS:[BX+SI]
+      AND    DI,CS:[BX+DI]
+      AND    DI,CS:[BP+SI]
+      AND    DI,CS:[BP+DI]
+      AND    DI,CS:[SI]
+      AND    DI,CS:[DI]
+      AND    DI,CS:[403FH]
+      AND    DI,CS:[BX]
+      AND    AX,CS:[BX+SI+65]
+      AND    AX,CS:[BX+SI-128]
+      AND    AX,CS:[BX+DI+66]
+      AND    AX,CS:[BX+DI-128]
+      AND    AX,CS:[BP+SI+67]
+      AND    AX,CS:[BP+SI-128]
+      AND    AX,CS:[BP+DI+68]
+      AND    AX,CS:[BP+DI-128]
+      AND    AX,CS:[SI+69]
+      AND    AX,CS:[SI-128]
+      AND    AX,CS:[DI+70]
+      AND    AX,CS:[DI-128]
+      AND    AX,CS:[BP+71]
+      AND    AX,CS:[BP-128]
+      AND    AX,CS:[BX+72]
+      AND    AX,CS:[BX-128]
+      AND    CX,CS:[BX+SI+73]
+      AND    CX,CS:[BX+SI-128]
+      AND    CX,CS:[BX+DI+74]
+      AND    CX,CS:[BX+DI-128]
+      AND    CX,CS:[BP+SI+75]
+      AND    CX,CS:[BP+SI-128]
+      AND    CX,CS:[BP+DI+76]
+      AND    CX,CS:[BP+DI-128]
+      AND    CX,CS:[SI+77]
+      AND    CX,CS:[SI-128]
+      AND    CX,CS:[DI+78]
+      AND    CX,CS:[DI-128]
+      AND    CX,CS:[BP+79]
+      AND    CX,CS:[BP-128]
+      AND    CX,CS:[BX+80]
+      AND    CX,CS:[BX-128]
+      AND    DX,CS:[BX+SI+81]
+      AND    DX,CS:[BX+SI-128]
+      AND    DX,CS:[BX+DI+82]
+      AND    DX,CS:[BX+DI-128]
+      AND    DX,CS:[BP+SI+83]
+      AND    DX,CS:[BP+SI-128]
+      AND    DX,CS:[BP+DI+84]
+      AND    DX,CS:[BP+DI-128]
+      AND    DX,CS:[SI+85]
+      AND    DX,CS:[SI-128]
+      AND    DX,CS:[DI+86]
+      AND    DX,CS:[DI-128]
+      AND    DX,CS:[BP+87]
+      AND    DX,CS:[BP-128]
+      AND    DX,CS:[BX+88]
+      AND    DX,CS:[BX-128]
+      AND    BX,CS:[BX+SI+89]
+      AND    BX,CS:[BX+SI-128]
+      AND    BX,CS:[BX+DI+90]
+      AND    BX,CS:[BX+DI-128]
+      AND    BX,CS:[BP+SI+91]
+      AND    BX,CS:[BP+SI-128]
+      AND    BX,CS:[BP+DI+92]
+      AND    BX,CS:[BP+DI-128]
+      AND    BX,CS:[SI+93]
+      AND    BX,CS:[SI-128]
+      AND    BX,CS:[DI+94]
+      AND    BX,CS:[DI-128]
+      AND    BX,CS:[BP+95]
+      AND    BX,CS:[BP-128]
+      AND    BX,CS:[BX+96]
+      AND    BX,CS:[BX-128]
+      AND    SP,CS:[BX+SI+97]
+      AND    SP,CS:[BX+SI-128]
+      AND    SP,CS:[BX+DI+98]
+      AND    SP,CS:[BX+DI-128]
+      AND    SP,CS:[BP+SI+99]
+      AND    SP,CS:[BP+SI-128]
+      AND    SP,CS:[BP+DI+100]
+      AND    SP,CS:[BP+DI-128]
+      AND    SP,CS:[SI+101]
+      AND    SP,CS:[SI-128]
+      AND    SP,CS:[DI+102]
+      AND    SP,CS:[DI-128]
+      AND    SP,CS:[BP+103]
+      AND    SP,CS:[BP-128]
+      AND    SP,CS:[BX+104]
+      AND    SP,CS:[BX-128]
+      AND    BP,CS:[BX+SI+105]
+      AND    BP,CS:[BX+SI-128]
+      AND    BP,CS:[BX+DI+106]
+      AND    BP,CS:[BX+DI-128]
+      AND    BP,CS:[BP+SI+107]
+      AND    BP,CS:[BP+SI-128]
+      AND    BP,CS:[BP+DI+108]
+      AND    BP,CS:[BP+DI-128]
+      AND    BP,CS:[SI+109]
+      AND    BP,CS:[SI-128]
+      AND    BP,CS:[DI+110]
+      AND    BP,CS:[DI-128]
+      AND    BP,CS:[BP+111]
+      AND    BP,CS:[BP-128]
+      AND    BP,CS:[BX+112]
+      AND    BP,CS:[BX-128]
+      AND    SI,CS:[BX+SI+113]
+      AND    SI,CS:[BX+SI-128]
+      AND    SI,CS:[BX+DI+114]
+      AND    SI,CS:[BX+DI-128]
+      AND    SI,CS:[BP+SI+115]
+      AND    SI,CS:[BP+SI-128]
+      AND    SI,CS:[BP+DI+116]
+      AND    SI,CS:[BP+DI-128]
+      AND    SI,CS:[SI+117]
+      AND    SI,CS:[SI-128]
+      AND    SI,CS:[DI+118]
+      AND    SI,CS:[DI-128]
+      AND    SI,CS:[BP+119]
+      AND    SI,CS:[BP-128]
+      AND    SI,CS:[BX+120]
+      AND    SI,CS:[BX-128]
+      AND    DI,CS:[BX+SI+121]
+      AND    DI,CS:[BX+SI-128]
+      AND    DI,CS:[BX+DI+122]
+      AND    DI,CS:[BX+DI-128]
+      AND    DI,CS:[BP+SI+123]
+      AND    DI,CS:[BP+SI-128]
+      AND    DI,CS:[BP+DI+124]
+      AND    DI,CS:[BP+DI-128]
+      AND    DI,CS:[SI+125]
+      AND    DI,CS:[SI-128]
+      AND    DI,CS:[DI+126]
+      AND    DI,CS:[DI-128]
+      AND    DI,CS:[BP+127]
+      AND    DI,CS:[BP-128]
+      AND    DI,CS:[BX-128]
+      AND    DI,CS:[BX+0]
+      AND    AX,CS:[BX+SI+8281H]
+      AND    AX,CS:[BX+DI+8382H]
+      AND    AX,CS:[BP+SI+8483H]
+      AND    AX,CS:[BP+DI+8584H]
+      AND    AX,CS:[SI+8685H]
+      AND    AX,CS:[DI+8786H]
+      AND    AX,CS:[BP+8887H]
+      AND    AX,CS:[BX+8988H]
+      AND    CX,CS:[BX+SI+8A89H]
+      AND    CX,CS:[BX+DI+8B8AH]
+      AND    CX,CS:[BP+SI+8C8BH]
+      AND    CX,CS:[BP+DI+8D8CH]
+      AND    CX,CS:[SI+8E8DH]
+      AND    CX,CS:[DI+8F8EH]
+      AND    CX,CS:[BP+908FH]
+      AND    CX,CS:[BX+9190H]
+      AND    DX,CS:[BX+SI+9291H]
+      AND    DX,CS:[BX+DI+9392H]
+      AND    DX,CS:[BP+SI+9493H]
+      AND    DX,CS:[BP+DI+9594H]
+      AND    DX,CS:[SI+9695H]
+      AND    DX,CS:[DI+9796H]
+      AND    DX,CS:[BP+9897H]
+      AND    DX,CS:[BX+9998H]
+      AND    BX,CS:[BX+SI+9A99H]
+      AND    BX,CS:[BX+DI+9B9AH]
+      AND    BX,CS:[BP+SI+9C9BH]
+      AND    BX,CS:[BP+DI+9D9CH]
+      AND    BX,CS:[SI+9E9DH]
+      AND    BX,CS:[DI+9F9EH]
+      AND    BX,CS:[BP+0A09FH]
+      AND    BX,CS:[BX+0A1A0H]
+      AND    SP,CS:[BX+SI+0A2A1H]
+      AND    SP,CS:[BX+DI+0A3A2H]
+      AND    SP,CS:[BP+SI+0A4A3H]
+      AND    SP,CS:[BP+DI+0A5A4H]
+      AND    SP,CS:[SI+0A6A5H]
+      AND    SP,CS:[DI+0A7A6H]
+      AND    SP,CS:[BP+0A8A7H]
+      AND    SP,CS:[BX+0A9A8H]
+      AND    BP,CS:[BX+SI+0AAA9H]
+      AND    BP,CS:[BX+DI+0ABAAH]
+      AND    BP,CS:[BP+SI+0ACABH]
+      AND    BP,CS:[BP+DI+0ADACH]
+      AND    BP,CS:[SI+0AEADH]
+      AND    BP,CS:[DI+0AFAEH]
+      AND    BP,CS:[BP+0B0AFH]
+      AND    BP,CS:[BX+0B1B0H]
+      AND    SI,CS:[BX+SI+0B2B1H]
+      AND    SI,CS:[BX+DI+0B3B2H]
+      AND    SI,CS:[BP+SI+0B4B3H]
+      AND    SI,CS:[BP+DI+0B5B4H]
+      AND    SI,CS:[SI+0B6B5H]
+      AND    SI,CS:[DI+0B7B6H]
+      AND    SI,CS:[BP+0B8B7H]
+      AND    SI,CS:[BX+0B9B8H]
+      AND    DI,CS:[BX+SI+0BAB9H]
+      AND    DI,CS:[BX+DI+0BBBAH]
+      AND    DI,CS:[BP+SI+0BCBBH]
+      AND    DI,CS:[BP+DI+0BDBCH]
+      AND    DI,CS:[SI+0BEBDH]
+      AND    DI,CS:[DI+0BFBEH]
+      AND    DI,CS:[BP+0C0BFH]
+      AND    DI,CS:[BX+0C1C0H]
+      AND    AX,CS:[BX+SI]
+      AND    AX,CS:[BX+DI]
+      AND    AX,CS:[BP+SI]
+      AND    AX,CS:[BP+DI]
+      AND    AX,CS:[SI]
+      AND    AX,CS:[DI]
+      AND    AX,CS:[0807H]
+      AND    AX,CS:[BX]
+      AND    CX,CS:[BX+SI]
+      AND    CX,CS:[BX+DI]
+      AND    CX,CS:[BP+SI]
+      AND    CX,CS:[BP+DI]
+      AND    CX,CS:[SI]
+      AND    CX,CS:[DI]
+      AND    CX,CS:[100FH]
+      AND    CX,CS:[BX]
+      AND    DX,CS:[BX+SI]
+      AND    DX,CS:[BX+DI]
+      AND    DX,CS:[BP+SI]
+      AND    DX,CS:[BP+DI]
+      AND    DX,CS:[SI]
+      AND    DX,CS:[DI]
+      AND    DX,CS:[1817H]
+      AND    DX,CS:[BX]
+      AND    BX,CS:[BX+SI]
+      AND    BX,CS:[BX+DI]
+      AND    BX,CS:[BP+SI]
+      AND    BX,CS:[BP+DI]
+      AND    BX,CS:[SI]
+      AND    BX,CS:[DI]
+      AND    BX,CS:[201FH]
+      AND    BX,CS:[BX]
+      AND    SP,CS:[BX+SI]
+      AND    SP,CS:[BX+DI]
+      AND    SP,CS:[BP+SI]
+      AND    SP,CS:[BP+DI]
+      SUB    CS:[BX+DI],CH
+      SUB    CS:[BP+SI],CH
+      SUB    CS:[BP+DI],CH
+      SUB    CS:[SI],CH
+      SUB    CS:[DI],CH
+      SUB    CS:[302FH],CH
+      SUB    CS:[BX],CH
+      SUB    CS:[BX+SI],DH
+      SUB    CS:[BP+SI],BP
+      SUB    CS:[BP+DI],BP
+      SUB    CS:[SI],BP
+      SUB    CS:[DI],BP
+      SUB    CS:[302FH],BP
+      SUB    CS:[BX],BP
+      SUB    CS:[BX+SI],SI
+      SUB    CS:[BX+DI],SI
+      SUB    CS:[BP+SI],SI
+      SUB    CS:[BP+DI],SI
+      SUB    CS:[SI],SI
+      SUB    CS:[DI],SI
+      SUB    CS:[3837H],SI
+      SUB    CS:[BX],SI
+      SUB    CS:[BX+SI],DI
+      SUB    CS:[BX+DI],DI
+      SUB    CS:[BP+SI],DI
+      SUB    CS:[BP+DI],DI
+      SUB    CS:[SI],DI
+      SUB    CS:[DI],DI
+      SUB    CS:[403FH],DI
+      SUB    CS:[BX],DI
+      SUB    CS:[BX+SI+65],AX
+      SUB    CS:[BX+SI-128],AX
+      SUB    CS:[BX+DI+66],AX
+      SUB    CS:[BX+DI-128],AX
+      SUB    CS:[BP+SI+67],AX
+      SUB    CS:[BP+SI-128],AX
+      SUB    CS:[BP+DI+68],AX
+      SUB    CS:[BP+DI-128],AX
+      SUB    CS:[SI+69],AX
+      SUB    CS:[SI-128],AX
+      SUB    CS:[DI+70],AX
+      SUB    CS:[DI-128],AX
+      SUB    CS:[BP+71],AX
+      SUB    CS:[BP-128],AX
+      SUB    CS:[BX+72],AX
+      SUB    CS:[BX-128],AX
+      SUB    CS:[BX+SI+73],CX
+      SUB    CS:[BX+SI-128],CX
+      SUB    CS:[BX+DI+74],CX
+      SUB    CS:[BX+DI-128],CX
+      SUB    CS:[BP+SI+75],CX
+      SUB    CS:[BP+SI-128],CX
+      SUB    CS:[BP+DI+76],CX
+      SUB    CS:[BP+DI-128],CX
+      SUB    CS:[SI+77],CX
+      SUB    CS:[SI-128],CX
+      SUB    CS:[DI+78],CX
+      SUB    CS:[DI-128],CX
+      SUB    CS:[BP+79],CX
+      SUB    CS:[BP-128],CX
+      SUB    CS:[BX+80],CX
+      SUB    CS:[BX-128],CX
+      SUB    CS:[BX+SI+81],DX
+      SUB    CS:[BX+SI-128],DX
+      SUB    CS:[BX+DI+82],DX
+      SUB    CS:[BX+DI-128],DX
+      SUB    CS:[BP+SI+83],DX
+      SUB    CS:[BP+SI-128],DX
+      SUB    CS:[BP+DI+84],DX
+      SUB    CS:[BP+DI-128],DX
+      SUB    CS:[SI+85],DX
+      SUB    CS:[SI-128],DX
+      SUB    CS:[DI+86],DX
+      SUB    CS:[DI-128],DX
+      SUB    CS:[BP+87],DX
+      SUB    CS:[BP-128],DX
+      SUB    CS:[BX+88],DX
+      SUB    CS:[BX-128],DX
+      SUB    CS:[BX+SI+89],BX
+      SUB    CS:[BX+SI-128],BX
+      SUB    CS:[BX+DI+90],BX
+      SUB    CS:[BX+DI-128],BX
+      SUB    CS:[BP+SI+91],BX
+      SUB    CS:[BP+SI-128],BX
+      SUB    CS:[BP+DI+92],BX
+      SUB    CS:[BP+DI-128],BX
+      SUB    CS:[SI+93],BX
+      SUB    CS:[SI-128],BX
+      SUB    CS:[DI+94],BX
+      SUB    CS:[DI-128],BX
+      SUB    CS:[BP+95],BX
+      SUB    CS:[BP-128],BX
+      SUB    CS:[BX+96],BX
+      SUB    CS:[BX-128],BX
+      SUB    CS:[BX+SI+97],SP
+      SUB    CS:[BX+SI-128],SP
+      SUB    CS:[BX+DI+98],SP
+      SUB    CS:[BX+DI-128],SP
+      SUB    CS:[BP+SI+99],SP
+      SUB    CS:[BP+SI-128],SP
+      SUB    CS:[BP+DI+100],SP
+      SUB    CS:[BP+DI-128],SP
+      SUB    CS:[SI+101],SP
+      SUB    CS:[SI-128],SP
+      SUB    CS:[DI+102],SP
+      SUB    CS:[DI-128],SP
+      SUB    CS:[BP+103],SP
+      SUB    CS:[BP-128],SP
+      SUB    CS:[BX+104],SP
+      SUB    CS:[BX-128],SP
+      SUB    CS:[BX+SI+105],BP
+      SUB    CS:[BX+SI-128],BP
+      SUB    CS:[BX+DI+106],BP
+      SUB    CS:[BX+DI-128],BP
+      SUB    CS:[BP+SI+107],BP
+      SUB    CS:[BP+SI-128],BP
+      SUB    CS:[BP+DI+108],BP
+      SUB    CS:[BP+DI-128],BP
+      SUB    CS:[SI+109],BP
+      SUB    CS:[SI-128],BP
+      SUB    CS:[DI+110],BP
+      SUB    CS:[DI-128],BP
+      SUB    CS:[BP+111],BP
+      SUB    CS:[BP-128],BP
+      SUB    CS:[BX+112],BP
+      SUB    CS:[BX-128],BP
+      SUB    CS:[BX+SI+113],SI
+      SUB    CS:[BX+SI-128],SI
+      SUB    CS:[BX+DI+114],SI
+      SUB    CS:[BX+DI-128],SI
+      SUB    CS:[BP+SI+115],SI
+      SUB    CS:[BP+SI-128],SI
+      SUB    CS:[BP+DI+116],SI
+      SUB    CS:[BP+DI-128],SI
+      SUB    CS:[SI+117],SI
+      SUB    CS:[SI-128],SI
+      SUB    CS:[DI+118],SI
+      SUB    CS:[DI-128],SI
+      SUB    CS:[BP+119],SI
+      SUB    CS:[BP-128],SI
+      SUB    CS:[BX+120],SI
+      SUB    CS:[BX-128],SI
+      SUB    CS:[BX+SI+121],DI
+      SUB    CS:[BX+SI-128],DI
+      SUB    CS:[BX+DI+122],DI
+      SUB    CS:[BX+DI-128],DI
+      SUB    CS:[BP+SI+123],DI
+      SUB    CS:[BP+SI-128],DI
+      SUB    CS:[BP+DI+124],DI
+      SUB    CS:[BP+DI-128],DI
+      SUB    CS:[SI+125],DI
+      SUB    CS:[SI-128],DI
+      SUB    CS:[DI+126],DI
+      SUB    CS:[DI-128],DI
+      SUB    CS:[BP+127],DI
+      SUB    CS:[BP-128],DI
+      SUB    CS:[BX-128],DI
+      SUB    CS:[BX+0],DI
+      SUB    CS:[BX+SI+8281H],AX
+      SUB    CS:[BX+DI+8382H],AX
+      SUB    CS:[BP+SI+8483H],AX
+      SUB    CS:[BP+DI+8584H],AX
+      SUB    CS:[SI+8685H],AX
+      SUB    CS:[DI+8786H],AX
+      SUB    CS:[BP+8887H],AX
+      SUB    CS:[BX+8988H],AX
+      SUB    CS:[BX+SI+8A89H],CX
+      SUB    CS:[BX+DI+8B8AH],CX
+      SUB    CS:[BP+SI+8C8BH],CX
+      SUB    CS:[BP+DI+8D8CH],CX
+      SUB    CS:[SI+8E8DH],CX
+      SUB    CS:[DI+8F8EH],CX
+      SUB    CS:[BP+908FH],CX
+      SUB    CS:[BX+9190H],CX
+      SUB    CS:[BX+SI+9291H],DX
+      SUB    CS:[BX+DI+9392H],DX
+      SUB    CS:[BP+SI+9493H],DX
+      SUB    CS:[BP+DI+9594H],DX
+      SUB    CS:[SI+9695H],DX
+      SUB    CS:[DI+9796H],DX
+      SUB    CS:[BP+9897H],DX
+      SUB    CS:[BX+9998H],DX
+      SUB    CS:[BX+SI+9A99H],BX
+      SUB    CS:[BX+DI+9B9AH],BX
+      SUB    CS:[BP+SI+9C9BH],BX
+      SUB    CS:[BP+DI+9D9CH],BX
+      SUB    CS:[SI+9E9DH],BX
+      SUB    CS:[DI+9F9EH],BX
+      SUB    CS:[BP+0A09FH],BX
+      SUB    CS:[BX+0A1A0H],BX
+      SUB    CS:[BX+SI+0A2A1H],SP
+      SUB    CS:[BX+DI+0A3A2H],SP
+      SUB    CS:[BP+SI+0A4A3H],SP
+      SUB    CS:[BP+DI+0A5A4H],SP
+      SUB    CS:[SI+0A6A5H],SP
+      SUB    CS:[DI+0A7A6H],SP
+      SUB    CS:[BP+0A8A7H],SP
+      SUB    CS:[BX+0A9A8H],SP
+      SUB    CS:[BX+SI+0AAA9H],BP
+      SUB    CS:[BX+DI+0ABAAH],BP
+      SUB    CS:[BP+SI+0ACABH],BP
+      SUB    CS:[BP+DI+0ADACH],BP
+      SUB    CS:[SI+0AEADH],BP
+      SUB    CS:[DI+0AFAEH],BP
+      SUB    CS:[BP+0B0AFH],BP
+      SUB    CS:[BX+0B1B0H],BP
+      SUB    CS:[BX+SI+0B2B1H],SI
+      SUB    CS:[BX+DI+0B3B2H],SI
+      SUB    CS:[BP+SI+0B4B3H],SI
+      SUB    CS:[BP+DI+0B5B4H],SI
+      SUB    CS:[SI+0B6B5H],SI
+      SUB    CS:[DI+0B7B6H],SI
+      SUB    CS:[BP+0B8B7H],SI
+      SUB    CS:[BX+0B9B8H],SI
+      SUB    CS:[BX+SI+0BAB9H],DI
+      SUB    CS:[BX+DI+0BBBAH],DI
+      SUB    CS:[BP+SI+0BCBBH],DI
+      SUB    CS:[BP+DI+0BDBCH],DI
+      SUB    CS:[SI+0BEBDH],DI
+      SUB    CS:[DI+0BFBEH],DI
+      SUB    CS:[BP+0C0BFH],DI
+      SUB    CS:[BX+0C1C0H],DI
+      SUB    CS:[BX+SI],AX
+      SUB    CS:[BX+DI],AX
+      SUB    CS:[BP+SI],AX
+      SUB    CS:[BP+DI],AX
+      SUB    CS:[SI],AX
+      SUB    CS:[DI],AX
+      SUB    CS:[0807H],AX
+      SUB    CS:[BX],AX
+      SUB    CS:[BX+SI],CX
+      SUB    CS:[BX+DI],CX
+      SUB    CS:[BP+SI],CX
+      SUB    CS:[BP+DI],CX
+      SUB    CS:[SI],CX
+      SUB    CS:[DI],CX
+      SUB    CS:[100FH],CX
+      SUB    CS:[BX],CX
+      SUB    CS:[BX+SI],DX
+      SUB    CS:[BX+DI],DX
+      SUB    CS:[BP+SI],DX
+      SUB    CS:[BP+DI],DX
+      SUB    CS:[SI],DX
+      SUB    CS:[DI],DX
+      SUB    CS:[1817H],DX
+      SUB    CS:[BX],DX
+      SUB    CS:[BX+SI],BX
+      SUB    CS:[BX+DI],BX
+      SUB    CS:[BP+SI],BX
+      SUB    CS:[BP+DI],BX
+      SUB    CS:[SI],BX
+      SUB    CS:[DI],BX
+      SUB    CS:[201FH],BX
+      SUB    CS:[BX],BX
+      SUB    CS:[BX+SI],SP
+      SUB    CS:[BX+DI],SP
+      SUB    CS:[BP+SI],SP
+      SUB    CS:[BP+DI],SP
+      SUB    CS:[SI],SP
+      SUB    CS:[DI],SP
+      SUB    CS:[2827H],SP
+      SUB    CS:[BX],SP
+      SUB    CS:[BX+SI],BP
+      SUB    CS:[BX+DI],BP
+      SUB    CH,CS:[BP+DI]
+      SUB    CH,CS:[SI]
+      SUB    CH,CS:[DI]
+      SUB    CH,CS:[302FH]
+      SUB    CH,CS:[BX]
+      SUB    DH,CS:[BX+SI]
+      SUB    DH,CS:[BX+DI]
+      SUB    DH,CS:[BP+SI]
+      SUB    BP,CS:[SI]
+      SUB    BP,CS:[DI]
+      SUB    BP,CS:[302FH]
+      SUB    BP,CS:[BX]
+      SUB    SI,CS:[BX+SI]
+      SUB    SI,CS:[BX+DI]
+      SUB    SI,CS:[BP+SI]
+      SUB    SI,CS:[BP+DI]
+      SUB    SI,CS:[SI]
+      SUB    SI,CS:[DI]
+      SUB    SI,CS:[3837H]
+      SUB    SI,CS:[BX]
+      SUB    DI,CS:[BX+SI]
+      SUB    DI,CS:[BX+DI]
+      SUB    DI,CS:[BP+SI]
+      SUB    DI,CS:[BP+DI]
+      SUB    DI,CS:[SI]
+      SUB    DI,CS:[DI]
+      SUB    DI,CS:[403FH]
+      SUB    DI,CS:[BX]
+      SUB    AX,CS:[BX+SI+65]
+      SUB    AX,CS:[BX+SI-128]
+      SUB    AX,CS:[BX+DI+66]
+      SUB    AX,CS:[BX+DI-128]
+      SUB    AX,CS:[BP+SI+67]
+      SUB    AX,CS:[BP+SI-128]
+      SUB    AX,CS:[BP+DI+68]
+      SUB    AX,CS:[BP+DI-128]
+      SUB    AX,CS:[SI+69]
+      SUB    AX,CS:[SI-128]
+      SUB    AX,CS:[DI+70]
+      SUB    AX,CS:[DI-128]
+      SUB    AX,CS:[BP+71]
+      SUB    AX,CS:[BP-128]
+      SUB    AX,CS:[BX+72]
+      SUB    AX,CS:[BX-128]
+      SUB    CX,CS:[BX+SI+73]
+      SUB    CX,CS:[BX+SI-128]
+      SUB    CX,CS:[BX+DI+74]
+      SUB    CX,CS:[BX+DI-128]
+      SUB    CX,CS:[BP+SI+75]
+      SUB    CX,CS:[BP+SI-128]
+      SUB    CX,CS:[BP+DI+76]
+      SUB    CX,CS:[BP+DI-128]
+      SUB    CX,CS:[SI+77]
+      SUB    CX,CS:[SI-128]
+      SUB    CX,CS:[DI+78]
+      SUB    CX,CS:[DI-128]
+      SUB    CX,CS:[BP+79]
+      SUB    CX,CS:[BP-128]
+      SUB    CX,CS:[BX+80]
+      SUB    CX,CS:[BX-128]
+      SUB    DX,CS:[BX+SI+81]
+      SUB    DX,CS:[BX+SI-128]
+      SUB    DX,CS:[BX+DI+82]
+      SUB    DX,CS:[BX+DI-128]
+      SUB    DX,CS:[BP+SI+83]
+      SUB    DX,CS:[BP+SI-128]
+      SUB    DX,CS:[BP+DI+84]
+      SUB    DX,CS:[BP+DI-128]
+      SUB    DX,CS:[SI+85]
+      SUB    DX,CS:[SI-128]
+      SUB    DX,CS:[DI+86]
+      SUB    DX,CS:[DI-128]
+      SUB    DX,CS:[BP+87]
+      SUB    DX,CS:[BP-128]
+      SUB    DX,CS:[BX+88]
+      SUB    DX,CS:[BX-128]
+      SUB    BX,CS:[BX+SI+89]
+      SUB    BX,CS:[BX+SI-128]
+      SUB    BX,CS:[BX+DI+90]
+      SUB    BX,CS:[BX+DI-128]
+      SUB    BX,CS:[BP+SI+91]
+      SUB    BX,CS:[BP+SI-128]
+      SUB    BX,CS:[BP+DI+92]
+      SUB    BX,CS:[BP+DI-128]
+      SUB    BX,CS:[SI+93]
+      SUB    BX,CS:[SI-128]
+      SUB    BX,CS:[DI+94]
+      SUB    BX,CS:[DI-128]
+      SUB    BX,CS:[BP+95]
+      SUB    BX,CS:[BP-128]
+      SUB    BX,CS:[BX+96]
+      SUB    BX,CS:[BX-128]
+      SUB    SP,CS:[BX+SI+97]
+      SUB    SP,CS:[BX+SI-128]
+      SUB    SP,CS:[BX+DI+98]
+      SUB    SP,CS:[BX+DI-128]
+      SUB    SP,CS:[BP+SI+99]
+      SUB    SP,CS:[BP+SI-128]
+      SUB    SP,CS:[BP+DI+100]
+      SUB    SP,CS:[BP+DI-128]
+      SUB    SP,CS:[SI+101]
+      SUB    SP,CS:[SI-128]
+      SUB    SP,CS:[DI+102]
+      SUB    SP,CS:[DI-128]
+      SUB    SP,CS:[BP+103]
+      SUB    SP,CS:[BP-128]
+      SUB    SP,CS:[BX+104]
+      SUB    SP,CS:[BX-128]
+      SUB    BP,CS:[BX+SI+105]
+      SUB    BP,CS:[BX+SI-128]
+      SUB    BP,CS:[BX+DI+106]
+      SUB    BP,CS:[BX+DI-128]
+      SUB    BP,CS:[BP+SI+107]
+      SUB    BP,CS:[BP+SI-128]
+      SUB    BP,CS:[BP+DI+108]
+      SUB    BP,CS:[BP+DI-128]
+      SUB    BP,CS:[SI+109]
+      SUB    BP,CS:[SI-128]
+      SUB    BP,CS:[DI+110]
+      SUB    BP,CS:[DI-128]
+      SUB    BP,CS:[BP+111]
+      SUB    BP,CS:[BP-128]
+      SUB    BP,CS:[BX+112]
+      SUB    BP,CS:[BX-128]
+      SUB    SI,CS:[BX+SI+113]
+      SUB    SI,CS:[BX+SI-128]
+      SUB    SI,CS:[BX+DI+114]
+      SUB    SI,CS:[BX+DI-128]
+      SUB    SI,CS:[BP+SI+115]
+      SUB    SI,CS:[BP+SI-128]
+      SUB    SI,CS:[BP+DI+116]
+      SUB    SI,CS:[BP+DI-128]
+      SUB    SI,CS:[SI+117]
+      SUB    SI,CS:[SI-128]
+      SUB    SI,CS:[DI+118]
+      SUB    SI,CS:[DI-128]
+      SUB    SI,CS:[BP+119]
+      SUB    SI,CS:[BP-128]
+      SUB    SI,CS:[BX+120]
+      SUB    SI,CS:[BX-128]
+      SUB    DI,CS:[BX+SI+121]
+      SUB    DI,CS:[BX+SI-128]
+      SUB    DI,CS:[BX+DI+122]
+      SUB    DI,CS:[BX+DI-128]
+      SUB    DI,CS:[BP+SI+123]
+      SUB    DI,CS:[BP+SI-128]
+      SUB    DI,CS:[BP+DI+124]
+      SUB    DI,CS:[BP+DI-128]
+      SUB    DI,CS:[SI+125]
+      SUB    DI,CS:[SI-128]
+      SUB    DI,CS:[DI+126]
+      SUB    DI,CS:[DI-128]
+      SUB    DI,CS:[BP+127]
+      SUB    DI,CS:[BP-128]
+      SUB    DI,CS:[BX-128]
+      SUB    DI,CS:[BX+0]
+      SUB    AX,CS:[BX+SI+8281H]
+      SUB    AX,CS:[BX+DI+8382H]
+      SUB    AX,CS:[BP+SI+8483H]
+      SUB    AX,CS:[BP+DI+8584H]
+      SUB    AX,CS:[SI+8685H]
+      SUB    AX,CS:[DI+8786H]
+      SUB    AX,CS:[BP+8887H]
+      SUB    AX,CS:[BX+8988H]
+      SUB    CX,CS:[BX+SI+8A89H]
+      SUB    CX,CS:[BX+DI+8B8AH]
+      SUB    CX,CS:[BP+SI+8C8BH]
+      SUB    CX,CS:[BP+DI+8D8CH]
+      SUB    CX,CS:[SI+8E8DH]
+      SUB    CX,CS:[DI+8F8EH]
+      SUB    CX,CS:[BP+908FH]
+      SUB    CX,CS:[BX+9190H]
+      SUB    DX,CS:[BX+SI+9291H]
+      SUB    DX,CS:[BX+DI+9392H]
+      SUB    DX,CS:[BP+SI+9493H]
+      SUB    DX,CS:[BP+DI+9594H]
+      SUB    DX,CS:[SI+9695H]
+      SUB    DX,CS:[DI+9796H]
+      SUB    DX,CS:[BP+9897H]
+      SUB    DX,CS:[BX+9998H]
+      SUB    BX,CS:[BX+SI+9A99H]
+      SUB    BX,CS:[BX+DI+9B9AH]
+      SUB    BX,CS:[BP+SI+9C9BH]
+      SUB    BX,CS:[BP+DI+9D9CH]
+      SUB    BX,CS:[SI+9E9DH]
+      SUB    BX,CS:[DI+9F9EH]
+      SUB    BX,CS:[BP+0A09FH]
+      SUB    BX,CS:[BX+0A1A0H]
+      SUB    SP,CS:[BX+SI+0A2A1H]
+      SUB    SP,CS:[BX+DI+0A3A2H]
+      SUB    SP,CS:[BP+SI+0A4A3H]
+      SUB    SP,CS:[BP+DI+0A5A4H]
+      SUB    SP,CS:[SI+0A6A5H]
+      SUB    SP,CS:[DI+0A7A6H]
+      SUB    SP,CS:[BP+0A8A7H]
+      SUB    SP,CS:[BX+0A9A8H]
+      SUB    BP,CS:[BX+SI+0AAA9H]
+      SUB    BP,CS:[BX+DI+0ABAAH]
+      SUB    BP,CS:[BP+SI+0ACABH]
+      SUB    BP,CS:[BP+DI+0ADACH]
+      SUB    BP,CS:[SI+0AEADH]
+      SUB    BP,CS:[DI+0AFAEH]
+      SUB    BP,CS:[BP+0B0AFH]
+      SUB    BP,CS:[BX+0B1B0H]
+      SUB    SI,CS:[BX+SI+0B2B1H]
+      SUB    SI,CS:[BX+DI+0B3B2H]
+      SUB    SI,CS:[BP+SI+0B4B3H]
+      SUB    SI,CS:[BP+DI+0B5B4H]
+      SUB    SI,CS:[SI+0B6B5H]
+      SUB    SI,CS:[DI+0B7B6H]
+      SUB    SI,CS:[BP+0B8B7H]
+      SUB    SI,CS:[BX+0B9B8H]
+      SUB    DI,CS:[BX+SI+0BAB9H]
+      SUB    DI,CS:[BX+DI+0BBBAH]
+      SUB    DI,CS:[BP+SI+0BCBBH]
+      SUB    DI,CS:[BP+DI+0BDBCH]
+      SUB    DI,CS:[SI+0BEBDH]
+      SUB    DI,CS:[DI+0BFBEH]
+      SUB    DI,CS:[BP+0C0BFH]
+      SUB    DI,CS:[BX+0C1C0H]
+      SUB    AX,CS:[BX+SI]
+      SUB    AX,CS:[BX+DI]
+      SUB    AX,CS:[BP+SI]
+      SUB    AX,CS:[BP+DI]
+      SUB    AX,CS:[SI]
+      SUB    AX,CS:[DI]
+      SUB    AX,CS:[0807H]
+      SUB    AX,CS:[BX]
+      SUB    CX,CS:[BX+SI]
+      SUB    CX,CS:[BX+DI]
+      SUB    CX,CS:[BP+SI]
+      SUB    CX,CS:[BP+DI]
+      SUB    CX,CS:[SI]
+      SUB    CX,CS:[DI]
+      SUB    CX,CS:[100FH]
+      SUB    CX,CS:[BX]
+      SUB    DX,CS:[BX+SI]
+      SUB    DX,CS:[BX+DI]
+      SUB    DX,CS:[BP+SI]
+      SUB    DX,CS:[BP+DI]
+      SUB    DX,CS:[SI]
+      SUB    DX,CS:[DI]
+      SUB    DX,CS:[1817H]
+      SUB    DX,CS:[BX]
+      SUB    BX,CS:[BX+SI]
+      SUB    BX,CS:[BX+DI]
+      SUB    BX,CS:[BP+SI]
+      SUB    BX,CS:[BP+DI]
+      SUB    BX,CS:[SI]
+      SUB    BX,CS:[DI]
+      SUB    BX,CS:[201FH]
+      SUB    BX,CS:[BX]
+      SUB    SP,CS:[BX+SI]
+      SUB    SP,CS:[BX+DI]
+      SUB    SP,CS:[BP+SI]
+      SUB    SP,CS:[BP+DI]
+      SUB    SP,CS:[SI]
+      SUB    SP,CS:[DI]
+      SUB    SP,CS:[2827H]
+      SUB    SP,CS:[BX]
+      SUB    BP,CS:[BX+SI]
+      SUB    BP,CS:[BX+DI]
+      SUB    BP,CS:[BP+SI]
+      SUB    BP,CS:[BP+DI]
+      CMP    SS:[BX+DI],BH
+      CMP    SS:[BP+SI],BH
+      CMP    SS:[BP+DI],BH
+      CMP    SS:[SI],BH
+      CMP    SS:[DI],BH
+      CMP    SS:[403FH],BH
+      CMP    SS:[BX],BH
+      CMP    SS:[BX+SI+65],AL
+      CMP    SS:[BX+SI-128],AL
+      CMP    SS:[BX+DI+66],AL
+      CMP    SS:[BX+DI-128],AL
+      CMP    SS:[BP+SI+67],AL
+      CMP    SS:[BP+SI-128],AL
+      CMP    SS:[BP+DI+68],AL
+      CMP    SS:[BP+DI-128],AL
+      CMP    SS:[SI+69],AL
+      CMP    SS:[SI-128],AL
+      CMP    SS:[DI+70],AL
+      CMP    SS:[DI-128],AL
+      CMP    SS:[BP+71],AL
+      CMP    SS:[BP-128],AL
+      CMP    SS:[BX+72],AL
+      CMP    SS:[BX-128],AL
+      CMP    SS:[BX+SI+73],CL
+      CMP    SS:[BX+SI-128],CL
+      CMP    SS:[BX+DI+74],CL
+      CMP    SS:[BX+DI-128],CL
+      CMP    SS:[BP+SI+75],CL
+      CMP    SS:[BP+SI-128],CL
+      CMP    SS:[BP+DI+76],CL
+      CMP    SS:[BP+DI-128],CL
+      CMP    SS:[SI+77],CL
+      CMP    SS:[SI-128],CL
+      CMP    SS:[DI+78],CL
+      CMP    SS:[DI-128],CL
+      CMP    SS:[BP+79],CL
+      CMP    SS:[BP-128],CL
+      CMP    SS:[BX+80],CL
+      CMP    SS:[BX-128],CL
+      CMP    SS:[BX+SI+81],DL
+      CMP    SS:[BX+SI-128],DL
+      CMP    SS:[BX+DI+82],DL
+      CMP    SS:[BX+DI-128],DL
+      CMP    SS:[BP+SI+83],DL
+      CMP    SS:[BP+SI-128],DL
+      CMP    SS:[BP+DI+84],DL
+      CMP    SS:[BP+DI-128],DL
+      CMP    SS:[SI+85],DL
+      CMP    SS:[SI-128],DL
+      CMP    SS:[DI+86],DL
+      CMP    SS:[DI-128],DL
+      CMP    SS:[BP+87],DL
+      CMP    SS:[BP-128],DL
+      CMP    SS:[BX+88],DL
+      CMP    SS:[BX-128],DL
+      CMP    SS:[BX+SI+89],BL
+      CMP    SS:[BX+SI-128],BL
+      CMP    SS:[BX+DI+90],BL
+      CMP    SS:[BX+DI-128],BL
+      CMP    SS:[BP+SI+91],BL
+      CMP    SS:[BP+SI-128],BL
+      CMP    SS:[BP+DI+92],BL
+      CMP    SS:[BP+DI-128],BL
+      CMP    SS:[SI+93],BL
+      CMP    SS:[SI-128],BL
+      CMP    SS:[DI+94],BL
+      CMP    SS:[DI-128],BL
+      CMP    SS:[BP+95],BL
+      CMP    SS:[BP-128],BL
+      CMP    SS:[BX+96],BL
+      CMP    SS:[BX-128],BL
+      CMP    SS:[BX+SI+97],AH
+      CMP    SS:[BX+SI-128],AH
+      CMP    SS:[BX+DI+98],AH
+      CMP    SS:[BX+DI-128],AH
+      CMP    SS:[BP+SI+99],AH
+      CMP    SS:[BP+SI-128],AH
+      CMP    SS:[BP+DI+100],AH
+      CMP    SS:[BP+DI-128],AH
+      CMP    SS:[SI+101],AH
+      CMP    SS:[SI-128],AH
+      CMP    SS:[DI+102],AH
+      CMP    SS:[DI-128],AH
+      CMP    SS:[BP+103],AH
+      CMP    SS:[BP-128],AH
+      CMP    SS:[BX+104],AH
+      CMP    SS:[BX-128],AH
+      CMP    SS:[BX+SI+8281H],AL
+      CMP    SS:[BX+DI+8382H],AL
+      CMP    SS:[BP+SI+8483H],AL
+      CMP    SS:[BP+DI+8584H],AL
+      CMP    SS:[SI+8685H],AL
+      CMP    SS:[DI+8786H],AL
+      CMP    SS:[BP+8887H],AL
+      CMP    SS:[BX+8988H],AL
+      CMP    SS:[BX+SI+8A89H],CL
+      CMP    SS:[BX+DI+8B8AH],CL
+      CMP    SS:[BP+SI+8C8BH],CL
+      CMP    SS:[BP+DI+8D8CH],CL
+      CMP    SS:[SI+8E8DH],CL
+      CMP    SS:[DI+8F8EH],CL
+      CMP    SS:[BP+908FH],CL
+      CMP    SS:[BX+9190H],CL
+      CMP    SS:[BX+SI+9291H],DL
+      CMP    SS:[BX+DI+9392H],DL
+      CMP    SS:[BP+SI+9493H],DL
+      CMP    SS:[BP+DI+9594H],DL
+      CMP    SS:[SI+9695H],DL
+      CMP    SS:[DI+9796H],DL
+      CMP    SS:[BP+9897H],DL
+      CMP    SS:[BX+9998H],DL
+      CMP    SS:[BX+SI+9A99H],BL
+      CMP    SS:[BX+DI+9B9AH],BL
+      CMP    SS:[BP+SI+9C9BH],BL
+      CMP    SS:[BP+DI+9D9CH],BL
+      CMP    SS:[SI+9E9DH],BL
+      CMP    SS:[DI+9F9EH],BL
+      CMP    SS:[BP+0A09FH],BL
+      CMP    SS:[BX+0A1A0H],BL
+      CMP    SS:[BX+SI+0A2A1H],AH
+      CMP    SS:[BX+DI+0A3A2H],AH
+      CMP    SS:[BP+SI+0A4A3H],AH
+      CMP    SS:[BP+DI+0A5A4H],AH
+      CMP    SS:[SI+0A6A5H],AH
+      CMP    SS:[DI+0A7A6H],AH
+      CMP    SS:[BP+0A8A7H],AH
+      CMP    SS:[BX+0A9A8H],AH
+      CMP    SS:[BP+SI],DI
+      CMP    SS:[BP+DI],DI
+      CMP    SS:[SI],DI
+      CMP    SS:[DI],DI
+      CMP    SS:[403FH],DI
+      CMP    SS:[BX],DI
+      CMP    SS:[BX+SI+65],AX
+      CMP    SS:[BX+SI-128],AX
+      CMP    SS:[BX+DI+66],AX
+      CMP    SS:[BX+DI-128],AX
+      CMP    SS:[BP+SI+67],AX
+      CMP    SS:[BP+SI-128],AX
+      CMP    SS:[BP+DI+68],AX
+      CMP    SS:[BP+DI-128],AX
+      CMP    SS:[SI+69],AX
+      CMP    SS:[SI-128],AX
+      CMP    SS:[DI+70],AX
+      CMP    SS:[DI-128],AX
+      CMP    SS:[BP+71],AX
+      CMP    SS:[BP-128],AX
+      CMP    SS:[BX+72],AX
+      CMP    SS:[BX-128],AX
+      CMP    SS:[BX+SI+73],CX
+      CMP    SS:[BX+SI-128],CX
+      CMP    SS:[BX+DI+74],CX
+      CMP    SS:[BX+DI-128],CX
+      CMP    SS:[BP+SI+75],CX
+      CMP    SS:[BP+SI-128],CX
+      CMP    SS:[BP+DI+76],CX
+      CMP    SS:[BP+DI-128],CX
+      CMP    SS:[SI+77],CX
+      CMP    SS:[SI-128],CX
+      CMP    SS:[DI+78],CX
+      CMP    SS:[DI-128],CX
+      CMP    SS:[BP+79],CX
+      CMP    SS:[BP-128],CX
+      CMP    SS:[BX+80],CX
+      CMP    SS:[BX-128],CX
+      CMP    SS:[BX+SI+81],DX
+      CMP    SS:[BX+SI-128],DX
+      CMP    SS:[BX+DI+82],DX
+      CMP    SS:[BX+DI-128],DX
+      CMP    SS:[BP+SI+83],DX
+      CMP    SS:[BP+SI-128],DX
+      CMP    SS:[BP+DI+84],DX
+      CMP    SS:[BP+DI-128],DX
+      CMP    SS:[SI+85],DX
+      CMP    SS:[SI-128],DX
+      CMP    SS:[DI+86],DX
+      CMP    SS:[DI-128],DX
+      CMP    SS:[BP+87],DX
+      CMP    SS:[BP-128],DX
+      CMP    SS:[BX+88],DX
+      CMP    SS:[BX-128],DX
+      CMP    SS:[BX+SI+89],BX
+      CMP    SS:[BX+SI-128],BX
+      CMP    SS:[BX+DI+90],BX
+      CMP    SS:[BX+DI-128],BX
+      CMP    SS:[BP+SI+91],BX
+      CMP    SS:[BP+SI-128],BX
+      CMP    SS:[BP+DI+92],BX
+      CMP    SS:[BP+DI-128],BX
+      CMP    SS:[SI+93],BX
+      CMP    SS:[SI-128],BX
+      CMP    SS:[DI+94],BX
+      CMP    SS:[DI-128],BX
+      CMP    SS:[BP+95],BX
+      CMP    SS:[BP-128],BX
+      CMP    SS:[BX+96],BX
+      CMP    SS:[BX-128],BX
+      CMP    SS:[BX+SI+97],SP
+      CMP    SS:[BX+SI-128],SP
+      CMP    SS:[BX+DI+98],SP
+      CMP    SS:[BX+DI-128],SP
+      CMP    SS:[BP+SI+99],SP
+      CMP    SS:[BP+SI-128],SP
+      CMP    SS:[BP+DI+100],SP
+      CMP    SS:[BP+DI-128],SP
+      CMP    SS:[SI+101],SP
+      CMP    SS:[SI-128],SP
+      CMP    SS:[DI+102],SP
+      CMP    SS:[DI-128],SP
+      CMP    SS:[BP+103],SP
+      CMP    SS:[BP-128],SP
+      CMP    SS:[BX+104],SP
+      CMP    SS:[BX-128],SP
+      CMP    SS:[BX+SI+105],BP
+      CMP    SS:[BX+SI-128],BP
+      CMP    SS:[BX+DI+106],BP
+      CMP    SS:[BX+DI-128],BP
+      CMP    SS:[BP+SI+107],BP
+      CMP    SS:[BP+SI-128],BP
+      CMP    SS:[BP+DI+108],BP
+      CMP    SS:[BP+DI-128],BP
+      CMP    SS:[SI+109],BP
+      CMP    SS:[SI-128],BP
+      CMP    SS:[DI+110],BP
+      CMP    SS:[DI-128],BP
+      CMP    SS:[BP+111],BP
+      CMP    SS:[BP-128],BP
+      CMP    SS:[BX+112],BP
+      CMP    SS:[BX-128],BP
+      CMP    SS:[BX+SI+113],SI
+      CMP    SS:[BX+SI-128],SI
+      CMP    SS:[BX+DI+114],SI
+      CMP    SS:[BX+DI-128],SI
+      CMP    SS:[BP+SI+115],SI
+      CMP    SS:[BP+SI-128],SI
+      CMP    SS:[BP+DI+116],SI
+      CMP    SS:[BP+DI-128],SI
+      CMP    SS:[SI+117],SI
+      CMP    SS:[SI-128],SI
+      CMP    SS:[DI+118],SI
+      CMP    SS:[DI-128],SI
+      CMP    SS:[BP+119],SI
+      CMP    SS:[BP-128],SI
+      CMP    SS:[BX+120],SI
+      CMP    SS:[BX-128],SI
+      CMP    SS:[BX+SI+121],DI
+      CMP    SS:[BX+SI-128],DI
+      CMP    SS:[BX+DI+122],DI
+      CMP    SS:[BX+DI-128],DI
+      CMP    SS:[BP+SI+123],DI
+      CMP    SS:[BP+SI-128],DI
+      CMP    SS:[BP+DI+124],DI
+      CMP    SS:[BP+DI-128],DI
+      CMP    SS:[SI+125],DI
+      CMP    SS:[SI-128],DI
+      CMP    SS:[DI+126],DI
+      CMP    SS:[DI-128],DI
+      CMP    SS:[BP+127],DI
+      CMP    SS:[BP-128],DI
+      CMP    SS:[BX-128],DI
+      CMP    SS:[BX+0],DI
+      CMP    SS:[BX+SI+8281H],AX
+      CMP    SS:[BX+DI+8382H],AX
+      CMP    SS:[BP+SI+8483H],AX
+      CMP    SS:[BP+DI+8584H],AX
+      CMP    SS:[SI+8685H],AX
+      CMP    SS:[DI+8786H],AX
+      CMP    SS:[BP+8887H],AX
+      CMP    SS:[BX+8988H],AX
+      CMP    SS:[BX+SI+8A89H],CX
+      CMP    SS:[BX+DI+8B8AH],CX
+      CMP    SS:[BP+SI+8C8BH],CX
+      CMP    SS:[BP+DI+8D8CH],CX
+      CMP    SS:[SI+8E8DH],CX
+      CMP    SS:[DI+8F8EH],CX
+      CMP    SS:[BP+908FH],CX
+      CMP    SS:[BX+9190H],CX
+      CMP    SS:[BX+SI+9291H],DX
+      CMP    SS:[BX+DI+9392H],DX
+      CMP    SS:[BP+SI+9493H],DX
+      CMP    SS:[BP+DI+9594H],DX
+      CMP    SS:[SI+9695H],DX
+      CMP    SS:[DI+9796H],DX
+      CMP    SS:[BP+9897H],DX
+      CMP    SS:[BX+9998H],DX
+      CMP    SS:[BX+SI+9A99H],BX
+      CMP    SS:[BX+DI+9B9AH],BX
+      CMP    SS:[BP+SI+9C9BH],BX
+      CMP    SS:[BP+DI+9D9CH],BX
+      CMP    SS:[SI+9E9DH],BX
+      CMP    SS:[DI+9F9EH],BX
+      CMP    SS:[BP+0A09FH],BX
+      CMP    SS:[BX+0A1A0H],BX
+      CMP    SS:[BX+SI+0A2A1H],SP
+      CMP    SS:[BX+DI+0A3A2H],SP
+      CMP    SS:[BP+SI+0A4A3H],SP
+      CMP    SS:[BP+DI+0A5A4H],SP
+      CMP    SS:[SI+0A6A5H],SP
+      CMP    SS:[DI+0A7A6H],SP
+      CMP    SS:[BP+0A8A7H],SP
+      CMP    SS:[BX+0A9A8H],SP
+      CMP    SS:[BX+SI+0AAA9H],BP
+      CMP    SS:[BX+DI+0ABAAH],BP
+      CMP    SS:[BP+SI+0ACABH],BP
+      CMP    SS:[BP+DI+0ADACH],BP
+      CMP    SS:[SI+0AEADH],BP
+      CMP    SS:[DI+0AFAEH],BP
+      CMP    SS:[BP+0B0AFH],BP
+      CMP    SS:[BX+0B1B0H],BP
+      CMP    SS:[BX+SI+0B2B1H],SI
+      CMP    SS:[BX+DI+0B3B2H],SI
+      CMP    SS:[BP+SI+0B4B3H],SI
+      CMP    SS:[BP+DI+0B5B4H],SI
+      CMP    SS:[SI+0B6B5H],SI
+      CMP    SS:[DI+0B7B6H],SI
+      CMP    SS:[BP+0B8B7H],SI
+      CMP    SS:[BX+0B9B8H],SI
+      CMP    SS:[BX+SI+0BAB9H],DI
+      CMP    SS:[BX+DI+0BBBAH],DI
+      CMP    SS:[BP+SI+0BCBBH],DI
+      CMP    SS:[BP+DI+0BDBCH],DI
+      CMP    SS:[SI+0BEBDH],DI
+      CMP    SS:[DI+0BFBEH],DI
+      CMP    SS:[BP+0C0BFH],DI
+      CMP    SS:[BX+0C1C0H],DI
+      CMP    SS:[BX+SI],AX
+      CMP    SS:[BX+DI],AX
+      CMP    SS:[BP+SI],AX
+      CMP    SS:[BP+DI],AX
+      CMP    SS:[SI],AX
+      CMP    SS:[DI],AX
+      CMP    SS:[0807H],AX
+      CMP    SS:[BX],AX
+      CMP    SS:[BX+SI],CX
+      CMP    SS:[BX+DI],CX
+      CMP    SS:[BP+SI],CX
+      CMP    SS:[BP+DI],CX
+      CMP    SS:[SI],CX
+      CMP    SS:[DI],CX
+      CMP    SS:[100FH],CX
+      CMP    SS:[BX],CX
+      CMP    SS:[BX+SI],DX
+      CMP    SS:[BX+DI],DX
+      CMP    SS:[BP+SI],DX
+      CMP    SS:[BP+DI],DX
+      CMP    SS:[SI],DX
+      CMP    SS:[DI],DX
+      CMP    SS:[1817H],DX
+      CMP    SS:[BX],DX
+      CMP    SS:[BX+SI],BX
+      CMP    SS:[BX+DI],BX
+      CMP    SS:[BP+SI],BX
+      CMP    SS:[BP+DI],BX
+      CMP    SS:[SI],BX
+      CMP    SS:[DI],BX
+      CMP    SS:[201FH],BX
+      CMP    SS:[BX],BX
+      CMP    SS:[BX+SI],SP
+      CMP    SS:[BX+DI],SP
+      CMP    SS:[BP+SI],SP
+      CMP    SS:[BP+DI],SP
+      CMP    SS:[SI],SP
+      CMP    SS:[DI],SP
+      CMP    SS:[2827H],SP
+      CMP    SS:[BX],SP
+      CMP    SS:[BX+SI],BP
+      CMP    SS:[BX+DI],BP
+      CMP    SS:[BP+SI],BP
+      CMP    SS:[BP+DI],BP
+      CMP    SS:[SI],BP
+      CMP    SS:[DI],BP
+      CMP    SS:[302FH],BP
+      CMP    SS:[BX],BP
+      CMP    SS:[BX+SI],SI
+      CMP    SS:[BX+DI],SI
+      CMP    SS:[BP+SI],SI
+      CMP    SS:[BP+DI],SI
+      CMP    SS:[SI],SI
+      CMP    SS:[DI],SI
+      CMP    SS:[3837H],SI
+      CMP    SS:[BX],SI
+      CMP    SS:[BX+SI],DI
+      CMP    SS:[BX+DI],DI
+      CMP    BH,SS:[BP+DI]
+      CMP    BH,SS:[SI]
+      CMP    BH,SS:[DI]
+      CMP    BH,SS:[403FH]
+      CMP    BH,SS:[BX]
+      CMP    AL,SS:[BX+SI+65]
+      CMP    AL,SS:[BX+SI-128]
+      CMP    AL,SS:[BX+DI+66]
+      CMP    AL,SS:[BX+DI-128]
+      CMP    AL,SS:[BP+SI+67]
+      CMP    AL,SS:[BP+SI-128]
+      CMP    AL,SS:[BP+DI+68]
+      CMP    AL,SS:[BP+DI-128]
+      CMP    AL,SS:[SI+69]
+      CMP    AL,SS:[SI-128]
+      CMP    AL,SS:[DI+70]
+      CMP    AL,SS:[DI-128]
+      CMP    AL,SS:[BP+71]
+      CMP    AL,SS:[BP-128]
+      CMP    AL,SS:[BX+72]
+      CMP    AL,SS:[BX-128]
+      CMP    CL,SS:[BX+SI+73]
+      CMP    CL,SS:[BX+SI-128]
+      CMP    CL,SS:[BX+DI+74]
+      CMP    CL,SS:[BX+DI-128]
+      CMP    CL,SS:[BP+SI+75]
+      CMP    CL,SS:[BP+SI-128]
+      CMP    CL,SS:[BP+DI+76]
+      CMP    CL,SS:[BP+DI-128]
+      CMP    CL,SS:[SI+77]
+      CMP    CL,SS:[SI-128]
+      CMP    CL,SS:[DI+78]
+      CMP    CL,SS:[DI-128]
+      CMP    CL,SS:[BP+79]
+      CMP    CL,SS:[BP-128]
+      CMP    CL,SS:[BX+80]
+      CMP    CL,SS:[BX-128]
+      CMP    DL,SS:[BX+SI+81]
+      CMP    DL,SS:[BX+SI-128]
+      CMP    DL,SS:[BX+DI+82]
+      CMP    DL,SS:[BX+DI-128]
+      CMP    DL,SS:[BP+SI+83]
+      CMP    DL,SS:[BP+SI-128]
+      CMP    DL,SS:[BP+DI+84]
+      CMP    DL,SS:[BP+DI-128]
+      CMP    DL,SS:[SI+85]
+      CMP    DL,SS:[SI-128]
+      CMP    DL,SS:[DI+86]
+      CMP    DL,SS:[DI-128]
+      CMP    DL,SS:[BP+87]
+      CMP    DL,SS:[BP-128]
+      CMP    DL,SS:[BX+88]
+      CMP    DL,SS:[BX-128]
+      CMP    BL,SS:[BX+SI+89]
+      CMP    BL,SS:[BX+SI-128]
+      CMP    BL,SS:[BX+DI+90]
+      CMP    BL,SS:[BX+DI-128]
+      CMP    BL,SS:[BP+SI+91]
+      CMP    BL,SS:[BP+SI-128]
+      CMP    BL,SS:[BP+DI+92]
+      CMP    BL,SS:[BP+DI-128]
+      CMP    BL,SS:[SI+93]
+      CMP    BL,SS:[SI-128]
+      CMP    BL,SS:[DI+94]
+      CMP    BL,SS:[DI-128]
+      CMP    BL,SS:[BP+95]
+      CMP    BL,SS:[BP-128]
+      CMP    BL,SS:[BX+96]
+      CMP    BL,SS:[BX-128]
+      CMP    AH,SS:[BX+SI+97]
+      CMP    AH,SS:[BX+SI-128]
+      CMP    AH,SS:[BX+DI+98]
+      CMP    AH,SS:[BX+DI-128]
+      CMP    AH,SS:[BP+SI+99]
+      CMP    AH,SS:[BP+SI-128]
+      CMP    AH,SS:[BP+DI+100]
+      CMP    AH,SS:[BP+DI-128]
+      CMP    AH,SS:[SI+101]
+      CMP    AH,SS:[SI-128]
+      CMP    AH,SS:[DI+102]
+      CMP    AH,SS:[DI-128]
+      CMP    AH,SS:[BP+103]
+      CMP    AH,SS:[BP-128]
+      CMP    AH,SS:[BX+104]
+      CMP    AH,SS:[BX-128]
+      CMP    AL,SS:[BX+SI+8281H]
+      CMP    AL,SS:[BX+DI+8382H]
+      CMP    AL,SS:[BP+SI+8483H]
+      CMP    AL,SS:[BP+DI+8584H]
+      CMP    AL,SS:[SI+8685H]
+      CMP    AL,SS:[DI+8786H]
+      CMP    AL,SS:[BP+8887H]
+      CMP    AL,SS:[BX+8988H]
+      CMP    CL,SS:[BX+SI+8A89H]
+      CMP    CL,SS:[BX+DI+8B8AH]
+      CMP    CL,SS:[BP+SI+8C8BH]
+      CMP    CL,SS:[BP+DI+8D8CH]
+      CMP    CL,SS:[SI+8E8DH]
+      CMP    CL,SS:[DI+8F8EH]
+      CMP    CL,SS:[BP+908FH]
+      CMP    CL,SS:[BX+9190H]
+      CMP    DL,SS:[BX+SI+9291H]
+      CMP    DL,SS:[BX+DI+9392H]
+      CMP    DL,SS:[BP+SI+9493H]
+      CMP    DL,SS:[BP+DI+9594H]
+      CMP    DL,SS:[SI+9695H]
+      CMP    DL,SS:[DI+9796H]
+      CMP    DL,SS:[BP+9897H]
+      CMP    DL,SS:[BX+9998H]
+      CMP    BL,SS:[BX+SI+9A99H]
+      CMP    BL,SS:[BX+DI+9B9AH]
+      CMP    BL,SS:[BP+SI+9C9BH]
+      CMP    BL,SS:[BP+DI+9D9CH]
+      CMP    BL,SS:[SI+9E9DH]
+      CMP    BL,SS:[DI+9F9EH]
+      CMP    BL,SS:[BP+0A09FH]
+      CMP    BL,SS:[BX+0A1A0H]
+      CMP    AH,SS:[BX+SI+0A2A1H]
+      CMP    AH,SS:[BX+DI+0A3A2H]
+      CMP    AH,SS:[BP+SI+0A4A3H]
+      CMP    AH,SS:[BP+DI+0A5A4H]
+      CMP    AH,SS:[SI+0A6A5H]
+      CMP    AH,SS:[DI+0A7A6H]
+      CMP    AH,SS:[BP+0A8A7H]
+      CMP    AH,SS:[BX+0A9A8H]
+      CMP    DI,SS:[SI]
+      CMP    DI,SS:[DI]
+      CMP    DI,SS:[403FH]
+      CMP    DI,SS:[BX]
+      CMP    AX,SS:[BX+SI+65]
+      CMP    AX,SS:[BX+SI-128]
+      CMP    AX,SS:[BX+DI+66]
+      CMP    AX,SS:[BX+DI-128]
+      CMP    AX,SS:[BP+SI+67]
+      CMP    AX,SS:[BP+SI-128]
+      CMP    AX,SS:[BP+DI+68]
+      CMP    AX,SS:[BP+DI-128]
+      CMP    AX,SS:[SI+69]
+      CMP    AX,SS:[SI-128]
+      CMP    AX,SS:[DI+70]
+      CMP    AX,SS:[DI-128]
+      CMP    AX,SS:[BP+71]
+      CMP    AX,SS:[BP-128]
+      CMP    AX,SS:[BX+72]
+      CMP    AX,SS:[BX-128]
+      CMP    CX,SS:[BX+SI+73]
+      CMP    CX,SS:[BX+SI-128]
+      CMP    CX,SS:[BX+DI+74]
+      CMP    CX,SS:[BX+DI-128]
+      CMP    CX,SS:[BP+SI+75]
+      CMP    CX,SS:[BP+SI-128]
+      CMP    CX,SS:[BP+DI+76]
+      CMP    CX,SS:[BP+DI-128]
+      CMP    CX,SS:[SI+77]
+      CMP    CX,SS:[SI-128]
+      CMP    CX,SS:[DI+78]
+      CMP    CX,SS:[DI-128]
+      CMP    CX,SS:[BP+79]
+      CMP    CX,SS:[BP-128]
+      CMP    CX,SS:[BX+80]
+      CMP    CX,SS:[BX-128]
+      CMP    DX,SS:[BX+SI+81]
+      CMP    DX,SS:[BX+SI-128]
+      CMP    DX,SS:[BX+DI+82]
+      CMP    DX,SS:[BX+DI-128]
+      CMP    DX,SS:[BP+SI+83]
+      CMP    DX,SS:[BP+SI-128]
+      CMP    DX,SS:[BP+DI+84]
+      CMP    DX,SS:[BP+DI-128]
+      CMP    DX,SS:[SI+85]
+      CMP    DX,SS:[SI-128]
+      CMP    DX,SS:[DI+86]
+      CMP    DX,SS:[DI-128]
+      CMP    DX,SS:[BP+87]
+      CMP    DX,SS:[BP-128]
+      CMP    DX,SS:[BX+88]
+      CMP    DX,SS:[BX-128]
+      CMP    BX,SS:[BX+SI+89]
+      CMP    BX,SS:[BX+SI-128]
+      CMP    BX,SS:[BX+DI+90]
+      CMP    BX,SS:[BX+DI-128]
+      CMP    BX,SS:[BP+SI+91]
+      CMP    BX,SS:[BP+SI-128]
+      CMP    BX,SS:[BP+DI+92]
+      CMP    BX,SS:[BP+DI-128]
+      CMP    BX,SS:[SI+93]
+      CMP    BX,SS:[SI-128]
+      CMP    BX,SS:[DI+94]
+      CMP    BX,SS:[DI-128]
+      CMP    BX,SS:[BP+95]
+      CMP    BX,SS:[BP-128]
+      CMP    BX,SS:[BX+96]
+      CMP    BX,SS:[BX-128]
+      CMP    SP,SS:[BX+SI+97]
+      CMP    SP,SS:[BX+SI-128]
+      CMP    SP,SS:[BX+DI+98]
+      CMP    SP,SS:[BX+DI-128]
+      CMP    SP,SS:[BP+SI+99]
+      CMP    SP,SS:[BP+SI-128]
+      CMP    SP,SS:[BP+DI+100]
+      CMP    SP,SS:[BP+DI-128]
+      CMP    SP,SS:[SI+101]
+      CMP    SP,SS:[SI-128]
+      CMP    SP,SS:[DI+102]
+      CMP    SP,SS:[DI-128]
+      CMP    SP,SS:[BP+103]
+      CMP    SP,SS:[BP-128]
+      CMP    SP,SS:[BX+104]
+      CMP    SP,SS:[BX-128]
+      CMP    BP,SS:[BX+SI+105]
+      CMP    BP,SS:[BX+SI-128]
+      CMP    BP,SS:[BX+DI+106]
+      CMP    BP,SS:[BX+DI-128]
+      CMP    BP,SS:[BP+SI+107]
+      CMP    BP,SS:[BP+SI-128]
+      CMP    BP,SS:[BP+DI+108]
+      CMP    BP,SS:[BP+DI-128]
+      CMP    BP,SS:[SI+109]
+      CMP    BP,SS:[SI-128]
+      CMP    BP,SS:[DI+110]
+      CMP    BP,SS:[DI-128]
+      CMP    BP,SS:[BP+111]
+      CMP    BP,SS:[BP-128]
+      CMP    BP,SS:[BX+112]
+      CMP    BP,SS:[BX-128]
+      CMP    SI,SS:[BX+SI+113]
+      CMP    SI,SS:[BX+SI-128]
+      CMP    SI,SS:[BX+DI+114]
+      CMP    SI,SS:[BX+DI-128]
+      CMP    SI,SS:[BP+SI+115]
+      CMP    SI,SS:[BP+SI-128]
+      CMP    SI,SS:[BP+DI+116]
+      CMP    SI,SS:[BP+DI-128]
+      CMP    SI,SS:[SI+117]
+      CMP    SI,SS:[SI-128]
+      CMP    SI,SS:[DI+118]
+      CMP    SI,SS:[DI-128]
+      CMP    SI,SS:[BP+119]
+      CMP    SI,SS:[BP-128]
+      CMP    SI,SS:[BX+120]
+      CMP    SI,SS:[BX-128]
+      CMP    DI,SS:[BX+SI+121]
+      CMP    DI,SS:[BX+SI-128]
+      CMP    DI,SS:[BX+DI+122]
+      CMP    DI,SS:[BX+DI-128]
+      CMP    DI,SS:[BP+SI+123]
+      CMP    DI,SS:[BP+SI-128]
+      CMP    DI,SS:[BP+DI+124]
+      CMP    DI,SS:[BP+DI-128]
+      CMP    DI,SS:[SI+125]
+      CMP    DI,SS:[SI-128]
+      CMP    DI,SS:[DI+126]
+      CMP    DI,SS:[DI-128]
+      CMP    DI,SS:[BP+127]
+      CMP    DI,SS:[BP-128]
+      CMP    DI,SS:[BX-128]
+      CMP    DI,SS:[BX+0]
+      CMP    AX,SS:[BX+SI+8281H]
+      CMP    AX,SS:[BX+DI+8382H]
+      CMP    AX,SS:[BP+SI+8483H]
+      CMP    AX,SS:[BP+DI+8584H]
+      CMP    AX,SS:[SI+8685H]
+      CMP    AX,SS:[DI+8786H]
+      CMP    AX,SS:[BP+8887H]
+      CMP    AX,SS:[BX+8988H]
+      CMP    CX,SS:[BX+SI+8A89H]
+      CMP    CX,SS:[BX+DI+8B8AH]
+      CMP    CX,SS:[BP+SI+8C8BH]
+      CMP    CX,SS:[BP+DI+8D8CH]
+      CMP    CX,SS:[SI+8E8DH]
+      CMP    CX,SS:[DI+8F8EH]
+      CMP    CX,SS:[BP+908FH]
+      CMP    CX,SS:[BX+9190H]
+      CMP    DX,SS:[BX+SI+9291H]
+      CMP    DX,SS:[BX+DI+9392H]
+      CMP    DX,SS:[BP+SI+9493H]
+      CMP    DX,SS:[BP+DI+9594H]
+      CMP    DX,SS:[SI+9695H]
+      CMP    DX,SS:[DI+9796H]
+      CMP    DX,SS:[BP+9897H]
+      CMP    DX,SS:[BX+9998H]
+      CMP    BX,SS:[BX+SI+9A99H]
+      CMP    BX,SS:[BX+DI+9B9AH]
+      CMP    BX,SS:[BP+SI+9C9BH]
+      CMP    BX,SS:[BP+DI+9D9CH]
+      CMP    BX,SS:[SI+9E9DH]
+      CMP    BX,SS:[DI+9F9EH]
+      CMP    BX,SS:[BP+0A09FH]
+      CMP    BX,SS:[BX+0A1A0H]
+      CMP    SP,SS:[BX+SI+0A2A1H]
+      CMP    SP,SS:[BX+DI+0A3A2H]
+      CMP    SP,SS:[BP+SI+0A4A3H]
+      CMP    SP,SS:[BP+DI+0A5A4H]
+      CMP    SP,SS:[SI+0A6A5H]
+      CMP    SP,SS:[DI+0A7A6H]
+      CMP    SP,SS:[BP+0A8A7H]
+      CMP    SP,SS:[BX+0A9A8H]
+      CMP    BP,SS:[BX+SI+0AAA9H]
+      CMP    BP,SS:[BX+DI+0ABAAH]
+      CMP    BP,SS:[BP+SI+0ACABH]
+      CMP    BP,SS:[BP+DI+0ADACH]
+      CMP    BP,SS:[SI+0AEADH]
+      CMP    BP,SS:[DI+0AFAEH]
+      CMP    BP,SS:[BP+0B0AFH]
+      CMP    BP,SS:[BX+0B1B0H]
+      CMP    SI,SS:[BX+SI+0B2B1H]
+      CMP    SI,SS:[BX+DI+0B3B2H]
+      CMP    SI,SS:[BP+SI+0B4B3H]
+      CMP    SI,SS:[BP+DI+0B5B4H]
+      CMP    SI,SS:[SI+0B6B5H]
+      CMP    SI,SS:[DI+0B7B6H]
+      CMP    SI,SS:[BP+0B8B7H]
+      CMP    SI,SS:[BX+0B9B8H]
+      CMP    DI,SS:[BX+SI+0BAB9H]
+      CMP    DI,SS:[BX+DI+0BBBAH]
+      CMP    DI,SS:[BP+SI+0BCBBH]
+      CMP    DI,SS:[BP+DI+0BDBCH]
+      CMP    DI,SS:[SI+0BEBDH]
+      CMP    DI,SS:[DI+0BFBEH]
+      CMP    DI,SS:[BP+0C0BFH]
+      CMP    DI,SS:[BX+0C1C0H]
+      CMP    AX,SS:[BX+SI]
+      CMP    AX,SS:[BX+DI]
+      CMP    AX,SS:[BP+SI]
+      CMP    AX,SS:[BP+DI]
+      CMP    AX,SS:[SI]
+      CMP    AX,SS:[DI]
+      CMP    AX,SS:[0807H]
+      CMP    AX,SS:[BX]
+      CMP    CX,SS:[BX+SI]
+      CMP    CX,SS:[BX+DI]
+      CMP    CX,SS:[BP+SI]
+      CMP    CX,SS:[BP+DI]
+      CMP    CX,SS:[SI]
+      CMP    CX,SS:[DI]
+      CMP    CX,SS:[100FH]
+      CMP    CX,SS:[BX]
+      CMP    DX,SS:[BX+SI]
+      CMP    DX,SS:[BX+DI]
+      CMP    DX,SS:[BP+SI]
+      CMP    DX,SS:[BP+DI]
+      CMP    DX,SS:[SI]
+      CMP    DX,SS:[DI]
+      CMP    DX,SS:[1817H]
+      CMP    DX,SS:[BX]
+      CMP    BX,SS:[BX+SI]
+      CMP    BX,SS:[BX+DI]
+      CMP    BX,SS:[BP+SI]
+      CMP    BX,SS:[BP+DI]
+      CMP    BX,SS:[SI]
+      CMP    BX,SS:[DI]
+      CMP    BX,SS:[201FH]
+      CMP    BX,SS:[BX]
+      CMP    SP,SS:[BX+SI]
+      CMP    SP,SS:[BX+DI]
+      CMP    SP,SS:[BP+SI]
+      CMP    SP,SS:[BP+DI]
+      CMP    SP,SS:[SI]
+      CMP    SP,SS:[DI]
+      CMP    SP,SS:[2827H]
+      CMP    SP,SS:[BX]
+      CMP    BP,SS:[BX+SI]
+      CMP    BP,SS:[BX+DI]
+      CMP    BP,SS:[BP+SI]
+      CMP    BP,SS:[BP+DI]
+      CMP    BP,SS:[SI]
+      CMP    BP,SS:[DI]
+      CMP    BP,SS:[302FH]
+      CMP    BP,SS:[BX]
+      CMP    SI,SS:[BX+SI]
+      CMP    SI,SS:[BX+DI]
+      CMP    SI,SS:[BP+SI]
+      CMP    SI,SS:[BP+DI]
+      CMP    SI,SS:[SI]
+      CMP    SI,SS:[DI]
+      CMP    SI,SS:[3837H]
+      CMP    SI,SS:[BX]
+      CMP    DI,SS:[BX+SI]
+      CMP    DI,SS:[BX+DI]
+      CMP    DI,SS:[BP+SI]
+      CMP    DI,SS:[BP+DI]
+      ADD    BYTE PTR SS:[BX+DI+8382H],84H
+      ADD    BYTE PTR SS:[BP+SI+8382H],84H
+      ADD    BYTE PTR SS:[BP+DI+8382H],84H
+      ADD    BYTE PTR SS:[SI+8382H],84H
+      ADD    BYTE PTR SS:[DI+8382H],84H
+      ADD    BYTE PTR SS:[BP+8382H],84H
+      ADD    BYTE PTR SS:[BX+8382H],84H
+      OR     BYTE PTR SS:[BX+SI+8382H],84H
+      OR     BYTE PTR SS:[BX+DI+8382H],84H
+      OR     BYTE PTR SS:[BP+SI+8382H],84H
+      OR     BYTE PTR SS:[BP+DI+8382H],84H
+      OR     BYTE PTR SS:[SI+8382H],84H
+      OR     BYTE PTR SS:[DI+8382H],84H
+      OR     BYTE PTR SS:[BP+8382H],84H
+      OR     BYTE PTR SS:[BX+8382H],84H
+      ADC    BYTE PTR SS:[BX+SI+8382H],84H
+      ADC    BYTE PTR SS:[BX+DI+8382H],84H
+      ADC    BYTE PTR SS:[BP+SI+8382H],84H
+      ADC    BYTE PTR SS:[BP+DI+8382H],84H
+      ADC    BYTE PTR SS:[SI+8382H],84H
+      ADC    BYTE PTR SS:[DI+8382H],84H
+      ADC    BYTE PTR SS:[BP+8382H],84H
+      ADC    BYTE PTR SS:[BX+8382H],84H
+      SBB    BYTE PTR SS:[BX+SI+8382H],84H
+      SBB    BYTE PTR SS:[BX+DI+8382H],84H
+      SBB    BYTE PTR SS:[BP+SI+8382H],84H
+      SBB    BYTE PTR SS:[BP+DI+8382H],84H
+      SBB    BYTE PTR SS:[SI+8382H],84H
+      SBB    BYTE PTR SS:[DI+8382H],84H
+      SBB    BYTE PTR SS:[BP+8382H],84H
+      SBB    BYTE PTR SS:[BX+8382H],84H
+      AND    BYTE PTR SS:[BX+SI+8382H],84H
+      AND    BYTE PTR SS:[BX+DI+8382H],84H
+      AND    BYTE PTR SS:[BP+SI+8382H],84H
+      AND    BYTE PTR SS:[BP+DI+8382H],84H
+      AND    BYTE PTR SS:[SI+8382H],84H
+      AND    BYTE PTR SS:[DI+8382H],84H
+      AND    BYTE PTR SS:[BP+8382H],84H
+      AND    BYTE PTR SS:[BX+8382H],84H
+      SUB    BYTE PTR SS:[BX+SI+8382H],84H
+      SUB    BYTE PTR SS:[BX+DI+8382H],84H
+      SUB    BYTE PTR SS:[BP+SI+8382H],84H
+      SUB    BYTE PTR SS:[BP+DI+8382H],84H
+      SUB    BYTE PTR SS:[SI+8382H],84H
+      SUB    BYTE PTR SS:[DI+8382H],84H
+      SUB    BYTE PTR SS:[BP+8382H],84H
+      SUB    BYTE PTR SS:[BX+8382H],84H
+      XOR    BYTE PTR SS:[BX+SI+8382H],84H
+      XOR    BYTE PTR SS:[BX+DI+8382H],84H
+      XOR    BYTE PTR SS:[BP+SI+8382H],84H
+      XOR    BYTE PTR SS:[BP+DI+8382H],84H
+      XOR    BYTE PTR SS:[SI+8382H],84H
+      XOR    BYTE PTR SS:[DI+8382H],84H
+      XOR    BYTE PTR SS:[BP+8382H],84H
+      XOR    BYTE PTR SS:[BX+8382H],84H
+      CMP    BYTE PTR SS:[BX+SI+8382H],84H
+      CMP    BYTE PTR SS:[BX+DI+8382H],84H
+      CMP    BYTE PTR SS:[BP+SI+8382H],84H
+      CMP    BYTE PTR SS:[BP+DI+8382H],84H
+      CMP    BYTE PTR SS:[SI+8382H],84H
+      CMP    BYTE PTR SS:[DI+8382H],84H
+      CMP    BYTE PTR SS:[BP+8382H],84H
+      CMP    BYTE PTR SS:[BX+8382H],84H
+      ADD    BYTE PTR SS:[BX+SI],82H
+      ADD    WORD PTR SS:[BP+SI+8483H],8685H
+      ADD    WORD PTR SS:[BP+DI+8483H],8685H
+      ADD    WORD PTR SS:[SI+8483H],8685H
+      ADD    WORD PTR SS:[DI+8483H],8685H
+      ADD    WORD PTR SS:[BP+8483H],8685H
+      ADD    WORD PTR SS:[BX+8483H],8685H
+      OR     WORD PTR SS:[BX+SI+8483H],8685H
+      OR     WORD PTR SS:[BX+DI+8483H],8685H
+      OR     WORD PTR SS:[BP+SI+8483H],8685H
+      OR     WORD PTR SS:[BP+DI+8483H],8685H
+      OR     WORD PTR SS:[SI+8483H],8685H
+      OR     WORD PTR SS:[DI+8483H],8685H
+      OR     WORD PTR SS:[BP+8483H],8685H
+      OR     WORD PTR SS:[BX+8483H],8685H
+      ADC    WORD PTR SS:[BX+SI+8483H],8685H
+      ADC    WORD PTR SS:[BX+DI+8483H],8685H
+      ADC    WORD PTR SS:[BP+SI+8483H],8685H
+      ADC    WORD PTR SS:[BP+DI+8483H],8685H
+      ADC    WORD PTR SS:[SI+8483H],8685H
+      ADC    WORD PTR SS:[DI+8483H],8685H
+      ADC    WORD PTR SS:[BP+8483H],8685H
+      ADC    WORD PTR SS:[BX+8483H],8685H
+      SBB    WORD PTR SS:[BX+SI+8483H],8685H
+      SBB    WORD PTR SS:[BX+DI+8483H],8685H
+      SBB    WORD PTR SS:[BP+SI+8483H],8685H
+      SBB    WORD PTR SS:[BP+DI+8483H],8685H
+      SBB    WORD PTR SS:[SI+8483H],8685H
+      SBB    WORD PTR SS:[DI+8483H],8685H
+      SBB    WORD PTR SS:[BP+8483H],8685H
+      SBB    WORD PTR SS:[BX+8483H],8685H
+      AND    WORD PTR SS:[BX+SI+8483H],8685H
+      AND    WORD PTR SS:[BX+DI+8483H],8685H
+      AND    WORD PTR SS:[BP+SI+8483H],8685H
+      AND    WORD PTR SS:[BP+DI+8483H],8685H
+      AND    WORD PTR SS:[SI+8483H],8685H
+      AND    WORD PTR SS:[DI+8483H],8685H
+      AND    WORD PTR SS:[BP+8483H],8685H
+      AND    WORD PTR SS:[BX+8483H],8685H
+      SUB    WORD PTR SS:[BX+SI+8483H],8685H
+      SUB    WORD PTR SS:[BX+DI+8483H],8685H
+      SUB    WORD PTR SS:[BP+SI+8483H],8685H
+      SUB    WORD PTR SS:[BP+DI+8483H],8685H
+      SUB    WORD PTR SS:[SI+8483H],8685H
+      SUB    WORD PTR SS:[DI+8483H],8685H
+      SUB    WORD PTR SS:[BP+8483H],8685H
+      SUB    WORD PTR SS:[BX+8483H],8685H
+      XOR    WORD PTR SS:[BX+SI+8483H],8685H
+      XOR    WORD PTR SS:[BX+DI+8483H],8685H
+      XOR    WORD PTR SS:[BP+SI+8483H],8685H
+      XOR    WORD PTR SS:[BP+DI+8483H],8685H
+      XOR    WORD PTR SS:[SI+8483H],8685H
+      XOR    WORD PTR SS:[DI+8483H],8685H
+      XOR    WORD PTR SS:[BP+8483H],8685H
+      XOR    WORD PTR SS:[BX+8483H],8685H
+      CMP    WORD PTR SS:[BX+SI+8483H],8685H
+      CMP    WORD PTR SS:[BX+DI+8483H],8685H
+      CMP    WORD PTR SS:[BP+SI+8483H],8685H
+      CMP    WORD PTR SS:[BP+DI+8483H],8685H
+      CMP    WORD PTR SS:[SI+8483H],8685H
+      CMP    WORD PTR SS:[DI+8483H],8685H
+      CMP    WORD PTR SS:[BP+8483H],8685H
+      CMP    WORD PTR SS:[BX+8483H],8685H
+      ADD    WORD PTR SS:[BX+SI],8483H
+      ADD    WORD PTR SS:[SI+8685H],-79H
+      ADD    WORD PTR SS:[DI+8685H],-79H
+      ADD    WORD PTR SS:[BP+8685H],-79H
+      ADD    WORD PTR SS:[BX+8685H],-79H
+      OR     WORD PTR SS:[BX+SI+8685H],-79H
+      OR     WORD PTR SS:[BX+DI+8685H],-79H
+      OR     WORD PTR SS:[BP+SI+8685H],-79H
+      OR     WORD PTR SS:[BP+DI+8685H],-79H
+      OR     WORD PTR SS:[SI+8685H],-79H
+      OR     WORD PTR SS:[DI+8685H],-79H
+      OR     WORD PTR SS:[BP+8685H],-79H
+      OR     WORD PTR SS:[BX+8685H],-79H
+      ADC    WORD PTR SS:[BX+SI+8685H],-79H
+      ADC    WORD PTR SS:[BX+DI+8685H],-79H
+      ADC    WORD PTR SS:[BP+SI+8685H],-79H
+      ADC    WORD PTR SS:[BP+DI+8685H],-79H
+      ADC    WORD PTR SS:[SI+8685H],-79H
+      ADC    WORD PTR SS:[DI+8685H],-79H
+      ADC    WORD PTR SS:[BP+8685H],-79H
+      ADC    WORD PTR SS:[BX+8685H],-79H
+      SBB    WORD PTR SS:[BX+SI+8685H],-79H
+      SBB    WORD PTR SS:[BX+DI+8685H],-79H
+      SBB    WORD PTR SS:[BP+SI+8685H],-79H
+      SBB    WORD PTR SS:[BP+DI+8685H],-79H
+      SBB    WORD PTR SS:[SI+8685H],-79H
+      SBB    WORD PTR SS:[DI+8685H],-79H
+      SBB    WORD PTR SS:[BP+8685H],-79H
+      SBB    WORD PTR SS:[BX+8685H],-79H
+      AND    WORD PTR SS:[BX+SI+8685H],-79H
+      AND    WORD PTR SS:[BX+DI+8685H],-79H
+      AND    WORD PTR SS:[BP+SI+8685H],-79H
+      AND    WORD PTR SS:[BP+DI+8685H],-79H
+      AND    WORD PTR SS:[SI+8685H],-79H
+      AND    WORD PTR SS:[DI+8685H],-79H
+      AND    WORD PTR SS:[BP+8685H],-79H
+      AND    WORD PTR SS:[BX+8685H],-79H
+      SUB    WORD PTR SS:[BX+SI+8685H],-79H
+      SUB    WORD PTR SS:[BX+DI+8685H],-79H
+      SUB    WORD PTR SS:[BP+SI+8685H],-79H
+      SUB    WORD PTR SS:[BP+DI+8685H],-79H
+      SUB    WORD PTR SS:[SI+8685H],-79H
+      SUB    WORD PTR SS:[DI+8685H],-79H
+      SUB    WORD PTR SS:[BP+8685H],-79H
+      SUB    WORD PTR SS:[BX+8685H],-79H
+      XOR    WORD PTR SS:[BX+SI+8685H],-79H
+      XOR    WORD PTR SS:[BX+DI+8685H],-79H
+      XOR    WORD PTR SS:[BP+SI+8685H],-79H
+      XOR    WORD PTR SS:[BP+DI+8685H],-79H
+      XOR    WORD PTR SS:[SI+8685H],-79H
+      XOR    WORD PTR SS:[DI+8685H],-79H
+      XOR    WORD PTR SS:[BP+8685H],-79H
+      XOR    WORD PTR SS:[BX+8685H],-79H
+      CMP    WORD PTR SS:[BX+SI+8685H],-79H
+      CMP    WORD PTR SS:[BX+DI+8685H],-79H
+      CMP    WORD PTR SS:[BP+SI+8685H],-79H
+      CMP    WORD PTR SS:[BP+DI+8685H],-79H
+      CMP    WORD PTR SS:[SI+8685H],-79H
+      CMP    WORD PTR SS:[DI+8685H],-79H
+      CMP    WORD PTR SS:[BP+8685H],-79H
+      CMP    WORD PTR SS:[BX+8685H],-79H
+      ADD    WORD PTR SS:[BX+SI],-7BH
+      TEST   AL,SS:[DI+8786H]
+      TEST   AL,SS:[BP+8786H]
+      TEST   AL,SS:[BX+8786H]
+      TEST   CL,SS:[BX+SI+8786H]
+      TEST   CL,SS:[BX+DI+8786H]
+      TEST   CL,SS:[BP+SI+8786H]
+      TEST   CL,SS:[BP+DI+8786H]
+      TEST   CL,SS:[SI+8786H]
+      TEST   CL,SS:[DI+8786H]
+      TEST   CL,SS:[BP+8786H]
+      TEST   CL,SS:[BX+8786H]
+      TEST   DL,SS:[BX+SI+8786H]
+      TEST   DL,SS:[BX+DI+8786H]
+      TEST   DL,SS:[BP+SI+8786H]
+      TEST   DL,SS:[BP+DI+8786H]
+      TEST   DL,SS:[SI+8786H]
+      TEST   DL,SS:[DI+8786H]
+      TEST   DL,SS:[BP+8786H]
+      TEST   DL,SS:[BX+8786H]
+      TEST   BL,SS:[BX+SI+8786H]
+      TEST   BL,SS:[BX+DI+8786H]
+      TEST   BL,SS:[BP+SI+8786H]
+      TEST   BL,SS:[BP+DI+8786H]
+      TEST   BL,SS:[SI+8786H]
+      TEST   BL,SS:[DI+8786H]
+      TEST   BL,SS:[BP+8786H]
+      TEST   BL,SS:[BX+8786H]
+      TEST   AH,SS:[BX+SI+8786H]
+      TEST   AH,SS:[BX+DI+8786H]
+      TEST   AH,SS:[BP+SI+8786H]
+      TEST   AH,SS:[BP+DI+8786H]
+      TEST   AH,SS:[SI+8786H]
+      TEST   AH,SS:[DI+8786H]
+      TEST   AH,SS:[BP+8786H]
+      TEST   AH,SS:[BX+8786H]
+      TEST   AL,SS:[BX+SI]
+      TEST   AX,SS:[BP+8887H]
+      TEST   AX,SS:[BX+8887H]
+      TEST   CX,SS:[BX+SI+8887H]
+      TEST   CX,SS:[BX+DI+8887H]
+      TEST   CX,SS:[BP+SI+8887H]
+      TEST   CX,SS:[BP+DI+8887H]
+      TEST   CX,SS:[SI+8887H]
+      TEST   CX,SS:[DI+8887H]
+      TEST   CX,SS:[BP+8887H]
+      TEST   CX,SS:[BX+8887H]
+      TEST   DX,SS:[BX+SI+8887H]
+      TEST   DX,SS:[BX+DI+8887H]
+      TEST   DX,SS:[BP+SI+8887H]
+      TEST   DX,SS:[BP+DI+8887H]
+      TEST   DX,SS:[SI+8887H]
+      TEST   DX,SS:[DI+8887H]
+      TEST   DX,SS:[BP+8887H]
+      TEST   DX,SS:[BX+8887H]
+      TEST   BX,SS:[BX+SI+8887H]
+      TEST   BX,SS:[BX+DI+8887H]
+      TEST   BX,SS:[BP+SI+8887H]
+      TEST   BX,SS:[BP+DI+8887H]
+      TEST   BX,SS:[SI+8887H]
+      TEST   BX,SS:[DI+8887H]
+      TEST   BX,SS:[BP+8887H]
+      TEST   BX,SS:[BX+8887H]
+      TEST   SP,SS:[BX+SI+8887H]
+      TEST   SP,SS:[BX+DI+8887H]
+      TEST   SP,SS:[BP+SI+8887H]
+      TEST   SP,SS:[BP+DI+8887H]
+      TEST   SP,SS:[SI+8887H]
+      TEST   SP,SS:[DI+8887H]
+      TEST   SP,SS:[BP+8887H]
+      TEST   SP,SS:[BX+8887H]
+      TEST   BP,SS:[BX+SI+8887H]
+      TEST   BP,SS:[BX+DI+8887H]
+      TEST   BP,SS:[BP+SI+8887H]
+      TEST   BP,SS:[BP+DI+8887H]
+      TEST   BP,SS:[SI+8887H]
+      TEST   BP,SS:[DI+8887H]
+      TEST   BP,SS:[BP+8887H]
+      TEST   BP,SS:[BX+8887H]
+      TEST   SI,SS:[BX+SI+8887H]
+      TEST   SI,SS:[BX+DI+8887H]
+      TEST   SI,SS:[BP+SI+8887H]
+      TEST   SI,SS:[BP+DI+8887H]
+      TEST   SI,SS:[SI+8887H]
+      TEST   SI,SS:[DI+8887H]
+      TEST   SI,SS:[BP+8887H]
+      TEST   SI,SS:[BX+8887H]
+      TEST   DI,SS:[BX+SI+8887H]
+      TEST   DI,SS:[BX+DI+8887H]
+      TEST   DI,SS:[BP+SI+8887H]
+      TEST   DI,SS:[BP+DI+8887H]
+      TEST   DI,SS:[SI+8887H]
+      TEST   DI,SS:[DI+8887H]
+      TEST   DI,SS:[BP+8887H]
+      TEST   DI,SS:[BX+8887H]
+      TEST   AX,SS:[BX+SI]
+      XCHG   AL,SS:[BX+8988H]
+      XCHG   CL,SS:[BX+SI+8988H]
+      XCHG   CL,SS:[BX+DI+8988H]
+      XCHG   CL,SS:[BP+SI+8988H]
+      XCHG   CL,SS:[BP+DI+8988H]
+      XCHG   CL,SS:[SI+8988H]
+      XCHG   CL,SS:[DI+8988H]
+      XCHG   CL,SS:[BP+8988H]
+      XCHG   CL,SS:[BX+8988H]
+      XCHG   DL,SS:[BX+SI+8988H]
+      XCHG   DL,SS:[BX+DI+8988H]
+      XCHG   DL,SS:[BP+SI+8988H]
+      XCHG   DL,SS:[BP+DI+8988H]
+      XCHG   DL,SS:[SI+8988H]
+      XCHG   DL,SS:[DI+8988H]
+      XCHG   DL,SS:[BP+8988H]
+      XCHG   DL,SS:[BX+8988H]
+      XCHG   BL,SS:[BX+SI+8988H]
+      XCHG   BL,SS:[BX+DI+8988H]
+      XCHG   BL,SS:[BP+SI+8988H]
+      XCHG   BL,SS:[BP+DI+8988H]
+      XCHG   BL,SS:[SI+8988H]
+      XCHG   BL,SS:[DI+8988H]
+      XCHG   BL,SS:[BP+8988H]
+      XCHG   BL,SS:[BX+8988H]
+      XCHG   AH,SS:[BX+SI+8988H]
+      XCHG   AH,SS:[BX+DI+8988H]
+      XCHG   AH,SS:[BP+SI+8988H]
+      XCHG   AH,SS:[BP+DI+8988H]
+      XCHG   AH,SS:[SI+8988H]
+      XCHG   AH,SS:[DI+8988H]
+      XCHG   AH,SS:[BP+8988H]
+      XCHG   AH,SS:[BX+8988H]
+      XCHG   AL,SS:[BX+SI]
+      XCHG   CX,SS:[BX+SI+8A89H]
+      XCHG   CX,SS:[BX+DI+8A89H]
+      XCHG   CX,SS:[BP+SI+8A89H]
+      XCHG   CX,SS:[BP+DI+8A89H]
+      XCHG   CX,SS:[SI+8A89H]
+      XCHG   CX,SS:[DI+8A89H]
+      XCHG   CX,SS:[BP+8A89H]
+      XCHG   CX,SS:[BX+8A89H]
+      XCHG   DX,SS:[BX+SI+8A89H]
+      XCHG   DX,SS:[BX+DI+8A89H]
+      XCHG   DX,SS:[BP+SI+8A89H]
+      XCHG   DX,SS:[BP+DI+8A89H]
+      XCHG   DX,SS:[SI+8A89H]
+      XCHG   DX,SS:[DI+8A89H]
+      XCHG   DX,SS:[BP+8A89H]
+      XCHG   DX,SS:[BX+8A89H]
+      XCHG   BX,SS:[BX+SI+8A89H]
+      XCHG   BX,SS:[BX+DI+8A89H]
+      XCHG   BX,SS:[BP+SI+8A89H]
+      XCHG   BX,SS:[BP+DI+8A89H]
+      XCHG   BX,SS:[SI+8A89H]
+      XCHG   BX,SS:[DI+8A89H]
+      XCHG   BX,SS:[BP+8A89H]
+      XCHG   BX,SS:[BX+8A89H]
+      XCHG   SP,SS:[BX+SI+8A89H]
+      XCHG   SP,SS:[BX+DI+8A89H]
+      XCHG   SP,SS:[BP+SI+8A89H]
+      XCHG   SP,SS:[BP+DI+8A89H]
+      XCHG   SP,SS:[SI+8A89H]
+      XCHG   SP,SS:[DI+8A89H]
+      XCHG   SP,SS:[BP+8A89H]
+      XCHG   SP,SS:[BX+8A89H]
+      XCHG   BP,SS:[BX+SI+8A89H]
+      XCHG   BP,SS:[BX+DI+8A89H]
+      XCHG   BP,SS:[BP+SI+8A89H]
+      XCHG   BP,SS:[BP+DI+8A89H]
+      XCHG   BP,SS:[SI+8A89H]
+      XCHG   BP,SS:[DI+8A89H]
+      XCHG   BP,SS:[BP+8A89H]
+      XCHG   BP,SS:[BX+8A89H]
+      XCHG   SI,SS:[BX+SI+8A89H]
+      XCHG   SI,SS:[BX+DI+8A89H]
+      XCHG   SI,SS:[BP+SI+8A89H]
+      XCHG   SI,SS:[BP+DI+8A89H]
+      XCHG   SI,SS:[SI+8A89H]
+      XCHG   SI,SS:[DI+8A89H]
+      XCHG   SI,SS:[BP+8A89H]
+      XCHG   SI,SS:[BX+8A89H]
+      XCHG   DI,SS:[BX+SI+8A89H]
+      XCHG   DI,SS:[BX+DI+8A89H]
+      XCHG   DI,SS:[BP+SI+8A89H]
+      XCHG   DI,SS:[BP+DI+8A89H]
+      XCHG   DI,SS:[SI+8A89H]
+      XCHG   DI,SS:[DI+8A89H]
+      XCHG   DI,SS:[BP+8A89H]
+      XCHG   DI,SS:[BX+8A89H]
+      XCHG   AX,SS:[BX+SI]
+      MOV    SS:[BX+DI+8B8AH],CL
+      MOV    SS:[BP+SI+8B8AH],CL
+      MOV    SS:[BP+DI+8B8AH],CL
+      MOV    SS:[SI+8B8AH],CL
+      MOV    SS:[DI+8B8AH],CL
+      MOV    SS:[BP+8B8AH],CL
+      MOV    SS:[BX+8B8AH],CL
+      MOV    SS:[BX+SI+8B8AH],DL
+      MOV    SS:[BX+DI+8B8AH],DL
+      MOV    SS:[BP+SI+8B8AH],DL
+      MOV    SS:[BP+DI+8B8AH],DL
+      MOV    SS:[SI+8B8AH],DL
+      MOV    SS:[DI+8B8AH],DL
+      MOV    SS:[BP+8B8AH],DL
+      MOV    SS:[BX+8B8AH],DL
+      MOV    SS:[BX+SI+8B8AH],BL
+      MOV    SS:[BX+DI+8B8AH],BL
+      MOV    SS:[BP+SI+8B8AH],BL
+      MOV    SS:[BP+DI+8B8AH],BL
+      MOV    SS:[SI+8B8AH],BL
+      MOV    SS:[DI+8B8AH],BL
+      MOV    SS:[BP+8B8AH],BL
+      MOV    SS:[BX+8B8AH],BL
+      MOV    SS:[BX+SI+8B8AH],AH
+      MOV    SS:[BX+DI+8B8AH],AH
+      MOV    SS:[BP+SI+8B8AH],AH
+      MOV    SS:[BP+DI+8B8AH],AH
+      MOV    SS:[SI+8B8AH],AH
+      MOV    SS:[DI+8B8AH],AH
+      MOV    SS:[BP+8B8AH],AH
+      MOV    SS:[BX+8B8AH],AH
+      MOV    SS:[BX+SI],AL
+      MOV    SS:[BP+SI+8C8BH],CX
+      MOV    SS:[BP+DI+8C8BH],CX
+      MOV    SS:[SI+8C8BH],CX
+      MOV    SS:[DI+8C8BH],CX
+      MOV    SS:[BP+8C8BH],CX
+      MOV    SS:[BX+8C8BH],CX
+      MOV    SS:[BX+SI+8C8BH],DX
+      MOV    SS:[BX+DI+8C8BH],DX
+      MOV    SS:[BP+SI+8C8BH],DX
+      MOV    SS:[BP+DI+8C8BH],DX
+      MOV    SS:[SI+8C8BH],DX
+      MOV    SS:[DI+8C8BH],DX
+      MOV    SS:[BP+8C8BH],DX
+      MOV    SS:[BX+8C8BH],DX
+      MOV    SS:[BX+SI+8C8BH],BX
+      MOV    SS:[BX+DI+8C8BH],BX
+      MOV    SS:[BP+SI+8C8BH],BX
+      MOV    SS:[BP+DI+8C8BH],BX
+      MOV    SS:[SI+8C8BH],BX
+      MOV    SS:[DI+8C8BH],BX
+      MOV    SS:[BP+8C8BH],BX
+      MOV    SS:[BX+8C8BH],BX
+      MOV    SS:[BX+SI+8C8BH],SP
+      MOV    SS:[BX+DI+8C8BH],SP
+      MOV    SS:[BP+SI+8C8BH],SP
+      MOV    SS:[BP+DI+8C8BH],SP
+      MOV    SS:[SI+8C8BH],SP
+      MOV    SS:[DI+8C8BH],SP
+      MOV    SS:[BP+8C8BH],SP
+      MOV    SS:[BX+8C8BH],SP
+      MOV    SS:[BX+SI+8C8BH],BP
+      MOV    SS:[BX+DI+8C8BH],BP
+      MOV    SS:[BP+SI+8C8BH],BP
+      MOV    SS:[BP+DI+8C8BH],BP
+      MOV    SS:[SI+8C8BH],BP
+      MOV    SS:[DI+8C8BH],BP
+      MOV    SS:[BP+8C8BH],BP
+      MOV    SS:[BX+8C8BH],BP
+      MOV    SS:[BX+SI+8C8BH],SI
+      MOV    SS:[BX+DI+8C8BH],SI
+      MOV    SS:[BP+SI+8C8BH],SI
+      MOV    SS:[BP+DI+8C8BH],SI
+      MOV    SS:[SI+8C8BH],SI
+      MOV    SS:[DI+8C8BH],SI
+      MOV    SS:[BP+8C8BH],SI
+      MOV    SS:[BX+8C8BH],SI
+      MOV    SS:[BX+SI+8C8BH],DI
+      MOV    SS:[BX+DI+8C8BH],DI
+      MOV    SS:[BP+SI+8C8BH],DI
+      MOV    SS:[BP+DI+8C8BH],DI
+      MOV    SS:[SI+8C8BH],DI
+      MOV    SS:[DI+8C8BH],DI
+      MOV    SS:[BP+8C8BH],DI
+      MOV    SS:[BX+8C8BH],DI
+      MOV    SS:[BX+SI],AX
+      MOV    CL,SS:[BP+DI+8D8CH]
+      MOV    CL,SS:[SI+8D8CH]
+      MOV    CL,SS:[DI+8D8CH]
+      MOV    CL,SS:[BP+8D8CH]
+      MOV    CL,SS:[BX+8D8CH]
+      MOV    DL,SS:[BX+SI+8D8CH]
+      MOV    DL,SS:[BX+DI+8D8CH]
+      MOV    DL,SS:[BP+SI+8D8CH]
+      MOV    DL,SS:[BP+DI+8D8CH]
+      MOV    DL,SS:[SI+8D8CH]
+      MOV    DL,SS:[DI+8D8CH]
+      MOV    DL,SS:[BP+8D8CH]
+      MOV    DL,SS:[BX+8D8CH]
+      MOV    BL,SS:[BX+SI+8D8CH]
+      MOV    BL,SS:[BX+DI+8D8CH]
+      MOV    BL,SS:[BP+SI+8D8CH]
+      MOV    BL,SS:[BP+DI+8D8CH]
+      MOV    BL,SS:[SI+8D8CH]
+      MOV    BL,SS:[DI+8D8CH]
+      MOV    BL,SS:[BP+8D8CH]
+      MOV    BL,SS:[BX+8D8CH]
+      MOV    AH,SS:[BX+SI+8D8CH]
+      MOV    AH,SS:[BX+DI+8D8CH]
+      MOV    AH,SS:[BP+SI+8D8CH]
+      MOV    AH,SS:[BP+DI+8D8CH]
+      MOV    AH,SS:[SI+8D8CH]
+      MOV    AH,SS:[DI+8D8CH]
+      MOV    AH,SS:[BP+8D8CH]
+      MOV    AH,SS:[BX+8D8CH]
+      MOV    AL,SS:[BX+SI]
+      MOV    CX,SS:[SI+8E8DH]
+      MOV    CX,SS:[DI+8E8DH]
+      MOV    CX,SS:[BP+8E8DH]
+      MOV    CX,SS:[BX+8E8DH]
+      MOV    DX,SS:[BX+SI+8E8DH]
+      MOV    DX,SS:[BX+DI+8E8DH]
+      MOV    DX,SS:[BP+SI+8E8DH]
+      MOV    DX,SS:[BP+DI+8E8DH]
+      MOV    DX,SS:[SI+8E8DH]
+      MOV    DX,SS:[DI+8E8DH]
+      MOV    DX,SS:[BP+8E8DH]
+      MOV    DX,SS:[BX+8E8DH]
+      MOV    BX,SS:[BX+SI+8E8DH]
+      MOV    BX,SS:[BX+DI+8E8DH]
+      MOV    BX,SS:[BP+SI+8E8DH]
+      MOV    BX,SS:[BP+DI+8E8DH]
+      MOV    BX,SS:[SI+8E8DH]
+      MOV    BX,SS:[DI+8E8DH]
+      MOV    BX,SS:[BP+8E8DH]
+      MOV    BX,SS:[BX+8E8DH]
+      MOV    SP,SS:[BX+SI+8E8DH]
+      MOV    SP,SS:[BX+DI+8E8DH]
+      MOV    SP,SS:[BP+SI+8E8DH]
+      MOV    SP,SS:[BP+DI+8E8DH]
+      MOV    SP,SS:[SI+8E8DH]
+      MOV    SP,SS:[DI+8E8DH]
+      MOV    SP,SS:[BP+8E8DH]
+      MOV    SP,SS:[BX+8E8DH]
+      MOV    BP,SS:[BX+SI+8E8DH]
+      MOV    BP,SS:[BX+DI+8E8DH]
+      MOV    BP,SS:[BP+SI+8E8DH]
+      MOV    BP,SS:[BP+DI+8E8DH]
+      MOV    BP,SS:[SI+8E8DH]
+      MOV    BP,SS:[DI+8E8DH]
+      MOV    BP,SS:[BP+8E8DH]
+      MOV    BP,SS:[BX+8E8DH]
+      MOV    SI,SS:[BX+SI+8E8DH]
+      MOV    SI,SS:[BX+DI+8E8DH]
+      MOV    SI,SS:[BP+SI+8E8DH]
+      MOV    SI,SS:[BP+DI+8E8DH]
+      MOV    SI,SS:[SI+8E8DH]
+      MOV    SI,SS:[DI+8E8DH]
+      MOV    SI,SS:[BP+8E8DH]
+      MOV    SI,SS:[BX+8E8DH]
+      MOV    DI,SS:[BX+SI+8E8DH]
+      MOV    DI,SS:[BX+DI+8E8DH]
+      MOV    DI,SS:[BP+SI+8E8DH]
+      MOV    DI,SS:[BP+DI+8E8DH]
+      MOV    DI,SS:[SI+8E8DH]
+      MOV    DI,SS:[DI+8E8DH]
+      MOV    DI,SS:[BP+8E8DH]
+      MOV    DI,SS:[BX+8E8DH]
+      MOV    AX,SS:[BX+SI]
+      MOV    SS:[DI+8F8EH],CS
+      MOV    SS:[BP+8F8EH],CS
+      MOV    SS:[BX+8F8EH],CS
+      MOV    SS:[BX+SI+8F8EH],SS
+      MOV    SS:[BX+DI+8F8EH],SS
+      MOV    SS:[BP+SI+8F8EH],SS
+      MOV    SS:[BP+DI+8F8EH],SS
+      MOV    SS:[SI+8F8EH],SS
+      MOV    SS:[DI+8F8EH],SS
+      MOV    SS:[BP+8F8EH],SS
+      MOV    SS:[BX+8F8EH],SS
+      MOV    SS:[BX+SI+8F8EH],DS
+      MOV    SS:[BX+DI+8F8EH],DS
+      MOV    SS:[BP+SI+8F8EH],DS
+      MOV    SS:[BP+DI+8F8EH],DS
+      MOV    SS:[SI+8F8EH],DS
+      MOV    SS:[DI+8F8EH],DS
+      MOV    SS:[BP+8F8EH],DS
+      MOV    SS:[BX+8F8EH],DS
+      MOV    SS:[BX+SI+8F8EH],ES
+      MOV    SS:[BX+DI+8F8EH],ES
+      MOV    SS:[BP+SI+8F8EH],ES
+      MOV    SS:[BP+DI+8F8EH],ES
+      MOV    SS:[SI+8F8EH],ES
+      MOV    SS:[DI+8F8EH],ES
+      MOV    SS:[BP+8F8EH],ES
+      MOV    SS:[BX+8F8EH],ES
+      MOV    SS:[BX+SI+8F8EH],CS
+      MOV    SS:[BX+DI+8F8EH],CS
+      MOV    SS:[BP+SI+8F8EH],CS
+      MOV    SS:[BP+DI+8F8EH],CS
+      MOV    SS:[SI+8F8EH],CS
+      MOV    SS:[BX+SI],ES
+      LEA    CX,SS:[BP+908FH]
+      LEA    CX,SS:[BX+908FH]
+      LEA    DX,SS:[BX+SI+908FH]
+      LEA    DX,SS:[BX+DI+908FH]
+      LEA    DX,SS:[BP+SI+908FH]
+      LEA    DX,SS:[BP+DI+908FH]
+      LEA    DX,SS:[SI+908FH]
+      LEA    DX,SS:[DI+908FH]
+      LEA    DX,SS:[BP+908FH]
+      LEA    DX,SS:[BX+908FH]
+      LEA    BX,SS:[BX+SI+908FH]
+      LEA    BX,SS:[BX+DI+908FH]
+      LEA    BX,SS:[BP+SI+908FH]
+      LEA    BX,SS:[BP+DI+908FH]
+      LEA    BX,SS:[SI+908FH]
+      LEA    BX,SS:[DI+908FH]
+      LEA    BX,SS:[BP+908FH]
+      LEA    BX,SS:[BX+908FH]
+      LEA    SP,SS:[BX+SI+908FH]
+      LEA    SP,SS:[BX+DI+908FH]
+      LEA    SP,SS:[BP+SI+908FH]
+      LEA    SP,SS:[BP+DI+908FH]
+      LEA    SP,SS:[SI+908FH]
+      LEA    SP,SS:[DI+908FH]
+      LEA    SP,SS:[BP+908FH]
+      LEA    SP,SS:[BX+908FH]
+      LEA    BP,SS:[BX+SI+908FH]
+      LEA    BP,SS:[BX+DI+908FH]
+      LEA    BP,SS:[BP+SI+908FH]
+      LEA    BP,SS:[BP+DI+908FH]
+      LEA    BP,SS:[SI+908FH]
+      LEA    BP,SS:[DI+908FH]
+      LEA    BP,SS:[BP+908FH]
+      LEA    BP,SS:[BX+908FH]
+      LEA    SI,SS:[BX+SI+908FH]
+      LEA    SI,SS:[BX+DI+908FH]
+      LEA    SI,SS:[BP+SI+908FH]
+      LEA    SI,SS:[BP+DI+908FH]
+      LEA    SI,SS:[SI+908FH]
+      LEA    SI,SS:[DI+908FH]
+      LEA    SI,SS:[BP+908FH]
+      LEA    SI,SS:[BX+908FH]
+      LEA    DI,SS:[BX+SI+908FH]
+      LEA    DI,SS:[BX+DI+908FH]
+      LEA    DI,SS:[BP+SI+908FH]
+      LEA    DI,SS:[BP+DI+908FH]
+      LEA    DI,SS:[SI+908FH]
+      LEA    DI,SS:[DI+908FH]
+      LEA    DI,SS:[BP+908FH]
+      LEA    DI,SS:[BX+908FH]
+      LEA    AX,SS:[BX+SI]
+      MOV    CS,SS:[BX+9190H]
+      MOV    SS,SS:[BX+SI+9190H]
+      MOV    SS,SS:[BX+DI+9190H]
+      MOV    SS,SS:[BP+SI+9190H]
+      MOV    SS,SS:[BP+DI+9190H]
+      MOV    SS,SS:[SI+9190H]
+      MOV    SS,SS:[DI+9190H]
+      MOV    SS,SS:[BP+9190H]
+      MOV    SS,SS:[BX+9190H]
+      MOV    DS,SS:[BX+SI+9190H]
+      MOV    DS,SS:[BX+DI+9190H]
+      MOV    DS,SS:[BP+SI+9190H]
+      MOV    DS,SS:[BP+DI+9190H]
+      MOV    DS,SS:[SI+9190H]
+      MOV    DS,SS:[DI+9190H]
+      MOV    DS,SS:[BP+9190H]
+      MOV    DS,SS:[BX+9190H]
+      MOV    ES,SS:[BX+SI+9190H]
+      MOV    ES,SS:[BX+DI+9190H]
+      MOV    ES,SS:[BP+SI+9190H]
+      MOV    ES,SS:[BP+DI+9190H]
+      MOV    ES,SS:[SI+9190H]
+      MOV    ES,SS:[DI+9190H]
+      MOV    ES,SS:[BP+9190H]
+      MOV    ES,SS:[BX+9190H]
+      MOV    CS,SS:[BX+SI+9190H]
+      MOV    CS,SS:[BX+DI+9190H]
+      MOV    CS,SS:[BP+SI+9190H]
+      MOV    CS,SS:[BP+DI+9190H]
+      MOV    CS,SS:[SI+9190H]
+      MOV    CS,SS:[DI+9190H]
+      MOV    CS,SS:[BP+9190H]
+      MOV    ES,SS:[BX+SI]
+      MOV    AL,SS:[0A2A1H]
+      MOV    AX,SS:[0A3A2H]
+      MOV    SS:[0A4A3H],AL
+      MOV    SS:[0A5A4H],AX
       MOVSB  ES:[DI],SS:[SI]
       MOVSW  ES:[DI],SS:[SI]
       CMPSB  SS:[SI],ES:[DI]
       CMPSW  SS:[SI],ES:[DI]
       LODSB  SS:[SI]
       LODSW  SS:[SI]
-      MOV    AL,DS:[00A1H]
-      MOV    AX,DS:[00A2H]
-      MOV    DS:[00A3H],AL
-      MOV    DS:[00A4H],AX
+      INC    WORD PTR SS:[BX+SI]
+      INC    WORD PTR SS:[BX+DI]
+      INC    WORD PTR SS:[BP+SI]
+      INC    WORD PTR SS:[BP+DI]
+      INC    WORD PTR SS:[SI]
+      INC    WORD PTR SS:[DI]
+      INC    WORD PTR SS:[0807H]
+      INC    WORD PTR SS:[BX]
+      DEC    WORD PTR SS:[BX+SI]
+      DEC    WORD PTR SS:[BX+DI]
+      DEC    WORD PTR SS:[BP+SI]
+      DEC    WORD PTR SS:[BP+DI]
+      DEC    WORD PTR SS:[SI]
+      DEC    WORD PTR SS:[DI]
+      DEC    WORD PTR SS:[100FH]
+      DEC    WORD PTR SS:[BX]
+      CALL   SS:[BX+SI]
+      CALL   SS:[BX+DI]
+      CALL   SS:[BP+SI]
+      CALL   SS:[BP+DI]
+      CALL   SS:[SI]
+      CALL   SS:[DI]
+      CALL   SS:[1817H]
+      CALL   SS:[BX]
+      CALLF  SS:[BX+SI]
+      CALLF  SS:[BX+DI]
+      CALLF  SS:[BP+SI]
+      CALLF  SS:[BP+DI]
+      CALLF  SS:[SI]
+      CALLF  SS:[DI]
+      CALLF  SS:[201FH]
+      CALLF  SS:[BX]
+      JMP    SS:[BX+SI]
+      JMP    SS:[BX+DI]
+      JMP    SS:[BP+SI]
+      JMP    SS:[BP+DI]
+      JMP    SS:[SI]
+      JMP    SS:[DI]
+      JMP    SS:[2827H]
+      JMP    SS:[BX]
+      JMPF   SS:[BX+SI]
+      JMPF   SS:[BX+DI]
+      JMPF   SS:[BP+SI]
+      JMPF   SS:[BP+DI]
+      JMPF   SS:[SI]
+      JMPF   SS:[DI]
+      JMPF   SS:[302FH]
+      JMPF   SS:[BX]
+      PUSH   SS:[BX+SI]
+      PUSH   SS:[BX+DI]
+      PUSH   SS:[BP+SI]
+      PUSH   SS:[BP+DI]
+      PUSH   SS:[SI]
+      PUSH   SS:[DI]
+      PUSH   SS:[3837H]
+      PUSH   SS:[BX]
+      INC    WORD PTR SS:[BX+SI+65]
+      INC    WORD PTR SS:[BX+SI-128]
+      INC    WORD PTR SS:[BX+DI+66]
+      INC    WORD PTR SS:[BX+DI-128]
+      INC    WORD PTR SS:[BP+SI+67]
+      INC    WORD PTR SS:[BP+SI-128]
+      INC    WORD PTR SS:[BP+DI+68]
+      INC    WORD PTR SS:[BP+DI-128]
+      INC    WORD PTR SS:[SI+69]
+      INC    WORD PTR SS:[SI-128]
+      INC    WORD PTR SS:[DI+70]
+      INC    WORD PTR SS:[DI-128]
+      INC    WORD PTR SS:[BP+71]
+      INC    WORD PTR SS:[BP-128]
+      INC    WORD PTR SS:[BX+72]
+      INC    WORD PTR SS:[BX-128]
+      DEC    WORD PTR SS:[BX+SI+73]
+      DEC    WORD PTR SS:[BX+SI-128]
+      DEC    WORD PTR SS:[BX+DI+74]
+      DEC    WORD PTR SS:[BX+DI-128]
+      DEC    WORD PTR SS:[BP+SI+75]
+      DEC    WORD PTR SS:[BP+SI-128]
+      DEC    WORD PTR SS:[BP+DI+76]
+      DEC    WORD PTR SS:[BP+DI-128]
+      DEC    WORD PTR SS:[SI+77]
+      DEC    WORD PTR SS:[SI-128]
+      DEC    WORD PTR SS:[DI+78]
+      DEC    WORD PTR SS:[DI-128]
+      DEC    WORD PTR SS:[BP+79]
+      DEC    WORD PTR SS:[BP-128]
+      DEC    WORD PTR SS:[BX+80]
+      DEC    WORD PTR SS:[BX-128]
+      CALL   SS:[BX+SI+81]
+      CALL   SS:[BX+SI-128]
+      CALL   SS:[BX+DI+82]
+      CALL   SS:[BX+DI-128]
+      CALL   SS:[BP+SI+83]
+      CALL   SS:[BP+SI-128]
+      CALL   SS:[BP+DI+84]
+      CALL   SS:[BP+DI-128]
+      CALL   SS:[SI+85]
+      CALL   SS:[SI-128]
+      CALL   SS:[DI+86]
+      CALL   SS:[DI-128]
+      CALL   SS:[BP+87]
+      CALL   SS:[BP-128]
+      CALL   SS:[BX+88]
+      CALL   SS:[BX-128]
+      CALLF  SS:[BX+SI+89]
+      CALLF  SS:[BX+SI-128]
+      CALLF  SS:[BX+DI+90]
+      CALLF  SS:[BX+DI-128]
+      CALLF  SS:[BP+SI+91]
+      CALLF  SS:[BP+SI-128]
+      CALLF  SS:[BP+DI+92]
+      CALLF  SS:[BP+DI-128]
+      CALLF  SS:[SI+93]
+      CALLF  SS:[SI-128]
+      CALLF  SS:[DI+94]
+      CALLF  SS:[DI-128]
+      CALLF  SS:[BP+95]
+      CALLF  SS:[BP-128]
+      CALLF  SS:[BX+96]
+      CALLF  SS:[BX-128]
+      JMP    SS:[BX+SI+97]
+      JMP    SS:[BX+SI-128]
+      JMP    SS:[BX+DI+98]
+      JMP    SS:[BX+DI-128]
+      JMP    SS:[BP+SI+99]
+      JMP    SS:[BP+SI-128]
+      JMP    SS:[BP+DI+100]
+      JMP    SS:[BP+DI-128]
+      JMP    SS:[SI+101]
+      JMP    SS:[SI-128]
+      JMP    SS:[DI+102]
+      JMP    SS:[DI-128]
+      JMP    SS:[BP+103]
+      JMP    SS:[BP-128]
+      JMP    SS:[BX+104]
+      JMP    SS:[BX-128]
+      JMPF   SS:[BX+SI+105]
+      JMPF   SS:[BX+SI-128]
+      JMPF   SS:[BX+DI+106]
+      JMPF   SS:[BX+DI-128]
+      JMPF   SS:[BP+SI+107]
+      JMPF   SS:[BP+SI-128]
+      JMPF   SS:[BP+DI+108]
+      JMPF   SS:[BP+DI-128]
+      JMPF   SS:[SI+109]
+      JMPF   SS:[SI-128]
+      JMPF   SS:[DI+110]
+      JMPF   SS:[DI-128]
+      JMPF   SS:[BP+111]
+      JMPF   SS:[BP-128]
+      JMPF   SS:[BX+112]
+      JMPF   SS:[BX-128]
+      PUSH   SS:[BX+SI+113]
+      PUSH   SS:[BX+SI-128]
+      PUSH   SS:[BX+DI+114]
+      PUSH   SS:[BX+DI-128]
+      PUSH   SS:[BP+SI+115]
+      PUSH   SS:[BP+SI-128]
+      PUSH   SS:[BP+DI+116]
+      PUSH   SS:[BP+DI-128]
+      PUSH   SS:[SI+117]
+      PUSH   SS:[SI-128]
+      PUSH   SS:[DI+118]
+      PUSH   SS:[DI-128]
+      PUSH   SS:[BP+119]
+      PUSH   SS:[BP-128]
+      PUSH   SS:[BX+120]
+      PUSH   SS:[BX-128]
+      INC    WORD PTR SS:[BX+SI+8281H]
+      INC    WORD PTR SS:[BX+DI+8382H]
+      INC    WORD PTR SS:[BP+SI+8483H]
+      INC    WORD PTR SS:[BP+DI+8584H]
+      INC    WORD PTR SS:[SI+8685H]
+      INC    WORD PTR SS:[DI+8786H]
+      INC    WORD PTR SS:[BP+8887H]
+      INC    WORD PTR SS:[BX+8988H]
+      DEC    WORD PTR SS:[BX+SI+8A89H]
+      DEC    WORD PTR SS:[BX+DI+8B8AH]
+      DEC    WORD PTR SS:[BP+SI+8C8BH]
+      DEC    WORD PTR SS:[BP+DI+8D8CH]
+      DEC    WORD PTR SS:[SI+8E8DH]
+      DEC    WORD PTR SS:[DI+8F8EH]
+      DEC    WORD PTR SS:[BP+908FH]
+      DEC    WORD PTR SS:[BX+9190H]
+      CALL   SS:[BX+SI+9291H]
+      CALL   SS:[BX+DI+9392H]
+      CALL   SS:[BP+SI+9493H]
+      CALL   SS:[BP+DI+9594H]
+      CALL   SS:[SI+9695H]
+      CALL   SS:[DI+9796H]
+      CALL   SS:[BP+9897H]
+      CALL   SS:[BX+9998H]
+      CALLF  SS:[BX+SI+9A99H]
+      CALLF  SS:[BX+DI+9B9AH]
+      CALLF  SS:[BP+SI+9C9BH]
+      CALLF  SS:[BP+DI+9D9CH]
+      CALLF  SS:[SI+9E9DH]
+      CALLF  SS:[DI+9F9EH]
+      CALLF  SS:[BP+0A09FH]
+      CALLF  SS:[BX+0A1A0H]
+      JMP    SS:[BX+SI+0A2A1H]
+      JMP    SS:[BX+DI+0A3A2H]
+      JMP    SS:[BP+SI+0A4A3H]
+      JMP    SS:[BP+DI+0A5A4H]
+      JMP    SS:[SI+0A6A5H]
+      JMP    SS:[DI+0A7A6H]
+      JMP    SS:[BP+0A8A7H]
+      JMP    SS:[BX+0A9A8H]
+      JMPF   SS:[BX+SI+0AAA9H]
+      JMPF   SS:[BX+DI+0ABAAH]
+      JMPF   SS:[BP+SI+0ACABH]
+      JMPF   SS:[BP+DI+0ADACH]
+      JMPF   SS:[SI+0AEADH]
+      JMPF   SS:[DI+0AFAEH]
+      JMPF   SS:[BP+0B0AFH]
+      JMPF   SS:[BX+0B1B0H]
+      PUSH   SS:[BX+SI+0B2B1H]
+      PUSH   SS:[BX+DI+0B3B2H]
+      PUSH   SS:[BP+SI+0B4B3H]
+      PUSH   SS:[BP+DI+0B5B4H]
+      PUSH   SS:[SI+0B6B5H]
+      PUSH   SS:[DI+0B7B6H]
+      PUSH   SS:[BP+0B8B7H]
+      PUSH   SS:[BX+0B9B8H]
+      ADD    SS:[BX+DI],AL
+      ADD    SS:[BP+SI],AL
+      ADD    SS:[BP+DI],AL
+      ADD    SS:[SI],AL
+      ADD    SS:[DI],AL
+      ADD    SS:[0807H],AL
+      ADD    SS:[BX],AL
+      ADD    SS:[BX+SI],CL
+      ADD    SS:[BX+DI],CL
+      ADD    SS:[BP+SI],CL
+      ADD    SS:[BP+DI],CL
+      ADD    SS:[SI],CL
+      ADD    SS:[DI],CL
+      ADD    SS:[100FH],CL
+      ADD    SS:[BX],CL
+      ADD    SS:[BX+SI],DL
+      ADD    SS:[BX+DI],DL
+      ADD    SS:[BP+SI],DL
+      ADD    SS:[BP+DI],DL
+      ADD    SS:[SI],DL
+      ADD    SS:[DI],DL
+      ADD    SS:[1817H],DL
+      ADD    SS:[BX],DL
+      ADD    SS:[BX+SI],BL
+      ADD    SS:[BX+DI],BL
+      ADD    SS:[BP+SI],BL
+      ADD    SS:[BP+DI],BL
+      ADD    SS:[SI],BL
+      ADD    SS:[DI],BL
+      ADD    SS:[201FH],BL
+      ADD    SS:[BX],BL
+      ADD    SS:[BX+SI],AH
+      ADD    SS:[BX+DI],AH
+      ADD    SS:[BP+SI],AH
+      ADD    SS:[BP+DI],AH
+      ADD    SS:[SI],AH
+      ADD    SS:[DI],AH
+      ADD    SS:[2827H],AH
+      ADD    SS:[BX],AH
+      ADD    SS:[BP+SI],AX
+      ADD    SS:[BP+DI],AX
+      ADD    SS:[SI],AX
+      ADD    SS:[DI],AX
+      ADD    SS:[0807H],AX
+      ADD    SS:[BX],AX
+      ADD    SS:[BX+SI],CX
+      ADD    SS:[BX+DI],CX
+      ADD    SS:[BP+SI],CX
+      ADD    SS:[BP+DI],CX
+      ADD    SS:[SI],CX
+      ADD    SS:[DI],CX
+      ADD    SS:[100FH],CX
+      ADD    SS:[BX],CX
+      ADD    SS:[BX+SI],DX
+      ADD    SS:[BX+DI],DX
+      ADD    SS:[BP+SI],DX
+      ADD    SS:[BP+DI],DX
+      ADD    SS:[SI],DX
+      ADD    SS:[DI],DX
+      ADD    SS:[1817H],DX
+      ADD    SS:[BX],DX
+      ADD    SS:[BX+SI],BX
+      ADD    SS:[BX+DI],BX
+      ADD    SS:[BP+SI],BX
+      ADD    SS:[BP+DI],BX
+      ADD    SS:[SI],BX
+      ADD    SS:[DI],BX
+      ADD    SS:[201FH],BX
+      ADD    SS:[BX],BX
+      ADD    SS:[BX+SI],SP
+      ADD    SS:[BX+DI],SP
+      ADD    SS:[BP+SI],SP
+      ADD    SS:[BP+DI],SP
+      ADD    SS:[SI],SP
+      ADD    SS:[DI],SP
+      ADD    SS:[2827H],SP
+      ADD    SS:[BX],SP
+      ADD    SS:[BX+SI],BP
+      ADD    SS:[BX+DI],BP
+      ADD    SS:[BP+SI],BP
+      ADD    SS:[BP+DI],BP
+      ADD    SS:[SI],BP
+      ADD    SS:[DI],BP
+      ADD    SS:[302FH],BP
+      ADD    SS:[BX],BP
+      ADD    SS:[BX+SI],SI
+      ADD    SS:[BX+DI],SI
+      ADD    SS:[BP+SI],SI
+      ADD    SS:[BP+DI],SI
+      ADD    SS:[SI],SI
+      ADD    SS:[DI],SI
+      ADD    SS:[3837H],SI
+      ADD    SS:[BX],SI
+      ADD    SS:[BX+SI],DI
+      ADD    SS:[BX+DI],DI
+      ADD    SS:[BP+SI],DI
+      ADD    SS:[BP+DI],DI
+      ADD    SS:[SI],DI
+      ADD    SS:[DI],DI
+      ADD    SS:[403FH],DI
+      ADD    SS:[BX],DI
+      ADD    SS:[BX+SI+65],AX
+      ADD    SS:[BX+SI-128],AX
+      ADD    SS:[BX+DI+66],AX
+      ADD    SS:[BX+DI-128],AX
+      ADD    SS:[BP+SI+67],AX
+      ADD    SS:[BP+SI-128],AX
+      ADD    SS:[BP+DI+68],AX
+      ADD    SS:[BP+DI-128],AX
+      ADD    SS:[SI+69],AX
+      ADD    SS:[SI-128],AX
+      ADD    SS:[DI+70],AX
+      ADD    SS:[DI-128],AX
+      ADD    SS:[BP+71],AX
+      ADD    SS:[BP-128],AX
+      ADD    SS:[BX+72],AX
+      ADD    SS:[BX-128],AX
+      ADD    SS:[BX+SI+73],CX
+      ADD    SS:[BX+SI-128],CX
+      ADD    SS:[BX+DI+74],CX
+      ADD    SS:[BX+DI-128],CX
+      ADD    SS:[BP+SI+75],CX
+      ADD    SS:[BP+SI-128],CX
+      ADD    SS:[BP+DI+76],CX
+      ADD    SS:[BP+DI-128],CX
+      ADD    SS:[SI+77],CX
+      ADD    SS:[SI-128],CX
+      ADD    SS:[DI+78],CX
+      ADD    SS:[DI-128],CX
+      ADD    SS:[BP+79],CX
+      ADD    SS:[BP-128],CX
+      ADD    SS:[BX+80],CX
+      ADD    SS:[BX-128],CX
+      ADD    SS:[BX+SI+81],DX
+      ADD    SS:[BX+SI-128],DX
+      ADD    SS:[BX+DI+82],DX
+      ADD    SS:[BX+DI-128],DX
+      ADD    SS:[BP+SI+83],DX
+      ADD    SS:[BP+SI-128],DX
+      ADD    SS:[BP+DI+84],DX
+      ADD    SS:[BP+DI-128],DX
+      ADD    SS:[SI+85],DX
+      ADD    SS:[SI-128],DX
+      ADD    SS:[DI+86],DX
+      ADD    SS:[DI-128],DX
+      ADD    SS:[BP+87],DX
+      ADD    SS:[BP-128],DX
+      ADD    SS:[BX+88],DX
+      ADD    SS:[BX-128],DX
+      ADD    SS:[BX+SI+89],BX
+      ADD    SS:[BX+SI-128],BX
+      ADD    SS:[BX+DI+90],BX
+      ADD    SS:[BX+DI-128],BX
+      ADD    SS:[BP+SI+91],BX
+      ADD    SS:[BP+SI-128],BX
+      ADD    SS:[BP+DI+92],BX
+      ADD    SS:[BP+DI-128],BX
+      ADD    SS:[SI+93],BX
+      ADD    SS:[SI-128],BX
+      ADD    SS:[DI+94],BX
+      ADD    SS:[DI-128],BX
+      ADD    SS:[BP+95],BX
+      ADD    SS:[BP-128],BX
+      ADD    SS:[BX+96],BX
+      ADD    SS:[BX-128],BX
+      ADD    SS:[BX+SI+97],SP
+      ADD    SS:[BX+SI-128],SP
+      ADD    SS:[BX+DI+98],SP
+      ADD    SS:[BX+DI-128],SP
+      ADD    SS:[BP+SI+99],SP
+      ADD    SS:[BP+SI-128],SP
+      ADD    SS:[BP+DI+100],SP
+      ADD    SS:[BP+DI-128],SP
+      ADD    SS:[SI+101],SP
+      ADD    SS:[SI-128],SP
+      ADD    SS:[DI+102],SP
+      ADD    SS:[DI-128],SP
+      ADD    SS:[BP+103],SP
+      ADD    SS:[BP-128],SP
+      ADD    SS:[BX+104],SP
+      ADD    SS:[BX-128],SP
+      ADD    SS:[BX+SI+105],BP
+      ADD    SS:[BX+SI-128],BP
+      ADD    SS:[BX+DI+106],BP
+      ADD    SS:[BX+DI-128],BP
+      ADD    SS:[BP+SI+107],BP
+      ADD    SS:[BP+SI-128],BP
+      ADD    SS:[BP+DI+108],BP
+      ADD    SS:[BP+DI-128],BP
+      ADD    SS:[SI+109],BP
+      ADD    SS:[SI-128],BP
+      ADD    SS:[DI+110],BP
+      ADD    SS:[DI-128],BP
+      ADD    SS:[BP+111],BP
+      ADD    SS:[BP-128],BP
+      ADD    SS:[BX+112],BP
+      ADD    SS:[BX-128],BP
+      ADD    SS:[BX+SI+113],SI
+      ADD    SS:[BX+SI-128],SI
+      ADD    SS:[BX+DI+114],SI
+      ADD    SS:[BX+DI-128],SI
+      ADD    SS:[BP+SI+115],SI
+      ADD    SS:[BP+SI-128],SI
+      ADD    SS:[BP+DI+116],SI
+      ADD    SS:[BP+DI-128],SI
+      ADD    SS:[SI+117],SI
+      ADD    SS:[SI-128],SI
+      ADD    SS:[DI+118],SI
+      ADD    SS:[DI-128],SI
+      ADD    SS:[BP+119],SI
+      ADD    SS:[BP-128],SI
+      ADD    SS:[BX+120],SI
+      ADD    SS:[BX-128],SI
+      ADD    SS:[BX+SI+121],DI
+      ADD    SS:[BX+SI-128],DI
+      ADD    SS:[BX+DI+122],DI
+      ADD    SS:[BX+DI-128],DI
+      ADD    SS:[BP+SI+123],DI
+      ADD    SS:[BP+SI-128],DI
+      ADD    SS:[BP+DI+124],DI
+      ADD    SS:[BP+DI-128],DI
+      ADD    SS:[SI+125],DI
+      ADD    SS:[SI-128],DI
+      ADD    SS:[DI+126],DI
+      ADD    SS:[DI-128],DI
+      ADD    SS:[BP+127],DI
+      ADD    SS:[BP-128],DI
+      ADD    SS:[BX-128],DI
+      ADD    SS:[BX+0],DI
+      ADD    SS:[BX+SI+8281H],AX
+      ADD    SS:[BX+DI+8382H],AX
+      ADD    SS:[BP+SI+8483H],AX
+      ADD    SS:[BP+DI+8584H],AX
+      ADD    SS:[SI+8685H],AX
+      ADD    SS:[DI+8786H],AX
+      ADD    SS:[BP+8887H],AX
+      ADD    SS:[BX+8988H],AX
+      ADD    SS:[BX+SI+8A89H],CX
+      ADD    SS:[BX+DI+8B8AH],CX
+      ADD    SS:[BP+SI+8C8BH],CX
+      ADD    SS:[BP+DI+8D8CH],CX
+      ADD    SS:[SI+8E8DH],CX
+      ADD    SS:[DI+8F8EH],CX
+      ADD    SS:[BP+908FH],CX
+      ADD    SS:[BX+9190H],CX
+      ADD    SS:[BX+SI+9291H],DX
+      ADD    SS:[BX+DI+9392H],DX
+      ADD    SS:[BP+SI+9493H],DX
+      ADD    SS:[BP+DI+9594H],DX
+      ADD    SS:[SI+9695H],DX
+      ADD    SS:[DI+9796H],DX
+      ADD    SS:[BP+9897H],DX
+      ADD    SS:[BX+9998H],DX
+      ADD    SS:[BX+SI+9A99H],BX
+      ADD    SS:[BX+DI+9B9AH],BX
+      ADD    SS:[BP+SI+9C9BH],BX
+      ADD    SS:[BP+DI+9D9CH],BX
+      ADD    SS:[SI+9E9DH],BX
+      ADD    SS:[DI+9F9EH],BX
+      ADD    SS:[BP+0A09FH],BX
+      ADD    SS:[BX+0A1A0H],BX
+      ADD    SS:[BX+SI+0A2A1H],SP
+      ADD    SS:[BX+DI+0A3A2H],SP
+      ADD    SS:[BP+SI+0A4A3H],SP
+      ADD    SS:[BP+DI+0A5A4H],SP
+      ADD    SS:[SI+0A6A5H],SP
+      ADD    SS:[DI+0A7A6H],SP
+      ADD    SS:[BP+0A8A7H],SP
+      ADD    SS:[BX+0A9A8H],SP
+      ADD    SS:[BX+SI+0AAA9H],BP
+      ADD    SS:[BX+DI+0ABAAH],BP
+      ADD    SS:[BP+SI+0ACABH],BP
+      ADD    SS:[BP+DI+0ADACH],BP
+      ADD    SS:[SI+0AEADH],BP
+      ADD    SS:[DI+0AFAEH],BP
+      ADD    SS:[BP+0B0AFH],BP
+      ADD    SS:[BX+0B1B0H],BP
+      ADD    SS:[BX+SI+0B2B1H],SI
+      ADD    SS:[BX+DI+0B3B2H],SI
+      ADD    SS:[BP+SI+0B4B3H],SI
+      ADD    SS:[BP+DI+0B5B4H],SI
+      ADD    SS:[SI+0B6B5H],SI
+      ADD    SS:[DI+0B7B6H],SI
+      ADD    SS:[BP+0B8B7H],SI
+      ADD    SS:[BX+0B9B8H],SI
+      ADD    SS:[BX+SI+0BAB9H],DI
+      ADD    SS:[BX+DI+0BBBAH],DI
+      ADD    SS:[BP+SI+0BCBBH],DI
+      ADD    SS:[BP+DI+0BDBCH],DI
+      ADD    SS:[SI+0BEBDH],DI
+      ADD    SS:[DI+0BFBEH],DI
+      ADD    SS:[BP+0C0BFH],DI
+      ADD    SS:[BX+0C1C0H],DI
+      ADD    SS:[BX+SI],AX
+      ADD    SS:[BX+DI],AX
+      ADD    AL,SS:[BP+DI]
+      ADD    AL,SS:[SI]
+      ADD    AL,SS:[DI]
+      ADD    AL,SS:[0807H]
+      ADD    AL,SS:[BX]
+      ADD    CL,SS:[BX+SI]
+      ADD    CL,SS:[BX+DI]
+      ADD    CL,SS:[BP+SI]
+      ADD    CL,SS:[BP+DI]
+      ADD    CL,SS:[SI]
+      ADD    CL,SS:[DI]
+      ADD    CL,SS:[100FH]
+      ADD    CL,SS:[BX]
+      ADD    DL,SS:[BX+SI]
+      ADD    DL,SS:[BX+DI]
+      ADD    DL,SS:[BP+SI]
+      ADD    DL,SS:[BP+DI]
+      ADD    DL,SS:[SI]
+      ADD    DL,SS:[DI]
+      ADD    DL,SS:[1817H]
+      ADD    DL,SS:[BX]
+      ADD    BL,SS:[BX+SI]
+      ADD    BL,SS:[BX+DI]
+      ADD    BL,SS:[BP+SI]
+      ADD    BL,SS:[BP+DI]
+      ADD    BL,SS:[SI]
+      ADD    BL,SS:[DI]
+      ADD    BL,SS:[201FH]
+      ADD    BL,SS:[BX]
+      ADD    AH,SS:[BX+SI]
+      ADD    AH,SS:[BX+DI]
+      ADD    AH,SS:[BP+SI]
+      ADD    AH,SS:[BP+DI]
+      ADD    AH,SS:[SI]
+      ADD    AH,SS:[DI]
+      ADD    AH,SS:[2827H]
+      ADD    AH,SS:[BX]
+      ADD    AX,SS:[SI]
+      ADD    AX,SS:[DI]
+      ADD    AX,SS:[0807H]
+      ADD    AX,SS:[BX]
+      ADD    CX,SS:[BX+SI]
+      ADD    CX,SS:[BX+DI]
+      ADD    CX,SS:[BP+SI]
+      ADD    CX,SS:[BP+DI]
+      ADD    CX,SS:[SI]
+      ADD    CX,SS:[DI]
+      ADD    CX,SS:[100FH]
+      ADD    CX,SS:[BX]
+      ADD    DX,SS:[BX+SI]
+      ADD    DX,SS:[BX+DI]
+      ADD    DX,SS:[BP+SI]
+      ADD    DX,SS:[BP+DI]
+      ADD    DX,SS:[SI]
+      ADD    DX,SS:[DI]
+      ADD    DX,SS:[1817H]
+      ADD    DX,SS:[BX]
+      ADD    BX,SS:[BX+SI]
+      ADD    BX,SS:[BX+DI]
+      ADD    BX,SS:[BP+SI]
+      ADD    BX,SS:[BP+DI]
+      ADD    BX,SS:[SI]
+      ADD    BX,SS:[DI]
+      ADD    BX,SS:[201FH]
+      ADD    BX,SS:[BX]
+      ADD    SP,SS:[BX+SI]
+      ADD    SP,SS:[BX+DI]
+      ADD    SP,SS:[BP+SI]
+      ADD    SP,SS:[BP+DI]
+      ADD    SP,SS:[SI]
+      ADD    SP,SS:[DI]
+      ADD    SP,SS:[2827H]
+      ADD    SP,SS:[BX]
+      ADD    BP,SS:[BX+SI]
+      ADD    BP,SS:[BX+DI]
+      ADD    BP,SS:[BP+SI]
+      ADD    BP,SS:[BP+DI]
+      ADD    BP,SS:[SI]
+      ADD    BP,SS:[DI]
+      ADD    BP,SS:[302FH]
+      ADD    BP,SS:[BX]
+      ADD    SI,SS:[BX+SI]
+      ADD    SI,SS:[BX+DI]
+      ADD    SI,SS:[BP+SI]
+      ADD    SI,SS:[BP+DI]
+      ADD    SI,SS:[SI]
+      ADD    SI,SS:[DI]
+      ADD    SI,SS:[3837H]
+      ADD    SI,SS:[BX]
+      ADD    DI,SS:[BX+SI]
+      ADD    DI,SS:[BX+DI]
+      ADD    DI,SS:[BP+SI]
+      ADD    DI,SS:[BP+DI]
+      ADD    DI,SS:[SI]
+      ADD    DI,SS:[DI]
+      ADD    DI,SS:[403FH]
+      ADD    DI,SS:[BX]
+      ADD    AX,SS:[BX+SI+65]
+      ADD    AX,SS:[BX+SI-128]
+      ADD    AX,SS:[BX+DI+66]
+      ADD    AX,SS:[BX+DI-128]
+      ADD    AX,SS:[BP+SI+67]
+      ADD    AX,SS:[BP+SI-128]
+      ADD    AX,SS:[BP+DI+68]
+      ADD    AX,SS:[BP+DI-128]
+      ADD    AX,SS:[SI+69]
+      ADD    AX,SS:[SI-128]
+      ADD    AX,SS:[DI+70]
+      ADD    AX,SS:[DI-128]
+      ADD    AX,SS:[BP+71]
+      ADD    AX,SS:[BP-128]
+      ADD    AX,SS:[BX+72]
+      ADD    AX,SS:[BX-128]
+      ADD    CX,SS:[BX+SI+73]
+      ADD    CX,SS:[BX+SI-128]
+      ADD    CX,SS:[BX+DI+74]
+      ADD    CX,SS:[BX+DI-128]
+      ADD    CX,SS:[BP+SI+75]
+      ADD    CX,SS:[BP+SI-128]
+      ADD    CX,SS:[BP+DI+76]
+      ADD    CX,SS:[BP+DI-128]
+      ADD    CX,SS:[SI+77]
+      ADD    CX,SS:[SI-128]
+      ADD    CX,SS:[DI+78]
+      ADD    CX,SS:[DI-128]
+      ADD    CX,SS:[BP+79]
+      ADD    CX,SS:[BP-128]
+      ADD    CX,SS:[BX+80]
+      ADD    CX,SS:[BX-128]
+      ADD    DX,SS:[BX+SI+81]
+      ADD    DX,SS:[BX+SI-128]
+      ADD    DX,SS:[BX+DI+82]
+      ADD    DX,SS:[BX+DI-128]
+      ADD    DX,SS:[BP+SI+83]
+      ADD    DX,SS:[BP+SI-128]
+      ADD    DX,SS:[BP+DI+84]
+      ADD    DX,SS:[BP+DI-128]
+      ADD    DX,SS:[SI+85]
+      ADD    DX,SS:[SI-128]
+      ADD    DX,SS:[DI+86]
+      ADD    DX,SS:[DI-128]
+      ADD    DX,SS:[BP+87]
+      ADD    DX,SS:[BP-128]
+      ADD    DX,SS:[BX+88]
+      ADD    DX,SS:[BX-128]
+      ADD    BX,SS:[BX+SI+89]
+      ADD    BX,SS:[BX+SI-128]
+      ADD    BX,SS:[BX+DI+90]
+      ADD    BX,SS:[BX+DI-128]
+      ADD    BX,SS:[BP+SI+91]
+      ADD    BX,SS:[BP+SI-128]
+      ADD    BX,SS:[BP+DI+92]
+      ADD    BX,SS:[BP+DI-128]
+      ADD    BX,SS:[SI+93]
+      ADD    BX,SS:[SI-128]
+      ADD    BX,SS:[DI+94]
+      ADD    BX,SS:[DI-128]
+      ADD    BX,SS:[BP+95]
+      ADD    BX,SS:[BP-128]
+      ADD    BX,SS:[BX+96]
+      ADD    BX,SS:[BX-128]
+      ADD    SP,SS:[BX+SI+97]
+      ADD    SP,SS:[BX+SI-128]
+      ADD    SP,SS:[BX+DI+98]
+      ADD    SP,SS:[BX+DI-128]
+      ADD    SP,SS:[BP+SI+99]
+      ADD    SP,SS:[BP+SI-128]
+      ADD    SP,SS:[BP+DI+100]
+      ADD    SP,SS:[BP+DI-128]
+      ADD    SP,SS:[SI+101]
+      ADD    SP,SS:[SI-128]
+      ADD    SP,SS:[DI+102]
+      ADD    SP,SS:[DI-128]
+      ADD    SP,SS:[BP+103]
+      ADD    SP,SS:[BP-128]
+      ADD    SP,SS:[BX+104]
+      ADD    SP,SS:[BX-128]
+      ADD    BP,SS:[BX+SI+105]
+      ADD    BP,SS:[BX+SI-128]
+      ADD    BP,SS:[BX+DI+106]
+      ADD    BP,SS:[BX+DI-128]
+      ADD    BP,SS:[BP+SI+107]
+      ADD    BP,SS:[BP+SI-128]
+      ADD    BP,SS:[BP+DI+108]
+      ADD    BP,SS:[BP+DI-128]
+      ADD    BP,SS:[SI+109]
+      ADD    BP,SS:[SI-128]
+      ADD    BP,SS:[DI+110]
+      ADD    BP,SS:[DI-128]
+      ADD    BP,SS:[BP+111]
+      ADD    BP,SS:[BP-128]
+      ADD    BP,SS:[BX+112]
+      ADD    BP,SS:[BX-128]
+      ADD    SI,SS:[BX+SI+113]
+      ADD    SI,SS:[BX+SI-128]
+      ADD    SI,SS:[BX+DI+114]
+      ADD    SI,SS:[BX+DI-128]
+      ADD    SI,SS:[BP+SI+115]
+      ADD    SI,SS:[BP+SI-128]
+      ADD    SI,SS:[BP+DI+116]
+      ADD    SI,SS:[BP+DI-128]
+      ADD    SI,SS:[SI+117]
+      ADD    SI,SS:[SI-128]
+      ADD    SI,SS:[DI+118]
+      ADD    SI,SS:[DI-128]
+      ADD    SI,SS:[BP+119]
+      ADD    SI,SS:[BP-128]
+      ADD    SI,SS:[BX+120]
+      ADD    SI,SS:[BX-128]
+      ADD    DI,SS:[BX+SI+121]
+      ADD    DI,SS:[BX+SI-128]
+      ADD    DI,SS:[BX+DI+122]
+      ADD    DI,SS:[BX+DI-128]
+      ADD    DI,SS:[BP+SI+123]
+      ADD    DI,SS:[BP+SI-128]
+      ADD    DI,SS:[BP+DI+124]
+      ADD    DI,SS:[BP+DI-128]
+      ADD    DI,SS:[SI+125]
+      ADD    DI,SS:[SI-128]
+      ADD    DI,SS:[DI+126]
+      ADD    DI,SS:[DI-128]
+      ADD    DI,SS:[BP+127]
+      ADD    DI,SS:[BP-128]
+      ADD    DI,SS:[BX-128]
+      ADD    DI,SS:[BX+0]
+      ADD    AX,SS:[BX+SI+8281H]
+      ADD    AX,SS:[BX+DI+8382H]
+      ADD    AX,SS:[BP+SI+8483H]
+      ADD    AX,SS:[BP+DI+8584H]
+      ADD    AX,SS:[SI+8685H]
+      ADD    AX,SS:[DI+8786H]
+      ADD    AX,SS:[BP+8887H]
+      ADD    AX,SS:[BX+8988H]
+      ADD    CX,SS:[BX+SI+8A89H]
+      ADD    CX,SS:[BX+DI+8B8AH]
+      ADD    CX,SS:[BP+SI+8C8BH]
+      ADD    CX,SS:[BP+DI+8D8CH]
+      ADD    CX,SS:[SI+8E8DH]
+      ADD    CX,SS:[DI+8F8EH]
+      ADD    CX,SS:[BP+908FH]
+      ADD    CX,SS:[BX+9190H]
+      ADD    DX,SS:[BX+SI+9291H]
+      ADD    DX,SS:[BX+DI+9392H]
+      ADD    DX,SS:[BP+SI+9493H]
+      ADD    DX,SS:[BP+DI+9594H]
+      ADD    DX,SS:[SI+9695H]
+      ADD    DX,SS:[DI+9796H]
+      ADD    DX,SS:[BP+9897H]
+      ADD    DX,SS:[BX+9998H]
+      ADD    BX,SS:[BX+SI+9A99H]
+      ADD    BX,SS:[BX+DI+9B9AH]
+      ADD    BX,SS:[BP+SI+9C9BH]
+      ADD    BX,SS:[BP+DI+9D9CH]
+      ADD    BX,SS:[SI+9E9DH]
+      ADD    BX,SS:[DI+9F9EH]
+      ADD    BX,SS:[BP+0A09FH]
+      ADD    BX,SS:[BX+0A1A0H]
+      ADD    SP,SS:[BX+SI+0A2A1H]
+      ADD    SP,SS:[BX+DI+0A3A2H]
+      ADD    SP,SS:[BP+SI+0A4A3H]
+      ADD    SP,SS:[BP+DI+0A5A4H]
+      ADD    SP,SS:[SI+0A6A5H]
+      ADD    SP,SS:[DI+0A7A6H]
+      ADD    SP,SS:[BP+0A8A7H]
+      ADD    SP,SS:[BX+0A9A8H]
+      ADD    BP,SS:[BX+SI+0AAA9H]
+      ADD    BP,SS:[BX+DI+0ABAAH]
+      ADD    BP,SS:[BP+SI+0ACABH]
+      ADD    BP,SS:[BP+DI+0ADACH]
+      ADD    BP,SS:[SI+0AEADH]
+      ADD    BP,SS:[DI+0AFAEH]
+      ADD    BP,SS:[BP+0B0AFH]
+      ADD    BP,SS:[BX+0B1B0H]
+      ADD    SI,SS:[BX+SI+0B2B1H]
+      ADD    SI,SS:[BX+DI+0B3B2H]
+      ADD    SI,SS:[BP+SI+0B4B3H]
+      ADD    SI,SS:[BP+DI+0B5B4H]
+      ADD    SI,SS:[SI+0B6B5H]
+      ADD    SI,SS:[DI+0B7B6H]
+      ADD    SI,SS:[BP+0B8B7H]
+      ADD    SI,SS:[BX+0B9B8H]
+      ADD    DI,SS:[BX+SI+0BAB9H]
+      ADD    DI,SS:[BX+DI+0BBBAH]
+      ADD    DI,SS:[BP+SI+0BCBBH]
+      ADD    DI,SS:[BP+DI+0BDBCH]
+      ADD    DI,SS:[SI+0BEBDH]
+      ADD    DI,SS:[DI+0BFBEH]
+      ADD    DI,SS:[BP+0C0BFH]
+      ADD    DI,SS:[BX+0C1C0H]
+      ADD    AX,SS:[BX+SI]
+      ADD    AX,SS:[BX+DI]
+      ADD    AX,SS:[BP+SI]
+      ADD    AX,SS:[BP+DI]
+      OR     SS:[BX+DI],CL
+      OR     SS:[BP+SI],CL
+      OR     SS:[BP+DI],CL
+      OR     SS:[SI],CL
+      OR     SS:[DI],CL
+      OR     SS:[100FH],CL
+      OR     SS:[BX],CL
+      OR     SS:[BX+SI],DL
+      OR     SS:[BX+DI],DL
+      OR     SS:[BP+SI],DL
+      OR     SS:[BP+DI],DL
+      OR     SS:[SI],DL
+      OR     SS:[DI],DL
+      OR     SS:[1817H],DL
+      OR     SS:[BX],DL
+      OR     SS:[BX+SI],BL
+      OR     SS:[BX+DI],BL
+      OR     SS:[BP+SI],BL
+      OR     SS:[BP+DI],BL
+      OR     SS:[SI],BL
+      OR     SS:[DI],BL
+      OR     SS:[201FH],BL
+      OR     SS:[BX],BL
+      OR     SS:[BX+SI],AH
+      OR     SS:[BX+DI],AH
+      OR     SS:[BP+SI],AH
+      OR     SS:[BP+DI],AH
+      OR     SS:[SI],AH
+      OR     SS:[DI],AH
+      OR     SS:[2827H],AH
+      OR     SS:[BX],AH
+      OR     SS:[BP+SI],CX
+      OR     SS:[BP+DI],CX
+      OR     SS:[SI],CX
+      OR     SS:[DI],CX
+      OR     SS:[100FH],CX
+      OR     SS:[BX],CX
+      OR     SS:[BX+SI],DX
+      OR     SS:[BX+DI],DX
+      OR     SS:[BP+SI],DX
+      OR     SS:[BP+DI],DX
+      OR     SS:[SI],DX
+      OR     SS:[DI],DX
+      OR     SS:[1817H],DX
+      OR     SS:[BX],DX
+      OR     SS:[BX+SI],BX
+      OR     SS:[BX+DI],BX
+      OR     SS:[BP+SI],BX
+      OR     SS:[BP+DI],BX
+      OR     SS:[SI],BX
+      OR     SS:[DI],BX
+      OR     SS:[201FH],BX
+      OR     SS:[BX],BX
+      OR     SS:[BX+SI],SP
+      OR     SS:[BX+DI],SP
+      OR     SS:[BP+SI],SP
+      OR     SS:[BP+DI],SP
+      OR     SS:[SI],SP
+      OR     SS:[DI],SP
+      OR     SS:[2827H],SP
+      OR     SS:[BX],SP
+      OR     SS:[BX+SI],BP
+      OR     SS:[BX+DI],BP
+      OR     SS:[BP+SI],BP
+      OR     SS:[BP+DI],BP
+      OR     SS:[SI],BP
+      OR     SS:[DI],BP
+      OR     SS:[302FH],BP
+      OR     SS:[BX],BP
+      OR     SS:[BX+SI],SI
+      OR     SS:[BX+DI],SI
+      OR     SS:[BP+SI],SI
+      OR     SS:[BP+DI],SI
+      OR     SS:[SI],SI
+      OR     SS:[DI],SI
+      OR     SS:[3837H],SI
+      OR     SS:[BX],SI
+      OR     SS:[BX+SI],DI
+      OR     SS:[BX+DI],DI
+      OR     SS:[BP+SI],DI
+      OR     SS:[BP+DI],DI
+      OR     SS:[SI],DI
+      OR     SS:[DI],DI
+      OR     SS:[403FH],DI
+      OR     SS:[BX],DI
+      OR     SS:[BX+SI+65],AX
+      OR     SS:[BX+SI-128],AX
+      OR     SS:[BX+DI+66],AX
+      OR     SS:[BX+DI-128],AX
+      OR     SS:[BP+SI+67],AX
+      OR     SS:[BP+SI-128],AX
+      OR     SS:[BP+DI+68],AX
+      OR     SS:[BP+DI-128],AX
+      OR     SS:[SI+69],AX
+      OR     SS:[SI-128],AX
+      OR     SS:[DI+70],AX
+      OR     SS:[DI-128],AX
+      OR     SS:[BP+71],AX
+      OR     SS:[BP-128],AX
+      OR     SS:[BX+72],AX
+      OR     SS:[BX-128],AX
+      OR     SS:[BX+SI+73],CX
+      OR     SS:[BX+SI-128],CX
+      OR     SS:[BX+DI+74],CX
+      OR     SS:[BX+DI-128],CX
+      OR     SS:[BP+SI+75],CX
+      OR     SS:[BP+SI-128],CX
+      OR     SS:[BP+DI+76],CX
+      OR     SS:[BP+DI-128],CX
+      OR     SS:[SI+77],CX
+      OR     SS:[SI-128],CX
+      OR     SS:[DI+78],CX
+      OR     SS:[DI-128],CX
+      OR     SS:[BP+79],CX
+      OR     SS:[BP-128],CX
+      OR     SS:[BX+80],CX
+      OR     SS:[BX-128],CX
+      OR     SS:[BX+SI+81],DX
+      OR     SS:[BX+SI-128],DX
+      OR     SS:[BX+DI+82],DX
+      OR     SS:[BX+DI-128],DX
+      OR     SS:[BP+SI+83],DX
+      OR     SS:[BP+SI-128],DX
+      OR     SS:[BP+DI+84],DX
+      OR     SS:[BP+DI-128],DX
+      OR     SS:[SI+85],DX
+      OR     SS:[SI-128],DX
+      OR     SS:[DI+86],DX
+      OR     SS:[DI-128],DX
+      OR     SS:[BP+87],DX
+      OR     SS:[BP-128],DX
+      OR     SS:[BX+88],DX
+      OR     SS:[BX-128],DX
+      OR     SS:[BX+SI+89],BX
+      OR     SS:[BX+SI-128],BX
+      OR     SS:[BX+DI+90],BX
+      OR     SS:[BX+DI-128],BX
+      OR     SS:[BP+SI+91],BX
+      OR     SS:[BP+SI-128],BX
+      OR     SS:[BP+DI+92],BX
+      OR     SS:[BP+DI-128],BX
+      OR     SS:[SI+93],BX
+      OR     SS:[SI-128],BX
+      OR     SS:[DI+94],BX
+      OR     SS:[DI-128],BX
+      OR     SS:[BP+95],BX
+      OR     SS:[BP-128],BX
+      OR     SS:[BX+96],BX
+      OR     SS:[BX-128],BX
+      OR     SS:[BX+SI+97],SP
+      OR     SS:[BX+SI-128],SP
+      OR     SS:[BX+DI+98],SP
+      OR     SS:[BX+DI-128],SP
+      OR     SS:[BP+SI+99],SP
+      OR     SS:[BP+SI-128],SP
+      OR     SS:[BP+DI+100],SP
+      OR     SS:[BP+DI-128],SP
+      OR     SS:[SI+101],SP
+      OR     SS:[SI-128],SP
+      OR     SS:[DI+102],SP
+      OR     SS:[DI-128],SP
+      OR     SS:[BP+103],SP
+      OR     SS:[BP-128],SP
+      OR     SS:[BX+104],SP
+      OR     SS:[BX-128],SP
+      OR     SS:[BX+SI+105],BP
+      OR     SS:[BX+SI-128],BP
+      OR     SS:[BX+DI+106],BP
+      OR     SS:[BX+DI-128],BP
+      OR     SS:[BP+SI+107],BP
+      OR     SS:[BP+SI-128],BP
+      OR     SS:[BP+DI+108],BP
+      OR     SS:[BP+DI-128],BP
+      OR     SS:[SI+109],BP
+      OR     SS:[SI-128],BP
+      OR     SS:[DI+110],BP
+      OR     SS:[DI-128],BP
+      OR     SS:[BP+111],BP
+      OR     SS:[BP-128],BP
+      OR     SS:[BX+112],BP
+      OR     SS:[BX-128],BP
+      OR     SS:[BX+SI+113],SI
+      OR     SS:[BX+SI-128],SI
+      OR     SS:[BX+DI+114],SI
+      OR     SS:[BX+DI-128],SI
+      OR     SS:[BP+SI+115],SI
+      OR     SS:[BP+SI-128],SI
+      OR     SS:[BP+DI+116],SI
+      OR     SS:[BP+DI-128],SI
+      OR     SS:[SI+117],SI
+      OR     SS:[SI-128],SI
+      OR     SS:[DI+118],SI
+      OR     SS:[DI-128],SI
+      OR     SS:[BP+119],SI
+      OR     SS:[BP-128],SI
+      OR     SS:[BX+120],SI
+      OR     SS:[BX-128],SI
+      OR     SS:[BX+SI+121],DI
+      OR     SS:[BX+SI-128],DI
+      OR     SS:[BX+DI+122],DI
+      OR     SS:[BX+DI-128],DI
+      OR     SS:[BP+SI+123],DI
+      OR     SS:[BP+SI-128],DI
+      OR     SS:[BP+DI+124],DI
+      OR     SS:[BP+DI-128],DI
+      OR     SS:[SI+125],DI
+      OR     SS:[SI-128],DI
+      OR     SS:[DI+126],DI
+      OR     SS:[DI-128],DI
+      OR     SS:[BP+127],DI
+      OR     SS:[BP-128],DI
+      OR     SS:[BX-128],DI
+      OR     SS:[BX+0],DI
+      OR     SS:[BX+SI+8281H],AX
+      OR     SS:[BX+DI+8382H],AX
+      OR     SS:[BP+SI+8483H],AX
+      OR     SS:[BP+DI+8584H],AX
+      OR     SS:[SI+8685H],AX
+      OR     SS:[DI+8786H],AX
+      OR     SS:[BP+8887H],AX
+      OR     SS:[BX+8988H],AX
+      OR     SS:[BX+SI+8A89H],CX
+      OR     SS:[BX+DI+8B8AH],CX
+      OR     SS:[BP+SI+8C8BH],CX
+      OR     SS:[BP+DI+8D8CH],CX
+      OR     SS:[SI+8E8DH],CX
+      OR     SS:[DI+8F8EH],CX
+      OR     SS:[BP+908FH],CX
+      OR     SS:[BX+9190H],CX
+      OR     SS:[BX+SI+9291H],DX
+      OR     SS:[BX+DI+9392H],DX
+      OR     SS:[BP+SI+9493H],DX
+      OR     SS:[BP+DI+9594H],DX
+      OR     SS:[SI+9695H],DX
+      OR     SS:[DI+9796H],DX
+      OR     SS:[BP+9897H],DX
+      OR     SS:[BX+9998H],DX
+      OR     SS:[BX+SI+9A99H],BX
+      OR     SS:[BX+DI+9B9AH],BX
+      OR     SS:[BP+SI+9C9BH],BX
+      OR     SS:[BP+DI+9D9CH],BX
+      OR     SS:[SI+9E9DH],BX
+      OR     SS:[DI+9F9EH],BX
+      OR     SS:[BP+0A09FH],BX
+      OR     SS:[BX+0A1A0H],BX
+      OR     SS:[BX+SI+0A2A1H],SP
+      OR     SS:[BX+DI+0A3A2H],SP
+      OR     SS:[BP+SI+0A4A3H],SP
+      OR     SS:[BP+DI+0A5A4H],SP
+      OR     SS:[SI+0A6A5H],SP
+      OR     SS:[DI+0A7A6H],SP
+      OR     SS:[BP+0A8A7H],SP
+      OR     SS:[BX+0A9A8H],SP
+      OR     SS:[BX+SI+0AAA9H],BP
+      OR     SS:[BX+DI+0ABAAH],BP
+      OR     SS:[BP+SI+0ACABH],BP
+      OR     SS:[BP+DI+0ADACH],BP
+      OR     SS:[SI+0AEADH],BP
+      OR     SS:[DI+0AFAEH],BP
+      OR     SS:[BP+0B0AFH],BP
+      OR     SS:[BX+0B1B0H],BP
+      OR     SS:[BX+SI+0B2B1H],SI
+      OR     SS:[BX+DI+0B3B2H],SI
+      OR     SS:[BP+SI+0B4B3H],SI
+      OR     SS:[BP+DI+0B5B4H],SI
+      OR     SS:[SI+0B6B5H],SI
+      OR     SS:[DI+0B7B6H],SI
+      OR     SS:[BP+0B8B7H],SI
+      OR     SS:[BX+0B9B8H],SI
+      OR     SS:[BX+SI+0BAB9H],DI
+      OR     SS:[BX+DI+0BBBAH],DI
+      OR     SS:[BP+SI+0BCBBH],DI
+      OR     SS:[BP+DI+0BDBCH],DI
+      OR     SS:[SI+0BEBDH],DI
+      OR     SS:[DI+0BFBEH],DI
+      OR     SS:[BP+0C0BFH],DI
+      OR     SS:[BX+0C1C0H],DI
+      OR     SS:[BX+SI],AX
+      OR     SS:[BX+DI],AX
+      OR     SS:[BP+SI],AX
+      OR     SS:[BP+DI],AX
+      OR     SS:[SI],AX
+      OR     SS:[DI],AX
+      OR     SS:[0807H],AX
+      OR     SS:[BX],AX
+      OR     SS:[BX+SI],CX
+      OR     SS:[BX+DI],CX
+      OR     CL,SS:[BP+DI]
+      OR     CL,SS:[SI]
+      OR     CL,SS:[DI]
+      OR     CL,SS:[100FH]
+      OR     CL,SS:[BX]
+      OR     DL,SS:[BX+SI]
+      OR     DL,SS:[BX+DI]
+      OR     DL,SS:[BP+SI]
+      OR     DL,SS:[BP+DI]
+      OR     DL,SS:[SI]
+      OR     DL,SS:[DI]
+      OR     DL,SS:[1817H]
+      OR     DL,SS:[BX]
+      OR     BL,SS:[BX+SI]
+      OR     BL,SS:[BX+DI]
+      OR     BL,SS:[BP+SI]
+      OR     BL,SS:[BP+DI]
+      OR     BL,SS:[SI]
+      OR     BL,SS:[DI]
+      OR     BL,SS:[201FH]
+      OR     BL,SS:[BX]
+      OR     AH,SS:[BX+SI]
+      OR     AH,SS:[BX+DI]
+      OR     AH,SS:[BP+SI]
+      OR     AH,SS:[BP+DI]
+      OR     AH,SS:[SI]
+      OR     AH,SS:[DI]
+      OR     AH,SS:[2827H]
+      OR     AH,SS:[BX]
+      OR     CX,SS:[SI]
+      OR     CX,SS:[DI]
+      OR     CX,SS:[100FH]
+      OR     CX,SS:[BX]
+      OR     DX,SS:[BX+SI]
+      OR     DX,SS:[BX+DI]
+      OR     DX,SS:[BP+SI]
+      OR     DX,SS:[BP+DI]
+      OR     DX,SS:[SI]
+      OR     DX,SS:[DI]
+      OR     DX,SS:[1817H]
+      OR     DX,SS:[BX]
+      OR     BX,SS:[BX+SI]
+      OR     BX,SS:[BX+DI]
+      OR     BX,SS:[BP+SI]
+      OR     BX,SS:[BP+DI]
+      OR     BX,SS:[SI]
+      OR     BX,SS:[DI]
+      OR     BX,SS:[201FH]
+      OR     BX,SS:[BX]
+      OR     SP,SS:[BX+SI]
+      OR     SP,SS:[BX+DI]
+      OR     SP,SS:[BP+SI]
+      OR     SP,SS:[BP+DI]
+      OR     SP,SS:[SI]
+      OR     SP,SS:[DI]
+      OR     SP,SS:[2827H]
+      OR     SP,SS:[BX]
+      OR     BP,SS:[BX+SI]
+      OR     BP,SS:[BX+DI]
+      OR     BP,SS:[BP+SI]
+      OR     BP,SS:[BP+DI]
+      OR     BP,SS:[SI]
+      OR     BP,SS:[DI]
+      OR     BP,SS:[302FH]
+      OR     BP,SS:[BX]
+      OR     SI,SS:[BX+SI]
+      OR     SI,SS:[BX+DI]
+      OR     SI,SS:[BP+SI]
+      OR     SI,SS:[BP+DI]
+      OR     SI,SS:[SI]
+      OR     SI,SS:[DI]
+      OR     SI,SS:[3837H]
+      OR     SI,SS:[BX]
+      OR     DI,SS:[BX+SI]
+      OR     DI,SS:[BX+DI]
+      OR     DI,SS:[BP+SI]
+      OR     DI,SS:[BP+DI]
+      OR     DI,SS:[SI]
+      OR     DI,SS:[DI]
+      OR     DI,SS:[403FH]
+      OR     DI,SS:[BX]
+      OR     AX,SS:[BX+SI+65]
+      OR     AX,SS:[BX+SI-128]
+      OR     AX,SS:[BX+DI+66]
+      OR     AX,SS:[BX+DI-128]
+      OR     AX,SS:[BP+SI+67]
+      OR     AX,SS:[BP+SI-128]
+      OR     AX,SS:[BP+DI+68]
+      OR     AX,SS:[BP+DI-128]
+      OR     AX,SS:[SI+69]
+      OR     AX,SS:[SI-128]
+      OR     AX,SS:[DI+70]
+      OR     AX,SS:[DI-128]
+      OR     AX,SS:[BP+71]
+      OR     AX,SS:[BP-128]
+      OR     AX,SS:[BX+72]
+      OR     AX,SS:[BX-128]
+      OR     CX,SS:[BX+SI+73]
+      OR     CX,SS:[BX+SI-128]
+      OR     CX,SS:[BX+DI+74]
+      OR     CX,SS:[BX+DI-128]
+      OR     CX,SS:[BP+SI+75]
+      OR     CX,SS:[BP+SI-128]
+      OR     CX,SS:[BP+DI+76]
+      OR     CX,SS:[BP+DI-128]
+      OR     CX,SS:[SI+77]
+      OR     CX,SS:[SI-128]
+      OR     CX,SS:[DI+78]
+      OR     CX,SS:[DI-128]
+      OR     CX,SS:[BP+79]
+      OR     CX,SS:[BP-128]
+      OR     CX,SS:[BX+80]
+      OR     CX,SS:[BX-128]
+      OR     DX,SS:[BX+SI+81]
+      OR     DX,SS:[BX+SI-128]
+      OR     DX,SS:[BX+DI+82]
+      OR     DX,SS:[BX+DI-128]
+      OR     DX,SS:[BP+SI+83]
+      OR     DX,SS:[BP+SI-128]
+      OR     DX,SS:[BP+DI+84]
+      OR     DX,SS:[BP+DI-128]
+      OR     DX,SS:[SI+85]
+      OR     DX,SS:[SI-128]
+      OR     DX,SS:[DI+86]
+      OR     DX,SS:[DI-128]
+      OR     DX,SS:[BP+87]
+      OR     DX,SS:[BP-128]
+      OR     DX,SS:[BX+88]
+      OR     DX,SS:[BX-128]
+      OR     BX,SS:[BX+SI+89]
+      OR     BX,SS:[BX+SI-128]
+      OR     BX,SS:[BX+DI+90]
+      OR     BX,SS:[BX+DI-128]
+      OR     BX,SS:[BP+SI+91]
+      OR     BX,SS:[BP+SI-128]
+      OR     BX,SS:[BP+DI+92]
+      OR     BX,SS:[BP+DI-128]
+      OR     BX,SS:[SI+93]
+      OR     BX,SS:[SI-128]
+      OR     BX,SS:[DI+94]
+      OR     BX,SS:[DI-128]
+      OR     BX,SS:[BP+95]
+      OR     BX,SS:[BP-128]
+      OR     BX,SS:[BX+96]
+      OR     BX,SS:[BX-128]
+      OR     SP,SS:[BX+SI+97]
+      OR     SP,SS:[BX+SI-128]
+      OR     SP,SS:[BX+DI+98]
+      OR     SP,SS:[BX+DI-128]
+      OR     SP,SS:[BP+SI+99]
+      OR     SP,SS:[BP+SI-128]
+      OR     SP,SS:[BP+DI+100]
+      OR     SP,SS:[BP+DI-128]
+      OR     SP,SS:[SI+101]
+      OR     SP,SS:[SI-128]
+      OR     SP,SS:[DI+102]
+      OR     SP,SS:[DI-128]
+      OR     SP,SS:[BP+103]
+      OR     SP,SS:[BP-128]
+      OR     SP,SS:[BX+104]
+      OR     SP,SS:[BX-128]
+      OR     BP,SS:[BX+SI+105]
+      OR     BP,SS:[BX+SI-128]
+      OR     BP,SS:[BX+DI+106]
+      OR     BP,SS:[BX+DI-128]
+      OR     BP,SS:[BP+SI+107]
+      OR     BP,SS:[BP+SI-128]
+      OR     BP,SS:[BP+DI+108]
+      OR     BP,SS:[BP+DI-128]
+      OR     BP,SS:[SI+109]
+      OR     BP,SS:[SI-128]
+      OR     BP,SS:[DI+110]
+      OR     BP,SS:[DI-128]
+      OR     BP,SS:[BP+111]
+      OR     BP,SS:[BP-128]
+      OR     BP,SS:[BX+112]
+      OR     BP,SS:[BX-128]
+      OR     SI,SS:[BX+SI+113]
+      OR     SI,SS:[BX+SI-128]
+      OR     SI,SS:[BX+DI+114]
+      OR     SI,SS:[BX+DI-128]
+      OR     SI,SS:[BP+SI+115]
+      OR     SI,SS:[BP+SI-128]
+      OR     SI,SS:[BP+DI+116]
+      OR     SI,SS:[BP+DI-128]
+      OR     SI,SS:[SI+117]
+      OR     SI,SS:[SI-128]
+      OR     SI,SS:[DI+118]
+      OR     SI,SS:[DI-128]
+      OR     SI,SS:[BP+119]
+      OR     SI,SS:[BP-128]
+      OR     SI,SS:[BX+120]
+      OR     SI,SS:[BX-128]
+      OR     DI,SS:[BX+SI+121]
+      OR     DI,SS:[BX+SI-128]
+      OR     DI,SS:[BX+DI+122]
+      OR     DI,SS:[BX+DI-128]
+      OR     DI,SS:[BP+SI+123]
+      OR     DI,SS:[BP+SI-128]
+      OR     DI,SS:[BP+DI+124]
+      OR     DI,SS:[BP+DI-128]
+      OR     DI,SS:[SI+125]
+      OR     DI,SS:[SI-128]
+      OR     DI,SS:[DI+126]
+      OR     DI,SS:[DI-128]
+      OR     DI,SS:[BP+127]
+      OR     DI,SS:[BP-128]
+      OR     DI,SS:[BX-128]
+      OR     DI,SS:[BX+0]
+      OR     AX,SS:[BX+SI+8281H]
+      OR     AX,SS:[BX+DI+8382H]
+      OR     AX,SS:[BP+SI+8483H]
+      OR     AX,SS:[BP+DI+8584H]
+      OR     AX,SS:[SI+8685H]
+      OR     AX,SS:[DI+8786H]
+      OR     AX,SS:[BP+8887H]
+      OR     AX,SS:[BX+8988H]
+      OR     CX,SS:[BX+SI+8A89H]
+      OR     CX,SS:[BX+DI+8B8AH]
+      OR     CX,SS:[BP+SI+8C8BH]
+      OR     CX,SS:[BP+DI+8D8CH]
+      OR     CX,SS:[SI+8E8DH]
+      OR     CX,SS:[DI+8F8EH]
+      OR     CX,SS:[BP+908FH]
+      OR     CX,SS:[BX+9190H]
+      OR     DX,SS:[BX+SI+9291H]
+      OR     DX,SS:[BX+DI+9392H]
+      OR     DX,SS:[BP+SI+9493H]
+      OR     DX,SS:[BP+DI+9594H]
+      OR     DX,SS:[SI+9695H]
+      OR     DX,SS:[DI+9796H]
+      OR     DX,SS:[BP+9897H]
+      OR     DX,SS:[BX+9998H]
+      OR     BX,SS:[BX+SI+9A99H]
+      OR     BX,SS:[BX+DI+9B9AH]
+      OR     BX,SS:[BP+SI+9C9BH]
+      OR     BX,SS:[BP+DI+9D9CH]
+      OR     BX,SS:[SI+9E9DH]
+      OR     BX,SS:[DI+9F9EH]
+      OR     BX,SS:[BP+0A09FH]
+      OR     BX,SS:[BX+0A1A0H]
+      OR     SP,SS:[BX+SI+0A2A1H]
+      OR     SP,SS:[BX+DI+0A3A2H]
+      OR     SP,SS:[BP+SI+0A4A3H]
+      OR     SP,SS:[BP+DI+0A5A4H]
+      OR     SP,SS:[SI+0A6A5H]
+      OR     SP,SS:[DI+0A7A6H]
+      OR     SP,SS:[BP+0A8A7H]
+      OR     SP,SS:[BX+0A9A8H]
+      OR     BP,SS:[BX+SI+0AAA9H]
+      OR     BP,SS:[BX+DI+0ABAAH]
+      OR     BP,SS:[BP+SI+0ACABH]
+      OR     BP,SS:[BP+DI+0ADACH]
+      OR     BP,SS:[SI+0AEADH]
+      OR     BP,SS:[DI+0AFAEH]
+      OR     BP,SS:[BP+0B0AFH]
+      OR     BP,SS:[BX+0B1B0H]
+      OR     SI,SS:[BX+SI+0B2B1H]
+      OR     SI,SS:[BX+DI+0B3B2H]
+      OR     SI,SS:[BP+SI+0B4B3H]
+      OR     SI,SS:[BP+DI+0B5B4H]
+      OR     SI,SS:[SI+0B6B5H]
+      OR     SI,SS:[DI+0B7B6H]
+      OR     SI,SS:[BP+0B8B7H]
+      OR     SI,SS:[BX+0B9B8H]
+      OR     DI,SS:[BX+SI+0BAB9H]
+      OR     DI,SS:[BX+DI+0BBBAH]
+      OR     DI,SS:[BP+SI+0BCBBH]
+      OR     DI,SS:[BP+DI+0BDBCH]
+      OR     DI,SS:[SI+0BEBDH]
+      OR     DI,SS:[DI+0BFBEH]
+      OR     DI,SS:[BP+0C0BFH]
+      OR     DI,SS:[BX+0C1C0H]
+      OR     AX,SS:[BX+SI]
+      OR     AX,SS:[BX+DI]
+      OR     AX,SS:[BP+SI]
+      OR     AX,SS:[BP+DI]
+      OR     AX,SS:[SI]
+      OR     AX,SS:[DI]
+      OR     AX,SS:[0807H]
+      OR     AX,SS:[BX]
+      OR     CX,SS:[BX+SI]
+      OR     CX,SS:[BX+DI]
+      OR     CX,SS:[BP+SI]
+      OR     CX,SS:[BP+DI]
+      ADC    SS:[BX+DI],DL
+      ADC    SS:[BP+SI],DL
+      ADC    SS:[BP+DI],DL
+      ADC    SS:[SI],DL
+      ADC    SS:[DI],DL
+      ADC    SS:[1817H],DL
+      ADC    SS:[BX],DL
+      ADC    SS:[BX+SI],BL
+      ADC    SS:[BX+DI],BL
+      ADC    SS:[BP+SI],BL
+      ADC    SS:[BP+DI],BL
+      ADC    SS:[SI],BL
+      ADC    SS:[DI],BL
+      ADC    SS:[201FH],BL
+      ADC    SS:[BX],BL
+      ADC    SS:[BX+SI],AH
+      ADC    SS:[BX+DI],AH
+      ADC    SS:[BP+SI],AH
+      ADC    SS:[BP+DI],AH
+      ADC    SS:[SI],AH
+      ADC    SS:[DI],AH
+      ADC    SS:[2827H],AH
+      ADC    SS:[BX],AH
+      ADC    SS:[BP+SI],DX
+      ADC    SS:[BP+DI],DX
+      ADC    SS:[SI],DX
+      ADC    SS:[DI],DX
+      ADC    SS:[1817H],DX
+      ADC    SS:[BX],DX
+      ADC    SS:[BX+SI],BX
+      ADC    SS:[BX+DI],BX
+      ADC    SS:[BP+SI],BX
+      ADC    SS:[BP+DI],BX
+      ADC    SS:[SI],BX
+      ADC    SS:[DI],BX
+      ADC    SS:[201FH],BX
+      ADC    SS:[BX],BX
+      ADC    SS:[BX+SI],SP
+      ADC    SS:[BX+DI],SP
+      ADC    SS:[BP+SI],SP
+      ADC    SS:[BP+DI],SP
+      ADC    SS:[SI],SP
+      ADC    SS:[DI],SP
+      ADC    SS:[2827H],SP
+      ADC    SS:[BX],SP
+      ADC    SS:[BX+SI],BP
+      ADC    SS:[BX+DI],BP
+      ADC    SS:[BP+SI],BP
+      ADC    SS:[BP+DI],BP
+      ADC    SS:[SI],BP
+      ADC    SS:[DI],BP
+      ADC    SS:[302FH],BP
+      ADC    SS:[BX],BP
+      ADC    SS:[BX+SI],SI
+      ADC    SS:[BX+DI],SI
+      ADC    SS:[BP+SI],SI
+      ADC    SS:[BP+DI],SI
+      ADC    SS:[SI],SI
+      ADC    SS:[DI],SI
+      ADC    SS:[3837H],SI
+      ADC    SS:[BX],SI
+      ADC    SS:[BX+SI],DI
+      ADC    SS:[BX+DI],DI
+      ADC    SS:[BP+SI],DI
+      ADC    SS:[BP+DI],DI
+      ADC    SS:[SI],DI
+      ADC    SS:[DI],DI
+      ADC    SS:[403FH],DI
+      ADC    SS:[BX],DI
+      ADC    SS:[BX+SI+65],AX
+      ADC    SS:[BX+SI-128],AX
+      ADC    SS:[BX+DI+66],AX
+      ADC    SS:[BX+DI-128],AX
+      ADC    SS:[BP+SI+67],AX
+      ADC    SS:[BP+SI-128],AX
+      ADC    SS:[BP+DI+68],AX
+      ADC    SS:[BP+DI-128],AX
+      ADC    SS:[SI+69],AX
+      ADC    SS:[SI-128],AX
+      ADC    SS:[DI+70],AX
+      ADC    SS:[DI-128],AX
+      ADC    SS:[BP+71],AX
+      ADC    SS:[BP-128],AX
+      ADC    SS:[BX+72],AX
+      ADC    SS:[BX-128],AX
+      ADC    SS:[BX+SI+73],CX
+      ADC    SS:[BX+SI-128],CX
+      ADC    SS:[BX+DI+74],CX
+      ADC    SS:[BX+DI-128],CX
+      ADC    SS:[BP+SI+75],CX
+      ADC    SS:[BP+SI-128],CX
+      ADC    SS:[BP+DI+76],CX
+      ADC    SS:[BP+DI-128],CX
+      ADC    SS:[SI+77],CX
+      ADC    SS:[SI-128],CX
+      ADC    SS:[DI+78],CX
+      ADC    SS:[DI-128],CX
+      ADC    SS:[BP+79],CX
+      ADC    SS:[BP-128],CX
+      ADC    SS:[BX+80],CX
+      ADC    SS:[BX-128],CX
+      ADC    SS:[BX+SI+81],DX
+      ADC    SS:[BX+SI-128],DX
+      ADC    SS:[BX+DI+82],DX
+      ADC    SS:[BX+DI-128],DX
+      ADC    SS:[BP+SI+83],DX
+      ADC    SS:[BP+SI-128],DX
+      ADC    SS:[BP+DI+84],DX
+      ADC    SS:[BP+DI-128],DX
+      ADC    SS:[SI+85],DX
+      ADC    SS:[SI-128],DX
+      ADC    SS:[DI+86],DX
+      ADC    SS:[DI-128],DX
+      ADC    SS:[BP+87],DX
+      ADC    SS:[BP-128],DX
+      ADC    SS:[BX+88],DX
+      ADC    SS:[BX-128],DX
+      ADC    SS:[BX+SI+89],BX
+      ADC    SS:[BX+SI-128],BX
+      ADC    SS:[BX+DI+90],BX
+      ADC    SS:[BX+DI-128],BX
+      ADC    SS:[BP+SI+91],BX
+      ADC    SS:[BP+SI-128],BX
+      ADC    SS:[BP+DI+92],BX
+      ADC    SS:[BP+DI-128],BX
+      ADC    SS:[SI+93],BX
+      ADC    SS:[SI-128],BX
+      ADC    SS:[DI+94],BX
+      ADC    SS:[DI-128],BX
+      ADC    SS:[BP+95],BX
+      ADC    SS:[BP-128],BX
+      ADC    SS:[BX+96],BX
+      ADC    SS:[BX-128],BX
+      ADC    SS:[BX+SI+97],SP
+      ADC    SS:[BX+SI-128],SP
+      ADC    SS:[BX+DI+98],SP
+      ADC    SS:[BX+DI-128],SP
+      ADC    SS:[BP+SI+99],SP
+      ADC    SS:[BP+SI-128],SP
+      ADC    SS:[BP+DI+100],SP
+      ADC    SS:[BP+DI-128],SP
+      ADC    SS:[SI+101],SP
+      ADC    SS:[SI-128],SP
+      ADC    SS:[DI+102],SP
+      ADC    SS:[DI-128],SP
+      ADC    SS:[BP+103],SP
+      ADC    SS:[BP-128],SP
+      ADC    SS:[BX+104],SP
+      ADC    SS:[BX-128],SP
+      ADC    SS:[BX+SI+105],BP
+      ADC    SS:[BX+SI-128],BP
+      ADC    SS:[BX+DI+106],BP
+      ADC    SS:[BX+DI-128],BP
+      ADC    SS:[BP+SI+107],BP
+      ADC    SS:[BP+SI-128],BP
+      ADC    SS:[BP+DI+108],BP
+      ADC    SS:[BP+DI-128],BP
+      ADC    SS:[SI+109],BP
+      ADC    SS:[SI-128],BP
+      ADC    SS:[DI+110],BP
+      ADC    SS:[DI-128],BP
+      ADC    SS:[BP+111],BP
+      ADC    SS:[BP-128],BP
+      ADC    SS:[BX+112],BP
+      ADC    SS:[BX-128],BP
+      ADC    SS:[BX+SI+113],SI
+      ADC    SS:[BX+SI-128],SI
+      ADC    SS:[BX+DI+114],SI
+      ADC    SS:[BX+DI-128],SI
+      ADC    SS:[BP+SI+115],SI
+      ADC    SS:[BP+SI-128],SI
+      ADC    SS:[BP+DI+116],SI
+      ADC    SS:[BP+DI-128],SI
+      ADC    SS:[SI+117],SI
+      ADC    SS:[SI-128],SI
+      ADC    SS:[DI+118],SI
+      ADC    SS:[DI-128],SI
+      ADC    SS:[BP+119],SI
+      ADC    SS:[BP-128],SI
+      ADC    SS:[BX+120],SI
+      ADC    SS:[BX-128],SI
+      ADC    SS:[BX+SI+121],DI
+      ADC    SS:[BX+SI-128],DI
+      ADC    SS:[BX+DI+122],DI
+      ADC    SS:[BX+DI-128],DI
+      ADC    SS:[BP+SI+123],DI
+      ADC    SS:[BP+SI-128],DI
+      ADC    SS:[BP+DI+124],DI
+      ADC    SS:[BP+DI-128],DI
+      ADC    SS:[SI+125],DI
+      ADC    SS:[SI-128],DI
+      ADC    SS:[DI+126],DI
+      ADC    SS:[DI-128],DI
+      ADC    SS:[BP+127],DI
+      ADC    SS:[BP-128],DI
+      ADC    SS:[BX-128],DI
+      ADC    SS:[BX+0],DI
+      ADC    SS:[BX+SI+8281H],AX
+      ADC    SS:[BX+DI+8382H],AX
+      ADC    SS:[BP+SI+8483H],AX
+      ADC    SS:[BP+DI+8584H],AX
+      ADC    SS:[SI+8685H],AX
+      ADC    SS:[DI+8786H],AX
+      ADC    SS:[BP+8887H],AX
+      ADC    SS:[BX+8988H],AX
+      ADC    SS:[BX+SI+8A89H],CX
+      ADC    SS:[BX+DI+8B8AH],CX
+      ADC    SS:[BP+SI+8C8BH],CX
+      ADC    SS:[BP+DI+8D8CH],CX
+      ADC    SS:[SI+8E8DH],CX
+      ADC    SS:[DI+8F8EH],CX
+      ADC    SS:[BP+908FH],CX
+      ADC    SS:[BX+9190H],CX
+      ADC    SS:[BX+SI+9291H],DX
+      ADC    SS:[BX+DI+9392H],DX
+      ADC    SS:[BP+SI+9493H],DX
+      ADC    SS:[BP+DI+9594H],DX
+      ADC    SS:[SI+9695H],DX
+      ADC    SS:[DI+9796H],DX
+      ADC    SS:[BP+9897H],DX
+      ADC    SS:[BX+9998H],DX
+      ADC    SS:[BX+SI+9A99H],BX
+      ADC    SS:[BX+DI+9B9AH],BX
+      ADC    SS:[BP+SI+9C9BH],BX
+      ADC    SS:[BP+DI+9D9CH],BX
+      ADC    SS:[SI+9E9DH],BX
+      ADC    SS:[DI+9F9EH],BX
+      ADC    SS:[BP+0A09FH],BX
+      ADC    SS:[BX+0A1A0H],BX
+      ADC    SS:[BX+SI+0A2A1H],SP
+      ADC    SS:[BX+DI+0A3A2H],SP
+      ADC    SS:[BP+SI+0A4A3H],SP
+      ADC    SS:[BP+DI+0A5A4H],SP
+      ADC    SS:[SI+0A6A5H],SP
+      ADC    SS:[DI+0A7A6H],SP
+      ADC    SS:[BP+0A8A7H],SP
+      ADC    SS:[BX+0A9A8H],SP
+      ADC    SS:[BX+SI+0AAA9H],BP
+      ADC    SS:[BX+DI+0ABAAH],BP
+      ADC    SS:[BP+SI+0ACABH],BP
+      ADC    SS:[BP+DI+0ADACH],BP
+      ADC    SS:[SI+0AEADH],BP
+      ADC    SS:[DI+0AFAEH],BP
+      ADC    SS:[BP+0B0AFH],BP
+      ADC    SS:[BX+0B1B0H],BP
+      ADC    SS:[BX+SI+0B2B1H],SI
+      ADC    SS:[BX+DI+0B3B2H],SI
+      ADC    SS:[BP+SI+0B4B3H],SI
+      ADC    SS:[BP+DI+0B5B4H],SI
+      ADC    SS:[SI+0B6B5H],SI
+      ADC    SS:[DI+0B7B6H],SI
+      ADC    SS:[BP+0B8B7H],SI
+      ADC    SS:[BX+0B9B8H],SI
+      ADC    SS:[BX+SI+0BAB9H],DI
+      ADC    SS:[BX+DI+0BBBAH],DI
+      ADC    SS:[BP+SI+0BCBBH],DI
+      ADC    SS:[BP+DI+0BDBCH],DI
+      ADC    SS:[SI+0BEBDH],DI
+      ADC    SS:[DI+0BFBEH],DI
+      ADC    SS:[BP+0C0BFH],DI
+      ADC    SS:[BX+0C1C0H],DI
+      ADC    SS:[BX+SI],AX
+      ADC    SS:[BX+DI],AX
+      ADC    SS:[BP+SI],AX
+      ADC    SS:[BP+DI],AX
+      ADC    SS:[SI],AX
+      ADC    SS:[DI],AX
+      ADC    SS:[0807H],AX
+      ADC    SS:[BX],AX
+      ADC    SS:[BX+SI],CX
+      ADC    SS:[BX+DI],CX
+      ADC    SS:[BP+SI],CX
+      ADC    SS:[BP+DI],CX
+      ADC    SS:[SI],CX
+      ADC    SS:[DI],CX
+      ADC    SS:[100FH],CX
+      ADC    SS:[BX],CX
+      ADC    SS:[BX+SI],DX
+      ADC    SS:[BX+DI],DX
+      ADC    DL,SS:[BP+DI]
+      ADC    DL,SS:[SI]
+      ADC    DL,SS:[DI]
+      ADC    DL,SS:[1817H]
+      ADC    DL,SS:[BX]
+      ADC    BL,SS:[BX+SI]
+      ADC    BL,SS:[BX+DI]
+      ADC    BL,SS:[BP+SI]
+      ADC    BL,SS:[BP+DI]
+      ADC    BL,SS:[SI]
+      ADC    BL,SS:[DI]
+      ADC    BL,SS:[201FH]
+      ADC    BL,SS:[BX]
+      ADC    AH,SS:[BX+SI]
+      ADC    AH,SS:[BX+DI]
+      ADC    AH,SS:[BP+SI]
+      ADC    AH,SS:[BP+DI]
+      ADC    AH,SS:[SI]
+      ADC    AH,SS:[DI]
+      ADC    AH,SS:[2827H]
+      ADC    AH,SS:[BX]
+      ADC    DX,SS:[SI]
+      ADC    DX,SS:[DI]
+      ADC    DX,SS:[1817H]
+      ADC    DX,SS:[BX]
+      ADC    BX,SS:[BX+SI]
+      ADC    BX,SS:[BX+DI]
+      ADC    BX,SS:[BP+SI]
+      ADC    BX,SS:[BP+DI]
+      ADC    BX,SS:[SI]
+      ADC    BX,SS:[DI]
+      ADC    BX,SS:[201FH]
+      ADC    BX,SS:[BX]
+      ADC    SP,SS:[BX+SI]
+      ADC    SP,SS:[BX+DI]
+      ADC    SP,SS:[BP+SI]
+      ADC    SP,SS:[BP+DI]
+      ADC    SP,SS:[SI]
+      ADC    SP,SS:[DI]
+      ADC    SP,SS:[2827H]
+      ADC    SP,SS:[BX]
+      ADC    BP,SS:[BX+SI]
+      ADC    BP,SS:[BX+DI]
+      ADC    BP,SS:[BP+SI]
+      ADC    BP,SS:[BP+DI]
+      ADC    BP,SS:[SI]
+      ADC    BP,SS:[DI]
+      ADC    BP,SS:[302FH]
+      ADC    BP,SS:[BX]
+      ADC    SI,SS:[BX+SI]
+      ADC    SI,SS:[BX+DI]
+      ADC    SI,SS:[BP+SI]
+      ADC    SI,SS:[BP+DI]
+      ADC    SI,SS:[SI]
+      ADC    SI,SS:[DI]
+      ADC    SI,SS:[3837H]
+      ADC    SI,SS:[BX]
+      ADC    DI,SS:[BX+SI]
+      ADC    DI,SS:[BX+DI]
+      ADC    DI,SS:[BP+SI]
+      ADC    DI,SS:[BP+DI]
+      ADC    DI,SS:[SI]
+      ADC    DI,SS:[DI]
+      ADC    DI,SS:[403FH]
+      ADC    DI,SS:[BX]
+      ADC    AX,SS:[BX+SI+65]
+      ADC    AX,SS:[BX+SI-128]
+      ADC    AX,SS:[BX+DI+66]
+      ADC    AX,SS:[BX+DI-128]
+      ADC    AX,SS:[BP+SI+67]
+      ADC    AX,SS:[BP+SI-128]
+      ADC    AX,SS:[BP+DI+68]
+      ADC    AX,SS:[BP+DI-128]
+      ADC    AX,SS:[SI+69]
+      ADC    AX,SS:[SI-128]
+      ADC    AX,SS:[DI+70]
+      ADC    AX,SS:[DI-128]
+      ADC    AX,SS:[BP+71]
+      ADC    AX,SS:[BP-128]
+      ADC    AX,SS:[BX+72]
+      ADC    AX,SS:[BX-128]
+      ADC    CX,SS:[BX+SI+73]
+      ADC    CX,SS:[BX+SI-128]
+      ADC    CX,SS:[BX+DI+74]
+      ADC    CX,SS:[BX+DI-128]
+      ADC    CX,SS:[BP+SI+75]
+      ADC    CX,SS:[BP+SI-128]
+      ADC    CX,SS:[BP+DI+76]
+      ADC    CX,SS:[BP+DI-128]
+      ADC    CX,SS:[SI+77]
+      ADC    CX,SS:[SI-128]
+      ADC    CX,SS:[DI+78]
+      ADC    CX,SS:[DI-128]
+      ADC    CX,SS:[BP+79]
+      ADC    CX,SS:[BP-128]
+      ADC    CX,SS:[BX+80]
+      ADC    CX,SS:[BX-128]
+      ADC    DX,SS:[BX+SI+81]
+      ADC    DX,SS:[BX+SI-128]
+      ADC    DX,SS:[BX+DI+82]
+      ADC    DX,SS:[BX+DI-128]
+      ADC    DX,SS:[BP+SI+83]
+      ADC    DX,SS:[BP+SI-128]
+      ADC    DX,SS:[BP+DI+84]
+      ADC    DX,SS:[BP+DI-128]
+      ADC    DX,SS:[SI+85]
+      ADC    DX,SS:[SI-128]
+      ADC    DX,SS:[DI+86]
+      ADC    DX,SS:[DI-128]
+      ADC    DX,SS:[BP+87]
+      ADC    DX,SS:[BP-128]
+      ADC    DX,SS:[BX+88]
+      ADC    DX,SS:[BX-128]
+      ADC    BX,SS:[BX+SI+89]
+      ADC    BX,SS:[BX+SI-128]
+      ADC    BX,SS:[BX+DI+90]
+      ADC    BX,SS:[BX+DI-128]
+      ADC    BX,SS:[BP+SI+91]
+      ADC    BX,SS:[BP+SI-128]
+      ADC    BX,SS:[BP+DI+92]
+      ADC    BX,SS:[BP+DI-128]
+      ADC    BX,SS:[SI+93]
+      ADC    BX,SS:[SI-128]
+      ADC    BX,SS:[DI+94]
+      ADC    BX,SS:[DI-128]
+      ADC    BX,SS:[BP+95]
+      ADC    BX,SS:[BP-128]
+      ADC    BX,SS:[BX+96]
+      ADC    BX,SS:[BX-128]
+      ADC    SP,SS:[BX+SI+97]
+      ADC    SP,SS:[BX+SI-128]
+      ADC    SP,SS:[BX+DI+98]
+      ADC    SP,SS:[BX+DI-128]
+      ADC    SP,SS:[BP+SI+99]
+      ADC    SP,SS:[BP+SI-128]
+      ADC    SP,SS:[BP+DI+100]
+      ADC    SP,SS:[BP+DI-128]
+      ADC    SP,SS:[SI+101]
+      ADC    SP,SS:[SI-128]
+      ADC    SP,SS:[DI+102]
+      ADC    SP,SS:[DI-128]
+      ADC    SP,SS:[BP+103]
+      ADC    SP,SS:[BP-128]
+      ADC    SP,SS:[BX+104]
+      ADC    SP,SS:[BX-128]
+      ADC    BP,SS:[BX+SI+105]
+      ADC    BP,SS:[BX+SI-128]
+      ADC    BP,SS:[BX+DI+106]
+      ADC    BP,SS:[BX+DI-128]
+      ADC    BP,SS:[BP+SI+107]
+      ADC    BP,SS:[BP+SI-128]
+      ADC    BP,SS:[BP+DI+108]
+      ADC    BP,SS:[BP+DI-128]
+      ADC    BP,SS:[SI+109]
+      ADC    BP,SS:[SI-128]
+      ADC    BP,SS:[DI+110]
+      ADC    BP,SS:[DI-128]
+      ADC    BP,SS:[BP+111]
+      ADC    BP,SS:[BP-128]
+      ADC    BP,SS:[BX+112]
+      ADC    BP,SS:[BX-128]
+      ADC    SI,SS:[BX+SI+113]
+      ADC    SI,SS:[BX+SI-128]
+      ADC    SI,SS:[BX+DI+114]
+      ADC    SI,SS:[BX+DI-128]
+      ADC    SI,SS:[BP+SI+115]
+      ADC    SI,SS:[BP+SI-128]
+      ADC    SI,SS:[BP+DI+116]
+      ADC    SI,SS:[BP+DI-128]
+      ADC    SI,SS:[SI+117]
+      ADC    SI,SS:[SI-128]
+      ADC    SI,SS:[DI+118]
+      ADC    SI,SS:[DI-128]
+      ADC    SI,SS:[BP+119]
+      ADC    SI,SS:[BP-128]
+      ADC    SI,SS:[BX+120]
+      ADC    SI,SS:[BX-128]
+      ADC    DI,SS:[BX+SI+121]
+      ADC    DI,SS:[BX+SI-128]
+      ADC    DI,SS:[BX+DI+122]
+      ADC    DI,SS:[BX+DI-128]
+      ADC    DI,SS:[BP+SI+123]
+      ADC    DI,SS:[BP+SI-128]
+      ADC    DI,SS:[BP+DI+124]
+      ADC    DI,SS:[BP+DI-128]
+      ADC    DI,SS:[SI+125]
+      ADC    DI,SS:[SI-128]
+      ADC    DI,SS:[DI+126]
+      ADC    DI,SS:[DI-128]
+      ADC    DI,SS:[BP+127]
+      ADC    DI,SS:[BP-128]
+      ADC    DI,SS:[BX-128]
+      ADC    DI,SS:[BX+0]
+      ADC    AX,SS:[BX+SI+8281H]
+      ADC    AX,SS:[BX+DI+8382H]
+      ADC    AX,SS:[BP+SI+8483H]
+      ADC    AX,SS:[BP+DI+8584H]
+      ADC    AX,SS:[SI+8685H]
+      ADC    AX,SS:[DI+8786H]
+      ADC    AX,SS:[BP+8887H]
+      ADC    AX,SS:[BX+8988H]
+      ADC    CX,SS:[BX+SI+8A89H]
+      ADC    CX,SS:[BX+DI+8B8AH]
+      ADC    CX,SS:[BP+SI+8C8BH]
+      ADC    CX,SS:[BP+DI+8D8CH]
+      ADC    CX,SS:[SI+8E8DH]
+      ADC    CX,SS:[DI+8F8EH]
+      ADC    CX,SS:[BP+908FH]
+      ADC    CX,SS:[BX+9190H]
+      ADC    DX,SS:[BX+SI+9291H]
+      ADC    DX,SS:[BX+DI+9392H]
+      ADC    DX,SS:[BP+SI+9493H]
+      ADC    DX,SS:[BP+DI+9594H]
+      ADC    DX,SS:[SI+9695H]
+      ADC    DX,SS:[DI+9796H]
+      ADC    DX,SS:[BP+9897H]
+      ADC    DX,SS:[BX+9998H]
+      ADC    BX,SS:[BX+SI+9A99H]
+      ADC    BX,SS:[BX+DI+9B9AH]
+      ADC    BX,SS:[BP+SI+9C9BH]
+      ADC    BX,SS:[BP+DI+9D9CH]
+      ADC    BX,SS:[SI+9E9DH]
+      ADC    BX,SS:[DI+9F9EH]
+      ADC    BX,SS:[BP+0A09FH]
+      ADC    BX,SS:[BX+0A1A0H]
+      ADC    SP,SS:[BX+SI+0A2A1H]
+      ADC    SP,SS:[BX+DI+0A3A2H]
+      ADC    SP,SS:[BP+SI+0A4A3H]
+      ADC    SP,SS:[BP+DI+0A5A4H]
+      ADC    SP,SS:[SI+0A6A5H]
+      ADC    SP,SS:[DI+0A7A6H]
+      ADC    SP,SS:[BP+0A8A7H]
+      ADC    SP,SS:[BX+0A9A8H]
+      ADC    BP,SS:[BX+SI+0AAA9H]
+      ADC    BP,SS:[BX+DI+0ABAAH]
+      ADC    BP,SS:[BP+SI+0ACABH]
+      ADC    BP,SS:[BP+DI+0ADACH]
+      ADC    BP,SS:[SI+0AEADH]
+      ADC    BP,SS:[DI+0AFAEH]
+      ADC    BP,SS:[BP+0B0AFH]
+      ADC    BP,SS:[BX+0B1B0H]
+      ADC    SI,SS:[BX+SI+0B2B1H]
+      ADC    SI,SS:[BX+DI+0B3B2H]
+      ADC    SI,SS:[BP+SI+0B4B3H]
+      ADC    SI,SS:[BP+DI+0B5B4H]
+      ADC    SI,SS:[SI+0B6B5H]
+      ADC    SI,SS:[DI+0B7B6H]
+      ADC    SI,SS:[BP+0B8B7H]
+      ADC    SI,SS:[BX+0B9B8H]
+      ADC    DI,SS:[BX+SI+0BAB9H]
+      ADC    DI,SS:[BX+DI+0BBBAH]
+      ADC    DI,SS:[BP+SI+0BCBBH]
+      ADC    DI,SS:[BP+DI+0BDBCH]
+      ADC    DI,SS:[SI+0BEBDH]
+      ADC    DI,SS:[DI+0BFBEH]
+      ADC    DI,SS:[BP+0C0BFH]
+      ADC    DI,SS:[BX+0C1C0H]
+      ADC    AX,SS:[BX+SI]
+      ADC    AX,SS:[BX+DI]
+      ADC    AX,SS:[BP+SI]
+      ADC    AX,SS:[BP+DI]
+      ADC    AX,SS:[SI]
+      ADC    AX,SS:[DI]
+      ADC    AX,SS:[0807H]
+      ADC    AX,SS:[BX]
+      ADC    CX,SS:[BX+SI]
+      ADC    CX,SS:[BX+DI]
+      ADC    CX,SS:[BP+SI]
+      ADC    CX,SS:[BP+DI]
+      ADC    CX,SS:[SI]
+      ADC    CX,SS:[DI]
+      ADC    CX,SS:[100FH]
+      ADC    CX,SS:[BX]
+      ADC    DX,SS:[BX+SI]
+      ADC    DX,SS:[BX+DI]
+      ADC    DX,SS:[BP+SI]
+      ADC    DX,SS:[BP+DI]
+      SBB    SS:[BX+DI],BL
+      SBB    SS:[BP+SI],BL
+      SBB    SS:[BP+DI],BL
+      SBB    SS:[SI],BL
+      SBB    SS:[DI],BL
+      SBB    SS:[201FH],BL
+      SBB    SS:[BX],BL
+      SBB    SS:[BX+SI],AH
+      SBB    SS:[BX+DI],AH
+      SBB    SS:[BP+SI],AH
+      SBB    SS:[BP+DI],AH
+      SBB    SS:[SI],AH
+      SBB    SS:[DI],AH
+      SBB    SS:[2827H],AH
+      SBB    SS:[BX],AH
+      SBB    SS:[BP+SI],BX
+      SBB    SS:[BP+DI],BX
+      SBB    SS:[SI],BX
+      SBB    SS:[DI],BX
+      SBB    SS:[201FH],BX
+      SBB    SS:[BX],BX
+      SBB    SS:[BX+SI],SP
+      SBB    SS:[BX+DI],SP
+      SBB    SS:[BP+SI],SP
+      SBB    SS:[BP+DI],SP
+      SBB    SS:[SI],SP
+      SBB    SS:[DI],SP
+      SBB    SS:[2827H],SP
+      SBB    SS:[BX],SP
+      SBB    SS:[BX+SI],BP
+      SBB    SS:[BX+DI],BP
+      SBB    SS:[BP+SI],BP
+      SBB    SS:[BP+DI],BP
+      SBB    SS:[SI],BP
+      SBB    SS:[DI],BP
+      SBB    SS:[302FH],BP
+      SBB    SS:[BX],BP
+      SBB    SS:[BX+SI],SI
+      SBB    SS:[BX+DI],SI
+      SBB    SS:[BP+SI],SI
+      SBB    SS:[BP+DI],SI
+      SBB    SS:[SI],SI
+      SBB    SS:[DI],SI
+      SBB    SS:[3837H],SI
+      SBB    SS:[BX],SI
+      SBB    SS:[BX+SI],DI
+      SBB    SS:[BX+DI],DI
+      SBB    SS:[BP+SI],DI
+      SBB    SS:[BP+DI],DI
+      SBB    SS:[SI],DI
+      SBB    SS:[DI],DI
+      SBB    SS:[403FH],DI
+      SBB    SS:[BX],DI
+      SBB    SS:[BX+SI+65],AX
+      SBB    SS:[BX+SI-128],AX
+      SBB    SS:[BX+DI+66],AX
+      SBB    SS:[BX+DI-128],AX
+      SBB    SS:[BP+SI+67],AX
+      SBB    SS:[BP+SI-128],AX
+      SBB    SS:[BP+DI+68],AX
+      SBB    SS:[BP+DI-128],AX
+      SBB    SS:[SI+69],AX
+      SBB    SS:[SI-128],AX
+      SBB    SS:[DI+70],AX
+      SBB    SS:[DI-128],AX
+      SBB    SS:[BP+71],AX
+      SBB    SS:[BP-128],AX
+      SBB    SS:[BX+72],AX
+      SBB    SS:[BX-128],AX
+      SBB    SS:[BX+SI+73],CX
+      SBB    SS:[BX+SI-128],CX
+      SBB    SS:[BX+DI+74],CX
+      SBB    SS:[BX+DI-128],CX
+      SBB    SS:[BP+SI+75],CX
+      SBB    SS:[BP+SI-128],CX
+      SBB    SS:[BP+DI+76],CX
+      SBB    SS:[BP+DI-128],CX
+      SBB    SS:[SI+77],CX
+      SBB    SS:[SI-128],CX
+      SBB    SS:[DI+78],CX
+      SBB    SS:[DI-128],CX
+      SBB    SS:[BP+79],CX
+      SBB    SS:[BP-128],CX
+      SBB    SS:[BX+80],CX
+      SBB    SS:[BX-128],CX
+      SBB    SS:[BX+SI+81],DX
+      SBB    SS:[BX+SI-128],DX
+      SBB    SS:[BX+DI+82],DX
+      SBB    SS:[BX+DI-128],DX
+      SBB    SS:[BP+SI+83],DX
+      SBB    SS:[BP+SI-128],DX
+      SBB    SS:[BP+DI+84],DX
+      SBB    SS:[BP+DI-128],DX
+      SBB    SS:[SI+85],DX
+      SBB    SS:[SI-128],DX
+      SBB    SS:[DI+86],DX
+      SBB    SS:[DI-128],DX
+      SBB    SS:[BP+87],DX
+      SBB    SS:[BP-128],DX
+      SBB    SS:[BX+88],DX
+      SBB    SS:[BX-128],DX
+      SBB    SS:[BX+SI+89],BX
+      SBB    SS:[BX+SI-128],BX
+      SBB    SS:[BX+DI+90],BX
+      SBB    SS:[BX+DI-128],BX
+      SBB    SS:[BP+SI+91],BX
+      SBB    SS:[BP+SI-128],BX
+      SBB    SS:[BP+DI+92],BX
+      SBB    SS:[BP+DI-128],BX
+      SBB    SS:[SI+93],BX
+      SBB    SS:[SI-128],BX
+      SBB    SS:[DI+94],BX
+      SBB    SS:[DI-128],BX
+      SBB    SS:[BP+95],BX
+      SBB    SS:[BP-128],BX
+      SBB    SS:[BX+96],BX
+      SBB    SS:[BX-128],BX
+      SBB    SS:[BX+SI+97],SP
+      SBB    SS:[BX+SI-128],SP
+      SBB    SS:[BX+DI+98],SP
+      SBB    SS:[BX+DI-128],SP
+      SBB    SS:[BP+SI+99],SP
+      SBB    SS:[BP+SI-128],SP
+      SBB    SS:[BP+DI+100],SP
+      SBB    SS:[BP+DI-128],SP
+      SBB    SS:[SI+101],SP
+      SBB    SS:[SI-128],SP
+      SBB    SS:[DI+102],SP
+      SBB    SS:[DI-128],SP
+      SBB    SS:[BP+103],SP
+      SBB    SS:[BP-128],SP
+      SBB    SS:[BX+104],SP
+      SBB    SS:[BX-128],SP
+      SBB    SS:[BX+SI+105],BP
+      SBB    SS:[BX+SI-128],BP
+      SBB    SS:[BX+DI+106],BP
+      SBB    SS:[BX+DI-128],BP
+      SBB    SS:[BP+SI+107],BP
+      SBB    SS:[BP+SI-128],BP
+      SBB    SS:[BP+DI+108],BP
+      SBB    SS:[BP+DI-128],BP
+      SBB    SS:[SI+109],BP
+      SBB    SS:[SI-128],BP
+      SBB    SS:[DI+110],BP
+      SBB    SS:[DI-128],BP
+      SBB    SS:[BP+111],BP
+      SBB    SS:[BP-128],BP
+      SBB    SS:[BX+112],BP
+      SBB    SS:[BX-128],BP
+      SBB    SS:[BX+SI+113],SI
+      SBB    SS:[BX+SI-128],SI
+      SBB    SS:[BX+DI+114],SI
+      SBB    SS:[BX+DI-128],SI
+      SBB    SS:[BP+SI+115],SI
+      SBB    SS:[BP+SI-128],SI
+      SBB    SS:[BP+DI+116],SI
+      SBB    SS:[BP+DI-128],SI
+      SBB    SS:[SI+117],SI
+      SBB    SS:[SI-128],SI
+      SBB    SS:[DI+118],SI
+      SBB    SS:[DI-128],SI
+      SBB    SS:[BP+119],SI
+      SBB    SS:[BP-128],SI
+      SBB    SS:[BX+120],SI
+      SBB    SS:[BX-128],SI
+      SBB    SS:[BX+SI+121],DI
+      SBB    SS:[BX+SI-128],DI
+      SBB    SS:[BX+DI+122],DI
+      SBB    SS:[BX+DI-128],DI
+      SBB    SS:[BP+SI+123],DI
+      SBB    SS:[BP+SI-128],DI
+      SBB    SS:[BP+DI+124],DI
+      SBB    SS:[BP+DI-128],DI
+      SBB    SS:[SI+125],DI
+      SBB    SS:[SI-128],DI
+      SBB    SS:[DI+126],DI
+      SBB    SS:[DI-128],DI
+      SBB    SS:[BP+127],DI
+      SBB    SS:[BP-128],DI
+      SBB    SS:[BX-128],DI
+      SBB    SS:[BX+0],DI
+      SBB    SS:[BX+SI+8281H],AX
+      SBB    SS:[BX+DI+8382H],AX
+      SBB    SS:[BP+SI+8483H],AX
+      SBB    SS:[BP+DI+8584H],AX
+      SBB    SS:[SI+8685H],AX
+      SBB    SS:[DI+8786H],AX
+      SBB    SS:[BP+8887H],AX
+      SBB    SS:[BX+8988H],AX
+      SBB    SS:[BX+SI+8A89H],CX
+      SBB    SS:[BX+DI+8B8AH],CX
+      SBB    SS:[BP+SI+8C8BH],CX
+      SBB    SS:[BP+DI+8D8CH],CX
+      SBB    SS:[SI+8E8DH],CX
+      SBB    SS:[DI+8F8EH],CX
+      SBB    SS:[BP+908FH],CX
+      SBB    SS:[BX+9190H],CX
+      SBB    SS:[BX+SI+9291H],DX
+      SBB    SS:[BX+DI+9392H],DX
+      SBB    SS:[BP+SI+9493H],DX
+      SBB    SS:[BP+DI+9594H],DX
+      SBB    SS:[SI+9695H],DX
+      SBB    SS:[DI+9796H],DX
+      SBB    SS:[BP+9897H],DX
+      SBB    SS:[BX+9998H],DX
+      SBB    SS:[BX+SI+9A99H],BX
+      SBB    SS:[BX+DI+9B9AH],BX
+      SBB    SS:[BP+SI+9C9BH],BX
+      SBB    SS:[BP+DI+9D9CH],BX
+      SBB    SS:[SI+9E9DH],BX
+      SBB    SS:[DI+9F9EH],BX
+      SBB    SS:[BP+0A09FH],BX
+      SBB    SS:[BX+0A1A0H],BX
+      SBB    SS:[BX+SI+0A2A1H],SP
+      SBB    SS:[BX+DI+0A3A2H],SP
+      SBB    SS:[BP+SI+0A4A3H],SP
+      SBB    SS:[BP+DI+0A5A4H],SP
+      SBB    SS:[SI+0A6A5H],SP
+      SBB    SS:[DI+0A7A6H],SP
+      SBB    SS:[BP+0A8A7H],SP
+      SBB    SS:[BX+0A9A8H],SP
+      SBB    SS:[BX+SI+0AAA9H],BP
+      SBB    SS:[BX+DI+0ABAAH],BP
+      SBB    SS:[BP+SI+0ACABH],BP
+      SBB    SS:[BP+DI+0ADACH],BP
+      SBB    SS:[SI+0AEADH],BP
+      SBB    SS:[DI+0AFAEH],BP
+      SBB    SS:[BP+0B0AFH],BP
+      SBB    SS:[BX+0B1B0H],BP
+      SBB    SS:[BX+SI+0B2B1H],SI
+      SBB    SS:[BX+DI+0B3B2H],SI
+      SBB    SS:[BP+SI+0B4B3H],SI
+      SBB    SS:[BP+DI+0B5B4H],SI
+      SBB    SS:[SI+0B6B5H],SI
+      SBB    SS:[DI+0B7B6H],SI
+      SBB    SS:[BP+0B8B7H],SI
+      SBB    SS:[BX+0B9B8H],SI
+      SBB    SS:[BX+SI+0BAB9H],DI
+      SBB    SS:[BX+DI+0BBBAH],DI
+      SBB    SS:[BP+SI+0BCBBH],DI
+      SBB    SS:[BP+DI+0BDBCH],DI
+      SBB    SS:[SI+0BEBDH],DI
+      SBB    SS:[DI+0BFBEH],DI
+      SBB    SS:[BP+0C0BFH],DI
+      SBB    SS:[BX+0C1C0H],DI
+      SBB    SS:[BX+SI],AX
+      SBB    SS:[BX+DI],AX
+      SBB    SS:[BP+SI],AX
+      SBB    SS:[BP+DI],AX
+      SBB    SS:[SI],AX
+      SBB    SS:[DI],AX
+      SBB    SS:[0807H],AX
+      SBB    SS:[BX],AX
+      SBB    SS:[BX+SI],CX
+      SBB    SS:[BX+DI],CX
+      SBB    SS:[BP+SI],CX
+      SBB    SS:[BP+DI],CX
+      SBB    SS:[SI],CX
+      SBB    SS:[DI],CX
+      SBB    SS:[100FH],CX
+      SBB    SS:[BX],CX
+      SBB    SS:[BX+SI],DX
+      SBB    SS:[BX+DI],DX
+      SBB    SS:[BP+SI],DX
+      SBB    SS:[BP+DI],DX
+      SBB    SS:[SI],DX
+      SBB    SS:[DI],DX
+      SBB    SS:[1817H],DX
+      SBB    SS:[BX],DX
+      SBB    SS:[BX+SI],BX
+      SBB    SS:[BX+DI],BX
+      SBB    BL,SS:[BP+DI]
+      SBB    BL,SS:[SI]
+      SBB    BL,SS:[DI]
+      SBB    BL,SS:[201FH]
+      SBB    BL,SS:[BX]
+      SBB    AH,SS:[BX+SI]
+      SBB    AH,SS:[BX+DI]
+      SBB    AH,SS:[BP+SI]
+      SBB    AH,SS:[BP+DI]
+      SBB    AH,SS:[SI]
+      SBB    AH,SS:[DI]
+      SBB    AH,SS:[2827H]
+      SBB    AH,SS:[BX]
+      SBB    BX,SS:[SI]
+      SBB    BX,SS:[DI]
+      SBB    BX,SS:[201FH]
+      SBB    BX,SS:[BX]
+      SBB    SP,SS:[BX+SI]
+      SBB    SP,SS:[BX+DI]
+      SBB    SP,SS:[BP+SI]
+      SBB    SP,SS:[BP+DI]
+      SBB    SP,SS:[SI]
+      SBB    SP,SS:[DI]
+      SBB    SP,SS:[2827H]
+      SBB    SP,SS:[BX]
+      SBB    BP,SS:[BX+SI]
+      SBB    BP,SS:[BX+DI]
+      SBB    BP,SS:[BP+SI]
+      SBB    BP,SS:[BP+DI]
+      SBB    BP,SS:[SI]
+      SBB    BP,SS:[DI]
+      SBB    BP,SS:[302FH]
+      SBB    BP,SS:[BX]
+      SBB    SI,SS:[BX+SI]
+      SBB    SI,SS:[BX+DI]
+      SBB    SI,SS:[BP+SI]
+      SBB    SI,SS:[BP+DI]
+      SBB    SI,SS:[SI]
+      SBB    SI,SS:[DI]
+      SBB    SI,SS:[3837H]
+      SBB    SI,SS:[BX]
+      SBB    DI,SS:[BX+SI]
+      SBB    DI,SS:[BX+DI]
+      SBB    DI,SS:[BP+SI]
+      SBB    DI,SS:[BP+DI]
+      SBB    DI,SS:[SI]
+      SBB    DI,SS:[DI]
+      SBB    DI,SS:[403FH]
+      SBB    DI,SS:[BX]
+      SBB    AX,SS:[BX+SI+65]
+      SBB    AX,SS:[BX+SI-128]
+      SBB    AX,SS:[BX+DI+66]
+      SBB    AX,SS:[BX+DI-128]
+      SBB    AX,SS:[BP+SI+67]
+      SBB    AX,SS:[BP+SI-128]
+      SBB    AX,SS:[BP+DI+68]
+      SBB    AX,SS:[BP+DI-128]
+      SBB    AX,SS:[SI+69]
+      SBB    AX,SS:[SI-128]
+      SBB    AX,SS:[DI+70]
+      SBB    AX,SS:[DI-128]
+      SBB    AX,SS:[BP+71]
+      SBB    AX,SS:[BP-128]
+      SBB    AX,SS:[BX+72]
+      SBB    AX,SS:[BX-128]
+      SBB    CX,SS:[BX+SI+73]
+      SBB    CX,SS:[BX+SI-128]
+      SBB    CX,SS:[BX+DI+74]
+      SBB    CX,SS:[BX+DI-128]
+      SBB    CX,SS:[BP+SI+75]
+      SBB    CX,SS:[BP+SI-128]
+      SBB    CX,SS:[BP+DI+76]
+      SBB    CX,SS:[BP+DI-128]
+      SBB    CX,SS:[SI+77]
+      SBB    CX,SS:[SI-128]
+      SBB    CX,SS:[DI+78]
+      SBB    CX,SS:[DI-128]
+      SBB    CX,SS:[BP+79]
+      SBB    CX,SS:[BP-128]
+      SBB    CX,SS:[BX+80]
+      SBB    CX,SS:[BX-128]
+      SBB    DX,SS:[BX+SI+81]
+      SBB    DX,SS:[BX+SI-128]
+      SBB    DX,SS:[BX+DI+82]
+      SBB    DX,SS:[BX+DI-128]
+      SBB    DX,SS:[BP+SI+83]
+      SBB    DX,SS:[BP+SI-128]
+      SBB    DX,SS:[BP+DI+84]
+      SBB    DX,SS:[BP+DI-128]
+      SBB    DX,SS:[SI+85]
+      SBB    DX,SS:[SI-128]
+      SBB    DX,SS:[DI+86]
+      SBB    DX,SS:[DI-128]
+      SBB    DX,SS:[BP+87]
+      SBB    DX,SS:[BP-128]
+      SBB    DX,SS:[BX+88]
+      SBB    DX,SS:[BX-128]
+      SBB    BX,SS:[BX+SI+89]
+      SBB    BX,SS:[BX+SI-128]
+      SBB    BX,SS:[BX+DI+90]
+      SBB    BX,SS:[BX+DI-128]
+      SBB    BX,SS:[BP+SI+91]
+      SBB    BX,SS:[BP+SI-128]
+      SBB    BX,SS:[BP+DI+92]
+      SBB    BX,SS:[BP+DI-128]
+      SBB    BX,SS:[SI+93]
+      SBB    BX,SS:[SI-128]
+      SBB    BX,SS:[DI+94]
+      SBB    BX,SS:[DI-128]
+      SBB    BX,SS:[BP+95]
+      SBB    BX,SS:[BP-128]
+      SBB    BX,SS:[BX+96]
+      SBB    BX,SS:[BX-128]
+      SBB    SP,SS:[BX+SI+97]
+      SBB    SP,SS:[BX+SI-128]
+      SBB    SP,SS:[BX+DI+98]
+      SBB    SP,SS:[BX+DI-128]
+      SBB    SP,SS:[BP+SI+99]
+      SBB    SP,SS:[BP+SI-128]
+      SBB    SP,SS:[BP+DI+100]
+      SBB    SP,SS:[BP+DI-128]
+      SBB    SP,SS:[SI+101]
+      SBB    SP,SS:[SI-128]
+      SBB    SP,SS:[DI+102]
+      SBB    SP,SS:[DI-128]
+      SBB    SP,SS:[BP+103]
+      SBB    SP,SS:[BP-128]
+      SBB    SP,SS:[BX+104]
+      SBB    SP,SS:[BX-128]
+      SBB    BP,SS:[BX+SI+105]
+      SBB    BP,SS:[BX+SI-128]
+      SBB    BP,SS:[BX+DI+106]
+      SBB    BP,SS:[BX+DI-128]
+      SBB    BP,SS:[BP+SI+107]
+      SBB    BP,SS:[BP+SI-128]
+      SBB    BP,SS:[BP+DI+108]
+      SBB    BP,SS:[BP+DI-128]
+      SBB    BP,SS:[SI+109]
+      SBB    BP,SS:[SI-128]
+      SBB    BP,SS:[DI+110]
+      SBB    BP,SS:[DI-128]
+      SBB    BP,SS:[BP+111]
+      SBB    BP,SS:[BP-128]
+      SBB    BP,SS:[BX+112]
+      SBB    BP,SS:[BX-128]
+      SBB    SI,SS:[BX+SI+113]
+      SBB    SI,SS:[BX+SI-128]
+      SBB    SI,SS:[BX+DI+114]
+      SBB    SI,SS:[BX+DI-128]
+      SBB    SI,SS:[BP+SI+115]
+      SBB    SI,SS:[BP+SI-128]
+      SBB    SI,SS:[BP+DI+116]
+      SBB    SI,SS:[BP+DI-128]
+      SBB    SI,SS:[SI+117]
+      SBB    SI,SS:[SI-128]
+      SBB    SI,SS:[DI+118]
+      SBB    SI,SS:[DI-128]
+      SBB    SI,SS:[BP+119]
+      SBB    SI,SS:[BP-128]
+      SBB    SI,SS:[BX+120]
+      SBB    SI,SS:[BX-128]
+      SBB    DI,SS:[BX+SI+121]
+      SBB    DI,SS:[BX+SI-128]
+      SBB    DI,SS:[BX+DI+122]
+      SBB    DI,SS:[BX+DI-128]
+      SBB    DI,SS:[BP+SI+123]
+      SBB    DI,SS:[BP+SI-128]
+      SBB    DI,SS:[BP+DI+124]
+      SBB    DI,SS:[BP+DI-128]
+      SBB    DI,SS:[SI+125]
+      SBB    DI,SS:[SI-128]
+      SBB    DI,SS:[DI+126]
+      SBB    DI,SS:[DI-128]
+      SBB    DI,SS:[BP+127]
+      SBB    DI,SS:[BP-128]
+      SBB    DI,SS:[BX-128]
+      SBB    DI,SS:[BX+0]
+      SBB    AX,SS:[BX+SI+8281H]
+      SBB    AX,SS:[BX+DI+8382H]
+      SBB    AX,SS:[BP+SI+8483H]
+      SBB    AX,SS:[BP+DI+8584H]
+      SBB    AX,SS:[SI+8685H]
+      SBB    AX,SS:[DI+8786H]
+      SBB    AX,SS:[BP+8887H]
+      SBB    AX,SS:[BX+8988H]
+      SBB    CX,SS:[BX+SI+8A89H]
+      SBB    CX,SS:[BX+DI+8B8AH]
+      SBB    CX,SS:[BP+SI+8C8BH]
+      SBB    CX,SS:[BP+DI+8D8CH]
+      SBB    CX,SS:[SI+8E8DH]
+      SBB    CX,SS:[DI+8F8EH]
+      SBB    CX,SS:[BP+908FH]
+      SBB    CX,SS:[BX+9190H]
+      SBB    DX,SS:[BX+SI+9291H]
+      SBB    DX,SS:[BX+DI+9392H]
+      SBB    DX,SS:[BP+SI+9493H]
+      SBB    DX,SS:[BP+DI+9594H]
+      SBB    DX,SS:[SI+9695H]
+      SBB    DX,SS:[DI+9796H]
+      SBB    DX,SS:[BP+9897H]
+      SBB    DX,SS:[BX+9998H]
+      SBB    BX,SS:[BX+SI+9A99H]
+      SBB    BX,SS:[BX+DI+9B9AH]
+      SBB    BX,SS:[BP+SI+9C9BH]
+      SBB    BX,SS:[BP+DI+9D9CH]
+      SBB    BX,SS:[SI+9E9DH]
+      SBB    BX,SS:[DI+9F9EH]
+      SBB    BX,SS:[BP+0A09FH]
+      SBB    BX,SS:[BX+0A1A0H]
+      SBB    SP,SS:[BX+SI+0A2A1H]
+      SBB    SP,SS:[BX+DI+0A3A2H]
+      SBB    SP,SS:[BP+SI+0A4A3H]
+      SBB    SP,SS:[BP+DI+0A5A4H]
+      SBB    SP,SS:[SI+0A6A5H]
+      SBB    SP,SS:[DI+0A7A6H]
+      SBB    SP,SS:[BP+0A8A7H]
+      SBB    SP,SS:[BX+0A9A8H]
+      SBB    BP,SS:[BX+SI+0AAA9H]
+      SBB    BP,SS:[BX+DI+0ABAAH]
+      SBB    BP,SS:[BP+SI+0ACABH]
+      SBB    BP,SS:[BP+DI+0ADACH]
+      SBB    BP,SS:[SI+0AEADH]
+      SBB    BP,SS:[DI+0AFAEH]
+      SBB    BP,SS:[BP+0B0AFH]
+      SBB    BP,SS:[BX+0B1B0H]
+      SBB    SI,SS:[BX+SI+0B2B1H]
+      SBB    SI,SS:[BX+DI+0B3B2H]
+      SBB    SI,SS:[BP+SI+0B4B3H]
+      SBB    SI,SS:[BP+DI+0B5B4H]
+      SBB    SI,SS:[SI+0B6B5H]
+      SBB    SI,SS:[DI+0B7B6H]
+      SBB    SI,SS:[BP+0B8B7H]
+      SBB    SI,SS:[BX+0B9B8H]
+      SBB    DI,SS:[BX+SI+0BAB9H]
+      SBB    DI,SS:[BX+DI+0BBBAH]
+      SBB    DI,SS:[BP+SI+0BCBBH]
+      SBB    DI,SS:[BP+DI+0BDBCH]
+      SBB    DI,SS:[SI+0BEBDH]
+      SBB    DI,SS:[DI+0BFBEH]
+      SBB    DI,SS:[BP+0C0BFH]
+      SBB    DI,SS:[BX+0C1C0H]
+      SBB    AX,SS:[BX+SI]
+      SBB    AX,SS:[BX+DI]
+      SBB    AX,SS:[BP+SI]
+      SBB    AX,SS:[BP+DI]
+      SBB    AX,SS:[SI]
+      SBB    AX,SS:[DI]
+      SBB    AX,SS:[0807H]
+      SBB    AX,SS:[BX]
+      SBB    CX,SS:[BX+SI]
+      SBB    CX,SS:[BX+DI]
+      SBB    CX,SS:[BP+SI]
+      SBB    CX,SS:[BP+DI]
+      SBB    CX,SS:[SI]
+      SBB    CX,SS:[DI]
+      SBB    CX,SS:[100FH]
+      SBB    CX,SS:[BX]
+      SBB    DX,SS:[BX+SI]
+      SBB    DX,SS:[BX+DI]
+      SBB    DX,SS:[BP+SI]
+      SBB    DX,SS:[BP+DI]
+      SBB    DX,SS:[SI]
+      SBB    DX,SS:[DI]
+      SBB    DX,SS:[1817H]
+      SBB    DX,SS:[BX]
+      SBB    BX,SS:[BX+SI]
+      SBB    BX,SS:[BX+DI]
+      SBB    BX,SS:[BP+SI]
+      SBB    BX,SS:[BP+DI]
+      AND    SS:[BX+DI],AH
+      AND    SS:[BP+SI],AH
+      AND    SS:[BP+DI],AH
+      AND    SS:[SI],AH
+      AND    SS:[DI],AH
+      AND    SS:[2827H],AH
+      AND    SS:[BX],AH
+      AND    SS:[BX+SI],CH
+      AND    SS:[BP+SI],SP
+      AND    SS:[BP+DI],SP
+      AND    SS:[SI],SP
+      AND    SS:[DI],SP
+      AND    SS:[2827H],SP
+      AND    SS:[BX],SP
+      AND    SS:[BX+SI],BP
+      AND    SS:[BX+DI],BP
+      AND    SS:[BP+SI],BP
+      AND    SS:[BP+DI],BP
+      AND    SS:[SI],BP
+      AND    SS:[DI],BP
+      AND    SS:[302FH],BP
+      AND    SS:[BX],BP
+      AND    SS:[BX+SI],SI
+      AND    SS:[BX+DI],SI
+      AND    SS:[BP+SI],SI
+      AND    SS:[BP+DI],SI
+      AND    SS:[SI],SI
+      AND    SS:[DI],SI
+      AND    SS:[3837H],SI
+      AND    SS:[BX],SI
+      AND    SS:[BX+SI],DI
+      AND    SS:[BX+DI],DI
+      AND    SS:[BP+SI],DI
+      AND    SS:[BP+DI],DI
+      AND    SS:[SI],DI
+      AND    SS:[DI],DI
+      AND    SS:[403FH],DI
+      AND    SS:[BX],DI
+      AND    SS:[BX+SI+65],AX
+      AND    SS:[BX+SI-128],AX
+      AND    SS:[BX+DI+66],AX
+      AND    SS:[BX+DI-128],AX
+      AND    SS:[BP+SI+67],AX
+      AND    SS:[BP+SI-128],AX
+      AND    SS:[BP+DI+68],AX
+      AND    SS:[BP+DI-128],AX
+      AND    SS:[SI+69],AX
+      AND    SS:[SI-128],AX
+      AND    SS:[DI+70],AX
+      AND    SS:[DI-128],AX
+      AND    SS:[BP+71],AX
+      AND    SS:[BP-128],AX
+      AND    SS:[BX+72],AX
+      AND    SS:[BX-128],AX
+      AND    SS:[BX+SI+73],CX
+      AND    SS:[BX+SI-128],CX
+      AND    SS:[BX+DI+74],CX
+      AND    SS:[BX+DI-128],CX
+      AND    SS:[BP+SI+75],CX
+      AND    SS:[BP+SI-128],CX
+      AND    SS:[BP+DI+76],CX
+      AND    SS:[BP+DI-128],CX
+      AND    SS:[SI+77],CX
+      AND    SS:[SI-128],CX
+      AND    SS:[DI+78],CX
+      AND    SS:[DI-128],CX
+      AND    SS:[BP+79],CX
+      AND    SS:[BP-128],CX
+      AND    SS:[BX+80],CX
+      AND    SS:[BX-128],CX
+      AND    SS:[BX+SI+81],DX
+      AND    SS:[BX+SI-128],DX
+      AND    SS:[BX+DI+82],DX
+      AND    SS:[BX+DI-128],DX
+      AND    SS:[BP+SI+83],DX
+      AND    SS:[BP+SI-128],DX
+      AND    SS:[BP+DI+84],DX
+      AND    SS:[BP+DI-128],DX
+      AND    SS:[SI+85],DX
+      AND    SS:[SI-128],DX
+      AND    SS:[DI+86],DX
+      AND    SS:[DI-128],DX
+      AND    SS:[BP+87],DX
+      AND    SS:[BP-128],DX
+      AND    SS:[BX+88],DX
+      AND    SS:[BX-128],DX
+      AND    SS:[BX+SI+89],BX
+      AND    SS:[BX+SI-128],BX
+      AND    SS:[BX+DI+90],BX
+      AND    SS:[BX+DI-128],BX
+      AND    SS:[BP+SI+91],BX
+      AND    SS:[BP+SI-128],BX
+      AND    SS:[BP+DI+92],BX
+      AND    SS:[BP+DI-128],BX
+      AND    SS:[SI+93],BX
+      AND    SS:[SI-128],BX
+      AND    SS:[DI+94],BX
+      AND    SS:[DI-128],BX
+      AND    SS:[BP+95],BX
+      AND    SS:[BP-128],BX
+      AND    SS:[BX+96],BX
+      AND    SS:[BX-128],BX
+      AND    SS:[BX+SI+97],SP
+      AND    SS:[BX+SI-128],SP
+      AND    SS:[BX+DI+98],SP
+      AND    SS:[BX+DI-128],SP
+      AND    SS:[BP+SI+99],SP
+      AND    SS:[BP+SI-128],SP
+      AND    SS:[BP+DI+100],SP
+      AND    SS:[BP+DI-128],SP
+      AND    SS:[SI+101],SP
+      AND    SS:[SI-128],SP
+      AND    SS:[DI+102],SP
+      AND    SS:[DI-128],SP
+      AND    SS:[BP+103],SP
+      AND    SS:[BP-128],SP
+      AND    SS:[BX+104],SP
+      AND    SS:[BX-128],SP
+      AND    SS:[BX+SI+105],BP
+      AND    SS:[BX+SI-128],BP
+      AND    SS:[BX+DI+106],BP
+      AND    SS:[BX+DI-128],BP
+      AND    SS:[BP+SI+107],BP
+      AND    SS:[BP+SI-128],BP
+      AND    SS:[BP+DI+108],BP
+      AND    SS:[BP+DI-128],BP
+      AND    SS:[SI+109],BP
+      AND    SS:[SI-128],BP
+      AND    SS:[DI+110],BP
+      AND    SS:[DI-128],BP
+      AND    SS:[BP+111],BP
+      AND    SS:[BP-128],BP
+      AND    SS:[BX+112],BP
+      AND    SS:[BX-128],BP
+      AND    SS:[BX+SI+113],SI
+      AND    SS:[BX+SI-128],SI
+      AND    SS:[BX+DI+114],SI
+      AND    SS:[BX+DI-128],SI
+      AND    SS:[BP+SI+115],SI
+      AND    SS:[BP+SI-128],SI
+      AND    SS:[BP+DI+116],SI
+      AND    SS:[BP+DI-128],SI
+      AND    SS:[SI+117],SI
+      AND    SS:[SI-128],SI
+      AND    SS:[DI+118],SI
+      AND    SS:[DI-128],SI
+      AND    SS:[BP+119],SI
+      AND    SS:[BP-128],SI
+      AND    SS:[BX+120],SI
+      AND    SS:[BX-128],SI
+      AND    SS:[BX+SI+121],DI
+      AND    SS:[BX+SI-128],DI
+      AND    SS:[BX+DI+122],DI
+      AND    SS:[BX+DI-128],DI
+      AND    SS:[BP+SI+123],DI
+      AND    SS:[BP+SI-128],DI
+      AND    SS:[BP+DI+124],DI
+      AND    SS:[BP+DI-128],DI
+      AND    SS:[SI+125],DI
+      AND    SS:[SI-128],DI
+      AND    SS:[DI+126],DI
+      AND    SS:[DI-128],DI
+      AND    SS:[BP+127],DI
+      AND    SS:[BP-128],DI
+      AND    SS:[BX-128],DI
+      AND    SS:[BX+0],DI
+      AND    SS:[BX+SI+8281H],AX
+      AND    SS:[BX+DI+8382H],AX
+      AND    SS:[BP+SI+8483H],AX
+      AND    SS:[BP+DI+8584H],AX
+      AND    SS:[SI+8685H],AX
+      AND    SS:[DI+8786H],AX
+      AND    SS:[BP+8887H],AX
+      AND    SS:[BX+8988H],AX
+      AND    SS:[BX+SI+8A89H],CX
+      AND    SS:[BX+DI+8B8AH],CX
+      AND    SS:[BP+SI+8C8BH],CX
+      AND    SS:[BP+DI+8D8CH],CX
+      AND    SS:[SI+8E8DH],CX
+      AND    SS:[DI+8F8EH],CX
+      AND    SS:[BP+908FH],CX
+      AND    SS:[BX+9190H],CX
+      AND    SS:[BX+SI+9291H],DX
+      AND    SS:[BX+DI+9392H],DX
+      AND    SS:[BP+SI+9493H],DX
+      AND    SS:[BP+DI+9594H],DX
+      AND    SS:[SI+9695H],DX
+      AND    SS:[DI+9796H],DX
+      AND    SS:[BP+9897H],DX
+      AND    SS:[BX+9998H],DX
+      AND    SS:[BX+SI+9A99H],BX
+      AND    SS:[BX+DI+9B9AH],BX
+      AND    SS:[BP+SI+9C9BH],BX
+      AND    SS:[BP+DI+9D9CH],BX
+      AND    SS:[SI+9E9DH],BX
+      AND    SS:[DI+9F9EH],BX
+      AND    SS:[BP+0A09FH],BX
+      AND    SS:[BX+0A1A0H],BX
+      AND    SS:[BX+SI+0A2A1H],SP
+      AND    SS:[BX+DI+0A3A2H],SP
+      AND    SS:[BP+SI+0A4A3H],SP
+      AND    SS:[BP+DI+0A5A4H],SP
+      AND    SS:[SI+0A6A5H],SP
+      AND    SS:[DI+0A7A6H],SP
+      AND    SS:[BP+0A8A7H],SP
+      AND    SS:[BX+0A9A8H],SP
+      AND    SS:[BX+SI+0AAA9H],BP
+      AND    SS:[BX+DI+0ABAAH],BP
+      AND    SS:[BP+SI+0ACABH],BP
+      AND    SS:[BP+DI+0ADACH],BP
+      AND    SS:[SI+0AEADH],BP
+      AND    SS:[DI+0AFAEH],BP
+      AND    SS:[BP+0B0AFH],BP
+      AND    SS:[BX+0B1B0H],BP
+      AND    SS:[BX+SI+0B2B1H],SI
+      AND    SS:[BX+DI+0B3B2H],SI
+      AND    SS:[BP+SI+0B4B3H],SI
+      AND    SS:[BP+DI+0B5B4H],SI
+      AND    SS:[SI+0B6B5H],SI
+      AND    SS:[DI+0B7B6H],SI
+      AND    SS:[BP+0B8B7H],SI
+      AND    SS:[BX+0B9B8H],SI
+      AND    SS:[BX+SI+0BAB9H],DI
+      AND    SS:[BX+DI+0BBBAH],DI
+      AND    SS:[BP+SI+0BCBBH],DI
+      AND    SS:[BP+DI+0BDBCH],DI
+      AND    SS:[SI+0BEBDH],DI
+      AND    SS:[DI+0BFBEH],DI
+      AND    SS:[BP+0C0BFH],DI
+      AND    SS:[BX+0C1C0H],DI
+      AND    SS:[BX+SI],AX
+      AND    SS:[BX+DI],AX
+      AND    SS:[BP+SI],AX
+      AND    SS:[BP+DI],AX
+      AND    SS:[SI],AX
+      AND    SS:[DI],AX
+      AND    SS:[0807H],AX
+      AND    SS:[BX],AX
+      AND    SS:[BX+SI],CX
+      AND    SS:[BX+DI],CX
+      AND    SS:[BP+SI],CX
+      AND    SS:[BP+DI],CX
+      AND    SS:[SI],CX
+      AND    SS:[DI],CX
+      AND    SS:[100FH],CX
+      AND    SS:[BX],CX
+      AND    SS:[BX+SI],DX
+      AND    SS:[BX+DI],DX
+      AND    SS:[BP+SI],DX
+      AND    SS:[BP+DI],DX
+      AND    SS:[SI],DX
+      AND    SS:[DI],DX
+      AND    SS:[1817H],DX
+      AND    SS:[BX],DX
+      AND    SS:[BX+SI],BX
+      AND    SS:[BX+DI],BX
+      AND    SS:[BP+SI],BX
+      AND    SS:[BP+DI],BX
+      AND    SS:[SI],BX
+      AND    SS:[DI],BX
+      AND    SS:[201FH],BX
+      AND    SS:[BX],BX
+      AND    SS:[BX+SI],SP
+      AND    SS:[BX+DI],SP
+      AND    AH,SS:[BP+DI]
+      AND    AH,SS:[SI]
+      AND    AH,SS:[DI]
+      AND    AH,SS:[2827H]
+      AND    AH,SS:[BX]
+      AND    CH,SS:[BX+SI]
+      AND    CH,SS:[BX+DI]
+      AND    CH,SS:[BP+SI]
+      AND    SP,SS:[SI]
+      AND    SP,SS:[DI]
+      AND    SP,SS:[2827H]
+      AND    SP,SS:[BX]
+      AND    BP,SS:[BX+SI]
+      AND    BP,SS:[BX+DI]
+      AND    BP,SS:[BP+SI]
+      AND    BP,SS:[BP+DI]
+      AND    BP,SS:[SI]
+      AND    BP,SS:[DI]
+      AND    BP,SS:[302FH]
+      AND    BP,SS:[BX]
+      AND    SI,SS:[BX+SI]
+      AND    SI,SS:[BX+DI]
+      AND    SI,SS:[BP+SI]
+      AND    SI,SS:[BP+DI]
+      AND    SI,SS:[SI]
+      AND    SI,SS:[DI]
+      AND    SI,SS:[3837H]
+      AND    SI,SS:[BX]
+      AND    DI,SS:[BX+SI]
+      AND    DI,SS:[BX+DI]
+      AND    DI,SS:[BP+SI]
+      AND    DI,SS:[BP+DI]
+      AND    DI,SS:[SI]
+      AND    DI,SS:[DI]
+      AND    DI,SS:[403FH]
+      AND    DI,SS:[BX]
+      AND    AX,SS:[BX+SI+65]
+      AND    AX,SS:[BX+SI-128]
+      AND    AX,SS:[BX+DI+66]
+      AND    AX,SS:[BX+DI-128]
+      AND    AX,SS:[BP+SI+67]
+      AND    AX,SS:[BP+SI-128]
+      AND    AX,SS:[BP+DI+68]
+      AND    AX,SS:[BP+DI-128]
+      AND    AX,SS:[SI+69]
+      AND    AX,SS:[SI-128]
+      AND    AX,SS:[DI+70]
+      AND    AX,SS:[DI-128]
+      AND    AX,SS:[BP+71]
+      AND    AX,SS:[BP-128]
+      AND    AX,SS:[BX+72]
+      AND    AX,SS:[BX-128]
+      AND    CX,SS:[BX+SI+73]
+      AND    CX,SS:[BX+SI-128]
+      AND    CX,SS:[BX+DI+74]
+      AND    CX,SS:[BX+DI-128]
+      AND    CX,SS:[BP+SI+75]
+      AND    CX,SS:[BP+SI-128]
+      AND    CX,SS:[BP+DI+76]
+      AND    CX,SS:[BP+DI-128]
+      AND    CX,SS:[SI+77]
+      AND    CX,SS:[SI-128]
+      AND    CX,SS:[DI+78]
+      AND    CX,SS:[DI-128]
+      AND    CX,SS:[BP+79]
+      AND    CX,SS:[BP-128]
+      AND    CX,SS:[BX+80]
+      AND    CX,SS:[BX-128]
+      AND    DX,SS:[BX+SI+81]
+      AND    DX,SS:[BX+SI-128]
+      AND    DX,SS:[BX+DI+82]
+      AND    DX,SS:[BX+DI-128]
+      AND    DX,SS:[BP+SI+83]
+      AND    DX,SS:[BP+SI-128]
+      AND    DX,SS:[BP+DI+84]
+      AND    DX,SS:[BP+DI-128]
+      AND    DX,SS:[SI+85]
+      AND    DX,SS:[SI-128]
+      AND    DX,SS:[DI+86]
+      AND    DX,SS:[DI-128]
+      AND    DX,SS:[BP+87]
+      AND    DX,SS:[BP-128]
+      AND    DX,SS:[BX+88]
+      AND    DX,SS:[BX-128]
+      AND    BX,SS:[BX+SI+89]
+      AND    BX,SS:[BX+SI-128]
+      AND    BX,SS:[BX+DI+90]
+      AND    BX,SS:[BX+DI-128]
+      AND    BX,SS:[BP+SI+91]
+      AND    BX,SS:[BP+SI-128]
+      AND    BX,SS:[BP+DI+92]
+      AND    BX,SS:[BP+DI-128]
+      AND    BX,SS:[SI+93]
+      AND    BX,SS:[SI-128]
+      AND    BX,SS:[DI+94]
+      AND    BX,SS:[DI-128]
+      AND    BX,SS:[BP+95]
+      AND    BX,SS:[BP-128]
+      AND    BX,SS:[BX+96]
+      AND    BX,SS:[BX-128]
+      AND    SP,SS:[BX+SI+97]
+      AND    SP,SS:[BX+SI-128]
+      AND    SP,SS:[BX+DI+98]
+      AND    SP,SS:[BX+DI-128]
+      AND    SP,SS:[BP+SI+99]
+      AND    SP,SS:[BP+SI-128]
+      AND    SP,SS:[BP+DI+100]
+      AND    SP,SS:[BP+DI-128]
+      AND    SP,SS:[SI+101]
+      AND    SP,SS:[SI-128]
+      AND    SP,SS:[DI+102]
+      AND    SP,SS:[DI-128]
+      AND    SP,SS:[BP+103]
+      AND    SP,SS:[BP-128]
+      AND    SP,SS:[BX+104]
+      AND    SP,SS:[BX-128]
+      AND    BP,SS:[BX+SI+105]
+      AND    BP,SS:[BX+SI-128]
+      AND    BP,SS:[BX+DI+106]
+      AND    BP,SS:[BX+DI-128]
+      AND    BP,SS:[BP+SI+107]
+      AND    BP,SS:[BP+SI-128]
+      AND    BP,SS:[BP+DI+108]
+      AND    BP,SS:[BP+DI-128]
+      AND    BP,SS:[SI+109]
+      AND    BP,SS:[SI-128]
+      AND    BP,SS:[DI+110]
+      AND    BP,SS:[DI-128]
+      AND    BP,SS:[BP+111]
+      AND    BP,SS:[BP-128]
+      AND    BP,SS:[BX+112]
+      AND    BP,SS:[BX-128]
+      AND    SI,SS:[BX+SI+113]
+      AND    SI,SS:[BX+SI-128]
+      AND    SI,SS:[BX+DI+114]
+      AND    SI,SS:[BX+DI-128]
+      AND    SI,SS:[BP+SI+115]
+      AND    SI,SS:[BP+SI-128]
+      AND    SI,SS:[BP+DI+116]
+      AND    SI,SS:[BP+DI-128]
+      AND    SI,SS:[SI+117]
+      AND    SI,SS:[SI-128]
+      AND    SI,SS:[DI+118]
+      AND    SI,SS:[DI-128]
+      AND    SI,SS:[BP+119]
+      AND    SI,SS:[BP-128]
+      AND    SI,SS:[BX+120]
+      AND    SI,SS:[BX-128]
+      AND    DI,SS:[BX+SI+121]
+      AND    DI,SS:[BX+SI-128]
+      AND    DI,SS:[BX+DI+122]
+      AND    DI,SS:[BX+DI-128]
+      AND    DI,SS:[BP+SI+123]
+      AND    DI,SS:[BP+SI-128]
+      AND    DI,SS:[BP+DI+124]
+      AND    DI,SS:[BP+DI-128]
+      AND    DI,SS:[SI+125]
+      AND    DI,SS:[SI-128]
+      AND    DI,SS:[DI+126]
+      AND    DI,SS:[DI-128]
+      AND    DI,SS:[BP+127]
+      AND    DI,SS:[BP-128]
+      AND    DI,SS:[BX-128]
+      AND    DI,SS:[BX+0]
+      AND    AX,SS:[BX+SI+8281H]
+      AND    AX,SS:[BX+DI+8382H]
+      AND    AX,SS:[BP+SI+8483H]
+      AND    AX,SS:[BP+DI+8584H]
+      AND    AX,SS:[SI+8685H]
+      AND    AX,SS:[DI+8786H]
+      AND    AX,SS:[BP+8887H]
+      AND    AX,SS:[BX+8988H]
+      AND    CX,SS:[BX+SI+8A89H]
+      AND    CX,SS:[BX+DI+8B8AH]
+      AND    CX,SS:[BP+SI+8C8BH]
+      AND    CX,SS:[BP+DI+8D8CH]
+      AND    CX,SS:[SI+8E8DH]
+      AND    CX,SS:[DI+8F8EH]
+      AND    CX,SS:[BP+908FH]
+      AND    CX,SS:[BX+9190H]
+      AND    DX,SS:[BX+SI+9291H]
+      AND    DX,SS:[BX+DI+9392H]
+      AND    DX,SS:[BP+SI+9493H]
+      AND    DX,SS:[BP+DI+9594H]
+      AND    DX,SS:[SI+9695H]
+      AND    DX,SS:[DI+9796H]
+      AND    DX,SS:[BP+9897H]
+      AND    DX,SS:[BX+9998H]
+      AND    BX,SS:[BX+SI+9A99H]
+      AND    BX,SS:[BX+DI+9B9AH]
+      AND    BX,SS:[BP+SI+9C9BH]
+      AND    BX,SS:[BP+DI+9D9CH]
+      AND    BX,SS:[SI+9E9DH]
+      AND    BX,SS:[DI+9F9EH]
+      AND    BX,SS:[BP+0A09FH]
+      AND    BX,SS:[BX+0A1A0H]
+      AND    SP,SS:[BX+SI+0A2A1H]
+      AND    SP,SS:[BX+DI+0A3A2H]
+      AND    SP,SS:[BP+SI+0A4A3H]
+      AND    SP,SS:[BP+DI+0A5A4H]
+      AND    SP,SS:[SI+0A6A5H]
+      AND    SP,SS:[DI+0A7A6H]
+      AND    SP,SS:[BP+0A8A7H]
+      AND    SP,SS:[BX+0A9A8H]
+      AND    BP,SS:[BX+SI+0AAA9H]
+      AND    BP,SS:[BX+DI+0ABAAH]
+      AND    BP,SS:[BP+SI+0ACABH]
+      AND    BP,SS:[BP+DI+0ADACH]
+      AND    BP,SS:[SI+0AEADH]
+      AND    BP,SS:[DI+0AFAEH]
+      AND    BP,SS:[BP+0B0AFH]
+      AND    BP,SS:[BX+0B1B0H]
+      AND    SI,SS:[BX+SI+0B2B1H]
+      AND    SI,SS:[BX+DI+0B3B2H]
+      AND    SI,SS:[BP+SI+0B4B3H]
+      AND    SI,SS:[BP+DI+0B5B4H]
+      AND    SI,SS:[SI+0B6B5H]
+      AND    SI,SS:[DI+0B7B6H]
+      AND    SI,SS:[BP+0B8B7H]
+      AND    SI,SS:[BX+0B9B8H]
+      AND    DI,SS:[BX+SI+0BAB9H]
+      AND    DI,SS:[BX+DI+0BBBAH]
+      AND    DI,SS:[BP+SI+0BCBBH]
+      AND    DI,SS:[BP+DI+0BDBCH]
+      AND    DI,SS:[SI+0BEBDH]
+      AND    DI,SS:[DI+0BFBEH]
+      AND    DI,SS:[BP+0C0BFH]
+      AND    DI,SS:[BX+0C1C0H]
+      AND    AX,SS:[BX+SI]
+      AND    AX,SS:[BX+DI]
+      AND    AX,SS:[BP+SI]
+      AND    AX,SS:[BP+DI]
+      AND    AX,SS:[SI]
+      AND    AX,SS:[DI]
+      AND    AX,SS:[0807H]
+      AND    AX,SS:[BX]
+      AND    CX,SS:[BX+SI]
+      AND    CX,SS:[BX+DI]
+      AND    CX,SS:[BP+SI]
+      AND    CX,SS:[BP+DI]
+      AND    CX,SS:[SI]
+      AND    CX,SS:[DI]
+      AND    CX,SS:[100FH]
+      AND    CX,SS:[BX]
+      AND    DX,SS:[BX+SI]
+      AND    DX,SS:[BX+DI]
+      AND    DX,SS:[BP+SI]
+      AND    DX,SS:[BP+DI]
+      AND    DX,SS:[SI]
+      AND    DX,SS:[DI]
+      AND    DX,SS:[1817H]
+      AND    DX,SS:[BX]
+      AND    BX,SS:[BX+SI]
+      AND    BX,SS:[BX+DI]
+      AND    BX,SS:[BP+SI]
+      AND    BX,SS:[BP+DI]
+      AND    BX,SS:[SI]
+      AND    BX,SS:[DI]
+      AND    BX,SS:[201FH]
+      AND    BX,SS:[BX]
+      AND    SP,SS:[BX+SI]
+      AND    SP,SS:[BX+DI]
+      AND    SP,SS:[BP+SI]
+      AND    SP,SS:[BP+DI]
+      SUB    SS:[BX+DI],CH
+      SUB    SS:[BP+SI],CH
+      SUB    SS:[BP+DI],CH
+      SUB    SS:[SI],CH
+      SUB    SS:[DI],CH
+      SUB    SS:[302FH],CH
+      SUB    SS:[BX],CH
+      SUB    SS:[BX+SI],DH
+      SUB    SS:[BP+SI],BP
+      SUB    SS:[BP+DI],BP
+      SUB    SS:[SI],BP
+      SUB    SS:[DI],BP
+      SUB    SS:[302FH],BP
+      SUB    SS:[BX],BP
+      SUB    SS:[BX+SI],SI
+      SUB    SS:[BX+DI],SI
+      SUB    SS:[BP+SI],SI
+      SUB    SS:[BP+DI],SI
+      SUB    SS:[SI],SI
+      SUB    SS:[DI],SI
+      SUB    SS:[3837H],SI
+      SUB    SS:[BX],SI
+      SUB    SS:[BX+SI],DI
+      SUB    SS:[BX+DI],DI
+      SUB    SS:[BP+SI],DI
+      SUB    SS:[BP+DI],DI
+      SUB    SS:[SI],DI
+      SUB    SS:[DI],DI
+      SUB    SS:[403FH],DI
+      SUB    SS:[BX],DI
+      SUB    SS:[BX+SI+65],AX
+      SUB    SS:[BX+SI-128],AX
+      SUB    SS:[BX+DI+66],AX
+      SUB    SS:[BX+DI-128],AX
+      SUB    SS:[BP+SI+67],AX
+      SUB    SS:[BP+SI-128],AX
+      SUB    SS:[BP+DI+68],AX
+      SUB    SS:[BP+DI-128],AX
+      SUB    SS:[SI+69],AX
+      SUB    SS:[SI-128],AX
+      SUB    SS:[DI+70],AX
+      SUB    SS:[DI-128],AX
+      SUB    SS:[BP+71],AX
+      SUB    SS:[BP-128],AX
+      SUB    SS:[BX+72],AX
+      SUB    SS:[BX-128],AX
+      SUB    SS:[BX+SI+73],CX
+      SUB    SS:[BX+SI-128],CX
+      SUB    SS:[BX+DI+74],CX
+      SUB    SS:[BX+DI-128],CX
+      SUB    SS:[BP+SI+75],CX
+      SUB    SS:[BP+SI-128],CX
+      SUB    SS:[BP+DI+76],CX
+      SUB    SS:[BP+DI-128],CX
+      SUB    SS:[SI+77],CX
+      SUB    SS:[SI-128],CX
+      SUB    SS:[DI+78],CX
+      SUB    SS:[DI-128],CX
+      SUB    SS:[BP+79],CX
+      SUB    SS:[BP-128],CX
+      SUB    SS:[BX+80],CX
+      SUB    SS:[BX-128],CX
+      SUB    SS:[BX+SI+81],DX
+      SUB    SS:[BX+SI-128],DX
+      SUB    SS:[BX+DI+82],DX
+      SUB    SS:[BX+DI-128],DX
+      SUB    SS:[BP+SI+83],DX
+      SUB    SS:[BP+SI-128],DX
+      SUB    SS:[BP+DI+84],DX
+      SUB    SS:[BP+DI-128],DX
+      SUB    SS:[SI+85],DX
+      SUB    SS:[SI-128],DX
+      SUB    SS:[DI+86],DX
+      SUB    SS:[DI-128],DX
+      SUB    SS:[BP+87],DX
+      SUB    SS:[BP-128],DX
+      SUB    SS:[BX+88],DX
+      SUB    SS:[BX-128],DX
+      SUB    SS:[BX+SI+89],BX
+      SUB    SS:[BX+SI-128],BX
+      SUB    SS:[BX+DI+90],BX
+      SUB    SS:[BX+DI-128],BX
+      SUB    SS:[BP+SI+91],BX
+      SUB    SS:[BP+SI-128],BX
+      SUB    SS:[BP+DI+92],BX
+      SUB    SS:[BP+DI-128],BX
+      SUB    SS:[SI+93],BX
+      SUB    SS:[SI-128],BX
+      SUB    SS:[DI+94],BX
+      SUB    SS:[DI-128],BX
+      SUB    SS:[BP+95],BX
+      SUB    SS:[BP-128],BX
+      SUB    SS:[BX+96],BX
+      SUB    SS:[BX-128],BX
+      SUB    SS:[BX+SI+97],SP
+      SUB    SS:[BX+SI-128],SP
+      SUB    SS:[BX+DI+98],SP
+      SUB    SS:[BX+DI-128],SP
+      SUB    SS:[BP+SI+99],SP
+      SUB    SS:[BP+SI-128],SP
+      SUB    SS:[BP+DI+100],SP
+      SUB    SS:[BP+DI-128],SP
+      SUB    SS:[SI+101],SP
+      SUB    SS:[SI-128],SP
+      SUB    SS:[DI+102],SP
+      SUB    SS:[DI-128],SP
+      SUB    SS:[BP+103],SP
+      SUB    SS:[BP-128],SP
+      SUB    SS:[BX+104],SP
+      SUB    SS:[BX-128],SP
+      SUB    SS:[BX+SI+105],BP
+      SUB    SS:[BX+SI-128],BP
+      SUB    SS:[BX+DI+106],BP
+      SUB    SS:[BX+DI-128],BP
+      SUB    SS:[BP+SI+107],BP
+      SUB    SS:[BP+SI-128],BP
+      SUB    SS:[BP+DI+108],BP
+      SUB    SS:[BP+DI-128],BP
+      SUB    SS:[SI+109],BP
+      SUB    SS:[SI-128],BP
+      SUB    SS:[DI+110],BP
+      SUB    SS:[DI-128],BP
+      SUB    SS:[BP+111],BP
+      SUB    SS:[BP-128],BP
+      SUB    SS:[BX+112],BP
+      SUB    SS:[BX-128],BP
+      SUB    SS:[BX+SI+113],SI
+      SUB    SS:[BX+SI-128],SI
+      SUB    SS:[BX+DI+114],SI
+      SUB    SS:[BX+DI-128],SI
+      SUB    SS:[BP+SI+115],SI
+      SUB    SS:[BP+SI-128],SI
+      SUB    SS:[BP+DI+116],SI
+      SUB    SS:[BP+DI-128],SI
+      SUB    SS:[SI+117],SI
+      SUB    SS:[SI-128],SI
+      SUB    SS:[DI+118],SI
+      SUB    SS:[DI-128],SI
+      SUB    SS:[BP+119],SI
+      SUB    SS:[BP-128],SI
+      SUB    SS:[BX+120],SI
+      SUB    SS:[BX-128],SI
+      SUB    SS:[BX+SI+121],DI
+      SUB    SS:[BX+SI-128],DI
+      SUB    SS:[BX+DI+122],DI
+      SUB    SS:[BX+DI-128],DI
+      SUB    SS:[BP+SI+123],DI
+      SUB    SS:[BP+SI-128],DI
+      SUB    SS:[BP+DI+124],DI
+      SUB    SS:[BP+DI-128],DI
+      SUB    SS:[SI+125],DI
+      SUB    SS:[SI-128],DI
+      SUB    SS:[DI+126],DI
+      SUB    SS:[DI-128],DI
+      SUB    SS:[BP+127],DI
+      SUB    SS:[BP-128],DI
+      SUB    SS:[BX-128],DI
+      SUB    SS:[BX+0],DI
+      SUB    SS:[BX+SI+8281H],AX
+      SUB    SS:[BX+DI+8382H],AX
+      SUB    SS:[BP+SI+8483H],AX
+      SUB    SS:[BP+DI+8584H],AX
+      SUB    SS:[SI+8685H],AX
+      SUB    SS:[DI+8786H],AX
+      SUB    SS:[BP+8887H],AX
+      SUB    SS:[BX+8988H],AX
+      SUB    SS:[BX+SI+8A89H],CX
+      SUB    SS:[BX+DI+8B8AH],CX
+      SUB    SS:[BP+SI+8C8BH],CX
+      SUB    SS:[BP+DI+8D8CH],CX
+      SUB    SS:[SI+8E8DH],CX
+      SUB    SS:[DI+8F8EH],CX
+      SUB    SS:[BP+908FH],CX
+      SUB    SS:[BX+9190H],CX
+      SUB    SS:[BX+SI+9291H],DX
+      SUB    SS:[BX+DI+9392H],DX
+      SUB    SS:[BP+SI+9493H],DX
+      SUB    SS:[BP+DI+9594H],DX
+      SUB    SS:[SI+9695H],DX
+      SUB    SS:[DI+9796H],DX
+      SUB    SS:[BP+9897H],DX
+      SUB    SS:[BX+9998H],DX
+      SUB    SS:[BX+SI+9A99H],BX
+      SUB    SS:[BX+DI+9B9AH],BX
+      SUB    SS:[BP+SI+9C9BH],BX
+      SUB    SS:[BP+DI+9D9CH],BX
+      SUB    SS:[SI+9E9DH],BX
+      SUB    SS:[DI+9F9EH],BX
+      SUB    SS:[BP+0A09FH],BX
+      SUB    SS:[BX+0A1A0H],BX
+      SUB    SS:[BX+SI+0A2A1H],SP
+      SUB    SS:[BX+DI+0A3A2H],SP
+      SUB    SS:[BP+SI+0A4A3H],SP
+      SUB    SS:[BP+DI+0A5A4H],SP
+      SUB    SS:[SI+0A6A5H],SP
+      SUB    SS:[DI+0A7A6H],SP
+      SUB    SS:[BP+0A8A7H],SP
+      SUB    SS:[BX+0A9A8H],SP
+      SUB    SS:[BX+SI+0AAA9H],BP
+      SUB    SS:[BX+DI+0ABAAH],BP
+      SUB    SS:[BP+SI+0ACABH],BP
+      SUB    SS:[BP+DI+0ADACH],BP
+      SUB    SS:[SI+0AEADH],BP
+      SUB    SS:[DI+0AFAEH],BP
+      SUB    SS:[BP+0B0AFH],BP
+      SUB    SS:[BX+0B1B0H],BP
+      SUB    SS:[BX+SI+0B2B1H],SI
+      SUB    SS:[BX+DI+0B3B2H],SI
+      SUB    SS:[BP+SI+0B4B3H],SI
+      SUB    SS:[BP+DI+0B5B4H],SI
+      SUB    SS:[SI+0B6B5H],SI
+      SUB    SS:[DI+0B7B6H],SI
+      SUB    SS:[BP+0B8B7H],SI
+      SUB    SS:[BX+0B9B8H],SI
+      SUB    SS:[BX+SI+0BAB9H],DI
+      SUB    SS:[BX+DI+0BBBAH],DI
+      SUB    SS:[BP+SI+0BCBBH],DI
+      SUB    SS:[BP+DI+0BDBCH],DI
+      SUB    SS:[SI+0BEBDH],DI
+      SUB    SS:[DI+0BFBEH],DI
+      SUB    SS:[BP+0C0BFH],DI
+      SUB    SS:[BX+0C1C0H],DI
+      SUB    SS:[BX+SI],AX
+      SUB    SS:[BX+DI],AX
+      SUB    SS:[BP+SI],AX
+      SUB    SS:[BP+DI],AX
+      SUB    SS:[SI],AX
+      SUB    SS:[DI],AX
+      SUB    SS:[0807H],AX
+      SUB    SS:[BX],AX
+      SUB    SS:[BX+SI],CX
+      SUB    SS:[BX+DI],CX
+      SUB    SS:[BP+SI],CX
+      SUB    SS:[BP+DI],CX
+      SUB    SS:[SI],CX
+      SUB    SS:[DI],CX
+      SUB    SS:[100FH],CX
+      SUB    SS:[BX],CX
+      SUB    SS:[BX+SI],DX
+      SUB    SS:[BX+DI],DX
+      SUB    SS:[BP+SI],DX
+      SUB    SS:[BP+DI],DX
+      SUB    SS:[SI],DX
+      SUB    SS:[DI],DX
+      SUB    SS:[1817H],DX
+      SUB    SS:[BX],DX
+      SUB    SS:[BX+SI],BX
+      SUB    SS:[BX+DI],BX
+      SUB    SS:[BP+SI],BX
+      SUB    SS:[BP+DI],BX
+      SUB    SS:[SI],BX
+      SUB    SS:[DI],BX
+      SUB    SS:[201FH],BX
+      SUB    SS:[BX],BX
+      SUB    SS:[BX+SI],SP
+      SUB    SS:[BX+DI],SP
+      SUB    SS:[BP+SI],SP
+      SUB    SS:[BP+DI],SP
+      SUB    SS:[SI],SP
+      SUB    SS:[DI],SP
+      SUB    SS:[2827H],SP
+      SUB    SS:[BX],SP
+      SUB    SS:[BX+SI],BP
+      SUB    SS:[BX+DI],BP
+      SUB    CH,SS:[BP+DI]
+      SUB    CH,SS:[SI]
+      SUB    CH,SS:[DI]
+      SUB    CH,SS:[302FH]
+      SUB    CH,SS:[BX]
+      SUB    DH,SS:[BX+SI]
+      SUB    DH,SS:[BX+DI]
+      SUB    DH,SS:[BP+SI]
+      SUB    BP,SS:[SI]
+      SUB    BP,SS:[DI]
+      SUB    BP,SS:[302FH]
+      SUB    BP,SS:[BX]
+      SUB    SI,SS:[BX+SI]
+      SUB    SI,SS:[BX+DI]
+      SUB    SI,SS:[BP+SI]
+      SUB    SI,SS:[BP+DI]
+      SUB    SI,SS:[SI]
+      SUB    SI,SS:[DI]
+      SUB    SI,SS:[3837H]
+      SUB    SI,SS:[BX]
+      SUB    DI,SS:[BX+SI]
+      SUB    DI,SS:[BX+DI]
+      SUB    DI,SS:[BP+SI]
+      SUB    DI,SS:[BP+DI]
+      SUB    DI,SS:[SI]
+      SUB    DI,SS:[DI]
+      SUB    DI,SS:[403FH]
+      SUB    DI,SS:[BX]
+      SUB    AX,SS:[BX+SI+65]
+      SUB    AX,SS:[BX+SI-128]
+      SUB    AX,SS:[BX+DI+66]
+      SUB    AX,SS:[BX+DI-128]
+      SUB    AX,SS:[BP+SI+67]
+      SUB    AX,SS:[BP+SI-128]
+      SUB    AX,SS:[BP+DI+68]
+      SUB    AX,SS:[BP+DI-128]
+      SUB    AX,SS:[SI+69]
+      SUB    AX,SS:[SI-128]
+      SUB    AX,SS:[DI+70]
+      SUB    AX,SS:[DI-128]
+      SUB    AX,SS:[BP+71]
+      SUB    AX,SS:[BP-128]
+      SUB    AX,SS:[BX+72]
+      SUB    AX,SS:[BX-128]
+      SUB    CX,SS:[BX+SI+73]
+      SUB    CX,SS:[BX+SI-128]
+      SUB    CX,SS:[BX+DI+74]
+      SUB    CX,SS:[BX+DI-128]
+      SUB    CX,SS:[BP+SI+75]
+      SUB    CX,SS:[BP+SI-128]
+      SUB    CX,SS:[BP+DI+76]
+      SUB    CX,SS:[BP+DI-128]
+      SUB    CX,SS:[SI+77]
+      SUB    CX,SS:[SI-128]
+      SUB    CX,SS:[DI+78]
+      SUB    CX,SS:[DI-128]
+      SUB    CX,SS:[BP+79]
+      SUB    CX,SS:[BP-128]
+      SUB    CX,SS:[BX+80]
+      SUB    CX,SS:[BX-128]
+      SUB    DX,SS:[BX+SI+81]
+      SUB    DX,SS:[BX+SI-128]
+      SUB    DX,SS:[BX+DI+82]
+      SUB    DX,SS:[BX+DI-128]
+      SUB    DX,SS:[BP+SI+83]
+      SUB    DX,SS:[BP+SI-128]
+      SUB    DX,SS:[BP+DI+84]
+      SUB    DX,SS:[BP+DI-128]
+      SUB    DX,SS:[SI+85]
+      SUB    DX,SS:[SI-128]
+      SUB    DX,SS:[DI+86]
+      SUB    DX,SS:[DI-128]
+      SUB    DX,SS:[BP+87]
+      SUB    DX,SS:[BP-128]
+      SUB    DX,SS:[BX+88]
+      SUB    DX,SS:[BX-128]
+      SUB    BX,SS:[BX+SI+89]
+      SUB    BX,SS:[BX+SI-128]
+      SUB    BX,SS:[BX+DI+90]
+      SUB    BX,SS:[BX+DI-128]
+      SUB    BX,SS:[BP+SI+91]
+      SUB    BX,SS:[BP+SI-128]
+      SUB    BX,SS:[BP+DI+92]
+      SUB    BX,SS:[BP+DI-128]
+      SUB    BX,SS:[SI+93]
+      SUB    BX,SS:[SI-128]
+      SUB    BX,SS:[DI+94]
+      SUB    BX,SS:[DI-128]
+      SUB    BX,SS:[BP+95]
+      SUB    BX,SS:[BP-128]
+      SUB    BX,SS:[BX+96]
+      SUB    BX,SS:[BX-128]
+      SUB    SP,SS:[BX+SI+97]
+      SUB    SP,SS:[BX+SI-128]
+      SUB    SP,SS:[BX+DI+98]
+      SUB    SP,SS:[BX+DI-128]
+      SUB    SP,SS:[BP+SI+99]
+      SUB    SP,SS:[BP+SI-128]
+      SUB    SP,SS:[BP+DI+100]
+      SUB    SP,SS:[BP+DI-128]
+      SUB    SP,SS:[SI+101]
+      SUB    SP,SS:[SI-128]
+      SUB    SP,SS:[DI+102]
+      SUB    SP,SS:[DI-128]
+      SUB    SP,SS:[BP+103]
+      SUB    SP,SS:[BP-128]
+      SUB    SP,SS:[BX+104]
+      SUB    SP,SS:[BX-128]
+      SUB    BP,SS:[BX+SI+105]
+      SUB    BP,SS:[BX+SI-128]
+      SUB    BP,SS:[BX+DI+106]
+      SUB    BP,SS:[BX+DI-128]
+      SUB    BP,SS:[BP+SI+107]
+      SUB    BP,SS:[BP+SI-128]
+      SUB    BP,SS:[BP+DI+108]
+      SUB    BP,SS:[BP+DI-128]
+      SUB    BP,SS:[SI+109]
+      SUB    BP,SS:[SI-128]
+      SUB    BP,SS:[DI+110]
+      SUB    BP,SS:[DI-128]
+      SUB    BP,SS:[BP+111]
+      SUB    BP,SS:[BP-128]
+      SUB    BP,SS:[BX+112]
+      SUB    BP,SS:[BX-128]
+      SUB    SI,SS:[BX+SI+113]
+      SUB    SI,SS:[BX+SI-128]
+      SUB    SI,SS:[BX+DI+114]
+      SUB    SI,SS:[BX+DI-128]
+      SUB    SI,SS:[BP+SI+115]
+      SUB    SI,SS:[BP+SI-128]
+      SUB    SI,SS:[BP+DI+116]
+      SUB    SI,SS:[BP+DI-128]
+      SUB    SI,SS:[SI+117]
+      SUB    SI,SS:[SI-128]
+      SUB    SI,SS:[DI+118]
+      SUB    SI,SS:[DI-128]
+      SUB    SI,SS:[BP+119]
+      SUB    SI,SS:[BP-128]
+      SUB    SI,SS:[BX+120]
+      SUB    SI,SS:[BX-128]
+      SUB    DI,SS:[BX+SI+121]
+      SUB    DI,SS:[BX+SI-128]
+      SUB    DI,SS:[BX+DI+122]
+      SUB    DI,SS:[BX+DI-128]
+      SUB    DI,SS:[BP+SI+123]
+      SUB    DI,SS:[BP+SI-128]
+      SUB    DI,SS:[BP+DI+124]
+      SUB    DI,SS:[BP+DI-128]
+      SUB    DI,SS:[SI+125]
+      SUB    DI,SS:[SI-128]
+      SUB    DI,SS:[DI+126]
+      SUB    DI,SS:[DI-128]
+      SUB    DI,SS:[BP+127]
+      SUB    DI,SS:[BP-128]
+      SUB    DI,SS:[BX-128]
+      SUB    DI,SS:[BX+0]
+      SUB    AX,SS:[BX+SI+8281H]
+      SUB    AX,SS:[BX+DI+8382H]
+      SUB    AX,SS:[BP+SI+8483H]
+      SUB    AX,SS:[BP+DI+8584H]
+      SUB    AX,SS:[SI+8685H]
+      SUB    AX,SS:[DI+8786H]
+      SUB    AX,SS:[BP+8887H]
+      SUB    AX,SS:[BX+8988H]
+      SUB    CX,SS:[BX+SI+8A89H]
+      SUB    CX,SS:[BX+DI+8B8AH]
+      SUB    CX,SS:[BP+SI+8C8BH]
+      SUB    CX,SS:[BP+DI+8D8CH]
+      SUB    CX,SS:[SI+8E8DH]
+      SUB    CX,SS:[DI+8F8EH]
+      SUB    CX,SS:[BP+908FH]
+      SUB    CX,SS:[BX+9190H]
+      SUB    DX,SS:[BX+SI+9291H]
+      SUB    DX,SS:[BX+DI+9392H]
+      SUB    DX,SS:[BP+SI+9493H]
+      SUB    DX,SS:[BP+DI+9594H]
+      SUB    DX,SS:[SI+9695H]
+      SUB    DX,SS:[DI+9796H]
+      SUB    DX,SS:[BP+9897H]
+      SUB    DX,SS:[BX+9998H]
+      SUB    BX,SS:[BX+SI+9A99H]
+      SUB    BX,SS:[BX+DI+9B9AH]
+      SUB    BX,SS:[BP+SI+9C9BH]
+      SUB    BX,SS:[BP+DI+9D9CH]
+      SUB    BX,SS:[SI+9E9DH]
+      SUB    BX,SS:[DI+9F9EH]
+      SUB    BX,SS:[BP+0A09FH]
+      SUB    BX,SS:[BX+0A1A0H]
+      SUB    SP,SS:[BX+SI+0A2A1H]
+      SUB    SP,SS:[BX+DI+0A3A2H]
+      SUB    SP,SS:[BP+SI+0A4A3H]
+      SUB    SP,SS:[BP+DI+0A5A4H]
+      SUB    SP,SS:[SI+0A6A5H]
+      SUB    SP,SS:[DI+0A7A6H]
+      SUB    SP,SS:[BP+0A8A7H]
+      SUB    SP,SS:[BX+0A9A8H]
+      SUB    BP,SS:[BX+SI+0AAA9H]
+      SUB    BP,SS:[BX+DI+0ABAAH]
+      SUB    BP,SS:[BP+SI+0ACABH]
+      SUB    BP,SS:[BP+DI+0ADACH]
+      SUB    BP,SS:[SI+0AEADH]
+      SUB    BP,SS:[DI+0AFAEH]
+      SUB    BP,SS:[BP+0B0AFH]
+      SUB    BP,SS:[BX+0B1B0H]
+      SUB    SI,SS:[BX+SI+0B2B1H]
+      SUB    SI,SS:[BX+DI+0B3B2H]
+      SUB    SI,SS:[BP+SI+0B4B3H]
+      SUB    SI,SS:[BP+DI+0B5B4H]
+      SUB    SI,SS:[SI+0B6B5H]
+      SUB    SI,SS:[DI+0B7B6H]
+      SUB    SI,SS:[BP+0B8B7H]
+      SUB    SI,SS:[BX+0B9B8H]
+      SUB    DI,SS:[BX+SI+0BAB9H]
+      SUB    DI,SS:[BX+DI+0BBBAH]
+      SUB    DI,SS:[BP+SI+0BCBBH]
+      SUB    DI,SS:[BP+DI+0BDBCH]
+      SUB    DI,SS:[SI+0BEBDH]
+      SUB    DI,SS:[DI+0BFBEH]
+      SUB    DI,SS:[BP+0C0BFH]
+      SUB    DI,SS:[BX+0C1C0H]
+      SUB    AX,SS:[BX+SI]
+      SUB    AX,SS:[BX+DI]
+      SUB    AX,SS:[BP+SI]
+      SUB    AX,SS:[BP+DI]
+      SUB    AX,SS:[SI]
+      SUB    AX,SS:[DI]
+      SUB    AX,SS:[0807H]
+      SUB    AX,SS:[BX]
+      SUB    CX,SS:[BX+SI]
+      SUB    CX,SS:[BX+DI]
+      SUB    CX,SS:[BP+SI]
+      SUB    CX,SS:[BP+DI]
+      SUB    CX,SS:[SI]
+      SUB    CX,SS:[DI]
+      SUB    CX,SS:[100FH]
+      SUB    CX,SS:[BX]
+      SUB    DX,SS:[BX+SI]
+      SUB    DX,SS:[BX+DI]
+      SUB    DX,SS:[BP+SI]
+      SUB    DX,SS:[BP+DI]
+      SUB    DX,SS:[SI]
+      SUB    DX,SS:[DI]
+      SUB    DX,SS:[1817H]
+      SUB    DX,SS:[BX]
+      SUB    BX,SS:[BX+SI]
+      SUB    BX,SS:[BX+DI]
+      SUB    BX,SS:[BP+SI]
+      SUB    BX,SS:[BP+DI]
+      SUB    BX,SS:[SI]
+      SUB    BX,SS:[DI]
+      SUB    BX,SS:[201FH]
+      SUB    BX,SS:[BX]
+      SUB    SP,SS:[BX+SI]
+      SUB    SP,SS:[BX+DI]
+      SUB    SP,SS:[BP+SI]
+      SUB    SP,SS:[BP+DI]
+      SUB    SP,SS:[SI]
+      SUB    SP,SS:[DI]
+      SUB    SP,SS:[2827H]
+      SUB    SP,SS:[BX]
+      SUB    BP,SS:[BX+SI]
+      SUB    BP,SS:[BX+DI]
+      SUB    BP,SS:[BP+SI]
+      SUB    BP,SS:[BP+DI]
+      XOR    SS:[BX+DI],DH
+      XOR    SS:[BP+SI],DH
+      XOR    SS:[BP+DI],DH
+      XOR    SS:[SI],DH
+      XOR    SS:[DI],DH
+      XOR    SS:[3837H],DH
+      XOR    SS:[BX],DH
+      XOR    SS:[BX+SI],BH
+      XOR    SS:[BP+SI],SI
+      XOR    SS:[BP+DI],SI
+      XOR    SS:[SI],SI
+      XOR    SS:[DI],SI
+      XOR    SS:[3837H],SI
+      XOR    SS:[BX],SI
+      XOR    SS:[BX+SI],DI
+      XOR    SS:[BX+DI],DI
+      XOR    SS:[BP+SI],DI
+      XOR    SS:[BP+DI],DI
+      XOR    SS:[SI],DI
+      XOR    SS:[DI],DI
+      XOR    SS:[403FH],DI
+      XOR    SS:[BX],DI
+      XOR    SS:[BX+SI+65],AX
+      XOR    SS:[BX+SI-128],AX
+      XOR    SS:[BX+DI+66],AX
+      XOR    SS:[BX+DI-128],AX
+      XOR    SS:[BP+SI+67],AX
+      XOR    SS:[BP+SI-128],AX
+      XOR    SS:[BP+DI+68],AX
+      XOR    SS:[BP+DI-128],AX
+      XOR    SS:[SI+69],AX
+      XOR    SS:[SI-128],AX
+      XOR    SS:[DI+70],AX
+      XOR    SS:[DI-128],AX
+      XOR    SS:[BP+71],AX
+      XOR    SS:[BP-128],AX
+      XOR    SS:[BX+72],AX
+      XOR    SS:[BX-128],AX
+      XOR    SS:[BX+SI+73],CX
+      XOR    SS:[BX+SI-128],CX
+      XOR    SS:[BX+DI+74],CX
+      XOR    SS:[BX+DI-128],CX
+      XOR    SS:[BP+SI+75],CX
+      XOR    SS:[BP+SI-128],CX
+      XOR    SS:[BP+DI+76],CX
+      XOR    SS:[BP+DI-128],CX
+      XOR    SS:[SI+77],CX
+      XOR    SS:[SI-128],CX
+      XOR    SS:[DI+78],CX
+      XOR    SS:[DI-128],CX
+      XOR    SS:[BP+79],CX
+      XOR    SS:[BP-128],CX
+      XOR    SS:[BX+80],CX
+      XOR    SS:[BX-128],CX
+      XOR    SS:[BX+SI+81],DX
+      XOR    SS:[BX+SI-128],DX
+      XOR    SS:[BX+DI+82],DX
+      XOR    SS:[BX+DI-128],DX
+      XOR    SS:[BP+SI+83],DX
+      XOR    SS:[BP+SI-128],DX
+      XOR    SS:[BP+DI+84],DX
+      XOR    SS:[BP+DI-128],DX
+      XOR    SS:[SI+85],DX
+      XOR    SS:[SI-128],DX
+      XOR    SS:[DI+86],DX
+      XOR    SS:[DI-128],DX
+      XOR    SS:[BP+87],DX
+      XOR    SS:[BP-128],DX
+      XOR    SS:[BX+88],DX
+      XOR    SS:[BX-128],DX
+      XOR    SS:[BX+SI+89],BX
+      XOR    SS:[BX+SI-128],BX
+      XOR    SS:[BX+DI+90],BX
+      XOR    SS:[BX+DI-128],BX
+      XOR    SS:[BP+SI+91],BX
+      XOR    SS:[BP+SI-128],BX
+      XOR    SS:[BP+DI+92],BX
+      XOR    SS:[BP+DI-128],BX
+      XOR    SS:[SI+93],BX
+      XOR    SS:[SI-128],BX
+      XOR    SS:[DI+94],BX
+      XOR    SS:[DI-128],BX
+      XOR    SS:[BP+95],BX
+      XOR    SS:[BP-128],BX
+      XOR    SS:[BX+96],BX
+      XOR    SS:[BX-128],BX
+      XOR    SS:[BX+SI+97],SP
+      XOR    SS:[BX+SI-128],SP
+      XOR    SS:[BX+DI+98],SP
+      XOR    SS:[BX+DI-128],SP
+      XOR    SS:[BP+SI+99],SP
+      XOR    SS:[BP+SI-128],SP
+      XOR    SS:[BP+DI+100],SP
+      XOR    SS:[BP+DI-128],SP
+      XOR    SS:[SI+101],SP
+      XOR    SS:[SI-128],SP
+      XOR    SS:[DI+102],SP
+      XOR    SS:[DI-128],SP
+      XOR    SS:[BP+103],SP
+      XOR    SS:[BP-128],SP
+      XOR    SS:[BX+104],SP
+      XOR    SS:[BX-128],SP
+      XOR    SS:[BX+SI+105],BP
+      XOR    SS:[BX+SI-128],BP
+      XOR    SS:[BX+DI+106],BP
+      XOR    SS:[BX+DI-128],BP
+      XOR    SS:[BP+SI+107],BP
+      XOR    SS:[BP+SI-128],BP
+      XOR    SS:[BP+DI+108],BP
+      XOR    SS:[BP+DI-128],BP
+      XOR    SS:[SI+109],BP
+      XOR    SS:[SI-128],BP
+      XOR    SS:[DI+110],BP
+      XOR    SS:[DI-128],BP
+      XOR    SS:[BP+111],BP
+      XOR    SS:[BP-128],BP
+      XOR    SS:[BX+112],BP
+      XOR    SS:[BX-128],BP
+      XOR    SS:[BX+SI+113],SI
+      XOR    SS:[BX+SI-128],SI
+      XOR    SS:[BX+DI+114],SI
+      XOR    SS:[BX+DI-128],SI
+      XOR    SS:[BP+SI+115],SI
+      XOR    SS:[BP+SI-128],SI
+      XOR    SS:[BP+DI+116],SI
+      XOR    SS:[BP+DI-128],SI
+      XOR    SS:[SI+117],SI
+      XOR    SS:[SI-128],SI
+      XOR    SS:[DI+118],SI
+      XOR    SS:[DI-128],SI
+      XOR    SS:[BP+119],SI
+      XOR    SS:[BP-128],SI
+      XOR    SS:[BX+120],SI
+      XOR    SS:[BX-128],SI
+      XOR    SS:[BX+SI+121],DI
+      XOR    SS:[BX+SI-128],DI
+      XOR    SS:[BX+DI+122],DI
+      XOR    SS:[BX+DI-128],DI
+      XOR    SS:[BP+SI+123],DI
+      XOR    SS:[BP+SI-128],DI
+      XOR    SS:[BP+DI+124],DI
+      XOR    SS:[BP+DI-128],DI
+      XOR    SS:[SI+125],DI
+      XOR    SS:[SI-128],DI
+      XOR    SS:[DI+126],DI
+      XOR    SS:[DI-128],DI
+      XOR    SS:[BP+127],DI
+      XOR    SS:[BP-128],DI
+      XOR    SS:[BX-128],DI
+      XOR    SS:[BX+0],DI
+      XOR    SS:[BX+SI+8281H],AX
+      XOR    SS:[BX+DI+8382H],AX
+      XOR    SS:[BP+SI+8483H],AX
+      XOR    SS:[BP+DI+8584H],AX
+      XOR    SS:[SI+8685H],AX
+      XOR    SS:[DI+8786H],AX
+      XOR    SS:[BP+8887H],AX
+      XOR    SS:[BX+8988H],AX
+      XOR    SS:[BX+SI+8A89H],CX
+      XOR    SS:[BX+DI+8B8AH],CX
+      XOR    SS:[BP+SI+8C8BH],CX
+      XOR    SS:[BP+DI+8D8CH],CX
+      XOR    SS:[SI+8E8DH],CX
+      XOR    SS:[DI+8F8EH],CX
+      XOR    SS:[BP+908FH],CX
+      XOR    SS:[BX+9190H],CX
+      XOR    SS:[BX+SI+9291H],DX
+      XOR    SS:[BX+DI+9392H],DX
+      XOR    SS:[BP+SI+9493H],DX
+      XOR    SS:[BP+DI+9594H],DX
+      XOR    SS:[SI+9695H],DX
+      XOR    SS:[DI+9796H],DX
+      XOR    SS:[BP+9897H],DX
+      XOR    SS:[BX+9998H],DX
+      XOR    SS:[BX+SI+9A99H],BX
+      XOR    SS:[BX+DI+9B9AH],BX
+      XOR    SS:[BP+SI+9C9BH],BX
+      XOR    SS:[BP+DI+9D9CH],BX
+      XOR    SS:[SI+9E9DH],BX
+      XOR    SS:[DI+9F9EH],BX
+      XOR    SS:[BP+0A09FH],BX
+      XOR    SS:[BX+0A1A0H],BX
+      XOR    SS:[BX+SI+0A2A1H],SP
+      XOR    SS:[BX+DI+0A3A2H],SP
+      XOR    SS:[BP+SI+0A4A3H],SP
+      XOR    SS:[BP+DI+0A5A4H],SP
+      XOR    SS:[SI+0A6A5H],SP
+      XOR    SS:[DI+0A7A6H],SP
+      XOR    SS:[BP+0A8A7H],SP
+      XOR    SS:[BX+0A9A8H],SP
+      XOR    SS:[BX+SI+0AAA9H],BP
+      XOR    SS:[BX+DI+0ABAAH],BP
+      XOR    SS:[BP+SI+0ACABH],BP
+      XOR    SS:[BP+DI+0ADACH],BP
+      XOR    SS:[SI+0AEADH],BP
+      XOR    SS:[DI+0AFAEH],BP
+      XOR    SS:[BP+0B0AFH],BP
+      XOR    SS:[BX+0B1B0H],BP
+      XOR    SS:[BX+SI+0B2B1H],SI
+      XOR    SS:[BX+DI+0B3B2H],SI
+      XOR    SS:[BP+SI+0B4B3H],SI
+      XOR    SS:[BP+DI+0B5B4H],SI
+      XOR    SS:[SI+0B6B5H],SI
+      XOR    SS:[DI+0B7B6H],SI
+      XOR    SS:[BP+0B8B7H],SI
+      XOR    SS:[BX+0B9B8H],SI
+      XOR    SS:[BX+SI+0BAB9H],DI
+      XOR    SS:[BX+DI+0BBBAH],DI
+      XOR    SS:[BP+SI+0BCBBH],DI
+      XOR    SS:[BP+DI+0BDBCH],DI
+      XOR    SS:[SI+0BEBDH],DI
+      XOR    SS:[DI+0BFBEH],DI
+      XOR    SS:[BP+0C0BFH],DI
+      XOR    SS:[BX+0C1C0H],DI
+      XOR    SS:[BX+SI],AX
+      XOR    SS:[BX+DI],AX
+      XOR    SS:[BP+SI],AX
+      XOR    SS:[BP+DI],AX
+      XOR    SS:[SI],AX
+      XOR    SS:[DI],AX
+      XOR    SS:[0807H],AX
+      XOR    SS:[BX],AX
+      XOR    SS:[BX+SI],CX
+      XOR    SS:[BX+DI],CX
+      XOR    SS:[BP+SI],CX
+      XOR    SS:[BP+DI],CX
+      XOR    SS:[SI],CX
+      XOR    SS:[DI],CX
+      XOR    SS:[100FH],CX
+      XOR    SS:[BX],CX
+      XOR    SS:[BX+SI],DX
+      XOR    SS:[BX+DI],DX
+      XOR    SS:[BP+SI],DX
+      XOR    SS:[BP+DI],DX
+      XOR    SS:[SI],DX
+      XOR    SS:[DI],DX
+      XOR    SS:[1817H],DX
+      XOR    SS:[BX],DX
+      XOR    SS:[BX+SI],BX
+      XOR    SS:[BX+DI],BX
+      XOR    SS:[BP+SI],BX
+      XOR    SS:[BP+DI],BX
+      XOR    SS:[SI],BX
+      XOR    SS:[DI],BX
+      XOR    SS:[201FH],BX
+      XOR    SS:[BX],BX
+      XOR    SS:[BX+SI],SP
+      XOR    SS:[BX+DI],SP
+      XOR    SS:[BP+SI],SP
+      XOR    SS:[BP+DI],SP
+      XOR    SS:[SI],SP
+      XOR    SS:[DI],SP
+      XOR    SS:[2827H],SP
+      XOR    SS:[BX],SP
+      XOR    SS:[BX+SI],BP
+      XOR    SS:[BX+DI],BP
+      XOR    SS:[BP+SI],BP
+      XOR    SS:[BP+DI],BP
+      XOR    SS:[SI],BP
+      XOR    SS:[DI],BP
+      XOR    SS:[302FH],BP
+      XOR    SS:[BX],BP
+      XOR    SS:[BX+SI],SI
+      XOR    SS:[BX+DI],SI
+      XOR    DH,SS:[BP+DI]
+      XOR    DH,SS:[SI]
+      XOR    DH,SS:[DI]
+      XOR    DH,SS:[3837H]
+      XOR    DH,SS:[BX]
+      XOR    BH,SS:[BX+SI]
+      XOR    BH,SS:[BX+DI]
+      XOR    BH,SS:[BP+SI]
+      XOR    SI,SS:[SI]
+      XOR    SI,SS:[DI]
+      XOR    SI,SS:[3837H]
+      XOR    SI,SS:[BX]
+      XOR    DI,SS:[BX+SI]
+      XOR    DI,SS:[BX+DI]
+      XOR    DI,SS:[BP+SI]
+      XOR    DI,SS:[BP+DI]
+      XOR    DI,SS:[SI]
+      XOR    DI,SS:[DI]
+      XOR    DI,SS:[403FH]
+      XOR    DI,SS:[BX]
+      XOR    AX,SS:[BX+SI+65]
+      XOR    AX,SS:[BX+SI-128]
+      XOR    AX,SS:[BX+DI+66]
+      XOR    AX,SS:[BX+DI-128]
+      XOR    AX,SS:[BP+SI+67]
+      XOR    AX,SS:[BP+SI-128]
+      XOR    AX,SS:[BP+DI+68]
+      XOR    AX,SS:[BP+DI-128]
+      XOR    AX,SS:[SI+69]
+      XOR    AX,SS:[SI-128]
+      XOR    AX,SS:[DI+70]
+      XOR    AX,SS:[DI-128]
+      XOR    AX,SS:[BP+71]
+      XOR    AX,SS:[BP-128]
+      XOR    AX,SS:[BX+72]
+      XOR    AX,SS:[BX-128]
+      XOR    CX,SS:[BX+SI+73]
+      XOR    CX,SS:[BX+SI-128]
+      XOR    CX,SS:[BX+DI+74]
+      XOR    CX,SS:[BX+DI-128]
+      XOR    CX,SS:[BP+SI+75]
+      XOR    CX,SS:[BP+SI-128]
+      XOR    CX,SS:[BP+DI+76]
+      XOR    CX,SS:[BP+DI-128]
+      XOR    CX,SS:[SI+77]
+      XOR    CX,SS:[SI-128]
+      XOR    CX,SS:[DI+78]
+      XOR    CX,SS:[DI-128]
+      XOR    CX,SS:[BP+79]
+      XOR    CX,SS:[BP-128]
+      XOR    CX,SS:[BX+80]
+      XOR    CX,SS:[BX-128]
+      XOR    DX,SS:[BX+SI+81]
+      XOR    DX,SS:[BX+SI-128]
+      XOR    DX,SS:[BX+DI+82]
+      XOR    DX,SS:[BX+DI-128]
+      XOR    DX,SS:[BP+SI+83]
+      XOR    DX,SS:[BP+SI-128]
+      XOR    DX,SS:[BP+DI+84]
+      XOR    DX,SS:[BP+DI-128]
+      XOR    DX,SS:[SI+85]
+      XOR    DX,SS:[SI-128]
+      XOR    DX,SS:[DI+86]
+      XOR    DX,SS:[DI-128]
+      XOR    DX,SS:[BP+87]
+      XOR    DX,SS:[BP-128]
+      XOR    DX,SS:[BX+88]
+      XOR    DX,SS:[BX-128]
+      XOR    BX,SS:[BX+SI+89]
+      XOR    BX,SS:[BX+SI-128]
+      XOR    BX,SS:[BX+DI+90]
+      XOR    BX,SS:[BX+DI-128]
+      XOR    BX,SS:[BP+SI+91]
+      XOR    BX,SS:[BP+SI-128]
+      XOR    BX,SS:[BP+DI+92]
+      XOR    BX,SS:[BP+DI-128]
+      XOR    BX,SS:[SI+93]
+      XOR    BX,SS:[SI-128]
+      XOR    BX,SS:[DI+94]
+      XOR    BX,SS:[DI-128]
+      XOR    BX,SS:[BP+95]
+      XOR    BX,SS:[BP-128]
+      XOR    BX,SS:[BX+96]
+      XOR    BX,SS:[BX-128]
+      XOR    SP,SS:[BX+SI+97]
+      XOR    SP,SS:[BX+SI-128]
+      XOR    SP,SS:[BX+DI+98]
+      XOR    SP,SS:[BX+DI-128]
+      XOR    SP,SS:[BP+SI+99]
+      XOR    SP,SS:[BP+SI-128]
+      XOR    SP,SS:[BP+DI+100]
+      XOR    SP,SS:[BP+DI-128]
+      XOR    SP,SS:[SI+101]
+      XOR    SP,SS:[SI-128]
+      XOR    SP,SS:[DI+102]
+      XOR    SP,SS:[DI-128]
+      XOR    SP,SS:[BP+103]
+      XOR    SP,SS:[BP-128]
+      XOR    SP,SS:[BX+104]
+      XOR    SP,SS:[BX-128]
+      XOR    BP,SS:[BX+SI+105]
+      XOR    BP,SS:[BX+SI-128]
+      XOR    BP,SS:[BX+DI+106]
+      XOR    BP,SS:[BX+DI-128]
+      XOR    BP,SS:[BP+SI+107]
+      XOR    BP,SS:[BP+SI-128]
+      XOR    BP,SS:[BP+DI+108]
+      XOR    BP,SS:[BP+DI-128]
+      XOR    BP,SS:[SI+109]
+      XOR    BP,SS:[SI-128]
+      XOR    BP,SS:[DI+110]
+      XOR    BP,SS:[DI-128]
+      XOR    BP,SS:[BP+111]
+      XOR    BP,SS:[BP-128]
+      XOR    BP,SS:[BX+112]
+      XOR    BP,SS:[BX-128]
+      XOR    SI,SS:[BX+SI+113]
+      XOR    SI,SS:[BX+SI-128]
+      XOR    SI,SS:[BX+DI+114]
+      XOR    SI,SS:[BX+DI-128]
+      XOR    SI,SS:[BP+SI+115]
+      XOR    SI,SS:[BP+SI-128]
+      XOR    SI,SS:[BP+DI+116]
+      XOR    SI,SS:[BP+DI-128]
+      XOR    SI,SS:[SI+117]
+      XOR    SI,SS:[SI-128]
+      XOR    SI,SS:[DI+118]
+      XOR    SI,SS:[DI-128]
+      XOR    SI,SS:[BP+119]
+      XOR    SI,SS:[BP-128]
+      XOR    SI,SS:[BX+120]
+      XOR    SI,SS:[BX-128]
+      XOR    DI,SS:[BX+SI+121]
+      XOR    DI,SS:[BX+SI-128]
+      XOR    DI,SS:[BX+DI+122]
+      XOR    DI,SS:[BX+DI-128]
+      XOR    DI,SS:[BP+SI+123]
+      XOR    DI,SS:[BP+SI-128]
+      XOR    DI,SS:[BP+DI+124]
+      XOR    DI,SS:[BP+DI-128]
+      XOR    DI,SS:[SI+125]
+      XOR    DI,SS:[SI-128]
+      XOR    DI,SS:[DI+126]
+      XOR    DI,SS:[DI-128]
+      XOR    DI,SS:[BP+127]
+      XOR    DI,SS:[BP-128]
+      XOR    DI,SS:[BX-128]
+      XOR    DI,SS:[BX+0]
+      XOR    AX,SS:[BX+SI+8281H]
+      XOR    AX,SS:[BX+DI+8382H]
+      XOR    AX,SS:[BP+SI+8483H]
+      XOR    AX,SS:[BP+DI+8584H]
+      XOR    AX,SS:[SI+8685H]
+      XOR    AX,SS:[DI+8786H]
+      XOR    AX,SS:[BP+8887H]
+      XOR    AX,SS:[BX+8988H]
+      XOR    CX,SS:[BX+SI+8A89H]
+      XOR    CX,SS:[BX+DI+8B8AH]
+      XOR    CX,SS:[BP+SI+8C8BH]
+      XOR    CX,SS:[BP+DI+8D8CH]
+      XOR    CX,SS:[SI+8E8DH]
+      XOR    CX,SS:[DI+8F8EH]
+      XOR    CX,SS:[BP+908FH]
+      XOR    CX,SS:[BX+9190H]
+      XOR    DX,SS:[BX+SI+9291H]
+      XOR    DX,SS:[BX+DI+9392H]
+      XOR    DX,SS:[BP+SI+9493H]
+      XOR    DX,SS:[BP+DI+9594H]
+      XOR    DX,SS:[SI+9695H]
+      XOR    DX,SS:[DI+9796H]
+      XOR    DX,SS:[BP+9897H]
+      XOR    DX,SS:[BX+9998H]
+      XOR    BX,SS:[BX+SI+9A99H]
+      XOR    BX,SS:[BX+DI+9B9AH]
+      XOR    BX,SS:[BP+SI+9C9BH]
+      XOR    BX,SS:[BP+DI+9D9CH]
+      XOR    BX,SS:[SI+9E9DH]
+      XOR    BX,SS:[DI+9F9EH]
+      XOR    BX,SS:[BP+0A09FH]
+      XOR    BX,SS:[BX+0A1A0H]
+      XOR    SP,SS:[BX+SI+0A2A1H]
+      XOR    SP,SS:[BX+DI+0A3A2H]
+      XOR    SP,SS:[BP+SI+0A4A3H]
+      XOR    SP,SS:[BP+DI+0A5A4H]
+      XOR    SP,SS:[SI+0A6A5H]
+      XOR    SP,SS:[DI+0A7A6H]
+      XOR    SP,SS:[BP+0A8A7H]
+      XOR    SP,SS:[BX+0A9A8H]
+      XOR    BP,SS:[BX+SI+0AAA9H]
+      XOR    BP,SS:[BX+DI+0ABAAH]
+      XOR    BP,SS:[BP+SI+0ACABH]
+      XOR    BP,SS:[BP+DI+0ADACH]
+      XOR    BP,SS:[SI+0AEADH]
+      XOR    BP,SS:[DI+0AFAEH]
+      XOR    BP,SS:[BP+0B0AFH]
+      XOR    BP,SS:[BX+0B1B0H]
+      XOR    SI,SS:[BX+SI+0B2B1H]
+      XOR    SI,SS:[BX+DI+0B3B2H]
+      XOR    SI,SS:[BP+SI+0B4B3H]
+      XOR    SI,SS:[BP+DI+0B5B4H]
+      XOR    SI,SS:[SI+0B6B5H]
+      XOR    SI,SS:[DI+0B7B6H]
+      XOR    SI,SS:[BP+0B8B7H]
+      XOR    SI,SS:[BX+0B9B8H]
+      XOR    DI,SS:[BX+SI+0BAB9H]
+      XOR    DI,SS:[BX+DI+0BBBAH]
+      XOR    DI,SS:[BP+SI+0BCBBH]
+      XOR    DI,SS:[BP+DI+0BDBCH]
+      XOR    DI,SS:[SI+0BEBDH]
+      XOR    DI,SS:[DI+0BFBEH]
+      XOR    DI,SS:[BP+0C0BFH]
+      XOR    DI,SS:[BX+0C1C0H]
+      XOR    AX,SS:[BX+SI]
+      XOR    AX,SS:[BX+DI]
+      XOR    AX,SS:[BP+SI]
+      XOR    AX,SS:[BP+DI]
+      XOR    AX,SS:[SI]
+      XOR    AX,SS:[DI]
+      XOR    AX,SS:[0807H]
+      XOR    AX,SS:[BX]
+      XOR    CX,SS:[BX+SI]
+      XOR    CX,SS:[BX+DI]
+      XOR    CX,SS:[BP+SI]
+      XOR    CX,SS:[BP+DI]
+      XOR    CX,SS:[SI]
+      XOR    CX,SS:[DI]
+      XOR    CX,SS:[100FH]
+      XOR    CX,SS:[BX]
+      XOR    DX,SS:[BX+SI]
+      XOR    DX,SS:[BX+DI]
+      XOR    DX,SS:[BP+SI]
+      XOR    DX,SS:[BP+DI]
+      XOR    DX,SS:[SI]
+      XOR    DX,SS:[DI]
+      XOR    DX,SS:[1817H]
+      XOR    DX,SS:[BX]
+      XOR    BX,SS:[BX+SI]
+      XOR    BX,SS:[BX+DI]
+      XOR    BX,SS:[BP+SI]
+      XOR    BX,SS:[BP+DI]
+      XOR    BX,SS:[SI]
+      XOR    BX,SS:[DI]
+      XOR    BX,SS:[201FH]
+      XOR    BX,SS:[BX]
+      XOR    SP,SS:[BX+SI]
+      XOR    SP,SS:[BX+DI]
+      XOR    SP,SS:[BP+SI]
+      XOR    SP,SS:[BP+DI]
+      XOR    SP,SS:[SI]
+      XOR    SP,SS:[DI]
+      XOR    SP,SS:[2827H]
+      XOR    SP,SS:[BX]
+      XOR    BP,SS:[BX+SI]
+      XOR    BP,SS:[BX+DI]
+      XOR    BP,SS:[BP+SI]
+      XOR    BP,SS:[BP+DI]
+      XOR    BP,SS:[SI]
+      XOR    BP,SS:[DI]
+      XOR    BP,SS:[302FH]
+      XOR    BP,SS:[BX]
+      XOR    SI,SS:[BX+SI]
+      XOR    SI,SS:[BX+DI]
+      XOR    SI,SS:[BP+SI]
+      XOR    SI,SS:[BP+DI]
+      ADD    BYTE PTR DS:[BX+DI+8382H],84H
+      ADD    BYTE PTR DS:[BP+SI+8382H],84H
+      ADD    BYTE PTR DS:[BP+DI+8382H],84H
+      ADD    BYTE PTR DS:[SI+8382H],84H
+      ADD    BYTE PTR DS:[DI+8382H],84H
+      ADD    BYTE PTR DS:[BP+8382H],84H
+      ADD    BYTE PTR DS:[BX+8382H],84H
+      OR     BYTE PTR DS:[BX+SI+8382H],84H
+      OR     BYTE PTR DS:[BX+DI+8382H],84H
+      OR     BYTE PTR DS:[BP+SI+8382H],84H
+      OR     BYTE PTR DS:[BP+DI+8382H],84H
+      OR     BYTE PTR DS:[SI+8382H],84H
+      OR     BYTE PTR DS:[DI+8382H],84H
+      OR     BYTE PTR DS:[BP+8382H],84H
+      OR     BYTE PTR DS:[BX+8382H],84H
+      ADC    BYTE PTR DS:[BX+SI+8382H],84H
+      ADC    BYTE PTR DS:[BX+DI+8382H],84H
+      ADC    BYTE PTR DS:[BP+SI+8382H],84H
+      ADC    BYTE PTR DS:[BP+DI+8382H],84H
+      ADC    BYTE PTR DS:[SI+8382H],84H
+      ADC    BYTE PTR DS:[DI+8382H],84H
+      ADC    BYTE PTR DS:[BP+8382H],84H
+      ADC    BYTE PTR DS:[BX+8382H],84H
+      SBB    BYTE PTR DS:[BX+SI+8382H],84H
+      SBB    BYTE PTR DS:[BX+DI+8382H],84H
+      SBB    BYTE PTR DS:[BP+SI+8382H],84H
+      SBB    BYTE PTR DS:[BP+DI+8382H],84H
+      SBB    BYTE PTR DS:[SI+8382H],84H
+      SBB    BYTE PTR DS:[DI+8382H],84H
+      SBB    BYTE PTR DS:[BP+8382H],84H
+      SBB    BYTE PTR DS:[BX+8382H],84H
+      AND    BYTE PTR DS:[BX+SI+8382H],84H
+      AND    BYTE PTR DS:[BX+DI+8382H],84H
+      AND    BYTE PTR DS:[BP+SI+8382H],84H
+      AND    BYTE PTR DS:[BP+DI+8382H],84H
+      AND    BYTE PTR DS:[SI+8382H],84H
+      AND    BYTE PTR DS:[DI+8382H],84H
+      AND    BYTE PTR DS:[BP+8382H],84H
+      AND    BYTE PTR DS:[BX+8382H],84H
+      SUB    BYTE PTR DS:[BX+SI+8382H],84H
+      SUB    BYTE PTR DS:[BX+DI+8382H],84H
+      SUB    BYTE PTR DS:[BP+SI+8382H],84H
+      SUB    BYTE PTR DS:[BP+DI+8382H],84H
+      SUB    BYTE PTR DS:[SI+8382H],84H
+      SUB    BYTE PTR DS:[DI+8382H],84H
+      SUB    BYTE PTR DS:[BP+8382H],84H
+      SUB    BYTE PTR DS:[BX+8382H],84H
+      XOR    BYTE PTR DS:[BX+SI+8382H],84H
+      XOR    BYTE PTR DS:[BX+DI+8382H],84H
+      XOR    BYTE PTR DS:[BP+SI+8382H],84H
+      XOR    BYTE PTR DS:[BP+DI+8382H],84H
+      XOR    BYTE PTR DS:[SI+8382H],84H
+      XOR    BYTE PTR DS:[DI+8382H],84H
+      XOR    BYTE PTR DS:[BP+8382H],84H
+      XOR    BYTE PTR DS:[BX+8382H],84H
+      CMP    BYTE PTR DS:[BX+SI+8382H],84H
+      CMP    BYTE PTR DS:[BX+DI+8382H],84H
+      CMP    BYTE PTR DS:[BP+SI+8382H],84H
+      CMP    BYTE PTR DS:[BP+DI+8382H],84H
+      CMP    BYTE PTR DS:[SI+8382H],84H
+      CMP    BYTE PTR DS:[DI+8382H],84H
+      CMP    BYTE PTR DS:[BP+8382H],84H
+      CMP    BYTE PTR DS:[BX+8382H],84H
+      ADD    BYTE PTR DS:[BX+SI],82H
+      ADD    WORD PTR DS:[BP+SI+8483H],8685H
+      ADD    WORD PTR DS:[BP+DI+8483H],8685H
+      ADD    WORD PTR DS:[SI+8483H],8685H
+      ADD    WORD PTR DS:[DI+8483H],8685H
+      ADD    WORD PTR DS:[BP+8483H],8685H
+      ADD    WORD PTR DS:[BX+8483H],8685H
+      OR     WORD PTR DS:[BX+SI+8483H],8685H
+      OR     WORD PTR DS:[BX+DI+8483H],8685H
+      OR     WORD PTR DS:[BP+SI+8483H],8685H
+      OR     WORD PTR DS:[BP+DI+8483H],8685H
+      OR     WORD PTR DS:[SI+8483H],8685H
+      OR     WORD PTR DS:[DI+8483H],8685H
+      OR     WORD PTR DS:[BP+8483H],8685H
+      OR     WORD PTR DS:[BX+8483H],8685H
+      ADC    WORD PTR DS:[BX+SI+8483H],8685H
+      ADC    WORD PTR DS:[BX+DI+8483H],8685H
+      ADC    WORD PTR DS:[BP+SI+8483H],8685H
+      ADC    WORD PTR DS:[BP+DI+8483H],8685H
+      ADC    WORD PTR DS:[SI+8483H],8685H
+      ADC    WORD PTR DS:[DI+8483H],8685H
+      ADC    WORD PTR DS:[BP+8483H],8685H
+      ADC    WORD PTR DS:[BX+8483H],8685H
+      SBB    WORD PTR DS:[BX+SI+8483H],8685H
+      SBB    WORD PTR DS:[BX+DI+8483H],8685H
+      SBB    WORD PTR DS:[BP+SI+8483H],8685H
+      SBB    WORD PTR DS:[BP+DI+8483H],8685H
+      SBB    WORD PTR DS:[SI+8483H],8685H
+      SBB    WORD PTR DS:[DI+8483H],8685H
+      SBB    WORD PTR DS:[BP+8483H],8685H
+      SBB    WORD PTR DS:[BX+8483H],8685H
+      AND    WORD PTR DS:[BX+SI+8483H],8685H
+      AND    WORD PTR DS:[BX+DI+8483H],8685H
+      AND    WORD PTR DS:[BP+SI+8483H],8685H
+      AND    WORD PTR DS:[BP+DI+8483H],8685H
+      AND    WORD PTR DS:[SI+8483H],8685H
+      AND    WORD PTR DS:[DI+8483H],8685H
+      AND    WORD PTR DS:[BP+8483H],8685H
+      AND    WORD PTR DS:[BX+8483H],8685H
+      SUB    WORD PTR DS:[BX+SI+8483H],8685H
+      SUB    WORD PTR DS:[BX+DI+8483H],8685H
+      SUB    WORD PTR DS:[BP+SI+8483H],8685H
+      SUB    WORD PTR DS:[BP+DI+8483H],8685H
+      SUB    WORD PTR DS:[SI+8483H],8685H
+      SUB    WORD PTR DS:[DI+8483H],8685H
+      SUB    WORD PTR DS:[BP+8483H],8685H
+      SUB    WORD PTR DS:[BX+8483H],8685H
+      XOR    WORD PTR DS:[BX+SI+8483H],8685H
+      XOR    WORD PTR DS:[BX+DI+8483H],8685H
+      XOR    WORD PTR DS:[BP+SI+8483H],8685H
+      XOR    WORD PTR DS:[BP+DI+8483H],8685H
+      XOR    WORD PTR DS:[SI+8483H],8685H
+      XOR    WORD PTR DS:[DI+8483H],8685H
+      XOR    WORD PTR DS:[BP+8483H],8685H
+      XOR    WORD PTR DS:[BX+8483H],8685H
+      CMP    WORD PTR DS:[BX+SI+8483H],8685H
+      CMP    WORD PTR DS:[BX+DI+8483H],8685H
+      CMP    WORD PTR DS:[BP+SI+8483H],8685H
+      CMP    WORD PTR DS:[BP+DI+8483H],8685H
+      CMP    WORD PTR DS:[SI+8483H],8685H
+      CMP    WORD PTR DS:[DI+8483H],8685H
+      CMP    WORD PTR DS:[BP+8483H],8685H
+      CMP    WORD PTR DS:[BX+8483H],8685H
+      ADD    WORD PTR DS:[BX+SI],8483H
+      ADD    WORD PTR DS:[SI+8685H],-79H
+      ADD    WORD PTR DS:[DI+8685H],-79H
+      ADD    WORD PTR DS:[BP+8685H],-79H
+      ADD    WORD PTR DS:[BX+8685H],-79H
+      OR     WORD PTR DS:[BX+SI+8685H],-79H
+      OR     WORD PTR DS:[BX+DI+8685H],-79H
+      OR     WORD PTR DS:[BP+SI+8685H],-79H
+      OR     WORD PTR DS:[BP+DI+8685H],-79H
+      OR     WORD PTR DS:[SI+8685H],-79H
+      OR     WORD PTR DS:[DI+8685H],-79H
+      OR     WORD PTR DS:[BP+8685H],-79H
+      OR     WORD PTR DS:[BX+8685H],-79H
+      ADC    WORD PTR DS:[BX+SI+8685H],-79H
+      ADC    WORD PTR DS:[BX+DI+8685H],-79H
+      ADC    WORD PTR DS:[BP+SI+8685H],-79H
+      ADC    WORD PTR DS:[BP+DI+8685H],-79H
+      ADC    WORD PTR DS:[SI+8685H],-79H
+      ADC    WORD PTR DS:[DI+8685H],-79H
+      ADC    WORD PTR DS:[BP+8685H],-79H
+      ADC    WORD PTR DS:[BX+8685H],-79H
+      SBB    WORD PTR DS:[BX+SI+8685H],-79H
+      SBB    WORD PTR DS:[BX+DI+8685H],-79H
+      SBB    WORD PTR DS:[BP+SI+8685H],-79H
+      SBB    WORD PTR DS:[BP+DI+8685H],-79H
+      SBB    WORD PTR DS:[SI+8685H],-79H
+      SBB    WORD PTR DS:[DI+8685H],-79H
+      SBB    WORD PTR DS:[BP+8685H],-79H
+      SBB    WORD PTR DS:[BX+8685H],-79H
+      AND    WORD PTR DS:[BX+SI+8685H],-79H
+      AND    WORD PTR DS:[BX+DI+8685H],-79H
+      AND    WORD PTR DS:[BP+SI+8685H],-79H
+      AND    WORD PTR DS:[BP+DI+8685H],-79H
+      AND    WORD PTR DS:[SI+8685H],-79H
+      AND    WORD PTR DS:[DI+8685H],-79H
+      AND    WORD PTR DS:[BP+8685H],-79H
+      AND    WORD PTR DS:[BX+8685H],-79H
+      SUB    WORD PTR DS:[BX+SI+8685H],-79H
+      SUB    WORD PTR DS:[BX+DI+8685H],-79H
+      SUB    WORD PTR DS:[BP+SI+8685H],-79H
+      SUB    WORD PTR DS:[BP+DI+8685H],-79H
+      SUB    WORD PTR DS:[SI+8685H],-79H
+      SUB    WORD PTR DS:[DI+8685H],-79H
+      SUB    WORD PTR DS:[BP+8685H],-79H
+      SUB    WORD PTR DS:[BX+8685H],-79H
+      XOR    WORD PTR DS:[BX+SI+8685H],-79H
+      XOR    WORD PTR DS:[BX+DI+8685H],-79H
+      XOR    WORD PTR DS:[BP+SI+8685H],-79H
+      XOR    WORD PTR DS:[BP+DI+8685H],-79H
+      XOR    WORD PTR DS:[SI+8685H],-79H
+      XOR    WORD PTR DS:[DI+8685H],-79H
+      XOR    WORD PTR DS:[BP+8685H],-79H
+      XOR    WORD PTR DS:[BX+8685H],-79H
+      CMP    WORD PTR DS:[BX+SI+8685H],-79H
+      CMP    WORD PTR DS:[BX+DI+8685H],-79H
+      CMP    WORD PTR DS:[BP+SI+8685H],-79H
+      CMP    WORD PTR DS:[BP+DI+8685H],-79H
+      CMP    WORD PTR DS:[SI+8685H],-79H
+      CMP    WORD PTR DS:[DI+8685H],-79H
+      CMP    WORD PTR DS:[BP+8685H],-79H
+      CMP    WORD PTR DS:[BX+8685H],-79H
+      ADD    WORD PTR DS:[BX+SI],-7BH
+      TEST   AL,DS:[DI+8786H]
+      TEST   AL,DS:[BP+8786H]
+      TEST   AL,DS:[BX+8786H]
+      TEST   CL,DS:[BX+SI+8786H]
+      TEST   CL,DS:[BX+DI+8786H]
+      TEST   CL,DS:[BP+SI+8786H]
+      TEST   CL,DS:[BP+DI+8786H]
+      TEST   CL,DS:[SI+8786H]
+      TEST   CL,DS:[DI+8786H]
+      TEST   CL,DS:[BP+8786H]
+      TEST   CL,DS:[BX+8786H]
+      TEST   DL,DS:[BX+SI+8786H]
+      TEST   DL,DS:[BX+DI+8786H]
+      TEST   DL,DS:[BP+SI+8786H]
+      TEST   DL,DS:[BP+DI+8786H]
+      TEST   DL,DS:[SI+8786H]
+      TEST   DL,DS:[DI+8786H]
+      TEST   DL,DS:[BP+8786H]
+      TEST   DL,DS:[BX+8786H]
+      TEST   BL,DS:[BX+SI+8786H]
+      TEST   BL,DS:[BX+DI+8786H]
+      TEST   BL,DS:[BP+SI+8786H]
+      TEST   BL,DS:[BP+DI+8786H]
+      TEST   BL,DS:[SI+8786H]
+      TEST   BL,DS:[DI+8786H]
+      TEST   BL,DS:[BP+8786H]
+      TEST   BL,DS:[BX+8786H]
+      TEST   AH,DS:[BX+SI+8786H]
+      TEST   AH,DS:[BX+DI+8786H]
+      TEST   AH,DS:[BP+SI+8786H]
+      TEST   AH,DS:[BP+DI+8786H]
+      TEST   AH,DS:[SI+8786H]
+      TEST   AH,DS:[DI+8786H]
+      TEST   AH,DS:[BP+8786H]
+      TEST   AH,DS:[BX+8786H]
+      TEST   AL,DS:[BX+SI]
+      TEST   AX,DS:[BP+8887H]
+      TEST   AX,DS:[BX+8887H]
+      TEST   CX,DS:[BX+SI+8887H]
+      TEST   CX,DS:[BX+DI+8887H]
+      TEST   CX,DS:[BP+SI+8887H]
+      TEST   CX,DS:[BP+DI+8887H]
+      TEST   CX,DS:[SI+8887H]
+      TEST   CX,DS:[DI+8887H]
+      TEST   CX,DS:[BP+8887H]
+      TEST   CX,DS:[BX+8887H]
+      TEST   DX,DS:[BX+SI+8887H]
+      TEST   DX,DS:[BX+DI+8887H]
+      TEST   DX,DS:[BP+SI+8887H]
+      TEST   DX,DS:[BP+DI+8887H]
+      TEST   DX,DS:[SI+8887H]
+      TEST   DX,DS:[DI+8887H]
+      TEST   DX,DS:[BP+8887H]
+      TEST   DX,DS:[BX+8887H]
+      TEST   BX,DS:[BX+SI+8887H]
+      TEST   BX,DS:[BX+DI+8887H]
+      TEST   BX,DS:[BP+SI+8887H]
+      TEST   BX,DS:[BP+DI+8887H]
+      TEST   BX,DS:[SI+8887H]
+      TEST   BX,DS:[DI+8887H]
+      TEST   BX,DS:[BP+8887H]
+      TEST   BX,DS:[BX+8887H]
+      TEST   SP,DS:[BX+SI+8887H]
+      TEST   SP,DS:[BX+DI+8887H]
+      TEST   SP,DS:[BP+SI+8887H]
+      TEST   SP,DS:[BP+DI+8887H]
+      TEST   SP,DS:[SI+8887H]
+      TEST   SP,DS:[DI+8887H]
+      TEST   SP,DS:[BP+8887H]
+      TEST   SP,DS:[BX+8887H]
+      TEST   BP,DS:[BX+SI+8887H]
+      TEST   BP,DS:[BX+DI+8887H]
+      TEST   BP,DS:[BP+SI+8887H]
+      TEST   BP,DS:[BP+DI+8887H]
+      TEST   BP,DS:[SI+8887H]
+      TEST   BP,DS:[DI+8887H]
+      TEST   BP,DS:[BP+8887H]
+      TEST   BP,DS:[BX+8887H]
+      TEST   SI,DS:[BX+SI+8887H]
+      TEST   SI,DS:[BX+DI+8887H]
+      TEST   SI,DS:[BP+SI+8887H]
+      TEST   SI,DS:[BP+DI+8887H]
+      TEST   SI,DS:[SI+8887H]
+      TEST   SI,DS:[DI+8887H]
+      TEST   SI,DS:[BP+8887H]
+      TEST   SI,DS:[BX+8887H]
+      TEST   DI,DS:[BX+SI+8887H]
+      TEST   DI,DS:[BX+DI+8887H]
+      TEST   DI,DS:[BP+SI+8887H]
+      TEST   DI,DS:[BP+DI+8887H]
+      TEST   DI,DS:[SI+8887H]
+      TEST   DI,DS:[DI+8887H]
+      TEST   DI,DS:[BP+8887H]
+      TEST   DI,DS:[BX+8887H]
+      TEST   AX,DS:[BX+SI]
+      XCHG   AL,DS:[BX+8988H]
+      XCHG   CL,DS:[BX+SI+8988H]
+      XCHG   CL,DS:[BX+DI+8988H]
+      XCHG   CL,DS:[BP+SI+8988H]
+      XCHG   CL,DS:[BP+DI+8988H]
+      XCHG   CL,DS:[SI+8988H]
+      XCHG   CL,DS:[DI+8988H]
+      XCHG   CL,DS:[BP+8988H]
+      XCHG   CL,DS:[BX+8988H]
+      XCHG   DL,DS:[BX+SI+8988H]
+      XCHG   DL,DS:[BX+DI+8988H]
+      XCHG   DL,DS:[BP+SI+8988H]
+      XCHG   DL,DS:[BP+DI+8988H]
+      XCHG   DL,DS:[SI+8988H]
+      XCHG   DL,DS:[DI+8988H]
+      XCHG   DL,DS:[BP+8988H]
+      XCHG   DL,DS:[BX+8988H]
+      XCHG   BL,DS:[BX+SI+8988H]
+      XCHG   BL,DS:[BX+DI+8988H]
+      XCHG   BL,DS:[BP+SI+8988H]
+      XCHG   BL,DS:[BP+DI+8988H]
+      XCHG   BL,DS:[SI+8988H]
+      XCHG   BL,DS:[DI+8988H]
+      XCHG   BL,DS:[BP+8988H]
+      XCHG   BL,DS:[BX+8988H]
+      XCHG   AH,DS:[BX+SI+8988H]
+      XCHG   AH,DS:[BX+DI+8988H]
+      XCHG   AH,DS:[BP+SI+8988H]
+      XCHG   AH,DS:[BP+DI+8988H]
+      XCHG   AH,DS:[SI+8988H]
+      XCHG   AH,DS:[DI+8988H]
+      XCHG   AH,DS:[BP+8988H]
+      XCHG   AH,DS:[BX+8988H]
+      XCHG   AL,DS:[BX+SI]
+      XCHG   CX,DS:[BX+SI+8A89H]
+      XCHG   CX,DS:[BX+DI+8A89H]
+      XCHG   CX,DS:[BP+SI+8A89H]
+      XCHG   CX,DS:[BP+DI+8A89H]
+      XCHG   CX,DS:[SI+8A89H]
+      XCHG   CX,DS:[DI+8A89H]
+      XCHG   CX,DS:[BP+8A89H]
+      XCHG   CX,DS:[BX+8A89H]
+      XCHG   DX,DS:[BX+SI+8A89H]
+      XCHG   DX,DS:[BX+DI+8A89H]
+      XCHG   DX,DS:[BP+SI+8A89H]
+      XCHG   DX,DS:[BP+DI+8A89H]
+      XCHG   DX,DS:[SI+8A89H]
+      XCHG   DX,DS:[DI+8A89H]
+      XCHG   DX,DS:[BP+8A89H]
+      XCHG   DX,DS:[BX+8A89H]
+      XCHG   BX,DS:[BX+SI+8A89H]
+      XCHG   BX,DS:[BX+DI+8A89H]
+      XCHG   BX,DS:[BP+SI+8A89H]
+      XCHG   BX,DS:[BP+DI+8A89H]
+      XCHG   BX,DS:[SI+8A89H]
+      XCHG   BX,DS:[DI+8A89H]
+      XCHG   BX,DS:[BP+8A89H]
+      XCHG   BX,DS:[BX+8A89H]
+      XCHG   SP,DS:[BX+SI+8A89H]
+      XCHG   SP,DS:[BX+DI+8A89H]
+      XCHG   SP,DS:[BP+SI+8A89H]
+      XCHG   SP,DS:[BP+DI+8A89H]
+      XCHG   SP,DS:[SI+8A89H]
+      XCHG   SP,DS:[DI+8A89H]
+      XCHG   SP,DS:[BP+8A89H]
+      XCHG   SP,DS:[BX+8A89H]
+      XCHG   BP,DS:[BX+SI+8A89H]
+      XCHG   BP,DS:[BX+DI+8A89H]
+      XCHG   BP,DS:[BP+SI+8A89H]
+      XCHG   BP,DS:[BP+DI+8A89H]
+      XCHG   BP,DS:[SI+8A89H]
+      XCHG   BP,DS:[DI+8A89H]
+      XCHG   BP,DS:[BP+8A89H]
+      XCHG   BP,DS:[BX+8A89H]
+      XCHG   SI,DS:[BX+SI+8A89H]
+      XCHG   SI,DS:[BX+DI+8A89H]
+      XCHG   SI,DS:[BP+SI+8A89H]
+      XCHG   SI,DS:[BP+DI+8A89H]
+      XCHG   SI,DS:[SI+8A89H]
+      XCHG   SI,DS:[DI+8A89H]
+      XCHG   SI,DS:[BP+8A89H]
+      XCHG   SI,DS:[BX+8A89H]
+      XCHG   DI,DS:[BX+SI+8A89H]
+      XCHG   DI,DS:[BX+DI+8A89H]
+      XCHG   DI,DS:[BP+SI+8A89H]
+      XCHG   DI,DS:[BP+DI+8A89H]
+      XCHG   DI,DS:[SI+8A89H]
+      XCHG   DI,DS:[DI+8A89H]
+      XCHG   DI,DS:[BP+8A89H]
+      XCHG   DI,DS:[BX+8A89H]
+      XCHG   AX,DS:[BX+SI]
+      MOV    DS:[BX+DI+8B8AH],CL
+      MOV    DS:[BP+SI+8B8AH],CL
+      MOV    DS:[BP+DI+8B8AH],CL
+      MOV    DS:[SI+8B8AH],CL
+      MOV    DS:[DI+8B8AH],CL
+      MOV    DS:[BP+8B8AH],CL
+      MOV    DS:[BX+8B8AH],CL
+      MOV    DS:[BX+SI+8B8AH],DL
+      MOV    DS:[BX+DI+8B8AH],DL
+      MOV    DS:[BP+SI+8B8AH],DL
+      MOV    DS:[BP+DI+8B8AH],DL
+      MOV    DS:[SI+8B8AH],DL
+      MOV    DS:[DI+8B8AH],DL
+      MOV    DS:[BP+8B8AH],DL
+      MOV    DS:[BX+8B8AH],DL
+      MOV    DS:[BX+SI+8B8AH],BL
+      MOV    DS:[BX+DI+8B8AH],BL
+      MOV    DS:[BP+SI+8B8AH],BL
+      MOV    DS:[BP+DI+8B8AH],BL
+      MOV    DS:[SI+8B8AH],BL
+      MOV    DS:[DI+8B8AH],BL
+      MOV    DS:[BP+8B8AH],BL
+      MOV    DS:[BX+8B8AH],BL
+      MOV    DS:[BX+SI+8B8AH],AH
+      MOV    DS:[BX+DI+8B8AH],AH
+      MOV    DS:[BP+SI+8B8AH],AH
+      MOV    DS:[BP+DI+8B8AH],AH
+      MOV    DS:[SI+8B8AH],AH
+      MOV    DS:[DI+8B8AH],AH
+      MOV    DS:[BP+8B8AH],AH
+      MOV    DS:[BX+8B8AH],AH
+      MOV    DS:[BX+SI],AL
+      MOV    DS:[BP+SI+8C8BH],CX
+      MOV    DS:[BP+DI+8C8BH],CX
+      MOV    DS:[SI+8C8BH],CX
+      MOV    DS:[DI+8C8BH],CX
+      MOV    DS:[BP+8C8BH],CX
+      MOV    DS:[BX+8C8BH],CX
+      MOV    DS:[BX+SI+8C8BH],DX
+      MOV    DS:[BX+DI+8C8BH],DX
+      MOV    DS:[BP+SI+8C8BH],DX
+      MOV    DS:[BP+DI+8C8BH],DX
+      MOV    DS:[SI+8C8BH],DX
+      MOV    DS:[DI+8C8BH],DX
+      MOV    DS:[BP+8C8BH],DX
+      MOV    DS:[BX+8C8BH],DX
+      MOV    DS:[BX+SI+8C8BH],BX
+      MOV    DS:[BX+DI+8C8BH],BX
+      MOV    DS:[BP+SI+8C8BH],BX
+      MOV    DS:[BP+DI+8C8BH],BX
+      MOV    DS:[SI+8C8BH],BX
+      MOV    DS:[DI+8C8BH],BX
+      MOV    DS:[BP+8C8BH],BX
+      MOV    DS:[BX+8C8BH],BX
+      MOV    DS:[BX+SI+8C8BH],SP
+      MOV    DS:[BX+DI+8C8BH],SP
+      MOV    DS:[BP+SI+8C8BH],SP
+      MOV    DS:[BP+DI+8C8BH],SP
+      MOV    DS:[SI+8C8BH],SP
+      MOV    DS:[DI+8C8BH],SP
+      MOV    DS:[BP+8C8BH],SP
+      MOV    DS:[BX+8C8BH],SP
+      MOV    DS:[BX+SI+8C8BH],BP
+      MOV    DS:[BX+DI+8C8BH],BP
+      MOV    DS:[BP+SI+8C8BH],BP
+      MOV    DS:[BP+DI+8C8BH],BP
+      MOV    DS:[SI+8C8BH],BP
+      MOV    DS:[DI+8C8BH],BP
+      MOV    DS:[BP+8C8BH],BP
+      MOV    DS:[BX+8C8BH],BP
+      MOV    DS:[BX+SI+8C8BH],SI
+      MOV    DS:[BX+DI+8C8BH],SI
+      MOV    DS:[BP+SI+8C8BH],SI
+      MOV    DS:[BP+DI+8C8BH],SI
+      MOV    DS:[SI+8C8BH],SI
+      MOV    DS:[DI+8C8BH],SI
+      MOV    DS:[BP+8C8BH],SI
+      MOV    DS:[BX+8C8BH],SI
+      MOV    DS:[BX+SI+8C8BH],DI
+      MOV    DS:[BX+DI+8C8BH],DI
+      MOV    DS:[BP+SI+8C8BH],DI
+      MOV    DS:[BP+DI+8C8BH],DI
+      MOV    DS:[SI+8C8BH],DI
+      MOV    DS:[DI+8C8BH],DI
+      MOV    DS:[BP+8C8BH],DI
+      MOV    DS:[BX+8C8BH],DI
+      MOV    DS:[BX+SI],AX
+      MOV    CL,DS:[BP+DI+8D8CH]
+      MOV    CL,DS:[SI+8D8CH]
+      MOV    CL,DS:[DI+8D8CH]
+      MOV    CL,DS:[BP+8D8CH]
+      MOV    CL,DS:[BX+8D8CH]
+      MOV    DL,DS:[BX+SI+8D8CH]
+      MOV    DL,DS:[BX+DI+8D8CH]
+      MOV    DL,DS:[BP+SI+8D8CH]
+      MOV    DL,DS:[BP+DI+8D8CH]
+      MOV    DL,DS:[SI+8D8CH]
+      MOV    DL,DS:[DI+8D8CH]
+      MOV    DL,DS:[BP+8D8CH]
+      MOV    DL,DS:[BX+8D8CH]
+      MOV    BL,DS:[BX+SI+8D8CH]
+      MOV    BL,DS:[BX+DI+8D8CH]
+      MOV    BL,DS:[BP+SI+8D8CH]
+      MOV    BL,DS:[BP+DI+8D8CH]
+      MOV    BL,DS:[SI+8D8CH]
+      MOV    BL,DS:[DI+8D8CH]
+      MOV    BL,DS:[BP+8D8CH]
+      MOV    BL,DS:[BX+8D8CH]
+      MOV    AH,DS:[BX+SI+8D8CH]
+      MOV    AH,DS:[BX+DI+8D8CH]
+      MOV    AH,DS:[BP+SI+8D8CH]
+      MOV    AH,DS:[BP+DI+8D8CH]
+      MOV    AH,DS:[SI+8D8CH]
+      MOV    AH,DS:[DI+8D8CH]
+      MOV    AH,DS:[BP+8D8CH]
+      MOV    AH,DS:[BX+8D8CH]
+      MOV    AL,DS:[BX+SI]
+      MOV    CX,DS:[SI+8E8DH]
+      MOV    CX,DS:[DI+8E8DH]
+      MOV    CX,DS:[BP+8E8DH]
+      MOV    CX,DS:[BX+8E8DH]
+      MOV    DX,DS:[BX+SI+8E8DH]
+      MOV    DX,DS:[BX+DI+8E8DH]
+      MOV    DX,DS:[BP+SI+8E8DH]
+      MOV    DX,DS:[BP+DI+8E8DH]
+      MOV    DX,DS:[SI+8E8DH]
+      MOV    DX,DS:[DI+8E8DH]
+      MOV    DX,DS:[BP+8E8DH]
+      MOV    DX,DS:[BX+8E8DH]
+      MOV    BX,DS:[BX+SI+8E8DH]
+      MOV    BX,DS:[BX+DI+8E8DH]
+      MOV    BX,DS:[BP+SI+8E8DH]
+      MOV    BX,DS:[BP+DI+8E8DH]
+      MOV    BX,DS:[SI+8E8DH]
+      MOV    BX,DS:[DI+8E8DH]
+      MOV    BX,DS:[BP+8E8DH]
+      MOV    BX,DS:[BX+8E8DH]
+      MOV    SP,DS:[BX+SI+8E8DH]
+      MOV    SP,DS:[BX+DI+8E8DH]
+      MOV    SP,DS:[BP+SI+8E8DH]
+      MOV    SP,DS:[BP+DI+8E8DH]
+      MOV    SP,DS:[SI+8E8DH]
+      MOV    SP,DS:[DI+8E8DH]
+      MOV    SP,DS:[BP+8E8DH]
+      MOV    SP,DS:[BX+8E8DH]
+      MOV    BP,DS:[BX+SI+8E8DH]
+      MOV    BP,DS:[BX+DI+8E8DH]
+      MOV    BP,DS:[BP+SI+8E8DH]
+      MOV    BP,DS:[BP+DI+8E8DH]
+      MOV    BP,DS:[SI+8E8DH]
+      MOV    BP,DS:[DI+8E8DH]
+      MOV    BP,DS:[BP+8E8DH]
+      MOV    BP,DS:[BX+8E8DH]
+      MOV    SI,DS:[BX+SI+8E8DH]
+      MOV    SI,DS:[BX+DI+8E8DH]
+      MOV    SI,DS:[BP+SI+8E8DH]
+      MOV    SI,DS:[BP+DI+8E8DH]
+      MOV    SI,DS:[SI+8E8DH]
+      MOV    SI,DS:[DI+8E8DH]
+      MOV    SI,DS:[BP+8E8DH]
+      MOV    SI,DS:[BX+8E8DH]
+      MOV    DI,DS:[BX+SI+8E8DH]
+      MOV    DI,DS:[BX+DI+8E8DH]
+      MOV    DI,DS:[BP+SI+8E8DH]
+      MOV    DI,DS:[BP+DI+8E8DH]
+      MOV    DI,DS:[SI+8E8DH]
+      MOV    DI,DS:[DI+8E8DH]
+      MOV    DI,DS:[BP+8E8DH]
+      MOV    DI,DS:[BX+8E8DH]
+      MOV    AX,DS:[BX+SI]
+      MOV    DS:[DI+8F8EH],CS
+      MOV    DS:[BP+8F8EH],CS
+      MOV    DS:[BX+8F8EH],CS
+      MOV    DS:[BX+SI+8F8EH],SS
+      MOV    DS:[BX+DI+8F8EH],SS
+      MOV    DS:[BP+SI+8F8EH],SS
+      MOV    DS:[BP+DI+8F8EH],SS
+      MOV    DS:[SI+8F8EH],SS
+      MOV    DS:[DI+8F8EH],SS
+      MOV    DS:[BP+8F8EH],SS
+      MOV    DS:[BX+8F8EH],SS
+      MOV    DS:[BX+SI+8F8EH],DS
+      MOV    DS:[BX+DI+8F8EH],DS
+      MOV    DS:[BP+SI+8F8EH],DS
+      MOV    DS:[BP+DI+8F8EH],DS
+      MOV    DS:[SI+8F8EH],DS
+      MOV    DS:[DI+8F8EH],DS
+      MOV    DS:[BP+8F8EH],DS
+      MOV    DS:[BX+8F8EH],DS
+      MOV    DS:[BX+SI+8F8EH],ES
+      MOV    DS:[BX+DI+8F8EH],ES
+      MOV    DS:[BP+SI+8F8EH],ES
+      MOV    DS:[BP+DI+8F8EH],ES
+      MOV    DS:[SI+8F8EH],ES
+      MOV    DS:[DI+8F8EH],ES
+      MOV    DS:[BP+8F8EH],ES
+      MOV    DS:[BX+8F8EH],ES
+      MOV    DS:[BX+SI+8F8EH],CS
+      MOV    DS:[BX+DI+8F8EH],CS
+      MOV    DS:[BP+SI+8F8EH],CS
+      MOV    DS:[BP+DI+8F8EH],CS
+      MOV    DS:[SI+8F8EH],CS
+      MOV    DS:[BX+SI],ES
+      LEA    CX,DS:[BP+908FH]
+      LEA    CX,DS:[BX+908FH]
+      LEA    DX,DS:[BX+SI+908FH]
+      LEA    DX,DS:[BX+DI+908FH]
+      LEA    DX,DS:[BP+SI+908FH]
+      LEA    DX,DS:[BP+DI+908FH]
+      LEA    DX,DS:[SI+908FH]
+      LEA    DX,DS:[DI+908FH]
+      LEA    DX,DS:[BP+908FH]
+      LEA    DX,DS:[BX+908FH]
+      LEA    BX,DS:[BX+SI+908FH]
+      LEA    BX,DS:[BX+DI+908FH]
+      LEA    BX,DS:[BP+SI+908FH]
+      LEA    BX,DS:[BP+DI+908FH]
+      LEA    BX,DS:[SI+908FH]
+      LEA    BX,DS:[DI+908FH]
+      LEA    BX,DS:[BP+908FH]
+      LEA    BX,DS:[BX+908FH]
+      LEA    SP,DS:[BX+SI+908FH]
+      LEA    SP,DS:[BX+DI+908FH]
+      LEA    SP,DS:[BP+SI+908FH]
+      LEA    SP,DS:[BP+DI+908FH]
+      LEA    SP,DS:[SI+908FH]
+      LEA    SP,DS:[DI+908FH]
+      LEA    SP,DS:[BP+908FH]
+      LEA    SP,DS:[BX+908FH]
+      LEA    BP,DS:[BX+SI+908FH]
+      LEA    BP,DS:[BX+DI+908FH]
+      LEA    BP,DS:[BP+SI+908FH]
+      LEA    BP,DS:[BP+DI+908FH]
+      LEA    BP,DS:[SI+908FH]
+      LEA    BP,DS:[DI+908FH]
+      LEA    BP,DS:[BP+908FH]
+      LEA    BP,DS:[BX+908FH]
+      LEA    SI,DS:[BX+SI+908FH]
+      LEA    SI,DS:[BX+DI+908FH]
+      LEA    SI,DS:[BP+SI+908FH]
+      LEA    SI,DS:[BP+DI+908FH]
+      LEA    SI,DS:[SI+908FH]
+      LEA    SI,DS:[DI+908FH]
+      LEA    SI,DS:[BP+908FH]
+      LEA    SI,DS:[BX+908FH]
+      LEA    DI,DS:[BX+SI+908FH]
+      LEA    DI,DS:[BX+DI+908FH]
+      LEA    DI,DS:[BP+SI+908FH]
+      LEA    DI,DS:[BP+DI+908FH]
+      LEA    DI,DS:[SI+908FH]
+      LEA    DI,DS:[DI+908FH]
+      LEA    DI,DS:[BP+908FH]
+      LEA    DI,DS:[BX+908FH]
+      LEA    AX,DS:[BX+SI]
+      MOV    CS,DS:[BX+9190H]
+      MOV    SS,DS:[BX+SI+9190H]
+      MOV    SS,DS:[BX+DI+9190H]
+      MOV    SS,DS:[BP+SI+9190H]
+      MOV    SS,DS:[BP+DI+9190H]
+      MOV    SS,DS:[SI+9190H]
+      MOV    SS,DS:[DI+9190H]
+      MOV    SS,DS:[BP+9190H]
+      MOV    SS,DS:[BX+9190H]
+      MOV    DS,DS:[BX+SI+9190H]
+      MOV    DS,DS:[BX+DI+9190H]
+      MOV    DS,DS:[BP+SI+9190H]
+      MOV    DS,DS:[BP+DI+9190H]
+      MOV    DS,DS:[SI+9190H]
+      MOV    DS,DS:[DI+9190H]
+      MOV    DS,DS:[BP+9190H]
+      MOV    DS,DS:[BX+9190H]
+      MOV    ES,DS:[BX+SI+9190H]
+      MOV    ES,DS:[BX+DI+9190H]
+      MOV    ES,DS:[BP+SI+9190H]
+      MOV    ES,DS:[BP+DI+9190H]
+      MOV    ES,DS:[SI+9190H]
+      MOV    ES,DS:[DI+9190H]
+      MOV    ES,DS:[BP+9190H]
+      MOV    ES,DS:[BX+9190H]
+      MOV    CS,DS:[BX+SI+9190H]
+      MOV    CS,DS:[BX+DI+9190H]
+      MOV    CS,DS:[BP+SI+9190H]
+      MOV    CS,DS:[BP+DI+9190H]
+      MOV    CS,DS:[SI+9190H]
+      MOV    CS,DS:[DI+9190H]
+      MOV    CS,DS:[BP+9190H]
+      MOV    ES,DS:[BX+SI]
+      MOV    AL,DS:[0A2A1H]
+      MOV    AX,DS:[0A3A2H]
+      MOV    DS:[0A4A3H],AL
+      MOV    DS:[0A5A4H],AX
       MOVSB  ES:[DI],DS:[SI]
       MOVSW  ES:[DI],DS:[SI]
       CMPSB  DS:[SI],ES:[DI]
       CMPSW  DS:[SI],ES:[DI]
       LODSB  DS:[SI]
       LODSW  DS:[SI]
+      INC    WORD PTR DS:[BX+SI]
+      INC    WORD PTR DS:[BX+DI]
+      INC    WORD PTR DS:[BP+SI]
+      INC    WORD PTR DS:[BP+DI]
+      INC    WORD PTR DS:[SI]
+      INC    WORD PTR DS:[DI]
+      INC    WORD PTR DS:[0807H]
+      INC    WORD PTR DS:[BX]
+      DEC    WORD PTR DS:[BX+SI]
+      DEC    WORD PTR DS:[BX+DI]
+      DEC    WORD PTR DS:[BP+SI]
+      DEC    WORD PTR DS:[BP+DI]
+      DEC    WORD PTR DS:[SI]
+      DEC    WORD PTR DS:[DI]
+      DEC    WORD PTR DS:[100FH]
+      DEC    WORD PTR DS:[BX]
+      CALL   DS:[BX+SI]
+      CALL   DS:[BX+DI]
+      CALL   DS:[BP+SI]
+      CALL   DS:[BP+DI]
+      CALL   DS:[SI]
+      CALL   DS:[DI]
+      CALL   DS:[1817H]
+      CALL   DS:[BX]
+      CALLF  DS:[BX+SI]
+      CALLF  DS:[BX+DI]
+      CALLF  DS:[BP+SI]
+      CALLF  DS:[BP+DI]
+      CALLF  DS:[SI]
+      CALLF  DS:[DI]
+      CALLF  DS:[201FH]
+      CALLF  DS:[BX]
+      JMP    DS:[BX+SI]
+      JMP    DS:[BX+DI]
+      JMP    DS:[BP+SI]
+      JMP    DS:[BP+DI]
+      JMP    DS:[SI]
+      JMP    DS:[DI]
+      JMP    DS:[2827H]
+      JMP    DS:[BX]
+      JMPF   DS:[BX+SI]
+      JMPF   DS:[BX+DI]
+      JMPF   DS:[BP+SI]
+      JMPF   DS:[BP+DI]
+      JMPF   DS:[SI]
+      JMPF   DS:[DI]
+      JMPF   DS:[302FH]
+      JMPF   DS:[BX]
+      PUSH   DS:[BX+SI]
+      PUSH   DS:[BX+DI]
+      PUSH   DS:[BP+SI]
+      PUSH   DS:[BP+DI]
+      PUSH   DS:[SI]
+      PUSH   DS:[DI]
+      PUSH   DS:[3837H]
+      PUSH   DS:[BX]
+      INC    WORD PTR DS:[BX+SI+65]
+      INC    WORD PTR DS:[BX+SI-128]
+      INC    WORD PTR DS:[BX+DI+66]
+      INC    WORD PTR DS:[BX+DI-128]
+      INC    WORD PTR DS:[BP+SI+67]
+      INC    WORD PTR DS:[BP+SI-128]
+      INC    WORD PTR DS:[BP+DI+68]
+      INC    WORD PTR DS:[BP+DI-128]
+      INC    WORD PTR DS:[SI+69]
+      INC    WORD PTR DS:[SI-128]
+      INC    WORD PTR DS:[DI+70]
+      INC    WORD PTR DS:[DI-128]
+      INC    WORD PTR DS:[BP+71]
+      INC    WORD PTR DS:[BP-128]
+      INC    WORD PTR DS:[BX+72]
+      INC    WORD PTR DS:[BX-128]
+      DEC    WORD PTR DS:[BX+SI+73]
+      DEC    WORD PTR DS:[BX+SI-128]
+      DEC    WORD PTR DS:[BX+DI+74]
+      DEC    WORD PTR DS:[BX+DI-128]
+      DEC    WORD PTR DS:[BP+SI+75]
+      DEC    WORD PTR DS:[BP+SI-128]
+      DEC    WORD PTR DS:[BP+DI+76]
+      DEC    WORD PTR DS:[BP+DI-128]
+      DEC    WORD PTR DS:[SI+77]
+      DEC    WORD PTR DS:[SI-128]
+      DEC    WORD PTR DS:[DI+78]
+      DEC    WORD PTR DS:[DI-128]
+      DEC    WORD PTR DS:[BP+79]
+      DEC    WORD PTR DS:[BP-128]
+      DEC    WORD PTR DS:[BX+80]
+      DEC    WORD PTR DS:[BX-128]
+      CALL   DS:[BX+SI+81]
+      CALL   DS:[BX+SI-128]
+      CALL   DS:[BX+DI+82]
+      CALL   DS:[BX+DI-128]
+      CALL   DS:[BP+SI+83]
+      CALL   DS:[BP+SI-128]
+      CALL   DS:[BP+DI+84]
+      CALL   DS:[BP+DI-128]
+      CALL   DS:[SI+85]
+      CALL   DS:[SI-128]
+      CALL   DS:[DI+86]
+      CALL   DS:[DI-128]
+      CALL   DS:[BP+87]
+      CALL   DS:[BP-128]
+      CALL   DS:[BX+88]
+      CALL   DS:[BX-128]
+      CALLF  DS:[BX+SI+89]
+      CALLF  DS:[BX+SI-128]
+      CALLF  DS:[BX+DI+90]
+      CALLF  DS:[BX+DI-128]
+      CALLF  DS:[BP+SI+91]
+      CALLF  DS:[BP+SI-128]
+      CALLF  DS:[BP+DI+92]
+      CALLF  DS:[BP+DI-128]
+      CALLF  DS:[SI+93]
+      CALLF  DS:[SI-128]
+      CALLF  DS:[DI+94]
+      CALLF  DS:[DI-128]
+      CALLF  DS:[BP+95]
+      CALLF  DS:[BP-128]
+      CALLF  DS:[BX+96]
+      CALLF  DS:[BX-128]
+      JMP    DS:[BX+SI+97]
+      JMP    DS:[BX+SI-128]
+      JMP    DS:[BX+DI+98]
+      JMP    DS:[BX+DI-128]
+      JMP    DS:[BP+SI+99]
+      JMP    DS:[BP+SI-128]
+      JMP    DS:[BP+DI+100]
+      JMP    DS:[BP+DI-128]
+      JMP    DS:[SI+101]
+      JMP    DS:[SI-128]
+      JMP    DS:[DI+102]
+      JMP    DS:[DI-128]
+      JMP    DS:[BP+103]
+      JMP    DS:[BP-128]
+      JMP    DS:[BX+104]
+      JMP    DS:[BX-128]
+      JMPF   DS:[BX+SI+105]
+      JMPF   DS:[BX+SI-128]
+      JMPF   DS:[BX+DI+106]
+      JMPF   DS:[BX+DI-128]
+      JMPF   DS:[BP+SI+107]
+      JMPF   DS:[BP+SI-128]
+      JMPF   DS:[BP+DI+108]
+      JMPF   DS:[BP+DI-128]
+      JMPF   DS:[SI+109]
+      JMPF   DS:[SI-128]
+      JMPF   DS:[DI+110]
+      JMPF   DS:[DI-128]
+      JMPF   DS:[BP+111]
+      JMPF   DS:[BP-128]
+      JMPF   DS:[BX+112]
+      JMPF   DS:[BX-128]
+      PUSH   DS:[BX+SI+113]
+      PUSH   DS:[BX+SI-128]
+      PUSH   DS:[BX+DI+114]
+      PUSH   DS:[BX+DI-128]
+      PUSH   DS:[BP+SI+115]
+      PUSH   DS:[BP+SI-128]
+      PUSH   DS:[BP+DI+116]
+      PUSH   DS:[BP+DI-128]
+      PUSH   DS:[SI+117]
+      PUSH   DS:[SI-128]
+      PUSH   DS:[DI+118]
+      PUSH   DS:[DI-128]
+      PUSH   DS:[BP+119]
+      PUSH   DS:[BP-128]
+      PUSH   DS:[BX+120]
+      PUSH   DS:[BX-128]
+      INC    WORD PTR DS:[BX+SI+8281H]
+      INC    WORD PTR DS:[BX+DI+8382H]
+      INC    WORD PTR DS:[BP+SI+8483H]
+      INC    WORD PTR DS:[BP+DI+8584H]
+      INC    WORD PTR DS:[SI+8685H]
+      INC    WORD PTR DS:[DI+8786H]
+      INC    WORD PTR DS:[BP+8887H]
+      INC    WORD PTR DS:[BX+8988H]
+      DEC    WORD PTR DS:[BX+SI+8A89H]
+      DEC    WORD PTR DS:[BX+DI+8B8AH]
+      DEC    WORD PTR DS:[BP+SI+8C8BH]
+      DEC    WORD PTR DS:[BP+DI+8D8CH]
+      DEC    WORD PTR DS:[SI+8E8DH]
+      DEC    WORD PTR DS:[DI+8F8EH]
+      DEC    WORD PTR DS:[BP+908FH]
+      DEC    WORD PTR DS:[BX+9190H]
+      CALL   DS:[BX+SI+9291H]
+      CALL   DS:[BX+DI+9392H]
+      CALL   DS:[BP+SI+9493H]
+      CALL   DS:[BP+DI+9594H]
+      CALL   DS:[SI+9695H]
+      CALL   DS:[DI+9796H]
+      CALL   DS:[BP+9897H]
+      CALL   DS:[BX+9998H]
+      CALLF  DS:[BX+SI+9A99H]
+      CALLF  DS:[BX+DI+9B9AH]
+      CALLF  DS:[BP+SI+9C9BH]
+      CALLF  DS:[BP+DI+9D9CH]
+      CALLF  DS:[SI+9E9DH]
+      CALLF  DS:[DI+9F9EH]
+      CALLF  DS:[BP+0A09FH]
+      CALLF  DS:[BX+0A1A0H]
+      JMP    DS:[BX+SI+0A2A1H]
+      JMP    DS:[BX+DI+0A3A2H]
+      JMP    DS:[BP+SI+0A4A3H]
+      JMP    DS:[BP+DI+0A5A4H]
+      JMP    DS:[SI+0A6A5H]
+      JMP    DS:[DI+0A7A6H]
+      JMP    DS:[BP+0A8A7H]
+      JMP    DS:[BX+0A9A8H]
+      JMPF   DS:[BX+SI+0AAA9H]
+      JMPF   DS:[BX+DI+0ABAAH]
+      JMPF   DS:[BP+SI+0ACABH]
+      JMPF   DS:[BP+DI+0ADACH]
+      JMPF   DS:[SI+0AEADH]
+      JMPF   DS:[DI+0AFAEH]
+      JMPF   DS:[BP+0B0AFH]
+      JMPF   DS:[BX+0B1B0H]
+      PUSH   DS:[BX+SI+0B2B1H]
+      PUSH   DS:[BX+DI+0B3B2H]
+      PUSH   DS:[BP+SI+0B4B3H]
+      PUSH   DS:[BP+DI+0B5B4H]
+      PUSH   DS:[SI+0B6B5H]
+      PUSH   DS:[DI+0B7B6H]
+      PUSH   DS:[BP+0B8B7H]
+      PUSH   DS:[BX+0B9B8H]
+      ADD    DS:[BX+DI],AL
+      ADD    DS:[BP+SI],AL
+      ADD    DS:[BP+DI],AL
+      ADD    DS:[SI],AL
+      ADD    DS:[DI],AL
+      ADD    DS:[0807H],AL
+      ADD    DS:[BX],AL
+      ADD    DS:[BX+SI],CL
+      ADD    DS:[BX+DI],CL
+      ADD    DS:[BP+SI],CL
+      ADD    DS:[BP+DI],CL
+      ADD    DS:[SI],CL
+      ADD    DS:[DI],CL
+      ADD    DS:[100FH],CL
+      ADD    DS:[BX],CL
+      ADD    DS:[BX+SI],DL
+      ADD    DS:[BX+DI],DL
+      ADD    DS:[BP+SI],DL
+      ADD    DS:[BP+DI],DL
+      ADD    DS:[SI],DL
+      ADD    DS:[DI],DL
+      ADD    DS:[1817H],DL
+      ADD    DS:[BX],DL
+      ADD    DS:[BX+SI],BL
+      ADD    DS:[BX+DI],BL
+      ADD    DS:[BP+SI],BL
+      ADD    DS:[BP+DI],BL
+      ADD    DS:[SI],BL
+      ADD    DS:[DI],BL
+      ADD    DS:[201FH],BL
+      ADD    DS:[BX],BL
+      ADD    DS:[BX+SI],AH
+      ADD    DS:[BX+DI],AH
+      ADD    DS:[BP+SI],AH
+      ADD    DS:[BP+DI],AH
+      ADD    DS:[SI],AH
+      ADD    DS:[DI],AH
+      ADD    DS:[2827H],AH
+      ADD    DS:[BX],AH
+      ADD    DS:[BP+SI],AX
+      ADD    DS:[BP+DI],AX
+      ADD    DS:[SI],AX
+      ADD    DS:[DI],AX
+      ADD    DS:[0807H],AX
+      ADD    DS:[BX],AX
+      ADD    DS:[BX+SI],CX
+      ADD    DS:[BX+DI],CX
+      ADD    DS:[BP+SI],CX
+      ADD    DS:[BP+DI],CX
+      ADD    DS:[SI],CX
+      ADD    DS:[DI],CX
+      ADD    DS:[100FH],CX
+      ADD    DS:[BX],CX
+      ADD    DS:[BX+SI],DX
+      ADD    DS:[BX+DI],DX
+      ADD    DS:[BP+SI],DX
+      ADD    DS:[BP+DI],DX
+      ADD    DS:[SI],DX
+      ADD    DS:[DI],DX
+      ADD    DS:[1817H],DX
+      ADD    DS:[BX],DX
+      ADD    DS:[BX+SI],BX
+      ADD    DS:[BX+DI],BX
+      ADD    DS:[BP+SI],BX
+      ADD    DS:[BP+DI],BX
+      ADD    DS:[SI],BX
+      ADD    DS:[DI],BX
+      ADD    DS:[201FH],BX
+      ADD    DS:[BX],BX
+      ADD    DS:[BX+SI],SP
+      ADD    DS:[BX+DI],SP
+      ADD    DS:[BP+SI],SP
+      ADD    DS:[BP+DI],SP
+      ADD    DS:[SI],SP
+      ADD    DS:[DI],SP
+      ADD    DS:[2827H],SP
+      ADD    DS:[BX],SP
+      ADD    DS:[BX+SI],BP
+      ADD    DS:[BX+DI],BP
+      ADD    DS:[BP+SI],BP
+      ADD    DS:[BP+DI],BP
+      ADD    DS:[SI],BP
+      ADD    DS:[DI],BP
+      ADD    DS:[302FH],BP
+      ADD    DS:[BX],BP
+      ADD    DS:[BX+SI],SI
+      ADD    DS:[BX+DI],SI
+      ADD    DS:[BP+SI],SI
+      ADD    DS:[BP+DI],SI
+      ADD    DS:[SI],SI
+      ADD    DS:[DI],SI
+      ADD    DS:[3837H],SI
+      ADD    DS:[BX],SI
+      ADD    DS:[BX+SI],DI
+      ADD    DS:[BX+DI],DI
+      ADD    DS:[BP+SI],DI
+      ADD    DS:[BP+DI],DI
+      ADD    DS:[SI],DI
+      ADD    DS:[DI],DI
+      ADD    DS:[403FH],DI
+      ADD    DS:[BX],DI
+      ADD    DS:[BX+SI+65],AX
+      ADD    DS:[BX+SI-128],AX
+      ADD    DS:[BX+DI+66],AX
+      ADD    DS:[BX+DI-128],AX
+      ADD    DS:[BP+SI+67],AX
+      ADD    DS:[BP+SI-128],AX
+      ADD    DS:[BP+DI+68],AX
+      ADD    DS:[BP+DI-128],AX
+      ADD    DS:[SI+69],AX
+      ADD    DS:[SI-128],AX
+      ADD    DS:[DI+70],AX
+      ADD    DS:[DI-128],AX
+      ADD    DS:[BP+71],AX
+      ADD    DS:[BP-128],AX
+      ADD    DS:[BX+72],AX
+      ADD    DS:[BX-128],AX
+      ADD    DS:[BX+SI+73],CX
+      ADD    DS:[BX+SI-128],CX
+      ADD    DS:[BX+DI+74],CX
+      ADD    DS:[BX+DI-128],CX
+      ADD    DS:[BP+SI+75],CX
+      ADD    DS:[BP+SI-128],CX
+      ADD    DS:[BP+DI+76],CX
+      ADD    DS:[BP+DI-128],CX
+      ADD    DS:[SI+77],CX
+      ADD    DS:[SI-128],CX
+      ADD    DS:[DI+78],CX
+      ADD    DS:[DI-128],CX
+      ADD    DS:[BP+79],CX
+      ADD    DS:[BP-128],CX
+      ADD    DS:[BX+80],CX
+      ADD    DS:[BX-128],CX
+      ADD    DS:[BX+SI+81],DX
+      ADD    DS:[BX+SI-128],DX
+      ADD    DS:[BX+DI+82],DX
+      ADD    DS:[BX+DI-128],DX
+      ADD    DS:[BP+SI+83],DX
+      ADD    DS:[BP+SI-128],DX
+      ADD    DS:[BP+DI+84],DX
+      ADD    DS:[BP+DI-128],DX
+      ADD    DS:[SI+85],DX
+      ADD    DS:[SI-128],DX
+      ADD    DS:[DI+86],DX
+      ADD    DS:[DI-128],DX
+      ADD    DS:[BP+87],DX
+      ADD    DS:[BP-128],DX
+      ADD    DS:[BX+88],DX
+      ADD    DS:[BX-128],DX
+      ADD    DS:[BX+SI+89],BX
+      ADD    DS:[BX+SI-128],BX
+      ADD    DS:[BX+DI+90],BX
+      ADD    DS:[BX+DI-128],BX
+      ADD    DS:[BP+SI+91],BX
+      ADD    DS:[BP+SI-128],BX
+      ADD    DS:[BP+DI+92],BX
+      ADD    DS:[BP+DI-128],BX
+      ADD    DS:[SI+93],BX
+      ADD    DS:[SI-128],BX
+      ADD    DS:[DI+94],BX
+      ADD    DS:[DI-128],BX
+      ADD    DS:[BP+95],BX
+      ADD    DS:[BP-128],BX
+      ADD    DS:[BX+96],BX
+      ADD    DS:[BX-128],BX
+      ADD    DS:[BX+SI+97],SP
+      ADD    DS:[BX+SI-128],SP
+      ADD    DS:[BX+DI+98],SP
+      ADD    DS:[BX+DI-128],SP
+      ADD    DS:[BP+SI+99],SP
+      ADD    DS:[BP+SI-128],SP
+      ADD    DS:[BP+DI+100],SP
+      ADD    DS:[BP+DI-128],SP
+      ADD    DS:[SI+101],SP
+      ADD    DS:[SI-128],SP
+      ADD    DS:[DI+102],SP
+      ADD    DS:[DI-128],SP
+      ADD    DS:[BP+103],SP
+      ADD    DS:[BP-128],SP
+      ADD    DS:[BX+104],SP
+      ADD    DS:[BX-128],SP
+      ADD    DS:[BX+SI+105],BP
+      ADD    DS:[BX+SI-128],BP
+      ADD    DS:[BX+DI+106],BP
+      ADD    DS:[BX+DI-128],BP
+      ADD    DS:[BP+SI+107],BP
+      ADD    DS:[BP+SI-128],BP
+      ADD    DS:[BP+DI+108],BP
+      ADD    DS:[BP+DI-128],BP
+      ADD    DS:[SI+109],BP
+      ADD    DS:[SI-128],BP
+      ADD    DS:[DI+110],BP
+      ADD    DS:[DI-128],BP
+      ADD    DS:[BP+111],BP
+      ADD    DS:[BP-128],BP
+      ADD    DS:[BX+112],BP
+      ADD    DS:[BX-128],BP
+      ADD    DS:[BX+SI+113],SI
+      ADD    DS:[BX+SI-128],SI
+      ADD    DS:[BX+DI+114],SI
+      ADD    DS:[BX+DI-128],SI
+      ADD    DS:[BP+SI+115],SI
+      ADD    DS:[BP+SI-128],SI
+      ADD    DS:[BP+DI+116],SI
+      ADD    DS:[BP+DI-128],SI
+      ADD    DS:[SI+117],SI
+      ADD    DS:[SI-128],SI
+      ADD    DS:[DI+118],SI
+      ADD    DS:[DI-128],SI
+      ADD    DS:[BP+119],SI
+      ADD    DS:[BP-128],SI
+      ADD    DS:[BX+120],SI
+      ADD    DS:[BX-128],SI
+      ADD    DS:[BX+SI+121],DI
+      ADD    DS:[BX+SI-128],DI
+      ADD    DS:[BX+DI+122],DI
+      ADD    DS:[BX+DI-128],DI
+      ADD    DS:[BP+SI+123],DI
+      ADD    DS:[BP+SI-128],DI
+      ADD    DS:[BP+DI+124],DI
+      ADD    DS:[BP+DI-128],DI
+      ADD    DS:[SI+125],DI
+      ADD    DS:[SI-128],DI
+      ADD    DS:[DI+126],DI
+      ADD    DS:[DI-128],DI
+      ADD    DS:[BP+127],DI
+      ADD    DS:[BP-128],DI
+      ADD    DS:[BX-128],DI
+      ADD    DS:[BX+0],DI
+      ADD    DS:[BX+SI+8281H],AX
+      ADD    DS:[BX+DI+8382H],AX
+      ADD    DS:[BP+SI+8483H],AX
+      ADD    DS:[BP+DI+8584H],AX
+      ADD    DS:[SI+8685H],AX
+      ADD    DS:[DI+8786H],AX
+      ADD    DS:[BP+8887H],AX
+      ADD    DS:[BX+8988H],AX
+      ADD    DS:[BX+SI+8A89H],CX
+      ADD    DS:[BX+DI+8B8AH],CX
+      ADD    DS:[BP+SI+8C8BH],CX
+      ADD    DS:[BP+DI+8D8CH],CX
+      ADD    DS:[SI+8E8DH],CX
+      ADD    DS:[DI+8F8EH],CX
+      ADD    DS:[BP+908FH],CX
+      ADD    DS:[BX+9190H],CX
+      ADD    DS:[BX+SI+9291H],DX
+      ADD    DS:[BX+DI+9392H],DX
+      ADD    DS:[BP+SI+9493H],DX
+      ADD    DS:[BP+DI+9594H],DX
+      ADD    DS:[SI+9695H],DX
+      ADD    DS:[DI+9796H],DX
+      ADD    DS:[BP+9897H],DX
+      ADD    DS:[BX+9998H],DX
+      ADD    DS:[BX+SI+9A99H],BX
+      ADD    DS:[BX+DI+9B9AH],BX
+      ADD    DS:[BP+SI+9C9BH],BX
+      ADD    DS:[BP+DI+9D9CH],BX
+      ADD    DS:[SI+9E9DH],BX
+      ADD    DS:[DI+9F9EH],BX
+      ADD    DS:[BP+0A09FH],BX
+      ADD    DS:[BX+0A1A0H],BX
+      ADD    DS:[BX+SI+0A2A1H],SP
+      ADD    DS:[BX+DI+0A3A2H],SP
+      ADD    DS:[BP+SI+0A4A3H],SP
+      ADD    DS:[BP+DI+0A5A4H],SP
+      ADD    DS:[SI+0A6A5H],SP
+      ADD    DS:[DI+0A7A6H],SP
+      ADD    DS:[BP+0A8A7H],SP
+      ADD    DS:[BX+0A9A8H],SP
+      ADD    DS:[BX+SI+0AAA9H],BP
+      ADD    DS:[BX+DI+0ABAAH],BP
+      ADD    DS:[BP+SI+0ACABH],BP
+      ADD    DS:[BP+DI+0ADACH],BP
+      ADD    DS:[SI+0AEADH],BP
+      ADD    DS:[DI+0AFAEH],BP
+      ADD    DS:[BP+0B0AFH],BP
+      ADD    DS:[BX+0B1B0H],BP
+      ADD    DS:[BX+SI+0B2B1H],SI
+      ADD    DS:[BX+DI+0B3B2H],SI
+      ADD    DS:[BP+SI+0B4B3H],SI
+      ADD    DS:[BP+DI+0B5B4H],SI
+      ADD    DS:[SI+0B6B5H],SI
+      ADD    DS:[DI+0B7B6H],SI
+      ADD    DS:[BP+0B8B7H],SI
+      ADD    DS:[BX+0B9B8H],SI
+      ADD    DS:[BX+SI+0BAB9H],DI
+      ADD    DS:[BX+DI+0BBBAH],DI
+      ADD    DS:[BP+SI+0BCBBH],DI
+      ADD    DS:[BP+DI+0BDBCH],DI
+      ADD    DS:[SI+0BEBDH],DI
+      ADD    DS:[DI+0BFBEH],DI
+      ADD    DS:[BP+0C0BFH],DI
+      ADD    DS:[BX+0C1C0H],DI
+      ADD    DS:[BX+SI],AX
+      ADD    DS:[BX+DI],AX
+      ADD    AL,DS:[BP+DI]
+      ADD    AL,DS:[SI]
+      ADD    AL,DS:[DI]
+      ADD    AL,DS:[0807H]
+      ADD    AL,DS:[BX]
+      ADD    CL,DS:[BX+SI]
+      ADD    CL,DS:[BX+DI]
+      ADD    CL,DS:[BP+SI]
+      ADD    CL,DS:[BP+DI]
+      ADD    CL,DS:[SI]
+      ADD    CL,DS:[DI]
+      ADD    CL,DS:[100FH]
+      ADD    CL,DS:[BX]
+      ADD    DL,DS:[BX+SI]
+      ADD    DL,DS:[BX+DI]
+      ADD    DL,DS:[BP+SI]
+      ADD    DL,DS:[BP+DI]
+      ADD    DL,DS:[SI]
+      ADD    DL,DS:[DI]
+      ADD    DL,DS:[1817H]
+      ADD    DL,DS:[BX]
+      ADD    BL,DS:[BX+SI]
+      ADD    BL,DS:[BX+DI]
+      ADD    BL,DS:[BP+SI]
+      ADD    BL,DS:[BP+DI]
+      ADD    BL,DS:[SI]
+      ADD    BL,DS:[DI]
+      ADD    BL,DS:[201FH]
+      ADD    BL,DS:[BX]
+      ADD    AH,DS:[BX+SI]
+      ADD    AH,DS:[BX+DI]
+      ADD    AH,DS:[BP+SI]
+      ADD    AH,DS:[BP+DI]
+      ADD    AH,DS:[SI]
+      ADD    AH,DS:[DI]
+      ADD    AH,DS:[2827H]
+      ADD    AH,DS:[BX]
+      ADD    AX,DS:[SI]
+      ADD    AX,DS:[DI]
+      ADD    AX,DS:[0807H]
+      ADD    AX,DS:[BX]
+      ADD    CX,DS:[BX+SI]
+      ADD    CX,DS:[BX+DI]
+      ADD    CX,DS:[BP+SI]
+      ADD    CX,DS:[BP+DI]
+      ADD    CX,DS:[SI]
+      ADD    CX,DS:[DI]
+      ADD    CX,DS:[100FH]
+      ADD    CX,DS:[BX]
+      ADD    DX,DS:[BX+SI]
+      ADD    DX,DS:[BX+DI]
+      ADD    DX,DS:[BP+SI]
+      ADD    DX,DS:[BP+DI]
+      ADD    DX,DS:[SI]
+      ADD    DX,DS:[DI]
+      ADD    DX,DS:[1817H]
+      ADD    DX,DS:[BX]
+      ADD    BX,DS:[BX+SI]
+      ADD    BX,DS:[BX+DI]
+      ADD    BX,DS:[BP+SI]
+      ADD    BX,DS:[BP+DI]
+      ADD    BX,DS:[SI]
+      ADD    BX,DS:[DI]
+      ADD    BX,DS:[201FH]
+      ADD    BX,DS:[BX]
+      ADD    SP,DS:[BX+SI]
+      ADD    SP,DS:[BX+DI]
+      ADD    SP,DS:[BP+SI]
+      ADD    SP,DS:[BP+DI]
+      ADD    SP,DS:[SI]
+      ADD    SP,DS:[DI]
+      ADD    SP,DS:[2827H]
+      ADD    SP,DS:[BX]
+      ADD    BP,DS:[BX+SI]
+      ADD    BP,DS:[BX+DI]
+      ADD    BP,DS:[BP+SI]
+      ADD    BP,DS:[BP+DI]
+      ADD    BP,DS:[SI]
+      ADD    BP,DS:[DI]
+      ADD    BP,DS:[302FH]
+      ADD    BP,DS:[BX]
+      ADD    SI,DS:[BX+SI]
+      ADD    SI,DS:[BX+DI]
+      ADD    SI,DS:[BP+SI]
+      ADD    SI,DS:[BP+DI]
+      ADD    SI,DS:[SI]
+      ADD    SI,DS:[DI]
+      ADD    SI,DS:[3837H]
+      ADD    SI,DS:[BX]
+      ADD    DI,DS:[BX+SI]
+      ADD    DI,DS:[BX+DI]
+      ADD    DI,DS:[BP+SI]
+      ADD    DI,DS:[BP+DI]
+      ADD    DI,DS:[SI]
+      ADD    DI,DS:[DI]
+      ADD    DI,DS:[403FH]
+      ADD    DI,DS:[BX]
+      ADD    AX,DS:[BX+SI+65]
+      ADD    AX,DS:[BX+SI-128]
+      ADD    AX,DS:[BX+DI+66]
+      ADD    AX,DS:[BX+DI-128]
+      ADD    AX,DS:[BP+SI+67]
+      ADD    AX,DS:[BP+SI-128]
+      ADD    AX,DS:[BP+DI+68]
+      ADD    AX,DS:[BP+DI-128]
+      ADD    AX,DS:[SI+69]
+      ADD    AX,DS:[SI-128]
+      ADD    AX,DS:[DI+70]
+      ADD    AX,DS:[DI-128]
+      ADD    AX,DS:[BP+71]
+      ADD    AX,DS:[BP-128]
+      ADD    AX,DS:[BX+72]
+      ADD    AX,DS:[BX-128]
+      ADD    CX,DS:[BX+SI+73]
+      ADD    CX,DS:[BX+SI-128]
+      ADD    CX,DS:[BX+DI+74]
+      ADD    CX,DS:[BX+DI-128]
+      ADD    CX,DS:[BP+SI+75]
+      ADD    CX,DS:[BP+SI-128]
+      ADD    CX,DS:[BP+DI+76]
+      ADD    CX,DS:[BP+DI-128]
+      ADD    CX,DS:[SI+77]
+      ADD    CX,DS:[SI-128]
+      ADD    CX,DS:[DI+78]
+      ADD    CX,DS:[DI-128]
+      ADD    CX,DS:[BP+79]
+      ADD    CX,DS:[BP-128]
+      ADD    CX,DS:[BX+80]
+      ADD    CX,DS:[BX-128]
+      ADD    DX,DS:[BX+SI+81]
+      ADD    DX,DS:[BX+SI-128]
+      ADD    DX,DS:[BX+DI+82]
+      ADD    DX,DS:[BX+DI-128]
+      ADD    DX,DS:[BP+SI+83]
+      ADD    DX,DS:[BP+SI-128]
+      ADD    DX,DS:[BP+DI+84]
+      ADD    DX,DS:[BP+DI-128]
+      ADD    DX,DS:[SI+85]
+      ADD    DX,DS:[SI-128]
+      ADD    DX,DS:[DI+86]
+      ADD    DX,DS:[DI-128]
+      ADD    DX,DS:[BP+87]
+      ADD    DX,DS:[BP-128]
+      ADD    DX,DS:[BX+88]
+      ADD    DX,DS:[BX-128]
+      ADD    BX,DS:[BX+SI+89]
+      ADD    BX,DS:[BX+SI-128]
+      ADD    BX,DS:[BX+DI+90]
+      ADD    BX,DS:[BX+DI-128]
+      ADD    BX,DS:[BP+SI+91]
+      ADD    BX,DS:[BP+SI-128]
+      ADD    BX,DS:[BP+DI+92]
+      ADD    BX,DS:[BP+DI-128]
+      ADD    BX,DS:[SI+93]
+      ADD    BX,DS:[SI-128]
+      ADD    BX,DS:[DI+94]
+      ADD    BX,DS:[DI-128]
+      ADD    BX,DS:[BP+95]
+      ADD    BX,DS:[BP-128]
+      ADD    BX,DS:[BX+96]
+      ADD    BX,DS:[BX-128]
+      ADD    SP,DS:[BX+SI+97]
+      ADD    SP,DS:[BX+SI-128]
+      ADD    SP,DS:[BX+DI+98]
+      ADD    SP,DS:[BX+DI-128]
+      ADD    SP,DS:[BP+SI+99]
+      ADD    SP,DS:[BP+SI-128]
+      ADD    SP,DS:[BP+DI+100]
+      ADD    SP,DS:[BP+DI-128]
+      ADD    SP,DS:[SI+101]
+      ADD    SP,DS:[SI-128]
+      ADD    SP,DS:[DI+102]
+      ADD    SP,DS:[DI-128]
+      ADD    SP,DS:[BP+103]
+      ADD    SP,DS:[BP-128]
+      ADD    SP,DS:[BX+104]
+      ADD    SP,DS:[BX-128]
+      ADD    BP,DS:[BX+SI+105]
+      ADD    BP,DS:[BX+SI-128]
+      ADD    BP,DS:[BX+DI+106]
+      ADD    BP,DS:[BX+DI-128]
+      ADD    BP,DS:[BP+SI+107]
+      ADD    BP,DS:[BP+SI-128]
+      ADD    BP,DS:[BP+DI+108]
+      ADD    BP,DS:[BP+DI-128]
+      ADD    BP,DS:[SI+109]
+      ADD    BP,DS:[SI-128]
+      ADD    BP,DS:[DI+110]
+      ADD    BP,DS:[DI-128]
+      ADD    BP,DS:[BP+111]
+      ADD    BP,DS:[BP-128]
+      ADD    BP,DS:[BX+112]
+      ADD    BP,DS:[BX-128]
+      ADD    SI,DS:[BX+SI+113]
+      ADD    SI,DS:[BX+SI-128]
+      ADD    SI,DS:[BX+DI+114]
+      ADD    SI,DS:[BX+DI-128]
+      ADD    SI,DS:[BP+SI+115]
+      ADD    SI,DS:[BP+SI-128]
+      ADD    SI,DS:[BP+DI+116]
+      ADD    SI,DS:[BP+DI-128]
+      ADD    SI,DS:[SI+117]
+      ADD    SI,DS:[SI-128]
+      ADD    SI,DS:[DI+118]
+      ADD    SI,DS:[DI-128]
+      ADD    SI,DS:[BP+119]
+      ADD    SI,DS:[BP-128]
+      ADD    SI,DS:[BX+120]
+      ADD    SI,DS:[BX-128]
+      ADD    DI,DS:[BX+SI+121]
+      ADD    DI,DS:[BX+SI-128]
+      ADD    DI,DS:[BX+DI+122]
+      ADD    DI,DS:[BX+DI-128]
+      ADD    DI,DS:[BP+SI+123]
+      ADD    DI,DS:[BP+SI-128]
+      ADD    DI,DS:[BP+DI+124]
+      ADD    DI,DS:[BP+DI-128]
+      ADD    DI,DS:[SI+125]
+      ADD    DI,DS:[SI-128]
+      ADD    DI,DS:[DI+126]
+      ADD    DI,DS:[DI-128]
+      ADD    DI,DS:[BP+127]
+      ADD    DI,DS:[BP-128]
+      ADD    DI,DS:[BX-128]
+      ADD    DI,DS:[BX+0]
+      ADD    AX,DS:[BX+SI+8281H]
+      ADD    AX,DS:[BX+DI+8382H]
+      ADD    AX,DS:[BP+SI+8483H]
+      ADD    AX,DS:[BP+DI+8584H]
+      ADD    AX,DS:[SI+8685H]
+      ADD    AX,DS:[DI+8786H]
+      ADD    AX,DS:[BP+8887H]
+      ADD    AX,DS:[BX+8988H]
+      ADD    CX,DS:[BX+SI+8A89H]
+      ADD    CX,DS:[BX+DI+8B8AH]
+      ADD    CX,DS:[BP+SI+8C8BH]
+      ADD    CX,DS:[BP+DI+8D8CH]
+      ADD    CX,DS:[SI+8E8DH]
+      ADD    CX,DS:[DI+8F8EH]
+      ADD    CX,DS:[BP+908FH]
+      ADD    CX,DS:[BX+9190H]
+      ADD    DX,DS:[BX+SI+9291H]
+      ADD    DX,DS:[BX+DI+9392H]
+      ADD    DX,DS:[BP+SI+9493H]
+      ADD    DX,DS:[BP+DI+9594H]
+      ADD    DX,DS:[SI+9695H]
+      ADD    DX,DS:[DI+9796H]
+      ADD    DX,DS:[BP+9897H]
+      ADD    DX,DS:[BX+9998H]
+      ADD    BX,DS:[BX+SI+9A99H]
+      ADD    BX,DS:[BX+DI+9B9AH]
+      ADD    BX,DS:[BP+SI+9C9BH]
+      ADD    BX,DS:[BP+DI+9D9CH]
+      ADD    BX,DS:[SI+9E9DH]
+      ADD    BX,DS:[DI+9F9EH]
+      ADD    BX,DS:[BP+0A09FH]
+      ADD    BX,DS:[BX+0A1A0H]
+      ADD    SP,DS:[BX+SI+0A2A1H]
+      ADD    SP,DS:[BX+DI+0A3A2H]
+      ADD    SP,DS:[BP+SI+0A4A3H]
+      ADD    SP,DS:[BP+DI+0A5A4H]
+      ADD    SP,DS:[SI+0A6A5H]
+      ADD    SP,DS:[DI+0A7A6H]
+      ADD    SP,DS:[BP+0A8A7H]
+      ADD    SP,DS:[BX+0A9A8H]
+      ADD    BP,DS:[BX+SI+0AAA9H]
+      ADD    BP,DS:[BX+DI+0ABAAH]
+      ADD    BP,DS:[BP+SI+0ACABH]
+      ADD    BP,DS:[BP+DI+0ADACH]
+      ADD    BP,DS:[SI+0AEADH]
+      ADD    BP,DS:[DI+0AFAEH]
+      ADD    BP,DS:[BP+0B0AFH]
+      ADD    BP,DS:[BX+0B1B0H]
+      ADD    SI,DS:[BX+SI+0B2B1H]
+      ADD    SI,DS:[BX+DI+0B3B2H]
+      ADD    SI,DS:[BP+SI+0B4B3H]
+      ADD    SI,DS:[BP+DI+0B5B4H]
+      ADD    SI,DS:[SI+0B6B5H]
+      ADD    SI,DS:[DI+0B7B6H]
+      ADD    SI,DS:[BP+0B8B7H]
+      ADD    SI,DS:[BX+0B9B8H]
+      ADD    DI,DS:[BX+SI+0BAB9H]
+      ADD    DI,DS:[BX+DI+0BBBAH]
+      ADD    DI,DS:[BP+SI+0BCBBH]
+      ADD    DI,DS:[BP+DI+0BDBCH]
+      ADD    DI,DS:[SI+0BEBDH]
+      ADD    DI,DS:[DI+0BFBEH]
+      ADD    DI,DS:[BP+0C0BFH]
+      ADD    DI,DS:[BX+0C1C0H]
+      ADD    AX,DS:[BX+SI]
+      ADD    AX,DS:[BX+DI]
+      ADD    AX,DS:[BP+SI]
+      ADD    AX,DS:[BP+DI]
+      OR     DS:[BX+DI],CL
+      OR     DS:[BP+SI],CL
+      OR     DS:[BP+DI],CL
+      OR     DS:[SI],CL
+      OR     DS:[DI],CL
+      OR     DS:[100FH],CL
+      OR     DS:[BX],CL
+      OR     DS:[BX+SI],DL
+      OR     DS:[BX+DI],DL
+      OR     DS:[BP+SI],DL
+      OR     DS:[BP+DI],DL
+      OR     DS:[SI],DL
+      OR     DS:[DI],DL
+      OR     DS:[1817H],DL
+      OR     DS:[BX],DL
+      OR     DS:[BX+SI],BL
+      OR     DS:[BX+DI],BL
+      OR     DS:[BP+SI],BL
+      OR     DS:[BP+DI],BL
+      OR     DS:[SI],BL
+      OR     DS:[DI],BL
+      OR     DS:[201FH],BL
+      OR     DS:[BX],BL
+      OR     DS:[BX+SI],AH
+      OR     DS:[BX+DI],AH
+      OR     DS:[BP+SI],AH
+      OR     DS:[BP+DI],AH
+      OR     DS:[SI],AH
+      OR     DS:[DI],AH
+      OR     DS:[2827H],AH
+      OR     DS:[BX],AH
+      OR     DS:[BP+SI],CX
+      OR     DS:[BP+DI],CX
+      OR     DS:[SI],CX
+      OR     DS:[DI],CX
+      OR     DS:[100FH],CX
+      OR     DS:[BX],CX
+      OR     DS:[BX+SI],DX
+      OR     DS:[BX+DI],DX
+      OR     DS:[BP+SI],DX
+      OR     DS:[BP+DI],DX
+      OR     DS:[SI],DX
+      OR     DS:[DI],DX
+      OR     DS:[1817H],DX
+      OR     DS:[BX],DX
+      OR     DS:[BX+SI],BX
+      OR     DS:[BX+DI],BX
+      OR     DS:[BP+SI],BX
+      OR     DS:[BP+DI],BX
+      OR     DS:[SI],BX
+      OR     DS:[DI],BX
+      OR     DS:[201FH],BX
+      OR     DS:[BX],BX
+      OR     DS:[BX+SI],SP
+      OR     DS:[BX+DI],SP
+      OR     DS:[BP+SI],SP
+      OR     DS:[BP+DI],SP
+      OR     DS:[SI],SP
+      OR     DS:[DI],SP
+      OR     DS:[2827H],SP
+      OR     DS:[BX],SP
+      OR     DS:[BX+SI],BP
+      OR     DS:[BX+DI],BP
+      OR     DS:[BP+SI],BP
+      OR     DS:[BP+DI],BP
+      OR     DS:[SI],BP
+      OR     DS:[DI],BP
+      OR     DS:[302FH],BP
+      OR     DS:[BX],BP
+      OR     DS:[BX+SI],SI
+      OR     DS:[BX+DI],SI
+      OR     DS:[BP+SI],SI
+      OR     DS:[BP+DI],SI
+      OR     DS:[SI],SI
+      OR     DS:[DI],SI
+      OR     DS:[3837H],SI
+      OR     DS:[BX],SI
+      OR     DS:[BX+SI],DI
+      OR     DS:[BX+DI],DI
+      OR     DS:[BP+SI],DI
+      OR     DS:[BP+DI],DI
+      OR     DS:[SI],DI
+      OR     DS:[DI],DI
+      OR     DS:[403FH],DI
+      OR     DS:[BX],DI
+      OR     DS:[BX+SI+65],AX
+      OR     DS:[BX+SI-128],AX
+      OR     DS:[BX+DI+66],AX
+      OR     DS:[BX+DI-128],AX
+      OR     DS:[BP+SI+67],AX
+      OR     DS:[BP+SI-128],AX
+      OR     DS:[BP+DI+68],AX
+      OR     DS:[BP+DI-128],AX
+      OR     DS:[SI+69],AX
+      OR     DS:[SI-128],AX
+      OR     DS:[DI+70],AX
+      OR     DS:[DI-128],AX
+      OR     DS:[BP+71],AX
+      OR     DS:[BP-128],AX
+      OR     DS:[BX+72],AX
+      OR     DS:[BX-128],AX
+      OR     DS:[BX+SI+73],CX
+      OR     DS:[BX+SI-128],CX
+      OR     DS:[BX+DI+74],CX
+      OR     DS:[BX+DI-128],CX
+      OR     DS:[BP+SI+75],CX
+      OR     DS:[BP+SI-128],CX
+      OR     DS:[BP+DI+76],CX
+      OR     DS:[BP+DI-128],CX
+      OR     DS:[SI+77],CX
+      OR     DS:[SI-128],CX
+      OR     DS:[DI+78],CX
+      OR     DS:[DI-128],CX
+      OR     DS:[BP+79],CX
+      OR     DS:[BP-128],CX
+      OR     DS:[BX+80],CX
+      OR     DS:[BX-128],CX
+      OR     DS:[BX+SI+81],DX
+      OR     DS:[BX+SI-128],DX
+      OR     DS:[BX+DI+82],DX
+      OR     DS:[BX+DI-128],DX
+      OR     DS:[BP+SI+83],DX
+      OR     DS:[BP+SI-128],DX
+      OR     DS:[BP+DI+84],DX
+      OR     DS:[BP+DI-128],DX
+      OR     DS:[SI+85],DX
+      OR     DS:[SI-128],DX
+      OR     DS:[DI+86],DX
+      OR     DS:[DI-128],DX
+      OR     DS:[BP+87],DX
+      OR     DS:[BP-128],DX
+      OR     DS:[BX+88],DX
+      OR     DS:[BX-128],DX
+      OR     DS:[BX+SI+89],BX
+      OR     DS:[BX+SI-128],BX
+      OR     DS:[BX+DI+90],BX
+      OR     DS:[BX+DI-128],BX
+      OR     DS:[BP+SI+91],BX
+      OR     DS:[BP+SI-128],BX
+      OR     DS:[BP+DI+92],BX
+      OR     DS:[BP+DI-128],BX
+      OR     DS:[SI+93],BX
+      OR     DS:[SI-128],BX
+      OR     DS:[DI+94],BX
+      OR     DS:[DI-128],BX
+      OR     DS:[BP+95],BX
+      OR     DS:[BP-128],BX
+      OR     DS:[BX+96],BX
+      OR     DS:[BX-128],BX
+      OR     DS:[BX+SI+97],SP
+      OR     DS:[BX+SI-128],SP
+      OR     DS:[BX+DI+98],SP
+      OR     DS:[BX+DI-128],SP
+      OR     DS:[BP+SI+99],SP
+      OR     DS:[BP+SI-128],SP
+      OR     DS:[BP+DI+100],SP
+      OR     DS:[BP+DI-128],SP
+      OR     DS:[SI+101],SP
+      OR     DS:[SI-128],SP
+      OR     DS:[DI+102],SP
+      OR     DS:[DI-128],SP
+      OR     DS:[BP+103],SP
+      OR     DS:[BP-128],SP
+      OR     DS:[BX+104],SP
+      OR     DS:[BX-128],SP
+      OR     DS:[BX+SI+105],BP
+      OR     DS:[BX+SI-128],BP
+      OR     DS:[BX+DI+106],BP
+      OR     DS:[BX+DI-128],BP
+      OR     DS:[BP+SI+107],BP
+      OR     DS:[BP+SI-128],BP
+      OR     DS:[BP+DI+108],BP
+      OR     DS:[BP+DI-128],BP
+      OR     DS:[SI+109],BP
+      OR     DS:[SI-128],BP
+      OR     DS:[DI+110],BP
+      OR     DS:[DI-128],BP
+      OR     DS:[BP+111],BP
+      OR     DS:[BP-128],BP
+      OR     DS:[BX+112],BP
+      OR     DS:[BX-128],BP
+      OR     DS:[BX+SI+113],SI
+      OR     DS:[BX+SI-128],SI
+      OR     DS:[BX+DI+114],SI
+      OR     DS:[BX+DI-128],SI
+      OR     DS:[BP+SI+115],SI
+      OR     DS:[BP+SI-128],SI
+      OR     DS:[BP+DI+116],SI
+      OR     DS:[BP+DI-128],SI
+      OR     DS:[SI+117],SI
+      OR     DS:[SI-128],SI
+      OR     DS:[DI+118],SI
+      OR     DS:[DI-128],SI
+      OR     DS:[BP+119],SI
+      OR     DS:[BP-128],SI
+      OR     DS:[BX+120],SI
+      OR     DS:[BX-128],SI
+      OR     DS:[BX+SI+121],DI
+      OR     DS:[BX+SI-128],DI
+      OR     DS:[BX+DI+122],DI
+      OR     DS:[BX+DI-128],DI
+      OR     DS:[BP+SI+123],DI
+      OR     DS:[BP+SI-128],DI
+      OR     DS:[BP+DI+124],DI
+      OR     DS:[BP+DI-128],DI
+      OR     DS:[SI+125],DI
+      OR     DS:[SI-128],DI
+      OR     DS:[DI+126],DI
+      OR     DS:[DI-128],DI
+      OR     DS:[BP+127],DI
+      OR     DS:[BP-128],DI
+      OR     DS:[BX-128],DI
+      OR     DS:[BX+0],DI
+      OR     DS:[BX+SI+8281H],AX
+      OR     DS:[BX+DI+8382H],AX
+      OR     DS:[BP+SI+8483H],AX
+      OR     DS:[BP+DI+8584H],AX
+      OR     DS:[SI+8685H],AX
+      OR     DS:[DI+8786H],AX
+      OR     DS:[BP+8887H],AX
+      OR     DS:[BX+8988H],AX
+      OR     DS:[BX+SI+8A89H],CX
+      OR     DS:[BX+DI+8B8AH],CX
+      OR     DS:[BP+SI+8C8BH],CX
+      OR     DS:[BP+DI+8D8CH],CX
+      OR     DS:[SI+8E8DH],CX
+      OR     DS:[DI+8F8EH],CX
+      OR     DS:[BP+908FH],CX
+      OR     DS:[BX+9190H],CX
+      OR     DS:[BX+SI+9291H],DX
+      OR     DS:[BX+DI+9392H],DX
+      OR     DS:[BP+SI+9493H],DX
+      OR     DS:[BP+DI+9594H],DX
+      OR     DS:[SI+9695H],DX
+      OR     DS:[DI+9796H],DX
+      OR     DS:[BP+9897H],DX
+      OR     DS:[BX+9998H],DX
+      OR     DS:[BX+SI+9A99H],BX
+      OR     DS:[BX+DI+9B9AH],BX
+      OR     DS:[BP+SI+9C9BH],BX
+      OR     DS:[BP+DI+9D9CH],BX
+      OR     DS:[SI+9E9DH],BX
+      OR     DS:[DI+9F9EH],BX
+      OR     DS:[BP+0A09FH],BX
+      OR     DS:[BX+0A1A0H],BX
+      OR     DS:[BX+SI+0A2A1H],SP
+      OR     DS:[BX+DI+0A3A2H],SP
+      OR     DS:[BP+SI+0A4A3H],SP
+      OR     DS:[BP+DI+0A5A4H],SP
+      OR     DS:[SI+0A6A5H],SP
+      OR     DS:[DI+0A7A6H],SP
+      OR     DS:[BP+0A8A7H],SP
+      OR     DS:[BX+0A9A8H],SP
+      OR     DS:[BX+SI+0AAA9H],BP
+      OR     DS:[BX+DI+0ABAAH],BP
+      OR     DS:[BP+SI+0ACABH],BP
+      OR     DS:[BP+DI+0ADACH],BP
+      OR     DS:[SI+0AEADH],BP
+      OR     DS:[DI+0AFAEH],BP
+      OR     DS:[BP+0B0AFH],BP
+      OR     DS:[BX+0B1B0H],BP
+      OR     DS:[BX+SI+0B2B1H],SI
+      OR     DS:[BX+DI+0B3B2H],SI
+      OR     DS:[BP+SI+0B4B3H],SI
+      OR     DS:[BP+DI+0B5B4H],SI
+      OR     DS:[SI+0B6B5H],SI
+      OR     DS:[DI+0B7B6H],SI
+      OR     DS:[BP+0B8B7H],SI
+      OR     DS:[BX+0B9B8H],SI
+      OR     DS:[BX+SI+0BAB9H],DI
+      OR     DS:[BX+DI+0BBBAH],DI
+      OR     DS:[BP+SI+0BCBBH],DI
+      OR     DS:[BP+DI+0BDBCH],DI
+      OR     DS:[SI+0BEBDH],DI
+      OR     DS:[DI+0BFBEH],DI
+      OR     DS:[BP+0C0BFH],DI
+      OR     DS:[BX+0C1C0H],DI
+      OR     DS:[BX+SI],AX
+      OR     DS:[BX+DI],AX
+      OR     DS:[BP+SI],AX
+      OR     DS:[BP+DI],AX
+      OR     DS:[SI],AX
+      OR     DS:[DI],AX
+      OR     DS:[0807H],AX
+      OR     DS:[BX],AX
+      OR     DS:[BX+SI],CX
+      OR     DS:[BX+DI],CX
+      OR     CL,DS:[BP+DI]
+      OR     CL,DS:[SI]
+      OR     CL,DS:[DI]
+      OR     CL,DS:[100FH]
+      OR     CL,DS:[BX]
+      OR     DL,DS:[BX+SI]
+      OR     DL,DS:[BX+DI]
+      OR     DL,DS:[BP+SI]
+      OR     DL,DS:[BP+DI]
+      OR     DL,DS:[SI]
+      OR     DL,DS:[DI]
+      OR     DL,DS:[1817H]
+      OR     DL,DS:[BX]
+      OR     BL,DS:[BX+SI]
+      OR     BL,DS:[BX+DI]
+      OR     BL,DS:[BP+SI]
+      OR     BL,DS:[BP+DI]
+      OR     BL,DS:[SI]
+      OR     BL,DS:[DI]
+      OR     BL,DS:[201FH]
+      OR     BL,DS:[BX]
+      OR     AH,DS:[BX+SI]
+      OR     AH,DS:[BX+DI]
+      OR     AH,DS:[BP+SI]
+      OR     AH,DS:[BP+DI]
+      OR     AH,DS:[SI]
+      OR     AH,DS:[DI]
+      OR     AH,DS:[2827H]
+      OR     AH,DS:[BX]
+      OR     CX,DS:[SI]
+      OR     CX,DS:[DI]
+      OR     CX,DS:[100FH]
+      OR     CX,DS:[BX]
+      OR     DX,DS:[BX+SI]
+      OR     DX,DS:[BX+DI]
+      OR     DX,DS:[BP+SI]
+      OR     DX,DS:[BP+DI]
+      OR     DX,DS:[SI]
+      OR     DX,DS:[DI]
+      OR     DX,DS:[1817H]
+      OR     DX,DS:[BX]
+      OR     BX,DS:[BX+SI]
+      OR     BX,DS:[BX+DI]
+      OR     BX,DS:[BP+SI]
+      OR     BX,DS:[BP+DI]
+      OR     BX,DS:[SI]
+      OR     BX,DS:[DI]
+      OR     BX,DS:[201FH]
+      OR     BX,DS:[BX]
+      OR     SP,DS:[BX+SI]
+      OR     SP,DS:[BX+DI]
+      OR     SP,DS:[BP+SI]
+      OR     SP,DS:[BP+DI]
+      OR     SP,DS:[SI]
+      OR     SP,DS:[DI]
+      OR     SP,DS:[2827H]
+      OR     SP,DS:[BX]
+      OR     BP,DS:[BX+SI]
+      OR     BP,DS:[BX+DI]
+      OR     BP,DS:[BP+SI]
+      OR     BP,DS:[BP+DI]
+      OR     BP,DS:[SI]
+      OR     BP,DS:[DI]
+      OR     BP,DS:[302FH]
+      OR     BP,DS:[BX]
+      OR     SI,DS:[BX+SI]
+      OR     SI,DS:[BX+DI]
+      OR     SI,DS:[BP+SI]
+      OR     SI,DS:[BP+DI]
+      OR     SI,DS:[SI]
+      OR     SI,DS:[DI]
+      OR     SI,DS:[3837H]
+      OR     SI,DS:[BX]
+      OR     DI,DS:[BX+SI]
+      OR     DI,DS:[BX+DI]
+      OR     DI,DS:[BP+SI]
+      OR     DI,DS:[BP+DI]
+      OR     DI,DS:[SI]
+      OR     DI,DS:[DI]
+      OR     DI,DS:[403FH]
+      OR     DI,DS:[BX]
+      OR     AX,DS:[BX+SI+65]
+      OR     AX,DS:[BX+SI-128]
+      OR     AX,DS:[BX+DI+66]
+      OR     AX,DS:[BX+DI-128]
+      OR     AX,DS:[BP+SI+67]
+      OR     AX,DS:[BP+SI-128]
+      OR     AX,DS:[BP+DI+68]
+      OR     AX,DS:[BP+DI-128]
+      OR     AX,DS:[SI+69]
+      OR     AX,DS:[SI-128]
+      OR     AX,DS:[DI+70]
+      OR     AX,DS:[DI-128]
+      OR     AX,DS:[BP+71]
+      OR     AX,DS:[BP-128]
+      OR     AX,DS:[BX+72]
+      OR     AX,DS:[BX-128]
+      OR     CX,DS:[BX+SI+73]
+      OR     CX,DS:[BX+SI-128]
+      OR     CX,DS:[BX+DI+74]
+      OR     CX,DS:[BX+DI-128]
+      OR     CX,DS:[BP+SI+75]
+      OR     CX,DS:[BP+SI-128]
+      OR     CX,DS:[BP+DI+76]
+      OR     CX,DS:[BP+DI-128]
+      OR     CX,DS:[SI+77]
+      OR     CX,DS:[SI-128]
+      OR     CX,DS:[DI+78]
+      OR     CX,DS:[DI-128]
+      OR     CX,DS:[BP+79]
+      OR     CX,DS:[BP-128]
+      OR     CX,DS:[BX+80]
+      OR     CX,DS:[BX-128]
+      OR     DX,DS:[BX+SI+81]
+      OR     DX,DS:[BX+SI-128]
+      OR     DX,DS:[BX+DI+82]
+      OR     DX,DS:[BX+DI-128]
+      OR     DX,DS:[BP+SI+83]
+      OR     DX,DS:[BP+SI-128]
+      OR     DX,DS:[BP+DI+84]
+      OR     DX,DS:[BP+DI-128]
+      OR     DX,DS:[SI+85]
+      OR     DX,DS:[SI-128]
+      OR     DX,DS:[DI+86]
+      OR     DX,DS:[DI-128]
+      OR     DX,DS:[BP+87]
+      OR     DX,DS:[BP-128]
+      OR     DX,DS:[BX+88]
+      OR     DX,DS:[BX-128]
+      OR     BX,DS:[BX+SI+89]
+      OR     BX,DS:[BX+SI-128]
+      OR     BX,DS:[BX+DI+90]
+      OR     BX,DS:[BX+DI-128]
+      OR     BX,DS:[BP+SI+91]
+      OR     BX,DS:[BP+SI-128]
+      OR     BX,DS:[BP+DI+92]
+      OR     BX,DS:[BP+DI-128]
+      OR     BX,DS:[SI+93]
+      OR     BX,DS:[SI-128]
+      OR     BX,DS:[DI+94]
+      OR     BX,DS:[DI-128]
+      OR     BX,DS:[BP+95]
+      OR     BX,DS:[BP-128]
+      OR     BX,DS:[BX+96]
+      OR     BX,DS:[BX-128]
+      OR     SP,DS:[BX+SI+97]
+      OR     SP,DS:[BX+SI-128]
+      OR     SP,DS:[BX+DI+98]
+      OR     SP,DS:[BX+DI-128]
+      OR     SP,DS:[BP+SI+99]
+      OR     SP,DS:[BP+SI-128]
+      OR     SP,DS:[BP+DI+100]
+      OR     SP,DS:[BP+DI-128]
+      OR     SP,DS:[SI+101]
+      OR     SP,DS:[SI-128]
+      OR     SP,DS:[DI+102]
+      OR     SP,DS:[DI-128]
+      OR     SP,DS:[BP+103]
+      OR     SP,DS:[BP-128]
+      OR     SP,DS:[BX+104]
+      OR     SP,DS:[BX-128]
+      OR     BP,DS:[BX+SI+105]
+      OR     BP,DS:[BX+SI-128]
+      OR     BP,DS:[BX+DI+106]
+      OR     BP,DS:[BX+DI-128]
+      OR     BP,DS:[BP+SI+107]
+      OR     BP,DS:[BP+SI-128]
+      OR     BP,DS:[BP+DI+108]
+      OR     BP,DS:[BP+DI-128]
+      OR     BP,DS:[SI+109]
+      OR     BP,DS:[SI-128]
+      OR     BP,DS:[DI+110]
+      OR     BP,DS:[DI-128]
+      OR     BP,DS:[BP+111]
+      OR     BP,DS:[BP-128]
+      OR     BP,DS:[BX+112]
+      OR     BP,DS:[BX-128]
+      OR     SI,DS:[BX+SI+113]
+      OR     SI,DS:[BX+SI-128]
+      OR     SI,DS:[BX+DI+114]
+      OR     SI,DS:[BX+DI-128]
+      OR     SI,DS:[BP+SI+115]
+      OR     SI,DS:[BP+SI-128]
+      OR     SI,DS:[BP+DI+116]
+      OR     SI,DS:[BP+DI-128]
+      OR     SI,DS:[SI+117]
+      OR     SI,DS:[SI-128]
+      OR     SI,DS:[DI+118]
+      OR     SI,DS:[DI-128]
+      OR     SI,DS:[BP+119]
+      OR     SI,DS:[BP-128]
+      OR     SI,DS:[BX+120]
+      OR     SI,DS:[BX-128]
+      OR     DI,DS:[BX+SI+121]
+      OR     DI,DS:[BX+SI-128]
+      OR     DI,DS:[BX+DI+122]
+      OR     DI,DS:[BX+DI-128]
+      OR     DI,DS:[BP+SI+123]
+      OR     DI,DS:[BP+SI-128]
+      OR     DI,DS:[BP+DI+124]
+      OR     DI,DS:[BP+DI-128]
+      OR     DI,DS:[SI+125]
+      OR     DI,DS:[SI-128]
+      OR     DI,DS:[DI+126]
+      OR     DI,DS:[DI-128]
+      OR     DI,DS:[BP+127]
+      OR     DI,DS:[BP-128]
+      OR     DI,DS:[BX-128]
+      OR     DI,DS:[BX+0]
+      OR     AX,DS:[BX+SI+8281H]
+      OR     AX,DS:[BX+DI+8382H]
+      OR     AX,DS:[BP+SI+8483H]
+      OR     AX,DS:[BP+DI+8584H]
+      OR     AX,DS:[SI+8685H]
+      OR     AX,DS:[DI+8786H]
+      OR     AX,DS:[BP+8887H]
+      OR     AX,DS:[BX+8988H]
+      OR     CX,DS:[BX+SI+8A89H]
+      OR     CX,DS:[BX+DI+8B8AH]
+      OR     CX,DS:[BP+SI+8C8BH]
+      OR     CX,DS:[BP+DI+8D8CH]
+      OR     CX,DS:[SI+8E8DH]
+      OR     CX,DS:[DI+8F8EH]
+      OR     CX,DS:[BP+908FH]
+      OR     CX,DS:[BX+9190H]
+      OR     DX,DS:[BX+SI+9291H]
+      OR     DX,DS:[BX+DI+9392H]
+      OR     DX,DS:[BP+SI+9493H]
+      OR     DX,DS:[BP+DI+9594H]
+      OR     DX,DS:[SI+9695H]
+      OR     DX,DS:[DI+9796H]
+      OR     DX,DS:[BP+9897H]
+      OR     DX,DS:[BX+9998H]
+      OR     BX,DS:[BX+SI+9A99H]
+      OR     BX,DS:[BX+DI+9B9AH]
+      OR     BX,DS:[BP+SI+9C9BH]
+      OR     BX,DS:[BP+DI+9D9CH]
+      OR     BX,DS:[SI+9E9DH]
+      OR     BX,DS:[DI+9F9EH]
+      OR     BX,DS:[BP+0A09FH]
+      OR     BX,DS:[BX+0A1A0H]
+      OR     SP,DS:[BX+SI+0A2A1H]
+      OR     SP,DS:[BX+DI+0A3A2H]
+      OR     SP,DS:[BP+SI+0A4A3H]
+      OR     SP,DS:[BP+DI+0A5A4H]
+      OR     SP,DS:[SI+0A6A5H]
+      OR     SP,DS:[DI+0A7A6H]
+      OR     SP,DS:[BP+0A8A7H]
+      OR     SP,DS:[BX+0A9A8H]
+      OR     BP,DS:[BX+SI+0AAA9H]
+      OR     BP,DS:[BX+DI+0ABAAH]
+      OR     BP,DS:[BP+SI+0ACABH]
+      OR     BP,DS:[BP+DI+0ADACH]
+      OR     BP,DS:[SI+0AEADH]
+      OR     BP,DS:[DI+0AFAEH]
+      OR     BP,DS:[BP+0B0AFH]
+      OR     BP,DS:[BX+0B1B0H]
+      OR     SI,DS:[BX+SI+0B2B1H]
+      OR     SI,DS:[BX+DI+0B3B2H]
+      OR     SI,DS:[BP+SI+0B4B3H]
+      OR     SI,DS:[BP+DI+0B5B4H]
+      OR     SI,DS:[SI+0B6B5H]
+      OR     SI,DS:[DI+0B7B6H]
+      OR     SI,DS:[BP+0B8B7H]
+      OR     SI,DS:[BX+0B9B8H]
+      OR     DI,DS:[BX+SI+0BAB9H]
+      OR     DI,DS:[BX+DI+0BBBAH]
+      OR     DI,DS:[BP+SI+0BCBBH]
+      OR     DI,DS:[BP+DI+0BDBCH]
+      OR     DI,DS:[SI+0BEBDH]
+      OR     DI,DS:[DI+0BFBEH]
+      OR     DI,DS:[BP+0C0BFH]
+      OR     DI,DS:[BX+0C1C0H]
+      OR     AX,DS:[BX+SI]
+      OR     AX,DS:[BX+DI]
+      OR     AX,DS:[BP+SI]
+      OR     AX,DS:[BP+DI]
+      OR     AX,DS:[SI]
+      OR     AX,DS:[DI]
+      OR     AX,DS:[0807H]
+      OR     AX,DS:[BX]
+      OR     CX,DS:[BX+SI]
+      OR     CX,DS:[BX+DI]
+      OR     CX,DS:[BP+SI]
+      OR     CX,DS:[BP+DI]
+      ADC    DS:[BX+DI],DL
+      ADC    DS:[BP+SI],DL
+      ADC    DS:[BP+DI],DL
+      ADC    DS:[SI],DL
+      ADC    DS:[DI],DL
+      ADC    DS:[1817H],DL
+      ADC    DS:[BX],DL
+      ADC    DS:[BX+SI],BL
+      ADC    DS:[BX+DI],BL
+      ADC    DS:[BP+SI],BL
+      ADC    DS:[BP+DI],BL
+      ADC    DS:[SI],BL
+      ADC    DS:[DI],BL
+      ADC    DS:[201FH],BL
+      ADC    DS:[BX],BL
+      ADC    DS:[BX+SI],AH
+      ADC    DS:[BX+DI],AH
+      ADC    DS:[BP+SI],AH
+      ADC    DS:[BP+DI],AH
+      ADC    DS:[SI],AH
+      ADC    DS:[DI],AH
+      ADC    DS:[2827H],AH
+      ADC    DS:[BX],AH
+      ADC    DS:[BP+SI],DX
+      ADC    DS:[BP+DI],DX
+      ADC    DS:[SI],DX
+      ADC    DS:[DI],DX
+      ADC    DS:[1817H],DX
+      ADC    DS:[BX],DX
+      ADC    DS:[BX+SI],BX
+      ADC    DS:[BX+DI],BX
+      ADC    DS:[BP+SI],BX
+      ADC    DS:[BP+DI],BX
+      ADC    DS:[SI],BX
+      ADC    DS:[DI],BX
+      ADC    DS:[201FH],BX
+      ADC    DS:[BX],BX
+      ADC    DS:[BX+SI],SP
+      ADC    DS:[BX+DI],SP
+      ADC    DS:[BP+SI],SP
+      ADC    DS:[BP+DI],SP
+      ADC    DS:[SI],SP
+      ADC    DS:[DI],SP
+      ADC    DS:[2827H],SP
+      ADC    DS:[BX],SP
+      ADC    DS:[BX+SI],BP
+      ADC    DS:[BX+DI],BP
+      ADC    DS:[BP+SI],BP
+      ADC    DS:[BP+DI],BP
+      ADC    DS:[SI],BP
+      ADC    DS:[DI],BP
+      ADC    DS:[302FH],BP
+      ADC    DS:[BX],BP
+      ADC    DS:[BX+SI],SI
+      ADC    DS:[BX+DI],SI
+      ADC    DS:[BP+SI],SI
+      ADC    DS:[BP+DI],SI
+      ADC    DS:[SI],SI
+      ADC    DS:[DI],SI
+      ADC    DS:[3837H],SI
+      ADC    DS:[BX],SI
+      ADC    DS:[BX+SI],DI
+      ADC    DS:[BX+DI],DI
+      ADC    DS:[BP+SI],DI
+      ADC    DS:[BP+DI],DI
+      ADC    DS:[SI],DI
+      ADC    DS:[DI],DI
+      ADC    DS:[403FH],DI
+      ADC    DS:[BX],DI
+      ADC    DS:[BX+SI+65],AX
+      ADC    DS:[BX+SI-128],AX
+      ADC    DS:[BX+DI+66],AX
+      ADC    DS:[BX+DI-128],AX
+      ADC    DS:[BP+SI+67],AX
+      ADC    DS:[BP+SI-128],AX
+      ADC    DS:[BP+DI+68],AX
+      ADC    DS:[BP+DI-128],AX
+      ADC    DS:[SI+69],AX
+      ADC    DS:[SI-128],AX
+      ADC    DS:[DI+70],AX
+      ADC    DS:[DI-128],AX
+      ADC    DS:[BP+71],AX
+      ADC    DS:[BP-128],AX
+      ADC    DS:[BX+72],AX
+      ADC    DS:[BX-128],AX
+      ADC    DS:[BX+SI+73],CX
+      ADC    DS:[BX+SI-128],CX
+      ADC    DS:[BX+DI+74],CX
+      ADC    DS:[BX+DI-128],CX
+      ADC    DS:[BP+SI+75],CX
+      ADC    DS:[BP+SI-128],CX
+      ADC    DS:[BP+DI+76],CX
+      ADC    DS:[BP+DI-128],CX
+      ADC    DS:[SI+77],CX
+      ADC    DS:[SI-128],CX
+      ADC    DS:[DI+78],CX
+      ADC    DS:[DI-128],CX
+      ADC    DS:[BP+79],CX
+      ADC    DS:[BP-128],CX
+      ADC    DS:[BX+80],CX
+      ADC    DS:[BX-128],CX
+      ADC    DS:[BX+SI+81],DX
+      ADC    DS:[BX+SI-128],DX
+      ADC    DS:[BX+DI+82],DX
+      ADC    DS:[BX+DI-128],DX
+      ADC    DS:[BP+SI+83],DX
+      ADC    DS:[BP+SI-128],DX
+      ADC    DS:[BP+DI+84],DX
+      ADC    DS:[BP+DI-128],DX
+      ADC    DS:[SI+85],DX
+      ADC    DS:[SI-128],DX
+      ADC    DS:[DI+86],DX
+      ADC    DS:[DI-128],DX
+      ADC    DS:[BP+87],DX
+      ADC    DS:[BP-128],DX
+      ADC    DS:[BX+88],DX
+      ADC    DS:[BX-128],DX
+      ADC    DS:[BX+SI+89],BX
+      ADC    DS:[BX+SI-128],BX
+      ADC    DS:[BX+DI+90],BX
+      ADC    DS:[BX+DI-128],BX
+      ADC    DS:[BP+SI+91],BX
+      ADC    DS:[BP+SI-128],BX
+      ADC    DS:[BP+DI+92],BX
+      ADC    DS:[BP+DI-128],BX
+      ADC    DS:[SI+93],BX
+      ADC    DS:[SI-128],BX
+      ADC    DS:[DI+94],BX
+      ADC    DS:[DI-128],BX
+      ADC    DS:[BP+95],BX
+      ADC    DS:[BP-128],BX
+      ADC    DS:[BX+96],BX
+      ADC    DS:[BX-128],BX
+      ADC    DS:[BX+SI+97],SP
+      ADC    DS:[BX+SI-128],SP
+      ADC    DS:[BX+DI+98],SP
+      ADC    DS:[BX+DI-128],SP
+      ADC    DS:[BP+SI+99],SP
+      ADC    DS:[BP+SI-128],SP
+      ADC    DS:[BP+DI+100],SP
+      ADC    DS:[BP+DI-128],SP
+      ADC    DS:[SI+101],SP
+      ADC    DS:[SI-128],SP
+      ADC    DS:[DI+102],SP
+      ADC    DS:[DI-128],SP
+      ADC    DS:[BP+103],SP
+      ADC    DS:[BP-128],SP
+      ADC    DS:[BX+104],SP
+      ADC    DS:[BX-128],SP
+      ADC    DS:[BX+SI+105],BP
+      ADC    DS:[BX+SI-128],BP
+      ADC    DS:[BX+DI+106],BP
+      ADC    DS:[BX+DI-128],BP
+      ADC    DS:[BP+SI+107],BP
+      ADC    DS:[BP+SI-128],BP
+      ADC    DS:[BP+DI+108],BP
+      ADC    DS:[BP+DI-128],BP
+      ADC    DS:[SI+109],BP
+      ADC    DS:[SI-128],BP
+      ADC    DS:[DI+110],BP
+      ADC    DS:[DI-128],BP
+      ADC    DS:[BP+111],BP
+      ADC    DS:[BP-128],BP
+      ADC    DS:[BX+112],BP
+      ADC    DS:[BX-128],BP
+      ADC    DS:[BX+SI+113],SI
+      ADC    DS:[BX+SI-128],SI
+      ADC    DS:[BX+DI+114],SI
+      ADC    DS:[BX+DI-128],SI
+      ADC    DS:[BP+SI+115],SI
+      ADC    DS:[BP+SI-128],SI
+      ADC    DS:[BP+DI+116],SI
+      ADC    DS:[BP+DI-128],SI
+      ADC    DS:[SI+117],SI
+      ADC    DS:[SI-128],SI
+      ADC    DS:[DI+118],SI
+      ADC    DS:[DI-128],SI
+      ADC    DS:[BP+119],SI
+      ADC    DS:[BP-128],SI
+      ADC    DS:[BX+120],SI
+      ADC    DS:[BX-128],SI
+      ADC    DS:[BX+SI+121],DI
+      ADC    DS:[BX+SI-128],DI
+      ADC    DS:[BX+DI+122],DI
+      ADC    DS:[BX+DI-128],DI
+      ADC    DS:[BP+SI+123],DI
+      ADC    DS:[BP+SI-128],DI
+      ADC    DS:[BP+DI+124],DI
+      ADC    DS:[BP+DI-128],DI
+      ADC    DS:[SI+125],DI
+      ADC    DS:[SI-128],DI
+      ADC    DS:[DI+126],DI
+      ADC    DS:[DI-128],DI
+      ADC    DS:[BP+127],DI
+      ADC    DS:[BP-128],DI
+      ADC    DS:[BX-128],DI
+      ADC    DS:[BX+0],DI
+      ADC    DS:[BX+SI+8281H],AX
+      ADC    DS:[BX+DI+8382H],AX
+      ADC    DS:[BP+SI+8483H],AX
+      ADC    DS:[BP+DI+8584H],AX
+      ADC    DS:[SI+8685H],AX
+      ADC    DS:[DI+8786H],AX
+      ADC    DS:[BP+8887H],AX
+      ADC    DS:[BX+8988H],AX
+      ADC    DS:[BX+SI+8A89H],CX
+      ADC    DS:[BX+DI+8B8AH],CX
+      ADC    DS:[BP+SI+8C8BH],CX
+      ADC    DS:[BP+DI+8D8CH],CX
+      ADC    DS:[SI+8E8DH],CX
+      ADC    DS:[DI+8F8EH],CX
+      ADC    DS:[BP+908FH],CX
+      ADC    DS:[BX+9190H],CX
+      ADC    DS:[BX+SI+9291H],DX
+      ADC    DS:[BX+DI+9392H],DX
+      ADC    DS:[BP+SI+9493H],DX
+      ADC    DS:[BP+DI+9594H],DX
+      ADC    DS:[SI+9695H],DX
+      ADC    DS:[DI+9796H],DX
+      ADC    DS:[BP+9897H],DX
+      ADC    DS:[BX+9998H],DX
+      ADC    DS:[BX+SI+9A99H],BX
+      ADC    DS:[BX+DI+9B9AH],BX
+      ADC    DS:[BP+SI+9C9BH],BX
+      ADC    DS:[BP+DI+9D9CH],BX
+      ADC    DS:[SI+9E9DH],BX
+      ADC    DS:[DI+9F9EH],BX
+      ADC    DS:[BP+0A09FH],BX
+      ADC    DS:[BX+0A1A0H],BX
+      ADC    DS:[BX+SI+0A2A1H],SP
+      ADC    DS:[BX+DI+0A3A2H],SP
+      ADC    DS:[BP+SI+0A4A3H],SP
+      ADC    DS:[BP+DI+0A5A4H],SP
+      ADC    DS:[SI+0A6A5H],SP
+      ADC    DS:[DI+0A7A6H],SP
+      ADC    DS:[BP+0A8A7H],SP
+      ADC    DS:[BX+0A9A8H],SP
+      ADC    DS:[BX+SI+0AAA9H],BP
+      ADC    DS:[BX+DI+0ABAAH],BP
+      ADC    DS:[BP+SI+0ACABH],BP
+      ADC    DS:[BP+DI+0ADACH],BP
+      ADC    DS:[SI+0AEADH],BP
+      ADC    DS:[DI+0AFAEH],BP
+      ADC    DS:[BP+0B0AFH],BP
+      ADC    DS:[BX+0B1B0H],BP
+      ADC    DS:[BX+SI+0B2B1H],SI
+      ADC    DS:[BX+DI+0B3B2H],SI
+      ADC    DS:[BP+SI+0B4B3H],SI
+      ADC    DS:[BP+DI+0B5B4H],SI
+      ADC    DS:[SI+0B6B5H],SI
+      ADC    DS:[DI+0B7B6H],SI
+      ADC    DS:[BP+0B8B7H],SI
+      ADC    DS:[BX+0B9B8H],SI
+      ADC    DS:[BX+SI+0BAB9H],DI
+      ADC    DS:[BX+DI+0BBBAH],DI
+      ADC    DS:[BP+SI+0BCBBH],DI
+      ADC    DS:[BP+DI+0BDBCH],DI
+      ADC    DS:[SI+0BEBDH],DI
+      ADC    DS:[DI+0BFBEH],DI
+      ADC    DS:[BP+0C0BFH],DI
+      ADC    DS:[BX+0C1C0H],DI
+      ADC    DS:[BX+SI],AX
+      ADC    DS:[BX+DI],AX
+      ADC    DS:[BP+SI],AX
+      ADC    DS:[BP+DI],AX
+      ADC    DS:[SI],AX
+      ADC    DS:[DI],AX
+      ADC    DS:[0807H],AX
+      ADC    DS:[BX],AX
+      ADC    DS:[BX+SI],CX
+      ADC    DS:[BX+DI],CX
+      ADC    DS:[BP+SI],CX
+      ADC    DS:[BP+DI],CX
+      ADC    DS:[SI],CX
+      ADC    DS:[DI],CX
+      ADC    DS:[100FH],CX
+      ADC    DS:[BX],CX
+      ADC    DS:[BX+SI],DX
+      ADC    DS:[BX+DI],DX
+      ADC    DL,DS:[BP+DI]
+      ADC    DL,DS:[SI]
+      ADC    DL,DS:[DI]
+      ADC    DL,DS:[1817H]
+      ADC    DL,DS:[BX]
+      ADC    BL,DS:[BX+SI]
+      ADC    BL,DS:[BX+DI]
+      ADC    BL,DS:[BP+SI]
+      ADC    BL,DS:[BP+DI]
+      ADC    BL,DS:[SI]
+      ADC    BL,DS:[DI]
+      ADC    BL,DS:[201FH]
+      ADC    BL,DS:[BX]
+      ADC    AH,DS:[BX+SI]
+      ADC    AH,DS:[BX+DI]
+      ADC    AH,DS:[BP+SI]
+      ADC    AH,DS:[BP+DI]
+      ADC    AH,DS:[SI]
+      ADC    AH,DS:[DI]
+      ADC    AH,DS:[2827H]
+      ADC    AH,DS:[BX]
+      ADC    DX,DS:[SI]
+      ADC    DX,DS:[DI]
+      ADC    DX,DS:[1817H]
+      ADC    DX,DS:[BX]
+      ADC    BX,DS:[BX+SI]
+      ADC    BX,DS:[BX+DI]
+      ADC    BX,DS:[BP+SI]
+      ADC    BX,DS:[BP+DI]
+      ADC    BX,DS:[SI]
+      ADC    BX,DS:[DI]
+      ADC    BX,DS:[201FH]
+      ADC    BX,DS:[BX]
+      ADC    SP,DS:[BX+SI]
+      ADC    SP,DS:[BX+DI]
+      ADC    SP,DS:[BP+SI]
+      ADC    SP,DS:[BP+DI]
+      ADC    SP,DS:[SI]
+      ADC    SP,DS:[DI]
+      ADC    SP,DS:[2827H]
+      ADC    SP,DS:[BX]
+      ADC    BP,DS:[BX+SI]
+      ADC    BP,DS:[BX+DI]
+      ADC    BP,DS:[BP+SI]
+      ADC    BP,DS:[BP+DI]
+      ADC    BP,DS:[SI]
+      ADC    BP,DS:[DI]
+      ADC    BP,DS:[302FH]
+      ADC    BP,DS:[BX]
+      ADC    SI,DS:[BX+SI]
+      ADC    SI,DS:[BX+DI]
+      ADC    SI,DS:[BP+SI]
+      ADC    SI,DS:[BP+DI]
+      ADC    SI,DS:[SI]
+      ADC    SI,DS:[DI]
+      ADC    SI,DS:[3837H]
+      ADC    SI,DS:[BX]
+      ADC    DI,DS:[BX+SI]
+      ADC    DI,DS:[BX+DI]
+      ADC    DI,DS:[BP+SI]
+      ADC    DI,DS:[BP+DI]
+      ADC    DI,DS:[SI]
+      ADC    DI,DS:[DI]
+      ADC    DI,DS:[403FH]
+      ADC    DI,DS:[BX]
+      ADC    AX,DS:[BX+SI+65]
+      ADC    AX,DS:[BX+SI-128]
+      ADC    AX,DS:[BX+DI+66]
+      ADC    AX,DS:[BX+DI-128]
+      ADC    AX,DS:[BP+SI+67]
+      ADC    AX,DS:[BP+SI-128]
+      ADC    AX,DS:[BP+DI+68]
+      ADC    AX,DS:[BP+DI-128]
+      ADC    AX,DS:[SI+69]
+      ADC    AX,DS:[SI-128]
+      ADC    AX,DS:[DI+70]
+      ADC    AX,DS:[DI-128]
+      ADC    AX,DS:[BP+71]
+      ADC    AX,DS:[BP-128]
+      ADC    AX,DS:[BX+72]
+      ADC    AX,DS:[BX-128]
+      ADC    CX,DS:[BX+SI+73]
+      ADC    CX,DS:[BX+SI-128]
+      ADC    CX,DS:[BX+DI+74]
+      ADC    CX,DS:[BX+DI-128]
+      ADC    CX,DS:[BP+SI+75]
+      ADC    CX,DS:[BP+SI-128]
+      ADC    CX,DS:[BP+DI+76]
+      ADC    CX,DS:[BP+DI-128]
+      ADC    CX,DS:[SI+77]
+      ADC    CX,DS:[SI-128]
+      ADC    CX,DS:[DI+78]
+      ADC    CX,DS:[DI-128]
+      ADC    CX,DS:[BP+79]
+      ADC    CX,DS:[BP-128]
+      ADC    CX,DS:[BX+80]
+      ADC    CX,DS:[BX-128]
+      ADC    DX,DS:[BX+SI+81]
+      ADC    DX,DS:[BX+SI-128]
+      ADC    DX,DS:[BX+DI+82]
+      ADC    DX,DS:[BX+DI-128]
+      ADC    DX,DS:[BP+SI+83]
+      ADC    DX,DS:[BP+SI-128]
+      ADC    DX,DS:[BP+DI+84]
+      ADC    DX,DS:[BP+DI-128]
+      ADC    DX,DS:[SI+85]
+      ADC    DX,DS:[SI-128]
+      ADC    DX,DS:[DI+86]
+      ADC    DX,DS:[DI-128]
+      ADC    DX,DS:[BP+87]
+      ADC    DX,DS:[BP-128]
+      ADC    DX,DS:[BX+88]
+      ADC    DX,DS:[BX-128]
+      ADC    BX,DS:[BX+SI+89]
+      ADC    BX,DS:[BX+SI-128]
+      ADC    BX,DS:[BX+DI+90]
+      ADC    BX,DS:[BX+DI-128]
+      ADC    BX,DS:[BP+SI+91]
+      ADC    BX,DS:[BP+SI-128]
+      ADC    BX,DS:[BP+DI+92]
+      ADC    BX,DS:[BP+DI-128]
+      ADC    BX,DS:[SI+93]
+      ADC    BX,DS:[SI-128]
+      ADC    BX,DS:[DI+94]
+      ADC    BX,DS:[DI-128]
+      ADC    BX,DS:[BP+95]
+      ADC    BX,DS:[BP-128]
+      ADC    BX,DS:[BX+96]
+      ADC    BX,DS:[BX-128]
+      ADC    SP,DS:[BX+SI+97]
+      ADC    SP,DS:[BX+SI-128]
+      ADC    SP,DS:[BX+DI+98]
+      ADC    SP,DS:[BX+DI-128]
+      ADC    SP,DS:[BP+SI+99]
+      ADC    SP,DS:[BP+SI-128]
+      ADC    SP,DS:[BP+DI+100]
+      ADC    SP,DS:[BP+DI-128]
+      ADC    SP,DS:[SI+101]
+      ADC    SP,DS:[SI-128]
+      ADC    SP,DS:[DI+102]
+      ADC    SP,DS:[DI-128]
+      ADC    SP,DS:[BP+103]
+      ADC    SP,DS:[BP-128]
+      ADC    SP,DS:[BX+104]
+      ADC    SP,DS:[BX-128]
+      ADC    BP,DS:[BX+SI+105]
+      ADC    BP,DS:[BX+SI-128]
+      ADC    BP,DS:[BX+DI+106]
+      ADC    BP,DS:[BX+DI-128]
+      ADC    BP,DS:[BP+SI+107]
+      ADC    BP,DS:[BP+SI-128]
+      ADC    BP,DS:[BP+DI+108]
+      ADC    BP,DS:[BP+DI-128]
+      ADC    BP,DS:[SI+109]
+      ADC    BP,DS:[SI-128]
+      ADC    BP,DS:[DI+110]
+      ADC    BP,DS:[DI-128]
+      ADC    BP,DS:[BP+111]
+      ADC    BP,DS:[BP-128]
+      ADC    BP,DS:[BX+112]
+      ADC    BP,DS:[BX-128]
+      ADC    SI,DS:[BX+SI+113]
+      ADC    SI,DS:[BX+SI-128]
+      ADC    SI,DS:[BX+DI+114]
+      ADC    SI,DS:[BX+DI-128]
+      ADC    SI,DS:[BP+SI+115]
+      ADC    SI,DS:[BP+SI-128]
+      ADC    SI,DS:[BP+DI+116]
+      ADC    SI,DS:[BP+DI-128]
+      ADC    SI,DS:[SI+117]
+      ADC    SI,DS:[SI-128]
+      ADC    SI,DS:[DI+118]
+      ADC    SI,DS:[DI-128]
+      ADC    SI,DS:[BP+119]
+      ADC    SI,DS:[BP-128]
+      ADC    SI,DS:[BX+120]
+      ADC    SI,DS:[BX-128]
+      ADC    DI,DS:[BX+SI+121]
+      ADC    DI,DS:[BX+SI-128]
+      ADC    DI,DS:[BX+DI+122]
+      ADC    DI,DS:[BX+DI-128]
+      ADC    DI,DS:[BP+SI+123]
+      ADC    DI,DS:[BP+SI-128]
+      ADC    DI,DS:[BP+DI+124]
+      ADC    DI,DS:[BP+DI-128]
+      ADC    DI,DS:[SI+125]
+      ADC    DI,DS:[SI-128]
+      ADC    DI,DS:[DI+126]
+      ADC    DI,DS:[DI-128]
+      ADC    DI,DS:[BP+127]
+      ADC    DI,DS:[BP-128]
+      ADC    DI,DS:[BX-128]
+      ADC    DI,DS:[BX+0]
+      ADC    AX,DS:[BX+SI+8281H]
+      ADC    AX,DS:[BX+DI+8382H]
+      ADC    AX,DS:[BP+SI+8483H]
+      ADC    AX,DS:[BP+DI+8584H]
+      ADC    AX,DS:[SI+8685H]
+      ADC    AX,DS:[DI+8786H]
+      ADC    AX,DS:[BP+8887H]
+      ADC    AX,DS:[BX+8988H]
+      ADC    CX,DS:[BX+SI+8A89H]
+      ADC    CX,DS:[BX+DI+8B8AH]
+      ADC    CX,DS:[BP+SI+8C8BH]
+      ADC    CX,DS:[BP+DI+8D8CH]
+      ADC    CX,DS:[SI+8E8DH]
+      ADC    CX,DS:[DI+8F8EH]
+      ADC    CX,DS:[BP+908FH]
+      ADC    CX,DS:[BX+9190H]
+      ADC    DX,DS:[BX+SI+9291H]
+      ADC    DX,DS:[BX+DI+9392H]
+      ADC    DX,DS:[BP+SI+9493H]
+      ADC    DX,DS:[BP+DI+9594H]
+      ADC    DX,DS:[SI+9695H]
+      ADC    DX,DS:[DI+9796H]
+      ADC    DX,DS:[BP+9897H]
+      ADC    DX,DS:[BX+9998H]
+      ADC    BX,DS:[BX+SI+9A99H]
+      ADC    BX,DS:[BX+DI+9B9AH]
+      ADC    BX,DS:[BP+SI+9C9BH]
+      ADC    BX,DS:[BP+DI+9D9CH]
+      ADC    BX,DS:[SI+9E9DH]
+      ADC    BX,DS:[DI+9F9EH]
+      ADC    BX,DS:[BP+0A09FH]
+      ADC    BX,DS:[BX+0A1A0H]
+      ADC    SP,DS:[BX+SI+0A2A1H]
+      ADC    SP,DS:[BX+DI+0A3A2H]
+      ADC    SP,DS:[BP+SI+0A4A3H]
+      ADC    SP,DS:[BP+DI+0A5A4H]
+      ADC    SP,DS:[SI+0A6A5H]
+      ADC    SP,DS:[DI+0A7A6H]
+      ADC    SP,DS:[BP+0A8A7H]
+      ADC    SP,DS:[BX+0A9A8H]
+      ADC    BP,DS:[BX+SI+0AAA9H]
+      ADC    BP,DS:[BX+DI+0ABAAH]
+      ADC    BP,DS:[BP+SI+0ACABH]
+      ADC    BP,DS:[BP+DI+0ADACH]
+      ADC    BP,DS:[SI+0AEADH]
+      ADC    BP,DS:[DI+0AFAEH]
+      ADC    BP,DS:[BP+0B0AFH]
+      ADC    BP,DS:[BX+0B1B0H]
+      ADC    SI,DS:[BX+SI+0B2B1H]
+      ADC    SI,DS:[BX+DI+0B3B2H]
+      ADC    SI,DS:[BP+SI+0B4B3H]
+      ADC    SI,DS:[BP+DI+0B5B4H]
+      ADC    SI,DS:[SI+0B6B5H]
+      ADC    SI,DS:[DI+0B7B6H]
+      ADC    SI,DS:[BP+0B8B7H]
+      ADC    SI,DS:[BX+0B9B8H]
+      ADC    DI,DS:[BX+SI+0BAB9H]
+      ADC    DI,DS:[BX+DI+0BBBAH]
+      ADC    DI,DS:[BP+SI+0BCBBH]
+      ADC    DI,DS:[BP+DI+0BDBCH]
+      ADC    DI,DS:[SI+0BEBDH]
+      ADC    DI,DS:[DI+0BFBEH]
+      ADC    DI,DS:[BP+0C0BFH]
+      ADC    DI,DS:[BX+0C1C0H]
+      ADC    AX,DS:[BX+SI]
+      ADC    AX,DS:[BX+DI]
+      ADC    AX,DS:[BP+SI]
+      ADC    AX,DS:[BP+DI]
+      ADC    AX,DS:[SI]
+      ADC    AX,DS:[DI]
+      ADC    AX,DS:[0807H]
+      ADC    AX,DS:[BX]
+      ADC    CX,DS:[BX+SI]
+      ADC    CX,DS:[BX+DI]
+      ADC    CX,DS:[BP+SI]
+      ADC    CX,DS:[BP+DI]
+      ADC    CX,DS:[SI]
+      ADC    CX,DS:[DI]
+      ADC    CX,DS:[100FH]
+      ADC    CX,DS:[BX]
+      ADC    DX,DS:[BX+SI]
+      ADC    DX,DS:[BX+DI]
+      ADC    DX,DS:[BP+SI]
+      ADC    DX,DS:[BP+DI]
+      SBB    DS:[BX+DI],BL
+      SBB    DS:[BP+SI],BL
+      SBB    DS:[BP+DI],BL
+      SBB    DS:[SI],BL
+      SBB    DS:[DI],BL
+      SBB    DS:[201FH],BL
+      SBB    DS:[BX],BL
+      SBB    DS:[BX+SI],AH
+      SBB    DS:[BX+DI],AH
+      SBB    DS:[BP+SI],AH
+      SBB    DS:[BP+DI],AH
+      SBB    DS:[SI],AH
+      SBB    DS:[DI],AH
+      SBB    DS:[2827H],AH
+      SBB    DS:[BX],AH
+      SBB    DS:[BP+SI],BX
+      SBB    DS:[BP+DI],BX
+      SBB    DS:[SI],BX
+      SBB    DS:[DI],BX
+      SBB    DS:[201FH],BX
+      SBB    DS:[BX],BX
+      SBB    DS:[BX+SI],SP
+      SBB    DS:[BX+DI],SP
+      SBB    DS:[BP+SI],SP
+      SBB    DS:[BP+DI],SP
+      SBB    DS:[SI],SP
+      SBB    DS:[DI],SP
+      SBB    DS:[2827H],SP
+      SBB    DS:[BX],SP
+      SBB    DS:[BX+SI],BP
+      SBB    DS:[BX+DI],BP
+      SBB    DS:[BP+SI],BP
+      SBB    DS:[BP+DI],BP
+      SBB    DS:[SI],BP
+      SBB    DS:[DI],BP
+      SBB    DS:[302FH],BP
+      SBB    DS:[BX],BP
+      SBB    DS:[BX+SI],SI
+      SBB    DS:[BX+DI],SI
+      SBB    DS:[BP+SI],SI
+      SBB    DS:[BP+DI],SI
+      SBB    DS:[SI],SI
+      SBB    DS:[DI],SI
+      SBB    DS:[3837H],SI
+      SBB    DS:[BX],SI
+      SBB    DS:[BX+SI],DI
+      SBB    DS:[BX+DI],DI
+      SBB    DS:[BP+SI],DI
+      SBB    DS:[BP+DI],DI
+      SBB    DS:[SI],DI
+      SBB    DS:[DI],DI
+      SBB    DS:[403FH],DI
+      SBB    DS:[BX],DI
+      SBB    DS:[BX+SI+65],AX
+      SBB    DS:[BX+SI-128],AX
+      SBB    DS:[BX+DI+66],AX
+      SBB    DS:[BX+DI-128],AX
+      SBB    DS:[BP+SI+67],AX
+      SBB    DS:[BP+SI-128],AX
+      SBB    DS:[BP+DI+68],AX
+      SBB    DS:[BP+DI-128],AX
+      SBB    DS:[SI+69],AX
+      SBB    DS:[SI-128],AX
+      SBB    DS:[DI+70],AX
+      SBB    DS:[DI-128],AX
+      SBB    DS:[BP+71],AX
+      SBB    DS:[BP-128],AX
+      SBB    DS:[BX+72],AX
+      SBB    DS:[BX-128],AX
+      SBB    DS:[BX+SI+73],CX
+      SBB    DS:[BX+SI-128],CX
+      SBB    DS:[BX+DI+74],CX
+      SBB    DS:[BX+DI-128],CX
+      SBB    DS:[BP+SI+75],CX
+      SBB    DS:[BP+SI-128],CX
+      SBB    DS:[BP+DI+76],CX
+      SBB    DS:[BP+DI-128],CX
+      SBB    DS:[SI+77],CX
+      SBB    DS:[SI-128],CX
+      SBB    DS:[DI+78],CX
+      SBB    DS:[DI-128],CX
+      SBB    DS:[BP+79],CX
+      SBB    DS:[BP-128],CX
+      SBB    DS:[BX+80],CX
+      SBB    DS:[BX-128],CX
+      SBB    DS:[BX+SI+81],DX
+      SBB    DS:[BX+SI-128],DX
+      SBB    DS:[BX+DI+82],DX
+      SBB    DS:[BX+DI-128],DX
+      SBB    DS:[BP+SI+83],DX
+      SBB    DS:[BP+SI-128],DX
+      SBB    DS:[BP+DI+84],DX
+      SBB    DS:[BP+DI-128],DX
+      SBB    DS:[SI+85],DX
+      SBB    DS:[SI-128],DX
+      SBB    DS:[DI+86],DX
+      SBB    DS:[DI-128],DX
+      SBB    DS:[BP+87],DX
+      SBB    DS:[BP-128],DX
+      SBB    DS:[BX+88],DX
+      SBB    DS:[BX-128],DX
+      SBB    DS:[BX+SI+89],BX
+      SBB    DS:[BX+SI-128],BX
+      SBB    DS:[BX+DI+90],BX
+      SBB    DS:[BX+DI-128],BX
+      SBB    DS:[BP+SI+91],BX
+      SBB    DS:[BP+SI-128],BX
+      SBB    DS:[BP+DI+92],BX
+      SBB    DS:[BP+DI-128],BX
+      SBB    DS:[SI+93],BX
+      SBB    DS:[SI-128],BX
+      SBB    DS:[DI+94],BX
+      SBB    DS:[DI-128],BX
+      SBB    DS:[BP+95],BX
+      SBB    DS:[BP-128],BX
+      SBB    DS:[BX+96],BX
+      SBB    DS:[BX-128],BX
+      SBB    DS:[BX+SI+97],SP
+      SBB    DS:[BX+SI-128],SP
+      SBB    DS:[BX+DI+98],SP
+      SBB    DS:[BX+DI-128],SP
+      SBB    DS:[BP+SI+99],SP
+      SBB    DS:[BP+SI-128],SP
+      SBB    DS:[BP+DI+100],SP
+      SBB    DS:[BP+DI-128],SP
+      SBB    DS:[SI+101],SP
+      SBB    DS:[SI-128],SP
+      SBB    DS:[DI+102],SP
+      SBB    DS:[DI-128],SP
+      SBB    DS:[BP+103],SP
+      SBB    DS:[BP-128],SP
+      SBB    DS:[BX+104],SP
+      SBB    DS:[BX-128],SP
+      SBB    DS:[BX+SI+105],BP
+      SBB    DS:[BX+SI-128],BP
+      SBB    DS:[BX+DI+106],BP
+      SBB    DS:[BX+DI-128],BP
+      SBB    DS:[BP+SI+107],BP
+      SBB    DS:[BP+SI-128],BP
+      SBB    DS:[BP+DI+108],BP
+      SBB    DS:[BP+DI-128],BP
+      SBB    DS:[SI+109],BP
+      SBB    DS:[SI-128],BP
+      SBB    DS:[DI+110],BP
+      SBB    DS:[DI-128],BP
+      SBB    DS:[BP+111],BP
+      SBB    DS:[BP-128],BP
+      SBB    DS:[BX+112],BP
+      SBB    DS:[BX-128],BP
+      SBB    DS:[BX+SI+113],SI
+      SBB    DS:[BX+SI-128],SI
+      SBB    DS:[BX+DI+114],SI
+      SBB    DS:[BX+DI-128],SI
+      SBB    DS:[BP+SI+115],SI
+      SBB    DS:[BP+SI-128],SI
+      SBB    DS:[BP+DI+116],SI
+      SBB    DS:[BP+DI-128],SI
+      SBB    DS:[SI+117],SI
+      SBB    DS:[SI-128],SI
+      SBB    DS:[DI+118],SI
+      SBB    DS:[DI-128],SI
+      SBB    DS:[BP+119],SI
+      SBB    DS:[BP-128],SI
+      SBB    DS:[BX+120],SI
+      SBB    DS:[BX-128],SI
+      SBB    DS:[BX+SI+121],DI
+      SBB    DS:[BX+SI-128],DI
+      SBB    DS:[BX+DI+122],DI
+      SBB    DS:[BX+DI-128],DI
+      SBB    DS:[BP+SI+123],DI
+      SBB    DS:[BP+SI-128],DI
+      SBB    DS:[BP+DI+124],DI
+      SBB    DS:[BP+DI-128],DI
+      SBB    DS:[SI+125],DI
+      SBB    DS:[SI-128],DI
+      SBB    DS:[DI+126],DI
+      SBB    DS:[DI-128],DI
+      SBB    DS:[BP+127],DI
+      SBB    DS:[BP-128],DI
+      SBB    DS:[BX-128],DI
+      SBB    DS:[BX+0],DI
+      SBB    DS:[BX+SI+8281H],AX
+      SBB    DS:[BX+DI+8382H],AX
+      SBB    DS:[BP+SI+8483H],AX
+      SBB    DS:[BP+DI+8584H],AX
+      SBB    DS:[SI+8685H],AX
+      SBB    DS:[DI+8786H],AX
+      SBB    DS:[BP+8887H],AX
+      SBB    DS:[BX+8988H],AX
+      SBB    DS:[BX+SI+8A89H],CX
+      SBB    DS:[BX+DI+8B8AH],CX
+      SBB    DS:[BP+SI+8C8BH],CX
+      SBB    DS:[BP+DI+8D8CH],CX
+      SBB    DS:[SI+8E8DH],CX
+      SBB    DS:[DI+8F8EH],CX
+      SBB    DS:[BP+908FH],CX
+      SBB    DS:[BX+9190H],CX
+      SBB    DS:[BX+SI+9291H],DX
+      SBB    DS:[BX+DI+9392H],DX
+      SBB    DS:[BP+SI+9493H],DX
+      SBB    DS:[BP+DI+9594H],DX
+      SBB    DS:[SI+9695H],DX
+      SBB    DS:[DI+9796H],DX
+      SBB    DS:[BP+9897H],DX
+      SBB    DS:[BX+9998H],DX
+      SBB    DS:[BX+SI+9A99H],BX
+      SBB    DS:[BX+DI+9B9AH],BX
+      SBB    DS:[BP+SI+9C9BH],BX
+      SBB    DS:[BP+DI+9D9CH],BX
+      SBB    DS:[SI+9E9DH],BX
+      SBB    DS:[DI+9F9EH],BX
+      SBB    DS:[BP+0A09FH],BX
+      SBB    DS:[BX+0A1A0H],BX
+      SBB    DS:[BX+SI+0A2A1H],SP
+      SBB    DS:[BX+DI+0A3A2H],SP
+      SBB    DS:[BP+SI+0A4A3H],SP
+      SBB    DS:[BP+DI+0A5A4H],SP
+      SBB    DS:[SI+0A6A5H],SP
+      SBB    DS:[DI+0A7A6H],SP
+      SBB    DS:[BP+0A8A7H],SP
+      SBB    DS:[BX+0A9A8H],SP
+      SBB    DS:[BX+SI+0AAA9H],BP
+      SBB    DS:[BX+DI+0ABAAH],BP
+      SBB    DS:[BP+SI+0ACABH],BP
+      SBB    DS:[BP+DI+0ADACH],BP
+      SBB    DS:[SI+0AEADH],BP
+      SBB    DS:[DI+0AFAEH],BP
+      SBB    DS:[BP+0B0AFH],BP
+      SBB    DS:[BX+0B1B0H],BP
+      SBB    DS:[BX+SI+0B2B1H],SI
+      SBB    DS:[BX+DI+0B3B2H],SI
+      SBB    DS:[BP+SI+0B4B3H],SI
+      SBB    DS:[BP+DI+0B5B4H],SI
+      SBB    DS:[SI+0B6B5H],SI
+      SBB    DS:[DI+0B7B6H],SI
+      SBB    DS:[BP+0B8B7H],SI
+      SBB    DS:[BX+0B9B8H],SI
+      SBB    DS:[BX+SI+0BAB9H],DI
+      SBB    DS:[BX+DI+0BBBAH],DI
+      SBB    DS:[BP+SI+0BCBBH],DI
+      SBB    DS:[BP+DI+0BDBCH],DI
+      SBB    DS:[SI+0BEBDH],DI
+      SBB    DS:[DI+0BFBEH],DI
+      SBB    DS:[BP+0C0BFH],DI
+      SBB    DS:[BX+0C1C0H],DI
+      SBB    DS:[BX+SI],AX
+      SBB    DS:[BX+DI],AX
+      SBB    DS:[BP+SI],AX
+      SBB    DS:[BP+DI],AX
+      SBB    DS:[SI],AX
+      SBB    DS:[DI],AX
+      SBB    DS:[0807H],AX
+      SBB    DS:[BX],AX
+      SBB    DS:[BX+SI],CX
+      SBB    DS:[BX+DI],CX
+      SBB    DS:[BP+SI],CX
+      SBB    DS:[BP+DI],CX
+      SBB    DS:[SI],CX
+      SBB    DS:[DI],CX
+      SBB    DS:[100FH],CX
+      SBB    DS:[BX],CX
+      SBB    DS:[BX+SI],DX
+      SBB    DS:[BX+DI],DX
+      SBB    DS:[BP+SI],DX
+      SBB    DS:[BP+DI],DX
+      SBB    DS:[SI],DX
+      SBB    DS:[DI],DX
+      SBB    DS:[1817H],DX
+      SBB    DS:[BX],DX
+      SBB    DS:[BX+SI],BX
+      SBB    DS:[BX+DI],BX
+      SBB    BL,DS:[BP+DI]
+      SBB    BL,DS:[SI]
+      SBB    BL,DS:[DI]
+      SBB    BL,DS:[201FH]
+      SBB    BL,DS:[BX]
+      SBB    AH,DS:[BX+SI]
+      SBB    AH,DS:[BX+DI]
+      SBB    AH,DS:[BP+SI]
+      SBB    AH,DS:[BP+DI]
+      SBB    AH,DS:[SI]
+      SBB    AH,DS:[DI]
+      SBB    AH,DS:[2827H]
+      SBB    AH,DS:[BX]
+      SBB    BX,DS:[SI]
+      SBB    BX,DS:[DI]
+      SBB    BX,DS:[201FH]
+      SBB    BX,DS:[BX]
+      SBB    SP,DS:[BX+SI]
+      SBB    SP,DS:[BX+DI]
+      SBB    SP,DS:[BP+SI]
+      SBB    SP,DS:[BP+DI]
+      SBB    SP,DS:[SI]
+      SBB    SP,DS:[DI]
+      SBB    SP,DS:[2827H]
+      SBB    SP,DS:[BX]
+      SBB    BP,DS:[BX+SI]
+      SBB    BP,DS:[BX+DI]
+      SBB    BP,DS:[BP+SI]
+      SBB    BP,DS:[BP+DI]
+      SBB    BP,DS:[SI]
+      SBB    BP,DS:[DI]
+      SBB    BP,DS:[302FH]
+      SBB    BP,DS:[BX]
+      SBB    SI,DS:[BX+SI]
+      SBB    SI,DS:[BX+DI]
+      SBB    SI,DS:[BP+SI]
+      SBB    SI,DS:[BP+DI]
+      SBB    SI,DS:[SI]
+      SBB    SI,DS:[DI]
+      SBB    SI,DS:[3837H]
+      SBB    SI,DS:[BX]
+      SBB    DI,DS:[BX+SI]
+      SBB    DI,DS:[BX+DI]
+      SBB    DI,DS:[BP+SI]
+      SBB    DI,DS:[BP+DI]
+      SBB    DI,DS:[SI]
+      SBB    DI,DS:[DI]
+      SBB    DI,DS:[403FH]
+      SBB    DI,DS:[BX]
+      SBB    AX,DS:[BX+SI+65]
+      SBB    AX,DS:[BX+SI-128]
+      SBB    AX,DS:[BX+DI+66]
+      SBB    AX,DS:[BX+DI-128]
+      SBB    AX,DS:[BP+SI+67]
+      SBB    AX,DS:[BP+SI-128]
+      SBB    AX,DS:[BP+DI+68]
+      SBB    AX,DS:[BP+DI-128]
+      SBB    AX,DS:[SI+69]
+      SBB    AX,DS:[SI-128]
+      SBB    AX,DS:[DI+70]
+      SBB    AX,DS:[DI-128]
+      SBB    AX,DS:[BP+71]
+      SBB    AX,DS:[BP-128]
+      SBB    AX,DS:[BX+72]
+      SBB    AX,DS:[BX-128]
+      SBB    CX,DS:[BX+SI+73]
+      SBB    CX,DS:[BX+SI-128]
+      SBB    CX,DS:[BX+DI+74]
+      SBB    CX,DS:[BX+DI-128]
+      SBB    CX,DS:[BP+SI+75]
+      SBB    CX,DS:[BP+SI-128]
+      SBB    CX,DS:[BP+DI+76]
+      SBB    CX,DS:[BP+DI-128]
+      SBB    CX,DS:[SI+77]
+      SBB    CX,DS:[SI-128]
+      SBB    CX,DS:[DI+78]
+      SBB    CX,DS:[DI-128]
+      SBB    CX,DS:[BP+79]
+      SBB    CX,DS:[BP-128]
+      SBB    CX,DS:[BX+80]
+      SBB    CX,DS:[BX-128]
+      SBB    DX,DS:[BX+SI+81]
+      SBB    DX,DS:[BX+SI-128]
+      SBB    DX,DS:[BX+DI+82]
+      SBB    DX,DS:[BX+DI-128]
+      SBB    DX,DS:[BP+SI+83]
+      SBB    DX,DS:[BP+SI-128]
+      SBB    DX,DS:[BP+DI+84]
+      SBB    DX,DS:[BP+DI-128]
+      SBB    DX,DS:[SI+85]
+      SBB    DX,DS:[SI-128]
+      SBB    DX,DS:[DI+86]
+      SBB    DX,DS:[DI-128]
+      SBB    DX,DS:[BP+87]
+      SBB    DX,DS:[BP-128]
+      SBB    DX,DS:[BX+88]
+      SBB    DX,DS:[BX-128]
+      SBB    BX,DS:[BX+SI+89]
+      SBB    BX,DS:[BX+SI-128]
+      SBB    BX,DS:[BX+DI+90]
+      SBB    BX,DS:[BX+DI-128]
+      SBB    BX,DS:[BP+SI+91]
+      SBB    BX,DS:[BP+SI-128]
+      SBB    BX,DS:[BP+DI+92]
+      SBB    BX,DS:[BP+DI-128]
+      SBB    BX,DS:[SI+93]
+      SBB    BX,DS:[SI-128]
+      SBB    BX,DS:[DI+94]
+      SBB    BX,DS:[DI-128]
+      SBB    BX,DS:[BP+95]
+      SBB    BX,DS:[BP-128]
+      SBB    BX,DS:[BX+96]
+      SBB    BX,DS:[BX-128]
+      SBB    SP,DS:[BX+SI+97]
+      SBB    SP,DS:[BX+SI-128]
+      SBB    SP,DS:[BX+DI+98]
+      SBB    SP,DS:[BX+DI-128]
+      SBB    SP,DS:[BP+SI+99]
+      SBB    SP,DS:[BP+SI-128]
+      SBB    SP,DS:[BP+DI+100]
+      SBB    SP,DS:[BP+DI-128]
+      SBB    SP,DS:[SI+101]
+      SBB    SP,DS:[SI-128]
+      SBB    SP,DS:[DI+102]
+      SBB    SP,DS:[DI-128]
+      SBB    SP,DS:[BP+103]
+      SBB    SP,DS:[BP-128]
+      SBB    SP,DS:[BX+104]
+      SBB    SP,DS:[BX-128]
+      SBB    BP,DS:[BX+SI+105]
+      SBB    BP,DS:[BX+SI-128]
+      SBB    BP,DS:[BX+DI+106]
+      SBB    BP,DS:[BX+DI-128]
+      SBB    BP,DS:[BP+SI+107]
+      SBB    BP,DS:[BP+SI-128]
+      SBB    BP,DS:[BP+DI+108]
+      SBB    BP,DS:[BP+DI-128]
+      SBB    BP,DS:[SI+109]
+      SBB    BP,DS:[SI-128]
+      SBB    BP,DS:[DI+110]
+      SBB    BP,DS:[DI-128]
+      SBB    BP,DS:[BP+111]
+      SBB    BP,DS:[BP-128]
+      SBB    BP,DS:[BX+112]
+      SBB    BP,DS:[BX-128]
+      SBB    SI,DS:[BX+SI+113]
+      SBB    SI,DS:[BX+SI-128]
+      SBB    SI,DS:[BX+DI+114]
+      SBB    SI,DS:[BX+DI-128]
+      SBB    SI,DS:[BP+SI+115]
+      SBB    SI,DS:[BP+SI-128]
+      SBB    SI,DS:[BP+DI+116]
+      SBB    SI,DS:[BP+DI-128]
+      SBB    SI,DS:[SI+117]
+      SBB    SI,DS:[SI-128]
+      SBB    SI,DS:[DI+118]
+      SBB    SI,DS:[DI-128]
+      SBB    SI,DS:[BP+119]
+      SBB    SI,DS:[BP-128]
+      SBB    SI,DS:[BX+120]
+      SBB    SI,DS:[BX-128]
+      SBB    DI,DS:[BX+SI+121]
+      SBB    DI,DS:[BX+SI-128]
+      SBB    DI,DS:[BX+DI+122]
+      SBB    DI,DS:[BX+DI-128]
+      SBB    DI,DS:[BP+SI+123]
+      SBB    DI,DS:[BP+SI-128]
+      SBB    DI,DS:[BP+DI+124]
+      SBB    DI,DS:[BP+DI-128]
+      SBB    DI,DS:[SI+125]
+      SBB    DI,DS:[SI-128]
+      SBB    DI,DS:[DI+126]
+      SBB    DI,DS:[DI-128]
+      SBB    DI,DS:[BP+127]
+      SBB    DI,DS:[BP-128]
+      SBB    DI,DS:[BX-128]
+      SBB    DI,DS:[BX+0]
+      SBB    AX,DS:[BX+SI+8281H]
+      SBB    AX,DS:[BX+DI+8382H]
+      SBB    AX,DS:[BP+SI+8483H]
+      SBB    AX,DS:[BP+DI+8584H]
+      SBB    AX,DS:[SI+8685H]
+      SBB    AX,DS:[DI+8786H]
+      SBB    AX,DS:[BP+8887H]
+      SBB    AX,DS:[BX+8988H]
+      SBB    CX,DS:[BX+SI+8A89H]
+      SBB    CX,DS:[BX+DI+8B8AH]
+      SBB    CX,DS:[BP+SI+8C8BH]
+      SBB    CX,DS:[BP+DI+8D8CH]
+      SBB    CX,DS:[SI+8E8DH]
+      SBB    CX,DS:[DI+8F8EH]
+      SBB    CX,DS:[BP+908FH]
+      SBB    CX,DS:[BX+9190H]
+      SBB    DX,DS:[BX+SI+9291H]
+      SBB    DX,DS:[BX+DI+9392H]
+      SBB    DX,DS:[BP+SI+9493H]
+      SBB    DX,DS:[BP+DI+9594H]
+      SBB    DX,DS:[SI+9695H]
+      SBB    DX,DS:[DI+9796H]
+      SBB    DX,DS:[BP+9897H]
+      SBB    DX,DS:[BX+9998H]
+      SBB    BX,DS:[BX+SI+9A99H]
+      SBB    BX,DS:[BX+DI+9B9AH]
+      SBB    BX,DS:[BP+SI+9C9BH]
+      SBB    BX,DS:[BP+DI+9D9CH]
+      SBB    BX,DS:[SI+9E9DH]
+      SBB    BX,DS:[DI+9F9EH]
+      SBB    BX,DS:[BP+0A09FH]
+      SBB    BX,DS:[BX+0A1A0H]
+      SBB    SP,DS:[BX+SI+0A2A1H]
+      SBB    SP,DS:[BX+DI+0A3A2H]
+      SBB    SP,DS:[BP+SI+0A4A3H]
+      SBB    SP,DS:[BP+DI+0A5A4H]
+      SBB    SP,DS:[SI+0A6A5H]
+      SBB    SP,DS:[DI+0A7A6H]
+      SBB    SP,DS:[BP+0A8A7H]
+      SBB    SP,DS:[BX+0A9A8H]
+      SBB    BP,DS:[BX+SI+0AAA9H]
+      SBB    BP,DS:[BX+DI+0ABAAH]
+      SBB    BP,DS:[BP+SI+0ACABH]
+      SBB    BP,DS:[BP+DI+0ADACH]
+      SBB    BP,DS:[SI+0AEADH]
+      SBB    BP,DS:[DI+0AFAEH]
+      SBB    BP,DS:[BP+0B0AFH]
+      SBB    BP,DS:[BX+0B1B0H]
+      SBB    SI,DS:[BX+SI+0B2B1H]
+      SBB    SI,DS:[BX+DI+0B3B2H]
+      SBB    SI,DS:[BP+SI+0B4B3H]
+      SBB    SI,DS:[BP+DI+0B5B4H]
+      SBB    SI,DS:[SI+0B6B5H]
+      SBB    SI,DS:[DI+0B7B6H]
+      SBB    SI,DS:[BP+0B8B7H]
+      SBB    SI,DS:[BX+0B9B8H]
+      SBB    DI,DS:[BX+SI+0BAB9H]
+      SBB    DI,DS:[BX+DI+0BBBAH]
+      SBB    DI,DS:[BP+SI+0BCBBH]
+      SBB    DI,DS:[BP+DI+0BDBCH]
+      SBB    DI,DS:[SI+0BEBDH]
+      SBB    DI,DS:[DI+0BFBEH]
+      SBB    DI,DS:[BP+0C0BFH]
+      SBB    DI,DS:[BX+0C1C0H]
+      SBB    AX,DS:[BX+SI]
+      SBB    AX,DS:[BX+DI]
+      SBB    AX,DS:[BP+SI]
+      SBB    AX,DS:[BP+DI]
+      SBB    AX,DS:[SI]
+      SBB    AX,DS:[DI]
+      SBB    AX,DS:[0807H]
+      SBB    AX,DS:[BX]
+      SBB    CX,DS:[BX+SI]
+      SBB    CX,DS:[BX+DI]
+      SBB    CX,DS:[BP+SI]
+      SBB    CX,DS:[BP+DI]
+      SBB    CX,DS:[SI]
+      SBB    CX,DS:[DI]
+      SBB    CX,DS:[100FH]
+      SBB    CX,DS:[BX]
+      SBB    DX,DS:[BX+SI]
+      SBB    DX,DS:[BX+DI]
+      SBB    DX,DS:[BP+SI]
+      SBB    DX,DS:[BP+DI]
+      SBB    DX,DS:[SI]
+      SBB    DX,DS:[DI]
+      SBB    DX,DS:[1817H]
+      SBB    DX,DS:[BX]
+      SBB    BX,DS:[BX+SI]
+      SBB    BX,DS:[BX+DI]
+      SBB    BX,DS:[BP+SI]
+      SBB    BX,DS:[BP+DI]
+      AND    DS:[BX+DI],AH
+      AND    DS:[BP+SI],AH
+      AND    DS:[BP+DI],AH
+      AND    DS:[SI],AH
+      AND    DS:[DI],AH
+      AND    DS:[2827H],AH
+      AND    DS:[BX],AH
+      AND    DS:[BX+SI],CH
+      AND    DS:[BP+SI],SP
+      AND    DS:[BP+DI],SP
+      AND    DS:[SI],SP
+      AND    DS:[DI],SP
+      AND    DS:[2827H],SP
+      AND    DS:[BX],SP
+      AND    DS:[BX+SI],BP
+      AND    DS:[BX+DI],BP
+      AND    DS:[BP+SI],BP
+      AND    DS:[BP+DI],BP
+      AND    DS:[SI],BP
+      AND    DS:[DI],BP
+      AND    DS:[302FH],BP
+      AND    DS:[BX],BP
+      AND    DS:[BX+SI],SI
+      AND    DS:[BX+DI],SI
+      AND    DS:[BP+SI],SI
+      AND    DS:[BP+DI],SI
+      AND    DS:[SI],SI
+      AND    DS:[DI],SI
+      AND    DS:[3837H],SI
+      AND    DS:[BX],SI
+      AND    DS:[BX+SI],DI
+      AND    DS:[BX+DI],DI
+      AND    DS:[BP+SI],DI
+      AND    DS:[BP+DI],DI
+      AND    DS:[SI],DI
+      AND    DS:[DI],DI
+      AND    DS:[403FH],DI
+      AND    DS:[BX],DI
+      AND    DS:[BX+SI+65],AX
+      AND    DS:[BX+SI-128],AX
+      AND    DS:[BX+DI+66],AX
+      AND    DS:[BX+DI-128],AX
+      AND    DS:[BP+SI+67],AX
+      AND    DS:[BP+SI-128],AX
+      AND    DS:[BP+DI+68],AX
+      AND    DS:[BP+DI-128],AX
+      AND    DS:[SI+69],AX
+      AND    DS:[SI-128],AX
+      AND    DS:[DI+70],AX
+      AND    DS:[DI-128],AX
+      AND    DS:[BP+71],AX
+      AND    DS:[BP-128],AX
+      AND    DS:[BX+72],AX
+      AND    DS:[BX-128],AX
+      AND    DS:[BX+SI+73],CX
+      AND    DS:[BX+SI-128],CX
+      AND    DS:[BX+DI+74],CX
+      AND    DS:[BX+DI-128],CX
+      AND    DS:[BP+SI+75],CX
+      AND    DS:[BP+SI-128],CX
+      AND    DS:[BP+DI+76],CX
+      AND    DS:[BP+DI-128],CX
+      AND    DS:[SI+77],CX
+      AND    DS:[SI-128],CX
+      AND    DS:[DI+78],CX
+      AND    DS:[DI-128],CX
+      AND    DS:[BP+79],CX
+      AND    DS:[BP-128],CX
+      AND    DS:[BX+80],CX
+      AND    DS:[BX-128],CX
+      AND    DS:[BX+SI+81],DX
+      AND    DS:[BX+SI-128],DX
+      AND    DS:[BX+DI+82],DX
+      AND    DS:[BX+DI-128],DX
+      AND    DS:[BP+SI+83],DX
+      AND    DS:[BP+SI-128],DX
+      AND    DS:[BP+DI+84],DX
+      AND    DS:[BP+DI-128],DX
+      AND    DS:[SI+85],DX
+      AND    DS:[SI-128],DX
+      AND    DS:[DI+86],DX
+      AND    DS:[DI-128],DX
+      AND    DS:[BP+87],DX
+      AND    DS:[BP-128],DX
+      AND    DS:[BX+88],DX
+      AND    DS:[BX-128],DX
+      AND    DS:[BX+SI+89],BX
+      AND    DS:[BX+SI-128],BX
+      AND    DS:[BX+DI+90],BX
+      AND    DS:[BX+DI-128],BX
+      AND    DS:[BP+SI+91],BX
+      AND    DS:[BP+SI-128],BX
+      AND    DS:[BP+DI+92],BX
+      AND    DS:[BP+DI-128],BX
+      AND    DS:[SI+93],BX
+      AND    DS:[SI-128],BX
+      AND    DS:[DI+94],BX
+      AND    DS:[DI-128],BX
+      AND    DS:[BP+95],BX
+      AND    DS:[BP-128],BX
+      AND    DS:[BX+96],BX
+      AND    DS:[BX-128],BX
+      AND    DS:[BX+SI+97],SP
+      AND    DS:[BX+SI-128],SP
+      AND    DS:[BX+DI+98],SP
+      AND    DS:[BX+DI-128],SP
+      AND    DS:[BP+SI+99],SP
+      AND    DS:[BP+SI-128],SP
+      AND    DS:[BP+DI+100],SP
+      AND    DS:[BP+DI-128],SP
+      AND    DS:[SI+101],SP
+      AND    DS:[SI-128],SP
+      AND    DS:[DI+102],SP
+      AND    DS:[DI-128],SP
+      AND    DS:[BP+103],SP
+      AND    DS:[BP-128],SP
+      AND    DS:[BX+104],SP
+      AND    DS:[BX-128],SP
+      AND    DS:[BX+SI+105],BP
+      AND    DS:[BX+SI-128],BP
+      AND    DS:[BX+DI+106],BP
+      AND    DS:[BX+DI-128],BP
+      AND    DS:[BP+SI+107],BP
+      AND    DS:[BP+SI-128],BP
+      AND    DS:[BP+DI+108],BP
+      AND    DS:[BP+DI-128],BP
+      AND    DS:[SI+109],BP
+      AND    DS:[SI-128],BP
+      AND    DS:[DI+110],BP
+      AND    DS:[DI-128],BP
+      AND    DS:[BP+111],BP
+      AND    DS:[BP-128],BP
+      AND    DS:[BX+112],BP
+      AND    DS:[BX-128],BP
+      AND    DS:[BX+SI+113],SI
+      AND    DS:[BX+SI-128],SI
+      AND    DS:[BX+DI+114],SI
+      AND    DS:[BX+DI-128],SI
+      AND    DS:[BP+SI+115],SI
+      AND    DS:[BP+SI-128],SI
+      AND    DS:[BP+DI+116],SI
+      AND    DS:[BP+DI-128],SI
+      AND    DS:[SI+117],SI
+      AND    DS:[SI-128],SI
+      AND    DS:[DI+118],SI
+      AND    DS:[DI-128],SI
+      AND    DS:[BP+119],SI
+      AND    DS:[BP-128],SI
+      AND    DS:[BX+120],SI
+      AND    DS:[BX-128],SI
+      AND    DS:[BX+SI+121],DI
+      AND    DS:[BX+SI-128],DI
+      AND    DS:[BX+DI+122],DI
+      AND    DS:[BX+DI-128],DI
+      AND    DS:[BP+SI+123],DI
+      AND    DS:[BP+SI-128],DI
+      AND    DS:[BP+DI+124],DI
+      AND    DS:[BP+DI-128],DI
+      AND    DS:[SI+125],DI
+      AND    DS:[SI-128],DI
+      AND    DS:[DI+126],DI
+      AND    DS:[DI-128],DI
+      AND    DS:[BP+127],DI
+      AND    DS:[BP-128],DI
+      AND    DS:[BX-128],DI
+      AND    DS:[BX+0],DI
+      AND    DS:[BX+SI+8281H],AX
+      AND    DS:[BX+DI+8382H],AX
+      AND    DS:[BP+SI+8483H],AX
+      AND    DS:[BP+DI+8584H],AX
+      AND    DS:[SI+8685H],AX
+      AND    DS:[DI+8786H],AX
+      AND    DS:[BP+8887H],AX
+      AND    DS:[BX+8988H],AX
+      AND    DS:[BX+SI+8A89H],CX
+      AND    DS:[BX+DI+8B8AH],CX
+      AND    DS:[BP+SI+8C8BH],CX
+      AND    DS:[BP+DI+8D8CH],CX
+      AND    DS:[SI+8E8DH],CX
+      AND    DS:[DI+8F8EH],CX
+      AND    DS:[BP+908FH],CX
+      AND    DS:[BX+9190H],CX
+      AND    DS:[BX+SI+9291H],DX
+      AND    DS:[BX+DI+9392H],DX
+      AND    DS:[BP+SI+9493H],DX
+      AND    DS:[BP+DI+9594H],DX
+      AND    DS:[SI+9695H],DX
+      AND    DS:[DI+9796H],DX
+      AND    DS:[BP+9897H],DX
+      AND    DS:[BX+9998H],DX
+      AND    DS:[BX+SI+9A99H],BX
+      AND    DS:[BX+DI+9B9AH],BX
+      AND    DS:[BP+SI+9C9BH],BX
+      AND    DS:[BP+DI+9D9CH],BX
+      AND    DS:[SI+9E9DH],BX
+      AND    DS:[DI+9F9EH],BX
+      AND    DS:[BP+0A09FH],BX
+      AND    DS:[BX+0A1A0H],BX
+      AND    DS:[BX+SI+0A2A1H],SP
+      AND    DS:[BX+DI+0A3A2H],SP
+      AND    DS:[BP+SI+0A4A3H],SP
+      AND    DS:[BP+DI+0A5A4H],SP
+      AND    DS:[SI+0A6A5H],SP
+      AND    DS:[DI+0A7A6H],SP
+      AND    DS:[BP+0A8A7H],SP
+      AND    DS:[BX+0A9A8H],SP
+      AND    DS:[BX+SI+0AAA9H],BP
+      AND    DS:[BX+DI+0ABAAH],BP
+      AND    DS:[BP+SI+0ACABH],BP
+      AND    DS:[BP+DI+0ADACH],BP
+      AND    DS:[SI+0AEADH],BP
+      AND    DS:[DI+0AFAEH],BP
+      AND    DS:[BP+0B0AFH],BP
+      AND    DS:[BX+0B1B0H],BP
+      AND    DS:[BX+SI+0B2B1H],SI
+      AND    DS:[BX+DI+0B3B2H],SI
+      AND    DS:[BP+SI+0B4B3H],SI
+      AND    DS:[BP+DI+0B5B4H],SI
+      AND    DS:[SI+0B6B5H],SI
+      AND    DS:[DI+0B7B6H],SI
+      AND    DS:[BP+0B8B7H],SI
+      AND    DS:[BX+0B9B8H],SI
+      AND    DS:[BX+SI+0BAB9H],DI
+      AND    DS:[BX+DI+0BBBAH],DI
+      AND    DS:[BP+SI+0BCBBH],DI
+      AND    DS:[BP+DI+0BDBCH],DI
+      AND    DS:[SI+0BEBDH],DI
+      AND    DS:[DI+0BFBEH],DI
+      AND    DS:[BP+0C0BFH],DI
+      AND    DS:[BX+0C1C0H],DI
+      AND    DS:[BX+SI],AX
+      AND    DS:[BX+DI],AX
+      AND    DS:[BP+SI],AX
+      AND    DS:[BP+DI],AX
+      AND    DS:[SI],AX
+      AND    DS:[DI],AX
+      AND    DS:[0807H],AX
+      AND    DS:[BX],AX
+      AND    DS:[BX+SI],CX
+      AND    DS:[BX+DI],CX
+      AND    DS:[BP+SI],CX
+      AND    DS:[BP+DI],CX
+      AND    DS:[SI],CX
+      AND    DS:[DI],CX
+      AND    DS:[100FH],CX
+      AND    DS:[BX],CX
+      AND    DS:[BX+SI],DX
+      AND    DS:[BX+DI],DX
+      AND    DS:[BP+SI],DX
+      AND    DS:[BP+DI],DX
+      AND    DS:[SI],DX
+      AND    DS:[DI],DX
+      AND    DS:[1817H],DX
+      AND    DS:[BX],DX
+      AND    DS:[BX+SI],BX
+      AND    DS:[BX+DI],BX
+      AND    DS:[BP+SI],BX
+      AND    DS:[BP+DI],BX
+      AND    DS:[SI],BX
+      AND    DS:[DI],BX
+      AND    DS:[201FH],BX
+      AND    DS:[BX],BX
+      AND    DS:[BX+SI],SP
+      AND    DS:[BX+DI],SP
+      AND    AH,DS:[BP+DI]
+      AND    AH,DS:[SI]
+      AND    AH,DS:[DI]
+      AND    AH,DS:[2827H]
+      AND    AH,DS:[BX]
+      AND    CH,DS:[BX+SI]
+      AND    CH,DS:[BX+DI]
+      AND    CH,DS:[BP+SI]
+      AND    SP,DS:[SI]
+      AND    SP,DS:[DI]
+      AND    SP,DS:[2827H]
+      AND    SP,DS:[BX]
+      AND    BP,DS:[BX+SI]
+      AND    BP,DS:[BX+DI]
+      AND    BP,DS:[BP+SI]
+      AND    BP,DS:[BP+DI]
+      AND    BP,DS:[SI]
+      AND    BP,DS:[DI]
+      AND    BP,DS:[302FH]
+      AND    BP,DS:[BX]
+      AND    SI,DS:[BX+SI]
+      AND    SI,DS:[BX+DI]
+      AND    SI,DS:[BP+SI]
+      AND    SI,DS:[BP+DI]
+      AND    SI,DS:[SI]
+      AND    SI,DS:[DI]
+      AND    SI,DS:[3837H]
+      AND    SI,DS:[BX]
+      AND    DI,DS:[BX+SI]
+      AND    DI,DS:[BX+DI]
+      AND    DI,DS:[BP+SI]
+      AND    DI,DS:[BP+DI]
+      AND    DI,DS:[SI]
+      AND    DI,DS:[DI]
+      AND    DI,DS:[403FH]
+      AND    DI,DS:[BX]
+      AND    AX,DS:[BX+SI+65]
+      AND    AX,DS:[BX+SI-128]
+      AND    AX,DS:[BX+DI+66]
+      AND    AX,DS:[BX+DI-128]
+      AND    AX,DS:[BP+SI+67]
+      AND    AX,DS:[BP+SI-128]
+      AND    AX,DS:[BP+DI+68]
+      AND    AX,DS:[BP+DI-128]
+      AND    AX,DS:[SI+69]
+      AND    AX,DS:[SI-128]
+      AND    AX,DS:[DI+70]
+      AND    AX,DS:[DI-128]
+      AND    AX,DS:[BP+71]
+      AND    AX,DS:[BP-128]
+      AND    AX,DS:[BX+72]
+      AND    AX,DS:[BX-128]
+      AND    CX,DS:[BX+SI+73]
+      AND    CX,DS:[BX+SI-128]
+      AND    CX,DS:[BX+DI+74]
+      AND    CX,DS:[BX+DI-128]
+      AND    CX,DS:[BP+SI+75]
+      AND    CX,DS:[BP+SI-128]
+      AND    CX,DS:[BP+DI+76]
+      AND    CX,DS:[BP+DI-128]
+      AND    CX,DS:[SI+77]
+      AND    CX,DS:[SI-128]
+      AND    CX,DS:[DI+78]
+      AND    CX,DS:[DI-128]
+      AND    CX,DS:[BP+79]
+      AND    CX,DS:[BP-128]
+      AND    CX,DS:[BX+80]
+      AND    CX,DS:[BX-128]
+      AND    DX,DS:[BX+SI+81]
+      AND    DX,DS:[BX+SI-128]
+      AND    DX,DS:[BX+DI+82]
+      AND    DX,DS:[BX+DI-128]
+      AND    DX,DS:[BP+SI+83]
+      AND    DX,DS:[BP+SI-128]
+      AND    DX,DS:[BP+DI+84]
+      AND    DX,DS:[BP+DI-128]
+      AND    DX,DS:[SI+85]
+      AND    DX,DS:[SI-128]
+      AND    DX,DS:[DI+86]
+      AND    DX,DS:[DI-128]
+      AND    DX,DS:[BP+87]
+      AND    DX,DS:[BP-128]
+      AND    DX,DS:[BX+88]
+      AND    DX,DS:[BX-128]
+      AND    BX,DS:[BX+SI+89]
+      AND    BX,DS:[BX+SI-128]
+      AND    BX,DS:[BX+DI+90]
+      AND    BX,DS:[BX+DI-128]
+      AND    BX,DS:[BP+SI+91]
+      AND    BX,DS:[BP+SI-128]
+      AND    BX,DS:[BP+DI+92]
+      AND    BX,DS:[BP+DI-128]
+      AND    BX,DS:[SI+93]
+      AND    BX,DS:[SI-128]
+      AND    BX,DS:[DI+94]
+      AND    BX,DS:[DI-128]
+      AND    BX,DS:[BP+95]
+      AND    BX,DS:[BP-128]
+      AND    BX,DS:[BX+96]
+      AND    BX,DS:[BX-128]
+      AND    SP,DS:[BX+SI+97]
+      AND    SP,DS:[BX+SI-128]
+      AND    SP,DS:[BX+DI+98]
+      AND    SP,DS:[BX+DI-128]
+      AND    SP,DS:[BP+SI+99]
+      AND    SP,DS:[BP+SI-128]
+      AND    SP,DS:[BP+DI+100]
+      AND    SP,DS:[BP+DI-128]
+      AND    SP,DS:[SI+101]
+      AND    SP,DS:[SI-128]
+      AND    SP,DS:[DI+102]
+      AND    SP,DS:[DI-128]
+      AND    SP,DS:[BP+103]
+      AND    SP,DS:[BP-128]
+      AND    SP,DS:[BX+104]
+      AND    SP,DS:[BX-128]
+      AND    BP,DS:[BX+SI+105]
+      AND    BP,DS:[BX+SI-128]
+      AND    BP,DS:[BX+DI+106]
+      AND    BP,DS:[BX+DI-128]
+      AND    BP,DS:[BP+SI+107]
+      AND    BP,DS:[BP+SI-128]
+      AND    BP,DS:[BP+DI+108]
+      AND    BP,DS:[BP+DI-128]
+      AND    BP,DS:[SI+109]
+      AND    BP,DS:[SI-128]
+      AND    BP,DS:[DI+110]
+      AND    BP,DS:[DI-128]
+      AND    BP,DS:[BP+111]
+      AND    BP,DS:[BP-128]
+      AND    BP,DS:[BX+112]
+      AND    BP,DS:[BX-128]
+      AND    SI,DS:[BX+SI+113]
+      AND    SI,DS:[BX+SI-128]
+      AND    SI,DS:[BX+DI+114]
+      AND    SI,DS:[BX+DI-128]
+      AND    SI,DS:[BP+SI+115]
+      AND    SI,DS:[BP+SI-128]
+      AND    SI,DS:[BP+DI+116]
+      AND    SI,DS:[BP+DI-128]
+      AND    SI,DS:[SI+117]
+      AND    SI,DS:[SI-128]
+      AND    SI,DS:[DI+118]
+      AND    SI,DS:[DI-128]
+      AND    SI,DS:[BP+119]
+      AND    SI,DS:[BP-128]
+      AND    SI,DS:[BX+120]
+      AND    SI,DS:[BX-128]
+      AND    DI,DS:[BX+SI+121]
+      AND    DI,DS:[BX+SI-128]
+      AND    DI,DS:[BX+DI+122]
+      AND    DI,DS:[BX+DI-128]
+      AND    DI,DS:[BP+SI+123]
+      AND    DI,DS:[BP+SI-128]
+      AND    DI,DS:[BP+DI+124]
+      AND    DI,DS:[BP+DI-128]
+      AND    DI,DS:[SI+125]
+      AND    DI,DS:[SI-128]
+      AND    DI,DS:[DI+126]
+      AND    DI,DS:[DI-128]
+      AND    DI,DS:[BP+127]
+      AND    DI,DS:[BP-128]
+      AND    DI,DS:[BX-128]
+      AND    DI,DS:[BX+0]
+      AND    AX,DS:[BX+SI+8281H]
+      AND    AX,DS:[BX+DI+8382H]
+      AND    AX,DS:[BP+SI+8483H]
+      AND    AX,DS:[BP+DI+8584H]
+      AND    AX,DS:[SI+8685H]
+      AND    AX,DS:[DI+8786H]
+      AND    AX,DS:[BP+8887H]
+      AND    AX,DS:[BX+8988H]
+      AND    CX,DS:[BX+SI+8A89H]
+      AND    CX,DS:[BX+DI+8B8AH]
+      AND    CX,DS:[BP+SI+8C8BH]
+      AND    CX,DS:[BP+DI+8D8CH]
+      AND    CX,DS:[SI+8E8DH]
+      AND    CX,DS:[DI+8F8EH]
+      AND    CX,DS:[BP+908FH]
+      AND    CX,DS:[BX+9190H]
+      AND    DX,DS:[BX+SI+9291H]
+      AND    DX,DS:[BX+DI+9392H]
+      AND    DX,DS:[BP+SI+9493H]
+      AND    DX,DS:[BP+DI+9594H]
+      AND    DX,DS:[SI+9695H]
+      AND    DX,DS:[DI+9796H]
+      AND    DX,DS:[BP+9897H]
+      AND    DX,DS:[BX+9998H]
+      AND    BX,DS:[BX+SI+9A99H]
+      AND    BX,DS:[BX+DI+9B9AH]
+      AND    BX,DS:[BP+SI+9C9BH]
+      AND    BX,DS:[BP+DI+9D9CH]
+      AND    BX,DS:[SI+9E9DH]
+      AND    BX,DS:[DI+9F9EH]
+      AND    BX,DS:[BP+0A09FH]
+      AND    BX,DS:[BX+0A1A0H]
+      AND    SP,DS:[BX+SI+0A2A1H]
+      AND    SP,DS:[BX+DI+0A3A2H]
+      AND    SP,DS:[BP+SI+0A4A3H]
+      AND    SP,DS:[BP+DI+0A5A4H]
+      AND    SP,DS:[SI+0A6A5H]
+      AND    SP,DS:[DI+0A7A6H]
+      AND    SP,DS:[BP+0A8A7H]
+      AND    SP,DS:[BX+0A9A8H]
+      AND    BP,DS:[BX+SI+0AAA9H]
+      AND    BP,DS:[BX+DI+0ABAAH]
+      AND    BP,DS:[BP+SI+0ACABH]
+      AND    BP,DS:[BP+DI+0ADACH]
+      AND    BP,DS:[SI+0AEADH]
+      AND    BP,DS:[DI+0AFAEH]
+      AND    BP,DS:[BP+0B0AFH]
+      AND    BP,DS:[BX+0B1B0H]
+      AND    SI,DS:[BX+SI+0B2B1H]
+      AND    SI,DS:[BX+DI+0B3B2H]
+      AND    SI,DS:[BP+SI+0B4B3H]
+      AND    SI,DS:[BP+DI+0B5B4H]
+      AND    SI,DS:[SI+0B6B5H]
+      AND    SI,DS:[DI+0B7B6H]
+      AND    SI,DS:[BP+0B8B7H]
+      AND    SI,DS:[BX+0B9B8H]
+      AND    DI,DS:[BX+SI+0BAB9H]
+      AND    DI,DS:[BX+DI+0BBBAH]
+      AND    DI,DS:[BP+SI+0BCBBH]
+      AND    DI,DS:[BP+DI+0BDBCH]
+      AND    DI,DS:[SI+0BEBDH]
+      AND    DI,DS:[DI+0BFBEH]
+      AND    DI,DS:[BP+0C0BFH]
+      AND    DI,DS:[BX+0C1C0H]
+      AND    AX,DS:[BX+SI]
+      AND    AX,DS:[BX+DI]
+      AND    AX,DS:[BP+SI]
+      AND    AX,DS:[BP+DI]
+      AND    AX,DS:[SI]
+      AND    AX,DS:[DI]
+      AND    AX,DS:[0807H]
+      AND    AX,DS:[BX]
+      AND    CX,DS:[BX+SI]
+      AND    CX,DS:[BX+DI]
+      AND    CX,DS:[BP+SI]
+      AND    CX,DS:[BP+DI]
+      AND    CX,DS:[SI]
+      AND    CX,DS:[DI]
+      AND    CX,DS:[100FH]
+      AND    CX,DS:[BX]
+      AND    DX,DS:[BX+SI]
+      AND    DX,DS:[BX+DI]
+      AND    DX,DS:[BP+SI]
+      AND    DX,DS:[BP+DI]
+      AND    DX,DS:[SI]
+      AND    DX,DS:[DI]
+      AND    DX,DS:[1817H]
+      AND    DX,DS:[BX]
+      AND    BX,DS:[BX+SI]
+      AND    BX,DS:[BX+DI]
+      AND    BX,DS:[BP+SI]
+      AND    BX,DS:[BP+DI]
+      AND    BX,DS:[SI]
+      AND    BX,DS:[DI]
+      AND    BX,DS:[201FH]
+      AND    BX,DS:[BX]
+      AND    SP,DS:[BX+SI]
+      AND    SP,DS:[BX+DI]
+      AND    SP,DS:[BP+SI]
+      AND    SP,DS:[BP+DI]
+      SUB    DS:[BX+DI],CH
+      SUB    DS:[BP+SI],CH
+      SUB    DS:[BP+DI],CH
+      SUB    DS:[SI],CH
+      SUB    DS:[DI],CH
+      SUB    DS:[302FH],CH
+      SUB    DS:[BX],CH
+      SUB    DS:[BX+SI],DH
+      SUB    DS:[BP+SI],BP
+      SUB    DS:[BP+DI],BP
+      SUB    DS:[SI],BP
+      SUB    DS:[DI],BP
+      SUB    DS:[302FH],BP
+      SUB    DS:[BX],BP
+      SUB    DS:[BX+SI],SI
+      SUB    DS:[BX+DI],SI
+      SUB    DS:[BP+SI],SI
+      SUB    DS:[BP+DI],SI
+      SUB    DS:[SI],SI
+      SUB    DS:[DI],SI
+      SUB    DS:[3837H],SI
+      SUB    DS:[BX],SI
+      SUB    DS:[BX+SI],DI
+      SUB    DS:[BX+DI],DI
+      SUB    DS:[BP+SI],DI
+      SUB    DS:[BP+DI],DI
+      SUB    DS:[SI],DI
+      SUB    DS:[DI],DI
+      SUB    DS:[403FH],DI
+      SUB    DS:[BX],DI
+      SUB    DS:[BX+SI+65],AX
+      SUB    DS:[BX+SI-128],AX
+      SUB    DS:[BX+DI+66],AX
+      SUB    DS:[BX+DI-128],AX
+      SUB    DS:[BP+SI+67],AX
+      SUB    DS:[BP+SI-128],AX
+      SUB    DS:[BP+DI+68],AX
+      SUB    DS:[BP+DI-128],AX
+      SUB    DS:[SI+69],AX
+      SUB    DS:[SI-128],AX
+      SUB    DS:[DI+70],AX
+      SUB    DS:[DI-128],AX
+      SUB    DS:[BP+71],AX
+      SUB    DS:[BP-128],AX
+      SUB    DS:[BX+72],AX
+      SUB    DS:[BX-128],AX
+      SUB    DS:[BX+SI+73],CX
+      SUB    DS:[BX+SI-128],CX
+      SUB    DS:[BX+DI+74],CX
+      SUB    DS:[BX+DI-128],CX
+      SUB    DS:[BP+SI+75],CX
+      SUB    DS:[BP+SI-128],CX
+      SUB    DS:[BP+DI+76],CX
+      SUB    DS:[BP+DI-128],CX
+      SUB    DS:[SI+77],CX
+      SUB    DS:[SI-128],CX
+      SUB    DS:[DI+78],CX
+      SUB    DS:[DI-128],CX
+      SUB    DS:[BP+79],CX
+      SUB    DS:[BP-128],CX
+      SUB    DS:[BX+80],CX
+      SUB    DS:[BX-128],CX
+      SUB    DS:[BX+SI+81],DX
+      SUB    DS:[BX+SI-128],DX
+      SUB    DS:[BX+DI+82],DX
+      SUB    DS:[BX+DI-128],DX
+      SUB    DS:[BP+SI+83],DX
+      SUB    DS:[BP+SI-128],DX
+      SUB    DS:[BP+DI+84],DX
+      SUB    DS:[BP+DI-128],DX
+      SUB    DS:[SI+85],DX
+      SUB    DS:[SI-128],DX
+      SUB    DS:[DI+86],DX
+      SUB    DS:[DI-128],DX
+      SUB    DS:[BP+87],DX
+      SUB    DS:[BP-128],DX
+      SUB    DS:[BX+88],DX
+      SUB    DS:[BX-128],DX
+      SUB    DS:[BX+SI+89],BX
+      SUB    DS:[BX+SI-128],BX
+      SUB    DS:[BX+DI+90],BX
+      SUB    DS:[BX+DI-128],BX
+      SUB    DS:[BP+SI+91],BX
+      SUB    DS:[BP+SI-128],BX
+      SUB    DS:[BP+DI+92],BX
+      SUB    DS:[BP+DI-128],BX
+      SUB    DS:[SI+93],BX
+      SUB    DS:[SI-128],BX
+      SUB    DS:[DI+94],BX
+      SUB    DS:[DI-128],BX
+      SUB    DS:[BP+95],BX
+      SUB    DS:[BP-128],BX
+      SUB    DS:[BX+96],BX
+      SUB    DS:[BX-128],BX
+      SUB    DS:[BX+SI+97],SP
+      SUB    DS:[BX+SI-128],SP
+      SUB    DS:[BX+DI+98],SP
+      SUB    DS:[BX+DI-128],SP
+      SUB    DS:[BP+SI+99],SP
+      SUB    DS:[BP+SI-128],SP
+      SUB    DS:[BP+DI+100],SP
+      SUB    DS:[BP+DI-128],SP
+      SUB    DS:[SI+101],SP
+      SUB    DS:[SI-128],SP
+      SUB    DS:[DI+102],SP
+      SUB    DS:[DI-128],SP
+      SUB    DS:[BP+103],SP
+      SUB    DS:[BP-128],SP
+      SUB    DS:[BX+104],SP
+      SUB    DS:[BX-128],SP
+      SUB    DS:[BX+SI+105],BP
+      SUB    DS:[BX+SI-128],BP
+      SUB    DS:[BX+DI+106],BP
+      SUB    DS:[BX+DI-128],BP
+      SUB    DS:[BP+SI+107],BP
+      SUB    DS:[BP+SI-128],BP
+      SUB    DS:[BP+DI+108],BP
+      SUB    DS:[BP+DI-128],BP
+      SUB    DS:[SI+109],BP
+      SUB    DS:[SI-128],BP
+      SUB    DS:[DI+110],BP
+      SUB    DS:[DI-128],BP
+      SUB    DS:[BP+111],BP
+      SUB    DS:[BP-128],BP
+      SUB    DS:[BX+112],BP
+      SUB    DS:[BX-128],BP
+      SUB    DS:[BX+SI+113],SI
+      SUB    DS:[BX+SI-128],SI
+      SUB    DS:[BX+DI+114],SI
+      SUB    DS:[BX+DI-128],SI
+      SUB    DS:[BP+SI+115],SI
+      SUB    DS:[BP+SI-128],SI
+      SUB    DS:[BP+DI+116],SI
+      SUB    DS:[BP+DI-128],SI
+      SUB    DS:[SI+117],SI
+      SUB    DS:[SI-128],SI
+      SUB    DS:[DI+118],SI
+      SUB    DS:[DI-128],SI
+      SUB    DS:[BP+119],SI
+      SUB    DS:[BP-128],SI
+      SUB    DS:[BX+120],SI
+      SUB    DS:[BX-128],SI
+      SUB    DS:[BX+SI+121],DI
+      SUB    DS:[BX+SI-128],DI
+      SUB    DS:[BX+DI+122],DI
+      SUB    DS:[BX+DI-128],DI
+      SUB    DS:[BP+SI+123],DI
+      SUB    DS:[BP+SI-128],DI
+      SUB    DS:[BP+DI+124],DI
+      SUB    DS:[BP+DI-128],DI
+      SUB    DS:[SI+125],DI
+      SUB    DS:[SI-128],DI
+      SUB    DS:[DI+126],DI
+      SUB    DS:[DI-128],DI
+      SUB    DS:[BP+127],DI
+      SUB    DS:[BP-128],DI
+      SUB    DS:[BX-128],DI
+      SUB    DS:[BX+0],DI
+      SUB    DS:[BX+SI+8281H],AX
+      SUB    DS:[BX+DI+8382H],AX
+      SUB    DS:[BP+SI+8483H],AX
+      SUB    DS:[BP+DI+8584H],AX
+      SUB    DS:[SI+8685H],AX
+      SUB    DS:[DI+8786H],AX
+      SUB    DS:[BP+8887H],AX
+      SUB    DS:[BX+8988H],AX
+      SUB    DS:[BX+SI+8A89H],CX
+      SUB    DS:[BX+DI+8B8AH],CX
+      SUB    DS:[BP+SI+8C8BH],CX
+      SUB    DS:[BP+DI+8D8CH],CX
+      SUB    DS:[SI+8E8DH],CX
+      SUB    DS:[DI+8F8EH],CX
+      SUB    DS:[BP+908FH],CX
+      SUB    DS:[BX+9190H],CX
+      SUB    DS:[BX+SI+9291H],DX
+      SUB    DS:[BX+DI+9392H],DX
+      SUB    DS:[BP+SI+9493H],DX
+      SUB    DS:[BP+DI+9594H],DX
+      SUB    DS:[SI+9695H],DX
+      SUB    DS:[DI+9796H],DX
+      SUB    DS:[BP+9897H],DX
+      SUB    DS:[BX+9998H],DX
+      SUB    DS:[BX+SI+9A99H],BX
+      SUB    DS:[BX+DI+9B9AH],BX
+      SUB    DS:[BP+SI+9C9BH],BX
+      SUB    DS:[BP+DI+9D9CH],BX
+      SUB    DS:[SI+9E9DH],BX
+      SUB    DS:[DI+9F9EH],BX
+      SUB    DS:[BP+0A09FH],BX
+      SUB    DS:[BX+0A1A0H],BX
+      SUB    DS:[BX+SI+0A2A1H],SP
+      SUB    DS:[BX+DI+0A3A2H],SP
+      SUB    DS:[BP+SI+0A4A3H],SP
+      SUB    DS:[BP+DI+0A5A4H],SP
+      SUB    DS:[SI+0A6A5H],SP
+      SUB    DS:[DI+0A7A6H],SP
+      SUB    DS:[BP+0A8A7H],SP
+      SUB    DS:[BX+0A9A8H],SP
+      SUB    DS:[BX+SI+0AAA9H],BP
+      SUB    DS:[BX+DI+0ABAAH],BP
+      SUB    DS:[BP+SI+0ACABH],BP
+      SUB    DS:[BP+DI+0ADACH],BP
+      SUB    DS:[SI+0AEADH],BP
+      SUB    DS:[DI+0AFAEH],BP
+      SUB    DS:[BP+0B0AFH],BP
+      SUB    DS:[BX+0B1B0H],BP
+      SUB    DS:[BX+SI+0B2B1H],SI
+      SUB    DS:[BX+DI+0B3B2H],SI
+      SUB    DS:[BP+SI+0B4B3H],SI
+      SUB    DS:[BP+DI+0B5B4H],SI
+      SUB    DS:[SI+0B6B5H],SI
+      SUB    DS:[DI+0B7B6H],SI
+      SUB    DS:[BP+0B8B7H],SI
+      SUB    DS:[BX+0B9B8H],SI
+      SUB    DS:[BX+SI+0BAB9H],DI
+      SUB    DS:[BX+DI+0BBBAH],DI
+      SUB    DS:[BP+SI+0BCBBH],DI
+      SUB    DS:[BP+DI+0BDBCH],DI
+      SUB    DS:[SI+0BEBDH],DI
+      SUB    DS:[DI+0BFBEH],DI
+      SUB    DS:[BP+0C0BFH],DI
+      SUB    DS:[BX+0C1C0H],DI
+      SUB    DS:[BX+SI],AX
+      SUB    DS:[BX+DI],AX
+      SUB    DS:[BP+SI],AX
+      SUB    DS:[BP+DI],AX
+      SUB    DS:[SI],AX
+      SUB    DS:[DI],AX
+      SUB    DS:[0807H],AX
+      SUB    DS:[BX],AX
+      SUB    DS:[BX+SI],CX
+      SUB    DS:[BX+DI],CX
+      SUB    DS:[BP+SI],CX
+      SUB    DS:[BP+DI],CX
+      SUB    DS:[SI],CX
+      SUB    DS:[DI],CX
+      SUB    DS:[100FH],CX
+      SUB    DS:[BX],CX
+      SUB    DS:[BX+SI],DX
+      SUB    DS:[BX+DI],DX
+      SUB    DS:[BP+SI],DX
+      SUB    DS:[BP+DI],DX
+      SUB    DS:[SI],DX
+      SUB    DS:[DI],DX
+      SUB    DS:[1817H],DX
+      SUB    DS:[BX],DX
+      SUB    DS:[BX+SI],BX
+      SUB    DS:[BX+DI],BX
+      SUB    DS:[BP+SI],BX
+      SUB    DS:[BP+DI],BX
+      SUB    DS:[SI],BX
+      SUB    DS:[DI],BX
+      SUB    DS:[201FH],BX
+      SUB    DS:[BX],BX
+      SUB    DS:[BX+SI],SP
+      SUB    DS:[BX+DI],SP
+      SUB    DS:[BP+SI],SP
+      SUB    DS:[BP+DI],SP
+      SUB    DS:[SI],SP
+      SUB    DS:[DI],SP
+      SUB    DS:[2827H],SP
+      SUB    DS:[BX],SP
+      SUB    DS:[BX+SI],BP
+      SUB    DS:[BX+DI],BP
+      SUB    CH,DS:[BP+DI]
+      SUB    CH,DS:[SI]
+      SUB    CH,DS:[DI]
+      SUB    CH,DS:[302FH]
+      SUB    CH,DS:[BX]
+      SUB    DH,DS:[BX+SI]
+      SUB    DH,DS:[BX+DI]
+      SUB    DH,DS:[BP+SI]
+      SUB    BP,DS:[SI]
+      SUB    BP,DS:[DI]
+      SUB    BP,DS:[302FH]
+      SUB    BP,DS:[BX]
+      SUB    SI,DS:[BX+SI]
+      SUB    SI,DS:[BX+DI]
+      SUB    SI,DS:[BP+SI]
+      SUB    SI,DS:[BP+DI]
+      SUB    SI,DS:[SI]
+      SUB    SI,DS:[DI]
+      SUB    SI,DS:[3837H]
+      SUB    SI,DS:[BX]
+      SUB    DI,DS:[BX+SI]
+      SUB    DI,DS:[BX+DI]
+      SUB    DI,DS:[BP+SI]
+      SUB    DI,DS:[BP+DI]
+      SUB    DI,DS:[SI]
+      SUB    DI,DS:[DI]
+      SUB    DI,DS:[403FH]
+      SUB    DI,DS:[BX]
+      SUB    AX,DS:[BX+SI+65]
+      SUB    AX,DS:[BX+SI-128]
+      SUB    AX,DS:[BX+DI+66]
+      SUB    AX,DS:[BX+DI-128]
+      SUB    AX,DS:[BP+SI+67]
+      SUB    AX,DS:[BP+SI-128]
+      SUB    AX,DS:[BP+DI+68]
+      SUB    AX,DS:[BP+DI-128]
+      SUB    AX,DS:[SI+69]
+      SUB    AX,DS:[SI-128]
+      SUB    AX,DS:[DI+70]
+      SUB    AX,DS:[DI-128]
+      SUB    AX,DS:[BP+71]
+      SUB    AX,DS:[BP-128]
+      SUB    AX,DS:[BX+72]
+      SUB    AX,DS:[BX-128]
+      SUB    CX,DS:[BX+SI+73]
+      SUB    CX,DS:[BX+SI-128]
+      SUB    CX,DS:[BX+DI+74]
+      SUB    CX,DS:[BX+DI-128]
+      SUB    CX,DS:[BP+SI+75]
+      SUB    CX,DS:[BP+SI-128]
+      SUB    CX,DS:[BP+DI+76]
+      SUB    CX,DS:[BP+DI-128]
+      SUB    CX,DS:[SI+77]
+      SUB    CX,DS:[SI-128]
+      SUB    CX,DS:[DI+78]
+      SUB    CX,DS:[DI-128]
+      SUB    CX,DS:[BP+79]
+      SUB    CX,DS:[BP-128]
+      SUB    CX,DS:[BX+80]
+      SUB    CX,DS:[BX-128]
+      SUB    DX,DS:[BX+SI+81]
+      SUB    DX,DS:[BX+SI-128]
+      SUB    DX,DS:[BX+DI+82]
+      SUB    DX,DS:[BX+DI-128]
+      SUB    DX,DS:[BP+SI+83]
+      SUB    DX,DS:[BP+SI-128]
+      SUB    DX,DS:[BP+DI+84]
+      SUB    DX,DS:[BP+DI-128]
+      SUB    DX,DS:[SI+85]
+      SUB    DX,DS:[SI-128]
+      SUB    DX,DS:[DI+86]
+      SUB    DX,DS:[DI-128]
+      SUB    DX,DS:[BP+87]
+      SUB    DX,DS:[BP-128]
+      SUB    DX,DS:[BX+88]
+      SUB    DX,DS:[BX-128]
+      SUB    BX,DS:[BX+SI+89]
+      SUB    BX,DS:[BX+SI-128]
+      SUB    BX,DS:[BX+DI+90]
+      SUB    BX,DS:[BX+DI-128]
+      SUB    BX,DS:[BP+SI+91]
+      SUB    BX,DS:[BP+SI-128]
+      SUB    BX,DS:[BP+DI+92]
+      SUB    BX,DS:[BP+DI-128]
+      SUB    BX,DS:[SI+93]
+      SUB    BX,DS:[SI-128]
+      SUB    BX,DS:[DI+94]
+      SUB    BX,DS:[DI-128]
+      SUB    BX,DS:[BP+95]
+      SUB    BX,DS:[BP-128]
+      SUB    BX,DS:[BX+96]
+      SUB    BX,DS:[BX-128]
+      SUB    SP,DS:[BX+SI+97]
+      SUB    SP,DS:[BX+SI-128]
+      SUB    SP,DS:[BX+DI+98]
+      SUB    SP,DS:[BX+DI-128]
+      SUB    SP,DS:[BP+SI+99]
+      SUB    SP,DS:[BP+SI-128]
+      SUB    SP,DS:[BP+DI+100]
+      SUB    SP,DS:[BP+DI-128]
+      SUB    SP,DS:[SI+101]
+      SUB    SP,DS:[SI-128]
+      SUB    SP,DS:[DI+102]
+      SUB    SP,DS:[DI-128]
+      SUB    SP,DS:[BP+103]
+      SUB    SP,DS:[BP-128]
+      SUB    SP,DS:[BX+104]
+      SUB    SP,DS:[BX-128]
+      SUB    BP,DS:[BX+SI+105]
+      SUB    BP,DS:[BX+SI-128]
+      SUB    BP,DS:[BX+DI+106]
+      SUB    BP,DS:[BX+DI-128]
+      SUB    BP,DS:[BP+SI+107]
+      SUB    BP,DS:[BP+SI-128]
+      SUB    BP,DS:[BP+DI+108]
+      SUB    BP,DS:[BP+DI-128]
+      SUB    BP,DS:[SI+109]
+      SUB    BP,DS:[SI-128]
+      SUB    BP,DS:[DI+110]
+      SUB    BP,DS:[DI-128]
+      SUB    BP,DS:[BP+111]
+      SUB    BP,DS:[BP-128]
+      SUB    BP,DS:[BX+112]
+      SUB    BP,DS:[BX-128]
+      SUB    SI,DS:[BX+SI+113]
+      SUB    SI,DS:[BX+SI-128]
+      SUB    SI,DS:[BX+DI+114]
+      SUB    SI,DS:[BX+DI-128]
+      SUB    SI,DS:[BP+SI+115]
+      SUB    SI,DS:[BP+SI-128]
+      SUB    SI,DS:[BP+DI+116]
+      SUB    SI,DS:[BP+DI-128]
+      SUB    SI,DS:[SI+117]
+      SUB    SI,DS:[SI-128]
+      SUB    SI,DS:[DI+118]
+      SUB    SI,DS:[DI-128]
+      SUB    SI,DS:[BP+119]
+      SUB    SI,DS:[BP-128]
+      SUB    SI,DS:[BX+120]
+      SUB    SI,DS:[BX-128]
+      SUB    DI,DS:[BX+SI+121]
+      SUB    DI,DS:[BX+SI-128]
+      SUB    DI,DS:[BX+DI+122]
+      SUB    DI,DS:[BX+DI-128]
+      SUB    DI,DS:[BP+SI+123]
+      SUB    DI,DS:[BP+SI-128]
+      SUB    DI,DS:[BP+DI+124]
+      SUB    DI,DS:[BP+DI-128]
+      SUB    DI,DS:[SI+125]
+      SUB    DI,DS:[SI-128]
+      SUB    DI,DS:[DI+126]
+      SUB    DI,DS:[DI-128]
+      SUB    DI,DS:[BP+127]
+      SUB    DI,DS:[BP-128]
+      SUB    DI,DS:[BX-128]
+      SUB    DI,DS:[BX+0]
+      SUB    AX,DS:[BX+SI+8281H]
+      SUB    AX,DS:[BX+DI+8382H]
+      SUB    AX,DS:[BP+SI+8483H]
+      SUB    AX,DS:[BP+DI+8584H]
+      SUB    AX,DS:[SI+8685H]
+      SUB    AX,DS:[DI+8786H]
+      SUB    AX,DS:[BP+8887H]
+      SUB    AX,DS:[BX+8988H]
+      SUB    CX,DS:[BX+SI+8A89H]
+      SUB    CX,DS:[BX+DI+8B8AH]
+      SUB    CX,DS:[BP+SI+8C8BH]
+      SUB    CX,DS:[BP+DI+8D8CH]
+      SUB    CX,DS:[SI+8E8DH]
+      SUB    CX,DS:[DI+8F8EH]
+      SUB    CX,DS:[BP+908FH]
+      SUB    CX,DS:[BX+9190H]
+      SUB    DX,DS:[BX+SI+9291H]
+      SUB    DX,DS:[BX+DI+9392H]
+      SUB    DX,DS:[BP+SI+9493H]
+      SUB    DX,DS:[BP+DI+9594H]
+      SUB    DX,DS:[SI+9695H]
+      SUB    DX,DS:[DI+9796H]
+      SUB    DX,DS:[BP+9897H]
+      SUB    DX,DS:[BX+9998H]
+      SUB    BX,DS:[BX+SI+9A99H]
+      SUB    BX,DS:[BX+DI+9B9AH]
+      SUB    BX,DS:[BP+SI+9C9BH]
+      SUB    BX,DS:[BP+DI+9D9CH]
+      SUB    BX,DS:[SI+9E9DH]
+      SUB    BX,DS:[DI+9F9EH]
+      SUB    BX,DS:[BP+0A09FH]
+      SUB    BX,DS:[BX+0A1A0H]
+      SUB    SP,DS:[BX+SI+0A2A1H]
+      SUB    SP,DS:[BX+DI+0A3A2H]
+      SUB    SP,DS:[BP+SI+0A4A3H]
+      SUB    SP,DS:[BP+DI+0A5A4H]
+      SUB    SP,DS:[SI+0A6A5H]
+      SUB    SP,DS:[DI+0A7A6H]
+      SUB    SP,DS:[BP+0A8A7H]
+      SUB    SP,DS:[BX+0A9A8H]
+      SUB    BP,DS:[BX+SI+0AAA9H]
+      SUB    BP,DS:[BX+DI+0ABAAH]
+      SUB    BP,DS:[BP+SI+0ACABH]
+      SUB    BP,DS:[BP+DI+0ADACH]
+      SUB    BP,DS:[SI+0AEADH]
+      SUB    BP,DS:[DI+0AFAEH]
+      SUB    BP,DS:[BP+0B0AFH]
+      SUB    BP,DS:[BX+0B1B0H]
+      SUB    SI,DS:[BX+SI+0B2B1H]
+      SUB    SI,DS:[BX+DI+0B3B2H]
+      SUB    SI,DS:[BP+SI+0B4B3H]
+      SUB    SI,DS:[BP+DI+0B5B4H]
+      SUB    SI,DS:[SI+0B6B5H]
+      SUB    SI,DS:[DI+0B7B6H]
+      SUB    SI,DS:[BP+0B8B7H]
+      SUB    SI,DS:[BX+0B9B8H]
+      SUB    DI,DS:[BX+SI+0BAB9H]
+      SUB    DI,DS:[BX+DI+0BBBAH]
+      SUB    DI,DS:[BP+SI+0BCBBH]
+      SUB    DI,DS:[BP+DI+0BDBCH]
+      SUB    DI,DS:[SI+0BEBDH]
+      SUB    DI,DS:[DI+0BFBEH]
+      SUB    DI,DS:[BP+0C0BFH]
+      SUB    DI,DS:[BX+0C1C0H]
+      SUB    AX,DS:[BX+SI]
+      SUB    AX,DS:[BX+DI]
+      SUB    AX,DS:[BP+SI]
+      SUB    AX,DS:[BP+DI]
+      SUB    AX,DS:[SI]
+      SUB    AX,DS:[DI]
+      SUB    AX,DS:[0807H]
+      SUB    AX,DS:[BX]
+      SUB    CX,DS:[BX+SI]
+      SUB    CX,DS:[BX+DI]
+      SUB    CX,DS:[BP+SI]
+      SUB    CX,DS:[BP+DI]
+      SUB    CX,DS:[SI]
+      SUB    CX,DS:[DI]
+      SUB    CX,DS:[100FH]
+      SUB    CX,DS:[BX]
+      SUB    DX,DS:[BX+SI]
+      SUB    DX,DS:[BX+DI]
+      SUB    DX,DS:[BP+SI]
+      SUB    DX,DS:[BP+DI]
+      SUB    DX,DS:[SI]
+      SUB    DX,DS:[DI]
+      SUB    DX,DS:[1817H]
+      SUB    DX,DS:[BX]
+      SUB    BX,DS:[BX+SI]
+      SUB    BX,DS:[BX+DI]
+      SUB    BX,DS:[BP+SI]
+      SUB    BX,DS:[BP+DI]
+      SUB    BX,DS:[SI]
+      SUB    BX,DS:[DI]
+      SUB    BX,DS:[201FH]
+      SUB    BX,DS:[BX]
+      SUB    SP,DS:[BX+SI]
+      SUB    SP,DS:[BX+DI]
+      SUB    SP,DS:[BP+SI]
+      SUB    SP,DS:[BP+DI]
+      SUB    SP,DS:[SI]
+      SUB    SP,DS:[DI]
+      SUB    SP,DS:[2827H]
+      SUB    SP,DS:[BX]
+      SUB    BP,DS:[BX+SI]
+      SUB    BP,DS:[BX+DI]
+      SUB    BP,DS:[BP+SI]
+      SUB    BP,DS:[BP+DI]
+      XOR    DS:[BX+DI],DH
+      XOR    DS:[BP+SI],DH
+      XOR    DS:[BP+DI],DH
+      XOR    DS:[SI],DH
+      XOR    DS:[DI],DH
+      XOR    DS:[3837H],DH
+      XOR    DS:[BX],DH
+      XOR    DS:[BX+SI],BH
+      XOR    DS:[BP+SI],SI
+      XOR    DS:[BP+DI],SI
+      XOR    DS:[SI],SI
+      XOR    DS:[DI],SI
+      XOR    DS:[3837H],SI
+      XOR    DS:[BX],SI
+      XOR    DS:[BX+SI],DI
+      XOR    DS:[BX+DI],DI
+      XOR    DS:[BP+SI],DI
+      XOR    DS:[BP+DI],DI
+      XOR    DS:[SI],DI
+      XOR    DS:[DI],DI
+      XOR    DS:[403FH],DI
+      XOR    DS:[BX],DI
+      XOR    DS:[BX+SI+65],AX
+      XOR    DS:[BX+SI-128],AX
+      XOR    DS:[BX+DI+66],AX
+      XOR    DS:[BX+DI-128],AX
+      XOR    DS:[BP+SI+67],AX
+      XOR    DS:[BP+SI-128],AX
+      XOR    DS:[BP+DI+68],AX
+      XOR    DS:[BP+DI-128],AX
+      XOR    DS:[SI+69],AX
+      XOR    DS:[SI-128],AX
+      XOR    DS:[DI+70],AX
+      XOR    DS:[DI-128],AX
+      XOR    DS:[BP+71],AX
+      XOR    DS:[BP-128],AX
+      XOR    DS:[BX+72],AX
+      XOR    DS:[BX-128],AX
+      XOR    DS:[BX+SI+73],CX
+      XOR    DS:[BX+SI-128],CX
+      XOR    DS:[BX+DI+74],CX
+      XOR    DS:[BX+DI-128],CX
+      XOR    DS:[BP+SI+75],CX
+      XOR    DS:[BP+SI-128],CX
+      XOR    DS:[BP+DI+76],CX
+      XOR    DS:[BP+DI-128],CX
+      XOR    DS:[SI+77],CX
+      XOR    DS:[SI-128],CX
+      XOR    DS:[DI+78],CX
+      XOR    DS:[DI-128],CX
+      XOR    DS:[BP+79],CX
+      XOR    DS:[BP-128],CX
+      XOR    DS:[BX+80],CX
+      XOR    DS:[BX-128],CX
+      XOR    DS:[BX+SI+81],DX
+      XOR    DS:[BX+SI-128],DX
+      XOR    DS:[BX+DI+82],DX
+      XOR    DS:[BX+DI-128],DX
+      XOR    DS:[BP+SI+83],DX
+      XOR    DS:[BP+SI-128],DX
+      XOR    DS:[BP+DI+84],DX
+      XOR    DS:[BP+DI-128],DX
+      XOR    DS:[SI+85],DX
+      XOR    DS:[SI-128],DX
+      XOR    DS:[DI+86],DX
+      XOR    DS:[DI-128],DX
+      XOR    DS:[BP+87],DX
+      XOR    DS:[BP-128],DX
+      XOR    DS:[BX+88],DX
+      XOR    DS:[BX-128],DX
+      XOR    DS:[BX+SI+89],BX
+      XOR    DS:[BX+SI-128],BX
+      XOR    DS:[BX+DI+90],BX
+      XOR    DS:[BX+DI-128],BX
+      XOR    DS:[BP+SI+91],BX
+      XOR    DS:[BP+SI-128],BX
+      XOR    DS:[BP+DI+92],BX
+      XOR    DS:[BP+DI-128],BX
+      XOR    DS:[SI+93],BX
+      XOR    DS:[SI-128],BX
+      XOR    DS:[DI+94],BX
+      XOR    DS:[DI-128],BX
+      XOR    DS:[BP+95],BX
+      XOR    DS:[BP-128],BX
+      XOR    DS:[BX+96],BX
+      XOR    DS:[BX-128],BX
+      XOR    DS:[BX+SI+97],SP
+      XOR    DS:[BX+SI-128],SP
+      XOR    DS:[BX+DI+98],SP
+      XOR    DS:[BX+DI-128],SP
+      XOR    DS:[BP+SI+99],SP
+      XOR    DS:[BP+SI-128],SP
+      XOR    DS:[BP+DI+100],SP
+      XOR    DS:[BP+DI-128],SP
+      XOR    DS:[SI+101],SP
+      XOR    DS:[SI-128],SP
+      XOR    DS:[DI+102],SP
+      XOR    DS:[DI-128],SP
+      XOR    DS:[BP+103],SP
+      XOR    DS:[BP-128],SP
+      XOR    DS:[BX+104],SP
+      XOR    DS:[BX-128],SP
+      XOR    DS:[BX+SI+105],BP
+      XOR    DS:[BX+SI-128],BP
+      XOR    DS:[BX+DI+106],BP
+      XOR    DS:[BX+DI-128],BP
+      XOR    DS:[BP+SI+107],BP
+      XOR    DS:[BP+SI-128],BP
+      XOR    DS:[BP+DI+108],BP
+      XOR    DS:[BP+DI-128],BP
+      XOR    DS:[SI+109],BP
+      XOR    DS:[SI-128],BP
+      XOR    DS:[DI+110],BP
+      XOR    DS:[DI-128],BP
+      XOR    DS:[BP+111],BP
+      XOR    DS:[BP-128],BP
+      XOR    DS:[BX+112],BP
+      XOR    DS:[BX-128],BP
+      XOR    DS:[BX+SI+113],SI
+      XOR    DS:[BX+SI-128],SI
+      XOR    DS:[BX+DI+114],SI
+      XOR    DS:[BX+DI-128],SI
+      XOR    DS:[BP+SI+115],SI
+      XOR    DS:[BP+SI-128],SI
+      XOR    DS:[BP+DI+116],SI
+      XOR    DS:[BP+DI-128],SI
+      XOR    DS:[SI+117],SI
+      XOR    DS:[SI-128],SI
+      XOR    DS:[DI+118],SI
+      XOR    DS:[DI-128],SI
+      XOR    DS:[BP+119],SI
+      XOR    DS:[BP-128],SI
+      XOR    DS:[BX+120],SI
+      XOR    DS:[BX-128],SI
+      XOR    DS:[BX+SI+121],DI
+      XOR    DS:[BX+SI-128],DI
+      XOR    DS:[BX+DI+122],DI
+      XOR    DS:[BX+DI-128],DI
+      XOR    DS:[BP+SI+123],DI
+      XOR    DS:[BP+SI-128],DI
+      XOR    DS:[BP+DI+124],DI
+      XOR    DS:[BP+DI-128],DI
+      XOR    DS:[SI+125],DI
+      XOR    DS:[SI-128],DI
+      XOR    DS:[DI+126],DI
+      XOR    DS:[DI-128],DI
+      XOR    DS:[BP+127],DI
+      XOR    DS:[BP-128],DI
+      XOR    DS:[BX-128],DI
+      XOR    DS:[BX+0],DI
+      XOR    DS:[BX+SI+8281H],AX
+      XOR    DS:[BX+DI+8382H],AX
+      XOR    DS:[BP+SI+8483H],AX
+      XOR    DS:[BP+DI+8584H],AX
+      XOR    DS:[SI+8685H],AX
+      XOR    DS:[DI+8786H],AX
+      XOR    DS:[BP+8887H],AX
+      XOR    DS:[BX+8988H],AX
+      XOR    DS:[BX+SI+8A89H],CX
+      XOR    DS:[BX+DI+8B8AH],CX
+      XOR    DS:[BP+SI+8C8BH],CX
+      XOR    DS:[BP+DI+8D8CH],CX
+      XOR    DS:[SI+8E8DH],CX
+      XOR    DS:[DI+8F8EH],CX
+      XOR    DS:[BP+908FH],CX
+      XOR    DS:[BX+9190H],CX
+      XOR    DS:[BX+SI+9291H],DX
+      XOR    DS:[BX+DI+9392H],DX
+      XOR    DS:[BP+SI+9493H],DX
+      XOR    DS:[BP+DI+9594H],DX
+      XOR    DS:[SI+9695H],DX
+      XOR    DS:[DI+9796H],DX
+      XOR    DS:[BP+9897H],DX
+      XOR    DS:[BX+9998H],DX
+      XOR    DS:[BX+SI+9A99H],BX
+      XOR    DS:[BX+DI+9B9AH],BX
+      XOR    DS:[BP+SI+9C9BH],BX
+      XOR    DS:[BP+DI+9D9CH],BX
+      XOR    DS:[SI+9E9DH],BX
+      XOR    DS:[DI+9F9EH],BX
+      XOR    DS:[BP+0A09FH],BX
+      XOR    DS:[BX+0A1A0H],BX
+      XOR    DS:[BX+SI+0A2A1H],SP
+      XOR    DS:[BX+DI+0A3A2H],SP
+      XOR    DS:[BP+SI+0A4A3H],SP
+      XOR    DS:[BP+DI+0A5A4H],SP
+      XOR    DS:[SI+0A6A5H],SP
+      XOR    DS:[DI+0A7A6H],SP
+      XOR    DS:[BP+0A8A7H],SP
+      XOR    DS:[BX+0A9A8H],SP
+      XOR    DS:[BX+SI+0AAA9H],BP
+      XOR    DS:[BX+DI+0ABAAH],BP
+      XOR    DS:[BP+SI+0ACABH],BP
+      XOR    DS:[BP+DI+0ADACH],BP
+      XOR    DS:[SI+0AEADH],BP
+      XOR    DS:[DI+0AFAEH],BP
+      XOR    DS:[BP+0B0AFH],BP
+      XOR    DS:[BX+0B1B0H],BP
+      XOR    DS:[BX+SI+0B2B1H],SI
+      XOR    DS:[BX+DI+0B3B2H],SI
+      XOR    DS:[BP+SI+0B4B3H],SI
+      XOR    DS:[BP+DI+0B5B4H],SI
+      XOR    DS:[SI+0B6B5H],SI
+      XOR    DS:[DI+0B7B6H],SI
+      XOR    DS:[BP+0B8B7H],SI
+      XOR    DS:[BX+0B9B8H],SI
+      XOR    DS:[BX+SI+0BAB9H],DI
+      XOR    DS:[BX+DI+0BBBAH],DI
+      XOR    DS:[BP+SI+0BCBBH],DI
+      XOR    DS:[BP+DI+0BDBCH],DI
+      XOR    DS:[SI+0BEBDH],DI
+      XOR    DS:[DI+0BFBEH],DI
+      XOR    DS:[BP+0C0BFH],DI
+      XOR    DS:[BX+0C1C0H],DI
+      XOR    DS:[BX+SI],AX
+      XOR    DS:[BX+DI],AX
+      XOR    DS:[BP+SI],AX
+      XOR    DS:[BP+DI],AX
+      XOR    DS:[SI],AX
+      XOR    DS:[DI],AX
+      XOR    DS:[0807H],AX
+      XOR    DS:[BX],AX
+      XOR    DS:[BX+SI],CX
+      XOR    DS:[BX+DI],CX
+      XOR    DS:[BP+SI],CX
+      XOR    DS:[BP+DI],CX
+      XOR    DS:[SI],CX
+      XOR    DS:[DI],CX
+      XOR    DS:[100FH],CX
+      XOR    DS:[BX],CX
+      XOR    DS:[BX+SI],DX
+      XOR    DS:[BX+DI],DX
+      XOR    DS:[BP+SI],DX
+      XOR    DS:[BP+DI],DX
+      XOR    DS:[SI],DX
+      XOR    DS:[DI],DX
+      XOR    DS:[1817H],DX
+      XOR    DS:[BX],DX
+      XOR    DS:[BX+SI],BX
+      XOR    DS:[BX+DI],BX
+      XOR    DS:[BP+SI],BX
+      XOR    DS:[BP+DI],BX
+      XOR    DS:[SI],BX
+      XOR    DS:[DI],BX
+      XOR    DS:[201FH],BX
+      XOR    DS:[BX],BX
+      XOR    DS:[BX+SI],SP
+      XOR    DS:[BX+DI],SP
+      XOR    DS:[BP+SI],SP
+      XOR    DS:[BP+DI],SP
+      XOR    DS:[SI],SP
+      XOR    DS:[DI],SP
+      XOR    DS:[2827H],SP
+      XOR    DS:[BX],SP
+      XOR    DS:[BX+SI],BP
+      XOR    DS:[BX+DI],BP
+      XOR    DS:[BP+SI],BP
+      XOR    DS:[BP+DI],BP
+      XOR    DS:[SI],BP
+      XOR    DS:[DI],BP
+      XOR    DS:[302FH],BP
+      XOR    DS:[BX],BP
+      XOR    DS:[BX+SI],SI
+      XOR    DS:[BX+DI],SI
+      XOR    DH,DS:[BP+DI]
+      XOR    DH,DS:[SI]
+      XOR    DH,DS:[DI]
+      XOR    DH,DS:[3837H]
+      XOR    DH,DS:[BX]
+      XOR    BH,DS:[BX+SI]
+      XOR    BH,DS:[BX+DI]
+      XOR    BH,DS:[BP+SI]
+      XOR    SI,DS:[SI]
+      XOR    SI,DS:[DI]
+      XOR    SI,DS:[3837H]
+      XOR    SI,DS:[BX]
+      XOR    DI,DS:[BX+SI]
+      XOR    DI,DS:[BX+DI]
+      XOR    DI,DS:[BP+SI]
+      XOR    DI,DS:[BP+DI]
+      XOR    DI,DS:[SI]
+      XOR    DI,DS:[DI]
+      XOR    DI,DS:[403FH]
+      XOR    DI,DS:[BX]
+      XOR    AX,DS:[BX+SI+65]
+      XOR    AX,DS:[BX+SI-128]
+      XOR    AX,DS:[BX+DI+66]
+      XOR    AX,DS:[BX+DI-128]
+      XOR    AX,DS:[BP+SI+67]
+      XOR    AX,DS:[BP+SI-128]
+      XOR    AX,DS:[BP+DI+68]
+      XOR    AX,DS:[BP+DI-128]
+      XOR    AX,DS:[SI+69]
+      XOR    AX,DS:[SI-128]
+      XOR    AX,DS:[DI+70]
+      XOR    AX,DS:[DI-128]
+      XOR    AX,DS:[BP+71]
+      XOR    AX,DS:[BP-128]
+      XOR    AX,DS:[BX+72]
+      XOR    AX,DS:[BX-128]
+      XOR    CX,DS:[BX+SI+73]
+      XOR    CX,DS:[BX+SI-128]
+      XOR    CX,DS:[BX+DI+74]
+      XOR    CX,DS:[BX+DI-128]
+      XOR    CX,DS:[BP+SI+75]
+      XOR    CX,DS:[BP+SI-128]
+      XOR    CX,DS:[BP+DI+76]
+      XOR    CX,DS:[BP+DI-128]
+      XOR    CX,DS:[SI+77]
+      XOR    CX,DS:[SI-128]
+      XOR    CX,DS:[DI+78]
+      XOR    CX,DS:[DI-128]
+      XOR    CX,DS:[BP+79]
+      XOR    CX,DS:[BP-128]
+      XOR    CX,DS:[BX+80]
+      XOR    CX,DS:[BX-128]
+      XOR    DX,DS:[BX+SI+81]
+      XOR    DX,DS:[BX+SI-128]
+      XOR    DX,DS:[BX+DI+82]
+      XOR    DX,DS:[BX+DI-128]
+      XOR    DX,DS:[BP+SI+83]
+      XOR    DX,DS:[BP+SI-128]
+      XOR    DX,DS:[BP+DI+84]
+      XOR    DX,DS:[BP+DI-128]
+      XOR    DX,DS:[SI+85]
+      XOR    DX,DS:[SI-128]
+      XOR    DX,DS:[DI+86]
+      XOR    DX,DS:[DI-128]
+      XOR    DX,DS:[BP+87]
+      XOR    DX,DS:[BP-128]
+      XOR    DX,DS:[BX+88]
+      XOR    DX,DS:[BX-128]
+      XOR    BX,DS:[BX+SI+89]
+      XOR    BX,DS:[BX+SI-128]
+      XOR    BX,DS:[BX+DI+90]
+      XOR    BX,DS:[BX+DI-128]
+      XOR    BX,DS:[BP+SI+91]
+      XOR    BX,DS:[BP+SI-128]
+      XOR    BX,DS:[BP+DI+92]
+      XOR    BX,DS:[BP+DI-128]
+      XOR    BX,DS:[SI+93]
+      XOR    BX,DS:[SI-128]
+      XOR    BX,DS:[DI+94]
+      XOR    BX,DS:[DI-128]
+      XOR    BX,DS:[BP+95]
+      XOR    BX,DS:[BP-128]
+      XOR    BX,DS:[BX+96]
+      XOR    BX,DS:[BX-128]
+      XOR    SP,DS:[BX+SI+97]
+      XOR    SP,DS:[BX+SI-128]
+      XOR    SP,DS:[BX+DI+98]
+      XOR    SP,DS:[BX+DI-128]
+      XOR    SP,DS:[BP+SI+99]
+      XOR    SP,DS:[BP+SI-128]
+      XOR    SP,DS:[BP+DI+100]
+      XOR    SP,DS:[BP+DI-128]
+      XOR    SP,DS:[SI+101]
+      XOR    SP,DS:[SI-128]
+      XOR    SP,DS:[DI+102]
+      XOR    SP,DS:[DI-128]
+      XOR    SP,DS:[BP+103]
+      XOR    SP,DS:[BP-128]
+      XOR    SP,DS:[BX+104]
+      XOR    SP,DS:[BX-128]
+      XOR    BP,DS:[BX+SI+105]
+      XOR    BP,DS:[BX+SI-128]
+      XOR    BP,DS:[BX+DI+106]
+      XOR    BP,DS:[BX+DI-128]
+      XOR    BP,DS:[BP+SI+107]
+      XOR    BP,DS:[BP+SI-128]
+      XOR    BP,DS:[BP+DI+108]
+      XOR    BP,DS:[BP+DI-128]
+      XOR    BP,DS:[SI+109]
+      XOR    BP,DS:[SI-128]
+      XOR    BP,DS:[DI+110]
+      XOR    BP,DS:[DI-128]
+      XOR    BP,DS:[BP+111]
+      XOR    BP,DS:[BP-128]
+      XOR    BP,DS:[BX+112]
+      XOR    BP,DS:[BX-128]
+      XOR    SI,DS:[BX+SI+113]
+      XOR    SI,DS:[BX+SI-128]
+      XOR    SI,DS:[BX+DI+114]
+      XOR    SI,DS:[BX+DI-128]
+      XOR    SI,DS:[BP+SI+115]
+      XOR    SI,DS:[BP+SI-128]
+      XOR    SI,DS:[BP+DI+116]
+      XOR    SI,DS:[BP+DI-128]
+      XOR    SI,DS:[SI+117]
+      XOR    SI,DS:[SI-128]
+      XOR    SI,DS:[DI+118]
+      XOR    SI,DS:[DI-128]
+      XOR    SI,DS:[BP+119]
+      XOR    SI,DS:[BP-128]
+      XOR    SI,DS:[BX+120]
+      XOR    SI,DS:[BX-128]
+      XOR    DI,DS:[BX+SI+121]
+      XOR    DI,DS:[BX+SI-128]
+      XOR    DI,DS:[BX+DI+122]
+      XOR    DI,DS:[BX+DI-128]
+      XOR    DI,DS:[BP+SI+123]
+      XOR    DI,DS:[BP+SI-128]
+      XOR    DI,DS:[BP+DI+124]
+      XOR    DI,DS:[BP+DI-128]
+      XOR    DI,DS:[SI+125]
+      XOR    DI,DS:[SI-128]
+      XOR    DI,DS:[DI+126]
+      XOR    DI,DS:[DI-128]
+      XOR    DI,DS:[BP+127]
+      XOR    DI,DS:[BP-128]
+      XOR    DI,DS:[BX-128]
+      XOR    DI,DS:[BX+0]
+      XOR    AX,DS:[BX+SI+8281H]
+      XOR    AX,DS:[BX+DI+8382H]
+      XOR    AX,DS:[BP+SI+8483H]
+      XOR    AX,DS:[BP+DI+8584H]
+      XOR    AX,DS:[SI+8685H]
+      XOR    AX,DS:[DI+8786H]
+      XOR    AX,DS:[BP+8887H]
+      XOR    AX,DS:[BX+8988H]
+      XOR    CX,DS:[BX+SI+8A89H]
+      XOR    CX,DS:[BX+DI+8B8AH]
+      XOR    CX,DS:[BP+SI+8C8BH]
+      XOR    CX,DS:[BP+DI+8D8CH]
+      XOR    CX,DS:[SI+8E8DH]
+      XOR    CX,DS:[DI+8F8EH]
+      XOR    CX,DS:[BP+908FH]
+      XOR    CX,DS:[BX+9190H]
+      XOR    DX,DS:[BX+SI+9291H]
+      XOR    DX,DS:[BX+DI+9392H]
+      XOR    DX,DS:[BP+SI+9493H]
+      XOR    DX,DS:[BP+DI+9594H]
+      XOR    DX,DS:[SI+9695H]
+      XOR    DX,DS:[DI+9796H]
+      XOR    DX,DS:[BP+9897H]
+      XOR    DX,DS:[BX+9998H]
+      XOR    BX,DS:[BX+SI+9A99H]
+      XOR    BX,DS:[BX+DI+9B9AH]
+      XOR    BX,DS:[BP+SI+9C9BH]
+      XOR    BX,DS:[BP+DI+9D9CH]
+      XOR    BX,DS:[SI+9E9DH]
+      XOR    BX,DS:[DI+9F9EH]
+      XOR    BX,DS:[BP+0A09FH]
+      XOR    BX,DS:[BX+0A1A0H]
+      XOR    SP,DS:[BX+SI+0A2A1H]
+      XOR    SP,DS:[BX+DI+0A3A2H]
+      XOR    SP,DS:[BP+SI+0A4A3H]
+      XOR    SP,DS:[BP+DI+0A5A4H]
+      XOR    SP,DS:[SI+0A6A5H]
+      XOR    SP,DS:[DI+0A7A6H]
+      XOR    SP,DS:[BP+0A8A7H]
+      XOR    SP,DS:[BX+0A9A8H]
+      XOR    BP,DS:[BX+SI+0AAA9H]
+      XOR    BP,DS:[BX+DI+0ABAAH]
+      XOR    BP,DS:[BP+SI+0ACABH]
+      XOR    BP,DS:[BP+DI+0ADACH]
+      XOR    BP,DS:[SI+0AEADH]
+      XOR    BP,DS:[DI+0AFAEH]
+      XOR    BP,DS:[BP+0B0AFH]
+      XOR    BP,DS:[BX+0B1B0H]
+      XOR    SI,DS:[BX+SI+0B2B1H]
+      XOR    SI,DS:[BX+DI+0B3B2H]
+      XOR    SI,DS:[BP+SI+0B4B3H]
+      XOR    SI,DS:[BP+DI+0B5B4H]
+      XOR    SI,DS:[SI+0B6B5H]
+      XOR    SI,DS:[DI+0B7B6H]
+      XOR    SI,DS:[BP+0B8B7H]
+      XOR    SI,DS:[BX+0B9B8H]
+      XOR    DI,DS:[BX+SI+0BAB9H]
+      XOR    DI,DS:[BX+DI+0BBBAH]
+      XOR    DI,DS:[BP+SI+0BCBBH]
+      XOR    DI,DS:[BP+DI+0BDBCH]
+      XOR    DI,DS:[SI+0BEBDH]
+      XOR    DI,DS:[DI+0BFBEH]
+      XOR    DI,DS:[BP+0C0BFH]
+      XOR    DI,DS:[BX+0C1C0H]
+      XOR    AX,DS:[BX+SI]
+      XOR    AX,DS:[BX+DI]
+      XOR    AX,DS:[BP+SI]
+      XOR    AX,DS:[BP+DI]
+      XOR    AX,DS:[SI]
+      XOR    AX,DS:[DI]
+      XOR    AX,DS:[0807H]
+      XOR    AX,DS:[BX]
+      XOR    CX,DS:[BX+SI]
+      XOR    CX,DS:[BX+DI]
+      XOR    CX,DS:[BP+SI]
+      XOR    CX,DS:[BP+DI]
+      XOR    CX,DS:[SI]
+      XOR    CX,DS:[DI]
+      XOR    CX,DS:[100FH]
+      XOR    CX,DS:[BX]
+      XOR    DX,DS:[BX+SI]
+      XOR    DX,DS:[BX+DI]
+      XOR    DX,DS:[BP+SI]
+      XOR    DX,DS:[BP+DI]
+      XOR    DX,DS:[SI]
+      XOR    DX,DS:[DI]
+      XOR    DX,DS:[1817H]
+      XOR    DX,DS:[BX]
+      XOR    BX,DS:[BX+SI]
+      XOR    BX,DS:[BX+DI]
+      XOR    BX,DS:[BP+SI]
+      XOR    BX,DS:[BP+DI]
+      XOR    BX,DS:[SI]
+      XOR    BX,DS:[DI]
+      XOR    BX,DS:[201FH]
+      XOR    BX,DS:[BX]
+      XOR    SP,DS:[BX+SI]
+      XOR    SP,DS:[BX+DI]
+      XOR    SP,DS:[BP+SI]
+      XOR    SP,DS:[BP+DI]
+      XOR    SP,DS:[SI]
+      XOR    SP,DS:[DI]
+      XOR    SP,DS:[2827H]
+      XOR    SP,DS:[BX]
+      XOR    BP,DS:[BX+SI]
+      XOR    BP,DS:[BX+DI]
+      XOR    BP,DS:[BP+SI]
+      XOR    BP,DS:[BP+DI]
+      XOR    BP,DS:[SI]
+      XOR    BP,DS:[DI]
+      XOR    BP,DS:[302FH]
+      XOR    BP,DS:[BX]
+      XOR    SI,DS:[BX+SI]
+      XOR    SI,DS:[BX+DI]
+      XOR    SI,DS:[BP+SI]
+      XOR    SI,DS:[BP+DI]
+      CMP    DS:[BX+DI],BH
+      CMP    DS:[BP+SI],BH
+      CMP    DS:[BP+DI],BH
+      CMP    DS:[SI],BH
+      CMP    DS:[DI],BH
+      CMP    DS:[403FH],BH
+      CMP    DS:[BX],BH
+      CMP    DS:[BX+SI+65],AL
+      CMP    DS:[BX+SI-128],AL
+      CMP    DS:[BX+DI+66],AL
+      CMP    DS:[BX+DI-128],AL
+      CMP    DS:[BP+SI+67],AL
+      CMP    DS:[BP+SI-128],AL
+      CMP    DS:[BP+DI+68],AL
+      CMP    DS:[BP+DI-128],AL
+      CMP    DS:[SI+69],AL
+      CMP    DS:[SI-128],AL
+      CMP    DS:[DI+70],AL
+      CMP    DS:[DI-128],AL
+      CMP    DS:[BP+71],AL
+      CMP    DS:[BP-128],AL
+      CMP    DS:[BX+72],AL
+      CMP    DS:[BX-128],AL
+      CMP    DS:[BX+SI+73],CL
+      CMP    DS:[BX+SI-128],CL
+      CMP    DS:[BX+DI+74],CL
+      CMP    DS:[BX+DI-128],CL
+      CMP    DS:[BP+SI+75],CL
+      CMP    DS:[BP+SI-128],CL
+      CMP    DS:[BP+DI+76],CL
+      CMP    DS:[BP+DI-128],CL
+      CMP    DS:[SI+77],CL
+      CMP    DS:[SI-128],CL
+      CMP    DS:[DI+78],CL
+      CMP    DS:[DI-128],CL
+      CMP    DS:[BP+79],CL
+      CMP    DS:[BP-128],CL
+      CMP    DS:[BX+80],CL
+      CMP    DS:[BX-128],CL
+      CMP    DS:[BX+SI+81],DL
+      CMP    DS:[BX+SI-128],DL
+      CMP    DS:[BX+DI+82],DL
+      CMP    DS:[BX+DI-128],DL
+      CMP    DS:[BP+SI+83],DL
+      CMP    DS:[BP+SI-128],DL
+      CMP    DS:[BP+DI+84],DL
+      CMP    DS:[BP+DI-128],DL
+      CMP    DS:[SI+85],DL
+      CMP    DS:[SI-128],DL
+      CMP    DS:[DI+86],DL
+      CMP    DS:[DI-128],DL
+      CMP    DS:[BP+87],DL
+      CMP    DS:[BP-128],DL
+      CMP    DS:[BX+88],DL
+      CMP    DS:[BX-128],DL
+      CMP    DS:[BX+SI+89],BL
+      CMP    DS:[BX+SI-128],BL
+      CMP    DS:[BX+DI+90],BL
+      CMP    DS:[BX+DI-128],BL
+      CMP    DS:[BP+SI+91],BL
+      CMP    DS:[BP+SI-128],BL
+      CMP    DS:[BP+DI+92],BL
+      CMP    DS:[BP+DI-128],BL
+      CMP    DS:[SI+93],BL
+      CMP    DS:[SI-128],BL
+      CMP    DS:[DI+94],BL
+      CMP    DS:[DI-128],BL
+      CMP    DS:[BP+95],BL
+      CMP    DS:[BP-128],BL
+      CMP    DS:[BX+96],BL
+      CMP    DS:[BX-128],BL
+      CMP    DS:[BX+SI+97],AH
+      CMP    DS:[BX+SI-128],AH
+      CMP    DS:[BX+DI+98],AH
+      CMP    DS:[BX+DI-128],AH
+      CMP    DS:[BP+SI+99],AH
+      CMP    DS:[BP+SI-128],AH
+      CMP    DS:[BP+DI+100],AH
+      CMP    DS:[BP+DI-128],AH
+      CMP    DS:[SI+101],AH
+      CMP    DS:[SI-128],AH
+      CMP    DS:[DI+102],AH
+      CMP    DS:[DI-128],AH
+      CMP    DS:[BP+103],AH
+      CMP    DS:[BP-128],AH
+      CMP    DS:[BX+104],AH
+      CMP    DS:[BX-128],AH
+      CMP    DS:[BX+SI+8281H],AL
+      CMP    DS:[BX+DI+8382H],AL
+      CMP    DS:[BP+SI+8483H],AL
+      CMP    DS:[BP+DI+8584H],AL
+      CMP    DS:[SI+8685H],AL
+      CMP    DS:[DI+8786H],AL
+      CMP    DS:[BP+8887H],AL
+      CMP    DS:[BX+8988H],AL
+      CMP    DS:[BX+SI+8A89H],CL
+      CMP    DS:[BX+DI+8B8AH],CL
+      CMP    DS:[BP+SI+8C8BH],CL
+      CMP    DS:[BP+DI+8D8CH],CL
+      CMP    DS:[SI+8E8DH],CL
+      CMP    DS:[DI+8F8EH],CL
+      CMP    DS:[BP+908FH],CL
+      CMP    DS:[BX+9190H],CL
+      CMP    DS:[BX+SI+9291H],DL
+      CMP    DS:[BX+DI+9392H],DL
+      CMP    DS:[BP+SI+9493H],DL
+      CMP    DS:[BP+DI+9594H],DL
+      CMP    DS:[SI+9695H],DL
+      CMP    DS:[DI+9796H],DL
+      CMP    DS:[BP+9897H],DL
+      CMP    DS:[BX+9998H],DL
+      CMP    DS:[BX+SI+9A99H],BL
+      CMP    DS:[BX+DI+9B9AH],BL
+      CMP    DS:[BP+SI+9C9BH],BL
+      CMP    DS:[BP+DI+9D9CH],BL
+      CMP    DS:[SI+9E9DH],BL
+      CMP    DS:[DI+9F9EH],BL
+      CMP    DS:[BP+0A09FH],BL
+      CMP    DS:[BX+0A1A0H],BL
+      CMP    DS:[BX+SI+0A2A1H],AH
+      CMP    DS:[BX+DI+0A3A2H],AH
+      CMP    DS:[BP+SI+0A4A3H],AH
+      CMP    DS:[BP+DI+0A5A4H],AH
+      CMP    DS:[SI+0A6A5H],AH
+      CMP    DS:[DI+0A7A6H],AH
+      CMP    DS:[BP+0A8A7H],AH
+      CMP    DS:[BX+0A9A8H],AH
+      CMP    DS:[BP+SI],DI
+      CMP    DS:[BP+DI],DI
+      CMP    DS:[SI],DI
+      CMP    DS:[DI],DI
+      CMP    DS:[403FH],DI
+      CMP    DS:[BX],DI
+      CMP    DS:[BX+SI+65],AX
+      CMP    DS:[BX+SI-128],AX
+      CMP    DS:[BX+DI+66],AX
+      CMP    DS:[BX+DI-128],AX
+      CMP    DS:[BP+SI+67],AX
+      CMP    DS:[BP+SI-128],AX
+      CMP    DS:[BP+DI+68],AX
+      CMP    DS:[BP+DI-128],AX
+      CMP    DS:[SI+69],AX
+      CMP    DS:[SI-128],AX
+      CMP    DS:[DI+70],AX
+      CMP    DS:[DI-128],AX
+      CMP    DS:[BP+71],AX
+      CMP    DS:[BP-128],AX
+      CMP    DS:[BX+72],AX
+      CMP    DS:[BX-128],AX
+      CMP    DS:[BX+SI+73],CX
+      CMP    DS:[BX+SI-128],CX
+      CMP    DS:[BX+DI+74],CX
+      CMP    DS:[BX+DI-128],CX
+      CMP    DS:[BP+SI+75],CX
+      CMP    DS:[BP+SI-128],CX
+      CMP    DS:[BP+DI+76],CX
+      CMP    DS:[BP+DI-128],CX
+      CMP    DS:[SI+77],CX
+      CMP    DS:[SI-128],CX
+      CMP    DS:[DI+78],CX
+      CMP    DS:[DI-128],CX
+      CMP    DS:[BP+79],CX
+      CMP    DS:[BP-128],CX
+      CMP    DS:[BX+80],CX
+      CMP    DS:[BX-128],CX
+      CMP    DS:[BX+SI+81],DX
+      CMP    DS:[BX+SI-128],DX
+      CMP    DS:[BX+DI+82],DX
+      CMP    DS:[BX+DI-128],DX
+      CMP    DS:[BP+SI+83],DX
+      CMP    DS:[BP+SI-128],DX
+      CMP    DS:[BP+DI+84],DX
+      CMP    DS:[BP+DI-128],DX
+      CMP    DS:[SI+85],DX
+      CMP    DS:[SI-128],DX
+      CMP    DS:[DI+86],DX
+      CMP    DS:[DI-128],DX
+      CMP    DS:[BP+87],DX
+      CMP    DS:[BP-128],DX
+      CMP    DS:[BX+88],DX
+      CMP    DS:[BX-128],DX
+      CMP    DS:[BX+SI+89],BX
+      CMP    DS:[BX+SI-128],BX
+      CMP    DS:[BX+DI+90],BX
+      CMP    DS:[BX+DI-128],BX
+      CMP    DS:[BP+SI+91],BX
+      CMP    DS:[BP+SI-128],BX
+      CMP    DS:[BP+DI+92],BX
+      CMP    DS:[BP+DI-128],BX
+      CMP    DS:[SI+93],BX
+      CMP    DS:[SI-128],BX
+      CMP    DS:[DI+94],BX
+      CMP    DS:[DI-128],BX
+      CMP    DS:[BP+95],BX
+      CMP    DS:[BP-128],BX
+      CMP    DS:[BX+96],BX
+      CMP    DS:[BX-128],BX
+      CMP    DS:[BX+SI+97],SP
+      CMP    DS:[BX+SI-128],SP
+      CMP    DS:[BX+DI+98],SP
+      CMP    DS:[BX+DI-128],SP
+      CMP    DS:[BP+SI+99],SP
+      CMP    DS:[BP+SI-128],SP
+      CMP    DS:[BP+DI+100],SP
+      CMP    DS:[BP+DI-128],SP
+      CMP    DS:[SI+101],SP
+      CMP    DS:[SI-128],SP
+      CMP    DS:[DI+102],SP
+      CMP    DS:[DI-128],SP
+      CMP    DS:[BP+103],SP
+      CMP    DS:[BP-128],SP
+      CMP    DS:[BX+104],SP
+      CMP    DS:[BX-128],SP
+      CMP    DS:[BX+SI+105],BP
+      CMP    DS:[BX+SI-128],BP
+      CMP    DS:[BX+DI+106],BP
+      CMP    DS:[BX+DI-128],BP
+      CMP    DS:[BP+SI+107],BP
+      CMP    DS:[BP+SI-128],BP
+      CMP    DS:[BP+DI+108],BP
+      CMP    DS:[BP+DI-128],BP
+      CMP    DS:[SI+109],BP
+      CMP    DS:[SI-128],BP
+      CMP    DS:[DI+110],BP
+      CMP    DS:[DI-128],BP
+      CMP    DS:[BP+111],BP
+      CMP    DS:[BP-128],BP
+      CMP    DS:[BX+112],BP
+      CMP    DS:[BX-128],BP
+      CMP    DS:[BX+SI+113],SI
+      CMP    DS:[BX+SI-128],SI
+      CMP    DS:[BX+DI+114],SI
+      CMP    DS:[BX+DI-128],SI
+      CMP    DS:[BP+SI+115],SI
+      CMP    DS:[BP+SI-128],SI
+      CMP    DS:[BP+DI+116],SI
+      CMP    DS:[BP+DI-128],SI
+      CMP    DS:[SI+117],SI
+      CMP    DS:[SI-128],SI
+      CMP    DS:[DI+118],SI
+      CMP    DS:[DI-128],SI
+      CMP    DS:[BP+119],SI
+      CMP    DS:[BP-128],SI
+      CMP    DS:[BX+120],SI
+      CMP    DS:[BX-128],SI
+      CMP    DS:[BX+SI+121],DI
+      CMP    DS:[BX+SI-128],DI
+      CMP    DS:[BX+DI+122],DI
+      CMP    DS:[BX+DI-128],DI
+      CMP    DS:[BP+SI+123],DI
+      CMP    DS:[BP+SI-128],DI
+      CMP    DS:[BP+DI+124],DI
+      CMP    DS:[BP+DI-128],DI
+      CMP    DS:[SI+125],DI
+      CMP    DS:[SI-128],DI
+      CMP    DS:[DI+126],DI
+      CMP    DS:[DI-128],DI
+      CMP    DS:[BP+127],DI
+      CMP    DS:[BP-128],DI
+      CMP    DS:[BX-128],DI
+      CMP    DS:[BX+0],DI
+      CMP    DS:[BX+SI+8281H],AX
+      CMP    DS:[BX+DI+8382H],AX
+      CMP    DS:[BP+SI+8483H],AX
+      CMP    DS:[BP+DI+8584H],AX
+      CMP    DS:[SI+8685H],AX
+      CMP    DS:[DI+8786H],AX
+      CMP    DS:[BP+8887H],AX
+      CMP    DS:[BX+8988H],AX
+      CMP    DS:[BX+SI+8A89H],CX
+      CMP    DS:[BX+DI+8B8AH],CX
+      CMP    DS:[BP+SI+8C8BH],CX
+      CMP    DS:[BP+DI+8D8CH],CX
+      CMP    DS:[SI+8E8DH],CX
+      CMP    DS:[DI+8F8EH],CX
+      CMP    DS:[BP+908FH],CX
+      CMP    DS:[BX+9190H],CX
+      CMP    DS:[BX+SI+9291H],DX
+      CMP    DS:[BX+DI+9392H],DX
+      CMP    DS:[BP+SI+9493H],DX
+      CMP    DS:[BP+DI+9594H],DX
+      CMP    DS:[SI+9695H],DX
+      CMP    DS:[DI+9796H],DX
+      CMP    DS:[BP+9897H],DX
+      CMP    DS:[BX+9998H],DX
+      CMP    DS:[BX+SI+9A99H],BX
+      CMP    DS:[BX+DI+9B9AH],BX
+      CMP    DS:[BP+SI+9C9BH],BX
+      CMP    DS:[BP+DI+9D9CH],BX
+      CMP    DS:[SI+9E9DH],BX
+      CMP    DS:[DI+9F9EH],BX
+      CMP    DS:[BP+0A09FH],BX
+      CMP    DS:[BX+0A1A0H],BX
+      CMP    DS:[BX+SI+0A2A1H],SP
+      CMP    DS:[BX+DI+0A3A2H],SP
+      CMP    DS:[BP+SI+0A4A3H],SP
+      CMP    DS:[BP+DI+0A5A4H],SP
+      CMP    DS:[SI+0A6A5H],SP
+      CMP    DS:[DI+0A7A6H],SP
+      CMP    DS:[BP+0A8A7H],SP
+      CMP    DS:[BX+0A9A8H],SP
+      CMP    DS:[BX+SI+0AAA9H],BP
+      CMP    DS:[BX+DI+0ABAAH],BP
+      CMP    DS:[BP+SI+0ACABH],BP
+      CMP    DS:[BP+DI+0ADACH],BP
+      CMP    DS:[SI+0AEADH],BP
+      CMP    DS:[DI+0AFAEH],BP
+      CMP    DS:[BP+0B0AFH],BP
+      CMP    DS:[BX+0B1B0H],BP
+      CMP    DS:[BX+SI+0B2B1H],SI
+      CMP    DS:[BX+DI+0B3B2H],SI
+      CMP    DS:[BP+SI+0B4B3H],SI
+      CMP    DS:[BP+DI+0B5B4H],SI
+      CMP    DS:[SI+0B6B5H],SI
+      CMP    DS:[DI+0B7B6H],SI
+      CMP    DS:[BP+0B8B7H],SI
+      CMP    DS:[BX+0B9B8H],SI
+      CMP    DS:[BX+SI+0BAB9H],DI
+      CMP    DS:[BX+DI+0BBBAH],DI
+      CMP    DS:[BP+SI+0BCBBH],DI
+      CMP    DS:[BP+DI+0BDBCH],DI
+      CMP    DS:[SI+0BEBDH],DI
+      CMP    DS:[DI+0BFBEH],DI
+      CMP    DS:[BP+0C0BFH],DI
+      CMP    DS:[BX+0C1C0H],DI
+      CMP    DS:[BX+SI],AX
+      CMP    DS:[BX+DI],AX
+      CMP    DS:[BP+SI],AX
+      CMP    DS:[BP+DI],AX
+      CMP    DS:[SI],AX
+      CMP    DS:[DI],AX
+      CMP    DS:[0807H],AX
+      CMP    DS:[BX],AX
+      CMP    DS:[BX+SI],CX
+      CMP    DS:[BX+DI],CX
+      CMP    DS:[BP+SI],CX
+      CMP    DS:[BP+DI],CX
+      CMP    DS:[SI],CX
+      CMP    DS:[DI],CX
+      CMP    DS:[100FH],CX
+      CMP    DS:[BX],CX
+      CMP    DS:[BX+SI],DX
+      CMP    DS:[BX+DI],DX
+      CMP    DS:[BP+SI],DX
+      CMP    DS:[BP+DI],DX
+      CMP    DS:[SI],DX
+      CMP    DS:[DI],DX
+      CMP    DS:[1817H],DX
+      CMP    DS:[BX],DX
+      CMP    DS:[BX+SI],BX
+      CMP    DS:[BX+DI],BX
+      CMP    DS:[BP+SI],BX
+      CMP    DS:[BP+DI],BX
+      CMP    DS:[SI],BX
+      CMP    DS:[DI],BX
+      CMP    DS:[201FH],BX
+      CMP    DS:[BX],BX
+      CMP    DS:[BX+SI],SP
+      CMP    DS:[BX+DI],SP
+      CMP    DS:[BP+SI],SP
+      CMP    DS:[BP+DI],SP
+      CMP    DS:[SI],SP
+      CMP    DS:[DI],SP
+      CMP    DS:[2827H],SP
+      CMP    DS:[BX],SP
+      CMP    DS:[BX+SI],BP
+      CMP    DS:[BX+DI],BP
+      CMP    DS:[BP+SI],BP
+      CMP    DS:[BP+DI],BP
+      CMP    DS:[SI],BP
+      CMP    DS:[DI],BP
+      CMP    DS:[302FH],BP
+      CMP    DS:[BX],BP
+      CMP    DS:[BX+SI],SI
+      CMP    DS:[BX+DI],SI
+      CMP    DS:[BP+SI],SI
+      CMP    DS:[BP+DI],SI
+      CMP    DS:[SI],SI
+      CMP    DS:[DI],SI
+      CMP    DS:[3837H],SI
+      CMP    DS:[BX],SI
+      CMP    DS:[BX+SI],DI
+      CMP    DS:[BX+DI],DI
+      CMP    BH,DS:[BP+DI]
+      CMP    BH,DS:[SI]
+      CMP    BH,DS:[DI]
+      CMP    BH,DS:[403FH]
+      CMP    BH,DS:[BX]
+      CMP    AL,DS:[BX+SI+65]
+      CMP    AL,DS:[BX+SI-128]
+      CMP    AL,DS:[BX+DI+66]
+      CMP    AL,DS:[BX+DI-128]
+      CMP    AL,DS:[BP+SI+67]
+      CMP    AL,DS:[BP+SI-128]
+      CMP    AL,DS:[BP+DI+68]
+      CMP    AL,DS:[BP+DI-128]
+      CMP    AL,DS:[SI+69]
+      CMP    AL,DS:[SI-128]
+      CMP    AL,DS:[DI+70]
+      CMP    AL,DS:[DI-128]
+      CMP    AL,DS:[BP+71]
+      CMP    AL,DS:[BP-128]
+      CMP    AL,DS:[BX+72]
+      CMP    AL,DS:[BX-128]
+      CMP    CL,DS:[BX+SI+73]
+      CMP    CL,DS:[BX+SI-128]
+      CMP    CL,DS:[BX+DI+74]
+      CMP    CL,DS:[BX+DI-128]
+      CMP    CL,DS:[BP+SI+75]
+      CMP    CL,DS:[BP+SI-128]
+      CMP    CL,DS:[BP+DI+76]
+      CMP    CL,DS:[BP+DI-128]
+      CMP    CL,DS:[SI+77]
+      CMP    CL,DS:[SI-128]
+      CMP    CL,DS:[DI+78]
+      CMP    CL,DS:[DI-128]
+      CMP    CL,DS:[BP+79]
+      CMP    CL,DS:[BP-128]
+      CMP    CL,DS:[BX+80]
+      CMP    CL,DS:[BX-128]
+      CMP    DL,DS:[BX+SI+81]
+      CMP    DL,DS:[BX+SI-128]
+      CMP    DL,DS:[BX+DI+82]
+      CMP    DL,DS:[BX+DI-128]
+      CMP    DL,DS:[BP+SI+83]
+      CMP    DL,DS:[BP+SI-128]
+      CMP    DL,DS:[BP+DI+84]
+      CMP    DL,DS:[BP+DI-128]
+      CMP    DL,DS:[SI+85]
+      CMP    DL,DS:[SI-128]
+      CMP    DL,DS:[DI+86]
+      CMP    DL,DS:[DI-128]
+      CMP    DL,DS:[BP+87]
+      CMP    DL,DS:[BP-128]
+      CMP    DL,DS:[BX+88]
+      CMP    DL,DS:[BX-128]
+      CMP    BL,DS:[BX+SI+89]
+      CMP    BL,DS:[BX+SI-128]
+      CMP    BL,DS:[BX+DI+90]
+      CMP    BL,DS:[BX+DI-128]
+      CMP    BL,DS:[BP+SI+91]
+      CMP    BL,DS:[BP+SI-128]
+      CMP    BL,DS:[BP+DI+92]
+      CMP    BL,DS:[BP+DI-128]
+      CMP    BL,DS:[SI+93]
+      CMP    BL,DS:[SI-128]
+      CMP    BL,DS:[DI+94]
+      CMP    BL,DS:[DI-128]
+      CMP    BL,DS:[BP+95]
+      CMP    BL,DS:[BP-128]
+      CMP    BL,DS:[BX+96]
+      CMP    BL,DS:[BX-128]
+      CMP    AH,DS:[BX+SI+97]
+      CMP    AH,DS:[BX+SI-128]
+      CMP    AH,DS:[BX+DI+98]
+      CMP    AH,DS:[BX+DI-128]
+      CMP    AH,DS:[BP+SI+99]
+      CMP    AH,DS:[BP+SI-128]
+      CMP    AH,DS:[BP+DI+100]
+      CMP    AH,DS:[BP+DI-128]
+      CMP    AH,DS:[SI+101]
+      CMP    AH,DS:[SI-128]
+      CMP    AH,DS:[DI+102]
+      CMP    AH,DS:[DI-128]
+      CMP    AH,DS:[BP+103]
+      CMP    AH,DS:[BP-128]
+      CMP    AH,DS:[BX+104]
+      CMP    AH,DS:[BX-128]
+      CMP    AL,DS:[BX+SI+8281H]
+      CMP    AL,DS:[BX+DI+8382H]
+      CMP    AL,DS:[BP+SI+8483H]
+      CMP    AL,DS:[BP+DI+8584H]
+      CMP    AL,DS:[SI+8685H]
+      CMP    AL,DS:[DI+8786H]
+      CMP    AL,DS:[BP+8887H]
+      CMP    AL,DS:[BX+8988H]
+      CMP    CL,DS:[BX+SI+8A89H]
+      CMP    CL,DS:[BX+DI+8B8AH]
+      CMP    CL,DS:[BP+SI+8C8BH]
+      CMP    CL,DS:[BP+DI+8D8CH]
+      CMP    CL,DS:[SI+8E8DH]
+      CMP    CL,DS:[DI+8F8EH]
+      CMP    CL,DS:[BP+908FH]
+      CMP    CL,DS:[BX+9190H]
+      CMP    DL,DS:[BX+SI+9291H]
+      CMP    DL,DS:[BX+DI+9392H]
+      CMP    DL,DS:[BP+SI+9493H]
+      CMP    DL,DS:[BP+DI+9594H]
+      CMP    DL,DS:[SI+9695H]
+      CMP    DL,DS:[DI+9796H]
+      CMP    DL,DS:[BP+9897H]
+      CMP    DL,DS:[BX+9998H]
+      CMP    BL,DS:[BX+SI+9A99H]
+      CMP    BL,DS:[BX+DI+9B9AH]
+      CMP    BL,DS:[BP+SI+9C9BH]
+      CMP    BL,DS:[BP+DI+9D9CH]
+      CMP    BL,DS:[SI+9E9DH]
+      CMP    BL,DS:[DI+9F9EH]
+      CMP    BL,DS:[BP+0A09FH]
+      CMP    BL,DS:[BX+0A1A0H]
+      CMP    AH,DS:[BX+SI+0A2A1H]
+      CMP    AH,DS:[BX+DI+0A3A2H]
+      CMP    AH,DS:[BP+SI+0A4A3H]
+      CMP    AH,DS:[BP+DI+0A5A4H]
+      CMP    AH,DS:[SI+0A6A5H]
+      CMP    AH,DS:[DI+0A7A6H]
+      CMP    AH,DS:[BP+0A8A7H]
+      CMP    AH,DS:[BX+0A9A8H]
+      CMP    DI,DS:[SI]
+      CMP    DI,DS:[DI]
+      CMP    DI,DS:[403FH]
+      CMP    DI,DS:[BX]
+      CMP    AX,DS:[BX+SI+65]
+      CMP    AX,DS:[BX+SI-128]
+      CMP    AX,DS:[BX+DI+66]
+      CMP    AX,DS:[BX+DI-128]
+      CMP    AX,DS:[BP+SI+67]
+      CMP    AX,DS:[BP+SI-128]
+      CMP    AX,DS:[BP+DI+68]
+      CMP    AX,DS:[BP+DI-128]
+      CMP    AX,DS:[SI+69]
+      CMP    AX,DS:[SI-128]
+      CMP    AX,DS:[DI+70]
+      CMP    AX,DS:[DI-128]
+      CMP    AX,DS:[BP+71]
+      CMP    AX,DS:[BP-128]
+      CMP    AX,DS:[BX+72]
+      CMP    AX,DS:[BX-128]
+      CMP    CX,DS:[BX+SI+73]
+      CMP    CX,DS:[BX+SI-128]
+      CMP    CX,DS:[BX+DI+74]
+      CMP    CX,DS:[BX+DI-128]
+      CMP    CX,DS:[BP+SI+75]
+      CMP    CX,DS:[BP+SI-128]
+      CMP    CX,DS:[BP+DI+76]
+      CMP    CX,DS:[BP+DI-128]
+      CMP    CX,DS:[SI+77]
+      CMP    CX,DS:[SI-128]
+      CMP    CX,DS:[DI+78]
+      CMP    CX,DS:[DI-128]
+      CMP    CX,DS:[BP+79]
+      CMP    CX,DS:[BP-128]
+      CMP    CX,DS:[BX+80]
+      CMP    CX,DS:[BX-128]
+      CMP    DX,DS:[BX+SI+81]
+      CMP    DX,DS:[BX+SI-128]
+      CMP    DX,DS:[BX+DI+82]
+      CMP    DX,DS:[BX+DI-128]
+      CMP    DX,DS:[BP+SI+83]
+      CMP    DX,DS:[BP+SI-128]
+      CMP    DX,DS:[BP+DI+84]
+      CMP    DX,DS:[BP+DI-128]
+      CMP    DX,DS:[SI+85]
+      CMP    DX,DS:[SI-128]
+      CMP    DX,DS:[DI+86]
+      CMP    DX,DS:[DI-128]
+      CMP    DX,DS:[BP+87]
+      CMP    DX,DS:[BP-128]
+      CMP    DX,DS:[BX+88]
+      CMP    DX,DS:[BX-128]
+      CMP    BX,DS:[BX+SI+89]
+      CMP    BX,DS:[BX+SI-128]
+      CMP    BX,DS:[BX+DI+90]
+      CMP    BX,DS:[BX+DI-128]
+      CMP    BX,DS:[BP+SI+91]
+      CMP    BX,DS:[BP+SI-128]
+      CMP    BX,DS:[BP+DI+92]
+      CMP    BX,DS:[BP+DI-128]
+      CMP    BX,DS:[SI+93]
+      CMP    BX,DS:[SI-128]
+      CMP    BX,DS:[DI+94]
+      CMP    BX,DS:[DI-128]
+      CMP    BX,DS:[BP+95]
+      CMP    BX,DS:[BP-128]
+      CMP    BX,DS:[BX+96]
+      CMP    BX,DS:[BX-128]
+      CMP    SP,DS:[BX+SI+97]
+      CMP    SP,DS:[BX+SI-128]
+      CMP    SP,DS:[BX+DI+98]
+      CMP    SP,DS:[BX+DI-128]
+      CMP    SP,DS:[BP+SI+99]
+      CMP    SP,DS:[BP+SI-128]
+      CMP    SP,DS:[BP+DI+100]
+      CMP    SP,DS:[BP+DI-128]
+      CMP    SP,DS:[SI+101]
+      CMP    SP,DS:[SI-128]
+      CMP    SP,DS:[DI+102]
+      CMP    SP,DS:[DI-128]
+      CMP    SP,DS:[BP+103]
+      CMP    SP,DS:[BP-128]
+      CMP    SP,DS:[BX+104]
+      CMP    SP,DS:[BX-128]
+      CMP    BP,DS:[BX+SI+105]
+      CMP    BP,DS:[BX+SI-128]
+      CMP    BP,DS:[BX+DI+106]
+      CMP    BP,DS:[BX+DI-128]
+      CMP    BP,DS:[BP+SI+107]
+      CMP    BP,DS:[BP+SI-128]
+      CMP    BP,DS:[BP+DI+108]
+      CMP    BP,DS:[BP+DI-128]
+      CMP    BP,DS:[SI+109]
+      CMP    BP,DS:[SI-128]
+      CMP    BP,DS:[DI+110]
+      CMP    BP,DS:[DI-128]
+      CMP    BP,DS:[BP+111]
+      CMP    BP,DS:[BP-128]
+      CMP    BP,DS:[BX+112]
+      CMP    BP,DS:[BX-128]
+      CMP    SI,DS:[BX+SI+113]
+      CMP    SI,DS:[BX+SI-128]
+      CMP    SI,DS:[BX+DI+114]
+      CMP    SI,DS:[BX+DI-128]
+      CMP    SI,DS:[BP+SI+115]
+      CMP    SI,DS:[BP+SI-128]
+      CMP    SI,DS:[BP+DI+116]
+      CMP    SI,DS:[BP+DI-128]
+      CMP    SI,DS:[SI+117]
+      CMP    SI,DS:[SI-128]
+      CMP    SI,DS:[DI+118]
+      CMP    SI,DS:[DI-128]
+      CMP    SI,DS:[BP+119]
+      CMP    SI,DS:[BP-128]
+      CMP    SI,DS:[BX+120]
+      CMP    SI,DS:[BX-128]
+      CMP    DI,DS:[BX+SI+121]
+      CMP    DI,DS:[BX+SI-128]
+      CMP    DI,DS:[BX+DI+122]
+      CMP    DI,DS:[BX+DI-128]
+      CMP    DI,DS:[BP+SI+123]
+      CMP    DI,DS:[BP+SI-128]
+      CMP    DI,DS:[BP+DI+124]
+      CMP    DI,DS:[BP+DI-128]
+      CMP    DI,DS:[SI+125]
+      CMP    DI,DS:[SI-128]
+      CMP    DI,DS:[DI+126]
+      CMP    DI,DS:[DI-128]
+      CMP    DI,DS:[BP+127]
+      CMP    DI,DS:[BP-128]
+      CMP    DI,DS:[BX-128]
+      CMP    DI,DS:[BX+0]
+      CMP    AX,DS:[BX+SI+8281H]
+      CMP    AX,DS:[BX+DI+8382H]
+      CMP    AX,DS:[BP+SI+8483H]
+      CMP    AX,DS:[BP+DI+8584H]
+      CMP    AX,DS:[SI+8685H]
+      CMP    AX,DS:[DI+8786H]
+      CMP    AX,DS:[BP+8887H]
+      CMP    AX,DS:[BX+8988H]
+      CMP    CX,DS:[BX+SI+8A89H]
+      CMP    CX,DS:[BX+DI+8B8AH]
+      CMP    CX,DS:[BP+SI+8C8BH]
+      CMP    CX,DS:[BP+DI+8D8CH]
+      CMP    CX,DS:[SI+8E8DH]
+      CMP    CX,DS:[DI+8F8EH]
+      CMP    CX,DS:[BP+908FH]
+      CMP    CX,DS:[BX+9190H]
+      CMP    DX,DS:[BX+SI+9291H]
+      CMP    DX,DS:[BX+DI+9392H]
+      CMP    DX,DS:[BP+SI+9493H]
+      CMP    DX,DS:[BP+DI+9594H]
+      CMP    DX,DS:[SI+9695H]
+      CMP    DX,DS:[DI+9796H]
+      CMP    DX,DS:[BP+9897H]
+      CMP    DX,DS:[BX+9998H]
+      CMP    BX,DS:[BX+SI+9A99H]
+      CMP    BX,DS:[BX+DI+9B9AH]
+      CMP    BX,DS:[BP+SI+9C9BH]
+      CMP    BX,DS:[BP+DI+9D9CH]
+      CMP    BX,DS:[SI+9E9DH]
+      CMP    BX,DS:[DI+9F9EH]
+      CMP    BX,DS:[BP+0A09FH]
+      CMP    BX,DS:[BX+0A1A0H]
+      CMP    SP,DS:[BX+SI+0A2A1H]
+      CMP    SP,DS:[BX+DI+0A3A2H]
+      CMP    SP,DS:[BP+SI+0A4A3H]
+      CMP    SP,DS:[BP+DI+0A5A4H]
+      CMP    SP,DS:[SI+0A6A5H]
+      CMP    SP,DS:[DI+0A7A6H]
+      CMP    SP,DS:[BP+0A8A7H]
+      CMP    SP,DS:[BX+0A9A8H]
+      CMP    BP,DS:[BX+SI+0AAA9H]
+      CMP    BP,DS:[BX+DI+0ABAAH]
+      CMP    BP,DS:[BP+SI+0ACABH]
+      CMP    BP,DS:[BP+DI+0ADACH]
+      CMP    BP,DS:[SI+0AEADH]
+      CMP    BP,DS:[DI+0AFAEH]
+      CMP    BP,DS:[BP+0B0AFH]
+      CMP    BP,DS:[BX+0B1B0H]
+      CMP    SI,DS:[BX+SI+0B2B1H]
+      CMP    SI,DS:[BX+DI+0B3B2H]
+      CMP    SI,DS:[BP+SI+0B4B3H]
+      CMP    SI,DS:[BP+DI+0B5B4H]
+      CMP    SI,DS:[SI+0B6B5H]
+      CMP    SI,DS:[DI+0B7B6H]
+      CMP    SI,DS:[BP+0B8B7H]
+      CMP    SI,DS:[BX+0B9B8H]
+      CMP    DI,DS:[BX+SI+0BAB9H]
+      CMP    DI,DS:[BX+DI+0BBBAH]
+      CMP    DI,DS:[BP+SI+0BCBBH]
+      CMP    DI,DS:[BP+DI+0BDBCH]
+      CMP    DI,DS:[SI+0BEBDH]
+      CMP    DI,DS:[DI+0BFBEH]
+      CMP    DI,DS:[BP+0C0BFH]
+      CMP    DI,DS:[BX+0C1C0H]
+      CMP    AX,DS:[BX+SI]
+      CMP    AX,DS:[BX+DI]
+      CMP    AX,DS:[BP+SI]
+      CMP    AX,DS:[BP+DI]
+      CMP    AX,DS:[SI]
+      CMP    AX,DS:[DI]
+      CMP    AX,DS:[0807H]
+      CMP    AX,DS:[BX]
+      CMP    CX,DS:[BX+SI]
+      CMP    CX,DS:[BX+DI]
+      CMP    CX,DS:[BP+SI]
+      CMP    CX,DS:[BP+DI]
+      CMP    CX,DS:[SI]
+      CMP    CX,DS:[DI]
+      CMP    CX,DS:[100FH]
+      CMP    CX,DS:[BX]
+      CMP    DX,DS:[BX+SI]
+      CMP    DX,DS:[BX+DI]
+      CMP    DX,DS:[BP+SI]
+      CMP    DX,DS:[BP+DI]
+      CMP    DX,DS:[SI]
+      CMP    DX,DS:[DI]
+      CMP    DX,DS:[1817H]
+      CMP    DX,DS:[BX]
+      CMP    BX,DS:[BX+SI]
+      CMP    BX,DS:[BX+DI]
+      CMP    BX,DS:[BP+SI]
+      CMP    BX,DS:[BP+DI]
+      CMP    BX,DS:[SI]
+      CMP    BX,DS:[DI]
+      CMP    BX,DS:[201FH]
+      CMP    BX,DS:[BX]
+      CMP    SP,DS:[BX+SI]
+      CMP    SP,DS:[BX+DI]
+      CMP    SP,DS:[BP+SI]
+      CMP    SP,DS:[BP+DI]
+      CMP    SP,DS:[SI]
+      CMP    SP,DS:[DI]
+      CMP    SP,DS:[2827H]
+      CMP    SP,DS:[BX]
+      CMP    BP,DS:[BX+SI]
+      CMP    BP,DS:[BX+DI]
+      CMP    BP,DS:[BP+SI]
+      CMP    BP,DS:[BP+DI]
+      CMP    BP,DS:[SI]
+      CMP    BP,DS:[DI]
+      CMP    BP,DS:[302FH]
+      CMP    BP,DS:[BX]
+      CMP    SI,DS:[BX+SI]
+      CMP    SI,DS:[BX+DI]
+      CMP    SI,DS:[BP+SI]
+      CMP    SI,DS:[BP+DI]
+      CMP    SI,DS:[SI]
+      CMP    SI,DS:[DI]
+      CMP    SI,DS:[3837H]
+      CMP    SI,DS:[BX]
+      CMP    DI,DS:[BX+SI]
+      CMP    DI,DS:[BX+DI]
+      CMP    DI,DS:[BP+SI]
+      CMP    DI,DS:[BP+DI]

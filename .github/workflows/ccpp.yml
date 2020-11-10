@@ -9,9 +9,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: test generator
-      run: cd test; make gen
     - name: test
       run: cd test; make test
+    - name: test generator
+      run: cd test; make generate
     - name: command line interface
       run: cd cli; make

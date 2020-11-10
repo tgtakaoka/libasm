@@ -20,10 +20,6 @@
 using namespace libasm::i8086;
 using namespace libasm::test;
 
-static bool filterRepeat(uint8_t opc) {
-    return opc == 0xF2 || opc == 0xF3;
-}
-
 int main(int argc, const char **argv) {
     DisI8086 dis8086;
     dis8086.setRelativeTarget(true);
@@ -34,7 +30,7 @@ int main(int argc, const char **argv) {
 
     TestGenerator<Config> generator(dis8086, 0x1000);
     generator
-        .generate(driver, filterRepeat)
+        .generate(driver)
         .generate(driver, 0xF2)
         .generate(driver, 0xF3)
         // segment override prefixes

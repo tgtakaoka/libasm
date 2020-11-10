@@ -20,16 +20,6 @@
 using namespace libasm::mc6809;
 using namespace libasm::test;
 
-static bool filterHd6309BitImmIndexed(uint8_t opc) {
-    if (opc == 0x10) return true; // prefix
-    if (opc == 0x11) return true; // prefix
-    if (opc == 0x61) return true; // OIM #nn,<indexed>
-    if (opc == 0x62) return true; // AIM #nn,<indexed>
-    if (opc == 0x65) return true; // EIM #nn,<indexed>
-    if (opc == 0x6B) return true; // TIM #nn,<indexed>
-    return false;
-}
-
 int main(int argc, const char **argv) {
     DisMc6809 dis6809;
     dis6809.setRelativeTarget(true);
@@ -39,13 +29,9 @@ int main(int argc, const char **argv) {
 
     TestGenerator<Config> generator(dis6809, 0x0100);
     generator
-        .generate(driver, filterHd6309BitImmIndexed)
+        .generate(driver)
         .generate(driver, 0x10)
-        .generate(driver, 0x11)
-        .generate(driver, 0x61, 0x62) // OIM
-        .generate(driver, 0x62, 0x63) // AIM
-        .generate(driver, 0x65, 0x66) // EIM
-        .generate(driver, 0x6B, 0x6C); // TIM
+        .generate(driver, 0x11);
 
     return driver.close();
 }

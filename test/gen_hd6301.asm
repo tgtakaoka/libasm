@@ -110,59 +110,61 @@
       TSTB
       CLRB
       NEG   97,X
-      AIM   #0,98,X
-      OIM   #0,99,X
-      BSET  0,0,X
+      AIM   #$62,99,X
+      BCLR  7,0,X
+      OIM   #$63,100,X
+      BSET  7,0,X
       COM   100,X
       LSR   101,X
-      EIM   #0,102,X
-      BTGL  0,0,X
+      EIM   #$66,103,X
+      BTGL  7,0,X
       ROR   103,X
       ASR   104,X
       ASL   105,X
       ROL   106,X
       DEC   107,X
-      TIM   #0,108,X
-      BTST  0,0,X
+      TIM   #$6C,109,X
+      BTST  7,0,X
       INC   109,X
       TST   110,X
       JMP   111,X
       CLR   112,X
-      NEG   >$0071
-      NEG   $0100
-      AIM   #0,$72
-      OIM   #0,$73
-      BSET  0,$00
-      COM   >$0074
-      COM   $0100
-      LSR   >$0075
-      LSR   $0100
-      EIM   #0,$76
-      BTGL  0,$00
-      ROR   >$0077
-      ROR   $0100
-      ASR   >$0078
-      ASR   $0100
-      ASL   >$0079
-      ASL   $0100
-      ROL   >$007A
-      ROL   $0100
-      DEC   >$007B
-      DEC   $0100
-      TIM   #0,$7C
-      BTST  0,$00
-      INC   >$007D
-      INC   $0100
-      TST   >$007E
-      TST   $0100
-      JMP   >$007F
-      JMP   $0100
-      CLR   >$0080
-      CLR   $0100
+      NEG   $7172
+      NEG   >$0000
+      AIM   #$72,$73
+      BCLR  7,$00
+      OIM   #$73,$74
+      BSET  7,$00
+      COM   $7475
+      COM   >$0000
+      LSR   $7576
+      LSR   >$0000
+      EIM   #$76,$77
+      BTGL  7,$00
+      ROR   $7778
+      ROR   >$0000
+      ASR   $7879
+      ASR   >$0000
+      ASL   $797A
+      ASL   >$0000
+      ROL   $7A7B
+      ROL   >$0000
+      DEC   $7B7C
+      DEC   >$0000
+      TIM   #$7C,$7D
+      BTST  7,$00
+      INC   $7D7E
+      INC   >$0000
+      TST   $7E7F
+      TST   >$0000
+      JMP   $7F80
+      JMP   >$0000
+      CLR   $8081
+      CLR   >$0000
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
-      SUBD  #$0084
+      SUBD  #$8485
       ANDA  #$85
       BITA  #$86
       LDAA  #$87
@@ -170,11 +172,11 @@
       ADCA  #$8A
       ORAA  #$8B
       ADDA  #$8C
-      CPX   #$008D
+      CPX   #$8D8E
       BSR   *-112
       BSR   *
       BSR   *+1
-      LDS   #$008F
+      LDS   #$8F90
       SUBA  $91
       CMPA  $92
       SBCA  $93
@@ -207,42 +209,42 @@
       JSR   174,X
       LDS   175,X
       STS   176,X
-      SUBA  >$00B1
-      SUBA  $0100
-      CMPA  >$00B2
-      CMPA  $0100
-      SBCA  >$00B3
-      SBCA  $0100
-      SUBD  >$00B4
-      SUBD  $0100
-      ANDA  >$00B5
-      ANDA  $0100
-      BITA  >$00B6
-      BITA  $0100
-      LDAA  >$00B7
-      LDAA  $0100
-      STAA  >$00B8
-      STAA  $0100
-      EORA  >$00B9
-      EORA  $0100
-      ADCA  >$00BA
-      ADCA  $0100
-      ORAA  >$00BB
-      ORAA  $0100
-      ADDA  >$00BC
-      ADDA  $0100
-      CPX   >$00BD
-      CPX   $0100
-      JSR   >$00BE
-      JSR   $0100
-      LDS   >$00BF
-      LDS   $0100
-      STS   >$00C0
-      STS   $0100
+      SUBA  $B1B2
+      SUBA  >$0000
+      CMPA  $B2B3
+      CMPA  >$0000
+      SBCA  $B3B4
+      SBCA  >$0000
+      SUBD  $B4B5
+      SUBD  >$0000
+      ANDA  $B5B6
+      ANDA  >$0000
+      BITA  $B6B7
+      BITA  >$0000
+      LDAA  $B7B8
+      LDAA  >$0000
+      STAA  $B8B9
+      STAA  >$0000
+      EORA  $B9BA
+      EORA  >$0000
+      ADCA  $BABB
+      ADCA  >$0000
+      ORAA  $BBBC
+      ORAA  >$0000
+      ADDA  $BCBD
+      ADDA  >$0000
+      CPX   $BDBE
+      CPX   >$0000
+      JSR   $BEBF
+      JSR   >$0000
+      LDS   $BFC0
+      LDS   >$0000
+      STS   $C0C1
+      STS   >$0000
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
-      ADDD  #$00C4
+      ADDD  #$C4C5
       ANDB  #$C5
       BITB  #$C6
       LDAB  #$C7
@@ -250,8 +252,8 @@
       ADCB  #$CA
       ORAB  #$CB
       ADDB  #$CC
-      LDD   #$00CD
-      LDX   #$00CF
+      LDD   #$CDCE
+      LDX   #$CFD0
       SUBB  $D1
       CMPB  $D2
       SBCB  $D3
@@ -284,34 +286,35 @@
       STD   238,X
       LDX   239,X
       STX   240,X
-      SUBB  >$00F1
-      SUBB  $0100
-      CMPB  >$00F2
-      CMPB  $0100
-      SBCB  >$00F3
-      SBCB  $0100
-      ADDD  >$00F4
-      ADDD  $0100
-      ANDB  >$00F5
-      ANDB  $0100
-      BITB  >$00F6
-      BITB  $0100
-      LDAB  >$00F7
-      LDAB  $0100
-      STAB  >$00F8
-      STAB  $0100
-      EORB  >$00F9
-      EORB  $0100
-      ADCB  >$00FA
-      ADCB  $0100
-      ORAB  >$00FB
-      ORAB  $0100
-      ADDB  >$00FC
-      ADDB  $0100
-      LDD   >$00FD
-      LDD   $0100
-      STD   >$00FE
-      STD   $0100
-      LDX   >$00FF
-      LDX   $0100
-      STX   $0100
+      SUBB  $F1F2
+      SUBB  >$0000
+      CMPB  $F2F3
+      CMPB  >$0000
+      SBCB  $F3F4
+      SBCB  >$0000
+      ADDD  $F4F5
+      ADDD  >$0000
+      ANDB  $F5F6
+      ANDB  >$0000
+      BITB  $F6F7
+      BITB  >$0000
+      LDAB  $F7F8
+      LDAB  >$0000
+      STAB  $F8F9
+      STAB  >$0000
+      EORB  $F9FA
+      EORB  >$0000
+      ADCB  $FAFB
+      ADCB  >$0000
+      ORAB  $FBFC
+      ORAB  >$0000
+      ADDB  $FCFD
+      ADDB  >$0000
+      LDD   $FDFE
+      LDD   >$0000
+      STD   $FEFF
+      STD   >$0000
+      LDX   $FF00
+      LDX   >$0000
+      STX   $0101
+      STX   >$0000

@@ -26,17 +26,14 @@ int main(int argc, const char **argv) {
     GenDriver<Config> driver(dis6800);
     if (driver.main(argc, argv))
         return 1;
-    const char *cpu = dis6800.getCpu();
 
     TestGenerator<Config> generator(dis6800, 0x0100);
-    if (strcmp(cpu, "6811") == 0) {
+    generator.generate(driver);
+    if (strcmp(dis6800.getCpu(), "6811") == 0) {
         generator
-            .generate(driver)
             .generate(driver, 0x18)
             .generate(driver, 0x1A)
             .generate(driver, 0xCD);
-    } else {
-        generator.generate(driver);
     }        
 
     return driver.close();

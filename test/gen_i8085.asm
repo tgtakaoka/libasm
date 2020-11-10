@@ -3,7 +3,7 @@
       CPU  8085
       ORG  0100H
       NOP
-      LXI  B,2
+      LXI  B,0302H
       STAX B
       INX  B
       INR  B
@@ -17,7 +17,7 @@
       DCR  C
       MVI  C,15
       RRC
-      LXI  D,18
+      LXI  D,1312H
       STAX D
       INX  D
       INR  D
@@ -32,30 +32,30 @@
       MVI  E,31
       RAR
       RIM
-      LXI  H,0022H
-      SHLD 0023H
+      LXI  H,2322H
+      SHLD 2423H
       INX  H
       INR  H
       DCR  H
       MVI  H,27H
       DAA
       DAD  H
-      LHLD 002BH
+      LHLD 2C2BH
       DCX  H
       INR  L
       DCR  L
       MVI  L,2FH
       CMA
       SIM
-      LXI  SP,0032H
-      STA  0033H
+      LXI  SP,3332H
+      STA  3433H
       INX  SP
       INR  M
       DCR  M
       MVI  M,37H
       STC
       DAD  SP
-      LDA  003BH
+      LDA  3C3BH
       DCX  SP
       INR  A
       DCR  A
@@ -191,53 +191,53 @@
       CMP  A
       RNZ
       POP  B
-      JNZ  00C3H
-      JMP  00C4H
-      CNZ  00C5H
+      JNZ  0C4C3H
+      JMP  0C5C4H
+      CNZ  0C6C5H
       PUSH B
       ADI  0C7H
       RST  0
       RZ
       RET
-      JZ   00CBH
-      CZ   00CDH
-      CALL 00CEH
+      JZ   0CCCBH
+      CZ   0CECDH
+      CALL 0CFCEH
       ACI  0CFH
       RNC
       POP  D
-      JNC  00D3H
+      JNC  0D4D3H
       OUT  0D4H
-      CNC  00D5H
+      CNC  0D6D5H
       PUSH D
       SUI  0D7H
       RC
-      JC   00DBH
+      JC   0DCDBH
       IN   0DCH
-      CC   00DDH
+      CC   0DEDDH
       SBI  0DFH
       RPO
       POP  H
-      JPO  00E3H
+      JPO  0E4E3H
       XTHL
-      CPO  00E5H
+      CPO  0E6E5H
       PUSH H
       ANI  0E7H
       RPE
       PCHL
-      JPE  00EBH
+      JPE  0ECEBH
       XCHG
-      CPE  00EDH
+      CPE  0EEEDH
       XRI  0EFH
       RP
       POP  PSW
-      JP   00F3H
+      JP   0F4F3H
       DI
-      CP   00F5H
+      CP   0F6F5H
       PUSH PSW
       ORI  0F7H
       RM
       SPHL
-      JM   00FBH
+      JM   0FCFBH
       EI
-      CM   00FDH
+      CM   0FEFDH
       CPI  0FFH

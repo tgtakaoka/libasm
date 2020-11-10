@@ -4,34 +4,34 @@
       ORG   0100H
       NOP
       AJMP  0002H
-      LJMP  0003H
+      LJMP  0304H
       RR    A
       INC   A
       INC   06H
       INC   @R0
       INC   R0
-      JBC   20H.0,$+20
-      JBC   20H.0,$-125
-      JBC   20H.0,$
+      JBC   22H.1,$+21
+      JBC   22H.0,$-125
+      JBC   22H.0,$
       ACALL 0012H
-      LCALL 0013H
+      LCALL 1314H
       RRC   A
       DEC   A
       DEC   16H
       DEC   @R0
       DEC   R0
-      JB    20H.0,$+36
-      JB    20H.0,$-125
-      JB    20H.0,$
+      JB    24H.1,$+37
+      JB    24H.0,$-125
+      JB    24H.0,$
       RET
       RL    A
       ADD   A,#25H
       ADD   A,26H
       ADD   A,@R0
       ADD   A,R0
-      JNB   20H.0,$+52
-      JNB   20H.0,$-125
-      JNB   20H.0,$
+      JNB   26H.1,$+53
+      JNB   26H.0,$-125
+      JNB   26H.0,$
       RETI
       RLC   A
       ADDC  A,#35H
@@ -42,7 +42,7 @@
       JC    $-126
       JC    $
       ORL   43H,A
-      ORL   00H,#44H
+      ORL   44H,#45H
       ORL   A,#45H
       ORL   A,46H
       ORL   A,@R0
@@ -51,7 +51,7 @@
       JNC   $-126
       JNC   $
       ANL   53H,A
-      ANL   00H,#54H
+      ANL   54H,#55H
       ANL   A,#55H
       ANL   A,56H
       ANL   A,@R0
@@ -60,7 +60,7 @@
       JZ    $-126
       JZ    $
       XRL   63H,A
-      XRL   00H,#64H
+      XRL   64H,#65H
       XRL   A,#65H
       XRL   A,66H
       XRL   A,@R0
@@ -71,7 +71,7 @@
       ORL   C,2EH.3
       JMP   @A+DPTR
       MOV   A,#75H
-      MOV   00H,#76H
+      MOV   76H,#77H
       MOV   @R0,#77H
       MOV   R0,#79H
       SJMP  $-125
@@ -80,10 +80,10 @@
       ANL   C,80H.3
       MOVC  A,@A+PC
       DIV   AB
-      MOV   86H,00H
+      MOV   87H,86H
       MOV   87H,@R0
       MOV   89H,R0
-      MOV   DPTR,#0091H
+      MOV   DPTR,#9192H
       MOV   90H.3,C
       MOVC  A,@A+DPTR
       SUBB  A,#95H
@@ -99,18 +99,18 @@
       ANL   C,/0B0H.1
       CPL   0B0H.3
       CPL   C
-      CJNE  A,#0,$-72
-      CJNE  A,#0,$
-      CJNE  A,#0,$+1
-      CJNE  A,00H,$-71
-      CJNE  A,00H,$
-      CJNE  A,00H,$+1
-      CJNE  @R0,#0,$-70
-      CJNE  @R0,#0,$
-      CJNE  @R0,#0,$+1
-      CJNE  R0,#0,$-68
-      CJNE  R0,#0,$
-      CJNE  R0,#0,$+1
+      CJNE  A,#0B5H,$-71
+      CJNE  A,#0B4H,$
+      CJNE  A,#0B4H,$+1
+      CJNE  A,0B6H,$-70
+      CJNE  A,0B5H,$
+      CJNE  A,0B5H,$+1
+      CJNE  @R0,#0B7H,$-69
+      CJNE  @R0,#0B6H,$
+      CJNE  @R0,#0B6H,$+1
+      CJNE  R0,#0B9H,$-67
+      CJNE  R0,#0B8H,$
+      CJNE  R0,#0B8H,$+1
       PUSH  0C1H
       CLR   0C0H.3
       CLR   C
@@ -122,9 +122,9 @@
       SETB  0D0H.3
       SETB  C
       DA    A
-      DJNZ  00H,$-39
-      DJNZ  00H,$
-      DJNZ  00H,$+1
+      DJNZ  0D6H,$-38
+      DJNZ  0D5H,$
+      DJNZ  0D5H,$+1
       XCHD  A,@R0
       DJNZ  R0,$-37
       DJNZ  R0,$

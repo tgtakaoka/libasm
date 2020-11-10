@@ -20,19 +20,6 @@
 using namespace libasm::z80;
 using namespace libasm::test;
 
-static bool filterZ80Prefix(uint8_t opc) {
-    if (opc == 0xCB) return true;
-    if (opc == 0xDD) return true;
-    if (opc == 0xED) return true;
-    if (opc == 0xFD) return true;
-    return false;
-}
-
-static bool filterZ80IxBitPrefix(uint8_t opc) {
-    if (opc == 0xCB) return true;
-    return false;
-}
-
 int main(int argc, const char **argv) {
     DisZ80 disz80;
     disz80.setRelativeTarget(true);
@@ -44,11 +31,10 @@ int main(int argc, const char **argv) {
 
     TestGenerator<Config> generator(disz80, 0x0100);
     generator
-        .generate(driver, filterZ80Prefix)
+        .generate(driver)
         .generate(driver, 0xED)
-        .generate(driver, 0xDD, filterZ80IxBitPrefix)
-        .generate(driver, 0xFD, filterZ80IxBitPrefix)
-        .generate(driver, 0xCB)
+        .generate(driver, 0xDD)
+        .generate(driver, 0xFD)
         .generate(driver, 0xDD, 0xCB, 0x7F)
         .generate(driver, 0xFD, 0xCB, 0x80);
 

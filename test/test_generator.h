@@ -32,108 +32,149 @@ namespace test {
 
 class DataGenerator {
 public:
-    typedef bool (*Filter)(uint8_t);
+    int start() const { return _start; }
+    int length() const { return _start + _size; }
+    virtual bool hasNext() const = 0;
+    virtual void next() = 0;
 
-    DataGenerator(uint8_t *buffer, Endian endian, int size, Filter filter = nullptr)
-        : _buffer(buffer),
-          _endian(endian),
-          _pos(0),
-          _size(size),
-          _end(calcEnd(0, size)),
-          _filter(filter),
-          _i(0)
-    {}
-
-    DataGenerator(const DataGenerator &parent, int size, Filter filter = nullptr)
-        : _buffer(parent._buffer),
-          _endian(parent._endian),
-          _pos(parent._pos + parent._size),
-          _size(size),
-          _end(calcEnd(parent._i, size)),
-          _filter(filter),
-          _i(parent._i)
-    {}
-
-    int pos() const { return _pos; }
-    int size() const { return _size; }
-
-    void next() {
-        _i = outSizedUint(_i) + 1;
-    }
-    bool hasNext() {
-        if (_i == _end) {
-            outSizedUint(0);
-            return false;
-        }
-        return true;
+    void outByte(uint8_t data, int off = 0) {
+        _buffer[_start + off] = data;
     }
 
-    void outUint8(uint8_t val8, int offset = 0) {
-        _buffer[_pos + offset] = val8;
+    void debug(FILE *out, const char *msg) const {
+#if DEBUG_TRACE
+        if (out) dump(out, msg, _start, _size);
+#endif
     }
 
-    void dump(FILE *out, const char *msg, int pos, int size) const {
-        fprintf(out, "%s %d/%d: ", msg, pos, size);
-        for (int i = 0; i < pos; i++)
-            fprintf(out, " %02X", _buffer[i]);
-        for (int i = 0; i < size; i++)
-            fprintf(out, "%c%02X", i == 0 ? '|' : ' ', _buffer[pos + i]);
+    void dump(FILE *out, const char *msg, int start, int size) const {
+        fprintf(out, "%s %d/%d: ", msg, start, size);
+        for (int pos = 0; pos < start; pos++)
+            fprintf(out, " %02X", _buffer[pos]);
+        for (int off = 0; off < size; off++)
+            fprintf(out, "%c%02X", off == 0 ? '|' : ' ', _buffer[start + off]);
         fprintf(out, "\n");
         fflush(out);
     }
 
-    void debugPrint(const char *msg) const {
-#if DEBUG_TRACE
-        dump(stdout, msg, _pos, _size);
-#endif
+protected:
+    DataGenerator(uint8_t *buffer, int bufSize, int start, int size)
+        : _buffer(buffer),
+          _bufSize(bufSize),
+          _start(start),
+          _size(size),
+          _count(0)
+    {}
+
+    DataGenerator(DataGenerator &parent, int size)
+        : _buffer(parent._buffer),
+          _bufSize(parent._bufSize),
+          _start(parent.length()),
+          _size(size),
+          _count(0)
+    {}
+
+    uint8_t *_buffer;
+    const int _bufSize;
+    const int _start;
+    const int _size;
+    int _count;
+
+    void fill() {
+        uint8_t data = _buffer[length() - 1] + 1;
+        for (int pos = length(); pos < _bufSize; pos++) {
+            _buffer[pos] = data++;
+        }
+    }
+};
+
+class ByteGenerator : public DataGenerator {
+public:
+    ByteGenerator(uint8_t *buffer, int bufSize, int start, int size = 1)
+        : DataGenerator(buffer, bufSize, start, size),
+          _off(0)
+    {
+        _data = initData();
+    }
+
+    ByteGenerator(DataGenerator &parent, int size)
+        : DataGenerator(parent, size),
+          _off(0)
+    {
+        _data = initData();
+    }
+
+    bool hasNext() const override {
+        return _off < _size;
+    }
+
+    void next() override {
+        _buffer[_start + _off] = _data;
+        fill();
+        _data++;
+        _count++;
+        if (_count < 0x100)
+            return;
+        _count = 0;
+        _off++;
     }
 
 private:
-    uint8_t *const _buffer;
+    int _off;
+    uint8_t _data;
+
+    uint8_t initData() const {
+        return (_start > 0) ? _buffer[_start - 1] + 1: 0;
+    }
+};
+
+class WordGenerator : public DataGenerator {
+public:
+    WordGenerator(uint8_t *buffer, int bufSize, Endian endian, int start)
+        : DataGenerator(buffer, bufSize, start, 2),
+          _endian(endian)
+    {
+        _data = initData();
+    }
+
+    WordGenerator(DataGenerator &parent, Endian endian)
+        : DataGenerator(parent, 2),
+          _endian(endian)
+    {
+        _data = initData();
+    }
+
+    bool hasNext() const override {
+        return _count < 0x10000;
+    }
+
+    void next() override {
+        outWord(_data, 0);
+        fill();
+        _data++;
+        _count++;
+    }
+
+    void outWord(uint16_t data, int off = 0) {
+        int pos = _start + off;
+        if (_endian == ENDIAN_BIG) {
+            _buffer[pos++] = data >> 8;
+            _buffer[pos]   = data;
+        } else {
+            _buffer[pos++] = data;;
+            _buffer[pos]   = data >> 8;
+        }
+    }
+
+private:
     const Endian _endian;
-    int _pos;
-    int _size;
-    const uint32_t _end;
-    Filter _filter;
-    uint32_t _i;
+    uint16_t _data;
 
-    static uint32_t calcEnd(uint32_t start, int size) {
-        if (size == 1) return start + 0x100;
-        if (size == 2) return start + 0x10000L;
-        return start;
-    }
-
-    uint32_t outSizedUint(uint32_t val) {
-        if (_size == 1) {
-            while (_filter && _filter(val))
-                val++;
-            outUint8(static_cast<uint8_t>(val));
-        } else if (_size == 2) {
-            outUint16(static_cast<uint16_t>(val));
-        } else {
-            outUint32(val);
-        }
-        return val;
-    }
-
-    void outUint16(uint16_t val16, int offset = 0) {
-        if (_endian == ENDIAN_BIG) {
-            outUint8(static_cast<uint8_t>(val16 >> 8), offset + 0);
-            outUint8(static_cast<uint8_t>(val16 >> 0), offset + 1);
-        } else {
-            outUint8(static_cast<uint8_t>(val16 >> 0), offset + 0);
-            outUint8(static_cast<uint8_t>(val16 >> 8), offset + 1);
-        }
-    }
-
-    void outUint32(uint32_t val32, int offset = 0) {
-        if (_endian == ENDIAN_BIG) {
-            outUint16(static_cast<uint16_t>(val32 >> 16), offset + 0);
-            outUint16(static_cast<uint16_t>(val32 >> 0),  offset + 2);
-        } else {
-            outUint16(static_cast<uint16_t>(val32 >> 0),  offset + 0);
-            outUint16(static_cast<uint16_t>(val32 >> 16), offset + 2);
-        }
+    uint16_t initData() const {
+        const uint8_t data = (_start > 0) ? _buffer[_start - 1] + 1 : 0;
+        return (_endian == ENDIAN_BIG)
+            ? (static_cast<uint16_t>(data) << 8) + (data + 1)
+            : data + (static_cast<uint16_t>(data + 1) << 8);
     }
 };
 
@@ -142,12 +183,13 @@ class TestData : private DisMemory {
 public:
     TestData()
         : DisMemory(0),
-          _operands(60)
+          _textBuffer(256)
     {}
 
-    const Insn &insn() const { return _insn; }
-    TextBuffer &operands() { return _operands; }
-    const TextBuffer &operands() const { return _operands; }
+    const Insn& insn() const { return _insn; }
+    const char *name() const { return _insn.name(); }
+    const uint8_t length() const { return _insn.length(); }
+    const char *operands() const { return _textBuffer.buffer(); }
     Error tryGenerate(
         Disassembler &dis,
         typename Conf::uintptr_t addr,
@@ -158,11 +200,11 @@ public:
         _memorySize = size;
         _memoryIndex = 0;
 
-        return dis.decode(*this, _insn, _operands.buffer(), nullptr);
+        return dis.decode(*this, _insn, _textBuffer.buffer(), nullptr);
     }
 
 private:
-    TextBuffer _operands;
+    TextBuffer _textBuffer;
     uint8_t *_memory;
     int _memorySize;
     int _memoryIndex;
@@ -176,13 +218,14 @@ private:
 template<typename Conf>
 class TestGenerator {
 public:
+    typedef typename Conf::opcode_t opcode_t;
+
     TestGenerator(
         Disassembler &disassembler,
         typename Conf::uintptr_t addr = 0)
         : _disassembler(disassembler),
           _memorySize(Conf::MAX_CODE),
-          _endian(Conf::ENDIAN),
-          _opcodeSize(sizeof(typename Conf::opcode_t)) {
+          _endian(Conf::ENDIAN) {
         _memory = new uint8_t[_memorySize];
         _addr = addr;
     }
@@ -197,49 +240,56 @@ public:
         virtual void origin(typename Conf::uintptr_t addr) = 0;
         virtual FILE* dumpOut() = 0;
     };
-    typedef bool (*Filter)(uint8_t);
 
-    TestGenerator<Conf> &generate(Printer &printer, Filter filter = nullptr) {
-        DataGenerator gen(_memory, _endian, _opcodeSize, filter);
+    TestGenerator<Conf> &generate(Printer &printer) {
+        FILE *dumpOut = printer.dumpOut();
+        if (dumpOut) fprintf(dumpOut, "@@ generate:\n");
         if (_addr) printer.origin(_addr);
-        return generate(printer, gen);
+        if (sizeof(opcode_t) == 1) {
+            ByteGenerator gen(_memory, _memorySize, 0);
+            return generate(printer, gen);
+        } else {
+            WordGenerator gen(_memory, _memorySize, _endian, 0);
+            return generate(printer, gen);
+        }
+    }
+
+    TestGenerator<Conf> &generate(Printer &printer, opcode_t opc1) {
+        FILE *dumpOut = printer.dumpOut();
+        if (dumpOut) fprintf(dumpOut, "@@ generate: %#02x\n", opc1);
+        if (sizeof(opcode_t) == 1) {
+            ByteGenerator parent(_memory, _memorySize, 0);
+            parent.outByte(opc1, 0);
+            ByteGenerator gen(parent, 1);
+            return generate(printer, gen);
+        } else {
+            WordGenerator parent(_memory, _memorySize, _endian, 0);
+            parent.outWord(opc1, 0);
+            WordGenerator gen(parent, _endian);
+            return generate(printer, gen);
+        }
     }
 
     TestGenerator<Conf> &generate(
-        Printer &printer, uint8_t opc1, Filter filter = nullptr) {
-        DataGenerator parent(_memory, _endian, _opcodeSize);
-        parent.outUint8(opc1);
-        DataGenerator gen(parent, _opcodeSize, filter);
-        return generate(printer, gen);
-    }
-
-    TestGenerator<Conf> &generate(
-        Printer &printer, uint8_t opc1, uint8_t opc2) {
-        DataGenerator parent(_memory, _endian, _opcodeSize * 2);
-        parent.outUint8(opc1, 0);
-        parent.outUint8(opc2, 1);
-        DataGenerator gen(parent, _opcodeSize);
+            Printer &printer, uint8_t opc1, uint8_t opc2) {
+        FILE *dumpOut = printer.dumpOut();
+        if (dumpOut) fprintf(dumpOut, "@@ generate: %#02x %#02x\n", opc1, opc2);
+        ByteGenerator parent(_memory, _memorySize, 0, 2);
+        parent.outByte(opc1, 0);
+        parent.outByte(opc2, 1);
+        ByteGenerator gen(parent, 1);
         return generate(printer, gen);
     }
 
     TestGenerator<Conf> &generate(
         Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
-        DataGenerator parent(_memory, _endian, _opcodeSize * 3);
-        parent.outUint8(opc1, 0);
-        parent.outUint8(opc2, 1);
-        parent.outUint8(opc3, 2);
-        DataGenerator gen(parent, _opcodeSize);
-        return generate(printer, gen);
-    }
-
-    TestGenerator<Conf> &generate(
-        Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3, uint8_t opc4) {
-        DataGenerator parent(_memory, _endian, _opcodeSize * 4);
-        parent.outUint8(opc1, 0);
-        parent.outUint8(opc2, 1);
-        parent.outUint8(opc3, 2);
-        parent.outUint8(opc4, 3);
-        DataGenerator gen(parent, _opcodeSize);
+        FILE *dumpOut = printer.dumpOut();
+        if (dumpOut) fprintf(dumpOut, "@@ generate: %#02x %#02x %#02x\n", opc1, opc2, opc3);
+        ByteGenerator parent(_memory, _memorySize, 0, 3);
+        parent.outByte(opc1, 0);
+        parent.outByte(opc2, 1);
+        parent.outByte(opc3, 2);
+        ByteGenerator gen(parent, 1);
         return generate(printer, gen);
     }
 
@@ -247,7 +297,6 @@ private:
     Disassembler &_disassembler;
     const int _memorySize;
     const Endian _endian;
-    const size_t _opcodeSize;
     uint8_t *_memory;
     TestData<Conf> _data;
     std::unordered_map<
@@ -268,79 +317,66 @@ private:
     }
 
     void printInsn(const TestData<Conf> &data) {
-        _printer->print(data.insn(), data.operands().buffer());
-        _addr += data.insn().length();
+        _printer->print(data.insn(), data.operands());
+        _addr += data.length();
     }
 
     int meaningfulTestData() {
-        std::string name(_data.insn().name());
-        const size_t size = _data.insn().length();
+        std::string name(_data.name());
+        const size_t size = _data.length();
         name += ':';
         name += size + '0';
         auto seen = _map.find(name);
         if (seen == _map.end()) {
-            _map.emplace(name, std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq>());
+            _map.emplace(name, std::unordered_set<
+                         TokenizedText, TokenizedText::hash, TokenizedText::eq>());
             seen = _map.find(name);
         }
         auto &variants = seen->second;
-        const TokenizedText a(_data.operands().buffer());
+        const TokenizedText a(_data.operands());
         auto found = variants.find(a);
         if (found != variants.end()) {
-            if (found->count() >= 300)
-                return 2;
+            if (found->count() >= 0x200)
+                return -1;
             return 0;
         }
         variants.insert(a);
-        return -2;
+        return 1;
     }
 
     void generateTests(DataGenerator &gen) {
         FILE *dumpOut = _printer->dumpOut();
-        gen.debugPrint("@@ enter");
+        gen.debug(dumpOut, "@@ enter");
         do {
             gen.next();
-            gen.debugPrint("@@  loop");
+            gen.debug(dumpOut, "@@  loop");
             _data.tryGenerate(_disassembler, _addr, _memory, _memorySize);
             if (_disassembler.getError() == OK) {
-                const int len = gen.pos() + gen.size();
-                const int newLen = _data.insn().length();
+                const int len = gen.length();
+                const int newLen = _data.length();
                 const int delta = newLen - len;
                 if (delta && dumpOut) {
                     fprintf(dumpOut,  "@@  delta: %d (%d <- %d)\n",
                             delta, newLen, len);
                     gen.dump(dumpOut, "@@   ", len, delta);
                     fprintf(dumpOut,  "@@       : %s %s\n",
-                            _data.insn().name(), _data.operands().buffer());
+                            _data.name(), _data.operands());
                     fflush(dumpOut);
                 }
+                const int level = meaningfulTestData();
+                if (level < 0 && gen.start() > 0) return;
+                if (level > 0) printInsn(_data);
                 if (delta > 0) {
-                    if (delta % 2 == 0 || delta == 1) {
-                        DataGenerator child(gen, delta);
-                        child.debugPrint("@@  long");
-                        generateTests(child);
-                        gen.debugPrint("@@  cont");
-                    } else {
-                        DataGenerator child(gen, 1);
-                        child.debugPrint("@@  odd1");
-                        generateTests(child);
-                        gen.debugPrint("@@  cont");
-                    }
+                    ByteGenerator child(gen, delta);
+                    child.debug(dumpOut, "@@ delta");
+                    generateTests(child);
                 } else if (delta < 0) {
-                    gen.debugPrint("@@  shrk");
-                    printInsn(_data);
+                    gen.debug(dumpOut, "@@  shrk");
                     return;
-                } else {
-                    int abort;
-                    if ((abort = meaningfulTestData()) < 0) {
-                        printInsn(_data);
-                    } else if (abort > 0) {
-                        gen.debugPrint("@@ abort");
-                        return;
-                    }
                 }
             }
         } while (gen.hasNext());
-        gen.debugPrint("@@ leave");
+        gen.debug(dumpOut, "@@ leave");
     }
 };
 

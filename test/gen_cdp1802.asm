@@ -47,18 +47,18 @@
       GHI  0
       PLO  0
       PHI  0
-      LBR  00C1H
-      LBQ  00C2H
-      LBZ  00C3H
-      LBDF 00C4H
+      LBR  0C1C2H
+      LBQ  0C2C3H
+      LBZ  0C3C4H
+      LBDF 0C4C5H
       NOP
       LSNQ
       LSNZ
       LSNF
       LSKP
-      LBNQ 00CAH
-      LBNZ 00CBH
-      LBNF 00CCH
+      LBNQ 0CACBH
+      LBNZ 0CBCCH
+      LBNF 0CCCDH
       LSIE
       LSQ
       LSZ

@@ -15,11 +15,11 @@
       SL   A
       SL   EA
       CALL 0
-      JSR  0x0022
-      PLI  P2,#0x0023
-      JMP  0x0026
-      LD   SP,#0x0026
-      LD   P2,#0x0027
+      JSR  0x2222
+      PLI  P2,#0x2423
+      JMP  0x2626
+      LD   SP,#0x2726
+      LD   P2,#0x2827
       MPY  EA,T
       BND  $+48
       BND  $-126
@@ -80,7 +80,7 @@
       LD   EA,0,SP
       LD   EA,-125,P2
       LD   EA,0,P2
-      LD   EA,#0x0085
+      LD   EA,#0x8685
       LD   EA,0xFF86
       LD   EA,@-121,P2
       LD   EA,@0,P2
@@ -121,7 +121,7 @@
       LD   T,0,SP
       LD   T,-93,P2
       LD   T,0,P2
-      LD   T,#0x00A5
+      LD   T,#0xA6A5
       LD   T,0xFFA6
       LD   T,@-89,P2
       LD   T,@0,P2
@@ -132,7 +132,7 @@
       ADD  EA,0,SP
       ADD  EA,-77,P2
       ADD  EA,0,P2
-      ADD  EA,#0x00B5
+      ADD  EA,#0xB6B5
       ADD  EA,0xFFB6
       ADD  EA,@-73,P2
       ADD  EA,@0,P2
@@ -143,7 +143,7 @@
       SUB  EA,0,SP
       SUB  EA,-69,P2
       SUB  EA,0,P2
-      SUB  EA,#0x00BD
+      SUB  EA,#0xBEBD
       SUB  EA,0xFFBE
       SUB  EA,@-65,P2
       SUB  EA,@0,P2

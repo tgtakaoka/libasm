@@ -9,10 +9,10 @@
       PHP
       ORA  #10
       ASL  A
-      ORA  >$000E
-      ORA  $0100
-      ASL  >$000F
-      ASL  $0100
+      ORA  $0F0E
+      ORA  >$000D
+      ASL  $100F
+      ASL  >$000E
       BPL  *+19
       BPL  *-126
       BPL  *
@@ -20,14 +20,14 @@
       ORA  $16,X
       ASL  $17,X
       CLC
-      ORA  >$001A,Y
-      ORA  $0100,Y
-      ORA  >$001E,X
-      ORA  $0100,X
-      ASL  >$001F,X
-      ASL  $0100,X
-      JSR  >$0021
-      JSR  $0100
+      ORA  $1B1A,Y
+      ORA  >$0019,Y
+      ORA  $1F1E,X
+      ORA  >$001D,X
+      ASL  $201F,X
+      ASL  >$001E,X
+      JSR  $2221
+      JSR  >$0020
       AND  ($22,X)
       BIT  $25
       AND  $26
@@ -35,12 +35,12 @@
       PLP
       AND  #$2A
       ROL  A
-      BIT  >$002D
-      BIT  $0100
-      AND  >$002E
-      AND  $0100
-      ROL  >$002F
-      ROL  $0100
+      BIT  $2E2D
+      BIT  >$002C
+      AND  $2F2E
+      AND  >$002D
+      ROL  $302F
+      ROL  >$002E
       BMI  *+51
       BMI  *-126
       BMI  *
@@ -48,12 +48,12 @@
       AND  $36,X
       ROL  $37,X
       SEC
-      AND  >$003A,Y
-      AND  $0100,Y
-      AND  >$003E,X
-      AND  $0100,X
-      ROL  >$003F,X
-      ROL  $0100,X
+      AND  $3B3A,Y
+      AND  >$0039,Y
+      AND  $3F3E,X
+      AND  >$003D,X
+      ROL  $403F,X
+      ROL  >$003E,X
       RTI
       EOR  ($42,X)
       EOR  $46
@@ -61,12 +61,12 @@
       PHA
       EOR  #$4A
       LSR  A
-      JMP  >$004D
-      JMP  $0100
-      EOR  >$004E
-      EOR  $0100
-      LSR  >$004F
-      LSR  $0100
+      JMP  $4E4D
+      JMP  >$004C
+      EOR  $4F4E
+      EOR  >$004D
+      LSR  $504F
+      LSR  >$004E
       BVC  *+83
       BVC  *-126
       BVC  *
@@ -74,12 +74,12 @@
       EOR  $56,X
       LSR  $57,X
       CLI
-      EOR  >$005A,Y
-      EOR  $0100,Y
-      EOR  >$005E,X
-      EOR  $0100,X
-      LSR  >$005F,X
-      LSR  $0100,X
+      EOR  $5B5A,Y
+      EOR  >$0059,Y
+      EOR  $5F5E,X
+      EOR  >$005D,X
+      LSR  $605F,X
+      LSR  >$005E,X
       RTS
       ADC  ($62,X)
       ADC  $66
@@ -87,12 +87,12 @@
       PLA
       ADC  #$6A
       ROR  A
-      JMP  (>$006D)
-      JMP  ($0100)
-      ADC  >$006E
-      ADC  $0100
-      ROR  >$006F
-      ROR  $0100
+      JMP  ($6E6D)
+      JMP  (>$006C)
+      ADC  $6F6E
+      ADC  >$006D
+      ROR  $706F
+      ROR  >$006E
       BVS  *+115
       BVS  *-126
       BVS  *
@@ -100,24 +100,24 @@
       ADC  $76,X
       ROR  $77,X
       SEI
-      ADC  >$007A,Y
-      ADC  $0100,Y
-      ADC  >$007E,X
-      ADC  $0100,X
-      ROR  >$007F,X
-      ROR  $0100,X
+      ADC  $7B7A,Y
+      ADC  >$0079,Y
+      ADC  $7F7E,X
+      ADC  >$007D,X
+      ROR  $807F,X
+      ROR  >$007E,X
       STA  ($82,X)
       STY  $85
       STA  $86
       STX  $87
       DEY
       TXA
-      STY  >$008D
-      STY  $0100
-      STA  >$008E
-      STA  $0100
-      STX  >$008F
-      STX  $0100
+      STY  $8E8D
+      STY  >$008C
+      STA  $8F8E
+      STA  >$008D
+      STX  $908F
+      STX  >$008E
       BCC  *-109
       BCC  *
       BCC  *+1
@@ -126,11 +126,11 @@
       STA  $96,X
       STX  $97,Y
       TYA
-      STA  >$009A,Y
-      STA  $0100,Y
+      STA  $9B9A,Y
+      STA  >$0099,Y
       TXS
-      STA  >$009E,X
-      STA  $0100,X
+      STA  $9F9E,X
+      STA  >$009D,X
       LDY  #$A1
       LDA  ($A2,X)
       LDX  #$A3
@@ -140,12 +140,12 @@
       TAY
       LDA  #$AA
       TAX
-      LDY  >$00AD
-      LDY  $0100
-      LDA  >$00AE
-      LDA  $0100
-      LDX  >$00AF
-      LDX  $0100
+      LDY  $AEAD
+      LDY  >$00AC
+      LDA  $AFAE
+      LDA  >$00AD
+      LDX  $B0AF
+      LDX  >$00AE
       BCS  *-77
       BCS  *
       BCS  *+1
@@ -154,15 +154,15 @@
       LDA  $B6,X
       LDX  $B7,Y
       CLV
-      LDA  >$00BA,Y
-      LDA  $0100,Y
+      LDA  $BBBA,Y
+      LDA  >$00B9,Y
       TSX
-      LDY  >$00BD,X
-      LDY  $0100,X
-      LDA  >$00BE,X
-      LDA  $0100,X
-      LDX  >$00BF,Y
-      LDX  $0100,Y
+      LDY  $BEBD,X
+      LDY  >$00BC,X
+      LDA  $BFBE,X
+      LDA  >$00BD,X
+      LDX  $C0BF,Y
+      LDX  >$00BE,Y
       CPY  #$C1
       CMP  ($C2,X)
       CPY  $C5
@@ -171,12 +171,12 @@
       INY
       CMP  #$CA
       DEX
-      CPY  >$00CD
-      CPY  $0100
-      CMP  >$00CE
-      CMP  $0100
-      DEC  >$00CF
-      DEC  $0100
+      CPY  $CECD
+      CPY  >$00CC
+      CMP  $CFCE
+      CMP  >$00CD
+      DEC  $D0CF
+      DEC  >$00CE
       BNE  *-45
       BNE  *
       BNE  *+1
@@ -184,12 +184,12 @@
       CMP  $D6,X
       DEC  $D7,X
       CLD
-      CMP  >$00DA,Y
-      CMP  $0100,Y
-      CMP  >$00DE,X
-      CMP  $0100,X
-      DEC  >$00DF,X
-      DEC  $0100,X
+      CMP  $DBDA,Y
+      CMP  >$00D9,Y
+      CMP  $DFDE,X
+      CMP  >$00DD,X
+      DEC  $E0DF,X
+      DEC  >$00DE,X
       CPX  #$E1
       SBC  ($E2,X)
       CPX  $E5
@@ -198,12 +198,12 @@
       INX
       SBC  #$EA
       NOP
-      CPX  >$00ED
-      CPX  $0100
-      SBC  >$00EE
-      SBC  $0100
-      INC  >$00EF
-      INC  $0100
+      CPX  $EEED
+      CPX  >$00EC
+      SBC  $EFEE
+      SBC  >$00ED
+      INC  $F0EF
+      INC  >$00EE
       BEQ  *-13
       BEQ  *
       BEQ  *+1
@@ -211,9 +211,9 @@
       SBC  $F6,X
       INC  $F7,X
       SED
-      SBC  >$00FA,Y
-      SBC  $0100,Y
-      SBC  >$00FE,X
-      SBC  $0100,X
+      SBC  $FBFA,Y
+      SBC  >$00F9,Y
+      SBC  $FFFE,X
+      SBC  >$00FD,X
       INC  >$00FF,X
-      INC  $0100,X
+      INC  $FFFE,X
