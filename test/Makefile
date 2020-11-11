@@ -58,6 +58,9 @@ TEST_OUTS=\
 
 all: $(TEST_OUTS)
 
+clean-test: $(TEST_OUTS)
+	-rm -f $^
+
 %.hex: %.asl
 	asl $(ASL_FLAGS) $^
 	p2hex -k -r \$$-\$$ -l 32 -F Intel $*.p $@ > /dev/null
@@ -373,6 +376,17 @@ OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing
 gen: $(GENS)
 
 generate: $(GEN_OUTS)
+
+gen-test: $(GEN_OUTS)
+	@for s in $^; do \
+	    x=$${s%.asm}; \
+	    x=$${x%.inc}; \
+	    echo asm $$x; \
+	    asm $${x}.asm; \
+	done
+
+clean-gen: $(GEN_OUTS)
+	-rm -f $^
 
 gen_mc6809:  gen_mc6809.o  dis_mc6809.o  $(OBJS_mc6809)  $(OBJS_gen)
 	$(CXX) -o $@ $(CXXFLAGS) $^
