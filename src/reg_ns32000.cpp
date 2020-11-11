@@ -161,6 +161,7 @@ char *RegNs32000::outPregName(char *out, PregName name) const {
 PregName RegNs32000::decodePregName(uint8_t num) {
     num &= 0xF;
     if (num >= 1 && num < 8) return PREG_UNDEF;
+    if (num == 11 || num == 12) return PREG_UNDEF;
     return PregName(num);
 }
 

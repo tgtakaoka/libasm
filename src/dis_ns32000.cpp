@@ -348,9 +348,12 @@ Error DisNs32000::decodeOperand(
     case M_GREG:
         out = _regs.outRegName(out, RegNs32000::decodeRegName(field));
         break;
-    case M_PREG:
-        out = _regs.outPregName(out, RegNs32000::decodePregName(field));
+    case M_PREG: {
+        const PregName preg = RegNs32000::decodePregName(field);
+        if (preg == PREG_UNDEF) return setError(UNKNOWN_REGISTER);
+        out = _regs.outPregName(out, preg);
         break;
+    }
 #ifdef NS32000_ENABLE_MMU
     case M_MREG:
         out = _regs.outMregName(out, RegNs32000::decodeMregName(field));
