@@ -193,7 +193,7 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, char *out) {
         const Config::opcode_t opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
         if (TableI8086.searchOpCode(istr))
-            setError(TableI8086.getError());
+            return setError(TableI8086.getError());
         if (!istr.stringInst())
             return setError(UNKNOWN_INSTRUCTION);
         outText(out, istr.name());

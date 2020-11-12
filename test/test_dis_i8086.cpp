@@ -1197,6 +1197,8 @@ static void test_string_manipulation() {
     TEST(REPNE, "LODSW", 0xF2, 0xAD);
     TEST(REPNE, "SCASB", 0xF2, 0xAE);
     TEST(REPNE, "SCASW", 0xF2, 0xAF);
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xF2, 0x90); // NOP
+    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xF2, 0xFF); // Prefix
 
     TEST(REP, "MOVSB", 0xF3, 0xA4);
     TEST(REP, "MOVSW", 0xF3, 0xA5);
