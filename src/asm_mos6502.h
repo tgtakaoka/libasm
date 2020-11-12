@@ -56,10 +56,7 @@ private:
         char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
     Error parseOperand(const char *scan, Operand &op, Operand &extra);
 
-    Error encodeLongRelative(InsnMos6502 &insn, const Operand &op);
-    Error encodeRelative(InsnMos6502 &insn, const Operand &op);
-    Error encodeZeroPageRelative(
-        InsnMos6502 &insn, const Operand &op, const Operand &extra);
+    Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

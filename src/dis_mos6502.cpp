@@ -140,21 +140,27 @@ Error DisMos6502::decodeZeroPage(
 
 Error DisMos6502::decodeRelative(
     DisMemory &memory, InsnMos6502 &insn, char *out) {
-    const AddrMode mode = insn.addrMode();
-    const uint8_t bank = static_cast<uint8_t>(insn.address() >> 16);
-    const uint16_t base = static_cast<uint16_t>(insn.address())
-        + (mode == REL ? 2 : 3);
-    int16_t delta;
-    uint8_t deltaWidth;
-    if (mode == REL_LONG) {
-        deltaWidth = 16;
-        delta = static_cast<int16_t>(insn.readUint16(memory));
+    const uint8_t deltaBits = (insn.addrMode() == REL_LONG) ? 16 : 8;
+    const int16_t delta = (deltaBits == 16)
+        ? static_cast<int16_t>(insn.readUint16(memory))
+        : static_cast<int8_t>(insn.readByte(memory));
+    const uint16_t origin = insn.address();
+    const uint16_t base = origin + insn.length();
+    const uint16_t target = base + delta;
+    Config::uintptr_t addr, orig;
+    if (addressWidth() == ADDRESS_24BIT) {
+        const Config::uintptr_t bank = insn.address() & ~0xFFFF;
+        addr = bank | target;
+        orig = addr - delta - insn.length();
+        if ((delta >= 0 && target <= origin) || (delta < 0 && target > base)) {
+            outAbsAddr(out, addr, addressWidth());
+            return setError(insn);
+        }
     } else {
-        deltaWidth = 8;
-        delta = static_cast<int8_t>(insn.readByte(memory));
+        addr = static_cast<int16_t>(target);
+        orig = static_cast<int16_t>(origin);
     }
-    const uint32_t target = (static_cast<uint32_t>(bank) << 16) + base + delta;
-    outRelAddr(out, target, insn.address(), deltaWidth);
+    outRelAddr(out, addr, orig, deltaBits);
     return setError(insn);
 }
 

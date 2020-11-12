@@ -127,7 +127,8 @@
       RTS
       ADC  ($62,X)
       PER  *+$6466
-      PER  *-$7F9B
+      PER  $008387
+      PER  *-$029B
       ADC  $64,S
       STZ  $65
       ADC  $66
@@ -170,7 +171,8 @@
       BRA  *
       BRA  *+1
       STA  ($82,X)
-      BRL  *-$7B7A
+      BRL  $00880E
+      BRL  *-$037B
       BRL  *+$0085
       STA  $84,S
       STY  $85

@@ -20,39 +20,26 @@
 namespace libasm {
 namespace mos6502 {
 
-Error AsmMos6502::encodeLongRelative(InsnMos6502 &insn, const Operand &op) {
-    const uint32_t target = op.getError() ? insn.address() : op.val32;
-    const uint8_t cbank = static_cast<uint8_t>(insn.address() >> 16);
-    const uint8_t tbank = static_cast<uint8_t>(target >> 16);
-    if (cbank != tbank) return setError(OPERAND_TOO_FAR);
-    const uint32_t base = insn.address() + 3;
-    const int32_t delta = op.getError() ? 0 : target - base;
-    if (delta >= 32768L || delta < -32768L) return setError(OPERAND_TOO_FAR);
-    insn.emitInsn();
-    insn.emitUint16(static_cast<uint16_t>(delta));
-    return OK;
-}
-
-Error AsmMos6502::encodeRelative(InsnMos6502 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? base : op.val32;
-    const Config::ptrdiff_t delta = target - base;
-    if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-    insn.emitInsn();
-    insn.emitByte(static_cast<uint8_t>(delta));
-    return OK;
-}
-
-Error AsmMos6502::encodeZeroPageRelative(
-    InsnMos6502 &insn, const Operand &op, const Operand &extra) {
-    const Config::uintptr_t base = insn.address() + 3;
-    const Config::uintptr_t target =
-        extra.getError() ? insn.address() : extra.val32;
-    const Config::ptrdiff_t delta = target - base;
-    if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
-    insn.emitInsn();
-    insn.emitByte(static_cast<uint8_t>(op.val32));
-    insn.emitByte(static_cast<uint8_t>(delta));
+Error AsmMos6502::encodeRelative(
+    InsnMos6502 &insn, AddrMode mode, const Operand &op) {
+    const Config::uintptr_t bank = insn.address() & ~0xFFFF;
+    const uint16_t base = insn.address() + insn.length()
+        + (mode == REL ? 1 : 2);
+    const uint16_t target = op.getError() ? base : op.val32;
+    const int16_t delta = target - base;
+    if (addressWidth() == ADDRESS_24BIT
+        && op.getError() == OK && (op.val32 & ~0xFFFF) != bank) {
+    too_far:
+        insn.resetAddress(insn.address()); // clear output.
+        return setError(OPERAND_TOO_FAR);
+    }
+    if (mode == REL) {
+        if (delta >= 128 || delta < -128)
+            goto too_far;
+        insn.emitByte(static_cast<uint8_t>(delta));
+    } else {
+        insn.emitUint16(static_cast<uint16_t>(delta));
+    }
     return OK;
 }
 
@@ -261,19 +248,21 @@ Error AsmMos6502::encode(Insn &_insn) {
     if (TableMos6502.searchName(insn))
         return setError(TableMos6502.getError());
 
-    switch (insn.addrMode()) {
+    const AddrMode mode = insn.addrMode();
+    switch (mode) {
     case IMPL:
     case ACCM:
         insn.emitInsn();
         break;
     case REL:
-        encodeRelative(insn, op);
-        break;
     case REL_LONG:
-        encodeLongRelative(insn, op);
+        insn.emitInsn();
+        encodeRelative(insn, mode, op);
         break;
     case ZPG_REL:
-        encodeZeroPageRelative(insn, op, extra);
+        insn.emitInsn();
+        insn.emitByte(static_cast<uint8_t>(op.val32));
+        encodeRelative(insn, REL, extra);
         break;
     case BLOCK_MOVE:
         insn.emitInsn();

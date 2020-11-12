@@ -745,9 +745,6 @@ static void test_rel() {
     ATEST(0x1000, "BVC $1004", 0x50, 0x02);
     ATEST(0x1000, "BVS $1081", 0x70, 0x7F);
     ATEST(0x1000, "BCC $0F82", 0x90, 0x80);
-    ATEST(0x1000, "BCS $1002", 0xB0, 0x00);
-    ATEST(0x1000, "BNE $1002", 0xD0, 0x00);
-    ATEST(0x1000, "BEQ $1002", 0xF0, 0x00);
 
     if (m6502()) {
         ETEST(UNKNOWN_INSTRUCTION, "BRA $1000");
@@ -757,10 +754,43 @@ static void test_rel() {
     }
     if (w65c816()) {
         // W65C816
-        ATEST(0x121000, "BRL $121234", 0x82, 0x31, 0x02);
-        ATEST(0x121000, "PER $121234", 0x62, 0x31, 0x02);
+        ATEST(                  0x0000, "BCS $FF82", 0xB0, 0x80);
+        ATEST(                  0xFFFE, "BNE $0000", 0xD0, 0x00);
+        ATEST(                  0xFFF0, "BEQ $0071", 0xF0, 0x7F);
+        EATEST(OPERAND_TOO_FAR, 0x0000, "BCS *-126");
+        EATEST(OPERAND_TOO_FAR, 0xFFFE, "BNE *+2");
+        EATEST(OPERAND_TOO_FAR, 0xFFF0, "BEQ *+129");
+
+        ATEST(                  0x120000, "BCS $12FF82", 0xB0, 0x80);
+        ATEST(                  0x12FFFE, "BNE $120000", 0xD0, 0x00);
+        ATEST(                  0x12FFF0, "BEQ $120071", 0xF0, 0x7F);
+        EATEST(OPERAND_TOO_FAR, 0x120000, "BCS *-126");
+        EATEST(OPERAND_TOO_FAR, 0x12FFFE, "BNE *+2");
+        EATEST(OPERAND_TOO_FAR, 0x12FFF0, "BEQ *+129");
+
+        ATEST(0x129000, "BRL $121003", 0x82, 0x00, 0x80);
+        ATEST(0x121000, "PER $129002", 0x62, 0xFF, 0x7F);
+        ATEST(0x129000, "BRL *-$7FFD", 0x82, 0x00, 0x80);
+        ATEST(0x121000, "PER *+$8002", 0x62, 0xFF, 0x7F);
+        EATEST(OPERAND_TOO_FAR, 0x129000, "BRL $131003");
+        EATEST(OPERAND_TOO_FAR, 0x121000, "PER $118002");
+
+        ATEST(                  0x121000, "BRL $129003", 0x82, 0x00, 0x80);
+        ATEST(                  0x129000, "PER $121002", 0x62, 0xFF, 0x7F);
+        EATEST(OPERAND_TOO_FAR, 0x121000, "BRL *-$7FFD");
+        EATEST(OPERAND_TOO_FAR, 0x129000, "PER *+$8002");
+
+        EATEST(OPERAND_TOO_FAR, 0x120000, "BCS $11FF82");
+        EATEST(OPERAND_TOO_FAR, 0x12FFFE, "BCS $130000");
+        EATEST(OPERAND_TOO_FAR, 0x12FFF0, "BCS $130061");
     } else {
-        // W65C816
+        ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
+        ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
+        ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
+        ATEST(0x0000, "BCS *-126", 0xB0, 0x80);
+        ATEST(0xFFFE, "BNE *+2",   0xD0, 0x00);
+        ATEST(0xFFF0, "BEQ *+129", 0xF0, 0x7F);
+
         ETEST(UNKNOWN_INSTRUCTION, "BRL $121234");
         ETEST(UNKNOWN_INSTRUCTION, "PER $121234");
     }
@@ -973,8 +1003,8 @@ static void test_undefined_symbol() {
         ETEST(UNDEFINED_SYMBOL, "SMB4 <UNDEF", 0xC7, 0x00);
 
         EATEST(UNDEFINED_SYMBOL, 0x1000, "BBR3 UNDEF,$1082", 0x3F, 0x00, 0x7F);
-        EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS6 $10,UNDEF",   0xEF, 0x10, 0xFD);
-        EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS7 UNDEF,UNDEF", 0xFF, 0x00, 0xFD);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS6 $10,UNDEF",   0xEF, 0x10, 0x00);
+        EATEST(UNDEFINED_SYMBOL, 0x1000, "BBS7 UNDEF,UNDEF", 0xFF, 0x00, 0x00);
     }
 }
 
