@@ -265,7 +265,7 @@ public:
         } else {
             WordGenerator parent(_memory, _memorySize, _endian, 0);
             parent.outWord(opc1, 0);
-            WordGenerator gen(parent, _endian);
+            ByteGenerator gen(parent, 1);
             return generate(printer, gen);
         }
     }
