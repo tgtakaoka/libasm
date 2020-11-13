@@ -18,6 +18,7 @@
 #define __ENTRY_Z80_H__
 
 #include "config_z80.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace z80 {
@@ -66,32 +67,48 @@ enum AddrMode : uint8_t {
     M_UNKI = 50,      // Undefined instruction
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint16_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _dst;
+        uint8_t _src;
 
-    static inline AddrMode _dstMode(uint16_t flags) {
-        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
-    }
-    static inline AddrMode _srcMode(uint16_t flags) {
-        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
-    }
-    static inline bool _indexBit(uint16_t flags) {
-        return flags & (1 << indexBit_bp);
-    }
-    static constexpr uint16_t _flags(
-        AddrMode dst, AddrMode src, bool indexBit = false) {
-        return (static_cast<uint16_t>(dst) << dstMode_gp)
-            | (static_cast<uint16_t>(src) << srcMode_gp)
-            | (indexBit ? (1 << indexBit_bp) : 0);
-    }
+        static constexpr Flags create(
+                AddrMode dst, AddrMode src, bool indexBit = false) {
+            return Flags{
+                static_cast<uint8_t>(
+                        static_cast<uint8_t>(dst)
+                        | (indexBit ? 1 << indexBit_bp : 0)),
+                static_cast<uint8_t>(src)
+            };
+        }
+        Flags read() const {
+            return Flags{
+                pgm_read_byte(&_dst),
+                pgm_read_byte(&_src)
+            };
+        }
+
+        AddrMode dstMode() const {
+            return AddrMode(_dst & ~(1 << indexBit_bp));
+        }
+        AddrMode srcMode() const {
+            return AddrMode(_src);
+        }
+        bool indexBit() const {
+            return _dst & (1 << indexBit_bp);
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
-    static constexpr int dstMode_gp = 0;
-    static constexpr int srcMode_gp = 8;
+    Flags _flags;
+
     static constexpr int indexBit_bp = 7;
-    static constexpr uint8_t addrMode_gm = 0x3F;
 };
 
 } // namespace z80

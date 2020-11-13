@@ -28,19 +28,18 @@ namespace mc68000 {
 #undef SPL
 #endif
 
-#define X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, _alias) \
+#define X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _alias) \
     {                                                                   \
         _opc,                                                           \
-        Entry::_flags(Entry::_opr(_msrc),                               \
-                      Entry::_opr(_mdst),                               \
-                      Entry::_pos(OP_##_spos, OP_##_dpos, _alias),      \
-                      Entry::_size(SZ_##_osize, ISZ_##_isize)),         \
-        TEXT_##_name,                                                   \
+        Entry::Flags::create(                                           \
+            _src, _dst, OP_##_srcp, OP_##_dstp,                         \
+            SZ_##_osize, ISZ_##_isize, _alias),                         \
+        TEXT_##_name                                                    \
     },
-#define E(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize)      \
-    X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, false)
-#define A(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize)      \
-    X(_opc, _name, _isize, _msrc, _mdst, _spos, _dpos, _osize, true)
+#define E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)    \
+    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
+#define A(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)    \
+    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, true)
 
 static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0000074, ORI,   NONE, M_IMDAT, M_CCR,   __, __, BYTE)
@@ -306,31 +305,25 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
     return false;
 }
 
-static bool matchAddrMode(uint32_t flags, const Entry *entry) {
-    const uint32_t table = pgm_read_dword(&entry->flags);
-    return acceptMode(Entry::_mode(Entry::_src(flags)), Entry::_mode(Entry::_src(table)))
-        && acceptMode(Entry::_mode(Entry::_dst(flags)), Entry::_mode(Entry::_dst(table)))
-        && acceptSize(
-            Entry::_insnSize(Entry::_size(flags)),
-            Entry::_oprSize(Entry::_size(table)),
-            Entry::_insnSize(Entry::_size(table)));
+static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.srcMode(), table.srcMode())
+        && acceptMode(flags.dstMode(), table.dstMode())
+        && acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
 Error TableMc68000::searchName(InsnMc68000 &insn) const {
-    const uint32_t flags = Entry::_flags(
-        Entry::_opr(insn.srcMode()), Entry::_opr(insn.dstMode()),
-        OP___, Entry::_size(SZ_NONE, insn.insnSize()));
     uint8_t count = 0;
     const Entry *const end = ARRAY_END(MC68000_TABLE);
     for (const Entry *entry = ARRAY_BEGIN(MC68000_TABLE);
          entry < end
-             && (entry = TableBase::searchName<Entry,uint32_t>(
-                     insn.name(), flags, entry, end, matchAddrMode, count));
+             && (entry = TableBase::searchName<Entry, Entry::Flags>(
+                     insn.name(), insn.flags(), entry, end, matchAddrMode, count));
          entry++) {
-        insn.setFlags(pgm_read_dword(&entry->flags));
+        insn.setFlags(entry->flags());
         if (insn.alias() && !_aliasEnabled)
             continue;
-        insn.setOpCode(pgm_read_word(&entry->opCode));
+        insn.setOpCode(entry->opCode());
         return _error.setOK();
     }
     return _error.setError(
@@ -366,16 +359,15 @@ static Config::opcode_t getInsnMask(OprSize size) {
     }
 }
 
-static Config::opcode_t getInsnMask(uint32_t flags) {
-    return getInsnMask(Entry::_mode(Entry::_src(flags)))
-        | getInsnMask(Entry::_srcPos(Entry::_pos(flags)))
-        | getInsnMask(Entry::_dstPos(Entry::_pos(flags)))
-        | getInsnMask(Entry::_oprSize(Entry::_size(flags)));
+static Config::opcode_t getInsnMask(Entry::Flags flags) {
+    return getInsnMask(flags.srcMode())
+        | getInsnMask(flags.srcPos())
+        | getInsnMask(flags.dstPos())
+        | getInsnMask(flags.oprSize());
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const uint32_t flags = pgm_read_dword(&entry->flags);
-    const Config::opcode_t mask = getInsnMask(flags);
+    const Config::opcode_t mask = getInsnMask(entry->flags());
     return opCode & ~mask;
 }
 
@@ -384,10 +376,8 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
         opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
     if (entry) {
-        insn.setFlags(pgm_read_dword(&entry->flags));
-        const /*PROGMEM*/ char *name =
-            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        insn.setName_P(name);
+        insn.setFlags(entry->flags());
+        insn.setName_P(entry->name());
         return _error.setOK();
     }
     return _error.setError(UNKNOWN_INSTRUCTION);

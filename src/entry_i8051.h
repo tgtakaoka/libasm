@@ -18,6 +18,7 @@
 #define __ENTRY_I8051_H__
 
 #include "config_i8051.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace i8051 {
@@ -43,28 +44,38 @@ enum AddrMode : uint8_t {
     INDXP = 17, // @A+PC
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint16_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint16_t _attr;
 
-    static inline AddrMode _dstMode(uint16_t flags) {
-        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
-    }
-    static inline AddrMode _srcMode(uint16_t flags) {
-        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
-    }
-    static inline AddrMode _extMode(uint16_t flags) {
-        return AddrMode((flags >> extMode_gp) & addrMode_gm);
-    }
-    static constexpr uint16_t _flags(
-        AddrMode dst, AddrMode src, AddrMode ext) {
-        return (static_cast<uint16_t>(dst) << dstMode_gp)
-            | (static_cast<uint16_t>(src) << srcMode_gp)
-            | (static_cast<uint16_t>(ext) << extMode_gp);
-    }
+        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext) {
+            return Flags{static_cast<uint16_t>(
+                    (static_cast<uint16_t>(dst) << dstMode_gp)
+                    | (static_cast<uint16_t>(src) << srcMode_gp)
+                    | (static_cast<uint16_t>(ext) << extMode_gp))};
+        }
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+
+        AddrMode dstMode() const {
+            return AddrMode((_attr >> dstMode_gp) & addrMode_gm);
+        }
+        AddrMode srcMode() const {
+            return AddrMode((_attr >> srcMode_gp) & addrMode_gm);
+        }
+        AddrMode extMode() const {
+            return AddrMode((_attr >> extMode_gp) & addrMode_gm);
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
+    Flags _flags;
+
     static constexpr uint8_t addrMode_gm = 0x1f;
     static constexpr uint8_t dstMode_gp = 0;
     static constexpr uint8_t srcMode_gp = 5;

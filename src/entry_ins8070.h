@@ -18,6 +18,7 @@
 #define __ENTRY_INS8070_H__
 
 #include "config_ins8070.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace ins8070 {
@@ -56,32 +57,43 @@ enum OprFormat : uint8_t {
     OPR_GN = 14, // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint16_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint16_t _attr;
 
-    static inline AddrMode _addrMode(uint16_t flags) {
-        return AddrMode(flags & addrMode_gm);
-    }
-    static inline OprFormat _dstOpr(uint16_t flags) {
-        return OprFormat((flags >> dstOpr_gp) & oprFormat_gm);
-    }
-    static inline OprFormat _srcOpr(uint16_t flags) {
-        return OprFormat((flags >> srcOpr_gp) & oprFormat_gm);
-    }
-    static inline OprSize _oprSize(uint16_t flags) {
-        return OprSize((flags >> oprSize_gp) & oprSize_gm);
-    }
-    static constexpr uint16_t _flags(
-        AddrMode addrMode, OprFormat dst, OprFormat src, OprSize size) {
-        return static_cast<uint16_t>(addrMode)
-            | (static_cast<uint16_t>(dst) << dstOpr_gp)
-            | (static_cast<uint16_t>(src) << srcOpr_gp)
-            | (static_cast<uint16_t>(size) << oprSize_gp);
-    }
+        static constexpr Flags create(
+            AddrMode addrMode, OprFormat dst, OprFormat src, OprSize size) {
+            return Flags{static_cast<uint16_t>(
+                    static_cast<uint16_t>(addrMode)
+                    | (static_cast<uint16_t>(dst) << dstOpr_gp)
+                    | (static_cast<uint16_t>(src) << srcOpr_gp)
+                    | (static_cast<uint16_t>(size) << oprSize_gp))};
+        }
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+
+        AddrMode mode() const {
+            return AddrMode(_attr & addrMode_gm);
+        }
+        OprFormat dstOpr() const {
+            return OprFormat((_attr >> dstOpr_gp) & oprFormat_gm);
+        }
+        OprFormat srcOpr() const {
+            return OprFormat((_attr >> srcOpr_gp) & oprFormat_gm);
+        }
+        OprSize size() const {
+            return OprSize((_attr >> oprSize_gp) & oprSize_gm);
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
+    Flags _flags;
+
     static constexpr uint8_t addrMode_gm  = 0x7;
     static constexpr uint8_t oprFormat_gm = 0xF;
     static constexpr uint8_t oprSize_gm   = 0x3;

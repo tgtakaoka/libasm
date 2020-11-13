@@ -28,30 +28,25 @@ class InsnZ8000 : public InsnBase<Config> {
 public:
     InsnZ8000(Insn &insn) : InsnBase(insn) {}
 
-    OprSize  oprSize() const { return Entry::_oprSize(_size); }
-    AddrMode dstMode() const { return Entry::_mode(_dst); }
-    AddrMode srcMode() const { return Entry::_mode(_src); }
-    AddrMode ex1Mode() const { return Entry::_ex1(_ext); }
-    AddrMode ex2Mode() const { return Entry::_ex2(_ext); }
-    PostMode postMode() const { return Entry::_post(_ext); }
+    OprSize  oprSize() const { return _flags.oprSize(); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode ex1Mode() const { return _flags.ex1Mode(); }
+    AddrMode ex2Mode() const { return _flags.ex2Mode(); }
+    PostMode postMode() const { return _flags.postMode(); }
     bool hasPost() const { return postMode() != P_NO; }
-    uint8_t postMask() const { return Entry::_postMask(postMode()); }
-    uint8_t postVal() const { return Entry::_postVal(postMode()); }
-    ModeField dstField() const { return Entry::_field(_dst); }
-    ModeField srcField() const { return Entry::_field(_src); }
+    uint8_t postMask() const { return _flags.postMask(); }
+    uint8_t postVal() const { return _flags.postVal(); }
+    ModeField dstField() const { return _flags.dstField(); }
+    ModeField srcField() const { return _flags.srcField(); }
 
-    void setFlags(uint32_t flags) {
-        _dst = Entry::_dst(flags);
-        _src = Entry::_src(flags);
-        _ext = Entry::_ext(flags);
-        _size = Entry::_size(flags);
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(
             AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-        _dst = Entry::_opr(dst, MF_NO);
-        _src = Entry::_opr(src, MF_NO);
-        _ext = Entry::_ext(ex1, ex2, P_NO);
+        _flags = Entry::Flags::create(
+                dst, MF_NO, src, MF_NO, ex1, ex2, P_NO, CM_0x0000, SZ_NONE);
     }
 
     void setOpCode(Config::opcode_t opCode) {
@@ -59,17 +54,11 @@ public:
         _post = 0;
     }
 
-    void readPost(DisMemory &memory) {
-        _post = readUint16(memory);
-    }
+    void readPost(DisMemory &memory) { _post = readUint16(memory); }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void embedPost(Config::opcode_t data) {
-        _post |= data;
-    }
+    void embedPost(Config::opcode_t data) { _post |= data; }
 
     Config::opcode_t opCode() const { return _opCode; }
     uint16_t post() const { return _post; }
@@ -93,10 +82,7 @@ public:
 private:
     Config::opcode_t _opCode;
     Config::opcode_t _post;
-    uint8_t _dst;
-    uint8_t _src;
-    uint8_t _ext;
-    uint8_t _size;
+    Entry::Flags _flags;
 
     uint8_t operandPos() {
         uint8_t pos = length();

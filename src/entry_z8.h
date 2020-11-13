@@ -18,6 +18,7 @@
 #define __ENTRY_Z8_H__
 
 #include "config_z8.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace z8 {
@@ -76,52 +77,55 @@ enum DstSrc : uint8_t {
     SRC_DST = 1, // source first, destination second.
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint32_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _dst;
+        uint8_t _src;
+        uint8_t _ext;
+        uint8_t _fmt;
 
-    static inline AddrMode _mode(uint8_t opr) {
-        return AddrMode(opr & addrMode_gm);
-    }
-    static inline PostFormat _postFmt(uint8_t fmt) {
-        return PostFormat(fmt & postFmt_gm);
-    }
-    static inline bool _dstSrc(uint8_t fmt) {
-        return DstSrc((fmt >> dstSrc_gp) & dstSrc_gm) == DST_SRC;
-    }
-    static inline uint8_t _dst(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> dst_gp);
-    }
-    static inline uint8_t _src(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> src_gp);
-    }
-    static inline uint8_t _ext(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> ext_gp);
-    }
-    static inline uint8_t _fmt(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> fmt_gp);
-    }
-    static constexpr uint8_t _opr(AddrMode mode) {
-        return static_cast<uint8_t>(mode & addrMode_gm);
-    }
+        static constexpr Flags create(
+                AddrMode dst, AddrMode src, AddrMode ext,
+                DstSrc dstSrc, PostFormat postFmt) {
+            return Flags{
+                static_cast<uint8_t>(dst),
+                static_cast<uint8_t>(src),
+                static_cast<uint8_t>(ext),
+                Entry::_fmt(dstSrc, postFmt)
+            };
+        }
+        Flags read() const {
+            return Flags{
+                pgm_read_byte(&_dst),
+                pgm_read_byte(&_src),
+                pgm_read_byte(&_ext),
+                pgm_read_byte(&_fmt)
+            };
+        }
+
+        AddrMode dstMode() const { return AddrMode(_dst); }
+        AddrMode srcMode() const { return AddrMode(_src); }
+        AddrMode extMode() const { return AddrMode(_ext); }
+        PostFormat postFmt() const { return PostFormat(_fmt & postFmt_gm); }
+        bool dstSrc() const {
+            return DstSrc((_fmt >> dstSrc_gp) & dstSrc_gm) == DST_SRC;
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
+
+private:
+    Flags _flags;
+
     static constexpr uint8_t _fmt(DstSrc dstSrc, PostFormat postFmt) {
         return static_cast<uint8_t>(postFmt & postFmt_gm)
             | (static_cast<uint8_t>(dstSrc & dstSrc_gm) << dstSrc_gp);
     }
-    static constexpr uint32_t _flags(
-            uint8_t dst, uint8_t src, uint8_t ext, uint8_t fmt) {
-        return (static_cast<uint32_t>(dst) << dst_gp)
-            | (static_cast<uint32_t>(src) << src_gp)
-            | (static_cast<uint32_t>(ext) << ext_gp)
-            | (static_cast<uint32_t>(fmt) << fmt_gp);
-    }
-private:
-    // |dst|, |src|, |ext|
-    static constexpr int8_t dst_gp = 0;
-    static constexpr int8_t src_gp = 8;
-    static constexpr int8_t ext_gp = 16;
-    static constexpr uint8_t addrMode_gm = 0x1f;
+
     // |fmt|
     static constexpr int8_t fmt_gp = 24;
     static constexpr uint8_t postFmt_gm = 0x7;

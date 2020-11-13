@@ -28,28 +28,23 @@ class InsnIns8070 : public InsnBase<Config> {
 public:
     InsnIns8070(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
-    OprFormat dstOpr() const { return Entry::_dstOpr(_flags); }
-    OprFormat srcOpr() const { return Entry::_srcOpr(_flags); }
-    OprSize oprSize() const { return Entry::_oprSize(_flags); }
+    AddrMode addrMode() const { return _flags.mode(); }
+    OprFormat dstOpr() const { return _flags.dstOpr(); }
+    OprFormat srcOpr() const { return _flags.srcOpr(); }
+    OprSize oprSize() const { return _flags.size(); }
 
-    void setFlags(uint16_t flags) {
-        _flags = flags;
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setOprFormats(OprFormat dst, OprFormat src) {
-        _flags = Entry::_flags(addrMode(), dst, src, oprSize());
+        _flags = Entry::Flags::create(UNDEF, dst, src, SZ_NONE);
     }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
     Config::opcode_t opCode() const { return _opCode; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
     void emitInsn() {
         emitByte(_opCode, 0);
@@ -65,7 +60,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint16_t _flags;
+    Entry::Flags _flags;
 
     uint8_t operandPos() const {
         uint8_t pos = length();

@@ -35,7 +35,7 @@ public:
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
 
-    struct EntryPage;
+    class EntryPage;
 
 private:
     CpuType _cpuType;

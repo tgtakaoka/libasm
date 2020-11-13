@@ -18,6 +18,7 @@
 #define __ENTRY_TMS9900_H__
 
 #include "config_tms9900.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace tms9900 {
@@ -52,28 +53,33 @@ enum AddrMode : uint8_t {
     M_INDX = 20,  // Indexed Addressing: @TABLE(Rn)
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint16_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _src;
+        uint8_t _dst;
 
-    static inline AddrMode _srcMode(uint16_t flags) {
-        return AddrMode((flags >> srcMode_gp) & addrMode_gm);
-    }
+        static constexpr Flags create(AddrMode src, AddrMode dst) {
+            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst)};
+        }
+        Flags read() const {
+            return Flags{
+                pgm_read_byte(&_src),
+                pgm_read_byte(&_dst)
+            };
+        }
 
-    static inline AddrMode _dstMode(uint16_t flags) {
-        return AddrMode((flags >> dstMode_gp) & addrMode_gm);
-    }
+        AddrMode srcMode() const { return AddrMode(_src); }
+        AddrMode dstMode() const { return AddrMode(_dst); }
+    };
 
-    static constexpr uint16_t _flags(AddrMode src, AddrMode dst) {
-        return (static_cast<uint16_t>(src) << srcMode_gp)
-            | (static_cast<uint16_t>(dst) << dstMode_gp);
-    }
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
-    static constexpr int srcMode_gp = 0;
-    static constexpr int dstMode_gp = 8;
-    static constexpr uint8_t addrMode_gm = 0x1F;
+    Flags _flags;
 };
 
 } // namespace tms9900

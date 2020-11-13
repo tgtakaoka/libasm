@@ -28,16 +28,15 @@ class InsnZ80 : public InsnBase<Config> {
 public:
     InsnZ80(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
-    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
-    bool indexBit() const { return Entry::_indexBit(_flags); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    bool indexBit() const { return _flags.indexBit(); }
 
-    void setFlags(uint16_t flags) {
-        _flags = flags;
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode dst, AddrMode src) {
-        _flags = Entry::_flags(dst, src);
+        _flags = Entry::Flags::create(dst, src);
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -45,9 +44,7 @@ public:
         _prefix = prefix;
     }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
     bool hasPrefix() const { return prefix() != 0; }
     Config::opcode_t prefix() const { return _prefix; }
@@ -69,7 +66,7 @@ public:
     }
 
 private:
-    uint16_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
 

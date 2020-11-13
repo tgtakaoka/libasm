@@ -24,24 +24,16 @@
 namespace libasm {
 namespace z8000 {
 
-#define E(_opc, _cm, _sz, _name, _dst, _src, _dst_mf, _src_mf)  \
-    {                                                           \
-        _opc,                                                   \
-        Entry::_flags(Entry::_opr(_dst, MF_##_dst_mf),          \
-                      Entry::_opr(_src, MF_##_src_mf),          \
-                      Entry::_ext(M_NO, M_NO, P_NO),            \
-                      Entry::_size(CM_##_cm, SZ_##_sz)),        \
-        TEXT_##_name                                            \
-    },
-#define X(_opc, _cm, _sz, _name, _dst, _src, _dst_mf, _src_mf, _ex1, _ex2, _post) \
+#define X(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf, _ex1, _ex2, _post) \
     {                                                                   \
         _opc,                                                           \
-        Entry::_flags(Entry::_opr(_dst, MF_##_dst_mf),                  \
-                      Entry::_opr(_src, MF_##_src_mf),                  \
-                      Entry::_ext(_ex1, _ex2, _post),                   \
-                      Entry::_size(CM_##_cm, SZ_##_sz)),                \
+        Entry::Flags::create(                                           \
+            _dst, MF_##_dstf, _src, MF_##_srcf,                         \
+            _ex1, _ex2, _post, CM_##_cm, SZ_##_sz),                     \
         TEXT_##_name                                                    \
     },
+#define E(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf)  \
+    X(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf, M_NO, M_NO, P_NO)
 
 static const Entry Z8000_TABLE[] PROGMEM = {
     E(0xC000, 0x0FFF, BYTE, LDB,    M_R,    M_IM8,  C8, C0)
@@ -298,27 +290,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint32_t flags, const Entry *entry) {
-    const uint32_t table = pgm_read_dword(&entry->flags);
-    return acceptMode(Entry::_mode(Entry::_dst(flags)), Entry::_mode(Entry::_dst(table)))
-        && acceptMode(Entry::_mode(Entry::_src(flags)), Entry::_mode(Entry::_src(table)))
-        && acceptMode(Entry::_ex1(Entry::_ext(flags)), Entry::_ex1(Entry::_ext(table)))
-        && acceptMode(Entry::_ex2(Entry::_ext(flags)), Entry::_ex2(Entry::_ext(table)));
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.dstMode(), table.dstMode())
+        && acceptMode(flags.srcMode(), table.srcMode())
+        && acceptMode(flags.ex1Mode(), table.ex1Mode())
+        && acceptMode(flags.ex2Mode(), table.ex2Mode());
 }
 
 Error TableZ8000::searchName(InsnZ8000 &insn) const {
     uint8_t count = 0;
-    const uint32_t flags = Entry::_flags(
-            Entry::_opr(insn.dstMode(), MF_NO),
-            Entry::_opr(insn.srcMode(), MF_NO),
-            Entry::_ext(insn.ex1Mode(), insn.ex2Mode(), P_NO),
-            0
-        );
-    const Entry *entry = TableBase::searchName<Entry, uint32_t>(
-            insn.name(), flags, ARRAY_RANGE(Z8000_TABLE), acceptModes, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+        insn.name(), insn.flags(), ARRAY_RANGE(Z8000_TABLE), acceptModes, count);
     if (entry) {
-        insn.setOpCode(pgm_read_word(&entry->opCode));
-        insn.setFlags(pgm_read_dword(&entry->flags));
+        insn.setOpCode(entry->opCode());
+        insn.setFlags(entry->flags());
         return _error.setOK();
     }
     return _error.setError(
@@ -327,9 +313,7 @@ Error TableZ8000::searchName(InsnZ8000 &insn) const {
 
 static Config::opcode_t tableCode(
         Config::opcode_t opCode, const Entry *entry) {
-    const uint32_t flags = pgm_read_dword(&entry->flags);
-    const uint16_t mask = Entry::_mask(Entry::_size(flags));
-    return opCode & ~mask;
+    return opCode & ~entry->flags().codeMask();
 }
 
 static bool matchPostWord(const InsnZ8000 &insn) {
@@ -340,13 +324,12 @@ static bool matchPostWord(const InsnZ8000 &insn) {
 const Entry *TableZ8000::searchOpCode(
     InsnZ8000 &insn, DisMemory &memory,
     const Entry *table, const Entry *end) const {
-    const Config::opcode_t opCode = insn.opCode();
     for (const Entry *entry = table;
          entry < end
              && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                     opCode, entry, end, tableCode))!= nullptr;
+                     insn.opCode(), entry, end, tableCode)) != nullptr;
          entry++) {
-        insn.setFlags(pgm_read_dword(&entry->flags));
+        insn.setFlags(entry->flags());
         if (insn.hasPost()) {
             if (insn.length() < 4) {
                 insn.readPost(memory);
@@ -355,9 +338,7 @@ const Entry *TableZ8000::searchOpCode(
             }
             if (!matchPostWord(insn)) continue;
         }
-        const /*PROGMEM*/ char *name =
-            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        insn.setName_P(name);
+        insn.setName_P(entry->name());
         return entry;
     }
     return nullptr;
@@ -372,10 +353,8 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
     const Entry *entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
     if (entry) {
         entry++;
-        insn.setFlags(pgm_read_dword(&entry->flags));
-        const /*PROGMEM*/ char *name =
-            reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-        insn.setName_P(name);
+        insn.setFlags(entry->flags());
+        insn.setName_P(entry->name());
     }
     return _error.setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }

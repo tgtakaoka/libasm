@@ -24,24 +24,17 @@
 namespace libasm {
 namespace ns32000 {
 
-#define E(_opc, _name, _sz, _src, _dst, _spos, _dpos)           \
-    {                                                           \
-        _opc,                                                   \
-        Entry::_flags(Entry::_opr(_src, _spos),                 \
-                      Entry::_opr(_dst, _dpos),                 \
-                      Entry::_opr(M_NONE, P_NONE),              \
-                      Entry::_ex2(M_NONE, P_NONE, SZ_##_sz)),   \
-        TEXT_##_name                                            \
-    },
-#define X(_opc, _name, _sz, _src, _dst, _spos, _dpos, _ex1m, _ex2m, _ex1p, _ex2p) \
+#define X(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex2m, _ex1p, _ex2p) \
     {                                                                   \
         _opc,                                                           \
-        Entry::_flags(Entry::_opr(_src, _spos),                         \
-                      Entry::_opr(_dst, _dpos),                         \
-                      Entry::_opr(_ex1m, _ex1p),                        \
-                      Entry::_ex2(_ex2m, _ex2p, SZ_##_sz)),             \
+        Entry::Flags::create(                                           \
+            _srcm, _srcp, _dstm, _dstp,                                 \
+            _ex1m, _ex1p, _ex2m, _ex2p,                                 \
+            SZ_##_sz),                                                  \
         TEXT_##_name                                                    \
     },
+#define E(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp)                 \
+    X(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, M_NONE, M_NONE, P_NONE, P_NONE)
 
 // Format 0: |cond|1010|
 static const Entry FORMAT_0[] PROGMEM = {
@@ -427,12 +420,22 @@ static const Entry FORMAT_14_2[] PROGMEM = {
 };
 #endif
 
-struct TableNs32000::EntryPage {
-    const Config::opcode_t prefix;
-    const Config::opcode_t mask;
-    const uint8_t post;
-    const Entry *const table;
-    const Entry *const end;
+class TableNs32000::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(
+        Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
+        const Entry *table, const Entry *end)
+        : EntryPageBase(table, end),
+          _prefix(prefix), _mask(mask), _post(post) {}
+
+    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
+    Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
+    Config::opcode_t post() const { return pgm_read_byte(&_post); }
+
+private:
+    Config::opcode_t _prefix;
+    Config::opcode_t _mask;
+    uint8_t _post;
 };
 
 static const TableNs32000::EntryPage NS32000_PAGES[] PROGMEM = {
@@ -471,7 +474,7 @@ static const TableNs32000::EntryPage NS32000_PAGES[] PROGMEM = {
 bool TableNs32000::isPrefixCode(Config::opcode_t opCode) const {
     for (const EntryPage *page = ARRAY_BEGIN(NS32000_PAGES);
          page < ARRAY_END(NS32000_PAGES); page++) {
-        const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+        const Config::opcode_t prefix = page->prefix();
         if (prefix == 0) continue;
         if (prefix == opCode) return true;
     }
@@ -508,32 +511,24 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint32_t flags, const Entry *entry) {
-    const uint32_t table = pgm_read_dword(&entry->flags);
-    return acceptMode(Entry::_mode(Entry::_src(flags)), Entry::_mode(Entry::_src(table)))
-        && acceptMode(Entry::_mode(Entry::_dst(flags)), Entry::_mode(Entry::_dst(table)))
-        && acceptMode(Entry::_mode(Entry::_ex1(flags)), Entry::_mode(Entry::_ex1(table)))
-        && acceptMode(Entry::_ex2Mode(Entry::_ex2(flags)), Entry::_ex2Mode(Entry::_ex2(table)));
+static bool acceptModes(const Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.srcMode(), table.srcMode())
+        && acceptMode(flags.dstMode(), table.dstMode())
+        && acceptMode(flags.ex1Mode(), table.ex1Mode())
+        && acceptMode(flags.ex2Mode(), table.ex2Mode());
 }
 
 Error TableNs32000::searchName(
     InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    const uint32_t flags = Entry::_flags(
-            Entry::_opr(insn.srcMode(), P_NONE),
-            Entry::_opr(insn.dstMode(), P_NONE),
-            Entry::_opr(insn.ex1Mode(), P_NONE),
-            Entry::_ex2(insn.ex2Mode(), P_NONE, SZ_NONE));
     for (const EntryPage *page = pages; page < end; page++) {
-        const uint8_t post = pgm_read_byte(&page->post);
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry, uint32_t>(
-                insn.name(), flags, table, end, acceptModes, count);
+        const uint8_t post = page->post();
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
-            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
-            insn.setFlags(pgm_read_dword(&entry->flags));
+            insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setFlags(entry->flags());
             if (post) insn.setHasPost();
             return OK;
         }
@@ -545,24 +540,18 @@ Error TableNs32000::searchOpCode(
     InsnNs32000 &insn, DisMemory &memory,
     const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-        if (insn.prefix() != prefix) continue;
-        const Config::opcode_t mask = ~pgm_read_byte(&page->mask);
-        const uint8_t post = pgm_read_byte(&page->post);
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            insn.opCode() & mask, table, end);
+        if (insn.prefix() != page->prefix()) continue;
+        const auto post = page->post();
+        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+            insn.opCode() & ~page->mask(), page->table(), page->end());
         if (entry) {
-            insn.setFlags(pgm_read_dword(&entry->flags));
+            insn.setFlags(entry->flags());
             if (post) {
                 insn.readPost(memory);
                 if (_error.setError(insn)) return getError();
                 insn.setHasPost();
             }
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setName_P(entry->name());
             return OK;
         }
     }

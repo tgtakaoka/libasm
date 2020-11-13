@@ -28,23 +28,20 @@ class InsnI8051 : public InsnBase<Config> {
 public:
     InsnI8051(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
-    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
-    AddrMode extMode() const { return Entry::_extMode(_flags); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode extMode() const { return _flags.extMode(); }
 
-    void setFlags(uint16_t flags) { _flags = flags; }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        _flags = Entry::_flags(dst, src, ext);
+        _flags = Entry::Flags::create(dst, src, ext);
     }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
     Config::opcode_t opCode() const { return _opCode; }
 
@@ -61,7 +58,7 @@ public:
     }
 
 private:
-    uint16_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
 
     uint8_t operandPos() const {

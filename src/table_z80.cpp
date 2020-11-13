@@ -25,16 +25,16 @@
 namespace libasm {
 namespace z80 {
 
+#define X(_opc, _name, _dst, _src, _ixb)        \
+    {                                           \
+        _opc,                                   \
+        Entry::Flags::create(_dst, _src, _ixb), \
+        TEXT_##_name                            \
+    },
 #define E(_opc, _name, _dst, _src)              \
-    { _opc,                                     \
-      Entry::_flags(_dst, _src),                \
-      TEXT_##_name                              \
-    },
+    X(_opc, _name, _dst, _src, false)
 #define IXB(_opc, _name, _dst, _src)            \
-    { _opc,                                     \
-      Entry::_flags(_dst, _src, true),          \
-      TEXT_##_name                              \
-    },
+    X(_opc, _name, _dst, _src, true)
 
 static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x00, NOP,  M_NO,   M_NO)
@@ -216,10 +216,16 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xE5, PUSH, R_IXIY, M_NO)
 };
 
-struct TableZ80::EntryPage {
-    const Config::opcode_t prefix;
-    const Entry *const table;
-    const Entry *const end;
+class TableZ80::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(
+        Config::opcode_t prefix, const Entry *table, const Entry *end)
+        : EntryPageBase(table, end), _prefix(prefix) {}
+
+    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
+
+private:
+    Config::opcode_t _prefix;
 };
 
 static constexpr TableZ80::EntryPage PAGES_I8080[] PROGMEM = {
@@ -267,27 +273,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint16_t flags, const Entry *entry) {
-    const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table))
-        && acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table));
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.dstMode(), table.dstMode())
+        && acceptMode(flags.srcMode(), table.srcMode());
 }
 
 Error TableZ80::searchName(
     InsnZ80 &insn,  const EntryPage *pages, const EntryPage *end) const {
-    const char *name = insn.name();
-    const uint16_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,uint16_t>(
-            name, flags, table, end, acceptModes, count);
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
-            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
-            insn.setFlags(pgm_read_word(&entry->flags));
+            insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setFlags(entry->flags());
             return OK;
         }
     }
@@ -295,9 +295,8 @@ Error TableZ80::searchName(
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const uint16_t flags = pgm_read_word(&entry->flags);
-    const AddrMode dst = Entry::_dstMode(flags);
-    const AddrMode src = Entry::_srcMode(flags);
+    const AddrMode dst = entry->flags().dstMode();
+    const AddrMode src = entry->flags().srcMode();
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
         mask |= 7;
@@ -318,18 +317,12 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
 Error TableZ80::searchOpCode(
     InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-        if (insn.prefix() != prefix) continue;
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
+        if (insn.prefix() != page->prefix()) continue;
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            insn.opCode(), table, end, maskCode);
+            insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
-            insn.setFlags(pgm_read_word(&entry->flags));
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setFlags(entry->flags());
+            insn.setName_P(entry->name());
             return OK;
         }
     }

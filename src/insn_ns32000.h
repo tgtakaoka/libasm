@@ -29,29 +29,25 @@ class InsnNs32000 : public InsnBase<Config> {
 public:
     InsnNs32000(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode srcMode() const { return Entry::_mode(_src); }
-    AddrMode dstMode() const { return Entry::_mode(_dst); }
-    AddrMode ex1Mode() const { return Entry::_mode(_ex1); }
-    AddrMode ex2Mode() const { return Entry::_ex2Mode(_ex2); }
-    OprPos srcPos() const { return Entry::_pos(_src); }
-    OprPos dstPos() const { return Entry::_pos(_dst); }
-    OprPos ex1Pos() const { return Entry::_pos(_ex1); }
-    OprPos ex2Pos() const { return Entry::_ex2Pos(_ex2); }
-    OprSize oprSize() const { return Entry::_oprSize(_ex2); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    AddrMode ex1Mode() const { return _flags.ex1Mode(); }
+    AddrMode ex2Mode() const { return _flags.ex2Mode(); }
+    OprPos srcPos() const { return _flags.srcPos(); }
+    OprPos dstPos() const { return _flags.dstPos(); }
+    OprPos ex1Pos() const { return _flags.ex1Pos(); }
+    OprPos ex2Pos() const { return _flags.ex2Pos(); }
+    OprSize oprSize() const { return _flags.oprSize(); }
 
-    void setFlags(uint32_t flags) {
-        _src = Entry::_src(flags);
-        _dst = Entry::_dst(flags);
-        _ex1 = Entry::_ex1(flags);
-        _ex2 = Entry::_ex2(flags);
+    void setFlags(Entry::Flags flags) {
+        _flags = flags;
         _hasPost = false;
     }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
-        _src = Entry::_opr(src, P_NONE);
-        _dst = Entry::_opr(dst, P_NONE);
-        _ex1 = Entry::_opr(ex1, P_NONE);
-        _ex2 = Entry::_ex2(ex2, P_NONE, SZ_NONE);
+        _flags = Entry::Flags::create(
+                src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE);
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -60,22 +56,16 @@ public:
         _post = 0;
     }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void embedPost(Config::opcode_t data) {
-        _post |= data;
-    }
+    void embedPost(Config::opcode_t data) { _post |= data;  }
 
     void setIndexByte(uint8_t data, OprPos pos) {
         if (pos == P_GEN1) _indexByte1 = data;
         if (pos == P_GEN2) _indexByte2 = data;
     }
 
-    void readPost(DisMemory &memory) {
-        _post = readByte(memory);
-    }
+    void readPost(DisMemory &memory) { _post = readByte(memory); }
 
     void setHasPost() { _hasPost = true; }
 
@@ -111,10 +101,7 @@ private:
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
     Config::opcode_t _post;
-    uint8_t _src;
-    uint8_t _dst;
-    uint8_t _ex1;
-    uint8_t _ex2;
+    Entry::Flags _flags;
     bool _hasPost;
     uint8_t _indexByte1;
     uint8_t _indexByte2;

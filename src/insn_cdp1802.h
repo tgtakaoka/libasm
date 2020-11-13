@@ -28,30 +28,23 @@ class InsnCdp1802 : public InsnBase<Config> {
 public:
     InsnCdp1802(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
+    AddrMode addrMode() const { return _flags.mode(); }
 
-    void setFlags(uint8_t flags) { _flags = flags; }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode mode) {
-        _flags = Entry::_flags(mode);
-    }
+    void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode);  }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
     Config::opcode_t opCode() const { return _opCode; }
 
-    void emitInsn() {
-        emitByte(_opCode);
-    }
+    void emitInsn() { emitByte(_opCode); }
 
 private:
-    uint8_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
 };
 

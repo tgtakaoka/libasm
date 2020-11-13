@@ -18,6 +18,7 @@
 #define __ENTRY_I8086_H__
 
 #include "config_i8086.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace i8086 {
@@ -82,38 +83,59 @@ enum OprSize : uint8_t {
     SZ_SOFF = 3, // Segment:Offset
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint32_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _dst;
+        uint8_t _src;
+        uint8_t _pos;
+        uint8_t _size;
 
-    static inline uint8_t _dst(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> dst_gp);
-    }
-    static inline uint8_t _src(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> src_gp);
-    }
-    static inline uint8_t _pos(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> pos_gp);
-    }
-    static inline uint8_t _size(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> size_gp);
-    }
-    static inline AddrMode _mode(uint8_t opr) {
-        return AddrMode((opr >> mode_gp) & mode_gm);
-    }
-    static inline OprPos _dstPos(uint8_t pos) {
-        return OprPos((pos >> dstPos_gp) & pos_gm);
-    }
-    static inline OprPos _srcPos(uint8_t pos) {
-        return OprPos((pos >> srcPos_gp) & pos_gm);
-    }
-    static inline OprSize _size(uint8_t size) {
-        return OprSize((size >> oprSize_gp) & oprSize_gm);
-    }
-    static inline bool _strInst(uint8_t size) {
-        return size & (1 << strInst_bp);
-    }
+        static constexpr Flags create(
+                AddrMode dstMode, AddrMode srcMode,
+                OprPos dstPos, OprPos srcPos,
+                OprSize size, bool strInst) {
+            return Entry::Flags{
+                Entry::_opr(dstMode), Entry::_opr(srcMode),
+                Entry::_pos(dstPos, srcPos), Entry::_size(size, strInst)
+            };
+        }
+        Flags read() const {
+            return Flags{
+                pgm_read_byte(&_dst),
+                pgm_read_byte(&_src),
+                pgm_read_byte(&_pos),
+                pgm_read_byte(&_size)
+            };
+        }
+
+        AddrMode dstMode() const {
+            return AddrMode((_dst >> mode_gp) & mode_gm);
+        }
+        AddrMode srcMode() const {
+            return AddrMode((_src >> mode_gp) & mode_gm);
+        }
+        OprPos dstPos() const {
+            return OprPos((_pos >> dstPos_gp) & pos_gm);
+        }
+        OprPos srcPos() const {
+            return OprPos((_pos >> srcPos_gp) & pos_gm);
+        }
+        OprSize size() const {
+            return OprSize((_size >> oprSize_gp) & oprSize_gm);
+        }
+        bool strInst() const {
+            return _size & (1 << strInst_bp);
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
+
+private:
+    Flags _flags;
 
     static constexpr uint8_t _opr(AddrMode mode) {
         return (static_cast<uint8_t>(mode) << mode_gp);
@@ -126,17 +148,7 @@ struct Entry {
         return (static_cast<uint8_t>(size) << oprSize_gp)
             | (strInst ? (1 << strInst_bp) : 0);
     }
-    static constexpr uint32_t _flags(
-            AddrMode dst, AddrMode src,
-            OprPos dstPos, OprPos srcPos,
-            OprSize size, bool strInst) {
-        return (static_cast<uint32_t>(_opr(dst)) << dst_gp)
-            | (static_cast<uint32_t>(_opr(src)) << src_gp)
-            | (static_cast<uint32_t>(_pos(dstPos, srcPos)) << pos_gp)
-            | (static_cast<uint32_t>(_size(size, strInst)) << size_gp);
-    }
 
-private:
     static constexpr int dst_gp = 0;
     static constexpr int src_gp = 8;
     static constexpr int pos_gp = 16;

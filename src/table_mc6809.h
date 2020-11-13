@@ -34,14 +34,14 @@ struct PostSpec {
 
     PostSpec() {}
     constexpr PostSpec(
-            RegName _index,
-            RegName _base,
-            int8_t _size,
-            bool _indir) :
-        index(_index),
-        base(_base),
-        size(_size),
-        indir(_indir) {}
+        RegName _index,
+        RegName _base,
+        int8_t _size,
+        bool _indir)
+        : index(_index),
+          base(_base),
+          size(_size),
+          indir(_indir) {}
 };
 
 class TableMc6809 : public TableBase {

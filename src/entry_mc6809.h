@@ -18,6 +18,7 @@
 #define __ENTRY_MC6809_H__
 
 #include "config_mc6809.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -44,25 +45,34 @@ enum AddrMode : uint8_t {
     REG_TFM = 13,  // Transfer Memory Register
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint8_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _attr;
 
-    static inline AddrMode _mode1(uint8_t flags) {
-        return AddrMode((flags >> op1_gp) & mode_gm);
-    }
+        static constexpr Flags create(AddrMode op1, AddrMode op2) {
+            return Flags{static_cast<uint8_t>(
+                        (static_cast<uint8_t>(op1) << op1_gp)
+                        | (static_cast<uint8_t>(op2) << op2_gp))};
+        }
+        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 
-    static inline AddrMode _mode2(uint8_t flags) {
-        return AddrMode((flags >> op2_gp) & mode_gm);
-    }
+        AddrMode mode1() const {
+            return AddrMode((_attr >> op1_gp) & mode_gm);
+        }
+        AddrMode mode2() const {
+            return AddrMode((_attr >> op2_gp) & mode_gm);
+        }
+    };
 
-    static constexpr uint8_t _flags(AddrMode op1, AddrMode op2) {
-        return (static_cast<uint8_t>(op1) << op1_gp)
-            | (static_cast<uint8_t>(op2) << op2_gp);
-    }
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
+    Flags _flags;
+
     static constexpr uint8_t mode_gm = 0xf;
     static constexpr int op1_gp = 0;
     static constexpr int op2_gp = 4;

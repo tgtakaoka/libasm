@@ -25,8 +25,8 @@
 namespace libasm {
 namespace mos6502 {
 
-#define E(_opc, _name, _amode)                      \
-    { _opc, Entry::_flags(_amode), TEXT_##_name },
+#define E(_opc, _name, _amode)                                  \
+    { _opc, Entry::Flags::create(_amode), TEXT_##_name },
 
 static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E(0x00, BRK,  IMPL)
@@ -351,9 +351,10 @@ static constexpr Entry W65C816_TABLE[] PROGMEM = {
     E(0xF7, SBCL, ZPG_IDIR_IDY)
 };
 
-struct TableMos6502::EntryPage {
-    const Entry *const table;
-    const Entry *const end;
+class TableMos6502::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(const Entry *table, const Entry *end)
+        : EntryPageBase(table, end) {}
 };
 
 static constexpr TableMos6502::EntryPage PAGES_MOS6502[] PROGMEM = {
@@ -382,7 +383,7 @@ static constexpr TableMos6502::EntryPage PAGES_W65C816[] PROGMEM = {
 };
 
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
-    const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+    const AddrMode table = entry->flags().mode();
     if (opr == table) return true;
     if (opr == IMMA) return table == IMMX || table == IMM8;
     if (opr == ZPG) return table == ABS || table == REL
@@ -401,18 +402,13 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 
 Error TableMos6502::searchName(
     InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) const {
-    const char *name = insn.name();
-    const AddrMode addrMode = insn.addrMode();
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchName<Entry, AddrMode>(
-            name, addrMode, table, end, acceptAddrMode, count);
+            insn.name(), insn.addrMode(), page->table(), page->end(), acceptAddrMode, count);
         if (entry) {
-            insn.setFlags(pgm_read_byte(&entry->flags));
-            insn.setOpCode(pgm_read_byte(&entry->opCode));
+            insn.setFlags(entry->flags());
+            insn.setOpCode(entry->opCode());
             return OK;
         }
     }
@@ -432,20 +428,15 @@ Error TableMos6502::searchOpCode(
     const EntryPage *pages, const EntryPage *end) const {
     const Config::opcode_t opCode = insn.opCode();
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        for (const Entry *entry = table;
-             entry < end
+        for (const Entry *entry = page->table();
+             entry < page->end()
                  && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
-                         opCode, entry, end));
+                         opCode, entry, page->end()));
              entry++) {
-            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setFlags(entry->flags());
             if (!acceptAddrMode(insn.addrMode(), useIndirectLong))
                 continue;
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setName_P(entry->name());
             return OK;
         }
     }

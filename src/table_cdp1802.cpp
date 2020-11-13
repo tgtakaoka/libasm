@@ -26,8 +26,8 @@
 namespace libasm {
 namespace cdp1802 {
 
-#define E(_opc, _name, _amode)                      \
-    { _opc, Entry::_flags(_amode), TEXT_##_name },
+#define E(_opc, _name, _amode)                          \
+    { _opc, Entry::Flags::create(_amode), TEXT_##_name },
 
 static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0x00, IDL,  NONE)
@@ -120,8 +120,9 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0xFF, SMI,  IMM8)
 };
 
-static bool acceptMode(AddrMode opr, const Entry *entry) {
-    const AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+static bool acceptMode(Entry::Flags flags, const Entry *entry) {
+    const AddrMode opr = flags.mode();
+    const AddrMode table = entry->flags().mode();
     if (opr == table) return true;
     if (opr == ADDR)
         return table == REGN || table == REG1 || table == IMM8
@@ -130,14 +131,12 @@ static bool acceptMode(AddrMode opr, const Entry *entry) {
 }
 
 Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
-    const char *name = insn.name();
-    const AddrMode mode = insn.addrMode();
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-        name, mode, ARRAY_RANGE(TABLE_CDP1802), acceptMode, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+        insn.name(), insn.flags(), ARRAY_RANGE(TABLE_CDP1802), acceptMode, count);
     if (entry) {
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        insn.setFlags(pgm_read_byte(&entry->flags));
+        insn.setOpCode(entry->opCode());
+        insn.setFlags(entry->flags());
         return _error.setOK();
     }
     return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
@@ -145,10 +144,10 @@ Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
 
 static Config::opcode_t tableCode(
     Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
-    if (addrMode == REGN || addrMode == REG1)
+    const AddrMode mode = entry->flags().mode();
+    if (mode == REGN || mode == REG1)
         return opCode & ~0x0F;
-    if (addrMode == IOAD)
+    if (mode == IOAD)
         return opCode & ~7;
     return opCode;
 }
@@ -159,11 +158,9 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
         TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(TABLE_CDP1802), tableCode);
     if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(pgm_read_byte(&entry->flags));
+    insn.setFlags(entry->flags());
     if (insn.addrMode() == UNDF) return _error.setError(UNKNOWN_INSTRUCTION);
-    const /*PROGMEM*/ char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    insn.setName_P(name);
+    insn.setName_P(entry->name());
     return _error.setOK();
 }
 

@@ -28,13 +28,14 @@ class InsnTms9900 : public InsnBase<Config> {
 public:
     InsnTms9900(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode srcMode() const { return Entry::_srcMode(_flags); }
-    AddrMode dstMode() const { return Entry::_dstMode(_flags); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
 
-    void setFlags(uint16_t flags) { _flags = flags; }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode src, AddrMode dst) {
-        _flags = Entry::_flags(src, dst);
+        _flags = Entry::Flags::create(src, dst);
     }
 
     void setOpCode(Config::opcode_t opCode) {
@@ -42,13 +43,9 @@ public:
         _post = 0;
     }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void embedPost(Config::opcode_t data) {
-        _post |= data;
-    }
+    void embedPost(Config::opcode_t data) { _post |= data; }
 
     void readPost(DisMemory &memory) {
         if (srcMode() == M_SRC2)
@@ -68,7 +65,7 @@ public:
     }
 
 private:
-    uint16_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _post;
 

@@ -25,10 +25,9 @@
 namespace libasm {
 namespace mc6809 {
 
-#define E(_opc, _name, _mode)                               \
-    { _opc,  Entry::_flags(_mode, NONE), TEXT_##_name },
 #define X(_opc, _name, _mode, _extra)                       \
-    { _opc,  Entry::_flags(_mode, _extra), TEXT_##_name },
+    { _opc, Entry::Flags::create(_mode, _extra), TEXT_##_name },
+#define E(_opc, _name, _mode) X(_opc, _name, _mode, NONE)
 
 static constexpr Entry MC6809_P00[] PROGMEM = {
     E(0x00, NEG,   DIR)
@@ -502,10 +501,16 @@ bool TableMc6809::isPrefix(Config::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
-struct TableMc6809::EntryPage {
-    const Config::opcode_t prefix;
-    const Entry *const table;
-    const Entry *const end;
+class TableMc6809::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(
+        Config::opcode_t prefix, const Entry *table, const Entry *end)
+        : EntryPageBase(table, end), _prefix(prefix) {}
+
+    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
+
+private:
+    Config::opcode_t _prefix;
 };
 
 static constexpr TableMc6809::EntryPage MC6809_PAGES[] PROGMEM = {
@@ -537,25 +542,21 @@ static bool matchAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool matchAddrMode(uint8_t flags, const Entry *entry) {
-    const uint8_t table = pgm_read_byte(&entry->flags);
-    return matchAddrMode(Entry::_mode1(flags), Entry::_mode1(table))
-        && matchAddrMode(Entry::_mode2(flags), Entry::_mode2(table));
+static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return matchAddrMode(flags.mode1(), table.mode1())
+        && matchAddrMode(flags.mode2(), table.mode2());
 }
 
 Error TableMc6809::searchName(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
-    const uint8_t flags = Entry::_flags(insn.mode1(), insn.mode2());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,uint8_t>(
-            insn.name(), flags, table, end, matchAddrMode, count);
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), matchAddrMode, count);
         if (entry) {
-            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
-            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setFlags(entry->flags());
             return OK;
         }
     }
@@ -565,17 +566,12 @@ Error TableMc6809::searchName(
 Error TableMc6809::searchOpCode(
     InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-        if (insn.prefix() != prefix) continue;
-        const Entry *table = reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            insn.opCode(), table, end);
+        if (insn.prefix() != page->prefix()) continue;
+        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+            insn.opCode(), page->table(), page->end());
         if (entry) {
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
-            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setFlags(entry->flags());
+            insn.setName_P(entry->name());
             return OK;
         }
     }
@@ -595,15 +591,15 @@ struct TableMc6809::PostEntry : public PostSpec {
     uint8_t byte;
 
     constexpr PostEntry(
-            RegName _index,
-            RegName _base,
-            int8_t _size,
-            bool _indir,
-            uint8_t _mask,
-            uint8_t _byte) :
-        PostSpec(_index, _base, _size, _indir),
-        mask(_mask),
-        byte(_byte) {}
+        RegName _index,
+        RegName _base,
+        int8_t _size,
+        bool _indir,
+        uint8_t _mask,
+        uint8_t _byte)
+        : PostSpec(_index, _base, _size, _indir),
+          mask(_mask),
+          byte(_byte) {}
 };
 
 static const TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {

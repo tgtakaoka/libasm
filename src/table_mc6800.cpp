@@ -25,13 +25,13 @@
 namespace libasm {
 namespace mc6800 {
 
-#define E3(_opc, _name, _size, _op1, _op2, _op3)                      \
-    { _opc, Entry::_flags(SZ_##_size, _op1, _op2, _op3), TEXT_##_name },
-#define E2(_opc, _name, _size, _op1, _op2) \
+#define E3(_opc, _name, _size, _op1, _op2, _op3)                        \
+    { _opc, Entry::Flags::create(_op1, _op2, _op3, SZ_##_size), TEXT_##_name },
+#define E2(_opc, _name, _size, _op1, _op2)      \
     E3(_opc, _name, _size, _op1, _op2, M_NO)
-#define E1(_opc, _name, _size, _op1) \
+#define E1(_opc, _name, _size, _op1)            \
     E3(_opc, _name, _size, _op1, M_NO, M_NO)
-#define E0(_opc, _name) \
+#define E0(_opc, _name)                         \
     E3(_opc, _name, NONE, M_NO, M_NO, M_NO)
 
 static constexpr Entry MC6800_TABLE[] PROGMEM = {
@@ -398,10 +398,16 @@ bool TableMc6800::isPrefix(Config::opcode_t opCode) const {
     return opCode == PREFIX_P18 || opCode == PREFIX_P1A || opCode == PREFIX_PCD;
 }
 
-struct TableMc6800::EntryPage {
-    const Config::opcode_t prefix;
-    const Entry *const table;
-    const Entry *const end;
+class TableMc6800::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(
+        Config::opcode_t prefix, const Entry *table, const Entry *end)
+        : EntryPageBase(table, end), _prefix(prefix) {}
+
+    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
+
+private:
+    Config::opcode_t _prefix;
 };
 
 static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
@@ -437,28 +443,22 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptAddrMode(uint16_t flags, const Entry *entry) {
-    const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptAddrMode(Entry::_mode1(flags), Entry::_mode1(table))
-        && acceptAddrMode(Entry::_mode2(flags), Entry::_mode2(table))
-        && acceptAddrMode(Entry::_mode3(flags), Entry::_mode3(table));
+static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptAddrMode(flags.mode1(), table.mode1())
+        && acceptAddrMode(flags.mode2(), table.mode2())
+        && acceptAddrMode(flags.mode3(), table.mode3());
 }
 
 Error TableMc6800::searchName(
     InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const{
-    const uint16_t flags =
-        Entry::_flags(SZ_NONE, insn.mode1(), insn.mode2(), insn.mode3());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,uint16_t>(
-            insn.name(), flags, table, end, acceptAddrMode, count);
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), acceptAddrMode, count);
         if (entry) {
-            const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
-            insn.setOpCode(pgm_read_byte(&entry->opCode), prefix);
-            insn.setFlags(pgm_read_word(&entry->flags));
+            insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setFlags(entry->flags());
             return OK;
         }
     }
@@ -468,18 +468,13 @@ Error TableMc6800::searchName(
 const Entry *TableMc6800::searchOpCode(
     InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Config::opcode_t prefix = pgm_read_byte(&page->prefix);
+        const Config::opcode_t prefix = page->prefix();
         if (insn.prefix() != prefix) continue;
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            insn.opCode(), table, end);
+        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+            insn.opCode(), page->table(), page->end());
         if (entry) {
-            insn.setFlags(pgm_read_word(&entry->flags));
-            const/*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setFlags(entry->flags());
+            insn.setName_P(entry->name());
             return entry;
         }
     }
@@ -499,12 +494,10 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     const Entry *entry = searchOpCode(insn, _table, _end);
     if (!entry) return _error.setError(INTERNAL_ERROR);
     entry += 1;
-    if (pgm_read_byte(&entry->opCode) != insn.opCode())
+    if (entry->opCode() != insn.opCode())
         return _error.setError(INTERNAL_ERROR);
-    insn.setFlags(pgm_read_word(&entry->flags));
-    const /*PROGMEM*/ char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    insn.setName_P(name);
+    insn.setFlags(entry->flags());
+    insn.setName_P(entry->name());
     return _error.setOK();
 }
 

@@ -26,8 +26,8 @@
 namespace libasm {
 namespace i8080 {
 
-#define E(_opc, _name, _dst, _src)                         \
-    { _opc, Entry::_flags(_dst, _src), TEXT_##_name },
+#define E(_opc, _name, _dst, _src)                              \
+    { _opc, Entry::Flags::create(_dst, _src), TEXT_##_name },
 
 static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0x00, NOP,  M_NO,   M_NO)
@@ -115,9 +115,10 @@ static constexpr Entry TABLE_I8085[] PROGMEM = {
     E(0x30, SIM,  M_NO,   M_NO)
 };
 
-struct TableI8080::EntryPage {
-    const Entry *table;
-    const Entry *end;
+class TableI8080::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(const Entry *table, const Entry *end)
+        : EntryPageBase(table, end) {}
 };
 
 static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
@@ -142,25 +143,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint8_t flags, const Entry *entry) {
-    const uint8_t table = pgm_read_byte(&entry->flags);
-    return acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table))
-        && acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table));
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.dstMode(), table.dstMode())
+        && acceptMode(flags.srcMode(), table.srcMode());
 }
 
 Error TableI8080::searchName(
     InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
-    const uint8_t flags = Entry::_flags(insn.dstMode(), insn.srcMode());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,uint8_t>(
-            insn.name(), flags, table, end, acceptModes, count);
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
-            insn.setOpCode(pgm_read_byte(&entry->opCode));
-            insn.setFlags(pgm_read_byte(&entry->flags));
+            insn.setOpCode(entry->opCode());
+            insn.setFlags(entry->flags());
             return OK;
         }
     }
@@ -169,9 +166,9 @@ Error TableI8080::searchName(
 
 static Config::opcode_t tableCode(
     Config::opcode_t opCode, const Entry *entry) {
-    const uint8_t flags = pgm_read_byte(&entry->flags);
-    const AddrMode dst = Entry::_dstMode(flags);
-    const AddrMode src = Entry::_srcMode(flags);
+    const Entry::Flags flags = entry->flags();
+    const AddrMode dst = flags.dstMode();
+    const AddrMode src = flags.srcMode();
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG) mask |= 07;
     if (dst == M_DST || dst == M_VEC) mask |= 070;
@@ -183,16 +180,11 @@ static Config::opcode_t tableCode(
 Error TableI8080::searchOpCode(
     InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            insn.opCode(), table, end, tableCode);
+            insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
-            insn.setFlags(pgm_read_byte(&entry->flags));
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setFlags(entry->flags());
+            insn.setName_P(entry->name());
             return OK;
         }
     }

@@ -28,15 +28,14 @@ class InsnMc6809 : public InsnBase<Config> {
 public:
     InsnMc6809(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode mode1() const { return Entry::_mode1(_flags); }
-    AddrMode mode2() const { return Entry::_mode2(_flags); }
+    AddrMode mode1() const { return _flags.mode1(); }
+    AddrMode mode2() const { return _flags.mode2(); }
 
-    void setFlags(uint8_t flags) {
-        _flags = flags;
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode op1, AddrMode op2) {
-        _flags = Entry::_flags(op1, op2);
+        _flags = Entry::Flags::create(op1, op2);
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -45,9 +44,7 @@ public:
         _hasPost = false;
     }
 
-    void setPost(Config::opcode_t post) {
-        _post = post;
-    }
+    void setPost(Config::opcode_t post) { _post = post; }
 
     Config::opcode_t readPost(DisMemory &memory) {
         if (!_hasPost) {
@@ -57,13 +54,9 @@ public:
         return _post;
     }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void embedPost(Config::opcode_t data) {
-        _post |= data;
-    }
+    void embedPost(Config::opcode_t data) { _post |= data; }
 
     bool hasPrefix() const { return prefix() != 0; }
     Config::opcode_t prefix() const { return _prefix; }
@@ -77,7 +70,7 @@ public:
     }
 
 private:
-    uint8_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
     Config::opcode_t _post;

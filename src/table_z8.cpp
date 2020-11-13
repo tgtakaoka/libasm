@@ -26,14 +26,11 @@
 namespace libasm {
 namespace z8 {
 
-#define P(_opc, _post, _name, _dst, _src, _dstSrc, _ext)    \
-    {                                                       \
-    _opc,                                                   \
-    Entry::_flags(Entry::_opr(_dst),                        \
-                  Entry::_opr(_src),                        \
-                  Entry::_opr(_ext),                        \
-                  Entry::_fmt(_dstSrc, _post)),             \
-    TEXT_##_name                                            \
+#define P(_opc, _post, _name, _dst, _src, _dstSrc, _ext)        \
+    {                                                           \
+        _opc,                                                   \
+        Entry::Flags::create(_dst, _src, _ext, _dstSrc, _post), \
+        TEXT_##_name                                            \
     },
 #define E(_opc, _name, _dst, _src, _dstSrc)     \
     P(_opc, P0, _name, _dst, _src, _dstSrc, M_NO)
@@ -253,9 +250,10 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
     P(0x37, P1_1, BTJRT, M_RA,  M_r,   SRC_DST, M_IMb)
 };
 
-struct TableZ8::EntryPage {
-    const Entry *const table;
-    const Entry *const end;
+class TableZ8::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(const Entry *table, const Entry *end)
+        : EntryPageBase(table, end) {}
 };
 
 static constexpr TableZ8::EntryPage Z8_PAGES[] PROGMEM = {
@@ -300,33 +298,22 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint32_t flags, const Entry *entry) {
-    const uint32_t table = pgm_read_dword(&entry->flags);
-    return acceptMode(Entry::_mode(Entry::_dst(flags)),
-                      Entry::_mode(Entry::_dst(table)))
-        && acceptMode(Entry::_mode(Entry::_src(flags)),
-                      Entry::_mode(Entry::_src(table)))
-        && acceptMode(Entry::_mode(Entry::_ext(flags)),
-                      Entry::_mode(Entry::_ext(table)));
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.dstMode(), table.dstMode())
+        && acceptMode(flags.srcMode(), table.srcMode())
+        && acceptMode(flags.extMode(), table.extMode());
 }
 
 Error TableZ8::searchName(
     InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    const uint32_t flags = Entry::_flags(
-            Entry::_opr(insn.dstMode()),
-            Entry::_opr(insn.srcMode()),
-            Entry::_opr(insn.extMode()),
-            Entry::_fmt(DS_NO, P0));
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,uint32_t>(
-            insn.name(), flags, table, end, acceptModes, count);
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
-            insn.setOpCode(pgm_read_byte(&entry->opCode));
-            insn.setFlags(pgm_read_dword(&entry->flags));
+            insn.setOpCode(entry->opCode());
+            insn.setFlags(entry->flags());
             return OK;
         }
     }
@@ -335,7 +322,7 @@ Error TableZ8::searchName(
 
 static Config::opcode_t maskCode(
     Config::opcode_t opCode, const Entry *entry) {
-    const Config::opcode_t table = pgm_read_byte(&entry->opCode);
+    const Config::opcode_t table = entry->opCode();
     return InsnZ8::operandInOpCode(table) ? opCode & 0x0f : opCode;
 }
 
@@ -357,14 +344,13 @@ Error TableZ8::searchOpCode(
     InsnZ8 &insn, DisMemory &memory,
     const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        for (const Entry *entry =
-                 reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
+        const Entry *end = page->end();
+        for (const Entry *entry = page->table();
              entry < end
                  && (entry = TableBase::searchCode<Entry,Config::opcode_t>(
                          insn.opCode(), entry, end, maskCode)) != nullptr;
              entry++) {
-            insn.setFlags(pgm_read_dword(&entry->flags));
+            insn.setFlags(entry->flags());
             if (insn.postFormat()) {
                 if (insn.length() < 2) {
                     insn.readPost(memory);
@@ -372,9 +358,7 @@ Error TableZ8::searchOpCode(
                 }
                 if (!matchPostByte(insn)) continue;
             }
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setName_P(entry->name());
             return OK;
         }
     }

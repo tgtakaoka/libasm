@@ -18,6 +18,7 @@
 #define __ENTRY_MC68000_H__
 
 #include "config_mc68000.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace mc68000 {
@@ -90,44 +91,55 @@ enum OprPos : uint8_t {
     OP___ = 4,  // ___|___|___|___
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint32_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _src;
+        uint8_t _dst;
+        uint8_t _pos;
+        uint8_t _size;
 
-    static inline AddrMode _mode(uint8_t opr) {
-        return AddrMode((opr >> addrMode_gp) & addrMode_gm);
-    }
-    static inline OprPos _srcPos(uint8_t pos) {
-        return OprPos((pos >> srcPos_gp) & oprPos_gm);
-    }
-    static inline OprPos _dstPos(uint8_t pos) {
-        return OprPos((pos >> dstPos_gp) & oprPos_gm);
-    }
-    static inline bool _alias(uint8_t pos) {
-        return ((pos >> alias_bp) & 1) ? true : false;
-    }
-    static inline OprSize _oprSize(uint8_t size) {
-        return OprSize((size >> oprSize_gp) & oprSize_gm);
-    }
-    static inline InsnSize _insnSize(uint8_t size) {
-        return InsnSize((size >> insnSize_gp) & insnSize_gm);
-    }
-    static inline uint8_t _src(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> src_gp);
-    }
-    static inline uint8_t _dst(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> dst_gp);
-    }
-    static constexpr uint8_t _pos(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> pos_gp);
-    }
-    static constexpr uint8_t _size(uint32_t flags) {
-        return static_cast<uint8_t>(flags >> size_gp);
-    }
-    static constexpr uint8_t _opr(AddrMode mode) {
-        return (static_cast<uint8_t>(mode) << addrMode_gp);
-    }
+        static constexpr Flags create(
+                AddrMode src, AddrMode dst,
+                OprPos srcPos, OprPos dstPos,
+                OprSize oSize, InsnSize iSize, bool alias) {
+            return Flags{
+                static_cast<uint8_t>(src),
+                static_cast<uint8_t>(dst),
+                Entry::_pos(srcPos, dstPos, alias),
+                Entry::_size(oSize, iSize)
+            };
+        }
+        Flags read() const {
+            return Flags{
+                pgm_read_byte(&_src),
+                pgm_read_byte(&_dst),
+                pgm_read_byte(&_pos),
+                pgm_read_byte(&_size)
+            };
+        }
+
+        AddrMode srcMode() const { return AddrMode(_src); }
+        AddrMode dstMode() const { return AddrMode(_dst); }
+        OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & oprPos_gm); }
+        OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & oprPos_gm); }
+        bool alias() const { return ((_pos >> alias_bp) & 1) ? true : false; }
+        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
+        InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & insnSize_gm); }
+
+        void setSrcMode(AddrMode mode) { _src = static_cast<uint8_t>(mode); }
+        void setDstMode(AddrMode mode) { _dst = static_cast<uint8_t>(mode); }
+        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size); }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
+
+private:
+    Flags _flags;
+
     static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
         return (static_cast<uint8_t>(src) << srcPos_gp)
             | (static_cast<uint8_t>(dst) << dstPos_gp)
@@ -137,18 +149,7 @@ struct Entry {
         return (static_cast<uint8_t>(opr) << oprSize_gp)
             | (static_cast<uint8_t>(insn) << insnSize_gp);
     }
-    static constexpr uint32_t _flags(
-        uint8_t src, uint8_t dst, uint8_t pos, uint8_t size) {
-        return (static_cast<uint32_t>(src) << src_gp)
-            | (static_cast<uint32_t>(dst) << dst_gp)
-            | (static_cast<uint32_t>(pos) << pos_gp)
-            | (static_cast<uint32_t>(size) << size_gp);
-    }
 
-private:
-    // |src|, |dst|
-    static constexpr uint8_t addrMode_gm = 0x7f;
-    static constexpr int     addrMode_gp = 0;
     // |pos|
     static constexpr uint8_t oprPos_gm = 0x7;
     static constexpr int     srcPos_gp = 0;
@@ -159,11 +160,6 @@ private:
     static constexpr uint8_t insnSize_gm = 0xf;
     static constexpr int     oprSize_gp  = 0;
     static constexpr int     insnSize_gp = 4;
-    // |flags|
-    static constexpr int src_gp  = 0;
-    static constexpr int dst_gp  = 8;
-    static constexpr int pos_gp  = 16;
-    static constexpr int size_gp = 24;
 };
 
 } // namespace mc68000

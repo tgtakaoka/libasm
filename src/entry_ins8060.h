@@ -19,6 +19,7 @@
 #define __ENTRY_INS8060_H__
 
 #include "config_ins8060.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace ins8060 {
@@ -33,20 +34,28 @@ enum AddrMode : uint8_t {
     UNDEF = 0,  // Undefined instruction
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint8_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint8_t _attr;
 
-    static inline AddrMode _addrMode(uint8_t flags) {
-        return AddrMode(flags & addrMode_gm);
-    }
-    static constexpr uint8_t _flags(AddrMode addrMode) {
-        return static_cast<uint8_t>(addrMode);
-    }
+        static constexpr Flags create(AddrMode mode) {
+            return Flags{static_cast<uint8_t>(mode)};
+        }
+        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
+
+        AddrMode mode() const {
+            return AddrMode(_attr);
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
-    static constexpr uint8_t addrMode_gm = 0x07;
+    Flags _flags;
 };
 
 } // namespace ins8060

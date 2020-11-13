@@ -28,36 +28,24 @@ class InsnZ8 : public InsnBase<Config> {
 public:
     InsnZ8(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode dstMode() const { return Entry::_mode(_dst); }
-    AddrMode srcMode() const { return Entry::_mode(_src); }
-    AddrMode extMode() const { return Entry::_mode(_ext); }
-    PostFormat postFormat() const { return Entry::_postFmt(_fmt); }
-    bool dstSrc() const { return Entry::_dstSrc(_fmt); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode extMode() const { return _flags.extMode(); }
+    PostFormat postFormat() const { return _flags.postFmt(); }
+    bool dstSrc() const { return _flags.dstSrc(); }
 
-    void setFlags(uint32_t flags) {
-        _dst = Entry::_dst(flags);
-        _src = Entry::_src(flags);
-        _ext = Entry::_ext(flags);
-        _fmt = Entry::_fmt(flags);
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        _dst = Entry::_opr(dst);
-        _src = Entry::_opr(src);
-        _ext = Entry::_opr(ext);
+        _flags = Entry::Flags::create(dst, src, ext, DS_NO, P0);
     }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void readPost(DisMemory &memory) {
-        readByte(memory);
-    }
+    void readPost(DisMemory &memory) { readByte(memory); }
 
     Config::opcode_t opCode() const { return _opCode; }
 
@@ -84,10 +72,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint8_t _dst;
-    uint8_t _src;
-    uint8_t _ext;
-    uint8_t _fmt;
+    Entry::Flags _flags;
 };
 
 } // namespace z8

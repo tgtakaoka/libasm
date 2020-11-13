@@ -28,29 +28,23 @@ class InsnIns8060 : public InsnBase<Config> {
 public:
     InsnIns8060(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return Entry::_addrMode(_flags); }
+    AddrMode addrMode() const { return _flags.mode(); }
 
-    void setFlags(uint8_t flags) { _flags = flags; }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode addrMode) {
-        _flags = Entry::_flags(addrMode);
-    }
+    void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode); }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode;  }
 
     Config::opcode_t opCode() const { return _opCode; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
-    void emitInsn() {
-        emitByte(_opCode);
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
+
+    void emitInsn() { emitByte(_opCode); }
 
 private:
-    uint8_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
 };
 

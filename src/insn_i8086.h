@@ -33,36 +33,29 @@ public:
           _hasModReg(false)
     {}
 
-    AddrMode dstMode() const { return Entry::_mode(_dst); }
-    AddrMode srcMode() const { return Entry::_mode(_src); }
-    OprPos dstPos() const { return Entry::_dstPos(_pos); }
-    OprPos srcPos() const { return Entry::_srcPos(_pos); }
-    OprSize oprSize() const { return Entry::_size(_size); }
-    bool stringInst() const { return Entry::_strInst(_size); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    OprPos dstPos() const { return _flags.dstPos(); }
+    OprPos srcPos() const { return _flags.srcPos(); }
+    OprSize oprSize() const { return _flags.size(); }
+    bool stringInst() const { return _flags.strInst(); }
 
-    void setFlags(uint32_t flags) {
-        _dst = Entry::_dst(flags);
-        _src = Entry::_src(flags);
-        _pos = Entry::_pos(flags);
-        _size = Entry::_size(flags);
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode dst, AddrMode src) {
-        _dst = Entry::_opr(dst);
-        _src = Entry::_opr(src);
+        _flags = Entry::Flags::create(dst, src, P_NONE, P_NONE, SZ_NONE, false);
     }
 
-    void setSegment(Config::opcode_t segment) {
-        _segment = segment;
-    }
+    void setSegment(Config::opcode_t segment) { _segment = segment; }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t first) {
-        _first = first;
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix) {
+        _prefix = prefix;
         _opCode = opCode;
     }
 
     void readModReg(DisMemory &memory) {
-        if (_first) {
+        if (_prefix) {
             _modReg = _opCode;
         } else {
             const OprPos dst = dstPos();
@@ -73,20 +66,19 @@ public:
     }
 
     Config::opcode_t segment() const { return _segment; }
-    Config::opcode_t first() const { return _first; }
+    Config::opcode_t prefix() const { return _prefix; }
     Config::opcode_t opCode() const { return _opCode; }
     Config::opcode_t modReg() const { return _modReg; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
+
     void embedModReg(Config::opcode_t data) {
         _modReg |= data;
         _hasModReg = true;
     }
 
     void prepairModReg() {
-        if (_first) return;
+        if (_prefix) return;
         const OprPos dst = dstPos();
         const OprPos src = srcPos();
         if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
@@ -96,7 +88,7 @@ public:
     void emitInsn() {
         uint8_t pos = 0;
         if (_segment) emitByte(_segment, pos++);
-        if (_first) emitByte(_first, pos++);
+        if (_prefix) emitByte(_prefix, pos++);
         emitByte(_opCode, pos++);
         if (_hasModReg) emitByte(_modReg, pos);
     }
@@ -111,20 +103,17 @@ public:
 
 private:
     Config::opcode_t _segment;
-    Config::opcode_t _first;
+    Config::opcode_t _prefix;
     Config::opcode_t _opCode;
     Config::opcode_t _modReg;
     bool _hasModReg;
-    uint8_t _dst;
-    uint8_t _src;
-    uint8_t _pos;
-    uint8_t _size;
+    Entry::Flags _flags;
 
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0) {
             if (_segment) pos++;
-            if (_first) pos++;
+            if (_prefix) pos++;
             pos++;
             if (_hasModReg) pos++;
         }

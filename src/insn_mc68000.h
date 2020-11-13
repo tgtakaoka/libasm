@@ -28,37 +28,29 @@ class InsnMc68000 : public InsnBase<Config> {
 public:
     InsnMc68000(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode srcMode() const { return Entry::_mode(_src); }
-    AddrMode dstMode() const { return Entry::_mode(_dst); }
-    OprPos srcPos() const { return Entry::_srcPos(_pos); }
-    OprPos dstPos() const { return Entry::_dstPos(_pos); }
-    bool alias() const { return Entry::_alias(_pos); }
-    OprSize  oprSize() const { return Entry::_oprSize(_size); }
-    InsnSize insnSize() const { return Entry::_insnSize(_size); }
+    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode dstMode() const { return _flags.dstMode(); }
+    OprPos srcPos() const { return _flags.srcPos(); }
+    OprPos dstPos() const { return _flags.dstPos(); }
+    bool alias() const { return _flags.alias(); }
+    OprSize  oprSize() const { return _flags.oprSize(); }
+    InsnSize insnSize() const { return _flags.insnSize(); }
 
-    void setFlags(uint32_t flags) {
-        _src = Entry::_src(flags);
-        _dst = Entry::_dst(flags);
-        _pos = Entry::_pos(flags);
-        _size = Entry::_size(flags);
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode src, AddrMode dst) {
-        _src = Entry::_opr(src);
-        _dst = Entry::_opr(dst);
+        _flags.setSrcMode(src);
+        _flags.setDstMode(dst);
     }
 
     void setInsnSize(OprSize osize) {
-        _size = Entry::_size(Entry::_oprSize(_size), InsnSize(osize));
+        _flags.setInsnSize(InsnSize(osize));
     }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-    }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
     Config::opcode_t opCode() const { return _opCode; }
 
@@ -76,10 +68,7 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    uint8_t _src;
-    uint8_t _dst;
-    uint8_t _pos;
-    uint8_t _size;
+    Entry::Flags _flags;
 
     uint8_t operandPos() const {
         uint8_t pos = length();

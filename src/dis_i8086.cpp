@@ -303,12 +303,12 @@ Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
             insn.setSegment(opCode);
             continue;
         }
-        Config::opcode_t firstByte = 0;
-        if (TableI8086.isFirstByte(opCode)) {
-            firstByte = opCode;
+        Config::opcode_t prefix = 0;
+        if (TableI8086.isPrefix(opCode)) {
+            prefix = opCode;
             opCode = insn.readByte(memory);
         }
-        insn.setOpCode(opCode, firstByte);
+        insn.setOpCode(opCode, prefix);
         return setError(insn);
     }
 }

@@ -26,10 +26,13 @@
 namespace libasm {
 namespace ins8070 {
 
-#define E(_opc, _name, _dst, _src, _size, _amode)    \
-    { _opc,                                             \
-      Entry::_flags(_amode, _dst, _src, SZ_##_size), \
-      TEXT_##_name },
+#define E(_opc, _name, _dst, _src, _size, _mode)    \
+    {                                               \
+        _opc,                                       \
+        Entry::Flags::create(                       \
+            _mode, _dst, _src, SZ_##_size),         \
+        TEXT_##_name                                \
+    },
 
 static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0x00, NOP,  OPR_NO, OPR_NO, NONE, IMPLIED)
@@ -119,21 +122,19 @@ static bool acceptOprFormat(OprFormat opr, OprFormat table) {
     return false;
 }
 
-static bool acceptOprFormats(uint16_t flags, const Entry *entry) {
-    const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptOprFormat(Entry::_dstOpr(flags), Entry::_dstOpr(table))
-        && acceptOprFormat(Entry::_srcOpr(flags), Entry::_srcOpr(table));
+static bool acceptOprFormats(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptOprFormat(flags.dstOpr(), table.dstOpr())
+        && acceptOprFormat(flags.srcOpr(), table.srcOpr());
 }
 
 Error TableIns8070::searchName(InsnIns8070 &insn) const {
     uint8_t count = 0;
-    const uint16_t flags =
-        Entry::_flags(IMPLIED, insn.dstOpr(), insn.srcOpr(), SZ_NONE);
-    const Entry *entry = TableBase::searchName<Entry,uint16_t>(
-        insn.name(), flags, ARRAY_RANGE(TABLE_INS8070), acceptOprFormats, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+        insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8070), acceptOprFormats, count);
     if (entry) {
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        insn.setFlags(pgm_read_word(&entry->flags));
+        insn.setOpCode(entry->opCode());
+        insn.setFlags(entry->flags());
         return _error.setOK();
     }
     return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
@@ -150,25 +151,20 @@ static Config::opcode_t maskCode(OprFormat format) {
     }
 }
 
-static Config::opcode_t tableCode(
-    Config::opcode_t opCode, const Entry *entry) {
-    const uint16_t flags = pgm_read_word(&entry->flags);
-    opCode &= ~maskCode(Entry::_dstOpr(flags));
-    opCode &= ~maskCode(Entry::_srcOpr(flags));
+static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
+    const Entry::Flags flags = entry->flags();
+    opCode &= ~maskCode(flags.dstOpr());
+    opCode &= ~maskCode(flags.srcOpr());
     return opCode;
 }
 
 Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry =
-        TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_INS8070), tableCode);
+    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
     if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(pgm_read_word(&entry->flags));
+    insn.setFlags(entry->flags());
     if (insn.addrMode() == UNDEF) return _error.setError(UNKNOWN_INSTRUCTION);
-    const /*PROGMEM*/ char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    insn.setName_P(name);
+    insn.setName_P(entry->name());
     return _error.setOK();
 }
 

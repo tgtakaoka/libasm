@@ -39,9 +39,7 @@ protected:
     static const E *searchName(
         const char *name, const E *begin, const E *end) {
         for (const E *entry = begin; entry < end; entry++) {
-            const char *target = reinterpret_cast<const char *>(
-                pgm_read_ptr(&entry->name));
-            if (strcasecmp_P(name, target) == 0)
+            if (strcasecmp_P(name, entry->name()) == 0)
                 return entry;
         }
         return nullptr;
@@ -66,14 +64,11 @@ protected:
         const C opCode, const E *begin, const E *end,
         C (*convert)(C, const E *) = nullptr) {
         for (const E *entry = begin; entry < end; entry++) {
-            if (sizeof(C) == 1) {
-                const C code = pgm_read_byte(&entry->opCode);
-                if ((convert ? convert(opCode, entry) : opCode) == code)
+            if (convert) {
+                if (convert(opCode, entry) == entry->opCode())
                     return entry;
-            }
-            if (sizeof(C) == 2) {
-                const C code =  pgm_read_word(&entry->opCode);
-                if ((convert ? convert(opCode, entry) : opCode) == code)
+            } else {
+                if (opCode == entry->opCode())
                     return entry;
             }
         }

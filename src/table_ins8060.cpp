@@ -26,8 +26,8 @@
 namespace libasm {
 namespace ins8060 {
 
-#define E(_opc, _name, _amode)                      \
-    { _opc, Entry::_flags(_amode), TEXT_##_name },
+#define E(_opc, _name, _mode)                               \
+    { _opc, Entry::Flags::create(_mode), TEXT_##_name },
 
 static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E(0x00, HALT, INHR)
@@ -79,8 +79,9 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E(0xF8, CAD,  INDX)
 };
 
-static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
-    AddrMode table = Entry::_addrMode(pgm_read_byte(&entry->flags));
+static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
+    const AddrMode opr = flags.mode();
+    const AddrMode table = entry->flags().mode();
     if (opr == table) return true;
     if (opr == REL8)
         return table == IMM8 || table == DISP || table == INDX;
@@ -91,24 +92,20 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 
 Error TableIns8060::searchName(InsnIns8060 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry,AddrMode>(
-        insn.name(), insn.addrMode(), ARRAY_RANGE(TABLE_INS8060),
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+        insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8060),
         acceptAddrMode, count);
     if (entry) {
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        insn.setFlags(pgm_read_byte(&entry->flags));
+        insn.setOpCode(entry->opCode());
+        insn.setFlags(entry->flags());
         return _error.setOK();
     }
     return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
-static Config::opcode_t tableCode(
-    Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode addrMode = Entry::_addrMode(pgm_read_byte(&entry->flags));
-    switch (addrMode) {
-    case PNTR:
-    case REL8:
-    case DISP:
+static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
+    switch (entry->flags().mode()) {
+    case PNTR: case REL8: case DISP:
         return opCode & ~0x03;
     case INDX:
         return opCode & ~0x07;
@@ -118,16 +115,12 @@ static Config::opcode_t tableCode(
 }
 
 Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry =
-        TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_INS8060), tableCode);
+    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
     if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(pgm_read_byte(&entry->flags));
+    insn.setFlags(entry->flags());
     if (insn.addrMode() == UNDEF) return _error.setError(UNKNOWN_INSTRUCTION);
-    const /*PROGMEM*/ char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    insn.setName_P(name);
+    insn.setName_P(entry->name());
     return _error.setOK();
 }
 

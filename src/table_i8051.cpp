@@ -26,8 +26,8 @@
 namespace libasm {
 namespace i8051 {
 
-#define E3(_opc, _name, _dst, _src, _ext)                       \
-    { _opc, Entry::_flags(_dst ,_src, _ext), TEXT_##_name },
+#define E3(_opc, _name, _dst, _src, _ext)                               \
+    { _opc, Entry::Flags::create(_dst ,_src, _ext), TEXT_##_name },
 #define E2(_opc, _name, _dst, _src) E3(_opc, _name, _dst, _src, NONE)
 
 static constexpr Entry TABLE_I8051[] PROGMEM = {
@@ -153,34 +153,29 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint16_t flags, const Entry *entry) {
-    const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table))
-        && acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table))
-        && acceptMode(Entry::_extMode(flags), Entry::_extMode(table));
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.dstMode(), table.dstMode())
+        && acceptMode(flags.srcMode(), table.srcMode())
+        && acceptMode(flags.extMode(), table.extMode());
 }
 
 Error TableI8051::searchName(InsnI8051 &insn) const {
-    const char *name = insn.name();
-    const uint16_t flags = Entry::_flags(
-        insn.dstMode(), insn.srcMode(), insn.extMode());
     uint8_t count = 0;
-    const Entry *entry =
-        TableBase::searchName<Entry, uint16_t>(
-            name, flags, ARRAY_RANGE(TABLE_I8051), acceptModes, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+        insn.name(), insn.flags(), ARRAY_RANGE(TABLE_I8051), acceptModes, count);
     if (entry) {
-        insn.setOpCode(pgm_read_byte(&entry->opCode));
-        insn.setFlags(pgm_read_word(&entry->flags));
+        insn.setOpCode(entry->opCode());
+        insn.setFlags(entry->flags());
         return _error.setOK();
     }
     return _error.setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
-static Config::opcode_t tableCode(
-    Config::opcode_t opCode, const Entry *entry) {
-    const uint16_t flags = pgm_read_word(&entry->flags);
-    const AddrMode dst = Entry::_dstMode(flags);
-    const AddrMode src = Entry::_srcMode(flags);
+static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
+    const Entry::Flags flags = entry->flags();
+    const AddrMode dst = flags.dstMode();
+    const AddrMode src = flags.srcMode();
     if (dst == RREG || src == RREG) return opCode & ~7;
     if (dst == IDIRR || src == IDIRR) return opCode & ~1;
     if (dst == ADR11) return opCode & ~0xE0;
@@ -189,14 +184,11 @@ static Config::opcode_t tableCode(
 
 Error TableI8051::searchOpCode(InsnI8051 &insn) const {
     const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry =
-        TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
+    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
     if (!entry) return _error.setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(pgm_read_word(&entry->flags));
-    const /*PROGMEM*/ char *name =
-        reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-    insn.setName_P(name);
+    insn.setFlags(entry->flags());
+    insn.setName_P(entry->name());
     return _error.setOK();
 }
 

@@ -26,8 +26,8 @@
 namespace libasm {
 namespace tms9900 {
 
-#define E(_insn, _name, _src, _dst)                     \
-    { _insn, Entry::_flags(_src, _dst), TEXT_##_name },
+#define E(_opc, _name, _src, _dst)                                  \
+    { _opc, Entry::Flags::create(_src, _dst), TEXT_##_name },
 
 static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E(0x0200, LI,   M_REG,  M_IMM)
@@ -122,9 +122,10 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E(0x0380, RTWP, M_RTWP, M_NO)
 };
 
-struct TableTms9900::EntryPage {
-    const Entry *table;
-    const Entry *end;
+class TableTms9900::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(const Entry *table, const Entry *end)
+        : EntryPageBase(table, end) {}
 };
 
 static constexpr TableTms9900::EntryPage TMS9900_PAGES[] PROGMEM = {
@@ -161,25 +162,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(uint16_t flags, const Entry *entry) {
-    const uint16_t table = pgm_read_word(&entry->flags);
-    return acceptMode(Entry::_srcMode(flags), Entry::_srcMode(table))
-        && acceptMode(Entry::_dstMode(flags), Entry::_dstMode(table));
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.srcMode(), table.srcMode())
+        && acceptMode(flags.dstMode(), table.dstMode());
 }
 
 Error TableTms9900::searchName(
     InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
-    const uint16_t flags = Entry::_flags(insn.srcMode(), insn.dstMode());
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
-        const Entry *entry = TableBase::searchName<Entry,uint16_t>(
-            insn.name(), flags, table, end, acceptModes, count);
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
-            insn.setOpCode(pgm_read_word(&entry->opCode));
-            insn.setFlags(pgm_read_word(&entry->flags));
+            insn.setOpCode(entry->opCode());
+            insn.setFlags(entry->flags());
             return OK;
         }
     }
@@ -187,9 +184,8 @@ Error TableTms9900::searchName(
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const uint16_t flags = pgm_read_word(&entry->flags);
-    const AddrMode src = Entry::_srcMode(flags);
-    const AddrMode dst = Entry::_dstMode(flags);
+    const AddrMode src = entry->flags().srcMode();
+    const AddrMode dst = entry->flags().dstMode();
     Config::opcode_t mask = 0;
     if (src == M_REG || dst == M_REG) mask |= 0xF;
     if (src == M_SRC) mask |= 0x3F;
@@ -204,16 +200,11 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
 Error TableTms9900::searchOpCode(
     InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *table =
-            reinterpret_cast<Entry *>(pgm_read_ptr(&page->table));
-        const Entry *end = reinterpret_cast<Entry *>(pgm_read_ptr(&page->end));
         const Entry *entry = TableBase::searchCode<Entry,Config::opcode_t>(
-            insn.opCode(), table, end, maskCode);
+            insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
-            insn.setFlags(pgm_read_word(&entry->flags));
-            const /*PROGMEM*/ char *name =
-                reinterpret_cast<const char *>(pgm_read_ptr(&entry->name));
-            insn.setName_P(name);
+            insn.setFlags(entry->flags());
+            insn.setName_P(entry->name());
             return OK;
         }
     }

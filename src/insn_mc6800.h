@@ -29,17 +29,16 @@ class InsnMc6800 : public InsnBase<Config> {
 public:
     InsnMc6800(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode mode1() const { return Entry::_mode1(_flags); }
-    AddrMode mode2() const { return Entry::_mode2(_flags); }
-    AddrMode mode3() const { return Entry::_mode3(_flags); }
-    OprSize size() const { return Entry::_size(_flags); }
+    AddrMode mode1() const { return _flags.mode1(); }
+    AddrMode mode2() const { return _flags.mode2(); }
+    AddrMode mode3() const { return _flags.mode3(); }
+    OprSize size() const { return _flags.size(); }
 
-    void setFlags(uint16_t flags) {
-        _flags = flags;
-    }
+    void setFlags(Entry::Flags flags) { _flags = flags; }
+    Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode op1, AddrMode op2, AddrMode op3) {
-        _flags = Entry::_flags(SZ_NONE, op1, op2, op3);
+    void setAddrMode(const AddrMode op1, const AddrMode op2, const AddrMode op3) {
+        _flags = Entry::Flags::create(op1, op2, op3, SZ_NONE);
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -47,9 +46,7 @@ public:
         _prefix = prefix;
     }
 
-    void embed(Config::opcode_t data) {
-        _opCode |= data;
-    }
+    void embed(Config::opcode_t data) { _opCode |= data; }
 
     bool hasPrefix() const { return _prefix != 0; }
     Config::opcode_t opCode() const { return _opCode; }
@@ -62,7 +59,7 @@ public:
     }
 
 private:
-    uint16_t _flags;
+    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
 };

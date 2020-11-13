@@ -18,6 +18,7 @@
 #define __ENTRY_MC6800_H__
 
 #include "config_mc6800.h"
+#include "entry_base.h"
 
 namespace libasm {
 namespace mc6800 {
@@ -49,32 +50,43 @@ enum OprSize : uint8_t {
     SZ_WORD = 2,
 };
 
-struct Entry {
-    const Config::opcode_t opCode;
-    const uint16_t flags;
-    const char *name;
+class Entry : public EntryBase<Config> {
+public:
+    struct Flags {
+        uint16_t _attr;
 
-    static inline AddrMode _mode1(uint16_t flags) {
-        return AddrMode((flags >> op1_gp) & mode_gm);
-    }
-    static inline AddrMode _mode2(uint16_t flags) {
-        return AddrMode((flags >> op2_gp) & mode_gm);
-    }
-    static inline AddrMode _mode3(uint16_t flags) {
-        return AddrMode((flags >> op3_gp) & mode_gm);
-    }
-    static inline OprSize _size(uint16_t flags) {
-        return OprSize((flags >> size_gp) & size_gm);
-    }
-    static constexpr uint16_t _flags(
-        OprSize size, AddrMode op1, AddrMode op2, AddrMode op3) {
-        return (static_cast<uint16_t>(op1) << op1_gp)
-            | (static_cast<uint16_t>(op2) << op2_gp)
-            | (static_cast<uint16_t>(op3) << op3_gp)
-            | (static_cast<uint16_t>(size) << size_gp);
-    }
+        static constexpr Flags create(
+                AddrMode op1, AddrMode op2, AddrMode op3, OprSize size) {
+            return Flags{static_cast<uint16_t>(
+                        (static_cast<uint16_t>(op1) << op1_gp)
+                        | (static_cast<uint16_t>(op2) << op2_gp)
+                        | (static_cast<uint16_t>(op3) << op3_gp)
+                        | (static_cast<uint16_t>(size) << size_gp))};
+        }
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+
+        AddrMode mode1() const {
+            return AddrMode((_attr >> op1_gp) & mode_gm);
+        }
+        AddrMode mode2() const {
+            return AddrMode((_attr >> op2_gp) & mode_gm);
+        }
+        AddrMode mode3() const {
+            return AddrMode((_attr >> op3_gp) & mode_gm);
+        }
+        OprSize size() const {
+            return OprSize((_attr >> size_gp) & size_gm);
+        }
+    };
+
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
+        : EntryBase(name, opCode), _flags(flags) {}
+
+    Flags flags() const { return _flags.read(); }
 
 private:
+    const Flags _flags;
+
     static constexpr int op1_gp  = 0;
     static constexpr int op2_gp  = 4;
     static constexpr int op3_gp  = 8;

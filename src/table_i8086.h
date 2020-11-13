@@ -34,7 +34,7 @@ public:
     bool isSegmentPrefix(Config::opcode_t opcode) const;
     RegName overrideSeg(Config::opcode_t opcode) const;
     Config::opcode_t segOverridePrefix(RegName name) const;
-    bool isFirstByte(Config::opcode_t opCode) const;
+    bool isPrefix(Config::opcode_t opCode) const;
 
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
