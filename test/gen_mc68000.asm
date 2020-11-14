@@ -7,8 +7,12 @@
       ORI.B   #26,(A0)+
       ORI.B   #$22,-(A0)
       ORI.B   #$2A,($2B2C,A0)
+      ORI.B   #$29,(-$7FD4,A0)
       ORI.B   #$32,($34,A0,D3.W)
-      ORI.B   #$37,($39,A5,D3.L)
+      ORI.B   #$31,($34,A0,D3.L)
+      ORI.B   #$31,($34,A0,A0.W)
+      ORI.B   #$31,($34,A0,A0.L)
+      ORI.B   #$31,(-$80,A0,D3.W)
       ORI.B   #$3A,($003B3C).W
       ORI.B   #$3B,($3D3E3F).L
       ORI     #$3E,CCR
@@ -17,9 +21,14 @@
       ORI.W   #$595A,(A0)+
       ORI.W   #$6162,-(A0)
       ORI.W   #$696A,($6B6C,A0)
+      ORI.W   #$6969,(-$7F94,A0)
       ORI.W   #$7172,($74,A0,D7.W)
-      ORI.W   #$7677,($79,A5,D7.L)
+      ORI.W   #$7171,($74,A0,D7.L)
+      ORI.W   #$7171,($74,A0,A0.W)
+      ORI.W   #$7171,($74,A0,A0.L)
+      ORI.W   #$7171,(-$80,A0,D7.W)
       ORI.W   #$797A,($007B7C).W
+      ORI.W   #$7B7C,($7E7F80).L
       ORI     #$7D7E,SR
       ORI.L   #$81828384,D0
       ORI.L   #$91929394,(A0)
@@ -28,72 +37,61 @@
       ORI.L   #$A9AAABAC,(-$5252,A0)
       ORI.L   #$B1B2B3B4,(-$4A,A0,A3.W)
       ORI.L   #$B4B5B6B7,(-$47,A3,A3.L)
+      ORI.L   #$BBBCBDBE,($FFBFC0).W
+      ORI.L   #$BDBEBFC0,($C2C3C4).L
       BTST.L  D0,D0
       MOVEP.W ($090A,A0),D0
-      MOVEP.W (-$7FF6,A0),D0
       BTST.B  D0,(A0)
       BTST.B  D0,(A0)+
       BTST.B  D0,-(A0)
       BTST.B  D0,($292A,A0)
-      BTST.B  D0,(-$7FD6,A0)
       BTST.B  D0,($32,A0,D3.W)
-      BTST.B  D0,($32,A0,D3.L)
-      BTST.B  D0,($32,A0,A0.W)
-      BTST.B  D0,($32,A0,A0.L)
       BTST.B  D0,(-$80,A0,D3.W)
+      BTST.B  D0,($39,A7,D3.L)
+      BTST.B  D0,(-$80,A7,D3.L)
       BTST.B  D0,($00393A).W
       BTST.B  D0,($3B3C3D).L
       BTST.B  D0,(*+$3B3E,PC)
-      BTST.B  D0,(*-$7FC2,PC)
       BTST.B  D0,(*+63,PC,D3.L)
-      BTST.B  D0,(*+63,PC,D4.W)
-      BTST.B  D0,(*+63,PC,A0.W)
-      BTST.B  D0,(*+63,PC,A0.L)
       BTST.B  D0,(*-126,PC,D3.L)
       BTST.B  D0,(*,PC,D3.L)
+      BTST.B  D0,(*+67,PC,D4.W)
+      BTST.B  D0,(*-126,PC,D4.W)
+      BTST.B  D0,(*,PC,D4.W)
       BCHG.L  D0,D0
       MOVEP.L ($494A,A0),D0
-      MOVEP.L (-$7FB6,A0),D0
       BCHG.B  D0,(A0)
       BCHG.B  D0,(A0)+
       BCHG.B  D0,-(A0)
       BCHG.B  D0,($696A,A0)
-      BCHG.B  D0,(-$7F96,A0)
       BCHG.B  D0,($72,A0,D7.W)
-      BCHG.B  D0,($72,A0,D7.L)
-      BCHG.B  D0,($72,A0,A0.W)
-      BCHG.B  D0,($72,A0,A0.L)
       BCHG.B  D0,(-$80,A0,D7.W)
+      BCHG.B  D0,($79,A7,D7.L)
+      BCHG.B  D0,(-$80,A7,D7.L)
       BCHG.B  D0,($00797A).W
       BCHG.B  D0,($7B7C7D).L
       BCLR.L  D0,D0
       MOVEP.W D0,(-$7676,A0)
-      MOVEP.W D0,($008A,A0)
       BCLR.B  D0,(A0)
       BCLR.B  D0,(A0)+
       BCLR.B  D0,-(A0)
       BCLR.B  D0,(-$5656,A0)
-      BCLR.B  D0,($00AA,A0)
       BCLR.B  D0,(-$4E,A0,A3.W)
-      BCLR.B  D0,(-$4E,A0,A3.L)
-      BCLR.B  D0,(-$4E,A0,D0.W)
-      BCLR.B  D0,(-$4E,A0,D0.L)
       BCLR.B  D0,(0,A0,A3.W)
+      BCLR.B  D0,(-$47,A7,A3.L)
+      BCLR.B  D0,(0,A7,A3.L)
       BCLR.B  D0,($FFB9BA).W
       BCLR.B  D0,($BBBCBD).L
       BSET.L  D0,D0
       MOVEP.L D0,(-$3636,A0)
-      MOVEP.L D0,($00CA,A0)
       BSET.B  D0,(A0)
       BSET.B  D0,(A0)+
       BSET.B  D0,-(A0)
       BSET.B  D0,(-$1616,A0)
-      BSET.B  D0,($00EA,A0)
       BSET.B  D0,(-14,A0,A7.W)
-      BSET.B  D0,(-14,A0,A7.L)
-      BSET.B  D0,(-14,A0,D0.W)
-      BSET.B  D0,(-14,A0,D0.L)
       BSET.B  D0,(0,A0,A7.W)
+      BSET.B  D0,(-7,A7,A7.L)
+      BSET.B  D0,(0,A7,A7.L)
       BSET.B  D0,($FFF9FA).W
       BSET.B  D0,($FBFCFD).L
       ANDI.B  #2,D0
@@ -101,8 +99,12 @@
       ANDI.B  #26,(A0)+
       ANDI.B  #$22,-(A0)
       ANDI.B  #$2A,($2B2C,A0)
+      ANDI.B  #$29,(-$7FD4,A0)
       ANDI.B  #$32,($34,A0,D3.W)
-      ANDI.B  #$37,($39,A5,D3.L)
+      ANDI.B  #$31,($34,A0,D3.L)
+      ANDI.B  #$31,($34,A0,A0.W)
+      ANDI.B  #$31,($34,A0,A0.L)
+      ANDI.B  #$31,(-$80,A0,D3.W)
       ANDI.B  #$3A,($003B3C).W
       ANDI.B  #$3B,($3D3E3F).L
       ANDI    #$3E,CCR
@@ -111,9 +113,14 @@
       ANDI.W  #$595A,(A0)+
       ANDI.W  #$6162,-(A0)
       ANDI.W  #$696A,($6B6C,A0)
+      ANDI.W  #$6969,(-$7F94,A0)
       ANDI.W  #$7172,($74,A0,D7.W)
-      ANDI.W  #$7677,($79,A5,D7.L)
+      ANDI.W  #$7171,($74,A0,D7.L)
+      ANDI.W  #$7171,($74,A0,A0.W)
+      ANDI.W  #$7171,($74,A0,A0.L)
+      ANDI.W  #$7171,(-$80,A0,D7.W)
       ANDI.W  #$797A,($007B7C).W
+      ANDI.W  #$7B7C,($7E7F80).L
       ANDI    #$7D7E,SR
       ANDI.L  #$81828384,D0
       ANDI.L  #$91929394,(A0)
@@ -122,13 +129,19 @@
       ANDI.L  #$A9AAABAC,(-$5252,A0)
       ANDI.L  #$B1B2B3B4,(-$4A,A0,A3.W)
       ANDI.L  #$B4B5B6B7,(-$47,A3,A3.L)
+      ANDI.L  #$BBBCBDBE,($FFBFC0).W
+      ANDI.L  #$BDBEBFC0,($C2C3C4).L
       SUBI.B  #2,D0
       SUBI.B  #18,(A0)
       SUBI.B  #26,(A0)+
       SUBI.B  #$22,-(A0)
       SUBI.B  #$2A,($2B2C,A0)
+      SUBI.B  #$29,(-$7FD4,A0)
       SUBI.B  #$32,($34,A0,D3.W)
-      SUBI.B  #$37,($39,A5,D3.L)
+      SUBI.B  #$31,($34,A0,D3.L)
+      SUBI.B  #$31,($34,A0,A0.W)
+      SUBI.B  #$31,($34,A0,A0.L)
+      SUBI.B  #$31,(-$80,A0,D3.W)
       SUBI.B  #$3A,($003B3C).W
       SUBI.B  #$3B,($3D3E3F).L
       SUBI.W  #$4142,D0
@@ -136,9 +149,14 @@
       SUBI.W  #$595A,(A0)+
       SUBI.W  #$6162,-(A0)
       SUBI.W  #$696A,($6B6C,A0)
+      SUBI.W  #$6969,(-$7F94,A0)
       SUBI.W  #$7172,($74,A0,D7.W)
-      SUBI.W  #$7677,($79,A5,D7.L)
+      SUBI.W  #$7171,($74,A0,D7.L)
+      SUBI.W  #$7171,($74,A0,A0.W)
+      SUBI.W  #$7171,($74,A0,A0.L)
+      SUBI.W  #$7171,(-$80,A0,D7.W)
       SUBI.W  #$797A,($007B7C).W
+      SUBI.W  #$7B7C,($7E7F80).L
       SUBI.L  #$81828384,D0
       SUBI.L  #$91929394,(A0)
       SUBI.L  #$999A9B9C,(A0)+
@@ -146,13 +164,19 @@
       SUBI.L  #$A9AAABAC,(-$5252,A0)
       SUBI.L  #$B1B2B3B4,(-$4A,A0,A3.W)
       SUBI.L  #$B4B5B6B7,(-$47,A3,A3.L)
+      SUBI.L  #$BBBCBDBE,($FFBFC0).W
+      SUBI.L  #$BDBEBFC0,($C2C3C4).L
       ADDI.B  #2,D0
       ADDI.B  #18,(A0)
       ADDI.B  #26,(A0)+
       ADDI.B  #$22,-(A0)
       ADDI.B  #$2A,($2B2C,A0)
+      ADDI.B  #$29,(-$7FD4,A0)
       ADDI.B  #$32,($34,A0,D3.W)
-      ADDI.B  #$37,($39,A5,D3.L)
+      ADDI.B  #$31,($34,A0,D3.L)
+      ADDI.B  #$31,($34,A0,A0.W)
+      ADDI.B  #$31,($34,A0,A0.L)
+      ADDI.B  #$31,(-$80,A0,D3.W)
       ADDI.B  #$3A,($003B3C).W
       ADDI.B  #$3B,($3D3E3F).L
       ADDI.W  #$4142,D0
@@ -160,9 +184,14 @@
       ADDI.W  #$595A,(A0)+
       ADDI.W  #$6162,-(A0)
       ADDI.W  #$696A,($6B6C,A0)
+      ADDI.W  #$6969,(-$7F94,A0)
       ADDI.W  #$7172,($74,A0,D7.W)
-      ADDI.W  #$7677,($79,A5,D7.L)
+      ADDI.W  #$7171,($74,A0,D7.L)
+      ADDI.W  #$7171,($74,A0,A0.W)
+      ADDI.W  #$7171,($74,A0,A0.L)
+      ADDI.W  #$7171,(-$80,A0,D7.W)
       ADDI.W  #$797A,($007B7C).W
+      ADDI.W  #$7B7C,($7E7F80).L
       ADDI.L  #$81828384,D0
       ADDI.L  #$91929394,(A0)
       ADDI.L  #$999A9B9C,(A0)+
@@ -170,13 +199,79 @@
       ADDI.L  #$A9AAABAC,(-$5252,A0)
       ADDI.L  #$B1B2B3B4,(-$4A,A0,A3.W)
       ADDI.L  #$B4B5B6B7,(-$47,A3,A3.L)
+      ADDI.L  #$BBBCBDBE,($FFBFC0).W
+      ADDI.L  #$BDBEBFC0,($C2C3C4).L
+      BTST.L  #1,D0
+      BTST.B  #1,(A0)
+      BTST.B  #1,(A0)+
+      BTST.B  #1,-(A0)
+      BTST.B  #1,($0203,A0)
+      BTST.B  #0,(-$7FFD,A0)
+      BTST.B  #1,(3,A0,D0.W)
+      BTST.B  #0,(3,A0,D0.L)
+      BTST.B  #0,(3,A0,A0.W)
+      BTST.B  #0,(3,A0,A0.L)
+      BTST.B  #0,(-$80,A0,D0.W)
+      BTST.B  #1,($000203).W
+      BTST.B  #1,($030405).L
+      BTST.B  #1,(*+$0207,PC)
+      BTST.B  #0,(*-$7FF9,PC)
+      BTST.B  #1,(*+7,PC,D0.W)
+      BTST.B  #0,(*+7,PC,D0.L)
+      BTST.B  #0,(*+7,PC,A0.W)
+      BTST.B  #0,(*+7,PC,A0.L)
+      BTST.B  #0,(*-124,PC,D0.W)
+      BTST.B  #0,(*,PC,D0.W)
+      BCHG.L  #1,D0
+      BCHG.B  #1,(A0)
+      BCHG.B  #1,(A0)+
+      BCHG.B  #1,-(A0)
+      BCHG.B  #1,($0203,A0)
+      BCHG.B  #0,(-$7FFD,A0)
+      BCHG.B  #1,(3,A0,D0.W)
+      BCHG.B  #0,(3,A0,D0.L)
+      BCHG.B  #0,(3,A0,A0.W)
+      BCHG.B  #0,(3,A0,A0.L)
+      BCHG.B  #0,(-$80,A0,D0.W)
+      BCHG.B  #1,($000203).W
+      BCHG.B  #1,($030405).L
+      BCLR.L  #1,D0
+      BCLR.B  #1,(A0)
+      BCLR.B  #1,(A0)+
+      BCLR.B  #1,-(A0)
+      BCLR.B  #1,($0203,A0)
+      BCLR.B  #0,(-$7FFD,A0)
+      BCLR.B  #1,(3,A0,D0.W)
+      BCLR.B  #0,(3,A0,D0.L)
+      BCLR.B  #0,(3,A0,A0.W)
+      BCLR.B  #0,(3,A0,A0.L)
+      BCLR.B  #0,(-$80,A0,D0.W)
+      BCLR.B  #1,($000203).W
+      BCLR.B  #1,($030405).L
+      BSET.L  #1,D0
+      BSET.B  #1,(A0)
+      BSET.B  #1,(A0)+
+      BSET.B  #1,-(A0)
+      BSET.B  #1,($0203,A0)
+      BSET.B  #0,(-$7FFD,A0)
+      BSET.B  #1,(3,A0,D0.W)
+      BSET.B  #0,(3,A0,D0.L)
+      BSET.B  #0,(3,A0,A0.W)
+      BSET.B  #0,(3,A0,A0.L)
+      BSET.B  #0,(-$80,A0,D0.W)
+      BSET.B  #1,($000203).W
+      BSET.B  #1,($030405).L
       EORI.B  #2,D0
       EORI.B  #18,(A0)
       EORI.B  #26,(A0)+
       EORI.B  #$22,-(A0)
       EORI.B  #$2A,($2B2C,A0)
+      EORI.B  #$29,(-$7FD4,A0)
       EORI.B  #$32,($34,A0,D3.W)
-      EORI.B  #$37,($39,A5,D3.L)
+      EORI.B  #$31,($34,A0,D3.L)
+      EORI.B  #$31,($34,A0,A0.W)
+      EORI.B  #$31,($34,A0,A0.L)
+      EORI.B  #$31,(-$80,A0,D3.W)
       EORI.B  #$3A,($003B3C).W
       EORI.B  #$3B,($3D3E3F).L
       EORI    #$3E,CCR
@@ -185,9 +280,14 @@
       EORI.W  #$595A,(A0)+
       EORI.W  #$6162,-(A0)
       EORI.W  #$696A,($6B6C,A0)
+      EORI.W  #$6969,(-$7F94,A0)
       EORI.W  #$7172,($74,A0,D7.W)
-      EORI.W  #$7677,($79,A5,D7.L)
+      EORI.W  #$7171,($74,A0,D7.L)
+      EORI.W  #$7171,($74,A0,A0.W)
+      EORI.W  #$7171,($74,A0,A0.L)
+      EORI.W  #$7171,(-$80,A0,D7.W)
       EORI.W  #$797A,($007B7C).W
+      EORI.W  #$7B7C,($7E7F80).L
       EORI    #$7D7E,SR
       EORI.L  #$81828384,D0
       EORI.L  #$91929394,(A0)
@@ -196,13 +296,19 @@
       EORI.L  #$A9AAABAC,(-$5252,A0)
       EORI.L  #$B1B2B3B4,(-$4A,A0,A3.W)
       EORI.L  #$B4B5B6B7,(-$47,A3,A3.L)
+      EORI.L  #$BBBCBDBE,($FFBFC0).W
+      EORI.L  #$BDBEBFC0,($C2C3C4).L
       CMPI.B  #2,D0
       CMPI.B  #18,(A0)
       CMPI.B  #26,(A0)+
       CMPI.B  #$22,-(A0)
       CMPI.B  #$2A,($2B2C,A0)
+      CMPI.B  #$29,(-$7FD4,A0)
       CMPI.B  #$32,($34,A0,D3.W)
-      CMPI.B  #$37,($39,A5,D3.L)
+      CMPI.B  #$31,($34,A0,D3.L)
+      CMPI.B  #$31,($34,A0,A0.W)
+      CMPI.B  #$31,($34,A0,A0.L)
+      CMPI.B  #$31,(-$80,A0,D3.W)
       CMPI.B  #$3A,($003B3C).W
       CMPI.B  #$3B,($3D3E3F).L
       CMPI.W  #$4142,D0
@@ -210,9 +316,14 @@
       CMPI.W  #$595A,(A0)+
       CMPI.W  #$6162,-(A0)
       CMPI.W  #$696A,($6B6C,A0)
+      CMPI.W  #$6969,(-$7F94,A0)
       CMPI.W  #$7172,($74,A0,D7.W)
-      CMPI.W  #$7677,($79,A5,D7.L)
+      CMPI.W  #$7171,($74,A0,D7.L)
+      CMPI.W  #$7171,($74,A0,A0.W)
+      CMPI.W  #$7171,($74,A0,A0.L)
+      CMPI.W  #$7171,(-$80,A0,D7.W)
       CMPI.W  #$797A,($007B7C).W
+      CMPI.W  #$7B7C,($7E7F80).L
       CMPI.L  #$81828384,D0
       CMPI.L  #$91929394,(A0)
       CMPI.L  #$999A9B9C,(A0)+
@@ -220,224 +331,210 @@
       CMPI.L  #$A9AAABAC,(-$5252,A0)
       CMPI.L  #$B1B2B3B4,(-$4A,A0,A3.W)
       CMPI.L  #$B4B5B6B7,(-$47,A3,A3.L)
+      CMPI.L  #$BBBCBDBE,($FFBFC0).W
+      CMPI.L  #$BDBEBFC0,($C2C3C4).L
       MOVE.B  D0,D0
       MOVE.B  (A0),D0
       MOVE.B  (A0)+,D0
       MOVE.B  -(A0),D0
       MOVE.B  ($292A,A0),D0
-      MOVE.B  (-$7FD6,A0),D0
       MOVE.B  ($32,A0,D3.W),D0
-      MOVE.B  ($32,A0,D3.L),D0
-      MOVE.B  ($32,A0,A0.W),D0
-      MOVE.B  ($32,A0,A0.L),D0
       MOVE.B  (-$80,A0,D3.W),D0
+      MOVE.B  ($39,A7,D3.L),D0
+      MOVE.B  (-$80,A7,D3.L),D0
       MOVE.B  ($00393A).W,D0
       MOVE.B  ($3B3C3D).L,D0
       MOVE.B  (*+$3B3E,PC),D0
-      MOVE.B  (*-$7FC2,PC),D0
       MOVE.B  (*+63,PC,D3.L),D0
-      MOVE.B  (*+63,PC,D4.W),D0
-      MOVE.B  (*+63,PC,A0.W),D0
-      MOVE.B  (*+63,PC,A0.L),D0
       MOVE.B  (*-126,PC,D3.L),D0
       MOVE.B  (*,PC,D3.L),D0
+      MOVE.B  (*+67,PC,D4.W),D0
+      MOVE.B  (*-126,PC,D4.W),D0
+      MOVE.B  (*,PC,D4.W),D0
       MOVE.B  #$3E,D0
       MOVE.B  D0,(A0)
       MOVE.B  (A0),(A0)
       MOVE.B  (A0)+,(A0)
       MOVE.B  -(A0),(A0)
       MOVE.B  (-$5656,A0),(A0)
-      MOVE.B  ($00AA,A0),(A0)
       MOVE.B  (-$4E,A0,A3.W),(A0)
-      MOVE.B  (-$4E,A0,A3.L),(A0)
-      MOVE.B  (-$4E,A0,D0.W),(A0)
-      MOVE.B  (-$4E,A0,D0.L),(A0)
       MOVE.B  (0,A0,A3.W),(A0)
+      MOVE.B  (-$47,A7,A3.L),(A0)
+      MOVE.B  (0,A7,A3.L),(A0)
       MOVE.B  ($FFB9BA).W,(A0)
       MOVE.B  ($BBBCBD).L,(A0)
       MOVE.B  (*-$4442,PC),(A0)
-      MOVE.B  (*+$00BE,PC),(A0)
       MOVE.B  (*-65,PC,A3.L),(A0)
-      MOVE.B  (*-65,PC,A4.W),(A0)
-      MOVE.B  (*-65,PC,D0.W),(A0)
-      MOVE.B  (*-65,PC,D0.L),(A0)
       MOVE.B  (*,PC,A3.L),(A0)
       MOVE.B  (*+1,PC,A3.L),(A0)
+      MOVE.B  (*-61,PC,A4.W),(A0)
+      MOVE.B  (*,PC,A4.W),(A0)
+      MOVE.B  (*+1,PC,A4.W),(A0)
       MOVE.B  #$BE,(A0)
       MOVE.B  D0,(A0)+
       MOVE.B  (A0),(A0)+
       MOVE.B  (A0)+,(A0)+
       MOVE.B  -(A0),(A0)+
       MOVE.B  (-$1616,A0),(A0)+
-      MOVE.B  ($00EA,A0),(A0)+
       MOVE.B  (-14,A0,A7.W),(A0)+
-      MOVE.B  (-14,A0,A7.L),(A0)+
-      MOVE.B  (-14,A0,D0.W),(A0)+
-      MOVE.B  (-14,A0,D0.L),(A0)+
       MOVE.B  (0,A0,A7.W),(A0)+
+      MOVE.B  (-7,A7,A7.L),(A0)+
+      MOVE.B  (0,A7,A7.L),(A0)+
       MOVE.B  ($FFF9FA).W,(A0)+
       MOVE.B  ($FBFCFD).L,(A0)+
       MOVE.B  (*-$0402,PC),(A0)+
-      MOVE.B  (*+$00FE,PC),(A0)+
       MOVE.B  (*-1,PC,A7.L),(A0)+
-      MOVE.B  (*-1,PC,D0.W),(A0)+
-      MOVE.B  (*-1,PC,D0.L),(A0)+
-      MOVE.B  (*-1,PC,A0.W),(A0)+
       MOVE.B  (*,PC,A7.L),(A0)+
       MOVE.B  (*+1,PC,A7.L),(A0)+
+      MOVE.B  (*+3,PC,D0.W),(A0)+
+      MOVE.B  (*-126,PC,D0.W),(A0)+
+      MOVE.B  (*,PC,D0.W),(A0)+
       MOVE.B  #$FE,(A0)+
       MOVE.B  D0,-(A0)
       MOVE.B  (A0),-(A0)
       MOVE.B  (A0)+,-(A0)
       MOVE.B  -(A0),-(A0)
       MOVE.B  ($292A,A0),-(A0)
-      MOVE.B  (-$7FD6,A0),-(A0)
       MOVE.B  ($32,A0,D3.W),-(A0)
-      MOVE.B  ($32,A0,D3.L),-(A0)
-      MOVE.B  ($32,A0,A0.W),-(A0)
-      MOVE.B  ($32,A0,A0.L),-(A0)
       MOVE.B  (-$80,A0,D3.W),-(A0)
+      MOVE.B  ($39,A7,D3.L),-(A0)
+      MOVE.B  (-$80,A7,D3.L),-(A0)
       MOVE.B  ($00393A).W,-(A0)
       MOVE.B  ($3B3C3D).L,-(A0)
       MOVE.B  (*+$3B3E,PC),-(A0)
-      MOVE.B  (*-$7FC2,PC),-(A0)
       MOVE.B  (*+63,PC,D3.L),-(A0)
-      MOVE.B  (*+63,PC,D4.W),-(A0)
-      MOVE.B  (*+63,PC,A0.W),-(A0)
-      MOVE.B  (*+63,PC,A0.L),-(A0)
       MOVE.B  (*-126,PC,D3.L),-(A0)
       MOVE.B  (*,PC,D3.L),-(A0)
+      MOVE.B  (*+67,PC,D4.W),-(A0)
+      MOVE.B  (*-126,PC,D4.W),-(A0)
+      MOVE.B  (*,PC,D4.W),-(A0)
       MOVE.B  #$3E,-(A0)
       MOVE.B  D0,($4142,A0)
-      MOVE.B  D0,(-$7FBE,A0)
       MOVE.B  (A0),($5152,A0)
-      MOVE.B  (A0),(-$7FAE,A0)
       MOVE.B  (A0)+,($595A,A0)
-      MOVE.B  (A0)+,(-$7FA6,A0)
       MOVE.B  -(A0),($6162,A0)
-      MOVE.B  -(A0),(-$7F9E,A0)
       MOVE.B  ($696A,A0),($6B6C,A0)
-      MOVE.B  (-$7F96,A0),($6B6C,A0)
-      MOVE.B  ($6868,A0),(-$7F94,A0)
+      MOVE.B  ($6969,A0),(-$7F94,A0)
       MOVE.B  ($72,A0,D7.W),($7374,A0)
-      MOVE.B  ($72,A0,D7.L),($7374,A0)
-      MOVE.B  ($72,A0,A0.W),($7374,A0)
-      MOVE.B  ($72,A0,A0.L),($7374,A0)
       MOVE.B  (-$80,A0,D7.W),($7374,A0)
-      MOVE.B  ($70,A0,D7.W),(-$7F8C,A0)
+      MOVE.B  ($71,A0,D7.W),(-$7F8C,A0)
+      MOVE.B  ($79,A7,D7.L),($7A7B,A0)
+      MOVE.B  (-$80,A7,D7.L),($7A7B,A0)
+      MOVE.B  ($78,A7,D7.L),(-$7F85,A0)
       MOVE.B  ($00797A).W,($7B7C,A0)
+      MOVE.B  ($007979).W,(-$7F84,A0)
       MOVE.B  ($7B7C7D).L,($7E7F,A0)
       MOVE.B  (*+$7B7E,PC),($7D7E,A0)
-      MOVE.B  (*-$7F82,PC),($7D7E,A0)
-      MOVE.B  (*+$7A7C,PC),(-$7F82,A0)
+      MOVE.B  (*+$7B7D,PC),(-$7F82,A0)
       MOVE.B  (*+127,PC,D7.L),($7E7F,A0)
-      MOVE.B  (*+127,PC,A0.W),($7E7F,A0)
-      MOVE.B  (*+127,PC,A0.L),($7E7F,A0)
-      MOVE.B  (*+127,PC,D0.W),($7E7F,A0)
       MOVE.B  (*-126,PC,D7.L),($7E7F,A0)
       MOVE.B  (*,PC,D7.L),($7E7F,A0)
-      MOVE.B  (*+125,PC,D7.L),(-$7F81,A0)
+      MOVE.B  (*+126,PC,D7.L),(-$7F81,A0)
       MOVE.B  #$7E,($7F80,A0)
+      MOVE.B  #$7D,(-$7F80,A0)
       MOVE.B  D0,(-$7E,A0,A0.W)
-      MOVE.B  D0,(-$7E,A0,A0.L)
-      MOVE.B  D0,(-$7E,A0,D0.W)
-      MOVE.B  D0,(-$7E,A0,D0.L)
       MOVE.B  D0,(0,A0,A0.W)
+      MOVE.B  D7,(-$77,A0,A0.L)
+      MOVE.B  D7,(0,A0,A0.L)
       MOVE.B  (A0),(-$6E,A0,A1.W)
-      MOVE.B  (A0),(-$6E,A0,A1.L)
-      MOVE.B  (A0),(-$6E,A0,D0.W)
-      MOVE.B  (A0),(-$6E,A0,D0.L)
       MOVE.B  (A0),(0,A0,A1.W)
+      MOVE.B  (A7),(-$67,A0,A1.L)
+      MOVE.B  (A7),(0,A0,A1.L)
       MOVE.B  (A0)+,(-$66,A0,A1.L)
-      MOVE.B  (A0)+,(-$66,A0,A2.W)
-      MOVE.B  (A0)+,(-$66,A0,D0.W)
-      MOVE.B  (A0)+,(-$66,A0,D0.L)
       MOVE.B  (A0)+,(0,A0,A1.L)
+      MOVE.B  (A7)+,(-$5F,A0,A2.W)
+      MOVE.B  (A7)+,(0,A0,A2.W)
       MOVE.B  -(A0),(-$5E,A0,A2.W)
-      MOVE.B  -(A0),(-$5E,A0,A2.L)
-      MOVE.B  -(A0),(-$5E,A0,D0.W)
-      MOVE.B  -(A0),(-$5E,A0,D0.L)
       MOVE.B  -(A0),(0,A0,A2.W)
+      MOVE.B  -(A7),(-$57,A0,A2.L)
+      MOVE.B  -(A7),(0,A0,A2.L)
       MOVE.B  (-$5656,A0),(-$54,A0,A2.L)
-      MOVE.B  ($00AA,A0),(-$54,A0,A2.L)
-      MOVE.B  (-$5758,A0),(-$54,A0,A3.W)
-      MOVE.B  (-$5758,A0),(-$54,A0,D0.W)
-      MOVE.B  (-$5758,A0),(-$54,A0,D0.L)
-      MOVE.B  ($00AF,A5),(-$4F,A0,A3.W)
+      MOVE.B  (-$5657,A0),(-$54,A0,A3.W)
+      MOVE.B  (-$5657,A0),(-$54,A0,D0.W)
+      MOVE.B  (-$5657,A0),(-$54,A0,D0.L)
+      MOVE.B  (-$5657,A0),(0,A0,A2.L)
       MOVE.B  (-$4E,A0,A3.W),(-$4C,A0,A3.W)
-      MOVE.B  (-$4E,A0,A3.L),(-$4C,A0,A3.W)
-      MOVE.B  (-$4E,A0,D0.W),(-$4C,A0,A3.W)
-      MOVE.B  (-$4E,A0,D0.L),(-$4C,A0,A3.W)
       MOVE.B  (0,A0,A3.W),(-$4C,A0,A3.W)
-      MOVE.B  (-$50,A0,A3.W),(-$4C,A0,A3.L)
-      MOVE.B  (-$50,A0,A3.W),(-$4C,A0,D0.W)
-      MOVE.B  (-$50,A0,A3.W),(-$4C,A0,D0.L)
-      MOVE.B  (-$50,A0,A3.W),(0,A0,A3.W)
-      MOVE.B  (-$49,A5,A3.L),(-$47,A0,A3.L)
-      MOVE.B  (-$49,A5,D0.W),(-$47,A0,A3.L)
-      MOVE.B  (-$49,A5,D0.L),(-$47,A0,A3.L)
+      MOVE.B  (-$4F,A0,A3.W),(-$4C,A0,A3.L)
+      MOVE.B  (-$4F,A0,A3.W),(-$4C,A0,D0.W)
+      MOVE.B  (-$4F,A0,A3.W),(-$4C,A0,D0.L)
+      MOVE.B  (-$4F,A0,A3.W),(0,A0,A3.W)
       MOVE.B  (0,A5,A3.W),(-$47,A0,A3.L)
+      MOVE.B  (-$47,A5,A3.L),(-$45,A0,A3.L)
+      MOVE.B  (0,A5,A3.L),(-$45,A0,A3.L)
+      MOVE.B  (-$48,A5,A3.L),(-$45,A0,A4.W)
+      MOVE.B  (-$48,A5,A3.L),(-$45,A0,D0.W)
+      MOVE.B  (-$48,A5,A3.L),(-$45,A0,D0.L)
+      MOVE.B  (-$48,A5,A3.L),(0,A0,A3.L)
       MOVE.B  ($FFB9BA).W,(-$44,A0,A3.L)
+      MOVE.B  ($FFB9B9).W,(-$44,A0,A4.W)
+      MOVE.B  ($FFB9B9).W,(-$44,A0,D0.W)
+      MOVE.B  ($FFB9B9).W,(-$44,A0,D0.L)
+      MOVE.B  ($FFB9B9).W,(0,A0,A3.L)
       MOVE.B  ($BBBCBD).L,(-$41,A0,A3.L)
       MOVE.B  (*-$4442,PC),(-$42,A0,A3.L)
-      MOVE.B  (*+$00BE,PC),(-$42,A0,A3.L)
-      MOVE.B  (*-$4544,PC),(-$42,A0,A4.W)
-      MOVE.B  (*-$4544,PC),(-$42,A0,D0.W)
-      MOVE.B  (*-$4544,PC),(-$42,A0,D0.L)
+      MOVE.B  (*-$4443,PC),(-$42,A0,A4.W)
+      MOVE.B  (*-$4443,PC),(-$42,A0,D0.W)
+      MOVE.B  (*-$4443,PC),(-$42,A0,D0.L)
+      MOVE.B  (*-$4443,PC),(0,A0,A3.L)
       MOVE.B  (*-65,PC,A3.L),(-$41,A0,A3.L)
-      MOVE.B  (*-65,PC,A4.W),(-$41,A0,A3.L)
-      MOVE.B  (*-65,PC,D0.W),(-$41,A0,A3.L)
-      MOVE.B  (*-65,PC,D0.L),(-$41,A0,A3.L)
       MOVE.B  (*,PC,A3.L),(-$41,A0,A3.L)
       MOVE.B  (*+1,PC,A3.L),(-$41,A0,A3.L)
-      MOVE.B  (*-67,PC,A3.L),(-$41,A0,A4.W)
-      MOVE.B  (*-67,PC,A3.L),(-$41,A0,D0.W)
-      MOVE.B  (*-67,PC,A3.L),(-$41,A0,D0.L)
-      MOVE.B  (*-67,PC,A3.L),(0,A0,A3.L)
+      MOVE.B  (*-66,PC,A3.L),(-$41,A0,A4.W)
+      MOVE.B  (*-66,PC,A3.L),(-$41,A0,D0.W)
+      MOVE.B  (*-66,PC,A3.L),(-$41,A0,D0.L)
+      MOVE.B  (*-66,PC,A3.L),(0,A0,A3.L)
+      MOVE.B  (*,PC,A3.L),(-$3F,A0,A4.W)
+      MOVE.B  (*+1,PC,A3.L),(-$3F,A0,A4.W)
+      MOVE.B  (*-61,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.B  (*,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.B  (*+1,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.B  (*-62,PC,A4.W),(-$3D,A0,A4.L)
+      MOVE.B  (*-62,PC,A4.W),(-$3D,A0,D0.W)
+      MOVE.B  (*-62,PC,A4.W),(-$3D,A0,D0.L)
+      MOVE.B  (*-62,PC,A4.W),(0,A0,A4.W)
       MOVE.B  #$BE,(-$40,A0,A3.L)
+      MOVE.B  #$BD,(-$40,A0,A4.W)
+      MOVE.B  #$BD,(-$40,A0,D0.W)
+      MOVE.B  #$BD,(-$40,A0,D0.L)
+      MOVE.B  #$BD,(0,A0,A3.L)
       MOVE.B  D0,($FFC1C2).W
       MOVE.B  (A0),($FFD1D2).W
       MOVE.B  (A0)+,($FFD9DA).W
       MOVE.B  -(A0),($FFE1E2).W
       MOVE.B  (-$1616,A0),($FFEBEC).W
-      MOVE.B  ($00EA,A0),($FFEBEC).W
       MOVE.B  (-14,A0,A7.W),($FFF3F4).W
-      MOVE.B  (-14,A0,A7.L),($FFF3F4).W
-      MOVE.B  (-14,A0,D0.W),($FFF3F4).W
-      MOVE.B  (-14,A0,D0.L),($FFF3F4).W
       MOVE.B  (0,A0,A7.W),($FFF3F4).W
+      MOVE.B  (-7,A7,A7.L),($FFFAFB).W
+      MOVE.B  (0,A7,A7.L),($FFFAFB).W
       MOVE.B  ($FFF9FA).W,($FFFBFC).W
       MOVE.B  ($FBFCFD).L,($FFFEFF).W
       MOVE.B  (*-$0402,PC),($FFFDFE).W
-      MOVE.B  (*+$00FE,PC),($FFFDFE).W
       MOVE.B  (*-1,PC,A7.L),($FFFEFF).W
-      MOVE.B  (*-1,PC,D0.W),($FFFEFF).W
-      MOVE.B  (*-1,PC,D0.L),($FFFEFF).W
-      MOVE.B  (*-1,PC,A0.W),($FFFEFF).W
       MOVE.B  (*,PC,A7.L),($FFFEFF).W
       MOVE.B  (*+1,PC,A7.L),($FFFEFF).W
+      MOVE.B  (*+3,PC,D0.W),($000203).W
+      MOVE.B  (*-126,PC,D0.W),($000203).W
+      MOVE.B  (*,PC,D0.W),($000203).W
       MOVE.B  #$FE,($FFFF00).W
       MOVE.B  D0,($C2C3C4).L
       MOVE.B  (A0),($D2D3D4).L
       MOVE.B  (A0)+,($DADBDC).L
       MOVE.B  -(A0),($E2E3E4).L
       MOVE.B  (-$1616,A0),($ECEDEE).L
-      MOVE.B  ($00EA,A0),($ECEDEE).L
       MOVE.B  (-14,A0,A7.W),($F4F5F6).L
-      MOVE.B  (-14,A0,A7.L),($F4F5F6).L
-      MOVE.B  (-14,A0,D0.W),($F4F5F6).L
-      MOVE.B  (-14,A0,D0.L),($F4F5F6).L
       MOVE.B  (0,A0,A7.W),($F4F5F6).L
+      MOVE.B  (-7,A7,A7.L),($FBFCFD).L
+      MOVE.B  (0,A7,A7.L),($FBFCFD).L
       MOVE.B  ($FFF9FA).W,($FCFDFE).L
       MOVE.B  ($FBFCFD).L,($FF0001).L
       MOVE.B  (*-$0402,PC),($FEFF00).L
-      MOVE.B  (*+$00FE,PC),($FEFF00).L
       MOVE.B  (*-1,PC,A7.L),($FF0001).L
-      MOVE.B  (*-1,PC,D0.W),($FF0001).L
-      MOVE.B  (*-1,PC,D0.L),($FF0001).L
-      MOVE.B  (*-1,PC,A0.W),($FF0001).L
       MOVE.B  (*,PC,A7.L),($FF0001).L
       MOVE.B  (*+1,PC,A7.L),($FF0001).L
+      MOVE.B  (*+3,PC,D0.W),($030405).L
+      MOVE.B  (*-126,PC,D0.W),($030405).L
+      MOVE.B  (*,PC,D0.W),($030405).L
       MOVE.B  #$FE,($000102).L
       MOVE.L  D0,D0
       MOVE.L  A0,D0
@@ -445,18 +542,19 @@
       MOVE.L  (A0)+,D0
       MOVE.L  -(A0),D0
       MOVE.L  ($292A,A0),D0
-      MOVE.L  (-$7FD6,A0),D0
       MOVE.L  ($32,A0,D3.W),D0
-      MOVE.L  ($32,A0,D3.L),D0
-      MOVE.L  ($32,A0,A0.W),D0
-      MOVE.L  ($32,A0,A0.L),D0
       MOVE.L  (-$80,A0,D3.W),D0
+      MOVE.L  ($39,A7,D3.L),D0
+      MOVE.L  (-$80,A7,D3.L),D0
+      MOVE.L  ($003B3C).W,D0
+      MOVE.L  ($3E3F40).L,D0
+      MOVE.L  (*+$3D40,PC),D0
       MOVE.L  (*+63,PC,D3.L),D0
-      MOVE.L  (*+63,PC,D4.W),D0
-      MOVE.L  (*+63,PC,A0.W),D0
-      MOVE.L  (*+63,PC,A0.L),D0
       MOVE.L  (*-126,PC,D3.L),D0
       MOVE.L  (*,PC,D3.L),D0
+      MOVE.L  (*+67,PC,D4.W),D0
+      MOVE.L  (*-126,PC,D4.W),D0
+      MOVE.L  (*,PC,D4.W),D0
       MOVE.L  #$3D3E3F40,D0
       MOVEA.L D0,A0
       MOVEA.L A0,A0
@@ -464,18 +562,20 @@
       MOVEA.L (A0)+,A0
       MOVEA.L -(A0),A0
       MOVEA.L ($696A,A0),A0
-      MOVEA.L (-$7F96,A0),A0
       MOVEA.L ($72,A0,D7.W),A0
-      MOVEA.L ($72,A0,D7.L),A0
-      MOVEA.L ($72,A0,A0.W),A0
-      MOVEA.L ($72,A0,A0.L),A0
       MOVEA.L (-$80,A0,D7.W),A0
+      MOVEA.L ($79,A7,D7.L),A0
+      MOVEA.L (-$80,A7,D7.L),A0
+      MOVEA.L ($007B7C).W,A0
+      MOVEA.L ($7E7F80).L,A0
+      MOVEA.L (*+$7B7E,PC),A0
+      MOVEA.L (*-$7C7A,PC),A0
       MOVEA.L (*+127,PC,D7.L),A0
-      MOVEA.L (*+127,PC,A0.W),A0
-      MOVEA.L (*+127,PC,A0.L),A0
-      MOVEA.L (*+127,PC,D0.W),A0
       MOVEA.L (*-126,PC,D7.L),A0
       MOVEA.L (*,PC,D7.L),A0
+      MOVEA.L (*-125,PC,A0.W),A0
+      MOVEA.L (*,PC,A0.W),A0
+      MOVEA.L (*+1,PC,A0.W),A0
       MOVEA.L #$7D7E7F80,A0
       MOVE.L  D0,(A0)
       MOVE.L  A0,(A0)
@@ -483,18 +583,19 @@
       MOVE.L  (A0)+,(A0)
       MOVE.L  -(A0),(A0)
       MOVE.L  (-$5656,A0),(A0)
-      MOVE.L  ($00AA,A0),(A0)
       MOVE.L  (-$4E,A0,A3.W),(A0)
-      MOVE.L  (-$4E,A0,A3.L),(A0)
-      MOVE.L  (-$4E,A0,D0.W),(A0)
-      MOVE.L  (-$4E,A0,D0.L),(A0)
       MOVE.L  (0,A0,A3.W),(A0)
+      MOVE.L  (-$47,A7,A3.L),(A0)
+      MOVE.L  (0,A7,A3.L),(A0)
+      MOVE.L  ($FFBBBC).W,(A0)
+      MOVE.L  ($BEBFC0).L,(A0)
+      MOVE.L  (*-$4240,PC),(A0)
       MOVE.L  (*-65,PC,A3.L),(A0)
-      MOVE.L  (*-65,PC,A4.W),(A0)
-      MOVE.L  (*-65,PC,D0.W),(A0)
-      MOVE.L  (*-65,PC,D0.L),(A0)
       MOVE.L  (*,PC,A3.L),(A0)
       MOVE.L  (*+1,PC,A3.L),(A0)
+      MOVE.L  (*-61,PC,A4.W),(A0)
+      MOVE.L  (*,PC,A4.W),(A0)
+      MOVE.L  (*+1,PC,A4.W),(A0)
       MOVE.L  #$BDBEBFC0,(A0)
       MOVE.L  D0,(A0)+
       MOVE.L  A0,(A0)+
@@ -502,18 +603,20 @@
       MOVE.L  (A0)+,(A0)+
       MOVE.L  -(A0),(A0)+
       MOVE.L  (-$1616,A0),(A0)+
-      MOVE.L  ($00EA,A0),(A0)+
       MOVE.L  (-14,A0,A7.W),(A0)+
-      MOVE.L  (-14,A0,A7.L),(A0)+
-      MOVE.L  (-14,A0,D0.W),(A0)+
-      MOVE.L  (-14,A0,D0.L),(A0)+
       MOVE.L  (0,A0,A7.W),(A0)+
+      MOVE.L  (-7,A7,A7.L),(A0)+
+      MOVE.L  (0,A7,A7.L),(A0)+
+      MOVE.L  ($FFFBFC).W,(A0)+
+      MOVE.L  ($FEFF00).L,(A0)+
+      MOVE.L  (*-$0402,PC),(A0)+
+      MOVE.L  (*+$0306,PC),(A0)+
       MOVE.L  (*-1,PC,A7.L),(A0)+
-      MOVE.L  (*-1,PC,D0.W),(A0)+
-      MOVE.L  (*-1,PC,D0.L),(A0)+
-      MOVE.L  (*-1,PC,A0.W),(A0)+
       MOVE.L  (*,PC,A7.L),(A0)+
       MOVE.L  (*+1,PC,A7.L),(A0)+
+      MOVE.L  (*+3,PC,D0.W),(A0)+
+      MOVE.L  (*-126,PC,D0.W),(A0)+
+      MOVE.L  (*,PC,D0.W),(A0)+
       MOVE.L  #$FDFEFF00,(A0)+
       MOVE.L  D0,-(A0)
       MOVE.L  A0,-(A0)
@@ -521,162 +624,169 @@
       MOVE.L  (A0)+,-(A0)
       MOVE.L  -(A0),-(A0)
       MOVE.L  ($292A,A0),-(A0)
-      MOVE.L  (-$7FD6,A0),-(A0)
       MOVE.L  ($32,A0,D3.W),-(A0)
-      MOVE.L  ($32,A0,D3.L),-(A0)
-      MOVE.L  ($32,A0,A0.W),-(A0)
-      MOVE.L  ($32,A0,A0.L),-(A0)
       MOVE.L  (-$80,A0,D3.W),-(A0)
+      MOVE.L  ($39,A7,D3.L),-(A0)
+      MOVE.L  (-$80,A7,D3.L),-(A0)
+      MOVE.L  ($003B3C).W,-(A0)
+      MOVE.L  ($3E3F40).L,-(A0)
+      MOVE.L  (*+$3D40,PC),-(A0)
       MOVE.L  (*+63,PC,D3.L),-(A0)
-      MOVE.L  (*+63,PC,D4.W),-(A0)
-      MOVE.L  (*+63,PC,A0.W),-(A0)
-      MOVE.L  (*+63,PC,A0.L),-(A0)
       MOVE.L  (*-126,PC,D3.L),-(A0)
       MOVE.L  (*,PC,D3.L),-(A0)
+      MOVE.L  (*+67,PC,D4.W),-(A0)
+      MOVE.L  (*-126,PC,D4.W),-(A0)
+      MOVE.L  (*,PC,D4.W),-(A0)
       MOVE.L  #$3D3E3F40,-(A0)
       MOVE.L  D0,($4142,A0)
-      MOVE.L  D0,(-$7FBE,A0)
       MOVE.L  A0,($494A,A0)
-      MOVE.L  A0,(-$7FB6,A0)
       MOVE.L  (A0),($5152,A0)
-      MOVE.L  (A0),(-$7FAE,A0)
       MOVE.L  (A0)+,($595A,A0)
-      MOVE.L  (A0)+,(-$7FA6,A0)
       MOVE.L  -(A0),($6162,A0)
-      MOVE.L  -(A0),(-$7F9E,A0)
       MOVE.L  ($696A,A0),($6B6C,A0)
-      MOVE.L  (-$7F96,A0),($6B6C,A0)
-      MOVE.L  ($6868,A0),(-$7F94,A0)
+      MOVE.L  ($6969,A0),(-$7F94,A0)
       MOVE.L  ($72,A0,D7.W),($7374,A0)
-      MOVE.L  ($72,A0,D7.L),($7374,A0)
-      MOVE.L  ($72,A0,A0.W),($7374,A0)
-      MOVE.L  ($72,A0,A0.L),($7374,A0)
       MOVE.L  (-$80,A0,D7.W),($7374,A0)
-      MOVE.L  ($70,A0,D7.W),(-$7F8C,A0)
+      MOVE.L  ($71,A0,D7.W),(-$7F8C,A0)
+      MOVE.L  ($79,A7,D7.L),($7A7B,A0)
+      MOVE.L  (-$80,A7,D7.L),($7A7B,A0)
+      MOVE.L  ($78,A7,D7.L),(-$7F85,A0)
+      MOVE.L  ($007B7C).W,($7D7E,A0)
+      MOVE.L  ($007F80).W,(-$7E7E,A0)
+      MOVE.L  ($7E7F80).L,(-$7E7E,A0)
+      MOVE.L  (*+$7B7E,PC),($7D7E,A0)
+      MOVE.L  (*-$7E7C,PC),(-$7C7C,A0)
       MOVE.L  (*+127,PC,D7.L),($7E7F,A0)
-      MOVE.L  (*+127,PC,A0.W),($7E7F,A0)
-      MOVE.L  (*+127,PC,A0.L),($7E7F,A0)
-      MOVE.L  (*+127,PC,D0.W),($7E7F,A0)
       MOVE.L  (*-126,PC,D7.L),($7E7F,A0)
       MOVE.L  (*,PC,D7.L),($7E7F,A0)
-      MOVE.L  (*+125,PC,D7.L),(-$7F81,A0)
+      MOVE.L  (*+126,PC,D7.L),(-$7F81,A0)
       MOVE.L  #$7D7E7F80,(-$7E7E,A0)
       MOVE.L  D0,(-$7E,A0,A0.W)
-      MOVE.L  D0,(-$7E,A0,A0.L)
-      MOVE.L  D0,(-$7E,A0,D0.W)
-      MOVE.L  D0,(-$7E,A0,D0.L)
       MOVE.L  D0,(0,A0,A0.W)
+      MOVE.L  D7,(-$77,A0,A0.L)
+      MOVE.L  D7,(0,A0,A0.L)
       MOVE.L  A0,(-$76,A0,A0.L)
-      MOVE.L  A0,(-$76,A0,A1.W)
-      MOVE.L  A0,(-$76,A0,D0.W)
-      MOVE.L  A0,(-$76,A0,D0.L)
       MOVE.L  A0,(0,A0,A0.L)
+      MOVE.L  A7,(-$6F,A0,A1.W)
+      MOVE.L  A7,(0,A0,A1.W)
       MOVE.L  (A0),(-$6E,A0,A1.W)
-      MOVE.L  (A0),(-$6E,A0,A1.L)
-      MOVE.L  (A0),(-$6E,A0,D0.W)
-      MOVE.L  (A0),(-$6E,A0,D0.L)
       MOVE.L  (A0),(0,A0,A1.W)
+      MOVE.L  (A7),(-$67,A0,A1.L)
+      MOVE.L  (A7),(0,A0,A1.L)
       MOVE.L  (A0)+,(-$66,A0,A1.L)
-      MOVE.L  (A0)+,(-$66,A0,A2.W)
-      MOVE.L  (A0)+,(-$66,A0,D0.W)
-      MOVE.L  (A0)+,(-$66,A0,D0.L)
       MOVE.L  (A0)+,(0,A0,A1.L)
+      MOVE.L  (A7)+,(-$5F,A0,A2.W)
+      MOVE.L  (A7)+,(0,A0,A2.W)
       MOVE.L  -(A0),(-$5E,A0,A2.W)
-      MOVE.L  -(A0),(-$5E,A0,A2.L)
-      MOVE.L  -(A0),(-$5E,A0,D0.W)
-      MOVE.L  -(A0),(-$5E,A0,D0.L)
       MOVE.L  -(A0),(0,A0,A2.W)
+      MOVE.L  -(A7),(-$57,A0,A2.L)
+      MOVE.L  -(A7),(0,A0,A2.L)
       MOVE.L  (-$5656,A0),(-$54,A0,A2.L)
-      MOVE.L  ($00AA,A0),(-$54,A0,A2.L)
-      MOVE.L  (-$5758,A0),(-$54,A0,A3.W)
-      MOVE.L  (-$5758,A0),(-$54,A0,D0.W)
-      MOVE.L  (-$5758,A0),(-$54,A0,D0.L)
-      MOVE.L  ($00AF,A5),(-$4F,A0,A3.W)
+      MOVE.L  (-$5657,A0),(-$54,A0,A3.W)
+      MOVE.L  (-$5657,A0),(-$54,A0,D0.W)
+      MOVE.L  (-$5657,A0),(-$54,A0,D0.L)
+      MOVE.L  (-$5657,A0),(0,A0,A2.L)
       MOVE.L  (-$4E,A0,A3.W),(-$4C,A0,A3.W)
-      MOVE.L  (-$4E,A0,A3.L),(-$4C,A0,A3.W)
-      MOVE.L  (-$4E,A0,D0.W),(-$4C,A0,A3.W)
-      MOVE.L  (-$4E,A0,D0.L),(-$4C,A0,A3.W)
       MOVE.L  (0,A0,A3.W),(-$4C,A0,A3.W)
-      MOVE.L  (-$50,A0,A3.W),(-$4C,A0,A3.L)
-      MOVE.L  (-$50,A0,A3.W),(-$4C,A0,D0.W)
-      MOVE.L  (-$50,A0,A3.W),(-$4C,A0,D0.L)
-      MOVE.L  (-$50,A0,A3.W),(0,A0,A3.W)
-      MOVE.L  (-$49,A5,A3.L),(-$47,A0,A3.L)
-      MOVE.L  (-$49,A5,D0.W),(-$47,A0,A3.L)
-      MOVE.L  (-$49,A5,D0.L),(-$47,A0,A3.L)
+      MOVE.L  (-$4F,A0,A3.W),(-$4C,A0,A3.L)
+      MOVE.L  (-$4F,A0,A3.W),(-$4C,A0,D0.W)
+      MOVE.L  (-$4F,A0,A3.W),(-$4C,A0,D0.L)
+      MOVE.L  (-$4F,A0,A3.W),(0,A0,A3.W)
       MOVE.L  (0,A5,A3.W),(-$47,A0,A3.L)
+      MOVE.L  (-$47,A5,A3.L),(-$45,A0,A3.L)
+      MOVE.L  (0,A5,A3.L),(-$45,A0,A3.L)
+      MOVE.L  (-$48,A5,A3.L),(-$45,A0,A4.W)
+      MOVE.L  (-$48,A5,A3.L),(-$45,A0,D0.W)
+      MOVE.L  (-$48,A5,A3.L),(-$45,A0,D0.L)
+      MOVE.L  (-$48,A5,A3.L),(0,A0,A3.L)
+      MOVE.L  ($FFBBBC).W,(-$42,A0,A3.L)
+      MOVE.L  ($FFBFC0).W,(-$3E,A0,A4.W)
+      MOVE.L  ($BEBFC0).L,(-$3E,A0,A4.W)
+      MOVE.L  (*-$4442,PC),(-$42,A0,A3.L)
+      MOVE.L  (*-$3E3C,PC),(-$3C,A0,A4.W)
       MOVE.L  (*-65,PC,A3.L),(-$41,A0,A3.L)
-      MOVE.L  (*-65,PC,A4.W),(-$41,A0,A3.L)
-      MOVE.L  (*-65,PC,D0.W),(-$41,A0,A3.L)
-      MOVE.L  (*-65,PC,D0.L),(-$41,A0,A3.L)
       MOVE.L  (*,PC,A3.L),(-$41,A0,A3.L)
       MOVE.L  (*+1,PC,A3.L),(-$41,A0,A3.L)
-      MOVE.L  (*-67,PC,A3.L),(-$41,A0,A4.W)
-      MOVE.L  (*-67,PC,A3.L),(-$41,A0,D0.W)
-      MOVE.L  (*-67,PC,A3.L),(-$41,A0,D0.L)
-      MOVE.L  (*-67,PC,A3.L),(0,A0,A3.L)
+      MOVE.L  (*-66,PC,A3.L),(-$41,A0,A4.W)
+      MOVE.L  (*-66,PC,A3.L),(-$41,A0,D0.W)
+      MOVE.L  (*-66,PC,A3.L),(-$41,A0,D0.L)
+      MOVE.L  (*-66,PC,A3.L),(0,A0,A3.L)
+      MOVE.L  (*,PC,A3.L),(-$3F,A0,A4.W)
+      MOVE.L  (*+1,PC,A3.L),(-$3F,A0,A4.W)
+      MOVE.L  (*-61,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.L  (*,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.L  (*+1,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.L  (*-62,PC,A4.W),(-$3D,A0,A4.L)
+      MOVE.L  (*-62,PC,A4.W),(-$3D,A0,D0.W)
+      MOVE.L  (*-62,PC,A4.W),(-$3D,A0,D0.L)
+      MOVE.L  (*-62,PC,A4.W),(0,A0,A4.W)
       MOVE.L  #$BDBEBFC0,(-$3E,A0,A4.W)
-      MOVE.L  D2,($FFC3C4).W
-      MOVE.L  A2,($FFCBCC).W
-      MOVE.L  (A2),($FFD3D4).W
-      MOVE.L  (A2)+,($FFDBDC).W
-      MOVE.L  -(A2),($FFE3E4).W
+      MOVE.L  D0,($FFC3C4).W
+      MOVE.L  A0,($FFCBCC).W
+      MOVE.L  (A0),($FFD3D4).W
+      MOVE.L  (A0)+,($FFDBDC).W
+      MOVE.L  -(A0),($FFE3E4).W
       MOVE.L  (-$1616,A0),($FFEBEC).W
-      MOVE.L  ($00EA,A0),($FFEBEC).W
       MOVE.L  (-14,A0,A7.W),($FFF3F4).W
-      MOVE.L  (-14,A0,A7.L),($FFF3F4).W
-      MOVE.L  (-14,A0,D0.W),($FFF3F4).W
-      MOVE.L  (-14,A0,D0.L),($FFF3F4).W
       MOVE.L  (0,A0,A7.W),($FFF3F4).W
-      MOVE.L  (*+$3B3E,PC),D1
-      MOVE.L  (*-$7FC2,PC),D1
-      MOVEA.L (*+$7B7E,PC),A1
-      MOVEA.L (*-$7F82,PC),A1
-      MOVE.L  (*-$4442,PC),(A1)
-      MOVE.L  (*+$00BE,PC),(A1)
-      MOVE.L  (*-$0402,PC),(A1)+
-      MOVE.L  (*+$00FE,PC),(A1)+
-      MOVE.L  (*+$3B3E,PC),-(A1)
-      MOVE.L  (*-$7FC2,PC),-(A1)
-      MOVE.L  (*+$7B7E,PC),($7D7E,A1)
-      MOVE.L  (*+$7A7C,PC),(-$7F82,A1)
-      MOVE.L  (*-$4442,PC),(-$42,A1,A3.L)
-      MOVE.L  (*-$4544,PC),(-$42,A1,A4.W)
+      MOVE.L  (-6,A0,A7.L),($FFFBFC).W
+      MOVE.L  (0,A0,A7.L),($FFFBFC).W
+      MOVE.L  (2,A0,D0.W),($000304).W
+      MOVE.L  (-$80,A0,D0.W),($000304).W
+      MOVE.L  (10,A0,D0.L),($000B0C).W
+      MOVE.L  (-$80,A0,D0.L),($000B0C).W
+      MOVE.L  (*-$0200,PC),($FFFF00).W
+      MOVE.L  (*,PC,A7.L),($FFFF00).W
+      MOVE.L  (*+1,PC,A7.L),($FFFF00).W
+      MOVE.L  (*-126,PC,A7.L),($FFFF00).W
+      MOVE.L  (*+4,PC,D0.W),($000304).W
+      MOVE.L  (*-126,PC,D0.W),($000304).W
+      MOVE.L  (*,PC,D0.W),($000304).W
+      MOVE.L  (*+12,PC,D0.L),($000B0C).W
+      MOVE.L  (*-126,PC,D0.L),($000B0C).W
+      MOVE.L  (*,PC,D0.L),($000B0C).W
+      MOVE.L  #$FF000102,($000304).W
       MOVE.L  D0,($C2C3C4).L
       MOVE.L  A0,($CACBCC).L
       MOVE.L  (A0),($D2D3D4).L
       MOVE.L  (A0)+,($DADBDC).L
       MOVE.L  -(A0),($E2E3E4).L
-      MOVE.L  (-$1414,A2),($EEEFF0).L
-      MOVE.L  ($00EC,A2),($EEEFF0).L
-      MOVE.L  (-12,A2,A7.W),($F6F7F8).L
-      MOVE.L  (-12,A2,A7.L),($F6F7F8).L
-      MOVE.L  (-12,A2,D0.W),($F6F7F8).L
-      MOVE.L  (-12,A2,D0.L),($F6F7F8).L
-      MOVE.L  (0,A2,A7.W),($F6F7F8).L
+      MOVE.L  (-$1414,A0),($EEEFF0).L
+      MOVE.L  (-12,A0,A7.W),($F6F7F8).L
+      MOVE.L  (0,A0,A7.W),($F6F7F8).L
+      MOVE.L  (-4,A7,A7.L),($FEFF00).L
+      MOVE.L  (0,A7,A7.L),($FEFF00).L
+      MOVE.L  (4,A7,D0.W),($060708).L
+      MOVE.L  (-$80,A7,D0.W),($060708).L
+      MOVE.L  ($FFFBFC).W,($FEFF00).L
+      MOVE.L  ($FEFF00).L,($020304).L
+      MOVE.L  (*+2,PC,A7.L),($020304).L
+      MOVE.L  (*-126,PC,A7.L),($020304).L
+      MOVE.L  (*,PC,A7.L),($020304).L
+      MOVE.L  (*+6,PC,D0.W),($060708).L
+      MOVE.L  (*-126,PC,D0.W),($060708).L
+      MOVE.L  (*,PC,D0.W),($060708).L
       MOVE.L  #$FDFEFF00,($020304).L
-      MOVE.L  (*-$7F82,PC),($7D7E,A2)
+      MOVE.L  (*+$7F82,PC),(-$7E7E,A2)
       MOVE.W  D0,D0
       MOVE.W  A0,D0
       MOVE.W  (A0),D0
       MOVE.W  (A0)+,D0
       MOVE.W  -(A0),D0
       MOVE.W  ($292A,A0),D0
-      MOVE.W  (-$7FD6,A0),D0
       MOVE.W  ($32,A0,D3.W),D0
-      MOVE.W  ($32,A0,D3.L),D0
-      MOVE.W  ($32,A0,A0.W),D0
-      MOVE.W  ($32,A0,A0.L),D0
       MOVE.W  (-$80,A0,D3.W),D0
+      MOVE.W  ($39,A7,D3.L),D0
+      MOVE.W  (-$80,A7,D3.L),D0
       MOVE.W  ($00393A).W,D0
+      MOVE.W  ($3C3D3E).L,D0
       MOVE.W  (*+$3B3E,PC),D0
-      MOVE.W  (*-$7FC2,PC),D0
       MOVE.W  (*+63,PC,D3.L),D0
-      MOVE.W  (*+63,PC,D4.W),D0
-      MOVE.W  (*+63,PC,A0.W),D0
-      MOVE.W  (*+63,PC,A0.L),D0
       MOVE.W  (*-126,PC,D3.L),D0
       MOVE.W  (*,PC,D3.L),D0
+      MOVE.W  (*+67,PC,D4.W),D0
+      MOVE.W  (*-126,PC,D4.W),D0
+      MOVE.W  (*,PC,D4.W),D0
       MOVE.W  #$3D3E,D0
       MOVEA.W D0,A0
       MOVEA.W A0,A0
@@ -684,21 +794,20 @@
       MOVEA.W (A0)+,A0
       MOVEA.W -(A0),A0
       MOVEA.W ($696A,A0),A0
-      MOVEA.W (-$7F96,A0),A0
       MOVEA.W ($72,A0,D7.W),A0
-      MOVEA.W ($72,A0,D7.L),A0
-      MOVEA.W ($72,A0,A0.W),A0
-      MOVEA.W ($72,A0,A0.L),A0
       MOVEA.W (-$80,A0,D7.W),A0
+      MOVEA.W ($79,A7,D7.L),A0
+      MOVEA.W (-$80,A7,D7.L),A0
       MOVEA.W ($00797A).W,A0
+      MOVEA.W ($7C7D7E).L,A0
       MOVEA.W (*+$7B7E,PC),A0
-      MOVEA.W (*-$7F82,PC),A0
+      MOVEA.W (*-$7E7C,PC),A0
       MOVEA.W (*+127,PC,D7.L),A0
-      MOVEA.W (*+127,PC,A0.W),A0
-      MOVEA.W (*+127,PC,A0.L),A0
-      MOVEA.W (*+127,PC,D0.W),A0
       MOVEA.W (*-126,PC,D7.L),A0
       MOVEA.W (*,PC,D7.L),A0
+      MOVEA.W (*-125,PC,A0.W),A0
+      MOVEA.W (*,PC,A0.W),A0
+      MOVEA.W (*+1,PC,A0.W),A0
       MOVEA.W #$7D7E,A0
       MOVE.W  D0,(A0)
       MOVE.W  A0,(A0)
@@ -706,21 +815,19 @@
       MOVE.W  (A0)+,(A0)
       MOVE.W  -(A0),(A0)
       MOVE.W  (-$5656,A0),(A0)
-      MOVE.W  ($00AA,A0),(A0)
       MOVE.W  (-$4E,A0,A3.W),(A0)
-      MOVE.W  (-$4E,A0,A3.L),(A0)
-      MOVE.W  (-$4E,A0,D0.W),(A0)
-      MOVE.W  (-$4E,A0,D0.L),(A0)
       MOVE.W  (0,A0,A3.W),(A0)
+      MOVE.W  (-$47,A7,A3.L),(A0)
+      MOVE.W  (0,A7,A3.L),(A0)
       MOVE.W  ($FFB9BA).W,(A0)
+      MOVE.W  ($BCBDBE).L,(A0)
       MOVE.W  (*-$4442,PC),(A0)
-      MOVE.W  (*+$00BE,PC),(A0)
       MOVE.W  (*-65,PC,A3.L),(A0)
-      MOVE.W  (*-65,PC,A4.W),(A0)
-      MOVE.W  (*-65,PC,D0.W),(A0)
-      MOVE.W  (*-65,PC,D0.L),(A0)
       MOVE.W  (*,PC,A3.L),(A0)
       MOVE.W  (*+1,PC,A3.L),(A0)
+      MOVE.W  (*-61,PC,A4.W),(A0)
+      MOVE.W  (*,PC,A4.W),(A0)
+      MOVE.W  (*+1,PC,A4.W),(A0)
       MOVE.W  #$BDBE,(A0)
       MOVE.W  D0,(A0)+
       MOVE.W  A0,(A0)+
@@ -728,21 +835,21 @@
       MOVE.W  (A0)+,(A0)+
       MOVE.W  -(A0),(A0)+
       MOVE.W  (-$1616,A0),(A0)+
-      MOVE.W  ($00EA,A0),(A0)+
       MOVE.W  (-14,A0,A7.W),(A0)+
-      MOVE.W  (-14,A0,A7.L),(A0)+
-      MOVE.W  (-14,A0,D0.W),(A0)+
-      MOVE.W  (-14,A0,D0.L),(A0)+
       MOVE.W  (0,A0,A7.W),(A0)+
+      MOVE.W  (-7,A7,A7.L),(A0)+
+      MOVE.W  (0,A7,A7.L),(A0)+
       MOVE.W  ($FFF9FA).W,(A0)+
+      MOVE.W  ($FCFDFE).L,(A0)+
       MOVE.W  (*-$0402,PC),(A0)+
-      MOVE.W  (*+$00FE,PC),(A0)+
+      MOVE.W  (*,PC),(A0)+
+      MOVE.W  (*+$0104,PC),(A0)+
       MOVE.W  (*-1,PC,A7.L),(A0)+
-      MOVE.W  (*-1,PC,D0.W),(A0)+
-      MOVE.W  (*-1,PC,D0.L),(A0)+
-      MOVE.W  (*-1,PC,A0.W),(A0)+
       MOVE.W  (*,PC,A7.L),(A0)+
       MOVE.W  (*+1,PC,A7.L),(A0)+
+      MOVE.W  (*+3,PC,D0.W),(A0)+
+      MOVE.W  (*-126,PC,D0.W),(A0)+
+      MOVE.W  (*,PC,D0.W),(A0)+
       MOVE.W  #$FDFE,(A0)+
       MOVE.W  D0,-(A0)
       MOVE.W  A0,-(A0)
@@ -750,134 +857,132 @@
       MOVE.W  (A0)+,-(A0)
       MOVE.W  -(A0),-(A0)
       MOVE.W  ($292A,A0),-(A0)
-      MOVE.W  (-$7FD6,A0),-(A0)
       MOVE.W  ($32,A0,D3.W),-(A0)
-      MOVE.W  ($32,A0,D3.L),-(A0)
-      MOVE.W  ($32,A0,A0.W),-(A0)
-      MOVE.W  ($32,A0,A0.L),-(A0)
       MOVE.W  (-$80,A0,D3.W),-(A0)
+      MOVE.W  ($39,A7,D3.L),-(A0)
+      MOVE.W  (-$80,A7,D3.L),-(A0)
       MOVE.W  ($00393A).W,-(A0)
+      MOVE.W  ($3C3D3E).L,-(A0)
       MOVE.W  (*+$3B3E,PC),-(A0)
-      MOVE.W  (*-$7FC2,PC),-(A0)
       MOVE.W  (*+63,PC,D3.L),-(A0)
-      MOVE.W  (*+63,PC,D4.W),-(A0)
-      MOVE.W  (*+63,PC,A0.W),-(A0)
-      MOVE.W  (*+63,PC,A0.L),-(A0)
       MOVE.W  (*-126,PC,D3.L),-(A0)
       MOVE.W  (*,PC,D3.L),-(A0)
+      MOVE.W  (*+67,PC,D4.W),-(A0)
+      MOVE.W  (*-126,PC,D4.W),-(A0)
+      MOVE.W  (*,PC,D4.W),-(A0)
       MOVE.W  #$3D3E,-(A0)
       MOVE.W  D0,($4142,A0)
-      MOVE.W  D0,(-$7FBE,A0)
       MOVE.W  A0,($494A,A0)
-      MOVE.W  A0,(-$7FB6,A0)
       MOVE.W  (A0),($5152,A0)
-      MOVE.W  (A0),(-$7FAE,A0)
       MOVE.W  (A0)+,($595A,A0)
-      MOVE.W  (A0)+,(-$7FA6,A0)
       MOVE.W  -(A0),($6162,A0)
-      MOVE.W  -(A0),(-$7F9E,A0)
       MOVE.W  ($696A,A0),($6B6C,A0)
-      MOVE.W  (-$7F96,A0),($6B6C,A0)
-      MOVE.W  ($6868,A0),(-$7F94,A0)
+      MOVE.W  ($6969,A0),(-$7F94,A0)
       MOVE.W  ($72,A0,D7.W),($7374,A0)
-      MOVE.W  ($72,A0,D7.L),($7374,A0)
-      MOVE.W  ($72,A0,A0.W),($7374,A0)
-      MOVE.W  ($72,A0,A0.L),($7374,A0)
       MOVE.W  (-$80,A0,D7.W),($7374,A0)
-      MOVE.W  ($70,A0,D7.W),(-$7F8C,A0)
+      MOVE.W  ($71,A0,D7.W),(-$7F8C,A0)
+      MOVE.W  ($79,A7,D7.L),($7A7B,A0)
+      MOVE.W  (-$80,A7,D7.L),($7A7B,A0)
+      MOVE.W  ($78,A7,D7.L),(-$7F85,A0)
       MOVE.W  ($00797A).W,($7B7C,A0)
-      MOVE.W  ($007878).W,(-$7F84,A0)
+      MOVE.W  ($007F80).W,(-$7E7E,A0)
+      MOVE.W  ($7C7D7E).L,($7F80,A0)
+      MOVE.W  ($7E7F80).L,(-$7E7E,A0)
       MOVE.W  (*+$7B7E,PC),($7D7E,A0)
-      MOVE.W  (*-$7F82,PC),($7D7E,A0)
-      MOVE.W  (*+$7A7C,PC),(-$7F82,A0)
+      MOVE.W  (*+$7F82,PC),(-$7E7E,A0)
+      MOVE.W  (*-$7E7C,PC),(-$7C7C,A0)
       MOVE.W  (*+127,PC,D7.L),($7E7F,A0)
-      MOVE.W  (*+127,PC,A0.W),($7E7F,A0)
-      MOVE.W  (*+127,PC,A0.L),($7E7F,A0)
-      MOVE.W  (*+127,PC,D0.W),($7E7F,A0)
       MOVE.W  (*-126,PC,D7.L),($7E7F,A0)
       MOVE.W  (*,PC,D7.L),($7E7F,A0)
-      MOVE.W  (*+125,PC,D7.L),(-$7F81,A0)
+      MOVE.W  (*+126,PC,D7.L),(-$7F81,A0)
       MOVE.W  #$7D7E,($7F80,A0)
+      MOVE.W  #$7D7D,(-$7F80,A0)
       MOVE.W  D0,(-$7E,A0,A0.W)
-      MOVE.W  D0,(-$7E,A0,A0.L)
-      MOVE.W  D0,(-$7E,A0,D0.W)
-      MOVE.W  D0,(-$7E,A0,D0.L)
       MOVE.W  D0,(0,A0,A0.W)
+      MOVE.W  D7,(-$77,A0,A0.L)
+      MOVE.W  D7,(0,A0,A0.L)
       MOVE.W  A0,(-$76,A0,A0.L)
-      MOVE.W  A0,(-$76,A0,A1.W)
-      MOVE.W  A0,(-$76,A0,D0.W)
-      MOVE.W  A0,(-$76,A0,D0.L)
       MOVE.W  A0,(0,A0,A0.L)
+      MOVE.W  A7,(-$6F,A0,A1.W)
+      MOVE.W  A7,(0,A0,A1.W)
       MOVE.W  (A0),(-$6E,A0,A1.W)
-      MOVE.W  (A0),(-$6E,A0,A1.L)
-      MOVE.W  (A0),(-$6E,A0,D0.W)
-      MOVE.W  (A0),(-$6E,A0,D0.L)
       MOVE.W  (A0),(0,A0,A1.W)
+      MOVE.W  (A7),(-$67,A0,A1.L)
+      MOVE.W  (A7),(0,A0,A1.L)
       MOVE.W  (A0)+,(-$66,A0,A1.L)
-      MOVE.W  (A0)+,(-$66,A0,A2.W)
-      MOVE.W  (A0)+,(-$66,A0,D0.W)
-      MOVE.W  (A0)+,(-$66,A0,D0.L)
       MOVE.W  (A0)+,(0,A0,A1.L)
+      MOVE.W  (A7)+,(-$5F,A0,A2.W)
+      MOVE.W  (A7)+,(0,A0,A2.W)
       MOVE.W  -(A0),(-$5E,A0,A2.W)
-      MOVE.W  -(A0),(-$5E,A0,A2.L)
-      MOVE.W  -(A0),(-$5E,A0,D0.W)
-      MOVE.W  -(A0),(-$5E,A0,D0.L)
       MOVE.W  -(A0),(0,A0,A2.W)
+      MOVE.W  -(A7),(-$57,A0,A2.L)
+      MOVE.W  -(A7),(0,A0,A2.L)
       MOVE.W  (-$5656,A0),(-$54,A0,A2.L)
-      MOVE.W  ($00AA,A0),(-$54,A0,A2.L)
-      MOVE.W  (-$5758,A0),(-$54,A0,A3.W)
-      MOVE.W  (-$5758,A0),(-$54,A0,D0.W)
-      MOVE.W  (-$5758,A0),(-$54,A0,D0.L)
-      MOVE.W  ($00AF,A5),(-$4F,A0,A3.W)
+      MOVE.W  (-$5657,A0),(-$54,A0,A3.W)
+      MOVE.W  (-$5657,A0),(-$54,A0,D0.W)
+      MOVE.W  (-$5657,A0),(-$54,A0,D0.L)
+      MOVE.W  (-$5657,A0),(0,A0,A2.L)
       MOVE.W  (-$4E,A0,A3.W),(-$4C,A0,A3.W)
-      MOVE.W  (-$4E,A0,A3.L),(-$4C,A0,A3.W)
-      MOVE.W  (-$4E,A0,D0.W),(-$4C,A0,A3.W)
-      MOVE.W  (-$4E,A0,D0.L),(-$4C,A0,A3.W)
       MOVE.W  (0,A0,A3.W),(-$4C,A0,A3.W)
-      MOVE.W  (-$50,A0,A3.W),(-$4C,A0,A3.L)
-      MOVE.W  (-$50,A0,A3.W),(-$4C,A0,D0.W)
-      MOVE.W  (-$50,A0,A3.W),(-$4C,A0,D0.L)
-      MOVE.W  (-$50,A0,A3.W),(0,A0,A3.W)
-      MOVE.W  (-$49,A5,A3.L),(-$47,A0,A3.L)
-      MOVE.W  (-$49,A5,D0.W),(-$47,A0,A3.L)
-      MOVE.W  (-$49,A5,D0.L),(-$47,A0,A3.L)
+      MOVE.W  (-$4F,A0,A3.W),(-$4C,A0,A3.L)
+      MOVE.W  (-$4F,A0,A3.W),(-$4C,A0,D0.W)
+      MOVE.W  (-$4F,A0,A3.W),(-$4C,A0,D0.L)
+      MOVE.W  (-$4F,A0,A3.W),(0,A0,A3.W)
       MOVE.W  (0,A5,A3.W),(-$47,A0,A3.L)
+      MOVE.W  (-$47,A5,A3.L),(-$45,A0,A3.L)
+      MOVE.W  (0,A5,A3.L),(-$45,A0,A3.L)
+      MOVE.W  (-$48,A5,A3.L),(-$45,A0,A4.W)
+      MOVE.W  (-$48,A5,A3.L),(-$45,A0,D0.W)
+      MOVE.W  (-$48,A5,A3.L),(-$45,A0,D0.L)
+      MOVE.W  (-$48,A5,A3.L),(0,A0,A3.L)
       MOVE.W  ($FFB9BA).W,(-$44,A0,A3.L)
-      MOVE.W  ($FFB8B8).W,(-$44,A0,A4.W)
-      MOVE.W  ($FFB8B8).W,(-$44,A0,D0.W)
-      MOVE.W  ($FFB8B8).W,(-$44,A0,D0.L)
+      MOVE.W  ($FFBFC0).W,(-$3E,A0,A4.W)
+      MOVE.W  ($BCBDBE).L,(-$40,A0,A3.L)
+      MOVE.W  ($BEBFC0).L,(-$3E,A0,A4.W)
       MOVE.W  (*-$4442,PC),(-$42,A0,A3.L)
-      MOVE.W  (*+$00BE,PC),(-$42,A0,A3.L)
-      MOVE.W  (*-$4544,PC),(-$42,A0,A4.W)
-      MOVE.W  (*-$4544,PC),(-$42,A0,D0.W)
-      MOVE.W  (*-$4544,PC),(-$42,A0,D0.L)
-      MOVE.W  (*-$4544,PC),(0,A0,A3.L)
+      MOVE.W  (*-$403E,PC),(-$3E,A0,A4.W)
       MOVE.W  (*-65,PC,A3.L),(-$41,A0,A3.L)
-      MOVE.W  (*-65,PC,A4.W),(-$41,A0,A3.L)
-      MOVE.W  (*-65,PC,D0.W),(-$41,A0,A3.L)
-      MOVE.W  (*-65,PC,D0.L),(-$41,A0,A3.L)
       MOVE.W  (*,PC,A3.L),(-$41,A0,A3.L)
       MOVE.W  (*+1,PC,A3.L),(-$41,A0,A3.L)
-      MOVE.W  (*-67,PC,A3.L),(-$41,A0,A4.W)
-      MOVE.W  (*-67,PC,A3.L),(-$41,A0,D0.W)
-      MOVE.W  (*-67,PC,A3.L),(-$41,A0,D0.L)
-      MOVE.W  (*-67,PC,A3.L),(0,A0,A3.L)
+      MOVE.W  (*-66,PC,A3.L),(-$41,A0,A4.W)
+      MOVE.W  (*-66,PC,A3.L),(-$41,A0,D0.W)
+      MOVE.W  (*-66,PC,A3.L),(-$41,A0,D0.L)
+      MOVE.W  (*-66,PC,A3.L),(0,A0,A3.L)
+      MOVE.W  (*,PC,A3.L),(-$3F,A0,A4.W)
+      MOVE.W  (*+1,PC,A3.L),(-$3F,A0,A4.W)
+      MOVE.W  (*-61,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.W  (*,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.W  (*+1,PC,A4.W),(-$3D,A0,A4.W)
+      MOVE.W  (*-62,PC,A4.W),(-$3D,A0,A4.L)
+      MOVE.W  (*-62,PC,A4.W),(-$3D,A0,D0.W)
+      MOVE.W  (*-62,PC,A4.W),(-$3D,A0,D0.L)
+      MOVE.W  (*-62,PC,A4.W),(0,A0,A4.W)
       MOVE.W  #$BDBE,(-$40,A0,A3.L)
+      MOVE.W  #$BDBD,(-$40,A0,A4.W)
+      MOVE.W  #$BDBD,(-$40,A0,D0.W)
+      MOVE.W  #$BDBD,(-$40,A0,D0.L)
+      MOVE.W  #$BDBD,(0,A0,A3.L)
       MOVE.W  D0,($FFC1C2).W
       MOVE.W  A0,($FFC9CA).W
       MOVE.W  (A0),($FFD1D2).W
       MOVE.W  (A0)+,($FFD9DA).W
       MOVE.W  -(A0),($FFE1E2).W
       MOVE.W  (-$1616,A0),($FFEBEC).W
-      MOVE.W  ($00EA,A0),($FFEBEC).W
       MOVE.W  (-14,A0,A7.W),($FFF3F4).W
-      MOVE.W  (-14,A0,A7.L),($FFF3F4).W
-      MOVE.W  (-14,A0,D0.W),($FFF3F4).W
-      MOVE.W  (-14,A0,D0.L),($FFF3F4).W
       MOVE.W  (0,A0,A7.W),($FFF3F4).W
+      MOVE.W  (-6,A7,A7.L),($FFFBFC).W
+      MOVE.W  (0,A7,A7.L),($FFFBFC).W
       MOVE.W  ($FFF9FA).W,($FFFBFC).W
+      MOVE.W  ($FCFDFE).L,($FFFF00).W
       MOVE.W  (*-$0402,PC),($FFFDFE).W
-      MOVE.W  (*+$00FE,PC),($FFFDFE).W
+      MOVE.W  (*,PC),($000102).W
+      MOVE.W  (*+$0104,PC),($000304).W
+      MOVE.W  (*,PC,A7.L),($FFFF00).W
+      MOVE.W  (*+1,PC,A7.L),($FFFF00).W
+      MOVE.W  (*-126,PC,A7.L),($FFFF00).W
+      MOVE.W  (*+4,PC,D0.W),($000304).W
+      MOVE.W  (*-126,PC,D0.W),($000304).W
+      MOVE.W  (*,PC,D0.W),($000304).W
       MOVE.W  #$FDFE,($FFFF00).W
       MOVE.W  D0,($C2C3C4).L
       MOVE.W  A0,($CACBCC).L
@@ -885,27 +990,31 @@
       MOVE.W  (A0)+,($DADBDC).L
       MOVE.W  -(A0),($E2E3E4).L
       MOVE.W  (-$1616,A0),($ECEDEE).L
-      MOVE.W  ($00EA,A0),($ECEDEE).L
       MOVE.W  (-14,A0,A7.W),($F4F5F6).L
-      MOVE.W  (-14,A0,A7.L),($F4F5F6).L
-      MOVE.W  (-14,A0,D0.W),($F4F5F6).L
-      MOVE.W  (-14,A0,D0.L),($F4F5F6).L
       MOVE.W  (0,A0,A7.W),($F4F5F6).L
+      MOVE.W  (-6,A7,A7.L),($FCFDFE).L
+      MOVE.W  (0,A7,A7.L),($FCFDFE).L
       MOVE.W  ($FFF9FA).W,($FCFDFE).L
+      MOVE.W  ($FCFDFE).L,($000102).L
       MOVE.W  (*-$0402,PC),($FEFF00).L
-      MOVE.W  (*+$00FE,PC),($FEFF00).L
+      MOVE.W  (*,PC),($020304).L
+      MOVE.W  (*+$0104,PC),($040506).L
+      MOVE.W  (*,PC,A7.L),($000102).L
+      MOVE.W  (*+1,PC,A7.L),($000102).L
+      MOVE.W  (*-126,PC,A7.L),($000102).L
+      MOVE.W  (*+4,PC,D0.W),($040506).L
+      MOVE.W  (*-126,PC,D0.W),($040506).L
+      MOVE.W  (*,PC,D0.W),($040506).L
       MOVE.W  #$FDFE,($000102).L
       NEGX.B  D0
       NEGX.B  (A0)
       NEGX.B  (A0)+
       NEGX.B  -(A0)
       NEGX.B  ($292A,A0)
-      NEGX.B  (-$7FD6,A0)
       NEGX.B  ($32,A0,D3.W)
-      NEGX.B  ($32,A0,D3.L)
-      NEGX.B  ($32,A0,A0.W)
-      NEGX.B  ($32,A0,A0.L)
       NEGX.B  (-$80,A0,D3.W)
+      NEGX.B  ($39,A7,D3.L)
+      NEGX.B  (-$80,A7,D3.L)
       NEGX.B  ($00393A).W
       NEGX.B  ($3B3C3D).L
       NEGX.W  D0
@@ -913,84 +1022,78 @@
       NEGX.W  (A0)+
       NEGX.W  -(A0)
       NEGX.W  ($696A,A0)
-      NEGX.W  (-$7F96,A0)
       NEGX.W  ($72,A0,D7.W)
-      NEGX.W  ($72,A0,D7.L)
-      NEGX.W  ($72,A0,A0.W)
-      NEGX.W  ($72,A0,A0.L)
       NEGX.W  (-$80,A0,D7.W)
+      NEGX.W  ($79,A7,D7.L)
+      NEGX.W  (-$80,A7,D7.L)
       NEGX.W  ($00797A).W
+      NEGX.W  ($7C7D7E).L
       NEGX.L  D0
       NEGX.L  (A0)
       NEGX.L  (A0)+
       NEGX.L  -(A0)
       NEGX.L  (-$5656,A0)
-      NEGX.L  ($00AA,A0)
       NEGX.L  (-$4E,A0,A3.W)
-      NEGX.L  (-$4E,A0,A3.L)
-      NEGX.L  (-$4E,A0,D0.W)
-      NEGX.L  (-$4E,A0,D0.L)
       NEGX.L  (0,A0,A3.W)
+      NEGX.L  (-$47,A7,A3.L)
+      NEGX.L  (0,A7,A3.L)
+      NEGX.L  ($FFBBBC).W
+      NEGX.L  ($BEBFC0).L
       MOVE    SR,D0
       MOVE    SR,(A0)
       MOVE    SR,(A0)+
       MOVE    SR,-(A0)
       MOVE    SR,(-$1616,A0)
-      MOVE    SR,($00EA,A0)
       MOVE    SR,(-14,A0,A7.W)
-      MOVE    SR,(-14,A0,A7.L)
-      MOVE    SR,(-14,A0,D0.W)
-      MOVE    SR,(-14,A0,D0.L)
       MOVE    SR,(0,A0,A7.W)
+      MOVE    SR,(-7,A7,A7.L)
+      MOVE    SR,(0,A7,A7.L)
       MOVE    SR,($FFF9FA).W
+      MOVE    SR,($FCFDFE).L
       CHK.W   D0,D0
       CHK.W   (A0),D0
       CHK.W   (A0)+,D0
       CHK.W   -(A0),D0
       CHK.W   (-$5656,A0),D0
-      CHK.W   ($00AA,A0),D0
       CHK.W   (-$4E,A0,A3.W),D0
-      CHK.W   (-$4E,A0,A3.L),D0
-      CHK.W   (-$4E,A0,D0.W),D0
-      CHK.W   (-$4E,A0,D0.L),D0
       CHK.W   (0,A0,A3.W),D0
+      CHK.W   (-$47,A7,A3.L),D0
+      CHK.W   (0,A7,A3.L),D0
       CHK.W   ($FFB9BA).W,D0
+      CHK.W   ($BCBDBE).L,D0
       CHK.W   (*-$4442,PC),D0
-      CHK.W   (*+$00BE,PC),D0
       CHK.W   (*-65,PC,A3.L),D0
-      CHK.W   (*-65,PC,A4.W),D0
-      CHK.W   (*-65,PC,D0.W),D0
-      CHK.W   (*-65,PC,D0.L),D0
       CHK.W   (*,PC,A3.L),D0
       CHK.W   (*+1,PC,A3.L),D0
+      CHK.W   (*-61,PC,A4.W),D0
+      CHK.W   (*,PC,A4.W),D0
+      CHK.W   (*+1,PC,A4.W),D0
       CHK.W   #$BDBE,D0
       LEA     (A0),A0
       LEA     (-$1616,A0),A0
-      LEA     ($00EA,A0),A0
       LEA     (-14,A0,A7.W),A0
-      LEA     (-14,A0,A7.L),A0
-      LEA     (-14,A0,D0.W),A0
-      LEA     (-14,A0,D0.L),A0
       LEA     (0,A0,A7.W),A0
+      LEA     (-7,A7,A7.L),A0
+      LEA     (0,A7,A7.L),A0
+      LEA     ($FFFBFC).W,A0
+      LEA     ($FEFF00).L,A0
       LEA     (*-$0402,PC),A0
-      LEA     (*+$00FE,PC),A0
+      LEA     (*+$0306,PC),A0
       LEA     (*-1,PC,A7.L),A0
-      LEA     (*-1,PC,D0.W),A0
-      LEA     (*-1,PC,D0.L),A0
-      LEA     (*-1,PC,A0.W),A0
       LEA     (*,PC,A7.L),A0
       LEA     (*+1,PC,A7.L),A0
+      LEA     (*+3,PC,D0.W),A0
+      LEA     (*-126,PC,D0.W),A0
+      LEA     (*,PC,D0.W),A0
       CLR.B   D0
       CLR.B   (A0)
       CLR.B   (A0)+
       CLR.B   -(A0)
       CLR.B   ($292A,A0)
-      CLR.B   (-$7FD6,A0)
       CLR.B   ($32,A0,D3.W)
-      CLR.B   ($32,A0,D3.L)
-      CLR.B   ($32,A0,A0.W)
-      CLR.B   ($32,A0,A0.L)
       CLR.B   (-$80,A0,D3.W)
+      CLR.B   ($39,A7,D3.L)
+      CLR.B   (-$80,A7,D3.L)
       CLR.B   ($00393A).W
       CLR.B   ($3B3C3D).L
       CLR.W   D0
@@ -998,35 +1101,32 @@
       CLR.W   (A0)+
       CLR.W   -(A0)
       CLR.W   ($696A,A0)
-      CLR.W   (-$7F96,A0)
       CLR.W   ($72,A0,D7.W)
-      CLR.W   ($72,A0,D7.L)
-      CLR.W   ($72,A0,A0.W)
-      CLR.W   ($72,A0,A0.L)
       CLR.W   (-$80,A0,D7.W)
+      CLR.W   ($79,A7,D7.L)
+      CLR.W   (-$80,A7,D7.L)
       CLR.W   ($00797A).W
+      CLR.W   ($7C7D7E).L
       CLR.L   D0
       CLR.L   (A0)
       CLR.L   (A0)+
       CLR.L   -(A0)
       CLR.L   (-$5656,A0)
-      CLR.L   ($00AA,A0)
       CLR.L   (-$4E,A0,A3.W)
-      CLR.L   (-$4E,A0,A3.L)
-      CLR.L   (-$4E,A0,D0.W)
-      CLR.L   (-$4E,A0,D0.L)
       CLR.L   (0,A0,A3.W)
+      CLR.L   (-$47,A7,A3.L)
+      CLR.L   (0,A7,A3.L)
+      CLR.L   ($FFBBBC).W
+      CLR.L   ($BEBFC0).L
       NEG.B   D0
       NEG.B   (A0)
       NEG.B   (A0)+
       NEG.B   -(A0)
       NEG.B   ($292A,A0)
-      NEG.B   (-$7FD6,A0)
       NEG.B   ($32,A0,D3.W)
-      NEG.B   ($32,A0,D3.L)
-      NEG.B   ($32,A0,A0.W)
-      NEG.B   ($32,A0,A0.L)
       NEG.B   (-$80,A0,D3.W)
+      NEG.B   ($39,A7,D3.L)
+      NEG.B   (-$80,A7,D3.L)
       NEG.B   ($00393A).W
       NEG.B   ($3B3C3D).L
       NEG.W   D0
@@ -1034,56 +1134,53 @@
       NEG.W   (A0)+
       NEG.W   -(A0)
       NEG.W   ($696A,A0)
-      NEG.W   (-$7F96,A0)
       NEG.W   ($72,A0,D7.W)
-      NEG.W   ($72,A0,D7.L)
-      NEG.W   ($72,A0,A0.W)
-      NEG.W   ($72,A0,A0.L)
       NEG.W   (-$80,A0,D7.W)
+      NEG.W   ($79,A7,D7.L)
+      NEG.W   (-$80,A7,D7.L)
       NEG.W   ($00797A).W
+      NEG.W   ($7C7D7E).L
       NEG.L   D0
       NEG.L   (A0)
       NEG.L   (A0)+
       NEG.L   -(A0)
       NEG.L   (-$5656,A0)
-      NEG.L   ($00AA,A0)
       NEG.L   (-$4E,A0,A3.W)
-      NEG.L   (-$4E,A0,A3.L)
-      NEG.L   (-$4E,A0,D0.W)
-      NEG.L   (-$4E,A0,D0.L)
       NEG.L   (0,A0,A3.W)
+      NEG.L   (-$47,A7,A3.L)
+      NEG.L   (0,A7,A3.L)
+      NEG.L   ($FFBBBC).W
+      NEG.L   ($BEBFC0).L
       MOVE    D0,CCR
       MOVE    (A0),CCR
       MOVE    (A0)+,CCR
       MOVE    -(A0),CCR
       MOVE    (-$1616,A0),CCR
-      MOVE    ($00EA,A0),CCR
       MOVE    (-14,A0,A7.W),CCR
-      MOVE    (-14,A0,A7.L),CCR
-      MOVE    (-14,A0,D0.W),CCR
-      MOVE    (-14,A0,D0.L),CCR
       MOVE    (0,A0,A7.W),CCR
+      MOVE    (-7,A7,A7.L),CCR
+      MOVE    (0,A7,A7.L),CCR
       MOVE    ($FFF9FA).W,CCR
+      MOVE    ($FCFDFE).L,CCR
       MOVE    (*-$0402,PC),CCR
-      MOVE    (*+$00FE,PC),CCR
+      MOVE    (*,PC),CCR
+      MOVE    (*+$0104,PC),CCR
       MOVE    (*-1,PC,A7.L),CCR
-      MOVE    (*-1,PC,D0.W),CCR
-      MOVE    (*-1,PC,D0.L),CCR
-      MOVE    (*-1,PC,A0.W),CCR
       MOVE    (*,PC,A7.L),CCR
       MOVE    (*+1,PC,A7.L),CCR
+      MOVE    (*+3,PC,D0.W),CCR
+      MOVE    (*-126,PC,D0.W),CCR
+      MOVE    (*,PC,D0.W),CCR
       MOVE    #$FE,CCR
       NOT.B   D0
       NOT.B   (A0)
       NOT.B   (A0)+
       NOT.B   -(A0)
       NOT.B   ($292A,A0)
-      NOT.B   (-$7FD6,A0)
       NOT.B   ($32,A0,D3.W)
-      NOT.B   ($32,A0,D3.L)
-      NOT.B   ($32,A0,A0.W)
-      NOT.B   ($32,A0,A0.L)
       NOT.B   (-$80,A0,D3.W)
+      NOT.B   ($39,A7,D3.L)
+      NOT.B   (-$80,A7,D3.L)
       NOT.B   ($00393A).W
       NOT.B   ($3B3C3D).L
       NOT.W   D0
@@ -1091,1922 +1188,3629 @@
       NOT.W   (A0)+
       NOT.W   -(A0)
       NOT.W   ($696A,A0)
-      NOT.W   (-$7F96,A0)
       NOT.W   ($72,A0,D7.W)
-      NOT.W   ($72,A0,D7.L)
-      NOT.W   ($72,A0,A0.W)
-      NOT.W   ($72,A0,A0.L)
       NOT.W   (-$80,A0,D7.W)
+      NOT.W   ($79,A7,D7.L)
+      NOT.W   (-$80,A7,D7.L)
       NOT.W   ($00797A).W
+      NOT.W   ($7C7D7E).L
       NOT.L   D0
       NOT.L   (A0)
       NOT.L   (A0)+
       NOT.L   -(A0)
       NOT.L   (-$5656,A0)
-      NOT.L   ($00AA,A0)
       NOT.L   (-$4E,A0,A3.W)
-      NOT.L   (-$4E,A0,A3.L)
-      NOT.L   (-$4E,A0,D0.W)
-      NOT.L   (-$4E,A0,D0.L)
       NOT.L   (0,A0,A3.W)
+      NOT.L   (-$47,A7,A3.L)
+      NOT.L   (0,A7,A3.L)
+      NOT.L   ($FFBBBC).W
+      NOT.L   ($BEBFC0).L
       MOVE    D0,SR
       MOVE    (A0),SR
       MOVE    (A0)+,SR
       MOVE    -(A0),SR
       MOVE    (-$1616,A0),SR
-      MOVE    ($00EA,A0),SR
       MOVE    (-14,A0,A7.W),SR
-      MOVE    (-14,A0,A7.L),SR
-      MOVE    (-14,A0,D0.W),SR
-      MOVE    (-14,A0,D0.L),SR
       MOVE    (0,A0,A7.W),SR
+      MOVE    (-7,A7,A7.L),SR
+      MOVE    (0,A7,A7.L),SR
       MOVE    ($FFF9FA).W,SR
+      MOVE    ($FCFDFE).L,SR
       MOVE    (*-$0402,PC),SR
-      MOVE    (*+$00FE,PC),SR
+      MOVE    (*,PC),SR
+      MOVE    (*+$0104,PC),SR
       MOVE    (*-1,PC,A7.L),SR
-      MOVE    (*-1,PC,D0.W),SR
-      MOVE    (*-1,PC,D0.L),SR
-      MOVE    (*-1,PC,A0.W),SR
       MOVE    (*,PC,A7.L),SR
       MOVE    (*+1,PC,A7.L),SR
+      MOVE    (*+3,PC,D0.W),SR
+      MOVE    (*-126,PC,D0.W),SR
+      MOVE    (*,PC,D0.W),SR
       MOVE    #$FDFE,SR
       NBCD    D0
       NBCD    (A0)
       NBCD    (A0)+
       NBCD    -(A0)
       NBCD    ($292A,A0)
-      NBCD    (-$7FD6,A0)
       NBCD    ($32,A0,D3.W)
-      NBCD    ($32,A0,D3.L)
-      NBCD    ($32,A0,A0.W)
-      NBCD    ($32,A0,A0.L)
       NBCD    (-$80,A0,D3.W)
+      NBCD    ($39,A7,D3.L)
+      NBCD    (-$80,A7,D3.L)
       NBCD    ($00393A).W
       NBCD    ($3B3C3D).L
       SWAP    D0
       PEA     (A0)
       PEA     ($696A,A0)
-      PEA     (-$7F96,A0)
       PEA     ($72,A0,D7.W)
-      PEA     ($72,A0,D7.L)
-      PEA     ($72,A0,A0.W)
-      PEA     ($72,A0,A0.L)
       PEA     (-$80,A0,D7.W)
-      PEA     (*+$7B7E,PC)
-      PEA     (*-$7F82,PC)
+      PEA     ($79,A7,D7.L)
+      PEA     (-$80,A7,D7.L)
+      PEA     ($007B7C).W
+      PEA     ($7E7F80).L
+      PEA     (*+$7D80,PC)
+      PEA     (*-$7E7C,PC)
       PEA     (*+127,PC,D7.L)
-      PEA     (*+127,PC,A0.W)
-      PEA     (*+127,PC,A0.L)
-      PEA     (*+127,PC,D0.W)
       PEA     (*-126,PC,D7.L)
       PEA     (*,PC,D7.L)
+      PEA     (*-125,PC,A0.W)
+      PEA     (*,PC,A0.W)
+      PEA     (*+1,PC,A0.W)
       EXT.W   D0
       MOVEM.W D1/D4/D7-A0/A4/A7,(A0)
-      MOVEM.W D1/D4/D7/A1/A4/A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A2/A4/A7,(A0)
-      MOVEM.W D1/D4/D7/A1-A2/A4/A7,(A0)
-      MOVEM.W D1/D4/D7/A3-A4/A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A3-A4/A7,(A0)
-      MOVEM.W D1/D4/D7/A1/A3-A4/A7,(A0)
-      MOVEM.W D1/D4/D7-A4/A7,(A0)
-      MOVEM.W D1/D4/D7/A5/A7,(A0)
-      MOVEM.W D1/D4/D7/A1/A3/A5/A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A2-A3/A5/A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A2/A4-A5/A7,(A0)
-      MOVEM.W D1/D4/D7/A1-A2/A4-A5/A7,(A0)
-      MOVEM.W D1/D4/D7/A6-A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A6-A7,(A0)
-      MOVEM.W D1/D4/D7/A1/A6-A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A2/A6-A7,(A0)
-      MOVEM.W D1/D4/D7/A1-A2/A6-A7,(A0)
-      MOVEM.W D1/D4/D7/A1/A3/A6-A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A2-A3/A6-A7,(A0)
-      MOVEM.W D1/D4/D7-A0/A2/A4/A6-A7,(A0)
-      MOVEM.W D1/D4/D7/A1-A2/A4/A6-A7,(A0)
-      MOVEM.W D1/D4/D7/A1/A3-A4/A6-A7,(A0)
-      MOVEM.W D1/D4/D7-A7,(A0)
-      MOVEM.W D1/D4/D7,(A0)
-      MOVEM.W D1/D4/D7/A1,(A0)
-      MOVEM.W D0-D1/D4/D7/A4/A7,(A0)
-      MOVEM.W D0/D2/D4/D7/A4/A7,(A0)
-      MOVEM.W D3-D4/D7/A4/A7,(A0)
-      MOVEM.W D0/D3-D4/D7/A4/A7,(A0)
-      MOVEM.W D0-D1/D3-D4/D7/A4/A7,(A0)
-      MOVEM.W D5/D7/A4/A7,(A0)
-      MOVEM.W D0-D1/D3/D5/D7/A4/A7,(A0)
-      MOVEM.W D0/D2-D3/D5/D7/A4/A7,(A0)
-      MOVEM.W D0/D2/D4-D5/D7/A4/A7,(A0)
-      MOVEM.W D6-D7/A4/A7,(A0)
-      MOVEM.W D0/D6-D7/A4/A7,(A0)
-      MOVEM.W D0-D1/D6-D7/A4/A7,(A0)
-      MOVEM.W D0/D2/D6-D7/A4/A7,(A0)
-      MOVEM.W D0-D1/D3/D6-D7/A4/A7,(A0)
-      MOVEM.W D0/D2-D3/D6-D7/A4/A7,(A0)
-      MOVEM.W D0/D2/D4/D6-D7/A4/A7,(A0)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A4/A7,(A0)
-      MOVEM.W A4/A7,(A0)
-      MOVEM.W D0/A4/A7,(A0)
-      MOVEM.W D0-D1/D4/D7/A1/A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A1/A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A2/A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1-A2/A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A3-A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A3-A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1/A3-A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A4/A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1/A3/A5/A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A2-A3/A5/A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A2/A4-A5/A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1-A2/A4-A5/A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A2/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1-A2/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1/A3/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A2-A3/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A0/A2/A4/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1-A2/A4/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1/A3-A4/A6-A7,(A1)
-      MOVEM.W D0-D1/D4/D7-A7,(A1)
-      MOVEM.W D0-D1/D4/D7,(A1)
-      MOVEM.W D0-D1/D4/D7/A1,(A1)
-      MOVEM.W D0/D2/D4/D7-A0/A4/A7,(A1)
-      MOVEM.W D3-D4/D7-A0/A4/A7,(A1)
-      MOVEM.W D0/D3-D4/D7-A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3-D4/D7-A0/A4/A7,(A1)
-      MOVEM.W D5/D7-A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A4/A7,(A1)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A4/A7,(A1)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A4/A7,(A1)
-      MOVEM.W D6-A0/A4/A7,(A1)
-      MOVEM.W A0/A4/A7,(A1)
-      MOVEM.W D0/A0/A4/A7,(A1)
-      MOVEM.W D0-D1/A0/A4/A7,(A1)
-      MOVEM.W D0/D2/A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3/A0/A4/A7,(A1)
-      MOVEM.W D0/D2-D3/A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3-D4/A0/A4/A7,(A1)
-      MOVEM.W D0/D2-D3/D5/A0/A4/A7,(A1)
-      MOVEM.W D0/D2/D4-D5/A0/A4/A7,(A1)
-      MOVEM.W D0/D2/D4/D6/A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A4/A7,(A1)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A4/A7,(A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A4/A7,(A2)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A4/A7,(A2)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A4/A7,(A2)
-      MOVEM.W D0/D2/D4/D6-D7/A1/A4/A7,(A2)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A4/A7,(A2)
-      MOVEM.W D0/D2/D4/D7-A0/A2/A4/A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1-A2/A4/A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A3-A4/A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A3-A4/A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1/A3-A4/A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A4/A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1/A3/A5/A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A2-A3/A5/A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A2/A4-A5/A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1-A2/A4-A5/A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A2/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1-A2/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1/A3/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A2-A3/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A0/A2/A4/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1-A2/A4/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1/A3-A4/A6-A7,(A3)
-      MOVEM.W D0/D2/D4/D7-A7,(A3)
-      MOVEM.W D0/D2/D4/D7,(A3)
-      MOVEM.W D0/D2/D4/D7/A1,(A3)
-      MOVEM.W A0-A1/A4/A7,(A3)
-      MOVEM.W D0/A0-A1/A4/A7,(A3)
-      MOVEM.W D0-D1/A0-A1/A4/A7,(A3)
-      MOVEM.W D0/D2/A0-A1/A4/A7,(A3)
-      MOVEM.W D0-D1/D3/A0-A1/A4/A7,(A3)
-      MOVEM.W D0/D2-D3/A0-A1/A4/A7,(A3)
-      MOVEM.W D0-D1/D3-D4/A0-A1/A4/A7,(A3)
-      MOVEM.W D0/D2-D3/D5/A0-A1/A4/A7,(A3)
-      MOVEM.W D0/D2/D4-D5/A0-A1/A4/A7,(A3)
-      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A4/A7,(A3)
-      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A4/A7,(A3)
-      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A4/A7,(A3)
-      MOVEM.W D3-D4/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D3-D4/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/D3-D4/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D5/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A7,(A5)
-      MOVEM.W D6-A0/A2/A4/A7,(A5)
-      MOVEM.W A0/A2/A4/A7,(A5)
-      MOVEM.W D0/A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2/A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/D3/A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2-D3/A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/D3-D4/A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2-D3/D5/A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2/D4-D5/A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4/A7,(A5)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4/A7,(A5)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4/A7,(A5)
-      MOVEM.W D3-D4/D7/A3-A4/A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A3-A4/A7,(A6)
-      MOVEM.W D3-D4/D7/A1/A3-A4/A7,(A6)
-      MOVEM.W D3-D4/D7-A4/A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A2-A3/A5/A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A2/A4-A5/A7,(A6)
-      MOVEM.W D3-D4/D7/A1-A2/A4-A5/A7,(A6)
-      MOVEM.W D3-D4/D7/A6-A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A6-A7,(A6)
-      MOVEM.W D3-D4/D7/A1/A6-A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A2/A6-A7,(A6)
-      MOVEM.W D3-D4/D7/A1-A2/A6-A7,(A6)
-      MOVEM.W D3-D4/D7/A1/A3/A6-A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A2-A3/A6-A7,(A6)
-      MOVEM.W D3-D4/D7-A0/A2/A4/A6-A7,(A6)
-      MOVEM.W D3-D4/D7/A1-A2/A4/A6-A7,(A6)
-      MOVEM.W D3-D4/D7/A1/A3-A4/A6-A7,(A6)
-      MOVEM.W D3-D4/D7-A7,(A6)
-      MOVEM.W D3-D4/D7,(A6)
-      MOVEM.W D3-D4/D7/A1,(A6)
-      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4/A7,(A6)
-      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4/A7,(A6)
-      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A7,(A6)
-      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4/A7,(A6)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4/A7,(A6)
-      MOVEM.W D0/D3-D4/D7/A3-A4/A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A3-A4/A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1/A3-A4/A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A4/A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A2-A3/A5/A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A2/A4-A5/A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1-A2/A4-A5/A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A2/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1-A2/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1/A3/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A2-A3/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A0/A2/A4/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1-A2/A4/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1/A3-A4/A6-A7,(A7)
-      MOVEM.W D0/D3-D4/D7-A7,(A7)
-      MOVEM.W D0/D3-D4/D7,(A7)
-      MOVEM.W D0/D3-D4/D7/A1,(A7)
+      MOVEM.W D0-D1/D4/D7-A0/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D7-A0/A4/A7,(A0)
+      MOVEM.W D3-D4/D7-A0/A4/A7,(A0)
+      MOVEM.W D0/D3-D4/D7-A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D7-A0/A4/A7,(A0)
+      MOVEM.W D5/D7-A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A4/A7,(A0)
+      MOVEM.W D6-A0/A4/A7,(A0)
+      MOVEM.W A0/A4/A7,(A0)
+      MOVEM.W D0/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/A0/A4/A7,(A0)
+      MOVEM.W D0/D2/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A4/A7,(A0)
+      MOVEM.W A0-A1/A4/A7,(A0)
+      MOVEM.W D0/A0-A1/A4/A7,(A0)
+      MOVEM.W D0-D1/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2/A0-A1/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/A0-A1/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A4/A7,(A0)
+      MOVEM.W D1-D2/D4/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D3-D4/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D3-D4/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D5/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D5/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A7,(A0)
+      MOVEM.W D6-A0/A2/A4/A7,(A0)
+      MOVEM.W A0/A2/A4/A7,(A0)
+      MOVEM.W D0/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4/A7,(A0)
+      MOVEM.W D0/D3-D4/D7/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D7/A3-A4/A7,(A0)
+      MOVEM.W D2-D4/D7/A3-A4/A7,(A0)
+      MOVEM.W D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A3-A4/A7,(A0)
+      MOVEM.W D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A3-A4/A7,(A0)
+      MOVEM.W A3-A4/A7,(A0)
+      MOVEM.W D0/A3-A4/A7,(A0)
+      MOVEM.W D1/D3-D4/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D2-D4/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A3-A4/A7,(A0)
+      MOVEM.W D6-A0/A3-A4/A7,(A0)
+      MOVEM.W A0/A3-A4/A7,(A0)
+      MOVEM.W D0/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3-A4/A7,(A0)
+      MOVEM.W A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3-A4/A7,(A0)
+      MOVEM.W D5/D7-A4/A7,(A0)
+      MOVEM.W D0/D5/D7-A4/A7,(A0)
+      MOVEM.W D0-D1/D5/D7-A4/A7,(A0)
+      MOVEM.W D0/D2/D5/D7-A4/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A4/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A4/A7,(A0)
+      MOVEM.W D4-D5/D7-A4/A7,(A0)
+      MOVEM.W D0/D4-D5/D7-A4/A7,(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A4/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A4/A7,(A0)
+      MOVEM.W D6-A4/A7,(A0)
+      MOVEM.W D0/D5/D7/A5/A7,(A0)
+      MOVEM.W D0-D1/D5/D7/A5/A7,(A0)
+      MOVEM.W D0/D2/D5/D7/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A5/A7,(A0)
+      MOVEM.W D4-D5/D7/A5/A7,(A0)
+      MOVEM.W D0/D4-D5/D7/A5/A7,(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A5/A7,(A0)
+      MOVEM.W D6-D7/A5/A7,(A0)
+      MOVEM.W D0/D6-D7/A5/A7,(A0)
+      MOVEM.W D0-D1/D6-D7/A5/A7,(A0)
+      MOVEM.W D0/D2/D6-D7/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D6-D7/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A5/A7,(A0)
+      MOVEM.W A5/A7,(A0)
+      MOVEM.W D0/A5/A7,(A0)
+      MOVEM.W D0/D2/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3/A5/A7,(A0)
+      MOVEM.W A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3/A5/A7,(A0)
+      MOVEM.W D1-D3/D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D4-D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D4-D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D6-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D6-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D6-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5/A7,(A0)
+      MOVEM.W D1-D2/D4-D5/D7-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D3-D5/D7-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D3-D5/D7-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D6-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D6-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D6-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D6-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4-A5/A7,(A0)
+      MOVEM.W D0/D6-D7/A6-A7,(A0)
+      MOVEM.W D0-D1/D6-D7/A6-A7,(A0)
+      MOVEM.W D0/D2/D6-D7/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D6-D7/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A6-A7,(A0)
+      MOVEM.W D5-D7/A6-A7,(A0)
+      MOVEM.W A6-A7,(A0)
+      MOVEM.W D0/A6-A7,(A0)
+      MOVEM.W D0/D2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A6-A7,(A0)
+      MOVEM.W D1/D6-A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D6-A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D6-A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D6-A0/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D6-A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A6-A7,(A0)
+      MOVEM.W D5-A0/A6-A7,(A0)
+      MOVEM.W A0/A6-A7,(A0)
+      MOVEM.W D0/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/A0/A6-A7,(A0)
+      MOVEM.W D0/D2/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A6-A7,(A0)
+      MOVEM.W A0-A1/A6-A7,(A0)
+      MOVEM.W D0/A0-A1/A6-A7,(A0)
+      MOVEM.W D0-D1/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2/A0-A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0-A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A6-A7,(A0)
+      MOVEM.W D1-D2/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D3/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D3/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2/A6-A7,(A0)
+      MOVEM.W D5-A0/A2/A6-A7,(A0)
+      MOVEM.W A0/A2/A6-A7,(A0)
+      MOVEM.W D0/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A6-A7,(A0)
+      MOVEM.W A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3/A6-A7,(A0)
+      MOVEM.W D1-D3/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D4/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D4/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D4/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D3-D4/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D5-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A6-A7,(A0)
+      MOVEM.W D1-D2/D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D3-D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D3-D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D5-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D5-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D5-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.W A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.W D7-A7,(A0)
+      MOVEM.W D0/D7-A7,(A0)
+      MOVEM.W D0-D1/D7-A7,(A0)
+      MOVEM.W D0/D2/D7-A7,(A0)
+      MOVEM.W D0-D1/D3/D7-A7,(A0)
+      MOVEM.W D0/D2-D3/D7-A7,(A0)
+      MOVEM.W D0/D2/D4/D7-A7,(A0)
+      MOVEM.W D0-D1/D3-D4/D7-A7,(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A7,(A0)
+      MOVEM.W D0,(A0)
+      MOVEM.W D0-D1,(A0)
+      MOVEM.W D0/D2,(A0)
+      MOVEM.W D0-D1/D3,(A0)
+      MOVEM.W D0/D2-D3,(A0)
+      MOVEM.W D0/D2/D4,(A0)
+      MOVEM.W D0-D1/D3-D4,(A0)
+      MOVEM.W D0-D1/D3/D5,(A0)
+      MOVEM.W D0/D2-D3/D5,(A0)
+      MOVEM.W D0/D2/D4-D5,(A0)
+      MOVEM.W D0/D2/D4/D6,(A0)
+      MOVEM.W D0-D1/D3-D4/D6,(A0)
+      MOVEM.W D0-D1/D3/D5-D6,(A0)
+      MOVEM.W D0/D2-D3/D5-D6,(A0)
+      MOVEM.W D0-D1/D3/D5/D7,(A0)
+      MOVEM.W D0/D2-D3/D5/D7,(A0)
+      MOVEM.W D0/D2/D4-D5/D7,(A0)
+      MOVEM.W D0/D2/D4/D6-D7,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7,(A0)
+      MOVEM.W D1/A0,(A0)
+      MOVEM.W D0-D1/A0,(A0)
+      MOVEM.W D0/D2/A0,(A0)
+      MOVEM.W D0-D1/D3/A0,(A0)
+      MOVEM.W D0/D2-D3/A0,(A0)
+      MOVEM.W D0/D2/D4/A0,(A0)
+      MOVEM.W D0-D1/D3-D4/A0,(A0)
+      MOVEM.W D0-D1/D3/D5/A0,(A0)
+      MOVEM.W D0/D2-D3/D5/A0,(A0)
+      MOVEM.W D0/D2/D4-D5/A0,(A0)
+      MOVEM.W D0/D2/D4/D6/A0,(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0,(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0,(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0,(A0)
+      MOVEM.W A0,(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1,(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1,(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1,(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1,(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1,(A0)
       MOVEM.W D0/D2/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0/D2/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2/D5/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0/D2/D5-D6/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2/D4/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0/D2-D3/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2-D3/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0/D2-D3/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2-A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D5/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D5-D6/A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D4/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A6,-(A0)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0-A0/A2/A6,-(A0)
-      MOVEM.W A0/A2/A6,-(A0)
-      MOVEM.W D6/A0/A2/A6,-(A0)
-      MOVEM.W D4/D6/A0/A2/A6,-(A0)
-      MOVEM.W D0/D2/A0/A2/A6-A7,-(A0)
-      MOVEM.W D0/D2/A0/A2/A5/A7,-(A0)
-      MOVEM.W D0/D2/A0/A2/A4/A6-A7,-(A0)
-      MOVEM.W D0/D2/A0/A2/A4-A5/A7,-(A0)
-      MOVEM.W D0/D2/A0/A2-A3,-(A0)
-      MOVEM.W D0/D2/A0/A2-A3/A7,-(A0)
-      MOVEM.W D0/D2/A0/A2-A3/A6-A7,-(A0)
-      MOVEM.W D0/D2/A0/A2-A3/A5/A7,-(A0)
-      MOVEM.W D0/D2/A0-A1,-(A0)
-      MOVEM.W D0/D2/A0-A1/A7,-(A0)
-      MOVEM.W D0/D2/A0-A1/A6-A7,-(A0)
-      MOVEM.W D0/D2/A0-A1/A5/A7,-(A0)
-      MOVEM.W D0/D2/A0-A1/A4/A6-A7,-(A0)
-      MOVEM.W D0/D2/A0-A1/A4-A5/A7,-(A0)
-      MOVEM.W D0/D2/A0-A1/A3/A5/A7,-(A0)
-      MOVEM.W D0/D2/A0-A1/A3-A4/A6-A7,-(A0)
-      MOVEM.W D0/D2,-(A0)
-      MOVEM.W D0/D2/A7,-(A0)
-      MOVEM.W D0/D2/A5/A7,-(A0)
-      MOVEM.W D0/D2/D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2/D6-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2/D5/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2/D5-D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2/D4/D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2-D3/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2-D3/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2-D3/D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D5/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D5-D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D4/D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0-A0/A2/A6-A7,-(A1)
-      MOVEM.W A0/A2/A6-A7,-(A1)
-      MOVEM.W D6/A0/A2/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2/A5/A7,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2/A4/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2/A4-A5/A7,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2-A3,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2-A3/A7,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2-A3/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7-A0/A2-A3/A5/A7,-(A1)
-      MOVEM.W D0/D2/D7-A1,-(A1)
-      MOVEM.W D0/D2/D7-A1/A7,-(A1)
-      MOVEM.W D0/D2/D7,-(A1)
-      MOVEM.W D0/D2/D7/A7,-(A1)
-      MOVEM.W D0/D2/D7/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7/A5/A7,-(A1)
-      MOVEM.W D0/D2/D7/A4/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7/A4-A5/A7,-(A1)
-      MOVEM.W D0/D2/D7/A3-A4/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7/A2/A4-A5/A7,-(A1)
-      MOVEM.W D0/D2/D7/A2-A3/A5/A7,-(A1)
-      MOVEM.W D0/D2/D7/A1/A3/A5/A7,-(A1)
-      MOVEM.W D0/D2/D7/A1/A3-A4/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7/A1-A2/A4/A6-A7,-(A1)
-      MOVEM.W D0/D2/D7/A1-A2/A4-A5/A7,-(A1)
-      MOVEM.W D0/D2/D6/A0/A2/A4/A6-A7,-(A2)
-      MOVEM.W D0/D2/D6/A0/A2/A4-A5/A7,-(A2)
-      MOVEM.W D0/D2/D6/A0/A2-A3/A5/A7,-(A2)
-      MOVEM.W D0/D2/D6/A0-A1/A3/A5/A7,-(A2)
-      MOVEM.W D0/D2/D6/A0-A1/A3-A4/A6-A7,-(A2)
-      MOVEM.W D0/D2/D5/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2/D5-D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2/D4/D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2-D3/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2-D3/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2-D3/D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D5/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D5-D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D4/D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0-A0/A2/A5/A7,-(A3)
-      MOVEM.W A0/A2/A5/A7,-(A3)
-      MOVEM.W D6/A0/A2/A5/A7,-(A3)
-      MOVEM.W D0/D2/D6-D7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A6-A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A5/A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A4/A6-A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A4-A5/A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A3-A4/A6-A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A2/A4-A5/A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A2-A3/A5/A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A1/A3-A4/A6-A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A1-A2/A4/A6-A7,-(A3)
-      MOVEM.W D0/D2/D6-D7/A1-A2/A4-A5/A7,-(A3)
-      MOVEM.W D0/D2/D5/D7-A0/A2/A4/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7-A0/A2/A4-A5/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7-A0/A2-A3,-(A5)
-      MOVEM.W D0/D2/D5/D7-A0/A2-A3/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7-A0/A2-A3/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7-A0/A2-A3/A5/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7-A1,-(A5)
-      MOVEM.W D0/D2/D5/D7-A1/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A5/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A4/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A4-A5/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A3-A4/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A2/A4-A5/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A2-A3/A5/A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A1/A3-A4/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A1-A2/A4/A6-A7,-(A5)
-      MOVEM.W D0/D2/D5/D7/A1-A2/A4-A5/A7,-(A5)
-      MOVEM.W D0/D2/D5-D6/A0/A2/A4/A6-A7,-(A6)
-      MOVEM.W D0/D2/D5-D6/A0/A2/A4-A5/A7,-(A6)
-      MOVEM.W D0/D2/D5-D6/A0/A2-A3/A5/A7,-(A6)
-      MOVEM.W D0/D2/D5-D6/A0-A1/A3/A5/A7,-(A6)
-      MOVEM.W D0/D2/D5-D6/A0-A1/A3-A4/A6-A7,-(A6)
+      MOVEM.W D0/D2/D7-A0/A2/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2/A5/A7,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2-A3,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2-A3/A7,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2-A3/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D7-A1,-(A0)
+      MOVEM.W D0/D2/D7-A1/A7,-(A0)
+      MOVEM.W D0/D2/D7,-(A0)
+      MOVEM.W D0/D2/D7/A7,-(A0)
+      MOVEM.W D0/D2/D7/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7/A5/A7,-(A0)
+      MOVEM.W D0/D2/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A5/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2/A5-A6,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2/A4,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2/A4/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2-A3,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2-A3/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2-A3/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7-A1,-(A0)
+      MOVEM.W D0/D2/D5/D7-A1/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D5-D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D5-D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D5-D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5-D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D5-D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A6,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A1,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A1/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A1/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0/A2-A4,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3,-(A0)
+      MOVEM.W D0/D2-D3/A7,-(A0)
+      MOVEM.W D0/D2-D3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A0/A2-A3/A6,-(A0)
+      MOVEM.W D0/D2-D3/D7-A0/A2-A3/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A0/A2-A4,-(A0)
+      MOVEM.W D0/D2-D3/D7-A1,-(A0)
+      MOVEM.W D0/D2-D3/D7-A1/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A1/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5-A6,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A4,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A4/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A1,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A1/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A1/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-A1,-(A0)
+      MOVEM.W D0/D2-A1/A7,-(A0)
+      MOVEM.W D0/D2-A1/A6-A7,-(A0)
+      MOVEM.W D0/D2-A1/A5/A7,-(A0)
+      MOVEM.W D0/D2-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-A1/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0/D2-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0/D2-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0/D2-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A6-A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A5/A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/A0-A2,-(A0)
+      MOVEM.W D0-D1,-(A0)
+      MOVEM.W D0-D1/A7,-(A0)
+      MOVEM.W D0-D1/A5/A7,-(A0)
+      MOVEM.W D0-D1/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7-A1/A6,-(A0)
+      MOVEM.W D0-D1/D7-A1/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7-A1/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7-A1/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D7-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7-A2,-(A0)
+      MOVEM.W D0-D1/D7,-(A0)
+      MOVEM.W D0-D1/D7/A7,-(A0)
+      MOVEM.W D0-D1/D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A5-A6,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A4,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A4/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A2,-(A0)
+      MOVEM.W D0-D1/D5/D7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5-D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D5-D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5-D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D5-D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D5-D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A6,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A3,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A3/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A3/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A3-A4/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A2,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A1/A3/A5-A6,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A1/A3-A4,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A1/A3-A4/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A2,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A2/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A2/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-A0,-(A0)
+      MOVEM.W D0-A0/A7,-(A0)
+      MOVEM.W D0-A0/A6-A7,-(A0)
+      MOVEM.W D0-A0/A5/A7,-(A0)
+      MOVEM.W D0-A0/A4/A6-A7,-(A0)
+      MOVEM.W D0-A0/A4-A5/A7,-(A0)
+      MOVEM.W D0-A0/A3/A5/A7,-(A0)
+      MOVEM.W D0-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.W D0-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D0-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D0-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W A7,-(A0)
+      MOVEM.W A6-A7,-(A0)
+      MOVEM.W A5/A7,-(A0)
+      MOVEM.W A4/A6-A7,-(A0)
+      MOVEM.W A4-A5/A7,-(A0)
+      MOVEM.W A3/A5/A7,-(A0)
+      MOVEM.W A3-A4/A6-A7,-(A0)
+      MOVEM.W A2/A4/A6-A7,-(A0)
+      MOVEM.W A2/A4-A5/A7,-(A0)
+      MOVEM.W A2-A3/A5/A7,-(A0)
+      MOVEM.W A1/A3/A5/A7,-(A0)
+      MOVEM.W A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D7/A6,-(A0)
+      MOVEM.W D7/A6-A7,-(A0)
+      MOVEM.W D7/A5/A7,-(A0)
+      MOVEM.W D7/A4/A6-A7,-(A0)
+      MOVEM.W D7/A4-A5/A7,-(A0)
+      MOVEM.W D7/A3/A5/A7,-(A0)
+      MOVEM.W D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D7,-(A0)
+      MOVEM.W D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D5/D7/A5-A6,-(A0)
+      MOVEM.W D5/D7/A4,-(A0)
+      MOVEM.W D5/D7/A4/A7,-(A0)
+      MOVEM.W D5/D7/A4/A6-A7,-(A0)
+      MOVEM.W D5/D7/A4-A5/A7,-(A0)
+      MOVEM.W D5/D7/A3/A5/A7,-(A0)
+      MOVEM.W D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.W D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.W D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.W D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.W D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.W D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.W D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.W D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.W D5/D7,-(A0)
+      MOVEM.W D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.W D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.W D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.W D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.W D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
       MOVEM.W D1/D3/D5/D7-A0/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A2-A3/A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A2-A3/A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A3/A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A4-A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A4-A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A4-A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A2/A4-A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1-A2/A4-A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A5/A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A2/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1-A2/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A3/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A2-A3/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A0/A2/A4/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1-A2/A4/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A3-A4/A6-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7-A7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A3,(-$5454,A0)
-      MOVEM.W D1/D3/D5/D7/A1/A3/A5,(-$5454,A0)
-      MOVEM.W D0-D1/D3/D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D2-D3/D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2-D3/D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D4-D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D4-D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0-D1/D4-D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2/D4-D5/D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0-D1/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0-D1/D3/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2-D3/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2/D4/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A3/A5/A7,(-$5454,A0)
-      MOVEM.W A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D0/D2/D4/A3/A5/A7,(-$5454,A0)
-      MOVEM.W D3/D5/D7/A3/A5/A7,($00AC,A0)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A1/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A2-A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A4-A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A4-A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A4-A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4-A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4-A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A3-A4/A6-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7-A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A3,(-$5353,A1)
-      MOVEM.W D2-D3/D5/D7-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D4-D5/D7-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D4-D5/D7-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D6-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D6-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2/D6-A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2-D3/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2/D4/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3-D4/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2-D3/D5/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2/D4-D5/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A3/A5/A7,(-$5353,A1)
-      MOVEM.W D0/D3/D5/D7-A0/A3/A5/A7,($00AD,A1)
-      MOVEM.W D2-D3/D5/D7/A2-A3/A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A2-A3/A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A3/A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A4-A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A4-A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1/A4-A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A2/A4-A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1-A2/A4-A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A5/A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A2/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1-A2/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1/A3/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A2-A3/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A0/A2/A4/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1-A2/A4/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1/A3-A4/A6-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7-A7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1,(-$5252,A2)
-      MOVEM.W D2-D3/D5/D7/A1/A3,(-$5252,A2)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A5/A7,(-$5252,A2)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A5/A7,(-$5252,A2)
-      MOVEM.W D0/D2/D4/D6-D7/A1/A3/A5/A7,(-$5252,A2)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3/A5/A7,(-$5252,A2)
-      MOVEM.W D1/D3/D5/D7/A1/A3/A5/A7,($00AE,A2)
-      MOVEM.W D0/D2-D3/D5/D7/A2-A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A4-A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A4-A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A4-A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4-A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4-A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A3-A4/A6-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7-A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A3,(-$5151,A3)
-      MOVEM.W A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/D3/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2/D4/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/D3-D4/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/D3/D5/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2/D4-D5/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2/D4/D6/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3/A5/A7,(-$5151,A3)
-      MOVEM.W D0-D1/D3/D5/D7-A1/A3/A5/A7,($00AF,A3)
-      MOVEM.W D4-D5/D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D4-D5/D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0-D1/D4-D5/D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D2/D4-D5/D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0-D1/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D2/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0-D1/D3/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D2-D3/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D2/D4/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D2/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D0/D2/D4/A2-A3/A5/A7,(-$5050,A4)
-      MOVEM.W D2-D3/D5/D7/A2-A3/A5/A7,($00B0,A4)
-      MOVEM.W D4-D5/D7-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D4-D5/D7-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D6-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D6-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2/D6-A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/D3/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2-D3/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2/D4/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/D3-D4/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/D3/D5/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2-D3/D5/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2/D4-D5/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A5/A7,(-$4F4F,A5)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5/A7,($00B1,A5)
-      MOVEM.W D4-D5/D7-A3/A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A4-A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A0/A4-A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1/A4-A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A0/A2/A4-A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1-A2/A4-A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A5/A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A0/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A0/A2/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1-A2/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1/A3/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A0/A2-A3/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A0/A2/A4/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1-A2/A4/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1/A3-A4/A6-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7-A7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1,(-$4E4E,A6)
-      MOVEM.W D4-D5/D7/A1/A3,(-$4E4E,A6)
-      MOVEM.W D0/D4-D5/D7/A4-A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1/A4-A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A2/A4-A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1-A2/A4-A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A2/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1-A2/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1/A3/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A2-A3/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A2/A4/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1-A2/A4/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1/A3-A4/A6-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7/A1/A3,(-$4D4D,A7)
-      MOVEM.W D0/D4-D5/D7-A0/A2/A4,(-$4D4D,A7)
-      MOVEM.W D0-D1/D4-D5/D7-A3/A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D2/D4-D5/D7-A3/A5/A7,(-$4D4D,A7)
-      MOVEM.W D6-A3/A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D6-A3/A5/A7,(-$4D4D,A7)
-      MOVEM.W D0/D2/D6-A3/A5/A7,(-$4D4D,A7)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D2-D3/D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D4-D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D4-D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D6-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D6-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2/D6-A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/D3/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2-D3/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2/D4/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/D3-D4/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/D3/D5/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2-D3/D5/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2/D4-D5/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2/D4/D6/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A3/A5/A7,(-$5454,A0)
+      MOVEM.W D0/D3/D5/D7-A0/A3/A5/A7,($00AC,A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A5/A7,(-$5353,A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A5/A7,(-$5353,A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A5/A7,(-$5353,A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3/A5/A7,(-$5353,A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3/A5/A7,(-$5353,A0)
+      MOVEM.W D1/D3/D5/D7/A1/A3/A5/A7,($00AD,A0)
+      MOVEM.W A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/D3/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2-D3/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2/D4/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3/A5/A7,(-$5252,A0)
+      MOVEM.W D0-D1/D3/D5/D7-A1/A3/A5/A7,($00AE,A0)
+      MOVEM.W D0/D2-D3/D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D1-D3/D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D4-D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D4-D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0-D1/D4-D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2/D4-D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0-D1/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0-D1/D3/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2-D3/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2/D4/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2/D4/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0/D2/D4/D6/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D0-D1/D3/D5/D7/A2-A3/A5/A7,(-$5151,A0)
+      MOVEM.W D2-D3/D5/D7/A2-A3/A5/A7,($00AF,A0)
+      MOVEM.W D1-D3/D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D4-D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D4-D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D6-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D6-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/D6-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/D4/D6-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D3/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/D4/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5/A7,(-$5050,A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A5/A7,($00B0,A0)
+      MOVEM.W D4-D5/D7-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0/D4-D5/D7-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0-D1/D4-D5/D7-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0/D2/D4-D5/D7-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D6-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0/D6-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0/D2/D6-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0-D1/D3/D6-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0/D2/D4/D6-A3/A5/A7,(-$4E4E,A0)
+      MOVEM.W D0/D4-D5/D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0-D1/D4-D5/D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2/D4-D5/D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D3-D5/D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0-D1/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0-D1/D3/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2-D3/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2/D4/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2/D4/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0-D1/D3/D5/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2/D4/D6/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0-D1/D3/D5/D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D0/D2-D3/D5/D7/A4-A5/A7,(-$4D4D,A0)
+      MOVEM.W D4-D5/D7/A4-A5/A7,($00B3,A0)
+      MOVEM.W D1/D4-D5/D7-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D3-D5/D7-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D6-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D6-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/D6-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3/D6-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/D4/D6-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2-D3/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/D4/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3-D4/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3/D5/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2-D3/D5/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/D4-D5/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2/D4/D6/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A4-A5/A7,(-$4C4C,A0)
+      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,($00B4,A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A4-A5/A7,(-$4B4B,A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A4-A5/A7,(-$4B4B,A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A4-A5/A7,(-$4B4B,A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A4-A5/A7,(-$4B4B,A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A4-A5/A7,(-$4B4B,A0)
+      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,($00B5,A0)
+      MOVEM.W A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/D3/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2-D3/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2/D4/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A4-A5/A7,(-$4A4A,A0)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,($00B6,A0)
+      MOVEM.W D1-D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D3-D5/D7-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D3-D5/D7-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D6-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D6-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D6-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3/D6-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2-D3/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D4/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$4848,A0)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,($00B8,A0)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4-A5/A7,(-$4747,A0)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7,(-$4747,A0)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4-A5/A7,(-$4747,A0)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4-A5/A7,(-$4747,A0)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$4747,A0)
+      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,($00B9,A0)
       MOVEM.W D1/D4-D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1-A2/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A3-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1-A2/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A3/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2-A3/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2/A4/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1-A2/A4/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A3-A4/A6-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A3,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2/A4,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A3/A5,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2/A4/A6,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1-A2/A4/A6,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A3/A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D1/D4-D5/D7-A0/A2-A3/A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D3-D5/D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0-D1/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0-D1/D3/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2-D3/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2/D4/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2/D4/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0-D1/D3/D5/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2/D4/D6/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0-D1/D3/D5/D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D0/D2-D3/D5/D7/A4-A5/A7,(-$4C,A0,A3.W)
-      MOVEM.W D4-D5/D7/A4-A5/A7,(-$4C,A0,A3.L)
-      MOVEM.W D4-D5/D7/A4-A5/A7,(-$4C,A0,D0.W)
-      MOVEM.W D4-D5/D7/A4-A5/A7,(-$4C,A0,D0.L)
-      MOVEM.W D4-D5/D7/A4-A5/A7,(0,A0,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1-A2/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1-A2/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A3/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2-A3/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A4/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1-A2/A4/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A3-A4/A6-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A3,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A4,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A3/A5,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2/A4/A6,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1-A2/A4/A6,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7/A1/A3/A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A0/A2-A3/A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D3-D5/D7-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D6-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D6-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/D6-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D3/D6-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/D4/D6-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D3/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2-D3/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/D4/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D3-D4/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D3/D5/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/D4-D5/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2/D4/D6/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A4-A5/A7,(-$4B,A1,A3.W)
-      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4B,A1,A3.L)
-      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4B,A1,D0.W)
-      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4B,A1,D0.L)
-      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(0,A1,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A4-A5/A7,(-$4A,A2,A3.W)
-      MOVEM.W D0/D2/D4/D6-D7/A1/A4-A5/A7,(-$4A,A2,A3.W)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A4-A5/A7,(-$4A,A2,A3.W)
-      MOVEM.W D0-D1/D3/D5/D7/A1/A4-A5/A7,(-$4A,A2,A3.W)
-      MOVEM.W D0/D2-D3/D5/D7/A1/A4-A5/A7,(-$4A,A2,A3.W)
-      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4A,A2,A3.L)
-      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4A,A2,D0.W)
-      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4A,A2,D0.L)
-      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(0,A2,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A3-A4/A6-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A3,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A5,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A6,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A6,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A5/A7,(-$49,A3,A3.W)
-      MOVEM.W A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0-D1/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0-D1/D3/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2-D3/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0-D1/D3-D4/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0-D1/D3/D5/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4-D5/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2/D4/D6/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A4-A5/A7,(-$49,A3,A3.W)
-      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$49,A3,A3.L)
-      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$49,A3,D0.W)
-      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$49,A3,D0.L)
-      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(0,A3,A3.W)
-      MOVEM.W D0-D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A3-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A3-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1-A2/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A3/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2-A3/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2/A4/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1-A2/A4/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A3-A4/A6-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A3,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2/A4,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A3/A5,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2/A4/A6,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1-A2/A4/A6,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7/A1/A3/A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2-A3/A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D6-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D6-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D6-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3/D6-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D4/D6-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2-D3/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D4/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3-D4/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3/D5/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2-D3/D5/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D4-D5/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D4/D6/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$47,A5,A3.L)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$47,A5,D0.W)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$47,A5,D0.L)
-      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(0,A5,A3.W)
-      MOVEM.W D3-D5/D7-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A3-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1-A2/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A3/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2-A3/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2/A4/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1-A2/A4/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A3-A4/A6-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A3,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2/A4,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A3/A5,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2/A4/A6,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1-A2/A4/A6,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1/A3/A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7-A0/A2-A3/A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D3-D5/D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0-D1/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0-D1/D3/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2-D3/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2/D4/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0-D1/D3/D5/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2/D4/D6/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$46,A6,A3.L)
-      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$46,A6,D0.W)
-      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$46,A6,D0.L)
-      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,(0,A6,A3.W)
-      MOVEM.W D0/D3-D5/D7/A3-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1-A2/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1/A3/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2-A3/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2/A4/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1-A2/A4/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1/A3-A4/A6-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1/A3,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2/A4,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1/A3/A5,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2/A4/A6,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1-A2/A4/A6,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7/A1/A3/A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D3-D5/D7-A0/A2-A3/A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D6-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D6-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D2/D6-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0-D1/D3/D6-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D2/D4/D6-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0-D1/D3/D5/D7-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D2-D3/D5/D7-A2/A4-A5/A7,(-$45,A7,A3.L)
-      MOVEM.W D0/D2/D4-D5/D7-A2/A4-A5/A7,(-$45,A7,A3.L)
+      MOVEM.W D0-D1/D4-D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D3-D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D6-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D6-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/D6-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3/D6-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/D4/D6-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2-D3/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/D4/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2/D4/D6/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.W)
+      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4C,A0,A3.L)
+      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4C,A0,D0.W)
+      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(-$4C,A0,D0.L)
+      MOVEM.W D0/D4-D5/D7-A0/A4-A5/A7,(0,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A4-A5/A7,(-$4B,A0,A3.W)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A4-A5/A7,(-$4B,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A4-A5/A7,(-$4B,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A4-A5/A7,(-$4B,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A4-A5/A7,(-$4B,A0,A3.W)
+      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4B,A0,A3.L)
+      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4B,A0,D0.W)
+      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(-$4B,A0,D0.L)
+      MOVEM.W D1/D4-D5/D7/A1/A4-A5/A7,(0,A0,A3.W)
+      MOVEM.W A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/D3/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2-D3/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2/D4/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A4-A5/A7,(-$4A,A0,A3.W)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$4A,A0,A3.L)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$4A,A0,D0.W)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(-$4A,A0,D0.L)
+      MOVEM.W D0-D1/D4-D5/D7-A1/A4-A5/A7,(0,A0,A3.W)
+      MOVEM.W D1-D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D3-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D3-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D6-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D6-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D6-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3/D6-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2-D3/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D4/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,A3.L)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,D0.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(-$48,A0,D0.L)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4-A5/A7,(0,A0,A3.W)
+      MOVEM.W D0-D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D3-D5/D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D3-D5/D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0-D1/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0-D1/D3/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2-D3/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2/D4/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$47,A0,A3.L)
+      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$47,A0,D0.W)
+      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,(-$47,A0,D0.L)
+      MOVEM.W D1-D2/D4-D5/D7/A1-A2/A4-A5/A7,(0,A0,A3.W)
+      MOVEM.W D3-D5/D7-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D6-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0/D6-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0/D2/D6-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0-D1/D3/D6-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/D7-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0/D2-D3/D5/D7-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0/D2/D4-D5/D7-A2/A4-A5/A7,(-$46,A0,A3.L)
+      MOVEM.W D0/D3-D5/D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0-D1/D3-D5/D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D2-D5/D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0-D1/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0-D1/D3/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2-D3/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2/D4/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2-D3/D5/D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D0/D2/D4-D5/D7/A3-A5/A7,(-$45,A0,A3.L)
+      MOVEM.W D3-D5/D7/A3-A5/A7,(-$45,A0,A4.W)
+      MOVEM.W D3-D5/D7/A3-A5/A7,(-$45,A0,D0.W)
+      MOVEM.W D3-D5/D7/A3-A5/A7,(-$45,A0,D0.L)
+      MOVEM.W D3-D5/D7/A3-A5/A7,(0,A0,A3.L)
+      MOVEM.W A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0-D1/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D2/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0-D1/D3/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D2-D3/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D2/D4/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0-D1/D3-D4/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D2/D4-D5/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A3-A5/A7,(-$44,A0,A3.L)
+      MOVEM.W D0/D3-D5/D7-A0/A3-A5/A7,(0,A0,A3.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3-A5/A7,(-$43,A0,A3.L)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3-A5/A7,(-$43,A0,A3.L)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3-A5/A7,(-$43,A0,A3.L)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3-A5/A7,(-$43,A0,A3.L)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3-A5/A7,(-$43,A0,A3.L)
+      MOVEM.W D1/D3-D5/D7/A1/A3-A5/A7,(0,A0,A3.L)
+      MOVEM.W D0-D1/D3-D5/D7-A1/A3-A5/A7,(0,A0,A3.L)
+      MOVEM.W D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0-D1/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0-D1/D3/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2-D3/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2/D4/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A5/A7,(-$3F,A0,A4.W)
+      MOVEM.W D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0-D1/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0/D2/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0-D1/D3/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0/D2-D3/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/D7-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/D7-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/D7-A5/A7,(-$3E,A0,A4.W)
+      MOVEM.W D0-D5/D7-A5/A7,(-$3E,A0,A4.L)
+      MOVEM.W D0-D5/D7-A5/A7,(-$3E,A0,D0.W)
+      MOVEM.W D0-D5/D7-A5/A7,(-$3E,A0,D0.L)
+      MOVEM.W D0-D5/D7-A5/A7,(0,A0,A3.L)
+      MOVEM.W D0/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D3/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2-D3/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D5-D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D3/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2/D4/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/D7/A6-A7,(-$3D,A0,A4.W)
+      MOVEM.W D6-D7/A6-A7,(-$3D,A0,A4.L)
+      MOVEM.W D6-D7/A6-A7,(-$3D,A0,D0.W)
+      MOVEM.W D6-D7/A6-A7,(-$3D,A0,D0.L)
+      MOVEM.W D6-D7/A6-A7,(0,A0,A4.W)
+      MOVEM.W D1/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2-D3/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D5-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2-D3/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/D4/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A6-A7,(-$3C,A0,A4.W)
+      MOVEM.W D0/D6-A0/A6-A7,(-$3C,A0,A4.L)
+      MOVEM.W D0/D6-A0/A6-A7,(-$3C,A0,D0.W)
+      MOVEM.W D0/D6-A0/A6-A7,(-$3C,A0,D0.L)
+      MOVEM.W D0/D6-A0/A6-A7,(0,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A6-A7,(-$3B,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A6-A7,(-$3B,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A6-A7,(-$3B,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A6-A7,(-$3B,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A6-A7,(-$3B,A0,A4.W)
+      MOVEM.W D1/D6-D7/A1/A6-A7,(-$3B,A0,A4.L)
+      MOVEM.W D1/D6-D7/A1/A6-A7,(-$3B,A0,D0.W)
+      MOVEM.W D1/D6-D7/A1/A6-A7,(-$3B,A0,D0.L)
+      MOVEM.W D1/D6-D7/A1/A6-A7,(0,A0,A4.W)
+      MOVEM.W A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/D3/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2-D3/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2/D4/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A6-A7,(-$3A,A0,A4.W)
+      MOVEM.W D0-D1/D6-A1/A6-A7,(-$3A,A0,A4.L)
+      MOVEM.W D0-D1/D6-A1/A6-A7,(-$3A,A0,D0.W)
+      MOVEM.W D0-D1/D6-A1/A6-A7,(-$3A,A0,D0.L)
+      MOVEM.W D0-D1/D6-A1/A6-A7,(0,A0,A4.W)
+      MOVEM.W D1-D2/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D3/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D3/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2-D3/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D5-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2-D3/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/D4/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A6-A7,(-$38,A0,A4.W)
+      MOVEM.W D0/D2/D6-A0/A2/A6-A7,(-$38,A0,A4.L)
+      MOVEM.W D0/D2/D6-A0/A2/A6-A7,(-$38,A0,D0.W)
+      MOVEM.W D0/D2/D6-A0/A2/A6-A7,(-$38,A0,D0.L)
+      MOVEM.W D0/D2/D6-A0/A2/A6-A7,(0,A0,A4.W)
+      MOVEM.W D0-D2/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D3/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D3/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0-D1/D3/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2-D3/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D5-D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0-D1/D3/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2/D4/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A6-A7,(-$37,A0,A4.L)
+      MOVEM.W D1-D2/D6-D7/A1-A2/A6-A7,(-$37,A0,D0.W)
+      MOVEM.W D1-D2/D6-D7/A1-A2/A6-A7,(-$37,A0,D0.L)
+      MOVEM.W D1-D2/D6-D7/A1-A2/A6-A7,(0,A0,A4.W)
+      MOVEM.W D0/D3/D6-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0-D1/D3/D6-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0/D2-D3/D6-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D5-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/D7-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/D7-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/D7-A2/A6-A7,(-$36,A0,A4.L)
+      MOVEM.W D0/D3/D6-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3/D6-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D2-D3/D6-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2-D3/D6-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D5-D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2/D4/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/D7/A3/A6-A7,(-$35,A0,A4.L)
+      MOVEM.W D0-D1/D3/D6-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D2-D3/D6-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2-D3/D6-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D4/D6-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D5-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2-D3/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2/D4/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A3/A6-A7,(-$34,A0,A4.L)
+      MOVEM.W D0/D3/D6-A0/A3/A6-A7,(0,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3/A6-A7,(-$33,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3/A6-A7,(-$33,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3/A6-A7,(-$33,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3/A6-A7,(-$33,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3/A6-A7,(-$33,A0,A4.L)
+      MOVEM.W D1/D3/D6-D7/A1/A3/A6-A7,(-$33,A0,D0.W)
+      MOVEM.W D1/D3/D6-D7/A1/A3/A6-A7,(-$33,A0,D0.L)
+      MOVEM.W D1/D3/D6-D7/A1/A3/A6-A7,(0,A0,A4.L)
+      MOVEM.W A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/D3/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2-D3/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2/D4/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3/A6-A7,(-$32,A0,A4.L)
+      MOVEM.W D0-D1/D3/D6-A1/A3/A6-A7,(-$32,A0,D0.W)
+      MOVEM.W D0-D1/D3/D6-A1/A3/A6-A7,(-$32,A0,D0.L)
+      MOVEM.W D0-D1/D3/D6-A1/A3/A6-A7,(0,A0,A4.L)
+      MOVEM.W D2-D3/D6-D7/A2-A3/A6-A7,(0,A0,A4.L)
+      MOVEM.W D1-D3/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D4/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D4/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D4/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D3-D4/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D5-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2-D3/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2/D4/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A6-A7,(-$30,A0,A4.L)
+      MOVEM.W D0/D2-D3/D6-A0/A2-A3/A6-A7,(-$30,A0,A5.W)
+      MOVEM.W D0/D2-D3/D6-A0/A2-A3/A6-A7,(-$30,A0,D0.W)
+      MOVEM.W D0/D2-D3/D6-A0/A2-A3/A6-A7,(-$30,A0,D0.L)
+      MOVEM.W D0/D2-D3/D6-A0/A2-A3/A6-A7,(0,A0,A4.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A3/A6-A7,(-$2F,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A3/A6-A7,(-$2F,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A3/A6-A7,(-$2F,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A3/A6-A7,(-$2F,A0,A5.W)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A3/A6-A7,(-$2F,A0,A5.W)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A4/A6-A7,(-$2B,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A4/A6-A7,(-$2B,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A4/A6-A7,(-$2B,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A4/A6-A7,(-$2B,A0,A5.W)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A4/A6-A7,(-$2B,A0,A5.W)
+      MOVEM.W D1/D4/D6-D7/A1/A4/A6-A7,(0,A0,A5.W)
+      MOVEM.W A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/D3/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2-D3/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2/D4/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A4/A6-A7,(-$2A,A0,A5.W)
+      MOVEM.W D0-D1/D4/D6-A1/A4/A6-A7,(0,A0,A5.W)
+      MOVEM.W D1-D2/D4/D6-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D3-D4/D6-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D3-D4/D6-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D5-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D5-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D5-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2-D3/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D4/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D4-D5/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D4/D6/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D4/D7-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A4/A6-A7,(-$28,A0,A5.W)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4/A6-A7,(-$28,A0,A5.L)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4/A6-A7,(-$28,A0,D0.W)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4/A6-A7,(-$28,A0,D0.L)
+      MOVEM.W D0/D2/D4/D6-A0/A2/A4/A6-A7,(0,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7,(-$27,A0,A5.L)
+      MOVEM.W D0-D1/D3/D5/D7/A1-A2/A4/A6-A7,(-$27,A0,A5.L)
+      MOVEM.W D0/D2-D3/D5/D7/A1-A2/A4/A6-A7,(-$27,A0,A5.L)
+      MOVEM.W D0/D2/D4-D5/D7/A1-A2/A4/A6-A7,(-$27,A0,A5.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1-A2/A4/A6-A7,(-$27,A0,A5.L)
+      MOVEM.W D1-D2/D4/D6-D7/A1-A2/A4/A6-A7,(-$27,A0,D0.W)
+      MOVEM.W D1-D2/D4/D6-D7/A1-A2/A4/A6-A7,(-$27,A0,D0.L)
+      MOVEM.W D1-D2/D4/D6-D7/A1-A2/A4/A6-A7,(0,A0,A5.W)
+      MOVEM.W D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(-$23,A0,A5.L)
+      MOVEM.W D0-D1/D3/D5/D7/A1/A3-A4/A6-A7,(-$23,A0,A5.L)
+      MOVEM.W D0/D2-D3/D5/D7/A1/A3-A4/A6-A7,(-$23,A0,A5.L)
+      MOVEM.W D0/D2/D4-D5/D7/A1/A3-A4/A6-A7,(-$23,A0,A5.L)
+      MOVEM.W D0/D2/D4/D6-D7/A1/A3-A4/A6-A7,(-$23,A0,A5.L)
+      MOVEM.W D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(-$23,A0,A6.W)
+      MOVEM.W D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(-$23,A0,D0.W)
+      MOVEM.W D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(-$23,A0,D0.L)
+      MOVEM.W D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(0,A0,A5.L)
+      MOVEM.W A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/D3/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2-D3/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2/D4/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7,(-$22,A0,A5.L)
+      MOVEM.W D0-D1/D3-D4/D6-A1/A3-A4/A6-A7,(-$22,A0,A6.W)
+      MOVEM.W D0-D1/D3-D4/D6-A1/A3-A4/A6-A7,(-$22,A0,D0.W)
+      MOVEM.W D0-D1/D3-D4/D6-A1/A3-A4/A6-A7,(-$22,A0,D0.L)
+      MOVEM.W D0-D1/D3-D4/D6-A1/A3-A4/A6-A7,(0,A0,A5.L)
       MOVEM.W D1/D3-D5/D7-A0/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A2-A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1-A2/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A3/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2-A3/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2/A4/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1-A2/A4/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A3-A4/A6-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A3,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2/A4,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A3/A5,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2/A4/A6,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1-A2/A4/A6,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1/A3/A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2-A3/A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7-A0/A2/A4-A5/A7,($FFBBBC).W
-      MOVEM.W D1/D3-D5/D7/A1-A2/A4-A5/A7,($FFBBBC).W
-      MOVEM.W D0-D1/D3-D5/D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D2-D5/D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0-D1/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0-D1/D3/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2-D3/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2/D4/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0-D1/D3-D4/D6-D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2/D4/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0-D1/D3/D5/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2/D4/D6/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0-D1/D3/D5/D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2-D3/D5/D7/A3-A5/A7,($FFBBBC).W
-      MOVEM.W D0/D2/D4-D5/D7/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3-D5/D7-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D2-D5/D7-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D6-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D6-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/D6-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3/D6-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/D4/D6-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2-D3/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/D4/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3-D4/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3/D5/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2-D3/D5/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/D4-D5/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/D4/D6/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3-D4/D6/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3/D5-D6/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2-D3/D5-D6/A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0-D1/D3/D5/D7-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2-D3/D5/D7-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W D0/D2/D4-D5/D7-A0/A3-A5/A7,($FFBBBC).W
+      MOVEM.W A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0-D1/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0-D1/D3/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2-D3/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2/D4/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3-A5/A7,($FFBDBE).W
+      MOVEM.W D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3/D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2-D3/D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/D4/D6-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3-D4/D6-A5/A7,($FFC1C2).W
+      MOVEM.W A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2-D3/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/D4/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3-D4/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3/D5/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2-D3/D5/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/D4-D5/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/D4/D6/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3-D4/D6/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3/D5-D6/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2-D3/D5-D6/A0-A5/A7,($FFC1C2).W
+      MOVEM.W D0-D1/D3/D5/D7-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2-D3/D5/D7-A5/A7,($FFC1C2).W
+      MOVEM.W D0/D2/D4-D5/D7-A5/A7,($FFC1C2).W
+      MOVEM.W D1/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2-D3/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/D4/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3-D4/D6-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D5-A0/A6-A7,($FFC3C4).W
+      MOVEM.W A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2-D3/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/D4/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3-D4/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3/D5/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2-D3/D5/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/D4-D5/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/D4/D6/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3-D4/D6/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3/D5-D6/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2-D3/D5-D6/A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0-D1/D3/D5/D7-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2-D3/D5/D7-A0/A6-A7,($FFC3C4).W
+      MOVEM.W D0/D2/D4-D5/D7-A0/A6-A7,($FFC3C4).W
+      MOVEM.W A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0-D1/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0-D1/D3/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2-D3/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2/D4/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0-D1/D3-D4/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0-D1/D3/D5/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2-D3/D5/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2/D4-D5/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2/D4/D6/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A6-A7,($FFC5C6).W
+      MOVEM.W D1-D2/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D3/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D3/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2-D3/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2/D4/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D5-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2-D3/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2/D4/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3-D4/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3/D5/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2-D3/D5/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2/D4-D5/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2/D4/D6/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2/A6-A7,($FFC7C8).W
+      MOVEM.W D1-D3/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D4/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D4/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D4/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2/D4/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D3-D4/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3-D4/D6-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D5-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2-D3/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2/D4/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3-D4/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3/D5/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2-D3/D5/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2/D4-D5/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2/D4/D6/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3-D4/D6/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3/D5-D6/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2-D3/D5-D6/A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0-D1/D3/D5/D7-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2-D3/D5/D7-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D0/D2/D4-D5/D7-A0/A2-A3/A6-A7,($FFCFD0).W
+      MOVEM.W D2-D5/D7-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2-D5/D7-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D6-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D6-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/D6-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3/D6-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/D4/D6-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3-D4/D6-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2-D3/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/D4/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3-D4/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3/D5/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2-D3/D5/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/D4-D5/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/D4/D6/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3-D4/D6/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3/D5-D6/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2-D3/D5-D6/A0-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0-D1/D3/D5/D7-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2-D3/D5/D7-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D0/D2/D4-D5/D7-A1/A3-A5/A7,($BEBFC0).L
+      MOVEM.W D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3/D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2-D3/D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/D4/D6-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3-D4/D6-A5/A7,($C2C3C4).L
+      MOVEM.W A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2-D3/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/D4/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3-D4/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3/D5/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2-D3/D5/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/D4-D5/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/D4/D6/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3-D4/D6/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3/D5-D6/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2-D3/D5-D6/A0-A5/A7,($C2C3C4).L
+      MOVEM.W D0-D1/D3/D5/D7-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2-D3/D5/D7-A5/A7,($C2C3C4).L
+      MOVEM.W D0/D2/D4-D5/D7-A5/A7,($C2C3C4).L
+      MOVEM.W D1/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2-D3/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/D4/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3-D4/D6-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D5-A0/A6-A7,($C4C5C6).L
+      MOVEM.W A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2-D3/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/D4/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3-D4/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3/D5/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2-D3/D5/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/D4-D5/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/D4/D6/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3-D4/D6/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3/D5-D6/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2-D3/D5-D6/A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0-D1/D3/D5/D7-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2-D3/D5/D7-A0/A6-A7,($C4C5C6).L
+      MOVEM.W D0/D2/D4-D5/D7-A0/A6-A7,($C4C5C6).L
       EXT.L   D0
       MOVEM.L D1/D4/D6-A0/A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-A0/A2/A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A1-A2/A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A3-A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-A0/A3-A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A3-A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-A4/A6-A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A5-A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A5-A7,(A0)
-      MOVEM.L D1/D4/D6-A7,(A0)
-      MOVEM.L D1/D4/D6-D7,(A0)
-      MOVEM.L D1/D4/D6-D7/A1,(A0)
-      MOVEM.L D1/D4/D6-A0/A2,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A3,(A0)
-      MOVEM.L D1/D4/D6-A0/A2/A4,(A0)
-      MOVEM.L D1/D4/D6-D7/A1-A2/A4,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A3/A5,(A0)
-      MOVEM.L D1/D4/D6-A0/A2-A3/A5,(A0)
-      MOVEM.L D1/D4/D6-A0/A2/A4/A6,(A0)
-      MOVEM.L D1/D4/D6-D7/A1-A2/A4/A6,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A3-A4/A6,(A0)
-      MOVEM.L D1/D4/D6-D7/A1/A3/A5/A7,(A0)
-      MOVEM.L D1/D4/D6-A0/A2-A3/A5/A7,(A0)
-      MOVEM.L D1/D4/D6-A0/A2/A4-A5/A7,(A0)
-      MOVEM.L D1/D4/D6-D7/A1-A2/A4-A5/A7,(A0)
-      MOVEM.L D0-D1/D4/D6-D7/A4/A6-A7,(A0)
-      MOVEM.L D0/D2/D4/D6-D7/A4/A6-A7,(A0)
-      MOVEM.L D3-D4/D6-D7/A4/A6-A7,(A0)
-      MOVEM.L D0/D3-D4/D6-D7/A4/A6-A7,(A0)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A4/A6-A7,(A0)
-      MOVEM.L D5-D7/A4/A6-A7,(A0)
-      MOVEM.L D0/D5-D7/A4/A6-A7,(A0)
-      MOVEM.L A4/A6-A7,(A0)
-      MOVEM.L D0/A4/A6-A7,(A0)
-      MOVEM.L D0/D2/A4/A6-A7,(A0)
-      MOVEM.L D0-D1/D3/A4/A6-A7,(A0)
-      MOVEM.L D0/D2/D4/A4/A6-A7,(A0)
-      MOVEM.L D0-D1/D3/D5/A4/A6-A7,(A0)
-      MOVEM.L D0/D2-D3/D5/A4/A6-A7,(A0)
-      MOVEM.L D0/D2/D4/D6/A4/A6-A7,(A0)
-      MOVEM.L D0-D1/D3-D4/D6/A4/A6-A7,(A0)
-      MOVEM.L D0-D1/D3/D5/D7/A4/A6-A7,(A0)
-      MOVEM.L D0/D2-D3/D5/D7/A4/A6-A7,(A0)
-      MOVEM.L D0/D2/D4-D5/D7/A4/A6-A7,(A0)
-      MOVEM.L D0-D1/D4/D6-D7/A1/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A1/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1-A2/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A3-A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A3-A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1/A3-A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A5-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1/A3,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2/A4,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1-A2/A4,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1/A3/A5,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2-A3/A5,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2/A4/A6,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1-A2/A4/A6,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1/A3-A4/A6,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1/A3/A5/A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2-A3/A5/A7,(A1)
-      MOVEM.L D0-D1/D4/D6-A0/A2/A4-A5/A7,(A1)
-      MOVEM.L D0-D1/D4/D6-D7/A1-A2/A4-A5/A7,(A1)
-      MOVEM.L D0/D2/D4/D6-A0/A4/A6-A7,(A1)
-      MOVEM.L D3-D4/D6-A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D3-D4/D6-A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D3-D4/D6-A0/A4/A6-A7,(A1)
-      MOVEM.L D5-A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D5-A0/A4/A6-A7,(A1)
-      MOVEM.L A0/A4/A6-A7,(A1)
-      MOVEM.L D0/A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2/A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D3/A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2-D3/A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2/D4/A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D3-D4/A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D3/D5/A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2-D3/D5/A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2/D4/D6/A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D3-D4/D6/A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2-D3/D5-D6/A0/A4/A6-A7,(A1)
-      MOVEM.L D0-D1/D3/D5/D7-A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2-D3/D5/D7-A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2/D4-D5/D7-A0/A4/A6-A7,(A1)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A4/A6-A7,(A2)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A4/A6-A7,(A2)
-      MOVEM.L D0-D1/D3/D5/D7/A1/A4/A6-A7,(A2)
-      MOVEM.L D0/D2-D3/D5/D7/A1/A4/A6-A7,(A2)
-      MOVEM.L D0/D2/D4-D5/D7/A1/A4/A6-A7,(A2)
-      MOVEM.L D0/D2/D4/D6-A0/A2/A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A3-A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A3-A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A3-A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A5-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A2,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A3,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A2/A4,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A3/A5,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A2-A3/A5,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A2/A4/A6,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4/A6,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A3-A4/A6,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A3/A5/A7,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A2-A3/A5/A7,(A3)
-      MOVEM.L D0/D2/D4/D6-A0/A2/A4-A5/A7,(A3)
-      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4-A5/A7,(A3)
-      MOVEM.L A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0-D1/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/D2/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0-D1/D3/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/D2-D3/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0-D1/D3-D4/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0-D1/D3/D5/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/D2-D3/D5/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/D2/D4/D6/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A4/A6-A7,(A3)
-      MOVEM.L D3-D4/D6-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D3-D4/D6-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3-D4/D6-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D5-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D5-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2-D3/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2/D4/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3-D4/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3/D5/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2-D3/D5/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2/D4-D5/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2/D4/D6/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3-D4/D6/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3/D5-D6/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2-D3/D5-D6/A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0-D1/D3/D5/D7-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2-D3/D5/D7-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D0/D2/D4-D5/D7-A0/A2/A4/A6-A7,(A5)
-      MOVEM.L D3-D4/D6-D7/A3-A4/A6-A7,(A6)
-      MOVEM.L D3-D4/D6-A0/A3-A4/A6-A7,(A6)
-      MOVEM.L D3-D4/D6-D7/A1/A3-A4/A6-A7,(A6)
-      MOVEM.L D3-D4/D6-A4/A6-A7,(A6)
-      MOVEM.L D3-D4/D6-D7/A5-A7,(A6)
-      MOVEM.L D3-D4/D6-A7,(A6)
-      MOVEM.L D3-D4/D6-D7,(A6)
-      MOVEM.L D3-D4/D6-D7/A1,(A6)
-      MOVEM.L D3-D4/D6-A0/A2,(A6)
-      MOVEM.L D3-D4/D6-D7/A1/A3,(A6)
-      MOVEM.L D3-D4/D6-A0/A2/A4,(A6)
-      MOVEM.L D3-D4/D6-D7/A1-A2/A4,(A6)
-      MOVEM.L D3-D4/D6-D7/A1/A3/A5,(A6)
-      MOVEM.L D3-D4/D6-A0/A2-A3/A5,(A6)
-      MOVEM.L D3-D4/D6-A0/A2/A4/A6,(A6)
-      MOVEM.L D3-D4/D6-D7/A1-A2/A4/A6,(A6)
-      MOVEM.L D3-D4/D6-D7/A1/A3-A4/A6,(A6)
-      MOVEM.L D3-D4/D6-D7/A1/A3/A5/A7,(A6)
-      MOVEM.L D3-D4/D6-A0/A2-A3/A5/A7,(A6)
-      MOVEM.L D3-D4/D6-A0/A2/A4-A5/A7,(A6)
-      MOVEM.L D3-D4/D6-D7/A1-A2/A4-A5/A7,(A6)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7,(A6)
-      MOVEM.L D0-D1/D3/D5/D7/A1-A2/A4/A6-A7,(A6)
-      MOVEM.L D0/D2-D3/D5/D7/A1-A2/A4/A6-A7,(A6)
-      MOVEM.L D0/D2/D4-D5/D7/A1-A2/A4/A6-A7,(A6)
-      MOVEM.L D0/D3-D4/D6-D7/A3-A4/A6-A7,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A3-A4/A6-A7,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1/A3-A4/A6-A7,(A7)
-      MOVEM.L D0/D3-D4/D6-A4/A6-A7,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A5-A7,(A7)
-      MOVEM.L D0/D3-D4/D6-A7,(A7)
-      MOVEM.L D0/D3-D4/D6-D7,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A2,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1/A3,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A2/A4,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1-A2/A4,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1/A3/A5,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A2-A3/A5,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A2/A4/A6,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1-A2/A4/A6,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1/A3-A4/A6,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1/A3/A5/A7,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A2-A3/A5/A7,(A7)
-      MOVEM.L D0/D3-D4/D6-A0/A2/A4-A5/A7,(A7)
-      MOVEM.L D0/D3-D4/D6-D7/A1-A2/A4-A5/A7,(A7)
+      MOVEM.L D0-D1/D4/D6-A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-A0/A4/A6-A7,(A0)
+      MOVEM.L D3-D4/D6-A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D3-D4/D6-A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-A0/A4/A6-A7,(A0)
+      MOVEM.L D5-A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D5-A0/A4/A6-A7,(A0)
+      MOVEM.L A0/A4/A6-A7,(A0)
+      MOVEM.L D0/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A4/A6-A7,(A0)
+      MOVEM.L A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A4/A6-A7,(A0)
+      MOVEM.L D1-D2/D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D3-D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D3-D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D5-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D5-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D5-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4/A6-A7,(A0)
+      MOVEM.L D0/D3-D4/D6-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D2-D4/D6-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D5-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D5-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D5-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L A3-A4/A6-A7,(A0)
+      MOVEM.L D0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A3-A4/A6-A7,(A0)
+      MOVEM.L D1/D3-D4/D6-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D2-D4/D6-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D5-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D5-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D5-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D7-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3-A4/A6-A7,(A0)
+      MOVEM.L A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7,(A0)
+      MOVEM.L D5-A4/A6-A7,(A0)
+      MOVEM.L D0/D5-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D5-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D5-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4/D7-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D7-A4/A6-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A4/A6-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A4/A6-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A4/A6-A7,(A0)
+      MOVEM.L D0/D5-D7/A5-A7,(A0)
+      MOVEM.L D0-D1/D5-D7/A5-A7,(A0)
+      MOVEM.L D0/D2/D5-D7/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D7/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D7/A5-A7,(A0)
+      MOVEM.L D4-D7/A5-A7,(A0)
+      MOVEM.L A5-A7,(A0)
+      MOVEM.L D0/A5-A7,(A0)
+      MOVEM.L D0/D2/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/A5-A7,(A0)
+      MOVEM.L D0/D2/D4/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A5-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A5-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A5-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A5-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A5-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A5-A7,(A0)
+      MOVEM.L A0/A5-A7,(A0)
+      MOVEM.L D0/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/A0/A5-A7,(A0)
+      MOVEM.L D0/D2/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/A0/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/A0/A5-A7,(A0)
+      MOVEM.L D0/D2/D4/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/A0/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/A0/A5-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A5-A7,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A5-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A5-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A5-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A5-A7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A5-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A5-A7,(A0)
+      MOVEM.L D7-A7,(A0)
+      MOVEM.L D0/D7-A7,(A0)
+      MOVEM.L D0-D1/D7-A7,(A0)
+      MOVEM.L D0/D2/D7-A7,(A0)
+      MOVEM.L D0-D1/D3/D7-A7,(A0)
+      MOVEM.L D0/D2-D3/D7-A7,(A0)
+      MOVEM.L D0/D2/D4/D7-A7,(A0)
+      MOVEM.L D0-D1/D3-D4/D7-A7,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A7,(A0)
+      MOVEM.L D0,(A0)
+      MOVEM.L D0-D1,(A0)
+      MOVEM.L D0/D2,(A0)
+      MOVEM.L D0-D1/D3,(A0)
+      MOVEM.L D0/D2-D3,(A0)
+      MOVEM.L D0/D2/D4,(A0)
+      MOVEM.L D0-D1/D3-D4,(A0)
+      MOVEM.L D0-D1/D3/D5,(A0)
+      MOVEM.L D0/D2-D3/D5,(A0)
+      MOVEM.L D0/D2/D4-D5,(A0)
+      MOVEM.L D0/D2/D4/D6,(A0)
+      MOVEM.L D0-D1/D3-D4/D6,(A0)
+      MOVEM.L D0-D1/D3/D5-D6,(A0)
+      MOVEM.L D0/D2-D3/D5-D6,(A0)
+      MOVEM.L D0-D1/D3/D5/D7,(A0)
+      MOVEM.L D0/D2-D3/D5/D7,(A0)
+      MOVEM.L D0/D2/D4-D5/D7,(A0)
+      MOVEM.L D0/D2/D4/D6-D7,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7,(A0)
+      MOVEM.L D1/A0,(A0)
+      MOVEM.L D0-D1/A0,(A0)
+      MOVEM.L D0/D2/A0,(A0)
+      MOVEM.L D0-D1/D3/A0,(A0)
+      MOVEM.L D0/D2-D3/A0,(A0)
+      MOVEM.L D0/D2/D4/A0,(A0)
+      MOVEM.L D0-D1/D3-D4/A0,(A0)
+      MOVEM.L D0-D1/D3/D5/A0,(A0)
+      MOVEM.L D0/D2-D3/D5/A0,(A0)
+      MOVEM.L D0/D2/D4-D5/A0,(A0)
+      MOVEM.L D0/D2/D4/D6/A0,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0,(A0)
+      MOVEM.L A0,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1,(A0)
+      MOVEM.L D1-D2/A0/A2,(A0)
+      MOVEM.L D3/A0/A2,(A0)
+      MOVEM.L D0/D3/A0/A2,(A0)
+      MOVEM.L D0-D1/D3/A0/A2,(A0)
+      MOVEM.L D0/D2-D3/A0/A2,(A0)
+      MOVEM.L D0/D2/D4/A0/A2,(A0)
+      MOVEM.L D0-D1/D3-D4/A0/A2,(A0)
+      MOVEM.L D0-D1/D3/D5/A0/A2,(A0)
+      MOVEM.L D0/D2-D3/D5/A0/A2,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A2,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A2,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2,(A0)
+      MOVEM.L D7-A0/A2,(A0)
+      MOVEM.L D0/D7-A0/A2,(A0)
+      MOVEM.L D0-D1/D7-A0/A2,(A0)
+      MOVEM.L D0/D2/D7-A0/A2,(A0)
+      MOVEM.L D0-D1/D3/D7-A0/A2,(A0)
+      MOVEM.L D0/D2-D3/D7-A0/A2,(A0)
+      MOVEM.L D0/D2/D4/D7-A0/A2,(A0)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2,(A0)
+      MOVEM.L A0/A2,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3,(A0)
+      MOVEM.L D2-D3/A0-A1/A3,(A0)
+      MOVEM.L D0/D2-D3/A0-A1/A3,(A0)
+      MOVEM.L D4/A0-A1/A3,(A0)
+      MOVEM.L D0/D4/A0-A1/A3,(A0)
+      MOVEM.L D0-D1/D4/A0-A1/A3,(A0)
+      MOVEM.L D0/D2/D4/A0-A1/A3,(A0)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3,(A0)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3,(A0)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3,(A0)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3,(A0)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3,(A0)
+      MOVEM.L A0-A1/A3,(A0)
+      MOVEM.L D1-D2/D4/A0/A2/A4,(A0)
+      MOVEM.L D3-D4/A0/A2/A4,(A0)
+      MOVEM.L D0/D3-D4/A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3-D4/A0/A2/A4,(A0)
+      MOVEM.L D5/A0/A2/A4,(A0)
+      MOVEM.L D0/D5/A0/A2/A4,(A0)
+      MOVEM.L D0/D2/D5/A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3/D5/A0/A2/A4,(A0)
+      MOVEM.L D0/D2-D3/D5/A0/A2/A4,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A2/A4,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2/A4,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2/A4,(A0)
+      MOVEM.L D7-A0/A2/A4,(A0)
+      MOVEM.L D0/D7-A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D7-A0/A2/A4,(A0)
+      MOVEM.L D0/D2/D7-A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3/D7-A0/A2/A4,(A0)
+      MOVEM.L D0/D2-D3/D7-A0/A2/A4,(A0)
+      MOVEM.L D0/D2/D4/D7-A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2/A4,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2/A4,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2/A4,(A0)
+      MOVEM.L A0/A2/A4,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1-A2/A4,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1-A2/A4,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1-A2/A4,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2/A4,(A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3/A5,(A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3/A5,(A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3/A5,(A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3/A5,(A0)
+      MOVEM.L D2-D3/D5/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3/A5,(A0)
+      MOVEM.L D4-D5/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D4-D5/A0-A1/A3/A5,(A0)
+      MOVEM.L D0-D1/D4-D5/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3/A5,(A0)
+      MOVEM.L D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D2/D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0-D1/D3/D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3/A5,(A0)
+      MOVEM.L A0-A1/A3/A5,(A0)
+      MOVEM.L D1-D3/D5/A0/A2-A3/A5,(A0)
+      MOVEM.L D4-D5/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D4-D5/A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D4-D5/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2/D4-D5/A0/A2-A3/A5,(A0)
+      MOVEM.L D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2/D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D3/D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2/D4/D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2-A3/A5,(A0)
+      MOVEM.L D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D3/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2/D4/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2-A3/A5,(A0)
+      MOVEM.L A0/A2-A3/A5,(A0)
       MOVEM.L D0-D2/D7-A2/A6,-(A0)
-      MOVEM.L D0-D2/D6/A0-A2/A6,-(A0)
-      MOVEM.L D0-D2/D5/D7-A2/A6,-(A0)
-      MOVEM.L D0-D2/D5-D6/A0-A2/A6,-(A0)
-      MOVEM.L D0-D2/D4/D6/A0-A2/A6,-(A0)
-      MOVEM.L D0-D2/D4-D5/D7-A2/A6,-(A0)
-      MOVEM.L D0-D3/A0-A2/A6,-(A0)
-      MOVEM.L D0-A2/A6,-(A0)
-      MOVEM.L A0-A2/A6,-(A0)
-      MOVEM.L D6/A0-A2/A6,-(A0)
-      MOVEM.L D5/D7-A2/A6,-(A0)
-      MOVEM.L D4/D6/A0-A2/A6,-(A0)
-      MOVEM.L D3/D5/D7-A2/A6,-(A0)
-      MOVEM.L D3/D5-D6/A0-A2/A6,-(A0)
-      MOVEM.L D2/D4/D6/A0-A2/A6,-(A0)
-      MOVEM.L D2/D4-D5/D7-A2/A6,-(A0)
-      MOVEM.L D1/D3/D5/D7-A2/A6,-(A0)
-      MOVEM.L D1/D3/D5-D6/A0-A2/A6,-(A0)
-      MOVEM.L D1/D3-D4/D6/A0-A2/A6,-(A0)
-      MOVEM.L D0/D2/D4/D6/A0-A2/A6,-(A0)
-      MOVEM.L D0/D2/D4-D5/D7-A2/A6,-(A0)
-      MOVEM.L D0/D2-D3/D5/D7-A2/A6,-(A0)
-      MOVEM.L D0/D2-D3/D5-D6/A0-A2/A6,-(A0)
-      MOVEM.L D0-D1/D3/D5/D7-A2/A6,-(A0)
-      MOVEM.L D0-D1/D3/D5-D6/A0-A2/A6,-(A0)
-      MOVEM.L D0-D1/D3-D4/D6/A0-A2/A6,-(A0)
-      MOVEM.L D0-D2/A0-A2/A6-A7,-(A0)
-      MOVEM.L D0-D2/A0-A2/A5/A7,-(A0)
-      MOVEM.L D0-D2/A0-A2/A4/A6-A7,-(A0)
-      MOVEM.L D0-D2/A0-A2/A4-A5/A7,-(A0)
-      MOVEM.L D0-D2/A0-A3,-(A0)
-      MOVEM.L D0-D2,-(A0)
-      MOVEM.L D0-D2/A7,-(A0)
-      MOVEM.L D0-D2/A5/A7,-(A0)
-      MOVEM.L D0-D2/A4/A6-A7,-(A0)
-      MOVEM.L D0-D2/A3/A5/A7,-(A0)
-      MOVEM.L D0-D2/A2/A4/A6-A7,-(A0)
-      MOVEM.L D0-D2/A2/A4-A5/A7,-(A0)
-      MOVEM.L D0-D2/A1/A3/A5/A7,-(A0)
-      MOVEM.L D0-D2/A1/A3-A4/A6-A7,-(A0)
-      MOVEM.L D0-D2/A0/A2/A4/A6-A7,-(A0)
-      MOVEM.L D0-D2/A0/A2/A4-A5/A7,-(A0)
-      MOVEM.L D0-D2/A0/A2-A3/A5/A7,-(A0)
-      MOVEM.L D0-D2/A0-A1/A3/A5/A7,-(A0)
-      MOVEM.L D0-D2/A0-A1/A3-A4/A6-A7,-(A0)
-      MOVEM.L D0-D2/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0-D2/D6-A2/A6-A7,-(A1)
-      MOVEM.L D0-D2/D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D0-D2/D5-D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0-D2/D4/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0-D2/D4-D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D0-A2/A6-A7,-(A1)
-      MOVEM.L A0-A2/A6-A7,-(A1)
-      MOVEM.L D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D4/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D3/D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D3/D5-D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D2/D4/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D2/D4-D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D1/D3/D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D1/D3/D5-D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D1/D3-D4/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0/D2/D4/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0/D2/D4-D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D0/D2-D3/D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D0/D2-D3/D5-D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0-D1/D3/D5/D7-A2/A6-A7,-(A1)
-      MOVEM.L D0-D1/D3/D5-D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0-D1/D3-D4/D6/A0-A2/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7-A2/A5/A7,-(A1)
-      MOVEM.L D0-D2/D7-A2/A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7-A2/A4-A5/A7,-(A1)
-      MOVEM.L D0-D2/D7-A3,-(A1)
-      MOVEM.L D0-D2/D7,-(A1)
-      MOVEM.L D0-D2/D7/A7,-(A1)
-      MOVEM.L D0-D2/D7/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7/A5/A7,-(A1)
-      MOVEM.L D0-D2/D7/A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7/A3/A5/A7,-(A1)
-      MOVEM.L D0-D2/D7/A2/A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7/A2/A4-A5/A7,-(A1)
-      MOVEM.L D0-D2/D7/A2-A3/A5/A7,-(A1)
-      MOVEM.L D0-D2/D7/A1/A3/A5/A7,-(A1)
-      MOVEM.L D0-D2/D7/A1/A3-A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7/A1-A2/A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7/A1-A2/A4-A5/A7,-(A1)
-      MOVEM.L D0-D2/D7-A0/A3/A5/A7,-(A1)
-      MOVEM.L D0-D2/D7-A0/A3-A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7-A0/A2/A4/A6-A7,-(A1)
-      MOVEM.L D0-D2/D7-A0/A2/A4-A5/A7,-(A1)
-      MOVEM.L D0-D2/D7-A0/A2-A3/A5/A7,-(A1)
-      MOVEM.L D0-D2/D6/A0/A2/A4/A6-A7,-(A2)
-      MOVEM.L D0-D2/D6/A0/A2/A4-A5/A7,-(A2)
-      MOVEM.L D0-D2/D6/A0/A2-A3/A5/A7,-(A2)
-      MOVEM.L D0-D2/D6/A0-A1/A3/A5/A7,-(A2)
-      MOVEM.L D0-D2/D6/A0-A1/A3-A4/A6-A7,-(A2)
-      MOVEM.L D0-D2/D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D0-D2/D5-D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0-D2/D4/D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0-D2/D4-D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D0-A2/A5/A7,-(A3)
-      MOVEM.L A0-A2/A5/A7,-(A3)
-      MOVEM.L D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D4/D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D3/D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D3/D5-D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D2/D4/D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D2/D4-D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D1/D3/D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D1/D3/D5-D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D1/D3-D4/D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0/D2/D4/D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0/D2/D4-D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D0/D2-D3/D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D0/D2-D3/D5-D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0-D1/D3/D5/D7-A2/A5/A7,-(A3)
-      MOVEM.L D0-D1/D3/D5-D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0-D1/D3-D4/D6/A0-A2/A5/A7,-(A3)
-      MOVEM.L D0-D2/D6-D7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A6-A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A5/A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A4/A6-A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A3/A5/A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A2/A4/A6-A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A2/A4-A5/A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A1/A3/A5/A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A1/A3-A4/A6-A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A1-A2/A4/A6-A7,-(A3)
-      MOVEM.L D0-D2/D6-D7/A1-A2/A4-A5/A7,-(A3)
-      MOVEM.L D0-D2/D5/D7-A2/A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A2/A4-A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A3,-(A5)
-      MOVEM.L D0-D2/D5/D7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A3/A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A2/A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A2/A4-A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A1/A3/A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A1/A3-A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A1-A2/A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7/A1-A2/A4-A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A0/A3/A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A0/A3-A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A0/A2/A4/A6-A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A0/A2/A4-A5/A7,-(A5)
-      MOVEM.L D0-D2/D5/D7-A0/A2-A3/A5/A7,-(A5)
-      MOVEM.L D0-D2/D5-D6/A0/A2/A4/A6-A7,-(A6)
-      MOVEM.L D0-D2/D5-D6/A0/A2/A4-A5/A7,-(A6)
-      MOVEM.L D0-D2/D5-D6/A0/A2-A3/A5/A7,-(A6)
-      MOVEM.L D0-D2/D5-D6/A0-A1/A3/A5/A7,-(A6)
-      MOVEM.L D0-D2/D5-D6/A0-A1/A3-A4/A6-A7,-(A6)
+      MOVEM.L D0-D2/D7-A2/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7-A2/A5/A7,-(A0)
+      MOVEM.L D0-D2/D7-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D7-A3,-(A0)
+      MOVEM.L D0-D2/D7,-(A0)
+      MOVEM.L D0-D2/D7/A7,-(A0)
+      MOVEM.L D0-D2/D7/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7/A5/A7,-(A0)
+      MOVEM.L D0-D2/D7/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D7/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D7-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A2/A5-A6,-(A0)
+      MOVEM.L D0-D2/D5/D7-A2/A4,-(A0)
+      MOVEM.L D0-D2/D5/D7-A2/A4/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A3,-(A0)
+      MOVEM.L D0-D2/D5/D7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5-D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D5-D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D5-D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5-D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D5-D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A2/A4-A6,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A3,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A3/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D2/D4-D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A0-A3/A7,-(A0)
+      MOVEM.L D0-D3/A0-A3/A6-A7,-(A0)
+      MOVEM.L D0-D3/A0-A3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A0-A4,-(A0)
+      MOVEM.L D0-D3,-(A0)
+      MOVEM.L D0-D3/A7,-(A0)
+      MOVEM.L D0-D3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A4/A6-A7,-(A0)
+      MOVEM.L D0-D3/A3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D3/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D3/A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-D3/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D3/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D3/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-D3/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-D3/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D0-D3/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-A0,-(A0)
+      MOVEM.L D0-A0/A7,-(A0)
+      MOVEM.L D0-A0/A6-A7,-(A0)
+      MOVEM.L D0-A0/A5/A7,-(A0)
+      MOVEM.L D0-A0/A4/A6-A7,-(A0)
+      MOVEM.L D0-A0/A4-A5/A7,-(A0)
+      MOVEM.L D0-A0/A3/A5/A7,-(A0)
+      MOVEM.L D0-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D0-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D0-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D0-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L A7,-(A0)
+      MOVEM.L A6-A7,-(A0)
+      MOVEM.L A5/A7,-(A0)
+      MOVEM.L A4/A6-A7,-(A0)
+      MOVEM.L A4-A5/A7,-(A0)
+      MOVEM.L A3/A5/A7,-(A0)
+      MOVEM.L A3-A4/A6-A7,-(A0)
+      MOVEM.L A2/A4/A6-A7,-(A0)
+      MOVEM.L A2/A4-A5/A7,-(A0)
+      MOVEM.L A2-A3/A5/A7,-(A0)
+      MOVEM.L A1/A3/A5/A7,-(A0)
+      MOVEM.L A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D7/A6,-(A0)
+      MOVEM.L D7/A6-A7,-(A0)
+      MOVEM.L D7/A5/A7,-(A0)
+      MOVEM.L D7/A4/A6-A7,-(A0)
+      MOVEM.L D7/A4-A5/A7,-(A0)
+      MOVEM.L D7/A3/A5/A7,-(A0)
+      MOVEM.L D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D7,-(A0)
+      MOVEM.L D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D5/D7/A5-A6,-(A0)
+      MOVEM.L D5/D7/A4,-(A0)
+      MOVEM.L D5/D7/A4/A7,-(A0)
+      MOVEM.L D5/D7/A4/A6-A7,-(A0)
+      MOVEM.L D5/D7/A4-A5/A7,-(A0)
+      MOVEM.L D5/D7/A3/A5/A7,-(A0)
+      MOVEM.L D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D5/D7-A0,-(A0)
+      MOVEM.L D5/D7-A0/A7,-(A0)
+      MOVEM.L D5/D7-A0/A6-A7,-(A0)
+      MOVEM.L D5/D7-A0/A5/A7,-(A0)
+      MOVEM.L D5/D7-A0/A4/A6-A7,-(A0)
+      MOVEM.L D5/D7-A0/A4-A5/A7,-(A0)
+      MOVEM.L D5/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.L D5/D7-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D5/D7,-(A0)
+      MOVEM.L D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D4/D6-D7/A4-A5,-(A0)
+      MOVEM.L D4/D6-D7/A4-A5/A7,-(A0)
+      MOVEM.L D4/D6-D7/A3,-(A0)
+      MOVEM.L D4/D6-D7/A3/A7,-(A0)
+      MOVEM.L D4/D6-D7/A3/A6-A7,-(A0)
+      MOVEM.L D4/D6-D7/A3/A5/A7,-(A0)
+      MOVEM.L D4/D6-D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D4/D6-D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D4/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D4/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D4/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D4/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D4/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D4/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D4/D6-D7,-(A0)
+      MOVEM.L D3/D5/D7/A3/A5-A6,-(A0)
+      MOVEM.L D3/D5/D7/A3-A4,-(A0)
+      MOVEM.L D3/D5/D7/A3-A4/A7,-(A0)
+      MOVEM.L D3/D5/D7/A3-A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7/A2,-(A0)
+      MOVEM.L D3/D5/D7/A2/A7,-(A0)
+      MOVEM.L D3/D5/D7/A2/A5/A7,-(A0)
+      MOVEM.L D3/D5/D7/A2/A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D3/D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D3/D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D3/D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D3/D5/D7-A0,-(A0)
+      MOVEM.L D3/D5/D7-A0/A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A5/A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A4-A5/A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D3/D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D3/D5/D7,-(A0)
+      MOVEM.L D3/D5-D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D3/D5-D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D3/D5-D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D3/D5-D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D3/D5-D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6/A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6/A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4/D6/A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D2/D4/D6/A0-A1/A3/A5/A7,-(A0)
+      MOVEM.L D2/D4/D6/A0-A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A2/A4-A5,-(A0)
+      MOVEM.L D2/D4/D6-D7/A2/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A2-A3,-(A0)
+      MOVEM.L D2/D4/D6-D7/A2-A3/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A2-A3/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1/A5/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4/D6-D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4/D6-D7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A2/A4-A6,-(A0)
+      MOVEM.L D2/D4-D5/D7/A2-A3,-(A0)
+      MOVEM.L D2/D4-D5/D7/A2-A3/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A2-A3/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A2-A3/A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1/A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1/A3/A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1/A3-A4/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1-A2/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7/A1-A2/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A3/A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A3-A4/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A2/A4/A6-A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A2/A4-A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7-A0/A2-A3/A5/A7,-(A0)
+      MOVEM.L D2/D4-D5/D7,-(A0)
       MOVEM.L D1/D3/D5-A0/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A2-A3/A5-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2-A3/A5-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A3/A5-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A4-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A4-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A3,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2/A4,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1-A2/A4,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A3/A5,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2-A3/A5,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2/A4/A6,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1-A2/A4/A6,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A3-A4/A6,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A3/A5/A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2-A3/A5/A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2/A4-A5/A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1-A2/A4-A5/A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-A0/A2/A4/A6-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1-A2/A4/A6-A7,(-$1414,A0)
-      MOVEM.L D1/D3/D5-D7/A1/A3-A4/A6-A7,(-$1414,A0)
-      MOVEM.L D0-D1/D3/D5-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D2-D3/D5-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2-D3/D5-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D4-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D4-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0-D1/D3/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2/D4/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0-D1/D3/D5/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2-D3/D5/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2/D4/D6/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0-D1/D3-D4/D6/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0-D1/D3/D5/D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2-D3/D5/D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2/D4-D5/D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0/D2/D4/D6-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A3/A5-A7,(-$1414,A0)
-      MOVEM.L D3/D5-D7/A3/A5-A7,($00EC,A0)
-      MOVEM.L D0-D1/D3/D5-D7/A1/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A1/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A2-A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2-A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A4-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1/A3,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2/A4,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1-A2/A4,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1/A3/A5,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2-A3/A5,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2/A4/A6,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1-A2/A4/A6,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1/A3-A4/A6,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1/A3/A5/A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2-A3/A5/A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2/A4-A5/A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1-A2/A4-A5/A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-A0/A2/A4/A6-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1-A2/A4/A6-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5-D7/A1/A3-A4/A6-A7,(-$1313,A1)
-      MOVEM.L D2-D3/D5-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2-D3/D5-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D4-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D4-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2-D3/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2/D4/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3-D4/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2-D3/D5/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2/D4/D6/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3-D4/D6/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2-D3/D5-D6/A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2/D4/D7-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3-D4/D7-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0-D1/D3/D5/D7-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2-D3/D5/D7-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D2/D4-D5/D7-A0/A3/A5-A7,(-$1313,A1)
-      MOVEM.L D0/D3/D5-A0/A3/A5-A7,($00ED,A1)
-      MOVEM.L D2-D3/D5-D7/A2-A3/A5-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2-A3/A5-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A3/A5-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A4-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1/A3,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2/A4,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1-A2/A4,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1/A3/A5,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2-A3/A5,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2/A4/A6,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1-A2/A4/A6,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1/A3-A4/A6,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1/A3/A5/A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2-A3/A5/A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2/A4-A5/A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1-A2/A4-A5/A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-A0/A2/A4/A6-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1-A2/A4/A6-A7,(-$1212,A2)
-      MOVEM.L D2-D3/D5-D7/A1/A3-A4/A6-A7,(-$1212,A2)
-      MOVEM.L D0-D1/D3/D5/D7/A1/A3/A5-A7,(-$1212,A2)
-      MOVEM.L D0/D2-D3/D5/D7/A1/A3/A5-A7,(-$1212,A2)
-      MOVEM.L D0/D2/D4-D5/D7/A1/A3/A5-A7,(-$1212,A2)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A3/A5-A7,(-$1212,A2)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3/A5-A7,(-$1212,A2)
-      MOVEM.L D1/D3/D5-D7/A1/A3/A5-A7,($00EE,A2)
-      MOVEM.L D0/D2-D3/D5-D7/A2-A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2-A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A4-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1/A3,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2/A4,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1-A2/A4,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1/A3/A5,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2-A3/A5,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2/A4/A6,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1-A2/A4/A6,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1/A3-A4/A6,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1/A3/A5/A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2-A3/A5/A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2/A4-A5/A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1-A2/A4-A5/A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-A0/A2/A4/A6-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1-A2/A4/A6-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5-D7/A1/A3-A4/A6-A7,(-$1111,A3)
-      MOVEM.L A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0-D1/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0-D1/D3/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2/D4/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0-D1/D3/D5/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2-D3/D5/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0/D2/D4/D6/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3/A5-A7,(-$1111,A3)
-      MOVEM.L D0-D1/D3/D5-A1/A3/A5-A7,($00EF,A3)
-      MOVEM.L D4-D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D4-D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0-D1/D3/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2/D4/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0-D1/D3/D5/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2-D3/D5/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2/D4/D6/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0-D1/D3-D4/D6/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0-D1/D3/D5/D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2-D3/D5/D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2/D4-D5/D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0/D2/D4/D6-D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A2-A3/A5-A7,(-$1010,A4)
-      MOVEM.L D2-D3/D5-D7/A2-A3/A5-A7,($00F0,A4)
-      MOVEM.L D4-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D4-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0-D1/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0-D1/D3/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2-D3/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2/D4/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0-D1/D3/D5/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2-D3/D5/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2/D4/D6/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0-D1/D3-D4/D6/A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2/D4/D7-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0-D1/D3-D4/D7-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0-D1/D3/D5/D7-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2-D3/D5/D7-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2/D4-D5/D7-A0/A2-A3/A5-A7,(-$0F0F,A5)
-      MOVEM.L D0/D2-D3/D5-A0/A2-A3/A5-A7,($00F1,A5)
-      MOVEM.L D4-A3/A5-A7,(-$0E0E,A6)
-      MOVEM.L D4-D7/A4-A7,(-$0E0E,A6)
-      MOVEM.L D4-A7,(-$0E0E,A6)
-      MOVEM.L D4-D7,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1/A3,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2/A4,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1-A2/A4,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1/A3/A5,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2-A3/A5,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2/A4/A6,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1-A2/A4/A6,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1/A3-A4/A6,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1/A3/A5/A7,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2-A3/A5/A7,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2/A4-A5/A7,(-$0E0E,A6)
-      MOVEM.L D4-D7/A1-A2/A4-A5/A7,(-$0E0E,A6)
-      MOVEM.L D4-A0/A2/A4/A6-A7,(-$0E0E,A6)
-      MOVEM.L D0/D4-D7/A4-A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A4-A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1/A3,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2/A4,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1-A2/A4,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1/A3/A5,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2-A3/A5,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2/A4/A6,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1-A2/A4/A6,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1/A3-A4/A6,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1/A3/A5/A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2-A3/A5/A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2/A4-A5/A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-D7/A1-A2/A4-A5/A7,(-$0D0D,A7)
-      MOVEM.L D0/D4-A0/A2/A4/A6-A7,(-$0D0D,A7)
+      MOVEM.L D0-D1/D3/D5-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D2-D3/D5-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2-D3/D5-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D4-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D4-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2-D3/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2/D4/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3-D4/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3/D5/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2-D3/D5/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2/D4-D5/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2/D4/D6/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2/D4/D7-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A3/A5-A7,(-$1414,A0)
+      MOVEM.L D0/D3/D5-A0/A3/A5-A7,($00EC,A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3/A5-A7,(-$1313,A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3/A5-A7,(-$1313,A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3/A5-A7,(-$1313,A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3/A5-A7,(-$1313,A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3/A5-A7,(-$1313,A0)
+      MOVEM.L D1/D3/D5-D7/A1/A3/A5-A7,($00ED,A0)
+      MOVEM.L A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/D3/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2-D3/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2/D4/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3/A5-A7,(-$1212,A0)
+      MOVEM.L D0-D1/D3/D5-A1/A3/A5-A7,($00EE,A0)
+      MOVEM.L D0/D2-D3/D5-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D1-D3/D5-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D4-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D4-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2/D4-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0-D1/D3/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2/D4/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0-D1/D3/D5/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2-D3/D5/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2/D4/D6/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0-D1/D3-D4/D6/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0-D1/D3/D5-D6/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0-D1/D3/D5/D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2-D3/D5/D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2/D4-D5/D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0/D2/D4/D6-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A2-A3/A5-A7,(-$1111,A0)
+      MOVEM.L D2-D3/D5-D7/A2-A3/A5-A7,($00EF,A0)
+      MOVEM.L D1-D3/D5-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D4-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D4-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/D4-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2-D3/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/D4/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3-D4/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3/D5/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2-D3/D5/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/D4-D5/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/D4/D6/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2-D3/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/D4/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2-A3/A5-A7,(-$1010,A0)
+      MOVEM.L D0/D2-D3/D5-A0/A2-A3/A5-A7,($00F0,A0)
+      MOVEM.L D4-A3/A5-A7,(-$0E0E,A0)
+      MOVEM.L D0/D4-A3/A5-A7,(-$0E0E,A0)
+      MOVEM.L D0-D1/D4-A3/A5-A7,(-$0E0E,A0)
+      MOVEM.L D0/D2/D4-A3/A5-A7,(-$0E0E,A0)
+      MOVEM.L D0/D4-D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D4-D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2/D4-D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D3-D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D3/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2/D4/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D3/D5/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2-D3/D5/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2/D4/D6/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D3-D4/D6/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D3/D5-D6/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2-D3/D5-D6/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D3/D5/D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2-D3/D5/D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2/D4-D5/D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0/D2/D4/D6-D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A4-A7,(-$0D0D,A0)
+      MOVEM.L D4-D7/A4-A7,($00F3,A0)
+      MOVEM.L A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2-D3/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2/D4/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3-D4/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3/D5/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2-D3/D5/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2/D4-D5/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2/D4/D6/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2-D3/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2/D4/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A4-A7,(-$0C0C,A0)
+      MOVEM.L D0/D4-A0/A4-A7,($00F4,A0)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A4-A7,(-$0B0B,A0)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A4-A7,(-$0B0B,A0)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A4-A7,(-$0B0B,A0)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A4-A7,(-$0B0B,A0)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A4-A7,(-$0B0B,A0)
+      MOVEM.L D1/D4-D7/A1/A4-A7,($00F5,A0)
       MOVEM.L D1/D4-A0/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1-A2/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A3-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A3,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2/A4,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1-A2/A4,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A3/A5,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2-A3/A5,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2/A4/A6,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1-A2/A4/A6,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A3-A4/A6,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A3/A5-A6,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2-A3/A5-A6,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A3/A5/A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2-A3/A5/A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2/A4-A5/A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1-A2/A4-A5/A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-A0/A2/A4/A6-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1-A2/A4/A6-A7,(-12,A0,A7.W)
-      MOVEM.L D1/D4-D7/A1/A3-A4/A6-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D4-D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2/D4-D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D3-D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D3/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2/D4/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D3/D5/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2-D3/D5/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2/D4/D6/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D3-D4/D6/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D3/D5-D6/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2-D3/D5-D6/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D3/D5/D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2-D3/D5/D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2/D4-D5/D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0/D2/D4/D6-D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A4-A7,(-12,A0,A7.W)
-      MOVEM.L D4-D7/A4-A7,(-12,A0,A7.L)
-      MOVEM.L D4-D7/A4-A7,(-12,A0,D0.W)
-      MOVEM.L D4-D7/A4-A7,(-12,A0,D0.L)
-      MOVEM.L D4-D7/A4-A7,(0,A0,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A1/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1-A2/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A3,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2/A4,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1-A2/A4,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A3/A5,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2-A3/A5,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2/A4/A6,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1-A2/A4/A6,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A3-A4/A6,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A3/A5-A6,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2-A3/A5-A6,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A3/A5/A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2-A3/A5/A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2/A4-A5/A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1-A2/A4-A5/A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-A0/A2/A4/A6-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1-A2/A4/A6-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D4-D7/A1/A3-A4/A6-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/D4-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D3-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/D4/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3/D5/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2-D3/D5/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/D4-D5/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/D4/D6/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3-D4/D6/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3/D5-D6/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2-D3/D5-D6/A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2-D3/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/D4/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3-D4/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0-D1/D3/D5/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2-D3/D5/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D2/D4-D5/D7-A0/A4-A7,(-11,A1,A7.W)
-      MOVEM.L D0/D4-A0/A4-A7,(-11,A1,A7.L)
-      MOVEM.L D0/D4-A0/A4-A7,(-11,A1,D0.W)
-      MOVEM.L D0/D4-A0/A4-A7,(-11,A1,D0.L)
-      MOVEM.L D0/D4-A0/A4-A7,(0,A1,A7.W)
-      MOVEM.L D0-D1/D3/D5/D7/A1/A4-A7,(-10,A2,A7.W)
-      MOVEM.L D0/D2-D3/D5/D7/A1/A4-A7,(-10,A2,A7.W)
-      MOVEM.L D0/D2/D4-D5/D7/A1/A4-A7,(-10,A2,A7.W)
-      MOVEM.L D0/D2/D4/D6-D7/A1/A4-A7,(-10,A2,A7.W)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A4-A7,(-10,A2,A7.W)
-      MOVEM.L D1/D4-D7/A1/A4-A7,(-10,A2,A7.L)
-      MOVEM.L D1/D4-D7/A1/A4-A7,(-10,A2,D0.W)
-      MOVEM.L D1/D4-D7/A1/A4-A7,(-10,A2,D0.L)
-      MOVEM.L D1/D4-D7/A1/A4-A7,(0,A2,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1-A2/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1/A3,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2/A4,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1-A2/A4,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1/A3/A5,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2-A3/A5,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2/A4/A6,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1-A2/A4/A6,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1/A3-A4/A6,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1/A3/A5-A6,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2-A3/A5-A6,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1/A3/A5/A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2-A3/A5/A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2/A4-A5/A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1-A2/A4-A5/A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-A0/A2/A4/A6-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1-A2/A4/A6-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4-D7/A1/A3-A4/A6-A7,(-9,A3,A7.W)
-      MOVEM.L A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0-D1/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0-D1/D3/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0-D1/D3/D5/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2-D3/D5/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2/D4/D6/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A4-A7,(-9,A3,A7.W)
-      MOVEM.L D0-D1/D4-A1/A4-A7,(-9,A3,A7.L)
-      MOVEM.L D0-D1/D4-A1/A4-A7,(-9,A3,D0.W)
-      MOVEM.L D0-D1/D4-A1/A4-A7,(-9,A3,D0.L)
-      MOVEM.L D0-D1/D4-A1/A4-A7,(0,A3,A7.W)
-      MOVEM.L D0-D2/D4-D7/A1-A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A3-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2/A4,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1-A2/A4,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3/A5,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2-A3/A5,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2/A4-A5,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2/A4/A6,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1-A2/A4/A6,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3-A4/A6,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3/A5-A6,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2-A3/A5-A6,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3/A5/A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2-A3/A5/A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2/A4-A5/A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1-A2/A4-A5/A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-A0/A2/A4/A6-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1-A2/A4/A6-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D2/D4-D7/A1/A3-A4/A6-A7,(-7,A5,A7.L)
-      MOVEM.L D3-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D3-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2-D3/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D4/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3/D5/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2-D3/D5/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D4-D5/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D4/D6/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3-D4/D6/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3/D5-D6/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2-D3/D5-D6/A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2-D3/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D4/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3-D4/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0-D1/D3/D5/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2-D3/D5/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D4-D5/D7-A0/A2/A4-A7,(-7,A5,A7.L)
-      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(-7,A5,D0.W)
-      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(-7,A5,D0.L)
-      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(0,A5,A7.W)
-      MOVEM.L D3-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1/A3-A7,(-6,A6,A7.L)
-      MOVEM.L D3-A7,(-6,A6,A7.L)
-      MOVEM.L D3-D7,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1/A3,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2/A4,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1-A2/A4,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1/A3/A5,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2-A3/A5,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1-A2/A4-A5,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2/A4/A6,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1-A2/A4/A6,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1/A3-A4/A6,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2-A3/A5-A6,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1/A3/A5/A7,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2-A3/A5/A7,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2/A4-A5/A7,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1-A2/A4-A5/A7,(-6,A6,A7.L)
-      MOVEM.L D3-A0/A2/A4/A6-A7,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1-A2/A4/A6-A7,(-6,A6,A7.L)
-      MOVEM.L D3-D7/A1/A3-A4/A6-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D3-D7/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0-D1/D3/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2/D4/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0-D1/D3/D5/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2-D3/D5/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2/D4-D5/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2/D4/D6/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0-D1/D3-D4/D6/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0-D1/D3/D5-D6/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2-D3/D5-D6/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0-D1/D3/D5/D7/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2-D3/D5/D7/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2/D4-D5/D7/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2/A4-A7,(-6,A6,A7.L)
-      MOVEM.L D1-D2/D4-D7/A1-A2/A4-A7,(-6,A6,D0.W)
-      MOVEM.L D1-D2/D4-D7/A1-A2/A4-A7,(-6,A6,D0.L)
-      MOVEM.L D1-D2/D4-D7/A1-A2/A4-A7,(0,A6,A7.W)
-      MOVEM.L D0/D3-D7/A3-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1/A3,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2/A4,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1-A2/A4,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1/A3/A5,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2-A3/A5,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2/A4/A6,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1-A2/A4/A6,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1/A3-A4/A6,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2-A3/A5-A6,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1/A3/A5/A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2-A3/A5/A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2/A4-A5/A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1-A2/A4-A5/A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-A0/A2/A4/A6-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1-A2/A4/A6-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D3-D7/A1/A3-A4/A6-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D2/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0-D1/D3/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D2-D3/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D2/D4/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0-D1/D3-D4/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0-D1/D3/D5/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D2-D3/D5/D7-A2/A4-A7,(-5,A7,A7.L)
-      MOVEM.L D0/D2/D4-D5/D7-A2/A4-A7,(-5,A7,A7.L)
+      MOVEM.L D0-D1/D4-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/D4-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D3-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2-D3/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/D4/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/D4-D5/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/D4/D6/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2-D3/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/D4/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A4-A7,(-12,A0,A7.W)
+      MOVEM.L D0/D4-A0/A4-A7,(-12,A0,A7.L)
+      MOVEM.L D0/D4-A0/A4-A7,(-12,A0,D0.W)
+      MOVEM.L D0/D4-A0/A4-A7,(-12,A0,D0.L)
+      MOVEM.L D0/D4-A0/A4-A7,(0,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A4-A7,(-11,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A4-A7,(-11,A0,A7.W)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A4-A7,(-11,A0,A7.W)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A4-A7,(-11,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A4-A7,(-11,A0,A7.W)
+      MOVEM.L D1/D4-D7/A1/A4-A7,(-11,A0,A7.L)
+      MOVEM.L D1/D4-D7/A1/A4-A7,(-11,A0,D0.W)
+      MOVEM.L D1/D4-D7/A1/A4-A7,(-11,A0,D0.L)
+      MOVEM.L D1/D4-D7/A1/A4-A7,(0,A0,A7.W)
+      MOVEM.L A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/D3/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2-D3/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2/D4/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A4-A7,(-10,A0,A7.W)
+      MOVEM.L D0-D1/D4-A1/A4-A7,(-10,A0,A7.L)
+      MOVEM.L D0-D1/D4-A1/A4-A7,(-10,A0,D0.W)
+      MOVEM.L D0-D1/D4-A1/A4-A7,(-10,A0,D0.L)
+      MOVEM.L D0-D1/D4-A1/A4-A7,(0,A0,A7.W)
+      MOVEM.L D1-D2/D4-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D3-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D3-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2-D3/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D4/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D4-D5/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D4/D6/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2-D3/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D4/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2/A4-A7,(-8,A0,A7.W)
+      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(-8,A0,A7.L)
+      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(-8,A0,D0.W)
+      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(-8,A0,D0.L)
+      MOVEM.L D0/D2/D4-A0/A2/A4-A7,(0,A0,A7.W)
+      MOVEM.L D0-D2/D4-D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D3-D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D3-D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0-D1/D3/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2/D4/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5-D6/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5-D6/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2/A4-A7,(-7,A0,A7.L)
+      MOVEM.L D1-D2/D4-D7/A1-A2/A4-A7,(-7,A0,D0.W)
+      MOVEM.L D1-D2/D4-D7/A1-A2/A4-A7,(-7,A0,D0.L)
+      MOVEM.L D1-D2/D4-D7/A1-A2/A4-A7,(0,A0,A7.W)
+      MOVEM.L D3-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0/D2/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0-D1/D3/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0/D2-D3/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0/D2/D4/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/D7-A2/A4-A7,(-6,A0,A7.L)
+      MOVEM.L D0/D3-D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3-D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D2-D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2/D4/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5-D6/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5-D6/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6-D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A3-A7,(-5,A0,A7.L)
+      MOVEM.L D3-D7/A3-A7,(-5,A0,D0.W)
+      MOVEM.L D3-D7/A3-A7,(-5,A0,D0.L)
+      MOVEM.L D3-D7/A3-A7,(-5,A0,A0.W)
+      MOVEM.L D3-D7/A3-A7,(0,A0,A7.L)
+      MOVEM.L A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0-D1/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D2/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0-D1/D3/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D2/D4/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A3-A7,(-4,A0,A7.L)
+      MOVEM.L D0/D3-A0/A3-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3-A7,(-3,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3-A7,(-3,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3-A7,(-3,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3-A7,(-3,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3-A7,(-3,A0,A7.L)
+      MOVEM.L D1-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2-D3/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/D4/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/D4/D6/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2-D3/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/D4/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2-A7,(0,A0,A7.L)
+      MOVEM.L D0/D2-A0/A2-A7,(0,A0,D0.W)
+      MOVEM.L D0/D2-A0/A2-A7,(0,A0,D0.L)
+      MOVEM.L D0-D7/A1-A7,(1,A0,D0.W)
+      MOVEM.L A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2-D3/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2/D4/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5-D6/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5-D6/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/D7/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/D7/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/D7/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6-D7/A1-A7,(1,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A7,(1,A0,D0.W)
+      MOVEM.L D1-D7/A1-A7,(1,A0,D0.L)
+      MOVEM.L D1-D7/A1-A7,(1,A0,A0.W)
+      MOVEM.L D7-A7,(2,A0,D0.W)
+      MOVEM.L D0/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0-D1/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0/D2/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0-D1/D3/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0/D2-D3/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0/D2/D4/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/D7-A7,(2,A0,D0.W)
+      MOVEM.L D0-A7,(2,A0,D0.L)
+      MOVEM.L D0-A7,(2,A0,A0.W)
+      MOVEM.L D0-A7,(2,A0,A0.L)
+      MOVEM.L D0-A7,(-$80,A0,A7.L)
+      MOVEM.L D0,(3,A0,D0.W)
+      MOVEM.L D0-D1,(3,A0,D0.W)
+      MOVEM.L D0/D2,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3,(3,A0,D0.W)
+      MOVEM.L D0/D2-D3,(3,A0,D0.W)
+      MOVEM.L D0/D2/D4,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5,(3,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5,(3,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5,(3,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5-D6,(3,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5-D6,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/D7,(3,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/D7,(3,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/D7,(3,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6-D7,(3,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6-D7,(3,A0,D0.W)
+      MOVEM.L D1/A0,(4,A0,D0.W)
+      MOVEM.L D0-D1/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2/A0,(4,A0,D0.W)
+      MOVEM.L D0-D1/D3/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2-D3/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2/D4/A0,(4,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/A0,(4,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6/A0,(4,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0,(4,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0,(4,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0,(4,A0,D0.W)
+      MOVEM.L A0,(4,A0,D0.W)
+      MOVEM.L D0/A0,(4,A0,D0.L)
+      MOVEM.L D0/A0,(4,A0,A0.W)
+      MOVEM.L D0/A0,(4,A0,A0.L)
+      MOVEM.L D0/A0,(-$80,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/D7/A1,(5,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/D7/A1,(5,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/D7/A1,(5,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6-D7/A1,(5,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1,(5,A0,D0.W)
+      MOVEM.L D1-D2/A0/A2,(8,A0,D0.W)
+      MOVEM.L D3/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D3/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2-D3/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/D4/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/D4/D6/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2,(8,A0,D0.W)
+      MOVEM.L D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2-D3/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/D4/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2,(8,A0,D0.W)
+      MOVEM.L A0/A2,(8,A0,D0.W)
+      MOVEM.L D0/D2/A0/A2,(8,A0,D0.L)
+      MOVEM.L D0/D2/A0/A2,(8,A0,A0.W)
+      MOVEM.L D0/D2/A0/A2,(8,A0,A0.L)
+      MOVEM.L D0/D2/A0/A2,(-$80,A0,D0.W)
+      MOVEM.L D3/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D3/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2-D3/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2/D4/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5-D6/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5-D6/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/D7/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/D7/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/D7/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6-D7/A1-A2,(9,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2,(9,A0,D0.L)
+      MOVEM.L A1-A2,(9,A0,D0.L)
+      MOVEM.L D0/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0-D1/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0/D2/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0-D1/D3/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0/D2-D3/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0/D2/D4/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/D7-A2,(10,A0,D0.L)
+      MOVEM.L D0/D3/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3/A3,(11,A0,D0.L)
+      MOVEM.L D2-D3/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2-D3/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2/D4/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5-D6/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5-D6/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/D7/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/D7/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/D7/A3,(11,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6-D7/A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A3,(11,A0,D0.L)
+      MOVEM.L A3,(11,A0,D0.L)
+      MOVEM.L D0-D1/D3/A0/A3,(12,A0,D0.L)
+      MOVEM.L D2-D3/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2-D3/A0/A3,(12,A0,D0.L)
+      MOVEM.L D4/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2/D4/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A3,(12,A0,D0.L)
+      MOVEM.L D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2-D3/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2/D4/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A3,(12,A0,D0.L)
+      MOVEM.L A0/A3,(12,A0,D0.L)
+      MOVEM.L D0/D3/A0/A3,(-$80,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3,(13,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3,(13,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3,(13,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3,(13,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3,(13,A0,D0.L)
+      MOVEM.L D2-D3/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D2-D3/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D4/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D4/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0-D1/D4/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D2/D4/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L A0-A1/A3,(14,A0,D0.L)
+      MOVEM.L D0-D1/D3/A0-A1/A3,(14,A0,D1.W)
+      MOVEM.L D0-D1/D3/A0-A1/A3,(14,A0,A0.W)
+      MOVEM.L D0-D1/D3/A0-A1/A3,(14,A0,A0.L)
+      MOVEM.L D0-D1/D3/A0-A1/A3,(-$80,A0,D0.L)
+      MOVEM.L D1-D3/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D4/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D4/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D4/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2/D4/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D3-D4/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2/D4/D6/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2-D3/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2/D4/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L A0/A2-A3,(16,A0,D0.L)
+      MOVEM.L D0/D2-D3/A0/A2-A3,(16,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A4,(21,A0,D1.W)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A4,(21,A0,D1.W)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A4,(21,A0,D1.W)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A4,(21,A0,D1.W)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A4,(21,A0,D1.W)
+      MOVEM.L D2/D4/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0/D2/D4/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D3-D4/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0/D3-D4/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D5/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L A0-A1/A4,(22,A0,D1.W)
+      MOVEM.L D0-D1/D4/A0-A1/A4,(-$80,A0,D1.W)
+      MOVEM.L D1-D2/D4/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D3-D4/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D3-D4/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3-D4/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D5/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D5/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D5/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2-D3/D5/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D4-D5/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D4/D6/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2-D3/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D4/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L A0/A2/A4,(24,A0,D1.W)
+      MOVEM.L D0/D2/D4/A0/A2/A4,(24,A0,D1.L)
+      MOVEM.L D0/D2/D4/A0/A2/A4,(24,A0,A0.W)
+      MOVEM.L D0/D2/D4/A0/A2/A4,(24,A0,A0.L)
+      MOVEM.L D0/D2/D4/A0/A2/A4,(-$80,A0,D1.W)
+      MOVEM.L D0-D1/D3/D5/D7/A1-A2/A4,(25,A0,D1.L)
+      MOVEM.L D0/D2-D3/D5/D7/A1-A2/A4,(25,A0,D1.L)
+      MOVEM.L D0/D2/D4-D5/D7/A1-A2/A4,(25,A0,D1.L)
+      MOVEM.L D0/D2/D4/D6-D7/A1-A2/A4,(25,A0,D1.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1-A2/A4,(25,A0,D1.L)
+      MOVEM.L D0-D1/D3/D5/D7/A1/A3-A4,(29,A0,D1.L)
+      MOVEM.L D0/D2-D3/D5/D7/A1/A3-A4,(29,A0,D1.L)
+      MOVEM.L D0/D2/D4-D5/D7/A1/A3-A4,(29,A0,D1.L)
+      MOVEM.L D0/D2/D4/D6-D7/A1/A3-A4,(29,A0,D1.L)
+      MOVEM.L D0-D1/D3-D4/D6-D7/A1/A3-A4,(29,A0,D1.L)
+      MOVEM.L D2-D4/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D2-D4/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0-D1/D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D2/D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0-D1/D4-D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L A0-A1/A3-A4,(30,A0,D1.L)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3-A4,(30,A0,D2.W)
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3-A4,(30,A0,A0.L)
       MOVEM.L D1/D3-A0/A3-A7,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3-A7,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A2-A7,($FFFBFC).W
-      MOVEM.L D1/D3-A7,($FFFBFC).W
-      MOVEM.L D1/D3-D7,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2/A4,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1-A2/A4,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3/A5,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2-A3/A5,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2/A4-A5,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1-A2/A4-A5,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2/A4/A6,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1-A2/A4/A6,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3-A4/A6,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3/A5-A6,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2-A3/A5-A6,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3/A5/A7,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2-A3/A5/A7,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2/A4-A5/A7,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1-A2/A4-A5/A7,($FFFBFC).W
-      MOVEM.L D1/D3-A0/A2/A4/A6-A7,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1-A2/A4/A6-A7,($FFFBFC).W
-      MOVEM.L D1/D3-D7/A1/A3-A4/A6-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3-D7/A3-A7,($FFFBFC).W
-      MOVEM.L D2-D7/A3-A7,($FFFBFC).W
-      MOVEM.L A3-A7,($FFFBFC).W
-      MOVEM.L D0/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2/A3-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2/D4/A3-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3/D5/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2-D3/D5/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2/D4-D5/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2/D4/D6/A3-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3-D4/D6/A3-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3/D5-D6/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2-D3/D5-D6/A3-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3/D5/D7/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2-D3/D5/D7/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2/D4-D5/D7/A3-A7,($FFFBFC).W
-      MOVEM.L D0/D2/D4/D6-D7/A3-A7,($FFFBFC).W
-      MOVEM.L D0-D1/D3-D4/D6-D7/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D2-A0/A3-A7,($FFFBFC).W
+      MOVEM.L A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2-D3/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/D4/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3-D4/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3/D5/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2-D3/D5/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/D4-D5/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/D4/D6/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3-D4/D6/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3/D5-D6/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2-D3/D5-D6/A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2-D3/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/D4/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3-D4/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0-D1/D3/D5/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2-D3/D5/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D0/D2/D4-D5/D7-A0/A3-A7,($FFFBFC).W
+      MOVEM.L D1/A0,($000304).W
+      MOVEM.L D0-D1/A0,($000304).W
+      MOVEM.L D0/D2/A0,($000304).W
+      MOVEM.L D0-D1/D3/A0,($000304).W
+      MOVEM.L D0/D2-D3/A0,($000304).W
+      MOVEM.L D0/D2/D4/A0,($000304).W
+      MOVEM.L D0-D1/D3-D4/A0,($000304).W
+      MOVEM.L D0-D1/D3/D5/A0,($000304).W
+      MOVEM.L D0/D2-D3/D5/A0,($000304).W
+      MOVEM.L D0/D2/D4-D5/A0,($000304).W
+      MOVEM.L D0/D2/D4/D6/A0,($000304).W
+      MOVEM.L D0-D1/D3-D4/D6/A0,($000304).W
+      MOVEM.L D0-D1/D3/D5-D6/A0,($000304).W
+      MOVEM.L D0/D2-D3/D5-D6/A0,($000304).W
+      MOVEM.L D7-A0,($000304).W
+      MOVEM.L D0/D7-A0,($000304).W
+      MOVEM.L D0-D1/D7-A0,($000304).W
+      MOVEM.L D0/D2/D7-A0,($000304).W
+      MOVEM.L D0-D1/D3/D7-A0,($000304).W
+      MOVEM.L D0/D2-D3/D7-A0,($000304).W
+      MOVEM.L D0/D2/D4/D7-A0,($000304).W
+      MOVEM.L D0-D1/D3-D4/D7-A0,($000304).W
+      MOVEM.L D0-D1/D3/D5/D7-A0,($000304).W
+      MOVEM.L D0/D2-D3/D5/D7-A0,($000304).W
+      MOVEM.L D0/D2/D4-D5/D7-A0,($000304).W
+      MOVEM.L A0,($000304).W
+      MOVEM.L D1-D2/A0/A2,($000708).W
+      MOVEM.L D3/A0/A2,($000708).W
+      MOVEM.L D0/D3/A0/A2,($000708).W
+      MOVEM.L D0-D1/D3/A0/A2,($000708).W
+      MOVEM.L D0/D2-D3/A0/A2,($000708).W
+      MOVEM.L D0/D2/D4/A0/A2,($000708).W
+      MOVEM.L D0-D1/D3-D4/A0/A2,($000708).W
+      MOVEM.L D0-D1/D3/D5/A0/A2,($000708).W
+      MOVEM.L D0/D2-D3/D5/A0/A2,($000708).W
+      MOVEM.L D0/D2/D4-D5/A0/A2,($000708).W
+      MOVEM.L D0/D2/D4/D6/A0/A2,($000708).W
+      MOVEM.L D0-D1/D3-D4/D6/A0/A2,($000708).W
+      MOVEM.L D0-D1/D3/D5-D6/A0/A2,($000708).W
+      MOVEM.L D0/D2-D3/D5-D6/A0/A2,($000708).W
+      MOVEM.L D7-A0/A2,($000708).W
+      MOVEM.L D0/D7-A0/A2,($000708).W
+      MOVEM.L D0-D1/D7-A0/A2,($000708).W
+      MOVEM.L D0/D2/D7-A0/A2,($000708).W
+      MOVEM.L D0-D1/D3/D7-A0/A2,($000708).W
+      MOVEM.L D0/D2-D3/D7-A0/A2,($000708).W
+      MOVEM.L D0/D2/D4/D7-A0/A2,($000708).W
+      MOVEM.L D0-D1/D3-D4/D7-A0/A2,($000708).W
+      MOVEM.L D0-D1/D3/D5/D7-A0/A2,($000708).W
+      MOVEM.L D0/D2-D3/D5/D7-A0/A2,($000708).W
+      MOVEM.L D0/D2/D4-D5/D7-A0/A2,($000708).W
+      MOVEM.L A0/A2,($000708).W
+      MOVEM.L D2-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2-A1/A3-A7,($FEFF00).L
+      MOVEM.L A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2-D3/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/D4/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2-D3/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/D4/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3-D4/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0-D1/D3/D5/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2-D3/D5/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L D0/D2/D4-D5/D7-A1/A3-A7,($FEFF00).L
+      MOVEM.L A0-A7,($020304).L
+      MOVEM.L D0/A0-A7,($020304).L
+      MOVEM.L D0-D1/A0-A7,($020304).L
+      MOVEM.L D0/D2/A0-A7,($020304).L
+      MOVEM.L D0-D1/D3/A0-A7,($020304).L
+      MOVEM.L D0/D2-D3/A0-A7,($020304).L
+      MOVEM.L D0/D2/D4/A0-A7,($020304).L
+      MOVEM.L D0-D1/D3-D4/A0-A7,($020304).L
+      MOVEM.L D0-D1/D3/D5/A0-A7,($020304).L
+      MOVEM.L D0/D2-D3/D5/A0-A7,($020304).L
+      MOVEM.L D0/D2/D4-D5/A0-A7,($020304).L
+      MOVEM.L D0/D2/D4/D6/A0-A7,($020304).L
+      MOVEM.L D0-D1/D3-D4/D6/A0-A7,($020304).L
+      MOVEM.L D0-D1/D3/D5-D6/A0-A7,($020304).L
+      MOVEM.L D0/D2-D3/D5-D6/A0-A7,($020304).L
+      MOVEM.L D7-A7,($020304).L
+      MOVEM.L D0/D7-A7,($020304).L
+      MOVEM.L D0-D1/D7-A7,($020304).L
+      MOVEM.L D0/D2/D7-A7,($020304).L
+      MOVEM.L D0-D1/D3/D7-A7,($020304).L
+      MOVEM.L D0/D2-D3/D7-A7,($020304).L
+      MOVEM.L D0/D2/D4/D7-A7,($020304).L
+      MOVEM.L D0-D1/D3-D4/D7-A7,($020304).L
+      MOVEM.L D0-D1/D3/D5/D7-A7,($020304).L
+      MOVEM.L D0/D2-D3/D5/D7-A7,($020304).L
+      MOVEM.L D0/D2/D4-D5/D7-A7,($020304).L
+      MOVEM.L D2-D3/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2-D3/A0-A1/A3,($0E0F10).L
+      MOVEM.L D4/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D4/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D4/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2/D4/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3-D4/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3,($0E0F10).L
+      MOVEM.L D7-A1/A3,($0E0F10).L
+      MOVEM.L D0/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2-D3/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2/D4/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3-D4/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0-D1/D3/D5/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2-D3/D5/D7-A1/A3,($0E0F10).L
+      MOVEM.L D0/D2/D4-D5/D7-A1/A3,($0E0F10).L
+      MOVEM.L A0-A1/A3,($0E0F10).L
+      MOVEM.L D2-D3/D5/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D4-D5/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D4-D5/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D4-D5/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2/D4-D5/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2/D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D3/D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D3/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2-D3/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2/D4/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D3-D4/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0-D1/D3/D5/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2-D3/D5/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L D0/D2/D4-D5/D7-A1/A3/A5,($2E2F30).L
+      MOVEM.L A0-A1/A3/A5,($2E2F30).L
+      MOVEM.L D2-D4/D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2-D4/D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D5-D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D5-D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D5-D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/D5-D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D3/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2-D3/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/D4/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D3-D4/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D3/D5/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2-D3/D5/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/D4-D5/D7-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/D4/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3-A4/A6,($5E5F60).L
+      MOVEM.L D2-D3/D5-D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2-D3/D5-D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D4-D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D4-D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/D4-D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2-D3/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/D4/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3-D4/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3/D5/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2-D3/D5/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/D4-D5/D7-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/D4/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3/D5/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2-D3/D5/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0/D2/D4/D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3-D4/D6/A0-A1/A3/A5-A6,($6E6F70).L
+      MOVEM.L D0-D1/D3/D5-D6/A0-A1/A3/A5-A6,($6E6F70).L
       TST.B   D0
       TST.B   (A0)
       TST.B   (A0)+
       TST.B   -(A0)
       TST.B   ($292A,A0)
-      TST.B   (-$7FD6,A0)
       TST.B   ($32,A0,D3.W)
-      TST.B   ($32,A0,D3.L)
-      TST.B   ($32,A0,A0.W)
-      TST.B   ($32,A0,A0.L)
       TST.B   (-$80,A0,D3.W)
+      TST.B   ($39,A7,D3.L)
+      TST.B   (-$80,A7,D3.L)
       TST.B   ($00393A).W
       TST.B   ($3B3C3D).L
       TST.W   D0
@@ -3014,2088 +4818,4643 @@
       TST.W   (A0)+
       TST.W   -(A0)
       TST.W   ($696A,A0)
-      TST.W   (-$7F96,A0)
       TST.W   ($72,A0,D7.W)
-      TST.W   ($72,A0,D7.L)
-      TST.W   ($72,A0,A0.W)
-      TST.W   ($72,A0,A0.L)
       TST.W   (-$80,A0,D7.W)
+      TST.W   ($79,A7,D7.L)
+      TST.W   (-$80,A7,D7.L)
       TST.W   ($00797A).W
+      TST.W   ($7C7D7E).L
       TST.L   D0
       TST.L   (A0)
       TST.L   (A0)+
       TST.L   -(A0)
       TST.L   (-$5656,A0)
-      TST.L   ($00AA,A0)
       TST.L   (-$4E,A0,A3.W)
-      TST.L   (-$4E,A0,A3.L)
-      TST.L   (-$4E,A0,D0.W)
-      TST.L   (-$4E,A0,D0.L)
       TST.L   (0,A0,A3.W)
+      TST.L   (-$47,A7,A3.L)
+      TST.L   (0,A7,A3.L)
+      TST.L   ($FFBBBC).W
+      TST.L   ($BEBFC0).L
       TAS     D0
       TAS     (A0)
       TAS     (A0)+
       TAS     -(A0)
       TAS     (-$1616,A0)
-      TAS     ($00EA,A0)
       TAS     (-14,A0,A7.W)
-      TAS     (-14,A0,A7.L)
-      TAS     (-14,A0,D0.W)
-      TAS     (-14,A0,D0.L)
       TAS     (0,A0,A7.W)
+      TAS     (-7,A7,A7.L)
+      TAS     (0,A7,A7.L)
       TAS     ($FFF9FA).W
       TAS     ($FBFCFD).L
       ILLEGAL
       MOVEM.W (A0),D1/D4/D7-A0/A4/A7
-      MOVEM.W (A0),D1/D4/D7/A1/A4/A7
-      MOVEM.W (A0),D1/D4/D7-A0/A2/A4/A7
-      MOVEM.W (A0),D1/D4/D7/A1-A2/A4/A7
-      MOVEM.W (A0),D1/D4/D7/A3-A4/A7
-      MOVEM.W (A0),D1/D4/D7-A0/A3-A4/A7
-      MOVEM.W (A0),D1/D4/D7/A1/A3-A4/A7
-      MOVEM.W (A0),D1/D4/D7-A4/A7
-      MOVEM.W (A0),D1/D4/D7/A5/A7
-      MOVEM.W (A0),D1/D4/D7/A1/A3/A5/A7
-      MOVEM.W (A0),D1/D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A0),D1/D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A0),D1/D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A0),D1/D4/D7/A6-A7
-      MOVEM.W (A0),D1/D4/D7-A0/A6-A7
-      MOVEM.W (A0),D1/D4/D7/A1/A6-A7
-      MOVEM.W (A0),D1/D4/D7-A0/A2/A6-A7
-      MOVEM.W (A0),D1/D4/D7/A1-A2/A6-A7
-      MOVEM.W (A0),D1/D4/D7/A1/A3/A6-A7
-      MOVEM.W (A0),D1/D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A0),D1/D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A0),D1/D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A0),D1/D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A0),D1/D4/D7-A7
-      MOVEM.W (A0),D1/D4/D7
-      MOVEM.W (A0),D1/D4/D7/A1
-      MOVEM.W (A0),D0-D1/D4/D7/A4/A7
-      MOVEM.W (A0),D0/D2/D4/D7/A4/A7
-      MOVEM.W (A0),D3-D4/D7/A4/A7
-      MOVEM.W (A0),D0/D3-D4/D7/A4/A7
-      MOVEM.W (A0),D0-D1/D3-D4/D7/A4/A7
-      MOVEM.W (A0),D5/D7/A4/A7
-      MOVEM.W (A0),D0-D1/D3/D5/D7/A4/A7
-      MOVEM.W (A0),D0/D2-D3/D5/D7/A4/A7
-      MOVEM.W (A0),D0/D2/D4-D5/D7/A4/A7
-      MOVEM.W (A0),D6-D7/A4/A7
-      MOVEM.W (A0),D0/D6-D7/A4/A7
-      MOVEM.W (A0),D0-D1/D6-D7/A4/A7
-      MOVEM.W (A0),D0/D2/D6-D7/A4/A7
-      MOVEM.W (A0),D0-D1/D3/D6-D7/A4/A7
-      MOVEM.W (A0),D0/D2-D3/D6-D7/A4/A7
-      MOVEM.W (A0),D0/D2/D4/D6-D7/A4/A7
-      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A4/A7
-      MOVEM.W (A0),A4/A7
-      MOVEM.W (A0),D0/A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1/A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7-A1/A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A2/A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1-A2/A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A3-A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A3-A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1/A3-A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7-A4/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1/A3/A5/A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A1),D0-D1/D4/D7/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A2/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1-A2/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1/A3/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A1),D0-D1/D4/D7-A7
-      MOVEM.W (A1),D0-D1/D4/D7
-      MOVEM.W (A1),D0-D1/D4/D7/A1
-      MOVEM.W (A1),D0/D2/D4/D7-A0/A4/A7
-      MOVEM.W (A1),D3-D4/D7-A0/A4/A7
-      MOVEM.W (A1),D0/D3-D4/D7-A0/A4/A7
-      MOVEM.W (A1),D0-D1/D3-D4/D7-A0/A4/A7
-      MOVEM.W (A1),D5/D7-A0/A4/A7
-      MOVEM.W (A1),D0-D1/D3/D5/D7-A0/A4/A7
-      MOVEM.W (A1),D0/D2-D3/D5/D7-A0/A4/A7
-      MOVEM.W (A1),D0/D2/D4-D5/D7-A0/A4/A7
-      MOVEM.W (A1),D6-A0/A4/A7
-      MOVEM.W (A1),A0/A4/A7
-      MOVEM.W (A1),D0/A0/A4/A7
-      MOVEM.W (A1),D0-D1/A0/A4/A7
-      MOVEM.W (A1),D0/D2/A0/A4/A7
-      MOVEM.W (A1),D0-D1/D3/A0/A4/A7
-      MOVEM.W (A1),D0/D2-D3/A0/A4/A7
-      MOVEM.W (A1),D0-D1/D3-D4/A0/A4/A7
-      MOVEM.W (A1),D0/D2-D3/D5/A0/A4/A7
-      MOVEM.W (A1),D0/D2/D4-D5/A0/A4/A7
-      MOVEM.W (A1),D0/D2/D4/D6/A0/A4/A7
-      MOVEM.W (A1),D0-D1/D3-D4/D6/A0/A4/A7
-      MOVEM.W (A1),D0-D1/D3/D5-D6/A0/A4/A7
-      MOVEM.W (A1),D0/D2-D3/D5-D6/A0/A4/A7
-      MOVEM.W (A2),D0-D1/D3/D5/D7/A1/A4/A7
-      MOVEM.W (A2),D0/D2-D3/D5/D7/A1/A4/A7
-      MOVEM.W (A2),D0/D2/D4-D5/D7/A1/A4/A7
-      MOVEM.W (A2),D0/D2/D4/D6-D7/A1/A4/A7
-      MOVEM.W (A2),D0-D1/D3-D4/D6-D7/A1/A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A2/A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1-A2/A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7/A3-A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A3-A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1/A3-A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7-A4/A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1/A3/A5/A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A3),D0/D2/D4/D7/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A2/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1-A2/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1/A3/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A3),D0/D2/D4/D7-A7
-      MOVEM.W (A3),D0/D2/D4/D7
-      MOVEM.W (A3),D0/D2/D4/D7/A1
-      MOVEM.W (A3),A0-A1/A4/A7
-      MOVEM.W (A3),D0/A0-A1/A4/A7
-      MOVEM.W (A3),D0-D1/A0-A1/A4/A7
-      MOVEM.W (A3),D0/D2/A0-A1/A4/A7
-      MOVEM.W (A3),D0-D1/D3/A0-A1/A4/A7
-      MOVEM.W (A3),D0/D2-D3/A0-A1/A4/A7
-      MOVEM.W (A3),D0-D1/D3-D4/A0-A1/A4/A7
-      MOVEM.W (A3),D0/D2-D3/D5/A0-A1/A4/A7
-      MOVEM.W (A3),D0/D2/D4-D5/A0-A1/A4/A7
-      MOVEM.W (A3),D0-D1/D3-D4/D6/A0-A1/A4/A7
-      MOVEM.W (A3),D0-D1/D3/D5-D6/A0-A1/A4/A7
-      MOVEM.W (A3),D0/D2-D3/D5-D6/A0-A1/A4/A7
-      MOVEM.W (A5),D3-D4/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D0/D3-D4/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/D3-D4/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D5/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/D3/D5/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2-D3/D5/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2/D4-D5/D7-A0/A2/A4/A7
-      MOVEM.W (A5),D6-A0/A2/A4/A7
-      MOVEM.W (A5),A0/A2/A4/A7
-      MOVEM.W (A5),D0/A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2/A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/D3/A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2-D3/A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/D3-D4/A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2-D3/D5/A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2/D4-D5/A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/D3-D4/D6/A0/A2/A4/A7
-      MOVEM.W (A5),D0-D1/D3/D5-D6/A0/A2/A4/A7
-      MOVEM.W (A5),D0/D2-D3/D5-D6/A0/A2/A4/A7
-      MOVEM.W (A6),D3-D4/D7/A3-A4/A7
-      MOVEM.W (A6),D3-D4/D7-A0/A3-A4/A7
-      MOVEM.W (A6),D3-D4/D7/A1/A3-A4/A7
-      MOVEM.W (A6),D3-D4/D7-A4/A7
-      MOVEM.W (A6),D3-D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A6),D3-D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A6),D3-D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A6),D3-D4/D7/A6-A7
-      MOVEM.W (A6),D3-D4/D7-A0/A6-A7
-      MOVEM.W (A6),D3-D4/D7/A1/A6-A7
-      MOVEM.W (A6),D3-D4/D7-A0/A2/A6-A7
-      MOVEM.W (A6),D3-D4/D7/A1-A2/A6-A7
-      MOVEM.W (A6),D3-D4/D7/A1/A3/A6-A7
-      MOVEM.W (A6),D3-D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A6),D3-D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A6),D3-D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A6),D3-D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A6),D3-D4/D7-A7
-      MOVEM.W (A6),D3-D4/D7
-      MOVEM.W (A6),D3-D4/D7/A1
-      MOVEM.W (A6),D0-D1/D3/D5/D7/A1-A2/A4/A7
-      MOVEM.W (A6),D0/D2-D3/D5/D7/A1-A2/A4/A7
-      MOVEM.W (A6),D0/D2/D4-D5/D7/A1-A2/A4/A7
-      MOVEM.W (A6),D0/D2/D4/D6-D7/A1-A2/A4/A7
-      MOVEM.W (A6),D0-D1/D3-D4/D6-D7/A1-A2/A4/A7
-      MOVEM.W (A7),D0/D3-D4/D7/A3-A4/A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A3-A4/A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1/A3-A4/A7
-      MOVEM.W (A7),D0/D3-D4/D7-A4/A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A7),D0/D3-D4/D7/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A2/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1-A2/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1/A3/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A7),D0/D3-D4/D7-A7
-      MOVEM.W (A7),D0/D3-D4/D7
-      MOVEM.W (A7),D0/D3-D4/D7/A1
+      MOVEM.W (A0),D0-D1/D4/D7-A0/A4/A7
+      MOVEM.W (A0),D0/D2/D4/D7-A0/A4/A7
+      MOVEM.W (A0),D3-D4/D7-A0/A4/A7
+      MOVEM.W (A0),D0/D3-D4/D7-A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D7-A0/A4/A7
+      MOVEM.W (A0),D5/D7-A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A4/A7
+      MOVEM.W (A0),D6-A0/A4/A7
+      MOVEM.W (A0),A0/A4/A7
+      MOVEM.W (A0),D0/A0/A4/A7
+      MOVEM.W (A0),D0-D1/A0/A4/A7
+      MOVEM.W (A0),D0/D2/A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3/A0/A4/A7
+      MOVEM.W (A0),D0/D2-D3/A0/A4/A7
+      MOVEM.W (A0),D0/D2/D4/A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1/A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1/A4/A7
+      MOVEM.W (A0),A0-A1/A4/A7
+      MOVEM.W (A0),D0/A0-A1/A4/A7
+      MOVEM.W (A0),D0-D1/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2/A0-A1/A4/A7
+      MOVEM.W (A0),D0-D1/D3/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2-D3/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2/D4/A0-A1/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0-A1/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0-A1/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0-A1/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0-A1/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0-A1/A4/A7
+      MOVEM.W (A0),D1-D2/D4/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D3-D4/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0/D3-D4/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D5/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0/D5/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2/D5/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A2/A4/A7
+      MOVEM.W (A0),D6-A0/A2/A4/A7
+      MOVEM.W (A0),A0/A2/A4/A7
+      MOVEM.W (A0),D0/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2-D3/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2/D4/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A2/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1-A2/A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1-A2/A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1-A2/A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1-A2/A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1-A2/A4/A7
+      MOVEM.W (A0),D0/D3-D4/D7/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D7/A3-A4/A7
+      MOVEM.W (A0),D2-D4/D7/A3-A4/A7
+      MOVEM.W (A0),D5/D7/A3-A4/A7
+      MOVEM.W (A0),D0/D5/D7/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D5/D7/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D5/D7/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A3-A4/A7
+      MOVEM.W (A0),D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0/D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A3-A4/A7
+      MOVEM.W (A0),A3-A4/A7
+      MOVEM.W (A0),D0/A3-A4/A7
+      MOVEM.W (A0),D1/D3-D4/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D2-D4/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0),D6-A0/A3-A4/A7
+      MOVEM.W (A0),A0/A3-A4/A7
+      MOVEM.W (A0),D0/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1/A3-A4/A7
+      MOVEM.W (A0),A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0),D5/D7-A4/A7
+      MOVEM.W (A0),D0/D5/D7-A4/A7
+      MOVEM.W (A0),D0-D1/D5/D7-A4/A7
+      MOVEM.W (A0),D0/D2/D5/D7-A4/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A4/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A4/A7
+      MOVEM.W (A0),D4-D5/D7-A4/A7
+      MOVEM.W (A0),D0/D4-D5/D7-A4/A7
+      MOVEM.W (A0),D0-D1/D4-D5/D7-A4/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A4/A7
+      MOVEM.W (A0),D6-A4/A7
+      MOVEM.W (A0),D0/D5/D7/A5/A7
+      MOVEM.W (A0),D0-D1/D5/D7/A5/A7
+      MOVEM.W (A0),D0/D2/D5/D7/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A5/A7
+      MOVEM.W (A0),D4-D5/D7/A5/A7
+      MOVEM.W (A0),D0/D4-D5/D7/A5/A7
+      MOVEM.W (A0),D0-D1/D4-D5/D7/A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A5/A7
+      MOVEM.W (A0),D6-D7/A5/A7
+      MOVEM.W (A0),D0/D6-D7/A5/A7
+      MOVEM.W (A0),D0-D1/D6-D7/A5/A7
+      MOVEM.W (A0),D0/D2/D6-D7/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D6-D7/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D6-D7/A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A5/A7
+      MOVEM.W (A0),A5/A7
+      MOVEM.W (A0),D0/A5/A7
+      MOVEM.W (A0),D0/D2/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1/A3/A5/A7
+      MOVEM.W (A0),A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0),D1-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0),A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0),D1-D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0),A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2-D3/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0),D0/D6-D7/A6-A7
+      MOVEM.W (A0),D0-D1/D6-D7/A6-A7
+      MOVEM.W (A0),D0/D2/D6-D7/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D6-D7/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D6-D7/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A6-A7
+      MOVEM.W (A0),D5-D7/A6-A7
+      MOVEM.W (A0),A6-A7
+      MOVEM.W (A0),D0/A6-A7
+      MOVEM.W (A0),D0/D2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A6-A7
+      MOVEM.W (A0),D1/D6-A0/A6-A7
+      MOVEM.W (A0),D0-D1/D6-A0/A6-A7
+      MOVEM.W (A0),D0/D2/D6-A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W (A0),D5-A0/A6-A7
+      MOVEM.W (A0),A0/A6-A7
+      MOVEM.W (A0),D0/A0/A6-A7
+      MOVEM.W (A0),D0-D1/A0/A6-A7
+      MOVEM.W (A0),D0/D2/A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1/A6-A7
+      MOVEM.W (A0),A0-A1/A6-A7
+      MOVEM.W (A0),D0/A0-A1/A6-A7
+      MOVEM.W (A0),D0-D1/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2/A0-A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0-A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0-A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0-A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0-A1/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (A0),D1-D2/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D0/D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-A0/A2/A6-A7
+      MOVEM.W (A0),D5-A0/A2/A6-A7
+      MOVEM.W (A0),A0/A2/A6-A7
+      MOVEM.W (A0),D0/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1-A2/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1/A3/A6-A7
+      MOVEM.W (A0),A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0),D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D5-A0/A2-A3/A6-A7
+      MOVEM.W (A0),A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (A0),D1-D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D5-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D5-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D5-A0/A2/A4/A6-A7
+      MOVEM.W (A0),A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0),A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0),D7-A7
+      MOVEM.W (A0),D0/D7-A7
+      MOVEM.W (A0),D0-D1/D7-A7
+      MOVEM.W (A0),D0/D2/D7-A7
+      MOVEM.W (A0),D0-D1/D3/D7-A7
+      MOVEM.W (A0),D0/D2-D3/D7-A7
+      MOVEM.W (A0),D0/D2/D4/D7-A7
+      MOVEM.W (A0),D0-D1/D3-D4/D7-A7
+      MOVEM.W (A0),D0-D1/D3/D5/D7-A7
+      MOVEM.W (A0),D0/D2-D3/D5/D7-A7
+      MOVEM.W (A0),D0/D2/D4-D5/D7-A7
+      MOVEM.W (A0),D0
+      MOVEM.W (A0),D0-D1
+      MOVEM.W (A0),D0/D2
+      MOVEM.W (A0),D0-D1/D3
+      MOVEM.W (A0),D0/D2-D3
+      MOVEM.W (A0),D0/D2/D4
+      MOVEM.W (A0),D0-D1/D3-D4
+      MOVEM.W (A0),D0-D1/D3/D5
+      MOVEM.W (A0),D0/D2-D3/D5
+      MOVEM.W (A0),D0/D2/D4-D5
+      MOVEM.W (A0),D0/D2/D4/D6
+      MOVEM.W (A0),D0-D1/D3-D4/D6
+      MOVEM.W (A0),D0-D1/D3/D5-D6
+      MOVEM.W (A0),D0/D2-D3/D5-D6
+      MOVEM.W (A0),D0-D1/D3/D5/D7
+      MOVEM.W (A0),D0/D2-D3/D5/D7
+      MOVEM.W (A0),D0/D2/D4-D5/D7
+      MOVEM.W (A0),D0/D2/D4/D6-D7
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7
+      MOVEM.W (A0),D1/A0
+      MOVEM.W (A0),D0-D1/A0
+      MOVEM.W (A0),D0/D2/A0
+      MOVEM.W (A0),D0-D1/D3/A0
+      MOVEM.W (A0),D0/D2-D3/A0
+      MOVEM.W (A0),D0/D2/D4/A0
+      MOVEM.W (A0),D0-D1/D3-D4/A0
+      MOVEM.W (A0),D0-D1/D3/D5/A0
+      MOVEM.W (A0),D0/D2-D3/D5/A0
+      MOVEM.W (A0),D0/D2/D4-D5/A0
+      MOVEM.W (A0),D0/D2/D4/D6/A0
+      MOVEM.W (A0),D0-D1/D3-D4/D6/A0
+      MOVEM.W (A0),D0-D1/D3/D5-D6/A0
+      MOVEM.W (A0),D0/D2-D3/D5-D6/A0
+      MOVEM.W (A0),A0
+      MOVEM.W (A0),D0-D1/D3/D5/D7/A1
+      MOVEM.W (A0),D0/D2-D3/D5/D7/A1
+      MOVEM.W (A0),D0/D2/D4-D5/D7/A1
+      MOVEM.W (A0),D0/D2/D4/D6-D7/A1
+      MOVEM.W (A0),D0-D1/D3-D4/D6-D7/A1
       MOVEM.W (A0)+,D1/D3-D4/D7-A0/A3-A4/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1/A3-A4/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A2-A4/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A4/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A2/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1-A2/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1/A3/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A2/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1-A2/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1/A3/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7-A7
-      MOVEM.W (A0)+,D1/D3-D4/D7
-      MOVEM.W (A0)+,D1/D3-D4/D7/A1
-      MOVEM.W (A0)+,D0-D1/D3-D4/D7/A3-A4/A7
-      MOVEM.W (A0)+,D2-D4/D7/A3-A4/A7
-      MOVEM.W (A0)+,D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D0-D1/D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D2/D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A3-A4/A7
-      MOVEM.W (A0)+,D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0-D1/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D2/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0-D1/D3/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D2-D3/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A3-A4/A7
-      MOVEM.W (A0)+,A3-A4/A7
-      MOVEM.W (A0)+,D0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A1/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A2/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1-A2/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1/A3/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A2/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1-A2/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1/A3/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7-A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7
-      MOVEM.W (A1)+,D0-D1/D3-D4/D7/A1
-      MOVEM.W (A1)+,D2-D4/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2/D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3/D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2-D3/D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2/D4-D5/D7-A0/A3-A4/A7
-      MOVEM.W (A1)+,D6-A0/A3-A4/A7
-      MOVEM.W (A1)+,A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2-D3/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2/D4/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3-D4/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3/D5/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2/D4-D5/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2/D4/D6/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0-D1/D3/D5-D6/A0/A3-A4/A7
-      MOVEM.W (A1)+,D0/D2-D3/D5-D6/A0/A3-A4/A7
-      MOVEM.W (A2)+,D2-D4/D7-A4/A7
-      MOVEM.W (A2)+,D2-D4/D7/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7/A1/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A2/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7/A1-A2/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7/A1/A3/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A2)+,D2-D4/D7/A1-A2/A4-A5/A7
-      MOVEM.W (A2)+,D2-D4/D7/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7/A1/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A2/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7/A1-A2/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7/A1/A3/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A2)+,D2-D4/D7-A7
-      MOVEM.W (A2)+,D2-D4/D7
-      MOVEM.W (A2)+,D2-D4/D7/A1
-      MOVEM.W (A2)+,D0-D1/D3/D5/D7/A1/A3-A4/A7
-      MOVEM.W (A2)+,D0/D2-D3/D5/D7/A1/A3-A4/A7
-      MOVEM.W (A2)+,D0/D2/D4-D5/D7/A1/A3-A4/A7
-      MOVEM.W (A2)+,D0/D2/D4/D6-D7/A1/A3-A4/A7
-      MOVEM.W (A2)+,D0-D1/D3-D4/D6-D7/A1/A3-A4/A7
-      MOVEM.W (A3)+,A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0-D1/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/D2/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/D2-D3/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/D2/D4/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0-D1/D3-D4/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0-D1/D3/D5/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/D2/D4-D5/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/D2/D4/D6/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0-D1/D3/D5-D6/A0-A1/A3-A4/A7
-      MOVEM.W (A3)+,D0/D2-D3/D5-D6/A0-A1/A3-A4/A7
-      MOVEM.W (A6)+,D5/D7-A4/A7
-      MOVEM.W (A6)+,D5/D7/A5/A7
-      MOVEM.W (A6)+,D5/D7-A0/A5/A7
-      MOVEM.W (A6)+,D5/D7/A1/A5/A7
-      MOVEM.W (A6)+,D5/D7-A0/A2/A5/A7
-      MOVEM.W (A6)+,D5/D7/A1-A2/A5/A7
-      MOVEM.W (A6)+,D5/D7/A1/A3/A5/A7
-      MOVEM.W (A6)+,D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A6)+,D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A6)+,D5/D7/A6-A7
-      MOVEM.W (A6)+,D5/D7-A0/A6-A7
-      MOVEM.W (A6)+,D5/D7/A1/A6-A7
-      MOVEM.W (A6)+,D5/D7-A0/A2/A6-A7
-      MOVEM.W (A6)+,D5/D7/A1-A2/A6-A7
-      MOVEM.W (A6)+,D5/D7/A1/A3/A6-A7
-      MOVEM.W (A6)+,D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A6)+,D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A6)+,D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A6)+,D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A6)+,D5/D7-A7
-      MOVEM.W (A6)+,D5/D7
-      MOVEM.W (A6)+,D5/D7/A1
-      MOVEM.W (A7)+,D0/D5/D7/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7/A1/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A2/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7/A1-A2/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7/A1/A3/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (A7)+,D0/D5/D7-A5/A7
-      MOVEM.W (A7)+,D0/D5/D7/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7/A1/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A2/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7/A1-A2/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7/A1/A3/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (A7)+,D0/D5/D7-A7
-      MOVEM.W (A7)+,D0/D5/D7
-      MOVEM.W (A7)+,D0/D5/D7/A1
-      MOVEM.W (A7)+,D0-D1/D5/D7-A4/A7
-      MOVEM.W (A7)+,D0/D2/D5/D7-A4/A7
-      MOVEM.W (A7)+,D0-D1/D3/D5/D7-A4/A7
-      MOVEM.W (A7)+,D0/D2-D3/D5/D7-A4/A7
-      MOVEM.W (A7)+,D0/D2/D4-D5/D7-A4/A7
-      MOVEM.W (A7)+,D6-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D2-D4/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A3-A4/A7
+      MOVEM.W (A0)+,D6-A0/A3-A4/A7
+      MOVEM.W (A0)+,A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1/A3-A4/A7
+      MOVEM.W (A0)+,A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0-A1/A3-A4/A7
+      MOVEM.W (A0)+,D0/D2-D4/D7/A2-A4/A7
+      MOVEM.W (A0)+,D1-D4/D7/A2-A4/A7
+      MOVEM.W (A0)+,D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0-D1/D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D2/D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0-D1/D4-D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A2-A4/A7
+      MOVEM.W (A0)+,D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0-D1/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D2/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A2-A4/A7
+      MOVEM.W (A0)+,A2-A4/A7
+      MOVEM.W (A0)+,D0/A2-A4/A7
+      MOVEM.W (A0)+,D5/D7-A4/A7
+      MOVEM.W (A0)+,D0/D5/D7-A4/A7
+      MOVEM.W (A0)+,D0-D1/D5/D7-A4/A7
+      MOVEM.W (A0)+,D0/D2/D5/D7-A4/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A4/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A4/A7
+      MOVEM.W (A0)+,D4-D5/D7-A4/A7
+      MOVEM.W (A0)+,D0/D4-D5/D7-A4/A7
+      MOVEM.W (A0)+,D0-D1/D4-D5/D7-A4/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A4/A7
+      MOVEM.W (A0)+,D6-A4/A7
+      MOVEM.W (A0)+,D0/D5/D7/A5/A7
+      MOVEM.W (A0)+,D0-D1/D5/D7/A5/A7
+      MOVEM.W (A0)+,D0/D2/D5/D7/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A5/A7
+      MOVEM.W (A0)+,D4-D5/D7/A5/A7
+      MOVEM.W (A0)+,D0/D4-D5/D7/A5/A7
+      MOVEM.W (A0)+,D0-D1/D4-D5/D7/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A5/A7
+      MOVEM.W (A0)+,D6-D7/A5/A7
+      MOVEM.W (A0)+,D0/D6-D7/A5/A7
+      MOVEM.W (A0)+,D0-D1/D6-D7/A5/A7
+      MOVEM.W (A0)+,D0/D2/D6-D7/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D6-D7/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D6-D7/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A5/A7
+      MOVEM.W (A0)+,A5/A7
+      MOVEM.W (A0)+,D0/A5/A7
+      MOVEM.W (A0)+,D0/D2/A5/A7
+      MOVEM.W (A0)+,D1/D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0/D2/D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D4-D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0/D4-D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D4-D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A5/A7
+      MOVEM.W (A0)+,D6-A0/A5/A7
+      MOVEM.W (A0)+,D0/D6-A0/A5/A7
+      MOVEM.W (A0)+,A0/A5/A7
+      MOVEM.W (A0)+,D0/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1/A5/A7
+      MOVEM.W (A0)+,A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0-A1/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0-A1/A5/A7
+      MOVEM.W (A0)+,D1-D2/D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D3/D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D3/D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D4-D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D4-D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D4-D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A2/A5/A7
+      MOVEM.W (A0)+,D6-A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D6-A0/A2/A5/A7
+      MOVEM.W (A0)+,A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1-A2/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1-A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1-A2/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1-A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1-A2/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1/A3/A5/A7
+      MOVEM.W (A0)+,A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0-A1/A3/A5/A7
+      MOVEM.W (A0)+,D1-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (A0)+,D1-D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (A0)+,D0/D6-D7/A6-A7
+      MOVEM.W (A0)+,D0-D1/D6-D7/A6-A7
+      MOVEM.W (A0)+,D0/D2/D6-D7/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D6-D7/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D6-D7/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A6-A7
+      MOVEM.W (A0)+,D5-D7/A6-A7
+      MOVEM.W (A0)+,A6-A7
+      MOVEM.W (A0)+,D0/A6-A7
+      MOVEM.W (A0)+,D0/D2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A6-A7
+      MOVEM.W (A0)+,D1/D6-A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D6-A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D6-A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W (A0)+,D5-A0/A6-A7
+      MOVEM.W (A0)+,A0/A6-A7
+      MOVEM.W (A0)+,D0/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1/A6-A7
+      MOVEM.W (A0)+,A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (A0)+,D1-D2/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-A0/A2/A6-A7
+      MOVEM.W (A0)+,D5-A0/A2/A6-A7
+      MOVEM.W (A0)+,A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1-A2/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1/A3/A6-A7
+      MOVEM.W (A0)+,A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (A0)+,D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D5-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (A0)+,D1-D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D5-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D5-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D5-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (A0)+,D7-A7
+      MOVEM.W (A0)+,D0/D7-A7
+      MOVEM.W (A0)+,D0-D1/D7-A7
+      MOVEM.W (A0)+,D0/D2/D7-A7
+      MOVEM.W (A0)+,D0-D1/D3/D7-A7
+      MOVEM.W (A0)+,D0/D2-D3/D7-A7
+      MOVEM.W (A0)+,D0/D2/D4/D7-A7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D7-A7
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7-A7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7-A7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7-A7
+      MOVEM.W (A0)+,D0
+      MOVEM.W (A0)+,D0-D1
+      MOVEM.W (A0)+,D0/D2
+      MOVEM.W (A0)+,D0-D1/D3
+      MOVEM.W (A0)+,D0/D2-D3
+      MOVEM.W (A0)+,D0/D2/D4
+      MOVEM.W (A0)+,D0-D1/D3-D4
+      MOVEM.W (A0)+,D0-D1/D3/D5
+      MOVEM.W (A0)+,D0/D2-D3/D5
+      MOVEM.W (A0)+,D0/D2/D4-D5
+      MOVEM.W (A0)+,D0/D2/D4/D6
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7
+      MOVEM.W (A0)+,D1/A0
+      MOVEM.W (A0)+,D0-D1/A0
+      MOVEM.W (A0)+,D0/D2/A0
+      MOVEM.W (A0)+,D0-D1/D3/A0
+      MOVEM.W (A0)+,D0/D2-D3/A0
+      MOVEM.W (A0)+,D0/D2/D4/A0
+      MOVEM.W (A0)+,D0-D1/D3-D4/A0
+      MOVEM.W (A0)+,D0-D1/D3/D5/A0
+      MOVEM.W (A0)+,D0/D2-D3/D5/A0
+      MOVEM.W (A0)+,D0/D2/D4-D5/A0
+      MOVEM.W (A0)+,D0/D2/D4/D6/A0
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6/A0
+      MOVEM.W (A0)+,D0-D1/D3/D5-D6/A0
+      MOVEM.W (A0)+,D0/D2-D3/D5-D6/A0
+      MOVEM.W (A0)+,A0
+      MOVEM.W (A0)+,D0-D1/D3/D5/D7/A1
+      MOVEM.W (A0)+,D0/D2-D3/D5/D7/A1
+      MOVEM.W (A0)+,D0/D2/D4-D5/D7/A1
+      MOVEM.W (A0)+,D0/D2/D4/D6-D7/A1
+      MOVEM.W (A0)+,D0-D1/D3-D4/D6-D7/A1
       MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A3/A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A4-A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A5/A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7-A7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A3
-      MOVEM.W (-$5454,A0),D1/D3/D5/D7/A1/A3/A5
-      MOVEM.W (-$5454,A0),D0-D1/D3/D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D2-D3/D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2-D3/D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D4-D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D4-D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0-D1/D4-D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2/D4-D5/D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0-D1/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0-D1/D3/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2-D3/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2/D4/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0-D1/D3-D4/D6-D7/A3/A5/A7
-      MOVEM.W (-$5454,A0),A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2/A3/A5/A7
-      MOVEM.W (-$5454,A0),D0/D2/D4/A3/A5/A7
-      MOVEM.W ($00AC,A0),D3/D5/D7/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A1/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A4-A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7-A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/D7/A1/A3
-      MOVEM.W (-$5353,A1),D2-D3/D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2-D3/D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D4-D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D4-D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D4-D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2/D4-D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D6-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D6-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2/D6-A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2-D3/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2/D4/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3-D4/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2-D3/D5/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2/D4-D5/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3-D4/D6/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0-D1/D3/D5-D6/A0/A3/A5/A7
-      MOVEM.W (-$5353,A1),D0/D2-D3/D5-D6/A0/A3/A5/A7
-      MOVEM.W ($00AD,A1),D0/D3/D5/D7-A0/A3/A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A3/A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A4-A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A5/A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7-A7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1
-      MOVEM.W (-$5252,A2),D2-D3/D5/D7/A1/A3
-      MOVEM.W (-$5252,A2),D0/D2-D3/D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$5252,A2),D0/D2/D4-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$5252,A2),D0/D2/D4/D6-D7/A1/A3/A5/A7
-      MOVEM.W (-$5252,A2),D0-D1/D3-D4/D6-D7/A1/A3/A5/A7
-      MOVEM.W ($00AE,A2),D1/D3/D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A4-A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7-A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/D7/A1/A3
-      MOVEM.W (-$5151,A3),A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0-D1/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0-D1/D3/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2/D4/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0-D1/D3-D4/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0-D1/D3/D5/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2/D4-D5/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2/D4/D6/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0-D1/D3-D4/D6/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0-D1/D3/D5-D6/A0-A1/A3/A5/A7
-      MOVEM.W (-$5151,A3),D0/D2-D3/D5-D6/A0-A1/A3/A5/A7
-      MOVEM.W ($00AF,A3),D0-D1/D3/D5/D7-A1/A3/A5/A7
-      MOVEM.W (-$5050,A4),D4-D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D4-D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0-D1/D4-D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D2/D4-D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0-D1/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D2/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0-D1/D3/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D2-D3/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D2/D4/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0-D1/D3-D4/D6-D7/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D2/A2-A3/A5/A7
-      MOVEM.W (-$5050,A4),D0/D2/D4/A2-A3/A5/A7
-      MOVEM.W ($00B0,A4),D2-D3/D5/D7/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D6-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D6-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2/D6-A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/D3/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2-D3/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2/D4/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/D3-D4/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/D3/D5/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2-D3/D5/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2/D4-D5/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2/D4/D6/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/D3-D4/D6/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0-D1/D3/D5-D6/A0/A2-A3/A5/A7
-      MOVEM.W (-$4F4F,A5),D0/D2-D3/D5-D6/A0/A2-A3/A5/A7
-      MOVEM.W ($00B1,A5),D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A3/A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A5/A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A0/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7-A7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1
-      MOVEM.W (-$4E4E,A6),D4-D5/D7/A1/A3
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7/A1/A3
-      MOVEM.W (-$4D4D,A7),D0/D4-D5/D7-A0/A2/A4
-      MOVEM.W (-$4D4D,A7),D0-D1/D4-D5/D7-A3/A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D2/D4-D5/D7-A3/A5/A7
-      MOVEM.W (-$4D4D,A7),D6-A3/A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D6-A3/A5/A7
-      MOVEM.W (-$4D4D,A7),D0/D2/D6-A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D3/D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D2-D3/D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2-D3/D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D4-D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D4-D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D4-D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2/D4-D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D6-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D6-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2/D6-A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D3/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2-D3/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2/D4/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D3-D4/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D3/D5/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2-D3/D5/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2/D4-D5/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2/D4/D6/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D3-D4/D6/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0-D1/D3/D5-D6/A0/A3/A5/A7
+      MOVEM.W (-$5454,A0),D0/D2-D3/D5-D6/A0/A3/A5/A7
+      MOVEM.W ($00AC,A0),D0/D3/D5/D7-A0/A3/A5/A7
+      MOVEM.W (-$5353,A0),D0-D1/D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (-$5353,A0),D0/D2-D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (-$5353,A0),D0/D2/D4-D5/D7/A1/A3/A5/A7
+      MOVEM.W (-$5353,A0),D0/D2/D4/D6-D7/A1/A3/A5/A7
+      MOVEM.W (-$5353,A0),D0-D1/D3-D4/D6-D7/A1/A3/A5/A7
+      MOVEM.W ($00AD,A0),D1/D3/D5/D7/A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0-D1/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0-D1/D3/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2-D3/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2/D4/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0-D1/D3-D4/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0-D1/D3/D5/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2-D3/D5/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2/D4-D5/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2/D4/D6/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0-D1/D3-D4/D6/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0-D1/D3/D5-D6/A0-A1/A3/A5/A7
+      MOVEM.W (-$5252,A0),D0/D2-D3/D5-D6/A0-A1/A3/A5/A7
+      MOVEM.W ($00AE,A0),D0-D1/D3/D5/D7-A1/A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2-D3/D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D1-D3/D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D4-D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D4-D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0-D1/D4-D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2/D4-D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0-D1/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0-D1/D3/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2-D3/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2/D4/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0-D1/D3-D4/D6-D7/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2/D4/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0/D2/D4/D6/A2-A3/A5/A7
+      MOVEM.W (-$5151,A0),D0-D1/D3/D5/D7/A2-A3/A5/A7
+      MOVEM.W ($00AF,A0),D2-D3/D5/D7/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D1-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/D4-D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D6-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D6-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/D6-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/D4/D6-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D3/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2-D3/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/D4/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D3-D4/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D3/D5/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2-D3/D5/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/D4-D5/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2/D4/D6/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D3-D4/D6/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D3/D5-D6/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2-D3/D5-D6/A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0-D1/D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$5050,A0),D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W ($00B0,A0),D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D4-D5/D7-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0/D4-D5/D7-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0-D1/D4-D5/D7-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0/D2/D4-D5/D7-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D6-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0/D6-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0/D2/D6-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0-D1/D3/D6-A3/A5/A7
+      MOVEM.W (-$4E4E,A0),D0/D2/D4/D6-A3/A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D4-D5/D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0-D1/D4-D5/D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2/D4-D5/D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D3-D5/D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0-D1/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0-D1/D3/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2-D3/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2/D4/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0-D1/D3-D4/D6-D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2/D4/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0-D1/D3/D5/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2/D4/D6/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0-D1/D3/D5/D7/A4-A5/A7
+      MOVEM.W (-$4D4D,A0),D0/D2-D3/D5/D7/A4-A5/A7
+      MOVEM.W ($00B3,A0),D4-D5/D7/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D1/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D3-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D6-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/D4/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2-D3/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/D4/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3-D4/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3/D5/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2-D3/D5/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/D4-D5/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2/D4/D6/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3-D4/D6/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3/D5-D6/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2-D3/D5-D6/A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0-D1/D3/D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C4C,A0),D0/D2-D3/D5/D7-A0/A4-A5/A7
+      MOVEM.W ($00B4,A0),D0/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4B4B,A0),D0/D2/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B4B,A0),D0/D2/D4/D6-D7/A1/A4-A5/A7
+      MOVEM.W (-$4B4B,A0),D0-D1/D3-D4/D6-D7/A1/A4-A5/A7
+      MOVEM.W (-$4B4B,A0),D0-D1/D3/D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B4B,A0),D0/D2-D3/D5/D7/A1/A4-A5/A7
+      MOVEM.W ($00B5,A0),D1/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0-D1/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0-D1/D3/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2-D3/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2/D4/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0-D1/D3-D4/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0-D1/D3/D5/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2-D3/D5/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2/D4-D5/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2/D4/D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0-D1/D3-D4/D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0-D1/D3/D5-D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A4A,A0),D0/D2-D3/D5-D6/A0-A1/A4-A5/A7
+      MOVEM.W ($00B6,A0),D0-D1/D4-D5/D7-A1/A4-A5/A7
+      MOVEM.W (-$4848,A0),D1-D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/D4/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2-D3/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/D4/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3-D4/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2-D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/D4-D5/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3-D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2-D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0-D1/D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2-D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$4848,A0),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W ($00B8,A0),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$4747,A0),D0/D2/D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$4747,A0),D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$4747,A0),D0-D1/D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$4747,A0),D0/D2-D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$4747,A0),D0/D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W ($00B9,A0),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
       MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A3-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A3
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2/A4
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A3/A5
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2/A4/A6
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1-A2/A4/A6
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D1/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0-D1/D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D3-D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0-D1/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2-D3/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3-D4/D6-D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D5/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4/D6/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.W),D0/D2-D3/D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,A3.L),D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,D0.W),D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4C,A0,D0.L),D4-D5/D7/A4-A5/A7
-      MOVEM.W (0,A0,A3.W),D4-D5/D7/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A1/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A3
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2/A4
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A3/A5
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2/A4/A6
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1-A2/A4/A6
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D3-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D6-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D6-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/D6-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D3/D6-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/D4/D6-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D3/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2-D3/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/D4/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D3-D4/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D3/D5/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/D4-D5/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2/D4/D6/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D3/D5-D6/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2-D3/D5-D6/A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0-D1/D3/D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.W),D0/D2-D3/D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,A3.L),D0/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,D0.W),D0/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4B,A1,D0.L),D0/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (0,A1,A3.W),D0/D4-D5/D7-A0/A4-A5/A7
-      MOVEM.W (-$4A,A2,A3.W),D0/D2/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,A3.W),D0/D2/D4/D6-D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,A3.W),D0-D1/D3-D4/D6-D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,A3.W),D0-D1/D3/D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,A3.W),D0/D2-D3/D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,A3.L),D1/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,D0.W),D1/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$4A,A2,D0.L),D1/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (0,A2,A3.W),D1/D4-D5/D7/A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1/A3
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2/A4
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1/A3/A5
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2/A4/A6
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1-A2/A4/A6
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$49,A3,A3.W),A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0-D1/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0-D1/D3/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2-D3/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0-D1/D3-D4/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0-D1/D3/D5/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4-D5/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2/D4/D6/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0-D1/D3/D5-D6/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.W),D0/D2-D3/D5-D6/A0-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,A3.L),D0-D1/D4-D5/D7-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,D0.W),D0-D1/D4-D5/D7-A1/A4-A5/A7
-      MOVEM.W (-$49,A3,D0.L),D0-D1/D4-D5/D7-A1/A4-A5/A7
-      MOVEM.W (0,A3,A3.W),D0-D1/D4-D5/D7-A1/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A3-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A3-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A3
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2/A4
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A3/A5
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2/A4/A6
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1-A2/A4/A6
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D2/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D3-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D3-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D6-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D6-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/D6-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3/D6-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/D4/D6-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2-D3/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/D4/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3-D4/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3/D5/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2-D3/D5/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/D4-D5/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/D4/D6/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3-D4/D6/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3/D5-D6/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2-D3/D5-D6/A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0-D1/D3/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2-D3/D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,A3.L),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,D0.W),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$47,A5,D0.L),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (0,A5,A3.W),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A3-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A3
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A2/A4
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A3/A5
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A2/A4/A6
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1-A2/A4/A6
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$46,A6,A3.L),D3-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D3-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0-D1/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0-D1/D3/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2-D3/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2/D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2/D4/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0-D1/D3/D5/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2/D4/D6/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0-D1/D3/D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2-D3/D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,A3.L),D0/D2/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,D0.W),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$46,A6,D0.L),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (0,A6,A3.W),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A3-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A2/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1-A2/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1/A3/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1/A3
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A2/A4
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1/A3/A5
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A2/A4/A6
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1-A2/A4/A6
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7/A1/A3/A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D3-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (-$45,A7,A3.L),D6-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D6-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D2/D6-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0-D1/D3/D6-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D2/D4/D6-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0-D1/D3/D5/D7-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D2-D3/D5/D7-A2/A4-A5/A7
-      MOVEM.W (-$45,A7,A3.L),D0/D2/D4-D5/D7-A2/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D3-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D6-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4/D6-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2-D3/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3-D4/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D5/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2-D3/D5/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4-D5/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2/D4/D6/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3-D4/D6/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D5-D6/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2-D3/D5-D6/A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0-D1/D3/D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.W),D0/D2-D3/D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,A3.L),D0/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,D0.W),D0/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4C,A0,D0.L),D0/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (0,A0,A3.W),D0/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.W (-$4B,A0,A3.W),D0/D2/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,A3.W),D0/D2/D4/D6-D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,A3.W),D0-D1/D3-D4/D6-D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,A3.W),D0-D1/D3/D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,A3.W),D0/D2-D3/D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,A3.L),D1/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,D0.W),D1/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4B,A0,D0.L),D1/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (0,A0,A3.W),D1/D4-D5/D7/A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0-D1/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0-D1/D3/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2-D3/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2/D4/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0-D1/D3-D4/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0-D1/D3/D5/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2-D3/D5/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2/D4-D5/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2/D4/D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0-D1/D3-D4/D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0-D1/D3/D5-D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.W),D0/D2-D3/D5-D6/A0-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,A3.L),D0-D1/D4-D5/D7-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,D0.W),D0-D1/D4-D5/D7-A1/A4-A5/A7
+      MOVEM.W (-$4A,A0,D0.L),D0-D1/D4-D5/D7-A1/A4-A5/A7
+      MOVEM.W (0,A0,A3.W),D0-D1/D4-D5/D7-A1/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D1-D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D3-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/D4/D6-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2-D3/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/D4/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3-D4/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2-D3/D5/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/D4-D5/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3-D4/D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2-D3/D5-D6/A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0-D1/D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2-D3/D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.W),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,A3.L),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,D0.W),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$48,A0,D0.L),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (0,A0,A3.W),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0-D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D3-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D3-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0-D1/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0-D1/D3/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2-D3/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2/D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2/D4/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0-D1/D3/D5/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2/D4/D6/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0-D1/D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2-D3/D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,A3.L),D0/D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,D0.W),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$47,A0,D0.L),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (0,A0,A3.W),D1-D2/D4-D5/D7/A1-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D3-D5/D7-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D6-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0/D6-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0/D2/D6-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0-D1/D3/D6-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0/D2/D4/D6-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0-D1/D3/D5/D7-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0/D2-D3/D5/D7-A2/A4-A5/A7
+      MOVEM.W (-$46,A0,A3.L),D0/D2/D4-D5/D7-A2/A4-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D3-D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0-D1/D3-D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D2-D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0-D1/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0-D1/D3/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2-D3/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2/D4/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0-D1/D3-D4/D6-D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2/D4/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0-D1/D3/D5/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2/D4/D6/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0-D1/D3/D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2-D3/D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A3.L),D0/D2/D4-D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,A4.W),D3-D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,D0.W),D3-D5/D7/A3-A5/A7
+      MOVEM.W (-$45,A0,D0.L),D3-D5/D7/A3-A5/A7
+      MOVEM.W (0,A0,A3.L),D3-D5/D7/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0-D1/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/D2/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0-D1/D3/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/D2-D3/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/D2/D4/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0-D1/D3-D4/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0-D1/D3/D5/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/D2/D4-D5/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/D2/D4/D6/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0-D1/D3-D4/D6/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0-D1/D3/D5-D6/A0/A3-A5/A7
+      MOVEM.W (-$44,A0,A3.L),D0/D2-D3/D5-D6/A0/A3-A5/A7
+      MOVEM.W (0,A0,A3.L),D0/D3-D5/D7-A0/A3-A5/A7
+      MOVEM.W (-$43,A0,A3.L),D0/D2/D4/D6-D7/A1/A3-A5/A7
+      MOVEM.W (-$43,A0,A3.L),D0-D1/D3-D4/D6-D7/A1/A3-A5/A7
+      MOVEM.W (-$43,A0,A3.L),D0-D1/D3/D5/D7/A1/A3-A5/A7
+      MOVEM.W (-$43,A0,A3.L),D0/D2-D3/D5/D7/A1/A3-A5/A7
+      MOVEM.W (-$43,A0,A3.L),D0/D2/D4-D5/D7/A1/A3-A5/A7
+      MOVEM.W (0,A0,A3.L),D1/D3-D5/D7/A1/A3-A5/A7
+      MOVEM.W (0,A0,A3.L),D0-D1/D3-D5/D7-A1/A3-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0-D1/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0-D1/D3/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2-D3/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2/D4/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0-D1/D3-D4/D6-D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2/D4/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0-D1/D3/D5/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2-D3/D5/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2/D4/D6/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0-D1/D3-D4/D6/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0-D1/D3/D5/D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2-D3/D5/D7/A1-A5/A7
+      MOVEM.W (-$3F,A0,A4.W),D0/D2/D4-D5/D7/A1-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0-D1/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0/D2/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0-D1/D3/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0/D2-D3/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0/D2/D4/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0-D1/D3-D4/D6-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0-D1/D3/D5/D7-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0/D2-D3/D5/D7-A5/A7
+      MOVEM.W (-$3E,A0,A4.W),D0/D2/D4-D5/D7-A5/A7
+      MOVEM.W (-$3E,A0,A4.L),D0-D5/D7-A5/A7
+      MOVEM.W (-$3E,A0,D0.W),D0-D5/D7-A5/A7
+      MOVEM.W (-$3E,A0,D0.L),D0-D5/D7-A5/A7
+      MOVEM.W (0,A0,A3.L),D0-D5/D7-A5/A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D3/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2-D3/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2/D4/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D3-D4/D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D5-D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D3/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2/D4/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D3/D5/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2-D3/D5/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2/D4/D6/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D3-D4/D6/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0-D1/D3/D5/D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2-D3/D5/D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.W),D0/D2/D4-D5/D7/A6-A7
+      MOVEM.W (-$3D,A0,A4.L),D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,D0.W),D6-D7/A6-A7
+      MOVEM.W (-$3D,A0,D0.L),D6-D7/A6-A7
+      MOVEM.W (0,A0,A4.W),D6-D7/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D1/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D5-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2-D3/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/D4/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.W),D0/D2/D4-D5/D7-A0/A6-A7
+      MOVEM.W (-$3C,A0,A4.L),D0/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,D0.W),D0/D6-A0/A6-A7
+      MOVEM.W (-$3C,A0,D0.L),D0/D6-A0/A6-A7
+      MOVEM.W (0,A0,A4.W),D0/D6-A0/A6-A7
+      MOVEM.W (-$3B,A0,A4.W),D0/D2/D4/D6-D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,A4.W),D0-D1/D3-D4/D6-D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,A4.W),D0-D1/D3/D5/D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,A4.W),D0/D2-D3/D5/D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,A4.W),D0/D2/D4-D5/D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,A4.L),D1/D6-D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,D0.W),D1/D6-D7/A1/A6-A7
+      MOVEM.W (-$3B,A0,D0.L),D1/D6-D7/A1/A6-A7
+      MOVEM.W (0,A0,A4.W),D1/D6-D7/A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0-D1/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0-D1/D3/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2-D3/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2/D4/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0-D1/D3-D4/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0-D1/D3/D5/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2-D3/D5/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2/D4-D5/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2/D4/D6/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0-D1/D3-D4/D6/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0-D1/D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.W),D0/D2-D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (-$3A,A0,A4.L),D0-D1/D6-A1/A6-A7
+      MOVEM.W (-$3A,A0,D0.W),D0-D1/D6-A1/A6-A7
+      MOVEM.W (-$3A,A0,D0.L),D0-D1/D6-A1/A6-A7
+      MOVEM.W (0,A0,A4.W),D0-D1/D6-A1/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D1-D2/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D3/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D3/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2-D3/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2/D4/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3-D4/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D5-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2-D3/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2/D4/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3-D4/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3/D5/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2-D3/D5/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2/D4-D5/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2/D4/D6/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3-D4/D6/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2-D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0-D1/D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2-D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.W),D0/D2/D4-D5/D7-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,A4.L),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,D0.W),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (-$38,A0,D0.L),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (0,A0,A4.W),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D1/D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2-D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2/D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D1/D3-D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D5-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D1/D3/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2/D4/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D1/D3/D5/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2-D3/D5/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2/D4/D6/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D1/D3-D4/D6/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0-D1/D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2-D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,A4.L),D0/D2/D4-D5/D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,D0.W),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$37,A0,D0.L),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (0,A0,A4.W),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0/D3/D6-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0-D1/D3/D6-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0/D2-D3/D6-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0/D2/D4/D6-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0-D1/D3-D4/D6-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D5-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0-D1/D3/D5/D7-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0/D2-D3/D5/D7-A2/A6-A7
+      MOVEM.W (-$36,A0,A4.L),D0/D2/D4-D5/D7-A2/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D3/D6-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0-D1/D3/D6-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D2-D3/D6-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2-D3/D6-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2/D4/D6-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0-D1/D3-D4/D6-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D5-D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0-D1/D3/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2/D4/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0-D1/D3/D5/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2-D3/D5/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2/D4/D6/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0-D1/D3-D4/D6/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0-D1/D3/D5/D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2-D3/D5/D7/A3/A6-A7
+      MOVEM.W (-$35,A0,A4.L),D0/D2/D4-D5/D7/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3/D6-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D2-D3/D6-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2-D3/D6-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D4/D6-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2/D4/D6-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3-D4/D6-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D5-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2-D3/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2/D4/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3-D4/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3/D5/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2-D3/D5/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2/D4-D5/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2/D4/D6/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3-D4/D6/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3/D5-D6/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2-D3/D5-D6/A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0-D1/D3/D5/D7-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2-D3/D5/D7-A0/A3/A6-A7
+      MOVEM.W (-$34,A0,A4.L),D0/D2/D4-D5/D7-A0/A3/A6-A7
+      MOVEM.W (0,A0,A4.L),D0/D3/D6-A0/A3/A6-A7
+      MOVEM.W (-$33,A0,A4.L),D0/D2/D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (-$33,A0,A4.L),D0-D1/D3-D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (-$33,A0,A4.L),D0-D1/D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (-$33,A0,A4.L),D0/D2-D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (-$33,A0,A4.L),D0/D2/D4-D5/D7/A1/A3/A6-A7
+      MOVEM.W (-$33,A0,D0.W),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (-$33,A0,D0.L),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (0,A0,A4.L),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0-D1/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0-D1/D3/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2-D3/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2/D4/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0-D1/D3-D4/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0-D1/D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2-D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2/D4-D5/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2/D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0-D1/D3-D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0-D1/D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,A4.L),D0/D2-D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,D0.W),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (-$32,A0,D0.L),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (0,A0,A4.L),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (0,A0,A4.L),D2-D3/D6-D7/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D5-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2-D3/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2/D4/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3-D4/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2-D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2/D4-D5/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2/D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3-D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2-D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A4.L),D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,A5.W),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,D0.W),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$30,A0,D0.L),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (0,A0,A4.L),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (-$2F,A0,A5.W),D0/D2/D4/D6-D7/A1-A3/A6-A7
+      MOVEM.W (-$2F,A0,A5.W),D0-D1/D3-D4/D6-D7/A1-A3/A6-A7
+      MOVEM.W (-$2F,A0,A5.W),D0-D1/D3/D5/D7/A1-A3/A6-A7
+      MOVEM.W (-$2F,A0,A5.W),D0/D2-D3/D5/D7/A1-A3/A6-A7
+      MOVEM.W (-$2F,A0,A5.W),D0/D2/D4-D5/D7/A1-A3/A6-A7
+      MOVEM.W (-$2B,A0,A5.W),D0/D2/D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (-$2B,A0,A5.W),D0-D1/D3-D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (-$2B,A0,A5.W),D0-D1/D3/D5/D7/A1/A4/A6-A7
+      MOVEM.W (-$2B,A0,A5.W),D0/D2-D3/D5/D7/A1/A4/A6-A7
+      MOVEM.W (-$2B,A0,A5.W),D0/D2/D4-D5/D7/A1/A4/A6-A7
+      MOVEM.W (0,A0,A5.W),D1/D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0-D1/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0-D1/D3/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2-D3/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2/D4/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0-D1/D3-D4/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0-D1/D3/D5/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2-D3/D5/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2/D4-D5/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2/D4/D6/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0-D1/D3-D4/D6/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0-D1/D3/D5-D6/A0-A1/A4/A6-A7
+      MOVEM.W (-$2A,A0,A5.W),D0/D2-D3/D5-D6/A0-A1/A4/A6-A7
+      MOVEM.W (0,A0,A5.W),D0-D1/D4/D6-A1/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D1-D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D5-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D5-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/D5-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2-D3/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/D4/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3-D4/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2-D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/D4-D5/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3-D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2-D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/D4/D7-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.W),D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,A5.L),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,D0.W),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$28,A0,D0.L),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (0,A0,A5.W),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (-$27,A0,A5.L),D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$27,A0,A5.L),D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$27,A0,A5.L),D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$27,A0,A5.L),D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$27,A0,A5.L),D0/D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$27,A0,D0.W),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$27,A0,D0.L),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (0,A0,A5.W),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (-$23,A0,A5.L),D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,A5.L),D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,A5.L),D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,A5.L),D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,A5.L),D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,A6.W),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,D0.W),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$23,A0,D0.L),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (0,A0,A5.L),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0-D1/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0-D1/D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2-D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2/D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A5.L),D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,A6.W),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,D0.W),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (-$22,A0,D0.L),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (0,A0,A5.L),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
       MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A2-A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1-A2/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A3/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A3
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2/A4
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A3/A5
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2/A4/A6
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1-A2/A4/A6
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1/A3/A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W ($FFBBBC).W,D1/D3-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W ($FFBBBC).W,D0-D1/D3-D5/D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D2-D5/D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0-D1/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0-D1/D3/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2-D3/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2/D4/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0-D1/D3-D4/D6-D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2/D4/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0-D1/D3/D5/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2/D4/D6/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0-D1/D3/D5/D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2-D3/D5/D7/A3-A5/A7
-      MOVEM.W ($FFBBBC).W,D0/D2/D4-D5/D7/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3-D5/D7-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D2-D5/D7-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D6-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D6-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/D6-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3/D6-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/D4/D6-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2-D3/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/D4/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3-D4/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3/D5/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2-D3/D5/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/D4-D5/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/D4/D6/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3-D4/D6/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3/D5-D6/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2-D3/D5-D6/A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0-D1/D3/D5/D7-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2-D3/D5/D7-A0/A3-A5/A7
+      MOVEM.W ($FFBBBC).W,D0/D2/D4-D5/D7-A0/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0-D1/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0-D1/D3/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2-D3/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2/D4/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0-D1/D3-D4/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0-D1/D3/D5/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2-D3/D5/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2/D4-D5/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2/D4/D6/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0-D1/D3-D4/D6/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0-D1/D3/D5-D6/A0-A1/A3-A5/A7
+      MOVEM.W ($FFBDBE).W,D0/D2-D3/D5-D6/A0-A1/A3-A5/A7
+      MOVEM.W ($FFC1C2).W,D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2-D3/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/D4/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3-D4/D6-A5/A7
+      MOVEM.W ($FFC1C2).W,A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2-D3/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/D4/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3-D4/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3/D5/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2-D3/D5/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/D4-D5/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/D4/D6/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3-D4/D6/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3/D5-D6/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2-D3/D5-D6/A0-A5/A7
+      MOVEM.W ($FFC1C2).W,D0-D1/D3/D5/D7-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2-D3/D5/D7-A5/A7
+      MOVEM.W ($FFC1C2).W,D0/D2/D4-D5/D7-A5/A7
+      MOVEM.W ($FFC3C4).W,D1/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D5-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2-D3/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/D4/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W ($FFC3C4).W,D0/D2/D4-D5/D7-A0/A6-A7
+      MOVEM.W ($FFC5C6).W,A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0-D1/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0-D1/D3/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2-D3/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2/D4/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0-D1/D3-D4/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0-D1/D3/D5/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2-D3/D5/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2/D4-D5/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2/D4/D6/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0-D1/D3-D4/D6/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0-D1/D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W ($FFC5C6).W,D0/D2-D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W ($FFC7C8).W,D1-D2/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D3/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D3/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2-D3/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2/D4/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3-D4/D6-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D5-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2-D3/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2/D4/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3-D4/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3/D5/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2-D3/D5/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2/D4-D5/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2/D4/D6/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3-D4/D6/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2-D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0-D1/D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2-D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W ($FFC7C8).W,D0/D2/D4-D5/D7-A0/A2/A6-A7
+      MOVEM.W ($FFCFD0).W,D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D5-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2-D3/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2/D4/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3-D4/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2-D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2/D4-D5/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2/D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3-D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2-D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W ($FFCFD0).W,D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W ($BEBFC0).L,D2-D5/D7-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2-D5/D7-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D6-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D6-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/D6-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3/D6-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/D4/D6-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3-D4/D6-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2-D3/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/D4/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3-D4/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3/D5/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2-D3/D5/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/D4-D5/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/D4/D6/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3-D4/D6/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3/D5-D6/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2-D3/D5-D6/A0-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0-D1/D3/D5/D7-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2-D3/D5/D7-A1/A3-A5/A7
+      MOVEM.W ($BEBFC0).L,D0/D2/D4-D5/D7-A1/A3-A5/A7
+      MOVEM.W ($C2C3C4).L,D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2-D3/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/D4/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3-D4/D6-A5/A7
+      MOVEM.W ($C2C3C4).L,A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2-D3/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/D4/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3-D4/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3/D5/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2-D3/D5/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/D4-D5/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/D4/D6/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3-D4/D6/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3/D5-D6/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2-D3/D5-D6/A0-A5/A7
+      MOVEM.W ($C2C3C4).L,D0-D1/D3/D5/D7-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2-D3/D5/D7-A5/A7
+      MOVEM.W ($C2C3C4).L,D0/D2/D4-D5/D7-A5/A7
+      MOVEM.W ($C4C5C6).L,D1/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D5-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2-D3/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/D4/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W ($C4C5C6).L,D0/D2/D4-D5/D7-A0/A6-A7
       MOVEM.W (*-$423E,PC),D2-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A2-A5/A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A5/A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1-A2/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A3/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A3
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2/A4
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A3/A5
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2/A4/A6
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1-A2/A4/A6
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A3-A4/A6
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1/A3/A5/A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (*-$423E,PC),D2-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (*-$423E,PC),D0-D1/D3-D5/D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2-D5/D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0-D1/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0-D1/D3/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2-D3/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2/D4/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0-D1/D3-D4/D6-D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2/D4/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0-D1/D3/D5/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2/D4/D6/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0-D1/D3/D5/D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2-D3/D5/D7/A1/A3-A5/A7
-      MOVEM.W (*-$423E,PC),D0/D2/D4-D5/D7/A1/A3-A5/A7
-      MOVEM.W (*+$00C2,PC),D1/D3-D5/D7/A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2-D5/D7-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D6-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D6-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/D6-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3/D6-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/D4/D6-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3-D4/D6-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2-D3/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/D4/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3-D4/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3/D5/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2-D3/D5/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/D4-D5/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/D4/D6/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3-D4/D6/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3/D5-D6/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2-D3/D5-D6/A0-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0-D1/D3/D5/D7-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2-D3/D5/D7-A1/A3-A5/A7
+      MOVEM.W (*-$423E,PC),D0/D2/D4-D5/D7-A1/A3-A5/A7
+      MOVEM.W (*+$00C2,PC),D0-D1/D3-D5/D7-A1/A3-A5/A7
+      MOVEM.W (*-$403C,PC),A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0-D1/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0-D1/D3/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2-D3/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2/D4/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0-D1/D3-D4/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0-D1/D3/D5/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2-D3/D5/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2/D4-D5/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2/D4/D6/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0-D1/D3-D4/D6/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0-D1/D3/D5-D6/A0/A2-A5/A7
+      MOVEM.W (*-$403C,PC),D0/D2-D3/D5-D6/A0/A2-A5/A7
+      MOVEM.W (*+$00C4,PC),D0/D2-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-$3E3A,PC),D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2-D3/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/D4/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3-D4/D6-A5/A7
+      MOVEM.W (*-$3E3A,PC),A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2-D3/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/D4/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3-D4/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3/D5/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2-D3/D5/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/D4-D5/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/D4/D6/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3-D4/D6/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3/D5-D6/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2-D3/D5-D6/A0-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0-D1/D3/D5/D7-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2-D3/D5/D7-A5/A7
+      MOVEM.W (*-$3E3A,PC),D0/D2/D4-D5/D7-A5/A7
+      MOVEM.W (*+$00C6,PC),D0-D5/D7-A5/A7
+      MOVEM.W (*-$3C38,PC),D1/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D5-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2-D3/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/D4/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W (*-$3C38,PC),D0/D2/D4-D5/D7-A0/A6-A7
+      MOVEM.W (*+$00C8,PC),D0/D6-A0/A6-A7
+      MOVEM.W (*-$3A36,PC),A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0-D1/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0-D1/D3/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2-D3/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2/D4/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0-D1/D3-D4/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0-D1/D3/D5/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2-D3/D5/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2/D4-D5/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2/D4/D6/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0-D1/D3-D4/D6/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0-D1/D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (*-$3A36,PC),D0/D2-D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (*+$00CA,PC),D0-D1/D6-A1/A6-A7
+      MOVEM.W (*-$3834,PC),D1-D2/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2-D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2/D4/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3-D4/D6-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D5-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2-D3/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2/D4/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3-D4/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3/D5/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2-D3/D5/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2/D4-D5/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2/D4/D6/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3-D4/D6/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2-D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0-D1/D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2-D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (*-$3834,PC),D0/D2/D4-D5/D7-A0/A2/A6-A7
+      MOVEM.W (*+$00CC,PC),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (*-$302C,PC),D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D5-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2-D3/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2/D4/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3-D4/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2-D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2/D4-D5/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2/D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3-D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2-D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (*-$302C,PC),D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (*+$00D4,PC),D0/D2-D3/D6-A0/A2-A3/A6-A7
       MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A2-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1-A2/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A3/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2-A3/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A3
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2/A4
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A3/A5
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2/A4/A6
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1-A2/A4/A6
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A3-A4/A6
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1/A3/A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2-A3/A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7-A0/A2/A4-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D5/D7/A1-A2/A4-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D2-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D6-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D6-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/D6-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D6-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/D4/D6-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3-D4/D6-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D3/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/D4/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3-D4/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D5/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/D4-D5/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/D4/D6/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3-D4/D6/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D5-D6/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D3/D5-D6/A0-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2-D3/D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A3.L),D0/D2/D4-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,A4.W),D0-D1/D3-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,D0.W),D0-D1/D3-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*-61,PC,D0.L),D0-D1/D3-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*,PC,A3.L),D0-D1/D3-D5/D7-A1/A3-A5/A7
-      MOVEM.W (*+1,PC,A3.L),D0-D1/D3-D5/D7-A1/A3-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D1-D5/D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0-D1/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2-D3/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2/D4/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0-D1/D3-D4/D6-D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2/D4/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D5/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2/D4/D6/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0-D1/D3-D4/D6/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0-D1/D3/D5/D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2-D3/D5/D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A3.L),D0/D2/D4-D5/D7/A2-A5/A7
+      MOVEM.W (*-61,PC,A4.W),D2-D5/D7/A2-A5/A7
+      MOVEM.W (*-61,PC,D0.W),D2-D5/D7/A2-A5/A7
+      MOVEM.W (*-61,PC,D0.L),D2-D5/D7/A2-A5/A7
+      MOVEM.W (*,PC,A3.L),D2-D5/D7/A2-A5/A7
+      MOVEM.W (*+1,PC,A3.L),D2-D5/D7/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D1-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3/D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2-D3/D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/D4/D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3-D4/D6-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2-D3/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/D4/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3-D4/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3/D5/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2-D3/D5/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/D4-D5/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/D4/D6/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3-D4/D6/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3/D5-D6/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2-D3/D5-D6/A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0-D1/D3/D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2-D3/D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A3.L),D0/D2/D4-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,A4.W),D0/D2-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,D0.W),D0/D2-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-60,PC,D0.L),D0/D2-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*,PC,A3.L),D0/D2-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*+1,PC,A3.L),D0/D2-D5/D7-A0/A2-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0-D1/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0-D1/D3/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2-D3/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2/D4/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0-D1/D3-D4/D6-D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2/D4/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0-D1/D3/D5/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2-D3/D5/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2/D4/D6/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0-D1/D3-D4/D6/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0-D1/D3/D5/D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2-D3/D5/D7/A1-A5/A7
+      MOVEM.W (*-59,PC,A4.W),D0/D2/D4-D5/D7/A1-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0-D1/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0/D2/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0-D1/D3/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0/D2-D3/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0/D2/D4/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0-D1/D3-D4/D6-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0-D1/D3/D5/D7-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0/D2-D3/D5/D7-A5/A7
+      MOVEM.W (*-58,PC,A4.W),D0/D2/D4-D5/D7-A5/A7
+      MOVEM.W (*-58,PC,A4.L),D0-D5/D7-A5/A7
+      MOVEM.W (*-58,PC,D0.W),D0-D5/D7-A5/A7
+      MOVEM.W (*-58,PC,D0.L),D0-D5/D7-A5/A7
+      MOVEM.W (*,PC,A3.L),D0-D5/D7-A5/A7
+      MOVEM.W (*+1,PC,A3.L),D0-D5/D7-A5/A7
+      MOVEM.W (*-57,PC,A4.W),D0/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D3/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2-D3/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2/D4/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D3-D4/D6-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D5-D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D3/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2/D4/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D3/D5/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2-D3/D5/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2/D4/D6/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D3-D4/D6/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0-D1/D3/D5/D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2-D3/D5/D7/A6-A7
+      MOVEM.W (*-57,PC,A4.W),D0/D2/D4-D5/D7/A6-A7
+      MOVEM.W (*-57,PC,A4.L),D6-D7/A6-A7
+      MOVEM.W (*-57,PC,D0.W),D6-D7/A6-A7
+      MOVEM.W (*-57,PC,D0.L),D6-D7/A6-A7
+      MOVEM.W (*,PC,A4.W),D6-D7/A6-A7
+      MOVEM.W (*+1,PC,A4.W),D6-D7/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D1/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2-D3/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/D4/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3-D4/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D5-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2-D3/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/D4/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3-D4/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3/D5/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2-D3/D5/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/D4-D5/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/D4/D6/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3-D4/D6/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3/D5-D6/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2-D3/D5-D6/A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0-D1/D3/D5/D7-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2-D3/D5/D7-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.W),D0/D2/D4-D5/D7-A0/A6-A7
+      MOVEM.W (*-56,PC,A4.L),D0/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,D0.W),D0/D6-A0/A6-A7
+      MOVEM.W (*-56,PC,D0.L),D0/D6-A0/A6-A7
+      MOVEM.W (*,PC,A4.W),D0/D6-A0/A6-A7
+      MOVEM.W (*+1,PC,A4.W),D0/D6-A0/A6-A7
+      MOVEM.W (*-55,PC,A4.W),D0/D2/D4/D6-D7/A1/A6-A7
+      MOVEM.W (*-55,PC,A4.W),D0-D1/D3-D4/D6-D7/A1/A6-A7
+      MOVEM.W (*-55,PC,A4.W),D0-D1/D3/D5/D7/A1/A6-A7
+      MOVEM.W (*-55,PC,A4.W),D0/D2-D3/D5/D7/A1/A6-A7
+      MOVEM.W (*-55,PC,A4.W),D0/D2/D4-D5/D7/A1/A6-A7
+      MOVEM.W (*-55,PC,A4.L),D1/D6-D7/A1/A6-A7
+      MOVEM.W (*-55,PC,D0.W),D1/D6-D7/A1/A6-A7
+      MOVEM.W (*-55,PC,D0.L),D1/D6-D7/A1/A6-A7
+      MOVEM.W (*,PC,A4.W),D1/D6-D7/A1/A6-A7
+      MOVEM.W (*+1,PC,A4.W),D1/D6-D7/A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0-D1/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0-D1/D3/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2-D3/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2/D4/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0-D1/D3-D4/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0-D1/D3/D5/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2-D3/D5/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2/D4-D5/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2/D4/D6/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0-D1/D3-D4/D6/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0-D1/D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.W),D0/D2-D3/D5-D6/A0-A1/A6-A7
+      MOVEM.W (*-54,PC,A4.L),D0-D1/D6-A1/A6-A7
+      MOVEM.W (*-54,PC,D0.W),D0-D1/D6-A1/A6-A7
+      MOVEM.W (*-54,PC,D0.L),D0-D1/D6-A1/A6-A7
+      MOVEM.W (*,PC,A4.W),D0-D1/D6-A1/A6-A7
+      MOVEM.W (*+1,PC,A4.W),D0-D1/D6-A1/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D1-D2/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2-D3/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2/D4/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3-D4/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D5-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2-D3/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2/D4/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3-D4/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3/D5/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2-D3/D5/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2/D4-D5/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2/D4/D6/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3-D4/D6/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2-D3/D5-D6/A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0-D1/D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2-D3/D5/D7-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.W),D0/D2/D4-D5/D7-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,A4.L),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,D0.W),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (*-52,PC,D0.L),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (*,PC,A4.W),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (*+1,PC,A4.W),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D1/D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2-D3/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2/D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D1/D3-D4/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D5-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D1/D3/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2/D4/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D1/D3/D5/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2-D3/D5/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2/D4/D6/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D1/D3-D4/D6/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0-D1/D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2-D3/D5/D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,A4.L),D0/D2/D4-D5/D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,D0.W),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-51,PC,D0.L),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*,PC,A4.W),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*+1,PC,A4.W),D1-D2/D6-D7/A1-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0/D3/D6-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0-D1/D3/D6-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0/D2-D3/D6-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0/D2/D4/D6-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0-D1/D3-D4/D6-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D5-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0-D1/D3/D5/D7-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0/D2-D3/D5/D7-A2/A6-A7
+      MOVEM.W (*-50,PC,A4.L),D0/D2/D4-D5/D7-A2/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D3/D6-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0-D1/D3/D6-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D2-D3/D6-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2-D3/D6-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2/D4/D6-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0-D1/D3-D4/D6-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D5-D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0-D1/D3/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2/D4/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0-D1/D3/D5/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2-D3/D5/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2/D4/D6/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0-D1/D3-D4/D6/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0-D1/D3/D5/D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2-D3/D5/D7/A3/A6-A7
+      MOVEM.W (*-49,PC,A4.L),D0/D2/D4-D5/D7/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3/D6-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D2-D3/D6-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2-D3/D6-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D4/D6-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2/D4/D6-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3-D4/D6-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D5-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2-D3/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2/D4/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3-D4/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3/D5/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2-D3/D5/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2/D4-D5/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2/D4/D6/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3-D4/D6/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3/D5-D6/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2-D3/D5-D6/A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0-D1/D3/D5/D7-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2-D3/D5/D7-A0/A3/A6-A7
+      MOVEM.W (*-48,PC,A4.L),D0/D2/D4-D5/D7-A0/A3/A6-A7
+      MOVEM.W (*,PC,A4.L),D0/D3/D6-A0/A3/A6-A7
+      MOVEM.W (*+1,PC,A4.L),D0/D3/D6-A0/A3/A6-A7
+      MOVEM.W (*-47,PC,A4.L),D0/D2/D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (*-47,PC,A4.L),D0-D1/D3-D4/D6-D7/A1/A3/A6-A7
+      MOVEM.W (*-47,PC,A4.L),D0-D1/D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (*-47,PC,A4.L),D0/D2-D3/D5/D7/A1/A3/A6-A7
+      MOVEM.W (*-47,PC,A4.L),D0/D2/D4-D5/D7/A1/A3/A6-A7
+      MOVEM.W (*-47,PC,D0.W),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (*-47,PC,D0.L),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (*,PC,A4.L),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (*+1,PC,A4.L),D1/D3/D6-D7/A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0-D1/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0-D1/D3/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2-D3/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2/D4/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0-D1/D3-D4/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0-D1/D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2-D3/D5/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2/D4-D5/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2/D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0-D1/D3-D4/D6/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0-D1/D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,A4.L),D0/D2-D3/D5-D6/A0-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,D0.W),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (*-46,PC,D0.L),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (*,PC,A4.L),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (*+1,PC,A4.L),D0-D1/D3/D6-A1/A3/A6-A7
+      MOVEM.W (*,PC,A4.L),D2-D3/D6-D7/A2-A3/A6-A7
+      MOVEM.W (*+1,PC,A4.L),D2-D3/D6-D7/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2/D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3-D4/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D5-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2-D3/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2/D4/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3-D4/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2-D3/D5/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2/D4-D5/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2/D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3-D4/D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2-D3/D5-D6/A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0-D1/D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2-D3/D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A4.L),D0/D2/D4-D5/D7-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,A5.W),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,D0.W),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-44,PC,D0.L),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*,PC,A4.L),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*+1,PC,A4.L),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.W (*-43,PC,A5.W),D0/D2/D4/D6-D7/A1-A3/A6-A7
+      MOVEM.W (*-43,PC,A5.W),D0-D1/D3-D4/D6-D7/A1-A3/A6-A7
+      MOVEM.W (*-43,PC,A5.W),D0-D1/D3/D5/D7/A1-A3/A6-A7
+      MOVEM.W (*-43,PC,A5.W),D0/D2-D3/D5/D7/A1-A3/A6-A7
+      MOVEM.W (*-43,PC,A5.W),D0/D2/D4-D5/D7/A1-A3/A6-A7
+      MOVEM.W (*-39,PC,A5.W),D0/D2/D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (*-39,PC,A5.W),D0-D1/D3-D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (*-39,PC,A5.W),D0-D1/D3/D5/D7/A1/A4/A6-A7
+      MOVEM.W (*-39,PC,A5.W),D0/D2-D3/D5/D7/A1/A4/A6-A7
+      MOVEM.W (*-39,PC,A5.W),D0/D2/D4-D5/D7/A1/A4/A6-A7
+      MOVEM.W (*,PC,A5.W),D1/D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (*+1,PC,A5.W),D1/D4/D6-D7/A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0-D1/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0-D1/D3/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2-D3/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2/D4/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0-D1/D3-D4/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0-D1/D3/D5/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2-D3/D5/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2/D4-D5/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2/D4/D6/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0-D1/D3-D4/D6/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0-D1/D3/D5-D6/A0-A1/A4/A6-A7
+      MOVEM.W (*-38,PC,A5.W),D0/D2-D3/D5-D6/A0-A1/A4/A6-A7
+      MOVEM.W (*,PC,A5.W),D0-D1/D4/D6-A1/A4/A6-A7
+      MOVEM.W (*+1,PC,A5.W),D0-D1/D4/D6-A1/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D1-D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D5-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D5-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/D5-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2-D3/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/D4/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3-D4/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2-D3/D5/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/D4-D5/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3-D4/D6/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2-D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/D4/D7-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.W),D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,A5.L),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,D0.W),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-36,PC,D0.L),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*,PC,A5.W),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*+1,PC,A5.W),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.W (*-35,PC,A5.L),D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-35,PC,A5.L),D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-35,PC,A5.L),D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-35,PC,A5.L),D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-35,PC,A5.L),D0/D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-35,PC,D0.W),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-35,PC,D0.L),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (*,PC,A5.W),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (*+1,PC,A5.W),D1-D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.W (*-31,PC,A5.L),D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,A5.L),D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,A5.L),D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,A5.L),D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,A5.L),D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,A6.W),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,D0.W),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-31,PC,D0.L),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*,PC,A5.L),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*+1,PC,A5.L),D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0-D1/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0-D1/D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2-D3/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2/D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A5.L),D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,A6.W),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,D0.W),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (*-30,PC,D0.L),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (*,PC,A5.L),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
+      MOVEM.W (*+1,PC,A5.L),D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
       MOVEM.L (A0),D1/D4/D6-A0/A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-A4/A6-A7
-      MOVEM.L (A0),D1/D4/D6-D7/A5-A7
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A5-A7
-      MOVEM.L (A0),D1/D4/D6-A7
-      MOVEM.L (A0),D1/D4/D6-D7
-      MOVEM.L (A0),D1/D4/D6-D7/A1
-      MOVEM.L (A0),D1/D4/D6-A0/A2
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A3
-      MOVEM.L (A0),D1/D4/D6-A0/A2/A4
-      MOVEM.L (A0),D1/D4/D6-D7/A1-A2/A4
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A3/A5
-      MOVEM.L (A0),D1/D4/D6-A0/A2-A3/A5
-      MOVEM.L (A0),D1/D4/D6-A0/A2/A4/A6
-      MOVEM.L (A0),D1/D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A0),D1/D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A0),D1/D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A0),D1/D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A0),D1/D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A0),D0-D1/D4/D6-D7/A4/A6-A7
-      MOVEM.L (A0),D0/D2/D4/D6-D7/A4/A6-A7
-      MOVEM.L (A0),D3-D4/D6-D7/A4/A6-A7
-      MOVEM.L (A0),D0/D3-D4/D6-D7/A4/A6-A7
-      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A4/A6-A7
-      MOVEM.L (A0),D5-D7/A4/A6-A7
-      MOVEM.L (A0),D0/D5-D7/A4/A6-A7
-      MOVEM.L (A0),A4/A6-A7
-      MOVEM.L (A0),D0/A4/A6-A7
-      MOVEM.L (A0),D0/D2/A4/A6-A7
-      MOVEM.L (A0),D0-D1/D3/A4/A6-A7
-      MOVEM.L (A0),D0/D2/D4/A4/A6-A7
-      MOVEM.L (A0),D0-D1/D3/D5/A4/A6-A7
-      MOVEM.L (A0),D0/D2-D3/D5/A4/A6-A7
-      MOVEM.L (A0),D0/D2/D4/D6/A4/A6-A7
-      MOVEM.L (A0),D0-D1/D3-D4/D6/A4/A6-A7
-      MOVEM.L (A0),D0-D1/D3/D5/D7/A4/A6-A7
-      MOVEM.L (A0),D0/D2-D3/D5/D7/A4/A6-A7
-      MOVEM.L (A0),D0/D2/D4-D5/D7/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-A1/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-A4/A6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A5-A7
-      MOVEM.L (A1),D0-D1/D4/D6-A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1/A3
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2/A4
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1-A2/A4
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1/A3/A5
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2-A3/A5
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2/A4/A6
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A1),D0-D1/D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A1),D0-D1/D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A1),D0/D2/D4/D6-A0/A4/A6-A7
-      MOVEM.L (A1),D3-D4/D6-A0/A4/A6-A7
-      MOVEM.L (A1),D0/D3-D4/D6-A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D3-D4/D6-A0/A4/A6-A7
-      MOVEM.L (A1),D5-A0/A4/A6-A7
-      MOVEM.L (A1),D0/D5-A0/A4/A6-A7
-      MOVEM.L (A1),A0/A4/A6-A7
-      MOVEM.L (A1),D0/A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2/A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D3/A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2-D3/A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2/D4/A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D3-D4/A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D3/D5/A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2-D3/D5/A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2/D4/D6/A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D3-D4/D6/A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2-D3/D5-D6/A0/A4/A6-A7
-      MOVEM.L (A1),D0-D1/D3/D5/D7-A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2-D3/D5/D7-A0/A4/A6-A7
-      MOVEM.L (A1),D0/D2/D4-D5/D7-A0/A4/A6-A7
-      MOVEM.L (A2),D0/D2/D4/D6-D7/A1/A4/A6-A7
-      MOVEM.L (A2),D0-D1/D3-D4/D6-D7/A1/A4/A6-A7
-      MOVEM.L (A2),D0-D1/D3/D5/D7/A1/A4/A6-A7
-      MOVEM.L (A2),D0/D2-D3/D5/D7/A1/A4/A6-A7
-      MOVEM.L (A2),D0/D2/D4-D5/D7/A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A5-A7
-      MOVEM.L (A3),D0/D2/D4/D6-A7
-      MOVEM.L (A3),D0/D2/D4/D6-D7
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1/A3
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2/A4
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1-A2/A4
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1/A3/A5
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2-A3/A5
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2/A4/A6
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A3),D0/D2/D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A3),D0/D2/D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A3),A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0-D1/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0-D1/D3/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2-D3/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0-D1/D3-D4/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0-D1/D3/D5/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2-D3/D5/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2/D4/D6/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0-D1/D3-D4/D6/A0-A1/A4/A6-A7
-      MOVEM.L (A3),D0/D2-D3/D5-D6/A0-A1/A4/A6-A7
-      MOVEM.L (A5),D3-D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D3-D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A5),D5-A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D5-A0/A2/A4/A6-A7
-      MOVEM.L (A5),A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2-D3/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2/D4/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3-D4/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3/D5/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2-D3/D5/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2/D4-D5/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2/D4/D6/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3-D4/D6/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3/D5-D6/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2-D3/D5-D6/A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
-      MOVEM.L (A5),D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
-      MOVEM.L (A6),D3-D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A6),D3-D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A6),D3-D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A6),D3-D4/D6-A4/A6-A7
-      MOVEM.L (A6),D3-D4/D6-D7/A5-A7
-      MOVEM.L (A6),D3-D4/D6-A7
-      MOVEM.L (A6),D3-D4/D6-D7
-      MOVEM.L (A6),D3-D4/D6-D7/A1
-      MOVEM.L (A6),D3-D4/D6-A0/A2
-      MOVEM.L (A6),D3-D4/D6-D7/A1/A3
-      MOVEM.L (A6),D3-D4/D6-A0/A2/A4
-      MOVEM.L (A6),D3-D4/D6-D7/A1-A2/A4
-      MOVEM.L (A6),D3-D4/D6-D7/A1/A3/A5
-      MOVEM.L (A6),D3-D4/D6-A0/A2-A3/A5
-      MOVEM.L (A6),D3-D4/D6-A0/A2/A4/A6
-      MOVEM.L (A6),D3-D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A6),D3-D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A6),D3-D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A6),D3-D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A6),D3-D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A6),D3-D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A6),D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A6),D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.L (A6),D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
-      MOVEM.L (A6),D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A7),D0/D3-D4/D6-A4/A6-A7
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A5-A7
-      MOVEM.L (A7),D0/D3-D4/D6-A7
-      MOVEM.L (A7),D0/D3-D4/D6-D7
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A2
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1/A3
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A2/A4
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1-A2/A4
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1/A3/A5
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A2-A3/A5
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A2/A4/A6
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A7),D0/D3-D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A7),D0/D3-D4/D6-D7/A1-A2/A4-A5/A7
+      MOVEM.L (A0),D0-D1/D4/D6-A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6-A0/A4/A6-A7
+      MOVEM.L (A0),D3-D4/D6-A0/A4/A6-A7
+      MOVEM.L (A0),D0/D3-D4/D6-A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-A0/A4/A6-A7
+      MOVEM.L (A0),D5-A0/A4/A6-A7
+      MOVEM.L (A0),D0/D5-A0/A4/A6-A7
+      MOVEM.L (A0),A0/A4/A6-A7
+      MOVEM.L (A0),D0/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A0/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1/A4/A6-A7
+      MOVEM.L (A0),A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0-A1/A4/A6-A7
+      MOVEM.L (A0),D1-D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D5-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D5-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D5-A0/A2/A4/A6-A7
+      MOVEM.L (A0),A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D7-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A0/A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1-A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1-A2/A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1-A2/A4/A6-A7
+      MOVEM.L (A0),D0/D3-D4/D6-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D2-D4/D6-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D5-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D5-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D5-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D7/A3-A4/A6-A7
+      MOVEM.L (A0),A3-A4/A6-A7
+      MOVEM.L (A0),D0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A3-A4/A6-A7
+      MOVEM.L (A0),D1/D3-D4/D6-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D2-D4/D6-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0),A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0),A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0),D5-A4/A6-A7
+      MOVEM.L (A0),D0/D5-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D5-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D5-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4/D7-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D7-A4/A6-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A4/A6-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A4/A6-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A4/A6-A7
+      MOVEM.L (A0),D0/D5-D7/A5-A7
+      MOVEM.L (A0),D0-D1/D5-D7/A5-A7
+      MOVEM.L (A0),D0/D2/D5-D7/A5-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D7/A5-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D7/A5-A7
+      MOVEM.L (A0),D4-D7/A5-A7
+      MOVEM.L (A0),A5-A7
+      MOVEM.L (A0),D0/A5-A7
+      MOVEM.L (A0),D0/D2/A5-A7
+      MOVEM.L (A0),D0-D1/D3/A5-A7
+      MOVEM.L (A0),D0/D2/D4/A5-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A5-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A5-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A5-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A5-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A5-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A5-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A5-A7
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A5-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A5-A7
+      MOVEM.L (A0),A0/A5-A7
+      MOVEM.L (A0),D0/A0/A5-A7
+      MOVEM.L (A0),D0-D1/A0/A5-A7
+      MOVEM.L (A0),D0/D2/A0/A5-A7
+      MOVEM.L (A0),D0-D1/D3/A0/A5-A7
+      MOVEM.L (A0),D0/D2-D3/A0/A5-A7
+      MOVEM.L (A0),D0/D2/D4/A0/A5-A7
+      MOVEM.L (A0),D0-D1/D3-D4/A0/A5-A7
+      MOVEM.L (A0),D0-D1/D3/D5/A0/A5-A7
+      MOVEM.L (A0),D0/D2-D3/D5/A0/A5-A7
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A5-A7
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A5-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A5-A7
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A5-A7
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A5-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1/A5-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1/A5-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1/A5-A7
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1/A5-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1/A5-A7
+      MOVEM.L (A0),D7-A7
+      MOVEM.L (A0),D0/D7-A7
+      MOVEM.L (A0),D0-D1/D7-A7
+      MOVEM.L (A0),D0/D2/D7-A7
+      MOVEM.L (A0),D0-D1/D3/D7-A7
+      MOVEM.L (A0),D0/D2-D3/D7-A7
+      MOVEM.L (A0),D0/D2/D4/D7-A7
+      MOVEM.L (A0),D0-D1/D3-D4/D7-A7
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A7
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A7
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A7
+      MOVEM.L (A0),D0
+      MOVEM.L (A0),D0-D1
+      MOVEM.L (A0),D0/D2
+      MOVEM.L (A0),D0-D1/D3
+      MOVEM.L (A0),D0/D2-D3
+      MOVEM.L (A0),D0/D2/D4
+      MOVEM.L (A0),D0-D1/D3-D4
+      MOVEM.L (A0),D0-D1/D3/D5
+      MOVEM.L (A0),D0/D2-D3/D5
+      MOVEM.L (A0),D0/D2/D4-D5
+      MOVEM.L (A0),D0/D2/D4/D6
+      MOVEM.L (A0),D0-D1/D3-D4/D6
+      MOVEM.L (A0),D0-D1/D3/D5-D6
+      MOVEM.L (A0),D0/D2-D3/D5-D6
+      MOVEM.L (A0),D0-D1/D3/D5/D7
+      MOVEM.L (A0),D0/D2-D3/D5/D7
+      MOVEM.L (A0),D0/D2/D4-D5/D7
+      MOVEM.L (A0),D0/D2/D4/D6-D7
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7
+      MOVEM.L (A0),D1/A0
+      MOVEM.L (A0),D0-D1/A0
+      MOVEM.L (A0),D0/D2/A0
+      MOVEM.L (A0),D0-D1/D3/A0
+      MOVEM.L (A0),D0/D2-D3/A0
+      MOVEM.L (A0),D0/D2/D4/A0
+      MOVEM.L (A0),D0-D1/D3-D4/A0
+      MOVEM.L (A0),D0-D1/D3/D5/A0
+      MOVEM.L (A0),D0/D2-D3/D5/A0
+      MOVEM.L (A0),D0/D2/D4-D5/A0
+      MOVEM.L (A0),D0/D2/D4/D6/A0
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0
+      MOVEM.L (A0),A0
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1
+      MOVEM.L (A0),D1-D2/A0/A2
+      MOVEM.L (A0),D3/A0/A2
+      MOVEM.L (A0),D0/D3/A0/A2
+      MOVEM.L (A0),D0-D1/D3/A0/A2
+      MOVEM.L (A0),D0/D2-D3/A0/A2
+      MOVEM.L (A0),D0/D2/D4/A0/A2
+      MOVEM.L (A0),D0-D1/D3-D4/A0/A2
+      MOVEM.L (A0),D0-D1/D3/D5/A0/A2
+      MOVEM.L (A0),D0/D2-D3/D5/A0/A2
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A2
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A2
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A2
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A2
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A2
+      MOVEM.L (A0),D7-A0/A2
+      MOVEM.L (A0),D0/D7-A0/A2
+      MOVEM.L (A0),D0-D1/D7-A0/A2
+      MOVEM.L (A0),D0/D2/D7-A0/A2
+      MOVEM.L (A0),D0-D1/D3/D7-A0/A2
+      MOVEM.L (A0),D0/D2-D3/D7-A0/A2
+      MOVEM.L (A0),D0/D2/D4/D7-A0/A2
+      MOVEM.L (A0),D0-D1/D3-D4/D7-A0/A2
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A0/A2
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A0/A2
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A0/A2
+      MOVEM.L (A0),A0/A2
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1/A3
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1/A3
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1/A3
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1/A3
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1/A3
+      MOVEM.L (A0),D2-D3/A0-A1/A3
+      MOVEM.L (A0),D0/D2-D3/A0-A1/A3
+      MOVEM.L (A0),D4/A0-A1/A3
+      MOVEM.L (A0),D0/D4/A0-A1/A3
+      MOVEM.L (A0),D0-D1/D4/A0-A1/A3
+      MOVEM.L (A0),D0/D2/D4/A0-A1/A3
+      MOVEM.L (A0),D0-D1/D3-D4/A0-A1/A3
+      MOVEM.L (A0),D0-D1/D3/D5/A0-A1/A3
+      MOVEM.L (A0),D0/D2-D3/D5/A0-A1/A3
+      MOVEM.L (A0),D0/D2/D4-D5/A0-A1/A3
+      MOVEM.L (A0),D0/D2/D4/D6/A0-A1/A3
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0-A1/A3
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0-A1/A3
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0-A1/A3
+      MOVEM.L (A0),A0-A1/A3
+      MOVEM.L (A0),D1-D2/D4/A0/A2/A4
+      MOVEM.L (A0),D3-D4/A0/A2/A4
+      MOVEM.L (A0),D0/D3-D4/A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3-D4/A0/A2/A4
+      MOVEM.L (A0),D5/A0/A2/A4
+      MOVEM.L (A0),D0/D5/A0/A2/A4
+      MOVEM.L (A0),D0/D2/D5/A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3/D5/A0/A2/A4
+      MOVEM.L (A0),D0/D2-D3/D5/A0/A2/A4
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A2/A4
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A2/A4
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A2/A4
+      MOVEM.L (A0),D7-A0/A2/A4
+      MOVEM.L (A0),D0/D7-A0/A2/A4
+      MOVEM.L (A0),D0-D1/D7-A0/A2/A4
+      MOVEM.L (A0),D0/D2/D7-A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3/D7-A0/A2/A4
+      MOVEM.L (A0),D0/D2-D3/D7-A0/A2/A4
+      MOVEM.L (A0),D0/D2/D4/D7-A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3-D4/D7-A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A0/A2/A4
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A0/A2/A4
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A0/A2/A4
+      MOVEM.L (A0),A0/A2/A4
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1-A2/A4
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1-A2/A4
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1-A2/A4
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1-A2/A4
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1-A2/A4
+      MOVEM.L (A0),D0-D1/D3/D5/D7/A1/A3/A5
+      MOVEM.L (A0),D0/D2-D3/D5/D7/A1/A3/A5
+      MOVEM.L (A0),D0/D2/D4-D5/D7/A1/A3/A5
+      MOVEM.L (A0),D0/D2/D4/D6-D7/A1/A3/A5
+      MOVEM.L (A0),D0-D1/D3-D4/D6-D7/A1/A3/A5
+      MOVEM.L (A0),D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L (A0),D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0),D0-D1/D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D2/D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0),D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D2/D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0-D1/D3/D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D2/D4/D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0-A1/A3/A5
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0-A1/A3/A5
+      MOVEM.L (A0),A0-A1/A3/A5
+      MOVEM.L (A0),D1-D3/D5/A0/A2-A3/A5
+      MOVEM.L (A0),D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2/D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0),D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2/D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D3/D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2-D3/D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2/D4/D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D3-D4/D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D3/D5-D6/A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2-D3/D5-D6/A0/A2-A3/A5
+      MOVEM.L (A0),D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D3/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2-D3/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2/D4/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D3-D4/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0-D1/D3/D5/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2-D3/D5/D7-A0/A2-A3/A5
+      MOVEM.L (A0),D0/D2/D4-D5/D7-A0/A2-A3/A5
+      MOVEM.L (A0),A0/A2-A3/A5
       MOVEM.L (A0)+,D1/D3-D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A2-A4/A6-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-A4/A6-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A5-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A5-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2/A5-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A3/A5-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A3
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2/A4
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1-A2/A4
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A3/A5
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2-A3/A5
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2/A4/A6
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A0)+,D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D2-D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D5-D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D5-D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2/D5-D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0-D1/D3/D5-D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0-D1/D3/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2/D4/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0-D1/D3/D5/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2-D3/D5/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2/D4/D6/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A3-A4/A6-A7
-      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A1/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A5-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A5-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2/A5-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A3/A5-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A3
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2/A4
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1-A2/A4
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A3/A5
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2-A3/A5
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2/A4/A6
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A1)+,D2-D4/D6-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D5-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D5-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/D5-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3/D5-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2-D3/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/D4/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3/D5/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2-D3/D5/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/D4-D5/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/D4/D6/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3-D4/D6/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3/D5-D6/A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/D4/D7-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0-D1/D3/D5/D7-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2-D3/D5/D7-A0/A3-A4/A6-A7
-      MOVEM.L (A1)+,D0/D2/D4-D5/D7-A0/A3-A4/A6-A7
-      MOVEM.L (A2)+,D2-D4/D6-A4/A6-A7
-      MOVEM.L (A2)+,D2-D4/D6-D7/A5-A7
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1/A5-A7
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2/A5-A7
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1/A3/A5-A7
-      MOVEM.L (A2)+,D2-D4/D6-A7
-      MOVEM.L (A2)+,D2-D4/D6-D7
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1/A3
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2/A4
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1-A2/A4
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1/A3/A5
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2-A3/A5
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2/A4/A6
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1-A2/A4/A6
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1/A3-A4/A6
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1/A3/A5/A7
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2-A3/A5/A7
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2/A4-A5/A7
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A2)+,D2-D4/D6-A0/A2/A4/A6-A7
-      MOVEM.L (A2)+,D2-D4/D6-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A2)+,D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.L (A2)+,D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
-      MOVEM.L (A2)+,D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
-      MOVEM.L (A2)+,D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0-D1/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0-D1/D3/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2-D3/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2/D4/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A3)+,D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
-      MOVEM.L (A6)+,D5-A4/A6-A7
-      MOVEM.L (A6)+,D5-D7/A5-A7
-      MOVEM.L (A6)+,D5-D7/A1/A5-A7
-      MOVEM.L (A6)+,D5-A0/A2/A5-A7
-      MOVEM.L (A6)+,D5-D7/A1/A3/A5-A7
-      MOVEM.L (A6)+,D5-A7
-      MOVEM.L (A6)+,D5-D7
-      MOVEM.L (A6)+,D5-D7/A1
-      MOVEM.L (A6)+,D5-A0/A2
-      MOVEM.L (A6)+,D5-D7/A1/A3
-      MOVEM.L (A6)+,D5-A0/A2/A4
-      MOVEM.L (A6)+,D5-D7/A1-A2/A4
-      MOVEM.L (A6)+,D5-D7/A1/A3/A5
-      MOVEM.L (A6)+,D5-A0/A2-A3/A5
-      MOVEM.L (A6)+,D5-A0/A2/A4/A6
-      MOVEM.L (A6)+,D5-D7/A1-A2/A4/A6
-      MOVEM.L (A6)+,D5-D7/A1/A3-A4/A6
-      MOVEM.L (A6)+,D5-D7/A1/A3/A5/A7
-      MOVEM.L (A6)+,D5-A0/A2-A3/A5/A7
-      MOVEM.L (A6)+,D5-A0/A2/A4-A5/A7
-      MOVEM.L (A6)+,D5-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A6)+,D5-A0/A2/A4/A6-A7
-      MOVEM.L (A6)+,D5-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A7)+,D0/D5-D7/A5-A7
-      MOVEM.L (A7)+,D0/D5-A0/A5-A7
-      MOVEM.L (A7)+,D0/D5-D7/A1/A5-A7
-      MOVEM.L (A7)+,D0/D5-A0/A2/A5-A7
-      MOVEM.L (A7)+,D0/D5-D7/A1/A3/A5-A7
-      MOVEM.L (A7)+,D0/D5-A7
-      MOVEM.L (A7)+,D0/D5-D7
-      MOVEM.L (A7)+,D0/D5-D7/A1
-      MOVEM.L (A7)+,D0/D5-A0/A2
-      MOVEM.L (A7)+,D0/D5-D7/A1/A3
-      MOVEM.L (A7)+,D0/D5-A0/A2/A4
-      MOVEM.L (A7)+,D0/D5-D7/A1-A2/A4
-      MOVEM.L (A7)+,D0/D5-D7/A1/A3/A5
-      MOVEM.L (A7)+,D0/D5-A0/A2-A3/A5
-      MOVEM.L (A7)+,D0/D5-A0/A2/A4/A6
-      MOVEM.L (A7)+,D0/D5-D7/A1-A2/A4/A6
-      MOVEM.L (A7)+,D0/D5-D7/A1/A3-A4/A6
-      MOVEM.L (A7)+,D0/D5-D7/A1/A3/A5/A7
-      MOVEM.L (A7)+,D0/D5-A0/A2-A3/A5/A7
-      MOVEM.L (A7)+,D0/D5-A0/A2/A4-A5/A7
-      MOVEM.L (A7)+,D0/D5-D7/A1-A2/A4-A5/A7
-      MOVEM.L (A7)+,D0/D5-A0/A2/A4/A6-A7
-      MOVEM.L (A7)+,D0/D5-D7/A1-A2/A4/A6-A7
-      MOVEM.L (A7)+,D0/D2/D5-A4/A6-A7
-      MOVEM.L (A7)+,D0-D1/D3/D5-A4/A6-A7
-      MOVEM.L (A7)+,D0/D2/D4/D7-A4/A6-A7
-      MOVEM.L (A7)+,D0-D1/D3/D5/D7-A4/A6-A7
-      MOVEM.L (A7)+,D0/D2-D3/D5/D7-A4/A6-A7
-      MOVEM.L (A7)+,D0/D2/D4-D5/D7-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D2-D4/D6-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A0/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0-A1/A3-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D4/D6-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D1-D4/D6-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D5-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D5-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D5-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A2-A4/A6-A7
+      MOVEM.L (A0)+,D5-A4/A6-A7
+      MOVEM.L (A0)+,D0/D5-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D5-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D5-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4/D7-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D7-A4/A6-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A4/A6-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A4/A6-A7
+      MOVEM.L (A0)+,D0/D5-D7/A5-A7
+      MOVEM.L (A0)+,D0-D1/D5-D7/A5-A7
+      MOVEM.L (A0)+,D0/D2/D5-D7/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D7/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-D7/A5-A7
+      MOVEM.L (A0)+,D4-D7/A5-A7
+      MOVEM.L (A0)+,A5-A7
+      MOVEM.L (A0)+,D0/A5-A7
+      MOVEM.L (A0)+,D0/D2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A5-A7
+      MOVEM.L (A0)+,A0/A5-A7
+      MOVEM.L (A0)+,D0/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1/A5-A7
+      MOVEM.L (A0)+,D1-D2/D5-A0/A2/A5-A7
+      MOVEM.L (A0)+,D3/D5-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D3/D5-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-A0/A2/A5-A7
+      MOVEM.L (A0)+,D4-A0/A2/A5-A7
+      MOVEM.L (A0)+,A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D7-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D7-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A0/A2/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1/A3/A5-A7
+      MOVEM.L (A0)+,A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0-A1/A3/A5-A7
+      MOVEM.L (A0)+,D7-A7
+      MOVEM.L (A0)+,D0/D7-A7
+      MOVEM.L (A0)+,D0-D1/D7-A7
+      MOVEM.L (A0)+,D0/D2/D7-A7
+      MOVEM.L (A0)+,D0-D1/D3/D7-A7
+      MOVEM.L (A0)+,D0/D2-D3/D7-A7
+      MOVEM.L (A0)+,D0/D2/D4/D7-A7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D7-A7
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A7
+      MOVEM.L (A0)+,D0
+      MOVEM.L (A0)+,D0-D1
+      MOVEM.L (A0)+,D0/D2
+      MOVEM.L (A0)+,D0-D1/D3
+      MOVEM.L (A0)+,D0/D2-D3
+      MOVEM.L (A0)+,D0/D2/D4
+      MOVEM.L (A0)+,D0-D1/D3-D4
+      MOVEM.L (A0)+,D0-D1/D3/D5
+      MOVEM.L (A0)+,D0/D2-D3/D5
+      MOVEM.L (A0)+,D0/D2/D4-D5
+      MOVEM.L (A0)+,D0/D2/D4/D6
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7
+      MOVEM.L (A0)+,D1/A0
+      MOVEM.L (A0)+,D0-D1/A0
+      MOVEM.L (A0)+,D0/D2/A0
+      MOVEM.L (A0)+,D0-D1/D3/A0
+      MOVEM.L (A0)+,D0/D2-D3/A0
+      MOVEM.L (A0)+,D0/D2/D4/A0
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0
+      MOVEM.L (A0)+,A0
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1
+      MOVEM.L (A0)+,D1-D2/A0/A2
+      MOVEM.L (A0)+,D3/A0/A2
+      MOVEM.L (A0)+,D0/D3/A0/A2
+      MOVEM.L (A0)+,D0-D1/D3/A0/A2
+      MOVEM.L (A0)+,D0/D2-D3/A0/A2
+      MOVEM.L (A0)+,D0/D2/D4/A0/A2
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0/A2
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0/A2
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0/A2
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0/A2
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0/A2
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0/A2
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0/A2
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0/A2
+      MOVEM.L (A0)+,D7-A0/A2
+      MOVEM.L (A0)+,D0/D7-A0/A2
+      MOVEM.L (A0)+,D0-D1/D7-A0/A2
+      MOVEM.L (A0)+,D0/D2/D7-A0/A2
+      MOVEM.L (A0)+,D0-D1/D3/D7-A0/A2
+      MOVEM.L (A0)+,D0/D2-D3/D7-A0/A2
+      MOVEM.L (A0)+,D0/D2/D4/D7-A0/A2
+      MOVEM.L (A0)+,D0-D1/D3-D4/D7-A0/A2
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A0/A2
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A0/A2
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A0/A2
+      MOVEM.L (A0)+,A0/A2
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1/A3
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1/A3
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1/A3
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1/A3
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1/A3
+      MOVEM.L (A0)+,D2-D3/A0-A1/A3
+      MOVEM.L (A0)+,D0/D2-D3/A0-A1/A3
+      MOVEM.L (A0)+,D4/A0-A1/A3
+      MOVEM.L (A0)+,D0/D4/A0-A1/A3
+      MOVEM.L (A0)+,D0-D1/D4/A0-A1/A3
+      MOVEM.L (A0)+,D0/D2/D4/A0-A1/A3
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0-A1/A3
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0-A1/A3
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0-A1/A3
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0-A1/A3
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0-A1/A3
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0-A1/A3
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0-A1/A3
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0-A1/A3
+      MOVEM.L (A0)+,A0-A1/A3
+      MOVEM.L (A0)+,D1-D2/D4/A0/A2/A4
+      MOVEM.L (A0)+,D3-D4/A0/A2/A4
+      MOVEM.L (A0)+,D0/D3-D4/A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3-D4/A0/A2/A4
+      MOVEM.L (A0)+,D5/A0/A2/A4
+      MOVEM.L (A0)+,D0/D5/A0/A2/A4
+      MOVEM.L (A0)+,D0/D2/D5/A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3/D5/A0/A2/A4
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0/A2/A4
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0/A2/A4
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0/A2/A4
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0/A2/A4
+      MOVEM.L (A0)+,D7-A0/A2/A4
+      MOVEM.L (A0)+,D0/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0/D2/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0/D2-D3/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0/D2/D4/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3-D4/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A0/A2/A4
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A0/A2/A4
+      MOVEM.L (A0)+,A0/A2/A4
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1-A2/A4
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1-A2/A4
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1-A2/A4
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1-A2/A4
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1-A2/A4
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7/A1/A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7/A1/A3/A5
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7/A1/A3/A5
+      MOVEM.L (A0)+,D0/D2/D4/D6-D7/A1/A3/A5
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6-D7/A1/A3/A5
+      MOVEM.L (A0)+,D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L (A0)+,D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0-D1/D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0-A1/A3/A5
+      MOVEM.L (A0)+,D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D2/D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0-D1/D3/D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0-A1/A3/A5
+      MOVEM.L (A0)+,A0-A1/A3/A5
+      MOVEM.L (A0)+,D1-D3/D5/A0/A2-A3/A5
+      MOVEM.L (A0)+,D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2/D4-D5/A0/A2-A3/A5
+      MOVEM.L (A0)+,D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2/D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D3/D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2/D4/D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D3-D4/D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D3/D5-D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D5-D6/A0/A2-A3/A5
+      MOVEM.L (A0)+,D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D3/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2/D4/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D3-D4/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0-D1/D3/D5/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2-D3/D5/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,D0/D2/D4-D5/D7-A0/A2-A3/A5
+      MOVEM.L (A0)+,A0/A2-A3/A5
       MOVEM.L (-$1414,A0),D1/D3/D5-A0/A3/A5-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A3/A5-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A2-A3/A5-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2-A3/A5-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-A3/A5-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A4-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A4-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A3
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2/A4
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1-A2/A4
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A3/A5
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2-A3/A5
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2/A4/A6
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1-A2/A4/A6
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A3-A4/A6
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A3/A5/A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2-A3/A5/A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2/A4-A5/A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-A0/A2/A4/A6-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-$1414,A0),D1/D3/D5-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-$1414,A0),D0-D1/D3/D5-D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D2-D3/D5-D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2-D3/D5-D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D4-D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D4-D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0-D1/D3/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2/D4/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0-D1/D3/D5/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2-D3/D5/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2/D4/D6/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0-D1/D3-D4/D6/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0-D1/D3/D5/D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2-D3/D5/D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2/D4-D5/D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0/D2/D4/D6-D7/A3/A5-A7
-      MOVEM.L (-$1414,A0),D0-D1/D3-D4/D6-D7/A3/A5-A7
-      MOVEM.L ($00EC,A0),D3/D5-D7/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A1/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A2-A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2-A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A4-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1/A3
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2/A4
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1-A2/A4
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1/A3/A5
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2-A3/A5
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2/A4/A6
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1-A2/A4/A6
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1/A3-A4/A6
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1/A3/A5/A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2-A3/A5/A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2/A4-A5/A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-A0/A2/A4/A6-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-$1313,A1),D2-D3/D5-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2-D3/D5-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D4-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D4-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2-D3/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2/D4/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3-D4/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2-D3/D5/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2/D4/D6/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3-D4/D6/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2-D3/D5-D6/A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2/D4/D7-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3-D4/D7-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0-D1/D3/D5/D7-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2-D3/D5/D7-A0/A3/A5-A7
-      MOVEM.L (-$1313,A1),D0/D2/D4-D5/D7-A0/A3/A5-A7
-      MOVEM.L ($00ED,A1),D0/D3/D5-A0/A3/A5-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A2-A3/A5-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2-A3/A5-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-A3/A5-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A4-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1/A3
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2/A4
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1-A2/A4
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1/A3/A5
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2-A3/A5
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2/A4/A6
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1-A2/A4/A6
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1/A3-A4/A6
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1/A3/A5/A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2-A3/A5/A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2/A4-A5/A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-A0/A2/A4/A6-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-$1212,A2),D2-D3/D5-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-$1212,A2),D0-D1/D3/D5/D7/A1/A3/A5-A7
-      MOVEM.L (-$1212,A2),D0/D2-D3/D5/D7/A1/A3/A5-A7
-      MOVEM.L (-$1212,A2),D0/D2/D4-D5/D7/A1/A3/A5-A7
-      MOVEM.L (-$1212,A2),D0/D2/D4/D6-D7/A1/A3/A5-A7
-      MOVEM.L (-$1212,A2),D0-D1/D3-D4/D6-D7/A1/A3/A5-A7
-      MOVEM.L ($00EE,A2),D1/D3/D5-D7/A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A2-A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2-A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A4-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1/A3
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2/A4
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1-A2/A4
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1/A3/A5
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2-A3/A5
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2/A4/A6
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1-A2/A4/A6
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1/A3-A4/A6
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1/A3/A5/A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2-A3/A5/A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2/A4-A5/A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-A0/A2/A4/A6-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-$1111,A3),A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0-D1/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0-D1/D3/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2/D4/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0-D1/D3/D5/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2-D3/D5/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0/D2/D4/D6/A0-A1/A3/A5-A7
-      MOVEM.L (-$1111,A3),D0-D1/D3-D4/D6/A0-A1/A3/A5-A7
-      MOVEM.L ($00EF,A3),D0-D1/D3/D5-A1/A3/A5-A7
-      MOVEM.L (-$1010,A4),D4-D7/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D4-D7/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0-D1/D3/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2/D4/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0-D1/D3/D5/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2-D3/D5/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2/D4/D6/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0-D1/D3-D4/D6/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0-D1/D3/D5/D7/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2-D3/D5/D7/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2/D4-D5/D7/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0/D2/D4/D6-D7/A2-A3/A5-A7
-      MOVEM.L (-$1010,A4),D0-D1/D3-D4/D6-D7/A2-A3/A5-A7
-      MOVEM.L ($00F0,A4),D2-D3/D5-D7/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D4-A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D4-A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0-D1/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0-D1/D3/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2-D3/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2/D4/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0-D1/D3/D5/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2-D3/D5/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2/D4/D6/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0-D1/D3-D4/D6/A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2/D4/D7-A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0-D1/D3-D4/D7-A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0-D1/D3/D5/D7-A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2-D3/D5/D7-A0/A2-A3/A5-A7
-      MOVEM.L (-$0F0F,A5),D0/D2/D4-D5/D7-A0/A2-A3/A5-A7
-      MOVEM.L ($00F1,A5),D0/D2-D3/D5-A0/A2-A3/A5-A7
-      MOVEM.L (-$0E0E,A6),D4-A3/A5-A7
-      MOVEM.L (-$0E0E,A6),D4-D7/A4-A7
-      MOVEM.L (-$0E0E,A6),D4-A7
-      MOVEM.L (-$0E0E,A6),D4-D7
-      MOVEM.L (-$0E0E,A6),D4-D7/A1
-      MOVEM.L (-$0E0E,A6),D4-A0/A2
-      MOVEM.L (-$0E0E,A6),D4-D7/A1/A3
-      MOVEM.L (-$0E0E,A6),D4-A0/A2/A4
-      MOVEM.L (-$0E0E,A6),D4-D7/A1-A2/A4
-      MOVEM.L (-$0E0E,A6),D4-D7/A1/A3/A5
-      MOVEM.L (-$0E0E,A6),D4-A0/A2-A3/A5
-      MOVEM.L (-$0E0E,A6),D4-A0/A2/A4/A6
-      MOVEM.L (-$0E0E,A6),D4-D7/A1-A2/A4/A6
-      MOVEM.L (-$0E0E,A6),D4-D7/A1/A3-A4/A6
-      MOVEM.L (-$0E0E,A6),D4-D7/A1/A3/A5/A7
-      MOVEM.L (-$0E0E,A6),D4-A0/A2-A3/A5/A7
-      MOVEM.L (-$0E0E,A6),D4-A0/A2/A4-A5/A7
-      MOVEM.L (-$0E0E,A6),D4-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-$0E0E,A6),D4-A0/A2/A4/A6-A7
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A4-A7
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A4-A7
-      MOVEM.L (-$0D0D,A7),D0/D4-A7
-      MOVEM.L (-$0D0D,A7),D0/D4-D7
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1/A3
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2/A4
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1-A2/A4
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1/A3/A5
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2-A3/A5
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2/A4/A6
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1-A2/A4/A6
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1/A3-A4/A6
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1/A3/A5/A7
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2-A3/A5/A7
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2/A4-A5/A7
-      MOVEM.L (-$0D0D,A7),D0/D4-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-$0D0D,A7),D0/D4-A0/A2/A4/A6-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3/D5-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D2-D3/D5-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2-D3/D5-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D4-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D4-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2-D3/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2/D4/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3-D4/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3/D5/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2-D3/D5/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2/D4-D5/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2/D4/D6/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3-D4/D6/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3/D5-D6/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2-D3/D5-D6/A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2/D4/D7-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3-D4/D7-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0-D1/D3/D5/D7-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2-D3/D5/D7-A0/A3/A5-A7
+      MOVEM.L (-$1414,A0),D0/D2/D4-D5/D7-A0/A3/A5-A7
+      MOVEM.L ($00EC,A0),D0/D3/D5-A0/A3/A5-A7
+      MOVEM.L (-$1313,A0),D0-D1/D3/D5/D7/A1/A3/A5-A7
+      MOVEM.L (-$1313,A0),D0/D2-D3/D5/D7/A1/A3/A5-A7
+      MOVEM.L (-$1313,A0),D0/D2/D4-D5/D7/A1/A3/A5-A7
+      MOVEM.L (-$1313,A0),D0/D2/D4/D6-D7/A1/A3/A5-A7
+      MOVEM.L (-$1313,A0),D0-D1/D3-D4/D6-D7/A1/A3/A5-A7
+      MOVEM.L ($00ED,A0),D1/D3/D5-D7/A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0-D1/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0-D1/D3/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2-D3/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2/D4/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0-D1/D3-D4/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0-D1/D3/D5/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2-D3/D5/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2/D4-D5/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2/D4/D6/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0-D1/D3-D4/D6/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0-D1/D3/D5-D6/A0-A1/A3/A5-A7
+      MOVEM.L (-$1212,A0),D0/D2-D3/D5-D6/A0-A1/A3/A5-A7
+      MOVEM.L ($00EE,A0),D0-D1/D3/D5-A1/A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2-D3/D5-D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D1-D3/D5-D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D4-D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D4-D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2/D4-D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0-D1/D3/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2/D4/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0-D1/D3/D5/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2-D3/D5/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2/D4/D6/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0-D1/D3-D4/D6/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0-D1/D3/D5-D6/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0-D1/D3/D5/D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2-D3/D5/D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2/D4-D5/D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0/D2/D4/D6-D7/A2-A3/A5-A7
+      MOVEM.L (-$1111,A0),D0-D1/D3-D4/D6-D7/A2-A3/A5-A7
+      MOVEM.L ($00EF,A0),D2-D3/D5-D7/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D1-D3/D5-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D4-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D4-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/D4-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2-D3/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/D4/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3-D4/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3/D5/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2-D3/D5/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/D4-D5/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/D4/D6/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3-D4/D6/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3/D5-D6/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2-D3/D5-D6/A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3/D7-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2-D3/D7-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/D4/D7-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3-D4/D7-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0-D1/D3/D5/D7-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2-D3/D5/D7-A0/A2-A3/A5-A7
+      MOVEM.L (-$1010,A0),D0/D2/D4-D5/D7-A0/A2-A3/A5-A7
+      MOVEM.L ($00F0,A0),D0/D2-D3/D5-A0/A2-A3/A5-A7
+      MOVEM.L (-$0E0E,A0),D4-A3/A5-A7
+      MOVEM.L (-$0E0E,A0),D0/D4-A3/A5-A7
+      MOVEM.L (-$0E0E,A0),D0-D1/D4-A3/A5-A7
+      MOVEM.L (-$0E0E,A0),D0/D2/D4-A3/A5-A7
+      MOVEM.L (-$0D0D,A0),D0/D4-D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D4-D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2/D4-D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D3-D7/A4-A7
+      MOVEM.L (-$0D0D,A0),A4-A7
+      MOVEM.L (-$0D0D,A0),D0/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D3/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2/D4/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D3/D5/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2-D3/D5/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2/D4/D6/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D3-D4/D6/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D3/D5-D6/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2-D3/D5-D6/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D3/D5/D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2-D3/D5/D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2/D4-D5/D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D0/D2/D4/D6-D7/A4-A7
+      MOVEM.L (-$0D0D,A0),D0-D1/D3-D4/D6-D7/A4-A7
+      MOVEM.L ($00F3,A0),D4-D7/A4-A7
+      MOVEM.L (-$0C0C,A0),A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2-D3/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2/D4/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3-D4/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3/D5/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2-D3/D5/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2/D4-D5/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2/D4/D6/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3-D4/D6/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3/D5-D6/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2-D3/D5-D6/A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3/D7-A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2-D3/D7-A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2/D4/D7-A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3-D4/D7-A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0-D1/D3/D5/D7-A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2-D3/D5/D7-A0/A4-A7
+      MOVEM.L (-$0C0C,A0),D0/D2/D4-D5/D7-A0/A4-A7
+      MOVEM.L ($00F4,A0),D0/D4-A0/A4-A7
+      MOVEM.L (-$0B0B,A0),D0-D1/D3/D5/D7/A1/A4-A7
+      MOVEM.L (-$0B0B,A0),D0/D2-D3/D5/D7/A1/A4-A7
+      MOVEM.L (-$0B0B,A0),D0/D2/D4-D5/D7/A1/A4-A7
+      MOVEM.L (-$0B0B,A0),D0/D2/D4/D6-D7/A1/A4-A7
+      MOVEM.L (-$0B0B,A0),D0-D1/D3-D4/D6-D7/A1/A4-A7
+      MOVEM.L ($00F5,A0),D1/D4-D7/A1/A4-A7
       MOVEM.L (-12,A0,A7.W),D1/D4-A0/A4-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A4-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2/A4-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1-A2/A4-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A3-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A3
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2/A4
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1-A2/A4
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A3/A5
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2-A3/A5
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2/A4/A6
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1-A2/A4/A6
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A3-A4/A6
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A3/A5-A6
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2-A3/A5-A6
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A3/A5/A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2-A3/A5/A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2/A4-A5/A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-A0/A2/A4/A6-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-12,A0,A7.W),D1/D4-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D4-D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2/D4-D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),D3-D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D3/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2/D4/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D5/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D5/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2/D4/D6/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D3-D4/D6/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D5-D6/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D5-D6/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D5/D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D5/D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2/D4-D5/D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0/D2/D4/D6-D7/A4-A7
-      MOVEM.L (-12,A0,A7.W),D0-D1/D3-D4/D6-D7/A4-A7
-      MOVEM.L (-12,A0,A7.L),D4-D7/A4-A7
-      MOVEM.L (-12,A0,D0.W),D4-D7/A4-A7
-      MOVEM.L (-12,A0,D0.L),D4-D7/A4-A7
-      MOVEM.L (0,A0,A7.W),D4-D7/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A1/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1-A2/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A3
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2/A4
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1-A2/A4
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A3/A5
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2-A3/A5
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2/A4/A6
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1-A2/A4/A6
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A3-A4/A6
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A3/A5-A6
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2-A3/A5-A6
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A3/A5/A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2-A3/A5/A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2/A4-A5/A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-A0/A2/A4/A6-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D4-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/D4-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D3-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/D4/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3/D5/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2-D3/D5/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/D4-D5/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/D4/D6/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3-D4/D6/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3/D5-D6/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2-D3/D5-D6/A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2-D3/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/D4/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3-D4/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0-D1/D3/D5/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2-D3/D5/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.W),D0/D2/D4-D5/D7-A0/A4-A7
-      MOVEM.L (-11,A1,A7.L),D0/D4-A0/A4-A7
-      MOVEM.L (-11,A1,D0.W),D0/D4-A0/A4-A7
-      MOVEM.L (-11,A1,D0.L),D0/D4-A0/A4-A7
-      MOVEM.L (0,A1,A7.W),D0/D4-A0/A4-A7
-      MOVEM.L (-10,A2,A7.W),D0-D1/D3/D5/D7/A1/A4-A7
-      MOVEM.L (-10,A2,A7.W),D0/D2-D3/D5/D7/A1/A4-A7
-      MOVEM.L (-10,A2,A7.W),D0/D2/D4-D5/D7/A1/A4-A7
-      MOVEM.L (-10,A2,A7.W),D0/D2/D4/D6-D7/A1/A4-A7
-      MOVEM.L (-10,A2,A7.W),D0-D1/D3-D4/D6-D7/A1/A4-A7
-      MOVEM.L (-10,A2,A7.L),D1/D4-D7/A1/A4-A7
-      MOVEM.L (-10,A2,D0.W),D1/D4-D7/A1/A4-A7
-      MOVEM.L (-10,A2,D0.L),D1/D4-D7/A1/A4-A7
-      MOVEM.L (0,A2,A7.W),D1/D4-D7/A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1-A2/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1/A3
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2/A4
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1-A2/A4
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1/A3/A5
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2-A3/A5
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2/A4/A6
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1-A2/A4/A6
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1/A3-A4/A6
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1/A3/A5-A6
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2-A3/A5-A6
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1/A3/A5/A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2-A3/A5/A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2/A4-A5/A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-A0/A2/A4/A6-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-9,A3,A7.W),A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0-D1/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0-D1/D3/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0-D1/D3/D5/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2-D3/D5/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2/D4/D6/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0-D1/D3-D4/D6/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0-D1/D3/D5-D6/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.W),D0/D2-D3/D5-D6/A0-A1/A4-A7
-      MOVEM.L (-9,A3,A7.L),D0-D1/D4-A1/A4-A7
-      MOVEM.L (-9,A3,D0.W),D0-D1/D4-A1/A4-A7
-      MOVEM.L (-9,A3,D0.L),D0-D1/D4-A1/A4-A7
-      MOVEM.L (0,A3,A7.W),D0-D1/D4-A1/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1-A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A3-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2/A4
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1-A2/A4
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3/A5
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2-A3/A5
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2/A4-A5
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2/A4/A6
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1-A2/A4/A6
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3-A4/A6
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3/A5-A6
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2-A3/A5-A6
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3/A5/A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2-A3/A5/A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2/A4-A5/A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-A0/A2/A4/A6-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-7,A5,A7.L),D0-D2/D4-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-7,A5,A7.L),D3-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D3-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2-D3/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/D4/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3/D5/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2-D3/D5/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/D4-D5/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/D4/D6/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3-D4/D6/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3/D5-D6/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2-D3/D5-D6/A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2-D3/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/D4/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3-D4/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0-D1/D3/D5/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2-D3/D5/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,A7.L),D0/D2/D4-D5/D7-A0/A2/A4-A7
-      MOVEM.L (-7,A5,D0.W),D0/D2/D4-A0/A2/A4-A7
-      MOVEM.L (-7,A5,D0.L),D0/D2/D4-A0/A2/A4-A7
-      MOVEM.L (0,A5,A7.W),D0/D2/D4-A0/A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D3-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1/A3-A7
-      MOVEM.L (-6,A6,A7.L),D3-A7
-      MOVEM.L (-6,A6,A7.L),D3-D7
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1/A3
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2/A4
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1-A2/A4
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1/A3/A5
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2-A3/A5
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1-A2/A4-A5
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2/A4/A6
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1-A2/A4/A6
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1/A3-A4/A6
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2-A3/A5-A6
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1/A3/A5/A7
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2-A3/A5/A7
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2/A4-A5/A7
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-6,A6,A7.L),D3-A0/A2/A4/A6-A7
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-6,A6,A7.L),D3-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-6,A6,A7.L),D0/D3-D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0-D1/D3/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2/D4/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0-D1/D3/D5/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2-D3/D5/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2/D4-D5/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2/D4/D6/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0-D1/D3-D4/D6/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0-D1/D3/D5-D6/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2-D3/D5-D6/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0-D1/D3/D5/D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2-D3/D5/D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2/D4-D5/D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0/D2/D4/D6-D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,A7.L),D0-D1/D3-D4/D6-D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,D0.W),D1-D2/D4-D7/A1-A2/A4-A7
-      MOVEM.L (-6,A6,D0.L),D1-D2/D4-D7/A1-A2/A4-A7
-      MOVEM.L (0,A6,A7.W),D1-D2/D4-D7/A1-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A3-A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1/A3
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2/A4
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1-A2/A4
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1/A3/A5
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2-A3/A5
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2/A4/A6
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1-A2/A4/A6
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1/A3-A4/A6
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2-A3/A5-A6
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1/A3/A5/A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2-A3/A5/A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2/A4-A5/A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1-A2/A4-A5/A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-A0/A2/A4/A6-A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1-A2/A4/A6-A7
-      MOVEM.L (-5,A7,A7.L),D0/D3-D7/A1/A3-A4/A6-A7
-      MOVEM.L (-5,A7,A7.L),D0/D2/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0-D1/D3/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0/D2-D3/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0/D2/D4/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0-D1/D3-D4/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0-D1/D3/D5/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0/D2-D3/D5/D7-A2/A4-A7
-      MOVEM.L (-5,A7,A7.L),D0/D2/D4-D5/D7-A2/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D4-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/D4-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D3-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2-D3/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/D4/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3-D4/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D5/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D5/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/D4-D5/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/D4/D6/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3-D4/D6/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D5-D6/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D5-D6/A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/D4/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3-D4/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0-D1/D3/D5/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2-D3/D5/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.W),D0/D2/D4-D5/D7-A0/A4-A7
+      MOVEM.L (-12,A0,A7.L),D0/D4-A0/A4-A7
+      MOVEM.L (-12,A0,D0.W),D0/D4-A0/A4-A7
+      MOVEM.L (-12,A0,D0.L),D0/D4-A0/A4-A7
+      MOVEM.L (0,A0,A7.W),D0/D4-A0/A4-A7
+      MOVEM.L (-11,A0,A7.W),D0-D1/D3/D5/D7/A1/A4-A7
+      MOVEM.L (-11,A0,A7.W),D0/D2-D3/D5/D7/A1/A4-A7
+      MOVEM.L (-11,A0,A7.W),D0/D2/D4-D5/D7/A1/A4-A7
+      MOVEM.L (-11,A0,A7.W),D0/D2/D4/D6-D7/A1/A4-A7
+      MOVEM.L (-11,A0,A7.W),D0-D1/D3-D4/D6-D7/A1/A4-A7
+      MOVEM.L (-11,A0,A7.L),D1/D4-D7/A1/A4-A7
+      MOVEM.L (-11,A0,D0.W),D1/D4-D7/A1/A4-A7
+      MOVEM.L (-11,A0,D0.L),D1/D4-D7/A1/A4-A7
+      MOVEM.L (0,A0,A7.W),D1/D4-D7/A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0-D1/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0-D1/D3/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2-D3/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2/D4/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0-D1/D3-D4/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0-D1/D3/D5/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2-D3/D5/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2/D4-D5/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2/D4/D6/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0-D1/D3-D4/D6/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0-D1/D3/D5-D6/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.W),D0/D2-D3/D5-D6/A0-A1/A4-A7
+      MOVEM.L (-10,A0,A7.L),D0-D1/D4-A1/A4-A7
+      MOVEM.L (-10,A0,D0.W),D0-D1/D4-A1/A4-A7
+      MOVEM.L (-10,A0,D0.L),D0-D1/D4-A1/A4-A7
+      MOVEM.L (0,A0,A7.W),D0-D1/D4-A1/A4-A7
+      MOVEM.L (-8,A0,A7.W),D1-D2/D4-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D3-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D3-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2-D3/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/D4/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3-D4/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3/D5/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2-D3/D5/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/D4-D5/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/D4/D6/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3-D4/D6/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3/D5-D6/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2-D3/D5-D6/A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2-D3/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/D4/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3-D4/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0-D1/D3/D5/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2-D3/D5/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.W),D0/D2/D4-D5/D7-A0/A2/A4-A7
+      MOVEM.L (-8,A0,A7.L),D0/D2/D4-A0/A2/A4-A7
+      MOVEM.L (-8,A0,D0.W),D0/D2/D4-A0/A2/A4-A7
+      MOVEM.L (-8,A0,D0.L),D0/D2/D4-A0/A2/A4-A7
+      MOVEM.L (0,A0,A7.W),D0/D2/D4-A0/A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D2/D4-D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D3-D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D3-D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D1/D3/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2/D4/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D1/D3/D5/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2-D3/D5/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2/D4-D5/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2/D4/D6/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D1/D3-D4/D6/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D1/D3/D5-D6/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2-D3/D5-D6/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D1/D3/D5/D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2-D3/D5/D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2/D4-D5/D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0/D2/D4/D6-D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,A7.L),D0-D1/D3-D4/D6-D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,D0.W),D1-D2/D4-D7/A1-A2/A4-A7
+      MOVEM.L (-7,A0,D0.L),D1-D2/D4-D7/A1-A2/A4-A7
+      MOVEM.L (0,A0,A7.W),D1-D2/D4-D7/A1-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D3-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0/D2/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0-D1/D3/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0/D2-D3/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0/D2/D4/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0-D1/D3-D4/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0-D1/D3/D5/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0/D2-D3/D5/D7-A2/A4-A7
+      MOVEM.L (-6,A0,A7.L),D0/D2/D4-D5/D7-A2/A4-A7
+      MOVEM.L (-5,A0,A7.L),D0/D3-D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3-D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),D2-D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2/D4/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3/D5/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2-D3/D5/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2/D4-D5/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2/D4/D6/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3-D4/D6/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3/D5-D6/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2-D3/D5-D6/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3/D5/D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2-D3/D5/D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2/D4-D5/D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0/D2/D4/D6-D7/A3-A7
+      MOVEM.L (-5,A0,A7.L),D0-D1/D3-D4/D6-D7/A3-A7
+      MOVEM.L (-5,A0,D0.W),D3-D7/A3-A7
+      MOVEM.L (-5,A0,D0.L),D3-D7/A3-A7
+      MOVEM.L (-5,A0,A0.W),D3-D7/A3-A7
+      MOVEM.L (0,A0,A7.L),D3-D7/A3-A7
+      MOVEM.L (-4,A0,A7.L),A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0-D1/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/D2/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0-D1/D3/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/D2/D4/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0-D1/D3-D4/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0-D1/D3/D5/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/D2-D3/D5/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/D2/D4-D5/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/D2/D4/D6/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0-D1/D3-D4/D6/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0-D1/D3/D5-D6/A0/A3-A7
+      MOVEM.L (-4,A0,A7.L),D0/D2-D3/D5-D6/A0/A3-A7
+      MOVEM.L (0,A0,A7.L),D0/D3-A0/A3-A7
+      MOVEM.L (-3,A0,A7.L),D0-D1/D3/D5/D7/A1/A3-A7
+      MOVEM.L (-3,A0,A7.L),D0/D2-D3/D5/D7/A1/A3-A7
+      MOVEM.L (-3,A0,A7.L),D0/D2/D4-D5/D7/A1/A3-A7
+      MOVEM.L (-3,A0,A7.L),D0/D2/D4/D6-D7/A1/A3-A7
+      MOVEM.L (-3,A0,A7.L),D0-D1/D3-D4/D6-D7/A1/A3-A7
+      MOVEM.L (0,A0,A7.L),D1-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2-D3/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/D4/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3-D4/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3/D5/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2-D3/D5/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/D4-D5/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/D4/D6/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3-D4/D6/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3/D5-D6/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2-D3/D5-D6/A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2-D3/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/D4/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3-D4/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0-D1/D3/D5/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2-D3/D5/D7-A0/A2-A7
+      MOVEM.L (0,A0,A7.L),D0/D2/D4-D5/D7-A0/A2-A7
+      MOVEM.L (0,A0,D0.W),D0/D2-A0/A2-A7
+      MOVEM.L (0,A0,D0.L),D0/D2-A0/A2-A7
+      MOVEM.L (1,A0,D0.W),D0-D7/A1-A7
+      MOVEM.L (1,A0,D0.W),A1-A7
+      MOVEM.L (1,A0,D0.W),D0/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2-D3/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2/D4/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3-D4/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3/D5/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2-D3/D5/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2/D4-D5/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2/D4/D6/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3-D4/D6/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3/D5-D6/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2-D3/D5-D6/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3/D5/D7/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2-D3/D5/D7/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2/D4-D5/D7/A1-A7
+      MOVEM.L (1,A0,D0.W),D0/D2/D4/D6-D7/A1-A7
+      MOVEM.L (1,A0,D0.W),D0-D1/D3-D4/D6-D7/A1-A7
+      MOVEM.L (1,A0,D0.L),D1-D7/A1-A7
+      MOVEM.L (1,A0,A0.W),D1-D7/A1-A7
+      MOVEM.L (2,A0,D0.W),D7-A7
+      MOVEM.L (2,A0,D0.W),D0/D7-A7
+      MOVEM.L (2,A0,D0.W),D0-D1/D7-A7
+      MOVEM.L (2,A0,D0.W),D0/D2/D7-A7
+      MOVEM.L (2,A0,D0.W),D0-D1/D3/D7-A7
+      MOVEM.L (2,A0,D0.W),D0/D2-D3/D7-A7
+      MOVEM.L (2,A0,D0.W),D0/D2/D4/D7-A7
+      MOVEM.L (2,A0,D0.W),D0-D1/D3-D4/D7-A7
+      MOVEM.L (2,A0,D0.W),D0-D1/D3/D5/D7-A7
+      MOVEM.L (2,A0,D0.W),D0/D2-D3/D5/D7-A7
+      MOVEM.L (2,A0,D0.W),D0/D2/D4-D5/D7-A7
+      MOVEM.L (2,A0,D0.L),D0-A7
+      MOVEM.L (2,A0,A0.W),D0-A7
+      MOVEM.L (2,A0,A0.L),D0-A7
+      MOVEM.L (-$80,A0,A7.L),D0-A7
+      MOVEM.L (3,A0,D0.W),D0
+      MOVEM.L (3,A0,D0.W),D0-D1
+      MOVEM.L (3,A0,D0.W),D0/D2
+      MOVEM.L (3,A0,D0.W),D0-D1/D3
+      MOVEM.L (3,A0,D0.W),D0/D2-D3
+      MOVEM.L (3,A0,D0.W),D0/D2/D4
+      MOVEM.L (3,A0,D0.W),D0-D1/D3-D4
+      MOVEM.L (3,A0,D0.W),D0-D1/D3/D5
+      MOVEM.L (3,A0,D0.W),D0/D2-D3/D5
+      MOVEM.L (3,A0,D0.W),D0/D2/D4-D5
+      MOVEM.L (3,A0,D0.W),D0/D2/D4/D6
+      MOVEM.L (3,A0,D0.W),D0-D1/D3-D4/D6
+      MOVEM.L (3,A0,D0.W),D0-D1/D3/D5-D6
+      MOVEM.L (3,A0,D0.W),D0/D2-D3/D5-D6
+      MOVEM.L (3,A0,D0.W),D0-D1/D3/D5/D7
+      MOVEM.L (3,A0,D0.W),D0/D2-D3/D5/D7
+      MOVEM.L (3,A0,D0.W),D0/D2/D4-D5/D7
+      MOVEM.L (3,A0,D0.W),D0/D2/D4/D6-D7
+      MOVEM.L (3,A0,D0.W),D0-D1/D3-D4/D6-D7
+      MOVEM.L (4,A0,D0.W),D1/A0
+      MOVEM.L (4,A0,D0.W),D0-D1/A0
+      MOVEM.L (4,A0,D0.W),D0/D2/A0
+      MOVEM.L (4,A0,D0.W),D0-D1/D3/A0
+      MOVEM.L (4,A0,D0.W),D0/D2-D3/A0
+      MOVEM.L (4,A0,D0.W),D0/D2/D4/A0
+      MOVEM.L (4,A0,D0.W),D0-D1/D3-D4/A0
+      MOVEM.L (4,A0,D0.W),D0-D1/D3/D5/A0
+      MOVEM.L (4,A0,D0.W),D0/D2-D3/D5/A0
+      MOVEM.L (4,A0,D0.W),D0/D2/D4-D5/A0
+      MOVEM.L (4,A0,D0.W),D0/D2/D4/D6/A0
+      MOVEM.L (4,A0,D0.W),D0-D1/D3-D4/D6/A0
+      MOVEM.L (4,A0,D0.W),D0-D1/D3/D5-D6/A0
+      MOVEM.L (4,A0,D0.W),D0/D2-D3/D5-D6/A0
+      MOVEM.L (4,A0,D0.W),A0
+      MOVEM.L (4,A0,D0.L),D0/A0
+      MOVEM.L (4,A0,A0.W),D0/A0
+      MOVEM.L (4,A0,A0.L),D0/A0
+      MOVEM.L (-$80,A0,D0.W),D0/A0
+      MOVEM.L (5,A0,D0.W),D0-D1/D3/D5/D7/A1
+      MOVEM.L (5,A0,D0.W),D0/D2-D3/D5/D7/A1
+      MOVEM.L (5,A0,D0.W),D0/D2/D4-D5/D7/A1
+      MOVEM.L (5,A0,D0.W),D0/D2/D4/D6-D7/A1
+      MOVEM.L (5,A0,D0.W),D0-D1/D3-D4/D6-D7/A1
+      MOVEM.L (8,A0,D0.W),D1-D2/A0/A2
+      MOVEM.L (8,A0,D0.W),D3/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D3/A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2-D3/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2/D4/A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3-D4/A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3/D5/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2-D3/D5/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2/D4-D5/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2/D4/D6/A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3-D4/D6/A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3/D5-D6/A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2-D3/D5-D6/A0/A2
+      MOVEM.L (8,A0,D0.W),D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2-D3/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2/D4/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3-D4/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0-D1/D3/D5/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2-D3/D5/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),D0/D2/D4-D5/D7-A0/A2
+      MOVEM.L (8,A0,D0.W),A0/A2
+      MOVEM.L (8,A0,D0.L),D0/D2/A0/A2
+      MOVEM.L (8,A0,A0.W),D0/D2/A0/A2
+      MOVEM.L (8,A0,A0.L),D0/D2/A0/A2
+      MOVEM.L (-$80,A0,D0.W),D0/D2/A0/A2
+      MOVEM.L (9,A0,D0.L),D3/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D3/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2-D3/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2/D4/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3-D4/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3/D5/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2-D3/D5/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2/D4-D5/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2/D4/D6/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3-D4/D6/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3/D5-D6/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2-D3/D5-D6/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3/D5/D7/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2-D3/D5/D7/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2/D4-D5/D7/A1-A2
+      MOVEM.L (9,A0,D0.L),D0/D2/D4/D6-D7/A1-A2
+      MOVEM.L (9,A0,D0.L),D0-D1/D3-D4/D6-D7/A1-A2
+      MOVEM.L (9,A0,D0.L),A1-A2
+      MOVEM.L (10,A0,D0.L),D0/D7-A2
+      MOVEM.L (10,A0,D0.L),D0-D1/D7-A2
+      MOVEM.L (10,A0,D0.L),D0/D2/D7-A2
+      MOVEM.L (10,A0,D0.L),D0-D1/D3/D7-A2
+      MOVEM.L (10,A0,D0.L),D0/D2-D3/D7-A2
+      MOVEM.L (10,A0,D0.L),D0/D2/D4/D7-A2
+      MOVEM.L (10,A0,D0.L),D0-D1/D3-D4/D7-A2
+      MOVEM.L (10,A0,D0.L),D0-D1/D3/D5/D7-A2
+      MOVEM.L (10,A0,D0.L),D0/D2-D3/D5/D7-A2
+      MOVEM.L (10,A0,D0.L),D0/D2/D4-D5/D7-A2
+      MOVEM.L (11,A0,D0.L),D0/D3/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3/A3
+      MOVEM.L (11,A0,D0.L),D2-D3/A3
+      MOVEM.L (11,A0,D0.L),D0/D2-D3/A3
+      MOVEM.L (11,A0,D0.L),D0/D2/D4/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3-D4/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3/D5/A3
+      MOVEM.L (11,A0,D0.L),D0/D2-D3/D5/A3
+      MOVEM.L (11,A0,D0.L),D0/D2/D4-D5/A3
+      MOVEM.L (11,A0,D0.L),D0/D2/D4/D6/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3-D4/D6/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3/D5-D6/A3
+      MOVEM.L (11,A0,D0.L),D0/D2-D3/D5-D6/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3/D5/D7/A3
+      MOVEM.L (11,A0,D0.L),D0/D2-D3/D5/D7/A3
+      MOVEM.L (11,A0,D0.L),D0/D2/D4-D5/D7/A3
+      MOVEM.L (11,A0,D0.L),D0/D2/D4/D6-D7/A3
+      MOVEM.L (11,A0,D0.L),D0-D1/D3-D4/D6-D7/A3
+      MOVEM.L (11,A0,D0.L),A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3/A0/A3
+      MOVEM.L (12,A0,D0.L),D2-D3/A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2-D3/A0/A3
+      MOVEM.L (12,A0,D0.L),D4/A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2/D4/A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3-D4/A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3/D5/A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2-D3/D5/A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2/D4-D5/A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2/D4/D6/A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3-D4/D6/A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3/D5-D6/A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2-D3/D5-D6/A0/A3
+      MOVEM.L (12,A0,D0.L),D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2-D3/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2/D4/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3-D4/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0-D1/D3/D5/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2-D3/D5/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),D0/D2/D4-D5/D7-A0/A3
+      MOVEM.L (12,A0,D0.L),A0/A3
+      MOVEM.L (-$80,A0,D0.L),D0/D3/A0/A3
+      MOVEM.L (13,A0,D0.L),D0-D1/D3/D5/D7/A1/A3
+      MOVEM.L (13,A0,D0.L),D0/D2-D3/D5/D7/A1/A3
+      MOVEM.L (13,A0,D0.L),D0/D2/D4-D5/D7/A1/A3
+      MOVEM.L (13,A0,D0.L),D0/D2/D4/D6-D7/A1/A3
+      MOVEM.L (13,A0,D0.L),D0-D1/D3-D4/D6-D7/A1/A3
+      MOVEM.L (14,A0,D0.L),D2-D3/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D2-D3/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D4/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D4/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0-D1/D4/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D2/D4/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0-D1/D3-D4/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0-D1/D3/D5/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D2-D3/D5/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D2/D4-D5/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D2/D4/D6/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0-D1/D3-D4/D6/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0-D1/D3/D5-D6/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),D0/D2-D3/D5-D6/A0-A1/A3
+      MOVEM.L (14,A0,D0.L),A0-A1/A3
+      MOVEM.L (14,A0,D1.W),D0-D1/D3/A0-A1/A3
+      MOVEM.L (14,A0,A0.W),D0-D1/D3/A0-A1/A3
+      MOVEM.L (14,A0,A0.L),D0-D1/D3/A0-A1/A3
+      MOVEM.L (-$80,A0,D0.L),D0-D1/D3/A0-A1/A3
+      MOVEM.L (16,A0,D0.L),D1-D3/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D4/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D4/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D4/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2/D4/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D3-D4/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3-D4/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3/D5/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2-D3/D5/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2/D4-D5/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2/D4/D6/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3-D4/D6/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3/D5-D6/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2-D3/D5-D6/A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2-D3/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2/D4/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3-D4/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0-D1/D3/D5/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2-D3/D5/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),D0/D2/D4-D5/D7-A0/A2-A3
+      MOVEM.L (16,A0,D0.L),A0/A2-A3
+      MOVEM.L (16,A0,D1.W),D0/D2-D3/A0/A2-A3
+      MOVEM.L (21,A0,D1.W),D0-D1/D3/D5/D7/A1/A4
+      MOVEM.L (21,A0,D1.W),D0/D2-D3/D5/D7/A1/A4
+      MOVEM.L (21,A0,D1.W),D0/D2/D4-D5/D7/A1/A4
+      MOVEM.L (21,A0,D1.W),D0/D2/D4/D6-D7/A1/A4
+      MOVEM.L (21,A0,D1.W),D0-D1/D3-D4/D6-D7/A1/A4
+      MOVEM.L (22,A0,D1.W),D2/D4/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0/D2/D4/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D3-D4/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0/D3-D4/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0-D1/D3-D4/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D5/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0-D1/D3/D5/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0/D2-D3/D5/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0/D2/D4-D5/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0/D2/D4/D6/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0-D1/D3-D4/D6/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0-D1/D3/D5-D6/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),D0/D2-D3/D5-D6/A0-A1/A4
+      MOVEM.L (22,A0,D1.W),A0-A1/A4
+      MOVEM.L (-$80,A0,D1.W),D0-D1/D4/A0-A1/A4
+      MOVEM.L (24,A0,D1.W),D1-D2/D4/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D3-D4/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D3-D4/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3-D4/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D5/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D5/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2/D5/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3/D5/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2-D3/D5/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2/D4-D5/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2/D4/D6/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3-D4/D6/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3/D5-D6/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2-D3/D5-D6/A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2-D3/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2/D4/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3-D4/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0-D1/D3/D5/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2-D3/D5/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),D0/D2/D4-D5/D7-A0/A2/A4
+      MOVEM.L (24,A0,D1.W),A0/A2/A4
+      MOVEM.L (24,A0,D1.L),D0/D2/D4/A0/A2/A4
+      MOVEM.L (24,A0,A0.W),D0/D2/D4/A0/A2/A4
+      MOVEM.L (24,A0,A0.L),D0/D2/D4/A0/A2/A4
+      MOVEM.L (-$80,A0,D1.W),D0/D2/D4/A0/A2/A4
+      MOVEM.L (25,A0,D1.L),D0-D1/D3/D5/D7/A1-A2/A4
+      MOVEM.L (25,A0,D1.L),D0/D2-D3/D5/D7/A1-A2/A4
+      MOVEM.L (25,A0,D1.L),D0/D2/D4-D5/D7/A1-A2/A4
+      MOVEM.L (25,A0,D1.L),D0/D2/D4/D6-D7/A1-A2/A4
+      MOVEM.L (25,A0,D1.L),D0-D1/D3-D4/D6-D7/A1-A2/A4
+      MOVEM.L (29,A0,D1.L),D0-D1/D3/D5/D7/A1/A3-A4
+      MOVEM.L (29,A0,D1.L),D0/D2-D3/D5/D7/A1/A3-A4
+      MOVEM.L (29,A0,D1.L),D0/D2/D4-D5/D7/A1/A3-A4
+      MOVEM.L (29,A0,D1.L),D0/D2/D4/D6-D7/A1/A3-A4
+      MOVEM.L (29,A0,D1.L),D0-D1/D3-D4/D6-D7/A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D2-D4/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D2-D4/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0-D1/D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D2/D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0-D1/D3/D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D2-D3/D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0-D1/D4-D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D2/D4-D5/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D2/D4/D6/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0-D1/D3-D4/D6/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0-D1/D3/D5-D6/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),D0/D2-D3/D5-D6/A0-A1/A3-A4
+      MOVEM.L (30,A0,D1.L),A0-A1/A3-A4
+      MOVEM.L (30,A0,D2.W),D0-D1/D3-D4/A0-A1/A3-A4
+      MOVEM.L (30,A0,A0.L),D0-D1/D3-D4/A0-A1/A3-A4
       MOVEM.L ($FFFBFC).W,D1/D3-A0/A3-A7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3-A7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A2-A7
-      MOVEM.L ($FFFBFC).W,D1/D3-A7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2/A4
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1-A2/A4
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3/A5
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2-A3/A5
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2/A4-A5
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1-A2/A4-A5
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2/A4/A6
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1-A2/A4/A6
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3-A4/A6
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3/A5-A6
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2-A3/A5-A6
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3/A5/A7
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2-A3/A5/A7
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2/A4-A5/A7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1-A2/A4-A5/A7
-      MOVEM.L ($FFFBFC).W,D1/D3-A0/A2/A4/A6-A7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1-A2/A4/A6-A7
-      MOVEM.L ($FFFBFC).W,D1/D3-D7/A1/A3-A4/A6-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3-D7/A3-A7
-      MOVEM.L ($FFFBFC).W,D2-D7/A3-A7
-      MOVEM.L ($FFFBFC).W,A3-A7
-      MOVEM.L ($FFFBFC).W,D0/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2/A3-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2/D4/A3-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3/D5/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2-D3/D5/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2/D4-D5/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2/D4/D6/A3-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3-D4/D6/A3-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3/D5-D6/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2-D3/D5-D6/A3-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3/D5/D7/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2-D3/D5/D7/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2/D4-D5/D7/A3-A7
-      MOVEM.L ($FFFBFC).W,D0/D2/D4/D6-D7/A3-A7
-      MOVEM.L ($FFFBFC).W,D0-D1/D3-D4/D6-D7/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D2-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2-D3/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/D4/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3-D4/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3/D5/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2-D3/D5/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/D4-D5/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/D4/D6/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3-D4/D6/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3/D5-D6/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2-D3/D5-D6/A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2-D3/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/D4/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3-D4/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0-D1/D3/D5/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2-D3/D5/D7-A0/A3-A7
+      MOVEM.L ($FFFBFC).W,D0/D2/D4-D5/D7-A0/A3-A7
+      MOVEM.L ($000304).W,D1/A0
+      MOVEM.L ($000304).W,D0-D1/A0
+      MOVEM.L ($000304).W,D0/D2/A0
+      MOVEM.L ($000304).W,D0-D1/D3/A0
+      MOVEM.L ($000304).W,D0/D2-D3/A0
+      MOVEM.L ($000304).W,D0/D2/D4/A0
+      MOVEM.L ($000304).W,D0-D1/D3-D4/A0
+      MOVEM.L ($000304).W,D0-D1/D3/D5/A0
+      MOVEM.L ($000304).W,D0/D2-D3/D5/A0
+      MOVEM.L ($000304).W,D0/D2/D4-D5/A0
+      MOVEM.L ($000304).W,D0/D2/D4/D6/A0
+      MOVEM.L ($000304).W,D0-D1/D3-D4/D6/A0
+      MOVEM.L ($000304).W,D0-D1/D3/D5-D6/A0
+      MOVEM.L ($000304).W,D0/D2-D3/D5-D6/A0
+      MOVEM.L ($000304).W,D7-A0
+      MOVEM.L ($000304).W,D0/D7-A0
+      MOVEM.L ($000304).W,D0-D1/D7-A0
+      MOVEM.L ($000304).W,D0/D2/D7-A0
+      MOVEM.L ($000304).W,D0-D1/D3/D7-A0
+      MOVEM.L ($000304).W,D0/D2-D3/D7-A0
+      MOVEM.L ($000304).W,D0/D2/D4/D7-A0
+      MOVEM.L ($000304).W,D0-D1/D3-D4/D7-A0
+      MOVEM.L ($000304).W,D0-D1/D3/D5/D7-A0
+      MOVEM.L ($000304).W,D0/D2-D3/D5/D7-A0
+      MOVEM.L ($000304).W,D0/D2/D4-D5/D7-A0
+      MOVEM.L ($000304).W,A0
+      MOVEM.L ($000708).W,D1-D2/A0/A2
+      MOVEM.L ($000708).W,D3/A0/A2
+      MOVEM.L ($000708).W,D0/D3/A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3/A0/A2
+      MOVEM.L ($000708).W,D0/D2-D3/A0/A2
+      MOVEM.L ($000708).W,D0/D2/D4/A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3-D4/A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3/D5/A0/A2
+      MOVEM.L ($000708).W,D0/D2-D3/D5/A0/A2
+      MOVEM.L ($000708).W,D0/D2/D4-D5/A0/A2
+      MOVEM.L ($000708).W,D0/D2/D4/D6/A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3-D4/D6/A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3/D5-D6/A0/A2
+      MOVEM.L ($000708).W,D0/D2-D3/D5-D6/A0/A2
+      MOVEM.L ($000708).W,D7-A0/A2
+      MOVEM.L ($000708).W,D0/D7-A0/A2
+      MOVEM.L ($000708).W,D0-D1/D7-A0/A2
+      MOVEM.L ($000708).W,D0/D2/D7-A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3/D7-A0/A2
+      MOVEM.L ($000708).W,D0/D2-D3/D7-A0/A2
+      MOVEM.L ($000708).W,D0/D2/D4/D7-A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3-D4/D7-A0/A2
+      MOVEM.L ($000708).W,D0-D1/D3/D5/D7-A0/A2
+      MOVEM.L ($000708).W,D0/D2-D3/D5/D7-A0/A2
+      MOVEM.L ($000708).W,D0/D2/D4-D5/D7-A0/A2
+      MOVEM.L ($000708).W,A0/A2
+      MOVEM.L ($FEFF00).L,D2-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2-A1/A3-A7
+      MOVEM.L ($FEFF00).L,A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2-D3/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/D4/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3-D4/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3/D5/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2-D3/D5/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/D4-D5/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/D4/D6/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3-D4/D6/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3/D5-D6/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2-D3/D5-D6/A0-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2-D3/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/D4/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3-D4/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0-D1/D3/D5/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2-D3/D5/D7-A1/A3-A7
+      MOVEM.L ($FEFF00).L,D0/D2/D4-D5/D7-A1/A3-A7
+      MOVEM.L ($020304).L,A0-A7
+      MOVEM.L ($020304).L,D0/A0-A7
+      MOVEM.L ($020304).L,D0-D1/A0-A7
+      MOVEM.L ($020304).L,D0/D2/A0-A7
+      MOVEM.L ($020304).L,D0-D1/D3/A0-A7
+      MOVEM.L ($020304).L,D0/D2-D3/A0-A7
+      MOVEM.L ($020304).L,D0/D2/D4/A0-A7
+      MOVEM.L ($020304).L,D0-D1/D3-D4/A0-A7
+      MOVEM.L ($020304).L,D0-D1/D3/D5/A0-A7
+      MOVEM.L ($020304).L,D0/D2-D3/D5/A0-A7
+      MOVEM.L ($020304).L,D0/D2/D4-D5/A0-A7
+      MOVEM.L ($020304).L,D0/D2/D4/D6/A0-A7
+      MOVEM.L ($020304).L,D0-D1/D3-D4/D6/A0-A7
+      MOVEM.L ($020304).L,D0-D1/D3/D5-D6/A0-A7
+      MOVEM.L ($020304).L,D0/D2-D3/D5-D6/A0-A7
+      MOVEM.L ($020304).L,D7-A7
+      MOVEM.L ($020304).L,D0/D7-A7
+      MOVEM.L ($020304).L,D0-D1/D7-A7
+      MOVEM.L ($020304).L,D0/D2/D7-A7
+      MOVEM.L ($020304).L,D0-D1/D3/D7-A7
+      MOVEM.L ($020304).L,D0/D2-D3/D7-A7
+      MOVEM.L ($020304).L,D0/D2/D4/D7-A7
+      MOVEM.L ($020304).L,D0-D1/D3-D4/D7-A7
+      MOVEM.L ($020304).L,D0-D1/D3/D5/D7-A7
+      MOVEM.L ($020304).L,D0/D2-D3/D5/D7-A7
+      MOVEM.L ($020304).L,D0/D2/D4-D5/D7-A7
+      MOVEM.L ($0E0F10).L,D2-D3/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2-D3/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D4/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D4/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D4/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2/D4/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3-D4/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3/D5/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2-D3/D5/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2/D4-D5/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2/D4/D6/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3-D4/D6/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3/D5-D6/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2-D3/D5-D6/A0-A1/A3
+      MOVEM.L ($0E0F10).L,D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2-D3/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2/D4/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3-D4/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0-D1/D3/D5/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2-D3/D5/D7-A1/A3
+      MOVEM.L ($0E0F10).L,D0/D2/D4-D5/D7-A1/A3
+      MOVEM.L ($0E0F10).L,A0-A1/A3
+      MOVEM.L ($2E2F30).L,D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D4-D5/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D4-D5/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D4-D5/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2/D4-D5/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2/D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D3/D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2/D4/D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D3-D4/D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D3/D5-D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2-D3/D5-D6/A0-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D3/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2-D3/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2/D4/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D3-D4/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0-D1/D3/D5/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2-D3/D5/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,D0/D2/D4-D5/D7-A1/A3/A5
+      MOVEM.L ($2E2F30).L,A0-A1/A3/A5
+      MOVEM.L ($5E5F60).L,D2-D4/D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2-D4/D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D5-D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D5-D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D5-D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/D5-D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D3/D5-D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2-D3/D5-D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D3/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2-D3/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/D4/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D3-D4/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D3/D5/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2-D3/D5/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/D4-D5/D7-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/D4/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D3/D5/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0/D2/D4/D6/A0-A1/A3-A4/A6
+      MOVEM.L ($5E5F60).L,D0-D1/D3-D4/D6/A0-A1/A3-A4/A6
+      MOVEM.L ($6E6F70).L,D2-D3/D5-D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2-D3/D5-D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D4-D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D4-D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/D4-D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2-D3/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/D4/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3-D4/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3/D5/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2-D3/D5/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/D4-D5/D7-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/D4/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3/D5/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2-D3/D5/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0/D2/D4/D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3-D4/D6/A0-A1/A3/A5-A6
+      MOVEM.L ($6E6F70).L,D0-D1/D3/D5-D6/A0-A1/A3/A5-A6
       MOVEM.L (*-$01FE,PC),D2-A1/A3-A7
-      MOVEM.L (*-$0500,PC),D1/D3-D7/A1/A3-A7
+      MOVEM.L (*-$0400,PC),D0-D1/D3-A1/A3-A7
+      MOVEM.L (*+$0106,PC),A0-A7
+      MOVEM.L (*-$00FC,PC),D0-A7
+      MOVEM.L (*+2,PC),D0-A7
+      MOVEM.L (*+$0308,PC),D1/A0
+      MOVEM.L (*+$050A,PC),D2/A0-A1
+      MOVEM.L (*+$0308,PC),D0-D1/A0-A1
+      MOVEM.L (*+$090E,PC),D0/D3/A0-A2
+      MOVEM.L (*+$0B10,PC),D1/D3/A0/A3
+      MOVEM.L (*+$0D12,PC),D2-D3/A0-A1/A3
+      MOVEM.L (*+$0B10,PC),D0-D1/D3/A0-A1/A3
+      MOVEM.L (*+$1116,PC),D0-D1/D4/A0-A3
+      MOVEM.L (*+$1318,PC),D0-D1/D4/A0/A4
+      MOVEM.L (*+$151A,PC),D2/D4/A0-A1/A4
+      MOVEM.L (*+$171C,PC),D1-D2/D4/A0/A2/A4
+      MOVEM.L (*+$151A,PC),D0/D2/D4/A0/A2/A4
+      MOVEM.L (*+$1B20,PC),D1/D3-D4/A0/A3-A4
+      MOVEM.L (*+$1D22,PC),D2-D4/A0-A1/A3-A4
+      MOVEM.L (*+$1B20,PC),D0-D1/D3-D4/A0-A1/A3-A4
+      MOVEM.L (*+$2126,PC),D0/D2/D5/A0-A4
+      MOVEM.L (*+$2328,PC),D0/D2/D5/A0/A5
+      MOVEM.L (*+$252A,PC),D0/D2/D5/A0-A1/A5
+      MOVEM.L (*+$272C,PC),D3/D5/A0/A2/A5
+      MOVEM.L (*+$292E,PC),D0-D1/D3/D5/A0-A2/A5
+      MOVEM.L (*+$2B30,PC),D0-D1/D3/D5/A0/A3/A5
+      MOVEM.L (*+$2D32,PC),D2-D3/D5/A0-A1/A3/A5
+      MOVEM.L (*+$2B30,PC),D0-D1/D3/D5/A0-A1/A3/A5
+      MOVEM.L (*+$3136,PC),D0/D4-D5/A0-A3/A5
+      MOVEM.L (*+$3338,PC),D0-D1/D4-D5/A0/A4-A5
+      MOVEM.L (*+$353A,PC),D2/D4-D5/A0-A1/A4-A5
+      MOVEM.L (*+$373C,PC),D1-D2/D4-D5/A0/A2/A4-A5
+      MOVEM.L (*+$353A,PC),D0/D2/D4-D5/A0/A2/A4-A5
+      MOVEM.L (*+$3B40,PC),D2-D5/A0/A3-A5
+      MOVEM.L (*+$3D42,PC),D6/A0-A1/A3-A5
+      MOVEM.L (*+$3F44,PC),D6/A0/A2-A5
+      MOVEM.L (*+$4146,PC),D0-D1/D3/D6/A0-A5
+      MOVEM.L (*+$4348,PC),D0-D1/D3/D6/A0/A6
+      MOVEM.L (*+$454A,PC),D0/D2-D3/D6/A0-A1/A6
+      MOVEM.L (*+$474C,PC),D0/D2-D3/D6/A0/A2/A6
+      MOVEM.L (*+$494E,PC),D0/D2/D4/D6/A0-A2/A6
+      MOVEM.L (*+$4B50,PC),D0/D2/D4/D6/A0/A3/A6
+      MOVEM.L (*+$4D52,PC),D0/D2-D3/D6/A0-A1/A3/A6
+      MOVEM.L (*+$4F54,PC),D1-D3/D6/A0/A2-A3/A6
+      MOVEM.L (*+$4D52,PC),D0/D2-D3/D6/A0/A2-A3/A6
+      MOVEM.L (*+$5358,PC),D0-D1/D3-D4/D6/A0/A4/A6
+      MOVEM.L (*+$555A,PC),D2/D4/D6/A0-A1/A4/A6
+      MOVEM.L (*+$575C,PC),D1-D2/D4/D6/A0/A2/A4/A6
+      MOVEM.L (*+$555A,PC),D0/D2/D4/D6/A0/A2/A4/A6
+      MOVEM.L (*+$5B60,PC),D0-D1/D3-D4/D6/A0/A3-A4/A6
+      MOVEM.L (*+$5D62,PC),D2-D4/D6/A0-A1/A3-A4/A6
+      MOVEM.L (*+$5B60,PC),D0-D1/D3-D4/D6/A0-A1/A3-A4/A6
+      MOVEM.L (*+$6166,PC),D0-D1/D5-D6/A0-A4/A6
+      MOVEM.L (*+$6368,PC),D0/D2/D5-D6/A0/A5-A6
+      MOVEM.L (*+$656A,PC),D0/D2/D5-D6/A0-A1/A5-A6
+      MOVEM.L (*+$676C,PC),D3/D5-D6/A0/A2/A5-A6
+      MOVEM.L (*+$696E,PC),D0-D1/D3/D5-D6/A0-A2/A5-A6
+      MOVEM.L (*+$6B70,PC),D0-D1/D3/D5-D6/A0/A3/A5-A6
+      MOVEM.L (*+$6D72,PC),D2-D3/D5-D6/A0-A1/A3/A5-A6
+      MOVEM.L (*+$6B70,PC),D0-D1/D3/D5-D6/A0-A1/A3/A5-A6
+      MOVEM.L (*+$7176,PC),D7-A3/A5-A6
+      MOVEM.L (*+$7378,PC),D0/D7-A0/A4-A6
+      MOVEM.L (*+$757A,PC),D0-D1/D7-A1/A4-A6
+      MOVEM.L (*+$777C,PC),D3-D6/A0/A2/A4-A6
+      MOVEM.L (*+$797E,PC),D0/D2/D7-A2/A4-A6
+      MOVEM.L (*+$7B80,PC),D0-D1/D3/D7-A0/A3-A6
+      MOVEM.L (*+$7D82,PC),D0/D2-D3/D7-A1/A3-A6
+      MOVEM.L (*+$7F84,PC),D0/D2/D4/D7-A0/A2-A6
+      MOVEM.L (*-$7E7A,PC),D0/D7-A6
+      MOVEM.L (*-$7C78,PC),D1/D7-A0/A7
+      MOVEM.L (*-$7A76,PC),D0/D2/D7-A1/A7
+      MOVEM.L (*-$7C78,PC),D0-D1/D7-A1/A7
+      MOVEM.L (*-$7672,PC),D0-D1/D3/D7-A2/A7
+      MOVEM.L (*-$7470,PC),D1/D3/D7-A0/A3/A7
+      MOVEM.L (*-$726E,PC),D2-D3/D7-A1/A3/A7
+      MOVEM.L (*-$7470,PC),D0-D1/D3/D7-A1/A3/A7
+      MOVEM.L (*-$6E6A,PC),D0/D2/D4/D7-A3/A7
+      MOVEM.L (*-$6C68,PC),D0/D2/D4/D7-A0/A4/A7
+      MOVEM.L (*-$6A66,PC),D0/D3-D4/D7-A1/A4/A7
+      MOVEM.L (*-$6864,PC),D1-D2/D4/D7-A0/A2/A4/A7
+      MOVEM.L (*-$6A66,PC),D0/D2/D4/D7-A0/A2/A4/A7
+      MOVEM.L (*-$6460,PC),D1/D3-D4/D7-A0/A3-A4/A7
+      MOVEM.L (*-$625E,PC),D2-D4/D7-A1/A3-A4/A7
+      MOVEM.L (*-$6460,PC),D0-D1/D3-D4/D7-A1/A3-A4/A7
+      MOVEM.L (*-$5E5A,PC),D0-D1/D3/D5/D7-A4/A7
+      MOVEM.L (*-$5C58,PC),D0-D1/D3/D5/D7-A0/A5/A7
+      MOVEM.L (*-$5A56,PC),D0/D2-D3/D5/D7-A1/A5/A7
+      MOVEM.L (*-$5854,PC),D3/D5/D7-A0/A2/A5/A7
+      MOVEM.L (*-$5652,PC),D0-D1/D4-D5/D7-A2/A5/A7
+      MOVEM.L (*-$5450,PC),D0-D1/D3/D5/D7-A0/A3/A5/A7
+      MOVEM.L (*-$524E,PC),D0/D2-D3/D5/D7-A1/A3/A5/A7
+      MOVEM.L (*-$504C,PC),D1-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.L (*-$524E,PC),D0/D2-D3/D5/D7-A0/A2-A3/A5/A7
+      MOVEM.L (*-$4C48,PC),D0/D2/D4-D5/D7-A0/A4-A5/A7
+      MOVEM.L (*-$4A46,PC),D6-A1/A4-A5/A7
+      MOVEM.L (*-$4844,PC),D1-D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.L (*-$4A46,PC),D0/D2/D4-D5/D7-A0/A2/A4-A5/A7
+      MOVEM.L (*-$4440,PC),D0/D6-A0/A3-A5/A7
+      MOVEM.L (*-$423E,PC),D0/D2/D6-A1/A3-A5/A7
+      MOVEM.L (*-$403C,PC),D0-D1/D3/D6-A0/A2-A5/A7
+      MOVEM.L (*-$3E3A,PC),D6-A5/A7
+      MOVEM.L (*-$3C38,PC),D1/D6-A0/A6-A7
+      MOVEM.L (*-$3A36,PC),D0/D2/D6-A1/A6-A7
+      MOVEM.L (*-$3834,PC),D1-D2/D6-A0/A2/A6-A7
+      MOVEM.L (*-$3A36,PC),D0/D2/D6-A0/A2/A6-A7
+      MOVEM.L (*-$3430,PC),D0-D1/D3/D6-A0/A3/A6-A7
+      MOVEM.L (*-$322E,PC),D0/D2-D3/D6-A1/A3/A6-A7
+      MOVEM.L (*-$302C,PC),D1-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.L (*-$322E,PC),D0/D2-D3/D6-A0/A2-A3/A6-A7
+      MOVEM.L (*-$2C28,PC),D0/D2/D4/D6-A0/A4/A6-A7
+      MOVEM.L (*-$2A26,PC),D0-D1/D3-D4/D6-A1/A4/A6-A7
+      MOVEM.L (*-$2824,PC),D1-D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.L (*-$2A26,PC),D0/D2/D4/D6-A0/A2/A4/A6-A7
+      MOVEM.L (*-$2420,PC),D0-D1/D3-D4/D6-A0/A3-A4/A6-A7
+      MOVEM.L (*-$221E,PC),D5-A1/A3-A4/A6-A7
+      MOVEM.L (*-$201C,PC),D0/D5-A0/A2-A4/A6-A7
+      MOVEM.L (*-$1E1A,PC),D0-D1/D3/D5-A4/A6-A7
+      MOVEM.L (*-$1C18,PC),D0/D2-D3/D5-A0/A5-A7
+      MOVEM.L (*-$1A16,PC),A0-A1/A5-A7
+      MOVEM.L (*-$1814,PC),D3/D5-A0/A2/A5-A7
+      MOVEM.L (*-$1612,PC),D0/A0-A2/A5-A7
+      MOVEM.L (*-$1410,PC),D4-A0/A3/A5-A7
+      MOVEM.L (*-$120E,PC),A0-A1/A3/A5-A7
+      MOVEM.L (*-$100C,PC),D0/D2/D4-A0/A2-A3/A5-A7
+      MOVEM.L (*-$0E0A,PC),D0-D1/A0-A3/A5-A7
+      MOVEM.L (*-$0C08,PC),A0/A4-A7
+      MOVEM.L (*-$0A06,PC),D0/D2/A0-A1/A4-A7
+      MOVEM.L (*-$0804,PC),A0/A2/A4-A7
+      MOVEM.L (*-$0602,PC),D0-D1/D3/A0-A2/A4-A7
       MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A2-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2/A4
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1-A2/A4
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3-A4
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3/A5
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2-A3/A5
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2/A4-A5
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1-A2/A4-A5
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2/A4/A6
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1-A2/A4/A6
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3-A4/A6
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3/A5-A6
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2-A3/A5-A6
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3/A5/A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2-A3/A5/A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2/A4-A5/A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1-A2/A4-A5/A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-A0/A2/A4/A6-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1-A2/A4/A6-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D7/A1/A3-A4/A6-A7
-      MOVEM.L (*+3,PC,A7.L),D2-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/D4/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3-D4/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D5/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D5/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/D4-D5/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/D4/D6/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3-D4/D6/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D5-D6/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D5-D6/A0-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/D4/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3-D4/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D5/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D5/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,A7.L),D0/D2/D4-D5/D7-A1/A3-A7
-      MOVEM.L (*+3,PC,D0.W),D0-D1/D3-A1/A3-A7
-      MOVEM.L (*+3,PC,D0.L),D0-D1/D3-A1/A3-A7
-      MOVEM.L (*+3,PC,A0.W),D0-D1/D3-A1/A3-A7
-      MOVEM.L (*,PC,A7.L),D0-D1/D3-A1/A3-A7
-      MOVEM.L (*-124,PC,A7.L),D0-D1/D3-A1/A3-A7
+      MOVEM.L (*+3,PC,A7.L),D1-D7/A2-A7
+      MOVEM.L (*+3,PC,A7.L),A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2/D4/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3-D4/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D5/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D5/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2/D4-D5/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2/D4/D6/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3-D4/D6/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D5-D6/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D5-D6/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3/D5/D7/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2-D3/D5/D7/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2/D4-D5/D7/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0/D2/D4/D6-D7/A2-A7
+      MOVEM.L (*+3,PC,A7.L),D0-D1/D3-D4/D6-D7/A2-A7
+      MOVEM.L (*+3,PC,D0.W),D2-D7/A2-A7
+      MOVEM.L (*+3,PC,D0.L),D2-D7/A2-A7
+      MOVEM.L (*+3,PC,A0.W),D2-D7/A2-A7
+      MOVEM.L (*-124,PC,A7.L),D2-D7/A2-A7
+      MOVEM.L (*,PC,A7.L),D2-D7/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D1-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2-D3/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/D4/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3-D4/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3/D5/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2-D3/D5/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/D4-D5/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/D4/D6/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3-D4/D6/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3/D5-D6/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2-D3/D5-D6/A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2-D3/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/D4/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3-D4/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0-D1/D3/D5/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2-D3/D5/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,A7.L),D0/D2/D4-D5/D7-A0/A2-A7
+      MOVEM.L (*+4,PC,D0.W),D0/D2-A0/A2-A7
+      MOVEM.L (*+4,PC,D0.L),D0/D2-A0/A2-A7
+      MOVEM.L (*+4,PC,A0.W),D0/D2-A0/A2-A7
+      MOVEM.L (*-124,PC,A7.L),D0/D2-A0/A2-A7
+      MOVEM.L (*,PC,A7.L),D0/D2-A0/A2-A7
+      MOVEM.L (*+5,PC,D0.W),A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2-D3/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2/D4/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3-D4/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3/D5/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2-D3/D5/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2/D4-D5/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2/D4/D6/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3-D4/D6/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3/D5-D6/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2-D3/D5-D6/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3/D5/D7/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2-D3/D5/D7/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2/D4-D5/D7/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0/D2/D4/D6-D7/A1-A7
+      MOVEM.L (*+5,PC,D0.W),D0-D1/D3-D4/D6-D7/A1-A7
+      MOVEM.L (*+6,PC,D0.W),D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0-D1/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0/D2/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0-D1/D3/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0/D2-D3/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0/D2/D4/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0-D1/D3-D4/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0-D1/D3/D5/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0/D2-D3/D5/D7-A7
+      MOVEM.L (*+6,PC,D0.W),D0/D2/D4-D5/D7-A7
+      MOVEM.L (*+6,PC,D0.L),D0-A7
+      MOVEM.L (*+6,PC,A0.W),D0-A7
+      MOVEM.L (*+6,PC,A0.L),D0-A7
+      MOVEM.L (*-124,PC,A7.L),D0-A7
+      MOVEM.L (*,PC,A7.L),D0-A7
+      MOVEM.L (*+7,PC,D0.W),D0
+      MOVEM.L (*+7,PC,D0.W),D0-D1
+      MOVEM.L (*+7,PC,D0.W),D0/D2
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3
+      MOVEM.L (*+7,PC,D0.W),D0/D2-D3
+      MOVEM.L (*+7,PC,D0.W),D0/D2/D4
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3-D4
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3/D5
+      MOVEM.L (*+7,PC,D0.W),D0/D2-D3/D5
+      MOVEM.L (*+7,PC,D0.W),D0/D2/D4-D5
+      MOVEM.L (*+7,PC,D0.W),D0/D2/D4/D6
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3-D4/D6
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3/D5-D6
+      MOVEM.L (*+7,PC,D0.W),D0/D2-D3/D5-D6
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3/D5/D7
+      MOVEM.L (*+7,PC,D0.W),D0/D2-D3/D5/D7
+      MOVEM.L (*+7,PC,D0.W),D0/D2/D4-D5/D7
+      MOVEM.L (*+7,PC,D0.W),D0/D2/D4/D6-D7
+      MOVEM.L (*+7,PC,D0.W),D0-D1/D3-D4/D6-D7
+      MOVEM.L (*+8,PC,D0.W),D1/A0
+      MOVEM.L (*+8,PC,D0.W),D0-D1/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2/A0
+      MOVEM.L (*+8,PC,D0.W),D0-D1/D3/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2-D3/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2/D4/A0
+      MOVEM.L (*+8,PC,D0.W),D0-D1/D3-D4/A0
+      MOVEM.L (*+8,PC,D0.W),D0-D1/D3/D5/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2-D3/D5/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2/D4-D5/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2/D4/D6/A0
+      MOVEM.L (*+8,PC,D0.W),D0-D1/D3-D4/D6/A0
+      MOVEM.L (*+8,PC,D0.W),D0-D1/D3/D5-D6/A0
+      MOVEM.L (*+8,PC,D0.W),D0/D2-D3/D5-D6/A0
+      MOVEM.L (*+8,PC,D0.W),A0
+      MOVEM.L (*+8,PC,D0.L),D0/A0
+      MOVEM.L (*+8,PC,A0.W),D0/A0
+      MOVEM.L (*+8,PC,A0.L),D0/A0
+      MOVEM.L (*-124,PC,D0.W),D0/A0
+      MOVEM.L (*,PC,D0.W),D0/A0
+      MOVEM.L (*+9,PC,D0.W),D0-D1/D3/D5/D7/A1
+      MOVEM.L (*+9,PC,D0.W),D0/D2-D3/D5/D7/A1
+      MOVEM.L (*+9,PC,D0.W),D0/D2/D4-D5/D7/A1
+      MOVEM.L (*+9,PC,D0.W),D0/D2/D4/D6-D7/A1
+      MOVEM.L (*+9,PC,D0.W),D0-D1/D3-D4/D6-D7/A1
+      MOVEM.L (*-124,PC,D0.W),D0-D1/A0-A1
+      MOVEM.L (*,PC,D0.W),D0-D1/A0-A1
+      MOVEM.L (*+12,PC,D0.W),D1-D2/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D3/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D3/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2-D3/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2/D4/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3-D4/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3/D5/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2-D3/D5/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2/D4-D5/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2/D4/D6/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3-D4/D6/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3/D5-D6/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2-D3/D5-D6/A0/A2
+      MOVEM.L (*+12,PC,D0.W),D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2-D3/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2/D4/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3-D4/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0-D1/D3/D5/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2-D3/D5/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),D0/D2/D4-D5/D7-A0/A2
+      MOVEM.L (*+12,PC,D0.W),A0/A2
+      MOVEM.L (*+12,PC,D0.L),D0/D2/A0/A2
+      MOVEM.L (*+12,PC,A0.W),D0/D2/A0/A2
+      MOVEM.L (*+12,PC,A0.L),D0/D2/A0/A2
+      MOVEM.L (*-124,PC,D0.W),D0/D2/A0/A2
+      MOVEM.L (*,PC,D0.W),D0/D2/A0/A2
+      MOVEM.L (*+13,PC,D0.L),D3/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D3/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2-D3/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2/D4/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3-D4/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3/D5/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2-D3/D5/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2/D4-D5/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2/D4/D6/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3-D4/D6/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3/D5-D6/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2-D3/D5-D6/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3/D5/D7/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2-D3/D5/D7/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2/D4-D5/D7/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0/D2/D4/D6-D7/A1-A2
+      MOVEM.L (*+13,PC,D0.L),D0-D1/D3-D4/D6-D7/A1-A2
+      MOVEM.L (*+13,PC,D0.L),A1-A2
+      MOVEM.L (*+14,PC,D0.L),D0/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0-D1/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0/D2/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0-D1/D3/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0/D2-D3/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0/D2/D4/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0-D1/D3-D4/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0-D1/D3/D5/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0/D2-D3/D5/D7-A2
+      MOVEM.L (*+14,PC,D0.L),D0/D2/D4-D5/D7-A2
+      MOVEM.L (*+15,PC,D0.L),D0/D3/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3/A3
+      MOVEM.L (*+15,PC,D0.L),D2-D3/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2-D3/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2/D4/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3-D4/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3/D5/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2-D3/D5/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2/D4-D5/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2/D4/D6/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3-D4/D6/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3/D5-D6/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2-D3/D5-D6/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3/D5/D7/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2-D3/D5/D7/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2/D4-D5/D7/A3
+      MOVEM.L (*+15,PC,D0.L),D0/D2/D4/D6-D7/A3
+      MOVEM.L (*+15,PC,D0.L),D0-D1/D3-D4/D6-D7/A3
+      MOVEM.L (*+15,PC,D0.L),A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D2-D3/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2-D3/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D4/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2/D4/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3-D4/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3/D5/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2-D3/D5/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2/D4-D5/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2/D4/D6/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3-D4/D6/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3/D5-D6/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2-D3/D5-D6/A0/A3
+      MOVEM.L (*+16,PC,D0.L),D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2-D3/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2/D4/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3-D4/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0-D1/D3/D5/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2-D3/D5/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),D0/D2/D4-D5/D7-A0/A3
+      MOVEM.L (*+16,PC,D0.L),A0/A3
+      MOVEM.L (*-124,PC,D0.L),D0/D3/A0/A3
+      MOVEM.L (*,PC,D0.L),D0/D3/A0/A3
+      MOVEM.L (*+17,PC,D0.L),D0-D1/D3/D5/D7/A1/A3
+      MOVEM.L (*+17,PC,D0.L),D0/D2-D3/D5/D7/A1/A3
+      MOVEM.L (*+17,PC,D0.L),D0/D2/D4-D5/D7/A1/A3
+      MOVEM.L (*+17,PC,D0.L),D0/D2/D4/D6-D7/A1/A3
+      MOVEM.L (*+17,PC,D0.L),D0-D1/D3-D4/D6-D7/A1/A3
+      MOVEM.L (*+18,PC,D0.L),D2-D3/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D2-D3/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D4/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D4/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0-D1/D4/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D2/D4/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0-D1/D3-D4/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0-D1/D3/D5/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D2-D3/D5/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D2/D4-D5/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D2/D4/D6/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0-D1/D3-D4/D6/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0-D1/D3/D5-D6/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),D0/D2-D3/D5-D6/A0-A1/A3
+      MOVEM.L (*+18,PC,D0.L),A0-A1/A3
+      MOVEM.L (*+18,PC,D1.W),D0-D1/D3/A0-A1/A3
+      MOVEM.L (*+18,PC,A0.W),D0-D1/D3/A0-A1/A3
+      MOVEM.L (*+18,PC,A0.L),D0-D1/D3/A0-A1/A3
+      MOVEM.L (*-124,PC,D0.L),D0-D1/D3/A0-A1/A3
+      MOVEM.L (*,PC,D0.L),D0-D1/D3/A0-A1/A3
+      MOVEM.L (*+20,PC,D0.L),D1-D3/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D4/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D4/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D4/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2/D4/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D3-D4/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3-D4/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3/D5/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2-D3/D5/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2/D4-D5/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2/D4/D6/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3-D4/D6/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3/D5-D6/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2-D3/D5-D6/A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2-D3/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2/D4/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3-D4/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0-D1/D3/D5/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2-D3/D5/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),D0/D2/D4-D5/D7-A0/A2-A3
+      MOVEM.L (*+20,PC,D0.L),A0/A2-A3
+      MOVEM.L (*+20,PC,D1.W),D0/D2-D3/A0/A2-A3
+      MOVEM.L (*+20,PC,A0.W),D0/D2-D3/A0/A2-A3
+      MOVEM.L (*-124,PC,D0.L),D0/D2-D3/A0/A2-A3
+      MOVEM.L (*,PC,D0.L),D0/D2-D3/A0/A2-A3
       TRAP    #0
       LINK    A0,#$5152
-      LINK    A0,#-$7FAE
       UNLK    A0
       MOVE    A0,USP
       MOVE    USP,A0
@@ -5108,49 +9467,45 @@
       RTR
       JSR     (A0)
       JSR     (-$5656,A0)
-      JSR     ($00AA,A0)
       JSR     (-$4E,A0,A3.W)
-      JSR     (-$4E,A0,A3.L)
-      JSR     (-$4E,A0,D0.W)
-      JSR     (-$4E,A0,D0.L)
       JSR     (0,A0,A3.W)
+      JSR     (-$47,A7,A3.L)
+      JSR     (0,A7,A3.L)
       JSR     ($FFB9BA).W
+      JSR     ($BCBDBE).L
       JSR     (*-$4442,PC)
-      JSR     (*+$00BE,PC)
       JSR     (*-65,PC,A3.L)
-      JSR     (*-65,PC,A4.W)
-      JSR     (*-65,PC,D0.W)
-      JSR     (*-65,PC,D0.L)
       JSR     (*,PC,A3.L)
       JSR     (*+1,PC,A3.L)
+      JSR     (*-61,PC,A4.W)
+      JSR     (*,PC,A4.W)
+      JSR     (*+1,PC,A4.W)
       JMP     (A0)
       JMP     (-$1616,A0)
-      JMP     ($00EA,A0)
       JMP     (-14,A0,A7.W)
-      JMP     (-14,A0,A7.L)
-      JMP     (-14,A0,D0.W)
-      JMP     (-14,A0,D0.L)
       JMP     (0,A0,A7.W)
+      JMP     (-7,A7,A7.L)
+      JMP     (0,A7,A7.L)
       JMP     ($FFF9FA).W
+      JMP     ($FCFDFE).L
       JMP     (*-$0402,PC)
-      JMP     (*+$00FE,PC)
+      JMP     (*,PC)
+      JMP     (*+$0104,PC)
       JMP     (*-1,PC,A7.L)
-      JMP     (*-1,PC,D0.W)
-      JMP     (*-1,PC,D0.L)
-      JMP     (*-1,PC,A0.W)
       JMP     (*,PC,A7.L)
       JMP     (*+1,PC,A7.L)
+      JMP     (*+3,PC,D0.W)
+      JMP     (*-126,PC,D0.W)
+      JMP     (*,PC,D0.W)
       ADDQ.B  #8,D0
       ADDQ.B  #8,(A0)
       ADDQ.B  #8,(A0)+
       ADDQ.B  #8,-(A0)
       ADDQ.B  #8,($292A,A0)
-      ADDQ.B  #8,(-$7FD6,A0)
       ADDQ.B  #8,($32,A0,D3.W)
-      ADDQ.B  #8,($32,A0,D3.L)
-      ADDQ.B  #8,($32,A0,A0.W)
-      ADDQ.B  #8,($32,A0,A0.L)
       ADDQ.B  #8,(-$80,A0,D3.W)
+      ADDQ.B  #8,($39,A7,D3.L)
+      ADDQ.B  #8,(-$80,A7,D3.L)
       ADDQ.B  #8,($00393A).W
       ADDQ.B  #8,($3B3C3D).L
       ADDQ.W  #8,D0
@@ -5159,38 +9514,34 @@
       ADDQ.W  #8,(A0)+
       ADDQ.W  #8,-(A0)
       ADDQ.W  #8,($696A,A0)
-      ADDQ.W  #8,(-$7F96,A0)
       ADDQ.W  #8,($72,A0,D7.W)
-      ADDQ.W  #8,($72,A0,D7.L)
-      ADDQ.W  #8,($72,A0,A0.W)
-      ADDQ.W  #8,($72,A0,A0.L)
       ADDQ.W  #8,(-$80,A0,D7.W)
+      ADDQ.W  #8,($79,A7,D7.L)
+      ADDQ.W  #8,(-$80,A7,D7.L)
       ADDQ.W  #8,($00797A).W
+      ADDQ.W  #8,($7C7D7E).L
       ADDQ.L  #8,D0
       ADDQ.L  #8,A0
       ADDQ.L  #8,(A0)
       ADDQ.L  #8,(A0)+
       ADDQ.L  #8,-(A0)
       ADDQ.L  #8,(-$5656,A0)
-      ADDQ.L  #8,($00AA,A0)
       ADDQ.L  #8,(-$4E,A0,A3.W)
-      ADDQ.L  #8,(-$4E,A0,A3.L)
-      ADDQ.L  #8,(-$4E,A0,D0.W)
-      ADDQ.L  #8,(-$4E,A0,D0.L)
       ADDQ.L  #8,(0,A0,A3.W)
+      ADDQ.L  #8,(-$47,A7,A3.L)
+      ADDQ.L  #8,(0,A7,A3.L)
+      ADDQ.L  #8,($FFBBBC).W
+      ADDQ.L  #8,($BEBFC0).L
       ST      D0
       DBT     D0,*-$3634
-      DBT     D0,*+$00CC
       ST      (A0)
       ST      (A0)+
       ST      -(A0)
       ST      (-$1616,A0)
-      ST      ($00EA,A0)
       ST      (-14,A0,A7.W)
-      ST      (-14,A0,A7.L)
-      ST      (-14,A0,D0.W)
-      ST      (-14,A0,D0.L)
       ST      (0,A0,A7.W)
+      ST      (-7,A7,A7.L)
+      ST      (0,A7,A7.L)
       ST      ($FFF9FA).W
       ST      ($FBFCFD).L
       SUBQ.B  #8,D0
@@ -5198,12 +9549,10 @@
       SUBQ.B  #8,(A0)+
       SUBQ.B  #8,-(A0)
       SUBQ.B  #8,($292A,A0)
-      SUBQ.B  #8,(-$7FD6,A0)
       SUBQ.B  #8,($32,A0,D3.W)
-      SUBQ.B  #8,($32,A0,D3.L)
-      SUBQ.B  #8,($32,A0,A0.W)
-      SUBQ.B  #8,($32,A0,A0.L)
       SUBQ.B  #8,(-$80,A0,D3.W)
+      SUBQ.B  #8,($39,A7,D3.L)
+      SUBQ.B  #8,(-$80,A7,D3.L)
       SUBQ.B  #8,($00393A).W
       SUBQ.B  #8,($3B3C3D).L
       SUBQ.W  #8,D0
@@ -5212,327 +9561,265 @@
       SUBQ.W  #8,(A0)+
       SUBQ.W  #8,-(A0)
       SUBQ.W  #8,($696A,A0)
-      SUBQ.W  #8,(-$7F96,A0)
       SUBQ.W  #8,($72,A0,D7.W)
-      SUBQ.W  #8,($72,A0,D7.L)
-      SUBQ.W  #8,($72,A0,A0.W)
-      SUBQ.W  #8,($72,A0,A0.L)
       SUBQ.W  #8,(-$80,A0,D7.W)
+      SUBQ.W  #8,($79,A7,D7.L)
+      SUBQ.W  #8,(-$80,A7,D7.L)
       SUBQ.W  #8,($00797A).W
+      SUBQ.W  #8,($7C7D7E).L
       SUBQ.L  #8,D0
       SUBQ.L  #8,A0
       SUBQ.L  #8,(A0)
       SUBQ.L  #8,(A0)+
       SUBQ.L  #8,-(A0)
       SUBQ.L  #8,(-$5656,A0)
-      SUBQ.L  #8,($00AA,A0)
       SUBQ.L  #8,(-$4E,A0,A3.W)
-      SUBQ.L  #8,(-$4E,A0,A3.L)
-      SUBQ.L  #8,(-$4E,A0,D0.W)
-      SUBQ.L  #8,(-$4E,A0,D0.L)
       SUBQ.L  #8,(0,A0,A3.W)
+      SUBQ.L  #8,(-$47,A7,A3.L)
+      SUBQ.L  #8,(0,A7,A3.L)
+      SUBQ.L  #8,($FFBBBC).W
+      SUBQ.L  #8,($BEBFC0).L
       SF      D0
       DBRA    D0,*-$3634
-      DBRA    D0,*+$00CC
       SF      (A0)
       SF      (A0)+
       SF      -(A0)
       SF      (-$1616,A0)
-      SF      ($00EA,A0)
       SF      (-14,A0,A7.W)
-      SF      (-14,A0,A7.L)
-      SF      (-14,A0,D0.W)
-      SF      (-14,A0,D0.L)
       SF      (0,A0,A7.W)
+      SF      (-7,A7,A7.L)
+      SF      (0,A7,A7.L)
       SF      ($FFF9FA).W
       SF      ($FBFCFD).L
       SHI     D0
       DBHI    D0,*-$3634
-      DBHI    D0,*+$00CC
       SHI     (A0)
       SHI     (A0)+
       SHI     -(A0)
       SHI     (-$1616,A0)
-      SHI     ($00EA,A0)
       SHI     (-14,A0,A7.W)
-      SHI     (-14,A0,A7.L)
-      SHI     (-14,A0,D0.W)
-      SHI     (-14,A0,D0.L)
       SHI     (0,A0,A7.W)
+      SHI     (-7,A7,A7.L)
+      SHI     (0,A7,A7.L)
       SHI     ($FFF9FA).W
       SHI     ($FBFCFD).L
       SLS     D0
       DBLS    D0,*-$3634
-      DBLS    D0,*+$00CC
       SLS     (A0)
       SLS     (A0)+
       SLS     -(A0)
       SLS     (-$1616,A0)
-      SLS     ($00EA,A0)
       SLS     (-14,A0,A7.W)
-      SLS     (-14,A0,A7.L)
-      SLS     (-14,A0,D0.W)
-      SLS     (-14,A0,D0.L)
       SLS     (0,A0,A7.W)
+      SLS     (-7,A7,A7.L)
+      SLS     (0,A7,A7.L)
       SLS     ($FFF9FA).W
       SLS     ($FBFCFD).L
       SCC     D0
       DBCC    D0,*-$3634
-      DBCC    D0,*+$00CC
       SCC     (A0)
       SCC     (A0)+
       SCC     -(A0)
       SCC     (-$1616,A0)
-      SCC     ($00EA,A0)
       SCC     (-14,A0,A7.W)
-      SCC     (-14,A0,A7.L)
-      SCC     (-14,A0,D0.W)
-      SCC     (-14,A0,D0.L)
       SCC     (0,A0,A7.W)
+      SCC     (-7,A7,A7.L)
+      SCC     (0,A7,A7.L)
       SCC     ($FFF9FA).W
       SCC     ($FBFCFD).L
       SCS     D0
       DBCS    D0,*-$3634
-      DBCS    D0,*+$00CC
       SCS     (A0)
       SCS     (A0)+
       SCS     -(A0)
       SCS     (-$1616,A0)
-      SCS     ($00EA,A0)
       SCS     (-14,A0,A7.W)
-      SCS     (-14,A0,A7.L)
-      SCS     (-14,A0,D0.W)
-      SCS     (-14,A0,D0.L)
       SCS     (0,A0,A7.W)
+      SCS     (-7,A7,A7.L)
+      SCS     (0,A7,A7.L)
       SCS     ($FFF9FA).W
       SCS     ($FBFCFD).L
       SNE     D0
       DBNE    D0,*-$3634
-      DBNE    D0,*+$00CC
       SNE     (A0)
       SNE     (A0)+
       SNE     -(A0)
       SNE     (-$1616,A0)
-      SNE     ($00EA,A0)
       SNE     (-14,A0,A7.W)
-      SNE     (-14,A0,A7.L)
-      SNE     (-14,A0,D0.W)
-      SNE     (-14,A0,D0.L)
       SNE     (0,A0,A7.W)
+      SNE     (-7,A7,A7.L)
+      SNE     (0,A7,A7.L)
       SNE     ($FFF9FA).W
       SNE     ($FBFCFD).L
       SEQ     D0
       DBEQ    D0,*-$3634
-      DBEQ    D0,*+$00CC
       SEQ     (A0)
       SEQ     (A0)+
       SEQ     -(A0)
       SEQ     (-$1616,A0)
-      SEQ     ($00EA,A0)
       SEQ     (-14,A0,A7.W)
-      SEQ     (-14,A0,A7.L)
-      SEQ     (-14,A0,D0.W)
-      SEQ     (-14,A0,D0.L)
       SEQ     (0,A0,A7.W)
+      SEQ     (-7,A7,A7.L)
+      SEQ     (0,A7,A7.L)
       SEQ     ($FFF9FA).W
       SEQ     ($FBFCFD).L
       SVC     D0
       DBVC    D0,*-$3634
-      DBVC    D0,*+$00CC
       SVC     (A0)
       SVC     (A0)+
       SVC     -(A0)
       SVC     (-$1616,A0)
-      SVC     ($00EA,A0)
       SVC     (-14,A0,A7.W)
-      SVC     (-14,A0,A7.L)
-      SVC     (-14,A0,D0.W)
-      SVC     (-14,A0,D0.L)
       SVC     (0,A0,A7.W)
+      SVC     (-7,A7,A7.L)
+      SVC     (0,A7,A7.L)
       SVC     ($FFF9FA).W
       SVC     ($FBFCFD).L
       SVS     D0
       DBVS    D0,*-$3634
-      DBVS    D0,*+$00CC
       SVS     (A0)
       SVS     (A0)+
       SVS     -(A0)
       SVS     (-$1616,A0)
-      SVS     ($00EA,A0)
       SVS     (-14,A0,A7.W)
-      SVS     (-14,A0,A7.L)
-      SVS     (-14,A0,D0.W)
-      SVS     (-14,A0,D0.L)
       SVS     (0,A0,A7.W)
+      SVS     (-7,A7,A7.L)
+      SVS     (0,A7,A7.L)
       SVS     ($FFF9FA).W
       SVS     ($FBFCFD).L
       SPL     D0
       DBPL    D0,*-$3634
-      DBPL    D0,*+$00CC
       SPL     (A0)
       SPL     (A0)+
       SPL     -(A0)
       SPL     (-$1616,A0)
-      SPL     ($00EA,A0)
       SPL     (-14,A0,A7.W)
-      SPL     (-14,A0,A7.L)
-      SPL     (-14,A0,D0.W)
-      SPL     (-14,A0,D0.L)
       SPL     (0,A0,A7.W)
+      SPL     (-7,A7,A7.L)
+      SPL     (0,A7,A7.L)
       SPL     ($FFF9FA).W
       SPL     ($FBFCFD).L
       SMI     D0
       DBMI    D0,*-$3634
-      DBMI    D0,*+$00CC
       SMI     (A0)
       SMI     (A0)+
       SMI     -(A0)
       SMI     (-$1616,A0)
-      SMI     ($00EA,A0)
       SMI     (-14,A0,A7.W)
-      SMI     (-14,A0,A7.L)
-      SMI     (-14,A0,D0.W)
-      SMI     (-14,A0,D0.L)
       SMI     (0,A0,A7.W)
+      SMI     (-7,A7,A7.L)
+      SMI     (0,A7,A7.L)
       SMI     ($FFF9FA).W
       SMI     ($FBFCFD).L
       SGE     D0
       DBGE    D0,*-$3634
-      DBGE    D0,*+$00CC
       SGE     (A0)
       SGE     (A0)+
       SGE     -(A0)
       SGE     (-$1616,A0)
-      SGE     ($00EA,A0)
       SGE     (-14,A0,A7.W)
-      SGE     (-14,A0,A7.L)
-      SGE     (-14,A0,D0.W)
-      SGE     (-14,A0,D0.L)
       SGE     (0,A0,A7.W)
+      SGE     (-7,A7,A7.L)
+      SGE     (0,A7,A7.L)
       SGE     ($FFF9FA).W
       SGE     ($FBFCFD).L
       SLT     D0
       DBLT    D0,*-$3634
-      DBLT    D0,*+$00CC
       SLT     (A0)
       SLT     (A0)+
       SLT     -(A0)
       SLT     (-$1616,A0)
-      SLT     ($00EA,A0)
       SLT     (-14,A0,A7.W)
-      SLT     (-14,A0,A7.L)
-      SLT     (-14,A0,D0.W)
-      SLT     (-14,A0,D0.L)
       SLT     (0,A0,A7.W)
+      SLT     (-7,A7,A7.L)
+      SLT     (0,A7,A7.L)
       SLT     ($FFF9FA).W
       SLT     ($FBFCFD).L
       SGT     D0
       DBGT    D0,*-$3634
-      DBGT    D0,*+$00CC
       SGT     (A0)
       SGT     (A0)+
       SGT     -(A0)
       SGT     (-$1616,A0)
-      SGT     ($00EA,A0)
       SGT     (-14,A0,A7.W)
-      SGT     (-14,A0,A7.L)
-      SGT     (-14,A0,D0.W)
-      SGT     (-14,A0,D0.L)
       SGT     (0,A0,A7.W)
+      SGT     (-7,A7,A7.L)
+      SGT     (0,A7,A7.L)
       SGT     ($FFF9FA).W
       SGT     ($FBFCFD).L
       SLE     D0
       DBLE    D0,*-$3634
-      DBLE    D0,*+$00CC
       SLE     (A0)
       SLE     (A0)+
       SLE     -(A0)
       SLE     (-$1616,A0)
-      SLE     ($00EA,A0)
       SLE     (-14,A0,A7.W)
-      SLE     (-14,A0,A7.L)
-      SLE     (-14,A0,D0.W)
-      SLE     (-14,A0,D0.L)
       SLE     (0,A0,A7.W)
+      SLE     (-7,A7,A7.L)
+      SLE     (0,A7,A7.L)
       SLE     ($FFF9FA).W
       SLE     ($FBFCFD).L
       BRA     *+$0104
-      BRA     *-$7FFC
       BRA     *+4
       BRA     *-126
       BRA     *
       BSR     *+$0104
-      BSR     *-$7FFC
       BSR     *+4
       BSR     *-126
       BSR     *
       BHI     *+$0104
-      BHI     *-$7FFC
       BHI     *+4
       BHI     *-126
       BHI     *
       BLS     *+$0104
-      BLS     *-$7FFC
       BLS     *+4
       BLS     *-126
       BLS     *
       BCC     *+$0104
-      BCC     *-$7FFC
       BCC     *+4
       BCC     *-126
       BCC     *
       BCS     *+$0104
-      BCS     *-$7FFC
       BCS     *+4
       BCS     *-126
       BCS     *
       BNE     *+$0104
-      BNE     *-$7FFC
       BNE     *+4
       BNE     *-126
       BNE     *
       BEQ     *+$0104
-      BEQ     *-$7FFC
       BEQ     *+4
       BEQ     *-126
       BEQ     *
       BVC     *+$0104
-      BVC     *-$7FFC
       BVC     *+4
       BVC     *-126
       BVC     *
       BVS     *+$0104
-      BVS     *-$7FFC
       BVS     *+4
       BVS     *-126
       BVS     *
       BPL     *+$0104
-      BPL     *-$7FFC
       BPL     *+4
       BPL     *-126
       BPL     *
       BMI     *+$0104
-      BMI     *-$7FFC
       BMI     *+4
       BMI     *-126
       BMI     *
       BGE     *+$0104
-      BGE     *-$7FFC
       BGE     *+4
       BGE     *-126
       BGE     *
       BLT     *+$0104
-      BLT     *-$7FFC
       BLT     *+4
       BLT     *-126
       BLT     *
       BGT     *+$0104
-      BGT     *-$7FFC
       BGT     *+4
       BGT     *-126
       BGT     *
       BLE     *+$0104
-      BLE     *-$7FFC
       BLE     *+4
       BLE     *-126
       BLE     *
@@ -5543,84 +9830,79 @@
       OR.B    (A0)+,D0
       OR.B    -(A0),D0
       OR.B    ($292A,A0),D0
-      OR.B    (-$7FD6,A0),D0
       OR.B    ($32,A0,D3.W),D0
-      OR.B    ($32,A0,D3.L),D0
-      OR.B    ($32,A0,A0.W),D0
-      OR.B    ($32,A0,A0.L),D0
       OR.B    (-$80,A0,D3.W),D0
+      OR.B    ($39,A7,D3.L),D0
+      OR.B    (-$80,A7,D3.L),D0
       OR.B    ($00393A).W,D0
       OR.B    ($3B3C3D).L,D0
       OR.B    (*+$3B3E,PC),D0
-      OR.B    (*-$7FC2,PC),D0
       OR.B    (*+63,PC,D3.L),D0
-      OR.B    (*+63,PC,D4.W),D0
-      OR.B    (*+63,PC,A0.W),D0
-      OR.B    (*+63,PC,A0.L),D0
       OR.B    (*-126,PC,D3.L),D0
       OR.B    (*,PC,D3.L),D0
+      OR.B    (*+67,PC,D4.W),D0
+      OR.B    (*-126,PC,D4.W),D0
+      OR.B    (*,PC,D4.W),D0
       OR.B    #$3E,D0
       OR.W    D0,D0
       OR.W    (A0),D0
       OR.W    (A0)+,D0
       OR.W    -(A0),D0
       OR.W    ($696A,A0),D0
-      OR.W    (-$7F96,A0),D0
       OR.W    ($72,A0,D7.W),D0
-      OR.W    ($72,A0,D7.L),D0
-      OR.W    ($72,A0,A0.W),D0
-      OR.W    ($72,A0,A0.L),D0
       OR.W    (-$80,A0,D7.W),D0
+      OR.W    ($79,A7,D7.L),D0
+      OR.W    (-$80,A7,D7.L),D0
       OR.W    ($00797A).W,D0
+      OR.W    ($7C7D7E).L,D0
       OR.W    (*+$7B7E,PC),D0
-      OR.W    (*-$7F82,PC),D0
+      OR.W    (*-$7E7C,PC),D0
       OR.W    (*+127,PC,D7.L),D0
-      OR.W    (*+127,PC,A0.W),D0
-      OR.W    (*+127,PC,A0.L),D0
-      OR.W    (*+127,PC,D0.W),D0
       OR.W    (*-126,PC,D7.L),D0
       OR.W    (*,PC,D7.L),D0
+      OR.W    (*-125,PC,A0.W),D0
+      OR.W    (*,PC,A0.W),D0
+      OR.W    (*+1,PC,A0.W),D0
       OR.W    #$7D7E,D0
       OR.L    D0,D0
       OR.L    (A0),D0
       OR.L    (A0)+,D0
       OR.L    -(A0),D0
       OR.L    (-$5656,A0),D0
-      OR.L    ($00AA,A0),D0
       OR.L    (-$4E,A0,A3.W),D0
-      OR.L    (-$4E,A0,A3.L),D0
-      OR.L    (-$4E,A0,D0.W),D0
-      OR.L    (-$4E,A0,D0.L),D0
       OR.L    (0,A0,A3.W),D0
-      OR.L    (*-$4442,PC),D0
-      OR.L    (*+$00BE,PC),D0
+      OR.L    (-$47,A7,A3.L),D0
+      OR.L    (0,A7,A3.L),D0
+      OR.L    ($FFBBBC).W,D0
+      OR.L    ($BEBFC0).L,D0
+      OR.L    (*-$4240,PC),D0
       OR.L    (*-65,PC,A3.L),D0
-      OR.L    (*-65,PC,A4.W),D0
-      OR.L    (*-65,PC,D0.W),D0
-      OR.L    (*-65,PC,D0.L),D0
       OR.L    (*,PC,A3.L),D0
       OR.L    (*+1,PC,A3.L),D0
+      OR.L    (*-61,PC,A4.W),D0
+      OR.L    (*,PC,A4.W),D0
+      OR.L    (*+1,PC,A4.W),D0
       OR.L    #$BDBEBFC0,D0
       DIVU.W  D0,D0
       DIVU.W  (A0),D0
       DIVU.W  (A0)+,D0
       DIVU.W  -(A0),D0
       DIVU.W  (-$1616,A0),D0
-      DIVU.W  ($00EA,A0),D0
       DIVU.W  (-14,A0,A7.W),D0
-      DIVU.W  (-14,A0,A7.L),D0
-      DIVU.W  (-14,A0,D0.W),D0
-      DIVU.W  (-14,A0,D0.L),D0
       DIVU.W  (0,A0,A7.W),D0
+      DIVU.W  (-7,A7,A7.L),D0
+      DIVU.W  (0,A7,A7.L),D0
       DIVU.W  ($FFF9FA).W,D0
+      DIVU.W  ($FCFDFE).L,D0
       DIVU.W  (*-$0402,PC),D0
-      DIVU.W  (*+$00FE,PC),D0
+      DIVU.W  (*,PC),D0
+      DIVU.W  (*+$0104,PC),D0
       DIVU.W  (*-1,PC,A7.L),D0
-      DIVU.W  (*-1,PC,D0.W),D0
-      DIVU.W  (*-1,PC,D0.L),D0
-      DIVU.W  (*-1,PC,A0.W),D0
       DIVU.W  (*,PC,A7.L),D0
       DIVU.W  (*+1,PC,A7.L),D0
+      DIVU.W  (*+3,PC,D0.W),D0
+      DIVU.W  (*-126,PC,D0.W),D0
+      DIVU.W  (*,PC,D0.W),D0
       DIVU.W  #$FDFE,D0
       SBCD    D0,D0
       SBCD    -(A0),-(A0)
@@ -5628,77 +9910,71 @@
       OR.B    D0,(A0)+
       OR.B    D0,-(A0)
       OR.B    D0,($292A,A0)
-      OR.B    D0,(-$7FD6,A0)
       OR.B    D0,($32,A0,D3.W)
-      OR.B    D0,($32,A0,D3.L)
-      OR.B    D0,($32,A0,A0.W)
-      OR.B    D0,($32,A0,A0.L)
       OR.B    D0,(-$80,A0,D3.W)
+      OR.B    D0,($39,A7,D3.L)
+      OR.B    D0,(-$80,A7,D3.L)
       OR.B    D0,($00393A).W
       OR.B    D0,($3B3C3D).L
       OR.W    D0,(A0)
       OR.W    D0,(A0)+
       OR.W    D0,-(A0)
       OR.W    D0,($696A,A0)
-      OR.W    D0,(-$7F96,A0)
       OR.W    D0,($72,A0,D7.W)
-      OR.W    D0,($72,A0,D7.L)
-      OR.W    D0,($72,A0,A0.W)
-      OR.W    D0,($72,A0,A0.L)
       OR.W    D0,(-$80,A0,D7.W)
+      OR.W    D0,($79,A7,D7.L)
+      OR.W    D0,(-$80,A7,D7.L)
       OR.W    D0,($00797A).W
+      OR.W    D0,($7C7D7E).L
       OR.L    D0,(A0)
       OR.L    D0,(A0)+
       OR.L    D0,-(A0)
       OR.L    D0,(-$5656,A0)
-      OR.L    D0,($00AA,A0)
       OR.L    D0,(-$4E,A0,A3.W)
-      OR.L    D0,(-$4E,A0,A3.L)
-      OR.L    D0,(-$4E,A0,D0.W)
-      OR.L    D0,(-$4E,A0,D0.L)
       OR.L    D0,(0,A0,A3.W)
+      OR.L    D0,(-$47,A7,A3.L)
+      OR.L    D0,(0,A7,A3.L)
+      OR.L    D0,($FFBBBC).W
+      OR.L    D0,($BEBFC0).L
       DIVS.W  D0,D0
       DIVS.W  (A0),D0
       DIVS.W  (A0)+,D0
       DIVS.W  -(A0),D0
       DIVS.W  (-$1616,A0),D0
-      DIVS.W  ($00EA,A0),D0
       DIVS.W  (-14,A0,A7.W),D0
-      DIVS.W  (-14,A0,A7.L),D0
-      DIVS.W  (-14,A0,D0.W),D0
-      DIVS.W  (-14,A0,D0.L),D0
       DIVS.W  (0,A0,A7.W),D0
+      DIVS.W  (-7,A7,A7.L),D0
+      DIVS.W  (0,A7,A7.L),D0
       DIVS.W  ($FFF9FA).W,D0
+      DIVS.W  ($FCFDFE).L,D0
       DIVS.W  (*-$0402,PC),D0
-      DIVS.W  (*+$00FE,PC),D0
+      DIVS.W  (*,PC),D0
+      DIVS.W  (*+$0104,PC),D0
       DIVS.W  (*-1,PC,A7.L),D0
-      DIVS.W  (*-1,PC,D0.W),D0
-      DIVS.W  (*-1,PC,D0.L),D0
-      DIVS.W  (*-1,PC,A0.W),D0
       DIVS.W  (*,PC,A7.L),D0
       DIVS.W  (*+1,PC,A7.L),D0
+      DIVS.W  (*+3,PC,D0.W),D0
+      DIVS.W  (*-126,PC,D0.W),D0
+      DIVS.W  (*,PC,D0.W),D0
       DIVS.W  #$FDFE,D0
       SUB.B   D0,D0
       SUB.B   (A0),D0
       SUB.B   (A0)+,D0
       SUB.B   -(A0),D0
       SUB.B   ($292A,A0),D0
-      SUB.B   (-$7FD6,A0),D0
       SUB.B   ($32,A0,D3.W),D0
-      SUB.B   ($32,A0,D3.L),D0
-      SUB.B   ($32,A0,A0.W),D0
-      SUB.B   ($32,A0,A0.L),D0
       SUB.B   (-$80,A0,D3.W),D0
+      SUB.B   ($39,A7,D3.L),D0
+      SUB.B   (-$80,A7,D3.L),D0
       SUB.B   ($00393A).W,D0
       SUB.B   ($3B3C3D).L,D0
       SUB.B   (*+$3B3E,PC),D0
-      SUB.B   (*-$7FC2,PC),D0
       SUB.B   (*+63,PC,D3.L),D0
-      SUB.B   (*+63,PC,D4.W),D0
-      SUB.B   (*+63,PC,A0.W),D0
-      SUB.B   (*+63,PC,A0.L),D0
       SUB.B   (*-126,PC,D3.L),D0
       SUB.B   (*,PC,D3.L),D0
+      SUB.B   (*+67,PC,D4.W),D0
+      SUB.B   (*-126,PC,D4.W),D0
+      SUB.B   (*,PC,D4.W),D0
       SUB.B   #$3E,D0
       SUB.W   D0,D0
       SUB.W   A0,D0
@@ -5706,21 +9982,20 @@
       SUB.W   (A0)+,D0
       SUB.W   -(A0),D0
       SUB.W   ($696A,A0),D0
-      SUB.W   (-$7F96,A0),D0
       SUB.W   ($72,A0,D7.W),D0
-      SUB.W   ($72,A0,D7.L),D0
-      SUB.W   ($72,A0,A0.W),D0
-      SUB.W   ($72,A0,A0.L),D0
       SUB.W   (-$80,A0,D7.W),D0
+      SUB.W   ($79,A7,D7.L),D0
+      SUB.W   (-$80,A7,D7.L),D0
       SUB.W   ($00797A).W,D0
+      SUB.W   ($7C7D7E).L,D0
       SUB.W   (*+$7B7E,PC),D0
-      SUB.W   (*-$7F82,PC),D0
+      SUB.W   (*-$7E7C,PC),D0
       SUB.W   (*+127,PC,D7.L),D0
-      SUB.W   (*+127,PC,A0.W),D0
-      SUB.W   (*+127,PC,A0.L),D0
-      SUB.W   (*+127,PC,D0.W),D0
       SUB.W   (*-126,PC,D7.L),D0
       SUB.W   (*,PC,D7.L),D0
+      SUB.W   (*-125,PC,A0.W),D0
+      SUB.W   (*,PC,A0.W),D0
+      SUB.W   (*+1,PC,A0.W),D0
       SUB.W   #$7D7E,D0
       SUB.L   D0,D0
       SUB.L   A0,D0
@@ -5728,20 +10003,19 @@
       SUB.L   (A0)+,D0
       SUB.L   -(A0),D0
       SUB.L   (-$5656,A0),D0
-      SUB.L   ($00AA,A0),D0
       SUB.L   (-$4E,A0,A3.W),D0
-      SUB.L   (-$4E,A0,A3.L),D0
-      SUB.L   (-$4E,A0,D0.W),D0
-      SUB.L   (-$4E,A0,D0.L),D0
       SUB.L   (0,A0,A3.W),D0
-      SUB.L   (*-$4442,PC),D0
-      SUB.L   (*+$00BE,PC),D0
+      SUB.L   (-$47,A7,A3.L),D0
+      SUB.L   (0,A7,A3.L),D0
+      SUB.L   ($FFBBBC).W,D0
+      SUB.L   ($BEBFC0).L,D0
+      SUB.L   (*-$4240,PC),D0
       SUB.L   (*-65,PC,A3.L),D0
-      SUB.L   (*-65,PC,A4.W),D0
-      SUB.L   (*-65,PC,D0.W),D0
-      SUB.L   (*-65,PC,D0.L),D0
       SUB.L   (*,PC,A3.L),D0
       SUB.L   (*+1,PC,A3.L),D0
+      SUB.L   (*-61,PC,A4.W),D0
+      SUB.L   (*,PC,A4.W),D0
+      SUB.L   (*+1,PC,A4.W),D0
       SUB.L   #$BDBEBFC0,D0
       SUBA.W  D0,A0
       SUBA.W  A0,A0
@@ -5749,21 +10023,21 @@
       SUBA.W  (A0)+,A0
       SUBA.W  -(A0),A0
       SUBA.W  (-$1616,A0),A0
-      SUBA.W  ($00EA,A0),A0
       SUBA.W  (-14,A0,A7.W),A0
-      SUBA.W  (-14,A0,A7.L),A0
-      SUBA.W  (-14,A0,D0.W),A0
-      SUBA.W  (-14,A0,D0.L),A0
       SUBA.W  (0,A0,A7.W),A0
+      SUBA.W  (-7,A7,A7.L),A0
+      SUBA.W  (0,A7,A7.L),A0
       SUBA.W  ($FFF9FA).W,A0
+      SUBA.W  ($FCFDFE).L,A0
       SUBA.W  (*-$0402,PC),A0
-      SUBA.W  (*+$00FE,PC),A0
+      SUBA.W  (*,PC),A0
+      SUBA.W  (*+$0104,PC),A0
       SUBA.W  (*-1,PC,A7.L),A0
-      SUBA.W  (*-1,PC,D0.W),A0
-      SUBA.W  (*-1,PC,D0.L),A0
-      SUBA.W  (*-1,PC,A0.W),A0
       SUBA.W  (*,PC,A7.L),A0
       SUBA.W  (*+1,PC,A7.L),A0
+      SUBA.W  (*+3,PC,D0.W),A0
+      SUBA.W  (*-126,PC,D0.W),A0
+      SUBA.W  (*,PC,D0.W),A0
       SUBA.W  #$FDFE,A0
       SUBX.B  D0,D0
       SUBX.B  -(A0),-(A0)
@@ -5771,12 +10045,10 @@
       SUB.B   D0,(A0)+
       SUB.B   D0,-(A0)
       SUB.B   D0,($292A,A0)
-      SUB.B   D0,(-$7FD6,A0)
       SUB.B   D0,($32,A0,D3.W)
-      SUB.B   D0,($32,A0,D3.L)
-      SUB.B   D0,($32,A0,A0.W)
-      SUB.B   D0,($32,A0,A0.L)
       SUB.B   D0,(-$80,A0,D3.W)
+      SUB.B   D0,($39,A7,D3.L)
+      SUB.B   D0,(-$80,A7,D3.L)
       SUB.B   D0,($00393A).W
       SUB.B   D0,($3B3C3D).L
       SUBX.W  D0,D0
@@ -5785,67 +10057,63 @@
       SUB.W   D0,(A0)+
       SUB.W   D0,-(A0)
       SUB.W   D0,($696A,A0)
-      SUB.W   D0,(-$7F96,A0)
       SUB.W   D0,($72,A0,D7.W)
-      SUB.W   D0,($72,A0,D7.L)
-      SUB.W   D0,($72,A0,A0.W)
-      SUB.W   D0,($72,A0,A0.L)
       SUB.W   D0,(-$80,A0,D7.W)
+      SUB.W   D0,($79,A7,D7.L)
+      SUB.W   D0,(-$80,A7,D7.L)
       SUB.W   D0,($00797A).W
+      SUB.W   D0,($7C7D7E).L
       SUBX.L  D0,D0
       SUBX.L  -(A0),-(A0)
       SUB.L   D0,(A0)
       SUB.L   D0,(A0)+
       SUB.L   D0,-(A0)
       SUB.L   D0,(-$5656,A0)
-      SUB.L   D0,($00AA,A0)
       SUB.L   D0,(-$4E,A0,A3.W)
-      SUB.L   D0,(-$4E,A0,A3.L)
-      SUB.L   D0,(-$4E,A0,D0.W)
-      SUB.L   D0,(-$4E,A0,D0.L)
       SUB.L   D0,(0,A0,A3.W)
+      SUB.L   D0,(-$47,A7,A3.L)
+      SUB.L   D0,(0,A7,A3.L)
+      SUB.L   D0,($FFBBBC).W
+      SUB.L   D0,($BEBFC0).L
       SUBA.L  D0,A0
       SUBA.L  A0,A0
       SUBA.L  (A0),A0
       SUBA.L  (A0)+,A0
       SUBA.L  -(A0),A0
       SUBA.L  (-$1616,A0),A0
-      SUBA.L  ($00EA,A0),A0
       SUBA.L  (-14,A0,A7.W),A0
-      SUBA.L  (-14,A0,A7.L),A0
-      SUBA.L  (-14,A0,D0.W),A0
-      SUBA.L  (-14,A0,D0.L),A0
       SUBA.L  (0,A0,A7.W),A0
+      SUBA.L  (-7,A7,A7.L),A0
+      SUBA.L  (0,A7,A7.L),A0
+      SUBA.L  ($FFFBFC).W,A0
+      SUBA.L  ($FEFF00).L,A0
+      SUBA.L  (*-$0402,PC),A0
+      SUBA.L  (*+$0306,PC),A0
       SUBA.L  (*-1,PC,A7.L),A0
-      SUBA.L  (*-1,PC,D0.W),A0
-      SUBA.L  (*-1,PC,D0.L),A0
-      SUBA.L  (*-1,PC,A0.W),A0
       SUBA.L  (*,PC,A7.L),A0
       SUBA.L  (*+1,PC,A7.L),A0
+      SUBA.L  (*+3,PC,D0.W),A0
+      SUBA.L  (*-126,PC,D0.W),A0
+      SUBA.L  (*,PC,D0.W),A0
       SUBA.L  #$FDFEFF00,A0
-      SUBA.L  (*-$0402,PC),A1
-      SUBA.L  (*+$00FE,PC),A1
       CMP.B   D0,D0
       CMP.B   (A0),D0
       CMP.B   (A0)+,D0
       CMP.B   -(A0),D0
       CMP.B   ($292A,A0),D0
-      CMP.B   (-$7FD6,A0),D0
       CMP.B   ($32,A0,D3.W),D0
-      CMP.B   ($32,A0,D3.L),D0
-      CMP.B   ($32,A0,A0.W),D0
-      CMP.B   ($32,A0,A0.L),D0
       CMP.B   (-$80,A0,D3.W),D0
+      CMP.B   ($39,A7,D3.L),D0
+      CMP.B   (-$80,A7,D3.L),D0
       CMP.B   ($00393A).W,D0
       CMP.B   ($3B3C3D).L,D0
       CMP.B   (*+$3B3E,PC),D0
-      CMP.B   (*-$7FC2,PC),D0
       CMP.B   (*+63,PC,D3.L),D0
-      CMP.B   (*+63,PC,D4.W),D0
-      CMP.B   (*+63,PC,A0.W),D0
-      CMP.B   (*+63,PC,A0.L),D0
       CMP.B   (*-126,PC,D3.L),D0
       CMP.B   (*,PC,D3.L),D0
+      CMP.B   (*+67,PC,D4.W),D0
+      CMP.B   (*-126,PC,D4.W),D0
+      CMP.B   (*,PC,D4.W),D0
       CMP.B   #$3E,D0
       CMP.W   D0,D0
       CMP.W   A0,D0
@@ -5853,21 +10121,20 @@
       CMP.W   (A0)+,D0
       CMP.W   -(A0),D0
       CMP.W   ($696A,A0),D0
-      CMP.W   (-$7F96,A0),D0
       CMP.W   ($72,A0,D7.W),D0
-      CMP.W   ($72,A0,D7.L),D0
-      CMP.W   ($72,A0,A0.W),D0
-      CMP.W   ($72,A0,A0.L),D0
       CMP.W   (-$80,A0,D7.W),D0
+      CMP.W   ($79,A7,D7.L),D0
+      CMP.W   (-$80,A7,D7.L),D0
       CMP.W   ($00797A).W,D0
+      CMP.W   ($7C7D7E).L,D0
       CMP.W   (*+$7B7E,PC),D0
-      CMP.W   (*-$7F82,PC),D0
+      CMP.W   (*-$7E7C,PC),D0
       CMP.W   (*+127,PC,D7.L),D0
-      CMP.W   (*+127,PC,A0.W),D0
-      CMP.W   (*+127,PC,A0.L),D0
-      CMP.W   (*+127,PC,D0.W),D0
       CMP.W   (*-126,PC,D7.L),D0
       CMP.W   (*,PC,D7.L),D0
+      CMP.W   (*-125,PC,A0.W),D0
+      CMP.W   (*,PC,A0.W),D0
+      CMP.W   (*+1,PC,A0.W),D0
       CMP.W   #$7D7E,D0
       CMP.L   D0,D0
       CMP.L   A0,D0
@@ -5875,18 +10142,19 @@
       CMP.L   (A0)+,D0
       CMP.L   -(A0),D0
       CMP.L   (-$5656,A0),D0
-      CMP.L   ($00AA,A0),D0
       CMP.L   (-$4E,A0,A3.W),D0
-      CMP.L   (-$4E,A0,A3.L),D0
-      CMP.L   (-$4E,A0,D0.W),D0
-      CMP.L   (-$4E,A0,D0.L),D0
       CMP.L   (0,A0,A3.W),D0
+      CMP.L   (-$47,A7,A3.L),D0
+      CMP.L   (0,A7,A3.L),D0
+      CMP.L   ($FFBBBC).W,D0
+      CMP.L   ($BEBFC0).L,D0
+      CMP.L   (*-$4442,PC),D0
       CMP.L   (*-65,PC,A3.L),D0
-      CMP.L   (*-65,PC,A4.W),D0
-      CMP.L   (*-65,PC,D0.W),D0
-      CMP.L   (*-65,PC,D0.L),D0
       CMP.L   (*,PC,A3.L),D0
       CMP.L   (*+1,PC,A3.L),D0
+      CMP.L   (*-61,PC,A4.W),D0
+      CMP.L   (*,PC,A4.W),D0
+      CMP.L   (*+1,PC,A4.W),D0
       CMP.L   #$BDBEBFC0,D0
       CMPA.W  D0,A0
       CMPA.W  A0,A0
@@ -5894,21 +10162,21 @@
       CMPA.W  (A0)+,A0
       CMPA.W  -(A0),A0
       CMPA.W  (-$1616,A0),A0
-      CMPA.W  ($00EA,A0),A0
       CMPA.W  (-14,A0,A7.W),A0
-      CMPA.W  (-14,A0,A7.L),A0
-      CMPA.W  (-14,A0,D0.W),A0
-      CMPA.W  (-14,A0,D0.L),A0
       CMPA.W  (0,A0,A7.W),A0
+      CMPA.W  (-7,A7,A7.L),A0
+      CMPA.W  (0,A7,A7.L),A0
       CMPA.W  ($FFF9FA).W,A0
+      CMPA.W  ($FCFDFE).L,A0
       CMPA.W  (*-$0402,PC),A0
-      CMPA.W  (*+$00FE,PC),A0
+      CMPA.W  (*,PC),A0
+      CMPA.W  (*+$0104,PC),A0
       CMPA.W  (*-1,PC,A7.L),A0
-      CMPA.W  (*-1,PC,D0.W),A0
-      CMPA.W  (*-1,PC,D0.L),A0
-      CMPA.W  (*-1,PC,A0.W),A0
       CMPA.W  (*,PC,A7.L),A0
       CMPA.W  (*+1,PC,A7.L),A0
+      CMPA.W  (*+3,PC,D0.W),A0
+      CMPA.W  (*-126,PC,D0.W),A0
+      CMPA.W  (*,PC,D0.W),A0
       CMPA.W  #$FDFE,A0
       EOR.B   D0,D0
       CMPM.B  (A0)+,(A0)+
@@ -5916,12 +10184,10 @@
       EOR.B   D0,(A0)+
       EOR.B   D0,-(A0)
       EOR.B   D0,($292A,A0)
-      EOR.B   D0,(-$7FD6,A0)
       EOR.B   D0,($32,A0,D3.W)
-      EOR.B   D0,($32,A0,D3.L)
-      EOR.B   D0,($32,A0,A0.W)
-      EOR.B   D0,($32,A0,A0.L)
       EOR.B   D0,(-$80,A0,D3.W)
+      EOR.B   D0,($39,A7,D3.L)
+      EOR.B   D0,(-$80,A7,D3.L)
       EOR.B   D0,($00393A).W
       EOR.B   D0,($3B3C3D).L
       EOR.W   D0,D0
@@ -5930,129 +10196,123 @@
       EOR.W   D0,(A0)+
       EOR.W   D0,-(A0)
       EOR.W   D0,($696A,A0)
-      EOR.W   D0,(-$7F96,A0)
       EOR.W   D0,($72,A0,D7.W)
-      EOR.W   D0,($72,A0,D7.L)
-      EOR.W   D0,($72,A0,A0.W)
-      EOR.W   D0,($72,A0,A0.L)
       EOR.W   D0,(-$80,A0,D7.W)
+      EOR.W   D0,($79,A7,D7.L)
+      EOR.W   D0,(-$80,A7,D7.L)
       EOR.W   D0,($00797A).W
+      EOR.W   D0,($7C7D7E).L
       EOR.L   D0,D0
       CMPM.L  (A0)+,(A0)+
       EOR.L   D0,(A0)
       EOR.L   D0,(A0)+
       EOR.L   D0,-(A0)
       EOR.L   D0,(-$5656,A0)
-      EOR.L   D0,($00AA,A0)
       EOR.L   D0,(-$4E,A0,A3.W)
-      EOR.L   D0,(-$4E,A0,A3.L)
-      EOR.L   D0,(-$4E,A0,D0.W)
-      EOR.L   D0,(-$4E,A0,D0.L)
       EOR.L   D0,(0,A0,A3.W)
+      EOR.L   D0,(-$47,A7,A3.L)
+      EOR.L   D0,(0,A7,A3.L)
+      EOR.L   D0,($FFBBBC).W
+      EOR.L   D0,($BEBFC0).L
       CMPA.L  D0,A0
       CMPA.L  A0,A0
       CMPA.L  (A0),A0
       CMPA.L  (A0)+,A0
       CMPA.L  -(A0),A0
       CMPA.L  (-$1616,A0),A0
-      CMPA.L  ($00EA,A0),A0
       CMPA.L  (-14,A0,A7.W),A0
-      CMPA.L  (-14,A0,A7.L),A0
-      CMPA.L  (-14,A0,D0.W),A0
-      CMPA.L  (-14,A0,D0.L),A0
       CMPA.L  (0,A0,A7.W),A0
-      CMPA.L  (*-$0402,PC),A0
-      CMPA.L  (*+$00FE,PC),A0
+      CMPA.L  (-7,A7,A7.L),A0
+      CMPA.L  (0,A7,A7.L),A0
+      CMPA.L  ($FFFBFC).W,A0
+      CMPA.L  ($FEFF00).L,A0
+      CMPA.L  (*-$0200,PC),A0
+      CMPA.L  (*+$0104,PC),A0
       CMPA.L  (*-1,PC,A7.L),A0
-      CMPA.L  (*-1,PC,D0.W),A0
-      CMPA.L  (*-1,PC,D0.L),A0
-      CMPA.L  (*-1,PC,A0.W),A0
       CMPA.L  (*,PC,A7.L),A0
       CMPA.L  (*+1,PC,A7.L),A0
+      CMPA.L  (*+3,PC,D0.W),A0
+      CMPA.L  (*-126,PC,D0.W),A0
+      CMPA.L  (*,PC,D0.W),A0
       CMPA.L  #$FDFEFF00,A0
       AND.B   D0,D0
       AND.B   (A0),D0
       AND.B   (A0)+,D0
       AND.B   -(A0),D0
       AND.B   ($292A,A0),D0
-      AND.B   (-$7FD6,A0),D0
       AND.B   ($32,A0,D3.W),D0
-      AND.B   ($32,A0,D3.L),D0
-      AND.B   ($32,A0,A0.W),D0
-      AND.B   ($32,A0,A0.L),D0
       AND.B   (-$80,A0,D3.W),D0
+      AND.B   ($39,A7,D3.L),D0
+      AND.B   (-$80,A7,D3.L),D0
       AND.B   ($00393A).W,D0
       AND.B   ($3B3C3D).L,D0
       AND.B   (*+$3B3E,PC),D0
-      AND.B   (*-$7FC2,PC),D0
       AND.B   (*+63,PC,D3.L),D0
-      AND.B   (*+63,PC,D4.W),D0
-      AND.B   (*+63,PC,A0.W),D0
-      AND.B   (*+63,PC,A0.L),D0
       AND.B   (*-126,PC,D3.L),D0
       AND.B   (*,PC,D3.L),D0
+      AND.B   (*+67,PC,D4.W),D0
+      AND.B   (*-126,PC,D4.W),D0
+      AND.B   (*,PC,D4.W),D0
       AND.B   #$3E,D0
       AND.W   D0,D0
       AND.W   (A0),D0
       AND.W   (A0)+,D0
       AND.W   -(A0),D0
       AND.W   ($696A,A0),D0
-      AND.W   (-$7F96,A0),D0
       AND.W   ($72,A0,D7.W),D0
-      AND.W   ($72,A0,D7.L),D0
-      AND.W   ($72,A0,A0.W),D0
-      AND.W   ($72,A0,A0.L),D0
       AND.W   (-$80,A0,D7.W),D0
+      AND.W   ($79,A7,D7.L),D0
+      AND.W   (-$80,A7,D7.L),D0
       AND.W   ($00797A).W,D0
+      AND.W   ($7C7D7E).L,D0
       AND.W   (*+$7B7E,PC),D0
-      AND.W   (*-$7F82,PC),D0
+      AND.W   (*-$7E7C,PC),D0
       AND.W   (*+127,PC,D7.L),D0
-      AND.W   (*+127,PC,A0.W),D0
-      AND.W   (*+127,PC,A0.L),D0
-      AND.W   (*+127,PC,D0.W),D0
       AND.W   (*-126,PC,D7.L),D0
       AND.W   (*,PC,D7.L),D0
+      AND.W   (*-125,PC,A0.W),D0
+      AND.W   (*,PC,A0.W),D0
+      AND.W   (*+1,PC,A0.W),D0
       AND.W   #$7D7E,D0
       AND.L   D0,D0
       AND.L   (A0),D0
       AND.L   (A0)+,D0
       AND.L   -(A0),D0
       AND.L   (-$5656,A0),D0
-      AND.L   ($00AA,A0),D0
       AND.L   (-$4E,A0,A3.W),D0
-      AND.L   (-$4E,A0,A3.L),D0
-      AND.L   (-$4E,A0,D0.W),D0
-      AND.L   (-$4E,A0,D0.L),D0
       AND.L   (0,A0,A3.W),D0
-      AND.L   (*-$4442,PC),D0
-      AND.L   (*+$00BE,PC),D0
+      AND.L   (-$47,A7,A3.L),D0
+      AND.L   (0,A7,A3.L),D0
+      AND.L   ($FFBBBC).W,D0
+      AND.L   ($BEBFC0).L,D0
+      AND.L   (*-$4240,PC),D0
       AND.L   (*-65,PC,A3.L),D0
-      AND.L   (*-65,PC,A4.W),D0
-      AND.L   (*-65,PC,D0.W),D0
-      AND.L   (*-65,PC,D0.L),D0
       AND.L   (*,PC,A3.L),D0
       AND.L   (*+1,PC,A3.L),D0
+      AND.L   (*-61,PC,A4.W),D0
+      AND.L   (*,PC,A4.W),D0
+      AND.L   (*+1,PC,A4.W),D0
       AND.L   #$BDBEBFC0,D0
       MULU.W  D0,D0
       MULU.W  (A0),D0
       MULU.W  (A0)+,D0
       MULU.W  -(A0),D0
       MULU.W  (-$1616,A0),D0
-      MULU.W  ($00EA,A0),D0
       MULU.W  (-14,A0,A7.W),D0
-      MULU.W  (-14,A0,A7.L),D0
-      MULU.W  (-14,A0,D0.W),D0
-      MULU.W  (-14,A0,D0.L),D0
       MULU.W  (0,A0,A7.W),D0
+      MULU.W  (-7,A7,A7.L),D0
+      MULU.W  (0,A7,A7.L),D0
       MULU.W  ($FFF9FA).W,D0
+      MULU.W  ($FCFDFE).L,D0
       MULU.W  (*-$0402,PC),D0
-      MULU.W  (*+$00FE,PC),D0
+      MULU.W  (*,PC),D0
+      MULU.W  (*+$0104,PC),D0
       MULU.W  (*-1,PC,A7.L),D0
-      MULU.W  (*-1,PC,D0.W),D0
-      MULU.W  (*-1,PC,D0.L),D0
-      MULU.W  (*-1,PC,A0.W),D0
       MULU.W  (*,PC,A7.L),D0
       MULU.W  (*+1,PC,A7.L),D0
+      MULU.W  (*+3,PC,D0.W),D0
+      MULU.W  (*-126,PC,D0.W),D0
+      MULU.W  (*,PC,D0.W),D0
       MULU.W  #$FDFE,D0
       ABCD    D0,D0
       ABCD    -(A0),-(A0)
@@ -6060,12 +10320,10 @@
       AND.B   D0,(A0)+
       AND.B   D0,-(A0)
       AND.B   D0,($292A,A0)
-      AND.B   D0,(-$7FD6,A0)
       AND.B   D0,($32,A0,D3.W)
-      AND.B   D0,($32,A0,D3.L)
-      AND.B   D0,($32,A0,A0.W)
-      AND.B   D0,($32,A0,A0.L)
       AND.B   D0,(-$80,A0,D3.W)
+      AND.B   D0,($39,A7,D3.L)
+      AND.B   D0,(-$80,A7,D3.L)
       AND.B   D0,($00393A).W
       AND.B   D0,($3B3C3D).L
       EXG     D0,D0
@@ -6074,66 +10332,62 @@
       AND.W   D0,(A0)+
       AND.W   D0,-(A0)
       AND.W   D0,($696A,A0)
-      AND.W   D0,(-$7F96,A0)
       AND.W   D0,($72,A0,D7.W)
-      AND.W   D0,($72,A0,D7.L)
-      AND.W   D0,($72,A0,A0.W)
-      AND.W   D0,($72,A0,A0.L)
       AND.W   D0,(-$80,A0,D7.W)
+      AND.W   D0,($79,A7,D7.L)
+      AND.W   D0,(-$80,A7,D7.L)
       AND.W   D0,($00797A).W
+      AND.W   D0,($7C7D7E).L
       EXG     D0,A0
       AND.L   D0,(A0)
       AND.L   D0,(A0)+
       AND.L   D0,-(A0)
       AND.L   D0,(-$5656,A0)
-      AND.L   D0,($00AA,A0)
       AND.L   D0,(-$4E,A0,A3.W)
-      AND.L   D0,(-$4E,A0,A3.L)
-      AND.L   D0,(-$4E,A0,D0.W)
-      AND.L   D0,(-$4E,A0,D0.L)
       AND.L   D0,(0,A0,A3.W)
+      AND.L   D0,(-$47,A7,A3.L)
+      AND.L   D0,(0,A7,A3.L)
+      AND.L   D0,($FFBBBC).W
+      AND.L   D0,($BEBFC0).L
       MULS.W  D0,D0
       MULS.W  (A0),D0
       MULS.W  (A0)+,D0
       MULS.W  -(A0),D0
       MULS.W  (-$1616,A0),D0
-      MULS.W  ($00EA,A0),D0
       MULS.W  (-14,A0,A7.W),D0
-      MULS.W  (-14,A0,A7.L),D0
-      MULS.W  (-14,A0,D0.W),D0
-      MULS.W  (-14,A0,D0.L),D0
       MULS.W  (0,A0,A7.W),D0
+      MULS.W  (-7,A7,A7.L),D0
+      MULS.W  (0,A7,A7.L),D0
       MULS.W  ($FFF9FA).W,D0
+      MULS.W  ($FCFDFE).L,D0
       MULS.W  (*-$0402,PC),D0
-      MULS.W  (*+$00FE,PC),D0
+      MULS.W  (*,PC),D0
+      MULS.W  (*+$0104,PC),D0
       MULS.W  (*-1,PC,A7.L),D0
-      MULS.W  (*-1,PC,D0.W),D0
-      MULS.W  (*-1,PC,D0.L),D0
-      MULS.W  (*-1,PC,A0.W),D0
       MULS.W  (*,PC,A7.L),D0
       MULS.W  (*+1,PC,A7.L),D0
+      MULS.W  (*+3,PC,D0.W),D0
+      MULS.W  (*-126,PC,D0.W),D0
+      MULS.W  (*,PC,D0.W),D0
       MULS.W  #$FDFE,D0
       ADD.B   D0,D0
       ADD.B   (A0),D0
       ADD.B   (A0)+,D0
       ADD.B   -(A0),D0
       ADD.B   ($292A,A0),D0
-      ADD.B   (-$7FD6,A0),D0
       ADD.B   ($32,A0,D3.W),D0
-      ADD.B   ($32,A0,D3.L),D0
-      ADD.B   ($32,A0,A0.W),D0
-      ADD.B   ($32,A0,A0.L),D0
       ADD.B   (-$80,A0,D3.W),D0
+      ADD.B   ($39,A7,D3.L),D0
+      ADD.B   (-$80,A7,D3.L),D0
       ADD.B   ($00393A).W,D0
       ADD.B   ($3B3C3D).L,D0
       ADD.B   (*+$3B3E,PC),D0
-      ADD.B   (*-$7FC2,PC),D0
       ADD.B   (*+63,PC,D3.L),D0
-      ADD.B   (*+63,PC,D4.W),D0
-      ADD.B   (*+63,PC,A0.W),D0
-      ADD.B   (*+63,PC,A0.L),D0
       ADD.B   (*-126,PC,D3.L),D0
       ADD.B   (*,PC,D3.L),D0
+      ADD.B   (*+67,PC,D4.W),D0
+      ADD.B   (*-126,PC,D4.W),D0
+      ADD.B   (*,PC,D4.W),D0
       ADD.B   #$3E,D0
       ADD.W   D0,D0
       ADD.W   A0,D0
@@ -6141,21 +10395,20 @@
       ADD.W   (A0)+,D0
       ADD.W   -(A0),D0
       ADD.W   ($696A,A0),D0
-      ADD.W   (-$7F96,A0),D0
       ADD.W   ($72,A0,D7.W),D0
-      ADD.W   ($72,A0,D7.L),D0
-      ADD.W   ($72,A0,A0.W),D0
-      ADD.W   ($72,A0,A0.L),D0
       ADD.W   (-$80,A0,D7.W),D0
+      ADD.W   ($79,A7,D7.L),D0
+      ADD.W   (-$80,A7,D7.L),D0
       ADD.W   ($00797A).W,D0
+      ADD.W   ($7C7D7E).L,D0
       ADD.W   (*+$7B7E,PC),D0
-      ADD.W   (*-$7F82,PC),D0
+      ADD.W   (*-$7E7C,PC),D0
       ADD.W   (*+127,PC,D7.L),D0
-      ADD.W   (*+127,PC,A0.W),D0
-      ADD.W   (*+127,PC,A0.L),D0
-      ADD.W   (*+127,PC,D0.W),D0
       ADD.W   (*-126,PC,D7.L),D0
       ADD.W   (*,PC,D7.L),D0
+      ADD.W   (*-125,PC,A0.W),D0
+      ADD.W   (*,PC,A0.W),D0
+      ADD.W   (*+1,PC,A0.W),D0
       ADD.W   #$7D7E,D0
       ADD.L   D0,D0
       ADD.L   A0,D0
@@ -6163,18 +10416,19 @@
       ADD.L   (A0)+,D0
       ADD.L   -(A0),D0
       ADD.L   (-$5656,A0),D0
-      ADD.L   ($00AA,A0),D0
       ADD.L   (-$4E,A0,A3.W),D0
-      ADD.L   (-$4E,A0,A3.L),D0
-      ADD.L   (-$4E,A0,D0.W),D0
-      ADD.L   (-$4E,A0,D0.L),D0
       ADD.L   (0,A0,A3.W),D0
+      ADD.L   (-$47,A7,A3.L),D0
+      ADD.L   (0,A7,A3.L),D0
+      ADD.L   ($FFBBBC).W,D0
+      ADD.L   ($BEBFC0).L,D0
+      ADD.L   (*-$4442,PC),D0
       ADD.L   (*-65,PC,A3.L),D0
-      ADD.L   (*-65,PC,A4.W),D0
-      ADD.L   (*-65,PC,D0.W),D0
-      ADD.L   (*-65,PC,D0.L),D0
       ADD.L   (*,PC,A3.L),D0
       ADD.L   (*+1,PC,A3.L),D0
+      ADD.L   (*-61,PC,A4.W),D0
+      ADD.L   (*,PC,A4.W),D0
+      ADD.L   (*+1,PC,A4.W),D0
       ADD.L   #$BDBEBFC0,D0
       ADDA.W  D0,A0
       ADDA.W  A0,A0
@@ -6182,21 +10436,21 @@
       ADDA.W  (A0)+,A0
       ADDA.W  -(A0),A0
       ADDA.W  (-$1616,A0),A0
-      ADDA.W  ($00EA,A0),A0
       ADDA.W  (-14,A0,A7.W),A0
-      ADDA.W  (-14,A0,A7.L),A0
-      ADDA.W  (-14,A0,D0.W),A0
-      ADDA.W  (-14,A0,D0.L),A0
       ADDA.W  (0,A0,A7.W),A0
+      ADDA.W  (-7,A7,A7.L),A0
+      ADDA.W  (0,A7,A7.L),A0
       ADDA.W  ($FFF9FA).W,A0
+      ADDA.W  ($FCFDFE).L,A0
       ADDA.W  (*-$0402,PC),A0
-      ADDA.W  (*+$00FE,PC),A0
+      ADDA.W  (*,PC),A0
+      ADDA.W  (*+$0104,PC),A0
       ADDA.W  (*-1,PC,A7.L),A0
-      ADDA.W  (*-1,PC,D0.W),A0
-      ADDA.W  (*-1,PC,D0.L),A0
-      ADDA.W  (*-1,PC,A0.W),A0
       ADDA.W  (*,PC,A7.L),A0
       ADDA.W  (*+1,PC,A7.L),A0
+      ADDA.W  (*+3,PC,D0.W),A0
+      ADDA.W  (*-126,PC,D0.W),A0
+      ADDA.W  (*,PC,D0.W),A0
       ADDA.W  #$FDFE,A0
       ADDX.B  D0,D0
       ADDX.B  -(A0),-(A0)
@@ -6204,12 +10458,10 @@
       ADD.B   D0,(A0)+
       ADD.B   D0,-(A0)
       ADD.B   D0,($292A,A0)
-      ADD.B   D0,(-$7FD6,A0)
       ADD.B   D0,($32,A0,D3.W)
-      ADD.B   D0,($32,A0,D3.L)
-      ADD.B   D0,($32,A0,A0.W)
-      ADD.B   D0,($32,A0,A0.L)
       ADD.B   D0,(-$80,A0,D3.W)
+      ADD.B   D0,($39,A7,D3.L)
+      ADD.B   D0,(-$80,A7,D3.L)
       ADD.B   D0,($00393A).W
       ADD.B   D0,($3B3C3D).L
       ADDX.W  D0,D0
@@ -6218,45 +10470,44 @@
       ADD.W   D0,(A0)+
       ADD.W   D0,-(A0)
       ADD.W   D0,($696A,A0)
-      ADD.W   D0,(-$7F96,A0)
       ADD.W   D0,($72,A0,D7.W)
-      ADD.W   D0,($72,A0,D7.L)
-      ADD.W   D0,($72,A0,A0.W)
-      ADD.W   D0,($72,A0,A0.L)
       ADD.W   D0,(-$80,A0,D7.W)
+      ADD.W   D0,($79,A7,D7.L)
+      ADD.W   D0,(-$80,A7,D7.L)
       ADD.W   D0,($00797A).W
+      ADD.W   D0,($7C7D7E).L
       ADDX.L  D0,D0
       ADDX.L  -(A0),-(A0)
       ADD.L   D0,(A0)
       ADD.L   D0,(A0)+
       ADD.L   D0,-(A0)
       ADD.L   D0,(-$5656,A0)
-      ADD.L   D0,($00AA,A0)
       ADD.L   D0,(-$4E,A0,A3.W)
-      ADD.L   D0,(-$4E,A0,A3.L)
-      ADD.L   D0,(-$4E,A0,D0.W)
-      ADD.L   D0,(-$4E,A0,D0.L)
       ADD.L   D0,(0,A0,A3.W)
+      ADD.L   D0,(-$47,A7,A3.L)
+      ADD.L   D0,(0,A7,A3.L)
+      ADD.L   D0,($FFBBBC).W
+      ADD.L   D0,($BEBFC0).L
       ADDA.L  D0,A0
       ADDA.L  A0,A0
       ADDA.L  (A0),A0
       ADDA.L  (A0)+,A0
       ADDA.L  -(A0),A0
       ADDA.L  (-$1616,A0),A0
-      ADDA.L  ($00EA,A0),A0
       ADDA.L  (-14,A0,A7.W),A0
-      ADDA.L  (-14,A0,A7.L),A0
-      ADDA.L  (-14,A0,D0.W),A0
-      ADDA.L  (-14,A0,D0.L),A0
       ADDA.L  (0,A0,A7.W),A0
-      ADDA.L  (*-$0402,PC),A0
-      ADDA.L  (*+$00FE,PC),A0
+      ADDA.L  (-7,A7,A7.L),A0
+      ADDA.L  (0,A7,A7.L),A0
+      ADDA.L  ($FFFBFC).W,A0
+      ADDA.L  ($FEFF00).L,A0
+      ADDA.L  (*-$0200,PC),A0
+      ADDA.L  (*+$0104,PC),A0
       ADDA.L  (*-1,PC,A7.L),A0
-      ADDA.L  (*-1,PC,D0.W),A0
-      ADDA.L  (*-1,PC,D0.L),A0
-      ADDA.L  (*-1,PC,A0.W),A0
       ADDA.L  (*,PC,A7.L),A0
       ADDA.L  (*+1,PC,A7.L),A0
+      ADDA.L  (*+3,PC,D0.W),A0
+      ADDA.L  (*-126,PC,D0.W),A0
+      ADDA.L  (*,PC,D0.W),A0
       ADDA.L  #$FDFEFF00,A0
       ASR.B   #8,D0
       LSR.B   #8,D0
@@ -6286,13 +10537,12 @@
       ASR     (A0)+
       ASR     -(A0)
       ASR     (-$1616,A0)
-      ASR     ($00EA,A0)
       ASR     (-14,A0,A7.W)
-      ASR     (-14,A0,A7.L)
-      ASR     (-14,A0,D0.W)
-      ASR     (-14,A0,D0.L)
       ASR     (0,A0,A7.W)
+      ASR     (-7,A7,A7.L)
+      ASR     (0,A7,A7.L)
       ASR     ($FFF9FA).W
+      ASR     ($FCFDFE).L
       ASL.B   #8,D0
       LSL.B   #8,D0
       ROXL.B  #8,D0
@@ -6321,76 +10571,69 @@
       ASL     (A0)+
       ASL     -(A0)
       ASL     (-$1616,A0)
-      ASL     ($00EA,A0)
       ASL     (-14,A0,A7.W)
-      ASL     (-14,A0,A7.L)
-      ASL     (-14,A0,D0.W)
-      ASL     (-14,A0,D0.L)
       ASL     (0,A0,A7.W)
+      ASL     (-7,A7,A7.L)
+      ASL     (0,A7,A7.L)
       ASL     ($FFF9FA).W
+      ASL     ($FCFDFE).L
       LSR     (A0)
       LSR     (A0)+
       LSR     -(A0)
       LSR     (-$1616,A0)
-      LSR     ($00EA,A0)
       LSR     (-14,A0,A7.W)
-      LSR     (-14,A0,A7.L)
-      LSR     (-14,A0,D0.W)
-      LSR     (-14,A0,D0.L)
       LSR     (0,A0,A7.W)
+      LSR     (-7,A7,A7.L)
+      LSR     (0,A7,A7.L)
       LSR     ($FFF9FA).W
+      LSR     ($FCFDFE).L
       LSL     (A0)
       LSL     (A0)+
       LSL     -(A0)
       LSL     (-$1616,A0)
-      LSL     ($00EA,A0)
       LSL     (-14,A0,A7.W)
-      LSL     (-14,A0,A7.L)
-      LSL     (-14,A0,D0.W)
-      LSL     (-14,A0,D0.L)
       LSL     (0,A0,A7.W)
+      LSL     (-7,A7,A7.L)
+      LSL     (0,A7,A7.L)
       LSL     ($FFF9FA).W
+      LSL     ($FCFDFE).L
       ROXR    (A0)
       ROXR    (A0)+
       ROXR    -(A0)
       ROXR    (-$1616,A0)
-      ROXR    ($00EA,A0)
       ROXR    (-14,A0,A7.W)
-      ROXR    (-14,A0,A7.L)
-      ROXR    (-14,A0,D0.W)
-      ROXR    (-14,A0,D0.L)
       ROXR    (0,A0,A7.W)
+      ROXR    (-7,A7,A7.L)
+      ROXR    (0,A7,A7.L)
       ROXR    ($FFF9FA).W
+      ROXR    ($FCFDFE).L
       ROXL    (A0)
       ROXL    (A0)+
       ROXL    -(A0)
       ROXL    (-$1616,A0)
-      ROXL    ($00EA,A0)
       ROXL    (-14,A0,A7.W)
-      ROXL    (-14,A0,A7.L)
-      ROXL    (-14,A0,D0.W)
-      ROXL    (-14,A0,D0.L)
       ROXL    (0,A0,A7.W)
+      ROXL    (-7,A7,A7.L)
+      ROXL    (0,A7,A7.L)
       ROXL    ($FFF9FA).W
+      ROXL    ($FCFDFE).L
       ROR     (A0)
       ROR     (A0)+
       ROR     -(A0)
       ROR     (-$1616,A0)
-      ROR     ($00EA,A0)
       ROR     (-14,A0,A7.W)
-      ROR     (-14,A0,A7.L)
-      ROR     (-14,A0,D0.W)
-      ROR     (-14,A0,D0.L)
       ROR     (0,A0,A7.W)
+      ROR     (-7,A7,A7.L)
+      ROR     (0,A7,A7.L)
       ROR     ($FFF9FA).W
+      ROR     ($FCFDFE).L
       ROL     (A0)
       ROL     (A0)+
       ROL     -(A0)
       ROL     (-$1616,A0)
-      ROL     ($00EA,A0)
       ROL     (-14,A0,A7.W)
-      ROL     (-14,A0,A7.L)
-      ROL     (-14,A0,D0.W)
-      ROL     (-14,A0,D0.L)
       ROL     (0,A0,A7.W)
+      ROL     (-7,A7,A7.L)
+      ROL     (0,A7,A7.L)
       ROL     ($FFF9FA).W
+      ROL     ($FCFDFE).L

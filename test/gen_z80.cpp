@@ -32,9 +32,6 @@ int main(int argc, const char **argv) {
     TestGenerator<Config> generator(disz80, 0x0100);
     generator
         .generate(driver)
-        .generate(driver, 0xED)
-        .generate(driver, 0xDD)
-        .generate(driver, 0xFD)
         .generate(driver, 0xDD, 0xCB, 0x7F)
         .generate(driver, 0xFD, 0xCB, 0x80);
 

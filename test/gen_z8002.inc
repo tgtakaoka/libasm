@@ -71,7 +71,9 @@
       divl   rq0,@r1
       div    rr0,#0x0102
       div    rr0,@r1
+      ldm    r0,@r1,#2
       testl  @r1
+      ldm    @r1,r0,#2
       ldl    @r1,rr0
       jp     f,@r1
       jp     lt,@r1
@@ -113,46 +115,53 @@
       ldb    @r1,rl0
       ld     @r1,r0
       ldrb   rh0,.+0x0106
-      ldrb   rh0,.-0x7ffa
       ldrb   rl0,.+0x090e
-      ldrb   rl0,.-0x7ff2
       ldb    rh0,r1(#0x1112)
-      ldb    rh0,r1(#-0x7fee)
       ldb    rl0,r1(#0x191a)
-      ldb    rl0,r1(#-0x7fe6)
+      ldb    rl7,r7(#-0x7f7f)
+      ldb    rh0,r8(#-0x7e7e)
       ldr    r0,.+0x0106
-      ldr    r0,.-0x7ffa
       ld     r0,r1(#0x1112)
-      ld     r0,r1(#-0x7fee)
+      ld     r15,r7(#-0x7f7f)
       ldrb   .+0x0106,rh0
-      ldrb   .-0x7ffa,rh0
       ldrb   .+0x090e,rl0
-      ldrb   .-0x7ff2,rl0
       ldb    r1(#0x1112),rh0
-      ldb    r1(#-0x7fee),rh0
       ldb    r1(#0x191a),rl0
-      ldb    r1(#-0x7fe6),rl0
+      ldb    r7(#-0x7f7f),rl7
+      ldb    r8(#-0x7e7e),rh0
       ldr    .+0x0106,r0
-      ldr    .-0x7ffa,r0
       ld     r1(#0x1112),r0
-      ld     r1(#-0x7fee),r0
+      ld     r7(#-0x7f7f),r15
       ldar   r0,.+0x0106
-      ldar   r0,.-0x7ffa
       lda    r0,r1(#0x1112)
-      lda    r0,r1(#-0x7fee)
+      lda    r15,r7(#-0x7f7f)
       ldrl   rr0,.+0x0106
-      ldrl   rr0,.-0x7ffa
       ldl    rr0,r1(#0x1112)
-      ldl    rr0,r1(#-0x7fee)
+      ldl    rr0,r8(#-0x7e7e)
       ldrl   .+0x0106,rr0
-      ldrl   .-0x7ffa,rr0
       ldl    r1(#0x1112),rr0
-      ldl    r1(#-0x7fee),rr0
+      ldl    r8(#-0x7e7e),rr0
       ldps   @r1
       inb    rh0,#0x0506
       sinb   rh0,#0x0607
       outb   #0x0708,rh0
       soutb  #0x0809,rh0
+      inirb  @r1,@r1,r15
+      inib   @r1,@r1,r15
+      sinirb @r1,@r1,r15
+      sinib  @r1,@r1,r15
+      otirb  @r1,@r1,r15
+      outib  @r1,@r1,r15
+      sotirb @r1,@r1,r15
+      soutib @r1,@r1,r15
+      indrb  @r1,@r1,r15
+      indb   @r1,@r1,r15
+      sindrb @r1,@r1,r15
+      sindb  @r1,@r1,r15
+      otdrb  @r1,@r1,r15
+      outdb  @r1,@r1,r15
+      sotdrb @r1,@r1,r15
+      soutdb @r1,@r1,r15
       inb    rl0,#0x8586
       sinb   rl0,#0x8687
       outb   #0x8788,rl0
@@ -161,6 +170,22 @@
       sin    r0,#0x0607
       out    #0x0708,r0
       sout   #0x0809,r0
+      inir   @r1,@r1,r15
+      ini    @r1,@r1,r15
+      sinir  @r1,@r1,r15
+      sini   @r1,@r1,r15
+      otir   @r1,@r1,r15
+      outi   @r1,@r1,r15
+      sotir  @r1,@r1,r15
+      souti  @r1,@r1,r15
+      indr   @r1,@r1,r15
+      ind    @r1,@r1,r15
+      sindr  @r1,@r1,r15
+      sind   @r1,@r1,r15
+      otdr   @r1,@r1,r15
+      outd   @r1,@r1,r15
+      sotdr  @r1,@r1,r15
+      soutd  @r1,@r1,r15
       inb    rh0,@r1
       inb    rl0,@r1
       in     r0,@r1
@@ -258,7 +283,9 @@
       ldm    r2,0x0405,#4
       testl  0x090a
       ldm    0x0c0d,r10,#12
+      ldm    r0,0x0203(r1),#2
       testl  0x191a(r1)
+      ldm    0x0203(r1),r0,#2
       ldl    0x0102,rr0
       ldl    0x1112(r1),rr0
       jp     f,0x0102
@@ -565,17 +592,29 @@
       extsl  rq0
       exts   rr0
       rlb    rh0,#1
+      sllb   rh0,#1
+      srlb   rh0,#8
       rrb    rh0,#1
       rlcb   rh0,#1
+      slab   rh0,#1
+      srab   rh0,#8
       rrcb   rh0,#1
       rlb    rl0,#1
+      sllb   rl0,#1
+      srlb   rl0,#8
       rrb    rl0,#1
       rlcb   rl0,#1
+      slab   rl0,#1
+      srab   rl0,#8
       rrcb   rl0,#1
       rl     r0,#1
+      sll    r0,#1
       rr     r0,#1
+      slll   rr0,#1
       rlc    r0,#1
+      sla    r0,#1
       rrc    r0,#1
+      slal   rr0,#1
       adcb   rh0,rh0
       adcb   rl0,rh0
       adcb   rh0,rl0
@@ -586,6 +625,340 @@
       sbcb   rh0,rl0
       sbcb   rl0,rl0
       sbc    r0,r0
+      trib   @r1,@r1,r15
+      trtib  @r1,@r1,r15
+      trirb  @r1,@r1,r15
+      trdb   @r1,@r1,r15
+      trtdb  @r1,@r1,r15
+      trdrb  @r1,@r1,r15
+      cpib   rh0,@r1,r0,lt
+      cpib   rh0,@r1,r0,le
+      cpib   rh0,@r1,r0,ule
+      cpib   rh0,@r1,r0,ov
+      cpib   rh0,@r1,r0,mi
+      cpib   rh0,@r1,r0,z
+      cpib   rh0,@r1,r0,c
+      cpib   rh0,@r1,r0
+      cpib   rh0,@r1,r0,ge
+      cpib   rh0,@r1,r0,gt
+      cpib   rh0,@r1,r0,ugt
+      cpib   rh0,@r1,r0,nov
+      cpib   rh0,@r1,r0,pl
+      cpib   rh0,@r1,r0,nz
+      cpib   rh0,@r1,r0,nc
+      cpib   rh1,@r1,r0,f
+      cpib   rl0,@r1,r0,f
+      cpib   rl0,@r1,r0,lt
+      cpib   rl0,@r1,r0,le
+      cpib   rl0,@r1,r0,ule
+      cpib   rl0,@r1,r0,ov
+      cpib   rl0,@r1,r0,mi
+      cpib   rl0,@r1,r0,z
+      cpib   rl0,@r1,r0,c
+      cpib   rl0,@r1,r0
+      cpib   rl0,@r1,r0,ge
+      cpib   rl0,@r1,r0,gt
+      cpib   rl0,@r1,r0,ugt
+      cpib   rl0,@r1,r0,nov
+      cpib   rl0,@r1,r0,pl
+      cpib   rl0,@r1,r0,nz
+      cpib   rl0,@r1,r0,nc
+      ldirb  @r1,@r1,r15
+      ldib   @r1,@r1,r15
+      cpsib  @r1,@r1,r15,f
+      cpsib  @r1,@r1,r15,lt
+      cpsib  @r1,@r1,r15,le
+      cpsib  @r1,@r1,r15,ule
+      cpsib  @r1,@r1,r15,ov
+      cpsib  @r1,@r1,r15,mi
+      cpsib  @r1,@r1,r15,z
+      cpsib  @r1,@r1,r15,c
+      cpsib  @r1,@r1,r15
+      cpsib  @r1,@r1,r15,ge
+      cpsib  @r1,@r1,r15,gt
+      cpsib  @r1,@r1,r15,ugt
+      cpsib  @r1,@r1,r15,nov
+      cpsib  @r1,@r1,r15,pl
+      cpsib  @r1,@r1,r15,nz
+      cpsib  @r1,@r1,r15,nc
+      cpirb  rh0,@r1,r0,lt
+      cpirb  rh0,@r1,r0,le
+      cpirb  rh0,@r1,r0,ule
+      cpirb  rh0,@r1,r0,ov
+      cpirb  rh0,@r1,r0,mi
+      cpirb  rh0,@r1,r0,z
+      cpirb  rh0,@r1,r0,c
+      cpirb  rh0,@r1,r0
+      cpirb  rh0,@r1,r0,ge
+      cpirb  rh0,@r1,r0,gt
+      cpirb  rh0,@r1,r0,ugt
+      cpirb  rh0,@r1,r0,nov
+      cpirb  rh0,@r1,r0,pl
+      cpirb  rh0,@r1,r0,nz
+      cpirb  rh0,@r1,r0,nc
+      cpirb  rh1,@r1,r0,f
+      cpirb  rl0,@r1,r0,f
+      cpirb  rl0,@r1,r0,lt
+      cpirb  rl0,@r1,r0,le
+      cpirb  rl0,@r1,r0,ule
+      cpirb  rl0,@r1,r0,ov
+      cpirb  rl0,@r1,r0,mi
+      cpirb  rl0,@r1,r0,z
+      cpirb  rl0,@r1,r0,c
+      cpirb  rl0,@r1,r0
+      cpirb  rl0,@r1,r0,ge
+      cpirb  rl0,@r1,r0,gt
+      cpirb  rl0,@r1,r0,ugt
+      cpirb  rl0,@r1,r0,nov
+      cpirb  rl0,@r1,r0,pl
+      cpirb  rl0,@r1,r0,nz
+      cpirb  rl0,@r1,r0,nc
+      cpsirb @r1,@r1,r15,f
+      cpsirb @r1,@r1,r15,lt
+      cpsirb @r1,@r1,r15,le
+      cpsirb @r1,@r1,r15,ule
+      cpsirb @r1,@r1,r15,ov
+      cpsirb @r1,@r1,r15,mi
+      cpsirb @r1,@r1,r15,z
+      cpsirb @r1,@r1,r15,c
+      cpsirb @r1,@r1,r15
+      cpsirb @r1,@r1,r15,ge
+      cpsirb @r1,@r1,r15,gt
+      cpsirb @r1,@r1,r15,ugt
+      cpsirb @r1,@r1,r15,nov
+      cpsirb @r1,@r1,r15,pl
+      cpsirb @r1,@r1,r15,nz
+      cpsirb @r1,@r1,r15,nc
+      cpdb   rh0,@r1,r0,lt
+      cpdb   rh0,@r1,r0,le
+      cpdb   rh0,@r1,r0,ule
+      cpdb   rh0,@r1,r0,ov
+      cpdb   rh0,@r1,r0,mi
+      cpdb   rh0,@r1,r0,z
+      cpdb   rh0,@r1,r0,c
+      cpdb   rh0,@r1,r0
+      cpdb   rh0,@r1,r0,ge
+      cpdb   rh0,@r1,r0,gt
+      cpdb   rh0,@r1,r0,ugt
+      cpdb   rh0,@r1,r0,nov
+      cpdb   rh0,@r1,r0,pl
+      cpdb   rh0,@r1,r0,nz
+      cpdb   rh0,@r1,r0,nc
+      cpdb   rh1,@r1,r0,f
+      cpdb   rl0,@r1,r0,f
+      cpdb   rl0,@r1,r0,lt
+      cpdb   rl0,@r1,r0,le
+      cpdb   rl0,@r1,r0,ule
+      cpdb   rl0,@r1,r0,ov
+      cpdb   rl0,@r1,r0,mi
+      cpdb   rl0,@r1,r0,z
+      cpdb   rl0,@r1,r0,c
+      cpdb   rl0,@r1,r0
+      cpdb   rl0,@r1,r0,ge
+      cpdb   rl0,@r1,r0,gt
+      cpdb   rl0,@r1,r0,ugt
+      cpdb   rl0,@r1,r0,nov
+      cpdb   rl0,@r1,r0,pl
+      cpdb   rl0,@r1,r0,nz
+      cpdb   rl0,@r1,r0,nc
+      lddrb  @r1,@r1,r15
+      lddb   @r1,@r1,r15
+      cpsdb  @r1,@r1,r15,f
+      cpsdb  @r1,@r1,r15,lt
+      cpsdb  @r1,@r1,r15,le
+      cpsdb  @r1,@r1,r15,ule
+      cpsdb  @r1,@r1,r15,ov
+      cpsdb  @r1,@r1,r15,mi
+      cpsdb  @r1,@r1,r15,z
+      cpsdb  @r1,@r1,r15,c
+      cpsdb  @r1,@r1,r15
+      cpsdb  @r1,@r1,r15,ge
+      cpsdb  @r1,@r1,r15,gt
+      cpsdb  @r1,@r1,r15,ugt
+      cpsdb  @r1,@r1,r15,nov
+      cpsdb  @r1,@r1,r15,pl
+      cpsdb  @r1,@r1,r15,nz
+      cpsdb  @r1,@r1,r15,nc
+      cpdrb  rh0,@r1,r0,lt
+      cpdrb  rh0,@r1,r0,le
+      cpdrb  rh0,@r1,r0,ule
+      cpdrb  rh0,@r1,r0,ov
+      cpdrb  rh0,@r1,r0,mi
+      cpdrb  rh0,@r1,r0,z
+      cpdrb  rh0,@r1,r0,c
+      cpdrb  rh0,@r1,r0
+      cpdrb  rh0,@r1,r0,ge
+      cpdrb  rh0,@r1,r0,gt
+      cpdrb  rh0,@r1,r0,ugt
+      cpdrb  rh0,@r1,r0,nov
+      cpdrb  rh0,@r1,r0,pl
+      cpdrb  rh0,@r1,r0,nz
+      cpdrb  rh0,@r1,r0,nc
+      cpdrb  rh1,@r1,r0,f
+      cpdrb  rl0,@r1,r0,f
+      cpdrb  rl0,@r1,r0,lt
+      cpdrb  rl0,@r1,r0,le
+      cpdrb  rl0,@r1,r0,ule
+      cpdrb  rl0,@r1,r0,ov
+      cpdrb  rl0,@r1,r0,mi
+      cpdrb  rl0,@r1,r0,z
+      cpdrb  rl0,@r1,r0,c
+      cpdrb  rl0,@r1,r0
+      cpdrb  rl0,@r1,r0,ge
+      cpdrb  rl0,@r1,r0,gt
+      cpdrb  rl0,@r1,r0,ugt
+      cpdrb  rl0,@r1,r0,nov
+      cpdrb  rl0,@r1,r0,pl
+      cpdrb  rl0,@r1,r0,nz
+      cpdrb  rl0,@r1,r0,nc
+      cpsdrb @r1,@r1,r15,f
+      cpsdrb @r1,@r1,r15,lt
+      cpsdrb @r1,@r1,r15,le
+      cpsdrb @r1,@r1,r15,ule
+      cpsdrb @r1,@r1,r15,ov
+      cpsdrb @r1,@r1,r15,mi
+      cpsdrb @r1,@r1,r15,z
+      cpsdrb @r1,@r1,r15,c
+      cpsdrb @r1,@r1,r15
+      cpsdrb @r1,@r1,r15,ge
+      cpsdrb @r1,@r1,r15,gt
+      cpsdrb @r1,@r1,r15,ugt
+      cpsdrb @r1,@r1,r15,nov
+      cpsdrb @r1,@r1,r15,pl
+      cpsdrb @r1,@r1,r15,nz
+      cpsdrb @r1,@r1,r15,nc
+      cpi    r0,@r1,r0,lt
+      cpi    r0,@r1,r0,le
+      cpi    r0,@r1,r0,ule
+      cpi    r0,@r1,r0,ov
+      cpi    r0,@r1,r0,mi
+      cpi    r0,@r1,r0,z
+      cpi    r0,@r1,r0,c
+      cpi    r0,@r1,r0
+      cpi    r0,@r1,r0,ge
+      cpi    r0,@r1,r0,gt
+      cpi    r0,@r1,r0,ugt
+      cpi    r0,@r1,r0,nov
+      cpi    r0,@r1,r0,pl
+      cpi    r0,@r1,r0,nz
+      cpi    r0,@r1,r0,nc
+      cpi    r1,@r1,r0,f
+      ldir   @r1,@r1,r15
+      ldi    @r1,@r1,r15
+      cpsi   @r1,@r1,r15,f
+      cpsi   @r1,@r1,r15,lt
+      cpsi   @r1,@r1,r15,le
+      cpsi   @r1,@r1,r15,ule
+      cpsi   @r1,@r1,r15,ov
+      cpsi   @r1,@r1,r15,mi
+      cpsi   @r1,@r1,r15,z
+      cpsi   @r1,@r1,r15,c
+      cpsi   @r1,@r1,r15
+      cpsi   @r1,@r1,r15,ge
+      cpsi   @r1,@r1,r15,gt
+      cpsi   @r1,@r1,r15,ugt
+      cpsi   @r1,@r1,r15,nov
+      cpsi   @r1,@r1,r15,pl
+      cpsi   @r1,@r1,r15,nz
+      cpsi   @r1,@r1,r15,nc
+      cpir   r0,@r1,r0,lt
+      cpir   r0,@r1,r0,le
+      cpir   r0,@r1,r0,ule
+      cpir   r0,@r1,r0,ov
+      cpir   r0,@r1,r0,mi
+      cpir   r0,@r1,r0,z
+      cpir   r0,@r1,r0,c
+      cpir   r0,@r1,r0
+      cpir   r0,@r1,r0,ge
+      cpir   r0,@r1,r0,gt
+      cpir   r0,@r1,r0,ugt
+      cpir   r0,@r1,r0,nov
+      cpir   r0,@r1,r0,pl
+      cpir   r0,@r1,r0,nz
+      cpir   r0,@r1,r0,nc
+      cpir   r1,@r1,r0,f
+      cpsir  @r1,@r1,r15,f
+      cpsir  @r1,@r1,r15,lt
+      cpsir  @r1,@r1,r15,le
+      cpsir  @r1,@r1,r15,ule
+      cpsir  @r1,@r1,r15,ov
+      cpsir  @r1,@r1,r15,mi
+      cpsir  @r1,@r1,r15,z
+      cpsir  @r1,@r1,r15,c
+      cpsir  @r1,@r1,r15
+      cpsir  @r1,@r1,r15,ge
+      cpsir  @r1,@r1,r15,gt
+      cpsir  @r1,@r1,r15,ugt
+      cpsir  @r1,@r1,r15,nov
+      cpsir  @r1,@r1,r15,pl
+      cpsir  @r1,@r1,r15,nz
+      cpsir  @r1,@r1,r15,nc
+      cpd    r0,@r1,r0,lt
+      cpd    r0,@r1,r0,le
+      cpd    r0,@r1,r0,ule
+      cpd    r0,@r1,r0,ov
+      cpd    r0,@r1,r0,mi
+      cpd    r0,@r1,r0,z
+      cpd    r0,@r1,r0,c
+      cpd    r0,@r1,r0
+      cpd    r0,@r1,r0,ge
+      cpd    r0,@r1,r0,gt
+      cpd    r0,@r1,r0,ugt
+      cpd    r0,@r1,r0,nov
+      cpd    r0,@r1,r0,pl
+      cpd    r0,@r1,r0,nz
+      cpd    r0,@r1,r0,nc
+      cpd    r1,@r1,r0,f
+      lddr   @r1,@r1,r15
+      ldd    @r1,@r1,r15
+      cpsd   @r1,@r1,r15,f
+      cpsd   @r1,@r1,r15,lt
+      cpsd   @r1,@r1,r15,le
+      cpsd   @r1,@r1,r15,ule
+      cpsd   @r1,@r1,r15,ov
+      cpsd   @r1,@r1,r15,mi
+      cpsd   @r1,@r1,r15,z
+      cpsd   @r1,@r1,r15,c
+      cpsd   @r1,@r1,r15
+      cpsd   @r1,@r1,r15,ge
+      cpsd   @r1,@r1,r15,gt
+      cpsd   @r1,@r1,r15,ugt
+      cpsd   @r1,@r1,r15,nov
+      cpsd   @r1,@r1,r15,pl
+      cpsd   @r1,@r1,r15,nz
+      cpsd   @r1,@r1,r15,nc
+      cpdr   r0,@r1,r0,lt
+      cpdr   r0,@r1,r0,le
+      cpdr   r0,@r1,r0,ule
+      cpdr   r0,@r1,r0,ov
+      cpdr   r0,@r1,r0,mi
+      cpdr   r0,@r1,r0,z
+      cpdr   r0,@r1,r0,c
+      cpdr   r0,@r1,r0
+      cpdr   r0,@r1,r0,ge
+      cpdr   r0,@r1,r0,gt
+      cpdr   r0,@r1,r0,ugt
+      cpdr   r0,@r1,r0,nov
+      cpdr   r0,@r1,r0,pl
+      cpdr   r0,@r1,r0,nz
+      cpdr   r0,@r1,r0,nc
+      cpdr   r1,@r1,r0,f
+      cpsdr  @r1,@r1,r15,f
+      cpsdr  @r1,@r1,r15,lt
+      cpsdr  @r1,@r1,r15,le
+      cpsdr  @r1,@r1,r15,ule
+      cpsdr  @r1,@r1,r15,ov
+      cpsdr  @r1,@r1,r15,mi
+      cpsdr  @r1,@r1,r15,z
+      cpsdr  @r1,@r1,r15,c
+      cpsdr  @r1,@r1,r15
+      cpsdr  @r1,@r1,r15,ge
+      cpsdr  @r1,@r1,r15,gt
+      cpsdr  @r1,@r1,r15,ugt
+      cpsdr  @r1,@r1,r15,nov
+      cpsdr  @r1,@r1,r15,pl
+      cpsdr  @r1,@r1,r15,nz
+      cpsdr  @r1,@r1,r15,nc
       rrdb   rh0,rh0
       rrdb   rl0,rh0
       rrdb   rh0,rl0

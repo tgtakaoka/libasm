@@ -312,87 +312,6 @@
       JP   C,0DCDBH
       IN   A,(0DCH)
       CALL C,0DEDDH
-      SBC  A,0DFH
-      RET  PO
-      POP  HL
-      JP   PO,0E4E3H
-      EX   (SP),HL
-      CALL PO,0E6E5H
-      PUSH HL
-      AND  A,0E7H
-      RET  PE
-      JP   (HL)
-      JP   PE,0ECEBH
-      EX   DE,HL
-      CALL PE,0EEEDH
-      XOR  A,0EFH
-      RET  P
-      POP  AF
-      JP   P,0F4F3H
-      DI
-      CALL P,0F6F5H
-      PUSH AF
-      OR   A,0F7H
-      RET  M
-      LD   SP,HL
-      JP   M,0FCFBH
-      EI
-      CALL M,0FEFDH
-      CP   A,0FFH
-      IN   B,(C)
-      OUT  (C),B
-      SBC  HL,BC
-      LD   (4544H),BC
-      NEG
-      RETN
-      IM   0
-      LD   I,A
-      IN   C,(C)
-      OUT  (C),C
-      ADC  HL,BC
-      LD   BC,(4D4CH)
-      RETI
-      LD   R,A
-      IN   D,(C)
-      OUT  (C),D
-      SBC  HL,DE
-      LD   (5554H),DE
-      LD   A,I
-      IN   E,(C)
-      OUT  (C),E
-      ADC  HL,DE
-      LD   DE,(5D5CH)
-      LD   A,R
-      IN   H,(C)
-      OUT  (C),H
-      SBC  HL,HL
-      RRD
-      IN   L,(C)
-      OUT  (C),L
-      ADC  HL,HL
-      RLD
-      SBC  HL,SP
-      LD   (7574H),SP
-      IN   A,(C)
-      OUT  (C),A
-      ADC  HL,SP
-      LD   SP,(7D7CH)
-      LDI
-      CPI
-      INI
-      OUTI
-      LDD
-      CPD
-      IND
-      OUTD
-      LDIR
-      CPIR
-      INIR
-      OTIR
-      LDDR
-      CPDR
-      INDR
-      OTDR
       POP  IX
       EX   (SP),IX
       PUSH IX
@@ -457,6 +376,86 @@
       OR   A,(IX+0)
       CP   A,(IX-65)
       CP   A,(IX+0)
+      SBC  A,0DFH
+      RET  PO
+      POP  HL
+      JP   PO,0E4E3H
+      EX   (SP),HL
+      CALL PO,0E6E5H
+      PUSH HL
+      AND  A,0E7H
+      RET  PE
+      JP   (HL)
+      JP   PE,0ECEBH
+      EX   DE,HL
+      CALL PE,0EEEDH
+      IN   B,(C)
+      OUT  (C),B
+      SBC  HL,BC
+      LD   (4544H),BC
+      NEG
+      RETN
+      IM   0
+      LD   I,A
+      IN   C,(C)
+      OUT  (C),C
+      ADC  HL,BC
+      LD   BC,(4D4CH)
+      RETI
+      LD   R,A
+      IN   D,(C)
+      OUT  (C),D
+      SBC  HL,DE
+      LD   (5554H),DE
+      LD   A,I
+      IN   E,(C)
+      OUT  (C),E
+      ADC  HL,DE
+      LD   DE,(5D5CH)
+      LD   A,R
+      IN   H,(C)
+      OUT  (C),H
+      SBC  HL,HL
+      RRD
+      IN   L,(C)
+      OUT  (C),L
+      ADC  HL,HL
+      RLD
+      SBC  HL,SP
+      LD   (7574H),SP
+      IN   A,(C)
+      OUT  (C),A
+      ADC  HL,SP
+      LD   SP,(7D7CH)
+      LDI
+      CPI
+      INI
+      OUTI
+      LDD
+      CPD
+      IND
+      OUTD
+      LDIR
+      CPIR
+      INIR
+      OTIR
+      LDDR
+      CPDR
+      INDR
+      OTDR
+      XOR  A,0EFH
+      RET  P
+      POP  AF
+      JP   P,0F4F3H
+      DI
+      CALL P,0F6F5H
+      PUSH AF
+      OR   A,0F7H
+      RET  M
+      LD   SP,HL
+      JP   M,0FCFBH
+      EI
+      CALL M,0FEFDH
       ADD  IY,BC
       ADD  IY,DE
       LD   IY,2322H
@@ -521,6 +520,7 @@
       PUSH IY
       JP   (IY)
       LD   SP,IY
+      CP   A,0FFH
       RES  0,(IX+127)
       SET  0,(IX+127)
       RLC  (IX+127)

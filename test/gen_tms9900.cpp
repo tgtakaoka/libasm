@@ -29,6 +29,7 @@ int main(int argc, const char **argv) {
 
     TestGenerator<Config> generator(dis9900, 0x0100);
     generator.generate(driver);
+/*
     if (strcmp(dis9900.getCpu(), "99105") == 0) {
         generator
             .generate(driver, 0x001C)
@@ -36,6 +37,7 @@ int main(int argc, const char **argv) {
             .generate(driver, 0x0029)
             .generate(driver, 0x002A);
     }
+*/
 
     return driver.close();
 }

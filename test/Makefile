@@ -132,8 +132,8 @@ asm-test:
 	    [ -f $$x.hex ] && o=$$x.hex; \
 	    [ -f $$x.s19 ] && o=$$x.s19; \
 	    [ -f $$x.s28 ] && o=$$x.s28; \
-	    echo asm $$s -o $$o; \
-	    asm $$s -o $$o; \
+	    echo asm $$s -o $$o -l $${x}.lst; \
+	    asm $$s -o $$o -l $${x}.lst; \
 	done
 
 TESTS=\
@@ -153,7 +153,7 @@ TESTS=\
 	test_ns32000 \
 	test_expr
 
-.PHONY: clean clean-obj test $(TESTS)
+.PHONY: clean clean-obj test $(TESTS) generate
 
 test: $(TESTS)
 
@@ -373,7 +373,8 @@ GEN_OUTS=\
 	gen_ns32032.inc
 
 GENS=$(GEN_OBJS:.o=)
-OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o cli_listing.o
+OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o \
+	cli_listing.o error_reporter.o
 
 gen: $(GENS)
 
@@ -383,8 +384,8 @@ gen-test: $(GEN_OUTS)
 	@for s in $^; do \
 	    x=$${s%.asm}; \
 	    x=$${x%.inc}; \
-	    echo asm $$x; \
-	    asm $${x}.asm; \
+	    echo asm $${x}.asm -o $${x}.out -l $${x}.lst; \
+	    asm $${x}.asm -o $${x}.out -l $${x}.lst; \
 	done
 
 clean-gen: $(GEN_OUTS)
@@ -487,7 +488,7 @@ gen_ns32032.inc: gen_ns32000
 clean: clean-obj
 	-rm -f $(TEST_OBJS:.o=) $(GENS)
 clean-obj:
-	-rm -f *.o *.d *.p *.lst
+	-rm -f *.o *.d *.p *.lst *.out
 
 # Local Variables:
 # mode: makefile-gmake

@@ -71,7 +71,9 @@
       divl   rq0,@rr2
       div    rr0,#0x0102
       div    rr0,@rr2
+      ldm    r0,@rr2,#2
       testl  @rr2
+      ldm    @rr2,r0,#2
       ldl    @rr2,rr0
       jp     f,@rr2
       jp     lt,@rr2
@@ -113,46 +115,45 @@
       ldb    @rr2,rl0
       ld     @rr2,r0
       ldrb   rh0,.+0x0106
-      ldrb   rh0,.-0x7ffa
       ldrb   rl0,.+0x090e
-      ldrb   rl0,.-0x7ff2
       ldb    rh0,rr2(#0x2122)
-      ldb    rh0,rr2(#-0x7fde)
       ldb    rl0,rr2(#0x292a)
-      ldb    rl0,rr2(#-0x7fd6)
+      ldb    rh0,rr8(#-0x7e7e)
+      ldb    rl0,rr8(#-0x7676)
       ldr    r0,.+0x0106
-      ldr    r0,.-0x7ffa
       ld     r0,rr2(#0x2122)
-      ld     r0,rr2(#-0x7fde)
+      ld     r0,rr8(#-0x7e7e)
       ldrb   .+0x0106,rh0
-      ldrb   .-0x7ffa,rh0
       ldrb   .+0x090e,rl0
-      ldrb   .-0x7ff2,rl0
       ldb    rr2(#0x2122),rh0
-      ldb    rr2(#-0x7fde),rh0
       ldb    rr2(#0x292a),rl0
-      ldb    rr2(#-0x7fd6),rl0
+      ldb    rr8(#-0x7e7e),rh0
+      ldb    rr8(#-0x7676),rl0
       ldr    .+0x0106,r0
-      ldr    .-0x7ffa,r0
       ld     rr2(#0x2122),r0
-      ld     rr2(#-0x7fde),r0
+      ld     rr8(#-0x7e7e),r0
       ldar   rr0,.+0x0106
-      ldar   rr0,.-0x7ffa
       lda    rr0,rr2(#0x2122)
-      lda    rr0,rr2(#-0x7fde)
+      lda    rr0,rr8(#-0x7e7e)
       ldrl   rr0,.+0x0106
-      ldrl   rr0,.-0x7ffa
       ldl    rr0,rr2(#0x2122)
-      ldl    rr0,rr2(#-0x7fde)
+      ldl    rr0,rr8(#-0x7e7e)
       ldrl   .+0x0106,rr0
-      ldrl   .-0x7ffa,rr0
       ldl    rr2(#0x2122),rr0
-      ldl    rr2(#-0x7fde),rr0
+      ldl    rr8(#-0x7e7e),rr0
       ldps   @rr2
       inb    rh0,#0x0506
       sinb   rh0,#0x0607
       outb   #0x0708,rh0
       soutb  #0x0809,rh0
+      otirb  @r1,@rr2,r15
+      outib  @r1,@rr2,r15
+      sotirb @r1,@rr2,r15
+      soutib @r1,@rr2,r15
+      otdrb  @r1,@rr2,r15
+      outdb  @r1,@rr2,r15
+      sotdrb @r1,@rr2,r15
+      soutdb @r1,@rr2,r15
       inb    rl0,#0x8586
       sinb   rl0,#0x8687
       outb   #0x8788,rl0
@@ -161,6 +162,14 @@
       sin    r0,#0x0607
       out    #0x0708,r0
       sout   #0x0809,r0
+      otir   @r1,@rr2,r15
+      outi   @r1,@rr2,r15
+      sotir  @r1,@rr2,r15
+      souti  @r1,@rr2,r15
+      otdr   @r1,@rr2,r15
+      outd   @r1,@rr2,r15
+      sotdr  @r1,@rr2,r15
+      soutd  @r1,@rr2,r15
       inb    rh0,@r1
       inb    rl0,@r1
       in     r0,@r1
@@ -168,345 +177,269 @@
       outb   @r1,rl0
       out    @r1,r0
       addb   rh0,0x010002
-      addb   rh0,0x000304
       addb   rl0,0x09000a
-      addb   rl0,0x000b0c
       addb   rh0,0x110012(r1)
-      addb   rh0,0x001314(r1)
       addb   rl0,0x19001a(r1)
-      addb   rl0,0x001b1c(r1)
+      addb   rl7,0x008283(r7)
+      addb   rh0,0x018384(r8)
       add    r0,0x010002
-      add    r0,0x000304
       add    r0,0x110012(r1)
-      add    r0,0x001314(r1)
+      add    r15,0x008283(r7)
       subb   rh0,0x010002
-      subb   rh0,0x000304
       subb   rl0,0x09000a
-      subb   rl0,0x000b0c
       subb   rh0,0x110012(r1)
-      subb   rh0,0x001314(r1)
       subb   rl0,0x19001a(r1)
-      subb   rl0,0x001b1c(r1)
+      subb   rl7,0x008283(r7)
+      subb   rh0,0x018384(r8)
       sub    r0,0x010002
-      sub    r0,0x000304
       sub    r0,0x110012(r1)
-      sub    r0,0x001314(r1)
+      sub    r15,0x008283(r7)
       orb    rh0,0x010002
-      orb    rh0,0x000304
       orb    rl0,0x09000a
-      orb    rl0,0x000b0c
       orb    rh0,0x110012(r1)
-      orb    rh0,0x001314(r1)
       orb    rl0,0x19001a(r1)
-      orb    rl0,0x001b1c(r1)
+      orb    rl7,0x008283(r7)
+      orb    rh0,0x018384(r8)
       or     r0,0x010002
-      or     r0,0x000304
       or     r0,0x110012(r1)
-      or     r0,0x001314(r1)
+      or     r15,0x008283(r7)
       andb   rh0,0x010002
-      andb   rh0,0x000304
       andb   rl0,0x09000a
-      andb   rl0,0x000b0c
       andb   rh0,0x110012(r1)
-      andb   rh0,0x001314(r1)
       andb   rl0,0x19001a(r1)
-      andb   rl0,0x001b1c(r1)
+      andb   rl7,0x008283(r7)
+      andb   rh0,0x018384(r8)
       and    r0,0x010002
-      and    r0,0x000304
       and    r0,0x110012(r1)
-      and    r0,0x001314(r1)
+      and    r15,0x008283(r7)
       xorb   rh0,0x010002
-      xorb   rh0,0x000304
       xorb   rl0,0x09000a
-      xorb   rl0,0x000b0c
       xorb   rh0,0x110012(r1)
-      xorb   rh0,0x001314(r1)
       xorb   rl0,0x19001a(r1)
-      xorb   rl0,0x001b1c(r1)
+      xorb   rl7,0x008283(r7)
+      xorb   rh0,0x018384(r8)
       xor    r0,0x010002
-      xor    r0,0x000304
       xor    r0,0x110012(r1)
-      xor    r0,0x001314(r1)
+      xor    r15,0x008283(r7)
       cpb    rh0,0x010002
-      cpb    rh0,0x000304
       cpb    rl0,0x09000a
-      cpb    rl0,0x000b0c
       cpb    rh0,0x110012(r1)
-      cpb    rh0,0x001314(r1)
       cpb    rl0,0x19001a(r1)
-      cpb    rl0,0x001b1c(r1)
+      cpb    rl7,0x008283(r7)
+      cpb    rh0,0x018384(r8)
       cp     r0,0x010002
-      cp     r0,0x000304
       cp     r0,0x110012(r1)
-      cp     r0,0x001314(r1)
+      cp     r15,0x008283(r7)
       comb   0x010002
-      comb   0x000304
       cpb    0x020003,#5
-      cpb    0x000405,#7
       negb   0x030004
-      negb   0x000506
       testb  0x050006
-      testb  0x000708
       ldb    0x060007,#9
-      ldb    0x000809,#11
       tsetb  0x070008
-      tsetb  0x00090a
       clrb   0x09000a
-      clrb   0x000b0c
       comb   0x110012(r1)
-      comb   0x001314(r1)
       cpb    0x120013(r1),#21
-      cpb    0x001415(r1),#23
       negb   0x130014(r1)
-      negb   0x001516(r1)
       testb  0x150016(r1)
-      testb  0x001718(r1)
       ldb    0x160017(r1),#25
-      ldb    0x001819(r1),#27
       tsetb  0x170018(r1)
-      tsetb  0x00191a(r1)
       clrb   0x19001a(r1)
-      clrb   0x001b1c(r1)
+      comb   0x018384(r8)
+      cpb    0x028485(r8),#0x87
+      negb   0x038586(r8)
+      testb  0x058788(r8)
+      ldb    0x068889(r8),#0x8b
+      tsetb  0x07898a(r8)
+      clrb   0x098b8c(r8)
       com    0x010002
-      com    0x000304
       cp     0x020003,#0x0405
-      cp     0x000405,#0x0607
       neg    0x030004
-      neg    0x000506
       test   0x050006
-      test   0x000708
       ld     0x060007,#0x0809
-      ld     0x000809,#0x0a0b
       tset   0x070008
-      tset   0x00090a
       clr    0x09000a
-      clr    0x000b0c
       com    0x110012(r1)
-      com    0x001314(r1)
       cp     0x120013(r1),#0x1415
-      cp     0x001415(r1),#0x1617
       neg    0x130014(r1)
-      neg    0x001516(r1)
       test   0x150016(r1)
-      test   0x001718(r1)
       ld     0x160017(r1),#0x1819
-      ld     0x001819(r1),#0x1a1b
       tset   0x170018(r1)
-      tset   0x00191a(r1)
       clr    0x19001a(r1)
-      clr    0x001b1c(r1)
+      com    0x018384(r8)
+      cp     0x028485(r8),#0x8687
+      neg    0x038586(r8)
+      test   0x058788(r8)
+      ld     0x068889(r8),#0x8a8b
+      tset   0x07898a(r8)
+      clr    0x098b8c(r8)
       cpl    rr0,0x010002
-      cpl    rr0,0x000304
       cpl    rr0,0x110012(r1)
-      cpl    rr0,0x001314(r1)
+      cpl    rr0,0x018384(r8)
       pushl  @rr2,0x210022
-      pushl  @rr2,0x002324
       pushl  @rr2,0x220023(r1)
-      pushl  @rr2,0x002425(r1)
+      pushl  @rr8,0x018384
+      pushl  @rr8,0x028485(r1)
       subl   rr0,0x010002
-      subl   rr0,0x000304
       subl   rr0,0x110012(r1)
-      subl   rr0,0x001314(r1)
+      subl   rr0,0x018384(r8)
       push   @rr2,0x210022
-      push   @rr2,0x002324
       push   @rr2,0x220023(r1)
-      push   @rr2,0x002425(r1)
+      push   @rr8,0x018384
+      push   @rr8,0x028485(r1)
       ldl    rr0,0x010002
-      ldl    rr0,0x000304
       ldl    rr0,0x110012(r1)
-      ldl    rr0,0x001314(r1)
+      ldl    rr0,0x018384(r8)
       popl   0x210022,@rr2
-      popl   0x002324,@rr2
       popl   0x220023(r1),@rr2
-      popl   0x002425(r1),@rr2
+      popl   0x018384,@rr8
+      popl   0x028485(r1),@rr8
       addl   rr0,0x010002
-      addl   rr0,0x000304
       addl   rr0,0x110012(r1)
-      addl   rr0,0x001314(r1)
+      addl   rr0,0x018384(r8)
       pop    0x210022,@rr2
-      pop    0x002324,@rr2
       pop    0x220023(r1),@rr2
-      pop    0x002425(r1),@rr2
+      pop    0x018384,@rr8
+      pop    0x028485(r1),@rr8
       multl  rq0,0x010002
-      multl  rq0,0x000304
       multl  rq0,0x110012(r1)
-      multl  rq0,0x001314(r1)
+      multl  rq0,0x018384(r8)
       mult   rr0,0x010002
-      mult   rr0,0x000304
       mult   rr0,0x110012(r1)
-      mult   rr0,0x001314(r1)
+      mult   rr0,0x018384(r8)
       divl   rq0,0x010002
-      divl   rq0,0x000304
       divl   rq0,0x110012(r1)
-      divl   rq0,0x001314(r1)
+      divl   rq0,0x018384(r8)
       div    rr0,0x010002
-      div    rr0,0x000304
       div    rr0,0x110012(r1)
-      div    rr0,0x001314(r1)
+      div    rr0,0x018384(r8)
       ldm    r2,0x040005,#4
-      ldm    r1,0x000607,#2
+      ldm    r2,0x000607,#3
       testl  0x09000a
-      testl  0x000b0c
       ldm    0x0c000d,r10,#12
-      ldm    0x000e0f,r9,#10
+      ldm    0x000e0f,r10,#11
+      ldm    r0,0x020003(r1),#2
+      ldm    r0,0x000405(r1),#1
       testl  0x19001a(r1)
-      testl  0x001b1c(r1)
+      ldm    0x020003(r1),r0,#2
+      ldm    0x000405(r1),r0,#1
+      testl  0x098b8c(r8)
       ldl    0x010002,rr0
-      ldl    0x000304,rr0
       ldl    0x110012(r1),rr0
-      ldl    0x001314(r1),rr0
+      ldl    0x018384(r8),rr0
       jp     f,0x010002
-      jp     f,0x000304
       jp     lt,0x020003
-      jp     lt,0x000405
       jp     le,0x030004
-      jp     le,0x000506
       jp     ule,0x040005
-      jp     ule,0x000607
       jp     ov,0x050006
-      jp     ov,0x000708
       jp     mi,0x060007
-      jp     mi,0x000809
       jp     z,0x070008
-      jp     z,0x00090a
       jp     c,0x080009
-      jp     c,0x000a0b
       jp     0x09000a
-      jp     0x000b0c
       jp     ge,0x0a000b
-      jp     ge,0x000c0d
       jp     gt,0x0b000c
-      jp     gt,0x000d0e
       jp     ugt,0x0c000d
-      jp     ugt,0x000e0f
       jp     nov,0x0d000e
-      jp     nov,0x000f10
       jp     pl,0x0e000f
-      jp     pl,0x001011
       jp     nz,0x0f0010
-      jp     nz,0x001112
       jp     nc,0x100011
-      jp     nc,0x001213
       jp     f,0x110012(r1)
-      jp     f,0x001314(r1)
       jp     lt,0x120013(r1)
-      jp     lt,0x001415(r1)
       jp     le,0x130014(r1)
-      jp     le,0x001516(r1)
       jp     ule,0x140015(r1)
-      jp     ule,0x001617(r1)
       jp     ov,0x150016(r1)
-      jp     ov,0x001718(r1)
       jp     mi,0x160017(r1)
-      jp     mi,0x001819(r1)
       jp     z,0x170018(r1)
-      jp     z,0x00191a(r1)
       jp     c,0x180019(r1)
-      jp     c,0x001a1b(r1)
       jp     0x19001a(r1)
-      jp     0x001b1c(r1)
       jp     ge,0x1a001b(r1)
-      jp     ge,0x001c1d(r1)
       jp     gt,0x1b001c(r1)
-      jp     gt,0x001d1e(r1)
       jp     ugt,0x1c001d(r1)
-      jp     ugt,0x001e1f(r1)
       jp     nov,0x1d001e(r1)
-      jp     nov,0x001f20(r1)
       jp     pl,0x1e001f(r1)
-      jp     pl,0x002021(r1)
       jp     nz,0x1f0020(r1)
-      jp     nz,0x002122(r1)
       jp     nc,0x200021(r1)
-      jp     nc,0x002223(r1)
+      jp     nc,0x008283(r7)
+      jp     f,0x018384(r8)
+      jp     lt,0x028485(r8)
+      jp     le,0x038586(r8)
+      jp     ule,0x048687(r8)
+      jp     ov,0x058788(r8)
+      jp     mi,0x068889(r8)
+      jp     z,0x07898a(r8)
+      jp     c,0x088a8b(r8)
+      jp     0x098b8c(r8)
+      jp     ge,0x0a8c8d(r8)
+      jp     gt,0x0b8d8e(r8)
+      jp     ugt,0x0c8e8f(r8)
+      jp     nov,0x0d8f90(r8)
+      jp     pl,0x0e9091(r8)
+      jp     nz,0x0f9192(r8)
       call   0x010002
-      call   0x000304
       call   0x110012(r1)
-      call   0x001314(r1)
+      call   0x008283(r7)
       ldb    rh0,0x010002
-      ldb    rh0,0x000304
       ldb    rl0,0x09000a
-      ldb    rl0,0x000b0c
       ldb    rh0,0x110012(r1)
-      ldb    rh0,0x001314(r1)
       ldb    rl0,0x19001a(r1)
-      ldb    rl0,0x001b1c(r1)
+      ldb    rl7,0x008283(r7)
+      ldb    rh0,0x018384(r8)
       ld     r0,0x010002
-      ld     r0,0x000304
       ld     r0,0x110012(r1)
-      ld     r0,0x001314(r1)
+      ld     r15,0x008283(r7)
       resb   0x010002,#0
-      resb   0x000304,#0
       resb   0x110012(r1),#0
-      resb   0x001314(r1),#0
+      resb   0x018384(r8),#0
       res    0x010002,#0
-      res    0x000304,#0
       res    0x110012(r1),#0
-      res    0x001314(r1),#0
+      res    0x008283(r7),#15
       setb   0x010002,#0
-      setb   0x000304,#0
       setb   0x110012(r1),#0
-      setb   0x001314(r1),#0
+      setb   0x018384(r8),#0
       set    0x010002,#0
-      set    0x000304,#0
       set    0x110012(r1),#0
-      set    0x001314(r1),#0
+      set    0x008283(r7),#15
       bitb   0x010002,#0
-      bitb   0x000304,#0
       bitb   0x110012(r1),#0
-      bitb   0x001314(r1),#0
+      bitb   0x018384(r8),#0
       bit    0x010002,#0
-      bit    0x000304,#0
       bit    0x110012(r1),#0
-      bit    0x001314(r1),#0
+      bit    0x008283(r7),#15
       incb   0x010002,#1
-      incb   0x000304,#1
       incb   0x110012(r1),#1
-      incb   0x001314(r1),#1
+      incb   0x008283(r7),#16
       inc    0x010002,#1
-      inc    0x000304,#1
       inc    0x110012(r1),#1
-      inc    0x001314(r1),#1
+      inc    0x008283(r7),#16
       decb   0x010002,#1
-      decb   0x000304,#1
       decb   0x110012(r1),#1
-      decb   0x001314(r1),#1
+      decb   0x008283(r7),#16
       dec    0x010002,#1
-      dec    0x000304,#1
       dec    0x110012(r1),#1
-      dec    0x001314(r1),#1
+      dec    0x008283(r7),#16
       exb    rh0,0x010002
-      exb    rh0,0x000304
       exb    rl0,0x09000a
-      exb    rl0,0x000b0c
       exb    rh0,0x110012(r1)
-      exb    rh0,0x001314(r1)
       exb    rl0,0x19001a(r1)
-      exb    rl0,0x001b1c(r1)
+      exb    rl7,0x008283(r7)
+      exb    rh0,0x018384(r8)
       ex     r0,0x010002
-      ex     r0,0x000304
       ex     r0,0x110012(r1)
-      ex     r0,0x001314(r1)
+      ex     r15,0x008283(r7)
       ldb    0x010002,rh0
-      ldb    0x000304,rh0
       ldb    0x09000a,rl0
-      ldb    0x000b0c,rl0
       ldb    0x110012(r1),rh0
-      ldb    0x001314(r1),rh0
       ldb    0x19001a(r1),rl0
-      ldb    0x001b1c(r1),rl0
+      ldb    0x008283(r7),rl7
+      ldb    0x018384(r8),rh0
       ld     0x010002,r0
-      ld     0x000304,r0
       ld     0x110012(r1),r0
-      ld     0x001314(r1),r0
+      ld     0x008283(r7),r15
       lda    rr0,0x010002
-      lda    rr0,0x000304
       lda    rr0,0x110012(r1)
-      lda    rr0,0x001314(r1)
+      lda    rr0,0x018384(r8)
       ldps   0x010002
-      ldps   0x000304
       ldps   0x110012(r1)
-      ldps   0x001314(r1)
+      ldps   0x018384(r8)
       halt
       iret
       mset
@@ -735,17 +668,29 @@
       extsl  rq0
       exts   rr0
       rlb    rh0,#1
+      sllb   rh0,#1
+      srlb   rh0,#8
       rrb    rh0,#1
       rlcb   rh0,#1
+      slab   rh0,#1
+      srab   rh0,#8
       rrcb   rh0,#1
       rlb    rl0,#1
+      sllb   rl0,#1
+      srlb   rl0,#8
       rrb    rl0,#1
       rlcb   rl0,#1
+      slab   rl0,#1
+      srab   rl0,#8
       rrcb   rl0,#1
       rl     r0,#1
+      sll    r0,#1
       rr     r0,#1
+      slll   rr0,#1
       rlc    r0,#1
+      sla    r0,#1
       rrc    r0,#1
+      slal   rr0,#1
       adcb   rh0,rh0
       adcb   rl0,rh0
       adcb   rh0,rl0
@@ -756,6 +701,198 @@
       sbcb   rh0,rl0
       sbcb   rl0,rl0
       sbc    r0,r0
+      cpib   rh0,@rr2,r0,lt
+      cpib   rh0,@rr2,r0,le
+      cpib   rh0,@rr2,r0,ule
+      cpib   rh0,@rr2,r0,ov
+      cpib   rh0,@rr2,r0,mi
+      cpib   rh0,@rr2,r0,z
+      cpib   rh0,@rr2,r0,c
+      cpib   rh0,@rr2,r0
+      cpib   rh0,@rr2,r0,ge
+      cpib   rh0,@rr2,r0,gt
+      cpib   rh0,@rr2,r0,ugt
+      cpib   rh0,@rr2,r0,nov
+      cpib   rh0,@rr2,r0,pl
+      cpib   rh0,@rr2,r0,nz
+      cpib   rh0,@rr2,r0,nc
+      cpib   rh1,@rr2,r0,f
+      cpib   rl0,@rr2,r0,f
+      cpib   rl0,@rr2,r0,lt
+      cpib   rl0,@rr2,r0,le
+      cpib   rl0,@rr2,r0,ule
+      cpib   rl0,@rr2,r0,ov
+      cpib   rl0,@rr2,r0,mi
+      cpib   rl0,@rr2,r0,z
+      cpib   rl0,@rr2,r0,c
+      cpib   rl0,@rr2,r0
+      cpib   rl0,@rr2,r0,ge
+      cpib   rl0,@rr2,r0,gt
+      cpib   rl0,@rr2,r0,ugt
+      cpib   rl0,@rr2,r0,nov
+      cpib   rl0,@rr2,r0,pl
+      cpib   rl0,@rr2,r0,nz
+      cpib   rl0,@rr2,r0,nc
+      cpirb  rh0,@rr2,r0,lt
+      cpirb  rh0,@rr2,r0,le
+      cpirb  rh0,@rr2,r0,ule
+      cpirb  rh0,@rr2,r0,ov
+      cpirb  rh0,@rr2,r0,mi
+      cpirb  rh0,@rr2,r0,z
+      cpirb  rh0,@rr2,r0,c
+      cpirb  rh0,@rr2,r0
+      cpirb  rh0,@rr2,r0,ge
+      cpirb  rh0,@rr2,r0,gt
+      cpirb  rh0,@rr2,r0,ugt
+      cpirb  rh0,@rr2,r0,nov
+      cpirb  rh0,@rr2,r0,pl
+      cpirb  rh0,@rr2,r0,nz
+      cpirb  rh0,@rr2,r0,nc
+      cpirb  rh1,@rr2,r0,f
+      cpirb  rl0,@rr2,r0,f
+      cpirb  rl0,@rr2,r0,lt
+      cpirb  rl0,@rr2,r0,le
+      cpirb  rl0,@rr2,r0,ule
+      cpirb  rl0,@rr2,r0,ov
+      cpirb  rl0,@rr2,r0,mi
+      cpirb  rl0,@rr2,r0,z
+      cpirb  rl0,@rr2,r0,c
+      cpirb  rl0,@rr2,r0
+      cpirb  rl0,@rr2,r0,ge
+      cpirb  rl0,@rr2,r0,gt
+      cpirb  rl0,@rr2,r0,ugt
+      cpirb  rl0,@rr2,r0,nov
+      cpirb  rl0,@rr2,r0,pl
+      cpirb  rl0,@rr2,r0,nz
+      cpirb  rl0,@rr2,r0,nc
+      cpdb   rh0,@rr2,r0,lt
+      cpdb   rh0,@rr2,r0,le
+      cpdb   rh0,@rr2,r0,ule
+      cpdb   rh0,@rr2,r0,ov
+      cpdb   rh0,@rr2,r0,mi
+      cpdb   rh0,@rr2,r0,z
+      cpdb   rh0,@rr2,r0,c
+      cpdb   rh0,@rr2,r0
+      cpdb   rh0,@rr2,r0,ge
+      cpdb   rh0,@rr2,r0,gt
+      cpdb   rh0,@rr2,r0,ugt
+      cpdb   rh0,@rr2,r0,nov
+      cpdb   rh0,@rr2,r0,pl
+      cpdb   rh0,@rr2,r0,nz
+      cpdb   rh0,@rr2,r0,nc
+      cpdb   rh1,@rr2,r0,f
+      cpdb   rl0,@rr2,r0,f
+      cpdb   rl0,@rr2,r0,lt
+      cpdb   rl0,@rr2,r0,le
+      cpdb   rl0,@rr2,r0,ule
+      cpdb   rl0,@rr2,r0,ov
+      cpdb   rl0,@rr2,r0,mi
+      cpdb   rl0,@rr2,r0,z
+      cpdb   rl0,@rr2,r0,c
+      cpdb   rl0,@rr2,r0
+      cpdb   rl0,@rr2,r0,ge
+      cpdb   rl0,@rr2,r0,gt
+      cpdb   rl0,@rr2,r0,ugt
+      cpdb   rl0,@rr2,r0,nov
+      cpdb   rl0,@rr2,r0,pl
+      cpdb   rl0,@rr2,r0,nz
+      cpdb   rl0,@rr2,r0,nc
+      cpdrb  rh0,@rr2,r0,lt
+      cpdrb  rh0,@rr2,r0,le
+      cpdrb  rh0,@rr2,r0,ule
+      cpdrb  rh0,@rr2,r0,ov
+      cpdrb  rh0,@rr2,r0,mi
+      cpdrb  rh0,@rr2,r0,z
+      cpdrb  rh0,@rr2,r0,c
+      cpdrb  rh0,@rr2,r0
+      cpdrb  rh0,@rr2,r0,ge
+      cpdrb  rh0,@rr2,r0,gt
+      cpdrb  rh0,@rr2,r0,ugt
+      cpdrb  rh0,@rr2,r0,nov
+      cpdrb  rh0,@rr2,r0,pl
+      cpdrb  rh0,@rr2,r0,nz
+      cpdrb  rh0,@rr2,r0,nc
+      cpdrb  rh1,@rr2,r0,f
+      cpdrb  rl0,@rr2,r0,f
+      cpdrb  rl0,@rr2,r0,lt
+      cpdrb  rl0,@rr2,r0,le
+      cpdrb  rl0,@rr2,r0,ule
+      cpdrb  rl0,@rr2,r0,ov
+      cpdrb  rl0,@rr2,r0,mi
+      cpdrb  rl0,@rr2,r0,z
+      cpdrb  rl0,@rr2,r0,c
+      cpdrb  rl0,@rr2,r0
+      cpdrb  rl0,@rr2,r0,ge
+      cpdrb  rl0,@rr2,r0,gt
+      cpdrb  rl0,@rr2,r0,ugt
+      cpdrb  rl0,@rr2,r0,nov
+      cpdrb  rl0,@rr2,r0,pl
+      cpdrb  rl0,@rr2,r0,nz
+      cpdrb  rl0,@rr2,r0,nc
+      cpi    r0,@rr2,r0,lt
+      cpi    r0,@rr2,r0,le
+      cpi    r0,@rr2,r0,ule
+      cpi    r0,@rr2,r0,ov
+      cpi    r0,@rr2,r0,mi
+      cpi    r0,@rr2,r0,z
+      cpi    r0,@rr2,r0,c
+      cpi    r0,@rr2,r0
+      cpi    r0,@rr2,r0,ge
+      cpi    r0,@rr2,r0,gt
+      cpi    r0,@rr2,r0,ugt
+      cpi    r0,@rr2,r0,nov
+      cpi    r0,@rr2,r0,pl
+      cpi    r0,@rr2,r0,nz
+      cpi    r0,@rr2,r0,nc
+      cpi    r1,@rr2,r0,f
+      cpir   r0,@rr2,r0,lt
+      cpir   r0,@rr2,r0,le
+      cpir   r0,@rr2,r0,ule
+      cpir   r0,@rr2,r0,ov
+      cpir   r0,@rr2,r0,mi
+      cpir   r0,@rr2,r0,z
+      cpir   r0,@rr2,r0,c
+      cpir   r0,@rr2,r0
+      cpir   r0,@rr2,r0,ge
+      cpir   r0,@rr2,r0,gt
+      cpir   r0,@rr2,r0,ugt
+      cpir   r0,@rr2,r0,nov
+      cpir   r0,@rr2,r0,pl
+      cpir   r0,@rr2,r0,nz
+      cpir   r0,@rr2,r0,nc
+      cpir   r1,@rr2,r0,f
+      cpd    r0,@rr2,r0,lt
+      cpd    r0,@rr2,r0,le
+      cpd    r0,@rr2,r0,ule
+      cpd    r0,@rr2,r0,ov
+      cpd    r0,@rr2,r0,mi
+      cpd    r0,@rr2,r0,z
+      cpd    r0,@rr2,r0,c
+      cpd    r0,@rr2,r0
+      cpd    r0,@rr2,r0,ge
+      cpd    r0,@rr2,r0,gt
+      cpd    r0,@rr2,r0,ugt
+      cpd    r0,@rr2,r0,nov
+      cpd    r0,@rr2,r0,pl
+      cpd    r0,@rr2,r0,nz
+      cpd    r0,@rr2,r0,nc
+      cpd    r1,@rr2,r0,f
+      cpdr   r0,@rr2,r0,lt
+      cpdr   r0,@rr2,r0,le
+      cpdr   r0,@rr2,r0,ule
+      cpdr   r0,@rr2,r0,ov
+      cpdr   r0,@rr2,r0,mi
+      cpdr   r0,@rr2,r0,z
+      cpdr   r0,@rr2,r0,c
+      cpdr   r0,@rr2,r0
+      cpdr   r0,@rr2,r0,ge
+      cpdr   r0,@rr2,r0,gt
+      cpdr   r0,@rr2,r0,ugt
+      cpdr   r0,@rr2,r0,nov
+      cpdr   r0,@rr2,r0,pl
+      cpdr   r0,@rr2,r0,nz
+      cpdr   r0,@rr2,r0,nc
+      cpdr   r1,@rr2,r0,f
       rrdb   rh0,rh0
       rrdb   rl0,rh0
       rrdb   rh0,rl0

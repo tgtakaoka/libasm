@@ -254,33 +254,6 @@ public:
         }
     }
 
-    TestGenerator<Conf> &generate(Printer &printer, opcode_t opc1) {
-        FILE *dumpOut = printer.dumpOut();
-        if (dumpOut) fprintf(dumpOut, "@@ generate: %#02x\n", opc1);
-        if (sizeof(opcode_t) == 1) {
-            ByteGenerator parent(_memory, _memorySize, 0);
-            parent.outByte(opc1, 0);
-            ByteGenerator gen(parent, 1);
-            return generate(printer, gen);
-        } else {
-            WordGenerator parent(_memory, _memorySize, _endian, 0);
-            parent.outWord(opc1, 0);
-            ByteGenerator gen(parent, 1);
-            return generate(printer, gen);
-        }
-    }
-
-    TestGenerator<Conf> &generate(
-            Printer &printer, uint8_t opc1, uint8_t opc2) {
-        FILE *dumpOut = printer.dumpOut();
-        if (dumpOut) fprintf(dumpOut, "@@ generate: %#02x %#02x\n", opc1, opc2);
-        ByteGenerator parent(_memory, _memorySize, 0, 2);
-        parent.outByte(opc1, 0);
-        parent.outByte(opc2, 1);
-        ByteGenerator gen(parent, 1);
-        return generate(printer, gen);
-    }
-
     TestGenerator<Conf> &generate(
         Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
         FILE *dumpOut = printer.dumpOut();
@@ -311,7 +284,11 @@ private:
 
     TestGenerator<Conf> &generate(Printer &printer, DataGenerator &gen) {
         _printer = &printer;
-        generateTests(gen);
+        do {
+            gen.next();
+            ByteGenerator child(gen, 1);
+            generateTests(child);
+        } while (gen.hasNext());
 
         return *this;
     }

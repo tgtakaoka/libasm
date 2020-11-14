@@ -29,12 +29,6 @@ int main(int argc, const char **argv) {
 
     TestGenerator<Config> generator(dis6800, 0x0100);
     generator.generate(driver);
-    if (strcmp(dis6800.getCpu(), "6811") == 0) {
-        generator
-            .generate(driver, 0x18)
-            .generate(driver, 0x1A)
-            .generate(driver, 0xCD);
-    }        
 
     return driver.close();
 }

@@ -29,15 +29,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     TestGenerator<Config> generator(dis8086, 0x1000);
-    generator
-        .generate(driver)
-        .generate(driver, 0xF2)
-        .generate(driver, 0xF3)
-        // segment override prefixes
-        .generate(driver, 0x26)
-        .generate(driver, 0x2E)
-        .generate(driver, 0x36)
-        .generate(driver, 0x3E);
+    generator.generate(driver);
 
     return driver.close();
 }

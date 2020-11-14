@@ -120,29 +120,17 @@
       JMP   111,X
       CLR   112,X
       NEG   $7172
-      NEG   >$0072
       COM   $7475
-      COM   >$0075
       LSR   $7576
-      LSR   >$0076
       ROR   $7778
-      ROR   >$0078
       ASR   $7879
-      ASR   >$0079
       ASL   $797A
-      ASL   >$007A
       ROL   $7A7B
-      ROL   >$007B
       DEC   $7B7C
-      DEC   >$007C
       INC   $7D7E
-      INC   >$007E
       TST   $7E7F
-      TST   >$007F
       JMP   $7F80
-      JMP   >$0080
       CLR   $8081
-      CLR   >$0081
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
@@ -192,37 +180,21 @@
       LDS   175,X
       STS   176,X
       SUBA  $B1B2
-      SUBA  >$00B2
       CMPA  $B2B3
-      CMPA  >$00B3
       SBCA  $B3B4
-      SBCA  >$00B4
       SUBD  $B4B5
-      SUBD  >$00B5
       ANDA  $B5B6
-      ANDA  >$00B6
       BITA  $B6B7
-      BITA  >$00B7
       LDAA  $B7B8
-      LDAA  >$00B8
       STAA  $B8B9
-      STAA  >$00B9
       EORA  $B9BA
-      EORA  >$00BA
       ADCA  $BABB
-      ADCA  >$00BB
       ORAA  $BBBC
-      ORAA  >$00BC
       ADDA  $BCBD
-      ADDA  >$00BD
       CPX   $BDBE
-      CPX   >$00BE
       JSR   $BEBF
-      JSR   >$00BF
       LDS   $BFC0
-      LDS   >$00C0
       STS   $C0C1
-      STS   >$00C1
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
@@ -269,34 +241,21 @@
       LDX   239,X
       STX   240,X
       SUBB  $F1F2
-      SUBB  >$00F2
       CMPB  $F2F3
-      CMPB  >$00F3
       SBCB  $F3F4
-      SBCB  >$00F4
       ADDD  $F4F5
-      ADDD  >$00F5
       ANDB  $F5F6
-      ANDB  >$00F6
       BITB  $F6F7
-      BITB  >$00F7
       LDAB  $F7F8
-      LDAB  >$00F8
       STAB  $F8F9
-      STAB  >$00F9
       EORB  $F9FA
-      EORB  >$00FA
       ADCB  $FAFB
-      ADCB  >$00FB
       ORAB  $FBFC
-      ORAB  >$00FC
       ADDB  $FCFD
-      ADDB  >$00FD
       LDD   $FDFE
-      LDD   >$00FE
       STD   $FEFF
-      STD   >$00FF
+      STD   >$0001
       LDX   $FF00
-      LDX   >$0000
+      LDX   >$0001
       STX   >$0001
-      STX   $0101
+      STX   $0102

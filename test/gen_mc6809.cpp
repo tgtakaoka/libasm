@@ -28,10 +28,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     TestGenerator<Config> generator(dis6809, 0x0100);
-    generator
-        .generate(driver)
-        .generate(driver, 0x10)
-        .generate(driver, 0x11);
+    generator.generate(driver);
 
     return driver.close();
 }

@@ -8,15 +8,14 @@
       ADD     R0,R3
       ADD     R0,@R4
       ADD     >06H,>05H
-      ADD     >06H,10H
-      ADD     10H,>04H
+      ADD     10H,>05H
       ADD     >07H,@06H
-      ADD     10H,@05H
+      ADD     10H,@06H
       ADD     >07H,#8
-      ADD     10H,#8
       BOR     R0,>09H,#4
-      BOR     >09H,#4,R0
-      BOR     10H,#3,R0
+      BOR     R0,10H,#4
+      BOR     >0AH,#4,R0
+      BOR     10H,#4,R0
       LD      R0,>09H
       LD      R0,10H
       LD      >0AH,R0
@@ -37,13 +36,12 @@
       ADC     R1,R3
       ADC     R1,@R4
       ADC     16H,15H
-      ADC     16H,>00H
-      ADC     >00H,14H
+      ADC     >00H,15H
       ADC     17H,@16H
-      ADC     >00H,@15H
+      ADC     >00H,@16H
       ADC     17H,#24
-      ADC     >00H,#24
       BCP     R1,19H,#4
+      BCP     R1,>00H,#4
       JR      LT,$+30
       JR      LT,$-126
       JR      LT,$
@@ -55,36 +53,36 @@
       SUB     R2,R3
       SUB     R2,@R4
       SUB     26H,25H
-      SUB     26H,>00H
-      SUB     >00H,24H
+      SUB     >00H,25H
       SUB     27H,@26H
-      SUB     >00H,@25H
+      SUB     >00H,@26H
       SUB     27H,#28H
-      SUB     >00H,#28H
       BXOR    R2,29H,#4
-      BXOR    29H,#4,R2
-      BXOR    >00H,#3,R2
+      BXOR    R2,>00H,#4
+      BXOR    2AH,#4,R2
+      BXOR    >00H,#4,R2
       JR      LE,$+46
       JR      LE,$-126
       JR      LE,$
       JP      LE,2E2FH
       EXIT
+      JP      @32H
       SRP0    #30H
       SRP1    #38H
       SRP     #40H
       SBC     R3,R3
       SBC     R3,@R4
       SBC     36H,35H
-      SBC     36H,>00H
-      SBC     >00H,34H
+      SBC     >00H,35H
       SBC     37H,@36H
-      SBC     >00H,@35H
+      SBC     >00H,@36H
       SBC     37H,#38H
-      SBC     >00H,#38H
       BTJRF   $+60,R3,#4
-      BTJRT   $+60,R3,#4
-      BTJRT   $-125,R3,#3
-      BTJRT   $,R3,#3
+      BTJRF   $-125,R3,#4
+      BTJRF   $,R3,#4
+      BTJRT   $+61,R3,#4
+      BTJRT   $-125,R3,#4
+      BTJRT   $,R3,#4
       JR      ULE,$+62
       JR      ULE,$-126
       JR      ULE,$
@@ -96,15 +94,14 @@
       OR      R4,R3
       OR      R4,@R4
       OR      46H,45H
-      OR      46H,>00H
-      OR      >00H,44H
+      OR      >00H,45H
       OR      47H,@46H
-      OR      >00H,@45H
+      OR      >00H,@46H
       OR      47H,#48H
-      OR      >00H,#48H
       LDB     R4,49H,#4
-      LDB     49H,#4,R4
-      LDB     >00H,#3,R4
+      LDB     R4,>00H,#4
+      LDB     4AH,#4,R4
+      LDB     >00H,#4,R4
       JR      OV,$+78
       JR      OV,$-126
       JR      OV,$
@@ -116,12 +113,10 @@
       AND     R5,R3
       AND     R5,@R4
       AND     56H,55H
-      AND     56H,>00H
-      AND     >00H,54H
+      AND     >00H,55H
       AND     57H,@56H
-      AND     >00H,@55H
+      AND     >00H,@56H
       AND     57H,#58H
-      AND     >00H,#58H
       BITC    R5,#4
       JR      MI,$+94
       JR      MI,$-126
@@ -134,15 +129,14 @@
       TCM     R6,R3
       TCM     R6,@R4
       TCM     66H,65H
-      TCM     66H,>00H
-      TCM     >00H,64H
+      TCM     >00H,65H
       TCM     67H,@66H
-      TCM     >00H,@65H
+      TCM     >00H,@66H
       TCM     67H,#68H
-      TCM     >00H,#68H
       BAND    R6,69H,#4
-      BAND    69H,#4,R6
-      BAND    >00H,#3,R6
+      BAND    R6,>00H,#4
+      BAND    6AH,#4,R6
+      BAND    >00H,#4,R6
       JR      Z,$+110
       JR      Z,$-126
       JR      Z,$
@@ -153,28 +147,29 @@
       TM      R7,R3
       TM      R7,@R4
       TM      76H,75H
-      TM      76H,>00H
-      TM      >00H,74H
+      TM      >00H,75H
       TM      77H,@76H
-      TM      >00H,@75H
+      TM      >00H,@76H
       TM      77H,#78H
-      TM      >00H,#78H
       BITR    R7,#4
       BITS    R7,#4
       JR      C,$+126
       JR      C,$-126
       JR      C,$
       JP      C,7E7FH
+      DECW    82H
+      DECW    >00H
       DECW    @82H
       PUSHUD  @83H,84H
-      PUSHUD  @82H,>00H
+      PUSHUD  @83H,>00H
       PUSHUI  @84H,85H
-      PUSHUI  @83H,>00H
+      PUSHUI  @84H,>00H
       MULT    86H,85H
-      MULT    86H,>00H
-      MULT    >00H,84H
+      MULT    >00H,85H
+      MULT    88H,@87H
+      MULT    >00H,@87H
       MULT    88H,#87H
-      MULT    >00H,#86H
+      MULT    >00H,#87H
       LD      R8,89H(R8)
       JR      $-114
       JR      $
@@ -185,34 +180,33 @@
       RL      >00H
       RL      @92H
       POPUD   94H,@93H
-      POPUD   >00H,@92H
+      POPUD   >00H,@93H
       POPUI   95H,@94H
-      POPUI   >00H,@93H
+      POPUI   >00H,@94H
       DIV     96H,95H
-      DIV     96H,>00H
-      DIV     >00H,94H
+      DIV     >00H,95H
+      DIV     98H,@97H
+      DIV     >00H,@97H
       DIV     98H,#97H
-      DIV     >00H,#96H
+      DIV     >00H,#97H
       LD      99H(R8),R9
       JR      GE,$-98
       JR      GE,$
       JR      GE,$+1
       JP      GE,9E9FH
       EI
+      INCW    0A2H
+      INCW    >00H
       INCW    @0A2H
       CP      R10,R3
       CP      R10,@R4
       CP      0A6H,0A5H
-      CP      0A6H,>00H
-      CP      >00H,0A4H
+      CP      >00H,0A5H
       CP      0A7H,@0A6H
-      CP      >00H,@0A5H
+      CP      >00H,@0A6H
       CP      0A7H,#0A8H
-      CP      >00H,#0A8H
       LDC     R10,0AAA9H(RR8)
-      LDE     R10,0AAA9H(RR8)
-      LDC     R11,0AAA9H
-      LDE     R11,0AAA9H
+      LDE     R10,0ABAAH(RR8)
       JR      GT,$-82
       JR      GT,$
       JR      GT,$+1
@@ -224,16 +218,12 @@
       XOR     R11,R3
       XOR     R11,@R4
       XOR     0B6H,0B5H
-      XOR     0B6H,>00H
-      XOR     >00H,0B4H
+      XOR     >00H,0B5H
       XOR     0B7H,@0B6H
-      XOR     >00H,@0B5H
+      XOR     >00H,@0B6H
       XOR     0B7H,#0B8H
-      XOR     >00H,#0B8H
       LDC     0BAB9H(RR8),R11
-      LDE     0BAB9H(RR8),R11
-      LDC     0BAB9H,R12
-      LDE     0BAB9H,R12
+      LDE     0BBBAH(RR8),R11
       JR      UGT,$-66
       JR      UGT,$
       JR      UGT,$+1
@@ -243,10 +233,13 @@
       RRC     >00H
       RRC     @0C2H
       CPIJE   R3,@R12,$-57
-      CPIJE   R2,@R12,$
-      CPIJE   R2,@R12,$+1
+      CPIJE   R3,@R12,$
+      CPIJE   R3,@R12,$+1
       LDC     R12,@RR4
       LDE     R12,@RR4
+      LDW     0C8H,@0C7H
+      LDW     >00H,@0C7H
+      LDW     0C8H,#0C9CAH
       LD      R12,@R8
       JR      NOV,$-50
       JR      NOV,$
@@ -257,8 +250,8 @@
       SRA     >00H
       SRA     @0D2H
       CPIJNE  R3,@R13,$-41
-      CPIJNE  R2,@R13,$
-      CPIJNE  R2,@R13,$+1
+      CPIJNE  R3,@R13,$
+      CPIJNE  R3,@R13,$+1
       LDC     @RR4,R13
       LDE     @RR4,R13
       CALL    #0D5H
@@ -277,16 +270,16 @@
       LDCI    R14,@RR4
       LDEI    R14,@RR4
       LD      0E6H,0E5H
-      LD      0E6H,>00H
-      LD      >00H,0E4H
+      LD      >00H,0E5H
       LD      0E7H,@0E6H
-      LD      >00H,@0E5H
+      LD      >00H,@0E6H
       LD      0E7H,#0E8H
-      LD      >00H,#0E8H
       LDC     R14,-23(RR8)
-      LDE     R14,-23(RR8)
-      LDE     R14,0(RR6)
-      LDE     R14,+1(RR6)
+      LDC     R14,0(RR8)
+      LDC     R14,+1(RR8)
+      LDE     R14,-22(RR8)
+      LDE     R14,0(RR8)
+      LDE     R14,+1(RR8)
       JR      NZ,$-18
       JR      NZ,$
       JR      NZ,$+1
@@ -299,13 +292,15 @@
       LDCPD   @RR4,R15
       LDCPI   @RR4,R15
       LDEPI   @RR4,R15
+      CALL    @0F6H
       LD      @0F7H,0F6H
-      LD      @0F7H,>00H
       CALL    0F7F8H
       LDC     -7(RR8),R15
-      LDE     -7(RR8),R15
-      LDE     0(RR6),R15
-      LDE     +1(RR6),R15
+      LDC     0(RR8),R15
+      LDC     +1(RR8),R15
+      LDE     -6(RR8),R15
+      LDE     0(RR8),R15
+      LDE     +1(RR8),R15
       JR      NC,$-2
       JR      NC,$
       JR      NC,$+1
