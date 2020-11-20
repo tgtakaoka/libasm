@@ -15,6 +15,7 @@
  */
 
 #include "asm_mc6800.h"
+
 #include "table_mc6800.h"
 
 namespace libasm {
@@ -29,7 +30,8 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     }
 
     const bool immediate = (*p == '#');
-    if (immediate) p++;
+    if (immediate)
+        p++;
     op.size = SZ_NONE;
     if (*p == '<') {
         p++;
@@ -39,7 +41,8 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
         op.size = SZ_WORD;
     }
     op.val16 = parseExpr16(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
     if (immediate) {
         op.mode = M_IMM;
@@ -57,9 +60,12 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
         }
     }
     if (op.size == SZ_NONE) {
-        if (op.val16 < 8) op.mode = M_BIT;
-        else if (op.val16 < 0x100) op.mode = M_DIR;
-        else op.mode = M_EXT;
+        if (op.val16 < 8)
+            op.mode = M_BIT;
+        else if (op.val16 < 0x100)
+            op.mode = M_DIR;
+        else
+            op.mode = M_EXT;
     } else {
         op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
     }
@@ -70,7 +76,8 @@ Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
-    if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
+    if (delta >= 128 || delta < -128)
+        return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
     return OK;
 }
@@ -90,7 +97,8 @@ Error AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+Error AsmMc6800::emitOperand(
+        InsnMc6800 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_DIR:
     case M_IDX:
@@ -118,17 +126,21 @@ Error AsmMc6800::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand op1, op2, op3;
-    if (parseOperand(endName, op1)) return getError();
+    if (parseOperand(endName, op1))
+        return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        if (parseOperand(p + 1, op2)) return getError();
+        if (parseOperand(p + 1, op2))
+            return getError();
         p = skipSpaces(_scan);
     }
     if (*p == ',') {
-        if (parseOperand(p + 1, op3)) return getError();
+        if (parseOperand(p + 1, op3))
+            return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(op1.getError());
     setErrorIf(op2.getError());
     setErrorIf(op3.getError());
@@ -138,14 +150,17 @@ Error AsmMc6800::encode(Insn &_insn) {
         return setError(TableMc6800.getError());
 
     insn.emitInsn();
-    if (emitOperand(insn, insn.mode1(), op1)) return getError();
-    if (emitOperand(insn, insn.mode2(), op2)) return getError();
-    if (emitOperand(insn, insn.mode3(), op3)) return getError();
+    if (emitOperand(insn, insn.mode1(), op1))
+        return getError();
+    if (emitOperand(insn, insn.mode2(), op2))
+        return getError();
+    if (emitOperand(insn, insn.mode3(), op3))
+        return getError();
     return getError();
 }
 
-} // namespace m6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

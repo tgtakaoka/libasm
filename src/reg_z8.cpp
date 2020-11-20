@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#include "config_z8.h"
 #include "reg_z8.h"
-#include "table_z8.h"
 
 #include <ctype.h>
+
+#include "config_z8.h"
+#include "table_z8.h"
 
 namespace libasm {
 namespace z8 {
@@ -31,12 +32,11 @@ uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
     return encodeRegName(name) | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
-
 static int8_t parseRegNum(const char *line) {
     if (isdigit(*line) && !RegBase::isidchar(line[1]))
         return *line - '0';
-    if (*line++ == '1'
-        && *line >= '0' && *line < '6' && !RegBase::isidchar(line[1]))
+    if (*line++ == '1' && *line >= '0' && *line < '6' &&
+            !RegBase::isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }
@@ -58,9 +58,12 @@ RegName RegZ8::parseRegName(const char *line) {
 
 uint8_t RegZ8::regNameLen(RegName name) {
     const int8_t num = int8_t(name);
-    if (num >= 16 + 10) return 4; // RR1n
-    if (num >= 10)      return 3; // RRn, R1n
-    if (num >= 0)       return 2; // Rn
+    if (num >= 16 + 10)
+        return 4;  // RR1n
+    if (num >= 10)
+        return 3;  // RRn, R1n
+    if (num >= 0)
+        return 2;  // Rn
     return 0;
 }
 
@@ -73,7 +76,8 @@ RegName RegZ8::decodeRegNum(uint8_t num) {
 }
 
 RegName RegZ8::decodePairRegNum(uint8_t num) {
-    if (num % 2) return REG_UNDEF;
+    if (num % 2)
+        return REG_UNDEF;
     return RegName((num & 0xF) + 16);
 }
 
@@ -98,6 +102,7 @@ char *RegZ8::outRegName(char *out, RegName name) const {
     return out;
 }
 
+// clang-format off
 static const char TEXT_CC_F[]   PROGMEM = "F";
 static const char TEXT_CC_LT[]  PROGMEM = "LT";
 static const char TEXT_CC_LE[]  PROGMEM = "LE";
@@ -118,29 +123,30 @@ static const char TEXT_CC_EQ[]  PROGMEM = "EQ";
 static const char TEXT_CC_ULT[] PROGMEM = "ULT";
 static const char TEXT_CC_NE[]  PROGMEM = "NE";
 static const char TEXT_CC_UGE[] PROGMEM = "UGE";
+// clang-format on
 static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
-    NAME_ENTRY(CC_F)
-    NAME_ENTRY(CC_LT)
-    NAME_ENTRY(CC_LE)
-    NAME_ENTRY(CC_ULE)
-    NAME_ENTRY(CC_OV)
-    NAME_ENTRY(CC_MI)
-    NAME_ENTRY(CC_Z)
-    NAME_ENTRY(CC_C)
-    NAME_ENTRY(CC_GE)
-    NAME_ENTRY(CC_GT)
-    NAME_ENTRY(CC_UGT)
-    NAME_ENTRY(CC_NOV)
-    NAME_ENTRY(CC_PL)
-    NAME_ENTRY(CC_NZ)
-    NAME_ENTRY(CC_NC)
-    // Aliases
-    NAME_ENTRY(CC_EQ)
-    NAME_ENTRY(CC_ULT)
-    NAME_ENTRY(CC_NE)
-    NAME_ENTRY(CC_UGE)
-    // Empty text
-    NAME_ENTRY(CC_T)
+        NAME_ENTRY(CC_F),
+        NAME_ENTRY(CC_LT),
+        NAME_ENTRY(CC_LE),
+        NAME_ENTRY(CC_ULE),
+        NAME_ENTRY(CC_OV),
+        NAME_ENTRY(CC_MI),
+        NAME_ENTRY(CC_Z),
+        NAME_ENTRY(CC_C),
+        NAME_ENTRY(CC_GE),
+        NAME_ENTRY(CC_GT),
+        NAME_ENTRY(CC_UGT),
+        NAME_ENTRY(CC_NOV),
+        NAME_ENTRY(CC_PL),
+        NAME_ENTRY(CC_NZ),
+        NAME_ENTRY(CC_NC),
+        // Aliases
+        NAME_ENTRY(CC_EQ),
+        NAME_ENTRY(CC_ULT),
+        NAME_ENTRY(CC_NE),
+        NAME_ENTRY(CC_UGE),
+        // Empty text
+        NAME_ENTRY(CC_T),
 };
 
 CcName RegZ8::parseCcName(const char *line) {
@@ -162,16 +168,17 @@ char *RegZ8::outCcName(char *out, CcName name) const {
 
 uint8_t RegZ8::encodeCcName(CcName name) {
     const uint8_t cc = uint8_t(name);
-    if (cc < 16) return cc;
-    return cc - 16;             // Aliases
+    if (cc < 16)
+        return cc;
+    return cc - 16;  // Aliases
 }
 
 CcName RegZ8::decodeCcNum(uint8_t num) {
     return CcName(num);
 }
 
-} // namespace z8
-} // namespace libasm
+}  // namespace z8
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

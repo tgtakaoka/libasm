@@ -31,36 +31,32 @@ extern TestAsserter asserter;
 extern TestMemory memory;
 extern TestSymtab symtab;
 
-void dis_assert(
-    const char *file, int line, Error error,
-    const char *expected_name, const char *expected_opr,
-    Disassembler &disassembler);
+void dis_assert(const char *file, int line, Error error,
+        const char *expected_name, const char *expected_opr,
+        Disassembler &disassembler);
 
-void run_test(
-        void (*test)(),
-        const char *name,
-        void (*set_up)(),
+void run_test(void (*test)(), const char *name, void (*set_up)(),
         void (*tear_down)());
 
-} // test
-} // namespace
+}  // namespace test
+}  // namespace libasm
 
 #define EQUALS(msg, expected, actual) \
     asserter.equals(__FILE__, __LINE__, msg, expected, actual)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
-#define __VASSERT(file, line, error, addr, name, opr, ...)          \
-    do {                                                            \
-        const Config::opcode_t name[] = { __VA_ARGS__ };            \
-        memory.setMemory(name, sizeof(name));                       \
-        memory.setAddress(addr);                                    \
-        dis_assert(file, line, error, #name, opr, disassembler);    \
+#define __VASSERT(file, line, error, addr, name, opr, ...)       \
+    do {                                                         \
+        const Config::opcode_t name[] = {__VA_ARGS__};           \
+        memory.setMemory(name, sizeof(name));                    \
+        memory.setAddress(addr);                                 \
+        dis_assert(file, line, error, #name, opr, disassembler); \
     } while (0)
-#define EATEST(error, addr, name, opr, ...)                             \
+#define EATEST(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
-#define ATEST(addr, name, opr, ...)                                 \
+#define ATEST(addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, OK, addr, name, opr, __VA_ARGS__)
-#define ETEST(error, name, opr, ...)                                    \
+#define ETEST(error, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, 0x0000, name, opr, __VA_ARGS__)
 #define TEST(name, opr, ...) ETEST(OK, name, opr, __VA_ARGS__)
 

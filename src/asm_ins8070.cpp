@@ -15,6 +15,7 @@
  */
 
 #include "asm_ins8070.h"
+
 #include "table_ins8070.h"
 
 namespace libasm {
@@ -39,7 +40,8 @@ Error AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
-    const Config::uintptr_t target = (op.getError() ? base + fetch : op.val16) - fetch;
+    const Config::uintptr_t target =
+            (op.getError() ? base + fetch : op.val16) - fetch;
     const Config::ptrdiff_t offset = target - base;
     if (offset < -128 || offset >= 128)
         return setError(OPERAND_TOO_FAR);
@@ -54,7 +56,8 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     }
     if ((op.format == OPR_16 || op.format == OPR_4) && op.reg == REG_UNDEF) {
         const Config::uintptr_t target = op.getError() ? 0xFF00 : op.val16;
-        if (target < 0xFF00) return setError(OVERFLOW_RANGE);
+        if (target < 0xFF00)
+            return setError(OVERFLOW_RANGE);
         insn.embed(5);
         insn.emitOperand8(static_cast<uint8_t>(target));
         return OK;
@@ -66,13 +69,14 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     if (offset < -128 || offset >= 128)
         return setError(OVERFLOW_RANGE);
     insn.embed(RegIns8070::encodePointerReg(op.reg));
-    if (op.autoIndex) insn.embed(4);
+    if (op.autoIndex)
+        insn.embed(4);
     insn.emitOperand8(static_cast<uint8_t>(offset));
     return OK;
 }
 
 Error AsmIns8070::emitOperand(
-    InsnIns8070 &insn, OprFormat format, const Operand &op) {
+        InsnIns8070 &insn, OprFormat format, const Operand &op) {
     switch (format) {
     case OPR_PN:
     case OPR_BR:
@@ -104,7 +108,8 @@ Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
 
     if (*p == '#' || *p == '=') {
         op.val16 = parseExpr16(p + 1);
-        if (parserError()) return getError();
+        if (parserError())
+            return getError();
         op.setError(getError());
         op.format = OPR_IM;
         return OK;
@@ -115,14 +120,30 @@ Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
         _scan = p + RegIns8070::regNameLen(reg);
         OprFormat opr;
         switch (reg) {
-        case REG_A:  opr = OPR_A;  break;
-        case REG_E:  opr = OPR_E;  break;
-        case REG_S:  opr = OPR_S;  break;
-        case REG_EA: opr = OPR_EA; break;
-        case REG_T:  opr = OPR_T;  break;
-        case REG_SP: opr = OPR_SP; break;
-        case REG_PC: opr = OPR_BR; break;
-        default:     opr = OPR_PN; break;
+        case REG_A:
+            opr = OPR_A;
+            break;
+        case REG_E:
+            opr = OPR_E;
+            break;
+        case REG_S:
+            opr = OPR_S;
+            break;
+        case REG_EA:
+            opr = OPR_EA;
+            break;
+        case REG_T:
+            opr = OPR_T;
+            break;
+        case REG_SP:
+            opr = OPR_SP;
+            break;
+        case REG_PC:
+            opr = OPR_BR;
+            break;
+        default:
+            opr = OPR_PN;
+            break;
         }
         op.reg = reg;
         op.format = opr;
@@ -130,13 +151,15 @@ Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
     }
 
     bool autoIndex = (*p == '@');
-    if (autoIndex) p++;
+    if (autoIndex)
+        p++;
     op.val16 = parseExpr16(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
 
-    if (*p == '(') // SC/MP style
+    if (*p == '(')  // SC/MP style
         return setError(MISSING_COMMA);
     if (*p == ',') {
         p = skipSpaces(p + 1);
@@ -145,14 +168,15 @@ Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
             p++;
         }
         const RegName ptr = RegIns8070::parseRegName(p);
-        if (!RegIns8070::isPointerReg(ptr)) setError(UNKNOWN_OPERAND);
+        if (!RegIns8070::isPointerReg(ptr))
+            setError(UNKNOWN_OPERAND);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
             return setError(REGISTER_NOT_ALLOWED);
         _scan = p + RegIns8070::regNameLen(ptr);
         op.reg = ptr;
         op.autoIndex = autoIndex;
-        op.format = (autoIndex || ptr == REG_SP || ptr == REG_PC)
-            ? OPR_GN : OPR_PR;
+        op.format =
+                (autoIndex || ptr == REG_SP || ptr == REG_PC) ? OPR_GN : OPR_PR;
         return OK;
     }
 
@@ -166,13 +190,16 @@ Error AsmIns8070::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand dst, src;
-    if (parseOperand(endName, dst)) return getError();
+    if (parseOperand(endName, dst))
+        return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        if (parseOperand(p + 1, src)) return getError();
+        if (parseOperand(p + 1, src))
+            return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(dst.getError());
     setErrorIf(src.getError());
 
@@ -180,14 +207,16 @@ Error AsmIns8070::encode(Insn &_insn) {
     if (TableIns8070.searchName(insn))
         return setError(TableIns8070.getError());
 
-    if (emitOperand(insn, insn.dstOpr(), dst)) return getError();
-    if (emitOperand(insn, insn.srcOpr(), src)) return getError();
+    if (emitOperand(insn, insn.dstOpr(), dst))
+        return getError();
+    if (emitOperand(insn, insn.srcOpr(), src))
+        return getError();
     insn.emitInsn();
     return getError();
 }
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

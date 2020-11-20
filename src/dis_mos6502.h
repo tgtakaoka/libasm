@@ -26,17 +26,15 @@
 namespace libasm {
 namespace mos6502 {
 
-class DisMos6502
-    : public Disassembler,
-      public Config {
+class DisMos6502 : public Disassembler, public Config {
 public:
     DisMos6502() : Disassembler(_formatter, _regs, TableMos6502) {}
 
-    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
-    void reset() override;
-    void useIndirectLong(bool enable) {
-        TableMos6502.useIndirectLong(enable);
+    AddressWidth addressWidth() const override {
+        return TableMos6502.addressWidth();
     }
+    void reset() override;
+    void useIndirectLong(bool enable) { TableMos6502.useIndirectLong(enable); }
     void longAccumlator(bool on) { TableMos6502.longAccumlator(on); }
     void longIndex(bool on) { TableMos6502.longIndex(on); }
 
@@ -52,10 +50,10 @@ private:
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __DIS_MOS6502_H__
+#endif  // __DIS_MOS6502_H__
 
 // Local Variables:
 // mode: c++

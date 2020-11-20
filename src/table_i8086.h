@@ -43,18 +43,18 @@ public:
     struct EntryPage;
 
 private:
-    Error searchName(
-        InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(
-        InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchName(InsnI8086 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    Error searchOpCode(InsnI8086 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
 };
 
 extern TableI8086 TableI8086;
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
-#endif // __TABLE_I8086_H__
+#endif  // __TABLE_I8086_H__
 
 // Local Variables:
 // mode: c++

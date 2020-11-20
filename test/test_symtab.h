@@ -17,11 +17,12 @@
 #ifndef __TEST_SYMTAB_H__
 #define __TEST_SYMTAB_H__
 
-#include "symbol_table.h"
+#include <string.h>
 
 #include <map>
 #include <string>
-#include <string.h>
+
+#include "symbol_table.h"
 
 namespace libasm {
 namespace test {
@@ -32,20 +33,18 @@ public:
         auto it = _value_to_symbol.find(addr);
         return it == _value_to_symbol.end() ? nullptr : it->second.c_str();
     }
-    bool hasSymbol(
-        const char *symbol, const char *end = nullptr) override {
-        return end ? hasSymbol(std::string(symbol, end)) : hasSymbol(std::string(symbol));
+    bool hasSymbol(const char *symbol, const char *end = nullptr) override {
+        return end ? hasSymbol(std::string(symbol, end))
+                   : hasSymbol(std::string(symbol));
     }
     uint32_t lookupSymbol(
-        const char *symbol, const char *end = nullptr) override {
-        return end ? lookup(std::string(symbol, end)) : lookup(std::string(symbol));
+            const char *symbol, const char *end = nullptr) override {
+        return end ? lookup(std::string(symbol, end))
+                   : lookup(std::string(symbol));
     }
-    uint32_t currentOrigin() override {
-        return _current_origin;
-    }
+    uint32_t currentOrigin() override { return _current_origin; }
 
-    void intern(
-        uint32_t value, const char *symbol, const char *end = nullptr) {
+    void intern(uint32_t value, const char *symbol, const char *end = nullptr) {
         intern(value, end ? std::string(symbol, end) : std::string(symbol));
     }
 
@@ -55,9 +54,7 @@ public:
         _current_origin = 0;
     }
 
-    void setCurrentOrigin(uint32_t value) {
-        _current_origin = value;
-    }
+    void setCurrentOrigin(uint32_t value) { _current_origin = value; }
 
 private:
     std::map<std::string, uint32_t, std::less<>> _symbol_to_value;
@@ -79,8 +76,8 @@ private:
     }
 };
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 #endif
 

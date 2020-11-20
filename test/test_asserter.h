@@ -17,10 +17,10 @@
 #ifndef __TEST_ASSERTER_H__
 #define __TEST_ASSERTER_H__
 
-#include "error_reporter.h"
-
 #include <stddef.h>
 #include <stdint.h>
+
+#include "error_reporter.h"
 
 namespace libasm {
 namespace test {
@@ -34,28 +34,20 @@ public:
         _fail_count = 0;
     }
     bool check() const;
-    void equals(
-        const char *file, const int line,
-        const char *message, const uint32_t expected, const uint32_t actual);
-    void equals(
-        const char *file, const int line,
-        const char *message, const char *expected, const char *actual);
-    void equals(
-        const char *file, const int line,
-        const char *message, Error expected, const ErrorReporter &actual);
-    void equals(
-        const char *file, const int line,
-        const char *message,
-        const uint8_t expected[], size_t expected_len,
-        const uint8_t actual[], size_t actual_len);
-    void equals(
-        const char *file, const int line,
-        const char *message,
-        const uint16_t expected[], size_t expected_len,
-        const uint8_t actual[], size_t actual_len);
-    void not_equals(
-        const char *file, const int line,
-        const char *message, const char *expected, const char *actual);
+    void equals(const char *file, const int line, const char *message,
+            const uint32_t expected, const uint32_t actual);
+    void equals(const char *file, const int line, const char *message,
+            const char *expected, const char *actual);
+    void equals(const char *file, const int line, const char *message,
+            Error expected, const ErrorReporter &actual);
+    void equals(const char *file, const int line, const char *message,
+            const uint8_t expected[], size_t expected_len,
+            const uint8_t actual[], size_t actual_len);
+    void equals(const char *file, const int line, const char *message,
+            const uint16_t expected[], size_t expected_len,
+            const uint8_t actual[], size_t actual_len);
+    void not_equals(const char *file, const int line, const char *message,
+            const char *expected, const char *actual);
 
 private:
     const char *_test_name;
@@ -63,8 +55,8 @@ private:
     int _fail_count;
 };
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 #endif
 

@@ -17,10 +17,10 @@
 #ifndef __TEST_MEMORY_H__
 #define __TEST_MEMORY_H__
 
+#include <stdint.h>
+
 #include "config_host.h"
 #include "dis_memory.h"
-
-#include <stdint.h>
 
 namespace libasm {
 namespace test {
@@ -46,15 +46,15 @@ private:
     size_t _size;
     uint8_t *_bytes;
     uint32_t _origin;
-    uint8_t _length;;
+    uint8_t _length;
     uint8_t _index;
     const uint16_t *_words;
 
     void ensureBytes(size_t size);
 };
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 #endif
 

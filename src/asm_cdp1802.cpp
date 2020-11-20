@@ -15,6 +15,7 @@
  */
 
 #include "asm_cdp1802.h"
+
 #include "table_cdp1802.h"
 
 namespace libasm {
@@ -34,10 +35,12 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn, const Operand &op) {
 Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p)) return OK;
+    if (endOfLine(p))
+        return OK;
 
     op.val16 = parseExpr16(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
     op.mode = ADDR;
     return OK;
@@ -49,9 +52,11 @@ Error AsmCdp1802::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand op;
-    if (parseOperand(endName, op)) return getError();
+    if (parseOperand(endName, op))
+        return getError();
     const char *p = skipSpaces(_scan);
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(op.getError());
 
     insn.setAddrMode(op.mode);
@@ -61,17 +66,20 @@ Error AsmCdp1802::encode(Insn &_insn) {
     uint16_t val16 = op.val16;
     switch (insn.addrMode()) {
     case REG1:
-        if (op.getError()) val16 = 7; // default work register.
-        if (val16 == 0) return setError(REGISTER_NOT_ALLOWED);
+        if (op.getError())
+            val16 = 7;  // default work register.
+        if (val16 == 0)
+            return setError(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case REGN:
-        if (val16 >= 16) return setError(ILLEGAL_REGISTER);
+        if (val16 >= 16)
+            return setError(ILLEGAL_REGISTER);
         insn.embed(val16);
         insn.emitInsn();
         return OK;
     case IMM8:
-        if (static_cast<int16_t>(val16) < -128
-            || (static_cast<int16_t>(val16) >= 0 && val16 >= 0x100))
+        if (static_cast<int16_t>(val16) < -128 ||
+                (static_cast<int16_t>(val16) >= 0 && val16 >= 0x100))
             return setError(OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
@@ -83,8 +91,10 @@ Error AsmCdp1802::encode(Insn &_insn) {
         insn.emitUint16(val16);
         return OK;
     case IOAD:
-        if (op.getError()) val16 = 1; // default IO address
-        if (val16 == 0 || val16 >= 8) return setError(OPERAND_NOT_ALLOWED);
+        if (op.getError())
+            val16 = 1;  // default IO address
+        if (val16 == 0 || val16 >= 8)
+            return setError(OPERAND_NOT_ALLOWED);
         insn.embed(val16);
         insn.emitInsn();
         return OK;
@@ -95,8 +105,8 @@ Error AsmCdp1802::encode(Insn &_insn) {
     return OK;
 }
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

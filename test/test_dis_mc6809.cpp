@@ -41,6 +41,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 6809", true,   disassembler.setCpu("6809"));
     EQUALS("cpu 6809", "6809", disassembler.getCpu());
@@ -1179,13 +1180,15 @@ static void test_illegal_hd6309() {
     for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
         ETEST(UNKNOWN_POSTBYTE, _, "", 0xA6, post_illegals[idx], 0, 0);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "6809", "6309",
+            "6809",
+            "6309",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);
@@ -1199,10 +1202,14 @@ void run_tests() {
         RUN_TEST(test_relative);
         RUN_TEST(test_stack);
         RUN_TEST(test_register);
-        if (is6309()) RUN_TEST(test_transfer);
-        if (is6309()) RUN_TEST(test_bit_position);
-        if (is6809()) RUN_TEST(test_illegal_mc6809);
-        if (is6309()) RUN_TEST(test_illegal_hd6309);
+        if (is6309())
+            RUN_TEST(test_transfer);
+        if (is6309())
+            RUN_TEST(test_bit_position);
+        if (is6809())
+            RUN_TEST(test_illegal_mc6809);
+        if (is6309())
+            RUN_TEST(test_illegal_hd6309);
     }
 }
 

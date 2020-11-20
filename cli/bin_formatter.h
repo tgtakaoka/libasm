@@ -17,10 +17,10 @@
 #ifndef __BIN_FORMATTER_H__
 #define __BIN_FORMATTER_H__
 
+#include <stdint.h>
+
 #include "config_base.h"
 #include "config_host.h"
-
-#include <stdint.h>
 
 namespace libasm {
 namespace cli {
@@ -33,10 +33,10 @@ public:
     virtual const char *begin() = 0;
     virtual const char *prepare(uint32_t addr) = 0;
     virtual const char *encode(
-        uint32_t addr, const uint8_t *data, uint8_t size) = 0;
+            uint32_t addr, const uint8_t *data, uint8_t size) = 0;
     virtual const char *end() = 0;
     virtual uint8_t *decode(
-        const char *line, uint32_t &addr, uint8_t &size) = 0;
+            const char *line, uint32_t &addr, uint8_t &size) = 0;
 
 protected:
     AddressWidth _addrWidth;
@@ -64,13 +64,12 @@ public:
     const char *begin() override;
     const char *prepare(uint32_t addr) override;
     const char *encode(
-        uint32_t addr, const uint8_t *data, uint8_t size) override;
+            uint32_t addr, const uint8_t *data, uint8_t size) override;
     const char *end() override;
-    uint8_t *decode(
-        const char *line, uint32_t &addr, uint8_t &size) override;
+    uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) override;
 
 private:
-    uint16_t _ela;              // Extended Linear Address
+    uint16_t _ela;  // Extended Linear Address
 
     uint8_t getSum() const override;
 };
@@ -82,17 +81,16 @@ public:
     const char *begin() override;
     const char *prepare(uint32_t addr) override { return nullptr; }
     const char *encode(
-        uint32_t addr, const uint8_t *data, uint8_t size) override;
+            uint32_t addr, const uint8_t *data, uint8_t size) override;
     const char *end() override;
-    uint8_t *decode(
-        const char *line, uint32_t &addr, uint8_t &size) override;
+    uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) override;
 
 private:
     uint8_t getSum() const override;
 };
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

@@ -46,10 +46,10 @@ private:
     Config::opcode_t _opCode;
 };
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __INSN_MOS6502_H__
+#endif  // __INSN_MOS6502_H__
 
 // Local Variables:
 // mode: c++

@@ -33,37 +33,37 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     // MOS6502
-    IMPL         = 0,   // Implied
-    ACCM         = 1,   // Accumulator A
-    IMMA         = 2,   // Immediate Accumulator: #nn
-    IMMX         = 3,   // Immediate Index register: #nn
-    ABS          = 4,   // Absolute: abs
-    ZPG          = 5,   // Zero Page: zp
-    ZPG_IDX      = 6,   // Zero Page Indexed: zp,X
-    ZPG_IDY      = 7,   // Zero Page Indexed: zp,Y
-    ABS_IDX      = 8,   // Absolute Indexed: abs,X
-    ABS_IDY      = 9,   // Absolute Indexed: abs,Y
-    REL          = 10,  // Relative: abs
+    IMPL = 0,           // Implied
+    ACCM = 1,           // Accumulator A
+    IMMA = 2,           // Immediate Accumulator: #nn
+    IMMX = 3,           // Immediate Index register: #nn
+    ABS = 4,            // Absolute: abs
+    ZPG = 5,            // Zero Page: zp
+    ZPG_IDX = 6,        // Zero Page Indexed: zp,X
+    ZPG_IDY = 7,        // Zero Page Indexed: zp,Y
+    ABS_IDX = 8,        // Absolute Indexed: abs,X
+    ABS_IDY = 9,        // Absolute Indexed: abs,Y
+    REL = 10,           // Relative: abs
     ZPG_IDX_IDIR = 11,  // Indexed Indirect: (zp,X)
     ZPG_IDIR_IDY = 12,  // Indirect Indexed: (zp),Y
-    ABS_IDIR     = 13,  // Absolute Indirect: (abs)
+    ABS_IDIR = 13,      // Absolute Indirect: (abs)
 
     // W65SC02
     ABS_IDX_IDIR = 14,  // Indexed Absolute Indirect: (abs,X)
-    ZPG_IDIR     = 15,  // Zero Page Indirect: (zp)
-    ZPG_REL      = 16,  // Zero Page Relative: zp,abs
+    ZPG_IDIR = 15,      // Zero Page Indirect: (zp)
+    ZPG_REL = 16,       // Zero Page Relative: zp,abs
 
     // W65C816
-    ABS_LONG          = 17,  // Absolute Long: al
-    ABS_LONG_IDX      = 18,  // Absolute Long Indexed: al,x
-    ABS_IDIR_LONG     = 19,  // Absolute Indirect Long: [abs]
-    REL_LONG          = 20,  // Relative Long: rl
-    SP_REL            = 21,  // Stack Relative: off,s
-    SP_REL_IDIR_IDY   = 22,  // Stack Relative Indirect Indexed: (off,s),y
-    ZPG_IDIR_LONG     = 23,  // Zero Page Indirect Long: [zp]
+    ABS_LONG = 17,           // Absolute Long: al
+    ABS_LONG_IDX = 18,       // Absolute Long Indexed: al,x
+    ABS_IDIR_LONG = 19,      // Absolute Indirect Long: [abs]
+    REL_LONG = 20,           // Relative Long: rl
+    SP_REL = 21,             // Stack Relative: off,s
+    SP_REL_IDIR_IDY = 22,    // Stack Relative Indirect Indexed: (off,s),y
+    ZPG_IDIR_LONG = 23,      // Zero Page Indirect Long: [zp]
     ZPG_IDIR_LONG_IDY = 24,  // Zero Page Indirect Long Indexed: [zp],y
-    BLOCK_MOVE        = 25,  // Block Move: ss,dd
-    IMM8              = 26,  // Immediate Byte.
+    BLOCK_MOVE = 25,         // Block Move: ss,dd
+    IMM8 = 26,               // Immediate Byte.
 };
 
 class Entry : public EntryBase<Config> {
@@ -88,10 +88,10 @@ private:
     Flags _flags;
 };
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __ENTRY_MOS6502_H__
+#endif  // __ENTRY_MOS6502_H__
 
 // Local Variables:
 // mode: c++

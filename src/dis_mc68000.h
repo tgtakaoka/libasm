@@ -26,9 +26,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class DisMc68000
-    : public Disassembler,
-      public Config {
+class DisMc68000 : public Disassembler, public Config {
 public:
     DisMc68000() : Disassembler(_formatter, _regs, TableMc68000) {}
 
@@ -39,30 +37,28 @@ private:
     char *outRegName(char *out, RegName regName);
     char *outOprSize(char *out, OprSize size);
     char *outMoveMltRegs(char *out, RegName start, RegName last, char suffix);
-    char *outMoveMltRegList(
-        char *out, uint16_t list, bool pop,
-        char *(DisMc68000::*outRegs)(char *, RegName, RegName, char));
+    char *outMoveMltRegList(char *out, uint16_t list, bool pop,
+            char *(DisMc68000::*outRegs)(char *, RegName, RegName, char));
 
     Error decodeImmediateData(
-        DisMemory &memory, InsnMc68000 &insn, char*out, OprSize eaSize);
-    Error decodeEffectiveAddr(
-        DisMemory &memory, InsnMc68000 &insn, char *out, const EaMc68000 &ea);
+            DisMemory &memory, InsnMc68000 &insn, char *out, OprSize eaSize);
+    Error decodeEffectiveAddr(DisMemory &memory, InsnMc68000 &insn, char *out,
+            const EaMc68000 &ea);
     Error decodeRelative(
-        DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8);
-    Error decodeOperand(
-        DisMemory &memory, InsnMc68000 &insn, char *out,
-        AddrMode mode, uint8_t modePos, uint8_t regPos,
-        OprSize size, uint16_t opr16);
+            DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8);
+    Error decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
+            AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size,
+            uint16_t opr16);
     Error checkOperand(
-        AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
+            AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
-#endif // __DIS_MC68000_H__
+#endif  // __DIS_MC68000_H__
 
 // Local Variables:
 // mode: c++

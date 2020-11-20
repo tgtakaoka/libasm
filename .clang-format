@@ -1,0 +1,10 @@
+BasedOnStyle: Chromium
+AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+BinPackArguments: true
+BinPackParameters: true
+ContinuationIndentWidth: 8
+DerivePointerAlignment: true
+IndentCaseLabels: false
+IndentWidth: 4
+UseTab: Never

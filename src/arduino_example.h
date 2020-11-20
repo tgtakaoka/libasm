@@ -17,11 +17,11 @@
 #ifndef __ARDUINO_EXAMPLE_H__
 #define __ARDUINO_EXAMPLE_H__
 
+#include <libcli.h>
+
 #include "asm_base.h"
 #include "dis_base.h"
 #include "str_memory.h"
-
-#include <libcli.h>
 
 namespace libasm {
 namespace arduino {
@@ -34,20 +34,15 @@ public:
         _cli.begin(console);
         _cli.setPrompter(printPrompt, reinterpret_cast<uintptr_t>(this));
     }
-    
-    void loop() {
-        _cli.loop();
-    }
+
+    void loop() { _cli.loop(); }
 
 protected:
     Cli _cli;
     uint32_t _origin;
 
     BaseExample(ConfigBase *config, const /*PROGMEM*/ char *prompt)
-        : _cli(),
-          _config(config),
-          _prompt(prompt)
-    {}
+        : _cli(), _config(config), _prompt(prompt) {}
 
     virtual const /*PROGMEM*/ char *getCpu() const = 0;
     virtual bool setCpu(const char *) = 0;
@@ -67,7 +62,7 @@ protected:
     void printBytes(const uint8_t *bytes, uint8_t length) {
         const OpCodeWidth width = _config->opCodeWidth();
         const Endian endian = _config->endian();
-        for (uint8_t i = 0; i < length; ) {
+        for (uint8_t i = 0; i < length;) {
             _cli.print(' ');
             if (width == OPCODE_8BIT)
                 _cli.printUint8(bytes[i++]);
@@ -83,7 +78,7 @@ protected:
             }
         }
         const uint8_t codeMax = _config->codeMax();
-        for (uint8_t i = length; i < codeMax; ) {
+        for (uint8_t i = length; i < codeMax;) {
             if (width == OPCODE_8BIT) {
                 _cli.print(F("   "));
                 i += 1;
@@ -129,22 +124,23 @@ protected:
     }
 
     bool hasSymbol(const char *symbol, const char *end) override {
-        (void)symbol; (void)end;
+        (void)symbol;
+        (void)end;
         return false;
     }
 
     uint32_t lookupSymbol(const char *symbol, const char *end) override {
-        (void)symbol; (void)end;
+        (void)symbol;
+        (void)end;
         return 0;
     }
     uint32_t currentOrigin() override { return _origin; }
 
-    static bool isSpace(char c) {
-        return c == ' ' || c == '\t';
-    }
+    static bool isSpace(char c) { return c == ' ' || c == '\t'; }
 
     static const char *skipSpaces(const char *p) {
-        while (isSpace(*p)) p++;
+        while (isSpace(*p))
+            p++;
         return p;
     }
 
@@ -168,9 +164,7 @@ private:
 class AsmExample : public BaseExample {
 public:
     AsmExample(Assembler &assembler)
-        : BaseExample(&assembler, PSTR("Asm")),
-          _assembler(assembler)
-    {}
+        : BaseExample(&assembler, PSTR("Asm")), _assembler(assembler) {}
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
@@ -181,9 +175,7 @@ protected:
     const /*PROGMEM */ char *getCpu() const override {
         return _assembler.getCpu();
     }
-    bool setCpu(const char *cpu) override {
-        return _assembler.setCpu(cpu);
-    }
+    bool setCpu(const char *cpu) override { return _assembler.setCpu(cpu); }
 
 private:
     Assembler &_assembler;
@@ -218,9 +210,7 @@ private:
 class DisExample : public BaseExample {
 public:
     DisExample(Disassembler &disassembler)
-        : BaseExample(&disassembler, PSTR("Dis")),
-          _disassembler(disassembler)
-    {
+        : BaseExample(&disassembler, PSTR("Dis")), _disassembler(disassembler) {
         _disassembler.setUppercase(true);
     }
 
@@ -272,10 +262,10 @@ private:
     }
 };
 
-} // namespace arduino
-} // namespace libasm
+}  // namespace arduino
+}  // namespace libasm
 
-#endif // __ARDUINO_EXAMPLE_H__
+#endif  // __ARDUINO_EXAMPLE_H__
 
 // Local Variables:
 // mode: c++

@@ -38,19 +38,18 @@ public:
     struct EntryPage;
 
 private:
-    Error searchName(
-        InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(
-        InsnNs32000 &insn, DisMemory &memory,
-        const EntryPage *pages, const EntryPage *end) const;
+    Error searchName(InsnNs32000 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory,
+            const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableNs32000 TableNs32000;
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __TABLE_NS32000_H__
+#endif  // __TABLE_NS32000_H__
 
 // Local Variables:
 // mode: c++

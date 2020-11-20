@@ -43,18 +43,18 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    Error searchName(
-        InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(
-        InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchName(InsnI8080 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    Error searchOpCode(InsnI8080 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
 };
 
 extern TableI8080 TableI8080;
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __TABLE_I8080_H__
+#endif  // __TABLE_I8080_H__
 
 // Local Variables:
 // mode: c++

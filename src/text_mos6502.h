@@ -22,8 +22,7 @@
 namespace libasm {
 namespace mos6502 {
 
-// MOS6502 instructions
-
+// clang-format off
 static const char TEXT_CPU_LIST[] PROGMEM =
     "MOS6502, R65C02, W65SC02, W65C02S, W65C816S";
 static const char TEXT_CPU_6502[]    PROGMEM = "6502";
@@ -37,6 +36,7 @@ static const char TEXT_CPU_65C816[]  PROGMEM = "65C816";
 static const char TEXT_CPU_65C816S[] PROGMEM = "65C816S";
 static constexpr const char *TEXT_CPU_MOS = TEXT_CPU_LIST;
 
+// MOS6502 instructions
 static const char TEXT_ADC[] PROGMEM = "ADC";
 static const char TEXT_AND[] PROGMEM = "AND";
 static const char TEXT_ASL[] PROGMEM = "ASL";
@@ -184,11 +184,12 @@ static const char TEXT_LDAL[] PROGMEM = "LDAL";
 static const char TEXT_ORAL[] PROGMEM = "ORAL";
 static const char TEXT_SBCL[] PROGMEM = "SBCL";
 static const char TEXT_STAL[] PROGMEM = "STAL";
+// clang-format on
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __TEXT_MOS6502_H__
+#endif  // __TEXT_MOS6502_H__
 
 // Local Variables:
 // mode: c++

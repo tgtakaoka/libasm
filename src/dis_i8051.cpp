@@ -15,6 +15,7 @@
  */
 
 #include "dis_i8051.h"
+
 #include "table_i8051.h"
 
 namespace libasm {
@@ -42,14 +43,16 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out) {
 }
 
 Error DisI8051::decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode) {
-    const RegName reg = _regs.decodeRReg(insn.opCode() & (mode == IDIRR ? 1 : 7));
-    if (mode == IDIRR) *out++ = '@';
+    const RegName reg =
+            _regs.decodeRReg(insn.opCode() & (mode == IDIRR ? 1 : 7));
+    if (mode == IDIRR)
+        *out++ = '@';
     outRegister(out, reg);
     return setOK();
 }
 
 Error DisI8051::decodeAddress(
-    DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
+        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     if (mode == ADR8) {
         outAbsAddr(out, insn.readByte(memory));
     } else if (mode == ADR11) {
@@ -65,7 +68,7 @@ Error DisI8051::decodeAddress(
 }
 
 Error DisI8051::decodeImmediate(
-    DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
+        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     *out++ = '#';
     if (mode == IMM8) {
         outHex(out, insn.readByte(memory), 8);
@@ -76,7 +79,7 @@ Error DisI8051::decodeImmediate(
 }
 
 Error DisI8051::decodeOperand(
-    DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
+        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     switch (mode) {
     case NONE:
         break;
@@ -132,14 +135,15 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnI8051 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
 
     if (TableI8051.searchOpCode(insn))
         return setError(TableI8051.getError());
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
-    if (dst == ADR8 && src == ADR8) { // MOV dst,src
+    if (dst == ADR8 && src == ADR8) {  // MOV dst,src
         const uint8_t src8 = insn.readByte(memory);
         const uint8_t dst8 = insn.readByte(memory);
         out = outAbsAddr(out, dst8);
@@ -147,25 +151,28 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, char *out) {
         out = outAbsAddr(out, src8);
     } else {
         if (dst != NONE) {
-            if (decodeOperand(memory, insn, out, dst)) return getError();
+            if (decodeOperand(memory, insn, out, dst))
+                return getError();
             out += strlen(out);
         }
         if (src != NONE) {
             *out++ = ',';
-            if (decodeOperand(memory, insn, out, src)) return getError();
+            if (decodeOperand(memory, insn, out, src))
+                return getError();
             out += strlen(out);
         }
     }
     const AddrMode ext = insn.extMode();
     if (ext != NONE) {
         *out++ = ',';
-        if (decodeOperand(memory, insn, out, ext)) return getError();
+        if (decodeOperand(memory, insn, out, ext))
+            return getError();
     }
     return setError(insn);
 }
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

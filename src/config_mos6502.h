@@ -22,16 +22,13 @@
 namespace libasm {
 namespace mos6502 {
 
-struct Config : ConfigImpl<
-    ADDRESS_24BIT, uint32_t, int32_t,
-    OPCODE_8BIT, uint8_t, 4,
-    ENDIAN_LITTLE, 4>
-{};
+struct Config : ConfigImpl<ADDRESS_24BIT, uint32_t, int32_t, OPCODE_8BIT,
+                        uint8_t, 4, ENDIAN_LITTLE, 4> {};
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __CONFIG_MOS6502_H__
+#endif  // __CONFIG_MOS6502_H__
 
 // Local Variables:
 // mode: c++

@@ -77,10 +77,10 @@ private:
     bool _hasPost;
 };
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
-#endif // __INSN_MC6809_H__
+#endif  // __INSN_MC6809_H__
 
 // Local Variables:
 // mode: c++

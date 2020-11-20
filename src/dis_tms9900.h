@@ -26,9 +26,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900
-    : public Disassembler,
-      public Config {
+class DisTms9900 : public Disassembler, public Config {
 public:
     DisTms9900() : Disassembler(_formatter, _regs, TableTms9900) {}
 
@@ -39,18 +37,17 @@ private:
     Error decodeRelative(InsnTms9900 &insn, char *out);
     Error checkPostWord(InsnTms9900 &insn);
     Error decodeMactoInstructionDetect(InsnTms9900 &insn);
-    Error decodeModeReg(
-        DisMemory &memory, InsnTms9900 &insn, char *out,
-        uint8_t mode, uint8_t reg);
+    Error decodeModeReg(DisMemory &memory, InsnTms9900 &insn, char *out,
+            uint8_t mode, uint8_t reg);
     Error decodeOperand(
-        DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __DIS_TMS9900_H__
+#endif  // __DIS_TMS9900_H__
 
 // Local Variables:
 // mode: c++

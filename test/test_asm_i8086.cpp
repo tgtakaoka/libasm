@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8086", true,   assembler.setCpu("8086"));
     EQUALS("cpu 8086", "8086", assembler.getCpu());
@@ -1547,6 +1548,7 @@ static void test_error() {
     ETEST(ILLEGAL_OPERAND, "STOSB ES:[BP]");
     ETEST(ILLEGAL_OPERAND, "STOSB ES:[BX]");
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

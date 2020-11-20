@@ -34,13 +34,12 @@ namespace cdp1802 {
  * R7-R15: Working register
  */
 
-class RegCdp1802 : public RegBase {
-};
+class RegCdp1802 : public RegBase {};
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
-#endif // __REG_CDP1802_H__
+#endif  // __REG_CDP1802_H__
 
 // Local Variables:
 // mode: c++

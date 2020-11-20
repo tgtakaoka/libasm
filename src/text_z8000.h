@@ -22,6 +22,7 @@
 namespace libasm {
 namespace z8000 {
 
+// clang-format off
 static const char TEXT_CPU_LIST[] PROGMEM   = "Z8001, Z8002";
 static const char TEXT_CPU_Z8001[] PROGMEM  = "Z8001";
 static constexpr const char *TEXT_CPU_Z8002 = (TEXT_CPU_LIST + 7);
@@ -215,11 +216,12 @@ static const char TEXT_TSET[]   PROGMEM = "TSET";
 static const char TEXT_TSETB[]  PROGMEM = "TSETB";
 static const char TEXT_XOR[]    PROGMEM = "XOR";
 static const char TEXT_XORB[]   PROGMEM = "XORB";
+// clang-format on
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __TEXT_Z8000__
+#endif  // __TEXT_Z8000__
 
 // Local Variables:
 // mode: c++

@@ -27,12 +27,13 @@ BinFormatter::BinFormatter(AddressWidth addrWidth)
       _line(nullptr),
       _line_len(0),
       _data(nullptr),
-      _data_len(0)
-{}
+      _data_len(0) {}
 
 BinFormatter::~BinFormatter() {
-    if (_line) free(_line);
-    if (_data) free(_data);
+    if (_line)
+        free(_line);
+    if (_data)
+        free(_data);
 }
 
 void BinFormatter::ensureLine(uint8_t len) {
@@ -50,9 +51,13 @@ void BinFormatter::ensureData(uint8_t len) {
     }
 }
 
-void BinFormatter::resetSum() { _check_sum = 0; }
+void BinFormatter::resetSum() {
+    _check_sum = 0;
+}
 
-void BinFormatter::addSum(uint8_t data) { _check_sum += data; }
+void BinFormatter::addSum(uint8_t data) {
+    _check_sum += data;
+}
 
 void BinFormatter::addSum(uint16_t data) {
     addSum(static_cast<uint8_t>(data >> 8));
@@ -69,9 +74,11 @@ static uint8_t parseHex(char c) {
 }
 
 bool BinFormatter::parseByte(const char *&line, uint8_t &val) {
-    if (!isxdigit(*line)) return true;
+    if (!isxdigit(*line))
+        return true;
     val = parseHex(*line++) << 4;
-    if (!isxdigit(*line)) return true;
+    if (!isxdigit(*line))
+        return true;
     val |= parseHex(*line++);
     addSum(val);
     return false;
@@ -79,14 +86,16 @@ bool BinFormatter::parseByte(const char *&line, uint8_t &val) {
 
 bool BinFormatter::parseUint16(const char *&line, uint16_t &val) {
     uint8_t val8 = 0;
-    if (parseByte(line, val8)) return true;
+    if (parseByte(line, val8))
+        return true;
     val = static_cast<uint16_t>(val8) << 8;
-    if (parseByte(line, val8)) return true;
+    if (parseByte(line, val8))
+        return true;
     val |= val8;
     return false;
 }
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

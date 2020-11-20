@@ -37,10 +37,10 @@ public:
     char *outRegName(char *out, const RegName name) const;
 };
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __REG_MOS6502_H__
+#endif  // __REG_MOS6502_H__
 
 // Local Variables:
 // mode: c++

@@ -51,17 +51,17 @@ private:
     bool setCpu(CpuType cpuType);
 
     Error searchName(
-        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
+            InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(
-        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
+            InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableZ80 TableZ80;
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
-#endif // __TABLE_Z80_H__
+#endif  // __TABLE_Z80_H__
 
 // Local Variables:
 // mode: c++

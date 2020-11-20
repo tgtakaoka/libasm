@@ -30,23 +30,23 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO   = 0,
-    M_IMM  = 1,   // 16-bit Immediate data
-    M_REG  = 2,   // ---- ---- ---- wwww: Work Register Addressing
+    M_NO = 0,
+    M_IMM = 1,    // 16-bit Immediate data
+    M_REG = 2,    // ---- ---- ---- wwww: Work Register Addressing
     M_SCNT = 3,   // ---- ---- cccc ----
-    M_SRC  = 4,   // ---- ---- --SS ssss
-    M_CNT  = 5,   // ---- --cc cc-- ----
-    M_XOP  = 6,   // ---- --vv vv-- ----
+    M_SRC = 4,    // ---- ---- --SS ssss
+    M_CNT = 5,    // ---- --cc cc-- ----
+    M_XOP = 6,    // ---- --vv vv-- ----
     M_DREG = 7,   // ---- --dd dd-- ----
-    M_DST  = 8,   // ---- DDdd dd-- ----
-    M_REL  = 10,  // ---- ---- nnnn nnnn
-    M_CRU  = 11,  // ---- ---- nnnn nnnn
+    M_DST = 8,    // ---- DDdd dd-- ----
+    M_REL = 10,   // ---- ---- nnnn nnnn
+    M_CRU = 11,   // ---- ---- nnnn nnnn
     M_RTWP = 12,  // ---- ---- ---- -nnn RTWP mode
     M_DST2 = 13,  // 0100 DDdd dd-- ---- in 2nd word
     M_CNT2 = 14,  // 0100 00cc cc-- ---- in 2nd word
     M_BIT2 = 15,  // 0000 00bb bb-- ---- in 2nd word
     M_SRC2 = 16,  // ---- ---- --SS ssss in 2nd word
-    //Only for assembler.
+    // Only for assembler.
     M_IREG = 17,  // Work Register Indirect Addressing: *Rn
     M_INCR = 18,  // Work Register Indirect Auto Increment Addressing: *Rn+
     M_SYBL = 19,  // Symbol (Direct) Addressing: @LABEL
@@ -63,10 +63,7 @@ public:
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst)};
         }
         Flags read() const {
-            return Flags{
-                pgm_read_byte(&_src),
-                pgm_read_byte(&_dst)
-            };
+            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst)};
         }
 
         AddrMode srcMode() const { return AddrMode(_src); }
@@ -82,10 +79,10 @@ private:
     Flags _flags;
 };
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __ENTRY_TMS9900_H__
+#endif  // __ENTRY_TMS9900_H__
 
 // Local Variables:
 // mode: c++

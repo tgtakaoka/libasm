@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-#include "config_ns32000.h"
 #include "reg_ns32000.h"
-#include "table_ns32000.h"
 
 #include <ctype.h>
+
+#include "config_ns32000.h"
+#include "table_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
 
+// clang-format off
 static const char TEXT_REG_R0[] PROGMEM = "R0";
 static const char TEXT_REG_R1[] PROGMEM = "R1";
 static const char TEXT_REG_R2[] PROGMEM = "R2";
@@ -41,37 +43,38 @@ static const char TEXT_REG_F5[] PROGMEM = "F5";
 static const char TEXT_REG_F6[] PROGMEM = "F6";
 static const char TEXT_REG_F7[] PROGMEM = "F7";
 #endif
-static const char TEXT_REG_FP[] PROGMEM = "FP";
-static const char TEXT_REG_SP[] PROGMEM = "SP";
-static const char TEXT_REG_SB[] PROGMEM = "SB";
-static const char TEXT_REG_PC[] PROGMEM = "PC";
+static const char TEXT_REG_FP[]  PROGMEM = "FP";
+static const char TEXT_REG_SP[]  PROGMEM = "SP";
+static const char TEXT_REG_SB[]  PROGMEM = "SB";
+static const char TEXT_REG_PC[]  PROGMEM = "PC";
 static const char TEXT_REG_TOS[] PROGMEM = "TOS";
 static const char TEXT_REG_EXT[] PROGMEM = "EXT";
+// clang-format on
 static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_R0)
-    NAME_ENTRY(REG_R1)
-    NAME_ENTRY(REG_R2)
-    NAME_ENTRY(REG_R3)
-    NAME_ENTRY(REG_R4)
-    NAME_ENTRY(REG_R5)
-    NAME_ENTRY(REG_R6)
-    NAME_ENTRY(REG_R7)
-    NAME_ENTRY(REG_FP)
-    NAME_ENTRY(REG_SP)
-    NAME_ENTRY(REG_SB)
-    NAME_ENTRY(REG_PC)
-    NAME_ENTRY(REG_TOS)
+        NAME_ENTRY(REG_R0),
+        NAME_ENTRY(REG_R1),
+        NAME_ENTRY(REG_R2),
+        NAME_ENTRY(REG_R3),
+        NAME_ENTRY(REG_R4),
+        NAME_ENTRY(REG_R5),
+        NAME_ENTRY(REG_R6),
+        NAME_ENTRY(REG_R7),
+        NAME_ENTRY(REG_FP),
+        NAME_ENTRY(REG_SP),
+        NAME_ENTRY(REG_SB),
+        NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_TOS),
 #ifdef NS32000_ENABLE_FLOAT
-    NAME_ENTRY(REG_F0)
-    NAME_ENTRY(REG_F1)
-    NAME_ENTRY(REG_F2)
-    NAME_ENTRY(REG_F3)
-    NAME_ENTRY(REG_F4)
-    NAME_ENTRY(REG_F5)
-    NAME_ENTRY(REG_F6)
-    NAME_ENTRY(REG_F7)
+        NAME_ENTRY(REG_F0),
+        NAME_ENTRY(REG_F1),
+        NAME_ENTRY(REG_F2),
+        NAME_ENTRY(REG_F3),
+        NAME_ENTRY(REG_F4),
+        NAME_ENTRY(REG_F5),
+        NAME_ENTRY(REG_F6),
+        NAME_ENTRY(REG_F7),
 #endif
-    NAME_ENTRY(REG_EXT)
+        NAME_ENTRY(REG_EXT),
 };
 
 RegName RegNs32000::parseRegName(const char *line) {
@@ -83,7 +86,8 @@ uint8_t RegNs32000::regNameLen(RegName name) {
     switch (name) {
     case REG_UNDEF:
         return 0;
-    case REG_TOS: case REG_EXT:
+    case REG_TOS:
+    case REG_EXT:
         return 3;
     default:
         return 2;
@@ -109,7 +113,8 @@ RegName RegNs32000::decodeRegName(uint8_t num) {
 
 uint8_t RegNs32000::encodeRegName(RegName name) {
 #ifdef NS32000_ENABLE_FLOAT
-    if (isFloat(name)) return uint8_t(name) - 8;
+    if (isFloat(name))
+        return uint8_t(name) - 8;
 #endif
     return uint8_t(name);
 }
@@ -126,20 +131,22 @@ bool RegNs32000::isFloat(RegName name) {
 }
 #endif
 
+// clang-format off
 static const char TEXT_PREG_UPSR[]    PROGMEM = "UPSR";
 static const char TEXT_PREG_US[]      PROGMEM = "US";
 static const char TEXT_PREG_PSR[]     PROGMEM = "PSR";
 static const char TEXT_PREG_INTBASE[] PROGMEM = "INTBASE";
 static const char TEXT_PREG_MOD[]     PROGMEM = "MOD";
+// clang-format on
 static const RegBase::NameEntry PREG_TABLE[] PROGMEM = {
-    NAME_ENTRY(PREG_UPSR)
-    { PREG_UPSR, TEXT_PREG_US },
-    { PREG_FP,   TEXT_REG_FP },
-    { PREG_SP,   TEXT_REG_SP },
-    { PREG_SB,   TEXT_REG_SB },
-    NAME_ENTRY(PREG_PSR)
-    NAME_ENTRY(PREG_INTBASE)
-    NAME_ENTRY(PREG_MOD)
+        NAME_ENTRY(PREG_UPSR),
+        {PREG_UPSR, TEXT_PREG_US},
+        {PREG_FP, TEXT_REG_FP},
+        {PREG_SP, TEXT_REG_SP},
+        {PREG_SB, TEXT_REG_SB},
+        NAME_ENTRY(PREG_PSR),
+        NAME_ENTRY(PREG_INTBASE),
+        NAME_ENTRY(PREG_MOD),
 };
 
 PregName RegNs32000::parsePregName(const char *line) {
@@ -160,8 +167,10 @@ char *RegNs32000::outPregName(char *out, PregName name) const {
 
 PregName RegNs32000::decodePregName(uint8_t num) {
     num &= 0xF;
-    if (num >= 1 && num < 8) return PREG_UNDEF;
-    if (num == 11 || num == 12) return PREG_UNDEF;
+    if (num >= 1 && num < 8)
+        return PREG_UNDEF;
+    if (num == 11 || num == 12)
+        return PREG_UNDEF;
     return PregName(num);
 }
 
@@ -170,6 +179,7 @@ uint8_t RegNs32000::encodePregName(PregName name) {
 }
 
 #ifdef NS32000_ENABLE_MMU
+// clang-format off
 static const char TEXT_MREG_BPR0[] PROGMEM = "BPR0";
 static const char TEXT_MREG_BPR1[] PROGMEM = "BPR1";
 static const char TEXT_MREG_MSR[]  PROGMEM = "MSR";
@@ -177,14 +187,15 @@ static const char TEXT_MREG_BCNT[] PROGMEM = "BCNT";
 static const char TEXT_MREG_PTB0[] PROGMEM = "PTB0";
 static const char TEXT_MREG_PTB1[] PROGMEM = "PTB1";
 static const char TEXT_MREG_EIA[]  PROGMEM = "EIA";
+// clang-format on
 static const RegBase::NameEntry MREG_TABLE[] PROGMEM = {
-    NAME_ENTRY(MREG_BPR0)
-    NAME_ENTRY(MREG_BPR1)
-    NAME_ENTRY(MREG_MSR)
-    NAME_ENTRY(MREG_BCNT)
-    NAME_ENTRY(MREG_PTB0)
-    NAME_ENTRY(MREG_PTB1)
-    NAME_ENTRY(MREG_EIA)
+        NAME_ENTRY(MREG_BPR0),
+        NAME_ENTRY(MREG_BPR1),
+        NAME_ENTRY(MREG_MSR),
+        NAME_ENTRY(MREG_BCNT),
+        NAME_ENTRY(MREG_PTB0),
+        NAME_ENTRY(MREG_PTB1),
+        NAME_ENTRY(MREG_EIA),
 };
 
 MregName RegNs32000::parseMregName(const char *line) {
@@ -205,7 +216,8 @@ char *RegNs32000::outMregName(char *out, MregName name) const {
 
 MregName RegNs32000::decodeMregName(uint8_t num) {
     num &= 0xF;
-    if (num == 14 || (num >= 2 && num < 10)) return MREG_UNDEF;
+    if (num == 14 || (num >= 2 && num < 10))
+        return MREG_UNDEF;
     return MregName(num);
 }
 
@@ -219,10 +231,10 @@ static const char TEXT_CONFIG_F[] PROGMEM = "F";
 static const char TEXT_CONFIG_M[] PROGMEM = "M";
 static const char TEXT_CONFIG_C[] PROGMEM = "C";
 static const RegBase::NameEntry CONFIG_TABLE[] PROGMEM = {
-    NAME_ENTRY(CONFIG_I)
-    NAME_ENTRY(CONFIG_M)
-    NAME_ENTRY(CONFIG_F)
-    NAME_ENTRY(CONFIG_C)
+        NAME_ENTRY(CONFIG_I),
+        NAME_ENTRY(CONFIG_M),
+        NAME_ENTRY(CONFIG_F),
+        NAME_ENTRY(CONFIG_C),
 };
 
 ConfigName RegNs32000::parseConfigName(const char *line) {
@@ -239,8 +251,10 @@ char *RegNs32000::outConfigNames(char *out, uint8_t configs) const {
     char sep = 0;
     for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
         if (configs & mask) {
-            if (sep) *out++ = sep;
-            const NameEntry *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
+            if (sep)
+                *out++ = sep;
+            const NameEntry *entry =
+                    searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
             out = outText(out, entry->text());
             sep = ',';
         }
@@ -254,9 +268,9 @@ static const char TEXT_STROPT_B[] PROGMEM = "B";
 static const char TEXT_STROPT_W[] PROGMEM = "W";
 static const char TEXT_STROPT_U[] PROGMEM = "U";
 static const RegBase::NameEntry STROPT_TABLE[] PROGMEM = {
-    NAME_ENTRY(STROPT_B)
-    NAME_ENTRY(STROPT_W)
-    NAME_ENTRY(STROPT_U)
+        NAME_ENTRY(STROPT_B),
+        NAME_ENTRY(STROPT_W),
+        NAME_ENTRY(STROPT_U),
 };
 
 StrOptName RegNs32000::parseStrOptName(const char *line) {
@@ -275,9 +289,11 @@ char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
         out = outText(out, TEXT_STROPT_B);
         sep = ',';
     }
-    const NameEntry *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
+    const NameEntry *entry =
+            searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
     if (entry) {
-        if (sep) *out++ = sep;
+        if (sep)
+            *out++ = sep;
         out = outText(out, entry->text());
     }
     *out++ = ']';
@@ -288,11 +304,20 @@ char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
 OprSize RegNs32000::parseIndexSize(const char *line) {
     OprSize size = SZ_NONE;
     switch (toupper(*line)) {
-    case 'B': size = SZ_BYTE; break;
-    case 'W': size = SZ_WORD; break;
-    case 'D': size = SZ_LONG; break;
-    case 'Q': size = SZ_QUAD; break;
-    default: return size;
+    case 'B':
+        size = SZ_BYTE;
+        break;
+    case 'W':
+        size = SZ_WORD;
+        break;
+    case 'D':
+        size = SZ_LONG;
+        break;
+    case 'Q':
+        size = SZ_QUAD;
+        break;
+    default:
+        return size;
     }
     return isidchar(line[1]) ? SZ_NONE : size;
 }
@@ -304,17 +329,27 @@ uint8_t RegNs32000::indexSizeLen(OprSize size) {
 char RegNs32000::indexSizeChar(OprSize size) const {
     char c;
     switch (size) {
-    case SZ_BYTE: c = 'B'; break;
-    case SZ_WORD: c = 'W'; break;
-    case SZ_LONG: c = 'D'; break;
-    case SZ_QUAD: c = 'Q'; break;
-    default: c = 0; break;
+    case SZ_BYTE:
+        c = 'B';
+        break;
+    case SZ_WORD:
+        c = 'W';
+        break;
+    case SZ_LONG:
+        c = 'D';
+        break;
+    case SZ_QUAD:
+        c = 'Q';
+        break;
+    default:
+        c = 0;
+        break;
     }
     return _uppercase ? c : tolower(c);
 }
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

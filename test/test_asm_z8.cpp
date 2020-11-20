@@ -36,13 +36,22 @@ static bool z88() {
     return strcmp(assembler.getCpu(), "Z88") == 0;
 }
 
-#define TZ86(src, ...)  if (z86()) TEST(src, __VA_ARGS__)
-#define TZ88(src, ...)  if (z88()) TEST(src, __VA_ARGS__)
-#define ETZ86(err, src, ...)  if (z86()) ETEST(err, src, __VA_ARGS__)
-#define ETZ88(err, src, ...)  if (z88()) ETEST(err, src, __VA_ARGS__)
+#define TZ86(src, ...) \
+    if (z86())         \
+    TEST(src, __VA_ARGS__)
+#define TZ88(src, ...) \
+    if (z88())         \
+    TEST(src, __VA_ARGS__)
+#define ETZ86(err, src, ...) \
+    if (z86())               \
+    ETEST(err, src, __VA_ARGS__)
+#define ETZ88(err, src, ...) \
+    if (z88())               \
+    ETEST(err, src, __VA_ARGS__)
 
 static uint8_t R(uint8_t n) {
-    if (z88()) return 0xC0 + n;
+    if (z88())
+        return 0xC0 + n;
     return 0xE0 + n;
 }
 
@@ -54,6 +63,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu z8", true, assembler.setCpu("z8"));
     EQUALS("cpu z8", "Z8", assembler.getCpu());
@@ -855,13 +865,16 @@ static void test_error() {
     ETZ88(ILLEGAL_BIT_NUMBER, "BITS R8,#8");
     ETZ88(ILLEGAL_BIT_NUMBER, "BXOR R2,R8,#8");
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "Z8", "Z86C", "Z88",
+            "Z8",
+            "Z86C",
+            "Z88",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         assembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);
@@ -872,7 +885,8 @@ void run_tests() {
         RUN_TEST(test_one_operand);
         RUN_TEST(test_two_operands);
         RUN_TEST(test_indexed);
-        if (z88()) RUN_TEST(test_bit_operation);
+        if (z88())
+            RUN_TEST(test_bit_operation);
         RUN_TEST(test_setrp);
         RUN_TEST(test_comment);
         RUN_TEST(test_undefined_symbol);

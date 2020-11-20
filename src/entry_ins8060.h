@@ -25,12 +25,12 @@ namespace libasm {
 namespace ins8060 {
 
 enum AddrMode : uint8_t {
-    INHR  = 1,  // Inherent
-    PNTR  = 2,  // Pointer, Pn
-    IMM8  = 3,  // Immediate, nn
-    REL8  = 4,  // PC Relative, label
-    DISP  = 5,  // Displacement, REL8 + dd(Pn), E(Pn)
-    INDX  = 6,  // Indexed, DISP + @dd(Pn), @E(Pn)
+    INHR = 1,   // Inherent
+    PNTR = 2,   // Pointer, Pn
+    IMM8 = 3,   // Immediate, nn
+    REL8 = 4,   // PC Relative, label
+    DISP = 5,   // Displacement, REL8 + dd(Pn), E(Pn)
+    INDX = 6,   // Indexed, DISP + @dd(Pn), @E(Pn)
     UNDEF = 0,  // Undefined instruction
 };
 
@@ -44,9 +44,7 @@ public:
         }
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 
-        AddrMode mode() const {
-            return AddrMode(_attr);
-        }
+        AddrMode mode() const { return AddrMode(_attr); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -58,10 +56,10 @@ private:
     Flags _flags;
 };
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
-#endif // __ENTRY_INS8060_H__
+#endif  // __ENTRY_INS8060_H__
 
 // Local Variables:
 // mode: c++

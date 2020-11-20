@@ -22,7 +22,7 @@
 namespace libasm {
 
 enum AddressWidth : uint8_t {
-    ADDRESS_8BIT  = 8,
+    ADDRESS_8BIT = 8,
     ADDRESS_16BIT = 16,
     ADDRESS_20BIT = 20,
     ADDRESS_24BIT = 24,
@@ -30,12 +30,12 @@ enum AddressWidth : uint8_t {
 };
 
 enum OpCodeWidth : uint8_t {
-    OPCODE_8BIT  = 8,
+    OPCODE_8BIT = 8,
     OPCODE_16BIT = 16,
 };
 
 enum Endian : uint8_t {
-    ENDIAN_BIG    = 0,
+    ENDIAN_BIG = 0,
     ENDIAN_LITTLE = 1,
 };
 
@@ -47,19 +47,12 @@ struct ConfigBase {
     virtual uint8_t nameMax() const = 0;
 };
 
-template<
-    AddressWidth AddrWE,
-    typename AddrT,
-    typename DiffT,
-    OpCodeWidth CodeWE,
-    typename OpCodeT,
-    uint8_t MaxCode,
-    Endian EndianE,
-    uint8_t MaxName
-    >
+template <AddressWidth AddrWE, typename AddrT, typename DiffT,
+        OpCodeWidth CodeWE, typename OpCodeT, uint8_t MaxCode, Endian EndianE,
+        uint8_t MaxName>
 struct ConfigImpl : virtual public ConfigBase {
-    typedef AddrT   uintptr_t;
-    typedef DiffT   ptrdiff_t;
+    typedef AddrT uintptr_t;
+    typedef DiffT ptrdiff_t;
     typedef OpCodeT opcode_t;
 
     static constexpr uint8_t MAX_CODE = MaxCode;
@@ -73,9 +66,9 @@ struct ConfigImpl : virtual public ConfigBase {
     uint8_t nameMax() const override { return MaxName; }
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __CONFIG_BASE_H__
+#endif  // __CONFIG_BASE_H__
 
 // Local Variables:
 // mode: c++

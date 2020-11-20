@@ -45,51 +45,51 @@ enum RegName : int8_t {
     REG_F6 = 6 + 8,
     REG_F7 = 7 + 8,
 #endif
-    REG_FP = 'F',  // FP
-    REG_SP = 'S',  // SP
-    REG_SB = 'B',  // SB
-    REG_PC = 'P',  // PC
-    REG_TOS = 'T', // TOS
-    REG_EXT = 'E', // EXT
+    REG_FP = 'F',   // FP
+    REG_SP = 'S',   // SP
+    REG_SB = 'B',   // SB
+    REG_PC = 'P',   // PC
+    REG_TOS = 'T',  // TOS
+    REG_EXT = 'E',  // EXT
 };
 
 enum PregName : int8_t {
-    PREG_UNDEF   = -1,
-    PREG_UPSR    = 0,  // UPSR/US
-    PREG_FP      = 8,  // FP
-    PREG_SP      = 9,  // SP
-    PREG_SB      = 10, // SB
-    PREG_PSR     = 13, // PSR
-    PREG_INTBASE = 14, // INTBASE
-    PREG_MOD     = 15, // MOD
+    PREG_UNDEF = -1,
+    PREG_UPSR = 0,      // UPSR/US
+    PREG_FP = 8,        // FP
+    PREG_SP = 9,        // SP
+    PREG_SB = 10,       // SB
+    PREG_PSR = 13,      // PSR
+    PREG_INTBASE = 14,  // INTBASE
+    PREG_MOD = 15,      // MOD
 };
 
 #ifdef NS32000_ENABLE_MMU
 enum MregName : int8_t {
     MREG_UNDEF = -1,
-    MREG_BPR0  = 0,  // BPR0
-    MREG_BPR1  = 1,  // BPR1
-    MREG_MSR   = 10, // MSR
-    MREG_BCNT  = 11, // BCNT
-    MREG_PTB0  = 12, // PTB0
-    MREG_PTB1  = 13, // PTB1
-    MREG_EIA   = 15, // EIA
+    MREG_BPR0 = 0,   // BPR0
+    MREG_BPR1 = 1,   // BPR1
+    MREG_MSR = 10,   // MSR
+    MREG_BCNT = 11,  // BCNT
+    MREG_PTB0 = 12,  // PTB0
+    MREG_PTB1 = 13,  // PTB1
+    MREG_EIA = 15,   // EIA
 };
 #endif
 
 enum ConfigName : uint8_t {
     CONFIG_UNDEF = 0,
-    CONFIG_I = 1, // Vectored Interrupt
-    CONFIG_F = 2, // Floating Point
-    CONFIG_M = 4, // Memory Management
-    CONFIG_C = 8, // Custom
+    CONFIG_I = 1,  // Vectored Interrupt
+    CONFIG_F = 2,  // Floating Point
+    CONFIG_M = 4,  // Memory Management
+    CONFIG_C = 8,  // Custom
 };
 
 enum StrOptName : uint8_t {
     STROPT_UNDEF = 0,
-    STROPT_B     = 0x2,  // Backward
-    STROPT_W     = 0x4,  // While Match
-    STROPT_U     = 0xC, // Until Match
+    STROPT_B = 0x2,  // Backward
+    STROPT_W = 0x4,  // While Match
+    STROPT_U = 0xC,  // Until Match
 };
 
 class RegNs32000 : public RegBase {
@@ -133,10 +133,10 @@ public:
     char indexSizeChar(OprSize size) const;
 };
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __REG_NS32000_H__
+#endif  // __REG_NS32000_H__
 
 // Local Variables:
 // mode: c++

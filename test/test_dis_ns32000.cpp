@@ -33,6 +33,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu ns32032", true,    disassembler.setCpu("NS32032"));
     EQUALS("cpu ns32032", "32032", disassembler.getCpu());
@@ -538,12 +539,16 @@ static void test_generic_addressing() {
          0xC0, 0x55, 0x66, 0x77,
          0x20);
 }
+// clang-format on
 
-static void assert_illegal(const char *file, int line, uint8_t post, uint8_t opc, uint8_t prefix) {
-    __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, _, "", prefix, opc, post);
+static void assert_illegal(
+        const char *file, int line, uint8_t post, uint8_t opc, uint8_t prefix) {
+    __VASSERT(
+            file, line, UNKNOWN_INSTRUCTION, 0x0000, _, "", prefix, opc, post);
 }
 
-static void assert_illegal(const char *file, int line, uint8_t opc, uint8_t prefix) {
+static void assert_illegal(
+        const char *file, int line, uint8_t opc, uint8_t prefix) {
     __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, _, "", prefix, opc);
 }
 
@@ -560,19 +565,26 @@ static void test_illegal() {
     // Format 3: |_gen_|_op| |011111|ii|
     for (uint8_t gen = 0x00; gen <= 0x1F; gen++) {
         for (uint8_t ii = 0; ii <= 3; ii++) {
-            static const uint8_t opc[] = { 0x1, 0x3, 0x5, 0x7, 0x8, 0x9, 0xB, 0xD, 0xF };
+            static const uint8_t opc[] = {
+                    0x1, 0x3, 0x5, 0x7, 0x8, 0x9, 0xB, 0xD, 0xF};
             for (uint8_t i = 0; i < sizeof(opc); i++) {
                 if (ii != 2)
-                    TEST_ILLEGAL((gen << 3) | (opc[i] >> 1), (opc[i] << 7) | 0x7C | ii);
+                    TEST_ILLEGAL((gen << 3) | (opc[i] >> 1),
+                            (opc[i] << 7) | 0x7C | ii);
             }
             if (ii == 3) {
-                TEST_ILLEGAL((gen << 3) | (0x2 >> 1), (0x2 << 7) | 0x7C | ii); // BICPSR
-                TEST_ILLEGAL((gen << 3) | (0x6 >> 1), (0x6 << 7) | 0x7C | ii); // BISPSR
+                TEST_ILLEGAL((gen << 3) | (0x2 >> 1),
+                        (0x2 << 7) | 0x7C | ii);  // BICPSR
+                TEST_ILLEGAL((gen << 3) | (0x6 >> 1),
+                        (0x6 << 7) | 0x7C | ii);  // BISPSR
             }
             if (ii != 3) {
-                TEST_ILLEGAL((gen << 3) | (0x0 >> 1), (0x0 << 7) | 0x7C | ii); // CXPD
-                TEST_ILLEGAL((gen << 3) | (0x4 >> 1), (0x4 << 7) | 0x7C | ii); // JUMP
-                TEST_ILLEGAL((gen << 3) | (0xC >> 1), (0xC << 7) | 0x7C | ii); // JSR
+                TEST_ILLEGAL((gen << 3) | (0x0 >> 1),
+                        (0x0 << 7) | 0x7C | ii);  // CXPD
+                TEST_ILLEGAL((gen << 3) | (0x4 >> 1),
+                        (0x4 << 7) | 0x7C | ii);  // JUMP
+                TEST_ILLEGAL((gen << 3) | (0xC >> 1),
+                        (0xC << 7) | 0x7C | ii);  // JSR
             }
         }
     }
@@ -581,7 +593,7 @@ static void test_illegal() {
     for (uint8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
         for (uint8_t ii = 0; ii <= 3; ii++) {
             if (ii != 3)
-                TEST_ILLEGAL((gen2 << 6) | (0x9 << 2) | ii, 0x0E); // ADDR
+                TEST_ILLEGAL((gen2 << 6) | (0x9 << 2) | ii, 0x0E);  // ADDR
         }
     }
 
@@ -592,24 +604,25 @@ static void test_illegal() {
                 TEST_ILLEGAL(data >> 1, (data << 7) | (opc << 2) | ii, 0x0E);
             }
             if (ii != 3)
-                TEST_ILLEGAL(data >> 1, (data << 7) | (0x2 << 2) | ii, 0x0E); // SETCFG
+                TEST_ILLEGAL(data >> 1, (data << 7) | (0x2 << 2) | ii,
+                        0x0E);  // SETCFG
         }
         if (ii == 2) {
-            TEST_ILLEGAL(0x00 | (0x0 << 2) | ii, 0x0E); // MOVSi
-            TEST_ILLEGAL(0x00 | (0x1 << 2) | ii, 0x0E); // CMPSi
-            TEST_ILLEGAL(0x00 | (0x3 << 2) | ii, 0x0E); // SKPSi
+            TEST_ILLEGAL(0x00 | (0x0 << 2) | ii, 0x0E);  // MOVSi
+            TEST_ILLEGAL(0x00 | (0x1 << 2) | ii, 0x0E);  // CMPSi
+            TEST_ILLEGAL(0x00 | (0x3 << 2) | ii, 0x0E);  // SKPSi
         }
         if (ii != 0) {
-            TEST_ILLEGAL(0x80 | (0x0 << 2) | ii, 0x0E); // MOVST
-            TEST_ILLEGAL(0x80 | (0x1 << 2) | ii, 0x0E); // CMPST
-            TEST_ILLEGAL(0x80 | (0x3 << 2) | ii, 0x0E); // SKPST
+            TEST_ILLEGAL(0x80 | (0x0 << 2) | ii, 0x0E);  // MOVST
+            TEST_ILLEGAL(0x80 | (0x1 << 2) | ii, 0x0E);  // CMPST
+            TEST_ILLEGAL(0x80 | (0x3 << 2) | ii, 0x0E);  // SKPST
         }
     }
 
     // Format 6: |gen1_|gen| |2_|_op_|ii|0100|1110|
     for (uint8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
         for (uint8_t ii = 0; ii <= 3; ii++) {
-            static const uint8_t opc[] = { 0x4, 0xA };
+            static const uint8_t opc[] = {0x4, 0xA};
             for (uint8_t i = 0; i < sizeof(opc); i++) {
                 TEST_ILLEGAL((gen2 << 6) | (opc[i] << 2) | ii, 0x4E);
             }
@@ -621,12 +634,12 @@ static void test_illegal() {
         for (uint8_t ii = 0; ii <= 3; ii++) {
             TEST_ILLEGAL((gen2 << 6) | (0xA << 2) | ii, 0xCE);
             if (ii != 0) {
-                TEST_ILLEGAL((gen2 << 6) | (0x4 << 2) | ii, 0xCE); // MOVXBW
-                TEST_ILLEGAL((gen2 << 6) | (0x5 << 2) | ii, 0xCE); // MOVZBW
+                TEST_ILLEGAL((gen2 << 6) | (0x4 << 2) | ii, 0xCE);  // MOVXBW
+                TEST_ILLEGAL((gen2 << 6) | (0x5 << 2) | ii, 0xCE);  // MOVZBW
             }
             if (ii == 2 || ii == 3) {
-                TEST_ILLEGAL((gen2 << 6) | (0x6 << 2) | ii, 0xCE); // MOVZiD
-                TEST_ILLEGAL((gen2 << 6) | (0x7 << 2) | ii, 0xCE); // MOVXiD
+                TEST_ILLEGAL((gen2 << 6) | (0x6 << 2) | ii, 0xCE);  // MOVZiD
+                TEST_ILLEGAL((gen2 << 6) | (0x7 << 2) | ii, 0xCE);  // MOVXiD
             }
         }
     }
@@ -637,11 +650,13 @@ static void test_illegal() {
             for (uint8_t reg = 0; reg <= 7; reg++) {
                 if (reg != 1 && reg != 3) {
                     uint8_t opc = 6;
-                    TEST_ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii, (opc << 6) | 0x2E); // MOVSUi/MOVUSi
+                    TEST_ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
+                            (opc << 6) | 0x2E);  // MOVSUi/MOVUSi
                 }
                 if (ii != 3) {
                     uint8_t opc = 1;
-                    TEST_ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii, (opc << 6) | 0x6E); // CVP
+                    TEST_ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
+                            (opc << 6) | 0x6E);  // CVP
                 }
             }
         }
@@ -652,14 +667,16 @@ static void test_illegal() {
         for (uint8_t ii = 0; ii <= 3; ii++) {
             for (uint8_t f = 0; f <= 4; f += 4) {
                 if (ii != 3) {
-                    TEST_ILLEGAL((gen2 << 6) | (1 << 3) | f | ii, 0x3E); // LFSR
-                    TEST_ILLEGAL((gen2 << 6) | (6 << 3) | f | ii, 0x3E); // SFSR
+                    TEST_ILLEGAL(
+                            (gen2 << 6) | (1 << 3) | f | ii, 0x3E);  // LFSR
+                    TEST_ILLEGAL(
+                            (gen2 << 6) | (6 << 3) | f | ii, 0x3E);  // SFSR
                 }
             }
             if (ii != 3)
-                TEST_ILLEGAL((gen2 << 6) | (2 << 3) | 0 | ii, 0x3E); // MOVLF
+                TEST_ILLEGAL((gen2 << 6) | (2 << 3) | 0 | ii, 0x3E);  // MOVLF
             if (ii != 2)
-                TEST_ILLEGAL((gen2 << 6) | (3 << 3) | 4 | ii, 0x3E); // MOVFL
+                TEST_ILLEGAL((gen2 << 6) | (3 << 3) | 4 | ii, 0x3E);  // MOVFL
         }
     }
 
@@ -668,7 +685,7 @@ static void test_illegal() {
 
     // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
     for (int8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
-        static uint8_t opc[] = { 0x3, 0x6, 0x7, 0x9, 0xA, 0xB, 0xE, 0xF };
+        static uint8_t opc[] = {0x3, 0x6, 0x7, 0x9, 0xA, 0xB, 0xE, 0xF};
         for (uint8_t i = 0; i < sizeof(opc); i++) {
             for (uint8_t f = 0; f <= 1; f++) {
                 TEST_ILLEGAL((gen2 << 6) | (opc[i] << 2) | f, 0xBE);
@@ -686,16 +703,18 @@ static void test_illegal() {
     for (uint8_t ii = 0; ii <= 3; ii++) {
         for (uint8_t data = 0x0; data <= 0xF; data++) {
             if (ii != 3) {
-                TEST_ILLEGAL((data >> 1), (data << 7) | (2 << 2) | ii, 0x1E); // LMR
-                TEST_ILLEGAL((data >> 1), (data << 7) | (3 << 2) | ii, 0x1E); // SMR
+                TEST_ILLEGAL(
+                        (data >> 1), (data << 7) | (2 << 2) | ii, 0x1E);  // LMR
+                TEST_ILLEGAL(
+                        (data >> 1), (data << 7) | (3 << 2) | ii, 0x1E);  // SMR
             }
             for (uint8_t opc = 0x4; opc <= 0xF; opc++) {
                 TEST_ILLEGAL((data >> 1), (data << 7) | (opc << 2) | ii, 0x1E);
             }
         }
         if (ii != 3) {
-            TEST_ILLEGAL(0x80 | (0 << 2) | ii, 0x1E); // RDVAL
-            TEST_ILLEGAL(0x80 | (1 << 2) | ii, 0x1E); // WRVAL
+            TEST_ILLEGAL(0x80 | (0 << 2) | ii, 0x1E);  // RDVAL
+            TEST_ILLEGAL(0x80 | (1 << 2) | ii, 0x1E);  // WRVAL
         }
     }
 

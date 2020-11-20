@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu sc/mp", true,    assembler.setCpu("SC/MP"));
     EQUALS("cpu sc/mp", "SC/MP", assembler.getCpu());
@@ -232,6 +233,7 @@ static void test_error() {
     ETEST(MISSING_CLOSING_PAREN, "LD 1(P3");
     ETEST(ILLEGAL_CONSTANT, "LDI #1");
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

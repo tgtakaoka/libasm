@@ -36,13 +36,22 @@ static bool z88() {
     return strcmp(disassembler.getCpu(), "Z88") == 0;
 }
 
-#define TZ86(name, opr, ...) if (z86()) TEST(name, opr, __VA_ARGS__)
-#define TZ88(name, opr, ...) if (z88()) TEST(name, opr, __VA_ARGS__)
-#define ETZ86(error, name, opr, ...) if (z86()) ETEST(error, name, opr, __VA_ARGS__)
-#define ETZ88(error, name, opr, ...) if (z88()) ETEST(error, name, opr, __VA_ARGS__)
+#define TZ86(name, opr, ...) \
+    if (z86())               \
+    TEST(name, opr, __VA_ARGS__)
+#define TZ88(name, opr, ...) \
+    if (z88())               \
+    TEST(name, opr, __VA_ARGS__)
+#define ETZ86(error, name, opr, ...) \
+    if (z86())                       \
+    ETEST(error, name, opr, __VA_ARGS__)
+#define ETZ88(error, name, opr, ...) \
+    if (z88())                       \
+    ETEST(error, name, opr, __VA_ARGS__)
 
 static uint8_t R(uint8_t n) {
-    if (z88()) return 0xC0 + n;
+    if (z88())
+        return 0xC0 + n;
     return 0xE0 + n;
 }
 
@@ -55,6 +64,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu z8", true, disassembler.setCpu("z8"));
     EQUALS("cpu z8", "Z8", disassembler.getCpu());
@@ -653,13 +663,16 @@ static void test_illegal_z88() {
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
         ILLEGAL(illegals[idx]);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "Z8", "Z86C", "Z88",
+            "Z8",
+            "Z86C",
+            "Z88",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);
@@ -671,13 +684,15 @@ void run_tests() {
         RUN_TEST(test_two_operands);
         RUN_TEST(test_indexed);
         RUN_TEST(test_setrp);
-        if (z88()) RUN_TEST(test_bit_operation);
+        if (z88())
+            RUN_TEST(test_bit_operation);
         if (z86c()) {
             RUN_TEST(test_illegal_z86c);
         } else if (z86c()) {
             RUN_TEST(test_illegal_z8);
         }
-        if (z88()) RUN_TEST(test_illegal_z88);
+        if (z88())
+            RUN_TEST(test_illegal_z88);
     }
 }
 

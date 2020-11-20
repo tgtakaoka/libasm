@@ -28,7 +28,7 @@ class InsnZ8000 : public InsnBase<Config> {
 public:
     InsnZ8000(Insn &insn) : InsnBase(insn) {}
 
-    OprSize  oprSize() const { return _flags.oprSize(); }
+    OprSize oprSize() const { return _flags.oprSize(); }
     AddrMode dstMode() const { return _flags.dstMode(); }
     AddrMode srcMode() const { return _flags.srcMode(); }
     AddrMode ex1Mode() const { return _flags.ex1Mode(); }
@@ -43,8 +43,7 @@ public:
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(
-            AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
+    void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
         _flags = Entry::Flags::create(
                 dst, MF_NO, src, MF_NO, ex1, ex2, P_NO, CM_0x0000, SZ_NONE);
     }
@@ -66,18 +65,17 @@ public:
     void emitInsn() {
         emitUint16(_opCode, 0);
         const PostMode mode = postMode();
-        if (mode == P_0XX8) _post |= 8;
-        if (mode == P_0XXE) _post |= 0xE;
-        if (mode != P_NO) emitUint16(_post, 2);
+        if (mode == P_0XX8)
+            _post |= 8;
+        if (mode == P_0XXE)
+            _post |= 0xE;
+        if (mode != P_NO)
+            emitUint16(_post, 2);
     }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, operandPos());
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
-    void emitOperand32(uint32_t val32) {
-        emitUint32(val32, operandPos());
-    }
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
 private:
     Config::opcode_t _opCode;
@@ -86,15 +84,16 @@ private:
 
     uint8_t operandPos() {
         uint8_t pos = length();
-        if (pos == 0) pos = hasPost() ? 4 : 2;
+        if (pos == 0)
+            pos = hasPost() ? 4 : 2;
         return pos;
     }
 };
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __INSN_Z8000_H__
+#endif  // __INSN_Z8000_H__
 
 // Local Variables:
 // mode: c++

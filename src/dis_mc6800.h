@@ -26,9 +26,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class DisMc6800
-    : public Disassembler,
-      public Config {
+class DisMc6800 : public Disassembler, public Config {
 public:
     DisMc6800() : Disassembler(_formatter, _regs, TableMc6800) {}
 
@@ -41,19 +39,19 @@ private:
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeIndexed(
-        DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeOperand(
-        DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
-#endif // __DIS_MC6800_H__
+#endif  // __DIS_MC6800_H__
 
 // Local Variables:
 // mode: c++

@@ -26,9 +26,7 @@
 namespace libasm {
 namespace z80 {
 
-class DisZ80
-    : public Disassembler,
-      public Config {
+class DisZ80 : public Disassembler, public Config {
 public:
     DisZ80() : Disassembler(_formatter, _regs, TableZ80) {}
 
@@ -45,14 +43,14 @@ private:
     Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out);
     Error decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out);
     Error decodeOperand(
-        DisMemory &memory, InsnZ80& insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
-#endif // __DIS_Z80_H__
+#endif  // __DIS_Z80_H__
 
 // Local Variables:
 // mode: c++

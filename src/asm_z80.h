@@ -26,9 +26,7 @@
 namespace libasm {
 namespace z80 {
 
-class AsmZ80
-    : public Assembler,
-      public Config {
+class AsmZ80 : public Assembler, public Config {
 public:
     AsmZ80() : Assembler(_parser, TableZ80) {}
 
@@ -39,27 +37,22 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(M_NO),
-              reg(REG_UNDEF),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
 
     Error encodeRelative(InsnZ80 &insn, const Operand &op);
     Error encodeIndexedBitOp(InsnZ80 &insn, const Operand &op);
-    Error encodeOperand(
-        InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other);
+    Error encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode,
+            const Operand &other);
     Error encode(Insn &insn) override;
 };
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
-#endif // __ASM_Z80_H__
+#endif  // __ASM_Z80_H__
 
 // Local Variables:
 // mode: c++

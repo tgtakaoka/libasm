@@ -17,6 +17,8 @@
 #ifndef __ASM_BASE_H__
 #define __ASM_BASE_H__
 
+#include <stdint.h>
+
 #include "config_base.h"
 #include "error_reporter.h"
 #include "insn_base.h"
@@ -24,16 +26,12 @@
 #include "table_base.h"
 #include "value_parser.h"
 
-#include <stdint.h>
-
 namespace libasm {
 
-class Assembler
-    : public ErrorReporter,
-      virtual public ConfigBase {
+class Assembler : public ErrorReporter, virtual public ConfigBase {
 public:
     Error encode(
-        const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
+            const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
     ValueParser &getParser() const { return _parser; }
     const char *errorAt() const { return _scan; }
@@ -49,21 +47,16 @@ protected:
     TableBase &_table;
     const char _commentChar;
     const char *_scan;
-    SymbolTable  *_symtab;
+    SymbolTable *_symtab;
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
-        : _parser(parser),
-          _table(table),
-          _commentChar(commentChar)
-    {}
+        : _parser(parser), _table(table), _commentChar(commentChar) {}
 
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;
     static const char *skipSpaces(const char *scan);
 
-    Error parserError() {
-        return _parser.error();
-    }
+    Error parserError() { return _parser.error(); }
 
     uint16_t parseExpr16(const char *scan) {
         Value value;
@@ -89,9 +82,9 @@ private:
     virtual Error encode(Insn &insn) = 0;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __ASM_BASE_H__
+#endif  // __ASM_BASE_H__
 
 // Local Variables:
 // mode: c++

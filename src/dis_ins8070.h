@@ -26,9 +26,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class DisIns8070
-    : public Disassembler,
-      public Config {
+class DisIns8070 : public Disassembler, public Config {
 public:
     DisIns8070() : Disassembler(_formatter, _regs, TableIns8070) {}
 
@@ -52,10 +50,10 @@ private:
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
-#endif // __DIS_INS8070_H__
+#endif  // __DIS_INS8070_H__
 
 // Local Variables:
 // mode: c++

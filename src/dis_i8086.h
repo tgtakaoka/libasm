@@ -26,9 +26,7 @@
 namespace libasm {
 namespace i8086 {
 
-class DisI8086
-    : public Disassembler,
-      public Config {
+class DisI8086 : public Disassembler, public Config {
 public:
     DisI8086() : Disassembler(_formatter, _regs, TableI8086) {}
 
@@ -41,31 +39,28 @@ private:
     bool _repeatHasStringInst;
 
     char *outRegister(char *out, RegName name, const char prefix = 0);
-    Error outMemReg(
-        DisMemory &memory, InsnI8086 &insn, char *out,
-        RegName seg, uint8_t mode, uint8_t r_m);
+    Error outMemReg(DisMemory &memory, InsnI8086 &insn, char *out, RegName seg,
+            uint8_t mode, uint8_t r_m);
 
     RegName decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos pos);
     Error decodeRelative(
-        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode);
     Error decodeImmediate(
-        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode);
     Error decodeRepeatStr(DisMemory &memory, InsnI8086 &insn, char *out);
-    Error decodeMemReg(
-        DisMemory &memory, InsnI8086 &insn, char *out,
-        AddrMode mode, OprPos pos);
-    Error decodeOperand(
-        DisMemory &memory, InsnI8086 &insn, char *out,
-        AddrMode mode, OprPos pos);
+    Error decodeMemReg(DisMemory &memory, InsnI8086 &insn, char *out,
+            AddrMode mode, OprPos pos);
+    Error decodeOperand(DisMemory &memory, InsnI8086 &insn, char *out,
+            AddrMode mode, OprPos pos);
     Error readCodes(DisMemory &memory, InsnI8086 &insn);
     Error decodeStringInst(DisMemory &memory, InsnI8086 &insn, char *out);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
-#endif // __DIS_I8086_H__
+#endif  // __DIS_I8086_H__
 
 // Local Variables:
 // mode: c++

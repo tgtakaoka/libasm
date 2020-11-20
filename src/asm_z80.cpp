@@ -15,8 +15,9 @@
  */
 
 #include "asm_z80.h"
-#include "table_z80.h"
+
 #include "reg_z80.h"
+#include "table_z80.h"
 
 namespace libasm {
 namespace z80 {
@@ -25,39 +26,43 @@ Error AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
-    if (delta < -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
+    if (delta < -128 || delta >= 128)
+        return setError(OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
     return OK;
 }
 
 Error AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
-    const Config::opcode_t opc = insn.opCode(); // Bit opcode.
-    insn.setOpCode(insn.prefix());              // Make 0xCB prefix as opcode.
-    RegZ80::encodeIndexReg(insn, op.reg);       // Add 0xDD/0xFD prefix
-    insn.emitOperand8(op.val16);                // Index offset.
-    insn.emitOperand8(opc);                     // Bit opcode.
+    const Config::opcode_t opc = insn.opCode();  // Bit opcode.
+    insn.setOpCode(insn.prefix());               // Make 0xCB prefix as opcode.
+    RegZ80::encodeIndexReg(insn, op.reg);        // Add 0xDD/0xFD prefix
+    insn.emitOperand8(op.val16);                 // Index offset.
+    insn.emitOperand8(opc);                      // Bit opcode.
     insn.emitInsn();
     return OK;
 }
 
 Error AsmZ80::encodeOperand(
-    InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
+        InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
     uint16_t val16 = op.val16;
     switch (mode) {
     case M_IM8:
-        if (static_cast<int16_t>(val16) < -128
-            || (static_cast<int16_t>(val16) >= 0 && val16 >= 256))
+        if (static_cast<int16_t>(val16) < -128 ||
+                (static_cast<int16_t>(val16) >= 0 && val16 >= 256))
             return setError(OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return OK;
     case M_IOA:
-        if (val16 >= 256) return setError(OVERFLOW_RANGE);
+        if (val16 >= 256)
+            return setError(OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return OK;
     case M_INDX:
-        if (static_cast<int16_t>(val16) < -128 || static_cast<int16_t>(val16) >= 128)
+        if (static_cast<int16_t>(val16) < -128 ||
+                static_cast<int16_t>(val16) >= 128)
             return setError(OVERFLOW_RANGE);
-        if (insn.indexBit()) return encodeIndexedBitOp(insn, op);
+        if (insn.indexBit())
+            return encodeIndexedBitOp(insn, op);
         insn.emitOperand8(val16);
         /* Fall-through */
     case R_IXIY:
@@ -96,19 +101,27 @@ Error AsmZ80::encodeOperand(
         insn.embed(RegZ80::encodeIrReg(op.reg) << 3);
         return OK;
     case M_VEC:
-        if ((val16 & ~0x38) != 0) return setError(ILLEGAL_OPERAND);
+        if ((val16 & ~0x38) != 0)
+            return setError(ILLEGAL_OPERAND);
         insn.embed(val16);
         return OK;
     case M_BIT:
-        if (val16 >= 8) return setError(ILLEGAL_BIT_NUMBER);
+        if (val16 >= 8)
+            return setError(ILLEGAL_BIT_NUMBER);
         insn.embed(static_cast<uint8_t>(val16) << 3);
         return OK;
     case M_IMMD:
         switch (val16) {
-        case 0: return OK;
-        case 1: insn.embed(2 << 3); return OK;
-        case 2: insn.embed(3 << 3); return OK;
-        default: break;
+        case 0:
+            return OK;
+        case 1:
+            insn.embed(2 << 3);
+            return OK;
+        case 2:
+            insn.embed(3 << 3);
+            return OK;
+        default:
+            break;
         }
         return setError(ILLEGAL_OPERAND);
     default:
@@ -119,7 +132,8 @@ Error AsmZ80::encodeOperand(
 Error AsmZ80::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p)) return OK;
+    if (endOfLine(p))
+        return OK;
 
     // 'C' is either C-reg or C-condition
     const RegName reg = RegZ80::parseRegName(p);
@@ -143,13 +157,19 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
     if (op.reg != REG_UNDEF) {
         _scan = p + RegZ80::regNameLen(op.reg);
         switch (op.reg) {
-        case REG_IX: case REG_IY:
+        case REG_IX:
+        case REG_IY:
             op.mode = R_IXIY;
             break;
-        case REG_I: case REG_R:
+        case REG_I:
+        case REG_R:
             op.mode = R_IR;
             break;
-        case REG_B: case REG_D: case REG_E: case REG_H: case REG_L:
+        case REG_B:
+        case REG_D:
+        case REG_E:
+        case REG_H:
+        case REG_L:
             op.mode = M_REG;
             break;
         default:
@@ -163,10 +183,12 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
         op.reg = RegZ80::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p);
-            if (parserError()) return getError();
+            if (parserError())
+                return getError();
             op.setError(getError());
             p = skipSpaces(_scan);
-            if (*p != ')') return setError(MISSING_CLOSING_PAREN);
+            if (*p != ')')
+                return setError(MISSING_CLOSING_PAREN);
             op.mode = M_ABS;
             _scan = p + 1;
             return OK;
@@ -174,10 +196,12 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
         p = skipSpaces(p + RegZ80::regNameLen(op.reg));
         if (*p == ')') {
             switch (op.reg) {
-            case REG_BC: case REG_DE:
+            case REG_BC:
+            case REG_DE:
                 op.mode = I_BCDE;
                 break;
-            case REG_IX: case REG_IY:
+            case REG_IX:
+            case REG_IY:
                 op.mode = I_IXIY;
                 break;
             case REG_HL:
@@ -198,10 +222,12 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
         if (*p == '+' || *p == '-') {
             if (op.reg == REG_IX || op.reg == REG_IY) {
                 op.val16 = parseExpr16(p);
-                if (parserError()) return getError();
+                if (parserError())
+                    return getError();
                 op.setError(getError());
                 p = skipSpaces(_scan);
-                if (*p != ')') return setError(MISSING_CLOSING_PAREN);
+                if (*p != ')')
+                    return setError(MISSING_CLOSING_PAREN);
                 _scan = p + 1;
                 op.mode = M_INDX;
                 return OK;
@@ -210,10 +236,12 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
         return setError(UNKNOWN_OPERAND);
     }
     op.val16 = parseExpr16(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
     op.mode = M_IM16;
-    return OK;;
+    return OK;
+    ;
 }
 
 Error AsmZ80::encode(Insn &_insn) {
@@ -230,7 +258,8 @@ Error AsmZ80::encode(Insn &_insn) {
             return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(dstOp.getError());
     setErrorIf(srcOp.getError());
 
@@ -253,8 +282,8 @@ Error AsmZ80::encode(Insn &_insn) {
     return getError();
 }
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

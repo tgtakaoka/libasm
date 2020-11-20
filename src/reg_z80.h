@@ -27,13 +27,13 @@ enum RegName : int8_t {
     REG_UNDEF = -1,
     // 16-bit registers
     // Pointer registers
-    REG_BC  = 0 + 0,
-    REG_DE  = 1 + 0,
-    REG_HL  = 2 + 0,
-    REG_SP  = 3 + 0,
-    REG_IX  = 4 + 0,
-    REG_IY  = 5 + 0,
-    REG_AF  = 6 + 0,
+    REG_BC = 0 + 0,
+    REG_DE = 1 + 0,
+    REG_HL = 2 + 0,
+    REG_SP = 3 + 0,
+    REG_IX = 4 + 0,
+    REG_IY = 5 + 0,
+    REG_AF = 6 + 0,
     REG_AFP = 7 + 0,
     // 8-bit registers
     // Data registers
@@ -45,8 +45,8 @@ enum RegName : int8_t {
     REG_L = 5 + 8,
     REG_A = 7 + 8,
     // Other registers
-    REG_I  = 0 + 16,
-    REG_R  = 1 + 16,
+    REG_I = 0 + 16,
+    REG_R = 1 + 16,
     // 8085
     REG_IM = 0 + 18,
 };
@@ -54,13 +54,13 @@ enum RegName : int8_t {
 enum CcName : int8_t {
     CC_UNDEF = -1,
     CC_NZ = 0,
-    CC_Z  = 1,
+    CC_Z = 1,
     CC_NC = 2,
-    CC_C  = 3,
+    CC_C = 3,
     CC_PO = 4,
     CC_PE = 5,
-    CC_P  = 6,
-    CC_M  = 7,
+    CC_P = 6,
+    CC_M = 7,
 };
 
 class RegZ80 : public RegBase {
@@ -96,10 +96,10 @@ public:
     static CcName decodeCcName(uint8_t num);
 };
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
-#endif // __REG_Z80_H__
+#endif  // __REG_Z80_H__
 
 // Local Variables:
 // mode: c++

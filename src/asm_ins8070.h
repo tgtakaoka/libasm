@@ -26,9 +26,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class AsmIns8070
-    : public Assembler,
-      public Config {
+class AsmIns8070 : public Assembler, public Config {
 public:
     AsmIns8070() : Assembler(_parser, TableIns8070) {}
 
@@ -45,8 +43,7 @@ private:
               format(OPR_NO),
               reg(REG_UNDEF),
               autoIndex(false),
-              val16(0)
-        {}
+              val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
@@ -59,10 +56,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
-#endif // __ASM_INS8070_H__
+#endif  // __ASM_INS8070_H__
 
 // Local Variables:
 // mode: c++

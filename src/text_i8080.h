@@ -20,9 +20,10 @@
 namespace libasm {
 namespace i8080 {
 
+// clang-format off
 static const char TEXT_CPU_LIST[]  PROGMEM = "i8080, i8085";
 static const char TEXT_CPU_I8080[] PROGMEM = "i8080";
-static constexpr const char *TEXT_CPU_8080 = &TEXT_CPU_I8080[1];
+static constexpr const char *TEXT_CPU_8080  = &TEXT_CPU_I8080[1];
 static constexpr const char *TEXT_CPU_I8085 = &TEXT_CPU_LIST[7];
 static constexpr const char *TEXT_CPU_8085  = &TEXT_CPU_LIST[8];
 
@@ -108,11 +109,12 @@ static const char TEXT_XTHL[] PROGMEM = "XTHL";
 // i8085
 static const char TEXT_RIM[]  PROGMEM = "RIM";
 static const char TEXT_SIM[]  PROGMEM = "SIM";
+// clang-format on
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __TEXT_I8080__
+#endif  // __TEXT_I8080__
 
 // Local Variables:
 // mode: c++

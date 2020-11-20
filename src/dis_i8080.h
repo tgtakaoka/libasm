@@ -26,9 +26,7 @@
 namespace libasm {
 namespace i8080 {
 
-class DisI8080
-    : public Disassembler,
-      public Config {
+class DisI8080 : public Disassembler, public Config {
 public:
     DisI8080() : Disassembler(_formatter, _regs, TableI8080) {}
 
@@ -39,14 +37,14 @@ private:
     char *outRegister(char *out, RegName regName);
 
     Error decodeOperand(
-        DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __DIS_I8080_H__
+#endif  // __DIS_I8080_H__
 
 // Local Variables:
 // mode: c++

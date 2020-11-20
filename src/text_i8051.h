@@ -20,6 +20,7 @@
 namespace libasm {
 namespace i8051 {
 
+// clang-format off
 static const char TEXT_CPU_I8051[] PROGMEM = "i8051";
 static constexpr const char *TEXT_CPU_8051 = (TEXT_CPU_I8051 + 1);
 
@@ -69,11 +70,12 @@ static const char TEXT_SWAP[]  PROGMEM = "SWAP";
 static const char TEXT_XCH[]   PROGMEM = "XCH";
 static const char TEXT_XCHD[]  PROGMEM = "XCHD";
 static const char TEXT_XRL[]   PROGMEM = "XRL";
+// clang-format on
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __TEXT_I8051__
+#endif  // __TEXT_I8051__
 
 // Local Variables:
 // mode: c++

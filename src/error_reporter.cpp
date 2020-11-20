@@ -24,59 +24,98 @@ const /*PROGMEM*/ char *ErrorReporter::errorText() const {
 
 const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
     switch (error) {
-    case OK:                   return PSTR("OK");
+    case OK:
+        return PSTR("OK");
 
     // Disassembler
-    case NO_MEMORY:            return PSTR("Not enough memory");
-    case INTERNAL_ERROR:       return PSTR("Internal error");
-    case UNKNOWN_POSTBYTE:     return PSTR("Unknown post-byte");
-    case ILLEGAL_REGISTER:     return PSTR("Illegal register");
-    case ILLEGAL_OPERAND:      return PSTR("Illegal operand");
-    case ILLEGAL_SIZE:         return PSTR("Illegal size");
-    case ILLEGAL_OPERAND_MODE: return PSTR("Illegal operand mode");
-    case ILLEGAL_SEGMENT:      return PSTR("Illegal segment override");
+    case NO_MEMORY:
+        return PSTR("Not enough memory");
+    case INTERNAL_ERROR:
+        return PSTR("Internal error");
+    case UNKNOWN_POSTBYTE:
+        return PSTR("Unknown post-byte");
+    case ILLEGAL_REGISTER:
+        return PSTR("Illegal register");
+    case ILLEGAL_OPERAND:
+        return PSTR("Illegal operand");
+    case ILLEGAL_SIZE:
+        return PSTR("Illegal size");
+    case ILLEGAL_OPERAND_MODE:
+        return PSTR("Illegal operand mode");
+    case ILLEGAL_SEGMENT:
+        return PSTR("Illegal segment override");
 
     // Assembler
-    case UNKNOWN_INSTRUCTION:  return PSTR("Unknown instruction");
-    case UNKNOWN_REGISTER:     return PSTR("Unknown register");
-    case UNKNOWN_OPERAND:      return PSTR("Unknown operand");
-    case OPERAND_NOT_ALLOWED:  return PSTR("Operand not allowed");
-    case OPERAND_TOO_FAR:      return PSTR("Operand too far");
-    case ILLEGAL_BIT_NUMBER:   return PSTR("Illegal bit number");
-    case GARBAGE_AT_END:       return PSTR("Garbage at line end");
-    case DUPLICATE_REGISTER:   return PSTR("Duplicate register");
-    case REGISTER_NOT_ALLOWED: return PSTR("Register not allowed");
-    case MISSING_COMMA:        return PSTR("Missing comma");
-    case NOT_BIT_ADDRESSABLE:  return PSTR("Not bit addressable address");
-    case OPCODE_HAS_NO_EFFECT: return PSTR("Opcode has no effect");
+    case UNKNOWN_INSTRUCTION:
+        return PSTR("Unknown instruction");
+    case UNKNOWN_REGISTER:
+        return PSTR("Unknown register");
+    case UNKNOWN_OPERAND:
+        return PSTR("Unknown operand");
+    case OPERAND_NOT_ALLOWED:
+        return PSTR("Operand not allowed");
+    case OPERAND_TOO_FAR:
+        return PSTR("Operand too far");
+    case ILLEGAL_BIT_NUMBER:
+        return PSTR("Illegal bit number");
+    case GARBAGE_AT_END:
+        return PSTR("Garbage at line end");
+    case DUPLICATE_REGISTER:
+        return PSTR("Duplicate register");
+    case REGISTER_NOT_ALLOWED:
+        return PSTR("Register not allowed");
+    case MISSING_COMMA:
+        return PSTR("Missing comma");
+    case NOT_BIT_ADDRESSABLE:
+        return PSTR("Not bit addressable address");
+    case OPCODE_HAS_NO_EFFECT:
+        return PSTR("Opcode has no effect");
 
     // ValueParser
-    case ILLEGAL_CONSTANT:        return PSTR("Illegal constant");
-    case OVERFLOW_RANGE:          return PSTR("Overflow range");
-    case MISSING_CLOSING_PAREN:   return PSTR("Missing closing parenthesis");
-    case MISSING_CLOSING_QUOTE:   return PSTR("Missing closing single quote");
-    case UNKNOWN_ESCAPE_SEQUENCE: return PSTR("Unknown escape sequence");
-    case UNKNOWN_EXPR_OPERATOR:   return PSTR("Unknown expression operator");
-    case DIVIDE_BY_ZERO:          return PSTR("Divided by zero");
-    case UNDEFINED_SYMBOL:        return PSTR("Undefined symbol");
-    case TOO_COMPLEX_EXPRESSION:  return PSTR("Too complex expression");
-    case OPERAND_NOT_ALIGNED:     return PSTR("Operand not aligned");
+    case ILLEGAL_CONSTANT:
+        return PSTR("Illegal constant");
+    case OVERFLOW_RANGE:
+        return PSTR("Overflow range");
+    case MISSING_CLOSING_PAREN:
+        return PSTR("Missing closing parenthesis");
+    case MISSING_CLOSING_QUOTE:
+        return PSTR("Missing closing single quote");
+    case UNKNOWN_ESCAPE_SEQUENCE:
+        return PSTR("Unknown escape sequence");
+    case UNKNOWN_EXPR_OPERATOR:
+        return PSTR("Unknown expression operator");
+    case DIVIDE_BY_ZERO:
+        return PSTR("Divided by zero");
+    case UNDEFINED_SYMBOL:
+        return PSTR("Undefined symbol");
+    case TOO_COMPLEX_EXPRESSION:
+        return PSTR("Too complex expression");
+    case OPERAND_NOT_ALIGNED:
+        return PSTR("Operand not aligned");
 
     // AsmDirective
-    case UNKNOWN_DIRECTIVE:      return PSTR("Unknown directive");
-    case ILLEGAL_LABEL:          return PSTR("Illegal label");
-    case DUPLICATE_LABEL:        return PSTR("Duplicate label");
-    case MISSING_LABEL:          return PSTR("Missing label");
-    case MISSING_CLOSING_DQUOTE: return PSTR("Missing closing double quote");
-    case UNSUPPORTED_CPU:        return PSTR("Unsupported CPU");
-    case TOO_MANY_INCLUDE:       return PSTR("Too many include");
-    case NO_INCLUDE_FOUND:       return PSTR("Include file not found");
+    case UNKNOWN_DIRECTIVE:
+        return PSTR("Unknown directive");
+    case ILLEGAL_LABEL:
+        return PSTR("Illegal label");
+    case DUPLICATE_LABEL:
+        return PSTR("Duplicate label");
+    case MISSING_LABEL:
+        return PSTR("Missing label");
+    case MISSING_CLOSING_DQUOTE:
+        return PSTR("Missing closing double quote");
+    case UNSUPPORTED_CPU:
+        return PSTR("Unsupported CPU");
+    case TOO_MANY_INCLUDE:
+        return PSTR("Too many include");
+    case NO_INCLUDE_FOUND:
+        return PSTR("Include file not found");
     }
 
     return PSTR("Unknown error");
 }
 
-} // namespace libasm
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

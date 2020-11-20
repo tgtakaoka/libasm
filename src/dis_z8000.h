@@ -26,18 +26,16 @@
 namespace libasm {
 namespace z8000 {
 
-class DisZ8000
-    : public Disassembler,
-      public Config {
+class DisZ8000 : public Disassembler, public Config {
 public:
     DisZ8000() : Disassembler(_formatter, _regs, TableZ8000, '#') {}
 
-    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
+    AddressWidth addressWidth() const override {
+        return TableZ8000.addressWidth();
+    }
 
     void reset() override { preferWorkRegister(true); }
-    void preferWorkRegister(bool enabled) {
-        _preferWorkRegister = enabled;
-    }
+    void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }
 
 private:
     ValueFormatter _formatter;
@@ -48,35 +46,31 @@ private:
     char *outConditionCode(char *out, uint8_t ccNum);
     char *outImmediate(char *out, uint8_t data, AddrMode mode);
     char *outComma(
-        char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field);
-    Error decodeImmediate(
-        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode,
-        OprSize size);
+            char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field);
+    Error decodeImmediate(DisMemory &memory, InsnZ8000 &insn, char *out,
+            AddrMode mode, OprSize size);
     Error decodeFlags(char *out, uint8_t flags);
     Error decodeGeneralRegister(
-        char *out, uint8_t num, OprSize size, bool indirect = false);
+            char *out, uint8_t num, OprSize size, bool indirect = false);
     Error decodeDoubleSizedRegister(char *out, uint8_t num, OprSize size);
     Error decodeControlRegister(char *out, uint8_t ctlNum, OprSize size);
-    Error decodeBaseAddressing(
-        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode,
-        uint8_t num);
-    Error decodeGenericAddressing(
-        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode,
-        uint8_t num);
+    Error decodeBaseAddressing(DisMemory &memory, InsnZ8000 &insn, char *out,
+            AddrMode mode, uint8_t num);
+    Error decodeGenericAddressing(DisMemory &memory, InsnZ8000 &insn, char *out,
+            AddrMode mode, uint8_t num);
     Error decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, char *out);
     Error decodeRelativeAddressing(
-        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode);
-    Error decodeOperand(
-        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode,
-        ModeField field);
+            DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode);
+    Error decodeOperand(DisMemory &memory, InsnZ8000 &insn, char *out,
+            AddrMode mode, ModeField field);
     Error checkPostWord(const InsnZ8000 &insn);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __DIS_Z8000_H__
+#endif  // __DIS_Z8000_H__
 
 // Local Variables:
 // mode: c++

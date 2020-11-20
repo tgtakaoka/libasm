@@ -17,12 +17,13 @@
 #ifndef __CLI_MEMORY_H__
 #define __CLI_MEMORY_H__
 
-#include "bin_formatter.h"
-#include "dis_memory.h"
-
 #include <stdint.h>
+
 #include <map>
 #include <vector>
+
+#include "bin_formatter.h"
+#include "dis_memory.h"
 
 namespace libasm {
 namespace cli {
@@ -43,13 +44,13 @@ public:
     void writeByte(uint32_t addr, uint8_t val);
     bool readByte(uint32_t addr, uint8_t &val) const;
     bool equals(const CliMemory &other) const;
-    void swap(CliMemory& other);
+    void swap(CliMemory &other);
 
     // Dumper should accept (Addr, const uint8_t *, size_t)
-    template<typename Dumper>
+    template <typename Dumper>
     void dump(Dumper dumper) const {
-        for (auto segment = _segments.cbegin();
-             segment != _segments.cend(); segment++) {
+        for (auto segment = _segments.cbegin(); segment != _segments.cend();
+                segment++) {
             const auto &mem = segment->second;
             dumper(segment->first, mem.data(), mem.size());
         }
@@ -76,8 +77,8 @@ private:
     void aggregate(Segment hint);
 };
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

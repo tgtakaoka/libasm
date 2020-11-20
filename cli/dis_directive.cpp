@@ -20,24 +20,20 @@ namespace libasm {
 namespace cli {
 
 DisDirective::DisDirective(
-    Disassembler &disassembler,
-    CliMemory &memory,
-    bool uppercase)
+        Disassembler &disassembler, CliMemory &memory, bool uppercase)
     : _disassembler(disassembler),
       _memory(memory),
       _listing(),
       _labelWidth(8),
       _operandWidth(8),
-      _address(0)
-{
+      _address(0) {
     _listing.setUppercase(uppercase);
     _disassembler.setUppercase(uppercase);
 }
 
 Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
     _memory.setAddress(addr);
-    const Error error =
-        _disassembler.decode(_memory, insn, _operands, nullptr);
+    const Error error = _disassembler.decode(_memory, insn, _operands, nullptr);
     _listing.reset(*this);
     _address = addr;
     _generated_size = insn.length();
@@ -45,7 +41,7 @@ Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
     return error;
 }
 
-const char *DisDirective::getCpu( bool withBytes) {
+const char *DisDirective::getCpu(bool withBytes) {
     _listing.reset(*this);
     _generated_size = 0;
     _instruction = "CPU";
@@ -55,7 +51,7 @@ const char *DisDirective::getCpu( bool withBytes) {
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {
     _disassembler.getFormatter().formatHex(
-        _operands, origin, _disassembler.addressWidth(), false);
+            _operands, origin, _disassembler.addressWidth(), false);
     _listing.reset(*this);
     _address = origin;
     _generated_size = 0;
@@ -64,7 +60,7 @@ const char *DisDirective::origin(uint32_t origin, bool withBytes) {
 }
 
 bool DisDirective::hasNext() const {
-    return  _listing.hasNext();
+    return _listing.hasNext();
 }
 
 const char *DisDirective::getLine() {
@@ -164,8 +160,8 @@ int DisDirective::operandWidth() const {
     return _operandWidth;
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

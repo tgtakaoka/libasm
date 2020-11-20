@@ -26,9 +26,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class AsmMc6809
-    : public Assembler,
-      public Config {
+class AsmMc6809 : public Assembler, public Config {
 public:
     AsmMc6809() : Assembler(_parser, TableMc6809) {}
 
@@ -52,12 +50,11 @@ private:
               base(REG_UNDEF),
               indir(false),
               extra(0),
-              val32(0)
-        {}
+              val32(0) {}
     };
 
     bool parsePointerMode(const char *scan, Operand &op, bool indir)
-        __attribute__((noinline));
+            __attribute__((noinline));
     bool parseIndexedMode(const char *scan, Operand &op, bool indir);
     bool parseBitPosition(const char *scan, Operand &op);
     bool parseRegisterList(const char *scan, Operand &op, bool indir);
@@ -68,19 +65,19 @@ private:
     Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
     Error encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Config::ptrdiff_t calculateDisplacement(
-        const InsnMc6809 &insn, const Operand &op) const;
+            const InsnMc6809 &insn, const Operand &op) const;
     Error encodeIndexed(InsnMc6809 &insn, const Operand &op);
     char transferMemoryMode(const Operand &op);
     Error encodeTransferMemory(
-        InsnMc6809 &insn, const Operand &op1, const Operand &op2);
+            InsnMc6809 &insn, const Operand &op1, const Operand &op2);
     Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Error encode(Insn &insn) override;
 };
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
-#endif // __ASM_MC6809_H__
+#endif  // __ASM_MC6809_H__
 
 // Local Variables:
 // mode: c++

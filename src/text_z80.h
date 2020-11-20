@@ -22,6 +22,7 @@
 namespace libasm {
 namespace z80 {
 
+// clang-format off
 static const char TEXT_CPU_Z80[]  PROGMEM = "Z80";
 static const char TEXT_CPU_8080[] PROGMEM = "8080";
 static const char TEXT_CPU_8085[] PROGMEM = "8085";
@@ -95,11 +96,12 @@ static const char TEXT_SRA[]  PROGMEM = "SRA";
 static const char TEXT_SRL[]  PROGMEM = "SRL";
 static const char TEXT_SUB[]  PROGMEM = "SUB";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
+// clang-format on
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
-#endif // __TEXT_Z80__
+#endif  // __TEXT_Z80__
 
 // Local Variables:
 // mode: c++

@@ -26,9 +26,7 @@
 namespace libasm {
 namespace ins8060 {
 
-class DisIns8060
-    : public Disassembler,
-      public Config {
+class DisIns8060 : public Disassembler, public Config {
 public:
     DisIns8060() : Disassembler(_formatter, _regs, TableIns8060) {}
 
@@ -41,14 +39,14 @@ private:
     Error decodePntr(InsnIns8060 &insn, char *out);
     Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, char *out);
     Error decodeIndx(
-        DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode);
+            DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
-#endif // __DIS_INS8060_H__
+#endif  // __DIS_INS8060_H__
 
 // Local Variables:
 // mode: c++

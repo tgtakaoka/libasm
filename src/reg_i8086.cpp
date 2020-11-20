@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-#include "config_i8086.h"
 #include "reg_i8086.h"
-#include "table_i8086.h"
 
 #include <ctype.h>
+
+#include "config_i8086.h"
+#include "table_i8086.h"
 
 namespace libasm {
 namespace i8086 {
 
+// clang-format off
 static const char TEXT_REG_AL[]   PROGMEM = "AL";
 static const char TEXT_REG_BL[]   PROGMEM = "BL";
 static const char TEXT_REG_CL[]   PROGMEM = "CL";
@@ -43,33 +45,34 @@ static const char TEXT_REG_CS[]   PROGMEM = "CS";
 static const char TEXT_REG_DS[]   PROGMEM = "DS";
 static const char TEXT_REG_ES[]   PROGMEM = "ES";
 static const char TEXT_REG_SS[]   PROGMEM = "SS";
-static const char TEXT_REG_PTR[]  PROGMEM = "PTR";
+static const char TEXT_REG_PTR[]  PROGMEM  = "PTR";
 static const char TEXT_REG_BYTE[] PROGMEM = "BYTE";
 static const char TEXT_REG_WORD[] PROGMEM = "WORD";
+// clang-format on
 static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_AL)
-    NAME_ENTRY(REG_AH)
-    NAME_ENTRY(REG_AX)
-    NAME_ENTRY(REG_BL)
-    NAME_ENTRY(REG_BH)
-    NAME_ENTRY(REG_BX)
-    NAME_ENTRY(REG_CL)
-    NAME_ENTRY(REG_CH)
-    NAME_ENTRY(REG_CX)
-    NAME_ENTRY(REG_DL)
-    NAME_ENTRY(REG_DH)
-    NAME_ENTRY(REG_DX)
-    NAME_ENTRY(REG_BP)
-    NAME_ENTRY(REG_SP)
-    NAME_ENTRY(REG_SI)
-    NAME_ENTRY(REG_DI)
-    NAME_ENTRY(REG_CS)
-    NAME_ENTRY(REG_DS)
-    NAME_ENTRY(REG_ES)
-    NAME_ENTRY(REG_SS)
-    NAME_ENTRY(REG_PTR)
-    NAME_ENTRY(REG_BYTE)
-    NAME_ENTRY(REG_WORD)
+        NAME_ENTRY(REG_AL),
+        NAME_ENTRY(REG_AH),
+        NAME_ENTRY(REG_AX),
+        NAME_ENTRY(REG_BL),
+        NAME_ENTRY(REG_BH),
+        NAME_ENTRY(REG_BX),
+        NAME_ENTRY(REG_CL),
+        NAME_ENTRY(REG_CH),
+        NAME_ENTRY(REG_CX),
+        NAME_ENTRY(REG_DL),
+        NAME_ENTRY(REG_DH),
+        NAME_ENTRY(REG_DX),
+        NAME_ENTRY(REG_BP),
+        NAME_ENTRY(REG_SP),
+        NAME_ENTRY(REG_SI),
+        NAME_ENTRY(REG_DI),
+        NAME_ENTRY(REG_CS),
+        NAME_ENTRY(REG_DS),
+        NAME_ENTRY(REG_ES),
+        NAME_ENTRY(REG_SS),
+        NAME_ENTRY(REG_PTR),
+        NAME_ENTRY(REG_BYTE),
+        NAME_ENTRY(REG_WORD),
 };
 
 RegName RegI8086::parseRegName(const char *line) {
@@ -117,13 +120,15 @@ OprSize RegI8086::generalRegSize(RegName name) {
 
 uint8_t RegI8086::encodeRegNum(RegName name) {
     const uint8_t num = uint8_t(name);
-    if (num < 8) return num;
-    if (num < 16) return num - 8;
+    if (num < 8)
+        return num;
+    if (num < 16)
+        return num - 8;
     return num - 16;
 }
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

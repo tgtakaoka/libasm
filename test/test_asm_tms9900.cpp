@@ -40,6 +40,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 9900", true,   assembler.setCpu("9900"));
     EQUALS("cpu 9900", "9900", assembler.getCpu());
@@ -381,13 +382,16 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x1000);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "JNE UNDEF", 0x1600);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "TMS9900", "TMS9995", "TMS99105",
+            "TMS9900",
+            "TMS9995",
+            "TMS99105",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         assembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

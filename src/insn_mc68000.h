@@ -33,7 +33,7 @@ public:
     OprPos srcPos() const { return _flags.srcPos(); }
     OprPos dstPos() const { return _flags.dstPos(); }
     bool alias() const { return _flags.alias(); }
-    OprSize  oprSize() const { return _flags.oprSize(); }
+    OprSize oprSize() const { return _flags.oprSize(); }
     InsnSize insnSize() const { return _flags.insnSize(); }
 
     void setFlags(Entry::Flags flags) { _flags = flags; }
@@ -44,9 +44,7 @@ public:
         _flags.setDstMode(dst);
     }
 
-    void setInsnSize(OprSize osize) {
-        _flags.setInsnSize(InsnSize(osize));
-    }
+    void setInsnSize(OprSize osize) { _flags.setInsnSize(InsnSize(osize)); }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
@@ -54,17 +52,11 @@ public:
 
     Config::opcode_t opCode() const { return _opCode; }
 
-    void emitInsn() {
-        emitUint16(_opCode, 0);
-    }
+    void emitInsn() { emitUint16(_opCode, 0); }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, operandPos());
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
-    void emitOperand32(uint32_t val32) {
-        emitUint32(val32, operandPos());
-    }
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
 private:
     Config::opcode_t _opCode;
@@ -72,15 +64,16 @@ private:
 
     uint8_t operandPos() const {
         uint8_t pos = length();
-        if (pos == 0) pos = sizeof(Config::opcode_t);
+        if (pos == 0)
+            pos = sizeof(Config::opcode_t);
         return pos;
     }
 };
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
-#endif // __INSN_MC68000_H__
+#endif  // __INSN_MC68000_H__
 
 // Local Variables:
 // mode: c++

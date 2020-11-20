@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-#include "config_ins8060.h"
 #include "reg_ins8060.h"
 
 #include <ctype.h>
 
+#include "config_ins8060.h"
+
 namespace libasm {
 namespace ins8060 {
 
-static const char TEXT_REG_E[]  PROGMEM = "E";
+// clang-format off
+static const char TEXT_REG_E[]  PROGMEM  = "E";
 static const char TEXT_REG_P0[] PROGMEM = "P0";
 static const char TEXT_REG_P1[] PROGMEM = "P1";
 static const char TEXT_REG_P2[] PROGMEM = "P2";
 static const char TEXT_REG_P3[] PROGMEM = "P3";
 static const char TEXT_REG_PC[] PROGMEM = "PC";
+// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_E)
-    NAME_ENTRY(REG_P1)
-    NAME_ENTRY(REG_P2)
-    NAME_ENTRY(REG_P3)
-    NAME_ENTRY(REG_PC)
-    NAME_ENTRY(REG_P0)
+        NAME_ENTRY(REG_E),
+        NAME_ENTRY(REG_P1),
+        NAME_ENTRY(REG_P2),
+        NAME_ENTRY(REG_P3),
+        NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_P0),
 };
 
 RegName RegIns8060::parseRegName(const char *line) {
@@ -55,7 +58,11 @@ char *RegIns8060::outRegName(char *out, const RegName name) const {
 
 bool RegIns8060::isPointerReg(RegName name) {
     switch (name) {
-    case REG_PC: case REG_P1: case REG_P2: case REG_P3: case REG_P0:
+    case REG_PC:
+    case REG_P1:
+    case REG_P2:
+    case REG_P3:
+    case REG_P0:
         return true;
     default:
         return false;
@@ -63,7 +70,8 @@ bool RegIns8060::isPointerReg(RegName name) {
 }
 
 uint8_t RegIns8060::encodePointerReg(RegName name) {
-    if (name == REG_P0) return 0;
+    if (name == REG_P0)
+        return 0;
     return uint8_t(name);
 }
 
@@ -71,8 +79,8 @@ RegName RegIns8060::decodePointerReg(uint8_t num) {
     return RegName(num & 3);
 }
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

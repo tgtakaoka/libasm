@@ -50,6 +50,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 6800", true, disassembler.setCpu("6800"));
     EQUALS("cpu 6800", "6800", disassembler.getCpu());
@@ -790,13 +791,17 @@ static void test_illegal_mc68hc11() {
         else idx++;
     }
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "6800", "6801", "6301", "6811",
+            "6800",
+            "6801",
+            "6301",
+            "6811",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

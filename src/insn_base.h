@@ -40,23 +40,22 @@ public:
 
 private:
     uint32_t _address;
-    uint8_t  _length;
+    uint8_t _length;
     static constexpr size_t MAX_CODE = 24;
-    uint8_t  _bytes[MAX_CODE];
+    uint8_t _bytes[MAX_CODE];
     static constexpr size_t MAX_NAME = 7;
-    char     _name[MAX_NAME + 1];
+    char _name[MAX_NAME + 1];
 
-    template<typename Conf>
+    template <typename Conf>
     friend class InsnBase;
 
-    void emitByte(uint8_t val) {
-        emitByte(val, _length);
-    }
+    void emitByte(uint8_t val) { emitByte(val, _length); }
 
     void emitByte(uint8_t val, uint8_t pos) {
         if (pos < MAX_CODE) {
             _bytes[pos++] = val;
-            if (_length < pos) _length = pos;
+            if (_length < pos)
+                _length = pos;
         }
     }
 
@@ -67,7 +66,8 @@ private:
 
     void setName(const char *name, const char *end) {
         uint8_t len = end - name;
-        if (len >= MAX_NAME) len = MAX_NAME;
+        if (len >= MAX_NAME)
+            len = MAX_NAME;
         strncpy(_name, name, len);
         _name[len] = 0;
     }
@@ -88,7 +88,7 @@ private:
     }
 };
 
-template<typename Conf>
+template <typename Conf>
 class InsnBase : public ErrorReporter {
 public:
     typename Conf::uintptr_t address() const { return _insn.address(); }
@@ -101,25 +101,17 @@ public:
         resetError();
     }
 
-    void setName_P(const /*PROGMEM*/ char *name) {
-        _insn.setName_P(name);
-    }
+    void setName_P(const /*PROGMEM*/ char *name) { _insn.setName_P(name); }
 
     void setName(const char *name, const char *end) {
         _insn.setName(name, end);
     }
 
-    void appendName(const char c) {
-        _insn.appendName(c);
-    }
+    void appendName(const char c) { _insn.appendName(c); }
 
-    void emitByte(uint8_t val) {
-        _insn.emitByte(val);
-    }
+    void emitByte(uint8_t val) { _insn.emitByte(val); }
 
-    void emitByte(uint8_t val, uint8_t pos) {
-        _insn.emitByte(val, pos);
-    }
+    void emitByte(uint8_t val, uint8_t pos) { _insn.emitByte(val, pos); }
 
     void emitUint16Be(uint16_t val) {
         emitByte(val >> 8);
@@ -143,21 +135,21 @@ public:
 
     void emitUint32Be(uint32_t val) {
         emitUint16Be(val >> 16);
-        emitUint16Be(val >>  0);
+        emitUint16Be(val >> 0);
     }
 
     void emitUint32Le(uint32_t val) {
-        emitUint16Le(val >>  0);
+        emitUint16Le(val >> 0);
         emitUint16Le(val >> 16);
     }
 
     void emitUint32Be(uint32_t val, uint8_t pos) {
         emitUint16Be(val >> 16, pos + 0);
-        emitUint16Be(val >>  0, pos + 2);
+        emitUint16Be(val >> 0, pos + 2);
     }
 
     void emitUint32Le(uint32_t val, uint8_t pos) {
-        emitUint16(val >>  0, pos + 0);
+        emitUint16(val >> 0, pos + 0);
         emitUint16(val >> 16, pos + 2);
     }
 
@@ -244,18 +236,15 @@ public:
     }
 
 protected:
-    InsnBase(Insn &insn)
-        : ErrorReporter(),
-          _insn(insn)
-    {}
+    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
 
 private:
     Insn &_insn;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __INSN_BASE_H__
+#endif  // __INSN_BASE_H__
 
 // Local Variables:
 // mode: c++

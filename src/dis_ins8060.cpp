@@ -15,6 +15,7 @@
  */
 
 #include "dis_ins8060.h"
+
 #include "table_ins8060.h"
 
 namespace libasm {
@@ -29,19 +30,18 @@ Error DisIns8060::decodePntr(InsnIns8060 &insn, char *out) {
     return setOK();
 }
 
-Error DisIns8060::decodeImm8(
-        DisMemory& memory, InsnIns8060 &insn, char *out) {
+Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, char *out) {
     outHex(out, insn.readByte(memory), 8);
     return setError(insn);
 }
 
 Error DisIns8060::decodeIndx(
-    DisMemory &memory, InsnIns8060& insn, char *out, bool hasMode) {
+        DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode) {
     const RegName reg = _regs.decodePointerReg(insn.opCode());
     const uint8_t opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)
         *out++ = '@';
-    if (reg == REG_PC && opr != 0x80) { // PC relative
+    if (reg == REG_PC && opr != 0x80) {  // PC relative
         // PC points the last byte of instruction.
         const Config::uintptr_t base = insn.address() + 1;
         const Config::uintptr_t page = (base & ~0xFFF);
@@ -58,7 +58,7 @@ Error DisIns8060::decodeIndx(
             outAbsAddr(out, target);
         }
     } else {
-        if (opr == 0x80) {         // E(Pn)
+        if (opr == 0x80) {  // E(Pn)
             out = outRegister(out, REG_E);
         } else {
             const int8_t disp = static_cast<int8_t>(opr);
@@ -75,7 +75,8 @@ Error DisIns8060::decodeIndx(
 Error DisIns8060::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnIns8060 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
     insn.setOpCode(opCode);
 
     if (TableIns8060.searchOpCode(insn))
@@ -96,8 +97,8 @@ Error DisIns8060::decode(DisMemory &memory, Insn &_insn, char *out) {
     }
 }
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

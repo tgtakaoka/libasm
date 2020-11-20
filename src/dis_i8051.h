@@ -26,9 +26,7 @@
 namespace libasm {
 namespace i8051 {
 
-class DisI8051
-    : public Disassembler,
-      public Config {
+class DisI8051 : public Disassembler, public Config {
 public:
     DisI8051() : Disassembler(_formatter, _regs, TableI8051) {}
 
@@ -42,18 +40,18 @@ private:
     Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out);
     Error decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode);
     Error decodeAddress(
-        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
+            DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
     Error decodeImmediate(
-        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
+            DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
     Error decodeOperand(
-        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
+            DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __DIS_I8051_H__
+#endif  // __DIS_I8051_H__
 
 // Local Variables:
 // mode: c++

@@ -36,10 +36,10 @@ public:
     char *outRegName(char *out, const RegName name) const;
 };
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
-#endif // __REG_MC6800_H__
+#endif  // __REG_MC6800_H__
 
 // Local Variables:
 // mode: c++

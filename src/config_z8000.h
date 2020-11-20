@@ -22,16 +22,13 @@
 namespace libasm {
 namespace z8000 {
 
-struct Config : ConfigImpl<
-    ADDRESS_24BIT, uint32_t, int32_t,
-    OPCODE_16BIT, uint16_t, 10,
-    ENDIAN_BIG, 6>
-{};
+struct Config : ConfigImpl<ADDRESS_24BIT, uint32_t, int32_t, OPCODE_16BIT,
+                        uint16_t, 10, ENDIAN_BIG, 6> {};
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __CONFIG_Z8000_H__
+#endif  // __CONFIG_Z8000_H__
 
 // Local Variables:
 // mode: c++

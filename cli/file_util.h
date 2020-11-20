@@ -17,8 +17,8 @@
 #ifndef __FILE_UTIL__
 #define __FILE_UTIL__
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 namespace libasm {
 namespace cli {
@@ -29,8 +29,8 @@ namespace cli {
  */
 int getLine(char *&lineptr, size_t &t, FILE *input);
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

@@ -17,6 +17,8 @@
 #ifndef __DIS_BASE_H__
 #define __DIS_BASE_H__
 
+#include <ctype.h>
+
 #include "config_base.h"
 #include "dis_memory.h"
 #include "error_reporter.h"
@@ -27,16 +29,12 @@
 #include "type_traits.h"
 #include "value_formatter.h"
 
-#include <ctype.h>
-
 namespace libasm {
 
-class Disassembler
-    : public ErrorReporter,
-      virtual public ConfigBase {
+class Disassembler : public ErrorReporter, virtual public ConfigBase {
 public:
     Error decode(
-        DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
+            DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
     ValueFormatter &getFormatter() { return _formatter; }
     char getCommentChar() const;
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
@@ -55,12 +53,12 @@ protected:
     SymbolTable *_symtab;
     bool _relativeTarget = false;
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char commentChar = 0)
+    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table,
+            char commentChar = 0)
         : _formatter(formatter),
           _regBase(regs),
           _table(table),
-          _commentChar(commentChar)
-    {}
+          _commentChar(commentChar) {}
 
     char *outText(char *out, const char *text) const {
         while ((*out = *text++) != 0)
@@ -74,53 +72,56 @@ protected:
         return out;
     }
 
-    template<typename Addr>
+    template <typename Addr>
     const char *lookup(Addr addr) const {
         const char *symbol = nullptr;
         if (_symtab) {
             symbol = _symtab->lookupValue(addr);
             if (!symbol) {
-                auto value = static_cast<
-                    typename make_signed<Addr>::type>(addr);
+                auto value =
+                        static_cast<typename make_signed<Addr>::type>(addr);
                 symbol = _symtab->lookupValue(static_cast<int32_t>(value));
             }
         }
         return symbol;
     }
 
-    template<typename T>
+    template <typename T>
     char *outHex(char *out, T val, int8_t bits) {
         const char *label = lookup(val);
-        if (label) return outText(out, label);
-        return _formatter.formatHex(out, val, bits, /*relax*/true);
+        if (label)
+            return outText(out, label);
+        return _formatter.formatHex(out, val, bits, /*relax*/ true);
     }
 
     char *outDec(char *out, uint8_t val, int8_t bits);
 
-    template<typename Addr>
-    char *outAbsAddr(
-        char *out, Addr val, uint8_t addrWidth = 0,
-        const /*PROGMEM*/ char *prefix = nullptr, bool needPrefix = false) {
+    template <typename Addr>
+    char *outAbsAddr(char *out, Addr val, uint8_t addrWidth = 0,
+            const /*PROGMEM*/ char *prefix = nullptr, bool needPrefix = false) {
         const char *label = lookup(val);
         if (label) {
-            if (prefix) out = outPstr(out, prefix);
+            if (prefix)
+                out = outPstr(out, prefix);
             return outText(out, label);
         }
-        if (needPrefix && prefix) out = outPstr(out, prefix);
-        if (addrWidth == 0) addrWidth = sizeof(Addr) * 8;
+        if (needPrefix && prefix)
+            out = outPstr(out, prefix);
+        if (addrWidth == 0)
+            addrWidth = sizeof(Addr) * 8;
         return _formatter.formatHex(out, val, addrWidth, false);
     }
 
-    template<typename Addr>
-    char *outRelAddr(
-        char *out, Addr target, Addr origin, uint8_t deltaBits) {
+    template <typename Addr>
+    char *outRelAddr(char *out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
             return outAbsAddr(out, target, addressWidth());
         *out++ = _formatter.currentOriginSymbol();
         *out = 0;
-        const auto delta = static_cast<
-            typename make_signed<Addr>::type>(target - origin);
-        if (delta == 0) return out;
+        const auto delta =
+                static_cast<typename make_signed<Addr>::type>(target - origin);
+        if (delta == 0)
+            return out;
         Addr val;
         if (delta < 0) {
             *out++ = '-';
@@ -141,9 +142,9 @@ private:
     virtual Error decode(DisMemory &memory, Insn &insn, char *out) = 0;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __DIS_BASE_H__
+#endif  // __DIS_BASE_H__
 
 // Local Variables:
 // mode: c++

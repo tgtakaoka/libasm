@@ -37,7 +37,8 @@ public:
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(const AddrMode op1, const AddrMode op2, const AddrMode op3) {
+    void setAddrMode(
+            const AddrMode op1, const AddrMode op2, const AddrMode op3) {
         _flags = Entry::Flags::create(op1, op2, op3, SZ_NONE);
     }
 
@@ -64,10 +65,10 @@ private:
     Config::opcode_t _prefix;
 };
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
-#endif // __INSN_MC6800_H__
+#endif  // __INSN_MC6800_H__
 
 // Local Variables:
 // mode: c++

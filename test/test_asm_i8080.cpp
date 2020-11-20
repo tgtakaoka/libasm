@@ -36,6 +36,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8080", true,   assembler.setCpu("8080"));
     EQUALS("cpu 8080", "8080", assembler.getCpu());
@@ -406,13 +407,15 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "OUT  UNDEF",   0xD3, 0x00);
     ETEST(UNDEFINED_SYMBOL, "IN   UNDEF",   0xDB, 0x00);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "8080", "8085",
+            "8080",
+            "8085",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         assembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

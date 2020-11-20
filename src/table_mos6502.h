@@ -55,19 +55,18 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    Error searchName(
-        InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(
-        InsnMos6502 &insn, bool useIndirectLong,
-        const EntryPage *pages, const EntryPage *end) const;
+    Error searchName(InsnMos6502 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    Error searchOpCode(InsnMos6502 &insn, bool useIndirectLong,
+            const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableMos6502 TableMos6502;
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __TABLE_MOS6502_H__
+#endif  // __TABLE_MOS6502_H__
 
 // Local Variables:
 // mode: c++

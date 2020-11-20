@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-#include "config_z80.h"
-#include "reg_z80.h"
-#include "table_z80.h"
 #include "reg_z80.h"
 
 #include <ctype.h>
 
+#include "config_z80.h"
+#include "reg_z80.h"
+#include "table_z80.h"
+
 namespace libasm {
 namespace z80 {
 
+// clang-format off
 static const char TEXT_REG_BC[]  PROGMEM = "BC";
 static const char TEXT_REG_DE[]  PROGMEM = "DE";
 static const char TEXT_REG_HL[]  PROGMEM = "HL";
@@ -42,25 +44,26 @@ static const char TEXT_REG_L[]   PROGMEM = "L";
 static const char TEXT_REG_IM[]  PROGMEM = "IM";
 static const char TEXT_REG_R[]   PROGMEM = "R";
 static const char TEXT_REG_I[]   PROGMEM = "I";
+// clang-format on
 static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
-     NAME_ENTRY(REG_BC)
-     NAME_ENTRY(REG_DE)
-     NAME_ENTRY(REG_HL)
-     NAME_ENTRY(REG_IX)
-     NAME_ENTRY(REG_IY)
-     NAME_ENTRY(REG_SP)
-     NAME_ENTRY(REG_AFP)
-     NAME_ENTRY(REG_AF)
-     NAME_ENTRY(REG_A)
-     NAME_ENTRY(REG_B)
-     NAME_ENTRY(REG_C)
-     NAME_ENTRY(REG_D)
-     NAME_ENTRY(REG_E)
-     NAME_ENTRY(REG_H)
-     NAME_ENTRY(REG_L)
-     NAME_ENTRY(REG_IM)
-     NAME_ENTRY(REG_R)
-     NAME_ENTRY(REG_I)
+        NAME_ENTRY(REG_BC),
+        NAME_ENTRY(REG_DE),
+        NAME_ENTRY(REG_HL),
+        NAME_ENTRY(REG_IX),
+        NAME_ENTRY(REG_IY),
+        NAME_ENTRY(REG_SP),
+        NAME_ENTRY(REG_AFP),
+        NAME_ENTRY(REG_AF),
+        NAME_ENTRY(REG_A),
+        NAME_ENTRY(REG_B),
+        NAME_ENTRY(REG_C),
+        NAME_ENTRY(REG_D),
+        NAME_ENTRY(REG_E),
+        NAME_ENTRY(REG_H),
+        NAME_ENTRY(REG_L),
+        NAME_ENTRY(REG_IM),
+        NAME_ENTRY(REG_R),
+        NAME_ENTRY(REG_I),
 };
 
 RegName RegZ80::parseRegName(const char *line) {
@@ -82,13 +85,15 @@ char *RegZ80::outRegName(char *out, RegName name) const {
 uint8_t RegZ80::encodeDataReg(RegName name) {
     // (HL) is parsed as I_HL, then looked up as M_REG(reg=REG_HL), so
     // we have to map REG_HL to register number 6.
-    if (name == REG_HL) return 6;
+    if (name == REG_HL)
+        return 6;
     return int8_t(name) - 8;
 }
 
 RegName RegZ80::decodeDataReg(uint8_t num) {
     // REG_HL represents (HL).
-    if ((num &= 7) == 6) return REG_HL;
+    if ((num &= 7) == 6)
+        return REG_HL;
     return RegName(num + 8);
 }
 
@@ -110,12 +115,14 @@ RegName RegZ80::decodePointerReg(uint8_t num, const InsnZ80 &insn) {
 }
 
 uint8_t RegZ80::encodeStackReg(RegName name) {
-    if (name == REG_AF) return 3;
+    if (name == REG_AF)
+        return 3;
     return uint8_t(name);
 }
 
 RegName RegZ80::decodeStackReg(uint8_t num) {
-    if ((num &= 3) == 3) return REG_AF;
+    if ((num &= 3) == 3)
+        return REG_AF;
     return RegName(num);
 }
 
@@ -129,14 +136,16 @@ RegName RegZ80::decodeIndirectBase(uint8_t num) {
 
 void RegZ80::encodeIndexReg(InsnZ80 &insn, RegName ixReg) {
     const Config::opcode_t prefix =
-        (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
+            (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
     insn.setOpCode(insn.opCode(), prefix);
 }
 
 RegName RegZ80::decodeIndexReg(const InsnZ80 &insn) {
     const Config::opcode_t prefix = insn.prefix();
-    if (prefix == TableZ80::PREFIX_IX) return REG_IX;
-    if (prefix == TableZ80::PREFIX_IY) return REG_IY;
+    if (prefix == TableZ80::PREFIX_IX)
+        return REG_IX;
+    if (prefix == TableZ80::PREFIX_IY)
+        return REG_IY;
     return REG_UNDEF;
 }
 
@@ -148,6 +157,7 @@ RegName RegZ80::decodeIrReg(uint8_t num) {
     return RegName((num & 1) + 16);
 }
 
+// clang-format off
 static const char TEXT_CC_NZ[] PROGMEM = "NZ";
 static const char TEXT_CC_Z[]  PROGMEM = "Z";
 static const char TEXT_CC_NC[] PROGMEM = "NC";
@@ -156,15 +166,16 @@ static const char TEXT_CC_PO[] PROGMEM = "PO";
 static const char TEXT_CC_PE[] PROGMEM = "PE";
 static const char TEXT_CC_P[]  PROGMEM = "P";
 static const char TEXT_CC_M[]  PROGMEM = "M";
+// clang-format off
 static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
-    NAME_ENTRY(CC_NZ)
-    NAME_ENTRY(CC_Z)
-    NAME_ENTRY(CC_NC)
-    NAME_ENTRY(CC_C)
-    NAME_ENTRY(CC_PO)
-    NAME_ENTRY(CC_PE)
-    NAME_ENTRY(CC_P)
-    NAME_ENTRY(CC_M)
+        NAME_ENTRY(CC_NZ),
+        NAME_ENTRY(CC_Z),
+        NAME_ENTRY(CC_NC),
+        NAME_ENTRY(CC_C),
+        NAME_ENTRY(CC_PO),
+        NAME_ENTRY(CC_PE),
+        NAME_ENTRY(CC_P),
+        NAME_ENTRY(CC_M),
 };
 
 CcName RegZ80::parseCcName(const char *line) {
@@ -196,8 +207,8 @@ CcName RegZ80::decodeCcName(uint8_t num) {
     return CcName(num & 7);
 }
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

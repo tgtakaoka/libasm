@@ -25,9 +25,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class AsmCdp1802
-    : public Assembler,
-      public Config {
+class AsmCdp1802 : public Assembler, public Config {
 public:
     AsmCdp1802() : Assembler(_parser, TableCdp1802) {}
 
@@ -37,11 +35,7 @@ private:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(NONE),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(NONE), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
@@ -50,10 +44,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
-#endif // __ASM_CDP1802_H__
+#endif  // __ASM_CDP1802_H__
 
 // Local Variables:
 // mode: c++

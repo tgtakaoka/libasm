@@ -61,9 +61,7 @@ public:
         return low4 == 0x0E || low4 == 0xF;
     }
 
-    void emitInsn() {
-        emitByte(_opCode);
-    }
+    void emitInsn() { emitByte(_opCode); }
 
     void emitUint16Le(uint16_t val) {
         emitByte(val >> 0);
@@ -75,10 +73,10 @@ private:
     Entry::Flags _flags;
 };
 
-} // namespace z8
-} // namespace libasm
+}  // namespace z8
+}  // namespace libasm
 
-#endif // __INSN_Z8_H__
+#endif  // __INSN_Z8_H__
 
 // Local Variables:
 // mode: c++

@@ -43,10 +43,10 @@ private:
 
 extern TableMc68000 TableMc68000;
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
-#endif // __TABLE_MC68000_H__
+#endif  // __TABLE_MC68000_H__
 
 // Local Variables:
 // mode: c++

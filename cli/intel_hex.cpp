@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-#include "bin_formatter.h"
-
 #include <stdio.h>
+
+#include "bin_formatter.h"
 
 namespace libasm {
 namespace cli {
 
-IntelHex::IntelHex(AddressWidth addrWidth)
-    : BinFormatter(addrWidth),
-      _ela(0)
-{}
+IntelHex::IntelHex(AddressWidth addrWidth) : BinFormatter(addrWidth), _ela(0) {}
 
 uint8_t IntelHex::getSum() const {
     return static_cast<uint8_t>(-this->_check_sum);
@@ -37,9 +34,11 @@ const char *IntelHex::begin() {
 
 // Output Type "04" Extended Linear Address, if necessary.
 const char *IntelHex::prepare(uint32_t addr) {
-    if (_addrWidth == ADDRESS_16BIT) return nullptr;
+    if (_addrWidth == ADDRESS_16BIT)
+        return nullptr;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
-    if (_ela == ela) return nullptr;
+    if (_ela == ela)
+        return nullptr;
     _ela = ela;
     const uint8_t len = sizeof(ela);
     const uint16_t dummy = 0;
@@ -52,13 +51,12 @@ const char *IntelHex::prepare(uint32_t addr) {
     addSum(type);
     addSum(ela);
     char *p = _line;
-    p += sprintf(p, ":%02X%04X%02X%04X%2X",
-                 len, dummy, type, ela, getSum());
+    p += sprintf(p, ":%02X%04X%02X%04X%2X", len, dummy, type, ela, getSum());
     return _line;
 }
 
 const char *IntelHex::encode(
-    uint32_t ela_addr, const uint8_t *data, uint8_t size) {
+        uint32_t ela_addr, const uint8_t *data, uint8_t size) {
     const uint16_t addr = static_cast<uint16_t>(ela_addr);
     const uint8_t type = 0;
     // :LLaaaa00dd....ddSS
@@ -76,25 +74,32 @@ const char *IntelHex::encode(
     return _line;
 }
 
-const char *IntelHex::end() { return ":00000001FF"; }
+const char *IntelHex::end() {
+    return ":00000001FF";
+}
 
-uint8_t *IntelHex::decode(
-    const char *line, uint32_t &ela_addr, uint8_t &size) {
+uint8_t *IntelHex::decode(const char *line, uint32_t &ela_addr, uint8_t &size) {
     ensureData(32);
-    if (*line++ != ':') return nullptr;
+    if (*line++ != ':')
+        return nullptr;
     size = 0;
     uint8_t len = 0;
-    if (parseByte(line, len)) return nullptr;
+    if (parseByte(line, len))
+        return nullptr;
     uint16_t addr = 0;
-    if (parseUint16(line, addr)) return nullptr;
+    if (parseUint16(line, addr))
+        return nullptr;
     uint8_t type;
-    if (parseByte(line, type)) return nullptr;
-    if (type == 0x01) return _data; // terminator
-    if (type == 0x04) {                   // Extended Linear Address
+    if (parseByte(line, type))
+        return nullptr;
+    if (type == 0x01)
+        return _data;    // terminator
+    if (type == 0x04) {  // Extended Linear Address
         _ela = addr;
         return _data;
     }
-    if (type != 0x00) return nullptr;
+    if (type != 0x00)
+        return nullptr;
 
     ela_addr = static_cast<uint32_t>(_ela) << 16 | addr;
     size = len;
@@ -107,14 +112,16 @@ uint8_t *IntelHex::decode(
             return nullptr;
     }
     uint8_t val = 0;
-    if (parseByte(line, val)) return nullptr;
-    if (_check_sum) return nullptr; // checksum error
+    if (parseByte(line, val))
+        return nullptr;
+    if (_check_sum)
+        return nullptr;  // checksum error
 
     return _data;
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

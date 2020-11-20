@@ -15,6 +15,7 @@
  */
 
 #include "dis_cdp1802.h"
+
 #include "table_cdp1802.h"
 
 namespace libasm {
@@ -23,7 +24,8 @@ namespace cdp1802 {
 Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnCdp1802 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
     insn.setOpCode(opCode);
 
     if (TableCdp1802.searchOpCode(insn))
@@ -55,8 +57,8 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     return setError(insn);
 }
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

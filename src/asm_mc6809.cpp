@@ -15,19 +15,21 @@
  */
 
 #include "asm_mc6809.h"
+
 #include "table_mc6809.h"
 
 namespace libasm {
 namespace mc6809 {
 
 Error AsmMc6809::encodeRelative(
-    InsnMc6809 &insn, const Operand &op, AddrMode mode) {
-    const Config::uintptr_t base = insn.address() + insn.length()
-        + (mode == LREL ? 2 : 1);
+        InsnMc6809 &insn, const Operand &op, AddrMode mode) {
+    const Config::uintptr_t base =
+            insn.address() + insn.length() + (mode == LREL ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
     if (mode == REL) {
-        if (delta >= 128 || delta < -128) return setError(OPERAND_TOO_FAR);
+        if (delta >= 128 || delta < -128)
+            return setError(OPERAND_TOO_FAR);
         insn.emitByte(delta);
     } else {
         insn.emitUint16(delta);
@@ -36,7 +38,7 @@ Error AsmMc6809::encodeRelative(
 }
 
 Config::ptrdiff_t AsmMc6809::calculateDisplacement(
-    const InsnMc6809 &insn, const Operand &op) const {
+        const InsnMc6809 &insn, const Operand &op) const {
     const Config::ptrdiff_t disp = static_cast<Config::ptrdiff_t>(op.val32);
     if (op.base == REG_PCR && op.getError() == OK) {
         // assuming 8-bit displacement (post byte + 8-bit displacement)
@@ -48,7 +50,7 @@ Config::ptrdiff_t AsmMc6809::calculateDisplacement(
 }
 
 Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
-    PostSpec spec = { op.index, op.base, op.extra, op.indir };
+    PostSpec spec = {op.index, op.base, op.extra, op.indir};
     if (op.mode == REG_REG && spec.index == REG_0)  // 0,X
         spec.index = REG_UNDEF;
 
@@ -57,15 +59,16 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
         const bool pc = (spec.base == REG_PC || spec.base == REG_PCR);
         uint8_t size;
         if (op.getError()) {
-            size = 16; // assume 16-bit displacement for undefined symbol.
-        } else if (!pc && disp == 0) { // ,X
+            size = 16;  // assume 16-bit displacement for undefined symbol.
+        } else if (!pc && disp == 0) {  // ,X
             size = 0;
         } else if (!pc && !spec.indir && disp >= -16 && disp < 16) {
             size = 5;
         } else if (disp >= -128 && disp < 128) {
             size = 8;
         } else {
-            if (spec.base == REG_PCR) disp--; // adjust to 16-bit displacement
+            if (spec.base == REG_PCR)
+                disp--;  // adjust to 16-bit displacement
             size = 16;
         }
         spec.size = size;
@@ -80,8 +83,10 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
     if (size == 5)
         post |= disp & 0x1F;
     insn.emitByte(post);
-    if (size == 8) insn.emitByte(disp);
-    if (size == 16) insn.emitUint16(disp);
+    if (size == 8)
+        insn.emitByte(disp);
+    if (size == 16)
+        insn.emitUint16(disp);
     return OK;
 }
 
@@ -108,7 +113,8 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
     } else if (op.mode == IM32) {
         post = op.val32;
     } else if (op.mode == REGLIST) {
-        if (op.getError()) return setError(op);
+        if (op.getError())
+            return setError(op);
         if (static_cast<int32_t>(op.val32) < 0)
             return setError(REGISTER_NOT_ALLOWED);
         post = op.val32;
@@ -120,32 +126,40 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
             reg = REG_U;
         }
         uint8_t bit = RegMc6809::encodeStackReg(reg);
-        if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
+        if (bit == 0)
+            return setError(REGISTER_NOT_ALLOWED);
         post = bit;
         reg = op.base;
         if (reg == REG_S || reg == REG_U) {
-            if (stack == REG_UNDEF) stack = reg;
-            if (stack != reg) return setError(REGISTER_NOT_ALLOWED);
+            if (stack == REG_UNDEF)
+                stack = reg;
+            if (stack != reg)
+                return setError(REGISTER_NOT_ALLOWED);
             reg = REG_U;
         }
         bit = RegMc6809::encodeStackReg(reg);
-        if (bit == 0) return setError(REGISTER_NOT_ALLOWED);
-        if (post & bit) return setError(DUPLICATE_REGISTER);
+        if (bit == 0)
+            return setError(REGISTER_NOT_ALLOWED);
+        if (post & bit)
+            return setError(DUPLICATE_REGISTER);
         post |= bit;
     } else {
         return setError(OPERAND_NOT_ALLOWED);
     }
     const bool onUserStack = (insn.opCode() & 2) != 0;
-    if (onUserStack && stack == REG_U) return setError(REGISTER_NOT_ALLOWED);
-    if (!onUserStack && stack == REG_S) return setError(REGISTER_NOT_ALLOWED);
+    if (onUserStack && stack == REG_U)
+        return setError(REGISTER_NOT_ALLOWED);
+    if (!onUserStack && stack == REG_S)
+        return setError(REGISTER_NOT_ALLOWED);
     insn.emitByte(post);
     return OK;
 }
 
 Error AsmMc6809::encodeOperand(
-    InsnMc6809 &insn, const Operand &op, AddrMode mode) {
+        InsnMc6809 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
-    case REL: case LREL:
+    case REL:
+    case LREL:
         return encodeRelative(insn, op, mode);
     case IM8:
         insn.emitByte(op.val32);
@@ -184,46 +198,57 @@ Error AsmMc6809::encodeOperand(
 
 char AsmMc6809::transferMemoryMode(const Operand &op) {
     if (op.mode == REGLIST) {
-        if (op.extra != 1) setError(UNKNOWN_OPERAND);
-        if (!RegMc6809::isTfmBaseReg(op.index)) setError(OPERAND_NOT_ALLOWED);
+        if (op.extra != 1)
+            setError(UNKNOWN_OPERAND);
+        if (!RegMc6809::isTfmBaseReg(op.index))
+            setError(OPERAND_NOT_ALLOWED);
         return 0;
     }
     return op.extra;
 }
 
 Error AsmMc6809::encodeTransferMemory(
-    InsnMc6809 &insn, const Operand &op1, const Operand &op2) {
+        InsnMc6809 &insn, const Operand &op1, const Operand &op2) {
     const char srcMode = transferMemoryMode(op1);
     const char dstMode = transferMemoryMode(op2);
-    if (getError()) return getError();
+    if (getError())
+        return getError();
 
     const int8_t mode = RegMc6809::encodeTfmMode(srcMode, dstMode);
-    if (mode < 0) return setError(UNKNOWN_OPERAND);
+    if (mode < 0)
+        return setError(UNKNOWN_OPERAND);
     insn.embed(mode);
 
-    const uint8_t post = (RegMc6809::encodeTfmBaseReg(op1.index) << 4)
-        | RegMc6809::encodeTfmBaseReg(op2.index);
+    const uint8_t post = (RegMc6809::encodeTfmBaseReg(op1.index) << 4) |
+                         RegMc6809::encodeTfmBaseReg(op2.index);
     insn.emitInsn();
     insn.emitByte(post);
     return OK;
 }
 
 bool AsmMc6809::parsePointerMode(const char *p, Operand &op, bool indir) {
-    if (*p++ != ',') return false;
+    if (*p++ != ',')
+        return false;
     int8_t size = 0;
     if (*p == '-') {
-        p++; size--;
+        p++;
+        size--;
         if (*p == '-') {
-            p++; size--;;
+            p++;
+            size--;
+            ;
         }
     }
     const RegName reg = RegMc6809::parseRegName(p);
-    if (!RegMc6809::isBaseReg(reg)) return false;
+    if (!RegMc6809::isBaseReg(reg))
+        return false;
     p += RegMc6809::regNameLen(reg);
     if (size == 0 && *p == '+') {
-        p++; size++;
+        p++;
+        size++;
         if (*p == '+') {
-            p++; size++;
+            p++;
+            size++;
         }
     }
     p = skipSpaces(p);
@@ -245,7 +270,8 @@ bool AsmMc6809::parsePointerMode(const char *p, Operand &op, bool indir) {
 bool AsmMc6809::parseIndexedMode(const char *scan, Operand &op, bool indir) {
     const char *p = skipSpaces(scan);
     const RegName base = RegMc6809::parseRegName(p);
-    if (!RegMc6809::isIndexedBase(base)) return false;
+    if (!RegMc6809::isIndexedBase(base))
+        return false;
     p = skipSpaces(p + RegMc6809::regNameLen(base));
     if (indir) {
         if (*p == ']') {
@@ -266,13 +292,16 @@ bool AsmMc6809::parseBitPosition(const char *p, Operand &op) {
     if (*p == '.') {
         p++;
         // bit position separator '.' can't have space around it.
-        if (*p == ' ' || *p == '\t') return false;
+        if (*p == ' ' || *p == '\t')
+            return false;
     } else if (*a == ',') {
         // bit position separator ',' can have spaces around it.
         p = skipSpaces(a + 1);
-    } else return false;
+    } else
+        return false;
     const RegName reg = RegMc6809::parseRegName(p);
-    if (reg != REG_0 && reg != REG_UNDEF) return false;
+    if (reg != REG_0 && reg != REG_UNDEF)
+        return false;
     const uint32_t bitp = parseExpr32(p);
     op.setErrorIf(getError());
     if (parserError() || bitp >= 8) {
@@ -291,7 +320,8 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
     const char *lastComma = p;
     while (true) {
         RegName reg = RegMc6809::parseRegName(p);
-        if (reg == REG_UNDEF) return false;
+        if (reg == REG_UNDEF)
+            return false;
         p += RegMc6809::regNameLen(reg);
         if (*p == '+' || *p == '-') {
             if (!RegMc6809::isTfmBaseReg(reg)) {
@@ -309,21 +339,28 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
             p = lastComma;
             break;
         }
-        if (n == 0) op.index = reg;
-        if (n == 1) op.base  = reg;
+        if (n == 0)
+            op.index = reg;
+        if (n == 1)
+            op.base = reg;
         n++;
-        if (reg == REG_S || reg == REG_U ) {
-            if (stack == REG_UNDEF) stack = reg;
-            if (stack != reg) push_pull = false;
+        if (reg == REG_S || reg == REG_U) {
+            if (stack == REG_UNDEF)
+                stack = reg;
+            if (stack != reg)
+                push_pull = false;
             reg = REG_U;
         }
         const uint8_t bit = RegMc6809::encodeStackReg(reg);
-        if (bit == 0) push_pull = false;
-        if (post & bit) op.setError(DUPLICATE_REGISTER);
+        if (bit == 0)
+            push_pull = false;
+        if (post & bit)
+            op.setError(DUPLICATE_REGISTER);
         post |= bit;
         p = skipSpaces(p);
         lastComma = p;
-        if (endOfLine(p) || *p != ',') break;
+        if (endOfLine(p) || *p != ',')
+            break;
         p = skipSpaces(p + 1);
     }
     if (indir) {
@@ -332,9 +369,10 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
         } else {
             setError(MISSING_CLOSING_PAREN);
         }
-        if (n != 2) setErrorIf(UNKNOWN_OPERAND);
+        if (n != 2)
+            setErrorIf(UNKNOWN_OPERAND);
         _scan = p;
-        op.mode = IDX;          // [A,X] [0,X]
+        op.mode = IDX;  // [A,X] [0,X]
         if (op.index == REG_0)
             op.index = REG_UNDEF;
         op.indir = true;
@@ -343,7 +381,7 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
     if (n == 2) {
         _scan = p;
         op.mode = REG_REG;
-        op.setOK(); // Clear possible DUPLICATE_REGISTER
+        op.setOK();  // Clear possible DUPLICATE_REGISTER
         return true;
     }
     _scan = p;
@@ -357,10 +395,12 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
 Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p)) return OK;
+    if (endOfLine(p))
+        return OK;
 
     const bool indir = (*p == '[');
-    if (indir) p = skipSpaces(p + 1);
+    if (indir)
+        p = skipSpaces(p + 1);
 
     if (parsePointerMode(p, op, indir))
         return getError();
@@ -377,9 +417,11 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
         return getError();
 
     if (*p == '#') {
-        if (indir) return setError(UNKNOWN_OPERAND);
+        if (indir)
+            return setError(UNKNOWN_OPERAND);
         op.val32 = parseExpr32(p + 1);
-        if (parserError()) return getError();
+        if (parserError())
+            return getError();
         op.setError(getError());
         op.mode = IM32;
         return OK;
@@ -387,28 +429,32 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
 
     int8_t size = 0;
     if (*p == '>') {
-        p++; size = 16;
+        p++;
+        size = 16;
     } else if (*p == '<') {
-        p++; size = 8;
+        p++;
+        size = 8;
         if (*p == '<') {
-            p++; size = 5;
+            p++;
+            size = 5;
         }
     }
     op.extra = size;
     p = skipSpaces(p);
-    if (*p == ',') return setError(UNKNOWN_OPERAND);
+    if (*p == ',')
+        return setError(UNKNOWN_OPERAND);
     op.val32 = parseExpr32(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
-    setOK(); // Cleat error
+    setOK();  // Cleat error
     p = skipSpaces(_scan);
 
     if (*p == ',' && parseIndexedMode(p + 1, op, indir))
         return getError();
 
     if (size == 0 || size == 5) {
-        const Config::uintptr_t addr =
-            static_cast<Config::uintptr_t>(op.val32);
+        const Config::uintptr_t addr = static_cast<Config::uintptr_t>(op.val32);
         size = static_cast<uint8_t>(addr >> 8) == _direct_page ? 8 : 16;
         op.extra = size;
     }
@@ -427,7 +473,7 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
             return setError(MISSING_CLOSING_PAREN);
         }
         _scan = p;
-        op.mode = IDX; // [nnnn]
+        op.mode = IDX;  // [nnnn]
         op.extra = 16;
         return OK;
     }
@@ -436,11 +482,11 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
     return OK;
 }
 
-static const char TEXT_SETDP[]  PROGMEM = "SETDP";
+static const char TEXT_SETDP[] PROGMEM = "SETDP";
 
 Error AsmMc6809::processPseudo(const char *scan, InsnMc6809 &insn) {
     const char *p = skipSpaces(scan);
-    insn.resetAddress(insn.address()); // make generated bytes zero.
+    insn.resetAddress(insn.address());  // make generated bytes zero.
     if (strcasecmp_P(insn.name(), TEXT_SETDP) == 0) {
         const uint32_t val = parseExpr32(p);
         if (getError() == OK)
@@ -459,13 +505,16 @@ Error AsmMc6809::encode(Insn &_insn) {
         return getError();
 
     Operand op1, op2;
-    if (parseOperand(endName, op1)) return getError();
+    if (parseOperand(endName, op1))
+        return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        if (parseOperand(p + 1, op2)) return getError();
+        if (parseOperand(p + 1, op2))
+            return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(op1.getError());
     setErrorIf(op2.getError());
 
@@ -482,12 +531,13 @@ Error AsmMc6809::encode(Insn &_insn) {
         return getError();
     }
     const AddrMode mode2 = insn.mode2();
-    if (mode2 == NONE) return getError();
+    if (mode2 == NONE)
+        return getError();
     return encodeOperand(insn, op2, mode2);
 }
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

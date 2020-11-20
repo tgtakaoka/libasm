@@ -26,9 +26,7 @@
 namespace libasm {
 namespace i8080 {
 
-class AsmI8080
-    : public Assembler,
-      public Config {
+class AsmI8080 : public Assembler, public Config {
 public:
     AsmI8080() : Assembler(_parser, TableI8080) {}
 
@@ -39,12 +37,7 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(M_NO),
-              reg(REG_UNDEF),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
@@ -53,10 +46,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __ASM_I8080_H__
+#endif  // __ASM_I8080_H__
 
 // Local Variables:
 // mode: c++

@@ -24,24 +24,24 @@ namespace libasm {
 namespace i8051 {
 
 enum AddrMode : uint8_t {
-    NONE  = 0,
-    REL   = 1,  // Relative
-    AREG  = 2,  // A register
-    RREG  = 3,  // Rn register
-    CREG  = 4,  // C register
-    DREG  = 5,  // DPTR register
-    ABREG = 6,  // AB register
-    ADR8  = 7,  // Internal 8-bit RAM address
-    ADR11 = 8,  // 11-bit program code address
-    ADR16 = 9,  // 16-bot program code address
-    BITAD = 10, // 8-bit bit address
-    NOTAD = 11, // not(/) 8-bit address
-    IMM8  = 12, // 8-bit Immediate data
-    IMM16 = 13, // 16-bit Immediate data
-    IDIRR = 14, // @Rn indirect
-    IDIRD = 15, // @DPTR indirect
-    INDXD = 16, // @A+DPTR
-    INDXP = 17, // @A+PC
+    NONE = 0,
+    REL = 1,     // Relative
+    AREG = 2,    // A register
+    RREG = 3,    // Rn register
+    CREG = 4,    // C register
+    DREG = 5,    // DPTR register
+    ABREG = 6,   // AB register
+    ADR8 = 7,    // Internal 8-bit RAM address
+    ADR11 = 8,   // 11-bit program code address
+    ADR16 = 9,   // 16-bot program code address
+    BITAD = 10,  // 8-bit bit address
+    NOTAD = 11,  // not(/) 8-bit address
+    IMM8 = 12,   // 8-bit Immediate data
+    IMM16 = 13,  // 16-bit Immediate data
+    IDIRR = 14,  // @Rn indirect
+    IDIRD = 15,  // @DPTR indirect
+    INDXD = 16,  // @A+DPTR
+    INDXP = 17,  // @A+PC
 };
 
 class Entry : public EntryBase<Config> {
@@ -49,11 +49,12 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext) {
+        static constexpr Flags create(
+                AddrMode dst, AddrMode src, AddrMode ext) {
             return Flags{static_cast<uint16_t>(
-                    (static_cast<uint16_t>(dst) << dstMode_gp)
-                    | (static_cast<uint16_t>(src) << srcMode_gp)
-                    | (static_cast<uint16_t>(ext) << extMode_gp))};
+                    (static_cast<uint16_t>(dst) << dstMode_gp) |
+                    (static_cast<uint16_t>(src) << srcMode_gp) |
+                    (static_cast<uint16_t>(ext) << extMode_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
@@ -82,10 +83,10 @@ private:
     static constexpr uint8_t extMode_gp = 10;
 };
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __ENTRY_I8051_H__
+#endif  // __ENTRY_I8051_H__
 
 // Local Variables:
 // mode: c++

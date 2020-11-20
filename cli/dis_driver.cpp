@@ -26,11 +26,12 @@ namespace cli {
 DisDriver::DisDriver(std::vector<Disassembler *> &disassemblers) {
     _disassemblers.reserve(disassemblers.size());
     _disassemblers.insert(
-        _disassemblers.end(), disassemblers.begin(), disassemblers.end());
+            _disassemblers.end(), disassemblers.begin(), disassemblers.end());
 }
 
 DisDriver::~DisDriver() {
-    if (_formatter) delete _formatter;
+    if (_formatter)
+        delete _formatter;
 }
 
 int DisDriver::usage() {
@@ -47,7 +48,8 @@ int DisDriver::usage() {
         for (auto dis : _disassemblers) {
             const char *list = dis->listCpu();
             if (buf.size() + strlen(list) < 47) {
-                if (buf.size()) buf += ", ";
+                if (buf.size())
+                    buf += ", ";
                 buf += list;
             } else {
                 cpuList += cpuSep;
@@ -58,12 +60,14 @@ int DisDriver::usage() {
         cpuList += cpuSep + buf;
     }
     fprintf(stderr,
-            "libasm disassembler (version " LIBASM_VERSION_STRING ")\n"
+            "libasm disassembler (version " LIBASM_VERSION_STRING
+            ")\n"
             "usage: %s%s [-o <output>] [-l <list>] <input>\n"
             "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
-            "  <input>     : file can be Motorola S-Record or Intel HEX format\n"
+            "  <input>     : file can be Motorola S-Record or Intel HEX "
+            "format\n"
             "  -r          : use program counter relative notation\n"
             "  -u          : use uppercase letter for output\n"
             "  -v          : print progress verbosely\n",
@@ -73,7 +77,8 @@ int DisDriver::usage() {
 
 int DisDriver::disassemble() {
     if (_verbose)
-        fprintf(stderr, "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
+        fprintf(stderr,
+                "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
     FILE *input = fopen(_input_name, "r");
     if (input == nullptr) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
@@ -108,59 +113,59 @@ int DisDriver::disassemble() {
             fprintf(stderr, "%s: Opened for listing\n", _list_name);
         fprintf(list, "%s\n", listing.getCpu(true));
     }
-    memory.dump(
-        [this, output, list, &listing]
-        (uint32_t base, const uint8_t *data, size_t size) {
+    memory.dump([this, output, list, &listing](
+                        uint32_t base, const uint8_t *data, size_t size) {
+        if (list) {
+            fprintf(list, "%s\n", listing.origin(base, true));
+            fflush(list);
+        }
+        if (output) {
+            fprintf(output, "%s\n", listing.origin(base));
+            fflush(output);
+        }
+        Insn insn;
+        for (size_t pc = 0; pc < size; pc += insn.length()) {
+            uint32_t address = base + pc;
+            listing.disassemble(address, insn);
+            const Error error = _disassembler->getError();
+            if (error)
+                fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, address,
+                        _disassembler->errorText());
             if (list) {
-                fprintf(list, "%s\n", listing.origin(base, true));
+                if (error)
+                    fprintf(list, "%s:0x%04x: error: %s\n", _input_name,
+                            address, _disassembler->errorText());
+                do {
+                    fprintf(list, "%s\n", listing.getLine());
+                } while (listing.hasNext());
                 fflush(list);
             }
             if (output) {
-                fprintf(output, "%s\n", listing.origin(base));
+                if (error)
+                    fprintf(output, "; %s:0x%04x: error: %s\n", _input_name,
+                            address, _disassembler->errorText());
+                do {
+                    fprintf(output, "%s\n", listing.getContent());
+                } while (listing.hasNext());
                 fflush(output);
             }
-            Insn insn;
-            for (size_t pc = 0; pc < size; pc += insn.length()) {
-                uint32_t address = base + pc;
-                listing.disassemble(address, insn);
-                const Error error = _disassembler->getError();
-                if (error)
-                    fprintf(stderr, "%s:0x%04x: error: %s\n",
-                            _input_name, address, _disassembler->errorText());
-                if (list) {
-                    if (error)
-                        fprintf(list, "%s:0x%04x: error: %s\n",
-                                _input_name, address, _disassembler->errorText());
-                    do {
-                        fprintf(list, "%s\n", listing.getLine());
-                    } while (listing.hasNext());
-                    fflush(list);
-                }
-                if (output) {
-                    if (error)
-                        fprintf(output, "; %s:0x%04x: error: %s\n",
-                                _input_name, address, _disassembler->errorText());
-                    do {
-                        fprintf(output, "%s\n", listing.getContent());
-                    } while (listing.hasNext());
-                    fflush(output);
-                }
-            }
-        });
-    if (output) fclose(output);
-    if (list) fclose(list);
+        }
+    });
+    if (output)
+        fclose(output);
+    if (list)
+        fclose(list);
 
     return 0;
 }
 
-int DisDriver::readInput(
-    FILE *input, const char *filename, CliMemory &memory) {
+int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
     int lineno = 0;
     int errors = 0;
     size_t line_len = 128;
     char *line = static_cast<char *>(malloc(line_len));
     int len;
-    uint32_t start = 0, end = 0;;
+    uint32_t start = 0, end = 0;
     while ((len = getLine(line, line_len, input)) > 0) {
         lineno++;
         uint32_t addr;
@@ -168,8 +173,8 @@ int DisDriver::readInput(
         uint8_t *data = _formatter->decode(line, addr, size);
         if (data == nullptr) {
             if (errors < 3) {
-                fprintf(stderr, "%s:%d: format error: %s\n",
-                        filename, lineno, line);
+                fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno,
+                        line);
             } else if (errors == 3) {
                 fprintf(stderr, "%s: too many errors, wrong format?\n",
                         filename);
@@ -191,8 +196,8 @@ int DisDriver::readInput(
         }
     }
     if (start != end && _verbose)
-        fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n",
-                _input_name, end - start, start, end - 1);
+        fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n", _input_name,
+                end - start, start, end - 1);
     free(line);
     return errors;
 }
@@ -203,7 +208,7 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
         fprintf(stderr, "Can't open input file %s\n", input_name);
         return nullptr;
     }
-            
+
     size_t line_len = 128;
     char *line = static_cast<char *>(malloc(line_len));
     const int len = getLine(line, line_len, input);
@@ -212,11 +217,13 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
     free(line);
 
     const AddressWidth addrWidth = _disassembler->addressWidth();
-    if (c == 'S') return new MotoSrec(addrWidth);
-    if (c == ':') return new IntelHex(addrWidth);
+    if (c == 'S')
+        return new MotoSrec(addrWidth);
+    if (c == ':')
+        return new IntelHex(addrWidth);
     return nullptr;
 }
-    
+
 Disassembler *DisDriver::defaultDisassembler() {
     const size_t prefix_len = strlen(PROG_PREFIX);
     if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
@@ -294,8 +301,7 @@ int DisDriver::parseOption(int argc, const char **argv) {
             }
         } else {
             if (_input_name) {
-                fprintf(stderr,
-                        "multiple input files specified: %s and %s\n",
+                fprintf(stderr, "multiple input files specified: %s and %s\n",
                         _input_name, opt);
                 return 1;
             }
@@ -332,8 +338,8 @@ const char *DisDriver::basename(const char *str, char sep_char) {
     return sep ? sep + 1 : str;
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

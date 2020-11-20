@@ -26,16 +26,12 @@
 namespace libasm {
 namespace z8 {
 
-class DisZ8
-    : public Disassembler,
-      public Config {
+class DisZ8 : public Disassembler, public Config {
 public:
     DisZ8() : Disassembler(_formatter, _regs, TableZ8) {}
 
     void reset() override { preferWorkRegister(true); }
-    void preferWorkRegister(bool enabled) {
-        _preferWorkRegister = enabled;
-    }
+    void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }
 
 private:
     IntelValueFormatter _formatter;
@@ -51,12 +47,12 @@ private:
     char *outBitPos(char *out, uint8_t bitPos);
 
     Error decodeOperand(
-        DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode);
-    Error decodeAbsolute(
-        DisMemory &memory, InsnZ8 &insn, char *out, Endian endian = ENDIAN_BIG);
+            DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode);
+    Error decodeAbsolute(DisMemory &memory, InsnZ8 &insn, char *out,
+            Endian endian = ENDIAN_BIG);
     Error decodeRelative(DisMemory &memory, InsnZ8 &insn, char *out);
     Error decodeIndexed(
-        DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1);
+            DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1);
     Error decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, char *out);
     Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn, char *out);
     Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out);
@@ -64,10 +60,10 @@ private:
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace z8
-} // namespace libasm
+}  // namespace z8
+}  // namespace libasm
 
-#endif // __DIS_Z8_H__
+#endif  // __DIS_Z8_H__
 
 // Local Variables:
 // mode: c++

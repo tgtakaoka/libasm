@@ -25,16 +25,16 @@ namespace i8080 {
 enum RegName : int8_t {
     REG_UNDEF = -1,
     // Data registers.
-    REG_B   = 0,
-    REG_C   = 1,
-    REG_D   = 2,
-    REG_E   = 3,
-    REG_H   = 4,
-    REG_L   = 5,
-    REG_M   = 6,
-    REG_A   = 7,
+    REG_B = 0,
+    REG_C = 1,
+    REG_D = 2,
+    REG_E = 3,
+    REG_H = 4,
+    REG_L = 5,
+    REG_M = 6,
+    REG_A = 7,
     // Other registers
-    REG_SP  = 0 + 8,
+    REG_SP = 0 + 8,
     REG_PSW = 1 + 8,
 };
 
@@ -59,10 +59,10 @@ public:
     static RegName decodeDataReg(uint8_t num);
 };
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __REG_I8080_H__
+#endif  // __REG_I8080_H__
 
 // Local Variables:
 // mode: c++

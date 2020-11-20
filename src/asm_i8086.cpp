@@ -15,8 +15,9 @@
  */
 
 #include "asm_i8086.h"
-#include "table_i8086.h"
+
 #include "reg_i8086.h"
+#include "table_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -27,8 +28,10 @@ bool AsmI8086::parseStringInst(const char *scan, Operand &op) {
     const char *endName = _parser.scanSymbol(scan);
     insn.setName(scan, endName);
     insn.setAddrMode(M_NONE, M_NONE);
-    if (TableI8086.searchName(insn)) return false;
-    if (!insn.stringInst()) return false;
+    if (TableI8086.searchName(insn))
+        return false;
+    if (!insn.stringInst())
+        return false;
     _scan = skipSpaces(endName);
     op.val32 = insn.opCode();
     op.mode = M_ISTR;
@@ -78,7 +81,8 @@ const char *AsmI8086::parseBaseRegister(const char *scan, Operand &op) {
 const char *AsmI8086::parseIndexRegister(const char *scan, Operand &op) {
     const char *p = scan;
     if (op.reg != REG_UNDEF) {
-        if (*p != '+') return scan;
+        if (*p != '+')
+            return scan;
         p = skipSpaces(p + 1);
     }
     const RegName reg = RegI8086::parseRegName(p);
@@ -91,7 +95,8 @@ const char *AsmI8086::parseIndexRegister(const char *scan, Operand &op) {
 
 const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
     const char *p = scan;
-    if (endOfLine(p) || *p == ']') return scan;
+    if (endOfLine(p) || *p == ']')
+        return scan;
     if (op.reg != REG_UNDEF || op.index != REG_UNDEF) {
         if (*p != '+' && *p != '-') {
             setError(UNKNOWN_OPERAND);
@@ -99,7 +104,8 @@ const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
         }
     }
     op.val32 = parseExpr32(p);
-    if (parserError()) return nullptr;
+    if (parserError())
+        return nullptr;
     op.setError(getError());
     op.hasVal = true;
     return skipSpaces(_scan);
@@ -108,31 +114,36 @@ const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
 Error AsmI8086::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p)) return OK;
+    if (endOfLine(p))
+        return OK;
 
     if (parseStringInst(p, op))
         return OK;
     p = parsePointerSize(p, op);
-    if (p == nullptr) return getError();
+    if (p == nullptr)
+        return getError();
     p = parseSegmentOverride(p, op);
     if (*p == '[') {
         p = skipSpaces(p + 1);
         p = parseBaseRegister(p, op);
         p = parseIndexRegister(p, op);
         p = parseDisplacement(p, op);
-        if (p == nullptr) return getError();
+        if (p == nullptr)
+            return getError();
         if (*p == ']') {
             _scan = p + 1;
             if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
                 if (op.hasVal) {
-                    op.mode = (op.ptr == REG_UNDEF) ? M_DIR
-                        : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
+                    op.mode = (op.ptr == REG_UNDEF)
+                                      ? M_DIR
+                                      : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
                     return OK;
                 }
                 return setError(UNKNOWN_OPERAND);
             }
-            op.mode = (op.ptr == REG_UNDEF) ? M_MEM
-                : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
+            op.mode = (op.ptr == REG_UNDEF)
+                              ? M_MEM
+                              : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
             return OK;
         }
         return setError(MISSING_CLOSING_PAREN);
@@ -145,12 +156,21 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
         _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
         switch (reg) {
-        case REG_AL: op.mode = M_AL; break;
-        case REG_CL: op.mode = M_CL; break;
-        case REG_AX: op.mode = M_AX; break;
-        case REG_DX: op.mode = M_DX; break;
+        case REG_AL:
+            op.mode = M_AL;
+            break;
+        case REG_CL:
+            op.mode = M_CL;
+            break;
+        case REG_AX:
+            op.mode = M_AX;
+            break;
+        case REG_DX:
+            op.mode = M_DX;
+            break;
         default:
-            op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
+            op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG
+                                                                 : M_WREG;
             break;
         }
         return OK;
@@ -158,19 +178,22 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
     if (RegI8086::isSegmentReg(reg)) {
         _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
-        op.mode = (reg == REG_CS) ? M_CS: M_SREG;
+        op.mode = (reg == REG_CS) ? M_CS : M_SREG;
         return OK;
     }
-    if (reg != REG_UNDEF) return setError(UNKNOWN_OPERAND);
+    if (reg != REG_UNDEF)
+        return setError(UNKNOWN_OPERAND);
 
     op.val32 = parseExpr32(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
     if (*p == ':') {
         op.seg16 = op.val32;
         op.val32 = parseExpr32(p + 1);
-        if (parserError()) return getError();
+        if (parserError())
+            return getError();
         op.setErrorIf(getError());
         op.mode = M_FAR;
         return OK;
@@ -180,20 +203,26 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
 }
 
 AddrMode AsmI8086::Operand::immediateMode() const {
-    if (getError()) return M_IMM;
-    if (val32 == 1) return M_VAL1;
-    if (val32 == 3) return M_VAL3;
+    if (getError())
+        return M_IMM;
+    if (val32 == 1)
+        return M_VAL1;
+    if (val32 == 3)
+        return M_VAL3;
     const int32_t val = static_cast<int32_t>(val32);
     return (val >= -0x80 && val < 0x80) ? M_IMM8 : M_IMM;
 }
 
 Error AsmI8086::emitImmediate(InsnI8086 &insn, OprSize size, uint16_t val) {
-    if (size == SZ_BYTE) insn.emitOperand8(val);
-    if (size == SZ_WORD) insn.emitOperand16(val);
+    if (size == SZ_BYTE)
+        insn.emitOperand8(val);
+    if (size == SZ_WORD)
+        insn.emitOperand16(val);
     return OK;
 }
 
-Error AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
+Error AsmI8086::emitRelative(
+        InsnI8086 &insn, const Operand &op, AddrMode mode) {
     const Config::uintptr_t base = insn.address() + (mode == M_REL8 ? 2 : 3);
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
@@ -203,12 +232,14 @@ Error AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) 
             insn.setOpCode(0xE9, 0);
             return emitRelative(insn, op, M_REL);
         }
-        if (overflow) return setError(OPERAND_TOO_FAR);
+        if (overflow)
+            return setError(OPERAND_TOO_FAR);
         insn.emitOperand8(static_cast<uint8_t>(delta));
         return OK;
     }
     // M_REL
-    if (delta < -0x8000 || delta >= 0x8000) return setError(OPERAND_TOO_FAR);
+    if (delta < -0x8000 || delta >= 0x8000)
+        return setError(OPERAND_TOO_FAR);
     insn.emitOperand16(static_cast<uint16_t>(delta));
     return OK;
 }
@@ -216,19 +247,30 @@ Error AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) 
 Error AsmI8086::emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos) {
     const uint8_t num = RegI8086::encodeRegNum(op.reg);
     switch (pos) {
-    case P_OREG: insn.embed(num); break;
-    case P_OSEG: insn.embed(num << 3); break;
-    case P_OMOD: insn.embed(0300 | num); break;
-    case P_REG:  insn.embedModReg(num << 3); break;
-    case P_MOD:  insn.embedModReg(0300 | num); break;
-    default: break;
+    case P_OREG:
+        insn.embed(num);
+        break;
+    case P_OSEG:
+        insn.embed(num << 3);
+        break;
+    case P_OMOD:
+        insn.embed(0300 | num);
+        break;
+    case P_REG:
+        insn.embedModReg(num << 3);
+        break;
+    case P_MOD:
+        insn.embedModReg(0300 | num);
+        break;
+    default:
+        break;
     }
     return OK;
 }
 
 uint8_t AsmI8086::Operand::encodeMod() const {
-    const bool needDisp = (reg == REG_BP && index == REG_UNDEF)
-        || (hasVal && (val32 || getError()));
+    const bool needDisp = (reg == REG_BP && index == REG_UNDEF) ||
+                          (hasVal && (val32 || getError()));
     if (needDisp) {
         const int32_t val = static_cast<int32_t>(val32);
         return (val < -0x80 || val >= 0x80 || getError()) ? 2 : 1;
@@ -243,14 +285,17 @@ uint8_t AsmI8086::Operand::encodeR_m() const {
     } else if (index == REG_UNDEF) {
         r_m = (reg == REG_BP) ? 6 : 7;
     } else {
-        if (reg == REG_BP) r_m |= 2;
-        if (index == REG_DI) r_m |= 1;
+        if (reg == REG_BP)
+            r_m |= 2;
+        if (index == REG_DI)
+            r_m |= 1;
     }
     return r_m;
 }
 
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) {
-    if (seg == REG_UNDEF) return 0;
+    if (seg == REG_UNDEF)
+        return 0;
     const Config::opcode_t segPrefix = TableI8086.segOverridePrefix(seg);
     if (_optimizeSegment) {
         if (base == REG_BP || base == REG_SP)
@@ -264,12 +309,20 @@ Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
     uint8_t mod;
     uint8_t modReg;
     switch (op.mode) {
-    case M_AL: case M_CL: case M_AX: case M_DX:
-    case M_BREG: case M_WREG:
+    case M_AL:
+    case M_CL:
+    case M_AX:
+    case M_DX:
+    case M_BREG:
+    case M_WREG:
         return emitRegister(insn, op, pos);
-    case M_BDIR: case M_WDIR: case M_DIR:
+    case M_BDIR:
+    case M_WDIR:
+    case M_DIR:
         return emitDirect(insn, op, pos);
-    case M_BMEM: case M_WMEM: case M_MEM:
+    case M_BMEM:
+    case M_WMEM:
+    case M_MEM:
         insn.setSegment(encodeSegmentOverride(op.seg, op.reg));
         mod = op.encodeMod();
         modReg = mod << 6;
@@ -279,26 +332,31 @@ Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
         } else {
             insn.embedModReg(modReg);
         }
-        if (mod == 1) insn.emitOperand8(op.val32);
-        if (mod == 2) insn.emitOperand16(op.val32);
+        if (mod == 1)
+            insn.emitOperand8(op.val32);
+        if (mod == 2)
+            insn.emitOperand16(op.val32);
         break;
-    default: break;
+    default:
+        break;
     }
     return OK;
 }
 
 Error AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
     insn.setSegment(encodeSegmentOverride(op.seg, REG_UNDEF));
-    if (pos == P_MOD)  insn.embedModReg(0006);
-    if (pos == P_OMOD) insn.embed(0006);
+    if (pos == P_MOD)
+        insn.embedModReg(0006);
+    if (pos == P_OMOD)
+        insn.embed(0006);
     return emitImmediate(insn, SZ_WORD, op.val32);
 }
 
 Error AsmI8086::emitOperand(
-    InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
+        InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
     switch (mode) {
     case M_CS:
-        if (pos == P_NONE)      // POP CS
+        if (pos == P_NONE)  // POP CS
             return setError(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_BREG:
@@ -316,7 +374,8 @@ Error AsmI8086::emitOperand(
     case M_IMM:
         return emitImmediate(insn, insn.oprSize(), op.val32);
     case M_IOA:
-        if (op.val32 >= 0x100) return setError(OVERFLOW_RANGE);
+        if (op.val32 >= 0x100)
+            return setError(OVERFLOW_RANGE);
         /* Fall-through */
     case M_IMM8:
         return emitImmediate(insn, SZ_BYTE, op.val32);
@@ -324,7 +383,8 @@ Error AsmI8086::emitOperand(
     case M_REL8:
         return emitRelative(insn, op, mode);
     case M_FAR:
-        if (op.val32 >= 0x10000) return setError(OVERFLOW_RANGE);
+        if (op.val32 >= 0x10000)
+            return setError(OVERFLOW_RANGE);
         emitImmediate(insn, SZ_WORD, op.val32);
         return emitImmediate(insn, SZ_WORD, op.seg16);
     case M_ISTR:
@@ -336,8 +396,9 @@ Error AsmI8086::emitOperand(
 }
 
 Error AsmI8086::emitStringOperand(
-    InsnI8086 &insn, const Operand &op, RegName seg, RegName index) {
-    if (op.mode == M_NONE) return OK;
+        InsnI8086 &insn, const Operand &op, RegName seg, RegName index) {
+    if (op.mode == M_NONE)
+        return OK;
     if (op.reg != REG_UNDEF || op.index != index || op.hasVal)
         return setError(ILLEGAL_OPERAND);
     if (seg == REG_ES && op.seg != REG_ES)
@@ -348,21 +409,26 @@ Error AsmI8086::emitStringOperand(
 }
 
 Error AsmI8086::encodeStringInst(
-    InsnI8086 &insn, const Operand &dst, const Operand &src) {
+        InsnI8086 &insn, const Operand &dst, const Operand &src) {
     switch (insn.opCode() & ~1) {
-    case 0xA4: // MOVS ES:[DI],DS:[SI]
-        if (emitStringOperand(insn, dst, REG_ES, REG_DI)) return getError();
-        if (emitStringOperand(insn, src, REG_DS, REG_SI)) return getError();
+    case 0xA4:  // MOVS ES:[DI],DS:[SI]
+        if (emitStringOperand(insn, dst, REG_ES, REG_DI))
+            return getError();
+        if (emitStringOperand(insn, src, REG_DS, REG_SI))
+            return getError();
         /* Fall-through */
-    case 0xAA: // STOS ES:[DI]
-    case 0xAE: // SCAS ES:[DI]
-        if (emitStringOperand(insn, dst, REG_ES, REG_DI)) return getError();
+    case 0xAA:  // STOS ES:[DI]
+    case 0xAE:  // SCAS ES:[DI]
+        if (emitStringOperand(insn, dst, REG_ES, REG_DI))
+            return getError();
         break;
-    case 0xA6: // CMPS DS:[SI],ES:[DI]
-        if (emitStringOperand(insn, src, REG_ES, REG_DI)) return getError();
+    case 0xA6:  // CMPS DS:[SI],ES:[DI]
+        if (emitStringOperand(insn, src, REG_ES, REG_DI))
+            return getError();
         /* Fall-through */
-    case 0xAC: // LODS DS:[SI]
-        if (emitStringOperand(insn, dst, REG_DS, REG_SI)) return getError();
+    case 0xAC:  // LODS DS:[SI]
+        if (emitStringOperand(insn, dst, REG_DS, REG_SI))
+            return getError();
         break;
     }
     insn.emitInsn();
@@ -375,13 +441,16 @@ Error AsmI8086::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp)) return getError();
+    if (parseOperand(endName, dstOp))
+        return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        if (parseOperand(p + 1, srcOp)) return getError();
+        if (parseOperand(p + 1, srcOp))
+            return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setError(dstOp.getError());
     setErrorIf(srcOp.getError());
 
@@ -406,8 +475,8 @@ Error AsmI8086::encode(Insn &_insn) {
     return getError();
 }
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

@@ -26,9 +26,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class DisMc6809
-    : public Disassembler,
-      public Config {
+class DisMc6809 : public Disassembler, public Config {
 public:
     DisMc6809() : Disassembler(_formatter, _regs, TableMc6809) {}
 
@@ -43,9 +41,9 @@ private:
     Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeExtended(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeRelative(
-        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
     Error decodeImmediate(
-        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
     Error decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out);
     // HD6309
@@ -53,14 +51,15 @@ private:
     Error decodeDirBit(DisMemory &memory, InsnMc6809 &insn, char *out);
     Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, char *out);
 
-    Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
+    Error decodeOperand(
+            DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
-#endif // __DIS_MC6809_H__
+#endif  // __DIS_MC6809_H__
 
 // Local Variables:
 // mode: c++

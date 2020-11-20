@@ -31,17 +31,17 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO   = 0,
-    M_DIR  = 1,  // Direct page
-    M_EXT  = 2,  // Extended
-    M_IDX  = 3,  // Indexed
-    M_REL  = 4,  // Relative
-    M_IMM  = 5,  // Immediate
+    M_NO = 0,
+    M_DIR = 1,  // Direct page
+    M_EXT = 2,  // Extended
+    M_IDX = 3,  // Indexed
+    M_REL = 4,  // Relative
+    M_IMM = 5,  // Immediate
     // HD6301
-    M_BMM  = 6,  // Bit number or Immediate (for disassembler)
-    M_BIT  = 7,  // Bit number (for assembler)
+    M_BMM = 6,  // Bit number or Immediate (for disassembler)
+    M_BIT = 7,  // Bit number (for assembler)
     // MC68HC11
-    M_IDY  = 8,  // Indexed Y
+    M_IDY = 8,  // Indexed Y
 };
 
 enum OprSize : uint8_t {
@@ -58,25 +58,17 @@ public:
         static constexpr Flags create(
                 AddrMode op1, AddrMode op2, AddrMode op3, OprSize size) {
             return Flags{static_cast<uint16_t>(
-                        (static_cast<uint16_t>(op1) << op1_gp)
-                        | (static_cast<uint16_t>(op2) << op2_gp)
-                        | (static_cast<uint16_t>(op3) << op3_gp)
-                        | (static_cast<uint16_t>(size) << size_gp))};
+                    (static_cast<uint16_t>(op1) << op1_gp) |
+                    (static_cast<uint16_t>(op2) << op2_gp) |
+                    (static_cast<uint16_t>(op3) << op3_gp) |
+                    (static_cast<uint16_t>(size) << size_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode mode1() const {
-            return AddrMode((_attr >> op1_gp) & mode_gm);
-        }
-        AddrMode mode2() const {
-            return AddrMode((_attr >> op2_gp) & mode_gm);
-        }
-        AddrMode mode3() const {
-            return AddrMode((_attr >> op3_gp) & mode_gm);
-        }
-        OprSize size() const {
-            return OprSize((_attr >> size_gp) & size_gm);
-        }
+        AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
+        AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
+        AddrMode mode3() const { return AddrMode((_attr >> op3_gp) & mode_gm); }
+        OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -87,18 +79,18 @@ public:
 private:
     const Flags _flags;
 
-    static constexpr int op1_gp  = 0;
-    static constexpr int op2_gp  = 4;
-    static constexpr int op3_gp  = 8;
+    static constexpr int op1_gp = 0;
+    static constexpr int op2_gp = 4;
+    static constexpr int op3_gp = 8;
     static constexpr int size_gp = 12;
     static constexpr uint8_t mode_gm = 0xF;
     static constexpr uint8_t size_gm = 0x3;
 };
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
-#endif // __ENTRY_MC6800_H__
+#endif  // __ENTRY_MC6800_H__
 
 // Local Variables:
 // mode: c++

@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-#include "config_mc6800.h"
 #include "reg_mc6800.h"
-#include "table_mc6800.h"
 
 #include <ctype.h>
+
+#include "config_mc6800.h"
+#include "table_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
 
 RegName RegMc6800::parseRegName(const char *line) {
     const char r = *line++;
-    if (isidchar(*line)) return REG_UNDEF;
+    if (isidchar(*line))
+        return REG_UNDEF;
     switch (toupper(r)) {
-    case 'X': return REG_X;
-    case 'Y': return REG_Y;
-    default:  return REG_UNDEF;
+    case 'X':
+        return REG_X;
+    case 'Y':
+        return REG_Y;
+    default:
+        return REG_UNDEF;
     }
 }
 
@@ -41,8 +46,8 @@ char *RegMc6800::outRegName(char *out, const RegName name) const {
     return outChar(out, char(name));
 }
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

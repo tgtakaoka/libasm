@@ -35,7 +35,7 @@ public:
 
     void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode); }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode;  }
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
     Config::opcode_t opCode() const { return _opCode; }
 
@@ -48,10 +48,10 @@ private:
     Config::opcode_t _opCode;
 };
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
-#endif // __INSN_INS8060_H__
+#endif  // __INSN_INS8060_H__
 
 // Local Variables:
 // mode: c++

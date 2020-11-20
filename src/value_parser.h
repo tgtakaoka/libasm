@@ -17,26 +17,22 @@
 #ifndef __VALUE_PARSER_H__
 #define __VALUE_PARSER_H__
 
-#include "symbol_table.h"
 #include "error_reporter.h"
+#include "symbol_table.h"
 
 namespace libasm {
 
 class Value {
 public:
-    static Value makeSigned(int32_t value) {
-        return Value(value, SIGNED);
-    }
+    static Value makeSigned(int32_t value) { return Value(value, SIGNED); }
 
-    static Value makeUnsigned(uint32_t value) {
-        return Value(value, UNSIGNED);
-    }
+    static Value makeUnsigned(uint32_t value) { return Value(value, UNSIGNED); }
 
     Value() : _value(0), _type(UNDEFINED) {}
 
     bool isUndefined() const { return _type == UNDEFINED; }
-    bool isSigned()    const { return _type == SIGNED; }
-    bool isUnsigned()  const { return _type == UNSIGNED; }
+    bool isSigned() const { return _type == SIGNED; }
+    bool isUnsigned() const { return _type == UNSIGNED; }
     bool overflowUint8() const;
     bool overflowUint16() const;
 
@@ -50,13 +46,9 @@ public:
         _type = UNSIGNED;
     }
 
-    int32_t getSigned() const {
-        return static_cast<int32_t>(_value);
-    }
+    int32_t getSigned() const { return static_cast<int32_t>(_value); }
 
-    uint32_t getUnsigned() const {
-        return _value;
-    }
+    uint32_t getUnsigned() const { return _value; }
 
     Value &complement() {
         _value = ~_value;
@@ -64,30 +56,27 @@ public:
     }
 
     Value &negate() {
-        if (!isUndefined()) setSigned(-getSigned());
+        if (!isUndefined())
+            setSigned(-getSigned());
         return *this;
     }
 
 private:
     enum ValueType : uint8_t {
         UNDEFINED = 0,
-        SIGNED    = 1,
-        UNSIGNED  = 2,
+        SIGNED = 1,
+        UNSIGNED = 2,
     };
 
     uint32_t _value;
     ValueType _type;
 
-    Value(uint32_t value, ValueType type)
-        : _value(value), _type(type) {}
+    Value(uint32_t value, ValueType type) : _value(value), _type(type) {}
 };
 
 class ValueParser : protected ErrorReporter {
 public:
-    ValueParser(char curSym = '.')
-        : ErrorReporter(),
-          _curSym(curSym)
-    {}
+    ValueParser(char curSym = '.') : ErrorReporter(), _curSym(curSym) {}
 
     Error error() const { return getError(); }
     /*
@@ -107,11 +96,9 @@ public:
 
 protected:
     virtual Error readNumber(const char *scan, Value &val);
-    Error parseNumber(
-        const char *scan, Value &val, const uint8_t base,
-        const char suffix = 0);
-    Error scanNumberEnd(
-        const char *scan, const uint8_t base, char suffix = 0);
+    Error parseNumber(const char *scan, Value &val, const uint8_t base,
+            const char suffix = 0);
+    Error scanNumberEnd(const char *scan, const uint8_t base, char suffix = 0);
 
 private:
     const char _curSym;
@@ -133,16 +120,15 @@ private:
 
     struct Operator {
         Operator(Op op, uint8_t precedence)
-            : _op(op),
-              _precedence(precedence)
-        {}
+            : _op(op), _precedence(precedence) {}
         enum Op _op;
         uint8_t _precedence;
     };
 
     struct OprAndLval {
         OprAndLval() : _opr(OP_NONE, 0), _value() {}
-        OprAndLval(const Operator &opr, Value value) : _opr(opr), _value(value) {}
+        OprAndLval(const Operator &opr, Value value)
+            : _opr(opr), _value(value) {}
         OprAndLval(const OprAndLval &o) : _opr(o._opr), _value(o._value) {}
         bool isEnd() const { return _opr._op == OP_NONE; }
         int precedence() const { return _opr._precedence; }
@@ -150,7 +136,7 @@ private:
         Value _value;
     };
 
-    template<typename E>
+    template <typename E>
     class Stack {
     public:
         void clear() { _top = 0; }
@@ -160,6 +146,7 @@ private:
         void push(const E v) { _values[_top++] = v; }
         void pop() { _top--; }
         uint8_t _top;
+
     private:
         static constexpr uint8_t capacity = 8;
         E _values[capacity];
@@ -178,6 +165,7 @@ private:
 class MotoValueParser : public ValueParser {
 public:
     MotoValueParser() : ValueParser('*') {}
+
 protected:
     Error readNumber(const char *scan, Value &val) override;
 };
@@ -185,11 +173,12 @@ protected:
 class IntelValueParser : public ValueParser {
 public:
     IntelValueParser() : ValueParser('$') {}
+
 protected:
     Error readNumber(const char *scan, Value &val) override;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
 #endif
 

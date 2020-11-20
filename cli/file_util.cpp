@@ -16,8 +16,8 @@
 
 #include "file_util.h"
 
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 namespace libasm {
 namespace cli {
@@ -39,8 +39,8 @@ int getLine(char *&lineptr, size_t &n, FILE *input) {
     return -1;
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

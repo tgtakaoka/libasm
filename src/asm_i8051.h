@@ -26,9 +26,7 @@
 namespace libasm {
 namespace i8051 {
 
-class AsmI8051
-    : public Assembler,
-      public Config {
+class AsmI8051 : public Assembler, public Config {
 public:
     AsmI8051() : Assembler(_parser, TableI8051) {}
 
@@ -39,25 +37,20 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(NONE),
-              reg(REG_UNDEF),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(NONE), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
 
     Error encodeOperand(
-        InsnI8051 &insn, const AddrMode mode, const Operand &op);
+            InsnI8051 &insn, const AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __ASM_I8051_H__
+#endif  // __ASM_I8051_H__
 
 // Local Variables:
 // mode: c++

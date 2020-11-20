@@ -36,6 +36,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8001", true,    assembler.setCpu("Z8001"));
     EQUALS("cpu 8001", "Z8001", assembler.getCpu());
@@ -1979,13 +1980,15 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "IN  R1,#UNDEF", 0x3B14, 0x0000);
     ETEST(UNDEFINED_SYMBOL, "OUT #UNDEF,R1", 0x3B16, 0x0000);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "Z8001", "Z8002",
+            "Z8001",
+            "Z8002",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         assembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

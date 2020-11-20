@@ -26,9 +26,7 @@
 namespace libasm {
 namespace z8 {
 
-class AsmZ8
-    : public Assembler,
-      public Config {
+class AsmZ8 : public Assembler, public Config {
 public:
     AsmZ8() : Assembler(_parser, TableZ8) {}
 
@@ -47,47 +45,42 @@ private:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         RegName reg;
-        CcName  cc;
+        CcName cc;
         uint16_t val16;
         Operand()
             : ErrorReporter(),
               mode(M_NO),
               reg(REG_UNDEF),
               cc(CC_UNDEF),
-              val16(0)
-        {}
+              val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
-    Error setRp(
-        const char *scan, InsnZ8 &insn, const /*PROGMEM*/ char *name,
-        bool (AsmZ8::*)(int16_t));
+    Error setRp(const char *scan, InsnZ8 &insn, const /*PROGMEM*/ char *name,
+            bool (AsmZ8::*)(int16_t));
     Error processPseudo(const char *scan, InsnZ8 &insn);
 
-    Error encodeOperand(
-        InsnZ8 &insn, const AddrMode mode, const Operand &op);
+    Error encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
     Error encodeAbsolute(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+            InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeRelative(InsnZ8 &insn, const Operand &op);
     Error encodeIndexed(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+            InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeIndirectRegPair(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+            InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
     Error encodeInOpCode(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeMultiOperands(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
-        const Operand &extOp);
-    Error encodePostByte(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp,
-        const Operand &extOp);
+            InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    Error encodeMultiOperands(InsnZ8 &insn, const Operand &dstOp,
+            const Operand &srcOp, const Operand &extOp);
+    Error encodePostByte(InsnZ8 &insn, const Operand &dstOp,
+            const Operand &srcOp, const Operand &extOp);
     Error encode(Insn &insn) override;
 };
 
-} // namespace z8
-} // namespace libasm
+}  // namespace z8
+}  // namespace libasm
 
-#endif // __ASM_Z8_H__
+#endif  // __ASM_Z8_H__
 
 // Local Variables:
 // mode: c++

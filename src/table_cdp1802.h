@@ -36,10 +36,10 @@ public:
 
 extern TableCdp1802 TableCdp1802;
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
-#endif // __TABLE_CDP1802_H__
+#endif  // __TABLE_CDP1802_H__
 
 // Local Variables:
 // mode: c++

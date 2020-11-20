@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+#include "reg_tms9900.h"
+
 #include <ctype.h>
 
 #include "config_tms9900.h"
-#include "reg_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
@@ -33,7 +34,8 @@ RegName RegTms9900::parseRegName(const char *line) {
 }
 
 uint8_t RegTms9900::regNameLen(RegName name) {
-    if (name == REG_UNDEF) return 0;
+    if (name == REG_UNDEF)
+        return 0;
     const uint8_t r = uint8_t(name);
     return r < 10 ? 2 : 3;
 }
@@ -55,8 +57,8 @@ uint8_t RegTms9900::encodeRegNumber(RegName name) {
     return uint8_t(name);
 }
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

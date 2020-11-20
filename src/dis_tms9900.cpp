@@ -15,6 +15,7 @@
  */
 
 #include "dis_tms9900.h"
+
 #include "table_tms9900.h"
 
 namespace libasm {
@@ -25,14 +26,17 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     const uint8_t srcMode = (post >> 4 & 3);
     switch (insn.dstMode()) {
     case M_DST2:
-        if ((post & 0xF000) == 0x4000) return OK;
+        if ((post & 0xF000) == 0x4000)
+            return OK;
         break;
     case M_CNT2:
-        if ((post & 0xFC00) == 0x4000) return OK;
+        if ((post & 0xFC00) == 0x4000)
+            return OK;
         break;
     case M_BIT2:
         // no auto increment mode.
-        if ((post & 0xFC00) == 0x0000 && srcMode != 3) return OK;
+        if ((post & 0xFC00) == 0x0000 && srcMode != 3)
+            return OK;
         break;
     default:
         return OK;
@@ -40,17 +44,18 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     return decodeMactoInstructionDetect(insn);
 }
 
-static const char TEXT_MID[]  PROGMEM = "MID";
+static const char TEXT_MID[] PROGMEM = "MID";
 
 Error DisTms9900::decodeMactoInstructionDetect(InsnTms9900 &insn) {
     insn.setName_P(TEXT_MID);
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error DisTms9900::decodeModeReg(
-    DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t mode, uint8_t reg) {
+Error DisTms9900::decodeModeReg(DisMemory &memory, InsnTms9900 &insn, char *out,
+        uint8_t mode, uint8_t reg) {
     switch (mode &= 3) {
-    case 1: case 3:
+    case 1:
+    case 3:
         *out++ = '*';
         /* Fall-through */
     case 0:
@@ -81,7 +86,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
 }
 
 Error DisTms9900::decodeOperand(
-    DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode) {
+        DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode) {
     const Config::opcode_t opc = insn.opCode();
     const Config::opcode_t post = insn.post();
     uint8_t val8;
@@ -96,7 +101,8 @@ Error DisTms9900::decodeOperand(
         _regs.outRegName(out, opc >> 6);
         return OK;
     case M_SRC2:
-        if (checkPostWord(insn)) return getError();
+        if (checkPostWord(insn))
+            return getError();
         /* Fall-through */
     case M_SRC:
         val8 = (mode == M_SRC) ? opc : post;
@@ -113,7 +119,8 @@ Error DisTms9900::decodeOperand(
             _regs.outRegName(out, 0);
             return OK;
         }
-        if (mode == M_CNT && val8 == 0) val8 = 16;
+        if (mode == M_CNT && val8 == 0)
+            val8 = 16;
         outDec(out, val8, 5);
         return OK;
     case M_BIT2:
@@ -124,8 +131,10 @@ Error DisTms9900::decodeOperand(
         return decodeRelative(insn, out);
     case M_SCNT:
         val8 = (opc >> 4) & 0xF;
-        if (val8 == 0) _regs.outRegName(out, 0);
-        else outDec(out, val8, 4);
+        if (val8 == 0)
+            _regs.outRegName(out, 0);
+        else
+            outDec(out, val8, 4);
         return OK;
     case M_CRU:
         val8 = opc & 0xFF;
@@ -134,7 +143,8 @@ Error DisTms9900::decodeOperand(
     case M_RTWP:
         val8 = opc & 7;
         if (val8 == 0 || val8 == 1 || val8 == 2 || val8 == 4) {
-            if (val8) outHex(out, val8, 7);
+            if (val8)
+                outHex(out, val8, 7);
             return OK;
         }
         return decodeMactoInstructionDetect(insn);
@@ -151,21 +161,24 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (TableTms9900.searchOpCode(insn))
         return decodeMactoInstructionDetect(insn);
     insn.readPost(memory);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
 
     const AddrMode src = insn.srcMode();
-    if (src == M_NO) return OK;
+    if (src == M_NO)
+        return OK;
     if (decodeOperand(memory, insn, out, src))
         return getError();
     const AddrMode dst = insn.dstMode();
-    if (dst == M_NO) return OK;
+    if (dst == M_NO)
+        return OK;
     out += strlen(out);
     *out++ = ',';
     return decodeOperand(memory, insn, out, dst);
 }
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

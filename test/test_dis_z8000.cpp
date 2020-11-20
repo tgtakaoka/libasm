@@ -37,6 +37,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8001", true,    disassembler.setCpu("Z8001"));
     EQUALS("cpu 8001", "Z8001", disassembler.getCpu());
@@ -1763,13 +1764,15 @@ static void test_cpu_conrtol() {
     TEST(SETFLG, "C,Z,S",   0x8DE1);
     TEST(SETFLG, "C,Z,S,P", 0x8DF1);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "Z8001", "Z8002",
+            "Z8001",
+            "Z8002",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

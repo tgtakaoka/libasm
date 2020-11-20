@@ -33,7 +33,7 @@ public:
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode);  }
+    void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode); }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
@@ -48,10 +48,10 @@ private:
     Config::opcode_t _opCode;
 };
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
-#endif // __INSN_CDP1802_H__
+#endif  // __INSN_CDP1802_H__
 
 // Local Variables:
 // mode: c++

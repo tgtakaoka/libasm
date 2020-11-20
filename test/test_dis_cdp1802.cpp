@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 1802", true,   disassembler.setCpu("1802"));
     EQUALS("cpu 1802", "1802", disassembler.getCpu());
@@ -351,6 +352,7 @@ static void test_branch() {
     TEST(LSZ,  "", 0xCE);
     TEST(LSDF, "", 0xCF);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

@@ -22,6 +22,7 @@
 namespace libasm {
 namespace ns32000 {
 
+// clang-format off
 static const char TEXT_CPU_NS32032[] PROGMEM = "NS32032";
 static constexpr const char *TEXT_CPU_LIST  = TEXT_CPU_NS32032;
 static constexpr const char *TEXT_CPU_NS    = TEXT_CPU_NS32032;
@@ -334,11 +335,12 @@ static const char TEXT_RDVAL[]   PROGMEM = "RDVAL";
 static const char TEXT_SMR[]     PROGMEM = "SMR";
 static const char TEXT_WRVAL[]   PROGMEM = "WRVAL";
 #endif
+// clang-format on
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __TEXT_NS32000__
+#endif  // __TEXT_NS32000__
 
 // Local Variables:
 // mode: c++

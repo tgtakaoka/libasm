@@ -24,16 +24,16 @@ namespace tms9900 {
 
 enum RegName : int8_t {
     REG_UNDEF = -1,
-    REG_R0 =  0,
-    REG_R1 =  1,
-    REG_R2 =  2,
-    REG_R3 =  3,
-    REG_R4 =  4,
-    REG_R5 =  5,
-    REG_R6 =  6,
-    REG_R7 =  7,
-    REG_R8 =  8,
-    REG_R9 =  9,
+    REG_R0 = 0,
+    REG_R1 = 1,
+    REG_R2 = 2,
+    REG_R3 = 3,
+    REG_R4 = 4,
+    REG_R5 = 5,
+    REG_R6 = 6,
+    REG_R7 = 7,
+    REG_R8 = 8,
+    REG_R9 = 9,
     REG_R10 = 10,
     REG_R11 = 11,
     REG_R12 = 12,
@@ -51,10 +51,10 @@ public:
     static uint8_t encodeRegNumber(RegName name);
 };
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __REG_TMS9900_H__
+#endif  // __REG_TMS9900_H__
 
 // Local Variables:
 // mode: c++

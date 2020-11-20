@@ -44,6 +44,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8080", true, disassembler.setCpu("8080"));
     EQUALS("get cpu", "8080", disassembler.getCpu());
@@ -830,13 +831,16 @@ static void test_illegal_z80() {
         prefix = 0xfd;
     }
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "z80", "8080", "8085",
+            "z80",
+            "8080",
+            "8085",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);
@@ -858,8 +862,10 @@ void run_tests() {
         RUN_TEST(test_indexed);
         RUN_TEST(test_shift_indexed);
         RUN_TEST(test_bitop_indexed);
-        if (is8080() || is8085()) RUN_TEST(test_illegal_i8080);
-        if (isZ80())  RUN_TEST(test_illegal_z80);
+        if (is8080() || is8085())
+            RUN_TEST(test_illegal_i8080);
+        if (isZ80())
+            RUN_TEST(test_illegal_z80);
     }
 }
 

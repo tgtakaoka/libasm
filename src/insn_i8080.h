@@ -38,33 +38,27 @@ public:
         _flags = Entry::Flags::create(dst, src);
     }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode;}
+    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
     void embed(Config::opcode_t data) { _opCode |= data; }
 
     Config::opcode_t opCode() const { return _opCode; }
 
-    void emitInsn() {
-        emitByte(_opCode, 0);
-    }
+    void emitInsn() { emitByte(_opCode, 0); }
 
-    void emitOperand8(uint8_t val8) {
-        emitByte(val8, 1);
-    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, 1); }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, 1);
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, 1); }
 
 private:
     Entry::Flags _flags;
     Config::opcode_t _opCode;
 };
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __INSN_I8080_H__
+#endif  // __INSN_I8080_H__
 
 // Local Variables:
 // mode: c++

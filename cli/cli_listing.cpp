@@ -54,8 +54,7 @@ void CliListing::formatHex(uint8_t val) {
     }
 }
 
-void CliListing::formatUint8(
-    uint8_t val, bool fixedWidth, bool zeroSuppress) {
+void CliListing::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msd = (val >> 4);
     if (msd || !zeroSuppress) {
         formatHex(msd);
@@ -66,7 +65,7 @@ void CliListing::formatUint8(
 }
 
 void CliListing::formatUint16(
-    uint16_t val, bool fixedWidth, bool zeroSuppress) {
+        uint16_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 8);
     if (msb || !zeroSuppress) {
         formatUint8(msb, fixedWidth, zeroSuppress);
@@ -78,7 +77,7 @@ void CliListing::formatUint16(
 }
 
 void CliListing::formatUint20(
-    uint32_t val, bool fixedWidth, bool zeroSuppress) {
+        uint32_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 16) & 0xF;
     if (msb || !zeroSuppress) {
         formatHex(msb);
@@ -90,7 +89,7 @@ void CliListing::formatUint20(
 }
 
 void CliListing::formatUint24(
-    uint32_t val, bool fixedWidth, bool zeroSuppress) {
+        uint32_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 16);
     if (msb || !zeroSuppress) {
         formatUint8(msb, fixedWidth, zeroSuppress);
@@ -102,7 +101,7 @@ void CliListing::formatUint24(
 }
 
 void CliListing::formatUint32(
-    uint32_t val, bool fixedWidth, bool zeroSuppress) {
+        uint32_t val, bool fixedWidth, bool zeroSuppress) {
     const uint16_t msw = static_cast<uint16_t>(val >> 16);
     if (msw || !zeroSuppress) {
         formatUint16(msw, fixedWidth, zeroSuppress);
@@ -114,7 +113,7 @@ void CliListing::formatUint32(
 }
 
 void CliListing::formatAddress(
-    uint32_t addr, bool fixedWidth, bool zeroSuppress) {
+        uint32_t addr, bool fixedWidth, bool zeroSuppress) {
     switch (_line->addressWidth()) {
     case ADDRESS_8BIT:
         formatUint8(addr, fixedWidth, zeroSuppress);
@@ -162,10 +161,13 @@ void CliListing::formatTab(size_t pos, int delta) {
         _out += ' ';
 }
 
-static void convertCase(const std::string &src, std::string &out, bool uppercase) {
+static void convertCase(
+        const std::string &src, std::string &out, bool uppercase) {
     for (char c : src) {
-        if (uppercase) c = toupper(c);
-        else c = tolower(c);
+        if (uppercase)
+            c = toupper(c);
+        else
+            c = tolower(c);
         out += c;
     }
 }
@@ -185,13 +187,12 @@ void CliListing::formatContent(int pos) {
         convertCase(_line->getInstruction(), _out, _uppercase);
     }
     if (_line->hasOperand()) {
-        formatTab(pos + _line->labelWidth()
-                  + _line->instructionWidth());
+        formatTab(pos + _line->labelWidth() + _line->instructionWidth());
         _out += _line->getOperand();
     }
     if (_line->hasComment()) {
-        formatTab(pos + _line->labelWidth()
-                  + _line->instructionWidth() + _line->operandWidth());
+        formatTab(pos + _line->labelWidth() + _line->instructionWidth() +
+                  _line->operandWidth());
         _out += _line->getComment();
     }
 }
@@ -220,14 +221,15 @@ void CliListing::formatLine() {
         formattedBytes = formatBytes(_next);
     }
     const int dataTextLen = _line->opCodeWidth() == OPCODE_8BIT
-        ? (_line->maxBytes() * 3)
-        : (_line->maxBytes() / 2) * 5;
-    if (_next == 0) formatContent(pos + dataTextLen + 1);
+                                    ? (_line->maxBytes() * 3)
+                                    : (_line->maxBytes() / 2) * 5;
+    if (_next == 0)
+        formatContent(pos + dataTextLen + 1);
     _next += formattedBytes;
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

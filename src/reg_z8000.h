@@ -27,16 +27,16 @@ enum RegName : int8_t {
     REG_UNDEF = -1,
     REG_ILLEGAL = -2,
     // Word Register
-    REG_R0  = 0,
-    REG_R1  = 1,
-    REG_R2  = 2,
-    REG_R3  = 3,
-    REG_R4  = 4,
-    REG_R5  = 5,
-    REG_R6  = 6,
-    REG_R7  = 7,
-    REG_R8  = 8,
-    REG_R9  = 9,
+    REG_R0 = 0,
+    REG_R1 = 1,
+    REG_R2 = 2,
+    REG_R3 = 3,
+    REG_R4 = 4,
+    REG_R5 = 5,
+    REG_R6 = 6,
+    REG_R7 = 7,
+    REG_R8 = 8,
+    REG_R9 = 9,
     REG_R10 = 10,
     REG_R11 = 11,
     REG_R12 = 12,
@@ -61,52 +61,52 @@ enum RegName : int8_t {
     REG_RL6 = 16 + 14,
     REG_RL7 = 16 + 15,
     // Long Register
-    REG_RR0  = 32 + 0,
-    REG_RR2  = 32 + 2,
-    REG_RR4  = 32 + 4,
-    REG_RR6  = 32 + 6,
-    REG_RR8  = 32 + 8,
+    REG_RR0 = 32 + 0,
+    REG_RR2 = 32 + 2,
+    REG_RR4 = 32 + 4,
+    REG_RR6 = 32 + 6,
+    REG_RR8 = 32 + 8,
     REG_RR10 = 32 + 10,
     REG_RR12 = 32 + 12,
     REG_RR14 = 32 + 14,
     // Quad Register
-    REG_RQ0  = 48 + 0,
-    REG_RQ4  = 48 + 4,
-    REG_RQ8  = 48 + 8,
+    REG_RQ0 = 48 + 0,
+    REG_RQ4 = 48 + 4,
+    REG_RQ8 = 48 + 8,
     REG_RQ12 = 48 + 12,
     // Special Register
-    REG_FLAGS   = 64 + 1,
-    REG_FCW     = 64 + 2,
+    REG_FLAGS = 64 + 1,
+    REG_FCW = 64 + 2,
     REG_REFRESH = 64 + 3,
     REG_PSAPSEG = 64 + 4,
     REG_PSAPOFF = 64 + 5,
-    REG_NSPSEG  = 64 + 6,
-    REG_NSPOFF  = 64 + 7,
+    REG_NSPSEG = 64 + 6,
+    REG_NSPOFF = 64 + 7,
 };
 
 enum CcName : int8_t {
     CC_UNDEF = -1,
-    CC_F   = 0,  // Always false
-    CC_LT  = 1,  // Less than
-    CC_LE  = 2,  // Less than or equal
-    CC_ULE = 3,  // Unsigned less than or equal
-    CC_OV  = 4,  // Overflow
-    CC_MI  = 5,  // Minus
-    CC_Z   = 6,  // Zero
-    CC_C   = 7,  // Carry
-    CC_T   = 8,  // Always true
-    CC_GE  = 9,  // Greater than or equal
-    CC_GT  = 10, // Greater than
-    CC_UGT = 11, // Unsigned greater than
-    CC_NOV = 12, // No overflow
-    CC_PL  = 13, // Plus
-    CC_NZ  = 14, // Not zero
-    CC_NC  = 15, // No carry
+    CC_F = 0,     // Always false
+    CC_LT = 1,    // Less than
+    CC_LE = 2,    // Less than or equal
+    CC_ULE = 3,   // Unsigned less than or equal
+    CC_OV = 4,    // Overflow
+    CC_MI = 5,    // Minus
+    CC_Z = 6,     // Zero
+    CC_C = 7,     // Carry
+    CC_T = 8,     // Always true
+    CC_GE = 9,    // Greater than or equal
+    CC_GT = 10,   // Greater than
+    CC_UGT = 11,  // Unsigned greater than
+    CC_NOV = 12,  // No overflow
+    CC_PL = 13,   // Plus
+    CC_NZ = 14,   // Not zero
+    CC_NC = 15,   // No carry
     // Alias
-    CC_EQ  = 6+16,   // Z: Equal
-    CC_ULT = 7+16,   // C: Unsigned less than
-    CC_NE  = 14+16,  // NZ: Nor equal
-    CC_UGE = 15+16,  // NC: Unsigned greater than or equal
+    CC_EQ = 6 + 16,    // Z: Equal
+    CC_ULT = 7 + 16,   // C: Unsigned less than
+    CC_NE = 14 + 16,   // NZ: Nor equal
+    CC_UGE = 15 + 16,  // NC: Unsigned greater than or equal
 };
 
 enum FlagName : int8_t {
@@ -116,13 +116,13 @@ enum FlagName : int8_t {
     FLAG_S = 2,  // Sign
     FLAG_P = 1,  // Parity
     // Alias
-    FLAG_V = 1+16, // Overflow
+    FLAG_V = 1 + 16,  // Overflow
 };
 
 enum IntrName : int8_t {
     INTR_UNDEF = 0,
-    INTR_NVI = 1, // Non-Vectored Interrupt
-    INTR_VI  = 2, // Vectored Interrupt
+    INTR_NVI = 1,  // Non-Vectored Interrupt
+    INTR_VI = 2,   // Vectored Interrupt
 };
 
 class RegZ8000 : public RegBase {
@@ -167,10 +167,10 @@ private:
     static uint8_t ctlRegLen(RegName name);
 };
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __REG_Z8000_H__
+#endif  // __REG_Z8000_H__
 
 // Local Variables:
 // mode: c++

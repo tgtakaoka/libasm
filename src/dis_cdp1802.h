@@ -26,9 +26,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class DisCdp1802
-    : public Disassembler,
-      public Config {
+class DisCdp1802 : public Disassembler, public Config {
 public:
     DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802) {}
 
@@ -39,10 +37,10 @@ private:
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
-#endif // __DIS_CDP1802_H__
+#endif  // __DIS_CDP1802_H__
 
 // Local Variables:
 // mode: c++

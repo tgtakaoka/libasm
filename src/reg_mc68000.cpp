@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_mc68000.h"
 #include "reg_mc68000.h"
 
 #include <ctype.h>
+
+#include "config_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
@@ -26,7 +27,8 @@ RegName RegMc68000::parseRegName(const char *line) {
     const char c1 = toupper(*line++);
     const char c2 = toupper(*line++);
     if (c1 == 'A' || c1 == 'D') {
-        if (c2 < '0' || c2 >= '8' || isidchar(*line)) return REG_UNDEF;
+        if (c2 < '0' || c2 >= '8' || isidchar(*line))
+            return REG_UNDEF;
         return c1 == 'D' ? decodeDataReg(c2 - '0') : decodeAddrReg(c2 - '0');
     }
     const char c3 = toupper(*line++);
@@ -42,12 +44,13 @@ RegName RegMc68000::parseRegName(const char *line) {
 }
 
 uint8_t RegMc68000::regNameLen(RegName name) {
-    if (name == REG_UNDEF) return 0;
+    if (name == REG_UNDEF)
+        return 0;
     return (name == REG_CCR || name == REG_USP) ? 3 : 2;
 }
 
-static const char TEXT_REG_PC[]  PROGMEM = "PC";
-static const char TEXT_REG_SR[]  PROGMEM = "SR";
+static const char TEXT_REG_PC[] PROGMEM = "PC";
+static const char TEXT_REG_SR[] PROGMEM = "SR";
 static const char TEXT_REG_CCR[] PROGMEM = "CCR";
 static const char TEXT_REG_USP[] PROGMEM = "USP";
 
@@ -107,14 +110,20 @@ RegName RegMc68000::decodeAddrReg(uint8_t regno) {
 }
 
 OprSize RegMc68000::parseSize(const char *line) {
-    if (*line++ != '.') return SZ_NONE;
+    if (*line++ != '.')
+        return SZ_NONE;
     const char c = *line++;
-    if (isidchar(*line)) return SZ_ERROR;
+    if (isidchar(*line))
+        return SZ_ERROR;
     switch (c & ~0x20) {
-    case 'B': return SZ_BYTE;
-    case 'W': return SZ_WORD;
-    case 'L': return SZ_LONG;
-    default:  return SZ_ERROR;
+    case 'B':
+        return SZ_BYTE;
+    case 'W':
+        return SZ_WORD;
+    case 'L':
+        return SZ_LONG;
+    default:
+        return SZ_ERROR;
     }
 }
 
@@ -125,12 +134,20 @@ uint8_t RegMc68000::sizeNameLen(OprSize size) {
 char RegMc68000::sizeSuffix(OprSize size) const {
     char suffix;
     switch (size) {
-    case SZ_BYTE: suffix = 'B'; break;
-    case SZ_WORD: suffix = 'W'; break;
-    case SZ_LONG: suffix = 'L'; break;
-    default:      return 0;
+    case SZ_BYTE:
+        suffix = 'B';
+        break;
+    case SZ_WORD:
+        suffix = 'W';
+        break;
+    case SZ_LONG:
+        suffix = 'L';
+        break;
+    default:
+        return 0;
     }
-    if (_uppercase) return suffix;
+    if (_uppercase)
+        return suffix;
     return suffix | 0x20;
 }
 
@@ -141,7 +158,8 @@ Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
 
 Config::opcode_t EaMc68000::encodeRegNo(AddrMode mode, RegName reg) {
     const uint8_t m = static_cast<uint8_t>(mode);
-    if (m < 8) return RegMc68000::encodeGeneralRegNo(reg);
+    if (m < 8)
+        return RegMc68000::encodeGeneralRegNo(reg);
     return m - 8;
 }
 
@@ -154,7 +172,7 @@ EaMc68000::EaMc68000(OprSize size_, uint8_t raw_mode, uint8_t regno) {
     } else {
         mode = AddrMode(raw_mode);
         reg = (mode == M_DREG) ? RegMc68000::decodeDataReg(regno)
-            : RegMc68000::decodeAddrReg(regno);
+                               : RegMc68000::decodeAddrReg(regno);
     }
 }
 
@@ -170,8 +188,8 @@ uint8_t BriefExt::disp() const {
     return static_cast<uint8_t>(word);
 }
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

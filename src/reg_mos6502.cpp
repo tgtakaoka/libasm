@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
+#include "reg_mos6502.h"
+
 #include <ctype.h>
 
 #include "config_mos6502.h"
-#include "reg_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
 
 RegName RegMos6502::parseRegName(const char *line) {
     const char r = *line++;
-    if (isidchar(*line)) return REG_UNDEF;
+    if (isidchar(*line))
+        return REG_UNDEF;
     switch (toupper(r)) {
-    case 'A': return REG_A;
-    case 'X': return REG_X;
-    case 'Y': return REG_Y;
-    case 'S': return REG_S;
-    default:  return REG_UNDEF;
+    case 'A':
+        return REG_A;
+    case 'X':
+        return REG_X;
+    case 'Y':
+        return REG_Y;
+    case 'S':
+        return REG_S;
+    default:
+        return REG_UNDEF;
     }
 }
 
@@ -42,8 +49,8 @@ char *RegMos6502::outRegName(char *out, const RegName name) const {
     return outChar(out, char(name));
 }
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

@@ -20,8 +20,8 @@
 #include "config_mc6809.h"
 #include "error_reporter.h"
 #include "insn_mc6809.h"
-#include "table_base.h"
 #include "reg_mc6809.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -33,15 +33,8 @@ struct PostSpec {
     bool indir;
 
     PostSpec() {}
-    constexpr PostSpec(
-        RegName _index,
-        RegName _base,
-        int8_t _size,
-        bool _indir)
-        : index(_index),
-          base(_base),
-          size(_size),
-          indir(_indir) {}
+    constexpr PostSpec(RegName _index, RegName _base, int8_t _size, bool _indir)
+        : index(_index), base(_base), size(_size), indir(_indir) {}
 };
 
 class TableMc6809 : public TableBase {
@@ -70,23 +63,22 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    Error searchName(
-      InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchPostByte(
-        const uint8_t post, PostSpec &spec,
-        const PostEntry *table, const PostEntry *end) const;
+    Error searchName(InsnMc6809 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    Error searchOpCode(InsnMc6809 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    Error searchPostByte(const uint8_t post, PostSpec &spec,
+            const PostEntry *table, const PostEntry *end) const;
     int16_t searchPostSpec(
-        PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
+            PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
 };
 
 extern TableMc6809 TableMc6809;
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
-#endif // __TABLE_MC6809_H__
+#endif  // __TABLE_MC6809_H__
 
 // Local Variables:
 // mode: c++

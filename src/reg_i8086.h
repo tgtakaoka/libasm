@@ -51,7 +51,7 @@ enum RegName : int8_t {
     // Other registers.
     REG_BYTE = 0 + 20,
     REG_WORD = 1 + 20,
-    REG_PTR  = 2 + 20,
+    REG_PTR = 2 + 20,
 };
 
 class RegI8086 : public RegBase {
@@ -69,10 +69,10 @@ public:
     static OprSize generalRegSize(RegName name);
 };
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
-#endif // __REG_I8086_H__
+#endif  // __REG_I8086_H__
 
 // Local Variables:
 // mode: c++

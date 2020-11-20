@@ -22,12 +22,13 @@
 namespace libasm {
 namespace z8 {
 
-static const char TEXT_CPU_LIST[] PROGMEM = "Z8, Z86C, Z88";
-static const char TEXT_CPU_Z8[]   PROGMEM = "Z8";
-static const char TEXT_CPU_Z86[]  PROGMEM = "Z86";
-static const char TEXT_CPU_Z86C[] PROGMEM = "Z86C";
-static constexpr const char *TEXT_CPU_Z88 = (TEXT_CPU_LIST + 10);
+// clang-format off
+static const char TEXT_CPU_LIST[]   PROGMEM = "Z8, Z86C, Z88";
+static const char TEXT_CPU_Z8[]     PROGMEM = "Z8";
+static const char TEXT_CPU_Z86[]    PROGMEM = "Z86";
+static const char TEXT_CPU_Z86C[]   PROGMEM = "Z86C";
 static const char TEXT_CPU_SUPER8[] PROGMEM = "Super8";
+static constexpr const char *TEXT_CPU_Z88 = (TEXT_CPU_LIST + 10);
 
 // Z8
 static const char TEXT_ADC[]  PROGMEM = "ADC";
@@ -112,11 +113,12 @@ static const char TEXT_SB1[]    PROGMEM = "SB1";
 static const char TEXT_SRP0[]   PROGMEM = "SRP0";
 static const char TEXT_SRP1[]   PROGMEM = "SRP1";
 static const char TEXT_WFI[]    PROGMEM = "WFI";
+// clang-format on
 
-} // namespace z8
-} // namespace libasm
+}  // namespace z8
+}  // namespace libasm
 
-#endif // __TEXT_Z8__
+#endif  // __TEXT_Z8__
 
 // Local Variables:
 // mode: c++

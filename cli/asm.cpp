@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <vector>
+
 #include "asm_cdp1802.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
@@ -23,8 +25,8 @@
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
 #include "asm_mc6800.h"
-#include "asm_mc6809.h"
 #include "asm_mc68000.h"
+#include "asm_mc6809.h"
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
 #include "asm_tms9900.h"
@@ -32,51 +34,57 @@
 #include "asm_z80.h"
 #include "asm_z8000.h"
 
-#include <vector>
-
 using namespace libasm;
 using namespace libasm::cli;
 
 mos6502::AsmMos6502 asm6502;
-mc6800::AsmMc6800   asm6800;
-mc6809::AsmMc6809   asm6809;
-i8051::AsmI8051     asm8051;
-i8080::AsmI8080     asm8080;
-z80::AsmZ80         asmz80;
-z8::AsmZ8           asmz8;
+mc6800::AsmMc6800 asm6800;
+mc6809::AsmMc6809 asm6809;
+i8051::AsmI8051 asm8051;
+i8080::AsmI8080 asm8080;
+z80::AsmZ80 asmz80;
+z8::AsmZ8 asmz8;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
 cdp1802::AsmCdp1802 asm1802;
-i8086::AsmI8086     asm8086;
+i8086::AsmI8086 asm8086;
 tms9900::AsmTms9900 asm9900;
 mc68000::AsmMc68000 asm68000;
-z8000::AsmZ8000     asmz8000;
+z8000::AsmZ8000 asmz8000;
 ns32000::AsmNs32000 asm32000;
 
 AsmMostekDirective dir6502(asm6502);
-AsmMotoDirective   dir6800(asm6800);
-AsmMotoDirective   dir6809(asm6809);
-AsmIntelDirective  dir8051(asm8051);
-AsmIntelDirective  dir8080(asm8080);
-AsmIntelDirective  dirz80(asmz80);
-AsmIntelDirective  dirz8(asmz8);
-AsmIntelDirective  dir8060(asm8060);
-AsmIntelDirective  dir8070(asm8070);
-AsmIntelDirective  dir1802(asm1802);
-AsmIntelDirective  dir8086(asm8086);
-AsmIntelDirective  dir9900(asm9900);
-AsmMotoDirective   dir68000(asm68000);
-AsmIntelDirective  dirz8000(asmz8000);
-AsmIntelDirective  dir32000(asm32000);
+AsmMotoDirective dir6800(asm6800);
+AsmMotoDirective dir6809(asm6809);
+AsmIntelDirective dir8051(asm8051);
+AsmIntelDirective dir8080(asm8080);
+AsmIntelDirective dirz80(asmz80);
+AsmIntelDirective dirz8(asmz8);
+AsmIntelDirective dir8060(asm8060);
+AsmIntelDirective dir8070(asm8070);
+AsmIntelDirective dir1802(asm1802);
+AsmIntelDirective dir8086(asm8086);
+AsmIntelDirective dir9900(asm9900);
+AsmMotoDirective dir68000(asm68000);
+AsmIntelDirective dirz8000(asmz8000);
+AsmIntelDirective dir32000(asm32000);
 
 std::vector<AsmDirective *> directives = {
-    &dir6800, &dir6809,
-    &dir6502,
-    &dir8051, &dir8080, &dir8086,
-    &dirz80, &dirz8,
-    &dir8060, &dir8070, &dir1802,
-    &dir68000, &dir32000,
-    &dirz8000, &dir9900,
+        &dir6800,
+        &dir6809,
+        &dir6502,
+        &dir8051,
+        &dir8080,
+        &dir8086,
+        &dirz80,
+        &dirz8,
+        &dir8060,
+        &dir8070,
+        &dir1802,
+        &dir68000,
+        &dir32000,
+        &dirz8000,
+        &dir9900,
 };
 
 int main(int argc, const char **argv) {

@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8051", true,   assembler.setCpu("8051"));
     EQUALS("cpu 8051", "8051", assembler.getCpu());
@@ -506,6 +507,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "LJMP  UNDEF", 0x02, 0x00, 0x00);
     ETEST(UNDEFINED_SYMBOL, "LCALL UNDEF", 0x12, 0x00, 0x00);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

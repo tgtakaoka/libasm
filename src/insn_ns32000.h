@@ -58,11 +58,13 @@ public:
 
     void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void embedPost(Config::opcode_t data) { _post |= data;  }
+    void embedPost(Config::opcode_t data) { _post |= data; }
 
     void setIndexByte(uint8_t data, OprPos pos) {
-        if (pos == P_GEN1) _indexByte1 = data;
-        if (pos == P_GEN2) _indexByte2 = data;
+        if (pos == P_GEN1)
+            _indexByte1 = data;
+        if (pos == P_GEN2)
+            _indexByte2 = data;
     }
 
     void readPost(DisMemory &memory) { _post = readByte(memory); }
@@ -80,22 +82,18 @@ public:
 
     void emitInsn() {
         uint8_t pos = 0;
-        if (hasPrefix()) emitByte(_prefix, pos++);
+        if (hasPrefix())
+            emitByte(_prefix, pos++);
         emitByte(_opCode, pos++);
-        if (hasPost()) emitByte(_post, pos);
+        if (hasPost())
+            emitByte(_post, pos);
     }
 
-    void emitOperand8(uint8_t val8) {
-        emitByte(val8, operandPos());
-    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, operandPos());
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
-    void emitOperand32(uint32_t val32) {
-        emitUint32(val32, operandPos());
-    }
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
 private:
     Config::opcode_t _opCode;
@@ -109,18 +107,20 @@ private:
     uint8_t operandPos() {
         uint8_t pos = length();
         if (pos == 0) {
-            if (hasPrefix()) pos++;
+            if (hasPrefix())
+                pos++;
             pos++;
-            if (hasPost()) pos++;
+            if (hasPost())
+                pos++;
         }
         return pos;
     }
 };
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __INSN_NS32000_H__
+#endif  // __INSN_NS32000_H__
 
 // Local Variables:
 // mode: c++

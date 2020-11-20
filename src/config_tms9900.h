@@ -22,16 +22,13 @@
 namespace libasm {
 namespace tms9900 {
 
-struct Config : ConfigImpl<
-    ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_16BIT, uint16_t, 8,
-    ENDIAN_BIG, 4>
-{};
+struct Config : ConfigImpl<ADDRESS_16BIT, uint16_t, int16_t, OPCODE_16BIT,
+                        uint16_t, 8, ENDIAN_BIG, 4> {};
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __CONFIG_TMS9900_H__
+#endif  // __CONFIG_TMS9900_H__
 
 // Local Variables:
 // mode: c++

@@ -15,16 +15,16 @@
  */
 
 #include "asm_ins8060.h"
+
 #include "table_ins8060.h"
 
 namespace libasm {
 namespace ins8060 {
 
-Error AsmIns8060::encodeRel8(
-    InsnIns8060 &insn, const Operand &op) {
+Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
     Config::ptrdiff_t delta;
     if (op.mode == DISP) {
-        delta = op.val16;       // E(Pn)
+        delta = op.val16;  // E(Pn)
         insn.embed(RegIns8060::encodePointerReg(op.reg));
     } else {
         // PC points the last byte of instruction.
@@ -32,11 +32,13 @@ Error AsmIns8060::encodeRel8(
         // PC will be incremented before fetching next instruction.
         const uint8_t fetch = (insn.addrMode() == REL8) ? 1 : 0;
         // Program space is paged by 4kB.
-        const Config::uintptr_t target = op.getError() ? base
-            : ((op.val16 & 0xFFF) | (base & ~0xFFF)) - fetch;
+        const Config::uintptr_t target =
+                op.getError() ? base
+                              : ((op.val16 & 0xFFF) | (base & ~0xFFF)) - fetch;
         delta = target - base;
         // delta -128 is for E reg.
-        if (delta <= -128 || delta >= 128) return setError(OPERAND_TOO_FAR);
+        if (delta <= -128 || delta >= 128)
+            return setError(OPERAND_TOO_FAR);
         insn.embed(RegIns8060::encodePointerReg(REG_PC));
     }
     insn.emitInsn();
@@ -48,8 +50,9 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
     if (op.mode == REL8)
         return encodeRel8(insn, op);
     insn.embed(RegIns8060::encodePointerReg(op.reg));
-    if (op.mode == INDX) { // auto displacement mode
-        if (insn.addrMode() != INDX) return setError(OPERAND_NOT_ALLOWED);
+    if (op.mode == INDX) {  // auto displacement mode
+        if (insn.addrMode() != INDX)
+            return setError(OPERAND_NOT_ALLOWED);
         insn.embed(4);
     }
     insn.emitInsn();
@@ -66,7 +69,8 @@ Error AsmIns8060::parseOperand(const char *scan, Operand &op) {
     }
 
     const bool autoDisp = (*p == '@');
-    if (autoDisp) p++;
+    if (autoDisp)
+        p++;
 
     const RegName reg = RegIns8060::parseRegName(p);
     if (reg == REG_E) {
@@ -79,7 +83,8 @@ Error AsmIns8060::parseOperand(const char *scan, Operand &op) {
         return OK;
     } else {
         op.val16 = parseExpr16(p);
-        if (parserError()) return getError();
+        if (parserError())
+            return getError();
         op.setError(getError());
         p = _scan;
     }
@@ -90,16 +95,18 @@ Error AsmIns8060::parseOperand(const char *scan, Operand &op) {
         if (!RegIns8060::isPointerReg(base))
             return setError(UNKNOWN_OPERAND);
         p += RegIns8060::regNameLen(base);
-        if (*p != ')') return setError(MISSING_CLOSING_PAREN);
+        if (*p != ')')
+            return setError(MISSING_CLOSING_PAREN);
         _scan = p + 1;
         op.reg = base;
         op.mode = autoDisp ? INDX : DISP;
         return OK;
     }
 
-    if (autoDisp || reg == REG_E) return setError(UNKNOWN_OPERAND);
+    if (autoDisp || reg == REG_E)
+        return setError(UNKNOWN_OPERAND);
     _scan = p;
-    op.mode = REL8; // May be IMM8 too
+    op.mode = REL8;  // May be IMM8 too
     return OK;
 }
 
@@ -109,9 +116,11 @@ Error AsmIns8060::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand op;
-    if (parseOperand(endName, op)) return getError();
+    if (parseOperand(endName, op))
+        return getError();
     const char *p = skipSpaces(_scan);
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(op.getError());
 
     insn.setAddrMode(op.mode);
@@ -143,8 +152,8 @@ Error AsmIns8060::encode(Insn &_insn) {
     return getError();
 }
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

@@ -56,10 +56,10 @@ private:
     Flags _flags;
 };
 
-} // namespace cdp1802
-} // namespace libasm
+}  // namespace cdp1802
+}  // namespace libasm
 
-#endif // __ENTRY_CDP1802_H__
+#endif  // __ENTRY_CDP1802_H__
 
 // Local Variables:
 // mode: c++

@@ -33,6 +33,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 68000", true,    disassembler.setCpu("68000"));
     EQUALS("cpu 68000", "68000", disassembler.getCpu());
@@ -2305,6 +2306,7 @@ static void test_multiproc() {
     ETEST(OPERAND_NOT_ALLOWED, _, "",  0045373); // (d8,PC,Xn)
     TEST(ILLEGAL, "",                  0045374); // #xxxx
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

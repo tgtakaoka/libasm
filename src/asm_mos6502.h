@@ -26,13 +26,13 @@
 namespace libasm {
 namespace mos6502 {
 
-class AsmMos6502
-    : public Assembler,
-      public Config {
+class AsmMos6502 : public Assembler, public Config {
 public:
     AsmMos6502() : Assembler(_parser, TableMos6502) {}
 
-    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
+    AddressWidth addressWidth() const override {
+        return TableMos6502.addressWidth();
+    }
     void reset() override { _long_acc = _long_idx = false; }
 
 private:
@@ -43,27 +43,23 @@ private:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         uint32_t val32;
-        Operand()
-            : ErrorReporter(),
-              mode(IMPL),
-              val32(0)
-        {}
+        Operand() : ErrorReporter(), mode(IMPL), val32(0) {}
     };
 
     Error parseOnOff(const char *scan, bool &val);
     Error processPseudo(const char *scan, InsnMos6502 &insn);
-    Error selectMode(
-        char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
+    Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs,
+            AddrMode labs = IMPL);
     Error parseOperand(const char *scan, Operand &op, Operand &extra);
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
-#endif // __ASM_MOS6502_H__
+#endif  // __ASM_MOS6502_H__
 
 // Local Variables:
 // mode: c++

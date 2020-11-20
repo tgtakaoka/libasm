@@ -22,60 +22,58 @@
 namespace libasm {
 
 enum Error : uint8_t {
-    OK                      = 0,
+    OK = 0,
 
     // Disassembler
-    NO_MEMORY               = 2,
-    INTERNAL_ERROR          = 3,
-    UNKNOWN_POSTBYTE        = 4,
-    ILLEGAL_REGISTER        = 5,
-    ILLEGAL_OPERAND         = 6,
-    ILLEGAL_SIZE            = 7,
-    ILLEGAL_OPERAND_MODE    = 8,
-    ILLEGAL_SEGMENT         = 9,
+    NO_MEMORY = 2,
+    INTERNAL_ERROR = 3,
+    UNKNOWN_POSTBYTE = 4,
+    ILLEGAL_REGISTER = 5,
+    ILLEGAL_OPERAND = 6,
+    ILLEGAL_SIZE = 7,
+    ILLEGAL_OPERAND_MODE = 8,
+    ILLEGAL_SEGMENT = 9,
 
     // Assembler
-    UNKNOWN_INSTRUCTION     = 21,
-    UNKNOWN_REGISTER        = 22,
-    UNKNOWN_OPERAND         = 23,
-    OPERAND_NOT_ALLOWED     = 24,
-    OPERAND_TOO_FAR         = 25,
-    ILLEGAL_BIT_NUMBER      = 26,
-    GARBAGE_AT_END          = 27,
-    DUPLICATE_REGISTER      = 28,
-    REGISTER_NOT_ALLOWED    = 29,
-    MISSING_COMMA           = 30,
-    NOT_BIT_ADDRESSABLE     = 31,
-    OPERAND_NOT_ALIGNED     = 32,
-    OPCODE_HAS_NO_EFFECT    = 33,
+    UNKNOWN_INSTRUCTION = 21,
+    UNKNOWN_REGISTER = 22,
+    UNKNOWN_OPERAND = 23,
+    OPERAND_NOT_ALLOWED = 24,
+    OPERAND_TOO_FAR = 25,
+    ILLEGAL_BIT_NUMBER = 26,
+    GARBAGE_AT_END = 27,
+    DUPLICATE_REGISTER = 28,
+    REGISTER_NOT_ALLOWED = 29,
+    MISSING_COMMA = 30,
+    NOT_BIT_ADDRESSABLE = 31,
+    OPERAND_NOT_ALIGNED = 32,
+    OPCODE_HAS_NO_EFFECT = 33,
 
     // ValueParser
-    ILLEGAL_CONSTANT        = 100,
-    OVERFLOW_RANGE          = 101,
-    MISSING_CLOSING_PAREN   = 102,
-    MISSING_CLOSING_QUOTE   = 103,
+    ILLEGAL_CONSTANT = 100,
+    OVERFLOW_RANGE = 101,
+    MISSING_CLOSING_PAREN = 102,
+    MISSING_CLOSING_QUOTE = 103,
     UNKNOWN_ESCAPE_SEQUENCE = 104,
-    UNKNOWN_EXPR_OPERATOR   = 105,
-    DIVIDE_BY_ZERO          = 106,
-    UNDEFINED_SYMBOL        = 107,
-    TOO_COMPLEX_EXPRESSION  = 108,
+    UNKNOWN_EXPR_OPERATOR = 105,
+    DIVIDE_BY_ZERO = 106,
+    UNDEFINED_SYMBOL = 107,
+    TOO_COMPLEX_EXPRESSION = 108,
 
     // AsmDirective
-    UNKNOWN_DIRECTIVE       = 150,
-    ILLEGAL_LABEL           = 151,
-    DUPLICATE_LABEL         = 152,
-    MISSING_LABEL           = 153,
-    MISSING_CLOSING_DQUOTE  = 154,
-    UNSUPPORTED_CPU         = 155,
-    TOO_MANY_INCLUDE        = 156,
-    NO_INCLUDE_FOUND        = 157,
+    UNKNOWN_DIRECTIVE = 150,
+    ILLEGAL_LABEL = 151,
+    DUPLICATE_LABEL = 152,
+    MISSING_LABEL = 153,
+    MISSING_CLOSING_DQUOTE = 154,
+    UNSUPPORTED_CPU = 155,
+    TOO_MANY_INCLUDE = 156,
+    NO_INCLUDE_FOUND = 157,
 };
 
 class ErrorReporter {
 public:
-    ErrorReporter()
-        : _error(OK)
-    {}
+    ErrorReporter() : _error(OK) {}
 
     Error getError() const { return _error; }
 
@@ -86,7 +84,8 @@ public:
         return setError(other.getError());
     }
     Error setErrorIf(Error error) {
-        if (_error == OK) _error = error;
+        if (_error == OK)
+            _error = error;
         return _error;
     }
 
@@ -97,9 +96,9 @@ private:
     Error _error;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __ERROR_REPORTER_H__
+#endif  // __ERROR_REPORTER_H__
 
 // Local Variables:
 // mode: c++

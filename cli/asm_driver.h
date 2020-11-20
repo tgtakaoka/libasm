@@ -17,11 +17,11 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
+#include <vector>
+
 #include "asm_directive.h"
 #include "cli_listing.h"
 #include "cli_memory.h"
-
-#include <vector>
 
 namespace libasm {
 namespace cli {
@@ -50,14 +50,14 @@ private:
     static constexpr const char *PROG_PREFIX = "asm";
     AsmDirective *defaultDirective();
     int assemble(
-        CliMemory &memory, FILE *list = nullptr, bool reportError = false);
+            CliMemory &memory, FILE *list = nullptr, bool reportError = false);
     void printListing(CliMemory &memory, FILE *out);
 
     static const char *basename(const char *str, char sep_char = '/');
 };
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

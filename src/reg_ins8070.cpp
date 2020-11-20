@@ -14,33 +14,36 @@
  * limitations under the License.
  */
 
-#include "config_ins8070.h"
 #include "reg_ins8070.h"
 
 #include <ctype.h>
 
+#include "config_ins8070.h"
+
 namespace libasm {
 namespace ins8070 {
 
-static const char TEXT_REG_A[]  PROGMEM = "A";
-static const char TEXT_REG_E[]  PROGMEM = "E";
+// clang-format off
+static const char TEXT_REG_A[]  PROGMEM  = "A";
+static const char TEXT_REG_E[]  PROGMEM  = "E";
 static const char TEXT_REG_EA[] PROGMEM = "EA";
-static const char TEXT_REG_T[]  PROGMEM = "T";
-static const char TEXT_REG_S[]  PROGMEM = "S";
+static const char TEXT_REG_T[]  PROGMEM  = "T";
+static const char TEXT_REG_S[]  PROGMEM  = "S";
 static const char TEXT_REG_PC[] PROGMEM = "PC";
 static const char TEXT_REG_SP[] PROGMEM = "SP";
 static const char TEXT_REG_P2[] PROGMEM = "P2";
 static const char TEXT_REG_P3[] PROGMEM = "P3";
+// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_A)
-    NAME_ENTRY(REG_E)
-    NAME_ENTRY(REG_EA)
-    NAME_ENTRY(REG_T)
-    NAME_ENTRY(REG_S)
-    NAME_ENTRY(REG_PC)
-    NAME_ENTRY(REG_SP)
-    NAME_ENTRY(REG_P2)
-    NAME_ENTRY(REG_P3)
+        NAME_ENTRY(REG_A),
+        NAME_ENTRY(REG_E),
+        NAME_ENTRY(REG_EA),
+        NAME_ENTRY(REG_T),
+        NAME_ENTRY(REG_S),
+        NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_SP),
+        NAME_ENTRY(REG_P2),
+        NAME_ENTRY(REG_P3),
 };
 
 RegName RegIns8070::parseRegName(const char *line) {
@@ -72,8 +75,8 @@ RegName RegIns8070::decodePointerReg(uint8_t num) {
     return RegName(num & 3);
 }
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

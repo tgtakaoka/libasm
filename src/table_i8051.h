@@ -36,10 +36,10 @@ public:
 
 extern TableI8051 TableI8051;
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __TABLE_I8051_H__
+#endif  // __TABLE_I8051_H__
 
 // Local Variables:
 // mode: c++

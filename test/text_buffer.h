@@ -18,6 +18,7 @@
 #define __TEXT_BUFFER_H__
 
 #include <stdint.h>
+
 #include <string>
 #include <vector>
 
@@ -47,12 +48,8 @@ private:
 
 class TextBuffer {
 public:
-    TextBuffer(int max) {
-        _buffer = new char[max + 1];
-    }
-    virtual ~TextBuffer() {
-        delete[] _buffer;
-    }
+    TextBuffer(int max) { _buffer = new char[max + 1]; }
+    virtual ~TextBuffer() { delete[] _buffer; }
 
     char *buffer() { return _buffer; }
     const char *buffer() const { return _buffer; }
@@ -61,8 +58,8 @@ private:
     char *_buffer;
 };
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 #endif
 

@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8086", true,   disassembler.setCpu("8086"));
     EQUALS("cpu 8086", "8086", disassembler.getCpu());
@@ -1369,7 +1370,7 @@ static void test_segment_override() {
 }
 
 static void test_illegal() {
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x0F); // POP CS
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x0F);  // POP CS
 
     for (uint8_t opc = 0x60; opc < 0x70; opc++)
         ILLEGAL(opc);
@@ -1418,6 +1419,7 @@ static void test_illegal() {
     ILLEGAL(0xDE);
     ILLEGAL(0xDF);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

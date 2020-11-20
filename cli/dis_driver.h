@@ -17,15 +17,16 @@
 #ifndef __DIS_DRIVER_H__
 #define __DIS_DRIVER_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <vector>
+
 #include "cli_memory.h"
 #include "dis_base.h"
 #include "dis_directive.h"
 #include "file_util.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <vector>
 
 namespace libasm {
 namespace cli {
@@ -58,8 +59,8 @@ private:
     static const char *basename(const char *str, char sep_char = '/');
 };
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

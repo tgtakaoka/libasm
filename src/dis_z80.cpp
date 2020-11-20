@@ -15,6 +15,7 @@
  */
 
 #include "dis_z80.h"
+
 #include "table_z80.h"
 
 namespace libasm {
@@ -43,7 +44,8 @@ char *DisZ80::outIndirectReg(char *out, RegName reg) {
 char *DisZ80::outIndexOffset(char *out, RegName reg, int8_t offset) {
     *out++ = '(';
     out = outRegister(out, reg);
-    if (offset >= 0) *out++ = '+';
+    if (offset >= 0)
+        *out++ = '+';
     out = outDec(out, offset, -8);
     *out++ = ')';
     *out = 0;
@@ -51,7 +53,8 @@ char *DisZ80::outIndexOffset(char *out, RegName reg, int8_t offset) {
 }
 
 char *DisZ80::outDataReg(char *out, RegName reg) {
-    if (reg == REG_HL) return outIndirectReg(out, reg);
+    if (reg == REG_HL)
+        return outIndirectReg(out, reg);
     return outRegister(out, reg);
 }
 
@@ -67,7 +70,8 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out) {
     insn.setName(name, name + strlen(name));
 
     const RegName reg = RegZ80::decodeDataReg(opc);
-    if (reg != REG_HL) return setError(UNKNOWN_INSTRUCTION);
+    if (reg != REG_HL)
+        return setError(UNKNOWN_INSTRUCTION);
     const AddrMode dst = ixBit.dstMode();
     if (dst == M_BIT) {
         out = outHex(out, (opc >> 3) & 7, 3);
@@ -85,7 +89,7 @@ Error DisZ80::decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out) {
 }
 
 Error DisZ80::decodeOperand(
-    DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode) {
+        DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode) {
     Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_IM8:
@@ -101,7 +105,8 @@ Error DisZ80::decodeOperand(
         outIndirectAddr(out, insn.readByte(memory), 8);
         break;
     case M_INDX:
-        outIndexOffset(out, RegZ80::decodeIndexReg(insn), insn.readByte(memory));
+        outIndexOffset(
+                out, RegZ80::decodeIndexReg(insn), insn.readByte(memory));
         break;
     case M_CC4:
         _regs.outCcName(out, RegZ80::decodeCcName((opc >> 3) & 3));
@@ -135,8 +140,10 @@ Error DisZ80::decodeOperand(
         return OK;
     case M_IMMD:
         opc = (opc >> 3) & 3;
-        if (opc == 1) return setError(UNKNOWN_INSTRUCTION);
-        if (opc) opc--;
+        if (opc == 1)
+            return setError(UNKNOWN_INSTRUCTION);
+        if (opc)
+            opc--;
         *out++ = opc + '0';
         *out = 0;
         return OK;
@@ -194,26 +201,31 @@ Error DisZ80::decode(DisMemory &memory, Insn &_insn, char *out) {
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
     }
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
 
     if (TableZ80.searchOpCode(insn))
         return setError(TableZ80.getError());
 
     const AddrMode dst = insn.dstMode();
-    if (dst == M_UNKI) return setError(UNKNOWN_INSTRUCTION);
-    if (dst == M_NO) return OK;
-    if (dst == T_IXB) return decodeIndexedBitOp(memory, insn, out);
+    if (dst == M_UNKI)
+        return setError(UNKNOWN_INSTRUCTION);
+    if (dst == M_NO)
+        return OK;
+    if (dst == T_IXB)
+        return decodeIndexedBitOp(memory, insn, out);
     if (decodeOperand(memory, insn, out, dst))
         return getError();
     const AddrMode src = insn.srcMode();
-    if (src == M_NO) return OK;
+    if (src == M_NO)
+        return OK;
     out += strlen(out);
     *out++ = ',';
     return decodeOperand(memory, insn, out, src);
 }
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

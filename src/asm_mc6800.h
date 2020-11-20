@@ -26,9 +26,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class AsmMc6800
-    : public Assembler,
-      public Config {
+class AsmMc6800 : public Assembler, public Config {
 public:
     AsmMc6800() : Assembler(_parser, TableMc6800) {}
 
@@ -37,14 +35,9 @@ private:
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        OprSize  size;
+        OprSize size;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(M_NO),
-              size(SZ_NONE),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(M_NO), size(SZ_NONE), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
@@ -55,10 +48,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
-#endif // __ASM_MC6800_H__
+#endif  // __ASM_MC6800_H__
 
 // Local Variables:
 // mode: c++

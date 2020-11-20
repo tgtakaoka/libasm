@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8070", true,   assembler.setCpu("8070"));
     EQUALS("cpu 8070", "8070", assembler.getCpu());
@@ -367,6 +368,7 @@ static void test_error() {
     ETEST(MISSING_COMMA,    "LD A,@1(P3)"); // SC/MP style
     ETEST(GARBAGE_AT_END,   "LD A,1,(EA)");
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

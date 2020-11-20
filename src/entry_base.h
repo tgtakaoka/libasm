@@ -21,7 +21,7 @@
 
 namespace libasm {
 
-template<typename Conf>
+template <typename Conf>
 class EntryBase {
 public:
     constexpr EntryBase(const char *name, typename Conf::opcode_t opCode)
@@ -44,7 +44,7 @@ private:
     typename Conf::opcode_t _opCode;
 };
 
-template<typename ENTRY_T>
+template <typename ENTRY_T>
 class EntryPageBase {
 public:
     const ENTRY_T *table() const {
@@ -63,9 +63,9 @@ private:
     const ENTRY_T *_end;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __ENTRY_BASE_H__
+#endif  // __ENTRY_BASE_H__
 
 // Local Variables:
 // mode: c++

@@ -30,10 +30,9 @@ int main(int argc, const char **argv) {
         driver.pseudo("Z80SYNTAX", "ON");
 
     TestGenerator<Config> generator(disz80, 0x0100);
-    generator
-        .generate(driver)
-        .generate(driver, 0xDD, 0xCB, 0x7F)
-        .generate(driver, 0xFD, 0xCB, 0x80);
+    generator.generate(driver)
+            .generate(driver, 0xDD, 0xCB, 0x7F)
+            .generate(driver, 0xFD, 0xCB, 0x80);
 
     return driver.close();
 }

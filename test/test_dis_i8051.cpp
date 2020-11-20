@@ -33,6 +33,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8051", true,   disassembler.setCpu("8051"));
     EQUALS("cpu 8051", "8051", disassembler.getCpu());
@@ -373,6 +374,7 @@ static void test_absolute() {
 static void test_illegal() {
     ILLEGAL(0xA5);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

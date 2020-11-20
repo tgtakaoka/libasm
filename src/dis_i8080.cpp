@@ -15,6 +15,7 @@
  */
 
 #include "dis_i8080.h"
+
 #include "table_i8080.h"
 
 namespace libasm {
@@ -25,12 +26,14 @@ char *DisI8080::outRegister(char *out, RegName regName) {
 }
 
 Error DisI8080::decodeOperand(
-    DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode) {
+        DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode) {
     switch (mode) {
-    case M_IM8: case M_IOA:
+    case M_IM8:
+    case M_IOA:
         outHex(out, insn.readByte(memory), 8);
         break;
-    case M_IM16: case M_ABS:
+    case M_IM16:
+    case M_ABS:
         outHex(out, insn.readUint16(memory), 16);
         break;
     case M_PTR:
@@ -55,30 +58,33 @@ Error DisI8080::decodeOperand(
         return OK;
     }
     return setError(insn);
-}    
+}
 
 Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnI8080 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
 
     insn.setOpCode(opCode);
     if (TableI8080.searchOpCode(insn))
         return setError(TableI8080.getError());
 
     const AddrMode dst = insn.dstMode();
-    if (dst == M_NO) return OK;
+    if (dst == M_NO)
+        return OK;
     if (decodeOperand(memory, insn, out, dst))
         return getError();
     const AddrMode src = insn.srcMode();
-    if (src == M_NO) return OK;
+    if (src == M_NO)
+        return OK;
     out += strlen(out);
     *out++ = ',';
     return decodeOperand(memory, insn, out, src);
 }
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

@@ -24,14 +24,13 @@ namespace libasm {
 class SymbolTable {
 public:
     virtual const char *lookupValue(uint32_t value) = 0;
-    virtual bool hasSymbol(
-        const char *symbol, const char *end = nullptr) = 0;
+    virtual bool hasSymbol(const char *symbol, const char *end = nullptr) = 0;
     virtual uint32_t lookupSymbol(
-        const char *symbol, const char *end = nullptr) = 0;
+            const char *symbol, const char *end = nullptr) = 0;
     virtual uint32_t currentOrigin() = 0;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
 #endif  // __SYMBOL_TABLE_H__
 

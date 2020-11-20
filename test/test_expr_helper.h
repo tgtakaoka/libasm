@@ -17,8 +17,8 @@
 #ifndef __TEST_EXPT_HELPER_H__
 #define __TEST_EXPT_HELPER_H__
 
-#include "test_symtab.h"
 #include "test_asserter.h"
+#include "test_symtab.h"
 #include "value_formatter.h"
 #include "value_parser.h"
 
@@ -30,11 +30,9 @@ namespace test {
 extern TestSymtab symtab;
 extern TestAsserter asserter;
 
-template<typename T>
-void val_assert(
-    const char *file, const int line, const char *expr,
-    const T expected, const Error expected_error,
-    ValueParser &parser) {
+template <typename T>
+void val_assert(const char *file, const int line, const char *expr,
+        const T expected, const Error expected_error, ValueParser &parser) {
     Value val;
     ErrorReporter error;
     parser.eval(expr, val, &symtab);
@@ -47,42 +45,39 @@ void val_assert(
         error.setErrorIf(UNDEFINED_SYMBOL);
     asserter.equals(file, line, expr, expected_error, error);
     if (error.getError() == OK)
-        asserter.equals(file, line, expr,
-                        static_cast<uint32_t>(expected),
-                        static_cast<T>(val.getUnsigned()));
+        asserter.equals(file, line, expr, static_cast<uint32_t>(expected),
+                static_cast<T>(val.getUnsigned()));
 }
 
-void dec_assert(
-    const char *file, const int line, const uint32_t value, int8_t bitWidth,
-    const char *expected, ValueFormatter &formatter);
+void dec_assert(const char *file, const int line, const uint32_t value,
+        int8_t bitWidth, const char *expected, ValueFormatter &formatter);
 
-void hex_assert(
-    const char *file, const int line, const uint32_t value, int8_t bitWidth,
-    const bool relax, const char *expected, ValueFormatter &formatter);
+void hex_assert(const char *file, const int line, const uint32_t value,
+        int8_t bitWidth, const bool relax, const char *expected,
+        ValueFormatter &formatter);
 
-void run_test(
-        void (*test)(),
-        const char *name,
-        void (*set_up)(),
+void run_test(void (*test)(), const char *name, void (*set_up)(),
         void (*tear_down)());
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
-#define E8(expr, expected, expected_error)                              \
-    val_assert<uint8_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
-#define E16(expr, expected, expected_error)                             \
-    val_assert<uint16_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
-#define E32(expr, expected, expected_error)                             \
-    val_assert<uint32_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+#define E8(expr, expected, expected_error) \
+    val_assert<uint8_t>(                   \
+            __FILE__, __LINE__, expr, expected, expected_error, parser)
+#define E16(expr, expected, expected_error) \
+    val_assert<uint16_t>(                   \
+            __FILE__, __LINE__, expr, expected, expected_error, parser)
+#define E32(expr, expected, expected_error) \
+    val_assert<uint32_t>(                   \
+            __FILE__, __LINE__, expr, expected, expected_error, parser)
 
-#define DEC(value, bits, expected)                               \
+#define DEC(value, bits, expected) \
     dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
-#define HEX(value, bits, relax, expected)                               \
+#define HEX(value, bits, relax, expected) \
     hex_assert(__FILE__, __LINE__, value, bits, relax, expected, formatter)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
-
 
 #endif
 

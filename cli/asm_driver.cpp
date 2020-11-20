@@ -23,8 +23,7 @@ namespace libasm {
 namespace cli {
 
 AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives)
-    : _commonDir(directives)
-{}
+    : _commonDir(directives) {}
 
 int AsmDriver::usage() {
     const char *cpuSep = "\n                ";
@@ -38,14 +37,16 @@ int AsmDriver::usage() {
         cpuList = _commonDir.listCpu(cpuSep);
     }
     fprintf(stderr,
-            "libasm assembler (version " LIBASM_VERSION_STRING ")\n"
+            "libasm assembler (version " LIBASM_VERSION_STRING
+            ")\n"
             "usage: %s [-o <output>] [-l <list>] <input>\n"
             "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
             "  -S[<bytes>] : output Motorola SREC format\n"
             "  -H[<bytes>] : output Intel HEX format\n"
-            "              : optional <bytes> specifies data record length (max 32)\n"
+            "              : optional <bytes> specifies data record length "
+            "(max 32)\n"
             "  -u          : use uppercase letter for output\n"
             "  -n          : output line number to list file\n"
             "  -v          : print progress verbosely\n",
@@ -58,7 +59,8 @@ int AsmDriver::assemble() {
     int pass = 0;
     CliMemory memory;
     if (_verbose) {
-        fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
+        fprintf(stderr,
+                "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
     (void)assemble(memory);
@@ -66,7 +68,8 @@ int AsmDriver::assemble() {
     do {
         _commonDir.setSymbolMode(true, false);
         CliMemory next;
-        if (_verbose) fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
+        if (_verbose)
+            fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
         (void)assemble(next);
         if (memory.equals(next))
             break;
@@ -90,25 +93,27 @@ int AsmDriver::assemble() {
             formatter = directive->defaultFormatter();
         }
         const char *begin = formatter->begin();
-        if (begin) fprintf(output, "%s\n", begin);
-        memory.dump(
-            [this, output, formatter]
-            (uint32_t addr, const uint8_t *data, size_t data_size) {
-                if (_verbose)
-                    fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n",
-                            _output_name,
-                            data_size, addr, (uint32_t)(addr + data_size - 1));
-                for (size_t i = 0; i < data_size; i += _record_bytes) {
-                    auto size = std::min(_record_bytes, data_size - i);
-                    const char *line = formatter->prepare(addr + i);
-                    if (line) fprintf(output, "%s\n", line);
-                    line = formatter->encode(addr + i, data + i, size);
+        if (begin)
+            fprintf(output, "%s\n", begin);
+        memory.dump([this, output, formatter](uint32_t addr,
+                            const uint8_t *data, size_t data_size) {
+            if (_verbose)
+                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n",
+                        _output_name, data_size, addr,
+                        (uint32_t)(addr + data_size - 1));
+            for (size_t i = 0; i < data_size; i += _record_bytes) {
+                auto size = std::min(_record_bytes, data_size - i);
+                const char *line = formatter->prepare(addr + i);
+                if (line)
                     fprintf(output, "%s\n", line);
-                    fflush(output);
-                }
-            });
+                line = formatter->encode(addr + i, data + i, size);
+                fprintf(output, "%s\n", line);
+                fflush(output);
+            }
+        });
         const char *end = formatter->end();
-        if (end) fprintf(output, "%s\n", end);
+        if (end)
+            fprintf(output, "%s\n", end);
         fclose(output);
         delete formatter;
     }
@@ -122,9 +127,11 @@ int AsmDriver::assemble() {
         if (_verbose)
             fprintf(stderr, "%s: Opened for listing\n", _list_name);
     }
-    if (_verbose) fprintf(stderr, "%s: Pass listing\n", _input_name);
+    if (_verbose)
+        fprintf(stderr, "%s: Pass listing\n", _input_name);
     assemble(memory, list, true);
-    if (list) fclose(list);
+    if (list)
+        fclose(list);
 
     return 0;
 }
@@ -144,13 +151,11 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
             const char *filename = _commonDir.currentSource();
             const int lineno = _commonDir.currentLineno();
             const int column = _commonDir.errorAt() - line + 1;
-            fprintf(stderr, "%s:%d:%d: error: %s\n",
-                    filename, lineno, column,
+            fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,
                     _commonDir.errorText());
             fprintf(stderr, "%s:%d %s\n", filename, lineno, line);
             if (list) {
-                fprintf(list, "%s:%d:%d: error: %s\n",
-                        filename, lineno, column,
+                fprintf(list, "%s:%d:%d: error: %s\n", filename, lineno, column,
                         _commonDir.errorText());
                 fprintf(list, "%s:%d %s\n", filename, lineno, line);
             }
@@ -251,8 +256,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
             }
         } else {
             if (_input_name) {
-                fprintf(stderr,
-                        "multiple input files specified: %s and %s\n",
+                fprintf(stderr, "multiple input files specified: %s and %s\n",
                         _input_name, opt);
                 return 1;
             }
@@ -279,8 +283,8 @@ const char *AsmDriver::basename(const char *str, char sep_char) {
     return sep ? sep + 1 : str;
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

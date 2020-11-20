@@ -47,18 +47,18 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    Error searchName(
-        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const;
-    const Entry *searchOpCode(
-        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchName(InsnMc6800 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
+    const Entry *searchOpCode(InsnMc6800 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
 };
 
 extern TableMc6800 TableMc6800;
 
-} // namespace mc6800
-} // namespace libasm
+}  // namespace mc6800
+}  // namespace libasm
 
-#endif // __TABLE_MC6800_H__
+#endif  // __TABLE_MC6800_H__
 
 // Local Variables:
 // mode: c++

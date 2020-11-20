@@ -15,6 +15,7 @@
  */
 
 #include "dis_ins8070.h"
+
 #include "table_ins8070.h"
 
 namespace libasm {
@@ -26,15 +27,24 @@ char *DisIns8070::outRegister(char *out, RegName regName) {
 
 char *DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
     switch (opr) {
-    case OPR_A:  return outRegister(out, REG_A);
-    case OPR_E:  return outRegister(out, REG_E);
-    case OPR_S:  return outRegister(out, REG_S);
-    case OPR_EA: return outRegister(out, REG_EA);
-    case OPR_PN: return outRegister(out, (value & 1) ? REG_P3 : REG_P2);
-    case OPR_BR: return outRegister(out, RegIns8070::decodePointerReg(value));
-    case OPR_T:  return outRegister(out, REG_T);
-    case OPR_4:  return outDec(out, value & 15, 4);
-    default:     return out;
+    case OPR_A:
+        return outRegister(out, REG_A);
+    case OPR_E:
+        return outRegister(out, REG_E);
+    case OPR_S:
+        return outRegister(out, REG_S);
+    case OPR_EA:
+        return outRegister(out, REG_EA);
+    case OPR_PN:
+        return outRegister(out, (value & 1) ? REG_P3 : REG_P2);
+    case OPR_BR:
+        return outRegister(out, RegIns8070::decodePointerReg(value));
+    case OPR_T:
+        return outRegister(out, REG_T);
+    case OPR_4:
+        return outDec(out, value & 15, 4);
+    default:
+        return out;
     }
 }
 
@@ -48,7 +58,7 @@ Error DisIns8070::decodeImplied(InsnIns8070 &insn, char *out) {
 }
 
 Error DisIns8070::decodeImmediate(
-    DisMemory &memory, InsnIns8070 &insn, char *out) {
+        DisMemory &memory, InsnIns8070 &insn, char *out) {
     out = outOperand(out, insn.dstOpr(), insn.opCode());
     *out++ = ',';
     *out++ = _immSym ? '#' : '=';
@@ -60,7 +70,7 @@ Error DisIns8070::decodeImmediate(
 }
 
 Error DisIns8070::decodeAbsolute(
-    DisMemory &memory, InsnIns8070 &insn, char *out) {
+        DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = insn.readUint16(memory) + fetch;
     outAbsAddr(out, target);
@@ -68,7 +78,7 @@ Error DisIns8070::decodeAbsolute(
 }
 
 Error DisIns8070::decodeDirect(
-    DisMemory &memory, InsnIns8070 &insn, char *out) {
+        DisMemory &memory, InsnIns8070 &insn, char *out) {
     const Config::uintptr_t target = 0xFF00 | insn.readByte(memory);
     outAbsAddr(out, target);
     return setError(insn);
@@ -79,8 +89,7 @@ Error DisIns8070::decodeRelative(
     const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
     const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
-    if (insn.dstOpr() == OPR_RL
-        || (src == OPR_GN && base == REG_PC)) {
+    if (insn.dstOpr() == OPR_RL || (src == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
         out = outRelAddr(out, target, insn.address(), 8);
@@ -101,18 +110,19 @@ Error DisIns8070::decodeRelative(
 }
 
 Error DisIns8070::decodeGeneric(
-    DisMemory &memory, InsnIns8070 &insn, char *out) {
+        DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t mode = insn.opCode() & 7;
     if (mode != 4) {
-       out = outOperand(out, insn.dstOpr());
-       *out++ = ',';
+        out = outOperand(out, insn.dstOpr());
+        *out++ = ',';
     }
     switch (mode) {
     case 4:
         return decodeImmediate(memory, insn, out);
     case 5:
         return decodeDirect(memory, insn, out);
-    case 6: case 7:
+    case 6:
+    case 7:
         *out++ = '@';
         return decodeRelative(memory, insn, out);
     default:
@@ -123,7 +133,8 @@ Error DisIns8070::decodeGeneric(
 Error DisIns8070::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnIns8070 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
     insn.setOpCode(opCode);
 
     if (TableIns8070.searchOpCode(insn))
@@ -145,8 +156,8 @@ Error DisIns8070::decode(DisMemory &memory, Insn &_insn, char *out) {
     }
 }
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

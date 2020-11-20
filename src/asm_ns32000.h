@@ -26,9 +26,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class AsmNs32000
-    : public Assembler,
-      public Config {
+class AsmNs32000 : public Assembler, public Config {
 public:
     AsmNs32000() : Assembler(_parser, TableNs32000, '#') {}
 
@@ -49,8 +47,7 @@ private:
               val32(0),
               disp2(0),
               index(REG_UNDEF),
-              indexSize(SZ_NONE)
-        {}
+              indexSize(SZ_NONE) {}
     };
 
     Error parseStrOptNames(const char *scan, Operand &op);
@@ -60,25 +57,23 @@ private:
     Error parseOperand(const char *scan, Operand &op);
     Error emitDisplacement(InsnNs32000 &insn, uint32_t val32);
     Error emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
-    Error emitBitField(
-        InsnNs32000 &insn, AddrMode mode,
-        const Operand *off, const Operand &len);
-    Error emitImmediate(InsnNs32000 &insn, const Operand &op,  OprSize size);
+    Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand *off,
+            const Operand &len);
+    Error emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);
     Error emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
     Error emitGeneric(
-        InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
+            InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
     Error emitRelative(InsnNs32000 &insn, const Operand &op);
-    Error emitOperand(
-        InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos,
-        const Operand *prevOp = nullptr);
+    Error emitOperand(InsnNs32000 &insn, AddrMode mode, const Operand &op,
+            OprPos pos, const Operand *prevOp = nullptr);
     Error encode(Insn &insn) override;
 };
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __ASM_NS32000_H__
+#endif  // __ASM_NS32000_H__
 
 // Local Variables:
 // mode: c++

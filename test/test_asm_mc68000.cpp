@@ -33,6 +33,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 68000", true,    assembler.setCpu("68000"));
     EQUALS("cpu 68000", "68000", assembler.getCpu());
@@ -2481,6 +2482,7 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "MOVEA (UNDEF,PC),A1",      0031172, 0x0000);
     EATEST(UNDEFINED_SYMBOL, 0x1000, "MOVEA (UNDEF,PC,D1.L),A1", 0031173, 0x1800);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

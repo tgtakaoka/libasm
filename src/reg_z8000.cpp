@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#include "config_z8000.h"
 #include "reg_z8000.h"
-#include "table_z8000.h"
 
 #include <ctype.h>
+
+#include "config_z8000.h"
+#include "table_z8000.h"
 
 namespace libasm {
 namespace z8000 {
@@ -26,8 +27,8 @@ namespace z8000 {
 static int8_t parseRegNum(const char *line) {
     if (isdigit(*line) && !RegBase::isidchar(line[1]))
         return *line - '0';
-    if (*line++ == '1'
-        && *line >= '0' && *line < '6' && !RegBase::isidchar(line[1]))
+    if (*line++ == '1' && *line >= '0' && *line < '6' &&
+            !RegBase::isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }
@@ -38,7 +39,8 @@ RegName RegZ8000::parseRegName(const char *line) {
         if (type == 'H' || type == 'L' || type == 'R' || type == 'Q')
             line++;
         int8_t num = parseRegNum(line);
-        if (num < 0) return REG_UNDEF;
+        if (num < 0)
+            return REG_UNDEF;
         if (type == 'H')
             return num < 8 ? RegName(num + 16) : REG_ILLEGAL;
         if (type == 'L')
@@ -53,18 +55,23 @@ RegName RegZ8000::parseRegName(const char *line) {
 }
 
 uint8_t RegZ8000::regNameLen(RegName name) {
-    if (isCtlReg(name)) return ctlRegLen(name);
+    if (isCtlReg(name))
+        return ctlRegLen(name);
     const int8_t num = int8_t(name);
-    if (num < 0) return 0;
-    if (isByteReg(name)) return 3;
+    if (num < 0)
+        return 0;
+    if (isByteReg(name))
+        return 3;
     const uint8_t len = isWordReg(name) ? 1 : 2;
     return len + ((num & 0xF) < 10 ? 1 : 2);
 }
 
 char *RegZ8000::outRegName(char *out, RegName name) const {
     int8_t num = int8_t(name);
-    if (num < 0) return out;
-    if (isCtlReg(name)) return outCtlName(out, name);
+    if (num < 0)
+        return out;
+    if (isCtlReg(name))
+        return outCtlName(out, name);
 
     out = outChar(out, 'R');
     if (isByteReg(name)) {
@@ -97,13 +104,19 @@ uint8_t RegZ8000::encodeGeneralRegName(RegName name) {
 
 RegName RegZ8000::decodeRegNum(uint8_t num, OprSize size) {
     switch (size) {
-    case SZ_BYTE: return decodeByteReg(num);
-    case SZ_WORD: return decodeWordReg(num);
-    case SZ_LONG: return decodeLongReg(num);
-    case SZ_QUAD: return decodeQuadReg(num);
-    case SZ_ADDR: return TableZ8000.segmentedModel()
-            ? decodeLongReg(num) : decodeWordReg(num);
-    default: return REG_UNDEF;
+    case SZ_BYTE:
+        return decodeByteReg(num);
+    case SZ_WORD:
+        return decodeWordReg(num);
+    case SZ_LONG:
+        return decodeLongReg(num);
+    case SZ_QUAD:
+        return decodeQuadReg(num);
+    case SZ_ADDR:
+        return TableZ8000.segmentedModel() ? decodeLongReg(num)
+                                           : decodeWordReg(num);
+    default:
+        return REG_UNDEF;
     }
 }
 
@@ -152,21 +165,23 @@ bool RegZ8000::isCtlReg(RegName name) {
     return r >= 64 && r < 64 + 8;
 }
 
+// clang-format off
 static const char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
 static const char TEXT_REG_FCW[]     PROGMEM = "FCW";
 static const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
 static const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
 static const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
-static const char TEXT_REG_NSPSEG[] PROGMEM  = "NSPSEG";
-static const char TEXT_REG_NSPOFF[] PROGMEM  = "NSPOFF";
+static const char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
+static const char TEXT_REG_NSPOFF[]  PROGMEM = "NSPOFF";
+// clang-format on
 static const RegBase::NameEntry CTL_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_FLAGS)
-    NAME_ENTRY(REG_FCW)
-    NAME_ENTRY(REG_REFRESH)
-    NAME_ENTRY(REG_PSAPSEG)
-    NAME_ENTRY(REG_PSAPOFF)
-    NAME_ENTRY(REG_NSPSEG)
-    NAME_ENTRY(REG_NSPOFF)
+        NAME_ENTRY(REG_FLAGS),
+        NAME_ENTRY(REG_FCW),
+        NAME_ENTRY(REG_REFRESH),
+        NAME_ENTRY(REG_PSAPSEG),
+        NAME_ENTRY(REG_PSAPOFF),
+        NAME_ENTRY(REG_NSPSEG),
+        NAME_ENTRY(REG_NSPOFF),
 };
 
 RegName RegZ8000::parseCtlReg(const char *line) {
@@ -187,7 +202,8 @@ char *RegZ8000::outCtlName(char *out, RegName name) const {
 
 RegName RegZ8000::decodeCtlReg(uint8_t num) {
     num &= 7;
-    if (num == 0) return REG_ILLEGAL;
+    if (num == 0)
+        return REG_ILLEGAL;
     return RegName(num + 64);
 }
 
@@ -195,11 +211,11 @@ uint8_t RegZ8000::encodeCtlReg(RegName name) {
     return uint8_t(name) - 64;
 }
 
-static const char TEXT_INTR_VI[] PROGMEM  = "VI";
+static const char TEXT_INTR_VI[] PROGMEM = "VI";
 static const char TEXT_INTR_NVI[] PROGMEM = "NVI";
 static const RegBase::NameEntry INTR_TABLE[] PROGMEM = {
-    NAME_ENTRY(INTR_NVI)
-    NAME_ENTRY(INTR_VI)
+        NAME_ENTRY(INTR_NVI),
+        NAME_ENTRY(INTR_VI),
 };
 
 IntrName RegZ8000::parseIntrName(const char *line) {
@@ -218,7 +234,8 @@ char *RegZ8000::outIntrNames(char *out, uint8_t intrs) const {
         c = ',';
     }
     if ((intrs & int8_t(INTR_NVI)) == 0) {
-        if (c) *out++ = c;
+        if (c)
+            *out++ = c;
         out = outText(out, TEXT_INTR_NVI);
     }
     return out;
@@ -228,6 +245,7 @@ uint8_t RegZ8000::encodeIntrName(IntrName name) {
     return uint8_t(name);
 }
 
+// clang-format off
 static const char TEXT_CC_F[]   PROGMEM = "F";
 static const char TEXT_CC_LT[]  PROGMEM = "LT";
 static const char TEXT_CC_LE[]  PROGMEM = "LE";
@@ -248,29 +266,30 @@ static const char TEXT_CC_EQ[]  PROGMEM = "EQ";
 static const char TEXT_CC_ULT[] PROGMEM = "ULT";
 static const char TEXT_CC_NE[]  PROGMEM = "NE";
 static const char TEXT_CC_UGE[] PROGMEM = "UGE";
+// clang-format on
 static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
-    NAME_ENTRY(CC_F)
-    NAME_ENTRY(CC_LT)
-    NAME_ENTRY(CC_LE)
-    NAME_ENTRY(CC_ULE)
-    NAME_ENTRY(CC_OV)
-    NAME_ENTRY(CC_MI)
-    NAME_ENTRY(CC_Z)
-    NAME_ENTRY(CC_C)
-    NAME_ENTRY(CC_GE)
-    NAME_ENTRY(CC_GT)
-    NAME_ENTRY(CC_UGT)
-    NAME_ENTRY(CC_NOV)
-    NAME_ENTRY(CC_PL)
-    NAME_ENTRY(CC_NZ)
-    NAME_ENTRY(CC_NC)
-    // Aliases
-    NAME_ENTRY(CC_EQ)
-    NAME_ENTRY(CC_ULT)
-    NAME_ENTRY(CC_NE)
-    NAME_ENTRY(CC_UGE)
-    // Empty text.
-    NAME_ENTRY(CC_T)
+        NAME_ENTRY(CC_F),
+        NAME_ENTRY(CC_LT),
+        NAME_ENTRY(CC_LE),
+        NAME_ENTRY(CC_ULE),
+        NAME_ENTRY(CC_OV),
+        NAME_ENTRY(CC_MI),
+        NAME_ENTRY(CC_Z),
+        NAME_ENTRY(CC_C),
+        NAME_ENTRY(CC_GE),
+        NAME_ENTRY(CC_GT),
+        NAME_ENTRY(CC_UGT),
+        NAME_ENTRY(CC_NOV),
+        NAME_ENTRY(CC_PL),
+        NAME_ENTRY(CC_NZ),
+        NAME_ENTRY(CC_NC),
+        // Aliases
+        NAME_ENTRY(CC_EQ),
+        NAME_ENTRY(CC_ULT),
+        NAME_ENTRY(CC_NE),
+        NAME_ENTRY(CC_UGE),
+        // Empty text.
+        NAME_ENTRY(CC_T),
 };
 
 CcName RegZ8000::parseCcName(const char *line) {
@@ -304,11 +323,11 @@ static const char TEXT_FLAG_S[] PROGMEM = "S";
 static const char TEXT_FLAG_P[] PROGMEM = "P";
 static const char TEXT_FLAG_V[] PROGMEM = "V";
 static const RegBase::NameEntry FLAG_TABLE[] PROGMEM = {
-    NAME_ENTRY(FLAG_C)
-    NAME_ENTRY(FLAG_Z)
-    NAME_ENTRY(FLAG_S)
-    NAME_ENTRY(FLAG_P)
-    NAME_ENTRY(FLAG_V)
+        NAME_ENTRY(FLAG_C),
+        NAME_ENTRY(FLAG_Z),
+        NAME_ENTRY(FLAG_S),
+        NAME_ENTRY(FLAG_P),
+        NAME_ENTRY(FLAG_V),
 };
 
 FlagName RegZ8000::parseFlagName(const char *line) {
@@ -324,7 +343,8 @@ char *RegZ8000::outFlagNames(char *out, uint8_t flags) const {
     char sep = 0;
     for (uint8_t bit = 0x8; bit; bit >>= 1) {
         if (flags & bit) {
-            if (sep) *out++ = sep;
+            if (sep)
+                *out++ = sep;
             sep = ',';
             const NameEntry *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
             out = outText(out, entry->text());
@@ -337,8 +357,8 @@ uint8_t RegZ8000::encodeFlagName(FlagName name) {
     return uint8_t(name) & 0xF;
 }
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

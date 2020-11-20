@@ -26,9 +26,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class AsmMc68000
-    : public Assembler,
-      public Config {
+class AsmMc68000 : public Assembler, public Config {
 public:
     AsmMc68000() : Assembler(_parser, TableMc68000) {}
 
@@ -50,8 +48,7 @@ private:
               reg(REG_UNDEF),
               indexReg(REG_UNDEF),
               indexSize(SZ_NONE),
-              val32(0)
-        {}
+              val32(0) {}
         void fixupMultiRegister();
         Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
@@ -60,24 +57,22 @@ private:
     Error parseOperand(const char *scan, Operand &opr);
     Error checkAlignment(OprSize size, Config::uintptr_t addr);
 
-    Error emitBriefExtension(
-        InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp);
+    Error emitBriefExtension(InsnMc68000 &insn, RegName index, OprSize size,
+            Config::ptrdiff_t disp);
     Error emitDisplacement(InsnMc68000 &insn, Config::ptrdiff_t disp);
-    Error emitAbsoluteAddr(
-        InsnMc68000 &insn, OprSize size, AddrMode mode, Config::uintptr_t addr);
-    Error emitRelativeAddr(
-        InsnMc68000 &insn, AddrMode mode, const Operand &op);
-    Error emitImmediateData(
-        InsnMc68000 &insn, OprSize size, uint32_t data);
-    Error emitEffectiveAddr(
-        InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
+    Error emitAbsoluteAddr(InsnMc68000 &insn, OprSize size, AddrMode mode,
+            Config::uintptr_t addr);
+    Error emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
+    Error emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t data);
+    Error emitEffectiveAddr(InsnMc68000 &insn, OprSize size, const Operand &op,
+            AddrMode mode, OprPos pos);
     Error encode(Insn &insn) override;
 };
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
-#endif // __ASM_MC68000_H__
+#endif  // __ASM_MC68000_H__
 
 // Local Variables:
 // mode: c++

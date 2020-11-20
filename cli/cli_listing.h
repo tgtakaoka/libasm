@@ -17,11 +17,12 @@
 #ifndef __CLI_LISTING_H__
 #define __CLI_LISTING_H__
 
+#include <stdint.h>
+
+#include <string>
+
 #include "config_base.h"
 #include "config_host.h"
-
-#include <stdint.h>
-#include <string>
 
 namespace libasm {
 namespace cli {
@@ -73,25 +74,25 @@ private:
 
     void formatHex(uint8_t val);
     void formatUint8(
-        uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
+            uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint16(
-        uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
+            uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint20(
-        uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+            uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint24(
-        uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+            uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint32(
-        uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+            uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatAddress(
-        uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
+            uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
     int formatBytes(int base);
     void formatTab(size_t pos, int delta = 4);
     void formatContent(int pos);
     void formatLine();
 };
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

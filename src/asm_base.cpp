@@ -15,20 +15,22 @@
  */
 
 #include "asm_base.h"
-#include "symbol_table.h"
-#include "value_parser.h"
 
 #include <ctype.h>
+
+#include "symbol_table.h"
+#include "value_parser.h"
 
 namespace libasm {
 
 Error Assembler::encode(
-    const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
+        const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
     _symtab = symtab;
     resetError();
     insn.resetAddress(addr);
     const char *scan = skipSpaces(line);
-    if (endOfLine(scan)) return OK;
+    if (endOfLine(scan))
+        return OK;
     _scan = scan;
     return encode(insn);
 }
@@ -51,7 +53,7 @@ const char *Assembler::skipSpaces(const char *scan) {
     return scan;
 }
 
-} // namespace libasm
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

@@ -14,35 +14,38 @@
  * limitations under the License.
  */
 
-#include "config_i8080.h"
 #include "reg_i8080.h"
 
 #include <ctype.h>
 
+#include "config_i8080.h"
+
 namespace libasm {
 namespace i8080 {
 
-static const char TEXT_REG_A[]   PROGMEM = "A";
-static const char TEXT_REG_B[]   PROGMEM = "B";
-static const char TEXT_REG_C[]   PROGMEM = "C";
-static const char TEXT_REG_D[]   PROGMEM = "D";
-static const char TEXT_REG_E[]   PROGMEM = "E";
-static const char TEXT_REG_H[]   PROGMEM = "H";
-static const char TEXT_REG_L[]   PROGMEM = "L";
-static const char TEXT_REG_M[]   PROGMEM = "M";
+// clang-format off
+static const char TEXT_REG_A[]   PROGMEM  = "A";
+static const char TEXT_REG_B[]   PROGMEM  = "B";
+static const char TEXT_REG_C[]   PROGMEM  = "C";
+static const char TEXT_REG_D[]   PROGMEM  = "D";
+static const char TEXT_REG_E[]   PROGMEM  = "E";
+static const char TEXT_REG_H[]   PROGMEM  = "H";
+static const char TEXT_REG_L[]   PROGMEM  = "L";
+static const char TEXT_REG_M[]   PROGMEM  = "M";
 static const char TEXT_REG_SP[]  PROGMEM = "SP";
 static const char TEXT_REG_PSW[] PROGMEM = "PSW";
+// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_A)
-    NAME_ENTRY(REG_B)
-    NAME_ENTRY(REG_C)
-    NAME_ENTRY(REG_D)
-    NAME_ENTRY(REG_E)
-    NAME_ENTRY(REG_H)
-    NAME_ENTRY(REG_L)
-    NAME_ENTRY(REG_M)
-    NAME_ENTRY(REG_SP)
-    NAME_ENTRY(REG_PSW)
+        NAME_ENTRY(REG_A),
+        NAME_ENTRY(REG_B),
+        NAME_ENTRY(REG_C),
+        NAME_ENTRY(REG_D),
+        NAME_ENTRY(REG_E),
+        NAME_ENTRY(REG_H),
+        NAME_ENTRY(REG_L),
+        NAME_ENTRY(REG_M),
+        NAME_ENTRY(REG_SP),
+        NAME_ENTRY(REG_PSW),
 };
 
 RegName RegI8080::parseRegName(const char *line) {
@@ -63,7 +66,10 @@ char *RegI8080::outRegName(char *out, const RegName name) const {
 
 bool RegI8080::isPointerReg(RegName name) {
     switch (name) {
-    case REG_B: case REG_D: case REG_H: case REG_SP:
+    case REG_B:
+    case REG_D:
+    case REG_H:
+    case REG_SP:
         return true;
     default:
         return false;
@@ -71,13 +77,17 @@ bool RegI8080::isPointerReg(RegName name) {
 }
 
 uint8_t RegI8080::encodePointerReg(RegName name) {
-    if (name == REG_SP) return 3;
+    if (name == REG_SP)
+        return 3;
     return (uint8_t(name) >> 1);
 }
 
 bool RegI8080::isStackReg(RegName name) {
     switch (name) {
-    case REG_B: case REG_D: case REG_H: case REG_PSW:
+    case REG_B:
+    case REG_D:
+    case REG_H:
+    case REG_PSW:
         return true;
     default:
         return false;
@@ -85,7 +95,8 @@ bool RegI8080::isStackReg(RegName name) {
 }
 
 uint8_t RegI8080::encodeStackReg(RegName name) {
-    if (name == REG_PSW) return 3;
+    if (name == REG_PSW)
+        return 3;
     return (uint8_t(name) >> 1);
 }
 
@@ -108,19 +119,27 @@ uint8_t RegI8080::encodeDataReg(RegName name) {
 
 RegName RegI8080::decodePointerReg(uint8_t num) {
     switch (num & 3) {
-    case 0:  return REG_B;
-    case 1:  return REG_D;
-    case 2:  return REG_H;
-    default: return REG_SP;
+    case 0:
+        return REG_B;
+    case 1:
+        return REG_D;
+    case 2:
+        return REG_H;
+    default:
+        return REG_SP;
     }
 }
 
 RegName RegI8080::decodeStackReg(uint8_t num) {
     switch (num & 3) {
-    case 0:  return REG_B;
-    case 1:  return REG_D;
-    case 2:  return REG_H;
-    default: return REG_PSW;
+    case 0:
+        return REG_B;
+    case 1:
+        return REG_D;
+    case 2:
+        return REG_H;
+    default:
+        return REG_PSW;
     }
 }
 
@@ -132,8 +151,8 @@ RegName RegI8080::decodeDataReg(uint8_t num) {
     return RegName(num & 7);
 }
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

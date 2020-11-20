@@ -46,17 +46,11 @@ public:
 
     void embed(Config::opcode_t data) { _opCode |= data; }
 
-    void emitInsn() {
-        emitByte(_opCode, 0);
-    }
+    void emitInsn() { emitByte(_opCode, 0); }
 
-    void emitOperand8(uint8_t val8) {
-        emitByte(val8, operandPos());
-    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, operandPos());
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
     Config::opcode_t _opCode;
@@ -64,15 +58,16 @@ private:
 
     uint8_t operandPos() const {
         uint8_t pos = length();
-        if (pos == 0) pos = 1;
+        if (pos == 0)
+            pos = 1;
         return pos;
     }
 };
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
-#endif // __INSN_INS8070_H__
+#endif  // __INSN_INS8070_H__
 
 // Local Variables:
 // mode: c++

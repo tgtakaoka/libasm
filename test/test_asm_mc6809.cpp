@@ -36,6 +36,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 6809", true,   assembler.setCpu("6809"));
     EQUALS("cpu 6809", "6809", assembler.getCpu());
@@ -1491,13 +1492,15 @@ static void test_undefined_symbol() {
         ETEST(UNDEFINED_SYMBOL, "BOR A.1,$34.UNDEF", 0x11, 0x32, 0x41, 0x34);
     }
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "6809", "6309",
+            "6809",
+            "6309",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         assembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

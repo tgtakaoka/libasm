@@ -26,31 +26,30 @@
 namespace libasm {
 namespace z8000 {
 
-class AsmZ8000
-    : public Assembler,
-      public Config {
+class AsmZ8000 : public Assembler, public Config {
 public:
     AsmZ8000() : Assembler(_parser, TableZ8000, '#') {}
 
-    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
+    AddressWidth addressWidth() const override {
+        return TableZ8000.addressWidth();
+    }
 
 private:
     ValueParser _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        RegName reg;    // M_R/M_IR/M_X/M_BX/M_CTL
-        RegName base;   // M_BA/M_BX
-        CcName cc;      // M_CC
-        uint32_t val32; // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
+        RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
+        RegName base;    // M_BA/M_BX
+        CcName cc;       // M_CC
+        uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
         Operand()
             : ErrorReporter(),
               mode(M_NO),
               reg(REG_UNDEF),
               base(REG_UNDEF),
               cc(CC_UNDEF),
-              val32(0)
-        {}
+              val32(0) {}
     };
 
     int8_t parseIntrNames(const char *scan);
@@ -74,10 +73,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __ASM_Z8000_H__
+#endif  // __ASM_Z8000_H__
 
 // Local Variables:
 // mode: c++

@@ -33,10 +33,10 @@ void CliMemory::setAddress(uint32_t addr) {
 
 bool CliMemory::hasNext() const {
     const uint32_t addr = address();
-    if (insideOf(_read_cache, addr)) return true;
-    for (auto segment = _segments.cbegin();
-         segment != _segments.cend();
-         segment++) {
+    if (insideOf(_read_cache, addr))
+        return true;
+    for (auto segment = _segments.cbegin(); segment != _segments.cend();
+            segment++) {
         if (insideOf(segment, addr)) {
             _read_cache = segment;
             return true;
@@ -77,9 +77,8 @@ void CliMemory::writeByte(uint32_t addr, uint8_t val) {
     }
 
     invalidateWriteCache();
-    for (auto segment = _segments.begin();
-         segment != _segments.end();
-         segment++) {
+    for (auto segment = _segments.begin(); segment != _segments.end();
+            segment++) {
         if (atEndOf(segment, addr)) {
             appendTo(segment, addr, val);
             return;
@@ -99,9 +98,8 @@ bool CliMemory::readByte(uint32_t addr, uint8_t &val) const {
         val = readFrom(_read_cache, addr);
         return true;
     }
-    for (auto segment = _segments.cbegin();
-         segment != _segments.cend();
-         segment++) {
+    for (auto segment = _segments.cbegin(); segment != _segments.cend();
+            segment++) {
         if (insideOf(segment, addr)) {
             val = readFrom(segment, addr);
             _read_cache = segment;
@@ -130,7 +128,7 @@ bool CliMemory::equals(const CliMemory &other) const {
     return a == _segments.cend() && b == other._segments.cend();
 }
 
-void CliMemory::swap(CliMemory& other) {
+void CliMemory::swap(CliMemory &other) {
     _segments.swap(other._segments);
     invalidateWriteCache();
     other.invalidateWriteCache();
@@ -145,20 +143,18 @@ void CliMemory::invalidateReadCache() const {
 }
 
 bool CliMemory::insideOf(ConstSegment &segment, uint32_t addr) const {
-    return segment != _segments.cend()
-        && addr >= segment->first
-        && addr < segment->first + segment->second.size();
+    return segment != _segments.cend() && addr >= segment->first &&
+           addr < segment->first + segment->second.size();
 }
 
 bool CliMemory::insideOf(Segment segment, uint32_t addr) const {
-    return segment != _segments.end()
-        && addr >= segment->first
-        && addr < segment->first + segment->second.size();
+    return segment != _segments.end() && addr >= segment->first &&
+           addr < segment->first + segment->second.size();
 }
 
 bool CliMemory::atEndOf(Segment segment, uint32_t addr) const {
-    return segment != _segments.end()
-        && addr == segment->first + segment->second.size();
+    return segment != _segments.end() &&
+           addr == segment->first + segment->second.size();
 }
 
 uint8_t CliMemory::readFrom(ConstSegment &segment, uint32_t addr) const {
@@ -178,8 +174,9 @@ void CliMemory::replaceAt(Segment &segment, uint32_t addr, uint8_t val) {
 }
 
 void CliMemory::createSegment(uint32_t addr, uint8_t val) {
-    _write_cache = _segments.insert(
-        std::make_pair(addr, std::vector<uint8_t>())).first;
+    _write_cache =
+            _segments.insert(std::make_pair(addr, std::vector<uint8_t>()))
+                    .first;
     _write_cache->second.push_back(val);
     aggregate(_write_cache);
 }
@@ -188,20 +185,19 @@ void CliMemory::aggregate(Segment hint) {
     Segment prev = hint;
     // Check following segment whether it is adjacent to.
     for (Segment next = ++hint;
-         next != _segments.end() && atEndOf(prev, next->first);
-         next = _segments.erase(next)) {
+            next != _segments.end() && atEndOf(prev, next->first);
+            next = _segments.erase(next)) {
         // Append next segment.
         prev->second.reserve(prev->second.size() + next->second.size());
-        prev->second.insert(
-            prev->second.end(),
-            std::make_move_iterator(next->second.begin()),
-            std::make_move_iterator(next->second.end()));
+        prev->second.insert(prev->second.end(),
+                std::make_move_iterator(next->second.begin()),
+                std::make_move_iterator(next->second.end()));
         invalidateWriteCache();
     }
 }
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

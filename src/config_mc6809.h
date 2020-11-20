@@ -22,16 +22,13 @@
 namespace libasm {
 namespace mc6809 {
 
-struct Config : public ConfigImpl<
-    ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, uint8_t, 5,
-    ENDIAN_BIG, 5>
-{};
+struct Config : public ConfigImpl<ADDRESS_16BIT, uint16_t, int16_t, OPCODE_8BIT,
+                        uint8_t, 5, ENDIAN_BIG, 5> {};
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
-#endif // __CONFIG_MC6809_H__
+#endif  // __CONFIG_MC6809_H__
 
 // Local Variables:
 // mode: c++

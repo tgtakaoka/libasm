@@ -25,19 +25,19 @@ namespace i8051 {
 enum RegName : int8_t {
     REG_UNDEF = -1,
     // R registers.
-    REG_R0   = 0,
-    REG_R1   = 1,
-    REG_R2   = 2,
-    REG_R3   = 3,
-    REG_R4   = 4,
-    REG_R5   = 5,
-    REG_R6   = 6,
-    REG_R7   = 7,
+    REG_R0 = 0,
+    REG_R1 = 1,
+    REG_R2 = 2,
+    REG_R3 = 3,
+    REG_R4 = 4,
+    REG_R5 = 5,
+    REG_R6 = 6,
+    REG_R7 = 7,
     // Other registers.
-    REG_A    = 0 + 8,
-    REG_AB   = 1 + 8,
-    REG_C    = 2 + 8,
-    REG_PC   = 3 + 8,
+    REG_A = 0 + 8,
+    REG_AB = 1 + 8,
+    REG_C = 2 + 8,
+    REG_PC = 3 + 8,
     REG_DPTR = 4 + 8,
 };
 
@@ -52,10 +52,10 @@ public:
     static RegName decodeRReg(uint8_t num);
 };
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __REG_I8051_H__
+#endif  // __REG_I8051_H__
 
 // Local Variables:
 // mode: c++

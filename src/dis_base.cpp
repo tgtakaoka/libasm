@@ -28,24 +28,26 @@ void Disassembler::setUppercase(bool uppercase) {
 }
 
 Error Disassembler::decode(
-    DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+        DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     _symtab = symtab;
 
     resetError();
     *operands = 0;
     insn.resetAddress(memory.address());
     decode(memory, insn, operands);
-    if (!_regBase.isUppercase()) insn.toLowerName();
+    if (!_regBase.isUppercase())
+        insn.toLowerName();
     return getError();
 }
 
 char *Disassembler::outDec(char *out, uint8_t val, int8_t bits) {
     const char *label = lookup(val);
-    if (label) return outText(out, label);
+    if (label)
+        return outText(out, label);
     return _formatter.formatDec(out, val, bits);
 }
 
-} // namespace libasm
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

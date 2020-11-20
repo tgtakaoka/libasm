@@ -26,9 +26,7 @@
 namespace libasm {
 namespace ins8060 {
 
-class AsmIns8060
-    : public Assembler,
-      public Config {
+class AsmIns8060 : public Assembler, public Config {
 public:
     AsmIns8060() : Assembler(_parser, TableIns8060) {}
 
@@ -39,12 +37,7 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(UNDEF),
-              reg(REG_UNDEF),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(UNDEF), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &opr);
@@ -55,10 +48,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
-#endif // __ASM_INS8060_H__
+#endif  // __ASM_INS8060_H__
 
 // Local Variables:
 // mode: c++

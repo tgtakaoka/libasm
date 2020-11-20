@@ -22,16 +22,13 @@
 namespace libasm {
 namespace i8051 {
 
-struct Config : ConfigImpl<
-    ADDRESS_16BIT, uint16_t, int16_t,
-    OPCODE_8BIT, uint8_t, 3,
-    ENDIAN_BIG, 5>
-{};
+struct Config : ConfigImpl<ADDRESS_16BIT, uint16_t, int16_t, OPCODE_8BIT,
+                        uint8_t, 3, ENDIAN_BIG, 5> {};
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __CONFIG_I8051_H__
+#endif  // __CONFIG_I8051_H__
 
 // Local Variables:
 // mode: c++

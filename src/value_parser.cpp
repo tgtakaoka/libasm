@@ -25,7 +25,8 @@ bool Value::overflowUint8() const {
 }
 
 bool Value::overflowUint16() const {
-    return getSigned() < -32768L || (getSigned() >= 0 && getUnsigned() >= 0x10000L);
+    return getSigned() < -32768L ||
+           (getSigned() >= 0 && getUnsigned() >= 0x10000L);
 }
 
 const char *ValueParser::readChar(const char *scan, char &val) {
@@ -45,12 +46,23 @@ const char *ValueParser::readChar(const char *scan, char &val) {
         base = 8;
     } else {
         switch (c) {
-        case '\'': case '"': case '?': case '\\':
+        case '\'':
+        case '"':
+        case '?':
+        case '\\':
             break;
-        case 'b': c = 0x08; break;
-        case 't': c = 0x09; break;
-        case 'n': c = 0x0a; break;
-        case 'r': c = 0x0d; break;
+        case 'b':
+            c = 0x08;
+            break;
+        case 't':
+            c = 0x09;
+            break;
+        case 'n':
+            c = 0x0a;
+            break;
+        case 'r':
+            c = 0x0d;
+            break;
         default:
             setError(UNKNOWN_ESCAPE_SEQUENCE);
             return scan;
@@ -60,7 +72,8 @@ const char *ValueParser::readChar(const char *scan, char &val) {
     }
     Value value;
     parseNumber(p, value, base);
-    if (getError()) return scan;
+    if (getError())
+        return scan;
     if (value.overflowUint8()) {
         setError(OVERFLOW_RANGE);
         return scan;
@@ -70,7 +83,8 @@ const char *ValueParser::readChar(const char *scan, char &val) {
 }
 
 static bool isValidDigit(const char c, const uint8_t base) {
-    if (base == 16) return isxdigit(c);
+    if (base == 16)
+        return isxdigit(c);
     return c >= '0' && c < '0' + base;
 }
 
@@ -81,7 +95,7 @@ static uint8_t toNumber(const char c, const uint8_t base) {
 }
 
 Error ValueParser::parseNumber(
-    const char *p, Value &val, const uint8_t base, const char suffix) {
+        const char *p, Value &val, const uint8_t base, const char suffix) {
     if (!isValidDigit(*p, base))
         return setError(ILLEGAL_CONSTANT);
     uint32_t v = 0;
@@ -113,7 +127,7 @@ static const char *skipSpaces(const char *p) {
 }
 
 const char *ValueParser::eval(
-    const char *scan, Value &value, SymbolTable *symtab) {
+        const char *scan, Value &value, SymbolTable *symtab) {
     _symtab = symtab;
     _stack.clear();
     setOK();
@@ -123,7 +137,8 @@ const char *ValueParser::eval(
 
 Value ValueParser::parseExpr(const char *scan) {
     Value value(readAtom(scan));
-    if (getError()) return Value();
+    if (getError())
+        return Value();
     if (_stack.full()) {
         setError(TOO_COMPLEX_EXPRESSION);
         return Value();
@@ -136,13 +151,13 @@ Value ValueParser::parseExpr(const char *scan) {
                 _stack.pop();
                 return value;
             }
-            value = evalExpr(
-                _stack.top()._opr._op, _stack.top()._value, value);
+            value = evalExpr(_stack.top()._opr._op, _stack.top()._value, value);
             _stack.pop();
         }
         _stack.push(OprAndLval(opr, value));
         value = readAtom(_next);
-        if (getError()) return Value();
+        if (getError())
+            return Value();
     }
     return Value();
 }
@@ -157,7 +172,7 @@ Value ValueParser::readAtom(const char *scan) {
             p = skipSpaces(_next);
             const char expected = (c == '(') ? ')' : ']';
             if (*p == expected) {
-                _next = p +1;
+                _next = p + 1;
                 return value;
             }
             setError(MISSING_CLOSING_PAREN);
@@ -179,7 +194,8 @@ Value ValueParser::readAtom(const char *scan) {
     }
     if (c == '~') {
         Value value(readAtom(p));
-        if (getError() == OK) return value.complement();
+        if (getError() == OK)
+            return value.complement();
         return value;
     }
     if (c == '-' || c == '+') {
@@ -187,7 +203,8 @@ Value ValueParser::readAtom(const char *scan) {
             setError(UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
-        if (c == '+') return readAtom(p);
+        if (c == '+')
+            return readAtom(p);
         Value value(readAtom(p));
         if (getError() == OK) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
@@ -226,7 +243,8 @@ Value ValueParser::readAtom(const char *scan) {
 Value ValueParser::readCharacterConstant(const char *scan) {
     char c = 0;
     _next = readChar(scan, c);
-    if (getError()) return Value();
+    if (getError())
+        return Value();
     return Value::makeSigned(c);
 }
 
@@ -237,11 +255,16 @@ ValueParser::Operator ValueParser::readOperator(const char *scan) {
     const char c = *p++;
     _next = p;
     switch (c) {
-    case '*': return Operator(OP_MUL, 13);
-    case '/': return Operator(OP_DIV, 13);
-    case '%': return Operator(OP_MOD, 13);
-    case '+': return Operator(OP_ADD, 12);
-    case '-': return Operator(OP_SUB, 12);
+    case '*':
+        return Operator(OP_MUL, 13);
+    case '/':
+        return Operator(OP_DIV, 13);
+    case '%':
+        return Operator(OP_MOD, 13);
+    case '+':
+        return Operator(OP_ADD, 12);
+    case '-':
+        return Operator(OP_SUB, 12);
     case '<':
         if (*p++ == '<') {
             _next = p;
@@ -256,9 +279,12 @@ ValueParser::Operator ValueParser::readOperator(const char *scan) {
         }
         setError(UNKNOWN_EXPR_OPERATOR);
         break;
-    case '&': return Operator(OP_BIT_AND, 8);
-    case '^': return Operator(OP_BIT_XOR, 7);
-    case '|': return Operator(OP_BIT_OR,  6);
+    case '&':
+        return Operator(OP_BIT_AND, 8);
+    case '^':
+        return Operator(OP_BIT_XOR, 7);
+    case '|':
+        return Operator(OP_BIT_OR, 6);
     default:
         break;
     }
@@ -267,8 +293,10 @@ ValueParser::Operator ValueParser::readOperator(const char *scan) {
 }
 
 bool ValueParser::isSymbolLetter(char c, bool head) const {
-    if (isalpha(c) || c == '_') return true;
-    if (head && c == '.') return true;
+    if (isalpha(c) || c == '_')
+        return true;
+    if (head && c == '.')
+        return true;
     return !head && isdigit(c);
 }
 
@@ -287,13 +315,13 @@ static uint32_t shift_left(uint32_t value, uint8_t count) {
 static uint32_t shift_right(uint32_t value, uint8_t count, bool sign) {
     for (unsigned i = 0; i <= 32 && i < count; i++) {
         value >>= 1;
-        if (sign) value |= 0x80000000;
+        if (sign)
+            value |= 0x80000000;
     }
     return value;
 }
 
-Value ValueParser::evalExpr(
-    const Op op, const Value lhs, const Value rhs) {
+Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
     if (lhs.isUndefined() || rhs.isUndefined())
         return Value();
     switch (op) {
@@ -340,23 +368,22 @@ Value ValueParser::evalExpr(
     case OP_BIT_SHL:
         if (lhs.isSigned())
             return Value::makeSigned(
-                shift_left(lhs.getSigned(), rhs.getUnsigned()));
+                    shift_left(lhs.getSigned(), rhs.getUnsigned()));
         return Value::makeUnsigned(
-            shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+                shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
     case OP_BIT_SHR:
         if (lhs.isSigned())
-            return Value::makeSigned(
-                shift_right(lhs.getSigned(), rhs.getUnsigned(),
-                            lhs.getSigned() & 0x80000000));
+            return Value::makeSigned(shift_right(lhs.getSigned(),
+                    rhs.getUnsigned(), lhs.getSigned() & 0x80000000));
         return Value::makeUnsigned(
-            shift_right(lhs.getUnsigned(), rhs.getUnsigned(), false));
+                shift_right(lhs.getUnsigned(), rhs.getUnsigned(), false));
     default:
         return Value();
     }
 }
 
 Error ValueParser::scanNumberEnd(
-    const char *scan, const uint8_t base, char suffix) {
+        const char *scan, const uint8_t base, char suffix) {
     while (isValidDigit(*scan, base))
         scan++;
     if (suffix && toupper(*scan++) != suffix)
@@ -407,7 +434,7 @@ Error IntelValueParser::readNumber(const char *scan, Value &val) {
     return ValueParser::readNumber(scan, val);
 }
 
-} // namespace libasm
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

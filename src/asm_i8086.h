@@ -26,9 +26,7 @@
 namespace libasm {
 namespace i8086 {
 
-class AsmI8086
-    : public Assembler,
-      public Config {
+class AsmI8086 : public Assembler, public Config {
 public:
     AsmI8086() : Assembler(_parser, TableI8086) {}
 
@@ -57,8 +55,7 @@ private:
               index(REG_UNDEF),
               hasVal(false),
               val32(0),
-              seg16(0)
-        {}
+              seg16(0) {}
         uint8_t encodeMod() const;
         uint8_t encodeR_m() const;
         AddrMode immediateMode() const;
@@ -88,10 +85,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
-#endif // __ASM_I8086_H__
+#endif  // __ASM_I8086_H__
 
 // Local Variables:
 // mode: c++

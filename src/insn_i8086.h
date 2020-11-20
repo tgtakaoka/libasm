@@ -27,11 +27,7 @@ namespace i8086 {
 class InsnI8086 : public InsnBase<Config> {
 public:
     InsnI8086(Insn &insn)
-        : InsnBase(insn),
-          _segment(0),
-          _modReg(0),
-          _hasModReg(false)
-    {}
+        : InsnBase(insn), _segment(0), _modReg(0), _hasModReg(false) {}
 
     AddrMode dstMode() const { return _flags.dstMode(); }
     AddrMode srcMode() const { return _flags.srcMode(); }
@@ -78,7 +74,8 @@ public:
     }
 
     void prepairModReg() {
-        if (_prefix) return;
+        if (_prefix)
+            return;
         const OprPos dst = dstPos();
         const OprPos src = srcPos();
         if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
@@ -87,19 +84,18 @@ public:
 
     void emitInsn() {
         uint8_t pos = 0;
-        if (_segment) emitByte(_segment, pos++);
-        if (_prefix) emitByte(_prefix, pos++);
+        if (_segment)
+            emitByte(_segment, pos++);
+        if (_prefix)
+            emitByte(_prefix, pos++);
         emitByte(_opCode, pos++);
-        if (_hasModReg) emitByte(_modReg, pos);
+        if (_hasModReg)
+            emitByte(_modReg, pos);
     }
 
-    void emitOperand8(uint8_t val8) {
-        emitByte(val8, operandPos());
-    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, operandPos());
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
     Config::opcode_t _segment;
@@ -112,19 +108,22 @@ private:
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0) {
-            if (_segment) pos++;
-            if (_prefix) pos++;
+            if (_segment)
+                pos++;
+            if (_prefix)
+                pos++;
             pos++;
-            if (_hasModReg) pos++;
+            if (_hasModReg)
+                pos++;
         }
         return pos;
     }
 };
 
-} // namespace i8086
-} // namespace libasm
+}  // namespace i8086
+}  // namespace libasm
 
-#endif // __INSN_I8086_H__
+#endif  // __INSN_I8086_H__
 
 // Local Variables:
 // mode: c++

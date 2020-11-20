@@ -30,10 +30,9 @@ TestSymtab symtab;
 static char actual_opr[128];
 static char message[256];
 
-void dis_assert(
-    const char *file, int line, Error error,
-    const char *expected_name, const char *expected_opr,
-    Disassembler &disassembler) {
+void dis_assert(const char *file, int line, Error error,
+        const char *expected_name, const char *expected_opr,
+        Disassembler &disassembler) {
     sprintf(message, "%s:%d: %s: ", file, line, expected_name);
     memory.dump(message + strlen(message));
     Insn insn;
@@ -45,25 +44,25 @@ void dis_assert(
     if (error == OK) {
         asserter.equals(file, line, expected_name, expected_name, insn.name());
         asserter.equals(file, line, expected_name, expected_opr, actual_opr);
-        asserter.equals(file, line, expected_name,
-                        memory.bytes(), memory.length(),
-                        insn.bytes(), insn.length());
+        asserter.equals(file, line, expected_name, memory.bytes(),
+                memory.length(), insn.bytes(), insn.length());
     }
 }
 
 bool test_failed;
 
-void run_test(
-    void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {
+void run_test(void (*test)(), const char *name, void (*set_up)(),
+        void (*tear_down)()) {
     asserter.clear(name);
     set_up();
     test();
     tear_down();
-    if (!asserter.check()) test_failed = true;
+    if (!asserter.check())
+        test_failed = true;
 }
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 using namespace libasm::test;
 

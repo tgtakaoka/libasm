@@ -2,3 +2,4 @@
 *.d
 *~
 build
+.ccls-cache

@@ -20,6 +20,7 @@
 namespace libasm {
 namespace ins8060 {
 
+// clang-format off
 static const char TEXT_CPU_SCMP[]    PROGMEM = "SC/MP";
 static const char TEXT_CPU_INS8060[] PROGMEM = "INS8060";
 static constexpr const char *TEXT_CPU_8060 = (TEXT_CPU_INS8060 + 3);
@@ -71,11 +72,12 @@ static const char TEXT_XPAL[] PROGMEM = "XPAL";
 static const char TEXT_XPPC[] PROGMEM = "XPPC";
 static const char TEXT_XRE[]  PROGMEM = "XRE";
 static const char TEXT_XRI[]  PROGMEM = "XRI";
+// clang-format on
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
-#endif // __TEXT_INS8060__
+#endif  // __TEXT_INS8060__
 
 // Local Variables:
 // mode: c++

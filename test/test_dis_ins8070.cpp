@@ -33,6 +33,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8070", true,   disassembler.setCpu("8070"));
     EQUALS("cpu 8070", "8070", disassembler.getCpu());
@@ -353,6 +354,7 @@ static void test_illegal() {
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
         ILLEGAL(illegals[idx]);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

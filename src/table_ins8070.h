@@ -36,10 +36,10 @@ public:
 
 extern TableIns8070 TableIns8070;
 
-} // namespace ins8070
-} // namespace libasm
+}  // namespace ins8070
+}  // namespace libasm
 
-#endif // __TABLE_INS8070_H__
+#endif  // __TABLE_INS8070_H__
 
 // Local Variables:
 // mode: c++

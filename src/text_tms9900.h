@@ -20,14 +20,14 @@
 namespace libasm {
 namespace tms9900 {
 
-// TMS9900
-
+// clang-format off
 static const char TEXT_CPU_LIST[] PROGMEM = "TMS9900, TMS9995, TMS99105";
-static constexpr const char *TEXT_CPU_TMS = TEXT_CPU_LIST;
 static const char TEXT_CPU_9900[] PROGMEM = "9900";
 static const char TEXT_CPU_9995[] PROGMEM = "9995";
+static constexpr const char *TEXT_CPU_TMS   = TEXT_CPU_LIST;
 static constexpr const char *TEXT_CPU_99105 = (TEXT_CPU_LIST + 21);
 
+// TMS9900
 static const char TEXT_A[]    PROGMEM = "A";
 static const char TEXT_AB[]   PROGMEM = "AB";
 static const char TEXT_ABS[]  PROGMEM = "ABS";
@@ -99,14 +99,12 @@ static const char TEXT_XOP[]  PROGMEM = "XOP";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
 
 // TMS9995
-
 static const char TEXT_MPYS[] PROGMEM = "MPYS";
 static const char TEXT_DIVS[] PROGMEM = "DIVS";
 static const char TEXT_LST[]  PROGMEM = "LST";
 static const char TEXT_LWP[]  PROGMEM = "LWP";
 
 // TMS999105
-
 static const char TEXT_AM[]   PROGMEM = "AM";
 static const char TEXT_BIND[] PROGMEM = "BIND";
 static const char TEXT_BLSK[] PROGMEM = "BLSK";
@@ -117,11 +115,12 @@ static const char TEXT_SRAM[] PROGMEM = "SRAM";
 static const char TEXT_TCMB[] PROGMEM = "TCMB";
 static const char TEXT_TMB[]  PROGMEM = "TMB";
 static const char TEXT_TSMB[] PROGMEM = "TSMB";
+// clang-format on
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __TEXT_TMS9900__
+#endif  // __TEXT_TMS9900__
 
 // Local Variables:
 // mode: c++

@@ -45,8 +45,8 @@ enum RegName : int8_t {
     REG_A7 = 7 + 8,
     // Other registers.
     REG_CCR = 0 + 16,
-    REG_PC  = 1 + 16,
-    REG_SR  = 2 + 16,
+    REG_PC = 1 + 16,
+    REG_SR = 2 + 16,
     REG_USP = 3 + 16,
 };
 
@@ -89,10 +89,10 @@ struct BriefExt {
     uint8_t disp() const;
 };
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
-#endif // __REG_MC68000_H__
+#endif  // __REG_MC68000_H__
 
 // Local Variables:
 // mode: c++

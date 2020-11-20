@@ -23,11 +23,8 @@ namespace libasm {
 
 class ValueFormatter {
 public:
-    ValueFormatter(char curSym = '.', bool cstyle = true) :
-        _curSym(curSym),
-        _cstyle(cstyle),
-        _uppercase(false)
-    {}
+    ValueFormatter(char curSym = '.', bool cstyle = true)
+        : _curSym(curSym), _cstyle(cstyle), _uppercase(false) {}
 
     void setCStyleHex(bool enable) { _cstyle = enable; }
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
@@ -45,7 +42,8 @@ public:
      * suppress when |relax| is true and |val| is less than 32 in
      * absolute value.
      */
-    char *formatHex(char *out, uint32_t val, int8_t bits, bool relax = true) const;
+    char *formatHex(
+            char *out, uint32_t val, int8_t bits, bool relax = true) const;
 
 protected:
     const char _curSym;
@@ -53,28 +51,31 @@ protected:
     bool _uppercase;
 
     uint32_t makePositive(char *out, uint32_t val, int8_t bits) const
-        __attribute__((noinline));
+            __attribute__((noinline));
     virtual char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const;
     char *outHex(char *out, uint32_t val, int8_t bits) const;
-    char *outDec(char *out, uint32_t val) const
-        __attribute__((noinline));
+    char *outDec(char *out, uint32_t val) const __attribute__((noinline));
 };
 
 class MotoValueFormatter : public ValueFormatter {
 public:
     MotoValueFormatter() : ValueFormatter('*', false) {}
+
 protected:
-    char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const override;
+    char *formatPositiveHex(
+            char *out, uint32_t val, int8_t bits) const override;
 };
 
 class IntelValueFormatter : public ValueFormatter {
 public:
     IntelValueFormatter() : ValueFormatter('$', false) {}
+
 protected:
-    char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const override;
+    char *formatPositiveHex(
+            char *out, uint32_t val, int8_t bits) const override;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
 #endif
 

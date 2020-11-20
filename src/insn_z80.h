@@ -57,13 +57,9 @@ public:
         emitByte(opCode(), pos);
     }
 
-    void emitOperand8(uint8_t val8) {
-        emitByte(val8, operandPos());
-    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
 
-    void emitOperand16(uint16_t val16) {
-        emitUint16(val16, operandPos());
-    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
     Entry::Flags _flags;
@@ -81,10 +77,10 @@ private:
     }
 };
 
-} // namespace z80
-} // namespace libasm
+}  // namespace z80
+}  // namespace libasm
 
-#endif // __INSN_Z80_H__
+#endif  // __INSN_Z80_H__
 
 // Local Variables:
 // mode: c++

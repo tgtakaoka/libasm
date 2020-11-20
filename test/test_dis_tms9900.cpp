@@ -45,6 +45,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 9900", true,   disassembler.setCpu("9900"));
     EQUALS("cpu 9900", "9900", disassembler.getCpu());
@@ -478,13 +479,16 @@ static void test_mid_tms99105() {
     assert_mid(ARRAY_RANGE(dp_bit_2nd), TCMB, &dp_bit_hole);
     assert_mid(ARRAY_RANGE(dp_bit_2nd), TSMB, &dp_bit_hole);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "TMS9900", "TMS9995", "TMS99105",
+            "TMS9900",
+            "TMS9995",
+            "TMS99105",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);
@@ -500,9 +504,12 @@ void run_tests() {
         RUN_TEST(test_dst_src);
         RUN_TEST(test_rel);
         RUN_TEST(test_cru_off);
-        if (is9900())  RUN_TEST(test_mid_tms9900);
-        if (is9995())  RUN_TEST(test_mid_tms9995);
-        if (is99105()) RUN_TEST(test_mid_tms99105);
+        if (is9900())
+            RUN_TEST(test_mid_tms9900);
+        if (is9995())
+            RUN_TEST(test_mid_tms9995);
+        if (is99105())
+            RUN_TEST(test_mid_tms99105);
     }
 }
 

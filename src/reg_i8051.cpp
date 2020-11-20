@@ -14,41 +14,44 @@
  * limitations under the License.
  */
 
-#include "config_i8051.h"
 #include "reg_i8051.h"
 
 #include <ctype.h>
 
+#include "config_i8051.h"
+
 namespace libasm {
 namespace i8051 {
 
-static const char TEXT_REG_A[]  PROGMEM = "A";
-static const char TEXT_REG_C[]  PROGMEM = "C";
-static const char TEXT_REG_AB[] PROGMEM = "AB";
-static const char TEXT_REG_R0[] PROGMEM = "R0";
-static const char TEXT_REG_R1[] PROGMEM = "R1";
-static const char TEXT_REG_R2[] PROGMEM = "R2";
-static const char TEXT_REG_R3[] PROGMEM = "R3";
-static const char TEXT_REG_R4[] PROGMEM = "R4";
-static const char TEXT_REG_R5[] PROGMEM = "R5";
-static const char TEXT_REG_R6[] PROGMEM = "R6";
-static const char TEXT_REG_R7[] PROGMEM = "R7";
-static const char TEXT_REG_PC[] PROGMEM = "PC";
+// clang-format off
+static const char TEXT_REG_A[]    PROGMEM = "A";
+static const char TEXT_REG_C[]    PROGMEM = "C";
+static const char TEXT_REG_AB[]   PROGMEM = "AB";
+static const char TEXT_REG_R0[]   PROGMEM = "R0";
+static const char TEXT_REG_R1[]   PROGMEM = "R1";
+static const char TEXT_REG_R2[]   PROGMEM = "R2";
+static const char TEXT_REG_R3[]   PROGMEM = "R3";
+static const char TEXT_REG_R4[]   PROGMEM = "R4";
+static const char TEXT_REG_R5[]   PROGMEM = "R5";
+static const char TEXT_REG_R6[]   PROGMEM = "R6";
+static const char TEXT_REG_R7[]   PROGMEM = "R7";
+static const char TEXT_REG_PC[]   PROGMEM = "PC";
 static const char TEXT_REG_DPTR[] PROGMEM = "DPTR";
+// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
-    NAME_ENTRY(REG_A)
-    NAME_ENTRY(REG_C)
-    NAME_ENTRY(REG_AB)
-    NAME_ENTRY(REG_R0)
-    NAME_ENTRY(REG_R1)
-    NAME_ENTRY(REG_R2)
-    NAME_ENTRY(REG_R3)
-    NAME_ENTRY(REG_R4)
-    NAME_ENTRY(REG_R5)
-    NAME_ENTRY(REG_R6)
-    NAME_ENTRY(REG_R7)
-    NAME_ENTRY(REG_PC)
-    NAME_ENTRY(REG_DPTR)
+        NAME_ENTRY(REG_A),
+        NAME_ENTRY(REG_C),
+        NAME_ENTRY(REG_AB),
+        NAME_ENTRY(REG_R0),
+        NAME_ENTRY(REG_R1),
+        NAME_ENTRY(REG_R2),
+        NAME_ENTRY(REG_R3),
+        NAME_ENTRY(REG_R4),
+        NAME_ENTRY(REG_R5),
+        NAME_ENTRY(REG_R6),
+        NAME_ENTRY(REG_R7),
+        NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_DPTR),
 };
 
 RegName RegI8051::parseRegName(const char *line) {
@@ -80,8 +83,8 @@ RegName RegI8051::decodeRReg(const uint8_t num) {
     return RegName(num);
 }
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

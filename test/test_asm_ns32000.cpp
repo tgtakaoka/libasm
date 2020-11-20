@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu NS32032", true,    assembler.setCpu("NS32032"));
     EQUALS("cpu NS32032", "32032", assembler.getCpu());
@@ -502,6 +503,7 @@ static void test_undefined_symbol() {
     ETEST(UNDEFINED_SYMBOL, "INSB R1,16,   2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x10, 0x02, 0x00);
     ETEST(UNDEFINED_SYMBOL, "INSB R1,UNDEF,2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x00, 0x02, 0x00);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

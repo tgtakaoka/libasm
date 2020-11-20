@@ -30,8 +30,8 @@ enum RegName : int8_t {
     REG_P2 = 2,
     REG_P3 = 3,
     // Other registers.
-    REG_P0 = 0 + 4, // Alias of PC
-    REG_E  = 1 + 4,
+    REG_P0 = 0 + 4,  // Alias of PC
+    REG_E = 1 + 4,
 };
 
 class RegIns8060 : public RegBase {
@@ -45,10 +45,10 @@ public:
     static RegName decodePointerReg(uint8_t num);
 };
 
-} // namespace ins8060
-} // namespace libasm
+}  // namespace ins8060
+}  // namespace libasm
 
-#endif // __REG_INS8060_H__
+#endif  // __REG_INS8060_H__
 
 // Local Variables:
 // mode: c++

@@ -35,9 +35,8 @@ protected:
 
     TableBase() {}
 
-    template<typename E>
-    static const E *searchName(
-        const char *name, const E *begin, const E *end) {
+    template <typename E>
+    static const E *searchName(const char *name, const E *begin, const E *end) {
         for (const E *entry = begin; entry < end; entry++) {
             if (strcasecmp_P(name, entry->name()) == 0)
                 return entry;
@@ -45,13 +44,12 @@ protected:
         return nullptr;
     }
 
-    template<typename E, typename A>
-    static const E *searchName(
-        const char *name, A attr, const E *begin, const E *end,
-        bool (*accept)(A, const E *), uint8_t &count) {
+    template <typename E, typename A>
+    static const E *searchName(const char *name, A attr, const E *begin,
+            const E *end, bool (*accept)(A, const E *), uint8_t &count) {
         for (const E *entry = begin;
-             entry < end && (entry = searchName(name, entry, end));
-             entry++) {
+                entry < end && (entry = searchName(name, entry, end));
+                entry++) {
             count++;
             if (accept(attr, entry))
                 return entry;
@@ -59,10 +57,9 @@ protected:
         return nullptr;
     }
 
-    template<typename E, typename C>
-    static const E *searchCode(
-        const C opCode, const E *begin, const E *end,
-        C (*convert)(C, const E *) = nullptr) {
+    template <typename E, typename C>
+    static const E *searchCode(const C opCode, const E *begin, const E *end,
+            C (*convert)(C, const E *) = nullptr) {
         for (const E *entry = begin; entry < end; entry++) {
             if (convert) {
                 if (convert(opCode, entry) == entry->opCode())
@@ -76,9 +73,9 @@ protected:
     }
 };
 
-} // namespace libasm
+}  // namespace libasm
 
-#endif // __TABLE_BASE_H__
+#endif  // __TABLE_BASE_H__
 
 // Local Variables:
 // mode: c++

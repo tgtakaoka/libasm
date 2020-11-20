@@ -15,6 +15,7 @@
  */
 
 #include "dis_mos6502.h"
+
 #include "table_mos6502.h"
 
 namespace libasm {
@@ -27,7 +28,7 @@ void DisMos6502::reset() {
 }
 
 Error DisMos6502::decodeImmediate(
-    DisMemory& memory, InsnMos6502 &insn, char *out) {
+        DisMemory &memory, InsnMos6502 &insn, char *out) {
     *out++ = '#';
     if (TableMos6502.longImmediate(insn.addrMode())) {
         outHex(out, insn.readUint16(memory), 16);
@@ -40,13 +41,11 @@ Error DisMos6502::decodeImmediate(
 }
 
 Error DisMos6502::decodeAbsolute(
-    DisMemory& memory, InsnMos6502 &insn, char *out) {
+        DisMemory &memory, InsnMos6502 &insn, char *out) {
     const AddrMode addrMode = insn.addrMode();
-    const bool indirect = addrMode == ABS_IDX_IDIR
-        || addrMode == ABS_IDIR
-        || addrMode == ABS_IDIR_LONG;
-    const bool absLong = addrMode == ABS_LONG
-        || addrMode == ABS_LONG_IDX;
+    const bool indirect = addrMode == ABS_IDX_IDIR || addrMode == ABS_IDIR ||
+                          addrMode == ABS_IDIR_LONG;
+    const bool absLong = addrMode == ABS_LONG || addrMode == ABS_LONG_IDX;
     const bool idirLong = addrMode == ABS_IDIR_LONG;
     RegName index;
     switch (addrMode) {
@@ -62,7 +61,8 @@ Error DisMos6502::decodeAbsolute(
         index = REG_UNDEF;
         break;
     }
-    if (indirect) *out++ = idirLong ? '[' : '(';
+    if (indirect)
+        *out++ = idirLong ? '[' : '(';
     const uint16_t addr = insn.readUint16(memory);
     if (!absLong) {
         out = outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
@@ -82,22 +82,21 @@ Error DisMos6502::decodeAbsolute(
         *out++ = ',';
         out = _regs.outRegName(out, index);
     }
-    if (indirect) *out++ = idirLong ? ']' : ')';
+    if (indirect)
+        *out++ = idirLong ? ']' : ')';
     *out = 0;
     return setError(insn);
 }
 
 Error DisMos6502::decodeZeroPage(
-    DisMemory &memory, InsnMos6502 &insn, char *out) {
+        DisMemory &memory, InsnMos6502 &insn, char *out) {
     const AddrMode addrMode = insn.addrMode();
-    const bool indirect = addrMode == ZPG_IDX_IDIR
-        || addrMode == ZPG_IDIR_IDY
-        || addrMode == ZPG_IDIR
-        || addrMode == SP_REL_IDIR_IDY
-        || addrMode == ZPG_IDIR_LONG
-        || addrMode == ZPG_IDIR_LONG_IDY;
-    const bool zpLong = addrMode == ZPG_IDIR_LONG
-        || addrMode == ZPG_IDIR_LONG_IDY;
+    const bool indirect =
+            addrMode == ZPG_IDX_IDIR || addrMode == ZPG_IDIR_IDY ||
+            addrMode == ZPG_IDIR || addrMode == SP_REL_IDIR_IDY ||
+            addrMode == ZPG_IDIR_LONG || addrMode == ZPG_IDIR_LONG_IDY;
+    const bool zpLong =
+            addrMode == ZPG_IDIR_LONG || addrMode == ZPG_IDIR_LONG_IDY;
     RegName index;
     switch (addrMode) {
     case ZPG_IDX:
@@ -118,14 +117,17 @@ Error DisMos6502::decodeZeroPage(
         break;
     }
     const uint8_t zp = insn.readByte(memory);
-    if (indirect) *out++ = zpLong ? '[' : '(';
+    if (indirect)
+        *out++ = zpLong ? '[' : '(';
     out = outAbsAddr(out, zp, 8, PSTR("<"));
-    if (indirect && index == REG_Y) *out++ = zpLong ? ']' : ')';
+    if (indirect && index == REG_Y)
+        *out++ = zpLong ? ']' : ')';
     if (index != REG_UNDEF) {
         *out++ = ',';
         out = _regs.outRegName(out, index);
     }
-    if (indirect && index != REG_Y) *out++ = zpLong ? ']' : ')';
+    if (indirect && index != REG_Y)
+        *out++ = zpLong ? ']' : ')';
     if (addrMode == SP_REL_IDIR_IDY) {
         *out++ = ',';
         out = _regs.outRegName(out, REG_Y);
@@ -139,11 +141,11 @@ Error DisMos6502::decodeZeroPage(
 }
 
 Error DisMos6502::decodeRelative(
-    DisMemory &memory, InsnMos6502 &insn, char *out) {
+        DisMemory &memory, InsnMos6502 &insn, char *out) {
     const uint8_t deltaBits = (insn.addrMode() == REL_LONG) ? 16 : 8;
-    const int16_t delta = (deltaBits == 16)
-        ? static_cast<int16_t>(insn.readUint16(memory))
-        : static_cast<int8_t>(insn.readByte(memory));
+    const int16_t delta =
+            (deltaBits == 16) ? static_cast<int16_t>(insn.readUint16(memory))
+                              : static_cast<int8_t>(insn.readByte(memory));
     const uint16_t origin = insn.address();
     const uint16_t base = origin + insn.length();
     const uint16_t target = base + delta;
@@ -165,7 +167,7 @@ Error DisMos6502::decodeRelative(
 }
 
 Error DisMos6502::decodeBlockMove(
-    DisMemory &memory, InsnMos6502 &insn, char *out) {
+        DisMemory &memory, InsnMos6502 &insn, char *out) {
     const uint8_t dbank = insn.readByte(memory);
     const uint8_t sbank = insn.readByte(memory);
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
@@ -179,7 +181,8 @@ Error DisMos6502::decodeBlockMove(
 Error DisMos6502::decode(DisMemory &memory, Insn &_insn, char *out) {
     InsnMos6502 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
-    if (setError(insn)) return getError();
+    if (setError(insn))
+        return getError();
     insn.setOpCode(opCode);
 
     if (TableMos6502.searchOpCode(insn))
@@ -227,8 +230,8 @@ Error DisMos6502::decode(DisMemory &memory, Insn &_insn, char *out) {
     }
 }
 
-} // namespace mos6502
-} // namespace libasm
+}  // namespace mos6502
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

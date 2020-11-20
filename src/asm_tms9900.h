@@ -26,9 +26,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900
-    : public Assembler,
-      public Config {
+class AsmTms9900 : public Assembler, public Config {
 public:
     AsmTms9900() : Assembler(_parser, TableTms9900) {}
 
@@ -39,12 +37,7 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(M_NO),
-              reg(REG_UNDEF),
-              val16(0)
-        {}
+        Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);
@@ -56,10 +49,10 @@ private:
     Error encode(Insn &insn) override;
 };
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __ASM_TMS9900_H__
+#endif  // __ASM_TMS9900_H__
 
 // Local Variables:
 // mode: c++

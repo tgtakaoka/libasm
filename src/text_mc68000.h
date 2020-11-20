@@ -22,9 +22,10 @@
 namespace libasm {
 namespace mc68000 {
 
+// clang-format off
 static const char TEXT_CPU_MC68000[] PROGMEM = "MC68000";
-static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_MC68000;
-static constexpr const char *TEXT_CPU_MC   = TEXT_CPU_MC68000;
+static constexpr const char *TEXT_CPU_LIST  = TEXT_CPU_MC68000;
+static constexpr const char *TEXT_CPU_MC    = TEXT_CPU_MC68000;
 static constexpr const char *TEXT_CPU_68000 = (TEXT_CPU_MC68000 + 2);
 
 // MC68000 instructions
@@ -153,11 +154,12 @@ static const char TEXT_TRAP[]  PROGMEM = "TRAP";
 static const char TEXT_TRAPV[] PROGMEM = "TRAPV";
 static const char TEXT_TST[]   PROGMEM = "TST";
 static const char TEXT_UNLK[]  PROGMEM = "UNLK";
+// clang-format on
 
-} // namespace mc68000
-} // namespace libasm
+}  // namespace mc68000
+}  // namespace libasm
 
-#endif // __TEXT_MC68000_H__
+#endif  // __TEXT_MC68000_H__
 
 // Local Variables:
 // mode: c++

@@ -40,7 +40,7 @@ private:
     uint32_t _address;
 };
 
-} // namespace libasm
+}  // namespace libasm
 
 #endif
 

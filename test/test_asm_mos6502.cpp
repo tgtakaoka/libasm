@@ -48,6 +48,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 6502", true,   assembler.setCpu("6502"));
     EQUALS("cpu 6502", "6502", assembler.getCpu());
@@ -1037,13 +1038,18 @@ static void test_error() {
         ETEST(REGISTER_NOT_ALLOWED, "JMP ($1234,Y)");
     }
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "6502", "65SC02", "65C02", "W65C02S", "65816",
+            "6502",
+            "65SC02",
+            "65C02",
+            "W65C02S",
+            "65816",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         assembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

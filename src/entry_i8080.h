@@ -29,17 +29,17 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO   = 0,
-    M_IM8  = 1,   // Immediate 8-bit
+    M_NO = 0,
+    M_IM8 = 1,    // Immediate 8-bit
     M_IM16 = 2,   // Immediate 16-bit
-    M_ABS  = 3,   // Direct address 16-bit
-    M_IOA  = 4,   // I/O address 8-bit
-    M_PTR  = 5,   // |..|pp|....|: B/D/H/SP
-    M_STK  = 6,   // |..|pp|....|: B/D/H/PSW
-    M_IDX  = 7,   // |...|i|....|: B/D
-    M_REG  = 8,   // |......|rrr|: B/C/D/E/H/L/M/A
-    M_DST  = 9,   // |..|rrr|...|: B/C/D/E/H/L/M/A
-    M_VEC  = 10,  // |..|vvv|...|: 0~7
+    M_ABS = 3,    // Direct address 16-bit
+    M_IOA = 4,    // I/O address 8-bit
+    M_PTR = 5,    // |..|pp|....|: B/D/H/SP
+    M_STK = 6,    // |..|pp|....|: B/D/H/PSW
+    M_IDX = 7,    // |...|i|....|: B/D
+    M_REG = 8,    // |......|rrr|: B/C/D/E/H/L/M/A
+    M_DST = 9,    // |..|rrr|...|: B/C/D/E/H/L/M/A
+    M_VEC = 10,   // |..|vvv|...|: 0~7
     M_REGH = 11,  // H register
 };
 
@@ -50,8 +50,8 @@ public:
 
         static constexpr Flags create(AddrMode dst, AddrMode src) {
             return Flags{static_cast<uint8_t>(
-                    (static_cast<uint8_t>(dst) << dstMode_gp)
-                    | (static_cast<uint8_t>(src) << srcMode_gp))};
+                    (static_cast<uint8_t>(dst) << dstMode_gp) |
+                    (static_cast<uint8_t>(src) << srcMode_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
@@ -76,10 +76,10 @@ private:
     static constexpr uint8_t addrMode_gm = 0xF;
 };
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
-#endif // __ENTRY_I8080_H__
+#endif  // __ENTRY_I8080_H__
 
 // Local Variables:
 // mode: c++

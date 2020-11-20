@@ -26,9 +26,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class DisNs32000
-    : public Disassembler,
-      public Config {
+class DisNs32000 : public Disassembler, public Config {
 public:
     DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '#') {}
 
@@ -44,37 +42,35 @@ private:
     char *outDisplacement(char *out, const Displacement &disp);
 
     Error readIndexByte(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos);
+            DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos);
     Error readDisplacement(
-        DisMemory &memory, InsnNs32000 &insn, Displacement &disp);
+            DisMemory &memory, InsnNs32000 &insn, Displacement &disp);
 
     Error decodeLength(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
     Error decodeBitField(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
     Error decodeImmediate(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
     Error decodeDisplacement(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnNs32000 &insn, char *out);
     Error decodeConfig(const InsnNs32000 &insn, char *out, OprPos pos);
     Error decodeStrOpt(const InsnNs32000 &insn, char *out, OprPos pos);
     Error decodeRegisterList(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
-    Error decodeGeneric(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode,
-        OprPos pos);
-    Error decodeOperand(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode,
-        OprPos pos);
+            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+    Error decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
+            AddrMode mode, OprPos pos);
+    Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
+            AddrMode mode, OprPos pos);
 
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __DIS_NS32000_H__
+#endif  // __DIS_NS32000_H__
 
 // Local Variables:
 // mode: c++

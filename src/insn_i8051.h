@@ -45,17 +45,11 @@ public:
 
     Config::opcode_t opCode() const { return _opCode; }
 
-    void emitInsn() {
-        emitByte(_opCode, 0);
-    }
+    void emitInsn() { emitByte(_opCode, 0); }
 
-    void emitOperand8(uint8_t val) {
-        emitByte(val, operandPos());
-    }
+    void emitOperand8(uint8_t val) { emitByte(val, operandPos()); }
 
-    void emitOperand16(uint16_t val) {
-        emitUint16(val, operandPos());
-    }
+    void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
 
 private:
     Entry::Flags _flags;
@@ -63,15 +57,16 @@ private:
 
     uint8_t operandPos() const {
         uint8_t pos = length();
-        if (pos == 0) pos = 1;
+        if (pos == 0)
+            pos = 1;
         return pos;
     }
 };
 
-} // namespace i8051
-} // namespace libasm
+}  // namespace i8051
+}  // namespace libasm
 
-#endif // __INSN_I8051_H__
+#endif  // __INSN_I8051_H__
 
 // Local Variables:
 // mode: c++

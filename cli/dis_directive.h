@@ -17,21 +17,22 @@
 #ifndef __DIS_DIRECTIVE_H__
 #define __DIS_DIRECTIVE_H__
 
+#include <stdint.h>
+
+#include <string>
+
 #include "cli_listing.h"
 #include "cli_memory.h"
 #include "config_base.h"
 #include "dis_base.h"
-
-#include <stdint.h>
-#include <string>
 
 namespace libasm {
 namespace cli {
 
 class DisDirective : public ListingLine {
 public:
-    DisDirective(
-        Disassembler &disassembler, CliMemory &memory, bool uppercase = false);
+    DisDirective(Disassembler &disassembler, CliMemory &memory,
+            bool uppercase = false);
 
     Error disassemble(uint32_t addr, Insn &insn);
     const char *getCpu(bool withBytes = false);
@@ -75,8 +76,8 @@ private:
     int operandWidth() const override;
 };
 
-} // namespace cli
-} // namespace libasm
+}  // namespace cli
+}  // namespace libasm
 
 #endif
 

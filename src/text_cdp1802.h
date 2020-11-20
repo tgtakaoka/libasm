@@ -20,6 +20,7 @@
 namespace libasm {
 namespace cdp1802 {
 
+// clang-format off
 static const char TEXT_CPU_CDP1802[] PROGMEM = "CDP1802";
 static constexpr const char *TEXT_CPU_1802 = &TEXT_CPU_CDP1802[3];
 
@@ -110,6 +111,7 @@ static const char TEXT_STR[]  PROGMEM = "STR";
 static const char TEXT_STXD[] PROGMEM = "STXD";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
 static const char TEXT_XRI[]  PROGMEM = "XRI";
+// clang-format off
 
 } // namespace cdp1802
 } // namespace libasm

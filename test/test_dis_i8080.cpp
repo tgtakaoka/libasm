@@ -40,6 +40,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 8080", true,   disassembler.setCpu("8080"));
     EQUALS("cpu 8080", "8080", disassembler.getCpu());
@@ -405,13 +406,15 @@ static void test_illegal() {
     ILLEGAL(0xED);
     ILLEGAL(0xFD);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);
     static const char *cpus[] = {
-        "8080", "8085",
+            "8080",
+            "8085",
     };
-    for (size_t i = 0; i < sizeof(cpus)/sizeof(cpus[0]); i++) {
+    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
         const char *cpu = cpus[i];
         disassembler.setCpu(cpu);
         printf("  TEST CPU %s\n", cpu);

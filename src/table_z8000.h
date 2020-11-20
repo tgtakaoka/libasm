@@ -42,17 +42,16 @@ public:
 private:
     CpuType _cpuType;
 
-    const Entry *searchOpCode(
-        InsnZ8000 &insn, DisMemory &memory,
-        const Entry *table, const Entry *end) const;
+    const Entry *searchOpCode(InsnZ8000 &insn, DisMemory &memory,
+            const Entry *table, const Entry *end) const;
 };
 
 extern TableZ8000 TableZ8000;
 
-} // namespace z8000
-} // namespace libasm
+}  // namespace z8000
+}  // namespace libasm
 
-#endif // __TABLE_Z8000_H__
+#endif  // __TABLE_Z8000_H__
 
 // Local Variables:
 // mode: c++

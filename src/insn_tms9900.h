@@ -57,12 +57,11 @@ public:
 
     void emitInsn() {
         emitUint16(_opCode, 0);
-        if (srcMode() == M_SRC2) emitUint16(_post, 2);
+        if (srcMode() == M_SRC2)
+            emitUint16(_post, 2);
     }
 
-    void emitOperand16(uint16_t val) {
-        emitUint16(val, operandPos());
-    }
+    void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
 
 private:
     Entry::Flags _flags;
@@ -71,16 +70,18 @@ private:
 
     uint8_t operandPos() const {
         uint8_t pos = length();
-        if (pos == 0) pos = 2;
-        if (srcMode() == M_SRC2 && pos < 4) pos = 4;
+        if (pos == 0)
+            pos = 2;
+        if (srcMode() == M_SRC2 && pos < 4)
+            pos = 4;
         return pos;
     }
 };
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __INSN_TMS9900_H__
+#endif  // __INSN_TMS9900_H__
 
 // Local Variables:
 // mode: c++

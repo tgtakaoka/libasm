@@ -24,66 +24,66 @@ namespace libasm {
 namespace ns32000 {
 
 enum AddrMode : uint8_t {
-    M_NONE  = 0,
-    M_GREG  = 1,  // Generic Register: Rn
+    M_NONE = 0,
+    M_GREG = 1,  // Generic Register: Rn
 #ifdef NS32000_ENABLE_FLOAT
-    M_FREG  = 2,  // Floating Register: Fn
+    M_FREG = 2,  // Floating Register: Fn
 #endif
-    M_RREL  = 3,  // Register Relative: disp(Rn)
-    M_MREL  = 4,  // Memory Relative: disp1(disp2(FP/SP/SB))
-    M_IMM   = 5,  // Immediate: value
-    M_ABS   = 6,  // Absolute: @disp
-    M_EXT   = 7,  // External: EXT(disp1)+disp2
-    M_TOS   = 8,  // Top of Stack: TOS
-    M_MEM   = 9,  // Memory Space: disp(FP/SP/SB/PC)
-    M_PREG  = 10, // Dedicated Register
+    M_RREL = 3,   // Register Relative: disp(Rn)
+    M_MREL = 4,   // Memory Relative: disp1(disp2(FP/SP/SB))
+    M_IMM = 5,    // Immediate: value
+    M_ABS = 6,    // Absolute: @disp
+    M_EXT = 7,    // External: EXT(disp1)+disp2
+    M_TOS = 8,    // Top of Stack: TOS
+    M_MEM = 9,    // Memory Space: disp(FP/SP/SB/PC)
+    M_PREG = 10,  // Dedicated Register
 #ifdef NS32000_ENABLE_MMU
-    M_MREG  = 11, // MMU Register
+    M_MREG = 11,  // MMU Register
 #endif
-    M_CONF  = 12, // Configuration
-    M_SOPT  = 13, // String instruction option
-    M_PUSH  = 14, // Register list for push
-    M_POP   = 15, // Register list for pop
-    M_GENR  = 16, // Generic (incl. Immediate)
-    M_GENC  = 17, // Generic Count (incl. Immediate)
-    M_GENW  = 18, // Generic (excl. Immediate)
-    M_GENA  = M_GENW, // Generic (excl. Immediate)
+    M_CONF = 12,      // Configuration
+    M_SOPT = 13,      // String instruction option
+    M_PUSH = 14,      // Register list for push
+    M_POP = 15,       // Register list for pop
+    M_GENR = 16,      // Generic (incl. Immediate)
+    M_GENC = 17,      // Generic Count (incl. Immediate)
+    M_GENW = 18,      // Generic (excl. Immediate)
+    M_GENA = M_GENW,  // Generic (excl. Immediate)
 #ifdef NS32000_ENABLE_FLOAT
-    M_FENR  = 19, // Floating Generic (incl. Immediate)
-    M_FENW  = 20, // Floating Generic (excl. Immediate)
+    M_FENR = 19,  // Floating Generic (incl. Immediate)
+    M_FENW = 20,  // Floating Generic (excl. Immediate)
 #endif
-    M_DISP  = 21, // Displacement
-    M_INT4  = 22, // 4-bit signed Integer
-    M_REL   = 23, // Relative address
-    M_BFOFF = 24, // Bit Field Offset: 0~7
-    M_BFLEN = 25, // Bit Field Length: 1~32
-    M_LEN32 = 26, // Length: 1~32
-    M_LEN16 = 27, // Length: 1~16
-    M_LEN8  = 28, // Length: 1~8
-    M_LEN4  = 29, // Length: 1~4
-    M_EMPTY = 30, // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
+    M_DISP = 21,   // Displacement
+    M_INT4 = 22,   // 4-bit signed Integer
+    M_REL = 23,    // Relative address
+    M_BFOFF = 24,  // Bit Field Offset: 0~7
+    M_BFLEN = 25,  // Bit Field Length: 1~32
+    M_LEN32 = 26,  // Length: 1~32
+    M_LEN16 = 27,  // Length: 1~16
+    M_LEN8 = 28,   // Length: 1~8
+    M_LEN4 = 29,   // Length: 1~4
+    M_EMPTY = 30,  // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
 };
 
 enum OprPos : uint8_t {
-    P_NONE  = 0,
-    P_GEN1  = 1,  // Generic operand 1
-    P_GEN2  = 2,  // Generic operand 2
+    P_NONE = 0,
+    P_GEN1 = 1,   // Generic operand 1
+    P_GEN2 = 2,   // Generic operand 2
     P_SHORT = 3,  // Short operand
-    P_REG   = 4,  // Register operand
-    P_IMPL  = 5,  // Implied Immediate
-    P_DISP  = 6,  // Displacement
+    P_REG = 4,    // Register operand
+    P_IMPL = 5,   // Implied Immediate
+    P_DISP = 6,   // Displacement
 };
 
 enum OprSize : uint8_t {
-    SZ_BYTE   = 0,  // 8-bit integer (Byte)
-    SZ_WORD   = 1,  // 16-bit integer (Word)
-    SZ_LONG   = 2,  // 32-bit integer (Double)
-    SZ_QUAD   = 3,  // 64-bit integer (Quad)
+    SZ_BYTE = 0,  // 8-bit integer (Byte)
+    SZ_WORD = 1,  // 16-bit integer (Word)
+    SZ_LONG = 2,  // 32-bit integer (Double)
+    SZ_QUAD = 3,  // 64-bit integer (Quad)
 #ifdef NS32000_ENABLE_FLOAT
-    SZ_FLOAT  = 4,  // 32-bit float (Float)
+    SZ_FLOAT = 4,   // 32-bit float (Float)
     SZ_DOUBLE = 5,  // 64-bit float (Long)
 #endif
-    SZ_NONE   = 6,
+    SZ_NONE = 6,
 };
 
 class Entry : public EntryBase<Config> {
@@ -94,21 +94,15 @@ public:
         uint8_t _ex1;
         uint8_t _ex2;
 
-        static constexpr Flags create(
-                AddrMode src, OprPos srcp, AddrMode dst, OprPos dstp,
-                AddrMode ex1, OprPos ex1p, AddrMode ex2, OprPos ex2p, OprSize size) {
-            return Entry::Flags{
-                Entry::_opr(src, srcp), Entry::_opr(dst, dstp),
-                Entry::_opr(ex1, ex1p), Entry::_ex2(ex2, ex2p, size)
-            };
+        static constexpr Flags create(AddrMode src, OprPos srcp, AddrMode dst,
+                OprPos dstp, AddrMode ex1, OprPos ex1p, AddrMode ex2,
+                OprPos ex2p, OprSize size) {
+            return Entry::Flags{Entry::_opr(src, srcp), Entry::_opr(dst, dstp),
+                    Entry::_opr(ex1, ex1p), Entry::_ex2(ex2, ex2p, size)};
         }
         Flags read() const {
-            return Flags{
-                pgm_read_byte(&_src),
-                pgm_read_byte(&_dst),
-                pgm_read_byte(&_ex1),
-                pgm_read_byte(&_ex2)
-            };
+            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst),
+                    pgm_read_byte(&_ex1), pgm_read_byte(&_ex2)};
         }
 
         AddrMode srcMode() const { return _mode(_src); }
@@ -143,18 +137,18 @@ private:
         return OprPos((opr >> oprPos_gp) & oprPos_gm);
     }
     static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
-        return (static_cast<uint8_t>(mode) << oprMode_gp)
-            | (static_cast<uint8_t>(pos) << oprPos_gp);
+        return (static_cast<uint8_t>(mode) << oprMode_gp) |
+               (static_cast<uint8_t>(pos) << oprPos_gp);
     }
     static constexpr uint8_t _ex2(AddrMode mode, OprPos pos, OprSize size) {
-        return (static_cast<uint8_t>(toEx2Mode(mode) << ex2Mode_gp))
-            | (static_cast<uint8_t>(toEx2Pos(pos) << ex2Pos_gp))
-            | (static_cast<uint8_t>(size) << oprSize_gp);
+        return (static_cast<uint8_t>(toEx2Mode(mode) << ex2Mode_gp)) |
+               (static_cast<uint8_t>(toEx2Pos(pos) << ex2Pos_gp)) |
+               (static_cast<uint8_t>(size) << oprSize_gp);
     }
 
     enum Ex2Mode : uint8_t {
         EM2_NONE = 0,
-        EM2_IMM  = 1,
+        EM2_IMM = 1,
         EM2_BFLEN = 2,
         EM2_LEN32 = 3,
         EM2_ERROR = 4,
@@ -166,11 +160,14 @@ private:
         EP2_ERROR = 3,
     };
     static constexpr Ex2Mode toEx2Mode(AddrMode mode) {
-        return mode == M_NONE ? EM2_NONE
-            : (mode == M_IMM  ? EM2_IMM
-            : (mode == M_BFLEN ? EM2_BFLEN
-            : (mode == M_LEN32 ? EM2_LEN32
-            : EM2_ERROR)));
+        return mode == M_NONE
+                       ? EM2_NONE
+                       : (mode == M_IMM ? EM2_IMM
+                                        : (mode == M_BFLEN
+                                                          ? EM2_BFLEN
+                                                          : (mode == M_LEN32
+                                                                            ? EM2_LEN32
+                                                                            : EM2_ERROR)));
         /*
         switch (mode) {
         case M_NONE:  return EM2_NONE;
@@ -183,9 +180,9 @@ private:
     }
     static constexpr Ex2Pos toEx2Pos(OprPos pos) {
         return pos == P_NONE ? EP2_NONE
-            : (pos == P_IMPL ? EP2_IMPL
-            : (pos == P_DISP ? EP2_DISP
-            : EP2_ERROR));
+                             : (pos == P_IMPL ? EP2_IMPL
+                                              : (pos == P_DISP ? EP2_DISP
+                                                               : EP2_ERROR));
         /*
         switch (pos) {
         case P_NONE: return EP2_NONE;
@@ -197,37 +194,44 @@ private:
     }
     static inline AddrMode toAddrMode(Ex2Mode mode) {
         switch (mode) {
-        case EM2_NONE:  return M_NONE;
-        case EM2_IMM:   return M_IMM;
-        case EM2_BFLEN: return M_BFLEN;
-        case EM2_LEN32: return M_LEN32;
-        default:        return M_NONE;
+        case EM2_NONE:
+            return M_NONE;
+        case EM2_IMM:
+            return M_IMM;
+        case EM2_BFLEN:
+            return M_BFLEN;
+        case EM2_LEN32:
+            return M_LEN32;
+        default:
+            return M_NONE;
         }
     }
     static inline OprPos toOprPos(Ex2Pos pos) {
-        if (pos == EP2_NONE) return P_NONE;
-        if (pos == EP2_IMPL) return P_IMPL;
+        if (pos == EP2_NONE)
+            return P_NONE;
+        if (pos == EP2_IMPL)
+            return P_IMPL;
         return (pos == EP2_DISP) ? P_DISP : P_NONE;
     }
 
     // |src|,|dst|,|ex1|
     static constexpr uint8_t oprMode_gm = 0x1f;
-    static constexpr uint8_t oprPos_gm  = 0x7;
+    static constexpr uint8_t oprPos_gm = 0x7;
     static constexpr uint8_t oprMode_gp = 0;
-    static constexpr uint8_t oprPos_gp  = 5;
+    static constexpr uint8_t oprPos_gp = 5;
     // |ex2|
     static constexpr uint8_t ex2Mode_gm = 0x7;
-    static constexpr uint8_t ex2Pos_gm  = 0x3;
+    static constexpr uint8_t ex2Pos_gm = 0x3;
     static constexpr uint8_t oprSize_gm = 0x7;
     static constexpr uint8_t ex2Mode_gp = 0;
-    static constexpr uint8_t ex2Pos_gp  = 3;
+    static constexpr uint8_t ex2Pos_gp = 3;
     static constexpr uint8_t oprSize_gp = 5;
 };
 
-} // namespace ns32000
-} // namespace libasm
+}  // namespace ns32000
+}  // namespace libasm
 
-#endif // __ENTRY_NS32000_H__
+#endif  // __ENTRY_NS32000_H__
 
 // Local Variables:
 // mode: c++

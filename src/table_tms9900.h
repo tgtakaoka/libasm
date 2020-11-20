@@ -43,18 +43,18 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    Error searchName(
-        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end) const;
-    Error searchOpCode(
-        InsnTms9900 &insn, const EntryPage *table, const EntryPage *end) const;
+    Error searchName(InsnTms9900 &insn, const EntryPage *table,
+            const EntryPage *end) const;
+    Error searchOpCode(InsnTms9900 &insn, const EntryPage *table,
+            const EntryPage *end) const;
 };
 
 extern TableTms9900 TableTms9900;
 
-} // namespace tms9900
-} // namespace libasm
+}  // namespace tms9900
+}  // namespace libasm
 
-#endif // __TABLE_TMS9900_H__
+#endif  // __TABLE_TMS9900_H__
 
 // Local Variables:
 // mode: c++

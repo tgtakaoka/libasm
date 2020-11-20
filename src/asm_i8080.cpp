@@ -15,17 +15,21 @@
  */
 
 #include "asm_i8080.h"
+
 #include "table_i8080.h"
 
 namespace libasm {
 namespace i8080 {
 
-Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
+Error AsmI8080::encodeOperand(
+        InsnI8080 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
-    case M_IM8: case M_IOA:
+    case M_IM8:
+    case M_IOA:
         insn.emitOperand8(op.val16);
         return OK;
-    case M_IM16: case M_ABS:
+    case M_IM16:
+    case M_ABS:
         insn.emitOperand16(op.val16);
         return OK;
     case M_PTR:
@@ -44,7 +48,8 @@ Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode)
         insn.embed(RegI8080::encodeDataReg(op.reg) << 3);
         return OK;
     case M_VEC:
-        if (op.val16 >= 8) return setError(OVERFLOW_RANGE);
+        if (op.val16 >= 8)
+            return setError(OVERFLOW_RANGE);
         insn.embed((op.val16 & 7) << 3);
         return OK;
     default:
@@ -55,23 +60,35 @@ Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode)
 Error AsmI8080::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p)) return OK;
+    if (endOfLine(p))
+        return OK;
 
     op.reg = RegI8080::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         _scan = p + RegI8080::regNameLen(op.reg);
         switch (op.reg) {
-        case REG_H:   op.mode = M_REGH; break;
-        case REG_SP:  op.mode = M_PTR;  break;
-        case REG_PSW: op.mode = M_STK;  break;
+        case REG_H:
+            op.mode = M_REGH;
+            break;
+        case REG_SP:
+            op.mode = M_PTR;
+            break;
+        case REG_PSW:
+            op.mode = M_STK;
+            break;
         case REG_B:
-        case REG_D:   op.mode = M_IDX;  break;
-        default:      op.mode = M_REG;  break;
+        case REG_D:
+            op.mode = M_IDX;
+            break;
+        default:
+            op.mode = M_REG;
+            break;
         }
         return OK;
     }
     op.val16 = parseExpr16(p);
-    if (parserError()) return getError();
+    if (parserError())
+        return getError();
     op.setError(getError());
     op.mode = M_IM16;
     return OK;
@@ -83,13 +100,16 @@ Error AsmI8080::encode(Insn &_insn) {
     insn.setName(_scan, endName);
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp)) return getError();
+    if (parseOperand(endName, dstOp))
+        return getError();
     const char *p = skipSpaces(_scan);
     if (*p == ',') {
-        if (parseOperand(p + 1, srcOp)) return getError();
+        if (parseOperand(p + 1, srcOp))
+            return getError();
         p = skipSpaces(_scan);
     }
-    if (!endOfLine(p)) return setError(GARBAGE_AT_END);
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
     setErrorIf(dstOp.getError());
     setErrorIf(srcOp.getError());
 
@@ -107,8 +127,8 @@ Error AsmI8080::encode(Insn &_insn) {
     return getError();
 }
 
-} // namespace i8080
-} // namespace libasm
+}  // namespace i8080
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

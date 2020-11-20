@@ -32,6 +32,7 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_cpu() {
     EQUALS("cpu 1802", true,   assembler.setCpu("1802"));
     EQUALS("cpu 1802", "1802", assembler.getCpu());
@@ -393,6 +394,7 @@ static void test_undefined_symbol() {
 
     EATEST(UNDEFINED_SYMBOL, 0x1234, "LBR UNDEF", 0xC0, 0x00, 0x00);
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_cpu);

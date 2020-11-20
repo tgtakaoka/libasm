@@ -26,24 +26,24 @@ namespace mc6809 {
 enum RegName : int8_t {
     REG_UNDEF = -1,
     // Data registers.
-    REG_D =   0,
-    REG_X =   1,
-    REG_Y =   2,
-    REG_U =   3,
-    REG_S =   4,
-    REG_PC =  5,
-    REG_W =   6,  // 6309
-    REG_V =   7,  // 6309
-    REG_A =   8,
-    REG_B =   9,
-    REG_CC =  10,
-    REG_DP =  11,
-    REG_Z =   12, // 6309: "z" zero register
-    REG_0 =   13, // 6309: "0" zero register
-    REG_E =   14, // 6309
-    REG_F =   15, // 6309
+    REG_D = 0,
+    REG_X = 1,
+    REG_Y = 2,
+    REG_U = 3,
+    REG_S = 4,
+    REG_PC = 5,
+    REG_W = 6,  // 6309
+    REG_V = 7,  // 6309
+    REG_A = 8,
+    REG_B = 9,
+    REG_CC = 10,
+    REG_DP = 11,
+    REG_Z = 12,  // 6309: "z" zero register
+    REG_0 = 13,  // 6309: "0" zero register
+    REG_E = 14,  // 6309
+    REG_F = 15,  // 6309
     // Other registers.
-    REG_PCR = 0 + 16, // Program counter relative addressing
+    REG_PCR = 0 + 16,  // Program counter relative addressing
 };
 
 enum RegSize : uint8_t {
@@ -56,8 +56,7 @@ class RegMc6809 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    static RegSize regSize(RegName name)
-        __attribute__((noinline));
+    static RegSize regSize(RegName name) __attribute__((noinline));
     char *outRegName(char *out, const RegName name) const;
 
     static RegName decodeDataReg(uint8_t num);
@@ -70,8 +69,7 @@ public:
     static uint8_t encodeBaseReg(RegName name);
 
     static RegName decodeStackReg(uint8_t bitPos);
-    static uint8_t encodeStackReg(RegName name)
-        __attribute__((noinline));
+    static uint8_t encodeStackReg(RegName name) __attribute__((noinline));
 
     static RegName decodeBitOpReg(uint8_t num);
     static bool isBitOpReg(RegName name);
@@ -85,10 +83,10 @@ public:
     static char tfmDstModeChar(uint8_t mode);
 };
 
-} // namespace mc6809
-} // namespace libasm
+}  // namespace mc6809
+}  // namespace libasm
 
-#endif // __REG_MC6809_H__
+#endif  // __REG_MC6809_H__
 
 // Local Variables:
 // mode: c++
