@@ -42,6 +42,7 @@ TEST_OUTS=\
 	test_z8.hex \
 	test_z86c.hex \
 	test_z88.hex \
+	test_tlcs90.hex \
 	test_ins8060.hex \
 	test_ins8070.hex \
 	test_cdp1802.hex \
