@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+#include "table_tlcs90.h"
 #include "config_tlcs90.h"
 #include "entry_tlcs90.h"
 #include "insn_tlcs90.h"
 #include "reg_tlcs90.h"
-#include "table_tlcs90.h"
 #include "text_tlcs90.h"
 
 #include <ctype.h>
@@ -27,8 +27,10 @@
 namespace libasm {
 namespace tlcs90 {
 
-#define E(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::create(_dst, _src), _name }
+#define X(_opc, _name, _dst, _src, _emit) \
+    { _opc, Entry::Flags::create(_dst, _src, _emit), _name }
+#define E(_opc, _name, _dst, _src) X(_opc, _name, _dst, _src, false)
+#define I(_opc, _name, _dst, _src) X(_opc, _name, _dst, _src, true)
 
 // clang-format off
 static constexpr Entry TABLE_TLCS90[] PROGMEM = {
@@ -60,36 +62,36 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E(0x1D, TEXT_CALR, M_REL16, M_NO),
     E(0x1E, TEXT_RET,  M_NO,    M_NO),
     E(0x1F, TEXT_RETI, M_NO,    M_NO),
-    E(0x27, TEXT_LD,   R_A,     M_DIR),
+    I(0x27, TEXT_LD,   R_A,     M_DIR),
     E(0x20, TEXT_LD,   R_A,     M_REG8),
-    E(0x2F, TEXT_LD,   M_DIR,   R_A),
+    I(0x2F, TEXT_LD,   M_DIR,   R_A),
     E(0x28, TEXT_LD,   M_REG8,  R_A),
-    E(0x37, TEXT_LD,   M_DIR,   M_IMM8),
+    I(0x37, TEXT_LD,   M_DIR,   M_IMM8),
     E(0x30, TEXT_LD,   M_REG8,  M_IMM8),
     E(0x3F, TEXT_LDW,  M_DIR,   M_IMM16),
     E(0x38, TEXT_LD,   M_REG16, M_IMM16),
-    E(0x47, TEXT_LD,   R_HL,    M_DIR),
+    I(0x47, TEXT_LD,   R_HL,    M_DIR),
     E(0x40, TEXT_LD,   R_HL,    M_REG16),
-    E(0x4F, TEXT_LD,   M_DIR,   R_HL),
+    I(0x4F, TEXT_LD,   M_DIR,   R_HL),
     E(0x48, TEXT_LD,   M_REG16, R_HL),
     E(0x50, TEXT_PUSH, M_STACK, M_NO),
     E(0x58, TEXT_POP,  M_STACK, M_NO),
-    E(0x60, TEXT_ADD,  R_A,     M_DIR),
-    E(0x61, TEXT_ADC,  R_A,     M_DIR),
-    E(0x62, TEXT_SUB,  R_A,     M_DIR),
-    E(0x63, TEXT_SBC,  R_A,     M_DIR),
-    E(0x64, TEXT_AND,  R_A,     M_DIR),
-    E(0x65, TEXT_XOR,  R_A,     M_DIR),
-    E(0x66, TEXT_OR,   R_A,     M_DIR),
-    E(0x67, TEXT_CP,   R_A,     M_DIR),
-    E(0x68, TEXT_ADD,  R_A,     M_IMM8),
-    E(0x69, TEXT_ADC,  R_A,     M_IMM8),
-    E(0x6A, TEXT_SUB,  R_A,     M_IMM8),
-    E(0x6B, TEXT_SBC,  R_A,     M_IMM8),
-    E(0x6C, TEXT_AND,  R_A,     M_IMM8),
-    E(0x6D, TEXT_XOR,  R_A,     M_IMM8),
-    E(0x6E, TEXT_OR,   R_A,     M_IMM8),
-    E(0x6F, TEXT_CP,   R_A,     M_IMM8),
+    I(0x60, TEXT_ADD,  R_A,     M_DIR),
+    I(0x61, TEXT_ADC,  R_A,     M_DIR),
+    I(0x62, TEXT_SUB,  R_A,     M_DIR),
+    I(0x63, TEXT_SBC,  R_A,     M_DIR),
+    I(0x64, TEXT_AND,  R_A,     M_DIR),
+    I(0x65, TEXT_XOR,  R_A,     M_DIR),
+    I(0x66, TEXT_OR,   R_A,     M_DIR),
+    I(0x67, TEXT_CP,   R_A,     M_DIR),
+    I(0x68, TEXT_ADD,  R_A,     M_IMM8),
+    I(0x69, TEXT_ADC,  R_A,     M_IMM8),
+    I(0x6A, TEXT_SUB,  R_A,     M_IMM8),
+    I(0x6B, TEXT_SBC,  R_A,     M_IMM8),
+    I(0x6C, TEXT_AND,  R_A,     M_IMM8),
+    I(0x6D, TEXT_XOR,  R_A,     M_IMM8),
+    I(0x6E, TEXT_OR,   R_A,     M_IMM8),
+    I(0x6F, TEXT_CP,   R_A,     M_IMM8),
     E(0x70, TEXT_ADD,  R_HL,    M_DIR),
     E(0x71, TEXT_ADC,  R_HL,    M_DIR),
     E(0x72, TEXT_SUB,  R_HL,    M_DIR),
@@ -122,6 +124,7 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E(0xA5, TEXT_SRAA, M_NO,    M_NO),
     E(0xA6, TEXT_SLLA, M_NO,    M_NO),
     E(0xA7, TEXT_SRLA, M_NO,    M_NO),
+#if 0
     E(0xA0, TEXT_RLC,  R_A,     M_NO),
     E(0xA1, TEXT_RRC,  R_A,     M_NO),
     E(0xA2, TEXT_RL,   R_A,     M_NO),
@@ -130,6 +133,7 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E(0xA5, TEXT_SRA,  R_A,     M_NO),
     E(0xA6, TEXT_SLL,  R_A,     M_NO),
     E(0xA7, TEXT_SRL,  R_A,     M_NO),
+#endif
     E(0xA8, TEXT_BIT,  M_BIT,   M_DIR),
     E(0xB0, TEXT_RES,  M_BIT,   M_DIR),
     E(0xB8, TEXT_SET,  M_BIT,   M_DIR),
@@ -145,7 +149,7 @@ static constexpr Entry TABLE_SRC[] PROGMEM = {
     E(0x13, TEXT_DIV,  R_HL,    M_SRC),
     E(0x14, TEXT_ADD,  M_REGIX, M_SRC),
     E(0x18, TEXT_TSET, M_BIT,   M_SRC),
-    E(0x28, TEXT_LD,   M_REG8,  M_SRC),
+    I(0x28, TEXT_LD,   M_REG8,  M_SRC),
     E(0x48, TEXT_LD,   M_REG16, M_SRC),
     E(0x50, TEXT_EX,   M_DST,   M_REG16),
     E(0x50, TEXT_EX,   M_REG16, M_SRC),
@@ -201,7 +205,7 @@ static constexpr Entry TABLE_REG[] PROGMEM = {
     E(0x12, TEXT_MUL,  R_HL,    M_SRC),
     E(0x13, TEXT_DIV,  R_HL,    M_SRC),
     E(0x18, TEXT_TSET, M_BIT,   M_SRC),
-    E(0x30, TEXT_LD,   M_REG8,  M_SRC),
+    I(0x30, TEXT_LD,   M_REG8,  M_SRC),
     E(0x60, TEXT_ADD,  R_A,     M_SRC),
     E(0x61, TEXT_ADC,  R_A,     M_SRC),
     E(0x62, TEXT_SUB,  R_A,     M_SRC),
@@ -373,7 +377,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_REGIX || opr == R_SP)
         return table == M_REG16 || table == M_STACK || table == M_REGIX;
     if (opr == M_IMM16)
-        return table == M_IMM8 || table == M_BIT || table == M_REL8 || table == M_REL16;
+        return table == M_IMM8 || table == M_BIT || table == M_REL8 ||
+               table == M_REL16;
     if (opr == M_DIR)
         return table == M_EXT;
     if (opr == R_AF)
@@ -386,10 +391,11 @@ static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
     const AddrMode tableDst = table.dstMode();
     const AddrMode tableSrc = table.srcMode();
     const AddrMode dst = (tableDst == M_DST) ? insn.preMode() : tableDst;
-    const AddrMode src = (tableSrc == M_SRC) ? insn.preMode()
-        : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    const AddrMode src = (tableSrc == M_SRC)
+                                 ? insn.preMode()
+                                 : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
     if (acceptMode(insn.dstMode(), dst) && acceptMode(insn.srcMode(), src)) {
-        insn.setAddrMode(dst, src);
+        insn.setAddrMode(dst, src, table.emit());
         // Update prefix mode.
         if (tableDst == M_DST) {
             insn.setPreMode(M_DST);
@@ -408,9 +414,9 @@ Error TableTlcs90::searchName(
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         insn.setPreMode(page->mode());
-        const Entry *entry = TableBase::searchName<Entry, InsnTlcs90&>(
-                insn.name(), insn, page->table(), page->end(),
-                acceptModes, count);
+        const Entry *entry =
+                TableBase::searchName<Entry, InsnTlcs90 &>(insn.name(), insn,
+                        page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             return OK;

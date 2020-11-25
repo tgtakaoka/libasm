@@ -24,6 +24,7 @@ AsmZ80          KEYWORD1        libasm
 DisZ80          KEYWORD1        libasm
 AsmZ8           KEYWORD1        libasm
 DisZ8           KEYWORD1        libasm
+AsmTlcs90       KEYWORD1        libasm
 DisTlcs90       KEYWORD1        libasm
 AsmIns8060      KEYWORD1        libasm
 DisIns8060      KEYWORD1        libasm

@@ -31,33 +31,39 @@ public:
     AddrMode dstMode() const { return _flags.dstMode(); }
     AddrMode srcMode() const { return _flags.srcMode(); }
     AddrMode preMode() const { return _preMode; }
+    bool emit() const { return _flags.emit(); }
 
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode dst, AddrMode src) {
-        _flags = Entry::Flags::create(dst, src);
+    void setAddrMode(AddrMode dst, AddrMode src, bool emit = false) {
+        _flags = Entry::Flags::create(dst, src, emit);
     }
-    void setPreMode(AddrMode pre) {
-        _preMode = pre;
-    }
+    void setPreMode(AddrMode pre) { _preMode = pre; }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;
     }
 
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
     bool hasPrefix() const { return prefix() != 0; }
     Config::opcode_t prefix() const { return _prefix; }
     Config::opcode_t opCode() const { return _opCode; }
+
+    void setEmitInsn() { _emitInsn = true; }
+    void emitInsn(Config::opcode_t opc) {
+        if (_emitInsn) {
+            emitByte(opc);
+            _emitInsn = false;
+        }
+    }
 
 private:
     Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
     AddrMode _preMode;
+    bool _emitInsn;
 };
 
 }  // namespace tlcs90

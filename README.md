@@ -15,6 +15,7 @@ Arduino).
   - i8080, i8085 (Intel or Zilog syntax)
   - Z80
   - Z8 (Z86), Z86C, Z88 (Super8)
+  - TLCS90
   - INS8060 (SC/MP)
   - INS8070
   - CDP1802

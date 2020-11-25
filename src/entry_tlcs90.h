@@ -60,15 +60,18 @@ public:
         uint8_t _dst;
         uint8_t _src;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src) {
-            return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src)};
+        static constexpr Flags create(AddrMode dst, AddrMode src, bool emit) {
+            return Flags{static_cast<uint8_t>(
+                                 uint8_t(dst) | (emit ? (1 << emit_bp) : 0)),
+                    static_cast<uint8_t>(src)};
         }
         Flags read() const {
             return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)};
         }
 
-        AddrMode dstMode() const { return AddrMode(_dst); }
+        AddrMode dstMode() const { return AddrMode(_dst & mode_gm); }
         AddrMode srcMode() const { return AddrMode(_src); }
+        bool emit() const { return _dst & (1 << emit_bp); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -78,6 +81,9 @@ public:
 
 private:
     Flags _flags;
+
+    static constexpr uint8_t mode_gm = 0x3f;
+    static constexpr int8_t emit_bp = 7;
 };
 
 }  // namespace tlcs90
