@@ -6,7 +6,7 @@ The libasm allows assembling and disassembling supported retro CPUs on
 a small environment (less than 10kB~18kB Flash and ~350B RAM on AVR
 Arduino).
 
-* Supported target CPUs.
+- Supported target CPUs.
   - MC6800, MC6801, HD6301, MC68HC11
   - MC6809, HD6309
   - MOS6502, W65SC02, R65C02, W65C02S
@@ -25,7 +25,7 @@ Arduino).
   - Z8001, Z8002
   - NS32032
 
-* Supported host environment.
+- Supported host environment.
   - Arduino (AVR, Teensy)
   - Linux, macOS (`C++14`: `g++`, `clang++`)
 
