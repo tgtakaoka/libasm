@@ -461,6 +461,68 @@
         LD      (SP+34H),SP
         LD      (HL+A),SP
 
+        LDW     (BC),5678H
+        LDW     (DE),5678H
+        LDW     (HL),5678H
+        LDW     (1234H),5678H
+        LDW     (IX),5678H
+        LDW     (IY),5678H
+        LDW     (SP),5678H
+        LDW     (0FF34H),5678H
+        LDW     (IX+34H),5678H
+        LDW     (IY-34H),5678H
+        LDW     (SP+34H),5678H
+        LDW     (HL+A),5678H
+
+        PUSH    BC
+        PUSH    DE
+        PUSH    HL
+        PUSH    IX
+        PUSH    IY
+        PUSH    AF
+
+        POP     BC
+        POP     DE
+        POP     HL
+        POP     IX
+        POP     IY
+        POP     AF
+
+        LDA     BC,(IX+34H)
+        LDA     BC,(IY-34H)
+        LDA     BC,(SP+34H)
+        LDA     BC,(HL+A)
+
+        LDA     DE,(IX+34H)
+        LDA     DE,(IY-34H)
+        LDA     DE,(SP+34H)
+        LDA     DE,(HL+A)
+
+        LDA     HL,(IX+34H)
+        LDA     HL,(IY-34H)
+        LDA     HL,(SP+34H)
+        LDA     HL,(HL+A)
+
+        LDA     IX,(IX+34H)
+        LDA     IX,(IY-34H)
+        LDA     IX,(SP+34H)
+        LDA     IX,(HL+A)
+
+        LDA     IY,(IX+34H)
+        LDA     IY,(IY-34H)
+        LDA     IY,(SP+34H)
+        LDA     IY,(HL+A)
+
+        LDA     SP,(IX+34H)
+        LDA     SP,(IY-34H)
+        LDA     SP,(SP+34H)
+        LDA     SP,(HL+A)
+
+        LDAR    HL,$+3
+        LDAR    HL,$
+        LDAR    HL,$-7FFEH
+        LDAR    HL,$+8001H
+
         EX      (BC),BC
         EX      (DE),BC
         EX      (HL),BC
