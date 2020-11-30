@@ -22,8 +22,9 @@
 namespace libasm {
 namespace tlcs90 {
 
-static const char TEXT_CPU_TLCS90[]  PROGMEM = "TLCS90";
+static const char TEXT_CPU_TLCS90[] PROGMEM = "TLCS90";
 
+// clang-format off
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
 static const char TEXT_AND[]  PROGMEM = "AND";
@@ -97,11 +98,12 @@ static const char TEXT_SUB[]  PROGMEM = "SUB";
 static const char TEXT_SWI[]  PROGMEM = "SWI";
 static const char TEXT_TSET[] PROGMEM = "TSET";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
+// clang-format on
 
-} // namespace tlcs90
-} // namespace libasm
+}  // namespace tlcs90
+}  // namespace libasm
 
-#endif // __TEXT_TLCS90__
+#endif  // __TEXT_TLCS90__
 
 // Local Variables:
 // mode: c++

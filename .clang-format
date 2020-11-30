@@ -3,8 +3,10 @@ AccessModifierOffset: -4
 AlignAfterOpenBracket: DontAlign
 BinPackArguments: true
 BinPackParameters: true
+BreakBeforeTernaryOperators: true
 ContinuationIndentWidth: 8
 DerivePointerAlignment: true
+FixNamespaceComments: true
 IndentCaseLabels: false
 IndentWidth: 4
 UseTab: Never
