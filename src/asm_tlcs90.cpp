@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//#include <stdio.h>
 
 #include "asm_tlcs90.h"
 
@@ -263,7 +262,6 @@ Error AsmTlcs90::encode(Insn &_insn) {
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
-    //    printf("@@ encode: %s\n", _scan);
     Operand dstOp, srcOp;
     if (parseOperand(endName, dstOp))
         return getError();
@@ -279,15 +277,8 @@ Error AsmTlcs90::encode(Insn &_insn) {
     setErrorIf(srcOp.getError());
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    //    printf("@@ search: name=%s dst=%s src=%s\n", insn.name(),
-    //            aMode(insn.dstMode()), aMode(insn.srcMode()));
     if (TableTlcs90.searchName(insn))
         return setError(TableTlcs90.getError());
-    //    printf("@@  found: prefix=%02X opc=%02X emit=%d pre=%s dst=%s
-    //    src=%s\n",
-    //            insn.prefix(), insn.opCode(), insn.emit(),
-    //            aMode(insn.preMode()), aMode(insn.dstMode()),
-    //            aMode(insn.srcMode()));
 
     const AddrMode pre = insn.preMode();
     const AddrMode dst = insn.dstMode();
