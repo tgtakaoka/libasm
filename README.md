@@ -3,7 +3,7 @@
 # libasm: cross assemble/disassemble library
 
 The libasm allows assembling and disassembling supported retro CPUs on
-a small environment (less than 10kB~18kB Flash and ~350B RAM on AVR
+a small environment (less than 9kB~17kB Flash and ~350B RAM on AVR
 Arduino).
 
 - Supported target CPUs.
@@ -27,6 +27,7 @@ Arduino).
 
 - Supported host environment.
   - Arduino (AVR, Teensy)
+  - PlatformIO
   - Linux, macOS (`C++14`: `g++`, `clang++`)
 
 More information about this library can be found at
