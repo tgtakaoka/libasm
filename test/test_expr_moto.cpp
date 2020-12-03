@@ -29,24 +29,31 @@ static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_hex_constant() {
-    E8("$0",  0x00, OK);
-    E8("$7f", 0x7f, OK);
-    E8("$80", 0x80, OK);
-    E8("$FF", 0xff, OK);
+    E8("$0",   0x00, OK);
+    E8("$7f",  0x7f, OK);
+    E8("$80",  0x80, OK);
+    E8("$FF",  0xff, OK);
     E8("$100", 0,    OVERFLOW_RANGE);
 
-    E16("$0",    0x0000, OK);
-    E16("$7fff", 0x7fff, OK);
-    E16("$8000", 0x8000, OK);
-    E16("$ffff", 0xffff, OK);
+    E16("$0",     0x0000, OK);
+    E16("$7fff",  0x7fff, OK);
+    E16("$8000",  0x8000, OK);
+    E16("$ffff",  0xffff, OK);
     E16("$10000", 0,      OVERFLOW_RANGE);
 
-    E32("$0",        0x00000000, OK);
-    E32("$7FFFFFFF", 0x7fffffff, OK);
-    E32("$80000000", 0x80000000, OK);
-    E32("$FFFFffff", 0xffffffff, OK);
+    E32("$0",         0x00000000, OK);
+    E32("$7FFFFFFF",  0x7fffffff, OK);
+    E32("$80000000",  0x80000000, OK);
+    E32("$FFFFffff",  0xffffffff, OK);
     E32("$100000000", 0,          OVERFLOW_RANGE);
+
+    E32("0x0",         0x00000000, OK);
+    E32("0x7FFFFFFF",  0x7fffffff, OK);
+    E32("0x80000000",  0x80000000, OK);
+    E32("0xFFFFffff",  0xffffffff, OK);
+    E32("0x100000000", 0,          OVERFLOW_RANGE);
 }
 
 static void test_oct_constant() {
@@ -67,6 +74,12 @@ static void test_oct_constant() {
     E32("@20000000000", 0x80000000, OK);
     E32("@37777777777", 0xffffffff, OK);
     E32("@40000000000", 0,          OVERFLOW_RANGE);
+
+    E32("00",           0x00000000, OK);
+    E32("017777777777", 0x7fffffff, OK);
+    E32("020000000000", 0x80000000, OK);
+    E32("037777777777", 0xffffffff, OK);
+    E32("040000000000", 0,          OVERFLOW_RANGE);
 }
 
 static void test_bin_constant() {
@@ -87,6 +100,12 @@ static void test_bin_constant() {
     E32("%10000000000000000000000000000000", 0x80000000, OK);
     E32("%11111111111111111111111111111111", 0xffffffff, OK);
     E32("%100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
+
+    E32("0b0",                                 0x00000000, OK);
+    E32("0b01111111111111111111111111111111",  0x7fffffff, OK);
+    E32("0b10000000000000000000000000000000",  0x80000000, OK);
+    E32("0b11111111111111111111111111111111",  0xffffffff, OK);
+    E32("0b100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
 }
 
 static void test_current_address() {
@@ -439,6 +458,7 @@ static void test_formatter_32bit() {
     HEX(-0x80000000, -32, false, "-$80000000");
     HEX(-0xffffffff, -32, false, "$00000001");
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_hex_constant);

@@ -22,13 +22,13 @@ using namespace libasm::test;
 ValueParser parser;
 ValueFormatter formatter;
 
-static void set_up() {
-}
+static void set_up() {}
 
 static void tear_down() {
     symtab.reset();
 }
 
+// clang-format off
 static void test_char_constant() {
     E8("'a'",    0x61, OK);
     E8("'\\''",  0x27, OK);
@@ -697,6 +697,7 @@ static void test_formatter_13bit() {
     HEX(    0 *2, -13, false, "0x0000");
     HEX(+2047 *2, -13, false, "0x0ffe");
 }
+// clang-format on
 
 void run_tests() {
     RUN_TEST(test_char_constant);

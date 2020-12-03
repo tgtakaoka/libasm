@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "value_parser.h"
 
 #include <ctype.h>
@@ -384,6 +383,12 @@ Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
 
 Error ValueParser::scanNumberEnd(
         const char *scan, const uint8_t base, char suffix) {
+    if (suffix == 'B') {
+        // Check whether intel binary or C-style binary
+        const char *p = scan;
+        if (*p++ == '0' && toupper(*p++) == 'B' && (*p == '0' || *p == '1'))
+            return ILLEGAL_CONSTANT; // expect intel but found C-style
+    }
     while (isValidDigit(*scan, base))
         scan++;
     if (suffix && toupper(*scan++) != suffix)
@@ -410,6 +415,8 @@ Error ValueParser::readNumber(const char *scan, Value &val) {
 }
 
 Error MotoValueParser::readNumber(const char *scan, Value &val) {
+    if (ValueParser::readNumber(scan, val) != ILLEGAL_CONSTANT)
+        return getError();
     const char c = *scan++;
     if (c == '$' && scanNumberEnd(scan, 16) == OK)
         return parseNumber(scan, val, 16);
@@ -417,9 +424,7 @@ Error MotoValueParser::readNumber(const char *scan, Value &val) {
         return parseNumber(scan, val, 8);
     if (c == '%' && scanNumberEnd(scan, 2) == OK)
         return parseNumber(scan, val, 2);
-    if (scanNumberEnd(--scan, 10) == OK)
-        return parseNumber(scan, val, 10);
-    return ValueParser::readNumber(scan, val);
+    return setError(ILLEGAL_CONSTANT);
 }
 
 Error IntelValueParser::readNumber(const char *scan, Value &val) {
@@ -429,8 +434,6 @@ Error IntelValueParser::readNumber(const char *scan, Value &val) {
         return parseNumber(scan, val, 8, 'O');
     if (scanNumberEnd(scan, 2, 'B') == OK)
         return parseNumber(scan, val, 2, 'B');
-    if (scanNumberEnd(scan, 10) == OK)
-        return parseNumber(scan, val, 10);
     return ValueParser::readNumber(scan, val);
 }
 

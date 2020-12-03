@@ -33,8 +33,6 @@ static char message[256];
 void dis_assert(const char *file, int line, Error error,
         const char *expected_name, const char *expected_opr,
         Disassembler &disassembler) {
-    sprintf(message, "%s:%d: %s: ", file, line, expected_name);
-    memory.dump(message + strlen(message));
     Insn insn;
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, actual_opr, &symtab);
