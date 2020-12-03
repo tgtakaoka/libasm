@@ -33,7 +33,7 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     if (immediate)
         p++;
     op.size = SZ_NONE;
-    if (*p == '<') {
+    if (*p == '<' || *p == '*') {
         p++;
         op.size = SZ_BYTE;
     } else if (*p == '>') {
@@ -129,13 +129,15 @@ Error AsmMc6800::encode(Insn &_insn) {
     if (parseOperand(endName, op1))
         return getError();
     const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, op2))
+    if (!endOfLine(p)) {
+        if (*p == ',') p++;
+        if (parseOperand(p, op2))
             return getError();
         p = skipSpaces(_scan);
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, op3))
+    if (!endOfLine(p)) {
+        if (*p == ',') p++;
+        if (parseOperand(p, op3))
             return getError();
         p = skipSpaces(_scan);
     }
