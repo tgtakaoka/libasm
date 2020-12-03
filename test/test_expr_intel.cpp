@@ -117,11 +117,20 @@ static void test_current_address() {
     E16("$-1001H", 0xFFFF, OK);
     E32("$+0F000H", 0x00010000, OK);
     E32("$-1001H", 0xFFFFFFFF, OK);
+    E16(".",       0x1000, OK);
+    E16(".+2",     0x1002, OK);
+    E16(".-2",     0x0FFE, OK);
+    E16(".+0xF000", 0,      OVERFLOW_RANGE);
+    E16(".-0x1001", 0xFFFF, OK);
+    E32(".+0xF000", 0x00010000, OK);
+    E32(".-0x1001", 0xFFFFFFFF, OK);
 
     symtab.intern(0x1000, "table");
     symtab.setCurrentOrigin(0x1100);
     E16("$-table", 0x100, OK);
     E16("($-table)/2", 0x80, OK);
+    E16(".-table",     0x100, OK);
+    E16("(.-table)/2", 0x80,  OK);
 }
 
 static void test_errors() {
