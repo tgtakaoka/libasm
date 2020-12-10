@@ -26,8 +26,8 @@ Arduino).
   - NS32032
 
 - Supported host environment.
-  - Arduino (AVR, Teensy)
-  - PlatformIO
+  - Arduino (avr, megaavr, teensy)
+  - PlatformIO (atmelavr, atmelmegaavr, teensy)
   - Linux, macOS (`C++14`: `g++`, `clang++`)
 
 More information about this library can be found at

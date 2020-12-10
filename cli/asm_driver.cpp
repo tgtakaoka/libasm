@@ -43,11 +43,11 @@ int AsmDriver::usage() {
             "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
-            "  -S[<bytes>] : output Motorola SREC format\n"
+            "  -S[<bytes>] : output Motorola S-Record format\n"
             "  -H[<bytes>] : output Intel HEX format\n"
             "              : optional <bytes> specifies data record length "
             "(max 32)\n"
-            "  -u          : use uppercase letter for output\n"
+            "  -u          : use uppercase letter for listing\n"
             "  -n          : output line number to list file\n"
             "  -v          : print progress verbosely\n",
             _progname, cpuList.c_str());
