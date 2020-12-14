@@ -2,5 +2,5 @@
 *.d
 *~
 build
-.ccls-cache
+.pio
 compile_commands.json
