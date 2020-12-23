@@ -92,7 +92,7 @@ public:
         _data = initData();
     }
 
-    ByteGenerator(DataGenerator &parent, int size)
+    ByteGenerator(DataGenerator &parent, int size = 1)
         : DataGenerator(parent, size), _off(0) {
         _data = initData();
     }
@@ -225,7 +225,8 @@ public:
         if (sizeof(opcode_t) == 1) {
             ByteGenerator gen(_memory, _memorySize, 0);
             return generate(printer, gen);
-        } else {
+        }
+        if (sizeof(opcode_t) == 2) {
             WordGenerator gen(_memory, _memorySize, _endian, 0);
             return generate(printer, gen);
         }
@@ -252,7 +253,7 @@ public:
         parent.outByte(opc1, 0);
         parent.outByte(opc2, 1);
         parent.outByte(opc3, 2);
-        ByteGenerator gen(parent, 1);
+        ByteGenerator gen(parent);
         return generate(printer, gen);
     }
 
@@ -274,7 +275,7 @@ private:
         _printer = &printer;
         do {
             gen.next();
-            ByteGenerator child(gen, 1);
+            ByteGenerator child(gen);
             generateTests(child);
         } while (gen.hasNext());
 
@@ -302,7 +303,7 @@ private:
         const TokenizedText a(_data.operands());
         auto found = variants.find(a);
         if (found != variants.end()) {
-            if (found->count() >= 0x200)
+            if (found->count() >= 0x2000)
                 return -1;
             return 0;
         }
