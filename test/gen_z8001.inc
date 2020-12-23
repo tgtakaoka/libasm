@@ -142,10 +142,10 @@
       ldl    rr2(#0x2122),rr0
       ldl    rr8(#-0x7e7e),rr0
       ldps   @rr2
-      inb    rh0,#0x0506
-      sinb   rh0,#0x0607
-      outb   #0x0708,rh0
-      soutb  #0x0809,rh0
+      inb    rh0,0x0506
+      sinb   rh0,0x0607
+      outb   0x0708,rh0
+      soutb  0x0809,rh0
       otirb  @r1,@rr2,r15
       outib  @r1,@rr2,r15
       sotirb @r1,@rr2,r15
@@ -154,14 +154,14 @@
       outdb  @r1,@rr2,r15
       sotdrb @r1,@rr2,r15
       soutdb @r1,@rr2,r15
-      inb    rl0,#0x8586
-      sinb   rl0,#0x8687
-      outb   #0x8788,rl0
-      soutb  #0x8889,rl0
-      in     r0,#0x0506
-      sin    r0,#0x0607
-      out    #0x0708,r0
-      sout   #0x0809,r0
+      inb    rl0,0x8586
+      sinb   rl0,0x8687
+      outb   0x8788,rl0
+      soutb  0x8889,rl0
+      in     r0,0x0506
+      sin    r0,0x0607
+      out    0x0708,r0
+      sout   0x0809,r0
       otir   @r1,@rr2,r15
       outi   @r1,@rr2,r15
       sotir  @r1,@rr2,r15

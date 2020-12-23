@@ -1425,12 +1425,12 @@ static void test_input() {
     TEST(INB, "RH1,@R2",     0x3C21);
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3D01);
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3C01);
-    TEST(IN,  "R1,#0x1234",  0x3B14, 0x1234);
-    TEST(INB, "RH1,#0x1234", 0x3A14, 0x1234);
+    TEST(IN,  "R1,0x1234",  0x3B14, 0x1234);
+    TEST(INB, "RH1,0x1234", 0x3A14, 0x1234);
 
     // Special Input
-    TEST(SIN,  "R1,#0x1234",  0x3B15, 0x1234);
-    TEST(SINB, "RH1,#0x1234", 0x3A15, 0x1234);
+    TEST(SIN,  "R1,0x1234",  0x3B15, 0x1234);
+    TEST(SINB, "RH1,0x1234", 0x3A15, 0x1234);
 
     // Input and Decrement
     if (z8001()) {
@@ -1543,12 +1543,12 @@ static void test_output() {
     TEST(OUTB, "@R2,RH1",     0x3E21);
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3F01);
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3E01);
-    TEST(OUT,  "#0x1234,R1",  0x3B16, 0x1234);
-    TEST(OUTB, "#0x1234,RH1", 0x3A16, 0x1234);
+    TEST(OUT,  "0x1234,R1",  0x3B16, 0x1234);
+    TEST(OUTB, "0x1234,RH1", 0x3A16, 0x1234);
 
     // Special Output
-    TEST(SOUT,  "#0x1234,R1",  0x3B17, 0x1234);
-    TEST(SOUTB, "#0x1234,RH1", 0x3A17, 0x1234);
+    TEST(SOUT,  "0x1234,R1",  0x3B17, 0x1234);
+    TEST(SOUTB, "0x1234,RH1", 0x3A17, 0x1234);
 
     // Output and Decrement
     if (z8001()) {

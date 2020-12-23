@@ -50,7 +50,7 @@ enum AddrMode : uint8_t {
     M_GENI = 9,   // Generic and Immediate: IM/IR/DA/X/R
     M_GEND = 10,  // Generic Data: IR/DA/X/R
     M_GENA = 11,  // Generic Address: IR/DA/X
-    M_IO = 12,    // IO Address: #nnnn
+    M_IO = 12,    // IO Address: nnnn/#nnnn
     M_IM8 = 13,   // System call: #nn
     M_BIT = 14,   // Bit number: #0~15
     M_CNT = 15,   // Count: #1~16

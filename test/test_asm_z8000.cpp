@@ -1485,10 +1485,16 @@ static void test_input() {
     TEST("INB RH1,@R2",     0x3C21);
     ETEST(REGISTER_NOT_ALLOWED, "IN  R1,@R0");
     ETEST(REGISTER_NOT_ALLOWED, "INB RH1,@R0");
+    TEST("IN  R1, 0x1234",  0x3B14, 0x1234);
+    TEST("INB RH1, 0x1234", 0x3A14, 0x1234);
+    // GNU as compatibility
     TEST("IN  R1,#0x1234",  0x3B14, 0x1234);
     TEST("INB RH1,#0x1234", 0x3A14, 0x1234);
 
     // Special Input
+    TEST("SIN  R1, 0x1234",  0x3B15, 0x1234);
+    TEST("SINB RH1, 0x1234", 0x3A15, 0x1234);
+    // GNU as compatibility
     TEST("SIN  R1,#0x1234",  0x3B15, 0x1234);
     TEST("SINB RH1,#0x1234", 0x3A15, 0x1234);
 
@@ -1635,10 +1641,16 @@ static void test_output() {
     TEST("OUTB @R2,RH1",     0x3E21);
     ETEST(REGISTER_NOT_ALLOWED, "OUT  @R0,R1");
     ETEST(REGISTER_NOT_ALLOWED, "OUTB @R0,RH1");
+    TEST("OUT    0x1234,R1",  0x3B16, 0x1234);
+    TEST("OUTB   0x1234,RH1", 0x3A16, 0x1234);
+    // GNU as compatibility
     TEST("OUT   #0x1234,R1",  0x3B16, 0x1234);
     TEST("OUTB  #0x1234,RH1", 0x3A16, 0x1234);
 
     // Special Output
+    TEST("SOUT    0x1234,R1",  0x3B17, 0x1234);
+    TEST("SOUTB   0x1234,RH1", 0x3A17, 0x1234);
+    // GNU as compatibility
     TEST("SOUT   #0x1234,R1",  0x3B17, 0x1234);
     TEST("SOUTB  #0x1234,RH1", 0x3A17, 0x1234);
 

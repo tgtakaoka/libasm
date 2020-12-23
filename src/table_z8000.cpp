@@ -278,16 +278,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_GENI || table == M_GEND || table == M_WR07 ||
                table == M_WR || table == M_DR;
     if (opr == M_IM)
-        return table == M_GENI || table == M_IO || table == M_IM8 ||
-               table == M_BIT || table == M_CNT || table == M_QCNT ||
-               table == M_SCNT || table == M_NCNT;
+        return table == M_GENI || table == M_IM8 || table == M_BIT ||
+               table == M_CNT || table == M_QCNT || table == M_SCNT ||
+               table == M_NCNT || table == M_IO;
     if (opr == M_IR)
         return table == M_GENI || table == M_GEND || table == M_GENA ||
                table == M_IRIO;
     if (opr == M_DA)
         return table == M_GENI || table == M_GEND || table == M_GENA ||
                table == M_RA || table == M_RA12 || table == M_RA8 ||
-               table == M_RA7;
+               table == M_RA7 || table == M_IO;
     if (opr == M_X)
         return table == M_GENI || table == M_GEND || table == M_GENA;
     if (opr == M_CC)

@@ -61,8 +61,6 @@ Error DisZ8000::decodeImmediate(DisMemory &memory, InsnZ8000 &insn, char *out,
         if (size == SZ_LONG && data > 32)
             return setError(ILLEGAL_OPERAND);
         outDec(out, data, 6);
-    } else if (mode == M_IO) {
-        outAbsAddr(out, insn.readUint16(memory));
     } else if (size == SZ_BYTE) {
         outHex(out, insn.readUint16(memory), 8);
     } else if (size == SZ_WORD) {
@@ -255,7 +253,8 @@ Error DisZ8000::decodeOperand(DisMemory &memory, InsnZ8000 &insn, char *out,
         outImmediate(out, insn.opCode(), mode);
         return OK;
     case M_IO:
-        return decodeImmediate(memory, insn, out, mode, SZ_WORD);
+        outAbsAddr(out, insn.readUint16(memory));
+        return OK;
     case M_IRIO:
         if (num == 0)
             return setError(REGISTER_NOT_ALLOWED);
