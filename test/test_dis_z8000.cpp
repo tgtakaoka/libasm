@@ -1203,7 +1203,7 @@ static void test_block_transfer() {
         TEST(CPD,  "R0,@R1,R2,F",    0xBB18, 0x0200);
         TEST(CPDB, "RL0,@R1,R2,LT",  0xBA18, 0x0281);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB08, 0x0410);
+    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB08, 0x0410); // R1,@RR0,R4
     ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA08, 0x0491);
 
     // Compare, Decrement, and Repeat
@@ -1297,7 +1297,7 @@ static void test_string_manipulation() {
     // Compare String and Decrement
     if (z8001()) {
         TEST(CPSD,  "@RR4,@RR2,R0",    0xBB2A, 0x0048);
-        TEST(CPSDB, "@RR4,@RR2,R4,GE", 0xBA2A, 0x0449);
+        TEST(CPSDB, "@RR4,@RR2,R6,GE", 0xBA2A, 0x0649);
     } else {
         TEST(CPSD,  "@R3,@R1,R2",    0xBB1A, 0x0238);
         TEST(CPSDB, "@R3,@R1,R2,GE", 0xBA1A, 0x0239);
@@ -1309,8 +1309,8 @@ static void test_string_manipulation() {
 
     // Compare String, Decrement, and Repeat
     if (z8001()) {
-        TEST(CPSDR,  "@RR2,@RR4,R5,GT",  0xBB4E, 0x052A);
-        TEST(CPSDRB, "@RR2,@RR4,R5,UGT", 0xBA4E, 0x052B);
+        TEST(CPSDR,  "@RR2,@RR4,R6,GT",  0xBB4E, 0x062A);
+        TEST(CPSDRB, "@RR2,@RR4,R6,UGT", 0xBA4E, 0x062B);
     } else {
         TEST(CPSDR,  "@R3,@R4,R5,GT",  0xBB4E, 0x053A);
         TEST(CPSDRB, "@R3,@R4,R0,UGT", 0xBA4E, 0x003B);
@@ -1348,75 +1348,175 @@ static void test_string_manipulation() {
 
     // Translate and Decrement
     if (z8001()) {
-        TEST(TRDB, "@RR2,@RR4,R1", 0xB828, 0x0140);
+        TEST(TRDB, "@RR2,@RR4,R6",         0xB828, 0x0640); // @RR2,@RR4,R6
+        TEST(TRDB, "@RR2,@RR4,R0",         0xB828, 0x0040); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB808, 0x0540); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0500); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0140); // @RR2,@RR4,R1
     } else {
-        TEST(TRDB, "@R1,@R2,R0",   0xB818, 0x0020);
+        TEST(TRDB, "@R2,@R3,R4",           0xB828, 0x0430); // @R2,@R3,R4
+        TEST(TRDB, "@R2,@R3,R0",           0xB828, 0x0030); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB808, 0x0430); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB818, 0x0430); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0400); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0410); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0130); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB808, 0x0140);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0100);
 
     // Translate, Decrement, and Repeat
     if (z8001()) {
-        TEST(TRDRB, "@RR4,@RR6,R2", 0xB84C, 0x0260);
+        TEST(TRDRB, "@RR2,@RR4,R6",        0xB82C, 0x0640); // @RR2,@RR4,R6
+        TEST(TRDRB, "@RR2,@RR4,R0",        0xB82C, 0x0040); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80C, 0x0540); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0500); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0140); // @RR2,@RR4,R1
     } else {
-        TEST(TRDRB, "@R4,@R5,R6",   0xB84C, 0x0650);
+        TEST(TRDRB, "@R2,@R3,R4",          0xB82C, 0x0430); // @R2,@R3,R4
+        TEST(TRDRB, "@R2,@R3,R0",          0xB82C, 0x0030); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80C, 0x0430); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB81C, 0x0430); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0400); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0410); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0130); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80C, 0x0260);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB84C, 0x0800);
 
     // Translate and Increment
     if (z8001()) {
-        TEST(TRIB, "@RR6,@RR8,R3", 0xB860, 0x0380);
+        TEST(TRIB, "@RR2,@RR4,R6",         0xB820, 0x0640); // @RR2,@RR4,R6
+        TEST(TRIB, "@RR2,@RR4,R0",         0xB820, 0x0040); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB800, 0x0540); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0500); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0140); // @RR2,@RR4,R1
     } else {
-        TEST(TRIB, "@R7,@R8,R9",   0xB870, 0x0980);
+        TEST(TRIB, "@R2,@R3,R4",           0xB820, 0x0430); // @R2,@R3,R4
+        TEST(TRIB, "@R2,@R3,R0",           0xB820, 0x0030); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB800, 0x0430); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB810, 0x0430); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0400); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0410); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0130); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB800, 0x0380);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB860, 0x0300);
 
     // Translate, Increment, and Repeat
     if (z8001()) {
-        TEST(TRIRB, "@RR8,@RR10,R12", 0xB884, 0x0CA0);
+        TEST(TRIRB, "@RR2,@RR4,R6",        0xB824, 0x0640); // @RR2,@RR4,R6
+        TEST(TRIRB, "@RR2,@RR4,R0",        0xB824, 0x0040); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB804, 0x0540); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0500); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0140); // @RR2,@RR4,R1
     } else {
-        TEST(TRIRB, "@R10,@R11,R12",  0xB8A4, 0x0CB0);
+        TEST(TRIRB, "@R2,@R3,R4",          0xB824, 0x0430); // @R2,@R3,R4
+        TEST(TRIRB, "@R2,@R3,R0",          0xB824, 0x0030); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB804, 0x0430); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB814, 0x0430); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0400); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0410); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0130); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB804, 0x0CA0);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB884, 0x0C00);
 
     // Translate, Test, and Decrement
     if (z8001()) {
-        TEST(TRTDB, "@RR10,@RR12,R9", 0xB8AA, 0x09C0);
+        TEST(TRTDB, "@RR2,@RR4,R6",        0xB82A, 0x0640); // @RR2,@RR4,R6
+        TEST(TRTDB, "@RR2,@RR4,R0",        0xB82A, 0x0040); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80A, 0x0540); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0500); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0140); // @RR2,@RR4,R1
     } else {
-        TEST(TRTDB, "@R13,@R14,R15",  0xB8DA, 0x0FE0);
+        TEST(TRTDB, "@R2,@R3,R4",          0xB82A, 0x0430); // @R2,@R3,R4
+        TEST(TRTDB, "@R2,@R3,R0",          0xB82A, 0x0030); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80A, 0x0430); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB81A, 0x0430); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0400); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0410); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0130); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80A, 0x09C0);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB8AA, 0x0900);
 
     // Translate, Test, Decrement, and Repeat
     if (z8001()) {
-        TEST(TRTDRB, "@RR12,@RR14,R0", 0xB8CE, 0x00EE);
+        TEST(TRTDRB, "@RR2,@RR4,R6",       0xB82E, 0x064E); // @RR2,@RR4,R6
+        TEST(TRTDRB, "@RR2,@RR4,R0",       0xB82E, 0x004E); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80E, 0x054E); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x050E); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x014E); // @RR2,@RR4,R1
     } else {
-        TEST(TRTDRB, "@R15,@R14,R13",  0xB8FE, 0x0DEE);
+        TEST(TRTDRB, "@R2,@R3,R4",         0xB82E, 0x043E); // @R2,@R3,R4
+        TEST(TRTDRB, "@R2,@R3,R0",         0xB82E, 0x003E); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80E, 0x043E); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB81E, 0x043E); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x040E); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x041E); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x013E); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80E, 0x00EE);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB8CE, 0x000E);
 
     // Translate, Test, and Increment
     if (z8001()) {
-        TEST(TRTIB, "@RR14,@RR12,R11", 0xB8E2, 0x0BC0);
+        TEST(TRTIB, "@RR2,@RR4,R6",        0xB822, 0x0640); // @RR2,@RR4,R6
+        TEST(TRTIB, "@RR2,@RR4,R0",        0xB822, 0x0040); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB802, 0x0540); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0500); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0140); // @RR2,@RR4,R1
     } else {
-        TEST(TRTIB, "@R12,@R11,R10",   0xB8C2, 0x0AB0);
+        TEST(TRTIB, "@R2,@R3,R4",          0xB822, 0x0430); // @R2,@R3,R4
+        TEST(TRTIB, "@R2,@R3,R0",          0xB822, 0x0030); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB802, 0x0430); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB812, 0x0430); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0400); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0410); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0130); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB802, 0x0BC0);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB8E2, 0x0A00);
 
     // Translate, Test, Increment, and Repeat
     if (z8001()) {
-        TEST(TRTIRB, "@RR10,@RR8,R7", 0xB8A6, 0x078E);
+        TEST(TRTIRB, "@RR2,@RR4,R6",       0xB826, 0x064E); // @RR2,@RR4,R6
+        TEST(TRTIRB, "@RR2,@RR4,R0",       0xB826, 0x004E); // @RR2,@RR4,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB806, 0x054E); // @RR0,@RR4,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x050E); // @RR2,@RR0,R5
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x014E); // @RR2,@RR4,R1
     } else {
-        TEST(TRTIRB, "@R9,@R8,R7",    0xB896, 0x078E);
+        TEST(TRTIRB, "@R2,@R3,R4",         0xB826, 0x043E); // @R2,@R3,R4
+        TEST(TRTIRB, "@R2,@R3,R0",         0xB826, 0x003E); // @R2,@R3,R0
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB806, 0x043E); // @R0,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB816, 0x043E); // @R1,@R3,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x040E); // @R2,@R0,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x041E); // @R2,@R1,R4
+        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x013E); // @R2,@R3,R1
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB806, 0x078E);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB8A6, 0x070E);
+
+    if (z8001()) {
+        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@RR0,@RR4,R6",   0xBB49, 0x0608);
+        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@RR2,@RR0,R6",   0xBB09, 0x0628);
+        ETEST(ILLEGAL_REGISTER,      LDD, "@RR1,@RR4,R6",   0xBB49, 0x0618);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR2,@RR4,R4",   0xBB49, 0x0428);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR2,@RR4,R5",   0xBB49, 0x0428);
+        ETEST(OK,                    LDD, "@RR2,@RR4,R6",   0xBB49, 0x0628);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR4,@RR4,R6",   0xBB49, 0x0648);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR6,@RR4,R6",   0xBB49, 0x0668);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR6,@RR4,R7",   0xBB49, 0x0768);
+        ETEST(OK,                    LDD, "@RR8,@RR4,R0",   0xBB49, 0x0088);
+        ETEST(OK,                    LDD, "@RR8,@RR4,R1",   0xBB49, 0x0188);
+        ETEST(OK,                    LDD, "@RR10,@RR4,R6",  0xBB49, 0x06A8);
+        ETEST(OK,                    LDD, "@RR12,@RR4,R6",  0xBB49, 0x06C8);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR14,@RR4,R15", 0xBB49, 0x0FE8);
+    } else {
+        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@R0,@R2,R3",   0xBB29, 0x0308);
+        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@R2,@R0,R3",   0xBB09, 0x0328);
+        ETEST(OK,                    LDD, "@R1,@R2,R3",   0xBB29, 0x0318);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@R2,@R2,R3",   0xBB29, 0x0328);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@R3,@R2,R2",   0xBB29, 0x0238);
+        ETEST(REGISTERS_OVERWRAPPED, LDD, "@R3,@R2,R3",   0xBB29, 0x0338);
+        ETEST(OK,                    LDD, "@R4,@R2,R3",   0xBB29, 0x0348);
+        ETEST(OK,                    LDD, "@R5,@R2,R3",   0xBB29, 0x0358);
+        ETEST(OK,                    LDD, "@R6,@R2,R3",   0xBB29, 0x0368);
+        ETEST(OK,                    LDD, "@R7,@R2,R3",   0xBB29, 0x0378);
+        ETEST(OK,                    LDD, "@R8,@R2,R3",   0xBB29, 0x0388);
+        ETEST(OK,                    LDD, "@R9,@R2,R3",   0xBB29, 0x0398);
+        ETEST(OK,                    LDD, "@R10,@R2,R3",  0xBB29, 0x03A8);
+        ETEST(OK,                    LDD, "@R11,@R2,R3",  0xBB29, 0x03B8);
+        ETEST(OK,                    LDD, "@R12,@R2,R3",  0xBB29, 0x03C8);
+        ETEST(OK,                    LDD, "@R13,@R2,R3",  0xBB29, 0x03D8);
+        ETEST(OK,                    LDD, "@R14,@R2,R3",  0xBB29, 0x03E8);
+        ETEST(OK,                    LDD, "@R15,@R2,R3",  0xBB29, 0x03F8);
+    }
 }
 
 static void test_input() {

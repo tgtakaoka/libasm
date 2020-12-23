@@ -70,6 +70,8 @@ private:
     Error emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op);
     Error emitOperand(
             InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
+    Error checkRegisterOverwrap(const InsnZ8000 &insn, const Operand &dstOp,
+            const Operand &srcOp, const Operand &cntOp);
     Error encode(Insn &insn) override;
 };
 

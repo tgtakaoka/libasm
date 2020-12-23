@@ -357,6 +357,17 @@ uint8_t RegZ8000::encodeFlagName(FlagName name) {
     return uint8_t(name) & 0xF;
 }
 
+bool RegZ8000::checkOverwrap(RegName dst, RegName src, RegName cnt) {
+    const uint8_t dnum = encodeGeneralRegName(dst);
+    const uint8_t ds = isByteReg(dst) && dnum >= 8 ? dnum - 8 : dnum;
+    const uint8_t de = isLongReg(dst) ? ds + 1 : ds;
+    const uint8_t ss = encodeGeneralRegName(src);
+    const uint8_t se = isLongReg(src) ? ss + 1 : ss;
+    const uint8_t c = encodeGeneralRegName(cnt);
+    return ds == ss || ds == se || de == ss || de == se || ds == c || de == c ||
+           ss == c || se == c;
+}
+
 }  // namespace z8000
 }  // namespace libasm
 

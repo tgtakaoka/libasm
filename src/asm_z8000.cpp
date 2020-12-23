@@ -327,6 +327,26 @@ Error AsmZ8000::emitOperand(
     return setError(INTERNAL_ERROR);
 }
 
+Error AsmZ8000::checkRegisterOverwrap(const InsnZ8000 &insn,
+        const Operand &dstOp, const Operand &srcOp, const Operand &cntOp) {
+    if (dstOp.mode == M_IR && (dstOp.reg == REG_R0 || dstOp.reg == REG_RR0))
+        return setError(REGISTER_NOT_ALLOWED);
+    if (srcOp.mode == M_IR && (srcOp.reg == REG_R0 || srcOp.reg == REG_RR0))
+        return setError(REGISTER_NOT_ALLOWED);
+    if (RegZ8000::checkOverwrap(dstOp.reg, srcOp.reg, cntOp.reg))
+        return setError(REGISTERS_OVERWRAPPED);
+    if (insn.isTranslateInsn()) {
+        // @R1 isn't allowed as dst/src.
+        if (!TableZ8000.segmentedModel() &&
+                (dstOp.reg == REG_R1 || srcOp.reg == REG_R1))
+            return setError(REGISTER_NOT_ALLOWED);
+        // R1 isn't allowed as cnt.
+        if (cntOp.reg == REG_R1)
+            return setError(REGISTER_NOT_ALLOWED);
+    }
+    return OK;
+}
+
 int8_t AsmZ8000::parseIntrNames(const char *scan) {
     const char *p = scan;
     if (endOfLine(p))
@@ -523,6 +543,9 @@ Error AsmZ8000::encode(Insn &_insn) {
     insn.setAddrMode(dstOp.mode, srcOp.mode, ex1Op.mode, ex2Op.mode);
     if (TableZ8000.searchName(insn))
         return setError(TableZ8000.getError());
+    if (insn.isThreeRegsInsn() &&
+            checkRegisterOverwrap(insn, dstOp, srcOp, ex1Op))
+        return getError();
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO) {

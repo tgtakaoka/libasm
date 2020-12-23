@@ -333,6 +333,37 @@ Error DisZ8000::checkPostWord(const InsnZ8000 &insn) {
     return OK;
 }
 
+Error DisZ8000::checkRegisterOverwrap(const InsnZ8000 &insn) {
+    const AddrMode dmode = insn.dstMode();
+    const uint8_t dnum = modeField(insn, insn.dstField());
+    const uint8_t snum = modeField(insn, insn.srcField());
+    const uint8_t cnum = modeField(insn, MF_P8);
+    if (dmode == M_IR && dnum == 0)
+        return setError(REGISTER_NOT_ALLOWED);
+    if (snum == 0)
+        return setError(REGISTER_NOT_ALLOWED);
+    if (insn.isTranslateInsn()) {
+        // @R1 isn't allowed as dst/src.
+        if (!TableZ8000.segmentedModel() && (dnum == 1 || snum == 1))
+            return setError(REGISTER_NOT_ALLOWED);
+        // R1 isn't allowed as cnt.
+        if (cnum == 1)
+            return setError(REGISTER_NOT_ALLOWED);
+    }
+
+    const RegName dst =
+            RegZ8000::decodeRegNum(dnum, dmode == M_IR ? SZ_ADDR : SZ_WORD);
+    if (dst == REG_ILLEGAL)
+        return OK;
+    const RegName src = RegZ8000::decodeRegNum(snum, SZ_ADDR);
+    if (src == REG_ILLEGAL)
+        return OK;
+    const RegName cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
+    if (RegZ8000::checkOverwrap(dst, src, cnt))
+        return setError(REGISTERS_OVERWRAPPED);
+    return OK;
+}
+
 char *DisZ8000::outComma(
         char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field) {
     if (mode == M_CC && _regs.decodeCcNum(modeField(insn, field)) == CC_T)
@@ -352,6 +383,8 @@ Error DisZ8000::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (TableZ8000.searchOpCode(insn, memory))
         return setError(TableZ8000.getError());
     if (checkPostWord(insn))
+        return getError();
+    if (insn.isThreeRegsInsn() && checkRegisterOverwrap(insn))
         return getError();
 
     const AddrMode dst = insn.dstMode();

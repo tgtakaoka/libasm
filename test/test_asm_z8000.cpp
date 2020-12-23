@@ -1325,7 +1325,7 @@ static void test_string_manipulation() {
     // Compare String and Decrement
     if (z8001()) {
         TEST("CPSD  @RR4,@RR2,R0",    0xBB2A, 0x0048);
-        TEST("CPSDB @RR4,@RR2,R4,GE", 0xBA2A, 0x0449);
+        TEST("CPSDB @RR4,@RR2,R6,GE", 0xBA2A, 0x0649);
         ETEST(REGISTER_NOT_ALLOWED, "CPSD  @RR0,@RR2,R0");
         ETEST(REGISTER_NOT_ALLOWED, "CPSD  @RR4,@RR0,R0");
         ETEST(REGISTER_NOT_ALLOWED, "CPSDB @RR0,@RR2,R4,GE");
@@ -1341,8 +1341,8 @@ static void test_string_manipulation() {
 
     // Compare String, Decrement, and Repeat
     if (z8001()) {
-        TEST("CPSDR  @RR2,@RR4,R5,GT",  0xBB4E, 0x052A);
-        TEST("CPSDRB @RR2,@RR4,R5,UGT", 0xBA4E, 0x052B);
+        TEST("CPSDR  @RR2,@RR4,R6,GT",  0xBB4E, 0x062A);
+        TEST("CPSDRB @RR2,@RR4,R6,UGT", 0xBA4E, 0x062B);
         ETEST(REGISTER_NOT_ALLOWED, "CPSDR  @RR0,@RR4,R5,GT");
         ETEST(REGISTER_NOT_ALLOWED, "CPSDR  @RR2,@RR0,R5,GT");
         ETEST(REGISTER_NOT_ALLOWED, "CPSDRB @RR0,@RR4,R5,UGT");
@@ -1358,8 +1358,8 @@ static void test_string_manipulation() {
 
     // Compare String and Increment
     if (z8001()) {
-        TEST("CPSI  @RR4,@RR6,R5,NOV", 0xBB62, 0x054C);
-        TEST("CPSIB @RR4,@RR6,R5,PL",  0xBA62, 0x054D);
+        TEST("CPSI  @RR4,@RR6,R2,NOV", 0xBB62, 0x024C);
+        TEST("CPSIB @RR4,@RR6,R2,PL",  0xBA62, 0x024D);
         ETEST(REGISTER_NOT_ALLOWED, "CPSI  @RR0,@RR6,R5,NOV");
         ETEST(REGISTER_NOT_ALLOWED, "CPSI  @RR4,@RR0,R5,NOV");
         ETEST(REGISTER_NOT_ALLOWED, "CPSIB @RR0,@RR6,R5,PL");
@@ -1392,13 +1392,20 @@ static void test_string_manipulation() {
 
     // Translate and Decrement
     if (z8001()) {
-        TEST("TRDB @RR2,@RR4,R1", 0xB828, 0x0140);
-        ETEST(REGISTER_NOT_ALLOWED, "TRDB @RR0,@RR4,R1");
-        ETEST(REGISTER_NOT_ALLOWED, "TRDB @RR2,@RR0,R1");
+        TEST(                       "TRDB @RR2,@RR4,R6", 0xB828, 0x0640);
+        TEST(                       "TRDB @RR2,@RR4,R0", 0xB828, 0x0040);
+        ETEST(REGISTER_NOT_ALLOWED, "TRDB @RR2,@RR4,R1");
+        ETEST(REGISTER_NOT_ALLOWED, "TRDB @RR0,@RR4,R6");
+        ETEST(REGISTER_NOT_ALLOWED, "TRDB @RR2,@RR0,R6");
     } else {
-        TEST("TRDB @R1,@R2,R0",   0xB818, 0x0020);
-        ETEST(REGISTER_NOT_ALLOWED, "TRDB @R0,@R2,R0");
-        ETEST(REGISTER_NOT_ALLOWED, "TRDB @R1,@R0,R0");
+        ETEST(REGISTER_NOT_ALLOWED,  "TRDB @R0,@R2,R3");
+        ETEST(REGISTER_NOT_ALLOWED,  "TRDB @R1,@R2,R3");
+        ETEST(REGISTER_NOT_ALLOWED,  "TRDB @R2,@R0,R3");
+        ETEST(REGISTER_NOT_ALLOWED,  "TRDB @R2,@R1,R3");
+        ETEST(REGISTERS_OVERWRAPPED, "TRDB @R2,@R2,R3");
+        TEST(                        "TRDB @R3,@R2,R4",   0xB838, 0x0420);
+        TEST(                        "TRDB @R3,@R2,R0",   0xB838, 0x0020);
+        ETEST(REGISTER_NOT_ALLOWED,  "TRDB @R3,@R2,R1");
     }
 
     // Translate, Decrement, and Repeat

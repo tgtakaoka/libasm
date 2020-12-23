@@ -77,6 +77,15 @@ public:
 
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
+    bool isThreeRegsInsn() const {
+        const uint8_t opc = _opCode >> 8;
+        return opc == 0xB8 || opc == 0xBA || opc == 0xBB;
+    }
+    bool isTranslateInsn() const {
+        const uint8_t opc = _opCode >> 8;
+        return opc == 0xB8;
+    }
+
 private:
     Config::opcode_t _opCode;
     Config::opcode_t _post;

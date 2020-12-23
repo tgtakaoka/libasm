@@ -48,6 +48,7 @@ enum Error : uint8_t {
     NOT_BIT_ADDRESSABLE = 31,
     OPERAND_NOT_ALIGNED = 32,
     OPCODE_HAS_NO_EFFECT = 33,
+    REGISTERS_OVERWRAPPED = 34,
 
     // ValueParser
     ILLEGAL_CONSTANT = 100,

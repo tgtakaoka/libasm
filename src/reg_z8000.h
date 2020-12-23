@@ -162,6 +162,8 @@ public:
     char *outIntrNames(char *out, uint8_t intrs) const;
     static uint8_t encodeIntrName(IntrName name);
 
+    static bool checkOverwrap(RegName dst, RegName src, RegName cnt);
+
 private:
     char *outCtlName(char *out, RegName name) const;
     static uint8_t ctlRegLen(RegName name);

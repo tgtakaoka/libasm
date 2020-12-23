@@ -70,6 +70,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Not bit addressable address");
     case OPCODE_HAS_NO_EFFECT:
         return PSTR("Opcode has no effect");
+    case REGISTERS_OVERWRAPPED:
+        return PSTR("Registers overwrapped");
 
     // ValueParser
     case ILLEGAL_CONSTANT:
