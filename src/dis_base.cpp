@@ -18,10 +18,6 @@
 
 namespace libasm {
 
-char Disassembler::getCommentChar() const {
-    return _commentChar ? _commentChar : ';';
-}
-
 void Disassembler::setUppercase(bool uppercase) {
     _formatter.setUppercase(uppercase);
     _regBase.setUppercase(uppercase);

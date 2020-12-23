@@ -497,11 +497,11 @@ gen_tms99105.asm: gen_tms9900
 gen_mc68000.asm: gen_mc68000
 	./$^ -u -C 68000 -o $@ -l $(@:.asm=.lst)
 gen_z8001.inc: gen_z8000
-	./$^ -c -C z8001 -o $@ -l $(@:.inc=.lst)
+	./$^ -g -C z8001 -o $@ -l $(@:.inc=.lst)
 gen_z8002.inc: gen_z8000
-	./$^ -c -C z8002 -o $@ -l $(@:.inc=.lst)
+	./$^ -g -C z8002 -o $@ -l $(@:.inc=.lst)
 gen_ns32032.inc: gen_ns32000
-	./$^ -c -C 32032 -o $@ -l $(@:.inc=.lst)
+	./$^ -g -C 32032 -o $@ -l $(@:.inc=.lst)
 
 clean: clean-obj
 	-rm -f $(TEST_OBJS:.o=) $(GENS)

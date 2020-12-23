@@ -33,6 +33,7 @@ public:
     Error encode(
             const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab);
 
+    void setCommentChar(char commentChar) { _commentChar = commentChar; }
     ValueParser &getParser() const { return _parser; }
     const char *errorAt() const { return _scan; }
     bool endOfLine(const char *scan) const;
@@ -45,7 +46,7 @@ public:
 protected:
     ValueParser &_parser;
     TableBase &_table;
-    const char _commentChar;
+    char _commentChar;
     const char *_scan;
     SymbolTable *_symtab;
 

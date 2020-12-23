@@ -36,7 +36,6 @@ public:
     Error decode(
             DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
     ValueFormatter &getFormatter() { return _formatter; }
-    char getCommentChar() const;
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase);
     virtual void reset() {}
@@ -49,16 +48,11 @@ protected:
     ValueFormatter &_formatter;
     RegBase &_regBase;
     TableBase &_table;
-    const char _commentChar;
     SymbolTable *_symtab;
     bool _relativeTarget = false;
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table,
-            char commentChar = 0)
-        : _formatter(formatter),
-          _regBase(regs),
-          _table(table),
-          _commentChar(commentChar) {}
+    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
+        : _formatter(formatter), _regBase(regs), _table(table) {}
 
     char *outText(char *out, const char *text) const {
         while ((*out = *text++) != 0)

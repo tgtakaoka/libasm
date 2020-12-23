@@ -41,7 +41,11 @@ public:
         if (parseOption(argc, argv))
             return usage();
 
-        const char commentChar = _disassembler.getCommentChar();
+        char commentChar = ';';
+        if (_generateGas) {
+            commentChar = '#';
+            _disassembler.getFormatter().setCStyleHex(true);
+        }
         _disassembler.setUppercase(_uppercase);
         _listing.setUppercase(_uppercase);
         _output = nullptr;
@@ -62,7 +66,7 @@ public:
             }
             printCommandLine(_list, commentChar, _progname, argc, argv);
         }
-        if (_generateCpu)
+        if (_generateCpu && !_generateGas)
             pseudo("CPU", _cpu);
         return 0;
     }
@@ -90,6 +94,7 @@ private:
     bool _uppercase;
     const char *_cpu;
     bool _generateCpu;
+    bool _generateGas;
     bool _dump;
     FILE *_output;
     FILE *_list;
@@ -108,7 +113,7 @@ private:
     }
 
     void origin(typename Conf::uintptr_t addr) override {
-        if (!_generateCpu)
+        if (!_generateCpu || _generateGas)
             return;
         char operands[40];
         _disassembler.getFormatter().formatHex(
@@ -175,6 +180,7 @@ private:
         _uppercase = false;
         _cpu = nullptr;
         _generateCpu = true;
+        _generateGas = false;
         _dump = false;
         for (int i = 1; i < argc; i++) {
             const char *opt = argv[i];
@@ -208,6 +214,9 @@ private:
                 case 'c':
                     _generateCpu = false;
                     break;
+                case 'g':
+                    _generateGas = true;
+                    break;
                 case 'u':
                     _uppercase = true;
                     break;
@@ -233,6 +242,7 @@ private:
                 "  -l <list>   : list file\n"
                 "  -C          : CPU variant: %s\n"
                 "  -c          : do not output cpu directive\n"
+                "  -g          : output GNU as compatible\n"
                 "  -u          : use uppercase letter for output\n"
                 "  -d          : dump debug info\n",
                 _progname, _disassembler.listCpu());

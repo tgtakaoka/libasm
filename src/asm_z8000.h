@@ -28,7 +28,7 @@ namespace z8000 {
 
 class AsmZ8000 : public Assembler, public Config {
 public:
-    AsmZ8000() : Assembler(_parser, TableZ8000, '#') {}
+    AsmZ8000() : Assembler(_parser, TableZ8000) {}
 
     AddressWidth addressWidth() const override {
         return TableZ8000.addressWidth();
