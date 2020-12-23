@@ -1551,6 +1551,67 @@
       CALL PL, (IX+31)
       CALL NZ, (IX+31)
       CALL NC, (IX+31)
+      JP   F, (IX-41H)
+      JP   LT, (IX-41H)
+      JP   LE, (IX-41H)
+      JP   ULE, (IX-41H)
+      JP   OV, (IX-41H)
+      JP   MI, (IX-41H)
+      JP   Z, (IX-41H)
+      JP   C, (IX-41H)
+      JP   (IX-41H)
+      JP   GE, (IX-41H)
+      JP   GT, (IX-41H)
+      JP   UGT, (IX-41H)
+      JP   NOV, (IX-41H)
+      JP   PL, (IX-41H)
+      JP   NZ, (IX-41H)
+      JP   NC, (IX-41H)
+      CALL F, (IX-41H)
+      CALL LT, (IX-41H)
+      CALL LE, (IX-41H)
+      CALL ULE, (IX-41H)
+      CALL OV, (IX-41H)
+      CALL MI, (IX-41H)
+      CALL Z, (IX-41H)
+      CALL C, (IX-41H)
+      CALL (IX-41H)
+      CALL GE, (IX-41H)
+      CALL GT, (IX-41H)
+      CALL UGT, (IX-41H)
+      CALL NOV, (IX-41H)
+      CALL PL, (IX-41H)
+      CALL NZ, (IX-41H)
+      CALL NC, (IX-41H)
+      LD   (IX-41H), B
+      LD   (IX-41H), C
+      LD   (IX-41H), D
+      LD   (IX-41H), E
+      LD   (IX-41H), H
+      LD   (IX-41H), L
+      LD   (IX-41H), A
+      LD   (IX-41H), 38H
+      LDA  BC, (IX-41H)
+      LDA  DE, (IX-41H)
+      LDA  HL, (IX-41H)
+      LDA  IX, (IX-41H)
+      LDA  IY, (IX-41H)
+      LDA  SP, (IX-41H)
+      LDW  (IX-41H), 4140H
+      LD   (IX-41H), BC
+      LD   (IX-41H), DE
+      LD   (IX-41H), HL
+      LD   (IX-41H), IX
+      LD   (IX-41H), IY
+      LD   (IX-41H), SP
+      ADD  (IX-41H), 69H
+      ADC  (IX-41H), 6AH
+      SUB  (IX-41H), 6BH
+      SBC  (IX-41H), 6CH
+      AND  (IX-41H), 6DH
+      XOR  (IX-41H), 6EH
+      OR   (IX-41H), 6FH
+      CP   (IX-41H), 70H
       LD   (IY+31), B
       LD   (IY+31), C
       LD   (IY+31), D
@@ -1612,6 +1673,67 @@
       CALL PL, (IY+31)
       CALL NZ, (IY+31)
       CALL NC, (IY+31)
+      JP   F, (IY-41H)
+      JP   LT, (IY-41H)
+      JP   LE, (IY-41H)
+      JP   ULE, (IY-41H)
+      JP   OV, (IY-41H)
+      JP   MI, (IY-41H)
+      JP   Z, (IY-41H)
+      JP   C, (IY-41H)
+      JP   (IY-41H)
+      JP   GE, (IY-41H)
+      JP   GT, (IY-41H)
+      JP   UGT, (IY-41H)
+      JP   NOV, (IY-41H)
+      JP   PL, (IY-41H)
+      JP   NZ, (IY-41H)
+      JP   NC, (IY-41H)
+      CALL F, (IY-41H)
+      CALL LT, (IY-41H)
+      CALL LE, (IY-41H)
+      CALL ULE, (IY-41H)
+      CALL OV, (IY-41H)
+      CALL MI, (IY-41H)
+      CALL Z, (IY-41H)
+      CALL C, (IY-41H)
+      CALL (IY-41H)
+      CALL GE, (IY-41H)
+      CALL GT, (IY-41H)
+      CALL UGT, (IY-41H)
+      CALL NOV, (IY-41H)
+      CALL PL, (IY-41H)
+      CALL NZ, (IY-41H)
+      CALL NC, (IY-41H)
+      LD   (IY-41H), B
+      LD   (IY-41H), C
+      LD   (IY-41H), D
+      LD   (IY-41H), E
+      LD   (IY-41H), H
+      LD   (IY-41H), L
+      LD   (IY-41H), A
+      LD   (IY-41H), 38H
+      LDA  BC, (IY-41H)
+      LDA  DE, (IY-41H)
+      LDA  HL, (IY-41H)
+      LDA  IX, (IY-41H)
+      LDA  IY, (IY-41H)
+      LDA  SP, (IY-41H)
+      LDW  (IY-41H), 4140H
+      LD   (IY-41H), BC
+      LD   (IY-41H), DE
+      LD   (IY-41H), HL
+      LD   (IY-41H), IX
+      LD   (IY-41H), IY
+      LD   (IY-41H), SP
+      ADD  (IY-41H), 69H
+      ADC  (IY-41H), 6AH
+      SUB  (IY-41H), 6BH
+      SBC  (IY-41H), 6CH
+      AND  (IY-41H), 6DH
+      XOR  (IY-41H), 6EH
+      OR   (IY-41H), 6FH
+      CP   (IY-41H), 70H
       LD   (SP+31), B
       LD   (SP+31), C
       LD   (SP+31), D
@@ -1673,6 +1795,67 @@
       CALL PL, (SP+31)
       CALL NZ, (SP+31)
       CALL NC, (SP+31)
+      JP   F, (SP-41H)
+      JP   LT, (SP-41H)
+      JP   LE, (SP-41H)
+      JP   ULE, (SP-41H)
+      JP   OV, (SP-41H)
+      JP   MI, (SP-41H)
+      JP   Z, (SP-41H)
+      JP   C, (SP-41H)
+      JP   (SP-41H)
+      JP   GE, (SP-41H)
+      JP   GT, (SP-41H)
+      JP   UGT, (SP-41H)
+      JP   NOV, (SP-41H)
+      JP   PL, (SP-41H)
+      JP   NZ, (SP-41H)
+      JP   NC, (SP-41H)
+      CALL F, (SP-41H)
+      CALL LT, (SP-41H)
+      CALL LE, (SP-41H)
+      CALL ULE, (SP-41H)
+      CALL OV, (SP-41H)
+      CALL MI, (SP-41H)
+      CALL Z, (SP-41H)
+      CALL C, (SP-41H)
+      CALL (SP-41H)
+      CALL GE, (SP-41H)
+      CALL GT, (SP-41H)
+      CALL UGT, (SP-41H)
+      CALL NOV, (SP-41H)
+      CALL PL, (SP-41H)
+      CALL NZ, (SP-41H)
+      CALL NC, (SP-41H)
+      LD   (SP-41H), B
+      LD   (SP-41H), C
+      LD   (SP-41H), D
+      LD   (SP-41H), E
+      LD   (SP-41H), H
+      LD   (SP-41H), L
+      LD   (SP-41H), A
+      LD   (SP-41H), 38H
+      LDA  BC, (SP-41H)
+      LDA  DE, (SP-41H)
+      LDA  HL, (SP-41H)
+      LDA  IX, (SP-41H)
+      LDA  IY, (SP-41H)
+      LDA  SP, (SP-41H)
+      LDW  (SP-41H), 4140H
+      LD   (SP-41H), BC
+      LD   (SP-41H), DE
+      LD   (SP-41H), HL
+      LD   (SP-41H), IX
+      LD   (SP-41H), IY
+      LD   (SP-41H), SP
+      ADD  (SP-41H), 69H
+      ADC  (SP-41H), 6AH
+      SUB  (SP-41H), 6BH
+      SBC  (SP-41H), 6CH
+      AND  (SP-41H), 6DH
+      XOR  (SP-41H), 6EH
+      OR   (SP-41H), 6FH
+      CP   (SP-41H), 70H
       LD   (HL+A), B
       LD   (HL+A), C
       LD   (HL+A), D

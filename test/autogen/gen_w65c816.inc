@@ -133,6 +133,7 @@
       ADC  ($62,X)
       PER  *+$6466
       PER  *-$029A
+      PER  *
       ADC  $64,S
       STZ  $65
       ADC  $66

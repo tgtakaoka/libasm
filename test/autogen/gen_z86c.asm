@@ -9,9 +9,12 @@
       ADD     R0, @R4
       ADD     >06H, >05H
       ADD     10H, >05H
+      ADD     11H, 10H
+      ADD     >00H, 10H
       ADD     >07H, @06H
       ADD     10H, @06H
       ADD     >07H, #8
+      ADD     10H, #17
       ADD     @08H, #9
       LD      R0, >09H
       LD      R0, 10H
@@ -214,9 +217,12 @@
       LD      R14, @R4
       LD      0E6H, 0E5H
       LD      >00H, 0E5H
+      LD      >01H, >00H
+      LD      10H, >00H
       LD      0E7H, @0E6H
       LD      >00H, @0E6H
       LD      0E7H, #0E8H
+      LD      >00H, #1
       LD      @0E8H, #0E9H
       JR      NZ, $-18
       JR      NZ, $
@@ -228,6 +234,7 @@
       SWAP    @0F2H
       LD      @R15, R4
       LD      @0F7H, 0F6H
+      LD      @01H, >00H
       JR      NC, $-2
       JR      NC, $
       JR      NC, $+1

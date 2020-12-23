@@ -33,8 +33,10 @@
       SHRAB 28, 27
       SJMP  $+35
       SJMP  $-985
+      SJMP  $
       SCALL $+43
       SCALL $-977
+      SCALL $
       JBC   49, 0, $+53
       JBC   49, 0, $-125
       JBC   49, 0, $
@@ -253,8 +255,10 @@
       BR    [228]
       LJMP  $-1615H
       LJMP  $+00EBH
+      LJMP  $
       LCALL $-0E0DH
       LCALL $+00F3H
+      LCALL $
       RET
       PUSHF
       POPF

@@ -111,32 +111,40 @@
       CLRB
       NEG   97,X
       AIM   #$62, 99,X
+      BCLR  7, 128,X
       OIM   #$63, 100,X
+      BSET  7, 129,X
       COM   100,X
       LSR   101,X
       EIM   #$66, 103,X
+      BTGL  7, 129,X
       ROR   103,X
       ASR   104,X
       ASL   105,X
       ROL   106,X
       DEC   107,X
       TIM   #$6C, 109,X
+      BTST  7, 129,X
       INC   109,X
       TST   110,X
       JMP   111,X
       CLR   112,X
       NEG   $7172
       AIM   #$72, $73
+      BCLR  7, $80
       OIM   #$73, $74
+      BSET  7, $81
       COM   $7475
       LSR   $7576
       EIM   #$76, $77
+      BTGL  7, $81
       ROR   $7778
       ASR   $7879
       ASL   $797A
       ROL   $7A7B
       DEC   $7B7C
       TIM   #$7C, $7D
+      BTST  7, $81
       INC   $7D7E
       TST   $7E7F
       JMP   $7F80
@@ -205,6 +213,7 @@
       JSR   $BEBF
       LDS   $BFC0
       STS   $C0C1
+      STS   >$0001
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
@@ -251,18 +260,31 @@
       LDX   239,X
       STX   240,X
       SUBB  $F1F2
+      SUBB  >$0001
       CMPB  $F2F3
+      CMPB  >$0001
       SBCB  $F3F4
+      SBCB  >$0001
       ADDD  $F4F5
+      ADDD  >$0001
       ANDB  $F5F6
+      ANDB  >$0001
       BITB  $F6F7
+      BITB  >$0001
       LDAB  $F7F8
+      LDAB  >$0001
       STAB  $F8F9
+      STAB  >$0001
       EORB  $F9FA
+      EORB  >$0001
       ADCB  $FAFB
+      ADCB  >$0001
       ORAB  $FBFC
+      ORAB  >$0001
       ADDB  $FCFD
+      ADDB  >$0001
       LDD   $FDFE
+      LDD   >$0001
       STD   $FEFF
       STD   >$0001
       LDX   $FF00

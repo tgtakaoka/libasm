@@ -9,9 +9,12 @@
       ADD     R0, @R4
       ADD     >06H, >05H
       ADD     10H, >05H
+      ADD     11H, 10H
+      ADD     >00H, 10H
       ADD     >07H, @06H
       ADD     10H, @06H
       ADD     >07H, #8
+      ADD     10H, #17
       BOR     R0, >09H, #4
       BOR     R0, 10H, #4
       BOR     >0AH, #4, R0
@@ -166,6 +169,8 @@
       PUSHUI  @84H, >00H
       MULT    86H, 85H
       MULT    >00H, 85H
+      MULT    >02H, >01H
+      MULT    10H, >01H
       MULT    88H, @87H
       MULT    >00H, @87H
       MULT    88H, #87H
@@ -185,6 +190,8 @@
       POPUI   >00H, @94H
       DIV     96H, 95H
       DIV     >00H, 95H
+      DIV     >02H, >01H
+      DIV     10H, >01H
       DIV     98H, @97H
       DIV     >00H, @97H
       DIV     98H, #97H
@@ -207,6 +214,8 @@
       CP      0A7H, #0A8H
       LDC     R10, 0AAA9H(RR8)
       LDE     R10, 0ABAAH(RR8)
+      LDC     R11, 0B2B1H
+      LDE     R11, 0B3B2H
       JR      GT, $-82
       JR      GT, $
       JR      GT, $+1
@@ -224,6 +233,8 @@
       XOR     0B7H, #0B8H
       LDC     0BAB9H(RR8), R11
       LDE     0BBBAH(RR8), R11
+      LDC     0C2C1H, R12
+      LDE     0C3C2H, R12
       JR      UGT, $-66
       JR      UGT, $
       JR      UGT, $+1
@@ -240,6 +251,7 @@
       LDW     0C8H, @0C7H
       LDW     >00H, @0C7H
       LDW     0C8H, #0C9CAH
+      LDW     >00H, #0102H
       LD      R12, @R8
       JR      NOV, $-50
       JR      NOV, $
@@ -271,9 +283,12 @@
       LDEI    R14, @RR4
       LD      0E6H, 0E5H
       LD      >00H, 0E5H
+      LD      >01H, >00H
+      LD      10H, >00H
       LD      0E7H, @0E6H
       LD      >00H, @0E6H
       LD      0E7H, #0E8H
+      LD      >00H, #1
       LDC     R14, -23(RR8)
       LDC     R14, 0(RR8)
       LDC     R14, +1(RR8)
@@ -294,6 +309,7 @@
       LDEPI   @RR4, R15
       CALL    @0F6H
       LD      @0F7H, 0F6H
+      LD      @01H, >00H
       CALL    0F7F8H
       LDC     -7(RR8), R15
       LDC     0(RR8), R15

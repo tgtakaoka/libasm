@@ -127,6 +127,62 @@
       CMPD  >-21,S
       CMPD  $00EB,S
       CMPD  D,S
+      CMPD  [,S++]
+      CMPD  [,--S]
+      CMPD  [,S]
+      CMPD  [B,S]
+      CMPD  [A,S]
+      CMPD  [-7,S]
+      CMPD  [<0,S]
+      CMPD  [1,S]
+      CMPD  [-$0505,S]
+      CMPD  [>-5,S]
+      CMPD  [$00FB,S]
+      CMPD  [D,S]
+      CMPD  <<0,X
+      CMPD  1,X
+      CMPD  -16,X
+      CMPD  <<0,Y
+      CMPD  1,Y
+      CMPD  -16,Y
+      CMPD  <<0,U
+      CMPD  1,U
+      CMPD  -16,U
+      CMPD  <<0,S
+      CMPD  1,S
+      CMPD  -16,S
+      CMPD  ,X+
+      CMPD  ,X++
+      CMPD  ,-X
+      CMPD  ,--X
+      CMPD  ,X
+      CMPD  B,X
+      CMPD  A,X
+      CMPD  -119,X
+      CMPD  <-16,X
+      CMPD  <0,X
+      CMPD  16,X
+      CMPD  -$7575,X
+      CMPD  >-$0075,X
+      CMPD  $008B,X
+      CMPD  D,X
+      CMPD  [,X++]
+      CMPD  [,--X]
+      CMPD  [,X]
+      CMPD  [B,X]
+      CMPD  [A,X]
+      CMPD  [-103,X]
+      CMPD  [<0,X]
+      CMPD  [1,X]
+      CMPD  [-$6565,X]
+      CMPD  [>-$0065,X]
+      CMPD  [$009B,X]
+      CMPD  [D,X]
+      CMPD  [$A0A1]
+      CMPD  ,Y+
+      CMPD  ,Y++
+      CMPD  ,-Y
+      CMPD  ,--Y
       CMPY  *-$514C,PCR
       CMPY  [,Y++]
       CMPD  $B4B5
@@ -224,6 +280,62 @@
       CMPU  >-21,S
       CMPU  $00EB,S
       CMPU  D,S
+      CMPU  [,S++]
+      CMPU  [,--S]
+      CMPU  [,S]
+      CMPU  [B,S]
+      CMPU  [A,S]
+      CMPU  [-7,S]
+      CMPU  [<0,S]
+      CMPU  [1,S]
+      CMPU  [-$0505,S]
+      CMPU  [>-5,S]
+      CMPU  [$00FB,S]
+      CMPU  [D,S]
+      CMPU  <<0,X
+      CMPU  1,X
+      CMPU  -16,X
+      CMPU  <<0,Y
+      CMPU  1,Y
+      CMPU  -16,Y
+      CMPU  <<0,U
+      CMPU  1,U
+      CMPU  -16,U
+      CMPU  <<0,S
+      CMPU  1,S
+      CMPU  -16,S
+      CMPU  ,X+
+      CMPU  ,X++
+      CMPU  ,-X
+      CMPU  ,--X
+      CMPU  ,X
+      CMPU  B,X
+      CMPU  A,X
+      CMPU  -119,X
+      CMPU  <-16,X
+      CMPU  <0,X
+      CMPU  16,X
+      CMPU  -$7575,X
+      CMPU  >-$0075,X
+      CMPU  $008B,X
+      CMPU  D,X
+      CMPU  [,X++]
+      CMPU  [,--X]
+      CMPU  [,X]
+      CMPU  [B,X]
+      CMPU  [A,X]
+      CMPU  [-103,X]
+      CMPU  [<0,X]
+      CMPU  [1,X]
+      CMPU  [-$6565,X]
+      CMPU  [>-$0065,X]
+      CMPU  [$009B,X]
+      CMPU  [D,X]
+      CMPU  [$A0A1]
+      CMPU  ,Y+
+      CMPU  ,Y++
+      CMPU  ,-Y
+      CMPU  ,--Y
       CMPS  *-$514C,PCR
       CMPS  [,Y++]
       CMPU  $B4B5
@@ -477,6 +589,50 @@
       LEAX  >-$0035,U
       LEAX  $00CB,U
       LEAX  D,U
+      LEAX  [,U++]
+      LEAX  [,--U]
+      LEAX  [,U]
+      LEAX  [B,U]
+      LEAX  [A,U]
+      LEAX  [-39,U]
+      LEAX  [<0,U]
+      LEAX  [1,U]
+      LEAX  [-$2525,U]
+      LEAX  [>-$0025,U]
+      LEAX  [$00DB,U]
+      LEAX  [D,U]
+      LEAX  ,S+
+      LEAX  ,S++
+      LEAX  ,-S
+      LEAX  ,--S
+      LEAX  ,S
+      LEAX  B,S
+      LEAX  A,S
+      LEAX  -23,S
+      LEAX  <-16,S
+      LEAX  <0,S
+      LEAX  16,S
+      LEAX  -$1515,S
+      LEAX  >-21,S
+      LEAX  $00EB,S
+      LEAX  D,S
+      LEAX  [,S++]
+      LEAX  [,--S]
+      LEAX  [,S]
+      LEAX  [B,S]
+      LEAX  [A,S]
+      LEAX  [-7,S]
+      LEAX  [<0,S]
+      LEAX  [1,S]
+      LEAX  [-$0505,S]
+      LEAX  [>-5,S]
+      LEAX  [$00FB,S]
+      LEAX  [D,S]
+      LEAX  <<0,X
+      LEAX  1,X
+      LEAX  -16,X
+      LEAX  <<0,Y
+      LEAX  1,Y
       LEAY  -14,Y
       LEAY  <<0,U
       LEAY  1,U
@@ -564,6 +720,50 @@
       LEAY  >-$0035,U
       LEAY  $00CB,U
       LEAY  D,U
+      LEAY  [,U++]
+      LEAY  [,--U]
+      LEAY  [,U]
+      LEAY  [B,U]
+      LEAY  [A,U]
+      LEAY  [-39,U]
+      LEAY  [<0,U]
+      LEAY  [1,U]
+      LEAY  [-$2525,U]
+      LEAY  [>-$0025,U]
+      LEAY  [$00DB,U]
+      LEAY  [D,U]
+      LEAY  ,S+
+      LEAY  ,S++
+      LEAY  ,-S
+      LEAY  ,--S
+      LEAY  ,S
+      LEAY  B,S
+      LEAY  A,S
+      LEAY  -23,S
+      LEAY  <-16,S
+      LEAY  <0,S
+      LEAY  16,S
+      LEAY  -$1515,S
+      LEAY  >-21,S
+      LEAY  $00EB,S
+      LEAY  D,S
+      LEAY  [,S++]
+      LEAY  [,--S]
+      LEAY  [,S]
+      LEAY  [B,S]
+      LEAY  [A,S]
+      LEAY  [-7,S]
+      LEAY  [<0,S]
+      LEAY  [1,S]
+      LEAY  [-$0505,S]
+      LEAY  [>-5,S]
+      LEAY  [$00FB,S]
+      LEAY  [D,S]
+      LEAY  <<0,X
+      LEAY  1,X
+      LEAY  -16,X
+      LEAY  <<0,Y
+      LEAY  1,Y
       LEAS  -13,Y
       LEAS  <<0,U
       LEAS  1,U
@@ -651,6 +851,50 @@
       LEAS  >-$0035,U
       LEAS  $00CB,U
       LEAS  D,U
+      LEAS  [,U++]
+      LEAS  [,--U]
+      LEAS  [,U]
+      LEAS  [B,U]
+      LEAS  [A,U]
+      LEAS  [-39,U]
+      LEAS  [<0,U]
+      LEAS  [1,U]
+      LEAS  [-$2525,U]
+      LEAS  [>-$0025,U]
+      LEAS  [$00DB,U]
+      LEAS  [D,U]
+      LEAS  ,S+
+      LEAS  ,S++
+      LEAS  ,-S
+      LEAS  ,--S
+      LEAS  ,S
+      LEAS  B,S
+      LEAS  A,S
+      LEAS  -23,S
+      LEAS  <-16,S
+      LEAS  <0,S
+      LEAS  16,S
+      LEAS  -$1515,S
+      LEAS  >-21,S
+      LEAS  $00EB,S
+      LEAS  D,S
+      LEAS  [,S++]
+      LEAS  [,--S]
+      LEAS  [,S]
+      LEAS  [B,S]
+      LEAS  [A,S]
+      LEAS  [-7,S]
+      LEAS  [<0,S]
+      LEAS  [1,S]
+      LEAS  [-$0505,S]
+      LEAS  [>-5,S]
+      LEAS  [$00FB,S]
+      LEAS  [D,S]
+      LEAS  <<0,X
+      LEAS  1,X
+      LEAS  -16,X
+      LEAS  <<0,Y
+      LEAS  1,Y
       LEAU  -12,Y
       LEAU  <<0,U
       LEAU  1,U
@@ -738,6 +982,50 @@
       LEAU  >-$0035,U
       LEAU  $00CB,U
       LEAU  D,U
+      LEAU  [,U++]
+      LEAU  [,--U]
+      LEAU  [,U]
+      LEAU  [B,U]
+      LEAU  [A,U]
+      LEAU  [-39,U]
+      LEAU  [<0,U]
+      LEAU  [1,U]
+      LEAU  [-$2525,U]
+      LEAU  [>-$0025,U]
+      LEAU  [$00DB,U]
+      LEAU  [D,U]
+      LEAU  ,S+
+      LEAU  ,S++
+      LEAU  ,-S
+      LEAU  ,--S
+      LEAU  ,S
+      LEAU  B,S
+      LEAU  A,S
+      LEAU  -23,S
+      LEAU  <-16,S
+      LEAU  <0,S
+      LEAU  16,S
+      LEAU  -$1515,S
+      LEAU  >-21,S
+      LEAU  $00EB,S
+      LEAU  D,S
+      LEAU  [,S++]
+      LEAU  [,--S]
+      LEAU  [,S]
+      LEAU  [B,S]
+      LEAU  [A,S]
+      LEAU  [-7,S]
+      LEAU  [<0,S]
+      LEAU  [1,S]
+      LEAU  [-$0505,S]
+      LEAU  [>-5,S]
+      LEAU  [$00FB,S]
+      LEAU  [D,S]
+      LEAU  <<0,X
+      LEAU  1,X
+      LEAU  -16,X
+      LEAU  <<0,Y
+      LEAU  1,Y
       PSHS  Y,X,B,CC
       PSHS  Y,X,D
       PSHS  Y,X,D,CC
@@ -1872,6 +2160,55 @@
       NEG   >-$0035,U
       NEG   $00CB,U
       NEG   D,U
+      NEG   [,U++]
+      NEG   [,--U]
+      NEG   [,U]
+      NEG   [B,U]
+      NEG   [A,U]
+      NEG   [-39,U]
+      NEG   [<0,U]
+      NEG   [1,U]
+      NEG   [-$2525,U]
+      NEG   [>-$0025,U]
+      NEG   [$00DB,U]
+      NEG   [D,U]
+      NEG   ,S+
+      NEG   ,S++
+      NEG   ,-S
+      NEG   ,--S
+      NEG   ,S
+      NEG   B,S
+      NEG   A,S
+      NEG   -23,S
+      NEG   <-16,S
+      NEG   <0,S
+      NEG   16,S
+      NEG   -$1515,S
+      NEG   >-21,S
+      NEG   $00EB,S
+      NEG   D,S
+      NEG   [,S++]
+      NEG   [,--S]
+      NEG   [,S]
+      NEG   [B,S]
+      NEG   [A,S]
+      NEG   [-7,S]
+      NEG   [<0,S]
+      NEG   [1,S]
+      NEG   [-$0505,S]
+      NEG   [>-5,S]
+      NEG   [$00FB,S]
+      NEG   [D,S]
+      NEG   <<0,X
+      NEG   1,X
+      NEG   -16,X
+      NEG   <<0,Y
+      NEG   1,Y
+      NEG   -16,Y
+      NEG   <<0,U
+      NEG   1,U
+      NEG   -16,U
+      NEG   <<0,S
       COM   4,S
       COM   -16,S
       COM   ,X+
@@ -1954,6 +2291,55 @@
       COM   >-$0035,U
       COM   $00CB,U
       COM   D,U
+      COM   [,U++]
+      COM   [,--U]
+      COM   [,U]
+      COM   [B,U]
+      COM   [A,U]
+      COM   [-39,U]
+      COM   [<0,U]
+      COM   [1,U]
+      COM   [-$2525,U]
+      COM   [>-$0025,U]
+      COM   [$00DB,U]
+      COM   [D,U]
+      COM   ,S+
+      COM   ,S++
+      COM   ,-S
+      COM   ,--S
+      COM   ,S
+      COM   B,S
+      COM   A,S
+      COM   -23,S
+      COM   <-16,S
+      COM   <0,S
+      COM   16,S
+      COM   -$1515,S
+      COM   >-21,S
+      COM   $00EB,S
+      COM   D,S
+      COM   [,S++]
+      COM   [,--S]
+      COM   [,S]
+      COM   [B,S]
+      COM   [A,S]
+      COM   [-7,S]
+      COM   [<0,S]
+      COM   [1,S]
+      COM   [-$0505,S]
+      COM   [>-5,S]
+      COM   [$00FB,S]
+      COM   [D,S]
+      COM   <<0,X
+      COM   1,X
+      COM   -16,X
+      COM   <<0,Y
+      COM   1,Y
+      COM   -16,Y
+      COM   <<0,U
+      COM   1,U
+      COM   -16,U
+      COM   <<0,S
       LSR   5,S
       LSR   -16,S
       LSR   ,X+
@@ -2036,6 +2422,55 @@
       LSR   >-$0035,U
       LSR   $00CB,U
       LSR   D,U
+      LSR   [,U++]
+      LSR   [,--U]
+      LSR   [,U]
+      LSR   [B,U]
+      LSR   [A,U]
+      LSR   [-39,U]
+      LSR   [<0,U]
+      LSR   [1,U]
+      LSR   [-$2525,U]
+      LSR   [>-$0025,U]
+      LSR   [$00DB,U]
+      LSR   [D,U]
+      LSR   ,S+
+      LSR   ,S++
+      LSR   ,-S
+      LSR   ,--S
+      LSR   ,S
+      LSR   B,S
+      LSR   A,S
+      LSR   -23,S
+      LSR   <-16,S
+      LSR   <0,S
+      LSR   16,S
+      LSR   -$1515,S
+      LSR   >-21,S
+      LSR   $00EB,S
+      LSR   D,S
+      LSR   [,S++]
+      LSR   [,--S]
+      LSR   [,S]
+      LSR   [B,S]
+      LSR   [A,S]
+      LSR   [-7,S]
+      LSR   [<0,S]
+      LSR   [1,S]
+      LSR   [-$0505,S]
+      LSR   [>-5,S]
+      LSR   [$00FB,S]
+      LSR   [D,S]
+      LSR   <<0,X
+      LSR   1,X
+      LSR   -16,X
+      LSR   <<0,Y
+      LSR   1,Y
+      LSR   -16,Y
+      LSR   <<0,U
+      LSR   1,U
+      LSR   -16,U
+      LSR   <<0,S
       ROR   7,S
       ROR   -16,S
       ROR   ,X+
@@ -2118,6 +2553,55 @@
       ROR   >-$0035,U
       ROR   $00CB,U
       ROR   D,U
+      ROR   [,U++]
+      ROR   [,--U]
+      ROR   [,U]
+      ROR   [B,U]
+      ROR   [A,U]
+      ROR   [-39,U]
+      ROR   [<0,U]
+      ROR   [1,U]
+      ROR   [-$2525,U]
+      ROR   [>-$0025,U]
+      ROR   [$00DB,U]
+      ROR   [D,U]
+      ROR   ,S+
+      ROR   ,S++
+      ROR   ,-S
+      ROR   ,--S
+      ROR   ,S
+      ROR   B,S
+      ROR   A,S
+      ROR   -23,S
+      ROR   <-16,S
+      ROR   <0,S
+      ROR   16,S
+      ROR   -$1515,S
+      ROR   >-21,S
+      ROR   $00EB,S
+      ROR   D,S
+      ROR   [,S++]
+      ROR   [,--S]
+      ROR   [,S]
+      ROR   [B,S]
+      ROR   [A,S]
+      ROR   [-7,S]
+      ROR   [<0,S]
+      ROR   [1,S]
+      ROR   [-$0505,S]
+      ROR   [>-5,S]
+      ROR   [$00FB,S]
+      ROR   [D,S]
+      ROR   <<0,X
+      ROR   1,X
+      ROR   -16,X
+      ROR   <<0,Y
+      ROR   1,Y
+      ROR   -16,Y
+      ROR   <<0,U
+      ROR   1,U
+      ROR   -16,U
+      ROR   <<0,S
       ASR   8,S
       ASR   -16,S
       ASR   ,X+
@@ -2200,6 +2684,55 @@
       ASR   >-$0035,U
       ASR   $00CB,U
       ASR   D,U
+      ASR   [,U++]
+      ASR   [,--U]
+      ASR   [,U]
+      ASR   [B,U]
+      ASR   [A,U]
+      ASR   [-39,U]
+      ASR   [<0,U]
+      ASR   [1,U]
+      ASR   [-$2525,U]
+      ASR   [>-$0025,U]
+      ASR   [$00DB,U]
+      ASR   [D,U]
+      ASR   ,S+
+      ASR   ,S++
+      ASR   ,-S
+      ASR   ,--S
+      ASR   ,S
+      ASR   B,S
+      ASR   A,S
+      ASR   -23,S
+      ASR   <-16,S
+      ASR   <0,S
+      ASR   16,S
+      ASR   -$1515,S
+      ASR   >-21,S
+      ASR   $00EB,S
+      ASR   D,S
+      ASR   [,S++]
+      ASR   [,--S]
+      ASR   [,S]
+      ASR   [B,S]
+      ASR   [A,S]
+      ASR   [-7,S]
+      ASR   [<0,S]
+      ASR   [1,S]
+      ASR   [-$0505,S]
+      ASR   [>-5,S]
+      ASR   [$00FB,S]
+      ASR   [D,S]
+      ASR   <<0,X
+      ASR   1,X
+      ASR   -16,X
+      ASR   <<0,Y
+      ASR   1,Y
+      ASR   -16,Y
+      ASR   <<0,U
+      ASR   1,U
+      ASR   -16,U
+      ASR   <<0,S
       ASL   9,S
       ASL   -16,S
       ASL   ,X+
@@ -2282,6 +2815,55 @@
       ASL   >-$0035,U
       ASL   $00CB,U
       ASL   D,U
+      ASL   [,U++]
+      ASL   [,--U]
+      ASL   [,U]
+      ASL   [B,U]
+      ASL   [A,U]
+      ASL   [-39,U]
+      ASL   [<0,U]
+      ASL   [1,U]
+      ASL   [-$2525,U]
+      ASL   [>-$0025,U]
+      ASL   [$00DB,U]
+      ASL   [D,U]
+      ASL   ,S+
+      ASL   ,S++
+      ASL   ,-S
+      ASL   ,--S
+      ASL   ,S
+      ASL   B,S
+      ASL   A,S
+      ASL   -23,S
+      ASL   <-16,S
+      ASL   <0,S
+      ASL   16,S
+      ASL   -$1515,S
+      ASL   >-21,S
+      ASL   $00EB,S
+      ASL   D,S
+      ASL   [,S++]
+      ASL   [,--S]
+      ASL   [,S]
+      ASL   [B,S]
+      ASL   [A,S]
+      ASL   [-7,S]
+      ASL   [<0,S]
+      ASL   [1,S]
+      ASL   [-$0505,S]
+      ASL   [>-5,S]
+      ASL   [$00FB,S]
+      ASL   [D,S]
+      ASL   <<0,X
+      ASL   1,X
+      ASL   -16,X
+      ASL   <<0,Y
+      ASL   1,Y
+      ASL   -16,Y
+      ASL   <<0,U
+      ASL   1,U
+      ASL   -16,U
+      ASL   <<0,S
       ROL   10,S
       ROL   -16,S
       ROL   ,X+
@@ -2364,6 +2946,55 @@
       ROL   >-$0035,U
       ROL   $00CB,U
       ROL   D,U
+      ROL   [,U++]
+      ROL   [,--U]
+      ROL   [,U]
+      ROL   [B,U]
+      ROL   [A,U]
+      ROL   [-39,U]
+      ROL   [<0,U]
+      ROL   [1,U]
+      ROL   [-$2525,U]
+      ROL   [>-$0025,U]
+      ROL   [$00DB,U]
+      ROL   [D,U]
+      ROL   ,S+
+      ROL   ,S++
+      ROL   ,-S
+      ROL   ,--S
+      ROL   ,S
+      ROL   B,S
+      ROL   A,S
+      ROL   -23,S
+      ROL   <-16,S
+      ROL   <0,S
+      ROL   16,S
+      ROL   -$1515,S
+      ROL   >-21,S
+      ROL   $00EB,S
+      ROL   D,S
+      ROL   [,S++]
+      ROL   [,--S]
+      ROL   [,S]
+      ROL   [B,S]
+      ROL   [A,S]
+      ROL   [-7,S]
+      ROL   [<0,S]
+      ROL   [1,S]
+      ROL   [-$0505,S]
+      ROL   [>-5,S]
+      ROL   [$00FB,S]
+      ROL   [D,S]
+      ROL   <<0,X
+      ROL   1,X
+      ROL   -16,X
+      ROL   <<0,Y
+      ROL   1,Y
+      ROL   -16,Y
+      ROL   <<0,U
+      ROL   1,U
+      ROL   -16,U
+      ROL   <<0,S
       DEC   11,S
       DEC   -16,S
       DEC   ,X+
@@ -2446,6 +3077,55 @@
       DEC   >-$0035,U
       DEC   $00CB,U
       DEC   D,U
+      DEC   [,U++]
+      DEC   [,--U]
+      DEC   [,U]
+      DEC   [B,U]
+      DEC   [A,U]
+      DEC   [-39,U]
+      DEC   [<0,U]
+      DEC   [1,U]
+      DEC   [-$2525,U]
+      DEC   [>-$0025,U]
+      DEC   [$00DB,U]
+      DEC   [D,U]
+      DEC   ,S+
+      DEC   ,S++
+      DEC   ,-S
+      DEC   ,--S
+      DEC   ,S
+      DEC   B,S
+      DEC   A,S
+      DEC   -23,S
+      DEC   <-16,S
+      DEC   <0,S
+      DEC   16,S
+      DEC   -$1515,S
+      DEC   >-21,S
+      DEC   $00EB,S
+      DEC   D,S
+      DEC   [,S++]
+      DEC   [,--S]
+      DEC   [,S]
+      DEC   [B,S]
+      DEC   [A,S]
+      DEC   [-7,S]
+      DEC   [<0,S]
+      DEC   [1,S]
+      DEC   [-$0505,S]
+      DEC   [>-5,S]
+      DEC   [$00FB,S]
+      DEC   [D,S]
+      DEC   <<0,X
+      DEC   1,X
+      DEC   -16,X
+      DEC   <<0,Y
+      DEC   1,Y
+      DEC   -16,Y
+      DEC   <<0,U
+      DEC   1,U
+      DEC   -16,U
+      DEC   <<0,S
       INC   13,S
       INC   -16,S
       INC   ,X+
@@ -2528,6 +3208,55 @@
       INC   >-$0035,U
       INC   $00CB,U
       INC   D,U
+      INC   [,U++]
+      INC   [,--U]
+      INC   [,U]
+      INC   [B,U]
+      INC   [A,U]
+      INC   [-39,U]
+      INC   [<0,U]
+      INC   [1,U]
+      INC   [-$2525,U]
+      INC   [>-$0025,U]
+      INC   [$00DB,U]
+      INC   [D,U]
+      INC   ,S+
+      INC   ,S++
+      INC   ,-S
+      INC   ,--S
+      INC   ,S
+      INC   B,S
+      INC   A,S
+      INC   -23,S
+      INC   <-16,S
+      INC   <0,S
+      INC   16,S
+      INC   -$1515,S
+      INC   >-21,S
+      INC   $00EB,S
+      INC   D,S
+      INC   [,S++]
+      INC   [,--S]
+      INC   [,S]
+      INC   [B,S]
+      INC   [A,S]
+      INC   [-7,S]
+      INC   [<0,S]
+      INC   [1,S]
+      INC   [-$0505,S]
+      INC   [>-5,S]
+      INC   [$00FB,S]
+      INC   [D,S]
+      INC   <<0,X
+      INC   1,X
+      INC   -16,X
+      INC   <<0,Y
+      INC   1,Y
+      INC   -16,Y
+      INC   <<0,U
+      INC   1,U
+      INC   -16,U
+      INC   <<0,S
       TST   14,S
       TST   -16,S
       TST   ,X+
@@ -2610,6 +3339,55 @@
       TST   >-$0035,U
       TST   $00CB,U
       TST   D,U
+      TST   [,U++]
+      TST   [,--U]
+      TST   [,U]
+      TST   [B,U]
+      TST   [A,U]
+      TST   [-39,U]
+      TST   [<0,U]
+      TST   [1,U]
+      TST   [-$2525,U]
+      TST   [>-$0025,U]
+      TST   [$00DB,U]
+      TST   [D,U]
+      TST   ,S+
+      TST   ,S++
+      TST   ,-S
+      TST   ,--S
+      TST   ,S
+      TST   B,S
+      TST   A,S
+      TST   -23,S
+      TST   <-16,S
+      TST   <0,S
+      TST   16,S
+      TST   -$1515,S
+      TST   >-21,S
+      TST   $00EB,S
+      TST   D,S
+      TST   [,S++]
+      TST   [,--S]
+      TST   [,S]
+      TST   [B,S]
+      TST   [A,S]
+      TST   [-7,S]
+      TST   [<0,S]
+      TST   [1,S]
+      TST   [-$0505,S]
+      TST   [>-5,S]
+      TST   [$00FB,S]
+      TST   [D,S]
+      TST   <<0,X
+      TST   1,X
+      TST   -16,X
+      TST   <<0,Y
+      TST   1,Y
+      TST   -16,Y
+      TST   <<0,U
+      TST   1,U
+      TST   -16,U
+      TST   <<0,S
       JMP   15,S
       JMP   -16,S
       JMP   ,X+
@@ -2692,6 +3470,55 @@
       JMP   >-$0035,U
       JMP   $00CB,U
       JMP   D,U
+      JMP   [,U++]
+      JMP   [,--U]
+      JMP   [,U]
+      JMP   [B,U]
+      JMP   [A,U]
+      JMP   [-39,U]
+      JMP   [<0,U]
+      JMP   [1,U]
+      JMP   [-$2525,U]
+      JMP   [>-$0025,U]
+      JMP   [$00DB,U]
+      JMP   [D,U]
+      JMP   ,S+
+      JMP   ,S++
+      JMP   ,-S
+      JMP   ,--S
+      JMP   ,S
+      JMP   B,S
+      JMP   A,S
+      JMP   -23,S
+      JMP   <-16,S
+      JMP   <0,S
+      JMP   16,S
+      JMP   -$1515,S
+      JMP   >-21,S
+      JMP   $00EB,S
+      JMP   D,S
+      JMP   [,S++]
+      JMP   [,--S]
+      JMP   [,S]
+      JMP   [B,S]
+      JMP   [A,S]
+      JMP   [-7,S]
+      JMP   [<0,S]
+      JMP   [1,S]
+      JMP   [-$0505,S]
+      JMP   [>-5,S]
+      JMP   [$00FB,S]
+      JMP   [D,S]
+      JMP   <<0,X
+      JMP   1,X
+      JMP   -16,X
+      JMP   <<0,Y
+      JMP   1,Y
+      JMP   -16,Y
+      JMP   <<0,U
+      JMP   1,U
+      JMP   -16,U
+      JMP   <<0,S
       CLR   -16,S
       CLR   ,X+
       CLR   ,X++
@@ -2773,6 +3600,56 @@
       CLR   >-$0035,U
       CLR   $00CB,U
       CLR   D,U
+      CLR   [,U++]
+      CLR   [,--U]
+      CLR   [,U]
+      CLR   [B,U]
+      CLR   [A,U]
+      CLR   [-39,U]
+      CLR   [<0,U]
+      CLR   [1,U]
+      CLR   [-$2525,U]
+      CLR   [>-$0025,U]
+      CLR   [$00DB,U]
+      CLR   [D,U]
+      CLR   ,S+
+      CLR   ,S++
+      CLR   ,-S
+      CLR   ,--S
+      CLR   ,S
+      CLR   B,S
+      CLR   A,S
+      CLR   -23,S
+      CLR   <-16,S
+      CLR   <0,S
+      CLR   16,S
+      CLR   -$1515,S
+      CLR   >-21,S
+      CLR   $00EB,S
+      CLR   D,S
+      CLR   [,S++]
+      CLR   [,--S]
+      CLR   [,S]
+      CLR   [B,S]
+      CLR   [A,S]
+      CLR   [-7,S]
+      CLR   [<0,S]
+      CLR   [1,S]
+      CLR   [-$0505,S]
+      CLR   [>-5,S]
+      CLR   [$00FB,S]
+      CLR   [D,S]
+      CLR   <<0,X
+      CLR   1,X
+      CLR   -16,X
+      CLR   <<0,Y
+      CLR   1,Y
+      CLR   -16,Y
+      CLR   <<0,U
+      CLR   1,U
+      CLR   -16,U
+      CLR   <<0,S
+      CLR   1,S
       NEG   $7172
       COM   $7475
       LSR   $7576
@@ -2895,6 +3772,59 @@
       SUBA  >-21,S
       SUBA  $00EB,S
       SUBA  D,S
+      SUBA  [,S++]
+      SUBA  [,--S]
+      SUBA  [,S]
+      SUBA  [B,S]
+      SUBA  [A,S]
+      SUBA  [-7,S]
+      SUBA  [<0,S]
+      SUBA  [1,S]
+      SUBA  [-$0505,S]
+      SUBA  [>-5,S]
+      SUBA  [$00FB,S]
+      SUBA  [D,S]
+      SUBA  <<0,X
+      SUBA  1,X
+      SUBA  -16,X
+      SUBA  <<0,Y
+      SUBA  1,Y
+      SUBA  -16,Y
+      SUBA  <<0,U
+      SUBA  1,U
+      SUBA  -16,U
+      SUBA  <<0,S
+      SUBA  1,S
+      SUBA  -16,S
+      SUBA  ,X+
+      SUBA  ,X++
+      SUBA  ,-X
+      SUBA  ,--X
+      SUBA  ,X
+      SUBA  B,X
+      SUBA  A,X
+      SUBA  -119,X
+      SUBA  <-16,X
+      SUBA  <0,X
+      SUBA  16,X
+      SUBA  -$7575,X
+      SUBA  >-$0075,X
+      SUBA  $008B,X
+      SUBA  D,X
+      SUBA  [,X++]
+      SUBA  [,--X]
+      SUBA  [,X]
+      SUBA  [B,X]
+      SUBA  [A,X]
+      SUBA  [-103,X]
+      SUBA  [<0,X]
+      SUBA  [1,X]
+      SUBA  [-$6565,X]
+      SUBA  [>-$0065,X]
+      SUBA  [$009B,X]
+      SUBA  [D,X]
+      SUBA  [$A0A1]
+      SUBA  ,Y+
       CMPA  ,-Y
       CMPA  ,--Y
       CMPA  ,Y
@@ -2972,6 +3902,60 @@
       CMPA  >-21,S
       CMPA  $00EB,S
       CMPA  D,S
+      CMPA  [,S++]
+      CMPA  [,--S]
+      CMPA  [,S]
+      CMPA  [B,S]
+      CMPA  [A,S]
+      CMPA  [-7,S]
+      CMPA  [<0,S]
+      CMPA  [1,S]
+      CMPA  [-$0505,S]
+      CMPA  [>-5,S]
+      CMPA  [$00FB,S]
+      CMPA  [D,S]
+      CMPA  <<0,X
+      CMPA  1,X
+      CMPA  -16,X
+      CMPA  <<0,Y
+      CMPA  1,Y
+      CMPA  -16,Y
+      CMPA  <<0,U
+      CMPA  1,U
+      CMPA  -16,U
+      CMPA  <<0,S
+      CMPA  1,S
+      CMPA  -16,S
+      CMPA  ,X+
+      CMPA  ,X++
+      CMPA  ,-X
+      CMPA  ,--X
+      CMPA  ,X
+      CMPA  B,X
+      CMPA  A,X
+      CMPA  -119,X
+      CMPA  <-16,X
+      CMPA  <0,X
+      CMPA  16,X
+      CMPA  -$7575,X
+      CMPA  >-$0075,X
+      CMPA  $008B,X
+      CMPA  D,X
+      CMPA  [,X++]
+      CMPA  [,--X]
+      CMPA  [,X]
+      CMPA  [B,X]
+      CMPA  [A,X]
+      CMPA  [-103,X]
+      CMPA  [<0,X]
+      CMPA  [1,X]
+      CMPA  [-$6565,X]
+      CMPA  [>-$0065,X]
+      CMPA  [$009B,X]
+      CMPA  [D,X]
+      CMPA  [$A0A1]
+      CMPA  ,Y+
+      CMPA  ,Y++
       SBCA  ,--Y
       SBCA  ,Y
       SBCA  B,Y
@@ -3048,6 +4032,61 @@
       SBCA  >-21,S
       SBCA  $00EB,S
       SBCA  D,S
+      SBCA  [,S++]
+      SBCA  [,--S]
+      SBCA  [,S]
+      SBCA  [B,S]
+      SBCA  [A,S]
+      SBCA  [-7,S]
+      SBCA  [<0,S]
+      SBCA  [1,S]
+      SBCA  [-$0505,S]
+      SBCA  [>-5,S]
+      SBCA  [$00FB,S]
+      SBCA  [D,S]
+      SBCA  <<0,X
+      SBCA  1,X
+      SBCA  -16,X
+      SBCA  <<0,Y
+      SBCA  1,Y
+      SBCA  -16,Y
+      SBCA  <<0,U
+      SBCA  1,U
+      SBCA  -16,U
+      SBCA  <<0,S
+      SBCA  1,S
+      SBCA  -16,S
+      SBCA  ,X+
+      SBCA  ,X++
+      SBCA  ,-X
+      SBCA  ,--X
+      SBCA  ,X
+      SBCA  B,X
+      SBCA  A,X
+      SBCA  -119,X
+      SBCA  <-16,X
+      SBCA  <0,X
+      SBCA  16,X
+      SBCA  -$7575,X
+      SBCA  >-$0075,X
+      SBCA  $008B,X
+      SBCA  D,X
+      SBCA  [,X++]
+      SBCA  [,--X]
+      SBCA  [,X]
+      SBCA  [B,X]
+      SBCA  [A,X]
+      SBCA  [-103,X]
+      SBCA  [<0,X]
+      SBCA  [1,X]
+      SBCA  [-$6565,X]
+      SBCA  [>-$0065,X]
+      SBCA  [$009B,X]
+      SBCA  [D,X]
+      SBCA  [$A0A1]
+      SBCA  ,Y+
+      SBCA  ,Y++
+      SBCA  ,-Y
       SUBD  ,Y
       SUBD  B,Y
       SUBD  A,Y
@@ -3123,6 +4162,62 @@
       SUBD  >-21,S
       SUBD  $00EB,S
       SUBD  D,S
+      SUBD  [,S++]
+      SUBD  [,--S]
+      SUBD  [,S]
+      SUBD  [B,S]
+      SUBD  [A,S]
+      SUBD  [-7,S]
+      SUBD  [<0,S]
+      SUBD  [1,S]
+      SUBD  [-$0505,S]
+      SUBD  [>-5,S]
+      SUBD  [$00FB,S]
+      SUBD  [D,S]
+      SUBD  <<0,X
+      SUBD  1,X
+      SUBD  -16,X
+      SUBD  <<0,Y
+      SUBD  1,Y
+      SUBD  -16,Y
+      SUBD  <<0,U
+      SUBD  1,U
+      SUBD  -16,U
+      SUBD  <<0,S
+      SUBD  1,S
+      SUBD  -16,S
+      SUBD  ,X+
+      SUBD  ,X++
+      SUBD  ,-X
+      SUBD  ,--X
+      SUBD  ,X
+      SUBD  B,X
+      SUBD  A,X
+      SUBD  -119,X
+      SUBD  <-16,X
+      SUBD  <0,X
+      SUBD  16,X
+      SUBD  -$7575,X
+      SUBD  >-$0075,X
+      SUBD  $008B,X
+      SUBD  D,X
+      SUBD  [,X++]
+      SUBD  [,--X]
+      SUBD  [,X]
+      SUBD  [B,X]
+      SUBD  [A,X]
+      SUBD  [-103,X]
+      SUBD  [<0,X]
+      SUBD  [1,X]
+      SUBD  [-$6565,X]
+      SUBD  [>-$0065,X]
+      SUBD  [$009B,X]
+      SUBD  [D,X]
+      SUBD  [$A0A1]
+      SUBD  ,Y+
+      SUBD  ,Y++
+      SUBD  ,-Y
+      SUBD  ,--Y
       ANDA  B,Y
       ANDA  A,Y
       ANDA  -87,Y
@@ -3197,6 +4292,63 @@
       ANDA  >-21,S
       ANDA  $00EB,S
       ANDA  D,S
+      ANDA  [,S++]
+      ANDA  [,--S]
+      ANDA  [,S]
+      ANDA  [B,S]
+      ANDA  [A,S]
+      ANDA  [-7,S]
+      ANDA  [<0,S]
+      ANDA  [1,S]
+      ANDA  [-$0505,S]
+      ANDA  [>-5,S]
+      ANDA  [$00FB,S]
+      ANDA  [D,S]
+      ANDA  <<0,X
+      ANDA  1,X
+      ANDA  -16,X
+      ANDA  <<0,Y
+      ANDA  1,Y
+      ANDA  -16,Y
+      ANDA  <<0,U
+      ANDA  1,U
+      ANDA  -16,U
+      ANDA  <<0,S
+      ANDA  1,S
+      ANDA  -16,S
+      ANDA  ,X+
+      ANDA  ,X++
+      ANDA  ,-X
+      ANDA  ,--X
+      ANDA  ,X
+      ANDA  B,X
+      ANDA  A,X
+      ANDA  -119,X
+      ANDA  <-16,X
+      ANDA  <0,X
+      ANDA  16,X
+      ANDA  -$7575,X
+      ANDA  >-$0075,X
+      ANDA  $008B,X
+      ANDA  D,X
+      ANDA  [,X++]
+      ANDA  [,--X]
+      ANDA  [,X]
+      ANDA  [B,X]
+      ANDA  [A,X]
+      ANDA  [-103,X]
+      ANDA  [<0,X]
+      ANDA  [1,X]
+      ANDA  [-$6565,X]
+      ANDA  [>-$0065,X]
+      ANDA  [$009B,X]
+      ANDA  [D,X]
+      ANDA  [$A0A1]
+      ANDA  ,Y+
+      ANDA  ,Y++
+      ANDA  ,-Y
+      ANDA  ,--Y
+      ANDA  ,Y
       BITA  A,Y
       BITA  -87,Y
       BITA  <-16,Y
@@ -3270,6 +4422,64 @@
       BITA  >-21,S
       BITA  $00EB,S
       BITA  D,S
+      BITA  [,S++]
+      BITA  [,--S]
+      BITA  [,S]
+      BITA  [B,S]
+      BITA  [A,S]
+      BITA  [-7,S]
+      BITA  [<0,S]
+      BITA  [1,S]
+      BITA  [-$0505,S]
+      BITA  [>-5,S]
+      BITA  [$00FB,S]
+      BITA  [D,S]
+      BITA  <<0,X
+      BITA  1,X
+      BITA  -16,X
+      BITA  <<0,Y
+      BITA  1,Y
+      BITA  -16,Y
+      BITA  <<0,U
+      BITA  1,U
+      BITA  -16,U
+      BITA  <<0,S
+      BITA  1,S
+      BITA  -16,S
+      BITA  ,X+
+      BITA  ,X++
+      BITA  ,-X
+      BITA  ,--X
+      BITA  ,X
+      BITA  B,X
+      BITA  A,X
+      BITA  -119,X
+      BITA  <-16,X
+      BITA  <0,X
+      BITA  16,X
+      BITA  -$7575,X
+      BITA  >-$0075,X
+      BITA  $008B,X
+      BITA  D,X
+      BITA  [,X++]
+      BITA  [,--X]
+      BITA  [,X]
+      BITA  [B,X]
+      BITA  [A,X]
+      BITA  [-103,X]
+      BITA  [<0,X]
+      BITA  [1,X]
+      BITA  [-$6565,X]
+      BITA  [>-$0065,X]
+      BITA  [$009B,X]
+      BITA  [D,X]
+      BITA  [$A0A1]
+      BITA  ,Y+
+      BITA  ,Y++
+      BITA  ,-Y
+      BITA  ,--Y
+      BITA  ,Y
+      BITA  B,Y
       LDA   -87,Y
       LDA   <-16,Y
       LDA   <0,Y
@@ -3342,6 +4552,65 @@
       LDA   >-21,S
       LDA   $00EB,S
       LDA   D,S
+      LDA   [,S++]
+      LDA   [,--S]
+      LDA   [,S]
+      LDA   [B,S]
+      LDA   [A,S]
+      LDA   [-7,S]
+      LDA   [<0,S]
+      LDA   [1,S]
+      LDA   [-$0505,S]
+      LDA   [>-5,S]
+      LDA   [$00FB,S]
+      LDA   [D,S]
+      LDA   <<0,X
+      LDA   1,X
+      LDA   -16,X
+      LDA   <<0,Y
+      LDA   1,Y
+      LDA   -16,Y
+      LDA   <<0,U
+      LDA   1,U
+      LDA   -16,U
+      LDA   <<0,S
+      LDA   1,S
+      LDA   -16,S
+      LDA   ,X+
+      LDA   ,X++
+      LDA   ,-X
+      LDA   ,--X
+      LDA   ,X
+      LDA   B,X
+      LDA   A,X
+      LDA   -119,X
+      LDA   <-16,X
+      LDA   <0,X
+      LDA   16,X
+      LDA   -$7575,X
+      LDA   >-$0075,X
+      LDA   $008B,X
+      LDA   D,X
+      LDA   [,X++]
+      LDA   [,--X]
+      LDA   [,X]
+      LDA   [B,X]
+      LDA   [A,X]
+      LDA   [-103,X]
+      LDA   [<0,X]
+      LDA   [1,X]
+      LDA   [-$6565,X]
+      LDA   [>-$0065,X]
+      LDA   [$009B,X]
+      LDA   [D,X]
+      LDA   [$A0A1]
+      LDA   ,Y+
+      LDA   ,Y++
+      LDA   ,-Y
+      LDA   ,--Y
+      LDA   ,Y
+      LDA   B,Y
+      LDA   A,Y
       STA   -87,Y
       STA   <-16,Y
       STA   <0,Y
@@ -3414,6 +4683,65 @@
       STA   >-21,S
       STA   $00EB,S
       STA   D,S
+      STA   [,S++]
+      STA   [,--S]
+      STA   [,S]
+      STA   [B,S]
+      STA   [A,S]
+      STA   [-7,S]
+      STA   [<0,S]
+      STA   [1,S]
+      STA   [-$0505,S]
+      STA   [>-5,S]
+      STA   [$00FB,S]
+      STA   [D,S]
+      STA   <<0,X
+      STA   1,X
+      STA   -16,X
+      STA   <<0,Y
+      STA   1,Y
+      STA   -16,Y
+      STA   <<0,U
+      STA   1,U
+      STA   -16,U
+      STA   <<0,S
+      STA   1,S
+      STA   -16,S
+      STA   ,X+
+      STA   ,X++
+      STA   ,-X
+      STA   ,--X
+      STA   ,X
+      STA   B,X
+      STA   A,X
+      STA   -119,X
+      STA   <-16,X
+      STA   <0,X
+      STA   16,X
+      STA   -$7575,X
+      STA   >-$0075,X
+      STA   $008B,X
+      STA   D,X
+      STA   [,X++]
+      STA   [,--X]
+      STA   [,X]
+      STA   [B,X]
+      STA   [A,X]
+      STA   [-103,X]
+      STA   [<0,X]
+      STA   [1,X]
+      STA   [-$6565,X]
+      STA   [>-$0065,X]
+      STA   [$009B,X]
+      STA   [D,X]
+      STA   [$A0A1]
+      STA   ,Y+
+      STA   ,Y++
+      STA   ,-Y
+      STA   ,--Y
+      STA   ,Y
+      STA   B,Y
+      STA   A,Y
       EORA  -$5555,Y
       EORA  >-$0055,Y
       EORA  $00AB,Y
@@ -3482,6 +4810,69 @@
       EORA  >-21,S
       EORA  $00EB,S
       EORA  D,S
+      EORA  [,S++]
+      EORA  [,--S]
+      EORA  [,S]
+      EORA  [B,S]
+      EORA  [A,S]
+      EORA  [-7,S]
+      EORA  [<0,S]
+      EORA  [1,S]
+      EORA  [-$0505,S]
+      EORA  [>-5,S]
+      EORA  [$00FB,S]
+      EORA  [D,S]
+      EORA  <<0,X
+      EORA  1,X
+      EORA  -16,X
+      EORA  <<0,Y
+      EORA  1,Y
+      EORA  -16,Y
+      EORA  <<0,U
+      EORA  1,U
+      EORA  -16,U
+      EORA  <<0,S
+      EORA  1,S
+      EORA  -16,S
+      EORA  ,X+
+      EORA  ,X++
+      EORA  ,-X
+      EORA  ,--X
+      EORA  ,X
+      EORA  B,X
+      EORA  A,X
+      EORA  -119,X
+      EORA  <-16,X
+      EORA  <0,X
+      EORA  16,X
+      EORA  -$7575,X
+      EORA  >-$0075,X
+      EORA  $008B,X
+      EORA  D,X
+      EORA  [,X++]
+      EORA  [,--X]
+      EORA  [,X]
+      EORA  [B,X]
+      EORA  [A,X]
+      EORA  [-103,X]
+      EORA  [<0,X]
+      EORA  [1,X]
+      EORA  [-$6565,X]
+      EORA  [>-$0065,X]
+      EORA  [$009B,X]
+      EORA  [D,X]
+      EORA  [$A0A1]
+      EORA  ,Y+
+      EORA  ,Y++
+      EORA  ,-Y
+      EORA  ,--Y
+      EORA  ,Y
+      EORA  B,Y
+      EORA  A,Y
+      EORA  -87,Y
+      EORA  <-16,Y
+      EORA  <0,Y
+      EORA  16,Y
       ADCA  D,Y
       ADCA  *-80,PCR
       ADCA  *,PCR
@@ -3547,6 +4938,72 @@
       ADCA  >-21,S
       ADCA  $00EB,S
       ADCA  D,S
+      ADCA  [,S++]
+      ADCA  [,--S]
+      ADCA  [,S]
+      ADCA  [B,S]
+      ADCA  [A,S]
+      ADCA  [-7,S]
+      ADCA  [<0,S]
+      ADCA  [1,S]
+      ADCA  [-$0505,S]
+      ADCA  [>-5,S]
+      ADCA  [$00FB,S]
+      ADCA  [D,S]
+      ADCA  <<0,X
+      ADCA  1,X
+      ADCA  -16,X
+      ADCA  <<0,Y
+      ADCA  1,Y
+      ADCA  -16,Y
+      ADCA  <<0,U
+      ADCA  1,U
+      ADCA  -16,U
+      ADCA  <<0,S
+      ADCA  1,S
+      ADCA  -16,S
+      ADCA  ,X+
+      ADCA  ,X++
+      ADCA  ,-X
+      ADCA  ,--X
+      ADCA  ,X
+      ADCA  B,X
+      ADCA  A,X
+      ADCA  -119,X
+      ADCA  <-16,X
+      ADCA  <0,X
+      ADCA  16,X
+      ADCA  -$7575,X
+      ADCA  >-$0075,X
+      ADCA  $008B,X
+      ADCA  D,X
+      ADCA  [,X++]
+      ADCA  [,--X]
+      ADCA  [,X]
+      ADCA  [B,X]
+      ADCA  [A,X]
+      ADCA  [-103,X]
+      ADCA  [<0,X]
+      ADCA  [1,X]
+      ADCA  [-$6565,X]
+      ADCA  [>-$0065,X]
+      ADCA  [$009B,X]
+      ADCA  [D,X]
+      ADCA  [$A0A1]
+      ADCA  ,Y+
+      ADCA  ,Y++
+      ADCA  ,-Y
+      ADCA  ,--Y
+      ADCA  ,Y
+      ADCA  B,Y
+      ADCA  A,Y
+      ADCA  -87,Y
+      ADCA  <-16,Y
+      ADCA  <0,Y
+      ADCA  16,Y
+      ADCA  -$5555,Y
+      ADCA  >-$0055,Y
+      ADCA  $00AB,Y
       ORA   D,Y
       ORA   *-80,PCR
       ORA   *,PCR
@@ -3612,6 +5069,72 @@
       ORA   >-21,S
       ORA   $00EB,S
       ORA   D,S
+      ORA   [,S++]
+      ORA   [,--S]
+      ORA   [,S]
+      ORA   [B,S]
+      ORA   [A,S]
+      ORA   [-7,S]
+      ORA   [<0,S]
+      ORA   [1,S]
+      ORA   [-$0505,S]
+      ORA   [>-5,S]
+      ORA   [$00FB,S]
+      ORA   [D,S]
+      ORA   <<0,X
+      ORA   1,X
+      ORA   -16,X
+      ORA   <<0,Y
+      ORA   1,Y
+      ORA   -16,Y
+      ORA   <<0,U
+      ORA   1,U
+      ORA   -16,U
+      ORA   <<0,S
+      ORA   1,S
+      ORA   -16,S
+      ORA   ,X+
+      ORA   ,X++
+      ORA   ,-X
+      ORA   ,--X
+      ORA   ,X
+      ORA   B,X
+      ORA   A,X
+      ORA   -119,X
+      ORA   <-16,X
+      ORA   <0,X
+      ORA   16,X
+      ORA   -$7575,X
+      ORA   >-$0075,X
+      ORA   $008B,X
+      ORA   D,X
+      ORA   [,X++]
+      ORA   [,--X]
+      ORA   [,X]
+      ORA   [B,X]
+      ORA   [A,X]
+      ORA   [-103,X]
+      ORA   [<0,X]
+      ORA   [1,X]
+      ORA   [-$6565,X]
+      ORA   [>-$0065,X]
+      ORA   [$009B,X]
+      ORA   [D,X]
+      ORA   [$A0A1]
+      ORA   ,Y+
+      ORA   ,Y++
+      ORA   ,-Y
+      ORA   ,--Y
+      ORA   ,Y
+      ORA   B,Y
+      ORA   A,Y
+      ORA   -87,Y
+      ORA   <-16,Y
+      ORA   <0,Y
+      ORA   16,Y
+      ORA   -$5555,Y
+      ORA   >-$0055,Y
+      ORA   $00AB,Y
       ADDA  *-80,PCR
       ADDA  *,PCR
       ADDA  *+1,PCR
@@ -3676,6 +5199,73 @@
       ADDA  >-21,S
       ADDA  $00EB,S
       ADDA  D,S
+      ADDA  [,S++]
+      ADDA  [,--S]
+      ADDA  [,S]
+      ADDA  [B,S]
+      ADDA  [A,S]
+      ADDA  [-7,S]
+      ADDA  [<0,S]
+      ADDA  [1,S]
+      ADDA  [-$0505,S]
+      ADDA  [>-5,S]
+      ADDA  [$00FB,S]
+      ADDA  [D,S]
+      ADDA  <<0,X
+      ADDA  1,X
+      ADDA  -16,X
+      ADDA  <<0,Y
+      ADDA  1,Y
+      ADDA  -16,Y
+      ADDA  <<0,U
+      ADDA  1,U
+      ADDA  -16,U
+      ADDA  <<0,S
+      ADDA  1,S
+      ADDA  -16,S
+      ADDA  ,X+
+      ADDA  ,X++
+      ADDA  ,-X
+      ADDA  ,--X
+      ADDA  ,X
+      ADDA  B,X
+      ADDA  A,X
+      ADDA  -119,X
+      ADDA  <-16,X
+      ADDA  <0,X
+      ADDA  16,X
+      ADDA  -$7575,X
+      ADDA  >-$0075,X
+      ADDA  $008B,X
+      ADDA  D,X
+      ADDA  [,X++]
+      ADDA  [,--X]
+      ADDA  [,X]
+      ADDA  [B,X]
+      ADDA  [A,X]
+      ADDA  [-103,X]
+      ADDA  [<0,X]
+      ADDA  [1,X]
+      ADDA  [-$6565,X]
+      ADDA  [>-$0065,X]
+      ADDA  [$009B,X]
+      ADDA  [D,X]
+      ADDA  [$A0A1]
+      ADDA  ,Y+
+      ADDA  ,Y++
+      ADDA  ,-Y
+      ADDA  ,--Y
+      ADDA  ,Y
+      ADDA  B,Y
+      ADDA  A,Y
+      ADDA  -87,Y
+      ADDA  <-16,Y
+      ADDA  <0,Y
+      ADDA  16,Y
+      ADDA  -$5555,Y
+      ADDA  >-$0055,Y
+      ADDA  $00AB,Y
+      ADDA  D,Y
       CMPX  *-$514D,PCR
       CMPX  *+$00B3,PCR
       CMPX  [,Y++]
@@ -3740,6 +5330,73 @@
       CMPX  >-21,S
       CMPX  $00EB,S
       CMPX  D,S
+      CMPX  [,S++]
+      CMPX  [,--S]
+      CMPX  [,S]
+      CMPX  [B,S]
+      CMPX  [A,S]
+      CMPX  [-7,S]
+      CMPX  [<0,S]
+      CMPX  [1,S]
+      CMPX  [-$0505,S]
+      CMPX  [>-5,S]
+      CMPX  [$00FB,S]
+      CMPX  [D,S]
+      CMPX  <<0,X
+      CMPX  1,X
+      CMPX  -16,X
+      CMPX  <<0,Y
+      CMPX  1,Y
+      CMPX  -16,Y
+      CMPX  <<0,U
+      CMPX  1,U
+      CMPX  -16,U
+      CMPX  <<0,S
+      CMPX  1,S
+      CMPX  -16,S
+      CMPX  ,X+
+      CMPX  ,X++
+      CMPX  ,-X
+      CMPX  ,--X
+      CMPX  ,X
+      CMPX  B,X
+      CMPX  A,X
+      CMPX  -119,X
+      CMPX  <-16,X
+      CMPX  <0,X
+      CMPX  16,X
+      CMPX  -$7575,X
+      CMPX  >-$0075,X
+      CMPX  $008B,X
+      CMPX  D,X
+      CMPX  [,X++]
+      CMPX  [,--X]
+      CMPX  [,X]
+      CMPX  [B,X]
+      CMPX  [A,X]
+      CMPX  [-103,X]
+      CMPX  [<0,X]
+      CMPX  [1,X]
+      CMPX  [-$6565,X]
+      CMPX  [>-$0065,X]
+      CMPX  [$009B,X]
+      CMPX  [D,X]
+      CMPX  [$A0A1]
+      CMPX  ,Y+
+      CMPX  ,Y++
+      CMPX  ,-Y
+      CMPX  ,--Y
+      CMPX  ,Y
+      CMPX  B,Y
+      CMPX  A,Y
+      CMPX  -87,Y
+      CMPX  <-16,Y
+      CMPX  <0,Y
+      CMPX  16,Y
+      CMPX  -$5555,Y
+      CMPX  >-$0055,Y
+      CMPX  $00AB,Y
+      CMPX  D,Y
       JSR   [,Y++]
       JSR   [,--Y]
       JSR   [,Y]
@@ -3816,6 +5473,61 @@
       JSR   [>-5,S]
       JSR   [$00FB,S]
       JSR   [D,S]
+      JSR   <<0,X
+      JSR   1,X
+      JSR   -16,X
+      JSR   <<0,Y
+      JSR   1,Y
+      JSR   -16,Y
+      JSR   <<0,U
+      JSR   1,U
+      JSR   -16,U
+      JSR   <<0,S
+      JSR   1,S
+      JSR   -16,S
+      JSR   ,X+
+      JSR   ,X++
+      JSR   ,-X
+      JSR   ,--X
+      JSR   ,X
+      JSR   B,X
+      JSR   A,X
+      JSR   -119,X
+      JSR   <-16,X
+      JSR   <0,X
+      JSR   16,X
+      JSR   -$7575,X
+      JSR   >-$0075,X
+      JSR   $008B,X
+      JSR   D,X
+      JSR   [,X++]
+      JSR   [,--X]
+      JSR   [,X]
+      JSR   [B,X]
+      JSR   [A,X]
+      JSR   [-103,X]
+      JSR   [<0,X]
+      JSR   [1,X]
+      JSR   [-$6565,X]
+      JSR   [>-$0065,X]
+      JSR   [$009B,X]
+      JSR   [D,X]
+      JSR   [$A0A1]
+      JSR   ,Y+
+      JSR   ,Y++
+      JSR   ,-Y
+      JSR   ,--Y
+      JSR   ,Y
+      JSR   B,Y
+      JSR   A,Y
+      JSR   -87,Y
+      JSR   <-16,Y
+      JSR   <0,Y
+      JSR   16,Y
+      JSR   -$5555,Y
+      JSR   >-$0055,Y
+      JSR   $00AB,Y
+      JSR   D,Y
       LDX   [,Y++]
       LDX   [,--Y]
       LDX   [,Y]
@@ -3892,6 +5604,61 @@
       LDX   [>-5,S]
       LDX   [$00FB,S]
       LDX   [D,S]
+      LDX   <<0,X
+      LDX   1,X
+      LDX   -16,X
+      LDX   <<0,Y
+      LDX   1,Y
+      LDX   -16,Y
+      LDX   <<0,U
+      LDX   1,U
+      LDX   -16,U
+      LDX   <<0,S
+      LDX   1,S
+      LDX   -16,S
+      LDX   ,X+
+      LDX   ,X++
+      LDX   ,-X
+      LDX   ,--X
+      LDX   ,X
+      LDX   B,X
+      LDX   A,X
+      LDX   -119,X
+      LDX   <-16,X
+      LDX   <0,X
+      LDX   16,X
+      LDX   -$7575,X
+      LDX   >-$0075,X
+      LDX   $008B,X
+      LDX   D,X
+      LDX   [,X++]
+      LDX   [,--X]
+      LDX   [,X]
+      LDX   [B,X]
+      LDX   [A,X]
+      LDX   [-103,X]
+      LDX   [<0,X]
+      LDX   [1,X]
+      LDX   [-$6565,X]
+      LDX   [>-$0065,X]
+      LDX   [$009B,X]
+      LDX   [D,X]
+      LDX   [$A0A1]
+      LDX   ,Y+
+      LDX   ,Y++
+      LDX   ,-Y
+      LDX   ,--Y
+      LDX   ,Y
+      LDX   B,Y
+      LDX   A,Y
+      LDX   -87,Y
+      LDX   <-16,Y
+      LDX   <0,Y
+      LDX   16,Y
+      LDX   -$5555,Y
+      LDX   >-$0055,Y
+      LDX   $00AB,Y
+      LDX   D,Y
       STX   [,Y++]
       STX   [,--Y]
       STX   [,Y]
@@ -3968,6 +5735,61 @@
       STX   [>-5,S]
       STX   [$00FB,S]
       STX   [D,S]
+      STX   <<0,X
+      STX   1,X
+      STX   -16,X
+      STX   <<0,Y
+      STX   1,Y
+      STX   -16,Y
+      STX   <<0,U
+      STX   1,U
+      STX   -16,U
+      STX   <<0,S
+      STX   1,S
+      STX   -16,S
+      STX   ,X+
+      STX   ,X++
+      STX   ,-X
+      STX   ,--X
+      STX   ,X
+      STX   B,X
+      STX   A,X
+      STX   -119,X
+      STX   <-16,X
+      STX   <0,X
+      STX   16,X
+      STX   -$7575,X
+      STX   >-$0075,X
+      STX   $008B,X
+      STX   D,X
+      STX   [,X++]
+      STX   [,--X]
+      STX   [,X]
+      STX   [B,X]
+      STX   [A,X]
+      STX   [-103,X]
+      STX   [<0,X]
+      STX   [1,X]
+      STX   [-$6565,X]
+      STX   [>-$0065,X]
+      STX   [$009B,X]
+      STX   [D,X]
+      STX   [$A0A1]
+      STX   ,Y+
+      STX   ,Y++
+      STX   ,-Y
+      STX   ,--Y
+      STX   ,Y
+      STX   B,Y
+      STX   A,Y
+      STX   -87,Y
+      STX   <-16,Y
+      STX   <0,Y
+      STX   16,Y
+      STX   -$5555,Y
+      STX   >-$0055,Y
+      STX   $00AB,Y
+      STX   D,Y
       SUBA  $B1B2
       CMPA  $B2B3
       SBCA  $B3B4
@@ -3984,6 +5806,7 @@
       JSR   $BEBF
       LDX   $BFC0
       STX   $C0C1
+      STX   >$0001
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
@@ -4104,6 +5927,46 @@
       SUBB  >-$0055,Y
       SUBB  $00AB,Y
       SUBB  D,Y
+      SUBB  [,Y++]
+      SUBB  [,--Y]
+      SUBB  [,Y]
+      SUBB  [B,Y]
+      SUBB  [A,Y]
+      SUBB  [-71,Y]
+      SUBB  [<0,Y]
+      SUBB  [1,Y]
+      SUBB  [-$4545,Y]
+      SUBB  [>-$0045,Y]
+      SUBB  [$00BB,Y]
+      SUBB  [D,Y]
+      SUBB  ,U+
+      SUBB  ,U++
+      SUBB  ,-U
+      SUBB  ,--U
+      SUBB  ,U
+      SUBB  B,U
+      SUBB  A,U
+      SUBB  -55,U
+      SUBB  <-16,U
+      SUBB  <0,U
+      SUBB  16,U
+      SUBB  -$3535,U
+      SUBB  >-$0035,U
+      SUBB  $00CB,U
+      SUBB  D,U
+      SUBB  [,U++]
+      SUBB  [,--U]
+      SUBB  [,U]
+      SUBB  [B,U]
+      SUBB  [A,U]
+      SUBB  [-39,U]
+      SUBB  [<0,U]
+      SUBB  [1,U]
+      SUBB  [-$2525,U]
+      SUBB  [>-$0025,U]
+      SUBB  [$00DB,U]
+      SUBB  [D,U]
+      SUBB  ,S+
       CMPB  ,-S
       CMPB  ,--S
       CMPB  ,S
@@ -4194,6 +6057,47 @@
       CMPB  >-$0055,Y
       CMPB  $00AB,Y
       CMPB  D,Y
+      CMPB  [,Y++]
+      CMPB  [,--Y]
+      CMPB  [,Y]
+      CMPB  [B,Y]
+      CMPB  [A,Y]
+      CMPB  [-71,Y]
+      CMPB  [<0,Y]
+      CMPB  [1,Y]
+      CMPB  [-$4545,Y]
+      CMPB  [>-$0045,Y]
+      CMPB  [$00BB,Y]
+      CMPB  [D,Y]
+      CMPB  ,U+
+      CMPB  ,U++
+      CMPB  ,-U
+      CMPB  ,--U
+      CMPB  ,U
+      CMPB  B,U
+      CMPB  A,U
+      CMPB  -55,U
+      CMPB  <-16,U
+      CMPB  <0,U
+      CMPB  16,U
+      CMPB  -$3535,U
+      CMPB  >-$0035,U
+      CMPB  $00CB,U
+      CMPB  D,U
+      CMPB  [,U++]
+      CMPB  [,--U]
+      CMPB  [,U]
+      CMPB  [B,U]
+      CMPB  [A,U]
+      CMPB  [-39,U]
+      CMPB  [<0,U]
+      CMPB  [1,U]
+      CMPB  [-$2525,U]
+      CMPB  [>-$0025,U]
+      CMPB  [$00DB,U]
+      CMPB  [D,U]
+      CMPB  ,S+
+      CMPB  ,S++
       SBCB  ,--S
       SBCB  ,S
       SBCB  B,S
@@ -4283,6 +6187,48 @@
       SBCB  >-$0055,Y
       SBCB  $00AB,Y
       SBCB  D,Y
+      SBCB  [,Y++]
+      SBCB  [,--Y]
+      SBCB  [,Y]
+      SBCB  [B,Y]
+      SBCB  [A,Y]
+      SBCB  [-71,Y]
+      SBCB  [<0,Y]
+      SBCB  [1,Y]
+      SBCB  [-$4545,Y]
+      SBCB  [>-$0045,Y]
+      SBCB  [$00BB,Y]
+      SBCB  [D,Y]
+      SBCB  ,U+
+      SBCB  ,U++
+      SBCB  ,-U
+      SBCB  ,--U
+      SBCB  ,U
+      SBCB  B,U
+      SBCB  A,U
+      SBCB  -55,U
+      SBCB  <-16,U
+      SBCB  <0,U
+      SBCB  16,U
+      SBCB  -$3535,U
+      SBCB  >-$0035,U
+      SBCB  $00CB,U
+      SBCB  D,U
+      SBCB  [,U++]
+      SBCB  [,--U]
+      SBCB  [,U]
+      SBCB  [B,U]
+      SBCB  [A,U]
+      SBCB  [-39,U]
+      SBCB  [<0,U]
+      SBCB  [1,U]
+      SBCB  [-$2525,U]
+      SBCB  [>-$0025,U]
+      SBCB  [$00DB,U]
+      SBCB  [D,U]
+      SBCB  ,S+
+      SBCB  ,S++
+      SBCB  ,-S
       ADDD  ,S
       ADDD  B,S
       ADDD  A,S
@@ -4371,6 +6317,49 @@
       ADDD  >-$0055,Y
       ADDD  $00AB,Y
       ADDD  D,Y
+      ADDD  [,Y++]
+      ADDD  [,--Y]
+      ADDD  [,Y]
+      ADDD  [B,Y]
+      ADDD  [A,Y]
+      ADDD  [-71,Y]
+      ADDD  [<0,Y]
+      ADDD  [1,Y]
+      ADDD  [-$4545,Y]
+      ADDD  [>-$0045,Y]
+      ADDD  [$00BB,Y]
+      ADDD  [D,Y]
+      ADDD  ,U+
+      ADDD  ,U++
+      ADDD  ,-U
+      ADDD  ,--U
+      ADDD  ,U
+      ADDD  B,U
+      ADDD  A,U
+      ADDD  -55,U
+      ADDD  <-16,U
+      ADDD  <0,U
+      ADDD  16,U
+      ADDD  -$3535,U
+      ADDD  >-$0035,U
+      ADDD  $00CB,U
+      ADDD  D,U
+      ADDD  [,U++]
+      ADDD  [,--U]
+      ADDD  [,U]
+      ADDD  [B,U]
+      ADDD  [A,U]
+      ADDD  [-39,U]
+      ADDD  [<0,U]
+      ADDD  [1,U]
+      ADDD  [-$2525,U]
+      ADDD  [>-$0025,U]
+      ADDD  [$00DB,U]
+      ADDD  [D,U]
+      ADDD  ,S+
+      ADDD  ,S++
+      ADDD  ,-S
+      ADDD  ,--S
       ANDB  B,S
       ANDB  A,S
       ANDB  -23,S
@@ -4458,6 +6447,50 @@
       ANDB  >-$0055,Y
       ANDB  $00AB,Y
       ANDB  D,Y
+      ANDB  [,Y++]
+      ANDB  [,--Y]
+      ANDB  [,Y]
+      ANDB  [B,Y]
+      ANDB  [A,Y]
+      ANDB  [-71,Y]
+      ANDB  [<0,Y]
+      ANDB  [1,Y]
+      ANDB  [-$4545,Y]
+      ANDB  [>-$0045,Y]
+      ANDB  [$00BB,Y]
+      ANDB  [D,Y]
+      ANDB  ,U+
+      ANDB  ,U++
+      ANDB  ,-U
+      ANDB  ,--U
+      ANDB  ,U
+      ANDB  B,U
+      ANDB  A,U
+      ANDB  -55,U
+      ANDB  <-16,U
+      ANDB  <0,U
+      ANDB  16,U
+      ANDB  -$3535,U
+      ANDB  >-$0035,U
+      ANDB  $00CB,U
+      ANDB  D,U
+      ANDB  [,U++]
+      ANDB  [,--U]
+      ANDB  [,U]
+      ANDB  [B,U]
+      ANDB  [A,U]
+      ANDB  [-39,U]
+      ANDB  [<0,U]
+      ANDB  [1,U]
+      ANDB  [-$2525,U]
+      ANDB  [>-$0025,U]
+      ANDB  [$00DB,U]
+      ANDB  [D,U]
+      ANDB  ,S+
+      ANDB  ,S++
+      ANDB  ,-S
+      ANDB  ,--S
+      ANDB  ,S
       BITB  A,S
       BITB  -23,S
       BITB  <-16,S
@@ -4544,6 +6577,51 @@
       BITB  >-$0055,Y
       BITB  $00AB,Y
       BITB  D,Y
+      BITB  [,Y++]
+      BITB  [,--Y]
+      BITB  [,Y]
+      BITB  [B,Y]
+      BITB  [A,Y]
+      BITB  [-71,Y]
+      BITB  [<0,Y]
+      BITB  [1,Y]
+      BITB  [-$4545,Y]
+      BITB  [>-$0045,Y]
+      BITB  [$00BB,Y]
+      BITB  [D,Y]
+      BITB  ,U+
+      BITB  ,U++
+      BITB  ,-U
+      BITB  ,--U
+      BITB  ,U
+      BITB  B,U
+      BITB  A,U
+      BITB  -55,U
+      BITB  <-16,U
+      BITB  <0,U
+      BITB  16,U
+      BITB  -$3535,U
+      BITB  >-$0035,U
+      BITB  $00CB,U
+      BITB  D,U
+      BITB  [,U++]
+      BITB  [,--U]
+      BITB  [,U]
+      BITB  [B,U]
+      BITB  [A,U]
+      BITB  [-39,U]
+      BITB  [<0,U]
+      BITB  [1,U]
+      BITB  [-$2525,U]
+      BITB  [>-$0025,U]
+      BITB  [$00DB,U]
+      BITB  [D,U]
+      BITB  ,S+
+      BITB  ,S++
+      BITB  ,-S
+      BITB  ,--S
+      BITB  ,S
+      BITB  B,S
       LDB   -23,S
       LDB   <-16,S
       LDB   <0,S
@@ -4629,6 +6707,52 @@
       LDB   >-$0055,Y
       LDB   $00AB,Y
       LDB   D,Y
+      LDB   [,Y++]
+      LDB   [,--Y]
+      LDB   [,Y]
+      LDB   [B,Y]
+      LDB   [A,Y]
+      LDB   [-71,Y]
+      LDB   [<0,Y]
+      LDB   [1,Y]
+      LDB   [-$4545,Y]
+      LDB   [>-$0045,Y]
+      LDB   [$00BB,Y]
+      LDB   [D,Y]
+      LDB   ,U+
+      LDB   ,U++
+      LDB   ,-U
+      LDB   ,--U
+      LDB   ,U
+      LDB   B,U
+      LDB   A,U
+      LDB   -55,U
+      LDB   <-16,U
+      LDB   <0,U
+      LDB   16,U
+      LDB   -$3535,U
+      LDB   >-$0035,U
+      LDB   $00CB,U
+      LDB   D,U
+      LDB   [,U++]
+      LDB   [,--U]
+      LDB   [,U]
+      LDB   [B,U]
+      LDB   [A,U]
+      LDB   [-39,U]
+      LDB   [<0,U]
+      LDB   [1,U]
+      LDB   [-$2525,U]
+      LDB   [>-$0025,U]
+      LDB   [$00DB,U]
+      LDB   [D,U]
+      LDB   ,S+
+      LDB   ,S++
+      LDB   ,-S
+      LDB   ,--S
+      LDB   ,S
+      LDB   B,S
+      LDB   A,S
       STB   -23,S
       STB   <-16,S
       STB   <0,S
@@ -4714,6 +6838,52 @@
       STB   >-$0055,Y
       STB   $00AB,Y
       STB   D,Y
+      STB   [,Y++]
+      STB   [,--Y]
+      STB   [,Y]
+      STB   [B,Y]
+      STB   [A,Y]
+      STB   [-71,Y]
+      STB   [<0,Y]
+      STB   [1,Y]
+      STB   [-$4545,Y]
+      STB   [>-$0045,Y]
+      STB   [$00BB,Y]
+      STB   [D,Y]
+      STB   ,U+
+      STB   ,U++
+      STB   ,-U
+      STB   ,--U
+      STB   ,U
+      STB   B,U
+      STB   A,U
+      STB   -55,U
+      STB   <-16,U
+      STB   <0,U
+      STB   16,U
+      STB   -$3535,U
+      STB   >-$0035,U
+      STB   $00CB,U
+      STB   D,U
+      STB   [,U++]
+      STB   [,--U]
+      STB   [,U]
+      STB   [B,U]
+      STB   [A,U]
+      STB   [-39,U]
+      STB   [<0,U]
+      STB   [1,U]
+      STB   [-$2525,U]
+      STB   [>-$0025,U]
+      STB   [$00DB,U]
+      STB   [D,U]
+      STB   ,S+
+      STB   ,S++
+      STB   ,-S
+      STB   ,--S
+      STB   ,S
+      STB   B,S
+      STB   A,S
       EORB  -$1515,S
       EORB  >-21,S
       EORB  $00EB,S
@@ -4795,6 +6965,56 @@
       EORB  >-$0055,Y
       EORB  $00AB,Y
       EORB  D,Y
+      EORB  [,Y++]
+      EORB  [,--Y]
+      EORB  [,Y]
+      EORB  [B,Y]
+      EORB  [A,Y]
+      EORB  [-71,Y]
+      EORB  [<0,Y]
+      EORB  [1,Y]
+      EORB  [-$4545,Y]
+      EORB  [>-$0045,Y]
+      EORB  [$00BB,Y]
+      EORB  [D,Y]
+      EORB  ,U+
+      EORB  ,U++
+      EORB  ,-U
+      EORB  ,--U
+      EORB  ,U
+      EORB  B,U
+      EORB  A,U
+      EORB  -55,U
+      EORB  <-16,U
+      EORB  <0,U
+      EORB  16,U
+      EORB  -$3535,U
+      EORB  >-$0035,U
+      EORB  $00CB,U
+      EORB  D,U
+      EORB  [,U++]
+      EORB  [,--U]
+      EORB  [,U]
+      EORB  [B,U]
+      EORB  [A,U]
+      EORB  [-39,U]
+      EORB  [<0,U]
+      EORB  [1,U]
+      EORB  [-$2525,U]
+      EORB  [>-$0025,U]
+      EORB  [$00DB,U]
+      EORB  [D,U]
+      EORB  ,S+
+      EORB  ,S++
+      EORB  ,-S
+      EORB  ,--S
+      EORB  ,S
+      EORB  B,S
+      EORB  A,S
+      EORB  -23,S
+      EORB  <-16,S
+      EORB  <0,S
+      EORB  16,S
       ADCB  D,S
       ADCB  *-16,PCR
       ADCB  *,PCR
@@ -4873,6 +7093,59 @@
       ADCB  >-$0055,Y
       ADCB  $00AB,Y
       ADCB  D,Y
+      ADCB  [,Y++]
+      ADCB  [,--Y]
+      ADCB  [,Y]
+      ADCB  [B,Y]
+      ADCB  [A,Y]
+      ADCB  [-71,Y]
+      ADCB  [<0,Y]
+      ADCB  [1,Y]
+      ADCB  [-$4545,Y]
+      ADCB  [>-$0045,Y]
+      ADCB  [$00BB,Y]
+      ADCB  [D,Y]
+      ADCB  ,U+
+      ADCB  ,U++
+      ADCB  ,-U
+      ADCB  ,--U
+      ADCB  ,U
+      ADCB  B,U
+      ADCB  A,U
+      ADCB  -55,U
+      ADCB  <-16,U
+      ADCB  <0,U
+      ADCB  16,U
+      ADCB  -$3535,U
+      ADCB  >-$0035,U
+      ADCB  $00CB,U
+      ADCB  D,U
+      ADCB  [,U++]
+      ADCB  [,--U]
+      ADCB  [,U]
+      ADCB  [B,U]
+      ADCB  [A,U]
+      ADCB  [-39,U]
+      ADCB  [<0,U]
+      ADCB  [1,U]
+      ADCB  [-$2525,U]
+      ADCB  [>-$0025,U]
+      ADCB  [$00DB,U]
+      ADCB  [D,U]
+      ADCB  ,S+
+      ADCB  ,S++
+      ADCB  ,-S
+      ADCB  ,--S
+      ADCB  ,S
+      ADCB  B,S
+      ADCB  A,S
+      ADCB  -23,S
+      ADCB  <-16,S
+      ADCB  <0,S
+      ADCB  16,S
+      ADCB  -$1515,S
+      ADCB  >-21,S
+      ADCB  $00EB,S
       ORB   D,S
       ORB   *-16,PCR
       ORB   *,PCR
@@ -4951,6 +7224,59 @@
       ORB   >-$0055,Y
       ORB   $00AB,Y
       ORB   D,Y
+      ORB   [,Y++]
+      ORB   [,--Y]
+      ORB   [,Y]
+      ORB   [B,Y]
+      ORB   [A,Y]
+      ORB   [-71,Y]
+      ORB   [<0,Y]
+      ORB   [1,Y]
+      ORB   [-$4545,Y]
+      ORB   [>-$0045,Y]
+      ORB   [$00BB,Y]
+      ORB   [D,Y]
+      ORB   ,U+
+      ORB   ,U++
+      ORB   ,-U
+      ORB   ,--U
+      ORB   ,U
+      ORB   B,U
+      ORB   A,U
+      ORB   -55,U
+      ORB   <-16,U
+      ORB   <0,U
+      ORB   16,U
+      ORB   -$3535,U
+      ORB   >-$0035,U
+      ORB   $00CB,U
+      ORB   D,U
+      ORB   [,U++]
+      ORB   [,--U]
+      ORB   [,U]
+      ORB   [B,U]
+      ORB   [A,U]
+      ORB   [-39,U]
+      ORB   [<0,U]
+      ORB   [1,U]
+      ORB   [-$2525,U]
+      ORB   [>-$0025,U]
+      ORB   [$00DB,U]
+      ORB   [D,U]
+      ORB   ,S+
+      ORB   ,S++
+      ORB   ,-S
+      ORB   ,--S
+      ORB   ,S
+      ORB   B,S
+      ORB   A,S
+      ORB   -23,S
+      ORB   <-16,S
+      ORB   <0,S
+      ORB   16,S
+      ORB   -$1515,S
+      ORB   >-21,S
+      ORB   $00EB,S
       ADDB  *-16,PCR
       ADDB  *,PCR
       ADDB  *+1,PCR
@@ -5028,6 +7354,60 @@
       ADDB  >-$0055,Y
       ADDB  $00AB,Y
       ADDB  D,Y
+      ADDB  [,Y++]
+      ADDB  [,--Y]
+      ADDB  [,Y]
+      ADDB  [B,Y]
+      ADDB  [A,Y]
+      ADDB  [-71,Y]
+      ADDB  [<0,Y]
+      ADDB  [1,Y]
+      ADDB  [-$4545,Y]
+      ADDB  [>-$0045,Y]
+      ADDB  [$00BB,Y]
+      ADDB  [D,Y]
+      ADDB  ,U+
+      ADDB  ,U++
+      ADDB  ,-U
+      ADDB  ,--U
+      ADDB  ,U
+      ADDB  B,U
+      ADDB  A,U
+      ADDB  -55,U
+      ADDB  <-16,U
+      ADDB  <0,U
+      ADDB  16,U
+      ADDB  -$3535,U
+      ADDB  >-$0035,U
+      ADDB  $00CB,U
+      ADDB  D,U
+      ADDB  [,U++]
+      ADDB  [,--U]
+      ADDB  [,U]
+      ADDB  [B,U]
+      ADDB  [A,U]
+      ADDB  [-39,U]
+      ADDB  [<0,U]
+      ADDB  [1,U]
+      ADDB  [-$2525,U]
+      ADDB  [>-$0025,U]
+      ADDB  [$00DB,U]
+      ADDB  [D,U]
+      ADDB  ,S+
+      ADDB  ,S++
+      ADDB  ,-S
+      ADDB  ,--S
+      ADDB  ,S
+      ADDB  B,S
+      ADDB  A,S
+      ADDB  -23,S
+      ADDB  <-16,S
+      ADDB  <0,S
+      ADDB  16,S
+      ADDB  -$1515,S
+      ADDB  >-21,S
+      ADDB  $00EB,S
+      ADDB  D,S
       LDD   *-$110D,PCR
       LDD   *+$00F3,PCR
       LDD   [,S++]
@@ -5105,6 +7485,60 @@
       LDD   >-$0055,Y
       LDD   $00AB,Y
       LDD   D,Y
+      LDD   [,Y++]
+      LDD   [,--Y]
+      LDD   [,Y]
+      LDD   [B,Y]
+      LDD   [A,Y]
+      LDD   [-71,Y]
+      LDD   [<0,Y]
+      LDD   [1,Y]
+      LDD   [-$4545,Y]
+      LDD   [>-$0045,Y]
+      LDD   [$00BB,Y]
+      LDD   [D,Y]
+      LDD   ,U+
+      LDD   ,U++
+      LDD   ,-U
+      LDD   ,--U
+      LDD   ,U
+      LDD   B,U
+      LDD   A,U
+      LDD   -55,U
+      LDD   <-16,U
+      LDD   <0,U
+      LDD   16,U
+      LDD   -$3535,U
+      LDD   >-$0035,U
+      LDD   $00CB,U
+      LDD   D,U
+      LDD   [,U++]
+      LDD   [,--U]
+      LDD   [,U]
+      LDD   [B,U]
+      LDD   [A,U]
+      LDD   [-39,U]
+      LDD   [<0,U]
+      LDD   [1,U]
+      LDD   [-$2525,U]
+      LDD   [>-$0025,U]
+      LDD   [$00DB,U]
+      LDD   [D,U]
+      LDD   ,S+
+      LDD   ,S++
+      LDD   ,-S
+      LDD   ,--S
+      LDD   ,S
+      LDD   B,S
+      LDD   A,S
+      LDD   -23,S
+      LDD   <-16,S
+      LDD   <0,S
+      LDD   16,S
+      LDD   -$1515,S
+      LDD   >-21,S
+      LDD   $00EB,S
+      LDD   D,S
       STD   [,S++]
       STD   [,--S]
       STD   [,S]
@@ -5194,6 +7628,48 @@
       STD   [>-$0045,Y]
       STD   [$00BB,Y]
       STD   [D,Y]
+      STD   ,U+
+      STD   ,U++
+      STD   ,-U
+      STD   ,--U
+      STD   ,U
+      STD   B,U
+      STD   A,U
+      STD   -55,U
+      STD   <-16,U
+      STD   <0,U
+      STD   16,U
+      STD   -$3535,U
+      STD   >-$0035,U
+      STD   $00CB,U
+      STD   D,U
+      STD   [,U++]
+      STD   [,--U]
+      STD   [,U]
+      STD   [B,U]
+      STD   [A,U]
+      STD   [-39,U]
+      STD   [<0,U]
+      STD   [1,U]
+      STD   [-$2525,U]
+      STD   [>-$0025,U]
+      STD   [$00DB,U]
+      STD   [D,U]
+      STD   ,S+
+      STD   ,S++
+      STD   ,-S
+      STD   ,--S
+      STD   ,S
+      STD   B,S
+      STD   A,S
+      STD   -23,S
+      STD   <-16,S
+      STD   <0,S
+      STD   16,S
+      STD   -$1515,S
+      STD   >-21,S
+      STD   $00EB,S
+      STD   D,S
       LDU   [,S++]
       LDU   [,--S]
       LDU   [,S]
@@ -5283,6 +7759,48 @@
       LDU   [>-$0045,Y]
       LDU   [$00BB,Y]
       LDU   [D,Y]
+      LDU   ,U+
+      LDU   ,U++
+      LDU   ,-U
+      LDU   ,--U
+      LDU   ,U
+      LDU   B,U
+      LDU   A,U
+      LDU   -55,U
+      LDU   <-16,U
+      LDU   <0,U
+      LDU   16,U
+      LDU   -$3535,U
+      LDU   >-$0035,U
+      LDU   $00CB,U
+      LDU   D,U
+      LDU   [,U++]
+      LDU   [,--U]
+      LDU   [,U]
+      LDU   [B,U]
+      LDU   [A,U]
+      LDU   [-39,U]
+      LDU   [<0,U]
+      LDU   [1,U]
+      LDU   [-$2525,U]
+      LDU   [>-$0025,U]
+      LDU   [$00DB,U]
+      LDU   [D,U]
+      LDU   ,S+
+      LDU   ,S++
+      LDU   ,-S
+      LDU   ,--S
+      LDU   ,S
+      LDU   B,S
+      LDU   A,S
+      LDU   -23,S
+      LDU   <-16,S
+      LDU   <0,S
+      LDU   16,S
+      LDU   -$1515,S
+      LDU   >-21,S
+      LDU   $00EB,S
+      LDU   D,S
       STU   [,S++]
       STU   [,--S]
       STU   [,S]
@@ -5372,19 +7890,74 @@
       STU   [>-$0045,Y]
       STU   [$00BB,Y]
       STU   [D,Y]
+      STU   ,U+
+      STU   ,U++
+      STU   ,-U
+      STU   ,--U
+      STU   ,U
+      STU   B,U
+      STU   A,U
+      STU   -55,U
+      STU   <-16,U
+      STU   <0,U
+      STU   16,U
+      STU   -$3535,U
+      STU   >-$0035,U
+      STU   $00CB,U
+      STU   D,U
+      STU   [,U++]
+      STU   [,--U]
+      STU   [,U]
+      STU   [B,U]
+      STU   [A,U]
+      STU   [-39,U]
+      STU   [<0,U]
+      STU   [1,U]
+      STU   [-$2525,U]
+      STU   [>-$0025,U]
+      STU   [$00DB,U]
+      STU   [D,U]
+      STU   ,S+
+      STU   ,S++
+      STU   ,-S
+      STU   ,--S
+      STU   ,S
+      STU   B,S
+      STU   A,S
+      STU   -23,S
+      STU   <-16,S
+      STU   <0,S
+      STU   16,S
+      STU   -$1515,S
+      STU   >-21,S
+      STU   $00EB,S
+      STU   D,S
       SUBB  $F1F2
+      SUBB  >$0001
       CMPB  $F2F3
+      CMPB  >$0001
       SBCB  $F3F4
+      SBCB  >$0001
       ADDD  $F4F5
+      ADDD  >$0001
       ANDB  $F5F6
+      ANDB  >$0001
       BITB  $F6F7
+      BITB  >$0001
       LDB   $F7F8
+      LDB   >$0001
       STB   $F8F9
+      STB   >$0001
       EORB  $F9FA
+      EORB  >$0001
       ADCB  $FAFB
+      ADCB  >$0001
       ORB   $FBFC
+      ORB   >$0001
       ADDB  $FCFD
+      ADDB  >$0001
       LDD   $FDFE
+      LDD   >$0001
       STD   $FEFF
       STD   >$0001
       LDU   $FF00

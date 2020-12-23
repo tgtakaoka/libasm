@@ -33,6 +33,31 @@
       DACI 7DH
       DSBI 80H
       SCAL 0, 8182H
+      SRET 0
+      RSXD 0
+      RNX  0
+      RLDI 0, 0C1C2H
+      DADD
+      DSM
+      DADI 0FDH
+      DSMI 0
+      STPC
+      DTC
+      SPM2
+      SCM2
+      SPM1
+      SCM1
+      LDC
+      STM
+      GEC
+      ETQ
+      XIE
+      XID
+      CIE
+      CID
+      DBNZ 0, 2122H
+      BCI  013FH
+      BXI  0140H
       INP  1
       RET
       DIS
@@ -88,28 +113,3 @@
       SDI  0FEH
       SHL
       SMI  0
-      SRET 0
-      RSXD 0
-      RNX  0
-      RLDI 0, 0C1C2H
-      DADD
-      DSM
-      DADI 0FDH
-      DSMI 0
-      STPC
-      DTC
-      SPM2
-      SCM2
-      SPM1
-      SCM1
-      LDC
-      STM
-      GEC
-      ETQ
-      XIE
-      XID
-      CIE
-      CID
-      DBNZ 0, 2122H
-      BCI  013FH
-      BXI  0140H

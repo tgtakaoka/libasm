@@ -32,7 +32,11 @@
       BSET  29,Y, #30
       BCLR  30,Y, #31
       BRSET 31,Y, #32, *+38
+      BRSET 30,Y, #30, *-123
+      BRSET 30,Y, #30, *
       BRCLR 32,Y, #$21, *+39
+      BRCLR 31,Y, #31, *-123
+      BRCLR 31,Y, #31, *
       TSY
       TYS
       PULY
@@ -289,6 +293,7 @@
       JSR   $BEBF
       LDS   $BFC0
       STS   $C0C1
+      STS   >$0001
       SUBB  #$C1
       CMPB  #$C2
       SBCB  #$C3
@@ -340,18 +345,31 @@
       LDX   239,X
       STX   240,X
       SUBB  $F1F2
+      SUBB  >$0001
       CMPB  $F2F3
+      CMPB  >$0001
       SBCB  $F3F4
+      SBCB  >$0001
       ADDD  $F4F5
+      ADDD  >$0001
       ANDB  $F5F6
+      ANDB  >$0001
       BITB  $F6F7
+      BITB  >$0001
       LDAB  $F7F8
+      LDAB  >$0001
       STAB  $F8F9
+      STAB  >$0001
       EORB  $F9FA
+      EORB  >$0001
       ADCB  $FAFB
+      ADCB  >$0001
       ORAB  $FBFC
+      ORAB  >$0001
       ADDB  $FCFD
+      ADDB  >$0001
       LDD   $FDFE
+      LDD   >$0001
       STD   $FEFF
       STD   >$0001
       LDX   $FF00

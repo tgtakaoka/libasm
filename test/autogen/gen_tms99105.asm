@@ -6,42 +6,52 @@
       SRAM *R0, 1
       SRAM @6162H, 1
       SRAM @6263H(R1), 1
+      SRAM *R0+, 1
       SLAM R1, 1
       SLAM *R0, 1
       SLAM @6162H, 1
       SLAM @6263H(R1), 1
+      SLAM *R0+, 1
       SM   R1, R1
       SM   *R0, R1
       SM   @6162H, R1
       SM   @6263H(R1), R1
+      SM   *R0+, R1
       SM   R5, *R1
       SM   *R0, *R1
       SM   @6162H, *R1
       SM   @6263H(R1), *R1
+      SM   *R0+, *R1
       SM   R9, @4A4BH(R1)
       SM   *R0, @4A4BH(R1)
       SM   @4A4BH, @4C4DH(R1)
       SM   @4A4BH(R1), @4C4DH(R1)
+      SM   *R0+, @4A4BH(R1)
       SM   R13, *R1+
       SM   *R0, *R1+
       SM   @6162H, *R1+
       SM   @6263H(R1), *R1+
+      SM   *R0+, *R1+
       AM   R1, R1
       AM   *R0, R1
       AM   @6162H, R1
       AM   @6263H(R1), R1
+      AM   *R0+, R1
       AM   R5, *R1
       AM   *R0, *R1
       AM   @6162H, *R1
       AM   @6263H(R1), *R1
+      AM   *R0+, *R1
       AM   R9, @4A4BH(R1)
       AM   *R0, @4A4BH(R1)
       AM   @4A4BH, @4C4DH(R1)
       AM   @4A4BH(R1), @4C4DH(R1)
+      AM   *R0+, @4A4BH(R1)
       AM   R13, *R1+
       AM   *R0, *R1+
       AM   @6162H, *R1+
       AM   @6263H(R1), *R1+
+      AM   *R0+, *R1+
       LST  R0
       LWP  R0
       BLSK R0, 0B1B2H

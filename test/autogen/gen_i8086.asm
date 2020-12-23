@@ -41,6 +41,152 @@
       ADD    [DI], AH
       ADD    [2827H], AH
       ADD    [BX], AH
+      ADD    [BX+SI+65], AL
+      ADD    [BX+SI-128], AL
+      ADD    [BX+DI+66], AL
+      ADD    [BX+DI-128], AL
+      ADD    [BP+SI+67], AL
+      ADD    [BP+SI-128], AL
+      ADD    [BP+DI+68], AL
+      ADD    [BP+DI-128], AL
+      ADD    [SI+69], AL
+      ADD    [SI-128], AL
+      ADD    [DI+70], AL
+      ADD    [DI-128], AL
+      ADD    [BP+71], AL
+      ADD    [BP-128], AL
+      ADD    [BX+72], AL
+      ADD    [BX-128], AL
+      ADD    [BX+SI+73], CL
+      ADD    [BX+SI-128], CL
+      ADD    [BX+DI+74], CL
+      ADD    [BX+DI-128], CL
+      ADD    [BP+SI+75], CL
+      ADD    [BP+SI-128], CL
+      ADD    [BP+DI+76], CL
+      ADD    [BP+DI-128], CL
+      ADD    [SI+77], CL
+      ADD    [SI-128], CL
+      ADD    [DI+78], CL
+      ADD    [DI-128], CL
+      ADD    [BP+79], CL
+      ADD    [BP-128], CL
+      ADD    [BX+80], CL
+      ADD    [BX-128], CL
+      ADD    [BX+SI+81], DL
+      ADD    [BX+SI-128], DL
+      ADD    [BX+DI+82], DL
+      ADD    [BX+DI-128], DL
+      ADD    [BP+SI+83], DL
+      ADD    [BP+SI-128], DL
+      ADD    [BP+DI+84], DL
+      ADD    [BP+DI-128], DL
+      ADD    [SI+85], DL
+      ADD    [SI-128], DL
+      ADD    [DI+86], DL
+      ADD    [DI-128], DL
+      ADD    [BP+87], DL
+      ADD    [BP-128], DL
+      ADD    [BX+88], DL
+      ADD    [BX-128], DL
+      ADD    [BX+SI+89], BL
+      ADD    [BX+SI-128], BL
+      ADD    [BX+DI+90], BL
+      ADD    [BX+DI-128], BL
+      ADD    [BP+SI+91], BL
+      ADD    [BP+SI-128], BL
+      ADD    [BP+DI+92], BL
+      ADD    [BP+DI-128], BL
+      ADD    [SI+93], BL
+      ADD    [SI-128], BL
+      ADD    [DI+94], BL
+      ADD    [DI-128], BL
+      ADD    [BP+95], BL
+      ADD    [BP-128], BL
+      ADD    [BX+96], BL
+      ADD    [BX-128], BL
+      ADD    [BX+SI+97], AH
+      ADD    [BX+SI-128], AH
+      ADD    [BX+DI+98], AH
+      ADD    [BX+DI-128], AH
+      ADD    [BP+SI+99], AH
+      ADD    [BP+SI-128], AH
+      ADD    [BP+DI+100], AH
+      ADD    [BP+DI-128], AH
+      ADD    [SI+101], AH
+      ADD    [SI-128], AH
+      ADD    [DI+102], AH
+      ADD    [DI-128], AH
+      ADD    [BP+103], AH
+      ADD    [BP-128], AH
+      ADD    [BX+104], AH
+      ADD    [BX-128], AH
+      ADD    [BX+SI+8281H], AL
+      ADD    [BX+DI+8382H], AL
+      ADD    [BP+SI+8483H], AL
+      ADD    [BP+DI+8584H], AL
+      ADD    [SI+8685H], AL
+      ADD    [DI+8786H], AL
+      ADD    [BP+8887H], AL
+      ADD    [BX+8988H], AL
+      ADD    [BX+SI+8A89H], CL
+      ADD    [BX+DI+8B8AH], CL
+      ADD    [BP+SI+8C8BH], CL
+      ADD    [BP+DI+8D8CH], CL
+      ADD    [SI+8E8DH], CL
+      ADD    [DI+8F8EH], CL
+      ADD    [BP+908FH], CL
+      ADD    [BX+9190H], CL
+      ADD    [BX+SI+9291H], DL
+      ADD    [BX+DI+9392H], DL
+      ADD    [BP+SI+9493H], DL
+      ADD    [BP+DI+9594H], DL
+      ADD    [SI+9695H], DL
+      ADD    [DI+9796H], DL
+      ADD    [BP+9897H], DL
+      ADD    [BX+9998H], DL
+      ADD    [BX+SI+9A99H], BL
+      ADD    [BX+DI+9B9AH], BL
+      ADD    [BP+SI+9C9BH], BL
+      ADD    [BP+DI+9D9CH], BL
+      ADD    [SI+9E9DH], BL
+      ADD    [DI+9F9EH], BL
+      ADD    [BP+0A09FH], BL
+      ADD    [BX+0A1A0H], BL
+      ADD    [BX+SI+0A2A1H], AH
+      ADD    [BX+DI+0A3A2H], AH
+      ADD    [BP+SI+0A4A3H], AH
+      ADD    [BP+DI+0A5A4H], AH
+      ADD    [SI+0A6A5H], AH
+      ADD    [DI+0A7A6H], AH
+      ADD    [BP+0A8A7H], AH
+      ADD    [BX+0A9A8H], AH
+      ADD    AL, AL
+      ADD    CL, AL
+      ADD    DL, AL
+      ADD    BL, AL
+      ADD    AH, AL
+      ADD    AL, CL
+      ADD    CL, CL
+      ADD    DL, CL
+      ADD    BL, CL
+      ADD    AH, CL
+      ADD    AL, DL
+      ADD    CL, DL
+      ADD    DL, DL
+      ADD    BL, DL
+      ADD    AH, DL
+      ADD    AL, BL
+      ADD    CL, BL
+      ADD    DL, BL
+      ADD    BL, BL
+      ADD    AH, BL
+      ADD    AL, AH
+      ADD    CL, AH
+      ADD    DL, AH
+      ADD    BL, AH
+      ADD    AH, AH
+      ADD    [BX+SI], AL
       ADD    [BP+SI], AX
       ADD    [BP+DI], AX
       ADD    [SI], AX
@@ -398,6 +544,129 @@
       ADD    AH, [DI]
       ADD    AH, [2827H]
       ADD    AH, [BX]
+      ADD    AL, [BX+SI+65]
+      ADD    AL, [BX+SI-128]
+      ADD    AL, [BX+DI+66]
+      ADD    AL, [BX+DI-128]
+      ADD    AL, [BP+SI+67]
+      ADD    AL, [BP+SI-128]
+      ADD    AL, [BP+DI+68]
+      ADD    AL, [BP+DI-128]
+      ADD    AL, [SI+69]
+      ADD    AL, [SI-128]
+      ADD    AL, [DI+70]
+      ADD    AL, [DI-128]
+      ADD    AL, [BP+71]
+      ADD    AL, [BP-128]
+      ADD    AL, [BX+72]
+      ADD    AL, [BX-128]
+      ADD    CL, [BX+SI+73]
+      ADD    CL, [BX+SI-128]
+      ADD    CL, [BX+DI+74]
+      ADD    CL, [BX+DI-128]
+      ADD    CL, [BP+SI+75]
+      ADD    CL, [BP+SI-128]
+      ADD    CL, [BP+DI+76]
+      ADD    CL, [BP+DI-128]
+      ADD    CL, [SI+77]
+      ADD    CL, [SI-128]
+      ADD    CL, [DI+78]
+      ADD    CL, [DI-128]
+      ADD    CL, [BP+79]
+      ADD    CL, [BP-128]
+      ADD    CL, [BX+80]
+      ADD    CL, [BX-128]
+      ADD    DL, [BX+SI+81]
+      ADD    DL, [BX+SI-128]
+      ADD    DL, [BX+DI+82]
+      ADD    DL, [BX+DI-128]
+      ADD    DL, [BP+SI+83]
+      ADD    DL, [BP+SI-128]
+      ADD    DL, [BP+DI+84]
+      ADD    DL, [BP+DI-128]
+      ADD    DL, [SI+85]
+      ADD    DL, [SI-128]
+      ADD    DL, [DI+86]
+      ADD    DL, [DI-128]
+      ADD    DL, [BP+87]
+      ADD    DL, [BP-128]
+      ADD    DL, [BX+88]
+      ADD    DL, [BX-128]
+      ADD    BL, [BX+SI+89]
+      ADD    BL, [BX+SI-128]
+      ADD    BL, [BX+DI+90]
+      ADD    BL, [BX+DI-128]
+      ADD    BL, [BP+SI+91]
+      ADD    BL, [BP+SI-128]
+      ADD    BL, [BP+DI+92]
+      ADD    BL, [BP+DI-128]
+      ADD    BL, [SI+93]
+      ADD    BL, [SI-128]
+      ADD    BL, [DI+94]
+      ADD    BL, [DI-128]
+      ADD    BL, [BP+95]
+      ADD    BL, [BP-128]
+      ADD    BL, [BX+96]
+      ADD    BL, [BX-128]
+      ADD    AH, [BX+SI+97]
+      ADD    AH, [BX+SI-128]
+      ADD    AH, [BX+DI+98]
+      ADD    AH, [BX+DI-128]
+      ADD    AH, [BP+SI+99]
+      ADD    AH, [BP+SI-128]
+      ADD    AH, [BP+DI+100]
+      ADD    AH, [BP+DI-128]
+      ADD    AH, [SI+101]
+      ADD    AH, [SI-128]
+      ADD    AH, [DI+102]
+      ADD    AH, [DI-128]
+      ADD    AH, [BP+103]
+      ADD    AH, [BP-128]
+      ADD    AH, [BX+104]
+      ADD    AH, [BX-128]
+      ADD    AL, [BX+SI+8281H]
+      ADD    AL, [BX+DI+8382H]
+      ADD    AL, [BP+SI+8483H]
+      ADD    AL, [BP+DI+8584H]
+      ADD    AL, [SI+8685H]
+      ADD    AL, [DI+8786H]
+      ADD    AL, [BP+8887H]
+      ADD    AL, [BX+8988H]
+      ADD    CL, [BX+SI+8A89H]
+      ADD    CL, [BX+DI+8B8AH]
+      ADD    CL, [BP+SI+8C8BH]
+      ADD    CL, [BP+DI+8D8CH]
+      ADD    CL, [SI+8E8DH]
+      ADD    CL, [DI+8F8EH]
+      ADD    CL, [BP+908FH]
+      ADD    CL, [BX+9190H]
+      ADD    DL, [BX+SI+9291H]
+      ADD    DL, [BX+DI+9392H]
+      ADD    DL, [BP+SI+9493H]
+      ADD    DL, [BP+DI+9594H]
+      ADD    DL, [SI+9695H]
+      ADD    DL, [DI+9796H]
+      ADD    DL, [BP+9897H]
+      ADD    DL, [BX+9998H]
+      ADD    BL, [BX+SI+9A99H]
+      ADD    BL, [BX+DI+9B9AH]
+      ADD    BL, [BP+SI+9C9BH]
+      ADD    BL, [BP+DI+9D9CH]
+      ADD    BL, [SI+9E9DH]
+      ADD    BL, [DI+9F9EH]
+      ADD    BL, [BP+0A09FH]
+      ADD    BL, [BX+0A1A0H]
+      ADD    AH, [BX+SI+0A2A1H]
+      ADD    AH, [BX+DI+0A3A2H]
+      ADD    AH, [BP+SI+0A4A3H]
+      ADD    AH, [BP+DI+0A5A4H]
+      ADD    AH, [SI+0A6A5H]
+      ADD    AH, [DI+0A7A6H]
+      ADD    AH, [BP+0A8A7H]
+      ADD    AH, [BX+0A9A8H]
+      ADD    AL, [BX+SI]
+      ADD    AL, [BX+DI]
+      ADD    AL, [BP+SI]
       ADD    AX, [SI]
       ADD    AX, [DI]
       ADD    AX, [0807H]
@@ -654,7 +923,6 @@
       ADD    AX, [BX+DI]
       ADD    AX, [BP+SI]
       ADD    AX, [BP+DI]
-      ADD    AL, 5
       ADD    AX, 0706H
       PUSH   ES
       POP    ES
@@ -689,6 +957,160 @@
       OR     [DI], AH
       OR     [2827H], AH
       OR     [BX], AH
+      OR     [BX+SI+65], AL
+      OR     [BX+SI-128], AL
+      OR     [BX+DI+66], AL
+      OR     [BX+DI-128], AL
+      OR     [BP+SI+67], AL
+      OR     [BP+SI-128], AL
+      OR     [BP+DI+68], AL
+      OR     [BP+DI-128], AL
+      OR     [SI+69], AL
+      OR     [SI-128], AL
+      OR     [DI+70], AL
+      OR     [DI-128], AL
+      OR     [BP+71], AL
+      OR     [BP-128], AL
+      OR     [BX+72], AL
+      OR     [BX-128], AL
+      OR     [BX+SI+73], CL
+      OR     [BX+SI-128], CL
+      OR     [BX+DI+74], CL
+      OR     [BX+DI-128], CL
+      OR     [BP+SI+75], CL
+      OR     [BP+SI-128], CL
+      OR     [BP+DI+76], CL
+      OR     [BP+DI-128], CL
+      OR     [SI+77], CL
+      OR     [SI-128], CL
+      OR     [DI+78], CL
+      OR     [DI-128], CL
+      OR     [BP+79], CL
+      OR     [BP-128], CL
+      OR     [BX+80], CL
+      OR     [BX-128], CL
+      OR     [BX+SI+81], DL
+      OR     [BX+SI-128], DL
+      OR     [BX+DI+82], DL
+      OR     [BX+DI-128], DL
+      OR     [BP+SI+83], DL
+      OR     [BP+SI-128], DL
+      OR     [BP+DI+84], DL
+      OR     [BP+DI-128], DL
+      OR     [SI+85], DL
+      OR     [SI-128], DL
+      OR     [DI+86], DL
+      OR     [DI-128], DL
+      OR     [BP+87], DL
+      OR     [BP-128], DL
+      OR     [BX+88], DL
+      OR     [BX-128], DL
+      OR     [BX+SI+89], BL
+      OR     [BX+SI-128], BL
+      OR     [BX+DI+90], BL
+      OR     [BX+DI-128], BL
+      OR     [BP+SI+91], BL
+      OR     [BP+SI-128], BL
+      OR     [BP+DI+92], BL
+      OR     [BP+DI-128], BL
+      OR     [SI+93], BL
+      OR     [SI-128], BL
+      OR     [DI+94], BL
+      OR     [DI-128], BL
+      OR     [BP+95], BL
+      OR     [BP-128], BL
+      OR     [BX+96], BL
+      OR     [BX-128], BL
+      OR     [BX+SI+97], AH
+      OR     [BX+SI-128], AH
+      OR     [BX+DI+98], AH
+      OR     [BX+DI-128], AH
+      OR     [BP+SI+99], AH
+      OR     [BP+SI-128], AH
+      OR     [BP+DI+100], AH
+      OR     [BP+DI-128], AH
+      OR     [SI+101], AH
+      OR     [SI-128], AH
+      OR     [DI+102], AH
+      OR     [DI-128], AH
+      OR     [BP+103], AH
+      OR     [BP-128], AH
+      OR     [BX+104], AH
+      OR     [BX-128], AH
+      OR     [BX+SI+8281H], AL
+      OR     [BX+DI+8382H], AL
+      OR     [BP+SI+8483H], AL
+      OR     [BP+DI+8584H], AL
+      OR     [SI+8685H], AL
+      OR     [DI+8786H], AL
+      OR     [BP+8887H], AL
+      OR     [BX+8988H], AL
+      OR     [BX+SI+8A89H], CL
+      OR     [BX+DI+8B8AH], CL
+      OR     [BP+SI+8C8BH], CL
+      OR     [BP+DI+8D8CH], CL
+      OR     [SI+8E8DH], CL
+      OR     [DI+8F8EH], CL
+      OR     [BP+908FH], CL
+      OR     [BX+9190H], CL
+      OR     [BX+SI+9291H], DL
+      OR     [BX+DI+9392H], DL
+      OR     [BP+SI+9493H], DL
+      OR     [BP+DI+9594H], DL
+      OR     [SI+9695H], DL
+      OR     [DI+9796H], DL
+      OR     [BP+9897H], DL
+      OR     [BX+9998H], DL
+      OR     [BX+SI+9A99H], BL
+      OR     [BX+DI+9B9AH], BL
+      OR     [BP+SI+9C9BH], BL
+      OR     [BP+DI+9D9CH], BL
+      OR     [SI+9E9DH], BL
+      OR     [DI+9F9EH], BL
+      OR     [BP+0A09FH], BL
+      OR     [BX+0A1A0H], BL
+      OR     [BX+SI+0A2A1H], AH
+      OR     [BX+DI+0A3A2H], AH
+      OR     [BP+SI+0A4A3H], AH
+      OR     [BP+DI+0A5A4H], AH
+      OR     [SI+0A6A5H], AH
+      OR     [DI+0A7A6H], AH
+      OR     [BP+0A8A7H], AH
+      OR     [BX+0A9A8H], AH
+      OR     AL, AL
+      OR     CL, AL
+      OR     DL, AL
+      OR     BL, AL
+      OR     AH, AL
+      OR     AL, CL
+      OR     CL, CL
+      OR     DL, CL
+      OR     BL, CL
+      OR     AH, CL
+      OR     AL, DL
+      OR     CL, DL
+      OR     DL, DL
+      OR     BL, DL
+      OR     AH, DL
+      OR     AL, BL
+      OR     CL, BL
+      OR     DL, BL
+      OR     BL, BL
+      OR     AH, BL
+      OR     AL, AH
+      OR     CL, AH
+      OR     DL, AH
+      OR     BL, AH
+      OR     AH, AH
+      OR     [BX+SI], AL
+      OR     [BX+DI], AL
+      OR     [BP+SI], AL
+      OR     [BP+DI], AL
+      OR     [SI], AL
+      OR     [DI], AL
+      OR     [0807H], AL
+      OR     [BX], AL
+      OR     [BX+SI], CL
       OR     [BP+SI], CX
       OR     [BP+DI], CX
       OR     [SI], CX
@@ -1038,6 +1460,137 @@
       OR     AH, [DI]
       OR     AH, [2827H]
       OR     AH, [BX]
+      OR     AL, [BX+SI+65]
+      OR     AL, [BX+SI-128]
+      OR     AL, [BX+DI+66]
+      OR     AL, [BX+DI-128]
+      OR     AL, [BP+SI+67]
+      OR     AL, [BP+SI-128]
+      OR     AL, [BP+DI+68]
+      OR     AL, [BP+DI-128]
+      OR     AL, [SI+69]
+      OR     AL, [SI-128]
+      OR     AL, [DI+70]
+      OR     AL, [DI-128]
+      OR     AL, [BP+71]
+      OR     AL, [BP-128]
+      OR     AL, [BX+72]
+      OR     AL, [BX-128]
+      OR     CL, [BX+SI+73]
+      OR     CL, [BX+SI-128]
+      OR     CL, [BX+DI+74]
+      OR     CL, [BX+DI-128]
+      OR     CL, [BP+SI+75]
+      OR     CL, [BP+SI-128]
+      OR     CL, [BP+DI+76]
+      OR     CL, [BP+DI-128]
+      OR     CL, [SI+77]
+      OR     CL, [SI-128]
+      OR     CL, [DI+78]
+      OR     CL, [DI-128]
+      OR     CL, [BP+79]
+      OR     CL, [BP-128]
+      OR     CL, [BX+80]
+      OR     CL, [BX-128]
+      OR     DL, [BX+SI+81]
+      OR     DL, [BX+SI-128]
+      OR     DL, [BX+DI+82]
+      OR     DL, [BX+DI-128]
+      OR     DL, [BP+SI+83]
+      OR     DL, [BP+SI-128]
+      OR     DL, [BP+DI+84]
+      OR     DL, [BP+DI-128]
+      OR     DL, [SI+85]
+      OR     DL, [SI-128]
+      OR     DL, [DI+86]
+      OR     DL, [DI-128]
+      OR     DL, [BP+87]
+      OR     DL, [BP-128]
+      OR     DL, [BX+88]
+      OR     DL, [BX-128]
+      OR     BL, [BX+SI+89]
+      OR     BL, [BX+SI-128]
+      OR     BL, [BX+DI+90]
+      OR     BL, [BX+DI-128]
+      OR     BL, [BP+SI+91]
+      OR     BL, [BP+SI-128]
+      OR     BL, [BP+DI+92]
+      OR     BL, [BP+DI-128]
+      OR     BL, [SI+93]
+      OR     BL, [SI-128]
+      OR     BL, [DI+94]
+      OR     BL, [DI-128]
+      OR     BL, [BP+95]
+      OR     BL, [BP-128]
+      OR     BL, [BX+96]
+      OR     BL, [BX-128]
+      OR     AH, [BX+SI+97]
+      OR     AH, [BX+SI-128]
+      OR     AH, [BX+DI+98]
+      OR     AH, [BX+DI-128]
+      OR     AH, [BP+SI+99]
+      OR     AH, [BP+SI-128]
+      OR     AH, [BP+DI+100]
+      OR     AH, [BP+DI-128]
+      OR     AH, [SI+101]
+      OR     AH, [SI-128]
+      OR     AH, [DI+102]
+      OR     AH, [DI-128]
+      OR     AH, [BP+103]
+      OR     AH, [BP-128]
+      OR     AH, [BX+104]
+      OR     AH, [BX-128]
+      OR     AL, [BX+SI+8281H]
+      OR     AL, [BX+DI+8382H]
+      OR     AL, [BP+SI+8483H]
+      OR     AL, [BP+DI+8584H]
+      OR     AL, [SI+8685H]
+      OR     AL, [DI+8786H]
+      OR     AL, [BP+8887H]
+      OR     AL, [BX+8988H]
+      OR     CL, [BX+SI+8A89H]
+      OR     CL, [BX+DI+8B8AH]
+      OR     CL, [BP+SI+8C8BH]
+      OR     CL, [BP+DI+8D8CH]
+      OR     CL, [SI+8E8DH]
+      OR     CL, [DI+8F8EH]
+      OR     CL, [BP+908FH]
+      OR     CL, [BX+9190H]
+      OR     DL, [BX+SI+9291H]
+      OR     DL, [BX+DI+9392H]
+      OR     DL, [BP+SI+9493H]
+      OR     DL, [BP+DI+9594H]
+      OR     DL, [SI+9695H]
+      OR     DL, [DI+9796H]
+      OR     DL, [BP+9897H]
+      OR     DL, [BX+9998H]
+      OR     BL, [BX+SI+9A99H]
+      OR     BL, [BX+DI+9B9AH]
+      OR     BL, [BP+SI+9C9BH]
+      OR     BL, [BP+DI+9D9CH]
+      OR     BL, [SI+9E9DH]
+      OR     BL, [DI+9F9EH]
+      OR     BL, [BP+0A09FH]
+      OR     BL, [BX+0A1A0H]
+      OR     AH, [BX+SI+0A2A1H]
+      OR     AH, [BX+DI+0A3A2H]
+      OR     AH, [BP+SI+0A4A3H]
+      OR     AH, [BP+DI+0A5A4H]
+      OR     AH, [SI+0A6A5H]
+      OR     AH, [DI+0A7A6H]
+      OR     AH, [BP+0A8A7H]
+      OR     AH, [BX+0A9A8H]
+      OR     AL, [BX+SI]
+      OR     AL, [BX+DI]
+      OR     AL, [BP+SI]
+      OR     AL, [BP+DI]
+      OR     AL, [SI]
+      OR     AL, [DI]
+      OR     AL, [0807H]
+      OR     AL, [BX]
+      OR     CL, [BX+SI]
+      OR     CL, [BX+DI]
+      OR     CL, [BP+SI]
       OR     CX, [SI]
       OR     CX, [DI]
       OR     CX, [100FH]
@@ -1294,7 +1847,6 @@
       OR     CX, [BX+DI]
       OR     CX, [BP+SI]
       OR     CX, [BP+DI]
-      OR     AL, 13
       OR     AX, 0F0EH
       PUSH   CS
       ADC    [BX+DI], DL
@@ -1320,6 +1872,168 @@
       ADC    [DI], AH
       ADC    [2827H], AH
       ADC    [BX], AH
+      ADC    [BX+SI+65], AL
+      ADC    [BX+SI-128], AL
+      ADC    [BX+DI+66], AL
+      ADC    [BX+DI-128], AL
+      ADC    [BP+SI+67], AL
+      ADC    [BP+SI-128], AL
+      ADC    [BP+DI+68], AL
+      ADC    [BP+DI-128], AL
+      ADC    [SI+69], AL
+      ADC    [SI-128], AL
+      ADC    [DI+70], AL
+      ADC    [DI-128], AL
+      ADC    [BP+71], AL
+      ADC    [BP-128], AL
+      ADC    [BX+72], AL
+      ADC    [BX-128], AL
+      ADC    [BX+SI+73], CL
+      ADC    [BX+SI-128], CL
+      ADC    [BX+DI+74], CL
+      ADC    [BX+DI-128], CL
+      ADC    [BP+SI+75], CL
+      ADC    [BP+SI-128], CL
+      ADC    [BP+DI+76], CL
+      ADC    [BP+DI-128], CL
+      ADC    [SI+77], CL
+      ADC    [SI-128], CL
+      ADC    [DI+78], CL
+      ADC    [DI-128], CL
+      ADC    [BP+79], CL
+      ADC    [BP-128], CL
+      ADC    [BX+80], CL
+      ADC    [BX-128], CL
+      ADC    [BX+SI+81], DL
+      ADC    [BX+SI-128], DL
+      ADC    [BX+DI+82], DL
+      ADC    [BX+DI-128], DL
+      ADC    [BP+SI+83], DL
+      ADC    [BP+SI-128], DL
+      ADC    [BP+DI+84], DL
+      ADC    [BP+DI-128], DL
+      ADC    [SI+85], DL
+      ADC    [SI-128], DL
+      ADC    [DI+86], DL
+      ADC    [DI-128], DL
+      ADC    [BP+87], DL
+      ADC    [BP-128], DL
+      ADC    [BX+88], DL
+      ADC    [BX-128], DL
+      ADC    [BX+SI+89], BL
+      ADC    [BX+SI-128], BL
+      ADC    [BX+DI+90], BL
+      ADC    [BX+DI-128], BL
+      ADC    [BP+SI+91], BL
+      ADC    [BP+SI-128], BL
+      ADC    [BP+DI+92], BL
+      ADC    [BP+DI-128], BL
+      ADC    [SI+93], BL
+      ADC    [SI-128], BL
+      ADC    [DI+94], BL
+      ADC    [DI-128], BL
+      ADC    [BP+95], BL
+      ADC    [BP-128], BL
+      ADC    [BX+96], BL
+      ADC    [BX-128], BL
+      ADC    [BX+SI+97], AH
+      ADC    [BX+SI-128], AH
+      ADC    [BX+DI+98], AH
+      ADC    [BX+DI-128], AH
+      ADC    [BP+SI+99], AH
+      ADC    [BP+SI-128], AH
+      ADC    [BP+DI+100], AH
+      ADC    [BP+DI-128], AH
+      ADC    [SI+101], AH
+      ADC    [SI-128], AH
+      ADC    [DI+102], AH
+      ADC    [DI-128], AH
+      ADC    [BP+103], AH
+      ADC    [BP-128], AH
+      ADC    [BX+104], AH
+      ADC    [BX-128], AH
+      ADC    [BX+SI+8281H], AL
+      ADC    [BX+DI+8382H], AL
+      ADC    [BP+SI+8483H], AL
+      ADC    [BP+DI+8584H], AL
+      ADC    [SI+8685H], AL
+      ADC    [DI+8786H], AL
+      ADC    [BP+8887H], AL
+      ADC    [BX+8988H], AL
+      ADC    [BX+SI+8A89H], CL
+      ADC    [BX+DI+8B8AH], CL
+      ADC    [BP+SI+8C8BH], CL
+      ADC    [BP+DI+8D8CH], CL
+      ADC    [SI+8E8DH], CL
+      ADC    [DI+8F8EH], CL
+      ADC    [BP+908FH], CL
+      ADC    [BX+9190H], CL
+      ADC    [BX+SI+9291H], DL
+      ADC    [BX+DI+9392H], DL
+      ADC    [BP+SI+9493H], DL
+      ADC    [BP+DI+9594H], DL
+      ADC    [SI+9695H], DL
+      ADC    [DI+9796H], DL
+      ADC    [BP+9897H], DL
+      ADC    [BX+9998H], DL
+      ADC    [BX+SI+9A99H], BL
+      ADC    [BX+DI+9B9AH], BL
+      ADC    [BP+SI+9C9BH], BL
+      ADC    [BP+DI+9D9CH], BL
+      ADC    [SI+9E9DH], BL
+      ADC    [DI+9F9EH], BL
+      ADC    [BP+0A09FH], BL
+      ADC    [BX+0A1A0H], BL
+      ADC    [BX+SI+0A2A1H], AH
+      ADC    [BX+DI+0A3A2H], AH
+      ADC    [BP+SI+0A4A3H], AH
+      ADC    [BP+DI+0A5A4H], AH
+      ADC    [SI+0A6A5H], AH
+      ADC    [DI+0A7A6H], AH
+      ADC    [BP+0A8A7H], AH
+      ADC    [BX+0A9A8H], AH
+      ADC    AL, AL
+      ADC    CL, AL
+      ADC    DL, AL
+      ADC    BL, AL
+      ADC    AH, AL
+      ADC    AL, CL
+      ADC    CL, CL
+      ADC    DL, CL
+      ADC    BL, CL
+      ADC    AH, CL
+      ADC    AL, DL
+      ADC    CL, DL
+      ADC    DL, DL
+      ADC    BL, DL
+      ADC    AH, DL
+      ADC    AL, BL
+      ADC    CL, BL
+      ADC    DL, BL
+      ADC    BL, BL
+      ADC    AH, BL
+      ADC    AL, AH
+      ADC    CL, AH
+      ADC    DL, AH
+      ADC    BL, AH
+      ADC    AH, AH
+      ADC    [BX+SI], AL
+      ADC    [BX+DI], AL
+      ADC    [BP+SI], AL
+      ADC    [BP+DI], AL
+      ADC    [SI], AL
+      ADC    [DI], AL
+      ADC    [0807H], AL
+      ADC    [BX], AL
+      ADC    [BX+SI], CL
+      ADC    [BX+DI], CL
+      ADC    [BP+SI], CL
+      ADC    [BP+DI], CL
+      ADC    [SI], CL
+      ADC    [DI], CL
+      ADC    [100FH], CL
+      ADC    [BX], CL
+      ADC    [BX+SI], DL
       ADC    [BP+SI], DX
       ADC    [BP+DI], DX
       ADC    [SI], DX
@@ -1661,6 +2375,145 @@
       ADC    AH, [DI]
       ADC    AH, [2827H]
       ADC    AH, [BX]
+      ADC    AL, [BX+SI+65]
+      ADC    AL, [BX+SI-128]
+      ADC    AL, [BX+DI+66]
+      ADC    AL, [BX+DI-128]
+      ADC    AL, [BP+SI+67]
+      ADC    AL, [BP+SI-128]
+      ADC    AL, [BP+DI+68]
+      ADC    AL, [BP+DI-128]
+      ADC    AL, [SI+69]
+      ADC    AL, [SI-128]
+      ADC    AL, [DI+70]
+      ADC    AL, [DI-128]
+      ADC    AL, [BP+71]
+      ADC    AL, [BP-128]
+      ADC    AL, [BX+72]
+      ADC    AL, [BX-128]
+      ADC    CL, [BX+SI+73]
+      ADC    CL, [BX+SI-128]
+      ADC    CL, [BX+DI+74]
+      ADC    CL, [BX+DI-128]
+      ADC    CL, [BP+SI+75]
+      ADC    CL, [BP+SI-128]
+      ADC    CL, [BP+DI+76]
+      ADC    CL, [BP+DI-128]
+      ADC    CL, [SI+77]
+      ADC    CL, [SI-128]
+      ADC    CL, [DI+78]
+      ADC    CL, [DI-128]
+      ADC    CL, [BP+79]
+      ADC    CL, [BP-128]
+      ADC    CL, [BX+80]
+      ADC    CL, [BX-128]
+      ADC    DL, [BX+SI+81]
+      ADC    DL, [BX+SI-128]
+      ADC    DL, [BX+DI+82]
+      ADC    DL, [BX+DI-128]
+      ADC    DL, [BP+SI+83]
+      ADC    DL, [BP+SI-128]
+      ADC    DL, [BP+DI+84]
+      ADC    DL, [BP+DI-128]
+      ADC    DL, [SI+85]
+      ADC    DL, [SI-128]
+      ADC    DL, [DI+86]
+      ADC    DL, [DI-128]
+      ADC    DL, [BP+87]
+      ADC    DL, [BP-128]
+      ADC    DL, [BX+88]
+      ADC    DL, [BX-128]
+      ADC    BL, [BX+SI+89]
+      ADC    BL, [BX+SI-128]
+      ADC    BL, [BX+DI+90]
+      ADC    BL, [BX+DI-128]
+      ADC    BL, [BP+SI+91]
+      ADC    BL, [BP+SI-128]
+      ADC    BL, [BP+DI+92]
+      ADC    BL, [BP+DI-128]
+      ADC    BL, [SI+93]
+      ADC    BL, [SI-128]
+      ADC    BL, [DI+94]
+      ADC    BL, [DI-128]
+      ADC    BL, [BP+95]
+      ADC    BL, [BP-128]
+      ADC    BL, [BX+96]
+      ADC    BL, [BX-128]
+      ADC    AH, [BX+SI+97]
+      ADC    AH, [BX+SI-128]
+      ADC    AH, [BX+DI+98]
+      ADC    AH, [BX+DI-128]
+      ADC    AH, [BP+SI+99]
+      ADC    AH, [BP+SI-128]
+      ADC    AH, [BP+DI+100]
+      ADC    AH, [BP+DI-128]
+      ADC    AH, [SI+101]
+      ADC    AH, [SI-128]
+      ADC    AH, [DI+102]
+      ADC    AH, [DI-128]
+      ADC    AH, [BP+103]
+      ADC    AH, [BP-128]
+      ADC    AH, [BX+104]
+      ADC    AH, [BX-128]
+      ADC    AL, [BX+SI+8281H]
+      ADC    AL, [BX+DI+8382H]
+      ADC    AL, [BP+SI+8483H]
+      ADC    AL, [BP+DI+8584H]
+      ADC    AL, [SI+8685H]
+      ADC    AL, [DI+8786H]
+      ADC    AL, [BP+8887H]
+      ADC    AL, [BX+8988H]
+      ADC    CL, [BX+SI+8A89H]
+      ADC    CL, [BX+DI+8B8AH]
+      ADC    CL, [BP+SI+8C8BH]
+      ADC    CL, [BP+DI+8D8CH]
+      ADC    CL, [SI+8E8DH]
+      ADC    CL, [DI+8F8EH]
+      ADC    CL, [BP+908FH]
+      ADC    CL, [BX+9190H]
+      ADC    DL, [BX+SI+9291H]
+      ADC    DL, [BX+DI+9392H]
+      ADC    DL, [BP+SI+9493H]
+      ADC    DL, [BP+DI+9594H]
+      ADC    DL, [SI+9695H]
+      ADC    DL, [DI+9796H]
+      ADC    DL, [BP+9897H]
+      ADC    DL, [BX+9998H]
+      ADC    BL, [BX+SI+9A99H]
+      ADC    BL, [BX+DI+9B9AH]
+      ADC    BL, [BP+SI+9C9BH]
+      ADC    BL, [BP+DI+9D9CH]
+      ADC    BL, [SI+9E9DH]
+      ADC    BL, [DI+9F9EH]
+      ADC    BL, [BP+0A09FH]
+      ADC    BL, [BX+0A1A0H]
+      ADC    AH, [BX+SI+0A2A1H]
+      ADC    AH, [BX+DI+0A3A2H]
+      ADC    AH, [BP+SI+0A4A3H]
+      ADC    AH, [BP+DI+0A5A4H]
+      ADC    AH, [SI+0A6A5H]
+      ADC    AH, [DI+0A7A6H]
+      ADC    AH, [BP+0A8A7H]
+      ADC    AH, [BX+0A9A8H]
+      ADC    AL, [BX+SI]
+      ADC    AL, [BX+DI]
+      ADC    AL, [BP+SI]
+      ADC    AL, [BP+DI]
+      ADC    AL, [SI]
+      ADC    AL, [DI]
+      ADC    AL, [0807H]
+      ADC    AL, [BX]
+      ADC    CL, [BX+SI]
+      ADC    CL, [BX+DI]
+      ADC    CL, [BP+SI]
+      ADC    CL, [BP+DI]
+      ADC    CL, [SI]
+      ADC    CL, [DI]
+      ADC    CL, [100FH]
+      ADC    CL, [BX]
+      ADC    DL, [BX+SI]
+      ADC    DL, [BX+DI]
+      ADC    DL, [BP+SI]
       ADC    DX, [SI]
       ADC    DX, [DI]
       ADC    DX, [1817H]
@@ -1917,7 +2770,6 @@
       ADC    DX, [BX+DI]
       ADC    DX, [BP+SI]
       ADC    DX, [BP+DI]
-      ADC    AL, 21
       ADC    AX, 1716H
       PUSH   SS
       POP    SS
@@ -1936,6 +2788,176 @@
       SBB    [DI], AH
       SBB    [2827H], AH
       SBB    [BX], AH
+      SBB    [BX+SI+65], AL
+      SBB    [BX+SI-128], AL
+      SBB    [BX+DI+66], AL
+      SBB    [BX+DI-128], AL
+      SBB    [BP+SI+67], AL
+      SBB    [BP+SI-128], AL
+      SBB    [BP+DI+68], AL
+      SBB    [BP+DI-128], AL
+      SBB    [SI+69], AL
+      SBB    [SI-128], AL
+      SBB    [DI+70], AL
+      SBB    [DI-128], AL
+      SBB    [BP+71], AL
+      SBB    [BP-128], AL
+      SBB    [BX+72], AL
+      SBB    [BX-128], AL
+      SBB    [BX+SI+73], CL
+      SBB    [BX+SI-128], CL
+      SBB    [BX+DI+74], CL
+      SBB    [BX+DI-128], CL
+      SBB    [BP+SI+75], CL
+      SBB    [BP+SI-128], CL
+      SBB    [BP+DI+76], CL
+      SBB    [BP+DI-128], CL
+      SBB    [SI+77], CL
+      SBB    [SI-128], CL
+      SBB    [DI+78], CL
+      SBB    [DI-128], CL
+      SBB    [BP+79], CL
+      SBB    [BP-128], CL
+      SBB    [BX+80], CL
+      SBB    [BX-128], CL
+      SBB    [BX+SI+81], DL
+      SBB    [BX+SI-128], DL
+      SBB    [BX+DI+82], DL
+      SBB    [BX+DI-128], DL
+      SBB    [BP+SI+83], DL
+      SBB    [BP+SI-128], DL
+      SBB    [BP+DI+84], DL
+      SBB    [BP+DI-128], DL
+      SBB    [SI+85], DL
+      SBB    [SI-128], DL
+      SBB    [DI+86], DL
+      SBB    [DI-128], DL
+      SBB    [BP+87], DL
+      SBB    [BP-128], DL
+      SBB    [BX+88], DL
+      SBB    [BX-128], DL
+      SBB    [BX+SI+89], BL
+      SBB    [BX+SI-128], BL
+      SBB    [BX+DI+90], BL
+      SBB    [BX+DI-128], BL
+      SBB    [BP+SI+91], BL
+      SBB    [BP+SI-128], BL
+      SBB    [BP+DI+92], BL
+      SBB    [BP+DI-128], BL
+      SBB    [SI+93], BL
+      SBB    [SI-128], BL
+      SBB    [DI+94], BL
+      SBB    [DI-128], BL
+      SBB    [BP+95], BL
+      SBB    [BP-128], BL
+      SBB    [BX+96], BL
+      SBB    [BX-128], BL
+      SBB    [BX+SI+97], AH
+      SBB    [BX+SI-128], AH
+      SBB    [BX+DI+98], AH
+      SBB    [BX+DI-128], AH
+      SBB    [BP+SI+99], AH
+      SBB    [BP+SI-128], AH
+      SBB    [BP+DI+100], AH
+      SBB    [BP+DI-128], AH
+      SBB    [SI+101], AH
+      SBB    [SI-128], AH
+      SBB    [DI+102], AH
+      SBB    [DI-128], AH
+      SBB    [BP+103], AH
+      SBB    [BP-128], AH
+      SBB    [BX+104], AH
+      SBB    [BX-128], AH
+      SBB    [BX+SI+8281H], AL
+      SBB    [BX+DI+8382H], AL
+      SBB    [BP+SI+8483H], AL
+      SBB    [BP+DI+8584H], AL
+      SBB    [SI+8685H], AL
+      SBB    [DI+8786H], AL
+      SBB    [BP+8887H], AL
+      SBB    [BX+8988H], AL
+      SBB    [BX+SI+8A89H], CL
+      SBB    [BX+DI+8B8AH], CL
+      SBB    [BP+SI+8C8BH], CL
+      SBB    [BP+DI+8D8CH], CL
+      SBB    [SI+8E8DH], CL
+      SBB    [DI+8F8EH], CL
+      SBB    [BP+908FH], CL
+      SBB    [BX+9190H], CL
+      SBB    [BX+SI+9291H], DL
+      SBB    [BX+DI+9392H], DL
+      SBB    [BP+SI+9493H], DL
+      SBB    [BP+DI+9594H], DL
+      SBB    [SI+9695H], DL
+      SBB    [DI+9796H], DL
+      SBB    [BP+9897H], DL
+      SBB    [BX+9998H], DL
+      SBB    [BX+SI+9A99H], BL
+      SBB    [BX+DI+9B9AH], BL
+      SBB    [BP+SI+9C9BH], BL
+      SBB    [BP+DI+9D9CH], BL
+      SBB    [SI+9E9DH], BL
+      SBB    [DI+9F9EH], BL
+      SBB    [BP+0A09FH], BL
+      SBB    [BX+0A1A0H], BL
+      SBB    [BX+SI+0A2A1H], AH
+      SBB    [BX+DI+0A3A2H], AH
+      SBB    [BP+SI+0A4A3H], AH
+      SBB    [BP+DI+0A5A4H], AH
+      SBB    [SI+0A6A5H], AH
+      SBB    [DI+0A7A6H], AH
+      SBB    [BP+0A8A7H], AH
+      SBB    [BX+0A9A8H], AH
+      SBB    AL, AL
+      SBB    CL, AL
+      SBB    DL, AL
+      SBB    BL, AL
+      SBB    AH, AL
+      SBB    AL, CL
+      SBB    CL, CL
+      SBB    DL, CL
+      SBB    BL, CL
+      SBB    AH, CL
+      SBB    AL, DL
+      SBB    CL, DL
+      SBB    DL, DL
+      SBB    BL, DL
+      SBB    AH, DL
+      SBB    AL, BL
+      SBB    CL, BL
+      SBB    DL, BL
+      SBB    BL, BL
+      SBB    AH, BL
+      SBB    AL, AH
+      SBB    CL, AH
+      SBB    DL, AH
+      SBB    BL, AH
+      SBB    AH, AH
+      SBB    [BX+SI], AL
+      SBB    [BX+DI], AL
+      SBB    [BP+SI], AL
+      SBB    [BP+DI], AL
+      SBB    [SI], AL
+      SBB    [DI], AL
+      SBB    [0807H], AL
+      SBB    [BX], AL
+      SBB    [BX+SI], CL
+      SBB    [BX+DI], CL
+      SBB    [BP+SI], CL
+      SBB    [BP+DI], CL
+      SBB    [SI], CL
+      SBB    [DI], CL
+      SBB    [100FH], CL
+      SBB    [BX], CL
+      SBB    [BX+SI], DL
+      SBB    [BX+DI], DL
+      SBB    [BP+SI], DL
+      SBB    [BP+DI], DL
+      SBB    [SI], DL
+      SBB    [DI], DL
+      SBB    [1817H], DL
+      SBB    [BX], DL
+      SBB    [BX+SI], BL
       SBB    [BP+SI], BX
       SBB    [BP+DI], BX
       SBB    [SI], BX
@@ -2269,6 +3291,153 @@
       SBB    AH, [DI]
       SBB    AH, [2827H]
       SBB    AH, [BX]
+      SBB    AL, [BX+SI+65]
+      SBB    AL, [BX+SI-128]
+      SBB    AL, [BX+DI+66]
+      SBB    AL, [BX+DI-128]
+      SBB    AL, [BP+SI+67]
+      SBB    AL, [BP+SI-128]
+      SBB    AL, [BP+DI+68]
+      SBB    AL, [BP+DI-128]
+      SBB    AL, [SI+69]
+      SBB    AL, [SI-128]
+      SBB    AL, [DI+70]
+      SBB    AL, [DI-128]
+      SBB    AL, [BP+71]
+      SBB    AL, [BP-128]
+      SBB    AL, [BX+72]
+      SBB    AL, [BX-128]
+      SBB    CL, [BX+SI+73]
+      SBB    CL, [BX+SI-128]
+      SBB    CL, [BX+DI+74]
+      SBB    CL, [BX+DI-128]
+      SBB    CL, [BP+SI+75]
+      SBB    CL, [BP+SI-128]
+      SBB    CL, [BP+DI+76]
+      SBB    CL, [BP+DI-128]
+      SBB    CL, [SI+77]
+      SBB    CL, [SI-128]
+      SBB    CL, [DI+78]
+      SBB    CL, [DI-128]
+      SBB    CL, [BP+79]
+      SBB    CL, [BP-128]
+      SBB    CL, [BX+80]
+      SBB    CL, [BX-128]
+      SBB    DL, [BX+SI+81]
+      SBB    DL, [BX+SI-128]
+      SBB    DL, [BX+DI+82]
+      SBB    DL, [BX+DI-128]
+      SBB    DL, [BP+SI+83]
+      SBB    DL, [BP+SI-128]
+      SBB    DL, [BP+DI+84]
+      SBB    DL, [BP+DI-128]
+      SBB    DL, [SI+85]
+      SBB    DL, [SI-128]
+      SBB    DL, [DI+86]
+      SBB    DL, [DI-128]
+      SBB    DL, [BP+87]
+      SBB    DL, [BP-128]
+      SBB    DL, [BX+88]
+      SBB    DL, [BX-128]
+      SBB    BL, [BX+SI+89]
+      SBB    BL, [BX+SI-128]
+      SBB    BL, [BX+DI+90]
+      SBB    BL, [BX+DI-128]
+      SBB    BL, [BP+SI+91]
+      SBB    BL, [BP+SI-128]
+      SBB    BL, [BP+DI+92]
+      SBB    BL, [BP+DI-128]
+      SBB    BL, [SI+93]
+      SBB    BL, [SI-128]
+      SBB    BL, [DI+94]
+      SBB    BL, [DI-128]
+      SBB    BL, [BP+95]
+      SBB    BL, [BP-128]
+      SBB    BL, [BX+96]
+      SBB    BL, [BX-128]
+      SBB    AH, [BX+SI+97]
+      SBB    AH, [BX+SI-128]
+      SBB    AH, [BX+DI+98]
+      SBB    AH, [BX+DI-128]
+      SBB    AH, [BP+SI+99]
+      SBB    AH, [BP+SI-128]
+      SBB    AH, [BP+DI+100]
+      SBB    AH, [BP+DI-128]
+      SBB    AH, [SI+101]
+      SBB    AH, [SI-128]
+      SBB    AH, [DI+102]
+      SBB    AH, [DI-128]
+      SBB    AH, [BP+103]
+      SBB    AH, [BP-128]
+      SBB    AH, [BX+104]
+      SBB    AH, [BX-128]
+      SBB    AL, [BX+SI+8281H]
+      SBB    AL, [BX+DI+8382H]
+      SBB    AL, [BP+SI+8483H]
+      SBB    AL, [BP+DI+8584H]
+      SBB    AL, [SI+8685H]
+      SBB    AL, [DI+8786H]
+      SBB    AL, [BP+8887H]
+      SBB    AL, [BX+8988H]
+      SBB    CL, [BX+SI+8A89H]
+      SBB    CL, [BX+DI+8B8AH]
+      SBB    CL, [BP+SI+8C8BH]
+      SBB    CL, [BP+DI+8D8CH]
+      SBB    CL, [SI+8E8DH]
+      SBB    CL, [DI+8F8EH]
+      SBB    CL, [BP+908FH]
+      SBB    CL, [BX+9190H]
+      SBB    DL, [BX+SI+9291H]
+      SBB    DL, [BX+DI+9392H]
+      SBB    DL, [BP+SI+9493H]
+      SBB    DL, [BP+DI+9594H]
+      SBB    DL, [SI+9695H]
+      SBB    DL, [DI+9796H]
+      SBB    DL, [BP+9897H]
+      SBB    DL, [BX+9998H]
+      SBB    BL, [BX+SI+9A99H]
+      SBB    BL, [BX+DI+9B9AH]
+      SBB    BL, [BP+SI+9C9BH]
+      SBB    BL, [BP+DI+9D9CH]
+      SBB    BL, [SI+9E9DH]
+      SBB    BL, [DI+9F9EH]
+      SBB    BL, [BP+0A09FH]
+      SBB    BL, [BX+0A1A0H]
+      SBB    AH, [BX+SI+0A2A1H]
+      SBB    AH, [BX+DI+0A3A2H]
+      SBB    AH, [BP+SI+0A4A3H]
+      SBB    AH, [BP+DI+0A5A4H]
+      SBB    AH, [SI+0A6A5H]
+      SBB    AH, [DI+0A7A6H]
+      SBB    AH, [BP+0A8A7H]
+      SBB    AH, [BX+0A9A8H]
+      SBB    AL, [BX+SI]
+      SBB    AL, [BX+DI]
+      SBB    AL, [BP+SI]
+      SBB    AL, [BP+DI]
+      SBB    AL, [SI]
+      SBB    AL, [DI]
+      SBB    AL, [0807H]
+      SBB    AL, [BX]
+      SBB    CL, [BX+SI]
+      SBB    CL, [BX+DI]
+      SBB    CL, [BP+SI]
+      SBB    CL, [BP+DI]
+      SBB    CL, [SI]
+      SBB    CL, [DI]
+      SBB    CL, [100FH]
+      SBB    CL, [BX]
+      SBB    DL, [BX+SI]
+      SBB    DL, [BX+DI]
+      SBB    DL, [BP+SI]
+      SBB    DL, [BP+DI]
+      SBB    DL, [SI]
+      SBB    DL, [DI]
+      SBB    DL, [1817H]
+      SBB    DL, [BX]
+      SBB    BL, [BX+SI]
+      SBB    BL, [BX+DI]
+      SBB    BL, [BP+SI]
       SBB    BX, [SI]
       SBB    BX, [DI]
       SBB    BX, [201FH]
@@ -2525,7 +3694,6 @@
       SBB    BX, [BX+DI]
       SBB    BX, [BP+SI]
       SBB    BX, [BP+DI]
-      SBB    AL, 29
       SBB    AX, 1F1EH
       PUSH   DS
       POP    DS
@@ -2537,6 +3705,183 @@
       AND    [2827H], AH
       AND    [BX], AH
       AND    [BX+SI], CH
+      AND    [BX+SI+65], AL
+      AND    [BX+SI-128], AL
+      AND    [BX+DI+66], AL
+      AND    [BX+DI-128], AL
+      AND    [BP+SI+67], AL
+      AND    [BP+SI-128], AL
+      AND    [BP+DI+68], AL
+      AND    [BP+DI-128], AL
+      AND    [SI+69], AL
+      AND    [SI-128], AL
+      AND    [DI+70], AL
+      AND    [DI-128], AL
+      AND    [BP+71], AL
+      AND    [BP-128], AL
+      AND    [BX+72], AL
+      AND    [BX-128], AL
+      AND    [BX+SI+73], CL
+      AND    [BX+SI-128], CL
+      AND    [BX+DI+74], CL
+      AND    [BX+DI-128], CL
+      AND    [BP+SI+75], CL
+      AND    [BP+SI-128], CL
+      AND    [BP+DI+76], CL
+      AND    [BP+DI-128], CL
+      AND    [SI+77], CL
+      AND    [SI-128], CL
+      AND    [DI+78], CL
+      AND    [DI-128], CL
+      AND    [BP+79], CL
+      AND    [BP-128], CL
+      AND    [BX+80], CL
+      AND    [BX-128], CL
+      AND    [BX+SI+81], DL
+      AND    [BX+SI-128], DL
+      AND    [BX+DI+82], DL
+      AND    [BX+DI-128], DL
+      AND    [BP+SI+83], DL
+      AND    [BP+SI-128], DL
+      AND    [BP+DI+84], DL
+      AND    [BP+DI-128], DL
+      AND    [SI+85], DL
+      AND    [SI-128], DL
+      AND    [DI+86], DL
+      AND    [DI-128], DL
+      AND    [BP+87], DL
+      AND    [BP-128], DL
+      AND    [BX+88], DL
+      AND    [BX-128], DL
+      AND    [BX+SI+89], BL
+      AND    [BX+SI-128], BL
+      AND    [BX+DI+90], BL
+      AND    [BX+DI-128], BL
+      AND    [BP+SI+91], BL
+      AND    [BP+SI-128], BL
+      AND    [BP+DI+92], BL
+      AND    [BP+DI-128], BL
+      AND    [SI+93], BL
+      AND    [SI-128], BL
+      AND    [DI+94], BL
+      AND    [DI-128], BL
+      AND    [BP+95], BL
+      AND    [BP-128], BL
+      AND    [BX+96], BL
+      AND    [BX-128], BL
+      AND    [BX+SI+97], AH
+      AND    [BX+SI-128], AH
+      AND    [BX+DI+98], AH
+      AND    [BX+DI-128], AH
+      AND    [BP+SI+99], AH
+      AND    [BP+SI-128], AH
+      AND    [BP+DI+100], AH
+      AND    [BP+DI-128], AH
+      AND    [SI+101], AH
+      AND    [SI-128], AH
+      AND    [DI+102], AH
+      AND    [DI-128], AH
+      AND    [BP+103], AH
+      AND    [BP-128], AH
+      AND    [BX+104], AH
+      AND    [BX-128], AH
+      AND    [BX+SI+8281H], AL
+      AND    [BX+DI+8382H], AL
+      AND    [BP+SI+8483H], AL
+      AND    [BP+DI+8584H], AL
+      AND    [SI+8685H], AL
+      AND    [DI+8786H], AL
+      AND    [BP+8887H], AL
+      AND    [BX+8988H], AL
+      AND    [BX+SI+8A89H], CL
+      AND    [BX+DI+8B8AH], CL
+      AND    [BP+SI+8C8BH], CL
+      AND    [BP+DI+8D8CH], CL
+      AND    [SI+8E8DH], CL
+      AND    [DI+8F8EH], CL
+      AND    [BP+908FH], CL
+      AND    [BX+9190H], CL
+      AND    [BX+SI+9291H], DL
+      AND    [BX+DI+9392H], DL
+      AND    [BP+SI+9493H], DL
+      AND    [BP+DI+9594H], DL
+      AND    [SI+9695H], DL
+      AND    [DI+9796H], DL
+      AND    [BP+9897H], DL
+      AND    [BX+9998H], DL
+      AND    [BX+SI+9A99H], BL
+      AND    [BX+DI+9B9AH], BL
+      AND    [BP+SI+9C9BH], BL
+      AND    [BP+DI+9D9CH], BL
+      AND    [SI+9E9DH], BL
+      AND    [DI+9F9EH], BL
+      AND    [BP+0A09FH], BL
+      AND    [BX+0A1A0H], BL
+      AND    [BX+SI+0A2A1H], AH
+      AND    [BX+DI+0A3A2H], AH
+      AND    [BP+SI+0A4A3H], AH
+      AND    [BP+DI+0A5A4H], AH
+      AND    [SI+0A6A5H], AH
+      AND    [DI+0A7A6H], AH
+      AND    [BP+0A8A7H], AH
+      AND    [BX+0A9A8H], AH
+      AND    AL, AL
+      AND    CL, AL
+      AND    DL, AL
+      AND    BL, AL
+      AND    AH, AL
+      AND    AL, CL
+      AND    CL, CL
+      AND    DL, CL
+      AND    BL, CL
+      AND    AH, CL
+      AND    AL, DL
+      AND    CL, DL
+      AND    DL, DL
+      AND    BL, DL
+      AND    AH, DL
+      AND    AL, BL
+      AND    CL, BL
+      AND    DL, BL
+      AND    BL, BL
+      AND    AH, BL
+      AND    AL, AH
+      AND    CL, AH
+      AND    DL, AH
+      AND    BL, AH
+      AND    AH, AH
+      AND    [BX+SI], AL
+      AND    [BX+DI], AL
+      AND    [BP+SI], AL
+      AND    [BP+DI], AL
+      AND    [SI], AL
+      AND    [DI], AL
+      AND    [0807H], AL
+      AND    [BX], AL
+      AND    [BX+SI], CL
+      AND    [BX+DI], CL
+      AND    [BP+SI], CL
+      AND    [BP+DI], CL
+      AND    [SI], CL
+      AND    [DI], CL
+      AND    [100FH], CL
+      AND    [BX], CL
+      AND    [BX+SI], DL
+      AND    [BX+DI], DL
+      AND    [BP+SI], DL
+      AND    [BP+DI], DL
+      AND    [SI], DL
+      AND    [DI], DL
+      AND    [1817H], DL
+      AND    [BX], DL
+      AND    [BX+SI], BL
+      AND    [BX+DI], BL
+      AND    [BP+SI], BL
+      AND    [BP+DI], BL
+      AND    [SI], BL
+      AND    [DI], BL
+      AND    [201FH], BL
+      AND    [BX], BL
       AND    [BP+SI], SP
       AND    [BP+DI], SP
       AND    [SI], SP
@@ -2865,6 +4210,158 @@
       AND    CH, [BX+SI]
       AND    CH, [BX+DI]
       AND    CH, [BP+SI]
+      AND    AL, [BX+SI+65]
+      AND    AL, [BX+SI-128]
+      AND    AL, [BX+DI+66]
+      AND    AL, [BX+DI-128]
+      AND    AL, [BP+SI+67]
+      AND    AL, [BP+SI-128]
+      AND    AL, [BP+DI+68]
+      AND    AL, [BP+DI-128]
+      AND    AL, [SI+69]
+      AND    AL, [SI-128]
+      AND    AL, [DI+70]
+      AND    AL, [DI-128]
+      AND    AL, [BP+71]
+      AND    AL, [BP-128]
+      AND    AL, [BX+72]
+      AND    AL, [BX-128]
+      AND    CL, [BX+SI+73]
+      AND    CL, [BX+SI-128]
+      AND    CL, [BX+DI+74]
+      AND    CL, [BX+DI-128]
+      AND    CL, [BP+SI+75]
+      AND    CL, [BP+SI-128]
+      AND    CL, [BP+DI+76]
+      AND    CL, [BP+DI-128]
+      AND    CL, [SI+77]
+      AND    CL, [SI-128]
+      AND    CL, [DI+78]
+      AND    CL, [DI-128]
+      AND    CL, [BP+79]
+      AND    CL, [BP-128]
+      AND    CL, [BX+80]
+      AND    CL, [BX-128]
+      AND    DL, [BX+SI+81]
+      AND    DL, [BX+SI-128]
+      AND    DL, [BX+DI+82]
+      AND    DL, [BX+DI-128]
+      AND    DL, [BP+SI+83]
+      AND    DL, [BP+SI-128]
+      AND    DL, [BP+DI+84]
+      AND    DL, [BP+DI-128]
+      AND    DL, [SI+85]
+      AND    DL, [SI-128]
+      AND    DL, [DI+86]
+      AND    DL, [DI-128]
+      AND    DL, [BP+87]
+      AND    DL, [BP-128]
+      AND    DL, [BX+88]
+      AND    DL, [BX-128]
+      AND    BL, [BX+SI+89]
+      AND    BL, [BX+SI-128]
+      AND    BL, [BX+DI+90]
+      AND    BL, [BX+DI-128]
+      AND    BL, [BP+SI+91]
+      AND    BL, [BP+SI-128]
+      AND    BL, [BP+DI+92]
+      AND    BL, [BP+DI-128]
+      AND    BL, [SI+93]
+      AND    BL, [SI-128]
+      AND    BL, [DI+94]
+      AND    BL, [DI-128]
+      AND    BL, [BP+95]
+      AND    BL, [BP-128]
+      AND    BL, [BX+96]
+      AND    BL, [BX-128]
+      AND    AH, [BX+SI+97]
+      AND    AH, [BX+SI-128]
+      AND    AH, [BX+DI+98]
+      AND    AH, [BX+DI-128]
+      AND    AH, [BP+SI+99]
+      AND    AH, [BP+SI-128]
+      AND    AH, [BP+DI+100]
+      AND    AH, [BP+DI-128]
+      AND    AH, [SI+101]
+      AND    AH, [SI-128]
+      AND    AH, [DI+102]
+      AND    AH, [DI-128]
+      AND    AH, [BP+103]
+      AND    AH, [BP-128]
+      AND    AH, [BX+104]
+      AND    AH, [BX-128]
+      AND    AL, [BX+SI+8281H]
+      AND    AL, [BX+DI+8382H]
+      AND    AL, [BP+SI+8483H]
+      AND    AL, [BP+DI+8584H]
+      AND    AL, [SI+8685H]
+      AND    AL, [DI+8786H]
+      AND    AL, [BP+8887H]
+      AND    AL, [BX+8988H]
+      AND    CL, [BX+SI+8A89H]
+      AND    CL, [BX+DI+8B8AH]
+      AND    CL, [BP+SI+8C8BH]
+      AND    CL, [BP+DI+8D8CH]
+      AND    CL, [SI+8E8DH]
+      AND    CL, [DI+8F8EH]
+      AND    CL, [BP+908FH]
+      AND    CL, [BX+9190H]
+      AND    DL, [BX+SI+9291H]
+      AND    DL, [BX+DI+9392H]
+      AND    DL, [BP+SI+9493H]
+      AND    DL, [BP+DI+9594H]
+      AND    DL, [SI+9695H]
+      AND    DL, [DI+9796H]
+      AND    DL, [BP+9897H]
+      AND    DL, [BX+9998H]
+      AND    BL, [BX+SI+9A99H]
+      AND    BL, [BX+DI+9B9AH]
+      AND    BL, [BP+SI+9C9BH]
+      AND    BL, [BP+DI+9D9CH]
+      AND    BL, [SI+9E9DH]
+      AND    BL, [DI+9F9EH]
+      AND    BL, [BP+0A09FH]
+      AND    BL, [BX+0A1A0H]
+      AND    AH, [BX+SI+0A2A1H]
+      AND    AH, [BX+DI+0A3A2H]
+      AND    AH, [BP+SI+0A4A3H]
+      AND    AH, [BP+DI+0A5A4H]
+      AND    AH, [SI+0A6A5H]
+      AND    AH, [DI+0A7A6H]
+      AND    AH, [BP+0A8A7H]
+      AND    AH, [BX+0A9A8H]
+      AND    AL, [BX+SI]
+      AND    AL, [BX+DI]
+      AND    AL, [BP+SI]
+      AND    AL, [BP+DI]
+      AND    AL, [SI]
+      AND    AL, [DI]
+      AND    AL, [0807H]
+      AND    AL, [BX]
+      AND    CL, [BX+SI]
+      AND    CL, [BX+DI]
+      AND    CL, [BP+SI]
+      AND    CL, [BP+DI]
+      AND    CL, [SI]
+      AND    CL, [DI]
+      AND    CL, [100FH]
+      AND    CL, [BX]
+      AND    DL, [BX+SI]
+      AND    DL, [BX+DI]
+      AND    DL, [BP+SI]
+      AND    DL, [BP+DI]
+      AND    DL, [SI]
+      AND    DL, [DI]
+      AND    DL, [1817H]
+      AND    DL, [BX]
+      AND    BL, [BX+SI]
+      AND    BL, [BX+DI]
+      AND    BL, [BP+SI]
+      AND    BL, [BP+DI]
+      AND    BL, [SI]
+      AND    BL, [DI]
+      AND    BL, [201FH]
+      AND    BL, [BX]
       AND    SP, [SI]
       AND    SP, [DI]
       AND    SP, [2827H]
@@ -3121,7 +4618,6 @@
       AND    SP, [BX+DI]
       AND    SP, [BP+SI]
       AND    SP, [BP+DI]
-      AND    AL, 25H
       AND    AX, 2726H
       SEGES
       DAA
@@ -3133,6 +4629,183 @@
       SUB    [302FH], CH
       SUB    [BX], CH
       SUB    [BX+SI], DH
+      SUB    [BX+SI+65], AL
+      SUB    [BX+SI-128], AL
+      SUB    [BX+DI+66], AL
+      SUB    [BX+DI-128], AL
+      SUB    [BP+SI+67], AL
+      SUB    [BP+SI-128], AL
+      SUB    [BP+DI+68], AL
+      SUB    [BP+DI-128], AL
+      SUB    [SI+69], AL
+      SUB    [SI-128], AL
+      SUB    [DI+70], AL
+      SUB    [DI-128], AL
+      SUB    [BP+71], AL
+      SUB    [BP-128], AL
+      SUB    [BX+72], AL
+      SUB    [BX-128], AL
+      SUB    [BX+SI+73], CL
+      SUB    [BX+SI-128], CL
+      SUB    [BX+DI+74], CL
+      SUB    [BX+DI-128], CL
+      SUB    [BP+SI+75], CL
+      SUB    [BP+SI-128], CL
+      SUB    [BP+DI+76], CL
+      SUB    [BP+DI-128], CL
+      SUB    [SI+77], CL
+      SUB    [SI-128], CL
+      SUB    [DI+78], CL
+      SUB    [DI-128], CL
+      SUB    [BP+79], CL
+      SUB    [BP-128], CL
+      SUB    [BX+80], CL
+      SUB    [BX-128], CL
+      SUB    [BX+SI+81], DL
+      SUB    [BX+SI-128], DL
+      SUB    [BX+DI+82], DL
+      SUB    [BX+DI-128], DL
+      SUB    [BP+SI+83], DL
+      SUB    [BP+SI-128], DL
+      SUB    [BP+DI+84], DL
+      SUB    [BP+DI-128], DL
+      SUB    [SI+85], DL
+      SUB    [SI-128], DL
+      SUB    [DI+86], DL
+      SUB    [DI-128], DL
+      SUB    [BP+87], DL
+      SUB    [BP-128], DL
+      SUB    [BX+88], DL
+      SUB    [BX-128], DL
+      SUB    [BX+SI+89], BL
+      SUB    [BX+SI-128], BL
+      SUB    [BX+DI+90], BL
+      SUB    [BX+DI-128], BL
+      SUB    [BP+SI+91], BL
+      SUB    [BP+SI-128], BL
+      SUB    [BP+DI+92], BL
+      SUB    [BP+DI-128], BL
+      SUB    [SI+93], BL
+      SUB    [SI-128], BL
+      SUB    [DI+94], BL
+      SUB    [DI-128], BL
+      SUB    [BP+95], BL
+      SUB    [BP-128], BL
+      SUB    [BX+96], BL
+      SUB    [BX-128], BL
+      SUB    [BX+SI+97], AH
+      SUB    [BX+SI-128], AH
+      SUB    [BX+DI+98], AH
+      SUB    [BX+DI-128], AH
+      SUB    [BP+SI+99], AH
+      SUB    [BP+SI-128], AH
+      SUB    [BP+DI+100], AH
+      SUB    [BP+DI-128], AH
+      SUB    [SI+101], AH
+      SUB    [SI-128], AH
+      SUB    [DI+102], AH
+      SUB    [DI-128], AH
+      SUB    [BP+103], AH
+      SUB    [BP-128], AH
+      SUB    [BX+104], AH
+      SUB    [BX-128], AH
+      SUB    [BX+SI+8281H], AL
+      SUB    [BX+DI+8382H], AL
+      SUB    [BP+SI+8483H], AL
+      SUB    [BP+DI+8584H], AL
+      SUB    [SI+8685H], AL
+      SUB    [DI+8786H], AL
+      SUB    [BP+8887H], AL
+      SUB    [BX+8988H], AL
+      SUB    [BX+SI+8A89H], CL
+      SUB    [BX+DI+8B8AH], CL
+      SUB    [BP+SI+8C8BH], CL
+      SUB    [BP+DI+8D8CH], CL
+      SUB    [SI+8E8DH], CL
+      SUB    [DI+8F8EH], CL
+      SUB    [BP+908FH], CL
+      SUB    [BX+9190H], CL
+      SUB    [BX+SI+9291H], DL
+      SUB    [BX+DI+9392H], DL
+      SUB    [BP+SI+9493H], DL
+      SUB    [BP+DI+9594H], DL
+      SUB    [SI+9695H], DL
+      SUB    [DI+9796H], DL
+      SUB    [BP+9897H], DL
+      SUB    [BX+9998H], DL
+      SUB    [BX+SI+9A99H], BL
+      SUB    [BX+DI+9B9AH], BL
+      SUB    [BP+SI+9C9BH], BL
+      SUB    [BP+DI+9D9CH], BL
+      SUB    [SI+9E9DH], BL
+      SUB    [DI+9F9EH], BL
+      SUB    [BP+0A09FH], BL
+      SUB    [BX+0A1A0H], BL
+      SUB    [BX+SI+0A2A1H], AH
+      SUB    [BX+DI+0A3A2H], AH
+      SUB    [BP+SI+0A4A3H], AH
+      SUB    [BP+DI+0A5A4H], AH
+      SUB    [SI+0A6A5H], AH
+      SUB    [DI+0A7A6H], AH
+      SUB    [BP+0A8A7H], AH
+      SUB    [BX+0A9A8H], AH
+      SUB    AL, AL
+      SUB    CL, AL
+      SUB    DL, AL
+      SUB    BL, AL
+      SUB    AH, AL
+      SUB    AL, CL
+      SUB    CL, CL
+      SUB    DL, CL
+      SUB    BL, CL
+      SUB    AH, CL
+      SUB    AL, DL
+      SUB    CL, DL
+      SUB    DL, DL
+      SUB    BL, DL
+      SUB    AH, DL
+      SUB    AL, BL
+      SUB    CL, BL
+      SUB    DL, BL
+      SUB    BL, BL
+      SUB    AH, BL
+      SUB    AL, AH
+      SUB    CL, AH
+      SUB    DL, AH
+      SUB    BL, AH
+      SUB    AH, AH
+      SUB    [BX+SI], AL
+      SUB    [BX+DI], AL
+      SUB    [BP+SI], AL
+      SUB    [BP+DI], AL
+      SUB    [SI], AL
+      SUB    [DI], AL
+      SUB    [0807H], AL
+      SUB    [BX], AL
+      SUB    [BX+SI], CL
+      SUB    [BX+DI], CL
+      SUB    [BP+SI], CL
+      SUB    [BP+DI], CL
+      SUB    [SI], CL
+      SUB    [DI], CL
+      SUB    [100FH], CL
+      SUB    [BX], CL
+      SUB    [BX+SI], DL
+      SUB    [BX+DI], DL
+      SUB    [BP+SI], DL
+      SUB    [BP+DI], DL
+      SUB    [SI], DL
+      SUB    [DI], DL
+      SUB    [1817H], DL
+      SUB    [BX], DL
+      SUB    [BX+SI], BL
+      SUB    [BX+DI], BL
+      SUB    [BP+SI], BL
+      SUB    [BP+DI], BL
+      SUB    [SI], BL
+      SUB    [DI], BL
+      SUB    [201FH], BL
+      SUB    [BX], BL
       SUB    [BP+SI], BP
       SUB    [BP+DI], BP
       SUB    [SI], BP
@@ -3461,6 +5134,158 @@
       SUB    DH, [BX+SI]
       SUB    DH, [BX+DI]
       SUB    DH, [BP+SI]
+      SUB    AL, [BX+SI+65]
+      SUB    AL, [BX+SI-128]
+      SUB    AL, [BX+DI+66]
+      SUB    AL, [BX+DI-128]
+      SUB    AL, [BP+SI+67]
+      SUB    AL, [BP+SI-128]
+      SUB    AL, [BP+DI+68]
+      SUB    AL, [BP+DI-128]
+      SUB    AL, [SI+69]
+      SUB    AL, [SI-128]
+      SUB    AL, [DI+70]
+      SUB    AL, [DI-128]
+      SUB    AL, [BP+71]
+      SUB    AL, [BP-128]
+      SUB    AL, [BX+72]
+      SUB    AL, [BX-128]
+      SUB    CL, [BX+SI+73]
+      SUB    CL, [BX+SI-128]
+      SUB    CL, [BX+DI+74]
+      SUB    CL, [BX+DI-128]
+      SUB    CL, [BP+SI+75]
+      SUB    CL, [BP+SI-128]
+      SUB    CL, [BP+DI+76]
+      SUB    CL, [BP+DI-128]
+      SUB    CL, [SI+77]
+      SUB    CL, [SI-128]
+      SUB    CL, [DI+78]
+      SUB    CL, [DI-128]
+      SUB    CL, [BP+79]
+      SUB    CL, [BP-128]
+      SUB    CL, [BX+80]
+      SUB    CL, [BX-128]
+      SUB    DL, [BX+SI+81]
+      SUB    DL, [BX+SI-128]
+      SUB    DL, [BX+DI+82]
+      SUB    DL, [BX+DI-128]
+      SUB    DL, [BP+SI+83]
+      SUB    DL, [BP+SI-128]
+      SUB    DL, [BP+DI+84]
+      SUB    DL, [BP+DI-128]
+      SUB    DL, [SI+85]
+      SUB    DL, [SI-128]
+      SUB    DL, [DI+86]
+      SUB    DL, [DI-128]
+      SUB    DL, [BP+87]
+      SUB    DL, [BP-128]
+      SUB    DL, [BX+88]
+      SUB    DL, [BX-128]
+      SUB    BL, [BX+SI+89]
+      SUB    BL, [BX+SI-128]
+      SUB    BL, [BX+DI+90]
+      SUB    BL, [BX+DI-128]
+      SUB    BL, [BP+SI+91]
+      SUB    BL, [BP+SI-128]
+      SUB    BL, [BP+DI+92]
+      SUB    BL, [BP+DI-128]
+      SUB    BL, [SI+93]
+      SUB    BL, [SI-128]
+      SUB    BL, [DI+94]
+      SUB    BL, [DI-128]
+      SUB    BL, [BP+95]
+      SUB    BL, [BP-128]
+      SUB    BL, [BX+96]
+      SUB    BL, [BX-128]
+      SUB    AH, [BX+SI+97]
+      SUB    AH, [BX+SI-128]
+      SUB    AH, [BX+DI+98]
+      SUB    AH, [BX+DI-128]
+      SUB    AH, [BP+SI+99]
+      SUB    AH, [BP+SI-128]
+      SUB    AH, [BP+DI+100]
+      SUB    AH, [BP+DI-128]
+      SUB    AH, [SI+101]
+      SUB    AH, [SI-128]
+      SUB    AH, [DI+102]
+      SUB    AH, [DI-128]
+      SUB    AH, [BP+103]
+      SUB    AH, [BP-128]
+      SUB    AH, [BX+104]
+      SUB    AH, [BX-128]
+      SUB    AL, [BX+SI+8281H]
+      SUB    AL, [BX+DI+8382H]
+      SUB    AL, [BP+SI+8483H]
+      SUB    AL, [BP+DI+8584H]
+      SUB    AL, [SI+8685H]
+      SUB    AL, [DI+8786H]
+      SUB    AL, [BP+8887H]
+      SUB    AL, [BX+8988H]
+      SUB    CL, [BX+SI+8A89H]
+      SUB    CL, [BX+DI+8B8AH]
+      SUB    CL, [BP+SI+8C8BH]
+      SUB    CL, [BP+DI+8D8CH]
+      SUB    CL, [SI+8E8DH]
+      SUB    CL, [DI+8F8EH]
+      SUB    CL, [BP+908FH]
+      SUB    CL, [BX+9190H]
+      SUB    DL, [BX+SI+9291H]
+      SUB    DL, [BX+DI+9392H]
+      SUB    DL, [BP+SI+9493H]
+      SUB    DL, [BP+DI+9594H]
+      SUB    DL, [SI+9695H]
+      SUB    DL, [DI+9796H]
+      SUB    DL, [BP+9897H]
+      SUB    DL, [BX+9998H]
+      SUB    BL, [BX+SI+9A99H]
+      SUB    BL, [BX+DI+9B9AH]
+      SUB    BL, [BP+SI+9C9BH]
+      SUB    BL, [BP+DI+9D9CH]
+      SUB    BL, [SI+9E9DH]
+      SUB    BL, [DI+9F9EH]
+      SUB    BL, [BP+0A09FH]
+      SUB    BL, [BX+0A1A0H]
+      SUB    AH, [BX+SI+0A2A1H]
+      SUB    AH, [BX+DI+0A3A2H]
+      SUB    AH, [BP+SI+0A4A3H]
+      SUB    AH, [BP+DI+0A5A4H]
+      SUB    AH, [SI+0A6A5H]
+      SUB    AH, [DI+0A7A6H]
+      SUB    AH, [BP+0A8A7H]
+      SUB    AH, [BX+0A9A8H]
+      SUB    AL, [BX+SI]
+      SUB    AL, [BX+DI]
+      SUB    AL, [BP+SI]
+      SUB    AL, [BP+DI]
+      SUB    AL, [SI]
+      SUB    AL, [DI]
+      SUB    AL, [0807H]
+      SUB    AL, [BX]
+      SUB    CL, [BX+SI]
+      SUB    CL, [BX+DI]
+      SUB    CL, [BP+SI]
+      SUB    CL, [BP+DI]
+      SUB    CL, [SI]
+      SUB    CL, [DI]
+      SUB    CL, [100FH]
+      SUB    CL, [BX]
+      SUB    DL, [BX+SI]
+      SUB    DL, [BX+DI]
+      SUB    DL, [BP+SI]
+      SUB    DL, [BP+DI]
+      SUB    DL, [SI]
+      SUB    DL, [DI]
+      SUB    DL, [1817H]
+      SUB    DL, [BX]
+      SUB    BL, [BX+SI]
+      SUB    BL, [BX+DI]
+      SUB    BL, [BP+SI]
+      SUB    BL, [BP+DI]
+      SUB    BL, [SI]
+      SUB    BL, [DI]
+      SUB    BL, [201FH]
+      SUB    BL, [BX]
       SUB    BP, [SI]
       SUB    BP, [DI]
       SUB    BP, [302FH]
@@ -3717,7 +5542,6 @@
       SUB    BP, [BX+DI]
       SUB    BP, [BP+SI]
       SUB    BP, [BP+DI]
-      SUB    AL, 2DH
       SUB    AX, 2F2EH
       SEGCS
       DAS
@@ -3729,6 +5553,183 @@
       XOR    [3837H], DH
       XOR    [BX], DH
       XOR    [BX+SI], BH
+      XOR    [BX+SI+65], AL
+      XOR    [BX+SI-128], AL
+      XOR    [BX+DI+66], AL
+      XOR    [BX+DI-128], AL
+      XOR    [BP+SI+67], AL
+      XOR    [BP+SI-128], AL
+      XOR    [BP+DI+68], AL
+      XOR    [BP+DI-128], AL
+      XOR    [SI+69], AL
+      XOR    [SI-128], AL
+      XOR    [DI+70], AL
+      XOR    [DI-128], AL
+      XOR    [BP+71], AL
+      XOR    [BP-128], AL
+      XOR    [BX+72], AL
+      XOR    [BX-128], AL
+      XOR    [BX+SI+73], CL
+      XOR    [BX+SI-128], CL
+      XOR    [BX+DI+74], CL
+      XOR    [BX+DI-128], CL
+      XOR    [BP+SI+75], CL
+      XOR    [BP+SI-128], CL
+      XOR    [BP+DI+76], CL
+      XOR    [BP+DI-128], CL
+      XOR    [SI+77], CL
+      XOR    [SI-128], CL
+      XOR    [DI+78], CL
+      XOR    [DI-128], CL
+      XOR    [BP+79], CL
+      XOR    [BP-128], CL
+      XOR    [BX+80], CL
+      XOR    [BX-128], CL
+      XOR    [BX+SI+81], DL
+      XOR    [BX+SI-128], DL
+      XOR    [BX+DI+82], DL
+      XOR    [BX+DI-128], DL
+      XOR    [BP+SI+83], DL
+      XOR    [BP+SI-128], DL
+      XOR    [BP+DI+84], DL
+      XOR    [BP+DI-128], DL
+      XOR    [SI+85], DL
+      XOR    [SI-128], DL
+      XOR    [DI+86], DL
+      XOR    [DI-128], DL
+      XOR    [BP+87], DL
+      XOR    [BP-128], DL
+      XOR    [BX+88], DL
+      XOR    [BX-128], DL
+      XOR    [BX+SI+89], BL
+      XOR    [BX+SI-128], BL
+      XOR    [BX+DI+90], BL
+      XOR    [BX+DI-128], BL
+      XOR    [BP+SI+91], BL
+      XOR    [BP+SI-128], BL
+      XOR    [BP+DI+92], BL
+      XOR    [BP+DI-128], BL
+      XOR    [SI+93], BL
+      XOR    [SI-128], BL
+      XOR    [DI+94], BL
+      XOR    [DI-128], BL
+      XOR    [BP+95], BL
+      XOR    [BP-128], BL
+      XOR    [BX+96], BL
+      XOR    [BX-128], BL
+      XOR    [BX+SI+97], AH
+      XOR    [BX+SI-128], AH
+      XOR    [BX+DI+98], AH
+      XOR    [BX+DI-128], AH
+      XOR    [BP+SI+99], AH
+      XOR    [BP+SI-128], AH
+      XOR    [BP+DI+100], AH
+      XOR    [BP+DI-128], AH
+      XOR    [SI+101], AH
+      XOR    [SI-128], AH
+      XOR    [DI+102], AH
+      XOR    [DI-128], AH
+      XOR    [BP+103], AH
+      XOR    [BP-128], AH
+      XOR    [BX+104], AH
+      XOR    [BX-128], AH
+      XOR    [BX+SI+8281H], AL
+      XOR    [BX+DI+8382H], AL
+      XOR    [BP+SI+8483H], AL
+      XOR    [BP+DI+8584H], AL
+      XOR    [SI+8685H], AL
+      XOR    [DI+8786H], AL
+      XOR    [BP+8887H], AL
+      XOR    [BX+8988H], AL
+      XOR    [BX+SI+8A89H], CL
+      XOR    [BX+DI+8B8AH], CL
+      XOR    [BP+SI+8C8BH], CL
+      XOR    [BP+DI+8D8CH], CL
+      XOR    [SI+8E8DH], CL
+      XOR    [DI+8F8EH], CL
+      XOR    [BP+908FH], CL
+      XOR    [BX+9190H], CL
+      XOR    [BX+SI+9291H], DL
+      XOR    [BX+DI+9392H], DL
+      XOR    [BP+SI+9493H], DL
+      XOR    [BP+DI+9594H], DL
+      XOR    [SI+9695H], DL
+      XOR    [DI+9796H], DL
+      XOR    [BP+9897H], DL
+      XOR    [BX+9998H], DL
+      XOR    [BX+SI+9A99H], BL
+      XOR    [BX+DI+9B9AH], BL
+      XOR    [BP+SI+9C9BH], BL
+      XOR    [BP+DI+9D9CH], BL
+      XOR    [SI+9E9DH], BL
+      XOR    [DI+9F9EH], BL
+      XOR    [BP+0A09FH], BL
+      XOR    [BX+0A1A0H], BL
+      XOR    [BX+SI+0A2A1H], AH
+      XOR    [BX+DI+0A3A2H], AH
+      XOR    [BP+SI+0A4A3H], AH
+      XOR    [BP+DI+0A5A4H], AH
+      XOR    [SI+0A6A5H], AH
+      XOR    [DI+0A7A6H], AH
+      XOR    [BP+0A8A7H], AH
+      XOR    [BX+0A9A8H], AH
+      XOR    AL, AL
+      XOR    CL, AL
+      XOR    DL, AL
+      XOR    BL, AL
+      XOR    AH, AL
+      XOR    AL, CL
+      XOR    CL, CL
+      XOR    DL, CL
+      XOR    BL, CL
+      XOR    AH, CL
+      XOR    AL, DL
+      XOR    CL, DL
+      XOR    DL, DL
+      XOR    BL, DL
+      XOR    AH, DL
+      XOR    AL, BL
+      XOR    CL, BL
+      XOR    DL, BL
+      XOR    BL, BL
+      XOR    AH, BL
+      XOR    AL, AH
+      XOR    CL, AH
+      XOR    DL, AH
+      XOR    BL, AH
+      XOR    AH, AH
+      XOR    [BX+SI], AL
+      XOR    [BX+DI], AL
+      XOR    [BP+SI], AL
+      XOR    [BP+DI], AL
+      XOR    [SI], AL
+      XOR    [DI], AL
+      XOR    [0807H], AL
+      XOR    [BX], AL
+      XOR    [BX+SI], CL
+      XOR    [BX+DI], CL
+      XOR    [BP+SI], CL
+      XOR    [BP+DI], CL
+      XOR    [SI], CL
+      XOR    [DI], CL
+      XOR    [100FH], CL
+      XOR    [BX], CL
+      XOR    [BX+SI], DL
+      XOR    [BX+DI], DL
+      XOR    [BP+SI], DL
+      XOR    [BP+DI], DL
+      XOR    [SI], DL
+      XOR    [DI], DL
+      XOR    [1817H], DL
+      XOR    [BX], DL
+      XOR    [BX+SI], BL
+      XOR    [BX+DI], BL
+      XOR    [BP+SI], BL
+      XOR    [BP+DI], BL
+      XOR    [SI], BL
+      XOR    [DI], BL
+      XOR    [201FH], BL
+      XOR    [BX], BL
       XOR    [BP+SI], SI
       XOR    [BP+DI], SI
       XOR    [SI], SI
@@ -4057,6 +6058,158 @@
       XOR    BH, [BX+SI]
       XOR    BH, [BX+DI]
       XOR    BH, [BP+SI]
+      XOR    AL, [BX+SI+65]
+      XOR    AL, [BX+SI-128]
+      XOR    AL, [BX+DI+66]
+      XOR    AL, [BX+DI-128]
+      XOR    AL, [BP+SI+67]
+      XOR    AL, [BP+SI-128]
+      XOR    AL, [BP+DI+68]
+      XOR    AL, [BP+DI-128]
+      XOR    AL, [SI+69]
+      XOR    AL, [SI-128]
+      XOR    AL, [DI+70]
+      XOR    AL, [DI-128]
+      XOR    AL, [BP+71]
+      XOR    AL, [BP-128]
+      XOR    AL, [BX+72]
+      XOR    AL, [BX-128]
+      XOR    CL, [BX+SI+73]
+      XOR    CL, [BX+SI-128]
+      XOR    CL, [BX+DI+74]
+      XOR    CL, [BX+DI-128]
+      XOR    CL, [BP+SI+75]
+      XOR    CL, [BP+SI-128]
+      XOR    CL, [BP+DI+76]
+      XOR    CL, [BP+DI-128]
+      XOR    CL, [SI+77]
+      XOR    CL, [SI-128]
+      XOR    CL, [DI+78]
+      XOR    CL, [DI-128]
+      XOR    CL, [BP+79]
+      XOR    CL, [BP-128]
+      XOR    CL, [BX+80]
+      XOR    CL, [BX-128]
+      XOR    DL, [BX+SI+81]
+      XOR    DL, [BX+SI-128]
+      XOR    DL, [BX+DI+82]
+      XOR    DL, [BX+DI-128]
+      XOR    DL, [BP+SI+83]
+      XOR    DL, [BP+SI-128]
+      XOR    DL, [BP+DI+84]
+      XOR    DL, [BP+DI-128]
+      XOR    DL, [SI+85]
+      XOR    DL, [SI-128]
+      XOR    DL, [DI+86]
+      XOR    DL, [DI-128]
+      XOR    DL, [BP+87]
+      XOR    DL, [BP-128]
+      XOR    DL, [BX+88]
+      XOR    DL, [BX-128]
+      XOR    BL, [BX+SI+89]
+      XOR    BL, [BX+SI-128]
+      XOR    BL, [BX+DI+90]
+      XOR    BL, [BX+DI-128]
+      XOR    BL, [BP+SI+91]
+      XOR    BL, [BP+SI-128]
+      XOR    BL, [BP+DI+92]
+      XOR    BL, [BP+DI-128]
+      XOR    BL, [SI+93]
+      XOR    BL, [SI-128]
+      XOR    BL, [DI+94]
+      XOR    BL, [DI-128]
+      XOR    BL, [BP+95]
+      XOR    BL, [BP-128]
+      XOR    BL, [BX+96]
+      XOR    BL, [BX-128]
+      XOR    AH, [BX+SI+97]
+      XOR    AH, [BX+SI-128]
+      XOR    AH, [BX+DI+98]
+      XOR    AH, [BX+DI-128]
+      XOR    AH, [BP+SI+99]
+      XOR    AH, [BP+SI-128]
+      XOR    AH, [BP+DI+100]
+      XOR    AH, [BP+DI-128]
+      XOR    AH, [SI+101]
+      XOR    AH, [SI-128]
+      XOR    AH, [DI+102]
+      XOR    AH, [DI-128]
+      XOR    AH, [BP+103]
+      XOR    AH, [BP-128]
+      XOR    AH, [BX+104]
+      XOR    AH, [BX-128]
+      XOR    AL, [BX+SI+8281H]
+      XOR    AL, [BX+DI+8382H]
+      XOR    AL, [BP+SI+8483H]
+      XOR    AL, [BP+DI+8584H]
+      XOR    AL, [SI+8685H]
+      XOR    AL, [DI+8786H]
+      XOR    AL, [BP+8887H]
+      XOR    AL, [BX+8988H]
+      XOR    CL, [BX+SI+8A89H]
+      XOR    CL, [BX+DI+8B8AH]
+      XOR    CL, [BP+SI+8C8BH]
+      XOR    CL, [BP+DI+8D8CH]
+      XOR    CL, [SI+8E8DH]
+      XOR    CL, [DI+8F8EH]
+      XOR    CL, [BP+908FH]
+      XOR    CL, [BX+9190H]
+      XOR    DL, [BX+SI+9291H]
+      XOR    DL, [BX+DI+9392H]
+      XOR    DL, [BP+SI+9493H]
+      XOR    DL, [BP+DI+9594H]
+      XOR    DL, [SI+9695H]
+      XOR    DL, [DI+9796H]
+      XOR    DL, [BP+9897H]
+      XOR    DL, [BX+9998H]
+      XOR    BL, [BX+SI+9A99H]
+      XOR    BL, [BX+DI+9B9AH]
+      XOR    BL, [BP+SI+9C9BH]
+      XOR    BL, [BP+DI+9D9CH]
+      XOR    BL, [SI+9E9DH]
+      XOR    BL, [DI+9F9EH]
+      XOR    BL, [BP+0A09FH]
+      XOR    BL, [BX+0A1A0H]
+      XOR    AH, [BX+SI+0A2A1H]
+      XOR    AH, [BX+DI+0A3A2H]
+      XOR    AH, [BP+SI+0A4A3H]
+      XOR    AH, [BP+DI+0A5A4H]
+      XOR    AH, [SI+0A6A5H]
+      XOR    AH, [DI+0A7A6H]
+      XOR    AH, [BP+0A8A7H]
+      XOR    AH, [BX+0A9A8H]
+      XOR    AL, [BX+SI]
+      XOR    AL, [BX+DI]
+      XOR    AL, [BP+SI]
+      XOR    AL, [BP+DI]
+      XOR    AL, [SI]
+      XOR    AL, [DI]
+      XOR    AL, [0807H]
+      XOR    AL, [BX]
+      XOR    CL, [BX+SI]
+      XOR    CL, [BX+DI]
+      XOR    CL, [BP+SI]
+      XOR    CL, [BP+DI]
+      XOR    CL, [SI]
+      XOR    CL, [DI]
+      XOR    CL, [100FH]
+      XOR    CL, [BX]
+      XOR    DL, [BX+SI]
+      XOR    DL, [BX+DI]
+      XOR    DL, [BP+SI]
+      XOR    DL, [BP+DI]
+      XOR    DL, [SI]
+      XOR    DL, [DI]
+      XOR    DL, [1817H]
+      XOR    DL, [BX]
+      XOR    BL, [BX+SI]
+      XOR    BL, [BX+DI]
+      XOR    BL, [BP+SI]
+      XOR    BL, [BP+DI]
+      XOR    BL, [SI]
+      XOR    BL, [DI]
+      XOR    BL, [201FH]
+      XOR    BL, [BX]
       XOR    SI, [SI]
       XOR    SI, [DI]
       XOR    SI, [3837H]
@@ -4313,7 +6466,6 @@
       XOR    SI, [BX+DI]
       XOR    SI, [BP+SI]
       XOR    SI, [BP+DI]
-      XOR    AL, 35H
       XOR    AX, 3736H
       SEGSS
       AAA
@@ -4444,6 +6596,64 @@
       CMP    [DI+0A7A6H], AH
       CMP    [BP+0A8A7H], AH
       CMP    [BX+0A9A8H], AH
+      CMP    AL, AL
+      CMP    CL, AL
+      CMP    DL, AL
+      CMP    BL, AL
+      CMP    AH, AL
+      CMP    AL, CL
+      CMP    CL, CL
+      CMP    DL, CL
+      CMP    BL, CL
+      CMP    AH, CL
+      CMP    AL, DL
+      CMP    CL, DL
+      CMP    DL, DL
+      CMP    BL, DL
+      CMP    AH, DL
+      CMP    AL, BL
+      CMP    CL, BL
+      CMP    DL, BL
+      CMP    BL, BL
+      CMP    AH, BL
+      CMP    AL, AH
+      CMP    CL, AH
+      CMP    DL, AH
+      CMP    BL, AH
+      CMP    AH, AH
+      CMP    [BX+SI], AL
+      CMP    [BX+DI], AL
+      CMP    [BP+SI], AL
+      CMP    [BP+DI], AL
+      CMP    [SI], AL
+      CMP    [DI], AL
+      CMP    [0807H], AL
+      CMP    [BX], AL
+      CMP    [BX+SI], CL
+      CMP    [BX+DI], CL
+      CMP    [BP+SI], CL
+      CMP    [BP+DI], CL
+      CMP    [SI], CL
+      CMP    [DI], CL
+      CMP    [100FH], CL
+      CMP    [BX], CL
+      CMP    [BX+SI], DL
+      CMP    [BX+DI], DL
+      CMP    [BP+SI], DL
+      CMP    [BP+DI], DL
+      CMP    [SI], DL
+      CMP    [DI], DL
+      CMP    [1817H], DL
+      CMP    [BX], DL
+      CMP    [BX+SI], BL
+      CMP    [BX+DI], BL
+      CMP    [BP+SI], BL
+      CMP    [BP+DI], BL
+      CMP    [SI], BL
+      CMP    [DI], BL
+      CMP    [201FH], BL
+      CMP    [BX], BL
+      CMP    [BX+SI], AH
       CMP    [BP+SI], DI
       CMP    [BP+DI], DI
       CMP    [SI], DI
@@ -4889,6 +7099,41 @@
       CMP    AH, [DI+0A7A6H]
       CMP    AH, [BP+0A8A7H]
       CMP    AH, [BX+0A9A8H]
+      CMP    AL, [BX+SI]
+      CMP    AL, [BX+DI]
+      CMP    AL, [BP+SI]
+      CMP    AL, [BP+DI]
+      CMP    AL, [SI]
+      CMP    AL, [DI]
+      CMP    AL, [0807H]
+      CMP    AL, [BX]
+      CMP    CL, [BX+SI]
+      CMP    CL, [BX+DI]
+      CMP    CL, [BP+SI]
+      CMP    CL, [BP+DI]
+      CMP    CL, [SI]
+      CMP    CL, [DI]
+      CMP    CL, [100FH]
+      CMP    CL, [BX]
+      CMP    DL, [BX+SI]
+      CMP    DL, [BX+DI]
+      CMP    DL, [BP+SI]
+      CMP    DL, [BP+DI]
+      CMP    DL, [SI]
+      CMP    DL, [DI]
+      CMP    DL, [1817H]
+      CMP    DL, [BX]
+      CMP    BL, [BX+SI]
+      CMP    BL, [BX+DI]
+      CMP    BL, [BP+SI]
+      CMP    BL, [BP+DI]
+      CMP    BL, [SI]
+      CMP    BL, [DI]
+      CMP    BL, [201FH]
+      CMP    BL, [BX]
+      CMP    AH, [BX+SI]
+      CMP    AH, [BX+DI]
+      CMP    AH, [BP+SI]
       CMP    DI, [SI]
       CMP    DI, [DI]
       CMP    DI, [403FH]
@@ -5145,7 +7390,6 @@
       CMP    DI, [BX+DI]
       CMP    DI, [BP+SI]
       CMP    DI, [BP+DI]
-      CMP    AL, 3DH
       CMP    AX, 3F3EH
       SEGDS
       AAS
@@ -5297,6 +7541,234 @@
       ADD    DL, 0C3H
       ADD    BL, 0C4H
       ADD    AH, 0C5H
+      OR     AL, 0C9H
+      OR     CL, 0CAH
+      OR     DL, 0CBH
+      OR     BL, 0CCH
+      OR     AH, 0CDH
+      ADC    AL, 0D1H
+      ADC    CL, 0D2H
+      ADC    DL, 0D3H
+      ADC    BL, 0D4H
+      ADC    AH, 0D5H
+      SBB    AL, 0D9H
+      SBB    CL, 0DAH
+      SBB    DL, 0DBH
+      SBB    BL, 0DCH
+      SBB    AH, 0DDH
+      AND    AL, 0E1H
+      AND    CL, 0E2H
+      AND    DL, 0E3H
+      AND    BL, 0E4H
+      AND    AH, 0E5H
+      SUB    AL, 0E9H
+      SUB    CL, 0EAH
+      SUB    DL, 0EBH
+      SUB    BL, 0ECH
+      SUB    AH, 0EDH
+      XOR    AL, 0F1H
+      XOR    CL, 0F2H
+      XOR    DL, 0F3H
+      XOR    BL, 0F4H
+      XOR    AH, 0F5H
+      CMP    AL, 0F9H
+      CMP    CL, 0FAH
+      CMP    DL, 0FBH
+      CMP    BL, 0FCH
+      CMP    AH, 0FDH
+      ADD    BYTE PTR [BX+SI], 1
+      ADD    BYTE PTR [BX+DI], 2
+      ADD    BYTE PTR [BP+SI], 3
+      ADD    BYTE PTR [BP+DI], 4
+      ADD    BYTE PTR [SI], 5
+      ADD    BYTE PTR [DI], 6
+      ADD    BYTE PTR [0807H], 9
+      ADD    BYTE PTR [BX], 8
+      OR     BYTE PTR [BX+SI], 9
+      OR     BYTE PTR [BX+DI], 10
+      OR     BYTE PTR [BP+SI], 11
+      OR     BYTE PTR [BP+DI], 12
+      OR     BYTE PTR [SI], 13
+      OR     BYTE PTR [DI], 14
+      OR     BYTE PTR [100FH], 17
+      OR     BYTE PTR [BX], 16
+      ADC    BYTE PTR [BX+SI], 17
+      ADC    BYTE PTR [BX+DI], 18
+      ADC    BYTE PTR [BP+SI], 19
+      ADC    BYTE PTR [BP+DI], 20
+      ADC    BYTE PTR [SI], 21
+      ADC    BYTE PTR [DI], 22
+      ADC    BYTE PTR [1817H], 25
+      ADC    BYTE PTR [BX], 24
+      SBB    BYTE PTR [BX+SI], 25
+      SBB    BYTE PTR [BX+DI], 26
+      SBB    BYTE PTR [BP+SI], 27
+      SBB    BYTE PTR [BP+DI], 28
+      SBB    BYTE PTR [SI], 29
+      SBB    BYTE PTR [DI], 30
+      SBB    BYTE PTR [201FH], 21H
+      SBB    BYTE PTR [BX], 32
+      AND    BYTE PTR [BX+SI], 21H
+      AND    BYTE PTR [BX+DI], 22H
+      AND    BYTE PTR [BP+SI], 23H
+      AND    BYTE PTR [BP+DI], 24H
+      AND    BYTE PTR [SI], 25H
+      AND    BYTE PTR [DI], 26H
+      AND    BYTE PTR [2827H], 29H
+      AND    BYTE PTR [BX], 28H
+      SUB    BYTE PTR [BX+SI], 29H
+      SUB    BYTE PTR [BX+DI], 2AH
+      SUB    BYTE PTR [BP+SI], 2BH
+      SUB    BYTE PTR [BP+DI], 2CH
+      SUB    BYTE PTR [SI], 2DH
+      SUB    BYTE PTR [DI], 2EH
+      SUB    BYTE PTR [302FH], 31H
+      SUB    BYTE PTR [BX], 30H
+      XOR    BYTE PTR [BX+SI], 31H
+      XOR    BYTE PTR [BX+DI], 32H
+      XOR    BYTE PTR [BP+SI], 33H
+      XOR    BYTE PTR [BP+DI], 34H
+      XOR    BYTE PTR [SI], 35H
+      XOR    BYTE PTR [DI], 36H
+      XOR    BYTE PTR [3837H], 39H
+      XOR    BYTE PTR [BX], 38H
+      CMP    BYTE PTR [BX+SI], 39H
+      CMP    BYTE PTR [BX+DI], 3AH
+      CMP    BYTE PTR [BP+SI], 3BH
+      CMP    BYTE PTR [BP+DI], 3CH
+      CMP    BYTE PTR [SI], 3DH
+      CMP    BYTE PTR [DI], 3EH
+      CMP    BYTE PTR [403FH], 41H
+      CMP    BYTE PTR [BX], 40H
+      ADD    BYTE PTR [BX+SI+65], 42H
+      ADD    BYTE PTR [BX+SI-128], 42H
+      ADD    BYTE PTR [BX+DI+66], 43H
+      ADD    BYTE PTR [BX+DI-128], 43H
+      ADD    BYTE PTR [BP+SI+67], 44H
+      ADD    BYTE PTR [BP+SI-128], 44H
+      ADD    BYTE PTR [BP+DI+68], 45H
+      ADD    BYTE PTR [BP+DI-128], 45H
+      ADD    BYTE PTR [SI+69], 46H
+      ADD    BYTE PTR [SI-128], 46H
+      ADD    BYTE PTR [DI+70], 47H
+      ADD    BYTE PTR [DI-128], 47H
+      ADD    BYTE PTR [BP+71], 48H
+      ADD    BYTE PTR [BP-128], 48H
+      ADD    BYTE PTR [BX+72], 49H
+      ADD    BYTE PTR [BX-128], 49H
+      OR     BYTE PTR [BX+SI+73], 4AH
+      OR     BYTE PTR [BX+SI-128], 4AH
+      OR     BYTE PTR [BX+DI+74], 4BH
+      OR     BYTE PTR [BX+DI-128], 4BH
+      OR     BYTE PTR [BP+SI+75], 4CH
+      OR     BYTE PTR [BP+SI-128], 4CH
+      OR     BYTE PTR [BP+DI+76], 4DH
+      OR     BYTE PTR [BP+DI-128], 4DH
+      OR     BYTE PTR [SI+77], 4EH
+      OR     BYTE PTR [SI-128], 4EH
+      OR     BYTE PTR [DI+78], 4FH
+      OR     BYTE PTR [DI-128], 4FH
+      OR     BYTE PTR [BP+79], 50H
+      OR     BYTE PTR [BP-128], 50H
+      OR     BYTE PTR [BX+80], 51H
+      OR     BYTE PTR [BX-128], 51H
+      ADC    BYTE PTR [BX+SI+81], 52H
+      ADC    BYTE PTR [BX+SI-128], 52H
+      ADC    BYTE PTR [BX+DI+82], 53H
+      ADC    BYTE PTR [BX+DI-128], 53H
+      ADC    BYTE PTR [BP+SI+83], 54H
+      ADC    BYTE PTR [BP+SI-128], 54H
+      ADC    BYTE PTR [BP+DI+84], 55H
+      ADC    BYTE PTR [BP+DI-128], 55H
+      ADC    BYTE PTR [SI+85], 56H
+      ADC    BYTE PTR [SI-128], 56H
+      ADC    BYTE PTR [DI+86], 57H
+      ADC    BYTE PTR [DI-128], 57H
+      ADC    BYTE PTR [BP+87], 58H
+      ADC    BYTE PTR [BP-128], 58H
+      ADC    BYTE PTR [BX+88], 59H
+      ADC    BYTE PTR [BX-128], 59H
+      SBB    BYTE PTR [BX+SI+89], 5AH
+      SBB    BYTE PTR [BX+SI-128], 5AH
+      SBB    BYTE PTR [BX+DI+90], 5BH
+      SBB    BYTE PTR [BX+DI-128], 5BH
+      SBB    BYTE PTR [BP+SI+91], 5CH
+      SBB    BYTE PTR [BP+SI-128], 5CH
+      SBB    BYTE PTR [BP+DI+92], 5DH
+      SBB    BYTE PTR [BP+DI-128], 5DH
+      SBB    BYTE PTR [SI+93], 5EH
+      SBB    BYTE PTR [SI-128], 5EH
+      SBB    BYTE PTR [DI+94], 5FH
+      SBB    BYTE PTR [DI-128], 5FH
+      SBB    BYTE PTR [BP+95], 60H
+      SBB    BYTE PTR [BP-128], 60H
+      SBB    BYTE PTR [BX+96], 61H
+      SBB    BYTE PTR [BX-128], 61H
+      AND    BYTE PTR [BX+SI+97], 62H
+      AND    BYTE PTR [BX+SI-128], 62H
+      AND    BYTE PTR [BX+DI+98], 63H
+      AND    BYTE PTR [BX+DI-128], 63H
+      AND    BYTE PTR [BP+SI+99], 64H
+      AND    BYTE PTR [BP+SI-128], 64H
+      AND    BYTE PTR [BP+DI+100], 65H
+      AND    BYTE PTR [BP+DI-128], 65H
+      AND    BYTE PTR [SI+101], 66H
+      AND    BYTE PTR [SI-128], 66H
+      AND    BYTE PTR [DI+102], 67H
+      AND    BYTE PTR [DI-128], 67H
+      AND    BYTE PTR [BP+103], 68H
+      AND    BYTE PTR [BP-128], 68H
+      AND    BYTE PTR [BX+104], 69H
+      AND    BYTE PTR [BX-128], 69H
+      SUB    BYTE PTR [BX+SI+105], 6AH
+      SUB    BYTE PTR [BX+SI-128], 6AH
+      SUB    BYTE PTR [BX+DI+106], 6BH
+      SUB    BYTE PTR [BX+DI-128], 6BH
+      SUB    BYTE PTR [BP+SI+107], 6CH
+      SUB    BYTE PTR [BP+SI-128], 6CH
+      SUB    BYTE PTR [BP+DI+108], 6DH
+      SUB    BYTE PTR [BP+DI-128], 6DH
+      SUB    BYTE PTR [SI+109], 6EH
+      SUB    BYTE PTR [SI-128], 6EH
+      SUB    BYTE PTR [DI+110], 6FH
+      SUB    BYTE PTR [DI-128], 6FH
+      SUB    BYTE PTR [BP+111], 70H
+      SUB    BYTE PTR [BP-128], 70H
+      SUB    BYTE PTR [BX+112], 71H
+      SUB    BYTE PTR [BX-128], 71H
+      XOR    BYTE PTR [BX+SI+113], 72H
+      XOR    BYTE PTR [BX+SI-128], 72H
+      XOR    BYTE PTR [BX+DI+114], 73H
+      XOR    BYTE PTR [BX+DI-128], 73H
+      XOR    BYTE PTR [BP+SI+115], 74H
+      XOR    BYTE PTR [BP+SI-128], 74H
+      XOR    BYTE PTR [BP+DI+116], 75H
+      XOR    BYTE PTR [BP+DI-128], 75H
+      XOR    BYTE PTR [SI+117], 76H
+      XOR    BYTE PTR [SI-128], 76H
+      XOR    BYTE PTR [DI+118], 77H
+      XOR    BYTE PTR [DI-128], 77H
+      XOR    BYTE PTR [BP+119], 78H
+      XOR    BYTE PTR [BP-128], 78H
+      XOR    BYTE PTR [BX+120], 79H
+      XOR    BYTE PTR [BX-128], 79H
+      CMP    BYTE PTR [BX+SI+121], 7AH
+      CMP    BYTE PTR [BX+SI-128], 7AH
+      CMP    BYTE PTR [BX+DI+122], 7BH
+      CMP    BYTE PTR [BX+DI-128], 7BH
+      CMP    BYTE PTR [BP+SI+123], 7CH
+      CMP    BYTE PTR [BP+SI-128], 7CH
+      CMP    BYTE PTR [BP+DI+124], 7DH
+      CMP    BYTE PTR [BP+DI-128], 7DH
+      CMP    BYTE PTR [SI+125], 7EH
+      CMP    BYTE PTR [SI-128], 7EH
+      CMP    BYTE PTR [DI+126], 7FH
+      CMP    BYTE PTR [DI-128], 7FH
+      CMP    BYTE PTR [BP+127], 80H
+      CMP    BYTE PTR [BP-128], 80H
+      CMP    BYTE PTR [BX-128], 81H
+      CMP    BYTE PTR [BX+0], 81H
+      ADD    BYTE PTR [BX+SI+8281H], 83H
       ADD    WORD PTR [BP+SI+8483H], 8685H
       ADD    WORD PTR [BP+DI+8584H], 8786H
       ADD    WORD PTR [SI+8685H], 8887H
@@ -5810,6 +8282,7 @@
       ADD    WORD PTR [DI], 6
       ADD    WORD PTR [DI], -80H
       ADD    WORD PTR [0807H], 9
+      ADD    WORD PTR [0606H], -80H
       ADD    WORD PTR [BX], 8
       ADD    WORD PTR [BX], -80H
       OR     WORD PTR [BX+SI], 9
@@ -5825,6 +8298,7 @@
       OR     WORD PTR [DI], 14
       OR     WORD PTR [DI], -80H
       OR     WORD PTR [100FH], 17
+      OR     WORD PTR [0E0EH], -80H
       OR     WORD PTR [BX], 16
       OR     WORD PTR [BX], -80H
       ADC    WORD PTR [BX+SI], 17
@@ -5840,6 +8314,7 @@
       ADC    WORD PTR [DI], 22
       ADC    WORD PTR [DI], -80H
       ADC    WORD PTR [1817H], 25
+      ADC    WORD PTR [1616H], -80H
       ADC    WORD PTR [BX], 24
       ADC    WORD PTR [BX], -80H
       SBB    WORD PTR [BX+SI], 25
@@ -5855,6 +8330,7 @@
       SBB    WORD PTR [DI], 30
       SBB    WORD PTR [DI], -80H
       SBB    WORD PTR [201FH], 21H
+      SBB    WORD PTR [1E1EH], -80H
       SBB    WORD PTR [BX], 32
       SBB    WORD PTR [BX], -80H
       AND    WORD PTR [BX+SI], 21H
@@ -5870,6 +8346,7 @@
       AND    WORD PTR [DI], 26H
       AND    WORD PTR [DI], -80H
       AND    WORD PTR [2827H], 29H
+      AND    WORD PTR [2626H], -80H
       AND    WORD PTR [BX], 28H
       AND    WORD PTR [BX], -80H
       SUB    WORD PTR [BX+SI], 29H
@@ -5885,6 +8362,7 @@
       SUB    WORD PTR [DI], 2EH
       SUB    WORD PTR [DI], -80H
       SUB    WORD PTR [302FH], 31H
+      SUB    WORD PTR [2E2EH], -80H
       SUB    WORD PTR [BX], 30H
       SUB    WORD PTR [BX], -80H
       XOR    WORD PTR [BX+SI], 31H
@@ -5900,6 +8378,7 @@
       XOR    WORD PTR [DI], 36H
       XOR    WORD PTR [DI], -80H
       XOR    WORD PTR [3837H], 39H
+      XOR    WORD PTR [3636H], -80H
       XOR    WORD PTR [BX], 38H
       XOR    WORD PTR [BX], -80H
       CMP    WORD PTR [BX+SI], 39H
@@ -5915,6 +8394,7 @@
       CMP    WORD PTR [DI], 3EH
       CMP    WORD PTR [DI], -80H
       CMP    WORD PTR [403FH], 41H
+      CMP    WORD PTR [3E3EH], -80H
       CMP    WORD PTR [BX], 40H
       CMP    WORD PTR [BX], -80H
       ADD    WORD PTR [BX+SI+65], 42H
@@ -6148,6 +8628,156 @@
       TEST   AH, [DI+0A7A6H]
       TEST   AH, [BP+0A8A7H]
       TEST   AH, [BX+0A9A8H]
+      TEST   AL, AL
+      TEST   AL, CL
+      TEST   AL, DL
+      TEST   AL, BL
+      TEST   AL, AH
+      TEST   CL, AL
+      TEST   CL, CL
+      TEST   CL, DL
+      TEST   CL, BL
+      TEST   CL, AH
+      TEST   DL, AL
+      TEST   DL, CL
+      TEST   DL, DL
+      TEST   DL, BL
+      TEST   DL, AH
+      TEST   BL, AL
+      TEST   BL, CL
+      TEST   BL, DL
+      TEST   BL, BL
+      TEST   BL, AH
+      TEST   AH, AL
+      TEST   AH, CL
+      TEST   AH, DL
+      TEST   AH, BL
+      TEST   AH, AH
+      TEST   AL, [BX+SI]
+      TEST   AL, [BX+DI]
+      TEST   AL, [BP+SI]
+      TEST   AL, [BP+DI]
+      TEST   AL, [SI]
+      TEST   AL, [DI]
+      TEST   AL, [0807H]
+      TEST   AL, [BX]
+      TEST   CL, [BX+SI]
+      TEST   CL, [BX+DI]
+      TEST   CL, [BP+SI]
+      TEST   CL, [BP+DI]
+      TEST   CL, [SI]
+      TEST   CL, [DI]
+      TEST   CL, [100FH]
+      TEST   CL, [BX]
+      TEST   DL, [BX+SI]
+      TEST   DL, [BX+DI]
+      TEST   DL, [BP+SI]
+      TEST   DL, [BP+DI]
+      TEST   DL, [SI]
+      TEST   DL, [DI]
+      TEST   DL, [1817H]
+      TEST   DL, [BX]
+      TEST   BL, [BX+SI]
+      TEST   BL, [BX+DI]
+      TEST   BL, [BP+SI]
+      TEST   BL, [BP+DI]
+      TEST   BL, [SI]
+      TEST   BL, [DI]
+      TEST   BL, [201FH]
+      TEST   BL, [BX]
+      TEST   AH, [BX+SI]
+      TEST   AH, [BX+DI]
+      TEST   AH, [BP+SI]
+      TEST   AH, [BP+DI]
+      TEST   AH, [SI]
+      TEST   AH, [DI]
+      TEST   AH, [2827H]
+      TEST   AH, [BX]
+      TEST   AL, [BX+SI+65]
+      TEST   AL, [BX+SI-128]
+      TEST   AL, [BX+DI+66]
+      TEST   AL, [BX+DI-128]
+      TEST   AL, [BP+SI+67]
+      TEST   AL, [BP+SI-128]
+      TEST   AL, [BP+DI+68]
+      TEST   AL, [BP+DI-128]
+      TEST   AL, [SI+69]
+      TEST   AL, [SI-128]
+      TEST   AL, [DI+70]
+      TEST   AL, [DI-128]
+      TEST   AL, [BP+71]
+      TEST   AL, [BP-128]
+      TEST   AL, [BX+72]
+      TEST   AL, [BX-128]
+      TEST   CL, [BX+SI+73]
+      TEST   CL, [BX+SI-128]
+      TEST   CL, [BX+DI+74]
+      TEST   CL, [BX+DI-128]
+      TEST   CL, [BP+SI+75]
+      TEST   CL, [BP+SI-128]
+      TEST   CL, [BP+DI+76]
+      TEST   CL, [BP+DI-128]
+      TEST   CL, [SI+77]
+      TEST   CL, [SI-128]
+      TEST   CL, [DI+78]
+      TEST   CL, [DI-128]
+      TEST   CL, [BP+79]
+      TEST   CL, [BP-128]
+      TEST   CL, [BX+80]
+      TEST   CL, [BX-128]
+      TEST   DL, [BX+SI+81]
+      TEST   DL, [BX+SI-128]
+      TEST   DL, [BX+DI+82]
+      TEST   DL, [BX+DI-128]
+      TEST   DL, [BP+SI+83]
+      TEST   DL, [BP+SI-128]
+      TEST   DL, [BP+DI+84]
+      TEST   DL, [BP+DI-128]
+      TEST   DL, [SI+85]
+      TEST   DL, [SI-128]
+      TEST   DL, [DI+86]
+      TEST   DL, [DI-128]
+      TEST   DL, [BP+87]
+      TEST   DL, [BP-128]
+      TEST   DL, [BX+88]
+      TEST   DL, [BX-128]
+      TEST   BL, [BX+SI+89]
+      TEST   BL, [BX+SI-128]
+      TEST   BL, [BX+DI+90]
+      TEST   BL, [BX+DI-128]
+      TEST   BL, [BP+SI+91]
+      TEST   BL, [BP+SI-128]
+      TEST   BL, [BP+DI+92]
+      TEST   BL, [BP+DI-128]
+      TEST   BL, [SI+93]
+      TEST   BL, [SI-128]
+      TEST   BL, [DI+94]
+      TEST   BL, [DI-128]
+      TEST   BL, [BP+95]
+      TEST   BL, [BP-128]
+      TEST   BL, [BX+96]
+      TEST   BL, [BX-128]
+      TEST   AH, [BX+SI+97]
+      TEST   AH, [BX+SI-128]
+      TEST   AH, [BX+DI+98]
+      TEST   AH, [BX+DI-128]
+      TEST   AH, [BP+SI+99]
+      TEST   AH, [BP+SI-128]
+      TEST   AH, [BP+DI+100]
+      TEST   AH, [BP+DI-128]
+      TEST   AH, [SI+101]
+      TEST   AH, [SI-128]
+      TEST   AH, [DI+102]
+      TEST   AH, [DI-128]
+      TEST   AH, [BP+103]
+      TEST   AH, [BP-128]
+      TEST   AH, [BX+104]
+      TEST   AH, [BX-128]
+      TEST   AL, [BX+SI+8281H]
+      TEST   AL, [BX+DI+8382H]
+      TEST   AL, [BP+SI+8483H]
+      TEST   AL, [BP+DI+8584H]
+      TEST   AL, [SI+8685H]
       TEST   AX, [BP+8887H]
       TEST   AX, [BX+8988H]
       TEST   CX, [BX+SI+8A89H]
@@ -6501,6 +9131,158 @@
       XCHG   AH, [DI+0A7A6H]
       XCHG   AH, [BP+0A8A7H]
       XCHG   AH, [BX+0A9A8H]
+      XCHG   AL, AL
+      XCHG   AL, CL
+      XCHG   AL, DL
+      XCHG   AL, BL
+      XCHG   AL, AH
+      XCHG   CL, AL
+      XCHG   CL, CL
+      XCHG   CL, DL
+      XCHG   CL, BL
+      XCHG   CL, AH
+      XCHG   DL, AL
+      XCHG   DL, CL
+      XCHG   DL, DL
+      XCHG   DL, BL
+      XCHG   DL, AH
+      XCHG   BL, AL
+      XCHG   BL, CL
+      XCHG   BL, DL
+      XCHG   BL, BL
+      XCHG   BL, AH
+      XCHG   AH, AL
+      XCHG   AH, CL
+      XCHG   AH, DL
+      XCHG   AH, BL
+      XCHG   AH, AH
+      XCHG   AL, [BX+SI]
+      XCHG   AL, [BX+DI]
+      XCHG   AL, [BP+SI]
+      XCHG   AL, [BP+DI]
+      XCHG   AL, [SI]
+      XCHG   AL, [DI]
+      XCHG   AL, [0807H]
+      XCHG   AL, [BX]
+      XCHG   CL, [BX+SI]
+      XCHG   CL, [BX+DI]
+      XCHG   CL, [BP+SI]
+      XCHG   CL, [BP+DI]
+      XCHG   CL, [SI]
+      XCHG   CL, [DI]
+      XCHG   CL, [100FH]
+      XCHG   CL, [BX]
+      XCHG   DL, [BX+SI]
+      XCHG   DL, [BX+DI]
+      XCHG   DL, [BP+SI]
+      XCHG   DL, [BP+DI]
+      XCHG   DL, [SI]
+      XCHG   DL, [DI]
+      XCHG   DL, [1817H]
+      XCHG   DL, [BX]
+      XCHG   BL, [BX+SI]
+      XCHG   BL, [BX+DI]
+      XCHG   BL, [BP+SI]
+      XCHG   BL, [BP+DI]
+      XCHG   BL, [SI]
+      XCHG   BL, [DI]
+      XCHG   BL, [201FH]
+      XCHG   BL, [BX]
+      XCHG   AH, [BX+SI]
+      XCHG   AH, [BX+DI]
+      XCHG   AH, [BP+SI]
+      XCHG   AH, [BP+DI]
+      XCHG   AH, [SI]
+      XCHG   AH, [DI]
+      XCHG   AH, [2827H]
+      XCHG   AH, [BX]
+      XCHG   AL, [BX+SI+65]
+      XCHG   AL, [BX+SI-128]
+      XCHG   AL, [BX+DI+66]
+      XCHG   AL, [BX+DI-128]
+      XCHG   AL, [BP+SI+67]
+      XCHG   AL, [BP+SI-128]
+      XCHG   AL, [BP+DI+68]
+      XCHG   AL, [BP+DI-128]
+      XCHG   AL, [SI+69]
+      XCHG   AL, [SI-128]
+      XCHG   AL, [DI+70]
+      XCHG   AL, [DI-128]
+      XCHG   AL, [BP+71]
+      XCHG   AL, [BP-128]
+      XCHG   AL, [BX+72]
+      XCHG   AL, [BX-128]
+      XCHG   CL, [BX+SI+73]
+      XCHG   CL, [BX+SI-128]
+      XCHG   CL, [BX+DI+74]
+      XCHG   CL, [BX+DI-128]
+      XCHG   CL, [BP+SI+75]
+      XCHG   CL, [BP+SI-128]
+      XCHG   CL, [BP+DI+76]
+      XCHG   CL, [BP+DI-128]
+      XCHG   CL, [SI+77]
+      XCHG   CL, [SI-128]
+      XCHG   CL, [DI+78]
+      XCHG   CL, [DI-128]
+      XCHG   CL, [BP+79]
+      XCHG   CL, [BP-128]
+      XCHG   CL, [BX+80]
+      XCHG   CL, [BX-128]
+      XCHG   DL, [BX+SI+81]
+      XCHG   DL, [BX+SI-128]
+      XCHG   DL, [BX+DI+82]
+      XCHG   DL, [BX+DI-128]
+      XCHG   DL, [BP+SI+83]
+      XCHG   DL, [BP+SI-128]
+      XCHG   DL, [BP+DI+84]
+      XCHG   DL, [BP+DI-128]
+      XCHG   DL, [SI+85]
+      XCHG   DL, [SI-128]
+      XCHG   DL, [DI+86]
+      XCHG   DL, [DI-128]
+      XCHG   DL, [BP+87]
+      XCHG   DL, [BP-128]
+      XCHG   DL, [BX+88]
+      XCHG   DL, [BX-128]
+      XCHG   BL, [BX+SI+89]
+      XCHG   BL, [BX+SI-128]
+      XCHG   BL, [BX+DI+90]
+      XCHG   BL, [BX+DI-128]
+      XCHG   BL, [BP+SI+91]
+      XCHG   BL, [BP+SI-128]
+      XCHG   BL, [BP+DI+92]
+      XCHG   BL, [BP+DI-128]
+      XCHG   BL, [SI+93]
+      XCHG   BL, [SI-128]
+      XCHG   BL, [DI+94]
+      XCHG   BL, [DI-128]
+      XCHG   BL, [BP+95]
+      XCHG   BL, [BP-128]
+      XCHG   BL, [BX+96]
+      XCHG   BL, [BX-128]
+      XCHG   AH, [BX+SI+97]
+      XCHG   AH, [BX+SI-128]
+      XCHG   AH, [BX+DI+98]
+      XCHG   AH, [BX+DI-128]
+      XCHG   AH, [BP+SI+99]
+      XCHG   AH, [BP+SI-128]
+      XCHG   AH, [BP+DI+100]
+      XCHG   AH, [BP+DI-128]
+      XCHG   AH, [SI+101]
+      XCHG   AH, [SI-128]
+      XCHG   AH, [DI+102]
+      XCHG   AH, [DI-128]
+      XCHG   AH, [BP+103]
+      XCHG   AH, [BP-128]
+      XCHG   AH, [BX+104]
+      XCHG   AH, [BX-128]
+      XCHG   AL, [BX+SI+8281H]
+      XCHG   AL, [BX+DI+8382H]
+      XCHG   AL, [BP+SI+8483H]
+      XCHG   AL, [BP+DI+8584H]
+      XCHG   AL, [SI+8685H]
+      XCHG   AL, [DI+8786H]
+      XCHG   AL, [BP+8887H]
       XCHG   CX, [BX+SI+8A89H]
       XCHG   CX, [BX+DI+8B8AH]
       XCHG   CX, [BP+SI+8C8BH]
@@ -6852,6 +9634,160 @@
       MOV    [DI+0A7A6H], AH
       MOV    [BP+0A8A7H], AH
       MOV    [BX+0A9A8H], AH
+      MOV    AL, AL
+      MOV    CL, AL
+      MOV    DL, AL
+      MOV    BL, AL
+      MOV    AH, AL
+      MOV    AL, CL
+      MOV    CL, CL
+      MOV    DL, CL
+      MOV    BL, CL
+      MOV    AH, CL
+      MOV    AL, DL
+      MOV    CL, DL
+      MOV    DL, DL
+      MOV    BL, DL
+      MOV    AH, DL
+      MOV    AL, BL
+      MOV    CL, BL
+      MOV    DL, BL
+      MOV    BL, BL
+      MOV    AH, BL
+      MOV    AL, AH
+      MOV    CL, AH
+      MOV    DL, AH
+      MOV    BL, AH
+      MOV    AH, AH
+      MOV    [BX+SI], AL
+      MOV    [BX+DI], AL
+      MOV    [BP+SI], AL
+      MOV    [BP+DI], AL
+      MOV    [SI], AL
+      MOV    [DI], AL
+      MOV    [0807H], AL
+      MOV    [BX], AL
+      MOV    [BX+SI], CL
+      MOV    [BX+DI], CL
+      MOV    [BP+SI], CL
+      MOV    [BP+DI], CL
+      MOV    [SI], CL
+      MOV    [DI], CL
+      MOV    [100FH], CL
+      MOV    [BX], CL
+      MOV    [BX+SI], DL
+      MOV    [BX+DI], DL
+      MOV    [BP+SI], DL
+      MOV    [BP+DI], DL
+      MOV    [SI], DL
+      MOV    [DI], DL
+      MOV    [1817H], DL
+      MOV    [BX], DL
+      MOV    [BX+SI], BL
+      MOV    [BX+DI], BL
+      MOV    [BP+SI], BL
+      MOV    [BP+DI], BL
+      MOV    [SI], BL
+      MOV    [DI], BL
+      MOV    [201FH], BL
+      MOV    [BX], BL
+      MOV    [BX+SI], AH
+      MOV    [BX+DI], AH
+      MOV    [BP+SI], AH
+      MOV    [BP+DI], AH
+      MOV    [SI], AH
+      MOV    [DI], AH
+      MOV    [2827H], AH
+      MOV    [BX], AH
+      MOV    [BX+SI+65], AL
+      MOV    [BX+SI-128], AL
+      MOV    [BX+DI+66], AL
+      MOV    [BX+DI-128], AL
+      MOV    [BP+SI+67], AL
+      MOV    [BP+SI-128], AL
+      MOV    [BP+DI+68], AL
+      MOV    [BP+DI-128], AL
+      MOV    [SI+69], AL
+      MOV    [SI-128], AL
+      MOV    [DI+70], AL
+      MOV    [DI-128], AL
+      MOV    [BP+71], AL
+      MOV    [BP-128], AL
+      MOV    [BX+72], AL
+      MOV    [BX-128], AL
+      MOV    [BX+SI+73], CL
+      MOV    [BX+SI-128], CL
+      MOV    [BX+DI+74], CL
+      MOV    [BX+DI-128], CL
+      MOV    [BP+SI+75], CL
+      MOV    [BP+SI-128], CL
+      MOV    [BP+DI+76], CL
+      MOV    [BP+DI-128], CL
+      MOV    [SI+77], CL
+      MOV    [SI-128], CL
+      MOV    [DI+78], CL
+      MOV    [DI-128], CL
+      MOV    [BP+79], CL
+      MOV    [BP-128], CL
+      MOV    [BX+80], CL
+      MOV    [BX-128], CL
+      MOV    [BX+SI+81], DL
+      MOV    [BX+SI-128], DL
+      MOV    [BX+DI+82], DL
+      MOV    [BX+DI-128], DL
+      MOV    [BP+SI+83], DL
+      MOV    [BP+SI-128], DL
+      MOV    [BP+DI+84], DL
+      MOV    [BP+DI-128], DL
+      MOV    [SI+85], DL
+      MOV    [SI-128], DL
+      MOV    [DI+86], DL
+      MOV    [DI-128], DL
+      MOV    [BP+87], DL
+      MOV    [BP-128], DL
+      MOV    [BX+88], DL
+      MOV    [BX-128], DL
+      MOV    [BX+SI+89], BL
+      MOV    [BX+SI-128], BL
+      MOV    [BX+DI+90], BL
+      MOV    [BX+DI-128], BL
+      MOV    [BP+SI+91], BL
+      MOV    [BP+SI-128], BL
+      MOV    [BP+DI+92], BL
+      MOV    [BP+DI-128], BL
+      MOV    [SI+93], BL
+      MOV    [SI-128], BL
+      MOV    [DI+94], BL
+      MOV    [DI-128], BL
+      MOV    [BP+95], BL
+      MOV    [BP-128], BL
+      MOV    [BX+96], BL
+      MOV    [BX-128], BL
+      MOV    [BX+SI+97], AH
+      MOV    [BX+SI-128], AH
+      MOV    [BX+DI+98], AH
+      MOV    [BX+DI-128], AH
+      MOV    [BP+SI+99], AH
+      MOV    [BP+SI-128], AH
+      MOV    [BP+DI+100], AH
+      MOV    [BP+DI-128], AH
+      MOV    [SI+101], AH
+      MOV    [SI-128], AH
+      MOV    [DI+102], AH
+      MOV    [DI-128], AH
+      MOV    [BP+103], AH
+      MOV    [BP-128], AH
+      MOV    [BX+104], AH
+      MOV    [BX-128], AH
+      MOV    [BX+SI+8281H], AL
+      MOV    [BX+DI+8382H], AL
+      MOV    [BP+SI+8483H], AL
+      MOV    [BP+DI+8584H], AL
+      MOV    [SI+8685H], AL
+      MOV    [DI+8786H], AL
+      MOV    [BP+8887H], AL
+      MOV    [BX+8988H], AL
+      MOV    [BX+SI+8A89H], CL
       MOV    [BP+SI+8C8BH], CX
       MOV    [BP+DI+8D8CH], CX
       MOV    [SI+8E8DH], CX
@@ -7201,6 +10137,137 @@
       MOV    AH, [DI+0A7A6H]
       MOV    AH, [BP+0A8A7H]
       MOV    AH, [BX+0A9A8H]
+      MOV    AL, [BX+SI]
+      MOV    AL, [BX+DI]
+      MOV    AL, [BP+SI]
+      MOV    AL, [BP+DI]
+      MOV    AL, [SI]
+      MOV    AL, [DI]
+      MOV    AL, [0807H]
+      MOV    AL, [BX]
+      MOV    CL, [BX+SI]
+      MOV    CL, [BX+DI]
+      MOV    CL, [BP+SI]
+      MOV    CL, [BP+DI]
+      MOV    CL, [SI]
+      MOV    CL, [DI]
+      MOV    CL, [100FH]
+      MOV    CL, [BX]
+      MOV    DL, [BX+SI]
+      MOV    DL, [BX+DI]
+      MOV    DL, [BP+SI]
+      MOV    DL, [BP+DI]
+      MOV    DL, [SI]
+      MOV    DL, [DI]
+      MOV    DL, [1817H]
+      MOV    DL, [BX]
+      MOV    BL, [BX+SI]
+      MOV    BL, [BX+DI]
+      MOV    BL, [BP+SI]
+      MOV    BL, [BP+DI]
+      MOV    BL, [SI]
+      MOV    BL, [DI]
+      MOV    BL, [201FH]
+      MOV    BL, [BX]
+      MOV    AH, [BX+SI]
+      MOV    AH, [BX+DI]
+      MOV    AH, [BP+SI]
+      MOV    AH, [BP+DI]
+      MOV    AH, [SI]
+      MOV    AH, [DI]
+      MOV    AH, [2827H]
+      MOV    AH, [BX]
+      MOV    AL, [BX+SI+65]
+      MOV    AL, [BX+SI-128]
+      MOV    AL, [BX+DI+66]
+      MOV    AL, [BX+DI-128]
+      MOV    AL, [BP+SI+67]
+      MOV    AL, [BP+SI-128]
+      MOV    AL, [BP+DI+68]
+      MOV    AL, [BP+DI-128]
+      MOV    AL, [SI+69]
+      MOV    AL, [SI-128]
+      MOV    AL, [DI+70]
+      MOV    AL, [DI-128]
+      MOV    AL, [BP+71]
+      MOV    AL, [BP-128]
+      MOV    AL, [BX+72]
+      MOV    AL, [BX-128]
+      MOV    CL, [BX+SI+73]
+      MOV    CL, [BX+SI-128]
+      MOV    CL, [BX+DI+74]
+      MOV    CL, [BX+DI-128]
+      MOV    CL, [BP+SI+75]
+      MOV    CL, [BP+SI-128]
+      MOV    CL, [BP+DI+76]
+      MOV    CL, [BP+DI-128]
+      MOV    CL, [SI+77]
+      MOV    CL, [SI-128]
+      MOV    CL, [DI+78]
+      MOV    CL, [DI-128]
+      MOV    CL, [BP+79]
+      MOV    CL, [BP-128]
+      MOV    CL, [BX+80]
+      MOV    CL, [BX-128]
+      MOV    DL, [BX+SI+81]
+      MOV    DL, [BX+SI-128]
+      MOV    DL, [BX+DI+82]
+      MOV    DL, [BX+DI-128]
+      MOV    DL, [BP+SI+83]
+      MOV    DL, [BP+SI-128]
+      MOV    DL, [BP+DI+84]
+      MOV    DL, [BP+DI-128]
+      MOV    DL, [SI+85]
+      MOV    DL, [SI-128]
+      MOV    DL, [DI+86]
+      MOV    DL, [DI-128]
+      MOV    DL, [BP+87]
+      MOV    DL, [BP-128]
+      MOV    DL, [BX+88]
+      MOV    DL, [BX-128]
+      MOV    BL, [BX+SI+89]
+      MOV    BL, [BX+SI-128]
+      MOV    BL, [BX+DI+90]
+      MOV    BL, [BX+DI-128]
+      MOV    BL, [BP+SI+91]
+      MOV    BL, [BP+SI-128]
+      MOV    BL, [BP+DI+92]
+      MOV    BL, [BP+DI-128]
+      MOV    BL, [SI+93]
+      MOV    BL, [SI-128]
+      MOV    BL, [DI+94]
+      MOV    BL, [DI-128]
+      MOV    BL, [BP+95]
+      MOV    BL, [BP-128]
+      MOV    BL, [BX+96]
+      MOV    BL, [BX-128]
+      MOV    AH, [BX+SI+97]
+      MOV    AH, [BX+SI-128]
+      MOV    AH, [BX+DI+98]
+      MOV    AH, [BX+DI-128]
+      MOV    AH, [BP+SI+99]
+      MOV    AH, [BP+SI-128]
+      MOV    AH, [BP+DI+100]
+      MOV    AH, [BP+DI-128]
+      MOV    AH, [SI+101]
+      MOV    AH, [SI-128]
+      MOV    AH, [DI+102]
+      MOV    AH, [DI-128]
+      MOV    AH, [BP+103]
+      MOV    AH, [BP-128]
+      MOV    AH, [BX+104]
+      MOV    AH, [BX-128]
+      MOV    AL, [BX+SI+8281H]
+      MOV    AL, [BX+DI+8382H]
+      MOV    AL, [BP+SI+8483H]
+      MOV    AL, [BP+DI+8584H]
+      MOV    AL, [SI+8685H]
+      MOV    AL, [DI+8786H]
+      MOV    AL, [BP+8887H]
+      MOV    AL, [BX+8988H]
+      MOV    CL, [BX+SI+8A89H]
+      MOV    CL, [BX+DI+8B8AH]
+      MOV    CL, [BP+SI+8C8BH]
       MOV    CX, [SI+8E8DH]
       MOV    CX, [DI+8F8EH]
       MOV    CX, [BP+908FH]
@@ -7489,6 +10556,134 @@
       MOV    [BP+SI+0ACABH], CS
       MOV    [BP+DI+0ADACH], CS
       MOV    [SI+0AEADH], CS
+      MOV    AX, ES
+      MOV    CX, ES
+      MOV    DX, ES
+      MOV    BX, ES
+      MOV    SP, ES
+      MOV    BP, ES
+      MOV    SI, ES
+      MOV    DI, ES
+      MOV    AX, CS
+      MOV    CX, CS
+      MOV    DX, CS
+      MOV    BX, CS
+      MOV    SP, CS
+      MOV    BP, CS
+      MOV    SI, CS
+      MOV    DI, CS
+      MOV    AX, SS
+      MOV    CX, SS
+      MOV    DX, SS
+      MOV    BX, SS
+      MOV    SP, SS
+      MOV    BP, SS
+      MOV    SI, SS
+      MOV    DI, SS
+      MOV    AX, DS
+      MOV    CX, DS
+      MOV    DX, DS
+      MOV    BX, DS
+      MOV    SP, DS
+      MOV    BP, DS
+      MOV    SI, DS
+      MOV    DI, DS
+      MOV    [BX+SI], ES
+      MOV    [BX+DI], ES
+      MOV    [BP+SI], ES
+      MOV    [BP+DI], ES
+      MOV    [SI], ES
+      MOV    [DI], ES
+      MOV    [0807H], ES
+      MOV    [BX], ES
+      MOV    [BX+SI], CS
+      MOV    [BX+DI], CS
+      MOV    [BP+SI], CS
+      MOV    [BP+DI], CS
+      MOV    [SI], CS
+      MOV    [DI], CS
+      MOV    [100FH], CS
+      MOV    [BX], CS
+      MOV    [BX+SI], SS
+      MOV    [BX+DI], SS
+      MOV    [BP+SI], SS
+      MOV    [BP+DI], SS
+      MOV    [SI], SS
+      MOV    [DI], SS
+      MOV    [1817H], SS
+      MOV    [BX], SS
+      MOV    [BX+SI], DS
+      MOV    [BX+DI], DS
+      MOV    [BP+SI], DS
+      MOV    [BP+DI], DS
+      MOV    [SI], DS
+      MOV    [DI], DS
+      MOV    [201FH], DS
+      MOV    [BX], DS
+      MOV    [BX+SI+65], ES
+      MOV    [BX+SI-128], ES
+      MOV    [BX+DI+66], ES
+      MOV    [BX+DI-128], ES
+      MOV    [BP+SI+67], ES
+      MOV    [BP+SI-128], ES
+      MOV    [BP+DI+68], ES
+      MOV    [BP+DI-128], ES
+      MOV    [SI+69], ES
+      MOV    [SI-128], ES
+      MOV    [DI+70], ES
+      MOV    [DI-128], ES
+      MOV    [BP+71], ES
+      MOV    [BP-128], ES
+      MOV    [BX+72], ES
+      MOV    [BX-128], ES
+      MOV    [BX+SI+73], CS
+      MOV    [BX+SI-128], CS
+      MOV    [BX+DI+74], CS
+      MOV    [BX+DI-128], CS
+      MOV    [BP+SI+75], CS
+      MOV    [BP+SI-128], CS
+      MOV    [BP+DI+76], CS
+      MOV    [BP+DI-128], CS
+      MOV    [SI+77], CS
+      MOV    [SI-128], CS
+      MOV    [DI+78], CS
+      MOV    [DI-128], CS
+      MOV    [BP+79], CS
+      MOV    [BP-128], CS
+      MOV    [BX+80], CS
+      MOV    [BX-128], CS
+      MOV    [BX+SI+81], SS
+      MOV    [BX+SI-128], SS
+      MOV    [BX+DI+82], SS
+      MOV    [BX+DI-128], SS
+      MOV    [BP+SI+83], SS
+      MOV    [BP+SI-128], SS
+      MOV    [BP+DI+84], SS
+      MOV    [BP+DI-128], SS
+      MOV    [SI+85], SS
+      MOV    [SI-128], SS
+      MOV    [DI+86], SS
+      MOV    [DI-128], SS
+      MOV    [BP+87], SS
+      MOV    [BP-128], SS
+      MOV    [BX+88], SS
+      MOV    [BX-128], SS
+      MOV    [BX+SI+89], DS
+      MOV    [BX+SI-128], DS
+      MOV    [BX+DI+90], DS
+      MOV    [BX+DI-128], DS
+      MOV    [BP+SI+91], DS
+      MOV    [BP+SI-128], DS
+      MOV    [BP+DI+92], DS
+      MOV    [BP+DI-128], DS
+      MOV    [SI+93], DS
+      MOV    [SI-128], DS
+      MOV    [DI+94], DS
+      MOV    [DI-128], DS
+      MOV    [BP+95], DS
+      MOV    [BP-128], DS
+      MOV    [BX+96], DS
+      MOV    [BX-128], DS
       LEA    CX, [BP+908FH]
       LEA    CX, [BX+9190H]
       LEA    DX, [BX+SI+9291H]
@@ -7777,6 +10972,134 @@
       MOV    CS, [SI+0AEADH]
       MOV    CS, [DI+0AFAEH]
       MOV    CS, [BP+0B0AFH]
+      MOV    ES, AX
+      MOV    ES, CX
+      MOV    ES, DX
+      MOV    ES, BX
+      MOV    ES, SP
+      MOV    ES, BP
+      MOV    ES, SI
+      MOV    ES, DI
+      MOV    CS, AX
+      MOV    CS, CX
+      MOV    CS, DX
+      MOV    CS, BX
+      MOV    CS, SP
+      MOV    CS, BP
+      MOV    CS, SI
+      MOV    CS, DI
+      MOV    SS, AX
+      MOV    SS, CX
+      MOV    SS, DX
+      MOV    SS, BX
+      MOV    SS, SP
+      MOV    SS, BP
+      MOV    SS, SI
+      MOV    SS, DI
+      MOV    DS, AX
+      MOV    DS, CX
+      MOV    DS, DX
+      MOV    DS, BX
+      MOV    DS, SP
+      MOV    DS, BP
+      MOV    DS, SI
+      MOV    DS, DI
+      MOV    ES, [BX+SI]
+      MOV    ES, [BX+DI]
+      MOV    ES, [BP+SI]
+      MOV    ES, [BP+DI]
+      MOV    ES, [SI]
+      MOV    ES, [DI]
+      MOV    ES, [0807H]
+      MOV    ES, [BX]
+      MOV    CS, [BX+SI]
+      MOV    CS, [BX+DI]
+      MOV    CS, [BP+SI]
+      MOV    CS, [BP+DI]
+      MOV    CS, [SI]
+      MOV    CS, [DI]
+      MOV    CS, [100FH]
+      MOV    CS, [BX]
+      MOV    SS, [BX+SI]
+      MOV    SS, [BX+DI]
+      MOV    SS, [BP+SI]
+      MOV    SS, [BP+DI]
+      MOV    SS, [SI]
+      MOV    SS, [DI]
+      MOV    SS, [1817H]
+      MOV    SS, [BX]
+      MOV    DS, [BX+SI]
+      MOV    DS, [BX+DI]
+      MOV    DS, [BP+SI]
+      MOV    DS, [BP+DI]
+      MOV    DS, [SI]
+      MOV    DS, [DI]
+      MOV    DS, [201FH]
+      MOV    DS, [BX]
+      MOV    ES, [BX+SI+65]
+      MOV    ES, [BX+SI-128]
+      MOV    ES, [BX+DI+66]
+      MOV    ES, [BX+DI-128]
+      MOV    ES, [BP+SI+67]
+      MOV    ES, [BP+SI-128]
+      MOV    ES, [BP+DI+68]
+      MOV    ES, [BP+DI-128]
+      MOV    ES, [SI+69]
+      MOV    ES, [SI-128]
+      MOV    ES, [DI+70]
+      MOV    ES, [DI-128]
+      MOV    ES, [BP+71]
+      MOV    ES, [BP-128]
+      MOV    ES, [BX+72]
+      MOV    ES, [BX-128]
+      MOV    CS, [BX+SI+73]
+      MOV    CS, [BX+SI-128]
+      MOV    CS, [BX+DI+74]
+      MOV    CS, [BX+DI-128]
+      MOV    CS, [BP+SI+75]
+      MOV    CS, [BP+SI-128]
+      MOV    CS, [BP+DI+76]
+      MOV    CS, [BP+DI-128]
+      MOV    CS, [SI+77]
+      MOV    CS, [SI-128]
+      MOV    CS, [DI+78]
+      MOV    CS, [DI-128]
+      MOV    CS, [BP+79]
+      MOV    CS, [BP-128]
+      MOV    CS, [BX+80]
+      MOV    CS, [BX-128]
+      MOV    SS, [BX+SI+81]
+      MOV    SS, [BX+SI-128]
+      MOV    SS, [BX+DI+82]
+      MOV    SS, [BX+DI-128]
+      MOV    SS, [BP+SI+83]
+      MOV    SS, [BP+SI-128]
+      MOV    SS, [BP+DI+84]
+      MOV    SS, [BP+DI-128]
+      MOV    SS, [SI+85]
+      MOV    SS, [SI-128]
+      MOV    SS, [DI+86]
+      MOV    SS, [DI-128]
+      MOV    SS, [BP+87]
+      MOV    SS, [BP-128]
+      MOV    SS, [BX+88]
+      MOV    SS, [BX-128]
+      MOV    DS, [BX+SI+89]
+      MOV    DS, [BX+SI-128]
+      MOV    DS, [BX+DI+90]
+      MOV    DS, [BX+DI-128]
+      MOV    DS, [BP+SI+91]
+      MOV    DS, [BP+SI-128]
+      MOV    DS, [BP+DI+92]
+      MOV    DS, [BP+DI-128]
+      MOV    DS, [SI+93]
+      MOV    DS, [SI-128]
+      MOV    DS, [DI+94]
+      MOV    DS, [DI-128]
+      MOV    DS, [BP+95]
+      MOV    DS, [BP-128]
+      MOV    DS, [BX+96]
+      MOV    DS, [BX-128]
       POP    AX
       POP    CX
       POP    DX
@@ -7841,7 +11164,6 @@
       MOVSW
       CMPSB
       CMPSW
-      TEST   AL, 0A9H
       TEST   AX, 0ABAAH
       STOSB
       STOSW
@@ -7849,11 +11171,6 @@
       LODSW
       SCASB
       SCASW
-      MOV    AL, 0B1H
-      MOV    CL, 0B2H
-      MOV    DL, 0B3H
-      MOV    BL, 0B4H
-      MOV    AH, 0B5H
       MOV    AX, 0BAB9H
       MOV    CX, 0BBBAH
       MOV    DX, 0BCBBH
@@ -9558,8 +12875,10 @@
       OUT    0E8H, AX
       CALL   $-1514H
       CALL   $+00ECH
+      CALL   $
       JMP    $-1413H
       JMP    $+00EDH
+      JMP    $
       JMPF   0EEEDH:0ECEBH
       JMP    $-18
       JMP    $
@@ -9826,6 +13145,30 @@
       TEST   DL, 0C3H
       TEST   BL, 0C4H
       TEST   AH, 0C5H
+      NOT    AL
+      NOT    CL
+      NOT    DL
+      NOT    BL
+      NOT    AH
+      NEG    AL
+      NEG    CL
+      NEG    DL
+      NEG    BL
+      NEG    AH
+      MUL    AL
+      MUL    CL
+      MUL    DL
+      MUL    BL
+      MUL    AH
+      IMUL   AL
+      IMUL   CL
+      IMUL   DL
+      IMUL   BL
+      IMUL   AH
+      DIV    AL
+      DIV    CL
+      DIV    DL
+      DIV    BL
       IDIV   AX
       IDIV   CX
       IDIV   DX

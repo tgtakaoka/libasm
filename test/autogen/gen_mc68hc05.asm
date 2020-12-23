@@ -202,21 +202,37 @@
       STX   >$0001
       STX   $0102
       SUB   53714,X
+      SUB   >1,X
       CMP   53971,X
+      CMP   >1,X
       SBC   54228,X
+      SBC   >1,X
       CPX   54485,X
+      CPX   >1,X
       AND   54742,X
+      AND   >1,X
       BIT   54999,X
+      BIT   >1,X
       LDA   55256,X
+      LDA   >1,X
       STA   55513,X
+      STA   >1,X
       EOR   55770,X
+      EOR   >1,X
       ADC   56027,X
+      ADC   >1,X
       ORA   56284,X
+      ORA   >1,X
       ADD   56541,X
+      ADD   >1,X
       JMP   56798,X
+      JMP   >1,X
       JSR   57055,X
+      JSR   >1,X
       LDX   57312,X
+      LDX   >1,X
       STX   57569,X
+      STX   >1,X
       SUB   225,X
       SUB   <0,X
       CMP   226,X
