@@ -38,7 +38,7 @@ public:
     void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }
 
 private:
-    ValueFormatter _formatter;
+    IntelValueFormatter _formatter;
     RegZ8000 _regs;
     bool _preferWorkRegister = true;
 

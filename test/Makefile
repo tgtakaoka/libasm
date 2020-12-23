@@ -383,7 +383,7 @@ GEN_OUTS=\
 	gen_i8086.asm \
 	gen_tms9900.asm gen_tms9995.asm gen_tms99105.asm \
 	gen_mc68000.asm \
-	gen_z8001.inc gen_z8002.inc \
+	gen_z8001.asm gen_z8002.asm gen_z8001.inc gen_z8002.inc \
 	gen_ns32032.inc
 
 GENS=$(GEN_OBJS:.o=)
@@ -496,6 +496,10 @@ gen_tms99105.asm: gen_tms9900
 	./$^ -u -C TMS99105 -o $@ -l $(@:.asm=.lst)
 gen_mc68000.asm: gen_mc68000
 	./$^ -u -C 68000 -o $@ -l $(@:.asm=.lst)
+gen_z8001.asm: gen_z8000
+	./$^ -u -C z8001 -o $@ -l $(@:.asm=.lst)
+gen_z8002.asm: gen_z8000
+	./$^ -u -C z8002 -o $@ -l $(@:.asm=.lst)
 gen_z8001.inc: gen_z8000
 	./$^ -g -C z8001 -o $@ -l $(@:.inc=.lst)
 gen_z8002.inc: gen_z8000

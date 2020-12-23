@@ -27,7 +27,9 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis8000);
+    const uintptr_t org = strcmp(dis8000.getCpu(), "Z8001") == 0
+        ? 0x10000 : 0x1000;
+    TestGenerator<Config> generator(dis8000, org);
     generator.generate(driver);
 
     return driver.close();

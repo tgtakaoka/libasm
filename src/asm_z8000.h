@@ -35,7 +35,7 @@ public:
     }
 
 private:
-    ValueParser _parser;
+    IntelValueParser _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
