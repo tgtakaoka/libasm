@@ -1,18 +1,18 @@
-# Copyright 2020 Tadashi G. Takaoka
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+;# Copyright 2020 Tadashi G. Takaoka
+;#
+;# Licensed under the Apache License, Version 2.0 (the "License");
+;# you may not use this file except in compliance with the License.
+;# You may obtain a copy of the License at
+;#
+;#     http://www.apache.org/licenses/LICENSE-2.0
+;#
+;# Unless required by applicable law or agreed to in writing, software
+;# distributed under the License is distributed on an "AS IS" BASIS,
+;# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;# See the License for the specific language governing permissions and
+;# limitations under the License.
 
-# Clear
+;# Clear
         clr     r2
         clr     @r2
         clr     data1234
@@ -21,7 +21,7 @@
         clrb    @r2
         clrb    data1234
         clrb    data1234(r2)
-# Exchange
+;# Exchange
         ex      r1,r2
         ex      r1,@r2
         ex      r1,data1234
@@ -30,7 +30,7 @@
         exb     rl1,@r2
         exb     rl1,data1234
         exb     rl1,data1234(r2)
-# Load
+;# Load
         ld      r1,r2
         ld      r1,@r2
         ld      r1,data1234
@@ -73,30 +73,30 @@
         ldl     r4(#data1234),rr2
         ldl     r4(r5),rr2
         ldl     rr2,#0x12345678
-# Load Address
+;# Load Address
         lda     r2,data1234
         lda     r2,data1234(r4)
         lda     r2,r4(#data1234)
         lda     r2,r4(r6)
-# Load Address Relative
+;# Load Address Relative
         ldar    r2,.
-# Load Constant
+;# Load Constant
         ldk     r1,#15
-# Load Multiple
+;# Load Multiple
         ldm     r0,@r2,#16
         ldm     r0,data1234,#15
         ldm     r0,data1234(r2),#14
         ldm     @r2,r1,#1
         ldm     data1234,r1,#2
         ldm     data1234(r2),r1,#3
-# Load Relative
+;# Load Relative
         ldr     r1,.
         ldr     .,r1
         ldrb    rh1,.
         ldrb    .,rh1
         ldrl    rr2,.
         ldrl    .,rr2
-# Pop
+;# Pop
         pop     r1,@r4
         pop     @r2,@r4
         pop     data1234,@r4
@@ -105,7 +105,7 @@
         popl    @r2,@r4
         popl    data1234,@r4
         popl    data1234(r2),@r4
-# Push
+;# Push
         push    @r4,r1
         push    @r4,#0x1234
         push    @r4,@r2
@@ -115,10 +115,10 @@
         pushl   @r4,@r2
         pushl   @r4,data1234
         pushl   @r4,data1234(r2)
-# Add with Carry
+;# Add with Carry
         adc     r1,r2
         adcb    rh1,rh2
-# Add
+;# Add
         add     r1,r2
         add     r1,#0x1234
         add     r1,@r2
@@ -134,7 +134,7 @@
         addl    rr2,@r4
         addl    rr2,data1234
         addl    rr2,data1234(r4)
-# Compare
+;# Compare
         cp      r1,r2
         cp      r1,#0x1234
         cp      r1,@r2
@@ -156,9 +156,9 @@
         cpl     rr2,@r4
         cpl     rr2,data1234
         cpl     rr2,data1234(r4)
-# Decimal Adjust
+;# Decimal Adjust
         dab     rh1
-# Decrement
+;# Decrement
         dec     r1,#16
         dec     @r2,#15
         dec     data1234,#14
@@ -167,7 +167,7 @@
         decb    @r2,#7
         decb    data1234,#6
         decb    data1234(r2),#5
-# Divide
+;# Divide
         div     rr2,r4
         div     rr2,#0x1234
         div     rr2,@r4
@@ -178,11 +178,11 @@
         divl    rq4,@r6
         divl    rq4,data1234
         divl    rq4,data1234(r6)
-# Extend Sign
+;# Extend Sign
         exts    rr2
         extsb   r1
         extsl   rq4
-# Increment
+;# Increment
         inc     r1,#16
         inc     @r2,#15
         inc     data1234,#14
@@ -191,7 +191,7 @@
         incb    @r2,#7
         incb    data1234,#6
         incb    data1234(r2),#5
-# Multiply
+;# Multiply
         mult    rr2,r4
         mult    rr2,#0x1234
         mult    rr2,@r4
@@ -202,7 +202,7 @@
         multl   rq4,@r6
         multl   rq4,data1234
         multl   rq4,data1234(r6)
-# Negate
+;# Negate
         neg     r1
         neg     @r2
         neg     data1234
@@ -211,10 +211,10 @@
         negb    @r2
         negb    data1234
         negb    data1234(r2)
-# Subtract with Carry
+;# Subtract with Carry
         sbc     r1,r2
         sbcb    rh1,rh2
-# Subtract
+;# Subtract
         sub     r1,r2
         sub     r1,#0x1234
         sub     r1,@r2
@@ -230,7 +230,7 @@
         subl    rr2,@r4
         subl    rr2,data1234
         subl    rr2,data1234(r4)
-# And
+;# And
         and     r1,r2
         and     r1,#0x1234
         and     r1,@r2
@@ -241,7 +241,7 @@
         andb    rh1,@r2
         andb    rh1,data1234
         andb    rh1,data1234(r2)
-# Complement
+;# Complement
         com     r1
         com     @r2
         com     data1234
@@ -250,7 +250,7 @@
         comb    @r2
         comb    data1234
         comb    data1234(r2)
-# Or
+;# Or
         or      r1,r2
         or      r1,#0x1234
         or      r1,@r2
@@ -261,7 +261,7 @@
         orb     rh1,@r2
         orb     rh1,data1234
         orb     rh1,data1234(r2)
-# Test
+;# Test
         test    r1
         test    @r2
         test    data1234
@@ -274,7 +274,7 @@
         testl   @r2
         testl   data1234
         testl   data1234(r2)
-# Exclusive Or
+;# Exclusive Or
         xor     r1,r2
         xor     r1,#0x1234
         xor     r1,@r2
@@ -285,25 +285,25 @@
         xorb    rh1,@r2
         xorb    rh1,data1234
         xorb    rh1,data1234(r2)
-# Call Procedure
+;# Call Procedure
         call    @r2
         call    data1234
         call    data1234(r2)
-# Call Procedure Relative
+;# Call Procedure Relative
         calr    .
-# Decrement and Jump if Not Zero
+;# Decrement and Jump if Not Zero
         djnz    r1,.
         dbjnz   rh1,.
-# Interrupt Return
+;# Interrupt Return
         iret
-# Jump
+;# Jump
         jp      @r2
         jp      data1234
         jp      data1234(r2)
         jp      eq,@r2
         jp      ne,data1234
         jp      z,data1234(r2)
-# Jump Relative
+;# Jump Relative
         jr      f,.
         jr      lt,.
         jr      le,.
@@ -324,7 +324,7 @@
         jr      ne,.
         jr      nc,.
         jr      uge,.
-# Return from Procedure
+;# Return from Procedure
         ret     f
         ret     lt
         ret     le
@@ -345,9 +345,9 @@
         ret     ne
         ret     nc
         ret     uge
-# System call
+;# System call
         sc      #3
-# Bit Test
+;# Bit Test
         bit     r1,r2
         bit     r1,#15
         bit     @r2,#14
@@ -358,7 +358,7 @@
         bitb    @r2,#6
         bitb    data1234,#5
         bitb    data1234(r2),#4
-# Reset Bit
+;# Reset Bit
         res     r1,r2
         res     r1,#15
         res     @r2,#14
@@ -369,7 +369,7 @@
         resb    @r2,#6
         resb    data1234,#5
         resb    data1234(r2),#4
-# Set Bit
+;# Set Bit
         set     r1,r2
         set     r1,#15
         set     @r2,#14
@@ -380,7 +380,7 @@
         setb    @r2,#6
         setb    data1234,#5
         setb    data1234(r2),#4
-# Test and Set
+;# Test and Set
         tset    r1
         tset    @r2
         tset    data1234
@@ -389,7 +389,7 @@
         tsetb   @r2
         tsetb   data1234
         tsetb   data1234(r2)
-# Test Condition Code
+;# Test Condition Code
         tcc     f,r1
         tcc     lt,r1
         tcc     le,r1
@@ -430,179 +430,171 @@
         tccb    ne,rh1
         tccb    nc,rh1
         tccb    uge,rh1
-# Rotate Left
+;# Rotate Left
         rl      r1,#1
         rlb     rh1,#2
-# Rotate Left through Carry
+;# Rotate Left through Carry
         rlc     r1,#2
         rlcb    rh1,#1
-# Rotate Left Digit
+;# Rotate Left Digit
         rldb    rh1,rh2
-# Rotate Right
+;# Rotate Right
         rr      r1,#2
         rrb     rh1,#1
-# Rotate Right through Carry
+;# Rotate Right through Carry
         rrc     r1,#1
         rrcb    rh1,#2
-# Rotate Rihgt Digit
+;# Rotate Rihgt Digit
         rrdb    rh1,rh2
-# Shift Dynamic Arithmetic
+;# Shift Dynamic Arithmetic
         sda     r1,r2
         sdab    rh1,r2
         sdal    rr4,r2
-# Shift Dynamic Logical
+;# Shift Dynamic Logical
         sdl     r1,r2
         sdlb    rh1,r2
         sdll    rr4,r2
-# Shift Left Arithmetic
+;# Shift Left Arithmetic
         sla     r1,#16
         slab    rh1,#8
         slal    rr4,#32
-# Shift Left Logical
+;# Shift Left Logical
         sll     r1,#1
         sllb    rh1,#1
         slll    rr4,#1
-# Shift Right Arithmetic
+;# Shift Right Arithmetic
         sra     r1,#2
         srab    rh1,#2
         sral    rr4,#2
-# Shift Right Logical
+;# Shift Right Logical
         srl     r1,#3
         srlb    rh1,#3
         srll    rr4,#3
-# Compare and Decrement
+;# Compare and Decrement
         cpd     r1,@r2,r4,eq
         cpdb    rh1,@r2,r4,ne
-# Compare, Decrement, and Repeat
+;# Compare, Decrement, and Repeat
         cpdr    r1,@r2,r4,eq
         cpdrb   rh1,@r2,r4,ne
-# Compare and Increment
+;# Compare and Increment
         cpi     r1,@r2,r4,eq
         cpib    rh1,@r2,r4,ne
-# Compare, Increment, and Repeat
+;# Compare, Increment, and Repeat
         cpir    r1,@r2,r4,eq
         cpirb   rh1,@r2,r4,ne
-# Compare String and Decrement
+;# Compare String and Decrement
         cpsd    @r2,@r4,r6,eq
         cpsdb   @r2,@r4,r6,ne
-# Compare String, Decrement, and Repeat
+;# Compare String, Decrement, and Repeat
         cpsdr   @r2,@r4,r6,eq
         cpsdrb  @r2,@r4,r6,ne
-# Compare Sring and Increment
+;# Compare Sring and Increment
         cpsi    @r2,@r4,r6,eq
         cpsib   @r2,@r4,r6,ne
-# Compare String, Increment, and Repeat
+;# Compare String, Increment, and Repeat
         cpsir   @r2,@r4,r6,eq
         cpsirb  @r2,@r4,r6,ne
-# Load and Decrement
+;# Load and Decrement
         ldd     @r2,@r4,r6
         lddb    @r2,@r4,r6
-# Load, Decrement, and Repeat
+;# Load, Decrement, and Repeat
         lddr    @r2,@r4,r6
         lddrb   @r2,@r4,r6
-# Load and Increment
+;# Load and Increment
         ldi     @r2,@r4,r6
         ldib    @r2,@r4,r6
-# Load, Increment, and Repeat
+;# Load, Increment, and Repeat
         ldir    @r2,@r4,r6
         ldirb   @r2,@r4,r6
-# Translate and Decrement
+;# Translate and Decrement
         trdb    @r2,@r4,r6
-# Translate, Decrement, and Repeat
+;# Translate, Decrement, and Repeat
         trdrb   @r2,@r4,r6
-# Translate and Increment
+;# Translate and Increment
         trib    @r2,@r4,r6
-# Translate, Increment, and Repeat
+;# Translate, Increment, and Repeat
         trirb   @r2,@r4,r6
-# Translate, Test, and Decrement
+;# Translate, Test, and Decrement
         trtdb   @r2,@r4,r6
-# Translate, Test, Decrement, and Repeat
+;# Translate, Test, Decrement, and Repeat
         trtdrb  @r2,@r4,r6
-# Translate, Test, and Increment
+;# Translate, Test, and Increment
         trtib   @r2,@r4,r6
-# Translate, Test, Increment, and Repeat
+;# Translate, Test, Increment, and Repeat
         trtirb  @r2,@r4,r6
-# Input
+;# Input
         in      r1,@r2
         inb     rh1,@r2
-        in      r1,#0x1234
-        inb     rh1,#0x1234
-# Input and Decrement
+;# Input and Decrement
         ind     @r2,@r4,r6
         indb    @r2,@r4,r6
-# Input, Decrement, and Repeat
+;# Input, Decrement, and Repeat
         indr    @r2,@r4,r6
         indrb   @r2,@r4,r6
-# Input and Increment
+;# Input and Increment
         ini     @r2,@r4,r6
         inib    @r2,@r4,r6
-# Input, Increment, and Repeat
+;# Input, Increment, and Repeat
         inir    @r2,@r4,r6
         inirb   @r2,@r4,r6
-# Output, Decrement, and Repeat
+;# Output, Decrement, and Repeat
         otdr    @r2,@r4,r6
         otdrb   @r2,@r4,r6
-# Output, Increment, and Repeat
+;# Output, Increment, and Repeat
         otir    @r2,@r4,r6
         otirb   @r2,@r4,r6
-# Output
+;# Output
         out     @r1,r2
         outb    @r1,rh2
-        out     #0x1234,r2
-        outb    #0x1234,rh2
-# Output and Decrement
+;# Output and Decrement
         outd    @r2,@r4,r6
         outdb   @r2,@r4,r6
-# Output and Increment
+;# Output and Increment
         outi    @r2,@r4,r6
         outib   @r2,@r4,r6
-# Special Input
-        sin     r1,#0x1234
-        sinb    rh1,#0x1234
-# Special Input, Decrement
+;# Special Input, Decrement
         sind    @r2,@r4,r6
         sindb   @r2,@r4,r6
-# Special Input, Decrement, and Repeat
+;# Special Input, Decrement, and Repeat
         sindr   @r2,@r4,r6
         sindrb  @r2,@r4,r6
-# Special Input and Increment
+;# Special Input and Increment
         sini    @r2,@r4,r6
         sinib   @r2,@r4,r6
-# Special Input, Increment, and Repeat
+;# Special Input, Increment, and Repeat
         sinir   @r2,@r4,r6
         sinirb  @r2,@r4,r6
-# Special Output, Decrement, and Repeat
+;# Special Output, Decrement, and Repeat
         sotdr   @r2,@r4,r6
         sotdrb  @r2,@r4,r6
-# Special Output, Increment, and Repeat
+;# Special Output, Increment, and Repeat
         sotir   @r2,@r4,r6
         sotirb  @r2,@r4,r6
-# Special Output
-        sout    #0x1234,r2
-        soutb   #0x1234,rl2
-# Special Output and Decrement
+;# Special Output and Decrement
         soutd   @r2,@r4,r6
         soutdb  @r2,@r4,r6
-# Special Output and Increment
+;# Special Output and Increment
         souti   @r2,@r4,r6
         soutib  @r2,@r4,r6
-# Complement Flag
-        comflg  c,z,s,p,v
-        comflg  v,p,s,z,c
+;# Complement Flag
+        comflg  c,z,s,v
+        comflg  p,s,z,c
         comflg  c
+        comflg  z
         comflg  v
         comflg  s
-# Disable Interrupt
+        comflg  p
+;# Disable Interrupt
         di      vi,nvi
         di      nvi
         di      vi
-# Enable Interrupt
+;# Enable Interrupt
         ei      nvi,vi
         ei      nvi
         ei      vi
-# Halt
+;# Halt
         halt
-# Load Control Register
+;# Load Control Register
         ldctl   fcw,r1
         ldctl   refresh,r1
         ldctl   psap,r1
@@ -613,34 +605,38 @@
         ldctl   r1,nsp
         ldctlb  rh1,flags
         ldctlb  flags,rh2
-# Load Program Status
+;# Load Program Status
         ldps    @r2
         ldps    data1234
         ldps    data1234(r2)
-# Multi-Micro Bit Test
+;# Multi-Micro Bit Test
         mbit
-# Multi-Micro Request
+;# Multi-Micro Request
         mreq    r1
-# Multi-Micro Reset
+;# Multi-Micro Reset
         mres
-# Multi-Micro Set
+;# Multi-Micro Set
         mset
-# No Operation
+;# No Operation
         nop
-# Reset Flag
-        resflg  c,z,s,p,v
-        resflg  v,p,s,z,c
+;# Reset Flag
+        resflg  c,z,s,v
+        resflg  p,s,z,c
         resflg  c
+        resflg  z
         resflg  v
         resflg  s
-# Set Flag
-        setflg  c,z,s,p,v
-        setflg  v,p,s,z,c
+        resflg  p
+;# Set Flag
+        setflg  c,z,s,v
+        setflg  p,s,z,c
         setflg  c
+        setflg  z
         setflg  v
         setflg  s
+        setflg  p
 
-# Local Variables:
-# mode: asm
-# End:
-# vim: set ft=asm:
+;# Local Variables:
+;# mode: asm
+;# End:
+;# vim: set ft=asm:

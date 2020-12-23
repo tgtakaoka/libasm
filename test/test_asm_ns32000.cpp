@@ -424,7 +424,7 @@ static void test_generic_addressing() {
 }
 
 static void test_comment() {
-    TEST("ADDB R1 , R0           # comment",     0x00, 0x08);
+    TEST("ADDB R1 , R0           ; comment",     0x00, 0x08);
     TEST("ADDB 2 (R2) , R0       ; comment",     0x00, 0x50, 0x02);
     TEST("ADDB 2 ( 4 (FP) ) , R0 ; comment",     0x00, 0x80, 0x04, 0x02);
     TEST("ADDB 0x123 , R0        ; comment",     0x00, 0xA0, 0x23);

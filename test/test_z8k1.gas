@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-        .z8002
+        .z8001
 
+        .equ    off1234,0x1234
         .section        bss1
 data1234:
         .section        bss2
 data5678:
 
         .text
-        .include        "test_z8002.inc"
+        .include        "test_z8001.inc"
+        .include        "test_z8k_io.inc"
 
         .end
 

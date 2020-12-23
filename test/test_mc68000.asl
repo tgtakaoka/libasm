@@ -12,10 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;fill    macro   v
-;        dc.b    [(*+32)&$ffffffe0-*]0
-;        align   v
-;        endm
+fill    macro   v
+        dc.b    [(*+32)&$ffffffe0-*]0
+        align   v
+        endm
 
         cpu     68000
         org     $10000

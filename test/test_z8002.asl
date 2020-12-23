@@ -13,6 +13,7 @@
 ; limitations under the License.
 
         cpu     z8002
+        supmode on
         org     1000h
 data1234: equ   1234h
 data5678: equ   5678h

@@ -12,11 +12,13 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     z8002
-        org     1000h
-data1234: equ   1234h
-data5678: equ   5678h
-        include "test_z8002.inc"
+        cpu     z8001
+        supmode on
+        org         010000h
+off1234:    equ     1234h
+data1234:   equ     0A1234h
+data5678:   equ     0B5678h
+        include "test_z8001.inc"
         include "test_z8000_io.inc"
         end
 

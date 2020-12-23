@@ -28,7 +28,7 @@ namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000, '#') {}
+    AsmNs32000() : Assembler(_parser, TableNs32000) {}
 
 private:
     ValueParser _parser;
