@@ -315,8 +315,8 @@
       ldm    r2,0x040005,#4
       ldm    r2,0x000607,#3
       testl  0x09000a
-      ldm    0x0c000d,r10,#12
-      ldm    0x000e0f,r10,#11
+      ldm    0x020003,r0,#2
+      ldm    0x000405,r0,#1
       ldm    r0,0x020003(r1),#2
       ldm    r0,0x000405(r1),#1
       testl  0x19001a(r1)

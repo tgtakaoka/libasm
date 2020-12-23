@@ -237,15 +237,29 @@ static void test_load_and_exchange() {
     if (z8001()) {
         TEST("LDM R15,@RR2,#1",        0x1C21, 0x0F00);
         TEST("LDM R1,@RR2,#2",         0x1C21, 0x0101);
-        TEST("LDM R15,0x120034,#3",    0x5C01, 0x0F02, 0x1234);
-        TEST("LDM R15,0x561234,#4",    0x5C01, 0x0F03, 0xD600, 0x1234);
+        TEST("LDM R13,0x120034,#3",    0x5C01, 0x0D02, 0x1234);
+        TEST("LDM R12,0x561234,#4",    0x5C01, 0x0C03, 0xD600, 0x1234);
         TEST("LDM R1,0x120034(R2),#5", 0x5C21, 0x0104, 0x1234);
         TEST("LDM R1,0x561234(R2),#6", 0x5C21, 0x0105, 0xD600, 0x1234);
+        ETEST(OVERFLOW_RANGE, "LDM R15,@RR2,#2");
+        TEST("LDM @RR2,R15,#1",        0x1C29, 0x0F00);
+        TEST("LDM @RR2,R1,#2",         0x1C29, 0x0101);
+        TEST("LDM 120034H,R13,#3",     0x5C09, 0x0D02, 0x1234);
+        TEST("LDM 561234H,R12,#4",     0x5C09, 0x0C03, 0xD600, 0x1234);
+        TEST("LDM 120034H(R2),R1,#5",  0x5C29, 0x0104, 0x1234);
+        TEST("LDM 561234H(R2),R0,#16", 0x5C29, 0x000F, 0xD600, 0x1234);
+        ETEST(OVERFLOW_RANGE, "LDM @RR2,R15,#2");
     } else {
-        TEST("LDM R15,@R2,#7",        0x1C21, 0x0F06);
+        TEST("LDM R9,@R2,#7",         0x1C21, 0x0906);
         TEST("LDM R1,@R2,#8",         0x1C21, 0x0107);
-        TEST("LDM R15,0x1234,#9",     0x5C01, 0x0F08, 0x1234);
+        TEST("LDM R7,0x1234,#9",      0x5C01, 0x0708, 0x1234);
         TEST("LDM R1,0x1234(R2),#15", 0x5C21, 0x010E, 0x1234);
+        ETEST(OVERFLOW_RANGE, "LDM R9,@R2,#8");
+        TEST("LDM @R2,R9,#7",        0x1C29, 0x0906);
+        TEST("LDM @R2,R1,#8",        0x1C29, 0x0107);
+        TEST("LDM 1234H,R7,#9",      0x5C09, 0x0708, 0x1234);
+        TEST("LDM 1234H(R2),R0,#16", 0x5C29, 0x000F, 0x1234);
+        ETEST(OVERFLOW_RANGE, "LDM @R2,R9,#8");
     }
 
     // Load Relative

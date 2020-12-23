@@ -284,7 +284,7 @@
       DIV    RR0,1112H(R1)
       LDM    R2,0405H,#4
       TESTL  090AH
-      LDM    0C0DH,R10,#12
+      LDM    0203H,R0,#2
       LDM    R0,0203H(R1),#2
       TESTL  191AH(R1)
       LDM    0203H(R1),R0,#2

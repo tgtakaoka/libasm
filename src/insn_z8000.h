@@ -85,6 +85,10 @@ public:
         const uint8_t opc = _opCode >> 8;
         return opc == 0xB8;
     }
+    bool isLoadMultiInsn() const {
+        const uint8_t opc = _opCode >> 8;
+        return opc == 0x1C || opc == 0x5C;
+    }
 
 private:
     Config::opcode_t _opCode;

@@ -317,8 +317,8 @@
       LDM    R2,040005H,#4
       LDM    R2,000607H,#3
       TESTL  09000AH
-      LDM    0C000DH,R10,#12
-      LDM    000E0FH,R10,#11
+      LDM    020003H,R0,#2
+      LDM    000405H,R0,#1
       LDM    R0,020003H(R1),#2
       LDM    R0,000405H(R1),#1
       TESTL  19001AH(R1)

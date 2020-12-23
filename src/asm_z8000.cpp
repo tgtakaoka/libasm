@@ -549,6 +549,11 @@ Error AsmZ8000::encode(Insn &_insn) {
     if (insn.isThreeRegsInsn() &&
             checkRegisterOverwrap(insn, dstOp, srcOp, ex1Op))
         return getError();
+    if (insn.isLoadMultiInsn()) {
+        const RegName reg = insn.dstMode() == M_R ? dstOp.reg : srcOp.reg;
+        if (RegZ8000::encodeGeneralRegName(reg) + ex1Op.val32 > 16)
+            return setError(OVERFLOW_RANGE);
+    }
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO) {

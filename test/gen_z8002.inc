@@ -282,7 +282,7 @@
       div    rr0,0x1112(r1)
       ldm    r2,0x0405,#4
       testl  0x090a
-      ldm    0x0c0d,r10,#12
+      ldm    0x0203,r0,#2
       ldm    r0,0x0203(r1),#2
       testl  0x191a(r1)
       ldm    0x0203(r1),r0,#2

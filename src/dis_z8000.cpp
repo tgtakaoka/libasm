@@ -386,6 +386,12 @@ Error DisZ8000::decode(DisMemory &memory, Insn &_insn, char *out) {
         return getError();
     if (insn.isThreeRegsInsn() && checkRegisterOverwrap(insn))
         return getError();
+    if (insn.isLoadMultiInsn()) {
+        const uint8_t reg = modeField(insn, MF_P8);
+        const uint8_t cnt = modeField(insn, MF_P0);
+        if (reg + cnt >= 16)
+            return setError(OVERFLOW_RANGE);
+    }
 
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO)
