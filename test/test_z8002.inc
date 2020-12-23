@@ -605,16 +605,12 @@
 # Load Control Register
         ldctl   fcw,r1
         ldctl   refresh,r1
-        ldctl   psapseg,r1
-        ldctl   psapoff,r1
-        ldctl   nspseg,r1
-        ldctl   nspoff,r1
+        ldctl   psap,r1
+        ldctl   nsp,r1
         ldctl   r1,fcw
         ldctl   r1,refresh
-        ldctl   r1,psapseg
-        ldctl   r1,psapoff
-        ldctl   r1,nspseg
-        ldctl   r1,nspoff
+        ldctl   r1,psap
+        ldctl   r1,nsp
         ldctlb  rh1,flags
         ldctlb  flags,rh2
 # Load Program Status

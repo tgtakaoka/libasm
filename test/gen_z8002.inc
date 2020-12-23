@@ -378,16 +378,12 @@
       ei     nvi
       ldctl  r0,fcw
       ldctl  r0,refresh
-      ldctl  r0,psapseg
-      ldctl  r0,psapoff
-      ldctl  r0,nspseg
-      ldctl  r0,nspoff
+      ldctl  r0,psap
+      ldctl  r0,nsp
       ldctl  fcw,r0
       ldctl  refresh,r0
-      ldctl  psapseg,r0
-      ldctl  psapoff,r0
-      ldctl  nspseg,r0
-      ldctl  nspoff,r0
+      ldctl  psap,r0
+      ldctl  nsp,r0
       sc     #0
       addb   rh0,rh1
       addb   rl0,rh1

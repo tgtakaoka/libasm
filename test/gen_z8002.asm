@@ -380,16 +380,12 @@
       EI     NVI
       LDCTL  R0,FCW
       LDCTL  R0,REFRESH
-      LDCTL  R0,PSAPSEG
-      LDCTL  R0,PSAPOFF
-      LDCTL  R0,NSPSEG
-      LDCTL  R0,NSPOFF
+      LDCTL  R0,PSAP
+      LDCTL  R0,NSP
       LDCTL  FCW,R0
       LDCTL  REFRESH,R0
-      LDCTL  PSAPSEG,R0
-      LDCTL  PSAPOFF,R0
-      LDCTL  NSPSEG,R0
-      LDCTL  NSPOFF,R0
+      LDCTL  PSAP,R0
+      LDCTL  NSP,R0
       SC     #0
       ADDB   RH0,RH1
       ADDB   RL0,RH1

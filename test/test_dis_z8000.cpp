@@ -1790,20 +1790,34 @@ static void test_cpu_conrtol() {
     TEST(HALT, "", 0x7A00);
 
     // Load Control Register
-    ETEST(ILLEGAL_SIZE, _, "",  0x7DE1);
+    ETEST(ILLEGAL_SIZE, LDCTL, "R14,FLAGS", 0x7DE1);
     TEST(LDCTL,  "R13,FCW",     0x7DD2);
     TEST(LDCTL,  "R12,REFRESH", 0x7DC3);
-    TEST(LDCTL,  "R11,PSAPSEG", 0x7DB4);
-    TEST(LDCTL,  "R10,PSAPOFF", 0x7DA5);
-    TEST(LDCTL,  "R9,NSPSEG",   0x7D96);
-    TEST(LDCTL,  "R8,NSPOFF",   0x7D87);
-    ETEST(ILLEGAL_SIZE, _, "",  0x7D69);
+    if (z8001()) {
+        TEST(LDCTL,  "R11,PSAPSEG", 0x7DB4);
+        TEST(LDCTL,  "R10,PSAPOFF", 0x7DA5);
+        TEST(LDCTL,  "R9,NSPSEG",   0x7D96);
+        TEST(LDCTL,  "R8,NSPOFF",   0x7D87);
+    } else {
+        ETEST(ILLEGAL_REGISTER, LDCTL, "R11,PSAPSEG", 0x7DB4);
+        TEST(                   LDCTL, "R10,PSAP",    0x7DA5);
+        ETEST(ILLEGAL_REGISTER, LDCTL, "R9,NSPSEG",   0x7D96);
+        TEST(                   LDCTL, "R8,NSP",      0x7D87);
+    }
+    ETEST(ILLEGAL_SIZE, LDCTL, "FLAGS,R6", 0x7D69);
     TEST(LDCTL,  "FCW,R5",      0x7D5A);
     TEST(LDCTL,  "REFRESH,R4",  0x7D4B);
-    TEST(LDCTL,  "PSAPSEG,R3",  0x7D3C);
-    TEST(LDCTL,  "PSAPOFF,R2",  0x7D2D);
-    TEST(LDCTL,  "NSPSEG,R1",   0x7D1E);
-    TEST(LDCTL,  "NSPOFF,R0",   0x7D0F);
+    if (z8001()) {
+        TEST(LDCTL,  "PSAPSEG,R3", 0x7D3C);
+        TEST(LDCTL,  "PSAPOFF,R2", 0x7D2D);
+        TEST(LDCTL,  "NSPSEG,R1",  0x7D1E);
+        TEST(LDCTL,  "NSPOFF,R0",  0x7D0F);
+    } else {
+        ETEST(ILLEGAL_REGISTER, LDCTL, "PSAPSEG,R3",  0x7D3C);
+        TEST(                   LDCTL, "PSAP,R2",     0x7D2D);
+        ETEST(ILLEGAL_REGISTER, LDCTL, "NSPSEG,R1",   0x7D1E);
+        TEST(                   LDCTL, "NSP,R0",      0x7D0F);
+    }
     TEST(LDCTLB, "RL6,FLAGS",   0x8CE1);
     TEST(LDCTLB, "FLAGS,RH6",   0x8C69);
 

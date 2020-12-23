@@ -241,7 +241,10 @@ Error AsmZ8000::emitCtlRegister(
         return setError(ILLEGAL_SIZE);
     if (insn.oprSize() == SZ_WORD && op.reg == REG_FLAGS)
         return setError(ILLEGAL_SIZE);
-    return emitData(insn, field, RegZ8000::decodeCtlReg(op.reg));
+    const int8_t data = RegZ8000::encodeCtlReg(op.reg);
+    if (data < 0)
+        return setError(ILLEGAL_REGISTER);
+    return emitData(insn, field, data);
 }
 
 Error AsmZ8000::emitOperand(

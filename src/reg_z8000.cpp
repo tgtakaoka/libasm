@@ -161,8 +161,7 @@ bool RegZ8000::isQuadReg(RegName name) {
 }
 
 bool RegZ8000::isCtlReg(RegName name) {
-    const int8_t r = static_cast<int8_t>(name);
-    return r >= 64 && r < 64 + 8;
+    return static_cast<int8_t>(name) >= 64;
 }
 
 // clang-format off
@@ -171,8 +170,10 @@ static const char TEXT_REG_FCW[]     PROGMEM = "FCW";
 static const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
 static const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
 static const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
+static const char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
 static const char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
 static const char TEXT_REG_NSPOFF[]  PROGMEM = "NSPOFF";
+static const char TEXT_REG_NSP[]     PROGMEM = "NSP";
 // clang-format on
 static const RegBase::NameEntry CTL_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_FLAGS),
@@ -180,9 +181,20 @@ static const RegBase::NameEntry CTL_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_REFRESH),
         NAME_ENTRY(REG_PSAPSEG),
         NAME_ENTRY(REG_PSAPOFF),
+        NAME_ENTRY(REG_PSAP),
         NAME_ENTRY(REG_NSPSEG),
         NAME_ENTRY(REG_NSPOFF),
+        NAME_ENTRY(REG_NSP),
 };
+
+static bool isSegCtlReg(RegName name) {
+    return name == REG_PSAPSEG || name == REG_PSAPOFF || name == REG_NSPSEG ||
+           name == REG_NSPOFF;
+}
+
+static bool isNonSegCtlReg(RegName name) {
+    return name == REG_PSAP || name == REG_NSP;
+}
 
 RegName RegZ8000::parseCtlReg(const char *line) {
     const NameEntry *entry = searchText(line, ARRAY_RANGE(CTL_TABLE));
@@ -202,13 +214,20 @@ char *RegZ8000::outCtlName(char *out, RegName name) const {
 
 RegName RegZ8000::decodeCtlReg(uint8_t num) {
     num &= 7;
-    if (num == 0)
-        return REG_ILLEGAL;
-    return RegName(num + 64);
+    const NameEntry *entry = searchName(num + 64, ARRAY_RANGE(CTL_TABLE));
+    RegName name = entry ? RegName(entry->name()) : REG_ILLEGAL;
+    if (!TableZ8000.segmentedModel() && isSegCtlReg(name)) {
+        name = RegName(entry->name() + 8);
+        return isNonSegCtlReg(name) ? name : REG_ILLEGAL;
+    }
+    return name;
 }
 
-uint8_t RegZ8000::encodeCtlReg(RegName name) {
-    return uint8_t(name) - 64;
+int8_t RegZ8000::encodeCtlReg(RegName name) {
+    const int8_t num = (static_cast<int8_t>(name) - 64) & 7;
+    if (TableZ8000.segmentedModel())
+        return isNonSegCtlReg(name) ? -1 : num;
+    return isSegCtlReg(name) ? -1 : num;
 }
 
 static const char TEXT_INTR_VI[] PROGMEM = "VI";

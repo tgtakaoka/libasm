@@ -82,6 +82,8 @@ enum RegName : int8_t {
     REG_PSAPOFF = 64 + 5,
     REG_NSPSEG = 64 + 6,
     REG_NSPOFF = 64 + 7,
+    REG_PSAP = REG_PSAPOFF + 8,
+    REG_NSP = REG_NSPOFF + 8,
 };
 
 enum CcName : int8_t {
@@ -144,7 +146,7 @@ public:
     static RegName parseCtlReg(const char *line);
     static RegName decodeCtlReg(uint8_t num);
     static bool isCtlReg(RegName name);
-    static uint8_t encodeCtlReg(RegName name);
+    static int8_t encodeCtlReg(RegName name);
 
     static CcName parseCcName(const char *line);
     static uint8_t ccNameLen(const CcName name);
