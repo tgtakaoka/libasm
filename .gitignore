@@ -3,4 +3,4 @@
 *~
 build
 .pio
-compile_commands.json
+.cache

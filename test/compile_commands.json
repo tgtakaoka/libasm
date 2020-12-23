@@ -1,0 +1,2054 @@
+[
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_cdp1802.o",
+            "test_dis_cdp1802.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_cdp1802.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_ins8070.o",
+            "../src/reg_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_ins8070.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_tlcs90.o",
+            "../src/dis_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_cdp1802.o",
+            "../src/dis_cdp1802.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_cdp1802.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_mc6800.o",
+            "gen_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_mc6809.o",
+            "../src/asm_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_z80.o",
+            "test_dis_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_i8080.o",
+            "../src/dis_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_ns32000.o",
+            "gen_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_z8.o",
+            "test_asm_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_mc6809.o",
+            "../src/reg_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_ins8060.o",
+            "../src/asm_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_i8051.o",
+            "../src/table_i8051.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_i8051.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_mc68000.o",
+            "gen_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_expr_moto.o",
+            "test_expr_moto.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_expr_moto.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_tlcs90.o",
+            "test_dis_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_ins8060.o",
+            "test_asm_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_ins8060.o",
+            "gen_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_z8000.o",
+            "gen_z8000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_z8000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_ns32000.o",
+            "../src/asm_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_z8.o",
+            "test_dis_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_ins8070.o",
+            "test_dis_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_ins8070.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_mos6502.o",
+            "../src/dis_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_cdp1802.o",
+            "../src/asm_cdp1802.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_cdp1802.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_i8080.o",
+            "../src/table_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_i8086.o",
+            "gen_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_i8051.o",
+            "../src/dis_i8051.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_i8051.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_tlcs90.o",
+            "../src/asm_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_ns32000.o",
+            "test_asm_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_z8.o",
+            "../src/reg_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_ins8060.o",
+            "../src/table_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_i8086.o",
+            "../src/reg_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_mc6800.o",
+            "../src/reg_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_z80.o",
+            "../src/asm_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_mc6800.o",
+            "test_asm_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_tlcs90.o",
+            "../src/table_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_ns32000.o",
+            "../src/dis_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_ns32000.o",
+            "../src/table_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_mc68000.o",
+            "test_asm_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_mc6809.o",
+            "gen_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_z80.o",
+            "gen_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_mc6800.o",
+            "../src/asm_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_z8.o",
+            "gen_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_tms9900.o",
+            "test_asm_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_mc68000.o",
+            "../src/dis_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_i8051.o",
+            "gen_i8051.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_i8051.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_i8080.o",
+            "gen_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_tms9900.o",
+            "../src/dis_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_z80.o",
+            "test_asm_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_z8.o",
+            "../src/dis_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_i8080.o",
+            "../src/reg_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_mc6809.o",
+            "test_dis_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_tms9900.o",
+            "gen_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "cli_listing.o",
+            "../cli/cli_listing.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../cli/cli_listing.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_ins8070.o",
+            "../src/asm_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_ins8070.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_tlcs90.o",
+            "gen_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_expr_base.o",
+            "test_expr_base.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_expr_base.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_ins8070.o",
+            "test_asm_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_ins8070.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_tms9900.o",
+            "../src/table_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_expr_intel.o",
+            "test_expr_intel.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_expr_intel.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "text_buffer.o",
+            "text_buffer.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "text_buffer.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_i8086.o",
+            "../src/asm_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_cdp1802.o",
+            "gen_cdp1802.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_cdp1802.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_mc6809.o",
+            "test_asm_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_i8086.o",
+            "test_asm_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_i8086.o",
+            "../src/dis_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_tlcs90.o",
+            "../src/reg_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_ins8070.o",
+            "../src/dis_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_ins8070.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_tms9900.o",
+            "../src/asm_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_tlcs90.o",
+            "test_asm_tlcs90.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_tlcs90.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_mos6502.o",
+            "../src/asm_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_mc68000.o",
+            "../src/table_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_expr_helper.o",
+            "test_expr_helper.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_expr_helper.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_mos6502.o",
+            "../src/table_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_mc6800.o",
+            "../src/table_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_ns32000.o",
+            "../src/reg_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_ins8060.o",
+            "../src/reg_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_z80.o",
+            "../src/table_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_mc6809.o",
+            "../src/table_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_mc6809.o",
+            "../src/dis_mc6809.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_mc6809.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_z80.o",
+            "../src/reg_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_cdp1802.o",
+            "../src/table_cdp1802.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_cdp1802.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_i8086.o",
+            "../src/table_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_tms9900.o",
+            "../src/reg_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_i8080.o",
+            "test_asm_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_i8080.o",
+            "../src/asm_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_z8.o",
+            "../src/table_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_z80.o",
+            "../src/dis_z80.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_z80.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_mc68000.o",
+            "../src/asm_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_mc68000.o",
+            "../src/reg_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_i8080.o",
+            "test_dis_i8080.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_i8080.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_mc6800.o",
+            "test_dis_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_mos6502.o",
+            "../src/reg_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "asm_z8.o",
+            "../src/asm_z8.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/asm_z8.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_mc6800.o",
+            "../src/dis_mc6800.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_mc6800.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_mc68000.o",
+            "test_dis_mc68000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_mc68000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_cdp1802.o",
+            "test_asm_cdp1802.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_cdp1802.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_mos6502.o",
+            "test_dis_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_ins8070.o",
+            "gen_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_ins8070.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_ns32000.o",
+            "test_dis_ns32000.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_ns32000.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_ins8060.o",
+            "test_dis_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "dis_ins8060.o",
+            "../src/dis_ins8060.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/dis_ins8060.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_asm_mos6502.o",
+            "test_asm_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_asm_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "reg_i8051.o",
+            "../src/reg_i8051.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/reg_i8051.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_i8086.o",
+            "test_dis_i8086.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_i8086.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "test_dis_tms9900.o",
+            "test_dis_tms9900.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "test_dis_tms9900.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "gen_mos6502.o",
+            "gen_mos6502.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "gen_mos6502.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-g",
+            "-std=c++14",
+            "-O",
+            "-I",
+            "../src",
+            "-I",
+            "../cli",
+            "-o",
+            "table_ins8070.o",
+            "../src/table_ins8070.cpp"
+        ],
+        "directory": "/home/t2/Arduino/libraries/libasm/test",
+        "file": "../src/table_ins8070.cpp"
+    }
+]
