@@ -19,16 +19,10 @@ P2HEX_FLAGS = -q -k -r \$$-\$$ -l 32
 
 %.hex: %.asl
 	asl $(ASL_FLAGS) $^
-	p2hex -q -k -r \$$-\$$ -l 32 -F Intel $*.p $@
-%.s19: %.asl
+	p2hex $(P2HEX_FLAGS) -F Intel $*.p $@
+%.s19 %.s28 %.s37: %.asl
 	asl $(ASL_FLAGS) $^
-	p2hex -q -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@
-%.s28: %.asl
-	asl $(ASL_FLAGS) $^
-	p2hex -q -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@
-%.s37: %.asl
-	asl $(ASL_FLAGS) $^
-	p2hex -q -k -r \$$-\$$ -l 32 -F Moto +5 $*.p $@
+	p2hex $(P2HEX_FLAGS) -F Moto +5 $*.p $@
 
 # Local Variables:
 # mode: makefile-gmake
