@@ -17,7 +17,7 @@ all:
 	@echo '"make gen"      build auto test source generator'
 	@echo '"make generate" generate auto test sources'
 
--include Makefile.vars
+-include ../src/Makefile.arch
 
 .PHONY: all test gen generate clean clean-objs
 
@@ -42,12 +42,6 @@ OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o
 OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o test_memory.o
 OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \
             value_parser.o value_formatter.o
-
-# define OBJS_arch variable which contains architecture related objects.
-define objs-arch # arch
-OBJS_$(1) := table_$(1).o reg_$(1).o
-
-endef
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
@@ -56,7 +50,7 @@ GEN_OBJS  = $(ARCHS:%=gen_%.o)
 OBJS = 	$(TEST_OBJS) $(GEN_OBJS) $(OBJS_test) $(OBJS_gen) \
 	$(OBJS_asm) $(OBJS_dis) $(OBJS_expr) \
 	$(ARCHS:%=asm_%.o) $(ARCHS:%=dis_%.o) $(EXPR_OBJS) \
-	$(foreach a,$(ARCHS),$(OBJS_$a))
+	$(foreach a,$(ARCHS),$(OBJS_$(a)))
 BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
 
 -include $(OBJS:.o=.d)

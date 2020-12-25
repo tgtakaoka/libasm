@@ -12,104 +12,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-INSTALL_DIR ?= /usr/local/bin
-VPATH=../src
-CXXFLAGS=-Wall -g -O -std=c++14 -I../src
-CPPFLAGS=-MMD
+BINS = asm dis
+INSTALL_DIR ?= $(HOME)/.local/bin
 
-OBJS_common   = file_util.o bin_formatter.o intel_hex.o moto_srec.o \
-		cli_listing.o cli_memory.o error_reporter.o
-OBJS_asm      = asm_base.o value_parser.o asm_driver.o asm_directive.o
-OBJS_dis      = dis_base.o value_formatter.o dis_driver.o dis_directive.o
-OBJS_mc6809   = table_mc6809.o  reg_mc6809.o
-OBJS_mc6800   = table_mc6800.o  reg_mc6800.o
-OBJS_mos6502  = table_mos6502.o reg_mos6502.o
-OBJS_w65c816  = table_w65c816.o reg_w65c816.o
-OBJS_i8051    = table_i8051.o   reg_i8051.o
-OBJS_i8080    = table_i8080.o   reg_i8080.o
-OBJS_z80      = table_z80.o     reg_z80.o
-OBJS_z8       = table_z8.o      reg_z8.o
-OBJS_tlcs90   = table_tlcs90.o  reg_tlcs90.o
-OBJS_ins8060  = table_ins8060.o reg_ins8060.o
-OBJS_ins8070  = table_ins8070.o reg_ins8070.o
-OBJS_cdp1802  = table_cdp1802.o
-OBJS_i8086    = table_i8086.o   reg_i8086.o
-OBJS_tms9900  = table_tms9900.o reg_tms9900.o
-OBJS_mc68000  = table_mc68000.o reg_mc68000.o
-OBJS_z8000    = table_z8000.o   reg_z8000.o
-OBJS_ns32000  = table_ns32000.o reg_ns32000.o
+all: $(BINS)
 
-OBJS = 	$(OBJS_common)  \
-	$(OBJS_asm)     \
-	$(OBJS_dis)     \
-	$(OBJS_mc6809)  \
-	$(OBJS_mc6800)  \
-	$(OBJS_mos6502) \
-	$(OBJS_i8080)   \
-	$(OBJS_z80)     \
-	$(OBJS_z8)      \
-	$(OBJS_tlcs90)  \
-	$(OBJS_ins8060) \
-	$(OBJS_ins8070) \
-	$(OBJS_cdp1802) \
-	$(OBJS_i8086)   \
-	$(OBJS_tms9900) \
-	$(OBJS_mc68000) \
-	$(OBJS_z8000)   \
-	$(OBJS_ns32000)
+-include ../src/Makefile.arch
 
-OBJS_driver = asm.o dis.o
+.PHONY: all install clean-objs clean
 
-DRIVERS = $(OBJS_driver:.o=)
+install: $(BINS)
+	install -s $(BINS) ${INSTALL_DIR}
 
-.PHONY: all clean
+clean-objs:
+	-rm -f $(OBJS)
+clean: clean-objs
+	-rm -f $(BINS) *.d *~
 
-all: $(DRIVERS)
+VPATH = ../src
+CXXFLAGS = -Wall -O -std=c++14 -I../src
+CPPFLAGS = -MMD
+
+OBJS_com = cli_listing.o cli_memory.o error_reporter.o file_util.o \
+	   bin_formatter.o intel_hex.o moto_srec.o \
+	   $(foreach a,$(ARCHS),$(OBJS_$(a)))
+OBJS_asm = asm.o asm_base.o asm_driver.o asm_directive.o value_parser.o \
+	   $(foreach a,$(ARCHS),asm_$(a).o)
+OBJS_dis = dis.o dis_base.o dis_driver.o dis_directive.o value_formatter.o \
+	   $(foreach a,$(ARCHS),dis_$(a).o)
+OBJS_bin = $(BINS:=.o)
+$(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
+
+OBJS = $(OBJS_com) $(OBJS_asm) $(OBJS_dis) $(OBJS_bin) \
+       $(foreach a,$(ARCHS),$(OBJS_$(a)))
+
+define bin-rule # bin
+$(1): $(OBJS_com) $(OBJS_$(1))
+	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
+
+endef
+$(eval $(foreach b,$(BINS),$(call bin-rule,$(b))))
 
 -include $(OBJS:.o=.d)
-
-asm:    asm.o $(OBJS_asm) $(OBJS_common) \
-	asm_mc6809.o  $(OBJS_mc6809)  \
-	asm_mc6800.o  $(OBJS_mc6800)  \
-	asm_mos6502.o $(OBJS_mos6502) \
-	asm_i8051.o   $(OBJS_i8051)   \
-	asm_i8080.o   $(OBJS_i8080)   \
-	asm_z80.o     $(OBJS_z80)     \
-	asm_z8.o      $(OBJS_z8)      \
-	asm_tlcs90.o  $(OBJS_tlcs90)  \
-	asm_ins8060.o $(OBJS_ins8060) \
-	asm_ins8070.o $(OBJS_ins8070) \
-	asm_cdp1802.o $(OBJS_cdp1802) \
-	asm_i8086.o   $(OBJS_i8086)   \
-	asm_tms9900.o $(OBJS_tms9900) \
-	asm_mc68000.o $(OBJS_mc68000) \
-	asm_z8000.o   $(OBJS_z8000)   \
-	asm_ns32000.o $(OBJS_ns32000)
-	$(CXX) $(CXXFLAGS) $^ -o $@
-dis:    dis.o $(OBJS_dis) $(OBJS_common) \
-	dis_mc6809.o  $(OBJS_mc6809)  \
-	dis_mc6800.o  $(OBJS_mc6800)  \
-	dis_mos6502.o $(OBJS_mos6502) \
-	dis_i8051.o   $(OBJS_i8051)   \
-	dis_i8080.o   $(OBJS_i8080)   \
-	dis_z80.o     $(OBJS_z80)     \
-	dis_z8.o      $(OBJS_z8)      \
-	dis_tlcs90.o  $(OBJS_tlcs90)  \
-	dis_ins8060.o $(OBJS_ins8060) \
-	dis_ins8070.o $(OBJS_ins8070) \
-	dis_cdp1802.o $(OBJS_cdp1802) \
-	dis_i8086.o   $(OBJS_i8086)   \
-	dis_tms9900.o $(OBJS_tms9900) \
-	dis_mc68000.o $(OBJS_mc68000) \
-	dis_z8000.o   $(OBJS_z8000)   \
-	dis_ns32000.o $(OBJS_ns32000)
-	$(CXX) $(CXXFLAGS) $^ -o $@
-
-install: $(DRIVERS)
-	install $(DRIVERS) ${INSTALL_DIR}
-clean:
-	-rm -f *.o *.d
-	-rm -f $(DRIVERS)
 
 # Local Variables:
 # mode: makefile-gmake

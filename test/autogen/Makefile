@@ -20,7 +20,7 @@ all:
 	@echo '"make asl-test" assemble with "asl" command'
 	@echo '"make gas-test" assemble with "gas" command'
 
--include ../Makefile.vars
+-include ../../src/Makefile.arch
 -include ../Makefile.asl
 -include ../Makefile.gas
 

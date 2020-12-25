@@ -17,6 +17,7 @@ ARCHS = \
 	mc6809  \
 	mc6800  \
 	mos6502 \
+	i8051   \
 	i8080   \
 	z80     \
 	z8      \
@@ -29,6 +30,11 @@ ARCHS = \
 	mc68000 \
 	z8000   \
 	ns32000
+# define OBJS_arch variable which contains architecture related objects.
+define objs-arch # arch
+OBJS_$(1) = table_$(1).o reg_$(1).o
+
+endef
 
 # target list for each architecture.
 TGT_mc6809  = mc6809 hd6309
