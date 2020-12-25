@@ -14,7 +14,7 @@
 
         cpu     ns32032
         org     0x10000
-        include "gen_ns32032.inc"
+        include "gen_ns32k.inc"
         end
 
 ;# Local Variables:

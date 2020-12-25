@@ -14,15 +14,9 @@
 
         cpu     65816
         org     $100000
-        longa   off
+        longa   on
         longi   on
-        include "test_mos6502.inc"
-        align   32
-        include "test_w65sc02.inc"
-        align   32
-        include "test_w65c02s.inc"
-        align   32
-        include "test_w65c816.inc"
+        include "gen_w65c816.inc"
         end
 
 ;;; Local Variables:
