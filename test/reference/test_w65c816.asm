@@ -13,6 +13,7 @@
 ;;; limitations under the License.
 
         cpu     65816
+
         org     $100000
         longa   off
         longi   off
@@ -23,6 +24,40 @@
         include "test_w65c02s.inc"
         align   32
         include "test_w65c816.inc"
+
+	org     $200000
+        longa   off
+        longi   on
+        include "test_mos6502.inc"
+        align   32
+        include "test_w65sc02.inc"
+        align   32
+        include "test_w65c02s.inc"
+        align   32
+        include "test_w65c816.inc"
+
+	org     $300000
+        longa   on
+        longi   off
+        include "test_mos6502.inc"
+        align   32
+        include "test_w65sc02.inc"
+        align   32
+        include "test_w65c02s.inc"
+        align   32
+        include "test_w65c816.inc"
+
+	org     $400000
+        longa   on
+        longi   on
+        include "test_mos6502.inc"
+        align   32
+        include "test_w65sc02.inc"
+        align   32
+        include "test_w65c02s.inc"
+        align   32
+        include "test_w65c816.inc"
+
         end
 
 ;;; Local Variables:

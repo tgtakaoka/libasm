@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-        .z8002
+        .z8001
         .text
-        .include        "gen_z8002.inc"
+        .include "gen_z8k1.inc"
         .end
 
 # Local Variables:
