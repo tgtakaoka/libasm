@@ -34,7 +34,7 @@ public:
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode mode1) { _flags = Entry::Flags::create(mode1, NONE); }
+    void setAddrMode(AddrMode mode1, AddrMode mode2) { _flags = Entry::Flags::create(mode1, mode2); }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
@@ -48,6 +48,8 @@ public:
     Config::opcode_t prefix() const { return _prefix; }
 
     void emitInsn() {
+        if (hasPrefix())
+            emitByte(prefix());
         emitByte(opCode());
     }
 

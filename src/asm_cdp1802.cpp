@@ -32,39 +32,10 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
-        return OK;
-
-    op.val16 = parseExpr16(p);
-    if (parserError())
-        return getError();
-    op.setError(getError());
-    op.mode = ADDR;
-    return OK;
-}
-
-Error AsmCdp1802::encode(Insn &_insn) {
-    InsnCdp1802 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
-
-    Operand op;
-    if (parseOperand(endName, op))
-        return getError();
-    const char *p = skipSpaces(_scan);
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(op.getError());
-
-    insn.setAddrMode(op.mode);
-    if (TableCdp1802.searchName(insn))
-        return setError(TableCdp1802.getError());
-
+Error AsmCdp1802::emitOperand(
+        InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     uint16_t val16 = op.val16;
-    switch (insn.mode1()) {
+    switch (mode) {
     case REG1:
         if (op.getError())
             val16 = 7;  // default work register.
@@ -101,6 +72,50 @@ Error AsmCdp1802::encode(Insn &_insn) {
     default:
         insn.emitInsn();
         return OK;
+    }
+}
+
+Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
+    const char *p = skipSpaces(scan);
+    _scan = p;
+    if (endOfLine(p))
+        return OK;
+
+    op.val16 = parseExpr16(p);
+    if (parserError())
+        return getError();
+    op.setError(getError());
+    op.mode = ADDR;
+    return OK;
+}
+
+Error AsmCdp1802::encode(Insn &_insn) {
+    InsnCdp1802 insn(_insn);
+    const char *endName = _parser.scanSymbol(_scan);
+    insn.setName(_scan, endName);
+
+    Operand op1, op2;
+    if (parseOperand(endName, op1))
+        return getError();
+    const char *p = skipSpaces(_scan);
+    if (*p == ',') {
+        if (parseOperand(p + 1, op2))
+            return getError();
+        p = skipSpaces(_scan);
+    }
+    if (!endOfLine(p))
+        return setError(GARBAGE_AT_END);
+    setErrorIf(op1.getError());
+    setErrorIf(op2.getError());
+
+    insn.setAddrMode(op1.mode, op2.mode);
+    if (TableCdp1802.searchName(insn))
+        return setError(TableCdp1802.getError());
+
+    if (emitOperand(insn, insn.mode1(), op1))
+        return getError();
+    if (insn.mode2() == ADDR) {
+        insn.emitUint16(op2.val16);
     }
     return OK;
 }

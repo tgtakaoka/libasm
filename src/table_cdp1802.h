@@ -44,6 +44,8 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
+    Error searchName(InsnCdp1802 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
     Error searchOpCode(InsnCdp1802 &insn, const EntryPage *pages,
             const EntryPage *end) const;
 };

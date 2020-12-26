@@ -183,9 +183,7 @@ bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
     return _cpuType == CDP1806 && opCode == 0x68;
 }
 
-static bool acceptMode(Entry::Flags flags, const Entry *entry) {
-    const AddrMode opr = flags.mode1();
-    const AddrMode table = entry->flags().mode1();
+static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == ADDR)
@@ -194,17 +192,26 @@ static bool acceptMode(Entry::Flags flags, const Entry *entry) {
     return false;
 }
 
-Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.mode1(), table.mode1()) &&
+           acceptMode(flags.mode2(), table.mode2());
+}
+
+Error TableCdp1802::searchName(
+        InsnCdp1802 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-            insn.flags(), ARRAY_RANGE(TABLE_CDP1802), acceptMode, count);
-    if (entry) {
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return _error.setOK();
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page->table(), page->end(),
+                acceptModes, count);
+        if (entry) {
+            insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setFlags(entry->flags());
+            return OK;
+        }
     }
-    return _error.setError(
-            count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -233,6 +240,10 @@ Error TableCdp1802::searchOpCode(
         }
     }
     return UNKNOWN_INSTRUCTION;
+}
+
+Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
+    return _error.setError(searchName(insn, _table, _end));
 }
 
 Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {

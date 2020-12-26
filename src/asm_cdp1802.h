@@ -40,6 +40,7 @@ private:
 
     Error parseOperand(const char *scan, Operand &op);
 
+    Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodePage(InsnCdp1802 &insn, const Operand &op);
     Error encode(Insn &insn) override;
 };
