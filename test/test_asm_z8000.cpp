@@ -2047,31 +2047,27 @@ static void test_undefined_symbol() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "Z8001",
-            "Z8002",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        assembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_load_and_exchange);
-        RUN_TEST(test_arithmetic);
-        RUN_TEST(test_logical);
-        RUN_TEST(test_program_control);
-        RUN_TEST(test_bit_manipulation);
-        RUN_TEST(test_rotate);
-        RUN_TEST(test_shift);
-        RUN_TEST(test_block_transfer);
-        RUN_TEST(test_string_manipulation);
-        RUN_TEST(test_input);
-        RUN_TEST(test_output);
-        RUN_TEST(test_cpu_conrtol);
-        RUN_TEST(test_comment);
-        RUN_TEST(test_undefined_symbol);
-    }
+    return assembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    assembler.setCpu(cpu);
+    RUN_TEST(test_load_and_exchange);
+    RUN_TEST(test_arithmetic);
+    RUN_TEST(test_logical);
+    RUN_TEST(test_program_control);
+    RUN_TEST(test_bit_manipulation);
+    RUN_TEST(test_rotate);
+    RUN_TEST(test_shift);
+    RUN_TEST(test_block_transfer);
+    RUN_TEST(test_string_manipulation);
+    RUN_TEST(test_input);
+    RUN_TEST(test_output);
+    RUN_TEST(test_cpu_conrtol);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undefined_symbol);
 }
 
 // Local Variables:

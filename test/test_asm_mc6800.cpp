@@ -931,29 +931,23 @@ static void test_undefined_symbol() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "6800",
-            "6801",
-            "6301",
-            "6811",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        assembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_inherent);
-        RUN_TEST(test_immediate);
-        RUN_TEST(test_direct);
-        RUN_TEST(test_extended);
-        RUN_TEST(test_indexed);
-        RUN_TEST(test_indexed_y);
-        RUN_TEST(test_relative);
-        RUN_TEST(test_bit_ops);
-        RUN_TEST(test_comment);
-        RUN_TEST(test_undefined_symbol);
-    }
+    return assembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    assembler.setCpu(cpu);
+    RUN_TEST(test_inherent);
+    RUN_TEST(test_immediate);
+    RUN_TEST(test_direct);
+    RUN_TEST(test_extended);
+    RUN_TEST(test_indexed);
+    RUN_TEST(test_indexed_y);
+    RUN_TEST(test_relative);
+    RUN_TEST(test_bit_ops);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undefined_symbol);
 }
 
 // Local Variables:

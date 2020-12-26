@@ -233,8 +233,13 @@ static void test_illegal() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
     RUN_TEST(test_inherent);
     RUN_TEST(test_pointer);
     RUN_TEST(test_immediate);

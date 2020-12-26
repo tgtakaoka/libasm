@@ -509,8 +509,13 @@ static void test_undefined_symbol() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
+    return assembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    assembler.setCpu(cpu);
     RUN_TEST(test_implied);
     RUN_TEST(test_regs);
     RUN_TEST(test_regr);

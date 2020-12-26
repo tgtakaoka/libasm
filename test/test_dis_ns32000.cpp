@@ -724,8 +724,13 @@ static void test_illegal() {
     }
 }
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
     RUN_TEST(test_format_0);
     RUN_TEST(test_format_1);
     RUN_TEST(test_format_2);

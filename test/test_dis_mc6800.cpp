@@ -793,35 +793,29 @@ static void test_illegal_mc68hc11() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "6800",
-            "6801",
-            "6301",
-            "6811",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        disassembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_inherent);
-        RUN_TEST(test_immediate);
-        RUN_TEST(test_direct);
-        RUN_TEST(test_extended);
-        RUN_TEST(test_indexed);
-        RUN_TEST(test_indexed_y);
-        RUN_TEST(test_relative);
-        RUN_TEST(test_bit_ops);
-        if (m6800()) {
-            RUN_TEST(test_illegal_mc6800);
-        } else if (m68hc11()) {
-            RUN_TEST(test_illegal_mc68hc11);
-        } else if (hd6301()) {
-            RUN_TEST(test_illegal_hd6301);
-        } else {
-            RUN_TEST(test_illegal_mc6801);
-        }
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
+    RUN_TEST(test_inherent);
+    RUN_TEST(test_immediate);
+    RUN_TEST(test_direct);
+    RUN_TEST(test_extended);
+    RUN_TEST(test_indexed);
+    RUN_TEST(test_indexed_y);
+    RUN_TEST(test_relative);
+    RUN_TEST(test_bit_ops);
+    if (m6800()) {
+        RUN_TEST(test_illegal_mc6800);
+    } else if (m68hc11()) {
+        RUN_TEST(test_illegal_mc68hc11);
+    } else if (hd6301()) {
+        RUN_TEST(test_illegal_hd6301);
+    } else {
+        RUN_TEST(test_illegal_mc6801);
     }
 }
 

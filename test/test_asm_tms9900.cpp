@@ -384,32 +384,27 @@ static void test_undefined_symbol() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "TMS9900",
-            "TMS9995",
-            "TMS99105",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        assembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_inh);
-        RUN_TEST(test_imm);
-        RUN_TEST(test_reg);
-        RUN_TEST(test_reg_imm);
-        RUN_TEST(test_cnt_reg);
-        RUN_TEST(test_src);
-        RUN_TEST(test_reg_src);
-        RUN_TEST(test_cnt_src);
-        RUN_TEST(test_xop_src);
-        RUN_TEST(test_dst_src);
-        RUN_TEST(test_rel);
-        RUN_TEST(test_cru_off);
-        RUN_TEST(test_comment);
-        RUN_TEST(test_undefined_symbol);
-    }
+    return assembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    assembler.setCpu(cpu);
+    RUN_TEST(test_inh);
+    RUN_TEST(test_imm);
+    RUN_TEST(test_reg);
+    RUN_TEST(test_reg_imm);
+    RUN_TEST(test_cnt_reg);
+    RUN_TEST(test_src);
+    RUN_TEST(test_reg_src);
+    RUN_TEST(test_cnt_src);
+    RUN_TEST(test_xop_src);
+    RUN_TEST(test_dst_src);
+    RUN_TEST(test_rel);
+    RUN_TEST(test_cru_off);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undefined_symbol);
 }
 
 // Local Variables:

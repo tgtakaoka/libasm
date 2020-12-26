@@ -1182,35 +1182,31 @@ static void test_illegal_hd6309() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "6809",
-            "6309",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        disassembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_inherent);
-        RUN_TEST(test_immediate);
-        RUN_TEST(test_direct);
-        RUN_TEST(test_extended);
-        RUN_TEST(test_indexed);
-        RUN_TEST(test_indexed_mode);
-        RUN_TEST(test_indexed_error);
-        RUN_TEST(test_relative);
-        RUN_TEST(test_stack);
-        RUN_TEST(test_register);
-        if (is6309())
-            RUN_TEST(test_transfer);
-        if (is6309())
-            RUN_TEST(test_bit_position);
-        if (is6809())
-            RUN_TEST(test_illegal_mc6809);
-        if (is6309())
-            RUN_TEST(test_illegal_hd6309);
-    }
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
+    RUN_TEST(test_inherent);
+    RUN_TEST(test_immediate);
+    RUN_TEST(test_direct);
+    RUN_TEST(test_extended);
+    RUN_TEST(test_indexed);
+    RUN_TEST(test_indexed_mode);
+    RUN_TEST(test_indexed_error);
+    RUN_TEST(test_relative);
+    RUN_TEST(test_stack);
+    RUN_TEST(test_register);
+    if (is6309())
+        RUN_TEST(test_transfer);
+    if (is6309())
+        RUN_TEST(test_bit_position);
+    if (is6809())
+        RUN_TEST(test_illegal_mc6809);
+    if (is6309())
+        RUN_TEST(test_illegal_hd6309);
 }
 
 // Local Variables:

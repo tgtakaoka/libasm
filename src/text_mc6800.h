@@ -23,14 +23,14 @@ namespace libasm {
 namespace mc6800 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC6811";
+static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC68HC11";
 static const char TEXT_CPU_6800[] PROGMEM = "6800";
 static const char TEXT_CPU_6801[] PROGMEM = "6801";
 static const char TEXT_CPU_6301[] PROGMEM = "6301";
-static const char TEXT_CPU_HC11[] PROGMEM = "68HC11";
+static const char TEXT_CPU_6811[] PROGMEM = "6811";
 static constexpr const char *TEXT_CPU_MC   = TEXT_CPU_LIST;
 static constexpr const char *TEXT_CPU_HD   = (TEXT_CPU_LIST + 16);
-static constexpr const char *TEXT_CPU_6811 = (TEXT_CPU_LIST + 26);
+static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 26);
 
 // MC6800
 static const char TEXT_ABA[]  PROGMEM = "ABA";

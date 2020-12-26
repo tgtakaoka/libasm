@@ -867,31 +867,26 @@ static void test_error() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "Z8",
-            "Z86C",
-            "Z88",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        assembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_implied);
-        RUN_TEST(test_absolute);
-        RUN_TEST(test_relative);
-        RUN_TEST(test_operand_in_opcode);
-        RUN_TEST(test_one_operand);
-        RUN_TEST(test_two_operands);
-        RUN_TEST(test_indexed);
-        if (z88())
-            RUN_TEST(test_bit_operation);
-        RUN_TEST(test_setrp);
-        RUN_TEST(test_comment);
-        RUN_TEST(test_undefined_symbol);
-        RUN_TEST(test_error);
-    }
+    return assembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    assembler.setCpu(cpu);
+    RUN_TEST(test_implied);
+    RUN_TEST(test_absolute);
+    RUN_TEST(test_relative);
+    RUN_TEST(test_operand_in_opcode);
+    RUN_TEST(test_one_operand);
+    RUN_TEST(test_two_operands);
+    RUN_TEST(test_indexed);
+    if (z88())
+        RUN_TEST(test_bit_operation);
+    RUN_TEST(test_setrp);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_error);
 }
 
 // Local Variables:

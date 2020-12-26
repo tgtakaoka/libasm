@@ -22,7 +22,8 @@
 #include "test_memory.h"
 #include "test_symtab.h"
 
-void run_tests();
+const char *run_cpu_test();
+void run_tests(const char *cpu);
 
 namespace libasm {
 namespace test {

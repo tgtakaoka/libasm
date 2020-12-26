@@ -2308,8 +2308,13 @@ static void test_multiproc() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
     RUN_TEST(test_data_move);
     RUN_TEST(test_integer);
     RUN_TEST(test_logical);

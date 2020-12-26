@@ -833,40 +833,35 @@ static void test_illegal_z80() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "z80",
-            "8080",
-            "8085",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        disassembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_move_inherent);
-        RUN_TEST(test_move_immediate);
-        RUN_TEST(test_move_direct);
-        RUN_TEST(test_stack_op);
-        RUN_TEST(test_jump_call);
-        RUN_TEST(test_incr_decr);
-        RUN_TEST(test_alu_register);
-        RUN_TEST(test_alu_immediate);
-        RUN_TEST(test_io);
-        RUN_TEST(test_inherent);
-        RUN_TEST(test_restart);
-        RUN_TEST(test_relative);
-        RUN_TEST(test_shift);
-        RUN_TEST(test_bitop);
-        RUN_TEST(test_index_registers);
-        RUN_TEST(test_indexed);
-        RUN_TEST(test_shift_indexed);
-        RUN_TEST(test_bitop_indexed);
-        if (is8080() || is8085())
-            RUN_TEST(test_illegal_i8080);
-        if (isZ80())
-            RUN_TEST(test_illegal_z80);
-    }
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
+    RUN_TEST(test_move_inherent);
+    RUN_TEST(test_move_immediate);
+    RUN_TEST(test_move_direct);
+    RUN_TEST(test_stack_op);
+    RUN_TEST(test_jump_call);
+    RUN_TEST(test_incr_decr);
+    RUN_TEST(test_alu_register);
+    RUN_TEST(test_alu_immediate);
+    RUN_TEST(test_io);
+    RUN_TEST(test_inherent);
+    RUN_TEST(test_restart);
+    RUN_TEST(test_relative);
+    RUN_TEST(test_shift);
+    RUN_TEST(test_bitop);
+    RUN_TEST(test_index_registers);
+    RUN_TEST(test_indexed);
+    RUN_TEST(test_shift_indexed);
+    RUN_TEST(test_bitop_indexed);
+    if (is8080() || is8085())
+        RUN_TEST(test_illegal_i8080);
+    if (isZ80())
+        RUN_TEST(test_illegal_z80);
 }
 
 // Local Variables:

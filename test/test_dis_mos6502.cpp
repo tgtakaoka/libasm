@@ -978,50 +978,43 @@ static void test_illegal_w65c02s() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "6502",
-            "65SC02",
-            "65C02",
-            "W65C02S",
-            "65816",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        disassembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_impl);
-        RUN_TEST(test_accm);
-        RUN_TEST(test_imm);
-        RUN_TEST(test_long_imm);
-        RUN_TEST(test_zpg);
-        RUN_TEST(test_zpg_indexed);
-        if (w65c816())
-            RUN_TEST(test_zpg_long);
-        if (w65c816())
-            RUN_TEST(test_sp_rel);
-        RUN_TEST(test_abs);
-        if (w65c816())
-            RUN_TEST(test_abs_long);
-        RUN_TEST(test_abs_indexed);
-        RUN_TEST(test_abs_idir);
-        RUN_TEST(test_zpg_idir);
-        RUN_TEST(test_abs_indexed_idir);
-        RUN_TEST(test_zpg_indexed_idir);
-        RUN_TEST(test_zpg_idir_indexed);
-        RUN_TEST(test_rel);
-        RUN_TEST(test_bitop);
-        RUN_TEST(test_zpg_rel);
-        if (m6502())
-            RUN_TEST(test_illegal_mos6502);
-        if (g65sc02())
-            RUN_TEST(test_illegal_g65sc02);
-        if (r65c02())
-            RUN_TEST(test_illegal_r65c02);
-        if (w65c02s())
-            RUN_TEST(test_illegal_w65c02s);
-    }
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
+    RUN_TEST(test_impl);
+    RUN_TEST(test_accm);
+    RUN_TEST(test_imm);
+    RUN_TEST(test_long_imm);
+    RUN_TEST(test_zpg);
+    RUN_TEST(test_zpg_indexed);
+    if (w65c816())
+        RUN_TEST(test_zpg_long);
+    if (w65c816())
+        RUN_TEST(test_sp_rel);
+    RUN_TEST(test_abs);
+    if (w65c816())
+        RUN_TEST(test_abs_long);
+    RUN_TEST(test_abs_indexed);
+    RUN_TEST(test_abs_idir);
+    RUN_TEST(test_zpg_idir);
+    RUN_TEST(test_abs_indexed_idir);
+    RUN_TEST(test_zpg_indexed_idir);
+    RUN_TEST(test_zpg_idir_indexed);
+    RUN_TEST(test_rel);
+    RUN_TEST(test_bitop);
+    RUN_TEST(test_zpg_rel);
+    if (m6502())
+        RUN_TEST(test_illegal_mos6502);
+    if (g65sc02())
+        RUN_TEST(test_illegal_g65sc02);
+    if (r65c02())
+        RUN_TEST(test_illegal_r65c02);
+    if (w65c02s())
+        RUN_TEST(test_illegal_w65c02s);
 }
 
 // Local Variables:

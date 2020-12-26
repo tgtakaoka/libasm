@@ -1040,41 +1040,34 @@ static void test_error() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "6502",
-            "65SC02",
-            "65C02",
-            "W65C02S",
-            "65816",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        assembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_impl);
-        RUN_TEST(test_accm);
-        RUN_TEST(test_imm);
-        RUN_TEST(test_zpg);
-        RUN_TEST(test_zpg_indexed);
-        RUN_TEST(test_zpg_long);
-        RUN_TEST(test_sp_rel);
-        RUN_TEST(test_abs);
-        RUN_TEST(test_abs_long);
-        RUN_TEST(test_abs_indexed);
-        RUN_TEST(test_abs_idir);
-        RUN_TEST(test_zpg_idir);
-        RUN_TEST(test_abs_indexed_idir);
-        RUN_TEST(test_zpg_indexed_idir);
-        RUN_TEST(test_zpg_idir_indexed);
-        RUN_TEST(test_rel);
-        RUN_TEST(test_bitop);
-        RUN_TEST(test_zpg_rel);
-        RUN_TEST(test_comment);
-        RUN_TEST(test_undefined_symbol);
-        RUN_TEST(test_error);
-    }
+    return assembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    assembler.setCpu(cpu);
+    RUN_TEST(test_impl);
+    RUN_TEST(test_accm);
+    RUN_TEST(test_imm);
+    RUN_TEST(test_zpg);
+    RUN_TEST(test_zpg_indexed);
+    RUN_TEST(test_zpg_long);
+    RUN_TEST(test_sp_rel);
+    RUN_TEST(test_abs);
+    RUN_TEST(test_abs_long);
+    RUN_TEST(test_abs_indexed);
+    RUN_TEST(test_abs_idir);
+    RUN_TEST(test_zpg_idir);
+    RUN_TEST(test_abs_indexed_idir);
+    RUN_TEST(test_zpg_indexed_idir);
+    RUN_TEST(test_zpg_idir_indexed);
+    RUN_TEST(test_rel);
+    RUN_TEST(test_bitop);
+    RUN_TEST(test_zpg_rel);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_error);
 }
 
 // Local Variables:

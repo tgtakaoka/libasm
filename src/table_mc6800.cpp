@@ -554,7 +554,7 @@ bool TableMc6800::setCpu(const char *cpu) {
     if (strcasecmp_P(p, TEXT_CPU_6801) == 0)
         return setCpu(MC6801);
     if (strcasecmp_P(p, TEXT_CPU_6811) == 0 ||
-            strcasecmp_P(p, TEXT_CPU_HC11) == 0)
+            strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
         return setCpu(MC68HC11);
     p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_HD, 2) == 0)

@@ -481,36 +481,31 @@ static void test_mid_tms99105() {
 }
 // clang-format on
 
-void run_tests() {
+const char *run_cpu_test() {
     RUN_TEST(test_cpu);
-    static const char *cpus[] = {
-            "TMS9900",
-            "TMS9995",
-            "TMS99105",
-    };
-    for (size_t i = 0; i < sizeof(cpus) / sizeof(cpus[0]); i++) {
-        const char *cpu = cpus[i];
-        disassembler.setCpu(cpu);
-        printf("  TEST CPU %s\n", cpu);
-        RUN_TEST(test_inh);
-        RUN_TEST(test_imm);
-        RUN_TEST(test_reg);
-        RUN_TEST(test_reg_imm);
-        RUN_TEST(test_cnt_reg);
-        RUN_TEST(test_src);
-        RUN_TEST(test_reg_src);
-        RUN_TEST(test_cnt_src);
-        RUN_TEST(test_xop_src);
-        RUN_TEST(test_dst_src);
-        RUN_TEST(test_rel);
-        RUN_TEST(test_cru_off);
-        if (is9900())
-            RUN_TEST(test_mid_tms9900);
-        if (is9995())
-            RUN_TEST(test_mid_tms9995);
-        if (is99105())
-            RUN_TEST(test_mid_tms99105);
-    }
+    return disassembler.listCpu();
+}
+
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
+    RUN_TEST(test_inh);
+    RUN_TEST(test_imm);
+    RUN_TEST(test_reg);
+    RUN_TEST(test_reg_imm);
+    RUN_TEST(test_cnt_reg);
+    RUN_TEST(test_src);
+    RUN_TEST(test_reg_src);
+    RUN_TEST(test_cnt_src);
+    RUN_TEST(test_xop_src);
+    RUN_TEST(test_dst_src);
+    RUN_TEST(test_rel);
+    RUN_TEST(test_cru_off);
+    if (is9900())
+        RUN_TEST(test_mid_tms9900);
+    if (is9995())
+        RUN_TEST(test_mid_tms9995);
+    if (is99105())
+        RUN_TEST(test_mid_tms99105);
 }
 
 // Local Variables:

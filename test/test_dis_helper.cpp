@@ -19,6 +19,8 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string>
+#include <vector>
 
 namespace libasm {
 namespace test {
@@ -64,9 +66,27 @@ void run_test(void (*test)(), const char *name, void (*set_up)(),
 
 using namespace libasm::test;
 
+std::vector<std::string> cpu_list(const char *cpu_list) {
+    std::vector<std::string> list;
+    const char *s = cpu_list;
+    while (true) {
+        const char *e = strchr(s, ',');
+        if (e == nullptr) {
+            list.emplace_back(s);
+            return list;
+        }
+        list.emplace_back(s, e - s);
+        for (s = e + 1; *s == ' '; s++)
+            ;
+    }
+}
+
 int main(int argc, char **argv) {
     test_failed = false;
-    run_tests();
+    for (const auto &cpu : cpu_list(run_cpu_test())) {
+        printf("  TEST %s disassembler\n", cpu.c_str());
+        run_tests(cpu.c_str());
+    }
     return test_failed ? 2 : 0;
 }
 
