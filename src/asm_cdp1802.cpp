@@ -64,7 +64,7 @@ Error AsmCdp1802::encode(Insn &_insn) {
         return setError(TableCdp1802.getError());
 
     uint16_t val16 = op.val16;
-    switch (insn.addrMode()) {
+    switch (insn.mode1()) {
     case REG1:
         if (op.getError())
             val16 = 7;  // default work register.

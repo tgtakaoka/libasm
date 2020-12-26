@@ -24,6 +24,10 @@ using namespace libasm::test;
 DisCdp1802 dis1802;
 Disassembler &disassembler(dis1802);
 
+static bool cdp1806() {
+    return strcmp(disassembler.getCpu(), "1806") == 0;
+}
+
 static void set_up() {
     disassembler.reset();
 }
@@ -37,43 +41,41 @@ static void test_cpu() {
     EQUALS("cpu 1802", true,   disassembler.setCpu("1802"));
     EQUALS("cpu 1802", "1802", disassembler.getCpu());
 
+    EQUALS("cpu 1806", true,   disassembler.setCpu("1806"));
+    EQUALS("cpu 1806", "1806", disassembler.getCpu());
+
     EQUALS("cpu CDP1802", true,   disassembler.setCpu("CDP1802"));
     EQUALS("cpu CDP1802", "1802", disassembler.getCpu());
+
+    EQUALS("cpu CDP1806", true,   disassembler.setCpu("CDP1806"));
+    EQUALS("cpu CDP1806", "1806", disassembler.getCpu());
 }
 
-static void test_inherent() {
-    TEST(IDL,  "", 0x00);
-    TEST(NOP,  "", 0xC4);
-    TEST(IRX,  "", 0x60);
-    ILLEGAL(0x68);
-    TEST(SAV,  "", 0x78);
-    TEST(MARK, "", 0x79);
-    TEST(REQ,  "", 0x7A);
-    TEST(SEQ,  "", 0x7B);
-    TEST(SHRC, "", 0x76);
-    TEST(SHLC, "", 0x7E);
-    TEST(SHR,  "", 0xF6);
-    TEST(SHL,  "", 0xFE);
-}
+static void test_mem_ref() {
+    // Load Immediate
+    TEST(LDI, "18",   0xF8, 0x12);
 
-static void test_indexed() {
-    TEST(RET,  "", 0x70);
-    TEST(DIS,  "", 0x71);
-    TEST(LDXA, "", 0x72);
-    TEST(STXD, "", 0x73);
-    TEST(ADC,  "", 0x74);
-    TEST(SDB,  "", 0x75);
-    TEST(SMB,  "", 0x77);
-    TEST(LDX,  "", 0xF0);
-    TEST(OR,   "", 0xF1);
-    TEST(AND,  "", 0xF2);
-    TEST(XOR,  "", 0xF3);
-    TEST(ADD,  "", 0xF4);
-    TEST(SD,   "", 0xF5);
-    TEST(SM,   "", 0xF7);
-}
+    if (cdp1806()) {
+        // Register Load Immediate
+        TEST(RLDI, "0,1234H",  0x68, 0xC0, 0x12, 0x34);
+        TEST(RLDI, "1,1234H",  0x68, 0xC1, 0x12, 0x34);
+        TEST(RLDI, "2,1234H",  0x68, 0xC2, 0x12, 0x34);
+        TEST(RLDI, "3,1234H",  0x68, 0xC3, 0x12, 0x34);
+        TEST(RLDI, "4,1234H",  0x68, 0xC4, 0x12, 0x34);
+        TEST(RLDI, "5,1234H",  0x68, 0xC5, 0x12, 0x34);
+        TEST(RLDI, "6,1234H",  0x68, 0xC6, 0x12, 0x34);
+        TEST(RLDI, "7,1234H",  0x68, 0xC7, 0x12, 0x34);
+        TEST(RLDI, "8,1234H",  0x68, 0xC8, 0x12, 0x34);
+        TEST(RLDI, "9,1234H",  0x68, 0xC9, 0x12, 0x34);
+        TEST(RLDI, "10,1234H", 0x68, 0xCA, 0x12, 0x34);
+        TEST(RLDI, "11,1234H", 0x68, 0xCB, 0x12, 0x34);
+        TEST(RLDI, "12,1234H", 0x68, 0xCC, 0x12, 0x34);
+        TEST(RLDI, "13,1234H", 0x68, 0xCD, 0x12, 0x34);
+        TEST(RLDI, "14,1234H", 0x68, 0xCE, 0x12, 0x34);
+        TEST(RLDI, "15,1234H", 0x68, 0xCF, 0x12, 0x34);
+    }
 
-static void test_register() {
+    // Load via N
     TEST(LDN, "1",  0x01);
     TEST(LDN, "2",  0x02);
     TEST(LDN, "3",  0x03);
@@ -90,40 +92,7 @@ static void test_register() {
     TEST(LDN, "14", 0x0E);
     TEST(LDN, "15", 0x0F);
 
-    TEST(INC, "0",  0x10);
-    TEST(INC, "1",  0x11);
-    TEST(INC, "2",  0x12);
-    TEST(INC, "3",  0x13);
-    TEST(INC, "4",  0x14);
-    TEST(INC, "5",  0x15);
-    TEST(INC, "6",  0x16);
-    TEST(INC, "7",  0x17);
-    TEST(INC, "8",  0x18);
-    TEST(INC, "9",  0x19);
-    TEST(INC, "10", 0x1A);
-    TEST(INC, "11", 0x1B);
-    TEST(INC, "12", 0x1C);
-    TEST(INC, "13", 0x1D);
-    TEST(INC, "14", 0x1E);
-    TEST(INC, "15", 0x1F);
-
-    TEST(DEC, "0",  0x20);
-    TEST(DEC, "1",  0x21);
-    TEST(DEC, "2",  0x22);
-    TEST(DEC, "3",  0x23);
-    TEST(DEC, "4",  0x24);
-    TEST(DEC, "5",  0x25);
-    TEST(DEC, "6",  0x26);
-    TEST(DEC, "7",  0x27);
-    TEST(DEC, "8",  0x28);
-    TEST(DEC, "9",  0x29);
-    TEST(DEC, "10", 0x2A);
-    TEST(DEC, "11", 0x2B);
-    TEST(DEC, "12", 0x2C);
-    TEST(DEC, "13", 0x2D);
-    TEST(DEC, "14", 0x2E);
-    TEST(DEC, "15", 0x2F);
-
+    // Load Advance
     TEST(LDA, "0",  0x40);
     TEST(LDA, "1",  0x41);
     TEST(LDA, "2",  0x42);
@@ -141,6 +110,33 @@ static void test_register() {
     TEST(LDA, "14", 0x4E);
     TEST(LDA, "15", 0x4F);
 
+    // Load via X
+    TEST(LDX,  "", 0xF0);
+
+    // Load via X and Advance
+    TEST(LDXA, "", 0x72);
+
+    if (cdp1806()) {
+        // Register Load via X and Advance
+        TEST(RLXA, "0",  0x68, 0x60);
+        TEST(RLXA, "1",  0x68, 0x61);
+        TEST(RLXA, "2",  0x68, 0x62);
+        TEST(RLXA, "3",  0x68, 0x63);
+        TEST(RLXA, "4",  0x68, 0x64);
+        TEST(RLXA, "5",  0x68, 0x65);
+        TEST(RLXA, "6",  0x68, 0x66);
+        TEST(RLXA, "7",  0x68, 0x67);
+        TEST(RLXA, "8",  0x68, 0x68);
+        TEST(RLXA, "9",  0x68, 0x69);
+        TEST(RLXA, "10", 0x68, 0x6A);
+        TEST(RLXA, "11", 0x68, 0x6B);
+        TEST(RLXA, "12", 0x68, 0x6C);
+        TEST(RLXA, "13", 0x68, 0x6D);
+        TEST(RLXA, "14", 0x68, 0x6E);
+        TEST(RLXA, "15", 0x68, 0x6F);
+    }
+
+    // Store via N
     TEST(STR, "0",  0x50);
     TEST(STR, "1",  0x51);
     TEST(STR, "2",  0x52);
@@ -158,6 +154,96 @@ static void test_register() {
     TEST(STR, "14", 0x5E);
     TEST(STR, "15", 0x5F);
 
+    // Store via X and Decrement
+    TEST(STXD, "", 0x73);
+
+    if (cdp1806()) {
+        // Register Store via X and Decrement
+        TEST(RSXD, "0",  0x68, 0xA0);
+        TEST(RSXD, "1",  0x68, 0xA1);
+        TEST(RSXD, "2",  0x68, 0xA2);
+        TEST(RSXD, "3",  0x68, 0xA3);
+        TEST(RSXD, "4",  0x68, 0xA4);
+        TEST(RSXD, "5",  0x68, 0xA5);
+        TEST(RSXD, "6",  0x68, 0xA6);
+        TEST(RSXD, "7",  0x68, 0xA7);
+        TEST(RSXD, "8",  0x68, 0xA8);
+        TEST(RSXD, "9",  0x68, 0xA9);
+        TEST(RSXD, "10", 0x68, 0xAA);
+        TEST(RSXD, "11", 0x68, 0xAB);
+        TEST(RSXD, "12", 0x68, 0xAC);
+        TEST(RSXD, "13", 0x68, 0xAD);
+        TEST(RSXD, "14", 0x68, 0xAE);
+        TEST(RSXD, "15", 0x68, 0xAF);
+    }
+
+    symtab.intern(3, "PC");
+    symtab.intern(4, "CALL");
+    TEST(LDN, "PC",   0x03);
+    TEST(SEP, "CALL", 0xD4);
+}
+
+static void test_reg_op() {
+    // Increment reg N
+    TEST(INC, "0",  0x10);
+    TEST(INC, "1",  0x11);
+    TEST(INC, "2",  0x12);
+    TEST(INC, "3",  0x13);
+    TEST(INC, "4",  0x14);
+    TEST(INC, "5",  0x15);
+    TEST(INC, "6",  0x16);
+    TEST(INC, "7",  0x17);
+    TEST(INC, "8",  0x18);
+    TEST(INC, "9",  0x19);
+    TEST(INC, "10", 0x1A);
+    TEST(INC, "11", 0x1B);
+    TEST(INC, "12", 0x1C);
+    TEST(INC, "13", 0x1D);
+    TEST(INC, "14", 0x1E);
+    TEST(INC, "15", 0x1F);
+
+    // Decrement reg N
+    TEST(DEC, "0",  0x20);
+    TEST(DEC, "1",  0x21);
+    TEST(DEC, "2",  0x22);
+    TEST(DEC, "3",  0x23);
+    TEST(DEC, "4",  0x24);
+    TEST(DEC, "5",  0x25);
+    TEST(DEC, "6",  0x26);
+    TEST(DEC, "7",  0x27);
+    TEST(DEC, "8",  0x28);
+    TEST(DEC, "9",  0x29);
+    TEST(DEC, "10", 0x2A);
+    TEST(DEC, "11", 0x2B);
+    TEST(DEC, "12", 0x2C);
+    TEST(DEC, "13", 0x2D);
+    TEST(DEC, "14", 0x2E);
+    TEST(DEC, "15", 0x2F);
+
+    if (cdp1806()) {
+        // Decrement reg N and long Branch if Not equal Zero
+        TEST(DBNZ, "0,1234H",  0x68, 0x20, 0x12, 0x34);
+        TEST(DBNZ, "1,1234H",  0x68, 0x21, 0x12, 0x34);
+        TEST(DBNZ, "2,1234H",  0x68, 0x22, 0x12, 0x34);
+        TEST(DBNZ, "3,1234H",  0x68, 0x23, 0x12, 0x34);
+        TEST(DBNZ, "4,1234H",  0x68, 0x24, 0x12, 0x34);
+        TEST(DBNZ, "5,1234H",  0x68, 0x25, 0x12, 0x34);
+        TEST(DBNZ, "6,1234H",  0x68, 0x26, 0x12, 0x34);
+        TEST(DBNZ, "7,1234H",  0x68, 0x27, 0x12, 0x34);
+        TEST(DBNZ, "8,1234H",  0x68, 0x28, 0x12, 0x34);
+        TEST(DBNZ, "9,1234H",  0x68, 0x29, 0x12, 0x34);
+        TEST(DBNZ, "10,1234H", 0x68, 0x2A, 0x12, 0x34);
+        TEST(DBNZ, "11,1234H", 0x68, 0x2B, 0x12, 0x34);
+        TEST(DBNZ, "12,1234H", 0x68, 0x2C, 0x12, 0x34);
+        TEST(DBNZ, "13,1234H", 0x68, 0x2D, 0x12, 0x34);
+        TEST(DBNZ, "14,1234H", 0x68, 0x2E, 0x12, 0x34);
+        TEST(DBNZ, "15,1234H", 0x68, 0x2F, 0x12, 0x34);
+    }
+
+    // Increment reg X
+    TEST(IRX,  "", 0x60);
+
+    // Get Low reg N
     TEST(GLO, "0",  0x80);
     TEST(GLO, "1",  0x81);
     TEST(GLO, "2",  0x82);
@@ -175,23 +261,7 @@ static void test_register() {
     TEST(GLO, "14", 0x8E);
     TEST(GLO, "15", 0x8F);
 
-    TEST(GHI, "0",  0x90);
-    TEST(GHI, "1",  0x91);
-    TEST(GHI, "2",  0x92);
-    TEST(GHI, "3",  0x93);
-    TEST(GHI, "4",  0x94);
-    TEST(GHI, "5",  0x95);
-    TEST(GHI, "6",  0x96);
-    TEST(GHI, "7",  0x97);
-    TEST(GHI, "8",  0x98);
-    TEST(GHI, "9",  0x99);
-    TEST(GHI, "10", 0x9A);
-    TEST(GHI, "11", 0x9B);
-    TEST(GHI, "12", 0x9C);
-    TEST(GHI, "13", 0x9D);
-    TEST(GHI, "14", 0x9E);
-    TEST(GHI, "15", 0x9F);
-
+    // Put Low reg N
     TEST(PLO, "0",  0xA0);
     TEST(PLO, "1",  0xA1);
     TEST(PLO, "2",  0xA2);
@@ -209,6 +279,25 @@ static void test_register() {
     TEST(PLO, "14", 0xAE);
     TEST(PLO, "15", 0xAF);
 
+    // Get High reg N
+    TEST(GHI, "0",  0x90);
+    TEST(GHI, "1",  0x91);
+    TEST(GHI, "2",  0x92);
+    TEST(GHI, "3",  0x93);
+    TEST(GHI, "4",  0x94);
+    TEST(GHI, "5",  0x95);
+    TEST(GHI, "6",  0x96);
+    TEST(GHI, "7",  0x97);
+    TEST(GHI, "8",  0x98);
+    TEST(GHI, "9",  0x99);
+    TEST(GHI, "10", 0x9A);
+    TEST(GHI, "11", 0x9B);
+    TEST(GHI, "12", 0x9C);
+    TEST(GHI, "13", 0x9D);
+    TEST(GHI, "14", 0x9E);
+    TEST(GHI, "15", 0x9F);
+
+    // Put High reg N
     TEST(PHI, "0",  0xB0);
     TEST(PHI, "1",  0xB1);
     TEST(PHI, "2",  0xB2);
@@ -225,6 +314,128 @@ static void test_register() {
     TEST(PHI, "13", 0xBD);
     TEST(PHI, "14", 0xBE);
     TEST(PHI, "15", 0xBF);
+
+    if (cdp1806()) {
+        // Register N to register X copy
+        TEST(RNX, "0",  0x68, 0xB0);
+        TEST(RNX, "1",  0x68, 0xB1);
+        TEST(RNX, "2",  0x68, 0xB2);
+        TEST(RNX, "3",  0x68, 0xB3);
+        TEST(RNX, "4",  0x68, 0xB4);
+        TEST(RNX, "5",  0x68, 0xB5);
+        TEST(RNX, "6",  0x68, 0xB6);
+        TEST(RNX, "7",  0x68, 0xB7);
+        TEST(RNX, "8",  0x68, 0xB8);
+        TEST(RNX, "9",  0x68, 0xB9);
+        TEST(RNX, "10", 0x68, 0xBA);
+        TEST(RNX, "11", 0x68, 0xBB);
+        TEST(RNX, "12", 0x68, 0xBC);
+        TEST(RNX, "13", 0x68, 0xBD);
+        TEST(RNX, "14", 0x68, 0xBE);
+        TEST(RNX, "15", 0x68, 0xBF);
+    }
+}
+
+static void test_logic_op() {
+    TEST(OR,   "",    0xF1);
+    TEST(ORI,  "34H", 0xF9, 0x34);
+    TEST(XOR,  "",    0xF3);
+    TEST(XRI,  "67H", 0xFB, 0x67);
+    TEST(AND,  "",    0xF2);
+    TEST(ANI,  "45H", 0xFA, 0x45);
+    TEST(SHR,  "",    0xF6);
+    TEST(SHRC, "",    0x76);
+    TEST(SHL,  "",    0xFE);
+    TEST(SHLC, "",    0x7E);
+}
+
+static void test_arith_op() {
+    TEST(ADD,  "",     0xF4);
+    TEST(ADI,  "89H",  0xFC, 0x89);
+    TEST(ADC,  "",     0x74);
+    TEST(ADCI, "0ABH", 0x7C, 0xAB);
+    TEST(SD,   "",     0xF5);
+    TEST(SDI,  "0ABH", 0xFD, 0xAB);
+    TEST(SDB,  "",     0x75);
+    TEST(SDBI, "0CDH", 0x7D, 0xCD);
+    TEST(SM,   "",     0xF7);
+    TEST(SMI,  "0CDH", 0xFF, 0xCD);
+    TEST(SMB,  "",     0x77);
+    TEST(SMBI, "0EFH", 0x7F, 0xEF);
+
+    if (cdp1806()) {
+        TEST(DADD, "",    0x68, 0xF4);
+        TEST(DADI, "89H", 0x68, 0xFC, 0x89);
+        TEST(DADC, "",    0x68, 0x74);
+        TEST(DACI, "89H", 0x68, 0x7C, 0x89);
+        TEST(DSM,  "",    0x68, 0xF7);
+        TEST(DSMI, "89H", 0x68, 0xFF, 0x89);
+        TEST(DSMB, "",    0x68, 0x77);
+        TEST(DSBI, "89H", 0x68, 0x7F, 0x89);
+    }
+
+    symtab.intern(-1,  "neg1");
+    symtab.intern(254, "pos254");
+    TEST(ADI, "neg1",   0xFC, 0xFF);
+    TEST(ADI, "pos254", 0xFC, 0xFE);
+}
+
+static void test_branch() {
+    ATEST(0x1000, BR,  "1031H", 0x30, 0x31);
+    ATEST(0x1000, BZ,  "1033H", 0x32, 0x33);
+    ATEST(0x1000, BNZ, "103BH", 0x3A, 0x3B);
+    ATEST(0x1000, BDF, "1034H", 0x33, 0x34);
+    ATEST(0x1000, BNF, "103CH", 0x3B, 0x3C);
+    ATEST(0x1000, BQ,  "1032H", 0x31, 0x32);
+    ATEST(0x1000, BNQ, "103AH", 0x39, 0x3A);
+    ATEST(0x1000, B1,  "1035H", 0x34, 0x35);
+    ATEST(0x1000, BN1, "103DH", 0x3C, 0x3D);
+    ATEST(0x1000, B2,  "1036H", 0x35, 0x36);
+    ATEST(0x1000, BN2, "103EH", 0x3D, 0x3E);
+    ATEST(0x1000, B3,  "1037H", 0x36, 0x37);
+    ATEST(0x1000, BN3, "103FH", 0x3E, 0x3F);
+    ATEST(0x1000, B4,  "1038H", 0x37, 0x38);
+    ATEST(0x1000, BN4, "1040H", 0x3F, 0x40);
+    if (cdp1806()) {
+        ATEST(0x1000, BCI, "1041H", 0x68, 0x3E, 0x41);
+        ATEST(0x1000, BXI, "1042H", 0x68, 0x3F, 0x42);
+    }
+
+    ATEST(0x10FD, BR,  "1031H", 0x30, 0x31);
+    ATEST(0x10FE, BR,  "1131H", 0x30, 0x31);
+    ATEST(0x10FF, BR,  "1131H", 0x30, 0x31);
+
+    TEST(LBR,  "1234H",  0xC0, 0x12, 0x34);
+    TEST(LBZ,  "9ABCH",  0xC2, 0x9A, 0xBC);
+    TEST(LBNZ, "5678H",  0xCA, 0x56, 0x78);
+    TEST(LBDF, "0DEF0H", 0xC3, 0xDE, 0xF0);
+    TEST(LBNF, "9ABCH",  0xCB, 0x9A, 0xBC);
+    TEST(LBQ,  "5678H",  0xC1, 0x56, 0x78);
+    TEST(LBNQ, "1234H",  0xC9, 0x12, 0x34);
+
+    TEST(SKP,  "", 0x38);
+    TEST(LSKP, "", 0xC8);
+    TEST(LSZ,  "", 0xCE);
+    TEST(LSNZ, "", 0xC6);
+    TEST(LSDF, "", 0xCF);
+    TEST(LSNF, "", 0xC7);
+    TEST(LSQ,  "", 0xCD);
+    TEST(LSNQ, "", 0xC5);
+    TEST(LSIE, "", 0xCC);
+
+    symtab.intern(0x1031, "sym1031");
+    symtab.intern(0x1131, "sym1131");
+
+    ATEST(0x10FD, BR, "sym1031", 0x30, 0x31);
+    ATEST(0x10FE, BR, "sym1131", 0x30, 0x31);
+    ATEST(0x10FF, BR, "sym1131", 0x30, 0x31);
+
+    TEST(LBNF, "sym1131", 0xCB, 0x11, 0x31);
+}
+
+static void test_control() {
+    TEST(IDL,  "", 0x00);
+    TEST(NOP,  "", 0xC4);
 
     TEST(SEP, "0",  0xD0);
     TEST(SEP, "1",  0xD1);
@@ -260,28 +471,36 @@ static void test_register() {
     TEST(SEX, "14", 0xEE);
     TEST(SEX, "15", 0xEF);
 
-    symtab.intern(3, "PC");
-    symtab.intern(4, "CALL");
-    TEST(LDN, "PC",   0x03);
-    TEST(SEP, "CALL", 0xD4);
+    TEST(SEQ,  "", 0x7B);
+    TEST(REQ,  "", 0x7A);
+    TEST(MARK, "", 0x79);
 }
 
-static void test_immediate() {
-    TEST(ADCI, "0ABH", 0x7C, 0xAB);
-    TEST(SDBI, "0CDH", 0x7D, 0xCD);
-    TEST(SMBI, "0EFH", 0x7F, 0xEF);
-    TEST(LDI,  "18",   0xF8, 0x12);
-    TEST(ORI,  "34H",  0xF9, 0x34);
-    TEST(ANI,  "45H",  0xFA, 0x45);
-    TEST(XRI,  "67H",  0xFB, 0x67);
-    TEST(ADI,  "89H",  0xFC, 0x89);
-    TEST(SDI,  "0ABH", 0xFD, 0xAB);
-    TEST(SMI,  "0CDH", 0xFF, 0xCD);
+static void test_timer() {
+    TEST(LDC,  "", 0x68, 0x06);
+    TEST(GEC,  "", 0x68, 0x08);
+    TEST(STPC, "", 0x68, 0x00);
+    TEST(DTC,  "", 0x68, 0x01);
+    TEST(STM,  "", 0x68, 0x07);
+    TEST(SCM1, "", 0x68, 0x05);
+    TEST(SCM2, "", 0x68, 0x03);
+    TEST(SPM1, "", 0x68, 0x04);
+    TEST(SPM2, "", 0x68, 0x02);
+    TEST(ETQ,  "", 0x68, 0x09);
+}
 
-    symtab.intern(-1,  "neg1");
-    symtab.intern(254, "pos254");
-    TEST(ADI, "neg1",   0xFC, 0xFF);
-    TEST(ADI, "pos254", 0xFC, 0xFE);
+static void test_intr() {
+    TEST(RET,  "", 0x70);
+    TEST(DIS,  "", 0x71);
+    TEST(SAV,  "", 0x78);
+
+    if (cdp1806()) {
+        TEST(XIE,  "", 0x68, 0x0A);
+        TEST(XID,  "", 0x68, 0x0B);
+        TEST(CIE,  "", 0x68, 0x0C);
+        TEST(CID,  "", 0x68, 0x0D);
+        TEST(DSAV, "", 0x68, 0x76);
+    }
 }
 
 static void test_io() {
@@ -292,6 +511,7 @@ static void test_io() {
     TEST(OUT, "5", 0x65);
     TEST(OUT, "6", 0x66);
     TEST(OUT, "7", 0x67);
+
     TEST(INP, "1", 0x69);
     TEST(INP, "2", 0x6A);
     TEST(INP, "3", 0x6B);
@@ -304,54 +524,71 @@ static void test_io() {
     TEST(INP, "STDIN", 0x69);
 }
 
-static void test_branch() {
-    ATEST(0x1000, BR,  "1031H", 0x30, 0x31);
-    ATEST(0x1000, BQ,  "1032H", 0x31, 0x32);
-    ATEST(0x1000, BZ,  "1033H", 0x32, 0x33);
-    ATEST(0x1000, BDF, "1034H", 0x33, 0x34);
-    ATEST(0x1000, B1,  "1035H", 0x34, 0x35);
-    ATEST(0x1000, B2,  "1036H", 0x35, 0x36);
-    ATEST(0x1000, B3,  "1037H", 0x36, 0x37);
-    ATEST(0x1000, B4,  "1038H", 0x37, 0x38);
-    ATEST(0x1000, BNQ, "103AH", 0x39, 0x3A);
-    ATEST(0x1000, BNZ, "103BH", 0x3A, 0x3B);
-    ATEST(0x1000, BNF, "103CH", 0x3B, 0x3C);
-    ATEST(0x1000, BN1, "103DH", 0x3C, 0x3D);
-    ATEST(0x1000, BN2, "103EH", 0x3D, 0x3E);
-    ATEST(0x1000, BN3, "103FH", 0x3E, 0x3F);
-    ATEST(0x1000, BN4, "1040H", 0x3F, 0x40);
+static void test_call() {
+    TEST(SCAL, "0,1234H",  0x68, 0x80, 0x12, 0x34);
+    TEST(SCAL, "1,1234H",  0x68, 0x81, 0x12, 0x34);
+    TEST(SCAL, "2,1234H",  0x68, 0x82, 0x12, 0x34);
+    TEST(SCAL, "3,1234H",  0x68, 0x83, 0x12, 0x34);
+    TEST(SCAL, "4,1234H",  0x68, 0x84, 0x12, 0x34);
+    TEST(SCAL, "5,1234H",  0x68, 0x85, 0x12, 0x34);
+    TEST(SCAL, "6,1234H",  0x68, 0x86, 0x12, 0x34);
+    TEST(SCAL, "7,1234H",  0x68, 0x87, 0x12, 0x34);
+    TEST(SCAL, "8,1234H",  0x68, 0x88, 0x12, 0x34);
+    TEST(SCAL, "9,1234H",  0x68, 0x89, 0x12, 0x34);
+    TEST(SCAL, "10,1234H", 0x68, 0x8A, 0x12, 0x34);
+    TEST(SCAL, "11,1234H", 0x68, 0x8B, 0x12, 0x34);
+    TEST(SCAL, "12,1234H", 0x68, 0x8C, 0x12, 0x34);
+    TEST(SCAL, "13,1234H", 0x68, 0x8D, 0x12, 0x34);
+    TEST(SCAL, "14,1234H", 0x68, 0x8E, 0x12, 0x34);
+    TEST(SCAL, "15,1234H", 0x68, 0x8F, 0x12, 0x34);
 
-    ATEST(0x10FD, BR,  "1031H", 0x30, 0x31);
-    ATEST(0x10FE, BR,  "1131H", 0x30, 0x31);
-    ATEST(0x10FF, BR,  "1131H", 0x30, 0x31);
-
-    TEST(LBR,  "1234H",  0xC0, 0x12, 0x34);
-    TEST(LBQ,  "5678H",  0xC1, 0x56, 0x78);
-    TEST(LBZ,  "9ABCH",  0xC2, 0x9A, 0xBC);
-    TEST(LBDF, "0DEF0H", 0xC3, 0xDE, 0xF0);
-    TEST(LBNQ, "1234H",  0xC9, 0x12, 0x34);
-    TEST(LBNZ, "5678H",  0xCA, 0x56, 0x78);
-    TEST(LBNF, "9ABCH",  0xCB, 0x9A, 0xBC);
-
-    symtab.intern(0x1031, "sym1031");
-    symtab.intern(0x1131, "sym1131");
-
-    ATEST(0x10FD, BR, "sym1031", 0x30, 0x31);
-    ATEST(0x10FE, BR, "sym1131", 0x30, 0x31);
-    ATEST(0x10FF, BR, "sym1131", 0x30, 0x31);
-
-    TEST(LBNF, "sym1131", 0xCB, 0x11, 0x31);
-
-    TEST(SKP,  "", 0x38);
-    TEST(LSNQ, "", 0xC5);
-    TEST(LSNZ, "", 0xC6);
-    TEST(LSNF, "", 0xC7);
-    TEST(LSKP, "", 0xC8);
-    TEST(LSIE, "", 0xCC);
-    TEST(LSQ,  "", 0xCD);
-    TEST(LSZ,  "", 0xCE);
-    TEST(LSDF, "", 0xCF);
+    TEST(SRET, "0",  0x68, 0x90);
+    TEST(SRET, "1",  0x68, 0x91);
+    TEST(SRET, "2",  0x68, 0x92);
+    TEST(SRET, "3",  0x68, 0x93);
+    TEST(SRET, "4",  0x68, 0x94);
+    TEST(SRET, "5",  0x68, 0x95);
+    TEST(SRET, "6",  0x68, 0x96);
+    TEST(SRET, "7",  0x68, 0x97);
+    TEST(SRET, "8",  0x68, 0x98);
+    TEST(SRET, "9",  0x68, 0x99);
+    TEST(SRET, "10", 0x68, 0x9A);
+    TEST(SRET, "11", 0x68, 0x9B);
+    TEST(SRET, "12", 0x68, 0x9C);
+    TEST(SRET, "13", 0x68, 0x9D);
+    TEST(SRET, "14", 0x68, 0x9E);
+    TEST(SRET, "15", 0x68, 0x9F);
 }
+
+static void test_illegal_cdp1802() {
+    ILLEGAL(0x68);
+}
+
+static void test_illegal_cdp1806() {
+    static const Config::opcode_t illegals[] = {
+        0x0E, 0x0F,
+        0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+        0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
+        0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
+        0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D,
+        0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
+        0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F,
+        0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57,
+        0x58, 0x59, 0x5A, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F,
+        0x70, 0x71, 0x72, 0x73, 0x75,
+        0x78, 0x79, 0x7A, 0x7B, 0x7D, 0x7E,
+        0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
+        0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
+        0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7,
+        0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
+        0xF0, 0xF1, 0xF2, 0xF3, 0xF5, 0xF6,
+        0xF8, 0xF9, 0xFA, 0xFB, 0xFD, 0xFE,
+    };
+
+    for (size_t idx = 0; idx < sizeof(illegals); idx++)
+        ILLEGAL(0x68, illegals[idx]);
+}
+
 // clang-format on
 
 const char *run_cpu_test() {
@@ -361,12 +598,21 @@ const char *run_cpu_test() {
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
-    RUN_TEST(test_inherent);
-    RUN_TEST(test_indexed);
-    RUN_TEST(test_register);
-    RUN_TEST(test_immediate);
-    RUN_TEST(test_io);
+    RUN_TEST(test_mem_ref);
+    RUN_TEST(test_reg_op);
+    RUN_TEST(test_logic_op);
+    RUN_TEST(test_arith_op);
     RUN_TEST(test_branch);
+    RUN_TEST(test_control);
+    RUN_TEST(test_intr);
+    RUN_TEST(test_io);
+    if (cdp1806()) {
+        RUN_TEST(test_timer);
+        RUN_TEST(test_call);
+        RUN_TEST(test_illegal_cdp1806);
+    } else {
+        RUN_TEST(test_illegal_cdp1802);
+    }
 }
 
 // Local Variables:

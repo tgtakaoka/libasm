@@ -232,6 +232,17 @@ public:
     }
 
     TestGenerator<Conf> &generate(
+                                  Printer &printer, uint8_t opc1) {
+        FILE *dumpOut = printer.dumpOut();
+        if (dumpOut)
+            fprintf(dumpOut, "@@ generate: %#02xx\n", opc1);
+        ByteGenerator parent(_memory, _memorySize, 0, 1);
+        parent.outByte(opc1, 0);
+        ByteGenerator gen(parent, 1);
+        return generate(printer, gen);
+    }
+
+    TestGenerator<Conf> &generate(
             Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
         FILE *dumpOut = printer.dumpOut();
         if (dumpOut)

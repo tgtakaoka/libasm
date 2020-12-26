@@ -26,12 +26,26 @@ namespace cdp1802 {
 
 class TableCdp1802 : public TableBase {
 public:
+    TableCdp1802();
+
     Error searchName(InsnCdp1802 &insn) const;
     Error searchOpCode(InsnCdp1802 &insn) const;
+    bool isPrefix(Config::opcode_t opCode) const;
 
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
+
+    struct EntryPage;
+
+private:
+    CpuType _cpuType;
+    const EntryPage *_table;
+    const EntryPage *_end;
+
+    bool setCpu(CpuType cpuType);
+    Error searchOpCode(InsnCdp1802 &insn, const EntryPage *pages,
+            const EntryPage *end) const;
 };
 
 extern TableCdp1802 TableCdp1802;

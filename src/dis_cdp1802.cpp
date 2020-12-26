@@ -21,40 +21,62 @@
 namespace libasm {
 namespace cdp1802 {
 
-Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
-    InsnCdp1802 insn(_insn);
-    Config::opcode_t opCode = insn.readByte(memory);
-    if (setError(insn))
-        return getError();
-    insn.setOpCode(opCode);
+static Config::uintptr_t pageAddr(Config::uintptr_t base, uint8_t val) {
+    return (base & ~0xFF) | val;
+}
 
-    if (TableCdp1802.searchOpCode(insn))
-        return setError(TableCdp1802.getError());
-
-    switch (insn.addrMode()) {
+Error DisCdp1802::decodeOperand(
+        DisMemory &memory, InsnCdp1802 &insn, char *out, AddrMode mode) {
+    const Config::opcode_t opCode = insn.opCode();
+    switch (mode) {
     case REG1:
     case REGN:
         outDec(out, opCode & 0xF, 4);
-        break;
+        return OK;
     case IMM8:
         outHex(out, insn.readByte(memory), 8);
         break;
     case IOAD:
         outHex(out, opCode & 7, 3);
-        break;
+        return OK;
     case ADDR:
         outAbsAddr(out, insn.readUint16(memory));
         break;
-    case PAGE: {
-        const uint8_t val = insn.readByte(memory);
-        const Config::uintptr_t addr = ((insn.address() + 2) & ~0xFF) | val;
-        outAbsAddr(out, addr);
+    case PAGE:
+        outAbsAddr(out, pageAddr(insn.address() + 2, insn.readByte(memory)));
         break;
-    }
     default:
-        break;
+        return OK;
     }
     return setError(insn);
+}
+
+Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
+    InsnCdp1802 insn(_insn);
+    Config::opcode_t opCode = insn.readByte(memory);
+    insn.setOpCode(opCode);
+    if (TableCdp1802.isPrefix(opCode)) {
+        const Config::opcode_t prefix = opCode;
+        opCode = insn.readByte(memory);
+        insn.setOpCode(opCode, prefix);
+    }
+    if (setError(insn))
+        return getError();
+
+    if (TableCdp1802.searchOpCode(insn))
+        return setError(TableCdp1802.getError());
+
+    const AddrMode mode1 = insn.mode1();
+    if (mode1 == NONE)
+        return OK;
+    if (decodeOperand(memory, insn, out, mode1))
+        return getError();
+    const AddrMode mode2 = insn.mode2();
+    if (mode2 == NONE)
+        return OK;
+    out += strlen(out);
+    *out++ = ',';
+    return decodeOperand(memory, insn, out, mode2);
 }
 
 }  // namespace cdp1802
