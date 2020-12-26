@@ -183,7 +183,7 @@ static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E(0xF0, TEXT_BEQ, REL),
 };
 
-static constexpr Entry W65SC02_TABLE[] PROGMEM = {
+static constexpr Entry G65SC02_TABLE[] PROGMEM = {
     E(0x5A, TEXT_PHY, IMPL),
     E(0x7A, TEXT_PLY, IMPL),
     E(0xDA, TEXT_PHX, IMPL),
@@ -362,24 +362,24 @@ public:
 static constexpr TableMos6502::EntryPage PAGES_MOS6502[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE)},
 };
-static constexpr TableMos6502::EntryPage PAGES_W65SC02[] PROGMEM = {
+static constexpr TableMos6502::EntryPage PAGES_G65SC02[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(W65SC02_TABLE)},
+        {ARRAY_RANGE(G65SC02_TABLE)},
 };
 static constexpr TableMos6502::EntryPage PAGES_R65C02[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(W65SC02_TABLE)},
+        {ARRAY_RANGE(G65SC02_TABLE)},
         {ARRAY_RANGE(R65C02_TABLE)},
 };
 static constexpr TableMos6502::EntryPage PAGES_W65C02S[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(W65SC02_TABLE)},
+        {ARRAY_RANGE(G65SC02_TABLE)},
         {ARRAY_RANGE(R65C02_TABLE)},
         {ARRAY_RANGE(W65C02S_TABLE)},
 };
 static constexpr TableMos6502::EntryPage PAGES_W65C816[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(W65SC02_TABLE)},
+        {ARRAY_RANGE(G65SC02_TABLE)},
         {ARRAY_RANGE(W65C02S_TABLE)},
         {ARRAY_RANGE(W65C816_TABLE)},
 };
@@ -475,9 +475,9 @@ bool TableMos6502::setCpu(CpuType cpuType) {
         _end = ARRAY_END(PAGES_MOS6502);
         return true;
     }
-    if (cpuType == W65SC02) {
-        _table = ARRAY_BEGIN(PAGES_W65SC02);
-        _end = ARRAY_END(PAGES_W65SC02);
+    if (cpuType == G65SC02) {
+        _table = ARRAY_BEGIN(PAGES_G65SC02);
+        _end = ARRAY_END(PAGES_G65SC02);
         return true;
     }
     if (cpuType == R65C02) {
@@ -509,7 +509,7 @@ const char *TableMos6502::listCpu() const {
 const char *TableMos6502::getCpu() const {
     if (_cpuType == MOS6502)
         return TEXT_CPU_6502;
-    if (_cpuType == W65SC02)
+    if (_cpuType == G65SC02)
         return TEXT_CPU_65SC02;
     if (_cpuType == R65C02)
         return TEXT_CPU_65C02;
@@ -526,10 +526,10 @@ bool TableMos6502::setCpu(const char *cpu) {
     p = cpu + (toupper(*cpu) == 'R' ? 1 : 0);
     if (strcasecmp_P(p, TEXT_CPU_65C02) == 0)
         return setCpu(R65C02);
+    p = cpu + (toupper(*cpu) == 'G' ? 1 : 0);
+    if (strcasecmp_P(p, TEXT_CPU_65SC02) == 0)
+        return setCpu(G65SC02);
     p = cpu + (toupper(*cpu) == 'W' ? 1 : 0);
-    if (strcasecmp_P(p, TEXT_CPU_65SC02) == 0 ||
-            strcasecmp_P(p, TEXT_CPU_65SC02S) == 0)
-        return setCpu(W65SC02);
     if (strcasecmp_P(p, TEXT_CPU_65C02) == 0 ||
             strcasecmp_P(p, TEXT_CPU_65C02S) == 0)
         return setCpu(W65C02S);

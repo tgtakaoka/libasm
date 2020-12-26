@@ -16,7 +16,7 @@
         org     $0100
         include "test_mos6502.inc"
         align   32
-        include "test_w65sc02.inc"
+        include "test_g65sc02.inc"
         end
 
 ;;; Local Variables:

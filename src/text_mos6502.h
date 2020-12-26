@@ -24,12 +24,12 @@ namespace mos6502 {
 
 // clang-format off
 static const char TEXT_CPU_LIST[] PROGMEM =
-    "MOS6502, R65C02, W65SC02, W65C02S, W65C816S";
+    "MOS6502, R65C02, G65SC02, W65C02S, W65C816S";
 static const char TEXT_CPU_6502[]    PROGMEM = "6502";
 static const char TEXT_CPU_65C02[]   PROGMEM = "65C02";
 static const char TEXT_CPU_65C02S[]  PROGMEM = "65C02S";
-static const char TEXT_CPU_65SC02[]  PROGMEM = "65SC02";
-static const char TEXT_CPU_65SC02S[] PROGMEM = "65SC02S";
+static const char TEXT_CPU_G65SC02[] PROGMEM = "G65SC02";
+static constexpr const char *TEXT_CPU_65SC02 = &TEXT_CPU_G65SC02[1];
 static const char TEXT_CPU_W65C02S[] PROGMEM = "W65C02S";
 static const char TEXT_CPU_65816[]   PROGMEM = "65816";
 static const char TEXT_CPU_65C816[]  PROGMEM = "65C816";
@@ -94,7 +94,7 @@ static const char TEXT_TXA[] PROGMEM = "TXA";
 static const char TEXT_TXS[] PROGMEM = "TXS";
 static const char TEXT_TYA[] PROGMEM = "TYA";
 
-// W65SC02 instructions
+// G65SC02 instructions
 
 static const char TEXT_BRA[] PROGMEM = "BRA";
 static const char TEXT_PHX[] PROGMEM = "PHX";

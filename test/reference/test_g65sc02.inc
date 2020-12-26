@@ -12,7 +12,7 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; W65SC02
+;;; G65SC02
 
 ;;; 0X
         tsb     $05

@@ -62,8 +62,8 @@ static void test_cpu() {
     EQUALS("cpu mos6502", true,   assembler.setCpu("mos6502"));
     EQUALS("cpu mos6502", "6502", assembler.getCpu());
 
-    EQUALS("cpu w65sc02", true,     assembler.setCpu("w65sc02"));
-    EQUALS("cpu w65sc02", "65SC02", assembler.getCpu());
+    EQUALS("cpu g65sc02", true,     assembler.setCpu("g65sc02"));
+    EQUALS("cpu g65sc02", "65SC02", assembler.getCpu());
 
     EQUALS("cpu r65c02", true,    assembler.setCpu("r65c02"));
     EQUALS("cpu r65c02", "65C02", assembler.getCpu());
@@ -122,7 +122,7 @@ static void test_impl() {
         ETEST(UNKNOWN_INSTRUCTION, "PHX");
         ETEST(UNKNOWN_INSTRUCTION, "PLX");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("PHY", 0x5A);
         TEST("PLY", 0x7A);
         TEST("PHX", 0xDA);
@@ -181,7 +181,7 @@ static void test_accm() {
         ETEST(OPERAND_NOT_ALLOWED, "INC A");
         ETEST(OPERAND_NOT_ALLOWED, "DEC A");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("INC A", 0x1A);
         TEST("DEC A", 0x3A);
     }
@@ -205,7 +205,7 @@ static void test_imm() {
     if (m6502()) {
         ETEST(OPERAND_NOT_ALLOWED, "BIT #$90");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("BIT #$90", 0x89, 0x90);
     }
     if (w65c816()) {
@@ -255,7 +255,7 @@ static void test_imm() {
     if (m6502()) {
         ETEST(OPERAND_NOT_ALLOWED, "BIT #zero90");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("BIT #zero90", 0x89, 0x90);
     }
     if (w65c816()) {
@@ -297,7 +297,7 @@ static void test_zpg() {
         ETEST(UNKNOWN_INSTRUCTION, "TRB $10");
         ETEST(UNKNOWN_INSTRUCTION, "STZ $10");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("TSB $10", 0x04, 0x10);
         TEST("TRB $10", 0x14, 0x10);
         TEST("STZ $10", 0x64, 0x10);
@@ -315,7 +315,7 @@ static void test_zpg() {
     if (m6502()) {
         ETEST(UNKNOWN_INSTRUCTION, "STZ zero10");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("STZ zero10", 0x64, 0x10);
     }
 }
@@ -348,7 +348,7 @@ static void test_zpg_indexed() {
         ETEST(OPERAND_NOT_ALLOWED, "BIT $10,X");
         ETEST(UNKNOWN_INSTRUCTION, "STZ $10,X");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("BIT $10,X", 0x34, 0x10);
         TEST("STZ $10,X", 0x74, 0x10);
     }
@@ -368,7 +368,7 @@ static void test_zpg_indexed() {
     if (m6502()) {
         ETEST(OPERAND_NOT_ALLOWED, "BIT zero10,X");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("BIT zero10,X", 0x34, 0x10);
     }
 }
@@ -486,7 +486,7 @@ static void test_abs() {
         ETEST(UNKNOWN_INSTRUCTION, "TRB $1234");
         ETEST(UNKNOWN_INSTRUCTION, "STZ $1234");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("TSB $1234", 0x0C, 0x34, 0x12);
         TEST("TRB $1234", 0x1C, 0x34, 0x12);
         TEST("STZ $1234", 0x9C, 0x34, 0x12);
@@ -510,7 +510,7 @@ static void test_abs() {
     if (m6502()) {
         ETEST(UNKNOWN_INSTRUCTION, "TSB abs1234");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("TSB abs1234",  0x0C, 0x34, 0x12);
     }
     if (w65c816()) {
@@ -614,7 +614,7 @@ static void test_abs_indexed() {
         ETEST(OPERAND_NOT_ALLOWED, "BIT $1234,X");
         ETEST(UNKNOWN_INSTRUCTION, "STZ $1234,X");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("BIT $1234,X", 0x3C, 0x34, 0x12);
         TEST("STZ $1234,X", 0x9E, 0x34, 0x12);
     }
@@ -634,7 +634,7 @@ static void test_abs_indexed() {
         ETEST(OPERAND_NOT_ALLOWED, "BIT abs1234,X");
         ETEST(UNKNOWN_INSTRUCTION, "STZ abs1234,X");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("BIT abs1234,X",  0x3C, 0x34, 0x12);
         TEST("STZ abs1234,X",  0x9E, 0x34, 0x12);
     }
@@ -656,13 +656,13 @@ static void test_abs_indexed_idir() {
     if (m6502()) {
         ETEST(OPERAND_NOT_ALLOWED, "JMP ($1234,X)");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("JMP ($1234,X)", 0x7C, 0x34, 0x12);
 
         symtab.intern(0x0010, "abs0010");
         symtab.intern(0x1234, "abs1234");
 
-        // W65SC02
+        // G65SC02
         TEST("JMP (>abs0010,X)", 0x7C, 0x10, 0x00);
         TEST("JMP (abs1234,X)",  0x7C, 0x34, 0x12);
     }
@@ -687,7 +687,7 @@ static void test_zpg_idir() {
         ETEST(OPERAND_NOT_ALLOWED, "CMP ($10)");
         ETEST(OPERAND_NOT_ALLOWED, "SBC ($10)");
     } else {
-        // W65SC02
+        // G65SC02
         TEST("ORA ($10)", 0x12, 0x10);
         TEST("AND ($10)", 0x32, 0x10);
         TEST("EOR ($10)", 0x52, 0x10);
@@ -750,7 +750,7 @@ static void test_rel() {
     if (m6502()) {
         ETEST(UNKNOWN_INSTRUCTION, "BRA $1000");
     } else {
-        // W65SC02
+        // G65SC02
         ATEST(0x1000, "BRA $1002", 0x80, 0x00);
     }
     if (w65c816()) {
@@ -808,7 +808,7 @@ static void test_rel() {
     if (m6502()) {
         ETEST(UNKNOWN_INSTRUCTION, "BRA label1000");
     } else {
-        // W65SC02
+        // G65SC02
         ATEST(0x1000, "BRA label1000", 0x80, 0xFE);
     }
 }
@@ -985,7 +985,7 @@ static void test_undefined_symbol() {
     EATEST(UNDEFINED_SYMBOL, 0x1000, "BCC UNDEF",     0x90, 0x00);
 
     if (!m6502()) {
-        // W65SC02
+        // G65SC02
         ETEST(UNDEFINED_SYMBOL, "BIT #UNDEF",   0x89, 0x00);
         ETEST(UNDEFINED_SYMBOL, "BIT UNDEF,X",  0x34, 0x00);
         ETEST(UNDEFINED_SYMBOL, "BIT <UNDEF,X", 0x34, 0x00);
@@ -1032,7 +1032,7 @@ static void test_error() {
         ETEST(REGISTER_NOT_ALLOWED, "JMP ($1234,Y)");
         ETEST(REGISTER_NOT_ALLOWED, "JSR ($1234,Y)");
     } else {
-        // W65SC02
+        // G65SC02
         ETEST(REGISTER_NOT_ALLOWED, "JSR ($1234,Y)");
         ETEST(OPERAND_NOT_ALLOWED,  "JSR ($1234,X)");
         ETEST(REGISTER_NOT_ALLOWED, "JMP ($1234,Y)");

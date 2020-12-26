@@ -9,8 +9,8 @@ Arduino).
 - Supported target CPUs.
   - MC6800, MC6801, HD6301, MC68HC11
   - MC6809, HD6309
-  - MOS6502, W65SC02, R65C02, W65C02S
-  - W65816 (W65C816S)
+  - MOS6502, G65SC02, R65C02, W65C02S
+  - W65C816S
   - i8051
   - i8080, i8085 (Intel or Zilog syntax)
   - Z80
@@ -26,8 +26,8 @@ Arduino).
   - NS32032
 
 - Supported host environment.
-  - Arduino (avr, megaavr, teensy)
-  - PlatformIO (atmelavr, atmelmegaavr, teensy)
+  - Arduino (avr, megaavr, samd, teensy)
+  - PlatformIO (atmelavr, atmelmegaavr, atmelsam, teensy)
   - Linux, macOS (`C++14`: `g++`, `clang++`)
 
 More information about this library can be found at

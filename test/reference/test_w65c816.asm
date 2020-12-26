@@ -19,7 +19,7 @@
         longi   off
         include "test_mos6502.inc"
         align   32
-        include "test_w65sc02.inc"
+        include "test_g65sc02.inc"
         align   32
         include "test_w65c02s.inc"
         align   32
@@ -30,7 +30,7 @@
         longi   on
         include "test_mos6502.inc"
         align   32
-        include "test_w65sc02.inc"
+        include "test_g65sc02.inc"
         align   32
         include "test_w65c02s.inc"
         align   32
@@ -41,7 +41,7 @@
         longi   off
         include "test_mos6502.inc"
         align   32
-        include "test_w65sc02.inc"
+        include "test_g65sc02.inc"
         align   32
         include "test_w65c02s.inc"
         align   32
@@ -52,7 +52,7 @@
         longi   on
         include "test_mos6502.inc"
         align   32
-        include "test_w65sc02.inc"
+        include "test_g65sc02.inc"
         align   32
         include "test_w65c02s.inc"
         align   32

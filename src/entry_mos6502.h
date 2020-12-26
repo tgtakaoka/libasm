@@ -25,7 +25,7 @@ namespace mos6502 {
 
 enum CpuType : uint8_t {
     MOS6502,
-    W65SC02,
+    G65SC02,
     R65C02,
     W65C02S,
     W65C816,
@@ -48,7 +48,7 @@ enum AddrMode : uint8_t {
     ZPG_IDIR_IDY = 12,  // Indirect Indexed: (zp),Y
     ABS_IDIR = 13,      // Absolute Indirect: (abs)
 
-    // W65SC02
+    // G65SC02
     ABS_IDX_IDIR = 14,  // Indexed Absolute Indirect: (abs,X)
     ZPG_IDIR = 15,      // Zero Page Indirect: (zp)
     ZPG_REL = 16,       // Zero Page Relative: zp,abs
