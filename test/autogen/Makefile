@@ -58,31 +58,53 @@ $(eval $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),\
 
 generate: $(GEN_OUTS)
 
-ASM_TESTS = $(wildcard gen_*.asm)
-asm-test: $(ASM_TESTS)
-	@for s in $^; do \
-	    x=$${s%.asm}; \
-	    echo asm $$x.asm -o $$x.hex -l $$x.lst; \
-	    asm $$x.asm -H32 -o $$x.hex -l $$x.lst; \
-	done
+ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
+ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-fmt,$(f)))
+define asm-rule # source stem fmt
+asm-$(2).$(3): $(1)
+	asm -o $(2).$(3) -l $(2).lst $$^
 
-ASL_exclude = gen_i8086.asm gen_ns32032.asm
+endef
+$(eval $(foreach f,$(ASM_TESTS),$(call asm-rule,$(f).asm,$(f),$(call out-fmt,$(f)))))
+
+asm-test: clean-asm $(ASM_OUTS:%=asm-%)
+clean-asm:
+	-rm -f $(ASM_OUTS)
+
+ASL_exclude = gen_i8086 gen_ns32032
 ASL_TESTS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
-asl-test: $(ASL_TESTS)
-	@for s in $^; do \
-	    x=$${s%.asm}; \
-	    a=$$x.asm; [ -f $$x.asl ] && a=$$x.asl; \
-	    echo "asl $(ASL_FLAGS) $$a && p2hex $(P2HEX_FLAGS) -F Intel $$x.p $$x.hex"; \
-	    asl $(ASL_FLAGS) $$a && p2hex $(P2HEX_FLAGS) -F Intel $$x.p $$x.hex; \
-	done
+ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-fmt,$(f)))
+define asl-file # stem
+$(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
+endef
+define asl-rule # source stem fmt
+asl-$(2).$(3): $(1)
+	asl $$(ASL_FLAGS) -L $$^
+	if [ $(3) = hex ]; then \
+	    p2hex $$(P2HEX_FLAGS) -F Intel   $(2).p $(2).$(3); \
+	else \
+	    p2hex $$(P2HEX_FLAGS) -F Moto +5 $(2).p $(2).$(3); \
+	fi
+
+endef
+$(eval $(foreach f,$(ASL_TESTS),$(call asl-rule,$(call asl-file,$(f)),$(f),$(call out-fmt,$(f)))))
+
+asl-test: clean-asl $(ASL_OUTS:%=asl-%)
+clean-asl:
+	-rm -f $(ASL_OUTS)
+
 
 GAS_TESTS = $(wildcard gen_*.gas)
-gas-test: $(GAS_TESTS:.gas=.hex)
+GAS_OUTS  = $(foreach f,$(GAS_TESTS),$(f:.gas=).$(call out-fmt,$(f:.gas=)))
+gas-test: clean-gas $(GAS_OUTS)
+clean-gas:
+	-rm -f $(GAS_OUTS)
 
 clean-gen:
 	-rm -f $(GEN_OUTS)
-clean:
-	-rm -f *.o *.lst *.hex
+
+clean: clean-asm clean-asl clean-gas
+	-rm -f *.p *.o *.lst
 
 # Local Variables:
 # mode: makefile-gmake

@@ -21,8 +21,7 @@ data1234:
 data5678:
 
         .text
-        .include        "test_z8001.inc"
-        .include        "test_z8k_io.inc"
+        .include        "test_z8k1.inc"
 
         .end
 

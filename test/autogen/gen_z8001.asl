@@ -12,12 +12,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     z8001
-        org         010000h
-off1234:    equ     1234h
-data1234:   equ     0A1234h
-data5678:   equ     0B5678h
-        include "test_z8001.inc"
+        cpu    z8001
+        supmode on
+        org    1000h
+        include "gen_z8k1.inc"
         end
 
 ; Local Variables:

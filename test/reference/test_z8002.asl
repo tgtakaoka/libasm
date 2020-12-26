@@ -18,7 +18,6 @@
 data1234: equ   1234h
 data5678: equ   5678h
         include "test_z8002.inc"
-        include "test_z8000_io.inc"
         end
 
 ; Local Variables:
