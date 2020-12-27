@@ -50,13 +50,13 @@ protected:
     void printAddress(uint32_t addr) {
         const AddressWidth width = _config->addressWidth();
         if (width == ADDRESS_16BIT)
-            _cli.printUint16(static_cast<uint16_t>(addr));
+            _cli.printHex16(addr);
         if (width == ADDRESS_20BIT)
-            _cli.printUint20(addr);
+            _cli.printHex20(addr);
         if (width == ADDRESS_24BIT)
-            _cli.printUint24(addr);
+            _cli.printHex24(addr);
         if (width == ADDRESS_32BIT)
-            _cli.printUint32(addr);
+            _cli.printHex32(addr);
     }
 
     void printBytes(const uint8_t *bytes, uint8_t length) {
@@ -65,16 +65,16 @@ protected:
         for (uint8_t i = 0; i < length;) {
             _cli.print(' ');
             if (width == OPCODE_8BIT)
-                _cli.printUint8(bytes[i++]);
+                _cli.printHex8(bytes[i++]);
             if (width == OPCODE_16BIT && endian == ENDIAN_BIG) {
                 uint16_t val = static_cast<uint16_t>(bytes[i++]) << 8;
                 val |= bytes[i++];
-                _cli.printUint16(val);
+                _cli.printHex16(val);
             }
             if (width == OPCODE_16BIT && endian == ENDIAN_LITTLE) {
                 uint16_t val = bytes[i++];
                 val = static_cast<uint16_t>(bytes[i++]) << 8;
-                _cli.printUint16(val);
+                _cli.printHex16(val);
             }
         }
         const uint8_t codeMax = _config->codeMax();
@@ -168,7 +168,7 @@ public:
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
-        _cli.readLine(handleLine, reinterpret_cast<uintptr_t>(this));
+        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
     }
 
 protected:
@@ -194,7 +194,7 @@ private:
         }
     }
 
-    static bool handleLine(Cli::State state, char *line, uintptr_t extra) {
+    static bool handleLine(char *line, uintptr_t extra, Cli::State state) {
         (void)state;
         AsmExample *example = reinterpret_cast<AsmExample *>(extra);
         const char *scan = skipSpaces(line);
@@ -202,7 +202,7 @@ private:
             if (!example->processPseudo(scan))
                 example->assemble(scan);
         }
-        example->_cli.readLine(handleLine, extra);
+        example->_cli.readString(handleLine, extra);
         return true;
     }
 };
@@ -216,7 +216,7 @@ public:
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
-        _cli.readLine(handleLine, reinterpret_cast<uintptr_t>(this));
+        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
     }
 
 protected:
@@ -247,7 +247,7 @@ private:
         }
     }
 
-    static bool handleLine(Cli::State state, char *line, uintptr_t extra) {
+    static bool handleLine(char *line, uintptr_t extra, Cli::State state) {
         (void)state;
         DisExample *example = reinterpret_cast<DisExample *>(extra);
         const char *scan = skipSpaces(line);
@@ -257,7 +257,7 @@ private:
                 example->disassemble(memory);
             }
         }
-        example->_cli.readLine(handleLine, extra);
+        example->_cli.readString(handleLine, extra);
         return true;
     }
 };
