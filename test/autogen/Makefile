@@ -25,7 +25,7 @@ all:
 -include ../Makefile.gas
 
 # target which has ".inc" suffix for output.
-INC_targets  = w65c816 tlcs90 z8k1 z8k2 ns32k
+INC_targets  = cdp1806 w65c816 tlcs90 z8k1 z8k2 ns32k
 # target which for GNU assembler
 GAS_targets  = z8k1 z8k2 ns32k
 

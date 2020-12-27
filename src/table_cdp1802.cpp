@@ -26,8 +26,9 @@
 namespace libasm {
 namespace cdp1802 {
 
-#define E(_opc, _name, _amode) \
-    { _opc, Entry::Flags::create(_amode), _name }
+#define X(_opc, _name, _op1, _op2) \
+    { _opc, Entry::Flags::create(_op1, _op2), _name }
+#define E(_opc, _name, _op1) X(_opc, _name, _op1, NONE)
 
 // clang-format off
 static constexpr Entry TABLE_CDP1802[] PROGMEM = {
@@ -120,11 +121,69 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0xFE, TEXT_SHL,  NONE),
     E(0xFF, TEXT_SMI,  IMM8),
 };
+
+static constexpr Entry TABLE_CDP1806[] PROGMEM = {
+    E(0x00, TEXT_STPC, NONE),
+    E(0x01, TEXT_DTC,  NONE),
+    E(0x02, TEXT_SPM2, NONE),
+    E(0x03, TEXT_SCM2, NONE),
+    E(0x04, TEXT_SPM1, NONE),
+    E(0x05, TEXT_SCM1, NONE),
+    E(0x06, TEXT_LDC,  NONE),
+    E(0x07, TEXT_STM,  NONE),
+    E(0x08, TEXT_GEC,  NONE),
+    E(0x09, TEXT_ETQ,  NONE),
+    E(0x0A, TEXT_XIE,  NONE),
+    E(0x0B, TEXT_XID,  NONE),
+    E(0x0C, TEXT_CIE,  NONE),
+    E(0x0D, TEXT_CID,  NONE),
+    X(0x20, TEXT_DBNZ, REGN, ADDR),
+    E(0x3E, TEXT_BCI,  PAGE),
+    E(0x3F, TEXT_BXI,  PAGE),
+    E(0x60, TEXT_RLXA, REGN),
+    E(0x74, TEXT_DADC, NONE),
+    E(0x76, TEXT_DSAV, NONE),
+    E(0x77, TEXT_DSMB, NONE),
+    E(0x7C, TEXT_DACI, IMM8),
+    E(0x7F, TEXT_DSBI, IMM8),
+    X(0x80, TEXT_SCAL, REGN, ADDR),
+    E(0x90, TEXT_SRET, REGN),
+    E(0xA0, TEXT_RSXD, REGN),
+    E(0xB0, TEXT_RNX,  REGN),
+    X(0xC0, TEXT_RLDI, REGN, ADDR),
+    E(0xF4, TEXT_DADD, NONE),
+    E(0xF7, TEXT_DSM,  NONE),
+    E(0xFC, TEXT_DADI, IMM8),
+    E(0xFF, TEXT_DSMI, IMM8),
+};
 // clang-format on
 
-static bool acceptMode(Entry::Flags flags, const Entry *entry) {
-    const AddrMode opr = flags.mode();
-    const AddrMode table = entry->flags().mode();
+class TableCdp1802::EntryPage : public EntryPageBase<Entry> {
+public:
+    constexpr EntryPage(
+            Config::opcode_t prefix, const Entry *table, const Entry *end)
+        : EntryPageBase(table, end), _prefix(prefix) {}
+
+    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
+
+private:
+    Config::opcode_t _prefix;
+};
+
+static constexpr TableCdp1802::EntryPage CDP1802_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_CDP1802)},
+};
+
+static constexpr TableCdp1802::EntryPage CDP1806_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_CDP1802)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1806)},
+};
+
+bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
+    return _cpuType == CDP1806 && opCode == 0x68;
+}
+
+static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == ADDR)
@@ -133,21 +192,30 @@ static bool acceptMode(Entry::Flags flags, const Entry *entry) {
     return false;
 }
 
-Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+    const Entry::Flags table = entry->flags();
+    return acceptMode(flags.mode1(), table.mode1()) &&
+           acceptMode(flags.mode2(), table.mode2());
+}
+
+Error TableCdp1802::searchName(
+        InsnCdp1802 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-            insn.flags(), ARRAY_RANGE(TABLE_CDP1802), acceptMode, count);
-    if (entry) {
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return _error.setOK();
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page->table(), page->end(),
+                acceptModes, count);
+        if (entry) {
+            insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setFlags(entry->flags());
+            return OK;
+        }
     }
-    return _error.setError(
-            count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode mode = entry->flags().mode();
+    const AddrMode mode = entry->flags().mode1();
     if (mode == REGN || mode == REG1)
         return opCode & ~0x0F;
     if (mode == IOAD)
@@ -155,30 +223,66 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode;
 }
 
+Error TableCdp1802::searchOpCode(
+        InsnCdp1802 &insn, const EntryPage *pages, const EntryPage *end) const {
+    for (const EntryPage *page = pages; page < end; page++) {
+        const Config::opcode_t prefix = page->prefix();
+        if (insn.prefix() != prefix)
+            continue;
+        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+                insn.opCode(), page->table(), page->end(), tableCode);
+        if (entry) {
+            insn.setFlags(entry->flags());
+            if (insn.mode1() == UNDF)
+                break;
+            insn.setName_P(entry->name());
+            return OK;
+        }
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
+Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
+    return _error.setError(searchName(insn, _table, _end));
+}
+
 Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_CDP1802), tableCode);
-    if (!entry)
-        return _error.setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(entry->flags());
-    if (insn.addrMode() == UNDF)
-        return _error.setError(UNKNOWN_INSTRUCTION);
-    insn.setName_P(entry->name());
-    return _error.setOK();
+    return _error.setError(searchOpCode(insn, _table, _end));
+}
+
+TableCdp1802::TableCdp1802() {
+    setCpu(CDP1802);
+}
+
+bool TableCdp1802::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    if (cpuType == CDP1802) {
+        _table = ARRAY_BEGIN(CDP1802_PAGES);
+        _end = ARRAY_END(CDP1802_PAGES);
+    } else {
+        _table = ARRAY_BEGIN(CDP1806_PAGES);
+        _end = ARRAY_END(CDP1806_PAGES);
+    }
+    return true;
 }
 
 const char *TableCdp1802::listCpu() const {
-    return TEXT_CPU_CDP1802;
+    return TEXT_CPU_LIST;
 }
 
 const char *TableCdp1802::getCpu() const {
-    return TEXT_CPU_1802;
+    return _cpuType == CDP1802 ? TEXT_CPU_1802 : TEXT_CPU_1806;
 }
 
 bool TableCdp1802::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_1802) == 0 ||
-           strcasecmp_P(cpu, TEXT_CPU_CDP1802) == 0;
+    const char *p = cpu;
+    if (strncasecmp_P(p, TEXT_CPU_CDP, 3) == 0)
+        p += 3;
+    if (strcmp_P(p, TEXT_CPU_1802) == 0)
+        return setCpu(CDP1802);
+    if (strcmp_P(p, TEXT_CPU_1806) == 0)
+        return setCpu(CDP1806);
+    return false;
 }
 
 class TableCdp1802 TableCdp1802;

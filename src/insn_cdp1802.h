@@ -28,24 +28,35 @@ class InsnCdp1802 : public InsnBase<Config> {
 public:
     InsnCdp1802(Insn &insn) : InsnBase(insn) {}
 
-    AddrMode addrMode() const { return _flags.mode(); }
+    AddrMode mode1() const { return _flags.mode1(); }
+    AddrMode mode2() const { return _flags.mode2(); }
 
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode); }
+    void setAddrMode(AddrMode mode1, AddrMode mode2) { _flags = Entry::Flags::create(mode1, mode2); }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
+    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
+        _opCode = opCode;
+        _prefix = prefix;
+    }
 
     void embed(Config::opcode_t data) { _opCode |= data; }
 
+    bool hasPrefix() const { return _prefix != 0; }
     Config::opcode_t opCode() const { return _opCode; }
+    Config::opcode_t prefix() const { return _prefix; }
 
-    void emitInsn() { emitByte(_opCode); }
+    void emitInsn() {
+        if (hasPrefix())
+            emitByte(prefix());
+        emitByte(opCode());
+    }
 
 private:
     Entry::Flags _flags;
     Config::opcode_t _opCode;
+    Config::opcode_t _prefix;
 };
 
 }  // namespace cdp1802

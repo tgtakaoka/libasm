@@ -21,9 +21,12 @@ namespace libasm {
 namespace cdp1802 {
 
 // clang-format off
-static const char TEXT_CPU_CDP1802[] PROGMEM = "CDP1802";
-static constexpr const char *TEXT_CPU_1802 = &TEXT_CPU_CDP1802[3];
+static const char TEXT_CPU_LIST[] PROGMEM  = "CDP1802, CDP1806";
+static const char TEXT_CPU_1802[] PROGMEM  = "1802";
+static constexpr const char* TEXT_CPU_CDP  = &TEXT_CPU_LIST[0];
+static constexpr const char* TEXT_CPU_1806 = &TEXT_CPU_LIST[12];
 
+// CDP1802
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADCI[] PROGMEM = "ADCI";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
@@ -111,6 +114,41 @@ static const char TEXT_STR[]  PROGMEM = "STR";
 static const char TEXT_STXD[] PROGMEM = "STXD";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
 static const char TEXT_XRI[]  PROGMEM = "XRI";
+
+// CDP1806
+static const char TEXT_RLDI[] PROGMEM = "RLDI";
+static const char TEXT_RLXA[] PROGMEM = "RLXA";
+static const char TEXT_RSXD[] PROGMEM = "RSXD";
+static const char TEXT_DBNZ[] PROGMEM = "DBNZ";
+static const char TEXT_RNX[]  PROGMEM = "RNX";
+static const char TEXT_DADD[] PROGMEM = "DADD";
+static const char TEXT_DADI[] PROGMEM = "DADI";
+static const char TEXT_DADC[] PROGMEM = "DADC";
+static const char TEXT_DACI[] PROGMEM = "DACI";
+static const char TEXT_DSM[]  PROGMEM = "DSM";
+static const char TEXT_DSMI[] PROGMEM = "DSMI";
+static const char TEXT_DSMB[] PROGMEM = "DSMB";
+static const char TEXT_DSBI[] PROGMEM = "DSBI";
+static const char TEXT_BCI[]  PROGMEM = "BCI";
+static const char TEXT_BXI[]  PROGMEM = "BXI";
+static const char TEXT_LDC[]  PROGMEM = "LDC";
+static const char TEXT_GEC[]  PROGMEM = "GEC";
+static const char TEXT_STPC[] PROGMEM = "STPC";
+static const char TEXT_DTC[]  PROGMEM = "DTC";
+static const char TEXT_STM[]  PROGMEM = "STM";
+static const char TEXT_SCM1[] PROGMEM = "SCM1";
+static const char TEXT_SCM2[] PROGMEM = "SCM2";
+static const char TEXT_SPM1[] PROGMEM = "SPM1";
+static const char TEXT_SPM2[] PROGMEM = "SPM2";
+static const char TEXT_ETQ[]  PROGMEM = "ETQ";
+static const char TEXT_XIE[]  PROGMEM = "XIE";
+static const char TEXT_XID[]  PROGMEM = "XID";
+static const char TEXT_CIE[]  PROGMEM = "CIE";
+static const char TEXT_CID[]  PROGMEM = "CID";
+static const char TEXT_DSAV[] PROGMEM = "DSAV";
+static const char TEXT_SCAL[] PROGMEM = "SCAL";
+static const char TEXT_SRET[] PROGMEM = "SRET";
+
 // clang-format off
 
 } // namespace cdp1802
