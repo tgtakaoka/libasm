@@ -30,10 +30,7 @@ using libcli::Cli;
 
 class BaseExample : protected SymbolTable {
 public:
-    virtual void begin(Stream &console) {
-        _cli.begin(console);
-        _cli.setPrompter(printPrompt, reinterpret_cast<uintptr_t>(this));
-    }
+    virtual void begin(Stream &console) { _cli.begin(console); }
 
     void loop() { _cli.loop(); }
 
@@ -41,8 +38,7 @@ protected:
     Cli _cli;
     uint32_t _origin;
 
-    BaseExample(ConfigBase *config, const /*PROGMEM*/ char *prompt)
-        : _cli(), _config(config), _prompt(prompt) {}
+    BaseExample(ConfigBase *config) : _cli(), _config(config) {}
 
     virtual const /*PROGMEM*/ char *getCpu() const = 0;
     virtual bool setCpu(const char *) = 0;
@@ -150,25 +146,16 @@ protected:
 
 private:
     ConfigBase *_config;
-    const /*PROGMEM*/ char *_prompt;
-
-    static void printPrompt(Cli &cli, uintptr_t extra) {
-        BaseExample *example = reinterpret_cast<BaseExample *>(extra);
-        cli.print(FSTR(example->_prompt));
-        cli.print(':');
-        cli.print(FSTR(example->getCpu()));
-        cli.print(F("> "));
-    }
 };
 
 class AsmExample : public BaseExample {
 public:
     AsmExample(Assembler &assembler)
-        : BaseExample(&assembler, PSTR("Asm")), _assembler(assembler) {}
+        : BaseExample(&assembler), _assembler(assembler) {}
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
-        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
+        printPrompt();
     }
 
 protected:
@@ -194,7 +181,14 @@ private:
         }
     }
 
-    static bool handleLine(char *line, uintptr_t extra, Cli::State state) {
+    void printPrompt() {
+        _cli.print(F("ASM:"));
+        _cli.print(FSTR(_assembler.getCpu()));
+        _cli.print(F("> "));
+        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
+    }
+
+    static void handleLine(char *line, uintptr_t extra, Cli::State state) {
         (void)state;
         AsmExample *example = reinterpret_cast<AsmExample *>(extra);
         const char *scan = skipSpaces(line);
@@ -202,21 +196,20 @@ private:
             if (!example->processPseudo(scan))
                 example->assemble(scan);
         }
-        example->_cli.readString(handleLine, extra);
-        return true;
+        example->printPrompt();
     }
 };
 
 class DisExample : public BaseExample {
 public:
     DisExample(Disassembler &disassembler)
-        : BaseExample(&disassembler, PSTR("Dis")), _disassembler(disassembler) {
+        : BaseExample(&disassembler), _disassembler(disassembler) {
         _disassembler.setUppercase(true);
     }
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
-        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
+        printPrompt();
     }
 
 protected:
@@ -247,6 +240,13 @@ private:
         }
     }
 
+    void printPrompt() {
+        _cli.print(F("DIS:"));
+        _cli.print(FSTR(_disassembler.getCpu()));
+        _cli.print(F("> "));
+        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
+    }
+
     static bool handleLine(char *line, uintptr_t extra, Cli::State state) {
         (void)state;
         DisExample *example = reinterpret_cast<DisExample *>(extra);
@@ -257,8 +257,7 @@ private:
                 example->disassemble(memory);
             }
         }
-        example->_cli.readString(handleLine, extra);
-        return true;
+        example->printPrompt();
     }
 };
 
