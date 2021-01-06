@@ -33,18 +33,19 @@ public:
     }
 
     static const char *readNumber(const char *scan, uint32_t *val) {
+        const char *p = skipSpaces(scan);
         // Intel style
-        if (scanNumberEnd(scan, 'H'))
-            return parseNumber(scan, val, 'H');
+        if (scanNumberEnd(p, 'H'))
+            return parseNumber(p, val, 'H');
 
         // Motorola style
-        if (*scan == '$' && scanNumberEnd(scan + 1))
-            return parseNumber(scan + 1, val);
+        if (*p == '$' && scanNumberEnd(p + 1))
+            return parseNumber(p + 1, val);
 
         // C-style
-        if (*scan == '0') {
-            if (toupper(scan[1]) == 'X' && scanNumberEnd(scan + 2))
-                return parseNumber(scan + 2, val);
+        if (*p == '0') {
+            if (toupper(p[1]) == 'X' && scanNumberEnd(p + 2))
+                return parseNumber(p + 2, val);
         }
         return scan;
     }
@@ -57,7 +58,7 @@ protected:
     }
 
 private:
-    mutable const char *_next;
+    const char *_next;
 
     static bool scanNumberEnd(const char *scan, const char suffix = 0) {
         return parseNumber(scan, nullptr, suffix) != scan;
@@ -65,7 +66,7 @@ private:
 
     static const char *parseNumber(
             const char *scan, uint32_t *val, char suffix = 0) {
-        const char *p = skipSpaces(scan);
+        const char *p = scan;
         uint32_t v = 0;
         while (isxdigit(*p)) {
             v <<= 4;
