@@ -756,16 +756,16 @@ static void test_program_control() {
     }
 
     // Call Procedure Relative
-    TEST("CALR .+2",      0xD000);
-    TEST("CALR .+10",     0xD004);
-    TEST("CALR .+0x1000", 0xD7FF);
-    TEST("CALR .-0x0FFE", 0xD800);
-    TEST("CALR .-10",     0xDFFA);
-    TEST("CALR .",        0xDFFF);
+    TEST("CALR $+2",      0xD000);
+    TEST("CALR $+10",     0xDFFC);
+    TEST("CALR $+0x1002", 0xD800);
+    TEST("CALR $-0x0FFC", 0xD7FF);
+    TEST("CALR $-10",     0xD006);
+    TEST("CALR $",        0xD001);
 
     // Decrement and Jump if Not Zero
-    TEST("DJNZ  R2,.",  0xF281);
-    TEST("DBJNZ RL0,.", 0xF801);
+    TEST("DJNZ  R2,$",  0xF281);
+    TEST("DBJNZ RL0,$", 0xF801);
 
     // Interrupt Return
     TEST("IRET  ", 0x7B00);
@@ -949,26 +949,26 @@ static void test_program_control() {
     }
 
     // Jump Relative
-    TEST("JR F,.",   0xE0FF);
-    TEST("JR LT,.",  0xE1FF);
-    TEST("JR LE,.",  0xE2FF);
-    TEST("JR ULE,.", 0xE3FF);
-    TEST("JR OV,.",  0xE4FF);
-    TEST("JR MI,.",  0xE5FF);
-    TEST("JR Z,.",   0xE6FF);
-    TEST("JR C,.",   0xE7FF);
-    TEST("JR .",     0xE8FF);
-    TEST("JR GE,.",  0xE9FF);
-    TEST("JR GT,.",  0xEAFF);
-    TEST("JR UGT,.", 0xEBFF);
-    TEST("JR NOV,.", 0xECFF);
-    TEST("JR PL,.",  0xEDFF);
-    TEST("JR NZ,.",  0xEEFF);
-    TEST("JR NC,.",  0xEFFF);
-    TEST("JR EQ,.",  0xE6FF);
-    TEST("JR ULT,.", 0xE7FF);
-    TEST("JR NE,.",  0xEEFF);
-    TEST("JR UGE,.", 0xEFFF);
+    TEST("JR F,$",   0xE0FF);
+    TEST("JR LT,$",  0xE1FF);
+    TEST("JR LE,$",  0xE2FF);
+    TEST("JR ULE,$", 0xE3FF);
+    TEST("JR OV,$",  0xE4FF);
+    TEST("JR MI,$",  0xE5FF);
+    TEST("JR Z,$",   0xE6FF);
+    TEST("JR C,$",   0xE7FF);
+    TEST("JR $",     0xE8FF);
+    TEST("JR GE,$",  0xE9FF);
+    TEST("JR GT,$",  0xEAFF);
+    TEST("JR UGT,$", 0xEBFF);
+    TEST("JR NOV,$", 0xECFF);
+    TEST("JR PL,$",  0xEDFF);
+    TEST("JR NZ,$",  0xEEFF);
+    TEST("JR NC,$",  0xEFFF);
+    TEST("JR EQ,$",  0xE6FF);
+    TEST("JR ULT,$", 0xE7FF);
+    TEST("JR NE,$",  0xEEFF);
+    TEST("JR UGE,$", 0xEFFF);
 
     // Return from Procedure
     TEST("RET F",   0x9E00);

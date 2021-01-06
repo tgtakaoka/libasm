@@ -760,11 +760,11 @@ static void test_program_control() {
     // Call Procedure Relative
     disassembler.setRelativeTarget(true);
     TEST(CALR, "$+2",    0xD000);
-    TEST(CALR, "$+10",   0xD004);
-    TEST(CALR, "$+4096", 0xD7FF);
-    TEST(CALR, "$-4094", 0xD800);
-    TEST(CALR, "$-10",   0xDFFA);
-    TEST(CALR, "$",      0xDFFF);
+    TEST(CALR, "$+10",   0xDFFC);
+    TEST(CALR, "$+4098", 0xD800);
+    TEST(CALR, "$-4092", 0xD7FF);
+    TEST(CALR, "$-10",   0xD006);
+    TEST(CALR, "$",      0xD001);
 
     // Decrement and Jump if Not Zero
     TEST(DJNZ,  "R2,$",  0xF281);

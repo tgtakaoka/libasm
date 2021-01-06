@@ -174,6 +174,7 @@ Error AsmZ8000::emitRelative(
         return setError(OPERAND_NOT_ALIGNED);
     delta /= 2;
     if (mode == M_RA12) {
+        delta = -delta;
         if (delta < -0x800 || delta >= 0x800)
             return setError(OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFFF));

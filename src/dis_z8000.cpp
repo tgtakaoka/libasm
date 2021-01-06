@@ -194,7 +194,7 @@ Error DisZ8000::decodeRelativeAddressing(
         uint16_t ra12 = insn.opCode() & 0xFFF;
         if (ra12 & 0x800)
             ra12 |= 0xF000;
-        delta = static_cast<int16_t>(ra12) * 2;
+        delta = -static_cast<int16_t>(ra12) * 2;
     }
     if (mode == M_RA8) {
         uint16_t ra8 = insn.opCode() & 0xFF;

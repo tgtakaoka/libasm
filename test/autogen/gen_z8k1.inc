@@ -905,8 +905,8 @@
       ldb    rh0,#0
       ldb    rl0,#0
       calr   $+2
-      calr   $-4094
       calr   $
+      calr   $-2
       jr     f,$+2
       jr     f,$-254
       jr     f,$
