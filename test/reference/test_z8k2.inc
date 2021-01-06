@@ -79,7 +79,7 @@
         lda     r2,r4(#data1234)
         lda     r2,r4(r6)
 ;# Load Address Relative
-        ldar    r2,$
+        ldar    r2,.
 ;# Load Constant
         ldk     r1,#15
 ;# Load Multiple
@@ -90,12 +90,12 @@
         ldm     data1234,r1,#2
         ldm     data1234(r2),r1,#3
 ;# Load Relative
-        ldr     r1,$
-        ldr     $,r1
-        ldrb    rh1,$
-        ldrb    $,rh1
-        ldrl    rr2,$
-        ldrl    $,rr2
+        ldr     r1,.
+        ldr     .,r1
+        ldrb    rh1,.
+        ldrb    .,rh1
+        ldrl    rr2,.
+        ldrl    .,rr2
 ;# Pop
         pop     r1,@r4
         pop     @r2,@r4
@@ -290,10 +290,14 @@
         call    data1234
         call    data1234(r2)
 ;# Call Procedure Relative
-        calr    $
+        calr    .
+        calr    .+16
+        calr    .-16
 ;# Decrement and Jump if Not Zero
-        djnz    r1,$
-        dbjnz   rh1,$
+        djnz    r1,.
+        djnz    r1,.-16
+        dbjnz   rh1,.
+        dbjnz   rh1,.-16
 ;# Interrupt Return
         iret
 ;# Jump
@@ -304,26 +308,26 @@
         jp      ne,data1234
         jp      z,data1234(r2)
 ;# Jump Relative
-        jr      f,$
-        jr      lt,$
-        jr      le,$
-        jr      ule,$
-        jr      ov,$
-        jr      mi,$
-        jr      z,$
-        jr      eq,$
-        jr      c,$
-        jr      ult,$
-        jr      $
-        jr      ge,$
-        jr      gt,$
-        jr      ugt,$
-        jr      nov,$
-        jr      pl,$
-        jr      nz,$
-        jr      ne,$
-        jr      nc,$
-        jr      uge,$
+        jr      f,.
+        jr      lt,.
+        jr      le,.
+        jr      ule,.
+        jr      ov,.
+        jr      mi,.
+        jr      z,.
+        jr      eq,.
+        jr      c,.
+        jr      ult,.
+        jr      .
+        jr      ge,.
+        jr      gt,.
+        jr      ugt,.
+        jr      nov,.
+        jr      pl,.
+        jr      nz,.
+        jr      ne,.
+        jr      nc,.
+        jr      uge,.
 ;# Return from Procedure
         ret     f
         ret     lt
@@ -525,8 +529,8 @@
 ;# Input
         in      r1,@r2
         inb     rh1,@r2
-        in      r1,0x1234
-        inb     rh1,0x1234
+        in      r1,#0x1234
+        inb     rh1,#0x1234
 ;# Input and Decrement
         ind     @r2,@r4,r6
         indb    @r2,@r4,r6
@@ -548,8 +552,8 @@
 ;# Output
         out     @r1,r2
         outb    @r1,rh2
-        out     0x1234,r2
-        outb    0x1234,rh2
+        out     #0x1234,r2
+        outb    #0x1234,rh2
 ;# Output and Decrement
         outd    @r2,@r4,r6
         outdb   @r2,@r4,r6
@@ -557,8 +561,8 @@
         outi    @r2,@r4,r6
         outib   @r2,@r4,r6
 ;# Special Input
-        sin     r1,0x1234
-        sinb    rh1,0x1234
+        sin     r1,#0x1234
+        sinb    rh1,#0x1234
 ;# Special Input, Decrement
         sind    @r2,@r4,r6
         sindb   @r2,@r4,r6
@@ -572,8 +576,8 @@
         sinir   @r2,@r4,r6
         sinirb  @r2,@r4,r6
 ;# Special Output
-        sout    0x1234,r2
-        soutb   0x1234,rl2
+        sout    #0x1234,r2
+        soutb   #0x1234,rl2
 ;# Special Output, Decrement, and Repeat
         sotdr   @r2,@r4,r6
         sotdrb  @r2,@r4,r6

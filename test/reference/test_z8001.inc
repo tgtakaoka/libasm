@@ -291,9 +291,13 @@
         call    data1234(r2)
 ;# Call Procedure Relative
         calr    $
+        calr    $+16
+        calr    $-16
 ;# Decrement and Jump if Not Zero
         djnz    r1,$
+        djnz    r1,$-16
         dbjnz   rh1,$
+        dbjnz   rh1,$-16
 ;# Interrupt Return
         iret
 ;# Jump
