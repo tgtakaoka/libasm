@@ -13,7 +13,7 @@
 ; limitations under the License.
 
         cpu     8085
-        z80syntax    on
+        z80syntax    exclusive
         org     0100h
         include "gen_i8085_z80syn.inc"
         end

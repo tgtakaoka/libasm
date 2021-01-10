@@ -12,10 +12,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     8085
-        z80syntax    on
+        cpu     8080
+        z80syntax    exclusive
         org     0100h
-        include "gen_i8085_z80syn.inc"
+        include "gen_i8080_z80syn.inc"
         end
 
 ; Local Variables:

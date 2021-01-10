@@ -26,8 +26,6 @@ int main(int argc, const char **argv) {
     GenDriver<Config> driver(disz80);
     if (driver.main(argc, argv))
         return 1;
-    if (strcmp(disz80.getCpu(), "Z80"))
-        driver.pseudo("Z80SYNTAX", "ON");
 
     TestGenerator<Config> generator(disz80, 0x0100);
     generator.generate(driver)
