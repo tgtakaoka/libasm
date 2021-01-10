@@ -92,7 +92,7 @@ CPU_ns32k    = 32032
 # targets with Motorola S19 format
 S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) mos6502 g65sc02 r65c02 w65c02s m6811
 # targets with Motorola S28 format
-S28_OUTS = w65c816 $(TGT_mc68000) m68k
+S28_OUTS = $(TGT_mc68000) m68k w65c816 w65c816_m0x0 w65c816_m0x1 w65c816_m1x0 w65c816_m1x1
 # targets with Intel32 (32bit address) format
 I32_OUTS = z8001 z8k1 ns32032 ns32k
 # other targets use Intel8 format

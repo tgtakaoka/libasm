@@ -15,7 +15,7 @@
 # GNU assembler rules
 
 # Z8001 target
-%_z8k1.hex: %_z8k1.gas
+%_z8001.hex: %_z8001.gas
 	z8k-coff-as --warn -o $(@:.hex=.p) $^
 	z8k-coff-ld -m z8001 --entry=0 -o $(@:.hex=.o) $(@:.hex=.p) \
 		--section-start=text=0x010000 \
@@ -27,7 +27,7 @@
 	z8k-coff-objdump -m z8001 -D $@ > $(@:.hex=.lst)
 
 # Z8002 target
-%_z8k2.hex: %_z8k2.gas
+%_z8002.hex: %_z8002.gas
 	z8k-coff-as --warn -o $(@:.hex=.p) $^
 	z8k-coff-ld -m z8002 --entry=0 -o $(@:.hex=.o) $(@:.hex=.p) \
 		--section-start=text=0x1000 \
@@ -39,7 +39,7 @@
 	z8k-coff-objdump -m z8002 -D $@ > $(@:.hex=.lst)
 
 # NS32032 target
-%_ns32k.hex: %_ns32k.gas
+%_ns32032.hex: %_ns32032.gas
 	ns32k-netbsd-as -m32032 --warn -o $(@:.hex=.o) $^
 	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
 		--adjust-section-vma .text=0x10000 $(@:.hex=.o) /dev/stdout | \
@@ -47,7 +47,7 @@
 	ns32k-netbsd-objdump -m ns32k:32032 -D $@ > $(@:.hex=.lst)
 
 # i8086 target
-%_i386.hex: %_i386.gas
+%_i8086.hex: %_i8086.gas
 	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel -mmnemonic=intel -o $(@:.hex=.p) $^
 	i386-elf-ld --entry=0 -section-start=.text=0x1000 -o $(@:.hex=.o) $(@:.hex=.p)
 	i386-elf-objcopy -I elf32-i386 -O ihex $(@:.hex=.o) /dev/stdout | \
@@ -55,7 +55,7 @@
 	i386-elf-objdump -m i8086 -M intel -D $@ > $(@:.hex=.lst)
 
 # MC68000 target
-%_m68k.s28: %_m68k.gas
+%_mc68000.s28: %_mc68000.gas
 	m68k-elf-as -m68000 --warn --register-prefix-optional --base-size-default-16 -o $(@:.s28=.p) $^
 	m68k-elf-ld --entry=0 -o $(@:.s28=.o) $(@:.s28=.p)
 	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len 32 \
@@ -64,7 +64,7 @@
 	m68k-elf-objdump -m 68000 -D $@ > $(@:.s28=.lst)
 
 # MC68HC11 target
-%_m6811.s19: %_m6811.gas
+%_mc68hc11.s19: %_mc68hc11.gas
 	m6811-elf-as -m68hc11 --warn -o $(@:.s19=.p) $^
 	m6811-elf-ld -m m68hc11elf --entry=0 -o $(@:.s19=.o) $(@:.s19=.p)
 	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len 32 \

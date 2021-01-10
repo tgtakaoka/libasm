@@ -28,7 +28,9 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis6502, 0x0200);
+    const Config::uintptr_t origin =
+            dis6502.addressWidth() == libasm::ADDRESS_24BIT ? 0x100200 : 0x0200;
+    TestGenerator<Config> generator(dis6502, origin);
     generator.generate(driver);
 
     return driver.close();

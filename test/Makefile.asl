@@ -17,13 +17,6 @@
 ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w -relaxed
 P2HEX_FLAGS = -q -k -r \$$-\$$ -l 32
 
-%.hex: %.asl
-	asl $(ASL_FLAGS) $^
-	p2hex $(P2HEX_FLAGS) -F Intel $*.p $@
-%.s19 %.s28 %.s37: %.asl
-	asl $(ASL_FLAGS) $^
-	p2hex $(P2HEX_FLAGS) -F Moto +5 $*.p $@
-
 # Local Variables:
 # mode: makefile-gmake
 # End:

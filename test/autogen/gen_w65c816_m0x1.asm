@@ -12,8 +12,8 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     65816
-        org     $100000
+        cpu     W65C816
+        org     $100200
         longa   on
         longi   off
         include "gen_w65c816.inc"
