@@ -120,7 +120,10 @@ Error DisMc6809::decodeRelative(
     } else {
         delta = static_cast<Config::ptrdiff_t>(insn.readUint16(memory));
     }
-    const Config::uintptr_t target = insn.address() + insn.length() + delta;
+    const Config::uintptr_t base = insn.address() + insn.length();
+    const Config::uintptr_t target = base + delta;
+    if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
+        return setError(OPERAND_TOO_FAR);
     const uint8_t deltaWidth = mode == REL ? 8 : 16;
     outRelAddr(out, target, insn.address(), deltaWidth);
     return setError(insn);
