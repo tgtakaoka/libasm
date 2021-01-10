@@ -38,8 +38,8 @@ enum RegName : int8_t {
     REG_B = 9,
     REG_CC = 10,
     REG_DP = 11,
-    REG_Z = 12,  // 6309: "z" zero register
-    REG_0 = 13,  // 6309: "0" zero register
+    REG_0 = 12,  // 6309: "0" zero register
+    REG_Z = 13,  // 6309: "z" zero register
     REG_E = 14,  // 6309
     REG_F = 15,  // 6309
     // Other registers.
