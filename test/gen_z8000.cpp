@@ -27,8 +27,12 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    const uintptr_t org = strcmp(dis8000.getCpu(), "Z8001") == 0
-        ? 0x10000 : 0x1000;
+    const Config::uintptr_t org =
+            dis8000.addressWidth() == libasm::ADDRESS_24BIT ? 0x10000 : 0x1000;
+    if (driver.generateGas()) {
+        dis8000.setIoAddressPrefix('#');
+        dis8000.setCurrentOriginSymbol('.');
+    }
     TestGenerator<Config> generator(dis8000, org);
     generator.generate(driver);
 

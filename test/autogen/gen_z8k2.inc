@@ -114,38 +114,38 @@
       ldb    @r1,rh0
       ldb    @r1,rl0
       ld     @r1,r0
-      ldrb   rh0,$+0x0106
-      ldrb   rl0,$+0x090e
+      ldrb   rh0,.+0x0106
+      ldrb   rl0,.+0x090e
       ldb    rh0,r1(#0x1112)
       ldb    rl0,r1(#0x191a)
       ldb    rl7,r7(#-0x7f7f)
       ldb    rh0,r8(#-0x7e7e)
-      ldr    r0,$+0x0106
+      ldr    r0,.+0x0106
       ld     r0,r1(#0x1112)
       ld     r15,r7(#-0x7f7f)
-      ldrb   $+0x0106,rh0
-      ldrb   $+0x090e,rl0
+      ldrb   .+0x0106,rh0
+      ldrb   .+0x090e,rl0
       ldb    r1(#0x1112),rh0
       ldb    r1(#0x191a),rl0
       ldb    r7(#-0x7f7f),rl7
       ldb    r8(#-0x7e7e),rh0
-      ldr    $+0x0106,r0
+      ldr    .+0x0106,r0
       ld     r1(#0x1112),r0
       ld     r7(#-0x7f7f),r15
-      ldar   r0,$+0x0106
+      ldar   r0,.+0x0106
       lda    r0,r1(#0x1112)
       lda    r15,r7(#-0x7f7f)
-      ldrl   rr0,$+0x0106
+      ldrl   rr0,.+0x0106
       ldl    rr0,r1(#0x1112)
       ldl    rr0,r8(#-0x7e7e)
-      ldrl   $+0x0106,rr0
+      ldrl   .+0x0106,rr0
       ldl    r1(#0x1112),rr0
       ldl    r8(#-0x7e7e),rr0
       ldps   @r1
-      inb    rh0,0x0506
-      sinb   rh0,0x0607
-      outb   0x0708,rh0
-      soutb  0x0809,rh0
+      inb    rh0,#0x0506
+      sinb   rh0,#0x0607
+      outb   #0x0708,rh0
+      soutb  #0x0809,rh0
       inirb  @r1,@r1,r15
       inib   @r1,@r1,r15
       sinirb @r1,@r1,r15
@@ -162,14 +162,14 @@
       outdb  @r1,@r1,r15
       sotdrb @r1,@r1,r15
       soutdb @r1,@r1,r15
-      inb    rl0,0x8586
-      sinb   rl0,0x8687
-      outb   0x8788,rl0
-      soutb  0x8889,rl0
-      in     r0,0x0506
-      sin    r0,0x0607
-      out    0x0708,r0
-      sout   0x0809,r0
+      inb    rl0,#0x8586
+      sinb   rl0,#0x8687
+      outb   #0x8788,rl0
+      soutb  #0x8889,rl0
+      in     r0,#0x0506
+      sin    r0,#0x0607
+      out    #0x0708,r0
+      sout   #0x0809,r0
       inir   @r1,@r1,r15
       ini    @r1,@r1,r15
       sinir  @r1,@r1,r15
@@ -960,63 +960,63 @@
       rldb   rl0,rl0
       ldb    rh0,#0
       ldb    rl0,#0
-      calr   $+2
-      calr   $
-      calr   $-2
-      jr     f,$+2
-      jr     f,$-254
-      jr     f,$
-      jr     lt,$+2
-      jr     lt,$-254
-      jr     lt,$
-      jr     le,$+2
-      jr     le,$-254
-      jr     le,$
-      jr     ule,$+2
-      jr     ule,$-254
-      jr     ule,$
-      jr     ov,$+2
-      jr     ov,$-254
-      jr     ov,$
-      jr     mi,$+2
-      jr     mi,$-254
-      jr     mi,$
-      jr     z,$+2
-      jr     z,$-254
-      jr     z,$
-      jr     c,$+2
-      jr     c,$-254
-      jr     c,$
-      jr     $+2
-      jr     $-254
-      jr     $
-      jr     ge,$+2
-      jr     ge,$-254
-      jr     ge,$
-      jr     gt,$+2
-      jr     gt,$-254
-      jr     gt,$
-      jr     ugt,$+2
-      jr     ugt,$-254
-      jr     ugt,$
-      jr     nov,$+2
-      jr     nov,$-254
-      jr     nov,$
-      jr     pl,$+2
-      jr     pl,$-254
-      jr     pl,$
-      jr     nz,$+2
-      jr     nz,$-254
-      jr     nz,$
-      jr     nc,$+2
-      jr     nc,$-254
-      jr     nc,$
-      dbjnz  rh0,$+2
-      dbjnz  rh0,$
-      dbjnz  rh0,$-2
-      djnz   r0,$+2
-      djnz   r0,$
-      djnz   r0,$-2
-      dbjnz  rl0,$+2
-      dbjnz  rl0,$
-      dbjnz  rl0,$-2
+      calr   .+2
+      calr   .
+      calr   .-2
+      jr     f,.+2
+      jr     f,.-254
+      jr     f,.
+      jr     lt,.+2
+      jr     lt,.-254
+      jr     lt,.
+      jr     le,.+2
+      jr     le,.-254
+      jr     le,.
+      jr     ule,.+2
+      jr     ule,.-254
+      jr     ule,.
+      jr     ov,.+2
+      jr     ov,.-254
+      jr     ov,.
+      jr     mi,.+2
+      jr     mi,.-254
+      jr     mi,.
+      jr     z,.+2
+      jr     z,.-254
+      jr     z,.
+      jr     c,.+2
+      jr     c,.-254
+      jr     c,.
+      jr     .+2
+      jr     .-254
+      jr     .
+      jr     ge,.+2
+      jr     ge,.-254
+      jr     ge,.
+      jr     gt,.+2
+      jr     gt,.-254
+      jr     gt,.
+      jr     ugt,.+2
+      jr     ugt,.-254
+      jr     ugt,.
+      jr     nov,.+2
+      jr     nov,.-254
+      jr     nov,.
+      jr     pl,.+2
+      jr     pl,.-254
+      jr     pl,.
+      jr     nz,.+2
+      jr     nz,.-254
+      jr     nz,.
+      jr     nc,.+2
+      jr     nc,.-254
+      jr     nc,.
+      dbjnz  rh0,.+2
+      dbjnz  rh0,.
+      dbjnz  rh0,.-2
+      djnz   r0,.+2
+      djnz   r0,.
+      djnz   r0,.-2
+      dbjnz  rl0,.+2
+      dbjnz  rl0,.
+      dbjnz  rl0,.-2

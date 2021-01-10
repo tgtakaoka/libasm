@@ -51,7 +51,7 @@ TGT_cdp1802 = cdp1802 cdp1806
 TGT_i8086   = i8086
 TGT_tms9900 = tms9900 tms9995 tms99105
 TGT_mc68000 = mc68000
-TGT_z8000   = z8k1 z8k2
+TGT_z8000   = z8001 z8002 z8k1 z8k2
 TGT_ns32000 = ns32k
 
 # CPU for each target
@@ -85,6 +85,8 @@ CPU_tms9900  = TMS9900
 CPU_tms9995  = TMS9995
 CPU_tms99105 = TMS99105
 CPU_mc68000  = 68000
+CPU_z8001    = Z8001
+CPU_z8002    = Z8002
 CPU_z8k1     = Z8001
 CPU_z8k2     = Z8002
 CPU_ns32k    = 32032

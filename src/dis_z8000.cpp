@@ -253,6 +253,8 @@ Error DisZ8000::decodeOperand(DisMemory &memory, InsnZ8000 &insn, char *out,
         outImmediate(out, insn.opCode(), mode);
         return OK;
     case M_IO:
+        if (_ioAddressPrefix)
+            *out++ = _ioAddressPrefix;
         outAbsAddr(out, insn.readUint16(memory));
         return OK;
     case M_IRIO:

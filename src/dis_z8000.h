@@ -28,19 +28,22 @@ namespace z8000 {
 
 class DisZ8000 : public Disassembler, public Config {
 public:
-    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000) {}
+    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000) {
+        setIoAddressPrefix(0);
+    }
 
     AddressWidth addressWidth() const override {
         return TableZ8000.addressWidth();
     }
-
-    void reset() override { preferWorkRegister(true); }
-    void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }
+    void setIoAddressPrefix(char prefix) { _ioAddressPrefix = prefix; }
+    void setCurrentOriginSymbol(char c) {
+        _formatter.setCurrentOriginSymbol(c);
+    }
 
 private:
     IntelValueFormatter _formatter;
     RegZ8000 _regs;
-    bool _preferWorkRegister = true;
+    char _ioAddressPrefix;
 
     char *outRegister(char *out, RegName regName);
     char *outConditionCode(char *out, uint8_t ccNum);

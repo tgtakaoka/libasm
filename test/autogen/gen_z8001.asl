@@ -15,7 +15,7 @@
         cpu    z8001
         supmode on
         org    1000h
-        include "gen_z8k1.inc"
+        include "gen_z8001.inc"
         end
 
 ; Local Variables:

@@ -14,7 +14,7 @@
 
         cpu    z8002
         org    1000h
-        include "gen_z8k2.inc"
+        include "gen_z8002.inc"
         end
 
 ; Local Variables:

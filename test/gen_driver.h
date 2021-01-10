@@ -85,7 +85,9 @@ public:
         return 0;
     }
 
-private:
+    bool generateGas() const { return _generateGas; }
+
+    private:
     Disassembler &_disassembler;
     CliListing _listing;
     const char *_progname;

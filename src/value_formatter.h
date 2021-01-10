@@ -28,6 +28,7 @@ public:
 
     void setCStyleHex(bool enable) { _cstyle = enable; }
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    void setCurrentOriginSymbol(char c) { _curSym = c; }
     char currentOriginSymbol() const { return _curSym; }
 
     /*
@@ -46,7 +47,7 @@ public:
             char *out, uint32_t val, int8_t bits, bool relax = true) const;
 
 protected:
-    const char _curSym;
+    char _curSym;
     bool _cstyle;
     bool _uppercase;
 
