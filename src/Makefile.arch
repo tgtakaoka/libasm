@@ -93,12 +93,20 @@ CPU_ns32k    = 32032
 S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) mos6502 g65sc02 r65c02 w65c02s m6811
 # targets with Motorola S28 format
 S28_OUTS = w65c816 $(TGT_mc68000) m68k
-# other targets use Intel HEX format
-define __out-fmt-internal # target
+# targets with Intel32 (32bit address) format
+I32_OUTS = z8001 z8k1 ns32032 ns32k
+# other targets use Intel8 format
+define __out-ext # target
 $(if $(filter $(1),$(S19_OUTS)),s19,$(if $(filter $(1),$(S28_OUTS)),s28,hex))
 endef
+define out-ext # file
+$(call __out-ext,$(subst gen_,,$(subst test_,,$(1))))
+endef
+define __out-fmt # target
+$(if $(filter $(1),$(I32_OUTS)),Intel32,$(if $(filter $(1),$(S19_OUTS) $(S28_OUTS)),Moto +5,Intel))
+endef
 define out-fmt # file
-$(call __out-fmt-internal,$(subst gen_,,$(subst test_,,$(1))))
+$(call __out-fmt,$(subst gen_,,$(subst test_,,$(1))))
 endef
 
 # Local Variables:
