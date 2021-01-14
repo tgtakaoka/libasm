@@ -1,6 +1,6 @@
 {
     "name": "libasm",
-    "version": "1.6.6",
+    "version": "1.6.8",
     "description": "Cross assembler and disassembler for retro CPUs",
     "keywords": "Assembler, Disassembler, MC6809, MC68HC11, MOS6502, i8051, i8080, Z80, Z8, TLCS90, CDP1802, TMS9900, i8086, MC68000, Z8000, NS32032",
     "repository":
