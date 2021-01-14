@@ -247,7 +247,7 @@ private:
         _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
     }
 
-    static bool handleLine(char *line, uintptr_t extra, Cli::State state) {
+    static void handleLine(char *line, uintptr_t extra, Cli::State state) {
         (void)state;
         DisExample *example = reinterpret_cast<DisExample *>(extra);
         const char *scan = skipSpaces(line);
