@@ -1,4 +1,4 @@
-;;; Copyright 2020 Tadashi G. Takaoka
+;;; Copyright 2021 Tadashi G. Takaoka
 ;;;
 ;;; Licensed under the Apache License, Version 2.0 (the "License");
 ;;; you may not use this file except in compliance with the License.
@@ -13,10 +13,27 @@
 ;;; limitations under the License.
 
         cpu     W65C816
+
         org     $100200
         longa   off
         longi   off
         include "gen_w65c816.inc"
+
+        org     $200200
+        longa   off
+        longi   on
+        include "gen_w65c816.inc"
+
+        org     $300200
+        longa   on
+        longi   off
+        include "gen_w65c816.inc"
+
+        org     $400200
+        longa   on
+        longi   on
+        include "gen_w65c816.inc"
+
         end
 
 ;;; Local Variables:
