@@ -14,7 +14,7 @@
 
 # Macro Assembler asl target
 
-ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w -relaxed
+ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w -relaxed -supmode
 P2HEX_FLAGS = -q -k -r \$$-\$$ -l 32
 
 # Local Variables:
