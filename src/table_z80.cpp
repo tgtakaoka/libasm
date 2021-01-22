@@ -369,7 +369,7 @@ bool TableZ80::setCpu(CpuType cpuType) {
 }
 
 const char *TableZ80::listCpu() const {
-    return TEXT_CPU_Z80;
+    return TEXT_CPU_LIST;
 }
 
 const char *TableZ80::getCpu() const {

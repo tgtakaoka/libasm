@@ -41,7 +41,7 @@ public:
 
     AsmDirective *restrictCpu(const char *cpu);
     AsmDirective *setCpu(const char *cpu);
-    std::string listCpu(const char *separator = ",") const;
+    std::string listCpu(const char *separator) const;
     AsmDirective *currentDirective();
 
     Error assembleLine(const char *line, CliMemory &memory);

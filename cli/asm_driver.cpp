@@ -26,8 +26,7 @@ AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives)
     : _commonDir(directives) {}
 
 int AsmDriver::usage() {
-    const char *cpuSep = "\n                ";
-    std::string cpuList(cpuSep + _commonDir.listCpu(cpuSep));
+    std::string cpuList;
     AsmDirective *directive = defaultDirective();
     if (directive) {
         cpuList = ": ";

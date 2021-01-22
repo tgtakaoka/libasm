@@ -60,17 +60,17 @@ std::vector<Disassembler *> disassemblers = {
         &dis6502,
         &dis8051,
         &dis8080,
-        &dis8086,
         &disz80,
         &disz8,
         &dis90,
+        &dis8086,
         &dis8060,
         &dis8070,
         &dis1802,
         &dis68000,
-        &dis32000,
-        &disz8000,
         &dis9900,
+        &disz8000,
+        &dis32000,
 };
 
 int main(int argc, const char **argv) {

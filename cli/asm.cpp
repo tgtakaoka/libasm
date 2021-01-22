@@ -78,17 +78,17 @@ std::vector<AsmDirective *> directives = {
         &dir6502,
         &dir8051,
         &dir8080,
-        &dir8086,
         &dirz80,
         &dirz8,
         &dir90,
+        &dir8086,
         &dir8060,
         &dir8070,
         &dir1802,
         &dir68000,
-        &dir32000,
-        &dirz8000,
         &dir9900,
+        &dirz8000,
+        &dir32000,
 };
 
 int main(int argc, const char **argv) {

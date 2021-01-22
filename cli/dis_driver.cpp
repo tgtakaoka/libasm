@@ -19,6 +19,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <set>
+#include <string>
 
 namespace libasm {
 namespace cli {
@@ -34,30 +36,64 @@ DisDriver::~DisDriver() {
         delete _formatter;
 }
 
-int DisDriver::usage() {
+static void appendTo(std::string &list, const std::string &cpu,
+        std::set<std::string> &cpuSet) {
+    if (cpuSet.find(cpu) == cpuSet.end()) {
+        cpuSet.insert(cpu);
+        if (!list.empty())
+            list += ", ";
+        list.append(cpu);
+    }
+}
+
+static std::string filter(const char *text, std::set<std::string> &cpuSet) {
+    std::string list;
+    while (true) {
+        const char *del = strchr(text, ',');
+        if (del == nullptr) {
+            const std::string cpu(text);
+            appendTo(list, cpu, cpuSet);
+            return list;
+        }
+        const std::string cpu(text, del);
+        appendTo(list, cpu, cpuSet);
+        for (text = del + 1; *text == ' '; text++)
+            ;
+    }
+}
+
+static std::string listCpu(const char *separator,
+        const std::vector<Disassembler *> &disassemblers) {
+    std::set<std::string> cpuSet;
     std::string cpuList;
-    const char *cpuOption = " -C <CPU>";
+    std::string buf = "";
+    for (auto dis : disassemblers) {
+        const std::string list(filter(dis->listCpu(), cpuSet));
+        if (buf.size() + list.size() < 47) {
+            if (buf.size())
+                buf += ", ";
+            buf += list;
+        } else {
+            cpuList += separator;
+            cpuList += buf;
+            buf = list;
+        }
+    }
+    cpuList += separator + buf;
+    return cpuList;
+}
+
+int DisDriver::usage() {
+    const char *cpuOption = "";
+    std::string cpuList;
     Disassembler *dis = defaultDisassembler();
     if (dis) {
         cpuList = ": ";
         cpuList += dis->listCpu();
-        cpuOption = "";
     } else {
+        cpuOption = " -C <CPU>";
         const char *cpuSep = "\n                ";
-        std::string buf = "";
-        for (auto dis : _disassemblers) {
-            const char *list = dis->listCpu();
-            if (buf.size() + strlen(list) < 47) {
-                if (buf.size())
-                    buf += ", ";
-                buf += list;
-            } else {
-                cpuList += cpuSep;
-                cpuList += buf;
-                buf = list;
-            }
-        }
-        cpuList += cpuSep + buf;
+        cpuList = listCpu(cpuSep, _disassemblers);
     }
     fprintf(stderr,
             "libasm disassembler (version " LIBASM_VERSION_STRING

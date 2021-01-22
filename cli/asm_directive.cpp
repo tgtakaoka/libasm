@@ -16,6 +16,8 @@
 
 #include "asm_directive.h"
 
+#include <string.h>
+#include <set>
 #include "file_util.h"
 
 namespace libasm {
@@ -78,12 +80,39 @@ AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
     return nullptr;
 }
 
+static void appendTo(std::string &list, const std::string &cpu,
+        std::set<std::string> &cpuSet) {
+    if (cpuSet.find(cpu) == cpuSet.end()) {
+        cpuSet.insert(cpu);
+        if (!list.empty())
+            list += ", ";
+        list.append(cpu);
+    }
+}
+
+static std::string filter(const char *text, std::set<std::string> &cpuSet) {
+    std::string list;
+    while (true) {
+        const char *del = strchr(text, ',');
+        if (del == nullptr) {
+            const std::string cpu(text);
+            appendTo(list, cpu, cpuSet);
+            return list;
+        }
+        const std::string cpu(text, del);
+        appendTo(list, cpu, cpuSet);
+        for (text = del + 1; *text == ' '; text++)
+            ;
+    }
+}
+
 std::string AsmCommonDirective::listCpu(const char *separator) const {
+    std::set<std::string> cpuSet;
     std::string cpuList;
     std::string buf = "";
     for (auto dir : _directives) {
-        const char *list = dir->assembler().listCpu();
-        if (buf.size() + strlen(list) < 47) {
+        const std::string list(filter(dir->assembler().listCpu(), cpuSet));
+        if (buf.size() + list.size() < 47) {
             if (buf.size())
                 buf += ", ";
             buf += list;
