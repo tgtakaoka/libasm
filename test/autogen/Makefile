@@ -79,8 +79,7 @@ $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
 endef
 define asl-rule # source stem suffix format
 asl-$(2).$(3): $(1)
-	asl $$(ASL_FLAGS) -L $$^
-	p2hex $$(P2HEX_FLAGS) -F $(4) $(2).p $(2).$(3)
+	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) -F $(4) $(2).p $(2).$(3)
 
 endef
 $(eval $(foreach f,$(ASL_TESTS),$(call asl-rule,$(call asl-file,$(f)),$(f),$(call out-ext,$(f)),$(call out-fmt,$(f)))))

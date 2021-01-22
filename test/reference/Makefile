@@ -24,34 +24,37 @@ all:
 -include ../Makefile.gas
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
-ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
-define asm-rule # file fmt
+ASM_OUTS  = $(foreach t,$(ASM_TESTS),$(t).$(call out-ext,$(t)))
+define asm-rule # test format
 asm-$(1).$(2): $(1).asm
 	asm -o $(1).$(2) -l $(1).lst $$^
 
 endef
-$(eval $(foreach f,$(ASM_TESTS),$(call asm-rule,$(f),$(call out-ext,$(f)))))
+$(eval $(foreach t,$(ASM_TESTS),$(call asm-rule,$(t),$(call out-ext,$(t)))))
 
 asm-test: clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_TESTS = $(patsubst %.asl,%,$(wildcard test_*.asl))
-ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
-define asl-rule # file suffix format
-asl-$(1).$(2): $(1).asl
-	asl $$(ASL_FLAGS) -L $$^
-	p2hex $$(P2HEX_FLAGS) -F $(3) $(1).p $(1).$(2)
+ASL_exclude = test_ns32032
+ASL_TESTS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
+ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
+define asl-rule # test suffix format source
+asl-$(1).$(2): $(4)
+	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) -F $(3) $(1).p $(1).$(2)
 
 endef
-$(eval $(foreach f,$(ASL_TESTS),$(call asl-rule,$(f),$(call out-ext,$(f)),$(call out-fmt,$(f)))))
+define asl-source # test
+$(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
+endef
+$(eval $(foreach t,$(ASL_TESTS),$(call asl-rule,$(t),$(call out-ext,$(t)),$(call out-fmt,$(t)),$(call asl-source,$(t)))))
 
 asl-test: clean-asl $(ASL_OUTS:%=asl-%)
 clean-asl:
 	-rm -f $(ASL_OUTS)
 
-GAS_TESTS = $(wildcard test_*.gas)
-GAS_OUTS  = $(foreach f,$(GAS_TESTS),$(f:.gas=).$(call out-ext,$(f:.gas=)))
+GAS_TESTS = $(patsubst %.gas,%,$(wildcard test_*.gas))
+GAS_OUTS  = $(foreach t,$(GAS_TESTS),$(t).$(call out-ext,$(t)))
 gas-test: clean-gas $(GAS_OUTS)
 clean-gas:
 	-rm -f $(GAS_OUTS)
