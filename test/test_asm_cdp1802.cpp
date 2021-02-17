@@ -24,8 +24,12 @@ using namespace libasm::test;
 AsmCdp1802 asm1802;
 Assembler &assembler(asm1802);
 
-static bool cdp1806() {
-    return strcmp(assembler.getCpu(), "1806") == 0;
+static bool cdp1804() {
+    return strcmp(assembler.getCpu(), "1804") == 0;
+}
+
+static bool cdp1804a() {
+    return strcmp(assembler.getCpu(), "1804A") == 0;
 }
 
 static void set_up() {
@@ -41,15 +45,27 @@ static void test_cpu() {
     EQUALS("cpu 1802", true,   assembler.setCpu("1802"));
     EQUALS("cpu 1802", "1802", assembler.getCpu());
 
+    EQUALS("cpu 1804", true,   assembler.setCpu("1804"));
+    EQUALS("cpu 1804", "1804", assembler.getCpu());
+
+    EQUALS("cpu 1804a", true,   assembler.setCpu("1804a"));
+    EQUALS("cpu 1804a", "1804A", assembler.getCpu());
+
     EQUALS("cpu CDP1802", true,   assembler.setCpu("CDP1802"));
     EQUALS("cpu CDP1802", "1802", assembler.getCpu());
+
+    EQUALS("cpu CDP1804", true,   assembler.setCpu("CDP1804"));
+    EQUALS("cpu CDP1804", "1804", assembler.getCpu());
+
+    EQUALS("cpu CDP1804A", true,   assembler.setCpu("CDP1804A"));
+    EQUALS("cpu CDP1804A", "1804A", assembler.getCpu());
 }
 
 static void test_mem_ref() {
     // Load Immediate
     TEST("LDI 18",   0xF8, 0x12);
 
-    if (cdp1806()) {
+    if (cdp1804()) {
         // Register Load Immediate
         TEST("RLDI 0,1234H",  0x68, 0xC0, 0x12, 0x34);
         TEST("RLDI 1,1234H",  0x68, 0xC1, 0x12, 0x34);
@@ -110,7 +126,7 @@ static void test_mem_ref() {
     // Load via X and Advance
     TEST("LDXA", 0x72);
 
-    if (cdp1806()) {
+    if (cdp1804()) {
         // Register Load via X and Advance
         TEST("RLXA 0",  0x68, 0x60);
         TEST("RLXA 1",  0x68, 0x61);
@@ -151,7 +167,7 @@ static void test_mem_ref() {
     // Store via X and Decrement
     TEST("STXD", 0x73);
 
-    if (cdp1806()) {
+    if (cdp1804()) {
         // Register Store via X and Decrement
         TEST("RSXD 0",  0x68, 0xA0);
         TEST("RSXD 1",  0x68, 0xA1);
@@ -214,7 +230,7 @@ static void test_reg_op() {
     TEST("DEC 14", 0x2E);
     TEST("DEC 15", 0x2F);
 
-    if (cdp1806()) {
+    if (cdp1804a()) {
         // Decrement reg N and long Branch if Not equal Zero
         TEST("DBNZ 0,1234H",  0x68, 0x20, 0x12, 0x34);
         TEST("DBNZ 1,1234H",  0x68, 0x21, 0x12, 0x34);
@@ -232,6 +248,8 @@ static void test_reg_op() {
         TEST("DBNZ 13,1234H", 0x68, 0x2D, 0x12, 0x34);
         TEST("DBNZ 14,1234H", 0x68, 0x2E, 0x12, 0x34);
         TEST("DBNZ 15,1234H", 0x68, 0x2F, 0x12, 0x34);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "DBNZ 15,1234H");
     }
 
     // Increment reg X
@@ -309,7 +327,7 @@ static void test_reg_op() {
     TEST("PHI 14", 0xBE);
     TEST("PHI 15", 0xBF);
 
-    if (cdp1806()) {
+    if (cdp1804()) {
         // Register N to register X copy
         TEST("RNX 0",  0x68, 0xB0);
         TEST("RNX 1",  0x68, 0xB1);
@@ -357,7 +375,7 @@ static void test_arith_op() {
     TEST("SMB",     0x77);
     TEST("SMBI 0EFH", 0x7F, 0xEF);
 
-    if (cdp1806()) {
+    if (cdp1804a()) {
         TEST("DADD",    0x68, 0xF4);
         TEST("DADI 89H", 0x68, 0xFC, 0x89);
         TEST("DADC",    0x68, 0x74);
@@ -366,6 +384,15 @@ static void test_arith_op() {
         TEST("DSMI 89H", 0x68, 0xFF, 0x89);
         TEST("DSMB",    0x68, 0x77);
         TEST("DSBI 89H", 0x68, 0x7F, 0x89);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "DADD");
+        ETEST(UNKNOWN_INSTRUCTION, "DADI 89H");
+        ETEST(UNKNOWN_INSTRUCTION, "DADC");
+        ETEST(UNKNOWN_INSTRUCTION, "DACI 89H");
+        ETEST(UNKNOWN_INSTRUCTION, "DSM");
+        ETEST(UNKNOWN_INSTRUCTION, "DSMI 89H");
+        ETEST(UNKNOWN_INSTRUCTION, "DSMB");
+        ETEST(UNKNOWN_INSTRUCTION, "DSBI 89H");
     }
 
     symtab.intern(-1,  "neg1");
@@ -390,7 +417,7 @@ static void test_branch() {
     ATEST(0x1000, "BN3 103FH", 0x3E, 0x3F);
     ATEST(0x1000, "B4  1038H", 0x37, 0x38);
     ATEST(0x1000, "BN4 1040H", 0x3F, 0x40);
-    if (cdp1806()) {
+    if (cdp1804()) {
         ATEST(0x1000, "BCI 1041H", 0x68, 0x3E, 0x41);
         ATEST(0x1000, "BXI 1042H", 0x68, 0x3F, 0x42);
     }
@@ -488,12 +515,21 @@ static void test_intr() {
     TEST("DIS", 0x71);
     TEST("SAV", 0x78);
 
-    if (cdp1806()) {
+    if (cdp1804() || cdp1804a()) {
         TEST("XIE", 0x68, 0x0A);
         TEST("XID", 0x68, 0x0B);
         TEST("CIE", 0x68, 0x0C);
         TEST("CID", 0x68, 0x0D);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "XIE");
+        ETEST(UNKNOWN_INSTRUCTION, "XID");
+        ETEST(UNKNOWN_INSTRUCTION, "CIE");
+        ETEST(UNKNOWN_INSTRUCTION, "CID");
+    }
+    if (cdp1804a()) {
         TEST("DSAV", 0x68, 0x76);
+    } else {
+        ETEST(UNKNOWN_INSTRUCTION, "DSAV");
     }
 }
 
@@ -597,7 +633,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control);
     RUN_TEST(test_intr);
     RUN_TEST(test_io);
-    if (cdp1806()) {
+    if (cdp1804()) {
         RUN_TEST(test_timer);
         RUN_TEST(test_call);
     }

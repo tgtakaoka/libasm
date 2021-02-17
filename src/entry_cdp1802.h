@@ -25,7 +25,8 @@ namespace cdp1802 {
 
 enum CpuType : uint8_t {
     CDP1802,
-    CDP1806,
+    CDP1804,
+    CDP1804A,
 };
 
 enum AddrMode : uint8_t {

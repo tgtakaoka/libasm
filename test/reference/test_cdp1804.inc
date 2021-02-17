@@ -1,4 +1,4 @@
-;;; Copyright 2020 Tadashi G. Takaoka
+;;; Copyright 2021 Tadashi G. Takaoka
 ;;;
 ;;; Licensed under the Apache License, Version 2.0 (the "License");
 ;;; you may not use this file except in compliance with the License.
@@ -27,23 +27,6 @@
         xid
         cie
         cid
-;;; 682X
-        dbnz    0,2122H
-        dbnz    1,2223H
-        dbnz    2,2324H
-        dbnz    3,2425H
-        dbnz    4,2526H
-        dbnz    5,2627H
-        dbnz    6,2728H
-        dbnz    7,2829H
-        dbnz    8,292AH
-        dbnz    9,2A2BH
-        dbnz    10,2B2CH
-        dbnz    11,2C2DH
-        dbnz    12,2D2EH
-        dbnz    13,2E2FH
-        dbnz    14,2F30H
-        dbnz    15,3031H
 ;;; 683X
         bci     033FH
         bxi     0340H
@@ -64,12 +47,6 @@
         rlxa    13
         rlxa    14
         rlxa    15
-;;; 687X
-        dadc
-        dsav
-        dsmb
-        daci    7DH
-        dsbi    80H
 ;;; 688X
         scal    0,8182H
         scal    1,8283H
@@ -155,11 +132,6 @@
         rldi    13,0CECFH
         rldi    14,0CFD0H
         rldi    15,0D0D1H
-;;; 68FX
-        dadd
-        dsm
-        dadi    0FDH
-        dsmi    00H
 ;;;
 ;;; Local Variables:
 ;;; mode: asm

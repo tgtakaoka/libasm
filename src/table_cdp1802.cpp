@@ -122,7 +122,7 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0xFF, TEXT_SMI,  IMM8),
 };
 
-static constexpr Entry TABLE_CDP1806[] PROGMEM = {
+static constexpr Entry TABLE_CDP1804[] PROGMEM = {
     E(0x00, TEXT_STPC, NONE),
     E(0x01, TEXT_DTC,  NONE),
     E(0x02, TEXT_SPM2, NONE),
@@ -137,20 +137,22 @@ static constexpr Entry TABLE_CDP1806[] PROGMEM = {
     E(0x0B, TEXT_XID,  NONE),
     E(0x0C, TEXT_CIE,  NONE),
     E(0x0D, TEXT_CID,  NONE),
-    X(0x20, TEXT_DBNZ, REGN, ADDR),
     E(0x3E, TEXT_BCI,  PAGE),
     E(0x3F, TEXT_BXI,  PAGE),
     E(0x60, TEXT_RLXA, REGN),
-    E(0x74, TEXT_DADC, NONE),
-    E(0x76, TEXT_DSAV, NONE),
-    E(0x77, TEXT_DSMB, NONE),
-    E(0x7C, TEXT_DACI, IMM8),
-    E(0x7F, TEXT_DSBI, IMM8),
     X(0x80, TEXT_SCAL, REGN, ADDR),
     E(0x90, TEXT_SRET, REGN),
     E(0xA0, TEXT_RSXD, REGN),
     E(0xB0, TEXT_RNX,  REGN),
     X(0xC0, TEXT_RLDI, REGN, ADDR),
+};
+static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
+    X(0x20, TEXT_DBNZ, REGN, ADDR),
+    E(0x74, TEXT_DADC, NONE),
+    E(0x76, TEXT_DSAV, NONE),
+    E(0x77, TEXT_DSMB, NONE),
+    E(0x7C, TEXT_DACI, IMM8),
+    E(0x7F, TEXT_DSBI, IMM8),
     E(0xF4, TEXT_DADD, NONE),
     E(0xF7, TEXT_DSM,  NONE),
     E(0xFC, TEXT_DADI, IMM8),
@@ -174,13 +176,19 @@ static constexpr TableCdp1802::EntryPage CDP1802_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802)},
 };
 
-static constexpr TableCdp1802::EntryPage CDP1806_PAGES[] PROGMEM = {
+static constexpr TableCdp1802::EntryPage CDP1804_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802)},
-        {0x68, ARRAY_RANGE(TABLE_CDP1806)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1804)},
+};
+
+static constexpr TableCdp1802::EntryPage CDP1804A_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_CDP1802)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1804)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1804A)},
 };
 
 bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
-    return _cpuType == CDP1806 && opCode == 0x68;
+    return _cpuType != CDP1802 && opCode == 0x68;
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -256,12 +264,19 @@ TableCdp1802::TableCdp1802() {
 
 bool TableCdp1802::setCpu(CpuType cpuType) {
     _cpuType = cpuType;
-    if (cpuType == CDP1802) {
+    switch (cpuType) {
+    case CDP1802:
         _table = ARRAY_BEGIN(CDP1802_PAGES);
         _end = ARRAY_END(CDP1802_PAGES);
-    } else {
-        _table = ARRAY_BEGIN(CDP1806_PAGES);
-        _end = ARRAY_END(CDP1806_PAGES);
+        break;
+    case CDP1804:
+        _table = ARRAY_BEGIN(CDP1804_PAGES);
+        _end = ARRAY_END(CDP1804_PAGES);
+        break;
+    default:
+        _table = ARRAY_BEGIN(CDP1804A_PAGES);
+        _end = ARRAY_END(CDP1804A_PAGES);
+        break;
     }
     return true;
 }
@@ -271,7 +286,9 @@ const char *TableCdp1802::listCpu() const {
 }
 
 const char *TableCdp1802::getCpu() const {
-    return _cpuType == CDP1802 ? TEXT_CPU_1802 : TEXT_CPU_1806;
+    if (_cpuType == CDP1802)
+        return TEXT_CPU_1802;
+    return _cpuType == CDP1804 ? TEXT_CPU_1804 : TEXT_CPU_1804A;
 }
 
 bool TableCdp1802::setCpu(const char *cpu) {
@@ -280,8 +297,10 @@ bool TableCdp1802::setCpu(const char *cpu) {
         p += 3;
     if (strcmp_P(p, TEXT_CPU_1802) == 0)
         return setCpu(CDP1802);
-    if (strcmp_P(p, TEXT_CPU_1806) == 0)
-        return setCpu(CDP1806);
+    if (strcmp_P(p, TEXT_CPU_1804) == 0)
+        return setCpu(CDP1804);
+    if (strcasecmp_P(p, TEXT_CPU_1804A) == 0)
+        return setCpu(CDP1804A);
     return false;
 }
 

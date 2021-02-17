@@ -1,4 +1,4 @@
-;;; Copyright 2020 Tadashi G. Takaoka
+;;; Copyright 2021 Tadashi G. Takaoka
 ;;;
 ;;; Licensed under the Apache License, Version 2.0 (the "License");
 ;;; you may not use this file except in compliance with the License.
@@ -12,11 +12,13 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     1804a
+        cpu     1804A
         org     0100h
         include "test_cdp1802.inc"
         org     0300h
-        include "test_cdp1806.inc"
+        include "test_cdp1804.inc"
+        org     0500h
+        include "test_cdp1804a.inc"
         end
 
 ;;; Local Variables:
