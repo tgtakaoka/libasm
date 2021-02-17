@@ -139,13 +139,19 @@ Error AsmZ8000::emitImmediate(
     return setError(OVERFLOW_RANGE);
 }
 
-Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, uint32_t addr) {
+Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
+    const uint32_t addr = op.val32;
     if (TableZ8000.segmentedModel()) {
         if (addr >= 0x800000L)
             return setError(OVERFLOW_RANGE);
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t off = static_cast<uint16_t>(addr);
-        if (off < 0x100) {
+        bool autoShortDirect = _autoShortDirect && op.getError() == OK;
+        if (off < 0x100 && autoShortDirect) {
+            insn.emitOperand16(seg | off);
+        } else if (op.cc == CC_F) { // short direct
+            if (off >= 0x100)
+                return setError(OVERFLOW_RANGE);
             insn.emitOperand16(seg | off);
         } else {
             insn.emitOperand16(0x8000 | seg);
@@ -199,7 +205,7 @@ Error AsmZ8000::emitIndexed(
         return setError(REGISTER_NOT_ALLOWED);
     if (emitRegister(insn, field, op.reg))
         return getError();
-    return emitDirectAddress(insn, op.val32);
+    return emitDirectAddress(insn, op);
 }
 
 Error AsmZ8000::emitBaseAddress(
@@ -289,7 +295,7 @@ Error AsmZ8000::emitOperand(
             return emitIndirectRegister(insn, field, op.reg);
         insn.embed(0x4000);
         if (op.mode == M_DA)
-            return emitDirectAddress(insn, op.val32);
+            return emitDirectAddress(insn, op);
         return emitIndexed(insn, field, op);
     case M_BA:
         return emitBaseAddress(insn, field, op);
@@ -490,7 +496,14 @@ Error AsmZ8000::parseOperand(const char *scan, Operand &op) {
         op.mode = M_INTR;
         return OK;
     }
-    op.val32 = parseExpr32(p);
+    const char *end;
+    if (*p == '|' && *(end = scanExpr(p + 1, '|')) == '|') {
+        op.val32 = parseExpr32(p + 1, end);
+        _scan = end + 1;
+        op.cc = CC_F;           // mark for short M_DA/M_X
+    } else {
+        op.val32 = parseExpr32(p);
+    }
     if (parserError())
         return getError();
     op.setError(getError());

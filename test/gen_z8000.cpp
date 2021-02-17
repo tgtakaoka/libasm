@@ -32,6 +32,7 @@ int main(int argc, const char **argv) {
     if (driver.generateGas()) {
         dis8000.setIoAddressPrefix('#');
         dis8000.setCurrentOriginSymbol('.');
+        dis8000.setShortDirect(false);
     }
     TestGenerator<Config> generator(dis8000, org);
     generator.generate(driver);

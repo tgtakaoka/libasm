@@ -176,74 +176,74 @@
       OUTB   @R1,RH0
       OUTB   @R1,RL0
       OUT    @R1,R0
-      ADDB   RH0,010002H
-      ADDB   RL0,09000AH
-      ADDB   RH0,110012H(R1)
-      ADDB   RL0,19001AH(R1)
+      ADDB   RH0,|010002H|
+      ADDB   RL0,|09000AH|
+      ADDB   RH0,|110012H|(R1)
+      ADDB   RL0,|19001AH|(R1)
       ADDB   RL7,008283H(R7)
       ADDB   RH0,018384H(R8)
-      ADD    R0,010002H
-      ADD    R0,110012H(R1)
+      ADD    R0,|010002H|
+      ADD    R0,|110012H|(R1)
       ADD    R15,008283H(R7)
-      SUBB   RH0,010002H
-      SUBB   RL0,09000AH
-      SUBB   RH0,110012H(R1)
-      SUBB   RL0,19001AH(R1)
+      SUBB   RH0,|010002H|
+      SUBB   RL0,|09000AH|
+      SUBB   RH0,|110012H|(R1)
+      SUBB   RL0,|19001AH|(R1)
       SUBB   RL7,008283H(R7)
       SUBB   RH0,018384H(R8)
-      SUB    R0,010002H
-      SUB    R0,110012H(R1)
+      SUB    R0,|010002H|
+      SUB    R0,|110012H|(R1)
       SUB    R15,008283H(R7)
-      ORB    RH0,010002H
-      ORB    RL0,09000AH
-      ORB    RH0,110012H(R1)
-      ORB    RL0,19001AH(R1)
+      ORB    RH0,|010002H|
+      ORB    RL0,|09000AH|
+      ORB    RH0,|110012H|(R1)
+      ORB    RL0,|19001AH|(R1)
       ORB    RL7,008283H(R7)
       ORB    RH0,018384H(R8)
-      OR     R0,010002H
-      OR     R0,110012H(R1)
+      OR     R0,|010002H|
+      OR     R0,|110012H|(R1)
       OR     R15,008283H(R7)
-      ANDB   RH0,010002H
-      ANDB   RL0,09000AH
-      ANDB   RH0,110012H(R1)
-      ANDB   RL0,19001AH(R1)
+      ANDB   RH0,|010002H|
+      ANDB   RL0,|09000AH|
+      ANDB   RH0,|110012H|(R1)
+      ANDB   RL0,|19001AH|(R1)
       ANDB   RL7,008283H(R7)
       ANDB   RH0,018384H(R8)
-      AND    R0,010002H
-      AND    R0,110012H(R1)
+      AND    R0,|010002H|
+      AND    R0,|110012H|(R1)
       AND    R15,008283H(R7)
-      XORB   RH0,010002H
-      XORB   RL0,09000AH
-      XORB   RH0,110012H(R1)
-      XORB   RL0,19001AH(R1)
+      XORB   RH0,|010002H|
+      XORB   RL0,|09000AH|
+      XORB   RH0,|110012H|(R1)
+      XORB   RL0,|19001AH|(R1)
       XORB   RL7,008283H(R7)
       XORB   RH0,018384H(R8)
-      XOR    R0,010002H
-      XOR    R0,110012H(R1)
+      XOR    R0,|010002H|
+      XOR    R0,|110012H|(R1)
       XOR    R15,008283H(R7)
-      CPB    RH0,010002H
-      CPB    RL0,09000AH
-      CPB    RH0,110012H(R1)
-      CPB    RL0,19001AH(R1)
+      CPB    RH0,|010002H|
+      CPB    RL0,|09000AH|
+      CPB    RH0,|110012H|(R1)
+      CPB    RL0,|19001AH|(R1)
       CPB    RL7,008283H(R7)
       CPB    RH0,018384H(R8)
-      CP     R0,010002H
-      CP     R0,110012H(R1)
+      CP     R0,|010002H|
+      CP     R0,|110012H|(R1)
       CP     R15,008283H(R7)
-      COMB   010002H
-      CPB    020003H,#5
-      NEGB   030004H
-      TESTB  050006H
-      LDB    060007H,#9
-      TSETB  070008H
-      CLRB   09000AH
-      COMB   110012H(R1)
-      CPB    120013H(R1),#21
-      NEGB   130014H(R1)
-      TESTB  150016H(R1)
-      LDB    160017H(R1),#25
-      TSETB  170018H(R1)
-      CLRB   19001AH(R1)
+      COMB   |010002H|
+      CPB    |020003H|,#5
+      NEGB   |030004H|
+      TESTB  |050006H|
+      LDB    |060007H|,#9
+      TSETB  |070008H|
+      CLRB   |09000AH|
+      COMB   |110012H|(R1)
+      CPB    |120013H|(R1),#21
+      NEGB   |130014H|(R1)
+      TESTB  |150016H|(R1)
+      LDB    |160017H|(R1),#25
+      TSETB  |170018H|(R1)
+      CLRB   |19001AH|(R1)
       COMB   018384H(R8)
       CPB    028485H(R8),#87H
       NEGB   038586H(R8)
@@ -251,20 +251,20 @@
       LDB    068889H(R8),#8BH
       TSETB  07898AH(R8)
       CLRB   098B8CH(R8)
-      COM    010002H
-      CP     020003H,#0405H
-      NEG    030004H
-      TEST   050006H
-      LD     060007H,#0809H
-      TSET   070008H
-      CLR    09000AH
-      COM    110012H(R1)
-      CP     120013H(R1),#1415H
-      NEG    130014H(R1)
-      TEST   150016H(R1)
-      LD     160017H(R1),#1819H
-      TSET   170018H(R1)
-      CLR    19001AH(R1)
+      COM    |010002H|
+      CP     |020003H|,#0405H
+      NEG    |030004H|
+      TEST   |050006H|
+      LD     |060007H|,#0809H
+      TSET   |070008H|
+      CLR    |09000AH|
+      COM    |110012H|(R1)
+      CP     |120013H|(R1),#1415H
+      NEG    |130014H|(R1)
+      TEST   |150016H|(R1)
+      LD     |160017H|(R1),#1819H
+      TSET   |170018H|(R1)
+      CLR    |19001AH|(R1)
       COM    018384H(R8)
       CP     028485H(R8),#8687H
       NEG    038586H(R8)
@@ -272,92 +272,92 @@
       LD     068889H(R8),#8A8BH
       TSET   07898AH(R8)
       CLR    098B8CH(R8)
-      CPL    RR0,010002H
-      CPL    RR0,110012H(R1)
+      CPL    RR0,|010002H|
+      CPL    RR0,|110012H|(R1)
       CPL    RR0,018384H(R8)
-      PUSHL  @RR2,210022H
-      PUSHL  @RR2,220023H(R1)
+      PUSHL  @RR2,|210022H|
+      PUSHL  @RR2,|220023H|(R1)
       PUSHL  @RR8,018384H
       PUSHL  @RR8,028485H(R1)
-      SUBL   RR0,010002H
-      SUBL   RR0,110012H(R1)
+      SUBL   RR0,|010002H|
+      SUBL   RR0,|110012H|(R1)
       SUBL   RR0,018384H(R8)
-      PUSH   @RR2,210022H
-      PUSH   @RR2,220023H(R1)
+      PUSH   @RR2,|210022H|
+      PUSH   @RR2,|220023H|(R1)
       PUSH   @RR8,018384H
       PUSH   @RR8,028485H(R1)
-      LDL    RR0,010002H
-      LDL    RR0,110012H(R1)
+      LDL    RR0,|010002H|
+      LDL    RR0,|110012H|(R1)
       LDL    RR0,018384H(R8)
-      POPL   210022H,@RR2
-      POPL   220023H(R1),@RR2
+      POPL   |210022H|,@RR2
+      POPL   |220023H|(R1),@RR2
       POPL   018384H,@RR8
       POPL   028485H(R1),@RR8
-      ADDL   RR0,010002H
-      ADDL   RR0,110012H(R1)
+      ADDL   RR0,|010002H|
+      ADDL   RR0,|110012H|(R1)
       ADDL   RR0,018384H(R8)
-      POP    210022H,@RR2
-      POP    220023H(R1),@RR2
+      POP    |210022H|,@RR2
+      POP    |220023H|(R1),@RR2
       POP    018384H,@RR8
       POP    028485H(R1),@RR8
-      MULTL  RQ0,010002H
-      MULTL  RQ0,110012H(R1)
+      MULTL  RQ0,|010002H|
+      MULTL  RQ0,|110012H|(R1)
       MULTL  RQ0,018384H(R8)
-      MULT   RR0,010002H
-      MULT   RR0,110012H(R1)
+      MULT   RR0,|010002H|
+      MULT   RR0,|110012H|(R1)
       MULT   RR0,018384H(R8)
-      DIVL   RQ0,010002H
-      DIVL   RQ0,110012H(R1)
+      DIVL   RQ0,|010002H|
+      DIVL   RQ0,|110012H|(R1)
       DIVL   RQ0,018384H(R8)
-      DIV    RR0,010002H
-      DIV    RR0,110012H(R1)
+      DIV    RR0,|010002H|
+      DIV    RR0,|110012H|(R1)
       DIV    RR0,018384H(R8)
-      LDM    R2,040005H,#4
+      LDM    R2,|040005H|,#4
       LDM    R2,000607H,#3
-      TESTL  09000AH
-      LDM    020003H,R0,#2
+      TESTL  |09000AH|
+      LDM    |020003H|,R0,#2
       LDM    000405H,R0,#1
-      LDM    R0,020003H(R1),#2
+      LDM    R0,|020003H|(R1),#2
       LDM    R0,000405H(R1),#1
-      TESTL  19001AH(R1)
-      LDM    020003H(R1),R0,#2
+      TESTL  |19001AH|(R1)
+      LDM    |020003H|(R1),R0,#2
       LDM    000405H(R1),R0,#1
       TESTL  098B8CH(R8)
-      LDL    010002H,RR0
-      LDL    110012H(R1),RR0
+      LDL    |010002H|,RR0
+      LDL    |110012H|(R1),RR0
       LDL    018384H(R8),RR0
-      JP     F,010002H
-      JP     LT,020003H
-      JP     LE,030004H
-      JP     ULE,040005H
-      JP     OV,050006H
-      JP     MI,060007H
-      JP     Z,070008H
-      JP     C,080009H
-      JP     09000AH
-      JP     GE,0A000BH
-      JP     GT,0B000CH
-      JP     UGT,0C000DH
-      JP     NOV,0D000EH
-      JP     PL,0E000FH
-      JP     NZ,0F0010H
-      JP     NC,100011H
-      JP     F,110012H(R1)
-      JP     LT,120013H(R1)
-      JP     LE,130014H(R1)
-      JP     ULE,140015H(R1)
-      JP     OV,150016H(R1)
-      JP     MI,160017H(R1)
-      JP     Z,170018H(R1)
-      JP     C,180019H(R1)
-      JP     19001AH(R1)
-      JP     GE,1A001BH(R1)
-      JP     GT,1B001CH(R1)
-      JP     UGT,1C001DH(R1)
-      JP     NOV,1D001EH(R1)
-      JP     PL,1E001FH(R1)
-      JP     NZ,1F0020H(R1)
-      JP     NC,200021H(R1)
+      JP     F,|010002H|
+      JP     LT,|020003H|
+      JP     LE,|030004H|
+      JP     ULE,|040005H|
+      JP     OV,|050006H|
+      JP     MI,|060007H|
+      JP     Z,|070008H|
+      JP     C,|080009H|
+      JP     |09000AH|
+      JP     GE,|0A000BH|
+      JP     GT,|0B000CH|
+      JP     UGT,|0C000DH|
+      JP     NOV,|0D000EH|
+      JP     PL,|0E000FH|
+      JP     NZ,|0F0010H|
+      JP     NC,|100011H|
+      JP     F,|110012H|(R1)
+      JP     LT,|120013H|(R1)
+      JP     LE,|130014H|(R1)
+      JP     ULE,|140015H|(R1)
+      JP     OV,|150016H|(R1)
+      JP     MI,|160017H|(R1)
+      JP     Z,|170018H|(R1)
+      JP     C,|180019H|(R1)
+      JP     |19001AH|(R1)
+      JP     GE,|1A001BH|(R1)
+      JP     GT,|1B001CH|(R1)
+      JP     UGT,|1C001DH|(R1)
+      JP     NOV,|1D001EH|(R1)
+      JP     PL,|1E001FH|(R1)
+      JP     NZ,|1F0020H|(R1)
+      JP     NC,|200021H|(R1)
       JP     NC,008283H(R7)
       JP     F,018384H(R8)
       JP     LT,028485H(R8)
@@ -374,71 +374,71 @@
       JP     NOV,0D8F90H(R8)
       JP     PL,0E9091H(R8)
       JP     NZ,0F9192H(R8)
-      CALL   010002H
-      CALL   110012H(R1)
+      CALL   |010002H|
+      CALL   |110012H|(R1)
       CALL   008283H(R7)
-      LDB    RH0,010002H
-      LDB    RL0,09000AH
-      LDB    RH0,110012H(R1)
-      LDB    RL0,19001AH(R1)
+      LDB    RH0,|010002H|
+      LDB    RL0,|09000AH|
+      LDB    RH0,|110012H|(R1)
+      LDB    RL0,|19001AH|(R1)
       LDB    RL7,008283H(R7)
       LDB    RH0,018384H(R8)
-      LD     R0,010002H
-      LD     R0,110012H(R1)
+      LD     R0,|010002H|
+      LD     R0,|110012H|(R1)
       LD     R15,008283H(R7)
-      RESB   010002H,#0
-      RESB   110012H(R1),#0
+      RESB   |010002H|,#0
+      RESB   |110012H|(R1),#0
       RESB   018384H(R8),#0
-      RES    010002H,#0
-      RES    110012H(R1),#0
+      RES    |010002H|,#0
+      RES    |110012H|(R1),#0
       RES    008283H(R7),#15
-      SETB   010002H,#0
-      SETB   110012H(R1),#0
+      SETB   |010002H|,#0
+      SETB   |110012H|(R1),#0
       SETB   018384H(R8),#0
-      SET    010002H,#0
-      SET    110012H(R1),#0
+      SET    |010002H|,#0
+      SET    |110012H|(R1),#0
       SET    008283H(R7),#15
-      BITB   010002H,#0
-      BITB   110012H(R1),#0
+      BITB   |010002H|,#0
+      BITB   |110012H|(R1),#0
       BITB   018384H(R8),#0
-      BIT    010002H,#0
-      BIT    110012H(R1),#0
+      BIT    |010002H|,#0
+      BIT    |110012H|(R1),#0
       BIT    008283H(R7),#15
-      INCB   010002H,#1
-      INCB   110012H(R1),#1
+      INCB   |010002H|,#1
+      INCB   |110012H|(R1),#1
       INCB   008283H(R7),#16
-      INC    010002H,#1
-      INC    110012H(R1),#1
+      INC    |010002H|,#1
+      INC    |110012H|(R1),#1
       INC    008283H(R7),#16
-      DECB   010002H,#1
-      DECB   110012H(R1),#1
+      DECB   |010002H|,#1
+      DECB   |110012H|(R1),#1
       DECB   008283H(R7),#16
-      DEC    010002H,#1
-      DEC    110012H(R1),#1
+      DEC    |010002H|,#1
+      DEC    |110012H|(R1),#1
       DEC    008283H(R7),#16
-      EXB    RH0,010002H
-      EXB    RL0,09000AH
-      EXB    RH0,110012H(R1)
-      EXB    RL0,19001AH(R1)
+      EXB    RH0,|010002H|
+      EXB    RL0,|09000AH|
+      EXB    RH0,|110012H|(R1)
+      EXB    RL0,|19001AH|(R1)
       EXB    RL7,008283H(R7)
       EXB    RH0,018384H(R8)
-      EX     R0,010002H
-      EX     R0,110012H(R1)
+      EX     R0,|010002H|
+      EX     R0,|110012H|(R1)
       EX     R15,008283H(R7)
-      LDB    010002H,RH0
-      LDB    09000AH,RL0
-      LDB    110012H(R1),RH0
-      LDB    19001AH(R1),RL0
+      LDB    |010002H|,RH0
+      LDB    |09000AH|,RL0
+      LDB    |110012H|(R1),RH0
+      LDB    |19001AH|(R1),RL0
       LDB    008283H(R7),RL7
       LDB    018384H(R8),RH0
-      LD     010002H,R0
-      LD     110012H(R1),R0
+      LD     |010002H|,R0
+      LD     |110012H|(R1),R0
       LD     008283H(R7),R15
-      LDA    RR0,010002H
-      LDA    RR0,110012H(R1)
+      LDA    RR0,|010002H|
+      LDA    RR0,|110012H|(R1)
       LDA    RR0,018384H(R8)
-      LDPS   010002H
-      LDPS   110012H(R1)
+      LDPS   |010002H|
+      LDPS   |110012H|(R1)
       LDPS   018384H(R8)
       HALT
       IRET

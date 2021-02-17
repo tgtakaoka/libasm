@@ -171,13 +171,21 @@ Error DisZ8000::decodeDirectAddress(
     if (TableZ8000.segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
         uint16_t off = static_cast<uint8_t>(addr);
+        bool shortDirect = _shortDirect;
         if (addr & 0x8000) {
             if (addr & 0x00FF)
                 setError(ILLEGAL_OPERAND);
             off = insn.readUint16(memory);
+            shortDirect = false;
         }
         const uint32_t linear = seg | off;
-        outAbsAddr(out, linear, addressWidth());
+        if (shortDirect)
+            *out++ = '|';
+        out = outAbsAddr(out, linear, addressWidth());
+        if (shortDirect) {
+            *out++ = '|';
+            *out = 0;
+        }
     } else {
         outAbsAddr(out, addr);
     }

@@ -33,15 +33,18 @@ public:
     AddressWidth addressWidth() const override {
         return TableZ8000.addressWidth();
     }
+    void reset() override { setAutoShortDirect(false); }
+    void setAutoShortDirect(bool enable) { _autoShortDirect = enable; }
 
 private:
     IntelValueParser _parser;
+    bool _autoShortDirect;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
         RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
         RegName base;    // M_BA/M_BX
-        CcName cc;       // M_CC
+        CcName cc;       // M_CC/M_DA/M_X
         uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
         Operand()
             : ErrorReporter(),
@@ -61,7 +64,7 @@ private:
     Error emitIndirectRegister(InsnZ8000 &insn, ModeField field, RegName reg);
     Error emitImmediate(
             InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
-    Error emitDirectAddress(InsnZ8000 &insn, uint32_t addr);
+    Error emitDirectAddress(InsnZ8000 &insn, const Operand &op);
     Error emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op);
     Error emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
     Error emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op);

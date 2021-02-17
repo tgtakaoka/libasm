@@ -47,6 +47,28 @@ bool Assembler::endOfLine(const char *scan) const {
     return *scan == 0 || *scan == ';' || *scan == _commentChar;
 }
 
+const char *Assembler::scanExpr(
+        const char *scan, char delim, uint16_t nesting) const {
+    nesting++;
+    while (!endOfLine(scan)) {
+        const char c = *scan;
+        if (c == delim)
+            return scan;
+        scan++;
+        if (c == '(') {
+            scan = scanExpr(scan, ')', nesting);
+        } else if (c == '[') {
+            scan = scanExpr(scan, ']', nesting);
+        } else if (c == '\'') {
+            char val;
+            scan = _parser.readChar(scan, val);
+            if (*scan == '\'')
+                scan++;
+        }
+    }
+    return scan;
+}
+
 const char *Assembler::skipSpaces(const char *scan) {
     while (*scan == ' ' || *scan == '\t')
         scan++;

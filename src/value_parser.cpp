@@ -119,17 +119,18 @@ Error ValueParser::parseNumber(
     return setOK();
 }
 
-static const char *skipSpaces(const char *p) {
+const char *ValueParser::skipSpaces(const char *p) const {
     while (*p == ' ' || *p == '\t')
         p++;
-    return p;
+    return (_end == nullptr || p < _end) ? p : nullptr;
 }
 
 const char *ValueParser::eval(
-        const char *scan, Value &value, SymbolTable *symtab) {
+        const char *scan, const char *end, Value &value, SymbolTable *symtab) {
     _symtab = symtab;
     _stack.clear();
     setOK();
+    _end = end;
     value = parseExpr(scan);
     return _next;
 }
@@ -163,19 +164,23 @@ Value ValueParser::parseExpr(const char *scan) {
 
 Value ValueParser::readAtom(const char *scan) {
     const char *p = skipSpaces(scan);
+    if (p == nullptr) {
+        setError(ILLEGAL_CONSTANT);
+        return Value();
+    }
     const char c = *p++;
 
     if (c == '(' || c == '[') {
         Value value(parseExpr(p));
         if (getError() == OK) {
-            p = skipSpaces(_next);
             const char expected = (c == '(') ? ')' : ']';
-            if (*p == expected) {
-                _next = p + 1;
-                return value;
+            p = skipSpaces(_next);
+            if (p == nullptr || *p != expected) {
+                setError(MISSING_CLOSING_PAREN);
+                return Value();
             }
-            setError(MISSING_CLOSING_PAREN);
-            return Value();
+            _next = p + 1;
+            return value;
         }
         return value;
     }
@@ -251,6 +256,8 @@ Value ValueParser::readCharacterConstant(const char *scan) {
 // The same order of C/C++ language.
 ValueParser::Operator ValueParser::readOperator(const char *scan) {
     const char *p = skipSpaces(scan);
+    if (p == nullptr)
+        return Operator(OP_NONE, 0);
     const char c = *p++;
     _next = p;
     switch (c) {
@@ -387,7 +394,7 @@ Error ValueParser::scanNumberEnd(
         // Check whether intel binary or C-style binary
         const char *p = scan;
         if (*p++ == '0' && toupper(*p++) == 'B' && (*p == '0' || *p == '1'))
-            return ILLEGAL_CONSTANT; // expect intel but found C-style
+            return ILLEGAL_CONSTANT;  // expect intel but found C-style
     }
     while (isValidDigit(*scan, base))
         scan++;

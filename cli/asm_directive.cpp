@@ -367,7 +367,7 @@ Error AsmCommonDirective::processPseudo(
 Error AsmCommonDirective::defineOrigin() {
     ValueParser &parser = _assembler->getParser();
     Value value;
-    const char *scan = parser.eval(_scan, value, this);
+    const char *scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -381,7 +381,7 @@ Error AsmCommonDirective::defineOrigin() {
 Error AsmCommonDirective::alignOrigin() {
     ValueParser &parser = _assembler->getParser();
     Value value;
-    const char *scan = parser.eval(_scan, value, this);
+    const char *scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -406,7 +406,7 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
         return setError(DUPLICATE_LABEL);
     ValueParser &parser = _assembler->getParser();
     Value value;
-    const char *scan = parser.eval(_scan, value, this);
+    const char *scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -460,7 +460,7 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
             _scan = p + 1;
         } else {
             Value value;
-            _scan = parser.eval(_scan, value, this);
+            _scan = parser.eval(_scan, nullptr, value, this);
             if (setError(parser.error()))
                 return getError();
             if (_reportUndef && value.isUndefined())
@@ -487,7 +487,7 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
     do {
         skipSpaces();
         Value value;
-        _scan = parser.eval(_scan, value, this);
+        _scan = parser.eval(_scan, nullptr, value, this);
         if (setError(parser.error()))
             return getError();
         if (_reportUndef && value.isUndefined())
@@ -516,7 +516,7 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
 Error AsmCommonDirective::defineSpaces() {
     ValueParser &parser = _assembler->getParser();
     Value value;
-    _scan = parser.eval(_scan, value, this);
+    _scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())

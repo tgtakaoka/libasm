@@ -80,11 +80,12 @@ public:
 
     Error error() const { return getError(); }
     /*
-     * Parse |scan| text and convert expression to |val|.
+     * Parse |scan| text until |end| and convert expression to |val|.
      * Undefined symbol reference in expression should be checked by
      * |val.isUndefined()|. Other error should be checked by |error()|.
      */
-    const char *eval(const char *scan, Value &val, SymbolTable *symtab);
+    const char *eval(
+            const char *scan, const char *end, Value &val, SymbolTable *symtab);
     /*
      * Parse |scan| text and convert character constant to |val|.
      * Error should be checked by |error()|.
@@ -103,6 +104,7 @@ protected:
 private:
     const char _curSym;
     const char *_next;
+    const char *_end;
 
     enum Op : uint8_t {
         OP_NONE,
@@ -155,6 +157,7 @@ private:
     SymbolTable *_symtab;
     Stack<OprAndLval> _stack;
 
+    const char *skipSpaces(const char *scan) const;
     Value parseExpr(const char *scan);
     Value readAtom(const char *scan);
     Value readCharacterConstant(const char *scan);

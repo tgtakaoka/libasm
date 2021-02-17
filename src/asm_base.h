@@ -55,13 +55,14 @@ protected:
 
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;
+    const char *scanExpr(const char *scan, char delim, uint16_t nesting = 0) const;
     static const char *skipSpaces(const char *scan);
 
     Error parserError() { return _parser.error(); }
 
-    uint16_t parseExpr16(const char *scan) {
+    uint16_t parseExpr16(const char *scan, const char *end = nullptr) {
         Value value;
-        _scan = _parser.eval(scan, value, _symtab);
+        _scan = _parser.eval(scan, end, value, _symtab);
         setError(_parser.error());
         if (value.overflowUint16())
             setErrorIf(OVERFLOW_RANGE);
@@ -70,9 +71,9 @@ protected:
         return value.getUnsigned();
     }
 
-    uint32_t parseExpr32(const char *scan) {
+    uint32_t parseExpr32(const char *scan, const char *end = nullptr) {
         Value value;
-        _scan = _parser.eval(scan, value, _symtab);
+        _scan = _parser.eval(scan, end, value, _symtab);
         setError(_parser.error());
         if (value.isUndefined())
             setErrorIf(UNDEFINED_SYMBOL);

@@ -35,7 +35,7 @@ void val_assert(const char *file, const int line, const char *expr,
         const T expected, const Error expected_error, ValueParser &parser) {
     Value val;
     ErrorReporter error;
-    parser.eval(expr, val, &symtab);
+    parser.eval(expr, nullptr, val, &symtab);
     error.setError(parser.error());
     if (sizeof(T) == 1 && val.overflowUint8())
         error.setErrorIf(OVERFLOW_RANGE);
