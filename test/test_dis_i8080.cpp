@@ -134,8 +134,8 @@ static void test_move_inherent() {
         TEST(RIM, "", 0x20);
         TEST(SIM, "", 0x30);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x20);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x30);
+        ERUI(RIM, "", 0x20);
+        ERUI(SIM, "", 0x30);
     }
 }
 
@@ -393,18 +393,18 @@ static void test_restart() {
 
 static void test_illegal() {
     if (is8080()) {
-        ILLEGAL(0x20);
-        ILLEGAL(0x30);
+        ERRI(0x20);
+        ERRI(0x30);
     }
-    ILLEGAL(0x08);
-    ILLEGAL(0x10);
-    ILLEGAL(0x18);
-    ILLEGAL(0x28);
-    ILLEGAL(0x38);
-    ILLEGAL(0xD9);
-    ILLEGAL(0xDD);
-    ILLEGAL(0xED);
-    ILLEGAL(0xFD);
+    ERRI(0x08);
+    ERRI(0x10);
+    ERRI(0x18);
+    ERRI(0x28);
+    ERRI(0x38);
+    ERRI(0xD9);
+    ERRI(0xDD);
+    ERRI(0xED);
+    ERRI(0xFD);
 }
 // clang-format on
 

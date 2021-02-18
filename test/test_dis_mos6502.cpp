@@ -122,10 +122,10 @@ static void test_impl() {
     TEST(SED, "", 0xF8);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x5A);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x7A);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDA);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFA);
+        ERRI(0x5A);
+        ERRI(0x7A);
+        ERRI(0xDA);
+        ERRI(0xFA);
     } else {
         // G65SC02
         TEST(PHY, "", 0x5A);
@@ -138,8 +138,8 @@ static void test_impl() {
         TEST(WAI, "", 0xCB);
         TEST(STP, "", 0xDB);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xCB);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDB);
+        ERRI(0xCB);
+        ERRI(0xDB);
     }
     if (w65c816()) {
         // W65C816
@@ -168,8 +168,8 @@ static void test_accm() {
     TEST(ROR, "A", 0x6A);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x1A);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x3A);
+        ERRI(0x1A);
+        ERRI(0x3A);
     } else {
         // G65SC02
         TEST(INC, "A", 0x1A);
@@ -193,7 +193,7 @@ static void test_imm() {
     TEST(SBC, "#$90", 0xE9, 0x90);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x89);
+        ERRI(0x89);
     } else {
         // G65SC02
         TEST(BIT, "#$90", 0x89, 0x90);
@@ -201,7 +201,7 @@ static void test_imm() {
     if (w65c816()) {
         // W65C816
         TEST(COP, "#16",  0x02, 0x10);
-        ETEST(UNKNOWN_INSTRUCTION, WDM, "#$10", 0x42, 0x10);
+        ERUI(WDM, "#$10", 0x42, 0x10);
         TEST(REP, "#32",  0xC2, 0x20);
         TEST(SEP, "#16",  0xE2, 0x10);
     }
@@ -316,9 +316,9 @@ static void test_zpg() {
     TEST(ROR, "$10", 0x66, 0x10);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x04);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x14);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x64);
+        ERRI(0x04);
+        ERRI(0x14);
+        ERRI(0x64);
     } else {
         // G65SC02
         TEST(TSB, "$10", 0x04, 0x10);
@@ -366,8 +366,8 @@ static void test_zpg_indexed() {
     TEST(ROR, "$10,X", 0x76, 0x10);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x34);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x74);
+        ERRI(0x34);
+        ERRI(0x74);
     } else {
         // G65SC02
         TEST(BIT, "$10,X", 0x34, 0x10);
@@ -498,9 +498,9 @@ static void test_abs() {
     TEST(JSR, ">$0034", 0x20, 0x34, 0x00);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0C);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x1C);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x9C);
+        ERRI(0x0C);
+        ERRI(0x1C);
+        ERRI(0x9C);
     } else {
         // G65SC02
         TEST(TSB,  "$1234", 0x0C, 0x34, 0x12);
@@ -616,8 +616,8 @@ static void test_abs_indexed() {
     TEST(ROR, ">$0034,X", 0x7E, 0x34, 0x00);
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x3C);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x9E);
+        ERRI(0x3C);
+        ERRI(0x9E);
     } else {
         // G65SC02
         TEST(BIT,  "$1234,X", 0x3C, 0x34, 0x12);
@@ -656,7 +656,7 @@ static void test_abs_idir() {
 
 static void test_abs_indexed_idir() {
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x7C);
+        ERRI(0x7C);
     } else {
         // G65SC02
         TEST(JMP, "(>$0009,X)", 0x7C, 0x09, 0x00);
@@ -678,14 +678,14 @@ static void test_abs_indexed_idir() {
 
 static void test_zpg_idir() {
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x12);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x32);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x52);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x72);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x92);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xB2);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD2);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xF2);
+        ERRI(0x12);
+        ERRI(0x32);
+        ERRI(0x52);
+        ERRI(0x72);
+        ERRI(0x92);
+        ERRI(0xB2);
+        ERRI(0xD2);
+        ERRI(0xF2);
     } else {
         // G65SC02
         TEST(ORA, "($00)", 0x12, 0x00);
@@ -751,9 +751,9 @@ static void test_rel() {
         ATEST(0x001000, BVC, "$001004", 0x50, 0x02);
         ATEST(0x001000, BVS, "$001081", 0x70, 0x7F);
         ATEST(0x001000, BCC, "$000F82", 0x90, 0x80);
-        EATEST(OPERAND_TOO_FAR, 0x120000, BCS, "$12FF82", 0xB0, 0x80);
-        EATEST(OPERAND_TOO_FAR, 0x12FFFE, BNE, "$120000", 0xD0, 0x00);
-        EATEST(OPERAND_TOO_FAR, 0x12FFF0, BEQ, "$120071", 0xF0, 0x7F);
+        AERRF(0x120000, BCS, "$12FF82", 0xB0, 0x80);
+        AERRF(0x12FFFE, BNE, "$120000", 0xD0, 0x00);
+        AERRF(0x12FFF0, BEQ, "$120071", 0xF0, 0x7F);
     } else {
         // MOS6502
         ATEST(0x1000, BPL, "$1002", 0x10, 0x00);
@@ -761,20 +761,20 @@ static void test_rel() {
         ATEST(0x1000, BVC, "$1004", 0x50, 0x02);
         ATEST(0x1000, BVS, "$1081", 0x70, 0x7F);
         ATEST(0x1000, BCC, "$0F82", 0x90, 0x80);
-        EATEST(OPERAND_TOO_FAR, 0x0000, BCS, "$FF82", 0xB0, 0x80);
+        AERRF(0x0000, BCS, "$FF82", 0xB0, 0x80);
         ATEST(0xFFFE, BNE, "$0000", 0xD0, 0x00);
-        EATEST(OPERAND_TOO_FAR, 0xFFF0, BEQ, "$0071", 0xF0, 0x7F);
+        AERRF(0xFFF0, BEQ, "$0071", 0xF0, 0x7F);
     }
 
     if (m6502()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x80);
+        ERRI(0x80);
     } else if (w65c816()) {
         // W65C816
         ATEST(0x121000, BRA, "$121002", 0x80, 0x00);
         ATEST(0x121000, BRL, "$121234", 0x82, 0x31, 0x02);
         ATEST(0x121000, PER, "$121234", 0x62, 0x31, 0x02);
-        EATEST(OPERAND_TOO_FAR, 0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
-        EATEST(OPERAND_TOO_FAR, 0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
+        AERRF(0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
+        AERRF(0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
     } else {
         // G65SC02
         ATEST(0x1000, BRA, "$1002", 0x80, 0x00);
@@ -800,36 +800,36 @@ static void test_rel() {
     ATEST(0x2000, BPL, "*+2",   0x10, 0x00);
     ATEST(0x2000, BPL, "*+129", 0x10, 0x7F);
     if (w65c816()) {
-        EATEST(OPERAND_TOO_FAR, 0x120000, BCS, "$12FF82", 0xB0, 0x80);
-        EATEST(OPERAND_TOO_FAR, 0x12FFFE, BNE, "$120000", 0xD0, 0x00);
-        EATEST(OPERAND_TOO_FAR, 0x12FFF0, BEQ, "$120071", 0xF0, 0x7F);
-        EATEST(OPERAND_TOO_FAR, 0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
-        EATEST(OPERAND_TOO_FAR, 0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
+        AERRF(0x120000, BCS, "$12FF82", 0xB0, 0x80);
+        AERRF(0x12FFFE, BNE, "$120000", 0xD0, 0x00);
+        AERRF(0x12FFF0, BEQ, "$120071", 0xF0, 0x7F);
+        AERRF(0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
+        AERRF(0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
     } else {
-        EATEST(OPERAND_TOO_FAR, 0x0000, BCS, "*-126", 0xB0, 0x80);
+        AERRF(0x0000, BCS, "*-126", 0xB0, 0x80);
         ATEST(0xFFFE, BNE, "*+2",   0xD0, 0x00);
-        EATEST(OPERAND_TOO_FAR, 0xFFF0, BEQ, "*+129", 0xF0, 0x7F);
+        AERRF(0xFFF0, BEQ, "*+129", 0xF0, 0x7F);
     }
 }
 
 static void test_bitop() {
     if (m6502() || g65sc02()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x07);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x17);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x27);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x37);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x47);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x57);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x67);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x77);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x87);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x97);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xA7);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xB7);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xC7);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xD7);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xE7);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xF7);
+        ERRI(0x07);
+        ERRI(0x17);
+        ERRI(0x27);
+        ERRI(0x37);
+        ERRI(0x47);
+        ERRI(0x57);
+        ERRI(0x67);
+        ERRI(0x77);
+        ERRI(0x87);
+        ERRI(0x97);
+        ERRI(0xA7);
+        ERRI(0xB7);
+        ERRI(0xC7);
+        ERRI(0xD7);
+        ERRI(0xE7);
+        ERRI(0xF7);
     } else if (r65c02() || w65c02s()) {
         // R65C02, W65C02S
         TEST(RMB0, "$10", 0x07, 0x10);
@@ -859,22 +859,22 @@ static void test_bitop() {
 
 static void test_zpg_rel() {
     if (m6502() || g65sc02()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x1F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x2F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x3F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x4F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x5F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x6F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x7F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x8F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x9F);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xAF);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xBF);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xCF);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xDF);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xEF);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFF);
+        ERRI(0x0F);
+        ERRI(0x1F);
+        ERRI(0x2F);
+        ERRI(0x3F);
+        ERRI(0x4F);
+        ERRI(0x5F);
+        ERRI(0x6F);
+        ERRI(0x7F);
+        ERRI(0x8F);
+        ERRI(0x9F);
+        ERRI(0xAF);
+        ERRI(0xBF);
+        ERRI(0xCF);
+        ERRI(0xDF);
+        ERRI(0xEF);
+        ERRI(0xFF);
     } else if (r65c02() || w65c02s()) {
         // R65C02, W65C02S
         ATEST(0x1000, BBR0, "$10,$1003", 0x0F, 0x10, 0x00);
@@ -928,7 +928,7 @@ static void test_illegal_mos6502() {
         0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_g65sc02() {
@@ -946,7 +946,7 @@ static void test_illegal_g65sc02() {
         0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_r65c02() {
@@ -960,7 +960,7 @@ static void test_illegal_r65c02() {
         0x5C, 0xDC, 0xFC,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_w65c02s() {
@@ -974,7 +974,7 @@ static void test_illegal_w65c02s() {
         0x5C, 0xDC, 0xFC,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 // clang-format on
 

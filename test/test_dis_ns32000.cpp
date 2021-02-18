@@ -82,8 +82,8 @@ static void test_format_1() {
     TEST(RESTORE, "[R0,R2,R7]",     0x72, 0xA1);
     TEST(ENTER,   "[R0,R2,R7], 16", 0x82, 0x85, 0x10);
     TEST(EXIT,    "[R0,R2,R7]",     0x92, 0xA1);
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x62, 0x00);
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x72, 0x00);
+    ERNE(SAVE,    "",               0x62, 0x00);
+    ERNE(RESTORE, "",               0x72, 0x00);
 
     // Various displacement.
     TEST(RET, "0",           0x12, 0x00);
@@ -93,7 +93,7 @@ static void test_format_1() {
     TEST(RET, "-0x2000",     0x12, 0xA0, 0x00);
     TEST(RET, "0x1FFFFFFF",  0x12, 0xDF, 0xFF, 0xFF, 0xFF);
     TEST(RET, "-0x1F000000", 0x12, 0xE1, 0x00, 0x00, 0x00);
-    ETEST(ILLEGAL_CONSTANT, _, "", 0x12, 0xE0);
+    ERIC(RET, "reserved",    0x12, 0xE0);
 }
 
 static void test_format_2() {
@@ -111,107 +111,107 @@ static void test_format_2() {
     TEST(ACBW,  "-2, R1, .-2", 0x4D, 0x0F, 0x7E);
     TEST(ACBD,  "4, R2, .+2",  0x4F, 0x12, 0x02);
 
-    TEST(LPRB, "UPSR, R1",         0x6C, 0x08);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEC, 0x00);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6C, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEC, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6C, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEC, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6C, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEC, 0x03);
-    TEST(LPRB, "FP, R2",           0x6C, 0x14);
-    TEST(LPRB, "SP, R3",           0xEC, 0x1C);
-    TEST(LPRB, "SB, R4",           0x6C, 0x25);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEC, 0x05);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6C, 0x06);
-    TEST(LPRB, "PSR, R5",          0xEC, 0x2E);
-    TEST(LPRB, "INTBASE, R6",      0x6C, 0x37);
-    TEST(LPRB, "MOD, R7",          0xEC, 0x3F);
+    TEST(LPRB, "UPSR, R1", 0x6C, 0x08);
+    ERUR(LPRB, "pr1, R1",  0xEC, 0x00);
+    ERUR(LPRB, "pr2, R1",  0x6C, 0x01);
+    ERUR(LPRB, "pr3, R1",  0xEC, 0x01);
+    ERUR(LPRB, "pr4, R1",  0x6C, 0x02);
+    ERUR(LPRB, "pr5, R1",  0xEC, 0x02);
+    ERUR(LPRB, "pr6, R1",  0x6C, 0x03);
+    ERUR(LPRB, "pr7, R1",  0xEC, 0x03);
+    TEST(LPRB, "FP, R2",   0x6C, 0x14);
+    TEST(LPRB, "SP, R3",   0xEC, 0x1C);
+    TEST(LPRB, "SB, R4",   0x6C, 0x25);
+    ERUR(LPRB, "pr11, R1", 0xEC, 0x05);
+    ERUR(LPRB, "pr12, R1", 0x6C, 0x06);
+    TEST(LPRB, "PSR, R5",  0xEC, 0x2E);
+    TEST(LPRB, "INTBASE, R6", 0x6C, 0x37);
+    TEST(LPRB, "MOD, R7",  0xEC, 0x3F);
 
-    TEST(LPRW, "UPSR, R1",         0x6D, 0x08);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xED, 0x00);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6D, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xED, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6D, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xED, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6D, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xED, 0x03);
-    TEST(LPRW, "FP, R2",           0x6D, 0x14);
-    TEST(LPRW, "SP, R3",           0xED, 0x1C);
-    TEST(LPRW, "SB, R4",           0x6D, 0x25);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xED, 0x05);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6D, 0x06);
-    TEST(LPRW, "PSR, R5",          0xED, 0x2E);
-    TEST(LPRW, "INTBASE, R6",      0x6D, 0x37);
-    TEST(LPRW, "MOD, 4(SB)",       0xED, 0xD7, 0x04);
+    TEST(LPRW, "UPSR, R1", 0x6D, 0x08);
+    ERUR(LPRW, "pr1, R1",  0xED, 0x00);
+    ERUR(LPRW, "pr2, R1",  0x6D, 0x01);
+    ERUR(LPRW, "pr3, R1",  0xED, 0x01);
+    ERUR(LPRW, "pr4, R1",  0x6D, 0x02);
+    ERUR(LPRW, "pr5, R1",  0xED, 0x02);
+    ERUR(LPRW, "pr6, R1",  0x6D, 0x03);
+    ERUR(LPRW, "pr7, R1",  0xED, 0x03);
+    TEST(LPRW, "FP, R2",   0x6D, 0x14);
+    TEST(LPRW, "SP, R3",   0xED, 0x1C);
+    TEST(LPRW, "SB, R4",   0x6D, 0x25);
+    ERUR(LPRW, "pr11, R1", 0xED, 0x05);
+    ERUR(LPRW, "pr12, R1", 0x6D, 0x06);
+    TEST(LPRW, "PSR, R5",  0xED, 0x2E);
+    TEST(LPRW, "INTBASE, R6", 0x6D, 0x37);
+    TEST(LPRW, "MOD, 4(SB)",  0xED, 0xD7, 0x04);
 
-    TEST(LPRD, "UPSR, R1",         0x6F, 0x08);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEF, 0x00);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6F, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEF, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6F, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEF, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6F, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEF, 0x03);
-    TEST(LPRD, "FP, R2",           0x6F, 0x14);
-    TEST(LPRD, "SP, R3",           0xEF, 0x1C);
-    TEST(LPRD, "SB, R4",           0x6F, 0x25);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xEF, 0x05);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x6F, 0x06);
-    TEST(LPRD, "PSR, R5",          0xEF, 0x2E);
-    TEST(LPRD, "INTBASE, R6",      0x6F, 0x37);
-    TEST(LPRD, "MOD, 4(SB)",       0xEF, 0xD7, 0x04);
+    TEST(LPRD, "UPSR, R1", 0x6F, 0x08);
+    ERUR(LPRD, "pr1, R1",  0xEF, 0x00);
+    ERUR(LPRD, "pr2, R1",  0x6F, 0x01);
+    ERUR(LPRD, "pr3, R1",  0xEF, 0x01);
+    ERUR(LPRD, "pr4, R1",  0x6F, 0x02);
+    ERUR(LPRD, "pr5, R1",  0xEF, 0x02);
+    ERUR(LPRD, "pr6, R1",  0x6F, 0x03);
+    ERUR(LPRD, "pr7, R1",  0xEF, 0x03);
+    TEST(LPRD, "FP, R2",   0x6F, 0x14);
+    TEST(LPRD, "SP, R3",   0xEF, 0x1C);
+    TEST(LPRD, "SB, R4",   0x6F, 0x25);
+    ERUR(LPRD, "pr11, R1", 0xEF, 0x05);
+    ERUR(LPRD, "pr12, R1", 0x6F, 0x06);
+    TEST(LPRD, "PSR, R5",  0xEF, 0x2E);
+    TEST(LPRD, "INTBASE, R6", 0x6F, 0x37);
+    TEST(LPRD, "MOD, 4(SB)",  0xEF, 0xD7, 0x04);
 
-    TEST(SPRB, "UPSR, R1",         0x2C, 0x08);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAC, 0x00);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2C, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAC, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2C, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAC, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2C, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAC, 0x03);
-    TEST(SPRB, "FP, R2",           0x2C, 0x14);
-    TEST(SPRB, "SP, R3",           0xAC, 0x1C);
-    TEST(SPRB, "SB, R4",           0x2C, 0x25);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAC, 0x05);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2C, 0x06);
-    TEST(SPRB, "PSR, R5",          0xAC, 0x2E);
-    TEST(SPRB, "INTBASE, R6",      0x2C, 0x37);
-    TEST(SPRB, "MOD, R7",          0xAC, 0x3F);
+    TEST(SPRB, "UPSR, R1", 0x2C, 0x08);
+    ERUR(SPRB, "pr1, R1",  0xAC, 0x00);
+    ERUR(SPRB, "pr2, R1",  0x2C, 0x01);
+    ERUR(SPRB, "pr3, R1",  0xAC, 0x01);
+    ERUR(SPRB, "pr4, R1",  0x2C, 0x02);
+    ERUR(SPRB, "pr5, R1",  0xAC, 0x02);
+    ERUR(SPRB, "pr6, R1",  0x2C, 0x03);
+    ERUR(SPRB, "pr7, R1",  0xAC, 0x03);
+    TEST(SPRB, "FP, R2",   0x2C, 0x14);
+    TEST(SPRB, "SP, R3",   0xAC, 0x1C);
+    TEST(SPRB, "SB, R4",   0x2C, 0x25);
+    ERUR(SPRB, "pr11, R1", 0xAC, 0x05);
+    ERUR(SPRB, "pr12, R1", 0x2C, 0x06);
+    TEST(SPRB, "PSR, R5",  0xAC, 0x2E);
+    TEST(SPRB, "INTBASE, R6", 0x2C, 0x37);
+    TEST(SPRB, "MOD, R7",     0xAC, 0x3F);
 
-    TEST(SPRW, "UPSR, R1",         0x2D, 0x08);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAD, 0x00);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2D, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAD, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2D, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAD, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2D, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAD, 0x03);
-    TEST(SPRW, "FP, R2",           0x2D, 0x14);
-    TEST(SPRW, "SP, R3",           0xAD, 0x1C);
-    TEST(SPRW, "SB, R4",           0x2D, 0x25);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAD, 0x05);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2D, 0x06);
-    TEST(SPRW, "PSR, R5",          0xAD, 0x2E);
-    TEST(SPRW, "INTBASE, R6",      0x2D, 0x37);
-    TEST(SPRW, "MOD, 4(SB)",       0xAD, 0xD7, 0x04);
+    TEST(SPRW, "UPSR, R1", 0x2D, 0x08);
+    ERUR(SPRW, "pr1, R1",  0xAD, 0x00);
+    ERUR(SPRW, "pr2, R1",  0x2D, 0x01);
+    ERUR(SPRW, "pr3, R1",  0xAD, 0x01);
+    ERUR(SPRW, "pr4, R1",  0x2D, 0x02);
+    ERUR(SPRW, "pr5, R1",  0xAD, 0x02);
+    ERUR(SPRW, "pr6, R1",  0x2D, 0x03);
+    ERUR(SPRW, "pr7, R1",  0xAD, 0x03);
+    TEST(SPRW, "FP, R2",   0x2D, 0x14);
+    TEST(SPRW, "SP, R3",   0xAD, 0x1C);
+    TEST(SPRW, "SB, R4",   0x2D, 0x25);
+    ERUR(SPRW, "pr11, R1", 0xAD, 0x05);
+    ERUR(SPRW, "pr12, R1", 0x2D, 0x06);
+    TEST(SPRW, "PSR, R5",  0xAD, 0x2E);
+    TEST(SPRW, "INTBASE, R6", 0x2D, 0x37);
+    TEST(SPRW, "MOD, 4(SB)",  0xAD, 0xD7, 0x04);
 
-    TEST(SPRD, "UPSR, R1",         0x2F, 0x08);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAF, 0x00);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2F, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAF, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2F, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAF, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2F, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAF, 0x03);
-    TEST(SPRD, "FP, R2",           0x2F, 0x14);
-    TEST(SPRD, "SP, R3",           0xAF, 0x1C);
-    TEST(SPRD, "SB, R4",           0x2F, 0x25);
-    ETEST(UNKNOWN_REGISTER, _, "", 0xAF, 0x05);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x2F, 0x06);
-    TEST(SPRD, "PSR, R5",          0xAF, 0x2E);
-    TEST(SPRD, "INTBASE, R6",      0x2F, 0x37);
-    TEST(SPRD, "MOD, 4(SB)",       0xAF, 0xD7, 0x04);
+    TEST(SPRD, "UPSR, R1", 0x2F, 0x08);
+    ERUR(SPRD, "pr1, R1",  0xAF, 0x00);
+    ERUR(SPRD, "pr2, R1",  0x2F, 0x01);
+    ERUR(SPRD, "pr3, R1",  0xAF, 0x01);
+    ERUR(SPRD, "pr4, R1",  0x2F, 0x02);
+    ERUR(SPRD, "pr5, R1",  0xAF, 0x02);
+    ERUR(SPRD, "pr6, R1",  0x2F, 0x03);
+    ERUR(SPRD, "pr7, R1",  0xAF, 0x03);
+    TEST(SPRD, "FP, R2",   0x2F, 0x14);
+    TEST(SPRD, "SP, R3",   0xAF, 0x1C);
+    TEST(SPRD, "SB, R4",   0x2F, 0x25);
+    ERUR(SPRD, "pr11, R1", 0xAF, 0x05);
+    ERUR(SPRD, "pr12, R1", 0x2F, 0x06);
+    TEST(SPRD, "PSR, R5",  0xAF, 0x2E);
+    TEST(SPRD, "INTBASE, R6", 0x2F, 0x37);
+    TEST(SPRD, "MOD, 4(SB)",  0xAF, 0xD7, 0x04);
 
 
     TEST(SEQB, "R0",           0x3C, 0x00);
@@ -407,39 +407,39 @@ static void test_format_11() {
 
 #ifdef NS32000_ENABLE_MMU
 static void test_format_14() {
-    TEST(LMR,   "BPR0, R1",        0x1E, 0x0B, 0x08);
-    TEST(LMR,   "BPR1, R2",        0x1E, 0x8B, 0x10);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0B, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8B, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0B, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8B, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0B, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8B, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0B, 0x04);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8B, 0x04);
-    TEST(LMR,   "MSR, R3",         0x1E, 0x0B, 0x1D);
-    TEST(LMR,   "BCNT, R4",        0x1E, 0x8B, 0x25);
-    TEST(LMR,   "PTB0, R5",        0x1E, 0x0B, 0x2E);
-    TEST(LMR,   "PTB1, R6",        0x1E, 0x8B, 0x36);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0B, 0x07);
-    TEST(LMR,   "EIA, R7",         0x1E, 0x8B, 0x3F);
+    TEST(LMR, "BPR0, R1", 0x1E, 0x0B, 0x08);
+    TEST(LMR, "BPR1, R2", 0x1E, 0x8B, 0x10);
+    ERUR(LMR, "mr2, R3",  0x1E, 0x0B, 0x19);
+    ERUR(LMR, "mr3, R4",  0x1E, 0x8B, 0x21);
+    ERUR(LMR, "mr4, R5",  0x1E, 0x0B, 0x2A);
+    ERUR(LMR, "mr5, R6",  0x1E, 0x8B, 0x32);
+    ERUR(LMR, "mr6, R7",  0x1E, 0x0B, 0x3B);
+    ERUR(LMR, "mr7, R0",  0x1E, 0x8B, 0x03);
+    ERUR(LMR, "mr8, R1",  0x1E, 0x0B, 0x0C);
+    ERUR(LMR, "mr9, R2",  0x1E, 0x8B, 0x14);
+    TEST(LMR, "MSR, R3",  0x1E, 0x0B, 0x1D);
+    TEST(LMR, "BCNT, R4", 0x1E, 0x8B, 0x25);
+    TEST(LMR, "PTB0, R5", 0x1E, 0x0B, 0x2E);
+    TEST(LMR, "PTB1, R6", 0x1E, 0x8B, 0x36);
+    ERUR(LMR, "mr14, R7", 0x1E, 0x0B, 0x3F);
+    TEST(LMR, "EIA, R0",  0x1E, 0x8B, 0x07);
 
-    TEST(SMR,   "BPR0, R1",        0x1E, 0x0F, 0x08);
-    TEST(SMR,   "BPR1, R2",        0x1E, 0x8F, 0x10);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0F, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8F, 0x01);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0F, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8F, 0x02);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0F, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8F, 0x03);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0F, 0x04);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x8F, 0x04);
-    TEST(SMR,   "MSR, R3",         0x1E, 0x0F, 0x1D);
-    TEST(SMR,   "BCNT, R4",        0x1E, 0x8F, 0x25);
-    TEST(SMR,   "PTB0, R5",        0x1E, 0x0F, 0x2E);
-    TEST(SMR,   "PTB1, R6",        0x1E, 0x8F, 0x36);
-    ETEST(UNKNOWN_REGISTER, _, "", 0x1E, 0x0F, 0x07);
-    TEST(SMR,   "EIA, R7",         0x1E, 0x8F, 0x3F);
+    TEST(SMR, "BPR0, R1", 0x1E, 0x0F, 0x08);
+    TEST(SMR, "BPR1, R2", 0x1E, 0x8F, 0x10);
+    ERUR(SMR, "mr2, R3",  0x1E, 0x0F, 0x19);
+    ERUR(SMR, "mr3, R4",  0x1E, 0x8F, 0x21);
+    ERUR(SMR, "mr4, R5",  0x1E, 0x0F, 0x2A);
+    ERUR(SMR, "mr5, R6",  0x1E, 0x8F, 0x32);
+    ERUR(SMR, "mr6, R7",  0x1E, 0x0F, 0x3B);
+    ERUR(SMR, "mr7, R0",  0x1E, 0x8F, 0x03);
+    ERUR(SMR, "mr8, R1",  0x1E, 0x0F, 0x0C);
+    ERUR(SMR, "mr9, R2",  0x1E, 0x8F, 0x14);
+    TEST(SMR, "MSR, R3",  0x1E, 0x0F, 0x1D);
+    TEST(SMR, "BCNT, R4", 0x1E, 0x8F, 0x25);
+    TEST(SMR, "PTB0, R5", 0x1E, 0x0F, 0x2E);
+    TEST(SMR, "PTB1, R6", 0x1E, 0x8F, 0x36);
+    ERUR(SMR, "mr14, R7", 0x1E, 0x0F, 0x3F);
+    TEST(SMR, "EIA, R0",  0x1E, 0x8F, 0x07);
 
     TEST(RDVAL, "0x0200(R0)", 0x1E, 0x03, 0x40, 0x82, 0x00);
     TEST(WRVAL, "0x0200(R0)", 0x1E, 0x07, 0x40, 0x82, 0x00);
@@ -464,15 +464,15 @@ static void test_generic_addressing() {
     TEST(ADDB, "0x56, R1",       0x40, 0xA0, 0x56);
     TEST(ADDW, "0x1234, R1",     0x41, 0xA0, 0x12, 0x34);
     TEST(ADDD, "0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
-    ETEST(OPERAND_NOT_ALLOWED, _, "", 0x00, 0x0D);
-    ETEST(OPERAND_NOT_ALLOWED, _, "", 0x01, 0x0D);
-    ETEST(OPERAND_NOT_ALLOWED, _, "", 0x03, 0x0D);
+    EROA(ADDB, "R1, imm", 0x00, 0x0D);
+    EROA(ADDW, "R1, imm", 0x01, 0x0D);
+    EROA(ADDD, "R1, imm", 0x03, 0x0D);
 #ifdef NS32000_ENABLE_FLOAT
     TEST(ADDF, "0x12345678, F1", 0xBE, 0x41, 0xA0, 0x12, 0x34, 0x56, 0x78);
     TEST(ADDL, "0x12345678:0x9ABCDEF0, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0);
-    ETEST(OPERAND_NOT_ALLOWED, _, "", 0xBE, 0x00, 0x0D);
-    ETEST(OPERAND_NOT_ALLOWED, _, "", 0xBE, 0x01, 0x0D);
+    EROA(ADDF, "F1, imm", 0xBE, 0x00, 0x0D);
+    EROA(ADDL, "F1, imm", 0xBE, 0x01, 0x0D);
 #endif
     // Absolute
     TEST(ADDW, "@0x1234, 4(R2)",   0x81, 0xAA, 0x92, 0x34, 0x04);
@@ -556,11 +556,11 @@ static void assert_illegal(const char *file, int line, uint8_t opc) {
     __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, _, "", opc);
 }
 
-#define TEST_ILLEGAL(...) assert_illegal(__FILE__, __LINE__, __VA_ARGS__)
+#define ILLEGAL(...) assert_illegal(__FILE__, __LINE__, __VA_ARGS__)
 
 static void test_illegal() {
     // Format 0: |cond|1010|
-    TEST_ILLEGAL(0xFA);
+    ILLEGAL(0xFA);
 
     // Format 3: |_gen_|_op| |011111|ii|
     for (uint8_t gen = 0x00; gen <= 0x1F; gen++) {
@@ -569,21 +569,21 @@ static void test_illegal() {
                     0x1, 0x3, 0x5, 0x7, 0x8, 0x9, 0xB, 0xD, 0xF};
             for (uint8_t i = 0; i < sizeof(opc); i++) {
                 if (ii != 2)
-                    TEST_ILLEGAL((gen << 3) | (opc[i] >> 1),
+                    ILLEGAL((gen << 3) | (opc[i] >> 1),
                             (opc[i] << 7) | 0x7C | ii);
             }
             if (ii == 3) {
-                TEST_ILLEGAL((gen << 3) | (0x2 >> 1),
+                ILLEGAL((gen << 3) | (0x2 >> 1),
                         (0x2 << 7) | 0x7C | ii);  // BICPSR
-                TEST_ILLEGAL((gen << 3) | (0x6 >> 1),
+                ILLEGAL((gen << 3) | (0x6 >> 1),
                         (0x6 << 7) | 0x7C | ii);  // BISPSR
             }
             if (ii != 3) {
-                TEST_ILLEGAL((gen << 3) | (0x0 >> 1),
+                ILLEGAL((gen << 3) | (0x0 >> 1),
                         (0x0 << 7) | 0x7C | ii);  // CXPD
-                TEST_ILLEGAL((gen << 3) | (0x4 >> 1),
+                ILLEGAL((gen << 3) | (0x4 >> 1),
                         (0x4 << 7) | 0x7C | ii);  // JUMP
-                TEST_ILLEGAL((gen << 3) | (0xC >> 1),
+                ILLEGAL((gen << 3) | (0xC >> 1),
                         (0xC << 7) | 0x7C | ii);  // JSR
             }
         }
@@ -593,7 +593,7 @@ static void test_illegal() {
     for (uint8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
         for (uint8_t ii = 0; ii <= 3; ii++) {
             if (ii != 3)
-                TEST_ILLEGAL((gen2 << 6) | (0x9 << 2) | ii, 0x0E);  // ADDR
+                ILLEGAL((gen2 << 6) | (0x9 << 2) | ii, 0x0E);  // ADDR
         }
     }
 
@@ -601,21 +601,21 @@ static void test_illegal() {
     for (uint8_t ii = 0; ii <= 3; ii++) {
         for (uint8_t data = 0; data <= 0xF; data++) {
             for (uint8_t opc = 0x4; opc <= 0xF; opc++) {
-                TEST_ILLEGAL(data >> 1, (data << 7) | (opc << 2) | ii, 0x0E);
+                ILLEGAL(data >> 1, (data << 7) | (opc << 2) | ii, 0x0E);
             }
             if (ii != 3)
-                TEST_ILLEGAL(data >> 1, (data << 7) | (0x2 << 2) | ii,
+                ILLEGAL(data >> 1, (data << 7) | (0x2 << 2) | ii,
                         0x0E);  // SETCFG
         }
         if (ii == 2) {
-            TEST_ILLEGAL(0x00 | (0x0 << 2) | ii, 0x0E);  // MOVSi
-            TEST_ILLEGAL(0x00 | (0x1 << 2) | ii, 0x0E);  // CMPSi
-            TEST_ILLEGAL(0x00 | (0x3 << 2) | ii, 0x0E);  // SKPSi
+            ILLEGAL(0x00 | (0x0 << 2) | ii, 0x0E);  // MOVSi
+            ILLEGAL(0x00 | (0x1 << 2) | ii, 0x0E);  // CMPSi
+            ILLEGAL(0x00 | (0x3 << 2) | ii, 0x0E);  // SKPSi
         }
         if (ii != 0) {
-            TEST_ILLEGAL(0x80 | (0x0 << 2) | ii, 0x0E);  // MOVST
-            TEST_ILLEGAL(0x80 | (0x1 << 2) | ii, 0x0E);  // CMPST
-            TEST_ILLEGAL(0x80 | (0x3 << 2) | ii, 0x0E);  // SKPST
+            ILLEGAL(0x80 | (0x0 << 2) | ii, 0x0E);  // MOVST
+            ILLEGAL(0x80 | (0x1 << 2) | ii, 0x0E);  // CMPST
+            ILLEGAL(0x80 | (0x3 << 2) | ii, 0x0E);  // SKPST
         }
     }
 
@@ -624,7 +624,7 @@ static void test_illegal() {
         for (uint8_t ii = 0; ii <= 3; ii++) {
             static const uint8_t opc[] = {0x4, 0xA};
             for (uint8_t i = 0; i < sizeof(opc); i++) {
-                TEST_ILLEGAL((gen2 << 6) | (opc[i] << 2) | ii, 0x4E);
+                ILLEGAL((gen2 << 6) | (opc[i] << 2) | ii, 0x4E);
             }
         }
     }
@@ -632,14 +632,14 @@ static void test_illegal() {
     // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|
     for (uint8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
         for (uint8_t ii = 0; ii <= 3; ii++) {
-            TEST_ILLEGAL((gen2 << 6) | (0xA << 2) | ii, 0xCE);
+            ILLEGAL((gen2 << 6) | (0xA << 2) | ii, 0xCE);
             if (ii != 0) {
-                TEST_ILLEGAL((gen2 << 6) | (0x4 << 2) | ii, 0xCE);  // MOVXBW
-                TEST_ILLEGAL((gen2 << 6) | (0x5 << 2) | ii, 0xCE);  // MOVZBW
+                ILLEGAL((gen2 << 6) | (0x4 << 2) | ii, 0xCE);  // MOVXBW
+                ILLEGAL((gen2 << 6) | (0x5 << 2) | ii, 0xCE);  // MOVZBW
             }
             if (ii == 2 || ii == 3) {
-                TEST_ILLEGAL((gen2 << 6) | (0x6 << 2) | ii, 0xCE);  // MOVZiD
-                TEST_ILLEGAL((gen2 << 6) | (0x7 << 2) | ii, 0xCE);  // MOVXiD
+                ILLEGAL((gen2 << 6) | (0x6 << 2) | ii, 0xCE);  // MOVZiD
+                ILLEGAL((gen2 << 6) | (0x7 << 2) | ii, 0xCE);  // MOVXiD
             }
         }
     }
@@ -650,12 +650,12 @@ static void test_illegal() {
             for (uint8_t reg = 0; reg <= 7; reg++) {
                 if (reg != 1 && reg != 3) {
                     uint8_t opc = 6;
-                    TEST_ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
+                    ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
                             (opc << 6) | 0x2E);  // MOVSUi/MOVUSi
                 }
                 if (ii != 3) {
                     uint8_t opc = 1;
-                    TEST_ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
+                    ILLEGAL((gen2 << 6) | (reg << 3) | (opc & 4) | ii,
                             (opc << 6) | 0x6E);  // CVP
                 }
             }
@@ -667,60 +667,56 @@ static void test_illegal() {
         for (uint8_t ii = 0; ii <= 3; ii++) {
             for (uint8_t f = 0; f <= 4; f += 4) {
                 if (ii != 3) {
-                    TEST_ILLEGAL(
-                            (gen2 << 6) | (1 << 3) | f | ii, 0x3E);  // LFSR
-                    TEST_ILLEGAL(
-                            (gen2 << 6) | (6 << 3) | f | ii, 0x3E);  // SFSR
+                    ILLEGAL((gen2 << 6) | (1 << 3) | f | ii, 0x3E);  // LFSR
+                    ILLEGAL((gen2 << 6) | (6 << 3) | f | ii, 0x3E);  // SFSR
                 }
             }
             if (ii != 3)
-                TEST_ILLEGAL((gen2 << 6) | (2 << 3) | 0 | ii, 0x3E);  // MOVLF
+                ILLEGAL((gen2 << 6) | (2 << 3) | 0 | ii, 0x3E);  // MOVLF
             if (ii != 2)
-                TEST_ILLEGAL((gen2 << 6) | (3 << 3) | 4 | ii, 0x3E);  // MOVFL
+                ILLEGAL((gen2 << 6) | (3 << 3) | 4 | ii, 0x3E);  // MOVFL
         }
     }
 
     // Format 10
-    TEST_ILLEGAL(0x7E);
+    ILLEGAL(0x7E);
 
     // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
     for (int8_t gen2 = 0x00; gen2 <= 0x1F; gen2++) {
         static uint8_t opc[] = {0x3, 0x6, 0x7, 0x9, 0xA, 0xB, 0xE, 0xF};
         for (uint8_t i = 0; i < sizeof(opc); i++) {
             for (uint8_t f = 0; f <= 1; f++) {
-                TEST_ILLEGAL((gen2 << 6) | (opc[i] << 2) | f, 0xBE);
+                ILLEGAL((gen2 << 6) | (opc[i] << 2) | f, 0xBE);
             }
         }
     }
 
     // Format 12
-    TEST_ILLEGAL(0xFE);
+    ILLEGAL(0xFE);
 
     // Format 13
-    TEST_ILLEGAL(0x9E);
+    ILLEGAL(0x9E);
 
     // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
     for (uint8_t ii = 0; ii <= 3; ii++) {
         for (uint8_t data = 0x0; data <= 0xF; data++) {
             if (ii != 3) {
-                TEST_ILLEGAL(
-                        (data >> 1), (data << 7) | (2 << 2) | ii, 0x1E);  // LMR
-                TEST_ILLEGAL(
-                        (data >> 1), (data << 7) | (3 << 2) | ii, 0x1E);  // SMR
+                ILLEGAL((data >> 1), (data << 7) | (2 << 2) | ii, 0x1E);  // LMR
+                ILLEGAL((data >> 1), (data << 7) | (3 << 2) | ii, 0x1E);  // SMR
             }
             for (uint8_t opc = 0x4; opc <= 0xF; opc++) {
-                TEST_ILLEGAL((data >> 1), (data << 7) | (opc << 2) | ii, 0x1E);
+                ILLEGAL((data >> 1), (data << 7) | (opc << 2) | ii, 0x1E);
             }
         }
         if (ii != 3) {
-            TEST_ILLEGAL(0x80 | (0 << 2) | ii, 0x1E);  // RDVAL
-            TEST_ILLEGAL(0x80 | (1 << 2) | ii, 0x1E);  // WRVAL
+            ILLEGAL(0x80 | (0 << 2) | ii, 0x1E);  // RDVAL
+            ILLEGAL(0x80 | (1 << 2) | ii, 0x1E);  // WRVAL
         }
     }
 
     // Format 15
     for (uint8_t nnn = 0; nnn <= 7; nnn++) {
-        TEST_ILLEGAL((nnn << 5) | 0x16);
+        ILLEGAL((nnn << 5) | 0x16);
     }
 }
 

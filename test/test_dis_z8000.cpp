@@ -243,25 +243,25 @@ static void test_load_and_exchange() {
         TEST(LDM, "R12,561234H,#4",       0x5C01, 0x0C03, 0xD600, 0x1234);
         TEST(LDM, "R1,|120034H|(R2),#5",  0x5C21, 0x0104, 0x1234);
         TEST(LDM, "R0,561234H(R2),#16",   0x5C21, 0x000F, 0xD600, 0x1234);
-        ETEST(OVERFLOW_RANGE, LDM, "R15,@RR2,#2", 0x1C21, 0x0F01);
+        ERVR(LDM, "R15,@RR2,#2", 0x1C21, 0x0F01);
         TEST(LDM, "@RR2,R15,#1",          0x1C29, 0x0F00);
         TEST(LDM, "@RR2,R1,#2",           0x1C29, 0x0101);
         TEST(LDM, "|120034H|,R13,#3",     0x5C09, 0x0D02, 0x1234);
         TEST(LDM, "561234H,R12,#4",       0x5C09, 0x0C03, 0xD600, 0x1234);
         TEST(LDM, "|120034H|(R2),R1,#5",  0x5C29, 0x0104, 0x1234);
         TEST(LDM, "561234H(R2),R0,#16",   0x5C29, 0x000F, 0xD600, 0x1234);
-        ETEST(OVERFLOW_RANGE, LDM, "@RR2,R15,#2", 0x1C29, 0x0F01);
+        ERVR(LDM, "@RR2,R15,#2", 0x1C29, 0x0F01);
     } else {
         TEST(LDM, "R9,@R2,#7",        0x1C21, 0x0906);
+        ERVR(LDM, "R9,@R2,#8",        0x1C21, 0x0907);
         TEST(LDM, "R1,@R2,#8",        0x1C21, 0x0107);
         TEST(LDM, "R7,1234H,#9",      0x5C01, 0x0708, 0x1234);
         TEST(LDM, "R0,1234H(R2),#16", 0x5C21, 0x000F, 0x1234);
-        ETEST(OVERFLOW_RANGE, LDM, "R9,@R2,#8", 0x1C21, 0x0907);
         TEST(LDM, "@R2,R9,#7",        0x1C29, 0x0906);
+        ERVR(LDM, "@R2,R9,#8",        0x1C29, 0x0907);
         TEST(LDM, "@R2,R1,#8",        0x1C29, 0x0107);
         TEST(LDM, "1234H,R7,#9",      0x5C09, 0x0708, 0x1234);
         TEST(LDM, "1234H(R2),R0,#16", 0x5C29, 0x000F, 0x1234);
-        ETEST(OVERFLOW_RANGE, LDM, "@R2,R9,#8", 0x1C29, 0x0907);
     }
 
     // Load Relative
@@ -493,10 +493,10 @@ static void test_arithmetic() {
     TEST(EXTS,  "RR8", 0xB18A);
     TEST(EXTSL, "RQ4", 0xB147);
     TEST(EXTSL, "RQ8", 0xB187);
-    ETEST(ILLEGAL_REGISTER, _, "", 0xB17A);
-    ETEST(ILLEGAL_REGISTER, _, "", 0xB1FA);
-    ETEST(ILLEGAL_REGISTER, _, "", 0xB167);
-    ETEST(ILLEGAL_REGISTER, _, "", 0xB1E7);
+    ERIR(EXTS,  "RR7",  0xB17A);
+    ERIR(EXTS,  "RR15", 0xB1FA);
+    ERIR(EXTSL, "RQ6",  0xB167);
+    ERIR(EXTSL, "RQ14", 0xB1E7);
 
     // Increment
     TEST(INC,  "R1,#1",   0xA910);
@@ -994,12 +994,12 @@ static void test_program_control() {
 
 static void test_bit_manipulation() {
     // Bit Test
-    TEST(BIT,  "R2,#1",       0xA721);
-    TEST(BIT,  "R2,R8",       0x2708, 0x0200);
-    TEST(BITB, "RL2,#1",      0xA6A1);
-    TEST(BITB, "RL2,R1",      0x2601, 0x0A00);
-    ETEST(ILLEGAL_BIT_NUMBER,   _, "", 0xA6A8); // #0~#7 only
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x2608, 0x0A00); // R0-R7 only
+    TEST(BIT,  "R2,#1",  0xA721);
+    TEST(BIT,  "R2,R8",  0x2708, 0x0200);
+    TEST(BITB, "RL2,#1", 0xA6A1);
+    ERBN(BITB, "RL2,#8", 0xA6A8);
+    TEST(BITB, "RL2,R1", 0x2601, 0x0A00);
+    ERRR(BITB, "RL2,R8", 0x2608, 0x0A00);
     if (z8001()) {
         TEST(BIT,  "@RR2,#3",           0x2723);
         TEST(BIT,  "|120034H|,#4",      0x6704, 0x1234);
@@ -1021,12 +1021,12 @@ static void test_bit_manipulation() {
     }
 
     // Reset Bit
-    TEST(RES,  "R2,#1",       0xA321);
-    TEST(RES,  "R2,R8",       0x2308, 0x0200);
-    TEST(RESB, "RL2,#1",      0xA2A1);
-    TEST(RESB, "RL2,R1",      0x2201, 0x0A00);
-    ETEST(ILLEGAL_BIT_NUMBER,   _, "", 0xA2A8); // #0~#7 only
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x2208, 0x0A00); // R0-R7 only
+    TEST(RES,  "R2,#1",  0xA321);
+    TEST(RES,  "R2,R8",  0x2308, 0x0200);
+    TEST(RESB, "RL2,#1", 0xA2A1);
+    ERBN(RESB, "RL2,#8", 0xA2A8);
+    TEST(RESB, "RL2,R1", 0x2201, 0x0A00);
+    ERRR(RESB, "RL2,R8", 0x2208, 0x0A00);
     if (z8001()) {
         TEST(RES,  "@RR2,#3",           0x2323);
         TEST(RES,  "|120034H|,#4",      0x6304, 0x1234);
@@ -1048,12 +1048,12 @@ static void test_bit_manipulation() {
     }
 
     // Set Bit
-    TEST(SET,  "R2,#1",       0xA521);
-    TEST(SET,  "R2,R8",       0x2508, 0x0200);
-    TEST(SETB, "RL2,#1",      0xA4A1);
-    TEST(SETB, "RL2,R1",      0x2401, 0x0A00);
-    ETEST(ILLEGAL_BIT_NUMBER,   _, "", 0xA4AF); // #0~#7 only
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x2408, 0x0A00); // R0-R7 only
+    TEST(SET,  "R2,#1",  0xA521);
+    TEST(SET,  "R2,R8",  0x2508, 0x0200);
+    TEST(SETB, "RL2,#1", 0xA4A1);
+    ERBN(SETB, "RL2,#8", 0xA4AF);
+    TEST(SETB, "RL2,R1", 0x2401, 0x0A00);
+    ERRR(SETB, "RL2,R8", 0x2408, 0x0A00);
     if (z8001()) {
         TEST(SET,  "@RR2,#3",           0x2523);
         TEST(SET,  "|120034H|,#4",      0x6504, 0x1234);
@@ -1176,96 +1176,107 @@ static void test_shift() {
     TEST(SDLL, "RR2,R8",  0xB327, 0x0800);
 
     // Shift Left Arithmetic
-    TEST(SLA,  "R2,#16",  0xB329, 0x0010);
+    TEST(SLA, "R2,#16",   0xB329, 0x0010);
+    ERIO(SLA, "R2,#17",   0xB329, 0x0011);
     TEST(SLAB, "RH2,#8",  0xB229, 0x0008);
+    ERIO(SLAB, "RH2,#9",  0xB229, 0x0009);
     TEST(SLAL, "RR2,#32", 0xB32D, 0x0020);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB329, 0x0011);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB229, 0x0009);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB32D, 0x0021);
+    ERIO(SLAL, "RR2,#33", 0xB32D, 0x0021);
 
     // Shift Right Arithmetic
-    TEST(SRA,  "R2,#16",  0xB329, 0xFFF0);
+    TEST(SRA, "R2,#16",   0xB329, 0xFFF0);
+    ERIO(SRA, "R2,#17",   0xB329, 0xFFEF);
     TEST(SRAB, "RH2,#8",  0xB229, 0x00F8);
+    ERIO(SRAB, "RH2,#9",  0xB229, 0x00F7);
     TEST(SRAL, "RR2,#32", 0xB32D, 0xFFE0);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB229, 0x00F7);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB329, 0xFFEF);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB32D, 0xFFDF);
+    ERIO(SRAL, "RR2,#33", 0xB32D, 0xFFDF);
 
     // Shift Left Logical
-    TEST(SLL,  "R2,#16",  0xB321, 0x0010);
+    TEST(SLL, "R2,#16",   0xB321, 0x0010);
+    ERIO(SLL, "R2,#17",   0xB321, 0x0011);
     TEST(SLLB, "RH2,#8",  0xB221, 0x0008);
+    ERIO(SLLB, "RH2,#9",  0xB221, 0x0009);
     TEST(SLLL, "RR2,#32", 0xB325, 0x0020);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB321, 0x0011);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB221, 0x0009);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB325, 0x0021);
+    ERIO(SLLL, "RR2,#33", 0xB325, 0x0021);
 
     // Shift Right Logical
-    TEST(SRL,  "R2,#16",  0xB321, 0xFFF0);
+    TEST(SRL, "R2,#16",   0xB321, 0xFFF0);
+    ERIO(SRL, "R2,#17",   0xB321, 0xFFEF);
     TEST(SRLB, "RH2,#8",  0xB221, 0x00F8);
+    ERIO(SRLB, "RH2,#9",  0xB221, 0x00F7);
     TEST(SRLL, "RR2,#32", 0xB325, 0xFFE0);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB221, 0x00F7);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB321, 0xFFEF);
-    ETEST(ILLEGAL_OPERAND, _, "",  0xB325, 0xFFDF);
+    ERIO(SRLL, "RR2,#33", 0xB325, 0xFFDF);
 }
 
 static void test_block_transfer() {
     // Compare and Decrement
     if (z8001()) {
         TEST(CPD,  "R0,@RR2,R4,F",   0xBB28, 0x0400);
-        TEST(CPDB, "RL0,@RR2,R4,LT", 0xBA28, 0x0481);
+        TEST(CPDB, "RH0,@RR2,R4,LT", 0xBA28, 0x0401);
+        ERRR(CPD,  "R2,@RR0,R4,F",   0xBB08, 0x0420);
+        ERRR(CPDB, "RL2,@RR0,R4,LT", 0xBA08, 0x04A1);
     } else {
         TEST(CPD,  "R0,@R1,R2,F",    0xBB18, 0x0200);
-        TEST(CPDB, "RL0,@R1,R2,LT",  0xBA18, 0x0281);
+        TEST(CPDB, "RH0,@R1,R2,LT",  0xBA18, 0x0201);
+        ERRR(CPD,  "R1,@R0,R4,F",    0xBB08, 0x0210);
+        ERRR(CPDB, "RH1,@R0,R4,LT",  0xBA08, 0x0211);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB08, 0x0410); // R1,@RR0,R4
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA08, 0x0491);
 
     // Compare, Decrement, and Repeat
     if (z8001()) {
         TEST(CPDR,  "R1,@RR4,R3,LE",   0xBB4C, 0x0312);
         TEST(CPDRB, "RL1,@RR4,R3,ULE", 0xBA4C, 0x0393);
+        ERRR(CPDR,  "R1,@RR0,R4,LE",   0xBB0C, 0x0412);
+        ERRR(CPDRB, "RL1,@RR0,R4,ULE", 0xBA0C, 0x0493);
     } else {
         TEST(CPDR,  "R3,@R4,R5,LE",    0xBB4C, 0x0532);
         TEST(CPDRB, "RL3,@R4,R5,ULE",  0xBA4C, 0x05B3);
+        ERRR(CPDR,  "R1,@R0,R4,LE",    0xBB0C, 0x0412);
+        ERRR(CPDRB, "RL1,@R0,R4,ULE",  0xBA0C, 0x0493);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB0C, 0x0412);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA0C, 0x0493);
 
     // Compare and Increment
     if (z8001()) {
         TEST(CPI,  "R2,@RR6,R4,OV", 0xBB60, 0x0424);
         TEST(CPIB, "RL2,@RR6,R4",   0xBA60, 0x04A8);
+        ERRR(CPI,  "R1,@RR0,R4,OV", 0xBB00, 0x0414);
+        ERRR(CPIB, "RL1,@RR0,R4",   0xBA00, 0x0498);
     } else {
         TEST(CPI,  "R6,@R7,R8,OV",  0xBB70, 0x0864);
         TEST(CPIB, "RL6,@R7,R8",    0xBA70, 0x08E8);
+        ERRR(CPI,  "R1,@R0,R4,OV",  0xBB00, 0x0414);
+        ERRR(CPIB, "RL1,@R0,R4",    0xBA00, 0x0498);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB00, 0x0414);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA00, 0x0498);
 
     // Compare, Increment, and Repeat
     if (z8001()) {
-        TEST(CPIR,  "R3,@RR8,R5,Z",  0xBB84, 0x0536);
-        TEST(CPIRB, "RL3,@RR8,R5,C", 0xBA84, 0x05B7);
-
+        TEST(CPIR,  "R3,@RR8,R5,Z",   0xBB84, 0x0536);
+        TEST(CPIRB, "RL3,@RR8,R5,C",  0xBA84, 0x05B7);
+        ERRR(CPIR,  "R1,@RR0,R4,Z",   0xBB04, 0x0416);
+        ERRR(CPIRB, "RL1,@RR0,R4,C",  0xBA04, 0x0497);
     } else {
         TEST(CPIR,  "R9,@R10,R11,Z",  0xBBA4, 0x0B96);
         TEST(CPIRB, "RH1,@R10,R11,C", 0xBAA4, 0x0B17);
+        ERRR(CPIR,  "R1,@R0,R4,Z",    0xBB04, 0x0416);
+        ERRR(CPIRB, "RL1,@R0,R4,C",   0xBA04, 0x0497);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB04, 0x0416);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA04, 0x0497);
 
     // Load and Decrement
     if (z8001()) {
         TEST(LDD,  "@RR2,@RR4,R6", 0xBB49, 0x0628);
         TEST(LDDB, "@RR2,@RR4,R6", 0xBA49, 0x0628);
+        ERRR(LDD,  "@RR2,@RR0,R6", 0xBB09, 0x0628);
+        ERRR(LDDB, "@RR2,@RR0,R6", 0xBA09, 0x0628);
+        ERRR(LDD,  "@RR0,@RR4,R6", 0xBB49, 0x0608);
+        ERRR(LDDB, "@RR0,@RR4,R6", 0xBA49, 0x0608);
     } else {
         TEST(LDD,  "@R1,@R2,R3",   0xBB29, 0x0318);
         TEST(LDDB, "@R1,@R2,R3",   0xBA29, 0x0318);
+        ERRR(LDD,  "@RR2,@RR0,R6", 0xBB09, 0x0628);
+        ERRR(LDDB, "@RR2,@RR0,R6", 0xBA09, 0x0628);
+        ERRR(LDD,  "@RR0,@RR4,R6", 0xBB49, 0x0608);
+        ERRR(LDDB, "@RR0,@RR4,R6", 0xBA49, 0x0608);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB09, 0x0628);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA09, 0x0628);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB49, 0x0608);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA49, 0x0608);
 
     // Load, Decrement, and Repeat
     if (z8001()) {
@@ -1275,10 +1286,10 @@ static void test_block_transfer() {
         TEST(LDDR,  "@R4,@R5,R6",   0xBB59, 0x0640);
         TEST(LDDRB, "@R4,@R5,R6",   0xBA59, 0x0640);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB09, 0x0840);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA09, 0x0840);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB69, 0x0800);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA69, 0x0800);
+    ERRR(LDDR,  "@RR4,@RR0,R8", 0xBB09, 0x0840);
+    ERRR(LDDRB, "@RR4,@RR0,R8", 0xBA09, 0x0840);
+    ERRR(LDDR,  "@RR0,@RR6,R8", 0xBB69, 0x0800);
+    ERRR(LDDRB, "@RR0,@RR6,R8", 0xBA69, 0x0800);
 
     // Load and Increment
     if (z8001()) {
@@ -1288,10 +1299,10 @@ static void test_block_transfer() {
         TEST(LDI,  "@R7,@R8,R9",    0xBB81, 0x0978);
         TEST(LDIB, "@R7,@R8,R9",    0xBA81, 0x0978);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB01, 0x0A68);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA01, 0x0A68);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB81, 0x0A08);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA81, 0x0A08);
+    ERRR(LDI,  "@RR6,@RR0,R10", 0xBB01, 0x0A68);
+    ERRR(LDIB, "@RR6,@RR0,R10", 0xBA01, 0x0A68);
+    ERRR(LDI,  "@RR0,@RR8,R10", 0xBB81, 0x0A08);
+    ERRR(LDIB, "@RR0,@RR8,R10", 0xBA81, 0x0A08);
 
     // Load, Increment, and Repeat
     if (z8001()) {
@@ -1301,10 +1312,10 @@ static void test_block_transfer() {
         TEST(LDIR,  "@R10,@R11,R12",  0xBBB1, 0x0CA0);
         TEST(LDIRB, "@R10,@R11,R12",  0xBAB1, 0x0CA0);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB01, 0x0C80);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA01, 0x0C80);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBBA1, 0x0C00);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBAA1, 0x0C00);
+    ERRR(LDIR,  "@RR8,@RR0,R12",  0xBB01, 0x0C80);
+    ERRR(LDIRB, "@RR8,@RR0,R12",  0xBA01, 0x0C80);
+    ERRR(LDIR,  "@RR0,@RR10,R12", 0xBBA1, 0x0C00);
+    ERRR(LDIRB, "@RR0,@RR10,R12", 0xBAA1, 0x0C00);
 }
 
 static void test_string_manipulation() {
@@ -1316,10 +1327,10 @@ static void test_string_manipulation() {
         TEST(CPSD,  "@R3,@R1,R2",    0xBB1A, 0x0238);
         TEST(CPSDB, "@R3,@R1,R2,GE", 0xBA1A, 0x0239);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB0A, 0x0048);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB2A, 0x0008);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA0A, 0x0449);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA1A, 0x0409);
+    ERRR(CPSD,  "@RR4,@RR0,R6",    0xBB0A, 0x0648);
+    ERRR(CPSDB, "@RR4,@RR0,R6,GE", 0xBA0A, 0x0649);
+    ERRR(CPSD , "@RR0,@RR2,R6",    0xBB2A, 0x0608);
+    ERRR(CPSDB, "@RR0,@RR2,R6,GE", 0xBA2A, 0x0609);
 
     // Compare String, Decrement, and Repeat
     if (z8001()) {
@@ -1329,10 +1340,10 @@ static void test_string_manipulation() {
         TEST(CPSDR,  "@R3,@R4,R5,GT",  0xBB4E, 0x053A);
         TEST(CPSDRB, "@R3,@R4,R0,UGT", 0xBA4E, 0x003B);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBB0E, 0x052A);
-    ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBB4E, 0x050A);
-    ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBA0E, 0x052B);
-    ETEST(REGISTER_NOT_ALLOWED, _, "",  0xBA4E, 0x000B);
+    ERRR(CPSDR,  "@RR2,@RR0,R5,GT",  0xBB0E, 0x052A);
+    ERRR(CPSDRB, "@RR2,@RR0,R5,UGT", 0xBA0E, 0x052B);
+    ERRR(CPSDR,  "@RR0,@RR4,R5,GT",  0xBB4E, 0x050A);
+    ERRR(CPSDRB, "@RR0,@RR4,R0,UGT", 0xBA4E, 0x000B);
 
     // Compare String and Increment
     if (z8001()) {
@@ -1342,10 +1353,10 @@ static void test_string_manipulation() {
         TEST(CPSI,  "@R6,@R7,R8,NOV", 0xBB72, 0x086C);
         TEST(CPSIB, "@R6,@R7,R8,PL",  0xBA72, 0x086D);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB02, 0x052C);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB62, 0x050C);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA02, 0x052D);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA62, 0x050D);
+    ERRR(CPSI,  "@RR2,@RR0,R5,NOV", 0xBB02, 0x052C);
+    ERRR(CPSIB, "@RR2,@RR0,R5,PL",  0xBA02, 0x052D);
+    ERRR(CPSI,  "@RR0,@RR6,R5,NOV", 0xBB62, 0x050C);
+    ERRR(CPSIB, "@RR0,@RR6,R5,PL",  0xBA62, 0x050D);
 
     // Compare String, Increment, and Repeat
     if (z8001()) {
@@ -1355,190 +1366,190 @@ static void test_string_manipulation() {
         TEST(CPSIR,  "@R9,@R10,R11,NZ", 0xBBA6, 0x0B9E);
         TEST(CPSIRB, "@R9,@R10,R11,NC", 0xBAA6, 0x0B9F);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB06, 0x064E);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBB86, 0x060E);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA06, 0x064F);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0xBA86, 0x060F);
+    ERRR(CPSIR,  "@RR4,@RR0,R6,NZ", 0xBB06, 0x064E);
+    ERRR(CPSIRB, "@RR4,@RR0,R6,NC", 0xBA06, 0x064F);
+    ERRR(CPSIR,  "@RR0,@RR8,R6,NZ", 0xBB86, 0x060E);
+    ERRR(CPSIRB, "@RR0,@RR8,R6,NC", 0xBA86, 0x060F);
 
     // Translate and Decrement
     if (z8001()) {
-        TEST(TRDB, "@RR2,@RR4,R6",         0xB828, 0x0640); // @RR2,@RR4,R6
-        TEST(TRDB, "@RR2,@RR4,R0",         0xB828, 0x0040); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB808, 0x0540); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0500); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0140); // @RR2,@RR4,R1
+        TEST(TRDB, "@RR2,@RR4,R6", 0xB828, 0x0640);
+        TEST(TRDB, "@RR2,@RR4,R0", 0xB828, 0x0040);
+        ERRR(TRDB, "@RR0,@RR4,R5", 0xB808, 0x0540);
+        ERRR(TRDB, "@RR2,@RR0,R5", 0xB828, 0x0500);
+        ERRR(TRDB, "@RR2,@RR4,R1", 0xB828, 0x0140);
     } else {
-        TEST(TRDB, "@R2,@R3,R4",           0xB828, 0x0430); // @R2,@R3,R4
-        TEST(TRDB, "@R2,@R3,R0",           0xB828, 0x0030); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB808, 0x0430); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB818, 0x0430); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0400); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0410); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB828, 0x0130); // @R2,@R3,R1
+        TEST(TRDB, "@R2,@R3,R4", 0xB828, 0x0430);
+        TEST(TRDB, "@R2,@R3,R0", 0xB828, 0x0030);
+        ERRR(TRDB, "@R0,@R3,R4", 0xB808, 0x0430);
+        ERRR(TRDB, "@R1,@R3,R4", 0xB818, 0x0430);
+        ERRR(TRDB, "@R2,@R0,R4", 0xB828, 0x0400);
+        ERRR(TRDB, "@R2,@R1,R4", 0xB828, 0x0410);
+        ERRR(TRDB, "@R2,@R3,R1", 0xB828, 0x0130);
     }
 
     // Translate, Decrement, and Repeat
     if (z8001()) {
-        TEST(TRDRB, "@RR2,@RR4,R6",        0xB82C, 0x0640); // @RR2,@RR4,R6
-        TEST(TRDRB, "@RR2,@RR4,R0",        0xB82C, 0x0040); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80C, 0x0540); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0500); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0140); // @RR2,@RR4,R1
+        TEST(TRDRB, "@RR2,@RR4,R6", 0xB82C, 0x0640);
+        TEST(TRDRB, "@RR2,@RR4,R0", 0xB82C, 0x0040);
+        ERRR(TRDRB, "@RR0,@RR4,R5", 0xB80C, 0x0540);
+        ERRR(TRDRB, "@RR2,@RR0,R5", 0xB82C, 0x0500);
+        ERRR(TRDRB, "@RR2,@RR4,R1", 0xB82C, 0x0140);
     } else {
-        TEST(TRDRB, "@R2,@R3,R4",          0xB82C, 0x0430); // @R2,@R3,R4
-        TEST(TRDRB, "@R2,@R3,R0",          0xB82C, 0x0030); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80C, 0x0430); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB81C, 0x0430); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0400); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0410); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82C, 0x0130); // @R2,@R3,R1
+        TEST(TRDRB, "@R2,@R3,R4", 0xB82C, 0x0430);
+        TEST(TRDRB, "@R2,@R3,R0", 0xB82C, 0x0030);
+        ERRR(TRDRB, "@R0,@R3,R4", 0xB80C, 0x0430);
+        ERRR(TRDRB, "@R1,@R3,R4", 0xB81C, 0x0430);
+        ERRR(TRDRB, "@R2,@R0,R4", 0xB82C, 0x0400);
+        ERRR(TRDRB, "@R2,@R1,R4", 0xB82C, 0x0410);
+        ERRR(TRDRB, "@R2,@R3,R1", 0xB82C, 0x0130);
     }
 
     // Translate and Increment
     if (z8001()) {
-        TEST(TRIB, "@RR2,@RR4,R6",         0xB820, 0x0640); // @RR2,@RR4,R6
-        TEST(TRIB, "@RR2,@RR4,R0",         0xB820, 0x0040); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB800, 0x0540); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0500); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0140); // @RR2,@RR4,R1
+        TEST(TRIB, "@RR2,@RR4,R6", 0xB820, 0x0640);
+        TEST(TRIB, "@RR2,@RR4,R0", 0xB820, 0x0040);
+        ERRR(TRIB, "@RR0,@RR4,R5", 0xB800, 0x0540);
+        ERRR(TRIB, "@RR2,@RR0,R5", 0xB820, 0x0500);
+        ERRR(TRIB, "@RR2,@RR4,R1", 0xB820, 0x0140);
     } else {
-        TEST(TRIB, "@R2,@R3,R4",           0xB820, 0x0430); // @R2,@R3,R4
-        TEST(TRIB, "@R2,@R3,R0",           0xB820, 0x0030); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB800, 0x0430); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB810, 0x0430); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0400); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0410); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB820, 0x0130); // @R2,@R3,R1
+        TEST(TRIB, "@R2,@R3,R4", 0xB820, 0x0430);
+        TEST(TRIB, "@R2,@R3,R0", 0xB820, 0x0030);
+        ERRR(TRIB, "@R0,@R3,R4", 0xB800, 0x0430);
+        ERRR(TRIB, "@R1,@R3,R4", 0xB810, 0x0430);
+        ERRR(TRIB, "@R2,@R0,R4", 0xB820, 0x0400);
+        ERRR(TRIB, "@R2,@R1,R4", 0xB820, 0x0410);
+        ERRR(TRIB, "@R2,@R3,R1", 0xB820, 0x0130);
     }
 
     // Translate, Increment, and Repeat
     if (z8001()) {
-        TEST(TRIRB, "@RR2,@RR4,R6",        0xB824, 0x0640); // @RR2,@RR4,R6
-        TEST(TRIRB, "@RR2,@RR4,R0",        0xB824, 0x0040); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB804, 0x0540); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0500); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0140); // @RR2,@RR4,R1
+        TEST(TRIRB, "@RR2,@RR4,R6", 0xB824, 0x0640);
+        TEST(TRIRB, "@RR2,@RR4,R0", 0xB824, 0x0040);
+        ERRR(TRIRB, "@RR0,@RR4,R5", 0xB804, 0x0540);
+        ERRR(TRIRB, "@RR2,@RR0,R5", 0xB824, 0x0500);
+        ERRR(TRIRB, "@RR2,@RR4,R1", 0xB824, 0x0140);
     } else {
-        TEST(TRIRB, "@R2,@R3,R4",          0xB824, 0x0430); // @R2,@R3,R4
-        TEST(TRIRB, "@R2,@R3,R0",          0xB824, 0x0030); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB804, 0x0430); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB814, 0x0430); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0400); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0410); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB824, 0x0130); // @R2,@R3,R1
+        TEST(TRIRB, "@R2,@R3,R4", 0xB824, 0x0430);
+        TEST(TRIRB, "@R2,@R3,R0", 0xB824, 0x0030);
+        ERRR(TRIRB, "@R0,@R3,R4", 0xB804, 0x0430);
+        ERRR(TRIRB, "@R1,@R3,R4", 0xB814, 0x0430);
+        ERRR(TRIRB, "@R2,@R0,R4", 0xB824, 0x0400);
+        ERRR(TRIRB, "@R2,@R1,R4", 0xB824, 0x0410);
+        ERRR(TRIRB, "@R2,@R3,R1", 0xB824, 0x0130);
     }
 
     // Translate, Test, and Decrement
     if (z8001()) {
-        TEST(TRTDB, "@RR2,@RR4,R6",        0xB82A, 0x0640); // @RR2,@RR4,R6
-        TEST(TRTDB, "@RR2,@RR4,R0",        0xB82A, 0x0040); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80A, 0x0540); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0500); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0140); // @RR2,@RR4,R1
+        TEST(TRTDB, "@RR2,@RR4,R6", 0xB82A, 0x0640);
+        TEST(TRTDB, "@RR2,@RR4,R0", 0xB82A, 0x0040);
+        ERRR(TRTDB, "@RR0,@RR4,R5", 0xB80A, 0x0540);
+        ERRR(TRTDB, "@RR2,@RR0,R5", 0xB82A, 0x0500);
+        ERRR(TRTDB, "@RR2,@RR4,R1", 0xB82A, 0x0140);
     } else {
-        TEST(TRTDB, "@R2,@R3,R4",          0xB82A, 0x0430); // @R2,@R3,R4
-        TEST(TRTDB, "@R2,@R3,R0",          0xB82A, 0x0030); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80A, 0x0430); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB81A, 0x0430); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0400); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0410); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82A, 0x0130); // @R2,@R3,R1
+        TEST(TRTDB, "@R2,@R3,R4", 0xB82A, 0x0430);
+        TEST(TRTDB, "@R2,@R3,R0", 0xB82A, 0x0030);
+        ERRR(TRTDB, "@R0,@R3,R4", 0xB80A, 0x0430);
+        ERRR(TRTDB, "@R1,@R3,R4", 0xB81A, 0x0430);
+        ERRR(TRTDB, "@R2,@R0,R4", 0xB82A, 0x0400);
+        ERRR(TRTDB, "@R2,@R1,R4", 0xB82A, 0x0410);
+        ERRR(TRTDB, "@R2,@R3,R1", 0xB82A, 0x0130);
     }
 
     // Translate, Test, Decrement, and Repeat
     if (z8001()) {
-        TEST(TRTDRB, "@RR2,@RR4,R6",       0xB82E, 0x064E); // @RR2,@RR4,R6
-        TEST(TRTDRB, "@RR2,@RR4,R0",       0xB82E, 0x004E); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80E, 0x054E); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x050E); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x014E); // @RR2,@RR4,R1
+        TEST(TRTDRB, "@RR2,@RR4,R6", 0xB82E, 0x064E);
+        TEST(TRTDRB, "@RR2,@RR4,R0", 0xB82E, 0x004E);
+        ERRR(TRTDRB, "@RR0,@RR4,R5", 0xB80E, 0x054E);
+        ERRR(TRTDRB, "@RR2,@RR0,R5", 0xB82E, 0x050E);
+        ERRR(TRTDRB, "@RR2,@RR4,R1", 0xB82E, 0x014E);
     } else {
-        TEST(TRTDRB, "@R2,@R3,R4",         0xB82E, 0x043E); // @R2,@R3,R4
-        TEST(TRTDRB, "@R2,@R3,R0",         0xB82E, 0x003E); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB80E, 0x043E); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB81E, 0x043E); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x040E); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x041E); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB82E, 0x013E); // @R2,@R3,R1
+        TEST(TRTDRB, "@R2,@R3,R4", 0xB82E, 0x043E);
+        TEST(TRTDRB, "@R2,@R3,R0", 0xB82E, 0x003E);
+        ERRR(TRTDRB, "@R0,@R3,R4", 0xB80E, 0x043E);
+        ERRR(TRTDRB, "@R1,@R3,R4", 0xB81E, 0x043E);
+        ERRR(TRTDRB, "@R2,@R0,R4", 0xB82E, 0x040E);
+        ERRR(TRTDRB, "@R2,@R1,R4", 0xB82E, 0x041E);
+        ERRR(TRTDRB, "@R2,@R3,R1", 0xB82E, 0x013E);
     }
 
     // Translate, Test, and Increment
     if (z8001()) {
-        TEST(TRTIB, "@RR2,@RR4,R6",        0xB822, 0x0640); // @RR2,@RR4,R6
-        TEST(TRTIB, "@RR2,@RR4,R0",        0xB822, 0x0040); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB802, 0x0540); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0500); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0140); // @RR2,@RR4,R1
+        TEST(TRTIB, "@RR2,@RR4,R6", 0xB822, 0x0640);
+        TEST(TRTIB, "@RR2,@RR4,R0", 0xB822, 0x0040);
+        ERRR(TRTIB, "@RR0,@RR4,R5", 0xB802, 0x0540);
+        ERRR(TRTIB, "@RR2,@RR0,R5", 0xB822, 0x0500);
+        ERRR(TRTIB, "@RR2,@RR4,R1", 0xB822, 0x0140);
     } else {
-        TEST(TRTIB, "@R2,@R3,R4",          0xB822, 0x0430); // @R2,@R3,R4
-        TEST(TRTIB, "@R2,@R3,R0",          0xB822, 0x0030); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB802, 0x0430); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB812, 0x0430); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0400); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0410); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB822, 0x0130); // @R2,@R3,R1
+        TEST(TRTIB, "@R2,@R3,R4", 0xB822, 0x0430);
+        TEST(TRTIB, "@R2,@R3,R0", 0xB822, 0x0030);
+        ERRR(TRTIB, "@R0,@R3,R4", 0xB802, 0x0430);
+        ERRR(TRTIB, "@R1,@R3,R4", 0xB812, 0x0430);
+        ERRR(TRTIB, "@R2,@R0,R4", 0xB822, 0x0400);
+        ERRR(TRTIB, "@R2,@R1,R4", 0xB822, 0x0410);
+        ERRR(TRTIB, "@R2,@R3,R1", 0xB822, 0x0130);
     }
 
     // Translate, Test, Increment, and Repeat
     if (z8001()) {
-        TEST(TRTIRB, "@RR2,@RR4,R6",       0xB826, 0x064E); // @RR2,@RR4,R6
-        TEST(TRTIRB, "@RR2,@RR4,R0",       0xB826, 0x004E); // @RR2,@RR4,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB806, 0x054E); // @RR0,@RR4,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x050E); // @RR2,@RR0,R5
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x014E); // @RR2,@RR4,R1
+        TEST(TRTIRB, "@RR2,@RR4,R6", 0xB826, 0x064E);
+        TEST(TRTIRB, "@RR2,@RR4,R0", 0xB826, 0x004E);
+        ERRR(TRTIRB, "@RR0,@RR4,R5", 0xB806, 0x054E);
+        ERRR(TRTIRB, "@RR2,@RR0,R5", 0xB826, 0x050E);
+        ERRR(TRTIRB, "@RR2,@RR4,R1", 0xB826, 0x014E);
     } else {
-        TEST(TRTIRB, "@R2,@R3,R4",         0xB826, 0x043E); // @R2,@R3,R4
-        TEST(TRTIRB, "@R2,@R3,R0",         0xB826, 0x003E); // @R2,@R3,R0
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB806, 0x043E); // @R0,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB816, 0x043E); // @R1,@R3,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x040E); // @R2,@R0,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x041E); // @R2,@R1,R4
-        ETEST(REGISTER_NOT_ALLOWED, _, "", 0xB826, 0x013E); // @R2,@R3,R1
+        TEST(TRTIRB, "@R2,@R3,R4", 0xB826, 0x043E);
+        TEST(TRTIRB, "@R2,@R3,R0", 0xB826, 0x003E);
+        ERRR(TRIIRB, "@R0,@R3,R4", 0xB806, 0x043E);
+        ERRR(TRIIRB, "@R1,@R3,R4", 0xB816, 0x043E);
+        ERRR(TRIIRB, "@R2,@R0,R4", 0xB826, 0x040E);
+        ERRR(TRIIRB, "@R2,@R1,R4", 0xB826, 0x041E);
+        ERRR(TRIIRB, "@R2,@R3,R1", 0xB826, 0x013E);
     }
 
     if (z8001()) {
-        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@RR0,@RR4,R6",   0xBB49, 0x0608);
-        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@RR2,@RR0,R6",   0xBB09, 0x0628);
-        ETEST(ILLEGAL_REGISTER,      LDD, "@RR1,@RR4,R6",   0xBB49, 0x0618);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR2,@RR4,R4",   0xBB49, 0x0428);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR2,@RR4,R5",   0xBB49, 0x0428);
-        ETEST(OK,                    LDD, "@RR2,@RR4,R6",   0xBB49, 0x0628);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR4,@RR4,R6",   0xBB49, 0x0648);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR6,@RR4,R6",   0xBB49, 0x0668);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR6,@RR4,R7",   0xBB49, 0x0768);
-        ETEST(OK,                    LDD, "@RR8,@RR4,R0",   0xBB49, 0x0088);
-        ETEST(OK,                    LDD, "@RR8,@RR4,R1",   0xBB49, 0x0188);
-        ETEST(OK,                    LDD, "@RR10,@RR4,R6",  0xBB49, 0x06A8);
-        ETEST(OK,                    LDD, "@RR12,@RR4,R6",  0xBB49, 0x06C8);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@RR14,@RR4,R15", 0xBB49, 0x0FE8);
+        ERRR(LDD, "@RR0,@RR4,R6",   0xBB49, 0x0608);
+        ERRR(LDD, "@RR2,@RR0,R6",   0xBB09, 0x0628);
+        ERIR(LDD, "@RR1,@RR4,R6",   0xBB49, 0x0618);
+        ERRV(LDD, "@RR2,@RR4,R4",   0xBB49, 0x0428);
+        ERRV(LDD, "@RR2,@RR4,R5",   0xBB49, 0x0428);
+        TEST(LDD, "@RR2,@RR4,R6",   0xBB49, 0x0628);
+        ERRV(LDD, "@RR4,@RR4,R6",   0xBB49, 0x0648);
+        ERRV(LDD, "@RR6,@RR4,R6",   0xBB49, 0x0668);
+        ERRV(LDD, "@RR6,@RR4,R7",   0xBB49, 0x0768);
+        TEST(LDD, "@RR8,@RR4,R0",   0xBB49, 0x0088);
+        TEST(LDD, "@RR8,@RR4,R1",   0xBB49, 0x0188);
+        TEST(LDD, "@RR10,@RR4,R6",  0xBB49, 0x06A8);
+        TEST(LDD, "@RR12,@RR4,R6",  0xBB49, 0x06C8);
+        ERRV(LDD, "@RR14,@RR4,R15", 0xBB49, 0x0FE8);
     } else {
-        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@R0,@R2,R3",   0xBB29, 0x0308);
-        ETEST(REGISTER_NOT_ALLOWED,  LDD, "@R2,@R0,R3",   0xBB09, 0x0328);
-        ETEST(OK,                    LDD, "@R1,@R2,R3",   0xBB29, 0x0318);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@R2,@R2,R3",   0xBB29, 0x0328);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@R3,@R2,R2",   0xBB29, 0x0238);
-        ETEST(REGISTERS_OVERWRAPPED, LDD, "@R3,@R2,R3",   0xBB29, 0x0338);
-        ETEST(OK,                    LDD, "@R4,@R2,R3",   0xBB29, 0x0348);
-        ETEST(OK,                    LDD, "@R5,@R2,R3",   0xBB29, 0x0358);
-        ETEST(OK,                    LDD, "@R6,@R2,R3",   0xBB29, 0x0368);
-        ETEST(OK,                    LDD, "@R7,@R2,R3",   0xBB29, 0x0378);
-        ETEST(OK,                    LDD, "@R8,@R2,R3",   0xBB29, 0x0388);
-        ETEST(OK,                    LDD, "@R9,@R2,R3",   0xBB29, 0x0398);
-        ETEST(OK,                    LDD, "@R10,@R2,R3",  0xBB29, 0x03A8);
-        ETEST(OK,                    LDD, "@R11,@R2,R3",  0xBB29, 0x03B8);
-        ETEST(OK,                    LDD, "@R12,@R2,R3",  0xBB29, 0x03C8);
-        ETEST(OK,                    LDD, "@R13,@R2,R3",  0xBB29, 0x03D8);
-        ETEST(OK,                    LDD, "@R14,@R2,R3",  0xBB29, 0x03E8);
-        ETEST(OK,                    LDD, "@R15,@R2,R3",  0xBB29, 0x03F8);
+        ERRR(LDD, "@R0,@R2,R3",  0xBB29, 0x0308);
+        ERRR(LDD, "@R2,@R0,R3",  0xBB09, 0x0328);
+        TEST(LDD, "@R1,@R2,R3",  0xBB29, 0x0318);
+        ERRV(LDD, "@R2,@R2,R3",  0xBB29, 0x0328);
+        ERRV(LDD, "@R3,@R2,R2",  0xBB29, 0x0238);
+        ERRV(LDD, "@R3,@R2,R3",  0xBB29, 0x0338);
+        TEST(LDD, "@R4,@R2,R3",  0xBB29, 0x0348);
+        TEST(LDD, "@R5,@R2,R3",  0xBB29, 0x0358);
+        TEST(LDD, "@R6,@R2,R3",  0xBB29, 0x0368);
+        TEST(LDD, "@R7,@R2,R3",  0xBB29, 0x0378);
+        TEST(LDD, "@R8,@R2,R3",  0xBB29, 0x0388);
+        TEST(LDD, "@R9,@R2,R3",  0xBB29, 0x0398);
+        TEST(LDD, "@R10,@R2,R3", 0xBB29, 0x03A8);
+        TEST(LDD, "@R11,@R2,R3", 0xBB29, 0x03B8);
+        TEST(LDD, "@R12,@R2,R3", 0xBB29, 0x03C8);
+        TEST(LDD, "@R13,@R2,R3", 0xBB29, 0x03D8);
+        TEST(LDD, "@R14,@R2,R3", 0xBB29, 0x03E8);
+        TEST(LDD, "@R15,@R2,R3", 0xBB29, 0x03F8);
     }
 }
 
 static void test_input() {
     // Input
-    TEST(IN,  "R1,@R2",      0x3D21);
-    TEST(INB, "RH1,@R2",     0x3C21);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3D01);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3C01);
+    TEST(IN,  "R1,@R2",    0x3D21);
+    TEST(INB, "RH1,@R2",   0x3C21);
+    ERRR(IN,  "R0,@R2",    0x3D01);
+    ERRR(INB, "RH0,@R2",   0x3C01);
     TEST(IN,  "R1,1234H",  0x3B14, 0x1234);
     TEST(INB, "RH1,1234H", 0x3A14, 0x1234);
 
@@ -1550,228 +1561,292 @@ static void test_input() {
     if (z8001()) {
         TEST(IND,  "@RR2,@R4,R6", 0x3B48, 0x0628);
         TEST(INDB, "@RR2,@R4,R6", 0x3A48, 0x0628);
+        ERRR(IND,  "@RR2,@R0,R6", 0x3B08, 0x0628);
+        ERRR(IND,  "@RR0,@R4,R6", 0x3B48, 0x0608);
+        ERRR(INDB, "@RR2,@R0,R6", 0x3A08, 0x0628);
+        ERRR(INDB, "@RR0,@R4,R6", 0x3A48, 0x0608);
     } else {
-        TEST(IND,  "@R1,@R2,R0",  0x3B28, 0x0018);
-        TEST(INDB, "@R1,@R2,R0",  0x3A28, 0x0018);
+        TEST(IND,  "@R1,@R2,R0", 0x3B28, 0x0018);
+        TEST(INDB, "@R1,@R2,R0", 0x3A28, 0x0018);
+        ERRR(IND,  "@R1,@R0,R0", 0x3B08, 0x0018);
+        ERRR(IND,  "@R0,@R2,R0", 0x3B28, 0x0008);
+        ERRR(INDB, "@R1,@R0,R0", 0x3A08, 0x0018);
+        ERRR(INDB, "@R0,@R2,R0", 0x3A28, 0x0008);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B08, 0x0628);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B48, 0x0608);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A08, 0x0628);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A48, 0x0608);
 
     // Special Input and Decrement
     if (z8001()) {
         TEST(SIND,  "@RR4,@R3,R0", 0x3B39, 0x0048);
         TEST(SINDB, "@RR4,@R3,R0", 0x3A39, 0x0048);
+        ERRR(SIND,  "@RR4,@R0,R0", 0x3B09, 0x0048);
+        ERRR(SIND,  "@RR0,@R3,R0", 0x3B39, 0x0008);
+        ERRR(SINDB, "@RR4,@R0,R0", 0x3A09, 0x0048);
+        ERRR(SINDB, "@RR0,@R3,R0", 0x3A39, 0x0008);
     } else {
-        TEST(SIND,  "@R3,@R4,R5",  0x3B49, 0x0538);
-        TEST(SINDB, "@R3,@R4,R5",  0x3A49, 0x0538);
+        TEST(SIND,  "@R3,@R4,R5", 0x3B49, 0x0538);
+        TEST(SINDB, "@R3,@R4,R5", 0x3A49, 0x0538);
+        ERRR(SIND,  "@R3,@R0,R5", 0x3B09, 0x0538);
+        ERRR(SIND,  "@R0,@R4,R5", 0x3B49, 0x0508);
+        ERRR(SINDB, "@R3,@R0,R5", 0x3A09, 0x0538);
+        ERRR(SINDB, "@R0,@R4,R0", 0x3A49, 0x0508);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B09, 0x0048);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B39, 0x0008);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A09, 0x0048);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A39, 0x0008);
 
     // Input, Decrement, and Repeat
     if (z8001()) {
         TEST(INDR,  "@RR6,@R4,R8", 0x3B48, 0x0860);
         TEST(INDRB, "@RR6,@R4,R8", 0x3A48, 0x0860);
+        ERRR(INDR,  "@RR6,@R0,R8", 0x3B08, 0x0860);
+        ERRR(INDR,  "@RR0,@R4,R8", 0x3B48, 0x0800);
+        ERRR(INDRB, "@RR6,@R0,R8", 0x3A08, 0x0860);
+        ERRR(INDRB, "@RR0,@R4,R8", 0x3A48, 0x0600);
     } else {
-        TEST(INDR,  "@R6,@R7,R8",  0x3B78, 0x0860);
-        TEST(INDRB, "@R6,@R7,R8",  0x3A78, 0x0860);
+        TEST(INDR,  "@R6,@R7,R8", 0x3B78, 0x0860);
+        TEST(INDRB, "@R6,@R7,R8", 0x3A78, 0x0860);
+        ERRR(INDR,  "@R6,@R0,R8", 0x3B08, 0x0860);
+        ERRR(INDR,  "@R0,@R7,R8", 0x3B78, 0x0800);
+        ERRR(INDRB, "@R6,@R0,R8", 0x3A08, 0x0860);
+        ERRR(INDRB, "@R0,@R7,R8", 0x3A78, 0x0600);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B08, 0x0860);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B48, 0x0800);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A08, 0x0860);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A48, 0x0600);
 
     // Special Input, Decrement, and Repeat
     if (z8001()) {
         TEST(SINDR,  "@RR8,@R10,R12", 0x3BA9, 0x0C80);
         TEST(SINDRB, "@RR8,@R10,R12", 0x3AA9, 0x0C80);
+        ERRR(SINDR,  "@RR8,@R0,R12",  0x3B09, 0x0C80);
+        ERRR(SINDR,  "@RR0,@R10,R12", 0x3BA9, 0x0C00);
+        ERRR(SINDRB, "@RR8,@R0,R12",  0x3A09, 0x0C80);
+        ERRR(SINDRB, "@RR0,@R10,R12", 0x3AA9, 0x0C00);
     } else {
-        TEST(SINDR,  "@R9,@R10,R11",  0x3BA9, 0x0B90);
-        TEST(SINDRB, "@R9,@R10,R11",  0x3AA9, 0x0B90);
+        TEST(SINDR,  "@R9,@R10,R11", 0x3BA9, 0x0B90);
+        TEST(SINDRB, "@R9,@R10,R11", 0x3AA9, 0x0B90);
+        ERRR(SINDR,  "@R9,@R0,R11",  0x3B09, 0x0B90);
+        ERRR(SINDR,  "@R0,@R10,R11", 0x3BA9, 0x0B00);
+        ERRR(SINDRB, "@R9,@R0,R11",  0x3A09, 0x0B90);
+        ERRR(SINDRB, "@R0,@R10,R11", 0x3AA9, 0x0B00);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B09, 0x0C80);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3BA9, 0x0C00);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A09, 0x0C80);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3AA9, 0x0C00);
 
     // Input and Increment
     if (z8001()) {
         TEST(INI,  "@RR14,@R2,R1", 0x3B20, 0x01E8);
         TEST(INIB, "@RR14,@R2,R1", 0x3A20, 0x01E8);
+        ERRR(INI,  "@RR14,@R0,R1", 0x3B00, 0x01E8);
+        ERRR(INI,  "@RR0,@R2,R1",  0x3B20, 0x0108);
+        ERRR(INIB, "@RR14,@R0,R1", 0x3A00, 0x01E8);
+        ERRR(INIB, "@RR0,@R2,R1",  0x3A20, 0x0108);
     } else {
         TEST(INI,  "@R12,@R13,R14", 0x3BD0, 0x0EC8);
         TEST(INIB, "@R12,@R13,R14", 0x3AD0, 0x0EC8);
+        ERRR(INI,  "@R12,@R0,R14",  0x3B00, 0x0EC8);
+        ERRR(INI,  "@R0,@R13,R14",  0x3BD0, 0x0E08);
+        ERRR(INIB, "@R12,@R0,R14",  0x3A00, 0x0EC8);
+        ERRR(INIB, "@R0,@R13,R14",  0x3AD0, 0x0E08);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B00, 0x01E8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B20, 0x0108);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A00, 0x01E8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A20, 0x0108);
 
     // Special Input and Increment
     if (z8001()) {
         TEST(SINI,  "@RR12,@R11,R10", 0x3BB1, 0x0AC8);
         TEST(SINIB, "@RR12,@R11,R10", 0x3AB1, 0x0AC8);
+        ERRR(SINI,  "@RR12,@R0,R10", 0x3B01, 0x0AC8);
+        ERRR(SINI,  "@RR0,@R11,R10", 0x3BB1, 0x0A08);
+        ERRR(SINIB, "@RR12,@R0,R10", 0x3A01, 0x0AC8);
+        ERRR(SINIB, "@RR0,@R11,R10", 0x3AB1, 0x0A08);
     } else {
         TEST(SINI,  "@R15,@R1,R0", 0x3B11, 0x00F8);
         TEST(SINIB, "@R15,@R1,R0", 0x3A11, 0x00F8);
+        ERRR(SINI,  "@R15,@R0,R0", 0x3B01, 0x00F8);
+        ERRR(SINI,  "@R0,@R1,R0",  0x3B11, 0x0008);
+        ERRR(SINIB, "@R15,@R0,R0", 0x3A01, 0x00F8);
+        ERRR(SINIB, "@R0,@R1,R0",  0x3A11, 0x0008);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B01, 0x0AC8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3BB1, 0x0A08);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A01, 0x0AC8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3AB1, 0x0A08);
 
     // Input, Increment and Repeat
     if (z8001()) {
         TEST(INIR,  "@RR10,@R9,R8", 0x3B90, 0x08A0);
         TEST(INIRB, "@RR10,@R9,R8", 0x3A90, 0x08A0);
+        ERRR(INIR,  "@RR10,@R0,R1", 0x3B00, 0x08A0);
+        ERRR(INIR,  "@RR0,@R9,R1",  0x3B90, 0x0800);
+        ERRR(INIRB, "@RR10,@R0,R1", 0x3A00, 0x08A0);
+        ERRR(INIRB, "@RR0,@R9,R1",  0x3A90, 0x0800);
     } else {
         TEST(INIR,  "@R3,@R2,R1", 0x3B20, 0x0130);
         TEST(INIRB, "@R3,@R2,R1", 0x3A20, 0x0130);
+        ERRR(INIR,  "@R3,@R0,R1", 0x3B00, 0x0130);
+        ERRR(INIR,  "@R0,@R2,R1", 0x3B20, 0x0100);
+        ERRR(INIRB, "@R3,@R0,R1", 0x3A00, 0x0130);
+        ERRR(INIRB, "@R0,@R2,R1", 0x3A20, 0x0100);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B00, 0x08A0);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B90, 0x0800);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A00, 0x08A0);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A90, 0x0800);
 
     // Special Input, Increment, and Repeat
     if (z8001()) {
         TEST(SINIR,  "@RR8,@R7,R6", 0x3B71, 0x0680);
         TEST(SINIRB, "@RR8,@R7,R6", 0x3A71, 0x0680);
+        ERRR(SINIR,  "@RR8,@R0,R6", 0x3B01, 0x0680);
+        ERRR(SINIR,  "@RR0,@R7,R6", 0x3B71, 0x0600);
+        ERRR(SINIRB, "@RR8,@R0,R6", 0x3A01, 0x0680);
+        ERRR(SINIRB, "@RR0,@R7,R6", 0x3A71, 0x0600);
     } else {
         TEST(SINIR,  "@R4,@R3,R2", 0x3B31, 0x0240);
         TEST(SINIRB, "@R4,@R3,R2", 0x3A31, 0x0240);
+        ERRR(SINIR,  "@R4,@R0,R2", 0x3B01, 0x0240);
+        ERRR(SINIR,  "@R0,@R3,R2", 0x3B31, 0x0200);
+        ERRR(SINIRB, "@R4,@R0,R2", 0x3A01, 0x0240);
+        ERRR(SINIRB, "@R0,@R3,R2", 0x3A31, 0x0200);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B01, 0x0680);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B71, 0x0600);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A01, 0x0680);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A71, 0x0600);
 }
 
 static void test_output() {
     // Output
-    TEST(OUT,  "@R2,R1",      0x3F21);
-    TEST(OUTB, "@R2,RH1",     0x3E21);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3F01);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3E01);
+    TEST(OUT,  "@R2,R1",  0x3F21);
+    TEST(OUTB, "@R2,RH1", 0x3E21);
+    ERRR(OUT,  "@R0,R1",  0x3F01);
+    ERRR(OUTB, "@R0,RH1", 0x3E01);
     TEST(OUT,  "1234H,R1",  0x3B16, 0x1234);
     TEST(OUTB, "1234H,RH1", 0x3A16, 0x1234);
 
     // Special Output
-    TEST(SOUT,  "1234H,R1",  0x3B17, 0x1234);
+    TEST(SOUT,  "1234H,R1", 0x3B17, 0x1234);
     TEST(SOUTB, "1234H,RH1", 0x3A17, 0x1234);
 
     // Output and Decrement
     if (z8001()) {
         TEST(OUTD,  "@R2,@RR4,R6", 0x3B4A, 0x0628);
         TEST(OUTDB, "@R2,@RR4,R6", 0x3A4A, 0x0628);
+        ERRR(OUTD,  "@R2,@RR0,R6", 0x3B0A, 0x0628);
+        ERRR(OUTD,  "@R0,@RR4,R6", 0x3B4A, 0x0608);
+        ERRR(OUTDB, "@R2,@RR0,R6", 0x3A0A, 0x0628);
+        ERRR(OUTDB, "@R0,@RR4,R6", 0x3A4A, 0x0608);
     } else {
-        TEST(OUTD,  "@R2,@R1,R0",  0x3B1A, 0x0028);
-        TEST(OUTDB, "@R2,@R1,R0",  0x3A1A, 0x0028);
+        TEST(OUTD,  "@R2,@R1,R0", 0x3B1A, 0x0028);
+        TEST(OUTDB, "@R2,@R1,R0", 0x3A1A, 0x0028);
+        ERRR(OUTD,  "@R2,@R0,R0", 0x3B0A, 0x0028);
+        ERRR(OUTD,  "@R0,@R1,R0", 0x3B1A, 0x0008);
+        ERRR(OUTDB, "@R2,@R0,R0", 0x3A0A, 0x0028);
+        ERRR(OUTDB, "@R0,@R1,R0", 0x3A1A, 0x0008);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B0A, 0x0628);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B4A, 0x0608);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A0A, 0x0628);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A4A, 0x0608);
 
     // Special Output and Decrement
     if (z8001()) {
         TEST(SOUTD,  "@R3,@RR4,R0", 0x3B4B, 0x0038);
         TEST(SOUTDB, "@R3,@RR4,R0", 0x3A4B, 0x0038);
+        ERRR(SOUTD,  "@R3,@RR0,R0", 0x3B0B, 0x0038);
+        ERRR(SOUTD,  "@R0,@RR4,R0", 0x3B4B, 0x0008);
+        ERRR(SOUTDB, "@R3,@RR0,R0", 0x3A0B, 0x0038);
+        ERRR(SOUTDB, "@R0,@RR4,R0", 0x3A4B, 0x0008);
     } else {
-        TEST(SOUTD,  "@R3,@R4,R5",  0x3B4B, 0x0538);
-        TEST(SOUTDB, "@R3,@R4,R5",  0x3A4B, 0x0538);
+        TEST(SOUTD,  "@R3,@R4,R5", 0x3B4B, 0x0538);
+        TEST(SOUTDB, "@R3,@R4,R5", 0x3A4B, 0x0538);
+        ERRR(SOUTD,  "@R3,@R0,R5", 0x3B0B, 0x0538);
+        ERRR(SOUTD,  "@R0,@R4,R5", 0x3B4B, 0x0508);
+        ERRR(SOUTDB, "@R3,@R0,R5", 0x3A0B, 0x0538);
+        ERRR(SOUTDB, "@R0,@R4,R5", 0x3A4B, 0x0508);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B0B, 0x0038);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B4B, 0x0008);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A0B, 0x0038);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A4B, 0x0008);
 
     // Output, Decrement, and Repeat
     if (z8001()) {
         TEST(OTDR,  "@R4,@RR6,R8", 0x3B6A, 0x0840);
         TEST(OTDRB, "@R4,@RR6,R8", 0x3A6A, 0x0840);
+        ERRR(OTDR,  "@R4,@RR0,R8", 0x3B0A, 0x0840);
+        ERRR(OTDR,  "@R0,@RR6,R8", 0x3B6A, 0x0800);
+        ERRR(OTDRB, "@R4,@RR0,R8", 0x3A0A, 0x0840);
+        ERRR(OTDRB, "@R0,@RR6,R8", 0x3A6A, 0x0600);
     } else {
-        TEST(OTDR,  "@R6,@R7,R8",  0x3B7A, 0x0860);
-        TEST(OTDRB, "@R6,@R7,R8",  0x3A7A, 0x0860);
+        TEST(OTDR,  "@R6,@R7,R8", 0x3B7A, 0x0860);
+        TEST(OTDRB, "@R6,@R7,R8", 0x3A7A, 0x0860);
+        ERRR(OTDR,  "@R6,@R0,R8", 0x3B0A, 0x0860);
+        ERRR(OTDR,  "@R0,@R7,R8", 0x3B7A, 0x0800);
+        ERRR(OTDRB, "@R6,@R0,R8", 0x3A0A, 0x0860);
+        ERRR(OTDRB, "@R0,@R7,R8", 0x3A7A, 0x0600);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B0A, 0x0840);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B6A, 0x0800);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A0A, 0x0840);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A6A, 0x0600);
 
     // Special Output, Decrement, and Repeat
     if (z8001()) {
         TEST(SOTDR,  "@R8,@RR10,R12", 0x3BAB, 0x0C80);
         TEST(SOTDRB, "@R8,@RR10,R12", 0x3AAB, 0x0C80);
+        ERRR(SOTDR,  "@R8,@RR0,R12",  0x3B0B, 0x0C80);
+        ERRR(SOTDR,  "@R0,@RR10,R12", 0x3BAB, 0x0C00);
+        ERRR(SOTDRB, "@R8,@RR0,R12",  0x3A0B, 0x0C80);
+        ERRR(SOTDRB, "@R0,@RR10,R12", 0x3AAB, 0x0C00);
     } else {
-        TEST(SOTDR,  "@R9,@R10,R11",  0x3BAB, 0x0B90);
-        TEST(SOTDRB, "@R9,@R10,R11",  0x3AAB, 0x0B90);
+        TEST(SOTDR,  "@R9,@R10,R11", 0x3BAB, 0x0B90);
+        TEST(SOTDRB, "@R9,@R10,R11", 0x3AAB, 0x0B90);
+        ERRR(SOTDR,  "@R9,@R0,R11",  0x3B0B, 0x0B90);
+        ERRR(SOTDR,  "@R0,@R10,R11", 0x3BAB, 0x0B00);
+        ERRR(SOTDRB, "@R9,@R0,R11",  0x3A0B, 0x0B90);
+        ERRR(SOTDRB, "@R0,@R10,R11", 0x3AAB, 0x0B00);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B0B, 0x0C80);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3BAB, 0x0C00);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A0B, 0x0C80);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3AAB, 0x0C00);
 
     // Output and Increment
     if (z8001()) {
         TEST(OUTI,  "@R14,@RR2,R1", 0x3B22, 0x01E8);
         TEST(OUTIB, "@R14,@RR2,R1", 0x3A22, 0x01E8);
+        ERRR(OUTI,  "@R14,@RR0,R1", 0x3B02, 0x01E8);
+        ERRR(OUTI,  "@R0,@RR2,R1",  0x3B22, 0x0108);
+        ERRR(OUTIB, "@R14,@RR0,R1", 0x3A02, 0x01E8);
+        ERRR(OUTIB, "@R0,@RR2,R1",  0x3A22, 0x0108);
     } else {
         TEST(OUTI,  "@R12,@R13,R14", 0x3BD2, 0x0EC8);
         TEST(OUTIB, "@R12,@R13,R14", 0x3AD2, 0x0EC8);
+        ERRR(OUTI,  "@R12,@R0,R14",  0x3B02, 0x0EC8);
+        ERRR(OUTI,  "@R0,@R13,R14",  0x3BD2, 0x0E08);
+        ERRR(OUTIB, "@R12,@R0,R14",  0x3A02, 0x0EC8);
+        ERRR(OUTIB, "@R0,@R13,R14",  0x3AD2, 0x0E08);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B02, 0x01E8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B22, 0x0108);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A02, 0x01E8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A22, 0x0108);
 
     // Special Output and Increment
     if (z8001()) {
         TEST(SOUTI,  "@R10,@RR12,R11", 0x3BC3, 0x0BA8);
         TEST(SOUTIB, "@R10,@RR12,R11", 0x3AC3, 0x0BA8);
+        ERRR(SOUTI,  "@R10,@RR0,R11",  0x3B03, 0x0BA8);
+        ERRR(SOUTI,  "@R0,@RR12,R11",  0x3BC3, 0x0B08);
+        ERRR(SOUTIB, "@R10,@RR0,R11",  0x3A03, 0x0BA8);
+        ERRR(SOUTIB, "@R0,@RR12,R11",  0x3AC3, 0x0B08);
     } else {
         TEST(SOUTI,  "@R15,@R1,R0", 0x3B13, 0x00F8);
         TEST(SOUTIB, "@R15,@R1,R0", 0x3A13, 0x00F8);
+        ERRR(SOUTI,  "@R15,@R0,R0", 0x3B03, 0x00F8);
+        ERRR(SOUTI,  "@R0,@R1,R0",  0x3B13, 0x0008);
+        ERRR(SOUTIB, "@R15,@R0,R0", 0x3A03, 0x00F8);
+        ERRR(SOUTIB, "@R0,@R1,R0",  0x3A13, 0x0008);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B03, 0x0BA8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3BC3, 0x0B08);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A03, 0x0BA8);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3AC3, 0x0B08);
 
     // Output, Increment and Repeat
     if (z8001()) {
         TEST(OTIR,  "@R9,@RR10,R8", 0x3BA2, 0x0890);
         TEST(OTIRB, "@R9,@RR10,R8", 0x3AA2, 0x0890);
+        ERRR(OTIR,  "@R9,@RR0,R8",  0x3B02, 0x0890);
+        ERRR(OTIR,  "@R0,@RR10,R8", 0x3BA2, 0x0800);
+        ERRR(OTIRB, "@R9,@RR0,R8",  0x3A02, 0x0890);
+        ERRR(OTIRB, "@R0,@RR10,R8", 0x3AA2, 0x0800);
     } else {
         TEST(OTIR,  "@R3,@R2,R1", 0x3B22, 0x0130);
         TEST(OTIRB, "@R3,@R2,R1", 0x3A22, 0x0130);
+        ERRR(OTIR,  "@R3,@R0,R1", 0x3B02, 0x0130);
+        ERRR(OTIR,  "@R0,@R2,R1", 0x3B22, 0x0100);
+        ERRR(OTIRB, "@R3,@R0,R1", 0x3A02, 0x0130);
+        ERRR(OTIRB, "@R0,@R2,R1", 0x3A22, 0x0100);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B02, 0x0890);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3BA2, 0x0800);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A02, 0x0890);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3AA2, 0x0800);
 
     // Special Output, Increment, and Repeat
     if (z8001()) {
         TEST(SOTIR,  "@R7,@RR8,R6", 0x3B83, 0x0670);
         TEST(SOTIRB, "@R7,@RR8,R6", 0x3A83, 0x0670);
+        ERRR(SOTIR,  "@R7,@RR0,R6", 0x3B03, 0x0670);
+        ERRR(SOTIR,  "@R0,@RR8,R6", 0x3B83, 0x0600);
+        ERRR(SOTIRB, "@R7,@RR0,R6", 0x3A03, 0x0670);
+        ERRR(SOTIRB, "@R0,@RR8,R6", 0x3A83, 0x0600);
     } else {
         TEST(SOTIR,  "@R4,@R3,R2", 0x3B33, 0x0240);
         TEST(SOTIRB, "@R4,@R3,R2", 0x3A33, 0x0240);
+        ERRR(SOTIR,  "@R4,@R0,R2", 0x3B03, 0x0240);
+        ERRR(SOTIR,  "@R0,@R3,R2", 0x3B33, 0x0200);
+        ERRR(SOTIRB, "@R4,@R0,R2", 0x3A03, 0x0240);
+        ERRR(SOTIRB, "@R0,@R3,R2", 0x3A33, 0x0200);
     }
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B03, 0x0670);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3B83, 0x0600);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A03, 0x0670);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x3A83, 0x0600);
 }
 
 static void test_cpu_conrtol() {
     // Complement Flag
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x8D05);
+    ERNE(COMFLG, "",        0x8D05);
     TEST(COMFLG, "P",       0x8D15);
     TEST(COMFLG, "S",       0x8D25);
     TEST(COMFLG, "S,P",     0x8D35);
@@ -1789,62 +1864,62 @@ static void test_cpu_conrtol() {
     TEST(COMFLG, "C,Z,S,P", 0x8DF5);
 
     // Disassembler Interrupt
-    TEST(DI,  "VI,NVI",  0x7C00);
-    TEST(DI,  "VI",      0x7C01);
-    TEST(DI,  "NVI",     0x7C02);
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x7C03);
+    TEST(DI, "VI,NVI", 0x7C00);
+    TEST(DI, "VI",     0x7C01);
+    TEST(DI, "NVI",    0x7C02);
+    ERNE(DI, "",       0x7C03);
 
     // Enable Interrupt
-    TEST(EI,  "VI,NVI",  0x7C04);
-    TEST(EI,  "VI",      0x7C05);
-    TEST(EI,  "NVI",     0x7C06);
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x7C07);
+    TEST(EI, "VI,NVI", 0x7C04);
+    TEST(EI, "VI",     0x7C05);
+    TEST(EI, "NVI",    0x7C06);
+    ERNE(EI, "",       0x7C07);
 
     // Halt
     TEST(HALT, "", 0x7A00);
 
     // Load Control Register
-    ETEST(ILLEGAL_SIZE, LDCTL, "R14,FLAGS", 0x7DE1);
-    TEST(LDCTL,  "R13,FCW",     0x7DD2);
-    TEST(LDCTL,  "R12,REFRESH", 0x7DC3);
+    ERSZ(LDCTL, "R14,FLAGS", 0x7DE1);
+    TEST(LDCTL, "R13,FCW", 0x7DD2);
+    TEST(LDCTL, "R12,REFRESH", 0x7DC3);
     if (z8001()) {
-        TEST(LDCTL,  "R11,PSAPSEG", 0x7DB4);
-        TEST(LDCTL,  "R10,PSAPOFF", 0x7DA5);
-        TEST(LDCTL,  "R9,NSPSEG",   0x7D96);
-        TEST(LDCTL,  "R8,NSPOFF",   0x7D87);
+        TEST(LDCTL, "R11,PSAPSEG", 0x7DB4);
+        TEST(LDCTL, "R10,PSAPOFF", 0x7DA5);
+        TEST(LDCTL, "R9,NSPSEG", 0x7D96);
+        TEST(LDCTL, "R8,NSPOFF", 0x7D87);
     } else {
-        ETEST(ILLEGAL_REGISTER, LDCTL, "R11,PSAPSEG", 0x7DB4);
-        TEST(                   LDCTL, "R10,PSAP",    0x7DA5);
-        ETEST(ILLEGAL_REGISTER, LDCTL, "R9,NSPSEG",   0x7D96);
-        TEST(                   LDCTL, "R8,NSP",      0x7D87);
+        ERIR(LDCTL, "R11,PSAPSEG", 0x7DB4);
+        TEST(LDCTL, "R10,PSAP", 0x7DA5);
+        ERIR(LDCTL, "R9,NSPSEG", 0x7D96);
+        TEST(LDCTL, "R8,NSP", 0x7D87);
     }
-    ETEST(ILLEGAL_SIZE, LDCTL, "FLAGS,R6", 0x7D69);
-    TEST(LDCTL,  "FCW,R5",      0x7D5A);
-    TEST(LDCTL,  "REFRESH,R4",  0x7D4B);
+    ERSZ(LDCTL, "FLAGS,R6", 0x7D69);
+    TEST(LDCTL, "FCW,R5", 0x7D5A);
+    TEST(LDCTL, "REFRESH,R4", 0x7D4B);
     if (z8001()) {
         TEST(LDCTL,  "PSAPSEG,R3", 0x7D3C);
         TEST(LDCTL,  "PSAPOFF,R2", 0x7D2D);
-        TEST(LDCTL,  "NSPSEG,R1",  0x7D1E);
-        TEST(LDCTL,  "NSPOFF,R0",  0x7D0F);
+        TEST(LDCTL,  "NSPSEG,R1", 0x7D1E);
+        TEST(LDCTL,  "NSPOFF,R0", 0x7D0F);
     } else {
-        ETEST(ILLEGAL_REGISTER, LDCTL, "PSAPSEG,R3",  0x7D3C);
-        TEST(                   LDCTL, "PSAP,R2",     0x7D2D);
-        ETEST(ILLEGAL_REGISTER, LDCTL, "NSPSEG,R1",   0x7D1E);
-        TEST(                   LDCTL, "NSP,R0",      0x7D0F);
+        ERIR(LDCTL, "PSAPSEG,R3", 0x7D3C);
+        TEST(LDCTL, "PSAP,R2", 0x7D2D);
+        ERIR(LDCTL, "NSPSEG,R1", 0x7D1E);
+        TEST(LDCTL, "NSP,R0", 0x7D0F);
     }
-    TEST(LDCTLB, "RL6,FLAGS",   0x8CE1);
-    TEST(LDCTLB, "FLAGS,RH6",   0x8C69);
+    TEST(LDCTLB, "RL6,FLAGS", 0x8CE1);
+    TEST(LDCTLB, "FLAGS,RH6", 0x8C69);
 
     // Load Program Status
     if (z8001()) {
-        TEST(LDPS, "@RR2",        0x3920);
-        TEST(LDPS, "|120034H|",     0x7900, 0x1234);
-        TEST(LDPS, "561234H",     0x7900, 0xD600, 0x1234);
+        TEST(LDPS, "@RR2", 0x3920);
+        TEST(LDPS, "|120034H|", 0x7900, 0x1234);
+        TEST(LDPS, "561234H", 0x7900, 0xD600, 0x1234);
         TEST(LDPS, "|120034H|(R1)", 0x7910, 0x1234);
         TEST(LDPS, "561234H(R1)", 0x7910, 0xD600, 0x1234);
     } else {
-        TEST(LDPS, "@R2",       0x3920);
-        TEST(LDPS, "1234H",     0x7900, 0x1234);
+        TEST(LDPS, "@R2", 0x3920);
+        TEST(LDPS, "1234H", 0x7900, 0x1234);
         TEST(LDPS, "1234H(R1)", 0x7910, 0x1234);
     }
 
@@ -1857,7 +1932,7 @@ static void test_cpu_conrtol() {
     TEST(NOP,  "", 0x8D07);
 
     // Reset Flag
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x8D03);
+    ERNE(RESFLG, "",        0x8D03);
     TEST(RESFLG, "P",       0x8D13);
     TEST(RESFLG, "S",       0x8D23);
     TEST(RESFLG, "S,P",     0x8D33);
@@ -1875,7 +1950,7 @@ static void test_cpu_conrtol() {
     TEST(RESFLG, "C,Z,S,P", 0x8DF3);
 
     // Set Flag
-    ETEST(OPCODE_HAS_NO_EFFECT, _, "", 0x8D01);
+    ERNE(SETFLG, "",        0x8D01);
     TEST(SETFLG, "P",       0x8D11);
     TEST(SETFLG, "S",       0x8D21);
     TEST(SETFLG, "S,P",     0x8D31);
@@ -1896,10 +1971,10 @@ static void test_cpu_conrtol() {
 static void test_short_direct() {
     dis8000.setShortDirect(false);
 
-    TEST(CLR,  "120034H",     0x4D08, 0x1234);
-    TEST(CLR,  "561234H",     0x4D08, 0xD600, 0x1234);
-    TEST(CLR,  "120034H(R2)", 0x4D28, 0x1234);
-    TEST(CLR,  "561234H(R2)", 0x4D28, 0xD600, 0x1234);
+    TEST(CLR, "120034H", 0x4D08, 0x1234);
+    TEST(CLR, "561234H", 0x4D08, 0xD600, 0x1234);
+    TEST(CLR, "120034H(R2)", 0x4D28, 0x1234);
+    TEST(CLR, "561234H(R2)", 0x4D28, 0xD600, 0x1234);
 }
 
 // clang-format on

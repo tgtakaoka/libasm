@@ -229,7 +229,7 @@ static void test_illegal() {
         0xCC,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 // clang-format on
 

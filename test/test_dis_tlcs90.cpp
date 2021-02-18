@@ -355,42 +355,42 @@ static void test_16bit_transfer() {
     TEST(LD, "BC,BC", 0xF8, 0x38);
     TEST(LD, "BC,DE", 0xF9, 0x38);
     TEST(LD, "BC,HL", 0xFA, 0x38);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x38);
+    ERRI(             0xFB, 0x38);
     TEST(LD, "BC,IX", 0xFC, 0x38);
     TEST(LD, "BC,IY", 0xFD, 0x38);
     TEST(LD, "BC,SP", 0xFE, 0x38);
     TEST(LD, "DE,BC", 0xF8, 0x39);
     TEST(LD, "DE,DE", 0xF9, 0x39);
     TEST(LD, "DE,HL", 0xFA, 0x39);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x39);
+    ERRI(             0xFB, 0x39);
     TEST(LD, "DE,IX", 0xFC, 0x39);
     TEST(LD, "DE,IY", 0xFD, 0x39);
     TEST(LD, "DE,SP", 0xFE, 0x39);
     TEST(LD, "HL,BC", 0xF8, 0x3A);
     TEST(LD, "HL,DE", 0xF9, 0x3A);
     TEST(LD, "HL,HL", 0xFA, 0x3A);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x3A);
+    ERRI(             0xFB, 0x3A);
     TEST(LD, "HL,IX", 0xFC, 0x3A);
     TEST(LD, "HL,IY", 0xFD, 0x3A);
     TEST(LD, "HL,SP", 0xFE, 0x3A);
     TEST(LD, "IX,BC", 0xF8, 0x3C);
     TEST(LD, "IX,DE", 0xF9, 0x3C);
     TEST(LD, "IX,HL", 0xFA, 0x3C);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x3C);
+    ERRI(             0xFB, 0x3C);
     TEST(LD, "IX,IX", 0xFC, 0x3C);
     TEST(LD, "IX,IY", 0xFD, 0x3C);
     TEST(LD, "IX,SP", 0xFE, 0x3C);
     TEST(LD, "IY,BC", 0xF8, 0x3D);
     TEST(LD, "IY,DE", 0xF9, 0x3D);
     TEST(LD, "IY,HL", 0xFA, 0x3D);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x3D);
+    ERRI(             0xFB, 0x3D);
     TEST(LD, "IY,IX", 0xFC, 0x3D);
     TEST(LD, "IY,IY", 0xFD, 0x3D);
     TEST(LD, "IY,SP", 0xFE, 0x3D);
     TEST(LD, "SP,BC", 0xF8, 0x3E);
     TEST(LD, "SP,DE", 0xF9, 0x3E);
     TEST(LD, "SP,HL", 0xFA, 0x3E);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x3E);
+    ERRI(             0xFB, 0x3E);
     TEST(LD, "SP,IX", 0xFC, 0x3E);
     TEST(LD, "SP,IY", 0xFD, 0x3E);
     TEST(LD, "SP,SP", 0xFE, 0x3E);
@@ -640,12 +640,12 @@ static void test_16bit_transfer() {
     TEST(LDA, "SP,(HL+A)", 0xF7, 0x3E);
 
     // LDA rr,(gg)
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xE8, 0x38);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xE9, 0x39);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xEA, 0x3A);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xEC, 0x3C);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xED, 0x3D);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xED, 0x3E);
+    ERRI(0xE8, 0x38);
+    ERRI(0xE9, 0x39);
+    ERRI(0xEA, 0x3A);
+    ERRI(0xEC, 0x3C);
+    ERRI(0xED, 0x3D);
+    ERRI(0xED, 0x3E);
 
     // LDAR HL,nm
     ATEST(0x1000, LDAR, "HL,1003H", 0x17, 0x01, 0x00);
@@ -1126,7 +1126,7 @@ static void test_16bit_arithmetic() {
     TEST(ADD, "HL,BC", 0xF8, 0x70);
     TEST(ADD, "HL,DE", 0xF9, 0x70);
     TEST(ADD, "HL,HL", 0xFA, 0x70);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x70);
+    ERRI(              0xFB, 0x70);
     TEST(ADD, "HL,IX", 0xFC, 0x70);
     TEST(ADD, "HL,IY", 0xFD, 0x70);
     TEST(ADD, "HL,SP", 0xFE, 0x70);
@@ -1147,7 +1147,7 @@ static void test_16bit_arithmetic() {
     TEST(ADC, "HL,BC", 0xF8, 0x71);
     TEST(ADC, "HL,DE", 0xF9, 0x71);
     TEST(ADC, "HL,HL", 0xFA, 0x71);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x71);
+    ERRI(              0xFB, 0x71);
     TEST(ADC, "HL,IX", 0xFC, 0x71);
     TEST(ADC, "HL,IY", 0xFD, 0x71);
     TEST(ADC, "HL,SP", 0xFE, 0x71);
@@ -1168,7 +1168,7 @@ static void test_16bit_arithmetic() {
     TEST(SUB, "HL,BC", 0xF8, 0x72);
     TEST(SUB, "HL,DE", 0xF9, 0x72);
     TEST(SUB, "HL,HL", 0xFA, 0x72);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x72);
+    ERRI(              0xFB, 0x72);
     TEST(SUB, "HL,IX", 0xFC, 0x72);
     TEST(SUB, "HL,IY", 0xFD, 0x72);
     TEST(SUB, "HL,SP", 0xFE, 0x72);
@@ -1189,7 +1189,7 @@ static void test_16bit_arithmetic() {
     TEST(SBC, "HL,BC", 0xF8, 0x73);
     TEST(SBC, "HL,DE", 0xF9, 0x73);
     TEST(SBC, "HL,HL", 0xFA, 0x73);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x73);
+    ERRI(              0xFB, 0x73);
     TEST(SBC, "HL,IX", 0xFC, 0x73);
     TEST(SBC, "HL,IY", 0xFD, 0x73);
     TEST(SBC, "HL,SP", 0xFE, 0x73);
@@ -1210,7 +1210,7 @@ static void test_16bit_arithmetic() {
     TEST(AND, "HL,BC", 0xF8, 0x74);
     TEST(AND, "HL,DE", 0xF9, 0x74);
     TEST(AND, "HL,HL", 0xFA, 0x74);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x74);
+    ERRI(              0xFB, 0x74);
     TEST(AND, "HL,IX", 0xFC, 0x74);
     TEST(AND, "HL,IY", 0xFD, 0x74);
     TEST(AND, "HL,SP", 0xFE, 0x74);
@@ -1231,7 +1231,7 @@ static void test_16bit_arithmetic() {
     TEST(OR, "HL,BC", 0xF8, 0x76);
     TEST(OR, "HL,DE", 0xF9, 0x76);
     TEST(OR, "HL,HL", 0xFA, 0x76);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x76);
+    ERRI(             0xFB, 0x76);
     TEST(OR, "HL,IX", 0xFC, 0x76);
     TEST(OR, "HL,IY", 0xFD, 0x76);
     TEST(OR, "HL,SP", 0xFE, 0x76);
@@ -1252,7 +1252,7 @@ static void test_16bit_arithmetic() {
     TEST(XOR, "HL,BC", 0xF8, 0x75);
     TEST(XOR, "HL,DE", 0xF9, 0x75);
     TEST(XOR, "HL,HL", 0xFA, 0x75);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x75);
+    ERRI(              0xFB, 0x75);
     TEST(XOR, "HL,IX", 0xFC, 0x75);
     TEST(XOR, "HL,IY", 0xFD, 0x75);
     TEST(XOR, "HL,SP", 0xFE, 0x75);
@@ -1273,7 +1273,7 @@ static void test_16bit_arithmetic() {
     TEST(CP, "HL,BC", 0xF8, 0x77);
     TEST(CP, "HL,DE", 0xF9, 0x77);
     TEST(CP, "HL,HL", 0xFA, 0x77);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x77);
+    ERRI(             0xFB, 0x77);
     TEST(CP, "HL,IX", 0xFC, 0x77);
     TEST(CP, "HL,IY", 0xFD, 0x77);
     TEST(CP, "HL,SP", 0xFE, 0x77);
@@ -1336,21 +1336,21 @@ static void test_16bit_arithmetic() {
     TEST(ADD, "IX,BC", 0xF8, 0x14);
     TEST(ADD, "IX,DE", 0xF9, 0x14);
     TEST(ADD, "IX,HL", 0xFA, 0x14);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x14);
+    ERRI(              0xFB, 0x14);
     TEST(ADD, "IX,IX", 0xFC, 0x14);
     TEST(ADD, "IX,IY", 0xFD, 0x14);
     TEST(ADD, "IX,SP", 0xFE, 0x14);
     TEST(ADD, "IY,BC", 0xF8, 0x15);
     TEST(ADD, "IY,DE", 0xF9, 0x15);
     TEST(ADD, "IY,HL", 0xFA, 0x15);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x15);
+    ERRI(              0xFB, 0x15);
     TEST(ADD, "IY,IX", 0xFC, 0x15);
     TEST(ADD, "IY,IY", 0xFD, 0x15);
     TEST(ADD, "IY,SP", 0xFE, 0x15);
     TEST(ADD, "SP,BC", 0xF8, 0x16);
     TEST(ADD, "SP,DE", 0xF9, 0x16);
     TEST(ADD, "SP,HL", 0xFA, 0x16);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xFB, 0x16);
+    ERRI(              0xFB, 0x16);
     TEST(ADD, "SP,IX", 0xFC, 0x16);
     TEST(ADD, "SP,IY", 0xFD, 0x16);
     TEST(ADD, "SP,SP", 0xFE, 0x16);
@@ -1712,7 +1712,7 @@ static void test_jump_call() {
 
     TEST(JP, "(1234H)", 0x1A, 0x34, 0x12);
     TEST(JP, "(1234H)", 0xEB, 0x34, 0x12, 0xC8);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xEF, 0x34, 0xC8);
+    ERRI(               0xEF, 0x34, 0xC8);
 
     TEST(JP, "F,(BC)",      0xE8, 0xC0);
     TEST(JP, "LT,(DE)",     0xE9, 0xC1);
@@ -1738,7 +1738,7 @@ static void test_jump_call() {
 
     TEST(CALL, "(1234H)", 0x1C, 0x34, 0x12);
     TEST(CALL, "(1234H)", 0xEB, 0x34, 0x12, 0xD8);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xEF, 0x34, 0xD8);
+    ERRI(                 0xEF, 0x34, 0xD8);
 
     TEST(CALL, "F,(BC)",      0xE8, 0xD0);
     TEST(CALL, "LT,(DE)",     0xE9, 0xD1);
@@ -1866,33 +1866,33 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
 
     switch (prefix_operand(prefix)) {
     case 2:
-        ILLEGAL(prefix, 0, 0, opc);
+        ERRI(prefix, 0, 0, opc);
         break;
     case 1:
-        ILLEGAL(prefix, 0, opc);
+        ERRI(prefix, 0, opc);
         break;
     default:
-        ILLEGAL(prefix, opc);
+        ERRI(prefix, opc);
         break;
     }
 }
 
 static void test_illegal() {
-    ILLEGAL(0x04);
-    ILLEGAL(0x05);
-    ILLEGAL(0x06);
-    ILLEGAL(0x3B);
-    ILLEGAL(0x43);
-    ILLEGAL(0x4B);
-    ILLEGAL(0x53);
-    ILLEGAL(0x57);
-    ILLEGAL(0x5B);
-    ILLEGAL(0x5F);
-    ILLEGAL(0x93);
-    ILLEGAL(0x9B);
+    ERRI(0x04);
+    ERRI(0x05);
+    ERRI(0x06);
+    ERRI(0x3B);
+    ERRI(0x43);
+    ERRI(0x4B);
+    ERRI(0x53);
+    ERRI(0x57);
+    ERRI(0x5B);
+    ERRI(0x5F);
+    ERRI(0x93);
+    ERRI(0x9B);
 
     for (uint8_t opc = 0xD0; opc <= 0xDF; opc++)
-        ILLEGAL(opc);
+        ERRI(opc);
 
     for (int i = 0; i < 256; i++) {
         const uint8_t opc = uint8_t(i);

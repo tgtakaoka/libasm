@@ -137,19 +137,19 @@ static void test_data_transfer() {
     TEST(PUSH, "SS",            0026);
     TEST(PUSH, "DS",            0036);
 
-    TEST(POP,  "BP",            0x8F, 0305);
-    TEST(POP,  "[SI]",          0x8F, 0004);
-    TEST(POP,  "[1234H]",       0x8F, 0006, 0x34, 0x12);
-    TEST(POP,  "[DI-52]",       0x8F, 0105, 0xCC);
-    TEST(POP,  "[BP+1234H]",    0x8F, 0206, 0x34, 0x12);
-    TEST(POP,  "[BX+SI]",       0x8F, 0000);
-    TEST(POP,  "[BX+DI+52]",    0x8F, 0101, 0x34);
-    TEST(POP,  "[BP+SI+1234H]", 0x8F, 0202, 0x34, 0x12);
-    TEST(POP,  "BP",            0135);
-    TEST(POP,  "ES",            0007);
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0017); // POP CS
-    TEST(POP,  "SS",            0027);
-    TEST(POP,  "DS",            0037);
+    TEST(POP, "BP",            0x8F, 0305);
+    TEST(POP, "[SI]",          0x8F, 0004);
+    TEST(POP, "[1234H]",       0x8F, 0006, 0x34, 0x12);
+    TEST(POP, "[DI-52]",       0x8F, 0105, 0xCC);
+    TEST(POP, "[BP+1234H]",    0x8F, 0206, 0x34, 0x12);
+    TEST(POP, "[BX+SI]",       0x8F, 0000);
+    TEST(POP, "[BX+DI+52]",    0x8F, 0101, 0x34);
+    TEST(POP, "[BP+SI+1234H]", 0x8F, 0202, 0x34, 0x12);
+    TEST(POP, "BP",            0135);
+    TEST(POP, "ES",            0007);
+    ERRR(POP, "CS",            0017);
+    TEST(POP, "SS",            0027);
+    TEST(POP, "DS",            0037);
 
     TEST(XCHG, "AL,CH",            0x86, 0305);
     TEST(XCHG, "CL,[SI]",          0x86, 0014);
@@ -1198,8 +1198,8 @@ static void test_string_manipulation() {
     TEST(REPNE, "LODSW", 0xF2, 0xAD);
     TEST(REPNE, "SCASB", 0xF2, 0xAE);
     TEST(REPNE, "SCASW", 0xF2, 0xAF);
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xF2, 0x90); // NOP
-    ETEST(UNKNOWN_INSTRUCTION, _, "", 0xF2, 0xFF); // Prefix
+    ERUI(REPNE, "NOP",   0xF2, 0x90);
+    ERUI(REPNE, "JMP [SI]", 0xF2, 0xFF, 0044);
 
     TEST(REP, "MOVSB", 0xF3, 0xA4);
     TEST(REP, "MOVSW", 0xF3, 0xA5);
@@ -1347,6 +1347,8 @@ static void test_segment_override() {
     TEST(JMP, "SS:[SI]", 0x36, 0xFF, 0044);
     TEST(JMP, "DS:[SI]", 0x3E, 0xFF, 0044);
 
+#define ERRS(name, opr, ...) VASSERT(ILLEGAL_SEGMENT, 0, name, opr, __VA_ARGS__)
+
     TEST(MOVSB, "ES:[DI],ES:[SI]", 0x26, 0xA4);
     TEST(MOVSB, "ES:[DI],CS:[SI]", 0x2E, 0xA4);
     TEST(MOVSW, "ES:[DI],SS:[SI]", 0x36, 0xA5);
@@ -1359,65 +1361,65 @@ static void test_segment_override() {
     TEST(LODSB, "CS:[SI]", 0x2E, 0xAC);
     TEST(LODSW, "SS:[SI]", 0x36, 0xAD);
     TEST(LODSW, "DS:[SI]", 0x3E, 0xAD);
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x26, 0xAA); // STOSB
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x36, 0xAA);
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x3E, 0xAB); // STOSW
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x26, 0xAB);
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x26, 0xAE); // SCASB
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x36, 0xAE);
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x3E, 0xAF); // SCASW
-    ETEST(ILLEGAL_SEGMENT, _, "", 0x26, 0xAF);
+    ERRS(STOSB, "ES:[DI]", 0x26, 0xAA);
+    ERRS(STOSB, "CS:[DI]", 0x2E, 0xAA);
+    ERRS(STOSW, "SS:[DI]", 0x36, 0xAB);
+    ERRS(STOSW, "DS:[DI]", 0x3E, 0xAB);
+    ERRS(SCASB, "ES:[DI]", 0x26, 0xAE);
+    ERRS(SCASB, "CS:[DI]", 0x2E, 0xAE);
+    ERRS(SCASW, "SS:[DI]", 0x36, 0xAF);
+    ERRS(SCASW, "DS:[DI]", 0x3E, 0xAF);
 }
 
 static void test_illegal() {
-    ETEST(REGISTER_NOT_ALLOWED, _, "", 0x0F);  // POP CS
+    ERRR(POP, "CS", 0x0F);
 
     for (uint8_t opc = 0x60; opc < 0x70; opc++)
-        ILLEGAL(opc);
+        ERRI(opc);
 
-    ILLEGAL(0x82);
+    ERRI(0x82);
 
     for (uint8_t mod = 0; mod < 4; mod++) {
         for (uint8_t reg = 0; reg < 8; reg++) {
             for (uint8_t r_m = 0; r_m < 8; r_m++) {
                 const uint8_t modReg = (mod << 6) | (reg << 3) | r_m;
                 if (reg == 1) {
-                    ILLEGAL(0xF6, modReg);
-                    ILLEGAL(0xF7, modReg);
+                    ERRI(0xF6, modReg);
+                    ERRI(0xF7, modReg);
                 }
                 if (reg == 6) {
-                    ILLEGAL(0xD0, modReg);
-                    ILLEGAL(0xD1, modReg);
-                    ILLEGAL(0xD2, modReg);
-                    ILLEGAL(0xD3, modReg);
+                    ERRI(0xD0, modReg);
+                    ERRI(0xD1, modReg);
+                    ERRI(0xD2, modReg);
+                    ERRI(0xD3, modReg);
                 }
                 if (reg == 7)
-                    ILLEGAL(0xFF, modReg);
+                    ERRI(0xFF, modReg);
                 if (reg != 0 && reg != 1)
-                    ILLEGAL(0xFE, modReg);
+                    ERRI(0xFE, modReg);
                 if (reg != 0) {
-                    ILLEGAL(0x8F, modReg);
-                    ILLEGAL(0xC6, modReg);
-                    ILLEGAL(0xC7, modReg);
+                    ERRI(0x8F, modReg);
+                    ERRI(0xC6, modReg);
+                    ERRI(0xC7, modReg);
                 }
             }
         }
     }
 
     for (uint8_t second = 0x0B; second != 0x0A; second++) {
-        ILLEGAL(0xD4, second);
-        ILLEGAL(0xD5, second);
+        ERRI(0xD4, second);
+        ERRI(0xD5, second);
     }
 
     // Co-processor instructions
-    ILLEGAL(0xD8);
-    ILLEGAL(0xD9);
-    ILLEGAL(0xDA);
-    ILLEGAL(0xDB);
-    ILLEGAL(0xDC);
-    ILLEGAL(0xDD);
-    ILLEGAL(0xDE);
-    ILLEGAL(0xDF);
+    ERRI(0xD8);
+    ERRI(0xD9);
+    ERRI(0xDA);
+    ERRI(0xDB);
+    ERRI(0xDC);
+    ERRI(0xDD);
+    ERRI(0xDE);
+    ERRI(0xDF);
 }
 // clang-format on
 

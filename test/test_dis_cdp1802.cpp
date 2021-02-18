@@ -573,7 +573,7 @@ static void test_call() {
 }
 
 static void test_illegal_cdp1802() {
-    ILLEGAL(0x68);
+    ERRI(0x68);
 }
 
 static void test_illegal_cdp1804() {
@@ -600,7 +600,7 @@ static void test_illegal_cdp1804() {
     };
 
     for (size_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(0x68, illegals[idx]);
+        ERRI(0x68, illegals[idx]);
 }
 
 static void test_illegal_cdp1804a() {
@@ -625,7 +625,7 @@ static void test_illegal_cdp1804a() {
     };
 
     for (size_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(0x68, illegals[idx]);
+        ERRI(0x68, illegals[idx]);
 }
 
 // clang-format on

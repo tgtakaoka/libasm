@@ -42,12 +42,14 @@ static bool z88() {
 #define TZ88(name, opr, ...) \
     if (z88())               \
     TEST(name, opr, __VA_ARGS__)
-#define ETZ86(error, name, opr, ...) \
-    if (z86())                       \
-    ETEST(error, name, opr, __VA_ARGS__)
-#define ETZ88(error, name, opr, ...) \
-    if (z88())                       \
-    ETEST(error, name, opr, __VA_ARGS__)
+#define OZ86(name, opr, ...) \
+    if (z86()) EROA(name, opr, __VA_ARGS__)
+#define OZ88(name, opr, ...) \
+    if (z88()) EROA(name, opr, __VA_ARGS__)
+#define UZ86(name, opr, ...) \
+    if (z86()) ERUI(name, opr, __VA_ARGS__)
+#define UZ88(name, opr, ...) \
+    if (z88()) ERUI(name, opr, __VA_ARGS__)
 
 static uint8_t R(uint8_t n) {
     if (z88())
@@ -562,41 +564,41 @@ static void test_indexed() {
 }
 
 static void test_setrp() {
-    TZ86(SRP, "#30H",                 0x31, 0x30);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x31);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x32);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x33);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x34);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x35);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x36);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x37);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x38);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x39);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3A);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3B);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3C);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3D);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3E);
-    ETZ86(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3F);
-    TZ86(SRP, "#40H",                 0x31, 0x40);
+    TZ86(SRP, "#30H", 0x31, 0x30);
+    OZ86(SRP, "#31H", 0x31, 0x31);
+    OZ86(SRP, "#32H", 0x31, 0x32);
+    OZ86(SRP, "#33H", 0x31, 0x33);
+    OZ86(SRP, "#34H", 0x31, 0x34);
+    OZ86(SRP, "#35H", 0x31, 0x35);
+    OZ86(SRP, "#36H", 0x31, 0x36);
+    OZ86(SRP, "#37H", 0x31, 0x37);
+    OZ86(SRP, "#38H", 0x31, 0x38);
+    OZ86(SRP, "#39H", 0x31, 0x39);
+    OZ86(SRP, "#3AH", 0x31, 0x3A);
+    OZ86(SRP, "#3BH", 0x31, 0x3B);
+    OZ86(SRP, "#3CH", 0x31, 0x3C);
+    OZ86(SRP, "#3DH", 0x31, 0x3D);
+    OZ86(SRP, "#3EH", 0x31, 0x3E);
+    OZ86(SRP, "#3FH", 0x31, 0x3F);
+    TZ86(SRP, "#40H", 0x31, 0x40);
 
-    TZ88(SRP,  "#30H",                0x31, 0x30);
-    TZ88(SRP1, "#30H",                0x31, 0x31);
-    TZ88(SRP0, "#30H",                0x31, 0x32);
-    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x33);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x34);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x35);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x36);
-    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x37);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x38);
-    TZ88(SRP1, "#38H",                0x31, 0x39);
-    TZ88(SRP0, "#38H",                0x31, 0x3A);
-    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x3B);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3C);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3D);
-    ETZ88(OPERAND_NOT_ALLOWED, _, "", 0x31, 0x3E);
-    ETZ88(UNKNOWN_INSTRUCTION, _, "", 0x31, 0x3F);
-    TZ88(SRP, "#40H",                 0x31, 0x40);
+    TZ88(SRP,  "#30H", 0x31, 0x30);
+    TZ88(SRP1, "#30H", 0x31, 0x31);
+    TZ88(SRP0, "#30H", 0x31, 0x32);
+    UZ88(SRP,  "#33H", 0x31, 0x33);
+    OZ88(SRP,  "#34H", 0x31, 0x34);
+    OZ88(SRP1, "#34H", 0x31, 0x35);
+    OZ88(SRP0, "#34H", 0x31, 0x36);
+    UZ88(SRP,  "#37H", 0x31, 0x37);
+    OZ88(SRP,  "#38H", 0x31, 0x38);
+    TZ88(SRP1, "#38H", 0x31, 0x39);
+    TZ88(SRP0, "#38H", 0x31, 0x3A);
+    UZ88(SRP,  "#3BH", 0x31, 0x3B);
+    OZ88(SRP,  "#3CH", 0x31, 0x3C);
+    OZ88(SRP1, "#3CH", 0x31, 0x3D);
+    OZ88(SRP0, "#3CH", 0x31, 0x3E);
+    UZ88(SRP,  "#3FH", 0x31, 0x3F);
+    TZ88(SRP,  "#40H", 0x31, 0x40);
 }
 
 static void test_bit_operation() {
@@ -639,7 +641,7 @@ static void test_illegal_z8() {
         0xF2, 0xF4, 0xF6, 0xF7,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_z86c() {
@@ -653,7 +655,7 @@ static void test_illegal_z86c() {
         0xF2, 0xF4, 0xF6, 0xF7,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_z88() {
@@ -661,7 +663,7 @@ static void test_illegal_z88() {
         0x6F, 0x7F, 0xD5,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 // clang-format on
 

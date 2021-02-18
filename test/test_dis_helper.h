@@ -53,15 +53,28 @@ void run_test(void (*test)(), const char *name, void (*set_up)(),
         memory.setAddress(addr);                                 \
         dis_assert(file, line, error, #name, opr, disassembler); \
     } while (0)
-#define EATEST(error, addr, name, opr, ...) \
+#define VASSERT(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
 #define ATEST(addr, name, opr, ...) \
-    __VASSERT(__FILE__, __LINE__, OK, addr, name, opr, __VA_ARGS__)
-#define ETEST(error, name, opr, ...) \
-    __VASSERT(__FILE__, __LINE__, error, 0x0000, name, opr, __VA_ARGS__)
-#define TEST(name, opr, ...) ETEST(OK, name, opr, __VA_ARGS__)
-
-#define ILLEGAL(...) ETEST(UNKNOWN_INSTRUCTION, _, "", __VA_ARGS__)
+    VASSERT(OK, addr, name, opr, __VA_ARGS__)
+#define AERRF(addr, name, opr, ...) \
+    VASSERT(OPERAND_TOO_FAR, addr, name, opr, __VA_ARGS__)
+#define TEST(name, opr, ...) VASSERT(OK, 0, name, opr, __VA_ARGS__)
+#define ERRP(...) VASSERT(UNKNOWN_POSTBYTE, 0, _, "", __VA_ARGS__)
+#define ERRI(...) VASSERT(UNKNOWN_INSTRUCTION, 0, _, "", __VA_ARGS__)
+#define ERNA(name, opr, ...) VASSERT(OPERAND_NOT_ALIGNED, 0, name, opr, __VA_ARGS__)
+#define ERBN(name, opr, ...) VASSERT(ILLEGAL_BIT_NUMBER, 0, name, opr, __VA_ARGS__)
+#define ERIC(name, opr, ...) VASSERT(ILLEGAL_CONSTANT, 0, name, opr, __VA_ARGS__)
+#define ERIO(name, opr, ...) VASSERT(ILLEGAL_OPERAND, 0, name, opr, __VA_ARGS__)
+#define ERIR(name, opr, ...) VASSERT(ILLEGAL_REGISTER, 0, name, opr, __VA_ARGS__)
+#define EROA(name, opr, ...) VASSERT(OPERAND_NOT_ALLOWED, 0, name, opr, __VA_ARGS__)
+#define ERRV(name, opr, ...) VASSERT(REGISTERS_OVERWRAPPED, 0, name, opr, __VA_ARGS__)
+#define ERRR(name, opr, ...) VASSERT(REGISTER_NOT_ALLOWED, 0, name, opr, __VA_ARGS__)
+#define ERUI(name, opr, ...) VASSERT(UNKNOWN_INSTRUCTION, 0, name, opr, __VA_ARGS__)
+#define ERUR(name, opr, ...) VASSERT(UNKNOWN_REGISTER, 0, name, opr, __VA_ARGS__)
+#define ERVR(name, opr, ...) VASSERT(OVERFLOW_RANGE, 0, name, opr, __VA_ARGS__)
+#define ERNE(name, opr, ...) VASSERT(OPCODE_HAS_NO_EFFECT, 0, name, opr, __VA_ARGS__)
+#define ERSZ(name, opr, ...) VASSERT(ILLEGAL_SIZE, 0, name, opr, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

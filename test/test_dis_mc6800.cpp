@@ -711,7 +711,7 @@ static void test_illegal_mc6800() {
         0xE3, 0xEC, 0xED, 0xF3, 0xFC, 0xFD,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_mc6801() {
@@ -724,7 +724,7 @@ static void test_illegal_mc6801() {
         0xC7, 0xCD, 0xCF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_hd6301() {
@@ -736,7 +736,7 @@ static void test_illegal_hd6301() {
         0xC7, 0xCD, 0xCF,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        ILLEGAL(illegals[idx]);
+        ERRI(illegals[idx]);
 }
 
 static void test_illegal_mc68hc11() {
@@ -748,7 +748,7 @@ static void test_illegal_mc68hc11() {
         0xC7,
     };
     for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        ILLEGAL(p00_illegals[idx]);
+        ERRI(p00_illegals[idx]);
 
     const uint8_t p18_legals[] = {
         0x08, 0x09,
@@ -767,7 +767,7 @@ static void test_illegal_mc68hc11() {
     uint8_t idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
         if (idx == sizeof(p18_legals) || opc < p18_legals[idx])
-            ILLEGAL(0x18, uint8_t(opc));
+            ERRI(0x18, uint8_t(opc));
         else idx++;
     }
 
@@ -777,7 +777,7 @@ static void test_illegal_mc68hc11() {
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
         if (idx == sizeof(p1a_legals) || opc < p1a_legals[idx])
-            ILLEGAL(0x1A, uint8_t(opc));
+            ERRI(0x1A, uint8_t(opc));
         else idx++;
     }
 
@@ -787,7 +787,7 @@ static void test_illegal_mc68hc11() {
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
         if (idx == sizeof(pcd_legals) || opc < pcd_legals[idx])
-            ILLEGAL(0xCD, uint8_t(opc));
+            ERRI(0xCD, uint8_t(opc));
         else idx++;
     }
 }

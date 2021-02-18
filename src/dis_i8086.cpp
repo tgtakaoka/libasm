@@ -334,7 +334,7 @@ Error DisI8086::decodeStringInst(
             *out++ = ',';
             outMemReg(memory, insn, out, REG_ES, 0, 5);
             break;
-        case 0xAA:  // STDS ES:[DI]
+        case 0xAA:  // STOS ES:[DI]
         case 0xAE:  // SCAS ES:[DI]
             return setError(ILLEGAL_SEGMENT);
         }

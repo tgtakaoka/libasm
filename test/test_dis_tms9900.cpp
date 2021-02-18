@@ -80,9 +80,9 @@ static void test_inh() {
         TEST(RTWP, "2", 0x0382);
         TEST(RTWP, "4", 0x0384);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0381);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0382);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0384);
+        ERUI(RTWP, "1", 0x0381);
+        ERUI(RTWP, "2", 0x0382);
+        ERUI(RTWP, "4", 0x0384);
     }
 }
 
@@ -102,12 +102,12 @@ static void test_reg() {
     TEST(STST, "R15", 0x02CF);
 
     if (is9900()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "",  0x0080);
-        ETEST(UNKNOWN_INSTRUCTION, _, "",  0x0091);
+        ERUI(LST, "R0", 0x0080);
+        ERUI(LWP, "R1", 0x0091);
     } else {
         // TMS9995
-        TEST(LST,  "R0",  0x0080);
-        TEST(LWP,  "R1",  0x0091);
+        TEST(LST, "R0", 0x0080);
+        TEST(LWP, "R1", 0x0091);
     }
 }
 
@@ -127,7 +127,7 @@ static void test_reg_imm() {
         TEST(BLSK, "R3,4567H",   0x00B3, 0x4567);
         TEST(BLSK, "R3,sym1234", 0x00B3, 0x1234);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x00B3);
+        ERRI(0x00B3);
     }
 }
 
@@ -155,8 +155,14 @@ static void test_src() {
     TEST(ABS,  "@8(R3)", 0x0763, 0x0008);
 
     if (is9900()) {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0182);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x01E8);
+        ERUI(DIVS, "R2",     0x0182);
+        ERUI(DIVS, "*R3",    0x0193);
+        ERUI(DIVS, "@1234H", 0x01A0, 0x1234);
+        ERUI(DIVS, "@1000H(R4)", 0x01A4, 0x1000);
+        ERUI(DIVS, "*R5+",   0x01B5);
+        ERUI(MPYS, "R0",     0x01C0);
+        ERUI(MPYS, "@2(R8)", 0x01E8, 0x0002);
+        ERUI(MPYS, "*R15+",  0x01FF);
     } else {
         // TMS9995
         TEST(DIVS, "R2",     0x0182);
@@ -177,11 +183,11 @@ static void test_src() {
         TEST(BIND, "@2223H(R1)", 0x0161, 0x2223);
         TEST(EVAD, "R5",         0x0105);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0C09);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0C0A);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0C0B);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0161);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0105);
+        ERUI(TMB,  "@0123H(R15),7", 0x0C09, 0x01EF, 0x0123);
+        ERUI(TCMB, "R0,0",          0x0C0A, 0x0000);
+        ERUI(TSMB, "*R2,15",        0x0C0B, 0x03D2);
+        ERUI(BIND, "@2223H(R1)", 0x0161, 0x2223);
+        ERUI(EVAD, "R5",         0x0105);
     }
 
     symtab.intern(-2, "neg2");
@@ -235,8 +241,8 @@ static void test_cnt_src() {
         TEST(SLAM, "R11,R0",          0x001D, 0x400B);
         TEST(SLAM, "*R13+,1",         0x001D, 0x407D);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x001C);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x001D);
+        ERUI(SRAM, "", 0x001C);
+        ERUI(SLAM, "", 0x001D);
     }
 }
 
@@ -287,8 +293,8 @@ static void test_dst_src() {
         TEST(AM, "@sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
         TEST(AM, "@sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x0029);
-        ETEST(UNKNOWN_INSTRUCTION, _, "", 0x002A);
+        ERUI(SM, "", 0x0029);
+        ERUI(AM, "", 0x002A);
     }
 }
 

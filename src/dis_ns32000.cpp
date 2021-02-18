@@ -409,9 +409,13 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
         break;
     }
 #ifdef NS32000_ENABLE_MMU
-    case M_MREG:
-        out = _regs.outMregName(out, RegNs32000::decodeMregName(field));
+    case M_MREG: {
+        const MregName mreg = RegNs32000::decodeMregName(field);
+        if (mreg == MREG_UNDEF)
+            return setError(UNKNOWN_REGISTER);
+        out = _regs.outMregName(out, mreg);
         break;
+    }
 #endif
     case M_CONF:
         return decodeConfig(insn, out, pos);

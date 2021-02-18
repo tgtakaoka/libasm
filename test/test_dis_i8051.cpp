@@ -372,7 +372,7 @@ static void test_absolute() {
 }
 
 static void test_illegal() {
-    ILLEGAL(0xA5);
+    ERRI(0xA5);
 }
 // clang-format on
 
