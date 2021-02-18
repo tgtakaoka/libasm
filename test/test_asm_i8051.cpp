@@ -159,7 +159,7 @@ static void test_regr() {
     TEST("MOV R6,A", 0xFE);
     TEST("MOV R7,A", 0xFF);
 
-    ETEST(UNDEFINED_SYMBOL, "INC R8", 0x05, 0x00);
+    ERUS("INC R8", 0x05, 0x00);
 }
 
 static void test_indirect() {
@@ -194,8 +194,8 @@ static void test_indirect() {
     TEST("MOV  @R0,A", 0xF6);
     TEST("MOV  @R1,A", 0xF7);
 
-    ETEST(UNKNOWN_OPERAND, "INC @R2");
-    ETEST(UNKNOWN_OPERAND, "MOV @R8,A");
+    ERRT("INC @R2",   UNKNOWN_OPERAND);
+    ERRT("MOV @R8,A", UNKNOWN_OPERAND);
 }
 
 static void test_immediate() {
@@ -222,8 +222,8 @@ static void test_immediate() {
     TEST("MOV R6,#7FH",  0x7E, 0x7F);
     TEST("MOV R7,#80H",  0x7F, 0x80);
 
-    ETEST(OVERFLOW_RANGE, "MOV R4,#-129");
-    ETEST(OVERFLOW_RANGE, "MOV R4,#256");
+    ERRT("MOV R4,#-129", OVERFLOW_RANGE);
+    ERRT("MOV R4,#256",  OVERFLOW_RANGE);
 
     TEST("MOV DPTR,#9192H", 0x90, 0x91, 0x92);
 
@@ -234,12 +234,12 @@ static void test_immediate() {
     symtab.intern(0x30, "dir30");
     symtab.intern(0x1234, "sym1234");
 
-    TEST("ADD A,#minus128",   0x24, 0x80);
-    TEST("XRL A,#plus255",    0x64, 0xFF);
-    ETEST(OVERFLOW_RANGE, "ADD A,#minus129");
-    ETEST(OVERFLOW_RANGE, "ORL A,#plus256");
+    TEST("ADD A,#minus128", 0x24, 0x80);
+    TEST("XRL A,#plus255",  0x64, 0xFF);
+    ERRT("ADD A,#minus129", OVERFLOW_RANGE);
+    ERRT("ORL A,#plus256",  OVERFLOW_RANGE);
     TEST("MOV dir30,#minus128", 0x75, 0x30, 0x80);
-    TEST("MOV DPTR,#sym1234", 0x90, 0x12, 0x34);
+    TEST("MOV  DPTR,#sym1234",  0x90, 0x12, 0x34);
 }
 
 static void test_relative() {
@@ -284,14 +284,14 @@ static void test_relative() {
     symtab.intern(0x1083, "sym1083");
     symtab.intern(0x40,   "counter");
 
-    EATEST(OPERAND_TOO_FAR, 0x1000, "SJMP sym0F81");
-    EATEST(OK,              0x1000, "SJMP sym0F82", 0x80, 0x80);
-    EATEST(OK,              0x1000, "SJMP sym1081", 0x80, 0x7F);
-    EATEST(OPERAND_TOO_FAR, 0x1000, "SJMP sym1082");
-    EATEST(OPERAND_TOO_FAR, 0x1000, "DJNZ counter,sym0F82");
-    EATEST(OK,              0x1000, "DJNZ counter,sym0F83", 0xD5, 0x40, 0x80);
-    EATEST(OK,              0x1000, "DJNZ counter,sym1082", 0xD5, 0x40, 0x7F);
-    EATEST(OPERAND_TOO_FAR, 0x1000, "DJNZ counter,sym1083");
+    AERRT(0x1000, "SJMP sym0F81", OPERAND_TOO_FAR);
+    ATEST(0x1000, "SJMP sym0F82", 0x80, 0x80);
+    ATEST(0x1000, "SJMP sym1081", 0x80, 0x7F);
+    AERRT(0x1000, "SJMP sym1082", OPERAND_TOO_FAR);
+    AERRT(0x1000, "DJNZ counter,sym0F82", OPERAND_TOO_FAR);
+    ATEST(0x1000, "DJNZ counter,sym0F83", 0xD5, 0x40, 0x80);
+    ATEST(0x1000, "DJNZ counter,sym1082", 0xD5, 0x40, 0x7F);
+    AERRT(0x1000, "DJNZ counter,sym1083", OPERAND_TOO_FAR);
 }
 
 static void test_bit_address() {
@@ -321,7 +321,7 @@ static void test_bit_address() {
     TEST("MOV reg2F.bit3,C",  0x92, 0x7B);
     TEST("ANL C,/regE0.bit3", 0xB0, 0xE3);
 
-    ETEST(ILLEGAL_BIT_NUMBER, "ORL C,2EH.8");
+    ERRT("ORL C,2EH.8", ILLEGAL_BIT_NUMBER);
 
     for (uint16_t i = 0x00; i < 0x100; i++) {
         char source[20];
@@ -333,7 +333,7 @@ static void test_bit_address() {
             uint8_t addr = (i & 0xF8) | 3;
             TEST(source, 0xC2, addr);
         } else {
-            ETEST(NOT_BIT_ADDRESSABLE, source);
+            ERRT(source, NOT_BIT_ADDRESSABLE);
         }
     }
 }
@@ -381,8 +381,8 @@ static void test_direct() {
     TEST("PUSH 0C1H", 0xC0, 0xC1);
     TEST("POP  0D1H", 0xD0, 0xD1);
 
-    ETEST(OVERFLOW_RANGE, "INC 100H");
-    ETEST(OVERFLOW_RANGE, "MOV R1,100H");
+    ERRT("INC 100H",    OVERFLOW_RANGE);
+    ERRT("MOV R1,100H", OVERFLOW_RANGE);
 
     symtab.intern(0x2F, "reg2F");
     symtab.intern(0xE0, "regE0");
@@ -416,8 +416,8 @@ static void test_page() {
     ATEST(0x1FFE, "ACALL 2002H", 0x11, 0x02);
     ATEST(0x1FFF, "ACALL 2002H", 0x11, 0x02);
 
-    EATEST(OPERAND_TOO_FAR, 0x17FE, "AJMP 1002H");
-    EATEST(OPERAND_TOO_FAR, 0x17FF, "AJMP 1002H");
+    AERRT(0x17FE, "AJMP 1002H", OPERAND_TOO_FAR);
+    AERRT(0x17FF, "AJMP 1002H", OPERAND_TOO_FAR);
 
     symtab.intern(0x1002, "sym1002");
     symtab.intern(0x1802, "sym1802");
@@ -433,79 +433,79 @@ static void test_absolute() {
 }
 
 static void test_comment() {
-    TEST("NOP       ; comment", 0x00);
-    TEST("SWAP A    ; comment", 0xC4);
-    TEST("INC  DPTR ; comment", 0xA3);
-    TEST("ANL  A , R0 ; comment", 0x58);
-    TEST("JMP  @A+DPTR ; comment", 0x73);
-    ETEST(UNKNOWN_OPERAND, "JMP  @ A+DPTR ; comment");
-    ETEST(UNKNOWN_OPERAND, "JMP  @A +DPTR ; comment");
-    ETEST(UNKNOWN_OPERAND, "JMP  @A+ DPTR ; comment");
-    ETEST(UNKNOWN_OPERAND, "JMP  @ A+PC   ; comment");
-    ETEST(UNKNOWN_OPERAND, "JMP  @A +PC   ; comment");
-    ETEST(UNKNOWN_OPERAND, "JMP  @A+ PC   ; comment");
-    ETEST(OK,              "MOVX A , @DPTR ; comment", 0xE0);
-    ETEST(OK,              "MOVX @DPTR , A ; comment", 0xF0);
-    ETEST(UNKNOWN_OPERAND, "MOVX A,@ DPTR ; comment");
-    ETEST(UNKNOWN_OPERAND, "MOVX @ DPTR,A ; comment");
-    ETEST(UNKNOWN_OPERAND, "INC  @ R0     ; comment");
-    ETEST(OK,              "ADD  A , @R1  ; comment", 0x27);
-    ETEST(UNKNOWN_OPERAND, "ADD  A, @ R1  ; comment");
-    ETEST(OK,              "ADD  A , # 25H   ; comment", 0x24, 0x25);
-    ETEST(OK,              "ORL  44H , # 45H ; comment", 0x43, 0x44, 0x45);
-    ETEST(OK,              "JBC  22H.1 , $ + 15H  ; comment", 0x10, 0x11, 0x12);
-    ETEST(OK,              "CJNE A , # 0B5H , $ - 47H ; comment", 0xB4, 0xB5, 0xB6);
-    ETEST(OK,              "ORL  C , / 0A8H.1     ; comment", 0xA0, 0xA9);
+    TEST("NOP       ; comment",      0x00);
+    TEST("SWAP A    ; comment",      0xC4);
+    TEST("INC  DPTR ; comment",      0xA3);
+    TEST("ANL  A , R0 ; comment",    0x58);
+    TEST("JMP  @A+DPTR ; comment",   0x73);
+    ERRT("JMP  @ A+DPTR ; comment",  UNKNOWN_OPERAND);
+    ERRT("JMP  @A +DPTR ; comment",  UNKNOWN_OPERAND);
+    ERRT("JMP  @A+ DPTR ; comment",  UNKNOWN_OPERAND);
+    ERRT("JMP  @ A+PC   ; comment",  UNKNOWN_OPERAND);
+    ERRT("JMP  @A +PC   ; comment",  UNKNOWN_OPERAND);
+    ERRT("JMP  @A+ PC   ; comment",  UNKNOWN_OPERAND);
+    TEST("MOVX A , @DPTR ; comment", 0xE0);
+    TEST("MOVX @DPTR , A ; comment", 0xF0);
+    ERRT("MOVX A,@ DPTR ; comment",  UNKNOWN_OPERAND);
+    ERRT("MOVX @ DPTR,A ; comment",  UNKNOWN_OPERAND);
+    ERRT("INC  @ R0     ; comment",  UNKNOWN_OPERAND);
+    TEST("ADD  A , @R1  ; comment",  0x27);
+    ERRT("ADD  A, @ R1  ; comment",  UNKNOWN_OPERAND);
+    TEST("ADD  A , # 25H   ; comment",          0x24, 0x25);
+    TEST("ORL  44H , # 45H ; comment",          0x43, 0x44, 0x45);
+    TEST("JBC  22H.1 , $ + 15H  ; comment",     0x10, 0x11, 0x12);
+    TEST("CJNE A , # 0B5H , $ - 47H ; comment", 0xB4, 0xB5, 0xB6);
+    TEST("ORL  C , / 0A8H.1     ; comment",     0xA0, 0xA9);
 }
 
 static void test_undefined_symbol() {
-    ETEST(UNDEFINED_SYMBOL, "ADD A,#UNDEF",     0x24, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ORL UNDEF,#45H",   0x43, 0x00, 0x45);
-    ETEST(UNDEFINED_SYMBOL, "ORL 44H,#UNDEF",   0x43, 0x44, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ORL UNDEF,#UNDEF", 0x43, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "MOV DPTR,#UNDEF",  0x90, 0x00, 0x00);
+    ERUS("ADD A,#UNDEF",     0x24, 0x00);
+    ERUS("ORL UNDEF,#45H",   0x43, 0x00, 0x45);
+    ERUS("ORL 44H,#UNDEF",   0x43, 0x44, 0x00);
+    ERUS("ORL UNDEF,#UNDEF", 0x43, 0x00, 0x00);
+    ERUS("MOV DPTR,#UNDEF",  0x90, 0x00, 0x00);
 
-    ETEST(UNDEFINED_SYMBOL, "JBC UNDEF.1,$+15H",     0x10, 0x01, 0x12);
-    ETEST(UNDEFINED_SYMBOL, "JBC 22H.UNDEF,$+15H",   0x10, 0x10, 0x12);
-    ETEST(UNDEFINED_SYMBOL, "JBC UNDEF.UNDEF,$+15H", 0x10, 0x00, 0x12);
-    ETEST(UNDEFINED_SYMBOL, "JBC 22H.1,UNDEF",       0x10, 0x11, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JBC UNDEF.1,UNDEF",     0x10, 0x01, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JBC 22H.UNDEF,UNDEF",   0x10, 0x10, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JBC UNDEF.UNDEF,UNDEF", 0x10, 0x00, 0x00);
+    ERUS("JBC UNDEF.1,$+15H",     0x10, 0x01, 0x12);
+    ERUS("JBC 22H.UNDEF,$+15H",   0x10, 0x10, 0x12);
+    ERUS("JBC UNDEF.UNDEF,$+15H", 0x10, 0x00, 0x12);
+    ERUS("JBC 22H.1,UNDEF",       0x10, 0x11, 0x00);
+    ERUS("JBC UNDEF.1,UNDEF",     0x10, 0x01, 0x00);
+    ERUS("JBC 22H.UNDEF,UNDEF",   0x10, 0x10, 0x00);
+    ERUS("JBC UNDEF.UNDEF,UNDEF", 0x10, 0x00, 0x00);
 
-    ETEST(UNDEFINED_SYMBOL, "JC  UNDEF", 0x40, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "CJNE A,#UNDEF,$-47H", 0xB4, 0x00, 0xB6);
-    ETEST(UNDEFINED_SYMBOL, "CJNE A,#0B5H,UNDEF",  0xB4, 0xB5, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "CJNE A,#UNDEF,UNDEF", 0xB4, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "CJNE A,UNDEF,$-46H",  0xB5, 0x00, 0xB7);
-    ETEST(UNDEFINED_SYMBOL, "CJNE A,0B6H,UNDEF",   0xB5, 0xB6, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "CJNE A,UNDEF,UNDEF",  0xB5, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "DJNZ UNDEF,$-26H", 0xD5, 0x00, 0xD7);
-    ETEST(UNDEFINED_SYMBOL, "DJNZ 0D6H,UNDEF",  0xD5, 0xD6, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "DJNZ UNDEF,UNDEF", 0xD5, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "DJNZ R0,UNDEF",    0xD8, 0x00);
+    ERUS("JC  UNDEF", 0x40, 0x00);
+    ERUS("CJNE A,#UNDEF,$-47H", 0xB4, 0x00, 0xB6);
+    ERUS("CJNE A,#0B5H,UNDEF",  0xB4, 0xB5, 0x00);
+    ERUS("CJNE A,#UNDEF,UNDEF", 0xB4, 0x00, 0x00);
+    ERUS("CJNE A,UNDEF,$-46H",  0xB5, 0x00, 0xB7);
+    ERUS("CJNE A,0B6H,UNDEF",   0xB5, 0xB6, 0x00);
+    ERUS("CJNE A,UNDEF,UNDEF",  0xB5, 0x00, 0x00);
+    ERUS("DJNZ UNDEF,$-26H", 0xD5, 0x00, 0xD7);
+    ERUS("DJNZ 0D6H,UNDEF",  0xD5, 0xD6, 0x00);
+    ERUS("DJNZ UNDEF,UNDEF", 0xD5, 0x00, 0x00);
+    ERUS("DJNZ R0,UNDEF",    0xD8, 0x00);
 
-    ETEST(UNDEFINED_SYMBOL, "MOV  UNDEF.3,C",     0x92, 0x03);
-    ETEST(UNDEFINED_SYMBOL, "MOV  90H.UNDEF,C",   0x92, 0x90);
-    ETEST(UNDEFINED_SYMBOL, "MOV  UNDEF.UNDEF,C", 0x92, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "MOV  UNDEF,C",       0x92, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ORL  C,/UNDEF.1",     0xA0, 0x01);
-    ETEST(UNDEFINED_SYMBOL, "ORL  C,/0A8H.UNDEF",  0xA0, 0xA8);
-    ETEST(UNDEFINED_SYMBOL, "ORL  C,/UNDEF.UNDEF", 0xA0, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ORL  C,/UNDEF",       0xA0, 0x00);
+    ERUS("MOV  UNDEF.3,C",     0x92, 0x03);
+    ERUS("MOV  90H.UNDEF,C",   0x92, 0x90);
+    ERUS("MOV  UNDEF.UNDEF,C", 0x92, 0x00);
+    ERUS("MOV  UNDEF,C",       0x92, 0x00);
+    ERUS("ORL  C,/UNDEF.1",     0xA0, 0x01);
+    ERUS("ORL  C,/0A8H.UNDEF",  0xA0, 0xA8);
+    ERUS("ORL  C,/UNDEF.UNDEF", 0xA0, 0x00);
+    ERUS("ORL  C,/UNDEF",       0xA0, 0x00);
 
-    ETEST(UNDEFINED_SYMBOL, "INC UNDEF",   0x05, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "MOV UNDEF,A", 0xF5, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "MOV UNDEF,86H",   0x85, 0x86, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "MOV 87H,UNDEF",   0x85, 0x00, 0x87);
-    ETEST(UNDEFINED_SYMBOL, "MOV UNDEF,UNDEF", 0x85, 0x00, 0x00);
+    ERUS("INC UNDEF",       0x05, 0x00);
+    ERUS("MOV UNDEF,A",     0xF5, 0x00);
+    ERUS("MOV UNDEF,86H",   0x85, 0x86, 0x00);
+    ERUS("MOV 87H,UNDEF",   0x85, 0x00, 0x87);
+    ERUS("MOV UNDEF,UNDEF", 0x85, 0x00, 0x00);
 
-    EATEST(UNDEFINED_SYMBOL, 0x17FD, "AJMP UNDEF", 0x01, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x17FE, "AJMP UNDEF", 0x01, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x17FF, "AJMP UNDEF", 0x01, 0x00);
+    AERRU(0x17FD, "AJMP UNDEF", 0x01, 0x00);
+    AERRU(0x17FE, "AJMP UNDEF", 0x01, 0x00);
+    AERRU(0x17FF, "AJMP UNDEF", 0x01, 0x00);
 
-    ETEST(UNDEFINED_SYMBOL, "LJMP  UNDEF", 0x02, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LCALL UNDEF", 0x12, 0x00, 0x00);
+    ERUS("LJMP  UNDEF", 0x02, 0x00, 0x00);
+    ERUS("LCALL UNDEF", 0x12, 0x00, 0x00);
 }
 // clang-format on
 

@@ -180,11 +180,11 @@ static void test_direct() {
 }
 
 static void test_relative() {
-    ATEST(0x1000, "BP  0x1000",    0x64, 0xFE);
-    ATEST(0x1100, "BZ  0x1082",    0x6C, 0x80);
-    ATEST(0x1000, "BRA 0x1081",    0x74, 0x7F);
-    ATEST(0x1000, "BNZ 0x1005",    0x7C, 0x03);
-    ATEST(0x1000, "BRA $",         0x74, 0xFE);
+    ATEST(0x1000, "BP  0x1000", 0x64, 0xFE);
+    ATEST(0x1100, "BZ  0x1082", 0x6C, 0x80);
+    ATEST(0x1000, "BRA 0x1081", 0x74, 0x7F);
+    ATEST(0x1000, "BNZ 0x1005", 0x7C, 0x03);
+    ATEST(0x1000, "BRA $",      0x74, 0xFE);
 
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1005, "sym1005");
@@ -198,14 +198,14 @@ static void test_relative() {
 }
 
 static void test_indexed() {
-    TEST(         "BP  0,P2",      0x66, 0x00);
-    TEST(         "BP  -128,P3",   0x67, 0x80);
-    TEST(         "BZ  127,P2",    0x6E, 0x7F);
-    TEST(         "BZ  0,P3",      0x6F, 0x00);
-    TEST(         "BRA 2,P2",      0x76, 0x02);
-    TEST(         "BRA 3,P3",      0x77, 0x03);
-    TEST(         "BNZ -2,P2",     0x7E, 0xFE);
-    TEST(         "BNZ -3,P3",     0x7F, 0xFD);
+    TEST("BP  0,P2",    0x66, 0x00);
+    TEST("BP  -128,P3", 0x67, 0x80);
+    TEST("BZ  127,P2",  0x6E, 0x7F);
+    TEST("BZ  0,P3",    0x6F, 0x00);
+    TEST("BRA 2,P2",    0x76, 0x02);
+    TEST("BRA 3,P3",    0x77, 0x03);
+    TEST("BNZ -2,P2",   0x7E, 0xFE);
+    TEST("BNZ -3,P3",   0x7F, 0xFD);
 
     ATEST(0x1000, "LD  EA,0x1000,PC", 0x80, 0xFF);
     TEST(         "LD  EA,0,SP",      0x81, 0x00);
@@ -344,29 +344,29 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ETEST(UNDEFINED_SYMBOL, "AND S,=UNDEF",  0x39, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ADD A,=UNDEF",  0xF4, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "PLI P2,=UNDEF", 0x22, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD  SP,=UNDEF", 0x25, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD  EA,=UNDEF", 0x84, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ST  EA,UNDEF",  0x8D, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ILD A,UNDEF",   0x95, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LD  T,@UNDEF,P3",    0xA7, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ADD EA,@UNDEF,P2",   0xB6, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "BP  UNDEF,P2",       0x66, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1100, "BZ  UNDEF", 0x6C, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "LD  EA,UNDEF,PC", 0x80, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JSR UNDEF", 0x20, 0x00, 0x00);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x24, 0x00, 0x00);
+    ERUS("AND S,=UNDEF",  0x39, 0x00);
+    ERUS("ADD A,=UNDEF",  0xF4, 0x00);
+    ERUS("PLI P2,=UNDEF", 0x22, 0x00, 0x00);
+    ERUS("LD  SP,=UNDEF", 0x25, 0x00, 0x00);
+    ERUS("LD  EA,=UNDEF", 0x84, 0x00, 0x00);
+    ERUS("ST  EA,UNDEF",  0x8D, 0x00);
+    ERUS("ILD A,UNDEF",   0x95, 0x00);
+    ERUS("LD  T,@UNDEF,P3",  0xA7, 0x00);
+    ERUS("ADD EA,@UNDEF,P2", 0xB6, 0x00);
+    ERUS("BP  UNDEF,P2", 0x66, 0x00);
+    AERRU(0x1100, "BZ  UNDEF", 0x6C, 0x00);
+    AERRU(0x1000, "LD  EA,UNDEF,PC", 0x80, 0x00);
+    AERRU(0x1000, "JSR UNDEF", 0x20, 0x00, 0x00);
+    AERRU(0x1000, "JMP UNDEF", 0x24, 0x00, 0x00);
 }
 
 static void test_error() {
-    ETEST(ILLEGAL_CONSTANT, "LD A,@@1,P3");
-    ETEST(ILLEGAL_CONSTANT, "LD A,@#1");
-    ETEST(ILLEGAL_CONSTANT, "LD A,@=1");
-    ETEST(MISSING_COMMA,    "LD A,1(P3)");  // SC/MP style
-    ETEST(MISSING_COMMA,    "LD A,@1(P3)"); // SC/MP style
-    ETEST(GARBAGE_AT_END,   "LD A,1,(EA)");
+    ERRT("LD A,@@1,P3", ILLEGAL_CONSTANT);
+    ERRT("LD A,@#1",    ILLEGAL_CONSTANT);
+    ERRT("LD A,@=1",    ILLEGAL_CONSTANT);
+    ERRT("LD A,1(P3)",  MISSING_COMMA); // SC/MP style
+    ERRT("LD A,@1(P3)", MISSING_COMMA); // SC/MP style
+    ERRT("LD A,1,(EA)", GARBAGE_AT_END);
 }
 // clang-format on
 

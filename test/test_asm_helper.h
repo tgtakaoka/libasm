@@ -52,13 +52,14 @@ void run_test(void (*test)(), const char *name, void (*set_up)(),
         const uint8_t length = sizeof(expected);                               \
         asm_assert(file, line, error, addr, src, expected, length, assembler); \
     } while (0)
-#define EATEST(error, addr, src, ...) \
+#define VASSERT(error, addr, src, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)
-#define ATEST(addr, src, ...) \
-    __VASSERT(__FILE__, __LINE__, OK, addr, src, __VA_ARGS__)
-#define ETEST(error, src, ...) \
-    __VASSERT(__FILE__, __LINE__, error, 0x0000, src, __VA_ARGS__)
-#define TEST(src, ...) ETEST(OK, src, __VA_ARGS__)
+#define AERRT(addr, src, error) VASSERT(error, addr, src)
+#define AERRU(addr, src, ...) VASSERT(UNDEFINED_SYMBOL, addr, src, __VA_ARGS__)
+#define ATEST(addr, src, ...) VASSERT(OK, addr, src, __VA_ARGS__)
+#define ERRT(src, error) VASSERT(error, 0x0000, src)
+#define ERUS(src, ...) VASSERT(UNDEFINED_SYMBOL, 0x0000, src, __VA_ARGS__)
+#define TEST(src, ...) VASSERT(OK, 0x0000, src, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

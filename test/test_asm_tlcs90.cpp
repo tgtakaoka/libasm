@@ -1680,6 +1680,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_shift_rotate);
     RUN_TEST(test_bitops);
     RUN_TEST(test_jump_call);
+    /* TODO
+    RUN_TEST(test_comment);
+    RUN_TEST(test_error);
+    RUN_TEST(test_undefined_symbol);
+    */
 }
 
 // Local Variables:

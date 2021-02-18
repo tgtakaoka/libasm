@@ -75,9 +75,9 @@ static void test_inh() {
         TEST("RTWP 1", 0x0381);
         TEST("RTWP 2", 0x0382);
         TEST("RTWP 4", 0x0384);
-        ETEST(OPERAND_NOT_ALLOWED, "RTWP 3");
+        ERRT("RTWP 3", OPERAND_NOT_ALLOWED);
     } else {
-        ETEST(OPERAND_NOT_ALLOWED, "RTWP 0");
+        ERRT("RTWP 0", OPERAND_NOT_ALLOWED);
     }
 }
 
@@ -98,18 +98,18 @@ static void test_reg() {
 
     if (is9995()) {
         // TMS9995
-        TEST("LST R0",  0x0080);
-        TEST("LWP R1",  0x0091);
+        TEST("LST R0", 0x0080);
+        TEST("LWP R1", 0x0091);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "LST R0");
-        ETEST(UNKNOWN_INSTRUCTION, "LWP R1");
+        ERRT("LST R0", UNKNOWN_INSTRUCTION);
+        ERRT("LWP R1", UNKNOWN_INSTRUCTION);
     }
 }
 
 static void test_reg_imm() {
-    TEST("LI   R0,0000H",  0x0200, 0x0000);
-    TEST("AI   R1,+1",     0x0221, 0x0001);
-    TEST("ANDI R8,377O",   0x0248, 0x00FF);
+    TEST("LI   R0,0000H", 0x0200, 0x0000);
+    TEST("AI   R1,+1",    0x0221, 0x0001);
+    TEST("ANDI R8,377O",  0x0248, 0x00FF);
     TEST("ORI  R14,~11111111B", 0x026E, 0xFF00);
     TEST("CI   R15,-1",   0x028F, 0xFFFF);
 
@@ -122,7 +122,7 @@ static void test_reg_imm() {
         TEST("BLSK R3,4567H",   0x00B3, 0x4567);
         TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "BLSK R3,4567H");
+        ERRT("BLSK R3,4567H",   UNKNOWN_INSTRUCTION);
     }
 }
 
@@ -131,7 +131,7 @@ static void test_cnt_reg() {
     TEST("SRL R4,12", 0x09C4);
     TEST("SLA R8,4",  0x0A48);
     TEST("SRC R9,15", 0x0BF9);
-    ETEST(OVERFLOW_RANGE, "SRC R9,16");
+    ERRT("SRC R9,16", OVERFLOW_RANGE);
 }
 
 static void test_src() {
@@ -149,7 +149,7 @@ static void test_src() {
     TEST("SWPB *R1",    0x06D1);
     TEST("SETO R12",    0x070C);
     TEST("ABS  @8(R3)", 0x0763, 0x0008);
-    ETEST(REGISTER_NOT_ALLOWED, "ABS @8(R0)");
+    ERRT("ABS  @8(R0)", REGISTER_NOT_ALLOWED);
 
     if (is9995()) {
         // TMS9995
@@ -162,8 +162,8 @@ static void test_src() {
         TEST("MPYS @2(R8)",     0x01E8, 0x0002);
         TEST("MPYS *R15+",      0x01FF);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "DIVS R2");
-        ETEST(UNKNOWN_INSTRUCTION, "MPYS R0");
+        ERRT("DIVS R2", UNKNOWN_INSTRUCTION);
+        ERRT("MPYS R0", UNKNOWN_INSTRUCTION);
     }
 
     if (is99105()) {
@@ -173,15 +173,15 @@ static void test_src() {
         TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
         TEST("BIND @2223H(R1)", 0x0161, 0x2223);
         TEST("EVAD R5",         0x0105);
-        ETEST(OPERAND_NOT_ALLOWED, "TMB  *R1+,7");
-        ETEST(OPERAND_NOT_ALLOWED, "TCMB *R1+,0");
-        ETEST(OPERAND_NOT_ALLOWED, "TSMB *R1+,15");
+        ERRT("TMB  *R1+,7",  OPERAND_NOT_ALLOWED);
+        ERRT("TCMB *R1+,0",  OPERAND_NOT_ALLOWED);
+        ERRT("TSMB *R1+,15", OPERAND_NOT_ALLOWED);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "TMB  @0123H(R15),7");
-        ETEST(UNKNOWN_INSTRUCTION, "TCMB R0,0");
-        ETEST(UNKNOWN_INSTRUCTION, "TSMB *R2,15");
-        ETEST(UNKNOWN_INSTRUCTION, "BIND @2223H(R1)");
-        ETEST(UNKNOWN_INSTRUCTION, "EVAD R5");
+        ERRT("TMB  @0123H(R15),7", UNKNOWN_INSTRUCTION);
+        ERRT("TCMB R0,0",          UNKNOWN_INSTRUCTION);
+        ERRT("TSMB *R2,15",        UNKNOWN_INSTRUCTION);
+        ERRT("BIND @2223H(R1)",    UNKNOWN_INSTRUCTION);
+        ERRT("EVAD R5",            UNKNOWN_INSTRUCTION);
     }
 
     symtab.intern(-2, "neg2");
@@ -221,8 +221,8 @@ static void test_reg_src() {
 static void test_cnt_src() {
     TEST("LDCR *R13+,16",  0x303D);
     TEST("STCR @2(R4),15", 0x37E4, 0x0002);
-    ETEST(OPERAND_NOT_ALLOWED, "STCR @2(R4),R0");
-    ETEST(OVERFLOW_RANGE, "STCR @2(R4),17");
+    ERRT("STCR @2(R4),R0", OPERAND_NOT_ALLOWED);
+    ERRT("STCR @2(R4),17", OVERFLOW_RANGE);
 
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
@@ -236,20 +236,20 @@ static void test_cnt_src() {
         TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
         TEST("SLAM R11,R0",          0x001D, 0x400B);
         TEST("SLAM *R13+,1",         0x001D, 0x407D);
-        ETEST(REGISTER_NOT_ALLOWED, "SRAM R11,R2");
-        ETEST(OPERAND_NOT_ALLOWED,  "SLAM R11,0");
-        ETEST(OVERFLOW_RANGE,       "SLAM R11,16");
+        ERRT("SRAM R11,R2", REGISTER_NOT_ALLOWED);
+        ERRT("SLAM R11,0",  OPERAND_NOT_ALLOWED);
+        ERRT("SLAM R11,16", OVERFLOW_RANGE);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "SRAM R11,R0");
-        ETEST(UNKNOWN_INSTRUCTION, "SLAM *R13+,1");
+        ERRT("SRAM R11,R0",  UNKNOWN_INSTRUCTION);
+        ERRT("SLAM *R13+,1", UNKNOWN_INSTRUCTION);
     }
 }
 
 static void test_xop_src() {
     TEST("XOP @9876H,0",  0x2C20, 0x9876);
     TEST("XOP @9876H,15", 0x2FE0, 0x9876);
-    ETEST(OPERAND_NOT_ALLOWED, "XOP @9876H,R0");
-    ETEST(OVERFLOW_RANGE, "XOP @9876H,16");
+    ERRT("XOP @9876H,R0", OPERAND_NOT_ALLOWED);
+    ERRT("XOP @9876H,16", OVERFLOW_RANGE);
 
     symtab.intern(10, "xop10");
     symtab.intern(0x9876, "sym9876");
@@ -294,8 +294,8 @@ static void test_dst_src() {
         TEST("AM @sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
         TEST("AM @sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "SM R10,@sym4000(R11)");
-        ETEST(UNKNOWN_INSTRUCTION, "AM @zero(R10),@1(R11)");
+        ERRT("SM R10,@sym4000(R11)",  UNKNOWN_INSTRUCTION);
+        ERRT("AM @zero(R10),@1(R11)", UNKNOWN_INSTRUCTION);
     }
 }
 
@@ -314,7 +314,7 @@ static void test_rel() {
     ATEST(0x1000, "JH  0FF8H", 0x1BFB);
     ATEST(0x1000, "JOP 0FF6H", 0x1CFA);
 
-    ETEST(OPERAND_NOT_ALIGNED, "JMP 1001H");
+    ERRT("JMP 1001H", OPERAND_NOT_ALIGNED);
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");
@@ -346,41 +346,41 @@ static void test_comment() {
     TEST("LWPI 1234H   ; comment", 0x02E0, 0x1234);
     TEST("STWP R14     ; comment", 0x02AE);
     TEST("LI   R0 , 0  ; comment", 0x0200, 0x0000);
-    TEST(                  "X *R10   ; comment", 0x049A);
-    ETEST(UNKNOWN_OPERAND, "X * R10  ; comment");
-    TEST(                  "CLR *R12+  ; comment", 0x04FC);
-    ETEST(UNKNOWN_OPERAND, "CLR * R12+ ; comment");
+    TEST("X *R10   ; comment", 0x049A);
+    ERRT("X * R10  ; comment", UNKNOWN_OPERAND);
+    TEST("CLR *R12+  ; comment", 0x04FC);
+    ERRT("CLR * R12+ ; comment", UNKNOWN_OPERAND);
     TEST("BLWP @ 9876H ; comment", 0x0420, 0x9876);
     TEST("SBO  0       ; comment", 0x1D00);
     TEST("INC  @ 2 ( R7 )  ; comment", 0x05A7, 0x0002);
-    TEST(                  "LDCR *R13+  , 16 ; comment",  0x303D);
-    ETEST(UNKNOWN_OPERAND, "LDCR * R13+ , 16 ; comment");
+    TEST("LDCR *R13+  , 16 ; comment", 0x303D);
+    ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND);
     TEST("SZC  @ 1234H ( R10 ) , @ 5678H ( R11 ) ; comment", 0x4AEA, 0x1234, 0x5678);
     ATEST(0x1000, "JMP 1002H ; comment", 0x1000);
-    ETEST(GARBAGE_AT_END, "CLR  *R12 + ; comment");
-    ETEST(GARBAGE_AT_END, "LDCR *R13 +, 16 ; comment");
+    ERRT("CLR  *R12 + ; comment", GARBAGE_AT_END);
+    ERRT("LDCR *R13 +, 16 ; comment", GARBAGE_AT_END);
 }
 
 static void test_undefined_symbol() {
-    ETEST(UNDEFINED_SYMBOL, "LWPI UNDEF",    0x02E0, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "LI   R0,UNDEF", 0x0200, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "SRL  R4,UNDEF", 0x0904);
-    ETEST(UNDEFINED_SYMBOL, "BLWP @UNDEF",   0x0420, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "INC  @UNDEF(R7)",    0x05A7, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "CZC  @UNDEF(R3),R7", 0x25E3, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "STCR @UNDEF(R4),15",    0x37E4, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "STCR @2(R4),UNDEF",     0x3424, 0x0002);
-    ETEST(UNDEFINED_SYMBOL, "STCR @UNDEF(R4),UNDEF", 0x3424, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "XOP  @UNDEF,15",     0x2FE0, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "XOP  @9876H,UNDEF",  0x2C20, 0x9876);
-    ETEST(UNDEFINED_SYMBOL, "XOP  @UNDEF,UNDEF",  0x2C20, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "SZC  @UNDEF(R10),@5678H(R11)", 0x4AEA, 0x0000, 0x5678);
-    ETEST(UNDEFINED_SYMBOL, "SZC  @1234H(R10),@UNDEF(R11)", 0x4AEA, 0x1234, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "SZC  @UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
-    ETEST(UNDEFINED_SYMBOL, "SBZ  UNDEF", 0x1E00);
+    ERUS("LWPI UNDEF",    0x02E0, 0x0000);
+    ERUS("LI   R0,UNDEF", 0x0200, 0x0000);
+    ERUS("SRL  R4,UNDEF", 0x0904);
+    ERUS("BLWP @UNDEF",   0x0420, 0x0000);
+    ERUS("INC  @UNDEF(R7)", 0x05A7, 0x0000);
+    ERUS("CZC  @UNDEF(R3),R7",    0x25E3, 0x0000);
+    ERUS("STCR @UNDEF(R4),15",    0x37E4, 0x0000);
+    ERUS("STCR @2(R4),UNDEF",     0x3424, 0x0002);
+    ERUS("STCR @UNDEF(R4),UNDEF", 0x3424, 0x0000);
+    ERUS("XOP  @UNDEF,15",    0x2FE0, 0x0000);
+    ERUS("XOP  @9876H,UNDEF", 0x2C20, 0x9876);
+    ERUS("XOP  @UNDEF,UNDEF", 0x2C20, 0x0000);
+    ERUS("SZC  @UNDEF(R10),@5678H(R11)", 0x4AEA, 0x0000, 0x5678);
+    ERUS("SZC  @1234H(R10),@UNDEF(R11)", 0x4AEA, 0x1234, 0x0000);
+    ERUS("SZC  @UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
+    ERUS("SBZ  UNDEF", 0x1E00);
 
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JMP UNDEF", 0x1000);
-    EATEST(UNDEFINED_SYMBOL, 0x1000, "JNE UNDEF", 0x1600);
+    AERRU(0x1000, "JMP UNDEF", 0x1000);
+    AERRU(0x1000, "JNE UNDEF", 0x1600);
 }
 // clang-format on
 

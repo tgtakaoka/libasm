@@ -130,8 +130,8 @@ static void test_move_inherent() {
         TEST("RIM", 0x20);
         TEST("SIM", 0x30);
     } else {
-        ETEST(UNKNOWN_INSTRUCTION, "RIM");
-        ETEST(UNKNOWN_INSTRUCTION, "SIM");
+        ERRT("RIM", UNKNOWN_INSTRUCTION);
+        ERRT("SIM", UNKNOWN_INSTRUCTION);
     }
 }
 
@@ -369,7 +369,7 @@ static void test_alu_immediate() {
     TEST("ADI 10B", 0xC6, 0x02);
     TEST("ACI 255", 0xCE, 0xFF);
 
-    TEST("SUI -2",  0xD6, 0xFE);
+    TEST("SUI -2",   0xD6, 0xFE);
     TEST("SBI 177O", 0xDE, 0x7F);
 
     TEST("ANI ~0FH", 0xE6, 0xF0);
@@ -391,21 +391,21 @@ static void test_comment() {
     TEST("JMP 1234H; comment", 0xC3, 0x34, 0x12);
     TEST("ANI ~0FH ; comment", 0xE6, 0xF0);
     TEST("CPI -1-23; comment", 0xFE, 0xE8);
-    TEST("MOV B , B  ; comment", 0x40);
-    TEST("MVI M , 0F6H ; comment", 0x36, 0xF6);
+    TEST("MOV B , B  ; comment",     0x40);
+    TEST("MVI M , 0F6H ; comment",   0x36, 0xF6);
     TEST("LXI B , 0BEEFH ; comment", 0x01, 0xEF, 0xBE);
 }
 
 static void test_undefined_symbol() {
-    ETEST(UNDEFINED_SYMBOL, "MVI  B,UNDEF", 0x06, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "LXI  B,UNDEF", 0x01, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "STA  UNDEF",   0x32, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "SHLD UNDEF",   0x22, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "JMP  UNDEF",   0xC3, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "CALL UNDEF",   0xCD, 0x00, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "ADI  UNDEF",   0xC6, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "OUT  UNDEF",   0xD3, 0x00);
-    ETEST(UNDEFINED_SYMBOL, "IN   UNDEF",   0xDB, 0x00);
+    ERUS("MVI  B,UNDEF", 0x06, 0x00);
+    ERUS("LXI  B,UNDEF", 0x01, 0x00, 0x00);
+    ERUS("STA  UNDEF", 0x32, 0x00, 0x00);
+    ERUS("SHLD UNDEF", 0x22, 0x00, 0x00);
+    ERUS("JMP  UNDEF", 0xC3, 0x00, 0x00);
+    ERUS("CALL UNDEF", 0xCD, 0x00, 0x00);
+    ERUS("ADI  UNDEF", 0xC6, 0x00);
+    ERUS("OUT  UNDEF", 0xD3, 0x00);
+    ERUS("IN   UNDEF", 0xDB, 0x00);
 }
 // clang-format on
 
