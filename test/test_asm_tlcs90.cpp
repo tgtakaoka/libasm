@@ -1661,6 +1661,50 @@ static void test_jump_call() {
     TEST("RET NE",  0xFE, 0xDE);
     TEST("RET UGE", 0xFE, 0xDF);
 }
+
+static void test_comment() {
+    TEST("LD B , ( BC )  ; comment",       0xE0, 0x28);
+    TEST("LD B , ( 1234H )  ; comment",    0xE3, 0x34, 0x12, 0x28);
+    TEST("LD B , ( IX + 34H )  ; comment", 0xF0, 0x34, 0x28);
+    TEST("LD B , ( HL + A )  ; comment",   0xF3, 0x28);
+    TEST("CALL LE , ( HL )  ; comment",      0xEA, 0xD2);
+    TEST("CALL ULE , ( 1234H ) ; comment",   0xEB, 0x34, 0x12, 0xD3);
+    TEST("CALL GT , ( SP + 34H ) ; comment", 0xF6, 0x34, 0xDA);
+    TEST("CALL UGT , ( HL + A ) ; comment",  0xF7, 0xDB);
+}
+
+static void test_error() {
+    ERRT("LD B,BC",       OPERAND_NOT_ALLOWED);
+    ERRT("LD B,(B)",      REGISTER_NOT_ALLOWED);
+    ERRT("LD B,(BC+34H)", REGISTER_NOT_ALLOWED);
+    ERRT("LD B,(HL+34H)", REGISTER_NOT_ALLOWED);
+    ERRT("LD B,(HL+B)",   REGISTER_NOT_ALLOWED);
+    ERRT("LD B,(HL-A)",   REGISTER_NOT_ALLOWED);
+    ERRT("LD B,(1234H",   MISSING_CLOSING_PAREN);
+    ERRT("LD B,(BC+34H",  MISSING_CLOSING_PAREN);
+    ERRT("LD B,(HL+A",    MISSING_CLOSING_PAREN);
+}
+
+static void test_undefined_symbol() {
+    ERUS("LD B,UNDEF",       0x30, 0x00);
+    ERUS("LD B,(UNDEF)",     0xE7, 0x00, 0x28);
+    ERUS("LD B,(SP+UNDEF)",  0xF2, 0x00, 0x28);
+    ERUS("LD (UNDEF),B",     0xEF, 0x00, 0x20);
+    ERUS("LD (IX-UNDEF),B",  0xF4, 0x00, 0x20);
+    ERUS("LD (UNDEF),UNDEF", 0x37, 0x00, 0x00);
+    ERUS("LD BC,UNDEF",      0x38, 0x00, 0x00);
+    ERUS("LD BC,(UNDEF)",    0xE7, 0x00, 0x48);
+    ERUS("LD BC,(SP+UNDEF)", 0xF2, 0x00, 0x48);
+    ERUS("LD (UNDEF),BC",    0xEF, 0x00, 0x40);
+    ERUS("INC (UNDEF)",      0x87, 0x00);
+    ERUS("INCX (UNDEF)",     0x07, 0x00);
+    ERUS("INCW (UNDEF)",     0x97, 0x00);
+
+    ERUS("BIT UNDEF,B",       0xF8, 0xA8);
+    ERUS("SET UNDEF,(UNDEF)", 0xB8, 0x00);
+    ERUS("RES 6,(UNDEF)",     0xB6, 0x00);
+}
+
 // clang-format on
 
 const char *run_cpu_test() {
@@ -1680,11 +1724,9 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_shift_rotate);
     RUN_TEST(test_bitops);
     RUN_TEST(test_jump_call);
-    /* TODO
     RUN_TEST(test_comment);
     RUN_TEST(test_error);
     RUN_TEST(test_undefined_symbol);
-    */
 }
 
 // Local Variables:

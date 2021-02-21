@@ -81,6 +81,7 @@ public:
     static uint8_t regNameLen(const RegName name);
     char *outRegName(char *out, const RegName name) const;
     static bool isReg16(RegName name);
+    static bool isRegIndex(RegName name);
 
     static uint8_t encodeReg8(RegName name);
     static RegName decodeReg8(uint8_t num);

@@ -79,6 +79,10 @@ bool RegTlcs90::isReg16(RegName name) {
     return uint8_t(name) <= uint8_t(REG_SP);
 }
 
+bool RegTlcs90::isRegIndex(RegName name) {
+    return isReg16(name) && uint8_t(name) >= uint8_t(REG_IX);
+}
+
 uint8_t RegTlcs90::encodeReg8(RegName name) {
     return int8_t(name) - 16;
 }

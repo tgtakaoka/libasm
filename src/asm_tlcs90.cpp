@@ -204,7 +204,8 @@ Error AsmTlcs90::parseOperand(const char *scan, Operand &op) {
             p = skipSpaces(_scan);
             if (*p != ')')
                 return setError(MISSING_CLOSING_PAREN);
-            op.mode = (op.val16 >= 0xFF00) ? M_DIR : M_EXT;
+            op.mode = op.getError() ? M_UNDEF
+                : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
             _scan = p + 1;
             return OK;
         }
@@ -240,7 +241,7 @@ Error AsmTlcs90::parseOperand(const char *scan, Operand &op) {
             p = skipSpaces(_scan);
             if (*p != ')')
                 return setError(MISSING_CLOSING_PAREN);
-            if (RegTlcs90::isReg16(reg)) {
+            if (RegTlcs90::isRegIndex(reg)) {
                 _scan = p + 1;
                 op.mode = M_IDX;
                 return OK;

@@ -48,6 +48,7 @@ enum AddrMode : uint8_t {
     R_AFP = 16 + 8 + 7,  // REG_AFP
     R_C = 16 + 16 + 1,   // REG_C or CC_C
     R_A = 16 + 16 + 6,   // REG_A
+    M_UNDEF = 59,        // Undefined address: M_EXT/M_DIR
     M_SRC16 = 60,        // M_REG16
     M_SRC = 61,
     M_DST = 62,

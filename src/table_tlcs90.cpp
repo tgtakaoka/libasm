@@ -381,6 +381,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_REL16;
     if (opr == M_DIR)
         return table == M_EXT;
+    if (opr == M_UNDEF)
+        return table == M_EXT || table == M_DIR;
     if (opr == R_AF)
         return table == M_STACK;
     return false;
