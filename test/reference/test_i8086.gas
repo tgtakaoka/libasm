@@ -1,21 +1,21 @@
-### Copyright 2020 Tadashi G. Takaoka
-###
-### Licensed under the Apache License, Version 2.0 (the "License")#
-### you may not use this file except in compliance with the License.
-### You may obtain a copy of the License at
-###
-###     http://www.apache.org/licenses/LICENSE-2.0
-###
-### Unless required by applicable law or agreed to in writing, software
-### distributed under the License is distributed on an "AS IS" BASIS,
-### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-### See the License for the specific language governing permissions and
-### limitations under the License.
+;### Copyright 2020 Tadashi G. Takaoka
+;###
+;### Licensed under the Apache License, Version 2.0 (the "License");
+;### you may not use this file except in compliance with the License.
+;### You may obtain a copy of the License at
+;###
+;###     http://www.apache.org/licenses/LICENSE-2.0
+;###
+;### Unless required by applicable law or agreed to in writing, software
+;### distributed under the License is distributed on an "AS IS" BASIS,
+;### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;### See the License for the specific language governing permissions and
+;### limitations under the License.
 
         .code16
 
-### Data Transfer
-### Move
+;### Data Transfer
+;### Move
         mov     al,cl
         mov     dl,bl
         mov     ah,ch
@@ -86,7 +86,7 @@
         mov     cs,[bx+si]
         mov     ss,[bx+di+0x34]
         mov     ds,[bp+si+0x1234]
-### Push data onto stack
+;### Push data onto stack
         push    bp
         push    [si]
         push    [0x1234]
@@ -99,7 +99,7 @@
         push    cs
         push    ss
         push    ds
-### Pop data from stack
+;### Pop data from stack
         pop     bp
         pop     [si]
         pop     [0x1234]
@@ -109,10 +109,10 @@
         pop     [bx+di+0x34]
         pop     [bp+si+0x1234]
         pop     es
-#       pop     cs
+;###    pop     cs
         pop     ss
         pop     ds
-### Exchange data
+;### Exchange data
         xchg    al,ch
         xchg    [si],cl
         xchg    [0x1234],dl
@@ -129,19 +129,19 @@
         xchg    [bx+si],bp
         xchg    [bx+di+0x34],si
         xchg    [bp+si+0x1234],di
-### Input from port
+;### Input from port
         in      al,0x34
         in      al,dx
         in      ax,0x34
         in      ax,dx
-### Output to port
+;### Output to port
         out     0x34,al
         out     dx,al
         out     0x34,ax
         out     dx,ax
-### Table look-up translation
+;### Table look-up translation
         xlat
-### Load effective address
+;### Load effective address
         lea     cx,[si]
         lea     dx,[0x1234]
         lea     bx,[di-0x34]
@@ -149,7 +149,7 @@
         lea     bp,[bx+si]
         lea     si,[bx+di+0x34]
         lea     di,[bp+si+0x1234]
-### Load pointer using DS
+;### Load pointer using DS
         lds     cx,[si]
         lds     dx,[0x1234]
         lds     bx,[di-0x34]
@@ -157,7 +157,7 @@
         lds     bp,[bx+si]
         lds     si,[bx+di+0x34]
         lds     di,[bp+si+0x1234]
-### Load ES with pointer
+;### Load ES with pointer
         les     cx,[si]
         les     dx,[0x1234]
         les     bx,[di-0x34]
@@ -165,17 +165,17 @@
         les     bp,[bx+si]
         les     si,[bx+di+0x34]
         les     di,[bp+si+0x1234]
-### Load FLAGS into 0xA register
+;### Load FLAGS into AH register
         lahf
-### Store 0xA into FLAGS
+;### Store AH into FLAGS
         sahf
-### Push FLAGS register onto stack
+;### Push FLAGS register onto stack
         pushf
-### Pop FLAGS register from stack
+;### Pop FLAGS register from stack
         popf
 
-### Arithmetic
-### Add
+;### Arithmetic
+;### Add
         add     al,cl
         add     dl,bl
         add     ah,ch
@@ -239,7 +239,7 @@
         add     word ptr [bx+si],0x56
         add     word ptr [bx+di+0x34],0x56
         add     word ptr [bp+si+0x1234],0x56
-### Add with carry
+;### Add with carry
         adc     al,cl
         adc     dl,bl
         adc     ah,ch
@@ -303,7 +303,7 @@
         adc     word ptr [bx+si],0x56
         adc     word ptr [bx+di+0x34],0x56
         adc     word ptr [bp+si+0x1234],0x56
-### Increment by 1
+;### Increment by 1
         inc     ch
         inc     byte ptr [si]
         inc     byte ptr [0x1234]
@@ -320,11 +320,11 @@
         inc     word ptr [bx+si]
         inc     word ptr [bx+di+0x34]
         inc     word ptr [bp+si+0x1234]
-### ASCII adjust AL after addition
+;### ASCII adjust AL after addition
         aaa
-### Decimal adjust AL after addition
+;### Decimal adjust AL after addition
         daa
-### Subtraction
+;### Subtraction
         sub     al,cl
         sub     dl,bl
         sub     ah,ch
@@ -388,7 +388,7 @@
         sub     word ptr [bx+si],0x56
         sub     word ptr [bx+di+0x34],0x56
         sub     word ptr [bp+si+0x1234],0x56
-### Subtract with borrow
+;### Subtract with borrow
         sbb     al,cl
         sbb     dl,bl
         sbb     ah,ch
@@ -452,7 +452,7 @@
         sbb     word ptr [bx+si],0x56
         sbb     word ptr [bx+di+0x34],0x56
         sbb     word ptr [bp+si+0x1234],0x56
-### Decrement by 1
+;### Decrement by 1
         dec     ch
         dec     byte ptr [si]
         dec     byte ptr [0x1234]
@@ -469,7 +469,7 @@
         dec     word ptr [bx+si]
         dec     word ptr [bx+di+0x34]
         dec     word ptr [bp+si+0x1234]
-### Negation
+;### Negation
         neg     ch
         neg     byte ptr [si]
         neg     byte ptr [0x1234]
@@ -486,7 +486,7 @@
         neg     word ptr [bx+si]
         neg     word ptr [bx+di+0x34]
         neg     word ptr [bp+si+0x1234]
-### Compare operands
+;### Compare operands
         cmp     al,cl
         cmp     dl,bl
         cmp     ah,ch
@@ -550,11 +550,11 @@
         cmp     word ptr [bx+si],0x56
         cmp     word ptr [bx+di+0x34],0x56
         cmp     word ptr [bp+si+0x1234],0x56
-### ASCII adjust AL after subtraction
+;### ASCII adjust AL after subtraction
         aas
-### Decimal adjust AL after subtraction
+;### Decimal adjust AL after subtraction
         das
-### Unsigned multiply
+;### Unsigned multiply
         mul     ch
         mul     byte ptr [si]
         mul     byte ptr [0x1234]
@@ -571,7 +571,7 @@
         mul     word ptr [bx+si]
         mul     word ptr [bx+di+0x34]
         mul     word ptr [bp+si+0x1234]
-### Signed multiply
+;### Signed multiply
         imul    ch
         imul    byte ptr [si]
         imul    byte ptr [0x1234]
@@ -588,9 +588,9 @@
         imul    word ptr [bx+si]
         imul    word ptr [bx+di+0x34]
         imul    word ptr [bp+si+0x1234]
-### ASCII adjust AX afrer multiplication
+;### ASCII adjust AX afrer multiplication
         aam
-### Unsigned divide
+;### Unsigned divide
         div     ch
         div     byte ptr [si]
         div     byte ptr [0x1234]
@@ -607,7 +607,7 @@
         div     word ptr [bx+si]
         div     word ptr [bx+di+0x34]
         div     word ptr [bp+si+0x1234]
-### Signed divide
+;### Signed divide
         idiv    ch
         idiv    byte ptr [si]
         idiv    byte ptr [0x1234]
@@ -624,15 +624,15 @@
         idiv    word ptr [bx+si]
         idiv    word ptr [bx+di+0x34]
         idiv    word ptr [bp+si+0x1234]
-### ASCII adjust AX before division
+;### ASCII adjust AX before division
         aad
-### Convert byte to word
+;### Convert byte to word
         cbw
-### Convert word to double word
+;### Convert word to double word
         cwd
 
-### Logic
-### Negate the operand, logical NOT
+;### Logic
+;### Negate the operand, logical NOT
         not     ch
         not     byte ptr [si]
         not     byte ptr [0x1234]
@@ -649,7 +649,7 @@
         not     word ptr [bx+si]
         not     word ptr [bx+di+0x34]
         not     word ptr [bp+si+0x1234]
-### Shift left, unsigned shift left
+;### Shift left, unsigned shift left
         shl     ch,1
         shl     byte ptr [si],1
         shl     byte ptr [0x1234],1
@@ -682,7 +682,7 @@
         shl     word ptr [bx+si],cl
         shl     word ptr [bx+di+0x34],cl
         shl     word ptr [bp+si+0x1234],cl
-### Shift arithmetically left, signed shift left
+;### Shift arithmetically left, signed shift left
         sal     ch,1
         sal     byte ptr [si],1
         sal     byte ptr [0x1234],1
@@ -715,7 +715,7 @@
         sal     word ptr [bx+si],cl
         sal     word ptr [bx+di+0x34],cl
         sal     word ptr [bp+si+0x1234],cl
-### Shift right, unsigned shift right
+;### Shift right, unsigned shift right
         shr     ch,1
         shr     byte ptr [si],1
         shr     byte ptr [0x1234],1
@@ -748,7 +748,7 @@
         shr     word ptr [bx+si],cl
         shr     word ptr [bx+di+0x34],cl
         shr     word ptr [bp+si+0x1234],cl
-### Shift arithmetically right, signed shift right
+;### Shift arithmetically right, signed shift right
         sar     ch,1
         sar     byte ptr [si],1
         sar     byte ptr [0x1234],1
@@ -781,7 +781,7 @@
         sar     word ptr [bx+si],cl
         sar     word ptr [bx+di+0x34],cl
         sar     word ptr [bp+si+0x1234],cl
-### Rotate left
+;### Rotate left
         rol     ch,1
         rol     byte ptr [si],1
         rol     byte ptr [0x1234],1
@@ -814,7 +814,7 @@
         rol     word ptr [bx+si],cl
         rol     word ptr [bx+di+0x34],cl
         rol     word ptr [bp+si+0x1234],cl
-### Rotate right
+;### Rotate right
         ror     ch,1
         ror     byte ptr [si],1
         ror     byte ptr [0x1234],1
@@ -847,7 +847,7 @@
         ror     word ptr [bx+si],cl
         ror     word ptr [bx+di+0x34],cl
         ror     word ptr [bp+si+0x1234],cl
-### Rotate left with carry
+;### Rotate left with carry
         rcl     ch,1
         rcl     byte ptr [si],1
         rcl     byte ptr [0x1234],1
@@ -880,7 +880,7 @@
         rcl     word ptr [bx+si],cl
         rcl     word ptr [bx+di+0x34],cl
         rcl     word ptr [bp+si+0x1234],cl
-### Rotate right with carry
+;### Rotate right with carry
         rcr     ch,1
         rcr     byte ptr [si],1
         rcr     byte ptr [0x1234],1
@@ -913,7 +913,7 @@
         rcr     word ptr [bx+si],cl
         rcr     word ptr [bx+di+0x34],cl
         rcr     word ptr [bp+si+0x1234],cl
-### Logical AND
+;### Logical AND
         and     al,cl
         and     dl,bl
         and     ah,ch
@@ -968,7 +968,7 @@
         and     word ptr [bx+si],0x5678
         and     word ptr [bx+di+0x34],0x5678
         and     word ptr [bp+si+0x1234],0x5678
-### Logical compare
+;### Logical compare
         test    al,cl
         test    dl,bl
         test    ah,ch
@@ -1023,7 +1023,7 @@
         test    word ptr [bx+si],0x5678
         test    word ptr [bx+di+0x34],0x5678
         test    word ptr [bp+si+0x1234],0x5678
-### Logical OR
+;### Logical OR
         or      al,cl
         or      dl,bl
         or      ah,ch
@@ -1078,7 +1078,7 @@
         or      word ptr [bx+si],0x5678
         or      word ptr [bx+di+0x34],0x5678
         or      word ptr [bp+si+0x1234],0x5678
-### Exclusive OR
+;### Exclusive OR
         xor     al,cl
         xor     dl,bl
         xor     ah,ch
@@ -1134,8 +1134,8 @@
         xor     word ptr [bx+di+0x34],0x5678
         xor     word ptr [bp+si+0x1234],0x5678
 
-### String manipulation
-### Repeat
+;### String manipulation
+;### Repeat
         rep     movsb
         rep     movsw
         rep     cmpsb
@@ -1146,7 +1146,7 @@
         rep     lodsw
         rep     scasb
         rep     scasw
-### Repeat While Equal/Zero
+;### Repeat While Equal/Zero
         repe    movsb
         repe    movsw
         repe    cmpsb
@@ -1167,7 +1167,7 @@
         repz    lodsw
         repz    scasb
         repz    scasw
-### Repeat While Not Equal/Not Zero
+;### Repeat While Not Equal/Not Zero
         repne   movsb
         repne   movsw
         repne   cmpsb
@@ -1188,29 +1188,29 @@
         repnz   lodsw
         repnz   scasb
         repnz   scasw
-### Move byte from string to string
+;### Move byte from string to string
         movsb
-### Move word from string to string
+;### Move word from string to string
         movsw
-### Compare bytes in memory
+;### Compare bytes in memory
         cmpsb
-### Compare words in memory
+;### Compare words in memory
         cmpsw
-### Compare byte string
+;### Compare byte string
         scasb
-### Compare word string
+;### Compare word string
         scasw
-### Load string byte
+;### Load string byte
         lodsb
-### Load string word
+;### Load string word
         lodsw
-### Store byte string
+;### Store byte string
         stosb
-### Store word string
+;### Store word string
         stosw
 
-### Control transfer
-### Call procedure
+;### Control transfer
+;### Call procedure
         call    $
         call    ax
         call    si
@@ -1229,7 +1229,7 @@
         lcall   [bx+si]
         lcall   [bx+di+0x34]
         lcall   [bp+si+0x1234]
-### Jump
+;### Jump
         jmp     $+0x1234
         jmp     $
         jmp     ax
@@ -1249,100 +1249,100 @@
         ljmp    [bx+si]
         ljmp    [bx+di+0x34]
         ljmp    [bp+si+0x1234]
-### Return from procedure
+;### Return from procedure
         ret
         ret     16
         lret
         lret    16
-### Jump on Equal/Zero
+;### Jump on Equal/Zero
         je      $
         jz      $
-### Jump on Less/Not Greater or Equal
+;### Jump on Less/Not Greater or Equal
         jl      $
         jnge    $
-### Jump on Less or Equal/Not Greater
+;### Jump on Less or Equal/Not Greater
         jle     $
         jng     $
-### Jump on Below/Not Above or Equal/Carry
+;### Jump on Below/Not Above or Equal/Carry
         jb      $
         jnae    $
         jc      $
-### Jump on Below or Equal/Not Above
+;### Jump on Below or Equal/Not Above
         jbe     $
         jna     $
-### Jump on Parity/Parity Even
+;### Jump on Parity/Parity Even
         jpe     $
         jp      $
-### Jump on Overflow
+;### Jump on Overflow
         jo      $
-### Jump on Sign
+;### Jump on Sign
         js      $
-### Jump on Not Equal/Not Zero
+;### Jump on Not Equal/Not Zero
         jne     $
         jnz     $
-### Jump on Not Less/Greater or Equal
+;### Jump on Not Less/Greater or Equal
         jge     $
         jnl     $
-### Jump on Not Less or Equal/Greater
+;### Jump on Not Less or Equal/Greater
         jg      $
         jnle    $
-### Jump on Not Below/Above or Equal/Not Carry
+;### Jump on Not Below/Above or Equal/Not Carry
         jae     $
         jnb     $
         jnc     $
-### Jump on Not Below or Equal/Above
+;### Jump on Not Below or Equal/Above
         ja      $
         jnbe    $
-### Jump on Not Parity/Parity Odd
+;### Jump on Not Parity/Parity Odd
         jpo     $
         jnp     $
-### Jump on Not Overflow
+;### Jump on Not Overflow
         jno     $
-### Jump on Not Sign
+;### Jump on Not Sign
         jns     $
-### Loop CX Times
+;### Loop CX Times
         loop    $
-### Loop While Zero/Equal
+;### Loop While Zero/Equal
         loope   $
         loopz   $
-### Loop While Not Zero/Equal
+;### Loop While Not Zero/Equal
         loopne  $
         loopnz  $
-### Jump if CX is zero
+;### Jump if CX is zero
         jcxz    $
-### Call interrupt
+;### Call interrupt
         int     2
         int     3
-### Call interrupt if overflow
+;### Call interrupt if overflow
         into
-### Return from interrupt
+;### Return from interrupt
         iret
 
-### Processor control
-### Clear carry flag
+;### Processor control
+;### Clear carry flag
         clc
-### Complement carry flag
+;### Complement carry flag
         cmc
-### Set carry flag
+;### Set carry flag
         stc
-### Clear direction flag
+;### Clear direction flag
         cld
-### Set direction flag
+;### Set direction flag
         std
-### Clear interrupt flag
+;### Clear interrupt flag
         cli
-### Set interrupt flag
+;### Set interrupt flag
         sti
-### Enter halt state
+;### Enter halt state
         hlt
-### Wait until not busy
+;### Wait until not busy
         wait
-### Assert BUS LOCK# signal
+;### Assert BUS LOCK# signal
         lock
-### No operation
+;### No operation
         nop
 
-### Segment override
+;### Segment override
 #        mov     es:[bx],ah
 #        mov     es:[bp],ah
 #        mov     es:[si],ah
@@ -1369,7 +1369,7 @@
 #        jmp     ss:[si]
 #        jmp     ds:[si]
 
-### Local Variables:
-### mode: asm
-### End:
-### vim: set ft=asm:
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:
