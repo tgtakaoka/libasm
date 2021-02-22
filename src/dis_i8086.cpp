@@ -343,22 +343,20 @@ Error DisI8086::decodeStringInst(
 }
 
 Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
-    while (true) {
-        Config::opcode_t opCode = insn.readByte(memory);
-        if (TableI8086.isSegmentPrefix(opCode)) {
-            if (insn.segment())
-                return setError(ILLEGAL_SEGMENT);
-            insn.setSegment(opCode);
-            continue;
-        }
-        Config::opcode_t prefix = 0;
-        if (TableI8086.isPrefix(opCode)) {
-            prefix = opCode;
-            opCode = insn.readByte(memory);
-        }
-        insn.setOpCode(opCode, prefix);
-        return setError(insn);
+    Config::opcode_t opCode = insn.readByte(memory);
+    while (!_separateSegOverride && TableI8086.isSegmentPrefix(opCode)) {
+        if (insn.segment())
+            return setError(ILLEGAL_SEGMENT);
+        insn.setSegment(opCode);
+        opCode = insn.readByte(memory);
     }
+    Config::opcode_t prefix = 0;
+    if (TableI8086.isPrefix(opCode)) {
+        prefix = opCode;
+        opCode = insn.readByte(memory);
+    }
+    insn.setOpCode(opCode, prefix);
+    return setError(insn);
 }
 
 Error DisI8086::decode(DisMemory &memory, Insn &_insn, char *out) {

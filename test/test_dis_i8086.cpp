@@ -1321,6 +1321,13 @@ static void test_processor_control() {
 }
 
 static void test_segment_override() {
+    TEST(SEGES, "", 0x26);
+    TEST(SEGCS, "", 0x2E);
+    TEST(SEGSS, "", 0x36);
+    TEST(SEGDS, "", 0x3E);
+
+    dis8086.setSeparateSegOverride(false);
+
     TEST(MOV, "ES:[BX],AH",    0x26, 0x88, 0047);
     TEST(MOV, "ES:[BP+0],AH",  0x26, 0x88, 0146, 0x00);
     TEST(MOV, "ES:[SI],AH",    0x26, 0x88, 0044);

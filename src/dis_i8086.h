@@ -30,13 +30,18 @@ class DisI8086 : public Disassembler, public Config {
 public:
     DisI8086() : Disassembler(_formatter, _regs, TableI8086) {}
 
+    void reset() override {
+        setSeparateSegOverride(true);
+        setRepeatHasStringInstruction(false);
+    }
+    void setSeparateSegOverride(bool yes) { _separateSegOverride = yes; }
     void setRepeatHasStringInstruction(bool yes) { _repeatHasStringInst = yes; }
-    void reset() override { setRepeatHasStringInstruction(false); }
 
 private:
     IntelValueFormatter _formatter;
     RegI8086 _regs;
-    bool _repeatHasStringInst;
+    bool _separateSegOverride = true;
+    bool _repeatHasStringInst = false;
 
     char *outRegister(char *out, RegName name, const char prefix = 0);
     Error outMemReg(DisMemory &memory, InsnI8086 &insn, char *out, RegName seg,
