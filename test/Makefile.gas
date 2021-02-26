@@ -23,7 +23,8 @@
 		--section-start=bss2=0x0B5678
 	z8k-coff-objcopy -I coff-z8k -O ihex $(@:.hex=.o) /dev/stdout \
 		--adjust-section-vma .text=0x010000 | \
-		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
+	srec_cat /dev/stdin -intel -HEAder="" \
+		-output $@ -Intel -output_block_size=32
 	z8k-coff-objdump -m z8001 -D $@ > $(@:.hex=.lst)
 
 # Z8002 target
@@ -35,7 +36,8 @@
 		--section-start=bss2=0x5678
 	z8k-coff-objcopy -I coff-z8k -O ihex $(@:.hex=.o) /dev/stdout \
 		--adjust-section-vma .text=0x1000 | \
-		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
+	srec_cat /dev/stdin -intel -HEAder="" \
+		-output $@ -Intel -output_block_size=32
 	z8k-coff-objdump -m z8002 -D $@ > $(@:.hex=.lst)
 
 # NS32032 target
@@ -43,33 +45,37 @@
 	ns32k-netbsd-as -m32032 --warn -o $(@:.hex=.o) $^
 	ns32k-netbsd-objcopy -I a.out-ns32k-netbsd -O ihex -j .text \
 		--adjust-section-vma .text=0x10000 $(@:.hex=.o) /dev/stdout | \
-		srec_cat /dev/stdin -intel -HEAder "" -output $@ -Intel -line-length=76
+	srec_cat /dev/stdin -intel -HEAder="" \
+		-output $@ -Intel -output_block_size=32
 	ns32k-netbsd-objdump -m ns32k:32032 -D $@ > $(@:.hex=.lst)
 
 # i8086 target
 %_i8086.hex: %_i8086.gas
-	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel -mmnemonic=intel -o $(@:.hex=.p) $^
+	i386-elf-as -mtune=i8086 --warn -mnaked-reg -msyntax=intel \
+		-mmnemonic=intel -o $(@:.hex=.p) $^
 	i386-elf-ld --entry=0 -section-start=.text=0x1000 -o $(@:.hex=.o) $(@:.hex=.p)
 	i386-elf-objcopy -I elf32-i386 -O ihex $(@:.hex=.o) /dev/stdout | \
-		srec_cat /dev/stdin -intel -output $@ -Intel -line-length=76
+	srec_cat /dev/stdin -intel -HEAder="" \
+		-output $@ -Intel -output_block_size=32
 	i386-elf-objdump -m i8086 -M intel -D $@ > $(@:.hex=.lst)
 
 # MC68000 target
 %_mc68000.s28: %_mc68000.gas
-	m68k-elf-as -m68000 --warn --register-prefix-optional --base-size-default-16 -o $(@:.s28=.p) $^
+	m68k-elf-as -m68000 --warn --register-prefix-optional \
+		--base-size-default-16 -o $(@:.s28=.p) $^
 	m68k-elf-ld --entry=0 -o $(@:.s28=.o) $(@:.s28=.p)
-	m68k-elf-objcopy -I elf32-m68k -O srec --srec-len 32 \
+	m68k-elf-objcopy -I elf32-m68k -O srec \
 		--adjust-section-vma .text=0x10000 $(@:.s28=.o) /dev/stdout | \
-		srec_cat /dev/stdin -HEAder "" -output $@
+	srec_cat /dev/stdin -HEAder="" -disable=data_count -output $@ -output_block_size=32
 	m68k-elf-objdump -m 68000 -D $@ > $(@:.s28=.lst)
 
 # MC68HC11 target
 %_mc68hc11.s19: %_mc68hc11.gas
 	m6811-elf-as -m68hc11 --warn -o $(@:.s19=.p) $^
 	m6811-elf-ld -m m68hc11elf --entry=0 -o $(@:.s19=.o) $(@:.s19=.p)
-	m6811-elf-objcopy -I elf32-m68hc11 -O srec --srec-len 32 \
+	m6811-elf-objcopy -I elf32-m68hc11 -O srec \
 		--adjust-section-vma .text=0x0100 $(@:.s19=.o) /dev/stdout | \
-		srec_cat /dev/stdin -HEAder "" -output $@
+	srec_cat /dev/stdin -HEAder="" -disable=data_count -output $@ -output_block_size=32
 	m6811-elf-objdump -m m68hc11 -D $@ > $(@:.s19=.lst)
 
 # Local Variables:
