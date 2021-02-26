@@ -12,6 +12,14 @@
 ;# See the License for the specific language governing permissions and
 ;# limitations under the License.
 
+;# Move Value from Supervisor to User Space: MOVSUi src/gen, dest/gen
+        movsub  5(sp), 9(sb)
+        movsuw  r2, r3
+        movsud  r4, r5
+;# Move Value from User to Supervisor Space: MOVUSi src/gen, dest/gen
+        movusb  9(sb), 5(sp)
+        movusw  r2, r3
+        movusd  r4, r5
 ;# Load Memory Management Register: LMR mmureg/short, src/gen
         lmr     bpr0, r0
         lmr     bpr1, r1

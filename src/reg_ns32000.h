@@ -34,8 +34,7 @@ enum RegName : int8_t {
     REG_R5 = 5 + 0,
     REG_R6 = 6 + 0,
     REG_R7 = 7 + 0,
-#ifdef NS32000_ENABLE_FLOAT
-    // Floating point registers.
+    // NS32081 Floating point registers.
     REG_F0 = 0 + 8,
     REG_F1 = 1 + 8,
     REG_F2 = 2 + 8,
@@ -44,7 +43,6 @@ enum RegName : int8_t {
     REG_F5 = 5 + 8,
     REG_F6 = 6 + 8,
     REG_F7 = 7 + 8,
-#endif
     REG_FP = 'F',   // FP
     REG_SP = 'S',   // SP
     REG_SB = 'B',   // SB
@@ -64,7 +62,6 @@ enum PregName : int8_t {
     PREG_MOD = 15,      // MOD
 };
 
-#ifdef NS32000_ENABLE_MMU
 enum MregName : int8_t {
     MREG_UNDEF = -1,
     MREG_BPR0 = 0,   // BPR0
@@ -75,7 +72,6 @@ enum MregName : int8_t {
     MREG_PTB1 = 13,  // PTB1
     MREG_EIA = 15,   // EIA
 };
-#endif
 
 enum ConfigName : uint8_t {
     CONFIG_UNDEF = 0,
@@ -99,12 +95,8 @@ public:
     char *outRegName(char *out, const RegName name) const;
     static uint8_t encodeRegName(RegName name);
     static bool isGeneric(RegName name);
-#ifdef NS32000_ENABLE_FLOAT
     static RegName decodeRegName(uint8_t num, bool floating = false);
     static bool isFloat(RegName name);
-#else
-    static RegName decodeRegName(uint8_t num);
-#endif
 
     static PregName parsePregName(const char *line);
     static uint8_t pregNameLen(PregName name);
@@ -112,13 +104,11 @@ public:
     static PregName decodePregName(uint8_t num);
     static uint8_t encodePregName(PregName name);
 
-#ifdef NS32000_ENABLE_MMU
     static MregName parseMregName(const char *line);
     static uint8_t mregNameLen(MregName name);
     char *outMregName(char *out, MregName name) const;
     static MregName decodeMregName(uint8_t num);
     static uint8_t encodeMregName(MregName name);
-#endif
 
     static ConfigName parseConfigName(const char *line);
     static uint8_t configNameLen(ConfigName name);

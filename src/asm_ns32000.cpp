@@ -137,7 +137,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
         op.mode = M_PREG;
         return OK;
     }
-#ifdef NS32000_ENABLE_MMU
+
     const MregName mreg = RegNs32000::parseMregName(p);
     if (mreg != MREG_UNDEF) {
         _scan = p + RegNs32000::mregNameLen(mreg);
@@ -145,7 +145,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
         op.mode = M_MREG;
         return OK;
     }
-#endif
+
     RegName reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         p += RegNs32000::regNameLen(reg);
@@ -155,14 +155,14 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
             op.mode = M_GREG;
             return OK;
         }
-#ifdef NS32000_ENABLE_FLOAT
+
         if (RegNs32000::isFloat(reg)) {
             _scan = p;
             op.reg = reg;
             op.mode = M_FREG;
             return OK;
         }
-#endif
+
         if (reg == REG_TOS) {
             _scan = p;
             op.mode = M_TOS;
@@ -195,7 +195,6 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
         return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
-#ifdef NS32000_ENABLE_FLOAT
     if (*p == ':') {  // 64-bit immediate
         op.disp2 = parseExpr32(p + 1);
         if (parserError())
@@ -204,12 +203,9 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
         op.indexSize = SZ_DOUBLE;
         p = skipSpaces(_scan);
     } else {
-#endif
         op.disp2 = 0;
         op.indexSize = SZ_LONG;
-#ifdef NS32000_ENABLE_FLOAT
     }
-#endif
     if (endOfLine(p) || *p == ',') {
         _scan = p;
         op.mode = M_IMM;  // M_REL
@@ -421,17 +417,13 @@ Error AsmNs32000::emitImmediate(
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
     case SZ_LONG:
-#ifdef NS32000_ENABLE_FLOAT
     case SZ_FLOAT:
-#endif
         insn.emitOperand32(op.val32);
         break;
-#ifdef NS32000_ENABLE_FLOAT
     case SZ_DOUBLE:
         insn.emitOperand32(op.val32);
         insn.emitOperand32(op.indexSize == SZ_DOUBLE ? op.disp2 : 0);
         break;
-#endif
     default:
         return setError(INTERNAL_ERROR);
     }
@@ -441,9 +433,7 @@ Error AsmNs32000::emitImmediate(
 uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
     switch (mode) {
     case M_GREG:
-#ifdef NS32000_ENABLE_FLOAT
     case M_FREG:
-#endif
         return RegNs32000::encodeRegName(reg);
     case M_RREL:
         return RegNs32000::encodeRegName(reg) | 0x08;
@@ -531,9 +521,7 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
         embedOprField(insn, pos, RegNs32000::encodeRegName(op.reg));
         break;
     case M_PREG:
-#ifdef NS32000_ENABLE_MMU
     case M_MREG:
-#endif
     case M_CONF:
     case M_SOPT:
         embedOprField(insn, pos, op.val32);
@@ -551,10 +539,8 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
     case M_GENR:
     case M_GENC:
     case M_GENW:
-#ifdef NS32000_ENABLE_FLOAT
     case M_FENR:
     case M_FENW:
-#endif
         return emitGeneric(insn, mode, op, pos);
     case M_INT4: {
         const int32_t val = static_cast<int32_t>(op.val32);
@@ -590,10 +576,44 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
     return OK;
 }
 
+static const char TEXT_FPU[] PROGMEM = "FPU";
+static const char TEXT_PMMU[] PROGMEM = "PMMU";
+static const char TEXT_FPU_NS32081[] PROGMEM = "NS32081";
+static const char TEXT_MMU_NS32082[] PROGMEM = "NS32082";
+static const char TEXT_NONE[] PROGMEM = "NONE";
+
+Error AsmNs32000::processPseudo(const char *scan, const InsnNs32000 &insn) {
+    const char *p = skipSpaces(scan);
+    const char *end = _parser.scanSymbol(p);
+    const bool none = strcasecmp_P(p, TEXT_NONE) == 0;
+    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
+        if (strcasecmp_P(p, TEXT_FPU_NS32081) == 0 || none) {
+            setFpu(none ? FPU_NONE : FPU_NS32081);
+            _scan = end;
+        } else {
+            setError(UNKNOWN_OPERAND);
+        }
+        return OK;
+    }
+    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
+        if (strcasecmp_P(p, TEXT_MMU_NS32082) == 0 || none) {
+            setMmu(none ? MMU_NONE : MMU_NS32082);
+            _scan = end;
+        } else {
+            setError(UNKNOWN_OPERAND);
+        }
+        return OK;
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
 Error AsmNs32000::encode(Insn &_insn) {
     InsnNs32000 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
+
+    if (processPseudo(endName, insn) == OK)
+        return getError();
 
     Operand srcOp, dstOp, ex1Op, ex2Op;
     if (parseOperand(endName, srcOp))

@@ -33,7 +33,15 @@ static const char TEXT_REG_R4[] PROGMEM = "R4";
 static const char TEXT_REG_R5[] PROGMEM = "R5";
 static const char TEXT_REG_R6[] PROGMEM = "R6";
 static const char TEXT_REG_R7[] PROGMEM = "R7";
-#ifdef NS32000_ENABLE_FLOAT
+
+static const char TEXT_REG_FP[]  PROGMEM = "FP";
+static const char TEXT_REG_SP[]  PROGMEM = "SP";
+static const char TEXT_REG_SB[]  PROGMEM = "SB";
+static const char TEXT_REG_PC[]  PROGMEM = "PC";
+static const char TEXT_REG_TOS[] PROGMEM = "TOS";
+static const char TEXT_REG_EXT[] PROGMEM = "EXT";
+
+// NS32081/FPU Registers
 static const char TEXT_REG_F0[] PROGMEM = "F0";
 static const char TEXT_REG_F1[] PROGMEM = "F1";
 static const char TEXT_REG_F2[] PROGMEM = "F2";
@@ -42,38 +50,19 @@ static const char TEXT_REG_F4[] PROGMEM = "F4";
 static const char TEXT_REG_F5[] PROGMEM = "F5";
 static const char TEXT_REG_F6[] PROGMEM = "F6";
 static const char TEXT_REG_F7[] PROGMEM = "F7";
-#endif
-static const char TEXT_REG_FP[]  PROGMEM = "FP";
-static const char TEXT_REG_SP[]  PROGMEM = "SP";
-static const char TEXT_REG_SB[]  PROGMEM = "SB";
-static const char TEXT_REG_PC[]  PROGMEM = "PC";
-static const char TEXT_REG_TOS[] PROGMEM = "TOS";
-static const char TEXT_REG_EXT[] PROGMEM = "EXT";
 // clang-format on
+
 static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_R0),
-        NAME_ENTRY(REG_R1),
-        NAME_ENTRY(REG_R2),
-        NAME_ENTRY(REG_R3),
-        NAME_ENTRY(REG_R4),
-        NAME_ENTRY(REG_R5),
-        NAME_ENTRY(REG_R6),
-        NAME_ENTRY(REG_R7),
-        NAME_ENTRY(REG_FP),
-        NAME_ENTRY(REG_SP),
-        NAME_ENTRY(REG_SB),
-        NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_R0), NAME_ENTRY(REG_R1), NAME_ENTRY(REG_R2),
+        NAME_ENTRY(REG_R3), NAME_ENTRY(REG_R4), NAME_ENTRY(REG_R5),
+        NAME_ENTRY(REG_R6), NAME_ENTRY(REG_R7), NAME_ENTRY(REG_FP),
+        NAME_ENTRY(REG_SP), NAME_ENTRY(REG_SB), NAME_ENTRY(REG_PC),
         NAME_ENTRY(REG_TOS),
-#ifdef NS32000_ENABLE_FLOAT
-        NAME_ENTRY(REG_F0),
-        NAME_ENTRY(REG_F1),
-        NAME_ENTRY(REG_F2),
-        NAME_ENTRY(REG_F3),
-        NAME_ENTRY(REG_F4),
-        NAME_ENTRY(REG_F5),
-        NAME_ENTRY(REG_F6),
-        NAME_ENTRY(REG_F7),
-#endif
+
+        NAME_ENTRY(REG_F0), NAME_ENTRY(REG_F1), NAME_ENTRY(REG_F2),
+        NAME_ENTRY(REG_F3), NAME_ENTRY(REG_F4), NAME_ENTRY(REG_F5),
+        NAME_ENTRY(REG_F6), NAME_ENTRY(REG_F7),
+
         NAME_ENTRY(REG_EXT),
 };
 
@@ -101,21 +90,13 @@ char *RegNs32000::outRegName(char *out, RegName name) const {
     return out;
 }
 
-#ifdef NS32000_ENABLE_FLOAT
 RegName RegNs32000::decodeRegName(uint8_t num, bool floating) {
     return RegName((num & 7) + (floating ? 8 : 0));
 }
-#else
-RegName RegNs32000::decodeRegName(uint8_t num) {
-    return RegName(num & 7);
-}
-#endif
 
 uint8_t RegNs32000::encodeRegName(RegName name) {
-#ifdef NS32000_ENABLE_FLOAT
     if (isFloat(name))
         return uint8_t(name) - 8;
-#endif
     return uint8_t(name);
 }
 
@@ -124,12 +105,10 @@ bool RegNs32000::isGeneric(RegName name) {
     return num >= 0 && num < 8;
 }
 
-#ifdef NS32000_ENABLE_FLOAT
 bool RegNs32000::isFloat(RegName name) {
     const int8_t num = int8_t(name) - 8;
     return num >= 0 && num < 8;
 }
-#endif
 
 // clang-format off
 static const char TEXT_PREG_UPSR[]    PROGMEM = "UPSR";
@@ -178,8 +157,8 @@ uint8_t RegNs32000::encodePregName(PregName name) {
     return uint8_t(name);
 }
 
-#ifdef NS32000_ENABLE_MMU
 // clang-format off
+// NS32082/MMU registers.
 static const char TEXT_MREG_BPR0[] PROGMEM = "BPR0";
 static const char TEXT_MREG_BPR1[] PROGMEM = "BPR1";
 static const char TEXT_MREG_MSR[]  PROGMEM = "MSR";
@@ -224,7 +203,6 @@ MregName RegNs32000::decodeMregName(uint8_t num) {
 uint8_t RegNs32000::encodeMregName(MregName name) {
     return uint8_t(name);
 }
-#endif
 
 static const char TEXT_CONFIG_I[] PROGMEM = "I";
 static const char TEXT_CONFIG_F[] PROGMEM = "F";

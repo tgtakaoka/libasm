@@ -23,23 +23,28 @@
 namespace libasm {
 namespace ns32000 {
 
+enum FpuType : uint8_t {
+    FPU_NONE = 0,
+    FPU_NS32081 = 1,
+};
+enum MmuType : uint8_t {
+    MMU_NONE = 0,
+    MMU_NS32082 = 1,
+};
+
 enum AddrMode : uint8_t {
     M_NONE = 0,
-    M_GREG = 1,  // Generic Register: Rn
-#ifdef NS32000_ENABLE_FLOAT
-    M_FREG = 2,  // Floating Register: Fn
-#endif
-    M_RREL = 3,   // Register Relative: disp(Rn)
-    M_MREL = 4,   // Memory Relative: disp1(disp2(FP/SP/SB))
-    M_IMM = 5,    // Immediate: value
-    M_ABS = 6,    // Absolute: @disp
-    M_EXT = 7,    // External: EXT(disp1)+disp2
-    M_TOS = 8,    // Top of Stack: TOS
-    M_MEM = 9,    // Memory Space: disp(FP/SP/SB/PC)
-    M_PREG = 10,  // Dedicated Register
-#ifdef NS32000_ENABLE_MMU
-    M_MREG = 11,  // MMU Register
-#endif
+    M_GREG = 1,       // Generic Register: Rn
+    M_FREG = 2,       // Floating Register: Fn
+    M_RREL = 3,       // Register Relative: disp(Rn)
+    M_MREL = 4,       // Memory Relative: disp1(disp2(FP/SP/SB))
+    M_IMM = 5,        // Immediate: value
+    M_ABS = 6,        // Absolute: @disp
+    M_EXT = 7,        // External: EXT(disp1)+disp2
+    M_TOS = 8,        // Top of Stack: TOS
+    M_MEM = 9,        // Memory Space: disp(FP/SP/SB/PC)
+    M_PREG = 10,      // Dedicated Register
+    M_MREG = 11,      // MMU Register
     M_CONF = 12,      // Configuration
     M_SOPT = 13,      // String instruction option
     M_PUSH = 14,      // Register list for push
@@ -48,20 +53,18 @@ enum AddrMode : uint8_t {
     M_GENC = 17,      // Generic Count (incl. Immediate)
     M_GENW = 18,      // Generic (excl. Immediate)
     M_GENA = M_GENW,  // Generic (excl. Immediate)
-#ifdef NS32000_ENABLE_FLOAT
-    M_FENR = 19,  // Floating Generic (incl. Immediate)
-    M_FENW = 20,  // Floating Generic (excl. Immediate)
-#endif
-    M_DISP = 21,   // Displacement
-    M_INT4 = 22,   // 4-bit signed Integer
-    M_REL = 23,    // Relative address
-    M_BFOFF = 24,  // Bit Field Offset: 0~7
-    M_BFLEN = 25,  // Bit Field Length: 1~32
-    M_LEN32 = 26,  // Length: 1~32
-    M_LEN16 = 27,  // Length: 1~16
-    M_LEN8 = 28,   // Length: 1~8
-    M_LEN4 = 29,   // Length: 1~4
-    M_EMPTY = 30,  // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
+    M_FENR = 19,      // Floating Generic (incl. Immediate)
+    M_FENW = 20,      // Floating Generic (excl. Immediate)
+    M_DISP = 21,      // Displacement
+    M_INT4 = 22,      // 4-bit signed Integer
+    M_REL = 23,       // Relative address
+    M_BFOFF = 24,     // Bit Field Offset: 0~7
+    M_BFLEN = 25,     // Bit Field Length: 1~32
+    M_LEN32 = 26,     // Length: 1~32
+    M_LEN16 = 27,     // Length: 1~16
+    M_LEN8 = 28,      // Length: 1~8
+    M_LEN4 = 29,      // Length: 1~4
+    M_EMPTY = 30,     // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
 };
 
 enum OprPos : uint8_t {
@@ -75,14 +78,12 @@ enum OprPos : uint8_t {
 };
 
 enum OprSize : uint8_t {
-    SZ_BYTE = 0,  // 8-bit integer (Byte)
-    SZ_WORD = 1,  // 16-bit integer (Word)
-    SZ_LONG = 2,  // 32-bit integer (Double)
-    SZ_QUAD = 3,  // 64-bit integer (Quad)
-#ifdef NS32000_ENABLE_FLOAT
+    SZ_BYTE = 0,    // 8-bit integer (Byte)
+    SZ_WORD = 1,    // 16-bit integer (Word)
+    SZ_LONG = 2,    // 32-bit integer (Double)
+    SZ_QUAD = 3,    // 64-bit integer (Quad)
     SZ_FLOAT = 4,   // 32-bit float (Float)
     SZ_DOUBLE = 5,  // 64-bit float (Long)
-#endif
     SZ_NONE = 6,
 };
 

@@ -355,7 +355,6 @@ static const Entry FORMAT_8_4[] PROGMEM = {
     X(0x03, TEXT_CHECKD, LONG, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, M_NONE, P_GEN2, P_NONE),
 };
 
-#ifdef NS32000_ENABLE_FLOAT
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
 static const Entry FORMAT_9[] PROGMEM = {
     E(0x00, TEXT_MOVBL,   BYTE,   M_GENR, M_FENW, P_GEN1, P_GEN2),
@@ -407,9 +406,7 @@ static const Entry FORMAT_11[] PROGMEM = {
     E(0x34, TEXT_ABSL, DOUBLE, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E(0x35, TEXT_ABSF, FLOAT,  M_FENR, M_FENW, P_GEN1, P_GEN2),
 };
-#endif
 
-#ifdef NS32000_ENABLE_MMU
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
 static const Entry FORMAT_14_1[] PROGMEM = {
     E(0x03, TEXT_RDVAL, LONG, M_GENA, M_NONE, P_GEN1,  P_NONE),
@@ -419,7 +416,6 @@ static const Entry FORMAT_14_2[] PROGMEM = {
     E(0x0B, TEXT_LMR,   LONG, M_MREG, M_GENR, P_SHORT, P_GEN1),
     E(0x0F, TEXT_SMR,   LONG, M_MREG, M_GENW, P_SHORT, P_GEN1),
 };
-#endif
 // clang-format on
 
 class TableNs32000::EntryPage : public EntryPageBase<Entry> {
@@ -441,7 +437,8 @@ private:
     uint8_t _post;
 };
 
-static const TableNs32000::EntryPage NS32000_PAGES[] PROGMEM = {
+// Standard Instructions
+static const TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_0)},
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_1)},
         {0x00, 0xC0, 1, ARRAY_RANGE(FORMAT_4)},
@@ -462,28 +459,39 @@ static const TableNs32000::EntryPage NS32000_PAGES[] PROGMEM = {
         {0x2E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_1)},
         {0x6E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_2)},
         {0xAE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_3)},
-        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1)},
         {0xEE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_4)},
-#ifdef NS32000_ENABLE_FLOAT
-        {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9)},
-        {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11)},
-#endif
-#ifdef NS32000_ENABLE_MMU
-        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1)},
-        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2)},
-#endif
 };
 
-bool TableNs32000::isPrefixCode(Config::opcode_t opCode) const {
-    for (const EntryPage *page = ARRAY_BEGIN(NS32000_PAGES);
-            page < ARRAY_END(NS32000_PAGES); page++) {
-        const Config::opcode_t prefix = page->prefix();
+// Floating point instructions
+static const TableNs32000::EntryPage NS32081_PAGES[] PROGMEM = {
+        {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9)},
+        {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11)},
+};
+
+// Memory management instructions
+static const TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
+        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1)},
+        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1)},
+        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2)},
+};
+
+static bool isPrefix(Config::opcode_t opCode,
+        const TableNs32000::EntryPage *page,
+        const TableNs32000::EntryPage *end) {
+    for (const TableNs32000::EntryPage *entry = page; entry < end; entry++) {
+        const Config::opcode_t prefix = entry->prefix();
         if (prefix == 0)
             continue;
         if (prefix == opCode)
             return true;
     }
     return false;
+}
+
+bool TableNs32000::isPrefixCode(Config::opcode_t opCode) const {
+    return isPrefix(opCode, ARRAY_RANGE(NS32032_PAGES)) ||
+           isPrefix(opCode, ARRAY_RANGE(NS32081_PAGES)) ||
+           isPrefix(opCode, ARRAY_RANGE(NS32082_PAGES));
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -494,23 +502,15 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_PUSH || table == M_POP;
     if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT ||
             opr == M_TOS || opr == M_MEM)
-        return table == M_GENR || table == M_GENC || table == M_GENW
-#ifdef NS32000_ENABLE_FLOAT
-               || table == M_FENR || table == M_FENW
-#endif
-                ;
+        return table == M_GENR || table == M_GENC || table == M_GENW ||
+               table == M_FENR || table == M_FENW;
     if (opr == M_IMM)
-        return table == M_GENR || table == M_GENC
-#ifdef NS32000_ENABLE_FLOAT
-               || table == M_FENR
-#endif
-               || table == M_DISP || table == M_INT4 || table == M_REL ||
+        return table == M_GENR || table == M_GENC || table == M_FENR ||
+               table == M_DISP || table == M_INT4 || table == M_REL ||
                table == M_BFOFF || table == M_BFLEN || table == M_LEN32 ||
                table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
-#ifdef NS32000_ENABLE_FLOAT
     if (opr == M_FREG)
         return table == M_FENR || table == M_FENW;
-#endif
     if (opr == M_PUSH)
         return table == M_POP;
     if (opr == M_EMPTY)
@@ -570,12 +570,21 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory,
 }
 
 Error TableNs32000::searchName(InsnNs32000 &insn) const {
-    return _error.setError(searchName(insn, ARRAY_RANGE(NS32000_PAGES)));
+    Error error = searchName(insn, ARRAY_RANGE(NS32032_PAGES));
+    if (error == UNKNOWN_INSTRUCTION && _fpuType == FPU_NS32081)
+        error = searchName(insn, ARRAY_RANGE(NS32081_PAGES));
+    if (error == UNKNOWN_INSTRUCTION && _mmuType == MMU_NS32082)
+        error = searchName(insn, ARRAY_RANGE(NS32082_PAGES));
+    return _error.setError(error);
 }
 
 Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
-    return _error.setError(
-            searchOpCode(insn, memory, ARRAY_RANGE(NS32000_PAGES)));
+    Error error = searchOpCode(insn, memory, ARRAY_RANGE(NS32032_PAGES));
+    if (error != OK)
+        error = searchOpCode(insn, memory, ARRAY_RANGE(NS32081_PAGES));
+    if (error != OK)
+        error = searchOpCode(insn, memory, ARRAY_RANGE(NS32082_PAGES));
+    return _error.setError(error);
 }
 
 const char *TableNs32000::listCpu() const {

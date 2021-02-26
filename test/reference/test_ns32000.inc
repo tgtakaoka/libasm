@@ -358,14 +358,6 @@ label3:
         wait
 ;# Diagnose: DIA
         dia
-;# Move Value from Supervisor to User Space: MOVSUi src/gen, dest/gen
-        movsub  5(sp), 9(sb)
-        movsuw  r2, r3
-        movsud  r4, r5
-;# Move Value from User to Supervisor Space: MOVUSi src/gen, dest/gen
-        movusb  9(sb), 5(sp)
-        movusw  r2, r3
-        movusd  r4, r5
 ;# Longest instruction
         extd    r1, 0x112233(0x334455(fp))[r3:w], 0x556677(0x778899(sb))[r4:w], 32
 ;# Register

@@ -28,6 +28,7 @@ static constexpr const char *TEXT_CPU_LIST  = TEXT_CPU_NS32032;
 static constexpr const char *TEXT_CPU_NS    = TEXT_CPU_NS32032;
 static constexpr const char *TEXT_CPU_32032 = (TEXT_CPU_NS32032 + 2);
 
+// Standard instructions
 static const char TEXT_ABSB[]    PROGMEM = "ABSB";
 static const char TEXT_ABSD[]    PROGMEM = "ABSD";
 static const char TEXT_ABSW[]    PROGMEM = "ABSW";
@@ -169,13 +170,7 @@ static const char TEXT_MOVQW[]   PROGMEM = "MOVQW";
 static const char TEXT_MOVSB[]   PROGMEM = "MOVSB";
 static const char TEXT_MOVSD[]   PROGMEM = "MOVSD";
 static const char TEXT_MOVST[]   PROGMEM = "MOVST";
-static const char TEXT_MOVSUB[]  PROGMEM = "MOVSUB";
-static const char TEXT_MOVSUD[]  PROGMEM = "MOVSUD";
-static const char TEXT_MOVSUW[]  PROGMEM = "MOVSUW";
 static const char TEXT_MOVSW[]   PROGMEM = "MOVSW";
-static const char TEXT_MOVUSB[]  PROGMEM = "MOVUSB";
-static const char TEXT_MOVUSD[]  PROGMEM = "MOVUSD";
-static const char TEXT_MOVUSW[]  PROGMEM = "MOVUSW";
 static const char TEXT_MOVW[]    PROGMEM = "MOVW";
 static const char TEXT_MOVXBD[]  PROGMEM = "MOVXBD";
 static const char TEXT_MOVXBW[]  PROGMEM = "MOVXBW";
@@ -285,7 +280,7 @@ static const char TEXT_WAIT[]    PROGMEM = "WAIT";
 static const char TEXT_XORB[]    PROGMEM = "XORB";
 static const char TEXT_XORD[]    PROGMEM = "XORD";
 static const char TEXT_XORW[]    PROGMEM = "XORW";
-#ifdef NS32000_ENABLE_FLOAT
+// Floating point instructions
 static const char TEXT_ABSF[]    PROGMEM = "ABSF";
 static const char TEXT_ABSL[]    PROGMEM = "ABSL";
 static const char TEXT_ADDF[]    PROGMEM = "ADDF";
@@ -328,13 +323,17 @@ static const char TEXT_TRUNCFW[] PROGMEM = "TRUNCFW";
 static const char TEXT_TRUNCLB[] PROGMEM = "TRUNCLB";
 static const char TEXT_TRUNCLD[] PROGMEM = "TRUNCLD";
 static const char TEXT_TRUNCLW[] PROGMEM = "TRUNCLW";
-#endif
-#ifdef NS32000_ENABLE_MMU
+// Memory management instructions
 static const char TEXT_LMR[]     PROGMEM = "LMR";
+static const char TEXT_MOVSUB[]  PROGMEM = "MOVSUB";
+static const char TEXT_MOVSUD[]  PROGMEM = "MOVSUD";
+static const char TEXT_MOVSUW[]  PROGMEM = "MOVSUW";
+static const char TEXT_MOVUSB[]  PROGMEM = "MOVUSB";
+static const char TEXT_MOVUSD[]  PROGMEM = "MOVUSD";
+static const char TEXT_MOVUSW[]  PROGMEM = "MOVUSW";
 static const char TEXT_RDVAL[]   PROGMEM = "RDVAL";
 static const char TEXT_SMR[]     PROGMEM = "SMR";
 static const char TEXT_WRVAL[]   PROGMEM = "WRVAL";
-#endif
 // clang-format on
 
 }  // namespace ns32000

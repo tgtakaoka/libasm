@@ -39,6 +39,14 @@ static void test_cpu() {
 
     EQUALS("cpu 32032", true,    assembler.setCpu("32032"));
     EQUALS("cpu 32032", "32032", assembler.getCpu());
+
+    TEST("fpu ns32081");
+    TEST("fpu none");
+    ERRT("fpu ns32082", UNKNOWN_OPERAND);
+
+    TEST("pmmu ns32082");
+    TEST("pmmu none");
+    ERRT("pmmu ns32081", UNKNOWN_OPERAND);
 }
 
 static void test_format_0() {
@@ -284,12 +292,11 @@ static void test_format_8() {
     TEST("FFSW 8(SB),R0",   0x6E, 0x05, 0xD0, 0x08);
     TEST("INDEXB R0,0x14(SB),-4(FP)", 0x2E, 0x04, 0xD6, 0x14, 0x7C);
     TEST("INSW R0,R2,0(R1),7", 0xAE, 0x41, 0x12, 0x00, 0x07);
-    TEST("MOVSUB 5(SP),9(SB)", 0xAE, 0x8C, 0xCE, 0x05, 0x09);
-    TEST("MOVUSB 9(SB),5(SP)", 0xAE, 0x5C, 0xD6, 0x09, 0x05);
 }
 
-#ifdef NS32000_ENABLE_FLOAT
 static void test_format_9() {
+    TEST("FPU NS32081");
+
     TEST("MOVF F0,8(SB)",   0xBE, 0x85, 0x06, 0x08);
     TEST("MOVBF 2,F0",      0x3E, 0x04, 0xA0, 0x02);
     TEST("MOVDL 16(SB),F2", 0x3E, 0x83, 0xD0, 0x10);
@@ -301,12 +308,29 @@ static void test_format_9() {
     TEST("ROUNDLD F2,12(SB)", 0x3E, 0xA3, 0x16, 0x0C);
     TEST("TRUNCFB F0,R0",     0x3E, 0x2C, 0x00);
     TEST("TRUNCLD F2,8(SB)",  0x3E, 0xAB, 0x16, 0x08);
-
     TEST("LFSR R0",  0x3E, 0x0F, 0x00);
     TEST("SFSR TOS", 0x3E, 0xF7, 0x05);
+
+    TEST("FPU NONE");
+
+    ERRT("MOVF F0,8(SB)",   UNKNOWN_INSTRUCTION);
+    ERRT("MOVBF 2,F0",      UNKNOWN_INSTRUCTION);
+    ERRT("MOVDL 16(SB),F2", UNKNOWN_INSTRUCTION);
+    ERRT("MOVFL 8(SB),F0",  UNKNOWN_INSTRUCTION);
+    ERRT("MOVLF F0,12(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("FLOORFB F0,R0",     UNKNOWN_INSTRUCTION);
+    ERRT("FLOORLD F2,16(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("ROUNDFB F0,R0",     UNKNOWN_INSTRUCTION);
+    ERRT("ROUNDLD F2,12(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("TRUNCFB F0,R0",     UNKNOWN_INSTRUCTION);
+    ERRT("TRUNCLD F2,8(SB)",  UNKNOWN_INSTRUCTION);
+    ERRT("LFSR R0",  UNKNOWN_INSTRUCTION);
+    ERRT("SFSR TOS", UNKNOWN_INSTRUCTION);
 }
 
 static void test_format_11() {
+    TEST("FPU NS32081");
+
     TEST("ABSF F0,F2",     0xBE, 0xB5, 0x00);
     TEST("ADDF F0,F7",     0xBE, 0xC1, 0x01);
     TEST("ADDL F2,16(SB)", 0xBE, 0x80, 0x16, 0x10);
@@ -318,24 +342,56 @@ static void test_format_11() {
     TEST("NEGF F0,F2", 0xBE, 0x95, 0x00);
     TEST("SUBF F0,F7",     0xBE, 0xD1, 0x01);
     TEST("SUBL F2,16(SB)", 0xBE, 0x90, 0x16, 0x10);
-}
-#endif
 
-#ifdef NS32000_ENABLE_MMU
+    TEST("FPU NONE");
+
+    ERRT("ABSF F0,F2",     UNKNOWN_INSTRUCTION);
+    ERRT("ADDF F0,F7",     UNKNOWN_INSTRUCTION);
+    ERRT("ADDL F2,16(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("CMPF F0,F2",     UNKNOWN_INSTRUCTION);
+    ERRT("DIVF F0,F7",         UNKNOWN_INSTRUCTION);
+    ERRT("DIVL -8(FP),16(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("MULF F0,F7",        UNKNOWN_INSTRUCTION);
+    ERRT("MULL -8(FP),8(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("NEGF F0,F2", UNKNOWN_INSTRUCTION);
+    ERRT("SUBF F0,F7",     UNKNOWN_INSTRUCTION);
+    ERRT("SUBL F2,16(SB)", UNKNOWN_INSTRUCTION);
+}
+
+static void test_format_8_mmu() {
+    TEST("PMMU NS32082");
+
+    TEST("MOVSUB 5(SP),9(SB)", 0xAE, 0x8C, 0xCE, 0x05, 0x09);
+    TEST("MOVUSB 9(SB),5(SP)", 0xAE, 0x5C, 0xD6, 0x09, 0x05);
+
+    TEST("PMMU NONE");
+
+    ERRT("MOVSUB 5(SP),9(SB)", UNKNOWN_INSTRUCTION);
+    ERRT("MOVUSB 9(SB),5(SP)", UNKNOWN_INSTRUCTION);
+}
+
 static void test_format_14() {
+    TEST("PMMU NS32082");
+
     TEST("LMR PTB1,R0", 0x1E, 0x8B, 0x06);
     TEST("SMR PTB0,R0", 0x1E, 0x0F, 0x06);
     TEST("RDVAL 0x200(R0)", 0x1E, 0x03, 0x40, 0x82, 0x00);
     TEST("WRVAL 0x200(R0)", 0x1E, 0x07, 0x40, 0x82, 0x00);
+
+    TEST("PMMU NONE");
+
+    ERRT("LMR PTB1,R0", UNKNOWN_INSTRUCTION);
+    ERRT("SMR PTB0,R0", UNKNOWN_INSTRUCTION);
+    ERRT("RDVAL 0x200(R0)", UNKNOWN_INSTRUCTION);
+    ERRT("WRVAL 0x200(R0)", UNKNOWN_INSTRUCTION);
 }
-#endif
 
 static void test_generic_addressing() {
+    TEST("FPU NS32081");
+
     // Register
     TEST("ADDW R1, R2", 0x81, 0x08);
-#ifdef NS32000_ENABLE_FLOAT
     TEST("ADDF F1, F2", 0xBE, 0x81, 0x08);
-#endif
     // Register Relative
     TEST("ADDW 4(R1), R2",     0x81, 0x48, 0x04);
     TEST("ADDW 4(R1), 64(R2)", 0x81, 0x4A, 0x04, 0x80, 0x40);
@@ -348,14 +404,13 @@ static void test_generic_addressing() {
     TEST("ADDB 0x56,       R1", 0x40, 0xA0, 0x56);
     TEST("ADDW 0x1234,     R1", 0x41, 0xA0, 0x12, 0x34);
     TEST("ADDD 0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
-#ifdef NS32000_ENABLE_FLOAT
     TEST("ADDF 0x12345678, F1",
          0xBE, 0x41, 0xA0, 0x12, 0x34, 0x56, 0x78);
     TEST("ADDL 0x12345678, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x00, 0x00, 0x00, 0x00);
     TEST("ADDL 0x12345678:0x9ABCDEF0, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0);
-#endif
+
     // Absolute
     TEST("ADDW @0x1234, 4(R2)",   0x81, 0xAA, 0x92, 0x34, 0x4);
     TEST("ADDW @0x1234, @0x5678", 0x41, 0xAD, 0x92, 0x34, 0xC0, 0x00, 0x56, 0x78);
@@ -424,6 +479,9 @@ static void test_generic_addressing() {
 }
 
 static void test_comment() {
+    TEST("FPU NS32081");
+    TEST("PMMU NS32082");
+
     TEST("ADDB R1 , R0           ; comment",     0x00, 0x08);
     TEST("ADDB 2 (R2) , R0       ; comment",     0x00, 0x50, 0x02);
     TEST("ADDB 2 ( 4 (FP) ) , R0 ; comment",     0x00, 0x80, 0x04, 0x02);
@@ -440,14 +498,10 @@ static void test_comment() {
     TEST("ADDB TOS[R3:B] , R0          ; comment",     0x00, 0xE0, 0xBB);
     TEST("ADDB 2 (SP)[R3:B] , R0       ; comment",     0x00, 0xE0, 0xCB, 0x02);
 
-#ifdef NS32000_ENABLE_FLOAT
     TEST("ADDL 0x12345678 : 0x9ABCDEF0, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0);
-#endif
     TEST("LPRB UPSR , R0 ; comment", 0x6C, 0x00);
-#ifdef NS32000_ENABLE_MMU
     TEST("LMR  PTB0 , R0 ; comment", 0x1E, 0x0B, 0x06);
-#endif
 
     TEST("SETCFG [ I , F , M , C ] ; comment", 0x0E, 0x8B, 0x07);
 
@@ -521,13 +575,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
-#ifdef NS32000_ENABLE_FLOAT
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
-#endif
-#ifdef NS32000_ENABLE_MMU
+    RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14);
-#endif
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);

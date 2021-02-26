@@ -22,11 +22,8 @@ namespace libasm {
 namespace ns32000 {
 
 static bool isGenMode(AddrMode mode) {
-    return mode == M_GENR || mode == M_GENW || mode == M_GENC
-#ifdef NS32000_ENABLE_FLOAT
-           || mode == M_FENR || mode == M_FENW
-#endif
-            ;
+    return mode == M_GENR || mode == M_GENW || mode == M_GENC ||
+           mode == M_FENR || mode == M_FENW;
 }
 
 static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
@@ -168,7 +165,6 @@ Error DisNs32000::decodeImmediate(
     case SZ_LONG:
         outHex(out, insn.readUint32(memory), 32);
         break;
-#ifdef NS32000_ENABLE_FLOAT
     case SZ_FLOAT:
         outHex(out, insn.readUint32(memory), 32);
         break;
@@ -178,7 +174,6 @@ Error DisNs32000::decodeImmediate(
         *out++ = ':';
         outHex(out, insn.readUint32(memory), 32);
         break;
-#endif
     default:
         break;
     }
@@ -273,12 +268,8 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 5:
     case 6:
     case 7:
-#ifdef NS32000_ENABLE_FLOAT
         reg = RegNs32000::decodeRegName(
                 gen, (mode == M_FENR || mode == M_FENW));
-#else
-        reg = RegNs32000::decodeRegName(gen);
-#endif
         out = _regs.outRegName(out, reg);
         break;
     case 8:
@@ -322,13 +313,8 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 0x13:
         return setError(ILLEGAL_OPERAND_MODE);
     case 0x14:
-#ifdef NS32000_ENABLE_FLOAT
         if (mode == M_GENW || mode == M_FENW)
             return setError(OPERAND_NOT_ALLOWED);
-#else
-        if (mode == M_GENW)
-            return setError(OPERAND_NOT_ALLOWED);
-#endif
         return decodeImmediate(memory, insn, out, mode);
     case 0x15:
         if (readDisplacement(memory, insn, disp))
@@ -408,7 +394,6 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
         out = _regs.outPregName(out, preg);
         break;
     }
-#ifdef NS32000_ENABLE_MMU
     case M_MREG: {
         const MregName mreg = RegNs32000::decodeMregName(field);
         if (mreg == MREG_UNDEF)
@@ -416,7 +401,6 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
         out = _regs.outMregName(out, mreg);
         break;
     }
-#endif
     case M_CONF:
         return decodeConfig(insn, out, pos);
     case M_SOPT:
@@ -427,10 +411,8 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
     case M_GENR:
     case M_GENC:
     case M_GENW:
-#ifdef NS32000_ENABLE_FLOAT
     case M_FENW:
     case M_FENR:
-#endif
         return decodeGeneric(memory, insn, out, mode, pos);
     case M_INT4:
         outDec(out, static_cast<int8_t>(getOprField(insn, pos)), -4);

@@ -34,10 +34,17 @@ public:
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
+    void setFpu(FpuType fpuType) { _fpuType = fpuType; }
+    FpuType getFpu() const { return _fpuType; }
+    void setMmu(MmuType mmuType) { _mmuType = mmuType; }
+    MmuType getMmu() const { return _mmuType; }
 
     struct EntryPage;
 
 private:
+    FpuType _fpuType;
+    MmuType _mmuType;
+
     Error searchName(InsnNs32000 &insn, const EntryPage *pages,
             const EntryPage *end) const;
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory,

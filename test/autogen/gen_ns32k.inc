@@ -400,6 +400,149 @@
       cmpqw   0, 0x0081(r0)
       cmpqw   -8, -59(r0)
       cmpqw   -8, 0x0081(r0)
+      smr     bpr1, 0x1394(0x1192(sb))
+      smr     bcnt, 0x1394(0x1192(sb))
+      smr     ptb1, 0x1394(0x1192(sb))
+      smr     eia, 0x1394(0x1192(sb))
+      smr     bpr1, @0x1192
+      rdval   r0
+      rdval   -63(r0)
+      rdval   0x0081(r0)
+      wrval   r1
+      wrval   -63(r0)
+      wrval   0x0081(r0)
+      smr     bpr0, r2
+      smr     msr, r2
+      smr     ptb0, r2
+      smr     bpr0, -63(r0)
+      smr     bpr0, 0x0081(r0)
+      smr     msr, -58(r0)
+      smr     msr, 0x0081(r0)
+      smr     ptb0, -57(r0)
+      smr     ptb0, 0x0081(r0)
+      smr     bpr0, 0x0384(0x0182(fp))
+      smr     bpr0, 0x0384(-0x1f7e(fp))
+      smr     bpr0, 0x0586(0x00828384(fp))
+      smr     bpr0, -0x1f7a(0x00828384(fp))
+      smr     bpr0, 0x00868788(0x00828384(fp))
+      smr     msr, 0x0889(0x0687(fp))
+      smr     msr, 0x0889(-0x1f79(fp))
+      smr     msr, 0x0a8b(0x00878889(fp))
+      smr     msr, -0x1f75(0x00878889(fp))
+      smr     msr, 0x008b8c8d(0x00878889(fp))
+      smr     ptb0, 0x098a(0x0788(fp))
+      smr     ptb0, 0x098a(-0x1f78(fp))
+      smr     ptb0, 0x0b8c(0x0088898a(fp))
+      smr     ptb0, -0x1f74(0x0088898a(fp))
+      smr     ptb0, 0x008c8d8e(0x0088898a(fp))
+      smr     bpr0, 0x0b8c(0x098a(sp))
+      smr     bpr0, 0x0b8c(-0x1f76(sp))
+      smr     bpr0, 0x0d8e(0x008a8b8c(sp))
+      smr     bpr0, -0x1f72(0x008a8b8c(sp))
+      smr     bpr0, 0x008e8f90(0x008a8b8c(sp))
+      smr     msr, 0x1091(0x0e8f(sp))
+      smr     msr, 0x1091(-0x1f71(sp))
+      smr     msr, 0x1293(0x008f9091(sp))
+      smr     msr, -0x1f6d(0x008f9091(sp))
+      smr     msr, 0x00939495(0x008f9091(sp))
+      smr     msr, 0x1293(-0x1e706f6f(sp))
+      smr     msr, -0x1f6d(-0x1e706f6f(sp))
+      smr     msr, 0x00939495(-0x1e706f6f(sp))
+      smr     msr, 0x0f90(0(sp))
+      smr     ptb0, 0x1192(0x0f90(sp))
+      smr     ptb0, 0x1192(-0x1f70(sp))
+      smr     ptb0, 0x1394(0x00909192(sp))
+      smr     ptb0, -0x1f6c(0x00909192(sp))
+      smr     ptb0, 0x00949596(0x00909192(sp))
+      smr     ptb0, 0x1394(-0x1e6f6e6e(sp))
+      smr     ptb0, -0x1f6c(-0x1e6f6e6e(sp))
+      smr     ptb0, 0x00949596(-0x1e6f6e6e(sp))
+      smr     ptb0, 0x1091(0(sp))
+      smr     bpr0, 0x1394(-0x1f6e(sb))
+      smr     bpr0, 0x1596(0x00929394(sb))
+      smr     bpr0, -0x1f6a(0x00929394(sb))
+      smr     bpr0, 0x00969798(0x00929394(sb))
+      smr     bpr0, 0x1596(-0x1e6d6c6c(sb))
+      smr     bpr0, -0x1f6a(-0x1e6d6c6c(sb))
+      smr     bpr0, 0x00969798(-0x1e6d6c6c(sb))
+      smr     bpr0, 0x1293(0(sb))
+      smr     msr, 0x1899(0x1697(sb))
+      smr     msr, 0x1899(-0x1f69(sb))
+      smr     msr, 0x1a9b(0x00979899(sb))
+      smr     msr, -0x1f65(0x00979899(sb))
+      smr     msr, 0x009b9c9d(0x00979899(sb))
+      smr     msr, 0x1a9b(-0x1e686767(sb))
+      smr     msr, -0x1f65(-0x1e686767(sb))
+      smr     msr, 0x009b9c9d(-0x1e686767(sb))
+      smr     msr, 0x1798(0(sb))
+      smr     ptb0, 0x199a(-0x1f68(sb))
+      smr     ptb0, 0x1b9c(0x0098999a(sb))
+      smr     ptb0, -0x1f64(0x0098999a(sb))
+      smr     ptb0, 0x009c9d9e(0x0098999a(sb))
+      smr     ptb0, 0x1b9c(-0x1e676666(sb))
+      smr     ptb0, -0x1f64(-0x1e676666(sb))
+      smr     ptb0, 0x009c9d9e(-0x1e676666(sb))
+      smr     ptb0, 0x1899(0(sb))
+      smr     bpr0, @-0x1656
+      smr     bpr0, @0x00aaabac
+      smr     msr, @-0x1151
+      smr     msr, @0x00afb0b1
+      smr     ptb0, @-0x1050
+      smr     ptb0, @0x00b0b1b2
+      smr     bpr0, ext(-0x0e4e)+(-0x0c4c)
+      smr     bpr0, ext(0x00b2b3b4)+(-0x0a4a)
+      smr     bpr0, ext(0x00b2b3b4)+0x00b6b7b8
+      smr     bpr0, ext(-0x1e4d4c4c)+(-0x0a4a)
+      smr     bpr0, ext(-0x1e4d4c4c)+0x00b6b7b8
+      smr     bpr0, ext(0)+(-0x0d4d)
+      smr     msr, ext(-0x0949)+(-0x0747)
+      smr     msr, ext(0x00b7b8b9)+(-0x0545)
+      smr     msr, ext(0x00b7b8b9)+0x00bbbcbd
+      smr     msr, ext(-0x1e484747)+(-0x0545)
+      smr     msr, ext(-0x1e484747)+0x00bbbcbd
+      smr     msr, ext(0)+(-0x0848)
+      smr     ptb0, ext(-0x0848)+(-0x0646)
+      smr     ptb0, ext(0x00b8b9ba)+(-0x0444)
+      smr     ptb0, ext(0x00b8b9ba)+0x00bcbdbe
+      smr     ptb0, ext(-0x1e474646)+(-0x0444)
+      smr     ptb0, ext(-0x1e474646)+0x00bcbdbe
+      smr     ptb0, ext(0)+(-0x0747)
+      smr     bpr0, tos
+      smr     msr, tos
+      smr     ptb0, tos
+      smr     bpr0, 0x01c2c3c4(fp)
+      smr     bpr0, -0x1e3d3c3c(fp)
+      smr     bpr0, 0(fp)
+      smr     msr, 0x06c7c8c9(fp)
+      smr     msr, -0x1e383737(fp)
+      smr     msr, 0(fp)
+      smr     ptb0, 0x07c8c9ca(fp)
+      smr     ptb0, -0x1e373636(fp)
+      smr     ptb0, 0(fp)
+      smr     bpr0, 0x09cacbcc(sp)
+      smr     bpr0, -0x1e353434(sp)
+      smr     bpr0, 0(sp)
+      smr     msr, 0x0ecfd0d1(sp)
+      smr     msr, -0x1e302f2f(sp)
+      smr     msr, 0(sp)
+      smr     ptb0, 0x0fd0d1d2(sp)
+      smr     ptb0, -0x1e2f2e2e(sp)
+      smr     ptb0, 0(sp)
+      smr     bpr0, 0x11d2d3d4(sb)
+      smr     bpr0, -0x1e2d2c2c(sb)
+      smr     bpr0, 0(sb)
+      smr     msr, 0x16d7d8d9(sb)
+      smr     msr, -0x1e282727(sb)
+      smr     msr, 0(sb)
+      smr     ptb0, 0x17d8d9da(sb)
+      smr     ptb0, -0x1e272626(sb)
+      smr     ptb0, 0(sb)
+      smr     bpr0, 0xdbe564(pc)
+      smr     bpr0, 0x01098f(pc)
+      smr     msr, 0xe0ea74(pc)
+      smr     msr, 0x01099a(pc)
+      smr     ptb0, 0xe1eb80(pc)
+      smr     ptb0, 0x0109a5(pc)
       cmpqd   0, r4
       cmpqd   -8, r4
       cmpqd   0, -63(r0)
@@ -499,8 +642,8 @@
       andw    r5, -63(r0)[r0:b]
       andw    r5, 0x0081(r0)[r0:b]
       andw    r6, r0
-      bcs     0x010739
-      bcs     0x010791
+      bcs     0x010b49
+      bcs     0x010ba1
       andd    r5, 46(45(fp))
       andd    r5, 46(-64(fp))
       andd    r5, 47(0x002e(fp))
@@ -997,7 +1140,7 @@
       indexd  r6, tos, 0x01c2c3c4(fp)[r0:d]
       indexd  r6, tos, 0x01c2c3c4(sp)[r0:d]
       indexd  r6, tos, 0x01c2c3c4(sb)[r0:d]
-      indexd  r6, tos, 0xc3dd87(pc)[r0:d]
+      indexd  r6, tos, 0xc3e197(pc)[r0:d]
       indexd  r6, tos, r0[r0:d]
       indexd  r6, 0x01c2c3c4(fp), r2
       indexd  r6, -0x1e3d3c3c(fp), r2
@@ -1016,7 +1159,7 @@
       indexd  r6, 0(fp), 0x08c9cacb(sb)
       indexd  r6, 0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       indexd  r6, 0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      indexd  r6, 0x09cacbcc(fp), 0xcfea59(pc)[r0:d]
+      indexd  r6, 0x09cacbcc(fp), 0xcfee69(pc)[r0:d]
       indexd  r6, 0x09cacbcc(fp), r0[r0:d]
       indexd  r6, 0x09cacbcc(sp), r2
       indexd  r6, -0x1e353434(sp), r2
@@ -1034,7 +1177,7 @@
       indexd  r6, -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       indexd  r6, 0(sp), 0x10d1d2d3(sb)
       indexd  r6, 0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      indexd  r6, 0x11d2d3d4(sp), 0xd7f323(pc)[r0:d]
+      indexd  r6, 0x11d2d3d4(sp), 0xd7f733(pc)[r0:d]
       indexd  r6, 0x11d2d3d4(sp), r0[r0:d]
       indexd  r6, 0x11d2d3d4(sb), r2
       indexd  r6, -0x1e2d2c2c(sb), r2
@@ -1051,18 +1194,18 @@
       indexd  r6, 0x17d8d9da(sb), 0x1bdcddde(sb)
       indexd  r6, -0x1e272626(sb), 0x1bdcddde(sb)
       indexd  r6, 0(sb), 0x18d9dadb(sb)
-      indexd  r6, 0x19dadbdc(sb), 0xdffbe1(pc)[r0:d]
+      indexd  r6, 0x19dadbdc(sb), 0xdffff1(pc)[r0:d]
       indexd  r6, 0x19dadbdc(sb), r0[r0:d]
-      indexd  r6, 0xdbf7f1(pc), r2
-      indexd  r6, 0x011c1c(pc), r2
-      indexd  r6, 0xddf9fe(pc), 0x1fe0e1e2(r2)
-      indexd  r6, 0x011c2b(pc), 0x1cdddedf(r2)
-      indexd  r6, 0xdffc13(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      indexd  r6, 0x011c42(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      indexd  r6, 0xe0fd2f(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      indexd  r6, 0x011c5d(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      indexd  r6, 0xe1fe4b(pc), -0x1c1b1a1a(sb)
-      indexd  r6, 0x011d54(pc), -0x1e1d1c1c(sb)
+      indexd  r6, 0xdbfc01(pc), r2
+      indexd  r6, 0x01202c(pc), r2
+      indexd  r6, 0xddfe0e(pc), 0x1fe0e1e2(r2)
+      indexd  r6, 0x01203b(pc), 0x1cdddedf(r2)
+      indexd  r6, 0xe00023(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      indexd  r6, 0x012052(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      indexd  r6, 0xe1013f(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      indexd  r6, 0x01206d(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      indexd  r6, 0xe2025b(pc), -0x1c1b1a1a(sb)
+      indexd  r6, 0x012164(pc), -0x1e1d1c1c(sb)
       indexd  r6, r0[r0:q], r0[r1:d]
       indexd  r6, 2(r0)[r0:q], r0[r1:d]
       indexd  r6, -64(r0)[r0:q], r0[r1:d]
@@ -1108,18 +1251,18 @@
       indexd  r7, 0x02c3c4c5(sb), 0x06c7c8c9(fp)[r1:d]
       indexd  r7, 0x02c3c4c4(sb), -0x1e383737(fp)[r1:d]
       indexd  r7, 0x02c3c4c4(sb), 0(fp)[r1:d]
-      indexd  r7, 0xc3e1c5(pc), -0x1e393838(r2)
-      indexd  r7, 0xc3e1d0(pc), 0x09cacbcc(0x05c6c7c8(sb))
-      indexd  r7, 0xc3e1df(pc), 0x09cacbcc(-0x1e393838(sb))
-      indexd  r7, 0xc3e1ee(pc), 0x06c7c8c9(0(sb))
-      indexd  r7, 0xc3e1fa(pc), ext(0x05c6c7c8)+0x09cacbcc
-      indexd  r7, 0xc3e209(pc), ext(-0x1e393838)+0x09cacbcc
-      indexd  r7, 0xc3e218(pc), ext(0)+0x06c7c8c9
-      indexd  r7, 0xc3e224(pc), 0x05c6c7c8(sb)
-      indexd  r7, 0xc3e22f(pc), 0(sb)
-      indexd  r7, 0xc4e338(pc), 0x06c7c8c9(fp)[r1:d]
-      indexd  r7, 0xc4e343(pc), -0x1e383737(fp)[r1:d]
-      indexd  r7, 0xc4e34f(pc), 0(fp)[r1:d]
+      indexd  r7, 0xc3e5d5(pc), -0x1e393838(r2)
+      indexd  r7, 0xc3e5e0(pc), 0x09cacbcc(0x05c6c7c8(sb))
+      indexd  r7, 0xc3e5ef(pc), 0x09cacbcc(-0x1e393838(sb))
+      indexd  r7, 0xc3e5fe(pc), 0x06c7c8c9(0(sb))
+      indexd  r7, 0xc3e60a(pc), ext(0x05c6c7c8)+0x09cacbcc
+      indexd  r7, 0xc3e619(pc), ext(-0x1e393838)+0x09cacbcc
+      indexd  r7, 0xc3e628(pc), ext(0)+0x06c7c8c9
+      indexd  r7, 0xc3e634(pc), 0x05c6c7c8(sb)
+      indexd  r7, 0xc3e63f(pc), 0(sb)
+      indexd  r7, 0xc4e748(pc), 0x06c7c8c9(fp)[r1:d]
+      indexd  r7, 0xc4e753(pc), -0x1e383737(fp)[r1:d]
+      indexd  r7, 0xc4e75f(pc), 0(fp)[r1:d]
       indexd  r7, 0x02c3c4c5(fp)[r1:b], r2
       indexd  r7, 0x02c3c4c5(fp)[r1:b], 0x06c7c8c9(r2)
       indexd  r7, 0x02c3c4c4(fp)[r1:b], -0x1e383737(r2)
@@ -1177,8 +1320,8 @@
       indexd  r7, 0x02c3c4c4(fp)[r1:q], 0(sb)
       indexd  r7, 0x03c4c5c6(fp)[r1:q], 0x07c8c9ca(fp)[r2:d]
       indexb  r0, 0x06c7c8c9(fp), tos
-      indexb  r0, 0x06c7c8c9(fp), 0xccee2c(pc)
-      indexb  r0, 0x06c7c8c9(fp), 0x01216a(pc)
+      indexb  r0, 0x06c7c8c9(fp), 0xccf23c(pc)
+      indexb  r0, 0x06c7c8c9(fp), 0x01257a(pc)
       indexb  r0, 0x07c8c9ca(fp), 0x0bcccdce(fp)[r6:q]
       indexb  r0, 0x07c8c9c9(fp), -0x1e333232(fp)[r6:q]
       indexb  r0, 0x07c8c9c9(fp), 0(fp)[r6:q]
@@ -1187,8 +1330,8 @@
       indexb  r0, 0x06c7c8c9(sp), -0x1e343333(r3)
       indexb  r0, 0x06c7c8c9(sp), 0(r3)
       indexb  r0, 0x06c7c8c9(sp), tos
-      indexb  r0, 0x06c7c8c9(sp), 0xccee8c(pc)
-      indexb  r0, 0x06c7c8c9(sp), 0x0121ca(pc)
+      indexb  r0, 0x06c7c8c9(sp), 0xccf29c(pc)
+      indexb  r0, 0x06c7c8c9(sp), 0x0125da(pc)
       indexb  r0, 0x07c8c9ca(sp), 0x0bcccdce(fp)[r6:q]
       indexb  r0, 0x07c8c9c9(sp), -0x1e333232(fp)[r6:q]
       indexb  r0, 0x07c8c9c9(sp), 0(fp)[r6:q]
@@ -1197,105 +1340,105 @@
       indexb  r0, 0x06c7c8c9(sb), -0x1e343333(r3)
       indexb  r0, 0x06c7c8c9(sb), 0(r3)
       indexb  r0, 0x06c7c8c9(sb), tos
-      indexb  r0, 0x06c7c8c9(sb), 0xcceeec(pc)
-      indexb  r0, 0x06c7c8c9(sb), 0x01222a(pc)
+      indexb  r0, 0x06c7c8c9(sb), 0xccf2fc(pc)
+      indexb  r0, 0x06c7c8c9(sb), 0x01263a(pc)
       indexb  r0, 0x07c8c9ca(sb), 0x0bcccdce(fp)[r6:q]
       indexb  r0, 0x07c8c9c9(sb), -0x1e333232(fp)[r6:q]
       indexb  r0, 0x07c8c9c9(sb), 0(fp)[r6:q]
-      indexb  r0, 0xc8eb1c(pc), r3
-      indexb  r0, 0xc8eb23(pc), 0x0acbcccd(r3)
-      indexb  r0, 0xc8eb2e(pc), -0x1e343333(r3)
-      indexb  r0, 0xc8eb39(pc), 0(r3)
-      indexb  r0, 0xc8eb41(pc), tos
-      indexb  r0, 0xc8eb48(pc), 0xccef4c(pc)
-      indexb  r0, 0xc8eb53(pc), 0x01228a(pc)
-      indexb  r0, 0xc9ec5c(pc), 0x0bcccdce(fp)[r6:q]
-      indexb  r0, 0xc9ec67(pc), -0x1e333232(fp)[r6:q]
-      indexb  r0, 0xc9ec73(pc), 0(fp)[r6:q]
+      indexb  r0, 0xc8ef2c(pc), r3
+      indexb  r0, 0xc8ef33(pc), 0x0acbcccd(r3)
+      indexb  r0, 0xc8ef3e(pc), -0x1e343333(r3)
+      indexb  r0, 0xc8ef49(pc), 0(r3)
+      indexb  r0, 0xc8ef51(pc), tos
+      indexb  r0, 0xc8ef58(pc), 0xccf35c(pc)
+      indexb  r0, 0xc8ef63(pc), 0x01269a(pc)
+      indexb  r0, 0xc9f06c(pc), 0x0bcccdce(fp)[r6:q]
+      indexb  r0, 0xc9f077(pc), -0x1e333232(fp)[r6:q]
+      indexb  r0, 0xc9f083(pc), 0(fp)[r6:q]
       indexb  r0, 0x07c8c9ca(fp)[r6:b], r3
       indexb  r0, 0x07c8c9ca(fp)[r6:b], 0x0bcccdce(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:b], -0x1e333232(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:b], 0(r3)
       indexb  r0, 0x07c8c9ca(fp)[r6:b], tos
-      indexb  r0, 0x07c8c9ca(fp)[r6:b], 0xcdf0b2(pc)
-      indexb  r0, 0x07c8c9c9(fp)[r6:b], 0x0122f0(pc)
+      indexb  r0, 0x07c8c9ca(fp)[r6:b], 0xcdf4c2(pc)
+      indexb  r0, 0x07c8c9c9(fp)[r6:b], 0x012700(pc)
       indexb  r0, 0x08c9cacb(fp)[r6:b], 0x0ccdcecf(fp)[r7:q]
       indexb  r0, 0x07c8c9ca(fp)[r6:w], r3
       indexb  r0, 0x07c8c9ca(fp)[r6:w], 0x0bcccdce(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:w], -0x1e333232(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:w], 0(r3)
       indexb  r0, 0x07c8c9ca(fp)[r6:w], tos
-      indexb  r0, 0x07c8c9ca(fp)[r6:w], 0xcdf105(pc)
-      indexb  r0, 0x07c8c9c9(fp)[r6:w], 0x012343(pc)
+      indexb  r0, 0x07c8c9ca(fp)[r6:w], 0xcdf515(pc)
+      indexb  r0, 0x07c8c9c9(fp)[r6:w], 0x012753(pc)
       indexb  r0, 0x08c9cacb(fp)[r6:w], 0x0ccdcecf(fp)[r7:q]
       indexb  r0, 0x07c8c9ca(fp)[r6:d], r3
       indexb  r0, 0x07c8c9ca(fp)[r6:d], 0x0bcccdce(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:d], -0x1e333232(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:d], 0(r3)
       indexb  r0, 0x07c8c9ca(fp)[r6:d], tos
-      indexb  r0, 0x07c8c9ca(fp)[r6:d], 0xcdf158(pc)
-      indexb  r0, 0x07c8c9c9(fp)[r6:d], 0x012396(pc)
+      indexb  r0, 0x07c8c9ca(fp)[r6:d], 0xcdf568(pc)
+      indexb  r0, 0x07c8c9c9(fp)[r6:d], 0x0127a6(pc)
       indexb  r0, 0x08c9cacb(fp)[r6:d], 0x0ccdcecf(fp)[r7:q]
       indexb  r0, 0x07c8c9ca(fp)[r6:q], r3
       indexb  r0, 0x07c8c9ca(fp)[r6:q], 0x0bcccdce(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:q], -0x1e333232(r3)
       indexb  r0, 0x07c8c9c9(fp)[r6:q], 0(r3)
       indexb  r0, 0x07c8c9ca(fp)[r6:q], tos
-      indexb  r0, 0x07c8c9ca(fp)[r6:q], 0xcdf1ab(pc)
-      indexb  r0, 0x07c8c9c9(fp)[r6:q], 0x0123e9(pc)
+      indexb  r0, 0x07c8c9ca(fp)[r6:q], 0xcdf5bb(pc)
+      indexb  r0, 0x07c8c9c9(fp)[r6:q], 0x0127f9(pc)
       indexb  r0, 0x08c9cacb(fp)[r6:q], 0x0ccdcecf(fp)[r7:q]
-      indexw  r0, 0x07c8c9ca(fp), 0xcdf1cd(pc)
+      indexw  r0, 0x07c8c9ca(fp), 0xcdf5dd(pc)
       indexw  r0, 0x08c9cacb(fp), 0x0ccdcecf(fp)[r7:q]
       indexw  r0, 0x07c8c9ca(sp), r3
       indexd  r0, 0x09cacbcc(sp), tos
-      indexd  r0, 0x09cacbcc(sp), 0xcff3f4(pc)
-      indexd  r0, 0x09cacbcc(sp), 0x01242f(pc)
+      indexd  r0, 0x09cacbcc(sp), 0xcff804(pc)
+      indexd  r0, 0x09cacbcc(sp), 0x01283f(pc)
       indexd  r0, 0x0acbcccd(sp), 0x0ecfd0d1(sp)[r1:q]
       indexd  r0, 0x0acbcccc(sp), -0x1e302f2f(sp)[r1:q]
       indexd  r0, 0x0acbcccc(sp), 0(sp)[r1:q]
       indexd  r0, 0x09cacbcc(sb), tos
-      indexd  r0, 0x09cacbcc(sb), 0xcff42f(pc)
-      indexd  r0, 0x09cacbcc(sb), 0x01246a(pc)
+      indexd  r0, 0x09cacbcc(sb), 0xcff83f(pc)
+      indexd  r0, 0x09cacbcc(sb), 0x01287a(pc)
       indexd  r0, 0x0acbcccd(sb), 0x0ecfd0d1(sp)[r1:q]
       indexd  r0, 0x0acbcccc(sb), -0x1e302f2f(sp)[r1:q]
       indexd  r0, 0x0acbcccc(sb), 0(sp)[r1:q]
-      indexd  r0, 0xcbf05f(pc), tos
-      indexd  r0, 0xcbf066(pc), 0xcff46a(pc)
-      indexd  r0, 0xcbf071(pc), 0x0124a5(pc)
-      indexd  r0, 0xccf17a(pc), 0x0ecfd0d1(sp)[r1:q]
-      indexd  r0, 0xccf185(pc), -0x1e302f2f(sp)[r1:q]
-      indexd  r0, 0xccf191(pc), 0(sp)[r1:q]
+      indexd  r0, 0xcbf46f(pc), tos
+      indexd  r0, 0xcbf476(pc), 0xcff87a(pc)
+      indexd  r0, 0xcbf481(pc), 0x0128b5(pc)
+      indexd  r0, 0xccf58a(pc), 0x0ecfd0d1(sp)[r1:q]
+      indexd  r0, 0xccf595(pc), -0x1e302f2f(sp)[r1:q]
+      indexd  r0, 0xccf5a1(pc), 0(sp)[r1:q]
       indexd  r0, 0x0acbcccd(sp)[r1:b], r3
       indexd  r0, 0x0acbcccd(sp)[r1:b], 0x0ecfd0d1(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:b], -0x1e302f2f(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:b], 0(r3)
       indexd  r0, 0x0acbcccd(sp)[r1:b], tos
-      indexd  r0, 0x0acbcccd(sp)[r1:b], 0xd0f5d0(pc)
-      indexd  r0, 0x0acbcccc(sp)[r1:b], 0x01250b(pc)
+      indexd  r0, 0x0acbcccd(sp)[r1:b], 0xd0f9e0(pc)
+      indexd  r0, 0x0acbcccc(sp)[r1:b], 0x01291b(pc)
       indexd  r0, 0x0bcccdce(sp)[r1:b], 0x0fd0d1d2(sp)[r2:q]
       indexd  r0, 0x0acbcccd(sp)[r1:w], r3
       indexd  r0, 0x0acbcccd(sp)[r1:w], 0x0ecfd0d1(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:w], -0x1e302f2f(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:w], 0(r3)
       indexd  r0, 0x0acbcccd(sp)[r1:w], tos
-      indexd  r0, 0x0acbcccd(sp)[r1:w], 0xd0f623(pc)
-      indexd  r0, 0x0acbcccc(sp)[r1:w], 0x01255e(pc)
+      indexd  r0, 0x0acbcccd(sp)[r1:w], 0xd0fa33(pc)
+      indexd  r0, 0x0acbcccc(sp)[r1:w], 0x01296e(pc)
       indexd  r0, 0x0bcccdce(sp)[r1:w], 0x0fd0d1d2(sp)[r2:q]
       indexd  r0, 0x0acbcccd(sp)[r1:d], r3
       indexd  r0, 0x0acbcccd(sp)[r1:d], 0x0ecfd0d1(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:d], -0x1e302f2f(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:d], 0(r3)
       indexd  r0, 0x0acbcccd(sp)[r1:d], tos
-      indexd  r0, 0x0acbcccd(sp)[r1:d], 0xd0f676(pc)
-      indexd  r0, 0x0acbcccc(sp)[r1:d], 0x0125b1(pc)
+      indexd  r0, 0x0acbcccd(sp)[r1:d], 0xd0fa86(pc)
+      indexd  r0, 0x0acbcccc(sp)[r1:d], 0x0129c1(pc)
       indexd  r0, 0x0bcccdce(sp)[r1:d], 0x0fd0d1d2(sp)[r2:q]
       indexd  r0, 0x0acbcccd(sp)[r1:q], r3
       indexd  r0, 0x0acbcccd(sp)[r1:q], 0x0ecfd0d1(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:q], -0x1e302f2f(r3)
       indexd  r0, 0x0acbcccc(sp)[r1:q], 0(r3)
       indexd  r0, 0x0acbcccd(sp)[r1:q], tos
-      indexd  r0, 0x0acbcccd(sp)[r1:q], 0xd0f6c9(pc)
-      indexd  r0, 0x0acbcccc(sp)[r1:q], 0x012604(pc)
+      indexd  r0, 0x0acbcccd(sp)[r1:q], 0xd0fad9(pc)
+      indexd  r0, 0x0acbcccc(sp)[r1:q], 0x012a14(pc)
       indexd  r0, 0x0bcccdce(sp)[r1:q], 0x0fd0d1d2(sp)[r2:q]
       indexb  r1, 0x0fd0d1d2(sp), 0x13d4d5d6(sp)[r6:q]
       indexb  r1, 0x0fd0d1d1(sp), -0x1e2b2a2a(sp)[r6:q]
@@ -1303,184 +1446,184 @@
       indexb  r1, 0x0fd0d1d2(sb), 0x13d4d5d6(sp)[r6:q]
       indexb  r1, 0x0fd0d1d1(sb), -0x1e2b2a2a(sp)[r6:q]
       indexb  r1, 0x0fd0d1d1(sb), 0(sp)[r6:q]
-      indexb  r1, 0xd1f82e(pc), 0x13d4d5d6(sp)[r6:q]
-      indexb  r1, 0xd1f839(pc), -0x1e2b2a2a(sp)[r6:q]
-      indexb  r1, 0xd1f845(pc), 0(sp)[r6:q]
+      indexb  r1, 0xd1fc3e(pc), 0x13d4d5d6(sp)[r6:q]
+      indexb  r1, 0xd1fc49(pc), -0x1e2b2a2a(sp)[r6:q]
+      indexb  r1, 0xd1fc55(pc), 0(sp)[r6:q]
       indexb  r1, 0x0fd0d1d2(sp)[r6:b], r3
       indexb  r1, 0x0fd0d1d2(sp)[r6:b], 0x13d4d5d6(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:b], -0x1e2b2a2a(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:b], 0(r3)
       indexb  r1, 0x0fd0d1d2(sp)[r6:b], tos
-      indexb  r1, 0x0fd0d1d2(sp)[r6:b], 0xd5fc84(pc)
-      indexb  r1, 0x0fd0d1d1(sp)[r6:b], 0x0126ba(pc)
+      indexb  r1, 0x0fd0d1d2(sp)[r6:b], 0xd60094(pc)
+      indexb  r1, 0x0fd0d1d1(sp)[r6:b], 0x012aca(pc)
       indexb  r1, 0x10d1d2d3(sp)[r6:b], 0x14d5d6d7(sp)[r7:q]
       indexb  r1, 0x0fd0d1d2(sp)[r6:w], r3
       indexb  r1, 0x0fd0d1d2(sp)[r6:w], 0x13d4d5d6(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:w], -0x1e2b2a2a(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:w], 0(r3)
       indexb  r1, 0x0fd0d1d2(sp)[r6:w], tos
-      indexb  r1, 0x0fd0d1d2(sp)[r6:w], 0xd5fcd7(pc)
-      indexb  r1, 0x0fd0d1d1(sp)[r6:w], 0x01270d(pc)
+      indexb  r1, 0x0fd0d1d2(sp)[r6:w], 0xd600e7(pc)
+      indexb  r1, 0x0fd0d1d1(sp)[r6:w], 0x012b1d(pc)
       indexb  r1, 0x10d1d2d3(sp)[r6:w], 0x14d5d6d7(sp)[r7:q]
       indexb  r1, 0x0fd0d1d2(sp)[r6:d], r3
       indexb  r1, 0x0fd0d1d2(sp)[r6:d], 0x13d4d5d6(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:d], -0x1e2b2a2a(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:d], 0(r3)
       indexb  r1, 0x0fd0d1d2(sp)[r6:d], tos
-      indexb  r1, 0x0fd0d1d2(sp)[r6:d], 0xd5fd2a(pc)
-      indexb  r1, 0x0fd0d1d1(sp)[r6:d], 0x012760(pc)
+      indexb  r1, 0x0fd0d1d2(sp)[r6:d], 0xd6013a(pc)
+      indexb  r1, 0x0fd0d1d1(sp)[r6:d], 0x012b70(pc)
       indexb  r1, 0x10d1d2d3(sp)[r6:d], 0x14d5d6d7(sp)[r7:q]
       indexb  r1, 0x0fd0d1d2(sp)[r6:q], r3
       indexb  r1, 0x0fd0d1d2(sp)[r6:q], 0x13d4d5d6(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:q], -0x1e2b2a2a(r3)
       indexb  r1, 0x0fd0d1d1(sp)[r6:q], 0(r3)
       indexb  r1, 0x0fd0d1d2(sp)[r6:q], tos
-      indexb  r1, 0x0fd0d1d2(sp)[r6:q], 0xd5fd7d(pc)
-      indexb  r1, 0x0fd0d1d1(sp)[r6:q], 0x0127b3(pc)
+      indexb  r1, 0x0fd0d1d2(sp)[r6:q], 0xd6018d(pc)
+      indexb  r1, 0x0fd0d1d1(sp)[r6:q], 0x012bc3(pc)
       indexb  r1, 0x10d1d2d3(sp)[r6:q], 0x14d5d6d7(sp)[r7:q]
-      indexw  r1, 0x0fd0d1d2(sp), 0xd5fd9f(pc)
+      indexw  r1, 0x0fd0d1d2(sp), 0xd601af(pc)
       indexw  r1, 0x10d1d2d3(sp), 0x14d5d6d7(sp)[r7:q]
       indexw  r1, 0x0fd0d1d2(sb), r3
       indexd  r1, 0x12d3d4d5(sb), 0x16d7d8d9(sb)[r1:q]
       indexd  r1, 0x12d3d4d4(sb), -0x1e282727(sb)[r1:q]
       indexd  r1, 0x12d3d4d4(sb), 0(sb)[r1:q]
-      indexd  r1, 0xd4fcdd(pc), 0x16d7d8d9(sb)[r1:q]
-      indexd  r1, 0xd4fce8(pc), -0x1e282727(sb)[r1:q]
-      indexd  r1, 0xd4fcf4(pc), 0(sb)[r1:q]
+      indexd  r1, 0xd500ed(pc), 0x16d7d8d9(sb)[r1:q]
+      indexd  r1, 0xd500f8(pc), -0x1e282727(sb)[r1:q]
+      indexd  r1, 0xd50104(pc), 0(sb)[r1:q]
       indexd  r1, 0x12d3d4d5(sb)[r1:b], r3
       indexd  r1, 0x12d3d4d5(sb)[r1:b], 0x16d7d8d9(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:b], -0x1e282727(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:b], 0(r3)
       indexd  r1, 0x12d3d4d5(sb)[r1:b], tos
-      indexd  r1, 0x12d3d4d5(sb)[r1:b], 0xd90133(pc)
-      indexd  r1, 0x12d3d4d4(sb)[r1:b], 0x012866(pc)
+      indexd  r1, 0x12d3d4d5(sb)[r1:b], 0xd90543(pc)
+      indexd  r1, 0x12d3d4d4(sb)[r1:b], 0x012c76(pc)
       indexd  r1, 0x13d4d5d6(sb)[r1:b], 0x17d8d9da(sb)[r2:q]
       indexd  r1, 0x12d3d4d5(sb)[r1:w], r3
       indexd  r1, 0x12d3d4d5(sb)[r1:w], 0x16d7d8d9(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:w], -0x1e282727(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:w], 0(r3)
       indexd  r1, 0x12d3d4d5(sb)[r1:w], tos
-      indexd  r1, 0x12d3d4d5(sb)[r1:w], 0xd90186(pc)
-      indexd  r1, 0x12d3d4d4(sb)[r1:w], 0x0128b9(pc)
+      indexd  r1, 0x12d3d4d5(sb)[r1:w], 0xd90596(pc)
+      indexd  r1, 0x12d3d4d4(sb)[r1:w], 0x012cc9(pc)
       indexd  r1, 0x13d4d5d6(sb)[r1:w], 0x17d8d9da(sb)[r2:q]
       indexd  r1, 0x12d3d4d5(sb)[r1:d], r3
       indexd  r1, 0x12d3d4d5(sb)[r1:d], 0x16d7d8d9(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:d], -0x1e282727(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:d], 0(r3)
       indexd  r1, 0x12d3d4d5(sb)[r1:d], tos
-      indexd  r1, 0x12d3d4d5(sb)[r1:d], 0xd901d9(pc)
-      indexd  r1, 0x12d3d4d4(sb)[r1:d], 0x01290c(pc)
+      indexd  r1, 0x12d3d4d5(sb)[r1:d], 0xd905e9(pc)
+      indexd  r1, 0x12d3d4d4(sb)[r1:d], 0x012d1c(pc)
       indexd  r1, 0x13d4d5d6(sb)[r1:d], 0x17d8d9da(sb)[r2:q]
       indexd  r1, 0x12d3d4d5(sb)[r1:q], r3
       indexd  r1, 0x12d3d4d5(sb)[r1:q], 0x16d7d8d9(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:q], -0x1e282727(r3)
       indexd  r1, 0x12d3d4d4(sb)[r1:q], 0(r3)
       indexd  r1, 0x12d3d4d5(sb)[r1:q], tos
-      indexd  r1, 0x12d3d4d5(sb)[r1:q], 0xd9022c(pc)
-      indexd  r1, 0x12d3d4d4(sb)[r1:q], 0x01295f(pc)
+      indexd  r1, 0x12d3d4d5(sb)[r1:q], 0xd9063c(pc)
+      indexd  r1, 0x12d3d4d4(sb)[r1:q], 0x012d6f(pc)
       indexd  r1, 0x13d4d5d6(sb)[r1:q], 0x17d8d9da(sb)[r2:q]
       indexb  r2, 0x17d8d9da(sb), 0x1bdcddde(sb)[r6:q]
       indexb  r2, 0x17d8d9d9(sb), -0x1e232222(sb)[r6:q]
       indexb  r2, 0x17d8d9d9(sb), 0(sb)[r6:q]
-      indexb  r2, 0xda0370(pc), 0x1bdcddde(sb)[r6:q]
-      indexb  r2, 0xda037b(pc), -0x1e232222(sb)[r6:q]
-      indexb  r2, 0xda0387(pc), 0(sb)[r6:q]
+      indexb  r2, 0xda0780(pc), 0x1bdcddde(sb)[r6:q]
+      indexb  r2, 0xda078b(pc), -0x1e232222(sb)[r6:q]
+      indexb  r2, 0xda0797(pc), 0(sb)[r6:q]
       indexb  r2, 0x17d8d9da(sb)[r6:b], r3
       indexb  r2, 0x17d8d9da(sb)[r6:b], 0x1bdcddde(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:b], -0x1e232222(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:b], 0(r3)
       indexb  r2, 0x17d8d9da(sb)[r6:b], tos
-      indexb  r2, 0x17d8d9da(sb)[r6:b], 0xde07c6(pc)
-      indexb  r2, 0x17d8d9d9(sb)[r6:b], 0x0129f4(pc)
+      indexb  r2, 0x17d8d9da(sb)[r6:b], 0xde0bd6(pc)
+      indexb  r2, 0x17d8d9d9(sb)[r6:b], 0x012e04(pc)
       indexb  r2, 0x18d9dadb(sb)[r6:b], 0x1cdddedf(sb)[r7:q]
       indexb  r2, 0x17d8d9da(sb)[r6:w], r3
       indexb  r2, 0x17d8d9da(sb)[r6:w], 0x1bdcddde(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:w], -0x1e232222(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:w], 0(r3)
       indexb  r2, 0x17d8d9da(sb)[r6:w], tos
-      indexb  r2, 0x17d8d9da(sb)[r6:w], 0xde0819(pc)
-      indexb  r2, 0x17d8d9d9(sb)[r6:w], 0x012a47(pc)
+      indexb  r2, 0x17d8d9da(sb)[r6:w], 0xde0c29(pc)
+      indexb  r2, 0x17d8d9d9(sb)[r6:w], 0x012e57(pc)
       indexb  r2, 0x18d9dadb(sb)[r6:w], 0x1cdddedf(sb)[r7:q]
       indexb  r2, 0x17d8d9da(sb)[r6:d], r3
       indexb  r2, 0x17d8d9da(sb)[r6:d], 0x1bdcddde(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:d], -0x1e232222(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:d], 0(r3)
       indexb  r2, 0x17d8d9da(sb)[r6:d], tos
-      indexb  r2, 0x17d8d9da(sb)[r6:d], 0xde086c(pc)
-      indexb  r2, 0x17d8d9d9(sb)[r6:d], 0x012a9a(pc)
+      indexb  r2, 0x17d8d9da(sb)[r6:d], 0xde0c7c(pc)
+      indexb  r2, 0x17d8d9d9(sb)[r6:d], 0x012eaa(pc)
       indexb  r2, 0x18d9dadb(sb)[r6:d], 0x1cdddedf(sb)[r7:q]
       indexb  r2, 0x17d8d9da(sb)[r6:q], r3
       indexb  r2, 0x17d8d9da(sb)[r6:q], 0x1bdcddde(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:q], -0x1e232222(r3)
       indexb  r2, 0x17d8d9d9(sb)[r6:q], 0(r3)
       indexb  r2, 0x17d8d9da(sb)[r6:q], tos
-      indexb  r2, 0x17d8d9da(sb)[r6:q], 0xde08bf(pc)
-      indexb  r2, 0x17d8d9d9(sb)[r6:q], 0x012aed(pc)
+      indexb  r2, 0x17d8d9da(sb)[r6:q], 0xde0ccf(pc)
+      indexb  r2, 0x17d8d9d9(sb)[r6:q], 0x012efd(pc)
       indexb  r2, 0x18d9dadb(sb)[r6:q], 0x1cdddedf(sb)[r7:q]
-      indexw  r2, 0x17d8d9da(sb), 0xde08e1(pc)
+      indexw  r2, 0x17d8d9da(sb), 0xde0cf1(pc)
       indexw  r2, 0x18d9dadb(sb), 0x1cdddedf(sb)[r7:q]
-      indexw  r2, 0xda04f4(pc), r3
-      indexd  r2, 0xdd07fe(pc), 0xe10c02(pc)[r1:q]
-      indexd  r2, 0xdd0809(pc), 0x012b2d(pc)[r1:q]
-      indexd  r2, 0xdd0813(pc)[r1:b], r3
-      indexd  r2, 0xdd081b(pc)[r1:b], 0x1edfe0e1(r3)
-      indexd  r2, 0xdd0826(pc)[r1:b], -0x1e201f1f(r3)
-      indexd  r2, 0xdd0832(pc)[r1:b], 0(r3)
-      indexd  r2, 0xdd083c(pc)[r1:b], tos
-      indexd  r2, 0xdd0844(pc)[r1:b], 0xe10c48(pc)
-      indexd  r2, 0xdd084f(pc)[r1:b], 0x012b73(pc)
-      indexd  r2, 0xde095a(pc)[r1:b], 0xe20d5e(pc)[r2:q]
-      indexd  r2, 0xdd0866(pc)[r1:w], r3
-      indexd  r2, 0xdd086e(pc)[r1:w], 0x1edfe0e1(r3)
-      indexd  r2, 0xdd0879(pc)[r1:w], -0x1e201f1f(r3)
-      indexd  r2, 0xdd0885(pc)[r1:w], 0(r3)
-      indexd  r2, 0xdd088f(pc)[r1:w], tos
-      indexd  r2, 0xdd0897(pc)[r1:w], 0xe10c9b(pc)
-      indexd  r2, 0xdd08a2(pc)[r1:w], 0x012bc6(pc)
-      indexd  r2, 0xde09ad(pc)[r1:w], 0xe20db1(pc)[r2:q]
-      indexd  r2, 0xdd08b9(pc)[r1:d], r3
-      indexd  r2, 0xdd08c1(pc)[r1:d], 0x1edfe0e1(r3)
-      indexd  r2, 0xdd08cc(pc)[r1:d], -0x1e201f1f(r3)
-      indexd  r2, 0xdd08d8(pc)[r1:d], 0(r3)
-      indexd  r2, 0xdd08e2(pc)[r1:d], tos
-      indexd  r2, 0xdd08ea(pc)[r1:d], 0xe10cee(pc)
-      indexd  r2, 0xdd08f5(pc)[r1:d], 0x012c19(pc)
-      indexd  r2, 0xde0a00(pc)[r1:d], 0xe20e04(pc)[r2:q]
-      indexd  r2, 0xdd090c(pc)[r1:q], r3
-      indexd  r2, 0xdd0914(pc)[r1:q], 0x1edfe0e1(r3)
-      indexd  r2, 0xdd091f(pc)[r1:q], -0x1e201f1f(r3)
-      indexd  r2, 0xdd092b(pc)[r1:q], 0(r3)
-      indexd  r2, 0xdd0935(pc)[r1:q], tos
-      indexd  r2, 0xdd093d(pc)[r1:q], 0xe10d41(pc)
-      indexd  r2, 0xdd0948(pc)[r1:q], 0x012c6c(pc)
-      indexd  r2, 0xde0a53(pc)[r1:q], 0xe20e57(pc)[r2:q]
-      indexb  r3, 0xe20e64(pc), 0xe61268(pc)[r6:q]
-      indexb  r3, 0xe20e6f(pc), 0x012c8e(pc)[r6:q]
-      indexb  r3, 0xe20e79(pc)[r6:b], r3
-      indexb  r3, 0xe20e81(pc)[r6:b], -0x1c1b1a1a(r3)
-      indexb  r3, 0xe20e8c(pc)[r6:b], 0(r3)
-      indexb  r3, 0xe20e96(pc)[r6:b], tos
-      indexb  r3, 0xe20e9e(pc)[r6:b], 0xe612a2(pc)
-      indexb  r3, 0xe20ea9(pc)[r6:b], 0x012cc8(pc)
-      indexb  r3, 0xe20eb3(pc)[r6:w], r3
-      indexb  r3, 0xe20ebb(pc)[r6:w], -0x1c1b1a1a(r3)
-      indexb  r3, 0xe20ec6(pc)[r6:w], 0(r3)
-      indexb  r3, 0xe20ed0(pc)[r6:w], tos
-      indexb  r3, 0xe20ed8(pc)[r6:w], 0xe612dc(pc)
-      indexb  r3, 0xe20ee3(pc)[r6:w], 0x012d02(pc)
-      indexb  r3, 0xe20eed(pc)[r6:d], r3
-      indexb  r3, 0xe20ef5(pc)[r6:d], -0x1c1b1a1a(r3)
-      indexb  r3, 0xe20f00(pc)[r6:d], 0(r3)
-      indexb  r3, 0xe20f0a(pc)[r6:d], tos
-      indexb  r3, 0xe20f12(pc)[r6:d], 0xe61316(pc)
-      indexb  r3, 0xe20f1d(pc)[r6:d], 0x012d3c(pc)
-      indexb  r3, 0xe20f27(pc)[r6:q], r3
-      indexb  r3, 0xe20f2f(pc)[r6:q], -0x1c1b1a1a(r3)
-      indexb  r3, 0xe20f3a(pc)[r6:q], 0(r3)
-      indexb  r3, 0xe20f44(pc)[r6:q], tos
-      indexb  r3, 0xe20f4c(pc)[r6:q], 0xe61350(pc)
-      indexb  r3, 0xe20f57(pc)[r6:q], 0x012d76(pc)
-      indexw  r3, 0xe20f61(pc), 0xe61365(pc)
+      indexw  r2, 0xda0904(pc), r3
+      indexd  r2, 0xdd0c0e(pc), 0xe11012(pc)[r1:q]
+      indexd  r2, 0xdd0c19(pc), 0x012f3d(pc)[r1:q]
+      indexd  r2, 0xdd0c23(pc)[r1:b], r3
+      indexd  r2, 0xdd0c2b(pc)[r1:b], 0x1edfe0e1(r3)
+      indexd  r2, 0xdd0c36(pc)[r1:b], -0x1e201f1f(r3)
+      indexd  r2, 0xdd0c42(pc)[r1:b], 0(r3)
+      indexd  r2, 0xdd0c4c(pc)[r1:b], tos
+      indexd  r2, 0xdd0c54(pc)[r1:b], 0xe11058(pc)
+      indexd  r2, 0xdd0c5f(pc)[r1:b], 0x012f83(pc)
+      indexd  r2, 0xde0d6a(pc)[r1:b], 0xe2116e(pc)[r2:q]
+      indexd  r2, 0xdd0c76(pc)[r1:w], r3
+      indexd  r2, 0xdd0c7e(pc)[r1:w], 0x1edfe0e1(r3)
+      indexd  r2, 0xdd0c89(pc)[r1:w], -0x1e201f1f(r3)
+      indexd  r2, 0xdd0c95(pc)[r1:w], 0(r3)
+      indexd  r2, 0xdd0c9f(pc)[r1:w], tos
+      indexd  r2, 0xdd0ca7(pc)[r1:w], 0xe110ab(pc)
+      indexd  r2, 0xdd0cb2(pc)[r1:w], 0x012fd6(pc)
+      indexd  r2, 0xde0dbd(pc)[r1:w], 0xe211c1(pc)[r2:q]
+      indexd  r2, 0xdd0cc9(pc)[r1:d], r3
+      indexd  r2, 0xdd0cd1(pc)[r1:d], 0x1edfe0e1(r3)
+      indexd  r2, 0xdd0cdc(pc)[r1:d], -0x1e201f1f(r3)
+      indexd  r2, 0xdd0ce8(pc)[r1:d], 0(r3)
+      indexd  r2, 0xdd0cf2(pc)[r1:d], tos
+      indexd  r2, 0xdd0cfa(pc)[r1:d], 0xe110fe(pc)
+      indexd  r2, 0xdd0d05(pc)[r1:d], 0x013029(pc)
+      indexd  r2, 0xde0e10(pc)[r1:d], 0xe21214(pc)[r2:q]
+      indexd  r2, 0xdd0d1c(pc)[r1:q], r3
+      indexd  r2, 0xdd0d24(pc)[r1:q], 0x1edfe0e1(r3)
+      indexd  r2, 0xdd0d2f(pc)[r1:q], -0x1e201f1f(r3)
+      indexd  r2, 0xdd0d3b(pc)[r1:q], 0(r3)
+      indexd  r2, 0xdd0d45(pc)[r1:q], tos
+      indexd  r2, 0xdd0d4d(pc)[r1:q], 0xe11151(pc)
+      indexd  r2, 0xdd0d58(pc)[r1:q], 0x01307c(pc)
+      indexd  r2, 0xde0e63(pc)[r1:q], 0xe21267(pc)[r2:q]
+      indexb  r3, 0xe21274(pc), 0xe61678(pc)[r6:q]
+      indexb  r3, 0xe2127f(pc), 0x01309e(pc)[r6:q]
+      indexb  r3, 0xe21289(pc)[r6:b], r3
+      indexb  r3, 0xe21291(pc)[r6:b], -0x1c1b1a1a(r3)
+      indexb  r3, 0xe2129c(pc)[r6:b], 0(r3)
+      indexb  r3, 0xe212a6(pc)[r6:b], tos
+      indexb  r3, 0xe212ae(pc)[r6:b], 0xe616b2(pc)
+      indexb  r3, 0xe212b9(pc)[r6:b], 0x0130d8(pc)
+      indexb  r3, 0xe212c3(pc)[r6:w], r3
+      indexb  r3, 0xe212cb(pc)[r6:w], -0x1c1b1a1a(r3)
+      indexb  r3, 0xe212d6(pc)[r6:w], 0(r3)
+      indexb  r3, 0xe212e0(pc)[r6:w], tos
+      indexb  r3, 0xe212e8(pc)[r6:w], 0xe616ec(pc)
+      indexb  r3, 0xe212f3(pc)[r6:w], 0x013112(pc)
+      indexb  r3, 0xe212fd(pc)[r6:d], r3
+      indexb  r3, 0xe21305(pc)[r6:d], -0x1c1b1a1a(r3)
+      indexb  r3, 0xe21310(pc)[r6:d], 0(r3)
+      indexb  r3, 0xe2131a(pc)[r6:d], tos
+      indexb  r3, 0xe21322(pc)[r6:d], 0xe61726(pc)
+      indexb  r3, 0xe2132d(pc)[r6:d], 0x01314c(pc)
+      indexb  r3, 0xe21337(pc)[r6:q], r3
+      indexb  r3, 0xe2133f(pc)[r6:q], -0x1c1b1a1a(r3)
+      indexb  r3, 0xe2134a(pc)[r6:q], 0(r3)
+      indexb  r3, 0xe21354(pc)[r6:q], tos
+      indexb  r3, 0xe2135c(pc)[r6:q], 0xe61760(pc)
+      indexb  r3, 0xe21367(pc)[r6:q], 0x013186(pc)
+      indexw  r3, 0xe21371(pc), 0xe61775(pc)
       extb    r0, r0, r4, 2
       extb    r0, r0, 2(r0), 3
       extb    r0, r0, 3(2(fp)), 4
@@ -1767,8 +1910,8 @@
       xorw    -55(r0), ext(-54)+(-53)[r0:b]
       xorw    -55(r0), ext(-54)+0x0081[r0:b]
       xorw    -55(r0), tos[r0:b]
-      bcc     0x013315
-      bcc     0x01335d
+      bcc     0x013725
+      bcc     0x01376d
       xord    r7, 62(61(fp))
       xord    r7, 62(-64(fp))
       xord    r7, 63(0x003e(fp))
@@ -2101,20 +2244,20 @@
       sltb    0x17d8d9da(sb)
       sltb    -0x1e272626(sb)
       sltb    0(sb)
-      seqb    0xdc1705(pc)
-      seqb    0x013b2f(pc)
-      scsb    0xdd180f(pc)
-      scsb    0x013b38(pc)
-      shib    0xde1919(pc)
-      shib    0x013b41(pc)
-      sgtb    0xdf1a23(pc)
-      sgtb    0x013b4a(pc)
-      sfsb    0xe01b2d(pc)
-      sfsb    0x013b53(pc)
-      slob    0xe11c37(pc)
-      slob    0x013b5c(pc)
-      sltb    0xe21d41(pc)
-      sltb    0x013b65(pc)
+      seqb    0xdc1b15(pc)
+      seqb    0x013f3f(pc)
+      scsb    0xdd1c1f(pc)
+      scsb    0x013f48(pc)
+      shib    0xde1d29(pc)
+      shib    0x013f51(pc)
+      sgtb    0xdf1e33(pc)
+      sgtb    0x013f5a(pc)
+      sfsb    0xe01f3d(pc)
+      sfsb    0x013f63(pc)
+      slob    0xe12047(pc)
+      slob    0x013f6c(pc)
+      sltb    0xe22151(pc)
+      sltb    0x013f75(pc)
       seqb    r0
       scsb    r0
       shib    r0
@@ -2406,26 +2549,1100 @@
       sltw    0x17d8d9da(sb)
       sltw    -0x1e272626(sb)
       sltw    0(sb)
-      seqw    0xdc1ead(pc)
-      seqw    0x0142d7(pc)
-      scsw    0xdd1fb7(pc)
-      scsw    0x0142e0(pc)
-      shiw    0xde20c1(pc)
-      shiw    0x0142e9(pc)
-      sgtw    0xdf21cb(pc)
-      sgtw    0x0142f2(pc)
-      sfsw    0xe022d5(pc)
-      sfsw    0x0142fb(pc)
-      slow    0xe123df(pc)
-      slow    0x014304(pc)
-      sltw    0xe224e9(pc)
-      sltw    0x01430d(pc)
+      seqw    0xdc22bd(pc)
+      seqw    0x0146e7(pc)
+      scsw    0xdd23c7(pc)
+      scsw    0x0146f0(pc)
+      shiw    0xde24d1(pc)
+      shiw    0x0146f9(pc)
+      sgtw    0xdf25db(pc)
+      sgtw    0x014702(pc)
+      sfsw    0xe026e5(pc)
+      sfsw    0x01470b(pc)
+      slow    0xe127ef(pc)
+      slow    0x014714(pc)
+      sltw    0xe228f9(pc)
+      sltw    0x01471d(pc)
       seqw    r0
       scsw    r0
       shiw    r0
       sgtw    r0
       sfsw    r0
       slow    r0
+      floorfd -63(r0), r0
+      floorfd -63(r0), -62(r0)
+      floorfd -63(r0), 0x0081(r0)
+      floorfd -63(r0), -61(-62(fp))
+      floorfd -63(r0), -60(0x0043(fp))
+      floorfd -63(r0), 0x0081(0x0043(fp))
+      floorfd -63(r0), -62(fp)
+      floorfd -63(r0), 0x0081(fp)
+      floorfd -62(r0), -61(r0)[r1:b]
+      floorfd 0x0043(r0), -60(r0)[r1:b]
+      floorfd 0x0043(r0), 0x0081(r0)[r1:b]
+      movbl   -62(r0), f5
+      movbl   -62(r0), -61(r1)
+      movbl   -62(r0), 0x0081(r1)
+      movbl   -62(r0), -60(-61(sp))
+      movbl   -62(r0), -59(0x0044(sp))
+      movbl   -62(r0), 0x0081(0x0044(sp))
+      movbl   -62(r0), @-61
+      movbl   -62(r0), @0x0081
+      movbl   -62(r0), -61(sp)
+      movbl   -62(r0), 0x0081(sp)
+      movbl   -61(r0), -60(r0)[r2:w]
+      movbl   0x0044(r0), -59(r0)[r2:w]
+      movbl   0x0044(r0), 0x0081(r0)[r2:w]
+      movwl   -61(r0), -60(r1)
+      movwl   -61(r0), -59(-60(sp))
+      movwl   -61(r0), 0x0081(-60(sp))
+      movwl   -61(r0), @-60
+      movwl   -61(r0), -60(sp)
+      movwl   -60(r0), -59(r0)[r3:w]
+      movwl   -60(r0), 0x0081(r0)[r3:w]
+      movwl   -61(r1), f1
+      movdl   -59(r0), -57(-58(sp))
+      movdl   -59(r0), @-58
+      movbf   -58(r0), @-57
+      movbf   -58(r0), -57(sp)
+      movbf   -57(r0), -56(r0)[r6:w]
+      movbf   -57(r0), 0x0081(r0)[r6:w]
+      movbf   -58(r1), f1
+      movwf   -57(r0), -56(sp)
+      movwf   -56(r0), -55(r0)[r7:w]
+      movwf   -56(r0), 0x0081(r0)[r7:w]
+      movwf   -57(r1), f1
+      movdf   -55(r1), f1
+      movdf   -55(r1), -54(r1)
+      movdf   -55(r1), 0x0081(r1)
+      movdf   -55(r1), -53(-54(sp))
+      movdf   -55(r1), -52(0x004b(sp))
+      movdf   -55(r1), 0x0081(0x004b(sp))
+      movdf   -55(r1), @-54
+      movdf   -55(r1), @0x0081
+      movdf   -55(r1), -54(sp)
+      movdf   -55(r1), 0x0081(sp)
+      movdf   -54(r1), -53(r1)[r1:w]
+      movdf   0x004b(r1), -52(r1)[r1:w]
+      movdf   0x004b(r1), 0x0081(r1)[r1:w]
+      lfsr    -47(r2)
+      lfsr    -46(-47(fp))
+      lfsr    0x0081(-47(fp))
+      lfsr    -46(-47(sp))
+      lfsr    0x0081(-47(sp))
+      lfsr    -46(-47(sb))
+      lfsr    0x0081(-47(sb))
+      lfsr    0x51525354
+      movlf   -39(r2), -38(r3)[r0:w]
+      movlf   -40(r3), f1
+      movfl   -35(r3), -33(-34(sp))
+      movfl   -35(r3), @-34
+      roundlb -30(r4), r5
+      roundlb -30(r4), -29(r1)
+      roundlb -30(r4), 0x0081(r1)
+      roundlb -30(r4), -28(-29(sp))
+      roundlb -30(r4), -27(0x0064(sp))
+      roundlb -30(r4), 0x0081(0x0064(sp))
+      roundlb -30(r4), @-29
+      roundlb -30(r4), @0x0081
+      roundlb -30(r4), -29(sp)
+      roundlb -30(r4), 0x0081(sp)
+      roundlb -29(r4), -28(r4)[r2:w]
+      roundlb 0x0064(r4), -27(r4)[r2:w]
+      roundlb 0x0064(r4), 0x0081(r4)[r2:w]
+      roundlb -29(-30(fp)), r1
+      roundlb 0x0081(-30(fp)), r1
+      roundlb -29(-30(fp)), -28(r1)
+      roundlb 0x0064(-30(fp)), -27(r1)
+      roundlb 0x0064(-30(fp)), 0x0081(r1)
+      roundlb -29(-30(fp)), -27(-28(sp))
+      roundlb 0x0064(-30(fp)), -26(-27(sp))
+      roundlb 0x0064(-30(fp)), 0x0081(-27(sp))
+      roundlb -29(-30(fp)), @-28
+      roundlb 0x0064(-30(fp)), @-27
+      roundlb 0x0064(-30(fp)), @0x0081
+      roundlb -29(-30(fp)), -28(sp)
+      roundlb 0x0064(-30(fp)), -27(sp)
+      roundlb 0x0064(-30(fp)), 0x0081(sp)
+      roundlb -28(-29(fp)), -27(r4)[r2:w]
+      roundlb -27(0x0064(fp)), -26(r4)[r2:w]
+      roundlb -27(0x0064(fp)), 0x0081(r4)[r2:w]
+      roundlb -29(-30(sp)), r1
+      roundlb 0x0081(-30(sp)), r1
+      roundlb -29(-30(sp)), -28(r1)
+      roundlb 0x0064(-30(sp)), -27(r1)
+      roundlb 0x0064(-30(sp)), 0x0081(r1)
+      roundlb -29(-30(sp)), -27(-28(sp))
+      roundlb 0x0064(-30(sp)), -26(-27(sp))
+      roundlb 0x0064(-30(sp)), 0x0081(-27(sp))
+      roundlb -29(-30(sp)), @-28
+      roundlb 0x0064(-30(sp)), @-27
+      roundlb 0x0064(-30(sp)), @0x0081
+      roundlb -29(-30(sp)), -28(sp)
+      roundlb 0x0064(-30(sp)), -27(sp)
+      roundlb 0x0064(-30(sp)), 0x0081(sp)
+      roundlb -28(-29(sp)), -27(r4)[r2:w]
+      roundlb -27(0x0064(sp)), -26(r4)[r2:w]
+      roundlb -27(0x0064(sp)), 0x0081(r4)[r2:w]
+      roundlb -29(-30(sb)), r1
+      roundlb 0x0081(-30(sb)), r1
+      roundlb -29(-30(sb)), -28(r1)
+      roundlb 0x0064(-30(sb)), -27(r1)
+      roundlb 0x0064(-30(sb)), 0x0081(r1)
+      roundlb -29(-30(sb)), -27(-28(sp))
+      roundlb 0x0064(-30(sb)), -26(-27(sp))
+      roundlb 0x0064(-30(sb)), 0x0081(-27(sp))
+      roundlb -29(-30(sb)), @-28
+      roundlb 0x0064(-30(sb)), @-27
+      roundlb 0x0064(-30(sb)), @0x0081
+      roundlb -29(-30(sb)), -28(sp)
+      roundlb 0x0064(-30(sb)), -27(sp)
+      roundlb 0x0064(-30(sb)), 0x0081(sp)
+      roundlb -28(-29(sb)), -27(r4)[r2:w]
+      roundlb -27(0x0064(sb)), -26(r4)[r2:w]
+      roundlb -27(0x0064(sb)), 0x0081(r4)[r2:w]
+      roundlb 0x62636465:0x66676869, r1
+      roundlw -29(r4), -28(r1)
+      roundlw -29(r4), -27(-28(sp))
+      roundlw -29(r4), 0x0081(-28(sp))
+      roundlw -29(r4), @-28
+      roundlw -29(r4), -28(sp)
+      roundlw -28(r4), -27(r4)[r3:w]
+      roundlw -28(r4), 0x0081(r4)[r3:w]
+      roundlw -29(r5), r1
+      roundld -27(r4), -25(-26(sp))
+      roundld -27(r4), @-26
+      roundfb -26(r4), @-25
+      roundfb -26(r4), -25(sp)
+      roundfb -25(r4), -24(r4)[r6:w]
+      roundfb -25(r4), 0x0081(r4)[r6:w]
+      roundfb -26(r5), r1
+      roundfw -25(r4), -24(sp)
+      roundfw -24(r4), -23(r4)[r7:w]
+      roundfw -24(r4), 0x0081(r4)[r7:w]
+      roundfw -25(r5), r1
+      roundfd -23(r5), r1
+      roundfd -23(r5), -22(r1)
+      roundfd -23(r5), 0x0081(r1)
+      roundfd -23(r5), -21(-22(sp))
+      roundfd -23(r5), -20(0x006b(sp))
+      roundfd -23(r5), 0x0081(0x006b(sp))
+      roundfd -23(r5), @-22
+      roundfd -23(r5), @0x0081
+      roundfd -23(r5), -22(sp)
+      roundfd -23(r5), 0x0081(sp)
+      roundfd -22(r5), -21(r5)[r1:w]
+      roundfd 0x006b(r5), -20(r5)[r1:w]
+      roundfd 0x006b(r5), 0x0081(r5)[r1:w]
+      roundfd -22(-23(fp)), r1
+      roundfd 0x0081(-23(fp)), r1
+      roundfd -22(-23(fp)), -21(r1)
+      roundfd 0x006b(-23(fp)), -20(r1)
+      roundfd 0x006b(-23(fp)), 0x0081(r1)
+      roundfd -22(-23(fp)), -20(-21(sp))
+      roundfd 0x006b(-23(fp)), -19(-20(sp))
+      roundfd 0x006b(-23(fp)), 0x0081(-20(sp))
+      roundfd -22(-23(fp)), @-21
+      roundfd 0x006b(-23(fp)), @-20
+      roundfd 0x006b(-23(fp)), @0x0081
+      roundfd -22(-23(fp)), -21(sp)
+      roundfd 0x006b(-23(fp)), -20(sp)
+      roundfd 0x006b(-23(fp)), 0x0081(sp)
+      roundfd -21(-22(fp)), -20(r5)[r1:w]
+      roundfd -20(0x006b(fp)), -19(r5)[r1:w]
+      roundfd -20(0x006b(fp)), 0x0081(r5)[r1:w]
+      roundfd -22(-23(sp)), r1
+      roundfd 0x0081(-23(sp)), r1
+      roundfd -22(-23(sp)), -21(r1)
+      roundfd 0x006b(-23(sp)), -20(r1)
+      roundfd 0x006b(-23(sp)), 0x0081(r1)
+      roundfd -22(-23(sp)), -20(-21(sp))
+      roundfd 0x006b(-23(sp)), -19(-20(sp))
+      roundfd 0x006b(-23(sp)), 0x0081(-20(sp))
+      roundfd -22(-23(sp)), @-21
+      roundfd 0x006b(-23(sp)), @-20
+      roundfd 0x006b(-23(sp)), @0x0081
+      roundfd -22(-23(sp)), -21(sp)
+      roundfd 0x006b(-23(sp)), -20(sp)
+      roundfd 0x006b(-23(sp)), 0x0081(sp)
+      roundfd -21(-22(sp)), -20(r5)[r1:w]
+      roundfd -20(0x006b(sp)), -19(r5)[r1:w]
+      roundfd -20(0x006b(sp)), 0x0081(r5)[r1:w]
+      roundfd -22(-23(sb)), r1
+      roundfd 0x0081(-23(sb)), r1
+      roundfd -22(-23(sb)), -21(r1)
+      roundfd 0x006b(-23(sb)), -20(r1)
+      roundfd 0x006b(-23(sb)), 0x0081(r1)
+      roundfd -22(-23(sb)), -20(-21(sp))
+      roundfd 0x006b(-23(sb)), -19(-20(sp))
+      roundfd 0x006b(-23(sb)), 0x0081(-20(sp))
+      roundfd -22(-23(sb)), @-21
+      roundfd 0x006b(-23(sb)), @-20
+      roundfd 0x006b(-23(sb)), @0x0081
+      roundfd -22(-23(sb)), -21(sp)
+      roundfd 0x006b(-23(sb)), -20(sp)
+      roundfd 0x006b(-23(sb)), 0x0081(sp)
+      roundfd -21(-22(sb)), -20(r5)[r1:w]
+      roundfd -20(0x006b(sb)), -19(r5)[r1:w]
+      roundfd -20(0x006b(sb)), 0x0081(r5)[r1:w]
+      roundfd 0x696a6b6c, r1
+      trunclb -22(r5), r5
+      trunclb -22(r5), -21(r1)
+      trunclb -22(r5), 0x0081(r1)
+      trunclb -22(r5), -20(-21(sp))
+      trunclb -22(r5), -19(0x006c(sp))
+      trunclb -22(r5), 0x0081(0x006c(sp))
+      trunclb -22(r5), @-21
+      trunclb -22(r5), @0x0081
+      trunclb -22(r5), -21(sp)
+      trunclb -22(r5), 0x0081(sp)
+      trunclb -21(r5), -20(r5)[r2:w]
+      trunclb 0x006c(r5), -19(r5)[r2:w]
+      trunclb 0x006c(r5), 0x0081(r5)[r2:w]
+      trunclb -21(-22(fp)), r1
+      trunclb 0x0081(-22(fp)), r1
+      trunclb -21(-22(fp)), -20(r1)
+      trunclb 0x006c(-22(fp)), -19(r1)
+      trunclb 0x006c(-22(fp)), 0x0081(r1)
+      trunclb -21(-22(fp)), -19(-20(sp))
+      trunclb 0x006c(-22(fp)), -18(-19(sp))
+      trunclb 0x006c(-22(fp)), 0x0081(-19(sp))
+      trunclb -21(-22(fp)), @-20
+      trunclb 0x006c(-22(fp)), @-19
+      trunclb 0x006c(-22(fp)), @0x0081
+      trunclb -21(-22(fp)), -20(sp)
+      trunclb 0x006c(-22(fp)), -19(sp)
+      trunclb 0x006c(-22(fp)), 0x0081(sp)
+      trunclb -20(-21(fp)), -19(r5)[r2:w]
+      trunclb -19(0x006c(fp)), -18(r5)[r2:w]
+      trunclb -19(0x006c(fp)), 0x0081(r5)[r2:w]
+      trunclb -21(-22(sp)), r1
+      trunclb 0x0081(-22(sp)), r1
+      trunclb -21(-22(sp)), -20(r1)
+      trunclb 0x006c(-22(sp)), -19(r1)
+      trunclb 0x006c(-22(sp)), 0x0081(r1)
+      trunclb -21(-22(sp)), -19(-20(sp))
+      trunclb 0x006c(-22(sp)), -18(-19(sp))
+      trunclb 0x006c(-22(sp)), 0x0081(-19(sp))
+      trunclb -21(-22(sp)), @-20
+      trunclb 0x006c(-22(sp)), @-19
+      trunclb 0x006c(-22(sp)), @0x0081
+      trunclb -21(-22(sp)), -20(sp)
+      trunclb 0x006c(-22(sp)), -19(sp)
+      trunclb 0x006c(-22(sp)), 0x0081(sp)
+      trunclb -20(-21(sp)), -19(r5)[r2:w]
+      trunclb -19(0x006c(sp)), -18(r5)[r2:w]
+      trunclb -19(0x006c(sp)), 0x0081(r5)[r2:w]
+      trunclb -21(-22(sb)), r1
+      trunclb 0x0081(-22(sb)), r1
+      trunclb -21(-22(sb)), -20(r1)
+      trunclb 0x006c(-22(sb)), -19(r1)
+      trunclb 0x006c(-22(sb)), 0x0081(r1)
+      trunclb -21(-22(sb)), -19(-20(sp))
+      trunclb 0x006c(-22(sb)), -18(-19(sp))
+      trunclb 0x006c(-22(sb)), 0x0081(-19(sp))
+      trunclb -21(-22(sb)), @-20
+      trunclb 0x006c(-22(sb)), @-19
+      trunclb 0x006c(-22(sb)), @0x0081
+      trunclb -21(-22(sb)), -20(sp)
+      trunclb 0x006c(-22(sb)), -19(sp)
+      trunclb 0x006c(-22(sb)), 0x0081(sp)
+      trunclb -20(-21(sb)), -19(r5)[r2:w]
+      trunclb -19(0x006c(sb)), -18(r5)[r2:w]
+      trunclb -19(0x006c(sb)), 0x0081(r5)[r2:w]
+      trunclb 0x6a6b6c6d:0x6e6f7071, r1
+      trunclw -21(r5), -20(r1)
+      trunclw -21(r5), -19(-20(sp))
+      trunclw -21(r5), 0x0081(-20(sp))
+      trunclw -21(r5), @-20
+      trunclw -21(r5), -20(sp)
+      trunclw -20(r5), -19(r5)[r3:w]
+      trunclw -20(r5), 0x0081(r5)[r3:w]
+      trunclw -21(r6), r1
+      truncld -19(r5), -17(-18(sp))
+      truncld -19(r5), @-18
+      truncfb -18(r5), @-17
+      truncfb -18(r5), -17(sp)
+      truncfb -17(r5), -16(r5)[r6:w]
+      truncfb -17(r5), 0x0081(r5)[r6:w]
+      truncfb -18(r6), r1
+      truncfw -17(r5), -16(sp)
+      truncfw -16(r5), -15(r5)[r7:w]
+      truncfw -16(r5), 0x0081(r5)[r7:w]
+      truncfw -17(r6), r1
+      truncfd -15(r6), r1
+      truncfd -15(r6), -14(r1)
+      truncfd -15(r6), 0x0081(r1)
+      truncfd -15(r6), -13(-14(sp))
+      truncfd -15(r6), -12(0x0073(sp))
+      truncfd -15(r6), 0x0081(0x0073(sp))
+      truncfd -15(r6), -12(-0x1f8d(sp))
+      truncfd -15(r6), 0x0081(-0x1f8d(sp))
+      truncfd -15(r6), -10(0x00737475(sp))
+      truncfd -15(r6), @-14
+      truncfd -15(r6), @0x0081
+      truncfd -15(r6), -14(sp)
+      truncfd -15(r6), 0x0081(sp)
+      truncfd -14(r6), -13(r6)[r1:w]
+      truncfd 0x0073(r6), -12(r6)[r1:w]
+      truncfd 0x0073(r6), 0x0081(r6)[r1:w]
+      truncfd -0x1f8d(r6), -12(r6)[r1:w]
+      truncfd -0x1f8d(r6), 0x0081(r6)[r1:w]
+      truncfd 0x00737475(r6), -10(r6)[r1:w]
+      truncfd -14(-15(fp)), r1
+      truncfd 0x0081(-15(fp)), r1
+      truncfd -14(-15(fp)), -13(r1)
+      truncfd 0x0073(-15(fp)), -12(r1)
+      truncfd 0x0073(-15(fp)), 0x0081(r1)
+      truncfd -0x1f8d(-15(fp)), -12(r1)
+      truncfd -0x1f8d(-15(fp)), 0x0081(r1)
+      truncfd 0x00737475(-15(fp)), -10(r1)
+      truncfd -14(-15(fp)), -12(-13(sp))
+      truncfd 0x0073(-15(fp)), -11(-12(sp))
+      truncfd 0x0073(-15(fp)), 0x0081(-12(sp))
+      truncfd -0x1f8d(-15(fp)), -11(-12(sp))
+      truncfd -0x1f8d(-15(fp)), 0x0081(-12(sp))
+      truncfd 0x00737475(-15(fp)), -9(-10(sp))
+      truncfd 0x00737474(-15(fp)), -8(0x0077(sp))
+      truncfd 0x00737474(-15(fp)), 0x0081(0x0077(sp))
+      truncfd 0x00737474(-15(fp)), -8(-0x1f89(sp))
+      truncfd 0x00737474(-15(fp)), 0x0081(-0x1f89(sp))
+      truncfd 0x00737474(-15(fp)), -6(0x00777879(sp))
+      truncfd -14(-15(fp)), @-13
+      truncfd 0x0073(-15(fp)), @-12
+      truncfd 0x0073(-15(fp)), @0x0081
+      truncfd -0x1f8d(-15(fp)), @-12
+      truncfd -0x1f8d(-15(fp)), @0x0081
+      truncfd 0x00737475(-15(fp)), @-10
+      truncfd -14(-15(fp)), -13(sp)
+      truncfd 0x0073(-15(fp)), -12(sp)
+      truncfd 0x0073(-15(fp)), 0x0081(sp)
+      truncfd -0x1f8d(-15(fp)), -12(sp)
+      truncfd -0x1f8d(-15(fp)), 0x0081(sp)
+      truncfd 0x00737475(-15(fp)), -10(sp)
+      truncfd -13(-14(fp)), -12(r6)[r1:w]
+      truncfd -12(0x0073(fp)), -11(r6)[r1:w]
+      truncfd -12(0x0073(fp)), 0x0081(r6)[r1:w]
+      truncfd -12(-0x1f8d(fp)), -11(r6)[r1:w]
+      truncfd -12(-0x1f8d(fp)), 0x0081(r6)[r1:w]
+      truncfd -10(0x00737475(fp)), -9(r6)[r1:w]
+      truncfd 0x0077(0x00737474(fp)), -8(r6)[r1:w]
+      truncfd 0x0077(0x00737474(fp)), 0x0081(r6)[r1:w]
+      truncfd -0x1f89(0x00737474(fp)), -8(r6)[r1:w]
+      truncfd -0x1f89(0x00737474(fp)), 0x0081(r6)[r1:w]
+      truncfd 0x00777879(0x00737474(fp)), -6(r6)[r1:w]
+      truncfd -14(-15(sp)), r1
+      truncfd 0x0081(-15(sp)), r1
+      truncfd -14(-15(sp)), -13(r1)
+      truncfd 0x0073(-15(sp)), -12(r1)
+      truncfd 0x0073(-15(sp)), 0x0081(r1)
+      truncfd -0x1f8d(-15(sp)), -12(r1)
+      truncfd -0x1f8d(-15(sp)), 0x0081(r1)
+      truncfd 0x00737475(-15(sp)), -10(r1)
+      truncfd -14(-15(sp)), -12(-13(sp))
+      truncfd 0x0073(-15(sp)), -11(-12(sp))
+      truncfd 0x0073(-15(sp)), 0x0081(-12(sp))
+      truncfd -0x1f8d(-15(sp)), -11(-12(sp))
+      truncfd -0x1f8d(-15(sp)), 0x0081(-12(sp))
+      truncfd 0x00737475(-15(sp)), -9(-10(sp))
+      truncfd 0x00737474(-15(sp)), -8(0x0077(sp))
+      truncfd 0x00737474(-15(sp)), 0x0081(0x0077(sp))
+      truncfd 0x00737474(-15(sp)), -8(-0x1f89(sp))
+      truncfd 0x00737474(-15(sp)), 0x0081(-0x1f89(sp))
+      truncfd 0x00737474(-15(sp)), -6(0x00777879(sp))
+      truncfd -14(-15(sp)), @-13
+      truncfd 0x0073(-15(sp)), @-12
+      truncfd 0x0073(-15(sp)), @0x0081
+      truncfd -0x1f8d(-15(sp)), @-12
+      truncfd -0x1f8d(-15(sp)), @0x0081
+      truncfd 0x00737475(-15(sp)), @-10
+      truncfd -14(-15(sp)), -13(sp)
+      truncfd 0x0073(-15(sp)), -12(sp)
+      truncfd 0x0073(-15(sp)), 0x0081(sp)
+      truncfd -0x1f8d(-15(sp)), -12(sp)
+      truncfd -0x1f8d(-15(sp)), 0x0081(sp)
+      truncfd 0x00737475(-15(sp)), -10(sp)
+      truncfd -13(-14(sp)), -12(r6)[r1:w]
+      truncfd -12(0x0073(sp)), -11(r6)[r1:w]
+      truncfd -12(0x0073(sp)), 0x0081(r6)[r1:w]
+      truncfd -12(-0x1f8d(sp)), -11(r6)[r1:w]
+      truncfd -12(-0x1f8d(sp)), 0x0081(r6)[r1:w]
+      truncfd -10(0x00737475(sp)), -9(r6)[r1:w]
+      truncfd 0x0077(0x00737474(sp)), -8(r6)[r1:w]
+      truncfd 0x0077(0x00737474(sp)), 0x0081(r6)[r1:w]
+      truncfd -0x1f89(0x00737474(sp)), -8(r6)[r1:w]
+      truncfd -0x1f89(0x00737474(sp)), 0x0081(r6)[r1:w]
+      truncfd 0x00777879(0x00737474(sp)), -6(r6)[r1:w]
+      truncfd -14(-15(sb)), r1
+      truncfd 0x0081(-15(sb)), r1
+      truncfd -14(-15(sb)), -13(r1)
+      truncfd 0x0073(-15(sb)), -12(r1)
+      truncfd 0x0073(-15(sb)), 0x0081(r1)
+      truncfd -0x1f8d(-15(sb)), -12(r1)
+      truncfd -0x1f8d(-15(sb)), 0x0081(r1)
+      truncfd 0x00737475(-15(sb)), -10(r1)
+      truncfd -14(-15(sb)), -12(-13(sp))
+      truncfd 0x0073(-15(sb)), -11(-12(sp))
+      truncfd 0x0073(-15(sb)), 0x0081(-12(sp))
+      truncfd -0x1f8d(-15(sb)), -11(-12(sp))
+      truncfd -0x1f8d(-15(sb)), 0x0081(-12(sp))
+      truncfd 0x00737475(-15(sb)), -9(-10(sp))
+      truncfd 0x00737474(-15(sb)), -8(0x0077(sp))
+      truncfd 0x00737474(-15(sb)), 0x0081(0x0077(sp))
+      truncfd 0x00737474(-15(sb)), -8(-0x1f89(sp))
+      truncfd 0x00737474(-15(sb)), 0x0081(-0x1f89(sp))
+      truncfd 0x00737474(-15(sb)), -6(0x00777879(sp))
+      truncfd -14(-15(sb)), @-13
+      truncfd 0x0073(-15(sb)), @-12
+      truncfd 0x0073(-15(sb)), @0x0081
+      truncfd -0x1f8d(-15(sb)), @-12
+      truncfd -0x1f8d(-15(sb)), @0x0081
+      truncfd 0x00737475(-15(sb)), @-10
+      truncfd -14(-15(sb)), -13(sp)
+      truncfd 0x0073(-15(sb)), -12(sp)
+      truncfd 0x0073(-15(sb)), 0x0081(sp)
+      truncfd -0x1f8d(-15(sb)), -12(sp)
+      truncfd -0x1f8d(-15(sb)), 0x0081(sp)
+      truncfd 0x00737475(-15(sb)), -10(sp)
+      truncfd -13(-14(sb)), -12(r6)[r1:w]
+      truncfd -12(0x0073(sb)), -11(r6)[r1:w]
+      truncfd -12(0x0073(sb)), 0x0081(r6)[r1:w]
+      truncfd -12(-0x1f8d(sb)), -11(r6)[r1:w]
+      truncfd -12(-0x1f8d(sb)), 0x0081(r6)[r1:w]
+      truncfd -10(0x00737475(sb)), -9(r6)[r1:w]
+      truncfd 0x0077(0x00737474(sb)), -8(r6)[r1:w]
+      truncfd 0x0077(0x00737474(sb)), 0x0081(r6)[r1:w]
+      truncfd -0x1f89(0x00737474(sb)), -8(r6)[r1:w]
+      truncfd -0x1f89(0x00737474(sb)), 0x0081(r6)[r1:w]
+      truncfd 0x00777879(0x00737474(sb)), -6(r6)[r1:w]
+      truncfd 0x71727374, r1
+      sfsr    r1
+      sfsr    -5(r1)
+      sfsr    0x0081(r1)
+      sfsr    -2(-3(sp))
+      sfsr    -1(0x007e(sp))
+      sfsr    0x0081(0x007e(sp))
+      sfsr    -1(-0x1f82(sp))
+      sfsr    0x0081(-0x1f82(sp))
+      sfsr    0x0182(0x007e7f80(sp))
+      sfsr    @-2
+      sfsr    @0x0081
+      sfsr    -1(sp)
+      sfsr    0x0081(sp)
+      sfsr    0x0384(0x0182(fp))[r0:w]
+      sfsr    0x0384(0x0182(sp))[r0:w]
+      sfsr    0x0384(0x0182(sb))[r0:w]
+      sfsr    @0x0182[r0:w]
+      floorlb -6(r7), r5
+      floorlb -6(r7), -5(r1)
+      floorlb -6(r7), 0x0081(r1)
+      floorlb -6(r7), -4(-5(sp))
+      floorlb -6(r7), -3(0x007c(sp))
+      floorlb -6(r7), 0x0081(0x007c(sp))
+      floorlb -6(r7), -3(-0x1f84(sp))
+      floorlb -6(r7), 0x0081(-0x1f84(sp))
+      floorlb -6(r7), -1(0x007c7d7e(sp))
+      floorlb -6(r7), @-5
+      floorlb -6(r7), @0x0081
+      floorlb -6(r7), -5(sp)
+      floorlb -6(r7), 0x0081(sp)
+      floorlb -5(r7), -4(r7)[r2:w]
+      floorlb 0x007c(r7), -3(r7)[r2:w]
+      floorlb 0x007c(r7), 0x0081(r7)[r2:w]
+      floorlb -0x1f84(r7), -3(r7)[r2:w]
+      floorlb -0x1f84(r7), 0x0081(r7)[r2:w]
+      floorlb 0x007c7d7e(r7), -1(r7)[r2:w]
+      floorlb -5(-6(fp)), r1
+      floorlb 0x0081(-6(fp)), r1
+      floorlb -5(-6(fp)), -4(r1)
+      floorlb 0x007c(-6(fp)), -3(r1)
+      floorlb 0x007c(-6(fp)), 0x0081(r1)
+      floorlb -0x1f84(-6(fp)), -3(r1)
+      floorlb -0x1f84(-6(fp)), 0x0081(r1)
+      floorlb 0x007c7d7e(-6(fp)), -1(r1)
+      floorlb -5(-6(fp)), -3(-4(sp))
+      floorlb 0x007c(-6(fp)), -2(-3(sp))
+      floorlb 0x007c(-6(fp)), 0x0081(-3(sp))
+      floorlb -0x1f84(-6(fp)), -2(-3(sp))
+      floorlb -0x1f84(-6(fp)), 0x0081(-3(sp))
+      floorlb 0x007c7d7e(-6(fp)), 0x0081(-1(sp))
+      floorlb 0x007c7d7d(-6(fp)), 0x0182(0x0080(sp))
+      floorlb -5(-6(fp)), @-4
+      floorlb 0x007c(-6(fp)), @-3
+      floorlb 0x007c(-6(fp)), @0x0081
+      floorlb -0x1f84(-6(fp)), @-3
+      floorlb -0x1f84(-6(fp)), @0x0081
+      floorlb 0x007c7d7e(-6(fp)), @-1
+      floorlb -5(-6(fp)), -4(sp)
+      floorlb 0x007c(-6(fp)), -3(sp)
+      floorlb 0x007c(-6(fp)), 0x0081(sp)
+      floorlb -0x1f84(-6(fp)), -3(sp)
+      floorlb -0x1f84(-6(fp)), 0x0081(sp)
+      floorlb 0x007c7d7e(-6(fp)), -1(sp)
+      floorlb -4(-5(fp)), -3(r7)[r2:w]
+      floorlb -3(0x007c(fp)), -2(r7)[r2:w]
+      floorlb -3(0x007c(fp)), 0x0081(r7)[r2:w]
+      floorlb -3(-0x1f84(fp)), -2(r7)[r2:w]
+      floorlb -3(-0x1f84(fp)), 0x0081(r7)[r2:w]
+      floorlb -1(0x007c7d7e(fp)), 0x0081(r7)[r2:w]
+      floorlb 0x0080(0x007c7d7d(fp)), 0x0182(r7)[r2:w]
+      floorlb -5(-6(sp)), r1
+      floorlb 0x0081(-6(sp)), r1
+      floorlb -5(-6(sp)), -4(r1)
+      floorlb 0x007c(-6(sp)), -3(r1)
+      floorlb 0x007c(-6(sp)), 0x0081(r1)
+      floorlb -0x1f84(-6(sp)), -3(r1)
+      floorlb -0x1f84(-6(sp)), 0x0081(r1)
+      floorlb 0x007c7d7e(-6(sp)), -1(r1)
+      floorlb -5(-6(sp)), -3(-4(sp))
+      floorlb 0x007c(-6(sp)), -2(-3(sp))
+      floorlb 0x007c(-6(sp)), 0x0081(-3(sp))
+      floorlb -0x1f84(-6(sp)), -2(-3(sp))
+      floorlb -0x1f84(-6(sp)), 0x0081(-3(sp))
+      floorlb 0x007c7d7e(-6(sp)), 0x0081(-1(sp))
+      floorlb 0x007c7d7d(-6(sp)), 0x0182(0x0080(sp))
+      floorlb -5(-6(sp)), @-4
+      floorlb 0x007c(-6(sp)), @-3
+      floorlb 0x007c(-6(sp)), @0x0081
+      floorlb -0x1f84(-6(sp)), @-3
+      floorlb -0x1f84(-6(sp)), @0x0081
+      floorlb 0x007c7d7e(-6(sp)), @-1
+      floorlb -5(-6(sp)), -4(sp)
+      floorlb 0x007c(-6(sp)), -3(sp)
+      floorlb 0x007c(-6(sp)), 0x0081(sp)
+      floorlb -0x1f84(-6(sp)), -3(sp)
+      floorlb -0x1f84(-6(sp)), 0x0081(sp)
+      floorlb 0x007c7d7e(-6(sp)), -1(sp)
+      floorlb -4(-5(sp)), -3(r7)[r2:w]
+      floorlb -3(0x007c(sp)), -2(r7)[r2:w]
+      floorlb -3(0x007c(sp)), 0x0081(r7)[r2:w]
+      floorlb -3(-0x1f84(sp)), -2(r7)[r2:w]
+      floorlb -3(-0x1f84(sp)), 0x0081(r7)[r2:w]
+      floorlb -1(0x007c7d7e(sp)), 0x0081(r7)[r2:w]
+      floorlb 0x0080(0x007c7d7d(sp)), 0x0182(r7)[r2:w]
+      floorlb -5(-6(sb)), r1
+      floorlb 0x0081(-6(sb)), r1
+      floorlb -5(-6(sb)), -4(r1)
+      floorlb 0x007c(-6(sb)), -3(r1)
+      floorlb 0x007c(-6(sb)), 0x0081(r1)
+      floorlb -0x1f84(-6(sb)), -3(r1)
+      floorlb -0x1f84(-6(sb)), 0x0081(r1)
+      floorlb 0x007c7d7e(-6(sb)), -1(r1)
+      floorlb -5(-6(sb)), -3(-4(sp))
+      floorlb 0x007c(-6(sb)), -2(-3(sp))
+      floorlb 0x007c(-6(sb)), 0x0081(-3(sp))
+      floorlb -0x1f84(-6(sb)), -2(-3(sp))
+      floorlb -0x1f84(-6(sb)), 0x0081(-3(sp))
+      floorlb 0x007c7d7e(-6(sb)), 0x0081(-1(sp))
+      floorlb 0x007c7d7d(-6(sb)), 0x0182(0x0080(sp))
+      floorlb -5(-6(sb)), @-4
+      floorlb 0x007c(-6(sb)), @-3
+      floorlb 0x007c(-6(sb)), @0x0081
+      floorlb -0x1f84(-6(sb)), @-3
+      floorlb -0x1f84(-6(sb)), @0x0081
+      floorlb 0x007c7d7e(-6(sb)), @-1
+      floorlb -5(-6(sb)), -4(sp)
+      floorlb 0x007c(-6(sb)), -3(sp)
+      floorlb 0x007c(-6(sb)), 0x0081(sp)
+      floorlb -0x1f84(-6(sb)), -3(sp)
+      floorlb -0x1f84(-6(sb)), 0x0081(sp)
+      floorlb 0x007c7d7e(-6(sb)), -1(sp)
+      floorlb -4(-5(sb)), -3(r7)[r2:w]
+      floorlb -3(0x007c(sb)), -2(r7)[r2:w]
+      floorlb -3(0x007c(sb)), 0x0081(r7)[r2:w]
+      floorlb -3(-0x1f84(sb)), -2(r7)[r2:w]
+      floorlb -3(-0x1f84(sb)), 0x0081(r7)[r2:w]
+      floorlb -1(0x007c7d7e(sb)), 0x0081(r7)[r2:w]
+      floorlb 0x0080(0x007c7d7d(sb)), 0x0182(r7)[r2:w]
+      floorlb 0x7a7b7c7d:0x7e7f8081, r1
+      floorlw -5(r7), -4(r1)
+      floorlw -5(r7), -3(-4(sp))
+      floorlw -5(r7), 0x0081(-4(sp))
+      floorlw -5(r7), @-4
+      floorlw -5(r7), -4(sp)
+      floorlw -4(r7), -3(r7)[r3:w]
+      floorlw -4(r7), 0x0081(r7)[r3:w]
+      floorlw -4(-5(fp)), r1
+      floorlw -4(-5(fp)), -3(r1)
+      floorlw -4(-5(fp)), 0x0081(r1)
+      floorlw -4(-5(fp)), -2(-3(sp))
+      floorlw -4(-5(fp)), -1(0x007e(sp))
+      floorlw -4(-5(fp)), 0x0081(0x007e(sp))
+      floorlw -4(-5(fp)), -1(-0x1f82(sp))
+      floorlw -4(-5(fp)), 0x0081(-0x1f82(sp))
+      floorlw -4(-5(fp)), 0x0182(0x007e7f80(sp))
+      floorlw -4(-5(fp)), @-3
+      floorlw -4(-5(fp)), @0x0081
+      floorlw -4(-5(fp)), -3(sp)
+      floorlw -4(-5(fp)), 0x0081(sp)
+      floorlw -3(-4(fp)), -2(r7)[r3:w]
+      floorlw 0x007e(-4(fp)), -1(r7)[r3:w]
+      floorlw 0x007e(-4(fp)), 0x0081(r7)[r3:w]
+      floorlw -0x1f82(-4(fp)), -1(r7)[r3:w]
+      floorlw -0x1f82(-4(fp)), 0x0081(r7)[r3:w]
+      floorlw 0x007e7f80(-4(fp)), 0x0182(r7)[r3:w]
+      floorlw -4(-5(sp)), r1
+      floorlw -4(-5(sp)), -3(r1)
+      floorlw -4(-5(sp)), 0x0081(r1)
+      floorlw -4(-5(sp)), -2(-3(sp))
+      floorlw -4(-5(sp)), -1(0x007e(sp))
+      floorlw -4(-5(sp)), 0x0081(0x007e(sp))
+      floorlw -4(-5(sp)), -1(-0x1f82(sp))
+      floorlw -4(-5(sp)), 0x0081(-0x1f82(sp))
+      floorlw -4(-5(sp)), 0x0182(0x007e7f80(sp))
+      floorlw -4(-5(sp)), @-3
+      floorlw -4(-5(sp)), @0x0081
+      floorlw -4(-5(sp)), -3(sp)
+      floorlw -4(-5(sp)), 0x0081(sp)
+      floorlw -3(-4(sp)), -2(r7)[r3:w]
+      floorlw 0x007e(-4(sp)), -1(r7)[r3:w]
+      floorlw 0x007e(-4(sp)), 0x0081(r7)[r3:w]
+      floorlw -0x1f82(-4(sp)), -1(r7)[r3:w]
+      floorlw -0x1f82(-4(sp)), 0x0081(r7)[r3:w]
+      floorlw 0x007e7f80(-4(sp)), 0x0182(r7)[r3:w]
+      floorlw -4(-5(sb)), r1
+      floorlw -4(-5(sb)), -3(r1)
+      floorlw -4(-5(sb)), 0x0081(r1)
+      floorlw -4(-5(sb)), -2(-3(sp))
+      floorlw -4(-5(sb)), -1(0x007e(sp))
+      floorlw -4(-5(sb)), 0x0081(0x007e(sp))
+      floorlw -4(-5(sb)), -1(-0x1f82(sp))
+      floorlw -4(-5(sb)), 0x0081(-0x1f82(sp))
+      floorlw -4(-5(sb)), 0x0182(0x007e7f80(sp))
+      floorlw -4(-5(sb)), @-3
+      floorlw -4(-5(sb)), @0x0081
+      floorlw -4(-5(sb)), -3(sp)
+      floorlw -4(-5(sb)), 0x0081(sp)
+      floorlw -3(-4(sb)), -2(r7)[r3:w]
+      floorlw 0x007e(-4(sb)), -1(r7)[r3:w]
+      floorlw 0x007e(-4(sb)), 0x0081(r7)[r3:w]
+      floorlw -0x1f82(-4(sb)), -1(r7)[r3:w]
+      floorlw -0x1f82(-4(sb)), 0x0081(r7)[r3:w]
+      floorlw 0x007e7f80(-4(sb)), 0x0182(r7)[r3:w]
+      floorlw 0x7b7c7d7e:0x7f808182, r1
+      floorld -3(r7), -1(-2(sp))
+      floorld -3(r7), @-2
+      floorfb -2(r7), @-1
+      floorfb -2(r7), -1(sp)
+      floorfb -1(r7), 0x0081(r7)[r6:w]
+      floorfb -1(r7), -0x1f7f(r7)[r6:w]
+      floorfb -1(r7), 0x00818283(r7)[r6:w]
+      floorfb -1(-2(fp)), r1
+      floorfb -1(-2(fp)), 0x0081(r1)
+      floorfb -1(-2(fp)), -0x1f7f(r1)
+      floorfb -1(-2(fp)), 0x00818283(r1)
+      floorfb -1(-2(fp)), 0x0283(0x0081(sp))
+      floorfb -1(-2(fp)), 0x0283(-0x1f7f(sp))
+      floorfb -1(-2(fp)), 0x0485(0x00818283(sp))
+      floorfb -1(-2(fp)), -0x1f7b(0x00818283(sp))
+      floorfb -1(-2(fp)), 0x00858687(0x00818283(sp))
+      floorfb -1(-2(fp)), @0x0081
+      floorfb -1(-2(fp)), @-0x1f7f
+      floorfb -1(-2(fp)), @0x00818283
+      floorfb -1(-2(fp)), 0x0081(sp)
+      floorfb -1(-2(fp)), -0x1f7f(sp)
+      floorfb -1(-2(fp)), 0x00818283(sp)
+      floorfb 0x0081(-1(fp)), 0x0283(r7)[r6:w]
+      floorfb -0x1f7f(-1(fp)), 0x0283(r7)[r6:w]
+      floorfb 0x00818283(-1(fp)), 0x0485(r7)[r6:w]
+      floorfb 0x00818283(-1(fp)), -0x1f7b(r7)[r6:w]
+      floorfb 0x00818283(-1(fp)), 0x00858687(r7)[r6:w]
+      floorfb -1(-2(sp)), r1
+      floorfb -1(-2(sp)), 0x0081(r1)
+      floorfb -1(-2(sp)), -0x1f7f(r1)
+      floorfb -1(-2(sp)), 0x00818283(r1)
+      floorfb -1(-2(sp)), 0x0283(0x0081(sp))
+      floorfb -1(-2(sp)), 0x0283(-0x1f7f(sp))
+      floorfb -1(-2(sp)), 0x0485(0x00818283(sp))
+      floorfb -1(-2(sp)), -0x1f7b(0x00818283(sp))
+      floorfb -1(-2(sp)), 0x00858687(0x00818283(sp))
+      floorfb -1(-2(sp)), @0x0081
+      floorfb -1(-2(sp)), @-0x1f7f
+      floorfb -1(-2(sp)), @0x00818283
+      floorfb -1(-2(sp)), 0x0081(sp)
+      floorfb -1(-2(sp)), -0x1f7f(sp)
+      floorfb -1(-2(sp)), 0x00818283(sp)
+      floorfb 0x0081(-1(sp)), 0x0283(r7)[r6:w]
+      floorfb -0x1f7f(-1(sp)), 0x0283(r7)[r6:w]
+      floorfb 0x00818283(-1(sp)), 0x0485(r7)[r6:w]
+      floorfb 0x00818283(-1(sp)), -0x1f7b(r7)[r6:w]
+      floorfb 0x00818283(-1(sp)), 0x00858687(r7)[r6:w]
+      floorfb -1(-2(sb)), r1
+      floorfb -1(-2(sb)), 0x0081(r1)
+      floorfb -1(-2(sb)), -0x1f7f(r1)
+      floorfb -1(-2(sb)), 0x00818283(r1)
+      floorfb -1(-2(sb)), 0x0283(0x0081(sp))
+      floorfb -1(-2(sb)), 0x0283(-0x1f7f(sp))
+      floorfb -1(-2(sb)), 0x0485(0x00818283(sp))
+      floorfb -1(-2(sb)), -0x1f7b(0x00818283(sp))
+      floorfb -1(-2(sb)), 0x00858687(0x00818283(sp))
+      floorfb -1(-2(sb)), @0x0081
+      floorfb -1(-2(sb)), @-0x1f7f
+      floorfb -1(-2(sb)), @0x00818283
+      floorfb -1(-2(sb)), 0x0081(sp)
+      floorfb -1(-2(sb)), -0x1f7f(sp)
+      floorfb -1(-2(sb)), 0x00818283(sp)
+      floorfb 0x0081(-1(sb)), 0x0283(r7)[r6:w]
+      floorfb -0x1f7f(-1(sb)), 0x0283(r7)[r6:w]
+      floorfb 0x00818283(-1(sb)), 0x0485(r7)[r6:w]
+      floorfb 0x00818283(-1(sb)), -0x1f7b(r7)[r6:w]
+      floorfb 0x00818283(-1(sb)), 0x00858687(r7)[r6:w]
+      floorfb 0x7e7f8081, r1
+      floorfw -1(r7), 0x0081(sp)
+      floorfw 0x0081(r7), 0x0283(r7)[r7:w]
+      floorfw 0x0081(r7), -0x1f7d(r7)[r7:w]
+      floorfw 0x0081(r7), 0x00838485(r7)[r7:w]
+      floorfw 0x0081(-1(fp)), r1
+      floorfw 0x0081(-1(fp)), 0x0283(r1)
+      floorfw 0x0081(-1(fp)), -0x1f7d(r1)
+      floorfw 0x0081(-1(fp)), 0x00838485(r1)
+      floorfw 0x0081(-1(fp)), 0x0485(0x0283(sp))
+      floorfw 0x0081(-1(fp)), 0x0485(-0x1f7d(sp))
+      floorfw 0x0081(-1(fp)), 0x0687(0x00838485(sp))
+      floorfw 0x0081(-1(fp)), -0x1f79(0x00838485(sp))
+      floorfw 0x0081(-1(fp)), 0x00878889(0x00838485(sp))
+      floorfw 0x0081(-1(fp)), @0x0283
+      floorfw 0x0081(-1(fp)), @-0x1f7d
+      floorfw 0x0081(-1(fp)), @0x00838485
+      floorfw 0x0081(-1(fp)), 0x0283(sp)
+      floorfw 0x0081(-1(fp)), -0x1f7d(sp)
+      floorfw 0x0081(-1(fp)), 0x00838485(sp)
+      floorfw 0x0283(0x0081(fp)), 0x0485(r7)[r7:w]
+      floorfw -0x1f7d(0x0081(fp)), 0x0485(r7)[r7:w]
+      floorfw 0x00838485(0x0081(fp)), 0x0687(r7)[r7:w]
+      floorfw 0x00838485(0x0081(fp)), -0x1f79(r7)[r7:w]
+      floorfw 0x00838485(0x0081(fp)), 0x00878889(r7)[r7:w]
+      floorfw 0x0081(-1(sp)), r1
+      floorfw 0x0081(-1(sp)), 0x0283(r1)
+      floorfw 0x0081(-1(sp)), -0x1f7d(r1)
+      floorfw 0x0081(-1(sp)), 0x00838485(r1)
+      floorfw 0x0081(-1(sp)), 0x0485(0x0283(sp))
+      floorfw 0x0081(-1(sp)), 0x0485(-0x1f7d(sp))
+      floorfw 0x0081(-1(sp)), 0x0687(0x00838485(sp))
+      floorfw 0x0081(-1(sp)), -0x1f79(0x00838485(sp))
+      floorfw 0x0081(-1(sp)), 0x00878889(0x00838485(sp))
+      floorfw 0x0081(-1(sp)), @0x0283
+      floorfw 0x0081(-1(sp)), @-0x1f7d
+      floorfw 0x0081(-1(sp)), @0x00838485
+      floorfw 0x0081(-1(sp)), 0x0283(sp)
+      floorfw 0x0081(-1(sp)), -0x1f7d(sp)
+      floorfw 0x0081(-1(sp)), 0x00838485(sp)
+      floorfw 0x0283(0x0081(sp)), 0x0485(r7)[r7:w]
+      floorfw -0x1f7d(0x0081(sp)), 0x0485(r7)[r7:w]
+      floorfw 0x00838485(0x0081(sp)), 0x0687(r7)[r7:w]
+      floorfw 0x00838485(0x0081(sp)), -0x1f79(r7)[r7:w]
+      floorfw 0x00838485(0x0081(sp)), 0x00878889(r7)[r7:w]
+      floorfw 0x0081(-1(sb)), r1
+      floorfw 0x0081(-1(sb)), 0x0283(r1)
+      floorfw 0x0081(-1(sb)), -0x1f7d(r1)
+      floorfw 0x0081(-1(sb)), 0x00838485(r1)
+      floorfw 0x0081(-1(sb)), 0x0485(0x0283(sp))
+      floorfw 0x0081(-1(sb)), 0x0485(-0x1f7d(sp))
+      floorfw 0x0081(-1(sb)), 0x0687(0x00838485(sp))
+      floorfw 0x0081(-1(sb)), -0x1f79(0x00838485(sp))
+      floorfw 0x0081(-1(sb)), 0x00878889(0x00838485(sp))
+      floorfw 0x0081(-1(sb)), @0x0283
+      floorfw 0x0081(-1(sb)), @-0x1f7d
+      floorfw 0x0081(-1(sb)), @0x00838485
+      floorfw 0x0081(-1(sb)), 0x0283(sp)
+      floorfw 0x0081(-1(sb)), -0x1f7d(sp)
+      floorfw 0x0081(-1(sb)), 0x00838485(sp)
+      floorfw 0x0283(0x0081(sb)), 0x0485(r7)[r7:w]
+      floorfw -0x1f7d(0x0081(sb)), 0x0485(r7)[r7:w]
+      floorfw 0x00838485(0x0081(sb)), 0x0687(r7)[r7:w]
+      floorfw 0x00838485(0x0081(sb)), -0x1f79(r7)[r7:w]
+      floorfw 0x00838485(0x0081(sb)), 0x00878889(r7)[r7:w]
+      floorfw 0x7f808182, r1
+      floorfw 0x7f808182, 0x0384(r1)
+      floorfw 0x7f808181, -0x1f7c(r1)
+      floorfw 0x7f808181, 0x00848586(r1)
+      floorfw 0x7f808182, 0x0586(0x0384(sp))
+      floorfw 0x7f808181, 0x0586(-0x1f7c(sp))
+      floorfw 0x7f808181, 0x0788(0x00848586(sp))
+      floorfw 0x7f808181, -0x1f78(0x00848586(sp))
+      floorfw 0x7f808181, 0x0088898a(0x00848586(sp))
+      floorfw 0x7f808182, @0x0384
+      floorfw 0x7f808181, @-0x1f7c
+      floorfw 0x7f808181, @0x00848586
+      floorfw 0x7f808182, 0x0384(sp)
+      floorfw 0x7f808181, -0x1f7c(sp)
+      floorfw 0x7f808181, 0x00848586(sp)
+      floorfw 0x80818283, 0x0485(r7)[r7:w]
+      floorfw @-1, r1
+      floorfd 0x0384(0x0182(fp)), r1
+      floorfd 0x0384(0x0182(fp)), 0x0586(r1)
+      floorfd 0x0384(0x0182(fp)), -0x1f7a(r1)
+      floorfd 0x0384(0x0182(fp)), 0x00868788(r1)
+      floorfd 0x0384(0x0182(fp)), 0x0788(0x0586(sp))
+      floorfd 0x0384(0x0182(fp)), 0x0788(-0x1f7a(sp))
+      floorfd 0x0384(0x0182(fp)), 0x098a(0x00868788(sp))
+      floorfd 0x0384(0x0182(fp)), -0x1f76(0x00868788(sp))
+      floorfd 0x0384(0x0182(fp)), 0x008a8b8c(0x00868788(sp))
+      floorfd 0x0384(0x0182(fp)), @0x0586
+      floorfd 0x0384(0x0182(fp)), @-0x1f7a
+      floorfd 0x0384(0x0182(fp)), @0x00868788
+      floorfd 0x0384(0x0182(fp)), 0x0586(sp)
+      floorfd 0x0384(0x0182(fp)), -0x1f7a(sp)
+      floorfd 0x0384(0x0182(fp)), 0x00868788(sp)
+      floorfd 0x0485(0x0283(fp)), 0x0889(0x0687(fp))[r1:w]
+      floorfd 0x0484(0x0283(fp)), 0x0889(-0x1f79(fp))[r1:w]
+      floorfd 0x0484(0x0283(fp)), 0x0a8b(0x00878889(fp))[r1:w]
+      floorfd 0x0484(0x0283(fp)), -0x1f75(0x00878889(fp))[r1:w]
+      floorfd 0x0484(0x0283(fp)), 0x008b8c8d(0x00878889(fp))[r1:w]
+      floorfd 0x0384(0x0182(sp)), r1
+      floorfd 0x0384(0x0182(sp)), 0x0586(r1)
+      floorfd 0x0384(0x0182(sp)), -0x1f7a(r1)
+      floorfd 0x0384(0x0182(sp)), 0x00868788(r1)
+      floorfd 0x0384(0x0182(sp)), 0x0788(0x0586(sp))
+      floorfd 0x0384(0x0182(sp)), 0x0788(-0x1f7a(sp))
+      floorfd 0x0384(0x0182(sp)), 0x098a(0x00868788(sp))
+      floorfd 0x0384(0x0182(sp)), -0x1f76(0x00868788(sp))
+      floorfd 0x0384(0x0182(sp)), 0x008a8b8c(0x00868788(sp))
+      floorfd 0x0384(0x0182(sp)), @0x0586
+      floorfd 0x0384(0x0182(sp)), @-0x1f7a
+      floorfd 0x0384(0x0182(sp)), @0x00868788
+      floorfd 0x0384(0x0182(sp)), 0x0586(sp)
+      floorfd 0x0384(0x0182(sp)), -0x1f7a(sp)
+      floorfd 0x0384(0x0182(sp)), 0x00868788(sp)
+      floorfd 0x0485(0x0283(sp)), 0x0889(0x0687(fp))[r1:w]
+      floorfd 0x0484(0x0283(sp)), 0x0889(-0x1f79(fp))[r1:w]
+      floorfd 0x0484(0x0283(sp)), 0x0a8b(0x00878889(fp))[r1:w]
+      floorfd 0x0484(0x0283(sp)), -0x1f75(0x00878889(fp))[r1:w]
+      floorfd 0x0484(0x0283(sp)), 0x008b8c8d(0x00878889(fp))[r1:w]
+      floorfd 0x0384(0x0182(sb)), r1
+      floorfd 0x0384(0x0182(sb)), 0x0586(r1)
+      floorfd 0x0384(0x0182(sb)), -0x1f7a(r1)
+      floorfd 0x0384(0x0182(sb)), 0x00868788(r1)
+      floorfd 0x0384(0x0182(sb)), 0x0788(0x0586(sp))
+      floorfd 0x0384(0x0182(sb)), 0x0788(-0x1f7a(sp))
+      floorfd 0x0384(0x0182(sb)), 0x098a(0x00868788(sp))
+      floorfd 0x0384(0x0182(sb)), -0x1f76(0x00868788(sp))
+      floorfd 0x0384(0x0182(sb)), 0x008a8b8c(0x00868788(sp))
+      floorfd 0x0384(0x0182(sb)), @0x0586
+      floorfd 0x0384(0x0182(sb)), @-0x1f7a
+      floorfd 0x0384(0x0182(sb)), @0x00868788
+      floorfd 0x0384(0x0182(sb)), 0x0586(sp)
+      floorfd 0x0384(0x0182(sb)), -0x1f7a(sp)
+      floorfd 0x0384(0x0182(sb)), 0x00868788(sp)
+      floorfd 0x0485(0x0283(sb)), 0x0889(0x0687(fp))[r1:w]
+      floorfd 0x0484(0x0283(sb)), 0x0889(-0x1f79(fp))[r1:w]
+      floorfd 0x0484(0x0283(sb)), 0x0a8b(0x00878889(fp))[r1:w]
+      floorfd 0x0484(0x0283(sb)), -0x1f75(0x00878889(fp))[r1:w]
+      floorfd 0x0484(0x0283(sb)), 0x008b8c8d(0x00878889(fp))[r1:w]
+      floorfd 0x81828384, r1
+      floorfd 0x81828384, 0x0586(r1)
+      floorfd 0x81828384, -0x1f7a(r1)
+      floorfd 0x81828384, 0x00868788(r1)
+      floorfd 0x81828384, 0x0788(0x0586(sp))
+      floorfd 0x81828384, 0x0788(-0x1f7a(sp))
+      floorfd 0x81828384, 0x098a(0x00868788(sp))
+      floorfd 0x81828384, -0x1f76(0x00868788(sp))
+      floorfd 0x81828384, 0x008a8b8c(0x00868788(sp))
+      floorfd 0x81828384, @0x0586
+      floorfd 0x81828384, @-0x1f7a
+      floorfd 0x81828384, @0x00868788
+      floorfd 0x81828384, 0x0586(sp)
+      floorfd 0x81828384, -0x1f7a(sp)
+      floorfd 0x81828384, 0x00868788(sp)
+      floorfd 0x82838485, 0x0889(0x0687(fp))[r1:w]
+      floorfd 0x82838484, 0x0889(-0x1f79(fp))[r1:w]
+      floorfd 0x82838484, 0x0a8b(0x00878889(fp))[r1:w]
+      floorfd 0x82838484, -0x1f75(0x00878889(fp))[r1:w]
+      floorfd 0x82838484, 0x008b8c8d(0x00878889(fp))[r1:w]
+      floorfd @0x0182, r1
+      movbl   0x0485(0x0283(fp)), f6
+      movbl   0x0485(0x0283(fp)), 0x0687(r2)
+      movbl   0x0485(0x0283(fp)), -0x1f79(r2)
+      movbl   0x0485(0x0283(fp)), 0x00878889(r2)
+      movbl   0x0485(0x0283(fp)), 0x0889(0x0687(sb))
+      movbl   0x0485(0x0283(fp)), 0x0889(-0x1f79(sb))
+      movbl   0x0485(0x0283(fp)), 0x0a8b(0x00878889(sb))
+      movbl   0x0485(0x0283(fp)), -0x1f75(0x00878889(sb))
+      movbl   0x0485(0x0283(fp)), 0x008b8c8d(0x00878889(sb))
+      movbl   0x0485(0x0283(fp)), ext(0x0687)+0x0889
+      movbl   0x0485(0x0283(fp)), ext(-0x1f79)+0x0889
+      movbl   0x0485(0x0283(fp)), ext(0x00878889)+0x0a8b
+      movbl   0x0485(0x0283(fp)), ext(0x00878889)+(-0x1f75)
+      movbl   0x0485(0x0283(fp)), ext(0x00878889)+0x008b8c8d
+      movbl   0x0485(0x0283(fp)), 0x0687(sb)
+      movbl   0x0485(0x0283(fp)), -0x1f79(sb)
+      movbl   0x0485(0x0283(fp)), 0x00878889(sb)
+      movbl   0x0586(0x0384(fp)), 0x098a(0x0788(fp))[r2:d]
+      movbl   0x0585(0x0384(fp)), 0x098a(-0x1f78(fp))[r2:d]
+      movbl   0x0585(0x0384(fp)), 0x0b8c(0x0088898a(fp))[r2:d]
+      movbl   0x0585(0x0384(fp)), -0x1f74(0x0088898a(fp))[r2:d]
+      movbl   0x0585(0x0384(fp)), 0x008c8d8e(0x0088898a(fp))[r2:d]
+      movbl   0x0485(0x0283(sp)), f2
+      movbl   0x0485(0x0283(sp)), 0x0687(r2)
+      movbl   0x0485(0x0283(sp)), -0x1f79(r2)
+      movbl   0x0485(0x0283(sp)), 0x00878889(r2)
+      movbl   0x0485(0x0283(sp)), 0x0889(0x0687(sb))
+      movbl   0x0485(0x0283(sp)), 0x0889(-0x1f79(sb))
+      movbl   0x0485(0x0283(sp)), 0x0a8b(0x00878889(sb))
+      movbl   0x0485(0x0283(sp)), -0x1f75(0x00878889(sb))
+      movbl   0x0485(0x0283(sp)), 0x008b8c8d(0x00878889(sb))
+      movbl   0x0485(0x0283(sp)), ext(0x0687)+0x0889
+      movbl   0x0485(0x0283(sp)), ext(-0x1f79)+0x0889
+      movbl   0x0485(0x0283(sp)), ext(0x00878889)+0x0a8b
+      movbl   0x0485(0x0283(sp)), ext(0x00878889)+(-0x1f75)
+      movbl   0x0485(0x0283(sp)), ext(0x00878889)+0x008b8c8d
+      movbl   0x0485(0x0283(sp)), 0x0687(sb)
+      movbl   0x0485(0x0283(sp)), -0x1f79(sb)
+      movbl   0x0485(0x0283(sp)), 0x00878889(sb)
+      movbl   0x0586(0x0384(sp)), 0x098a(0x0788(fp))[r2:d]
+      movbl   0x0585(0x0384(sp)), 0x098a(-0x1f78(fp))[r2:d]
+      movbl   0x0585(0x0384(sp)), 0x0b8c(0x0088898a(fp))[r2:d]
+      movbl   0x0585(0x0384(sp)), -0x1f74(0x0088898a(fp))[r2:d]
+      movbl   0x0585(0x0384(sp)), 0x008c8d8e(0x0088898a(fp))[r2:d]
+      movbl   0x0485(0x0283(sb)), f2
+      movbl   0x0485(0x0283(sb)), 0x0687(r2)
+      movbl   0x0485(0x0283(sb)), -0x1f79(r2)
+      movbl   0x0485(0x0283(sb)), 0x00878889(r2)
+      movbl   0x0485(0x0283(sb)), 0x0889(0x0687(sb))
+      movbl   0x0485(0x0283(sb)), 0x0889(-0x1f79(sb))
+      movbl   0x0485(0x0283(sb)), 0x0a8b(0x00878889(sb))
+      movbl   0x0485(0x0283(sb)), -0x1f75(0x00878889(sb))
+      movbl   0x0485(0x0283(sb)), 0x008b8c8d(0x00878889(sb))
+      movbl   0x0485(0x0283(sb)), ext(0x0687)+0x0889
+      movbl   0x0485(0x0283(sb)), ext(-0x1f79)+0x0889
+      movbl   0x0485(0x0283(sb)), ext(0x00878889)+0x0a8b
+      movbl   0x0485(0x0283(sb)), ext(0x00878889)+(-0x1f75)
+      movbl   0x0485(0x0283(sb)), ext(0x00878889)+0x008b8c8d
+      movbl   0x0485(0x0283(sb)), 0x0687(sb)
+      movbl   0x0485(0x0283(sb)), -0x1f79(sb)
+      movbl   0x0485(0x0283(sb)), 0x00878889(sb)
+      movbl   0x0586(0x0384(sb)), 0x098a(0x0788(fp))[r2:d]
+      movbl   0x0585(0x0384(sb)), 0x098a(-0x1f78(fp))[r2:d]
+      movbl   0x0585(0x0384(sb)), 0x0b8c(0x0088898a(fp))[r2:d]
+      movbl   0x0585(0x0384(sb)), -0x1f74(0x0088898a(fp))[r2:d]
+      movbl   0x0585(0x0384(sb)), 0x008c8d8e(0x0088898a(fp))[r2:d]
+      movbl   0x82, f2
+      movwl   0x0586(0x0384(fp)), 0x0788(r2)
+      movwl   0x0586(0x0384(fp)), 0x098a(0x0788(sb))
+      movwl   0x0586(0x0384(fp)), -0x1f76(0x0788(sb))
+      movwl   0x0586(0x0384(fp)), 0x008a8b8c(0x0788(sb))
+      movwl   0x0586(0x0384(fp)), ext(0x0788)+0x098a
+      movwl   0x0586(0x0384(fp)), ext(0x0788)+(-0x1f76)
+      movwl   0x0586(0x0384(fp)), ext(0x0788)+0x008a8b8c
+      movwl   0x0586(0x0384(fp)), 0x0788(sb)
+      movwl   0x0687(0x0485(fp)), 0x0a8b(0x0889(fp))[r3:d]
+      movwl   0x0687(0x0485(fp)), -0x1f75(0x0888(fp))[r3:d]
+      movwl   0x0687(0x0485(fp)), 0x008b8c8d(0x0888(fp))[r3:d]
+      movwl   0x0586(0x0384(sp)), f2
+      movdl   0x0788(0x0586(fp)), 0x0b8c(0x098a(sb))
+      movdl   0x0788(0x0586(fp)), ext(0x098a)+0x0b8c
+      movdl   0x0788(0x0586(fp)), 0x098a(sb)
+      movbf   0x0889(0x0687(fp)), ext(0x0a8b)+0x0c8d
+      movbf   0x0889(0x0687(fp)), 0x0a8b(sb)
+      movwf   0x098a(0x0788(fp)), 0x0b8c(sb)
+      movwf   0x0a8b(0x0889(fp)), 0x0e8f(0x0c8d(fp))[r7:d]
+      movwf   0x0a8b(0x0889(fp)), -0x1f71(0x0c8c(fp))[r7:d]
+      movwf   0x0a8b(0x0889(fp)), 0x008f9091(0x0c8c(fp))[r7:d]
+      movwf   0x098a(0x0788(sp)), f2
+      movdf   0x0b8c(0x098a(sp)), f2
+      movdf   0x0b8c(0x098a(sp)), 0x0d8e(r2)
+      movdf   0x0b8c(0x098a(sp)), -0x1f72(r2)
+      movdf   0x0b8c(0x098a(sp)), 0x008e8f90(r2)
+      movdf   0x0b8c(0x098a(sp)), 0x0f90(0x0d8e(sb))
+      movdf   0x0b8c(0x098a(sp)), 0x0f90(-0x1f72(sb))
+      movdf   0x0b8c(0x098a(sp)), 0x1192(0x008e8f90(sb))
+      movdf   0x0b8c(0x098a(sp)), -0x1f6e(0x008e8f90(sb))
+      movdf   0x0b8c(0x098a(sp)), 0x00929394(0x008e8f90(sb))
+      movdf   0x0b8c(0x098a(sp)), 0x1192(-0x1e717070(sb))
+      movdf   0x0b8c(0x098a(sp)), -0x1f6e(-0x1e717070(sb))
+      movdf   0x0b8c(0x098a(sp)), 0x00929394(-0x1e717070(sb))
+      movdf   0x0b8c(0x098a(sp)), 0x0e8f(0(sb))
+      movdf   0x0b8c(0x098a(sp)), ext(0x0d8e)+0x0f90
+      movdf   0x0b8c(0x098a(sp)), ext(-0x1f72)+0x0f90
+      movdf   0x0b8c(0x098a(sp)), ext(0x008e8f90)+0x1192
+      movdf   0x0b8c(0x098a(sp)), ext(0x008e8f90)+(-0x1f6e)
+      movdf   0x0b8c(0x098a(sp)), ext(0x008e8f90)+0x00929394
+      movdf   0x0b8c(0x098a(sp)), ext(-0x1e717070)+0x1192
+      movdf   0x0b8c(0x098a(sp)), ext(-0x1e717070)+(-0x1f6e)
+      movdf   0x0b8c(0x098a(sp)), ext(-0x1e717070)+0x00929394
+      movdf   0x0b8c(0x098a(sp)), ext(0)+0x0e8f
+      movdf   0x0b8c(0x098a(sp)), 0x0d8e(sb)
+      movdf   0x0b8c(0x098a(sp)), -0x1f72(sb)
+      movdf   0x0b8c(0x098a(sp)), 0x008e8f90(sb)
+      movdf   0x0c8d(0x0a8b(sp)), 0x1091(0x0e8f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), 0x1091(-0x1f71(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), 0x1293(0x008f9091(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), -0x1f6d(0x008f9091(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), 0x00939495(0x008f9091(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), 0x1293(-0x1e706f6f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), -0x1f6d(-0x1e706f6f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), 0x00939495(-0x1e706f6f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sp)), 0x0f90(0(sp))[r1:d]
+      movdf   0x0b8c(0x098a(sb)), f2
+      movdf   0x0b8c(0x098a(sb)), 0x0d8e(r2)
+      movdf   0x0b8c(0x098a(sb)), -0x1f72(r2)
+      movdf   0x0b8c(0x098a(sb)), 0x008e8f90(r2)
+      movdf   0x0b8c(0x098a(sb)), 0x0f90(0x0d8e(sb))
+      movdf   0x0b8c(0x098a(sb)), 0x0f90(-0x1f72(sb))
+      movdf   0x0b8c(0x098a(sb)), 0x1192(0x008e8f90(sb))
+      movdf   0x0b8c(0x098a(sb)), -0x1f6e(0x008e8f90(sb))
+      movdf   0x0b8c(0x098a(sb)), 0x00929394(0x008e8f90(sb))
+      movdf   0x0b8c(0x098a(sb)), 0x1192(-0x1e717070(sb))
+      movdf   0x0b8c(0x098a(sb)), -0x1f6e(-0x1e717070(sb))
+      movdf   0x0b8c(0x098a(sb)), 0x00929394(-0x1e717070(sb))
+      movdf   0x0b8c(0x098a(sb)), 0x0e8f(0(sb))
+      movdf   0x0b8c(0x098a(sb)), ext(0x0d8e)+0x0f90
+      movdf   0x0b8c(0x098a(sb)), ext(-0x1f72)+0x0f90
+      movdf   0x0b8c(0x098a(sb)), ext(0x008e8f90)+0x1192
+      movdf   0x0b8c(0x098a(sb)), ext(0x008e8f90)+(-0x1f6e)
+      movdf   0x0b8c(0x098a(sb)), ext(0x008e8f90)+0x00929394
+      movdf   0x0b8c(0x098a(sb)), ext(-0x1e717070)+0x1192
+      movdf   0x0b8c(0x098a(sb)), ext(-0x1e717070)+(-0x1f6e)
+      movdf   0x0b8c(0x098a(sb)), ext(-0x1e717070)+0x00929394
+      movdf   0x0b8c(0x098a(sb)), ext(0)+0x0e8f
+      movdf   0x0b8c(0x098a(sb)), 0x0d8e(sb)
+      movdf   0x0b8c(0x098a(sb)), -0x1f72(sb)
+      movdf   0x0b8c(0x098a(sb)), 0x008e8f90(sb)
+      movdf   0x0c8d(0x0a8b(sb)), 0x1091(0x0e8f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), 0x1091(-0x1f71(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), 0x1293(0x008f9091(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), -0x1f6d(0x008f9091(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), 0x00939495(0x008f9091(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), 0x1293(-0x1e706f6f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), -0x1f6d(-0x1e706f6f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), 0x00939495(-0x1e706f6f(sp))[r1:d]
+      movdf   0x0c8c(0x0a8b(sb)), 0x0f90(0(sp))[r1:d]
+      movdf   0x898a8b8c, f2
+      movdf   0x898a8b8c, 0x0d8e(r2)
+      movdf   0x898a8b8c, -0x1f72(r2)
+      movdf   0x898a8b8c, 0x008e8f90(r2)
+      movdf   0x898a8b8c, 0x0f90(0x0d8e(sb))
+      movdf   0x898a8b8c, 0x0f90(-0x1f72(sb))
+      movdf   0x898a8b8c, 0x1192(0x008e8f90(sb))
+      movdf   0x898a8b8c, -0x1f6e(0x008e8f90(sb))
+      movdf   0x898a8b8c, 0x00929394(0x008e8f90(sb))
+      movdf   0x898a8b8c, 0x1192(-0x1e717070(sb))
+      movdf   0x898a8b8c, -0x1f6e(-0x1e717070(sb))
+      movdf   0x898a8b8c, 0x00929394(-0x1e717070(sb))
+      movdf   0x898a8b8c, 0x0e8f(0(sb))
+      movdf   0x898a8b8c, ext(0x0d8e)+0x0f90
+      movdf   0x898a8b8c, ext(-0x1f72)+0x0f90
+      movdf   0x898a8b8c, ext(0x008e8f90)+0x1192
+      movdf   0x898a8b8c, ext(0x008e8f90)+(-0x1f6e)
+      movdf   0x898a8b8c, ext(0x008e8f90)+0x00929394
+      movdf   0x898a8b8c, ext(-0x1e717070)+0x1192
+      movdf   0x898a8b8c, ext(-0x1e717070)+(-0x1f6e)
+      movdf   0x898a8b8c, ext(-0x1e717070)+0x00929394
+      movdf   0x898a8b8c, ext(0)+0x0e8f
+      movdf   0x898a8b8c, 0x0d8e(sb)
+      movdf   0x898a8b8c, -0x1f72(sb)
+      movdf   0x898a8b8c, 0x008e8f90(sb)
+      movdf   0x8a8b8c8d, 0x1091(0x0e8f(sp))[r1:d]
+      movdf   0x8a8b8c8c, 0x1091(-0x1f71(sp))[r1:d]
+      movdf   0x8a8b8c8c, 0x1293(0x008f9091(sp))[r1:d]
+      movdf   0x8a8b8c8c, -0x1f6d(0x008f9091(sp))[r1:d]
+      movdf   0x8a8b8c8c, 0x00939495(0x008f9091(sp))[r1:d]
+      movdf   0x8a8b8c8c, 0x1293(-0x1e706f6f(sp))[r1:d]
+      movdf   0x8a8b8c8c, -0x1f6d(-0x1e706f6f(sp))[r1:d]
+      movdf   0x8a8b8c8c, 0x00939495(-0x1e706f6f(sp))[r1:d]
+      movdf   0x8a8b8c8c, 0x0f90(0(sp))[r1:d]
+      movdf   @0x098a, f2
+      lfsr    0x1394(0x1192(sb))
       seqd    -63(r0)
       seqd    0x0081(r0)
       scsd    -62(r0)
@@ -2711,20 +3928,20 @@
       sltd    0x17d8d9da(sb)
       sltd    -0x1e272626(sb)
       sltd    0(sb)
-      seqd    0xdc2655(pc)
-      seqd    0x014a7f(pc)
-      scsd    0xdd275f(pc)
-      scsd    0x014a88(pc)
-      shid    0xde2869(pc)
-      shid    0x014a91(pc)
-      sgtd    0xdf2973(pc)
-      sgtd    0x014a9a(pc)
-      sfsd    0xe02a7d(pc)
-      sfsd    0x014aa3(pc)
-      slod    0xe12b87(pc)
-      slod    0x014aac(pc)
-      sltd    0xe22c91(pc)
-      sltd    0x014ab5(pc)
+      seqd    0xdc4edd(pc)
+      seqd    0x017307(pc)
+      scsd    0xdd4fe7(pc)
+      scsd    0x017310(pc)
+      shid    0xde50f1(pc)
+      shid    0x017319(pc)
+      sgtd    0xdf51fb(pc)
+      sgtd    0x017322(pc)
+      sfsd    0xe05305(pc)
+      sfsd    0x01732b(pc)
+      slod    0xe1540f(pc)
+      slod    0x017334(pc)
+      sltd    0xe25519(pc)
+      sltd    0x01733d(pc)
       seqd    r0
       scsd    r0
       shid    r0
@@ -3154,8 +4371,8 @@
       cmpb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      cmpb    ext(-0x0646)+(-0x0444), 0x015664(pc)[r0:w]
-      cmpb    ext(-0x0646)+(-0x0444), 0xc0186f(pc)[r0:w]
+      cmpb    ext(-0x0646)+(-0x0444), 0x017eec(pc)[r0:w]
+      cmpb    ext(-0x0646)+(-0x0444), 0xc040f7(pc)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), r0[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -3186,7 +4403,7 @@
       cmpb    tos, 0x01c2c3c4(fp)[r0:w]
       cmpb    tos, 0x01c2c3c4(sp)[r0:w]
       cmpb    tos, 0x01c2c3c4(sb)[r0:w]
-      cmpb    tos, 0xc41d96(pc)[r0:w]
+      cmpb    tos, 0xc4461e(pc)[r0:w]
       cmpb    tos, r0[r0:w]
       cmpb    0x01c2c3c4(fp), r1
       cmpb    -0x1e3d3c3c(fp), r1
@@ -3205,7 +4422,7 @@
       cmpb    0(fp), 0x08c9cacb(sp)
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      cmpb    0x09cacbcc(fp), 0xd02a49(pc)[r0:w]
+      cmpb    0x09cacbcc(fp), 0xd052d1(pc)[r0:w]
       cmpb    0x09cacbcc(fp), r0[r0:w]
       cmpb    0x09cacbcc(sp), r1
       cmpb    -0x1e353434(sp), r1
@@ -3223,7 +4440,7 @@
       cmpb    -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       cmpb    0(sp), 0x10d1d2d3(sp)
       cmpb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      cmpb    0x11d2d3d4(sp), 0xd832f5(pc)[r0:w]
+      cmpb    0x11d2d3d4(sp), 0xd85b7d(pc)[r0:w]
       cmpb    0x11d2d3d4(sp), r0[r0:w]
       cmpb    0x11d2d3d4(sb), r1
       cmpb    -0x1e2d2c2c(sb), r1
@@ -3240,18 +4457,18 @@
       cmpb    0x17d8d9da(sb), 0x1bdcddde(sp)
       cmpb    -0x1e272626(sb), 0x1bdcddde(sp)
       cmpb    0(sb), 0x18d9dadb(sp)
-      cmpb    0x19dadbdc(sb), 0xe03b96(pc)[r0:w]
+      cmpb    0x19dadbdc(sb), 0xe0641e(pc)[r0:w]
       cmpb    0x19dadbdc(sb), r0[r0:w]
-      cmpb    0xdc37a4(pc), r1
-      cmpb    0x015bce(pc), r1
-      cmpb    0xde39af(pc), 0x1fe0e1e2(r1)
-      cmpb    0x015bdb(pc), 0x1cdddedf(r1)
-      cmpb    0xe03bc2(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      cmpb    0x015bf0(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      cmpb    0xe13cdc(pc), @-0x1d1c1b1b
-      cmpb    0x015c05(pc), @0x1fe0e1e2
-      cmpb    0xe23dee(pc), -0x1c1b1a1a(sp)
-      cmpb    0x015cf6(pc), -0x1e1d1c1c(sp)
+      cmpb    0xdc602c(pc), r1
+      cmpb    0x018456(pc), r1
+      cmpb    0xde6237(pc), 0x1fe0e1e2(r1)
+      cmpb    0x018463(pc), 0x1cdddedf(r1)
+      cmpb    0xe0644a(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      cmpb    0x018478(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      cmpb    0xe16564(pc), @-0x1d1c1b1b
+      cmpb    0x01848d(pc), @0x1fe0e1e2
+      cmpb    0xe26676(pc), -0x1c1b1a1a(sp)
+      cmpb    0x01857e(pc), -0x1e1d1c1c(sp)
       cmpb    r0[r0:q], r0[r1:w]
       cmpb    2(r0)[r0:q], r0[r1:w]
       cmpb    -64(r0)[r0:q], r0[r1:w]
@@ -3783,8 +5000,8 @@
       bicb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      bicb    ext(-0x0646)+(-0x0444), 0x016c0f(pc)[r0:w]
-      bicb    ext(-0x0646)+(-0x0444), 0xc02e1a(pc)[r0:w]
+      bicb    ext(-0x0646)+(-0x0444), 0x019497(pc)[r0:w]
+      bicb    ext(-0x0646)+(-0x0444), 0xc056a2(pc)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), r0[r0:w]
       bicb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -3830,7 +5047,7 @@
       bicb    tos, 0x01c2c3c4(fp)[r0:w]
       bicb    tos, 0x01c2c3c4(sp)[r0:w]
       bicb    tos, 0x01c2c3c4(sb)[r0:w]
-      bicb    tos, 0xc43422(pc)[r0:w]
+      bicb    tos, 0xc45caa(pc)[r0:w]
       bicb    tos, r0[r0:w]
       bicb    0x01c2c3c4(fp), r1
       bicb    -0x1e3d3c3c(fp), r1
@@ -3849,7 +5066,7 @@
       bicb    0(fp), 0x08c9cacb(sp)
       bicb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       bicb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      bicb    0x09cacbcc(fp), 0xd040d5(pc)[r0:w]
+      bicb    0x09cacbcc(fp), 0xd0695d(pc)[r0:w]
       bicb    0x09cacbcc(fp), r0[r0:w]
       bicb    0x09cacbcc(sp), r1
       bicb    -0x1e353434(sp), r1
@@ -3867,7 +5084,7 @@
       bicb    -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       bicb    0(sp), 0x10d1d2d3(sp)
       bicb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      bicb    0x11d2d3d4(sp), 0xd84981(pc)[r0:w]
+      bicb    0x11d2d3d4(sp), 0xd87209(pc)[r0:w]
       bicb    0x11d2d3d4(sp), r0[r0:w]
       bicb    0x11d2d3d4(sb), r1
       bicb    -0x1e2d2c2c(sb), r1
@@ -3884,18 +5101,18 @@
       bicb    0x17d8d9da(sb), 0x1bdcddde(sp)
       bicb    -0x1e272626(sb), 0x1bdcddde(sp)
       bicb    0(sb), 0x18d9dadb(sp)
-      bicb    0x19dadbdc(sb), 0xe05222(pc)[r0:w]
+      bicb    0x19dadbdc(sb), 0xe07aaa(pc)[r0:w]
       bicb    0x19dadbdc(sb), r0[r0:w]
-      bicb    0xdc4e30(pc), r1
-      bicb    0x01725a(pc), r1
-      bicb    0xde503b(pc), 0x1fe0e1e2(r1)
-      bicb    0x017267(pc), 0x1cdddedf(r1)
-      bicb    0xe0524e(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      bicb    0x01727c(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      bicb    0xe15368(pc), @-0x1d1c1b1b
-      bicb    0x017291(pc), @0x1fe0e1e2
-      bicb    0xe2547a(pc), -0x1c1b1a1a(sp)
-      bicb    0x017382(pc), -0x1e1d1c1c(sp)
+      bicb    0xdc76b8(pc), r1
+      bicb    0x019ae2(pc), r1
+      bicb    0xde78c3(pc), 0x1fe0e1e2(r1)
+      bicb    0x019aef(pc), 0x1cdddedf(r1)
+      bicb    0xe07ad6(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      bicb    0x019b04(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      bicb    0xe17bf0(pc), @-0x1d1c1b1b
+      bicb    0x019b19(pc), @0x1fe0e1e2
+      bicb    0xe27d02(pc), -0x1c1b1a1a(sp)
+      bicb    0x019c0a(pc), -0x1e1d1c1c(sp)
       bicb    r0[r0:q], r0[r1:w]
       bicb    2(r0)[r0:q], r0[r1:w]
       bicb    -64(r0)[r0:q], r0[r1:w]
@@ -4061,8 +5278,8 @@
       bicw    0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sp)
       bicw    0x1899(0(sb)), 0x1a9b(sp)
       bicw    0xa1a2, r1
-      bhi     0x0177de
-      bhi     0x017896
+      bhi     0x01a066
+      bhi     0x01a11e
       bicd    -51(r1), -49(-50(sp))
       bicd    0x004e(r1), -48(-49(sp))
       bicd    0x004e(r1), 0x0081(-49(sp))
@@ -4210,18 +5427,18 @@
       bicd    0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sp)
       bicd    0x1899(0(sb)), 0x1a9b(sp)
       bicd    0xa1a2a3a4, r1
-      acbb    -6, -50(r1), 0x017d06
-      acbb    -6, 0x004f(r1), 0x017d0b
-      acbb    -6, 0x004f(r1), 0x017dc1
-      acbb    0, -47(r2), 0x017d18
-      acbb    0, 0x0052(r2), 0x017d1d
-      acbb    0, 0x0052(r2), 0x017dd0
-      acbw    -4, -49(r1), 0x017d25
-      acbw    -4, 0x0050(r1), 0x017d2a
-      acbw    -4, 0x0050(r1), 0x017ddf
-      acbw    0, -47(r2), 0x017d36
-      acbw    0, 0x0052(r2), 0x017d3b
-      acbw    0, 0x0052(r2), 0x017dee
+      acbb    -6, -50(r1), 0x01a58e
+      acbb    -6, 0x004f(r1), 0x01a593
+      acbb    -6, 0x004f(r1), 0x01a649
+      acbb    0, -47(r2), 0x01a5a0
+      acbb    0, 0x0052(r2), 0x01a5a5
+      acbb    0, 0x0052(r2), 0x01a658
+      acbw    -4, -49(r1), 0x01a5ad
+      acbw    -4, 0x0050(r1), 0x01a5b2
+      acbw    -4, 0x0050(r1), 0x01a667
+      acbw    0, -47(r2), 0x01a5be
+      acbw    0, 0x0052(r2), 0x01a5c3
+      acbw    0, 0x0052(r2), 0x01a676
       cbitid  -47(r2), r1
       cbitid  -47(r2), -46(r1)
       cbitid  -47(r2), 0x0081(r1)
@@ -6073,12 +7290,12 @@
       lshw    0x1a9b(0x1899(sb)), -0x1f61(0x1c9c(sb))[r7:d]
       lshw    0x1a9b(0x1899(sb)), 0x009fa0a1(0x1c9c(sb))[r7:d]
       lshw    -105, r2
-      acbd    0, -47(r2), 0x01bab8
-      acbd    0, 0x0052(r2), 0x01babd
-      acbd    0, 0x0052(r2), 0x01bb70
-      acbd    -8, -43(r2), 0x01bacb
-      acbd    -8, 0x0056(r2), 0x01bad0
-      acbd    -8, 0x0056(r2), 0x01bb7f
+      acbd    0, -47(r2), 0x01e340
+      acbd    0, 0x0052(r2), 0x01e345
+      acbd    0, 0x0052(r2), 0x01e3f8
+      acbd    -8, -43(r2), 0x01e353
+      acbd    -8, 0x0056(r2), 0x01e358
+      acbd    -8, 0x0056(r2), 0x01e407
       addcb   -46(r2), r5
       addcb   0x0081(r2), r5
       addcb   -45(r2), -44(r1)
@@ -6301,8 +7518,8 @@
       addcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      addcb   ext(-0x0646)+(-0x0444), 0x01c06c(pc)[r0:w]
-      addcb   ext(-0x0646)+(-0x0444), 0xc08277(pc)[r0:w]
+      addcb   ext(-0x0646)+(-0x0444), 0x01e8f4(pc)[r0:w]
+      addcb   ext(-0x0646)+(-0x0444), 0xc0aaff(pc)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), r0[r0:w]
       addcb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -6348,7 +7565,7 @@
       addcb   tos, 0x01c2c3c4(fp)[r0:w]
       addcb   tos, 0x01c2c3c4(sp)[r0:w]
       addcb   tos, 0x01c2c3c4(sb)[r0:w]
-      addcb   tos, 0xc4887f(pc)[r0:w]
+      addcb   tos, 0xc4b107(pc)[r0:w]
       addcb   tos, r0[r0:w]
       addcb   0x01c2c3c4(fp), r1
       addcb   -0x1e3d3c3c(fp), r1
@@ -6367,7 +7584,7 @@
       addcb   0(fp), 0x08c9cacb(sp)
       addcb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       addcb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      addcb   0x09cacbcc(fp), 0xd09532(pc)[r0:w]
+      addcb   0x09cacbcc(fp), 0xd0bdba(pc)[r0:w]
       addcb   0x09cacbcc(fp), r0[r0:w]
       addcb   0x09cacbcc(sp), r1
       addcb   -0x1e353434(sp), r1
@@ -6385,7 +7602,7 @@
       addcb   -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       addcb   0(sp), 0x10d1d2d3(sp)
       addcb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      addcb   0x11d2d3d4(sp), 0xd89dde(pc)[r0:w]
+      addcb   0x11d2d3d4(sp), 0xd8c666(pc)[r0:w]
       addcb   0x11d2d3d4(sp), r0[r0:w]
       addcb   0x11d2d3d4(sb), r1
       addcb   -0x1e2d2c2c(sb), r1
@@ -6402,18 +7619,18 @@
       addcb   0x17d8d9da(sb), 0x1bdcddde(sp)
       addcb   -0x1e272626(sb), 0x1bdcddde(sp)
       addcb   0(sb), 0x18d9dadb(sp)
-      addcb   0x19dadbdc(sb), 0xe0a67f(pc)[r0:w]
+      addcb   0x19dadbdc(sb), 0xe0cf07(pc)[r0:w]
       addcb   0x19dadbdc(sb), r0[r0:w]
-      addcb   0xdca28d(pc), r1
-      addcb   0x01c6b7(pc), r1
-      addcb   0xdea498(pc), 0x1fe0e1e2(r1)
-      addcb   0x01c6c4(pc), 0x1cdddedf(r1)
-      addcb   0xe0a6ab(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      addcb   0x01c6d9(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      addcb   0xe1a7c5(pc), @-0x1d1c1b1b
-      addcb   0x01c6ee(pc), @0x1fe0e1e2
-      addcb   0xe2a8d7(pc), -0x1c1b1a1a(sp)
-      addcb   0x01c7df(pc), -0x1e1d1c1c(sp)
+      addcb   0xdccb15(pc), r1
+      addcb   0x01ef3f(pc), r1
+      addcb   0xdecd20(pc), 0x1fe0e1e2(r1)
+      addcb   0x01ef4c(pc), 0x1cdddedf(r1)
+      addcb   0xe0cf33(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      addcb   0x01ef61(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      addcb   0xe1d04d(pc), @-0x1d1c1b1b
+      addcb   0x01ef76(pc), @0x1fe0e1e2
+      addcb   0xe2d15f(pc), -0x1c1b1a1a(sp)
+      addcb   0x01f067(pc), -0x1e1d1c1c(sp)
       addcb   r0[r0:q], r0[r1:w]
       addcb   2(r0)[r0:q], r0[r1:w]
       addcb   -64(r0)[r0:q], r0[r1:w]
@@ -6949,8 +8166,8 @@
       movb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       movb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       movb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      movb    ext(-0x0646)+(-0x0444), 0x01d6f8(pc)[r0:w]
-      movb    ext(-0x0646)+(-0x0444), 0xc09903(pc)[r0:w]
+      movb    ext(-0x0646)+(-0x0444), 0x01ff80(pc)[r0:w]
+      movb    ext(-0x0646)+(-0x0444), 0xc0c18b(pc)[r0:w]
       movb    ext(-0x0646)+(-0x0444), r0[r0:w]
       movb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       movb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -6996,7 +8213,7 @@
       movb    tos, 0x01c2c3c4(fp)[r0:w]
       movb    tos, 0x01c2c3c4(sp)[r0:w]
       movb    tos, 0x01c2c3c4(sb)[r0:w]
-      movb    tos, 0xc49f0b(pc)[r0:w]
+      movb    tos, 0xc4c793(pc)[r0:w]
       movb    tos, r0[r0:w]
       movb    0x01c2c3c4(fp), r1
       movb    -0x1e3d3c3c(fp), r1
@@ -7015,7 +8232,7 @@
       movb    0(fp), 0x08c9cacb(sp)
       movb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       movb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      movb    0x09cacbcc(fp), 0xd0abbe(pc)[r0:w]
+      movb    0x09cacbcc(fp), 0xd0d446(pc)[r0:w]
       movb    0x09cacbcc(fp), r0[r0:w]
       movb    0x09cacbcc(sp), r1
       movb    -0x1e353434(sp), r1
@@ -7033,7 +8250,7 @@
       movb    -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       movb    0(sp), 0x10d1d2d3(sp)
       movb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      movb    0x11d2d3d4(sp), 0xd8b46a(pc)[r0:w]
+      movb    0x11d2d3d4(sp), 0xd8dcf2(pc)[r0:w]
       movb    0x11d2d3d4(sp), r0[r0:w]
       movb    0x11d2d3d4(sb), r1
       movb    -0x1e2d2c2c(sb), r1
@@ -7050,18 +8267,18 @@
       movb    0x17d8d9da(sb), 0x1bdcddde(sp)
       movb    -0x1e272626(sb), 0x1bdcddde(sp)
       movb    0(sb), 0x18d9dadb(sp)
-      movb    0x19dadbdc(sb), 0xe0bd0b(pc)[r0:w]
+      movb    0x19dadbdc(sb), 0xe0e593(pc)[r0:w]
       movb    0x19dadbdc(sb), r0[r0:w]
-      movb    0xdcb919(pc), r1
-      movb    0x01dd43(pc), r1
-      movb    0xdebb24(pc), 0x1fe0e1e2(r1)
-      movb    0x01dd50(pc), 0x1cdddedf(r1)
-      movb    0xe0bd37(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      movb    0x01dd65(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      movb    0xe1be51(pc), @-0x1d1c1b1b
-      movb    0x01dd7a(pc), @0x1fe0e1e2
-      movb    0xe2bf63(pc), -0x1c1b1a1a(sp)
-      movb    0x01de6b(pc), -0x1e1d1c1c(sp)
+      movb    0xdce1a1(pc), r1
+      movb    0x0205cb(pc), r1
+      movb    0xdee3ac(pc), 0x1fe0e1e2(r1)
+      movb    0x0205d8(pc), 0x1cdddedf(r1)
+      movb    0xe0e5bf(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      movb    0x0205ed(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      movb    0xe1e6d9(pc), @-0x1d1c1b1b
+      movb    0x020602(pc), @0x1fe0e1e2
+      movb    0xe2e7eb(pc), -0x1c1b1a1a(sp)
+      movb    0x0206f3(pc), -0x1e1d1c1c(sp)
       movb    r0[r0:q], r0[r1:w]
       movb    2(r0)[r0:q], r0[r1:w]
       movb    -64(r0)[r0:q], r0[r1:w]
@@ -7596,8 +8813,8 @@
       orb     ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       orb     ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       orb     ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      orb     ext(-0x0646)+(-0x0444), 0x01ed83(pc)[r0:w]
-      orb     ext(-0x0646)+(-0x0444), 0xc0af8e(pc)[r0:w]
+      orb     ext(-0x0646)+(-0x0444), 0x02160b(pc)[r0:w]
+      orb     ext(-0x0646)+(-0x0444), 0xc0d816(pc)[r0:w]
       orb     ext(-0x0646)+(-0x0444), r0[r0:w]
       orb     ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       orb     ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -7643,7 +8860,7 @@
       orb     tos, 0x01c2c3c4(fp)[r0:w]
       orb     tos, 0x01c2c3c4(sp)[r0:w]
       orb     tos, 0x01c2c3c4(sb)[r0:w]
-      orb     tos, 0xc4b596(pc)[r0:w]
+      orb     tos, 0xc4de1e(pc)[r0:w]
       orb     tos, r0[r0:w]
       orb     0x01c2c3c4(fp), r1
       orb     -0x1e3d3c3c(fp), r1
@@ -7662,7 +8879,7 @@
       orb     0(fp), 0x08c9cacb(sp)
       orb     0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       orb     0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      orb     0x09cacbcc(fp), 0xd0c249(pc)[r0:w]
+      orb     0x09cacbcc(fp), 0xd0ead1(pc)[r0:w]
       orb     0x09cacbcc(fp), r0[r0:w]
       orb     0x09cacbcc(sp), r1
       orb     -0x1e353434(sp), r1
@@ -7680,7 +8897,7 @@
       orb     -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       orb     0(sp), 0x10d1d2d3(sp)
       orb     0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      orb     0x11d2d3d4(sp), 0xd8caf5(pc)[r0:w]
+      orb     0x11d2d3d4(sp), 0xd8f37d(pc)[r0:w]
       orb     0x11d2d3d4(sp), r0[r0:w]
       orb     0x11d2d3d4(sb), r1
       orb     -0x1e2d2c2c(sb), r1
@@ -7697,18 +8914,18 @@
       orb     0x17d8d9da(sb), 0x1bdcddde(sp)
       orb     -0x1e272626(sb), 0x1bdcddde(sp)
       orb     0(sb), 0x18d9dadb(sp)
-      orb     0x19dadbdc(sb), 0xe0d396(pc)[r0:w]
+      orb     0x19dadbdc(sb), 0xe0fc1e(pc)[r0:w]
       orb     0x19dadbdc(sb), r0[r0:w]
-      orb     0xdccfa4(pc), r1
-      orb     0x01f3ce(pc), r1
-      orb     0xded1af(pc), 0x1fe0e1e2(r1)
-      orb     0x01f3db(pc), 0x1cdddedf(r1)
-      orb     0xe0d3c2(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      orb     0x01f3f0(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      orb     0xe1d4dc(pc), @-0x1d1c1b1b
-      orb     0x01f405(pc), @0x1fe0e1e2
-      orb     0xe2d5ee(pc), -0x1c1b1a1a(sp)
-      orb     0x01f4f6(pc), -0x1e1d1c1c(sp)
+      orb     0xdcf82c(pc), r1
+      orb     0x021c56(pc), r1
+      orb     0xdefa37(pc), 0x1fe0e1e2(r1)
+      orb     0x021c63(pc), 0x1cdddedf(r1)
+      orb     0xe0fc4a(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      orb     0x021c78(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      orb     0xe1fd64(pc), @-0x1d1c1b1b
+      orb     0x021c8d(pc), @0x1fe0e1e2
+      orb     0xe2fe76(pc), -0x1c1b1a1a(sp)
+      orb     0x021d7e(pc), -0x1e1d1c1c(sp)
       orb     r0[r0:q], r0[r1:w]
       orb     2(r0)[r0:q], r0[r1:w]
       orb     -64(r0)[r0:q], r0[r1:w]
@@ -7874,8 +9091,8 @@
       orw     0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sp)
       orw     0x1899(0(sb)), 0x1a9b(sp)
       orw     0xa1a2, r1
-      bls     0x01f962
-      bls     0x01fa0a
+      bls     0x0221ea
+      bls     0x022292
       ord     -35(r3), -33(-34(sp))
       ord     0x005e(r3), -32(-33(sp))
       ord     0x005e(r3), 0x0081(-33(sp))
@@ -8257,8 +9474,8 @@
       subb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       subb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       subb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      subb    ext(-0x0646)+(-0x0444), 0x02043d(pc)[r0:w]
-      subb    ext(-0x0646)+(-0x0444), 0xc0c648(pc)[r0:w]
+      subb    ext(-0x0646)+(-0x0444), 0x022cc5(pc)[r0:w]
+      subb    ext(-0x0646)+(-0x0444), 0xc0eed0(pc)[r0:w]
       subb    ext(-0x0646)+(-0x0444), r0[r0:w]
       subb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       subb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -8304,7 +9521,7 @@
       subb    tos, 0x01c2c3c4(fp)[r0:w]
       subb    tos, 0x01c2c3c4(sp)[r0:w]
       subb    tos, 0x01c2c3c4(sb)[r0:w]
-      subb    tos, 0xc4cc50(pc)[r0:w]
+      subb    tos, 0xc4f4d8(pc)[r0:w]
       subb    tos, r0[r0:w]
       subb    0x01c2c3c4(fp), r1
       subb    -0x1e3d3c3c(fp), r1
@@ -8323,7 +9540,7 @@
       subb    0(fp), 0x08c9cacb(sp)
       subb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       subb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      subb    0x09cacbcc(fp), 0xd0d903(pc)[r0:w]
+      subb    0x09cacbcc(fp), 0xd1018b(pc)[r0:w]
       subb    0x09cacbcc(fp), r0[r0:w]
       subb    0x09cacbcc(sp), r1
       subb    -0x1e353434(sp), r1
@@ -8341,7 +9558,7 @@
       subb    -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       subb    0(sp), 0x10d1d2d3(sp)
       subb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      subb    0x11d2d3d4(sp), 0xd8e1af(pc)[r0:w]
+      subb    0x11d2d3d4(sp), 0xd90a37(pc)[r0:w]
       subb    0x11d2d3d4(sp), r0[r0:w]
       subb    0x11d2d3d4(sb), r1
       subb    -0x1e2d2c2c(sb), r1
@@ -8358,18 +9575,18 @@
       subb    0x17d8d9da(sb), 0x1bdcddde(sp)
       subb    -0x1e272626(sb), 0x1bdcddde(sp)
       subb    0(sb), 0x18d9dadb(sp)
-      subb    0x19dadbdc(sb), 0xe0ea50(pc)[r0:w]
+      subb    0x19dadbdc(sb), 0xe112d8(pc)[r0:w]
       subb    0x19dadbdc(sb), r0[r0:w]
-      subb    0xdce65e(pc), r1
-      subb    0x020a88(pc), r1
-      subb    0xdee869(pc), 0x1fe0e1e2(r1)
-      subb    0x020a95(pc), 0x1cdddedf(r1)
-      subb    0xe0ea7c(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      subb    0x020aaa(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      subb    0xe1eb96(pc), @-0x1d1c1b1b
-      subb    0x020abf(pc), @0x1fe0e1e2
-      subb    0xe2eca8(pc), -0x1c1b1a1a(sp)
-      subb    0x020bb0(pc), -0x1e1d1c1c(sp)
+      subb    0xdd0ee6(pc), r1
+      subb    0x023310(pc), r1
+      subb    0xdf10f1(pc), 0x1fe0e1e2(r1)
+      subb    0x02331d(pc), 0x1cdddedf(r1)
+      subb    0xe11304(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      subb    0x023332(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      subb    0xe2141e(pc), @-0x1d1c1b1b
+      subb    0x023347(pc), @0x1fe0e1e2
+      subb    0xe31530(pc), -0x1c1b1a1a(sp)
+      subb    0x023438(pc), -0x1e1d1c1c(sp)
       subb    r0[r0:q], r0[r1:w]
       subb    2(r0)[r0:q], r0[r1:w]
       subb    -64(r0)[r0:q], r0[r1:w]
@@ -8901,8 +10118,8 @@
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       addr    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      addr    ext(-0x0646)+(-0x0444), 0x021a8c(pc)[r0:w]
-      addr    ext(-0x0646)+(-0x0444), 0xc0dc97(pc)[r0:w]
+      addr    ext(-0x0646)+(-0x0444), 0x024314(pc)[r0:w]
+      addr    ext(-0x0646)+(-0x0444), 0xc1051f(pc)[r0:w]
       addr    ext(-0x0646)+(-0x0444), r0[r0:w]
       addr    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -8948,7 +10165,7 @@
       addr    tos, 0x01c2c3c4(fp)[r0:w]
       addr    tos, 0x01c2c3c4(sp)[r0:w]
       addr    tos, 0x01c2c3c4(sb)[r0:w]
-      addr    tos, 0xc4e29f(pc)[r0:w]
+      addr    tos, 0xc50b27(pc)[r0:w]
       addr    tos, r0[r0:w]
       addr    0x01c2c3c4(fp), r1
       addr    -0x1e3d3c3c(fp), r1
@@ -8967,7 +10184,7 @@
       addr    0(fp), 0x08c9cacb(sp)
       addr    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       addr    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      addr    0x09cacbcc(fp), 0xd0ef52(pc)[r0:w]
+      addr    0x09cacbcc(fp), 0xd117da(pc)[r0:w]
       addr    0x09cacbcc(fp), r0[r0:w]
       addr    0x09cacbcc(sp), r1
       addr    -0x1e353434(sp), r1
@@ -8985,7 +10202,7 @@
       addr    -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       addr    0(sp), 0x10d1d2d3(sp)
       addr    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      addr    0x11d2d3d4(sp), 0xd8f7fe(pc)[r0:w]
+      addr    0x11d2d3d4(sp), 0xd92086(pc)[r0:w]
       addr    0x11d2d3d4(sp), r0[r0:w]
       addr    0x11d2d3d4(sb), r1
       addr    -0x1e2d2c2c(sb), r1
@@ -9002,18 +10219,18 @@
       addr    0x17d8d9da(sb), 0x1bdcddde(sp)
       addr    -0x1e272626(sb), 0x1bdcddde(sp)
       addr    0(sb), 0x18d9dadb(sp)
-      addr    0x19dadbdc(sb), 0xe1009f(pc)[r0:w]
+      addr    0x19dadbdc(sb), 0xe12927(pc)[r0:w]
       addr    0x19dadbdc(sb), r0[r0:w]
-      addr    0xdcfcad(pc), r1
-      addr    0x0220d7(pc), r1
-      addr    0xdefeb8(pc), 0x1fe0e1e2(r1)
-      addr    0x0220e4(pc), 0x1cdddedf(r1)
-      addr    0xe100cb(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      addr    0x0220f9(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      addr    0xe201e5(pc), @-0x1d1c1b1b
-      addr    0x02210e(pc), @0x1fe0e1e2
-      addr    0xe302f7(pc), -0x1c1b1a1a(sp)
-      addr    0x0221ff(pc), -0x1e1d1c1c(sp)
+      addr    0xdd2535(pc), r1
+      addr    0x02495f(pc), r1
+      addr    0xdf2740(pc), 0x1fe0e1e2(r1)
+      addr    0x02496c(pc), 0x1cdddedf(r1)
+      addr    0xe12953(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      addr    0x024981(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      addr    0xe22a6d(pc), @-0x1d1c1b1b
+      addr    0x024996(pc), @0x1fe0e1e2
+      addr    0xe32b7f(pc), -0x1c1b1a1a(sp)
+      addr    0x024a87(pc), -0x1e1d1c1c(sp)
       addr    r0[r0:q], r0[r1:w]
       addr    2(r0)[r0:q], r0[r1:w]
       addr    -64(r0)[r0:q], r0[r1:w]
@@ -9257,8 +10474,8 @@
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       andb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      andb    ext(-0x0646)+(-0x0444), 0x0226ed(pc)[r0:w]
-      andb    ext(-0x0646)+(-0x0444), 0xc0e8f8(pc)[r0:w]
+      andb    ext(-0x0646)+(-0x0444), 0x024f75(pc)[r0:w]
+      andb    ext(-0x0646)+(-0x0444), 0xc11180(pc)[r0:w]
       andb    ext(-0x0646)+(-0x0444), r0[r0:w]
       andb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -9304,7 +10521,7 @@
       andb    tos, 0x01c2c3c4(fp)[r0:w]
       andb    tos, 0x01c2c3c4(sp)[r0:w]
       andb    tos, 0x01c2c3c4(sb)[r0:w]
-      andb    tos, 0xc4ef00(pc)[r0:w]
+      andb    tos, 0xc51788(pc)[r0:w]
       andb    tos, r0[r0:w]
       andb    0x01c2c3c4(fp), r1
       andb    -0x1e3d3c3c(fp), r1
@@ -9323,7 +10540,7 @@
       andb    0(fp), 0x08c9cacb(sp)
       andb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       andb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      andb    0x09cacbcc(fp), 0xd0fbb3(pc)[r0:w]
+      andb    0x09cacbcc(fp), 0xd1243b(pc)[r0:w]
       andb    0x09cacbcc(fp), r0[r0:w]
       andb    0x09cacbcc(sp), r1
       andb    -0x1e353434(sp), r1
@@ -9341,7 +10558,7 @@
       andb    -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       andb    0(sp), 0x10d1d2d3(sp)
       andb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      andb    0x11d2d3d4(sp), 0xd9045f(pc)[r0:w]
+      andb    0x11d2d3d4(sp), 0xd92ce7(pc)[r0:w]
       andb    0x11d2d3d4(sp), r0[r0:w]
       andb    0x11d2d3d4(sb), r1
       andb    -0x1e2d2c2c(sb), r1
@@ -9358,18 +10575,18 @@
       andb    0x17d8d9da(sb), 0x1bdcddde(sp)
       andb    -0x1e272626(sb), 0x1bdcddde(sp)
       andb    0(sb), 0x18d9dadb(sp)
-      andb    0x19dadbdc(sb), 0xe10d00(pc)[r0:w]
+      andb    0x19dadbdc(sb), 0xe13588(pc)[r0:w]
       andb    0x19dadbdc(sb), r0[r0:w]
-      andb    0xdd090e(pc), r1
-      andb    0x022d38(pc), r1
-      andb    0xdf0b19(pc), 0x1fe0e1e2(r1)
-      andb    0x022d45(pc), 0x1cdddedf(r1)
-      andb    0xe10d2c(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      andb    0x022d5a(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      andb    0xe20e46(pc), @-0x1d1c1b1b
-      andb    0x022d6f(pc), @0x1fe0e1e2
-      andb    0xe30f58(pc), -0x1c1b1a1a(sp)
-      andb    0x022e60(pc), -0x1e1d1c1c(sp)
+      andb    0xdd3196(pc), r1
+      andb    0x0255c0(pc), r1
+      andb    0xdf33a1(pc), 0x1fe0e1e2(r1)
+      andb    0x0255cd(pc), 0x1cdddedf(r1)
+      andb    0xe135b4(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      andb    0x0255e2(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      andb    0xe236ce(pc), @-0x1d1c1b1b
+      andb    0x0255f7(pc), @0x1fe0e1e2
+      andb    0xe337e0(pc), -0x1c1b1a1a(sp)
+      andb    0x0256e8(pc), -0x1e1d1c1c(sp)
       andb    r0[r0:q], r0[r1:w]
       andb    2(r0)[r0:q], r0[r1:w]
       andb    -64(r0)[r0:q], r0[r1:w]
@@ -9538,8 +10755,8 @@
       andw    0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sp)
       andw    0x1899(0(sb)), 0x1a9b(sp)
       andw    0xa1a2, r1
-      bgt     0x0232ee
-      bgt     0x023386
+      bgt     0x025b76
+      bgt     0x025c0e
       andd    -19(r5), -17(-18(sp))
       andd    0x006e(r5), -16(-17(sp))
       andd    0x006e(r5), 0x0081(-17(sp))
@@ -10336,8 +11553,8 @@
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      subcb   ext(-0x0646)+(-0x0444), 0x024d56(pc)[r0:w]
-      subcb   ext(-0x0646)+(-0x0444), 0xc10f61(pc)[r0:w]
+      subcb   ext(-0x0646)+(-0x0444), 0x0275de(pc)[r0:w]
+      subcb   ext(-0x0646)+(-0x0444), 0xc137e9(pc)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), r0[r0:w]
       subcb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -10383,7 +11600,7 @@
       subcb   tos, 0x01c2c3c4(fp)[r0:w]
       subcb   tos, 0x01c2c3c4(sp)[r0:w]
       subcb   tos, 0x01c2c3c4(sb)[r0:w]
-      subcb   tos, 0xc51569(pc)[r0:w]
+      subcb   tos, 0xc53df1(pc)[r0:w]
       subcb   tos, r0[r0:w]
       subcb   0x01c2c3c4(fp), r1
       subcb   -0x1e3d3c3c(fp), r1
@@ -10402,7 +11619,7 @@
       subcb   0(fp), 0x08c9cacb(sp)
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      subcb   0x09cacbcc(fp), 0xd1221c(pc)[r0:w]
+      subcb   0x09cacbcc(fp), 0xd14aa4(pc)[r0:w]
       subcb   0x09cacbcc(fp), r0[r0:w]
       subcb   0x09cacbcc(sp), r1
       subcb   -0x1e353434(sp), r1
@@ -10420,7 +11637,7 @@
       subcb   -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       subcb   0(sp), 0x10d1d2d3(sp)
       subcb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      subcb   0x11d2d3d4(sp), 0xd92ac8(pc)[r0:w]
+      subcb   0x11d2d3d4(sp), 0xd95350(pc)[r0:w]
       subcb   0x11d2d3d4(sp), r0[r0:w]
       subcb   0x11d2d3d4(sb), r1
       subcb   -0x1e2d2c2c(sb), r1
@@ -10437,18 +11654,18 @@
       subcb   0x17d8d9da(sb), 0x1bdcddde(sp)
       subcb   -0x1e272626(sb), 0x1bdcddde(sp)
       subcb   0(sb), 0x18d9dadb(sp)
-      subcb   0x19dadbdc(sb), 0xe13369(pc)[r0:w]
+      subcb   0x19dadbdc(sb), 0xe15bf1(pc)[r0:w]
       subcb   0x19dadbdc(sb), r0[r0:w]
-      subcb   0xdd2f77(pc), r1
-      subcb   0x0253a1(pc), r1
-      subcb   0xdf3182(pc), 0x1fe0e1e2(r1)
-      subcb   0x0253ae(pc), 0x1cdddedf(r1)
-      subcb   0xe13395(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      subcb   0x0253c3(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      subcb   0xe234af(pc), @-0x1d1c1b1b
-      subcb   0x0253d8(pc), @0x1fe0e1e2
-      subcb   0xe335c1(pc), -0x1c1b1a1a(sp)
-      subcb   0x0254c9(pc), -0x1e1d1c1c(sp)
+      subcb   0xdd57ff(pc), r1
+      subcb   0x027c29(pc), r1
+      subcb   0xdf5a0a(pc), 0x1fe0e1e2(r1)
+      subcb   0x027c36(pc), 0x1cdddedf(r1)
+      subcb   0xe15c1d(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      subcb   0x027c4b(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      subcb   0xe25d37(pc), @-0x1d1c1b1b
+      subcb   0x027c60(pc), @0x1fe0e1e2
+      subcb   0xe35e49(pc), -0x1c1b1a1a(sp)
+      subcb   0x027d51(pc), -0x1e1d1c1c(sp)
       subcb   r0[r0:q], r0[r1:w]
       subcb   2(r0)[r0:q], r0[r1:w]
       subcb   -64(r0)[r0:q], r0[r1:w]
@@ -11037,8 +12254,8 @@
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
-      tbitb   ext(-0x0646)+(-0x0444), 0x026539(pc)[r0:w]
-      tbitb   ext(-0x0646)+(-0x0444), 0xc12744(pc)[r0:w]
+      tbitb   ext(-0x0646)+(-0x0444), 0x028dc1(pc)[r0:w]
+      tbitb   ext(-0x0646)+(-0x0444), 0xc14fcc(pc)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), r0[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
@@ -11084,7 +12301,7 @@
       tbitb   tos, 0x01c2c3c4(fp)[r0:w]
       tbitb   tos, 0x01c2c3c4(sp)[r0:w]
       tbitb   tos, 0x01c2c3c4(sb)[r0:w]
-      tbitb   tos, 0xc52d4c(pc)[r0:w]
+      tbitb   tos, 0xc555d4(pc)[r0:w]
       tbitb   tos, r0[r0:w]
       tbitb   0x01c2c3c4(fp), r1
       tbitb   -0x1e3d3c3c(fp), r1
@@ -11103,7 +12320,7 @@
       tbitb   0(fp), 0x08c9cacb(sp)
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
-      tbitb   0x09cacbcc(fp), 0xd139ff(pc)[r0:w]
+      tbitb   0x09cacbcc(fp), 0xd16287(pc)[r0:w]
       tbitb   0x09cacbcc(fp), r0[r0:w]
       tbitb   0x09cacbcc(sp), r1
       tbitb   -0x1e353434(sp), r1
@@ -11121,7 +12338,7 @@
       tbitb   -0x1e2f2e2e(sp), 0x13d4d5d6(sp)
       tbitb   0(sp), 0x10d1d2d3(sp)
       tbitb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
-      tbitb   0x11d2d3d4(sp), 0xd942ab(pc)[r0:w]
+      tbitb   0x11d2d3d4(sp), 0xd96b33(pc)[r0:w]
       tbitb   0x11d2d3d4(sp), r0[r0:w]
       tbitb   0x11d2d3d4(sb), r1
       tbitb   -0x1e2d2c2c(sb), r1
@@ -11138,18 +12355,18 @@
       tbitb   0x17d8d9da(sb), 0x1bdcddde(sp)
       tbitb   -0x1e272626(sb), 0x1bdcddde(sp)
       tbitb   0(sb), 0x18d9dadb(sp)
-      tbitb   0x19dadbdc(sb), 0xe14b4c(pc)[r0:w]
+      tbitb   0x19dadbdc(sb), 0xe173d4(pc)[r0:w]
       tbitb   0x19dadbdc(sb), r0[r0:w]
-      tbitb   0xdd475a(pc), r1
-      tbitb   0x026b84(pc), r1
-      tbitb   0xdf4965(pc), 0x1fe0e1e2(r1)
-      tbitb   0x026b91(pc), 0x1cdddedf(r1)
-      tbitb   0xe14b78(pc), -0x1a191818(-0x1e1d1c1c(sp))
-      tbitb   0x026ba6(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
-      tbitb   0xe24c92(pc), @-0x1d1c1b1b
-      tbitb   0x026bbb(pc), @0x1fe0e1e2
-      tbitb   0xe34da4(pc), -0x1c1b1a1a(sp)
-      tbitb   0x026cac(pc), -0x1e1d1c1c(sp)
+      tbitb   0xdd6fe2(pc), r1
+      tbitb   0x02940c(pc), r1
+      tbitb   0xdf71ed(pc), 0x1fe0e1e2(r1)
+      tbitb   0x029419(pc), 0x1cdddedf(r1)
+      tbitb   0xe17400(pc), -0x1a191818(-0x1e1d1c1c(sp))
+      tbitb   0x02942e(pc), -0x1d1c1b1b(0x1edfe0e1(sp))
+      tbitb   0xe2751a(pc), @-0x1d1c1b1b
+      tbitb   0x029443(pc), @0x1fe0e1e2
+      tbitb   0xe3762c(pc), -0x1c1b1a1a(sp)
+      tbitb   0x029534(pc), -0x1e1d1c1c(sp)
       tbitb   r0[r0:q], r0[r1:w]
       tbitb   2(r0)[r0:q], r0[r1:w]
       tbitb   -64(r0)[r0:q], r0[r1:w]
@@ -11455,8 +12672,8 @@
       xorw    0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sp)
       xorw    0x1899(0(sb)), 0x1a9b(sp)
       xorw    0xa1a2, r1
-      ble     0x027646
-      ble     0x0276ce
+      ble     0x029ece
+      ble     0x029f56
       xord    -3(r7), -1(-2(sp))
       xord    0x007e(r7), 0x0081(-1(sp))
       xord    0x007e(r7), -0x1f7f(-1(sp))
@@ -11753,12 +12970,12 @@
       caseb   0x18d9dadb(sb)
       caseb   -0x1e262525(sb)
       caseb   0(sb)
-      bicpsrb 0xde5c41(pc)
-      bicpsrb 0x027f6a(pc)
-      bispsrb 0xe05e4c(pc)
-      bispsrb 0x027f73(pc)
-      adjspb  0xe26057(pc)
-      adjspb  0x027f7c(pc)
+      bicpsrb 0xde84c9(pc)
+      bicpsrb 0x02a7f2(pc)
+      bispsrb 0xe086d4(pc)
+      bispsrb 0x02a7fb(pc)
+      adjspb  0xe288df(pc)
+      adjspb  0x02a804(pc)
       caseb   r0[r0:q]
       caseb   -63(r0)[r0:q]
       caseb   0x0081(r0)[r0:q]
@@ -11934,12 +13151,12 @@
       casew   0x18d9dadb(sb)
       casew   -0x1e262525(sb)
       casew   0(sb)
-      bicpsrw 0xde60c1(pc)
-      bicpsrw 0x0283ea(pc)
-      bispsrw 0xe062cc(pc)
-      bispsrw 0x0283f3(pc)
-      adjspw  0xe264d7(pc)
-      adjspw  0x0283fc(pc)
+      bicpsrw 0xde8949(pc)
+      bicpsrw 0x02ac72(pc)
+      bispsrw 0xe08b54(pc)
+      bispsrw 0x02ac7b(pc)
+      adjspw  0xe28d5f(pc)
+      adjspw  0x02ac84(pc)
       casew   r0[r0:q]
       casew   -63(r0)[r0:q]
       casew   0x0081(r0)[r0:q]
@@ -12153,14 +13370,14 @@
       cased   0x18d9dadb(sb)
       cased   -0x1e262525(sb)
       cased   0(sb)
-      cxpd    0xdd654d(pc)
-      cxpd    0x028977(pc)
-      jump    0xdf6758(pc)
-      jump    0x028980(pc)
-      adjspd  0xe26a64(pc)
-      adjspd  0x028989(pc)
-      jsr     0xe36b6e(pc)
-      jsr     0x028992(pc)
+      cxpd    0xdd8dd5(pc)
+      cxpd    0x02b1ff(pc)
+      jump    0xdf8fe0(pc)
+      jump    0x02b208(pc)
+      adjspd  0xe292ec(pc)
+      adjspd  0x02b211(pc)
+      jsr     0xe393f6(pc)
+      jsr     0x02b21a(pc)
       cased   r0[r0:q]
       cased   -63(r0)[r0:q]
       cased   0x0081(r0)[r0:q]
@@ -12372,8 +13589,8 @@
       addb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       addb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       addb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      addb    ext(-0x0646)+(-0x0444), 0x028edc(pc)[r0:d]
-      addb    ext(-0x0646)+(-0x0444), 0xc150e7(pc)[r0:d]
+      addb    ext(-0x0646)+(-0x0444), 0x02b764(pc)[r0:d]
+      addb    ext(-0x0646)+(-0x0444), 0xc1796f(pc)[r0:d]
       addb    ext(-0x0646)+(-0x0444), r0[r0:d]
       addb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       addb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -12419,7 +13636,7 @@
       addb    tos, 0x01c2c3c4(fp)[r0:d]
       addb    tos, 0x01c2c3c4(sp)[r0:d]
       addb    tos, 0x01c2c3c4(sb)[r0:d]
-      addb    tos, 0xc556f7(pc)[r0:d]
+      addb    tos, 0xc57f7f(pc)[r0:d]
       addb    tos, r0[r0:d]
       addb    0x01c2c3c4(fp), r2
       addb    -0x1e3d3c3c(fp), r2
@@ -12438,7 +13655,7 @@
       addb    0(fp), 0x08c9cacb(sb)
       addb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       addb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      addb    0x09cacbcc(fp), 0xd163b6(pc)[r0:d]
+      addb    0x09cacbcc(fp), 0xd18c3e(pc)[r0:d]
       addb    0x09cacbcc(fp), r0[r0:d]
       addb    0x09cacbcc(sp), r2
       addb    -0x1e353434(sp), r2
@@ -12456,7 +13673,7 @@
       addb    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       addb    0(sp), 0x10d1d2d3(sb)
       addb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      addb    0x11d2d3d4(sp), 0xd96c6e(pc)[r0:d]
+      addb    0x11d2d3d4(sp), 0xd994f6(pc)[r0:d]
       addb    0x11d2d3d4(sp), r0[r0:d]
       addb    0x11d2d3d4(sb), r2
       addb    -0x1e2d2c2c(sb), r2
@@ -12473,18 +13690,18 @@
       addb    0x17d8d9da(sb), 0x1bdcddde(sb)
       addb    -0x1e272626(sb), 0x1bdcddde(sb)
       addb    0(sb), 0x18d9dadb(sb)
-      addb    0x19dadbdc(sb), 0xe1751b(pc)[r0:d]
+      addb    0x19dadbdc(sb), 0xe19da3(pc)[r0:d]
       addb    0x19dadbdc(sb), r0[r0:d]
-      addb    0xdd7129(pc), r2
-      addb    0x029553(pc), r2
-      addb    0xdf7334(pc), 0x1fe0e1e2(r2)
-      addb    0x029560(pc), 0x1cdddedf(r2)
-      addb    0xe17547(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      addb    0x029575(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      addb    0xe27661(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      addb    0x02958e(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      addb    0xe3777b(pc), -0x1c1b1a1a(sb)
-      addb    0x029683(pc), -0x1e1d1c1c(sb)
+      addb    0xdd99b1(pc), r2
+      addb    0x02bddb(pc), r2
+      addb    0xdf9bbc(pc), 0x1fe0e1e2(r2)
+      addb    0x02bde8(pc), 0x1cdddedf(r2)
+      addb    0xe19dcf(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      addb    0x02bdfd(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      addb    0xe29ee9(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      addb    0x02be16(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      addb    0xe3a003(pc), -0x1c1b1a1a(sb)
+      addb    0x02bf0b(pc), -0x1e1d1c1c(sb)
       addb    r0[r0:q], r0[r1:d]
       addb    2(r0)[r0:q], r0[r1:d]
       addb    -64(r0)[r0:q], r0[r1:d]
@@ -12989,7 +14206,7 @@
       bicw    0x1b9c(-0x1e676666(sb)), -0x1f62(sb)
       bicw    0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sb)
       bicw    0x1899(0(sb)), 0x1a9b(sb)
-      bfs     0x02b5ed
+      bfs     0x02de75
       bicd    0x0f90(0x0d8e(sp)), 0x1394(0x1192(sb))
       bicd    0x0f90(-0x1f72(sp)), 0x1394(0x1192(sb))
       bicd    0x1192(0x008e8f90(sp)), 0x1596(0x1394(sb))
@@ -13109,10 +14326,10 @@
       addqb   -7, 0x15d6d7d8(sb)
       addqb   -7, -0x1e292828(sb)
       addqb   -7, 0(sb)
-      addqb   1, 0xdd8a45(pc)
-      addqb   1, 0x02ae6f(pc)
-      addqb   -7, 0xe18e52(pc)
-      addqb   -7, 0x02ae78(pc)
+      addqb   1, 0xddb2cd(pc)
+      addqb   1, 0x02d6f7(pc)
+      addqb   -7, 0xe1b6da(pc)
+      addqb   -7, 0x02d700(pc)
       addqb   -1, r0[r0:q]
       addqb   -1, -63(r0)[r0:q]
       addqb   -1, 0x0081(r0)[r0:q]
@@ -13179,10 +14396,10 @@
       addqw   -7, 0x15d6d7d8(sb)
       addqw   -7, -0x1e292828(sb)
       addqw   -7, 0(sb)
-      addqw   1, 0xdd8c02(pc)
-      addqw   1, 0x02b02c(pc)
-      addqw   -7, 0xe1900f(pc)
-      addqw   -7, 0x02b035(pc)
+      addqw   1, 0xddb48a(pc)
+      addqw   1, 0x02d8b4(pc)
+      addqw   -7, 0xe1b897(pc)
+      addqw   -7, 0x02d8bd(pc)
       addqw   -1, r0[r0:q]
       addqw   -1, -63(r0)[r0:q]
       addqw   -1, 0x0081(r0)[r0:q]
@@ -13240,10 +14457,10 @@
       addqd   -7, 0x15d6d7d8(sb)
       addqd   -7, -0x1e292828(sb)
       addqd   -7, 0(sb)
-      addqd   1, 0xdd8d7a(pc)
-      addqd   1, 0x02b1a4(pc)
-      addqd   -7, 0xe19187(pc)
-      addqd   -7, 0x02b1ad(pc)
+      addqd   1, 0xddb602(pc)
+      addqd   1, 0x02da2c(pc)
+      addqd   -7, 0xe1ba0f(pc)
+      addqd   -7, 0x02da35(pc)
       addqd   -1, r0[r0:q]
       addqd   -1, -63(r0)[r0:q]
       addqd   -1, 0x0081(r0)[r0:q]
@@ -13363,7 +14580,7 @@
       movw    0x1b9c(-0x1e676666(sb)), -0x1f62(sb)
       movw    0x1b9c(-0x1e676666(sb)), 0x009e9fa0(sb)
       movw    0x1899(0(sb)), 0x1a9b(sb)
-      bfc     0x02d1fa
+      bfc     0x02fa82
       cmpqb   1, @-0x1656
       cmpqb   1, @0x00aaabac
       cmpqb   -7, @-0x1252
@@ -13400,10 +14617,10 @@
       cmpqb   -7, 0x15d6d7d8(sb)
       cmpqb   -7, -0x1e292828(sb)
       cmpqb   -7, 0(sb)
-      cmpqb   1, 0xdd930d(pc)
-      cmpqb   1, 0x02b737(pc)
-      cmpqb   -7, 0xe1971a(pc)
-      cmpqb   -7, 0x02b740(pc)
+      cmpqb   1, 0xddbb95(pc)
+      cmpqb   1, 0x02dfbf(pc)
+      cmpqb   -7, 0xe1bfa2(pc)
+      cmpqb   -7, 0x02dfc8(pc)
       cmpqb   -1, r0[r0:q]
       cmpqb   -1, -63(r0)[r0:q]
       cmpqb   -1, 0x0081(r0)[r0:q]
@@ -13443,10 +14660,10 @@
       cmpqw   -7, 0x15d6d7d8(sb)
       cmpqw   -7, -0x1e292828(sb)
       cmpqw   -7, 0(sb)
-      cmpqw   1, 0xdd93fb(pc)
-      cmpqw   1, 0x02b825(pc)
-      cmpqw   -7, 0xe19808(pc)
-      cmpqw   -7, 0x02b82e(pc)
+      cmpqw   1, 0xddbc83(pc)
+      cmpqw   1, 0x02e0ad(pc)
+      cmpqw   -7, 0xe1c090(pc)
+      cmpqw   -7, 0x02e0b6(pc)
       cmpqw   -1, r0[r0:q]
       cmpqw   -1, -63(r0)[r0:q]
       cmpqw   -1, 0x0081(r0)[r0:q]
@@ -13486,10 +14703,10 @@
       cmpqd   -7, 0x15d6d7d8(sb)
       cmpqd   -7, -0x1e292828(sb)
       cmpqd   -7, 0(sb)
-      cmpqd   1, 0xdd94e9(pc)
-      cmpqd   1, 0x02b913(pc)
-      cmpqd   -7, 0xe198f6(pc)
-      cmpqd   -7, 0x02b91c(pc)
+      cmpqd   1, 0xddbd71(pc)
+      cmpqd   1, 0x02e19b(pc)
+      cmpqd   -7, 0xe1c17e(pc)
+      cmpqd   -7, 0x02e1a4(pc)
       cmpqd   -1, r0[r0:q]
       cmpqd   -1, -63(r0)[r0:q]
       cmpqd   -1, 0x0081(r0)[r0:q]
@@ -13564,8 +14781,8 @@
       subd    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       subd    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       subd    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      subd    ext(-0x0646)+(-0x0444), 0x02b97f(pc)[r0:d]
-      subd    ext(-0x0646)+(-0x0444), 0xc17b8a(pc)[r0:d]
+      subd    ext(-0x0646)+(-0x0444), 0x02e207(pc)[r0:d]
+      subd    ext(-0x0646)+(-0x0444), 0xc1a412(pc)[r0:d]
       subd    ext(-0x0646)+(-0x0444), r0[r0:d]
       subd    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subd    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -13611,7 +14828,7 @@
       subd    tos, 0x01c2c3c4(fp)[r0:d]
       subd    tos, 0x01c2c3c4(sp)[r0:d]
       subd    tos, 0x01c2c3c4(sb)[r0:d]
-      subd    tos, 0xc5819a(pc)[r0:d]
+      subd    tos, 0xc5aa22(pc)[r0:d]
       subd    tos, r0[r0:d]
       subd    0x01c2c3c4(fp), r2
       subd    -0x1e3d3c3c(fp), r2
@@ -13630,7 +14847,7 @@
       subd    0(fp), 0x08c9cacb(sb)
       subd    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subd    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      subd    0x09cacbcc(fp), 0xd18e59(pc)[r0:d]
+      subd    0x09cacbcc(fp), 0xd1b6e1(pc)[r0:d]
       subd    0x09cacbcc(fp), r0[r0:d]
       subd    0x09cacbcc(sp), r2
       subd    -0x1e353434(sp), r2
@@ -13648,7 +14865,7 @@
       subd    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       subd    0(sp), 0x10d1d2d3(sb)
       subd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      subd    0x11d2d3d4(sp), 0xd99711(pc)[r0:d]
+      subd    0x11d2d3d4(sp), 0xd9bf99(pc)[r0:d]
       subd    0x11d2d3d4(sp), r0[r0:d]
       subd    0x11d2d3d4(sb), r2
       subd    -0x1e2d2c2c(sb), r2
@@ -13665,18 +14882,18 @@
       subd    0x17d8d9da(sb), 0x1bdcddde(sb)
       subd    -0x1e272626(sb), 0x1bdcddde(sb)
       subd    0(sb), 0x18d9dadb(sb)
-      subd    0x19dadbdc(sb), 0xe19fbe(pc)[r0:d]
+      subd    0x19dadbdc(sb), 0xe1c846(pc)[r0:d]
       subd    0x19dadbdc(sb), r0[r0:d]
-      subd    0xdd9bcc(pc), r2
-      subd    0x02bff6(pc), r2
-      subd    0xdf9dd7(pc), 0x1fe0e1e2(r2)
-      subd    0x02c003(pc), 0x1cdddedf(r2)
-      subd    0xe19fea(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      subd    0x02c018(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      subd    0xe2a104(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      subd    0x02c031(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      subd    0xe3a21e(pc), -0x1c1b1a1a(sb)
-      subd    0x02c126(pc), -0x1e1d1c1c(sb)
+      subd    0xddc454(pc), r2
+      subd    0x02e87e(pc), r2
+      subd    0xdfc65f(pc), 0x1fe0e1e2(r2)
+      subd    0x02e88b(pc), 0x1cdddedf(r2)
+      subd    0xe1c872(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      subd    0x02e8a0(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      subd    0xe2c98c(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      subd    0x02e8b9(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      subd    0xe3caa6(pc), -0x1c1b1a1a(sb)
+      subd    0x02e9ae(pc), -0x1e1d1c1c(sb)
       subd    r0[r0:q], r0[r1:d]
       subd    2(r0)[r0:q], r0[r1:d]
       subd    -64(r0)[r0:q], r0[r1:d]
@@ -13742,8 +14959,8 @@
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       addr    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      addr    ext(-0x0646)+(-0x0444), 0x02c025(pc)[r0:d]
-      addr    ext(-0x0646)+(-0x0444), 0xc18230(pc)[r0:d]
+      addr    ext(-0x0646)+(-0x0444), 0x02e8ad(pc)[r0:d]
+      addr    ext(-0x0646)+(-0x0444), 0xc1aab8(pc)[r0:d]
       addr    ext(-0x0646)+(-0x0444), r0[r0:d]
       addr    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -13786,7 +15003,7 @@
       addr    tos, 0x01c2c3c4(fp)[r0:d]
       addr    tos, 0x01c2c3c4(sp)[r0:d]
       addr    tos, 0x01c2c3c4(sb)[r0:d]
-      addr    tos, 0xc58834(pc)[r0:d]
+      addr    tos, 0xc5b0bc(pc)[r0:d]
       addr    tos, r0[r0:d]
       addr    0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       addr    -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
@@ -13799,7 +15016,7 @@
       addr    0(fp), 0x08c9cacb(sb)
       addr    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       addr    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      addr    0x09cacbcc(fp), 0xd194c9(pc)[r0:d]
+      addr    0x09cacbcc(fp), 0xd1bd51(pc)[r0:d]
       addr    0x09cacbcc(fp), r0[r0:d]
       addr    0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       addr    -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
@@ -13811,7 +15028,7 @@
       addr    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       addr    0(sp), 0x10d1d2d3(sb)
       addr    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      addr    0x11d2d3d4(sp), 0xd99d57(pc)[r0:d]
+      addr    0x11d2d3d4(sp), 0xd9c5df(pc)[r0:d]
       addr    0x11d2d3d4(sp), r0[r0:d]
       addr    0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       addr    -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
@@ -13822,14 +15039,14 @@
       addr    0x17d8d9da(sb), 0x1bdcddde(sb)
       addr    -0x1e272626(sb), 0x1bdcddde(sb)
       addr    0(sb), 0x18d9dadb(sb)
-      addr    0x19dadbdc(sb), 0xe1a5da(pc)[r0:d]
+      addr    0x19dadbdc(sb), 0xe1ce62(pc)[r0:d]
       addr    0x19dadbdc(sb), r0[r0:d]
-      addr    0xe1a5ec(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      addr    0x02c61a(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      addr    0xe2a706(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      addr    0x02c633(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      addr    0xe3a820(pc), -0x1c1b1a1a(sb)
-      addr    0x02c728(pc), -0x1e1d1c1c(sb)
+      addr    0xe1ce74(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      addr    0x02eea2(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      addr    0xe2cf8e(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      addr    0x02eebb(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      addr    0xe3d0a8(pc), -0x1c1b1a1a(sb)
+      addr    0x02efb0(pc), -0x1e1d1c1c(sb)
       addr    r0[r0:q], r0[r1:d]
       addr    2(r0)[r0:q], r0[r1:d]
       addr    -64(r0)[r0:q], r0[r1:d]
@@ -13879,8 +15096,8 @@
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       andb    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      andb    ext(-0x0646)+(-0x0444), 0x02c5e1(pc)[r0:d]
-      andb    ext(-0x0646)+(-0x0444), 0xc187ec(pc)[r0:d]
+      andb    ext(-0x0646)+(-0x0444), 0x02ee69(pc)[r0:d]
+      andb    ext(-0x0646)+(-0x0444), 0xc1b074(pc)[r0:d]
       andb    ext(-0x0646)+(-0x0444), r0[r0:d]
       andb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -13923,7 +15140,7 @@
       andb    tos, 0x01c2c3c4(fp)[r0:d]
       andb    tos, 0x01c2c3c4(sp)[r0:d]
       andb    tos, 0x01c2c3c4(sb)[r0:d]
-      andb    tos, 0xc58df0(pc)[r0:d]
+      andb    tos, 0xc5b678(pc)[r0:d]
       andb    tos, r0[r0:d]
       andb    0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       andb    -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
@@ -13936,7 +15153,7 @@
       andb    0(fp), 0x08c9cacb(sb)
       andb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       andb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      andb    0x09cacbcc(fp), 0xd19a85(pc)[r0:d]
+      andb    0x09cacbcc(fp), 0xd1c30d(pc)[r0:d]
       andb    0x09cacbcc(fp), r0[r0:d]
       andb    0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       andb    -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
@@ -13948,7 +15165,7 @@
       andb    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       andb    0(sp), 0x10d1d2d3(sb)
       andb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      andb    0x11d2d3d4(sp), 0xd9a313(pc)[r0:d]
+      andb    0x11d2d3d4(sp), 0xd9cb9b(pc)[r0:d]
       andb    0x11d2d3d4(sp), r0[r0:d]
       andb    0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       andb    -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
@@ -13959,14 +15176,14 @@
       andb    0x17d8d9da(sb), 0x1bdcddde(sb)
       andb    -0x1e272626(sb), 0x1bdcddde(sb)
       andb    0(sb), 0x18d9dadb(sb)
-      andb    0x19dadbdc(sb), 0xe1ab96(pc)[r0:d]
+      andb    0x19dadbdc(sb), 0xe1d41e(pc)[r0:d]
       andb    0x19dadbdc(sb), r0[r0:d]
-      andb    0xe1aba8(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      andb    0x02cbd6(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      andb    0xe2acc2(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      andb    0x02cbef(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      andb    0xe3addc(pc), -0x1c1b1a1a(sb)
-      andb    0x02cce4(pc), -0x1e1d1c1c(sb)
+      andb    0xe1d430(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      andb    0x02f45e(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      andb    0xe2d54a(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      andb    0x02f477(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      andb    0xe3d664(pc), -0x1c1b1a1a(sb)
+      andb    0x02f56c(pc), -0x1e1d1c1c(sb)
       andb    r0[r0:q], r0[r1:d]
       andb    2(r0)[r0:q], r0[r1:d]
       andb    -64(r0)[r0:q], r0[r1:d]
@@ -14031,8 +15248,8 @@
       andw    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       andw    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       andw    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      andw    ext(-0x0646)+(-0x0444), 0x02cc1f(pc)[r0:d]
-      andw    ext(-0x0646)+(-0x0444), 0xc18e2a(pc)[r0:d]
+      andw    ext(-0x0646)+(-0x0444), 0x02f4a7(pc)[r0:d]
+      andw    ext(-0x0646)+(-0x0444), 0xc1b6b2(pc)[r0:d]
       andw    ext(-0x0646)+(-0x0444), r0[r0:d]
       andw    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       andw    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -14078,7 +15295,7 @@
       andw    tos, 0x01c2c3c4(fp)[r0:d]
       andw    tos, 0x01c2c3c4(sp)[r0:d]
       andw    tos, 0x01c2c3c4(sb)[r0:d]
-      andw    tos, 0xc5943a(pc)[r0:d]
+      andw    tos, 0xc5bcc2(pc)[r0:d]
       andw    tos, r0[r0:d]
       andw    0x01c2c3c4(fp), r2
       andw    -0x1e3d3c3c(fp), r2
@@ -14097,7 +15314,7 @@
       andw    0(fp), 0x08c9cacb(sb)
       andw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       andw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      andw    0x09cacbcc(fp), 0xd1a0f9(pc)[r0:d]
+      andw    0x09cacbcc(fp), 0xd1c981(pc)[r0:d]
       andw    0x09cacbcc(fp), r0[r0:d]
       andw    0x09cacbcc(sp), r2
       andw    -0x1e353434(sp), r2
@@ -14115,7 +15332,7 @@
       andw    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       andw    0(sp), 0x10d1d2d3(sb)
       andw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      andw    0x11d2d3d4(sp), 0xd9a9b1(pc)[r0:d]
+      andw    0x11d2d3d4(sp), 0xd9d239(pc)[r0:d]
       andw    0x11d2d3d4(sp), r0[r0:d]
       andw    0x11d2d3d4(sb), r2
       andw    -0x1e2d2c2c(sb), r2
@@ -14132,18 +15349,18 @@
       andw    0x17d8d9da(sb), 0x1bdcddde(sb)
       andw    -0x1e272626(sb), 0x1bdcddde(sb)
       andw    0(sb), 0x18d9dadb(sb)
-      andw    0x19dadbdc(sb), 0xe1b25e(pc)[r0:d]
+      andw    0x19dadbdc(sb), 0xe1dae6(pc)[r0:d]
       andw    0x19dadbdc(sb), r0[r0:d]
-      andw    0xddae6c(pc), r2
-      andw    0x02d296(pc), r2
-      andw    0xdfb077(pc), 0x1fe0e1e2(r2)
-      andw    0x02d2a3(pc), 0x1cdddedf(r2)
-      andw    0xe1b28a(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      andw    0x02d2b8(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      andw    0xe2b3a4(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      andw    0x02d2d1(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      andw    0xe3b4be(pc), -0x1c1b1a1a(sb)
-      andw    0x02d3c6(pc), -0x1e1d1c1c(sb)
+      andw    0xddd6f4(pc), r2
+      andw    0x02fb1e(pc), r2
+      andw    0xdfd8ff(pc), 0x1fe0e1e2(r2)
+      andw    0x02fb2b(pc), 0x1cdddedf(r2)
+      andw    0xe1db12(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      andw    0x02fb40(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      andw    0xe2dc2c(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      andw    0x02fb59(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      andw    0xe3dd46(pc), -0x1c1b1a1a(sb)
+      andw    0x02fc4e(pc), -0x1e1d1c1c(sb)
       andw    r0[r0:q], r0[r1:d]
       andw    2(r0)[r0:q], r0[r1:d]
       andw    -64(r0)[r0:q], r0[r1:d]
@@ -14164,7 +15381,7 @@
       andw    r0, r1[r0:d]
       andw    r0, -63(r0)[r0:d]
       andw    r0, 0x0081(r0)[r0:d]
-      blo     0x02bef4
+      blo     0x02e77c
       andd    @-0x1252, -0x0e4e(-0x1050(sb))
       andd    @0x00aeafb0, -0x0c4c(-0x0e4e(sb))
       andd    @0x00aeafb0, 0x00b4b5b6(-0x0e4e(sb))
@@ -14222,8 +15439,8 @@
       andd    ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       andd    ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       andd    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      andd    ext(-0x0646)+(-0x0444), 0x02d332(pc)[r0:d]
-      andd    ext(-0x0646)+(-0x0444), 0xc1953d(pc)[r0:d]
+      andd    ext(-0x0646)+(-0x0444), 0x02fbba(pc)[r0:d]
+      andd    ext(-0x0646)+(-0x0444), 0xc1bdc5(pc)[r0:d]
       andd    ext(-0x0646)+(-0x0444), r0[r0:d]
       andd    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       andd    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -14269,7 +15486,7 @@
       andd    tos, 0x01c2c3c4(fp)[r0:d]
       andd    tos, 0x01c2c3c4(sp)[r0:d]
       andd    tos, 0x01c2c3c4(sb)[r0:d]
-      andd    tos, 0xc59b4d(pc)[r0:d]
+      andd    tos, 0xc5c3d5(pc)[r0:d]
       andd    tos, r0[r0:d]
       andd    0x01c2c3c4(fp), r2
       andd    -0x1e3d3c3c(fp), r2
@@ -14288,7 +15505,7 @@
       andd    0(fp), 0x08c9cacb(sb)
       andd    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       andd    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      andd    0x09cacbcc(fp), 0xd1a80c(pc)[r0:d]
+      andd    0x09cacbcc(fp), 0xd1d094(pc)[r0:d]
       andd    0x09cacbcc(fp), r0[r0:d]
       andd    0x09cacbcc(sp), r2
       andd    -0x1e353434(sp), r2
@@ -14306,7 +15523,7 @@
       andd    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       andd    0(sp), 0x10d1d2d3(sb)
       andd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      andd    0x11d2d3d4(sp), 0xd9b0c4(pc)[r0:d]
+      andd    0x11d2d3d4(sp), 0xd9d94c(pc)[r0:d]
       andd    0x11d2d3d4(sp), r0[r0:d]
       andd    0x11d2d3d4(sb), r2
       andd    -0x1e2d2c2c(sb), r2
@@ -14323,18 +15540,18 @@
       andd    0x17d8d9da(sb), 0x1bdcddde(sb)
       andd    -0x1e272626(sb), 0x1bdcddde(sb)
       andd    0(sb), 0x18d9dadb(sb)
-      andd    0x19dadbdc(sb), 0xe1b971(pc)[r0:d]
+      andd    0x19dadbdc(sb), 0xe1e1f9(pc)[r0:d]
       andd    0x19dadbdc(sb), r0[r0:d]
-      andd    0xddb57f(pc), r2
-      andd    0x02d9a9(pc), r2
-      andd    0xdfb78a(pc), 0x1fe0e1e2(r2)
-      andd    0x02d9b6(pc), 0x1cdddedf(r2)
-      andd    0xe1b99d(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      andd    0x02d9cb(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      andd    0xe2bab7(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      andd    0x02d9e4(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      andd    0xe3bbd1(pc), -0x1c1b1a1a(sb)
-      andd    0x02dad9(pc), -0x1e1d1c1c(sb)
+      andd    0xddde07(pc), r2
+      andd    0x030231(pc), r2
+      andd    0xdfe012(pc), 0x1fe0e1e2(r2)
+      andd    0x03023e(pc), 0x1cdddedf(r2)
+      andd    0xe1e225(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      andd    0x030253(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      andd    0xe2e33f(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      andd    0x03026c(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      andd    0xe3e459(pc), -0x1c1b1a1a(sb)
+      andd    0x030361(pc), -0x1e1d1c1c(sb)
       andd    r0[r0:q], r0[r1:d]
       andd    2(r0)[r0:q], r0[r1:d]
       andd    -64(r0)[r0:q], r0[r1:d]
@@ -14407,10 +15624,10 @@
       sprb    mod, 0x18d9dadb(sb)
       sprb    mod, -0x1e262525(sb)
       sprb    mod, 0(sb)
-      sprb    sp, 0xe1bb69(pc)
-      sprb    sp, 0x02db8f(pc)
-      sprb    psr, 0xe3bd74(pc)
-      sprb    psr, 0x02db98(pc)
+      sprb    sp, 0xe1e3f1(pc)
+      sprb    sp, 0x030417(pc)
+      sprb    psr, 0xe3e5fc(pc)
+      sprb    psr, 0x030420(pc)
       sprb    mod, r0[r0:q]
       sprb    mod, -63(r0)[r0:q]
       sprb    mod, 0x0081(r0)[r0:q]
@@ -14475,10 +15692,10 @@
       sprw    mod, 0x18d9dadb(sb)
       sprw    mod, -0x1e262525(sb)
       sprw    mod, 0(sb)
-      sprw    sp, 0xe1bcd0(pc)
-      sprw    sp, 0x02dcf6(pc)
-      sprw    psr, 0xe3bedb(pc)
-      sprw    psr, 0x02dcff(pc)
+      sprw    sp, 0xe1e558(pc)
+      sprw    sp, 0x03057e(pc)
+      sprw    psr, 0xe3e763(pc)
+      sprw    psr, 0x030587(pc)
       sprw    mod, r0[r0:q]
       sprw    mod, -63(r0)[r0:q]
       sprw    mod, 0x0081(r0)[r0:q]
@@ -14492,8 +15709,8 @@
       sprw    mod, -56(r0)
       sprw    mod, 0x0081(r0)
       movsub  0x0ecfd0d1(sp), tos
-      movsub  0x0ecfd0d1(sp), 0xd6b205(pc)
-      movsub  0x0ecfd0d1(sp), 0x02dd3b(pc)
+      movsub  0x0ecfd0d1(sp), 0xd6da8d(pc)
+      movsub  0x0ecfd0d1(sp), 0x0305c3(pc)
       movsub  0x0fd0d1d2(sp), 0x13d4d5d6(sp)[r6:q]
       movsub  0x0fd0d1d1(sp), -0x1e2b2a2a(sp)[r6:q]
       movsub  0x0fd0d1d1(sp), 0(sp)[r6:q]
@@ -14502,55 +15719,55 @@
       movsub  0x0ecfd0d1(sb), -0x1e2c2b2b(r3)
       movsub  0x0ecfd0d1(sb), 0(r3)
       movsub  0x0ecfd0d1(sb), tos
-      movsub  0x0ecfd0d1(sb), 0xd6b265(pc)
-      movsub  0x0ecfd0d1(sb), 0x02dd9b(pc)
+      movsub  0x0ecfd0d1(sb), 0xd6daed(pc)
+      movsub  0x0ecfd0d1(sb), 0x030623(pc)
       movsub  0x0fd0d1d2(sb), 0x13d4d5d6(sp)[r6:q]
       movsub  0x0fd0d1d1(sb), -0x1e2b2a2a(sp)[r6:q]
       movsub  0x0fd0d1d1(sb), 0(sp)[r6:q]
-      movsub  0xd2ae95(pc), r3
-      movsub  0xd2ae9c(pc), 0x12d3d4d5(r3)
-      movsub  0xd2aea7(pc), -0x1e2c2b2b(r3)
-      movsub  0xd2aeb2(pc), 0(r3)
-      movsub  0xd2aeba(pc), tos
-      movsub  0xd2aec1(pc), 0xd6b2c5(pc)
-      movsub  0xd2aecc(pc), 0x02ddfb(pc)
-      movsub  0xd3afd5(pc), 0x13d4d5d6(sp)[r6:q]
-      movsub  0xd3afe0(pc), -0x1e2b2a2a(sp)[r6:q]
-      movsub  0xd3afec(pc), 0(sp)[r6:q]
+      movsub  0xd2d71d(pc), r3
+      movsub  0xd2d724(pc), 0x12d3d4d5(r3)
+      movsub  0xd2d72f(pc), -0x1e2c2b2b(r3)
+      movsub  0xd2d73a(pc), 0(r3)
+      movsub  0xd2d742(pc), tos
+      movsub  0xd2d749(pc), 0xd6db4d(pc)
+      movsub  0xd2d754(pc), 0x030683(pc)
+      movsub  0xd3d85d(pc), 0x13d4d5d6(sp)[r6:q]
+      movsub  0xd3d868(pc), -0x1e2b2a2a(sp)[r6:q]
+      movsub  0xd3d874(pc), 0(sp)[r6:q]
       movsub  0x0fd0d1d2(sp)[r6:b], r3
       movsub  0x0fd0d1d2(sp)[r6:b], 0x13d4d5d6(r3)
       movsub  0x0fd0d1d1(sp)[r6:b], -0x1e2b2a2a(r3)
       movsub  0x0fd0d1d1(sp)[r6:b], 0(r3)
       movsub  0x0fd0d1d2(sp)[r6:b], tos
-      movsub  0x0fd0d1d2(sp)[r6:b], 0xd7b42b(pc)
-      movsub  0x0fd0d1d1(sp)[r6:b], 0x02de61(pc)
+      movsub  0x0fd0d1d2(sp)[r6:b], 0xd7dcb3(pc)
+      movsub  0x0fd0d1d1(sp)[r6:b], 0x0306e9(pc)
       movsub  0x10d1d2d3(sp)[r6:b], 0x14d5d6d7(sp)[r7:q]
       movsub  0x0fd0d1d2(sp)[r6:w], r3
       movsub  0x0fd0d1d2(sp)[r6:w], 0x13d4d5d6(r3)
       movsub  0x0fd0d1d1(sp)[r6:w], -0x1e2b2a2a(r3)
       movsub  0x0fd0d1d1(sp)[r6:w], 0(r3)
       movsub  0x0fd0d1d2(sp)[r6:w], tos
-      movsub  0x0fd0d1d2(sp)[r6:w], 0xd7b47e(pc)
-      movsub  0x0fd0d1d1(sp)[r6:w], 0x02deb4(pc)
+      movsub  0x0fd0d1d2(sp)[r6:w], 0xd7dd06(pc)
+      movsub  0x0fd0d1d1(sp)[r6:w], 0x03073c(pc)
       movsub  0x10d1d2d3(sp)[r6:w], 0x14d5d6d7(sp)[r7:q]
       movsub  0x0fd0d1d2(sp)[r6:d], r3
       movsub  0x0fd0d1d2(sp)[r6:d], 0x13d4d5d6(r3)
       movsub  0x0fd0d1d1(sp)[r6:d], -0x1e2b2a2a(r3)
       movsub  0x0fd0d1d1(sp)[r6:d], 0(r3)
       movsub  0x0fd0d1d2(sp)[r6:d], tos
-      movsub  0x0fd0d1d2(sp)[r6:d], 0xd7b4d1(pc)
-      movsub  0x0fd0d1d1(sp)[r6:d], 0x02df07(pc)
+      movsub  0x0fd0d1d2(sp)[r6:d], 0xd7dd59(pc)
+      movsub  0x0fd0d1d1(sp)[r6:d], 0x03078f(pc)
       movsub  0x10d1d2d3(sp)[r6:d], 0x14d5d6d7(sp)[r7:q]
       movsub  0x0fd0d1d2(sp)[r6:q], r3
       movsub  0x0fd0d1d2(sp)[r6:q], 0x13d4d5d6(r3)
       movsub  0x0fd0d1d1(sp)[r6:q], -0x1e2b2a2a(r3)
       movsub  0x0fd0d1d1(sp)[r6:q], 0(r3)
       movsub  0x0fd0d1d2(sp)[r6:q], tos
-      movsub  0x0fd0d1d2(sp)[r6:q], 0xd7b524(pc)
-      movsub  0x0fd0d1d1(sp)[r6:q], 0x02df5a(pc)
+      movsub  0x0fd0d1d2(sp)[r6:q], 0xd7ddac(pc)
+      movsub  0x0fd0d1d1(sp)[r6:q], 0x0307e2(pc)
       movsub  0x10d1d2d3(sp)[r6:q], 0x14d5d6d7(sp)[r7:q]
       movsub  r0, r3
-      movsuw  0x0fd0d1d2(sp), 0xd7b549(pc)
+      movsuw  0x0fd0d1d2(sp), 0xd7ddd1(pc)
       movsuw  0x10d1d2d3(sp), 0x14d5d6d7(sp)[r7:q]
       movsuw  0x0fd0d1d2(sb), r3
       movsud  0x11d2d3d4(sb), r3
@@ -14558,85 +15775,85 @@
       movsud  0x11d2d3d4(sb), -0x1e292828(r3)
       movsud  0x11d2d3d4(sb), 0(r3)
       movsud  0x11d2d3d4(sb), tos
-      movsud  0x11d2d3d4(sb), 0xd9b795(pc)
-      movsud  0x11d2d3d4(sb), 0x02dfc8(pc)
+      movsud  0x11d2d3d4(sb), 0xd9e01d(pc)
+      movsud  0x11d2d3d4(sb), 0x030850(pc)
       movsud  0x12d3d4d5(sb), 0x16d7d8d9(sb)[r1:q]
       movsud  0x12d3d4d4(sb), -0x1e282727(sb)[r1:q]
       movsud  0x12d3d4d4(sb), 0(sb)[r1:q]
-      movsud  0xd5b3c5(pc), r3
-      movsud  0xd5b3cc(pc), 0x15d6d7d8(r3)
-      movsud  0xd5b3d7(pc), -0x1e292828(r3)
-      movsud  0xd5b3e2(pc), 0(r3)
-      movsud  0xd5b3ea(pc), tos
-      movsud  0xd5b3f1(pc), 0xd9b7f5(pc)
-      movsud  0xd5b3fc(pc), 0x02e028(pc)
-      movsud  0xd6b505(pc), 0x16d7d8d9(sb)[r1:q]
-      movsud  0xd6b510(pc), -0x1e282727(sb)[r1:q]
-      movsud  0xd6b51c(pc), 0(sb)[r1:q]
+      movsud  0xd5dc4d(pc), r3
+      movsud  0xd5dc54(pc), 0x15d6d7d8(r3)
+      movsud  0xd5dc5f(pc), -0x1e292828(r3)
+      movsud  0xd5dc6a(pc), 0(r3)
+      movsud  0xd5dc72(pc), tos
+      movsud  0xd5dc79(pc), 0xd9e07d(pc)
+      movsud  0xd5dc84(pc), 0x0308b0(pc)
+      movsud  0xd6dd8d(pc), 0x16d7d8d9(sb)[r1:q]
+      movsud  0xd6dd98(pc), -0x1e282727(sb)[r1:q]
+      movsud  0xd6dda4(pc), 0(sb)[r1:q]
       movsud  0x12d3d4d5(sb)[r1:b], r3
       movsud  0x12d3d4d5(sb)[r1:b], 0x16d7d8d9(r3)
       movsud  0x12d3d4d4(sb)[r1:b], -0x1e282727(r3)
       movsud  0x12d3d4d4(sb)[r1:b], 0(r3)
       movsud  0x12d3d4d5(sb)[r1:b], tos
-      movsud  0x12d3d4d5(sb)[r1:b], 0xdab95b(pc)
-      movsud  0x12d3d4d4(sb)[r1:b], 0x02e08e(pc)
+      movsud  0x12d3d4d5(sb)[r1:b], 0xdae1e3(pc)
+      movsud  0x12d3d4d4(sb)[r1:b], 0x030916(pc)
       movsud  0x13d4d5d6(sb)[r1:b], 0x17d8d9da(sb)[r2:q]
       movsud  0x12d3d4d5(sb)[r1:w], r3
       movsud  0x12d3d4d5(sb)[r1:w], 0x16d7d8d9(r3)
       movsud  0x12d3d4d4(sb)[r1:w], -0x1e282727(r3)
       movsud  0x12d3d4d4(sb)[r1:w], 0(r3)
       movsud  0x12d3d4d5(sb)[r1:w], tos
-      movsud  0x12d3d4d5(sb)[r1:w], 0xdab9ae(pc)
-      movsud  0x12d3d4d4(sb)[r1:w], 0x02e0e1(pc)
+      movsud  0x12d3d4d5(sb)[r1:w], 0xdae236(pc)
+      movsud  0x12d3d4d4(sb)[r1:w], 0x030969(pc)
       movsud  0x13d4d5d6(sb)[r1:w], 0x17d8d9da(sb)[r2:q]
       movsud  0x12d3d4d5(sb)[r1:d], r3
       movsud  0x12d3d4d5(sb)[r1:d], 0x16d7d8d9(r3)
       movsud  0x12d3d4d4(sb)[r1:d], -0x1e282727(r3)
       movsud  0x12d3d4d4(sb)[r1:d], 0(r3)
       movsud  0x12d3d4d5(sb)[r1:d], tos
-      movsud  0x12d3d4d5(sb)[r1:d], 0xdaba01(pc)
-      movsud  0x12d3d4d4(sb)[r1:d], 0x02e134(pc)
+      movsud  0x12d3d4d5(sb)[r1:d], 0xdae289(pc)
+      movsud  0x12d3d4d4(sb)[r1:d], 0x0309bc(pc)
       movsud  0x13d4d5d6(sb)[r1:d], 0x17d8d9da(sb)[r2:q]
       movsud  0x12d3d4d5(sb)[r1:q], r3
       movsud  0x12d3d4d5(sb)[r1:q], 0x16d7d8d9(r3)
       movsud  0x12d3d4d4(sb)[r1:q], -0x1e282727(r3)
       movsud  0x12d3d4d4(sb)[r1:q], 0(r3)
       movsud  0x12d3d4d5(sb)[r1:q], tos
-      movsud  0x12d3d4d5(sb)[r1:q], 0xdaba54(pc)
-      movsud  0x12d3d4d4(sb)[r1:q], 0x02e187(pc)
+      movsud  0x12d3d4d5(sb)[r1:q], 0xdae2dc(pc)
+      movsud  0x12d3d4d4(sb)[r1:q], 0x030a0f(pc)
       movsud  0x13d4d5d6(sb)[r1:q], 0x17d8d9da(sb)[r2:q]
       movsud  r0, r3
-      movusb  0xe2c281(pc), tos
-      movusb  0xe2c288(pc), 0xe6c68c(pc)
-      movusb  0xe2c293(pc), 0x02e1b2(pc)
-      movusb  0xe3c39c(pc), 0xe7c7a0(pc)[r6:q]
-      movusb  0xe3c3a7(pc), 0x02e1c6(pc)[r6:q]
-      movusb  0xe3c3b1(pc)[r6:b], r3
-      movusb  0xe3c3b9(pc)[r6:b], -0x1c1b1a1a(r3)
-      movusb  0xe3c3c4(pc)[r6:b], 0(r3)
-      movusb  0xe3c3ce(pc)[r6:b], tos
-      movusb  0xe3c3d6(pc)[r6:b], 0xe7c7da(pc)
-      movusb  0xe3c3e1(pc)[r6:b], 0x02e200(pc)
-      movusb  0xe3c3eb(pc)[r6:w], r3
-      movusb  0xe3c3f3(pc)[r6:w], -0x1c1b1a1a(r3)
-      movusb  0xe3c3fe(pc)[r6:w], 0(r3)
-      movusb  0xe3c408(pc)[r6:w], tos
-      movusb  0xe3c410(pc)[r6:w], 0xe7c814(pc)
-      movusb  0xe3c41b(pc)[r6:w], 0x02e23a(pc)
-      movusb  0xe3c425(pc)[r6:d], r3
-      movusb  0xe3c42d(pc)[r6:d], -0x1c1b1a1a(r3)
-      movusb  0xe3c438(pc)[r6:d], 0(r3)
-      movusb  0xe3c442(pc)[r6:d], tos
-      movusb  0xe3c44a(pc)[r6:d], 0xe7c84e(pc)
-      movusb  0xe3c455(pc)[r6:d], 0x02e274(pc)
-      movusb  0xe3c45f(pc)[r6:q], r3
-      movusb  0xe3c467(pc)[r6:q], -0x1c1b1a1a(r3)
-      movusb  0xe3c472(pc)[r6:q], 0(r3)
-      movusb  0xe3c47c(pc)[r6:q], tos
-      movusb  0xe3c484(pc)[r6:q], 0xe7c888(pc)
-      movusb  0xe3c48f(pc)[r6:q], 0x02e2ae(pc)
+      movusb  0xe2eb09(pc), tos
+      movusb  0xe2eb10(pc), 0xe6ef14(pc)
+      movusb  0xe2eb1b(pc), 0x030a3a(pc)
+      movusb  0xe3ec24(pc), 0xe7f028(pc)[r6:q]
+      movusb  0xe3ec2f(pc), 0x030a4e(pc)[r6:q]
+      movusb  0xe3ec39(pc)[r6:b], r3
+      movusb  0xe3ec41(pc)[r6:b], -0x1c1b1a1a(r3)
+      movusb  0xe3ec4c(pc)[r6:b], 0(r3)
+      movusb  0xe3ec56(pc)[r6:b], tos
+      movusb  0xe3ec5e(pc)[r6:b], 0xe7f062(pc)
+      movusb  0xe3ec69(pc)[r6:b], 0x030a88(pc)
+      movusb  0xe3ec73(pc)[r6:w], r3
+      movusb  0xe3ec7b(pc)[r6:w], -0x1c1b1a1a(r3)
+      movusb  0xe3ec86(pc)[r6:w], 0(r3)
+      movusb  0xe3ec90(pc)[r6:w], tos
+      movusb  0xe3ec98(pc)[r6:w], 0xe7f09c(pc)
+      movusb  0xe3eca3(pc)[r6:w], 0x030ac2(pc)
+      movusb  0xe3ecad(pc)[r6:d], r3
+      movusb  0xe3ecb5(pc)[r6:d], -0x1c1b1a1a(r3)
+      movusb  0xe3ecc0(pc)[r6:d], 0(r3)
+      movusb  0xe3ecca(pc)[r6:d], tos
+      movusb  0xe3ecd2(pc)[r6:d], 0xe7f0d6(pc)
+      movusb  0xe3ecdd(pc)[r6:d], 0x030afc(pc)
+      movusb  0xe3ece7(pc)[r6:q], r3
+      movusb  0xe3ecef(pc)[r6:q], -0x1c1b1a1a(r3)
+      movusb  0xe3ecfa(pc)[r6:q], 0(r3)
+      movusb  0xe3ed04(pc)[r6:q], tos
+      movusb  0xe3ed0c(pc)[r6:q], 0xe7f110(pc)
+      movusb  0xe3ed17(pc)[r6:q], 0x030b36(pc)
       movusb  r0, r3
-      movusw  0xe3c49c(pc), 0xe7c8a0(pc)
+      movusw  0xe3ed24(pc), 0xe7f128(pc)
       movusw  r0, r3
       insb    r0, r0, r4, 2
       insb    r0, r0, 2(r0), 3
@@ -14915,10 +16132,10 @@
       sprd    mod, 0x18d9dadb(sb)
       sprd    mod, -0x1e262525(sb)
       sprd    mod, 0(sb)
-      sprd    sp, 0xe1ca2b(pc)
-      sprd    sp, 0x02ea51(pc)
-      sprd    psr, 0xe3cc36(pc)
-      sprd    psr, 0x02ea5a(pc)
+      sprd    sp, 0xe1f2b3(pc)
+      sprd    sp, 0x0312d9(pc)
+      sprd    psr, 0xe3f4be(pc)
+      sprd    psr, 0x0312e2(pc)
       sprd    mod, r0[r0:q]
       sprd    mod, -63(r0)[r0:q]
       sprd    mod, 0x0081(r0)[r0:q]
@@ -14956,8 +16173,8 @@
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      subcb   ext(-0x0646)+(-0x0444), 0x02e94e(pc)[r0:d]
-      subcb   ext(-0x0646)+(-0x0444), 0xc1ab59(pc)[r0:d]
+      subcb   ext(-0x0646)+(-0x0444), 0x0311d6(pc)[r0:d]
+      subcb   ext(-0x0646)+(-0x0444), 0xc1d3e1(pc)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), r0[r0:d]
       subcb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -15000,7 +16217,7 @@
       subcb   tos, 0x01c2c3c4(fp)[r0:d]
       subcb   tos, 0x01c2c3c4(sp)[r0:d]
       subcb   tos, 0x01c2c3c4(sb)[r0:d]
-      subcb   tos, 0xc5b15d(pc)[r0:d]
+      subcb   tos, 0xc5d9e5(pc)[r0:d]
       subcb   tos, r0[r0:d]
       subcb   0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       subcb   -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
@@ -15013,7 +16230,7 @@
       subcb   0(fp), 0x08c9cacb(sb)
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      subcb   0x09cacbcc(fp), 0xd1bdf2(pc)[r0:d]
+      subcb   0x09cacbcc(fp), 0xd1e67a(pc)[r0:d]
       subcb   0x09cacbcc(fp), r0[r0:d]
       subcb   0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       subcb   -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
@@ -15025,7 +16242,7 @@
       subcb   -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       subcb   0(sp), 0x10d1d2d3(sb)
       subcb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      subcb   0x11d2d3d4(sp), 0xd9c680(pc)[r0:d]
+      subcb   0x11d2d3d4(sp), 0xd9ef08(pc)[r0:d]
       subcb   0x11d2d3d4(sp), r0[r0:d]
       subcb   0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       subcb   -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
@@ -15036,14 +16253,14 @@
       subcb   0x17d8d9da(sb), 0x1bdcddde(sb)
       subcb   -0x1e272626(sb), 0x1bdcddde(sb)
       subcb   0(sb), 0x18d9dadb(sb)
-      subcb   0x19dadbdc(sb), 0xe1cf03(pc)[r0:d]
+      subcb   0x19dadbdc(sb), 0xe1f78b(pc)[r0:d]
       subcb   0x19dadbdc(sb), r0[r0:d]
-      subcb   0xe1cf15(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      subcb   0x02ef43(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      subcb   0xe2d02f(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      subcb   0x02ef5c(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      subcb   0xe3d149(pc), -0x1c1b1a1a(sb)
-      subcb   0x02f051(pc), -0x1e1d1c1c(sb)
+      subcb   0xe1f79d(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      subcb   0x0317cb(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      subcb   0xe2f8b7(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      subcb   0x0317e4(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      subcb   0xe3f9d1(pc), -0x1c1b1a1a(sb)
+      subcb   0x0318d9(pc), -0x1e1d1c1c(sb)
       subcb   r0[r0:q], r0[r1:d]
       subcb   2(r0)[r0:q], r0[r1:d]
       subcb   -64(r0)[r0:q], r0[r1:d]
@@ -15079,8 +16296,8 @@
       subcw   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      subcw   ext(-0x0646)+(-0x0444), 0x02ee92(pc)[r0:d]
-      subcw   ext(-0x0646)+(-0x0444), 0xc1b09d(pc)[r0:d]
+      subcw   ext(-0x0646)+(-0x0444), 0x03171a(pc)[r0:d]
+      subcw   ext(-0x0646)+(-0x0444), 0xc1d925(pc)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), r0[r0:d]
       subcw   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -15126,7 +16343,7 @@
       subcw   tos, 0x01c2c3c4(fp)[r0:d]
       subcw   tos, 0x01c2c3c4(sp)[r0:d]
       subcw   tos, 0x01c2c3c4(sb)[r0:d]
-      subcw   tos, 0xc5b6ad(pc)[r0:d]
+      subcw   tos, 0xc5df35(pc)[r0:d]
       subcw   tos, r0[r0:d]
       subcw   0x01c2c3c4(fp), r2
       subcw   -0x1e3d3c3c(fp), r2
@@ -15145,7 +16362,7 @@
       subcw   0(fp), 0x08c9cacb(sb)
       subcw   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subcw   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      subcw   0x09cacbcc(fp), 0xd1c36c(pc)[r0:d]
+      subcw   0x09cacbcc(fp), 0xd1ebf4(pc)[r0:d]
       subcw   0x09cacbcc(fp), r0[r0:d]
       subcw   0x09cacbcc(sp), r2
       subcw   -0x1e353434(sp), r2
@@ -15163,7 +16380,7 @@
       subcw   -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       subcw   0(sp), 0x10d1d2d3(sb)
       subcw   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      subcw   0x11d2d3d4(sp), 0xd9cc24(pc)[r0:d]
+      subcw   0x11d2d3d4(sp), 0xd9f4ac(pc)[r0:d]
       subcw   0x11d2d3d4(sp), r0[r0:d]
       subcw   0x11d2d3d4(sb), r2
       subcw   -0x1e2d2c2c(sb), r2
@@ -15180,18 +16397,18 @@
       subcw   0x17d8d9da(sb), 0x1bdcddde(sb)
       subcw   -0x1e272626(sb), 0x1bdcddde(sb)
       subcw   0(sb), 0x18d9dadb(sb)
-      subcw   0x19dadbdc(sb), 0xe1d4d1(pc)[r0:d]
+      subcw   0x19dadbdc(sb), 0xe1fd59(pc)[r0:d]
       subcw   0x19dadbdc(sb), r0[r0:d]
-      subcw   0xddd0df(pc), r2
-      subcw   0x02f509(pc), r2
-      subcw   0xdfd2ea(pc), 0x1fe0e1e2(r2)
-      subcw   0x02f516(pc), 0x1cdddedf(r2)
-      subcw   0xe1d4fd(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      subcw   0x02f52b(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      subcw   0xe2d617(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      subcw   0x02f544(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      subcw   0xe3d731(pc), -0x1c1b1a1a(sb)
-      subcw   0x02f639(pc), -0x1e1d1c1c(sb)
+      subcw   0xddf967(pc), r2
+      subcw   0x031d91(pc), r2
+      subcw   0xdffb72(pc), 0x1fe0e1e2(r2)
+      subcw   0x031d9e(pc), 0x1cdddedf(r2)
+      subcw   0xe1fd85(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      subcw   0x031db3(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      subcw   0xe2fe9f(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      subcw   0x031dcc(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      subcw   0xe3ffb9(pc), -0x1c1b1a1a(sb)
+      subcw   0x031ec1(pc), -0x1e1d1c1c(sb)
       subcw   r0[r0:q], r0[r1:d]
       subcw   2(r0)[r0:q], r0[r1:d]
       subcw   -64(r0)[r0:q], r0[r1:d]
@@ -15238,8 +16455,8 @@
       subcd   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      subcd   ext(-0x0646)+(-0x0444), 0x02f486(pc)[r0:d]
-      subcd   ext(-0x0646)+(-0x0444), 0xc1b691(pc)[r0:d]
+      subcd   ext(-0x0646)+(-0x0444), 0x031d0e(pc)[r0:d]
+      subcd   ext(-0x0646)+(-0x0444), 0xc1df19(pc)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), r0[r0:d]
       subcd   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -15285,7 +16502,7 @@
       subcd   tos, 0x01c2c3c4(fp)[r0:d]
       subcd   tos, 0x01c2c3c4(sp)[r0:d]
       subcd   tos, 0x01c2c3c4(sb)[r0:d]
-      subcd   tos, 0xc5bca1(pc)[r0:d]
+      subcd   tos, 0xc5e529(pc)[r0:d]
       subcd   tos, r0[r0:d]
       subcd   0x01c2c3c4(fp), r2
       subcd   -0x1e3d3c3c(fp), r2
@@ -15304,7 +16521,7 @@
       subcd   0(fp), 0x08c9cacb(sb)
       subcd   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subcd   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      subcd   0x09cacbcc(fp), 0xd1c960(pc)[r0:d]
+      subcd   0x09cacbcc(fp), 0xd1f1e8(pc)[r0:d]
       subcd   0x09cacbcc(fp), r0[r0:d]
       subcd   0x09cacbcc(sp), r2
       subcd   -0x1e353434(sp), r2
@@ -15322,7 +16539,7 @@
       subcd   -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       subcd   0(sp), 0x10d1d2d3(sb)
       subcd   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      subcd   0x11d2d3d4(sp), 0xd9d218(pc)[r0:d]
+      subcd   0x11d2d3d4(sp), 0xd9faa0(pc)[r0:d]
       subcd   0x11d2d3d4(sp), r0[r0:d]
       subcd   0x11d2d3d4(sb), r2
       subcd   -0x1e2d2c2c(sb), r2
@@ -15339,18 +16556,18 @@
       subcd   0x17d8d9da(sb), 0x1bdcddde(sb)
       subcd   -0x1e272626(sb), 0x1bdcddde(sb)
       subcd   0(sb), 0x18d9dadb(sb)
-      subcd   0x19dadbdc(sb), 0xe1dac5(pc)[r0:d]
+      subcd   0x19dadbdc(sb), 0xe2034d(pc)[r0:d]
       subcd   0x19dadbdc(sb), r0[r0:d]
-      subcd   0xddd6d3(pc), r2
-      subcd   0x02fafd(pc), r2
-      subcd   0xdfd8de(pc), 0x1fe0e1e2(r2)
-      subcd   0x02fb0a(pc), 0x1cdddedf(r2)
-      subcd   0xe1daf1(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      subcd   0x02fb1f(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      subcd   0xe2dc0b(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      subcd   0x02fb38(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      subcd   0xe3dd25(pc), -0x1c1b1a1a(sb)
-      subcd   0x02fc2d(pc), -0x1e1d1c1c(sb)
+      subcd   0xddff5b(pc), r2
+      subcd   0x032385(pc), r2
+      subcd   0xe00166(pc), 0x1fe0e1e2(r2)
+      subcd   0x032392(pc), 0x1cdddedf(r2)
+      subcd   0xe20379(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      subcd   0x0323a7(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      subcd   0xe30493(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      subcd   0x0323c0(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      subcd   0xe405ad(pc), -0x1c1b1a1a(sb)
+      subcd   0x0324b5(pc), -0x1e1d1c1c(sb)
       subcd   r0[r0:q], r0[r1:d]
       subcd   2(r0)[r0:q], r0[r1:d]
       subcd   -64(r0)[r0:q], r0[r1:d]
@@ -15390,8 +16607,8 @@
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      tbitb   ext(-0x0646)+(-0x0444), 0x02fa32(pc)[r0:d]
-      tbitb   ext(-0x0646)+(-0x0444), 0xc1bc3d(pc)[r0:d]
+      tbitb   ext(-0x0646)+(-0x0444), 0x0322ba(pc)[r0:d]
+      tbitb   ext(-0x0646)+(-0x0444), 0xc1e4c5(pc)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), r0[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -15434,7 +16651,7 @@
       tbitb   tos, 0x01c2c3c4(fp)[r0:d]
       tbitb   tos, 0x01c2c3c4(sp)[r0:d]
       tbitb   tos, 0x01c2c3c4(sb)[r0:d]
-      tbitb   tos, 0xc5c241(pc)[r0:d]
+      tbitb   tos, 0xc5eac9(pc)[r0:d]
       tbitb   tos, r0[r0:d]
       tbitb   0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       tbitb   -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
@@ -15447,7 +16664,7 @@
       tbitb   0(fp), 0x08c9cacb(sb)
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      tbitb   0x09cacbcc(fp), 0xd1ced6(pc)[r0:d]
+      tbitb   0x09cacbcc(fp), 0xd1f75e(pc)[r0:d]
       tbitb   0x09cacbcc(fp), r0[r0:d]
       tbitb   0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       tbitb   -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
@@ -15459,7 +16676,7 @@
       tbitb   -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       tbitb   0(sp), 0x10d1d2d3(sb)
       tbitb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      tbitb   0x11d2d3d4(sp), 0xd9d764(pc)[r0:d]
+      tbitb   0x11d2d3d4(sp), 0xd9ffec(pc)[r0:d]
       tbitb   0x11d2d3d4(sp), r0[r0:d]
       tbitb   0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       tbitb   -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
@@ -15470,14 +16687,14 @@
       tbitb   0x17d8d9da(sb), 0x1bdcddde(sb)
       tbitb   -0x1e272626(sb), 0x1bdcddde(sb)
       tbitb   0(sb), 0x18d9dadb(sb)
-      tbitb   0x19dadbdc(sb), 0xe1dfe7(pc)[r0:d]
+      tbitb   0x19dadbdc(sb), 0xe2086f(pc)[r0:d]
       tbitb   0x19dadbdc(sb), r0[r0:d]
-      tbitb   0xe1dff9(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      tbitb   0x030027(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      tbitb   0xe2e113(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      tbitb   0x030040(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      tbitb   0xe3e22d(pc), -0x1c1b1a1a(sb)
-      tbitb   0x030135(pc), -0x1e1d1c1c(sb)
+      tbitb   0xe20881(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      tbitb   0x0328af(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      tbitb   0xe3099b(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      tbitb   0x0328c8(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      tbitb   0xe40ab5(pc), -0x1c1b1a1a(sb)
+      tbitb   0x0329bd(pc), -0x1e1d1c1c(sb)
       tbitb   r0[r0:q], r0[r1:d]
       tbitb   2(r0)[r0:q], r0[r1:d]
       tbitb   -64(r0)[r0:q], r0[r1:d]
@@ -15495,8 +16712,8 @@
       tbitw   ext(-0x0646)+(-0x0444), 0x00bebfc0(sp)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), -0x0242(sb)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
-      tbitw   ext(-0x0646)+(-0x0444), 0x02fead(pc)[r0:d]
-      tbitw   ext(-0x0646)+(-0x0444), 0xc1c0b8(pc)[r0:d]
+      tbitw   ext(-0x0646)+(-0x0444), 0x032735(pc)[r0:d]
+      tbitw   ext(-0x0646)+(-0x0444), 0xc1e940(pc)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), r0[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
@@ -15542,7 +16759,7 @@
       tbitw   tos, 0x01c2c3c4(fp)[r0:d]
       tbitw   tos, 0x01c2c3c4(sp)[r0:d]
       tbitw   tos, 0x01c2c3c4(sb)[r0:d]
-      tbitw   tos, 0xc5c6c8(pc)[r0:d]
+      tbitw   tos, 0xc5ef50(pc)[r0:d]
       tbitw   tos, r0[r0:d]
       tbitw   0x01c2c3c4(fp), r2
       tbitw   -0x1e3d3c3c(fp), r2
@@ -15561,7 +16778,7 @@
       tbitw   0(fp), 0x08c9cacb(sb)
       tbitw   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       tbitw   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      tbitw   0x09cacbcc(fp), 0xd1d387(pc)[r0:d]
+      tbitw   0x09cacbcc(fp), 0xd1fc0f(pc)[r0:d]
       tbitw   0x09cacbcc(fp), r0[r0:d]
       tbitw   0x09cacbcc(sp), r2
       tbitw   -0x1e353434(sp), r2
@@ -15579,7 +16796,7 @@
       tbitw   -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       tbitw   0(sp), 0x10d1d2d3(sb)
       tbitw   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      tbitw   0x11d2d3d4(sp), 0xd9dc3f(pc)[r0:d]
+      tbitw   0x11d2d3d4(sp), 0xda04c7(pc)[r0:d]
       tbitw   0x11d2d3d4(sp), r0[r0:d]
       tbitw   0x11d2d3d4(sb), r2
       tbitw   -0x1e2d2c2c(sb), r2
@@ -15596,18 +16813,18 @@
       tbitw   0x17d8d9da(sb), 0x1bdcddde(sb)
       tbitw   -0x1e272626(sb), 0x1bdcddde(sb)
       tbitw   0(sb), 0x18d9dadb(sb)
-      tbitw   0x19dadbdc(sb), 0xe1e4ec(pc)[r0:d]
+      tbitw   0x19dadbdc(sb), 0xe20d74(pc)[r0:d]
       tbitw   0x19dadbdc(sb), r0[r0:d]
-      tbitw   0xdde0fa(pc), r2
-      tbitw   0x030524(pc), r2
-      tbitw   0xdfe305(pc), 0x1fe0e1e2(r2)
-      tbitw   0x030531(pc), 0x1cdddedf(r2)
-      tbitw   0xe1e518(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      tbitw   0x030546(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      tbitw   0xe2e632(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      tbitw   0x03055f(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      tbitw   0xe3e74c(pc), -0x1c1b1a1a(sb)
-      tbitw   0x030654(pc), -0x1e1d1c1c(sb)
+      tbitw   0xde0982(pc), r2
+      tbitw   0x032dac(pc), r2
+      tbitw   0xe00b8d(pc), 0x1fe0e1e2(r2)
+      tbitw   0x032db9(pc), 0x1cdddedf(r2)
+      tbitw   0xe20da0(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      tbitw   0x032dce(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      tbitw   0xe30eba(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      tbitw   0x032de7(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      tbitw   0xe40fd4(pc), -0x1c1b1a1a(sb)
+      tbitw   0x032edc(pc), -0x1e1d1c1c(sb)
       tbitw   r0[r0:q], r0[r1:d]
       tbitw   2(r0)[r0:q], r0[r1:d]
       tbitw   -64(r0)[r0:q], r0[r1:d]
@@ -15642,7 +16859,7 @@
       tbitd   tos, 0x01c2c3c4(fp)[r0:d]
       tbitd   tos, 0x01c2c3c4(sp)[r0:d]
       tbitd   tos, 0x01c2c3c4(sb)[r0:d]
-      tbitd   tos, 0xc5c9f8(pc)[r0:d]
+      tbitd   tos, 0xc5f280(pc)[r0:d]
       tbitd   tos, r0[r0:d]
       tbitd   0x01c2c3c4(fp), r2
       tbitd   -0x1e3d3c3c(fp), r2
@@ -15661,7 +16878,7 @@
       tbitd   0(fp), 0x08c9cacb(sb)
       tbitd   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       tbitd   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      tbitd   0x09cacbcc(fp), 0xd1d6b7(pc)[r0:d]
+      tbitd   0x09cacbcc(fp), 0xd1ff3f(pc)[r0:d]
       tbitd   0x09cacbcc(fp), r0[r0:d]
       tbitd   0x09cacbcc(sp), r2
       tbitd   -0x1e353434(sp), r2
@@ -15679,7 +16896,7 @@
       tbitd   -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       tbitd   0(sp), 0x10d1d2d3(sb)
       tbitd   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      tbitd   0x11d2d3d4(sp), 0xd9df6f(pc)[r0:d]
+      tbitd   0x11d2d3d4(sp), 0xda07f7(pc)[r0:d]
       tbitd   0x11d2d3d4(sp), r0[r0:d]
       tbitd   0x11d2d3d4(sb), r2
       tbitd   -0x1e2d2c2c(sb), r2
@@ -15696,18 +16913,18 @@
       tbitd   0x17d8d9da(sb), 0x1bdcddde(sb)
       tbitd   -0x1e272626(sb), 0x1bdcddde(sb)
       tbitd   0(sb), 0x18d9dadb(sb)
-      tbitd   0x19dadbdc(sb), 0xe1e81c(pc)[r0:d]
+      tbitd   0x19dadbdc(sb), 0xe210a4(pc)[r0:d]
       tbitd   0x19dadbdc(sb), r0[r0:d]
-      tbitd   0xdde42a(pc), r2
-      tbitd   0x030854(pc), r2
-      tbitd   0xdfe635(pc), 0x1fe0e1e2(r2)
-      tbitd   0x030861(pc), 0x1cdddedf(r2)
-      tbitd   0xe1e848(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      tbitd   0x030876(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      tbitd   0xe2e962(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      tbitd   0x03088f(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      tbitd   0xe3ea7c(pc), -0x1c1b1a1a(sb)
-      tbitd   0x030984(pc), -0x1e1d1c1c(sb)
+      tbitd   0xde0cb2(pc), r2
+      tbitd   0x0330dc(pc), r2
+      tbitd   0xe00ebd(pc), 0x1fe0e1e2(r2)
+      tbitd   0x0330e9(pc), 0x1cdddedf(r2)
+      tbitd   0xe210d0(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      tbitd   0x0330fe(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      tbitd   0xe311ea(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      tbitd   0x033117(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      tbitd   0xe41304(pc), -0x1c1b1a1a(sb)
+      tbitd   0x03320c(pc), -0x1e1d1c1c(sb)
       tbitd   r0[r0:q], r0[r1:d]
       tbitd   2(r0)[r0:q], r0[r1:d]
       tbitd   -64(r0)[r0:q], r0[r1:d]
@@ -15742,7 +16959,7 @@
       xorb    tos, 0x01c2c3c4(fp)[r0:d]
       xorb    tos, 0x01c2c3c4(sp)[r0:d]
       xorb    tos, 0x01c2c3c4(sb)[r0:d]
-      xorb    tos, 0xc5cd28(pc)[r0:d]
+      xorb    tos, 0xc5f5b0(pc)[r0:d]
       xorb    tos, r0[r0:d]
       xorb    0x01c2c3c4(fp), r2
       xorb    -0x1e3d3c3c(fp), r2
@@ -15761,7 +16978,7 @@
       xorb    0(fp), 0x08c9cacb(sb)
       xorb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       xorb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      xorb    0x09cacbcc(fp), 0xd1d9e7(pc)[r0:d]
+      xorb    0x09cacbcc(fp), 0xd2026f(pc)[r0:d]
       xorb    0x09cacbcc(fp), r0[r0:d]
       xorb    0x09cacbcc(sp), r2
       xorb    -0x1e353434(sp), r2
@@ -15779,7 +16996,7 @@
       xorb    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       xorb    0(sp), 0x10d1d2d3(sb)
       xorb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      xorb    0x11d2d3d4(sp), 0xd9e29f(pc)[r0:d]
+      xorb    0x11d2d3d4(sp), 0xda0b27(pc)[r0:d]
       xorb    0x11d2d3d4(sp), r0[r0:d]
       xorb    0x11d2d3d4(sb), r2
       xorb    -0x1e2d2c2c(sb), r2
@@ -15796,18 +17013,18 @@
       xorb    0x17d8d9da(sb), 0x1bdcddde(sb)
       xorb    -0x1e272626(sb), 0x1bdcddde(sb)
       xorb    0(sb), 0x18d9dadb(sb)
-      xorb    0x19dadbdc(sb), 0xe1eb4c(pc)[r0:d]
+      xorb    0x19dadbdc(sb), 0xe213d4(pc)[r0:d]
       xorb    0x19dadbdc(sb), r0[r0:d]
-      xorb    0xdde75a(pc), r2
-      xorb    0x030b84(pc), r2
-      xorb    0xdfe965(pc), 0x1fe0e1e2(r2)
-      xorb    0x030b91(pc), 0x1cdddedf(r2)
-      xorb    0xe1eb78(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      xorb    0x030ba6(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      xorb    0xe2ec92(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      xorb    0x030bbf(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      xorb    0xe3edac(pc), -0x1c1b1a1a(sb)
-      xorb    0x030cb4(pc), -0x1e1d1c1c(sb)
+      xorb    0xde0fe2(pc), r2
+      xorb    0x03340c(pc), r2
+      xorb    0xe011ed(pc), 0x1fe0e1e2(r2)
+      xorb    0x033419(pc), 0x1cdddedf(r2)
+      xorb    0xe21400(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      xorb    0x03342e(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      xorb    0xe3151a(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      xorb    0x033447(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      xorb    0xe41634(pc), -0x1c1b1a1a(sb)
+      xorb    0x03353c(pc), -0x1e1d1c1c(sb)
       xorb    r0[r0:q], r0[r1:d]
       xorb    2(r0)[r0:q], r0[r1:d]
       xorb    -64(r0)[r0:q], r0[r1:d]
@@ -15841,7 +17058,7 @@
       xorw    tos, 0x01c2c3c4(fp)[r0:d]
       xorw    tos, 0x01c2c3c4(sp)[r0:d]
       xorw    tos, 0x01c2c3c4(sb)[r0:d]
-      xorw    tos, 0xc5d056(pc)[r0:d]
+      xorw    tos, 0xc5f8de(pc)[r0:d]
       xorw    tos, r0[r0:d]
       xorw    0x01c2c3c4(fp), r2
       xorw    -0x1e3d3c3c(fp), r2
@@ -15860,7 +17077,7 @@
       xorw    0(fp), 0x08c9cacb(sb)
       xorw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       xorw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      xorw    0x09cacbcc(fp), 0xd1dd15(pc)[r0:d]
+      xorw    0x09cacbcc(fp), 0xd2059d(pc)[r0:d]
       xorw    0x09cacbcc(fp), r0[r0:d]
       xorw    0x09cacbcc(sp), r2
       xorw    -0x1e353434(sp), r2
@@ -15878,7 +17095,7 @@
       xorw    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       xorw    0(sp), 0x10d1d2d3(sb)
       xorw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      xorw    0x11d2d3d4(sp), 0xd9e5cd(pc)[r0:d]
+      xorw    0x11d2d3d4(sp), 0xda0e55(pc)[r0:d]
       xorw    0x11d2d3d4(sp), r0[r0:d]
       xorw    0x11d2d3d4(sb), r2
       xorw    -0x1e2d2c2c(sb), r2
@@ -15895,18 +17112,18 @@
       xorw    0x17d8d9da(sb), 0x1bdcddde(sb)
       xorw    -0x1e272626(sb), 0x1bdcddde(sb)
       xorw    0(sb), 0x18d9dadb(sb)
-      xorw    0x19dadbdc(sb), 0xe1ee7a(pc)[r0:d]
+      xorw    0x19dadbdc(sb), 0xe21702(pc)[r0:d]
       xorw    0x19dadbdc(sb), r0[r0:d]
-      xorw    0xddea88(pc), r2
-      xorw    0x030eb2(pc), r2
-      xorw    0xdfec93(pc), 0x1fe0e1e2(r2)
-      xorw    0x030ebf(pc), 0x1cdddedf(r2)
-      xorw    0xe1eea6(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      xorw    0x030ed4(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      xorw    0xe2efc0(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      xorw    0x030eed(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      xorw    0xe3f0da(pc), -0x1c1b1a1a(sb)
-      xorw    0x030fe2(pc), -0x1e1d1c1c(sb)
+      xorw    0xde1310(pc), r2
+      xorw    0x03373a(pc), r2
+      xorw    0xe0151b(pc), 0x1fe0e1e2(r2)
+      xorw    0x033747(pc), 0x1cdddedf(r2)
+      xorw    0xe2172e(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      xorw    0x03375c(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      xorw    0xe31848(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      xorw    0x033775(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      xorw    0xe41962(pc), -0x1c1b1a1a(sb)
+      xorw    0x03386a(pc), -0x1e1d1c1c(sb)
       xorw    r0[r0:q], r0[r1:d]
       xorw    2(r0)[r0:q], r0[r1:d]
       xorw    -64(r0)[r0:q], r0[r1:d]
@@ -15928,7 +17145,7 @@
       xorw    r0, r1[r0:d]
       xorw    r0, -63(r0)[r0:d]
       xorw    r0, 0x0081(r0)[r0:d]
-      bhs     0x030b22
+      bhs     0x0333aa
       xord    tos, -0x0040(-0x0242(sb))
       xord    tos, 0x01c2c3c4(0x00bebfc0(sb))
       xord    tos, -0x1e3d3c3c(0x00bebfc0(sb))
@@ -15940,7 +17157,7 @@
       xord    tos, 0x01c2c3c4(fp)[r0:d]
       xord    tos, 0x01c2c3c4(sp)[r0:d]
       xord    tos, 0x01c2c3c4(sb)[r0:d]
-      xord    tos, 0xc5d37f(pc)[r0:d]
+      xord    tos, 0xc5fc07(pc)[r0:d]
       xord    tos, r0[r0:d]
       xord    0x01c2c3c4(fp), r2
       xord    -0x1e3d3c3c(fp), r2
@@ -15959,7 +17176,7 @@
       xord    0(fp), 0x08c9cacb(sb)
       xord    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       xord    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      xord    0x09cacbcc(fp), 0xd1e03e(pc)[r0:d]
+      xord    0x09cacbcc(fp), 0xd208c6(pc)[r0:d]
       xord    0x09cacbcc(fp), r0[r0:d]
       xord    0x09cacbcc(sp), r2
       xord    -0x1e353434(sp), r2
@@ -15977,7 +17194,7 @@
       xord    -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       xord    0(sp), 0x10d1d2d3(sb)
       xord    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      xord    0x11d2d3d4(sp), 0xd9e8f6(pc)[r0:d]
+      xord    0x11d2d3d4(sp), 0xda117e(pc)[r0:d]
       xord    0x11d2d3d4(sp), r0[r0:d]
       xord    0x11d2d3d4(sb), r2
       xord    -0x1e2d2c2c(sb), r2
@@ -15994,18 +17211,18 @@
       xord    0x17d8d9da(sb), 0x1bdcddde(sb)
       xord    -0x1e272626(sb), 0x1bdcddde(sb)
       xord    0(sb), 0x18d9dadb(sb)
-      xord    0x19dadbdc(sb), 0xe1f1a3(pc)[r0:d]
+      xord    0x19dadbdc(sb), 0xe21a2b(pc)[r0:d]
       xord    0x19dadbdc(sb), r0[r0:d]
-      xord    0xddedb1(pc), r2
-      xord    0x0311db(pc), r2
-      xord    0xdfefbc(pc), 0x1fe0e1e2(r2)
-      xord    0x0311e8(pc), 0x1cdddedf(r2)
-      xord    0xe1f1cf(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      xord    0x0311fd(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      xord    0xe2f2e9(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      xord    0x031216(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      xord    0xe3f403(pc), -0x1c1b1a1a(sb)
-      xord    0x03130b(pc), -0x1e1d1c1c(sb)
+      xord    0xde1639(pc), r2
+      xord    0x033a63(pc), r2
+      xord    0xe01844(pc), 0x1fe0e1e2(r2)
+      xord    0x033a70(pc), 0x1cdddedf(r2)
+      xord    0xe21a57(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      xord    0x033a85(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      xord    0xe31b71(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      xord    0x033a9e(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      xord    0xe41c8b(pc), -0x1c1b1a1a(sb)
+      xord    0x033b93(pc), -0x1e1d1c1c(sb)
       xord    r0[r0:q], r0[r1:d]
       xord    2(r0)[r0:q], r0[r1:d]
       xord    -64(r0)[r0:q], r0[r1:d]
@@ -16095,20 +17312,20 @@
       sgeb    0x17d8d9da(sb)
       sgeb    -0x1e272626(sb)
       sgeb    0(sb)
-      sneb    0xddefb4(pc)
-      sneb    0x0313de(pc)
-      sccb    0xdef0be(pc)
-      sccb    0x0313e7(pc)
-      slsb    0xdff1c8(pc)
-      slsb    0x0313f0(pc)
-      sleb    0xe0f2d2(pc)
-      sleb    0x0313f9(pc)
-      sfcb    0xe1f3dc(pc)
-      sfcb    0x031402(pc)
-      shsb    0xe2f4e6(pc)
-      shsb    0x03140b(pc)
-      sgeb    0xe3f5f0(pc)
-      sgeb    0x031414(pc)
+      sneb    0xde183c(pc)
+      sneb    0x033c66(pc)
+      sccb    0xdf1946(pc)
+      sccb    0x033c6f(pc)
+      slsb    0xe01a50(pc)
+      slsb    0x033c78(pc)
+      sleb    0xe11b5a(pc)
+      sleb    0x033c81(pc)
+      sfcb    0xe21c64(pc)
+      sfcb    0x033c8a(pc)
+      shsb    0xe31d6e(pc)
+      shsb    0x033c93(pc)
+      sgeb    0xe41e78(pc)
+      sgeb    0x033c9c(pc)
       sneb    r0
       sccb    r0
       slsb    r0
@@ -16400,20 +17617,20 @@
       sgew    0x17d8d9da(sb)
       sgew    -0x1e272626(sb)
       sgew    0(sb)
-      snew    0xddf75c(pc)
-      snew    0x031b86(pc)
-      sccw    0xdef866(pc)
-      sccw    0x031b8f(pc)
-      slsw    0xdff970(pc)
-      slsw    0x031b98(pc)
-      slew    0xe0fa7a(pc)
-      slew    0x031ba1(pc)
-      sfcw    0xe1fb84(pc)
-      sfcw    0x031baa(pc)
-      shsw    0xe2fc8e(pc)
-      shsw    0x031bb3(pc)
-      sgew    0xe3fd98(pc)
-      sgew    0x031bbc(pc)
+      snew    0xde1fe4(pc)
+      snew    0x03440e(pc)
+      sccw    0xdf20ee(pc)
+      sccw    0x034417(pc)
+      slsw    0xe021f8(pc)
+      slsw    0x034420(pc)
+      slew    0xe12302(pc)
+      slew    0x034429(pc)
+      sfcw    0xe2240c(pc)
+      sfcw    0x034432(pc)
+      shsw    0xe32516(pc)
+      shsw    0x03443b(pc)
+      sgew    0xe42620(pc)
+      sgew    0x034444(pc)
       snew    r0
       sccw    r0
       slsw    r0
@@ -16642,6 +17859,1035 @@
       slew    tos
       sfcw    tos
       shsw    tos
+      addl    0x02c3c4c5(fp), f7
+      addl    0x02c3c4c5(fp), 0x06c7c8c9(r3)
+      addl    0x02c3c4c5(fp), -0x1e383737(r3)
+      addl    0x02c3c4c5(fp), 0(r3)
+      addl    0x02c3c4c5(fp), tos
+      addl    0x02c3c4c5(fp), 0xcb136a(pc)
+      addl    0x02c3c4c5(fp), 0x034aac(pc)
+      addl    0x03c4c5c6(fp), 0x07c8c9ca(fp)[r2:q]
+      addl    0x03c4c5c5(fp), -0x1e373636(fp)[r2:q]
+      addl    0x03c4c5c5(fp), 0(fp)[r2:q]
+      addl    0x02c3c4c5(sp), f3
+      addl    0x02c3c4c5(sp), 0x06c7c8c9(r3)
+      addl    0x02c3c4c5(sp), -0x1e383737(r3)
+      addl    0x02c3c4c5(sp), 0(r3)
+      addl    0x02c3c4c5(sp), tos
+      addl    0x02c3c4c5(sp), 0xcb13ca(pc)
+      addl    0x02c3c4c5(sp), 0x034b0c(pc)
+      addl    0x03c4c5c6(sp), 0x07c8c9ca(fp)[r2:q]
+      addl    0x03c4c5c5(sp), -0x1e373636(fp)[r2:q]
+      addl    0x03c4c5c5(sp), 0(fp)[r2:q]
+      addl    0x02c3c4c5(sb), f3
+      addl    0x02c3c4c5(sb), 0x06c7c8c9(r3)
+      addl    0x02c3c4c5(sb), -0x1e383737(r3)
+      addl    0x02c3c4c5(sb), 0(r3)
+      addl    0x02c3c4c5(sb), tos
+      addl    0x02c3c4c5(sb), 0xcb142a(pc)
+      addl    0x02c3c4c5(sb), 0x034b6c(pc)
+      addl    0x03c4c5c6(sb), 0x07c8c9ca(fp)[r2:q]
+      addl    0x03c4c5c5(sb), -0x1e373636(fp)[r2:q]
+      addl    0x03c4c5c5(sb), 0(fp)[r2:q]
+      addl    0xc7105a(pc), f3
+      addl    0xc71061(pc), 0x06c7c8c9(r3)
+      addl    0xc7106c(pc), -0x1e383737(r3)
+      addl    0xc71077(pc), 0(r3)
+      addl    0xc7107f(pc), tos
+      addl    0xc71086(pc), 0xcb148a(pc)
+      addl    0xc71091(pc), 0x034bcc(pc)
+      addl    0xc8119a(pc), 0x07c8c9ca(fp)[r2:q]
+      addl    0xc811a5(pc), -0x1e373636(fp)[r2:q]
+      addl    0xc811b1(pc), 0(fp)[r2:q]
+      addl    0x03c4c5c6(fp)[r2:b], f3
+      addl    0x03c4c5c6(fp)[r2:b], 0x07c8c9ca(r3)
+      addl    0x03c4c5c5(fp)[r2:b], -0x1e373636(r3)
+      addl    0x03c4c5c5(fp)[r2:b], 0(r3)
+      addl    0x03c4c5c6(fp)[r2:b], tos
+      addl    0x03c4c5c6(fp)[r2:b], 0xcc15f0(pc)
+      addl    0x03c4c5c5(fp)[r2:b], 0x034c32(pc)
+      addl    0x04c5c6c7(fp)[r2:b], 0x08c9cacb(fp)[r3:q]
+      addl    0x03c4c5c6(fp)[r2:w], f3
+      addl    0x03c4c5c6(fp)[r2:w], 0x07c8c9ca(r3)
+      addl    0x03c4c5c5(fp)[r2:w], -0x1e373636(r3)
+      addl    0x03c4c5c5(fp)[r2:w], 0(r3)
+      addl    0x03c4c5c6(fp)[r2:w], tos
+      addl    0x03c4c5c6(fp)[r2:w], 0xcc1643(pc)
+      addl    0x03c4c5c5(fp)[r2:w], 0x034c85(pc)
+      addl    0x04c5c6c7(fp)[r2:w], 0x08c9cacb(fp)[r3:q]
+      addl    0x03c4c5c6(fp)[r2:d], f3
+      addl    0x03c4c5c6(fp)[r2:d], 0x07c8c9ca(r3)
+      addl    0x03c4c5c5(fp)[r2:d], -0x1e373636(r3)
+      addl    0x03c4c5c5(fp)[r2:d], 0(r3)
+      addl    0x03c4c5c6(fp)[r2:d], tos
+      addl    0x03c4c5c6(fp)[r2:d], 0xcc1696(pc)
+      addl    0x03c4c5c5(fp)[r2:d], 0x034cd8(pc)
+      addl    0x04c5c6c7(fp)[r2:d], 0x08c9cacb(fp)[r3:q]
+      addl    0x03c4c5c6(fp)[r2:q], f3
+      addl    0x03c4c5c6(fp)[r2:q], 0x07c8c9ca(r3)
+      addl    0x03c4c5c5(fp)[r2:q], -0x1e373636(r3)
+      addl    0x03c4c5c5(fp)[r2:q], 0(r3)
+      addl    0x03c4c5c6(fp)[r2:q], tos
+      addl    0x03c4c5c6(fp)[r2:q], 0xcc16e9(pc)
+      addl    0x03c4c5c5(fp)[r2:q], 0x034d2b(pc)
+      addl    0x04c5c6c7(fp)[r2:q], 0x08c9cacb(fp)[r3:q]
+      addl    f0, f3
+      addf    0x03c4c5c6(fp), 0x07c8c9ca(r3)
+      addf    0x03c4c5c6(fp), tos
+      movl    0x06c7c8c9(fp), tos
+      movl    0x06c7c8c9(fp), 0xcf1a2a(pc)
+      movl    0x06c7c8c9(fp), 0x034d68(pc)
+      movl    0x07c8c9ca(fp), 0x0bcccdce(fp)[r6:q]
+      movl    0x07c8c9c9(fp), -0x1e333232(fp)[r6:q]
+      movl    0x07c8c9c9(fp), 0(fp)[r6:q]
+      movl    0x06c7c8c9(sp), f3
+      movl    0x06c7c8c9(sp), 0x0acbcccd(r3)
+      movl    0x06c7c8c9(sp), -0x1e343333(r3)
+      movl    0x06c7c8c9(sp), 0(r3)
+      movl    0x06c7c8c9(sp), tos
+      movl    0x06c7c8c9(sp), 0xcf1a8a(pc)
+      movl    0x06c7c8c9(sp), 0x034dc8(pc)
+      movl    0x07c8c9ca(sp), 0x0bcccdce(fp)[r6:q]
+      movl    0x07c8c9c9(sp), -0x1e333232(fp)[r6:q]
+      movl    0x07c8c9c9(sp), 0(fp)[r6:q]
+      movl    0x06c7c8c9(sb), f3
+      movl    0x06c7c8c9(sb), 0x0acbcccd(r3)
+      movl    0x06c7c8c9(sb), -0x1e343333(r3)
+      movl    0x06c7c8c9(sb), 0(r3)
+      movl    0x06c7c8c9(sb), tos
+      movl    0x06c7c8c9(sb), 0xcf1aea(pc)
+      movl    0x06c7c8c9(sb), 0x034e28(pc)
+      movl    0x07c8c9ca(sb), 0x0bcccdce(fp)[r6:q]
+      movl    0x07c8c9c9(sb), -0x1e333232(fp)[r6:q]
+      movl    0x07c8c9c9(sb), 0(fp)[r6:q]
+      movl    0xcb171a(pc), f3
+      movl    0xcb1721(pc), 0x0acbcccd(r3)
+      movl    0xcb172c(pc), -0x1e343333(r3)
+      movl    0xcb1737(pc), 0(r3)
+      movl    0xcb173f(pc), tos
+      movl    0xcb1746(pc), 0xcf1b4a(pc)
+      movl    0xcb1751(pc), 0x034e88(pc)
+      movl    0xcc185a(pc), 0x0bcccdce(fp)[r6:q]
+      movl    0xcc1865(pc), -0x1e333232(fp)[r6:q]
+      movl    0xcc1871(pc), 0(fp)[r6:q]
+      movl    0x07c8c9ca(fp)[r6:b], f3
+      movl    0x07c8c9ca(fp)[r6:b], 0x0bcccdce(r3)
+      movl    0x07c8c9c9(fp)[r6:b], -0x1e333232(r3)
+      movl    0x07c8c9c9(fp)[r6:b], 0(r3)
+      movl    0x07c8c9ca(fp)[r6:b], tos
+      movl    0x07c8c9ca(fp)[r6:b], 0xd01cb0(pc)
+      movl    0x07c8c9c9(fp)[r6:b], 0x034eee(pc)
+      movl    0x08c9cacb(fp)[r6:b], 0x0ccdcecf(fp)[r7:q]
+      movl    0x07c8c9ca(fp)[r6:w], f3
+      movl    0x07c8c9ca(fp)[r6:w], 0x0bcccdce(r3)
+      movl    0x07c8c9c9(fp)[r6:w], -0x1e333232(r3)
+      movl    0x07c8c9c9(fp)[r6:w], 0(r3)
+      movl    0x07c8c9ca(fp)[r6:w], tos
+      movl    0x07c8c9ca(fp)[r6:w], 0xd01d03(pc)
+      movl    0x07c8c9c9(fp)[r6:w], 0x034f41(pc)
+      movl    0x08c9cacb(fp)[r6:w], 0x0ccdcecf(fp)[r7:q]
+      movl    0x07c8c9ca(fp)[r6:d], f3
+      movl    0x07c8c9ca(fp)[r6:d], 0x0bcccdce(r3)
+      movl    0x07c8c9c9(fp)[r6:d], -0x1e333232(r3)
+      movl    0x07c8c9c9(fp)[r6:d], 0(r3)
+      movl    0x07c8c9ca(fp)[r6:d], tos
+      movl    0x07c8c9ca(fp)[r6:d], 0xd01d56(pc)
+      movl    0x07c8c9c9(fp)[r6:d], 0x034f94(pc)
+      movl    0x08c9cacb(fp)[r6:d], 0x0ccdcecf(fp)[r7:q]
+      movl    0x07c8c9ca(fp)[r6:q], f3
+      movl    0x07c8c9ca(fp)[r6:q], 0x0bcccdce(r3)
+      movl    0x07c8c9c9(fp)[r6:q], -0x1e333232(r3)
+      movl    0x07c8c9c9(fp)[r6:q], 0(r3)
+      movl    0x07c8c9ca(fp)[r6:q], tos
+      movl    0x07c8c9ca(fp)[r6:q], 0xd01da9(pc)
+      movl    0x07c8c9c9(fp)[r6:q], 0x034fe7(pc)
+      movl    0x08c9cacb(fp)[r6:q], 0x0ccdcecf(fp)[r7:q]
+      movl    f0, f3
+      movf    0x07c8c9ca(fp), 0xd01dce(pc)
+      movf    0x08c9cacb(fp), 0x0ccdcecf(fp)[r7:q]
+      movf    0x07c8c9ca(sp), f3
+      cmpl    0x0acbcccd(sp), f7
+      cmpl    0x0acbcccd(sp), 0x0ecfd0d1(r3)
+      cmpl    0x0acbcccd(sp), -0x1e302f2f(r3)
+      cmpl    0x0acbcccd(sp), 0(r3)
+      cmpl    0x0acbcccd(sp), tos
+      cmpl    0x0acbcccd(sp), 0xd3211b(pc)
+      cmpl    0x0acbcccd(sp), 0x035055(pc)
+      cmpl    0x0bcccdce(sp), 0x0fd0d1d2(sp)[r2:q]
+      cmpl    0x0bcccdcd(sp), -0x1e2f2e2e(sp)[r2:q]
+      cmpl    0x0bcccdcd(sp), 0(sp)[r2:q]
+      cmpl    0x0acbcccd(sb), f3
+      cmpl    0x0acbcccd(sb), 0x0ecfd0d1(r3)
+      cmpl    0x0acbcccd(sb), -0x1e302f2f(r3)
+      cmpl    0x0acbcccd(sb), 0(r3)
+      cmpl    0x0acbcccd(sb), tos
+      cmpl    0x0acbcccd(sb), 0xd3217b(pc)
+      cmpl    0x0acbcccd(sb), 0x0350b5(pc)
+      cmpl    0x0bcccdce(sb), 0x0fd0d1d2(sp)[r2:q]
+      cmpl    0x0bcccdcd(sb), -0x1e2f2e2e(sp)[r2:q]
+      cmpl    0x0bcccdcd(sb), 0(sp)[r2:q]
+      cmpl    0xcf1dab(pc), f3
+      cmpl    0xcf1db2(pc), 0x0ecfd0d1(r3)
+      cmpl    0xcf1dbd(pc), -0x1e302f2f(r3)
+      cmpl    0xcf1dc8(pc), 0(r3)
+      cmpl    0xcf1dd0(pc), tos
+      cmpl    0xcf1dd7(pc), 0xd321db(pc)
+      cmpl    0xcf1de2(pc), 0x035115(pc)
+      cmpl    0xd01eeb(pc), 0x0fd0d1d2(sp)[r2:q]
+      cmpl    0xd01ef6(pc), -0x1e2f2e2e(sp)[r2:q]
+      cmpl    0xd01f02(pc), 0(sp)[r2:q]
+      cmpl    0x0bcccdce(sp)[r2:b], f3
+      cmpl    0x0bcccdce(sp)[r2:b], 0x0fd0d1d2(r3)
+      cmpl    0x0bcccdcd(sp)[r2:b], -0x1e2f2e2e(r3)
+      cmpl    0x0bcccdcd(sp)[r2:b], 0(r3)
+      cmpl    0x0bcccdce(sp)[r2:b], tos
+      cmpl    0x0bcccdce(sp)[r2:b], 0xd42341(pc)
+      cmpl    0x0bcccdcd(sp)[r2:b], 0x03517b(pc)
+      cmpl    0x0ccdcecf(sp)[r2:b], 0x10d1d2d3(sp)[r3:q]
+      cmpl    0x0bcccdce(sp)[r2:w], f3
+      cmpl    0x0bcccdce(sp)[r2:w], 0x0fd0d1d2(r3)
+      cmpl    0x0bcccdcd(sp)[r2:w], -0x1e2f2e2e(r3)
+      cmpl    0x0bcccdcd(sp)[r2:w], 0(r3)
+      cmpl    0x0bcccdce(sp)[r2:w], tos
+      cmpl    0x0bcccdce(sp)[r2:w], 0xd42394(pc)
+      cmpl    0x0bcccdcd(sp)[r2:w], 0x0351ce(pc)
+      cmpl    0x0ccdcecf(sp)[r2:w], 0x10d1d2d3(sp)[r3:q]
+      cmpl    0x0bcccdce(sp)[r2:d], f3
+      cmpl    0x0bcccdce(sp)[r2:d], 0x0fd0d1d2(r3)
+      cmpl    0x0bcccdcd(sp)[r2:d], -0x1e2f2e2e(r3)
+      cmpl    0x0bcccdcd(sp)[r2:d], 0(r3)
+      cmpl    0x0bcccdce(sp)[r2:d], tos
+      cmpl    0x0bcccdce(sp)[r2:d], 0xd423e7(pc)
+      cmpl    0x0bcccdcd(sp)[r2:d], 0x035221(pc)
+      cmpl    0x0ccdcecf(sp)[r2:d], 0x10d1d2d3(sp)[r3:q]
+      cmpl    0x0bcccdce(sp)[r2:q], f3
+      cmpl    0x0bcccdce(sp)[r2:q], 0x0fd0d1d2(r3)
+      cmpl    0x0bcccdcd(sp)[r2:q], -0x1e2f2e2e(r3)
+      cmpl    0x0bcccdcd(sp)[r2:q], 0(r3)
+      cmpl    0x0bcccdce(sp)[r2:q], tos
+      cmpl    0x0bcccdce(sp)[r2:q], 0xd4243a(pc)
+      cmpl    0x0bcccdcd(sp)[r2:q], 0x035274(pc)
+      cmpl    0x0ccdcecf(sp)[r2:q], 0x10d1d2d3(sp)[r3:q]
+      cmpl    f0, f3
+      cmpf    0x0bcccdce(sp), 0x0fd0d1d2(r3)
+      cmpf    0x0bcccdce(sp), tos
+      subl    0x12d3d4d5(sb), f7
+      subl    0x12d3d4d5(sb), 0x16d7d8d9(r3)
+      subl    0x12d3d4d5(sb), -0x1e282727(r3)
+      subl    0x12d3d4d5(sb), 0(r3)
+      subl    0x12d3d4d5(sb), tos
+      subl    0x12d3d4d5(sb), 0xdb2ba4(pc)
+      subl    0x12d3d4d5(sb), 0x0352d6(pc)
+      subl    0x13d4d5d6(sb), 0x17d8d9da(sb)[r2:q]
+      subl    0x13d4d5d5(sb), -0x1e272626(sb)[r2:q]
+      subl    0x13d4d5d5(sb), 0(sb)[r2:q]
+      subl    0xd727d4(pc), f3
+      subl    0xd727db(pc), 0x16d7d8d9(r3)
+      subl    0xd727e6(pc), -0x1e282727(r3)
+      subl    0xd727f1(pc), 0(r3)
+      subl    0xd727f9(pc), tos
+      subl    0xd72800(pc), 0xdb2c04(pc)
+      subl    0xd7280b(pc), 0x035336(pc)
+      subl    0xd82914(pc), 0x17d8d9da(sb)[r2:q]
+      subl    0xd8291f(pc), -0x1e272626(sb)[r2:q]
+      subl    0xd8292b(pc), 0(sb)[r2:q]
+      subl    0x13d4d5d6(sb)[r2:b], f3
+      subl    0x13d4d5d6(sb)[r2:b], 0x17d8d9da(r3)
+      subl    0x13d4d5d5(sb)[r2:b], -0x1e272626(r3)
+      subl    0x13d4d5d5(sb)[r2:b], 0(r3)
+      subl    0x13d4d5d6(sb)[r2:b], tos
+      subl    0x13d4d5d6(sb)[r2:b], 0xdc2d6a(pc)
+      subl    0x13d4d5d5(sb)[r2:b], 0x03539c(pc)
+      subl    0x14d5d6d7(sb)[r2:b], 0x18d9dadb(sb)[r3:q]
+      subl    0x13d4d5d6(sb)[r2:w], f3
+      subl    0x13d4d5d6(sb)[r2:w], 0x17d8d9da(r3)
+      subl    0x13d4d5d5(sb)[r2:w], -0x1e272626(r3)
+      subl    0x13d4d5d5(sb)[r2:w], 0(r3)
+      subl    0x13d4d5d6(sb)[r2:w], tos
+      subl    0x13d4d5d6(sb)[r2:w], 0xdc2dbd(pc)
+      subl    0x13d4d5d5(sb)[r2:w], 0x0353ef(pc)
+      subl    0x14d5d6d7(sb)[r2:w], 0x18d9dadb(sb)[r3:q]
+      subl    0x13d4d5d6(sb)[r2:d], f3
+      subl    0x13d4d5d6(sb)[r2:d], 0x17d8d9da(r3)
+      subl    0x13d4d5d5(sb)[r2:d], -0x1e272626(r3)
+      subl    0x13d4d5d5(sb)[r2:d], 0(r3)
+      subl    0x13d4d5d6(sb)[r2:d], tos
+      subl    0x13d4d5d6(sb)[r2:d], 0xdc2e10(pc)
+      subl    0x13d4d5d5(sb)[r2:d], 0x035442(pc)
+      subl    0x14d5d6d7(sb)[r2:d], 0x18d9dadb(sb)[r3:q]
+      subl    0x13d4d5d6(sb)[r2:q], f3
+      subl    0x13d4d5d6(sb)[r2:q], 0x17d8d9da(r3)
+      subl    0x13d4d5d5(sb)[r2:q], -0x1e272626(r3)
+      subl    0x13d4d5d5(sb)[r2:q], 0(r3)
+      subl    0x13d4d5d6(sb)[r2:q], tos
+      subl    0x13d4d5d6(sb)[r2:q], 0xdc2e63(pc)
+      subl    0x13d4d5d5(sb)[r2:q], 0x035495(pc)
+      subl    0x14d5d6d7(sb)[r2:q], 0x18d9dadb(sb)[r3:q]
+      subl    f0, f3
+      subf    0x13d4d5d6(sb), 0x17d8d9da(r3)
+      subf    0x13d4d5d6(sb), tos
+      negl    0x16d7d8d9(sb), tos
+      negl    0x16d7d8d9(sb), 0xdf31a4(pc)
+      negl    0x16d7d8d9(sb), 0x0354d2(pc)
+      negl    0x17d8d9da(sb), 0x1bdcddde(sb)[r6:q]
+      negl    0x17d8d9d9(sb), -0x1e232222(sb)[r6:q]
+      negl    0x17d8d9d9(sb), 0(sb)[r6:q]
+      negl    0xdb2dd4(pc), f3
+      negl    0xdb2ddb(pc), 0x1adbdcdd(r3)
+      negl    0xdb2de6(pc), -0x1e242323(r3)
+      negl    0xdb2df1(pc), 0(r3)
+      negl    0xdb2df9(pc), tos
+      negl    0xdb2e00(pc), 0xdf3204(pc)
+      negl    0xdb2e0b(pc), 0x035532(pc)
+      negl    0xdc2f14(pc), 0x1bdcddde(sb)[r6:q]
+      negl    0xdc2f1f(pc), -0x1e232222(sb)[r6:q]
+      negl    0xdc2f2b(pc), 0(sb)[r6:q]
+      negl    0x17d8d9da(sb)[r6:b], f3
+      negl    0x17d8d9da(sb)[r6:b], 0x1bdcddde(r3)
+      negl    0x17d8d9d9(sb)[r6:b], -0x1e232222(r3)
+      negl    0x17d8d9d9(sb)[r6:b], 0(r3)
+      negl    0x17d8d9da(sb)[r6:b], tos
+      negl    0x17d8d9da(sb)[r6:b], 0xe0336a(pc)
+      negl    0x17d8d9d9(sb)[r6:b], 0x035598(pc)
+      negl    0x18d9dadb(sb)[r6:b], 0x1cdddedf(sb)[r7:q]
+      negl    0x17d8d9da(sb)[r6:w], f3
+      negl    0x17d8d9da(sb)[r6:w], 0x1bdcddde(r3)
+      negl    0x17d8d9d9(sb)[r6:w], -0x1e232222(r3)
+      negl    0x17d8d9d9(sb)[r6:w], 0(r3)
+      negl    0x17d8d9da(sb)[r6:w], tos
+      negl    0x17d8d9da(sb)[r6:w], 0xe033bd(pc)
+      negl    0x17d8d9d9(sb)[r6:w], 0x0355eb(pc)
+      negl    0x18d9dadb(sb)[r6:w], 0x1cdddedf(sb)[r7:q]
+      negl    0x17d8d9da(sb)[r6:d], f3
+      negl    0x17d8d9da(sb)[r6:d], 0x1bdcddde(r3)
+      negl    0x17d8d9d9(sb)[r6:d], -0x1e232222(r3)
+      negl    0x17d8d9d9(sb)[r6:d], 0(r3)
+      negl    0x17d8d9da(sb)[r6:d], tos
+      negl    0x17d8d9da(sb)[r6:d], 0xe03410(pc)
+      negl    0x17d8d9d9(sb)[r6:d], 0x03563e(pc)
+      negl    0x18d9dadb(sb)[r6:d], 0x1cdddedf(sb)[r7:q]
+      negl    0x17d8d9da(sb)[r6:q], f3
+      negl    0x17d8d9da(sb)[r6:q], 0x1bdcddde(r3)
+      negl    0x17d8d9d9(sb)[r6:q], -0x1e232222(r3)
+      negl    0x17d8d9d9(sb)[r6:q], 0(r3)
+      negl    0x17d8d9da(sb)[r6:q], tos
+      negl    0x17d8d9da(sb)[r6:q], 0xe03463(pc)
+      negl    0x17d8d9d9(sb)[r6:q], 0x035691(pc)
+      negl    0x18d9dadb(sb)[r6:q], 0x1cdddedf(sb)[r7:q]
+      negl    f0, f3
+      negf    0x17d8d9da(sb), 0xe03488(pc)
+      negf    0x18d9dadb(sb), 0x1cdddedf(sb)[r7:q]
+      negf    0xdc309b(pc), f3
+      addl    f0, 3(r0)
+      addl    f0, -64(r0)
+      addl    f0, 0x0081(r0)
+      addl    f0, 6(5(fp))
+      addl    f0, 6(-64(fp))
+      addl    f0, 7(6(fp))
+      addl    f0, -64(6(fp))
+      addl    f0, 0x0081(6(fp))
+      addl    f0, 7(fp)
+      addl    f0, -64(fp)
+      addl    f0, 0x0081(fp)
+      addl    f0, f1[r0:b]
+      addl    f0, -63(r0)[r0:b]
+      addl    f0, 0x0081(r0)[r0:b]
+      addf    f0, 3(r0)
+      addf    f0, 4(3(fp))
+      addf    f0, -64(3(fp))
+      addf    f0, 0x0081(3(fp))
+      addf    f0, 3(fp)
+      addf    f0, f0[r3:b]
+      addf    f1, f0
+      movf    f0, 7(fp)
+      movf    f0, f0[r7:b]
+      movf    f1, f0
+      cmpl    f1, 11(r0)
+      cmpl    f1, -64(r0)
+      cmpl    f1, 0x0081(r0)
+      cmpl    f1, 14(13(fp))
+      cmpl    f1, 14(-64(fp))
+      cmpl    f1, 15(14(fp))
+      cmpl    f1, -64(14(fp))
+      cmpl    f1, 0x0081(14(fp))
+      cmpl    f1, 15(fp)
+      cmpl    f1, -64(fp)
+      cmpl    f1, 0x0081(fp)
+      cmpl    f1, f2[r0:b]
+      cmpl    f1, -63(r0)[r0:b]
+      cmpl    f1, 0x0081(r0)[r0:b]
+      cmpf    f1, 11(r0)
+      cmpf    f1, 12(11(fp))
+      cmpf    f1, -64(11(fp))
+      cmpf    f1, 0x0081(11(fp))
+      cmpf    f1, 11(fp)
+      cmpf    f1, f1[r3:b]
+      cmpf    f2, f0
+      subl    f2, 19(r0)
+      subl    f2, -64(r0)
+      subl    f2, 0x0081(r0)
+      subl    f2, 22(21(fp))
+      subl    f2, 22(-64(fp))
+      subl    f2, 23(22(fp))
+      subl    f2, -64(22(fp))
+      subl    f2, 0x0081(22(fp))
+      subl    f2, 23(fp)
+      subl    f2, -64(fp)
+      subl    f2, 0x0081(fp)
+      subl    f2, f3[r0:b]
+      subl    f2, -63(r0)[r0:b]
+      subl    f2, 0x0081(r0)[r0:b]
+      subf    f2, 19(r0)
+      subf    f2, 20(19(fp))
+      subf    f2, -64(19(fp))
+      subf    f2, 0x0081(19(fp))
+      subf    f2, 19(fp)
+      subf    f2, f2[r3:b]
+      subf    f3, f0
+      negf    f2, 23(fp)
+      negf    f2, f2[r7:b]
+      negf    f3, f0
+      divl    f4, f4
+      divl    f4, 35(r0)
+      divl    f4, -64(r0)
+      divl    f4, 0x0081(r0)
+      divl    f4, 38(37(fp))
+      divl    f4, 38(-64(fp))
+      divl    f4, 39(0x0026(fp))
+      divl    f4, -64(0x0026(fp))
+      divl    f4, 0x0081(0x0026(fp))
+      divl    f4, 39(fp)
+      divl    f4, -64(fp)
+      divl    f4, 0x0081(fp)
+      divl    f4, f5[r0:b]
+      divl    f4, -63(r0)[r0:b]
+      divl    f4, 0x0081(r0)[r0:b]
+      divf    f4, 35(r0)
+      divf    f4, 36(35(fp))
+      divf    f4, -64(35(fp))
+      divf    f4, 0x0081(35(fp))
+      divf    f4, 35(fp)
+      divf    f4, f4[r3:b]
+      divf    f5, f0
+      mull    f6, f4
+      mull    f6, 51(r0)
+      mull    f6, -64(r0)
+      mull    f6, 0x0081(r0)
+      mull    f6, 54(53(fp))
+      mull    f6, 54(-64(fp))
+      mull    f6, 55(0x0036(fp))
+      mull    f6, -64(0x0036(fp))
+      mull    f6, 0x0081(0x0036(fp))
+      mull    f6, 55(-0x1fca(fp))
+      mull    f6, -64(-0x1fca(fp))
+      mull    f6, 0x0081(-0x1fca(fp))
+      mull    f6, 57(0x00363738(fp))
+      mull    f6, 55(fp)
+      mull    f6, -64(fp)
+      mull    f6, 0x0081(fp)
+      mull    f6, f7[r0:b]
+      mull    f6, -63(r0)[r0:b]
+      mull    f6, 0x0081(r0)[r0:b]
+      mull    f7, -63(0x003e3f40(fp))
+      mulf    f6, 51(r0)
+      mulf    f6, 52(51(fp))
+      mulf    f6, -64(51(fp))
+      mulf    f6, 0x0081(51(fp))
+      mulf    f6, 51(fp)
+      mulf    f6, f6[r3:b]
+      mulf    f7, f0
+      absf    f6, 55(fp)
+      absf    f6, f6[r7:b]
+      absf    f7, f0
+      addl    -62(r0), f5
+      addl    -62(r0), -61(r1)
+      addl    -62(r0), 0x0081(r1)
+      addl    -62(r0), -60(-61(sp))
+      addl    -62(r0), -59(0x0044(sp))
+      addl    -62(r0), 0x0081(0x0044(sp))
+      addl    -62(r0), @-61
+      addl    -62(r0), @0x0081
+      addl    -62(r0), -61(sp)
+      addl    -62(r0), 0x0081(sp)
+      addl    -61(r0), -60(r0)[r2:w]
+      addl    0x0044(r0), -59(r0)[r2:w]
+      addl    0x0044(r0), 0x0081(r0)[r2:w]
+      addf    -61(r0), -60(r1)
+      addf    -61(r0), -59(-60(sp))
+      addf    -61(r0), 0x0081(-60(sp))
+      addf    -61(r0), @-60
+      addf    -61(r0), -60(sp)
+      addf    -60(r0), -59(r0)[r3:w]
+      addf    -60(r0), 0x0081(r0)[r3:w]
+      addf    -61(r1), f1
+      movl    -58(r0), @-57
+      movl    -58(r0), -57(sp)
+      movl    -57(r0), -56(r0)[r6:w]
+      movl    -57(r0), 0x0081(r0)[r6:w]
+      movl    -58(r1), f1
+      movf    -57(r0), -56(sp)
+      movf    -56(r0), -55(r0)[r7:w]
+      movf    -56(r0), 0x0081(r0)[r7:w]
+      movf    -57(r1), f1
+      cmpl    -54(r1), f5
+      cmpl    -54(r1), -53(r1)
+      cmpl    -54(r1), 0x0081(r1)
+      cmpl    -54(r1), -52(-53(sp))
+      cmpl    -54(r1), -51(0x004c(sp))
+      cmpl    -54(r1), 0x0081(0x004c(sp))
+      cmpl    -54(r1), @-53
+      cmpl    -54(r1), @0x0081
+      cmpl    -54(r1), -53(sp)
+      cmpl    -54(r1), 0x0081(sp)
+      cmpl    -53(r1), -52(r1)[r2:w]
+      cmpl    0x004c(r1), -51(r1)[r2:w]
+      cmpl    0x004c(r1), 0x0081(r1)[r2:w]
+      cmpf    -53(r1), -52(r1)
+      cmpf    -53(r1), -51(-52(sp))
+      cmpf    -53(r1), 0x0081(-52(sp))
+      cmpf    -53(r1), @-52
+      cmpf    -53(r1), -52(sp)
+      cmpf    -52(r1), -51(r1)[r3:w]
+      cmpf    -52(r1), 0x0081(r1)[r3:w]
+      cmpf    -53(r2), f1
+      subl    -46(r2), f5
+      subl    -46(r2), -45(r1)
+      subl    -46(r2), 0x0081(r1)
+      subl    -46(r2), -44(-45(sp))
+      subl    -46(r2), -43(0x0054(sp))
+      subl    -46(r2), 0x0081(0x0054(sp))
+      subl    -46(r2), @-45
+      subl    -46(r2), @0x0081
+      subl    -46(r2), -45(sp)
+      subl    -46(r2), 0x0081(sp)
+      subl    -45(r2), -44(r2)[r2:w]
+      subl    0x0054(r2), -43(r2)[r2:w]
+      subl    0x0054(r2), 0x0081(r2)[r2:w]
+      subl    -45(-46(fp)), f1
+      subl    0x0081(-46(fp)), f1
+      subl    -45(-46(fp)), -44(r1)
+      subl    0x0054(-46(fp)), -43(r1)
+      subl    0x0054(-46(fp)), 0x0081(r1)
+      subl    -45(-46(fp)), -43(-44(sp))
+      subl    0x0054(-46(fp)), -42(-43(sp))
+      subl    0x0054(-46(fp)), 0x0081(-43(sp))
+      subl    -45(-46(fp)), @-44
+      subl    0x0054(-46(fp)), @-43
+      subl    0x0054(-46(fp)), @0x0081
+      subl    -45(-46(fp)), -44(sp)
+      subl    0x0054(-46(fp)), -43(sp)
+      subl    0x0054(-46(fp)), 0x0081(sp)
+      subl    -44(-45(fp)), -43(r2)[r2:w]
+      subl    -43(0x0054(fp)), -42(r2)[r2:w]
+      subl    -43(0x0054(fp)), 0x0081(r2)[r2:w]
+      subl    -45(-46(sp)), f1
+      subl    0x0081(-46(sp)), f1
+      subl    -45(-46(sp)), -44(r1)
+      subl    0x0054(-46(sp)), -43(r1)
+      subl    0x0054(-46(sp)), 0x0081(r1)
+      subl    -45(-46(sp)), -43(-44(sp))
+      subl    0x0054(-46(sp)), -42(-43(sp))
+      subl    0x0054(-46(sp)), 0x0081(-43(sp))
+      subl    -45(-46(sp)), @-44
+      subl    0x0054(-46(sp)), @-43
+      subl    0x0054(-46(sp)), @0x0081
+      subl    -45(-46(sp)), -44(sp)
+      subl    0x0054(-46(sp)), -43(sp)
+      subl    0x0054(-46(sp)), 0x0081(sp)
+      subl    -44(-45(sp)), -43(r2)[r2:w]
+      subl    -43(0x0054(sp)), -42(r2)[r2:w]
+      subl    -43(0x0054(sp)), 0x0081(r2)[r2:w]
+      subl    -45(-46(sb)), f1
+      subl    0x0081(-46(sb)), f1
+      subl    -45(-46(sb)), -44(r1)
+      subl    0x0054(-46(sb)), -43(r1)
+      subl    0x0054(-46(sb)), 0x0081(r1)
+      subl    -45(-46(sb)), -43(-44(sp))
+      subl    0x0054(-46(sb)), -42(-43(sp))
+      subl    0x0054(-46(sb)), 0x0081(-43(sp))
+      subl    -45(-46(sb)), @-44
+      subl    0x0054(-46(sb)), @-43
+      subl    0x0054(-46(sb)), @0x0081
+      subl    -45(-46(sb)), -44(sp)
+      subl    0x0054(-46(sb)), -43(sp)
+      subl    0x0054(-46(sb)), 0x0081(sp)
+      subl    -44(-45(sb)), -43(r2)[r2:w]
+      subl    -43(0x0054(sb)), -42(r2)[r2:w]
+      subl    -43(0x0054(sb)), 0x0081(r2)[r2:w]
+      subl    0x52535455:0x56575859, f1
+      subf    -45(r2), -44(r1)
+      subf    -45(r2), -43(-44(sp))
+      subf    -45(r2), 0x0081(-44(sp))
+      subf    -45(r2), @-44
+      subf    -45(r2), -44(sp)
+      subf    -44(r2), -43(r2)[r3:w]
+      subf    -44(r2), 0x0081(r2)[r3:w]
+      subf    -45(r3), f1
+      negl    -42(r2), @-41
+      negl    -42(r2), -41(sp)
+      negl    -41(r2), -40(r2)[r6:w]
+      negl    -41(r2), 0x0081(r2)[r6:w]
+      negl    -42(r3), f1
+      negf    -41(r2), -40(sp)
+      negf    -40(r2), -39(r2)[r7:w]
+      negf    -40(r2), 0x0081(r2)[r7:w]
+      negf    -41(r3), f1
+      divl    -30(r4), f5
+      divl    -30(r4), -29(r1)
+      divl    -30(r4), 0x0081(r1)
+      divl    -30(r4), -28(-29(sp))
+      divl    -30(r4), -27(0x0064(sp))
+      divl    -30(r4), 0x0081(0x0064(sp))
+      divl    -30(r4), @-29
+      divl    -30(r4), @0x0081
+      divl    -30(r4), -29(sp)
+      divl    -30(r4), 0x0081(sp)
+      divl    -29(r4), -28(r4)[r2:w]
+      divl    0x0064(r4), -27(r4)[r2:w]
+      divl    0x0064(r4), 0x0081(r4)[r2:w]
+      divl    -29(-30(fp)), f1
+      divl    0x0081(-30(fp)), f1
+      divl    -29(-30(fp)), -28(r1)
+      divl    0x0064(-30(fp)), -27(r1)
+      divl    0x0064(-30(fp)), 0x0081(r1)
+      divl    -29(-30(fp)), -27(-28(sp))
+      divl    0x0064(-30(fp)), -26(-27(sp))
+      divl    0x0064(-30(fp)), 0x0081(-27(sp))
+      divl    -29(-30(fp)), @-28
+      divl    0x0064(-30(fp)), @-27
+      divl    0x0064(-30(fp)), @0x0081
+      divl    -29(-30(fp)), -28(sp)
+      divl    0x0064(-30(fp)), -27(sp)
+      divl    0x0064(-30(fp)), 0x0081(sp)
+      divl    -28(-29(fp)), -27(r4)[r2:w]
+      divl    -27(0x0064(fp)), -26(r4)[r2:w]
+      divl    -27(0x0064(fp)), 0x0081(r4)[r2:w]
+      divl    -29(-30(sp)), f1
+      divl    0x0081(-30(sp)), f1
+      divl    -29(-30(sp)), -28(r1)
+      divl    0x0064(-30(sp)), -27(r1)
+      divl    0x0064(-30(sp)), 0x0081(r1)
+      divl    -29(-30(sp)), -27(-28(sp))
+      divl    0x0064(-30(sp)), -26(-27(sp))
+      divl    0x0064(-30(sp)), 0x0081(-27(sp))
+      divl    -29(-30(sp)), @-28
+      divl    0x0064(-30(sp)), @-27
+      divl    0x0064(-30(sp)), @0x0081
+      divl    -29(-30(sp)), -28(sp)
+      divl    0x0064(-30(sp)), -27(sp)
+      divl    0x0064(-30(sp)), 0x0081(sp)
+      divl    -28(-29(sp)), -27(r4)[r2:w]
+      divl    -27(0x0064(sp)), -26(r4)[r2:w]
+      divl    -27(0x0064(sp)), 0x0081(r4)[r2:w]
+      divl    -29(-30(sb)), f1
+      divl    0x0081(-30(sb)), f1
+      divl    -29(-30(sb)), -28(r1)
+      divl    0x0064(-30(sb)), -27(r1)
+      divl    0x0064(-30(sb)), 0x0081(r1)
+      divl    -29(-30(sb)), -27(-28(sp))
+      divl    0x0064(-30(sb)), -26(-27(sp))
+      divl    0x0064(-30(sb)), 0x0081(-27(sp))
+      divl    -29(-30(sb)), @-28
+      divl    0x0064(-30(sb)), @-27
+      divl    0x0064(-30(sb)), @0x0081
+      divl    -29(-30(sb)), -28(sp)
+      divl    0x0064(-30(sb)), -27(sp)
+      divl    0x0064(-30(sb)), 0x0081(sp)
+      divl    -28(-29(sb)), -27(r4)[r2:w]
+      divl    -27(0x0064(sb)), -26(r4)[r2:w]
+      divl    -27(0x0064(sb)), 0x0081(r4)[r2:w]
+      divl    0x62636465:0x66676869, f1
+      divf    -29(r4), -28(r1)
+      divf    -29(r4), -27(-28(sp))
+      divf    -29(r4), 0x0081(-28(sp))
+      divf    -29(r4), @-28
+      divf    -29(r4), -28(sp)
+      divf    -28(r4), -27(r4)[r3:w]
+      divf    -28(r4), 0x0081(r4)[r3:w]
+      divf    -29(r5), f1
+      mull    -14(r6), f5
+      mull    -14(r6), -13(r1)
+      mull    -14(r6), 0x0081(r1)
+      mull    -14(r6), -12(-13(sp))
+      mull    -14(r6), -11(0x0074(sp))
+      mull    -14(r6), 0x0081(0x0074(sp))
+      mull    -14(r6), -11(-0x1f8c(sp))
+      mull    -14(r6), 0x0081(-0x1f8c(sp))
+      mull    -14(r6), -9(0x00747576(sp))
+      mull    -14(r6), @-13
+      mull    -14(r6), @0x0081
+      mull    -14(r6), -13(sp)
+      mull    -14(r6), 0x0081(sp)
+      mull    -13(r6), -12(r6)[r2:w]
+      mull    0x0074(r6), -11(r6)[r2:w]
+      mull    0x0074(r6), 0x0081(r6)[r2:w]
+      mull    -0x1f8c(r6), -11(r6)[r2:w]
+      mull    -0x1f8c(r6), 0x0081(r6)[r2:w]
+      mull    0x00747576(r6), -9(r6)[r2:w]
+      mull    -13(-14(fp)), f1
+      mull    0x0081(-14(fp)), f1
+      mull    -13(-14(fp)), -12(r1)
+      mull    0x0074(-14(fp)), -11(r1)
+      mull    0x0074(-14(fp)), 0x0081(r1)
+      mull    -0x1f8c(-14(fp)), -11(r1)
+      mull    -0x1f8c(-14(fp)), 0x0081(r1)
+      mull    0x00747576(-14(fp)), -9(r1)
+      mull    -13(-14(fp)), -11(-12(sp))
+      mull    0x0074(-14(fp)), -10(-11(sp))
+      mull    0x0074(-14(fp)), 0x0081(-11(sp))
+      mull    -0x1f8c(-14(fp)), -10(-11(sp))
+      mull    -0x1f8c(-14(fp)), 0x0081(-11(sp))
+      mull    0x00747576(-14(fp)), -8(-9(sp))
+      mull    0x00747575(-14(fp)), -7(0x0078(sp))
+      mull    0x00747575(-14(fp)), 0x0081(0x0078(sp))
+      mull    0x00747575(-14(fp)), -7(-0x1f88(sp))
+      mull    0x00747575(-14(fp)), 0x0081(-0x1f88(sp))
+      mull    0x00747575(-14(fp)), -5(0x0078797a(sp))
+      mull    -13(-14(fp)), @-12
+      mull    0x0074(-14(fp)), @-11
+      mull    0x0074(-14(fp)), @0x0081
+      mull    -0x1f8c(-14(fp)), @-11
+      mull    -0x1f8c(-14(fp)), @0x0081
+      mull    0x00747576(-14(fp)), @-9
+      mull    -13(-14(fp)), -12(sp)
+      mull    0x0074(-14(fp)), -11(sp)
+      mull    0x0074(-14(fp)), 0x0081(sp)
+      mull    -0x1f8c(-14(fp)), -11(sp)
+      mull    -0x1f8c(-14(fp)), 0x0081(sp)
+      mull    0x00747576(-14(fp)), -9(sp)
+      mull    -12(-13(fp)), -11(r6)[r2:w]
+      mull    -11(0x0074(fp)), -10(r6)[r2:w]
+      mull    -11(0x0074(fp)), 0x0081(r6)[r2:w]
+      mull    -11(-0x1f8c(fp)), -10(r6)[r2:w]
+      mull    -11(-0x1f8c(fp)), 0x0081(r6)[r2:w]
+      mull    -9(0x00747576(fp)), -8(r6)[r2:w]
+      mull    0x0078(0x00747575(fp)), -7(r6)[r2:w]
+      mull    0x0078(0x00747575(fp)), 0x0081(r6)[r2:w]
+      mull    -0x1f88(0x00747575(fp)), -7(r6)[r2:w]
+      mull    -0x1f88(0x00747575(fp)), 0x0081(r6)[r2:w]
+      mull    0x0078797a(0x00747575(fp)), -5(r6)[r2:w]
+      mull    -13(-14(sp)), f1
+      mull    0x0081(-14(sp)), f1
+      mull    -13(-14(sp)), -12(r1)
+      mull    0x0074(-14(sp)), -11(r1)
+      mull    0x0074(-14(sp)), 0x0081(r1)
+      mull    -0x1f8c(-14(sp)), -11(r1)
+      mull    -0x1f8c(-14(sp)), 0x0081(r1)
+      mull    0x00747576(-14(sp)), -9(r1)
+      mull    -13(-14(sp)), -11(-12(sp))
+      mull    0x0074(-14(sp)), -10(-11(sp))
+      mull    0x0074(-14(sp)), 0x0081(-11(sp))
+      mull    -0x1f8c(-14(sp)), -10(-11(sp))
+      mull    -0x1f8c(-14(sp)), 0x0081(-11(sp))
+      mull    0x00747576(-14(sp)), -8(-9(sp))
+      mull    0x00747575(-14(sp)), -7(0x0078(sp))
+      mull    0x00747575(-14(sp)), 0x0081(0x0078(sp))
+      mull    0x00747575(-14(sp)), -7(-0x1f88(sp))
+      mull    0x00747575(-14(sp)), 0x0081(-0x1f88(sp))
+      mull    0x00747575(-14(sp)), -5(0x0078797a(sp))
+      mull    -13(-14(sp)), @-12
+      mull    0x0074(-14(sp)), @-11
+      mull    0x0074(-14(sp)), @0x0081
+      mull    -0x1f8c(-14(sp)), @-11
+      mull    -0x1f8c(-14(sp)), @0x0081
+      mull    0x00747576(-14(sp)), @-9
+      mull    -13(-14(sp)), -12(sp)
+      mull    0x0074(-14(sp)), -11(sp)
+      mull    0x0074(-14(sp)), 0x0081(sp)
+      mull    -0x1f8c(-14(sp)), -11(sp)
+      mull    -0x1f8c(-14(sp)), 0x0081(sp)
+      mull    0x00747576(-14(sp)), -9(sp)
+      mull    -12(-13(sp)), -11(r6)[r2:w]
+      mull    -11(0x0074(sp)), -10(r6)[r2:w]
+      mull    -11(0x0074(sp)), 0x0081(r6)[r2:w]
+      mull    -11(-0x1f8c(sp)), -10(r6)[r2:w]
+      mull    -11(-0x1f8c(sp)), 0x0081(r6)[r2:w]
+      mull    -9(0x00747576(sp)), -8(r6)[r2:w]
+      mull    0x0078(0x00747575(sp)), -7(r6)[r2:w]
+      mull    0x0078(0x00747575(sp)), 0x0081(r6)[r2:w]
+      mull    -0x1f88(0x00747575(sp)), -7(r6)[r2:w]
+      mull    -0x1f88(0x00747575(sp)), 0x0081(r6)[r2:w]
+      mull    0x0078797a(0x00747575(sp)), -5(r6)[r2:w]
+      mull    -13(-14(sb)), f1
+      mull    0x0081(-14(sb)), f1
+      mull    -13(-14(sb)), -12(r1)
+      mull    0x0074(-14(sb)), -11(r1)
+      mull    0x0074(-14(sb)), 0x0081(r1)
+      mull    -0x1f8c(-14(sb)), -11(r1)
+      mull    -0x1f8c(-14(sb)), 0x0081(r1)
+      mull    0x00747576(-14(sb)), -9(r1)
+      mull    -13(-14(sb)), -11(-12(sp))
+      mull    0x0074(-14(sb)), -10(-11(sp))
+      mull    0x0074(-14(sb)), 0x0081(-11(sp))
+      mull    -0x1f8c(-14(sb)), -10(-11(sp))
+      mull    -0x1f8c(-14(sb)), 0x0081(-11(sp))
+      mull    0x00747576(-14(sb)), -8(-9(sp))
+      mull    0x00747575(-14(sb)), -7(0x0078(sp))
+      mull    0x00747575(-14(sb)), 0x0081(0x0078(sp))
+      mull    0x00747575(-14(sb)), -7(-0x1f88(sp))
+      mull    0x00747575(-14(sb)), 0x0081(-0x1f88(sp))
+      mull    0x00747575(-14(sb)), -5(0x0078797a(sp))
+      mull    -13(-14(sb)), @-12
+      mull    0x0074(-14(sb)), @-11
+      mull    0x0074(-14(sb)), @0x0081
+      mull    -0x1f8c(-14(sb)), @-11
+      mull    -0x1f8c(-14(sb)), @0x0081
+      mull    0x00747576(-14(sb)), @-9
+      mull    -13(-14(sb)), -12(sp)
+      mull    0x0074(-14(sb)), -11(sp)
+      mull    0x0074(-14(sb)), 0x0081(sp)
+      mull    -0x1f8c(-14(sb)), -11(sp)
+      mull    -0x1f8c(-14(sb)), 0x0081(sp)
+      mull    0x00747576(-14(sb)), -9(sp)
+      mull    -12(-13(sb)), -11(r6)[r2:w]
+      mull    -11(0x0074(sb)), -10(r6)[r2:w]
+      mull    -11(0x0074(sb)), 0x0081(r6)[r2:w]
+      mull    -11(-0x1f8c(sb)), -10(r6)[r2:w]
+      mull    -11(-0x1f8c(sb)), 0x0081(r6)[r2:w]
+      mull    -9(0x00747576(sb)), -8(r6)[r2:w]
+      mull    0x0078(0x00747575(sb)), -7(r6)[r2:w]
+      mull    0x0078(0x00747575(sb)), 0x0081(r6)[r2:w]
+      mull    -0x1f88(0x00747575(sb)), -7(r6)[r2:w]
+      mull    -0x1f88(0x00747575(sb)), 0x0081(r6)[r2:w]
+      mull    0x0078797a(0x00747575(sb)), -5(r6)[r2:w]
+      mull    0x72737475:0x76777879, f1
+      mulf    -13(r6), -12(r1)
+      mulf    -13(r6), -11(-12(sp))
+      mulf    -13(r6), 0x0081(-12(sp))
+      mulf    -13(r6), @-12
+      mulf    -13(r6), -12(sp)
+      mulf    -12(r6), -11(r6)[r3:w]
+      mulf    -12(r6), 0x0081(r6)[r3:w]
+      mulf    -13(r7), f1
+      absl    -10(r6), @-9
+      absl    -10(r6), -9(sp)
+      absl    -9(r6), -8(r6)[r6:w]
+      absl    -9(r6), 0x0081(r6)[r6:w]
+      absl    -10(r7), f1
+      absf    -9(r6), -8(sp)
+      absf    -8(r6), -7(r6)[r7:w]
+      absf    -8(r6), 0x0081(r6)[r7:w]
+      absf    -9(r7), f1
+      addl    0x0485(0x0283(fp)), f6
+      addl    0x0485(0x0283(fp)), 0x0687(r2)
+      addl    0x0485(0x0283(fp)), -0x1f79(r2)
+      addl    0x0485(0x0283(fp)), 0x00878889(r2)
+      addl    0x0485(0x0283(fp)), 0x0889(0x0687(sb))
+      addl    0x0485(0x0283(fp)), 0x0889(-0x1f79(sb))
+      addl    0x0485(0x0283(fp)), 0x0a8b(0x00878889(sb))
+      addl    0x0485(0x0283(fp)), -0x1f75(0x00878889(sb))
+      addl    0x0485(0x0283(fp)), 0x008b8c8d(0x00878889(sb))
+      addl    0x0485(0x0283(fp)), ext(0x0687)+0x0889
+      addl    0x0485(0x0283(fp)), ext(-0x1f79)+0x0889
+      addl    0x0485(0x0283(fp)), ext(0x00878889)+0x0a8b
+      addl    0x0485(0x0283(fp)), ext(0x00878889)+(-0x1f75)
+      addl    0x0485(0x0283(fp)), ext(0x00878889)+0x008b8c8d
+      addl    0x0485(0x0283(fp)), 0x0687(sb)
+      addl    0x0485(0x0283(fp)), -0x1f79(sb)
+      addl    0x0485(0x0283(fp)), 0x00878889(sb)
+      addl    0x0586(0x0384(fp)), 0x098a(0x0788(fp))[r2:d]
+      addl    0x0585(0x0384(fp)), 0x098a(-0x1f78(fp))[r2:d]
+      addl    0x0585(0x0384(fp)), 0x0b8c(0x0088898a(fp))[r2:d]
+      addl    0x0585(0x0384(fp)), -0x1f74(0x0088898a(fp))[r2:d]
+      addl    0x0585(0x0384(fp)), 0x008c8d8e(0x0088898a(fp))[r2:d]
+      addl    0x0485(0x0283(sp)), f2
+      addl    0x0485(0x0283(sp)), 0x0687(r2)
+      addl    0x0485(0x0283(sp)), -0x1f79(r2)
+      addl    0x0485(0x0283(sp)), 0x00878889(r2)
+      addl    0x0485(0x0283(sp)), 0x0889(0x0687(sb))
+      addl    0x0485(0x0283(sp)), 0x0889(-0x1f79(sb))
+      addl    0x0485(0x0283(sp)), 0x0a8b(0x00878889(sb))
+      addl    0x0485(0x0283(sp)), -0x1f75(0x00878889(sb))
+      addl    0x0485(0x0283(sp)), 0x008b8c8d(0x00878889(sb))
+      addl    0x0485(0x0283(sp)), ext(0x0687)+0x0889
+      addl    0x0485(0x0283(sp)), ext(-0x1f79)+0x0889
+      addl    0x0485(0x0283(sp)), ext(0x00878889)+0x0a8b
+      addl    0x0485(0x0283(sp)), ext(0x00878889)+(-0x1f75)
+      addl    0x0485(0x0283(sp)), ext(0x00878889)+0x008b8c8d
+      addl    0x0485(0x0283(sp)), 0x0687(sb)
+      addl    0x0485(0x0283(sp)), -0x1f79(sb)
+      addl    0x0485(0x0283(sp)), 0x00878889(sb)
+      addl    0x0586(0x0384(sp)), 0x098a(0x0788(fp))[r2:d]
+      addl    0x0585(0x0384(sp)), 0x098a(-0x1f78(fp))[r2:d]
+      addl    0x0585(0x0384(sp)), 0x0b8c(0x0088898a(fp))[r2:d]
+      addl    0x0585(0x0384(sp)), -0x1f74(0x0088898a(fp))[r2:d]
+      addl    0x0585(0x0384(sp)), 0x008c8d8e(0x0088898a(fp))[r2:d]
+      addl    0x0485(0x0283(sb)), f2
+      addl    0x0485(0x0283(sb)), 0x0687(r2)
+      addl    0x0485(0x0283(sb)), -0x1f79(r2)
+      addl    0x0485(0x0283(sb)), 0x00878889(r2)
+      addl    0x0485(0x0283(sb)), 0x0889(0x0687(sb))
+      addl    0x0485(0x0283(sb)), 0x0889(-0x1f79(sb))
+      addl    0x0485(0x0283(sb)), 0x0a8b(0x00878889(sb))
+      addl    0x0485(0x0283(sb)), -0x1f75(0x00878889(sb))
+      addl    0x0485(0x0283(sb)), 0x008b8c8d(0x00878889(sb))
+      addl    0x0485(0x0283(sb)), ext(0x0687)+0x0889
+      addl    0x0485(0x0283(sb)), ext(-0x1f79)+0x0889
+      addl    0x0485(0x0283(sb)), ext(0x00878889)+0x0a8b
+      addl    0x0485(0x0283(sb)), ext(0x00878889)+(-0x1f75)
+      addl    0x0485(0x0283(sb)), ext(0x00878889)+0x008b8c8d
+      addl    0x0485(0x0283(sb)), 0x0687(sb)
+      addl    0x0485(0x0283(sb)), -0x1f79(sb)
+      addl    0x0485(0x0283(sb)), 0x00878889(sb)
+      addl    0x0586(0x0384(sb)), 0x098a(0x0788(fp))[r2:d]
+      addl    0x0585(0x0384(sb)), 0x098a(-0x1f78(fp))[r2:d]
+      addl    0x0585(0x0384(sb)), 0x0b8c(0x0088898a(fp))[r2:d]
+      addl    0x0585(0x0384(sb)), -0x1f74(0x0088898a(fp))[r2:d]
+      addl    0x0585(0x0384(sb)), 0x008c8d8e(0x0088898a(fp))[r2:d]
+      addl    0x82838485:0x86878889, f2
+      addf    0x0586(0x0384(fp)), 0x0788(r2)
+      addf    0x0586(0x0384(fp)), 0x098a(0x0788(sb))
+      addf    0x0586(0x0384(fp)), -0x1f76(0x0788(sb))
+      addf    0x0586(0x0384(fp)), 0x008a8b8c(0x0788(sb))
+      addf    0x0586(0x0384(fp)), ext(0x0788)+0x098a
+      addf    0x0586(0x0384(fp)), ext(0x0788)+(-0x1f76)
+      addf    0x0586(0x0384(fp)), ext(0x0788)+0x008a8b8c
+      addf    0x0586(0x0384(fp)), 0x0788(sb)
+      addf    0x0687(0x0485(fp)), 0x0a8b(0x0889(fp))[r3:d]
+      addf    0x0687(0x0485(fp)), -0x1f75(0x0888(fp))[r3:d]
+      addf    0x0687(0x0485(fp)), 0x008b8c8d(0x0888(fp))[r3:d]
+      addf    0x0586(0x0384(sp)), f2
+      movl    0x0889(0x0687(fp)), ext(0x0a8b)+0x0c8d
+      movl    0x0889(0x0687(fp)), 0x0a8b(sb)
+      movf    0x098a(0x0788(fp)), 0x0b8c(sb)
+      movf    0x0a8b(0x0889(fp)), 0x0e8f(0x0c8d(fp))[r7:d]
+      movf    0x0a8b(0x0889(fp)), -0x1f71(0x0c8c(fp))[r7:d]
+      movf    0x0a8b(0x0889(fp)), 0x008f9091(0x0c8c(fp))[r7:d]
+      movf    0x098a(0x0788(sp)), f2
+      cmpl    0x0c8d(0x0a8b(sp)), f6
+      cmpl    0x0c8d(0x0a8b(sp)), 0x0e8f(r2)
+      cmpl    0x0c8d(0x0a8b(sp)), -0x1f71(r2)
+      cmpl    0x0c8d(0x0a8b(sp)), 0x008f9091(r2)
+      cmpl    0x0c8d(0x0a8b(sp)), 0x1091(0x0e8f(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), 0x1091(-0x1f71(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), 0x1293(0x008f9091(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), -0x1f6d(0x008f9091(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), 0x00939495(0x008f9091(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), 0x1293(-0x1e706f6f(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), -0x1f6d(-0x1e706f6f(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), 0x00939495(-0x1e706f6f(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), 0x0f90(0(sb))
+      cmpl    0x0c8d(0x0a8b(sp)), ext(0x0e8f)+0x1091
+      cmpl    0x0c8d(0x0a8b(sp)), ext(-0x1f71)+0x1091
+      cmpl    0x0c8d(0x0a8b(sp)), ext(0x008f9091)+0x1293
+      cmpl    0x0c8d(0x0a8b(sp)), ext(0x008f9091)+(-0x1f6d)
+      cmpl    0x0c8d(0x0a8b(sp)), ext(0x008f9091)+0x00939495
+      cmpl    0x0c8d(0x0a8b(sp)), ext(-0x1e706f6f)+0x1293
+      cmpl    0x0c8d(0x0a8b(sp)), ext(-0x1e706f6f)+(-0x1f6d)
+      cmpl    0x0c8d(0x0a8b(sp)), ext(-0x1e706f6f)+0x00939495
+      cmpl    0x0c8d(0x0a8b(sp)), ext(0)+0x0f90
+      cmpl    0x0c8d(0x0a8b(sp)), 0x0e8f(sb)
+      cmpl    0x0c8d(0x0a8b(sp)), -0x1f71(sb)
+      cmpl    0x0c8d(0x0a8b(sp)), 0x008f9091(sb)
+      cmpl    0x0d8e(0x0b8c(sp)), 0x1192(0x0f90(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), 0x1192(-0x1f70(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), 0x1394(0x00909192(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), -0x1f6c(0x00909192(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), 0x00949596(0x00909192(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), 0x1394(-0x1e6f6e6e(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), -0x1f6c(-0x1e6f6e6e(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), 0x00949596(-0x1e6f6e6e(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sp)), 0x1091(0(sp))[r2:d]
+      cmpl    0x0c8d(0x0a8b(sb)), f2
+      cmpl    0x0c8d(0x0a8b(sb)), 0x0e8f(r2)
+      cmpl    0x0c8d(0x0a8b(sb)), -0x1f71(r2)
+      cmpl    0x0c8d(0x0a8b(sb)), 0x008f9091(r2)
+      cmpl    0x0c8d(0x0a8b(sb)), 0x1091(0x0e8f(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), 0x1091(-0x1f71(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), 0x1293(0x008f9091(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), -0x1f6d(0x008f9091(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), 0x00939495(0x008f9091(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), 0x1293(-0x1e706f6f(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), -0x1f6d(-0x1e706f6f(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), 0x00939495(-0x1e706f6f(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), 0x0f90(0(sb))
+      cmpl    0x0c8d(0x0a8b(sb)), ext(0x0e8f)+0x1091
+      cmpl    0x0c8d(0x0a8b(sb)), ext(-0x1f71)+0x1091
+      cmpl    0x0c8d(0x0a8b(sb)), ext(0x008f9091)+0x1293
+      cmpl    0x0c8d(0x0a8b(sb)), ext(0x008f9091)+(-0x1f6d)
+      cmpl    0x0c8d(0x0a8b(sb)), ext(0x008f9091)+0x00939495
+      cmpl    0x0c8d(0x0a8b(sb)), ext(-0x1e706f6f)+0x1293
+      cmpl    0x0c8d(0x0a8b(sb)), ext(-0x1e706f6f)+(-0x1f6d)
+      cmpl    0x0c8d(0x0a8b(sb)), ext(-0x1e706f6f)+0x00939495
+      cmpl    0x0c8d(0x0a8b(sb)), ext(0)+0x0f90
+      cmpl    0x0c8d(0x0a8b(sb)), 0x0e8f(sb)
+      cmpl    0x0c8d(0x0a8b(sb)), -0x1f71(sb)
+      cmpl    0x0c8d(0x0a8b(sb)), 0x008f9091(sb)
+      cmpl    0x0d8e(0x0b8c(sb)), 0x1192(0x0f90(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), 0x1192(-0x1f70(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), 0x1394(0x00909192(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), -0x1f6c(0x00909192(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), 0x00949596(0x00909192(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), 0x1394(-0x1e6f6e6e(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), -0x1f6c(-0x1e6f6e6e(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), 0x00949596(-0x1e6f6e6e(sp))[r2:d]
+      cmpl    0x0d8d(0x0b8c(sb)), 0x1091(0(sp))[r2:d]
+      cmpl    0x8a8b8c8d:0x8e8f9091, f2
+      cmpf    0x0d8e(0x0b8c(sp)), 0x0f90(r2)
+      cmpf    0x0d8e(0x0b8c(sp)), 0x1192(0x0f90(sb))
+      cmpf    0x0d8e(0x0b8c(sp)), -0x1f6e(0x0f90(sb))
+      cmpf    0x0d8e(0x0b8c(sp)), 0x00929394(0x0f90(sb))
+      cmpf    0x0d8e(0x0b8c(sp)), ext(0x0f90)+0x1192
+      cmpf    0x0d8e(0x0b8c(sp)), ext(0x0f90)+(-0x1f6e)
+      cmpf    0x0d8e(0x0b8c(sp)), ext(0x0f90)+0x00929394
+      cmpf    0x0d8e(0x0b8c(sp)), 0x0f90(sb)
+      cmpf    0x0e8f(0x0c8d(sp)), 0x1293(0x1091(sp))[r3:d]
+      cmpf    0x0e8f(0x0c8d(sp)), -0x1f6d(0x1090(sp))[r3:d]
+      cmpf    0x0e8f(0x0c8d(sp)), 0x00939495(0x1090(sp))[r3:d]
+      cmpf    0x0d8e(0x0b8c(sb)), f2
+      subl    0x1495(0x1293(sb)), f6
+      subl    0x1495(0x1293(sb)), 0x1697(r2)
+      subl    0x1495(0x1293(sb)), -0x1f69(r2)
+      subl    0x1495(0x1293(sb)), 0x00979899(r2)
+      subl    0x1495(0x1293(sb)), 0x1899(0x1697(sb))
+      subl    0x1495(0x1293(sb)), 0x1899(-0x1f69(sb))
+      subl    0x1495(0x1293(sb)), 0x1a9b(0x00979899(sb))
+      subl    0x1495(0x1293(sb)), -0x1f65(0x00979899(sb))
+      subl    0x1495(0x1293(sb)), 0x009b9c9d(0x00979899(sb))
+      subl    0x1495(0x1293(sb)), 0x1a9b(-0x1e686767(sb))
+      subl    0x1495(0x1293(sb)), -0x1f65(-0x1e686767(sb))
+      subl    0x1495(0x1293(sb)), 0x009b9c9d(-0x1e686767(sb))
+      subl    0x1495(0x1293(sb)), 0x1798(0(sb))
+      subl    0x1495(0x1293(sb)), ext(0x1697)+0x1899
+      subl    0x1495(0x1293(sb)), ext(-0x1f69)+0x1899
+      subl    0x1495(0x1293(sb)), ext(0x00979899)+0x1a9b
+      subl    0x1495(0x1293(sb)), ext(0x00979899)+(-0x1f65)
+      subl    0x1495(0x1293(sb)), ext(0x00979899)+0x009b9c9d
+      subl    0x1495(0x1293(sb)), ext(-0x1e686767)+0x1a9b
+      subl    0x1495(0x1293(sb)), ext(-0x1e686767)+(-0x1f65)
+      subl    0x1495(0x1293(sb)), ext(-0x1e686767)+0x009b9c9d
+      subl    0x1495(0x1293(sb)), ext(0)+0x1798
+      subl    0x1495(0x1293(sb)), 0x1697(sb)
+      subl    0x1495(0x1293(sb)), -0x1f69(sb)
+      subl    0x1495(0x1293(sb)), 0x00979899(sb)
+      subl    0x1596(0x1394(sb)), 0x199a(0x1798(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), 0x199a(-0x1f68(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), 0x1b9c(0x0098999a(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), -0x1f64(0x0098999a(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), 0x009c9d9e(0x0098999a(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), 0x1b9c(-0x1e676666(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), -0x1f64(-0x1e676666(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), 0x009c9d9e(-0x1e676666(sb))[r2:d]
+      subl    0x1595(0x1394(sb)), 0x1899(0(sb))[r2:d]
+      subf    0x1596(0x1394(sb)), 0x1798(r2)
+      subf    0x1596(0x1394(sb)), 0x199a(0x1798(sb))
+      subf    0x1596(0x1394(sb)), -0x1f66(0x1798(sb))
+      subf    0x1596(0x1394(sb)), 0x009a9b9c(0x1798(sb))
+      subf    0x1596(0x1394(sb)), ext(0x1798)+0x199a
+      subf    0x1596(0x1394(sb)), ext(0x1798)+(-0x1f66)
+      subf    0x1596(0x1394(sb)), ext(0x1798)+0x009a9b9c
+      subf    0x1596(0x1394(sb)), 0x1798(sb)
+      subf    0x1697(0x1495(sb)), 0x1a9b(0x1899(sb))[r3:d]
+      subf    0x1697(0x1495(sb)), -0x1f65(0x1898(sb))[r3:d]
+      subf    0x1697(0x1495(sb)), 0x009b9c9d(0x1898(sb))[r3:d]
+      subf    0x93949596, f2
+      negl    0x1899(0x1697(sb)), ext(0x1a9b)+0x1c9d
+      negl    0x1899(0x1697(sb)), 0x1a9b(sb)
+      negf    0x199a(0x1798(sb)), 0x1b9c(sb)
+      negf    0x1a9b(0x1899(sb)), 0x1e9f(0x1c9d(sb))[r7:d]
+      negf    0x1a9b(0x1899(sb)), -0x1f61(0x1c9c(sb))[r7:d]
+      negf    0x1a9b(0x1899(sb)), 0x009fa0a1(0x1c9c(sb))[r7:d]
+      negf    0x9798999a, f2
       sned    0x01c2c3c4(fp)
       sned    -0x1e3d3c3c(fp)
       sned    0(fp)
@@ -16705,20 +18951,20 @@
       sged    0x17d8d9da(sb)
       sged    -0x1e272626(sb)
       sged    0(sb)
-      sned    0xddff04(pc)
-      sned    0x03232e(pc)
-      sccd    0xdf000e(pc)
-      sccd    0x032337(pc)
-      slsd    0xe00118(pc)
-      slsd    0x032340(pc)
-      sled    0xe10222(pc)
-      sled    0x032349(pc)
-      sfcd    0xe2032c(pc)
-      sfcd    0x032352(pc)
-      shsd    0xe30436(pc)
-      shsd    0x03235b(pc)
-      sged    0xe40540(pc)
-      sged    0x032364(pc)
+      sned    0xde4aba(pc)
+      sned    0x036ee4(pc)
+      sccd    0xdf4bc4(pc)
+      sccd    0x036eed(pc)
+      slsd    0xe04cce(pc)
+      slsd    0x036ef6(pc)
+      sled    0xe14dd8(pc)
+      sled    0x036eff(pc)
+      sfcd    0xe24ee2(pc)
+      sfcd    0x036f08(pc)
+      shsd    0xe34fec(pc)
+      shsd    0x036f11(pc)
+      sged    0xe450f6(pc)
+      sged    0x036f1a(pc)
       sned    r0
       sccd    r0
       slsd    r0
@@ -16951,34 +19197,34 @@
       addb    0x06c7c8c9(fp), tos
       addb    -0x1e383737(fp), tos
       addb    0(fp), tos
-      addb    0x07c8c9ca(fp), 0xcff774(pc)
-      addb    -0x1e373636(fp), 0xcff77e(pc)
-      addb    0(fp), 0xccf485(pc)
+      addb    0x07c8c9ca(fp), 0xd0432a(pc)
+      addb    -0x1e373636(fp), 0xd04334(pc)
+      addb    0(fp), 0xcd403b(pc)
       addb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       addb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
-      addb    0x09cacbcc(fp), 0xd1f9a7(pc)[r0:q]
+      addb    0x09cacbcc(fp), 0xd2455d(pc)[r0:q]
       addb    0x09cacbcc(fp), r0[r0:q]
       addb    0x0ecfd0d1(sp), tos
       addb    -0x1e302f2f(sp), tos
       addb    0(sp), tos
-      addb    0x0fd0d1d2(sp), 0xd7ffce(pc)
-      addb    -0x1e2f2e2e(sp), 0xd7ffd8(pc)
-      addb    0(sp), 0xd4fcdf(pc)
+      addb    0x0fd0d1d2(sp), 0xd84b84(pc)
+      addb    -0x1e2f2e2e(sp), 0xd84b8e(pc)
+      addb    0(sp), 0xd54895(pc)
       addb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      addb    0x11d2d3d4(sp), 0xda01f6(pc)[r0:q]
+      addb    0x11d2d3d4(sp), 0xda4dac(pc)[r0:q]
       addb    0x11d2d3d4(sp), r0[r0:q]
       addb    0x16d7d8d9(sb), tos
       addb    -0x1e282727(sb), tos
       addb    0(sb), tos
-      addb    0x17d8d9da(sb), 0xe0081d(pc)
-      addb    -0x1e272626(sb), 0xe00827(pc)
-      addb    0(sb), 0xdd052e(pc)
-      addb    0x19dadbdc(sb), 0xe20a3a(pc)[r0:q]
+      addb    0x17d8d9da(sb), 0xe053d3(pc)
+      addb    -0x1e272626(sb), 0xe053dd(pc)
+      addb    0(sb), 0xdd50e4(pc)
+      addb    0x19dadbdc(sb), 0xe255f0(pc)[r0:q]
       addb    0x19dadbdc(sb), r0[r0:q]
-      addb    0xe30b4d(pc), tos
-      addb    0x032a72(pc), tos
-      addb    0xe40c57(pc), 0xe8105b(pc)
-      addb    0x032b5f(pc), 0xe60e63(pc)
+      addb    0xe35703(pc), tos
+      addb    0x037628(pc), tos
+      addb    0xe4580d(pc), 0xe85c11(pc)
+      addb    0x037715(pc), 0xe65a19(pc)
       addb    r0[r0:q], r0[r1:q]
       addb    2(r0)[r0:q], r0[r1:q]
       addb    -64(r0)[r0:q], r0[r1:q]
@@ -16989,12 +19235,12 @@
       addw    0x06c7c8c9(fp), tos
       addw    -0x1e383737(fp), tos
       addw    0(fp), tos
-      addw    0x07c8c9ca(fp), 0xcff893(pc)
-      addw    -0x1e373636(fp), 0xcff89d(pc)
-      addw    0(fp), 0xccf5a4(pc)
+      addw    0x07c8c9ca(fp), 0xd04449(pc)
+      addw    -0x1e373636(fp), 0xd04453(pc)
+      addw    0(fp), 0xcd415a(pc)
       addw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       addw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
-      addw    0x09cacbcc(fp), 0xd1fac6(pc)[r0:q]
+      addw    0x09cacbcc(fp), 0xd2467c(pc)[r0:q]
       addw    0x09cacbcc(fp), r0[r0:q]
       addw    0x09cacbcc(sp), r3
       addw    -0x1e353434(sp), r3
@@ -17005,11 +19251,11 @@
       addw    0x0ecfd0d1(sp), tos
       addw    -0x1e302f2f(sp), tos
       addw    0(sp), tos
-      addw    0x0fd0d1d2(sp), 0xd80117(pc)
-      addw    -0x1e2f2e2e(sp), 0xd80121(pc)
-      addw    0(sp), 0xd4fe28(pc)
+      addw    0x0fd0d1d2(sp), 0xd84ccd(pc)
+      addw    -0x1e2f2e2e(sp), 0xd84cd7(pc)
+      addw    0(sp), 0xd549de(pc)
       addw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      addw    0x11d2d3d4(sp), 0xda033f(pc)[r0:q]
+      addw    0x11d2d3d4(sp), 0xda4ef5(pc)[r0:q]
       addw    0x11d2d3d4(sp), r0[r0:q]
       addw    0x11d2d3d4(sb), r3
       addw    -0x1e2d2c2c(sb), r3
@@ -17020,19 +19266,19 @@
       addw    0x16d7d8d9(sb), tos
       addw    -0x1e282727(sb), tos
       addw    0(sb), tos
-      addw    0x17d8d9da(sb), 0xe00990(pc)
-      addw    -0x1e272626(sb), 0xe0099a(pc)
-      addw    0(sb), 0xdd06a1(pc)
-      addw    0x19dadbdc(sb), 0xe20bad(pc)[r0:q]
+      addw    0x17d8d9da(sb), 0xe05546(pc)
+      addw    -0x1e272626(sb), 0xe05550(pc)
+      addw    0(sb), 0xdd5257(pc)
+      addw    0x19dadbdc(sb), 0xe25763(pc)[r0:q]
       addw    0x19dadbdc(sb), r0[r0:q]
-      addw    0xde07bb(pc), r3
-      addw    0x032be5(pc), r3
-      addw    0xe009c6(pc), 0x1fe0e1e2(r3)
-      addw    0x032bf2(pc), 0x1cdddedf(r3)
-      addw    0xe30cda(pc), tos
-      addw    0x032bff(pc), tos
-      addw    0xe40de4(pc), 0xe811e8(pc)
-      addw    0x032cec(pc), 0xe60ff0(pc)
+      addw    0xde5371(pc), r3
+      addw    0x03779b(pc), r3
+      addw    0xe0557c(pc), 0x1fe0e1e2(r3)
+      addw    0x0377a8(pc), 0x1cdddedf(r3)
+      addw    0xe35890(pc), tos
+      addw    0x0377b5(pc), tos
+      addw    0xe4599a(pc), 0xe85d9e(pc)
+      addw    0x0378a2(pc), 0xe65ba6(pc)
       addw    r0[r0:q], r0[r1:q]
       addw    2(r0)[r0:q], r0[r1:q]
       addw    -64(r0)[r0:q], r0[r1:q]
@@ -17041,12 +19287,12 @@
       addd    0x06c7c8c9(fp), tos
       addd    -0x1e383737(fp), tos
       addd    0(fp), tos
-      addd    0x07c8c9ca(fp), 0xcffa06(pc)
-      addd    -0x1e373636(fp), 0xcffa10(pc)
-      addd    0(fp), 0xccf717(pc)
+      addd    0x07c8c9ca(fp), 0xd045bc(pc)
+      addd    -0x1e373636(fp), 0xd045c6(pc)
+      addd    0(fp), 0xcd42cd(pc)
       addd    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       addd    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
-      addd    0x09cacbcc(fp), 0xd1fc39(pc)[r0:q]
+      addd    0x09cacbcc(fp), 0xd247ef(pc)[r0:q]
       addd    0x09cacbcc(fp), r0[r0:q]
       addd    0x09cacbcc(sp), r3
       addd    -0x1e353434(sp), r3
@@ -17057,11 +19303,11 @@
       addd    0x0ecfd0d1(sp), tos
       addd    -0x1e302f2f(sp), tos
       addd    0(sp), tos
-      addd    0x0fd0d1d2(sp), 0xd8028a(pc)
-      addd    -0x1e2f2e2e(sp), 0xd80294(pc)
-      addd    0(sp), 0xd4ff9b(pc)
+      addd    0x0fd0d1d2(sp), 0xd84e40(pc)
+      addd    -0x1e2f2e2e(sp), 0xd84e4a(pc)
+      addd    0(sp), 0xd54b51(pc)
       addd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      addd    0x11d2d3d4(sp), 0xda04b2(pc)[r0:q]
+      addd    0x11d2d3d4(sp), 0xda5068(pc)[r0:q]
       addd    0x11d2d3d4(sp), r0[r0:q]
       addd    0x11d2d3d4(sb), r3
       addd    -0x1e2d2c2c(sb), r3
@@ -17072,70 +19318,70 @@
       addd    0x16d7d8d9(sb), tos
       addd    -0x1e282727(sb), tos
       addd    0(sb), tos
-      addd    0x17d8d9da(sb), 0xe00b03(pc)
-      addd    -0x1e272626(sb), 0xe00b0d(pc)
-      addd    0(sb), 0xdd0814(pc)
-      addd    0x19dadbdc(sb), 0xe20d20(pc)[r0:q]
+      addd    0x17d8d9da(sb), 0xe056b9(pc)
+      addd    -0x1e272626(sb), 0xe056c3(pc)
+      addd    0(sb), 0xdd53ca(pc)
+      addd    0x19dadbdc(sb), 0xe258d6(pc)[r0:q]
       addd    0x19dadbdc(sb), r0[r0:q]
-      addd    0xde092e(pc), r3
-      addd    0x032d58(pc), r3
-      addd    0xe00b39(pc), 0x1fe0e1e2(r3)
-      addd    0x032d65(pc), 0x1cdddedf(r3)
-      addd    0xe30e4d(pc), tos
-      addd    0x032d72(pc), tos
-      addd    0xe40f57(pc), 0xe8135b(pc)
-      addd    0x032e5f(pc), 0xe61163(pc)
+      addd    0xde54e4(pc), r3
+      addd    0x03790e(pc), r3
+      addd    0xe056ef(pc), 0x1fe0e1e2(r3)
+      addd    0x03791b(pc), 0x1cdddedf(r3)
+      addd    0xe35a03(pc), tos
+      addd    0x037928(pc), tos
+      addd    0xe45b0d(pc), 0xe85f11(pc)
+      addd    0x037a15(pc), 0xe65d19(pc)
       addd    r0[r0:q], r0[r1:q]
       addd    2(r0)[r0:q], r0[r1:q]
       addd    -64(r0)[r0:q], r0[r1:q]
       addd    0x0081(r0)[r0:q], r0[r1:q]
       addd    r0, tos
-      addd    r0, 0x032da4(pc)
-      addd    r0, 0x032e21(pc)
+      addd    r0, 0x03795a(pc)
+      addd    r0, 0x0379d7(pc)
       addd    r0, r1[r0:q]
       addd    r0, -63(r0)[r0:q]
       addd    r0, 0x0081(r0)[r0:q]
       cmpb    0x06c7c8c9(fp), tos
       cmpb    -0x1e383737(fp), tos
       cmpb    0(fp), tos
-      cmpb    0x07c8c9ca(fp), 0xcffb8d(pc)
-      cmpb    -0x1e373636(fp), 0xcffb97(pc)
-      cmpb    0(fp), 0xccf89e(pc)
+      cmpb    0x07c8c9ca(fp), 0xd04743(pc)
+      cmpb    -0x1e373636(fp), 0xd0474d(pc)
+      cmpb    0(fp), 0xcd4454(pc)
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
-      cmpb    0x09cacbcc(fp), 0xd1fdc0(pc)[r0:q]
+      cmpb    0x09cacbcc(fp), 0xd24976(pc)[r0:q]
       cmpb    0x09cacbcc(fp), r0[r0:q]
       cmpb    0x0ecfd0d1(sp), tos
       cmpb    -0x1e302f2f(sp), tos
       cmpb    0(sp), tos
-      cmpb    0x0fd0d1d2(sp), 0xd803e7(pc)
-      cmpb    -0x1e2f2e2e(sp), 0xd803f1(pc)
-      cmpb    0(sp), 0xd500f8(pc)
+      cmpb    0x0fd0d1d2(sp), 0xd84f9d(pc)
+      cmpb    -0x1e2f2e2e(sp), 0xd84fa7(pc)
+      cmpb    0(sp), 0xd54cae(pc)
       cmpb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      cmpb    0x11d2d3d4(sp), 0xda060f(pc)[r0:q]
+      cmpb    0x11d2d3d4(sp), 0xda51c5(pc)[r0:q]
       cmpb    0x11d2d3d4(sp), r0[r0:q]
       cmpb    0x16d7d8d9(sb), tos
       cmpb    -0x1e282727(sb), tos
       cmpb    0(sb), tos
-      cmpb    0x17d8d9da(sb), 0xe00c36(pc)
-      cmpb    -0x1e272626(sb), 0xe00c40(pc)
-      cmpb    0(sb), 0xdd0947(pc)
-      cmpb    0x19dadbdc(sb), 0xe20e53(pc)[r0:q]
+      cmpb    0x17d8d9da(sb), 0xe057ec(pc)
+      cmpb    -0x1e272626(sb), 0xe057f6(pc)
+      cmpb    0(sb), 0xdd54fd(pc)
+      cmpb    0x19dadbdc(sb), 0xe25a09(pc)[r0:q]
       cmpb    0x19dadbdc(sb), r0[r0:q]
-      cmpb    0xe30f66(pc), tos
-      cmpb    0x032e8b(pc), tos
-      cmpb    0xe41070(pc), 0xe81474(pc)
-      cmpb    0x032f78(pc), 0xe6127c(pc)
+      cmpb    0xe35b1c(pc), tos
+      cmpb    0x037a41(pc), tos
+      cmpb    0xe45c26(pc), 0xe8602a(pc)
+      cmpb    0x037b2e(pc), 0xe65e32(pc)
       cmpb    r0[r0:q], r0[r1:q]
       cmpb    2(r0)[r0:q], r0[r1:q]
       cmpb    -64(r0)[r0:q], r0[r1:q]
       cmpb    0x0081(r0)[r0:q], r0[r1:q]
-      cmpw    0x07c8c9ca(fp), 0xcffc82(pc)
-      cmpw    -0x1e373636(fp), 0xcffc8c(pc)
-      cmpw    0(fp), 0xccf993(pc)
+      cmpw    0x07c8c9ca(fp), 0xd04838(pc)
+      cmpw    -0x1e373636(fp), 0xd04842(pc)
+      cmpw    0(fp), 0xcd4549(pc)
       cmpw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       cmpw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
-      cmpw    0x09cacbcc(fp), 0xd1feb5(pc)[r0:q]
+      cmpw    0x09cacbcc(fp), 0xd24a6b(pc)[r0:q]
       cmpw    0x09cacbcc(fp), r0[r0:q]
       cmpw    0x09cacbcc(sp), r3
       cmpw    -0x1e353434(sp), r3
@@ -17146,11 +19392,11 @@
       cmpw    0x0ecfd0d1(sp), tos
       cmpw    -0x1e302f2f(sp), tos
       cmpw    0(sp), tos
-      cmpw    0x0fd0d1d2(sp), 0xd80506(pc)
-      cmpw    -0x1e2f2e2e(sp), 0xd80510(pc)
-      cmpw    0(sp), 0xd50217(pc)
+      cmpw    0x0fd0d1d2(sp), 0xd850bc(pc)
+      cmpw    -0x1e2f2e2e(sp), 0xd850c6(pc)
+      cmpw    0(sp), 0xd54dcd(pc)
       cmpw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      cmpw    0x11d2d3d4(sp), 0xda072e(pc)[r0:q]
+      cmpw    0x11d2d3d4(sp), 0xda52e4(pc)[r0:q]
       cmpw    0x11d2d3d4(sp), r0[r0:q]
       cmpw    0x11d2d3d4(sb), r3
       cmpw    -0x1e2d2c2c(sb), r3
@@ -17161,26 +19407,26 @@
       cmpw    0x16d7d8d9(sb), tos
       cmpw    -0x1e282727(sb), tos
       cmpw    0(sb), tos
-      cmpw    0x17d8d9da(sb), 0xe00d7f(pc)
-      cmpw    -0x1e272626(sb), 0xe00d89(pc)
-      cmpw    0(sb), 0xdd0a90(pc)
-      cmpw    0x19dadbdc(sb), 0xe20f9c(pc)[r0:q]
+      cmpw    0x17d8d9da(sb), 0xe05935(pc)
+      cmpw    -0x1e272626(sb), 0xe0593f(pc)
+      cmpw    0(sb), 0xdd5646(pc)
+      cmpw    0x19dadbdc(sb), 0xe25b52(pc)[r0:q]
       cmpw    0x19dadbdc(sb), r0[r0:q]
-      cmpw    0xde0baa(pc), r3
-      cmpw    0x032fd4(pc), r3
-      cmpw    0xe00db5(pc), 0x1fe0e1e2(r3)
-      cmpw    0x032fe1(pc), 0x1cdddedf(r3)
-      cmpw    0xe310c9(pc), tos
-      cmpw    0x032fee(pc), tos
-      cmpw    0xe411d3(pc), 0xe815d7(pc)
-      cmpw    0x0330db(pc), 0xe613df(pc)
+      cmpw    0xde5760(pc), r3
+      cmpw    0x037b8a(pc), r3
+      cmpw    0xe0596b(pc), 0x1fe0e1e2(r3)
+      cmpw    0x037b97(pc), 0x1cdddedf(r3)
+      cmpw    0xe35c7f(pc), tos
+      cmpw    0x037ba4(pc), tos
+      cmpw    0xe45d89(pc), 0xe8618d(pc)
+      cmpw    0x037c91(pc), 0xe65f95(pc)
       cmpw    r0[r0:q], r0[r1:q]
       cmpw    2(r0)[r0:q], r0[r1:q]
       cmpw    -64(r0)[r0:q], r0[r1:q]
       cmpw    0x0081(r0)[r0:q], r0[r1:q]
       cmpw    r0, tos
-      cmpw    r0, 0x033020(pc)
-      cmpw    r0, 0x03309d(pc)
+      cmpw    r0, 0x037bd6(pc)
+      cmpw    r0, 0x037c53(pc)
       cmpw    r0, r1[r0:q]
       cmpw    r0, -63(r0)[r0:q]
       cmpw    r0, 0x0081(r0)[r0:q]
@@ -17193,11 +19439,11 @@
       cmpd    0x0ecfd0d1(sp), tos
       cmpd    -0x1e302f2f(sp), tos
       cmpd    0(sp), tos
-      cmpd    0x0fd0d1d2(sp), 0xd8063b(pc)
-      cmpd    -0x1e2f2e2e(sp), 0xd80645(pc)
-      cmpd    0(sp), 0xd5034c(pc)
+      cmpd    0x0fd0d1d2(sp), 0xd851f1(pc)
+      cmpd    -0x1e2f2e2e(sp), 0xd851fb(pc)
+      cmpd    0(sp), 0xd54f02(pc)
       cmpd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      cmpd    0x11d2d3d4(sp), 0xda0863(pc)[r0:q]
+      cmpd    0x11d2d3d4(sp), 0xda5419(pc)[r0:q]
       cmpd    0x11d2d3d4(sp), r0[r0:q]
       cmpd    0x11d2d3d4(sb), r3
       cmpd    -0x1e2d2c2c(sb), r3
@@ -17208,50 +19454,50 @@
       cmpd    0x16d7d8d9(sb), tos
       cmpd    -0x1e282727(sb), tos
       cmpd    0(sb), tos
-      cmpd    0x17d8d9da(sb), 0xe00eb4(pc)
-      cmpd    -0x1e272626(sb), 0xe00ebe(pc)
-      cmpd    0(sb), 0xdd0bc5(pc)
-      cmpd    0x19dadbdc(sb), 0xe210d1(pc)[r0:q]
+      cmpd    0x17d8d9da(sb), 0xe05a6a(pc)
+      cmpd    -0x1e272626(sb), 0xe05a74(pc)
+      cmpd    0(sb), 0xdd577b(pc)
+      cmpd    0x19dadbdc(sb), 0xe25c87(pc)[r0:q]
       cmpd    0x19dadbdc(sb), r0[r0:q]
-      cmpd    0xde0cdf(pc), r3
-      cmpd    0x033109(pc), r3
-      cmpd    0xe00eea(pc), 0x1fe0e1e2(r3)
-      cmpd    0x033116(pc), 0x1cdddedf(r3)
-      cmpd    0xe311fe(pc), tos
-      cmpd    0x033123(pc), tos
-      cmpd    0xe41308(pc), 0xe8170c(pc)
-      cmpd    0x033210(pc), 0xe61514(pc)
+      cmpd    0xde5895(pc), r3
+      cmpd    0x037cbf(pc), r3
+      cmpd    0xe05aa0(pc), 0x1fe0e1e2(r3)
+      cmpd    0x037ccc(pc), 0x1cdddedf(r3)
+      cmpd    0xe35db4(pc), tos
+      cmpd    0x037cd9(pc), tos
+      cmpd    0xe45ebe(pc), 0xe862c2(pc)
+      cmpd    0x037dc6(pc), 0xe660ca(pc)
       cmpd    r0[r0:q], r0[r1:q]
       cmpd    2(r0)[r0:q], r0[r1:q]
       cmpd    -64(r0)[r0:q], r0[r1:q]
       cmpd    0x0081(r0)[r0:q], r0[r1:q]
       cmpd    r0, tos
-      cmpd    r0, 0x033155(pc)
-      cmpd    r0, 0x0331d2(pc)
+      cmpd    r0, 0x037d0b(pc)
+      cmpd    r0, 0x037d88(pc)
       cmpd    r0, r1[r0:q]
       cmpd    r0, -63(r0)[r0:q]
       cmpd    r0, 0x0081(r0)[r0:q]
       bicb    0x0ecfd0d1(sp), tos
       bicb    -0x1e302f2f(sp), tos
       bicb    0(sp), tos
-      bicb    0x0fd0d1d2(sp), 0xd80746(pc)
-      bicb    -0x1e2f2e2e(sp), 0xd80750(pc)
-      bicb    0(sp), 0xd50457(pc)
+      bicb    0x0fd0d1d2(sp), 0xd852fc(pc)
+      bicb    -0x1e2f2e2e(sp), 0xd85306(pc)
+      bicb    0(sp), 0xd5500d(pc)
       bicb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      bicb    0x11d2d3d4(sp), 0xda096e(pc)[r0:q]
+      bicb    0x11d2d3d4(sp), 0xda5524(pc)[r0:q]
       bicb    0x11d2d3d4(sp), r0[r0:q]
       bicb    0x16d7d8d9(sb), tos
       bicb    -0x1e282727(sb), tos
       bicb    0(sb), tos
-      bicb    0x17d8d9da(sb), 0xe00f95(pc)
-      bicb    -0x1e272626(sb), 0xe00f9f(pc)
-      bicb    0(sb), 0xdd0ca6(pc)
-      bicb    0x19dadbdc(sb), 0xe211b2(pc)[r0:q]
+      bicb    0x17d8d9da(sb), 0xe05b4b(pc)
+      bicb    -0x1e272626(sb), 0xe05b55(pc)
+      bicb    0(sb), 0xdd585c(pc)
+      bicb    0x19dadbdc(sb), 0xe25d68(pc)[r0:q]
       bicb    0x19dadbdc(sb), r0[r0:q]
-      bicb    0xe312c5(pc), tos
-      bicb    0x0331ea(pc), tos
-      bicb    0xe413cf(pc), 0xe817d3(pc)
-      bicb    0x0332d7(pc), 0xe615db(pc)
+      bicb    0xe35e7b(pc), tos
+      bicb    0x037da0(pc), tos
+      bicb    0xe45f85(pc), 0xe86389(pc)
+      bicb    0x037e8d(pc), 0xe66191(pc)
       bicb    r0[r0:q], r0[r1:q]
       bicb    2(r0)[r0:q], r0[r1:q]
       bicb    -64(r0)[r0:q], r0[r1:q]
@@ -17262,11 +19508,11 @@
       bicw    0x0ecfd0d1(sp), tos
       bicw    -0x1e302f2f(sp), tos
       bicw    0(sp), tos
-      bicw    0x0fd0d1d2(sp), 0xd80813(pc)
-      bicw    -0x1e2f2e2e(sp), 0xd8081d(pc)
-      bicw    0(sp), 0xd50524(pc)
+      bicw    0x0fd0d1d2(sp), 0xd853c9(pc)
+      bicw    -0x1e2f2e2e(sp), 0xd853d3(pc)
+      bicw    0(sp), 0xd550da(pc)
       bicw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      bicw    0x11d2d3d4(sp), 0xda0a3b(pc)[r0:q]
+      bicw    0x11d2d3d4(sp), 0xda55f1(pc)[r0:q]
       bicw    0x11d2d3d4(sp), r0[r0:q]
       bicw    0x11d2d3d4(sb), r3
       bicw    -0x1e2d2c2c(sb), r3
@@ -17277,38 +19523,38 @@
       bicw    0x16d7d8d9(sb), tos
       bicw    -0x1e282727(sb), tos
       bicw    0(sb), tos
-      bicw    0x17d8d9da(sb), 0xe0108c(pc)
-      bicw    -0x1e272626(sb), 0xe01096(pc)
-      bicw    0(sb), 0xdd0d9d(pc)
-      bicw    0x19dadbdc(sb), 0xe212a9(pc)[r0:q]
+      bicw    0x17d8d9da(sb), 0xe05c42(pc)
+      bicw    -0x1e272626(sb), 0xe05c4c(pc)
+      bicw    0(sb), 0xdd5953(pc)
+      bicw    0x19dadbdc(sb), 0xe25e5f(pc)[r0:q]
       bicw    0x19dadbdc(sb), r0[r0:q]
-      bicw    0xde0eb7(pc), r3
-      bicw    0x0332e1(pc), r3
-      bicw    0xe010c2(pc), 0x1fe0e1e2(r3)
-      bicw    0x0332ee(pc), 0x1cdddedf(r3)
-      bicw    0xe313d6(pc), tos
-      bicw    0x0332fb(pc), tos
-      bicw    0xe414e0(pc), 0xe818e4(pc)
-      bicw    0x0333e8(pc), 0xe616ec(pc)
+      bicw    0xde5a6d(pc), r3
+      bicw    0x037e97(pc), r3
+      bicw    0xe05c78(pc), 0x1fe0e1e2(r3)
+      bicw    0x037ea4(pc), 0x1cdddedf(r3)
+      bicw    0xe35f8c(pc), tos
+      bicw    0x037eb1(pc), tos
+      bicw    0xe46096(pc), 0xe8649a(pc)
+      bicw    0x037f9e(pc), 0xe662a2(pc)
       bicw    r0[r0:q], r0[r1:q]
       bicw    2(r0)[r0:q], r0[r1:q]
       bicw    -64(r0)[r0:q], r0[r1:q]
       bicw    0x0081(r0)[r0:q], r0[r1:q]
       bicw    r0, tos
-      bicw    r0, 0x03332d(pc)
-      bicw    r0, 0x0333aa(pc)
+      bicw    r0, 0x037ee3(pc)
+      bicw    r0, 0x037f60(pc)
       bicw    r0, r1[r0:q]
       bicw    r0, -63(r0)[r0:q]
       bicw    r0, 0x0081(r0)[r0:q]
-      blt     0xd00107
+      blt     0xd04cbd
       bicd    0x0ecfd0d1(sp), tos
       bicd    -0x1e302f2f(sp), tos
       bicd    0(sp), tos
-      bicd    0x0fd0d1d2(sp), 0xd80923(pc)
-      bicd    -0x1e2f2e2e(sp), 0xd8092d(pc)
-      bicd    0(sp), 0xd50634(pc)
+      bicd    0x0fd0d1d2(sp), 0xd854d9(pc)
+      bicd    -0x1e2f2e2e(sp), 0xd854e3(pc)
+      bicd    0(sp), 0xd551ea(pc)
       bicd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
-      bicd    0x11d2d3d4(sp), 0xda0b4b(pc)[r0:q]
+      bicd    0x11d2d3d4(sp), 0xda5701(pc)[r0:q]
       bicd    0x11d2d3d4(sp), r0[r0:q]
       bicd    0x11d2d3d4(sb), r3
       bicd    -0x1e2d2c2c(sb), r3
@@ -17319,71 +19565,71 @@
       bicd    0x16d7d8d9(sb), tos
       bicd    -0x1e282727(sb), tos
       bicd    0(sb), tos
-      bicd    0x17d8d9da(sb), 0xe0119c(pc)
-      bicd    -0x1e272626(sb), 0xe011a6(pc)
-      bicd    0(sb), 0xdd0ead(pc)
-      bicd    0x19dadbdc(sb), 0xe213b9(pc)[r0:q]
+      bicd    0x17d8d9da(sb), 0xe05d52(pc)
+      bicd    -0x1e272626(sb), 0xe05d5c(pc)
+      bicd    0(sb), 0xdd5a63(pc)
+      bicd    0x19dadbdc(sb), 0xe25f6f(pc)[r0:q]
       bicd    0x19dadbdc(sb), r0[r0:q]
-      bicd    0xde0fc7(pc), r3
-      bicd    0x0333f1(pc), r3
-      bicd    0xe011d2(pc), 0x1fe0e1e2(r3)
-      bicd    0x0333fe(pc), 0x1cdddedf(r3)
-      bicd    0xe314e6(pc), tos
-      bicd    0x03340b(pc), tos
-      bicd    0xe415f0(pc), 0xe819f4(pc)
-      bicd    0x0334f8(pc), 0xe617fc(pc)
+      bicd    0xde5b7d(pc), r3
+      bicd    0x037fa7(pc), r3
+      bicd    0xe05d88(pc), 0x1fe0e1e2(r3)
+      bicd    0x037fb4(pc), 0x1cdddedf(r3)
+      bicd    0xe3609c(pc), tos
+      bicd    0x037fc1(pc), tos
+      bicd    0xe461a6(pc), 0xe865aa(pc)
+      bicd    0x0380ae(pc), 0xe663b2(pc)
       bicd    r0[r0:q], r0[r1:q]
       bicd    2(r0)[r0:q], r0[r1:q]
       bicd    -64(r0)[r0:q], r0[r1:q]
       bicd    0x0081(r0)[r0:q], r0[r1:q]
       bicd    r0, tos
-      bicd    r0, 0x03343d(pc)
-      bicd    r0, 0x0334ba(pc)
+      bicd    r0, 0x037ff3(pc)
+      bicd    r0, 0x038070(pc)
       bicd    r0, r1[r0:q]
       bicd    r0, -63(r0)[r0:q]
       bicd    r0, 0x0081(r0)[r0:q]
-      acbb    -5, 0x0ecfd0d1(sp), 0xd7091e
-      acbb    -5, -0x1e302f2f(sp), 0xd70928
-      acbb    -5, 0(sp), 0xd4062f
-      acbb    1, 0x11d2d3d4(sb), 0xda0c3c
-      acbb    1, -0x1e2d2c2c(sb), 0xda0c46
-      acbb    1, 0(sb), 0xd7094d
-      acbb    -7, 0x15d6d7d8(sb), 0xde105b
-      acbb    -7, -0x1e292828(sb), 0xde1065
-      acbb    -7, 0(sb), 0xdb0d6c
-      acbb    1, 0xde1076(pc), 0xe2147a
-      acbb    1, 0x0334a4(pc), 0xdf1181
-      acbb    -7, 0xe2148b(pc), 0xe6188f
-      acbb    -7, 0x0334b5(pc), 0xe31596
-      acbb    -3, 0x03359c(pc), 0xe618a0
-      acbb    -1, r0[r0:q], 0x0334c5
-      acbb    -1, 1(r0)[r0:q], 0x0334ca
-      acbb    -1, 1(r0)[r0:q], 0x03354e
-      acbb    1, r0, 0x0334d4
-      acbb    1, r0, 0x033557
-      acbb    -7, r0, 0x0334df
-      acbb    -7, r0, 0x03355e
-      acbw    -3, 0x0fd0d1d2(sp), 0xd80ab7
-      acbw    -3, -0x1e2f2e2e(sp), 0xd80ac1
-      acbw    -3, 0(sp), 0xd507c8
-      acbw    1, 0x11d2d3d4(sb), 0xda0cd4
-      acbw    1, -0x1e2d2c2c(sb), 0xda0cde
-      acbw    1, 0(sb), 0xd709e5
-      acbw    -7, 0x15d6d7d8(sb), 0xde10f3
-      acbw    -7, -0x1e292828(sb), 0xde10fd
-      acbw    -7, 0(sb), 0xdb0e04
-      acbw    1, 0xde110e(pc), 0xe21512
-      acbw    1, 0x03353c(pc), 0xdf1219
-      acbw    -7, 0xe21523(pc), 0xe61927
-      acbw    -7, 0x03354d(pc), 0xe3162e
-      acbw    -3, 0x033634(pc), 0xe61938
-      acbw    -1, r0[r0:q], 0x03355d
-      acbw    -1, 1(r0)[r0:q], 0x033562
-      acbw    -1, 1(r0)[r0:q], 0x0335e6
-      acbw    1, r0, 0x03356c
-      acbw    1, r0, 0x0335ef
-      acbw    -7, r0, 0x033577
-      acbw    -7, r0, 0x0335f6
+      acbb    -5, 0x0ecfd0d1(sp), 0xd754d4
+      acbb    -5, -0x1e302f2f(sp), 0xd754de
+      acbb    -5, 0(sp), 0xd451e5
+      acbb    1, 0x11d2d3d4(sb), 0xda57f2
+      acbb    1, -0x1e2d2c2c(sb), 0xda57fc
+      acbb    1, 0(sb), 0xd75503
+      acbb    -7, 0x15d6d7d8(sb), 0xde5c11
+      acbb    -7, -0x1e292828(sb), 0xde5c1b
+      acbb    -7, 0(sb), 0xdb5922
+      acbb    1, 0xde5c2c(pc), 0xe26030
+      acbb    1, 0x03805a(pc), 0xdf5d37
+      acbb    -7, 0xe26041(pc), 0xe66445
+      acbb    -7, 0x03806b(pc), 0xe3614c
+      acbb    -3, 0x038152(pc), 0xe66456
+      acbb    -1, r0[r0:q], 0x03807b
+      acbb    -1, 1(r0)[r0:q], 0x038080
+      acbb    -1, 1(r0)[r0:q], 0x038104
+      acbb    1, r0, 0x03808a
+      acbb    1, r0, 0x03810d
+      acbb    -7, r0, 0x038095
+      acbb    -7, r0, 0x038114
+      acbw    -3, 0x0fd0d1d2(sp), 0xd8566d
+      acbw    -3, -0x1e2f2e2e(sp), 0xd85677
+      acbw    -3, 0(sp), 0xd5537e
+      acbw    1, 0x11d2d3d4(sb), 0xda588a
+      acbw    1, -0x1e2d2c2c(sb), 0xda5894
+      acbw    1, 0(sb), 0xd7559b
+      acbw    -7, 0x15d6d7d8(sb), 0xde5ca9
+      acbw    -7, -0x1e292828(sb), 0xde5cb3
+      acbw    -7, 0(sb), 0xdb59ba
+      acbw    1, 0xde5cc4(pc), 0xe260c8
+      acbw    1, 0x0380f2(pc), 0xdf5dcf
+      acbw    -7, 0xe260d9(pc), 0xe664dd
+      acbw    -7, 0x038103(pc), 0xe361e4
+      acbw    -3, 0x0381ea(pc), 0xe664ee
+      acbw    -1, r0[r0:q], 0x038113
+      acbw    -1, 1(r0)[r0:q], 0x038118
+      acbw    -1, 1(r0)[r0:q], 0x03819c
+      acbw    1, r0, 0x038122
+      acbw    1, r0, 0x0381a5
+      acbw    -7, r0, 0x03812d
+      acbw    -7, r0, 0x0381ac
       extsd   0x11d2d3d4(sb), r3, 6, 22
       extsd   0x11d2d3d4(sb), 0x15d6d7d8(r3), 6, 26
       movxbw  0x12d3d4d5(sb), r7
@@ -17391,182 +19637,182 @@
       movxbw  0x12d3d4d5(sb), -0x1e282727(r3)
       movxbw  0x12d3d4d5(sb), 0(r3)
       movxbw  0x12d3d4d5(sb), tos
-      movxbw  0x12d3d4d5(sb), 0xdb0e92(pc)
-      movxbw  0x12d3d4d5(sb), 0x0335c4(pc)
+      movxbw  0x12d3d4d5(sb), 0xdb5a48(pc)
+      movxbw  0x12d3d4d5(sb), 0x03817a(pc)
       movxbw  0x13d4d5d6(sb), 0x17d8d9da(sb)[r2:q]
       movxbw  0x13d4d5d5(sb), -0x1e272626(sb)[r2:q]
       movxbw  0x13d4d5d5(sb), 0(sb)[r2:q]
-      movxbw  0xd70ac2(pc), r3
-      movxbw  0xd70ac9(pc), 0x16d7d8d9(r3)
-      movxbw  0xd70ad4(pc), -0x1e282727(r3)
-      movxbw  0xd70adf(pc), 0(r3)
-      movxbw  0xd70ae7(pc), tos
-      movxbw  0xd70aee(pc), 0xdb0ef2(pc)
-      movxbw  0xd70af9(pc), 0x033624(pc)
-      movxbw  0xd80c02(pc), 0x17d8d9da(sb)[r2:q]
-      movxbw  0xd80c0d(pc), -0x1e272626(sb)[r2:q]
-      movxbw  0xd80c19(pc), 0(sb)[r2:q]
+      movxbw  0xd75678(pc), r3
+      movxbw  0xd7567f(pc), 0x16d7d8d9(r3)
+      movxbw  0xd7568a(pc), -0x1e282727(r3)
+      movxbw  0xd75695(pc), 0(r3)
+      movxbw  0xd7569d(pc), tos
+      movxbw  0xd756a4(pc), 0xdb5aa8(pc)
+      movxbw  0xd756af(pc), 0x0381da(pc)
+      movxbw  0xd857b8(pc), 0x17d8d9da(sb)[r2:q]
+      movxbw  0xd857c3(pc), -0x1e272626(sb)[r2:q]
+      movxbw  0xd857cf(pc), 0(sb)[r2:q]
       movxbw  0x13d4d5d6(sb)[r2:b], r3
       movxbw  0x13d4d5d6(sb)[r2:b], 0x17d8d9da(r3)
       movxbw  0x13d4d5d5(sb)[r2:b], -0x1e272626(r3)
       movxbw  0x13d4d5d5(sb)[r2:b], 0(r3)
       movxbw  0x13d4d5d6(sb)[r2:b], tos
-      movxbw  0x13d4d5d6(sb)[r2:b], 0xdc1058(pc)
-      movxbw  0x13d4d5d5(sb)[r2:b], 0x03368a(pc)
+      movxbw  0x13d4d5d6(sb)[r2:b], 0xdc5c0e(pc)
+      movxbw  0x13d4d5d5(sb)[r2:b], 0x038240(pc)
       movxbw  0x14d5d6d7(sb)[r2:b], 0x18d9dadb(sb)[r3:q]
       movxbw  0x13d4d5d6(sb)[r2:w], r3
       movxbw  0x13d4d5d6(sb)[r2:w], 0x17d8d9da(r3)
       movxbw  0x13d4d5d5(sb)[r2:w], -0x1e272626(r3)
       movxbw  0x13d4d5d5(sb)[r2:w], 0(r3)
       movxbw  0x13d4d5d6(sb)[r2:w], tos
-      movxbw  0x13d4d5d6(sb)[r2:w], 0xdc10ab(pc)
-      movxbw  0x13d4d5d5(sb)[r2:w], 0x0336dd(pc)
+      movxbw  0x13d4d5d6(sb)[r2:w], 0xdc5c61(pc)
+      movxbw  0x13d4d5d5(sb)[r2:w], 0x038293(pc)
       movxbw  0x14d5d6d7(sb)[r2:w], 0x18d9dadb(sb)[r3:q]
       movxbw  0x13d4d5d6(sb)[r2:d], r3
       movxbw  0x13d4d5d6(sb)[r2:d], 0x17d8d9da(r3)
       movxbw  0x13d4d5d5(sb)[r2:d], -0x1e272626(r3)
       movxbw  0x13d4d5d5(sb)[r2:d], 0(r3)
       movxbw  0x13d4d5d6(sb)[r2:d], tos
-      movxbw  0x13d4d5d6(sb)[r2:d], 0xdc10fe(pc)
-      movxbw  0x13d4d5d5(sb)[r2:d], 0x033730(pc)
+      movxbw  0x13d4d5d6(sb)[r2:d], 0xdc5cb4(pc)
+      movxbw  0x13d4d5d5(sb)[r2:d], 0x0382e6(pc)
       movxbw  0x14d5d6d7(sb)[r2:d], 0x18d9dadb(sb)[r3:q]
       movxbw  0x13d4d5d6(sb)[r2:q], r3
       movxbw  0x13d4d5d6(sb)[r2:q], 0x17d8d9da(r3)
       movxbw  0x13d4d5d5(sb)[r2:q], -0x1e272626(r3)
       movxbw  0x13d4d5d5(sb)[r2:q], 0(r3)
       movxbw  0x13d4d5d6(sb)[r2:q], tos
-      movxbw  0x13d4d5d6(sb)[r2:q], 0xdc1151(pc)
-      movxbw  0x13d4d5d5(sb)[r2:q], 0x033783(pc)
+      movxbw  0x13d4d5d6(sb)[r2:q], 0xdc5d07(pc)
+      movxbw  0x13d4d5d5(sb)[r2:q], 0x038339(pc)
       movxbw  0x14d5d6d7(sb)[r2:q], 0x18d9dadb(sb)[r3:q]
       movxbw  r0, r3
       movzbw  0x16d7d8d9(sb), tos
-      movzbw  0x16d7d8d9(sb), 0xdf1480(pc)
-      movzbw  0x16d7d8d9(sb), 0x0337ae(pc)
+      movzbw  0x16d7d8d9(sb), 0xdf6036(pc)
+      movzbw  0x16d7d8d9(sb), 0x038364(pc)
       movzbw  0x17d8d9da(sb), 0x1bdcddde(sb)[r6:q]
       movzbw  0x17d8d9d9(sb), -0x1e232222(sb)[r6:q]
       movzbw  0x17d8d9d9(sb), 0(sb)[r6:q]
-      movzbw  0xdb10b0(pc), r3
-      movzbw  0xdb10b7(pc), 0x1adbdcdd(r3)
-      movzbw  0xdb10c2(pc), -0x1e242323(r3)
-      movzbw  0xdb10cd(pc), 0(r3)
-      movzbw  0xdb10d5(pc), tos
-      movzbw  0xdb10dc(pc), 0xdf14e0(pc)
-      movzbw  0xdb10e7(pc), 0x03380e(pc)
-      movzbw  0xdc11f0(pc), 0x1bdcddde(sb)[r6:q]
-      movzbw  0xdc11fb(pc), -0x1e232222(sb)[r6:q]
-      movzbw  0xdc1207(pc), 0(sb)[r6:q]
+      movzbw  0xdb5c66(pc), r3
+      movzbw  0xdb5c6d(pc), 0x1adbdcdd(r3)
+      movzbw  0xdb5c78(pc), -0x1e242323(r3)
+      movzbw  0xdb5c83(pc), 0(r3)
+      movzbw  0xdb5c8b(pc), tos
+      movzbw  0xdb5c92(pc), 0xdf6096(pc)
+      movzbw  0xdb5c9d(pc), 0x0383c4(pc)
+      movzbw  0xdc5da6(pc), 0x1bdcddde(sb)[r6:q]
+      movzbw  0xdc5db1(pc), -0x1e232222(sb)[r6:q]
+      movzbw  0xdc5dbd(pc), 0(sb)[r6:q]
       movzbw  0x17d8d9da(sb)[r6:b], r3
       movzbw  0x17d8d9da(sb)[r6:b], 0x1bdcddde(r3)
       movzbw  0x17d8d9d9(sb)[r6:b], -0x1e232222(r3)
       movzbw  0x17d8d9d9(sb)[r6:b], 0(r3)
       movzbw  0x17d8d9da(sb)[r6:b], tos
-      movzbw  0x17d8d9da(sb)[r6:b], 0xe01646(pc)
-      movzbw  0x17d8d9d9(sb)[r6:b], 0x033874(pc)
+      movzbw  0x17d8d9da(sb)[r6:b], 0xe061fc(pc)
+      movzbw  0x17d8d9d9(sb)[r6:b], 0x03842a(pc)
       movzbw  0x18d9dadb(sb)[r6:b], 0x1cdddedf(sb)[r7:q]
       movzbw  0x17d8d9da(sb)[r6:w], r3
       movzbw  0x17d8d9da(sb)[r6:w], 0x1bdcddde(r3)
       movzbw  0x17d8d9d9(sb)[r6:w], -0x1e232222(r3)
       movzbw  0x17d8d9d9(sb)[r6:w], 0(r3)
       movzbw  0x17d8d9da(sb)[r6:w], tos
-      movzbw  0x17d8d9da(sb)[r6:w], 0xe01699(pc)
-      movzbw  0x17d8d9d9(sb)[r6:w], 0x0338c7(pc)
+      movzbw  0x17d8d9da(sb)[r6:w], 0xe0624f(pc)
+      movzbw  0x17d8d9d9(sb)[r6:w], 0x03847d(pc)
       movzbw  0x18d9dadb(sb)[r6:w], 0x1cdddedf(sb)[r7:q]
       movzbw  0x17d8d9da(sb)[r6:d], r3
       movzbw  0x17d8d9da(sb)[r6:d], 0x1bdcddde(r3)
       movzbw  0x17d8d9d9(sb)[r6:d], -0x1e232222(r3)
       movzbw  0x17d8d9d9(sb)[r6:d], 0(r3)
       movzbw  0x17d8d9da(sb)[r6:d], tos
-      movzbw  0x17d8d9da(sb)[r6:d], 0xe016ec(pc)
-      movzbw  0x17d8d9d9(sb)[r6:d], 0x03391a(pc)
+      movzbw  0x17d8d9da(sb)[r6:d], 0xe062a2(pc)
+      movzbw  0x17d8d9d9(sb)[r6:d], 0x0384d0(pc)
       movzbw  0x18d9dadb(sb)[r6:d], 0x1cdddedf(sb)[r7:q]
       movzbw  0x17d8d9da(sb)[r6:q], r3
       movzbw  0x17d8d9da(sb)[r6:q], 0x1bdcddde(r3)
       movzbw  0x17d8d9d9(sb)[r6:q], -0x1e232222(r3)
       movzbw  0x17d8d9d9(sb)[r6:q], 0(r3)
       movzbw  0x17d8d9da(sb)[r6:q], tos
-      movzbw  0x17d8d9da(sb)[r6:q], 0xe0173f(pc)
-      movzbw  0x17d8d9d9(sb)[r6:q], 0x03396d(pc)
+      movzbw  0x17d8d9da(sb)[r6:q], 0xe062f5(pc)
+      movzbw  0x17d8d9d9(sb)[r6:q], 0x038523(pc)
       movzbw  0x18d9dadb(sb)[r6:q], 0x1cdddedf(sb)[r7:q]
       movzbw  r0, r3
-      movzbd  0xdf1663(pc), r7
-      movzbd  0xdf166a(pc), 0x1edfe0e1(r3)
-      movzbd  0xdf1675(pc), -0x1e201f1f(r3)
-      movzbd  0xdf1680(pc), 0(r3)
-      movzbd  0xdf1688(pc), tos
-      movzbd  0xdf168f(pc), 0xe31a93(pc)
-      movzbd  0xdf169a(pc), 0x0339bd(pc)
-      movzbd  0xe017a3(pc), 0xe41ba7(pc)[r2:q]
-      movzbd  0xe017ae(pc), 0x0339d1(pc)[r2:q]
-      movzbd  0xe017b8(pc)[r2:b], r3
-      movzbd  0xe017c0(pc)[r2:b], 0x1fe0e1e2(r3)
-      movzbd  0xe017cb(pc)[r2:b], -0x1e1f1e1e(r3)
-      movzbd  0xe017d7(pc)[r2:b], 0(r3)
-      movzbd  0xe017e1(pc)[r2:b], tos
-      movzbd  0xe017e9(pc)[r2:b], 0xe41bed(pc)
-      movzbd  0xe017f4(pc)[r2:b], 0x033a17(pc)
-      movzbd  0xe017fe(pc)[r2:w], r3
-      movzbd  0xe01806(pc)[r2:w], 0x1fe0e1e2(r3)
-      movzbd  0xe01811(pc)[r2:w], -0x1e1f1e1e(r3)
-      movzbd  0xe0181d(pc)[r2:w], 0(r3)
-      movzbd  0xe01827(pc)[r2:w], tos
-      movzbd  0xe0182f(pc)[r2:w], 0xe41c33(pc)
-      movzbd  0xe0183a(pc)[r2:w], 0x033a5d(pc)
-      movzbd  0xe01844(pc)[r2:d], r3
-      movzbd  0xe0184c(pc)[r2:d], 0x1fe0e1e2(r3)
-      movzbd  0xe01857(pc)[r2:d], -0x1e1f1e1e(r3)
-      movzbd  0xe01863(pc)[r2:d], 0(r3)
-      movzbd  0xe0186d(pc)[r2:d], tos
-      movzbd  0xe01875(pc)[r2:d], 0xe41c79(pc)
-      movzbd  0xe01880(pc)[r2:d], 0x033aa3(pc)
-      movzbd  0xe0188a(pc)[r2:q], r3
-      movzbd  0xe01892(pc)[r2:q], 0x1fe0e1e2(r3)
-      movzbd  0xe0189d(pc)[r2:q], -0x1e1f1e1e(r3)
-      movzbd  0xe018a9(pc)[r2:q], 0(r3)
-      movzbd  0xe018b3(pc)[r2:q], tos
-      movzbd  0xe018bb(pc)[r2:q], 0xe41cbf(pc)
-      movzbd  0xe018c6(pc)[r2:q], 0x033ae9(pc)
+      movzbd  0xdf6219(pc), r7
+      movzbd  0xdf6220(pc), 0x1edfe0e1(r3)
+      movzbd  0xdf622b(pc), -0x1e201f1f(r3)
+      movzbd  0xdf6236(pc), 0(r3)
+      movzbd  0xdf623e(pc), tos
+      movzbd  0xdf6245(pc), 0xe36649(pc)
+      movzbd  0xdf6250(pc), 0x038573(pc)
+      movzbd  0xe06359(pc), 0xe4675d(pc)[r2:q]
+      movzbd  0xe06364(pc), 0x038587(pc)[r2:q]
+      movzbd  0xe0636e(pc)[r2:b], r3
+      movzbd  0xe06376(pc)[r2:b], 0x1fe0e1e2(r3)
+      movzbd  0xe06381(pc)[r2:b], -0x1e1f1e1e(r3)
+      movzbd  0xe0638d(pc)[r2:b], 0(r3)
+      movzbd  0xe06397(pc)[r2:b], tos
+      movzbd  0xe0639f(pc)[r2:b], 0xe467a3(pc)
+      movzbd  0xe063aa(pc)[r2:b], 0x0385cd(pc)
+      movzbd  0xe063b4(pc)[r2:w], r3
+      movzbd  0xe063bc(pc)[r2:w], 0x1fe0e1e2(r3)
+      movzbd  0xe063c7(pc)[r2:w], -0x1e1f1e1e(r3)
+      movzbd  0xe063d3(pc)[r2:w], 0(r3)
+      movzbd  0xe063dd(pc)[r2:w], tos
+      movzbd  0xe063e5(pc)[r2:w], 0xe467e9(pc)
+      movzbd  0xe063f0(pc)[r2:w], 0x038613(pc)
+      movzbd  0xe063fa(pc)[r2:d], r3
+      movzbd  0xe06402(pc)[r2:d], 0x1fe0e1e2(r3)
+      movzbd  0xe0640d(pc)[r2:d], -0x1e1f1e1e(r3)
+      movzbd  0xe06419(pc)[r2:d], 0(r3)
+      movzbd  0xe06423(pc)[r2:d], tos
+      movzbd  0xe0642b(pc)[r2:d], 0xe4682f(pc)
+      movzbd  0xe06436(pc)[r2:d], 0x038659(pc)
+      movzbd  0xe06440(pc)[r2:q], r3
+      movzbd  0xe06448(pc)[r2:q], 0x1fe0e1e2(r3)
+      movzbd  0xe06453(pc)[r2:q], -0x1e1f1e1e(r3)
+      movzbd  0xe0645f(pc)[r2:q], 0(r3)
+      movzbd  0xe06469(pc)[r2:q], tos
+      movzbd  0xe06471(pc)[r2:q], 0xe46875(pc)
+      movzbd  0xe0647c(pc)[r2:q], 0x03869f(pc)
       movzbd  r0, r3
-      movzwd  0xe018d3(pc), 0x1fe0e1e2(r3)
-      movzwd  0xe018de(pc), tos
-      movxbd  0xe31be8(pc), tos
-      movxbd  0xe31bef(pc), 0xe71ff3(pc)
-      movxbd  0xe31bfa(pc), 0x033b19(pc)
-      movxbd  0xe41d03(pc), 0xe82107(pc)[r6:q]
-      movxbd  0xe41d0e(pc), 0x033b2d(pc)[r6:q]
-      movxbd  0xe41d18(pc)[r6:b], r3
-      movxbd  0xe41d20(pc)[r6:b], -0x1c1b1a1a(r3)
-      movxbd  0xe41d2b(pc)[r6:b], 0(r3)
-      movxbd  0xe41d35(pc)[r6:b], tos
-      movxbd  0xe41d3d(pc)[r6:b], 0xe82141(pc)
-      movxbd  0xe41d48(pc)[r6:b], 0x033b67(pc)
-      movxbd  0xe41d52(pc)[r6:w], r3
-      movxbd  0xe41d5a(pc)[r6:w], -0x1c1b1a1a(r3)
-      movxbd  0xe41d65(pc)[r6:w], 0(r3)
-      movxbd  0xe41d6f(pc)[r6:w], tos
-      movxbd  0xe41d77(pc)[r6:w], 0xe8217b(pc)
-      movxbd  0xe41d82(pc)[r6:w], 0x033ba1(pc)
-      movxbd  0xe41d8c(pc)[r6:d], r3
-      movxbd  0xe41d94(pc)[r6:d], -0x1c1b1a1a(r3)
-      movxbd  0xe41d9f(pc)[r6:d], 0(r3)
-      movxbd  0xe41da9(pc)[r6:d], tos
-      movxbd  0xe41db1(pc)[r6:d], 0xe821b5(pc)
-      movxbd  0xe41dbc(pc)[r6:d], 0x033bdb(pc)
-      movxbd  0xe41dc6(pc)[r6:q], r3
-      movxbd  0xe41dce(pc)[r6:q], -0x1c1b1a1a(r3)
-      movxbd  0xe41dd9(pc)[r6:q], 0(r3)
-      movxbd  0xe41de3(pc)[r6:q], tos
-      movxbd  0xe41deb(pc)[r6:q], 0xe821ef(pc)
-      movxbd  0xe41df6(pc)[r6:q], 0x033c15(pc)
+      movzwd  0xe06489(pc), 0x1fe0e1e2(r3)
+      movzwd  0xe06494(pc), tos
+      movxbd  0xe3679e(pc), tos
+      movxbd  0xe367a5(pc), 0xe76ba9(pc)
+      movxbd  0xe367b0(pc), 0x0386cf(pc)
+      movxbd  0xe468b9(pc), 0xe86cbd(pc)[r6:q]
+      movxbd  0xe468c4(pc), 0x0386e3(pc)[r6:q]
+      movxbd  0xe468ce(pc)[r6:b], r3
+      movxbd  0xe468d6(pc)[r6:b], -0x1c1b1a1a(r3)
+      movxbd  0xe468e1(pc)[r6:b], 0(r3)
+      movxbd  0xe468eb(pc)[r6:b], tos
+      movxbd  0xe468f3(pc)[r6:b], 0xe86cf7(pc)
+      movxbd  0xe468fe(pc)[r6:b], 0x03871d(pc)
+      movxbd  0xe46908(pc)[r6:w], r3
+      movxbd  0xe46910(pc)[r6:w], -0x1c1b1a1a(r3)
+      movxbd  0xe4691b(pc)[r6:w], 0(r3)
+      movxbd  0xe46925(pc)[r6:w], tos
+      movxbd  0xe4692d(pc)[r6:w], 0xe86d31(pc)
+      movxbd  0xe46938(pc)[r6:w], 0x038757(pc)
+      movxbd  0xe46942(pc)[r6:d], r3
+      movxbd  0xe4694a(pc)[r6:d], -0x1c1b1a1a(r3)
+      movxbd  0xe46955(pc)[r6:d], 0(r3)
+      movxbd  0xe4695f(pc)[r6:d], tos
+      movxbd  0xe46967(pc)[r6:d], 0xe86d6b(pc)
+      movxbd  0xe46972(pc)[r6:d], 0x038791(pc)
+      movxbd  0xe4697c(pc)[r6:q], r3
+      movxbd  0xe46984(pc)[r6:q], -0x1c1b1a1a(r3)
+      movxbd  0xe4698f(pc)[r6:q], 0(r3)
+      movxbd  0xe46999(pc)[r6:q], tos
+      movxbd  0xe469a1(pc)[r6:q], 0xe86da5(pc)
+      movxbd  0xe469ac(pc)[r6:q], 0x0387cb(pc)
       movxbd  r0, r3
-      movxwd  0xe41e03(pc), 0xe82207(pc)
+      movxwd  0xe469b9(pc), 0xe86dbd(pc)
       movxwd  r0, r3
       divd    r0, r3
       divd    r0, 3(r3)
       divd    r0, -64(r3)
       divd    r0, 0x0081(r3)
       divd    r0, tos
-      divd    r0, 0x033c49(pc)
-      divd    r0, 0x033cc7(pc)
+      divd    r0, 0x0387ff(pc)
+      divd    r0, 0x03887d(pc)
       divd    r0, r1[r0:q]
       divd    r0, -63(r0)[r0:q]
       divd    r0, 0x0081(r0)[r0:q]
@@ -17635,9 +19881,9 @@
       movmw   3(sb), r0, 3
       movmw   3(sb), 5(4(fp)), 4
       movmw   3(sb), -64(4(fp)), 4
-      movmw   0x033dfc(pc), r0, 3
-      movmw   0x033e01(pc), 5(4(fp)), 4
-      movmw   0x033e08(pc), -64(4(fp)), 4
+      movmw   0x0389b2(pc), r0, 3
+      movmw   0x0389b7(pc), 5(4(fp)), 4
+      movmw   0x0389be(pc), -64(4(fp)), 4
       movmw   r0[r3:b], r0, 3
       movmw   r0[r3:b], 5(4(fp)), 4
       movmw   r0[r3:b], -64(4(fp)), 4
@@ -17696,9 +19942,9 @@
       cmpmw   7(sb), r0, 5
       cmpmw   7(sb), 9(8(fp)), 6
       cmpmw   7(sb), -64(8(fp)), 6
-      cmpmw   0x033f88(pc), r0, 5
-      cmpmw   0x033f8d(pc), 9(8(fp)), 6
-      cmpmw   0x033f94(pc), -64(8(fp)), 6
+      cmpmw   0x038b3e(pc), r0, 5
+      cmpmw   0x038b43(pc), 9(8(fp)), 6
+      cmpmw   0x038b4a(pc), -64(8(fp)), 6
       cmpmw   r0[r7:b], r0, 5
       cmpmw   r0[r7:b], 9(8(fp)), 6
       cmpmw   r0[r7:b], -64(8(fp)), 6
@@ -19076,36 +21322,36 @@
       remw    -8(r6), -7(r6)[r7:w]
       remw    -8(r6), 0x0081(r6)[r7:w]
       remw    -9(r7), r1
-      acbd    1, 0x11d2d3d4(sb), 0xda3c79
-      acbd    1, -0x1e2d2c2c(sb), 0xda3c83
-      acbd    1, 0(sb), 0xd7398a
-      acbd    -7, 0x15d6d7d8(sb), 0xde4098
-      acbd    -7, -0x1e292828(sb), 0xde40a2
-      acbd    -7, 0(sb), 0xdb3da9
-      acbd    1, 0xde40b3(pc), 0xe244b7
-      acbd    1, 0x0364e1(pc), 0xdf41be
-      acbd    -7, 0xe244c8(pc), 0xe648cc
-      acbd    -7, 0x0364f2(pc), 0xe345d3
-      acbd    -3, 0x0365d9(pc), 0xe648dd
-      acbd    -1, r0[r0:q], 0x036502
-      acbd    -1, 1(r0)[r0:q], 0x036507
-      acbd    -1, 1(r0)[r0:q], 0x03658b
-      acbd    1, r0, 0x036511
-      acbd    1, r0, 0x036594
-      acbd    -7, r0, 0x03651c
-      acbd    -7, r0, 0x03659b
+      acbd    1, 0x11d2d3d4(sb), 0xda882f
+      acbd    1, -0x1e2d2c2c(sb), 0xda8839
+      acbd    1, 0(sb), 0xd78540
+      acbd    -7, 0x15d6d7d8(sb), 0xde8c4e
+      acbd    -7, -0x1e292828(sb), 0xde8c58
+      acbd    -7, 0(sb), 0xdb895f
+      acbd    1, 0xde8c69(pc), 0xe2906d
+      acbd    1, 0x03b097(pc), 0xdf8d74
+      acbd    -7, 0xe2907e(pc), 0xe69482
+      acbd    -7, 0x03b0a8(pc), 0xe39189
+      acbd    -3, 0x03b18f(pc), 0xe69493
+      acbd    -1, r0[r0:q], 0x03b0b8
+      acbd    -1, 1(r0)[r0:q], 0x03b0bd
+      acbd    -1, 1(r0)[r0:q], 0x03b141
+      acbd    1, r0, 0x03b0c7
+      acbd    1, r0, 0x03b14a
+      acbd    -7, r0, 0x03b0d2
+      acbd    -7, r0, 0x03b151
       addcb   0x16d7d8d9(sb), tos
       addcb   -0x1e282727(sb), tos
       addcb   0(sb), tos
-      addcb   0x17d8d9da(sb), 0xe0430b(pc)
-      addcb   -0x1e272626(sb), 0xe04315(pc)
-      addcb   0(sb), 0xdd401c(pc)
-      addcb   0x19dadbdc(sb), 0xe24528(pc)[r0:q]
+      addcb   0x17d8d9da(sb), 0xe08ec1(pc)
+      addcb   -0x1e272626(sb), 0xe08ecb(pc)
+      addcb   0(sb), 0xdd8bd2(pc)
+      addcb   0x19dadbdc(sb), 0xe290de(pc)[r0:q]
       addcb   0x19dadbdc(sb), r0[r0:q]
-      addcb   0xe3463b(pc), tos
-      addcb   0x036560(pc), tos
-      addcb   0xe44745(pc), 0xe84b49(pc)
-      addcb   0x03664d(pc), 0xe64951(pc)
+      addcb   0xe391f1(pc), tos
+      addcb   0x03b116(pc), tos
+      addcb   0xe492fb(pc), 0xe896ff(pc)
+      addcb   0x03b203(pc), 0xe69507(pc)
       addcb   r0[r0:q], r0[r1:q]
       addcb   2(r0)[r0:q], r0[r1:q]
       addcb   -64(r0)[r0:q], r0[r1:q]
@@ -19116,26 +21362,26 @@
       addcw   0x16d7d8d9(sb), tos
       addcw   -0x1e282727(sb), tos
       addcw   0(sb), tos
-      addcw   0x17d8d9da(sb), 0xe04391(pc)
-      addcw   -0x1e272626(sb), 0xe0439b(pc)
-      addcw   0(sb), 0xdd40a2(pc)
-      addcw   0x19dadbdc(sb), 0xe245ae(pc)[r0:q]
+      addcw   0x17d8d9da(sb), 0xe08f47(pc)
+      addcw   -0x1e272626(sb), 0xe08f51(pc)
+      addcw   0(sb), 0xdd8c58(pc)
+      addcw   0x19dadbdc(sb), 0xe29164(pc)[r0:q]
       addcw   0x19dadbdc(sb), r0[r0:q]
-      addcw   0xde41bc(pc), r3
-      addcw   0x0365e6(pc), r3
-      addcw   0xe043c7(pc), 0x1fe0e1e2(r3)
-      addcw   0x0365f3(pc), 0x1cdddedf(r3)
-      addcw   0xe346db(pc), tos
-      addcw   0x036600(pc), tos
-      addcw   0xe447e5(pc), 0xe84be9(pc)
-      addcw   0x0366ed(pc), 0xe649f1(pc)
+      addcw   0xde8d72(pc), r3
+      addcw   0x03b19c(pc), r3
+      addcw   0xe08f7d(pc), 0x1fe0e1e2(r3)
+      addcw   0x03b1a9(pc), 0x1cdddedf(r3)
+      addcw   0xe39291(pc), tos
+      addcw   0x03b1b6(pc), tos
+      addcw   0xe4939b(pc), 0xe8979f(pc)
+      addcw   0x03b2a3(pc), 0xe695a7(pc)
       addcw   r0[r0:q], r0[r1:q]
       addcw   2(r0)[r0:q], r0[r1:q]
       addcw   -64(r0)[r0:q], r0[r1:q]
       addcw   0x0081(r0)[r0:q], r0[r1:q]
       addcw   r0, tos
-      addcw   r0, 0x036632(pc)
-      addcw   r0, 0x0366af(pc)
+      addcw   r0, 0x03b1e8(pc)
+      addcw   r0, 0x03b265(pc)
       addcw   r0, r1[r0:q]
       addcw   r0, -63(r0)[r0:q]
       addcw   r0, 0x0081(r0)[r0:q]
@@ -19143,134 +21389,134 @@
       addcd   0x16d7d8d9(sb), tos
       addcd   -0x1e282727(sb), tos
       addcd   0(sb), tos
-      addcd   0x17d8d9da(sb), 0xe0442c(pc)
-      addcd   -0x1e272626(sb), 0xe04436(pc)
-      addcd   0(sb), 0xdd413d(pc)
-      addcd   0x19dadbdc(sb), 0xe24649(pc)[r0:q]
+      addcd   0x17d8d9da(sb), 0xe08fe2(pc)
+      addcd   -0x1e272626(sb), 0xe08fec(pc)
+      addcd   0(sb), 0xdd8cf3(pc)
+      addcd   0x19dadbdc(sb), 0xe291ff(pc)[r0:q]
       addcd   0x19dadbdc(sb), r0[r0:q]
-      addcd   0xde4257(pc), r3
-      addcd   0x036681(pc), r3
-      addcd   0xe04462(pc), 0x1fe0e1e2(r3)
-      addcd   0x03668e(pc), 0x1cdddedf(r3)
-      addcd   0xe34776(pc), tos
-      addcd   0x03669b(pc), tos
-      addcd   0xe44880(pc), 0xe84c84(pc)
-      addcd   0x036788(pc), 0xe64a8c(pc)
+      addcd   0xde8e0d(pc), r3
+      addcd   0x03b237(pc), r3
+      addcd   0xe09018(pc), 0x1fe0e1e2(r3)
+      addcd   0x03b244(pc), 0x1cdddedf(r3)
+      addcd   0xe3932c(pc), tos
+      addcd   0x03b251(pc), tos
+      addcd   0xe49436(pc), 0xe8983a(pc)
+      addcd   0x03b33e(pc), 0xe69642(pc)
       addcd   r0[r0:q], r0[r1:q]
       addcd   2(r0)[r0:q], r0[r1:q]
       addcd   -64(r0)[r0:q], r0[r1:q]
       addcd   0x0081(r0)[r0:q], r0[r1:q]
       addcd   r0, tos
-      addcd   r0, 0x0366cd(pc)
-      addcd   r0, 0x03674a(pc)
+      addcd   r0, 0x03b283(pc)
+      addcd   r0, 0x03b300(pc)
       addcd   r0, r1[r0:q]
       addcd   r0, -63(r0)[r0:q]
       addcd   r0, 0x0081(r0)[r0:q]
       movb    0x16d7d8d9(sb), tos
       movb    -0x1e282727(sb), tos
       movb    0(sb), tos
-      movb    0x17d8d9da(sb), 0xe044c6(pc)
-      movb    -0x1e272626(sb), 0xe044d0(pc)
-      movb    0(sb), 0xdd41d7(pc)
-      movb    0x19dadbdc(sb), 0xe246e3(pc)[r0:q]
+      movb    0x17d8d9da(sb), 0xe0907c(pc)
+      movb    -0x1e272626(sb), 0xe09086(pc)
+      movb    0(sb), 0xdd8d8d(pc)
+      movb    0x19dadbdc(sb), 0xe29299(pc)[r0:q]
       movb    0x19dadbdc(sb), r0[r0:q]
-      movb    0xe347f6(pc), tos
-      movb    0x03671b(pc), tos
-      movb    0xe44900(pc), 0xe84d04(pc)
-      movb    0x036808(pc), 0xe64b0c(pc)
+      movb    0xe393ac(pc), tos
+      movb    0x03b2d1(pc), tos
+      movb    0xe494b6(pc), 0xe898ba(pc)
+      movb    0x03b3be(pc), 0xe696c2(pc)
       movb    r0[r0:q], r0[r1:q]
       movb    2(r0)[r0:q], r0[r1:q]
       movb    -64(r0)[r0:q], r0[r1:q]
       movb    0x0081(r0)[r0:q], r0[r1:q]
-      movw    0x17d8d9da(sb), 0xe04522(pc)
-      movw    -0x1e272626(sb), 0xe0452c(pc)
-      movw    0(sb), 0xdd4233(pc)
-      movw    0x19dadbdc(sb), 0xe2473f(pc)[r0:q]
+      movw    0x17d8d9da(sb), 0xe090d8(pc)
+      movw    -0x1e272626(sb), 0xe090e2(pc)
+      movw    0(sb), 0xdd8de9(pc)
+      movw    0x19dadbdc(sb), 0xe292f5(pc)[r0:q]
       movw    0x19dadbdc(sb), r0[r0:q]
-      movw    0xde434d(pc), r3
-      movw    0x036777(pc), r3
-      movw    0xe04558(pc), 0x1fe0e1e2(r3)
-      movw    0x036784(pc), 0x1cdddedf(r3)
-      movw    0xe3486c(pc), tos
-      movw    0x036791(pc), tos
-      movw    0xe44976(pc), 0xe84d7a(pc)
-      movw    0x03687e(pc), 0xe64b82(pc)
+      movw    0xde8f03(pc), r3
+      movw    0x03b32d(pc), r3
+      movw    0xe0910e(pc), 0x1fe0e1e2(r3)
+      movw    0x03b33a(pc), 0x1cdddedf(r3)
+      movw    0xe39422(pc), tos
+      movw    0x03b347(pc), tos
+      movw    0xe4952c(pc), 0xe89930(pc)
+      movw    0x03b434(pc), 0xe69738(pc)
       movw    r0[r0:q], r0[r1:q]
       movw    2(r0)[r0:q], r0[r1:q]
       movw    -64(r0)[r0:q], r0[r1:q]
       movw    0x0081(r0)[r0:q], r0[r1:q]
       movw    r0, tos
-      movw    r0, 0x0367c3(pc)
-      movw    r0, 0x036840(pc)
+      movw    r0, 0x03b379(pc)
+      movw    r0, 0x03b3f6(pc)
       movw    r0, r1[r0:q]
       movw    r0, -63(r0)[r0:q]
       movw    r0, 0x0081(r0)[r0:q]
-      movd    0xde43ab(pc), r3
-      movd    0x0367d5(pc), r3
-      movd    0xe045b6(pc), 0x1fe0e1e2(r3)
-      movd    0x0367e2(pc), 0x1cdddedf(r3)
-      movd    0xe348ca(pc), tos
-      movd    0x0367ef(pc), tos
-      movd    0xe449d4(pc), 0xe84dd8(pc)
-      movd    0x0368dc(pc), 0xe64be0(pc)
+      movd    0xde8f61(pc), r3
+      movd    0x03b38b(pc), r3
+      movd    0xe0916c(pc), 0x1fe0e1e2(r3)
+      movd    0x03b398(pc), 0x1cdddedf(r3)
+      movd    0xe39480(pc), tos
+      movd    0x03b3a5(pc), tos
+      movd    0xe4958a(pc), 0xe8998e(pc)
+      movd    0x03b492(pc), 0xe69796(pc)
       movd    r0[r0:q], r0[r1:q]
       movd    2(r0)[r0:q], r0[r1:q]
       movd    -64(r0)[r0:q], r0[r1:q]
       movd    0x0081(r0)[r0:q], r0[r1:q]
       movd    r0, tos
-      movd    r0, 0x036821(pc)
-      movd    r0, 0x03689e(pc)
+      movd    r0, 0x03b3d7(pc)
+      movd    r0, 0x03b454(pc)
       movd    r0, r1[r0:q]
       movd    r0, -63(r0)[r0:q]
       movd    r0, 0x0081(r0)[r0:q]
-      orb     0xe3490e(pc), tos
-      orb     0x036833(pc), tos
-      orb     0xe44a18(pc), 0xe84e1c(pc)
-      orb     0x036920(pc), 0xe64c24(pc)
+      orb     0xe394c4(pc), tos
+      orb     0x03b3e9(pc), tos
+      orb     0xe495ce(pc), 0xe899d2(pc)
+      orb     0x03b4d6(pc), 0xe697da(pc)
       orb     r0[r0:q], r0[r1:q]
       orb     2(r0)[r0:q], r0[r1:q]
       orb     -64(r0)[r0:q], r0[r1:q]
       orb     0x0081(r0)[r0:q], r0[r1:q]
-      orw     0xe0463a(pc), 0x1fe0e1e2(r3)
-      orw     0x036866(pc), 0x1cdddedf(r3)
-      orw     0xe3494e(pc), tos
-      orw     0x036873(pc), tos
-      orw     0xe44a58(pc), 0xe84e5c(pc)
-      orw     0x036960(pc), 0xe64c64(pc)
+      orw     0xe091f0(pc), 0x1fe0e1e2(r3)
+      orw     0x03b41c(pc), 0x1cdddedf(r3)
+      orw     0xe39504(pc), tos
+      orw     0x03b429(pc), tos
+      orw     0xe4960e(pc), 0xe89a12(pc)
+      orw     0x03b516(pc), 0xe6981a(pc)
       orw     r0[r0:q], r0[r1:q]
       orw     2(r0)[r0:q], r0[r1:q]
       orw     -64(r0)[r0:q], r0[r1:q]
       orw     0x0081(r0)[r0:q], r0[r1:q]
       orw     r0, tos
-      orw     r0, 0x0368a5(pc)
-      orw     r0, 0x036922(pc)
+      orw     r0, 0x03b45b(pc)
+      orw     r0, 0x03b4d8(pc)
       orw     r0, r1[r0:q]
       orw     r0, -63(r0)[r0:q]
       orw     r0, 0x0081(r0)[r0:q]
-      bge     0xe0468f
-      ord     0xe34997(pc), tos
-      ord     0x0368bc(pc), tos
-      ord     0xe44aa1(pc), 0xe84ea5(pc)
-      ord     0x0369a9(pc), 0xe64cad(pc)
+      bge     0xe09245
+      ord     0xe3954d(pc), tos
+      ord     0x03b472(pc), tos
+      ord     0xe49657(pc), 0xe89a5b(pc)
+      ord     0x03b55f(pc), 0xe69863(pc)
       ord     r0[r0:q], r0[r1:q]
       ord     2(r0)[r0:q], r0[r1:q]
       ord     -64(r0)[r0:q], r0[r1:q]
       ord     0x0081(r0)[r0:q], r0[r1:q]
       ord     r0, tos
-      ord     r0, 0x0368ee(pc)
-      ord     r0, 0x03696b(pc)
+      ord     r0, 0x03b4a4(pc)
+      ord     r0, 0x03b521(pc)
       ord     r0, r1[r0:q]
       ord     r0, -63(r0)[r0:q]
       ord     r0, 0x0081(r0)[r0:q]
-      movqb   -5, 0xe349db(pc)
-      movqb   -5, 0x036900(pc)
+      movqb   -5, 0xe39591(pc)
+      movqb   -5, 0x03b4b6(pc)
       movqb   -1, r0[r0:q]
       movqb   -1, -63(r0)[r0:q]
       movqb   -1, 0x0081(r0)[r0:q]
       movqb   1, r0
       movqb   -7, r0
-      movqw   -3, 0xe44af5(pc)
-      movqw   -3, 0x036919(pc)
+      movqw   -3, 0xe496ab(pc)
+      movqw   -3, 0x03b4cf(pc)
       movqw   -1, r0[r0:q]
       movqw   -1, -63(r0)[r0:q]
       movqw   -1, 0x0081(r0)[r0:q]
@@ -19290,8 +21536,8 @@
       subw    -64(r0)[r0:q], r0[r1:q]
       subw    0x0081(r0)[r0:q], r0[r1:q]
       subw    r0, tos
-      subw    r0, 0x03696d(pc)
-      subw    r0, 0x0369ea(pc)
+      subw    r0, 0x03b523(pc)
+      subw    r0, 0x03b5a0(pc)
       subw    r0, r1[r0:q]
       subw    r0, -63(r0)[r0:q]
       subw    r0, 0x0081(r0)[r0:q]
@@ -19312,7 +21558,7 @@
       andw    2(r0)[r0:q], r0[r1:q]
       andw    -64(r0)[r0:q], r0[r1:q]
       andw    0x0081(r0)[r0:q], r0[r1:q]
-      br      0xf057b8
+      br      0xf0a36e
       andd    r0[r0:q], r0[r1:q]
       andd    2(r0)[r0:q], r0[r1:q]
       andd    -64(r0)[r0:q], r0[r1:q]
@@ -19690,7 +21936,7 @@
       checkb  r7, tos, 0x01c2c3c4(fp)[r0:d]
       checkb  r7, tos, 0x01c2c3c4(sp)[r0:d]
       checkb  r7, tos, 0x01c2c3c4(sb)[r0:d]
-      checkb  r7, tos, 0xc63b6b(pc)[r0:d]
+      checkb  r7, tos, 0xc68721(pc)[r0:d]
       checkb  r7, tos, r0[r0:d]
       checkb  r7, 0x01c2c3c4(fp), r2
       checkb  r7, -0x1e3d3c3c(fp), r2
@@ -19709,7 +21955,7 @@
       checkb  r7, 0(fp), 0x08c9cacb(sb)
       checkb  r7, 0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       checkb  r7, 0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
-      checkb  r7, 0x09cacbcc(fp), 0xd2483d(pc)[r0:d]
+      checkb  r7, 0x09cacbcc(fp), 0xd293f3(pc)[r0:d]
       checkb  r7, 0x09cacbcc(fp), r0[r0:d]
       checkb  r7, 0x09cacbcc(sp), r2
       checkb  r7, -0x1e353434(sp), r2
@@ -19727,7 +21973,7 @@
       checkb  r7, -0x1e2f2e2e(sp), 0x13d4d5d6(sb)
       checkb  r7, 0(sp), 0x10d1d2d3(sb)
       checkb  r7, 0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
-      checkb  r7, 0x11d2d3d4(sp), 0xda5107(pc)[r0:d]
+      checkb  r7, 0x11d2d3d4(sp), 0xda9cbd(pc)[r0:d]
       checkb  r7, 0x11d2d3d4(sp), r0[r0:d]
       checkb  r7, 0x11d2d3d4(sb), r2
       checkb  r7, -0x1e2d2c2c(sb), r2
@@ -19744,18 +21990,18 @@
       checkb  r7, 0x17d8d9da(sb), 0x1bdcddde(sb)
       checkb  r7, -0x1e272626(sb), 0x1bdcddde(sb)
       checkb  r7, 0(sb), 0x18d9dadb(sb)
-      checkb  r7, 0x19dadbdc(sb), 0xe259c5(pc)[r0:d]
+      checkb  r7, 0x19dadbdc(sb), 0xe2a57b(pc)[r0:d]
       checkb  r7, 0x19dadbdc(sb), r0[r0:d]
-      checkb  r7, 0xde55d5(pc), r2
-      checkb  r7, 0x037a00(pc), r2
-      checkb  r7, 0xe057e2(pc), 0x1fe0e1e2(r2)
-      checkb  r7, 0x037a0f(pc), 0x1cdddedf(r2)
-      checkb  r7, 0xe259f7(pc), -0x1a191818(-0x1e1d1c1c(sb))
-      checkb  r7, 0x037a26(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
-      checkb  r7, 0xe35b13(pc), ext(-0x1d1c1b1b)+(-0x19181717)
-      checkb  r7, 0x037a41(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
-      checkb  r7, 0xe45c2f(pc), -0x1c1b1a1a(sb)
-      checkb  r7, 0x037b38(pc), -0x1e1d1c1c(sb)
+      checkb  r7, 0xdea18b(pc), r2
+      checkb  r7, 0x03c5b6(pc), r2
+      checkb  r7, 0xe0a398(pc), 0x1fe0e1e2(r2)
+      checkb  r7, 0x03c5c5(pc), 0x1cdddedf(r2)
+      checkb  r7, 0xe2a5ad(pc), -0x1a191818(-0x1e1d1c1c(sb))
+      checkb  r7, 0x03c5dc(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
+      checkb  r7, 0xe3a6c9(pc), ext(-0x1d1c1b1b)+(-0x19181717)
+      checkb  r7, 0x03c5f7(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
+      checkb  r7, 0xe4a7e5(pc), -0x1c1b1a1a(sb)
+      checkb  r7, 0x03c6ee(pc), -0x1e1d1c1c(sb)
       checkb  r7, r0[r0:q], r0[r1:d]
       checkb  r7, 2(r0)[r0:q], r0[r1:d]
       checkb  r7, -64(r0)[r0:q], r0[r1:d]
@@ -19772,63 +22018,63 @@
       checkd  r7, tos, -0x0242(sb)
       checkb  r0, 0x02c3c4c5(fp), -0x1e383737(r3)
       checkb  r0, 0x02c3c4c5(fp), tos
-      checkb  r0, 0x02c3c4c5(fp), 0xcb4395(pc)
-      checkb  r0, 0x02c3c4c5(fp), 0x037ad7(pc)
+      checkb  r0, 0x02c3c4c5(fp), 0xcb8f4b(pc)
+      checkb  r0, 0x02c3c4c5(fp), 0x03c68d(pc)
       checkb  r0, 0x03c4c5c6(fp), 0x07c8c9ca(fp)[r2:q]
       checkb  r0, 0x03c4c5c5(fp), -0x1e373636(fp)[r2:q]
       checkb  r0, 0x03c4c5c5(fp), 0(fp)[r2:q]
       checkb  r0, 0x02c3c4c5(sp), -0x1e383737(r3)
       checkb  r0, 0x02c3c4c5(sp), tos
-      checkb  r0, 0x02c3c4c5(sp), 0xcb43db(pc)
-      checkb  r0, 0x02c3c4c5(sp), 0x037b1d(pc)
+      checkb  r0, 0x02c3c4c5(sp), 0xcb8f91(pc)
+      checkb  r0, 0x02c3c4c5(sp), 0x03c6d3(pc)
       checkb  r0, 0x03c4c5c6(sp), 0x07c8c9ca(fp)[r2:q]
       checkb  r0, 0x03c4c5c5(sp), -0x1e373636(fp)[r2:q]
       checkb  r0, 0x03c4c5c5(sp), 0(fp)[r2:q]
       checkb  r0, 0x02c3c4c5(sb), -0x1e383737(r3)
       checkb  r0, 0x02c3c4c5(sb), tos
-      checkb  r0, 0x02c3c4c5(sb), 0xcb4421(pc)
-      checkb  r0, 0x02c3c4c5(sb), 0x037b63(pc)
+      checkb  r0, 0x02c3c4c5(sb), 0xcb8fd7(pc)
+      checkb  r0, 0x02c3c4c5(sb), 0x03c719(pc)
       checkb  r0, 0x03c4c5c6(sb), 0x07c8c9ca(fp)[r2:q]
       checkb  r0, 0x03c4c5c5(sb), -0x1e373636(fp)[r2:q]
       checkb  r0, 0x03c4c5c5(sb), 0(fp)[r2:q]
-      checkb  r0, 0xc74051(pc), -0x1e383737(r3)
-      checkb  r0, 0xc7405c(pc), tos
-      checkb  r0, 0xc74063(pc), 0xcb4467(pc)
-      checkb  r0, 0xc7406e(pc), 0x037ba9(pc)
-      checkb  r0, 0xc84177(pc), 0x07c8c9ca(fp)[r2:q]
-      checkb  r0, 0xc84182(pc), -0x1e373636(fp)[r2:q]
-      checkb  r0, 0xc8418e(pc), 0(fp)[r2:q]
+      checkb  r0, 0xc78c07(pc), -0x1e383737(r3)
+      checkb  r0, 0xc78c12(pc), tos
+      checkb  r0, 0xc78c19(pc), 0xcb901d(pc)
+      checkb  r0, 0xc78c24(pc), 0x03c75f(pc)
+      checkb  r0, 0xc88d2d(pc), 0x07c8c9ca(fp)[r2:q]
+      checkb  r0, 0xc88d38(pc), -0x1e373636(fp)[r2:q]
+      checkb  r0, 0xc88d44(pc), 0(fp)[r2:q]
       checkb  r0, 0x03c4c5c6(fp)[r2:b], r3
       checkb  r0, 0x03c4c5c6(fp)[r2:b], 0x07c8c9ca(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:b], -0x1e373636(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:b], 0(r3)
       checkb  r0, 0x03c4c5c6(fp)[r2:b], tos
-      checkb  r0, 0x03c4c5c6(fp)[r2:b], 0xcc45cd(pc)
-      checkb  r0, 0x03c4c5c5(fp)[r2:b], 0x037c0f(pc)
+      checkb  r0, 0x03c4c5c6(fp)[r2:b], 0xcc9183(pc)
+      checkb  r0, 0x03c4c5c5(fp)[r2:b], 0x03c7c5(pc)
       checkb  r0, 0x04c5c6c7(fp)[r2:b], 0x08c9cacb(fp)[r3:q]
       checkb  r0, 0x03c4c5c6(fp)[r2:w], r3
       checkb  r0, 0x03c4c5c6(fp)[r2:w], 0x07c8c9ca(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:w], -0x1e373636(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:w], 0(r3)
       checkb  r0, 0x03c4c5c6(fp)[r2:w], tos
-      checkb  r0, 0x03c4c5c6(fp)[r2:w], 0xcc4620(pc)
-      checkb  r0, 0x03c4c5c5(fp)[r2:w], 0x037c62(pc)
+      checkb  r0, 0x03c4c5c6(fp)[r2:w], 0xcc91d6(pc)
+      checkb  r0, 0x03c4c5c5(fp)[r2:w], 0x03c818(pc)
       checkb  r0, 0x04c5c6c7(fp)[r2:w], 0x08c9cacb(fp)[r3:q]
       checkb  r0, 0x03c4c5c6(fp)[r2:d], r3
       checkb  r0, 0x03c4c5c6(fp)[r2:d], 0x07c8c9ca(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:d], -0x1e373636(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:d], 0(r3)
       checkb  r0, 0x03c4c5c6(fp)[r2:d], tos
-      checkb  r0, 0x03c4c5c6(fp)[r2:d], 0xcc4673(pc)
-      checkb  r0, 0x03c4c5c5(fp)[r2:d], 0x037cb5(pc)
+      checkb  r0, 0x03c4c5c6(fp)[r2:d], 0xcc9229(pc)
+      checkb  r0, 0x03c4c5c5(fp)[r2:d], 0x03c86b(pc)
       checkb  r0, 0x04c5c6c7(fp)[r2:d], 0x08c9cacb(fp)[r3:q]
       checkb  r0, 0x03c4c5c6(fp)[r2:q], r3
       checkb  r0, 0x03c4c5c6(fp)[r2:q], 0x07c8c9ca(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:q], -0x1e373636(r3)
       checkb  r0, 0x03c4c5c5(fp)[r2:q], 0(r3)
       checkb  r0, 0x03c4c5c6(fp)[r2:q], tos
-      checkb  r0, 0x03c4c5c6(fp)[r2:q], 0xcc46c6(pc)
-      checkb  r0, 0x03c4c5c5(fp)[r2:q], 0x037d08(pc)
+      checkb  r0, 0x03c4c5c6(fp)[r2:q], 0xcc927c(pc)
+      checkb  r0, 0x03c4c5c5(fp)[r2:q], 0x03c8be(pc)
       checkb  r0, 0x04c5c6c7(fp)[r2:q], 0x08c9cacb(fp)[r3:q]
       checkw  r0, 0x03c4c5c6(fp), 0x07c8c9ca(r3)
       checkw  r0, 0x03c4c5c6(fp), tos
@@ -19838,115 +22084,115 @@
       checkb  r1, 0x0bcccdce(sb), 0x0fd0d1d2(sp)[r2:q]
       checkb  r1, 0x0bcccdcd(sb), -0x1e2f2e2e(sp)[r2:q]
       checkb  r1, 0x0bcccdcd(sb), 0(sp)[r2:q]
-      checkb  r1, 0xd04b40(pc), 0x0fd0d1d2(sp)[r2:q]
-      checkb  r1, 0xd04b4b(pc), -0x1e2f2e2e(sp)[r2:q]
-      checkb  r1, 0xd04b57(pc), 0(sp)[r2:q]
+      checkb  r1, 0xd096f6(pc), 0x0fd0d1d2(sp)[r2:q]
+      checkb  r1, 0xd09701(pc), -0x1e2f2e2e(sp)[r2:q]
+      checkb  r1, 0xd0970d(pc), 0(sp)[r2:q]
       checkb  r1, 0x0bcccdce(sp)[r2:b], r3
       checkb  r1, 0x0bcccdce(sp)[r2:b], 0x0fd0d1d2(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:b], -0x1e2f2e2e(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:b], 0(r3)
       checkb  r1, 0x0bcccdce(sp)[r2:b], tos
-      checkb  r1, 0x0bcccdce(sp)[r2:b], 0xd44f96(pc)
-      checkb  r1, 0x0bcccdcd(sp)[r2:b], 0x037dd0(pc)
+      checkb  r1, 0x0bcccdce(sp)[r2:b], 0xd49b4c(pc)
+      checkb  r1, 0x0bcccdcd(sp)[r2:b], 0x03c986(pc)
       checkb  r1, 0x0ccdcecf(sp)[r2:b], 0x10d1d2d3(sp)[r3:q]
       checkb  r1, 0x0bcccdce(sp)[r2:w], r3
       checkb  r1, 0x0bcccdce(sp)[r2:w], 0x0fd0d1d2(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:w], -0x1e2f2e2e(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:w], 0(r3)
       checkb  r1, 0x0bcccdce(sp)[r2:w], tos
-      checkb  r1, 0x0bcccdce(sp)[r2:w], 0xd44fe9(pc)
-      checkb  r1, 0x0bcccdcd(sp)[r2:w], 0x037e23(pc)
+      checkb  r1, 0x0bcccdce(sp)[r2:w], 0xd49b9f(pc)
+      checkb  r1, 0x0bcccdcd(sp)[r2:w], 0x03c9d9(pc)
       checkb  r1, 0x0ccdcecf(sp)[r2:w], 0x10d1d2d3(sp)[r3:q]
       checkb  r1, 0x0bcccdce(sp)[r2:d], r3
       checkb  r1, 0x0bcccdce(sp)[r2:d], 0x0fd0d1d2(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:d], -0x1e2f2e2e(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:d], 0(r3)
       checkb  r1, 0x0bcccdce(sp)[r2:d], tos
-      checkb  r1, 0x0bcccdce(sp)[r2:d], 0xd4503c(pc)
-      checkb  r1, 0x0bcccdcd(sp)[r2:d], 0x037e76(pc)
+      checkb  r1, 0x0bcccdce(sp)[r2:d], 0xd49bf2(pc)
+      checkb  r1, 0x0bcccdcd(sp)[r2:d], 0x03ca2c(pc)
       checkb  r1, 0x0ccdcecf(sp)[r2:d], 0x10d1d2d3(sp)[r3:q]
       checkb  r1, 0x0bcccdce(sp)[r2:q], r3
       checkb  r1, 0x0bcccdce(sp)[r2:q], 0x0fd0d1d2(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:q], -0x1e2f2e2e(r3)
       checkb  r1, 0x0bcccdcd(sp)[r2:q], 0(r3)
       checkb  r1, 0x0bcccdce(sp)[r2:q], tos
-      checkb  r1, 0x0bcccdce(sp)[r2:q], 0xd4508f(pc)
-      checkb  r1, 0x0bcccdcd(sp)[r2:q], 0x037ec9(pc)
+      checkb  r1, 0x0bcccdce(sp)[r2:q], 0xd49c45(pc)
+      checkb  r1, 0x0bcccdcd(sp)[r2:q], 0x03ca7f(pc)
       checkb  r1, 0x0ccdcecf(sp)[r2:q], 0x10d1d2d3(sp)[r3:q]
       checkw  r1, 0x0bcccdce(sp), 0x0fd0d1d2(r3)
       checkw  r1, 0x0bcccdce(sp), tos
       checkb  r2, 0x13d4d5d6(sb), 0x17d8d9da(sb)[r2:q]
       checkb  r2, 0x13d4d5d5(sb), -0x1e272626(sb)[r2:q]
       checkb  r2, 0x13d4d5d5(sb), 0(sb)[r2:q]
-      checkb  r2, 0xd854e8(pc), 0x17d8d9da(sb)[r2:q]
-      checkb  r2, 0xd854f3(pc), -0x1e272626(sb)[r2:q]
-      checkb  r2, 0xd854ff(pc), 0(sb)[r2:q]
+      checkb  r2, 0xd8a09e(pc), 0x17d8d9da(sb)[r2:q]
+      checkb  r2, 0xd8a0a9(pc), -0x1e272626(sb)[r2:q]
+      checkb  r2, 0xd8a0b5(pc), 0(sb)[r2:q]
       checkb  r2, 0x13d4d5d6(sb)[r2:b], r3
       checkb  r2, 0x13d4d5d6(sb)[r2:b], 0x17d8d9da(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:b], -0x1e272626(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:b], 0(r3)
       checkb  r2, 0x13d4d5d6(sb)[r2:b], tos
-      checkb  r2, 0x13d4d5d6(sb)[r2:b], 0xdc593e(pc)
-      checkb  r2, 0x13d4d5d5(sb)[r2:b], 0x037f70(pc)
+      checkb  r2, 0x13d4d5d6(sb)[r2:b], 0xdca4f4(pc)
+      checkb  r2, 0x13d4d5d5(sb)[r2:b], 0x03cb26(pc)
       checkb  r2, 0x14d5d6d7(sb)[r2:b], 0x18d9dadb(sb)[r3:q]
       checkb  r2, 0x13d4d5d6(sb)[r2:w], r3
       checkb  r2, 0x13d4d5d6(sb)[r2:w], 0x17d8d9da(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:w], -0x1e272626(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:w], 0(r3)
       checkb  r2, 0x13d4d5d6(sb)[r2:w], tos
-      checkb  r2, 0x13d4d5d6(sb)[r2:w], 0xdc5991(pc)
-      checkb  r2, 0x13d4d5d5(sb)[r2:w], 0x037fc3(pc)
+      checkb  r2, 0x13d4d5d6(sb)[r2:w], 0xdca547(pc)
+      checkb  r2, 0x13d4d5d5(sb)[r2:w], 0x03cb79(pc)
       checkb  r2, 0x14d5d6d7(sb)[r2:w], 0x18d9dadb(sb)[r3:q]
       checkb  r2, 0x13d4d5d6(sb)[r2:d], r3
       checkb  r2, 0x13d4d5d6(sb)[r2:d], 0x17d8d9da(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:d], -0x1e272626(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:d], 0(r3)
       checkb  r2, 0x13d4d5d6(sb)[r2:d], tos
-      checkb  r2, 0x13d4d5d6(sb)[r2:d], 0xdc59e4(pc)
-      checkb  r2, 0x13d4d5d5(sb)[r2:d], 0x038016(pc)
+      checkb  r2, 0x13d4d5d6(sb)[r2:d], 0xdca59a(pc)
+      checkb  r2, 0x13d4d5d5(sb)[r2:d], 0x03cbcc(pc)
       checkb  r2, 0x14d5d6d7(sb)[r2:d], 0x18d9dadb(sb)[r3:q]
       checkb  r2, 0x13d4d5d6(sb)[r2:q], r3
       checkb  r2, 0x13d4d5d6(sb)[r2:q], 0x17d8d9da(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:q], -0x1e272626(r3)
       checkb  r2, 0x13d4d5d5(sb)[r2:q], 0(r3)
       checkb  r2, 0x13d4d5d6(sb)[r2:q], tos
-      checkb  r2, 0x13d4d5d6(sb)[r2:q], 0xdc5a37(pc)
-      checkb  r2, 0x13d4d5d5(sb)[r2:q], 0x038069(pc)
+      checkb  r2, 0x13d4d5d6(sb)[r2:q], 0xdca5ed(pc)
+      checkb  r2, 0x13d4d5d5(sb)[r2:q], 0x03cc1f(pc)
       checkb  r2, 0x14d5d6d7(sb)[r2:q], 0x18d9dadb(sb)[r3:q]
       checkw  r2, 0x13d4d5d6(sb), 0x17d8d9da(r3)
       checkw  r2, 0x13d4d5d6(sb), tos
-      checkb  r3, 0xe05e6f(pc), 0xe46273(pc)[r2:q]
-      checkb  r3, 0xe05e7a(pc), 0x03809d(pc)[r2:q]
-      checkb  r3, 0xe05e84(pc)[r2:b], r3
-      checkb  r3, 0xe05e8c(pc)[r2:b], 0x1fe0e1e2(r3)
-      checkb  r3, 0xe05e97(pc)[r2:b], -0x1e1f1e1e(r3)
-      checkb  r3, 0xe05ea3(pc)[r2:b], 0(r3)
-      checkb  r3, 0xe05ead(pc)[r2:b], tos
-      checkb  r3, 0xe05eb5(pc)[r2:b], 0xe462b9(pc)
-      checkb  r3, 0xe05ec0(pc)[r2:b], 0x0380e3(pc)
-      checkb  r3, 0xe05eca(pc)[r2:w], r3
-      checkb  r3, 0xe05ed2(pc)[r2:w], 0x1fe0e1e2(r3)
-      checkb  r3, 0xe05edd(pc)[r2:w], -0x1e1f1e1e(r3)
-      checkb  r3, 0xe05ee9(pc)[r2:w], 0(r3)
-      checkb  r3, 0xe05ef3(pc)[r2:w], tos
-      checkb  r3, 0xe05efb(pc)[r2:w], 0xe462ff(pc)
-      checkb  r3, 0xe05f06(pc)[r2:w], 0x038129(pc)
-      checkb  r3, 0xe05f10(pc)[r2:d], r3
-      checkb  r3, 0xe05f18(pc)[r2:d], 0x1fe0e1e2(r3)
-      checkb  r3, 0xe05f23(pc)[r2:d], -0x1e1f1e1e(r3)
-      checkb  r3, 0xe05f2f(pc)[r2:d], 0(r3)
-      checkb  r3, 0xe05f39(pc)[r2:d], tos
-      checkb  r3, 0xe05f41(pc)[r2:d], 0xe46345(pc)
-      checkb  r3, 0xe05f4c(pc)[r2:d], 0x03816f(pc)
-      checkb  r3, 0xe05f56(pc)[r2:q], r3
-      checkb  r3, 0xe05f5e(pc)[r2:q], 0x1fe0e1e2(r3)
-      checkb  r3, 0xe05f69(pc)[r2:q], -0x1e1f1e1e(r3)
-      checkb  r3, 0xe05f75(pc)[r2:q], 0(r3)
-      checkb  r3, 0xe05f7f(pc)[r2:q], tos
-      checkb  r3, 0xe05f87(pc)[r2:q], 0xe4638b(pc)
-      checkb  r3, 0xe05f92(pc)[r2:q], 0x0381b5(pc)
-      checkw  r3, 0xe05f9c(pc), 0x1fe0e1e2(r3)
-      checkw  r3, 0xe05fa7(pc), tos
+      checkb  r3, 0xe0aa25(pc), 0xe4ae29(pc)[r2:q]
+      checkb  r3, 0xe0aa30(pc), 0x03cc53(pc)[r2:q]
+      checkb  r3, 0xe0aa3a(pc)[r2:b], r3
+      checkb  r3, 0xe0aa42(pc)[r2:b], 0x1fe0e1e2(r3)
+      checkb  r3, 0xe0aa4d(pc)[r2:b], -0x1e1f1e1e(r3)
+      checkb  r3, 0xe0aa59(pc)[r2:b], 0(r3)
+      checkb  r3, 0xe0aa63(pc)[r2:b], tos
+      checkb  r3, 0xe0aa6b(pc)[r2:b], 0xe4ae6f(pc)
+      checkb  r3, 0xe0aa76(pc)[r2:b], 0x03cc99(pc)
+      checkb  r3, 0xe0aa80(pc)[r2:w], r3
+      checkb  r3, 0xe0aa88(pc)[r2:w], 0x1fe0e1e2(r3)
+      checkb  r3, 0xe0aa93(pc)[r2:w], -0x1e1f1e1e(r3)
+      checkb  r3, 0xe0aa9f(pc)[r2:w], 0(r3)
+      checkb  r3, 0xe0aaa9(pc)[r2:w], tos
+      checkb  r3, 0xe0aab1(pc)[r2:w], 0xe4aeb5(pc)
+      checkb  r3, 0xe0aabc(pc)[r2:w], 0x03ccdf(pc)
+      checkb  r3, 0xe0aac6(pc)[r2:d], r3
+      checkb  r3, 0xe0aace(pc)[r2:d], 0x1fe0e1e2(r3)
+      checkb  r3, 0xe0aad9(pc)[r2:d], -0x1e1f1e1e(r3)
+      checkb  r3, 0xe0aae5(pc)[r2:d], 0(r3)
+      checkb  r3, 0xe0aaef(pc)[r2:d], tos
+      checkb  r3, 0xe0aaf7(pc)[r2:d], 0xe4aefb(pc)
+      checkb  r3, 0xe0ab02(pc)[r2:d], 0x03cd25(pc)
+      checkb  r3, 0xe0ab0c(pc)[r2:q], r3
+      checkb  r3, 0xe0ab14(pc)[r2:q], 0x1fe0e1e2(r3)
+      checkb  r3, 0xe0ab1f(pc)[r2:q], -0x1e1f1e1e(r3)
+      checkb  r3, 0xe0ab2b(pc)[r2:q], 0(r3)
+      checkb  r3, 0xe0ab35(pc)[r2:q], tos
+      checkb  r3, 0xe0ab3d(pc)[r2:q], 0xe4af41(pc)
+      checkb  r3, 0xe0ab48(pc)[r2:q], 0x03cd6b(pc)
+      checkw  r3, 0xe0ab52(pc), 0x1fe0e1e2(r3)
+      checkw  r3, 0xe0ab5d(pc), tos
       lprd    mod, r0[r0:q]
       lprd    mod, -63(r0)[r0:q]
       lprd    mod, 0x0081(r0)[r0:q]

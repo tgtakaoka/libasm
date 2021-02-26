@@ -30,6 +30,13 @@ class AsmNs32000 : public Assembler, public Config {
 public:
     AsmNs32000() : Assembler(_parser, TableNs32000) {}
 
+    void reset() override {
+        setFpu(FPU_NONE);
+        setMmu(MMU_NONE);
+    }
+    void setFpu(FpuType fpuType) { TableNs32000.setFpu(fpuType); }
+    void setMmu(MmuType mmuType) { TableNs32000.setMmu(mmuType); }
+
 private:
     ValueParser _parser;
 
@@ -55,6 +62,7 @@ private:
     Error parseRegisterList(const char *scan, Operand &op);
     Error parseBaseOperand(const char *scan, Operand &op);
     Error parseOperand(const char *scan, Operand &op);
+    Error processPseudo(const char *scan, const InsnNs32000 &insn);
     Error emitDisplacement(InsnNs32000 &insn, uint32_t val32);
     Error emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
     Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand *off,

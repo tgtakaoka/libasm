@@ -15,10 +15,15 @@
         cpu     ns32032
         org     0x10000
         include "test_ns32000.inc"
-;        align   32
-;        include "test_ns32000_float.inc"
-;        align   32
-;        include "test_ns32000_mmu.inc"
+
+        fpu     ns32081
+        align   32
+        include "test_ns32000_float.inc"
+
+        pmmu    ns32082
+        align   32
+        include "test_ns32000_mmu.inc"
+
         end
 
 ; Local Variables:

@@ -368,11 +368,8 @@ static void test_format_8() {
     TEST(FFSW,   "8(SB), R0",           0x6E, 0x05, 0xD0, 0x08);
     TEST(INDEXB, "R0, 20(SB), -4(FP)",  0x2E, 0x04, 0xD6, 0x14, 0x7C);
     TEST(INSW,   "R0, R2, 0(R1), 7",    0xAE, 0x41, 0x12, 0x00, 0x07);
-    TEST(MOVSUB, "5(SP), 9(SB)",        0xAE, 0x8C, 0xCE, 0x05, 0x09);
-    TEST(MOVUSB, "9(SB), 5(SP)",        0xAE, 0x5C, 0xD6, 0x09, 0x05);
 }
 
-#ifdef NS32000_ENABLE_FLOAT
 static void test_format_9() {
     TEST(MOVF,  "F0, 8(SB)",    0xBE, 0x85, 0x06, 0x08);
     TEST(MOVBF, "2, F0",        0x3E, 0x04, 0xA0, 0x02);
@@ -403,9 +400,12 @@ static void test_format_11() {
     TEST(SUBF, "F0, F7",         0xBE, 0xD1, 0x01);
     TEST(SUBL, "F2, 16(SB)",     0xBE, 0x90, 0x16, 0x10);
 }
-#endif
 
-#ifdef NS32000_ENABLE_MMU
+static void test_format_8_mmu() {
+    TEST(MOVSUB, "5(SP), 9(SB)",        0xAE, 0x8C, 0xCE, 0x05, 0x09);
+    TEST(MOVUSB, "9(SB), 5(SP)",        0xAE, 0x5C, 0xD6, 0x09, 0x05);
+}
+
 static void test_format_14() {
     TEST(LMR, "BPR0, R1", 0x1E, 0x0B, 0x08);
     TEST(LMR, "BPR1, R2", 0x1E, 0x8B, 0x10);
@@ -444,14 +444,11 @@ static void test_format_14() {
     TEST(RDVAL, "0x0200(R0)", 0x1E, 0x03, 0x40, 0x82, 0x00);
     TEST(WRVAL, "0x0200(R0)", 0x1E, 0x07, 0x40, 0x82, 0x00);
 }
-#endif
 
 static void test_generic_addressing() {
     // Register
     TEST(ADDW, "R1, R2", 0x81, 0x08);
-#ifdef NS32000_ENABLE_FLOAT
     TEST(ADDF, "F1, F2", 0xBE, 0x81, 0x08);
-#endif
     // Register Relative
     TEST(ADDW, "4(R1), R2",     0x81, 0x48, 0x04);
     TEST(ADDW, "4(R1), 32(R2)", 0x81, 0x4A, 0x04, 0x80, 0x20);
@@ -467,13 +464,12 @@ static void test_generic_addressing() {
     EROA(ADDB, "R1, imm", 0x00, 0x0D);
     EROA(ADDW, "R1, imm", 0x01, 0x0D);
     EROA(ADDD, "R1, imm", 0x03, 0x0D);
-#ifdef NS32000_ENABLE_FLOAT
     TEST(ADDF, "0x12345678, F1", 0xBE, 0x41, 0xA0, 0x12, 0x34, 0x56, 0x78);
     TEST(ADDL, "0x12345678:0x9ABCDEF0, F1",
          0xBE, 0x40, 0xA0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0);
     EROA(ADDF, "F1, imm", 0xBE, 0x00, 0x0D);
     EROA(ADDL, "F1, imm", 0xBE, 0x01, 0x0D);
-#endif
+
     // Absolute
     TEST(ADDW, "@0x1234, 4(R2)",   0x81, 0xAA, 0x92, 0x34, 0x04);
     TEST(ADDW, "@0x1234, @0x00005678", 0x41, 0xAD, 0x92, 0x34, 0xC0, 0x00, 0x56, 0x78);
@@ -736,13 +732,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_6);
     RUN_TEST(test_format_7);
     RUN_TEST(test_format_8);
-#ifdef NS32000_ENABLE_FLOAT
     RUN_TEST(test_format_9);
     RUN_TEST(test_format_11);
-#endif
-#ifdef NS32000_ENABLE_MMU
+    RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14);
-#endif
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_illegal);
 }
