@@ -539,6 +539,7 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
     case M_GENR:
     case M_GENC:
     case M_GENW:
+    case M_GENA:
     case M_FENR:
     case M_FENW:
         return emitGeneric(insn, mode, op, pos);

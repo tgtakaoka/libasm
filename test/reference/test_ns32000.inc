@@ -245,17 +245,17 @@ label0:
 ;# Skip String,  Translating: SKPST options
         skpst   [w]
 ;# Move Multiple: MOVMi block1/gen, block2/gen, length/disp
-        movmb   r0, r1, 10
+        movmb   10(fp), 0(sp), 10
         movmw   10(r0), 16(r1), 4
-        movmd   r4, r5, 4
+        movmd   tos, 6(r2), 4
 ;# Compare Multiple: CMPMi block1/gen, block2/gen, length/disp
-        cmpmb   r0, r1, 10
+        cmpmb   10(fp), 0(sp), 10
         cmpmw   10(r0), 16(r1), 4
-        cmpmd   r4, r5, 4
+        cmpmd   tos, 6(r2), 4
 ;# Bounds Check: CHECKi dest/reg, bounds/gen, src/gen
         checkb  r0, 4(sb), r2
-        checkw  r3, r4, r5
-        checkd  r6, r7, tos
+        checkw  r3, 16(r1), r5
+        checkd  r6, 6(fp), tos
 ;# Calculate Index: INDEXi accum/reg, length/gen, index/gen
         indexb  r0, 20(sb), -4(fp)
         indexw  r2, r3, r4

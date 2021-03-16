@@ -49,22 +49,22 @@ enum AddrMode : uint8_t {
     M_SOPT = 13,      // String instruction option
     M_PUSH = 14,      // Register list for push
     M_POP = 15,       // Register list for pop
-    M_GENR = 16,      // Generic (incl. Immediate)
+    M_GENR = 16,      // Generic read (incl. Immediate)
     M_GENC = 17,      // Generic Count (incl. Immediate)
-    M_GENW = 18,      // Generic (excl. Immediate)
-    M_GENA = M_GENW,  // Generic (excl. Immediate)
-    M_FENR = 19,      // Floating Generic (incl. Immediate)
-    M_FENW = 20,      // Floating Generic (excl. Immediate)
-    M_DISP = 21,      // Displacement
-    M_INT4 = 22,      // 4-bit signed Integer
-    M_REL = 23,       // Relative address
-    M_BFOFF = 24,     // Bit Field Offset: 0~7
-    M_BFLEN = 25,     // Bit Field Length: 1~32
-    M_LEN32 = 26,     // Length: 1~32
-    M_LEN16 = 27,     // Length: 1~16
-    M_LEN8 = 28,      // Length: 1~8
-    M_LEN4 = 29,      // Length: 1~4
-    M_EMPTY = 30,     // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
+    M_GENW = 18,      // Generic write/rmw/regaddr (excl. Immediate)
+    M_GENA = 19,      // Generic address (excl. Immediate and Register)
+    M_FENR = 20,      // Floating Generic read (incl. Immediate)
+    M_FENW = 21,      // Floating Generic write/rmw (excl. Immediate)
+    M_DISP = 22,      // Displacement
+    M_INT4 = 23,      // 4-bit signed Integer
+    M_REL = 24,       // Relative address
+    M_BFOFF = 25,     // Bit Field Offset: 0~7
+    M_BFLEN = 26,     // Bit Field Length: 1~32
+    M_LEN32 = 27,     // Length: 1~32
+    M_LEN16 = 28,     // Length: 1~16
+    M_LEN8 = 29,      // Length: 1~8
+    M_LEN4 = 30,      // Length: 1~4
+    M_EMPTY = 31,     // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
 };
 
 enum OprPos : uint8_t {

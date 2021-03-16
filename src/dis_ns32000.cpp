@@ -22,7 +22,7 @@ namespace libasm {
 namespace ns32000 {
 
 static bool isGenMode(AddrMode mode) {
-    return mode == M_GENR || mode == M_GENW || mode == M_GENC ||
+    return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA ||
            mode == M_FENR || mode == M_FENW;
 }
 
@@ -251,7 +251,8 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     uint8_t gen = getOprField(insn, pos);
     RegName index = REG_UNDEF;
     OprSize indexSize = SZ_NONE;
-    if (isScaledIndex(gen)) {
+    const bool scaledIndex = isScaledIndex(gen);
+    if (scaledIndex) {
         indexSize = OprSize(gen & 0x3);
         const uint8_t indexByte = insn.indexByte(pos);
         index = RegNs32000::decodeRegName(indexByte);
@@ -268,8 +269,10 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 5:
     case 6:
     case 7:
+        if (mode == M_GENA)
+            return setError(REGISTER_NOT_ALLOWED);
         reg = RegNs32000::decodeRegName(
-                gen, (mode == M_FENR || mode == M_FENW));
+                gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
         out = _regs.outRegName(out, reg);
         break;
     case 8:
@@ -313,7 +316,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 0x13:
         return setError(ILLEGAL_OPERAND_MODE);
     case 0x14:
-        if (mode == M_GENW || mode == M_FENW)
+        if (mode == M_GENW || mode == M_GENA || mode == M_FENW || scaledIndex)
             return setError(OPERAND_NOT_ALLOWED);
         return decodeImmediate(memory, insn, out, mode);
     case 0x15:
@@ -411,6 +414,7 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
     case M_GENR:
     case M_GENC:
     case M_GENW:
+    case M_GENA:
     case M_FENW:
     case M_FENR:
         return decodeGeneric(memory, insn, out, mode, pos);
