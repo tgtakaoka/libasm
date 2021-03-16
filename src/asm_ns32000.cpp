@@ -180,16 +180,22 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
                 return getError();
             op.setError(getError());
             p = skipSpaces(_scan);
-            if (*p++ != ')')
+            if (*p != ')')
                 return setError(MISSING_CLOSING_PAREN);
-            if (*(p = skipSpaces(p)) != '+')
-                return setError(UNKNOWN_OPERAND);
-            op.disp2 = parseExpr32(p + 1);
-            if (parserError())
-                return getError();
-            op.setErrorIf(getError());
-            op.mode = M_EXT;
-            return OK;
+            p = skipSpaces(p + 1);
+            if (*p == '+' || *p == '-') {
+                op.disp2 = parseExpr32(p);
+                if (parserError())
+                    return getError();
+                op.setErrorIf(getError());
+                p = skipSpaces(_scan);
+            }
+            if (*p == '[' || endOfLine(p) || *p == ',') {
+                op.mode = M_EXT;
+                _scan = p;
+                return OK;
+            }
+            return setError(UNKNOWN_OPERAND);
         }
         return setError(UNKNOWN_REGISTER);
     }
