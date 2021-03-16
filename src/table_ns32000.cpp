@@ -513,7 +513,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_FENR || table == M_FENW;
     if (opr == M_PUSH)
         return table == M_POP;
-    if (opr == M_EMPTY)
+    if (opr == M_NONE)
         return table == M_PUSH || table == M_POP || table == M_CONF ||
                table == M_SOPT;
     return false;

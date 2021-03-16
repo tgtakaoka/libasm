@@ -22,13 +22,9 @@
 namespace libasm {
 namespace ns32000 {
 
-Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
+Error AsmNs32000::parseStrOptNames(const char *p, Operand &op, bool braket) {
     uint8_t strOpt = 0;
     while (true) {
-        if (*p == ']') {
-            p++;
-            break;
-        }
         const StrOptName name = RegNs32000::parseStrOptName(p);
         if (name == STROPT_UNDEF)
             return UNKNOWN_OPERAND;
@@ -37,10 +33,12 @@ Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
             return setError(ILLEGAL_OPERAND);
         strOpt |= uint8_t(name);
         p = skipSpaces(p);
-        if (*p == ',') {
+        if (*p == ',' || (!braket && *p == '/')) {
             p++;
         } else if (*p == ']') {
             p++;
+            break;
+        } else if (!braket && endOfLine(p)) {
             break;
         } else {
             return UNKNOWN_OPERAND;
@@ -49,13 +47,17 @@ Error AsmNs32000::parseStrOptNames(const char *p, Operand &op) {
     }
     _scan = p;
     op.val32 = strOpt;
-    op.mode = strOpt ? M_SOPT : M_EMPTY;
+    op.mode = M_SOPT;
     return setOK();
 }
 
 Error AsmNs32000::parseConfigNames(const char *p, Operand &op) {
     uint8_t configs = 0;
     while (true) {
+        if (*p == ']') {
+            p++;
+            break;
+        }
         const ConfigName name = RegNs32000::parseConfigName(p);
         if (name == CONFIG_UNDEF)
             return UNKNOWN_OPERAND;
@@ -74,7 +76,7 @@ Error AsmNs32000::parseConfigNames(const char *p, Operand &op) {
     }
     _scan = p;
     op.val32 = configs;
-    op.mode = M_CONF;
+    op.mode = configs ? M_CONF : M_NONE;
     return setOK();
 }
 
@@ -120,15 +122,17 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
 
     if (*p == '[') {
         p = skipSpaces(p + 1);
-        // parseStrOpt can handle empty list "[]".
-        if (parseStrOptNames(p, op) != UNKNOWN_OPERAND)
-            return getError();
+        // parseConfigName can handle empty list "[]".
         if (parseConfigNames(p, op) != UNKNOWN_OPERAND)
             return getError();
         if (parseRegisterList(p, op) != UNKNOWN_OPERAND)
             return getError();
+        if (parseStrOptNames(p, op, true) != UNKNOWN_OPERAND)
+            return getError();
         return setError(MISSING_CLOSING_PAREN);
     }
+    if (parseStrOptNames(p, op) == OK)
+        return OK;
 
     const PregName preg = RegNs32000::parsePregName(p);
     if (preg != PREG_UNDEF) {

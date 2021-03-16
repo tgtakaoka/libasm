@@ -227,23 +227,23 @@ label0:
         inssw   r2, 16(sb), 4, 7
         inssd   r4, r5, 6, 8
 ;# Move String: MOVSi options
-        movsb   [w]
-        movsw   [b,w]
-        movsd   []
+        movsb   w
+        movsw   b
+        movsd
 ;# Move String,  Translating: MOVST options
-        movst   []
+        movst
 ;# Compare String: CMPSi options
-        cmpsb   []
-        cmpsw   [b,u]
-        cmpsd   [u]
+        cmpsb
+        cmpsw   b
+        cmpsd   u
 ;# Compare String,  Translating: CMPST options
-        cmpst   []
+        cmpst
 ;# Skip String: SKPSi options
-        skpsb   []
-        skpsw   [b]
-        skpsd   [u]
+        skpsb
+        skpsw   b
+        skpsd   u
 ;# Skip String,  Translating: SKPST options
-        skpst   [w]
+        skpst   w
 ;# Move Multiple: MOVMi block1/gen, block2/gen, length/disp
         movmb   10(fp), 0(sp), 10
         movmw   10(r0), 16(r1), 4

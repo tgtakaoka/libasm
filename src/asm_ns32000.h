@@ -57,7 +57,7 @@ private:
               indexSize(SZ_NONE) {}
     };
 
-    Error parseStrOptNames(const char *scan, Operand &op);
+    Error parseStrOptNames(const char *scan, Operand &op, bool braket = false);
     Error parseConfigNames(const char *scan, Operand &op);
     Error parseRegisterList(const char *scan, Operand &op);
     Error parseBaseOperand(const char *scan, Operand &op);

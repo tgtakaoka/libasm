@@ -30,9 +30,13 @@ class DisNs32000 : public Disassembler, public Config {
 public:
     DisNs32000() : Disassembler(_formatter, _regs, TableNs32000) {}
 
+    void reset() override { stringOptionBraket(false); }
+    void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
+
 private:
     ValueFormatter _formatter;
     RegNs32000 _regs;
+    bool _stringOptionBraket = false;
 
     struct Displacement {
         int32_t val32;

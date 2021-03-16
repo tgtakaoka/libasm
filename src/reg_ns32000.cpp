@@ -261,7 +261,6 @@ uint8_t RegNs32000::strOptNameLen(StrOptName name) {
 }
 
 char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
-    *out++ = '[';
     char sep = 0;
     if (strOpts & uint8_t(STROPT_B)) {
         out = outText(out, TEXT_STROPT_B);
@@ -274,7 +273,6 @@ char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
             *out++ = sep;
         out = outText(out, entry->text());
     }
-    *out++ = ']';
     *out = 0;
     return out;
 }

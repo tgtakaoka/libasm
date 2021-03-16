@@ -64,7 +64,6 @@ enum AddrMode : uint8_t {
     M_LEN16 = 28,     // Length: 1~16
     M_LEN8 = 29,      // Length: 1~8
     M_LEN4 = 30,      // Length: 1~4
-    M_EMPTY = 31,     // Empty List: [] (M_CONF/M_SOPT/M_PUSH/M_POP)
 };
 
 enum OprPos : uint8_t {

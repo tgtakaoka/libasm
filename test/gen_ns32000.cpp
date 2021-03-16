@@ -26,6 +26,8 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
+    if (driver.generateGas())
+        dis32000.stringOptionBraket(true);
     TestGenerator<Config> generator(dis32000, 0x10000);
     generator.generate(driver);
 

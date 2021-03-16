@@ -215,7 +215,12 @@ Error DisNs32000::decodeConfig(const InsnNs32000 &insn, char *out, OprPos pos) {
 
 Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, char *out, OprPos pos) {
     const uint8_t strOpts = getOprField(insn, pos);
-    _regs.outStrOptNames(out, strOpts);
+    if (_stringOptionBraket)
+        *out++ = '[';
+    out = _regs.outStrOptNames(out, strOpts);
+    if (_stringOptionBraket)
+        *out++ = ']';
+    *out = 0;
     return OK;
 }
 
