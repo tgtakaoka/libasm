@@ -66,7 +66,7 @@ private:
     Error decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
             AddrMode mode, OprPos pos);
     Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
-            AddrMode mode, OprPos pos);
+            AddrMode mode, OprPos pos, OprSize size);
 
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };

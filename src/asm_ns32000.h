@@ -73,8 +73,8 @@ private:
     Error emitGeneric(
             InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
     Error emitRelative(InsnNs32000 &insn, const Operand &op);
-    Error emitOperand(InsnNs32000 &insn, AddrMode mode, const Operand &op,
-            OprPos pos, const Operand *prevOp = nullptr);
+    Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size,
+            const Operand &op, OprPos pos, const Operand *prevOp = nullptr);
     Error encode(Insn &insn) override;
 };
 

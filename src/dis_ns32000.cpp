@@ -22,8 +22,8 @@ namespace libasm {
 namespace ns32000 {
 
 static bool isGenMode(AddrMode mode) {
-    return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA ||
-           mode == M_FENR || mode == M_FENW;
+    return mode == M_GENR || mode == M_GENW || mode == M_GENC ||
+           mode == M_GENA || mode == M_FENR || mode == M_FENW;
 }
 
 static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
@@ -396,7 +396,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
 }
 
 Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
-        AddrMode mode, OprPos pos) {
+        AddrMode mode, OprPos pos, OprSize size) {
     const uint8_t field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
@@ -422,12 +422,19 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
         return decodeStrOpt(insn, out, pos);
     case M_RLST:
         return decodeRegisterList(memory, insn, out, mode);
-    case M_GENR:
-    case M_GENC:
-    case M_GENW:
-    case M_GENA:
     case M_FENW:
     case M_FENR:
+        if (field < 8 && field % 2 != 0 && (size == SZ_LONG || size == SZ_QUAD))
+            return setError(REGISTER_NOT_ALLOWED);
+        goto decode_generic;
+    case M_GENR:
+    case M_GENW:
+        if (field < 8 && field % 2 != 0 && size == SZ_QUAD)
+            return setError(REGISTER_NOT_ALLOWED);
+        goto decode_generic;
+    case M_GENC:
+    case M_GENA:
+    decode_generic:
         return decodeGeneric(memory, insn, out, mode, pos);
     case M_INT4:
         outDec(out, static_cast<int8_t>(getOprField(insn, pos)), -4);
@@ -472,27 +479,32 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn, char *out) {
         return getError();
 
     const AddrMode src = insn.srcMode();
+    const AddrMode dst = insn.dstMode();
+    const AddrMode ex1 = insn.ex1Mode();
+    const AddrMode ex2 = insn.ex2Mode();
+    const OprSize size = insn.oprSize();
     if (src == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, out, src, insn.srcPos()))
+    const OprSize srcSize =
+            (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
+    if (decodeOperand(memory, insn, out, src, insn.srcPos(), srcSize))
         return getError();
-    const AddrMode dst = insn.dstMode();
     if (dst == M_NONE)
         return setOK();
     out = outComma(out);
-    if (decodeOperand(memory, insn, out, dst, insn.dstPos()))
+    const OprSize dstSize =
+            (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
+    if (decodeOperand(memory, insn, out, dst, insn.dstPos(), dstSize))
         return getError();
-    const AddrMode ex1 = insn.ex1Mode();
     if (ex1 == M_NONE)
         return setOK();
     out = outComma(out);
-    if (decodeOperand(memory, insn, out, ex1, insn.ex1Pos()))
+    if (decodeOperand(memory, insn, out, ex1, insn.ex1Pos(), size))
         return getError();
-    const AddrMode ex2 = insn.ex2Mode();
     if (ex2 == M_NONE || ex2 == M_BFLEN)
         return setOK();
     out = outComma(out);
-    if (decodeOperand(memory, insn, out, ex2, insn.ex2Pos()))
+    if (decodeOperand(memory, insn, out, ex2, insn.ex2Pos(), size))
         return getError();
     return setOK();
 }

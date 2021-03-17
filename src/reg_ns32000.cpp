@@ -110,6 +110,11 @@ bool RegNs32000::isFloat(RegName name) {
     return num >= 0 && num < 8;
 }
 
+bool RegNs32000::isRegPair(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= 0 && num < 16 && num % 2 == 0;
+}
+
 // clang-format off
 static const char TEXT_PREG_UPSR[]    PROGMEM = "UPSR";
 static const char TEXT_PREG_US[]      PROGMEM = "US";

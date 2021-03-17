@@ -36,8 +36,7 @@ asm-test: clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_exclude = test_ns32032
-ASL_TESTS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
+ASL_TESTS = $(ASM_TESTS)
 ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
 define asl-rule # test suffix format source
 asl-$(1).$(2): $(4)

@@ -45,9 +45,9 @@
         mulw    5, r0
         muld    4(-4(fp)), 3(sb)
 ;# Multiply Extended Integer: MEIi src/gen, dest/gen
-        meib    r0, r1
-        meiw    r2, 10(sb)
-        meid    r2, r0
+        meib    r0, r2
+        meiw    10(sb), r4
+        meid    r2, r6
 ;# Divide: DIVi src/gen, dest/gen
         divb    r0, r1
         divw    10(sp), 4(sp)
@@ -65,9 +65,9 @@
         remw    r2, r3
         remd    r4, r5
 ;# Divide Extended Integer: DEIi src/gen, dest/gen
-        deib    r0, r1
-        deiw    r2, r0
-        deid    r4, r5
+        deib    r0, r2
+        deiw    10(sb), r4
+        deid    r2, r6
 ;# Move: MOVi src/gen, dest/gen
         movb    r0, r1
         movw    r2, r3

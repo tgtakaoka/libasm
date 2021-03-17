@@ -524,7 +524,7 @@ Error AsmNs32000::emitRelative(InsnNs32000 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
+Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size,
         const Operand &op, OprPos pos, const Operand *prevOp) {
     switch (mode) {
     case M_GREG:
@@ -539,18 +539,31 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
     case M_RLST:
         if (op.val32 == 0)
             return setError(OPCODE_HAS_NO_EFFECT);
-        if (insn.oprSize() == SZ_NONE) {  // PUSH
+        if (size == SZ_NONE) {  // PUSH
             insn.emitOperand8(op.val32);
         } else {  // POP
             insn.emitOperand8(reverseBits(op.val32));
         }
         break;
-    case M_GENR:
-    case M_GENC:
-    case M_GENW:
-    case M_GENA:
     case M_FENR:
     case M_FENW:
+        if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) &&
+                !RegNs32000::isRegPair(op.reg)) {
+            insn.resetAddress(insn.address());
+            return setError(REGISTER_NOT_ALLOWED);
+        }
+        goto emit_generic;
+    case M_GENR:
+    case M_GENW:
+        if (op.mode == M_GREG && size == SZ_QUAD &&
+                !RegNs32000::isRegPair(op.reg)) {
+            insn.resetAddress(insn.address());
+            return setError(REGISTER_NOT_ALLOWED);
+        }
+        goto emit_generic;
+    case M_GENC:
+    case M_GENA:
+    emit_generic:
         return emitGeneric(insn, mode, op, pos);
     case M_INT4: {
         const int32_t val = static_cast<int32_t>(op.val32);
@@ -657,28 +670,33 @@ Error AsmNs32000::encode(Insn &_insn) {
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     const AddrMode ex1 = insn.ex1Mode();
+    const AddrMode ex2 = insn.ex2Mode();
     if (emitIndexByte(insn, srcOp))
         return getError();
     if (emitIndexByte(insn, dstOp))
         return getError();
     if (emitIndexByte(insn, ex1Op))
         return getError();
+    const OprSize size = insn.oprSize();
     if (src != M_NONE) {
-        if (emitOperand(insn, src, srcOp, insn.srcPos()))
+        const OprSize srcSize =
+                (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
+        if (emitOperand(insn, src, srcSize, srcOp, insn.srcPos()))
             return getError();
     }
     if (dst != M_NONE) {
-        if (emitOperand(insn, dst, dstOp, insn.dstPos()))
+        const OprSize dstSize =
+                (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
+        if (emitOperand(insn, dst, dstSize, dstOp, insn.dstPos()))
             return getError();
     }
     if (ex1 != M_NONE) {
-        if (emitOperand(insn, ex1, ex1Op, insn.ex1Pos()))
+        if (emitOperand(insn, ex1, size, ex1Op, insn.ex1Pos()))
             return getError();
     }
-    const AddrMode ex2 = insn.ex2Mode();
     if (ex2 != M_NONE) {
         const Operand *prevOp = (ex2 == M_BFLEN) ? &ex1Op : nullptr;
-        if (emitOperand(insn, ex2, ex2Op, insn.ex2Pos(), prevOp))
+        if (emitOperand(insn, ex2, size, ex2Op, insn.ex2Pos(), prevOp))
             return getError();
     }
     insn.emitInsn();

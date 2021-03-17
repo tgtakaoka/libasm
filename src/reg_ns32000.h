@@ -97,6 +97,7 @@ public:
     static bool isGeneric(RegName name);
     static RegName decodeRegName(uint8_t num, bool floating = false);
     static bool isFloat(RegName name);
+    static bool isRegPair(RegName name);
 
     static PregName parsePregName(const char *line);
     static uint8_t pregNameLen(PregName name);

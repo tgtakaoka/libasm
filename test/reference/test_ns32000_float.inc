@@ -25,48 +25,50 @@
         divf    f0, f7
         divl    -8(fp), 16(sb)
 ;# Negate Floating: NEGf src/gen, dest/gen
-        negf    f0, f2
-        negl    f2, f3
+        negf    f1, f3
+        negl    f2, f4
 ;# Absolute Value Floating: ABSf src/gen, dest/gen
-        absf    f0, f2
-        absl    f2, f3
+        absf    f1, f3
+        absl    f2, f4
 ;# Compare Floating: CMPf src1/gen, src2/gen
-        cmpf    f0, f2
-        cmpf    f2, f3
+        cmpf    f5, f7
+        cmpl    f6, f0
 ;# Move Floating: MOVf src/gen, dest/gen
         movf    f0, 8(sb)
-        movl    f2, f3
+        movl    f2, f4
 ;# Move Long Floating to Floating: MOVLF src/gen, dest/gen
         movlf   f0, 12(sb)
+        movlf   12(sb), f1
 ;# Move Floating to Long Floating: MOVFL src/gen, dest/gen
         movfl   8(sb), f0
+        movfl   f1, 8(sb)
 ;# Move Integer to Floating: MOVif src/gen, dest/gen
         movbf   2, f0
         movwf   r1, f2
         movdf   r2, f3
         movbl   r3, f4
-        movwl   r4, f5
+        movwl   r3, f6
         movdl   16(sb), f2
 ;# Round Floating to Integer: ROUNDfi src/gen, dest/gen
         roundfb f0, r0
         roundfw f1, r2
         roundfd f2, r3
-        roundlb f3, r4
-        roundlw f4, r5
+        roundlb f4, r4
+        roundlw f6, r5
         roundld f2, 12(sb)
 ;# Truncate Floating to Integer: TRUNCfi src/gen, dest/gen
         truncfb f0, r0
         truncfw f1, r2
         truncfd f2, r3
-        trunclb f3, r4
-        trunclw f4, r5
+        trunclb f4, r4
+        trunclw f6, r5
         truncld f2, 8(sb)
 ;# Floor Floating to Integer: FLOORfi src/gen, dest/gen
         floorfb f0, r0
         floorfw f1, r2
         floorfd f2, r3
-        floorlb f3, r4
-        floorlw f4, r5
+        floorlb f4, r4
+        floorlw f6, r5
         floorld f2, 16(sb)
 ;# Load FSR: LFSR src/gen
         lfsr    r0
