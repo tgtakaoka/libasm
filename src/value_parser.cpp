@@ -170,10 +170,10 @@ Value ValueParser::readAtom(const char *scan) {
     }
     const char c = *p++;
 
-    if (c == '(' || c == '[') {
+    if (c == '(') {
         Value value(parseExpr(p));
         if (getError() == OK) {
-            const char expected = (c == '(') ? ')' : ']';
+            const char expected = ')';
             p = skipSpaces(_next);
             if (p == nullptr || *p != expected) {
                 setError(MISSING_CLOSING_PAREN);
