@@ -134,6 +134,21 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
     if (parseStrOptNames(p, op) == OK)
         return OK;
 
+    if (*p == '*' || *p == '.') {
+        const char *t = skipSpaces(p + 1);
+        if (*t == '+' || *t == '-' || endOfLine(t) || *t == '[' || *t == ',') {
+            const char *end = scanExpr(t, '[');
+            op.val32 = parseExpr32(p, end);
+            if (parserError() == OK) {
+                op.setError(getError());
+                op.mode = M_REL;
+                op.reg = REG_PC;
+                return OK;
+            }
+            return setError(UNKNOWN_OPERAND);
+        }
+    }
+
     const PregName preg = RegNs32000::parsePregName(p);
     if (preg != PREG_UNDEF) {
         _scan = p + RegNs32000::pregNameLen(preg);
@@ -274,7 +289,7 @@ Error AsmNs32000::parseOperand(const char *scan, Operand &op) {
         return getError();
     if (op.mode == M_GREG || op.mode == M_RREL || op.mode == M_MREL ||
             op.mode == M_ABS || op.mode == M_EXT || op.mode == M_TOS ||
-            op.mode == M_MEM) {
+            op.mode == M_MEM || op.mode == M_REL) {
         const char *p = skipSpaces(_scan);
         if (*p++ != '[')
             return OK;
@@ -463,6 +478,7 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
         return 0x16;
     case M_TOS:
         return 0x17;
+    case M_REL:
     case M_MEM:
         if (reg == REG_FP)
             return 0x18;
@@ -504,6 +520,8 @@ Error AsmNs32000::emitGeneric(
         if (op.mode == M_MEM && op.reg == REG_PC)
             return emitRelative(insn, op);
         return emitDisplacement(insn, op.val32);
+    case M_REL:
+        return emitRelative(insn, op);
     case M_MREL:
         if (emitDisplacement(insn, op.disp2))
             return getError();

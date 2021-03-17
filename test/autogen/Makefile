@@ -71,7 +71,7 @@ asm-test: clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_exclude = gen_i8086 gen_ns32032
+ASL_exclude = gen_i8086
 ASL_TESTS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
 ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
 define asl-file # stem

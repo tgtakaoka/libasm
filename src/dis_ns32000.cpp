@@ -372,7 +372,6 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
         goto m_mem;
     case 0x1B:
         reg = REG_PC;
-        goto m_mem;
     m_mem:
         if (readDisplacement(memory, insn, disp))
             return getError();
@@ -381,7 +380,16 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
             if (target >= static_cast<Config::uintptr_t>(1)
                                   << uint8_t(addressWidth()))
                 return setError(OVERFLOW_RANGE);
-            out = outRelAddr(out, target, insn.address(), disp.bits);
+            if (_pcRelativeParen) {
+                out = outAbsAddr(out, target, addressWidth());
+            } else {
+                *out++ = _formatter.currentOriginSymbol();
+                if (disp.val32 > 0)
+                    *out++ = '+';
+                if (disp.val32)
+                    out = outDisplacement(out, disp);
+                break;
+            }
         } else {
             out = outDisplacement(out, disp);
         }

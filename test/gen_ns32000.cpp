@@ -23,11 +23,15 @@ using namespace libasm::test;
 int main(int argc, const char **argv) {
     DisNs32000 dis32000;
     GenDriver<Config> driver(dis32000);
+    dis32000.setRelativeTarget(true);
     if (driver.main(argc, argv))
         return 1;
 
-    if (driver.generateGas())
+    if (driver.generateGas()) {
         dis32000.stringOptionBraket(true);
+        dis32000.setCurrentOriginSymbol('.');
+        dis32000.pcRelativeParen(true);
+    }
     TestGenerator<Config> generator(dis32000, 0x10000);
     generator.generate(driver);
 

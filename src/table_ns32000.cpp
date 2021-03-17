@@ -505,7 +505,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_GENR || table == M_GENC || table == M_GENW ||
                table == M_RLST;
     if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT ||
-            opr == M_TOS || opr == M_MEM)
+            opr == M_TOS || opr == M_MEM || opr == M_REL)
         return table == M_GENR || table == M_GENC || table == M_GENW ||
                table == M_GENA || table == M_FENR || table == M_FENW;
     if (opr == M_IMM)

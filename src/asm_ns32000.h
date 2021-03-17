@@ -38,7 +38,7 @@ public:
     void setMmu(MmuType mmuType) { TableNs32000.setMmu(mmuType); }
 
 private:
-    ValueParser _parser;
+    ValueParser _parser{'*'};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
