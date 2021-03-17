@@ -47,8 +47,7 @@ enum AddrMode : uint8_t {
     M_MREG = 11,      // MMU Register
     M_CONF = 12,      // Configuration
     M_SOPT = 13,      // String instruction option
-    M_PUSH = 14,      // Register list for push
-    M_POP = 15,       // Register list for pop
+    M_RLST = 14,      // Register list
     M_GENR = 16,      // Generic read (incl. Immediate)
     M_GENC = 17,      // Generic Count (incl. Immediate)
     M_GENW = 18,      // Generic write/rmw/regaddr (excl. Immediate)

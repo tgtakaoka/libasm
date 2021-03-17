@@ -102,7 +102,7 @@ Error AsmNs32000::parseRegisterList(const char *p, Operand &op) {
     }
     _scan = p;
     op.val32 = list;
-    op.mode = M_PUSH;
+    op.mode = M_RLST;
     return setOK();
 }
 
@@ -536,15 +536,14 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode,
     case M_SOPT:
         embedOprField(insn, pos, op.val32);
         break;
-    case M_PUSH:
+    case M_RLST:
         if (op.val32 == 0)
             return setError(OPCODE_HAS_NO_EFFECT);
-        insn.emitOperand8(op.val32);
-        break;
-    case M_POP:
-        if (op.val32 == 0)
-            return setError(OPCODE_HAS_NO_EFFECT);
-        insn.emitOperand8(reverseBits(op.val32));
+        if (insn.oprSize() == SZ_NONE) {  // PUSH
+            insn.emitOperand8(op.val32);
+        } else {  // POP
+            insn.emitOperand8(reverseBits(op.val32));
+        }
         break;
     case M_GENR:
     case M_GENC:

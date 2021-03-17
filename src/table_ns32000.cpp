@@ -64,10 +64,10 @@ static const Entry FORMAT_1[] PROGMEM = {
     E(0x32, TEXT_RXP,     NONE, M_DISP, M_NONE, P_DISP, P_NONE),
     E(0x42, TEXT_RETT,    NONE, M_DISP, M_NONE, P_DISP, P_NONE),
     E(0x52, TEXT_RETI,    NONE, M_NONE, M_NONE, P_NONE, P_NONE),
-    E(0x62, TEXT_SAVE,    NONE, M_PUSH, M_NONE, P_IMPL, P_NONE),
-    E(0x72, TEXT_RESTORE, NONE, M_POP,  M_NONE, P_IMPL, P_NONE),
-    E(0x82, TEXT_ENTER,   NONE, M_PUSH, M_DISP, P_IMPL, P_DISP),
-    E(0x92, TEXT_EXIT,    NONE, M_POP,  M_NONE, P_IMPL, P_NONE),
+    E(0x62, TEXT_SAVE,    NONE, M_RLST, M_NONE, P_IMPL, P_NONE),
+    E(0x72, TEXT_RESTORE, LONG, M_RLST, M_NONE, P_IMPL, P_NONE),
+    E(0x82, TEXT_ENTER,   NONE, M_RLST, M_DISP, P_IMPL, P_DISP),
+    E(0x92, TEXT_EXIT,    LONG, M_RLST, M_NONE, P_IMPL, P_NONE),
     E(0xA2, TEXT_NOP,     NONE, M_NONE, M_NONE, P_NONE, P_NONE),
     E(0xB2, TEXT_WAIT,    NONE, M_NONE, M_NONE, P_NONE, P_NONE),
     E(0xC2, TEXT_DIA,     NONE, M_NONE, M_NONE, P_NONE, P_NONE),
@@ -499,11 +499,11 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return true;
     if (opr == M_GREG)
         return table == M_GENR || table == M_GENC || table == M_GENW ||
-               table == M_PUSH || table == M_POP;
+               table == M_RLST;
     if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT ||
             opr == M_TOS || opr == M_MEM)
-        return table == M_GENR || table == M_GENC || table == M_GENW || table == M_GENA ||
-               table == M_FENR || table == M_FENW;
+        return table == M_GENR || table == M_GENC || table == M_GENW ||
+               table == M_GENA || table == M_FENR || table == M_FENW;
     if (opr == M_IMM)
         return table == M_GENR || table == M_GENC || table == M_FENR ||
                table == M_DISP || table == M_INT4 || table == M_REL ||
@@ -511,11 +511,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
     if (opr == M_FREG)
         return table == M_FENR || table == M_FENW;
-    if (opr == M_PUSH)
-        return table == M_POP;
     if (opr == M_NONE)
-        return table == M_PUSH || table == M_POP || table == M_CONF ||
-               table == M_SOPT;
+        return table == M_RLST || table == M_CONF || table == M_SOPT;
     return false;
 }
 

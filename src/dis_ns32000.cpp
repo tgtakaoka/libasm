@@ -231,7 +231,8 @@ Error DisNs32000::decodeRegisterList(
         return getError();
     if (list == 0)
         return setError(OPCODE_HAS_NO_EFFECT);
-    const uint8_t mask = (mode == M_POP) ? 0x80 : 0x01;
+    const bool push = insn.oprSize() == SZ_NONE;
+    const uint8_t mask = push ? 0x01 : 0x80;
     *out++ = '[';
     char sep = 0;
     for (uint8_t reg = 0; list; reg++) {
@@ -241,10 +242,10 @@ Error DisNs32000::decodeRegisterList(
             out = _regs.outRegName(out, RegNs32000::decodeRegName(reg));
             sep = ',';
         }
-        if (mode == M_POP)
-            list <<= 1;
-        else
+        if (push)
             list >>= 1;
+        else
+            list <<= 1;
     }
     *out++ = ']';
     *out = 0;
@@ -413,8 +414,7 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
         return decodeConfig(insn, out, pos);
     case M_SOPT:
         return decodeStrOpt(insn, out, pos);
-    case M_PUSH:
-    case M_POP:
+    case M_RLST:
         return decodeRegisterList(memory, insn, out, mode);
     case M_GENR:
     case M_GENC:
