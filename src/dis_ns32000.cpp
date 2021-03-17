@@ -162,13 +162,13 @@ Error DisNs32000::decodeImmediate(
     case SZ_WORD:
         outHex(out, insn.readUint16(memory), 16);
         break;
-    case SZ_LONG:
+    case SZ_DOUBLE:
         outHex(out, insn.readUint32(memory), 32);
         break;
     case SZ_FLOAT:
         outHex(out, insn.readUint32(memory), 32);
         break;
-    case SZ_DOUBLE:
+    case SZ_LONG:
         // TODO: double
         out = outHex(out, insn.readUint32(memory), 32);
         *out++ = ':';

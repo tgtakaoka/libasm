@@ -287,7 +287,7 @@ OprSize RegNs32000::parseIndexSize(const char *line) {
         size = SZ_WORD;
         break;
     case 'D':
-        size = SZ_LONG;
+        size = SZ_DOUBLE;
         break;
     case 'Q':
         size = SZ_QUAD;
@@ -311,7 +311,7 @@ char RegNs32000::indexSizeChar(OprSize size) const {
     case SZ_WORD:
         c = 'W';
         break;
-    case SZ_LONG:
+    case SZ_DOUBLE:
         c = 'D';
         break;
     case SZ_QUAD:

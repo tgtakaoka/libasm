@@ -34,35 +34,35 @@ enum MmuType : uint8_t {
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
-    M_GREG = 1,       // Generic Register: Rn
-    M_FREG = 2,       // Floating Register: Fn
-    M_RREL = 3,       // Register Relative: disp(Rn)
-    M_MREL = 4,       // Memory Relative: disp1(disp2(FP/SP/SB))
-    M_IMM = 5,        // Immediate: value
-    M_ABS = 6,        // Absolute: @disp
-    M_EXT = 7,        // External: EXT(disp1)+disp2
-    M_TOS = 8,        // Top of Stack: TOS
-    M_MEM = 9,        // Memory Space: disp(FP/SP/SB/PC)
-    M_PREG = 10,      // Dedicated Register
-    M_MREG = 11,      // MMU Register
-    M_CONF = 12,      // Configuration
-    M_SOPT = 13,      // String instruction option
-    M_RLST = 14,      // Register list
-    M_GENR = 16,      // Generic read (incl. Immediate)
-    M_GENC = 17,      // Generic Count (incl. Immediate)
-    M_GENW = 18,      // Generic write/rmw/regaddr (excl. Immediate)
-    M_GENA = 19,      // Generic address (excl. Immediate and Register)
-    M_FENR = 20,      // Floating Generic read (incl. Immediate)
-    M_FENW = 21,      // Floating Generic write/rmw (excl. Immediate)
-    M_DISP = 22,      // Displacement
-    M_INT4 = 23,      // 4-bit signed Integer
-    M_REL = 24,       // Relative address
-    M_BFOFF = 25,     // Bit Field Offset: 0~7
-    M_BFLEN = 26,     // Bit Field Length: 1~32
-    M_LEN32 = 27,     // Length: 1~32
-    M_LEN16 = 28,     // Length: 1~16
-    M_LEN8 = 29,      // Length: 1~8
-    M_LEN4 = 30,      // Length: 1~4
+    M_GREG = 1,    // Generic Register: Rn
+    M_FREG = 2,    // Floating Register: Fn
+    M_RREL = 3,    // Register Relative: disp(Rn)
+    M_MREL = 4,    // Memory Relative: disp1(disp2(FP/SP/SB))
+    M_IMM = 5,     // Immediate: value
+    M_ABS = 6,     // Absolute: @disp
+    M_EXT = 7,     // External: EXT(disp1)+disp2
+    M_TOS = 8,     // Top of Stack: TOS
+    M_MEM = 9,     // Memory Space: disp(FP/SP/SB/PC)
+    M_PREG = 10,   // Dedicated Register
+    M_MREG = 11,   // MMU Register
+    M_CONF = 12,   // Configuration
+    M_SOPT = 13,   // String instruction option
+    M_RLST = 14,   // Register list
+    M_GENR = 16,   // Generic read (incl. Immediate)
+    M_GENC = 17,   // Generic Count (incl. Immediate)
+    M_GENW = 18,   // Generic write/rmw/regaddr (excl. Immediate)
+    M_GENA = 19,   // Generic address (excl. Immediate and Register)
+    M_FENR = 20,   // Floating Generic read (incl. Immediate)
+    M_FENW = 21,   // Floating Generic write/rmw (excl. Immediate)
+    M_DISP = 22,   // Displacement
+    M_INT4 = 23,   // 4-bit signed Integer
+    M_REL = 24,    // Relative address
+    M_BFOFF = 25,  // Bit Field Offset: 0~7
+    M_BFLEN = 26,  // Bit Field Length: 1~32
+    M_LEN32 = 27,  // Length: 1~32
+    M_LEN16 = 28,  // Length: 1~16
+    M_LEN8 = 29,   // Length: 1~8
+    M_LEN4 = 30,   // Length: 1~4
 };
 
 enum OprPos : uint8_t {
@@ -78,10 +78,10 @@ enum OprPos : uint8_t {
 enum OprSize : uint8_t {
     SZ_BYTE = 0,    // 8-bit integer (Byte)
     SZ_WORD = 1,    // 16-bit integer (Word)
-    SZ_LONG = 2,    // 32-bit integer (Double)
+    SZ_DOUBLE = 2,  // 32-bit integer (Double)
     SZ_QUAD = 3,    // 64-bit integer (Quad)
     SZ_FLOAT = 4,   // 32-bit float (Float)
-    SZ_DOUBLE = 5,  // 64-bit float (Long)
+    SZ_LONG = 5,    // 64-bit float (Long)
     SZ_NONE = 6,
 };
 

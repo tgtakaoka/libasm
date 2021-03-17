@@ -210,11 +210,11 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
         if (parserError())
             return getError();
         op.setErrorIf(getError());
-        op.indexSize = SZ_DOUBLE;
+        op.indexSize = SZ_LONG;
         p = skipSpaces(_scan);
     } else {
         op.disp2 = 0;
-        op.indexSize = SZ_LONG;
+        op.indexSize = SZ_DOUBLE;
     }
     if (endOfLine(p) || *p == ',') {
         _scan = p;
@@ -316,7 +316,7 @@ static uint8_t encodeScaledIndex(OprSize indexSize) {
         return 0x1C;
     case SZ_WORD:
         return 0x1D;
-    case SZ_LONG:
+    case SZ_DOUBLE:
         return 0x1E;
     case SZ_QUAD:
         return 0x1F;
@@ -426,13 +426,13 @@ Error AsmNs32000::emitImmediate(
     case SZ_WORD:
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
-    case SZ_LONG:
+    case SZ_DOUBLE:
     case SZ_FLOAT:
         insn.emitOperand32(op.val32);
         break;
-    case SZ_DOUBLE:
+    case SZ_LONG:
         insn.emitOperand32(op.val32);
-        insn.emitOperand32(op.indexSize == SZ_DOUBLE ? op.disp2 : 0);
+        insn.emitOperand32(op.indexSize == SZ_LONG ? op.disp2 : 0);
         break;
     default:
         return setError(INTERNAL_ERROR);
