@@ -12,7 +12,7 @@
       addb    r0, 7(fp)
       addb    r0, -64(fp)
       addb    r0, 0x0081(fp)
-      addb    r0, r1[r0:b]
+      addb    r0, 0(r1)[r0:b]
       addb    r0, -63(r0)[r0:b]
       addb    r0, 0x0081(r0)[r0:b]
       addw    r0, 3(r0)
@@ -26,7 +26,7 @@
       addw    r0, 7(fp)
       addw    r0, -64(fp)
       addw    r0, 0x0081(fp)
-      addw    r0, r1[r0:b]
+      addw    r0, 0(r1)[r0:b]
       addw    r0, -63(r0)[r0:b]
       addw    r0, 0x0081(r0)[r0:b]
       addw    r1, r0
@@ -40,7 +40,7 @@
       addd    r0, 7(fp)
       addd    r0, -64(fp)
       addd    r0, 0x0081(fp)
-      addd    r0, r1[r0:b]
+      addd    r0, 0(r1)[r0:b]
       addd    r0, -63(r0)[r0:b]
       addd    r0, 0x0081(r0)[r0:b]
       addd    r1, r0
@@ -51,7 +51,7 @@
       cmpb    r0, 7(fp)
       cmpb    r0, -64(fp)
       cmpb    r0, 0x0081(fp)
-      cmpb    r0, r1[r0:b]
+      cmpb    r0, 0(r1)[r0:b]
       cmpb    r0, -63(r0)[r0:b]
       cmpb    r0, 0x0081(r0)[r0:b]
       cmpb    r1, r0
@@ -66,7 +66,7 @@
       cmpw    r0, 7(fp)
       cmpw    r0, -64(fp)
       cmpw    r0, 0x0081(fp)
-      cmpw    r0, r1[r0:b]
+      cmpw    r0, 0(r1)[r0:b]
       cmpw    r0, -63(r0)[r0:b]
       cmpw    r0, 0x0081(r0)[r0:b]
       cmpw    r1, r0
@@ -92,7 +92,7 @@
       cmpd    r1, 15(fp)
       cmpd    r1, -64(fp)
       cmpd    r1, 0x0081(fp)
-      cmpd    r1, r2[r0:b]
+      cmpd    r1, 0(r2)[r0:b]
       cmpd    r1, -63(r0)[r0:b]
       cmpd    r1, 0x0081(r0)[r0:b]
       bicb    r1, r4
@@ -107,7 +107,7 @@
       bicb    r1, 15(fp)
       bicb    r1, -64(fp)
       bicb    r1, 0x0081(fp)
-      bicb    r1, r2[r0:b]
+      bicb    r1, 0(r2)[r0:b]
       bicb    r1, -63(r0)[r0:b]
       bicb    r1, 0x0081(r0)[r0:b]
       bicw    r1, 11(r0)
@@ -121,7 +121,7 @@
       bicw    r1, 15(fp)
       bicw    r1, -64(fp)
       bicw    r1, 0x0081(fp)
-      bicw    r1, r2[r0:b]
+      bicw    r1, 0(r2)[r0:b]
       bicw    r1, -63(r0)[r0:b]
       bicw    r1, 0x0081(r0)[r0:b]
       bicw    r2, r0
@@ -135,7 +135,7 @@
       bicd    r1, 15(fp)
       bicd    r1, -64(fp)
       bicd    r1, 0x0081(fp)
-      bicd    r1, r2[r0:b]
+      bicd    r1, 0(r2)[r0:b]
       bicd    r1, -63(r0)[r0:b]
       bicd    r1, 0x0081(r0)[r0:b]
       bicd    r2, r0
@@ -260,7 +260,7 @@
       addcb   r2, 23(fp)
       addcb   r2, -64(fp)
       addcb   r2, 0x0081(fp)
-      addcb   r2, r3[r0:b]
+      addcb   r2, 0(r3)[r0:b]
       addcb   r2, -63(r0)[r0:b]
       addcb   r2, 0x0081(r0)[r0:b]
       addcw   r2, 19(r0)
@@ -274,7 +274,7 @@
       addcw   r2, 23(fp)
       addcw   r2, -64(fp)
       addcw   r2, 0x0081(fp)
-      addcw   r2, r3[r0:b]
+      addcw   r2, 0(r3)[r0:b]
       addcw   r2, -63(r0)[r0:b]
       addcw   r2, 0x0081(r0)[r0:b]
       addcw   r3, r0
@@ -289,7 +289,7 @@
       addcd   r2, 23(fp)
       addcd   r2, -64(fp)
       addcd   r2, 0x0081(fp)
-      addcd   r2, r3[r0:b]
+      addcd   r2, 0(r3)[r0:b]
       addcd   r2, -63(r0)[r0:b]
       addcd   r2, 0x0081(r0)[r0:b]
       addcd   r3, r0
@@ -299,7 +299,7 @@
       movb    r2, 23(fp)
       movb    r2, -64(fp)
       movb    r2, 0x0081(fp)
-      movb    r2, r3[r0:b]
+      movb    r2, 0(r3)[r0:b]
       movb    r2, -63(r0)[r0:b]
       movb    r2, 0x0081(r0)[r0:b]
       movb    r3, r0
@@ -314,7 +314,7 @@
       movw    r2, 23(fp)
       movw    r2, -64(fp)
       movw    r2, 0x0081(fp)
-      movw    r2, r3[r0:b]
+      movw    r2, 0(r3)[r0:b]
       movw    r2, -63(r0)[r0:b]
       movw    r2, 0x0081(r0)[r0:b]
       movw    r3, r0
@@ -338,7 +338,7 @@
       movd    r3, 31(fp)
       movd    r3, -64(fp)
       movd    r3, 0x0081(fp)
-      movd    r3, r4[r0:b]
+      movd    r3, 0(r4)[r0:b]
       movd    r3, -63(r0)[r0:b]
       movd    r3, 0x0081(r0)[r0:b]
       orb     r3, r4
@@ -353,7 +353,7 @@
       orb     r3, 31(fp)
       orb     r3, -64(fp)
       orb     r3, 0x0081(fp)
-      orb     r3, r4[r0:b]
+      orb     r3, 0(r4)[r0:b]
       orb     r3, -63(r0)[r0:b]
       orb     r3, 0x0081(r0)[r0:b]
       orw     r3, 27(r0)
@@ -367,7 +367,7 @@
       orw     r3, 31(fp)
       orw     r3, -64(fp)
       orw     r3, 0x0081(fp)
-      orw     r3, r4[r0:b]
+      orw     r3, 0(r4)[r0:b]
       orw     r3, -63(r0)[r0:b]
       orw     r3, 0x0081(r0)[r0:b]
       orw     r4, r0
@@ -381,7 +381,7 @@
       ord     r3, 31(fp)
       ord     r3, -64(fp)
       ord     r3, 0x0081(fp)
-      ord     r3, r4[r0:b]
+      ord     r3, 0(r4)[r0:b]
       ord     r3, -63(r0)[r0:b]
       ord     r3, 0x0081(r0)[r0:b]
       ord     r4, r0
@@ -555,7 +555,7 @@
       subb    r4, 39(fp)
       subb    r4, -64(fp)
       subb    r4, 0x0081(fp)
-      subb    r4, r5[r0:b]
+      subb    r4, 0(r5)[r0:b]
       subb    r4, -63(r0)[r0:b]
       subb    r4, 0x0081(r0)[r0:b]
       subw    r4, 35(r0)
@@ -569,7 +569,7 @@
       subw    r4, 39(fp)
       subw    r4, -64(fp)
       subw    r4, 0x0081(fp)
-      subw    r4, r5[r0:b]
+      subw    r4, 0(r5)[r0:b]
       subw    r4, -63(r0)[r0:b]
       subw    r4, 0x0081(r0)[r0:b]
       subw    r5, r0
@@ -584,7 +584,7 @@
       subd    r4, 39(fp)
       subd    r4, -64(fp)
       subd    r4, 0x0081(fp)
-      subd    r4, r5[r0:b]
+      subd    r4, 0(r5)[r0:b]
       subd    r4, -63(r0)[r0:b]
       subd    r4, 0x0081(r0)[r0:b]
       subd    r5, r0
@@ -625,7 +625,7 @@
       andb    r5, 47(fp)
       andb    r5, -64(fp)
       andb    r5, 0x0081(fp)
-      andb    r5, r6[r0:b]
+      andb    r5, 0(r6)[r0:b]
       andb    r5, -63(r0)[r0:b]
       andb    r5, 0x0081(r0)[r0:b]
       andw    r5, 43(r0)
@@ -639,7 +639,7 @@
       andw    r5, 47(fp)
       andw    r5, -64(fp)
       andw    r5, 0x0081(fp)
-      andw    r5, r6[r0:b]
+      andw    r5, 0(r6)[r0:b]
       andw    r5, -63(r0)[r0:b]
       andw    r5, 0x0081(r0)[r0:b]
       andw    r6, r0
@@ -653,7 +653,7 @@
       andd    r5, 47(fp)
       andd    r5, -64(fp)
       andd    r5, 0x0081(fp)
-      andd    r5, r6[r0:b]
+      andd    r5, 0(r6)[r0:b]
       andd    r5, -63(r0)[r0:b]
       andd    r5, 0x0081(r0)[r0:b]
       andd    r6, r0
@@ -701,16 +701,16 @@
       indexd  r5, r6, 55(fp)
       indexd  r5, r6, -64(fp)
       indexd  r5, r6, 0x0081(fp)
-      indexd  r5, r6, r7[r0:b]
+      indexd  r5, r6, 0(r7)[r0:b]
       indexd  r5, r6, -63(r0)[r0:b]
       indexd  r5, r6, 0x0081(r0)[r0:b]
       indexd  r5, r7, -63(0x003e3f40(fp))
       indexb  r6, r6, 0x36
       indexb  r6, r6, 54(fp)
-      indexb  r6, r6, r6[r6:b]
+      indexb  r6, r6, 0(r6)[r6:b]
       indexb  r6, r7, r0
       indexw  r6, r6, 55(fp)
-      indexw  r6, r6, r6[r7:b]
+      indexw  r6, r6, 0(r6)[r7:b]
       indexw  r6, r7, r0
       indexb  r7, 62(r0), r0
       indexb  r7, 62(r0), 63(r0)
@@ -724,9 +724,9 @@
       indexb  r7, 62(r0), 63(fp)
       indexb  r7, 62(r0), -64(fp)
       indexb  r7, 62(r0), 0x0081(fp)
-      indexb  r7, 63(r0), r7[r6:b]
-      indexb  r7, -64(r0), r7[r6:b]
-      indexb  r7, 0x0081(r0), r7[r6:b]
+      indexb  r7, 63(r0), 0(r7)[r6:b]
+      indexb  r7, -64(r0), 0(r7)[r6:b]
+      indexb  r7, 0x0081(r0), 0(r7)[r6:b]
       indexw  r7, 63(r0), r0
       indexw  r7, 63(r0), -64(r0)
       indexw  r7, 63(r0), 0x0081(r0)
@@ -736,8 +736,8 @@
       indexw  r7, 63(r0), 0x4041
       indexw  r7, 63(r0), -64(fp)
       indexw  r7, 63(r0), 0x0081(fp)
-      indexw  r7, -64(r0), r7[r7:b]
-      indexw  r7, 0x0081(r0), r7[r7:b]
+      indexw  r7, -64(r0), 0(r7)[r7:b]
+      indexw  r7, 0x0081(r0), 0(r7)[r7:b]
       indexd  r7, -63(r0), r0
       indexd  r7, -63(r0), -62(r0)
       indexd  r7, -63(r0), 0x0081(r0)
@@ -1140,7 +1140,7 @@
       indexd  r6, tos, 0x01c2c3c4(sp)[r0:d]
       indexd  r6, tos, 0x01c2c3c4(sb)[r0:d]
       indexd  r6, tos, 0xc3e1aa(pc)[r0:d]
-      indexd  r6, tos, r0[r0:d]
+      indexd  r6, tos, 0(r0)[r0:d]
       indexd  r6, 0x01c2c3c4(fp), r2
       indexd  r6, -0x1e3d3c3c(fp), r2
       indexd  r6, 0(fp), r2
@@ -1159,7 +1159,7 @@
       indexd  r6, 0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       indexd  r6, 0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       indexd  r6, 0x09cacbcc(fp), 0xcfee7c(pc)[r0:d]
-      indexd  r6, 0x09cacbcc(fp), r0[r0:d]
+      indexd  r6, 0x09cacbcc(fp), 0(r0)[r0:d]
       indexd  r6, 0x09cacbcc(sp), r2
       indexd  r6, -0x1e353434(sp), r2
       indexd  r6, 0(sp), r2
@@ -1177,7 +1177,7 @@
       indexd  r6, 0(sp), 0x10d1d2d3(sb)
       indexd  r6, 0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       indexd  r6, 0x11d2d3d4(sp), 0xd7f746(pc)[r0:d]
-      indexd  r6, 0x11d2d3d4(sp), r0[r0:d]
+      indexd  r6, 0x11d2d3d4(sp), 0(r0)[r0:d]
       indexd  r6, 0x11d2d3d4(sb), r2
       indexd  r6, -0x1e2d2c2c(sb), r2
       indexd  r6, 0(sb), r2
@@ -1194,7 +1194,7 @@
       indexd  r6, -0x1e272626(sb), 0x1bdcddde(sb)
       indexd  r6, 0(sb), 0x18d9dadb(sb)
       indexd  r6, 0x19dadbdc(sb), 0xe00004(pc)[r0:d]
-      indexd  r6, 0x19dadbdc(sb), r0[r0:d]
+      indexd  r6, 0x19dadbdc(sb), 0(r0)[r0:d]
       indexd  r6, 0xdbfc14(pc), r2
       indexd  r6, 0x01203f(pc), r2
       indexd  r6, 0xddfe21(pc), 0x1fe0e1e2(r2)
@@ -1205,10 +1205,10 @@
       indexd  r6, 0x012080(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       indexd  r6, 0xe2026e(pc), -0x1c1b1a1a(sb)
       indexd  r6, 0x012177(pc), -0x1e1d1c1c(sb)
-      indexd  r6, r0[r0:q], r0[r1:d]
-      indexd  r6, 2(r0)[r0:q], r0[r1:d]
-      indexd  r6, -64(r0)[r0:q], r0[r1:d]
-      indexd  r6, 0x0081(r0)[r0:q], r0[r1:d]
+      indexd  r6, 0(r0)[r0:q], 0(r0)[r1:d]
+      indexd  r6, 2(r0)[r0:q], 0(r0)[r1:d]
+      indexd  r6, -64(r0)[r0:q], 0(r0)[r1:d]
+      indexd  r6, 0x0081(r0)[r0:q], 0(r0)[r1:d]
       indexd  r6, r0, 6(5(sb))
       indexd  r6, r0, 6(-64(sb))
       indexd  r6, r0, 7(6(sb))
@@ -1222,7 +1222,7 @@
       indexd  r6, r0, 7(sb)
       indexd  r6, r0, -64(sb)
       indexd  r6, r0, 0x0081(sb)
-      indexd  r6, r0, r1[r0:d]
+      indexd  r6, r0, 0(r1)[r0:d]
       indexd  r6, r0, -63(r0)[r0:d]
       indexd  r6, r0, 0x0081(r0)[r0:d]
       indexb  r7, tos, ext(-0x0141)+0x00c1c2c3
@@ -1629,7 +1629,7 @@
       extb    r0, r0, -64(2(fp)), 4
       extb    r0, r0, 4(2(fp)), 5
       extb    r0, r0, 2(fp), 3
-      extb    r0, r0, r0[r2:b], 3
+      extb    r0, r0, 0(r0)[r2:b], 3
       extb    r0, 2(r0), r0, 3
       extb    r0, 2(r0), 3(r0), 4
       extb    r0, 2(r0), -64(r0), 4
@@ -1640,13 +1640,13 @@
       extb    r0, 2(r0), 3(fp), 4
       extb    r0, 2(r0), -64(fp), 4
       extb    r0, 2(r0), 4(fp), 5
-      extb    r0, 3(r0), r0[r2:b], 4
-      extb    r0, -64(r0), r0[r2:b], 4
-      extb    r0, 4(r0), r0[r2:b], 5
+      extb    r0, 3(r0), 0(r0)[r2:b], 4
+      extb    r0, -64(r0), 0(r0)[r2:b], 4
+      extb    r0, 4(r0), 0(r0)[r2:b], 5
       extw    r0, r0, 3(r0), 4
       extw    r0, r0, 4(3(fp)), 5
       extw    r0, r0, 3(fp), 4
-      extw    r0, r0, r0[r3:b], 4
+      extw    r0, r0, 0(r0)[r3:b], 4
       extw    r0, r1, r0, 3
       extd    r0, r0, 6(5(fp)), 7
       extd    r0, r0, 5(fp), 6
@@ -1678,7 +1678,7 @@
       subcb   r6, 55(fp)
       subcb   r6, -64(fp)
       subcb   r6, 0x0081(fp)
-      subcb   r6, r7[r0:b]
+      subcb   r6, 0(r7)[r0:b]
       subcb   r6, -63(r0)[r0:b]
       subcb   r6, 0x0081(r0)[r0:b]
       subcb   r7, -63(0x003e3f40(fp))
@@ -1697,7 +1697,7 @@
       subcw   r6, 55(fp)
       subcw   r6, -64(fp)
       subcw   r6, 0x0081(fp)
-      subcw   r6, r7[r0:b]
+      subcw   r6, 0(r7)[r0:b]
       subcw   r6, -63(r0)[r0:b]
       subcw   r6, 0x0081(r0)[r0:b]
       subcw   r7, r0
@@ -1717,7 +1717,7 @@
       subcd   r6, 55(fp)
       subcd   r6, -64(fp)
       subcd   r6, 0x0081(fp)
-      subcd   r6, r7[r0:b]
+      subcd   r6, 0(r7)[r0:b]
       subcd   r6, -63(r0)[r0:b]
       subcd   r6, 0x0081(r0)[r0:b]
       subcd   r7, r0
@@ -1728,7 +1728,7 @@
       tbitb   r6, 55(fp)
       tbitb   r6, -64(fp)
       tbitb   r6, 0x0081(fp)
-      tbitb   r6, r7[r0:b]
+      tbitb   r6, 0(r7)[r0:b]
       tbitb   r6, -63(r0)[r0:b]
       tbitb   r6, 0x0081(r0)[r0:b]
       tbitb   r7, r0
@@ -1747,7 +1747,7 @@
       tbitw   r6, 55(fp)
       tbitw   r6, -64(fp)
       tbitw   r6, 0x0081(fp)
-      tbitw   r6, r7[r0:b]
+      tbitw   r6, 0(r7)[r0:b]
       tbitw   r6, -63(r0)[r0:b]
       tbitw   r6, 0x0081(r0)[r0:b]
       tbitw   r7, r0
@@ -4371,7 +4371,7 @@
       cmpb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), 0x017efd(pc)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), 0xc04108(pc)[r0:w]
-      cmpb    ext(-0x0646)+(-0x0444), r0[r0:w]
+      cmpb    ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       cmpb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -4417,7 +4417,7 @@
       cmpb    tos, 0x01c2c3c4(sp)[r0:w]
       cmpb    tos, 0x01c2c3c4(sb)[r0:w]
       cmpb    tos, 0xc44710(pc)[r0:w]
-      cmpb    tos, r0[r0:w]
+      cmpb    tos, 0(r0)[r0:w]
       cmpb    0x01c2c3c4(fp), r1
       cmpb    -0x1e3d3c3c(fp), r1
       cmpb    0(fp), r1
@@ -4436,7 +4436,7 @@
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       cmpb    0x09cacbcc(fp), 0xd053c3(pc)[r0:w]
-      cmpb    0x09cacbcc(fp), r0[r0:w]
+      cmpb    0x09cacbcc(fp), 0(r0)[r0:w]
       cmpb    0x09cacbcc(sp), r1
       cmpb    -0x1e353434(sp), r1
       cmpb    0(sp), r1
@@ -4454,7 +4454,7 @@
       cmpb    0(sp), 0x10d1d2d3(sp)
       cmpb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       cmpb    0x11d2d3d4(sp), 0xd85c6f(pc)[r0:w]
-      cmpb    0x11d2d3d4(sp), r0[r0:w]
+      cmpb    0x11d2d3d4(sp), 0(r0)[r0:w]
       cmpb    0x11d2d3d4(sb), r1
       cmpb    -0x1e2d2c2c(sb), r1
       cmpb    0(sb), r1
@@ -4471,7 +4471,7 @@
       cmpb    -0x1e272626(sb), 0x1bdcddde(sp)
       cmpb    0(sb), 0x18d9dadb(sp)
       cmpb    0x19dadbdc(sb), 0xe06510(pc)[r0:w]
-      cmpb    0x19dadbdc(sb), r0[r0:w]
+      cmpb    0x19dadbdc(sb), 0(r0)[r0:w]
       cmpb    0xdc611e(pc), r1
       cmpb    0x018548(pc), r1
       cmpb    0xde6329(pc), 0x1fe0e1e2(r1)
@@ -4482,10 +4482,10 @@
       cmpb    0x01857f(pc), @0x1fe0e1e2
       cmpb    0xe26768(pc), -0x1c1b1a1a(sp)
       cmpb    0x018670(pc), -0x1e1d1c1c(sp)
-      cmpb    r0[r0:q], r0[r1:w]
-      cmpb    2(r0)[r0:q], r0[r1:w]
-      cmpb    -64(r0)[r0:q], r0[r1:w]
-      cmpb    0x0081(r0)[r0:q], r0[r1:w]
+      cmpb    0(r0)[r0:q], 0(r0)[r1:w]
+      cmpb    2(r0)[r0:q], 0(r0)[r1:w]
+      cmpb    -64(r0)[r0:q], 0(r0)[r1:w]
+      cmpb    0x0081(r0)[r0:q], 0(r0)[r1:w]
       cmpb    r0, 6(5(sp))
       cmpb    r0, 6(-64(sp))
       cmpb    r0, 7(6(sp))
@@ -4497,7 +4497,7 @@
       cmpb    r0, 7(sp)
       cmpb    r0, -64(sp)
       cmpb    r0, 0x0081(sp)
-      cmpb    r0, r1[r0:w]
+      cmpb    r0, 0(r1)[r0:w]
       cmpb    r0, -63(r0)[r0:w]
       cmpb    r0, 0x0081(r0)[r0:w]
       cmpw    -57(r0), -56(sp)
@@ -5018,7 +5018,7 @@
       bicb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), 0x019588(pc)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), 0xc05793(pc)[r0:w]
-      bicb    ext(-0x0646)+(-0x0444), r0[r0:w]
+      bicb    ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       bicb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -5064,7 +5064,7 @@
       bicb    tos, 0x01c2c3c4(sp)[r0:w]
       bicb    tos, 0x01c2c3c4(sb)[r0:w]
       bicb    tos, 0xc45d9b(pc)[r0:w]
-      bicb    tos, r0[r0:w]
+      bicb    tos, 0(r0)[r0:w]
       bicb    0x01c2c3c4(fp), r1
       bicb    -0x1e3d3c3c(fp), r1
       bicb    0(fp), r1
@@ -5083,7 +5083,7 @@
       bicb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       bicb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       bicb    0x09cacbcc(fp), 0xd06a4e(pc)[r0:w]
-      bicb    0x09cacbcc(fp), r0[r0:w]
+      bicb    0x09cacbcc(fp), 0(r0)[r0:w]
       bicb    0x09cacbcc(sp), r1
       bicb    -0x1e353434(sp), r1
       bicb    0(sp), r1
@@ -5101,7 +5101,7 @@
       bicb    0(sp), 0x10d1d2d3(sp)
       bicb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       bicb    0x11d2d3d4(sp), 0xd872fa(pc)[r0:w]
-      bicb    0x11d2d3d4(sp), r0[r0:w]
+      bicb    0x11d2d3d4(sp), 0(r0)[r0:w]
       bicb    0x11d2d3d4(sb), r1
       bicb    -0x1e2d2c2c(sb), r1
       bicb    0(sb), r1
@@ -5118,7 +5118,7 @@
       bicb    -0x1e272626(sb), 0x1bdcddde(sp)
       bicb    0(sb), 0x18d9dadb(sp)
       bicb    0x19dadbdc(sb), 0xe07b9b(pc)[r0:w]
-      bicb    0x19dadbdc(sb), r0[r0:w]
+      bicb    0x19dadbdc(sb), 0(r0)[r0:w]
       bicb    0xdc77a9(pc), r1
       bicb    0x019bd3(pc), r1
       bicb    0xde79b4(pc), 0x1fe0e1e2(r1)
@@ -5129,10 +5129,10 @@
       bicb    0x019c0a(pc), @0x1fe0e1e2
       bicb    0xe27df3(pc), -0x1c1b1a1a(sp)
       bicb    0x019cfb(pc), -0x1e1d1c1c(sp)
-      bicb    r0[r0:q], r0[r1:w]
-      bicb    2(r0)[r0:q], r0[r1:w]
-      bicb    -64(r0)[r0:q], r0[r1:w]
-      bicb    0x0081(r0)[r0:q], r0[r1:w]
+      bicb    0(r0)[r0:q], 0(r0)[r1:w]
+      bicb    2(r0)[r0:q], 0(r0)[r1:w]
+      bicb    -64(r0)[r0:q], 0(r0)[r1:w]
+      bicb    0x0081(r0)[r0:q], 0(r0)[r1:w]
       bicb    r0, 6(5(sp))
       bicb    r0, 6(-64(sp))
       bicb    r0, 7(6(sp))
@@ -5144,7 +5144,7 @@
       bicb    r0, 7(sp)
       bicb    r0, -64(sp)
       bicb    r0, 0x0081(sp)
-      bicb    r0, r1[r0:w]
+      bicb    r0, 0(r1)[r0:w]
       bicb    r0, -63(r0)[r0:w]
       bicb    r0, 0x0081(r0)[r0:w]
       bicw    -53(r1), -52(r1)
@@ -7536,7 +7536,7 @@
       addcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), 0x01e9e5(pc)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), 0xc0abf0(pc)[r0:w]
-      addcb   ext(-0x0646)+(-0x0444), r0[r0:w]
+      addcb   ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       addcb   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -7582,7 +7582,7 @@
       addcb   tos, 0x01c2c3c4(sp)[r0:w]
       addcb   tos, 0x01c2c3c4(sb)[r0:w]
       addcb   tos, 0xc4b1f8(pc)[r0:w]
-      addcb   tos, r0[r0:w]
+      addcb   tos, 0(r0)[r0:w]
       addcb   0x01c2c3c4(fp), r1
       addcb   -0x1e3d3c3c(fp), r1
       addcb   0(fp), r1
@@ -7601,7 +7601,7 @@
       addcb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       addcb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       addcb   0x09cacbcc(fp), 0xd0beab(pc)[r0:w]
-      addcb   0x09cacbcc(fp), r0[r0:w]
+      addcb   0x09cacbcc(fp), 0(r0)[r0:w]
       addcb   0x09cacbcc(sp), r1
       addcb   -0x1e353434(sp), r1
       addcb   0(sp), r1
@@ -7619,7 +7619,7 @@
       addcb   0(sp), 0x10d1d2d3(sp)
       addcb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       addcb   0x11d2d3d4(sp), 0xd8c757(pc)[r0:w]
-      addcb   0x11d2d3d4(sp), r0[r0:w]
+      addcb   0x11d2d3d4(sp), 0(r0)[r0:w]
       addcb   0x11d2d3d4(sb), r1
       addcb   -0x1e2d2c2c(sb), r1
       addcb   0(sb), r1
@@ -7636,7 +7636,7 @@
       addcb   -0x1e272626(sb), 0x1bdcddde(sp)
       addcb   0(sb), 0x18d9dadb(sp)
       addcb   0x19dadbdc(sb), 0xe0cff8(pc)[r0:w]
-      addcb   0x19dadbdc(sb), r0[r0:w]
+      addcb   0x19dadbdc(sb), 0(r0)[r0:w]
       addcb   0xdccc06(pc), r1
       addcb   0x01f030(pc), r1
       addcb   0xdece11(pc), 0x1fe0e1e2(r1)
@@ -7647,10 +7647,10 @@
       addcb   0x01f067(pc), @0x1fe0e1e2
       addcb   0xe2d250(pc), -0x1c1b1a1a(sp)
       addcb   0x01f158(pc), -0x1e1d1c1c(sp)
-      addcb   r0[r0:q], r0[r1:w]
-      addcb   2(r0)[r0:q], r0[r1:w]
-      addcb   -64(r0)[r0:q], r0[r1:w]
-      addcb   0x0081(r0)[r0:q], r0[r1:w]
+      addcb   0(r0)[r0:q], 0(r0)[r1:w]
+      addcb   2(r0)[r0:q], 0(r0)[r1:w]
+      addcb   -64(r0)[r0:q], 0(r0)[r1:w]
+      addcb   0x0081(r0)[r0:q], 0(r0)[r1:w]
       addcb   r0, 6(5(sp))
       addcb   r0, 6(-64(sp))
       addcb   r0, 7(6(sp))
@@ -7662,7 +7662,7 @@
       addcb   r0, 7(sp)
       addcb   r0, -64(sp)
       addcb   r0, 0x0081(sp)
-      addcb   r0, r1[r0:w]
+      addcb   r0, 0(r1)[r0:w]
       addcb   r0, -63(r0)[r0:w]
       addcb   r0, 0x0081(r0)[r0:w]
       addcw   -45(r2), -44(r1)
@@ -8184,7 +8184,7 @@
       movb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       movb    ext(-0x0646)+(-0x0444), 0x020071(pc)[r0:w]
       movb    ext(-0x0646)+(-0x0444), 0xc0c27c(pc)[r0:w]
-      movb    ext(-0x0646)+(-0x0444), r0[r0:w]
+      movb    ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       movb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       movb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       movb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -8230,7 +8230,7 @@
       movb    tos, 0x01c2c3c4(sp)[r0:w]
       movb    tos, 0x01c2c3c4(sb)[r0:w]
       movb    tos, 0xc4c884(pc)[r0:w]
-      movb    tos, r0[r0:w]
+      movb    tos, 0(r0)[r0:w]
       movb    0x01c2c3c4(fp), r1
       movb    -0x1e3d3c3c(fp), r1
       movb    0(fp), r1
@@ -8249,7 +8249,7 @@
       movb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       movb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       movb    0x09cacbcc(fp), 0xd0d537(pc)[r0:w]
-      movb    0x09cacbcc(fp), r0[r0:w]
+      movb    0x09cacbcc(fp), 0(r0)[r0:w]
       movb    0x09cacbcc(sp), r1
       movb    -0x1e353434(sp), r1
       movb    0(sp), r1
@@ -8267,7 +8267,7 @@
       movb    0(sp), 0x10d1d2d3(sp)
       movb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       movb    0x11d2d3d4(sp), 0xd8dde3(pc)[r0:w]
-      movb    0x11d2d3d4(sp), r0[r0:w]
+      movb    0x11d2d3d4(sp), 0(r0)[r0:w]
       movb    0x11d2d3d4(sb), r1
       movb    -0x1e2d2c2c(sb), r1
       movb    0(sb), r1
@@ -8284,7 +8284,7 @@
       movb    -0x1e272626(sb), 0x1bdcddde(sp)
       movb    0(sb), 0x18d9dadb(sp)
       movb    0x19dadbdc(sb), 0xe0e684(pc)[r0:w]
-      movb    0x19dadbdc(sb), r0[r0:w]
+      movb    0x19dadbdc(sb), 0(r0)[r0:w]
       movb    0xdce292(pc), r1
       movb    0x0206bc(pc), r1
       movb    0xdee49d(pc), 0x1fe0e1e2(r1)
@@ -8295,10 +8295,10 @@
       movb    0x0206f3(pc), @0x1fe0e1e2
       movb    0xe2e8dc(pc), -0x1c1b1a1a(sp)
       movb    0x0207e4(pc), -0x1e1d1c1c(sp)
-      movb    r0[r0:q], r0[r1:w]
-      movb    2(r0)[r0:q], r0[r1:w]
-      movb    -64(r0)[r0:q], r0[r1:w]
-      movb    0x0081(r0)[r0:q], r0[r1:w]
+      movb    0(r0)[r0:q], 0(r0)[r1:w]
+      movb    2(r0)[r0:q], 0(r0)[r1:w]
+      movb    -64(r0)[r0:q], 0(r0)[r1:w]
+      movb    0x0081(r0)[r0:q], 0(r0)[r1:w]
       movb    r0, 6(5(sp))
       movb    r0, 6(-64(sp))
       movb    r0, 7(6(sp))
@@ -8310,7 +8310,7 @@
       movb    r0, 7(sp)
       movb    r0, -64(sp)
       movb    r0, 0x0081(sp)
-      movb    r0, r1[r0:w]
+      movb    r0, 0(r1)[r0:w]
       movb    r0, -63(r0)[r0:w]
       movb    r0, 0x0081(r0)[r0:w]
       movw    -41(r2), -40(sp)
@@ -8831,7 +8831,7 @@
       orb     ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       orb     ext(-0x0646)+(-0x0444), 0x0216fc(pc)[r0:w]
       orb     ext(-0x0646)+(-0x0444), 0xc0d907(pc)[r0:w]
-      orb     ext(-0x0646)+(-0x0444), r0[r0:w]
+      orb     ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       orb     ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       orb     ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       orb     ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -8877,7 +8877,7 @@
       orb     tos, 0x01c2c3c4(sp)[r0:w]
       orb     tos, 0x01c2c3c4(sb)[r0:w]
       orb     tos, 0xc4df0f(pc)[r0:w]
-      orb     tos, r0[r0:w]
+      orb     tos, 0(r0)[r0:w]
       orb     0x01c2c3c4(fp), r1
       orb     -0x1e3d3c3c(fp), r1
       orb     0(fp), r1
@@ -8896,7 +8896,7 @@
       orb     0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       orb     0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       orb     0x09cacbcc(fp), 0xd0ebc2(pc)[r0:w]
-      orb     0x09cacbcc(fp), r0[r0:w]
+      orb     0x09cacbcc(fp), 0(r0)[r0:w]
       orb     0x09cacbcc(sp), r1
       orb     -0x1e353434(sp), r1
       orb     0(sp), r1
@@ -8914,7 +8914,7 @@
       orb     0(sp), 0x10d1d2d3(sp)
       orb     0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       orb     0x11d2d3d4(sp), 0xd8f46e(pc)[r0:w]
-      orb     0x11d2d3d4(sp), r0[r0:w]
+      orb     0x11d2d3d4(sp), 0(r0)[r0:w]
       orb     0x11d2d3d4(sb), r1
       orb     -0x1e2d2c2c(sb), r1
       orb     0(sb), r1
@@ -8931,7 +8931,7 @@
       orb     -0x1e272626(sb), 0x1bdcddde(sp)
       orb     0(sb), 0x18d9dadb(sp)
       orb     0x19dadbdc(sb), 0xe0fd0f(pc)[r0:w]
-      orb     0x19dadbdc(sb), r0[r0:w]
+      orb     0x19dadbdc(sb), 0(r0)[r0:w]
       orb     0xdcf91d(pc), r1
       orb     0x021d47(pc), r1
       orb     0xdefb28(pc), 0x1fe0e1e2(r1)
@@ -8942,10 +8942,10 @@
       orb     0x021d7e(pc), @0x1fe0e1e2
       orb     0xe2ff67(pc), -0x1c1b1a1a(sp)
       orb     0x021e6f(pc), -0x1e1d1c1c(sp)
-      orb     r0[r0:q], r0[r1:w]
-      orb     2(r0)[r0:q], r0[r1:w]
-      orb     -64(r0)[r0:q], r0[r1:w]
-      orb     0x0081(r0)[r0:q], r0[r1:w]
+      orb     0(r0)[r0:q], 0(r0)[r1:w]
+      orb     2(r0)[r0:q], 0(r0)[r1:w]
+      orb     -64(r0)[r0:q], 0(r0)[r1:w]
+      orb     0x0081(r0)[r0:q], 0(r0)[r1:w]
       orb     r0, 6(5(sp))
       orb     r0, 6(-64(sp))
       orb     r0, 7(6(sp))
@@ -8957,7 +8957,7 @@
       orb     r0, 7(sp)
       orb     r0, -64(sp)
       orb     r0, 0x0081(sp)
-      orb     r0, r1[r0:w]
+      orb     r0, 0(r1)[r0:w]
       orb     r0, -63(r0)[r0:w]
       orb     r0, 0x0081(r0)[r0:w]
       orw     -37(r3), -36(r1)
@@ -9492,7 +9492,7 @@
       subb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       subb    ext(-0x0646)+(-0x0444), 0x022db6(pc)[r0:w]
       subb    ext(-0x0646)+(-0x0444), 0xc0efc1(pc)[r0:w]
-      subb    ext(-0x0646)+(-0x0444), r0[r0:w]
+      subb    ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       subb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       subb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       subb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -9538,7 +9538,7 @@
       subb    tos, 0x01c2c3c4(sp)[r0:w]
       subb    tos, 0x01c2c3c4(sb)[r0:w]
       subb    tos, 0xc4f5c9(pc)[r0:w]
-      subb    tos, r0[r0:w]
+      subb    tos, 0(r0)[r0:w]
       subb    0x01c2c3c4(fp), r1
       subb    -0x1e3d3c3c(fp), r1
       subb    0(fp), r1
@@ -9557,7 +9557,7 @@
       subb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       subb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       subb    0x09cacbcc(fp), 0xd1027c(pc)[r0:w]
-      subb    0x09cacbcc(fp), r0[r0:w]
+      subb    0x09cacbcc(fp), 0(r0)[r0:w]
       subb    0x09cacbcc(sp), r1
       subb    -0x1e353434(sp), r1
       subb    0(sp), r1
@@ -9575,7 +9575,7 @@
       subb    0(sp), 0x10d1d2d3(sp)
       subb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       subb    0x11d2d3d4(sp), 0xd90b28(pc)[r0:w]
-      subb    0x11d2d3d4(sp), r0[r0:w]
+      subb    0x11d2d3d4(sp), 0(r0)[r0:w]
       subb    0x11d2d3d4(sb), r1
       subb    -0x1e2d2c2c(sb), r1
       subb    0(sb), r1
@@ -9592,7 +9592,7 @@
       subb    -0x1e272626(sb), 0x1bdcddde(sp)
       subb    0(sb), 0x18d9dadb(sp)
       subb    0x19dadbdc(sb), 0xe113c9(pc)[r0:w]
-      subb    0x19dadbdc(sb), r0[r0:w]
+      subb    0x19dadbdc(sb), 0(r0)[r0:w]
       subb    0xdd0fd7(pc), r1
       subb    0x023401(pc), r1
       subb    0xdf11e2(pc), 0x1fe0e1e2(r1)
@@ -9603,10 +9603,10 @@
       subb    0x023438(pc), @0x1fe0e1e2
       subb    0xe31621(pc), -0x1c1b1a1a(sp)
       subb    0x023529(pc), -0x1e1d1c1c(sp)
-      subb    r0[r0:q], r0[r1:w]
-      subb    2(r0)[r0:q], r0[r1:w]
-      subb    -64(r0)[r0:q], r0[r1:w]
-      subb    0x0081(r0)[r0:q], r0[r1:w]
+      subb    0(r0)[r0:q], 0(r0)[r1:w]
+      subb    2(r0)[r0:q], 0(r0)[r1:w]
+      subb    -64(r0)[r0:q], 0(r0)[r1:w]
+      subb    0x0081(r0)[r0:q], 0(r0)[r1:w]
       subb    r0, 6(5(sp))
       subb    r0, 6(-64(sp))
       subb    r0, 7(6(sp))
@@ -9618,7 +9618,7 @@
       subb    r0, 7(sp)
       subb    r0, -64(sp)
       subb    r0, 0x0081(sp)
-      subb    r0, r1[r0:w]
+      subb    r0, 0(r1)[r0:w]
       subb    r0, -63(r0)[r0:w]
       subb    r0, 0x0081(r0)[r0:w]
       subw    -29(r4), -28(r1)
@@ -10150,7 +10150,7 @@
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       andb    ext(-0x0646)+(-0x0444), 0x024463(pc)[r0:w]
       andb    ext(-0x0646)+(-0x0444), 0xc1066e(pc)[r0:w]
-      andb    ext(-0x0646)+(-0x0444), r0[r0:w]
+      andb    ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       andb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       andb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -10196,7 +10196,7 @@
       andb    tos, 0x01c2c3c4(sp)[r0:w]
       andb    tos, 0x01c2c3c4(sb)[r0:w]
       andb    tos, 0xc50c76(pc)[r0:w]
-      andb    tos, r0[r0:w]
+      andb    tos, 0(r0)[r0:w]
       andb    0x01c2c3c4(fp), r1
       andb    -0x1e3d3c3c(fp), r1
       andb    0(fp), r1
@@ -10215,7 +10215,7 @@
       andb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       andb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       andb    0x09cacbcc(fp), 0xd11929(pc)[r0:w]
-      andb    0x09cacbcc(fp), r0[r0:w]
+      andb    0x09cacbcc(fp), 0(r0)[r0:w]
       andb    0x09cacbcc(sp), r1
       andb    -0x1e353434(sp), r1
       andb    0(sp), r1
@@ -10233,7 +10233,7 @@
       andb    0(sp), 0x10d1d2d3(sp)
       andb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       andb    0x11d2d3d4(sp), 0xd921d5(pc)[r0:w]
-      andb    0x11d2d3d4(sp), r0[r0:w]
+      andb    0x11d2d3d4(sp), 0(r0)[r0:w]
       andb    0x11d2d3d4(sb), r1
       andb    -0x1e2d2c2c(sb), r1
       andb    0(sb), r1
@@ -10250,7 +10250,7 @@
       andb    -0x1e272626(sb), 0x1bdcddde(sp)
       andb    0(sb), 0x18d9dadb(sp)
       andb    0x19dadbdc(sb), 0xe12a76(pc)[r0:w]
-      andb    0x19dadbdc(sb), r0[r0:w]
+      andb    0x19dadbdc(sb), 0(r0)[r0:w]
       andb    0xdd2684(pc), r1
       andb    0x024aae(pc), r1
       andb    0xdf288f(pc), 0x1fe0e1e2(r1)
@@ -10261,10 +10261,10 @@
       andb    0x024ae5(pc), @0x1fe0e1e2
       andb    0xe32cce(pc), -0x1c1b1a1a(sp)
       andb    0x024bd6(pc), -0x1e1d1c1c(sp)
-      andb    r0[r0:q], r0[r1:w]
-      andb    2(r0)[r0:q], r0[r1:w]
-      andb    -64(r0)[r0:q], r0[r1:w]
-      andb    0x0081(r0)[r0:q], r0[r1:w]
+      andb    0(r0)[r0:q], 0(r0)[r1:w]
+      andb    2(r0)[r0:q], 0(r0)[r1:w]
+      andb    -64(r0)[r0:q], 0(r0)[r1:w]
+      andb    0x0081(r0)[r0:q], 0(r0)[r1:w]
       andb    r0, 6(5(sp))
       andb    r0, 6(-64(sp))
       andb    r0, 7(6(sp))
@@ -10276,7 +10276,7 @@
       andb    r0, 7(sp)
       andb    r0, -64(sp)
       andb    r0, 0x0081(sp)
-      andb    r0, r1[r0:w]
+      andb    r0, 0(r1)[r0:w]
       andb    r0, -63(r0)[r0:w]
       andb    r0, 0x0081(r0)[r0:w]
       andw    -21(r5), -20(r1)
@@ -11229,7 +11229,7 @@
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), 0x026acc(pc)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), 0xc12cd7(pc)[r0:w]
-      subcb   ext(-0x0646)+(-0x0444), r0[r0:w]
+      subcb   ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       subcb   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -11275,7 +11275,7 @@
       subcb   tos, 0x01c2c3c4(sp)[r0:w]
       subcb   tos, 0x01c2c3c4(sb)[r0:w]
       subcb   tos, 0xc532df(pc)[r0:w]
-      subcb   tos, r0[r0:w]
+      subcb   tos, 0(r0)[r0:w]
       subcb   0x01c2c3c4(fp), r1
       subcb   -0x1e3d3c3c(fp), r1
       subcb   0(fp), r1
@@ -11294,7 +11294,7 @@
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       subcb   0x09cacbcc(fp), 0xd13f92(pc)[r0:w]
-      subcb   0x09cacbcc(fp), r0[r0:w]
+      subcb   0x09cacbcc(fp), 0(r0)[r0:w]
       subcb   0x09cacbcc(sp), r1
       subcb   -0x1e353434(sp), r1
       subcb   0(sp), r1
@@ -11312,7 +11312,7 @@
       subcb   0(sp), 0x10d1d2d3(sp)
       subcb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       subcb   0x11d2d3d4(sp), 0xd9483e(pc)[r0:w]
-      subcb   0x11d2d3d4(sp), r0[r0:w]
+      subcb   0x11d2d3d4(sp), 0(r0)[r0:w]
       subcb   0x11d2d3d4(sb), r1
       subcb   -0x1e2d2c2c(sb), r1
       subcb   0(sb), r1
@@ -11329,7 +11329,7 @@
       subcb   -0x1e272626(sb), 0x1bdcddde(sp)
       subcb   0(sb), 0x18d9dadb(sp)
       subcb   0x19dadbdc(sb), 0xe150df(pc)[r0:w]
-      subcb   0x19dadbdc(sb), r0[r0:w]
+      subcb   0x19dadbdc(sb), 0(r0)[r0:w]
       subcb   0xdd4ced(pc), r1
       subcb   0x027117(pc), r1
       subcb   0xdf4ef8(pc), 0x1fe0e1e2(r1)
@@ -11340,10 +11340,10 @@
       subcb   0x02714e(pc), @0x1fe0e1e2
       subcb   0xe35337(pc), -0x1c1b1a1a(sp)
       subcb   0x02723f(pc), -0x1e1d1c1c(sp)
-      subcb   r0[r0:q], r0[r1:w]
-      subcb   2(r0)[r0:q], r0[r1:w]
-      subcb   -64(r0)[r0:q], r0[r1:w]
-      subcb   0x0081(r0)[r0:q], r0[r1:w]
+      subcb   0(r0)[r0:q], 0(r0)[r1:w]
+      subcb   2(r0)[r0:q], 0(r0)[r1:w]
+      subcb   -64(r0)[r0:q], 0(r0)[r1:w]
+      subcb   0x0081(r0)[r0:q], 0(r0)[r1:w]
       subcb   r0, 6(5(sp))
       subcb   r0, 6(-64(sp))
       subcb   r0, 7(6(sp))
@@ -11355,7 +11355,7 @@
       subcb   r0, 7(sp)
       subcb   r0, -64(sp)
       subcb   r0, 0x0081(sp)
-      subcb   r0, r1[r0:w]
+      subcb   r0, 0(r1)[r0:w]
       subcb   r0, -63(r0)[r0:w]
       subcb   r0, 0x0081(r0)[r0:w]
       subcw   -13(r6), -12(r1)
@@ -11930,7 +11930,7 @@
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), 0x0282af(pc)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), 0xc144ba(pc)[r0:w]
-      tbitb   ext(-0x0646)+(-0x0444), r0[r0:w]
+      tbitb   ext(-0x0646)+(-0x0444), 0(r0)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:w]
       tbitb   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:w]
@@ -11976,7 +11976,7 @@
       tbitb   tos, 0x01c2c3c4(sp)[r0:w]
       tbitb   tos, 0x01c2c3c4(sb)[r0:w]
       tbitb   tos, 0xc54ac2(pc)[r0:w]
-      tbitb   tos, r0[r0:w]
+      tbitb   tos, 0(r0)[r0:w]
       tbitb   0x01c2c3c4(fp), r1
       tbitb   -0x1e3d3c3c(fp), r1
       tbitb   0(fp), r1
@@ -11995,7 +11995,7 @@
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:w]
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:w]
       tbitb   0x09cacbcc(fp), 0xd15775(pc)[r0:w]
-      tbitb   0x09cacbcc(fp), r0[r0:w]
+      tbitb   0x09cacbcc(fp), 0(r0)[r0:w]
       tbitb   0x09cacbcc(sp), r1
       tbitb   -0x1e353434(sp), r1
       tbitb   0(sp), r1
@@ -12013,7 +12013,7 @@
       tbitb   0(sp), 0x10d1d2d3(sp)
       tbitb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:w]
       tbitb   0x11d2d3d4(sp), 0xd96021(pc)[r0:w]
-      tbitb   0x11d2d3d4(sp), r0[r0:w]
+      tbitb   0x11d2d3d4(sp), 0(r0)[r0:w]
       tbitb   0x11d2d3d4(sb), r1
       tbitb   -0x1e2d2c2c(sb), r1
       tbitb   0(sb), r1
@@ -12030,7 +12030,7 @@
       tbitb   -0x1e272626(sb), 0x1bdcddde(sp)
       tbitb   0(sb), 0x18d9dadb(sp)
       tbitb   0x19dadbdc(sb), 0xe168c2(pc)[r0:w]
-      tbitb   0x19dadbdc(sb), r0[r0:w]
+      tbitb   0x19dadbdc(sb), 0(r0)[r0:w]
       tbitb   0xdd64d0(pc), r1
       tbitb   0x0288fa(pc), r1
       tbitb   0xdf66db(pc), 0x1fe0e1e2(r1)
@@ -12041,10 +12041,10 @@
       tbitb   0x028931(pc), @0x1fe0e1e2
       tbitb   0xe36b1a(pc), -0x1c1b1a1a(sp)
       tbitb   0x028a22(pc), -0x1e1d1c1c(sp)
-      tbitb   r0[r0:q], r0[r1:w]
-      tbitb   2(r0)[r0:q], r0[r1:w]
-      tbitb   -64(r0)[r0:q], r0[r1:w]
-      tbitb   0x0081(r0)[r0:q], r0[r1:w]
+      tbitb   0(r0)[r0:q], 0(r0)[r1:w]
+      tbitb   2(r0)[r0:q], 0(r0)[r1:w]
+      tbitb   -64(r0)[r0:q], 0(r0)[r1:w]
+      tbitb   0x0081(r0)[r0:q], 0(r0)[r1:w]
       tbitb   r0, 6(5(sp))
       tbitb   r0, 6(-64(sp))
       tbitb   r0, 7(6(sp))
@@ -12056,7 +12056,7 @@
       tbitb   r0, 7(sp)
       tbitb   r0, -64(sp)
       tbitb   r0, 0x0081(sp)
-      tbitb   r0, r1[r0:w]
+      tbitb   r0, 0(r1)[r0:w]
       tbitb   r0, -63(r0)[r0:w]
       tbitb   r0, 0x0081(r0)[r0:w]
       tbitw   -9(r6), -8(sp)
@@ -12650,7 +12650,7 @@
       bispsrb 0x029ce9(pc)
       adjspb  0xe27dcd(pc)
       adjspb  0x029cf2(pc)
-      caseb   r0[r0:q]
+      caseb   0(r0)[r0:q]
       caseb   -63(r0)[r0:q]
       caseb   0x0081(r0)[r0:q]
       bicpsrb r0
@@ -12831,7 +12831,7 @@
       bispsrw 0x02a169(pc)
       adjspw  0xe2824d(pc)
       adjspw  0x02a172(pc)
-      casew   r0[r0:q]
+      casew   0(r0)[r0:q]
       casew   -63(r0)[r0:q]
       casew   0x0081(r0)[r0:q]
       bicpsrw r0
@@ -13052,7 +13052,7 @@
       adjspd  0x02a6ff(pc)
       jsr     0xe388e4(pc)
       jsr     0x02a708(pc)
-      cased   r0[r0:q]
+      cased   0(r0)[r0:q]
       cased   -63(r0)[r0:q]
       cased   0x0081(r0)[r0:q]
       adjspd  r0
@@ -13262,7 +13262,7 @@
       addb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       addb    ext(-0x0646)+(-0x0444), 0x02ac4c(pc)[r0:d]
       addb    ext(-0x0646)+(-0x0444), 0xc16e57(pc)[r0:d]
-      addb    ext(-0x0646)+(-0x0444), r0[r0:d]
+      addb    ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       addb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       addb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       addb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -13308,7 +13308,7 @@
       addb    tos, 0x01c2c3c4(sp)[r0:d]
       addb    tos, 0x01c2c3c4(sb)[r0:d]
       addb    tos, 0xc57467(pc)[r0:d]
-      addb    tos, r0[r0:d]
+      addb    tos, 0(r0)[r0:d]
       addb    0x01c2c3c4(fp), r2
       addb    -0x1e3d3c3c(fp), r2
       addb    0(fp), r2
@@ -13327,7 +13327,7 @@
       addb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       addb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       addb    0x09cacbcc(fp), 0xd18126(pc)[r0:d]
-      addb    0x09cacbcc(fp), r0[r0:d]
+      addb    0x09cacbcc(fp), 0(r0)[r0:d]
       addb    0x09cacbcc(sp), r2
       addb    -0x1e353434(sp), r2
       addb    0(sp), r2
@@ -13345,7 +13345,7 @@
       addb    0(sp), 0x10d1d2d3(sb)
       addb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       addb    0x11d2d3d4(sp), 0xd989de(pc)[r0:d]
-      addb    0x11d2d3d4(sp), r0[r0:d]
+      addb    0x11d2d3d4(sp), 0(r0)[r0:d]
       addb    0x11d2d3d4(sb), r2
       addb    -0x1e2d2c2c(sb), r2
       addb    0(sb), r2
@@ -13362,7 +13362,7 @@
       addb    -0x1e272626(sb), 0x1bdcddde(sb)
       addb    0(sb), 0x18d9dadb(sb)
       addb    0x19dadbdc(sb), 0xe1928b(pc)[r0:d]
-      addb    0x19dadbdc(sb), r0[r0:d]
+      addb    0x19dadbdc(sb), 0(r0)[r0:d]
       addb    0xdd8e99(pc), r2
       addb    0x02b2c3(pc), r2
       addb    0xdf90a4(pc), 0x1fe0e1e2(r2)
@@ -13373,10 +13373,10 @@
       addb    0x02b2fe(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       addb    0xe394eb(pc), -0x1c1b1a1a(sb)
       addb    0x02b3f3(pc), -0x1e1d1c1c(sb)
-      addb    r0[r0:q], r0[r1:d]
-      addb    2(r0)[r0:q], r0[r1:d]
-      addb    -64(r0)[r0:q], r0[r1:d]
-      addb    0x0081(r0)[r0:q], r0[r1:d]
+      addb    0(r0)[r0:q], 0(r0)[r1:d]
+      addb    2(r0)[r0:q], 0(r0)[r1:d]
+      addb    -64(r0)[r0:q], 0(r0)[r1:d]
+      addb    0x0081(r0)[r0:q], 0(r0)[r1:d]
       addw    0x0586(0x0384(fp)), 0x0788(r2)
       addw    0x0586(-0x1f7c(fp)), 0x0788(r2)
       addw    0x0788(0x00848586(fp)), 0x098a(r2)
@@ -14005,7 +14005,7 @@
       addqb   1, 0x02cc03(pc)
       addqb   -7, 0xe1abe6(pc)
       addqb   -7, 0x02cc0c(pc)
-      addqb   -1, r0[r0:q]
+      addqb   -1, 0(r0)[r0:q]
       addqb   -1, -63(r0)[r0:q]
       addqb   -1, 0x0081(r0)[r0:q]
       addqw   -3, 0x1192(0x0f90(sp))
@@ -14075,7 +14075,7 @@
       addqw   1, 0x02cdc0(pc)
       addqw   -7, 0xe1ada3(pc)
       addqw   -7, 0x02cdc9(pc)
-      addqw   -1, r0[r0:q]
+      addqw   -1, 0(r0)[r0:q]
       addqw   -1, -63(r0)[r0:q]
       addqw   -1, 0x0081(r0)[r0:q]
       addqd   1, 0x1394(0x1192(sb))
@@ -14136,7 +14136,7 @@
       addqd   1, 0x02cf38(pc)
       addqd   -7, 0xe1af1b(pc)
       addqd   -7, 0x02cf41(pc)
-      addqd   -1, r0[r0:q]
+      addqd   -1, 0(r0)[r0:q]
       addqd   -1, -63(r0)[r0:q]
       addqd   -1, 0x0081(r0)[r0:q]
       addcb   0x1798(0x1596(sb)), 0x1b9c(0x199a(sb))
@@ -14332,7 +14332,7 @@
       subd    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       subd    ext(-0x0646)+(-0x0444), 0x02d456(pc)[r0:d]
       subd    ext(-0x0646)+(-0x0444), 0xc19661(pc)[r0:d]
-      subd    ext(-0x0646)+(-0x0444), r0[r0:d]
+      subd    ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       subd    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subd    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       subd    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -14378,7 +14378,7 @@
       subd    tos, 0x01c2c3c4(sp)[r0:d]
       subd    tos, 0x01c2c3c4(sb)[r0:d]
       subd    tos, 0xc59c71(pc)[r0:d]
-      subd    tos, r0[r0:d]
+      subd    tos, 0(r0)[r0:d]
       subd    0x01c2c3c4(fp), r2
       subd    -0x1e3d3c3c(fp), r2
       subd    0(fp), r2
@@ -14397,7 +14397,7 @@
       subd    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subd    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       subd    0x09cacbcc(fp), 0xd1a930(pc)[r0:d]
-      subd    0x09cacbcc(fp), r0[r0:d]
+      subd    0x09cacbcc(fp), 0(r0)[r0:d]
       subd    0x09cacbcc(sp), r2
       subd    -0x1e353434(sp), r2
       subd    0(sp), r2
@@ -14415,7 +14415,7 @@
       subd    0(sp), 0x10d1d2d3(sb)
       subd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       subd    0x11d2d3d4(sp), 0xd9b1e8(pc)[r0:d]
-      subd    0x11d2d3d4(sp), r0[r0:d]
+      subd    0x11d2d3d4(sp), 0(r0)[r0:d]
       subd    0x11d2d3d4(sb), r2
       subd    -0x1e2d2c2c(sb), r2
       subd    0(sb), r2
@@ -14432,7 +14432,7 @@
       subd    -0x1e272626(sb), 0x1bdcddde(sb)
       subd    0(sb), 0x18d9dadb(sb)
       subd    0x19dadbdc(sb), 0xe1ba95(pc)[r0:d]
-      subd    0x19dadbdc(sb), r0[r0:d]
+      subd    0x19dadbdc(sb), 0(r0)[r0:d]
       subd    0xddb6a3(pc), r2
       subd    0x02dacd(pc), r2
       subd    0xdfb8ae(pc), 0x1fe0e1e2(r2)
@@ -14443,10 +14443,10 @@
       subd    0x02db08(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       subd    0xe3bcf5(pc), -0x1c1b1a1a(sb)
       subd    0x02dbfd(pc), -0x1e1d1c1c(sb)
-      subd    r0[r0:q], r0[r1:d]
-      subd    2(r0)[r0:q], r0[r1:d]
-      subd    -64(r0)[r0:q], r0[r1:d]
-      subd    0x0081(r0)[r0:q], r0[r1:d]
+      subd    0(r0)[r0:q], 0(r0)[r1:d]
+      subd    2(r0)[r0:q], 0(r0)[r1:d]
+      subd    -64(r0)[r0:q], 0(r0)[r1:d]
+      subd    0x0081(r0)[r0:q], 0(r0)[r1:d]
       subd    r0, 6(5(sb))
       subd    r0, 6(-64(sb))
       subd    r0, 7(6(sb))
@@ -14460,7 +14460,7 @@
       subd    r0, 7(sb)
       subd    r0, -64(sb)
       subd    r0, 0x0081(sb)
-      subd    r0, r1[r0:d]
+      subd    r0, 0(r1)[r0:d]
       subd    r0, -63(r0)[r0:d]
       subd    r0, 0x0081(r0)[r0:d]
       addr    @-0x1656, r2
@@ -14527,7 +14527,7 @@
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       addr    ext(-0x0646)+(-0x0444), 0x02db88(pc)[r0:d]
       addr    ext(-0x0646)+(-0x0444), 0xc19d93(pc)[r0:d]
-      addr    ext(-0x0646)+(-0x0444), r0[r0:d]
+      addr    ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       addr    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       addr    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       addr    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -14573,7 +14573,7 @@
       addr    tos, 0x01c2c3c4(sp)[r0:d]
       addr    tos, 0x01c2c3c4(sb)[r0:d]
       addr    tos, 0xc5a3a3(pc)[r0:d]
-      addr    tos, r0[r0:d]
+      addr    tos, 0(r0)[r0:d]
       addr    0x01c2c3c4(fp), r2
       addr    -0x1e3d3c3c(fp), r2
       addr    0(fp), r2
@@ -14592,7 +14592,7 @@
       addr    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       addr    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       addr    0x09cacbcc(fp), 0xd1b062(pc)[r0:d]
-      addr    0x09cacbcc(fp), r0[r0:d]
+      addr    0x09cacbcc(fp), 0(r0)[r0:d]
       addr    0x09cacbcc(sp), r2
       addr    -0x1e353434(sp), r2
       addr    0(sp), r2
@@ -14610,7 +14610,7 @@
       addr    0(sp), 0x10d1d2d3(sb)
       addr    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       addr    0x11d2d3d4(sp), 0xd9b91a(pc)[r0:d]
-      addr    0x11d2d3d4(sp), r0[r0:d]
+      addr    0x11d2d3d4(sp), 0(r0)[r0:d]
       addr    0x11d2d3d4(sb), r2
       addr    -0x1e2d2c2c(sb), r2
       addr    0(sb), r2
@@ -14627,7 +14627,7 @@
       addr    -0x1e272626(sb), 0x1bdcddde(sb)
       addr    0(sb), 0x18d9dadb(sb)
       addr    0x19dadbdc(sb), 0xe1c1c7(pc)[r0:d]
-      addr    0x19dadbdc(sb), r0[r0:d]
+      addr    0x19dadbdc(sb), 0(r0)[r0:d]
       addr    0xddbdd5(pc), r2
       addr    0x02e1ff(pc), r2
       addr    0xdfbfe0(pc), 0x1fe0e1e2(r2)
@@ -14685,7 +14685,7 @@
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       andb    ext(-0x0646)+(-0x0444), 0x02e1d4(pc)[r0:d]
       andb    ext(-0x0646)+(-0x0444), 0xc1a3df(pc)[r0:d]
-      andb    ext(-0x0646)+(-0x0444), r0[r0:d]
+      andb    ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       andb    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       andb    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       andb    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -14728,7 +14728,7 @@
       andb    tos, 0x01c2c3c4(sp)[r0:d]
       andb    tos, 0x01c2c3c4(sb)[r0:d]
       andb    tos, 0xc5a9e3(pc)[r0:d]
-      andb    tos, r0[r0:d]
+      andb    tos, 0(r0)[r0:d]
       andb    0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       andb    -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
       andb    0(fp), 0x0acbcccd(0x06c7c8c9(sb))
@@ -14741,7 +14741,7 @@
       andb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       andb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       andb    0x09cacbcc(fp), 0xd1b678(pc)[r0:d]
-      andb    0x09cacbcc(fp), r0[r0:d]
+      andb    0x09cacbcc(fp), 0(r0)[r0:d]
       andb    0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       andb    -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       andb    0(sp), 0x12d3d4d5(0x0ecfd0d1(sb))
@@ -14753,7 +14753,7 @@
       andb    0(sp), 0x10d1d2d3(sb)
       andb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       andb    0x11d2d3d4(sp), 0xd9bf06(pc)[r0:d]
-      andb    0x11d2d3d4(sp), r0[r0:d]
+      andb    0x11d2d3d4(sp), 0(r0)[r0:d]
       andb    0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       andb    -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
       andb    0(sb), 0x1adbdcdd(0x16d7d8d9(sb))
@@ -14764,17 +14764,17 @@
       andb    -0x1e272626(sb), 0x1bdcddde(sb)
       andb    0(sb), 0x18d9dadb(sb)
       andb    0x19dadbdc(sb), 0xe1c789(pc)[r0:d]
-      andb    0x19dadbdc(sb), r0[r0:d]
+      andb    0x19dadbdc(sb), 0(r0)[r0:d]
       andb    0xe1c79b(pc), -0x1a191818(-0x1e1d1c1c(sb))
       andb    0x02e7c9(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
       andb    0xe2c8b5(pc), ext(-0x1d1c1b1b)+(-0x19181717)
       andb    0x02e7e2(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       andb    0xe3c9cf(pc), -0x1c1b1a1a(sb)
       andb    0x02e8d7(pc), -0x1e1d1c1c(sb)
-      andb    r0[r0:q], r0[r1:d]
-      andb    2(r0)[r0:q], r0[r1:d]
-      andb    -64(r0)[r0:q], r0[r1:d]
-      andb    0x0081(r0)[r0:q], r0[r1:d]
+      andb    0(r0)[r0:q], 0(r0)[r1:d]
+      andb    2(r0)[r0:q], 0(r0)[r1:d]
+      andb    -64(r0)[r0:q], 0(r0)[r1:d]
+      andb    0x0081(r0)[r0:q], 0(r0)[r1:d]
       andw    @-0x1454, -0x1252(r2)
       andw    @0x00acadae, -0x1050(r2)
       andw    @0x00acadae, 0x00b0b1b2(r2)
@@ -14837,7 +14837,7 @@
       andw    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       andw    ext(-0x0646)+(-0x0444), 0x02e812(pc)[r0:d]
       andw    ext(-0x0646)+(-0x0444), 0xc1aa1d(pc)[r0:d]
-      andw    ext(-0x0646)+(-0x0444), r0[r0:d]
+      andw    ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       andw    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       andw    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       andw    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -14883,7 +14883,7 @@
       andw    tos, 0x01c2c3c4(sp)[r0:d]
       andw    tos, 0x01c2c3c4(sb)[r0:d]
       andw    tos, 0xc5b02d(pc)[r0:d]
-      andw    tos, r0[r0:d]
+      andw    tos, 0(r0)[r0:d]
       andw    0x01c2c3c4(fp), r2
       andw    -0x1e3d3c3c(fp), r2
       andw    0(fp), r2
@@ -14902,7 +14902,7 @@
       andw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       andw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       andw    0x09cacbcc(fp), 0xd1bcec(pc)[r0:d]
-      andw    0x09cacbcc(fp), r0[r0:d]
+      andw    0x09cacbcc(fp), 0(r0)[r0:d]
       andw    0x09cacbcc(sp), r2
       andw    -0x1e353434(sp), r2
       andw    0(sp), r2
@@ -14920,7 +14920,7 @@
       andw    0(sp), 0x10d1d2d3(sb)
       andw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       andw    0x11d2d3d4(sp), 0xd9c5a4(pc)[r0:d]
-      andw    0x11d2d3d4(sp), r0[r0:d]
+      andw    0x11d2d3d4(sp), 0(r0)[r0:d]
       andw    0x11d2d3d4(sb), r2
       andw    -0x1e2d2c2c(sb), r2
       andw    0(sb), r2
@@ -14937,7 +14937,7 @@
       andw    -0x1e272626(sb), 0x1bdcddde(sb)
       andw    0(sb), 0x18d9dadb(sb)
       andw    0x19dadbdc(sb), 0xe1ce51(pc)[r0:d]
-      andw    0x19dadbdc(sb), r0[r0:d]
+      andw    0x19dadbdc(sb), 0(r0)[r0:d]
       andw    0xddca5f(pc), r2
       andw    0x02ee89(pc), r2
       andw    0xdfcc6a(pc), 0x1fe0e1e2(r2)
@@ -14948,10 +14948,10 @@
       andw    0x02eec4(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       andw    0xe3d0b1(pc), -0x1c1b1a1a(sb)
       andw    0x02efb9(pc), -0x1e1d1c1c(sb)
-      andw    r0[r0:q], r0[r1:d]
-      andw    2(r0)[r0:q], r0[r1:d]
-      andw    -64(r0)[r0:q], r0[r1:d]
-      andw    0x0081(r0)[r0:q], r0[r1:d]
+      andw    0(r0)[r0:q], 0(r0)[r1:d]
+      andw    2(r0)[r0:q], 0(r0)[r1:d]
+      andw    -64(r0)[r0:q], 0(r0)[r1:d]
+      andw    0x0081(r0)[r0:q], 0(r0)[r1:d]
       andw    r0, 6(5(sb))
       andw    r0, 6(-64(sb))
       andw    r0, 7(6(sb))
@@ -14965,7 +14965,7 @@
       andw    r0, 7(sb)
       andw    r0, -64(sb)
       andw    r0, 0x0081(sb)
-      andw    r0, r1[r0:d]
+      andw    r0, 0(r1)[r0:d]
       andw    r0, -63(r0)[r0:d]
       andw    r0, 0x0081(r0)[r0:d]
       blo     0x02dae7
@@ -15028,7 +15028,7 @@
       andd    ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       andd    ext(-0x0646)+(-0x0444), 0x02ef25(pc)[r0:d]
       andd    ext(-0x0646)+(-0x0444), 0xc1b130(pc)[r0:d]
-      andd    ext(-0x0646)+(-0x0444), r0[r0:d]
+      andd    ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       andd    ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       andd    ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       andd    ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -15074,7 +15074,7 @@
       andd    tos, 0x01c2c3c4(sp)[r0:d]
       andd    tos, 0x01c2c3c4(sb)[r0:d]
       andd    tos, 0xc5b740(pc)[r0:d]
-      andd    tos, r0[r0:d]
+      andd    tos, 0(r0)[r0:d]
       andd    0x01c2c3c4(fp), r2
       andd    -0x1e3d3c3c(fp), r2
       andd    0(fp), r2
@@ -15093,7 +15093,7 @@
       andd    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       andd    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       andd    0x09cacbcc(fp), 0xd1c3ff(pc)[r0:d]
-      andd    0x09cacbcc(fp), r0[r0:d]
+      andd    0x09cacbcc(fp), 0(r0)[r0:d]
       andd    0x09cacbcc(sp), r2
       andd    -0x1e353434(sp), r2
       andd    0(sp), r2
@@ -15111,7 +15111,7 @@
       andd    0(sp), 0x10d1d2d3(sb)
       andd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       andd    0x11d2d3d4(sp), 0xd9ccb7(pc)[r0:d]
-      andd    0x11d2d3d4(sp), r0[r0:d]
+      andd    0x11d2d3d4(sp), 0(r0)[r0:d]
       andd    0x11d2d3d4(sb), r2
       andd    -0x1e2d2c2c(sb), r2
       andd    0(sb), r2
@@ -15128,7 +15128,7 @@
       andd    -0x1e272626(sb), 0x1bdcddde(sb)
       andd    0(sb), 0x18d9dadb(sb)
       andd    0x19dadbdc(sb), 0xe1d564(pc)[r0:d]
-      andd    0x19dadbdc(sb), r0[r0:d]
+      andd    0x19dadbdc(sb), 0(r0)[r0:d]
       andd    0xddd172(pc), r2
       andd    0x02f59c(pc), r2
       andd    0xdfd37d(pc), 0x1fe0e1e2(r2)
@@ -15139,10 +15139,10 @@
       andd    0x02f5d7(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       andd    0xe3d7c4(pc), -0x1c1b1a1a(sb)
       andd    0x02f6cc(pc), -0x1e1d1c1c(sb)
-      andd    r0[r0:q], r0[r1:d]
-      andd    2(r0)[r0:q], r0[r1:d]
-      andd    -64(r0)[r0:q], r0[r1:d]
-      andd    0x0081(r0)[r0:q], r0[r1:d]
+      andd    0(r0)[r0:q], 0(r0)[r1:d]
+      andd    2(r0)[r0:q], 0(r0)[r1:d]
+      andd    -64(r0)[r0:q], 0(r0)[r1:d]
+      andd    0x0081(r0)[r0:q], 0(r0)[r1:d]
       andd    r0, 6(5(sb))
       andd    r0, 6(-64(sb))
       andd    r0, 7(6(sb))
@@ -15156,7 +15156,7 @@
       andd    r0, 7(sb)
       andd    r0, -64(sb)
       andd    r0, 0x0081(sb)
-      andd    r0, r1[r0:d]
+      andd    r0, 0(r1)[r0:d]
       andd    r0, -63(r0)[r0:d]
       andd    r0, 0x0081(r0)[r0:d]
       sprb    psr, @-0x1050
@@ -15215,7 +15215,7 @@
       sprb    sp, 0x02f782(pc)
       sprb    psr, 0xe3d967(pc)
       sprb    psr, 0x02f78b(pc)
-      sprb    mod, r0[r0:q]
+      sprb    mod, 0(r0)[r0:q]
       sprb    mod, -63(r0)[r0:q]
       sprb    mod, 0x0081(r0)[r0:q]
       sprb    sp, r0
@@ -15283,7 +15283,7 @@
       sprw    sp, 0x02f8e9(pc)
       sprw    psr, 0xe3dace(pc)
       sprw    psr, 0x02f8f2(pc)
-      sprw    mod, r0[r0:q]
+      sprw    mod, 0(r0)[r0:q]
       sprw    mod, -63(r0)[r0:q]
       sprw    mod, 0x0081(r0)[r0:q]
       sprw    sp, r0
@@ -15401,7 +15401,7 @@
       insb    r0, r0, -64(2(fp)), 4
       insb    r0, r0, 4(2(fp)), 5
       insb    r0, r0, 2(fp), 3
-      insb    r0, r0, r0[r2:b], 3
+      insb    r0, r0, 0(r0)[r2:b], 3
       insb    r0, 2(r0), r0, 3
       insb    r0, 2(r0), 3(r0), 4
       insb    r0, 2(r0), -64(r0), 4
@@ -15412,13 +15412,13 @@
       insb    r0, 2(r0), 3(fp), 4
       insb    r0, 2(r0), -64(fp), 4
       insb    r0, 2(r0), 4(fp), 5
-      insb    r0, 3(r0), r0[r2:b], 4
-      insb    r0, -64(r0), r0[r2:b], 4
-      insb    r0, 4(r0), r0[r2:b], 5
+      insb    r0, 3(r0), 0(r0)[r2:b], 4
+      insb    r0, -64(r0), 0(r0)[r2:b], 4
+      insb    r0, 4(r0), 0(r0)[r2:b], 5
       insw    r0, r0, 3(r0), 4
       insw    r0, r0, 4(3(fp)), 5
       insw    r0, r0, 3(fp), 4
-      insw    r0, r0, r0[r3:b], 4
+      insw    r0, r0, 0(r0)[r3:b], 4
       insw    r0, r1, r0, 3
       insd    r0, r0, 6(5(fp)), 7
       insd    r0, r0, 5(fp), 6
@@ -15744,7 +15744,7 @@
       sprd    sp, 0x03065b(pc)
       sprd    psr, 0xe3e840(pc)
       sprd    psr, 0x030664(pc)
-      sprd    mod, r0[r0:q]
+      sprd    mod, 0(r0)[r0:q]
       sprd    mod, -63(r0)[r0:q]
       sprd    mod, 0x0081(r0)[r0:q]
       sprd    sp, r0
@@ -15783,7 +15783,7 @@
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), 0x030558(pc)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), 0xc1c763(pc)[r0:d]
-      subcb   ext(-0x0646)+(-0x0444), r0[r0:d]
+      subcb   ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       subcb   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -15826,7 +15826,7 @@
       subcb   tos, 0x01c2c3c4(sp)[r0:d]
       subcb   tos, 0x01c2c3c4(sb)[r0:d]
       subcb   tos, 0xc5cd67(pc)[r0:d]
-      subcb   tos, r0[r0:d]
+      subcb   tos, 0(r0)[r0:d]
       subcb   0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       subcb   -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
       subcb   0(fp), 0x0acbcccd(0x06c7c8c9(sb))
@@ -15839,7 +15839,7 @@
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subcb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       subcb   0x09cacbcc(fp), 0xd1d9fc(pc)[r0:d]
-      subcb   0x09cacbcc(fp), r0[r0:d]
+      subcb   0x09cacbcc(fp), 0(r0)[r0:d]
       subcb   0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       subcb   -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       subcb   0(sp), 0x12d3d4d5(0x0ecfd0d1(sb))
@@ -15851,7 +15851,7 @@
       subcb   0(sp), 0x10d1d2d3(sb)
       subcb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       subcb   0x11d2d3d4(sp), 0xd9e28a(pc)[r0:d]
-      subcb   0x11d2d3d4(sp), r0[r0:d]
+      subcb   0x11d2d3d4(sp), 0(r0)[r0:d]
       subcb   0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       subcb   -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
       subcb   0(sb), 0x1adbdcdd(0x16d7d8d9(sb))
@@ -15862,17 +15862,17 @@
       subcb   -0x1e272626(sb), 0x1bdcddde(sb)
       subcb   0(sb), 0x18d9dadb(sb)
       subcb   0x19dadbdc(sb), 0xe1eb0d(pc)[r0:d]
-      subcb   0x19dadbdc(sb), r0[r0:d]
+      subcb   0x19dadbdc(sb), 0(r0)[r0:d]
       subcb   0xe1eb1f(pc), -0x1a191818(-0x1e1d1c1c(sb))
       subcb   0x030b4d(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
       subcb   0xe2ec39(pc), ext(-0x1d1c1b1b)+(-0x19181717)
       subcb   0x030b66(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       subcb   0xe3ed53(pc), -0x1c1b1a1a(sb)
       subcb   0x030c5b(pc), -0x1e1d1c1c(sb)
-      subcb   r0[r0:q], r0[r1:d]
-      subcb   2(r0)[r0:q], r0[r1:d]
-      subcb   -64(r0)[r0:q], r0[r1:d]
-      subcb   0x0081(r0)[r0:q], r0[r1:d]
+      subcb   0(r0)[r0:q], 0(r0)[r1:d]
+      subcb   2(r0)[r0:q], 0(r0)[r1:d]
+      subcb   -64(r0)[r0:q], 0(r0)[r1:d]
+      subcb   0x0081(r0)[r0:q], 0(r0)[r1:d]
       subcw   ext(-0x0c4c)+(-0x0a4a), -0x0848(r2)
       subcw   ext(0x00b4b5b6)+(-0x0848), -0x0646(r2)
       subcw   ext(0x00b4b5b6)+(-0x0848), 0x00babbbc(r2)
@@ -15906,7 +15906,7 @@
       subcw   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), 0x030a9c(pc)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), 0xc1cca7(pc)[r0:d]
-      subcw   ext(-0x0646)+(-0x0444), r0[r0:d]
+      subcw   ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       subcw   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -15952,7 +15952,7 @@
       subcw   tos, 0x01c2c3c4(sp)[r0:d]
       subcw   tos, 0x01c2c3c4(sb)[r0:d]
       subcw   tos, 0xc5d2b7(pc)[r0:d]
-      subcw   tos, r0[r0:d]
+      subcw   tos, 0(r0)[r0:d]
       subcw   0x01c2c3c4(fp), r2
       subcw   -0x1e3d3c3c(fp), r2
       subcw   0(fp), r2
@@ -15971,7 +15971,7 @@
       subcw   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subcw   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       subcw   0x09cacbcc(fp), 0xd1df76(pc)[r0:d]
-      subcw   0x09cacbcc(fp), r0[r0:d]
+      subcw   0x09cacbcc(fp), 0(r0)[r0:d]
       subcw   0x09cacbcc(sp), r2
       subcw   -0x1e353434(sp), r2
       subcw   0(sp), r2
@@ -15989,7 +15989,7 @@
       subcw   0(sp), 0x10d1d2d3(sb)
       subcw   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       subcw   0x11d2d3d4(sp), 0xd9e82e(pc)[r0:d]
-      subcw   0x11d2d3d4(sp), r0[r0:d]
+      subcw   0x11d2d3d4(sp), 0(r0)[r0:d]
       subcw   0x11d2d3d4(sb), r2
       subcw   -0x1e2d2c2c(sb), r2
       subcw   0(sb), r2
@@ -16006,7 +16006,7 @@
       subcw   -0x1e272626(sb), 0x1bdcddde(sb)
       subcw   0(sb), 0x18d9dadb(sb)
       subcw   0x19dadbdc(sb), 0xe1f0db(pc)[r0:d]
-      subcw   0x19dadbdc(sb), r0[r0:d]
+      subcw   0x19dadbdc(sb), 0(r0)[r0:d]
       subcw   0xddece9(pc), r2
       subcw   0x031113(pc), r2
       subcw   0xdfeef4(pc), 0x1fe0e1e2(r2)
@@ -16017,10 +16017,10 @@
       subcw   0x03114e(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       subcw   0xe3f33b(pc), -0x1c1b1a1a(sb)
       subcw   0x031243(pc), -0x1e1d1c1c(sb)
-      subcw   r0[r0:q], r0[r1:d]
-      subcw   2(r0)[r0:q], r0[r1:d]
-      subcw   -64(r0)[r0:q], r0[r1:d]
-      subcw   0x0081(r0)[r0:q], r0[r1:d]
+      subcw   0(r0)[r0:q], 0(r0)[r1:d]
+      subcw   2(r0)[r0:q], 0(r0)[r1:d]
+      subcw   -64(r0)[r0:q], 0(r0)[r1:d]
+      subcw   0x0081(r0)[r0:q], 0(r0)[r1:d]
       subcw   r0, 6(5(sb))
       subcw   r0, 6(-64(sb))
       subcw   r0, 7(6(sb))
@@ -16034,7 +16034,7 @@
       subcw   r0, 7(sb)
       subcw   r0, -64(sb)
       subcw   r0, 0x0081(sb)
-      subcw   r0, r1[r0:d]
+      subcw   r0, 0(r1)[r0:d]
       subcw   r0, -63(r0)[r0:d]
       subcw   r0, 0x0081(r0)[r0:d]
       wait
@@ -16065,7 +16065,7 @@
       subcd   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), 0x031090(pc)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), 0xc1d29b(pc)[r0:d]
-      subcd   ext(-0x0646)+(-0x0444), r0[r0:d]
+      subcd   ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       subcd   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -16111,7 +16111,7 @@
       subcd   tos, 0x01c2c3c4(sp)[r0:d]
       subcd   tos, 0x01c2c3c4(sb)[r0:d]
       subcd   tos, 0xc5d8ab(pc)[r0:d]
-      subcd   tos, r0[r0:d]
+      subcd   tos, 0(r0)[r0:d]
       subcd   0x01c2c3c4(fp), r2
       subcd   -0x1e3d3c3c(fp), r2
       subcd   0(fp), r2
@@ -16130,7 +16130,7 @@
       subcd   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       subcd   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       subcd   0x09cacbcc(fp), 0xd1e56a(pc)[r0:d]
-      subcd   0x09cacbcc(fp), r0[r0:d]
+      subcd   0x09cacbcc(fp), 0(r0)[r0:d]
       subcd   0x09cacbcc(sp), r2
       subcd   -0x1e353434(sp), r2
       subcd   0(sp), r2
@@ -16148,7 +16148,7 @@
       subcd   0(sp), 0x10d1d2d3(sb)
       subcd   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       subcd   0x11d2d3d4(sp), 0xd9ee22(pc)[r0:d]
-      subcd   0x11d2d3d4(sp), r0[r0:d]
+      subcd   0x11d2d3d4(sp), 0(r0)[r0:d]
       subcd   0x11d2d3d4(sb), r2
       subcd   -0x1e2d2c2c(sb), r2
       subcd   0(sb), r2
@@ -16165,7 +16165,7 @@
       subcd   -0x1e272626(sb), 0x1bdcddde(sb)
       subcd   0(sb), 0x18d9dadb(sb)
       subcd   0x19dadbdc(sb), 0xe1f6cf(pc)[r0:d]
-      subcd   0x19dadbdc(sb), r0[r0:d]
+      subcd   0x19dadbdc(sb), 0(r0)[r0:d]
       subcd   0xddf2dd(pc), r2
       subcd   0x031707(pc), r2
       subcd   0xdff4e8(pc), 0x1fe0e1e2(r2)
@@ -16176,10 +16176,10 @@
       subcd   0x031742(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       subcd   0xe3f92f(pc), -0x1c1b1a1a(sb)
       subcd   0x031837(pc), -0x1e1d1c1c(sb)
-      subcd   r0[r0:q], r0[r1:d]
-      subcd   2(r0)[r0:q], r0[r1:d]
-      subcd   -64(r0)[r0:q], r0[r1:d]
-      subcd   0x0081(r0)[r0:q], r0[r1:d]
+      subcd   0(r0)[r0:q], 0(r0)[r1:d]
+      subcd   2(r0)[r0:q], 0(r0)[r1:d]
+      subcd   -64(r0)[r0:q], 0(r0)[r1:d]
+      subcd   0x0081(r0)[r0:q], 0(r0)[r1:d]
       subcd   r0, 6(5(sb))
       subcd   r0, 6(-64(sb))
       subcd   r0, 7(6(sb))
@@ -16193,7 +16193,7 @@
       subcd   r0, 7(sb)
       subcd   r0, -64(sb)
       subcd   r0, 0x0081(sb)
-      subcd   r0, r1[r0:d]
+      subcd   r0, 0(r1)[r0:d]
       subcd   r0, -63(r0)[r0:d]
       subcd   r0, 0x0081(r0)[r0:d]
       tbitb   ext(-0x0949)+(-0x0747), ext(-0x0545)+(-0x0343)
@@ -16217,7 +16217,7 @@
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), 0x03163c(pc)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), 0xc1d847(pc)[r0:d]
-      tbitb   ext(-0x0646)+(-0x0444), r0[r0:d]
+      tbitb   ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       tbitb   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -16260,7 +16260,7 @@
       tbitb   tos, 0x01c2c3c4(sp)[r0:d]
       tbitb   tos, 0x01c2c3c4(sb)[r0:d]
       tbitb   tos, 0xc5de4b(pc)[r0:d]
-      tbitb   tos, r0[r0:d]
+      tbitb   tos, 0(r0)[r0:d]
       tbitb   0x05c6c7c8(fp), 0x0dcecfd0(0x09cacbcc(sb))
       tbitb   -0x1e393838(fp), 0x0dcecfd0(0x09cacbcc(sb))
       tbitb   0(fp), 0x0acbcccd(0x06c7c8c9(sb))
@@ -16273,7 +16273,7 @@
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       tbitb   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       tbitb   0x09cacbcc(fp), 0xd1eae0(pc)[r0:d]
-      tbitb   0x09cacbcc(fp), r0[r0:d]
+      tbitb   0x09cacbcc(fp), 0(r0)[r0:d]
       tbitb   0x0dcecfd0(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       tbitb   -0x1e313030(sp), 0x15d6d7d8(0x11d2d3d4(sb))
       tbitb   0(sp), 0x12d3d4d5(0x0ecfd0d1(sb))
@@ -16285,7 +16285,7 @@
       tbitb   0(sp), 0x10d1d2d3(sb)
       tbitb   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       tbitb   0x11d2d3d4(sp), 0xd9f36e(pc)[r0:d]
-      tbitb   0x11d2d3d4(sp), r0[r0:d]
+      tbitb   0x11d2d3d4(sp), 0(r0)[r0:d]
       tbitb   0x15d6d7d8(sb), 0x1ddedfe0(0x19dadbdc(sb))
       tbitb   -0x1e292828(sb), 0x1ddedfe0(0x19dadbdc(sb))
       tbitb   0(sb), 0x1adbdcdd(0x16d7d8d9(sb))
@@ -16296,17 +16296,17 @@
       tbitb   -0x1e272626(sb), 0x1bdcddde(sb)
       tbitb   0(sb), 0x18d9dadb(sb)
       tbitb   0x19dadbdc(sb), 0xe1fbf1(pc)[r0:d]
-      tbitb   0x19dadbdc(sb), r0[r0:d]
+      tbitb   0x19dadbdc(sb), 0(r0)[r0:d]
       tbitb   0xe1fc03(pc), -0x1a191818(-0x1e1d1c1c(sb))
       tbitb   0x031c31(pc), -0x1d1c1b1b(0x1edfe0e1(sb))
       tbitb   0xe2fd1d(pc), ext(-0x1d1c1b1b)+(-0x19181717)
       tbitb   0x031c4a(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       tbitb   0xe3fe37(pc), -0x1c1b1a1a(sb)
       tbitb   0x031d3f(pc), -0x1e1d1c1c(sb)
-      tbitb   r0[r0:q], r0[r1:d]
-      tbitb   2(r0)[r0:q], r0[r1:d]
-      tbitb   -64(r0)[r0:q], r0[r1:d]
-      tbitb   0x0081(r0)[r0:q], r0[r1:d]
+      tbitb   0(r0)[r0:q], 0(r0)[r1:d]
+      tbitb   2(r0)[r0:q], 0(r0)[r1:d]
+      tbitb   -64(r0)[r0:q], 0(r0)[r1:d]
+      tbitb   0x0081(r0)[r0:q], 0(r0)[r1:d]
       tbitw   ext(-0x0848)+(-0x0646), -0x0444(sb)
       tbitw   ext(0x00b8b9ba)+(-0x0444), -0x0242(sb)
       tbitw   ext(0x00b8b9ba)+(-0x0444), 0x00bebfc0(sb)
@@ -16322,7 +16322,7 @@
       tbitw   ext(-0x0646)+(-0x0444), 0x00bebfc0(sb)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), 0x031ab7(pc)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), 0xc1dcc2(pc)[r0:d]
-      tbitw   ext(-0x0646)+(-0x0444), r0[r0:d]
+      tbitw   ext(-0x0646)+(-0x0444), 0(r0)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), -0x0242(r0)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), 0x00bebfc0(r0)[r0:d]
       tbitw   ext(-0x0646)+(-0x0444), -0x0040(-0x0242(fp))[r0:d]
@@ -16368,7 +16368,7 @@
       tbitw   tos, 0x01c2c3c4(sp)[r0:d]
       tbitw   tos, 0x01c2c3c4(sb)[r0:d]
       tbitw   tos, 0xc5e2d2(pc)[r0:d]
-      tbitw   tos, r0[r0:d]
+      tbitw   tos, 0(r0)[r0:d]
       tbitw   0x01c2c3c4(fp), r2
       tbitw   -0x1e3d3c3c(fp), r2
       tbitw   0(fp), r2
@@ -16387,7 +16387,7 @@
       tbitw   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       tbitw   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       tbitw   0x09cacbcc(fp), 0xd1ef91(pc)[r0:d]
-      tbitw   0x09cacbcc(fp), r0[r0:d]
+      tbitw   0x09cacbcc(fp), 0(r0)[r0:d]
       tbitw   0x09cacbcc(sp), r2
       tbitw   -0x1e353434(sp), r2
       tbitw   0(sp), r2
@@ -16405,7 +16405,7 @@
       tbitw   0(sp), 0x10d1d2d3(sb)
       tbitw   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       tbitw   0x11d2d3d4(sp), 0xd9f849(pc)[r0:d]
-      tbitw   0x11d2d3d4(sp), r0[r0:d]
+      tbitw   0x11d2d3d4(sp), 0(r0)[r0:d]
       tbitw   0x11d2d3d4(sb), r2
       tbitw   -0x1e2d2c2c(sb), r2
       tbitw   0(sb), r2
@@ -16422,7 +16422,7 @@
       tbitw   -0x1e272626(sb), 0x1bdcddde(sb)
       tbitw   0(sb), 0x18d9dadb(sb)
       tbitw   0x19dadbdc(sb), 0xe200f6(pc)[r0:d]
-      tbitw   0x19dadbdc(sb), r0[r0:d]
+      tbitw   0x19dadbdc(sb), 0(r0)[r0:d]
       tbitw   0xddfd04(pc), r2
       tbitw   0x03212e(pc), r2
       tbitw   0xdfff0f(pc), 0x1fe0e1e2(r2)
@@ -16433,10 +16433,10 @@
       tbitw   0x032169(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       tbitw   0xe40356(pc), -0x1c1b1a1a(sb)
       tbitw   0x03225e(pc), -0x1e1d1c1c(sb)
-      tbitw   r0[r0:q], r0[r1:d]
-      tbitw   2(r0)[r0:q], r0[r1:d]
-      tbitw   -64(r0)[r0:q], r0[r1:d]
-      tbitw   0x0081(r0)[r0:q], r0[r1:d]
+      tbitw   0(r0)[r0:q], 0(r0)[r1:d]
+      tbitw   2(r0)[r0:q], 0(r0)[r1:d]
+      tbitw   -64(r0)[r0:q], 0(r0)[r1:d]
+      tbitw   0x0081(r0)[r0:q], 0(r0)[r1:d]
       tbitw   r0, 6(5(sb))
       tbitw   r0, 6(-64(sb))
       tbitw   r0, 7(6(sb))
@@ -16450,7 +16450,7 @@
       tbitw   r0, 7(sb)
       tbitw   r0, -64(sb)
       tbitw   r0, 0x0081(sb)
-      tbitw   r0, r1[r0:d]
+      tbitw   r0, 0(r1)[r0:d]
       tbitw   r0, -63(r0)[r0:d]
       tbitw   r0, 0x0081(r0)[r0:d]
       tbitd   tos, r2
@@ -16468,7 +16468,7 @@
       tbitd   tos, 0x01c2c3c4(sp)[r0:d]
       tbitd   tos, 0x01c2c3c4(sb)[r0:d]
       tbitd   tos, 0xc5e602(pc)[r0:d]
-      tbitd   tos, r0[r0:d]
+      tbitd   tos, 0(r0)[r0:d]
       tbitd   0x01c2c3c4(fp), r2
       tbitd   -0x1e3d3c3c(fp), r2
       tbitd   0(fp), r2
@@ -16487,7 +16487,7 @@
       tbitd   0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       tbitd   0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       tbitd   0x09cacbcc(fp), 0xd1f2c1(pc)[r0:d]
-      tbitd   0x09cacbcc(fp), r0[r0:d]
+      tbitd   0x09cacbcc(fp), 0(r0)[r0:d]
       tbitd   0x09cacbcc(sp), r2
       tbitd   -0x1e353434(sp), r2
       tbitd   0(sp), r2
@@ -16505,7 +16505,7 @@
       tbitd   0(sp), 0x10d1d2d3(sb)
       tbitd   0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       tbitd   0x11d2d3d4(sp), 0xd9fb79(pc)[r0:d]
-      tbitd   0x11d2d3d4(sp), r0[r0:d]
+      tbitd   0x11d2d3d4(sp), 0(r0)[r0:d]
       tbitd   0x11d2d3d4(sb), r2
       tbitd   -0x1e2d2c2c(sb), r2
       tbitd   0(sb), r2
@@ -16522,7 +16522,7 @@
       tbitd   -0x1e272626(sb), 0x1bdcddde(sb)
       tbitd   0(sb), 0x18d9dadb(sb)
       tbitd   0x19dadbdc(sb), 0xe20426(pc)[r0:d]
-      tbitd   0x19dadbdc(sb), r0[r0:d]
+      tbitd   0x19dadbdc(sb), 0(r0)[r0:d]
       tbitd   0xde0034(pc), r2
       tbitd   0x03245e(pc), r2
       tbitd   0xe0023f(pc), 0x1fe0e1e2(r2)
@@ -16533,10 +16533,10 @@
       tbitd   0x032499(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       tbitd   0xe40686(pc), -0x1c1b1a1a(sb)
       tbitd   0x03258e(pc), -0x1e1d1c1c(sb)
-      tbitd   r0[r0:q], r0[r1:d]
-      tbitd   2(r0)[r0:q], r0[r1:d]
-      tbitd   -64(r0)[r0:q], r0[r1:d]
-      tbitd   0x0081(r0)[r0:q], r0[r1:d]
+      tbitd   0(r0)[r0:q], 0(r0)[r1:d]
+      tbitd   2(r0)[r0:q], 0(r0)[r1:d]
+      tbitd   -64(r0)[r0:q], 0(r0)[r1:d]
+      tbitd   0x0081(r0)[r0:q], 0(r0)[r1:d]
       tbitd   r0, 6(5(sb))
       tbitd   r0, 6(-64(sb))
       tbitd   r0, 7(6(sb))
@@ -16550,7 +16550,7 @@
       tbitd   r0, 7(sb)
       tbitd   r0, -64(sb)
       tbitd   r0, 0x0081(sb)
-      tbitd   r0, r1[r0:d]
+      tbitd   r0, 0(r1)[r0:d]
       tbitd   r0, -63(r0)[r0:d]
       tbitd   r0, 0x0081(r0)[r0:d]
       xorb    tos, r6
@@ -16568,7 +16568,7 @@
       xorb    tos, 0x01c2c3c4(sp)[r0:d]
       xorb    tos, 0x01c2c3c4(sb)[r0:d]
       xorb    tos, 0xc5e932(pc)[r0:d]
-      xorb    tos, r0[r0:d]
+      xorb    tos, 0(r0)[r0:d]
       xorb    0x01c2c3c4(fp), r2
       xorb    -0x1e3d3c3c(fp), r2
       xorb    0(fp), r2
@@ -16587,7 +16587,7 @@
       xorb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       xorb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       xorb    0x09cacbcc(fp), 0xd1f5f1(pc)[r0:d]
-      xorb    0x09cacbcc(fp), r0[r0:d]
+      xorb    0x09cacbcc(fp), 0(r0)[r0:d]
       xorb    0x09cacbcc(sp), r2
       xorb    -0x1e353434(sp), r2
       xorb    0(sp), r2
@@ -16605,7 +16605,7 @@
       xorb    0(sp), 0x10d1d2d3(sb)
       xorb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       xorb    0x11d2d3d4(sp), 0xd9fea9(pc)[r0:d]
-      xorb    0x11d2d3d4(sp), r0[r0:d]
+      xorb    0x11d2d3d4(sp), 0(r0)[r0:d]
       xorb    0x11d2d3d4(sb), r2
       xorb    -0x1e2d2c2c(sb), r2
       xorb    0(sb), r2
@@ -16622,7 +16622,7 @@
       xorb    -0x1e272626(sb), 0x1bdcddde(sb)
       xorb    0(sb), 0x18d9dadb(sb)
       xorb    0x19dadbdc(sb), 0xe20756(pc)[r0:d]
-      xorb    0x19dadbdc(sb), r0[r0:d]
+      xorb    0x19dadbdc(sb), 0(r0)[r0:d]
       xorb    0xde0364(pc), r2
       xorb    0x03278e(pc), r2
       xorb    0xe0056f(pc), 0x1fe0e1e2(r2)
@@ -16633,10 +16633,10 @@
       xorb    0x0327c9(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       xorb    0xe409b6(pc), -0x1c1b1a1a(sb)
       xorb    0x0328be(pc), -0x1e1d1c1c(sb)
-      xorb    r0[r0:q], r0[r1:d]
-      xorb    2(r0)[r0:q], r0[r1:d]
-      xorb    -64(r0)[r0:q], r0[r1:d]
-      xorb    0x0081(r0)[r0:q], r0[r1:d]
+      xorb    0(r0)[r0:q], 0(r0)[r1:d]
+      xorb    2(r0)[r0:q], 0(r0)[r1:d]
+      xorb    -64(r0)[r0:q], 0(r0)[r1:d]
+      xorb    0x0081(r0)[r0:q], 0(r0)[r1:d]
       xorb    r0, 6(5(sb))
       xorb    r0, 6(-64(sb))
       xorb    r0, 7(6(sb))
@@ -16650,7 +16650,7 @@
       xorb    r0, 7(sb)
       xorb    r0, -64(sb)
       xorb    r0, 0x0081(sb)
-      xorb    r0, r1[r0:d]
+      xorb    r0, 0(r1)[r0:d]
       xorb    r0, -63(r0)[r0:d]
       xorb    r0, 0x0081(r0)[r0:d]
       xorw    tos, -0x0444(r2)
@@ -16667,7 +16667,7 @@
       xorw    tos, 0x01c2c3c4(sp)[r0:d]
       xorw    tos, 0x01c2c3c4(sb)[r0:d]
       xorw    tos, 0xc5ec60(pc)[r0:d]
-      xorw    tos, r0[r0:d]
+      xorw    tos, 0(r0)[r0:d]
       xorw    0x01c2c3c4(fp), r2
       xorw    -0x1e3d3c3c(fp), r2
       xorw    0(fp), r2
@@ -16686,7 +16686,7 @@
       xorw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       xorw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       xorw    0x09cacbcc(fp), 0xd1f91f(pc)[r0:d]
-      xorw    0x09cacbcc(fp), r0[r0:d]
+      xorw    0x09cacbcc(fp), 0(r0)[r0:d]
       xorw    0x09cacbcc(sp), r2
       xorw    -0x1e353434(sp), r2
       xorw    0(sp), r2
@@ -16704,7 +16704,7 @@
       xorw    0(sp), 0x10d1d2d3(sb)
       xorw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       xorw    0x11d2d3d4(sp), 0xda01d7(pc)[r0:d]
-      xorw    0x11d2d3d4(sp), r0[r0:d]
+      xorw    0x11d2d3d4(sp), 0(r0)[r0:d]
       xorw    0x11d2d3d4(sb), r2
       xorw    -0x1e2d2c2c(sb), r2
       xorw    0(sb), r2
@@ -16721,7 +16721,7 @@
       xorw    -0x1e272626(sb), 0x1bdcddde(sb)
       xorw    0(sb), 0x18d9dadb(sb)
       xorw    0x19dadbdc(sb), 0xe20a84(pc)[r0:d]
-      xorw    0x19dadbdc(sb), r0[r0:d]
+      xorw    0x19dadbdc(sb), 0(r0)[r0:d]
       xorw    0xde0692(pc), r2
       xorw    0x032abc(pc), r2
       xorw    0xe0089d(pc), 0x1fe0e1e2(r2)
@@ -16732,10 +16732,10 @@
       xorw    0x032af7(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       xorw    0xe40ce4(pc), -0x1c1b1a1a(sb)
       xorw    0x032bec(pc), -0x1e1d1c1c(sb)
-      xorw    r0[r0:q], r0[r1:d]
-      xorw    2(r0)[r0:q], r0[r1:d]
-      xorw    -64(r0)[r0:q], r0[r1:d]
-      xorw    0x0081(r0)[r0:q], r0[r1:d]
+      xorw    0(r0)[r0:q], 0(r0)[r1:d]
+      xorw    2(r0)[r0:q], 0(r0)[r1:d]
+      xorw    -64(r0)[r0:q], 0(r0)[r1:d]
+      xorw    0x0081(r0)[r0:q], 0(r0)[r1:d]
       xorw    r0, r2
       xorw    r0, 6(5(sb))
       xorw    r0, 6(-64(sb))
@@ -16750,7 +16750,7 @@
       xorw    r0, 7(sb)
       xorw    r0, -64(sb)
       xorw    r0, 0x0081(sb)
-      xorw    r0, r1[r0:d]
+      xorw    r0, 0(r1)[r0:d]
       xorw    r0, -63(r0)[r0:d]
       xorw    r0, 0x0081(r0)[r0:d]
       bhs     0x03272c
@@ -16766,7 +16766,7 @@
       xord    tos, 0x01c2c3c4(sp)[r0:d]
       xord    tos, 0x01c2c3c4(sb)[r0:d]
       xord    tos, 0xc5ef89(pc)[r0:d]
-      xord    tos, r0[r0:d]
+      xord    tos, 0(r0)[r0:d]
       xord    0x01c2c3c4(fp), r2
       xord    -0x1e3d3c3c(fp), r2
       xord    0(fp), r2
@@ -16785,7 +16785,7 @@
       xord    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       xord    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       xord    0x09cacbcc(fp), 0xd1fc48(pc)[r0:d]
-      xord    0x09cacbcc(fp), r0[r0:d]
+      xord    0x09cacbcc(fp), 0(r0)[r0:d]
       xord    0x09cacbcc(sp), r2
       xord    -0x1e353434(sp), r2
       xord    0(sp), r2
@@ -16803,7 +16803,7 @@
       xord    0(sp), 0x10d1d2d3(sb)
       xord    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       xord    0x11d2d3d4(sp), 0xda0500(pc)[r0:d]
-      xord    0x11d2d3d4(sp), r0[r0:d]
+      xord    0x11d2d3d4(sp), 0(r0)[r0:d]
       xord    0x11d2d3d4(sb), r2
       xord    -0x1e2d2c2c(sb), r2
       xord    0(sb), r2
@@ -16820,7 +16820,7 @@
       xord    -0x1e272626(sb), 0x1bdcddde(sb)
       xord    0(sb), 0x18d9dadb(sb)
       xord    0x19dadbdc(sb), 0xe20dad(pc)[r0:d]
-      xord    0x19dadbdc(sb), r0[r0:d]
+      xord    0x19dadbdc(sb), 0(r0)[r0:d]
       xord    0xde09bb(pc), r2
       xord    0x032de5(pc), r2
       xord    0xe00bc6(pc), 0x1fe0e1e2(r2)
@@ -16831,10 +16831,10 @@
       xord    0x032e20(pc), ext(0x1fe0e1e2)+(-0x1c1b1a1a)
       xord    0xe4100d(pc), -0x1c1b1a1a(sb)
       xord    0x032f15(pc), -0x1e1d1c1c(sb)
-      xord    r0[r0:q], r0[r1:d]
-      xord    2(r0)[r0:q], r0[r1:d]
-      xord    -64(r0)[r0:q], r0[r1:d]
-      xord    0x0081(r0)[r0:q], r0[r1:d]
+      xord    0(r0)[r0:q], 0(r0)[r1:d]
+      xord    2(r0)[r0:q], 0(r0)[r1:d]
+      xord    -64(r0)[r0:q], 0(r0)[r1:d]
+      xord    0x0081(r0)[r0:q], 0(r0)[r1:d]
       xord    r0, r2
       xord    r0, 3(r2)
       xord    r0, -64(r2)
@@ -16852,7 +16852,7 @@
       xord    r0, 7(sb)
       xord    r0, -64(sb)
       xord    r0, 0x0081(sb)
-      xord    r0, r1[r0:d]
+      xord    r0, 0(r1)[r0:d]
       xord    r0, -63(r0)[r0:d]
       xord    r0, 0x0081(r0)[r0:d]
       shsb    tos
@@ -17797,7 +17797,7 @@
       addl    f0, 7(fp)
       addl    f0, -64(fp)
       addl    f0, 0x0081(fp)
-      addl    f0, r1[r0:b]
+      addl    f0, 0(r1)[r0:b]
       addl    f0, -63(r0)[r0:b]
       addl    f0, 0x0081(r0)[r0:b]
       addf    f0, 3(r0)
@@ -17805,10 +17805,10 @@
       addf    f0, -64(3(fp))
       addf    f0, 0x0081(3(fp))
       addf    f0, 3(fp)
-      addf    f0, r0[r3:b]
+      addf    f0, 0(r0)[r3:b]
       addf    f1, f0
       movf    f0, 7(fp)
-      movf    f0, r0[r7:b]
+      movf    f0, 0(r0)[r7:b]
       movf    f1, f0
       cmpl    f1, 11(r0)
       cmpl    f1, -64(r0)
@@ -17822,7 +17822,7 @@
       cmpl    f1, 15(fp)
       cmpl    f1, -64(fp)
       cmpl    f1, 0x0081(fp)
-      cmpl    f1, r2[r0:b]
+      cmpl    f1, 0(r2)[r0:b]
       cmpl    f1, -63(r0)[r0:b]
       cmpl    f1, 0x0081(r0)[r0:b]
       cmpf    f1, 11(r0)
@@ -17831,7 +17831,7 @@
       cmpf    f1, 0x0081(11(fp))
       cmpf    f1, 0x0b0c0d0e
       cmpf    f1, 11(fp)
-      cmpf    f1, r1[r3:b]
+      cmpf    f1, 0(r1)[r3:b]
       cmpf    f2, f0
       subl    f2, 19(r0)
       subl    f2, -64(r0)
@@ -17844,7 +17844,7 @@
       subl    f2, 23(fp)
       subl    f2, -64(fp)
       subl    f2, 0x0081(fp)
-      subl    f2, r3[r0:b]
+      subl    f2, 0(r3)[r0:b]
       subl    f2, -63(r0)[r0:b]
       subl    f2, 0x0081(r0)[r0:b]
       subf    f2, 19(r0)
@@ -17852,10 +17852,10 @@
       subf    f2, -64(19(fp))
       subf    f2, 0x0081(19(fp))
       subf    f2, 19(fp)
-      subf    f2, r2[r3:b]
+      subf    f2, 0(r2)[r3:b]
       subf    f3, f0
       negf    f2, 23(fp)
-      negf    f2, r2[r7:b]
+      negf    f2, 0(r2)[r7:b]
       negf    f3, f0
       divl    f4, f4
       divl    f4, 35(r0)
@@ -17869,7 +17869,7 @@
       divl    f4, 39(fp)
       divl    f4, -64(fp)
       divl    f4, 0x0081(fp)
-      divl    f4, r5[r0:b]
+      divl    f4, 0(r5)[r0:b]
       divl    f4, -63(r0)[r0:b]
       divl    f4, 0x0081(r0)[r0:b]
       divf    f4, 35(r0)
@@ -17877,7 +17877,7 @@
       divf    f4, -64(35(fp))
       divf    f4, 0x0081(35(fp))
       divf    f4, 35(fp)
-      divf    f4, r4[r3:b]
+      divf    f4, 0(r4)[r3:b]
       divf    f5, f0
       mull    f6, f4
       mull    f6, 51(r0)
@@ -17895,7 +17895,7 @@
       mull    f6, 55(fp)
       mull    f6, -64(fp)
       mull    f6, 0x0081(fp)
-      mull    f6, r7[r0:b]
+      mull    f6, 0(r7)[r0:b]
       mull    f6, -63(r0)[r0:b]
       mull    f6, 0x0081(r0)[r0:b]
       mull    f7, -63(0x003e3f40(fp))
@@ -17904,10 +17904,10 @@
       mulf    f6, -64(51(fp))
       mulf    f6, 0x0081(51(fp))
       mulf    f6, 51(fp)
-      mulf    f6, r6[r3:b]
+      mulf    f6, 0(r6)[r3:b]
       mulf    f7, f0
       absf    f6, 55(fp)
-      absf    f6, r6[r7:b]
+      absf    f6, 0(r6)[r7:b]
       absf    f7, f0
       addl    -62(r0), f5
       addl    -62(r0), -61(r1)
@@ -18813,7 +18813,7 @@
       addb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       addb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
       addb    0x09cacbcc(fp), 0xd238f1(pc)[r0:q]
-      addb    0x09cacbcc(fp), r0[r0:q]
+      addb    0x09cacbcc(fp), 0(r0)[r0:q]
       addb    0x0ecfd0d1(sp), tos
       addb    -0x1e302f2f(sp), tos
       addb    0(sp), tos
@@ -18822,7 +18822,7 @@
       addb    0(sp), 0xd53c29(pc)
       addb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       addb    0x11d2d3d4(sp), 0xda4140(pc)[r0:q]
-      addb    0x11d2d3d4(sp), r0[r0:q]
+      addb    0x11d2d3d4(sp), 0(r0)[r0:q]
       addb    0x16d7d8d9(sb), tos
       addb    -0x1e282727(sb), tos
       addb    0(sb), tos
@@ -18830,15 +18830,15 @@
       addb    -0x1e272626(sb), 0xe04771(pc)
       addb    0(sb), 0xdd4478(pc)
       addb    0x19dadbdc(sb), 0xe24984(pc)[r0:q]
-      addb    0x19dadbdc(sb), r0[r0:q]
+      addb    0x19dadbdc(sb), 0(r0)[r0:q]
       addb    0xe34a97(pc), tos
       addb    0x0369bc(pc), tos
       addb    0xe44ba1(pc), 0xe84fa5(pc)
       addb    0x036aa9(pc), 0xe64dad(pc)
-      addb    r0[r0:q], r0[r1:q]
-      addb    2(r0)[r0:q], r0[r1:q]
-      addb    -64(r0)[r0:q], r0[r1:q]
-      addb    0x0081(r0)[r0:q], r0[r1:q]
+      addb    0(r0)[r0:q], 0(r0)[r1:q]
+      addb    2(r0)[r0:q], 0(r0)[r1:q]
+      addb    -64(r0)[r0:q], 0(r0)[r1:q]
+      addb    0x0081(r0)[r0:q], 0(r0)[r1:q]
       addw    0x03c4c5c6(fp), 0x07c8c9ca(r3)
       addw    -0x1e3b3a3a(fp), 0x07c8c9ca(r3)
       addw    0(fp), 0x04c5c6c7(r3)
@@ -18851,7 +18851,7 @@
       addw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       addw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
       addw    0x09cacbcc(fp), 0xd23a10(pc)[r0:q]
-      addw    0x09cacbcc(fp), r0[r0:q]
+      addw    0x09cacbcc(fp), 0(r0)[r0:q]
       addw    0x09cacbcc(sp), r3
       addw    -0x1e353434(sp), r3
       addw    0(sp), r3
@@ -18866,7 +18866,7 @@
       addw    0(sp), 0xd53d72(pc)
       addw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       addw    0x11d2d3d4(sp), 0xda4289(pc)[r0:q]
-      addw    0x11d2d3d4(sp), r0[r0:q]
+      addw    0x11d2d3d4(sp), 0(r0)[r0:q]
       addw    0x11d2d3d4(sb), r3
       addw    -0x1e2d2c2c(sb), r3
       addw    0(sb), r3
@@ -18880,7 +18880,7 @@
       addw    -0x1e272626(sb), 0xe048e4(pc)
       addw    0(sb), 0xdd45eb(pc)
       addw    0x19dadbdc(sb), 0xe24af7(pc)[r0:q]
-      addw    0x19dadbdc(sb), r0[r0:q]
+      addw    0x19dadbdc(sb), 0(r0)[r0:q]
       addw    0xde4705(pc), r3
       addw    0x036b2f(pc), r3
       addw    0xe04910(pc), 0x1fe0e1e2(r3)
@@ -18889,10 +18889,10 @@
       addw    0x036b49(pc), tos
       addw    0xe44d2e(pc), 0xe85132(pc)
       addw    0x036c36(pc), 0xe64f3a(pc)
-      addw    r0[r0:q], r0[r1:q]
-      addw    2(r0)[r0:q], r0[r1:q]
-      addw    -64(r0)[r0:q], r0[r1:q]
-      addw    0x0081(r0)[r0:q], r0[r1:q]
+      addw    0(r0)[r0:q], 0(r0)[r1:q]
+      addw    2(r0)[r0:q], 0(r0)[r1:q]
+      addw    -64(r0)[r0:q], 0(r0)[r1:q]
+      addw    0x0081(r0)[r0:q], 0(r0)[r1:q]
       dia
       addd    0x06c7c8c9(fp), tos
       addd    -0x1e383737(fp), tos
@@ -18903,7 +18903,7 @@
       addd    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       addd    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
       addd    0x09cacbcc(fp), 0xd23b83(pc)[r0:q]
-      addd    0x09cacbcc(fp), r0[r0:q]
+      addd    0x09cacbcc(fp), 0(r0)[r0:q]
       addd    0x09cacbcc(sp), r3
       addd    -0x1e353434(sp), r3
       addd    0(sp), r3
@@ -18918,7 +18918,7 @@
       addd    0(sp), 0xd53ee5(pc)
       addd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       addd    0x11d2d3d4(sp), 0xda43fc(pc)[r0:q]
-      addd    0x11d2d3d4(sp), r0[r0:q]
+      addd    0x11d2d3d4(sp), 0(r0)[r0:q]
       addd    0x11d2d3d4(sb), r3
       addd    -0x1e2d2c2c(sb), r3
       addd    0(sb), r3
@@ -18932,7 +18932,7 @@
       addd    -0x1e272626(sb), 0xe04a57(pc)
       addd    0(sb), 0xdd475e(pc)
       addd    0x19dadbdc(sb), 0xe24c6a(pc)[r0:q]
-      addd    0x19dadbdc(sb), r0[r0:q]
+      addd    0x19dadbdc(sb), 0(r0)[r0:q]
       addd    0xde4878(pc), r3
       addd    0x036ca2(pc), r3
       addd    0xe04a83(pc), 0x1fe0e1e2(r3)
@@ -18941,14 +18941,14 @@
       addd    0x036cbc(pc), tos
       addd    0xe44ea1(pc), 0xe852a5(pc)
       addd    0x036da9(pc), 0xe650ad(pc)
-      addd    r0[r0:q], r0[r1:q]
-      addd    2(r0)[r0:q], r0[r1:q]
-      addd    -64(r0)[r0:q], r0[r1:q]
-      addd    0x0081(r0)[r0:q], r0[r1:q]
+      addd    0(r0)[r0:q], 0(r0)[r1:q]
+      addd    2(r0)[r0:q], 0(r0)[r1:q]
+      addd    -64(r0)[r0:q], 0(r0)[r1:q]
+      addd    0x0081(r0)[r0:q], 0(r0)[r1:q]
       addd    r0, tos
       addd    r0, 0x036cee(pc)
       addd    r0, 0x036d6b(pc)
-      addd    r0, r1[r0:q]
+      addd    r0, 0(r1)[r0:q]
       addd    r0, -63(r0)[r0:q]
       addd    r0, 0x0081(r0)[r0:q]
       cmpb    0x06c7c8c9(fp), tos
@@ -18960,7 +18960,7 @@
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       cmpb    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
       cmpb    0x09cacbcc(fp), 0xd23d0a(pc)[r0:q]
-      cmpb    0x09cacbcc(fp), r0[r0:q]
+      cmpb    0x09cacbcc(fp), 0(r0)[r0:q]
       cmpb    0x0ecfd0d1(sp), tos
       cmpb    -0x1e302f2f(sp), tos
       cmpb    0(sp), tos
@@ -18969,7 +18969,7 @@
       cmpb    0(sp), 0xd54042(pc)
       cmpb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       cmpb    0x11d2d3d4(sp), 0xda4559(pc)[r0:q]
-      cmpb    0x11d2d3d4(sp), r0[r0:q]
+      cmpb    0x11d2d3d4(sp), 0(r0)[r0:q]
       cmpb    0x16d7d8d9(sb), tos
       cmpb    -0x1e282727(sb), tos
       cmpb    0(sb), tos
@@ -18977,22 +18977,22 @@
       cmpb    -0x1e272626(sb), 0xe04b8a(pc)
       cmpb    0(sb), 0xdd4891(pc)
       cmpb    0x19dadbdc(sb), 0xe24d9d(pc)[r0:q]
-      cmpb    0x19dadbdc(sb), r0[r0:q]
+      cmpb    0x19dadbdc(sb), 0(r0)[r0:q]
       cmpb    0xe34eb0(pc), tos
       cmpb    0x036dd5(pc), tos
       cmpb    0xe44fba(pc), 0xe853be(pc)
       cmpb    0x036ec2(pc), 0xe651c6(pc)
-      cmpb    r0[r0:q], r0[r1:q]
-      cmpb    2(r0)[r0:q], r0[r1:q]
-      cmpb    -64(r0)[r0:q], r0[r1:q]
-      cmpb    0x0081(r0)[r0:q], r0[r1:q]
+      cmpb    0(r0)[r0:q], 0(r0)[r1:q]
+      cmpb    2(r0)[r0:q], 0(r0)[r1:q]
+      cmpb    -64(r0)[r0:q], 0(r0)[r1:q]
+      cmpb    0x0081(r0)[r0:q], 0(r0)[r1:q]
       cmpw    0x07c8c9ca(fp), 0xd03bcc(pc)
       cmpw    -0x1e373636(fp), 0xd03bd6(pc)
       cmpw    0(fp), 0xcd38dd(pc)
       cmpw    0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:q]
       cmpw    0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:q]
       cmpw    0x09cacbcc(fp), 0xd23dff(pc)[r0:q]
-      cmpw    0x09cacbcc(fp), r0[r0:q]
+      cmpw    0x09cacbcc(fp), 0(r0)[r0:q]
       cmpw    0x09cacbcc(sp), r3
       cmpw    -0x1e353434(sp), r3
       cmpw    0(sp), r3
@@ -19007,7 +19007,7 @@
       cmpw    0(sp), 0xd54161(pc)
       cmpw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       cmpw    0x11d2d3d4(sp), 0xda4678(pc)[r0:q]
-      cmpw    0x11d2d3d4(sp), r0[r0:q]
+      cmpw    0x11d2d3d4(sp), 0(r0)[r0:q]
       cmpw    0x11d2d3d4(sb), r3
       cmpw    -0x1e2d2c2c(sb), r3
       cmpw    0(sb), r3
@@ -19021,7 +19021,7 @@
       cmpw    -0x1e272626(sb), 0xe04cd3(pc)
       cmpw    0(sb), 0xdd49da(pc)
       cmpw    0x19dadbdc(sb), 0xe24ee6(pc)[r0:q]
-      cmpw    0x19dadbdc(sb), r0[r0:q]
+      cmpw    0x19dadbdc(sb), 0(r0)[r0:q]
       cmpw    0xde4af4(pc), r3
       cmpw    0x036f1e(pc), r3
       cmpw    0xe04cff(pc), 0x1fe0e1e2(r3)
@@ -19030,14 +19030,14 @@
       cmpw    0x036f38(pc), tos
       cmpw    0xe4511d(pc), 0xe85521(pc)
       cmpw    0x037025(pc), 0xe65329(pc)
-      cmpw    r0[r0:q], r0[r1:q]
-      cmpw    2(r0)[r0:q], r0[r1:q]
-      cmpw    -64(r0)[r0:q], r0[r1:q]
-      cmpw    0x0081(r0)[r0:q], r0[r1:q]
+      cmpw    0(r0)[r0:q], 0(r0)[r1:q]
+      cmpw    2(r0)[r0:q], 0(r0)[r1:q]
+      cmpw    -64(r0)[r0:q], 0(r0)[r1:q]
+      cmpw    0x0081(r0)[r0:q], 0(r0)[r1:q]
       cmpw    r0, tos
       cmpw    r0, 0x036f6a(pc)
       cmpw    r0, 0x036fe7(pc)
-      cmpw    r0, r1[r0:q]
+      cmpw    r0, 0(r1)[r0:q]
       cmpw    r0, -63(r0)[r0:q]
       cmpw    r0, 0x0081(r0)[r0:q]
       cmpd    0x09cacbcc(sp), r3
@@ -19054,7 +19054,7 @@
       cmpd    0(sp), 0xd54296(pc)
       cmpd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       cmpd    0x11d2d3d4(sp), 0xda47ad(pc)[r0:q]
-      cmpd    0x11d2d3d4(sp), r0[r0:q]
+      cmpd    0x11d2d3d4(sp), 0(r0)[r0:q]
       cmpd    0x11d2d3d4(sb), r3
       cmpd    -0x1e2d2c2c(sb), r3
       cmpd    0(sb), r3
@@ -19068,7 +19068,7 @@
       cmpd    -0x1e272626(sb), 0xe04e08(pc)
       cmpd    0(sb), 0xdd4b0f(pc)
       cmpd    0x19dadbdc(sb), 0xe2501b(pc)[r0:q]
-      cmpd    0x19dadbdc(sb), r0[r0:q]
+      cmpd    0x19dadbdc(sb), 0(r0)[r0:q]
       cmpd    0xde4c29(pc), r3
       cmpd    0x037053(pc), r3
       cmpd    0xe04e34(pc), 0x1fe0e1e2(r3)
@@ -19077,14 +19077,14 @@
       cmpd    0x03706d(pc), tos
       cmpd    0xe45252(pc), 0xe85656(pc)
       cmpd    0x03715a(pc), 0xe6545e(pc)
-      cmpd    r0[r0:q], r0[r1:q]
-      cmpd    2(r0)[r0:q], r0[r1:q]
-      cmpd    -64(r0)[r0:q], r0[r1:q]
-      cmpd    0x0081(r0)[r0:q], r0[r1:q]
+      cmpd    0(r0)[r0:q], 0(r0)[r1:q]
+      cmpd    2(r0)[r0:q], 0(r0)[r1:q]
+      cmpd    -64(r0)[r0:q], 0(r0)[r1:q]
+      cmpd    0x0081(r0)[r0:q], 0(r0)[r1:q]
       cmpd    r0, tos
       cmpd    r0, 0x03709f(pc)
       cmpd    r0, 0x03711c(pc)
-      cmpd    r0, r1[r0:q]
+      cmpd    r0, 0(r1)[r0:q]
       cmpd    r0, -63(r0)[r0:q]
       cmpd    r0, 0x0081(r0)[r0:q]
       bicb    0x0ecfd0d1(sp), tos
@@ -19095,7 +19095,7 @@
       bicb    0(sp), 0xd543a1(pc)
       bicb    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       bicb    0x11d2d3d4(sp), 0xda48b8(pc)[r0:q]
-      bicb    0x11d2d3d4(sp), r0[r0:q]
+      bicb    0x11d2d3d4(sp), 0(r0)[r0:q]
       bicb    0x16d7d8d9(sb), tos
       bicb    -0x1e282727(sb), tos
       bicb    0(sb), tos
@@ -19103,15 +19103,15 @@
       bicb    -0x1e272626(sb), 0xe04ee9(pc)
       bicb    0(sb), 0xdd4bf0(pc)
       bicb    0x19dadbdc(sb), 0xe250fc(pc)[r0:q]
-      bicb    0x19dadbdc(sb), r0[r0:q]
+      bicb    0x19dadbdc(sb), 0(r0)[r0:q]
       bicb    0xe3520f(pc), tos
       bicb    0x037134(pc), tos
       bicb    0xe45319(pc), 0xe8571d(pc)
       bicb    0x037221(pc), 0xe65525(pc)
-      bicb    r0[r0:q], r0[r1:q]
-      bicb    2(r0)[r0:q], r0[r1:q]
-      bicb    -64(r0)[r0:q], r0[r1:q]
-      bicb    0x0081(r0)[r0:q], r0[r1:q]
+      bicb    0(r0)[r0:q], 0(r0)[r1:q]
+      bicb    2(r0)[r0:q], 0(r0)[r1:q]
+      bicb    -64(r0)[r0:q], 0(r0)[r1:q]
+      bicb    0x0081(r0)[r0:q], 0(r0)[r1:q]
       bicw    0x0bcccdce(sp), 0x0fd0d1d2(r3)
       bicw    -0x1e333232(sp), 0x0fd0d1d2(r3)
       bicw    0(sp), 0x0ccdcecf(r3)
@@ -19123,7 +19123,7 @@
       bicw    0(sp), 0xd5446e(pc)
       bicw    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       bicw    0x11d2d3d4(sp), 0xda4985(pc)[r0:q]
-      bicw    0x11d2d3d4(sp), r0[r0:q]
+      bicw    0x11d2d3d4(sp), 0(r0)[r0:q]
       bicw    0x11d2d3d4(sb), r3
       bicw    -0x1e2d2c2c(sb), r3
       bicw    0(sb), r3
@@ -19137,7 +19137,7 @@
       bicw    -0x1e272626(sb), 0xe04fe0(pc)
       bicw    0(sb), 0xdd4ce7(pc)
       bicw    0x19dadbdc(sb), 0xe251f3(pc)[r0:q]
-      bicw    0x19dadbdc(sb), r0[r0:q]
+      bicw    0x19dadbdc(sb), 0(r0)[r0:q]
       bicw    0xde4e01(pc), r3
       bicw    0x03722b(pc), r3
       bicw    0xe0500c(pc), 0x1fe0e1e2(r3)
@@ -19146,14 +19146,14 @@
       bicw    0x037245(pc), tos
       bicw    0xe4542a(pc), 0xe8582e(pc)
       bicw    0x037332(pc), 0xe65636(pc)
-      bicw    r0[r0:q], r0[r1:q]
-      bicw    2(r0)[r0:q], r0[r1:q]
-      bicw    -64(r0)[r0:q], r0[r1:q]
-      bicw    0x0081(r0)[r0:q], r0[r1:q]
+      bicw    0(r0)[r0:q], 0(r0)[r1:q]
+      bicw    2(r0)[r0:q], 0(r0)[r1:q]
+      bicw    -64(r0)[r0:q], 0(r0)[r1:q]
+      bicw    0x0081(r0)[r0:q], 0(r0)[r1:q]
       bicw    r0, tos
       bicw    r0, 0x037277(pc)
       bicw    r0, 0x0372f4(pc)
-      bicw    r0, r1[r0:q]
+      bicw    r0, 0(r1)[r0:q]
       bicw    r0, -63(r0)[r0:q]
       bicw    r0, 0x0081(r0)[r0:q]
       blt     0xd04051
@@ -19165,7 +19165,7 @@
       bicd    0(sp), 0xd5457e(pc)
       bicd    0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:q]
       bicd    0x11d2d3d4(sp), 0xda4a95(pc)[r0:q]
-      bicd    0x11d2d3d4(sp), r0[r0:q]
+      bicd    0x11d2d3d4(sp), 0(r0)[r0:q]
       bicd    0x11d2d3d4(sb), r3
       bicd    -0x1e2d2c2c(sb), r3
       bicd    0(sb), r3
@@ -19179,7 +19179,7 @@
       bicd    -0x1e272626(sb), 0xe050f0(pc)
       bicd    0(sb), 0xdd4df7(pc)
       bicd    0x19dadbdc(sb), 0xe25303(pc)[r0:q]
-      bicd    0x19dadbdc(sb), r0[r0:q]
+      bicd    0x19dadbdc(sb), 0(r0)[r0:q]
       bicd    0xde4f11(pc), r3
       bicd    0x03733b(pc), r3
       bicd    0xe0511c(pc), 0x1fe0e1e2(r3)
@@ -19188,14 +19188,14 @@
       bicd    0x037355(pc), tos
       bicd    0xe4553a(pc), 0xe8593e(pc)
       bicd    0x037442(pc), 0xe65746(pc)
-      bicd    r0[r0:q], r0[r1:q]
-      bicd    2(r0)[r0:q], r0[r1:q]
-      bicd    -64(r0)[r0:q], r0[r1:q]
-      bicd    0x0081(r0)[r0:q], r0[r1:q]
+      bicd    0(r0)[r0:q], 0(r0)[r1:q]
+      bicd    2(r0)[r0:q], 0(r0)[r1:q]
+      bicd    -64(r0)[r0:q], 0(r0)[r1:q]
+      bicd    0x0081(r0)[r0:q], 0(r0)[r1:q]
       bicd    r0, tos
       bicd    r0, 0x037387(pc)
       bicd    r0, 0x037404(pc)
-      bicd    r0, r1[r0:q]
+      bicd    r0, 0(r1)[r0:q]
       bicd    r0, -63(r0)[r0:q]
       bicd    r0, 0x0081(r0)[r0:q]
       acbb    -5, 0x0ecfd0d1(sp), 0xd74868
@@ -19212,7 +19212,7 @@
       acbb    -7, 0xe253d5(pc), 0xe657d9
       acbb    -7, 0x0373ff(pc), 0xe354e0
       acbb    -3, 0x0374e6(pc), 0xe657ea
-      acbb    -1, r0[r0:q], 0x03740f
+      acbb    -1, 0(r0)[r0:q], 0x03740f
       acbb    -1, 1(r0)[r0:q], 0x037414
       acbb    -1, 1(r0)[r0:q], 0x037498
       acbb    1, r0, 0x03741e
@@ -19233,7 +19233,7 @@
       acbw    -7, 0xe2546d(pc), 0xe65871
       acbw    -7, 0x037497(pc), 0xe35578
       acbw    -3, 0x03757e(pc), 0xe65882
-      acbw    -1, r0[r0:q], 0x0374a7
+      acbw    -1, 0(r0)[r0:q], 0x0374a7
       acbw    -1, 1(r0)[r0:q], 0x0374ac
       acbw    -1, 1(r0)[r0:q], 0x037530
       acbw    1, r0, 0x0374b6
@@ -19423,7 +19423,7 @@
       divd    r0, tos
       divd    r0, 0x037b93(pc)
       divd    r0, 0x037c11(pc)
-      divd    r0, r1[r0:q]
+      divd    r0, 0(r1)[r0:q]
       divd    r0, -63(r0)[r0:q]
       divd    r0, 0x0081(r0)[r0:q]
       inssb   r1, r4, 0, 11
@@ -19432,16 +19432,16 @@
       inssb   r1, -64(10(fp)), 0, 13
       inssb   r1, 12(10(fp)), 0, 14
       inssb   r1, 10(fp), 0, 12
-      inssb   r1, r1[r2:b], 0, 12
+      inssb   r1, 0(r1)[r2:b], 0, 12
       inssw   r1, 11(r0), 0, 13
       inssw   r1, 12(11(fp)), 0, 14
       inssw   r1, 11(fp), 0, 13
-      inssw   r1, r1[r3:b], 0, 13
+      inssw   r1, 0(r1)[r3:b], 0, 13
       inssw   r2, r0, 0, 12
       inssd   r1, 14(13(fp)), 0, 16
       inssd   r1, 13(fp), 0, 15
       extsw   r1, 15(fp), 0, 17
-      extsw   r1, r1[r7:b], 0, 17
+      extsw   r1, 0(r1)[r7:b], 0, 17
       extsw   r2, r0, 0, 16
       extsd   r2, r0, 0, 18
       extsd   r2, 17(r0), 0, 19
@@ -19449,7 +19449,7 @@
       extsd   r2, -64(17(fp)), 0, 20
       extsd   r2, 19(17(fp)), 0, 21
       extsd   r2, 17(fp), 0, 19
-      extsd   r2, r2[r1:b], 0, 19
+      extsd   r2, 0(r2)[r1:b], 0, 19
       movxbw  r2, 19(r0)
       movxbw  r2, -64(r0)
       movxbw  r2, 0x0081(r0)
@@ -19461,7 +19461,7 @@
       movxbw  r2, 23(fp)
       movxbw  r2, -64(fp)
       movxbw  r2, 0x0081(fp)
-      movxbw  r2, r3[r0:b]
+      movxbw  r2, 0(r3)[r0:b]
       movxbw  r2, -63(r0)[r0:b]
       movxbw  r2, 0x0081(r0)[r0:b]
       movzbd  r3, 27(r0)
@@ -19475,7 +19475,7 @@
       movzbd  r3, 31(fp)
       movzbd  r3, -64(fp)
       movzbd  r3, 0x0081(fp)
-      movzbd  r3, r4[r0:b]
+      movzbd  r3, 0(r4)[r0:b]
       movzbd  r3, -63(r0)[r0:b]
       movzbd  r3, 0x0081(r0)[r0:b]
       movzwd  r3, 27(r0)
@@ -19483,10 +19483,10 @@
       movzwd  r3, -64(27(fp))
       movzwd  r3, 0x0081(27(fp))
       movzwd  r3, 27(fp)
-      movzwd  r3, r3[r3:b]
+      movzwd  r3, 0(r3)[r3:b]
       movzwd  r4, r0
       movxwd  r3, 31(fp)
-      movxwd  r3, r3[r7:b]
+      movxwd  r3, 0(r3)[r7:b]
       mulb    r4, r4
       mulb    r4, 35(r0)
       mulb    r4, -64(r0)
@@ -19499,7 +19499,7 @@
       mulb    r4, 39(fp)
       mulb    r4, -64(fp)
       mulb    r4, 0x0081(fp)
-      mulb    r4, r5[r0:b]
+      mulb    r4, 0(r5)[r0:b]
       mulb    r4, -63(r0)[r0:b]
       mulb    r4, 0x0081(r0)[r0:b]
       mulw    r4, 35(r0)
@@ -19507,12 +19507,12 @@
       mulw    r4, -64(35(fp))
       mulw    r4, 0x0081(35(fp))
       mulw    r4, 35(fp)
-      mulw    r4, r4[r3:b]
+      mulw    r4, 0(r4)[r3:b]
       mulw    r5, r0
       muld    r4, 38(37(fp))
       muld    r4, 37(fp)
       meiw    r4, 39(fp)
-      meiw    r4, r4[r7:b]
+      meiw    r4, 0(r4)[r7:b]
       meiw    r5, r0
       meid    r5, r0
       meid    r5, 43(r0)
@@ -19526,11 +19526,11 @@
       meid    r5, 47(fp)
       meid    r5, -64(fp)
       meid    r5, 0x0081(fp)
-      meid    r5, r6[r0:b]
+      meid    r5, 0(r6)[r0:b]
       meid    r5, -63(r0)[r0:b]
       meid    r5, 0x0081(r0)[r0:b]
       deiw    r5, 47(fp)
-      deiw    r5, r5[r7:b]
+      deiw    r5, 0(r5)[r7:b]
       deiw    r6, r0
       deid    r6, r0
       deid    r6, 51(r0)
@@ -19548,7 +19548,7 @@
       deid    r6, 55(fp)
       deid    r6, -64(fp)
       deid    r6, 0x0081(fp)
-      deid    r6, r7[r0:b]
+      deid    r6, 0(r7)[r0:b]
       deid    r6, -63(r0)[r0:b]
       deid    r6, 0x0081(r0)[r0:b]
       deid    r7, -63(0x003e3f40(fp))
@@ -19568,7 +19568,7 @@
       quob    r6, 55(fp)
       quob    r6, -64(fp)
       quob    r6, 0x0081(fp)
-      quob    r6, r7[r0:b]
+      quob    r6, 0(r7)[r0:b]
       quob    r6, -63(r0)[r0:b]
       quob    r6, 0x0081(r0)[r0:b]
       quob    r7, -63(0x003e3f40(fp))
@@ -19577,12 +19577,12 @@
       quow    r6, -64(51(fp))
       quow    r6, 0x0081(51(fp))
       quow    r6, 51(fp)
-      quow    r6, r6[r3:b]
+      quow    r6, 0(r6)[r3:b]
       quow    r7, r0
       quod    r6, 54(53(fp))
       quod    r6, 53(fp)
       remw    r6, 55(fp)
-      remw    r6, r6[r7:b]
+      remw    r6, 0(r6)[r7:b]
       remw    r7, r0
       remd    r7, r0
       remd    r7, 59(r0)
@@ -19687,7 +19687,7 @@
       modw    r7, -64(59(fp))
       modw    r7, 0x0081(59(fp))
       modw    r7, 59(fp)
-      modw    r7, r7[r3:b]
+      modw    r7, 0(r7)[r3:b]
       modw    59(r0), r0
       modw    59(r0), 60(r0)
       modw    59(r0), -64(r0)
@@ -19704,9 +19704,9 @@
       modw    59(r0), 60(fp)
       modw    59(r0), -64(fp)
       modw    59(r0), 0x0081(fp)
-      modw    60(r0), r7[r3:b]
-      modw    -64(r0), r7[r3:b]
-      modw    0x0081(r0), r7[r3:b]
+      modw    60(r0), 0(r7)[r3:b]
+      modw    -64(r0), 0(r7)[r3:b]
+      modw    0x0081(r0), 0(r7)[r3:b]
       modw    60(59(fp)), r0
       modw    -64(59(fp)), r0
       modw    0x0081(59(fp)), r0
@@ -19740,15 +19740,15 @@
       modw    -0x1fc3(59(fp)), -64(fp)
       modw    -0x1fc3(59(fp)), 0x0081(fp)
       modw    0x003d3e3f(59(fp)), -64(fp)
-      modw    61(60(fp)), r7[r3:b]
-      modw    61(-64(fp)), r7[r3:b]
-      modw    62(0x003d(fp)), r7[r3:b]
-      modw    -64(0x003d(fp)), r7[r3:b]
-      modw    0x0081(0x003d(fp)), r7[r3:b]
-      modw    62(-0x1fc3(fp)), r7[r3:b]
-      modw    -64(-0x1fc3(fp)), r7[r3:b]
-      modw    0x0081(-0x1fc3(fp)), r7[r3:b]
-      modw    -64(0x003d3e3f(fp)), r7[r3:b]
+      modw    61(60(fp)), 0(r7)[r3:b]
+      modw    61(-64(fp)), 0(r7)[r3:b]
+      modw    62(0x003d(fp)), 0(r7)[r3:b]
+      modw    -64(0x003d(fp)), 0(r7)[r3:b]
+      modw    0x0081(0x003d(fp)), 0(r7)[r3:b]
+      modw    62(-0x1fc3(fp)), 0(r7)[r3:b]
+      modw    -64(-0x1fc3(fp)), 0(r7)[r3:b]
+      modw    0x0081(-0x1fc3(fp)), 0(r7)[r3:b]
+      modw    -64(0x003d3e3f(fp)), 0(r7)[r3:b]
       modw    60(59(sp)), r0
       modw    -64(59(sp)), r0
       modw    0x0081(59(sp)), r0
@@ -19782,15 +19782,15 @@
       modw    -0x1fc3(59(sp)), -64(fp)
       modw    -0x1fc3(59(sp)), 0x0081(fp)
       modw    0x003d3e3f(59(sp)), -64(fp)
-      modw    61(60(sp)), r7[r3:b]
-      modw    61(-64(sp)), r7[r3:b]
-      modw    62(0x003d(sp)), r7[r3:b]
-      modw    -64(0x003d(sp)), r7[r3:b]
-      modw    0x0081(0x003d(sp)), r7[r3:b]
-      modw    62(-0x1fc3(sp)), r7[r3:b]
-      modw    -64(-0x1fc3(sp)), r7[r3:b]
-      modw    0x0081(-0x1fc3(sp)), r7[r3:b]
-      modw    -64(0x003d3e3f(sp)), r7[r3:b]
+      modw    61(60(sp)), 0(r7)[r3:b]
+      modw    61(-64(sp)), 0(r7)[r3:b]
+      modw    62(0x003d(sp)), 0(r7)[r3:b]
+      modw    -64(0x003d(sp)), 0(r7)[r3:b]
+      modw    0x0081(0x003d(sp)), 0(r7)[r3:b]
+      modw    62(-0x1fc3(sp)), 0(r7)[r3:b]
+      modw    -64(-0x1fc3(sp)), 0(r7)[r3:b]
+      modw    0x0081(-0x1fc3(sp)), 0(r7)[r3:b]
+      modw    -64(0x003d3e3f(sp)), 0(r7)[r3:b]
       modw    60(59(sb)), r0
       modw    -64(59(sb)), r0
       modw    0x0081(59(sb)), r0
@@ -19824,15 +19824,15 @@
       modw    -0x1fc3(59(sb)), -64(fp)
       modw    -0x1fc3(59(sb)), 0x0081(fp)
       modw    0x003d3e3f(59(sb)), -64(fp)
-      modw    61(60(sb)), r7[r3:b]
-      modw    61(-64(sb)), r7[r3:b]
-      modw    62(0x003d(sb)), r7[r3:b]
-      modw    -64(0x003d(sb)), r7[r3:b]
-      modw    0x0081(0x003d(sb)), r7[r3:b]
-      modw    62(-0x1fc3(sb)), r7[r3:b]
-      modw    -64(-0x1fc3(sb)), r7[r3:b]
-      modw    0x0081(-0x1fc3(sb)), r7[r3:b]
-      modw    -64(0x003d3e3f(sb)), r7[r3:b]
+      modw    61(60(sb)), 0(r7)[r3:b]
+      modw    61(-64(sb)), 0(r7)[r3:b]
+      modw    62(0x003d(sb)), 0(r7)[r3:b]
+      modw    -64(0x003d(sb)), 0(r7)[r3:b]
+      modw    0x0081(0x003d(sb)), 0(r7)[r3:b]
+      modw    62(-0x1fc3(sb)), 0(r7)[r3:b]
+      modw    -64(-0x1fc3(sb)), 0(r7)[r3:b]
+      modw    0x0081(-0x1fc3(sb)), 0(r7)[r3:b]
+      modw    -64(0x003d3e3f(sb)), 0(r7)[r3:b]
       modw    0x3b3c, r0
       modw    0x3b3c, 61(r0)
       modw    0x3b3b, -64(r0)
@@ -19849,7 +19849,7 @@
       modw    0x3b3c, 61(fp)
       modw    0x3b3b, -64(fp)
       modw    0x3b3b, 0x0081(fp)
-      modw    0x3c3d, r7[r3:b]
+      modw    0x3c3d, 0(r7)[r3:b]
       modw    @59, r0
       modw    @59, 60(r0)
       modw    @59, -64(r0)
@@ -19866,9 +19866,9 @@
       modw    @59, 60(fp)
       modw    @59, -64(fp)
       modw    @59, 0x0081(fp)
-      modw    @60, r7[r3:b]
-      modw    @-64, r7[r3:b]
-      modw    @0x0081, r7[r3:b]
+      modw    @60, 0(r7)[r3:b]
+      modw    @-64, 0(r7)[r3:b]
+      modw    @0x0081, 0(r7)[r3:b]
       modw    ext(59)+60, r0
       modw    ext(59)+(-64), r0
       modw    ext(59)+0x0081, r0
@@ -19902,20 +19902,20 @@
       modw    ext(59)+(-0x1fc3), -64(fp)
       modw    ext(59)+(-0x1fc3), 0x0081(fp)
       modw    ext(59)+0x003d3e3f, -64(fp)
-      modw    ext(60)+61, r7[r3:b]
-      modw    ext(-64)+61, r7[r3:b]
-      modw    ext(0x003d)+62, r7[r3:b]
-      modw    ext(0x003d)+(-64), r7[r3:b]
-      modw    ext(0x003d)+0x0081, r7[r3:b]
-      modw    ext(-0x1fc3)+62, r7[r3:b]
-      modw    ext(-0x1fc3)+(-64), r7[r3:b]
-      modw    ext(-0x1fc3)+0x0081, r7[r3:b]
-      modw    ext(0x003d3e3f)+(-64), r7[r3:b]
+      modw    ext(60)+61, 0(r7)[r3:b]
+      modw    ext(-64)+61, 0(r7)[r3:b]
+      modw    ext(0x003d)+62, 0(r7)[r3:b]
+      modw    ext(0x003d)+(-64), 0(r7)[r3:b]
+      modw    ext(0x003d)+0x0081, 0(r7)[r3:b]
+      modw    ext(-0x1fc3)+62, 0(r7)[r3:b]
+      modw    ext(-0x1fc3)+(-64), 0(r7)[r3:b]
+      modw    ext(-0x1fc3)+0x0081, 0(r7)[r3:b]
+      modw    ext(0x003d3e3f)+(-64), 0(r7)[r3:b]
       modw    tos, r0
       modd    r7, 62(61(fp))
       modd    r7, 61(fp)
       divw    r7, 63(fp)
-      divw    r7, r7[r7:b]
+      divw    r7, 0(r7)[r7:b]
       divw    63(r0), r0
       divw    63(r0), -64(r0)
       divw    63(r0), 0x0081(r0)
@@ -19924,8 +19924,8 @@
       divw    63(r0), 0x0081(0x0041(fp))
       divw    63(r0), -64(fp)
       divw    63(r0), 0x0081(fp)
-      divw    -64(r0), r7[r7:b]
-      divw    0x0081(r0), r7[r7:b]
+      divw    -64(r0), 0(r7)[r7:b]
+      divw    0x0081(r0), 0(r7)[r7:b]
       divd    -63(r0), r0
       divd    -63(r0), -62(r0)
       divd    -63(r0), 0x0081(r0)
@@ -20802,7 +20802,7 @@
       acbd    -7, 0xe2808c(pc), 0xe68490
       acbd    -7, 0x03a0b6(pc), 0xe38197
       acbd    -3, 0x03a19d(pc), 0xe684a1
-      acbd    -1, r0[r0:q], 0x03a0c6
+      acbd    -1, 0(r0)[r0:q], 0x03a0c6
       acbd    -1, 1(r0)[r0:q], 0x03a0cb
       acbd    -1, 1(r0)[r0:q], 0x03a14f
       acbd    1, r0, 0x03a0d5
@@ -20816,15 +20816,15 @@
       addcb   -0x1e272626(sb), 0xe07ed9(pc)
       addcb   0(sb), 0xdd7be0(pc)
       addcb   0x19dadbdc(sb), 0xe280ec(pc)[r0:q]
-      addcb   0x19dadbdc(sb), r0[r0:q]
+      addcb   0x19dadbdc(sb), 0(r0)[r0:q]
       addcb   0xe381ff(pc), tos
       addcb   0x03a124(pc), tos
       addcb   0xe48309(pc), 0xe8870d(pc)
       addcb   0x03a211(pc), 0xe68515(pc)
-      addcb   r0[r0:q], r0[r1:q]
-      addcb   2(r0)[r0:q], r0[r1:q]
-      addcb   -64(r0)[r0:q], r0[r1:q]
-      addcb   0x0081(r0)[r0:q], r0[r1:q]
+      addcb   0(r0)[r0:q], 0(r0)[r1:q]
+      addcb   2(r0)[r0:q], 0(r0)[r1:q]
+      addcb   -64(r0)[r0:q], 0(r0)[r1:q]
+      addcb   0x0081(r0)[r0:q], 0(r0)[r1:q]
       addcw   0x13d4d5d6(sb), 0x17d8d9da(r3)
       addcw   -0x1e2b2a2a(sb), 0x17d8d9da(r3)
       addcw   0(sb), 0x14d5d6d7(r3)
@@ -20835,7 +20835,7 @@
       addcw   -0x1e272626(sb), 0xe07f5f(pc)
       addcw   0(sb), 0xdd7c66(pc)
       addcw   0x19dadbdc(sb), 0xe28172(pc)[r0:q]
-      addcw   0x19dadbdc(sb), r0[r0:q]
+      addcw   0x19dadbdc(sb), 0(r0)[r0:q]
       addcw   0xde7d80(pc), r3
       addcw   0x03a1aa(pc), r3
       addcw   0xe07f8b(pc), 0x1fe0e1e2(r3)
@@ -20844,14 +20844,14 @@
       addcw   0x03a1c4(pc), tos
       addcw   0xe483a9(pc), 0xe887ad(pc)
       addcw   0x03a2b1(pc), 0xe685b5(pc)
-      addcw   r0[r0:q], r0[r1:q]
-      addcw   2(r0)[r0:q], r0[r1:q]
-      addcw   -64(r0)[r0:q], r0[r1:q]
-      addcw   0x0081(r0)[r0:q], r0[r1:q]
+      addcw   0(r0)[r0:q], 0(r0)[r1:q]
+      addcw   2(r0)[r0:q], 0(r0)[r1:q]
+      addcw   -64(r0)[r0:q], 0(r0)[r1:q]
+      addcw   0x0081(r0)[r0:q], 0(r0)[r1:q]
       addcw   r0, tos
       addcw   r0, 0x03a1f6(pc)
       addcw   r0, 0x03a273(pc)
-      addcw   r0, r1[r0:q]
+      addcw   r0, 0(r1)[r0:q]
       addcw   r0, -63(r0)[r0:q]
       addcw   r0, 0x0081(r0)[r0:q]
       flag
@@ -20862,7 +20862,7 @@
       addcd   -0x1e272626(sb), 0xe07ffa(pc)
       addcd   0(sb), 0xdd7d01(pc)
       addcd   0x19dadbdc(sb), 0xe2820d(pc)[r0:q]
-      addcd   0x19dadbdc(sb), r0[r0:q]
+      addcd   0x19dadbdc(sb), 0(r0)[r0:q]
       addcd   0xde7e1b(pc), r3
       addcd   0x03a245(pc), r3
       addcd   0xe08026(pc), 0x1fe0e1e2(r3)
@@ -20871,14 +20871,14 @@
       addcd   0x03a25f(pc), tos
       addcd   0xe48444(pc), 0xe88848(pc)
       addcd   0x03a34c(pc), 0xe68650(pc)
-      addcd   r0[r0:q], r0[r1:q]
-      addcd   2(r0)[r0:q], r0[r1:q]
-      addcd   -64(r0)[r0:q], r0[r1:q]
-      addcd   0x0081(r0)[r0:q], r0[r1:q]
+      addcd   0(r0)[r0:q], 0(r0)[r1:q]
+      addcd   2(r0)[r0:q], 0(r0)[r1:q]
+      addcd   -64(r0)[r0:q], 0(r0)[r1:q]
+      addcd   0x0081(r0)[r0:q], 0(r0)[r1:q]
       addcd   r0, tos
       addcd   r0, 0x03a291(pc)
       addcd   r0, 0x03a30e(pc)
-      addcd   r0, r1[r0:q]
+      addcd   r0, 0(r1)[r0:q]
       addcd   r0, -63(r0)[r0:q]
       addcd   r0, 0x0081(r0)[r0:q]
       movb    0x16d7d8d9(sb), tos
@@ -20888,20 +20888,20 @@
       movb    -0x1e272626(sb), 0xe08094(pc)
       movb    0(sb), 0xdd7d9b(pc)
       movb    0x19dadbdc(sb), 0xe282a7(pc)[r0:q]
-      movb    0x19dadbdc(sb), r0[r0:q]
+      movb    0x19dadbdc(sb), 0(r0)[r0:q]
       movb    0xe383ba(pc), tos
       movb    0x03a2df(pc), tos
       movb    0xe484c4(pc), 0xe888c8(pc)
       movb    0x03a3cc(pc), 0xe686d0(pc)
-      movb    r0[r0:q], r0[r1:q]
-      movb    2(r0)[r0:q], r0[r1:q]
-      movb    -64(r0)[r0:q], r0[r1:q]
-      movb    0x0081(r0)[r0:q], r0[r1:q]
+      movb    0(r0)[r0:q], 0(r0)[r1:q]
+      movb    2(r0)[r0:q], 0(r0)[r1:q]
+      movb    -64(r0)[r0:q], 0(r0)[r1:q]
+      movb    0x0081(r0)[r0:q], 0(r0)[r1:q]
       movw    0x17d8d9da(sb), 0xe080e6(pc)
       movw    -0x1e272626(sb), 0xe080f0(pc)
       movw    0(sb), 0xdd7df7(pc)
       movw    0x19dadbdc(sb), 0xe28303(pc)[r0:q]
-      movw    0x19dadbdc(sb), r0[r0:q]
+      movw    0x19dadbdc(sb), 0(r0)[r0:q]
       movw    0xde7f11(pc), r3
       movw    0x03a33b(pc), r3
       movw    0xe0811c(pc), 0x1fe0e1e2(r3)
@@ -20910,14 +20910,14 @@
       movw    0x03a355(pc), tos
       movw    0xe4853a(pc), 0xe8893e(pc)
       movw    0x03a442(pc), 0xe68746(pc)
-      movw    r0[r0:q], r0[r1:q]
-      movw    2(r0)[r0:q], r0[r1:q]
-      movw    -64(r0)[r0:q], r0[r1:q]
-      movw    0x0081(r0)[r0:q], r0[r1:q]
+      movw    0(r0)[r0:q], 0(r0)[r1:q]
+      movw    2(r0)[r0:q], 0(r0)[r1:q]
+      movw    -64(r0)[r0:q], 0(r0)[r1:q]
+      movw    0x0081(r0)[r0:q], 0(r0)[r1:q]
       movw    r0, tos
       movw    r0, 0x03a387(pc)
       movw    r0, 0x03a404(pc)
-      movw    r0, r1[r0:q]
+      movw    r0, 0(r1)[r0:q]
       movw    r0, -63(r0)[r0:q]
       movw    r0, 0x0081(r0)[r0:q]
       movd    0xde7f6f(pc), r3
@@ -20928,38 +20928,38 @@
       movd    0x03a3b3(pc), tos
       movd    0xe48598(pc), 0xe8899c(pc)
       movd    0x03a4a0(pc), 0xe687a4(pc)
-      movd    r0[r0:q], r0[r1:q]
-      movd    2(r0)[r0:q], r0[r1:q]
-      movd    -64(r0)[r0:q], r0[r1:q]
-      movd    0x0081(r0)[r0:q], r0[r1:q]
+      movd    0(r0)[r0:q], 0(r0)[r1:q]
+      movd    2(r0)[r0:q], 0(r0)[r1:q]
+      movd    -64(r0)[r0:q], 0(r0)[r1:q]
+      movd    0x0081(r0)[r0:q], 0(r0)[r1:q]
       movd    r0, tos
       movd    r0, 0x03a3e5(pc)
       movd    r0, 0x03a462(pc)
-      movd    r0, r1[r0:q]
+      movd    r0, 0(r1)[r0:q]
       movd    r0, -63(r0)[r0:q]
       movd    r0, 0x0081(r0)[r0:q]
       orb     0xe384d2(pc), tos
       orb     0x03a3f7(pc), tos
       orb     0xe485dc(pc), 0xe889e0(pc)
       orb     0x03a4e4(pc), 0xe687e8(pc)
-      orb     r0[r0:q], r0[r1:q]
-      orb     2(r0)[r0:q], r0[r1:q]
-      orb     -64(r0)[r0:q], r0[r1:q]
-      orb     0x0081(r0)[r0:q], r0[r1:q]
+      orb     0(r0)[r0:q], 0(r0)[r1:q]
+      orb     2(r0)[r0:q], 0(r0)[r1:q]
+      orb     -64(r0)[r0:q], 0(r0)[r1:q]
+      orb     0x0081(r0)[r0:q], 0(r0)[r1:q]
       orw     0xe081fe(pc), 0x1fe0e1e2(r3)
       orw     0x03a42a(pc), 0x1cdddedf(r3)
       orw     0xe38512(pc), tos
       orw     0x03a437(pc), tos
       orw     0xe4861c(pc), 0xe88a20(pc)
       orw     0x03a524(pc), 0xe68828(pc)
-      orw     r0[r0:q], r0[r1:q]
-      orw     2(r0)[r0:q], r0[r1:q]
-      orw     -64(r0)[r0:q], r0[r1:q]
-      orw     0x0081(r0)[r0:q], r0[r1:q]
+      orw     0(r0)[r0:q], 0(r0)[r1:q]
+      orw     2(r0)[r0:q], 0(r0)[r1:q]
+      orw     -64(r0)[r0:q], 0(r0)[r1:q]
+      orw     0x0081(r0)[r0:q], 0(r0)[r1:q]
       orw     r0, tos
       orw     r0, 0x03a469(pc)
       orw     r0, 0x03a4e6(pc)
-      orw     r0, r1[r0:q]
+      orw     r0, 0(r1)[r0:q]
       orw     r0, -63(r0)[r0:q]
       orw     r0, 0x0081(r0)[r0:q]
       bge     0xe08253
@@ -20967,68 +20967,68 @@
       ord     0x03a480(pc), tos
       ord     0xe48665(pc), 0xe88a69(pc)
       ord     0x03a56d(pc), 0xe68871(pc)
-      ord     r0[r0:q], r0[r1:q]
-      ord     2(r0)[r0:q], r0[r1:q]
-      ord     -64(r0)[r0:q], r0[r1:q]
-      ord     0x0081(r0)[r0:q], r0[r1:q]
+      ord     0(r0)[r0:q], 0(r0)[r1:q]
+      ord     2(r0)[r0:q], 0(r0)[r1:q]
+      ord     -64(r0)[r0:q], 0(r0)[r1:q]
+      ord     0x0081(r0)[r0:q], 0(r0)[r1:q]
       ord     r0, tos
       ord     r0, 0x03a4b2(pc)
       ord     r0, 0x03a52f(pc)
-      ord     r0, r1[r0:q]
+      ord     r0, 0(r1)[r0:q]
       ord     r0, -63(r0)[r0:q]
       ord     r0, 0x0081(r0)[r0:q]
       movqb   -5, 0xe3859f(pc)
       movqb   -5, 0x03a4c4(pc)
-      movqb   -1, r0[r0:q]
+      movqb   -1, 0(r0)[r0:q]
       movqb   -1, -63(r0)[r0:q]
       movqb   -1, 0x0081(r0)[r0:q]
       movqb   1, r0
       movqb   -7, r0
       movqw   -3, 0xe486b9(pc)
       movqw   -3, 0x03a4dd(pc)
-      movqw   -1, r0[r0:q]
+      movqw   -1, 0(r0)[r0:q]
       movqw   -1, -63(r0)[r0:q]
       movqw   -1, 0x0081(r0)[r0:q]
       movqw   1, r0
       movqw   -7, r0
-      movqd   -1, r0[r0:q]
+      movqd   -1, 0(r0)[r0:q]
       movqd   -1, -63(r0)[r0:q]
       movqd   -1, 0x0081(r0)[r0:q]
       movqd   1, r0
       movqd   -7, r0
-      subb    r0[r0:q], r0[r1:q]
-      subb    2(r0)[r0:q], r0[r1:q]
-      subb    -64(r0)[r0:q], r0[r1:q]
-      subb    0x0081(r0)[r0:q], r0[r1:q]
-      subw    r0[r0:q], r0[r1:q]
-      subw    2(r0)[r0:q], r0[r1:q]
-      subw    -64(r0)[r0:q], r0[r1:q]
-      subw    0x0081(r0)[r0:q], r0[r1:q]
+      subb    0(r0)[r0:q], 0(r0)[r1:q]
+      subb    2(r0)[r0:q], 0(r0)[r1:q]
+      subb    -64(r0)[r0:q], 0(r0)[r1:q]
+      subb    0x0081(r0)[r0:q], 0(r0)[r1:q]
+      subw    0(r0)[r0:q], 0(r0)[r1:q]
+      subw    2(r0)[r0:q], 0(r0)[r1:q]
+      subw    -64(r0)[r0:q], 0(r0)[r1:q]
+      subw    0x0081(r0)[r0:q], 0(r0)[r1:q]
       subw    r0, tos
       subw    r0, 0x03a531(pc)
       subw    r0, 0x03a5ae(pc)
-      subw    r0, r1[r0:q]
+      subw    r0, 0(r1)[r0:q]
       subw    r0, -63(r0)[r0:q]
       subw    r0, 0x0081(r0)[r0:q]
       svc
-      subd    r0[r0:q], r0[r1:q]
-      subd    2(r0)[r0:q], r0[r1:q]
-      subd    -64(r0)[r0:q], r0[r1:q]
-      subd    0x0081(r0)[r0:q], r0[r1:q]
-      andb    r0[r0:q], r0[r1:q]
-      andb    2(r0)[r0:q], r0[r1:q]
-      andb    -64(r0)[r0:q], r0[r1:q]
-      andb    0x0081(r0)[r0:q], r0[r1:q]
-      andw    r0[r0:q], r0[r1:q]
-      andw    2(r0)[r0:q], r0[r1:q]
-      andw    -64(r0)[r0:q], r0[r1:q]
-      andw    0x0081(r0)[r0:q], r0[r1:q]
+      subd    0(r0)[r0:q], 0(r0)[r1:q]
+      subd    2(r0)[r0:q], 0(r0)[r1:q]
+      subd    -64(r0)[r0:q], 0(r0)[r1:q]
+      subd    0x0081(r0)[r0:q], 0(r0)[r1:q]
+      andb    0(r0)[r0:q], 0(r0)[r1:q]
+      andb    2(r0)[r0:q], 0(r0)[r1:q]
+      andb    -64(r0)[r0:q], 0(r0)[r1:q]
+      andb    0x0081(r0)[r0:q], 0(r0)[r1:q]
+      andw    0(r0)[r0:q], 0(r0)[r1:q]
+      andw    2(r0)[r0:q], 0(r0)[r1:q]
+      andw    -64(r0)[r0:q], 0(r0)[r1:q]
+      andw    0x0081(r0)[r0:q], 0(r0)[r1:q]
       br      0xf09368
-      andd    r0[r0:q], r0[r1:q]
-      andd    2(r0)[r0:q], r0[r1:q]
-      andd    -64(r0)[r0:q], r0[r1:q]
-      andd    0x0081(r0)[r0:q], r0[r1:q]
-      lprb    mod, r0[r0:q]
+      andd    0(r0)[r0:q], 0(r0)[r1:q]
+      andd    2(r0)[r0:q], 0(r0)[r1:q]
+      andd    -64(r0)[r0:q], 0(r0)[r1:q]
+      andd    0x0081(r0)[r0:q], 0(r0)[r1:q]
+      lprb    mod, 0(r0)[r0:q]
       lprb    mod, -63(r0)[r0:q]
       lprb    mod, 0x0081(r0)[r0:q]
       lprb    sp, r0
@@ -21040,7 +21040,7 @@
       lprb    psr, 0x0081(r0)
       lprb    mod, -56(r0)
       lprb    mod, 0x0081(r0)
-      lprw    mod, r0[r0:q]
+      lprw    mod, 0(r0)[r0:q]
       lprw    mod, -63(r0)[r0:q]
       lprw    mod, 0x0081(r0)[r0:q]
       lprw    sp, r0
@@ -21375,7 +21375,7 @@
       checkb  r7, tos, 0x01c2c3c4(sp)[r0:d]
       checkb  r7, tos, 0x01c2c3c4(sb)[r0:d]
       checkb  r7, tos, 0xc6769a(pc)[r0:d]
-      checkb  r7, tos, r0[r0:d]
+      checkb  r7, tos, 0(r0)[r0:d]
       checkb  r7, 0x01c2c3c4(fp), r2
       checkb  r7, -0x1e3d3c3c(fp), r2
       checkb  r7, 0(fp), r2
@@ -21394,7 +21394,7 @@
       checkb  r7, 0x09cacbcc(fp), 0x0dcecfd0(sp)[r0:d]
       checkb  r7, 0x09cacbcc(fp), 0x0dcecfd0(sb)[r0:d]
       checkb  r7, 0x09cacbcc(fp), 0xd2836c(pc)[r0:d]
-      checkb  r7, 0x09cacbcc(fp), r0[r0:d]
+      checkb  r7, 0x09cacbcc(fp), 0(r0)[r0:d]
       checkb  r7, 0x09cacbcc(sp), r2
       checkb  r7, -0x1e353434(sp), r2
       checkb  r7, 0(sp), r2
@@ -21412,7 +21412,7 @@
       checkb  r7, 0(sp), 0x10d1d2d3(sb)
       checkb  r7, 0x11d2d3d4(sp), 0x15d6d7d8(sb)[r0:d]
       checkb  r7, 0x11d2d3d4(sp), 0xda8c36(pc)[r0:d]
-      checkb  r7, 0x11d2d3d4(sp), r0[r0:d]
+      checkb  r7, 0x11d2d3d4(sp), 0(r0)[r0:d]
       checkb  r7, 0x11d2d3d4(sb), r2
       checkb  r7, -0x1e2d2c2c(sb), r2
       checkb  r7, 0(sb), r2
@@ -21429,7 +21429,7 @@
       checkb  r7, -0x1e272626(sb), 0x1bdcddde(sb)
       checkb  r7, 0(sb), 0x18d9dadb(sb)
       checkb  r7, 0x19dadbdc(sb), 0xe294f4(pc)[r0:d]
-      checkb  r7, 0x19dadbdc(sb), r0[r0:d]
+      checkb  r7, 0x19dadbdc(sb), 0(r0)[r0:d]
       checkb  r7, 0xde9104(pc), r2
       checkb  r7, 0x03b52f(pc), r2
       checkb  r7, 0xe09311(pc), 0x1fe0e1e2(r2)
@@ -21646,7 +21646,7 @@
       checkb  r3, 0x1bdcdddd(r0), 0x03bd88(pc)[r2:q]
       checkw  r3, 0xe09b6f(pc), 0x1fe0e1e2(r3)
       checkw  r3, 0xe09b7a(pc), tos
-      lprd    mod, r0[r0:q]
+      lprd    mod, 0(r0)[r0:q]
       lprd    mod, -63(r0)[r0:q]
       lprd    mod, 0x0081(r0)[r0:q]
       lprd    sp, r0
@@ -21658,40 +21658,40 @@
       lprd    psr, 0x0081(r0)
       lprd    mod, -56(r0)
       lprd    mod, 0x0081(r0)
-      subcb   r0[r0:q], r0[r1:q]
-      subcb   2(r0)[r0:q], r0[r1:q]
-      subcb   -64(r0)[r0:q], r0[r1:q]
-      subcb   0x0081(r0)[r0:q], r0[r1:q]
-      subcw   r0[r0:q], r0[r1:q]
-      subcw   2(r0)[r0:q], r0[r1:q]
-      subcw   -64(r0)[r0:q], r0[r1:q]
-      subcw   0x0081(r0)[r0:q], r0[r1:q]
+      subcb   0(r0)[r0:q], 0(r0)[r1:q]
+      subcb   2(r0)[r0:q], 0(r0)[r1:q]
+      subcb   -64(r0)[r0:q], 0(r0)[r1:q]
+      subcb   0x0081(r0)[r0:q], 0(r0)[r1:q]
+      subcw   0(r0)[r0:q], 0(r0)[r1:q]
+      subcw   2(r0)[r0:q], 0(r0)[r1:q]
+      subcw   -64(r0)[r0:q], 0(r0)[r1:q]
+      subcw   0x0081(r0)[r0:q], 0(r0)[r1:q]
       bpt
-      subcd   r0[r0:q], r0[r1:q]
-      subcd   2(r0)[r0:q], r0[r1:q]
-      subcd   -64(r0)[r0:q], r0[r1:q]
-      subcd   0x0081(r0)[r0:q], r0[r1:q]
-      tbitb   r0[r0:q], r0[r1:q]
-      tbitb   2(r0)[r0:q], r0[r1:q]
-      tbitb   -64(r0)[r0:q], r0[r1:q]
-      tbitb   0x0081(r0)[r0:q], r0[r1:q]
-      tbitw   r0[r0:q], r0[r1:q]
-      tbitw   2(r0)[r0:q], r0[r1:q]
-      tbitw   -64(r0)[r0:q], r0[r1:q]
-      tbitw   0x0081(r0)[r0:q], r0[r1:q]
-      tbitd   r0[r0:q], r0[r1:q]
-      tbitd   2(r0)[r0:q], r0[r1:q]
-      tbitd   -64(r0)[r0:q], r0[r1:q]
-      tbitd   0x0081(r0)[r0:q], r0[r1:q]
-      xorb    r0[r0:q], r0[r1:q]
-      xorb    2(r0)[r0:q], r0[r1:q]
-      xorb    -64(r0)[r0:q], r0[r1:q]
-      xorb    0x0081(r0)[r0:q], r0[r1:q]
-      xorw    r0[r0:q], r0[r1:q]
-      xorw    2(r0)[r0:q], r0[r1:q]
-      xorw    -64(r0)[r0:q], r0[r1:q]
-      xorw    0x0081(r0)[r0:q], r0[r1:q]
-      xord    r0[r0:q], r0[r1:q]
-      xord    2(r0)[r0:q], r0[r1:q]
-      xord    -64(r0)[r0:q], r0[r1:q]
-      xord    0x0081(r0)[r0:q], r0[r1:q]
+      subcd   0(r0)[r0:q], 0(r0)[r1:q]
+      subcd   2(r0)[r0:q], 0(r0)[r1:q]
+      subcd   -64(r0)[r0:q], 0(r0)[r1:q]
+      subcd   0x0081(r0)[r0:q], 0(r0)[r1:q]
+      tbitb   0(r0)[r0:q], 0(r0)[r1:q]
+      tbitb   2(r0)[r0:q], 0(r0)[r1:q]
+      tbitb   -64(r0)[r0:q], 0(r0)[r1:q]
+      tbitb   0x0081(r0)[r0:q], 0(r0)[r1:q]
+      tbitw   0(r0)[r0:q], 0(r0)[r1:q]
+      tbitw   2(r0)[r0:q], 0(r0)[r1:q]
+      tbitw   -64(r0)[r0:q], 0(r0)[r1:q]
+      tbitw   0x0081(r0)[r0:q], 0(r0)[r1:q]
+      tbitd   0(r0)[r0:q], 0(r0)[r1:q]
+      tbitd   2(r0)[r0:q], 0(r0)[r1:q]
+      tbitd   -64(r0)[r0:q], 0(r0)[r1:q]
+      tbitd   0x0081(r0)[r0:q], 0(r0)[r1:q]
+      xorb    0(r0)[r0:q], 0(r0)[r1:q]
+      xorb    2(r0)[r0:q], 0(r0)[r1:q]
+      xorb    -64(r0)[r0:q], 0(r0)[r1:q]
+      xorb    0x0081(r0)[r0:q], 0(r0)[r1:q]
+      xorw    0(r0)[r0:q], 0(r0)[r1:q]
+      xorw    2(r0)[r0:q], 0(r0)[r1:q]
+      xorw    -64(r0)[r0:q], 0(r0)[r1:q]
+      xorw    0x0081(r0)[r0:q], 0(r0)[r1:q]
+      xord    0(r0)[r0:q], 0(r0)[r1:q]
+      xord    2(r0)[r0:q], 0(r0)[r1:q]
+      xord    -64(r0)[r0:q], 0(r0)[r1:q]
+      xord    0x0081(r0)[r0:q], 0(r0)[r1:q]

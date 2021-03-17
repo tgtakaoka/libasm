@@ -12,7 +12,7 @@
       ADDB    R0, 7(FP)
       ADDB    R0, -64(FP)
       ADDB    R0, 0x0081(FP)
-      ADDB    R0, R1[R0:B]
+      ADDB    R0, 0(R1)[R0:B]
       ADDB    R0, -63(R0)[R0:B]
       ADDB    R0, 0x0081(R0)[R0:B]
       ADDW    R0, 3(R0)
@@ -26,7 +26,7 @@
       ADDW    R0, 7(FP)
       ADDW    R0, -64(FP)
       ADDW    R0, 0x0081(FP)
-      ADDW    R0, R1[R0:B]
+      ADDW    R0, 0(R1)[R0:B]
       ADDW    R0, -63(R0)[R0:B]
       ADDW    R0, 0x0081(R0)[R0:B]
       ADDW    R1, R0
@@ -40,7 +40,7 @@
       ADDD    R0, 7(FP)
       ADDD    R0, -64(FP)
       ADDD    R0, 0x0081(FP)
-      ADDD    R0, R1[R0:B]
+      ADDD    R0, 0(R1)[R0:B]
       ADDD    R0, -63(R0)[R0:B]
       ADDD    R0, 0x0081(R0)[R0:B]
       ADDD    R1, R0
@@ -51,7 +51,7 @@
       CMPB    R0, 7(FP)
       CMPB    R0, -64(FP)
       CMPB    R0, 0x0081(FP)
-      CMPB    R0, R1[R0:B]
+      CMPB    R0, 0(R1)[R0:B]
       CMPB    R0, -63(R0)[R0:B]
       CMPB    R0, 0x0081(R0)[R0:B]
       CMPB    R1, R0
@@ -66,7 +66,7 @@
       CMPW    R0, 7(FP)
       CMPW    R0, -64(FP)
       CMPW    R0, 0x0081(FP)
-      CMPW    R0, R1[R0:B]
+      CMPW    R0, 0(R1)[R0:B]
       CMPW    R0, -63(R0)[R0:B]
       CMPW    R0, 0x0081(R0)[R0:B]
       CMPW    R1, R0
@@ -92,7 +92,7 @@
       CMPD    R1, 15(FP)
       CMPD    R1, -64(FP)
       CMPD    R1, 0x0081(FP)
-      CMPD    R1, R2[R0:B]
+      CMPD    R1, 0(R2)[R0:B]
       CMPD    R1, -63(R0)[R0:B]
       CMPD    R1, 0x0081(R0)[R0:B]
       BICB    R1, R4
@@ -107,7 +107,7 @@
       BICB    R1, 15(FP)
       BICB    R1, -64(FP)
       BICB    R1, 0x0081(FP)
-      BICB    R1, R2[R0:B]
+      BICB    R1, 0(R2)[R0:B]
       BICB    R1, -63(R0)[R0:B]
       BICB    R1, 0x0081(R0)[R0:B]
       BICW    R1, 11(R0)
@@ -121,7 +121,7 @@
       BICW    R1, 15(FP)
       BICW    R1, -64(FP)
       BICW    R1, 0x0081(FP)
-      BICW    R1, R2[R0:B]
+      BICW    R1, 0(R2)[R0:B]
       BICW    R1, -63(R0)[R0:B]
       BICW    R1, 0x0081(R0)[R0:B]
       BICW    R2, R0
@@ -135,7 +135,7 @@
       BICD    R1, 15(FP)
       BICD    R1, -64(FP)
       BICD    R1, 0x0081(FP)
-      BICD    R1, R2[R0:B]
+      BICD    R1, 0(R2)[R0:B]
       BICD    R1, -63(R0)[R0:B]
       BICD    R1, 0x0081(R0)[R0:B]
       BICD    R2, R0
@@ -260,7 +260,7 @@
       ADDCB   R2, 23(FP)
       ADDCB   R2, -64(FP)
       ADDCB   R2, 0x0081(FP)
-      ADDCB   R2, R3[R0:B]
+      ADDCB   R2, 0(R3)[R0:B]
       ADDCB   R2, -63(R0)[R0:B]
       ADDCB   R2, 0x0081(R0)[R0:B]
       ADDCW   R2, 19(R0)
@@ -274,7 +274,7 @@
       ADDCW   R2, 23(FP)
       ADDCW   R2, -64(FP)
       ADDCW   R2, 0x0081(FP)
-      ADDCW   R2, R3[R0:B]
+      ADDCW   R2, 0(R3)[R0:B]
       ADDCW   R2, -63(R0)[R0:B]
       ADDCW   R2, 0x0081(R0)[R0:B]
       ADDCW   R3, R0
@@ -289,7 +289,7 @@
       ADDCD   R2, 23(FP)
       ADDCD   R2, -64(FP)
       ADDCD   R2, 0x0081(FP)
-      ADDCD   R2, R3[R0:B]
+      ADDCD   R2, 0(R3)[R0:B]
       ADDCD   R2, -63(R0)[R0:B]
       ADDCD   R2, 0x0081(R0)[R0:B]
       ADDCD   R3, R0
@@ -299,7 +299,7 @@
       MOVB    R2, 23(FP)
       MOVB    R2, -64(FP)
       MOVB    R2, 0x0081(FP)
-      MOVB    R2, R3[R0:B]
+      MOVB    R2, 0(R3)[R0:B]
       MOVB    R2, -63(R0)[R0:B]
       MOVB    R2, 0x0081(R0)[R0:B]
       MOVB    R3, R0
@@ -314,7 +314,7 @@
       MOVW    R2, 23(FP)
       MOVW    R2, -64(FP)
       MOVW    R2, 0x0081(FP)
-      MOVW    R2, R3[R0:B]
+      MOVW    R2, 0(R3)[R0:B]
       MOVW    R2, -63(R0)[R0:B]
       MOVW    R2, 0x0081(R0)[R0:B]
       MOVW    R3, R0
@@ -338,7 +338,7 @@
       MOVD    R3, 31(FP)
       MOVD    R3, -64(FP)
       MOVD    R3, 0x0081(FP)
-      MOVD    R3, R4[R0:B]
+      MOVD    R3, 0(R4)[R0:B]
       MOVD    R3, -63(R0)[R0:B]
       MOVD    R3, 0x0081(R0)[R0:B]
       ORB     R3, R4
@@ -353,7 +353,7 @@
       ORB     R3, 31(FP)
       ORB     R3, -64(FP)
       ORB     R3, 0x0081(FP)
-      ORB     R3, R4[R0:B]
+      ORB     R3, 0(R4)[R0:B]
       ORB     R3, -63(R0)[R0:B]
       ORB     R3, 0x0081(R0)[R0:B]
       ORW     R3, 27(R0)
@@ -367,7 +367,7 @@
       ORW     R3, 31(FP)
       ORW     R3, -64(FP)
       ORW     R3, 0x0081(FP)
-      ORW     R3, R4[R0:B]
+      ORW     R3, 0(R4)[R0:B]
       ORW     R3, -63(R0)[R0:B]
       ORW     R3, 0x0081(R0)[R0:B]
       ORW     R4, R0
@@ -381,7 +381,7 @@
       ORD     R3, 31(FP)
       ORD     R3, -64(FP)
       ORD     R3, 0x0081(FP)
-      ORD     R3, R4[R0:B]
+      ORD     R3, 0(R4)[R0:B]
       ORD     R3, -63(R0)[R0:B]
       ORD     R3, 0x0081(R0)[R0:B]
       ORD     R4, R0
@@ -555,7 +555,7 @@
       SUBB    R4, 39(FP)
       SUBB    R4, -64(FP)
       SUBB    R4, 0x0081(FP)
-      SUBB    R4, R5[R0:B]
+      SUBB    R4, 0(R5)[R0:B]
       SUBB    R4, -63(R0)[R0:B]
       SUBB    R4, 0x0081(R0)[R0:B]
       SUBW    R4, 35(R0)
@@ -569,7 +569,7 @@
       SUBW    R4, 39(FP)
       SUBW    R4, -64(FP)
       SUBW    R4, 0x0081(FP)
-      SUBW    R4, R5[R0:B]
+      SUBW    R4, 0(R5)[R0:B]
       SUBW    R4, -63(R0)[R0:B]
       SUBW    R4, 0x0081(R0)[R0:B]
       SUBW    R5, R0
@@ -584,7 +584,7 @@
       SUBD    R4, 39(FP)
       SUBD    R4, -64(FP)
       SUBD    R4, 0x0081(FP)
-      SUBD    R4, R5[R0:B]
+      SUBD    R4, 0(R5)[R0:B]
       SUBD    R4, -63(R0)[R0:B]
       SUBD    R4, 0x0081(R0)[R0:B]
       SUBD    R5, R0
@@ -625,7 +625,7 @@
       ANDB    R5, 47(FP)
       ANDB    R5, -64(FP)
       ANDB    R5, 0x0081(FP)
-      ANDB    R5, R6[R0:B]
+      ANDB    R5, 0(R6)[R0:B]
       ANDB    R5, -63(R0)[R0:B]
       ANDB    R5, 0x0081(R0)[R0:B]
       ANDW    R5, 43(R0)
@@ -639,7 +639,7 @@
       ANDW    R5, 47(FP)
       ANDW    R5, -64(FP)
       ANDW    R5, 0x0081(FP)
-      ANDW    R5, R6[R0:B]
+      ANDW    R5, 0(R6)[R0:B]
       ANDW    R5, -63(R0)[R0:B]
       ANDW    R5, 0x0081(R0)[R0:B]
       ANDW    R6, R0
@@ -653,7 +653,7 @@
       ANDD    R5, 47(FP)
       ANDD    R5, -64(FP)
       ANDD    R5, 0x0081(FP)
-      ANDD    R5, R6[R0:B]
+      ANDD    R5, 0(R6)[R0:B]
       ANDD    R5, -63(R0)[R0:B]
       ANDD    R5, 0x0081(R0)[R0:B]
       ANDD    R6, R0
@@ -701,16 +701,16 @@
       INDEXD  R5, R6, 55(FP)
       INDEXD  R5, R6, -64(FP)
       INDEXD  R5, R6, 0x0081(FP)
-      INDEXD  R5, R6, R7[R0:B]
+      INDEXD  R5, R6, 0(R7)[R0:B]
       INDEXD  R5, R6, -63(R0)[R0:B]
       INDEXD  R5, R6, 0x0081(R0)[R0:B]
       INDEXD  R5, R7, -63(0x003E3F40(FP))
       INDEXB  R6, R6, 0x36
       INDEXB  R6, R6, 54(FP)
-      INDEXB  R6, R6, R6[R6:B]
+      INDEXB  R6, R6, 0(R6)[R6:B]
       INDEXB  R6, R7, R0
       INDEXW  R6, R6, 55(FP)
-      INDEXW  R6, R6, R6[R7:B]
+      INDEXW  R6, R6, 0(R6)[R7:B]
       INDEXW  R6, R7, R0
       INDEXB  R7, 62(R0), R0
       INDEXB  R7, 62(R0), 63(R0)
@@ -724,9 +724,9 @@
       INDEXB  R7, 62(R0), 63(FP)
       INDEXB  R7, 62(R0), -64(FP)
       INDEXB  R7, 62(R0), 0x0081(FP)
-      INDEXB  R7, 63(R0), R7[R6:B]
-      INDEXB  R7, -64(R0), R7[R6:B]
-      INDEXB  R7, 0x0081(R0), R7[R6:B]
+      INDEXB  R7, 63(R0), 0(R7)[R6:B]
+      INDEXB  R7, -64(R0), 0(R7)[R6:B]
+      INDEXB  R7, 0x0081(R0), 0(R7)[R6:B]
       INDEXW  R7, 63(R0), R0
       INDEXW  R7, 63(R0), -64(R0)
       INDEXW  R7, 63(R0), 0x0081(R0)
@@ -736,8 +736,8 @@
       INDEXW  R7, 63(R0), 0x4041
       INDEXW  R7, 63(R0), -64(FP)
       INDEXW  R7, 63(R0), 0x0081(FP)
-      INDEXW  R7, -64(R0), R7[R7:B]
-      INDEXW  R7, 0x0081(R0), R7[R7:B]
+      INDEXW  R7, -64(R0), 0(R7)[R7:B]
+      INDEXW  R7, 0x0081(R0), 0(R7)[R7:B]
       INDEXD  R7, -63(R0), R0
       INDEXD  R7, -63(R0), -62(R0)
       INDEXD  R7, -63(R0), 0x0081(R0)
@@ -1140,7 +1140,7 @@
       INDEXD  R6, TOS, 0x01C2C3C4(SP)[R0:D]
       INDEXD  R6, TOS, 0x01C2C3C4(SB)[R0:D]
       INDEXD  R6, TOS, 0xC3E1AA(PC)[R0:D]
-      INDEXD  R6, TOS, R0[R0:D]
+      INDEXD  R6, TOS, 0(R0)[R0:D]
       INDEXD  R6, 0x01C2C3C4(FP), R2
       INDEXD  R6, -0x1E3D3C3C(FP), R2
       INDEXD  R6, 0(FP), R2
@@ -1159,7 +1159,7 @@
       INDEXD  R6, 0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       INDEXD  R6, 0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       INDEXD  R6, 0x09CACBCC(FP), 0xCFEE7C(PC)[R0:D]
-      INDEXD  R6, 0x09CACBCC(FP), R0[R0:D]
+      INDEXD  R6, 0x09CACBCC(FP), 0(R0)[R0:D]
       INDEXD  R6, 0x09CACBCC(SP), R2
       INDEXD  R6, -0x1E353434(SP), R2
       INDEXD  R6, 0(SP), R2
@@ -1177,7 +1177,7 @@
       INDEXD  R6, 0(SP), 0x10D1D2D3(SB)
       INDEXD  R6, 0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       INDEXD  R6, 0x11D2D3D4(SP), 0xD7F746(PC)[R0:D]
-      INDEXD  R6, 0x11D2D3D4(SP), R0[R0:D]
+      INDEXD  R6, 0x11D2D3D4(SP), 0(R0)[R0:D]
       INDEXD  R6, 0x11D2D3D4(SB), R2
       INDEXD  R6, -0x1E2D2C2C(SB), R2
       INDEXD  R6, 0(SB), R2
@@ -1194,7 +1194,7 @@
       INDEXD  R6, -0x1E272626(SB), 0x1BDCDDDE(SB)
       INDEXD  R6, 0(SB), 0x18D9DADB(SB)
       INDEXD  R6, 0x19DADBDC(SB), 0xE00004(PC)[R0:D]
-      INDEXD  R6, 0x19DADBDC(SB), R0[R0:D]
+      INDEXD  R6, 0x19DADBDC(SB), 0(R0)[R0:D]
       INDEXD  R6, 0xDBFC14(PC), R2
       INDEXD  R6, 0x01203F(PC), R2
       INDEXD  R6, 0xDDFE21(PC), 0x1FE0E1E2(R2)
@@ -1205,10 +1205,10 @@
       INDEXD  R6, 0x012080(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       INDEXD  R6, 0xE2026E(PC), -0x1C1B1A1A(SB)
       INDEXD  R6, 0x012177(PC), -0x1E1D1C1C(SB)
-      INDEXD  R6, R0[R0:Q], R0[R1:D]
-      INDEXD  R6, 2(R0)[R0:Q], R0[R1:D]
-      INDEXD  R6, -64(R0)[R0:Q], R0[R1:D]
-      INDEXD  R6, 0x0081(R0)[R0:Q], R0[R1:D]
+      INDEXD  R6, 0(R0)[R0:Q], 0(R0)[R1:D]
+      INDEXD  R6, 2(R0)[R0:Q], 0(R0)[R1:D]
+      INDEXD  R6, -64(R0)[R0:Q], 0(R0)[R1:D]
+      INDEXD  R6, 0x0081(R0)[R0:Q], 0(R0)[R1:D]
       INDEXD  R6, R0, 6(5(SB))
       INDEXD  R6, R0, 6(-64(SB))
       INDEXD  R6, R0, 7(6(SB))
@@ -1222,7 +1222,7 @@
       INDEXD  R6, R0, 7(SB)
       INDEXD  R6, R0, -64(SB)
       INDEXD  R6, R0, 0x0081(SB)
-      INDEXD  R6, R0, R1[R0:D]
+      INDEXD  R6, R0, 0(R1)[R0:D]
       INDEXD  R6, R0, -63(R0)[R0:D]
       INDEXD  R6, R0, 0x0081(R0)[R0:D]
       INDEXB  R7, TOS, EXT(-0x0141)+0x00C1C2C3
@@ -1629,7 +1629,7 @@
       EXTB    R0, R0, -64(2(FP)), 4
       EXTB    R0, R0, 4(2(FP)), 5
       EXTB    R0, R0, 2(FP), 3
-      EXTB    R0, R0, R0[R2:B], 3
+      EXTB    R0, R0, 0(R0)[R2:B], 3
       EXTB    R0, 2(R0), R0, 3
       EXTB    R0, 2(R0), 3(R0), 4
       EXTB    R0, 2(R0), -64(R0), 4
@@ -1640,13 +1640,13 @@
       EXTB    R0, 2(R0), 3(FP), 4
       EXTB    R0, 2(R0), -64(FP), 4
       EXTB    R0, 2(R0), 4(FP), 5
-      EXTB    R0, 3(R0), R0[R2:B], 4
-      EXTB    R0, -64(R0), R0[R2:B], 4
-      EXTB    R0, 4(R0), R0[R2:B], 5
+      EXTB    R0, 3(R0), 0(R0)[R2:B], 4
+      EXTB    R0, -64(R0), 0(R0)[R2:B], 4
+      EXTB    R0, 4(R0), 0(R0)[R2:B], 5
       EXTW    R0, R0, 3(R0), 4
       EXTW    R0, R0, 4(3(FP)), 5
       EXTW    R0, R0, 3(FP), 4
-      EXTW    R0, R0, R0[R3:B], 4
+      EXTW    R0, R0, 0(R0)[R3:B], 4
       EXTW    R0, R1, R0, 3
       EXTD    R0, R0, 6(5(FP)), 7
       EXTD    R0, R0, 5(FP), 6
@@ -1678,7 +1678,7 @@
       SUBCB   R6, 55(FP)
       SUBCB   R6, -64(FP)
       SUBCB   R6, 0x0081(FP)
-      SUBCB   R6, R7[R0:B]
+      SUBCB   R6, 0(R7)[R0:B]
       SUBCB   R6, -63(R0)[R0:B]
       SUBCB   R6, 0x0081(R0)[R0:B]
       SUBCB   R7, -63(0x003E3F40(FP))
@@ -1697,7 +1697,7 @@
       SUBCW   R6, 55(FP)
       SUBCW   R6, -64(FP)
       SUBCW   R6, 0x0081(FP)
-      SUBCW   R6, R7[R0:B]
+      SUBCW   R6, 0(R7)[R0:B]
       SUBCW   R6, -63(R0)[R0:B]
       SUBCW   R6, 0x0081(R0)[R0:B]
       SUBCW   R7, R0
@@ -1717,7 +1717,7 @@
       SUBCD   R6, 55(FP)
       SUBCD   R6, -64(FP)
       SUBCD   R6, 0x0081(FP)
-      SUBCD   R6, R7[R0:B]
+      SUBCD   R6, 0(R7)[R0:B]
       SUBCD   R6, -63(R0)[R0:B]
       SUBCD   R6, 0x0081(R0)[R0:B]
       SUBCD   R7, R0
@@ -1728,7 +1728,7 @@
       TBITB   R6, 55(FP)
       TBITB   R6, -64(FP)
       TBITB   R6, 0x0081(FP)
-      TBITB   R6, R7[R0:B]
+      TBITB   R6, 0(R7)[R0:B]
       TBITB   R6, -63(R0)[R0:B]
       TBITB   R6, 0x0081(R0)[R0:B]
       TBITB   R7, R0
@@ -1747,7 +1747,7 @@
       TBITW   R6, 55(FP)
       TBITW   R6, -64(FP)
       TBITW   R6, 0x0081(FP)
-      TBITW   R6, R7[R0:B]
+      TBITW   R6, 0(R7)[R0:B]
       TBITW   R6, -63(R0)[R0:B]
       TBITW   R6, 0x0081(R0)[R0:B]
       TBITW   R7, R0
@@ -4371,7 +4371,7 @@
       CMPB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       CMPB    EXT(-0x0646)+(-0x0444), 0x017EFD(PC)[R0:W]
       CMPB    EXT(-0x0646)+(-0x0444), 0xC04108(PC)[R0:W]
-      CMPB    EXT(-0x0646)+(-0x0444), R0[R0:W]
+      CMPB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       CMPB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       CMPB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       CMPB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -4417,7 +4417,7 @@
       CMPB    TOS, 0x01C2C3C4(SP)[R0:W]
       CMPB    TOS, 0x01C2C3C4(SB)[R0:W]
       CMPB    TOS, 0xC44710(PC)[R0:W]
-      CMPB    TOS, R0[R0:W]
+      CMPB    TOS, 0(R0)[R0:W]
       CMPB    0x01C2C3C4(FP), R1
       CMPB    -0x1E3D3C3C(FP), R1
       CMPB    0(FP), R1
@@ -4436,7 +4436,7 @@
       CMPB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       CMPB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       CMPB    0x09CACBCC(FP), 0xD053C3(PC)[R0:W]
-      CMPB    0x09CACBCC(FP), R0[R0:W]
+      CMPB    0x09CACBCC(FP), 0(R0)[R0:W]
       CMPB    0x09CACBCC(SP), R1
       CMPB    -0x1E353434(SP), R1
       CMPB    0(SP), R1
@@ -4454,7 +4454,7 @@
       CMPB    0(SP), 0x10D1D2D3(SP)
       CMPB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       CMPB    0x11D2D3D4(SP), 0xD85C6F(PC)[R0:W]
-      CMPB    0x11D2D3D4(SP), R0[R0:W]
+      CMPB    0x11D2D3D4(SP), 0(R0)[R0:W]
       CMPB    0x11D2D3D4(SB), R1
       CMPB    -0x1E2D2C2C(SB), R1
       CMPB    0(SB), R1
@@ -4471,7 +4471,7 @@
       CMPB    -0x1E272626(SB), 0x1BDCDDDE(SP)
       CMPB    0(SB), 0x18D9DADB(SP)
       CMPB    0x19DADBDC(SB), 0xE06510(PC)[R0:W]
-      CMPB    0x19DADBDC(SB), R0[R0:W]
+      CMPB    0x19DADBDC(SB), 0(R0)[R0:W]
       CMPB    0xDC611E(PC), R1
       CMPB    0x018548(PC), R1
       CMPB    0xDE6329(PC), 0x1FE0E1E2(R1)
@@ -4482,10 +4482,10 @@
       CMPB    0x01857F(PC), @0x1FE0E1E2
       CMPB    0xE26768(PC), -0x1C1B1A1A(SP)
       CMPB    0x018670(PC), -0x1E1D1C1C(SP)
-      CMPB    R0[R0:Q], R0[R1:W]
-      CMPB    2(R0)[R0:Q], R0[R1:W]
-      CMPB    -64(R0)[R0:Q], R0[R1:W]
-      CMPB    0x0081(R0)[R0:Q], R0[R1:W]
+      CMPB    0(R0)[R0:Q], 0(R0)[R1:W]
+      CMPB    2(R0)[R0:Q], 0(R0)[R1:W]
+      CMPB    -64(R0)[R0:Q], 0(R0)[R1:W]
+      CMPB    0x0081(R0)[R0:Q], 0(R0)[R1:W]
       CMPB    R0, 6(5(SP))
       CMPB    R0, 6(-64(SP))
       CMPB    R0, 7(6(SP))
@@ -4497,7 +4497,7 @@
       CMPB    R0, 7(SP)
       CMPB    R0, -64(SP)
       CMPB    R0, 0x0081(SP)
-      CMPB    R0, R1[R0:W]
+      CMPB    R0, 0(R1)[R0:W]
       CMPB    R0, -63(R0)[R0:W]
       CMPB    R0, 0x0081(R0)[R0:W]
       CMPW    -57(R0), -56(SP)
@@ -5018,7 +5018,7 @@
       BICB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       BICB    EXT(-0x0646)+(-0x0444), 0x019588(PC)[R0:W]
       BICB    EXT(-0x0646)+(-0x0444), 0xC05793(PC)[R0:W]
-      BICB    EXT(-0x0646)+(-0x0444), R0[R0:W]
+      BICB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       BICB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       BICB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       BICB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -5064,7 +5064,7 @@
       BICB    TOS, 0x01C2C3C4(SP)[R0:W]
       BICB    TOS, 0x01C2C3C4(SB)[R0:W]
       BICB    TOS, 0xC45D9B(PC)[R0:W]
-      BICB    TOS, R0[R0:W]
+      BICB    TOS, 0(R0)[R0:W]
       BICB    0x01C2C3C4(FP), R1
       BICB    -0x1E3D3C3C(FP), R1
       BICB    0(FP), R1
@@ -5083,7 +5083,7 @@
       BICB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       BICB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       BICB    0x09CACBCC(FP), 0xD06A4E(PC)[R0:W]
-      BICB    0x09CACBCC(FP), R0[R0:W]
+      BICB    0x09CACBCC(FP), 0(R0)[R0:W]
       BICB    0x09CACBCC(SP), R1
       BICB    -0x1E353434(SP), R1
       BICB    0(SP), R1
@@ -5101,7 +5101,7 @@
       BICB    0(SP), 0x10D1D2D3(SP)
       BICB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       BICB    0x11D2D3D4(SP), 0xD872FA(PC)[R0:W]
-      BICB    0x11D2D3D4(SP), R0[R0:W]
+      BICB    0x11D2D3D4(SP), 0(R0)[R0:W]
       BICB    0x11D2D3D4(SB), R1
       BICB    -0x1E2D2C2C(SB), R1
       BICB    0(SB), R1
@@ -5118,7 +5118,7 @@
       BICB    -0x1E272626(SB), 0x1BDCDDDE(SP)
       BICB    0(SB), 0x18D9DADB(SP)
       BICB    0x19DADBDC(SB), 0xE07B9B(PC)[R0:W]
-      BICB    0x19DADBDC(SB), R0[R0:W]
+      BICB    0x19DADBDC(SB), 0(R0)[R0:W]
       BICB    0xDC77A9(PC), R1
       BICB    0x019BD3(PC), R1
       BICB    0xDE79B4(PC), 0x1FE0E1E2(R1)
@@ -5129,10 +5129,10 @@
       BICB    0x019C0A(PC), @0x1FE0E1E2
       BICB    0xE27DF3(PC), -0x1C1B1A1A(SP)
       BICB    0x019CFB(PC), -0x1E1D1C1C(SP)
-      BICB    R0[R0:Q], R0[R1:W]
-      BICB    2(R0)[R0:Q], R0[R1:W]
-      BICB    -64(R0)[R0:Q], R0[R1:W]
-      BICB    0x0081(R0)[R0:Q], R0[R1:W]
+      BICB    0(R0)[R0:Q], 0(R0)[R1:W]
+      BICB    2(R0)[R0:Q], 0(R0)[R1:W]
+      BICB    -64(R0)[R0:Q], 0(R0)[R1:W]
+      BICB    0x0081(R0)[R0:Q], 0(R0)[R1:W]
       BICB    R0, 6(5(SP))
       BICB    R0, 6(-64(SP))
       BICB    R0, 7(6(SP))
@@ -5144,7 +5144,7 @@
       BICB    R0, 7(SP)
       BICB    R0, -64(SP)
       BICB    R0, 0x0081(SP)
-      BICB    R0, R1[R0:W]
+      BICB    R0, 0(R1)[R0:W]
       BICB    R0, -63(R0)[R0:W]
       BICB    R0, 0x0081(R0)[R0:W]
       BICW    -53(R1), -52(R1)
@@ -7536,7 +7536,7 @@
       ADDCB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       ADDCB   EXT(-0x0646)+(-0x0444), 0x01E9E5(PC)[R0:W]
       ADDCB   EXT(-0x0646)+(-0x0444), 0xC0ABF0(PC)[R0:W]
-      ADDCB   EXT(-0x0646)+(-0x0444), R0[R0:W]
+      ADDCB   EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       ADDCB   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       ADDCB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       ADDCB   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -7582,7 +7582,7 @@
       ADDCB   TOS, 0x01C2C3C4(SP)[R0:W]
       ADDCB   TOS, 0x01C2C3C4(SB)[R0:W]
       ADDCB   TOS, 0xC4B1F8(PC)[R0:W]
-      ADDCB   TOS, R0[R0:W]
+      ADDCB   TOS, 0(R0)[R0:W]
       ADDCB   0x01C2C3C4(FP), R1
       ADDCB   -0x1E3D3C3C(FP), R1
       ADDCB   0(FP), R1
@@ -7601,7 +7601,7 @@
       ADDCB   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       ADDCB   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       ADDCB   0x09CACBCC(FP), 0xD0BEAB(PC)[R0:W]
-      ADDCB   0x09CACBCC(FP), R0[R0:W]
+      ADDCB   0x09CACBCC(FP), 0(R0)[R0:W]
       ADDCB   0x09CACBCC(SP), R1
       ADDCB   -0x1E353434(SP), R1
       ADDCB   0(SP), R1
@@ -7619,7 +7619,7 @@
       ADDCB   0(SP), 0x10D1D2D3(SP)
       ADDCB   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       ADDCB   0x11D2D3D4(SP), 0xD8C757(PC)[R0:W]
-      ADDCB   0x11D2D3D4(SP), R0[R0:W]
+      ADDCB   0x11D2D3D4(SP), 0(R0)[R0:W]
       ADDCB   0x11D2D3D4(SB), R1
       ADDCB   -0x1E2D2C2C(SB), R1
       ADDCB   0(SB), R1
@@ -7636,7 +7636,7 @@
       ADDCB   -0x1E272626(SB), 0x1BDCDDDE(SP)
       ADDCB   0(SB), 0x18D9DADB(SP)
       ADDCB   0x19DADBDC(SB), 0xE0CFF8(PC)[R0:W]
-      ADDCB   0x19DADBDC(SB), R0[R0:W]
+      ADDCB   0x19DADBDC(SB), 0(R0)[R0:W]
       ADDCB   0xDCCC06(PC), R1
       ADDCB   0x01F030(PC), R1
       ADDCB   0xDECE11(PC), 0x1FE0E1E2(R1)
@@ -7647,10 +7647,10 @@
       ADDCB   0x01F067(PC), @0x1FE0E1E2
       ADDCB   0xE2D250(PC), -0x1C1B1A1A(SP)
       ADDCB   0x01F158(PC), -0x1E1D1C1C(SP)
-      ADDCB   R0[R0:Q], R0[R1:W]
-      ADDCB   2(R0)[R0:Q], R0[R1:W]
-      ADDCB   -64(R0)[R0:Q], R0[R1:W]
-      ADDCB   0x0081(R0)[R0:Q], R0[R1:W]
+      ADDCB   0(R0)[R0:Q], 0(R0)[R1:W]
+      ADDCB   2(R0)[R0:Q], 0(R0)[R1:W]
+      ADDCB   -64(R0)[R0:Q], 0(R0)[R1:W]
+      ADDCB   0x0081(R0)[R0:Q], 0(R0)[R1:W]
       ADDCB   R0, 6(5(SP))
       ADDCB   R0, 6(-64(SP))
       ADDCB   R0, 7(6(SP))
@@ -7662,7 +7662,7 @@
       ADDCB   R0, 7(SP)
       ADDCB   R0, -64(SP)
       ADDCB   R0, 0x0081(SP)
-      ADDCB   R0, R1[R0:W]
+      ADDCB   R0, 0(R1)[R0:W]
       ADDCB   R0, -63(R0)[R0:W]
       ADDCB   R0, 0x0081(R0)[R0:W]
       ADDCW   -45(R2), -44(R1)
@@ -8184,7 +8184,7 @@
       MOVB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       MOVB    EXT(-0x0646)+(-0x0444), 0x020071(PC)[R0:W]
       MOVB    EXT(-0x0646)+(-0x0444), 0xC0C27C(PC)[R0:W]
-      MOVB    EXT(-0x0646)+(-0x0444), R0[R0:W]
+      MOVB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       MOVB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       MOVB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       MOVB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -8230,7 +8230,7 @@
       MOVB    TOS, 0x01C2C3C4(SP)[R0:W]
       MOVB    TOS, 0x01C2C3C4(SB)[R0:W]
       MOVB    TOS, 0xC4C884(PC)[R0:W]
-      MOVB    TOS, R0[R0:W]
+      MOVB    TOS, 0(R0)[R0:W]
       MOVB    0x01C2C3C4(FP), R1
       MOVB    -0x1E3D3C3C(FP), R1
       MOVB    0(FP), R1
@@ -8249,7 +8249,7 @@
       MOVB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       MOVB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       MOVB    0x09CACBCC(FP), 0xD0D537(PC)[R0:W]
-      MOVB    0x09CACBCC(FP), R0[R0:W]
+      MOVB    0x09CACBCC(FP), 0(R0)[R0:W]
       MOVB    0x09CACBCC(SP), R1
       MOVB    -0x1E353434(SP), R1
       MOVB    0(SP), R1
@@ -8267,7 +8267,7 @@
       MOVB    0(SP), 0x10D1D2D3(SP)
       MOVB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       MOVB    0x11D2D3D4(SP), 0xD8DDE3(PC)[R0:W]
-      MOVB    0x11D2D3D4(SP), R0[R0:W]
+      MOVB    0x11D2D3D4(SP), 0(R0)[R0:W]
       MOVB    0x11D2D3D4(SB), R1
       MOVB    -0x1E2D2C2C(SB), R1
       MOVB    0(SB), R1
@@ -8284,7 +8284,7 @@
       MOVB    -0x1E272626(SB), 0x1BDCDDDE(SP)
       MOVB    0(SB), 0x18D9DADB(SP)
       MOVB    0x19DADBDC(SB), 0xE0E684(PC)[R0:W]
-      MOVB    0x19DADBDC(SB), R0[R0:W]
+      MOVB    0x19DADBDC(SB), 0(R0)[R0:W]
       MOVB    0xDCE292(PC), R1
       MOVB    0x0206BC(PC), R1
       MOVB    0xDEE49D(PC), 0x1FE0E1E2(R1)
@@ -8295,10 +8295,10 @@
       MOVB    0x0206F3(PC), @0x1FE0E1E2
       MOVB    0xE2E8DC(PC), -0x1C1B1A1A(SP)
       MOVB    0x0207E4(PC), -0x1E1D1C1C(SP)
-      MOVB    R0[R0:Q], R0[R1:W]
-      MOVB    2(R0)[R0:Q], R0[R1:W]
-      MOVB    -64(R0)[R0:Q], R0[R1:W]
-      MOVB    0x0081(R0)[R0:Q], R0[R1:W]
+      MOVB    0(R0)[R0:Q], 0(R0)[R1:W]
+      MOVB    2(R0)[R0:Q], 0(R0)[R1:W]
+      MOVB    -64(R0)[R0:Q], 0(R0)[R1:W]
+      MOVB    0x0081(R0)[R0:Q], 0(R0)[R1:W]
       MOVB    R0, 6(5(SP))
       MOVB    R0, 6(-64(SP))
       MOVB    R0, 7(6(SP))
@@ -8310,7 +8310,7 @@
       MOVB    R0, 7(SP)
       MOVB    R0, -64(SP)
       MOVB    R0, 0x0081(SP)
-      MOVB    R0, R1[R0:W]
+      MOVB    R0, 0(R1)[R0:W]
       MOVB    R0, -63(R0)[R0:W]
       MOVB    R0, 0x0081(R0)[R0:W]
       MOVW    -41(R2), -40(SP)
@@ -8831,7 +8831,7 @@
       ORB     EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       ORB     EXT(-0x0646)+(-0x0444), 0x0216FC(PC)[R0:W]
       ORB     EXT(-0x0646)+(-0x0444), 0xC0D907(PC)[R0:W]
-      ORB     EXT(-0x0646)+(-0x0444), R0[R0:W]
+      ORB     EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       ORB     EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       ORB     EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       ORB     EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -8877,7 +8877,7 @@
       ORB     TOS, 0x01C2C3C4(SP)[R0:W]
       ORB     TOS, 0x01C2C3C4(SB)[R0:W]
       ORB     TOS, 0xC4DF0F(PC)[R0:W]
-      ORB     TOS, R0[R0:W]
+      ORB     TOS, 0(R0)[R0:W]
       ORB     0x01C2C3C4(FP), R1
       ORB     -0x1E3D3C3C(FP), R1
       ORB     0(FP), R1
@@ -8896,7 +8896,7 @@
       ORB     0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       ORB     0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       ORB     0x09CACBCC(FP), 0xD0EBC2(PC)[R0:W]
-      ORB     0x09CACBCC(FP), R0[R0:W]
+      ORB     0x09CACBCC(FP), 0(R0)[R0:W]
       ORB     0x09CACBCC(SP), R1
       ORB     -0x1E353434(SP), R1
       ORB     0(SP), R1
@@ -8914,7 +8914,7 @@
       ORB     0(SP), 0x10D1D2D3(SP)
       ORB     0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       ORB     0x11D2D3D4(SP), 0xD8F46E(PC)[R0:W]
-      ORB     0x11D2D3D4(SP), R0[R0:W]
+      ORB     0x11D2D3D4(SP), 0(R0)[R0:W]
       ORB     0x11D2D3D4(SB), R1
       ORB     -0x1E2D2C2C(SB), R1
       ORB     0(SB), R1
@@ -8931,7 +8931,7 @@
       ORB     -0x1E272626(SB), 0x1BDCDDDE(SP)
       ORB     0(SB), 0x18D9DADB(SP)
       ORB     0x19DADBDC(SB), 0xE0FD0F(PC)[R0:W]
-      ORB     0x19DADBDC(SB), R0[R0:W]
+      ORB     0x19DADBDC(SB), 0(R0)[R0:W]
       ORB     0xDCF91D(PC), R1
       ORB     0x021D47(PC), R1
       ORB     0xDEFB28(PC), 0x1FE0E1E2(R1)
@@ -8942,10 +8942,10 @@
       ORB     0x021D7E(PC), @0x1FE0E1E2
       ORB     0xE2FF67(PC), -0x1C1B1A1A(SP)
       ORB     0x021E6F(PC), -0x1E1D1C1C(SP)
-      ORB     R0[R0:Q], R0[R1:W]
-      ORB     2(R0)[R0:Q], R0[R1:W]
-      ORB     -64(R0)[R0:Q], R0[R1:W]
-      ORB     0x0081(R0)[R0:Q], R0[R1:W]
+      ORB     0(R0)[R0:Q], 0(R0)[R1:W]
+      ORB     2(R0)[R0:Q], 0(R0)[R1:W]
+      ORB     -64(R0)[R0:Q], 0(R0)[R1:W]
+      ORB     0x0081(R0)[R0:Q], 0(R0)[R1:W]
       ORB     R0, 6(5(SP))
       ORB     R0, 6(-64(SP))
       ORB     R0, 7(6(SP))
@@ -8957,7 +8957,7 @@
       ORB     R0, 7(SP)
       ORB     R0, -64(SP)
       ORB     R0, 0x0081(SP)
-      ORB     R0, R1[R0:W]
+      ORB     R0, 0(R1)[R0:W]
       ORB     R0, -63(R0)[R0:W]
       ORB     R0, 0x0081(R0)[R0:W]
       ORW     -37(R3), -36(R1)
@@ -9492,7 +9492,7 @@
       SUBB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       SUBB    EXT(-0x0646)+(-0x0444), 0x022DB6(PC)[R0:W]
       SUBB    EXT(-0x0646)+(-0x0444), 0xC0EFC1(PC)[R0:W]
-      SUBB    EXT(-0x0646)+(-0x0444), R0[R0:W]
+      SUBB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       SUBB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       SUBB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       SUBB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -9538,7 +9538,7 @@
       SUBB    TOS, 0x01C2C3C4(SP)[R0:W]
       SUBB    TOS, 0x01C2C3C4(SB)[R0:W]
       SUBB    TOS, 0xC4F5C9(PC)[R0:W]
-      SUBB    TOS, R0[R0:W]
+      SUBB    TOS, 0(R0)[R0:W]
       SUBB    0x01C2C3C4(FP), R1
       SUBB    -0x1E3D3C3C(FP), R1
       SUBB    0(FP), R1
@@ -9557,7 +9557,7 @@
       SUBB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       SUBB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       SUBB    0x09CACBCC(FP), 0xD1027C(PC)[R0:W]
-      SUBB    0x09CACBCC(FP), R0[R0:W]
+      SUBB    0x09CACBCC(FP), 0(R0)[R0:W]
       SUBB    0x09CACBCC(SP), R1
       SUBB    -0x1E353434(SP), R1
       SUBB    0(SP), R1
@@ -9575,7 +9575,7 @@
       SUBB    0(SP), 0x10D1D2D3(SP)
       SUBB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       SUBB    0x11D2D3D4(SP), 0xD90B28(PC)[R0:W]
-      SUBB    0x11D2D3D4(SP), R0[R0:W]
+      SUBB    0x11D2D3D4(SP), 0(R0)[R0:W]
       SUBB    0x11D2D3D4(SB), R1
       SUBB    -0x1E2D2C2C(SB), R1
       SUBB    0(SB), R1
@@ -9592,7 +9592,7 @@
       SUBB    -0x1E272626(SB), 0x1BDCDDDE(SP)
       SUBB    0(SB), 0x18D9DADB(SP)
       SUBB    0x19DADBDC(SB), 0xE113C9(PC)[R0:W]
-      SUBB    0x19DADBDC(SB), R0[R0:W]
+      SUBB    0x19DADBDC(SB), 0(R0)[R0:W]
       SUBB    0xDD0FD7(PC), R1
       SUBB    0x023401(PC), R1
       SUBB    0xDF11E2(PC), 0x1FE0E1E2(R1)
@@ -9603,10 +9603,10 @@
       SUBB    0x023438(PC), @0x1FE0E1E2
       SUBB    0xE31621(PC), -0x1C1B1A1A(SP)
       SUBB    0x023529(PC), -0x1E1D1C1C(SP)
-      SUBB    R0[R0:Q], R0[R1:W]
-      SUBB    2(R0)[R0:Q], R0[R1:W]
-      SUBB    -64(R0)[R0:Q], R0[R1:W]
-      SUBB    0x0081(R0)[R0:Q], R0[R1:W]
+      SUBB    0(R0)[R0:Q], 0(R0)[R1:W]
+      SUBB    2(R0)[R0:Q], 0(R0)[R1:W]
+      SUBB    -64(R0)[R0:Q], 0(R0)[R1:W]
+      SUBB    0x0081(R0)[R0:Q], 0(R0)[R1:W]
       SUBB    R0, 6(5(SP))
       SUBB    R0, 6(-64(SP))
       SUBB    R0, 7(6(SP))
@@ -9618,7 +9618,7 @@
       SUBB    R0, 7(SP)
       SUBB    R0, -64(SP)
       SUBB    R0, 0x0081(SP)
-      SUBB    R0, R1[R0:W]
+      SUBB    R0, 0(R1)[R0:W]
       SUBB    R0, -63(R0)[R0:W]
       SUBB    R0, 0x0081(R0)[R0:W]
       SUBW    -29(R4), -28(R1)
@@ -10150,7 +10150,7 @@
       ANDB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       ANDB    EXT(-0x0646)+(-0x0444), 0x024463(PC)[R0:W]
       ANDB    EXT(-0x0646)+(-0x0444), 0xC1066E(PC)[R0:W]
-      ANDB    EXT(-0x0646)+(-0x0444), R0[R0:W]
+      ANDB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       ANDB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       ANDB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       ANDB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -10196,7 +10196,7 @@
       ANDB    TOS, 0x01C2C3C4(SP)[R0:W]
       ANDB    TOS, 0x01C2C3C4(SB)[R0:W]
       ANDB    TOS, 0xC50C76(PC)[R0:W]
-      ANDB    TOS, R0[R0:W]
+      ANDB    TOS, 0(R0)[R0:W]
       ANDB    0x01C2C3C4(FP), R1
       ANDB    -0x1E3D3C3C(FP), R1
       ANDB    0(FP), R1
@@ -10215,7 +10215,7 @@
       ANDB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       ANDB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       ANDB    0x09CACBCC(FP), 0xD11929(PC)[R0:W]
-      ANDB    0x09CACBCC(FP), R0[R0:W]
+      ANDB    0x09CACBCC(FP), 0(R0)[R0:W]
       ANDB    0x09CACBCC(SP), R1
       ANDB    -0x1E353434(SP), R1
       ANDB    0(SP), R1
@@ -10233,7 +10233,7 @@
       ANDB    0(SP), 0x10D1D2D3(SP)
       ANDB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       ANDB    0x11D2D3D4(SP), 0xD921D5(PC)[R0:W]
-      ANDB    0x11D2D3D4(SP), R0[R0:W]
+      ANDB    0x11D2D3D4(SP), 0(R0)[R0:W]
       ANDB    0x11D2D3D4(SB), R1
       ANDB    -0x1E2D2C2C(SB), R1
       ANDB    0(SB), R1
@@ -10250,7 +10250,7 @@
       ANDB    -0x1E272626(SB), 0x1BDCDDDE(SP)
       ANDB    0(SB), 0x18D9DADB(SP)
       ANDB    0x19DADBDC(SB), 0xE12A76(PC)[R0:W]
-      ANDB    0x19DADBDC(SB), R0[R0:W]
+      ANDB    0x19DADBDC(SB), 0(R0)[R0:W]
       ANDB    0xDD2684(PC), R1
       ANDB    0x024AAE(PC), R1
       ANDB    0xDF288F(PC), 0x1FE0E1E2(R1)
@@ -10261,10 +10261,10 @@
       ANDB    0x024AE5(PC), @0x1FE0E1E2
       ANDB    0xE32CCE(PC), -0x1C1B1A1A(SP)
       ANDB    0x024BD6(PC), -0x1E1D1C1C(SP)
-      ANDB    R0[R0:Q], R0[R1:W]
-      ANDB    2(R0)[R0:Q], R0[R1:W]
-      ANDB    -64(R0)[R0:Q], R0[R1:W]
-      ANDB    0x0081(R0)[R0:Q], R0[R1:W]
+      ANDB    0(R0)[R0:Q], 0(R0)[R1:W]
+      ANDB    2(R0)[R0:Q], 0(R0)[R1:W]
+      ANDB    -64(R0)[R0:Q], 0(R0)[R1:W]
+      ANDB    0x0081(R0)[R0:Q], 0(R0)[R1:W]
       ANDB    R0, 6(5(SP))
       ANDB    R0, 6(-64(SP))
       ANDB    R0, 7(6(SP))
@@ -10276,7 +10276,7 @@
       ANDB    R0, 7(SP)
       ANDB    R0, -64(SP)
       ANDB    R0, 0x0081(SP)
-      ANDB    R0, R1[R0:W]
+      ANDB    R0, 0(R1)[R0:W]
       ANDB    R0, -63(R0)[R0:W]
       ANDB    R0, 0x0081(R0)[R0:W]
       ANDW    -21(R5), -20(R1)
@@ -11229,7 +11229,7 @@
       SUBCB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       SUBCB   EXT(-0x0646)+(-0x0444), 0x026ACC(PC)[R0:W]
       SUBCB   EXT(-0x0646)+(-0x0444), 0xC12CD7(PC)[R0:W]
-      SUBCB   EXT(-0x0646)+(-0x0444), R0[R0:W]
+      SUBCB   EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       SUBCB   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       SUBCB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       SUBCB   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -11275,7 +11275,7 @@
       SUBCB   TOS, 0x01C2C3C4(SP)[R0:W]
       SUBCB   TOS, 0x01C2C3C4(SB)[R0:W]
       SUBCB   TOS, 0xC532DF(PC)[R0:W]
-      SUBCB   TOS, R0[R0:W]
+      SUBCB   TOS, 0(R0)[R0:W]
       SUBCB   0x01C2C3C4(FP), R1
       SUBCB   -0x1E3D3C3C(FP), R1
       SUBCB   0(FP), R1
@@ -11294,7 +11294,7 @@
       SUBCB   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       SUBCB   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       SUBCB   0x09CACBCC(FP), 0xD13F92(PC)[R0:W]
-      SUBCB   0x09CACBCC(FP), R0[R0:W]
+      SUBCB   0x09CACBCC(FP), 0(R0)[R0:W]
       SUBCB   0x09CACBCC(SP), R1
       SUBCB   -0x1E353434(SP), R1
       SUBCB   0(SP), R1
@@ -11312,7 +11312,7 @@
       SUBCB   0(SP), 0x10D1D2D3(SP)
       SUBCB   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       SUBCB   0x11D2D3D4(SP), 0xD9483E(PC)[R0:W]
-      SUBCB   0x11D2D3D4(SP), R0[R0:W]
+      SUBCB   0x11D2D3D4(SP), 0(R0)[R0:W]
       SUBCB   0x11D2D3D4(SB), R1
       SUBCB   -0x1E2D2C2C(SB), R1
       SUBCB   0(SB), R1
@@ -11329,7 +11329,7 @@
       SUBCB   -0x1E272626(SB), 0x1BDCDDDE(SP)
       SUBCB   0(SB), 0x18D9DADB(SP)
       SUBCB   0x19DADBDC(SB), 0xE150DF(PC)[R0:W]
-      SUBCB   0x19DADBDC(SB), R0[R0:W]
+      SUBCB   0x19DADBDC(SB), 0(R0)[R0:W]
       SUBCB   0xDD4CED(PC), R1
       SUBCB   0x027117(PC), R1
       SUBCB   0xDF4EF8(PC), 0x1FE0E1E2(R1)
@@ -11340,10 +11340,10 @@
       SUBCB   0x02714E(PC), @0x1FE0E1E2
       SUBCB   0xE35337(PC), -0x1C1B1A1A(SP)
       SUBCB   0x02723F(PC), -0x1E1D1C1C(SP)
-      SUBCB   R0[R0:Q], R0[R1:W]
-      SUBCB   2(R0)[R0:Q], R0[R1:W]
-      SUBCB   -64(R0)[R0:Q], R0[R1:W]
-      SUBCB   0x0081(R0)[R0:Q], R0[R1:W]
+      SUBCB   0(R0)[R0:Q], 0(R0)[R1:W]
+      SUBCB   2(R0)[R0:Q], 0(R0)[R1:W]
+      SUBCB   -64(R0)[R0:Q], 0(R0)[R1:W]
+      SUBCB   0x0081(R0)[R0:Q], 0(R0)[R1:W]
       SUBCB   R0, 6(5(SP))
       SUBCB   R0, 6(-64(SP))
       SUBCB   R0, 7(6(SP))
@@ -11355,7 +11355,7 @@
       SUBCB   R0, 7(SP)
       SUBCB   R0, -64(SP)
       SUBCB   R0, 0x0081(SP)
-      SUBCB   R0, R1[R0:W]
+      SUBCB   R0, 0(R1)[R0:W]
       SUBCB   R0, -63(R0)[R0:W]
       SUBCB   R0, 0x0081(R0)[R0:W]
       SUBCW   -13(R6), -12(R1)
@@ -11930,7 +11930,7 @@
       TBITB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:W]
       TBITB   EXT(-0x0646)+(-0x0444), 0x0282AF(PC)[R0:W]
       TBITB   EXT(-0x0646)+(-0x0444), 0xC144BA(PC)[R0:W]
-      TBITB   EXT(-0x0646)+(-0x0444), R0[R0:W]
+      TBITB   EXT(-0x0646)+(-0x0444), 0(R0)[R0:W]
       TBITB   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:W]
       TBITB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:W]
       TBITB   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:W]
@@ -11976,7 +11976,7 @@
       TBITB   TOS, 0x01C2C3C4(SP)[R0:W]
       TBITB   TOS, 0x01C2C3C4(SB)[R0:W]
       TBITB   TOS, 0xC54AC2(PC)[R0:W]
-      TBITB   TOS, R0[R0:W]
+      TBITB   TOS, 0(R0)[R0:W]
       TBITB   0x01C2C3C4(FP), R1
       TBITB   -0x1E3D3C3C(FP), R1
       TBITB   0(FP), R1
@@ -11995,7 +11995,7 @@
       TBITB   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:W]
       TBITB   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:W]
       TBITB   0x09CACBCC(FP), 0xD15775(PC)[R0:W]
-      TBITB   0x09CACBCC(FP), R0[R0:W]
+      TBITB   0x09CACBCC(FP), 0(R0)[R0:W]
       TBITB   0x09CACBCC(SP), R1
       TBITB   -0x1E353434(SP), R1
       TBITB   0(SP), R1
@@ -12013,7 +12013,7 @@
       TBITB   0(SP), 0x10D1D2D3(SP)
       TBITB   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:W]
       TBITB   0x11D2D3D4(SP), 0xD96021(PC)[R0:W]
-      TBITB   0x11D2D3D4(SP), R0[R0:W]
+      TBITB   0x11D2D3D4(SP), 0(R0)[R0:W]
       TBITB   0x11D2D3D4(SB), R1
       TBITB   -0x1E2D2C2C(SB), R1
       TBITB   0(SB), R1
@@ -12030,7 +12030,7 @@
       TBITB   -0x1E272626(SB), 0x1BDCDDDE(SP)
       TBITB   0(SB), 0x18D9DADB(SP)
       TBITB   0x19DADBDC(SB), 0xE168C2(PC)[R0:W]
-      TBITB   0x19DADBDC(SB), R0[R0:W]
+      TBITB   0x19DADBDC(SB), 0(R0)[R0:W]
       TBITB   0xDD64D0(PC), R1
       TBITB   0x0288FA(PC), R1
       TBITB   0xDF66DB(PC), 0x1FE0E1E2(R1)
@@ -12041,10 +12041,10 @@
       TBITB   0x028931(PC), @0x1FE0E1E2
       TBITB   0xE36B1A(PC), -0x1C1B1A1A(SP)
       TBITB   0x028A22(PC), -0x1E1D1C1C(SP)
-      TBITB   R0[R0:Q], R0[R1:W]
-      TBITB   2(R0)[R0:Q], R0[R1:W]
-      TBITB   -64(R0)[R0:Q], R0[R1:W]
-      TBITB   0x0081(R0)[R0:Q], R0[R1:W]
+      TBITB   0(R0)[R0:Q], 0(R0)[R1:W]
+      TBITB   2(R0)[R0:Q], 0(R0)[R1:W]
+      TBITB   -64(R0)[R0:Q], 0(R0)[R1:W]
+      TBITB   0x0081(R0)[R0:Q], 0(R0)[R1:W]
       TBITB   R0, 6(5(SP))
       TBITB   R0, 6(-64(SP))
       TBITB   R0, 7(6(SP))
@@ -12056,7 +12056,7 @@
       TBITB   R0, 7(SP)
       TBITB   R0, -64(SP)
       TBITB   R0, 0x0081(SP)
-      TBITB   R0, R1[R0:W]
+      TBITB   R0, 0(R1)[R0:W]
       TBITB   R0, -63(R0)[R0:W]
       TBITB   R0, 0x0081(R0)[R0:W]
       TBITW   -9(R6), -8(SP)
@@ -12650,7 +12650,7 @@
       BISPSRB 0x029CE9(PC)
       ADJSPB  0xE27DCD(PC)
       ADJSPB  0x029CF2(PC)
-      CASEB   R0[R0:Q]
+      CASEB   0(R0)[R0:Q]
       CASEB   -63(R0)[R0:Q]
       CASEB   0x0081(R0)[R0:Q]
       BICPSRB R0
@@ -12831,7 +12831,7 @@
       BISPSRW 0x02A169(PC)
       ADJSPW  0xE2824D(PC)
       ADJSPW  0x02A172(PC)
-      CASEW   R0[R0:Q]
+      CASEW   0(R0)[R0:Q]
       CASEW   -63(R0)[R0:Q]
       CASEW   0x0081(R0)[R0:Q]
       BICPSRW R0
@@ -13052,7 +13052,7 @@
       ADJSPD  0x02A6FF(PC)
       JSR     0xE388E4(PC)
       JSR     0x02A708(PC)
-      CASED   R0[R0:Q]
+      CASED   0(R0)[R0:Q]
       CASED   -63(R0)[R0:Q]
       CASED   0x0081(R0)[R0:Q]
       ADJSPD  R0
@@ -13262,7 +13262,7 @@
       ADDB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       ADDB    EXT(-0x0646)+(-0x0444), 0x02AC4C(PC)[R0:D]
       ADDB    EXT(-0x0646)+(-0x0444), 0xC16E57(PC)[R0:D]
-      ADDB    EXT(-0x0646)+(-0x0444), R0[R0:D]
+      ADDB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       ADDB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       ADDB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       ADDB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -13308,7 +13308,7 @@
       ADDB    TOS, 0x01C2C3C4(SP)[R0:D]
       ADDB    TOS, 0x01C2C3C4(SB)[R0:D]
       ADDB    TOS, 0xC57467(PC)[R0:D]
-      ADDB    TOS, R0[R0:D]
+      ADDB    TOS, 0(R0)[R0:D]
       ADDB    0x01C2C3C4(FP), R2
       ADDB    -0x1E3D3C3C(FP), R2
       ADDB    0(FP), R2
@@ -13327,7 +13327,7 @@
       ADDB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       ADDB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       ADDB    0x09CACBCC(FP), 0xD18126(PC)[R0:D]
-      ADDB    0x09CACBCC(FP), R0[R0:D]
+      ADDB    0x09CACBCC(FP), 0(R0)[R0:D]
       ADDB    0x09CACBCC(SP), R2
       ADDB    -0x1E353434(SP), R2
       ADDB    0(SP), R2
@@ -13345,7 +13345,7 @@
       ADDB    0(SP), 0x10D1D2D3(SB)
       ADDB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       ADDB    0x11D2D3D4(SP), 0xD989DE(PC)[R0:D]
-      ADDB    0x11D2D3D4(SP), R0[R0:D]
+      ADDB    0x11D2D3D4(SP), 0(R0)[R0:D]
       ADDB    0x11D2D3D4(SB), R2
       ADDB    -0x1E2D2C2C(SB), R2
       ADDB    0(SB), R2
@@ -13362,7 +13362,7 @@
       ADDB    -0x1E272626(SB), 0x1BDCDDDE(SB)
       ADDB    0(SB), 0x18D9DADB(SB)
       ADDB    0x19DADBDC(SB), 0xE1928B(PC)[R0:D]
-      ADDB    0x19DADBDC(SB), R0[R0:D]
+      ADDB    0x19DADBDC(SB), 0(R0)[R0:D]
       ADDB    0xDD8E99(PC), R2
       ADDB    0x02B2C3(PC), R2
       ADDB    0xDF90A4(PC), 0x1FE0E1E2(R2)
@@ -13373,10 +13373,10 @@
       ADDB    0x02B2FE(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       ADDB    0xE394EB(PC), -0x1C1B1A1A(SB)
       ADDB    0x02B3F3(PC), -0x1E1D1C1C(SB)
-      ADDB    R0[R0:Q], R0[R1:D]
-      ADDB    2(R0)[R0:Q], R0[R1:D]
-      ADDB    -64(R0)[R0:Q], R0[R1:D]
-      ADDB    0x0081(R0)[R0:Q], R0[R1:D]
+      ADDB    0(R0)[R0:Q], 0(R0)[R1:D]
+      ADDB    2(R0)[R0:Q], 0(R0)[R1:D]
+      ADDB    -64(R0)[R0:Q], 0(R0)[R1:D]
+      ADDB    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       ADDW    0x0586(0x0384(FP)), 0x0788(R2)
       ADDW    0x0586(-0x1F7C(FP)), 0x0788(R2)
       ADDW    0x0788(0x00848586(FP)), 0x098A(R2)
@@ -14005,7 +14005,7 @@
       ADDQB   1, 0x02CC03(PC)
       ADDQB   -7, 0xE1ABE6(PC)
       ADDQB   -7, 0x02CC0C(PC)
-      ADDQB   -1, R0[R0:Q]
+      ADDQB   -1, 0(R0)[R0:Q]
       ADDQB   -1, -63(R0)[R0:Q]
       ADDQB   -1, 0x0081(R0)[R0:Q]
       ADDQW   -3, 0x1192(0x0F90(SP))
@@ -14075,7 +14075,7 @@
       ADDQW   1, 0x02CDC0(PC)
       ADDQW   -7, 0xE1ADA3(PC)
       ADDQW   -7, 0x02CDC9(PC)
-      ADDQW   -1, R0[R0:Q]
+      ADDQW   -1, 0(R0)[R0:Q]
       ADDQW   -1, -63(R0)[R0:Q]
       ADDQW   -1, 0x0081(R0)[R0:Q]
       ADDQD   1, 0x1394(0x1192(SB))
@@ -14136,7 +14136,7 @@
       ADDQD   1, 0x02CF38(PC)
       ADDQD   -7, 0xE1AF1B(PC)
       ADDQD   -7, 0x02CF41(PC)
-      ADDQD   -1, R0[R0:Q]
+      ADDQD   -1, 0(R0)[R0:Q]
       ADDQD   -1, -63(R0)[R0:Q]
       ADDQD   -1, 0x0081(R0)[R0:Q]
       ADDCB   0x1798(0x1596(SB)), 0x1B9C(0x199A(SB))
@@ -14332,7 +14332,7 @@
       SUBD    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       SUBD    EXT(-0x0646)+(-0x0444), 0x02D456(PC)[R0:D]
       SUBD    EXT(-0x0646)+(-0x0444), 0xC19661(PC)[R0:D]
-      SUBD    EXT(-0x0646)+(-0x0444), R0[R0:D]
+      SUBD    EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       SUBD    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       SUBD    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       SUBD    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -14378,7 +14378,7 @@
       SUBD    TOS, 0x01C2C3C4(SP)[R0:D]
       SUBD    TOS, 0x01C2C3C4(SB)[R0:D]
       SUBD    TOS, 0xC59C71(PC)[R0:D]
-      SUBD    TOS, R0[R0:D]
+      SUBD    TOS, 0(R0)[R0:D]
       SUBD    0x01C2C3C4(FP), R2
       SUBD    -0x1E3D3C3C(FP), R2
       SUBD    0(FP), R2
@@ -14397,7 +14397,7 @@
       SUBD    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       SUBD    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       SUBD    0x09CACBCC(FP), 0xD1A930(PC)[R0:D]
-      SUBD    0x09CACBCC(FP), R0[R0:D]
+      SUBD    0x09CACBCC(FP), 0(R0)[R0:D]
       SUBD    0x09CACBCC(SP), R2
       SUBD    -0x1E353434(SP), R2
       SUBD    0(SP), R2
@@ -14415,7 +14415,7 @@
       SUBD    0(SP), 0x10D1D2D3(SB)
       SUBD    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       SUBD    0x11D2D3D4(SP), 0xD9B1E8(PC)[R0:D]
-      SUBD    0x11D2D3D4(SP), R0[R0:D]
+      SUBD    0x11D2D3D4(SP), 0(R0)[R0:D]
       SUBD    0x11D2D3D4(SB), R2
       SUBD    -0x1E2D2C2C(SB), R2
       SUBD    0(SB), R2
@@ -14432,7 +14432,7 @@
       SUBD    -0x1E272626(SB), 0x1BDCDDDE(SB)
       SUBD    0(SB), 0x18D9DADB(SB)
       SUBD    0x19DADBDC(SB), 0xE1BA95(PC)[R0:D]
-      SUBD    0x19DADBDC(SB), R0[R0:D]
+      SUBD    0x19DADBDC(SB), 0(R0)[R0:D]
       SUBD    0xDDB6A3(PC), R2
       SUBD    0x02DACD(PC), R2
       SUBD    0xDFB8AE(PC), 0x1FE0E1E2(R2)
@@ -14443,10 +14443,10 @@
       SUBD    0x02DB08(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       SUBD    0xE3BCF5(PC), -0x1C1B1A1A(SB)
       SUBD    0x02DBFD(PC), -0x1E1D1C1C(SB)
-      SUBD    R0[R0:Q], R0[R1:D]
-      SUBD    2(R0)[R0:Q], R0[R1:D]
-      SUBD    -64(R0)[R0:Q], R0[R1:D]
-      SUBD    0x0081(R0)[R0:Q], R0[R1:D]
+      SUBD    0(R0)[R0:Q], 0(R0)[R1:D]
+      SUBD    2(R0)[R0:Q], 0(R0)[R1:D]
+      SUBD    -64(R0)[R0:Q], 0(R0)[R1:D]
+      SUBD    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       SUBD    R0, 6(5(SB))
       SUBD    R0, 6(-64(SB))
       SUBD    R0, 7(6(SB))
@@ -14460,7 +14460,7 @@
       SUBD    R0, 7(SB)
       SUBD    R0, -64(SB)
       SUBD    R0, 0x0081(SB)
-      SUBD    R0, R1[R0:D]
+      SUBD    R0, 0(R1)[R0:D]
       SUBD    R0, -63(R0)[R0:D]
       SUBD    R0, 0x0081(R0)[R0:D]
       ADDR    @-0x1656, R2
@@ -14527,7 +14527,7 @@
       ADDR    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       ADDR    EXT(-0x0646)+(-0x0444), 0x02DB88(PC)[R0:D]
       ADDR    EXT(-0x0646)+(-0x0444), 0xC19D93(PC)[R0:D]
-      ADDR    EXT(-0x0646)+(-0x0444), R0[R0:D]
+      ADDR    EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       ADDR    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       ADDR    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       ADDR    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -14573,7 +14573,7 @@
       ADDR    TOS, 0x01C2C3C4(SP)[R0:D]
       ADDR    TOS, 0x01C2C3C4(SB)[R0:D]
       ADDR    TOS, 0xC5A3A3(PC)[R0:D]
-      ADDR    TOS, R0[R0:D]
+      ADDR    TOS, 0(R0)[R0:D]
       ADDR    0x01C2C3C4(FP), R2
       ADDR    -0x1E3D3C3C(FP), R2
       ADDR    0(FP), R2
@@ -14592,7 +14592,7 @@
       ADDR    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       ADDR    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       ADDR    0x09CACBCC(FP), 0xD1B062(PC)[R0:D]
-      ADDR    0x09CACBCC(FP), R0[R0:D]
+      ADDR    0x09CACBCC(FP), 0(R0)[R0:D]
       ADDR    0x09CACBCC(SP), R2
       ADDR    -0x1E353434(SP), R2
       ADDR    0(SP), R2
@@ -14610,7 +14610,7 @@
       ADDR    0(SP), 0x10D1D2D3(SB)
       ADDR    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       ADDR    0x11D2D3D4(SP), 0xD9B91A(PC)[R0:D]
-      ADDR    0x11D2D3D4(SP), R0[R0:D]
+      ADDR    0x11D2D3D4(SP), 0(R0)[R0:D]
       ADDR    0x11D2D3D4(SB), R2
       ADDR    -0x1E2D2C2C(SB), R2
       ADDR    0(SB), R2
@@ -14627,7 +14627,7 @@
       ADDR    -0x1E272626(SB), 0x1BDCDDDE(SB)
       ADDR    0(SB), 0x18D9DADB(SB)
       ADDR    0x19DADBDC(SB), 0xE1C1C7(PC)[R0:D]
-      ADDR    0x19DADBDC(SB), R0[R0:D]
+      ADDR    0x19DADBDC(SB), 0(R0)[R0:D]
       ADDR    0xDDBDD5(PC), R2
       ADDR    0x02E1FF(PC), R2
       ADDR    0xDFBFE0(PC), 0x1FE0E1E2(R2)
@@ -14685,7 +14685,7 @@
       ANDB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       ANDB    EXT(-0x0646)+(-0x0444), 0x02E1D4(PC)[R0:D]
       ANDB    EXT(-0x0646)+(-0x0444), 0xC1A3DF(PC)[R0:D]
-      ANDB    EXT(-0x0646)+(-0x0444), R0[R0:D]
+      ANDB    EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       ANDB    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       ANDB    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       ANDB    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -14728,7 +14728,7 @@
       ANDB    TOS, 0x01C2C3C4(SP)[R0:D]
       ANDB    TOS, 0x01C2C3C4(SB)[R0:D]
       ANDB    TOS, 0xC5A9E3(PC)[R0:D]
-      ANDB    TOS, R0[R0:D]
+      ANDB    TOS, 0(R0)[R0:D]
       ANDB    0x05C6C7C8(FP), 0x0DCECFD0(0x09CACBCC(SB))
       ANDB    -0x1E393838(FP), 0x0DCECFD0(0x09CACBCC(SB))
       ANDB    0(FP), 0x0ACBCCCD(0x06C7C8C9(SB))
@@ -14741,7 +14741,7 @@
       ANDB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       ANDB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       ANDB    0x09CACBCC(FP), 0xD1B678(PC)[R0:D]
-      ANDB    0x09CACBCC(FP), R0[R0:D]
+      ANDB    0x09CACBCC(FP), 0(R0)[R0:D]
       ANDB    0x0DCECFD0(SP), 0x15D6D7D8(0x11D2D3D4(SB))
       ANDB    -0x1E313030(SP), 0x15D6D7D8(0x11D2D3D4(SB))
       ANDB    0(SP), 0x12D3D4D5(0x0ECFD0D1(SB))
@@ -14753,7 +14753,7 @@
       ANDB    0(SP), 0x10D1D2D3(SB)
       ANDB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       ANDB    0x11D2D3D4(SP), 0xD9BF06(PC)[R0:D]
-      ANDB    0x11D2D3D4(SP), R0[R0:D]
+      ANDB    0x11D2D3D4(SP), 0(R0)[R0:D]
       ANDB    0x15D6D7D8(SB), 0x1DDEDFE0(0x19DADBDC(SB))
       ANDB    -0x1E292828(SB), 0x1DDEDFE0(0x19DADBDC(SB))
       ANDB    0(SB), 0x1ADBDCDD(0x16D7D8D9(SB))
@@ -14764,17 +14764,17 @@
       ANDB    -0x1E272626(SB), 0x1BDCDDDE(SB)
       ANDB    0(SB), 0x18D9DADB(SB)
       ANDB    0x19DADBDC(SB), 0xE1C789(PC)[R0:D]
-      ANDB    0x19DADBDC(SB), R0[R0:D]
+      ANDB    0x19DADBDC(SB), 0(R0)[R0:D]
       ANDB    0xE1C79B(PC), -0x1A191818(-0x1E1D1C1C(SB))
       ANDB    0x02E7C9(PC), -0x1D1C1B1B(0x1EDFE0E1(SB))
       ANDB    0xE2C8B5(PC), EXT(-0x1D1C1B1B)+(-0x19181717)
       ANDB    0x02E7E2(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       ANDB    0xE3C9CF(PC), -0x1C1B1A1A(SB)
       ANDB    0x02E8D7(PC), -0x1E1D1C1C(SB)
-      ANDB    R0[R0:Q], R0[R1:D]
-      ANDB    2(R0)[R0:Q], R0[R1:D]
-      ANDB    -64(R0)[R0:Q], R0[R1:D]
-      ANDB    0x0081(R0)[R0:Q], R0[R1:D]
+      ANDB    0(R0)[R0:Q], 0(R0)[R1:D]
+      ANDB    2(R0)[R0:Q], 0(R0)[R1:D]
+      ANDB    -64(R0)[R0:Q], 0(R0)[R1:D]
+      ANDB    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       ANDW    @-0x1454, -0x1252(R2)
       ANDW    @0x00ACADAE, -0x1050(R2)
       ANDW    @0x00ACADAE, 0x00B0B1B2(R2)
@@ -14837,7 +14837,7 @@
       ANDW    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       ANDW    EXT(-0x0646)+(-0x0444), 0x02E812(PC)[R0:D]
       ANDW    EXT(-0x0646)+(-0x0444), 0xC1AA1D(PC)[R0:D]
-      ANDW    EXT(-0x0646)+(-0x0444), R0[R0:D]
+      ANDW    EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       ANDW    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       ANDW    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       ANDW    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -14883,7 +14883,7 @@
       ANDW    TOS, 0x01C2C3C4(SP)[R0:D]
       ANDW    TOS, 0x01C2C3C4(SB)[R0:D]
       ANDW    TOS, 0xC5B02D(PC)[R0:D]
-      ANDW    TOS, R0[R0:D]
+      ANDW    TOS, 0(R0)[R0:D]
       ANDW    0x01C2C3C4(FP), R2
       ANDW    -0x1E3D3C3C(FP), R2
       ANDW    0(FP), R2
@@ -14902,7 +14902,7 @@
       ANDW    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       ANDW    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       ANDW    0x09CACBCC(FP), 0xD1BCEC(PC)[R0:D]
-      ANDW    0x09CACBCC(FP), R0[R0:D]
+      ANDW    0x09CACBCC(FP), 0(R0)[R0:D]
       ANDW    0x09CACBCC(SP), R2
       ANDW    -0x1E353434(SP), R2
       ANDW    0(SP), R2
@@ -14920,7 +14920,7 @@
       ANDW    0(SP), 0x10D1D2D3(SB)
       ANDW    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       ANDW    0x11D2D3D4(SP), 0xD9C5A4(PC)[R0:D]
-      ANDW    0x11D2D3D4(SP), R0[R0:D]
+      ANDW    0x11D2D3D4(SP), 0(R0)[R0:D]
       ANDW    0x11D2D3D4(SB), R2
       ANDW    -0x1E2D2C2C(SB), R2
       ANDW    0(SB), R2
@@ -14937,7 +14937,7 @@
       ANDW    -0x1E272626(SB), 0x1BDCDDDE(SB)
       ANDW    0(SB), 0x18D9DADB(SB)
       ANDW    0x19DADBDC(SB), 0xE1CE51(PC)[R0:D]
-      ANDW    0x19DADBDC(SB), R0[R0:D]
+      ANDW    0x19DADBDC(SB), 0(R0)[R0:D]
       ANDW    0xDDCA5F(PC), R2
       ANDW    0x02EE89(PC), R2
       ANDW    0xDFCC6A(PC), 0x1FE0E1E2(R2)
@@ -14948,10 +14948,10 @@
       ANDW    0x02EEC4(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       ANDW    0xE3D0B1(PC), -0x1C1B1A1A(SB)
       ANDW    0x02EFB9(PC), -0x1E1D1C1C(SB)
-      ANDW    R0[R0:Q], R0[R1:D]
-      ANDW    2(R0)[R0:Q], R0[R1:D]
-      ANDW    -64(R0)[R0:Q], R0[R1:D]
-      ANDW    0x0081(R0)[R0:Q], R0[R1:D]
+      ANDW    0(R0)[R0:Q], 0(R0)[R1:D]
+      ANDW    2(R0)[R0:Q], 0(R0)[R1:D]
+      ANDW    -64(R0)[R0:Q], 0(R0)[R1:D]
+      ANDW    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       ANDW    R0, 6(5(SB))
       ANDW    R0, 6(-64(SB))
       ANDW    R0, 7(6(SB))
@@ -14965,7 +14965,7 @@
       ANDW    R0, 7(SB)
       ANDW    R0, -64(SB)
       ANDW    R0, 0x0081(SB)
-      ANDW    R0, R1[R0:D]
+      ANDW    R0, 0(R1)[R0:D]
       ANDW    R0, -63(R0)[R0:D]
       ANDW    R0, 0x0081(R0)[R0:D]
       BLO     0x02DAE7
@@ -15028,7 +15028,7 @@
       ANDD    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       ANDD    EXT(-0x0646)+(-0x0444), 0x02EF25(PC)[R0:D]
       ANDD    EXT(-0x0646)+(-0x0444), 0xC1B130(PC)[R0:D]
-      ANDD    EXT(-0x0646)+(-0x0444), R0[R0:D]
+      ANDD    EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       ANDD    EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       ANDD    EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       ANDD    EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -15074,7 +15074,7 @@
       ANDD    TOS, 0x01C2C3C4(SP)[R0:D]
       ANDD    TOS, 0x01C2C3C4(SB)[R0:D]
       ANDD    TOS, 0xC5B740(PC)[R0:D]
-      ANDD    TOS, R0[R0:D]
+      ANDD    TOS, 0(R0)[R0:D]
       ANDD    0x01C2C3C4(FP), R2
       ANDD    -0x1E3D3C3C(FP), R2
       ANDD    0(FP), R2
@@ -15093,7 +15093,7 @@
       ANDD    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       ANDD    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       ANDD    0x09CACBCC(FP), 0xD1C3FF(PC)[R0:D]
-      ANDD    0x09CACBCC(FP), R0[R0:D]
+      ANDD    0x09CACBCC(FP), 0(R0)[R0:D]
       ANDD    0x09CACBCC(SP), R2
       ANDD    -0x1E353434(SP), R2
       ANDD    0(SP), R2
@@ -15111,7 +15111,7 @@
       ANDD    0(SP), 0x10D1D2D3(SB)
       ANDD    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       ANDD    0x11D2D3D4(SP), 0xD9CCB7(PC)[R0:D]
-      ANDD    0x11D2D3D4(SP), R0[R0:D]
+      ANDD    0x11D2D3D4(SP), 0(R0)[R0:D]
       ANDD    0x11D2D3D4(SB), R2
       ANDD    -0x1E2D2C2C(SB), R2
       ANDD    0(SB), R2
@@ -15128,7 +15128,7 @@
       ANDD    -0x1E272626(SB), 0x1BDCDDDE(SB)
       ANDD    0(SB), 0x18D9DADB(SB)
       ANDD    0x19DADBDC(SB), 0xE1D564(PC)[R0:D]
-      ANDD    0x19DADBDC(SB), R0[R0:D]
+      ANDD    0x19DADBDC(SB), 0(R0)[R0:D]
       ANDD    0xDDD172(PC), R2
       ANDD    0x02F59C(PC), R2
       ANDD    0xDFD37D(PC), 0x1FE0E1E2(R2)
@@ -15139,10 +15139,10 @@
       ANDD    0x02F5D7(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       ANDD    0xE3D7C4(PC), -0x1C1B1A1A(SB)
       ANDD    0x02F6CC(PC), -0x1E1D1C1C(SB)
-      ANDD    R0[R0:Q], R0[R1:D]
-      ANDD    2(R0)[R0:Q], R0[R1:D]
-      ANDD    -64(R0)[R0:Q], R0[R1:D]
-      ANDD    0x0081(R0)[R0:Q], R0[R1:D]
+      ANDD    0(R0)[R0:Q], 0(R0)[R1:D]
+      ANDD    2(R0)[R0:Q], 0(R0)[R1:D]
+      ANDD    -64(R0)[R0:Q], 0(R0)[R1:D]
+      ANDD    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       ANDD    R0, 6(5(SB))
       ANDD    R0, 6(-64(SB))
       ANDD    R0, 7(6(SB))
@@ -15156,7 +15156,7 @@
       ANDD    R0, 7(SB)
       ANDD    R0, -64(SB)
       ANDD    R0, 0x0081(SB)
-      ANDD    R0, R1[R0:D]
+      ANDD    R0, 0(R1)[R0:D]
       ANDD    R0, -63(R0)[R0:D]
       ANDD    R0, 0x0081(R0)[R0:D]
       SPRB    PSR, @-0x1050
@@ -15215,7 +15215,7 @@
       SPRB    SP, 0x02F782(PC)
       SPRB    PSR, 0xE3D967(PC)
       SPRB    PSR, 0x02F78B(PC)
-      SPRB    MOD, R0[R0:Q]
+      SPRB    MOD, 0(R0)[R0:Q]
       SPRB    MOD, -63(R0)[R0:Q]
       SPRB    MOD, 0x0081(R0)[R0:Q]
       SPRB    SP, R0
@@ -15283,7 +15283,7 @@
       SPRW    SP, 0x02F8E9(PC)
       SPRW    PSR, 0xE3DACE(PC)
       SPRW    PSR, 0x02F8F2(PC)
-      SPRW    MOD, R0[R0:Q]
+      SPRW    MOD, 0(R0)[R0:Q]
       SPRW    MOD, -63(R0)[R0:Q]
       SPRW    MOD, 0x0081(R0)[R0:Q]
       SPRW    SP, R0
@@ -15401,7 +15401,7 @@
       INSB    R0, R0, -64(2(FP)), 4
       INSB    R0, R0, 4(2(FP)), 5
       INSB    R0, R0, 2(FP), 3
-      INSB    R0, R0, R0[R2:B], 3
+      INSB    R0, R0, 0(R0)[R2:B], 3
       INSB    R0, 2(R0), R0, 3
       INSB    R0, 2(R0), 3(R0), 4
       INSB    R0, 2(R0), -64(R0), 4
@@ -15412,13 +15412,13 @@
       INSB    R0, 2(R0), 3(FP), 4
       INSB    R0, 2(R0), -64(FP), 4
       INSB    R0, 2(R0), 4(FP), 5
-      INSB    R0, 3(R0), R0[R2:B], 4
-      INSB    R0, -64(R0), R0[R2:B], 4
-      INSB    R0, 4(R0), R0[R2:B], 5
+      INSB    R0, 3(R0), 0(R0)[R2:B], 4
+      INSB    R0, -64(R0), 0(R0)[R2:B], 4
+      INSB    R0, 4(R0), 0(R0)[R2:B], 5
       INSW    R0, R0, 3(R0), 4
       INSW    R0, R0, 4(3(FP)), 5
       INSW    R0, R0, 3(FP), 4
-      INSW    R0, R0, R0[R3:B], 4
+      INSW    R0, R0, 0(R0)[R3:B], 4
       INSW    R0, R1, R0, 3
       INSD    R0, R0, 6(5(FP)), 7
       INSD    R0, R0, 5(FP), 6
@@ -15744,7 +15744,7 @@
       SPRD    SP, 0x03065B(PC)
       SPRD    PSR, 0xE3E840(PC)
       SPRD    PSR, 0x030664(PC)
-      SPRD    MOD, R0[R0:Q]
+      SPRD    MOD, 0(R0)[R0:Q]
       SPRD    MOD, -63(R0)[R0:Q]
       SPRD    MOD, 0x0081(R0)[R0:Q]
       SPRD    SP, R0
@@ -15783,7 +15783,7 @@
       SUBCB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       SUBCB   EXT(-0x0646)+(-0x0444), 0x030558(PC)[R0:D]
       SUBCB   EXT(-0x0646)+(-0x0444), 0xC1C763(PC)[R0:D]
-      SUBCB   EXT(-0x0646)+(-0x0444), R0[R0:D]
+      SUBCB   EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       SUBCB   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       SUBCB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       SUBCB   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -15826,7 +15826,7 @@
       SUBCB   TOS, 0x01C2C3C4(SP)[R0:D]
       SUBCB   TOS, 0x01C2C3C4(SB)[R0:D]
       SUBCB   TOS, 0xC5CD67(PC)[R0:D]
-      SUBCB   TOS, R0[R0:D]
+      SUBCB   TOS, 0(R0)[R0:D]
       SUBCB   0x05C6C7C8(FP), 0x0DCECFD0(0x09CACBCC(SB))
       SUBCB   -0x1E393838(FP), 0x0DCECFD0(0x09CACBCC(SB))
       SUBCB   0(FP), 0x0ACBCCCD(0x06C7C8C9(SB))
@@ -15839,7 +15839,7 @@
       SUBCB   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       SUBCB   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       SUBCB   0x09CACBCC(FP), 0xD1D9FC(PC)[R0:D]
-      SUBCB   0x09CACBCC(FP), R0[R0:D]
+      SUBCB   0x09CACBCC(FP), 0(R0)[R0:D]
       SUBCB   0x0DCECFD0(SP), 0x15D6D7D8(0x11D2D3D4(SB))
       SUBCB   -0x1E313030(SP), 0x15D6D7D8(0x11D2D3D4(SB))
       SUBCB   0(SP), 0x12D3D4D5(0x0ECFD0D1(SB))
@@ -15851,7 +15851,7 @@
       SUBCB   0(SP), 0x10D1D2D3(SB)
       SUBCB   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       SUBCB   0x11D2D3D4(SP), 0xD9E28A(PC)[R0:D]
-      SUBCB   0x11D2D3D4(SP), R0[R0:D]
+      SUBCB   0x11D2D3D4(SP), 0(R0)[R0:D]
       SUBCB   0x15D6D7D8(SB), 0x1DDEDFE0(0x19DADBDC(SB))
       SUBCB   -0x1E292828(SB), 0x1DDEDFE0(0x19DADBDC(SB))
       SUBCB   0(SB), 0x1ADBDCDD(0x16D7D8D9(SB))
@@ -15862,17 +15862,17 @@
       SUBCB   -0x1E272626(SB), 0x1BDCDDDE(SB)
       SUBCB   0(SB), 0x18D9DADB(SB)
       SUBCB   0x19DADBDC(SB), 0xE1EB0D(PC)[R0:D]
-      SUBCB   0x19DADBDC(SB), R0[R0:D]
+      SUBCB   0x19DADBDC(SB), 0(R0)[R0:D]
       SUBCB   0xE1EB1F(PC), -0x1A191818(-0x1E1D1C1C(SB))
       SUBCB   0x030B4D(PC), -0x1D1C1B1B(0x1EDFE0E1(SB))
       SUBCB   0xE2EC39(PC), EXT(-0x1D1C1B1B)+(-0x19181717)
       SUBCB   0x030B66(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       SUBCB   0xE3ED53(PC), -0x1C1B1A1A(SB)
       SUBCB   0x030C5B(PC), -0x1E1D1C1C(SB)
-      SUBCB   R0[R0:Q], R0[R1:D]
-      SUBCB   2(R0)[R0:Q], R0[R1:D]
-      SUBCB   -64(R0)[R0:Q], R0[R1:D]
-      SUBCB   0x0081(R0)[R0:Q], R0[R1:D]
+      SUBCB   0(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCB   2(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCB   -64(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCB   0x0081(R0)[R0:Q], 0(R0)[R1:D]
       SUBCW   EXT(-0x0C4C)+(-0x0A4A), -0x0848(R2)
       SUBCW   EXT(0x00B4B5B6)+(-0x0848), -0x0646(R2)
       SUBCW   EXT(0x00B4B5B6)+(-0x0848), 0x00BABBBC(R2)
@@ -15906,7 +15906,7 @@
       SUBCW   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       SUBCW   EXT(-0x0646)+(-0x0444), 0x030A9C(PC)[R0:D]
       SUBCW   EXT(-0x0646)+(-0x0444), 0xC1CCA7(PC)[R0:D]
-      SUBCW   EXT(-0x0646)+(-0x0444), R0[R0:D]
+      SUBCW   EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       SUBCW   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       SUBCW   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       SUBCW   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -15952,7 +15952,7 @@
       SUBCW   TOS, 0x01C2C3C4(SP)[R0:D]
       SUBCW   TOS, 0x01C2C3C4(SB)[R0:D]
       SUBCW   TOS, 0xC5D2B7(PC)[R0:D]
-      SUBCW   TOS, R0[R0:D]
+      SUBCW   TOS, 0(R0)[R0:D]
       SUBCW   0x01C2C3C4(FP), R2
       SUBCW   -0x1E3D3C3C(FP), R2
       SUBCW   0(FP), R2
@@ -15971,7 +15971,7 @@
       SUBCW   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       SUBCW   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       SUBCW   0x09CACBCC(FP), 0xD1DF76(PC)[R0:D]
-      SUBCW   0x09CACBCC(FP), R0[R0:D]
+      SUBCW   0x09CACBCC(FP), 0(R0)[R0:D]
       SUBCW   0x09CACBCC(SP), R2
       SUBCW   -0x1E353434(SP), R2
       SUBCW   0(SP), R2
@@ -15989,7 +15989,7 @@
       SUBCW   0(SP), 0x10D1D2D3(SB)
       SUBCW   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       SUBCW   0x11D2D3D4(SP), 0xD9E82E(PC)[R0:D]
-      SUBCW   0x11D2D3D4(SP), R0[R0:D]
+      SUBCW   0x11D2D3D4(SP), 0(R0)[R0:D]
       SUBCW   0x11D2D3D4(SB), R2
       SUBCW   -0x1E2D2C2C(SB), R2
       SUBCW   0(SB), R2
@@ -16006,7 +16006,7 @@
       SUBCW   -0x1E272626(SB), 0x1BDCDDDE(SB)
       SUBCW   0(SB), 0x18D9DADB(SB)
       SUBCW   0x19DADBDC(SB), 0xE1F0DB(PC)[R0:D]
-      SUBCW   0x19DADBDC(SB), R0[R0:D]
+      SUBCW   0x19DADBDC(SB), 0(R0)[R0:D]
       SUBCW   0xDDECE9(PC), R2
       SUBCW   0x031113(PC), R2
       SUBCW   0xDFEEF4(PC), 0x1FE0E1E2(R2)
@@ -16017,10 +16017,10 @@
       SUBCW   0x03114E(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       SUBCW   0xE3F33B(PC), -0x1C1B1A1A(SB)
       SUBCW   0x031243(PC), -0x1E1D1C1C(SB)
-      SUBCW   R0[R0:Q], R0[R1:D]
-      SUBCW   2(R0)[R0:Q], R0[R1:D]
-      SUBCW   -64(R0)[R0:Q], R0[R1:D]
-      SUBCW   0x0081(R0)[R0:Q], R0[R1:D]
+      SUBCW   0(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCW   2(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCW   -64(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCW   0x0081(R0)[R0:Q], 0(R0)[R1:D]
       SUBCW   R0, 6(5(SB))
       SUBCW   R0, 6(-64(SB))
       SUBCW   R0, 7(6(SB))
@@ -16034,7 +16034,7 @@
       SUBCW   R0, 7(SB)
       SUBCW   R0, -64(SB)
       SUBCW   R0, 0x0081(SB)
-      SUBCW   R0, R1[R0:D]
+      SUBCW   R0, 0(R1)[R0:D]
       SUBCW   R0, -63(R0)[R0:D]
       SUBCW   R0, 0x0081(R0)[R0:D]
       WAIT
@@ -16065,7 +16065,7 @@
       SUBCD   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       SUBCD   EXT(-0x0646)+(-0x0444), 0x031090(PC)[R0:D]
       SUBCD   EXT(-0x0646)+(-0x0444), 0xC1D29B(PC)[R0:D]
-      SUBCD   EXT(-0x0646)+(-0x0444), R0[R0:D]
+      SUBCD   EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       SUBCD   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       SUBCD   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       SUBCD   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -16111,7 +16111,7 @@
       SUBCD   TOS, 0x01C2C3C4(SP)[R0:D]
       SUBCD   TOS, 0x01C2C3C4(SB)[R0:D]
       SUBCD   TOS, 0xC5D8AB(PC)[R0:D]
-      SUBCD   TOS, R0[R0:D]
+      SUBCD   TOS, 0(R0)[R0:D]
       SUBCD   0x01C2C3C4(FP), R2
       SUBCD   -0x1E3D3C3C(FP), R2
       SUBCD   0(FP), R2
@@ -16130,7 +16130,7 @@
       SUBCD   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       SUBCD   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       SUBCD   0x09CACBCC(FP), 0xD1E56A(PC)[R0:D]
-      SUBCD   0x09CACBCC(FP), R0[R0:D]
+      SUBCD   0x09CACBCC(FP), 0(R0)[R0:D]
       SUBCD   0x09CACBCC(SP), R2
       SUBCD   -0x1E353434(SP), R2
       SUBCD   0(SP), R2
@@ -16148,7 +16148,7 @@
       SUBCD   0(SP), 0x10D1D2D3(SB)
       SUBCD   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       SUBCD   0x11D2D3D4(SP), 0xD9EE22(PC)[R0:D]
-      SUBCD   0x11D2D3D4(SP), R0[R0:D]
+      SUBCD   0x11D2D3D4(SP), 0(R0)[R0:D]
       SUBCD   0x11D2D3D4(SB), R2
       SUBCD   -0x1E2D2C2C(SB), R2
       SUBCD   0(SB), R2
@@ -16165,7 +16165,7 @@
       SUBCD   -0x1E272626(SB), 0x1BDCDDDE(SB)
       SUBCD   0(SB), 0x18D9DADB(SB)
       SUBCD   0x19DADBDC(SB), 0xE1F6CF(PC)[R0:D]
-      SUBCD   0x19DADBDC(SB), R0[R0:D]
+      SUBCD   0x19DADBDC(SB), 0(R0)[R0:D]
       SUBCD   0xDDF2DD(PC), R2
       SUBCD   0x031707(PC), R2
       SUBCD   0xDFF4E8(PC), 0x1FE0E1E2(R2)
@@ -16176,10 +16176,10 @@
       SUBCD   0x031742(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       SUBCD   0xE3F92F(PC), -0x1C1B1A1A(SB)
       SUBCD   0x031837(PC), -0x1E1D1C1C(SB)
-      SUBCD   R0[R0:Q], R0[R1:D]
-      SUBCD   2(R0)[R0:Q], R0[R1:D]
-      SUBCD   -64(R0)[R0:Q], R0[R1:D]
-      SUBCD   0x0081(R0)[R0:Q], R0[R1:D]
+      SUBCD   0(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCD   2(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCD   -64(R0)[R0:Q], 0(R0)[R1:D]
+      SUBCD   0x0081(R0)[R0:Q], 0(R0)[R1:D]
       SUBCD   R0, 6(5(SB))
       SUBCD   R0, 6(-64(SB))
       SUBCD   R0, 7(6(SB))
@@ -16193,7 +16193,7 @@
       SUBCD   R0, 7(SB)
       SUBCD   R0, -64(SB)
       SUBCD   R0, 0x0081(SB)
-      SUBCD   R0, R1[R0:D]
+      SUBCD   R0, 0(R1)[R0:D]
       SUBCD   R0, -63(R0)[R0:D]
       SUBCD   R0, 0x0081(R0)[R0:D]
       TBITB   EXT(-0x0949)+(-0x0747), EXT(-0x0545)+(-0x0343)
@@ -16217,7 +16217,7 @@
       TBITB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       TBITB   EXT(-0x0646)+(-0x0444), 0x03163C(PC)[R0:D]
       TBITB   EXT(-0x0646)+(-0x0444), 0xC1D847(PC)[R0:D]
-      TBITB   EXT(-0x0646)+(-0x0444), R0[R0:D]
+      TBITB   EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       TBITB   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       TBITB   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       TBITB   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -16260,7 +16260,7 @@
       TBITB   TOS, 0x01C2C3C4(SP)[R0:D]
       TBITB   TOS, 0x01C2C3C4(SB)[R0:D]
       TBITB   TOS, 0xC5DE4B(PC)[R0:D]
-      TBITB   TOS, R0[R0:D]
+      TBITB   TOS, 0(R0)[R0:D]
       TBITB   0x05C6C7C8(FP), 0x0DCECFD0(0x09CACBCC(SB))
       TBITB   -0x1E393838(FP), 0x0DCECFD0(0x09CACBCC(SB))
       TBITB   0(FP), 0x0ACBCCCD(0x06C7C8C9(SB))
@@ -16273,7 +16273,7 @@
       TBITB   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       TBITB   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       TBITB   0x09CACBCC(FP), 0xD1EAE0(PC)[R0:D]
-      TBITB   0x09CACBCC(FP), R0[R0:D]
+      TBITB   0x09CACBCC(FP), 0(R0)[R0:D]
       TBITB   0x0DCECFD0(SP), 0x15D6D7D8(0x11D2D3D4(SB))
       TBITB   -0x1E313030(SP), 0x15D6D7D8(0x11D2D3D4(SB))
       TBITB   0(SP), 0x12D3D4D5(0x0ECFD0D1(SB))
@@ -16285,7 +16285,7 @@
       TBITB   0(SP), 0x10D1D2D3(SB)
       TBITB   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       TBITB   0x11D2D3D4(SP), 0xD9F36E(PC)[R0:D]
-      TBITB   0x11D2D3D4(SP), R0[R0:D]
+      TBITB   0x11D2D3D4(SP), 0(R0)[R0:D]
       TBITB   0x15D6D7D8(SB), 0x1DDEDFE0(0x19DADBDC(SB))
       TBITB   -0x1E292828(SB), 0x1DDEDFE0(0x19DADBDC(SB))
       TBITB   0(SB), 0x1ADBDCDD(0x16D7D8D9(SB))
@@ -16296,17 +16296,17 @@
       TBITB   -0x1E272626(SB), 0x1BDCDDDE(SB)
       TBITB   0(SB), 0x18D9DADB(SB)
       TBITB   0x19DADBDC(SB), 0xE1FBF1(PC)[R0:D]
-      TBITB   0x19DADBDC(SB), R0[R0:D]
+      TBITB   0x19DADBDC(SB), 0(R0)[R0:D]
       TBITB   0xE1FC03(PC), -0x1A191818(-0x1E1D1C1C(SB))
       TBITB   0x031C31(PC), -0x1D1C1B1B(0x1EDFE0E1(SB))
       TBITB   0xE2FD1D(PC), EXT(-0x1D1C1B1B)+(-0x19181717)
       TBITB   0x031C4A(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       TBITB   0xE3FE37(PC), -0x1C1B1A1A(SB)
       TBITB   0x031D3F(PC), -0x1E1D1C1C(SB)
-      TBITB   R0[R0:Q], R0[R1:D]
-      TBITB   2(R0)[R0:Q], R0[R1:D]
-      TBITB   -64(R0)[R0:Q], R0[R1:D]
-      TBITB   0x0081(R0)[R0:Q], R0[R1:D]
+      TBITB   0(R0)[R0:Q], 0(R0)[R1:D]
+      TBITB   2(R0)[R0:Q], 0(R0)[R1:D]
+      TBITB   -64(R0)[R0:Q], 0(R0)[R1:D]
+      TBITB   0x0081(R0)[R0:Q], 0(R0)[R1:D]
       TBITW   EXT(-0x0848)+(-0x0646), -0x0444(SB)
       TBITW   EXT(0x00B8B9BA)+(-0x0444), -0x0242(SB)
       TBITW   EXT(0x00B8B9BA)+(-0x0444), 0x00BEBFC0(SB)
@@ -16322,7 +16322,7 @@
       TBITW   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(SB)[R0:D]
       TBITW   EXT(-0x0646)+(-0x0444), 0x031AB7(PC)[R0:D]
       TBITW   EXT(-0x0646)+(-0x0444), 0xC1DCC2(PC)[R0:D]
-      TBITW   EXT(-0x0646)+(-0x0444), R0[R0:D]
+      TBITW   EXT(-0x0646)+(-0x0444), 0(R0)[R0:D]
       TBITW   EXT(-0x0646)+(-0x0444), -0x0242(R0)[R0:D]
       TBITW   EXT(-0x0646)+(-0x0444), 0x00BEBFC0(R0)[R0:D]
       TBITW   EXT(-0x0646)+(-0x0444), -0x0040(-0x0242(FP))[R0:D]
@@ -16368,7 +16368,7 @@
       TBITW   TOS, 0x01C2C3C4(SP)[R0:D]
       TBITW   TOS, 0x01C2C3C4(SB)[R0:D]
       TBITW   TOS, 0xC5E2D2(PC)[R0:D]
-      TBITW   TOS, R0[R0:D]
+      TBITW   TOS, 0(R0)[R0:D]
       TBITW   0x01C2C3C4(FP), R2
       TBITW   -0x1E3D3C3C(FP), R2
       TBITW   0(FP), R2
@@ -16387,7 +16387,7 @@
       TBITW   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       TBITW   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       TBITW   0x09CACBCC(FP), 0xD1EF91(PC)[R0:D]
-      TBITW   0x09CACBCC(FP), R0[R0:D]
+      TBITW   0x09CACBCC(FP), 0(R0)[R0:D]
       TBITW   0x09CACBCC(SP), R2
       TBITW   -0x1E353434(SP), R2
       TBITW   0(SP), R2
@@ -16405,7 +16405,7 @@
       TBITW   0(SP), 0x10D1D2D3(SB)
       TBITW   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       TBITW   0x11D2D3D4(SP), 0xD9F849(PC)[R0:D]
-      TBITW   0x11D2D3D4(SP), R0[R0:D]
+      TBITW   0x11D2D3D4(SP), 0(R0)[R0:D]
       TBITW   0x11D2D3D4(SB), R2
       TBITW   -0x1E2D2C2C(SB), R2
       TBITW   0(SB), R2
@@ -16422,7 +16422,7 @@
       TBITW   -0x1E272626(SB), 0x1BDCDDDE(SB)
       TBITW   0(SB), 0x18D9DADB(SB)
       TBITW   0x19DADBDC(SB), 0xE200F6(PC)[R0:D]
-      TBITW   0x19DADBDC(SB), R0[R0:D]
+      TBITW   0x19DADBDC(SB), 0(R0)[R0:D]
       TBITW   0xDDFD04(PC), R2
       TBITW   0x03212E(PC), R2
       TBITW   0xDFFF0F(PC), 0x1FE0E1E2(R2)
@@ -16433,10 +16433,10 @@
       TBITW   0x032169(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       TBITW   0xE40356(PC), -0x1C1B1A1A(SB)
       TBITW   0x03225E(PC), -0x1E1D1C1C(SB)
-      TBITW   R0[R0:Q], R0[R1:D]
-      TBITW   2(R0)[R0:Q], R0[R1:D]
-      TBITW   -64(R0)[R0:Q], R0[R1:D]
-      TBITW   0x0081(R0)[R0:Q], R0[R1:D]
+      TBITW   0(R0)[R0:Q], 0(R0)[R1:D]
+      TBITW   2(R0)[R0:Q], 0(R0)[R1:D]
+      TBITW   -64(R0)[R0:Q], 0(R0)[R1:D]
+      TBITW   0x0081(R0)[R0:Q], 0(R0)[R1:D]
       TBITW   R0, 6(5(SB))
       TBITW   R0, 6(-64(SB))
       TBITW   R0, 7(6(SB))
@@ -16450,7 +16450,7 @@
       TBITW   R0, 7(SB)
       TBITW   R0, -64(SB)
       TBITW   R0, 0x0081(SB)
-      TBITW   R0, R1[R0:D]
+      TBITW   R0, 0(R1)[R0:D]
       TBITW   R0, -63(R0)[R0:D]
       TBITW   R0, 0x0081(R0)[R0:D]
       TBITD   TOS, R2
@@ -16468,7 +16468,7 @@
       TBITD   TOS, 0x01C2C3C4(SP)[R0:D]
       TBITD   TOS, 0x01C2C3C4(SB)[R0:D]
       TBITD   TOS, 0xC5E602(PC)[R0:D]
-      TBITD   TOS, R0[R0:D]
+      TBITD   TOS, 0(R0)[R0:D]
       TBITD   0x01C2C3C4(FP), R2
       TBITD   -0x1E3D3C3C(FP), R2
       TBITD   0(FP), R2
@@ -16487,7 +16487,7 @@
       TBITD   0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       TBITD   0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       TBITD   0x09CACBCC(FP), 0xD1F2C1(PC)[R0:D]
-      TBITD   0x09CACBCC(FP), R0[R0:D]
+      TBITD   0x09CACBCC(FP), 0(R0)[R0:D]
       TBITD   0x09CACBCC(SP), R2
       TBITD   -0x1E353434(SP), R2
       TBITD   0(SP), R2
@@ -16505,7 +16505,7 @@
       TBITD   0(SP), 0x10D1D2D3(SB)
       TBITD   0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       TBITD   0x11D2D3D4(SP), 0xD9FB79(PC)[R0:D]
-      TBITD   0x11D2D3D4(SP), R0[R0:D]
+      TBITD   0x11D2D3D4(SP), 0(R0)[R0:D]
       TBITD   0x11D2D3D4(SB), R2
       TBITD   -0x1E2D2C2C(SB), R2
       TBITD   0(SB), R2
@@ -16522,7 +16522,7 @@
       TBITD   -0x1E272626(SB), 0x1BDCDDDE(SB)
       TBITD   0(SB), 0x18D9DADB(SB)
       TBITD   0x19DADBDC(SB), 0xE20426(PC)[R0:D]
-      TBITD   0x19DADBDC(SB), R0[R0:D]
+      TBITD   0x19DADBDC(SB), 0(R0)[R0:D]
       TBITD   0xDE0034(PC), R2
       TBITD   0x03245E(PC), R2
       TBITD   0xE0023F(PC), 0x1FE0E1E2(R2)
@@ -16533,10 +16533,10 @@
       TBITD   0x032499(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       TBITD   0xE40686(PC), -0x1C1B1A1A(SB)
       TBITD   0x03258E(PC), -0x1E1D1C1C(SB)
-      TBITD   R0[R0:Q], R0[R1:D]
-      TBITD   2(R0)[R0:Q], R0[R1:D]
-      TBITD   -64(R0)[R0:Q], R0[R1:D]
-      TBITD   0x0081(R0)[R0:Q], R0[R1:D]
+      TBITD   0(R0)[R0:Q], 0(R0)[R1:D]
+      TBITD   2(R0)[R0:Q], 0(R0)[R1:D]
+      TBITD   -64(R0)[R0:Q], 0(R0)[R1:D]
+      TBITD   0x0081(R0)[R0:Q], 0(R0)[R1:D]
       TBITD   R0, 6(5(SB))
       TBITD   R0, 6(-64(SB))
       TBITD   R0, 7(6(SB))
@@ -16550,7 +16550,7 @@
       TBITD   R0, 7(SB)
       TBITD   R0, -64(SB)
       TBITD   R0, 0x0081(SB)
-      TBITD   R0, R1[R0:D]
+      TBITD   R0, 0(R1)[R0:D]
       TBITD   R0, -63(R0)[R0:D]
       TBITD   R0, 0x0081(R0)[R0:D]
       XORB    TOS, R6
@@ -16568,7 +16568,7 @@
       XORB    TOS, 0x01C2C3C4(SP)[R0:D]
       XORB    TOS, 0x01C2C3C4(SB)[R0:D]
       XORB    TOS, 0xC5E932(PC)[R0:D]
-      XORB    TOS, R0[R0:D]
+      XORB    TOS, 0(R0)[R0:D]
       XORB    0x01C2C3C4(FP), R2
       XORB    -0x1E3D3C3C(FP), R2
       XORB    0(FP), R2
@@ -16587,7 +16587,7 @@
       XORB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       XORB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       XORB    0x09CACBCC(FP), 0xD1F5F1(PC)[R0:D]
-      XORB    0x09CACBCC(FP), R0[R0:D]
+      XORB    0x09CACBCC(FP), 0(R0)[R0:D]
       XORB    0x09CACBCC(SP), R2
       XORB    -0x1E353434(SP), R2
       XORB    0(SP), R2
@@ -16605,7 +16605,7 @@
       XORB    0(SP), 0x10D1D2D3(SB)
       XORB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       XORB    0x11D2D3D4(SP), 0xD9FEA9(PC)[R0:D]
-      XORB    0x11D2D3D4(SP), R0[R0:D]
+      XORB    0x11D2D3D4(SP), 0(R0)[R0:D]
       XORB    0x11D2D3D4(SB), R2
       XORB    -0x1E2D2C2C(SB), R2
       XORB    0(SB), R2
@@ -16622,7 +16622,7 @@
       XORB    -0x1E272626(SB), 0x1BDCDDDE(SB)
       XORB    0(SB), 0x18D9DADB(SB)
       XORB    0x19DADBDC(SB), 0xE20756(PC)[R0:D]
-      XORB    0x19DADBDC(SB), R0[R0:D]
+      XORB    0x19DADBDC(SB), 0(R0)[R0:D]
       XORB    0xDE0364(PC), R2
       XORB    0x03278E(PC), R2
       XORB    0xE0056F(PC), 0x1FE0E1E2(R2)
@@ -16633,10 +16633,10 @@
       XORB    0x0327C9(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       XORB    0xE409B6(PC), -0x1C1B1A1A(SB)
       XORB    0x0328BE(PC), -0x1E1D1C1C(SB)
-      XORB    R0[R0:Q], R0[R1:D]
-      XORB    2(R0)[R0:Q], R0[R1:D]
-      XORB    -64(R0)[R0:Q], R0[R1:D]
-      XORB    0x0081(R0)[R0:Q], R0[R1:D]
+      XORB    0(R0)[R0:Q], 0(R0)[R1:D]
+      XORB    2(R0)[R0:Q], 0(R0)[R1:D]
+      XORB    -64(R0)[R0:Q], 0(R0)[R1:D]
+      XORB    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       XORB    R0, 6(5(SB))
       XORB    R0, 6(-64(SB))
       XORB    R0, 7(6(SB))
@@ -16650,7 +16650,7 @@
       XORB    R0, 7(SB)
       XORB    R0, -64(SB)
       XORB    R0, 0x0081(SB)
-      XORB    R0, R1[R0:D]
+      XORB    R0, 0(R1)[R0:D]
       XORB    R0, -63(R0)[R0:D]
       XORB    R0, 0x0081(R0)[R0:D]
       XORW    TOS, -0x0444(R2)
@@ -16667,7 +16667,7 @@
       XORW    TOS, 0x01C2C3C4(SP)[R0:D]
       XORW    TOS, 0x01C2C3C4(SB)[R0:D]
       XORW    TOS, 0xC5EC60(PC)[R0:D]
-      XORW    TOS, R0[R0:D]
+      XORW    TOS, 0(R0)[R0:D]
       XORW    0x01C2C3C4(FP), R2
       XORW    -0x1E3D3C3C(FP), R2
       XORW    0(FP), R2
@@ -16686,7 +16686,7 @@
       XORW    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       XORW    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       XORW    0x09CACBCC(FP), 0xD1F91F(PC)[R0:D]
-      XORW    0x09CACBCC(FP), R0[R0:D]
+      XORW    0x09CACBCC(FP), 0(R0)[R0:D]
       XORW    0x09CACBCC(SP), R2
       XORW    -0x1E353434(SP), R2
       XORW    0(SP), R2
@@ -16704,7 +16704,7 @@
       XORW    0(SP), 0x10D1D2D3(SB)
       XORW    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       XORW    0x11D2D3D4(SP), 0xDA01D7(PC)[R0:D]
-      XORW    0x11D2D3D4(SP), R0[R0:D]
+      XORW    0x11D2D3D4(SP), 0(R0)[R0:D]
       XORW    0x11D2D3D4(SB), R2
       XORW    -0x1E2D2C2C(SB), R2
       XORW    0(SB), R2
@@ -16721,7 +16721,7 @@
       XORW    -0x1E272626(SB), 0x1BDCDDDE(SB)
       XORW    0(SB), 0x18D9DADB(SB)
       XORW    0x19DADBDC(SB), 0xE20A84(PC)[R0:D]
-      XORW    0x19DADBDC(SB), R0[R0:D]
+      XORW    0x19DADBDC(SB), 0(R0)[R0:D]
       XORW    0xDE0692(PC), R2
       XORW    0x032ABC(PC), R2
       XORW    0xE0089D(PC), 0x1FE0E1E2(R2)
@@ -16732,10 +16732,10 @@
       XORW    0x032AF7(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       XORW    0xE40CE4(PC), -0x1C1B1A1A(SB)
       XORW    0x032BEC(PC), -0x1E1D1C1C(SB)
-      XORW    R0[R0:Q], R0[R1:D]
-      XORW    2(R0)[R0:Q], R0[R1:D]
-      XORW    -64(R0)[R0:Q], R0[R1:D]
-      XORW    0x0081(R0)[R0:Q], R0[R1:D]
+      XORW    0(R0)[R0:Q], 0(R0)[R1:D]
+      XORW    2(R0)[R0:Q], 0(R0)[R1:D]
+      XORW    -64(R0)[R0:Q], 0(R0)[R1:D]
+      XORW    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       XORW    R0, R2
       XORW    R0, 6(5(SB))
       XORW    R0, 6(-64(SB))
@@ -16750,7 +16750,7 @@
       XORW    R0, 7(SB)
       XORW    R0, -64(SB)
       XORW    R0, 0x0081(SB)
-      XORW    R0, R1[R0:D]
+      XORW    R0, 0(R1)[R0:D]
       XORW    R0, -63(R0)[R0:D]
       XORW    R0, 0x0081(R0)[R0:D]
       BHS     0x03272C
@@ -16766,7 +16766,7 @@
       XORD    TOS, 0x01C2C3C4(SP)[R0:D]
       XORD    TOS, 0x01C2C3C4(SB)[R0:D]
       XORD    TOS, 0xC5EF89(PC)[R0:D]
-      XORD    TOS, R0[R0:D]
+      XORD    TOS, 0(R0)[R0:D]
       XORD    0x01C2C3C4(FP), R2
       XORD    -0x1E3D3C3C(FP), R2
       XORD    0(FP), R2
@@ -16785,7 +16785,7 @@
       XORD    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       XORD    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       XORD    0x09CACBCC(FP), 0xD1FC48(PC)[R0:D]
-      XORD    0x09CACBCC(FP), R0[R0:D]
+      XORD    0x09CACBCC(FP), 0(R0)[R0:D]
       XORD    0x09CACBCC(SP), R2
       XORD    -0x1E353434(SP), R2
       XORD    0(SP), R2
@@ -16803,7 +16803,7 @@
       XORD    0(SP), 0x10D1D2D3(SB)
       XORD    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       XORD    0x11D2D3D4(SP), 0xDA0500(PC)[R0:D]
-      XORD    0x11D2D3D4(SP), R0[R0:D]
+      XORD    0x11D2D3D4(SP), 0(R0)[R0:D]
       XORD    0x11D2D3D4(SB), R2
       XORD    -0x1E2D2C2C(SB), R2
       XORD    0(SB), R2
@@ -16820,7 +16820,7 @@
       XORD    -0x1E272626(SB), 0x1BDCDDDE(SB)
       XORD    0(SB), 0x18D9DADB(SB)
       XORD    0x19DADBDC(SB), 0xE20DAD(PC)[R0:D]
-      XORD    0x19DADBDC(SB), R0[R0:D]
+      XORD    0x19DADBDC(SB), 0(R0)[R0:D]
       XORD    0xDE09BB(PC), R2
       XORD    0x032DE5(PC), R2
       XORD    0xE00BC6(PC), 0x1FE0E1E2(R2)
@@ -16831,10 +16831,10 @@
       XORD    0x032E20(PC), EXT(0x1FE0E1E2)+(-0x1C1B1A1A)
       XORD    0xE4100D(PC), -0x1C1B1A1A(SB)
       XORD    0x032F15(PC), -0x1E1D1C1C(SB)
-      XORD    R0[R0:Q], R0[R1:D]
-      XORD    2(R0)[R0:Q], R0[R1:D]
-      XORD    -64(R0)[R0:Q], R0[R1:D]
-      XORD    0x0081(R0)[R0:Q], R0[R1:D]
+      XORD    0(R0)[R0:Q], 0(R0)[R1:D]
+      XORD    2(R0)[R0:Q], 0(R0)[R1:D]
+      XORD    -64(R0)[R0:Q], 0(R0)[R1:D]
+      XORD    0x0081(R0)[R0:Q], 0(R0)[R1:D]
       XORD    R0, R2
       XORD    R0, 3(R2)
       XORD    R0, -64(R2)
@@ -16852,7 +16852,7 @@
       XORD    R0, 7(SB)
       XORD    R0, -64(SB)
       XORD    R0, 0x0081(SB)
-      XORD    R0, R1[R0:D]
+      XORD    R0, 0(R1)[R0:D]
       XORD    R0, -63(R0)[R0:D]
       XORD    R0, 0x0081(R0)[R0:D]
       SHSB    TOS
@@ -17797,7 +17797,7 @@
       ADDL    F0, 7(FP)
       ADDL    F0, -64(FP)
       ADDL    F0, 0x0081(FP)
-      ADDL    F0, R1[R0:B]
+      ADDL    F0, 0(R1)[R0:B]
       ADDL    F0, -63(R0)[R0:B]
       ADDL    F0, 0x0081(R0)[R0:B]
       ADDF    F0, 3(R0)
@@ -17805,10 +17805,10 @@
       ADDF    F0, -64(3(FP))
       ADDF    F0, 0x0081(3(FP))
       ADDF    F0, 3(FP)
-      ADDF    F0, R0[R3:B]
+      ADDF    F0, 0(R0)[R3:B]
       ADDF    F1, F0
       MOVF    F0, 7(FP)
-      MOVF    F0, R0[R7:B]
+      MOVF    F0, 0(R0)[R7:B]
       MOVF    F1, F0
       CMPL    F1, 11(R0)
       CMPL    F1, -64(R0)
@@ -17822,7 +17822,7 @@
       CMPL    F1, 15(FP)
       CMPL    F1, -64(FP)
       CMPL    F1, 0x0081(FP)
-      CMPL    F1, R2[R0:B]
+      CMPL    F1, 0(R2)[R0:B]
       CMPL    F1, -63(R0)[R0:B]
       CMPL    F1, 0x0081(R0)[R0:B]
       CMPF    F1, 11(R0)
@@ -17831,7 +17831,7 @@
       CMPF    F1, 0x0081(11(FP))
       CMPF    F1, 0x0B0C0D0E
       CMPF    F1, 11(FP)
-      CMPF    F1, R1[R3:B]
+      CMPF    F1, 0(R1)[R3:B]
       CMPF    F2, F0
       SUBL    F2, 19(R0)
       SUBL    F2, -64(R0)
@@ -17844,7 +17844,7 @@
       SUBL    F2, 23(FP)
       SUBL    F2, -64(FP)
       SUBL    F2, 0x0081(FP)
-      SUBL    F2, R3[R0:B]
+      SUBL    F2, 0(R3)[R0:B]
       SUBL    F2, -63(R0)[R0:B]
       SUBL    F2, 0x0081(R0)[R0:B]
       SUBF    F2, 19(R0)
@@ -17852,10 +17852,10 @@
       SUBF    F2, -64(19(FP))
       SUBF    F2, 0x0081(19(FP))
       SUBF    F2, 19(FP)
-      SUBF    F2, R2[R3:B]
+      SUBF    F2, 0(R2)[R3:B]
       SUBF    F3, F0
       NEGF    F2, 23(FP)
-      NEGF    F2, R2[R7:B]
+      NEGF    F2, 0(R2)[R7:B]
       NEGF    F3, F0
       DIVL    F4, F4
       DIVL    F4, 35(R0)
@@ -17869,7 +17869,7 @@
       DIVL    F4, 39(FP)
       DIVL    F4, -64(FP)
       DIVL    F4, 0x0081(FP)
-      DIVL    F4, R5[R0:B]
+      DIVL    F4, 0(R5)[R0:B]
       DIVL    F4, -63(R0)[R0:B]
       DIVL    F4, 0x0081(R0)[R0:B]
       DIVF    F4, 35(R0)
@@ -17877,7 +17877,7 @@
       DIVF    F4, -64(35(FP))
       DIVF    F4, 0x0081(35(FP))
       DIVF    F4, 35(FP)
-      DIVF    F4, R4[R3:B]
+      DIVF    F4, 0(R4)[R3:B]
       DIVF    F5, F0
       MULL    F6, F4
       MULL    F6, 51(R0)
@@ -17895,7 +17895,7 @@
       MULL    F6, 55(FP)
       MULL    F6, -64(FP)
       MULL    F6, 0x0081(FP)
-      MULL    F6, R7[R0:B]
+      MULL    F6, 0(R7)[R0:B]
       MULL    F6, -63(R0)[R0:B]
       MULL    F6, 0x0081(R0)[R0:B]
       MULL    F7, -63(0x003E3F40(FP))
@@ -17904,10 +17904,10 @@
       MULF    F6, -64(51(FP))
       MULF    F6, 0x0081(51(FP))
       MULF    F6, 51(FP)
-      MULF    F6, R6[R3:B]
+      MULF    F6, 0(R6)[R3:B]
       MULF    F7, F0
       ABSF    F6, 55(FP)
-      ABSF    F6, R6[R7:B]
+      ABSF    F6, 0(R6)[R7:B]
       ABSF    F7, F0
       ADDL    -62(R0), F5
       ADDL    -62(R0), -61(R1)
@@ -18813,7 +18813,7 @@
       ADDB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:Q]
       ADDB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:Q]
       ADDB    0x09CACBCC(FP), 0xD238F1(PC)[R0:Q]
-      ADDB    0x09CACBCC(FP), R0[R0:Q]
+      ADDB    0x09CACBCC(FP), 0(R0)[R0:Q]
       ADDB    0x0ECFD0D1(SP), TOS
       ADDB    -0x1E302F2F(SP), TOS
       ADDB    0(SP), TOS
@@ -18822,7 +18822,7 @@
       ADDB    0(SP), 0xD53C29(PC)
       ADDB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       ADDB    0x11D2D3D4(SP), 0xDA4140(PC)[R0:Q]
-      ADDB    0x11D2D3D4(SP), R0[R0:Q]
+      ADDB    0x11D2D3D4(SP), 0(R0)[R0:Q]
       ADDB    0x16D7D8D9(SB), TOS
       ADDB    -0x1E282727(SB), TOS
       ADDB    0(SB), TOS
@@ -18830,15 +18830,15 @@
       ADDB    -0x1E272626(SB), 0xE04771(PC)
       ADDB    0(SB), 0xDD4478(PC)
       ADDB    0x19DADBDC(SB), 0xE24984(PC)[R0:Q]
-      ADDB    0x19DADBDC(SB), R0[R0:Q]
+      ADDB    0x19DADBDC(SB), 0(R0)[R0:Q]
       ADDB    0xE34A97(PC), TOS
       ADDB    0x0369BC(PC), TOS
       ADDB    0xE44BA1(PC), 0xE84FA5(PC)
       ADDB    0x036AA9(PC), 0xE64DAD(PC)
-      ADDB    R0[R0:Q], R0[R1:Q]
-      ADDB    2(R0)[R0:Q], R0[R1:Q]
-      ADDB    -64(R0)[R0:Q], R0[R1:Q]
-      ADDB    0x0081(R0)[R0:Q], R0[R1:Q]
+      ADDB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ADDW    0x03C4C5C6(FP), 0x07C8C9CA(R3)
       ADDW    -0x1E3B3A3A(FP), 0x07C8C9CA(R3)
       ADDW    0(FP), 0x04C5C6C7(R3)
@@ -18851,7 +18851,7 @@
       ADDW    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:Q]
       ADDW    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:Q]
       ADDW    0x09CACBCC(FP), 0xD23A10(PC)[R0:Q]
-      ADDW    0x09CACBCC(FP), R0[R0:Q]
+      ADDW    0x09CACBCC(FP), 0(R0)[R0:Q]
       ADDW    0x09CACBCC(SP), R3
       ADDW    -0x1E353434(SP), R3
       ADDW    0(SP), R3
@@ -18866,7 +18866,7 @@
       ADDW    0(SP), 0xD53D72(PC)
       ADDW    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       ADDW    0x11D2D3D4(SP), 0xDA4289(PC)[R0:Q]
-      ADDW    0x11D2D3D4(SP), R0[R0:Q]
+      ADDW    0x11D2D3D4(SP), 0(R0)[R0:Q]
       ADDW    0x11D2D3D4(SB), R3
       ADDW    -0x1E2D2C2C(SB), R3
       ADDW    0(SB), R3
@@ -18880,7 +18880,7 @@
       ADDW    -0x1E272626(SB), 0xE048E4(PC)
       ADDW    0(SB), 0xDD45EB(PC)
       ADDW    0x19DADBDC(SB), 0xE24AF7(PC)[R0:Q]
-      ADDW    0x19DADBDC(SB), R0[R0:Q]
+      ADDW    0x19DADBDC(SB), 0(R0)[R0:Q]
       ADDW    0xDE4705(PC), R3
       ADDW    0x036B2F(PC), R3
       ADDW    0xE04910(PC), 0x1FE0E1E2(R3)
@@ -18889,10 +18889,10 @@
       ADDW    0x036B49(PC), TOS
       ADDW    0xE44D2E(PC), 0xE85132(PC)
       ADDW    0x036C36(PC), 0xE64F3A(PC)
-      ADDW    R0[R0:Q], R0[R1:Q]
-      ADDW    2(R0)[R0:Q], R0[R1:Q]
-      ADDW    -64(R0)[R0:Q], R0[R1:Q]
-      ADDW    0x0081(R0)[R0:Q], R0[R1:Q]
+      ADDW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       DIA
       ADDD    0x06C7C8C9(FP), TOS
       ADDD    -0x1E383737(FP), TOS
@@ -18903,7 +18903,7 @@
       ADDD    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:Q]
       ADDD    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:Q]
       ADDD    0x09CACBCC(FP), 0xD23B83(PC)[R0:Q]
-      ADDD    0x09CACBCC(FP), R0[R0:Q]
+      ADDD    0x09CACBCC(FP), 0(R0)[R0:Q]
       ADDD    0x09CACBCC(SP), R3
       ADDD    -0x1E353434(SP), R3
       ADDD    0(SP), R3
@@ -18918,7 +18918,7 @@
       ADDD    0(SP), 0xD53EE5(PC)
       ADDD    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       ADDD    0x11D2D3D4(SP), 0xDA43FC(PC)[R0:Q]
-      ADDD    0x11D2D3D4(SP), R0[R0:Q]
+      ADDD    0x11D2D3D4(SP), 0(R0)[R0:Q]
       ADDD    0x11D2D3D4(SB), R3
       ADDD    -0x1E2D2C2C(SB), R3
       ADDD    0(SB), R3
@@ -18932,7 +18932,7 @@
       ADDD    -0x1E272626(SB), 0xE04A57(PC)
       ADDD    0(SB), 0xDD475E(PC)
       ADDD    0x19DADBDC(SB), 0xE24C6A(PC)[R0:Q]
-      ADDD    0x19DADBDC(SB), R0[R0:Q]
+      ADDD    0x19DADBDC(SB), 0(R0)[R0:Q]
       ADDD    0xDE4878(PC), R3
       ADDD    0x036CA2(PC), R3
       ADDD    0xE04A83(PC), 0x1FE0E1E2(R3)
@@ -18941,14 +18941,14 @@
       ADDD    0x036CBC(PC), TOS
       ADDD    0xE44EA1(PC), 0xE852A5(PC)
       ADDD    0x036DA9(PC), 0xE650AD(PC)
-      ADDD    R0[R0:Q], R0[R1:Q]
-      ADDD    2(R0)[R0:Q], R0[R1:Q]
-      ADDD    -64(R0)[R0:Q], R0[R1:Q]
-      ADDD    0x0081(R0)[R0:Q], R0[R1:Q]
+      ADDD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ADDD    R0, TOS
       ADDD    R0, 0x036CEE(PC)
       ADDD    R0, 0x036D6B(PC)
-      ADDD    R0, R1[R0:Q]
+      ADDD    R0, 0(R1)[R0:Q]
       ADDD    R0, -63(R0)[R0:Q]
       ADDD    R0, 0x0081(R0)[R0:Q]
       CMPB    0x06C7C8C9(FP), TOS
@@ -18960,7 +18960,7 @@
       CMPB    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:Q]
       CMPB    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:Q]
       CMPB    0x09CACBCC(FP), 0xD23D0A(PC)[R0:Q]
-      CMPB    0x09CACBCC(FP), R0[R0:Q]
+      CMPB    0x09CACBCC(FP), 0(R0)[R0:Q]
       CMPB    0x0ECFD0D1(SP), TOS
       CMPB    -0x1E302F2F(SP), TOS
       CMPB    0(SP), TOS
@@ -18969,7 +18969,7 @@
       CMPB    0(SP), 0xD54042(PC)
       CMPB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       CMPB    0x11D2D3D4(SP), 0xDA4559(PC)[R0:Q]
-      CMPB    0x11D2D3D4(SP), R0[R0:Q]
+      CMPB    0x11D2D3D4(SP), 0(R0)[R0:Q]
       CMPB    0x16D7D8D9(SB), TOS
       CMPB    -0x1E282727(SB), TOS
       CMPB    0(SB), TOS
@@ -18977,22 +18977,22 @@
       CMPB    -0x1E272626(SB), 0xE04B8A(PC)
       CMPB    0(SB), 0xDD4891(PC)
       CMPB    0x19DADBDC(SB), 0xE24D9D(PC)[R0:Q]
-      CMPB    0x19DADBDC(SB), R0[R0:Q]
+      CMPB    0x19DADBDC(SB), 0(R0)[R0:Q]
       CMPB    0xE34EB0(PC), TOS
       CMPB    0x036DD5(PC), TOS
       CMPB    0xE44FBA(PC), 0xE853BE(PC)
       CMPB    0x036EC2(PC), 0xE651C6(PC)
-      CMPB    R0[R0:Q], R0[R1:Q]
-      CMPB    2(R0)[R0:Q], R0[R1:Q]
-      CMPB    -64(R0)[R0:Q], R0[R1:Q]
-      CMPB    0x0081(R0)[R0:Q], R0[R1:Q]
+      CMPB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       CMPW    0x07C8C9CA(FP), 0xD03BCC(PC)
       CMPW    -0x1E373636(FP), 0xD03BD6(PC)
       CMPW    0(FP), 0xCD38DD(PC)
       CMPW    0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:Q]
       CMPW    0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:Q]
       CMPW    0x09CACBCC(FP), 0xD23DFF(PC)[R0:Q]
-      CMPW    0x09CACBCC(FP), R0[R0:Q]
+      CMPW    0x09CACBCC(FP), 0(R0)[R0:Q]
       CMPW    0x09CACBCC(SP), R3
       CMPW    -0x1E353434(SP), R3
       CMPW    0(SP), R3
@@ -19007,7 +19007,7 @@
       CMPW    0(SP), 0xD54161(PC)
       CMPW    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       CMPW    0x11D2D3D4(SP), 0xDA4678(PC)[R0:Q]
-      CMPW    0x11D2D3D4(SP), R0[R0:Q]
+      CMPW    0x11D2D3D4(SP), 0(R0)[R0:Q]
       CMPW    0x11D2D3D4(SB), R3
       CMPW    -0x1E2D2C2C(SB), R3
       CMPW    0(SB), R3
@@ -19021,7 +19021,7 @@
       CMPW    -0x1E272626(SB), 0xE04CD3(PC)
       CMPW    0(SB), 0xDD49DA(PC)
       CMPW    0x19DADBDC(SB), 0xE24EE6(PC)[R0:Q]
-      CMPW    0x19DADBDC(SB), R0[R0:Q]
+      CMPW    0x19DADBDC(SB), 0(R0)[R0:Q]
       CMPW    0xDE4AF4(PC), R3
       CMPW    0x036F1E(PC), R3
       CMPW    0xE04CFF(PC), 0x1FE0E1E2(R3)
@@ -19030,14 +19030,14 @@
       CMPW    0x036F38(PC), TOS
       CMPW    0xE4511D(PC), 0xE85521(PC)
       CMPW    0x037025(PC), 0xE65329(PC)
-      CMPW    R0[R0:Q], R0[R1:Q]
-      CMPW    2(R0)[R0:Q], R0[R1:Q]
-      CMPW    -64(R0)[R0:Q], R0[R1:Q]
-      CMPW    0x0081(R0)[R0:Q], R0[R1:Q]
+      CMPW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       CMPW    R0, TOS
       CMPW    R0, 0x036F6A(PC)
       CMPW    R0, 0x036FE7(PC)
-      CMPW    R0, R1[R0:Q]
+      CMPW    R0, 0(R1)[R0:Q]
       CMPW    R0, -63(R0)[R0:Q]
       CMPW    R0, 0x0081(R0)[R0:Q]
       CMPD    0x09CACBCC(SP), R3
@@ -19054,7 +19054,7 @@
       CMPD    0(SP), 0xD54296(PC)
       CMPD    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       CMPD    0x11D2D3D4(SP), 0xDA47AD(PC)[R0:Q]
-      CMPD    0x11D2D3D4(SP), R0[R0:Q]
+      CMPD    0x11D2D3D4(SP), 0(R0)[R0:Q]
       CMPD    0x11D2D3D4(SB), R3
       CMPD    -0x1E2D2C2C(SB), R3
       CMPD    0(SB), R3
@@ -19068,7 +19068,7 @@
       CMPD    -0x1E272626(SB), 0xE04E08(PC)
       CMPD    0(SB), 0xDD4B0F(PC)
       CMPD    0x19DADBDC(SB), 0xE2501B(PC)[R0:Q]
-      CMPD    0x19DADBDC(SB), R0[R0:Q]
+      CMPD    0x19DADBDC(SB), 0(R0)[R0:Q]
       CMPD    0xDE4C29(PC), R3
       CMPD    0x037053(PC), R3
       CMPD    0xE04E34(PC), 0x1FE0E1E2(R3)
@@ -19077,14 +19077,14 @@
       CMPD    0x03706D(PC), TOS
       CMPD    0xE45252(PC), 0xE85656(PC)
       CMPD    0x03715A(PC), 0xE6545E(PC)
-      CMPD    R0[R0:Q], R0[R1:Q]
-      CMPD    2(R0)[R0:Q], R0[R1:Q]
-      CMPD    -64(R0)[R0:Q], R0[R1:Q]
-      CMPD    0x0081(R0)[R0:Q], R0[R1:Q]
+      CMPD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      CMPD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       CMPD    R0, TOS
       CMPD    R0, 0x03709F(PC)
       CMPD    R0, 0x03711C(PC)
-      CMPD    R0, R1[R0:Q]
+      CMPD    R0, 0(R1)[R0:Q]
       CMPD    R0, -63(R0)[R0:Q]
       CMPD    R0, 0x0081(R0)[R0:Q]
       BICB    0x0ECFD0D1(SP), TOS
@@ -19095,7 +19095,7 @@
       BICB    0(SP), 0xD543A1(PC)
       BICB    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       BICB    0x11D2D3D4(SP), 0xDA48B8(PC)[R0:Q]
-      BICB    0x11D2D3D4(SP), R0[R0:Q]
+      BICB    0x11D2D3D4(SP), 0(R0)[R0:Q]
       BICB    0x16D7D8D9(SB), TOS
       BICB    -0x1E282727(SB), TOS
       BICB    0(SB), TOS
@@ -19103,15 +19103,15 @@
       BICB    -0x1E272626(SB), 0xE04EE9(PC)
       BICB    0(SB), 0xDD4BF0(PC)
       BICB    0x19DADBDC(SB), 0xE250FC(PC)[R0:Q]
-      BICB    0x19DADBDC(SB), R0[R0:Q]
+      BICB    0x19DADBDC(SB), 0(R0)[R0:Q]
       BICB    0xE3520F(PC), TOS
       BICB    0x037134(PC), TOS
       BICB    0xE45319(PC), 0xE8571D(PC)
       BICB    0x037221(PC), 0xE65525(PC)
-      BICB    R0[R0:Q], R0[R1:Q]
-      BICB    2(R0)[R0:Q], R0[R1:Q]
-      BICB    -64(R0)[R0:Q], R0[R1:Q]
-      BICB    0x0081(R0)[R0:Q], R0[R1:Q]
+      BICB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      BICB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      BICB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      BICB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       BICW    0x0BCCCDCE(SP), 0x0FD0D1D2(R3)
       BICW    -0x1E333232(SP), 0x0FD0D1D2(R3)
       BICW    0(SP), 0x0CCDCECF(R3)
@@ -19123,7 +19123,7 @@
       BICW    0(SP), 0xD5446E(PC)
       BICW    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       BICW    0x11D2D3D4(SP), 0xDA4985(PC)[R0:Q]
-      BICW    0x11D2D3D4(SP), R0[R0:Q]
+      BICW    0x11D2D3D4(SP), 0(R0)[R0:Q]
       BICW    0x11D2D3D4(SB), R3
       BICW    -0x1E2D2C2C(SB), R3
       BICW    0(SB), R3
@@ -19137,7 +19137,7 @@
       BICW    -0x1E272626(SB), 0xE04FE0(PC)
       BICW    0(SB), 0xDD4CE7(PC)
       BICW    0x19DADBDC(SB), 0xE251F3(PC)[R0:Q]
-      BICW    0x19DADBDC(SB), R0[R0:Q]
+      BICW    0x19DADBDC(SB), 0(R0)[R0:Q]
       BICW    0xDE4E01(PC), R3
       BICW    0x03722B(PC), R3
       BICW    0xE0500C(PC), 0x1FE0E1E2(R3)
@@ -19146,14 +19146,14 @@
       BICW    0x037245(PC), TOS
       BICW    0xE4542A(PC), 0xE8582E(PC)
       BICW    0x037332(PC), 0xE65636(PC)
-      BICW    R0[R0:Q], R0[R1:Q]
-      BICW    2(R0)[R0:Q], R0[R1:Q]
-      BICW    -64(R0)[R0:Q], R0[R1:Q]
-      BICW    0x0081(R0)[R0:Q], R0[R1:Q]
+      BICW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      BICW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      BICW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      BICW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       BICW    R0, TOS
       BICW    R0, 0x037277(PC)
       BICW    R0, 0x0372F4(PC)
-      BICW    R0, R1[R0:Q]
+      BICW    R0, 0(R1)[R0:Q]
       BICW    R0, -63(R0)[R0:Q]
       BICW    R0, 0x0081(R0)[R0:Q]
       BLT     0xD04051
@@ -19165,7 +19165,7 @@
       BICD    0(SP), 0xD5457E(PC)
       BICD    0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:Q]
       BICD    0x11D2D3D4(SP), 0xDA4A95(PC)[R0:Q]
-      BICD    0x11D2D3D4(SP), R0[R0:Q]
+      BICD    0x11D2D3D4(SP), 0(R0)[R0:Q]
       BICD    0x11D2D3D4(SB), R3
       BICD    -0x1E2D2C2C(SB), R3
       BICD    0(SB), R3
@@ -19179,7 +19179,7 @@
       BICD    -0x1E272626(SB), 0xE050F0(PC)
       BICD    0(SB), 0xDD4DF7(PC)
       BICD    0x19DADBDC(SB), 0xE25303(PC)[R0:Q]
-      BICD    0x19DADBDC(SB), R0[R0:Q]
+      BICD    0x19DADBDC(SB), 0(R0)[R0:Q]
       BICD    0xDE4F11(PC), R3
       BICD    0x03733B(PC), R3
       BICD    0xE0511C(PC), 0x1FE0E1E2(R3)
@@ -19188,14 +19188,14 @@
       BICD    0x037355(PC), TOS
       BICD    0xE4553A(PC), 0xE8593E(PC)
       BICD    0x037442(PC), 0xE65746(PC)
-      BICD    R0[R0:Q], R0[R1:Q]
-      BICD    2(R0)[R0:Q], R0[R1:Q]
-      BICD    -64(R0)[R0:Q], R0[R1:Q]
-      BICD    0x0081(R0)[R0:Q], R0[R1:Q]
+      BICD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      BICD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      BICD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      BICD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       BICD    R0, TOS
       BICD    R0, 0x037387(PC)
       BICD    R0, 0x037404(PC)
-      BICD    R0, R1[R0:Q]
+      BICD    R0, 0(R1)[R0:Q]
       BICD    R0, -63(R0)[R0:Q]
       BICD    R0, 0x0081(R0)[R0:Q]
       ACBB    -5, 0x0ECFD0D1(SP), 0xD74868
@@ -19212,7 +19212,7 @@
       ACBB    -7, 0xE253D5(PC), 0xE657D9
       ACBB    -7, 0x0373FF(PC), 0xE354E0
       ACBB    -3, 0x0374E6(PC), 0xE657EA
-      ACBB    -1, R0[R0:Q], 0x03740F
+      ACBB    -1, 0(R0)[R0:Q], 0x03740F
       ACBB    -1, 1(R0)[R0:Q], 0x037414
       ACBB    -1, 1(R0)[R0:Q], 0x037498
       ACBB    1, R0, 0x03741E
@@ -19233,7 +19233,7 @@
       ACBW    -7, 0xE2546D(PC), 0xE65871
       ACBW    -7, 0x037497(PC), 0xE35578
       ACBW    -3, 0x03757E(PC), 0xE65882
-      ACBW    -1, R0[R0:Q], 0x0374A7
+      ACBW    -1, 0(R0)[R0:Q], 0x0374A7
       ACBW    -1, 1(R0)[R0:Q], 0x0374AC
       ACBW    -1, 1(R0)[R0:Q], 0x037530
       ACBW    1, R0, 0x0374B6
@@ -19423,7 +19423,7 @@
       DIVD    R0, TOS
       DIVD    R0, 0x037B93(PC)
       DIVD    R0, 0x037C11(PC)
-      DIVD    R0, R1[R0:Q]
+      DIVD    R0, 0(R1)[R0:Q]
       DIVD    R0, -63(R0)[R0:Q]
       DIVD    R0, 0x0081(R0)[R0:Q]
       INSSB   R1, R4, 0, 11
@@ -19432,16 +19432,16 @@
       INSSB   R1, -64(10(FP)), 0, 13
       INSSB   R1, 12(10(FP)), 0, 14
       INSSB   R1, 10(FP), 0, 12
-      INSSB   R1, R1[R2:B], 0, 12
+      INSSB   R1, 0(R1)[R2:B], 0, 12
       INSSW   R1, 11(R0), 0, 13
       INSSW   R1, 12(11(FP)), 0, 14
       INSSW   R1, 11(FP), 0, 13
-      INSSW   R1, R1[R3:B], 0, 13
+      INSSW   R1, 0(R1)[R3:B], 0, 13
       INSSW   R2, R0, 0, 12
       INSSD   R1, 14(13(FP)), 0, 16
       INSSD   R1, 13(FP), 0, 15
       EXTSW   R1, 15(FP), 0, 17
-      EXTSW   R1, R1[R7:B], 0, 17
+      EXTSW   R1, 0(R1)[R7:B], 0, 17
       EXTSW   R2, R0, 0, 16
       EXTSD   R2, R0, 0, 18
       EXTSD   R2, 17(R0), 0, 19
@@ -19449,7 +19449,7 @@
       EXTSD   R2, -64(17(FP)), 0, 20
       EXTSD   R2, 19(17(FP)), 0, 21
       EXTSD   R2, 17(FP), 0, 19
-      EXTSD   R2, R2[R1:B], 0, 19
+      EXTSD   R2, 0(R2)[R1:B], 0, 19
       MOVXBW  R2, 19(R0)
       MOVXBW  R2, -64(R0)
       MOVXBW  R2, 0x0081(R0)
@@ -19461,7 +19461,7 @@
       MOVXBW  R2, 23(FP)
       MOVXBW  R2, -64(FP)
       MOVXBW  R2, 0x0081(FP)
-      MOVXBW  R2, R3[R0:B]
+      MOVXBW  R2, 0(R3)[R0:B]
       MOVXBW  R2, -63(R0)[R0:B]
       MOVXBW  R2, 0x0081(R0)[R0:B]
       MOVZBD  R3, 27(R0)
@@ -19475,7 +19475,7 @@
       MOVZBD  R3, 31(FP)
       MOVZBD  R3, -64(FP)
       MOVZBD  R3, 0x0081(FP)
-      MOVZBD  R3, R4[R0:B]
+      MOVZBD  R3, 0(R4)[R0:B]
       MOVZBD  R3, -63(R0)[R0:B]
       MOVZBD  R3, 0x0081(R0)[R0:B]
       MOVZWD  R3, 27(R0)
@@ -19483,10 +19483,10 @@
       MOVZWD  R3, -64(27(FP))
       MOVZWD  R3, 0x0081(27(FP))
       MOVZWD  R3, 27(FP)
-      MOVZWD  R3, R3[R3:B]
+      MOVZWD  R3, 0(R3)[R3:B]
       MOVZWD  R4, R0
       MOVXWD  R3, 31(FP)
-      MOVXWD  R3, R3[R7:B]
+      MOVXWD  R3, 0(R3)[R7:B]
       MULB    R4, R4
       MULB    R4, 35(R0)
       MULB    R4, -64(R0)
@@ -19499,7 +19499,7 @@
       MULB    R4, 39(FP)
       MULB    R4, -64(FP)
       MULB    R4, 0x0081(FP)
-      MULB    R4, R5[R0:B]
+      MULB    R4, 0(R5)[R0:B]
       MULB    R4, -63(R0)[R0:B]
       MULB    R4, 0x0081(R0)[R0:B]
       MULW    R4, 35(R0)
@@ -19507,12 +19507,12 @@
       MULW    R4, -64(35(FP))
       MULW    R4, 0x0081(35(FP))
       MULW    R4, 35(FP)
-      MULW    R4, R4[R3:B]
+      MULW    R4, 0(R4)[R3:B]
       MULW    R5, R0
       MULD    R4, 38(37(FP))
       MULD    R4, 37(FP)
       MEIW    R4, 39(FP)
-      MEIW    R4, R4[R7:B]
+      MEIW    R4, 0(R4)[R7:B]
       MEIW    R5, R0
       MEID    R5, R0
       MEID    R5, 43(R0)
@@ -19526,11 +19526,11 @@
       MEID    R5, 47(FP)
       MEID    R5, -64(FP)
       MEID    R5, 0x0081(FP)
-      MEID    R5, R6[R0:B]
+      MEID    R5, 0(R6)[R0:B]
       MEID    R5, -63(R0)[R0:B]
       MEID    R5, 0x0081(R0)[R0:B]
       DEIW    R5, 47(FP)
-      DEIW    R5, R5[R7:B]
+      DEIW    R5, 0(R5)[R7:B]
       DEIW    R6, R0
       DEID    R6, R0
       DEID    R6, 51(R0)
@@ -19548,7 +19548,7 @@
       DEID    R6, 55(FP)
       DEID    R6, -64(FP)
       DEID    R6, 0x0081(FP)
-      DEID    R6, R7[R0:B]
+      DEID    R6, 0(R7)[R0:B]
       DEID    R6, -63(R0)[R0:B]
       DEID    R6, 0x0081(R0)[R0:B]
       DEID    R7, -63(0x003E3F40(FP))
@@ -19568,7 +19568,7 @@
       QUOB    R6, 55(FP)
       QUOB    R6, -64(FP)
       QUOB    R6, 0x0081(FP)
-      QUOB    R6, R7[R0:B]
+      QUOB    R6, 0(R7)[R0:B]
       QUOB    R6, -63(R0)[R0:B]
       QUOB    R6, 0x0081(R0)[R0:B]
       QUOB    R7, -63(0x003E3F40(FP))
@@ -19577,12 +19577,12 @@
       QUOW    R6, -64(51(FP))
       QUOW    R6, 0x0081(51(FP))
       QUOW    R6, 51(FP)
-      QUOW    R6, R6[R3:B]
+      QUOW    R6, 0(R6)[R3:B]
       QUOW    R7, R0
       QUOD    R6, 54(53(FP))
       QUOD    R6, 53(FP)
       REMW    R6, 55(FP)
-      REMW    R6, R6[R7:B]
+      REMW    R6, 0(R6)[R7:B]
       REMW    R7, R0
       REMD    R7, R0
       REMD    R7, 59(R0)
@@ -19687,7 +19687,7 @@
       MODW    R7, -64(59(FP))
       MODW    R7, 0x0081(59(FP))
       MODW    R7, 59(FP)
-      MODW    R7, R7[R3:B]
+      MODW    R7, 0(R7)[R3:B]
       MODW    59(R0), R0
       MODW    59(R0), 60(R0)
       MODW    59(R0), -64(R0)
@@ -19704,9 +19704,9 @@
       MODW    59(R0), 60(FP)
       MODW    59(R0), -64(FP)
       MODW    59(R0), 0x0081(FP)
-      MODW    60(R0), R7[R3:B]
-      MODW    -64(R0), R7[R3:B]
-      MODW    0x0081(R0), R7[R3:B]
+      MODW    60(R0), 0(R7)[R3:B]
+      MODW    -64(R0), 0(R7)[R3:B]
+      MODW    0x0081(R0), 0(R7)[R3:B]
       MODW    60(59(FP)), R0
       MODW    -64(59(FP)), R0
       MODW    0x0081(59(FP)), R0
@@ -19740,15 +19740,15 @@
       MODW    -0x1FC3(59(FP)), -64(FP)
       MODW    -0x1FC3(59(FP)), 0x0081(FP)
       MODW    0x003D3E3F(59(FP)), -64(FP)
-      MODW    61(60(FP)), R7[R3:B]
-      MODW    61(-64(FP)), R7[R3:B]
-      MODW    62(0x003D(FP)), R7[R3:B]
-      MODW    -64(0x003D(FP)), R7[R3:B]
-      MODW    0x0081(0x003D(FP)), R7[R3:B]
-      MODW    62(-0x1FC3(FP)), R7[R3:B]
-      MODW    -64(-0x1FC3(FP)), R7[R3:B]
-      MODW    0x0081(-0x1FC3(FP)), R7[R3:B]
-      MODW    -64(0x003D3E3F(FP)), R7[R3:B]
+      MODW    61(60(FP)), 0(R7)[R3:B]
+      MODW    61(-64(FP)), 0(R7)[R3:B]
+      MODW    62(0x003D(FP)), 0(R7)[R3:B]
+      MODW    -64(0x003D(FP)), 0(R7)[R3:B]
+      MODW    0x0081(0x003D(FP)), 0(R7)[R3:B]
+      MODW    62(-0x1FC3(FP)), 0(R7)[R3:B]
+      MODW    -64(-0x1FC3(FP)), 0(R7)[R3:B]
+      MODW    0x0081(-0x1FC3(FP)), 0(R7)[R3:B]
+      MODW    -64(0x003D3E3F(FP)), 0(R7)[R3:B]
       MODW    60(59(SP)), R0
       MODW    -64(59(SP)), R0
       MODW    0x0081(59(SP)), R0
@@ -19782,15 +19782,15 @@
       MODW    -0x1FC3(59(SP)), -64(FP)
       MODW    -0x1FC3(59(SP)), 0x0081(FP)
       MODW    0x003D3E3F(59(SP)), -64(FP)
-      MODW    61(60(SP)), R7[R3:B]
-      MODW    61(-64(SP)), R7[R3:B]
-      MODW    62(0x003D(SP)), R7[R3:B]
-      MODW    -64(0x003D(SP)), R7[R3:B]
-      MODW    0x0081(0x003D(SP)), R7[R3:B]
-      MODW    62(-0x1FC3(SP)), R7[R3:B]
-      MODW    -64(-0x1FC3(SP)), R7[R3:B]
-      MODW    0x0081(-0x1FC3(SP)), R7[R3:B]
-      MODW    -64(0x003D3E3F(SP)), R7[R3:B]
+      MODW    61(60(SP)), 0(R7)[R3:B]
+      MODW    61(-64(SP)), 0(R7)[R3:B]
+      MODW    62(0x003D(SP)), 0(R7)[R3:B]
+      MODW    -64(0x003D(SP)), 0(R7)[R3:B]
+      MODW    0x0081(0x003D(SP)), 0(R7)[R3:B]
+      MODW    62(-0x1FC3(SP)), 0(R7)[R3:B]
+      MODW    -64(-0x1FC3(SP)), 0(R7)[R3:B]
+      MODW    0x0081(-0x1FC3(SP)), 0(R7)[R3:B]
+      MODW    -64(0x003D3E3F(SP)), 0(R7)[R3:B]
       MODW    60(59(SB)), R0
       MODW    -64(59(SB)), R0
       MODW    0x0081(59(SB)), R0
@@ -19824,15 +19824,15 @@
       MODW    -0x1FC3(59(SB)), -64(FP)
       MODW    -0x1FC3(59(SB)), 0x0081(FP)
       MODW    0x003D3E3F(59(SB)), -64(FP)
-      MODW    61(60(SB)), R7[R3:B]
-      MODW    61(-64(SB)), R7[R3:B]
-      MODW    62(0x003D(SB)), R7[R3:B]
-      MODW    -64(0x003D(SB)), R7[R3:B]
-      MODW    0x0081(0x003D(SB)), R7[R3:B]
-      MODW    62(-0x1FC3(SB)), R7[R3:B]
-      MODW    -64(-0x1FC3(SB)), R7[R3:B]
-      MODW    0x0081(-0x1FC3(SB)), R7[R3:B]
-      MODW    -64(0x003D3E3F(SB)), R7[R3:B]
+      MODW    61(60(SB)), 0(R7)[R3:B]
+      MODW    61(-64(SB)), 0(R7)[R3:B]
+      MODW    62(0x003D(SB)), 0(R7)[R3:B]
+      MODW    -64(0x003D(SB)), 0(R7)[R3:B]
+      MODW    0x0081(0x003D(SB)), 0(R7)[R3:B]
+      MODW    62(-0x1FC3(SB)), 0(R7)[R3:B]
+      MODW    -64(-0x1FC3(SB)), 0(R7)[R3:B]
+      MODW    0x0081(-0x1FC3(SB)), 0(R7)[R3:B]
+      MODW    -64(0x003D3E3F(SB)), 0(R7)[R3:B]
       MODW    0x3B3C, R0
       MODW    0x3B3C, 61(R0)
       MODW    0x3B3B, -64(R0)
@@ -19849,7 +19849,7 @@
       MODW    0x3B3C, 61(FP)
       MODW    0x3B3B, -64(FP)
       MODW    0x3B3B, 0x0081(FP)
-      MODW    0x3C3D, R7[R3:B]
+      MODW    0x3C3D, 0(R7)[R3:B]
       MODW    @59, R0
       MODW    @59, 60(R0)
       MODW    @59, -64(R0)
@@ -19866,9 +19866,9 @@
       MODW    @59, 60(FP)
       MODW    @59, -64(FP)
       MODW    @59, 0x0081(FP)
-      MODW    @60, R7[R3:B]
-      MODW    @-64, R7[R3:B]
-      MODW    @0x0081, R7[R3:B]
+      MODW    @60, 0(R7)[R3:B]
+      MODW    @-64, 0(R7)[R3:B]
+      MODW    @0x0081, 0(R7)[R3:B]
       MODW    EXT(59)+60, R0
       MODW    EXT(59)+(-64), R0
       MODW    EXT(59)+0x0081, R0
@@ -19902,20 +19902,20 @@
       MODW    EXT(59)+(-0x1FC3), -64(FP)
       MODW    EXT(59)+(-0x1FC3), 0x0081(FP)
       MODW    EXT(59)+0x003D3E3F, -64(FP)
-      MODW    EXT(60)+61, R7[R3:B]
-      MODW    EXT(-64)+61, R7[R3:B]
-      MODW    EXT(0x003D)+62, R7[R3:B]
-      MODW    EXT(0x003D)+(-64), R7[R3:B]
-      MODW    EXT(0x003D)+0x0081, R7[R3:B]
-      MODW    EXT(-0x1FC3)+62, R7[R3:B]
-      MODW    EXT(-0x1FC3)+(-64), R7[R3:B]
-      MODW    EXT(-0x1FC3)+0x0081, R7[R3:B]
-      MODW    EXT(0x003D3E3F)+(-64), R7[R3:B]
+      MODW    EXT(60)+61, 0(R7)[R3:B]
+      MODW    EXT(-64)+61, 0(R7)[R3:B]
+      MODW    EXT(0x003D)+62, 0(R7)[R3:B]
+      MODW    EXT(0x003D)+(-64), 0(R7)[R3:B]
+      MODW    EXT(0x003D)+0x0081, 0(R7)[R3:B]
+      MODW    EXT(-0x1FC3)+62, 0(R7)[R3:B]
+      MODW    EXT(-0x1FC3)+(-64), 0(R7)[R3:B]
+      MODW    EXT(-0x1FC3)+0x0081, 0(R7)[R3:B]
+      MODW    EXT(0x003D3E3F)+(-64), 0(R7)[R3:B]
       MODW    TOS, R0
       MODD    R7, 62(61(FP))
       MODD    R7, 61(FP)
       DIVW    R7, 63(FP)
-      DIVW    R7, R7[R7:B]
+      DIVW    R7, 0(R7)[R7:B]
       DIVW    63(R0), R0
       DIVW    63(R0), -64(R0)
       DIVW    63(R0), 0x0081(R0)
@@ -19924,8 +19924,8 @@
       DIVW    63(R0), 0x0081(0x0041(FP))
       DIVW    63(R0), -64(FP)
       DIVW    63(R0), 0x0081(FP)
-      DIVW    -64(R0), R7[R7:B]
-      DIVW    0x0081(R0), R7[R7:B]
+      DIVW    -64(R0), 0(R7)[R7:B]
+      DIVW    0x0081(R0), 0(R7)[R7:B]
       DIVD    -63(R0), R0
       DIVD    -63(R0), -62(R0)
       DIVD    -63(R0), 0x0081(R0)
@@ -20802,7 +20802,7 @@
       ACBD    -7, 0xE2808C(PC), 0xE68490
       ACBD    -7, 0x03A0B6(PC), 0xE38197
       ACBD    -3, 0x03A19D(PC), 0xE684A1
-      ACBD    -1, R0[R0:Q], 0x03A0C6
+      ACBD    -1, 0(R0)[R0:Q], 0x03A0C6
       ACBD    -1, 1(R0)[R0:Q], 0x03A0CB
       ACBD    -1, 1(R0)[R0:Q], 0x03A14F
       ACBD    1, R0, 0x03A0D5
@@ -20816,15 +20816,15 @@
       ADDCB   -0x1E272626(SB), 0xE07ED9(PC)
       ADDCB   0(SB), 0xDD7BE0(PC)
       ADDCB   0x19DADBDC(SB), 0xE280EC(PC)[R0:Q]
-      ADDCB   0x19DADBDC(SB), R0[R0:Q]
+      ADDCB   0x19DADBDC(SB), 0(R0)[R0:Q]
       ADDCB   0xE381FF(PC), TOS
       ADDCB   0x03A124(PC), TOS
       ADDCB   0xE48309(PC), 0xE8870D(PC)
       ADDCB   0x03A211(PC), 0xE68515(PC)
-      ADDCB   R0[R0:Q], R0[R1:Q]
-      ADDCB   2(R0)[R0:Q], R0[R1:Q]
-      ADDCB   -64(R0)[R0:Q], R0[R1:Q]
-      ADDCB   0x0081(R0)[R0:Q], R0[R1:Q]
+      ADDCB   0(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCB   2(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCB   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCB   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ADDCW   0x13D4D5D6(SB), 0x17D8D9DA(R3)
       ADDCW   -0x1E2B2A2A(SB), 0x17D8D9DA(R3)
       ADDCW   0(SB), 0x14D5D6D7(R3)
@@ -20835,7 +20835,7 @@
       ADDCW   -0x1E272626(SB), 0xE07F5F(PC)
       ADDCW   0(SB), 0xDD7C66(PC)
       ADDCW   0x19DADBDC(SB), 0xE28172(PC)[R0:Q]
-      ADDCW   0x19DADBDC(SB), R0[R0:Q]
+      ADDCW   0x19DADBDC(SB), 0(R0)[R0:Q]
       ADDCW   0xDE7D80(PC), R3
       ADDCW   0x03A1AA(PC), R3
       ADDCW   0xE07F8B(PC), 0x1FE0E1E2(R3)
@@ -20844,14 +20844,14 @@
       ADDCW   0x03A1C4(PC), TOS
       ADDCW   0xE483A9(PC), 0xE887AD(PC)
       ADDCW   0x03A2B1(PC), 0xE685B5(PC)
-      ADDCW   R0[R0:Q], R0[R1:Q]
-      ADDCW   2(R0)[R0:Q], R0[R1:Q]
-      ADDCW   -64(R0)[R0:Q], R0[R1:Q]
-      ADDCW   0x0081(R0)[R0:Q], R0[R1:Q]
+      ADDCW   0(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCW   2(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCW   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCW   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ADDCW   R0, TOS
       ADDCW   R0, 0x03A1F6(PC)
       ADDCW   R0, 0x03A273(PC)
-      ADDCW   R0, R1[R0:Q]
+      ADDCW   R0, 0(R1)[R0:Q]
       ADDCW   R0, -63(R0)[R0:Q]
       ADDCW   R0, 0x0081(R0)[R0:Q]
       FLAG
@@ -20862,7 +20862,7 @@
       ADDCD   -0x1E272626(SB), 0xE07FFA(PC)
       ADDCD   0(SB), 0xDD7D01(PC)
       ADDCD   0x19DADBDC(SB), 0xE2820D(PC)[R0:Q]
-      ADDCD   0x19DADBDC(SB), R0[R0:Q]
+      ADDCD   0x19DADBDC(SB), 0(R0)[R0:Q]
       ADDCD   0xDE7E1B(PC), R3
       ADDCD   0x03A245(PC), R3
       ADDCD   0xE08026(PC), 0x1FE0E1E2(R3)
@@ -20871,14 +20871,14 @@
       ADDCD   0x03A25F(PC), TOS
       ADDCD   0xE48444(PC), 0xE88848(PC)
       ADDCD   0x03A34C(PC), 0xE68650(PC)
-      ADDCD   R0[R0:Q], R0[R1:Q]
-      ADDCD   2(R0)[R0:Q], R0[R1:Q]
-      ADDCD   -64(R0)[R0:Q], R0[R1:Q]
-      ADDCD   0x0081(R0)[R0:Q], R0[R1:Q]
+      ADDCD   0(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCD   2(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCD   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ADDCD   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ADDCD   R0, TOS
       ADDCD   R0, 0x03A291(PC)
       ADDCD   R0, 0x03A30E(PC)
-      ADDCD   R0, R1[R0:Q]
+      ADDCD   R0, 0(R1)[R0:Q]
       ADDCD   R0, -63(R0)[R0:Q]
       ADDCD   R0, 0x0081(R0)[R0:Q]
       MOVB    0x16D7D8D9(SB), TOS
@@ -20888,20 +20888,20 @@
       MOVB    -0x1E272626(SB), 0xE08094(PC)
       MOVB    0(SB), 0xDD7D9B(PC)
       MOVB    0x19DADBDC(SB), 0xE282A7(PC)[R0:Q]
-      MOVB    0x19DADBDC(SB), R0[R0:Q]
+      MOVB    0x19DADBDC(SB), 0(R0)[R0:Q]
       MOVB    0xE383BA(PC), TOS
       MOVB    0x03A2DF(PC), TOS
       MOVB    0xE484C4(PC), 0xE888C8(PC)
       MOVB    0x03A3CC(PC), 0xE686D0(PC)
-      MOVB    R0[R0:Q], R0[R1:Q]
-      MOVB    2(R0)[R0:Q], R0[R1:Q]
-      MOVB    -64(R0)[R0:Q], R0[R1:Q]
-      MOVB    0x0081(R0)[R0:Q], R0[R1:Q]
+      MOVB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       MOVW    0x17D8D9DA(SB), 0xE080E6(PC)
       MOVW    -0x1E272626(SB), 0xE080F0(PC)
       MOVW    0(SB), 0xDD7DF7(PC)
       MOVW    0x19DADBDC(SB), 0xE28303(PC)[R0:Q]
-      MOVW    0x19DADBDC(SB), R0[R0:Q]
+      MOVW    0x19DADBDC(SB), 0(R0)[R0:Q]
       MOVW    0xDE7F11(PC), R3
       MOVW    0x03A33B(PC), R3
       MOVW    0xE0811C(PC), 0x1FE0E1E2(R3)
@@ -20910,14 +20910,14 @@
       MOVW    0x03A355(PC), TOS
       MOVW    0xE4853A(PC), 0xE8893E(PC)
       MOVW    0x03A442(PC), 0xE68746(PC)
-      MOVW    R0[R0:Q], R0[R1:Q]
-      MOVW    2(R0)[R0:Q], R0[R1:Q]
-      MOVW    -64(R0)[R0:Q], R0[R1:Q]
-      MOVW    0x0081(R0)[R0:Q], R0[R1:Q]
+      MOVW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       MOVW    R0, TOS
       MOVW    R0, 0x03A387(PC)
       MOVW    R0, 0x03A404(PC)
-      MOVW    R0, R1[R0:Q]
+      MOVW    R0, 0(R1)[R0:Q]
       MOVW    R0, -63(R0)[R0:Q]
       MOVW    R0, 0x0081(R0)[R0:Q]
       MOVD    0xDE7F6F(PC), R3
@@ -20928,38 +20928,38 @@
       MOVD    0x03A3B3(PC), TOS
       MOVD    0xE48598(PC), 0xE8899C(PC)
       MOVD    0x03A4A0(PC), 0xE687A4(PC)
-      MOVD    R0[R0:Q], R0[R1:Q]
-      MOVD    2(R0)[R0:Q], R0[R1:Q]
-      MOVD    -64(R0)[R0:Q], R0[R1:Q]
-      MOVD    0x0081(R0)[R0:Q], R0[R1:Q]
+      MOVD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      MOVD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       MOVD    R0, TOS
       MOVD    R0, 0x03A3E5(PC)
       MOVD    R0, 0x03A462(PC)
-      MOVD    R0, R1[R0:Q]
+      MOVD    R0, 0(R1)[R0:Q]
       MOVD    R0, -63(R0)[R0:Q]
       MOVD    R0, 0x0081(R0)[R0:Q]
       ORB     0xE384D2(PC), TOS
       ORB     0x03A3F7(PC), TOS
       ORB     0xE485DC(PC), 0xE889E0(PC)
       ORB     0x03A4E4(PC), 0xE687E8(PC)
-      ORB     R0[R0:Q], R0[R1:Q]
-      ORB     2(R0)[R0:Q], R0[R1:Q]
-      ORB     -64(R0)[R0:Q], R0[R1:Q]
-      ORB     0x0081(R0)[R0:Q], R0[R1:Q]
+      ORB     0(R0)[R0:Q], 0(R0)[R1:Q]
+      ORB     2(R0)[R0:Q], 0(R0)[R1:Q]
+      ORB     -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ORB     0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ORW     0xE081FE(PC), 0x1FE0E1E2(R3)
       ORW     0x03A42A(PC), 0x1CDDDEDF(R3)
       ORW     0xE38512(PC), TOS
       ORW     0x03A437(PC), TOS
       ORW     0xE4861C(PC), 0xE88A20(PC)
       ORW     0x03A524(PC), 0xE68828(PC)
-      ORW     R0[R0:Q], R0[R1:Q]
-      ORW     2(R0)[R0:Q], R0[R1:Q]
-      ORW     -64(R0)[R0:Q], R0[R1:Q]
-      ORW     0x0081(R0)[R0:Q], R0[R1:Q]
+      ORW     0(R0)[R0:Q], 0(R0)[R1:Q]
+      ORW     2(R0)[R0:Q], 0(R0)[R1:Q]
+      ORW     -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ORW     0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ORW     R0, TOS
       ORW     R0, 0x03A469(PC)
       ORW     R0, 0x03A4E6(PC)
-      ORW     R0, R1[R0:Q]
+      ORW     R0, 0(R1)[R0:Q]
       ORW     R0, -63(R0)[R0:Q]
       ORW     R0, 0x0081(R0)[R0:Q]
       BGE     0xE08253
@@ -20967,68 +20967,68 @@
       ORD     0x03A480(PC), TOS
       ORD     0xE48665(PC), 0xE88A69(PC)
       ORD     0x03A56D(PC), 0xE68871(PC)
-      ORD     R0[R0:Q], R0[R1:Q]
-      ORD     2(R0)[R0:Q], R0[R1:Q]
-      ORD     -64(R0)[R0:Q], R0[R1:Q]
-      ORD     0x0081(R0)[R0:Q], R0[R1:Q]
+      ORD     0(R0)[R0:Q], 0(R0)[R1:Q]
+      ORD     2(R0)[R0:Q], 0(R0)[R1:Q]
+      ORD     -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ORD     0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       ORD     R0, TOS
       ORD     R0, 0x03A4B2(PC)
       ORD     R0, 0x03A52F(PC)
-      ORD     R0, R1[R0:Q]
+      ORD     R0, 0(R1)[R0:Q]
       ORD     R0, -63(R0)[R0:Q]
       ORD     R0, 0x0081(R0)[R0:Q]
       MOVQB   -5, 0xE3859F(PC)
       MOVQB   -5, 0x03A4C4(PC)
-      MOVQB   -1, R0[R0:Q]
+      MOVQB   -1, 0(R0)[R0:Q]
       MOVQB   -1, -63(R0)[R0:Q]
       MOVQB   -1, 0x0081(R0)[R0:Q]
       MOVQB   1, R0
       MOVQB   -7, R0
       MOVQW   -3, 0xE486B9(PC)
       MOVQW   -3, 0x03A4DD(PC)
-      MOVQW   -1, R0[R0:Q]
+      MOVQW   -1, 0(R0)[R0:Q]
       MOVQW   -1, -63(R0)[R0:Q]
       MOVQW   -1, 0x0081(R0)[R0:Q]
       MOVQW   1, R0
       MOVQW   -7, R0
-      MOVQD   -1, R0[R0:Q]
+      MOVQD   -1, 0(R0)[R0:Q]
       MOVQD   -1, -63(R0)[R0:Q]
       MOVQD   -1, 0x0081(R0)[R0:Q]
       MOVQD   1, R0
       MOVQD   -7, R0
-      SUBB    R0[R0:Q], R0[R1:Q]
-      SUBB    2(R0)[R0:Q], R0[R1:Q]
-      SUBB    -64(R0)[R0:Q], R0[R1:Q]
-      SUBB    0x0081(R0)[R0:Q], R0[R1:Q]
-      SUBW    R0[R0:Q], R0[R1:Q]
-      SUBW    2(R0)[R0:Q], R0[R1:Q]
-      SUBW    -64(R0)[R0:Q], R0[R1:Q]
-      SUBW    0x0081(R0)[R0:Q], R0[R1:Q]
+      SUBB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       SUBW    R0, TOS
       SUBW    R0, 0x03A531(PC)
       SUBW    R0, 0x03A5AE(PC)
-      SUBW    R0, R1[R0:Q]
+      SUBW    R0, 0(R1)[R0:Q]
       SUBW    R0, -63(R0)[R0:Q]
       SUBW    R0, 0x0081(R0)[R0:Q]
       SVC
-      SUBD    R0[R0:Q], R0[R1:Q]
-      SUBD    2(R0)[R0:Q], R0[R1:Q]
-      SUBD    -64(R0)[R0:Q], R0[R1:Q]
-      SUBD    0x0081(R0)[R0:Q], R0[R1:Q]
-      ANDB    R0[R0:Q], R0[R1:Q]
-      ANDB    2(R0)[R0:Q], R0[R1:Q]
-      ANDB    -64(R0)[R0:Q], R0[R1:Q]
-      ANDB    0x0081(R0)[R0:Q], R0[R1:Q]
-      ANDW    R0[R0:Q], R0[R1:Q]
-      ANDW    2(R0)[R0:Q], R0[R1:Q]
-      ANDW    -64(R0)[R0:Q], R0[R1:Q]
-      ANDW    0x0081(R0)[R0:Q], R0[R1:Q]
+      SUBD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       BR      0xF09368
-      ANDD    R0[R0:Q], R0[R1:Q]
-      ANDD    2(R0)[R0:Q], R0[R1:Q]
-      ANDD    -64(R0)[R0:Q], R0[R1:Q]
-      ANDD    0x0081(R0)[R0:Q], R0[R1:Q]
-      LPRB    MOD, R0[R0:Q]
+      ANDD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      ANDD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      LPRB    MOD, 0(R0)[R0:Q]
       LPRB    MOD, -63(R0)[R0:Q]
       LPRB    MOD, 0x0081(R0)[R0:Q]
       LPRB    SP, R0
@@ -21040,7 +21040,7 @@
       LPRB    PSR, 0x0081(R0)
       LPRB    MOD, -56(R0)
       LPRB    MOD, 0x0081(R0)
-      LPRW    MOD, R0[R0:Q]
+      LPRW    MOD, 0(R0)[R0:Q]
       LPRW    MOD, -63(R0)[R0:Q]
       LPRW    MOD, 0x0081(R0)[R0:Q]
       LPRW    SP, R0
@@ -21375,7 +21375,7 @@
       CHECKB  R7, TOS, 0x01C2C3C4(SP)[R0:D]
       CHECKB  R7, TOS, 0x01C2C3C4(SB)[R0:D]
       CHECKB  R7, TOS, 0xC6769A(PC)[R0:D]
-      CHECKB  R7, TOS, R0[R0:D]
+      CHECKB  R7, TOS, 0(R0)[R0:D]
       CHECKB  R7, 0x01C2C3C4(FP), R2
       CHECKB  R7, -0x1E3D3C3C(FP), R2
       CHECKB  R7, 0(FP), R2
@@ -21394,7 +21394,7 @@
       CHECKB  R7, 0x09CACBCC(FP), 0x0DCECFD0(SP)[R0:D]
       CHECKB  R7, 0x09CACBCC(FP), 0x0DCECFD0(SB)[R0:D]
       CHECKB  R7, 0x09CACBCC(FP), 0xD2836C(PC)[R0:D]
-      CHECKB  R7, 0x09CACBCC(FP), R0[R0:D]
+      CHECKB  R7, 0x09CACBCC(FP), 0(R0)[R0:D]
       CHECKB  R7, 0x09CACBCC(SP), R2
       CHECKB  R7, -0x1E353434(SP), R2
       CHECKB  R7, 0(SP), R2
@@ -21412,7 +21412,7 @@
       CHECKB  R7, 0(SP), 0x10D1D2D3(SB)
       CHECKB  R7, 0x11D2D3D4(SP), 0x15D6D7D8(SB)[R0:D]
       CHECKB  R7, 0x11D2D3D4(SP), 0xDA8C36(PC)[R0:D]
-      CHECKB  R7, 0x11D2D3D4(SP), R0[R0:D]
+      CHECKB  R7, 0x11D2D3D4(SP), 0(R0)[R0:D]
       CHECKB  R7, 0x11D2D3D4(SB), R2
       CHECKB  R7, -0x1E2D2C2C(SB), R2
       CHECKB  R7, 0(SB), R2
@@ -21429,7 +21429,7 @@
       CHECKB  R7, -0x1E272626(SB), 0x1BDCDDDE(SB)
       CHECKB  R7, 0(SB), 0x18D9DADB(SB)
       CHECKB  R7, 0x19DADBDC(SB), 0xE294F4(PC)[R0:D]
-      CHECKB  R7, 0x19DADBDC(SB), R0[R0:D]
+      CHECKB  R7, 0x19DADBDC(SB), 0(R0)[R0:D]
       CHECKB  R7, 0xDE9104(PC), R2
       CHECKB  R7, 0x03B52F(PC), R2
       CHECKB  R7, 0xE09311(PC), 0x1FE0E1E2(R2)
@@ -21646,7 +21646,7 @@
       CHECKB  R3, 0x1BDCDDDD(R0), 0x03BD88(PC)[R2:Q]
       CHECKW  R3, 0xE09B6F(PC), 0x1FE0E1E2(R3)
       CHECKW  R3, 0xE09B7A(PC), TOS
-      LPRD    MOD, R0[R0:Q]
+      LPRD    MOD, 0(R0)[R0:Q]
       LPRD    MOD, -63(R0)[R0:Q]
       LPRD    MOD, 0x0081(R0)[R0:Q]
       LPRD    SP, R0
@@ -21658,40 +21658,40 @@
       LPRD    PSR, 0x0081(R0)
       LPRD    MOD, -56(R0)
       LPRD    MOD, 0x0081(R0)
-      SUBCB   R0[R0:Q], R0[R1:Q]
-      SUBCB   2(R0)[R0:Q], R0[R1:Q]
-      SUBCB   -64(R0)[R0:Q], R0[R1:Q]
-      SUBCB   0x0081(R0)[R0:Q], R0[R1:Q]
-      SUBCW   R0[R0:Q], R0[R1:Q]
-      SUBCW   2(R0)[R0:Q], R0[R1:Q]
-      SUBCW   -64(R0)[R0:Q], R0[R1:Q]
-      SUBCW   0x0081(R0)[R0:Q], R0[R1:Q]
+      SUBCB   0(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCB   2(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCB   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCB   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCW   0(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCW   2(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCW   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCW   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
       BPT
-      SUBCD   R0[R0:Q], R0[R1:Q]
-      SUBCD   2(R0)[R0:Q], R0[R1:Q]
-      SUBCD   -64(R0)[R0:Q], R0[R1:Q]
-      SUBCD   0x0081(R0)[R0:Q], R0[R1:Q]
-      TBITB   R0[R0:Q], R0[R1:Q]
-      TBITB   2(R0)[R0:Q], R0[R1:Q]
-      TBITB   -64(R0)[R0:Q], R0[R1:Q]
-      TBITB   0x0081(R0)[R0:Q], R0[R1:Q]
-      TBITW   R0[R0:Q], R0[R1:Q]
-      TBITW   2(R0)[R0:Q], R0[R1:Q]
-      TBITW   -64(R0)[R0:Q], R0[R1:Q]
-      TBITW   0x0081(R0)[R0:Q], R0[R1:Q]
-      TBITD   R0[R0:Q], R0[R1:Q]
-      TBITD   2(R0)[R0:Q], R0[R1:Q]
-      TBITD   -64(R0)[R0:Q], R0[R1:Q]
-      TBITD   0x0081(R0)[R0:Q], R0[R1:Q]
-      XORB    R0[R0:Q], R0[R1:Q]
-      XORB    2(R0)[R0:Q], R0[R1:Q]
-      XORB    -64(R0)[R0:Q], R0[R1:Q]
-      XORB    0x0081(R0)[R0:Q], R0[R1:Q]
-      XORW    R0[R0:Q], R0[R1:Q]
-      XORW    2(R0)[R0:Q], R0[R1:Q]
-      XORW    -64(R0)[R0:Q], R0[R1:Q]
-      XORW    0x0081(R0)[R0:Q], R0[R1:Q]
-      XORD    R0[R0:Q], R0[R1:Q]
-      XORD    2(R0)[R0:Q], R0[R1:Q]
-      XORD    -64(R0)[R0:Q], R0[R1:Q]
-      XORD    0x0081(R0)[R0:Q], R0[R1:Q]
+      SUBCD   0(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCD   2(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCD   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      SUBCD   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITB   0(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITB   2(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITB   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITB   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITW   0(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITW   2(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITW   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITW   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITD   0(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITD   2(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITD   -64(R0)[R0:Q], 0(R0)[R1:Q]
+      TBITD   0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      XORB    0(R0)[R0:Q], 0(R0)[R1:Q]
+      XORB    2(R0)[R0:Q], 0(R0)[R1:Q]
+      XORB    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      XORB    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      XORW    0(R0)[R0:Q], 0(R0)[R1:Q]
+      XORW    2(R0)[R0:Q], 0(R0)[R1:Q]
+      XORW    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      XORW    0x0081(R0)[R0:Q], 0(R0)[R1:Q]
+      XORD    0(R0)[R0:Q], 0(R0)[R1:Q]
+      XORD    2(R0)[R0:Q], 0(R0)[R1:Q]
+      XORD    -64(R0)[R0:Q], 0(R0)[R1:Q]
+      XORD    0x0081(R0)[R0:Q], 0(R0)[R1:Q]

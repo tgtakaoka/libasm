@@ -279,7 +279,13 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
             return setError(REGISTER_NOT_ALLOWED);
         reg = RegNs32000::decodeRegName(
                 gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
+        if (scaledIndex) {
+            *out++ = '0';
+            *out++ = '(';
+        }
         out = _regs.outRegName(out, reg);
+        if (scaledIndex)
+            *out++ = ')';
         break;
     case 8:
     case 9:
