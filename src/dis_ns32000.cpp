@@ -75,8 +75,8 @@ char *DisNs32000::outDisplacement(char *out, const Displacement &disp) {
 Error DisNs32000::readDisplacement(
         DisMemory &memory, InsnNs32000 &insn, Displacement &disp) {
     const uint8_t head = insn.readByte(memory);
-    // 0xxx|xxxx
     if ((head & 0x80) == 0) {
+        // 0xxx|xxxx
         const int8_t val8 = (head & 0x40) ? (head | 0x80) : head;
         disp.val32 = val8;
         disp.bits = 7;
@@ -84,14 +84,14 @@ Error DisNs32000::readDisplacement(
         const int8_t val8 = (head & 0x20) ? (head | 0xC0) : (head & ~0xC0);
         const int16_t val16 =
                 (static_cast<int16_t>(val8) << 8) | insn.readByte(memory);
-        // 10xx|xxxx
         if ((head & 0x40) == 0) {
+            // 10xx|xxxx
             disp.val32 = static_cast<int32_t>(val16);
             disp.bits = 14;
         } else {
-            // 1110|0000 is reserved
+            // 11xx|xxxx
             if (head == 0xE0)
-                return setError(ILLEGAL_CONSTANT);
+                return setError(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
             const int32_t val32 = (static_cast<int32_t>(val16) << 16) |
                                   insn.readUint16(memory);
             if (val32 < -0x1F000000L || val32 >= 0x20000000L)
@@ -203,6 +203,8 @@ Error DisNs32000::decodeRelative(
     if (readDisplacement(memory, insn, disp))
         return getError();
     const Config::uintptr_t target = insn.address() + disp.val32;
+    if (target >= static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
+        return setError(OVERFLOW_RANGE);
     outRelAddr(out, target, insn.address(), disp.bits);
     return OK;
 }
@@ -334,6 +336,9 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 0x15:
         if (readDisplacement(memory, insn, disp))
             return getError();
+        if (static_cast<Config::uintptr_t>(disp.val32) >=
+                static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
+            return setError(OVERFLOW_RANGE);
         *out++ = '@';
         out = outDisplacement(out, disp);
         break;
@@ -373,6 +378,9 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
             return getError();
         if (reg == REG_PC) {
             const Config::uintptr_t target = insn.address() + disp.val32;
+            if (target >= static_cast<Config::uintptr_t>(1)
+                                  << uint8_t(addressWidth()))
+                return setError(OVERFLOW_RANGE);
             out = outRelAddr(out, target, insn.address(), disp.bits);
         } else {
             out = outDisplacement(out, disp);

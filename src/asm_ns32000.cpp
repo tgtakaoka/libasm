@@ -494,8 +494,12 @@ Error AsmNs32000::emitGeneric(
                                   : encodeScaledIndex(op.indexSize);
     embedOprField(insn, pos, field);
     switch (op.mode) {
-    case M_RREL:
     case M_ABS:
+        if (static_cast<Config::uintptr_t>(op.val32) >=
+                static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
+            return setError(OVERFLOW_RANGE);
+        /* Fall-through */
+    case M_RREL:
     case M_MEM:
         if (op.mode == M_MEM && op.reg == REG_PC)
             return emitRelative(insn, op);

@@ -72,7 +72,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(),
 #define ERRR(name, opr, ...) VASSERT(REGISTER_NOT_ALLOWED, 0, name, opr, __VA_ARGS__)
 #define ERUI(name, opr, ...) VASSERT(UNKNOWN_INSTRUCTION, 0, name, opr, __VA_ARGS__)
 #define ERUR(name, opr, ...) VASSERT(UNKNOWN_REGISTER, 0, name, opr, __VA_ARGS__)
-#define ERVR(name, opr, ...) VASSERT(OVERFLOW_RANGE, 0, name, opr, __VA_ARGS__)
+#define AERVR(addr, name, opr, ...) VASSERT(OVERFLOW_RANGE, addr, name, opr, __VA_ARGS__)
+#define ERVR(name, opr, ...) AERVR(0, name, opr, __VA_ARGS__)
 #define ERNE(name, opr, ...) VASSERT(OPCODE_HAS_NO_EFFECT, 0, name, opr, __VA_ARGS__)
 #define ERSZ(name, opr, ...) VASSERT(ILLEGAL_SIZE, 0, name, opr, __VA_ARGS__)
 
