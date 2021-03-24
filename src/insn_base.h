@@ -153,6 +153,26 @@ public:
         emitUint16(val >> 16, pos + 2);
     }
 
+    void emitUint64Be(uint64_t val) {
+        emitUint32Be(val >> 32);
+        emitUint32Be(val >> 0);
+    }
+
+    void emitUint64Le(uint64_t val) {
+        emitUint32Le(val >> 0);
+        emitUint32Le(val >> 32);
+    }
+
+    void emitUint64Be(uint64_t val, uint8_t pos) {
+        emitUint32Be(val >> 32, pos + 0);
+        emitUint32Be(val >> 0, pos + 4);
+    }
+
+    void emitUint64Le(uint64_t val, uint8_t pos) {
+        emitUint32(val >> 0, pos + 0);
+        emitUint32(val >> 32, pos + 4);
+    }
+
     uint8_t readByte(DisMemory &memory) {
         if (!memory.hasNext()) {
             setError(NO_MEMORY);
@@ -187,6 +207,18 @@ public:
         return static_cast<uint32_t>(msw) << 16 | lsw;
     }
 
+    uint64_t readUint64Be(DisMemory &memory) {
+        const uint32_t msw = readUint32Be(memory);
+        const uint32_t lsw = readUint32Be(memory);
+        return static_cast<uint64_t>(msw) << 32 | lsw;
+    }
+
+    uint64_t readUint64Le(DisMemory &memory) {
+        const uint32_t lsw = readUint32Le(memory);
+        const uint32_t msw = readUint32Le(memory);
+        return static_cast<uint64_t>(msw) << 32 | lsw;
+    }
+
     void emitUint16(uint16_t val) {
         if (Conf::ENDIAN == ENDIAN_BIG) {
             emitUint16Be(val);
@@ -219,6 +251,74 @@ public:
         }
     }
 
+    void emitUint64(uint64_t val) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            emitUint64Be(val);
+        } else {
+            emitUint64Le(val);
+        }
+    }
+
+    void emitUint64(uint32_t val, uint8_t pos) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            emitUint64Be(val, pos);
+        } else {
+            emitUint64Le(val, pos);
+        }
+    }
+
+    void emitFloat32(float val, uint8_t pos) {
+        union {
+            float float32;
+            uint32_t val32;
+        } bytes;
+        bytes.float32 = val;
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            emitUint32Be(bytes.val32, pos);
+        } else {
+            emitUint32Le(bytes.val32, pos);
+        }
+    }
+
+    void emitFloat32(float val) {
+        union {
+            float float32;
+            uint32_t val32;
+        } bytes;
+        bytes.float32 = val;
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            emitUint32Be(bytes.val32);
+        } else {
+            emitUint32Le(bytes.val32);
+        }
+    }
+
+    void emitFloat64(double val) {
+        union {
+            double float64;
+            uint64_t val64;
+        } bytes;
+        bytes.float64 = val;
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            emitUint64Be(bytes.val64);
+        } else {
+            emitUint64Le(bytes.val64);
+        }
+    }
+
+    void emitFloat64(double val, uint8_t pos) {
+        union {
+            double float64;
+            uint64_t val64;
+        } bytes;
+        bytes.float64 = val;
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            emitUint64Be(bytes.val64, pos);
+        } else {
+            emitUint64Le(bytes.val64, pos);
+        }
+    }
+
     uint16_t readUint16(DisMemory &memory) {
         if (Conf::ENDIAN == ENDIAN_BIG) {
             return readUint16Be(memory);
@@ -233,6 +333,40 @@ public:
         } else {
             return readUint32Le(memory);
         }
+    }
+
+    uint64_t readUint64(DisMemory &memory) {
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            return readUint64Be(memory);
+        } else {
+            return readUint64Le(memory);
+        }
+    }
+
+    float readFloat32(DisMemory &memory) {
+        union {
+            float float32;
+            uint32_t val32;
+        } bytes;
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            bytes.val32 = readUint32Be(memory);
+        } else {
+            bytes.val32 = readUint32Le(memory);
+        }
+        return bytes.float32;
+    }
+
+    double readFloat64(DisMemory &memory) {
+        union {
+            double float64;
+            uint64_t val64;
+        } bytes;
+        if (Conf::ENDIAN == ENDIAN_BIG) {
+            bytes.val64 = readUint64Be(memory);
+        } else {
+            bytes.val64 = readUint64Le(memory);
+        }
+        return bytes.float64;
     }
 
 protected:

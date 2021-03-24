@@ -16,6 +16,7 @@
 
 #include "dis_ns32000.h"
 
+#include <stdio.h>
 #include "table_ns32000.h"
 
 namespace libasm {
@@ -166,13 +167,12 @@ Error DisNs32000::decodeImmediate(
         outHex(out, insn.readUint32(memory), 32);
         break;
     case SZ_FLOAT:
-        outHex(out, insn.readUint32(memory), 32);
+        sprintf(out, "%.8g", static_cast<double>(insn.readFloat32(memory)));
+        out += strlen(out);
         break;
     case SZ_LONG:
-        // TODO: double
-        out = outHex(out, insn.readUint32(memory), 32);
-        *out++ = ':';
-        outHex(out, insn.readUint32(memory), 32);
+        sprintf(out, "%.16lg", insn.readFloat64(memory));
+        out += strlen(out);
         break;
     default:
         break;
@@ -258,10 +258,10 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
         AddrMode mode, OprPos pos) {
     uint8_t gen = getOprField(insn, pos);
     RegName index = REG_UNDEF;
-    OprSize indexSize = SZ_NONE;
+    OprSize size = SZ_NONE;
     const bool scaledIndex = isScaledIndex(gen);
     if (scaledIndex) {
-        indexSize = OprSize(gen & 0x3);
+        size = OprSize(gen & 0x3);
         const uint8_t indexByte = insn.indexByte(pos);
         index = RegNs32000::decodeRegName(indexByte);
         gen = indexByte >> 3;
@@ -411,7 +411,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
         *out++ = '[';
         out = _regs.outRegName(out, index);
         *out++ = ':';
-        *out++ = _regs.indexSizeChar(indexSize);
+        *out++ = _regs.indexSizeChar(size);
         *out++ = ']';
     }
     *out = 0;

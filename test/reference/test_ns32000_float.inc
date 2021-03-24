@@ -36,6 +36,16 @@
 ;# Move Floating: MOVf src/gen, dest/gen
         movf    f0, 8(sb)
         movl    f2, f4
+	movf    nan, f0
+        movf    +inf, f1
+        movf    -inf, f1
+        movf    +0.0, f2
+        movf    -0.0, f2
+	movl    nan, f0
+        movl    +inf, f2
+        movl    -inf, f2
+        movl    +0.0, f4
+        movl    -0.0, f4
 ;# Move Long Floating to Floating: MOVLF src/gen, dest/gen
         movlf   f0, 12(sb)
         movlf   12(sb), f1

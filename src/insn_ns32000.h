@@ -95,6 +95,10 @@ public:
 
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
+    void emitOpFloat32(float float32) { emitFloat32(float32, operandPos()); }
+
+    void emitOpFloat64(double float64) { emitFloat64(float64, operandPos()); }
+
 private:
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;

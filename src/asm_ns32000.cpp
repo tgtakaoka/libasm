@@ -16,6 +16,7 @@
 
 #include "asm_ns32000.h"
 
+#include <stdlib.h>
 #include "reg_ns32000.h"
 #include "table_ns32000.h"
 
@@ -216,21 +217,24 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
     }
 
     op.val32 = parseExpr32(p);
+    const char *t = _scan;
+    if (*t == '.' || *t == 'e' || *t == 'E' ||
+            parserError() == OVERFLOW_RANGE || getError() == UNDEFINED_SYMBOL) {
+        char *e;
+        op.float64 = strtod(p, &e);
+        t = skipSpaces(e);
+        if (p != e && (*t == ',' || endOfLine(t))) {
+            _scan = e;
+            op.mode = M_IMM;
+            op.size = SZ_LONG;
+            return setOK();
+        }
+    }
     if (parserError())
         return getError();
     op.setError(getError());
     p = skipSpaces(_scan);
-    if (*p == ':') {  // 64-bit immediate
-        op.disp2 = parseExpr32(p + 1);
-        if (parserError())
-            return getError();
-        op.setErrorIf(getError());
-        op.indexSize = SZ_LONG;
-        p = skipSpaces(_scan);
-    } else {
-        op.disp2 = 0;
-        op.indexSize = SZ_DOUBLE;
-    }
+    op.size = SZ_DOUBLE;
     if (endOfLine(p) || *p == ',') {
         _scan = p;
         op.mode = M_IMM;  // M_REL
@@ -309,7 +313,7 @@ Error AsmNs32000::parseOperand(const char *scan, Operand &op) {
             return setError(MISSING_CLOSING_PAREN);
         _scan = p;
         op.index = index;
-        op.indexSize = indexSize;
+        op.size = indexSize;
     }
     return OK;
 }
@@ -444,12 +448,15 @@ Error AsmNs32000::emitImmediate(
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
     case SZ_DOUBLE:
-    case SZ_FLOAT:
         insn.emitOperand32(op.val32);
         break;
+    case SZ_FLOAT:
+        insn.emitOpFloat32(op.size == SZ_LONG ? static_cast<float>(op.float64)
+                                              : static_cast<float>(op.val32));
+        break;
     case SZ_LONG:
-        insn.emitOperand32(op.val32);
-        insn.emitOperand32(op.indexSize == SZ_LONG ? op.disp2 : 0);
+        insn.emitOpFloat64(op.size == SZ_LONG ? op.float64
+                                              : static_cast<double>(op.val32));
         break;
     default:
         return setError(INTERNAL_ERROR);
@@ -509,7 +516,7 @@ Error AsmNs32000::emitGeneric(
         InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos) {
     const uint8_t field = (op.index == REG_UNDEF)
                                   ? encodeGenericField(op.mode, op.reg)
-                                  : encodeScaledIndex(op.indexSize);
+                                  : encodeScaledIndex(op.size);
     embedOprField(insn, pos, field);
     switch (op.mode) {
     case M_ABS:

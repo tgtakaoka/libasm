@@ -43,10 +43,15 @@ private:
     struct Operand : public ErrorReporter {
         AddrMode mode;
         RegName reg;
-        uint32_t val32;
-        uint32_t disp2;
+        union {
+            struct {
+                uint32_t val32;
+                uint32_t disp2;
+            };
+            double float64;
+        };
         RegName index;
-        OprSize indexSize;
+        OprSize size;
         Operand()
             : ErrorReporter(),
               mode(M_NONE),
@@ -54,7 +59,7 @@ private:
               val32(0),
               disp2(0),
               index(REG_UNDEF),
-              indexSize(SZ_NONE) {}
+              size(SZ_NONE) {}
     };
 
     Error parseStrOptNames(const char *scan, Operand &op, bool braket = false);
