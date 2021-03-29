@@ -33,9 +33,11 @@ public:
     void reset() override {
         stringOptionBraket(false);
         pcRelativeParen(false);
+        externalParen(false);
     }
     void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
     void pcRelativeParen(bool paren) { _pcRelativeParen = paren; }
+    void externalParen(bool paren) { _externalParen = paren; }
     void setCurrentOriginSymbol(char c) { _formatter.setCurrentOriginSymbol(c); }
 
 private:
@@ -43,6 +45,7 @@ private:
     RegNs32000 _regs;
     bool _stringOptionBraket = false;
     bool _pcRelativeParen = false;
+    bool _externalParen = false;
 
     struct Displacement {
         int32_t val32;

@@ -276,7 +276,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 4:
     case 5:
     case 6:
-    case 7:
+    case 7:  // M_GREG, M_FREG
         if (mode == M_GENA)
             return setError(REGISTER_NOT_ALLOWED);
         reg = RegNs32000::decodeRegName(
@@ -296,7 +296,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 12:
     case 13:
     case 14:
-    case 15:
+    case 15:  // M_RREL
         reg = RegNs32000::decodeRegName(gen);
         if (readDisplacement(memory, insn, disp))
             return getError();
@@ -314,26 +314,29 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 0x12:
         reg = REG_SB;
         goto m_mrel;
-    m_mrel:
+    m_mrel:  // M_MREL
         if (readDisplacement(memory, insn, disp))
             return getError();
         if (readDisplacement(memory, insn, disp2))
             return getError();
-        out = outDisplacement(out, disp2);
-        *out++ = '(';
+        if (reg != REG_EXT || disp2.val32) {
+            out = outDisplacement(out, disp2);
+            *out++ = '(';
+        }
         out = outDisplacement(out, disp);
         *out++ = '(';
         out = _regs.outRegName(out, reg);
         *out++ = ')';
-        *out++ = ')';
+        if (reg != REG_EXT || disp2.val32)
+            *out++ = ')';
         break;
     case 0x13:
         return setError(ILLEGAL_OPERAND_MODE);
-    case 0x14:
+    case 0x14:  // M_IMM
         if (mode == M_GENW || mode == M_GENA || mode == M_FENW || scaledIndex)
             return setError(OPERAND_NOT_ALLOWED);
         return decodeImmediate(memory, insn, out, mode);
-    case 0x15:
+    case 0x15:  // M_ABS
         if (readDisplacement(memory, insn, disp))
             return getError();
         if (static_cast<Config::uintptr_t>(disp.val32) >=
@@ -342,7 +345,11 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
         *out++ = '@';
         out = outDisplacement(out, disp);
         break;
-    case 0x16:
+    case 0x16:  // M_EXT
+        if (_externalParen) {
+            reg = REG_EXT;
+            goto m_mrel;
+        }
         if (readDisplacement(memory, insn, disp))
             return getError();
         if (readDisplacement(memory, insn, disp2))
@@ -358,7 +365,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
         if (disp2.val32 < 0)
             *out++ = ')';
         break;
-    case 0x17:
+    case 0x17:  // M_TOS
         out = _regs.outRegName(out, REG_TOS);
         break;
     case 0x18:
@@ -372,7 +379,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
         goto m_mem;
     case 0x1B:
         reg = REG_PC;
-    m_mem:
+    m_mem:  // M_MEM
         if (readDisplacement(memory, insn, disp))
             return getError();
         if (reg == REG_PC) {

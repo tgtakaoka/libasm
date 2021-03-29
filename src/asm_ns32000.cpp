@@ -249,16 +249,18 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
             op.mode = M_RREL;
             return OK;
         }
-        if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_PC) {
+        if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_PC ||
+                reg == REG_EXT) {
             _scan = p;
             op.reg = reg;
-            op.mode = M_MEM;
+            op.mode = (reg == REG_EXT) ? M_EXT : M_MEM;
             return OK;
         }
         return setError(UNKNOWN_OPERAND);
     }
 
-    op.disp2 = parseExpr32(p);
+    op.disp2 = op.val32;
+    op.val32 = parseExpr32(p);
     if (parserError())
         return getError();
     op.setErrorIf(getError());
@@ -272,10 +274,10 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
             return setError(MISSING_CLOSING_PAREN);
         if (*(p = skipSpaces(p)) != ')')
             return setError(MISSING_CLOSING_PAREN);
-        if (reg == REG_FP || reg == REG_SP || reg == REG_SB) {
+        if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_EXT) {
             _scan = p + 1;
             op.reg = reg;
-            op.mode = M_MREL;
+            op.mode = (reg == REG_EXT) ? M_EXT : M_MREL;
             return OK;
         }
         return setError(UNKNOWN_OPERAND);
@@ -523,9 +525,6 @@ Error AsmNs32000::emitGeneric(
     case M_REL:
         return emitRelative(insn, op);
     case M_MREL:
-        if (emitDisplacement(insn, op.disp2))
-            return getError();
-        return emitDisplacement(insn, op.val32);
     case M_EXT:
         if (emitDisplacement(insn, op.val32))
             return getError();
