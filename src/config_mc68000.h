@@ -22,8 +22,7 @@
 namespace libasm {
 namespace mc68000 {
 
-struct Config : ConfigImpl<ADDRESS_24BIT, uint32_t, int32_t, OPCODE_16BIT,
-                        uint16_t, 10, ENDIAN_BIG, 7> {};
+struct Config : ConfigImpl<ADDRESS_24BIT, OPCODE_16BIT, ENDIAN_BIG, 10, 7> {};
 
 }  // namespace mc68000
 }  // namespace libasm

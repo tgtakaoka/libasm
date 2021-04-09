@@ -115,9 +115,6 @@ void CliListing::formatUint32(
 void CliListing::formatAddress(
         uint32_t addr, bool fixedWidth, bool zeroSuppress) {
     switch (_line->addressWidth()) {
-    case ADDRESS_8BIT:
-        formatUint8(addr, fixedWidth, zeroSuppress);
-        break;
     case ADDRESS_16BIT:
         formatUint16(addr, fixedWidth, zeroSuppress);
         break;

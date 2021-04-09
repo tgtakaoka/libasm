@@ -22,8 +22,8 @@
 namespace libasm {
 namespace mc6800 {
 
-struct Config : public ConfigImpl<ADDRESS_16BIT, uint16_t, int16_t, OPCODE_8BIT,
-                        uint8_t, 5, ENDIAN_BIG, 5> {};
+struct Config
+    : public ConfigImpl<ADDRESS_16BIT, OPCODE_8BIT, ENDIAN_BIG, 5, 5> {};
 
 }  // namespace mc6800
 }  // namespace libasm

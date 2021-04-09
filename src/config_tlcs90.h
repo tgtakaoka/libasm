@@ -22,8 +22,7 @@
 namespace libasm {
 namespace tlcs90 {
 
-struct Config : ConfigImpl<ADDRESS_16BIT, uint16_t, int16_t, OPCODE_8BIT,
-                        uint8_t, 6, ENDIAN_LITTLE, 4> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, OPCODE_8BIT, ENDIAN_LITTLE, 6, 4> {};
 
 }  // namespace tlcs90
 }  // namespace libasm

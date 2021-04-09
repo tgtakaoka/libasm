@@ -22,8 +22,7 @@
 namespace libasm {
 namespace ins8070 {
 
-struct Config : ConfigImpl<ADDRESS_16BIT, uint16_t, int16_t, OPCODE_8BIT,
-                        uint8_t, 3, ENDIAN_LITTLE, 4> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, OPCODE_8BIT, ENDIAN_LITTLE, 3, 4> {};
 
 }  // namespace ins8070
 }  // namespace libasm

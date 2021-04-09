@@ -19,10 +19,11 @@
 
 #include "config_host.h"
 
+#include "type_traits.h"
+
 namespace libasm {
 
 enum AddressWidth : uint8_t {
-    ADDRESS_8BIT = 8,
     ADDRESS_16BIT = 16,
     ADDRESS_20BIT = 20,
     ADDRESS_24BIT = 24,
@@ -42,27 +43,54 @@ enum Endian : uint8_t {
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
     virtual OpCodeWidth opCodeWidth() const = 0;
-    virtual uint8_t codeMax() const = 0;
     virtual Endian endian() const = 0;
+    virtual uint8_t codeMax() const = 0;
     virtual uint8_t nameMax() const = 0;
 };
 
-template <AddressWidth AddrWE, typename AddrT, typename DiffT,
-        OpCodeWidth CodeWE, typename OpCodeT, uint8_t MaxCode, Endian EndianE,
-        uint8_t MaxName>
-struct ConfigImpl : virtual public ConfigBase {
-    typedef AddrT uintptr_t;
-    typedef DiffT ptrdiff_t;
-    typedef OpCodeT opcode_t;
+namespace {
+template <typename A>
+struct __address_helper {
+    typedef A uintptr_t;
+    typedef typename make_signed<A>::type ptrdiff_t;
+};
+template <AddressWidth width>
+struct __address_type;
+template <>
+struct __address_type<ADDRESS_16BIT> : public __address_helper<uint16_t> {};
+template <>
+struct __address_type<ADDRESS_20BIT> : public __address_helper<uint32_t> {};
+template <>
+struct __address_type<ADDRESS_24BIT> : public __address_helper<uint32_t> {};
+template <>
+struct __address_type<ADDRESS_32BIT> : public __address_helper<uint32_t> {};
 
-    static constexpr uint8_t MAX_CODE = MaxCode;
+template <typename C>
+struct __opcode_helper {
+    typedef C opcode_t;
+};
+template <OpCodeWidth width>
+struct __opcode_type;
+template <>
+struct __opcode_type<OPCODE_8BIT> : public __opcode_helper<uint8_t> {};
+template <>
+struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
+}  // namespace
+
+template <AddressWidth AddrWE, OpCodeWidth CodeWE, Endian EndianE,
+        uint8_t MaxCode, uint8_t MaxName>
+struct ConfigImpl : virtual public ConfigBase {
+    typedef typename __address_type<AddrWE>::uintptr_t uintptr_t;
+    typedef typename __address_type<AddrWE>::ptrdiff_t ptrdiff_t;
+    typedef typename __opcode_type<CodeWE>::opcode_t opcode_t;
     static constexpr Endian ENDIAN = EndianE;
+    static constexpr uint8_t MAX_CODE = MaxCode;
     static constexpr uint8_t MAX_NAME = MaxName;
 
     AddressWidth addressWidth() const override { return AddrWE; }
     OpCodeWidth opCodeWidth() const override { return CodeWE; }
-    uint8_t codeMax() const override { return MaxCode; }
     Endian endian() const override { return EndianE; }
+    uint8_t codeMax() const override { return MaxCode; }
     uint8_t nameMax() const override { return MaxName; }
 };
 

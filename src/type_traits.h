@@ -23,6 +23,7 @@ namespace libasm {
 
 // Extracted from <type_traits>
 
+namespace {
 template <bool v>
 struct __bool_constant {
     static constexpr bool value = v;
@@ -34,7 +35,6 @@ typedef __bool_constant<false> false_type;
 // is_unsigned
 template <typename T>
 struct __is_unsigned_helper;
-;
 template <>
 struct __is_unsigned_helper<int8_t> : public false_type {};
 template <>
@@ -98,10 +98,6 @@ template <>
 struct __make_unsigned<uint32_t> {
     typedef uint32_t __type;
 };
-template <typename T>
-struct make_unsigned {
-    typedef typename __make_unsigned<T>::__type type;
-};
 
 // make_signed
 template <typename T>
@@ -132,6 +128,13 @@ template <>
 struct __make_signed<uint32_t> {
     typedef int32_t __type;
 };
+}  // namespace
+
+template <typename T>
+struct make_unsigned {
+    typedef typename __make_unsigned<T>::__type type;
+};
+
 template <typename T>
 struct make_signed {
     typedef typename __make_signed<T>::__type type;
