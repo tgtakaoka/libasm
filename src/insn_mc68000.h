@@ -24,9 +24,9 @@
 namespace libasm {
 namespace mc68000 {
 
-class InsnMc68000 : public InsnBase<Config> {
+class InsnMc68000 : public InsnImpl<Config> {
 public:
-    InsnMc68000(Insn &insn) : InsnBase(insn) {}
+    InsnMc68000(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode srcMode() const { return _flags.srcMode(); }
     AddrMode dstMode() const { return _flags.dstMode(); }

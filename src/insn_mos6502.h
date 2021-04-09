@@ -24,9 +24,9 @@
 namespace libasm {
 namespace mos6502 {
 
-class InsnMos6502 : public InsnBase<Config> {
+class InsnMos6502 : public InsnImpl<Config> {
 public:
-    InsnMos6502(Insn &insn) : InsnBase(insn) {}
+    InsnMos6502(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode addrMode() const { return _flags.mode(); }
 

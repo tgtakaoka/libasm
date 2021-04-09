@@ -99,7 +99,7 @@ Error DisZ8::decodeAbsolute(
         DisMemory &memory, InsnZ8 &insn, char *out, Endian endian) {
     const Config::uintptr_t addr = (endian == ENDIAN_LITTLE)
                                            ? insn.readUint16Le(memory)
-                                           : insn.readUint16(memory);
+                                           : insn.readUint16Be(memory);
     outAbsAddr(out, addr);
     return setError(insn);
 }

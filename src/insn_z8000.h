@@ -24,9 +24,9 @@
 namespace libasm {
 namespace z8000 {
 
-class InsnZ8000 : public InsnBase<Config> {
+class InsnZ8000 : public InsnImpl<Config> {
 public:
-    InsnZ8000(Insn &insn) : InsnBase(insn) {}
+    InsnZ8000(Insn &insn) : InsnImpl(insn) {}
 
     OprSize oprSize() const { return _flags.oprSize(); }
     AddrMode dstMode() const { return _flags.dstMode(); }

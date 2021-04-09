@@ -24,9 +24,9 @@
 namespace libasm {
 namespace z8 {
 
-class InsnZ8 : public InsnBase<Config> {
+class InsnZ8 : public InsnImpl<Config> {
 public:
-    InsnZ8(Insn &insn) : InsnBase(insn) {}
+    InsnZ8(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode dstMode() const { return _flags.dstMode(); }
     AddrMode srcMode() const { return _flags.srcMode(); }

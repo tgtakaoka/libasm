@@ -24,9 +24,9 @@
 namespace libasm {
 namespace i8051 {
 
-class InsnI8051 : public InsnBase<Config> {
+class InsnI8051 : public InsnImpl<Config> {
 public:
-    InsnI8051(Insn &insn) : InsnBase(insn) {}
+    InsnI8051(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode dstMode() const { return _flags.dstMode(); }
     AddrMode srcMode() const { return _flags.srcMode(); }

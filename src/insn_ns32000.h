@@ -25,9 +25,9 @@
 namespace libasm {
 namespace ns32000 {
 
-class InsnNs32000 : public InsnBase<Config> {
+class InsnNs32000 : public InsnImpl<Config> {
 public:
-    InsnNs32000(Insn &insn) : InsnBase(insn) {}
+    InsnNs32000(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode srcMode() const { return _flags.srcMode(); }
     AddrMode dstMode() const { return _flags.dstMode(); }
