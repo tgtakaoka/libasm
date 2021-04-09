@@ -455,11 +455,11 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn, bool useIndirectLong,
 }
 
 Error TableMos6502::searchName(InsnMos6502 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
-    return _error.setError(searchOpCode(insn, _useIndirectLong, _table, _end));
+    return setError(searchOpCode(insn, _useIndirectLong, _table, _end));
 }
 
 TableMos6502::TableMos6502() {

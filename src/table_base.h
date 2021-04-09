@@ -56,9 +56,13 @@ public:
     Error getError() const { return _error.getError(); }
 
 protected:
-    mutable ErrorReporter _error;
-
     TableBase() {}
+
+    Error setOK() const { return _error.setOK(); }
+    Error setError(Error error) const { return _error.setError(error); }
+    Error setError(ErrorReporter reporter) const {
+        return _error.setError(reporter);
+    }
 
     /**
      * Lookup instruction entries from |begin| until |end| to find an
@@ -109,6 +113,9 @@ protected:
         }
         return nullptr;
     }
+
+private:
+    mutable ErrorReporter _error;
 };
 
 }  // namespace libasm

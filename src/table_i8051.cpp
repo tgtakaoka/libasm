@@ -171,10 +171,9 @@ Error TableI8051::searchName(InsnI8051 &insn) const {
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
-        return _error.setOK();
+        return setOK();
     }
-    return _error.setError(
-            count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -195,10 +194,10 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) const {
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
     if (!entry)
-        return _error.setError(UNKNOWN_INSTRUCTION);
+        return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
     insn.setName_P(entry->name());
-    return _error.setOK();
+    return setOK();
 }
 
 const char *TableI8051::listCpu() const {

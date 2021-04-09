@@ -317,10 +317,9 @@ Error TableMc68000::searchName(InsnMc68000 &insn) const {
         if (insn.alias() && !_aliasEnabled)
             continue;
         insn.setOpCode(entry->opCode());
-        return _error.setOK();
+        return setOK();
     }
-    return _error.setError(
-            count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t getInsnMask(AddrMode srcMode) {
@@ -378,9 +377,9 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     if (entry) {
         insn.setFlags(entry->flags());
         insn.setName_P(entry->name());
-        return _error.setOK();
+        return setOK();
     }
-    return _error.setError(UNKNOWN_INSTRUCTION);
+    return setError(UNKNOWN_INSTRUCTION);
 }
 
 TableMc68000::TableMc68000() : _aliasEnabled(false) {}

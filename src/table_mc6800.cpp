@@ -490,24 +490,24 @@ const Entry *TableMc6800::searchOpCode(
 }
 
 Error TableMc6800::searchName(InsnMc6800 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
     const Entry *entry = searchOpCode(insn, _table, _end);
-    return _error.setError(entry ? OK : UNKNOWN_INSTRUCTION);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     const Entry *entry = searchOpCode(insn, _table, _end);
     if (!entry)
-        return _error.setError(INTERNAL_ERROR);
+        return setError(INTERNAL_ERROR);
     entry += 1;
     if (entry->opCode() != insn.opCode())
-        return _error.setError(INTERNAL_ERROR);
+        return setError(INTERNAL_ERROR);
     insn.setFlags(entry->flags());
     insn.setName_P(entry->name());
-    return _error.setOK();
+    return setOK();
 }
 
 TableMc6800::TableMc6800() {

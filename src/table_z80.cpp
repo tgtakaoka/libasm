@@ -337,11 +337,11 @@ bool TableZ80::isPrefix(Config::opcode_t opCode) const {
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableZ80::searchOpCode(InsnZ80 &insn) const {
-    return _error.setError(searchOpCode(insn, _table, _end));
+    return setError(searchOpCode(insn, _table, _end));
 }
 
 TableZ80::TableZ80() {

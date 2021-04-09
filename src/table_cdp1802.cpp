@@ -251,11 +251,11 @@ Error TableCdp1802::searchOpCode(
 }
 
 Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
-    return _error.setError(searchOpCode(insn, _table, _end));
+    return setError(searchOpCode(insn, _table, _end));
 }
 
 TableCdp1802::TableCdp1802() {

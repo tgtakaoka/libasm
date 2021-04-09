@@ -386,11 +386,11 @@ Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory,
 }
 
 Error TableZ8::searchName(InsnZ8 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) const {
-    return _error.setError(searchOpCode(insn, memory, _table, _end));
+    return setError(searchOpCode(insn, memory, _table, _end));
 }
 
 TableZ8::TableZ8() {

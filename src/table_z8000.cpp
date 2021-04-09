@@ -312,10 +312,9 @@ Error TableZ8000::searchName(InsnZ8000 &insn) const {
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
-        return _error.setOK();
+        return setOK();
     }
-    return _error.setError(
-            count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -338,7 +337,7 @@ const Entry *TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory,
         if (insn.hasPost()) {
             if (insn.length() < 4) {
                 insn.readPost(memory);
-                if (_error.setError(insn))
+                if (setError(insn))
                     return nullptr;
             }
             if (!matchPostWord(insn))
@@ -352,7 +351,7 @@ const Entry *TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory,
 
 Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) const {
     const Entry *entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
-    return _error.setError(entry ? OK : UNKNOWN_INSTRUCTION);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
@@ -362,7 +361,7 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
         insn.setFlags(entry->flags());
         insn.setName_P(entry->name());
     }
-    return _error.setError(entry ? OK : UNKNOWN_INSTRUCTION);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableZ8000::TableZ8000() : _cpuType(Z8001) {}

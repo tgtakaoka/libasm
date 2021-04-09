@@ -220,11 +220,11 @@ Error TableTms9900::searchOpCode(
 }
 
 Error TableTms9900::searchName(InsnTms9900 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
-    return _error.setError(searchOpCode(insn, _table, _end));
+    return setError(searchOpCode(insn, _table, _end));
 }
 
 TableTms9900::TableTms9900() {

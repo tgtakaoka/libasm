@@ -559,7 +559,7 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory,
             insn.setFlags(entry->flags());
             if (post) {
                 insn.readPost(memory);
-                if (_error.setError(insn))
+                if (setError(insn))
                     return getError();
                 insn.setHasPost();
             }
@@ -576,7 +576,7 @@ Error TableNs32000::searchName(InsnNs32000 &insn) const {
         error = searchName(insn, ARRAY_RANGE(NS32081_PAGES));
     if (error == UNKNOWN_INSTRUCTION && _mmuType == MMU_NS32082)
         error = searchName(insn, ARRAY_RANGE(NS32082_PAGES));
-    return _error.setError(error);
+    return setError(error);
 }
 
 Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
@@ -585,7 +585,7 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
         error = searchOpCode(insn, memory, ARRAY_RANGE(NS32081_PAGES));
     if (error != OK)
         error = searchOpCode(insn, memory, ARRAY_RANGE(NS32082_PAGES));
-    return _error.setError(error);
+    return setError(error);
 }
 
 const char *TableNs32000::listCpu() const {

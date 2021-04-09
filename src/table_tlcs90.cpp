@@ -359,10 +359,10 @@ Error TableTlcs90::readInsn(
             break;
         }
         insn.setOpCode(insn.readByte(memory), code);
-        return _error.setError(insn);
+        return setError(insn);
     }
     insn.setOpCode(code);
-    return _error.setError(insn);
+    return setError(insn);
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -476,11 +476,11 @@ Error TableTlcs90::searchOpCode(
 }
 
 Error TableTlcs90::searchName(InsnTlcs90 &insn) const {
-    return _error.setError(searchName(insn, ARRAY_RANGE(PAGES_TLCS90)));
+    return setError(searchName(insn, ARRAY_RANGE(PAGES_TLCS90)));
 }
 
 Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) const {
-    return _error.setError(searchOpCode(insn, ARRAY_RANGE(PAGES_TLCS90)));
+    return setError(searchOpCode(insn, ARRAY_RANGE(PAGES_TLCS90)));
 }
 
 const char *TableTlcs90::listCpu() const {

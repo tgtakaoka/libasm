@@ -100,10 +100,9 @@ Error TableIns8060::searchName(InsnIns8060 &insn) const {
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
-        return _error.setOK();
+        return setOK();
     }
-    return _error.setError(
-            count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -123,12 +122,12 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
     const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
     if (!entry)
-        return _error.setError(UNKNOWN_INSTRUCTION);
+        return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
     if (insn.addrMode() == UNDEF)
-        return _error.setError(UNKNOWN_INSTRUCTION);
+        return setError(UNKNOWN_INSTRUCTION);
     insn.setName_P(entry->name());
-    return _error.setOK();
+    return setOK();
 }
 
 const char *TableIns8060::listCpu() const {

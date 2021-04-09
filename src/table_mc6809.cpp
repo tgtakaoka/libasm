@@ -591,11 +591,11 @@ Error TableMc6809::searchOpCode(
 }
 
 Error TableMc6809::searchName(InsnMc6809 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
-    return _error.setError(searchOpCode(insn, _table, _end));
+    return setError(searchOpCode(insn, _table, _end));
 }
 
 struct TableMc6809::PostEntry : public PostSpec {

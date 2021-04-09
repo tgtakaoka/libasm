@@ -198,11 +198,11 @@ Error TableI8080::searchOpCode(
 }
 
 Error TableI8080::searchName(InsnI8080 &insn) const {
-    return _error.setError(searchName(insn, _table, _end));
+    return setError(searchName(insn, _table, _end));
 }
 
 Error TableI8080::searchOpCode(InsnI8080 &insn) const {
-    return _error.setError(searchOpCode(insn, _table, _end));
+    return setError(searchOpCode(insn, _table, _end));
 }
 
 TableI8080::TableI8080() {

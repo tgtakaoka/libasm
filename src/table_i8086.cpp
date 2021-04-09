@@ -568,11 +568,11 @@ Error TableI8086::searchOpCode(
 }
 
 Error TableI8086::searchName(InsnI8086 &insn) const {
-    return _error.setError(searchName(insn, ARRAY_RANGE(I8086_PAGES)));
+    return setError(searchName(insn, ARRAY_RANGE(I8086_PAGES)));
 }
 
 Error TableI8086::searchOpCode(InsnI8086 &insn) const {
-    return _error.setError(searchOpCode(insn, ARRAY_RANGE(I8086_PAGES)));
+    return setError(searchOpCode(insn, ARRAY_RANGE(I8086_PAGES)));
 }
 
 const char *TableI8086::listCpu() const {
