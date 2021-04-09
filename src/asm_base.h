@@ -55,30 +55,17 @@ protected:
 
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;
-    const char *scanExpr(const char *scan, char delim, uint16_t nesting = 0) const;
-    static const char *skipSpaces(const char *scan);
 
+    /** Scan |expr| text to find |delim| letter. */
+    const char *scanExpr(const char *expr, char delim, uint16_t nesting = 0) const;
+    /** Parse |expr| text and get value as unsigned 16 bit. */
+    uint16_t parseExpr16(const char *expr, const char *end = nullptr);
+    /** Parse |expr| text and get value as unsigned 32 bit. */
+    uint32_t parseExpr32(const char *expr, const char *end = nullptr);
+    /** Return error caused by |parseExpr16| and |parseExpr32|. */
     Error parserError() { return _parser.error(); }
 
-    uint16_t parseExpr16(const char *scan, const char *end = nullptr) {
-        Value value;
-        _scan = _parser.eval(scan, end, value, _symtab);
-        setError(_parser.error());
-        if (value.overflowUint16())
-            setErrorIf(OVERFLOW_RANGE);
-        if (value.isUndefined())
-            setErrorIf(UNDEFINED_SYMBOL);
-        return value.getUnsigned();
-    }
-
-    uint32_t parseExpr32(const char *scan, const char *end = nullptr) {
-        Value value;
-        _scan = _parser.eval(scan, end, value, _symtab);
-        setError(_parser.error());
-        if (value.isUndefined())
-            setErrorIf(UNDEFINED_SYMBOL);
-        return value.getUnsigned();
-    }
+    static const char *skipSpaces(const char *scan);
 
 private:
     virtual Error encode(Insn &insn) = 0;

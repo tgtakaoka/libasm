@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z8000 {
 
-static int8_t parseRegNum(const char *line) {
+int8_t RegZ8000::parseRegNum(const char *line) {
     if (isdigit(*line) && !RegBase::isidchar(line[1]))
         return *line - '0';
     if (*line++ == '1' && *line >= '0' && *line < '6' &&

@@ -36,6 +36,7 @@ public:
      * integer when |bits| is negative.  Leading zero will be
      * suppressed.
      */
+
     char *formatDec(char *out, uint32_t val, int8_t bits) const;
     /*
      * Convert |val| as |bits| hexadecimal integer.  Treat |val| as

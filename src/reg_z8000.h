@@ -168,6 +168,7 @@ public:
 
 private:
     char *outCtlName(char *out, RegName name) const;
+    static int8_t parseRegNum(const char *line);
     static uint8_t ctlRegLen(RegName name);
 };
 

@@ -21,6 +21,9 @@
 
 namespace libasm {
 
+/**
+ * Base class for instruction table entry.
+ */
 template <typename Conf>
 class EntryBase {
 public:
@@ -42,25 +45,6 @@ public:
 private:
     const char *_name;
     typename Conf::opcode_t _opCode;
-};
-
-template <typename ENTRY_T>
-class EntryPageBase {
-public:
-    const ENTRY_T *table() const {
-        return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_table));
-    }
-    const ENTRY_T *end() const {
-        return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_end));
-    }
-
-protected:
-    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end)
-        : _table(table), _end(end) {}
-
-private:
-    const ENTRY_T *_table;
-    const ENTRY_T *_end;
 };
 
 }  // namespace libasm

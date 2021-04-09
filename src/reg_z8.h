@@ -96,6 +96,9 @@ public:
 
     static bool isWorkRegAlias(uint8_t addr);
     static uint8_t encodeWorkRegAddr(RegName name);
+
+private:
+    static int8_t parseRegNum(const char *line);
 };
 
 }  // namespace z8

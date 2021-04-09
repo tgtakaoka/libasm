@@ -80,17 +80,17 @@ public:
 
     Error error() const { return getError(); }
     /*
-     * Parse |scan| text until |end| and convert expression to |val|.
+     * Parse |expr| text until |end| and convert expression to |val|.
      * Undefined symbol reference in expression should be checked by
      * |val.isUndefined()|. Other error should be checked by |error()|.
      */
     const char *eval(
-            const char *scan, const char *end, Value &val, SymbolTable *symtab);
+            const char *expr, const char *end, Value &val, SymbolTable *symtab);
     /*
-     * Parse |scan| text and convert character constant to |val|.
+     * Parse |expr| text and convert character constant to |val|.
      * Error should be checked by |error()|.
      */
-    const char *readChar(const char *scan, char &val);
+    const char *readChar(const char *expr, char &val);
 
     bool isSymbolLetter(char c, bool head = false) const;
     const char *scanSymbol(const char *scan) const;

@@ -32,11 +32,10 @@ uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
     return encodeRegName(name) | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
-static int8_t parseRegNum(const char *line) {
-    if (isdigit(*line) && !RegBase::isidchar(line[1]))
+int8_t RegZ8::parseRegNum(const char *line) {
+    if (isdigit(*line) && !isidchar(line[1]))
         return *line - '0';
-    if (*line++ == '1' && *line >= '0' && *line < '6' &&
-            !RegBase::isidchar(line[1]))
+    if (*line++ == '1' && *line >= '0' && *line < '6' && !isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }

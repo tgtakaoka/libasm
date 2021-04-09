@@ -47,26 +47,46 @@ bool Assembler::endOfLine(const char *scan) const {
     return *scan == 0 || *scan == ';' || *scan == _commentChar;
 }
 
+uint16_t Assembler::parseExpr16(const char *expr, const char *end) {
+    Value value;
+    _scan = _parser.eval(expr, end, value, _symtab);
+    setError(_parser.error());
+    if (value.overflowUint16())
+        setErrorIf(OVERFLOW_RANGE);
+    if (value.isUndefined())
+        setErrorIf(UNDEFINED_SYMBOL);
+    return value.getUnsigned();
+}
+
+uint32_t Assembler::parseExpr32(const char *expr, const char *end) {
+    Value value;
+    _scan = _parser.eval(expr, end, value, _symtab);
+    setError(_parser.error());
+    if (value.isUndefined())
+        setErrorIf(UNDEFINED_SYMBOL);
+    return value.getUnsigned();
+}
+
 const char *Assembler::scanExpr(
-        const char *scan, char delim, uint16_t nesting) const {
+        const char *expr, char delim, uint16_t nesting) const {
     nesting++;
-    while (!endOfLine(scan)) {
-        const char c = *scan;
+    while (!endOfLine(expr)) {
+        const char c = *expr;
         if (c == delim)
-            return scan;
-        scan++;
+            return expr;
+        expr++;
         if (c == '(') {
-            scan = scanExpr(scan, ')', nesting);
+            expr = scanExpr(expr, ')', nesting);
         } else if (c == '[') {
-            scan = scanExpr(scan, ']', nesting);
+            expr = scanExpr(expr, ']', nesting);
         } else if (c == '\'') {
             char val;
-            scan = _parser.readChar(scan, val);
-            if (*scan == '\'')
-                scan++;
+            expr = _parser.readChar(expr, val);
+            if (*expr == '\'')
+                expr++;
         }
     }
-    return scan;
+    return expr;
 }
 
 const char *Assembler::skipSpaces(const char *scan) {

@@ -54,18 +54,7 @@ protected:
     Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
         : _formatter(formatter), _regBase(regs), _table(table) {}
 
-    char *outText(char *out, const char *text) const {
-        while ((*out = *text++) != 0)
-            out++;
-        return out;
-    }
-
-    char *outPstr(char *out, const /*PROGMEM*/ char *pstr) const {
-        while ((*out = pgm_read_byte(pstr++)) != 0)
-            out++;
-        return out;
-    }
-
+    /** Lookup |addr| value and returns symbol. */
     template <typename Addr>
     const char *lookup(Addr addr) const {
         const char *symbol = nullptr;
@@ -80,6 +69,23 @@ protected:
         return symbol;
     }
 
+    /** Copy |text| into |out|. */
+    char *outText(char *out, const char *text) const;
+
+    /** Copy |pstr| text in programe memory into |out|. */
+    char *outPstr(char *out, const /*PROGMEM*/ char *pstr) const;
+
+    /**
+     * Convert |val| as |bits| decimal integer. Treat |val| as signed
+     * integer when |bits| is negative.
+     */
+    char *outDec(char *out, uint8_t val, int8_t bits);
+
+    /**
+     * Convert |val| as |bits| hexadecimal integer. Treat |val| as
+     * signed integer when |bits| is negative. Output symbol label when
+     * |val| is in symbol table.
+     */
     template <typename T>
     char *outHex(char *out, T val, int8_t bits) {
         const char *label = lookup(val);
@@ -88,8 +94,10 @@ protected:
         return _formatter.formatHex(out, val, bits, /*relax*/ true);
     }
 
-    char *outDec(char *out, uint8_t val, int8_t bits);
-
+    /**
+     * Convert |val| as |addrWidth| bit absolute address. Output
+     * symbol label when |val| is in symbol table.
+     */
     template <typename Addr>
     char *outAbsAddr(char *out, Addr val, uint8_t addrWidth = 0,
             const /*PROGMEM*/ char *prefix = nullptr, bool needPrefix = false) {
@@ -106,6 +114,10 @@ protected:
         return _formatter.formatHex(out, val, addrWidth, false);
     }
 
+    /**
+     * Convert |target| as relative |deltaBits| offset from
+     * |origin|.
+     */
     template <typename Addr>
     char *outRelAddr(char *out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)

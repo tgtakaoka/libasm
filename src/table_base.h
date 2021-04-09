@@ -23,6 +23,31 @@
 
 namespace libasm {
 
+/**
+ * Base class for instruction page table entry.
+ */
+template <typename ENTRY_T>
+class EntryPageBase {
+public:
+    const ENTRY_T *table() const {
+        return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_table));
+    }
+    const ENTRY_T *end() const {
+        return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_end));
+    }
+
+protected:
+    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end)
+        : _table(table), _end(end) {}
+
+private:
+    const ENTRY_T *_table;
+    const ENTRY_T *_end;
+};
+
+/**
+ * Base class for instruction table.
+ */
 class TableBase {
 public:
     virtual const char *listCpu() const = 0;
@@ -35,6 +60,10 @@ protected:
 
     TableBase() {}
 
+    /**
+     * Lookup instruction entries from |begin| until |end| to find an
+     * entry which has |name|.
+     */
     template <typename E>
     static const E *searchName(const char *name, const E *begin, const E *end) {
         for (const E *entry = begin; entry < end; entry++) {
@@ -44,6 +73,11 @@ protected:
         return nullptr;
     }
 
+    /**
+     * Lookup instruction entries from |begin| until |end| to find an
+     * entry which has |name| and accepts |attr|. Returns the number
+     * of entries matching |name| regardless of |attr|.
+     */
     template <typename E, typename A>
     static const E *searchName(const char *name, A attr, const E *begin,
             const E *end, bool (*accept)(A, const E *), uint8_t &count) {
@@ -57,6 +91,10 @@ protected:
         return nullptr;
     }
 
+    /**
+     * Lookup instruction entries from |begin| until |end| to find an
+     * entry which matches |opCode| converted by |convert|.
+     */
     template <typename E, typename C>
     static const E *searchCode(const C opCode, const E *begin, const E *end,
             C (*convert)(C, const E *) = nullptr) {

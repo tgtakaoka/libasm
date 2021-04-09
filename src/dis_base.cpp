@@ -36,6 +36,18 @@ Error Disassembler::decode(
     return getError();
 }
 
+char *Disassembler::outText(char *out, const char *text) const {
+    while ((*out = *text++) != 0)
+        out++;
+    return out;
+}
+
+char *Disassembler::outPstr(char *out, const /*PROGMEM*/ char *pstr) const {
+    while ((*out = pgm_read_byte(pstr++)) != 0)
+        out++;
+    return out;
+}
+
 char *Disassembler::outDec(char *out, uint8_t val, int8_t bits) {
     const char *label = lookup(val);
     if (label)

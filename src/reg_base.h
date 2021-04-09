@@ -21,16 +21,20 @@
 #ifndef __REG_BASE_H__
 #define __REG_BASE_H__
 
+/**
+ * Base class for registers.
+ */
 class RegBase {
 public:
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
     bool isUppercase() const { return _uppercase; }
 
-    static bool isidchar(const char c) { return isalnum(c) || c == '_'; }
-
+    /**
+     * Entry of registers, condition codes and flags table.
+     */
     struct NameEntry {
         const uint8_t _name;
-        const char *const _text;
+        const /*PROGMEM*/ char *const _text;
 #define NAME_ENTRY(name) {name, TEXT_##name}
 
         inline uint8_t name() const { return pgm_read_byte(&this->_name); }
@@ -61,6 +65,8 @@ protected:
         }
         return out;
     }
+
+    static bool isidchar(const char c) { return isalnum(c) || c == '_'; }
 
     static const NameEntry *searchName(
             uint8_t name, const NameEntry *begin, const NameEntry *end) {

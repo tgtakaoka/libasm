@@ -28,9 +28,9 @@ bool Value::overflowUint16() const {
            (getSigned() >= 0 && getUnsigned() >= 0x10000L);
 }
 
-const char *ValueParser::readChar(const char *scan, char &val) {
+const char *ValueParser::readChar(const char *expr, char &val) {
     setOK();
-    const char *p = scan;
+    const char *p = expr;
     char c = *p++;
     if (c != '\\') {
         val = c;
@@ -64,7 +64,7 @@ const char *ValueParser::readChar(const char *scan, char &val) {
             break;
         default:
             setError(UNKNOWN_ESCAPE_SEQUENCE);
-            return scan;
+            return expr;
         }
         val = c;
         return p;
@@ -72,10 +72,10 @@ const char *ValueParser::readChar(const char *scan, char &val) {
     Value value;
     parseNumber(p, value, base);
     if (getError())
-        return scan;
+        return expr;
     if (value.overflowUint8()) {
         setError(OVERFLOW_RANGE);
-        return scan;
+        return expr;
     }
     val = value.getUnsigned();
     return _next;
@@ -126,12 +126,12 @@ const char *ValueParser::skipSpaces(const char *p) const {
 }
 
 const char *ValueParser::eval(
-        const char *scan, const char *end, Value &value, SymbolTable *symtab) {
+        const char *expr, const char *end, Value &value, SymbolTable *symtab) {
     _symtab = symtab;
     _stack.clear();
     setOK();
     _end = end;
-    value = parseExpr(scan);
+    value = parseExpr(expr);
     return _next;
 }
 
