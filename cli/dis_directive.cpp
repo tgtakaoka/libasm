@@ -19,8 +19,7 @@
 namespace libasm {
 namespace cli {
 
-DisDirective::DisDirective(
-        Disassembler &disassembler, CliMemory &memory, bool uppercase)
+DisDirective::DisDirective(Disassembler &disassembler, CliMemory &memory, bool uppercase)
     : _disassembler(disassembler),
       _memory(memory),
       _listing(),
@@ -50,8 +49,7 @@ const char *DisDirective::getCpu(bool withBytes) {
 }
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {
-    _disassembler.getFormatter().formatHex(
-            _operands, origin, _disassembler.addressWidth(), false);
+    _disassembler.getFormatter().formatHex(_operands, origin, _disassembler.addressWidth(), false);
     _listing.reset(*this);
     _address = origin;
     _generated_size = 0;

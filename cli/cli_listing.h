@@ -73,18 +73,12 @@ private:
     std::string _out;
 
     void formatHex(uint8_t val);
-    void formatUint8(
-            uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint16(
-            uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint20(
-            uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint24(
-            uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint32(
-            uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatAddress(
-            uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint8(uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint16(uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint20(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint24(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint32(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatAddress(uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
     int formatBytes(int base);
     void formatTab(size_t pos, int delta = 4);
     void formatContent(int pos);

@@ -24,12 +24,12 @@ DisI8086 dis8086;
 DisExample example(dis8086);
 
 void setup() {
-  Serial.begin(9800);
-  example.begin(Serial);
+    Serial.begin(9800);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

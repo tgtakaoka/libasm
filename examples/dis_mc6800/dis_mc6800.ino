@@ -24,12 +24,12 @@ DisMc6800 dis6800;
 DisExample example(dis6800);
 
 void setup() {
-  Serial.begin(9800);
-  example.begin(Serial);
+    Serial.begin(9800);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

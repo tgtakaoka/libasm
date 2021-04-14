@@ -24,12 +24,12 @@ DisCdp1802 dis1802;
 DisExample example(dis1802);
 
 void setup() {
-  Serial.begin(9800);
-  example.begin(Serial);
+    Serial.begin(9800);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

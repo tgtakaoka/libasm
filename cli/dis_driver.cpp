@@ -27,8 +27,7 @@ namespace cli {
 
 DisDriver::DisDriver(std::vector<Disassembler *> &disassemblers) {
     _disassemblers.reserve(disassemblers.size());
-    _disassemblers.insert(
-            _disassemblers.end(), disassemblers.begin(), disassemblers.end());
+    _disassemblers.insert(_disassemblers.end(), disassemblers.begin(), disassemblers.end());
 }
 
 DisDriver::~DisDriver() {
@@ -36,8 +35,7 @@ DisDriver::~DisDriver() {
         delete _formatter;
 }
 
-static void appendTo(std::string &list, const std::string &cpu,
-        std::set<std::string> &cpuSet) {
+static void appendTo(std::string &list, const std::string &cpu, std::set<std::string> &cpuSet) {
     if (cpuSet.find(cpu) == cpuSet.end()) {
         cpuSet.insert(cpu);
         if (!list.empty())
@@ -62,8 +60,8 @@ static std::string filter(const char *text, std::set<std::string> &cpuSet) {
     }
 }
 
-static std::string listCpu(const char *separator,
-        const std::vector<Disassembler *> &disassemblers) {
+static std::string listCpu(
+        const char *separator, const std::vector<Disassembler *> &disassemblers) {
     std::set<std::string> cpuSet;
     std::string cpuList;
     std::string buf = "";
@@ -113,8 +111,7 @@ int DisDriver::usage() {
 
 int DisDriver::disassemble() {
     if (_verbose)
-        fprintf(stderr,
-                "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
+        fprintf(stderr, "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
     FILE *input = fopen(_input_name, "r");
     if (input == nullptr) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
@@ -149,8 +146,7 @@ int DisDriver::disassemble() {
             fprintf(stderr, "%s: Opened for listing\n", _list_name);
         fprintf(list, "%s\n", listing.getCpu(true));
     }
-    memory.dump([this, output, list, &listing](
-                        uint32_t base, const uint8_t *data, size_t size) {
+    memory.dump([this, output, list, &listing](uint32_t base, const uint8_t *data, size_t size) {
         if (list) {
             fprintf(list, "%s\n", listing.origin(base, true));
             fflush(list);
@@ -169,8 +165,8 @@ int DisDriver::disassemble() {
                         _disassembler->errorText());
             if (list) {
                 if (error)
-                    fprintf(list, "%s:0x%04x: error: %s\n", _input_name,
-                            address, _disassembler->errorText());
+                    fprintf(list, "%s:0x%04x: error: %s\n", _input_name, address,
+                            _disassembler->errorText());
                 do {
                     fprintf(list, "%s\n", listing.getLine());
                 } while (listing.hasNext());
@@ -178,8 +174,8 @@ int DisDriver::disassemble() {
             }
             if (output) {
                 if (error)
-                    fprintf(output, "; %s:0x%04x: error: %s\n", _input_name,
-                            address, _disassembler->errorText());
+                    fprintf(output, "; %s:0x%04x: error: %s\n", _input_name, address,
+                            _disassembler->errorText());
                 do {
                     fprintf(output, "%s\n", listing.getContent());
                 } while (listing.hasNext());
@@ -209,11 +205,9 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
         uint8_t *data = _formatter->decode(line, addr, size);
         if (data == nullptr) {
             if (errors < 3) {
-                fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno,
-                        line);
+                fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno, line);
             } else if (errors == 3) {
-                fprintf(stderr, "%s: too many errors, wrong format?\n",
-                        filename);
+                fprintf(stderr, "%s: too many errors, wrong format?\n", filename);
             }
             errors++;
             continue;
@@ -223,8 +217,8 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
                 start = end = addr;
             if (addr != end) {
                 if (_verbose)
-                    fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n",
-                            _input_name, end - start, start, end - 1);
+                    fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n", _input_name, end - start,
+                            start, end - 1);
                 start = addr;
             }
             end = addr + size;
@@ -232,8 +226,7 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
         }
     }
     if (start != end && _verbose)
-        fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n", _input_name,
-                end - start, start, end - 1);
+        fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n", _input_name, end - start, start, end - 1);
     free(line);
     return errors;
 }
@@ -337,8 +330,7 @@ int DisDriver::parseOption(int argc, const char **argv) {
             }
         } else {
             if (_input_name) {
-                fprintf(stderr, "multiple input files specified: %s and %s\n",
-                        _input_name, opt);
+                fprintf(stderr, "multiple input files specified: %s and %s\n", _input_name, opt);
                 return 1;
             }
             _input_name = opt;
@@ -354,8 +346,7 @@ int DisDriver::parseOption(int argc, const char **argv) {
     }
     _formatter = determineInputFormat(_input_name);
     if (_formatter == nullptr) {
-        fprintf(stderr, "Can't determine format of input file %s\n",
-                _input_name);
+        fprintf(stderr, "Can't determine format of input file %s\n", _input_name);
         return 2;
     }
     if (_output_name && strcmp(_output_name, _input_name) == 0) {

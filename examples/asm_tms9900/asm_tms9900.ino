@@ -24,12 +24,12 @@ AsmTms9900 asm9900;
 AsmExample example(asm9900);
 
 void setup() {
-  Serial.begin(9600);
-  example.begin(Serial);
+    Serial.begin(9600);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

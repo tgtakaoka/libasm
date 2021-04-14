@@ -24,12 +24,12 @@ DisMos6502 dis6502;
 DisExample example(dis6502);
 
 void setup() {
-  Serial.begin(9800);
-  example.begin(Serial);
+    Serial.begin(9800);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

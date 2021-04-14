@@ -23,11 +23,9 @@
 namespace libasm {
 namespace cli {
 
-AsmCommonDirective::AsmCommonDirective(
-        std::vector<AsmDirective *> &directives) {
+AsmCommonDirective::AsmCommonDirective(std::vector<AsmDirective *> &directives) {
     _directives.reserve(directives.size());
-    _directives.insert(
-            _directives.begin(), directives.begin(), directives.end());
+    _directives.insert(_directives.begin(), directives.begin(), directives.end());
     _asmZ80 = _asmI8080 = nullptr;
     for (auto directive : _directives) {
         if (directive->assembler().setCpu("Z80")) {
@@ -80,8 +78,7 @@ AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
     return nullptr;
 }
 
-static void appendTo(std::string &list, const std::string &cpu,
-        std::set<std::string> &cpuSet) {
+static void appendTo(std::string &list, const std::string &cpu, std::set<std::string> &cpuSet) {
     if (cpuSet.find(cpu) == cpuSet.end()) {
         cpuSet.insert(cpu);
         if (!list.empty())
@@ -263,8 +260,7 @@ Error AsmCommonDirective::openSource(const char *input_name, const char *end) {
     if (end == nullptr)
         end = input_name + strlen(input_name);
     const Source *parent = _sources.empty() ? nullptr : _sources.back();
-    const size_t pos =
-            parent ? parent->name.find_last_of('/') : std::string::npos;
+    const size_t pos = parent ? parent->name.find_last_of('/') : std::string::npos;
     Source *source;
     if (pos == std::string::npos || *input_name == '/') {
         source = new Source(input_name, end, parent);
@@ -300,8 +296,7 @@ Error AsmCommonDirective::closeSource() {
     return setError(OK);
 }
 
-bool AsmCommonDirective::compareDirective(
-        const char *name, const char *directive_name) const {
+bool AsmCommonDirective::compareDirective(const char *name, const char *directive_name) const {
     if (strcasecmp(name, directive_name) == 0)
         return true;
     return *directive_name == '.' && strcasecmp(name, directive_name + 1) == 0;
@@ -309,8 +304,7 @@ bool AsmCommonDirective::compareDirective(
 
 Error AsmCommonDirective::processPseudo(
         const char *directive, const char *&label, CliMemory &memory) {
-    if (_directive->processDirective(directive, label, memory, *this) !=
-            UNKNOWN_DIRECTIVE)
+    if (_directive->processDirective(directive, label, memory, *this) != UNKNOWN_DIRECTIVE)
         return getError();
     if (compareDirective(directive, ".org"))
         return defineOrigin();
@@ -429,8 +423,7 @@ Error AsmCommonDirective::includeFile() {
     while (*end && (!c || *end != c) && !isspace(*end))
         end++;
     if (c && *end != c)
-        return setError(
-                c == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+        return setError(c == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
     return openSource(filename, end);
 }
 
@@ -548,8 +541,7 @@ uint32_t AsmCommonDirective::currentOrigin() {
     return _origin;
 }
 
-Error AsmCommonDirective::internSymbol(
-        uint32_t value, const char *symbol, const char *end) {
+Error AsmCommonDirective::internSymbol(uint32_t value, const char *symbol, const char *end) {
     if (end)
         return symbolIntern(value, std::string(symbol, end - symbol));
     return symbolIntern(value, std::string(symbol));
@@ -613,8 +605,7 @@ bool AsmCommonDirective::hasOperand() const {
 }
 
 std::string AsmCommonDirective::getOperand() const {
-    return std::string(
-            _list.operand, trimRight(_list.operand, _list.operand_len));
+    return std::string(_list.operand, trimRight(_list.operand, _list.operand_len));
 }
 
 uint16_t AsmCommonDirective::lineNumber() const {
@@ -676,15 +667,14 @@ int AsmCommonDirective::operandWidth() const {
 
 // Motorola type directives
 
-AsmMotoDirective::AsmMotoDirective(Assembler &assembler)
-    : AsmDirective(assembler) {}
+AsmMotoDirective::AsmMotoDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinFormatter *AsmMotoDirective::defaultFormatter() const {
     return new MotoSrec(_assembler.addressWidth());
 }
 
-Error AsmMotoDirective::processDirective(const char *directive,
-        const char *&label, CliMemory &memory, AsmCommonDirective &common) {
+Error AsmMotoDirective::processDirective(
+        const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
     if (common.compareDirective(directive, ".fcb"))
         return common.defineBytes(memory);
     if (common.compareDirective(directive, ".fcc"))
@@ -696,17 +686,15 @@ Error AsmMotoDirective::processDirective(const char *directive,
     return UNKNOWN_DIRECTIVE;
 }
 
-AsmMostekDirective::AsmMostekDirective(Assembler &assembler)
-    : AsmDirective(assembler) {}
+AsmMostekDirective::AsmMostekDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinFormatter *AsmMostekDirective::defaultFormatter() const {
     return new MotoSrec(_assembler.addressWidth());
 }
 
-Error AsmMostekDirective::processDirective(const char *directive,
-        const char *&label, CliMemory &memory, AsmCommonDirective &common) {
-    if (common.compareDirective(directive, ":=") ||
-            common.compareDirective(directive, "="))
+Error AsmMostekDirective::processDirective(
+        const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
+    if (common.compareDirective(directive, ":=") || common.compareDirective(directive, "="))
         return common.defineLabel(label, memory);
     if (common.compareDirective(directive, ".fcb"))
         return common.defineBytes(memory);
@@ -719,15 +707,14 @@ Error AsmMostekDirective::processDirective(const char *directive,
     return UNKNOWN_DIRECTIVE;
 }
 
-AsmIntelDirective::AsmIntelDirective(Assembler &assembler)
-    : AsmDirective(assembler) {}
+AsmIntelDirective::AsmIntelDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinFormatter *AsmIntelDirective::defaultFormatter() const {
     return new IntelHex(_assembler.addressWidth());
 }
 
-Error AsmIntelDirective::processDirective(const char *directive,
-        const char *&label, CliMemory &memory, AsmCommonDirective &common) {
+Error AsmIntelDirective::processDirective(
+        const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
     if (common.compareDirective(directive, ".db"))
         return common.defineBytes(memory);
     if (common.compareDirective(directive, ".dw"))

@@ -22,8 +22,7 @@
 namespace libasm {
 namespace cli {
 
-AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives)
-    : _commonDir(directives) {}
+AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives) : _commonDir(directives) {}
 
 int AsmDriver::usage() {
     std::string cpuList;
@@ -58,8 +57,7 @@ int AsmDriver::assemble() {
     int pass = 0;
     CliMemory memory;
     if (_verbose) {
-        fprintf(stderr,
-                "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
+        fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
     (void)assemble(memory);
@@ -94,22 +92,21 @@ int AsmDriver::assemble() {
         const char *begin = formatter->begin();
         if (begin)
             fprintf(output, "%s\n", begin);
-        memory.dump([this, output, formatter](uint32_t addr,
-                            const uint8_t *data, size_t data_size) {
-            if (_verbose)
-                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n",
-                        _output_name, data_size, addr,
-                        (uint32_t)(addr + data_size - 1));
-            for (size_t i = 0; i < data_size; i += _record_bytes) {
-                auto size = std::min(_record_bytes, data_size - i);
-                const char *line = formatter->prepare(addr + i);
-                if (line)
-                    fprintf(output, "%s\n", line);
-                line = formatter->encode(addr + i, data + i, size);
-                fprintf(output, "%s\n", line);
-                fflush(output);
-            }
-        });
+        memory.dump(
+                [this, output, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
+                    if (_verbose)
+                        fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
+                                addr, (uint32_t)(addr + data_size - 1));
+                    for (size_t i = 0; i < data_size; i += _record_bytes) {
+                        auto size = std::min(_record_bytes, data_size - i);
+                        const char *line = formatter->prepare(addr + i);
+                        if (line)
+                            fprintf(output, "%s\n", line);
+                        line = formatter->encode(addr + i, data + i, size);
+                        fprintf(output, "%s\n", line);
+                        fflush(output);
+                    }
+                });
         const char *end = formatter->end();
         if (end)
             fprintf(output, "%s\n", end);
@@ -255,8 +252,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
             }
         } else {
             if (_input_name) {
-                fprintf(stderr, "multiple input files specified: %s and %s\n",
-                        _input_name, opt);
+                fprintf(stderr, "multiple input files specified: %s and %s\n", _input_name, opt);
                 return 1;
             }
             _input_name = opt;

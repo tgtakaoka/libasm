@@ -32,11 +32,9 @@ public:
 
     virtual const char *begin() = 0;
     virtual const char *prepare(uint32_t addr) = 0;
-    virtual const char *encode(
-            uint32_t addr, const uint8_t *data, uint8_t size) = 0;
+    virtual const char *encode(uint32_t addr, const uint8_t *data, uint8_t size) = 0;
     virtual const char *end() = 0;
-    virtual uint8_t *decode(
-            const char *line, uint32_t &addr, uint8_t &size) = 0;
+    virtual uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) = 0;
 
 protected:
     AddressWidth _addrWidth;
@@ -63,8 +61,7 @@ public:
 
     const char *begin() override;
     const char *prepare(uint32_t addr) override;
-    const char *encode(
-            uint32_t addr, const uint8_t *data, uint8_t size) override;
+    const char *encode(uint32_t addr, const uint8_t *data, uint8_t size) override;
     const char *end() override;
     uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) override;
 
@@ -80,8 +77,7 @@ public:
 
     const char *begin() override;
     const char *prepare(uint32_t addr) override { return nullptr; }
-    const char *encode(
-            uint32_t addr, const uint8_t *data, uint8_t size) override;
+    const char *encode(uint32_t addr, const uint8_t *data, uint8_t size) override;
     const char *end() override;
     uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) override;
 

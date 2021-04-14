@@ -24,12 +24,12 @@ AsmTlcs90 asm90;
 AsmExample example(asm90);
 
 void setup() {
-  Serial.begin(9600);
-  example.begin(Serial);
+    Serial.begin(9600);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

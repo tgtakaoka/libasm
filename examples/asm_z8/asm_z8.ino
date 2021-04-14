@@ -24,12 +24,12 @@ AsmZ8 asmz8;
 AsmExample example(asmz8);
 
 void setup() {
-  Serial.begin(9600);
-  example.begin(Serial);
+    Serial.begin(9600);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

@@ -24,12 +24,12 @@ AsmI8080 asm8080;
 AsmExample example(asm8080);
 
 void setup() {
-  Serial.begin(9600);
-  example.begin(Serial);
+    Serial.begin(9600);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:
