@@ -40,17 +40,12 @@ private:
     char *outMoveMltRegList(char *out, uint16_t list, bool pop,
             char *(DisMc68000::*outRegs)(char *, RegName, RegName, char));
 
-    Error decodeImmediateData(
-            DisMemory &memory, InsnMc68000 &insn, char *out, OprSize eaSize);
-    Error decodeEffectiveAddr(DisMemory &memory, InsnMc68000 &insn, char *out,
-            const EaMc68000 &ea);
-    Error decodeRelative(
-            DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8);
-    Error decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
-            AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size,
-            uint16_t opr16);
-    Error checkOperand(
-            AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
+    Error decodeImmediateData(DisMemory &memory, InsnMc68000 &insn, char *out, OprSize eaSize);
+    Error decodeEffectiveAddr(DisMemory &memory, InsnMc68000 &insn, char *out, const EaMc68000 &ea);
+    Error decodeRelative(DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8);
+    Error decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out, AddrMode mode,
+            uint8_t modePos, uint8_t regPos, OprSize size, uint16_t opr16);
+    Error checkOperand(AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };

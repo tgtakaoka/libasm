@@ -23,8 +23,7 @@ void Disassembler::setUppercase(bool uppercase) {
     _regBase.setUppercase(uppercase);
 }
 
-Error Disassembler::decode(
-        DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+Error Disassembler::decode(DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
     _symtab = symtab;
 
     resetError();

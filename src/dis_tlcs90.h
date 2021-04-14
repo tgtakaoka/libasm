@@ -34,12 +34,9 @@ private:
     IntelValueFormatter _formatter;
     RegTlcs90 _regs;
 
-    Error readOperand(
-            DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op);
-    Error decodeRelative(
-            InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op);
-    Error decodeOperand(
-            InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op);
+    Error readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op);
+    Error decodeRelative(InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op);
+    Error decodeOperand(InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

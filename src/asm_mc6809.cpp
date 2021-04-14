@@ -21,10 +21,8 @@
 namespace libasm {
 namespace mc6809 {
 
-Error AsmMc6809::encodeRelative(
-        InsnMc6809 &insn, const Operand &op, AddrMode mode) {
-    const Config::uintptr_t base =
-            insn.address() + insn.length() + (mode == LREL ? 2 : 1);
+Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
+    const Config::uintptr_t base = insn.address() + insn.length() + (mode == LREL ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
     if (mode == REL) {
@@ -59,7 +57,7 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
         const bool pc = (spec.base == REG_PC || spec.base == REG_PCR);
         uint8_t size;
         if (op.getError()) {
-            size = 16;  // assume 16-bit displacement for undefined symbol.
+            size = 16;                  // assume 16-bit displacement for undefined symbol.
         } else if (!pc && disp == 0) {  // ,X
             size = 0;
         } else if (!pc && !spec.indir && disp >= -16 && disp < 16) {
@@ -155,8 +153,7 @@ Error AsmMc6809::encodePushPull(InsnMc6809 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmMc6809::encodeOperand(
-        InsnMc6809 &insn, const Operand &op, AddrMode mode) {
+Error AsmMc6809::encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case REL:
     case LREL:
@@ -207,8 +204,7 @@ char AsmMc6809::transferMemoryMode(const Operand &op) {
     return op.extra;
 }
 
-Error AsmMc6809::encodeTransferMemory(
-        InsnMc6809 &insn, const Operand &op1, const Operand &op2) {
+Error AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, const Operand &op1, const Operand &op2) {
     const char srcMode = transferMemoryMode(op1);
     const char dstMode = transferMemoryMode(op2);
     if (getError())
@@ -219,8 +215,8 @@ Error AsmMc6809::encodeTransferMemory(
         return setError(UNKNOWN_OPERAND);
     insn.embed(mode);
 
-    const uint8_t post = (RegMc6809::encodeTfmBaseReg(op1.index) << 4) |
-                         RegMc6809::encodeTfmBaseReg(op2.index);
+    const uint8_t post =
+            (RegMc6809::encodeTfmBaseReg(op1.index) << 4) | RegMc6809::encodeTfmBaseReg(op2.index);
     insn.emitInsn();
     insn.emitByte(post);
     return OK;

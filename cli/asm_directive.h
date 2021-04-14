@@ -32,9 +32,7 @@ namespace cli {
 
 class AsmDirective;
 
-class AsmCommonDirective : public ErrorReporter,
-                           public ListingLine,
-                           protected SymbolTable {
+class AsmCommonDirective : public ErrorReporter, public ListingLine, protected SymbolTable {
 public:
     AsmCommonDirective(std::vector<AsmDirective *> &directives);
     virtual ~AsmCommonDirective();
@@ -100,17 +98,14 @@ private:
     } _list;
 
     Error closeSource();
-    Error processPseudo(
-            const char *directive, const char *&label, CliMemory &memory);
+    Error processPseudo(const char *directive, const char *&label, CliMemory &memory);
 
     // SymbolTable
     const char *lookupValue(uint32_t address) override;
     bool hasSymbol(const char *symbol, const char *end = nullptr) override;
-    uint32_t lookupSymbol(
-            const char *symbol, const char *end = nullptr) override;
+    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) override;
     uint32_t currentOrigin() override;
-    Error internSymbol(
-            uint32_t value, const char *symbol, const char *end = nullptr);
+    Error internSymbol(uint32_t value, const char *symbol, const char *end = nullptr);
 
     void skipSpaces();
 
@@ -156,8 +151,8 @@ class AsmDirective {
 public:
     Assembler &assembler() { return _assembler; }
     virtual BinFormatter *defaultFormatter() const = 0;
-    virtual Error processDirective(const char *directive, const char *&label,
-            CliMemory &memory, AsmCommonDirective &common) = 0;
+    virtual Error processDirective(const char *directive, const char *&label, CliMemory &memory,
+            AsmCommonDirective &common) = 0;
 
 protected:
     Assembler &_assembler;
@@ -169,24 +164,24 @@ class AsmMotoDirective : public AsmDirective {
 public:
     AsmMotoDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
-    Error processDirective(const char *directive, const char *&label,
-            CliMemory &memory, AsmCommonDirective &common) override;
+    Error processDirective(const char *directive, const char *&label, CliMemory &memory,
+            AsmCommonDirective &common) override;
 };
 
 class AsmMostekDirective : public AsmDirective {
 public:
     AsmMostekDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
-    Error processDirective(const char *directive, const char *&label,
-            CliMemory &memory, AsmCommonDirective &common) override;
+    Error processDirective(const char *directive, const char *&label, CliMemory &memory,
+            AsmCommonDirective &common) override;
 };
 
 class AsmIntelDirective : public AsmDirective {
 public:
     AsmIntelDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
-    Error processDirective(const char *directive, const char *&label,
-            CliMemory &memory, AsmCommonDirective &common) override;
+    Error processDirective(const char *directive, const char *&label, CliMemory &memory,
+            AsmCommonDirective &common) override;
 };
 
 }  // namespace cli

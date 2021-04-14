@@ -24,12 +24,12 @@ AsmMc6800 asm6800;
 AsmExample example(asm6800);
 
 void setup() {
-  Serial.begin(9600);
-  example.begin(Serial);
+    Serial.begin(9600);
+    example.begin(Serial);
 }
 
 void loop() {
-  example.loop();
+    example.loop();
 }
 
 // Local Variables:

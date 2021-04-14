@@ -27,8 +27,7 @@ namespace z8000 {
 int8_t RegZ8000::parseRegNum(const char *line) {
     if (isdigit(*line) && !RegBase::isidchar(line[1]))
         return *line - '0';
-    if (*line++ == '1' && *line >= '0' && *line < '6' &&
-            !RegBase::isidchar(line[1]))
+    if (*line++ == '1' && *line >= '0' && *line < '6' && !RegBase::isidchar(line[1]))
         return *line - '0' + 10;
     return -1;
 }
@@ -113,8 +112,7 @@ RegName RegZ8000::decodeRegNum(uint8_t num, OprSize size) {
     case SZ_QUAD:
         return decodeQuadReg(num);
     case SZ_ADDR:
-        return TableZ8000.segmentedModel() ? decodeLongReg(num)
-                                           : decodeWordReg(num);
+        return TableZ8000.segmentedModel() ? decodeLongReg(num) : decodeWordReg(num);
     default:
         return REG_UNDEF;
     }
@@ -188,8 +186,7 @@ static const RegBase::NameEntry CTL_TABLE[] PROGMEM = {
 };
 
 static bool isSegCtlReg(RegName name) {
-    return name == REG_PSAPSEG || name == REG_PSAPOFF || name == REG_NSPSEG ||
-           name == REG_NSPOFF;
+    return name == REG_PSAPSEG || name == REG_PSAPOFF || name == REG_NSPSEG || name == REG_NSPOFF;
 }
 
 static bool isNonSegCtlReg(RegName name) {
@@ -383,8 +380,7 @@ bool RegZ8000::checkOverwrap(RegName dst, RegName src, RegName cnt) {
     const uint8_t ss = encodeGeneralRegName(src);
     const uint8_t se = isLongReg(src) ? ss + 1 : ss;
     const uint8_t c = encodeGeneralRegName(cnt);
-    return ds == ss || ds == se || de == ss || de == se || ds == c || de == c ||
-           ss == c || se == c;
+    return ds == ss || ds == se || de == ss || de == se || ds == c || de == c || ss == c || se == c;
 }
 
 }  // namespace z8000

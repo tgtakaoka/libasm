@@ -58,11 +58,7 @@ public:
 
 protected:
     DataGenerator(uint8_t *buffer, int bufSize, int start, int size)
-        : _buffer(buffer),
-          _bufSize(bufSize),
-          _start(start),
-          _size(size),
-          _count(0) {}
+        : _buffer(buffer), _bufSize(bufSize), _start(start), _size(size), _count(0) {}
 
     DataGenerator(DataGenerator &parent, int size)
         : _buffer(parent._buffer),
@@ -92,8 +88,7 @@ public:
         _data = initData();
     }
 
-    ByteGenerator(DataGenerator &parent, int size)
-        : DataGenerator(parent, size), _off(0) {
+    ByteGenerator(DataGenerator &parent, int size) : DataGenerator(parent, size), _off(0) {
         _data = initData();
     }
 
@@ -114,9 +109,7 @@ private:
     int _off;
     uint8_t _data;
 
-    uint8_t initData() const {
-        return (_start > 0) ? _buffer[_start - 1] + 1 : 0;
-    }
+    uint8_t initData() const { return (_start > 0) ? _buffer[_start - 1] + 1 : 0; }
 };
 
 class WordGenerator : public DataGenerator {
@@ -157,9 +150,8 @@ private:
 
     uint16_t initData() const {
         const uint8_t data = (_start > 0) ? _buffer[_start - 1] + 1 : 0;
-        return (_endian == ENDIAN_BIG)
-                       ? (static_cast<uint16_t>(data) << 8) + (data + 1)
-                       : data + (static_cast<uint16_t>(data + 1) << 8);
+        return (_endian == ENDIAN_BIG) ? (static_cast<uint16_t>(data) << 8) + (data + 1)
+                                       : data + (static_cast<uint16_t>(data + 1) << 8);
     }
 };
 
@@ -172,8 +164,7 @@ public:
     const char *name() const { return _insn.name(); }
     const uint8_t length() const { return _insn.length(); }
     const char *operands() const { return _textBuffer.buffer(); }
-    Error tryGenerate(Disassembler &dis, typename Conf::uintptr_t addr,
-            uint8_t *memory, int size) {
+    Error tryGenerate(Disassembler &dis, typename Conf::uintptr_t addr, uint8_t *memory, int size) {
         resetAddress(addr);
         _memory = memory;
         _memorySize = size;
@@ -200,9 +191,7 @@ public:
     typedef typename Conf::opcode_t opcode_t;
 
     TestGenerator(Disassembler &disassembler, typename Conf::uintptr_t addr = 0)
-        : _disassembler(disassembler),
-          _memorySize(Conf::MAX_CODE),
-          _endian(Conf::ENDIAN) {
+        : _disassembler(disassembler), _memorySize(Conf::MAX_CODE), _endian(Conf::ENDIAN) {
         _memory = new uint8_t[_memorySize];
         _addr = addr;
     }
@@ -231,8 +220,7 @@ public:
         }
     }
 
-    TestGenerator<Conf> &generate(
-                                  Printer &printer, uint8_t opc1) {
+    TestGenerator<Conf> &generate(Printer &printer, uint8_t opc1) {
         FILE *dumpOut = printer.dumpOut();
         if (dumpOut)
             fprintf(dumpOut, "@@ generate: %#02xx\n", opc1);
@@ -242,12 +230,10 @@ public:
         return generate(printer, gen);
     }
 
-    TestGenerator<Conf> &generate(
-            Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
+    TestGenerator<Conf> &generate(Printer &printer, uint8_t opc1, uint8_t opc2, uint8_t opc3) {
         FILE *dumpOut = printer.dumpOut();
         if (dumpOut)
-            fprintf(dumpOut, "@@ generate: %#02x %#02x %#02x\n", opc1, opc2,
-                    opc3);
+            fprintf(dumpOut, "@@ generate: %#02x %#02x %#02x\n", opc1, opc2, opc3);
         ByteGenerator parent(_memory, _memorySize, 0, 3);
         parent.outByte(opc1, 0);
         parent.outByte(opc2, 1);
@@ -263,8 +249,7 @@ private:
     uint8_t *_memory;
     TestData<Conf> _data;
     std::unordered_map<std::string,
-            std::unordered_set<TokenizedText, TokenizedText::hash,
-                    TokenizedText::eq> >
+            std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq> >
             _map;
 
     typename Conf::uintptr_t _addr;
@@ -293,9 +278,8 @@ private:
         name += size + '0';
         auto seen = _map.find(name);
         if (seen == _map.end()) {
-            _map.emplace(
-                    name, std::unordered_set<TokenizedText, TokenizedText::hash,
-                                  TokenizedText::eq>());
+            _map.emplace(name,
+                    std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq>());
             seen = _map.find(name);
         }
         auto &variants = seen->second;
@@ -322,11 +306,9 @@ private:
                 const int newLen = _data.length();
                 const int delta = newLen - len;
                 if (delta && dumpOut) {
-                    fprintf(dumpOut, "@@  delta: %d (%d <- %d)\n", delta,
-                            newLen, len);
+                    fprintf(dumpOut, "@@  delta: %d (%d <- %d)\n", delta, newLen, len);
                     gen.dump(dumpOut, "@@   ", len, delta);
-                    fprintf(dumpOut, "@@       : %s %s\n", _data.name(),
-                            _data.operands());
+                    fprintf(dumpOut, "@@       : %s %s\n", _data.name(), _data.operands());
                     fflush(dumpOut);
                 }
                 const int level = meaningfulTestData();

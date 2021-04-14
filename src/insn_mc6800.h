@@ -37,8 +37,7 @@ public:
     void setFlags(Entry::Flags flags) { _flags = flags; }
     Entry::Flags flags() const { return _flags; }
 
-    void setAddrMode(
-            const AddrMode op1, const AddrMode op2, const AddrMode op3) {
+    void setAddrMode(const AddrMode op1, const AddrMode op2, const AddrMode op3) {
         _flags = Entry::Flags::create(op1, op2, op3, SZ_NONE);
     }
 

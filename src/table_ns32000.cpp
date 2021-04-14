@@ -24,17 +24,15 @@
 namespace libasm {
 namespace ns32000 {
 
-#define X(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex2m, _ex1p,   \
-        _ex2p)                                                                 \
-    {                                                                          \
-        _opc,                                                                  \
-                Entry::Flags::create(_srcm, _srcp, _dstm, _dstp, _ex1m, _ex1p, \
-                        _ex2m, _ex2p, SZ_##_sz),                               \
-                _name                                                          \
+#define X(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _ex1m, _ex2m, _ex1p, _ex2p)        \
+    {                                                                                      \
+        _opc,                                                                              \
+                Entry::Flags::create(                                                      \
+                        _srcm, _srcp, _dstm, _dstp, _ex1m, _ex1p, _ex2m, _ex2p, SZ_##_sz), \
+                _name                                                                      \
     }
-#define E(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp)                     \
-    X(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, M_NONE, M_NONE, P_NONE, \
-            P_NONE)
+#define E(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp) \
+    X(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, M_NONE, M_NONE, P_NONE, P_NONE)
 
 // clang-format off
 // Format 0: |cond|1010|
@@ -424,12 +422,9 @@ static const Entry FORMAT_14_2[] PROGMEM = {
 
 class TableNs32000::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask,
-            uint8_t post, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end),
-          _prefix(prefix),
-          _mask(mask),
-          _post(post) {}
+    constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
+            const Entry *table, const Entry *end)
+        : EntryPageBase(table, end), _prefix(prefix), _mask(mask), _post(post) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
     Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
@@ -479,8 +474,7 @@ static const TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
         {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2)},
 };
 
-static bool isPrefix(Config::opcode_t opCode,
-        const TableNs32000::EntryPage *page,
+static bool isPrefix(Config::opcode_t opCode, const TableNs32000::EntryPage *page,
         const TableNs32000::EntryPage *end) {
     for (const TableNs32000::EntryPage *entry = page; entry < end; entry++) {
         const Config::opcode_t prefix = entry->prefix();
@@ -502,17 +496,15 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_GREG)
-        return table == M_GENR || table == M_GENC || table == M_GENW ||
-               table == M_RLST;
-    if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT ||
-            opr == M_TOS || opr == M_MEM || opr == M_REL)
-        return table == M_GENR || table == M_GENC || table == M_GENW ||
-               table == M_GENA || table == M_FENR || table == M_FENW;
+        return table == M_GENR || table == M_GENC || table == M_GENW || table == M_RLST;
+    if (opr == M_RREL || opr == M_MREL || opr == M_ABS || opr == M_EXT || opr == M_TOS ||
+            opr == M_MEM || opr == M_REL)
+        return table == M_GENR || table == M_GENC || table == M_GENW || table == M_GENA ||
+               table == M_FENR || table == M_FENW;
     if (opr == M_IMM)
-        return table == M_GENR || table == M_GENC || table == M_FENR ||
-               table == M_DISP || table == M_INT4 || table == M_REL ||
-               table == M_BFOFF || table == M_BFLEN || table == M_LEN32 ||
-               table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
+        return table == M_GENR || table == M_GENC || table == M_FENR || table == M_DISP ||
+               table == M_INT4 || table == M_REL || table == M_BFOFF || table == M_BFLEN ||
+               table == M_LEN32 || table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
     if (opr == M_FREG)
         return table == M_FENR || table == M_FENW;
     if (opr == M_NONE)
@@ -534,8 +526,7 @@ Error TableNs32000::searchName(
     for (const EntryPage *page = pages; page < end; page++) {
         const uint8_t post = page->post();
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptModes, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -547,8 +538,8 @@ Error TableNs32000::searchName(
     return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
-Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory,
-        const EntryPage *pages, const EntryPage *end) const {
+Error TableNs32000::searchOpCode(
+        InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         if (insn.prefix() != page->prefix())
             continue;

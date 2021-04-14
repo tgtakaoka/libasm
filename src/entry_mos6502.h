@@ -71,9 +71,7 @@ public:
     struct Flags {
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode mode) {
-            return Flags{static_cast<uint8_t>(mode)};
-        }
+        static constexpr Flags create(AddrMode mode) { return Flags{static_cast<uint8_t>(mode)}; }
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 
         AddrMode mode() const { return AddrMode(_attr); }

@@ -36,8 +36,7 @@ private:
 
     char *outRegister(char *out, RegName regName);
 
-    Error decodeOperand(
-            DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode);
+    Error decodeOperand(DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

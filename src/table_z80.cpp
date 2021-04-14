@@ -214,8 +214,7 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
 
 class TableZ80::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(
-            Config::opcode_t prefix, const Entry *table, const Entry *end)
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
@@ -248,8 +247,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == R_A || opr == I_HL)
         return table == M_REG || table == M_DST;
     if (opr == R_C)
-        return table == M_REG || table == M_DST || table == M_CC4 ||
-               table == M_CC8;
+        return table == M_REG || table == M_DST || table == M_CC4 || table == M_CC8;
     if (opr == R_BC || opr == R_DE)
         return table == M_PTR || table == M_PIX || table == M_STK;
     if (opr == R_HL)
@@ -261,8 +259,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == R_IXIY)
         return table == M_PIX;
     if (opr == M_IM16)
-        return table == M_IM8 || table == M_REL || table == M_BIT ||
-               table == M_VEC || table == M_IMMD;
+        return table == M_IM8 || table == M_REL || table == M_BIT || table == M_VEC ||
+               table == M_IMMD;
     if (opr == M_ABS)
         return table == M_IOA;
     if (opr == M_CC4)
@@ -276,13 +274,11 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.srcMode(), table.srcMode());
 }
 
-Error TableZ80::searchName(
-        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableZ80::searchName(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptModes, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -298,11 +294,10 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
         mask |= 7;
-    if (dst == M_CC8 || src == M_DST || dst == M_DST || dst == M_VEC ||
-            dst == M_BIT)
+    if (dst == M_CC8 || src == M_DST || dst == M_DST || dst == M_VEC || dst == M_BIT)
         mask |= (7 << 3);
-    if (dst == M_PTR || src == M_PTR || dst == M_PIX || src == M_PIX ||
-            dst == M_STK || src == M_STK)
+    if (dst == M_PTR || src == M_PTR || dst == M_PIX || src == M_PIX || dst == M_STK ||
+            src == M_STK)
         mask |= (3 << 4);
     if (dst == I_BCDE || src == I_BCDE)
         mask |= (1 << 4);
@@ -313,8 +308,7 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableZ80::searchOpCode(
-        InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableZ80::searchOpCode(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         if (insn.prefix() != page->prefix())
             continue;
@@ -332,8 +326,8 @@ Error TableZ80::searchOpCode(
 bool TableZ80::isPrefix(Config::opcode_t opCode) const {
     if (_cpuType != Z80)
         return false;
-    return opCode == PREFIX_CB || opCode == PREFIX_ED ||
-           opCode == TableZ80::PREFIX_IX || opCode == TableZ80::PREFIX_IY;
+    return opCode == PREFIX_CB || opCode == PREFIX_ED || opCode == TableZ80::PREFIX_IX ||
+           opCode == TableZ80::PREFIX_IY;
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) const {

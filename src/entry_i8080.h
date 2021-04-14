@@ -49,18 +49,13 @@ public:
         uint8_t _attr;
 
         static constexpr Flags create(AddrMode dst, AddrMode src) {
-            return Flags{static_cast<uint8_t>(
-                    (static_cast<uint8_t>(dst) << dstMode_gp) |
-                    (static_cast<uint8_t>(src) << srcMode_gp))};
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(dst) << dstMode_gp) |
+                                              (static_cast<uint8_t>(src) << srcMode_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode dstMode() const {
-            return AddrMode((_attr >> dstMode_gp) & addrMode_gm);
-        }
-        AddrMode srcMode() const {
-            return AddrMode((_attr >> srcMode_gp) & addrMode_gm);
-        }
+        AddrMode dstMode() const { return AddrMode((_attr >> dstMode_gp) & addrMode_gm); }
+        AddrMode srcMode() const { return AddrMode((_attr >> srcMode_gp) & addrMode_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

@@ -84,8 +84,7 @@ public:
      * Undefined symbol reference in expression should be checked by
      * |val.isUndefined()|. Other error should be checked by |error()|.
      */
-    const char *eval(
-            const char *expr, const char *end, Value &val, SymbolTable *symtab);
+    const char *eval(const char *expr, const char *end, Value &val, SymbolTable *symtab);
     /*
      * Parse |expr| text and convert character constant to |val|.
      * Error should be checked by |error()|.
@@ -97,8 +96,7 @@ public:
 
 protected:
     virtual Error readNumber(const char *scan, Value &val);
-    Error parseNumber(const char *scan, Value &val, const uint8_t base,
-            const char suffix = 0);
+    Error parseNumber(const char *scan, Value &val, const uint8_t base, const char suffix = 0);
     Error scanNumberEnd(const char *scan, const uint8_t base, char suffix = 0);
 
 private:
@@ -121,16 +119,14 @@ private:
     };
 
     struct Operator {
-        Operator(Op op, uint8_t precedence)
-            : _op(op), _precedence(precedence) {}
+        Operator(Op op, uint8_t precedence) : _op(op), _precedence(precedence) {}
         enum Op _op;
         uint8_t _precedence;
     };
 
     struct OprAndLval {
         OprAndLval() : _opr(OP_NONE, 0), _value() {}
-        OprAndLval(const Operator &opr, Value value)
-            : _opr(opr), _value(value) {}
+        OprAndLval(const Operator &opr, Value value) : _opr(opr), _value(value) {}
         OprAndLval(const OprAndLval &o) : _opr(o._opr), _value(o._value) {}
         bool isEnd() const { return _opr._op == OP_NONE; }
         int precedence() const { return _opr._precedence; }

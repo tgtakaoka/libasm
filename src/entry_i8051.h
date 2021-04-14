@@ -49,24 +49,16 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(
-                AddrMode dst, AddrMode src, AddrMode ext) {
-            return Flags{static_cast<uint16_t>(
-                    (static_cast<uint16_t>(dst) << dstMode_gp) |
-                    (static_cast<uint16_t>(src) << srcMode_gp) |
-                    (static_cast<uint16_t>(ext) << extMode_gp))};
+        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dstMode_gp) |
+                                               (static_cast<uint16_t>(src) << srcMode_gp) |
+                                               (static_cast<uint16_t>(ext) << extMode_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode dstMode() const {
-            return AddrMode((_attr >> dstMode_gp) & addrMode_gm);
-        }
-        AddrMode srcMode() const {
-            return AddrMode((_attr >> srcMode_gp) & addrMode_gm);
-        }
-        AddrMode extMode() const {
-            return AddrMode((_attr >> extMode_gp) & addrMode_gm);
-        }
+        AddrMode dstMode() const { return AddrMode((_attr >> dstMode_gp) & addrMode_gm); }
+        AddrMode srcMode() const { return AddrMode((_attr >> srcMode_gp) & addrMode_gm); }
+        AddrMode extMode() const { return AddrMode((_attr >> extMode_gp) & addrMode_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

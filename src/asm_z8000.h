@@ -30,9 +30,7 @@ class AsmZ8000 : public Assembler, public Config {
 public:
     AsmZ8000() : Assembler(_parser, TableZ8000) {}
 
-    AddressWidth addressWidth() const override {
-        return TableZ8000.addressWidth();
-    }
+    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
     void reset() override { setAutoShortDirect(false); }
     void setAutoShortDirect(bool enable) { _autoShortDirect = enable; }
 
@@ -62,8 +60,7 @@ private:
     Error emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
     Error emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);
     Error emitIndirectRegister(InsnZ8000 &insn, ModeField field, RegName reg);
-    Error emitImmediate(
-            InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
+    Error emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
     Error emitDirectAddress(InsnZ8000 &insn, const Operand &op);
     Error emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op);
     Error emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
@@ -71,10 +68,9 @@ private:
     Error emitBaseIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
     Error emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op);
     Error emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op);
-    Error emitOperand(
-            InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
-    Error checkRegisterOverwrap(const InsnZ8000 &insn, const Operand &dstOp,
-            const Operand &srcOp, const Operand &cntOp);
+    Error emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
+    Error checkRegisterOverwrap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
+            const Operand &cntOp);
     Error encode(Insn &insn) override;
 };
 

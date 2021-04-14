@@ -30,9 +30,7 @@ class AsmMos6502 : public Assembler, public Config {
 public:
     AsmMos6502() : Assembler(_parser, TableMos6502) {}
 
-    AddressWidth addressWidth() const override {
-        return TableMos6502.addressWidth();
-    }
+    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override { _long_acc = _long_idx = false; }
 
 private:
@@ -48,8 +46,7 @@ private:
 
     Error parseOnOff(const char *scan, bool &val);
     Error processPseudo(const char *scan, InsnMos6502 &insn);
-    Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs,
-            AddrMode labs = IMPL);
+    Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
     Error parseOperand(const char *scan, Operand &op, Operand &extra);
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);

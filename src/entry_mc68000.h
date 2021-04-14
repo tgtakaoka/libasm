@@ -71,8 +71,8 @@ enum AddrMode : uint8_t {
                    // /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)/#xxxx
     M_WADDR = 23,  // Readable Address:  Dn/An/(An)/(An)+/-(An)/(*,An)/(Abs)
     M_WDATA = 24,  // Writable Data:     Dn   /(An)/(An)+/-(An)/(*.An)/(Abs)
-    M_RMEM = 25,  // Readable Memory:   Dn /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
-    M_WMEM = 26,  // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
+    M_RMEM = 25,   // Readable Memory:   Dn /(An)/(An)+/-(An)/(*,An)/(Abs)/(*,PC)
+    M_WMEM = 26,   // Writable Memory:         (An)/(An)+/-(An)/(*,An)/(Abs)
     M_JADDR = 27,  // Jumpable Address:        (An) /(*,An)/(Abs)/(*,PC)
     M_IADDR = 28,  // Increment Address:       (An)/(An)+ /(*,An)/(Abs)/(*,PC)
     M_DADDR = 29,  // Decrement Address:       (An)/     /-(An)/(*,An)/(Abs)
@@ -101,38 +101,27 @@ public:
         uint8_t _pos;
         uint8_t _size;
 
-        static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos,
-                OprPos dstPos, OprSize oSize, InsnSize iSize, bool alias) {
+        static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
+                OprSize oSize, InsnSize iSize, bool alias) {
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos, alias),
-                    Entry::_size(oSize, iSize)};
+                    Entry::_pos(srcPos, dstPos, alias), Entry::_size(oSize, iSize)};
         }
         Flags read() const {
-            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst),
-                    pgm_read_byte(&_pos), pgm_read_byte(&_size)};
+            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_pos),
+                    pgm_read_byte(&_size)};
         }
 
         AddrMode srcMode() const { return AddrMode(_src); }
         AddrMode dstMode() const { return AddrMode(_dst); }
-        OprPos srcPos() const {
-            return OprPos((_pos >> srcPos_gp) & oprPos_gm);
-        }
-        OprPos dstPos() const {
-            return OprPos((_pos >> dstPos_gp) & oprPos_gm);
-        }
+        OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & oprPos_gm); }
+        OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & oprPos_gm); }
         bool alias() const { return ((_pos >> alias_bp) & 1) ? true : false; }
-        OprSize oprSize() const {
-            return OprSize((_size >> oprSize_gp) & oprSize_gm);
-        }
-        InsnSize insnSize() const {
-            return InsnSize((_size >> insnSize_gp) & insnSize_gm);
-        }
+        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
+        InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & insnSize_gm); }
 
         void setSrcMode(AddrMode mode) { _src = static_cast<uint8_t>(mode); }
         void setDstMode(AddrMode mode) { _dst = static_cast<uint8_t>(mode); }
-        void setInsnSize(InsnSize size) {
-            _size = Entry::_size(oprSize(), size);
-        }
+        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -144,8 +133,7 @@ private:
     Flags _flags;
 
     static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
-        return (static_cast<uint8_t>(src) << srcPos_gp) |
-               (static_cast<uint8_t>(dst) << dstPos_gp) |
+        return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp) |
                (alias ? (1 << alias_bp) : 0);
     }
     static constexpr uint8_t _size(OprSize opr, InsnSize insn) {

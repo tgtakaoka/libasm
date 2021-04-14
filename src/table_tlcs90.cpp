@@ -276,8 +276,8 @@ static constexpr Entry TABLE_BLOCK[] PROGMEM = {
 
 class TableTlcs90::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(Config::opcode_t prefix, AddrMode mode,
-            const Entry *table, const Entry *end)
+    constexpr EntryPage(
+            Config::opcode_t prefix, AddrMode mode, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix), _mode(uint8_t(mode)) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
@@ -327,11 +327,10 @@ static constexpr TableTlcs90::EntryPage PAGES_TLCS90[] PROGMEM = {
         {0xFE, M_NO, ARRAY_RANGE(TABLE_BLOCK)},
 };
 
-Error TableTlcs90::readInsn(
-        DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
+Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
     Config::opcode_t code = insn.readByte(memory);
-    for (const EntryPage *page = ARRAY_BEGIN(PAGES_TLCS90) + 1;
-            page < ARRAY_END(PAGES_TLCS90); page++) {
+    for (const EntryPage *page = ARRAY_BEGIN(PAGES_TLCS90) + 1; page < ARRAY_END(PAGES_TLCS90);
+            page++) {
         if (!page->prefixMatch(code))
             continue;
         op.mode = page->mode();
@@ -377,8 +376,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_REGIX || opr == R_SP)
         return table == M_REG16 || table == M_STACK || table == M_REGIX;
     if (opr == M_IMM16)
-        return table == M_IMM8 || table == M_BIT || table == M_REL8 ||
-               table == M_REL16;
+        return table == M_IMM8 || table == M_BIT || table == M_REL8 || table == M_REL16;
     if (opr == M_DIR)
         return table == M_EXT;
     if (opr == M_UNDEF)
@@ -393,9 +391,8 @@ static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
     const AddrMode tableDst = table.dstMode();
     const AddrMode tableSrc = table.srcMode();
     const AddrMode dst = (tableDst == M_DST) ? insn.preMode() : tableDst;
-    const AddrMode src = (tableSrc == M_SRC)
-                                 ? insn.preMode()
-                                 : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    const AddrMode src =
+            (tableSrc == M_SRC) ? insn.preMode() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
     if (acceptMode(insn.dstMode(), dst) && acceptMode(insn.srcMode(), src)) {
         insn.setAddrMode(dst, src, table.emit());
         // Update prefix mode.
@@ -416,9 +413,8 @@ Error TableTlcs90::searchName(
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         insn.setPreMode(page->mode());
-        const Entry *entry =
-                TableBase::searchName<Entry, InsnTlcs90 &>(insn.name(), insn,
-                        page->table(), page->end(), acceptModes, count);
+        const Entry *entry = TableBase::searchName<Entry, InsnTlcs90 &>(
+                insn.name(), insn, page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             return OK;

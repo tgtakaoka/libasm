@@ -46,13 +46,10 @@ private:
     char *outPairAddr(char *out, uint8_t regAddr, bool indir = false);
     char *outBitPos(char *out, uint8_t bitPos);
 
-    Error decodeOperand(
-            DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode);
-    Error decodeAbsolute(DisMemory &memory, InsnZ8 &insn, char *out,
-            Endian endian = ENDIAN_BIG);
+    Error decodeOperand(DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode);
+    Error decodeAbsolute(DisMemory &memory, InsnZ8 &insn, char *out, Endian endian = ENDIAN_BIG);
     Error decodeRelative(DisMemory &memory, InsnZ8 &insn, char *out);
-    Error decodeIndexed(
-            DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1);
+    Error decodeIndexed(DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1);
     Error decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, char *out);
     Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn, char *out);
     Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, char *out);

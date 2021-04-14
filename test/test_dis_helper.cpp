@@ -32,9 +32,8 @@ TestSymtab symtab;
 static char actual_opr[128];
 static char message[256];
 
-void dis_assert(const char *file, int line, Error error,
-        const char *expected_name, const char *expected_opr,
-        Disassembler &disassembler) {
+void dis_assert(const char *file, int line, Error error, const char *expected_name,
+        const char *expected_opr, Disassembler &disassembler) {
     Insn insn;
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, actual_opr, &symtab);
@@ -44,15 +43,14 @@ void dis_assert(const char *file, int line, Error error,
     if (error == OK) {
         asserter.equals(file, line, expected_name, expected_name, insn.name());
         asserter.equals(file, line, expected_name, expected_opr, actual_opr);
-        asserter.equals(file, line, expected_name, memory.bytes(),
-                memory.length(), insn.bytes(), insn.length());
+        asserter.equals(file, line, expected_name, memory.bytes(), memory.length(), insn.bytes(),
+                insn.length());
     }
 }
 
 bool test_failed;
 
-void run_test(void (*test)(), const char *name, void (*set_up)(),
-        void (*tear_down)()) {
+void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {
     asserter.clear(name);
     set_up();
     test();

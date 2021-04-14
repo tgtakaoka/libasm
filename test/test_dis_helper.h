@@ -32,18 +32,15 @@ extern TestAsserter asserter;
 extern TestMemory memory;
 extern TestSymtab symtab;
 
-void dis_assert(const char *file, int line, Error error,
-        const char *expected_name, const char *expected_opr,
-        Disassembler &disassembler);
+void dis_assert(const char *file, int line, Error error, const char *expected_name,
+        const char *expected_opr, Disassembler &disassembler);
 
-void run_test(void (*test)(), const char *name, void (*set_up)(),
-        void (*tear_down)());
+void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
 }  // namespace test
 }  // namespace libasm
 
-#define EQUALS(msg, expected, actual) \
-    asserter.equals(__FILE__, __LINE__, msg, expected, actual)
+#define EQUALS(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
 #define __VASSERT(file, line, error, addr, name, opr, ...)       \
@@ -55,10 +52,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(),
     } while (0)
 #define VASSERT(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
-#define ATEST(addr, name, opr, ...) \
-    VASSERT(OK, addr, name, opr, __VA_ARGS__)
-#define AERRF(addr, name, opr, ...) \
-    VASSERT(OPERAND_TOO_FAR, addr, name, opr, __VA_ARGS__)
+#define ATEST(addr, name, opr, ...) VASSERT(OK, addr, name, opr, __VA_ARGS__)
+#define AERRF(addr, name, opr, ...) VASSERT(OPERAND_TOO_FAR, addr, name, opr, __VA_ARGS__)
 #define TEST(name, opr, ...) VASSERT(OK, 0, name, opr, __VA_ARGS__)
 #define ERRP(...) VASSERT(UNKNOWN_POSTBYTE, 0, _, "", __VA_ARGS__)
 #define ERRI(...) VASSERT(UNKNOWN_INSTRUCTION, 0, _, "", __VA_ARGS__)

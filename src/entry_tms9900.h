@@ -62,9 +62,7 @@ public:
         static constexpr Flags create(AddrMode src, AddrMode dst) {
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst)};
         }
-        Flags read() const {
-            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst)};
-        }
+        Flags read() const { return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst)}; }
 
         AddrMode srcMode() const { return AddrMode(_src); }
         AddrMode dstMode() const { return AddrMode(_dst); }

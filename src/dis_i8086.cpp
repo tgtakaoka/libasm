@@ -29,8 +29,7 @@ char *DisI8086::outRegister(char *out, RegName name, const char prefix) {
     return _regs.outRegName(out, name);
 }
 
-RegName DisI8086::decodeRegister(
-        const InsnI8086 &insn, AddrMode mode, OprPos pos) {
+RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos pos) {
     uint8_t num = 0;
     switch (pos) {
     case P_OREG:
@@ -62,8 +61,7 @@ RegName DisI8086::decodeRegister(
     }
 }
 
-Error DisI8086::decodeRelative(
-        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
+Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
     int16_t disp;
     if (mode == M_REL8) {
         disp = static_cast<int8_t>(insn.readByte(memory));
@@ -75,8 +73,7 @@ Error DisI8086::decodeRelative(
     return setError(insn);
 }
 
-Error DisI8086::decodeImmediate(
-        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
+Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
     if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
         outHex(out, insn.readUint16(memory), 16);
     } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
@@ -162,8 +159,8 @@ static RegName pointerReg(const InsnI8086 &insn) {
     return size == SZ_BYTE ? REG_BYTE : REG_WORD;
 }
 
-Error DisI8086::outMemReg(DisMemory &memory, InsnI8086 &insn, char *out,
-        RegName seg, uint8_t mod, uint8_t r_m) {
+Error DisI8086::outMemReg(
+        DisMemory &memory, InsnI8086 &insn, char *out, RegName seg, uint8_t mod, uint8_t r_m) {
     if (operandSize(insn) == SZ_NONE) {
         const RegName ptr = pointerReg(insn);
         if (ptr != REG_UNDEF) {
@@ -202,8 +199,8 @@ Error DisI8086::outMemReg(DisMemory &memory, InsnI8086 &insn, char *out,
     return setError(insn);
 }
 
-Error DisI8086::decodeMemReg(DisMemory &memory, InsnI8086 &insn, char *out,
-        AddrMode mode, OprPos pos) {
+Error DisI8086::decodeMemReg(
+        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode, OprPos pos) {
     const uint8_t mod = insn.modReg() >> 6;
     if (mod == 3) {
         if (mode == M_BMEM || mode == M_WMEM)
@@ -213,8 +210,7 @@ Error DisI8086::decodeMemReg(DisMemory &memory, InsnI8086 &insn, char *out,
         return OK;
     }
     const uint8_t r_m = insn.modReg() & 07;
-    return outMemReg(memory, insn, out, TableI8086.overrideSeg(insn.segment()),
-            mod, r_m);
+    return outMemReg(memory, insn, out, TableI8086.overrideSeg(insn.segment()), mod, r_m);
 }
 
 Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, char *out) {
@@ -232,8 +228,8 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, char *out) {
     return OK;
 }
 
-Error DisI8086::decodeOperand(DisMemory &memory, InsnI8086 &insn, char *out,
-        AddrMode mode, OprPos pos) {
+Error DisI8086::decodeOperand(
+        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode, OprPos pos) {
     RegName name;
     switch (mode) {
     case M_NONE:
@@ -277,8 +273,7 @@ Error DisI8086::decodeOperand(DisMemory &memory, InsnI8086 &insn, char *out,
         return decodeImmediate(memory, insn, out, mode);
     case M_BDIR:
     case M_WDIR:
-        return outMemReg(memory, insn, out,
-                TableI8086.overrideSeg(insn.segment()), 0, 6);
+        return outMemReg(memory, insn, out, TableI8086.overrideSeg(insn.segment()), 0, 6);
     case M_REL:
     case M_REL8:
         return decodeRelative(memory, insn, out, mode);
@@ -311,12 +306,10 @@ static bool validSegOverride(const InsnI8086 &insn) {
     if (insn.stringInst())
         return true;
     const uint8_t mod = insn.modReg() >> 6;
-    return validSegOverride(insn.dstMode(), mod) ||
-           validSegOverride(insn.srcMode(), mod);
+    return validSegOverride(insn.dstMode(), mod) || validSegOverride(insn.srcMode(), mod);
 }
 
-Error DisI8086::decodeStringInst(
-        DisMemory &memory, InsnI8086 &insn, char *out) {
+Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, char *out) {
     if (insn.segment()) {
         const RegName seg = TableI8086.overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {

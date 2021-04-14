@@ -30,9 +30,7 @@ public:
     constexpr EntryBase(const char *name, typename Conf::opcode_t opCode)
         : _name(name), _opCode(opCode) {}
 
-    const char *name() const {
-        return reinterpret_cast<const char *>(pgm_read_ptr(&_name));
-    }
+    const char *name() const { return reinterpret_cast<const char *>(pgm_read_ptr(&_name)); }
 
     typename Conf::opcode_t opCode() const {
         if (sizeof(typename Conf::opcode_t) == 1) {

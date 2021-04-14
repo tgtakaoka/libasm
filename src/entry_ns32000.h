@@ -93,32 +93,25 @@ public:
         uint8_t _ex1;
         uint8_t _ex2;
 
-        static constexpr Flags create(AddrMode src, OprPos srcp, AddrMode dst,
-                OprPos dstp, AddrMode ex1, OprPos ex1p, AddrMode ex2,
-                OprPos ex2p, OprSize size) {
+        static constexpr Flags create(AddrMode src, OprPos srcp, AddrMode dst, OprPos dstp,
+                AddrMode ex1, OprPos ex1p, AddrMode ex2, OprPos ex2p, OprSize size) {
             return Entry::Flags{Entry::_opr(src, srcp), Entry::_opr(dst, dstp),
                     Entry::_opr(ex1, ex1p), Entry::_ex2(ex2, ex2p, size)};
         }
         Flags read() const {
-            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst),
-                    pgm_read_byte(&_ex1), pgm_read_byte(&_ex2)};
+            return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_ex1),
+                    pgm_read_byte(&_ex2)};
         }
 
         AddrMode srcMode() const { return _mode(_src); }
         AddrMode dstMode() const { return _mode(_dst); }
         AddrMode ex1Mode() const { return _mode(_ex1); }
-        AddrMode ex2Mode() const {
-            return toAddrMode(Ex2Mode((_ex2 >> ex2Mode_gp) & ex2Mode_gm));
-        }
+        AddrMode ex2Mode() const { return toAddrMode(Ex2Mode((_ex2 >> ex2Mode_gp) & ex2Mode_gm)); }
         OprPos srcPos() const { return _pos(_src); }
         OprPos dstPos() const { return _pos(_dst); }
         OprPos ex1Pos() const { return _pos(_ex1); }
-        OprPos ex2Pos() const {
-            return toOprPos(Ex2Pos((_ex2 >> ex2Pos_gp) & ex2Pos_gm));
-        }
-        OprSize oprSize() const {
-            return OprSize((_ex2 >> oprSize_gp) & oprSize_gm);
-        }
+        OprPos ex2Pos() const { return toOprPos(Ex2Pos((_ex2 >> ex2Pos_gp) & ex2Pos_gm)); }
+        OprSize oprSize() const { return OprSize((_ex2 >> oprSize_gp) & oprSize_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -129,12 +122,8 @@ public:
 private:
     Flags _flags;
 
-    static inline AddrMode _mode(uint8_t opr) {
-        return AddrMode((opr >> oprMode_gp) & oprMode_gm);
-    }
-    static inline OprPos _pos(uint8_t opr) {
-        return OprPos((opr >> oprPos_gp) & oprPos_gm);
-    }
+    static inline AddrMode _mode(uint8_t opr) { return AddrMode((opr >> oprMode_gp) & oprMode_gm); }
+    static inline OprPos _pos(uint8_t opr) { return OprPos((opr >> oprPos_gp) & oprPos_gm); }
     static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
         return (static_cast<uint8_t>(mode) << oprMode_gp) |
                (static_cast<uint8_t>(pos) << oprPos_gp);
@@ -159,14 +148,11 @@ private:
         EP2_ERROR = 3,
     };
     static constexpr Ex2Mode toEx2Mode(AddrMode mode) {
-        return mode == M_NONE
-                       ? EM2_NONE
-                       : (mode == M_IMM ? EM2_IMM
-                                        : (mode == M_BFLEN
-                                                          ? EM2_BFLEN
-                                                          : (mode == M_LEN32
-                                                                            ? EM2_LEN32
-                                                                            : EM2_ERROR)));
+        return mode == M_NONE ? EM2_NONE
+                              : (mode == M_IMM ? EM2_IMM
+                                               : (mode == M_BFLEN ? EM2_BFLEN
+                                                                  : (mode == M_LEN32 ? EM2_LEN32
+                                                                                     : EM2_ERROR)));
         /*
         switch (mode) {
         case M_NONE:  return EM2_NONE;
@@ -179,9 +165,7 @@ private:
     }
     static constexpr Ex2Pos toEx2Pos(OprPos pos) {
         return pos == P_NONE ? EP2_NONE
-                             : (pos == P_IMPL ? EP2_IMPL
-                                              : (pos == P_DISP ? EP2_DISP
-                                                               : EP2_ERROR));
+                             : (pos == P_IMPL ? EP2_IMPL : (pos == P_DISP ? EP2_DISP : EP2_ERROR));
         /*
         switch (pos) {
         case P_NONE: return EP2_NONE;

@@ -46,8 +46,7 @@ public:
     Entry::Flags flags() const { return _flags; }
 
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
-        _flags = Entry::Flags::create(
-                src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE);
+        _flags = Entry::Flags::create(src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE);
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -76,9 +75,7 @@ public:
     Config::opcode_t prefix() const { return _prefix; }
     bool hasPost() const { return _hasPost; }
     uint8_t post() const { return _post; }
-    uint8_t indexByte(OprPos pos) const {
-        return pos == P_GEN1 ? _indexByte1 : _indexByte2;
-    }
+    uint8_t indexByte(OprPos pos) const { return pos == P_GEN1 ? _indexByte1 : _indexByte2; }
 
     void emitInsn() {
         uint8_t pos = 0;

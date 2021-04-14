@@ -23,8 +23,7 @@
 
 namespace libasm {
 
-Error Assembler::encode(
-        const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
+Error Assembler::encode(const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
     _symtab = symtab;
     resetError();
     insn.resetAddress(addr);
@@ -67,8 +66,7 @@ uint32_t Assembler::parseExpr32(const char *expr, const char *end) {
     return value.getUnsigned();
 }
 
-const char *Assembler::scanExpr(
-        const char *expr, char delim, uint16_t nesting) const {
+const char *Assembler::scanExpr(const char *expr, char delim, uint16_t nesting) const {
     nesting++;
     while (!endOfLine(expr)) {
         const char c = *expr;

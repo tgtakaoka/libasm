@@ -58,7 +58,7 @@ enum AddrMode : uint8_t {
     M_SCNT = 17,  // Signed Count: #-32~32
     M_NCNT = 18,  // Signed Negative Count: #-32~32
     M_CC = 19,    // Condition Code:
-                // F/Z/NZ/C/NC/PL/MI/NE/EQ/OV/NOV/PE/PO/GE/LT/GT/LE/UGE/ULT/UGT/ULE
+                  // F/Z/NZ/C/NC/PL/MI/NE/EQ/OV/NOV/PE/PO/GE/LT/GT/LE/UGE/ULT/UGT/ULE
     M_INTR = 20,  // Interrupt type: VI/NVI
     M_CTL = 21,   // Control Register:
                   // FCW/REFRESH/NSPSRG/NSPOFF/PSAPSEG/PSAPOFF/FLAGS
@@ -115,33 +115,25 @@ public:
         uint8_t _ext;
         uint8_t _size;
 
-        static constexpr Flags create(AddrMode dst, ModeField dstField,
-                AddrMode src, ModeField srcField, AddrMode ex1, AddrMode ex2,
-                PostMode post, CodeMask mask, OprSize size) {
+        static constexpr Flags create(AddrMode dst, ModeField dstField, AddrMode src,
+                ModeField srcField, AddrMode ex1, AddrMode ex2, PostMode post, CodeMask mask,
+                OprSize size) {
             return Flags{Entry::_opr(dst, dstField), Entry::_opr(src, srcField),
                     Entry::_exopr(ex1, ex2, post), Entry::_size(mask, size)};
         }
         Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src),
-                    pgm_read_byte(&_ext), pgm_read_byte(&_size)};
+            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
+                    pgm_read_byte(&_size)};
         }
 
         AddrMode dstMode() const { return Entry::_mode(_dst); }
         AddrMode srcMode() const { return Entry::_mode(_src); }
-        AddrMode ex1Mode() const {
-            return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm));
-        }
-        AddrMode ex2Mode() const {
-            return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm));
-        }
+        AddrMode ex1Mode() const { return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm)); }
+        AddrMode ex2Mode() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
         ModeField dstField() const { return Entry::_field(_dst); }
         ModeField srcField() const { return Entry::_field(_src); }
-        PostMode postMode() const {
-            return PostMode((_ext >> postVal_gp) & postVal_gm);
-        }
-        OprSize oprSize() const {
-            return OprSize((_size >> oprSize_gp) & oprSize_gm);
-        }
+        PostMode postMode() const { return PostMode((_ext >> postVal_gp) & postVal_gm); }
+        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
         uint8_t postMask() const { return Entry::_postMask(postMode()); }
         uint8_t postVal() const { return Entry::_postVal(postMode()); }
         uint16_t codeMask() const { return Entry::_codeMask(_size); }
@@ -235,9 +227,7 @@ private:
         return mode == M_NO ? E1_NO
                             : ((mode == M_CNT || mode == M_IM)
                                               ? E1_CNT
-                                              : ((mode == M_WR || mode == M_R)
-                                                                ? E1_WR
-                                                                : E1_ERROR));
+                                              : ((mode == M_WR || mode == M_R) ? E1_WR : E1_ERROR));
         /*
         switch (mode) {
         case M_NO:  return E1_NO;

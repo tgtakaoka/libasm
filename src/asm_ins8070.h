@@ -38,12 +38,7 @@ private:
         RegName reg;
         bool autoIndex;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              format(OPR_NO),
-              reg(REG_UNDEF),
-              autoIndex(false),
-              val16(0) {}
+        Operand() : ErrorReporter(), format(OPR_NO), reg(REG_UNDEF), autoIndex(false), val16(0) {}
     };
 
     Error parseOperand(const char *scan, Operand &op);

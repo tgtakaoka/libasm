@@ -64,8 +64,7 @@ private:
         return parseNumber(scan, nullptr, suffix) != scan;
     }
 
-    static const char *parseNumber(
-            const char *scan, uint32_t *val, char suffix = 0) {
+    static const char *parseNumber(const char *scan, uint32_t *val, char suffix = 0) {
         const char *p = scan;
         uint32_t v = 0;
         while (isxdigit(*p)) {

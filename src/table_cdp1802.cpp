@@ -162,8 +162,7 @@ static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
 
 class TableCdp1802::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(
-            Config::opcode_t prefix, const Entry *table, const Entry *end)
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
@@ -195,15 +194,13 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == ADDR)
-        return table == REGN || table == REG1 || table == IMM8 ||
-               table == PAGE || table == IOAD;
+        return table == REGN || table == REG1 || table == IMM8 || table == PAGE || table == IOAD;
     return false;
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     const Entry::Flags table = entry->flags();
-    return acceptMode(flags.mode1(), table.mode1()) &&
-           acceptMode(flags.mode2(), table.mode2());
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
 Error TableCdp1802::searchName(
@@ -211,8 +208,7 @@ Error TableCdp1802::searchName(
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptModes, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());

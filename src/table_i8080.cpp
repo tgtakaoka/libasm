@@ -119,8 +119,7 @@ static constexpr Entry TABLE_I8085[] PROGMEM = {
 
 class TableI8080::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(const Entry *table, const Entry *end)
-        : EntryPageBase(table, end) {}
+    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 
 static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
@@ -137,11 +136,9 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_REG)
         return table == M_DST;
     if (opr == M_IDX || opr == M_REGH)
-        return table == M_PTR || table == M_STK || table == M_REG ||
-               table == M_DST;
+        return table == M_PTR || table == M_STK || table == M_REG || table == M_DST;
     if (opr == M_IM16)
-        return table == M_IM8 || table == M_ABS || table == M_IOA ||
-               table == M_VEC;
+        return table == M_IM8 || table == M_ABS || table == M_IOA || table == M_VEC;
     return false;
 }
 
@@ -151,13 +148,11 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.srcMode(), table.srcMode());
 }
 
-Error TableI8080::searchName(
-        InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableI8080::searchName(InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptModes, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
@@ -211,8 +206,7 @@ TableI8080::TableI8080() {
 
 bool TableI8080::setCpu(CpuType cpuType) {
     _cpuType = cpuType;
-    _table = (cpuType == I8080) ? ARRAY_BEGIN(I8080_PAGES)
-                                : ARRAY_BEGIN(I8085_PAGES);
+    _table = (cpuType == I8080) ? ARRAY_BEGIN(I8080_PAGES) : ARRAY_BEGIN(I8085_PAGES);
     _end = (cpuType == I8080) ? ARRAY_END(I8080_PAGES) : ARRAY_END(I8085_PAGES);
     return true;
 }

@@ -63,14 +63,11 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    Error searchName(InsnMc6809 &insn, const EntryPage *pages,
-            const EntryPage *end) const;
-    Error searchOpCode(InsnMc6809 &insn, const EntryPage *pages,
-            const EntryPage *end) const;
-    Error searchPostByte(const uint8_t post, PostSpec &spec,
-            const PostEntry *table, const PostEntry *end) const;
-    int16_t searchPostSpec(
-            PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
+    Error searchName(InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchPostByte(
+            const uint8_t post, PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
+    int16_t searchPostSpec(PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
 };
 
 extern TableMc6809 TableMc6809;

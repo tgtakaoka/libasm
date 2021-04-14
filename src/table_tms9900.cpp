@@ -126,8 +126,7 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
 
 class TableTms9900::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(const Entry *table, const Entry *end)
-        : EntryPageBase(table, end) {}
+    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 
 static constexpr TableTms9900::EntryPage TMS9900_PAGES[] PROGMEM = {
@@ -149,16 +148,13 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IREG || opr == M_INCR || opr == M_SYBL || opr == M_INDX)
-        return table == M_SRC || table == M_DST || table == M_SRC2 ||
-               table == M_DST2;
+        return table == M_SRC || table == M_DST || table == M_SRC2 || table == M_DST2;
     if (opr == M_REG)
-        return table == M_SRC || table == M_DST || table == M_SRC2 ||
-               table == M_DST2 || table == M_DREG || table == M_SCNT ||
-               table == M_CNT2;
+        return table == M_SRC || table == M_DST || table == M_SRC2 || table == M_DST2 ||
+               table == M_DREG || table == M_SCNT || table == M_CNT2;
     if (opr == M_IMM)
-        return table == M_REL || table == M_SCNT || table == M_CNT ||
-               table == M_CNT2 || table == M_CRU || table == M_BIT2 ||
-               table == M_XOP || table == M_RTWP;
+        return table == M_REL || table == M_SCNT || table == M_CNT || table == M_CNT2 ||
+               table == M_CRU || table == M_BIT2 || table == M_XOP || table == M_RTWP;
     return false;
 }
 
@@ -173,8 +169,7 @@ Error TableTms9900::searchName(
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptModes, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

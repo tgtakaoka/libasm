@@ -51,8 +51,8 @@ Error DisTms9900::decodeMactoInstructionDetect(InsnTms9900 &insn) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error DisTms9900::decodeModeReg(DisMemory &memory, InsnTms9900 &insn, char *out,
-        uint8_t mode, uint8_t reg) {
+Error DisTms9900::decodeModeReg(
+        DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t mode, uint8_t reg) {
     switch (mode &= 3) {
     case 1:
     case 3:
@@ -85,8 +85,7 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
     return OK;
 }
 
-Error DisTms9900::decodeOperand(
-        DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode) {
+Error DisTms9900::decodeOperand(DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode) {
     const Config::opcode_t opc = insn.opCode();
     const Config::opcode_t post = insn.post();
     uint8_t val8;

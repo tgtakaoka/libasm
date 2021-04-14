@@ -30,30 +30,25 @@ namespace test {
 extern TestAsserter asserter;
 extern TestSymtab symtab;
 
-void asm_assert(const char *file, int line, Error error, uint32_t addr,
-        const char *src, const uint8_t *expected, uint8_t length,
-        Assembler &assembler);
+void asm_assert(const char *file, int line, Error error, uint32_t addr, const char *src,
+        const uint8_t *expected, uint8_t length, Assembler &assembler);
 
-void asm_assert(const char *file, int line, Error error, uint32_t addr,
-        const char *src, const uint16_t *expected, uint8_t length,
-        Assembler &assembler);
+void asm_assert(const char *file, int line, Error error, uint32_t addr, const char *src,
+        const uint16_t *expected, uint8_t length, Assembler &assembler);
 
-void run_test(void (*test)(), const char *name, void (*set_up)(),
-        void (*tear_down)());
+void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
 }  // namespace test
 }  // namespace libasm
 
-#define EQUALS(msg, expected, actual) \
-    asserter.equals(__FILE__, __LINE__, msg, expected, actual)
+#define EQUALS(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
 #define __VASSERT(file, line, error, addr, src, ...)                           \
     do {                                                                       \
         const Config::opcode_t expected[] = {__VA_ARGS__};                     \
         const uint8_t length = sizeof(expected);                               \
         asm_assert(file, line, error, addr, src, expected, length, assembler); \
     } while (0)
-#define VASSERT(error, addr, src, ...) \
-    __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)
+#define VASSERT(error, addr, src, ...) __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)
 #define AERRT(addr, src, error) VASSERT(error, addr, src)
 #define AERRU(addr, src, ...) VASSERT(UNDEFINED_SYMBOL, addr, src, __VA_ARGS__)
 #define ATEST(addr, src, ...) VASSERT(OK, addr, src, __VA_ARGS__)

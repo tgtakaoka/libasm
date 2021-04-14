@@ -85,23 +85,21 @@ public:
         uint8_t _ext;
         uint8_t _fmt;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext,
-                DstSrc dstSrc, PostFormat postFmt) {
+        static constexpr Flags create(
+                AddrMode dst, AddrMode src, AddrMode ext, DstSrc dstSrc, PostFormat postFmt) {
             return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src),
                     static_cast<uint8_t>(ext), Entry::_fmt(dstSrc, postFmt)};
         }
         Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src),
-                    pgm_read_byte(&_ext), pgm_read_byte(&_fmt)};
+            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
+                    pgm_read_byte(&_fmt)};
         }
 
         AddrMode dstMode() const { return AddrMode(_dst); }
         AddrMode srcMode() const { return AddrMode(_src); }
         AddrMode extMode() const { return AddrMode(_ext); }
         PostFormat postFmt() const { return PostFormat(_fmt & postFmt_gm); }
-        bool dstSrc() const {
-            return DstSrc((_fmt >> dstSrc_gp) & dstSrc_gm) == DST_SRC;
-        }
+        bool dstSrc() const { return DstSrc((_fmt >> dstSrc_gp) & dstSrc_gm) == DST_SRC; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

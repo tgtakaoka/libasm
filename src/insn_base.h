@@ -102,9 +102,7 @@ public:
     void setName_P(const /*PROGMEM*/ char *name) { _insn.setName_P(name); }
 
     /** Set instruction name from text (Assembler). */
-    void setName(const char *name, const char *end) {
-        _insn.setName(name, end);
-    }
+    void setName(const char *name, const char *end) { _insn.setName(name, end); }
 
     /** Append a letter to instruction name. */
     void appendName(const char c) { _insn.appendName(c); }
@@ -259,9 +257,7 @@ class InsnImpl : public InsnBase {
 public:
     typename Conf::uintptr_t address() const { return InsnBase::address(); }
 
-    void resetAddress(typename Conf::uintptr_t addr) {
-        InsnBase::resetAddress(addr);
-    }
+    void resetAddress(typename Conf::uintptr_t addr) { InsnBase::resetAddress(addr); }
 
     /* Generate 16 bit |data| (Assembler). */
     void emitUint16(uint16_t data) {

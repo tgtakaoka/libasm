@@ -86,8 +86,7 @@ const char *aMode(AddrMode mode) {
     }
 }
 
-Error AsmTlcs90::encodeRelative(
-        InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
+Error AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
@@ -101,8 +100,8 @@ Error AsmTlcs90::encodeRelative(
     return OK;
 }
 
-Error AsmTlcs90::encodeOperand(InsnTlcs90 &insn, AddrMode mode,
-        const Operand &op, Config::opcode_t opc) {
+Error AsmTlcs90::encodeOperand(
+        InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) {
     switch (mode) {
     case M_IMM8:
     case M_DIR:
@@ -204,8 +203,7 @@ Error AsmTlcs90::parseOperand(const char *scan, Operand &op) {
             p = skipSpaces(_scan);
             if (*p != ')')
                 return setError(MISSING_CLOSING_PAREN);
-            op.mode = op.getError() ? M_UNDEF
-                : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
+            op.mode = op.getError() ? M_UNDEF : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
             _scan = p + 1;
             return OK;
         }

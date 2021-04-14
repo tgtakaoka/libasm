@@ -97,8 +97,7 @@ Error AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmMc6800::emitOperand(
-        InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_DIR:
     case M_IDX:

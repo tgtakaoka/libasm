@@ -32,13 +32,10 @@ public:
     const ENTRY_T *table() const {
         return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_table));
     }
-    const ENTRY_T *end() const {
-        return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_end));
-    }
+    const ENTRY_T *end() const { return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_end)); }
 
 protected:
-    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end)
-        : _table(table), _end(end) {}
+    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end) : _table(table), _end(end) {}
 
 private:
     const ENTRY_T *_table;
@@ -60,9 +57,7 @@ protected:
 
     Error setOK() const { return _error.setOK(); }
     Error setError(Error error) const { return _error.setError(error); }
-    Error setError(ErrorReporter reporter) const {
-        return _error.setError(reporter);
-    }
+    Error setError(ErrorReporter reporter) const { return _error.setError(reporter); }
 
     /**
      * Lookup instruction entries from |begin| until |end| to find an
@@ -83,10 +78,9 @@ protected:
      * of entries matching |name| regardless of |attr|.
      */
     template <typename E, typename A>
-    static const E *searchName(const char *name, A attr, const E *begin,
-            const E *end, bool (*accept)(A, const E *), uint8_t &count) {
-        for (const E *entry = begin;
-                entry < end && (entry = searchName(name, entry, end));
+    static const E *searchName(const char *name, A attr, const E *begin, const E *end,
+            bool (*accept)(A, const E *), uint8_t &count) {
+        for (const E *entry = begin; entry < end && (entry = searchName(name, entry, end));
                 entry++) {
             count++;
             if (accept(attr, entry))
@@ -100,8 +94,8 @@ protected:
      * entry which matches |opCode| converted by |convert|.
      */
     template <typename E, typename C>
-    static const E *searchCode(const C opCode, const E *begin, const E *end,
-            C (*convert)(C, const E *) = nullptr) {
+    static const E *searchCode(
+            const C opCode, const E *begin, const E *end, C (*convert)(C, const E *) = nullptr) {
         for (const E *entry = begin; entry < end; entry++) {
             if (convert) {
                 if (convert(opCode, entry) == entry->opCode())

@@ -57,8 +57,7 @@ Error DisIns8070::decodeImplied(InsnIns8070 &insn, char *out) {
     return setOK();
 }
 
-Error DisIns8070::decodeImmediate(
-        DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, char *out) {
     out = outOperand(out, insn.dstOpr(), insn.opCode());
     *out++ = ',';
     *out++ = _immSym ? '#' : '=';
@@ -69,23 +68,20 @@ Error DisIns8070::decodeImmediate(
     return setError(insn);
 }
 
-Error DisIns8070::decodeAbsolute(
-        DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = insn.readUint16(memory) + fetch;
     outAbsAddr(out, target);
     return setError(insn);
 }
 
-Error DisIns8070::decodeDirect(
-        DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, char *out) {
     const Config::uintptr_t target = 0xFF00 | insn.readByte(memory);
     outAbsAddr(out, target);
     return setError(insn);
 }
 
-Error DisIns8070::decodeRelative(
-        DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeRelative(DisMemory &memory, InsnIns8070 &insn, char *out) {
     const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
     const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
@@ -109,8 +105,7 @@ Error DisIns8070::decodeRelative(
     return setError(insn);
 }
 
-Error DisIns8070::decodeGeneric(
-        DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, char *out) {
     const uint8_t mode = insn.opCode() & 7;
     if (mode != 4) {
         out = outOperand(out, insn.dstOpr());

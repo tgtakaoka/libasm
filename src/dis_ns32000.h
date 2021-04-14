@@ -38,9 +38,7 @@ public:
     void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
     void pcRelativeParen(bool paren) { _pcRelativeParen = paren; }
     void externalParen(bool paren) { _externalParen = paren; }
-    void setCurrentOriginSymbol(char c) {
-        _formatter.setCurrentOriginSymbol(c);
-    }
+    void setCurrentOriginSymbol(char c) { _formatter.setCurrentOriginSymbol(c); }
 
 private:
     ValueFormatter _formatter{'*'};
@@ -56,27 +54,20 @@ private:
 
     char *outDisplacement(char *out, const Displacement &disp);
 
-    Error readIndexByte(
-            DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos);
-    Error readDisplacement(
-            DisMemory &memory, InsnNs32000 &insn, Displacement &disp);
+    Error readIndexByte(DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos);
+    Error readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displacement &disp);
 
-    Error decodeLength(
-            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
-    Error decodeBitField(
-            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
-    Error decodeImmediate(
-            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
-    Error decodeDisplacement(
-            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+    Error decodeLength(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+    Error decodeBitField(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+    Error decodeImmediate(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+    Error decodeDisplacement(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnNs32000 &insn, char *out);
     Error decodeConfig(const InsnNs32000 &insn, char *out, OprPos pos);
     Error decodeStrOpt(const InsnNs32000 &insn, char *out, OprPos pos);
     Error decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, char *out);
-    Error decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
-            AddrMode mode, OprPos pos);
-    Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
-            AddrMode mode, OprPos pos, OprSize size);
+    Error decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode, OprPos pos);
+    Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode, OprPos pos,
+            OprSize size);
 
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };

@@ -79,8 +79,8 @@ Error AsmMc68000::checkAlignment(OprSize size, Config::uintptr_t addr) {
     return OK;
 }
 
-Error AsmMc68000::emitBriefExtension(InsnMc68000 &insn, RegName index,
-        OprSize size, Config::ptrdiff_t disp) {
+Error AsmMc68000::emitBriefExtension(
+        InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp) {
     if (disp < -0x80 || disp > 0x80)
         return setError(OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
@@ -100,8 +100,8 @@ Error AsmMc68000::emitDisplacement(InsnMc68000 &insn, Config::ptrdiff_t disp) {
     return OK;
 }
 
-Error AsmMc68000::emitAbsoluteAddr(InsnMc68000 &insn, OprSize size,
-        AddrMode mode, Config::uintptr_t addr) {
+Error AsmMc68000::emitAbsoluteAddr(
+        InsnMc68000 &insn, OprSize size, AddrMode mode, Config::uintptr_t addr) {
     if (checkAlignment(size, addr))
         return getError();
     if (mode == M_AWORD) {
@@ -114,8 +114,7 @@ Error AsmMc68000::emitAbsoluteAddr(InsnMc68000 &insn, OprSize size,
     return OK;
 }
 
-Error AsmMc68000::emitRelativeAddr(
-        InsnMc68000 &insn, AddrMode mode, const Operand &op) {
+Error AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     if (target % 2)
@@ -133,8 +132,7 @@ Error AsmMc68000::emitRelativeAddr(
     return OK;
 }
 
-Error AsmMc68000::emitImmediateData(
-        InsnMc68000 &insn, OprSize size, uint32_t data) {
+Error AsmMc68000::emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t data) {
     if (size == SZ_LONG) {
         insn.emitOperand32(data);
         return OK;
@@ -165,8 +163,8 @@ Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
     return val32 - (insn.address() + len);
 }
 
-Error AsmMc68000::emitEffectiveAddr(InsnMc68000 &insn, OprSize size,
-        const Operand &op, AddrMode mode, OprPos pos) {
+Error AsmMc68000::emitEffectiveAddr(
+        InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) {
     if (mode == M_NONE)
         return op.mode == M_NONE ? OK : UNKNOWN_OPERAND;
 
@@ -188,11 +186,10 @@ Error AsmMc68000::emitEffectiveAddr(InsnMc68000 &insn, OprSize size,
             return setError(OPERAND_NOT_ALLOWED);
         break;
     case M_INDX:
-        return emitBriefExtension(insn, op.indexReg, op.indexSize,
-                static_cast<Config::ptrdiff_t>(op.val32));
-    case M_PCIDX:
         return emitBriefExtension(
-                insn, op.indexReg, op.indexSize, op.offset(insn));
+                insn, op.indexReg, op.indexSize, static_cast<Config::ptrdiff_t>(op.val32));
+    case M_PCIDX:
+        return emitBriefExtension(insn, op.indexReg, op.indexSize, op.offset(insn));
     case M_DISP:
         return emitDisplacement(insn, static_cast<Config::ptrdiff_t>(op.val32));
     case M_PCDSP:
@@ -346,9 +343,7 @@ Error AsmMc68000::parseOperand(const char *scan, Operand &op) {
             if ((op.val32 & 0xFF8000) == 0xFF8000)
                 op.val32 |= 0xFFFF0000;
             if (size == SZ_NONE) {
-                op.mode = (op.val32 >= 0xFFFF8000 || op.val32 < 0x8000)
-                                  ? M_AWORD
-                                  : M_ALONG;
+                op.mode = (op.val32 >= 0xFFFF8000 || op.val32 < 0x8000) ? M_AWORD : M_ALONG;
             } else if (size == SZ_WORD) {
                 op.mode = M_AWORD;
             } else if (size == SZ_LONG) {

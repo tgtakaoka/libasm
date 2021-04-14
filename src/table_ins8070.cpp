@@ -128,8 +128,8 @@ static bool acceptOprFormats(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8070::searchName(InsnIns8070 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-            insn.flags(), ARRAY_RANGE(TABLE_INS8070), acceptOprFormats, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8070), acceptOprFormats, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -181,8 +181,7 @@ const char *TableIns8070::getCpu() const {
 }
 
 bool TableIns8070::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_INS8070) == 0 ||
-           strcasecmp_P(cpu, TEXT_CPU_8070) == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_INS8070) == 0 || strcasecmp_P(cpu, TEXT_CPU_8070) == 0;
 }
 
 class TableIns8070 TableIns8070;

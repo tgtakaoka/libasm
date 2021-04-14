@@ -42,8 +42,7 @@ private:
 
     Error parseOperand(const char *scan, Operand &op);
 
-    Error encodeOperand(
-            InsnI8051 &insn, const AddrMode mode, const Operand &op);
+    Error encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

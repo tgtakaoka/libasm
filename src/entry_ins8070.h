@@ -64,24 +64,17 @@ public:
 
         static constexpr Flags create(
                 AddrMode addrMode, OprFormat dst, OprFormat src, OprSize size) {
-            return Flags{static_cast<uint16_t>(
-                    static_cast<uint16_t>(addrMode) |
-                    (static_cast<uint16_t>(dst) << dstOpr_gp) |
-                    (static_cast<uint16_t>(src) << srcOpr_gp) |
-                    (static_cast<uint16_t>(size) << oprSize_gp))};
+            return Flags{static_cast<uint16_t>(static_cast<uint16_t>(addrMode) |
+                                               (static_cast<uint16_t>(dst) << dstOpr_gp) |
+                                               (static_cast<uint16_t>(src) << srcOpr_gp) |
+                                               (static_cast<uint16_t>(size) << oprSize_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
         AddrMode mode() const { return AddrMode(_attr & addrMode_gm); }
-        OprFormat dstOpr() const {
-            return OprFormat((_attr >> dstOpr_gp) & oprFormat_gm);
-        }
-        OprFormat srcOpr() const {
-            return OprFormat((_attr >> srcOpr_gp) & oprFormat_gm);
-        }
-        OprSize size() const {
-            return OprSize((_attr >> oprSize_gp) & oprSize_gm);
-        }
+        OprFormat dstOpr() const { return OprFormat((_attr >> dstOpr_gp) & oprFormat_gm); }
+        OprFormat srcOpr() const { return OprFormat((_attr >> srcOpr_gp) & oprFormat_gm); }
+        OprSize size() const { return OprSize((_attr >> oprSize_gp) & oprSize_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

@@ -124,8 +124,7 @@ Error AsmI8051::parseOperand(const char *scan, Operand &op) {
     return OK;
 }
 
-Error AsmI8051::encodeOperand(
-        InsnI8051 &insn, const AddrMode mode, const Operand &op) {
+Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op) {
     switch (mode) {
     case REL: {
         uint8_t len = insn.length();
@@ -157,8 +156,7 @@ Error AsmI8051::encodeOperand(
     }
     case ADR11: {
         const Config::uintptr_t base = insn.address() + 2;
-        const Config::uintptr_t target =
-                op.getError() ? (base & ~0x7FF) : op.val16;
+        const Config::uintptr_t target = op.getError() ? (base & ~0x7FF) : op.val16;
         if ((base & ~0x7FF) != (target & ~0x7FF))
             return setError(OPERAND_TOO_FAR);
         insn.embed((target & 0x700) >> 3);

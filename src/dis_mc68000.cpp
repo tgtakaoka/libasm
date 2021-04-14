@@ -71,8 +71,8 @@ Error DisMc68000::decodeEffectiveAddr(
         const RegName base = (mode == M_DISP) ? ea.reg : REG_PC;
         const uint16_t val16 = insn.readUint16(memory);
         if (mode == M_PCDSP) {
-            const Config::uintptr_t target = insn.address() + insn.length() -
-                                             2 + static_cast<int16_t>(val16);
+            const Config::uintptr_t target =
+                    insn.address() + insn.length() - 2 + static_cast<int16_t>(val16);
             if (ea.size == SZ_WORD && (target % 2) != 0)
                 return setError(OPERAND_NOT_ALIGNED);
             if (ea.size == SZ_LONG && (target % 4) != 0)
@@ -106,8 +106,8 @@ Error DisMc68000::decodeEffectiveAddr(
         ext.word = insn.readUint16(memory);
         const uint8_t val8 = ext.disp();
         if (mode == M_PCIDX) {
-            const Config::uintptr_t target = insn.address() + insn.length() -
-                                             2 + static_cast<int8_t>(val8);
+            const Config::uintptr_t target =
+                    insn.address() + insn.length() - 2 + static_cast<int8_t>(val8);
             out = outRelAddr(out, target, insn.address(), 8);
         } else {
             out = outHex(out, val8, -8);
@@ -129,8 +129,7 @@ Error DisMc68000::decodeEffectiveAddr(
     return setError(insn);
 }
 
-Error DisMc68000::decodeRelative(
-        DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8) {
+Error DisMc68000::decodeRelative(DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8) {
     Config::uintptr_t target = insn.address() + 2;
     if (rel8) {
         target += static_cast<int8_t>(rel8);
@@ -144,8 +143,7 @@ Error DisMc68000::decodeRelative(
 }
 
 static RegName decodeMoveMltReg(int8_t regno) {
-    return (regno < 8) ? RegMc68000::decodeDataReg(regno)
-                       : RegMc68000::decodeAddrReg(regno - 8);
+    return (regno < 8) ? RegMc68000::decodeDataReg(regno) : RegMc68000::decodeAddrReg(regno - 8);
 }
 
 char *DisMc68000::outMoveMltRegList(char *out, uint16_t list, bool push,
@@ -160,8 +158,7 @@ char *DisMc68000::outMoveMltRegList(char *out, uint16_t list, bool push,
             } else if (i == last + 1) {
                 last = i;
             } else {
-                out = (this->*outRegs)(out, decodeMoveMltReg(start),
-                        decodeMoveMltReg(last), '/');
+                out = (this->*outRegs)(out, decodeMoveMltReg(start), decodeMoveMltReg(last), '/');
                 start = last = i;
             }
         }
@@ -171,13 +168,11 @@ char *DisMc68000::outMoveMltRegList(char *out, uint16_t list, bool push,
             mask <<= 1;
     }
     if (start >= 0)
-        out = (this->*outRegs)(
-                out, decodeMoveMltReg(start), decodeMoveMltReg(last), 0);
+        out = (this->*outRegs)(out, decodeMoveMltReg(start), decodeMoveMltReg(last), 0);
     return out;
 }
 
-char *DisMc68000::outMoveMltRegs(
-        char *out, RegName start, RegName last, char suffix) {
+char *DisMc68000::outMoveMltRegs(char *out, RegName start, RegName last, char suffix) {
     out = outRegName(out, start);
     if (start != last) {
         *out++ = '-';
@@ -189,8 +184,8 @@ char *DisMc68000::outMoveMltRegs(
     return out;
 }
 
-Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
-        AddrMode mode, uint8_t m, uint8_t r, OprSize s, uint16_t opr16) {
+Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out, AddrMode mode,
+        uint8_t m, uint8_t r, OprSize s, uint16_t opr16) {
     EaMc68000 ea(s, m, r);
     switch (mode) {
     case M_AREG:
@@ -251,8 +246,7 @@ Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
     case M_MULT:
         if (opr16 == 0)
             return setError(OPCODE_HAS_NO_EFFECT);
-        outMoveMltRegList(out, opr16,
-                AddrMode((insn.opCode() >> 3) & 7) == M_PDEC,
+        outMoveMltRegList(out, opr16, AddrMode((insn.opCode() >> 3) & 7) == M_PDEC,
                 &DisMc68000::outMoveMltRegs);
         break;
     case M_NONE:
@@ -267,8 +261,7 @@ Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
         outRegName(out, REG_USP);
         break;
     case M_REL8:
-        return decodeRelative(
-                memory, insn, out, static_cast<uint8_t>(insn.opCode()));
+        return decodeRelative(memory, insn, out, static_cast<uint8_t>(insn.opCode()));
     case M_REL16:
         return decodeRelative(memory, insn, out, 0);
     default:
@@ -281,13 +274,12 @@ Error DisMc68000::checkOperand(AddrMode mode, uint8_t m, uint8_t r, OprSize s) {
     EaMc68000 ea(s, m, r);
     switch (mode) {
     case M_WDATA:
-        if (ea.mode == M_AREG || ea.mode == M_PCDSP || ea.mode == M_PCIDX ||
-                ea.mode == M_IMDAT)
+        if (ea.mode == M_AREG || ea.mode == M_PCDSP || ea.mode == M_PCIDX || ea.mode == M_IMDAT)
             return setError(OPERAND_NOT_ALLOWED);
         break;
     case M_WMEM:
-        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PCDSP ||
-                ea.mode == M_PCIDX || ea.mode == M_IMDAT)
+        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PCDSP || ea.mode == M_PCIDX ||
+                ea.mode == M_IMDAT)
             return setError(OPERAND_NOT_ALLOWED);
         break;
     case M_RMEM:
@@ -299,18 +291,17 @@ Error DisMc68000::checkOperand(AddrMode mode, uint8_t m, uint8_t r, OprSize s) {
             return setError(OPERAND_NOT_ALLOWED);
         break;
     case M_JADDR:
-        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PINC ||
-                ea.mode == M_PDEC || ea.mode == M_IMDAT)
-            return setError(OPERAND_NOT_ALLOWED);
-        break;
-    case M_IADDR:
-        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PDEC ||
+        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PINC || ea.mode == M_PDEC ||
                 ea.mode == M_IMDAT)
             return setError(OPERAND_NOT_ALLOWED);
         break;
+    case M_IADDR:
+        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PDEC || ea.mode == M_IMDAT)
+            return setError(OPERAND_NOT_ALLOWED);
+        break;
     case M_DADDR:
-        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PINC ||
-                ea.mode == M_PCDSP || ea.mode == M_PCIDX || ea.mode == M_IMDAT)
+        if (ea.mode == M_DREG || ea.mode == M_AREG || ea.mode == M_PINC || ea.mode == M_PCDSP ||
+                ea.mode == M_PCIDX || ea.mode == M_IMDAT)
             return setError(OPERAND_NOT_ALLOWED);
         break;
     case M_WADDR:

@@ -35,8 +35,7 @@ Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, char *out) {
     return setError(insn);
 }
 
-Error DisIns8060::decodeIndx(
-        DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode) {
+Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode) {
     const RegName reg = _regs.decodePointerReg(insn.opCode());
     const uint8_t opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)

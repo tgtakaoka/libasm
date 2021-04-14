@@ -33,8 +33,7 @@ namespace libasm {
 
 class Disassembler : public ErrorReporter, virtual public ConfigBase {
 public:
-    Error decode(
-            DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
+    Error decode(DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
     ValueFormatter &getFormatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase);
@@ -61,8 +60,7 @@ protected:
         if (_symtab) {
             symbol = _symtab->lookupValue(addr);
             if (!symbol) {
-                auto value =
-                        static_cast<typename make_signed<Addr>::type>(addr);
+                auto value = static_cast<typename make_signed<Addr>::type>(addr);
                 symbol = _symtab->lookupValue(static_cast<int32_t>(value));
             }
         }
@@ -124,8 +122,7 @@ protected:
             return outAbsAddr(out, target, addressWidth());
         *out++ = _formatter.currentOriginSymbol();
         *out = 0;
-        const auto delta =
-                static_cast<typename make_signed<Addr>::type>(target - origin);
+        const auto delta = static_cast<typename make_signed<Addr>::type>(target - origin);
         if (delta == 0)
             return out;
         Addr val;

@@ -73,20 +73,14 @@ public:
         uint8_t _dst;
         uint8_t _src;
 
-        static constexpr Flags create(
-                AddrMode dst, AddrMode src, bool indexBit = false) {
-            return Flags{
-                    static_cast<uint8_t>(static_cast<uint8_t>(dst) |
-                                         (indexBit ? 1 << indexBit_bp : 0)),
+        static constexpr Flags create(AddrMode dst, AddrMode src, bool indexBit = false) {
+            return Flags{static_cast<uint8_t>(
+                                 static_cast<uint8_t>(dst) | (indexBit ? 1 << indexBit_bp : 0)),
                     static_cast<uint8_t>(src)};
         }
-        Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)};
-        }
+        Flags read() const { return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)}; }
 
-        AddrMode dstMode() const {
-            return AddrMode(_dst & ~(1 << indexBit_bp));
-        }
+        AddrMode dstMode() const { return AddrMode(_dst & ~(1 << indexBit_bp)); }
         AddrMode srcMode() const { return AddrMode(_src); }
         bool indexBit() const { return _dst & (1 << indexBit_bp); }
     };

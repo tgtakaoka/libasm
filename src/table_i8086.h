@@ -43,10 +43,8 @@ public:
     struct EntryPage;
 
 private:
-    Error searchName(InsnI8086 &insn, const EntryPage *pages,
-            const EntryPage *end) const;
-    Error searchOpCode(InsnI8086 &insn, const EntryPage *pages,
-            const EntryPage *end) const;
+    Error searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableI8086 TableI8086;

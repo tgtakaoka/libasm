@@ -22,8 +22,7 @@
 namespace libasm {
 namespace tlcs90 {
 
-Error DisTlcs90::readOperand(
-        DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op) {
+Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op) {
     const Config::opcode_t opc = insn.opCode();
     op.mode = mode;
     switch (mode) {
@@ -69,8 +68,7 @@ Error DisTlcs90::readOperand(
     return setError(insn);
 }
 
-Error DisTlcs90::decodeRelative(
-        InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeRelative(InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op) {
     Config::ptrdiff_t delta;
     if (mode == M_REL8) {
         delta = static_cast<int8_t>(op.val16);
@@ -83,8 +81,7 @@ Error DisTlcs90::decodeRelative(
     return OK;
 }
 
-Error DisTlcs90::decodeOperand(
-        InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op) {
     uint16_t val16 = op.val16;
     int8_t val8 = static_cast<int8_t>(val16);
     switch (mode) {

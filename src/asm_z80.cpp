@@ -42,8 +42,7 @@ Error AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmZ80::encodeOperand(
-        InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
+Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
     uint16_t val16 = op.val16;
     switch (mode) {
     case M_IM8:
@@ -58,8 +57,7 @@ Error AsmZ80::encodeOperand(
         insn.emitOperand8(val16);
         return OK;
     case M_INDX:
-        if (static_cast<int16_t>(val16) < -128 ||
-                static_cast<int16_t>(val16) >= 128)
+        if (static_cast<int16_t>(val16) < -128 || static_cast<int16_t>(val16) >= 128)
             return setError(OVERFLOW_RANGE);
         if (insn.indexBit())
             return encodeIndexedBitOp(insn, op);

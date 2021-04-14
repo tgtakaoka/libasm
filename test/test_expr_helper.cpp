@@ -22,8 +22,8 @@ namespace test {
 TestAsserter asserter;
 TestSymtab symtab;
 
-void dec_assert(const char *file, const int line, const uint32_t value,
-        int8_t bitWidth, const char *expected, ValueFormatter &formatter) {
+void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
+        const char *expected, ValueFormatter &formatter) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
@@ -31,9 +31,8 @@ void dec_assert(const char *file, const int line, const uint32_t value,
     asserter.equals(file, line, msg, expected, actual);
 }
 
-void hex_assert(const char *file, const int line, const uint32_t value,
-        int8_t bitWidth, const bool relax, const char *expected,
-        ValueFormatter &formatter) {
+void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
+        const bool relax, const char *expected, ValueFormatter &formatter) {
     char msg[80];
     sprintf(msg, "%#x", value);
     char actual[80];
@@ -43,8 +42,7 @@ void hex_assert(const char *file, const int line, const uint32_t value,
 
 bool test_failed;
 
-void run_test(void (*test)(), const char *name, void (*set_up)(),
-        void (*tear_down)()) {
+void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {
     asserter.clear(name);
     set_up();
     test();

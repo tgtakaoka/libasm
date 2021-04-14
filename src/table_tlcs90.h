@@ -30,8 +30,7 @@ struct Operand : public ErrorReporter {
     RegName reg;
     CcName cc;
     uint16_t val16;
-    Operand()
-        : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+    Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
 class TableTlcs90 : public TableBase {
@@ -47,10 +46,8 @@ public:
     struct EntryPage;
 
 private:
-    Error searchName(InsnTlcs90 &insn, const EntryPage *pages,
-            const EntryPage *end) const;
-    Error searchOpCode(InsnTlcs90 &insn, const EntryPage *pages,
-            const EntryPage *end) const;
+    Error searchName(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableTlcs90 TableTlcs90;

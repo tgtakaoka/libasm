@@ -170,8 +170,8 @@ uint8_t RegMc6809::encodeStackReg(RegName name) {
     if (name == REG_D)
         return 0x06;
     uint8_t bit = 0x01;
-    for (const /*PROGMEM*/ RegName *r = ARRAY_BEGIN(STACK_REGS);
-            r < ARRAY_END(STACK_REGS); r++, bit <<= 1) {
+    for (const /*PROGMEM*/ RegName *r = ARRAY_BEGIN(STACK_REGS); r < ARRAY_END(STACK_REGS);
+            r++, bit <<= 1) {
         if (pgm_read_byte(r) == name)
             return bit;
     }

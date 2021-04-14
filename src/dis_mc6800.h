@@ -38,13 +38,11 @@ private:
 
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeIndexed(
-            DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
+    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn, char *out);
     Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeOperand(
-            DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
+    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

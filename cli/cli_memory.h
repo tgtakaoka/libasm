@@ -49,8 +49,7 @@ public:
     // Dumper should accept (Addr, const uint8_t *, size_t)
     template <typename Dumper>
     void dump(Dumper dumper) const {
-        for (auto segment = _segments.cbegin(); segment != _segments.cend();
-                segment++) {
+        for (auto segment = _segments.cbegin(); segment != _segments.cend(); segment++) {
             const auto &mem = segment->second;
             dumper(segment->first, mem.data(), mem.size());
         }

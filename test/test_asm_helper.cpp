@@ -26,32 +26,27 @@ namespace test {
 TestAsserter asserter;
 TestSymtab symtab;
 
-void asm_assert(const char *file, int line, Error error, uint32_t addr,
-        const char *src, const uint8_t *expected, uint8_t length,
-        Assembler &assembler) {
+void asm_assert(const char *file, int line, Error error, uint32_t addr, const char *src,
+        const uint8_t *expected, uint8_t length, Assembler &assembler) {
     Insn insn;
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
     asserter.equals(file, line, src, error, assembler);
-    asserter.equals(
-            file, line, src, expected, length, insn.bytes(), insn.length());
+    asserter.equals(file, line, src, expected, length, insn.bytes(), insn.length());
 }
 
-void asm_assert(const char *file, int line, Error error, uint32_t addr,
-        const char *src, const uint16_t *expected, uint8_t length,
-        Assembler &assembler) {
+void asm_assert(const char *file, int line, Error error, uint32_t addr, const char *src,
+        const uint16_t *expected, uint8_t length, Assembler &assembler) {
     Insn insn;
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
     asserter.equals(file, line, src, error, assembler);
-    asserter.equals(
-            file, line, src, expected, length, insn.bytes(), insn.length());
+    asserter.equals(file, line, src, expected, length, insn.bytes(), insn.length());
 }
 
 bool test_failed;
 
-void run_test(void (*test)(), const char *name, void (*set_up)(),
-        void (*tear_down)()) {
+void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)()) {
     asserter.clear(name);
     set_up();
     test();

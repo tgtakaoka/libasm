@@ -81,9 +81,7 @@ public:
     Error resetError() { return setOK(); }
     Error setOK() { return setError(OK); }
     Error setError(Error error) { return _error = error; }
-    Error setError(const ErrorReporter &other) {
-        return setError(other.getError());
-    }
+    Error setError(const ErrorReporter &other) { return setError(other.getError()); }
     Error setErrorIf(Error error) {
         if (_error == OK)
             _error = error;

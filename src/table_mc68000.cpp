@@ -25,12 +25,12 @@
 namespace libasm {
 namespace mc68000 {
 
-#define X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _alias) \
-    {                                                                    \
-        _opc,                                                            \
-                Entry::Flags::create(_src, _dst, OP_##_srcp, OP_##_dstp, \
-                        SZ_##_osize, ISZ_##_isize, _alias),              \
-                _name                                                    \
+#define X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _alias)                        \
+    {                                                                                           \
+        _opc,                                                                                   \
+                Entry::Flags::create(                                                           \
+                        _src, _dst, OP_##_srcp, OP_##_dstp, SZ_##_osize, ISZ_##_isize, _alias), \
+                _name                                                                           \
     }
 #define E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
     X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
@@ -253,30 +253,26 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_DREG)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR ||
-               table == M_WDATA || table == M_RMEM || table == M_MULT;
+        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
+               table == M_RMEM || table == M_MULT;
     if (opr == M_AREG)
         return table == M_RADDR || table == M_WADDR || table == M_MULT;
-    if (opr == M_AIND || opr == M_DISP || opr == M_INDX || opr == M_AWORD ||
-            opr == M_ALONG)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR ||
-               table == M_WDATA || table == M_RMEM || table == M_WMEM ||
-               table == M_JADDR || table == M_IADDR || table == M_DADDR;
-    if (opr == M_PINC)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR ||
-               table == M_WDATA || table == M_RMEM || table == M_WMEM ||
-               table == M_IADDR;
-    if (opr == M_PDEC)
-        return table == M_RADDR || table == M_RDATA || table == M_WADDR ||
-               table == M_WDATA || table == M_RMEM || table == M_WMEM ||
+    if (opr == M_AIND || opr == M_DISP || opr == M_INDX || opr == M_AWORD || opr == M_ALONG)
+        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
+               table == M_RMEM || table == M_WMEM || table == M_JADDR || table == M_IADDR ||
                table == M_DADDR;
+    if (opr == M_PINC)
+        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
+               table == M_RMEM || table == M_WMEM || table == M_IADDR;
+    if (opr == M_PDEC)
+        return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
+               table == M_RMEM || table == M_WMEM || table == M_DADDR;
     if (opr == M_PCDSP || opr == M_PCIDX)
-        return table == M_RADDR || table == M_RDATA || table == M_RMEM ||
-               table == M_JADDR || table == M_IADDR;
+        return table == M_RADDR || table == M_RDATA || table == M_RMEM || table == M_JADDR ||
+               table == M_IADDR;
     if (opr == M_IMDAT)
-        return table == M_RADDR || table == M_RDATA || table == M_IMBIT ||
-               table == M_IM3 || table == M_IM8 || table == M_IMVEC ||
-               table == M_IMDSP;
+        return table == M_RADDR || table == M_RDATA || table == M_IMBIT || table == M_IM3 ||
+               table == M_IM8 || table == M_IMVEC || table == M_IMDSP;
     if (opr == M_LABEL)
         return table == M_REL16 || table == M_REL8;
     return false;
@@ -293,8 +289,8 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
     if (opr == SZ_LONG)
         return table == SZ_DATA || table == SZ_ADR6 || table == SZ_ADR8;
     if (opr == SZ_NONE)
-        return table == SZ_WORD || table == SZ_DATA || isize == ISZ_NONE ||
-               table == SZ_ADR6 || table == SZ_ADR8;
+        return table == SZ_WORD || table == SZ_DATA || isize == ISZ_NONE || table == SZ_ADR6 ||
+               table == SZ_ADR8;
     return false;
 }
 
@@ -309,9 +305,8 @@ Error TableMc68000::searchName(InsnMc68000 &insn) const {
     uint8_t count = 0;
     const Entry *const end = ARRAY_END(MC68000_TABLE);
     for (const Entry *entry = ARRAY_BEGIN(MC68000_TABLE);
-            entry < end &&
-            (entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-                     insn.flags(), entry, end, matchAddrMode, count));
+            entry < end && (entry = TableBase::searchName<Entry, Entry::Flags>(
+                                    insn.name(), insn.flags(), entry, end, matchAddrMode, count));
             entry++) {
         insn.setFlags(entry->flags());
         if (insn.alias() && !_aliasEnabled)

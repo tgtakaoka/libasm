@@ -67,8 +67,7 @@ char *DisZ8::outBitPos(char *out, uint8_t bitPos) {
     return outHex(out, bitPos, 3);
 }
 
-Error DisZ8::decodeOperand(
-        DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode) {
+Error DisZ8::decodeOperand(DisMemory &memory, InsnZ8 &insn, char *out, AddrMode mode) {
     const PostFormat post = insn.postFormat();
     uint8_t val = post ? insn.post() : insn.readByte(memory);
     if (setError(insn))
@@ -95,11 +94,9 @@ Error DisZ8::decodeOperand(
     return setOK();
 }
 
-Error DisZ8::decodeAbsolute(
-        DisMemory &memory, InsnZ8 &insn, char *out, Endian endian) {
-    const Config::uintptr_t addr = (endian == ENDIAN_LITTLE)
-                                           ? insn.readUint16Le(memory)
-                                           : insn.readUint16Be(memory);
+Error DisZ8::decodeAbsolute(DisMemory &memory, InsnZ8 &insn, char *out, Endian endian) {
+    const Config::uintptr_t addr =
+            (endian == ENDIAN_LITTLE) ? insn.readUint16Le(memory) : insn.readUint16Be(memory);
     outAbsAddr(out, addr);
     return setError(insn);
 }
@@ -135,8 +132,7 @@ char *DisZ8::outIndexed(char *out, uint16_t base, RegName idx, AddrMode mode) {
     return out;
 }
 
-Error DisZ8::decodeIndexed(
-        DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1) {
+Error DisZ8::decodeIndexed(DisMemory &memory, InsnZ8 &insn, char *out, uint8_t opr1) {
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     const bool pair = !(dst == M_X || src == M_X);
@@ -146,15 +142,12 @@ Error DisZ8::decodeIndexed(
     } else {
         base16 = insn.readByte(memory);
     }
-    const RegName idx =
-            pair ? _regs.decodePairRegNum(opr1) : _regs.decodeRegNum(opr1);
+    const RegName idx = pair ? _regs.decodePairRegNum(opr1) : _regs.decodeRegNum(opr1);
     if (idx == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    out = (dst == M_r) ? outWorkReg(out, opr1 >> 4)
-                       : outIndexed(out, base16, idx, dst);
+    out = (dst == M_r) ? outWorkReg(out, opr1 >> 4) : outIndexed(out, base16, idx, dst);
     out = outComma(out);
-    out = (src == M_r) ? outWorkReg(out, opr1 >> 4)
-                       : outIndexed(out, base16, idx, src);
+    out = (src == M_r) ? outWorkReg(out, opr1 >> 4) : outIndexed(out, base16, idx, src);
     return setError(insn);
 }
 
@@ -293,15 +286,12 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, char *out) {
         return setOK();
     }
     if (dst == M_Irr || src == M_Irr) {  // P1: LDCxx, LDExx
-        out = (dst == M_Irr) ? outPairReg(out, post & 0x0E, true)
-                             : outWorkReg(out, post >> 4);
+        out = (dst == M_Irr) ? outPairReg(out, post & 0x0E, true) : outWorkReg(out, post >> 4);
         out = outComma(out);
-        out = (src == M_Irr) ? outPairReg(out, post & 0x0E, true)
-                             : outWorkReg(out, post >> 4);
+        out = (src == M_Irr) ? outPairReg(out, post & 0x0E, true) : outWorkReg(out, post >> 4);
         return setOK();
     }
-    if (dst == M_XL || src == M_XL || dst == M_XS ||
-            src == M_XS)  // P1: LDC, LDE
+    if (dst == M_XL || src == M_XL || dst == M_XS || src == M_XS)  // P1: LDC, LDE
         return decodeIndexed(memory, insn, out, post & ~1);
     if (dst == M_RA) {  // P1: BTJRF, BTJRT
         if (decodeRelative(memory, insn, out))

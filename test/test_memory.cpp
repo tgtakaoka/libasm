@@ -23,8 +23,7 @@
 namespace libasm {
 namespace test {
 
-TestMemory::TestMemory()
-    : DisMemory(0) {
+TestMemory::TestMemory() : DisMemory(0) {
     ensureBytes(16);
 }
 
@@ -101,8 +100,8 @@ uint8_t TestMemory::nextByte() {
     return _bytes[_index++];
 }
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

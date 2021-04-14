@@ -42,8 +42,7 @@ private:
 
     Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out);
     Error decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out);
-    Error decodeOperand(
-            DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode);
+    Error decodeOperand(DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };
 

@@ -135,8 +135,7 @@ RegName RegZ80::decodeIndirectBase(uint8_t num) {
 }
 
 void RegZ80::encodeIndexReg(InsnZ80 &insn, RegName ixReg) {
-    const Config::opcode_t prefix =
-            (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
+    const Config::opcode_t prefix = (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
     insn.setOpCode(insn.opCode(), prefix);
 }
 

@@ -25,11 +25,8 @@
 namespace libasm {
 namespace i8086 {
 
-#define _ENTRY(_opc, _name, _sz, _dst, _src, _dpos, _spos, _stri)              \
-    {                                                                          \
-        _opc, Entry::Flags::create(_dst, _src, _dpos, _spos, SZ_##_sz, _stri), \
-                _name                                                          \
-    }
+#define _ENTRY(_opc, _name, _sz, _dst, _src, _dpos, _spos, _stri) \
+    { _opc, Entry::Flags::create(_dst, _src, _dpos, _spos, SZ_##_sz, _stri), _name }
 #define E(_opc, _name, _sz, _dst, _src, _dpos, _spos) \
     _ENTRY(_opc, _name, _sz, _dst, _src, _dpos, _spos, false)
 #define S(_opc, _name, _sz, _dst, _src, _dpos, _spos) \
@@ -380,8 +377,7 @@ static const Entry TABLE_FF[] PROGMEM = {
 
 class TableI8086::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(
-            Config::opcode_t prefix, const Entry *table, const Entry *end)
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
@@ -422,14 +418,12 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_WREG)
         return table == M_WMOD;
     if (opr == M_MEM)  // checked by |acceptSize| later.
-        return table == M_BMOD || table == M_BMEM || table == M_WMOD ||
-               table == M_WMEM;
+        return table == M_BMOD || table == M_BMEM || table == M_WMOD || table == M_WMEM;
     if (opr == M_DIR)  // checked by |acceptSize| later.
-        return table == M_BMOD || table == M_BMEM || table == M_BDIR ||
-               table == M_WMOD || table == M_WMEM || table == M_WDIR;
+        return table == M_BMOD || table == M_BMEM || table == M_BDIR || table == M_WMOD ||
+               table == M_WMEM || table == M_WDIR;
     if (opr == M_IMM || opr == M_IMM8 || opr == M_VAL1 || opr == M_VAL3)
-        return table == M_IMM || table == M_IOA || table == M_REL8 ||
-               table == M_REL;
+        return table == M_IMM || table == M_IOA || table == M_REL8 || table == M_REL;
     if (opr == M_BMEM)
         return table == M_BMOD;
     if (opr == M_WMEM)
@@ -450,8 +444,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 }
 
 static bool hasSize(AddrMode mode) {
-    return mode == M_AX || mode == M_DX || mode == M_WREG || mode == M_AL ||
-           mode == M_CL || mode == M_BREG || mode == M_CS || mode == M_SREG;
+    return mode == M_AX || mode == M_DX || mode == M_WREG || mode == M_AL || mode == M_CL ||
+           mode == M_BREG || mode == M_CS || mode == M_SREG;
 }
 
 static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
@@ -469,14 +463,13 @@ static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
     return true;
 }
 
-Error TableI8086::searchName(
-        InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableI8086::searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         for (const Entry *entry = page->table();
                 entry < page->end() &&
-                (entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-                         insn.flags(), entry, page->end(), acceptModes, count));
+                (entry = TableBase::searchName<Entry, Entry::Flags>(
+                         insn.name(), insn.flags(), entry, page->end(), acceptModes, count));
                 entry++) {
             if (!acceptSize(insn, entry))
                 continue;
@@ -527,8 +520,7 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 }
 
 bool TableI8086::isPrefix(Config::opcode_t opCode) const {
-    for (const EntryPage *page = ARRAY_BEGIN(I8086_PAGES);
-            page < ARRAY_END(I8086_PAGES); page++) {
+    for (const EntryPage *page = ARRAY_BEGIN(I8086_PAGES); page < ARRAY_END(I8086_PAGES); page++) {
         const Config::opcode_t prefix = page->prefix();
         if (prefix == 0)
             continue;

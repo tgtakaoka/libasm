@@ -48,10 +48,9 @@ private:
 
     bool setCpu(CpuType cpuType);
 
-    Error searchName(
-            InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(InsnZ8 &insn, DisMemory &memory, const EntryPage *pages,
-            const EntryPage *end) const;
+    Error searchName(InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(
+            InsnZ8 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableZ8 TableZ8;

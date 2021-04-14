@@ -59,8 +59,7 @@ char *ValueFormatter::outDec(char *out, uint32_t val) const {
     return t;
 }
 
-uint32_t ValueFormatter::makePositive(
-        char *out, uint32_t val, int8_t bits) const {
+uint32_t ValueFormatter::makePositive(char *out, uint32_t val, int8_t bits) const {
     *out = 0;
     uint8_t bw = bits;
     if (bits < 0) {
@@ -75,8 +74,7 @@ uint32_t ValueFormatter::makePositive(
     return val & ~(0xFFFFFFFF << bw);
 }
 
-char *ValueFormatter::formatHex(
-        char *out, uint32_t val, int8_t bits, bool relax) const {
+char *ValueFormatter::formatHex(char *out, uint32_t val, int8_t bits, bool relax) const {
     val = makePositive(out, val, bits);
     if (*out)
         out++;
@@ -94,21 +92,18 @@ char *ValueFormatter::formatDec(char *out, uint32_t val, int8_t bits) const {
     return reverseStr(out, outDec(out, val));
 }
 
-char *ValueFormatter::formatPositiveHex(
-        char *out, uint32_t val, int8_t bits) const {
+char *ValueFormatter::formatPositiveHex(char *out, uint32_t val, int8_t bits) const {
     *out++ = '0';
     *out++ = 'x';
     return reverseStr(out, outHex(out, val, bits));
 }
 
-char *MotoValueFormatter::formatPositiveHex(
-        char *out, uint32_t val, int8_t bits) const {
+char *MotoValueFormatter::formatPositiveHex(char *out, uint32_t val, int8_t bits) const {
     *out++ = '$';
     return reverseStr(out, outHex(out, val, bits));
 }
 
-char *IntelValueFormatter::formatPositiveHex(
-        char *out, uint32_t val, int8_t bits) const {
+char *IntelValueFormatter::formatPositiveHex(char *out, uint32_t val, int8_t bits) const {
     char *t = outHex(out, val, bits);
     if (t[-1] > '9')
         *t++ = '0';

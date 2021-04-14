@@ -40,15 +40,15 @@ char *DisZ8000::outImmediate(char *out, uint8_t data, AddrMode mode) {
     return outHex(out, val, 8);
 }
 
-Error DisZ8000::decodeImmediate(DisMemory &memory, InsnZ8000 &insn, char *out,
-        AddrMode mode, OprSize size) {
+Error DisZ8000::decodeImmediate(
+        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, OprSize size) {
     *out++ = '#';
     if (mode == M_SCNT || mode == M_NCNT) {
         uint16_t data = insn.readUint16(memory);
         if (size == SZ_BYTE && (data & 0xFF00) != 0)
             return setError(ILLEGAL_OPERAND);
-        const int16_t count = (size == SZ_BYTE) ? static_cast<int8_t>(data)
-                                                : static_cast<int16_t>(data);
+        const int16_t count =
+                (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
             if (TableZ8000.searchOpCodeAlias(insn, memory))
                 return setError(TableZ8000.getError());
@@ -79,8 +79,7 @@ Error DisZ8000::decodeFlags(char *out, uint8_t flags) {
     return OK;
 }
 
-Error DisZ8000::decodeGeneralRegister(
-        char *out, uint8_t num, OprSize size, bool indirect) {
+Error DisZ8000::decodeGeneralRegister(char *out, uint8_t num, OprSize size, bool indirect) {
     const RegName reg = _regs.decodeRegNum(num, size);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
@@ -90,8 +89,7 @@ Error DisZ8000::decodeGeneralRegister(
     return OK;
 }
 
-Error DisZ8000::decodeDoubleSizedRegister(
-        char *out, uint8_t num, OprSize size) {
+Error DisZ8000::decodeDoubleSizedRegister(char *out, uint8_t num, OprSize size) {
     if (size == SZ_BYTE)
         return decodeGeneralRegister(out, num, SZ_WORD);
     if (size == SZ_WORD)
@@ -113,8 +111,8 @@ Error DisZ8000::decodeControlRegister(char *out, uint8_t ctlNum, OprSize size) {
     return OK;
 }
 
-Error DisZ8000::decodeBaseAddressing(DisMemory &memory, InsnZ8000 &insn,
-        char *out, AddrMode mode, uint8_t num) {
+Error DisZ8000::decodeBaseAddressing(
+        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, uint8_t num) {
     num &= 0xf;
     if (num == 0)
         return setError(REGISTER_NOT_ALLOWED);
@@ -135,8 +133,8 @@ Error DisZ8000::decodeBaseAddressing(DisMemory &memory, InsnZ8000 &insn,
     return setError(insn);
 }
 
-Error DisZ8000::decodeGenericAddressing(DisMemory &memory, InsnZ8000 &insn,
-        char *out, AddrMode mode, uint8_t num) {
+Error DisZ8000::decodeGenericAddressing(
+        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, uint8_t num) {
     num &= 0xF;
     const uint8_t addressing = insn.opCode() >> 14;
     if (addressing == 0 && num == 0 && mode == M_GENI) {  // M_IM
@@ -165,8 +163,7 @@ Error DisZ8000::decodeGenericAddressing(DisMemory &memory, InsnZ8000 &insn,
     return setError(INTERNAL_ERROR);
 }
 
-Error DisZ8000::decodeDirectAddress(
-        DisMemory &memory, InsnZ8000 &insn, char *out) {
+Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, char *out) {
     const uint16_t addr = insn.readUint16(memory);
     if (TableZ8000.segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
@@ -241,8 +238,8 @@ static uint8_t modeField(const InsnZ8000 &insn, ModeField field) {
     }
 }
 
-Error DisZ8000::decodeOperand(DisMemory &memory, InsnZ8000 &insn, char *out,
-        AddrMode mode, ModeField field) {
+Error DisZ8000::decodeOperand(
+        DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, ModeField field) {
     uint8_t num = modeField(insn, field);
     switch (mode) {
     case M_NO:
@@ -361,8 +358,7 @@ Error DisZ8000::checkRegisterOverwrap(const InsnZ8000 &insn) {
             return setError(REGISTER_NOT_ALLOWED);
     }
 
-    const RegName dst =
-            RegZ8000::decodeRegNum(dnum, dmode == M_IR ? SZ_ADDR : SZ_WORD);
+    const RegName dst = RegZ8000::decodeRegNum(dnum, dmode == M_IR ? SZ_ADDR : SZ_WORD);
     if (dst == REG_ILLEGAL)
         return OK;
     const RegName src = RegZ8000::decodeRegNum(snum, SZ_ADDR);
@@ -374,8 +370,7 @@ Error DisZ8000::checkRegisterOverwrap(const InsnZ8000 &insn) {
     return OK;
 }
 
-char *DisZ8000::outComma(
-        char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field) {
+char *DisZ8000::outComma(char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field) {
     if (mode == M_CC && _regs.decodeCcNum(modeField(insn, field)) == CC_T)
         return out;
     out += strlen(out);

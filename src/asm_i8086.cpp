@@ -134,16 +134,13 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
             _scan = p + 1;
             if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
                 if (op.hasVal) {
-                    op.mode = (op.ptr == REG_UNDEF)
-                                      ? M_DIR
-                                      : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
+                    op.mode =
+                            (op.ptr == REG_UNDEF) ? M_DIR : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
                     return OK;
                 }
                 return setError(UNKNOWN_OPERAND);
             }
-            op.mode = (op.ptr == REG_UNDEF)
-                              ? M_MEM
-                              : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
+            op.mode = (op.ptr == REG_UNDEF) ? M_MEM : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
             return OK;
         }
         return setError(MISSING_CLOSING_PAREN);
@@ -169,8 +166,7 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
             op.mode = M_DX;
             break;
         default:
-            op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG
-                                                                 : M_WREG;
+            op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
             break;
         }
         return OK;
@@ -221,8 +217,7 @@ Error AsmI8086::emitImmediate(InsnI8086 &insn, OprSize size, uint16_t val) {
     return OK;
 }
 
-Error AsmI8086::emitRelative(
-        InsnI8086 &insn, const Operand &op, AddrMode mode) {
+Error AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
     const Config::uintptr_t base = insn.address() + (mode == M_REL8 ? 2 : 3);
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
@@ -269,8 +264,8 @@ Error AsmI8086::emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos) {
 }
 
 uint8_t AsmI8086::Operand::encodeMod() const {
-    const bool needDisp = (reg == REG_BP && index == REG_UNDEF) ||
-                          (hasVal && (val32 || getError()));
+    const bool needDisp =
+            (reg == REG_BP && index == REG_UNDEF) || (hasVal && (val32 || getError()));
     if (needDisp) {
         const int32_t val = static_cast<int32_t>(val32);
         return (val < -0x80 || val >= 0x80 || getError()) ? 2 : 1;
@@ -352,8 +347,7 @@ Error AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
     return emitImmediate(insn, SZ_WORD, op.val32);
 }
 
-Error AsmI8086::emitOperand(
-        InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
+Error AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
     switch (mode) {
     case M_CS:
         if (pos == P_NONE)  // POP CS
@@ -395,8 +389,7 @@ Error AsmI8086::emitOperand(
     }
 }
 
-Error AsmI8086::emitStringOperand(
-        InsnI8086 &insn, const Operand &op, RegName seg, RegName index) {
+Error AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index) {
     if (op.mode == M_NONE)
         return OK;
     if (op.reg != REG_UNDEF || op.index != index || op.hasVal)
@@ -408,8 +401,7 @@ Error AsmI8086::emitStringOperand(
     return OK;
 }
 
-Error AsmI8086::encodeStringInst(
-        InsnI8086 &insn, const Operand &dst, const Operand &src) {
+Error AsmI8086::encodeStringInst(InsnI8086 &insn, const Operand &dst, const Operand &src) {
     switch (insn.opCode() & ~1) {
     case 0xA4:  // MOVS ES:[DI],DS:[SI]
         if (emitStringOperand(insn, dst, REG_ES, REG_DI))

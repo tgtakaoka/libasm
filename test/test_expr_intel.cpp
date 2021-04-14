@@ -75,11 +75,11 @@ static void test_oct_constant() {
     E32("37777777777O", 0xffffffff, OK);
     E32("40000000000O", 0, OVERFLOW_RANGE);
 
-    E32("00",           0x00000000, OK);
+    E32("00", 0x00000000, OK);
     E32("017777777777", 0x7fffffff, OK);
     E32("020000000000", 0x80000000, OK);
     E32("037777777777", 0xffffffff, OK);
-    E32("040000000000", 0,          OVERFLOW_RANGE);
+    E32("040000000000", 0, OVERFLOW_RANGE);
 }
 
 static void test_bin_constant() {
@@ -101,11 +101,11 @@ static void test_bin_constant() {
     E32("11111111111111111111111111111111B", 0xffffffff, OK);
     E32("100000000000000000000000000000000b", 0, OVERFLOW_RANGE);
 
-    E32("0b0",                                 0x00000000, OK);
-    E32("0b01111111111111111111111111111111",  0x7fffffff, OK);
-    E32("0b10000000000000000000000000000000",  0x80000000, OK);
-    E32("0b11111111111111111111111111111111",  0xffffffff, OK);
-    E32("0b100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
+    E32("0b0", 0x00000000, OK);
+    E32("0b01111111111111111111111111111111", 0x7fffffff, OK);
+    E32("0b10000000000000000000000000000000", 0x80000000, OK);
+    E32("0b11111111111111111111111111111111", 0xffffffff, OK);
+    E32("0b100000000000000000000000000000000", 0, OVERFLOW_RANGE);
 }
 
 static void test_current_address() {
@@ -117,10 +117,10 @@ static void test_current_address() {
     E16("$-1001H", 0xFFFF, OK);
     E32("$+0F000H", 0x00010000, OK);
     E32("$-1001H", 0xFFFFFFFF, OK);
-    E16(".",       0x1000, OK);
-    E16(".+2",     0x1002, OK);
-    E16(".-2",     0x0FFE, OK);
-    E16(".+0xF000", 0,      OVERFLOW_RANGE);
+    E16(".", 0x1000, OK);
+    E16(".+2", 0x1002, OK);
+    E16(".-2", 0x0FFE, OK);
+    E16(".+0xF000", 0, OVERFLOW_RANGE);
     E16(".-0x1001", 0xFFFF, OK);
     E32(".+0xF000", 0x00010000, OK);
     E32(".-0x1001", 0xFFFFFFFF, OK);
@@ -129,8 +129,8 @@ static void test_current_address() {
     symtab.setCurrentOrigin(0x1100);
     E16("$-table", 0x100, OK);
     E16("($-table)/2", 0x80, OK);
-    E16(".-table",     0x100, OK);
-    E16("(.-table)/2", 0x80,  OK);
+    E16(".-table", 0x100, OK);
+    E16("(.-table)/2", 0x80, OK);
 }
 
 static void test_errors() {

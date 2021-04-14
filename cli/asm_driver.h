@@ -49,8 +49,7 @@ private:
 
     static constexpr const char *PROG_PREFIX = "asm";
     AsmDirective *defaultDirective();
-    int assemble(
-            CliMemory &memory, FILE *list = nullptr, bool reportError = false);
+    int assemble(CliMemory &memory, FILE *list = nullptr, bool reportError = false);
     void printListing(CliMemory &memory, FILE *out);
 
     static const char *basename(const char *str, char sep_char = '/');

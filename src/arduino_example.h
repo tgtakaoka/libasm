@@ -150,8 +150,7 @@ private:
 
 class AsmExample : public BaseExample {
 public:
-    AsmExample(Assembler &assembler)
-        : BaseExample(&assembler), _assembler(assembler) {}
+    AsmExample(Assembler &assembler) : BaseExample(&assembler), _assembler(assembler) {}
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
@@ -159,9 +158,7 @@ public:
     }
 
 protected:
-    const /*PROGMEM */ char *getCpu() const override {
-        return _assembler.getCpu();
-    }
+    const /*PROGMEM */ char *getCpu() const override { return _assembler.getCpu(); }
     bool setCpu(const char *cpu) override { return _assembler.setCpu(cpu); }
 
 private:
@@ -213,9 +210,7 @@ public:
     }
 
 protected:
-    const /*PROGMEM*/ char *getCpu() const override {
-        return _disassembler.getCpu();
-    }
+    const /*PROGMEM*/ char *getCpu() const override { return _disassembler.getCpu(); }
     bool setCpu(const char *cpu) override { return _disassembler.setCpu(cpu); }
 
 private:

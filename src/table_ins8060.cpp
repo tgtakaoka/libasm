@@ -95,8 +95,8 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8060::searchName(InsnIns8060 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-            insn.flags(), ARRAY_RANGE(TABLE_INS8060), acceptAddrMode, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8060), acceptAddrMode, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -139,8 +139,7 @@ const char *TableIns8060::getCpu() const {
 }
 
 bool TableIns8060::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_SCMP) == 0 ||
-           strcasecmp_P(cpu, TEXT_CPU_INS8060) == 0 ||
+    return strcasecmp_P(cpu, TEXT_CPU_SCMP) == 0 || strcasecmp_P(cpu, TEXT_CPU_INS8060) == 0 ||
            strcasecmp_P(cpu, TEXT_CPU_8060) == 0;
 }
 

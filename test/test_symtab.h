@@ -34,13 +34,10 @@ public:
         return it == _value_to_symbol.end() ? nullptr : it->second.c_str();
     }
     bool hasSymbol(const char *symbol, const char *end = nullptr) override {
-        return end ? hasSymbol(std::string(symbol, end))
-                   : hasSymbol(std::string(symbol));
+        return end ? hasSymbol(std::string(symbol, end)) : hasSymbol(std::string(symbol));
     }
-    uint32_t lookupSymbol(
-            const char *symbol, const char *end = nullptr) override {
-        return end ? lookup(std::string(symbol, end))
-                   : lookup(std::string(symbol));
+    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) override {
+        return end ? lookup(std::string(symbol, end)) : lookup(std::string(symbol));
     }
     uint32_t currentOrigin() override { return _current_origin; }
 

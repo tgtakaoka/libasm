@@ -24,8 +24,7 @@ bool Value::overflowUint8() const {
 }
 
 bool Value::overflowUint16() const {
-    return getSigned() < -32768L ||
-           (getSigned() >= 0 && getUnsigned() >= 0x10000L);
+    return getSigned() < -32768L || (getSigned() >= 0 && getUnsigned() >= 0x10000L);
 }
 
 const char *ValueParser::readChar(const char *expr, char &val) {
@@ -93,8 +92,7 @@ static uint8_t toNumber(const char c, const uint8_t base) {
     return c - '0';
 }
 
-Error ValueParser::parseNumber(
-        const char *p, Value &val, const uint8_t base, const char suffix) {
+Error ValueParser::parseNumber(const char *p, Value &val, const uint8_t base, const char suffix) {
     if (!isValidDigit(*p, base))
         return setError(ILLEGAL_CONSTANT);
     uint32_t v = 0;
@@ -373,23 +371,19 @@ Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
         return Value::makeUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
     case OP_BIT_SHL:
         if (lhs.isSigned())
-            return Value::makeSigned(
-                    shift_left(lhs.getSigned(), rhs.getUnsigned()));
-        return Value::makeUnsigned(
-                shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+            return Value::makeSigned(shift_left(lhs.getSigned(), rhs.getUnsigned()));
+        return Value::makeUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
     case OP_BIT_SHR:
         if (lhs.isSigned())
-            return Value::makeSigned(shift_right(lhs.getSigned(),
-                    rhs.getUnsigned(), lhs.getSigned() & 0x80000000));
-        return Value::makeUnsigned(
-                shift_right(lhs.getUnsigned(), rhs.getUnsigned(), false));
+            return Value::makeSigned(
+                    shift_right(lhs.getSigned(), rhs.getUnsigned(), lhs.getSigned() & 0x80000000));
+        return Value::makeUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned(), false));
     default:
         return Value();
     }
 }
 
-Error ValueParser::scanNumberEnd(
-        const char *scan, const uint8_t base, char suffix) {
+Error ValueParser::scanNumberEnd(const char *scan, const uint8_t base, char suffix) {
     if (suffix == 'B') {
         // Check whether intel binary or C-style binary
         const char *p = scan;

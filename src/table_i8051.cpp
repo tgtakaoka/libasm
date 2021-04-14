@@ -152,8 +152,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == IMM16)
         return table == IMM8;
     if (opr == ADR16)
-        return table == ADR8 || table == ADR11 || table == REL ||
-               table == BITAD;
+        return table == ADR8 || table == ADR11 || table == REL || table == BITAD;
     return false;
 }
 
@@ -166,8 +165,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableI8051::searchName(InsnI8051 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-            insn.flags(), ARRAY_RANGE(TABLE_I8051), acceptModes, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), ARRAY_RANGE(TABLE_I8051), acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -209,8 +208,7 @@ const char *TableI8051::getCpu() const {
 }
 
 bool TableI8051::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_8051) == 0 ||
-           strcasecmp_P(cpu, TEXT_CPU_I8051) == 0;
+    return strcasecmp_P(cpu, TEXT_CPU_8051) == 0 || strcasecmp_P(cpu, TEXT_CPU_I8051) == 0;
 }
 
 class TableI8051 TableI8051;

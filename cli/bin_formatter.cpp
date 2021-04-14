@@ -23,11 +23,7 @@ namespace libasm {
 namespace cli {
 
 BinFormatter::BinFormatter(AddressWidth addrWidth)
-    : _addrWidth(addrWidth),
-      _line(nullptr),
-      _line_len(0),
-      _data(nullptr),
-      _data_len(0) {}
+    : _addrWidth(addrWidth), _line(nullptr), _line_len(0), _data(nullptr), _data_len(0) {}
 
 BinFormatter::~BinFormatter() {
     if (_line)

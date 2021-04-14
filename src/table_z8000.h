@@ -42,8 +42,8 @@ public:
 private:
     CpuType _cpuType;
 
-    const Entry *searchOpCode(InsnZ8000 &insn, DisMemory &memory,
-            const Entry *table, const Entry *end) const;
+    const Entry *searchOpCode(
+            InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const;
 };
 
 extern TableZ8000 TableZ8000;

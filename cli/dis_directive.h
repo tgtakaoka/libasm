@@ -31,8 +31,7 @@ namespace cli {
 
 class DisDirective : public ListingLine {
 public:
-    DisDirective(Disassembler &disassembler, CliMemory &memory,
-            bool uppercase = false);
+    DisDirective(Disassembler &disassembler, CliMemory &memory, bool uppercase = false);
 
     Error disassemble(uint32_t addr, Insn &insn);
     const char *getCpu(bool withBytes = false);

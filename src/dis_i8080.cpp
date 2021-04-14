@@ -25,8 +25,7 @@ char *DisI8080::outRegister(char *out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisI8080::decodeOperand(
-        DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode) {
+Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode) {
     switch (mode) {
     case M_IM8:
     case M_IOA:

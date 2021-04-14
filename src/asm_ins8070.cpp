@@ -40,8 +40,7 @@ Error AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
-    const Config::uintptr_t target =
-            (op.getError() ? base + fetch : op.val16) - fetch;
+    const Config::uintptr_t target = (op.getError() ? base + fetch : op.val16) - fetch;
     const Config::ptrdiff_t offset = target - base;
     if (offset < -128 || offset >= 128)
         return setError(OPERAND_TOO_FAR);
@@ -75,8 +74,7 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmIns8070::emitOperand(
-        InsnIns8070 &insn, OprFormat format, const Operand &op) {
+Error AsmIns8070::emitOperand(InsnIns8070 &insn, OprFormat format, const Operand &op) {
     switch (format) {
     case OPR_PN:
     case OPR_BR:
@@ -175,8 +173,7 @@ Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
         _scan = p + RegIns8070::regNameLen(ptr);
         op.reg = ptr;
         op.autoIndex = autoIndex;
-        op.format =
-                (autoIndex || ptr == REG_SP || ptr == REG_PC) ? OPR_GN : OPR_PR;
+        op.format = (autoIndex || ptr == REG_SP || ptr == REG_PC) ? OPR_GN : OPR_PR;
         return OK;
     }
 

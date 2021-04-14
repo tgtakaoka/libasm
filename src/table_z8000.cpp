@@ -24,12 +24,12 @@
 namespace libasm {
 namespace z8000 {
 
-#define X(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf, _ex1, _ex2, _post)  \
-    {                                                                          \
-        _opc,                                                                  \
-                Entry::Flags::create(_dst, MF_##_dstf, _src, MF_##_srcf, _ex1, \
-                        _ex2, _post, CM_##_cm, SZ_##_sz),                      \
-                _name                                                          \
+#define X(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf, _ex1, _ex2, _post)               \
+    {                                                                                       \
+        _opc,                                                                               \
+                Entry::Flags::create(_dst, MF_##_dstf, _src, MF_##_srcf, _ex1, _ex2, _post, \
+                        CM_##_cm, SZ_##_sz),                                                \
+                _name                                                                       \
     }
 #define E(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf) \
     X(_opc, _cm, _sz, _name, _dst, _src, _dstf, _srcf, M_NO, M_NO, P_NO)
@@ -275,19 +275,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_R)
-        return table == M_GENI || table == M_GEND || table == M_WR07 ||
-               table == M_WR || table == M_DR;
+        return table == M_GENI || table == M_GEND || table == M_WR07 || table == M_WR ||
+               table == M_DR;
     if (opr == M_IM)
-        return table == M_GENI || table == M_IM8 || table == M_BIT ||
-               table == M_CNT || table == M_QCNT || table == M_SCNT ||
-               table == M_NCNT || table == M_IO;
+        return table == M_GENI || table == M_IM8 || table == M_BIT || table == M_CNT ||
+               table == M_QCNT || table == M_SCNT || table == M_NCNT || table == M_IO;
     if (opr == M_IR)
-        return table == M_GENI || table == M_GEND || table == M_GENA ||
-               table == M_IRIO;
+        return table == M_GENI || table == M_GEND || table == M_GENA || table == M_IRIO;
     if (opr == M_DA)
-        return table == M_GENI || table == M_GEND || table == M_GENA ||
-               table == M_RA || table == M_RA12 || table == M_RA8 ||
-               table == M_RA7 || table == M_IO;
+        return table == M_GENI || table == M_GEND || table == M_GENA || table == M_RA ||
+               table == M_RA12 || table == M_RA8 || table == M_RA7 || table == M_IO;
     if (opr == M_X)
         return table == M_GENI || table == M_GEND || table == M_GENA;
     if (opr == M_CC)
@@ -307,8 +304,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableZ8000::searchName(InsnZ8000 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(insn.name(),
-            insn.flags(), ARRAY_RANGE(Z8000_TABLE), acceptModes, count);
+    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+            insn.name(), insn.flags(), ARRAY_RANGE(Z8000_TABLE), acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -326,12 +323,11 @@ static bool matchPostWord(const InsnZ8000 &insn) {
     return post == insn.postVal();
 }
 
-const Entry *TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory,
-        const Entry *table, const Entry *end) const {
+const Entry *TableZ8000::searchOpCode(
+        InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const {
     for (const Entry *entry = table;
-            entry < end &&
-            (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                     insn.opCode(), entry, end, tableCode)) != nullptr;
+            entry < end && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
+                                    insn.opCode(), entry, end, tableCode)) != nullptr;
             entry++) {
         insn.setFlags(entry->flags());
         if (insn.hasPost()) {

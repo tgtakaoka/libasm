@@ -23,8 +23,8 @@ namespace libasm {
 namespace ns32000 {
 
 static bool isGenMode(AddrMode mode) {
-    return mode == M_GENR || mode == M_GENW || mode == M_GENC ||
-           mode == M_GENA || mode == M_FENR || mode == M_FENW;
+    return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA || mode == M_FENR ||
+           mode == M_FENW;
 }
 
 static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
@@ -51,8 +51,7 @@ static bool isScaledIndex(uint8_t gen) {
     return gen >= 0x1c;
 }
 
-Error DisNs32000::readIndexByte(
-        DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos) {
+Error DisNs32000::readIndexByte(DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos) {
     if (isGenMode(mode) && isScaledIndex(getOprField(insn, pos)))
         insn.setIndexByte(insn.readByte(memory), pos);
     return setError(insn);
@@ -73,8 +72,7 @@ char *DisNs32000::outDisplacement(char *out, const Displacement &disp) {
     return out;
 }
 
-Error DisNs32000::readDisplacement(
-        DisMemory &memory, InsnNs32000 &insn, Displacement &disp) {
+Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displacement &disp) {
     const uint8_t head = insn.readByte(memory);
     if ((head & 0x80) == 0) {
         // 0xxx|xxxx
@@ -83,8 +81,7 @@ Error DisNs32000::readDisplacement(
         disp.bits = 7;
     } else {
         const int8_t val8 = (head & 0x20) ? (head | 0xC0) : (head & ~0xC0);
-        const int16_t val16 =
-                (static_cast<int16_t>(val8) << 8) | insn.readByte(memory);
+        const int16_t val16 = (static_cast<int16_t>(val8) << 8) | insn.readByte(memory);
         if ((head & 0x40) == 0) {
             // 10xx|xxxx
             disp.val32 = static_cast<int32_t>(val16);
@@ -93,8 +90,7 @@ Error DisNs32000::readDisplacement(
             // 11xx|xxxx
             if (head == 0xE0)
                 return setError(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
-            const int32_t val32 = (static_cast<int32_t>(val16) << 16) |
-                                  insn.readUint16(memory);
+            const int32_t val32 = (static_cast<int32_t>(val16) << 16) | insn.readUint16(memory);
             if (val32 < -0x1F000000L || val32 >= 0x20000000L)
                 return setError(OVERFLOW_RANGE);
             disp.val32 = val32;
@@ -104,8 +100,7 @@ Error DisNs32000::readDisplacement(
     return setError(insn);
 }
 
-Error DisNs32000::decodeLength(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
+Error DisNs32000::decodeLength(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     Displacement disp;
     if (readDisplacement(memory, insn, disp))
         return getError();
@@ -136,8 +131,7 @@ static char *outComma(char *out) {
     return out;
 }
 
-Error DisNs32000::decodeBitField(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
+Error DisNs32000::decodeBitField(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     if (mode == M_BFLEN)
         return OK;
     const uint8_t data = insn.readByte(memory);
@@ -149,8 +143,7 @@ Error DisNs32000::decodeBitField(
     return setError(insn);
 }
 
-Error DisNs32000::decodeImmediate(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
+Error DisNs32000::decodeImmediate(DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
     const OprSize size = (mode == M_GENC) ? SZ_BYTE : insn.oprSize();
     switch (size) {
     case SZ_BYTE:
@@ -197,8 +190,7 @@ Error DisNs32000::decodeDisplacement(
     return OK;
 }
 
-Error DisNs32000::decodeRelative(
-        DisMemory &memory, InsnNs32000 &insn, char *out) {
+Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn, char *out) {
     Displacement disp;
     if (readDisplacement(memory, insn, disp))
         return getError();
@@ -254,8 +246,8 @@ Error DisNs32000::decodeRegisterList(
     return OK;
 }
 
-Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
-        AddrMode mode, OprPos pos) {
+Error DisNs32000::decodeGeneric(
+        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode, OprPos pos) {
     uint8_t gen = getOprField(insn, pos);
     RegName index = REG_UNDEF;
     OprSize size = SZ_NONE;
@@ -279,8 +271,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 7:  // M_GREG, M_FREG
         if (mode == M_GENA)
             return setError(REGISTER_NOT_ALLOWED);
-        reg = RegNs32000::decodeRegName(
-                gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
+        reg = RegNs32000::decodeRegName(gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
         if (scaledIndex) {
             *out++ = '0';
             *out++ = '(';
@@ -339,8 +330,8 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     case 0x15:  // M_ABS
         if (readDisplacement(memory, insn, disp))
             return getError();
-        if (static_cast<Config::uintptr_t>(disp.val32) >=
-                static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
+        if (static_cast<Config::uintptr_t>(disp.val32) >= static_cast<Config::uintptr_t>(1)
+                                                                  << uint8_t(addressWidth()))
             return setError(OVERFLOW_RANGE);
         *out++ = '@';
         out = outDisplacement(out, disp);
@@ -384,8 +375,7 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
             return getError();
         if (reg == REG_PC) {
             const Config::uintptr_t target = insn.address() + disp.val32;
-            if (target >= static_cast<Config::uintptr_t>(1)
-                                  << uint8_t(addressWidth()))
+            if (target >= static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
                 return setError(OVERFLOW_RANGE);
             if (_pcRelativeParen) {
                 out = outAbsAddr(out, target, addressWidth());
@@ -418,8 +408,8 @@ Error DisNs32000::decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
     return OK;
 }
 
-Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
-        AddrMode mode, OprPos pos, OprSize size) {
+Error DisNs32000::decodeOperand(
+        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode, OprPos pos, OprSize size) {
     const uint8_t field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
@@ -508,15 +498,13 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn, char *out) {
     const OprSize size = insn.oprSize();
     if (src == M_NONE)
         return setOK();
-    const OprSize srcSize =
-            (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
+    const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
     if (decodeOperand(memory, insn, out, src, insn.srcPos(), srcSize))
         return getError();
     if (dst == M_NONE)
         return setOK();
     out = outComma(out);
-    const OprSize dstSize =
-            (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
+    const OprSize dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
     if (decodeOperand(memory, insn, out, dst, insn.dstPos(), dstSize))
         return getError();
     if (ex1 == M_NONE)

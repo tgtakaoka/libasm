@@ -88,8 +88,7 @@ Error DisZ80::decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out) {
     return setError(insn);
 }
 
-Error DisZ80::decodeOperand(
-        DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode) {
+Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode) {
     Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_IM8:
@@ -105,8 +104,7 @@ Error DisZ80::decodeOperand(
         outIndirectAddr(out, insn.readByte(memory), 8);
         break;
     case M_INDX:
-        outIndexOffset(
-                out, RegZ80::decodeIndexReg(insn), insn.readByte(memory));
+        outIndexOffset(out, RegZ80::decodeIndexReg(insn), insn.readByte(memory));
         break;
     case M_CC4:
         _regs.outCcName(out, RegZ80::decodeCcName((opc >> 3) & 3));

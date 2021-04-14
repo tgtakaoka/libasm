@@ -76,12 +76,9 @@ private:
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);
     Error emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos);
     Error emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos);
-    Error emitOperand(
-            InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
-    Error emitStringOperand(
-            InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
-    Error encodeStringInst(
-            InsnI8086 &insn, const Operand &src, const Operand &dst);
+    Error emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
+    Error emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
+    Error encodeStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
     Error encode(Insn &insn) override;
 };
 

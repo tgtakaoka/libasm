@@ -23,7 +23,7 @@
 
 namespace libasm {
 namespace cdp1802 {
-   // empty
+// empty
 }  // namespace cdp1802
 }  // namespace libasm
 

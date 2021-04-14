@@ -55,8 +55,7 @@ const char *IntelHex::prepare(uint32_t addr) {
     return _line;
 }
 
-const char *IntelHex::encode(
-        uint32_t ela_addr, const uint8_t *data, uint8_t size) {
+const char *IntelHex::encode(uint32_t ela_addr, const uint8_t *data, uint8_t size) {
     const uint16_t addr = static_cast<uint16_t>(ela_addr);
     const uint8_t type = 0;
     // :LLaaaa00dd....ddSS

@@ -21,8 +21,7 @@
 namespace libasm {
 namespace i8080 {
 
-Error AsmI8080::encodeOperand(
-        InsnI8080 &insn, const Operand &op, AddrMode mode) {
+Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_IM8:
     case M_IOA:

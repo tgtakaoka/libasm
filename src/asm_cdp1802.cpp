@@ -32,8 +32,7 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmCdp1802::emitOperand(
-        InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
+Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     uint16_t val16 = op.val16;
     switch (mode) {
     case REG1:

@@ -70,16 +70,14 @@ private:
     Error processPseudo(const char *scan, const InsnNs32000 &insn);
     Error emitDisplacement(InsnNs32000 &insn, uint32_t val32);
     Error emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
-    Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand *off,
-            const Operand &len);
+    Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand *off, const Operand &len);
     Error emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);
     Error emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
-    Error emitGeneric(
-            InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
+    Error emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
     Error emitRelative(InsnNs32000 &insn, const Operand &op);
-    Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size,
-            const Operand &op, OprPos pos, const Operand *prevOp = nullptr);
+    Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
+            const Operand *prevOp = nullptr);
     Error encode(Insn &insn) override;
 };
 

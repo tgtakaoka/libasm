@@ -23,7 +23,8 @@ namespace libasm {
 namespace test {
 
 static bool isBdigits(const char *&r, const char *p) {
-    if (*p != '0' && *p != '1') return false;
+    if (*p != '0' && *p != '1')
+        return false;
     while (*p == '0' || *p == '1')
         p++;
     r = p;
@@ -31,7 +32,8 @@ static bool isBdigits(const char *&r, const char *p) {
 }
 
 static bool isXdigits(const char *&r, const char *p) {
-    if (!isxdigit(*p)) return false;
+    if (!isxdigit(*p))
+        return false;
     while (isxdigit(*p))
         p++;
     r = p;
@@ -39,7 +41,8 @@ static bool isXdigits(const char *&r, const char *p) {
 }
 
 static bool isDigits(const char *&r, const char *p) {
-    if (!isdigit(*p)) return false;
+    if (!isdigit(*p))
+        return false;
     while (isdigit(*p))
         p++;
     r = p;
@@ -74,10 +77,7 @@ static bool isNumber(const char *p, const char *&r) {
 
 static constexpr uint8_t TOKEN_DIGITS = 0x80;
 
-TokenizedText::TokenizedText(const char *text)
-    : _tokens(tokenize(text)),
-      _count(0)
-{}
+TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
 
 std::vector<uint8_t> TokenizedText::tokenize(const char *text) {
     std::vector<uint8_t> t;
@@ -94,8 +94,7 @@ std::vector<uint8_t> TokenizedText::tokenize(const char *text) {
     return t;
 }
 
-std::size_t TokenizedText::hash::operator()(
-    const TokenizedText &it) const {
+std::size_t TokenizedText::hash::operator()(const TokenizedText &it) const {
     std::size_t seed = it.length();
     for (auto t : it._tokens) {
         seed ^= t + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -103,17 +102,18 @@ std::size_t TokenizedText::hash::operator()(
     return seed;
 }
 
-bool TokenizedText::eq::operator()(
-    const TokenizedText &a, const TokenizedText &b) const {
-    if (a.length() != b.length()) return false;
+bool TokenizedText::eq::operator()(const TokenizedText &a, const TokenizedText &b) const {
+    if (a.length() != b.length())
+        return false;
     for (std::size_t i = 0; i < a.length(); i++) {
-        if (a._tokens.at(i) != b._tokens.at(i)) return false;
+        if (a._tokens.at(i) != b._tokens.at(i))
+            return false;
     }
     return true;
 }
 
-} // namespace test
-} // namespace libasm
+}  // namespace test
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

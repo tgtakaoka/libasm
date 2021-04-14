@@ -42,8 +42,7 @@ Error AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmTms9900::encodeModeReg(
-        InsnTms9900 &insn, const Operand &op, AddrMode mode) {
+Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
     if (mode == M_SRC2 && insn.dstMode() == M_BIT2 && op.mode == M_INCR)
         return setError(OPERAND_NOT_ALLOWED);
     Config::opcode_t opc = RegTms9900::encodeRegNumber(op.reg);
@@ -84,8 +83,7 @@ Error AsmTms9900::encodeModeReg(
     return OK;
 }
 
-Error AsmTms9900::encodeOperand(
-        InsnTms9900 &insn, const Operand &op, AddrMode mode) {
+Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
     uint16_t val16 = op.val16;
     switch (mode) {
     case M_IMM:
@@ -147,8 +145,7 @@ Error AsmTms9900::encodeOperand(
         insn.embedPost(val16 << 6);
         return OK;
     case M_RTWP:
-        if ((val16 == 0 || val16 == 1 || val16 == 2 || val16 == 4) &&
-                op.getError() == OK) {
+        if ((val16 == 0 || val16 == 1 || val16 == 2 || val16 == 4) && op.getError() == OK) {
             insn.embed(val16 & 7);
             return OK;
         }

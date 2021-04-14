@@ -26,8 +26,7 @@ namespace i8086 {
 
 class InsnI8086 : public InsnImpl<Config> {
 public:
-    InsnI8086(Insn &insn)
-        : InsnImpl(insn), _segment(0), _modReg(0), _hasModReg(false) {}
+    InsnI8086(Insn &insn) : InsnImpl(insn), _segment(0), _modReg(0), _hasModReg(false) {}
 
     AddrMode dstMode() const { return _flags.dstMode(); }
     AddrMode srcMode() const { return _flags.srcMode(); }

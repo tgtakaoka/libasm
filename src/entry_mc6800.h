@@ -55,13 +55,11 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(
-                AddrMode op1, AddrMode op2, AddrMode op3, OprSize size) {
-            return Flags{static_cast<uint16_t>(
-                    (static_cast<uint16_t>(op1) << op1_gp) |
-                    (static_cast<uint16_t>(op2) << op2_gp) |
-                    (static_cast<uint16_t>(op3) << op3_gp) |
-                    (static_cast<uint16_t>(size) << size_gp))};
+        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3, OprSize size) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(op1) << op1_gp) |
+                                               (static_cast<uint16_t>(op2) << op2_gp) |
+                                               (static_cast<uint16_t>(op3) << op3_gp) |
+                                               (static_cast<uint16_t>(size) << size_gp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 

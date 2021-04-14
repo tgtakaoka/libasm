@@ -35,8 +35,8 @@ private:
 
     Error parseOperand(const char *scan, Operand &op);
     Error encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
-    Error encodeOperand(InsnTlcs90 &insn, AddrMode mode, const Operand &op,
-            Config::opcode_t opcode);
+    Error encodeOperand(
+            InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
     Error encode(Insn &insn) override;
 };
 

@@ -25,15 +25,13 @@ char *DisMc6809::outRegister(char *out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisMc6809::decodeDirectPage(
-        DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, char *out) {
     const uint8_t dir = insn.readByte(memory);
     outAbsAddr(out, dir, 8, PSTR("<"));
     return setError(insn);
 }
 
-Error DisMc6809::decodeExtended(
-        DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, char *out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
     outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     return setError(insn);
@@ -67,8 +65,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out) {
                 prefix = '>';
         }
         if (spec.base == REG_PCR) {
-            const Config::uintptr_t target =
-                    insn.address() + insn.length() + offset;
+            const Config::uintptr_t target = insn.address() + insn.length() + offset;
             out = outRelAddr(out, target, insn.address(), spec.size);
         } else {
             if (prefix) {
@@ -112,8 +109,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out) {
     return setError(insn);
 }
 
-Error DisMc6809::decodeRelative(
-        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
+Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
     Config::ptrdiff_t delta;
     if (mode == REL) {
         delta = static_cast<int8_t>(insn.readByte(memory));
@@ -129,8 +125,7 @@ Error DisMc6809::decodeRelative(
     return setError(insn);
 }
 
-Error DisMc6809::decodeImmediate(
-        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
+Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
     *out++ = '#';
     if (mode == IM8) {
         outHex(out, insn.readByte(memory), 8);
@@ -142,8 +137,7 @@ Error DisMc6809::decodeImmediate(
     return setError(insn);
 }
 
-Error DisMc6809::decodePushPull(
-        DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out) {
     uint8_t post = insn.readPost(memory);
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg)
@@ -167,8 +161,7 @@ Error DisMc6809::decodePushPull(
     return setError(insn);
 }
 
-Error DisMc6809::decodeRegisters(
-        DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out) {
     const uint8_t post = insn.readPost(memory);
     const RegName dst = _regs.decodeDataReg(post);
     const RegName src = _regs.decodeDataReg(post >> 4);
@@ -204,8 +197,7 @@ Error DisMc6809::decodeDirBit(DisMemory &memory, InsnMc6809 &insn, char *out) {
     return OK;
 }
 
-Error DisMc6809::decodeTransferMemory(
-        DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, char *out) {
     const uint8_t post = insn.readPost(memory);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
     const RegName dst = _regs.decodeTfmBaseReg(post);
@@ -225,8 +217,7 @@ Error DisMc6809::decodeTransferMemory(
     return setError(insn);
 }
 
-Error DisMc6809::decodeOperand(
-        DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
+Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
     switch (mode) {
     case DIR:
         return decodeDirectPage(memory, insn, out);

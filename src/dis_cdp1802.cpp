@@ -25,8 +25,7 @@ static Config::uintptr_t pageAddr(Config::uintptr_t base, uint8_t val) {
     return (base & ~0xFF) | val;
 }
 
-Error DisCdp1802::decodeOperand(
-        DisMemory &memory, InsnCdp1802 &insn, char *out, AddrMode mode) {
+Error DisCdp1802::decodeOperand(DisMemory &memory, InsnCdp1802 &insn, char *out, AddrMode mode) {
     const Config::opcode_t opCode = insn.opCode();
     switch (mode) {
     case REG1:

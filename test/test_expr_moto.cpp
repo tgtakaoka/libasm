@@ -22,8 +22,7 @@ using namespace libasm::test;
 MotoValueParser parser;
 MotoValueFormatter formatter;
 
-static void set_up() {
-}
+static void set_up() {}
 
 static void tear_down() {
     symtab.reset();

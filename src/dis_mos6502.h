@@ -30,9 +30,7 @@ class DisMos6502 : public Disassembler, public Config {
 public:
     DisMos6502() : Disassembler(_formatter, _regs, TableMos6502) {}
 
-    AddressWidth addressWidth() const override {
-        return TableMos6502.addressWidth();
-    }
+    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override;
     void useIndirectLong(bool enable) { TableMos6502.useIndirectLong(enable); }
     void longAccumlator(bool on) { TableMos6502.longAccumlator(on); }
@@ -42,14 +40,10 @@ private:
     MotoValueFormatter _formatter;
     RegMos6502 _regs;
 
-    Error decodeImmediate(
-            DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeAbsolute(
-            DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeZeroPage(
-            DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeRelative(
-            DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
+    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
+    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
+    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
+    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
     Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, char *out);
     Error decode(DisMemory &memory, Insn &insn, char *out) override;
 };

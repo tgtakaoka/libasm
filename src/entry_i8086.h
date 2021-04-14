@@ -91,27 +91,21 @@ public:
         uint8_t _pos;
         uint8_t _size;
 
-        static constexpr Flags create(AddrMode dstMode, AddrMode srcMode,
-                OprPos dstPos, OprPos srcPos, OprSize size, bool strInst) {
+        static constexpr Flags create(AddrMode dstMode, AddrMode srcMode, OprPos dstPos,
+                OprPos srcPos, OprSize size, bool strInst) {
             return Entry::Flags{Entry::_opr(dstMode), Entry::_opr(srcMode),
                     Entry::_pos(dstPos, srcPos), Entry::_size(size, strInst)};
         }
         Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src),
-                    pgm_read_byte(&_pos), pgm_read_byte(&_size)};
+            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_pos),
+                    pgm_read_byte(&_size)};
         }
 
-        AddrMode dstMode() const {
-            return AddrMode((_dst >> mode_gp) & mode_gm);
-        }
-        AddrMode srcMode() const {
-            return AddrMode((_src >> mode_gp) & mode_gm);
-        }
+        AddrMode dstMode() const { return AddrMode((_dst >> mode_gp) & mode_gm); }
+        AddrMode srcMode() const { return AddrMode((_src >> mode_gp) & mode_gm); }
         OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
         OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & pos_gm); }
-        OprSize size() const {
-            return OprSize((_size >> oprSize_gp) & oprSize_gm);
-        }
+        OprSize size() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
         bool strInst() const { return _size & (1 << strInst_bp); }
     };
 
@@ -123,16 +117,13 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t _opr(AddrMode mode) {
-        return (static_cast<uint8_t>(mode) << mode_gp);
-    }
+    static constexpr uint8_t _opr(AddrMode mode) { return (static_cast<uint8_t>(mode) << mode_gp); }
     static constexpr uint8_t _pos(OprPos dstPos, OprPos srcPos) {
         return (static_cast<uint8_t>(dstPos) << dstPos_gp) |
                (static_cast<uint8_t>(srcPos) << srcPos_gp);
     }
     static constexpr uint8_t _size(OprSize size, bool strInst) {
-        return (static_cast<uint8_t>(size) << oprSize_gp) |
-               (strInst ? (1 << strInst_bp) : 0);
+        return (static_cast<uint8_t>(size) << oprSize_gp) | (strInst ? (1 << strInst_bp) : 0);
     }
 
     static constexpr int dst_gp = 0;

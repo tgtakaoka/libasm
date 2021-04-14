@@ -53,15 +53,28 @@ static const char TEXT_REG_F7[] PROGMEM = "F7";
 // clang-format on
 
 static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_R0), NAME_ENTRY(REG_R1), NAME_ENTRY(REG_R2),
-        NAME_ENTRY(REG_R3), NAME_ENTRY(REG_R4), NAME_ENTRY(REG_R5),
-        NAME_ENTRY(REG_R6), NAME_ENTRY(REG_R7), NAME_ENTRY(REG_FP),
-        NAME_ENTRY(REG_SP), NAME_ENTRY(REG_SB), NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_R0),
+        NAME_ENTRY(REG_R1),
+        NAME_ENTRY(REG_R2),
+        NAME_ENTRY(REG_R3),
+        NAME_ENTRY(REG_R4),
+        NAME_ENTRY(REG_R5),
+        NAME_ENTRY(REG_R6),
+        NAME_ENTRY(REG_R7),
+        NAME_ENTRY(REG_FP),
+        NAME_ENTRY(REG_SP),
+        NAME_ENTRY(REG_SB),
+        NAME_ENTRY(REG_PC),
         NAME_ENTRY(REG_TOS),
 
-        NAME_ENTRY(REG_F0), NAME_ENTRY(REG_F1), NAME_ENTRY(REG_F2),
-        NAME_ENTRY(REG_F3), NAME_ENTRY(REG_F4), NAME_ENTRY(REG_F5),
-        NAME_ENTRY(REG_F6), NAME_ENTRY(REG_F7),
+        NAME_ENTRY(REG_F0),
+        NAME_ENTRY(REG_F1),
+        NAME_ENTRY(REG_F2),
+        NAME_ENTRY(REG_F3),
+        NAME_ENTRY(REG_F4),
+        NAME_ENTRY(REG_F5),
+        NAME_ENTRY(REG_F6),
+        NAME_ENTRY(REG_F7),
 
         NAME_ENTRY(REG_EXT),
 };
@@ -236,8 +249,7 @@ char *RegNs32000::outConfigNames(char *out, uint8_t configs) const {
         if (configs & mask) {
             if (sep)
                 *out++ = sep;
-            const NameEntry *entry =
-                    searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
+            const NameEntry *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
             out = outText(out, entry->text());
             sep = ',';
         }
@@ -271,8 +283,7 @@ char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
         out = outText(out, TEXT_STROPT_B);
         sep = ',';
     }
-    const NameEntry *entry =
-            searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
+    const NameEntry *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
     if (entry) {
         if (sep)
             *out++ = sep;

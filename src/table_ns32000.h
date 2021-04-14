@@ -45,10 +45,9 @@ private:
     FpuType _fpuType;
     MmuType _mmuType;
 
-    Error searchName(InsnNs32000 &insn, const EntryPage *pages,
+    Error searchName(InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages,
             const EntryPage *end) const;
-    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory,
-            const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableNs32000 TableNs32000;

@@ -43,16 +43,14 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out) {
 }
 
 Error DisI8051::decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode) {
-    const RegName reg =
-            _regs.decodeRReg(insn.opCode() & (mode == IDIRR ? 1 : 7));
+    const RegName reg = _regs.decodeRReg(insn.opCode() & (mode == IDIRR ? 1 : 7));
     if (mode == IDIRR)
         *out++ = '@';
     outRegister(out, reg);
     return setOK();
 }
 
-Error DisI8051::decodeAddress(
-        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
+Error DisI8051::decodeAddress(DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     if (mode == ADR8) {
         outAbsAddr(out, insn.readByte(memory));
     } else if (mode == ADR11) {
@@ -78,8 +76,7 @@ Error DisI8051::decodeImmediate(
     return setError(insn);
 }
 
-Error DisI8051::decodeOperand(
-        DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
+Error DisI8051::decodeOperand(DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode) {
     switch (mode) {
     case NONE:
         break;

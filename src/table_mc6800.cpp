@@ -27,8 +27,7 @@ namespace mc6800 {
 
 #define E3(_opc, _name, _size, _op1, _op2, _op3) \
     { _opc, Entry::Flags::create(_op1, _op2, _op3, SZ_##_size), _name }
-#define E2(_opc, _name, _size, _op1, _op2) \
-    E3(_opc, _name, _size, _op1, _op2, M_NO)
+#define E2(_opc, _name, _size, _op1, _op2) E3(_opc, _name, _size, _op1, _op2, M_NO)
 #define E1(_opc, _name, _size, _op1) E3(_opc, _name, _size, _op1, M_NO, M_NO)
 #define E0(_opc, _name) E3(_opc, _name, NONE, M_NO, M_NO, M_NO)
 
@@ -401,8 +400,7 @@ bool TableMc6800::isPrefix(Config::opcode_t opCode) const {
 
 class TableMc6800::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(
-            Config::opcode_t prefix, const Entry *table, const Entry *end)
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
@@ -461,8 +459,7 @@ Error TableMc6800::searchName(
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptAddrMode, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -553,8 +550,7 @@ bool TableMc6800::setCpu(const char *cpu) {
         return setCpu(MC6800);
     if (strcasecmp_P(p, TEXT_CPU_6801) == 0)
         return setCpu(MC6801);
-    if (strcasecmp_P(p, TEXT_CPU_6811) == 0 ||
-            strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
+    if (strcasecmp_P(p, TEXT_CPU_6811) == 0 || strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
         return setCpu(MC68HC11);
     p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_HD, 2) == 0)

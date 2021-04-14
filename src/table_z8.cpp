@@ -28,8 +28,7 @@ namespace z8 {
 
 #define P(_opc, _name, _post, _dst, _src, _dstSrc, _ext) \
     { _opc, Entry::Flags::create(_dst, _src, _ext, _dstSrc, _post), _name }
-#define E(_opc, _name, _dst, _src, _dstSrc) \
-    P(_opc, _name, P0, _dst, _src, _dstSrc, M_NO)
+#define E(_opc, _name, _dst, _src, _dstSrc) P(_opc, _name, P0, _dst, _src, _dstSrc, M_NO)
 
 // clang-format off
 static constexpr Entry TABLE_COMMON[] PROGMEM = {
@@ -250,8 +249,7 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
 
 class TableZ8::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(const Entry *table, const Entry *end)
-        : EntryPageBase(table, end) {}
+    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 
 static constexpr TableZ8::EntryPage Z8_PAGES[] PROGMEM = {
@@ -295,13 +293,12 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_W)
         return table == M_DA || table == M_RA || table == M_r || table == M_R;
     if (opr == M_WW)
-        return table == M_DA || table == M_RA || table == M_rr ||
-               table == M_RR || table == M_r || table == M_R;
+        return table == M_DA || table == M_RA || table == M_rr || table == M_RR || table == M_r ||
+               table == M_R;
     if (opr == M_IW)
         return table == M_Ir || table == M_IR;
     if (opr == M_IWW)
-        return table == M_Irr || table == M_IRR || table == M_Ir ||
-               table == M_IR;
+        return table == M_Irr || table == M_IRR || table == M_Ir || table == M_IR;
     if (opr == M_XS)
         return table == M_X;
     if (opr == M_XL)
@@ -316,13 +313,11 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.extMode(), table.extMode());
 }
 
-Error TableZ8::searchName(
-        InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableZ8::searchName(InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(),
-                acceptModes, count);
+                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
@@ -359,14 +354,13 @@ static bool matchPostByte(const InsnZ8 &insn) {
     }
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory,
-        const EntryPage *pages, const EntryPage *end) const {
+Error TableZ8::searchOpCode(
+        InsnZ8 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
         const Entry *end = page->end();
         for (const Entry *entry = page->table();
-                entry < end &&
-                (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                         insn.opCode(), entry, end, maskCode)) != nullptr;
+                entry < end && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
+                                        insn.opCode(), entry, end, maskCode)) != nullptr;
                 entry++) {
             insn.setFlags(entry->flags());
             if (insn.postFormat()) {
@@ -434,11 +428,9 @@ const char *TableZ8::getCpu() const {
 bool TableZ8::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_Z86C, 4) == 0)
         return setCpu(Z86C);
-    if (strncasecmp_P(cpu, TEXT_CPU_Z86, 3) == 0 ||
-            strcasecmp_P(cpu, TEXT_CPU_Z8) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_Z86, 3) == 0 || strcasecmp_P(cpu, TEXT_CPU_Z8) == 0)
         return setCpu(Z8);
-    if (strncasecmp_P(cpu, TEXT_CPU_Z88, 3) == 0 ||
-            strcasecmp_P(cpu, TEXT_CPU_SUPER8) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_Z88, 3) == 0 || strcasecmp_P(cpu, TEXT_CPU_SUPER8) == 0)
         return setCpu(SUPER8);
     return false;
 }

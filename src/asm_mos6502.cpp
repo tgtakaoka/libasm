@@ -21,15 +21,12 @@
 namespace libasm {
 namespace mos6502 {
 
-Error AsmMos6502::encodeRelative(
-        InsnMos6502 &insn, AddrMode mode, const Operand &op) {
+Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t bank = insn.address() & ~0xFFFF;
-    const uint16_t base =
-            insn.address() + insn.length() + (mode == REL ? 1 : 2);
+    const uint16_t base = insn.address() + insn.length() + (mode == REL ? 1 : 2);
     const uint16_t target = op.getError() ? base : op.val32;
     const int16_t delta = target - base;
-    if (addressWidth() == ADDRESS_24BIT && op.getError() == OK &&
-            (op.val32 & ~0xFFFF) != bank) {
+    if (addressWidth() == ADDRESS_24BIT && op.getError() == OK && (op.val32 & ~0xFFFF) != bank) {
     too_far:
         insn.resetAddress(insn.address());  // clear output.
         return setError(OPERAND_TOO_FAR);
@@ -44,8 +41,7 @@ Error AsmMos6502::encodeRelative(
     return OK;
 }
 
-Error AsmMos6502::selectMode(
-        char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) {
+Error AsmMos6502::selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) {
     if (size == '}') {
         if (labs == IMPL)
             return setError(UNKNOWN_OPERAND);
