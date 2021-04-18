@@ -38,7 +38,9 @@ public:
     void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
     void pcRelativeParen(bool paren) { _pcRelativeParen = paren; }
     void externalParen(bool paren) { _externalParen = paren; }
-    void setCurrentOriginSymbol(char c) { _formatter.setCurrentOriginSymbol(c); }
+    void setCurrentOriginSymbol(char c) {
+        _formatter.setCurrentOriginSymbol(c);
+    }
 
 private:
     ValueFormatter _formatter{'*'};
@@ -70,8 +72,7 @@ private:
     Error decodeRelative(DisMemory &memory, InsnNs32000 &insn, char *out);
     Error decodeConfig(const InsnNs32000 &insn, char *out, OprPos pos);
     Error decodeStrOpt(const InsnNs32000 &insn, char *out, OprPos pos);
-    Error decodeRegisterList(
-            DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode);
+    Error decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, char *out);
     Error decodeGeneric(DisMemory &memory, InsnNs32000 &insn, char *out,
             AddrMode mode, OprPos pos);
     Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,

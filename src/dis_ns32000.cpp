@@ -227,7 +227,7 @@ Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, char *out, OprPos pos) {
 }
 
 Error DisNs32000::decodeRegisterList(
-        DisMemory &memory, InsnNs32000 &insn, char *out, AddrMode mode) {
+        DisMemory &memory, InsnNs32000 &insn, char *out) {
     uint8_t list = insn.readByte(memory);
     if (setError(insn))
         return getError();
@@ -444,7 +444,7 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, char *out,
     case M_SOPT:
         return decodeStrOpt(insn, out, pos);
     case M_RLST:
-        return decodeRegisterList(memory, insn, out, mode);
+        return decodeRegisterList(memory, insn, out);
     case M_FENW:
     case M_FENR:
         if (field < 8 && field % 2 != 0 && (size == SZ_LONG || size == SZ_QUAD))
