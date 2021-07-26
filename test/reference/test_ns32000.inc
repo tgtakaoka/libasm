@@ -88,10 +88,16 @@
         cmpb    7(sb), 4(r0)
         cmpw    r2, r3
         cmpd    r4, r5
+        cmpb    0x12, 0x34
+        cmpw    0x1234, 0x5678
+        cmpd    0x12345678, 0x9abcdef0
 ;# Compare Quick: CMPQi src1/quick, src2/gen
         cmpqb   -8, r0
         cmpqw   7, r1
         cmpqd   -8, r2
+        cmpqb   -8, 0x12
+        cmpqw   7, 0x1234
+        cmpqd   -8, 0x12345678
 ;# Add Packed Decimal: ADDPi src/gen, dest/gen
         addpb   5(sb), tos
         addpw   r2, r3

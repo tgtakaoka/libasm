@@ -33,6 +33,8 @@
 ;# Compare Floating: CMPf src1/gen, src2/gen
         cmpf    f5, f7
         cmpl    f6, f0
+        cmpf    1.25, 3.75
+        cmpl    1.25, 3.75
 ;# Move Floating: MOVf src/gen, dest/gen
         movf    f0, 8(sb)
         movl    f2, f4
