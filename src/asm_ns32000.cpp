@@ -512,10 +512,15 @@ Error AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &o
     embedOprField(insn, pos, field);
     switch (op.mode) {
     case M_ABS:
-        if (static_cast<Config::uintptr_t>(op.val32) >= static_cast<Config::uintptr_t>(1)
-                                                                << uint8_t(addressWidth()))
-            return setError(OVERFLOW_RANGE);
-        /* Fall-through */
+        if (op.val32 < uint32_t(1) << uint8_t(addressWidth())) {
+            // Convert negative 24 bit address into negative 32bit value.
+            uint32_t val32 = op.val32;
+            if (val32 & (uint32_t(1) << uint8_t(addressWidth() - 1))) {
+                val32 |= ~((uint32_t(1) << uint8_t(addressWidth())) - 1);
+            }
+            return emitDisplacement(insn, val32);
+        }
+        return setError(OVERFLOW_RANGE);
     case M_RREL:
     case M_MEM:
         if (op.mode == M_MEM && op.reg == REG_PC)

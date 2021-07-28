@@ -218,8 +218,7 @@ Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, char *out, OprPos pos) {
     return OK;
 }
 
-Error DisNs32000::decodeRegisterList(
-        DisMemory &memory, InsnNs32000 &insn, char *out) {
+Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, char *out) {
     uint8_t list = insn.readByte(memory);
     if (setError(insn))
         return getError();
@@ -330,11 +329,13 @@ Error DisNs32000::decodeGeneric(
     case 0x15:  // M_ABS
         if (readDisplacement(memory, insn, disp))
             return getError();
-        if (static_cast<Config::uintptr_t>(disp.val32) >= static_cast<Config::uintptr_t>(1)
-                                                                  << uint8_t(addressWidth()))
+        // Check absolute address is in 24bit integer range.
+        if (disp.val32 >= (int32_t(1) << uint8_t(addressWidth() - 1)) ||
+                disp.val32 < (int32_t(-1) << uint8_t(addressWidth() - 1))) {
             return setError(OVERFLOW_RANGE);
+        }
         *out++ = '@';
-        out = outDisplacement(out, disp);
+        out = outAbsAddr(out, disp.val32, addressWidth());
         break;
     case 0x16:  // M_EXT
         if (_externalParen) {

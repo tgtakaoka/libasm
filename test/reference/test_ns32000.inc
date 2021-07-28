@@ -162,7 +162,7 @@
         scsw    8(9(fp))
         sccw    10(11(sp))
         shiw    12(13(sb))
-        slsw    @14
+        slsw    @0x00000E
         sgtw    ext(15)+16
         slew    tos
         sfsw    18(fp)
@@ -180,7 +180,7 @@ label0:
         slsd    -4(-5(fp))
         sgtd    -6(-7(sp))
         sled    -8(-9(sb))
-        sfsd    @0x1234
+        sfsd    @0x001234
         sfcd    ext(-10)+(-11)
         slod    -12(fp)
         shsd    -13(sp)
@@ -381,9 +381,15 @@ label3:
         addw    0x1234, r1
         addd    0x12345678, r1
 ;# Absolute
-        addw    @0x1234, 4(r2)
-        addw    @0x1234, @0x5678
-        addw    4(r2), @0x5678
+        addw    @0x001234, 4(r2)
+        addw    @0x001234, @0x005678
+        addw    4(r2), @0x005678
+        movw    @0x00003F, r0
+        movw    @0x001FFF, r0
+        movw    @0x7FFFFF, r0
+        movw    @0x800000, r0
+        movw    @0xFFE000, r0
+        movw    @0xFFFFC0, r0
 ;# External
         addw    ext(2)+4, 10(r2)
         addw    ext(-2)+(-4), 10(r2)
@@ -412,7 +418,7 @@ label3:
         addw    r1[r3:b], 8(r2)
         addw    4(r1)[r3:b], 8(r2)
         addw    6(4(fp))[r3:b], 8(r2)
-        addw    @0x1234[r3:b], 8(r2)
+        addw    @0x001234[r3:b], 8(r2)
         addw    ext(4)+6[r3:b], 8(r2)
         addw    tos[r3:b], 8(r2)
         addw    4(sp)[r3:b], 8(r2)
@@ -421,7 +427,7 @@ label3:
 label4:
         addw    8(r2), 4(r1)[r3:w]
         addw    8(r2), 6(4(fp))[r3:w]
-        addw    8(r2), @0x1234[r3:w]
+        addw    8(r2), @0x001234[r3:w]
         addw    8(r2), ext(4)+6[r3:w]
         addw    8(r2), tos[r3:w]
         addw    8(r2), 4(sp)[r3:w]
@@ -429,7 +435,7 @@ label4:
         addw    8(r2)[r3:d], r1[r5:w]
         addw    8(r2)[r3:d], 4(r1)[r5:w]
         addw    8(r2)[r3:d], 6(4(fp))[r5:w]
-        addw    8(r2)[r3:d], @0x1234[r5:w]
+        addw    8(r2)[r3:d], @0x001234[r5:w]
         addw    8(r2)[r3:q], ext(4)+6[r5:w]
         addw    8(r2)[r3:q], tos[r5:w]
         addw    8(r2)[r3:q], 4(sp)[r5:w]
