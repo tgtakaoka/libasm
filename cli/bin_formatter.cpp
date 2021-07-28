@@ -32,6 +32,13 @@ BinFormatter::~BinFormatter() {
         free(_data);
 }
 
+void BinFormatter::format(const char *text) const {
+    if (_out) {
+        fprintf(_out, "%s\n", text);
+        fflush(_out);
+    }
+}
+
 void BinFormatter::ensureLine(uint8_t len) {
     len += 1;
     if (_line_len < len) {

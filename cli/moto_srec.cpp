@@ -27,11 +27,12 @@ uint8_t MotoSrec::getSum() const {
     return static_cast<uint8_t>(~_check_sum);
 }
 
-const char *MotoSrec::begin() {
-    return "S0030000FC";
+void MotoSrec::begin(FILE *out) {
+    _out = out;
+    format("S0030000FC");
 }
 
-const char *MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
+void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
     uint8_t addrSize = 0;
     switch (_addrWidth) {
     case ADDRESS_16BIT:
@@ -71,20 +72,22 @@ const char *MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
         addSum(data[i]);
     }
     sprintf(p, "%02X", getSum());
-    return _line;
+    format(_line);
 }
 
-const char *MotoSrec::end() {
+void MotoSrec::end() {
     switch (_addrWidth) {
     case ADDRESS_16BIT:
-        return "S9030000FC";
+        format("S9030000FC");
+        break;
     case ADDRESS_20BIT:
     case ADDRESS_24BIT:
-        return "S804000000FB";
+        format("S804000000FB");
+        break;
     case ADDRESS_32BIT:
-        return "S70500000000FA";
+        format("S70500000000FA");
     }
-    return nullptr;
+    _out = nullptr;
 }
 
 uint8_t *MotoSrec::decode(const char *line, uint32_t &addr, uint8_t &size) {

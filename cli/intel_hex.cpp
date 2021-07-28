@@ -21,25 +21,45 @@
 namespace libasm {
 namespace cli {
 
-IntelHex::IntelHex(AddressWidth addrWidth) : BinFormatter(addrWidth), _ela(0) {}
+IntelHex::IntelHex(AddressWidth addrWidth)
+    : BinFormatter(addrWidth), _last_addr(-1), _next_addr(0) {}
 
 uint8_t IntelHex::getSum() const {
     return static_cast<uint8_t>(-this->_check_sum);
 }
 
-const char *IntelHex::begin() {
-    _ela = 0;
-    return nullptr;
+void IntelHex::begin(FILE *out) {
+    _out = out;
+    _last_addr = -1;
+    _next_addr = 0;
 }
 
-// Output Type "04" Extended Linear Address, if necessary.
-const char *IntelHex::prepare(uint32_t addr) {
+void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
+    const uint32_t end = addr + size;
+    // If this block overwarp ELA boundary.
+    if ((addr ^ end) & ~0xFFFF) {
+        const uint8_t chunk = (end & ~0xFFFF) - addr;
+        encodeLine(addr, data, chunk);
+        _last_addr = addr;
+        addr += chunk;
+        _next_addr = addr;
+        data += chunk;
+        size -= chunk;
+        if (size == 0) return;
+    }
+    // If |addr| is discontinued or |addr| has different ELA than last
+    if (addr != _next_addr || ((addr ^ _last_addr) & ~0xFFFF))
+        formatEla(addr);
+    encodeLine(addr, data, size);
+    _last_addr = addr;
+    _next_addr = addr + size;
+}
+
+// Output Type "04" Extended Linear Address.
+void IntelHex::formatEla(uint32_t addr) {
     if (_addrWidth == ADDRESS_16BIT)
-        return nullptr;
+        return;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
-    if (_ela == ela)
-        return nullptr;
-    _ela = ela;
     const uint8_t len = sizeof(ela);
     const uint16_t dummy = 0;
     const uint8_t type = 4;
@@ -50,38 +70,37 @@ const char *IntelHex::prepare(uint32_t addr) {
     addSum(dummy);
     addSum(type);
     addSum(ela);
-    char *p = _line;
-    p += sprintf(p, ":%02X%04X%02X%04X%2X", len, dummy, type, ela, getSum());
-    return _line;
+    sprintf(_line, ":%02X%04X%02X%04X%2X", len, dummy, type, ela, getSum());
+    format(_line);
 }
 
-const char *IntelHex::encode(uint32_t ela_addr, const uint8_t *data, uint8_t size) {
-    const uint16_t addr = static_cast<uint16_t>(ela_addr);
+void IntelHex::encodeLine(uint16_t addr, const uint8_t *data, uint8_t size) {
     const uint8_t type = 0;
     // :LLaaaa00dd....ddSS
     ensureLine(1 + (1 + sizeof(addr) + 1 + size + 1) * 2);
     char *p = _line;
-    p += sprintf(p, ":%02X%04X%02X", static_cast<uint8_t>(size), addr, type);
+    p += sprintf(p, ":%02X%04X%02X", size, addr, type);
     resetSum();
-    addSum(static_cast<uint8_t>(size));
+    addSum(size);
     addSum(addr);
     for (uint8_t i = 0; i < size; i++) {
         p += sprintf(p, "%02X", data[i]);
         addSum(data[i]);
     }
     sprintf(p, "%02X", getSum());
-    return _line;
+    format(_line);
 }
 
-const char *IntelHex::end() {
-    return ":00000001FF";
+void IntelHex::end() {
+    format(":00000001FF");
 }
 
 uint8_t *IntelHex::decode(const char *line, uint32_t &ela_addr, uint8_t &size) {
-    ensureData(32);
     if (*line++ != ':')
         return nullptr;
+    ensureData(16);
     size = 0;
+    resetSum();
     uint8_t len = 0;
     if (parseByte(line, len))
         return nullptr;
@@ -94,24 +113,29 @@ uint8_t *IntelHex::decode(const char *line, uint32_t &ela_addr, uint8_t &size) {
     if (type == 0x01)
         return _data;    // terminator
     if (type == 0x04) {  // Extended Linear Address
-        _ela = addr;
+        uint16_t ela = 0;
+        if (parseUint16(line, ela))
+            return nullptr;
+        _next_addr = static_cast<uint32_t>(ela) << 16;
+        uint8_t sum = 0;
+        if (parseByte(line, sum))
+            return nullptr;
+        if (_check_sum)
+            return nullptr;  // checksum error
         return _data;
     }
     if (type != 0x00)
         return nullptr;
 
-    ela_addr = static_cast<uint32_t>(_ela) << 16 | addr;
+    ela_addr = _next_addr | addr;
     size = len;
     ensureData(size);
-    resetSum();
-    addSum(static_cast<uint8_t>(size));
-    addSum(addr);
     for (uint8_t i = 0; i < size; i++) {
         if (parseByte(line, _data[i]))
             return nullptr;
     }
-    uint8_t val = 0;
-    if (parseByte(line, val))
+    uint8_t sum = 0;
+    if (parseByte(line, sum))
         return nullptr;
     if (_check_sum)
         return nullptr;  // checksum error

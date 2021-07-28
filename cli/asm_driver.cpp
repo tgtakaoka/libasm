@@ -89,9 +89,8 @@ int AsmDriver::assemble() {
         } else {
             formatter = directive->defaultFormatter();
         }
-        const char *begin = formatter->begin();
-        if (begin)
-            fprintf(output, "%s\n", begin);
+
+        formatter->begin(output);
         memory.dump(
                 [this, output, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
                     if (_verbose)
@@ -99,17 +98,10 @@ int AsmDriver::assemble() {
                                 addr, (uint32_t)(addr + data_size - 1));
                     for (size_t i = 0; i < data_size; i += _record_bytes) {
                         auto size = std::min(_record_bytes, data_size - i);
-                        const char *line = formatter->prepare(addr + i);
-                        if (line)
-                            fprintf(output, "%s\n", line);
-                        line = formatter->encode(addr + i, data + i, size);
-                        fprintf(output, "%s\n", line);
-                        fflush(output);
+                        formatter->encode(addr + i, data + i, size);
                     }
                 });
-        const char *end = formatter->end();
-        if (end)
-            fprintf(output, "%s\n", end);
+        formatter->end();
         fclose(output);
         delete formatter;
     }
