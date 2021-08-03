@@ -40,16 +40,14 @@ uint8_t RegTms9900::regNameLen(RegName name) {
     return r < 10 ? 2 : 3;
 }
 
-char *RegTms9900::outRegName(char *out, uint8_t num) const {
+StrBuffer &RegTms9900::outRegName(StrBuffer &out, uint8_t num) const {
     num &= 0x0f;
-    out = outChar(out, 'R');
+    outChar(out, 'R');
     if (num < 10) {
-        out = outChar(out, '0' + num);
+        out.letter('0' + num);
     } else {
-        out = outChar(out, '1');
-        out = outChar(out, '0' + num - 10);
+        out.letter('1').letter('0' + num - 10);
     }
-    *out = 0;
     return out;
 }
 

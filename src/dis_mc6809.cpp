@@ -21,29 +21,29 @@
 namespace libasm {
 namespace mc6809 {
 
-char *DisMc6809::outRegister(char *out, RegName regName) {
+StrBuffer &DisMc6809::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
     outAbsAddr(out, dir, 8, PSTR("<"));
     return setError(insn);
 }
 
-Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
     outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     return setError(insn);
 }
 
-Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
     PostSpec spec;
     if (TableMc6809.searchPostByte(post, spec))
         return setError(UNKNOWN_POSTBYTE);
     if (spec.indir)
-        *out++ = '[';
+        out.letter('[');
     if (spec.base != REG_UNDEF && spec.size > 2) {  // n,X
         Config::ptrdiff_t offset = 0;
         char prefix = 0;
@@ -66,50 +66,50 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out) {
         }
         if (spec.base == REG_PCR) {
             const Config::uintptr_t target = insn.address() + insn.length() + offset;
-            out = outRelAddr(out, target, insn.address(), spec.size);
+            outRelAddr(out, target, insn.address(), spec.size);
         } else {
             if (prefix) {
                 if (prefix == '{')
-                    *out++ = (prefix = '<');
-                *out++ = prefix;
+                    out.letter(prefix = '<');
+                out.letter(prefix);
             }
             if (spec.size == 16) {
-                out = outHex(out, offset, -16);
+                outHex(out, offset, -16);
             } else {
-                out = outDec(out, offset, -spec.size);
+                outDec(out, offset, -spec.size);
             }
         }
     }
     if (spec.index != REG_UNDEF)  // A,X
-        out = outRegister(out, spec.index);
+        outRegister(out, spec.index);
     if (spec.base == REG_UNDEF) {  // [nnnn]
-        out = outAbsAddr(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory));
     } else {
-        *out++ = ',';
+        out.letter(',');
     }
     if (spec.size < 0) {  // ,-X ,--X
-        *out++ = '-';
+        out.letter('-');
         if (spec.size == -2)
-            *out++ = '-';
+            out.letter('-');
     }
     if (spec.base == REG_X) {
         const RegName base = _regs.decodeBaseReg(post >> 5);
-        out = outRegister(out, base);
+        outRegister(out, base);
     } else if (spec.base != REG_UNDEF) {
-        out = outRegister(out, spec.base);
+        outRegister(out, spec.base);
     }
     if (spec.size == 1 || spec.size == 2) {  // ,X+ ,X++
-        *out++ = '+';
+        out.letter('+');
         if (spec.size == 2)
-            *out++ = '+';
+            out.letter('+');
     }
     if (spec.indir)
-        *out++ = ']';
-    *out = 0;
+        out.letter(']');
     return setError(insn);
 }
 
-Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
+Error DisMc6809::decodeRelative(
+        DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
     Config::ptrdiff_t delta;
     if (mode == REL) {
         delta = static_cast<int8_t>(insn.readByte(memory));
@@ -125,8 +125,9 @@ Error DisMc6809::decodeRelative(DisMemory &memory, InsnMc6809 &insn, char *out, 
     return setError(insn);
 }
 
-Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
-    *out++ = '#';
+Error DisMc6809::decodeImmediate(
+        DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
+    out.letter('#');
     if (mode == IM8) {
         outHex(out, insn.readByte(memory), 8);
     } else if (mode == IM16) {
@@ -137,7 +138,7 @@ Error DisMc6809::decodeImmediate(DisMemory &memory, InsnMc6809 &insn, char *out,
     return setError(insn);
 }
 
-Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     uint8_t post = insn.readPost(memory);
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg)
@@ -148,20 +149,20 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out) 
         const uint8_t bitPos = push ? 7 - i : i;
         if (post & (1 << bitPos)) {
             if (n != 0)
-                *out++ = ',';
+                out.letter(',');
             RegName reg = _regs.decodeStackReg(bitPos);
             if (reg == REG_U && onUserStack)
                 reg = REG_S;
             if (reg == REG_B && hasDreg)
                 reg = REG_D;
-            out = outRegister(out, reg);
+            outRegister(out, reg);
             n++;
         }
     }
     return setError(insn);
 }
 
-Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
     const RegName dst = _regs.decodeDataReg(post);
     const RegName src = _regs.decodeDataReg(post >> 4);
@@ -171,53 +172,49 @@ Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out)
     const RegSize size1 = _regs.regSize(src);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
-    out = outRegister(out, src);
-    *out++ = ',';
+    outRegister(out, src).letter(',');
     outRegister(out, dst);
     return setError(insn);
 }
 
-Error DisMc6809::decodeRegBit(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeRegBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
     const RegName reg = _regs.decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    out = outRegister(out, reg);
-    *out++ = '.';
-    out = outHex(out, post & 7, 3);
+    outRegister(out, reg).letter('.');
+    outHex(out, post & 7, 3);
     return OK;
 }
 
-Error DisMc6809::decodeDirBit(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeDirBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     if (decodeDirectPage(memory, insn, out))
         return getError();
-    out += strlen(out);
-    *out++ = '.';
+    out.letter('.');
     outHex(out, (insn.readPost(memory) >> 3) & 7, 3);
     return OK;
 }
 
-Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, char *out) {
+Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
     const RegName src = _regs.decodeTfmBaseReg(post >> 4);
     const RegName dst = _regs.decodeTfmBaseReg(post);
     const uint8_t mode = insn.opCode() & 0x3;
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    out = outRegister(out, src);
+    outRegister(out, src);
     const char srcModeChar = _regs.tfmSrcModeChar(mode);
     if (srcModeChar)
-        *out++ = srcModeChar;
-    *out++ = ',';
-    out = outRegister(out, dst);
+        out.letter(srcModeChar);
+    out.letter(',');
+    outRegister(out, dst);
     const char dstModeChar = _regs.tfmDstModeChar(mode);
     if (dstModeChar)
-        *out++ = dstModeChar;
-    *out = 0;
+        out.letter(dstModeChar);
     return setError(insn);
 }
 
-Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode) {
+Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case DIR:
         return decodeDirectPage(memory, insn, out);
@@ -247,7 +244,7 @@ Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, char *out, A
     }
 }
 
-Error DisMc6809::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisMc6809::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6809 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
@@ -269,8 +266,7 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn, char *out) {
         return OK;
     if (mode2 == REG_TFM)
         return OK;
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, mode2);
 }
 

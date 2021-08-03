@@ -21,11 +21,11 @@
 namespace libasm {
 namespace ins8070 {
 
-char *DisIns8070::outRegister(char *out, RegName regName) {
+StrBuffer &DisIns8070::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-char *DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
+StrBuffer &DisIns8070::outOperand(StrBuffer &out, OprFormat opr, uint8_t value) {
     switch (opr) {
     case OPR_A:
         return outRegister(out, REG_A);
@@ -48,19 +48,18 @@ char *DisIns8070::outOperand(char *out, OprFormat opr, uint8_t value) {
     }
 }
 
-Error DisIns8070::decodeImplied(InsnIns8070 &insn, char *out) {
-    out = outOperand(out, insn.dstOpr(), insn.opCode());
+Error DisIns8070::decodeImplied(InsnIns8070 &insn, StrBuffer &out) {
+    outOperand(out, insn.dstOpr(), insn.opCode());
     if (insn.srcOpr() != OPR_NO) {
-        *out++ = ',';
+        out.letter(',');
         outOperand(out, insn.srcOpr(), insn.opCode());
     }
     return setOK();
 }
 
-Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, char *out) {
-    out = outOperand(out, insn.dstOpr(), insn.opCode());
-    *out++ = ',';
-    *out++ = _immSym ? '#' : '=';
+Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
+    outOperand(out, insn.dstOpr(), insn.opCode()).letter(',');
+    out.letter(_immSym ? '#' : '=');
     if (insn.oprSize() == SZ_WORD)
         return decodeAbsolute(memory, insn, out);
 
@@ -68,34 +67,33 @@ Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, char *ou
     return setError(insn);
 }
 
-Error DisIns8070::decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
     const Config::uintptr_t target = insn.readUint16(memory) + fetch;
     outAbsAddr(out, target);
     return setError(insn);
 }
 
-Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     const Config::uintptr_t target = 0xFF00 | insn.readByte(memory);
     outAbsAddr(out, target);
     return setError(insn);
 }
 
-Error DisIns8070::decodeRelative(DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
     const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
     if (insn.dstOpr() == OPR_RL || (src == OPR_GN && base == REG_PC)) {
         const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
-        out = outRelAddr(out, target, insn.address(), 8);
+        outRelAddr(out, target, insn.address(), 8);
         if (src == OPR_GN) {
-            *out++ = ',';
+            out.letter(',');
             outRegister(out, REG_PC);
         }
     } else {
-        out = outDec(out, disp, -8);
-        *out++ = ',';
+        outDec(out, disp, -8).letter(',');
         if (src == OPR_PR) {
             outOperand(out, src, insn.opCode());
         } else {
@@ -105,12 +103,10 @@ Error DisIns8070::decodeRelative(DisMemory &memory, InsnIns8070 &insn, char *out
     return setError(insn);
 }
 
-Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, char *out) {
+Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     const uint8_t mode = insn.opCode() & 7;
-    if (mode != 4) {
-        out = outOperand(out, insn.dstOpr());
-        *out++ = ',';
-    }
+    if (mode != 4)
+        outOperand(out, insn.dstOpr()).letter(',');
     switch (mode) {
     case 4:
         return decodeImmediate(memory, insn, out);
@@ -118,14 +114,13 @@ Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, char *out)
         return decodeDirect(memory, insn, out);
     case 6:
     case 7:
-        *out++ = '@';
-        return decodeRelative(memory, insn, out);
+        return decodeRelative(memory, insn, out.letter('@'));
     default:
         return decodeRelative(memory, insn, out);
     }
 }
 
-Error DisIns8070::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisIns8070::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnIns8070 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))

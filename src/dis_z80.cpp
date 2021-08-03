@@ -21,44 +21,32 @@
 namespace libasm {
 namespace z80 {
 
-char *DisZ80::outIndirectAddr(char *out, uint16_t addr, uint8_t bits) {
-    *out++ = '(';
-    out = outHex(out, addr, bits);
-    *out++ = ')';
-    *out = 0;
-    return out;
+StrBuffer &DisZ80::outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits) {
+    return outHex(out.letter('('), addr, bits).letter(')');
 }
 
-char *DisZ80::outRegister(char *out, RegName reg) {
+StrBuffer &DisZ80::outRegister(StrBuffer &out, RegName reg) {
     return _regs.outRegName(out, reg);
 }
 
-char *DisZ80::outIndirectReg(char *out, RegName reg) {
-    *out++ = '(';
-    out = outRegister(out, reg);
-    *out++ = ')';
-    *out = 0;
-    return out;
+StrBuffer &DisZ80::outIndirectReg(StrBuffer &out, RegName reg) {
+    return outRegister(out.letter('('), reg).letter(')');
 }
 
-char *DisZ80::outIndexOffset(char *out, RegName reg, int8_t offset) {
-    *out++ = '(';
-    out = outRegister(out, reg);
+StrBuffer &DisZ80::outIndexOffset(StrBuffer &out, RegName reg, int8_t offset) {
+    outRegister(out.letter('('), reg);
     if (offset >= 0)
-        *out++ = '+';
-    out = outDec(out, offset, -8);
-    *out++ = ')';
-    *out = 0;
-    return out;
+        out.letter('+');
+    return outDec(out, offset, -8).letter(')');
 }
 
-char *DisZ80::outDataReg(char *out, RegName reg) {
+StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) {
     if (reg == REG_HL)
         return outIndirectReg(out, reg);
     return outRegister(out, reg);
 }
 
-Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out) {
+Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &out) {
     const int8_t offset = insn.readByte(memory);
     const Config::opcode_t opc = insn.readByte(memory);
 
@@ -73,22 +61,20 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out) {
     if (reg != REG_HL)
         return setError(UNKNOWN_INSTRUCTION);
     const AddrMode dst = ixBit.dstMode();
-    if (dst == M_BIT) {
-        out = outHex(out, (opc >> 3) & 7, 3);
-        *out++ = ',';
-    }
+    if (dst == M_BIT)
+        outHex(out, (opc >> 3) & 7, 3).letter(',');
     outIndexOffset(out, RegZ80::decodeIndexReg(insn), offset);
     return setError(insn);
 }
 
-Error DisZ80::decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out) {
+Error DisZ80::decodeRelative(DisMemory &memory, InsnZ80 &insn, StrBuffer &out) {
     const int8_t delta = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t target = insn.address() + insn.length() + delta;
     outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }
 
-Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode) {
+Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, AddrMode mode) {
     Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_IM8:
@@ -142,8 +128,7 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, char *out, AddrMod
             return setError(UNKNOWN_INSTRUCTION);
         if (opc)
             opc--;
-        *out++ = opc + '0';
-        *out = 0;
+        out.letter(opc + '0');
         return OK;
     case R_IR:
         outRegister(out, RegZ80::decodeIrReg(opc >> 3));
@@ -190,7 +175,7 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, char *out, AddrMod
     return setError(insn);
 }
 
-Error DisZ80::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisZ80::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnZ80 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
@@ -217,8 +202,7 @@ Error DisZ80::decode(DisMemory &memory, Insn &_insn, char *out) {
     const AddrMode src = insn.srcMode();
     if (src == M_NO)
         return OK;
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, src);
 }
 

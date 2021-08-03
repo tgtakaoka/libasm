@@ -65,36 +65,34 @@ uint8_t RegZ8000::regNameLen(RegName name) {
     return len + ((num & 0xF) < 10 ? 1 : 2);
 }
 
-char *RegZ8000::outRegName(char *out, RegName name) const {
+StrBuffer &RegZ8000::outRegName(StrBuffer &out, RegName name) const {
     int8_t num = int8_t(name);
     if (num < 0)
         return out;
     if (isCtlReg(name))
         return outCtlName(out, name);
 
-    out = outChar(out, 'R');
+    outChar(out, 'R');
     if (isByteReg(name)) {
         num -= 16;
         if (num < 8) {
-            out = outChar(out, 'H');
+            outChar(out, 'H');
         } else {
             num -= 8;
-            out = outChar(out, 'L');
+            outChar(out, 'L');
         }
     } else if (isLongReg(name)) {
         num -= 32;
-        out = outChar(out, 'R');
+        outChar(out, 'R');
     } else if (isQuadReg(name)) {
         num -= 48;
-        out = outChar(out, 'Q');
+        outChar(out, 'Q');
     }
     if (num >= 10) {
-        *out++ = '1';
+        out.letter('1');
         num -= 10;
     }
-    *out++ = num + '0';
-    *out = 0;
-    return out;
+    return out.letter(num + '0');
 }
 
 uint8_t RegZ8000::encodeGeneralRegName(RegName name) {
@@ -202,10 +200,10 @@ uint8_t RegZ8000::ctlRegLen(RegName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
 }
 
-char *RegZ8000::outCtlName(char *out, RegName name) const {
+StrBuffer &RegZ8000::outCtlName(StrBuffer &out, RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 
@@ -243,16 +241,16 @@ uint8_t RegZ8000::intrNameLen(IntrName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(INTR_TABLE));
 }
 
-char *RegZ8000::outIntrNames(char *out, uint8_t intrs) const {
+StrBuffer &RegZ8000::outIntrNames(StrBuffer &out, uint8_t intrs) const {
     char c = 0;
     if ((intrs & int8_t(INTR_VI)) == 0) {
-        out = outText(out, TEXT_INTR_VI);
+        outText(out, TEXT_INTR_VI);
         c = ',';
     }
     if ((intrs & int8_t(INTR_NVI)) == 0) {
         if (c)
-            *out++ = c;
-        out = outText(out, TEXT_INTR_NVI);
+            out.letter(c);
+        outText(out, TEXT_INTR_NVI);
     }
     return out;
 }
@@ -326,10 +324,10 @@ CcName RegZ8000::decodeCcNum(uint8_t num) {
     return CcName(num & 0xF);
 }
 
-char *RegZ8000::outCcName(char *out, CcName name) const {
+StrBuffer &RegZ8000::outCcName(StrBuffer &out, CcName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 
@@ -355,15 +353,15 @@ uint8_t RegZ8000::flagNameLen(FlagName name) {
     return name == FLAG_UNDEF ? 0 : 1;
 }
 
-char *RegZ8000::outFlagNames(char *out, uint8_t flags) const {
+StrBuffer &RegZ8000::outFlagNames(StrBuffer &out, uint8_t flags) const {
     char sep = 0;
     for (uint8_t bit = 0x8; bit; bit >>= 1) {
         if (flags & bit) {
             if (sep)
-                *out++ = sep;
+                out.letter(sep);
             sep = ',';
             const NameEntry *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
-            out = outText(out, entry->text());
+            outText(out, entry->text());
         }
     }
     return out;

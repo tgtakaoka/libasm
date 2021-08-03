@@ -67,7 +67,7 @@ class RegZ80 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(const RegName name);
-    char *outRegName(char *out, const RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 
     static uint8_t encodeDataReg(RegName name);
     static RegName decodeDataReg(uint8_t num);
@@ -90,7 +90,7 @@ public:
 
     static CcName parseCcName(const char *line);
     static uint8_t ccNameLen(const CcName name);
-    char *outCcName(char *out, CcName cc) const;
+    StrBuffer &outCcName(StrBuffer &out, CcName cc) const;
     static bool isCc4Name(CcName name);
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcName(uint8_t num);

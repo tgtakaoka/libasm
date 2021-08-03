@@ -33,7 +33,7 @@ class RegMc6800 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, const RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 };
 
 }  // namespace mc6800

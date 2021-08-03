@@ -84,21 +84,19 @@ bool RegZ8::isPairReg(RegName name) {
     return int8_t(name) >= 16;
 }
 
-char *RegZ8::outRegName(char *out, RegName name) const {
+StrBuffer &RegZ8::outRegName(StrBuffer &out, RegName name) const {
     uint8_t num = uint8_t(name);
     const char r = _uppercase ? 'R' : 'r';
-    *out++ = r;
+    out.letter(r);
     if (num >= 16) {
-        *out++ = r;
+        out.letter(r);
         num -= 16;
     }
     if (num >= 10) {
-        *out++ = '1';
+        out.letter('1');
         num -= 10;
     }
-    *out++ = num + '0';
-    *out = 0;
-    return out;
+    return out.letter(num + '0');
 }
 
 // clang-format off
@@ -158,10 +156,10 @@ uint8_t RegZ8::ccNameLen(const CcName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
-char *RegZ8::outCcName(char *out, CcName name) const {
+StrBuffer &RegZ8::outCcName(StrBuffer &out, CcName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 

@@ -25,7 +25,7 @@ static Config::uintptr_t pageAddr(Config::uintptr_t base, uint8_t val) {
     return (base & ~0xFF) | val;
 }
 
-Error DisCdp1802::decodeOperand(DisMemory &memory, InsnCdp1802 &insn, char *out, AddrMode mode) {
+Error DisCdp1802::decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode) {
     const Config::opcode_t opCode = insn.opCode();
     switch (mode) {
     case REG1:
@@ -50,7 +50,7 @@ Error DisCdp1802::decodeOperand(DisMemory &memory, InsnCdp1802 &insn, char *out,
     return setError(insn);
 }
 
-Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnCdp1802 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
@@ -73,8 +73,7 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, char *out) {
     const AddrMode mode2 = insn.mode2();
     if (mode2 == NONE)
         return OK;
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, mode2);
 }
 

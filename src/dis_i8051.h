@@ -34,15 +34,15 @@ private:
     IntelValueFormatter _formatter;
     RegI8051 _regs;
 
-    char *outRegister(char *out, RegName regName);
+    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
-    Error decodeRelative(DisMemory &memory, InsnI8051 &insn, char *out);
-    Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, char *out);
-    Error decodeRReg(InsnI8051 &insn, char *out, const AddrMode mode);
-    Error decodeAddress(DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
-    Error decodeOperand(DisMemory &memory, InsnI8051 &insn, char *out, const AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeRelative(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);
+    Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);
+    Error decodeRReg(InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
+    Error decodeAddress(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
+    Error decodeImmediate(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
+    Error decodeOperand(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace i8051

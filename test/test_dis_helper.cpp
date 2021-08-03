@@ -36,7 +36,7 @@ void dis_assert(const char *file, int line, Error error, const char *expected_na
         const char *expected_opr, Disassembler &disassembler) {
     Insn insn;
     disassembler.setUppercase(true);
-    disassembler.decode(memory, insn, actual_opr, &symtab);
+    disassembler.decode(memory, insn, actual_opr, sizeof(actual_opr), &symtab);
     strcpy(message, expected_name);
     memory.dump(message + strlen(message));
     asserter.equals(file, line, expected_name, error, disassembler);

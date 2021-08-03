@@ -79,7 +79,7 @@ class RegTlcs90 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(const RegName name);
-    char *outRegName(char *out, const RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
     static bool isReg16(RegName name);
     static bool isRegIndex(RegName name);
 
@@ -97,7 +97,7 @@ public:
 
     static CcName parseCcName(const char *line);
     static uint8_t ccNameLen(const CcName name);
-    char *outCcName(char *out, CcName cc) const;
+    StrBuffer &outCcName(StrBuffer &out, CcName cc) const;
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcName(uint8_t num);
 };

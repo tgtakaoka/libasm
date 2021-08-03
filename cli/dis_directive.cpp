@@ -32,7 +32,7 @@ DisDirective::DisDirective(Disassembler &disassembler, CliMemory &memory, bool u
 
 Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
     _memory.setAddress(addr);
-    const Error error = _disassembler.decode(_memory, insn, _operands, nullptr);
+    const Error error = _disassembler.decode(_memory, insn, _operands, sizeof(_operands));
     _listing.reset(*this);
     _address = addr;
     _generated_size = insn.length();
@@ -49,7 +49,8 @@ const char *DisDirective::getCpu(bool withBytes) {
 }
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {
-    _disassembler.getFormatter().formatHex(_operands, origin, _disassembler.addressWidth(), false);
+    StrBuffer buf(_operands, sizeof(_operands));
+    _disassembler.getFormatter().formatHex(buf, origin, _disassembler.addressWidth(), false);
     _listing.reset(*this);
     _address = origin;
     _generated_size = 0;

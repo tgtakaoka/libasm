@@ -142,7 +142,7 @@ Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
             return setError(OVERFLOW_RANGE);
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t off = static_cast<uint16_t>(addr);
-        bool autoShortDirect = _autoShortDirect && op.getError() == OK;
+        bool autoShortDirect = _autoShortDirect && op.isOK();
         if (off < 0x100 && autoShortDirect) {
             insn.emitOperand16(seg | off);
         } else if (op.cc == CC_F) {  // short direct

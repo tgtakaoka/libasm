@@ -57,7 +57,7 @@ public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
     static RegSize regSize(RegName name) __attribute__((noinline));
-    char *outRegName(char *out, const RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 
     static RegName decodeDataReg(uint8_t num);
     static bool isDataReg(RegName name);

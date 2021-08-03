@@ -48,13 +48,15 @@ private:
 
 class TextBuffer {
 public:
-    TextBuffer(int max) { _buffer = new char[max + 1]; }
+    TextBuffer(int max) : _max(max), _buffer(new char[max + 1]) {}
     virtual ~TextBuffer() { delete[] _buffer; }
 
     char *buffer() { return _buffer; }
     const char *buffer() const { return _buffer; }
+    const int size() const { return _max; }
 
 private:
+    const int _max;
     char *_buffer;
 };
 

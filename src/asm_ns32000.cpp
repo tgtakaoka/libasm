@@ -391,7 +391,7 @@ Error AsmNs32000::emitDisplacement(InsnNs32000 &insn, uint32_t val32) {
 
 Error AsmNs32000::emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op) {
     uint8_t len = op.getError() ? 0 : op.val32;
-    if (op.getError() == OK) {
+    if (op.isOK()) {
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val <= 0)
             return setError(ILLEGAL_CONSTANT);
@@ -424,7 +424,7 @@ Error AsmNs32000::emitBitField(
         return OK;
     if (offOp->val32 >= 8)
         return setError(ILLEGAL_BIT_NUMBER);
-    if (lenOp.getError() == OK && lenOp.val32 == 0)
+    if (lenOp.isOK() && lenOp.val32 == 0)
         return setError(ILLEGAL_CONSTANT);
     if (lenOp.val32 > 32)
         return setError(OVERFLOW_RANGE);
@@ -604,7 +604,7 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val < 0)
             return setError(ILLEGAL_CONSTANT);
-        if (op.getError() == OK && val == 0)
+        if (op.isOK() && val == 0)
             setError(ILLEGAL_CONSTANT);
         if (val > 32)
             return setError(OVERFLOW_RANGE);

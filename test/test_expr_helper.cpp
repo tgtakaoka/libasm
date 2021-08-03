@@ -16,6 +16,8 @@
 
 #include "test_expr_helper.h"
 
+#include "str_buffer.h"
+
 namespace libasm {
 namespace test {
 
@@ -27,7 +29,8 @@ void dec_assert(const char *file, const int line, const uint32_t value, int8_t b
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
-    formatter.formatDec(actual, value, bitWidth);
+    StrBuffer buf(actual, sizeof(actual));
+    formatter.formatDec(buf, value, bitWidth);
     asserter.equals(file, line, msg, expected, actual);
 }
 
@@ -36,7 +39,8 @@ void hex_assert(const char *file, const int line, const uint32_t value, int8_t b
     char msg[80];
     sprintf(msg, "%#x", value);
     char actual[80];
-    formatter.formatHex(actual, value, bitWidth, relax);
+    StrBuffer buf(actual, sizeof(actual));
+    formatter.formatHex(buf, value, bitWidth, relax);
     asserter.equals(file, line, msg, expected, actual);
 }
 

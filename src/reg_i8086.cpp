@@ -84,10 +84,10 @@ uint8_t RegI8086::regNameLen(RegName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
-char *RegI8086::outRegName(char *out, RegName name) const {
+StrBuffer &RegI8086::outRegName(StrBuffer &out, RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 

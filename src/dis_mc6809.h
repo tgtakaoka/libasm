@@ -35,23 +35,23 @@ private:
     MotoValueFormatter _formatter;
     RegMc6809 _regs;
 
-    char *outRegister(char *out, RegName regName) __attribute__((noinline));
+    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     // MC6809
-    Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeExtended(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
-    Error decodePushPull(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
+    Error decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
     // HD6309
-    Error decodeRegBit(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeDirBit(DisMemory &memory, InsnMc6809 &insn, char *out);
-    Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, char *out);
+    Error decodeRegBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeDirBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
 
-    Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, char *out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mc6809

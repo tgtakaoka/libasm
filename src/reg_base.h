@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+#ifndef __REG_BASE_H__
+#define __REG_BASE_H__
+
 #include <ctype.h>
 
 #include "config_host.h"
+#include "str_buffer.h"
 
-#ifndef __REG_BASE_H__
-#define __REG_BASE_H__
+namespace libasm {
 
 /**
  * Base class for registers.
@@ -50,18 +53,17 @@ protected:
 
     RegBase() {}
 
-    char *outChar(char *out, char c) const {
-        *out++ = _uppercase ? toupper(c) : tolower(c);
-        *out = 0;
+    StrBuffer &outChar(StrBuffer &out, char c) const {
+        return out.letter(_uppercase ? toupper(c) : tolower(c));
         return out;
     }
 
-    char *outText(char *out, const /*PROGMEM*/ char *text) const {
+    StrBuffer &outText(StrBuffer &out, const /*PROGMEM*/ char *text) const {
         while (true) {
             const char c = pgm_read_byte(text);
             if (c == 0)
                 break;
-            out = outChar(out, c);
+            outChar(out, c);
             text++;
         }
         return out;
@@ -93,6 +95,8 @@ protected:
         return nullptr;
     }
 };
+
+}  // namespace libasm
 
 #endif  // __REG_BASE_H__
 

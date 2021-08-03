@@ -54,15 +54,11 @@ static const char TEXT_REG_SR[] PROGMEM = "SR";
 static const char TEXT_REG_CCR[] PROGMEM = "CCR";
 static const char TEXT_REG_USP[] PROGMEM = "USP";
 
-char *RegMc68000::outRegName(char *out, RegName name) {
-    if (isDataReg(name)) {
-        out = outChar(out, 'D');
-        return outChar(out, '0' + int8_t(name));
-    }
-    if (isAddrReg(name)) {
-        out = outChar(out, 'A');
-        return outChar(out, '0' + int8_t(name) - 8);
-    }
+StrBuffer &RegMc68000::outRegName(StrBuffer &out, RegName name) {
+    if (isDataReg(name))
+        outChar(out, 'D').letter('0' + int8_t(name));
+    if (isAddrReg(name))
+        return outChar(out, 'A').letter('0' + int8_t(name) - 8);
     if (name == REG_CCR)
         return outText(out, TEXT_REG_CCR);
     if (name == REG_PC)

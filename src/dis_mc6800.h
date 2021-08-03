@@ -34,16 +34,16 @@ private:
     MotoValueFormatter _formatter;
     RegMc6800 _regs;
 
-    char *outRegister(char *out, RegName regName);
+    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
-    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
-    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, char *out);
-    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
+    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
+    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
+    Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
+    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
+    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mc6800

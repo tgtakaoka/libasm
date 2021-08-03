@@ -170,7 +170,7 @@ public:
         _memorySize = size;
         _memoryIndex = 0;
 
-        return dis.decode(*this, _insn, _textBuffer.buffer(), nullptr);
+        return dis.decode(*this, _insn, _textBuffer.buffer(), _textBuffer.size());;
     }
 
 private:
@@ -301,7 +301,7 @@ private:
             gen.next();
             gen.debug(dumpOut, "@@  loop");
             _data.tryGenerate(_disassembler, _addr, _memory, _memorySize);
-            if (_disassembler.getError() == OK) {
+            if (_disassembler.isOK()) {
                 const int len = gen.length();
                 const int newLen = _data.length();
                 const int delta = newLen - len;

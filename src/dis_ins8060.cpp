@@ -21,25 +21,25 @@
 namespace libasm {
 namespace ins8060 {
 
-char *DisIns8060::outRegister(char *out, RegName regName) {
+StrBuffer &DisIns8060::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisIns8060::decodePntr(InsnIns8060 &insn, char *out) {
+Error DisIns8060::decodePntr(InsnIns8060 &insn, StrBuffer &out) {
     outRegister(out, _regs.decodePointerReg(insn.opCode()));
     return setOK();
 }
 
-Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, char *out) {
+Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out) {
     outHex(out, insn.readByte(memory), 8);
     return setError(insn);
 }
 
-Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode) {
+Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode) {
     const RegName reg = _regs.decodePointerReg(insn.opCode());
     const uint8_t opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)
-        *out++ = '@';
+        out.letter('@');
     if (reg == REG_PC && opr != 0x80) {  // PC relative
         // PC points the last byte of instruction.
         const Config::uintptr_t base = insn.address() + 1;
@@ -58,20 +58,17 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, char *out, bo
         }
     } else {
         if (opr == 0x80) {  // E(Pn)
-            out = outRegister(out, REG_E);
+            outRegister(out, REG_E);
         } else {
             const int8_t disp = static_cast<int8_t>(opr);
-            out = outDec(out, disp, -8);
+            outDec(out, disp, -8);
         }
-        *out++ = '(';
-        out = outRegister(out, reg);
-        *out++ = ')';
-        *out = 0;
+        outRegister(out.letter('('), reg).letter(')');
     }
     return setError(insn);
 }
 
-Error DisIns8060::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisIns8060::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnIns8060 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))

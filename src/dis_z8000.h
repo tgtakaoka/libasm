@@ -45,27 +45,28 @@ private:
     char _ioAddressPrefix;
     bool _shortDirect;
 
-    char *outRegister(char *out, RegName regName);
-    char *outConditionCode(char *out, uint8_t ccNum);
-    char *outImmediate(char *out, uint8_t data, AddrMode mode);
-    char *outComma(char *out, const InsnZ8000 &insn, AddrMode mode, ModeField field);
+    StrBuffer &outRegister(StrBuffer &out, RegName regName);
+    StrBuffer &outConditionCode(StrBuffer &out, uint8_t ccNum);
+    StrBuffer &outImmediate(StrBuffer &out, uint8_t data, AddrMode mode);
+    StrBuffer &outComma(StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field);
     Error decodeImmediate(
-            DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, OprSize size);
-    Error decodeFlags(char *out, uint8_t flags);
-    Error decodeGeneralRegister(char *out, uint8_t num, OprSize size, bool indirect = false);
-    Error decodeDoubleSizedRegister(char *out, uint8_t num, OprSize size);
-    Error decodeControlRegister(char *out, uint8_t ctlNum, OprSize size);
+            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, OprSize size);
+    Error decodeFlags(StrBuffer &out, uint8_t flags);
+    Error decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect = false);
+    Error decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize size);
+    Error decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size);
     Error decodeBaseAddressing(
-            DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, uint8_t num);
+            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, uint8_t num);
     Error decodeGenericAddressing(
-            DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, uint8_t num);
-    Error decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, char *out);
-    Error decodeRelativeAddressing(DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode);
+            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, uint8_t num);
+    Error decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, StrBuffer &out);
+    Error decodeRelativeAddressing(
+            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode);
     Error decodeOperand(
-            DisMemory &memory, InsnZ8000 &insn, char *out, AddrMode mode, ModeField field);
+            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, ModeField field);
     Error checkPostWord(const InsnZ8000 &insn);
     Error checkRegisterOverwrap(const InsnZ8000 &insn);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace z8000

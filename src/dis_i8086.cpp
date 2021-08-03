@@ -21,11 +21,11 @@
 namespace libasm {
 namespace i8086 {
 
-char *DisI8086::outRegister(char *out, RegName name, const char prefix) {
+StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix) {
     if (name == REG_UNDEF)
         return out;
     if (prefix)
-        *out++ = prefix;
+        out.letter(prefix);
     return _regs.outRegName(out, name);
 }
 
@@ -61,7 +61,7 @@ RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos po
     }
 }
 
-Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
+Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
     int16_t disp;
     if (mode == M_REL8) {
         disp = static_cast<int8_t>(insn.readByte(memory));
@@ -73,7 +73,7 @@ Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, char *out, Ad
     return setError(insn);
 }
 
-Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode) {
+Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
     if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
         outHex(out, insn.readUint16(memory), 16);
     } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
@@ -84,8 +84,7 @@ Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, char *out, A
         // M_FAR
         const uint16_t offset = insn.readUint16(memory);
         const uint16_t segment = insn.readUint16(memory);
-        out = outAbsAddr(out, segment);
-        *out++ = ':';
+        outAbsAddr(out, segment).letter(':');
         outAbsAddr(out, offset);
     }
     return setError(insn);
@@ -160,47 +159,43 @@ static RegName pointerReg(const InsnI8086 &insn) {
 }
 
 Error DisI8086::outMemReg(
-        DisMemory &memory, InsnI8086 &insn, char *out, RegName seg, uint8_t mod, uint8_t r_m) {
+        DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mod, uint8_t r_m) {
     if (operandSize(insn) == SZ_NONE) {
         const RegName ptr = pointerReg(insn);
         if (ptr != REG_UNDEF) {
-            out = outRegister(out, ptr);
-            out = outRegister(out, REG_PTR, ' ');
-            *out++ = ' ';
+            outRegister(out, ptr);
+            outRegister(out, REG_PTR, ' ').letter(' ');
         }
     }
-    if (seg != REG_UNDEF) {
-        out = outRegister(out, seg);
-        *out++ = ':';
-    }
+    if (seg != REG_UNDEF)
+        outRegister(out, seg).letter(':');
     const RegName base = getBaseReg(mod, r_m);
     const RegName index = getIndexReg(r_m);
-    *out++ = '[';
+    out.letter('[');
     char sep = 0;
-    out = outRegister(out, base, sep);
+    outRegister(out, base, sep);
     if (base != REG_UNDEF)
         sep = '+';
-    out = outRegister(out, index, sep);
+    outRegister(out, index, sep);
     if (index != REG_UNDEF)
         sep = '+';
     if (mod == 1) {
         const int8_t disp8 = static_cast<int8_t>(insn.readByte(memory));
         if (disp8 >= 0)
-            *out++ = sep;
-        out = outDec(out, disp8, -8);
+            out.letter(sep);
+        outDec(out, disp8, -8);
     }
     if (mod == 2 || (mod == 0 && r_m == 6)) {
         if (sep)
-            *out++ = sep;
-        out = outAbsAddr(out, insn.readUint16(memory));
+            out.letter(sep);
+        outAbsAddr(out, insn.readUint16(memory));
     }
-    *out++ = ']';
-    *out = 0;
+    out.letter(']');
     return setError(insn);
 }
 
 Error DisI8086::decodeMemReg(
-        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode, OprPos pos) {
+        DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
     const uint8_t mod = insn.modReg() >> 6;
     if (mod == 3) {
         if (mode == M_BMEM || mode == M_WMEM)
@@ -213,7 +208,7 @@ Error DisI8086::decodeMemReg(
     return outMemReg(memory, insn, out, TableI8086.overrideSeg(insn.segment()), mod, r_m);
 }
 
-Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, char *out) {
+Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &out) {
     if (_repeatHasStringInst) {
         Insn _istr;
         InsnI8086 istr(_istr);
@@ -223,13 +218,13 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, char *out) {
             return setError(TableI8086.getError());
         if (!istr.stringInst())
             return setError(UNKNOWN_INSTRUCTION);
-        outText(out, istr.name());
+        out.text(istr.name());
     }
     return OK;
 }
 
 Error DisI8086::decodeOperand(
-        DisMemory &memory, InsnI8086 &insn, char *out, AddrMode mode, OprPos pos) {
+        DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
     RegName name;
     switch (mode) {
     case M_NONE:
@@ -309,22 +304,20 @@ static bool validSegOverride(const InsnI8086 &insn) {
     return validSegOverride(insn.dstMode(), mod) || validSegOverride(insn.srcMode(), mod);
 }
 
-Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, char *out) {
+Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out) {
     if (insn.segment()) {
         const RegName seg = TableI8086.overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {
         case 0xA4:  // MOVS ES:[DI],DS:[SI]
             outMemReg(memory, insn, out, REG_ES, 0, 5);
-            out += strlen(out);
-            *out++ = ',';
+            out.letter(',');
             /* Fall-through */
         case 0xAC:  // LODS DS:[SI]
             outMemReg(memory, insn, out, seg, 0, 4);
             break;
         case 0xA6:  // CMPS DS:[SI],ES:[DI]
             outMemReg(memory, insn, out, seg, 0, 4);
-            out += strlen(out);
-            *out++ = ',';
+            out.letter(',');
             outMemReg(memory, insn, out, REG_ES, 0, 5);
             break;
         case 0xAA:  // STOS ES:[DI]
@@ -352,7 +345,7 @@ Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
     return setError(insn);
 }
 
-Error DisI8086::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisI8086::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn))
         return getError();
@@ -372,8 +365,7 @@ Error DisI8086::decode(DisMemory &memory, Insn &_insn, char *out) {
     if (insn.srcMode() == M_NONE)
         return setOK();
 
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     if (decodeOperand(memory, insn, out, insn.srcMode(), insn.srcPos()))
         return getError();
     return setOK();

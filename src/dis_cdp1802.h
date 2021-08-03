@@ -34,8 +34,8 @@ private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
 
-    Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, char *out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace cdp1802

@@ -96,10 +96,10 @@ uint8_t RegNs32000::regNameLen(RegName name) {
     }
 }
 
-char *RegNs32000::outRegName(char *out, RegName name) const {
+StrBuffer &RegNs32000::outRegName(StrBuffer &out, RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 
@@ -155,10 +155,10 @@ uint8_t RegNs32000::pregNameLen(PregName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
 }
 
-char *RegNs32000::outPregName(char *out, PregName name) const {
+StrBuffer &RegNs32000::outPregName(StrBuffer &out, PregName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 
@@ -204,10 +204,10 @@ uint8_t RegNs32000::mregNameLen(MregName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
 }
 
-char *RegNs32000::outMregName(char *out, MregName name) const {
+StrBuffer &RegNs32000::outMregName(StrBuffer &out, MregName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 
@@ -242,21 +242,19 @@ uint8_t RegNs32000::configNameLen(ConfigName name) {
     return name == CONFIG_UNDEF ? 0 : 1;
 }
 
-char *RegNs32000::outConfigNames(char *out, uint8_t configs) const {
-    *out++ = '[';
+StrBuffer &RegNs32000::outConfigNames(StrBuffer &out, uint8_t configs) const {
+    out.letter('[');
     char sep = 0;
     for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
         if (configs & mask) {
             if (sep)
-                *out++ = sep;
+                out.letter(sep);
             const NameEntry *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
-            out = outText(out, entry->text());
+            outText(out, entry->text());
             sep = ',';
         }
     }
-    *out++ = ']';
-    *out = 0;
-    return out;
+    return out.letter(']');
 }
 
 static const char TEXT_STROPT_B[] PROGMEM = "B";
@@ -277,19 +275,18 @@ uint8_t RegNs32000::strOptNameLen(StrOptName name) {
     return name == STROPT_UNDEF ? 0 : 1;
 }
 
-char *RegNs32000::outStrOptNames(char *out, uint8_t strOpts) const {
+StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
     char sep = 0;
     if (strOpts & uint8_t(STROPT_B)) {
-        out = outText(out, TEXT_STROPT_B);
+        outText(out, TEXT_STROPT_B);
         sep = ',';
     }
     const NameEntry *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
     if (entry) {
         if (sep)
-            *out++ = sep;
-        out = outText(out, entry->text());
+            out.letter(sep);
+        outText(out, entry->text());
     }
-    *out = 0;
     return out;
 }
 

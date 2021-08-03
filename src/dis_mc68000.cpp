@@ -21,21 +21,19 @@
 namespace libasm {
 namespace mc68000 {
 
-char *DisMc68000::outRegName(char *out, RegName regName) {
+StrBuffer &DisMc68000::outRegName(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-char *DisMc68000::outOprSize(char *out, OprSize size) {
+StrBuffer &DisMc68000::outOprSize(StrBuffer &out, OprSize size) {
     const char suffix = _regs.sizeSuffix(size);
-    if (suffix) {
-        *out++ = '.';
-        *out++ = suffix;
-    }
+    if (suffix)
+        out.letter('.').letter(suffix);
     return out;
 }
 
 Error DisMc68000::decodeImmediateData(
-        DisMemory &memory, InsnMc68000 &insn, char *out, OprSize size) {
+        DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, OprSize size) {
     if (size == SZ_BYTE) {
         outHex(out, insn.readUint16(memory) & 0xFF, 8);
     } else if (size == SZ_WORD) {
@@ -51,7 +49,7 @@ Error DisMc68000::decodeImmediateData(
 }
 
 Error DisMc68000::decodeEffectiveAddr(
-        DisMemory &memory, InsnMc68000 &insn, char *out, const EaMc68000 &ea) {
+        DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, const EaMc68000 &ea) {
     const AddrMode mode = ea.mode;
     if (mode == M_ERROR)
         return setError(ILLEGAL_OPERAND);
@@ -59,14 +57,12 @@ Error DisMc68000::decodeEffectiveAddr(
         outRegName(out, ea.reg);
         return setOK();
     }
-    if (mode == M_IMDAT) {
-        *out++ = '#';
-        return decodeImmediateData(memory, insn, out, ea.size);
-    }
+    if (mode == M_IMDAT)
+        return decodeImmediateData(memory, insn, out.letter('#'), ea.size);
 
     if (mode == M_PDEC)
-        *out++ = '-';
-    *out++ = '(';
+        out.letter('-');
+    out.letter('(');
     if (mode == M_DISP || mode == M_PCDSP) {
         const RegName base = (mode == M_DISP) ? ea.reg : REG_PC;
         const uint16_t val16 = insn.readUint16(memory);
@@ -77,16 +73,15 @@ Error DisMc68000::decodeEffectiveAddr(
                 return setError(OPERAND_NOT_ALIGNED);
             if (ea.size == SZ_LONG && (target % 4) != 0)
                 return setError(OPERAND_NOT_ALIGNED);
-            out = outRelAddr(out, target, insn.address(), 16);
+            outRelAddr(out, target, insn.address(), 16);
         } else {
-            out = outHex(out, val16, -16);
+            outHex(out, val16, -16);
         }
-        *out++ = ',';
-        out = outRegName(out, base);
+        out.letter(',');
+        outRegName(out, base);
     }
-    if (mode == M_AIND || mode == M_PINC || mode == M_PDEC) {
-        out = outRegName(out, ea.reg);
-    }
+    if (mode == M_AIND || mode == M_PINC || mode == M_PDEC)
+        outRegName(out, ea.reg);
     if (mode == M_AWORD || mode == M_ALONG) {
         Config::uintptr_t target;
         if (mode == M_AWORD) {
@@ -98,7 +93,7 @@ Error DisMc68000::decodeEffectiveAddr(
             return setError(OPERAND_NOT_ALIGNED);
         if (ea.size == SZ_LONG && (target % 4) != 0)
             return setError(OPERAND_NOT_ALIGNED);
-        out = outAbsAddr(out, target, addressWidth());
+        outAbsAddr(out, target, addressWidth());
     }
     if (mode == M_INDX || mode == M_PCIDX) {
         const RegName base = (mode == M_INDX) ? ea.reg : REG_PC;
@@ -108,28 +103,27 @@ Error DisMc68000::decodeEffectiveAddr(
         if (mode == M_PCIDX) {
             const Config::uintptr_t target =
                     insn.address() + insn.length() - 2 + static_cast<int8_t>(val8);
-            out = outRelAddr(out, target, insn.address(), 8);
+            outRelAddr(out, target, insn.address(), 8);
         } else {
-            out = outHex(out, val8, -8);
+            outHex(out, val8, -8);
         }
-        *out++ = ',';
-        out = outRegName(out, base);
-        *out++ = ',';
-        out = outRegName(out, ext.index());
-        out = outOprSize(out, ext.indexSize());
+        out.letter(',');
+        outRegName(out, base).letter(',');
+        outRegName(out, ext.index());
+        outOprSize(out, ext.indexSize());
     }
-    *out++ = ')';
+    out.letter(')');
     if (mode == M_AWORD)
-        out = outOprSize(out, SZ_WORD);
+        outOprSize(out, SZ_WORD);
     if (mode == M_ALONG)
-        out = outOprSize(out, SZ_LONG);
+        outOprSize(out, SZ_LONG);
     if (mode == M_PINC)
-        *out++ = '+';
-    *out = 0;
+        out.letter('+');
     return setError(insn);
 }
 
-Error DisMc68000::decodeRelative(DisMemory &memory, InsnMc68000 &insn, char *out, uint8_t rel8) {
+Error DisMc68000::decodeRelative(
+        DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, uint8_t rel8) {
     Config::uintptr_t target = insn.address() + 2;
     if (rel8) {
         target += static_cast<int8_t>(rel8);
@@ -146,8 +140,8 @@ static RegName decodeMoveMltReg(int8_t regno) {
     return (regno < 8) ? RegMc68000::decodeDataReg(regno) : RegMc68000::decodeAddrReg(regno - 8);
 }
 
-char *DisMc68000::outMoveMltRegList(char *out, uint16_t list, bool push,
-        char *(DisMc68000::*outRegs)(char *, RegName, RegName, char)) {
+StrBuffer &DisMc68000::outMoveMltRegList(StrBuffer &out, uint16_t list, bool push,
+        StrBuffer &(DisMc68000::*outRegs)(StrBuffer &, RegName, RegName, char)) {
     int8_t start = -1;
     int8_t last = 0;
     uint16_t mask = push ? 0x8000 : 0x0001;
@@ -158,7 +152,7 @@ char *DisMc68000::outMoveMltRegList(char *out, uint16_t list, bool push,
             } else if (i == last + 1) {
                 last = i;
             } else {
-                out = (this->*outRegs)(out, decodeMoveMltReg(start), decodeMoveMltReg(last), '/');
+                (this->*outRegs)(out, decodeMoveMltReg(start), decodeMoveMltReg(last), '/');
                 start = last = i;
             }
         }
@@ -168,23 +162,20 @@ char *DisMc68000::outMoveMltRegList(char *out, uint16_t list, bool push,
             mask <<= 1;
     }
     if (start >= 0)
-        out = (this->*outRegs)(out, decodeMoveMltReg(start), decodeMoveMltReg(last), 0);
+        (this->*outRegs)(out, decodeMoveMltReg(start), decodeMoveMltReg(last), 0);
     return out;
 }
 
-char *DisMc68000::outMoveMltRegs(char *out, RegName start, RegName last, char suffix) {
-    out = outRegName(out, start);
-    if (start != last) {
-        *out++ = '-';
-        out = outRegName(out, last);
-    }
+StrBuffer &DisMc68000::outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suffix) {
+    outRegName(out, start);
+    if (start != last)
+        outRegName(out.letter('-'), last);
     if (suffix)
-        *out++ = suffix;
-    *out = 0;
+        out.letter(suffix);
     return out;
 }
 
-Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out, AddrMode mode,
+Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, AddrMode mode,
         uint8_t m, uint8_t r, OprSize s, uint16_t opr16) {
     EaMc68000 ea(s, m, r);
     switch (mode) {
@@ -215,12 +206,10 @@ Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
         r = (insn.opCode() >> 9) & 7;
         if (r == 0)
             r = 8;
-        *out++ = '#';
-        outDec(out, r, 4);
+        outDec(out.letter('#'), r, 4);
         break;
     case M_IM8:
-        *out++ = '#';
-        outHex(out, insn.opCode(), -8);
+        outHex(out.letter('#'), insn.opCode(), -8);
         break;
     case M_IMBIT:
         if (s == SZ_BYTE && opr16 >= 8)
@@ -229,19 +218,15 @@ Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, char *out,
             return setError(ILLEGAL_BIT_NUMBER);
         if (s == SZ_LONG && opr16 >= 32)
             return setError(ILLEGAL_BIT_NUMBER);
-        *out++ = '#';
-        outDec(out, opr16, 5);
+        outDec(out.letter('#'), opr16, 5);
         break;
     case M_IMDAT:
-        *out++ = '#';
-        return decodeImmediateData(memory, insn, out, s);
+        return decodeImmediateData(memory, insn, out.letter('#'), s);
     case M_IMVEC:
-        *out++ = '#';
-        outDec(out, insn.opCode() & 0xF, 4);
+        outDec(out.letter('#'), insn.opCode() & 0xF, 4);
         break;
     case M_IMDSP:
-        *out++ = '#';
-        outHex(out, opr16, -16);
+        outHex(out.letter('#'), opr16, -16);
         break;
     case M_MULT:
         if (opr16 == 0)
@@ -363,7 +348,7 @@ static OprSize sizeVal(const InsnMc68000 &insn) {
     return size;
 }
 
-Error DisMc68000::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisMc68000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc68000 insn(_insn);
     const Config::opcode_t opCode = insn.readUint16(memory);
     if (setError(insn))
@@ -408,8 +393,7 @@ Error DisMc68000::decode(DisMemory &memory, Insn &_insn, char *out) {
 
     if (dst == M_NONE)
         return setOK();
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, dst, dstMode, dstReg, size, opr16);
 }
 

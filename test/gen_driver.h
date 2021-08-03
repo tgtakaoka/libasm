@@ -117,7 +117,8 @@ private:
         if (!_generateCpu || _generateGas)
             return;
         char operands[40];
-        _disassembler.getFormatter().formatHex(operands, addr, _disassembler.addressWidth(), false);
+        StrBuffer buffer(operands, sizeof(operands));
+        _disassembler.getFormatter().formatHex(buffer, addr, _disassembler.addressWidth(), false);
         _address = addr;
         _generated_size = 0;
         print("ORG", operands);

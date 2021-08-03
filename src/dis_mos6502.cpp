@@ -27,8 +27,9 @@ void DisMos6502::reset() {
     longIndex(false);
 }
 
-Error DisMos6502::decodeImmediate(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode) {
-    *out++ = '#';
+Error DisMos6502::decodeImmediate(
+        DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
+    out.letter('#');
     if (TableMos6502.longImmediate(mode)) {
         outHex(out, insn.readUint16(memory), 16);
     } else {
@@ -39,14 +40,15 @@ Error DisMos6502::decodeImmediate(DisMemory &memory, InsnMos6502 &insn, char *ou
     return setError(insn);
 }
 
-Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode) {
+Error DisMos6502::decodeAbsolute(
+        DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
     const RegName index = (mode == ABS_IDX || mode == ABS_IDX_IDIR || mode == ABS_LONG_IDX)
                                   ? REG_X
                                   : (mode == ABS_IDY ? REG_Y : REG_UNDEF);
     const bool indirect = (mode == ABS_IDX_IDIR || mode == ABS_IDIR || mode == ABS_IDIR_LONG);
     const bool idirLong = (mode == ABS_IDIR_LONG);
     if (indirect)
-        *out++ = idirLong ? '[' : '(';
+        out.letter(idirLong ? '[' : '(');
     const uint16_t addr = insn.readUint16(memory);
     if (mode == ABS_LONG || mode == ABS_LONG_IDX) {
         uint32_t target = addr;
@@ -54,24 +56,24 @@ Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, char *out
         target |= static_cast<uint32_t>(bank) << 16;
         // JSL has only ABS_LONG addressing
         if (insn.opCode() == TableMos6502::JSL) {
-            out = outAbsAddr(out, target, addressWidth());
+            outAbsAddr(out, target, addressWidth());
         } else {
-            out = outAbsAddr(out, target, addressWidth(), PSTR(">>"), target < 0x10000);
+            outAbsAddr(out, target, addressWidth(), PSTR(">>"), target < 0x10000);
         }
     } else {
-        out = outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
+        outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     }
     if (index != REG_UNDEF) {
-        *out++ = ',';
-        out = _regs.outRegName(out, index);
+        out.letter(',');
+        _regs.outRegName(out, index);
     }
     if (indirect)
-        *out++ = idirLong ? ']' : ')';
-    *out = 0;
+        out.letter(idirLong ? ']' : ')');
     return setError(insn);
 }
 
-Error DisMos6502::decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode) {
+Error DisMos6502::decodeZeroPage(
+        DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
     const bool indirect =
             (mode == ZPG_IDX_IDIR || mode == ZPG_IDIR_IDY || mode == ZPG_IDIR ||
                     mode == SP_REL_IDIR_IDY || mode == ZPG_IDIR_LONG || mode == ZPG_IDIR_LONG_IDY);
@@ -97,29 +99,29 @@ Error DisMos6502::decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, char *out
     }
     const uint8_t zp = insn.readByte(memory);
     if (indirect)
-        *out++ = zpLong ? '[' : '(';
-    out = outAbsAddr(out, zp, 8, PSTR("<"));
+        out.letter(zpLong ? '[' : '(');
+    outAbsAddr(out, zp, 8, PSTR("<"));
     if (indirect && index == REG_Y)
-        *out++ = zpLong ? ']' : ')';
+        out.letter(zpLong ? ']' : ')');
     if (index != REG_UNDEF) {
-        *out++ = ',';
-        out = _regs.outRegName(out, index);
+        out.letter(',');
+        _regs.outRegName(out, index);
     }
     if (indirect && index != REG_Y)
-        *out++ = zpLong ? ']' : ')';
+        out.letter(zpLong ? ']' : ')');
     if (mode == SP_REL_IDIR_IDY) {
-        *out++ = ',';
-        out = _regs.outRegName(out, REG_Y);
+        out.letter(',');
+        _regs.outRegName(out, REG_Y);
     }
-    *out = 0;
     if (mode == ZPG_REL) {
-        *out++ = ',';
+        out.letter(',');
         return decodeRelative(memory, insn, out, REL);
     }
     return setError(insn);
 }
 
-Error DisMos6502::decodeRelative(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode) {
+Error DisMos6502::decodeRelative(
+        DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
     Config::ptrdiff_t delta;
     if (mode == REL_LONG) {
         delta = static_cast<int16_t>(insn.readUint16(memory));
@@ -144,18 +146,17 @@ Error DisMos6502::decodeRelative(DisMemory &memory, InsnMos6502 &insn, char *out
     return setError(insn);
 }
 
-Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, char *out) {
+Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
     const uint8_t dbank = insn.readByte(memory);
     const uint8_t sbank = insn.readByte(memory);
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
-    out = outAbsAddr(out, src, addressWidth());
-    *out++ = ',';
+    outAbsAddr(out, src, addressWidth()).letter(',');
     outAbsAddr(out, dst, addressWidth());
     return setOK();
 }
 
-Error DisMos6502::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisMos6502::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMos6502 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))
@@ -170,8 +171,7 @@ Error DisMos6502::decode(DisMemory &memory, Insn &_insn, char *out) {
     case IMPL:
         return setOK();
     case ACCM:
-        out = _regs.outRegName(out, REG_A);
-        *out = 0;
+        _regs.outRegName(out, REG_A);
         return setOK();
     case IMM8:
     case IMMA:

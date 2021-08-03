@@ -92,7 +92,7 @@ class RegNs32000 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, const RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
     static uint8_t encodeRegName(RegName name);
     static bool isGeneric(RegName name);
     static RegName decodeRegName(uint8_t num, bool floating = false);
@@ -101,23 +101,23 @@ public:
 
     static PregName parsePregName(const char *line);
     static uint8_t pregNameLen(PregName name);
-    char *outPregName(char *out, PregName name) const;
+    StrBuffer &outPregName(StrBuffer &out, PregName name) const;
     static PregName decodePregName(uint8_t num);
     static uint8_t encodePregName(PregName name);
 
     static MregName parseMregName(const char *line);
     static uint8_t mregNameLen(MregName name);
-    char *outMregName(char *out, MregName name) const;
+    StrBuffer &outMregName(StrBuffer &out, MregName name) const;
     static MregName decodeMregName(uint8_t num);
     static uint8_t encodeMregName(MregName name);
 
     static ConfigName parseConfigName(const char *line);
     static uint8_t configNameLen(ConfigName name);
-    char *outConfigNames(char *out, uint8_t configs) const;
+    StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs) const;
 
     static StrOptName parseStrOptName(const char *line);
     static uint8_t strOptNameLen(StrOptName name);
-    char *outStrOptNames(char *out, uint8_t strOpts) const;
+    StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts) const;
 
     static OprSize parseIndexSize(const char *line);
     static uint8_t indexSizeLen(OprSize size);

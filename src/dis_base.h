@@ -24,6 +24,7 @@
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "reg_base.h"
+#include "str_buffer.h"
 #include "symbol_table.h"
 #include "table_base.h"
 #include "type_traits.h"
@@ -33,7 +34,8 @@ namespace libasm {
 
 class Disassembler : public ErrorReporter, virtual public ConfigBase {
 public:
-    Error decode(DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab);
+    Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
+            SymbolTable *symtab = nullptr);
     ValueFormatter &getFormatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase);
@@ -67,17 +69,11 @@ protected:
         return symbol;
     }
 
-    /** Copy |text| into |out|. */
-    char *outText(char *out, const char *text) const;
-
-    /** Copy |pstr| text in programe memory into |out|. */
-    char *outPstr(char *out, const /*PROGMEM*/ char *pstr) const;
-
     /**
      * Convert |val| as |bits| decimal integer. Treat |val| as signed
      * integer when |bits| is negative.
      */
-    char *outDec(char *out, uint8_t val, int8_t bits);
+    StrBuffer &outDec(StrBuffer &out, uint8_t val, int8_t bits);
 
     /**
      * Convert |val| as |bits| hexadecimal integer. Treat |val| as
@@ -85,10 +81,10 @@ protected:
      * |val| is in symbol table.
      */
     template <typename T>
-    char *outHex(char *out, T val, int8_t bits) {
+    StrBuffer &outHex(StrBuffer &out, T val, int8_t bits) {
         const char *label = lookup(val);
         if (label)
-            return outText(out, label);
+            return out.text(label);
         return _formatter.formatHex(out, val, bits, /*relax*/ true);
     }
 
@@ -97,16 +93,16 @@ protected:
      * symbol label when |val| is in symbol table.
      */
     template <typename Addr>
-    char *outAbsAddr(char *out, Addr val, uint8_t addrWidth = 0,
+    StrBuffer &outAbsAddr(StrBuffer &out, Addr val, uint8_t addrWidth = 0,
             const /*PROGMEM*/ char *prefix = nullptr, bool needPrefix = false) {
         const char *label = lookup(val);
         if (label) {
             if (prefix)
-                out = outPstr(out, prefix);
-            return outText(out, label);
+                out.pstr(prefix);
+            return out.text(label);
         }
         if (needPrefix && prefix)
-            out = outPstr(out, prefix);
+            out.pstr(prefix);
         if (addrWidth == 0)
             addrWidth = sizeof(Addr) * 8;
         return _formatter.formatHex(out, val, addrWidth, false);
@@ -117,32 +113,30 @@ protected:
      * |origin|.
      */
     template <typename Addr>
-    char *outRelAddr(char *out, Addr target, Addr origin, uint8_t deltaBits) {
+    StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
             return outAbsAddr(out, target, addressWidth());
-        *out++ = _formatter.currentOriginSymbol();
-        *out = 0;
+        out.letter(_formatter.currentOriginSymbol());
         const auto delta = static_cast<typename make_signed<Addr>::type>(target - origin);
         if (delta == 0)
             return out;
         Addr val;
         if (delta < 0) {
-            *out++ = '-';
+            out.letter('-');
             val = static_cast<Addr>(-delta);
         } else {
-            *out++ = '+';
+            out.letter('+');
             val = static_cast<Addr>(delta);
         }
         if (deltaBits <= 14) {
-            out = _formatter.formatDec(out, val, deltaBits);
+            return _formatter.formatDec(out, val, deltaBits);
         } else {
-            out = _formatter.formatHex(out, val, deltaBits);
+            return _formatter.formatHex(out, val, deltaBits);
         }
-        return out;
     }
 
 private:
-    virtual Error decode(DisMemory &memory, Insn &insn, char *out) = 0;
+    virtual Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) = 0;
 };
 
 }  // namespace libasm

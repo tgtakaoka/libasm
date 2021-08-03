@@ -34,16 +34,16 @@ private:
     IntelValueFormatter _formatter;
     RegZ80 _regs;
 
-    char *outIndirectAddr(char *out, uint16_t addr, uint8_t bits);
-    char *outRegister(char *out, RegName reg);
-    char *outIndirectReg(char *out, RegName reg);
-    char *outIndexOffset(char *out, RegName reg, int8_t offset);
-    char *outDataReg(char *out, RegName reg);
+    StrBuffer &outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits);
+    StrBuffer &outRegister(StrBuffer &out, RegName reg);
+    StrBuffer &outIndirectReg(StrBuffer &out, RegName reg);
+    StrBuffer &outIndexOffset(StrBuffer &out, RegName reg, int8_t offset);
+    StrBuffer &outDataReg(StrBuffer &out, RegName reg);
 
-    Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, char *out);
-    Error decodeRelative(DisMemory &memory, InsnZ80 &insn, char *out);
-    Error decodeOperand(DisMemory &memory, InsnZ80 &insn, char *out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
+    Error decodeRelative(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
+    Error decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace z80

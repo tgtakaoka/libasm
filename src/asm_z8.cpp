@@ -259,7 +259,7 @@ Error AsmZ8::setRp(
     if (strcasecmp_P(insn.name(), name))
         return UNKNOWN_INSTRUCTION;
     const uint16_t rp = parseExpr16(scan);
-    if (getError() != OK || !(this->*set)(rp))
+    if (hasError() || !(this->*set)(rp))
         setError(OPERAND_NOT_ALLOWED);
     return OK;
 }

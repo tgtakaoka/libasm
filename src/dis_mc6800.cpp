@@ -21,31 +21,30 @@
 namespace libasm {
 namespace mc6800 {
 
-char *DisMc6800::outRegister(char *out, RegName regName) {
+StrBuffer &DisMc6800::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, char *out) {
+Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
     outAbsAddr(out, dir, 8, PSTR("<"));
     return setError(insn);
 }
 
-Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, char *out) {
+Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
     outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     return setError(insn);
 }
 
-Error DisMc6800::decodeIndexed(DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode) {
+Error DisMc6800::decodeIndexed(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
     const uint8_t disp8 = insn.readByte(memory);
-    out = outDec(out, disp8, 8);
-    *out++ = ',';
+    outDec(out, disp8, 8).letter(',');
     outRegister(out, mode == M_IDY ? REG_Y : REG_X);
     return setError(insn);
 }
 
-Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, char *out) {
+Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const int8_t delta8 = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t base = insn.address() + insn.length();
     const Config::uintptr_t target = base + delta8;
@@ -53,8 +52,8 @@ Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, char *out) 
     return setError(insn);
 }
 
-Error DisMc6800::decodeImmediate(DisMemory &memory, InsnMc6800 &insn, char *out) {
-    *out++ = '#';
+Error DisMc6800::decodeImmediate(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
+    out.letter('#');
     if (insn.size() == SZ_BYTE) {
         outHex(out, insn.readByte(memory), 8);
     } else {  // SZ_WORD
@@ -71,7 +70,7 @@ static int8_t bitNumber(uint8_t val) {
     return -1;
 }
 
-Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, char *out) {
+Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const uint8_t val8 = insn.readByte(memory);
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
@@ -80,13 +79,12 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, char *out)
             return setError(TableMc6800.getError());
         outHex(out, bitNum, 3);
     } else {
-        *out++ = '#';
-        outHex(out, val8, 8);
+        outHex(out.letter('#'), val8, 8);
     }
     return setError(insn);
 }
 
-Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, char *out, AddrMode mode) {
+Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_DIR:
         return decodeDirectPage(memory, insn, out);
@@ -106,7 +104,7 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, char *out, A
     }
 }
 
-Error DisMc6800::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6800 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
@@ -130,16 +128,14 @@ Error DisMc6800::decode(DisMemory &memory, Insn &_insn, char *out) {
 
     if (mode2 == M_NO)
         return setOK();
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     if (decodeOperand(memory, insn, out, mode2))
         return getError();
 
     const AddrMode mode3 = insn.mode3();
     if (mode3 == M_NO)
         return setOK();
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, mode3);
 }
 

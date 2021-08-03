@@ -34,10 +34,10 @@ private:
     IntelValueFormatter _formatter;
     RegI8080 _regs;
 
-    char *outRegister(char *out, RegName regName);
+    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
-    Error decodeOperand(DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace i8080

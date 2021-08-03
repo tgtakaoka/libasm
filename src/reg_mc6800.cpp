@@ -42,7 +42,7 @@ uint8_t RegMc6800::regNameLen(RegName name) {
     return name == REG_UNDEF ? 0 : 1;
 }
 
-char *RegMc6800::outRegName(char *out, const RegName name) const {
+StrBuffer &RegMc6800::outRegName(StrBuffer &out, const RegName name) const {
     return outChar(out, char(name));
 }
 

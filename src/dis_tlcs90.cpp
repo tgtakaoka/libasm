@@ -68,7 +68,7 @@ Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode,
     return setError(insn);
 }
 
-Error DisTlcs90::decodeRelative(InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
     Config::ptrdiff_t delta;
     if (mode == M_REL8) {
         delta = static_cast<int8_t>(op.val16);
@@ -81,56 +81,47 @@ Error DisTlcs90::decodeRelative(InsnTlcs90 &insn, char *out, AddrMode mode, cons
     return OK;
 }
 
-Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, char *out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
     uint16_t val16 = op.val16;
     int8_t val8 = static_cast<int8_t>(val16);
     switch (mode) {
     case M_IMM8:
     case M_BIT:
-        out = outHex(out, val16, 8);
+        outHex(out, val16, 8);
         break;
     case M_IMM16:
-        out = outHex(out, val16, 16);
+        outHex(out, val16, 16);
         break;
     case M_DIR:
         val16 |= 0xFF00;
         /* Fall-through */
     case M_EXT:
-        *out++ = '(';
-        out = outHex(out, val16, 16);
-        *out++ = ')';
+        outHex(out.letter('('), val16, 16).letter(')');
         break;
     case M_REL8:
     case M_REL16:
         return decodeRelative(insn, out, mode, op);
     case M_IND:
-        *out++ = '(';
-        out = _regs.outRegName(out, op.reg);
-        *out++ = ')';
+        _regs.outRegName(out.letter('('), op.reg).letter(')');
         break;
     case M_IDX:
-        *out++ = '(';
-        out = _regs.outRegName(out, op.reg);
+        _regs.outRegName(out.letter('('), op.reg);
         if (val8 >= 0)
-            *out++ = '+';
-        out = outHex(out, val8, -8);
-        *out++ = ')';
+            out.letter('+');
+        outHex(out, val8, -8).letter(')');
         break;
     case M_BASE:
-        *out++ = '(';
-        out = _regs.outRegName(out, REG_HL);
-        *out++ = '+';
-        out = _regs.outRegName(out, REG_A);
-        *out++ = ')';
+        _regs.outRegName(out.letter('('), REG_HL).letter('+');
+        _regs.outRegName(out, REG_A).letter(')');
         break;
     case M_CC:
-        out = _regs.outCcName(out, op.cc);
+        _regs.outCcName(out, op.cc);
         break;
     case M_STACK:
     case M_REG8:
     case M_REG16:
     case M_REGIX:
-        out = _regs.outRegName(out, op.reg);
+        _regs.outRegName(out, op.reg);
         break;
     case R_BC:
     case R_DE:
@@ -139,16 +130,15 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, char *out, AddrMode mode, const
     case R_AF:
     case R_AFP:
     case R_A:
-        out = _regs.outRegName(out, RegName(uint8_t(mode) - 16));
+        _regs.outRegName(out, RegName(uint8_t(mode) - 16));
         break;
     default:
         break;
     }
-    *out = 0;
     return OK;
 }
 
-Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTlcs90 insn(_insn);
     Operand preOp;
     if (TableTlcs90.readInsn(memory, insn, preOp))
@@ -158,6 +148,7 @@ Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, char *out) {
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO)
         return OK;
+    const char *start = out.mark();
     if (dst == M_DST) {
         decodeOperand(insn, out, preOp.mode, preOp);
     } else {
@@ -176,11 +167,8 @@ Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, char *out) {
         preOp.mode = M_REG16;
         preOp.reg = RegTlcs90::decodeReg16(insn.prefix());
     }
-    const uint8_t len = strlen(out);
-    if (len > 0) {  // skip CC_T because it's empty.
-        out += len;
-        *out++ = ',';
-    }
+    if (out.mark() != start)  // skip CC_T because it's empty.
+        out.letter(',');
     if (src == M_SRC || src == M_SRC16) {
         decodeOperand(insn, out, preOp.mode, preOp);
     } else {

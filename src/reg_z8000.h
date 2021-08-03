@@ -131,7 +131,7 @@ class RegZ8000 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, RegName name) const;
     static uint8_t encodeGeneralRegName(RegName name);
     static RegName decodeRegNum(uint8_t num, OprSize size);
     static RegName decodeByteReg(uint8_t num);
@@ -150,24 +150,24 @@ public:
 
     static CcName parseCcName(const char *line);
     static uint8_t ccNameLen(const CcName name);
-    char *outCcName(char *out, CcName name) const;
+    StrBuffer &outCcName(StrBuffer &out, CcName name) const;
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcNum(uint8_t num);
 
     static FlagName parseFlagName(const char *line);
     static uint8_t flagNameLen(FlagName name);
-    char *outFlagNames(char *out, uint8_t flags) const;
+    StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags) const;
     static uint8_t encodeFlagName(FlagName name);
 
     static IntrName parseIntrName(const char *line);
     static uint8_t intrNameLen(IntrName name);
-    char *outIntrNames(char *out, uint8_t intrs) const;
+    StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs) const;
     static uint8_t encodeIntrName(IntrName name);
 
     static bool checkOverwrap(RegName dst, RegName src, RegName cnt);
 
 private:
-    char *outCtlName(char *out, RegName name) const;
+    StrBuffer &outCtlName(StrBuffer &out, RegName name) const;
     static int8_t parseRegNum(const char *line);
     static uint8_t ctlRegLen(RegName name);
 };

@@ -34,12 +34,12 @@ private:
     ValueFormatter _formatter{'$'};
     RegIns8060 _regs;
 
-    char *outRegister(char *out, RegName regName);
+    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
-    Error decodePntr(InsnIns8060 &insn, char *out);
-    Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, char *out);
-    Error decodeIndx(DisMemory &memory, InsnIns8060 &insn, char *out, bool hasMode);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodePntr(InsnIns8060 &insn, StrBuffer &out);
+    Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out);
+    Error decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace ins8060

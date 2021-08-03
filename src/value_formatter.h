@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 
+#include "str_buffer.h"
+
 namespace libasm {
 
 class ValueFormatter {
@@ -37,24 +39,25 @@ public:
      * suppressed.
      */
 
-    char *formatDec(char *out, uint32_t val, int8_t bits) const;
+    StrBuffer &formatDec(StrBuffer &out, uint32_t val, int8_t bits) const;
     /*
      * Convert |val| as |bits| hexadecimal integer.  Treat |val| as
      * signed integer when |bits| is negative. Yse base 10 and zero
      * suppress when |relax| is true and |val| is less than 32 in
      * absolute value.
      */
-    char *formatHex(char *out, uint32_t val, int8_t bits, bool relax = true) const;
+    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax = true) const;
 
 protected:
     char _curSym;
     bool _cstyle;
     bool _uppercase;
 
-    uint32_t makePositive(char *out, uint32_t val, int8_t bits) const __attribute__((noinline));
-    virtual char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const;
-    char *outHex(char *out, uint32_t val, int8_t bits) const;
-    char *outDec(char *out, uint32_t val) const __attribute__((noinline));
+    uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const
+            __attribute__((noinline));
+    virtual StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const;
+    StrBuffer &outHex(StrBuffer &out, uint32_t val, int8_t bits) const;
+    StrBuffer &outDec(StrBuffer &out, uint32_t val) const __attribute__((noinline));
 };
 
 class MotoValueFormatter : public ValueFormatter {
@@ -62,7 +65,7 @@ public:
     MotoValueFormatter() : ValueFormatter('*', false) {}
 
 protected:
-    char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const override;
+    StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
 };
 
 class IntelValueFormatter : public ValueFormatter {
@@ -70,7 +73,7 @@ public:
     IntelValueFormatter() : ValueFormatter('$', false) {}
 
 protected:
-    char *formatPositiveHex(char *out, uint32_t val, int8_t bits) const override;
+    StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
 };
 
 }  // namespace libasm

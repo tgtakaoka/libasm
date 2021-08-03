@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,35 @@
  * limitations under the License.
  */
 
-#include "reg_mos6502.h"
+#ifndef __STR_BUFFER_H__
+#define __STR_BUFFER_H__
 
-#include <ctype.h>
+#include "error_reporter.h"
 
-#include "config_mos6502.h"
+#include <stddef.h>
 
 namespace libasm {
-namespace mos6502 {
 
-RegName RegMos6502::parseRegName(const char *line) {
-    const char r = *line++;
-    if (isidchar(*line))
-        return REG_UNDEF;
-    switch (toupper(r)) {
-    case 'A':
-        return REG_A;
-    case 'X':
-        return REG_X;
-    case 'Y':
-        return REG_Y;
-    case 'S':
-        return REG_S;
-    default:
-        return REG_UNDEF;
-    }
-}
+class StrBuffer : public ErrorReporter {
+public:
+    StrBuffer(char *buffer, size_t size);
 
-uint8_t RegMos6502::regNameLen(RegName name) {
-    return name == REG_UNDEF ? 0 : 1;
-}
+    StrBuffer &letter(char letter);
+    StrBuffer &text(const char *text);
+    StrBuffer &pstr(const /*PROGMEM*/ char *pstr);
+    StrBuffer &format(const char *fmt, double val);
 
-StrBuffer &RegMos6502::outRegName(StrBuffer &out, const RegName name) const {
-    return outChar(out, char(name));
-}
+    char *mark() const { return _out; }
+    StrBuffer &reverse(char *start);
 
-}  // namespace mos6502
+private:
+    char *_out;
+    const char *const _end;
+};
+
 }  // namespace libasm
+
+#endif  // __STR_BUFFER_H__
 
 // Local Variables:
 // mode: c++

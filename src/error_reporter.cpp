@@ -44,6 +44,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Illegal operand mode");
     case ILLEGAL_SEGMENT:
         return PSTR("Illegal segment override");
+    case BUFFER_OVERFLOW:
+        return PSTR("Buffer overflow");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:

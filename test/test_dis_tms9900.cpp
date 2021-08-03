@@ -400,7 +400,7 @@ static void assert_mid(
             bytes[pos + 3] = post;
             memory.setMemory(bytes, sizeof(bytes));
             disassembler.setUppercase(true);
-            disassembler.decode(memory, insn, operands, nullptr);
+            disassembler.decode(memory, insn, operands, sizeof(operands));
             if (m && i > m->end) {
                 if (++m >= end)
                     m = nullptr;

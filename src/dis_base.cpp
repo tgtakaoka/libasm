@@ -23,34 +23,24 @@ void Disassembler::setUppercase(bool uppercase) {
     _regBase.setUppercase(uppercase);
 }
 
-Error Disassembler::decode(DisMemory &memory, Insn &insn, char *operands, SymbolTable *symtab) {
+Error Disassembler::decode(
+        DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {
     _symtab = symtab;
 
     resetError();
-    *operands = 0;
+    StrBuffer out(operands, size);
     insn.resetAddress(memory.address());
-    decode(memory, insn, operands);
+    decode(memory, insn, out);
     if (!_regBase.isUppercase())
         insn.toLowerName();
+    setErrorIf(out.getError());
     return getError();
 }
 
-char *Disassembler::outText(char *out, const char *text) const {
-    while ((*out = *text++) != 0)
-        out++;
-    return out;
-}
-
-char *Disassembler::outPstr(char *out, const /*PROGMEM*/ char *pstr) const {
-    while ((*out = pgm_read_byte(pstr++)) != 0)
-        out++;
-    return out;
-}
-
-char *Disassembler::outDec(char *out, uint8_t val, int8_t bits) {
+StrBuffer &Disassembler::outDec(StrBuffer &out, uint8_t val, int8_t bits) {
     const char *label = lookup(val);
     if (label)
-        return outText(out, label);
+        return out.text(label);
     return _formatter.formatDec(out, val, bits);
 }
 

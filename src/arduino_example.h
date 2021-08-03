@@ -220,7 +220,7 @@ private:
         char operands[80];
         Insn insn;
         while (memory.hasNext()) {
-            if (_disassembler.decode(memory, insn, operands, this)) {
+            if (_disassembler.decode(memory, insn, operands, sizeof(operands), this)) {
                 _cli.print(F("Error: "));
                 _cli.println(FSTR(_disassembler.errorText()));
             } else {

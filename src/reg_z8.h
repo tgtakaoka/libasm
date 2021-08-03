@@ -82,14 +82,14 @@ class RegZ8 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, RegName name) const;
     static bool isPairReg(RegName);
     static uint8_t encodeRegName(RegName name);
     static RegName decodeRegNum(uint8_t num);
     static RegName decodePairRegNum(uint8_t num);
 
     static CcName parseCcName(const char *line);
-    char *outCcName(char *out, CcName name) const;
+    StrBuffer &outCcName(StrBuffer &out, CcName name) const;
     static uint8_t ccNameLen(const CcName name);
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcNum(uint8_t num);

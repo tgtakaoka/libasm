@@ -44,7 +44,7 @@ void val_assert(const char *file, const int line, const char *expr, const T expe
     if (val.isUndefined())
         error.setErrorIf(UNDEFINED_SYMBOL);
     asserter.equals(file, line, expr, expected_error, error);
-    if (error.getError() == OK)
+    if (error.isOK())
         asserter.equals(file, line, expr, static_cast<uint32_t>(expected),
                 static_cast<T>(val.getUnsigned()));
 }

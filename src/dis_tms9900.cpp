@@ -52,32 +52,27 @@ Error DisTms9900::decodeMactoInstructionDetect(InsnTms9900 &insn) {
 }
 
 Error DisTms9900::decodeModeReg(
-        DisMemory &memory, InsnTms9900 &insn, char *out, uint8_t mode, uint8_t reg) {
+        DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, uint8_t mode, uint8_t reg) {
     switch (mode &= 3) {
     case 1:
     case 3:
-        *out++ = '*';
+        out.letter('*');
         /* Fall-through */
     case 0:
-        out = _regs.outRegName(out, reg);
+        _regs.outRegName(out, reg);
         if (mode == 3)
-            *out++ = '+';
+            out.letter('+');
         break;
     default:
-        *out++ = '@';
-        out = outHex(out, insn.readUint16(memory), 16);
-        if (reg & 0xF) {
-            *out++ = '(';
-            out = _regs.outRegName(out, reg);
-            *out++ = ')';
-        }
+        outHex(out.letter('@'), insn.readUint16(memory), 16);
+        if (reg & 0xF)
+            _regs.outRegName(out.letter('('), reg).letter(')');
         break;
     }
-    *out = 0;
     return setError(insn);
 }
 
-Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
+Error DisTms9900::decodeRelative(InsnTms9900 &insn, StrBuffer &out) {
     int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
     delta <<= 1;
     const Config::uintptr_t target = insn.address() + 2 + delta;
@@ -85,7 +80,8 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn, char *out) {
     return OK;
 }
 
-Error DisTms9900::decodeOperand(DisMemory &memory, InsnTms9900 &insn, char *out, AddrMode mode) {
+Error DisTms9900::decodeOperand(
+        DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, AddrMode mode) {
     const Config::opcode_t opc = insn.opCode();
     const Config::opcode_t post = insn.post();
     uint8_t val8;
@@ -152,7 +148,7 @@ Error DisTms9900::decodeOperand(DisMemory &memory, InsnTms9900 &insn, char *out,
     }
 }
 
-Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisTms9900::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTms9900 insn(_insn);
     Config::opcode_t opCode = insn.readUint16(memory);
 
@@ -171,8 +167,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, char *out) {
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO)
         return OK;
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, dst);
 }
 

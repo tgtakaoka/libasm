@@ -40,12 +40,12 @@ private:
     MotoValueFormatter _formatter;
     RegMos6502 _regs;
 
-    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, char *out, AddrMode mode);
-    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, char *out);
-    Error decode(DisMemory &memory, Insn &insn, char *out) override;
+    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mos6502

@@ -75,10 +75,10 @@ uint8_t RegZ80::regNameLen(RegName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
-char *RegZ80::outRegName(char *out, RegName name) const {
+StrBuffer &RegZ80::outRegName(StrBuffer &out, RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 
@@ -186,10 +186,10 @@ uint8_t RegZ80::ccNameLen(const CcName name) {
     return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
-char *RegZ80::outCcName(char *out, const CcName name) const {
+StrBuffer &RegZ80::outCcName(StrBuffer &out, const CcName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 

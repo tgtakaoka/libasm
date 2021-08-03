@@ -21,11 +21,11 @@
 namespace libasm {
 namespace i8080 {
 
-char *DisI8080::outRegister(char *out, RegName regName) {
+StrBuffer &DisI8080::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, char *out, AddrMode mode) {
+Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_IM8:
     case M_IOA:
@@ -59,7 +59,7 @@ Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, char *out, Add
     return setError(insn);
 }
 
-Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
+Error DisI8080::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8080 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))
@@ -77,8 +77,7 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, char *out) {
     const AddrMode src = insn.srcMode();
     if (src == M_NO)
         return OK;
-    out += strlen(out);
-    *out++ = ',';
+    out.letter(',');
     return decodeOperand(memory, insn, out, src);
 }
 

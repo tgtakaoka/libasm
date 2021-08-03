@@ -145,7 +145,7 @@ Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode m
         insn.embedPost(val16 << 6);
         return OK;
     case M_RTWP:
-        if ((val16 == 0 || val16 == 1 || val16 == 2 || val16 == 4) && op.getError() == OK) {
+        if ((val16 == 0 || val16 == 1 || val16 == 2 || val16 == 4) && op.isOK()) {
             insn.embed(val16 & 7);
             return OK;
         }

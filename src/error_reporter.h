@@ -33,6 +33,7 @@ enum Error : uint8_t {
     ILLEGAL_SIZE = 7,
     ILLEGAL_OPERAND_MODE = 8,
     ILLEGAL_SEGMENT = 9,
+    BUFFER_OVERFLOW = 10,
 
     // Assembler
     UNKNOWN_INSTRUCTION = 21,
@@ -76,6 +77,8 @@ class ErrorReporter {
 public:
     ErrorReporter() : _error(OK) {}
 
+    bool isOK() const { return _error == OK; }
+    bool hasError() const { return !isOK(); }
     Error getError() const { return _error; }
 
     Error resetError() { return setOK(); }

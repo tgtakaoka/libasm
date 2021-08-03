@@ -45,7 +45,7 @@ class RegI8051 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, const RegName name) const;
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 
     static bool isRReg(RegName name);
     static uint8_t encodeRReg(RegName name);

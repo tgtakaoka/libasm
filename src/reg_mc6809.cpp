@@ -85,10 +85,10 @@ RegSize RegMc6809::regSize(RegName name) {
     return SZ_NONE;      // REG_Z..REG_0
 }
 
-char *RegMc6809::outRegName(char *out, const RegName name) const {
+StrBuffer &RegMc6809::outRegName(StrBuffer &out, const RegName name) const {
     const NameEntry *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out = outText(out, entry->text());
+        outText(out, entry->text());
     return out;
 }
 

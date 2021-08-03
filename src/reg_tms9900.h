@@ -46,7 +46,7 @@ class RegTms9900 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, uint8_t num) const;
+    StrBuffer &outRegName(StrBuffer &out, uint8_t num) const;
 
     static uint8_t encodeRegNumber(RegName name);
 };

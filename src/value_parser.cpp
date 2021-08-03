@@ -170,7 +170,7 @@ Value ValueParser::readAtom(const char *scan) {
 
     if (c == '(') {
         Value value(parseExpr(p));
-        if (getError() == OK) {
+        if (isOK()) {
             const char expected = ')';
             p = skipSpaces(_next);
             if (p == nullptr || *p != expected) {
@@ -185,7 +185,7 @@ Value ValueParser::readAtom(const char *scan) {
     if (c == '\'') {
         Value value(readCharacterConstant(p));
         p = _next;
-        if (getError() == OK) {
+        if (isOK()) {
             if (*p == '\'') {
                 _next = p + 1;
             } else {
@@ -196,7 +196,7 @@ Value ValueParser::readAtom(const char *scan) {
     }
     if (c == '~') {
         Value value(readAtom(p));
-        if (getError() == OK)
+        if (isOK())
             return value.complement();
         return value;
     }
@@ -208,7 +208,7 @@ Value ValueParser::readAtom(const char *scan) {
         if (c == '+')
             return readAtom(p);
         Value value(readAtom(p));
-        if (getError() == OK) {
+        if (isOK()) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(OVERFLOW_RANGE);
             return value.negate();

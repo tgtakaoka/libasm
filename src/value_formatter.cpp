@@ -18,55 +18,44 @@
 
 namespace libasm {
 
-static char *reverseStr(char *p, char *t) {
-    for (char *e = t - 1; p < e;) {
-        char c = *p;
-        *p++ = *e;
-        *e-- = c;
-    }
-    return t;
-}
 
-char *ValueFormatter::outHex(char *out, uint32_t val, int8_t bits) const {
+StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) const {
     const char hexBase = (_uppercase ? 'A' : 'a') - 10;
-    char *t = out;
+    char *start = out.mark();
     while (val) {
         const uint8_t digit = val & 0xF;
         if (digit < 10)
-            *t++ = digit + '0';
+            out.letter(digit + '0');
         else
-            *t++ = digit + hexBase;
+            out.letter(digit + hexBase);
         val >>= 4;
     }
     const uint8_t bw = (bits < 0) ? -bits : bits;
     const int8_t width = bw / 4 + (bw % 4 ? 1 : 0);
-    while (t - out < width)
-        *t++ = '0';
-    *t = 0;
-    return t;
+    while (out.mark() - start < width && out.isOK())
+        out.letter('0');
+    return out;
 }
 
-char *ValueFormatter::outDec(char *out, uint32_t val) const {
-    char *t = out;
+StrBuffer &ValueFormatter::outDec(StrBuffer &out, uint32_t val) const {
+    char *start = out.mark();
     while (val) {
         const uint8_t digit = val % 10;
-        *t++ = digit + '0';
+        out.letter(digit + '0');
         val /= 10;
     }
-    if (t == out)
-        *t++ = '0';
-    *t = 0;
-    return t;
+    if (out.mark() == start)
+        out.letter('0');
+    return out;
 }
 
-uint32_t ValueFormatter::makePositive(char *out, uint32_t val, int8_t bits) const {
-    *out = 0;
+uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits) const {
     uint8_t bw = bits;
     if (bits < 0) {
         bw = -bits;
         if (val & (1 << (bw - 1))) {
             val = ~val + 1;
-            *out = '-';
+            out.letter('-');
         }
     }
     if (bw >= 32)
@@ -74,43 +63,40 @@ uint32_t ValueFormatter::makePositive(char *out, uint32_t val, int8_t bits) cons
     return val & ~(0xFFFFFFFF << bw);
 }
 
-char *ValueFormatter::formatHex(char *out, uint32_t val, int8_t bits, bool relax) const {
+StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
     val = makePositive(out, val, bits);
-    if (*out)
-        out++;
+    char *start = out.mark();
     if (relax && val <= 32)
-        return reverseStr(out, outDec(out, val));
+        return outDec(out, val).reverse(start);
     if (_cstyle)
         return ValueFormatter::formatPositiveHex(out, val, bits);
     return formatPositiveHex(out, val, bits);
 }
 
-char *ValueFormatter::formatDec(char *out, uint32_t val, int8_t bits) const {
+StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
     val = makePositive(out, val, bits);
-    if (*out)
-        out++;
-    return reverseStr(out, outDec(out, val));
+    char *start = out.mark();
+    return outDec(out, val).reverse(start);
 }
 
-char *ValueFormatter::formatPositiveHex(char *out, uint32_t val, int8_t bits) const {
-    *out++ = '0';
-    *out++ = 'x';
-    return reverseStr(out, outHex(out, val, bits));
+StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+    out.letter('0').letter('x');
+    char *start = out.mark();
+    return outHex(out, val, bits).reverse(start);
 }
 
-char *MotoValueFormatter::formatPositiveHex(char *out, uint32_t val, int8_t bits) const {
-    *out++ = '$';
-    return reverseStr(out, outHex(out, val, bits));
+StrBuffer &MotoValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+    out.letter('$');
+    char *start = out.mark();
+    return outHex(out, val, bits).reverse(start);
 }
 
-char *IntelValueFormatter::formatPositiveHex(char *out, uint32_t val, int8_t bits) const {
-    char *t = outHex(out, val, bits);
-    if (t[-1] > '9')
-        *t++ = '0';
-    t = reverseStr(out, t);
-    *t++ = _uppercase ? 'H' : 'h';
-    *t = 0;
-    return t;
+StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+    char *start = out.mark();
+    char *top = outHex(out, val, bits).mark();
+    if (top[-1] > '9')
+        out.letter('0');
+    return out.reverse(start).letter(_uppercase ? 'H' : 'h');
 }
 
 }  // namespace libasm

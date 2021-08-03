@@ -54,7 +54,7 @@ class RegMc68000 : public RegBase {
 public:
     static RegName parseRegName(const char *line);
     static uint8_t regNameLen(RegName name);
-    char *outRegName(char *out, RegName name);
+    StrBuffer &outRegName(StrBuffer &out, RegName name);
     static bool isDataReg(RegName name);
     static bool isAddrReg(RegName name);
     static bool isGeneralReg(RegName name);
