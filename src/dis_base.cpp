@@ -37,13 +37,6 @@ Error Disassembler::decode(
     return getError();
 }
 
-StrBuffer &Disassembler::outDec(StrBuffer &out, uint8_t val, int8_t bits) {
-    const char *label = lookup(val);
-    if (label)
-        return out.text(label);
-    return _formatter.formatDec(out, val, bits);
-}
-
 }  // namespace libasm
 
 // Local Variables:

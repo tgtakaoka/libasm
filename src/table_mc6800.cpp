@@ -50,19 +50,8 @@ static constexpr Entry MC6800_TABLE[] PROGMEM = {
     E0(0x17, TEXT_TBA),
     E0(0x19, TEXT_DAA),
     E0(0x1B, TEXT_ABA),
-    E1(0x20, TEXT_BRA,  BYTE, M_REL),
-    E1(0x22, TEXT_BHI,  BYTE, M_REL),
-    E1(0x23, TEXT_BLS,  BYTE, M_REL),
-    E1(0x24, TEXT_BHS,  BYTE, M_REL),
-    E1(0x24, TEXT_BCC,  BYTE, M_REL),
-    E1(0x25, TEXT_BLO,  BYTE, M_REL),
-    E1(0x25, TEXT_BCS,  BYTE, M_REL),
-    E1(0x26, TEXT_BNE,  BYTE, M_REL),
-    E1(0x27, TEXT_BEQ,  BYTE, M_REL),
     E1(0x28, TEXT_BVC,  BYTE, M_REL),
     E1(0x29, TEXT_BVS,  BYTE, M_REL),
-    E1(0x2A, TEXT_BPL,  BYTE, M_REL),
-    E1(0x2B, TEXT_BMI,  BYTE, M_REL),
     E1(0x2C, TEXT_BGE,  BYTE, M_REL),
     E1(0x2D, TEXT_BLT,  BYTE, M_REL),
     E1(0x2E, TEXT_BGT,  BYTE, M_REL),
@@ -238,6 +227,20 @@ static constexpr Entry MC6800_TABLE[] PROGMEM = {
     E1(0xFF, TEXT_STX,  WORD, M_EXT),
 };
 
+static constexpr Entry MC68xx_BRANCHES[] PROGMEM = {
+    E1(0x20, TEXT_BRA,  BYTE, M_REL),
+    E1(0x22, TEXT_BHI,  BYTE, M_REL),
+    E1(0x23, TEXT_BLS,  BYTE, M_REL),
+    E1(0x24, TEXT_BHS,  BYTE, M_REL),
+    E1(0x24, TEXT_BCC,  BYTE, M_REL),
+    E1(0x25, TEXT_BLO,  BYTE, M_REL),
+    E1(0x25, TEXT_BCS,  BYTE, M_REL),
+    E1(0x26, TEXT_BNE,  BYTE, M_REL),
+    E1(0x27, TEXT_BEQ,  BYTE, M_REL),
+    E1(0x2A, TEXT_BPL,  BYTE, M_REL),
+    E1(0x2B, TEXT_BMI,  BYTE, M_REL),
+};
+
 static constexpr Entry MC6801_TABLE[] PROGMEM = {
     E0(0x04, TEXT_LSRD),
     E0(0x05, TEXT_ASLD),
@@ -284,6 +287,221 @@ static constexpr Entry HD6301_TABLE[] PROGMEM = {
     E2(0x75, TEXT_BTGL, BYTE, M_BIT, M_DIR),
     E2(0x7B, TEXT_TIM,  BYTE, M_BMM, M_DIR),
     E2(0x7B, TEXT_BTST, BYTE, M_BIT, M_DIR),
+};
+
+static constexpr Entry MC6805_TABLE[] PROGMEM = {
+    E1(0x21, TEXT_BRN,  BYTE, M_REL),
+    E1(0x28, TEXT_BHCC, BYTE, M_REL),
+    E1(0x29, TEXT_BHCS, BYTE, M_REL),
+    E1(0x2C, TEXT_BMC,  BYTE, M_REL),
+    E1(0x2D, TEXT_BMS,  BYTE, M_REL),
+    E1(0x2E, TEXT_BIL,  BYTE, M_REL),
+    E1(0x2F, TEXT_BIH,  BYTE, M_REL),
+    E1(0x30, TEXT_NEG,  BYTE, M_DIR),
+    E1(0x33, TEXT_COM,  BYTE, M_DIR),
+    E1(0x34, TEXT_LSR,  BYTE, M_DIR),
+    E1(0x36, TEXT_ROR,  BYTE, M_DIR),
+    E1(0x37, TEXT_ASR,  BYTE, M_DIR),
+    E1(0x38, TEXT_ASL,  BYTE, M_DIR),
+    E1(0x38, TEXT_LSL,  BYTE, M_DIR),
+    E1(0x39, TEXT_ROL,  BYTE, M_DIR),
+    E1(0x3A, TEXT_DEC,  BYTE, M_DIR),
+    E1(0x3C, TEXT_INC,  BYTE, M_DIR),
+    E1(0x3D, TEXT_TST,  BYTE, M_DIR),
+    E1(0x3F, TEXT_CLR,  BYTE, M_DIR),
+    E0(0x40, TEXT_NEGA),
+    E0(0x43, TEXT_COMA),
+    E0(0x44, TEXT_LSRA),
+    E0(0x46, TEXT_RORA),
+    E0(0x47, TEXT_ASRA),
+    E0(0x48, TEXT_ASLA),
+    E0(0x48, TEXT_LSLA),
+    E0(0x49, TEXT_ROLA),
+    E0(0x4A, TEXT_DECA),
+    E0(0x4C, TEXT_INCA),
+    E0(0x4D, TEXT_TSTA),
+    E0(0x4F, TEXT_CLRA),
+    E0(0x50, TEXT_NEGX),
+    E0(0x53, TEXT_COMX),
+    E0(0x54, TEXT_LSRX),
+    E0(0x56, TEXT_RORX),
+    E0(0x57, TEXT_ASRX),
+    E0(0x58, TEXT_ASLX),
+    E0(0x58, TEXT_LSLX),
+    E0(0x59, TEXT_ROLX),
+    E0(0x5A, TEXT_DECX),
+    E0(0x5C, TEXT_INCX),
+    E0(0x5D, TEXT_TSTX),
+    E0(0x5F, TEXT_CLRX),
+    E1(0x60, TEXT_NEG,  BYTE, M_IDX),
+    E1(0x63, TEXT_COM,  BYTE, M_IDX),
+    E1(0x64, TEXT_LSR,  BYTE, M_IDX),
+    E1(0x66, TEXT_ROR,  BYTE, M_IDX),
+    E1(0x67, TEXT_ASR,  BYTE, M_IDX),
+    E1(0x68, TEXT_ASL,  BYTE, M_IDX),
+    E1(0x68, TEXT_LSL,  BYTE, M_IDX),
+    E1(0x69, TEXT_ROL,  BYTE, M_IDX),
+    E1(0x6A, TEXT_DEC,  BYTE, M_IDX),
+    E1(0x6C, TEXT_INC,  BYTE, M_IDX),
+    E1(0x6D, TEXT_TST,  BYTE, M_IDX),
+    E1(0x6F, TEXT_CLR,  BYTE, M_IDX),
+    E1(0x70, TEXT_NEG,  NONE, M_IX0),
+    E1(0x73, TEXT_COM,  NONE, M_IX0),
+    E1(0x74, TEXT_LSR,  NONE, M_IX0),
+    E1(0x76, TEXT_ROR,  NONE, M_IX0),
+    E1(0x77, TEXT_ASR,  NONE, M_IX0),
+    E1(0x78, TEXT_ASL,  NONE, M_IX0),
+    E1(0x78, TEXT_LSL,  NONE, M_IX0),
+    E1(0x79, TEXT_ROL,  NONE, M_IX0),
+    E1(0x7A, TEXT_DEC,  NONE, M_IX0),
+    E1(0x7C, TEXT_INC,  NONE, M_IX0),
+    E1(0x7D, TEXT_TST,  NONE, M_IX0),
+    E1(0x7F, TEXT_CLR,  NONE, M_IX0),
+    E1(0xA0, TEXT_SUB,  BYTE, M_IMM),
+    E1(0xA1, TEXT_CMP,  BYTE, M_IMM),
+    E1(0xA2, TEXT_SBC,  BYTE, M_IMM),
+    E1(0xA3, TEXT_CPX,  BYTE, M_IMM),
+    E1(0xA4, TEXT_AND,  BYTE, M_IMM),
+    E1(0xA5, TEXT_BIT,  BYTE, M_IMM),
+    E1(0xA6, TEXT_LDA,  BYTE, M_IMM),
+    E1(0xA8, TEXT_EOR,  BYTE, M_IMM),
+    E1(0xA9, TEXT_ADC,  BYTE, M_IMM),
+    E1(0xAA, TEXT_ORA,  BYTE, M_IMM),
+    E1(0xAB, TEXT_ADD,  BYTE, M_IMM),
+    E1(0xAD, TEXT_BSR,  BYTE, M_REL),
+    E1(0xAE, TEXT_LDX,  BYTE, M_IMM),
+    E1(0xB0, TEXT_SUB,  BYTE, M_DIR),
+    E1(0xB1, TEXT_CMP,  BYTE, M_DIR),
+    E1(0xB2, TEXT_SBC,  BYTE, M_DIR),
+    E1(0xB3, TEXT_CPX,  BYTE, M_DIR),
+    E1(0xB4, TEXT_AND,  BYTE, M_DIR),
+    E1(0xB5, TEXT_BIT,  BYTE, M_DIR),
+    E1(0xB6, TEXT_LDA,  BYTE, M_DIR),
+    E1(0xB7, TEXT_STA,  BYTE, M_DIR),
+    E1(0xB8, TEXT_EOR,  BYTE, M_DIR),
+    E1(0xB9, TEXT_ADC,  BYTE, M_DIR),
+    E1(0xBA, TEXT_ORA,  BYTE, M_DIR),
+    E1(0xBB, TEXT_ADD,  BYTE, M_DIR),
+    E1(0xBC, TEXT_JMP,  BYTE, M_DIR),
+    E1(0xBD, TEXT_JSR,  BYTE, M_DIR),
+    E1(0xBE, TEXT_LDX,  BYTE, M_DIR),
+    E1(0xBF, TEXT_STX,  BYTE, M_DIR),
+    E1(0xC0, TEXT_SUB,  WORD, M_EXT),
+    E1(0xC1, TEXT_CMP,  WORD, M_EXT),
+    E1(0xC2, TEXT_SBC,  WORD, M_EXT),
+    E1(0xC3, TEXT_CPX,  WORD, M_EXT),
+    E1(0xC4, TEXT_AND,  WORD, M_EXT),
+    E1(0xC5, TEXT_BIT,  WORD, M_EXT),
+    E1(0xC6, TEXT_LDA,  WORD, M_EXT),
+    E1(0xC7, TEXT_STA,  WORD, M_EXT),
+    E1(0xC8, TEXT_EOR,  WORD, M_EXT),
+    E1(0xC9, TEXT_ADC,  WORD, M_EXT),
+    E1(0xCA, TEXT_ORA,  WORD, M_EXT),
+    E1(0xCB, TEXT_ADD,  WORD, M_EXT),
+    E1(0xCC, TEXT_JMP,  WORD, M_EXT),
+    E1(0xCD, TEXT_JSR,  WORD, M_EXT),
+    E1(0xCE, TEXT_LDX,  WORD, M_EXT),
+    E1(0xCF, TEXT_STX,  WORD, M_EXT),
+    E1(0xE0, TEXT_SUB,  BYTE, M_IDX),
+    E1(0xE1, TEXT_CMP,  BYTE, M_IDX),
+    E1(0xE2, TEXT_SBC,  BYTE, M_IDX),
+    E1(0xE3, TEXT_CPX,  BYTE, M_IDX),
+    E1(0xE4, TEXT_AND,  BYTE, M_IDX),
+    E1(0xE5, TEXT_BIT,  BYTE, M_IDX),
+    E1(0xE6, TEXT_LDA,  BYTE, M_IDX),
+    E1(0xE7, TEXT_STA,  BYTE, M_IDX),
+    E1(0xE8, TEXT_EOR,  BYTE, M_IDX),
+    E1(0xE9, TEXT_ADC,  BYTE, M_IDX),
+    E1(0xEA, TEXT_ORA,  BYTE, M_IDX),
+    E1(0xEB, TEXT_ADD,  BYTE, M_IDX),
+    E1(0xEC, TEXT_JMP,  BYTE, M_IDX),
+    E1(0xED, TEXT_JSR,  BYTE, M_IDX),
+    E1(0xEE, TEXT_LDX,  BYTE, M_IDX),
+    E1(0xEF, TEXT_STX,  BYTE, M_IDX),
+    E1(0xD0, TEXT_SUB,  WORD, M_IX2),
+    E1(0xD1, TEXT_CMP,  WORD, M_IX2),
+    E1(0xD2, TEXT_SBC,  WORD, M_IX2),
+    E1(0xD3, TEXT_CPX,  WORD, M_IX2),
+    E1(0xD4, TEXT_AND,  WORD, M_IX2),
+    E1(0xD5, TEXT_BIT,  WORD, M_IX2),
+    E1(0xD6, TEXT_LDA,  WORD, M_IX2),
+    E1(0xD7, TEXT_STA,  WORD, M_IX2),
+    E1(0xD8, TEXT_EOR,  WORD, M_IX2),
+    E1(0xD9, TEXT_ADC,  WORD, M_IX2),
+    E1(0xDA, TEXT_ORA,  WORD, M_IX2),
+    E1(0xDB, TEXT_ADD,  WORD, M_IX2),
+    E1(0xDC, TEXT_JMP,  WORD, M_IX2),
+    E1(0xDD, TEXT_JSR,  WORD, M_IX2),
+    E1(0xDE, TEXT_LDX,  WORD, M_IX2),
+    E1(0xDF, TEXT_STX,  WORD, M_IX2),
+    E1(0xF0, TEXT_SUB,  NONE, M_IX0),
+    E1(0xF1, TEXT_CMP,  NONE, M_IX0),
+    E1(0xF2, TEXT_SBC,  NONE, M_IX0),
+    E1(0xF3, TEXT_CPX,  NONE, M_IX0),
+    E1(0xF4, TEXT_AND,  NONE, M_IX0),
+    E1(0xF5, TEXT_BIT,  NONE, M_IX0),
+    E1(0xF6, TEXT_LDA,  NONE, M_IX0),
+    E1(0xF7, TEXT_STA,  NONE, M_IX0),
+    E1(0xF8, TEXT_EOR,  NONE, M_IX0),
+    E1(0xF9, TEXT_ADC,  NONE, M_IX0),
+    E1(0xFA, TEXT_ORA,  NONE, M_IX0),
+    E1(0xFB, TEXT_ADD,  NONE, M_IX0),
+    E1(0xFC, TEXT_JMP,  NONE, M_IX0),
+    E1(0xFD, TEXT_JSR,  NONE, M_IX0),
+    E1(0xFE, TEXT_LDX,  NONE, M_IX0),
+    E1(0xFF, TEXT_STX,  NONE, M_IX0),
+    E0(0x80, TEXT_RTI),
+    E0(0x81, TEXT_RTS),
+    E0(0x83, TEXT_SWI),
+    E0(0x97, TEXT_TAX),
+    E0(0x98, TEXT_CLC),
+    E0(0x99, TEXT_SEC),
+    E0(0x9A, TEXT_CLI),
+    E0(0x9B, TEXT_SEI),
+    E0(0x9C, TEXT_RSP),
+    E0(0x9D, TEXT_NOP),
+    E0(0x9F, TEXT_TXA),
+    E1(0x10, TEXT_BSET0, BYTE, M_DIR),
+    E1(0x11, TEXT_BCLR0, BYTE, M_DIR),
+    E1(0x12, TEXT_BSET1, BYTE, M_DIR),
+    E1(0x13, TEXT_BCLR1, BYTE, M_DIR),
+    E1(0x14, TEXT_BSET2, BYTE, M_DIR),
+    E1(0x15, TEXT_BCLR2, BYTE, M_DIR),
+    E1(0x16, TEXT_BSET3, BYTE, M_DIR),
+    E1(0x17, TEXT_BCLR3, BYTE, M_DIR),
+    E1(0x18, TEXT_BSET4, BYTE, M_DIR),
+    E1(0x19, TEXT_BCLR4, BYTE, M_DIR),
+    E1(0x1A, TEXT_BSET5, BYTE, M_DIR),
+    E1(0x1B, TEXT_BCLR5, BYTE, M_DIR),
+    E1(0x1C, TEXT_BSET6, BYTE, M_DIR),
+    E1(0x1D, TEXT_BCLR6, BYTE, M_DIR),
+    E1(0x1E, TEXT_BSET7, BYTE, M_DIR),
+    E1(0x1F, TEXT_BCLR7, BYTE, M_DIR),
+    E2(0x00, TEXT_BRSET0, BYTE, M_DIR, M_REL),
+    E2(0x01, TEXT_BRCLR0, BYTE, M_DIR, M_REL),
+    E2(0x02, TEXT_BRSET1, BYTE, M_DIR, M_REL),
+    E2(0x03, TEXT_BRCLR1, BYTE, M_DIR, M_REL),
+    E2(0x04, TEXT_BRSET2, BYTE, M_DIR, M_REL),
+    E2(0x05, TEXT_BRCLR2, BYTE, M_DIR, M_REL),
+    E2(0x06, TEXT_BRSET3, BYTE, M_DIR, M_REL),
+    E2(0x07, TEXT_BRCLR3, BYTE, M_DIR, M_REL),
+    E2(0x08, TEXT_BRSET4, BYTE, M_DIR, M_REL),
+    E2(0x09, TEXT_BRCLR4, BYTE, M_DIR, M_REL),
+    E2(0x0A, TEXT_BRSET5, BYTE, M_DIR, M_REL),
+    E2(0x0B, TEXT_BRCLR5, BYTE, M_DIR, M_REL),
+    E2(0x0C, TEXT_BRSET6, BYTE, M_DIR, M_REL),
+    E2(0x0D, TEXT_BRCLR6, BYTE, M_DIR, M_REL),
+    E2(0x0E, TEXT_BRSET7, BYTE, M_DIR, M_REL),
+    E2(0x0F, TEXT_BRCLR7, BYTE, M_DIR, M_REL),
+};
+
+static constexpr Entry MC146805_TABLE[] PROGMEM = {
+    E0(0x8E, TEXT_STOP),
+    E0(0x8F, TEXT_WAIT),
+};
+
+static constexpr Entry MC68HC05_TABLE[] PROGMEM = {
+    E0(0x42, TEXT_MUL),
 };
 
 static constexpr Entry MC68HC11_P00[] PROGMEM = {
@@ -411,22 +629,44 @@ private:
 
 static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
 };
 
 static constexpr TableMc6800::EntryPage MC6801_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6801_TABLE)},
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
 };
 
 static constexpr TableMc6800::EntryPage HD6301_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(HD6301_TABLE)},
         {PREFIX_P00, ARRAY_RANGE(MC6801_TABLE)},
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
+};
+
+static constexpr TableMc6800::EntryPage MC6805_PAGES[] PROGMEM = {
+        {PREFIX_P00, ARRAY_RANGE(MC6805_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
+};
+
+static constexpr TableMc6800::EntryPage MC146805_PAGES[] PROGMEM = {
+        {PREFIX_P00, ARRAY_RANGE(MC6805_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
+        {PREFIX_P00, ARRAY_RANGE(MC146805_TABLE)},
+};
+
+static constexpr TableMc6800::EntryPage MC68HC05_PAGES[] PROGMEM = {
+        {PREFIX_P00, ARRAY_RANGE(MC6805_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
+        {PREFIX_P00, ARRAY_RANGE(MC146805_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68HC05_TABLE)},
 };
 
 static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6801_TABLE)},
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE)},
+        {PREFIX_P00, ARRAY_RANGE(MC68xx_BRANCHES)},
         {PREFIX_P00, ARRAY_RANGE(MC68HC11_P00)},
         {PREFIX_P18, ARRAY_RANGE(MC68HC11_P18)},
         {PREFIX_P1A, ARRAY_RANGE(MC68HC11_P1A)},
@@ -511,22 +751,38 @@ TableMc6800::TableMc6800() {
     setCpu(MC6800);
 }
 
+class CpuTable : public EntryPageBase<TableMc6800::EntryPage> {
+public:
+    constexpr CpuTable(
+            CpuType cpuType, const TableMc6800::EntryPage *table, const TableMc6800::EntryPage *end)
+        : EntryPageBase(table, end), _cpuType(cpuType) {}
+
+    CpuType cpuType() const { return static_cast<CpuType>(pgm_read_byte(&_cpuType)); }
+
+private:
+    CpuType _cpuType;
+};
+
+static constexpr CpuTable CPU_TABLES[] PROGMEM = {
+        {MC6800, ARRAY_RANGE(MC6800_PAGES)},
+        {MC6801, ARRAY_RANGE(MC6801_PAGES)},
+        {HD6301, ARRAY_RANGE(HD6301_PAGES)},
+        {MC6805, ARRAY_RANGE(MC6805_PAGES)},
+        {MC146805, ARRAY_RANGE(MC146805_PAGES)},
+        {MC68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
+        {MC68HC11, ARRAY_RANGE(MC68HC11_PAGES)},
+};
+
 bool TableMc6800::setCpu(CpuType cpuType) {
     _cpuType = cpuType;
-    if (cpuType == MC6800) {
-        _table = ARRAY_BEGIN(MC6800_PAGES);
-        _end = ARRAY_END(MC6800_PAGES);
-    } else if (cpuType == MC6801) {
-        _table = ARRAY_BEGIN(MC6801_PAGES);
-        _end = ARRAY_END(MC6801_PAGES);
-    } else if (cpuType == MC68HC11) {
-        _table = ARRAY_BEGIN(MC68HC11_PAGES);
-        _end = ARRAY_END(MC68HC11_PAGES);
-    } else {
-        _table = ARRAY_BEGIN(HD6301_PAGES);
-        _end = ARRAY_END(HD6301_PAGES);
+    for (const CpuTable *t = ARRAY_BEGIN(CPU_TABLES); t < ARRAY_END(CPU_TABLES); t++) {
+        if (cpuType == t->cpuType()) {
+            _table = t->table();
+            _end = t->end();
+            return true;
+        }
     }
-    return true;
+    return false;
 }
 
 const char *TableMc6800::listCpu() const {
@@ -536,6 +792,12 @@ const char *TableMc6800::listCpu() const {
 const char *TableMc6800::getCpu() const {
     if (_cpuType == MC6800)
         return TEXT_CPU_6800;
+    if (_cpuType == MC6805)
+        return TEXT_CPU_6805;
+    if (_cpuType == MC146805)
+        return TEXT_CPU_146805;
+    if (_cpuType == MC68HC05)
+        return TEXT_CPU_68HC05;
     if (_cpuType == MC68HC11)
         return TEXT_CPU_6811;
     return _cpuType == MC6801 ? TEXT_CPU_6801 : TEXT_CPU_6301;
@@ -550,7 +812,15 @@ bool TableMc6800::setCpu(const char *cpu) {
         return setCpu(MC6800);
     if (strcasecmp_P(p, TEXT_CPU_6801) == 0)
         return setCpu(MC6801);
-    if (strcasecmp_P(p, TEXT_CPU_6811) == 0 || strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
+    if (strcasecmp_P(p, TEXT_CPU_6805) == 0)
+        return setCpu(MC6805);
+    if (strcasecmp_P(p, TEXT_CPU_146805) == 0)
+        return setCpu(MC146805);
+    if (strcasecmp_P(p, TEXT_CPU_68HC05) == 0)
+        return setCpu(MC68HC05);
+    if (strcasecmp_P(p, TEXT_CPU_6811) == 0)
+        return setCpu(MC68HC11);
+    if (strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
         return setCpu(MC68HC11);
     p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_HD, 2) == 0)

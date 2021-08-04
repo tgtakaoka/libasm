@@ -27,6 +27,9 @@ enum CpuType : uint8_t {
     MC6800,
     MC6801,
     HD6301,
+    MC6805,
+    MC146805,
+    MC68HC05,
     MC68HC11,
 };
 
@@ -42,6 +45,9 @@ enum AddrMode : uint8_t {
     M_BIT = 7,  // Bit number (for assembler)
     // MC68HC11
     M_IDY = 8,  // Indexed Y
+    // MC6805
+    M_IX0 = 9,  // Indexed X with no offset
+    M_IX2 = 10, // Indexed X with 16bit offset
 };
 
 enum OprSize : uint8_t {

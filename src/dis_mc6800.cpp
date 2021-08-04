@@ -33,14 +33,28 @@ Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer
 
 Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
+    if (TableMc6800.is6805() && addr >= 0x2000)
+        return setError(OVERFLOW_RANGE);
     outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     return setError(insn);
 }
 
 Error DisMc6800::decodeIndexed(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
-    const uint8_t disp8 = insn.readByte(memory);
-    outDec(out, disp8, 8).letter(',');
-    outRegister(out, mode == M_IDY ? REG_Y : REG_X);
+    if (mode == M_IX0) {
+        outRegister(out.letter(','), REG_X);
+    } else if (mode == M_IX2) {
+        const uint16_t disp16 = insn.readUint16(memory);
+        if (disp16 < 0x100)
+            out.letter('>');
+        outDec(out, disp16, 16).letter(',');
+        outRegister(out, REG_X);
+    } else {
+        const uint8_t disp8 = insn.readByte(memory);
+        if (TableMc6800.is6805() && disp8 == 0)
+            out.letter('<');
+        outDec(out, disp8, 8).letter(',');
+        outRegister(out, mode == M_IDY ? REG_Y : REG_X);
+    }
     return setError(insn);
 }
 
@@ -92,6 +106,8 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
         return decodeExtended(memory, insn, out);
     case M_IDX:
     case M_IDY:
+    case M_IX0:
+    case M_IX2:
         return decodeIndexed(memory, insn, out, mode);
     case M_REL:
         return decodeRelative(memory, insn, out);

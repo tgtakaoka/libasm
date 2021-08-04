@@ -23,14 +23,17 @@ namespace libasm {
 namespace mc6800 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC68HC11";
+static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11";
 static const char TEXT_CPU_6800[] PROGMEM = "6800";
 static const char TEXT_CPU_6801[] PROGMEM = "6801";
+static const char TEXT_CPU_6805[] PROGMEM = "6805";
+static const char TEXT_CPU_146805[] PROGMEM = "146805";
+static const char TEXT_CPU_68HC05[] PROGMEM = "68HC05";
 static const char TEXT_CPU_6301[] PROGMEM = "6301";
 static const char TEXT_CPU_6811[] PROGMEM = "6811";
 static constexpr const char *TEXT_CPU_MC   = TEXT_CPU_LIST;
 static constexpr const char *TEXT_CPU_HD   = (TEXT_CPU_LIST + 16);
-static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 26);
+static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 54);
 
 // MC6800
 static const char TEXT_ABA[]  PROGMEM = "ABA";
@@ -184,6 +187,62 @@ static const char TEXT_OIM[]  PROGMEM = "OIM";
 static const char TEXT_SLP[]  PROGMEM = "SLP";
 static const char TEXT_TIM[]  PROGMEM = "TIM";
 static const char TEXT_XGDX[] PROGMEM = "XGDX";
+
+// MC6805
+static const char TEXT_ASRX[] PROGMEM = "ASRX";
+static const char TEXT_ASLX[] PROGMEM = "ASLX";
+static const char TEXT_BHCC[] PROGMEM = "BHCC";
+static const char TEXT_BHCS[] PROGMEM = "BHCS";
+static const char TEXT_BIH[]  PROGMEM = "BIH";
+static const char TEXT_BIL[]  PROGMEM = "BIL";
+static const char TEXT_BMC[]  PROGMEM = "BMC";
+static const char TEXT_BMS[]  PROGMEM = "BMS";
+static const char TEXT_CLRX[] PROGMEM = "CLRX";
+static const char TEXT_COMX[] PROGMEM = "COMX";
+static const char TEXT_DECX[] PROGMEM = "DECX";
+static const char TEXT_INCX[] PROGMEM = "INCX";
+static const char TEXT_LSLX[] PROGMEM = "LSLX";
+static const char TEXT_LSRX[] PROGMEM = "LSRX";
+static const char TEXT_NEGX[] PROGMEM = "NEGX";
+static const char TEXT_ROLX[] PROGMEM = "ROLX";
+static const char TEXT_RORX[] PROGMEM = "RORX";
+static const char TEXT_RSP[]  PROGMEM = "RSP";
+static const char TEXT_TAX[]  PROGMEM = "TAX";
+static const char TEXT_TSTX[] PROGMEM = "TSTX";
+static const char TEXT_TXA[]  PROGMEM = "TXA";
+static const char TEXT_WAIT[] PROGMEM = "WAIT";
+static const char TEXT_BCLR0[] PROGMEM = "BCLR0";
+static const char TEXT_BCLR1[] PROGMEM = "BCLR1";
+static const char TEXT_BCLR2[] PROGMEM = "BCLR2";
+static const char TEXT_BCLR3[] PROGMEM = "BCLR3";
+static const char TEXT_BCLR4[] PROGMEM = "BCLR4";
+static const char TEXT_BCLR5[] PROGMEM = "BCLR5";
+static const char TEXT_BCLR6[] PROGMEM = "BCLR6";
+static const char TEXT_BCLR7[] PROGMEM = "BCLR7";
+static const char TEXT_BSET0[] PROGMEM = "BSET0";
+static const char TEXT_BSET1[] PROGMEM = "BSET1";
+static const char TEXT_BSET2[] PROGMEM = "BSET2";
+static const char TEXT_BSET3[] PROGMEM = "BSET3";
+static const char TEXT_BSET4[] PROGMEM = "BSET4";
+static const char TEXT_BSET5[] PROGMEM = "BSET5";
+static const char TEXT_BSET6[] PROGMEM = "BSET6";
+static const char TEXT_BSET7[] PROGMEM = "BSET7";
+static const char TEXT_BRCLR0[] PROGMEM = "BRCLR0";
+static const char TEXT_BRCLR1[] PROGMEM = "BRCLR1";
+static const char TEXT_BRCLR2[] PROGMEM = "BRCLR2";
+static const char TEXT_BRCLR3[] PROGMEM = "BRCLR3";
+static const char TEXT_BRCLR4[] PROGMEM = "BRCLR4";
+static const char TEXT_BRCLR5[] PROGMEM = "BRCLR5";
+static const char TEXT_BRCLR6[] PROGMEM = "BRCLR6";
+static const char TEXT_BRCLR7[] PROGMEM = "BRCLR7";
+static const char TEXT_BRSET0[] PROGMEM = "BRSET0";
+static const char TEXT_BRSET1[] PROGMEM = "BRSET1";
+static const char TEXT_BRSET2[] PROGMEM = "BRSET2";
+static const char TEXT_BRSET3[] PROGMEM = "BRSET3";
+static const char TEXT_BRSET4[] PROGMEM = "BRSET4";
+static const char TEXT_BRSET5[] PROGMEM = "BRSET5";
+static const char TEXT_BRSET6[] PROGMEM = "BRSET6";
+static const char TEXT_BRSET7[] PROGMEM = "BRSET7";
 
 // MC68HC11
 static const char TEXT_ABY[]   PROGMEM = "ABY";

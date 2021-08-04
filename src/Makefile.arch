@@ -38,7 +38,7 @@ endef
 
 # target list for each architecture.
 TGT_mc6809  = mc6809 hd6309
-TGT_mc6800  = mc6800 mc6801 mc68hc11 hd6301
+TGT_mc6800  = mc6800 mc6801 mc68hc05 mc68hc11 hd6301
 TGT_mos6502 = mos6502 g65sc02 r65c02 w65c02s w65c816
 TGT_i8051   = i8051
 TGT_i8080   = i8080 i8085
@@ -59,6 +59,7 @@ CPU_mc6809   = 6809
 CPU_hd6309   = 6309
 CPU_mc6800   = 6800
 CPU_mc6801   = 6801
+CPU_mc68hc05 = 68hc05
 CPU_mc68hc11 = 6811
 CPU_hd6301   = 6301
 CPU_mos6502  = 6502

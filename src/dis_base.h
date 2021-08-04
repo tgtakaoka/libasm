@@ -73,7 +73,13 @@ protected:
      * Convert |val| as |bits| decimal integer. Treat |val| as signed
      * integer when |bits| is negative.
      */
-    StrBuffer &outDec(StrBuffer &out, uint8_t val, int8_t bits);
+    template <typename T>
+    StrBuffer &outDec(StrBuffer &out, T val, int8_t bits) {
+        const char *label = lookup(val);
+        if (label)
+            return out.text(label);
+        return _formatter.formatDec(out, val, bits);
+    }
 
     /**
      * Convert |val| as |bits| hexadecimal integer. Treat |val| as

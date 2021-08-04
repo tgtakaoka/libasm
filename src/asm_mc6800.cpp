@@ -24,7 +24,18 @@ namespace mc6800 {
 Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p) || *p == ',') {
+    if (endOfLine(p)) {
+        op.mode = M_NO;
+        return OK;
+    }
+
+    if (*p == ',') {
+        const RegName reg = RegMc6800::parseRegName(p + 1);
+        if (reg == REG_X) {
+            _scan += RegMc6800::regNameLen(reg) + 1;
+            op.mode = M_IX0;
+            return OK;
+        }
         op.mode = M_NO;
         return OK;
     }
@@ -55,7 +66,23 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
         const RegName reg = RegMc6800::parseRegName(p);
         if (reg != REG_UNDEF) {
             _scan = p + RegMc6800::regNameLen(reg);
-            op.mode = (reg == REG_Y) ? M_IDY : M_IDX;
+            if (reg == REG_X) {
+                if (op.size == SZ_BYTE) {
+                    if (op.val16 >= 0x100)
+                        return setError(OVERFLOW_RANGE);
+                    op.mode = M_IDX;
+                } else if (op.size == SZ_WORD) {
+                    op.mode = M_IX2;
+                } else if (TableMc6800.is6805() && op.val16 == 0) {
+                    op.mode = M_IX0;
+                } else {
+                    op.mode = (op.val16 < 0x100) ? M_IDX : M_IX2;
+                }
+            } else if (reg == REG_Y) {
+                op.mode = M_IDY;
+            } else {
+                return setError(REGISTER_NOT_ALLOWED);
+            }
             return OK;
         }
     }
@@ -69,6 +96,8 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     } else {
         op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
     }
+    if (TableMc6800.is6805() && op.mode == M_EXT && op.val16 >= 0x2000)
+        return setError(OVERFLOW_RANGE);
     return OK;
 }
 
@@ -103,6 +132,9 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
     case M_IDX:
     case M_IDY:
         insn.emitByte(static_cast<uint8_t>(op.val16));
+        return OK;
+    case M_IX2:
+        insn.emitUint16(op.val16);
         return OK;
     case M_EXT:
         insn.emitUint16(op.val16);

@@ -40,6 +40,18 @@ static bool m6801() {
     return strcmp(assembler.getCpu(), "6801") == 0 || hd6301() || m68hc11();
 }
 
+static bool m146805() {
+    return strcmp(assembler.getCpu(), "146805") == 0;
+}
+
+static bool m68hc05() {
+    return strcmp(assembler.getCpu(), "68HC05") == 0;
+}
+
+static bool m6805() {
+    return strcmp(assembler.getCpu(), "6805") == 0 || m146805() || m68hc05();
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -59,57 +71,113 @@ static void test_cpu() {
     EQUALS("cpu 6301", true,   assembler.setCpu("6301"));
     EQUALS("cpu 6301", "6301", assembler.getCpu());
 
+    EQUALS("cpu 6805", true,   assembler.setCpu("6805"));
+    EQUALS("cpu 6805", "6805", assembler.getCpu());
+
+    EQUALS("cpu 146805", true,   assembler.setCpu("146805"));
+    EQUALS("cpu 146805", "146805", assembler.getCpu());
+
+    EQUALS("cpu 68HC05", true,   assembler.setCpu("68hc05"));
+    EQUALS("cpu 68HC05", "68HC05", assembler.getCpu());
+
     EQUALS("cpu 6811", true,   assembler.setCpu("6811"));
     EQUALS("cpu 6811", "6811", assembler.getCpu());
 
-    EQUALS("cpu mc6800", true,   assembler.setCpu("mc6800"));
-    EQUALS("cpu mc6800", "6800", assembler.getCpu());
+    EQUALS("cpu MC6800", true,   assembler.setCpu("mc6800"));
+    EQUALS("cpu MC6800", "6800", assembler.getCpu());
 
-    EQUALS("cpu mc6801", true,   assembler.setCpu("mc6801"));
-    EQUALS("cpu mc6801", "6801", assembler.getCpu());
+    EQUALS("cpu MC6801", true,   assembler.setCpu("mc6801"));
+    EQUALS("cpu MC6801", "6801", assembler.getCpu());
 
-    EQUALS("cpu hd6301", true,   assembler.setCpu("hd6301"));
-    EQUALS("cpu hd6301", "6301", assembler.getCpu());
+    EQUALS("cpu HD6301", true,   assembler.setCpu("hd6301"));
+    EQUALS("cpu HD6301", "6301", assembler.getCpu());
 
-    EQUALS("cpu mc6811", true,   assembler.setCpu("mc6811"));
-    EQUALS("cpu mc6811", "6811", assembler.getCpu());
+    EQUALS("cpu MC6805", true,   assembler.setCpu("mc6805"));
+    EQUALS("cpu MC6805", "6805", assembler.getCpu());
 
-    EQUALS("cpu mc68hc11", true,   assembler.setCpu("mc68hc11"));
-    EQUALS("cpu mc68hc11", "6811", assembler.getCpu());
+    EQUALS("cpu MC146805", true,   assembler.setCpu("mc146805"));
+    EQUALS("cpu MC146805", "146805", assembler.getCpu());
+
+    EQUALS("cpu MC68HC05", true,   assembler.setCpu("mc68hc05"));
+    EQUALS("cpu MC68HC05", "68HC05", assembler.getCpu());
+
+    EQUALS("cpu MC6811", true,   assembler.setCpu("mc6811"));
+    EQUALS("cpu MC6811", "6811", assembler.getCpu());
+
+    EQUALS("cpu MC68HC11", true,   assembler.setCpu("mc68hc11"));
+    EQUALS("cpu MC68HC11", "6811", assembler.getCpu());
 }
 
 static void test_inherent() {
-    TEST("NOP", 0x01);
-    TEST("TAP", 0x06);
-    TEST("TPA", 0x07);
-    TEST("INX", 0x08);
-    TEST("DEX", 0x09);
-    TEST("CLV", 0x0A);
-    TEST("SEV", 0x0B);
-    TEST("CLC", 0x0C);
-    TEST("SEC", 0x0D);
-    TEST("CLI", 0x0E);
-    TEST("SEI", 0x0F);
-    TEST("SBA", 0x10);
-    TEST("CBA", 0x11);
-    TEST("TAB", 0x16);
-    TEST("TBA", 0x17);
-    TEST("DAA", 0x19);
-    TEST("ABA", 0x1B);
-    TEST("TSX", 0x30);
-    TEST("INS", 0x31);
-    TEST("DES", 0x34);
-    TEST("TXS", 0x35);
+    if (m6805()) {
+        // MC6805
+        TEST("NOP", 0x9D);
+        ERRT("TAP", UNKNOWN_INSTRUCTION);
+        ERRT("TPA", UNKNOWN_INSTRUCTION);
+        ERRT("INX", UNKNOWN_INSTRUCTION);
+        ERRT("DEX", UNKNOWN_INSTRUCTION);
+        ERRT("CLV", UNKNOWN_INSTRUCTION);
+        ERRT("SEV", UNKNOWN_INSTRUCTION);
+        TEST("CLC", 0x98);
+        TEST("SEC", 0x99);
+        TEST("CLI", 0x9A);
+        TEST("SEI", 0x9B);
+        ERRT("SBA", UNKNOWN_INSTRUCTION);
+        ERRT("CBA", UNKNOWN_INSTRUCTION);
+        ERRT("TAB", UNKNOWN_INSTRUCTION);
+        ERRT("TBA", UNKNOWN_INSTRUCTION);
+        ERRT("DAA", UNKNOWN_INSTRUCTION);
+        ERRT("ABA", UNKNOWN_INSTRUCTION);
+        ERRT("TSX", UNKNOWN_INSTRUCTION);
+        ERRT("INS", UNKNOWN_INSTRUCTION);
+        ERRT("DES", UNKNOWN_INSTRUCTION);
+        ERRT("TXS", UNKNOWN_INSTRUCTION);
 
-    TEST("RTS", 0x39);
-    TEST("RTI", 0x3B);
-    TEST("WAI", 0x3E);
-    TEST("SWI", 0x3F);
+        TEST("RTS", 0x81);
+        TEST("RTI", 0x80);
+        ERRT("WAI", UNKNOWN_INSTRUCTION);
+        TEST("SWI", 0x83);
 
-    TEST("PULA", 0x32);
-    TEST("PULB", 0x33);
-    TEST("PSHA", 0x36);
-    TEST("PSHB", 0x37);
+        TEST("TAX",  0x97);
+        TEST("TXA",  0x9F);
+        if (m146805() || m68hc05()) {
+            // MC146805/MC68HC05
+            TEST("WAIT", 0x8F);
+        } else {
+            ERRT("WAIT", UNKNOWN_INSTRUCTION);
+        }
+    } else {
+        TEST("NOP", 0x01);
+        TEST("TAP", 0x06);
+        TEST("TPA", 0x07);
+        TEST("INX", 0x08);
+        TEST("DEX", 0x09);
+        TEST("CLV", 0x0A);
+        TEST("SEV", 0x0B);
+        TEST("CLC", 0x0C);
+        TEST("SEC", 0x0D);
+        TEST("CLI", 0x0E);
+        TEST("SEI", 0x0F);
+        TEST("SBA", 0x10);
+        TEST("CBA", 0x11);
+        TEST("TAB", 0x16);
+        TEST("TBA", 0x17);
+        TEST("DAA", 0x19);
+        TEST("ABA", 0x1B);
+        TEST("TSX", 0x30);
+        TEST("INS", 0x31);
+        TEST("DES", 0x34);
+        TEST("TXS", 0x35);
+
+        TEST("RTS", 0x39);
+        TEST("RTI", 0x3B);
+        TEST("WAI", 0x3E);
+        TEST("SWI", 0x3F);
+
+        ERRT("TAX",  UNKNOWN_INSTRUCTION);
+        ERRT("TXA",  UNKNOWN_INSTRUCTION);
+        ERRT("WAIT", UNKNOWN_INSTRUCTION);
+    }
 
     TEST("NEGA", 0x40);
     TEST("COMA", 0x43);
@@ -123,17 +191,79 @@ static void test_inherent() {
     TEST("TSTA", 0x4D);
     TEST("CLRA", 0x4F);
 
-    TEST("NEGB", 0x50);
-    TEST("COMB", 0x53);
-    TEST("LSRB", 0x54);
-    TEST("RORB", 0x56);
-    TEST("ASRB", 0x57);
-    TEST("ASLB", 0x58);
-    TEST("ROLB", 0x59);
-    TEST("DECB", 0x5A);
-    TEST("INCB", 0x5C);
-    TEST("TSTB", 0x5D);
-    TEST("CLRB", 0x5F);
+    if (m6805()) {
+        // MC6805
+        TEST("NEGX", 0x50);
+        TEST("COMX", 0x53);
+        TEST("LSRX", 0x54);
+        TEST("RORX", 0x56);
+        TEST("ASRX", 0x57);
+        TEST("ASLX", 0x58);
+        TEST("ROLX", 0x59);
+        TEST("DECX", 0x5A);
+        TEST("INCX", 0x5C);
+        TEST("TSTX", 0x5D);
+        TEST("CLRX", 0x5F);
+    } else {
+        ERRT("NEGX", UNKNOWN_INSTRUCTION);
+        ERRT("COMX", UNKNOWN_INSTRUCTION);
+        ERRT("LSRX", UNKNOWN_INSTRUCTION);
+        ERRT("RORX", UNKNOWN_INSTRUCTION);
+        ERRT("ASRX", UNKNOWN_INSTRUCTION);
+        ERRT("ASLX", UNKNOWN_INSTRUCTION);
+        ERRT("ROLX", UNKNOWN_INSTRUCTION);
+        ERRT("DECX", UNKNOWN_INSTRUCTION);
+        ERRT("INCX", UNKNOWN_INSTRUCTION);
+        ERRT("TSTX", UNKNOWN_INSTRUCTION);
+        ERRT("CLRX", UNKNOWN_INSTRUCTION);
+    }
+
+    if (m6805()) {
+        // MC6805
+        ERRT("PULA", UNKNOWN_INSTRUCTION);
+        ERRT("PULB", UNKNOWN_INSTRUCTION);
+        ERRT("PSHA", UNKNOWN_INSTRUCTION);
+        ERRT("PSHB", UNKNOWN_INSTRUCTION);
+
+        ERRT("NEGB", UNKNOWN_INSTRUCTION);
+        ERRT("COMB", UNKNOWN_INSTRUCTION);
+        ERRT("LSRB", UNKNOWN_INSTRUCTION);
+        ERRT("RORB", UNKNOWN_INSTRUCTION);
+        ERRT("ASRB", UNKNOWN_INSTRUCTION);
+        ERRT("ASLB", UNKNOWN_INSTRUCTION);
+        ERRT("ROLB", UNKNOWN_INSTRUCTION);
+        ERRT("DECB", UNKNOWN_INSTRUCTION);
+        ERRT("INCB", UNKNOWN_INSTRUCTION);
+        ERRT("TSTB", UNKNOWN_INSTRUCTION);
+        ERRT("CLRB", UNKNOWN_INSTRUCTION);
+    } else {
+        TEST("PULA", 0x32);
+        TEST("PULB", 0x33);
+        TEST("PSHA", 0x36);
+        TEST("PSHB", 0x37);
+
+        TEST("NEGB", 0x50);
+        TEST("COMB", 0x53);
+        TEST("LSRB", 0x54);
+        TEST("RORB", 0x56);
+        TEST("ASRB", 0x57);
+        TEST("ASLB", 0x58);
+        TEST("ROLB", 0x59);
+        TEST("DECB", 0x5A);
+        TEST("INCB", 0x5C);
+        TEST("TSTB", 0x5D);
+        TEST("CLRB", 0x5F);
+    }
+
+    if (m6801()) {
+        // MC6801
+        TEST("MUL",  0x3D);
+    } else if (m68hc05()) {
+        // MC68HC05
+        TEST("MUL",  0x42);
+    } else {
+        ERRT("MUL",  UNKNOWN_INSTRUCTION);
+    }
 
     if (m6801()) {
         // MC6801
@@ -143,7 +273,6 @@ static void test_inherent() {
         TEST("PULX", 0x38);
         TEST("ABX",  0x3A);
         TEST("PSHX", 0x3C);
-        TEST("MUL",  0x3D);
     } else {
         ERRT("LSRD", UNKNOWN_INSTRUCTION);
         ERRT("ASRD", UNKNOWN_INSTRUCTION);
@@ -151,7 +280,6 @@ static void test_inherent() {
         ERRT("PULX", UNKNOWN_INSTRUCTION);
         ERRT("ABX",  UNKNOWN_INSTRUCTION);
         ERRT("PSHX", UNKNOWN_INSTRUCTION);
-        ERRT("MUL",  UNKNOWN_INSTRUCTION);
     }
 
     if (hd6301()) {
@@ -159,6 +287,7 @@ static void test_inherent() {
         TEST("XGDX", 0x18);
         TEST("SLP",  0x1A);
     } else if (m68hc11()) {
+        // MC68HC11
         TEST("XGDX", 0x8F);
         ERRT("SLP",  UNKNOWN_INSTRUCTION);
     } else {
@@ -166,11 +295,20 @@ static void test_inherent() {
         ERRT("SLP",  UNKNOWN_INSTRUCTION);
     }
 
+    if (m146805() || m68hc05()) {
+        // MC146805/MC68HC05
+        TEST("STOP", 0x8E);
+    } else if (m68hc11()) {
+        // MC68HC11
+        TEST("STOP", 0xCF);
+    } else {
+        ERRT("STOP", UNKNOWN_INSTRUCTION);
+    }
+
     if (m68hc11()) {
         // MC68HC11
         TEST("IDIV", 0x02);
         TEST("FDIV", 0x03);
-        TEST("STOP", 0xCF);
         TEST("INY",  0x18, 0x08);
         TEST("DEY",  0x18, 0x09);
         TEST("TSY",  0x18, 0x30);
@@ -182,7 +320,6 @@ static void test_inherent() {
     } else {
         ERRT("IDIV", UNKNOWN_INSTRUCTION);
         ERRT("FIDV", UNKNOWN_INSTRUCTION);
-        ERRT("STOP", UNKNOWN_INSTRUCTION);
         ERRT("INY",  UNKNOWN_INSTRUCTION);
         ERRT("DEY",  UNKNOWN_INSTRUCTION);
         ERRT("TSY",  UNKNOWN_INSTRUCTION);
@@ -288,35 +425,63 @@ static void test_indexed_y() {
         ERRT("JMP 254,Y", OPERAND_NOT_ALLOWED);
         ERRT("CLR 255,Y", OPERAND_NOT_ALLOWED);
 
-        ERRT("SUBA   0,Y", OPERAND_NOT_ALLOWED);
-        ERRT("CMPA   0,Y", OPERAND_NOT_ALLOWED);
-        ERRT("SBCA   1,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ANDA   2,Y", OPERAND_NOT_ALLOWED);
-        ERRT("BITA   3,Y", OPERAND_NOT_ALLOWED);
-        ERRT("LDAA   4,Y", OPERAND_NOT_ALLOWED);
-        ERRT("STAA   5,Y", OPERAND_NOT_ALLOWED);
-        ERRT("EORA   6,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ADCA 127,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ORAA 128,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ADDA 255,Y", OPERAND_NOT_ALLOWED);
+        if (m6805()) {
+            // MC6805
+            ERRT("SUBA   0,Y", UNKNOWN_INSTRUCTION);
+            ERRT("CMPA   0,Y", UNKNOWN_INSTRUCTION);
+            ERRT("SBCA   1,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ANDA   2,Y", UNKNOWN_INSTRUCTION);
+            ERRT("BITA   3,Y", UNKNOWN_INSTRUCTION);
+            ERRT("LDAA   4,Y", UNKNOWN_INSTRUCTION);
+            ERRT("STAA   5,Y", UNKNOWN_INSTRUCTION);
+            ERRT("EORA   6,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ADCA 127,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ORAA 128,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ADDA 255,Y", UNKNOWN_INSTRUCTION);
 
-        ERRT("SUBB   0,Y", OPERAND_NOT_ALLOWED);
-        ERRT("CMPB   0,Y", OPERAND_NOT_ALLOWED);
-        ERRT("SBCB   1,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ANDB   2,Y", OPERAND_NOT_ALLOWED);
-        ERRT("BITB   3,Y", OPERAND_NOT_ALLOWED);
-        ERRT("LDAB   4,Y", OPERAND_NOT_ALLOWED);
-        ERRT("STAB   5,Y", OPERAND_NOT_ALLOWED);
-        ERRT("EORB   6,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ADCB 127,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ORAB 128,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ADDB 255,Y", OPERAND_NOT_ALLOWED);
+            ERRT("SUBB   0,Y", UNKNOWN_INSTRUCTION);
+            ERRT("CMPB   0,Y", UNKNOWN_INSTRUCTION);
+            ERRT("SBCB   1,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ANDB   2,Y", UNKNOWN_INSTRUCTION);
+            ERRT("BITB   3,Y", UNKNOWN_INSTRUCTION);
+            ERRT("LDAB   4,Y", UNKNOWN_INSTRUCTION);
+            ERRT("STAB   5,Y", UNKNOWN_INSTRUCTION);
+            ERRT("EORB   6,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ADCB 127,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ORAB 128,Y", UNKNOWN_INSTRUCTION);
+            ERRT("ADDB 255,Y", UNKNOWN_INSTRUCTION);
+        } else {
+            ERRT("SUBA   0,Y", OPERAND_NOT_ALLOWED);
+            ERRT("CMPA   0,Y", OPERAND_NOT_ALLOWED);
+            ERRT("SBCA   1,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ANDA   2,Y", OPERAND_NOT_ALLOWED);
+            ERRT("BITA   3,Y", OPERAND_NOT_ALLOWED);
+            ERRT("LDAA   4,Y", OPERAND_NOT_ALLOWED);
+            ERRT("STAA   5,Y", OPERAND_NOT_ALLOWED);
+            ERRT("EORA   6,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ADCA 127,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ORAA 128,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ADDA 255,Y", OPERAND_NOT_ALLOWED);
+
+            ERRT("SUBB   0,Y", OPERAND_NOT_ALLOWED);
+            ERRT("CMPB   0,Y", OPERAND_NOT_ALLOWED);
+            ERRT("SBCB   1,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ANDB   2,Y", OPERAND_NOT_ALLOWED);
+            ERRT("BITB   3,Y", OPERAND_NOT_ALLOWED);
+            ERRT("LDAB   4,Y", OPERAND_NOT_ALLOWED);
+            ERRT("STAB   5,Y", OPERAND_NOT_ALLOWED);
+            ERRT("EORB   6,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ADCB 127,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ORAB 128,Y", OPERAND_NOT_ALLOWED);
+            ERRT("ADDB 255,Y", OPERAND_NOT_ALLOWED);
+        }
 
         ERRT("CPY 0,Y", UNKNOWN_INSTRUCTION);
         ERRT("LDY 0,Y", UNKNOWN_INSTRUCTION);
         ERRT("STY 2,Y", UNKNOWN_INSTRUCTION);
         ERRT("CPD 0,Y", UNKNOWN_INSTRUCTION);
-        if (m6800()) {
+        if (m6800() || m6805()) {
+            // MC6800/MC6805
             ERRT("SUBD   0,Y", UNKNOWN_INSTRUCTION);
             ERRT("ADDD 128,Y", UNKNOWN_INSTRUCTION);
             ERRT("LDD  255,Y", UNKNOWN_INSTRUCTION);
@@ -327,8 +492,14 @@ static void test_indexed_y() {
             ERRT("LDD  255,Y", OPERAND_NOT_ALLOWED);
             ERRT("STD    0,Y", OPERAND_NOT_ALLOWED);
         }
-        ERRT("LDS 128,Y", OPERAND_NOT_ALLOWED);
-        ERRT("STS 255,Y", OPERAND_NOT_ALLOWED);
+        if (m6805()) {
+            // MC6805
+            ERRT("LDS 128,Y", UNKNOWN_INSTRUCTION);
+            ERRT("STS 255,Y", UNKNOWN_INSTRUCTION);
+        } else {
+            ERRT("LDS 128,Y", OPERAND_NOT_ALLOWED);
+            ERRT("STS 255,Y", OPERAND_NOT_ALLOWED);
+        }
 
         ERRT("JMP   0,Y", OPERAND_NOT_ALLOWED);
         ERRT("JSR 255,Y", OPERAND_NOT_ALLOWED);
@@ -347,19 +518,30 @@ static void test_relative() {
     ATEST(0x1000, "BLO $1002", 0x25, 0x00);
     ATEST(0x1000, "BNE $1002", 0x26, 0x00);
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
-    ATEST(0x1000, "BVC $1002", 0x28, 0x00);
-    ATEST(0x1000, "BVS $1002", 0x29, 0x00);
     ATEST(0x1000, "BPL $1002", 0x2A, 0x00);
     ATEST(0x1000, "BMI $1002", 0x2B, 0x00);
-    ATEST(0x1000, "BGE $1002", 0x2C, 0x00);
-    ATEST(0x1000, "BLT $1002", 0x2D, 0x00);
-    ATEST(0x1000, "BGT $1002", 0x2E, 0x00);
-    ATEST(0x1000, "BLE $1002", 0x2F, 0x00);
 
-    ATEST(0x1000, "BSR $1042", 0x8D, 0x40);
+    if (m6805()) {
+        // MC6805
+        ATEST(0x1000, "BHCC $1002", 0x28, 0x00);
+        ATEST(0x1000, "BHCS $1002", 0x29, 0x00);
+        ATEST(0x1000, "BMC $1002", 0x2C, 0x00);
+        ATEST(0x1000, "BMS $1002", 0x2D, 0x00);
+        ATEST(0x1000, "BIL $1002", 0x2E, 0x00);
+        ATEST(0x1000, "BIH $1002", 0x2F, 0x00);
+        ATEST(0x1000, "BSR $1042", 0xAD, 0x40);
+    } else {
+        ATEST(0x1000, "BVC $1002", 0x28, 0x00);
+        ATEST(0x1000, "BVS $1002", 0x29, 0x00);
+        ATEST(0x1000, "BGE $1002", 0x2C, 0x00);
+        ATEST(0x1000, "BLT $1002", 0x2D, 0x00);
+        ATEST(0x1000, "BGT $1002", 0x2E, 0x00);
+        ATEST(0x1000, "BLE $1002", 0x2F, 0x00);
+        ATEST(0x1000, "BSR $1042", 0x8D, 0x40);
+    }
 
-    if (m6801()) {
-        // MC6801
+    if (m6801() || m6805()) {
+        // MC6801/MC6805
         ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
     } else {
         ERRT("BRN $1081", UNKNOWN_INSTRUCTION);
@@ -370,41 +552,97 @@ static void test_relative() {
     symtab.intern(0x9002, "sub9002");
     symtab.intern(0x9003, "sub9003");
 
-    ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
-    ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
+    if (m6805()) {
+        // MC6805
+        ATEST(0x1000, "BSR  sub1081", 0xAD, 0x7F);
+        ATEST(0x1000, "BSR  sub0F82", 0xAD, 0x80);
+    } else {
+        ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
+        ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
+    }
 
-    if (m6801()) {
-        // MC6801
+    if (m6801() || m6805()) {
+        // MC6801/MC6805
         ATEST(0x1000, "BRN sub0F82", 0x21, 0x80);
     }
 }
 
 static void test_immediate() {
-    TEST("SUBA #$90", 0x80, 0x90);
-    TEST("CMPA #$90", 0x81, 0x90);
-    TEST("SBCA #$90", 0x82, 0x90);
-    TEST("ANDA #$90", 0x84, 0x90);
-    TEST("BITA #$90", 0x85, 0x90);
-    TEST("LDAA #$90", 0x86, 0x90);
-    TEST("EORA #$90", 0x88, 0x90);
-    TEST("ADCA #$90", 0x89, 0x90);
-    TEST("ORAA #$90", 0x8A, 0x90);
-    TEST("ADDA #$90", 0x8B, 0x90);
+    if (m6805()) {
+        TEST("SUB #$90", 0xA0, 0x90);
+        TEST("CMP #$90", 0xA1, 0x90);
+        TEST("SBC #$90", 0xA2, 0x90);
+        TEST("AND #$90", 0xA4, 0x90);
+        TEST("BIT #$90", 0xA5, 0x90);
+        TEST("LDA #$90", 0xA6, 0x90);
+        TEST("EOR #$90", 0xA8, 0x90);
+        TEST("ADC #$90", 0xA9, 0x90);
+        TEST("ORA #$90", 0xAA, 0x90);
+        TEST("ADD #$90", 0xAB, 0x90);
 
-    TEST("SUBB #$90", 0xC0, 0x90);
-    TEST("CMPB #$90", 0xC1, 0x90);
-    TEST("SBCB #$90", 0xC2, 0x90);
-    TEST("ANDB #$90", 0xC4, 0x90);
-    TEST("BITB #$90", 0xC5, 0x90);
-    TEST("LDAB #$90", 0xC6, 0x90);
-    TEST("EORB #$90", 0xC8, 0x90);
-    TEST("ADCB #$90", 0xC9, 0x90);
-    TEST("ORAB #$90", 0xCA, 0x90);
-    TEST("ADDB #$90", 0xCB, 0x90);
+        ERRT("SUBA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("CMPA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("SBCA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ANDA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("BITA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("LDAA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("EORA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ADCA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ORAA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ADDA #$90", UNKNOWN_INSTRUCTION);
 
-    TEST("CPX #$90A0", 0x8C, 0x90, 0xA0);
-    TEST("LDX #$90A0", 0xCE, 0x90, 0xA0);
-    TEST("LDS #$90A0", 0x8E, 0x90, 0xA0);
+        ERRT("SUBB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("CMPB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("SBCB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ANDB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("BITB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("LDAB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("EORB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ADCB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ORAB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ADDB #$90", UNKNOWN_INSTRUCTION);
+
+        TEST("CPX #$90", 0xA3, 0x90);
+        TEST("LDX #$90", 0xAE, 0x90);
+        ERRT("LDS #$90", UNKNOWN_INSTRUCTION);
+    } else {
+        ERRT("SUB #$90", UNKNOWN_INSTRUCTION);
+        ERRT("CMP #$90", UNKNOWN_INSTRUCTION);
+        ERRT("SBC #$90", UNKNOWN_INSTRUCTION);
+        ERRT("AND #$90", UNKNOWN_INSTRUCTION);
+        ERRT("BIT #$90", UNKNOWN_INSTRUCTION);
+        ERRT("LDA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("EOR #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ADC #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ORA #$90", UNKNOWN_INSTRUCTION);
+        ERRT("ADD #$90", UNKNOWN_INSTRUCTION);
+
+        TEST("SUBA #$90", 0x80, 0x90);
+        TEST("CMPA #$90", 0x81, 0x90);
+        TEST("SBCA #$90", 0x82, 0x90);
+        TEST("ANDA #$90", 0x84, 0x90);
+        TEST("BITA #$90", 0x85, 0x90);
+        TEST("LDAA #$90", 0x86, 0x90);
+        TEST("EORA #$90", 0x88, 0x90);
+        TEST("ADCA #$90", 0x89, 0x90);
+        TEST("ORAA #$90", 0x8A, 0x90);
+        TEST("ADDA #$90", 0x8B, 0x90);
+
+        TEST("SUBB #$90", 0xC0, 0x90);
+        TEST("CMPB #$90", 0xC1, 0x90);
+        TEST("SBCB #$90", 0xC2, 0x90);
+        TEST("ANDB #$90", 0xC4, 0x90);
+        TEST("BITB #$90", 0xC5, 0x90);
+        TEST("LDAB #$90", 0xC6, 0x90);
+        TEST("EORB #$90", 0xC8, 0x90);
+        TEST("ADCB #$90", 0xC9, 0x90);
+        TEST("ORAB #$90", 0xCA, 0x90);
+        TEST("ADDB #$90", 0xCB, 0x90);
+
+        TEST("CPX #$90A0", 0x8C, 0x90, 0xA0);
+        TEST("LDX #$90A0", 0xCE, 0x90, 0xA0);
+        TEST("LDS #$90A0", 0x8E, 0x90, 0xA0);
+    }
 
     if (m6801()) {
         // MC6801
@@ -431,10 +669,15 @@ static void test_immediate() {
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");
 
-    TEST("LDAA #$90",  0x86, 0x90);
-    TEST("CPX #dir90A0", 0x8C, 0x90, 0xA0);
-    TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
-    TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
+    if (m6805()) {
+        TEST("LDA #dir90", 0xA6, 0x90);
+        TEST("LDX #dir90", 0xAE, 0x90);
+    } else {
+        TEST("LDAA #dir90",  0x86, 0x90);
+        TEST("CPX #dir90A0", 0x8C, 0x90, 0xA0);
+        TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
+        TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
+    }
 
     if (m6801()) {
         // MC6801
@@ -451,35 +694,100 @@ static void test_immediate() {
 }
 
 static void test_direct() {
-    TEST("SUBA $90", 0x90, 0x90);
-    TEST("CMPA $90", 0x91, 0x90);
-    TEST("SBCA $90", 0x92, 0x90);
-    TEST("ANDA $90", 0x94, 0x90);
-    TEST("BITA $90", 0x95, 0x90);
-    TEST("LDAA $90", 0x96, 0x90);
-    TEST("STAA $90", 0x97, 0x90);
-    TEST("EORA $90", 0x98, 0x90);
-    TEST("ADCA $90", 0x99, 0x90);
-    TEST("ORAA $90", 0x9A, 0x90);
-    TEST("ADDA $90", 0x9B, 0x90);
+    if (m6805()) {
+        TEST("SUB $90", 0xB0, 0x90);
+        TEST("CMP $90", 0xB1, 0x90);
+        TEST("SBC $90", 0xB2, 0x90);
+        TEST("AND $90", 0xB4, 0x90);
+        TEST("BIT $90", 0xB5, 0x90);
+        TEST("LDA $90", 0xB6, 0x90);
+        TEST("STA $90", 0xB7, 0x90);
+        TEST("EOR $90", 0xB8, 0x90);
+        TEST("ADC $90", 0xB9, 0x90);
+        TEST("ORA $90", 0xBA, 0x90);
+        TEST("ADD $90", 0xBB, 0x90);
 
-    TEST("SUBB $90", 0xD0, 0x90);
-    TEST("CMPB $90", 0xD1, 0x90);
-    TEST("SBCB $90", 0xD2, 0x90);
-    TEST("ANDB $90", 0xD4, 0x90);
-    TEST("BITB $90", 0xD5, 0x90);
-    TEST("LDAB $90", 0xD6, 0x90);
-    TEST("STAB $90", 0xD7, 0x90);
-    TEST("EORB $90", 0xD8, 0x90);
-    TEST("ADCB $90", 0xD9, 0x90);
-    TEST("ORAB $90", 0xDA, 0x90);
-    TEST("ADDB $90", 0xDB, 0x90);
+        ERRT("SUBA $90", UNKNOWN_INSTRUCTION);
+        ERRT("CMPA $90", UNKNOWN_INSTRUCTION);
+        ERRT("SBCA $90", UNKNOWN_INSTRUCTION);
+        ERRT("ANDA $90", UNKNOWN_INSTRUCTION);
+        ERRT("BITA $90", UNKNOWN_INSTRUCTION);
+        ERRT("LDAA $90", UNKNOWN_INSTRUCTION);
+        ERRT("STAA $90", UNKNOWN_INSTRUCTION);
+        ERRT("EORA $90", UNKNOWN_INSTRUCTION);
+        ERRT("ADCA $90", UNKNOWN_INSTRUCTION);
+        ERRT("ORAA $90", UNKNOWN_INSTRUCTION);
+        ERRT("ADDA $90", UNKNOWN_INSTRUCTION);
 
-    TEST("CPX $90", 0x9C, 0x90);
-    TEST("LDX $90", 0xDE, 0x90);
-    TEST("STX $90", 0xDF, 0x90);
-    TEST("LDS $90", 0x9E, 0x90);
-    TEST("STS $90", 0x9F, 0x90);
+        ERRT("SUBB $90", UNKNOWN_INSTRUCTION);
+        ERRT("CMPB $90", UNKNOWN_INSTRUCTION);
+        ERRT("SBCB $90", UNKNOWN_INSTRUCTION);
+        ERRT("ANDB $90", UNKNOWN_INSTRUCTION);
+        ERRT("BITB $90", UNKNOWN_INSTRUCTION);
+        ERRT("LDAB $90", UNKNOWN_INSTRUCTION);
+        ERRT("STAB $90", UNKNOWN_INSTRUCTION);
+        ERRT("EORB $90", UNKNOWN_INSTRUCTION);
+        ERRT("ADCB $90", UNKNOWN_INSTRUCTION);
+        ERRT("ORAB $90", UNKNOWN_INSTRUCTION);
+        ERRT("ADDB $90", UNKNOWN_INSTRUCTION);
+
+        TEST("CPX $90", 0xB3, 0x90);
+        TEST("LDX $90", 0xBE, 0x90);
+        TEST("STX $90", 0xBF, 0x90);
+        ERRT("LDS $90", UNKNOWN_INSTRUCTION);
+        ERRT("STS $90", UNKNOWN_INSTRUCTION);
+    } else {
+        ERRT("SUB $90", UNKNOWN_INSTRUCTION);
+        ERRT("CMP $90", UNKNOWN_INSTRUCTION);
+        ERRT("SBC $90", UNKNOWN_INSTRUCTION);
+        ERRT("AND $90", UNKNOWN_INSTRUCTION);
+        ERRT("BIT $90", UNKNOWN_INSTRUCTION);
+        ERRT("LDA $90", UNKNOWN_INSTRUCTION);
+        ERRT("EOR $90", UNKNOWN_INSTRUCTION);
+        ERRT("ADC $90", UNKNOWN_INSTRUCTION);
+        ERRT("ORA $90", UNKNOWN_INSTRUCTION);
+        ERRT("ADD $90", UNKNOWN_INSTRUCTION);
+
+        TEST("SUBA $90", 0x90, 0x90);
+        TEST("CMPA $90", 0x91, 0x90);
+        TEST("SBCA $90", 0x92, 0x90);
+        TEST("ANDA $90", 0x94, 0x90);
+        TEST("BITA $90", 0x95, 0x90);
+        TEST("LDAA $90", 0x96, 0x90);
+        TEST("STAA $90", 0x97, 0x90);
+        TEST("EORA $90", 0x98, 0x90);
+        TEST("ADCA $90", 0x99, 0x90);
+        TEST("ORAA $90", 0x9A, 0x90);
+        TEST("ADDA $90", 0x9B, 0x90);
+
+        TEST("SUBB $90", 0xD0, 0x90);
+        TEST("CMPB $90", 0xD1, 0x90);
+        TEST("SBCB $90", 0xD2, 0x90);
+        TEST("ANDB $90", 0xD4, 0x90);
+        TEST("BITB $90", 0xD5, 0x90);
+        TEST("LDAB $90", 0xD6, 0x90);
+        TEST("STAB $90", 0xD7, 0x90);
+        TEST("EORB $90", 0xD8, 0x90);
+        TEST("ADCB $90", 0xD9, 0x90);
+        TEST("ORAB $90", 0xDA, 0x90);
+        TEST("ADDB $90", 0xDB, 0x90);
+
+        TEST("CPX $90", 0x9C, 0x90);
+        TEST("LDX $90", 0xDE, 0x90);
+        TEST("STX $90", 0xDF, 0x90);
+        TEST("LDS $90", 0x9E, 0x90);
+        TEST("STS $90", 0x9F, 0x90);
+    }
+
+    if (m6801()) {
+        // MC6801
+        TEST("JSR  $90", 0x9D, 0x90);
+    } else if (m6805()) {
+        // MC6805
+        TEST("JSR  $90", 0xBD, 0x90);
+    } else {
+        TEST("JSR  $90", 0xBD, 0x00, 0x90);
+    }
 
     if (m6801()) {
         // MC6801
@@ -487,13 +795,11 @@ static void test_direct() {
         TEST("ADDD $90", 0xD3, 0x90);
         TEST("LDD  $90", 0xDC, 0x90);
         TEST("STD  $90", 0xDD, 0x90);
-        TEST("JSR  $90", 0x9D, 0x90);
     } else {
         ERRT("SUBD $90", UNKNOWN_INSTRUCTION);
         ERRT("ADDD $90", UNKNOWN_INSTRUCTION);
         ERRT("LDD  $90", UNKNOWN_INSTRUCTION);
         ERRT("STD  $90", UNKNOWN_INSTRUCTION);
-        TEST("JSR  $90", 0xBD, 0x00, 0x90);
     }
 
     if (m68hc11()) {
@@ -513,13 +819,21 @@ static void test_direct() {
     symtab.intern(0x22, "dir22");
     symtab.intern(0x90, "dir90");
 
-    TEST("LDAA <dir90", 0x96, 0x90);
-    TEST("STAB  dir90", 0xD7, 0x90);
-    TEST("CPX  <dir22", 0x9C, 0x22);
-    TEST("LDX   dir22", 0xDE, 0x22);
-    TEST("STX  <dir22", 0xDF, 0x22);
-    TEST("LDS   dir90", 0x9E, 0x90);
-    TEST("STS  <dir90", 0x9F, 0x90);
+    if (m6805()) {
+        TEST("LDA <dir90", 0xB6, 0x90);
+        TEST("STA  dir90", 0xB7, 0x90);
+        TEST("CPX <dir22", 0xB3, 0x22);
+        TEST("LDX  dir22", 0xBE, 0x22);
+        TEST("STX <dir22", 0xBF, 0x22);
+    } else {
+        TEST("LDAA <dir90", 0x96, 0x90);
+        TEST("STAB  dir90", 0xD7, 0x90);
+        TEST("CPX  <dir22", 0x9C, 0x22);
+        TEST("LDX   dir22", 0xDE, 0x22);
+        TEST("STX  <dir22", 0xDF, 0x22);
+        TEST("LDS   dir90", 0x9E, 0x90);
+        TEST("STS  <dir90", 0x9F, 0x90);
+    }
 
     if (m6801()) {
         // MC6801
@@ -538,50 +852,128 @@ static void test_direct() {
 }
 
 static void test_extended() {
-    TEST("NEG >$0000", 0x70, 0x00, 0x00);
-    TEST("COM >$0009", 0x73, 0x00, 0x09);
-    TEST("LSR >$0034", 0x74, 0x00, 0x34);
-    TEST("ROR  $1234", 0x76, 0x12, 0x34);
-    TEST("ASR  $1234", 0x77, 0x12, 0x34);
-    TEST("ASL  $1234", 0x78, 0x12, 0x34);
-    TEST("ROL  $1234", 0x79, 0x12, 0x34);
-    TEST("DEC  $1234", 0x7A, 0x12, 0x34);
-    TEST("INC  $1234", 0x7C, 0x12, 0x34);
-    TEST("TST  $1234", 0x7D, 0x12, 0x34);
-    TEST("CLR  $1234", 0x7F, 0x12, 0x34);
+    if (m6805()) {
+        ERRT("NEG >$0000", OPERAND_NOT_ALLOWED);
+        ERRT("COM >$0009", OPERAND_NOT_ALLOWED);
+        ERRT("LSR >$0034", OPERAND_NOT_ALLOWED);
+        ERRT("ROR  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("ASR  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("ASL  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("ROL  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("DEC  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("INC  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("TST  $1234", OPERAND_NOT_ALLOWED);
+        ERRT("CLR  $1234", OPERAND_NOT_ALLOWED);
+    } else {
+        TEST("NEG >$0000", 0x70, 0x00, 0x00);
+        TEST("COM >$0009", 0x73, 0x00, 0x09);
+        TEST("LSR >$0034", 0x74, 0x00, 0x34);
+        TEST("ROR  $1234", 0x76, 0x12, 0x34);
+        TEST("ASR  $1234", 0x77, 0x12, 0x34);
+        TEST("ASL  $1234", 0x78, 0x12, 0x34);
+        TEST("ROL  $1234", 0x79, 0x12, 0x34);
+        TEST("DEC  $1234", 0x7A, 0x12, 0x34);
+        TEST("INC  $1234", 0x7C, 0x12, 0x34);
+        TEST("TST  $1234", 0x7D, 0x12, 0x34);
+        TEST("CLR  $1234", 0x7F, 0x12, 0x34);
+    }
 
-    TEST("SUBA >$0090", 0xB0, 0x00, 0x90);
-    TEST("CMPA >$0090", 0xB1, 0x00, 0x90);
-    TEST("SBCA >$0090", 0xB2, 0x00, 0x90);
-    TEST("ANDA >$0090", 0xB4, 0x00, 0x90);
-    TEST("BITA >$0090", 0xB5, 0x00, 0x90);
-    TEST("LDAA >$0090", 0xB6, 0x00, 0x90);
-    TEST("STAA >$0090", 0xB7, 0x00, 0x90);
-    TEST("EORA >$0090", 0xB8, 0x00, 0x90);
-    TEST("ADCA >$0090", 0xB9, 0x00, 0x90);
-    TEST("ORAA >$0090", 0xBA, 0x00, 0x90);
-    TEST("ADDA >$0090", 0xBB, 0x00, 0x90);
+    if (m6805()) {
+        TEST("SUB >$0090", 0xC0, 0x00, 0x90);
+        TEST("CMP >$0090", 0xC1, 0x00, 0x90);
+        TEST("SBC >$0090", 0xC2, 0x00, 0x90);
+        TEST("AND >$0090", 0xC4, 0x00, 0x90);
+        TEST("BIT >$0090", 0xC5, 0x00, 0x90);
+        TEST("LDA >$0090", 0xC6, 0x00, 0x90);
+        TEST("STA >$0090", 0xC7, 0x00, 0x90);
+        TEST("EOR >$0090", 0xC8, 0x00, 0x90);
+        TEST("ADC >$0090", 0xC9, 0x00, 0x90);
+        TEST("ORA >$0090", 0xCA, 0x00, 0x90);
+        TEST("ADD >$0090", 0xCB, 0x00, 0x90);
 
-    TEST("SUBB $9ABC", 0xF0, 0x9A, 0xBC);
-    TEST("CMPB $9ABC", 0xF1, 0x9A, 0xBC);
-    TEST("SBCB $9ABC", 0xF2, 0x9A, 0xBC);
-    TEST("ANDB $9ABC", 0xF4, 0x9A, 0xBC);
-    TEST("BITB $9ABC", 0xF5, 0x9A, 0xBC);
-    TEST("LDAB $9ABC", 0xF6, 0x9A, 0xBC);
-    TEST("STAB $9ABC", 0xF7, 0x9A, 0xBC);
-    TEST("EORB $9ABC", 0xF8, 0x9A, 0xBC);
-    TEST("ADCB $9ABC", 0xF9, 0x9A, 0xBC);
-    TEST("ORAB $9ABC", 0xFA, 0x9A, 0xBC);
-    TEST("ADDB $9ABC", 0xFB, 0x9A, 0xBC);
+        ERRT("SUB $2000", OVERFLOW_RANGE);
 
-    TEST("CPX $9ABC", 0xBC, 0x9A, 0xBC);
-    TEST("LDX $9ABC", 0xFE, 0x9A, 0xBC);
-    TEST("STX $9ABC", 0xFF, 0x9A, 0xBC);
-    TEST("LDS $9ABC", 0xBE, 0x9A, 0xBC);
-    TEST("STS $9ABC", 0xBF, 0x9A, 0xBC);
+        ERRT("SUBA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("CMPA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("SBCA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ANDA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("BITA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("LDAA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("STAA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("EORA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ADCA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ORAA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ADDA >$0090", UNKNOWN_INSTRUCTION);
 
-    TEST("JMP $0034", 0x7E, 0x00, 0x34);
-    TEST("JSR $1234", 0xBD, 0x12, 0x34);
+        ERRT("SUBB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("CMPB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("SBCB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("ANDB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("BITB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("LDAB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("STAB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("EORB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("ADCB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("ORAB $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("ADDB $1ABC", UNKNOWN_INSTRUCTION);
+
+        TEST("CPX $1ABC", 0xC3, 0x1A, 0xBC);
+        TEST("LDX $1ABC", 0xCE, 0x1A, 0xBC);
+        TEST("STX $1ABC", 0xCF, 0x1A, 0xBC);
+        ERRT("LDS $1ABC", UNKNOWN_INSTRUCTION);
+        ERRT("STS $1ABC", UNKNOWN_INSTRUCTION);
+
+        TEST("JMP >$0034", 0xCC, 0x00, 0x34);
+        TEST("JSR  $1234", 0xCD, 0x12, 0x34);
+
+        ERRT("CPX $2000", OVERFLOW_RANGE);
+        ERRT("JMP $4000", OVERFLOW_RANGE);
+        ERRT("JSR $8000", OVERFLOW_RANGE);
+    } else {
+        ERRT("SUB >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("CMP >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("SBC >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("AND >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("BIT >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("LDA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("EOR >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ADC >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ORA >$0090", UNKNOWN_INSTRUCTION);
+        ERRT("ADD >$0090", UNKNOWN_INSTRUCTION);
+
+        TEST("SUBA >$0090", 0xB0, 0x00, 0x90);
+        TEST("CMPA >$0090", 0xB1, 0x00, 0x90);
+        TEST("SBCA >$0090", 0xB2, 0x00, 0x90);
+        TEST("ANDA >$0090", 0xB4, 0x00, 0x90);
+        TEST("BITA >$0090", 0xB5, 0x00, 0x90);
+        TEST("LDAA >$0090", 0xB6, 0x00, 0x90);
+        TEST("STAA >$0090", 0xB7, 0x00, 0x90);
+        TEST("EORA >$0090", 0xB8, 0x00, 0x90);
+        TEST("ADCA >$0090", 0xB9, 0x00, 0x90);
+        TEST("ORAA >$0090", 0xBA, 0x00, 0x90);
+        TEST("ADDA >$0090", 0xBB, 0x00, 0x90);
+
+        TEST("SUBB $9ABC", 0xF0, 0x9A, 0xBC);
+        TEST("CMPB $9ABC", 0xF1, 0x9A, 0xBC);
+        TEST("SBCB $9ABC", 0xF2, 0x9A, 0xBC);
+        TEST("ANDB $9ABC", 0xF4, 0x9A, 0xBC);
+        TEST("BITB $9ABC", 0xF5, 0x9A, 0xBC);
+        TEST("LDAB $9ABC", 0xF6, 0x9A, 0xBC);
+        TEST("STAB $9ABC", 0xF7, 0x9A, 0xBC);
+        TEST("EORB $9ABC", 0xF8, 0x9A, 0xBC);
+        TEST("ADCB $9ABC", 0xF9, 0x9A, 0xBC);
+        TEST("ORAB $9ABC", 0xFA, 0x9A, 0xBC);
+        TEST("ADDB $9ABC", 0xFB, 0x9A, 0xBC);
+
+        TEST("CPX $9ABC", 0xBC, 0x9A, 0xBC);
+        TEST("LDX $9ABC", 0xFE, 0x9A, 0xBC);
+        TEST("STX $9ABC", 0xFF, 0x9A, 0xBC);
+        TEST("LDS $9ABC", 0xBE, 0x9A, 0xBC);
+        TEST("STS $9ABC", 0xBF, 0x9A, 0xBC);
+
+        TEST("JMP $0034", 0x7E, 0x00, 0x34);
+        TEST("JSR $1234", 0xBD, 0x12, 0x34);
+    }
 
     if (m6801()) {
         // MC6801
@@ -610,20 +1002,37 @@ static void test_extended() {
     }
 
     symtab.intern(0x0090, "ext0090");
+    symtab.intern(0x1ABC, "ext1ABC");
     symtab.intern(0x9ABC, "ext9ABC");
 
-    TEST("NEG   >ext0090", 0x70, 0x00, 0x90);
-    TEST("LDAA   ext9ABC", 0xB6, 0x9A, 0xBC);
-    TEST("STAB  >ext0090", 0xF7, 0x00, 0x90);
+    if (m6805()) {
+        ERRT("NEG >ext0090", OPERAND_NOT_ALLOWED);
+        TEST("LDA  ext1ABC", 0xC6, 0x1A, 0xBC);
+        TEST("STA >ext0090", 0xC7, 0x00, 0x90);
+    } else {
+        TEST("NEG   >ext0090", 0x70, 0x00, 0x90);
+        TEST("LDAA   ext9ABC", 0xB6, 0x9A, 0xBC);
+        TEST("STAB  >ext0090", 0xF7, 0x00, 0x90);
+    }
 
-    TEST("CPX  ext9ABC", 0xBC, 0x9A, 0xBC);
-    TEST("LDX  ext9ABC", 0xFE, 0x9A, 0xBC);
-    TEST("STX >ext0090", 0xFF, 0x00, 0x90);
-    TEST("LDS  ext9ABC", 0xBE, 0x9A, 0xBC);
-    TEST("STS >ext0090", 0xBF, 0x00, 0x90);
-    TEST("JMP  ext9ABC", 0x7E, 0x9A, 0xBC);
+    if (m6805()) {
+        TEST("CPX  ext1ABC", 0xC3, 0x1A, 0xBC);
+        TEST("LDX  ext1ABC", 0xCE, 0x1A, 0xBC);
+        TEST("STX >ext0090", 0xCF, 0x00, 0x90);
+        TEST("JMP  ext1ABC", 0xCC, 0x1A, 0xBC);
+    } else {
+        TEST("CPX  ext9ABC", 0xBC, 0x9A, 0xBC);
+        TEST("LDX  ext9ABC", 0xFE, 0x9A, 0xBC);
+        TEST("STX >ext0090", 0xFF, 0x00, 0x90);
+        TEST("LDS  ext9ABC", 0xBE, 0x9A, 0xBC);
+        TEST("STS >ext0090", 0xBF, 0x00, 0x90);
+        TEST("JMP  ext9ABC", 0x7E, 0x9A, 0xBC);
+    }
+
     if (m6800()) {
         TEST("JSR  ext0090", 0xBD, 0x00, 0x90);
+    } else if (m6805()) {
+        TEST("JSR  ext0090", 0xBD, 0x90);
     } else {
         TEST("JSR  ext0090", 0x9D, 0x90);
     }
@@ -645,52 +1054,214 @@ static void test_extended() {
 }
 
 static void test_indexed() {
-    TEST("NEG   0,X", 0x60, 0x00);
-    TEST("COM   0,X", 0x63, 0x00);
-    TEST("LSR   0,X", 0x64, 0x00);
+    if (m6805()) {
+        TEST("NEG   0,X", 0x70);
+    } else {
+        TEST("NEG   0,X", 0x60, 0x00);
+    }
+    TEST("COM  <0,X", 0x63, 0x00);
+    TEST("LSR   1,X", 0x64, 0x01);
     TEST("ROR   2,X", 0x66, 0x02);
     TEST("ASR   3,X", 0x67, 0x03);
     TEST("ASL   4,X", 0x68, 0x04);
-    TEST("ROL   5,X", 0x69, 0x05);
-    TEST("DEC   6,X", 0x6A, 0x06);
+    TEST("LSL   5,X", 0x68, 0x05);
+    TEST("ROL   6,X", 0x69, 0x06);
+    TEST("DEC   7,X", 0x6A, 0x07);
     TEST("INC 127,X", 0x6C, 0x7F);
     TEST("TST 128,X", 0x6D, 0x80);
     TEST("CLR 255,X", 0x6F, 0xFF);
 
-    TEST("SUBA   0,X", 0xA0, 0x00);
-    TEST("SUBA   0,X", 0xA0, 0x00);
-    TEST("CMPA   0,X", 0xA1, 0x00);
-    TEST("SBCA   1,X", 0xA2, 0x01);
-    TEST("ANDA   2,X", 0xA4, 0x02);
-    TEST("BITA   3,X", 0xA5, 0x03);
-    TEST("LDAA   4,X", 0xA6, 0x04);
-    TEST("STAA   5,X", 0xA7, 0x05);
-    TEST("EORA   6,X", 0xA8, 0x06);
-    TEST("ADCA 127,X", 0xA9, 0x7F);
-    TEST("ORAA 128,X", 0xAA, 0x80);
-    TEST("ADDA 255,X", 0xAB, 0xFF);
+    ERRT("NEG >0,X",    OPERAND_NOT_ALLOWED);
+    ERRT("COM >1,X",    OPERAND_NOT_ALLOWED);
+    ERRT("LSR >255,X",  OPERAND_NOT_ALLOWED);
+    ERRT("ROR 256,X",   OPERAND_NOT_ALLOWED);
+    ERRT("ASR 512,X",   OPERAND_NOT_ALLOWED);
+    ERRT("ASL 1024,X",  OPERAND_NOT_ALLOWED);
+    ERRT("LSL 2048,X",  OPERAND_NOT_ALLOWED);
+    ERRT("ROL 4096,X",  OPERAND_NOT_ALLOWED);
+    ERRT("DEC 8192,X",  OPERAND_NOT_ALLOWED);
+    ERRT("INC 16384,X", OPERAND_NOT_ALLOWED);
+    ERRT("TST 32768,X", OPERAND_NOT_ALLOWED);
+    ERRT("CLR 65535,X", OPERAND_NOT_ALLOWED);
 
-    TEST("SUBB   0,X", 0xE0, 0x00);
-    TEST("SUBB   0,X", 0xE0, 0x00);
-    TEST("CMPB   0,X", 0xE1, 0x00);
-    TEST("SBCB   1,X", 0xE2, 0x01);
-    TEST("ANDB   2,X", 0xE4, 0x02);
-    TEST("BITB   3,X", 0xE5, 0x03);
-    TEST("LDAB   4,X", 0xE6, 0x04);
-    TEST("STAB   5,X", 0xE7, 0x05);
-    TEST("EORB   6,X", 0xE8, 0x06);
-    TEST("ADCB 127,X", 0xE9, 0x7F);
-    TEST("ORAB 128,X", 0xEA, 0x80);
-    TEST("ADDB 255,X", 0xEB, 0xFF);
+    if (m6805()) {
+        TEST("NEG ,X", 0x70);
+        TEST("COM ,X", 0x73);
+        TEST("LSR ,X", 0x74);
+        TEST("ROR ,X", 0x76);
+        TEST("ASR ,X", 0x77);
+        TEST("LSL ,X", 0x78);
+        TEST("ASL ,X", 0x78);
+        TEST("ROL ,X", 0x79);
+        TEST("DEC ,X", 0x7A);
+        TEST("INC ,X", 0x7C);
+        TEST("TST ,X", 0x7D);
+        TEST("CLR ,X", 0x7F);
+    } else {
+        ERRT("NEG ,X", OPERAND_NOT_ALLOWED);
+        ERRT("COM ,X", OPERAND_NOT_ALLOWED);
+        ERRT("LSR ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ROR ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ASR ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ASL ,X", OPERAND_NOT_ALLOWED);
+        ERRT("LSL ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ROL ,X", OPERAND_NOT_ALLOWED);
+        ERRT("DEC ,X", OPERAND_NOT_ALLOWED);
+        ERRT("INC ,X", OPERAND_NOT_ALLOWED);
+        ERRT("TST ,X", OPERAND_NOT_ALLOWED);
+        ERRT("CLR ,X", OPERAND_NOT_ALLOWED);
+    }
 
-    TEST("CPX   0,X", 0xAC, 0x00);
-    TEST("LDX   0,X", 0xEE, 0x00);
-    TEST("STX   2,X", 0xEF, 0x02);
-    TEST("LDS 128,X", 0xAE, 0x80);
-    TEST("STS 255,X", 0xAF, 0xFF);
+    if (m6805()) {
+        TEST("SUB   0,X", 0xF0);
+        TEST("CMP  <0,X", 0xE1, 0x00);
+        TEST("SBC   1,X", 0xE2, 0x01);
+        TEST("AND   2,X", 0xE4, 0x02);
+        TEST("BIT   3,X", 0xE5, 0x03);
+        TEST("LDA   4,X", 0xE6, 0x04);
+        TEST("STA   5,X", 0xE7, 0x05);
+        TEST("EOR   6,X", 0xE8, 0x06);
+        TEST("ADC 127,X", 0xE9, 0x7F);
+        TEST("ORA 128,X", 0xEA, 0x80);
+        TEST("ADD 255,X", 0xEB, 0xFF);
 
-    TEST("JMP 0,X",   0x6E, 0x00);
-    TEST("JSR 255,X", 0xAD, 0xFF);
+        TEST("SUB ,X", 0xF0);
+        TEST("CMP ,X", 0xF1);
+        TEST("SBC ,X", 0xF2);
+        TEST("AND ,X", 0xF4);
+        TEST("BIT ,X", 0xF5);
+        TEST("LDA ,X", 0xF6);
+        TEST("STA ,X", 0xF7);
+        TEST("EOR ,X", 0xF8);
+        TEST("ADC ,X", 0xF9);
+        TEST("ORA ,X", 0xFA);
+        TEST("ADD ,X", 0xFB);
+
+        TEST("SUB >0,X",    0xD0, 0x00, 0x00);
+        TEST("CMP >1,X",    0xD1, 0x00, 0x01);
+        TEST("SBC 256,X",   0xD2, 0x01, 0x00);
+        TEST("AND 512,X",   0xD4, 0x02, 0x00);
+        TEST("BIT 1024,X",  0xD5, 0x04, 0x00);
+        TEST("LDA 2048,X",  0xD6, 0x08, 0x00);
+        TEST("STA 4096,X",  0xD7, 0x10, 0x00);
+        TEST("EOR 8192,X",  0xD8, 0x20, 0x00);
+        TEST("ADC 16384,X", 0xD9, 0x40, 0x00);
+        TEST("ORA 32768,X", 0xDA, 0x80, 0x00);
+        TEST("ADD 65535,X", 0xDB, 0xFF, 0xFF);
+
+        ERRT("SUBA   0,X", UNKNOWN_INSTRUCTION);
+        ERRT("CMPA   0,X", UNKNOWN_INSTRUCTION);
+        ERRT("SBCA   1,X", UNKNOWN_INSTRUCTION);
+        ERRT("ANDA   2,X", UNKNOWN_INSTRUCTION);
+        ERRT("BITA   3,X", UNKNOWN_INSTRUCTION);
+        ERRT("LDAA   4,X", UNKNOWN_INSTRUCTION);
+        ERRT("STAA   5,X", UNKNOWN_INSTRUCTION);
+        ERRT("EORA   6,X", UNKNOWN_INSTRUCTION);
+        ERRT("ADCA 127,X", UNKNOWN_INSTRUCTION);
+        ERRT("ORAA 128,X", UNKNOWN_INSTRUCTION);
+        ERRT("ADDA 255,X", UNKNOWN_INSTRUCTION);
+
+        ERRT("SUBB   0,X", UNKNOWN_INSTRUCTION);
+        ERRT("CMPB   0,X", UNKNOWN_INSTRUCTION);
+        ERRT("SBCB   1,X", UNKNOWN_INSTRUCTION);
+        ERRT("ANDB   2,X", UNKNOWN_INSTRUCTION);
+        ERRT("BITB   3,X", UNKNOWN_INSTRUCTION);
+        ERRT("LDAB   4,X", UNKNOWN_INSTRUCTION);
+        ERRT("STAB   5,X", UNKNOWN_INSTRUCTION);
+        ERRT("EORB   6,X", UNKNOWN_INSTRUCTION);
+        ERRT("ADCB 127,X", UNKNOWN_INSTRUCTION);
+        ERRT("ORAB 128,X", UNKNOWN_INSTRUCTION);
+        ERRT("ADDB 255,X", UNKNOWN_INSTRUCTION);
+
+        TEST("CPX ,X",   0xF3);
+        TEST("LDX ,X",   0xFE);
+        TEST("STX ,X",   0xFF);
+        TEST("CPX 0,X",  0xF3);
+        TEST("LDX <0,X", 0xEE, 0x00);
+        TEST("STX 2,X", 0xEF, 0x02);
+        ERRT("LDS 128,X", UNKNOWN_INSTRUCTION);
+        ERRT("STS 255,X", UNKNOWN_INSTRUCTION);
+
+        TEST("JMP ,X",    0xFC);
+        TEST("JSR ,X",    0xFD);
+        TEST("JMP 0,X",   0xFC);
+        TEST("JMP <0,X",  0xEC, 0x00);
+        TEST("JSR 255,X", 0xED, 0xFF);
+    } else {
+        ERRT("SUB   0,X", UNKNOWN_INSTRUCTION);
+        ERRT("CMP   0,X", UNKNOWN_INSTRUCTION);
+        ERRT("SBC   1,X", UNKNOWN_INSTRUCTION);
+        ERRT("AND   2,X", UNKNOWN_INSTRUCTION);
+        ERRT("BIT   3,X", UNKNOWN_INSTRUCTION);
+        ERRT("LDA   4,X", UNKNOWN_INSTRUCTION);
+        ERRT("STA   5,X", UNKNOWN_INSTRUCTION);
+        ERRT("EOR   6,X", UNKNOWN_INSTRUCTION);
+        ERRT("ADC 127,X", UNKNOWN_INSTRUCTION);
+        ERRT("ORA 128,X", UNKNOWN_INSTRUCTION);
+        ERRT("ADD 255,X", UNKNOWN_INSTRUCTION);
+
+        ERRT("SUBA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("CMPA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("SBCA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ANDA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("BITA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("LDAA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("STAA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("EORA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ADCA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ORAA ,X", OPERAND_NOT_ALLOWED);
+        ERRT("ADDA ,X", OPERAND_NOT_ALLOWED);
+
+        TEST("SUBA   0,X", 0xA0, 0x00);
+        TEST("CMPA   0,X", 0xA1, 0x00);
+        TEST("SBCA   1,X", 0xA2, 0x01);
+        TEST("ANDA   2,X", 0xA4, 0x02);
+        TEST("BITA   3,X", 0xA5, 0x03);
+        TEST("LDAA   4,X", 0xA6, 0x04);
+        TEST("STAA   5,X", 0xA7, 0x05);
+        TEST("EORA   6,X", 0xA8, 0x06);
+        TEST("ADCA 127,X", 0xA9, 0x7F);
+        TEST("ORAA 128,X", 0xAA, 0x80);
+        TEST("ADDA 255,X", 0xAB, 0xFF);
+
+        ERRT("SUBA >0,X",    OPERAND_NOT_ALLOWED);
+        ERRT("CMPA >1,X",    OPERAND_NOT_ALLOWED);
+        ERRT("SBCA 256,X",   OPERAND_NOT_ALLOWED);
+        ERRT("ANDA 512,X",   OPERAND_NOT_ALLOWED);
+        ERRT("BITA 1024,X",  OPERAND_NOT_ALLOWED);
+        ERRT("LDAA 2048,X",  OPERAND_NOT_ALLOWED);
+        ERRT("STAA 4096,X",  OPERAND_NOT_ALLOWED);
+        ERRT("EORA 8192,X",  OPERAND_NOT_ALLOWED);
+        ERRT("ADCA 16384,X", OPERAND_NOT_ALLOWED);
+        ERRT("ORAA 32768,X", OPERAND_NOT_ALLOWED);
+        ERRT("ADDA 65535,X", OPERAND_NOT_ALLOWED);
+
+        TEST("SUBB   0,X", 0xE0, 0x00);
+        TEST("CMPB   0,X", 0xE1, 0x00);
+        TEST("SBCB   1,X", 0xE2, 0x01);
+        TEST("ANDB   2,X", 0xE4, 0x02);
+        TEST("BITB   3,X", 0xE5, 0x03);
+        TEST("LDAB   4,X", 0xE6, 0x04);
+        TEST("STAB   5,X", 0xE7, 0x05);
+        TEST("EORB   6,X", 0xE8, 0x06);
+        TEST("ADCB 127,X", 0xE9, 0x7F);
+        TEST("ORAB 128,X", 0xEA, 0x80);
+        TEST("ADDB 255,X", 0xEB, 0xFF);
+
+        ERRT("CPX ,X", OPERAND_NOT_ALLOWED);
+        ERRT("LDX ,X", OPERAND_NOT_ALLOWED);
+        ERRT("STX ,X", OPERAND_NOT_ALLOWED);
+        TEST("CPX 0,X",   0xAC, 0x00);
+        TEST("LDX 0,X",   0xEE, 0x00);
+        TEST("STX 2,X",   0xEF, 0x02);
+        TEST("LDS 128,X", 0xAE, 0x80);
+        TEST("STS 255,X", 0xAF, 0xFF);
+
+        ERRT("JMP ,X", OPERAND_NOT_ALLOWED);
+        ERRT("JSR ,X", OPERAND_NOT_ALLOWED);
+        TEST("JMP 0,X",   0x6E, 0x00);
+        TEST("JSR 255,X", 0xAD, 0xFF);
+    }
 
     if (m6801()) {
         // MC6801
@@ -722,12 +1293,19 @@ static void test_indexed() {
     symtab.intern(128, "offset128");
     symtab.intern(255, "offset255");
 
-    TEST("NEG     offset0,X", 0x60, 0x00);
-    TEST("COM   offset255,X", 0x63, 0xFF);
-    TEST("CMPA    offset0,X", 0xA1, 0x00);
-    TEST("ADDB  offset255,X", 0xEB, 0xFF);
-    TEST("JMP     offset0,X", 0x6E, 0x00);
-    TEST("JSR   offset255,X", 0xAD, 0xFF);
+    TEST("NEG  <offset0,X", 0x60, 0x00);
+    TEST("COM offset255,X", 0x63, 0xFF);
+    if (m6805()) {
+        TEST("CMP  <offset0,X", 0xE1, 0x00);
+        TEST("ADD offset255,X", 0xEB, 0xFF);
+        TEST("JMP  <offset0,X", 0xEC, 0x00);
+        TEST("JSR offset255,X", 0xED, 0xFF);
+    } else {
+        TEST("CMPA    offset0,X", 0xA1, 0x00);
+        TEST("ADDB  offset255,X", 0xEB, 0xFF);
+        TEST("JMP     offset0,X", 0x6E, 0x00);
+        TEST("JSR   offset255,X", 0xAD, 0xFF);
+    }
 
     if (m6801()) {
         // MC6801
@@ -858,37 +1436,70 @@ static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
-    TEST("NOP          ; comment", 0x01);
-    TEST("PSHA         ; comment", 0x36);
-    TEST("SUBA  #$90   ; comment", 0x80, 0x90);
-    TEST("NEG > $0010  ; comment", 0x70, 0x00, 0x10);
-    TEST("SUBA   >$90  ; comment", 0xB0, 0x00, 0x90);
-    TEST("SUBA sym255  ; comment", 0x90, 0xFF);
-    TEST("SUBA >sym255 ; comment", 0xB0, 0x00, 0xFF);
-    TEST("SUBA sym1234 ; comment", 0xB0, 0x12, 0x34);
-    TEST("JMP sym255   ; comment", 0x7E, 0x00, 0xFF);
-    TEST("JSR sym1234  ; comment", 0xBD, 0x12, 0x34);
-    TEST("LDAA 0 , X   ; comment", 0xA6, 0x00);
+    if (m6805()) {
+        TEST("NOP         ; comment", 0x9D);
+        TEST("SUB   #$90  ; comment", 0xA0, 0x90);
+        TEST("NEG < $0010 ; comment", 0x30, 0x10);
+        TEST("SUB   >$90  ; comment", 0xC0, 0x00, 0x90);
+        TEST("SUB sym255  ; comment", 0xB0, 0xFF);
+        TEST("SUB >sym255 ; comment", 0xC0, 0x00, 0xFF);
+        TEST("SUB sym1234 ; comment", 0xC0, 0x12, 0x34);
+        TEST("JMP sym255  ; comment", 0xBC, 0xFF);
+        TEST("JSR sym1234 ; comment", 0xCD, 0x12, 0x34);
+        TEST("LDA 0 , X   ; comment", 0xF6);
+        TEST("LDA < 0 , X ; comment", 0xE6, 0x00);
+        TEST("LDA > 0 , X ; comment", 0xD6, 0x00, 0x00);
+    } else {
+        TEST("NOP          ; comment", 0x01);
+        TEST("PSHA         ; comment", 0x36);
+        TEST("SUBA  #$90   ; comment", 0x80, 0x90);
+        TEST("NEG > $0010  ; comment", 0x70, 0x00, 0x10);
+        TEST("SUBA   >$90  ; comment", 0xB0, 0x00, 0x90);
+        TEST("SUBA sym255  ; comment", 0x90, 0xFF);
+        TEST("SUBA >sym255 ; comment", 0xB0, 0x00, 0xFF);
+        TEST("SUBA sym1234 ; comment", 0xB0, 0x12, 0x34);
+        TEST("JMP sym255   ; comment", 0x7E, 0x00, 0xFF);
+        TEST("JSR sym1234  ; comment", 0xBD, 0x12, 0x34);
+        TEST("LDAA 0 , X   ; comment", 0xA6, 0x00);
+    }
 }
 
 static void test_undefined_symbol() {
-    ERUS("LDAA  #UNDEF", 0x86, 0x00);
-    ERUS("LDS   #UNDEF", 0x8E, 0x00, 0x00);
-    ERUS("NEG    UNDEF", 0x70, 0x00, 0x00);
-    ERUS("SUBA   UNDEF", 0x90, 0x00);
-    ERUS("SUBA  <UNDEF", 0x90, 0x00);
-    ERUS("SUBB  >UNDEF", 0xF0, 0x00, 0x00);
-    ERUS("JMP    UNDEF", 0x7E, 0x00, 0x00);
+    if (m6805()) {
+        ERUS("LDA  #UNDEF", 0xA6, 0x00);
+        ERUS("LDX  #UNDEF", 0xAE, 0x00);
+        ERUS("NEG  UNDEF",  0x30, 0x00);
+        ERUS("SUB  UNDEF",  0xB0, 0x00);
+        ERUS("SUB <UNDEF",  0xB0, 0x00);
+        ERUS("SUB >UNDEF",  0xC0, 0x00, 0x00);
+        ERUS("JMP  UNDEF",  0xBC, 0x00);
+        ERUS("LDA  UNDEF,X", 0xF6);
+        ERUS("LDA <UNDEF,X", 0xE6, 0x00);
+        ERUS("LDA >UNDEF,X", 0xD6, 0x00, 0x00);
+    } else {
+        ERUS("LDAA  #UNDEF", 0x86, 0x00);
+        ERUS("LDS   #UNDEF", 0x8E, 0x00, 0x00);
+        ERUS("NEG    UNDEF", 0x70, 0x00, 0x00);
+        ERUS("SUBA   UNDEF", 0x90, 0x00);
+        ERUS("SUBA  <UNDEF", 0x90, 0x00);
+        ERUS("SUBB  >UNDEF", 0xF0, 0x00, 0x00);
+        ERUS("JMP    UNDEF", 0x7E, 0x00, 0x00);
+        ERUS("LDAA UNDEF,X", 0xA6, 0x00);
+    }
     if (m6800()) {
         ERUS("JSR UNDEF", 0xBD, 0x00, 0x00);
+    } else if (m6805()) {
+        ERUS("JSR UNDEF", 0xBD, 0x00);
     } else {
         ERUS("JSR UNDEF", 0x9D, 0x00);
     }
 
-    ERUS("LDAA UNDEF,X", 0xA6, 0x00);
-
     ERUS("BRA UNDEF", 0x20, 0x00);
-    ERUS("BSR UNDEF", 0x8D, 0x00);
+    if (m6805()) {
+        ERUS("BSR UNDEF", 0xAD, 0x00);
+    } else {
+        ERUS("BSR UNDEF", 0x8D, 0x00);
+    }
 
     if (m6801()) {
         // MC6801
