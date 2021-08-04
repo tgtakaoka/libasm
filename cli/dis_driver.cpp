@@ -19,7 +19,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <set>
+#include <algorithm>
+#include <list>
 #include <string>
 
 namespace libasm {
@@ -35,26 +36,20 @@ DisDriver::~DisDriver() {
         delete _formatter;
 }
 
-static void appendTo(std::string &list, const std::string &cpu, std::set<std::string> &cpuSet) {
-    if (cpuSet.find(cpu) == cpuSet.end()) {
-        cpuSet.insert(cpu);
-        if (!list.empty())
-            list += ", ";
-        list.append(cpu);
-    }
+static void appendTo(const std::string &cpu, std::list<std::string> &list) {
+    if (std::find(list.begin(), list.end(), cpu) == list.end())
+        list.push_back(cpu);
 }
 
-static std::string filter(const char *text, std::set<std::string> &cpuSet) {
-    std::string list;
-    while (true) {
+static void filter(const char *text, std::list<std::string> &list) {
+    while (*text) {
         const char *del = strchr(text, ',');
         if (del == nullptr) {
-            const std::string cpu(text);
-            appendTo(list, cpu, cpuSet);
-            return list;
+            appendTo(std::string(text), list);
+            return;
         }
         const std::string cpu(text, del);
-        appendTo(list, cpu, cpuSet);
+        appendTo(cpu, list);
         for (text = del + 1; *text == ' '; text++)
             ;
     }
@@ -62,19 +57,21 @@ static std::string filter(const char *text, std::set<std::string> &cpuSet) {
 
 static std::string listCpu(
         const char *separator, const std::vector<Disassembler *> &disassemblers) {
-    std::set<std::string> cpuSet;
-    std::string cpuList;
-    std::string buf = "";
+    std::list<std::string> list;
     for (auto dis : disassemblers) {
-        const std::string list(filter(dis->listCpu(), cpuSet));
-        if (buf.size() + list.size() < 47) {
+        filter(dis->listCpu(), list);
+    }
+    std::string cpuList;
+    std::string buf;
+    for (auto &cpu : list) {
+        if (buf.size() + cpu.size() <= 58) {
             if (buf.size())
                 buf += ", ";
-            buf += list;
+            buf += cpu;
         } else {
             cpuList += separator;
             cpuList += buf;
-            buf = list;
+            buf = cpu;
         }
     }
     cpuList += separator + buf;
