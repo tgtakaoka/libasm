@@ -41,7 +41,6 @@ StrBuffer &StrBuffer::text(const char *text) {
     char c;
     while ((c = *text++) != 0)
         letter(c);
-    *_out = 0;
     return *this;
 }
 
@@ -49,7 +48,6 @@ StrBuffer &StrBuffer::pstr(const /*PROGMEM*/ char *pstr) {
     uint8_t c;
     while ((c = pgm_read_byte(pstr++)) != 0)
         letter(c);
-    *_out = 0;
     return *this;
 }
 
