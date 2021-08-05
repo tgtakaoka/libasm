@@ -7,7 +7,7 @@ a small environment (less than 9kB~17kB Flash and ~350B RAM on AVR
 Arduino).
 
 - Supported target CPUs.
-  - MC6800, MC6801, HD6301, MC6805, MC68HC05, MC68HC11
+  - MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11
   - MC6809, HD6309
   - MOS6502, G65SC02, R65C02, W65C02S
   - W65C816S
@@ -28,7 +28,7 @@ Arduino).
 - Supported host environment.
   - Arduino (avr, megaavr, samd, teensy)
   - PlatformIO (atmelavr, atmelmegaavr, atmelsam, teensy)
-  - Linux, macOS (`C++14`: `g++`, `clang++`)
+  - Linux, macOS (`C++14`)
 
 More information about this library can be found at
 https://github.com/tgtakaoka/libasm
