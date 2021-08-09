@@ -15,39 +15,39 @@
         cpu     68HC05
         org     $0100
 ;;; 0X
-        brset0  $01, *+5
-        brclr0  $02, *+6
-        brset1  $03, *+7
-        brclr1  $04, *+8
-        brset2  $05, *+9
-        brclr2  $06, *+10
-        brset3  $07, *+11
-        brclr3  $08, *+12
-        brset4  $09, *+13
-        brclr4  $0a, *+14
-        brset5  $0b, *+15
-        brclr5  $0c, *+16
-        brset6  $0d, *+17
-        brclr6  $0e, *+18
-        brset7  $0f, *+19
-        brclr7  $10, *+20
+        brset   0,$01, *+5
+        brclr   0,$02, *+6
+        brset   1,$03, *+7
+        brclr   1,$04, *+8
+        brset   2,$05, *+9
+        brclr   2,$06, *+10
+        brset   3,$07, *+11
+        brclr   3,$08, *+12
+        brset   4,$09, *+13
+        brclr   4,$0a, *+14
+        brset   5,$0b, *+15
+        brclr   5,$0c, *+16
+        brset   6,$0d, *+17
+        brclr   6,$0e, *+18
+        brset   7,$0f, *+19
+        brclr   7,$10, *+20
 ;;; 1X
-        bset0   $11
-        bclr0   $12
-        bset1   $13
-        bclr1   $14
-        bset2   $15
-        bclr2   $16
-        bset3   $17
-        bclr3   $18
-        bset4   $19
-        bclr4   $1a
-        bset5   $1b
-        bclr5   $1c
-        bset6   $1d
-        bclr6   $1e
-        bset7   $1f
-        bclr7   $20
+        bset    0,$11
+        bclr    0,$12
+        bset    1,$13
+        bclr    1,$14
+        bset    2,$15
+        bclr    2,$16
+        bset    3,$17
+        bclr    3,$18
+        bset    4,$19
+        bclr    4,$1a
+        bset    5,$1b
+        bclr    5,$1c
+        bset    6,$1d
+        bclr    6,$1e
+        bset    7,$1f
+        bclr    7,$20
 ;;; 2X
         bra     *+$23
         brn     *+$23

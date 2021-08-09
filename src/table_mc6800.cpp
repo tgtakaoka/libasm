@@ -461,38 +461,10 @@ static constexpr Entry MC6805_TABLE[] PROGMEM = {
     E0(0x9C, TEXT_RSP),
     E0(0x9D, TEXT_NOP),
     E0(0x9F, TEXT_TXA),
-    E1(0x10, TEXT_BSET0, BYTE, M_DIR),
-    E1(0x11, TEXT_BCLR0, BYTE, M_DIR),
-    E1(0x12, TEXT_BSET1, BYTE, M_DIR),
-    E1(0x13, TEXT_BCLR1, BYTE, M_DIR),
-    E1(0x14, TEXT_BSET2, BYTE, M_DIR),
-    E1(0x15, TEXT_BCLR2, BYTE, M_DIR),
-    E1(0x16, TEXT_BSET3, BYTE, M_DIR),
-    E1(0x17, TEXT_BCLR3, BYTE, M_DIR),
-    E1(0x18, TEXT_BSET4, BYTE, M_DIR),
-    E1(0x19, TEXT_BCLR4, BYTE, M_DIR),
-    E1(0x1A, TEXT_BSET5, BYTE, M_DIR),
-    E1(0x1B, TEXT_BCLR5, BYTE, M_DIR),
-    E1(0x1C, TEXT_BSET6, BYTE, M_DIR),
-    E1(0x1D, TEXT_BCLR6, BYTE, M_DIR),
-    E1(0x1E, TEXT_BSET7, BYTE, M_DIR),
-    E1(0x1F, TEXT_BCLR7, BYTE, M_DIR),
-    E2(0x00, TEXT_BRSET0, BYTE, M_DIR, M_REL),
-    E2(0x01, TEXT_BRCLR0, BYTE, M_DIR, M_REL),
-    E2(0x02, TEXT_BRSET1, BYTE, M_DIR, M_REL),
-    E2(0x03, TEXT_BRCLR1, BYTE, M_DIR, M_REL),
-    E2(0x04, TEXT_BRSET2, BYTE, M_DIR, M_REL),
-    E2(0x05, TEXT_BRCLR2, BYTE, M_DIR, M_REL),
-    E2(0x06, TEXT_BRSET3, BYTE, M_DIR, M_REL),
-    E2(0x07, TEXT_BRCLR3, BYTE, M_DIR, M_REL),
-    E2(0x08, TEXT_BRSET4, BYTE, M_DIR, M_REL),
-    E2(0x09, TEXT_BRCLR4, BYTE, M_DIR, M_REL),
-    E2(0x0A, TEXT_BRSET5, BYTE, M_DIR, M_REL),
-    E2(0x0B, TEXT_BRCLR5, BYTE, M_DIR, M_REL),
-    E2(0x0C, TEXT_BRSET6, BYTE, M_DIR, M_REL),
-    E2(0x0D, TEXT_BRCLR6, BYTE, M_DIR, M_REL),
-    E2(0x0E, TEXT_BRSET7, BYTE, M_DIR, M_REL),
-    E2(0x0F, TEXT_BRCLR7, BYTE, M_DIR, M_REL),
+    E2(0x10, TEXT_BSET,  BYTE, M_BNO, M_DIR),
+    E2(0x11, TEXT_BCLR,  BYTE, M_BNO, M_DIR),
+    E3(0x00, TEXT_BRSET, BYTE, M_BNO, M_DIR, M_REL),
+    E3(0x01, TEXT_BRCLR, BYTE, M_BNO, M_DIR, M_REL),
 };
 
 static constexpr Entry MC146805_TABLE[] PROGMEM = {
@@ -681,7 +653,7 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     if (opr == M_DIR)
         return table == M_REL || table == M_EXT;
     if (opr == M_BIT)
-        return table == M_REL || table == M_EXT || table == M_DIR;
+        return table == M_BNO || table == M_REL || table == M_EXT || table == M_DIR;
     if (opr == M_IMM)
         return table == M_BMM;
     return false;
@@ -709,6 +681,10 @@ Error TableMc6800::searchName(
     return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
 }
 
+static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {
+    return entry->flags().mode1() == M_BNO ? code & ~0x0E : code;
+}
+
 const Entry *TableMc6800::searchOpCode(
         InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
     for (const EntryPage *page = pages; page < end; page++) {
@@ -716,7 +692,7 @@ const Entry *TableMc6800::searchOpCode(
         if (insn.prefix() != prefix)
             continue;
         const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end());
+                insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name());

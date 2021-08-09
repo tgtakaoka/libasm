@@ -1341,15 +1341,20 @@ static void test_bit_ops() {
         ATEST(0x1000, "BRSET 255,Y,#$88,$0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
         ATEST(0x1000, "BRCLR   0,Y,#$88,$1084", 0x18, 0x1F, 0x00, 0x88, 0x7F);
     } else {
-        if (hd6301()) {
+        if (hd6301() || m6805()) {
             ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED);
             ERRT("BCLR $90,#$88", OPERAND_NOT_ALLOWED);
         } else {
             ERRT("BSET $90,#$88", UNKNOWN_INSTRUCTION);
             ERRT("BCLR $90,#$88", UNKNOWN_INSTRUCTION);
         }
-        ERRT("BRSET $90,#$88,$1083", UNKNOWN_INSTRUCTION);
-        ERRT("BRCLR $90,#$88,$0F84", UNKNOWN_INSTRUCTION);
+        if (m6805()) {
+            ERRT("BRSET $90,#$88,$1083", OPERAND_NOT_ALLOWED);
+            ERRT("BRCLR $90,#$88,$0F84", OPERAND_NOT_ALLOWED);
+        } else {
+            ERRT("BRSET $90,#$88,$1083", UNKNOWN_INSTRUCTION);
+            ERRT("BRCLR $90,#$88,$0F84", UNKNOWN_INSTRUCTION);
+        }
     }
 
     if (hd6301()) {
@@ -1371,6 +1376,17 @@ static void test_bit_ops() {
         TEST("BSET   6,$90", 0x72, 0x40, 0x90);
         TEST("BTGL   1,$90", 0x75, 0x02, 0x90);
         TEST("BTST   0,$90", 0x7B, 0x01, 0x90);
+    } else if (m6805()) {
+        // MC6805
+        TEST("BCLR   7,$90", 0x1F, 0x90);
+        TEST("BSET   6,$90", 0x1C, 0x90);
+
+        ERRT("AIM #$88,$90", UNKNOWN_INSTRUCTION);
+        ERRT("OIM #$44,$90", UNKNOWN_INSTRUCTION);
+        ERRT("EIM #$22,$90", UNKNOWN_INSTRUCTION);
+        ERRT("TIM #$11,$90", UNKNOWN_INSTRUCTION);
+        ERRT("BTGL   1,$90", UNKNOWN_INSTRUCTION);
+        ERRT("BTST   0,$90", UNKNOWN_INSTRUCTION);
     } else {
         if (m68hc11()) {
             ERRT("BCLR 7,$90", OPERAND_NOT_ALLOWED);

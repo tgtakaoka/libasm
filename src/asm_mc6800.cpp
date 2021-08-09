@@ -146,6 +146,7 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
         return emitImmediate(insn, op);
     case M_BIT:
         return emitBitNumber(insn, op);
+    case M_BNO: // handled in encode(Insn)
     default:
         return OK;
     }
@@ -180,6 +181,8 @@ Error AsmMc6800::encode(Insn &_insn) {
     if (TableMc6800.searchName(insn))
         return setError(TableMc6800.getError());
 
+    if (insn.mode1() == M_BNO)
+        insn.embed((op1.val16 & 7) << 1);
     insn.emitInsn();
     if (emitOperand(insn, insn.mode1(), op1))
         return getError();

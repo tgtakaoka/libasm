@@ -878,11 +878,11 @@ static void test_bit_ops() {
 
     if (m6805()) {
         // MC6805
-        TEST(BSET0, "$90", 0x10, 0x90);
-        TEST(BCLR7, "$90", 0x1F, 0x90);
+        TEST(BSET, "0,$90", 0x10, 0x90);
+        TEST(BCLR, "7,$90", 0x1F, 0x90);
 
-        ATEST(0x1000, BRSET0, "$90,$1082", 0x00, 0x90, 0x7F);
-        ATEST(0x1000, BRCLR7, "$90,$0F83", 0x0F, 0x90, 0x80);
+        ATEST(0x1000, BRSET, "0,$90,$1082", 0x00, 0x90, 0x7F);
+        ATEST(0x1000, BRCLR, "7,$90,$0F83", 0x0F, 0x90, 0x80);
     }
 
     if (hd6301()) {
@@ -910,7 +910,7 @@ static void test_bit_ops() {
     symtab.intern(255,  "offset255");
     symtab.intern(128,  "offset128");
     symtab.intern(127,  "offset127");
-    symtab.intern(0,    "offset0");
+    symtab.intern(10,   "offset10");
     symtab.intern(0x88, "data88");
     symtab.intern(0x0F83, "sym0F83");
     symtab.intern(0x0F84, "sym0F84");
@@ -927,11 +927,11 @@ static void test_bit_ops() {
 
     if (m6805()) {
         // MC6805
-        TEST(BSET0, "<dir90", 0x10, 0x90);
-        TEST(BCLR7, "<dir90", 0x1F, 0x90);
+        TEST(BSET, "bp4,<dir90", 0x18, 0x90);
+        TEST(BCLR, "bp6,<dir90", 0x1D, 0x90);
 
-        ATEST(0x1000, BRSET0, "<dir90,sym1082", 0x00, 0x90, 0x7F);
-        ATEST(0x1000, BRCLR7, "<dir90,sym0F83", 0x0F, 0x90, 0x80);
+        ATEST(0x1000, BRSET, "bp4,<dir90,sym1082", 0x08, 0x90, 0x7F);
+        ATEST(0x1000, BRCLR, "bp6,<dir90,sym0F83", 0x0D, 0x90, 0x80);
     }
 
     if (m68hc11()) {
@@ -941,22 +941,22 @@ static void test_bit_ops() {
         TEST(BSET, "offset127,X,#data88", 0x1C, 0x7F, 0x88);
         TEST(BCLR, "offset128,X,#data88", 0x1D, 0x80, 0x88);
         TEST(BSET, "offset255,Y,#data88", 0x18, 0x1C, 0xFF, 0x88);
-        TEST(BCLR, "offset0,Y,#data88",   0x18, 0x1D, 0x00, 0x88);
+        TEST(BCLR, "offset10,Y,#data88",  0x18, 0x1D, 0x0A, 0x88);
 
         ATEST(0x1000, BRSET, "<dir90,#data88,sym1083",   0x12, 0x90, 0x88, 0x7F);
         ATEST(0x1000, BRCLR, "<dir90,#data88,sym0F84",   0x13, 0x90, 0x88, 0x80);
         ATEST(0x1000, BRSET, "offset127,X,#data88,sym1000", 0x1E, 0x7F, 0x88, 0xFC);
         ATEST(0x1000, BRCLR, "offset128,X,#data88,sym1006", 0x1F, 0x80, 0x88, 0x02);
         ATEST(0x1000, BRSET, "offset255,Y,#data88,sym0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
-        ATEST(0x1000, BRCLR, "offset0,Y,#data88,sym1084",   0x18, 0x1F, 0x00, 0x88, 0x7F);
+        ATEST(0x1000, BRCLR, "offset10,Y,#data88,sym1084",  0x18, 0x1F, 0x0A, 0x88, 0x7F);
     }
 
     if (hd6301()) {
         // HD6301
-        TEST(AIM,  "#data88,offset0,X",   0x61, 0x88, 0x00);
+        TEST(AIM,  "#data88,offset10,X",  0x61, 0x88, 0x0A);
         TEST(OIM,  "#data88,<dir90",      0x72, 0x88, 0x90);
         TEST(EIM,  "#data88,offset255,X", 0x65, 0x88, 0xFF);
-        TEST(BCLR, "bp4,offset0,X",       0x61, 0xEF, 0x00);
+        TEST(BCLR, "bp4,offset10,X",      0x61, 0xEF, 0x0A);
         TEST(BSET, "bp4,<dir90",          0x72, 0x10, 0x90);
         TEST(BTGL, "bp6,offset255,X",     0x65, 0x40, 0xFF);
     }

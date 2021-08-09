@@ -48,6 +48,7 @@ enum AddrMode : uint8_t {
     // MC6805
     M_IX0 = 9,  // Indexed X with no offset
     M_IX2 = 10, // Indexed X with 16bit offset
+    M_BNO = 11, // Bit number in opcode
 };
 
 enum OprSize : uint8_t {

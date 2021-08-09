@@ -115,6 +115,9 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
         return decodeImmediate(memory, insn, out);
     case M_BMM:
         return decodeBitNumber(memory, insn, out);
+    case M_BNO:
+        outHex(out, (insn.opCode() >> 1) & 7, 3);
+        return OK;
     default:
         return OK;
     }
