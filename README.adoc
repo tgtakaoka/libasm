@@ -1,4 +1,6 @@
-0;256;0c= libasm: cross assemble/disassemble library =
+image:https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml/badge.svg[link="https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml"]
+
+= libasm: cross assemble/disassemble library =
 
 The libasm allows assembling and disassembling supported retro CPUs on
 a small environment (less than 9kB-17kB Flash and 350B RAM on AVR
@@ -28,7 +30,7 @@ Arduino).
 
 * Arduino (avr, megaavr, samd, teensy)
 * PlatformIO (atmelavr, atmelmegaavr, atmelsam, teensy)
-* Linux, macOS ( `C++14` )
+* Linux, macOS (C++14)
 
 NOTE: More information about this library can be found at
 https://github.com/tgtakaoka/libasm[GitHub]
