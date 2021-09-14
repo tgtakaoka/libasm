@@ -25,28 +25,21 @@
 namespace libasm {
 namespace ns32000 {
 
-class InsnNs32000 : public InsnImpl<Config> {
+class InsnNs32000 : public InsnImpl<Config, Entry> {
 public:
     InsnNs32000(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode ex1Mode() const { return _flags.ex1Mode(); }
-    AddrMode ex2Mode() const { return _flags.ex2Mode(); }
-    OprPos srcPos() const { return _flags.srcPos(); }
-    OprPos dstPos() const { return _flags.dstPos(); }
-    OprPos ex1Pos() const { return _flags.ex1Pos(); }
-    OprPos ex2Pos() const { return _flags.ex2Pos(); }
-    OprSize oprSize() const { return _flags.oprSize(); }
-
-    void setFlags(Entry::Flags flags) {
-        _flags = flags;
-        _hasPost = false;
-    }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode ex1Mode() const { return flags().ex1Mode(); }
+    AddrMode ex2Mode() const { return flags().ex2Mode(); }
+    OprPos srcPos() const { return flags().srcPos(); }
+    OprPos dstPos() const { return flags().dstPos(); }
+    OprPos ex1Pos() const { return flags().ex1Pos(); }
+    OprPos ex2Pos() const { return flags().ex2Pos(); }
+    OprSize oprSize() const { return flags().oprSize(); }
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
-        _flags = Entry::Flags::create(src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE);
+        setFlags(Entry::Flags::create(src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE));
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -67,8 +60,7 @@ public:
     }
 
     void readPost(DisMemory &memory) { _post = readByte(memory); }
-
-    void setHasPost() { _hasPost = true; }
+    void setHasPost(bool hasPost) { _hasPost = hasPost; }
 
     Config::opcode_t opCode() const { return _opCode; }
     bool hasPrefix() const { return _prefix != 0; }
@@ -100,7 +92,6 @@ private:
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
     Config::opcode_t _post;
-    Entry::Flags _flags;
     bool _hasPost;
     uint8_t _indexByte1;
     uint8_t _indexByte2;

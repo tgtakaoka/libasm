@@ -24,18 +24,14 @@
 namespace libasm {
 namespace cdp1802 {
 
-class InsnCdp1802 : public InsnImpl<Config> {
+class InsnCdp1802 : public InsnImpl<Config, Entry> {
 public:
     InsnCdp1802(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode mode1() const { return _flags.mode1(); }
-    AddrMode mode2() const { return _flags.mode2(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode mode1() const { return flags().mode1(); }
+    AddrMode mode2() const { return flags().mode2(); }
     void setAddrMode(AddrMode mode1, AddrMode mode2) {
-        _flags = Entry::Flags::create(mode1, mode2);
+        setFlags(Entry::Flags::create(mode1, mode2));
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -56,7 +52,6 @@ public:
     }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
 };

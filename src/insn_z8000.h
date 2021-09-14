@@ -24,27 +24,23 @@
 namespace libasm {
 namespace z8000 {
 
-class InsnZ8000 : public InsnImpl<Config> {
+class InsnZ8000 : public InsnImpl<Config, Entry> {
 public:
     InsnZ8000(Insn &insn) : InsnImpl(insn) {}
 
-    OprSize oprSize() const { return _flags.oprSize(); }
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    AddrMode ex1Mode() const { return _flags.ex1Mode(); }
-    AddrMode ex2Mode() const { return _flags.ex2Mode(); }
-    PostMode postMode() const { return _flags.postMode(); }
+    OprSize oprSize() const { return flags().oprSize(); }
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode ex1Mode() const { return flags().ex1Mode(); }
+    AddrMode ex2Mode() const { return flags().ex2Mode(); }
+    PostMode postMode() const { return flags().postMode(); }
     bool hasPost() const { return postMode() != P_NO; }
-    uint8_t postMask() const { return _flags.postMask(); }
-    uint8_t postVal() const { return _flags.postVal(); }
-    ModeField dstField() const { return _flags.dstField(); }
-    ModeField srcField() const { return _flags.srcField(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    uint8_t postMask() const { return flags().postMask(); }
+    uint8_t postVal() const { return flags().postVal(); }
+    ModeField dstField() const { return flags().dstField(); }
+    ModeField srcField() const { return flags().srcField(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-        _flags = Entry::Flags::create(dst, MF_NO, src, MF_NO, ex1, ex2, P_NO, CM_0x0000, SZ_NONE);
+        setFlags(Entry::Flags::create(dst, MF_NO, src, MF_NO, ex1, ex2, P_NO, CM_0x0000, SZ_NONE));
     }
 
     void setOpCode(Config::opcode_t opCode) {
@@ -92,7 +88,6 @@ public:
 private:
     Config::opcode_t _opCode;
     Config::opcode_t _post;
-    Entry::Flags _flags;
 
     uint8_t operandPos() {
         uint8_t pos = length();

@@ -530,8 +530,7 @@ Error TableNs32000::searchName(
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
-            if (post)
-                insn.setHasPost();
+            insn.setHasPost(post != 0);
             return OK;
         }
     }
@@ -548,11 +547,11 @@ Error TableNs32000::searchOpCode(
                 insn.opCode() & ~page->mask(), page->table(), page->end());
         if (entry) {
             insn.setFlags(entry->flags());
+            insn.setHasPost(post != 0);
             if (post) {
                 insn.readPost(memory);
                 if (setError(insn))
                     return getError();
-                insn.setHasPost();
             }
             insn.setName_P(entry->name());
             return OK;

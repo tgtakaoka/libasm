@@ -24,17 +24,13 @@
 namespace libasm {
 namespace i8080 {
 
-class InsnI8080 : public InsnImpl<Config> {
+class InsnI8080 : public InsnImpl<Config, Entry> {
 public:
     InsnI8080(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode srcMode() const { return _flags.srcMode(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
-    void setAddrMode(AddrMode dst, AddrMode src) { _flags = Entry::Flags::create(dst, src); }
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode srcMode() const { return flags().srcMode(); }
+    void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
@@ -49,7 +45,6 @@ public:
     void emitOperand16(uint16_t val16) { emitUint16(val16, 1); }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
 };
 

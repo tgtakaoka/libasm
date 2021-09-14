@@ -24,21 +24,17 @@
 namespace libasm {
 namespace z8 {
 
-class InsnZ8 : public InsnImpl<Config> {
+class InsnZ8 : public InsnImpl<Config, Entry> {
 public:
     InsnZ8(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    AddrMode extMode() const { return _flags.extMode(); }
-    PostFormat postFormat() const { return _flags.postFmt(); }
-    bool dstSrc() const { return _flags.dstSrc(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode extMode() const { return flags().extMode(); }
+    PostFormat postFormat() const { return flags().postFmt(); }
+    bool dstSrc() const { return flags().dstSrc(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        _flags = Entry::Flags::create(dst, src, ext, DS_NO, P0);
+        setFlags(Entry::Flags::create(dst, src, ext, DS_NO, P0));
     }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
@@ -70,7 +66,6 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    Entry::Flags _flags;
 };
 
 }  // namespace z8

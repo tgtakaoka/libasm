@@ -25,20 +25,16 @@
 namespace libasm {
 namespace mc6800 {
 
-class InsnMc6800 : public InsnImpl<Config> {
+class InsnMc6800 : public InsnImpl<Config, Entry> {
 public:
     InsnMc6800(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode mode1() const { return _flags.mode1(); }
-    AddrMode mode2() const { return _flags.mode2(); }
-    AddrMode mode3() const { return _flags.mode3(); }
-    OprSize size() const { return _flags.size(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode mode1() const { return flags().mode1(); }
+    AddrMode mode2() const { return flags().mode2(); }
+    AddrMode mode3() const { return flags().mode3(); }
+    OprSize size() const { return flags().size(); }
     void setAddrMode(const AddrMode op1, const AddrMode op2, const AddrMode op3) {
-        _flags = Entry::Flags::create(op1, op2, op3, SZ_NONE);
+        setFlags(Entry::Flags::create(op1, op2, op3, SZ_NONE));
     }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
@@ -59,7 +55,6 @@ public:
     }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
 };

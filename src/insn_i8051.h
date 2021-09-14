@@ -24,19 +24,15 @@
 namespace libasm {
 namespace i8051 {
 
-class InsnI8051 : public InsnImpl<Config> {
+class InsnI8051 : public InsnImpl<Config, Entry> {
 public:
     InsnI8051(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    AddrMode extMode() const { return _flags.extMode(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode extMode() const { return flags().extMode(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        _flags = Entry::Flags::create(dst, src, ext);
+        setFlags(Entry::Flags::create(dst, src, ext));
     }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
@@ -52,7 +48,6 @@ public:
     void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
 
     uint8_t operandPos() const {

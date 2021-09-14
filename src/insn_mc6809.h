@@ -24,17 +24,13 @@
 namespace libasm {
 namespace mc6809 {
 
-class InsnMc6809 : public InsnImpl<Config> {
+class InsnMc6809 : public InsnImpl<Config, Entry> {
 public:
     InsnMc6809(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode mode1() const { return _flags.mode1(); }
-    AddrMode mode2() const { return _flags.mode2(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
-    void setAddrMode(AddrMode op1, AddrMode op2) { _flags = Entry::Flags::create(op1, op2); }
+    AddrMode mode1() const { return flags().mode1(); }
+    AddrMode mode2() const { return flags().mode2(); }
+    void setAddrMode(AddrMode op1, AddrMode op2) { setFlags(Entry::Flags::create(op1, op2)); }
 
     void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
         _opCode = opCode;
@@ -68,7 +64,6 @@ public:
     }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
     Config::opcode_t _post;

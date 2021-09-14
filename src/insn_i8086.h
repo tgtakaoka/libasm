@@ -24,22 +24,18 @@
 namespace libasm {
 namespace i8086 {
 
-class InsnI8086 : public InsnImpl<Config> {
+class InsnI8086 : public InsnImpl<Config, Entry> {
 public:
     InsnI8086(Insn &insn) : InsnImpl(insn), _segment(0), _modReg(0), _hasModReg(false) {}
 
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    OprPos dstPos() const { return _flags.dstPos(); }
-    OprPos srcPos() const { return _flags.srcPos(); }
-    OprSize oprSize() const { return _flags.size(); }
-    bool stringInst() const { return _flags.strInst(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode srcMode() const { return flags().srcMode(); }
+    OprPos dstPos() const { return flags().dstPos(); }
+    OprPos srcPos() const { return flags().srcPos(); }
+    OprSize oprSize() const { return flags().size(); }
+    bool stringInst() const { return flags().strInst(); }
     void setAddrMode(AddrMode dst, AddrMode src) {
-        _flags = Entry::Flags::create(dst, src, P_NONE, P_NONE, SZ_NONE, false);
+        setFlags(Entry::Flags::create(dst, src, P_NONE, P_NONE, SZ_NONE, false));
     }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
@@ -102,7 +98,6 @@ private:
     Config::opcode_t _opCode;
     Config::opcode_t _modReg;
     bool _hasModReg;
-    Entry::Flags _flags;
 
     uint8_t operandPos() const {
         uint8_t pos = length();

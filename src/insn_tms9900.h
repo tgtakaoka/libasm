@@ -24,17 +24,13 @@
 namespace libasm {
 namespace tms9900 {
 
-class InsnTms9900 : public InsnImpl<Config> {
+class InsnTms9900 : public InsnImpl<Config, Entry> {
 public:
     InsnTms9900(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    AddrMode dstMode() const { return _flags.dstMode(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
-    void setAddrMode(AddrMode src, AddrMode dst) { _flags = Entry::Flags::create(src, dst); }
+    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode dstMode() const { return flags().dstMode(); }
+    void setAddrMode(AddrMode src, AddrMode dst) { setFlags(Entry::Flags::create(src, dst)); }
 
     void setOpCode(Config::opcode_t opCode) {
         _opCode = opCode;
@@ -62,7 +58,6 @@ public:
     void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _post;
 

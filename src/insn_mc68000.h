@@ -24,27 +24,23 @@
 namespace libasm {
 namespace mc68000 {
 
-class InsnMc68000 : public InsnImpl<Config> {
+class InsnMc68000 : public InsnImpl<Config, Entry> {
 public:
     InsnMc68000(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode srcMode() const { return _flags.srcMode(); }
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    OprPos srcPos() const { return _flags.srcPos(); }
-    OprPos dstPos() const { return _flags.dstPos(); }
-    bool alias() const { return _flags.alias(); }
-    OprSize oprSize() const { return _flags.oprSize(); }
-    InsnSize insnSize() const { return _flags.insnSize(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode dstMode() const { return flags().dstMode(); }
+    OprPos srcPos() const { return flags().srcPos(); }
+    OprPos dstPos() const { return flags().dstPos(); }
+    bool alias() const { return flags().alias(); }
+    OprSize oprSize() const { return flags().oprSize(); }
+    InsnSize insnSize() const { return flags().insnSize(); }
     void setAddrMode(AddrMode src, AddrMode dst) {
-        _flags.setSrcMode(src);
-        _flags.setDstMode(dst);
+        flags().setSrcMode(src);
+        flags().setDstMode(dst);
     }
 
-    void setInsnSize(OprSize osize) { _flags.setInsnSize(InsnSize(osize)); }
+    void setInsnSize(OprSize osize) { flags().setInsnSize(InsnSize(osize)); }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
@@ -60,7 +56,6 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    Entry::Flags _flags;
 
     uint8_t operandPos() const {
         uint8_t pos = length();

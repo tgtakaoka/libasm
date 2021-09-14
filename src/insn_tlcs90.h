@@ -24,20 +24,16 @@
 namespace libasm {
 namespace tlcs90 {
 
-class InsnTlcs90 : public InsnImpl<Config> {
+class InsnTlcs90 : public InsnImpl<Config, Entry> {
 public:
     InsnTlcs90(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return _flags.dstMode(); }
-    AddrMode srcMode() const { return _flags.srcMode(); }
+    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode srcMode() const { return flags().srcMode(); }
     AddrMode preMode() const { return _preMode; }
-    bool emit() const { return _flags.emit(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    bool emit() const { return flags().emit(); }
     void setAddrMode(AddrMode dst, AddrMode src, bool emit = false) {
-        _flags = Entry::Flags::create(dst, src, emit);
+        setFlags(Entry::Flags::create(dst, src, emit));
     }
     void setPreMode(AddrMode pre) { _preMode = pre; }
 
@@ -59,7 +55,6 @@ public:
     }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
     Config::opcode_t _prefix;
     AddrMode _preMode;

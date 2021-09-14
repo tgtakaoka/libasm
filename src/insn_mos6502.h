@@ -24,16 +24,12 @@
 namespace libasm {
 namespace mos6502 {
 
-class InsnMos6502 : public InsnImpl<Config> {
+class InsnMos6502 : public InsnImpl<Config, Entry> {
 public:
     InsnMos6502(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode addrMode() const { return _flags.mode(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
-    void setAddrMode(AddrMode mode) { _flags = Entry::Flags::create(mode); }
+    AddrMode addrMode() const { return flags().mode(); }
+    void setAddrMode(AddrMode mode) { setFlags(Entry::Flags::create(mode)); }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
 
@@ -42,7 +38,6 @@ public:
     void emitInsn() { emitByte(_opCode); }
 
 private:
-    Entry::Flags _flags;
     Config::opcode_t _opCode;
 };
 

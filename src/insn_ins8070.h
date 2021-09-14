@@ -24,20 +24,16 @@
 namespace libasm {
 namespace ins8070 {
 
-class InsnIns8070 : public InsnImpl<Config> {
+class InsnIns8070 : public InsnImpl<Config, Entry> {
 public:
     InsnIns8070(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode addrMode() const { return _flags.mode(); }
-    OprFormat dstOpr() const { return _flags.dstOpr(); }
-    OprFormat srcOpr() const { return _flags.srcOpr(); }
-    OprSize oprSize() const { return _flags.size(); }
-
-    void setFlags(Entry::Flags flags) { _flags = flags; }
-    Entry::Flags flags() const { return _flags; }
-
+    AddrMode addrMode() const { return flags().mode(); }
+    OprFormat dstOpr() const { return flags().dstOpr(); }
+    OprFormat srcOpr() const { return flags().srcOpr(); }
+    OprSize oprSize() const { return flags().size(); }
     void setOprFormats(OprFormat dst, OprFormat src) {
-        _flags = Entry::Flags::create(UNDEF, dst, src, SZ_NONE);
+        setFlags(Entry::Flags::create(UNDEF, dst, src, SZ_NONE));
     }
 
     void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
@@ -54,7 +50,6 @@ public:
 
 private:
     Config::opcode_t _opCode;
-    Entry::Flags _flags;
 
     uint8_t operandPos() const {
         uint8_t pos = length();

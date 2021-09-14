@@ -252,12 +252,16 @@ private:
     Insn &_insn;
 };
 
-template <typename Conf>
+template <typename Conf, typename Entry>
 class InsnImpl : public InsnBase {
 public:
     typename Conf::uintptr_t address() const { return InsnBase::address(); }
 
     void resetAddress(typename Conf::uintptr_t addr) { InsnBase::resetAddress(addr); }
+
+    void setFlags(typename Entry::Flags flags) { _flags = flags; }
+    typename Entry::Flags flags() const { return _flags; }
+    typename Entry::Flags& flags() { return _flags; }
 
     /* Generate 16 bit |data| (Assembler). */
     void emitUint16(uint16_t data) {
@@ -418,6 +422,14 @@ public:
 
 protected:
     InsnImpl(Insn &insn) : InsnBase(insn) {}
+
+    typename Conf::opcode_t _opCode;
+    typename Conf::opcode_t _prefix;
+    typename Conf::opcode_t _post;
+    bool _hasPost;
+
+private:
+    typename Entry::Flags _flags;
 };
 
 }  // namespace libasm
