@@ -35,21 +35,11 @@ public:
         setFlags(Entry::Flags::create(dst, src, ext));
     }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    Config::opcode_t opCode() const { return _opCode; }
-
-    void emitInsn() { emitByte(_opCode, 0); }
-
+    void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val) { emitByte(val, operandPos()); }
-
     void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
 
 private:
-    Config::opcode_t _opCode;
-
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0)

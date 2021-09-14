@@ -43,52 +43,35 @@ public:
         setFlags(Entry::Flags::create(dst, MF_NO, src, MF_NO, ex1, ex2, P_NO, CM_0x0000, SZ_NONE));
     }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-        _post = 0;
-    }
-
-    void readPost(DisMemory &memory) { _post = readUint16(memory); }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    void embedPost(Config::opcode_t data) { _post |= data; }
-
-    Config::opcode_t opCode() const { return _opCode; }
-    uint16_t post() const { return _post; }
+    void readPost(DisMemory &memory) { setPost(readUint16(memory)); }
 
     void emitInsn() {
-        emitUint16(_opCode, 0);
+        emitUint16(opCode(), 0);
         const PostMode mode = postMode();
         if (mode == P_0XX8)
-            _post |= 8;
+            embedPost(0x8);
         if (mode == P_0XXE)
-            _post |= 0xE;
+            embedPost(0xE);
         if (mode != P_NO)
-            emitUint16(_post, 2);
+            emitUint16(post(), 2);
     }
-
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
     bool isThreeRegsInsn() const {
-        const uint8_t opc = _opCode >> 8;
+        const uint8_t opc = opCode() >> 8;
         return opc == 0xB8 || opc == 0xBA || opc == 0xBB;
     }
     bool isTranslateInsn() const {
-        const uint8_t opc = _opCode >> 8;
+        const uint8_t opc = opCode() >> 8;
         return opc == 0xB8;
     }
     bool isLoadMultiInsn() const {
-        const uint8_t opc = _opCode >> 8;
+        const uint8_t opc = opCode() >> 8;
         return opc == 0x1C || opc == 0x5C;
     }
 
 private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _post;
-
     uint8_t operandPos() {
         uint8_t pos = length();
         if (pos == 0)

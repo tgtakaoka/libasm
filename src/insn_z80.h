@@ -33,32 +33,16 @@ public:
     bool indexBit() const { return flags().indexBit(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-    }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    bool hasPrefix() const { return prefix() != 0; }
-    Config::opcode_t prefix() const { return _prefix; }
-    Config::opcode_t opCode() const { return _opCode; }
-
     void emitInsn() {
         uint8_t pos = 0;
         if (hasPrefix())
             emitByte(prefix(), pos++);
         emitByte(opCode(), pos);
     }
-
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
-
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefix;
-
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (hasPrefix() && pos < 2) {

@@ -259,6 +259,22 @@ public:
 
     void resetAddress(typename Conf::uintptr_t addr) { InsnBase::resetAddress(addr); }
 
+    void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
+        _opCode = opCode;
+        _prefix = prefix;
+        setPost(0, false);
+    }
+    typename Conf::opcode_t opCode() const { return _opCode; }
+    void embed(typename Conf::opcode_t data) { _opCode |= data; }
+    bool hasPrefix() const { return _prefix != 0; }
+    typename Conf::opcode_t prefix() const { return _prefix; }
+    void setPost(typename Conf::opcode_t post, bool hasPost = true) {
+        _post = post;
+        _hasPost = hasPost;
+    }
+    void embedPost(typename Conf::opcode_t data) { _post |= data; }
+    bool hasPost() const { return _hasPost; }
+    typename Conf::opcode_t post() const { return _post; }
     void setFlags(typename Entry::Flags flags) { _flags = flags; }
     typename Entry::Flags flags() const { return _flags; }
     typename Entry::Flags& flags() { return _flags; }
@@ -423,12 +439,12 @@ public:
 protected:
     InsnImpl(Insn &insn) : InsnBase(insn) {}
 
+private:
     typename Conf::opcode_t _opCode;
     typename Conf::opcode_t _prefix;
     typename Conf::opcode_t _post;
     bool _hasPost;
 
-private:
     typename Entry::Flags _flags;
 };
 

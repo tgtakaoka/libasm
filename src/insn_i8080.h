@@ -32,20 +32,9 @@ public:
     AddrMode srcMode() const { return flags().srcMode(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    Config::opcode_t opCode() const { return _opCode; }
-
-    void emitInsn() { emitByte(_opCode, 0); }
-
+    void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val8) { emitByte(val8, 1); }
-
     void emitOperand16(uint16_t val16) { emitUint16(val16, 1); }
-
-private:
-    Config::opcode_t _opCode;
 };
 
 }  // namespace i8080

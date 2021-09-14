@@ -32,35 +32,20 @@ public:
     AddrMode dstMode() const { return flags().dstMode(); }
     void setAddrMode(AddrMode src, AddrMode dst) { setFlags(Entry::Flags::create(src, dst)); }
 
-    void setOpCode(Config::opcode_t opCode) {
-        _opCode = opCode;
-        _post = 0;
-    }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    void embedPost(Config::opcode_t data) { _post |= data; }
-
     void readPost(DisMemory &memory) {
         if (srcMode() == M_SRC2)
-            _post = readUint16(memory);
+            setPost(readUint16(memory));
     }
 
-    Config::opcode_t opCode() const { return _opCode; }
-    Config::opcode_t post() const { return _post; }
-
     void emitInsn() {
-        emitUint16(_opCode, 0);
+        emitUint16(opCode(), 0);
         if (srcMode() == M_SRC2)
-            emitUint16(_post, 2);
+            emitUint16(post(), 2);
     }
 
     void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
 
 private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _post;
-
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0)

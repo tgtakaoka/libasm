@@ -32,42 +32,17 @@ public:
     AddrMode mode2() const { return flags().mode2(); }
     void setAddrMode(AddrMode op1, AddrMode op2) { setFlags(Entry::Flags::create(op1, op2)); }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-        _hasPost = false;
-    }
-
-    void setPost(Config::opcode_t post) { _post = post; }
-
     Config::opcode_t readPost(DisMemory &memory) {
-        if (!_hasPost) {
-            _post = readByte(memory);
-            _hasPost = true;
-        }
-        return _post;
+        if (!hasPost())
+            setPost(readByte(memory));
+        return post();
     }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    void embedPost(Config::opcode_t data) { _post |= data; }
-
-    bool hasPrefix() const { return prefix() != 0; }
-    Config::opcode_t prefix() const { return _prefix; }
-    Config::opcode_t opCode() const { return _opCode; }
-    Config::opcode_t post() const { return _post; }
 
     void emitInsn() {
         if (hasPrefix())
             emitByte(prefix());
         emitByte(opCode());
     }
-
-private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefix;
-    Config::opcode_t _post;
-    bool _hasPost;
 };
 
 }  // namespace mc6809

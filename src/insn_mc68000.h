@@ -42,21 +42,11 @@ public:
 
     void setInsnSize(OprSize osize) { flags().setInsnSize(InsnSize(osize)); }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    Config::opcode_t opCode() const { return _opCode; }
-
-    void emitInsn() { emitUint16(_opCode, 0); }
-
+    void emitInsn() { emitUint16(opCode(), 0); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
 private:
-    Config::opcode_t _opCode;
-
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0)

@@ -37,15 +37,6 @@ public:
     }
     void setPreMode(AddrMode pre) { _preMode = pre; }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-    }
-
-    bool hasPrefix() const { return prefix() != 0; }
-    Config::opcode_t prefix() const { return _prefix; }
-    Config::opcode_t opCode() const { return _opCode; }
-
     void setEmitInsn() { _emitInsn = true; }
     void emitInsn(Config::opcode_t opc) {
         if (_emitInsn) {
@@ -55,8 +46,6 @@ public:
     }
 
 private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefix;
     AddrMode _preMode;
     bool _emitInsn;
 };

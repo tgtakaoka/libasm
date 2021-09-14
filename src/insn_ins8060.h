@@ -31,16 +31,7 @@ public:
     AddrMode addrMode() const { return flags().mode(); }
     void setAddrMode(AddrMode mode) { setFlags(Entry::Flags::create(mode)); }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
-
-    Config::opcode_t opCode() const { return _opCode; }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    void emitInsn() { emitByte(_opCode); }
-
-private:
-    Config::opcode_t _opCode;
+    void emitInsn() { emitByte(opCode()); }
 };
 
 }  // namespace ins8060

@@ -42,15 +42,7 @@ public:
         setFlags(Entry::Flags::create(src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE));
     }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-        _post = 0;
-    }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    void embedPost(Config::opcode_t data) { _post |= data; }
+    void readPost(DisMemory &memory) { setPost(readByte(memory)); }
 
     void setIndexByte(uint8_t data, OprPos pos) {
         if (pos == P_GEN1)
@@ -58,41 +50,24 @@ public:
         if (pos == P_GEN2)
             _indexByte2 = data;
     }
-
-    void readPost(DisMemory &memory) { _post = readByte(memory); }
-    void setHasPost(bool hasPost) { _hasPost = hasPost; }
-
-    Config::opcode_t opCode() const { return _opCode; }
-    bool hasPrefix() const { return _prefix != 0; }
-    Config::opcode_t prefix() const { return _prefix; }
-    bool hasPost() const { return _hasPost; }
-    uint8_t post() const { return _post; }
     uint8_t indexByte(OprPos pos) const { return pos == P_GEN1 ? _indexByte1 : _indexByte2; }
 
     void emitInsn() {
         uint8_t pos = 0;
         if (hasPrefix())
-            emitByte(_prefix, pos++);
-        emitByte(_opCode, pos++);
+            emitByte(prefix(), pos++);
+        emitByte(opCode(), pos++);
         if (hasPost())
-            emitByte(_post, pos);
+            emitByte(post(), pos);
     }
 
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
-
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
-
     void emitOpFloat32(float float32) { emitFloat32(float32, operandPos()); }
-
     void emitOpFloat64(double float64) { emitFloat64(float64, operandPos()); }
 
 private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefix;
-    Config::opcode_t _post;
-    bool _hasPost;
     uint8_t _indexByte1;
     uint8_t _indexByte2;
 

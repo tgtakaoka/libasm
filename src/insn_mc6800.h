@@ -37,26 +37,11 @@ public:
         setFlags(Entry::Flags::create(op1, op2, op3, SZ_NONE));
     }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-    }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    bool hasPrefix() const { return _prefix != 0; }
-    Config::opcode_t opCode() const { return _opCode; }
-    Config::opcode_t prefix() const { return _prefix; }
-
     void emitInsn() {
         if (hasPrefix())
             emitByte(prefix());
         emitByte(opCode());
     }
-
-private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefix;
 };
 
 }  // namespace mc6800

@@ -39,15 +39,11 @@ public:
     }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
-
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix) {
-        _prefix = prefix;
-        _opCode = opCode;
-    }
+    Config::opcode_t segment() const { return _segment; }
 
     void readModReg(DisMemory &memory) {
-        if (_prefix) {
-            _modReg = _opCode;
+        if (hasPrefix()) {
+            _modReg = opCode();
         } else {
             const OprPos dst = dstPos();
             const OprPos src = srcPos();
@@ -55,21 +51,14 @@ public:
                 _modReg = readByte(memory);
         }
     }
-
-    Config::opcode_t segment() const { return _segment; }
-    Config::opcode_t prefix() const { return _prefix; }
-    Config::opcode_t opCode() const { return _opCode; }
-    Config::opcode_t modReg() const { return _modReg; }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
     void embedModReg(Config::opcode_t data) {
         _modReg |= data;
         _hasModReg = true;
     }
+    Config::opcode_t modReg() const { return _modReg; }
 
     void prepairModReg() {
-        if (_prefix)
+        if (hasPrefix())
             return;
         const OprPos dst = dstPos();
         const OprPos src = srcPos();
@@ -81,21 +70,17 @@ public:
         uint8_t pos = 0;
         if (_segment)
             emitByte(_segment, pos++);
-        if (_prefix)
-            emitByte(_prefix, pos++);
-        emitByte(_opCode, pos++);
+        if (hasPrefix())
+            emitByte(prefix(), pos++);
+        emitByte(opCode(), pos++);
         if (_hasModReg)
             emitByte(_modReg, pos);
     }
-
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
-
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
     Config::opcode_t _segment;
-    Config::opcode_t _prefix;
-    Config::opcode_t _opCode;
     Config::opcode_t _modReg;
     bool _hasModReg;
 
@@ -104,7 +89,7 @@ private:
         if (pos == 0) {
             if (_segment)
                 pos++;
-            if (_prefix)
+            if (hasPrefix())
                 pos++;
             pos++;
             if (_hasModReg)

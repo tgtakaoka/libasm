@@ -34,26 +34,11 @@ public:
         setFlags(Entry::Flags::create(mode1, mode2));
     }
 
-    void setOpCode(Config::opcode_t opCode, Config::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-    }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    bool hasPrefix() const { return _prefix != 0; }
-    Config::opcode_t opCode() const { return _opCode; }
-    Config::opcode_t prefix() const { return _prefix; }
-
     void emitInsn() {
         if (hasPrefix())
             emitByte(prefix());
         emitByte(opCode());
     }
-
-private:
-    Config::opcode_t _opCode;
-    Config::opcode_t _prefix;
 };
 
 }  // namespace cdp1802

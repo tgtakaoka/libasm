@@ -37,15 +37,7 @@ public:
         setFlags(Entry::Flags::create(dst, src, ext, DS_NO, P0));
     }
 
-    void setOpCode(Config::opcode_t opCode) { _opCode = opCode; }
-
-    void embed(Config::opcode_t data) { _opCode |= data; }
-
-    void readPost(DisMemory &memory) { readByte(memory); }
-
-    Config::opcode_t opCode() const { return _opCode; }
-
-    uint8_t post() const { return bytes()[1]; }
+    void readPost(DisMemory &memory) { setPost(readByte(memory)); }
 
     static bool operandInOpCode(Config::opcode_t opCode) {
         const Config::opcode_t low4 = opCode & 0xF;
@@ -53,19 +45,15 @@ public:
     }
 
     bool singleByteOpCode() const {
-        const Config::opcode_t low4 = _opCode & 0xF;
+        const Config::opcode_t low4 = opCode() & 0xF;
         return low4 == 0x0E || low4 == 0xF;
     }
 
-    void emitInsn() { emitByte(_opCode); }
-
+    void emitInsn() { emitByte(opCode()); }
     void emitUint16Le(uint16_t val) {
         emitByte(val >> 0);
         emitByte(val >> 8);
     }
-
-private:
-    Config::opcode_t _opCode;
 };
 
 }  // namespace z8

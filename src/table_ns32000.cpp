@@ -529,8 +529,8 @@ Error TableNs32000::searchName(
                 insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
+            insn.setPost(0, post != 0);
             insn.setFlags(entry->flags());
-            insn.setHasPost(post != 0);
             return OK;
         }
     }
@@ -547,7 +547,6 @@ Error TableNs32000::searchOpCode(
                 insn.opCode() & ~page->mask(), page->table(), page->end());
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setHasPost(post != 0);
             if (post) {
                 insn.readPost(memory);
                 if (setError(insn))
