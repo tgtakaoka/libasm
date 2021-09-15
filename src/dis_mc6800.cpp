@@ -33,7 +33,7 @@ Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer
 
 Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    if (TableMc6800.is6805() && addr >= 0x2000)
+    if (TableMc6800.addressWidth() == ADDRESS_12BIT && addr >= 0x2000)
         return setError(OVERFLOW_RANGE);
     outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
     return setError(insn);

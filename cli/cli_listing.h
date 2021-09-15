@@ -74,6 +74,7 @@ private:
 
     void formatHex(uint8_t val);
     void formatUint8(uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatUint12(uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint16(uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint20(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
     void formatUint24(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);

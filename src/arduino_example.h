@@ -45,7 +45,7 @@ protected:
 
     void printAddress(uint32_t addr) {
         const AddressWidth width = _config->addressWidth();
-        if (width == ADDRESS_16BIT)
+        if (width == ADDRESS_16BIT || width == ADDRESS_12BIT)
             _cli.printHex16(addr);
         if (width == ADDRESS_20BIT)
             _cli.printHex20(addr);

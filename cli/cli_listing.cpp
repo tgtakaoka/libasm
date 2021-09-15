@@ -64,6 +64,17 @@ void CliListing::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
     formatHex(val);
 }
 
+void CliListing::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) {
+    const uint8_t msb = static_cast<uint8_t>(val >> 8) & 0xF;
+    if (msb || !zeroSuppress) {
+        formatHex(msb);
+        zeroSuppress = false;
+    } else if (fixedWidth) {
+        _out += " ";
+    }
+    formatUint8(static_cast<uint8_t>(val), fixedWidth, zeroSuppress);
+}
+
 void CliListing::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 8);
     if (msb || !zeroSuppress) {
@@ -110,6 +121,9 @@ void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) 
 
 void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
     switch (_line->addressWidth()) {
+    case ADDRESS_12BIT:
+        formatUint16(addr, fixedWidth, zeroSuppress);
+        break;
     case ADDRESS_16BIT:
         formatUint16(addr, fixedWidth, zeroSuppress);
         break;

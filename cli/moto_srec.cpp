@@ -35,6 +35,7 @@ void MotoSrec::begin(FILE *out) {
 void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
     uint8_t addrSize = 0;
     switch (_addrWidth) {
+    case ADDRESS_12BIT:
     case ADDRESS_16BIT:
         addrSize = 2;
         break;
@@ -52,6 +53,7 @@ void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
     addSum(len);
     char *p = _line;
     switch (_addrWidth) {
+    case ADDRESS_12BIT:
     case ADDRESS_16BIT:
         addr &= ((uint32_t)1 << 16) - 1;
         p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
@@ -77,6 +79,7 @@ void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
 
 void MotoSrec::end() {
     switch (_addrWidth) {
+    case ADDRESS_12BIT:
     case ADDRESS_16BIT:
         format("S9030000FC");
         break;
@@ -104,7 +107,8 @@ uint8_t *MotoSrec::decode(const char *line, uint32_t &addr, uint8_t &size) {
         return _data;  // record count
     if (type != '1' && type != '2' && type != '3')
         return nullptr;  // format error
-    if (_addrWidth == ADDRESS_16BIT && (type == '2' || type == '3'))
+    if ((_addrWidth == ADDRESS_12BIT || _addrWidth == ADDRESS_16BIT) &&
+            (type == '2' || type == '3'))
         return nullptr;  // address size overflow
     if (_addrWidth == ADDRESS_20BIT && type == '3')
         return nullptr;  // address size overflow

@@ -38,8 +38,8 @@ public:
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
     CpuType cpuType() const { return _cpuType; }
-
-    bool is6805() { return _cpuType == MC6805 || _cpuType == MC146805 || _cpuType == MC68HC05; }
+    AddressWidth addressWidth() const;
+    bool is6805() const;
 
     struct EntryPage;
 

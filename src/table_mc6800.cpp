@@ -761,6 +761,14 @@ bool TableMc6800::setCpu(CpuType cpuType) {
     return false;
 }
 
+AddressWidth TableMc6800::addressWidth() const {
+    return is6805() ? ADDRESS_12BIT : ADDRESS_16BIT;
+}
+
+bool TableMc6800::is6805() const {
+    return _cpuType == MC6805 || _cpuType == MC146805 || _cpuType == MC68HC05;
+}
+
 const char *TableMc6800::listCpu() const {
     return TEXT_CPU_LIST;
 }

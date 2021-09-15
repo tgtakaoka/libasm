@@ -96,7 +96,7 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     } else {
         op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
     }
-    if (TableMc6800.is6805() && op.mode == M_EXT && op.val16 >= 0x2000)
+    if (TableMc6800.addressWidth() == ADDRESS_12BIT && op.mode == M_EXT && op.val16 >= 0x2000)
         return setError(OVERFLOW_RANGE);
     return OK;
 }
