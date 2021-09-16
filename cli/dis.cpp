@@ -29,6 +29,7 @@
 #include "dis_mos6502.h"
 #include "dis_ns32000.h"
 #include "dis_tlcs90.h"
+#include "dis_tms32010.h"
 #include "dis_tms9900.h"
 #include "dis_z8.h"
 #include "dis_z80.h"
@@ -49,6 +50,7 @@ ins8070::DisIns8070 dis8070;
 cdp1802::DisCdp1802 dis1802;
 i8086::DisI8086 dis8086;
 tlcs90::DisTlcs90 dis90;
+tms32010::DisTms32010 dis32010;
 tms9900::DisTms9900 dis9900;
 mc68000::DisMc68000 dis68000;
 z8000::DisZ8000 disz8000;
@@ -66,6 +68,7 @@ std::vector<Disassembler *> disassemblers = {
         &dis8060,
         &dis8070,
         &dis1802,
+        &dis32010,
         &dis8086,
         &dis68000,
         &dis9900,
