@@ -1,0 +1,55 @@
+/*
+ * Copyright 2021 Tadashi G. Takaoka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef __DIS_TMS32010_H__
+#define __DIS_TMS32010_H__
+
+#include "config_tms32010.h"
+#include "dis_base.h"
+#include "insn_tms32010.h"
+#include "reg_tms32010.h"
+#include "table_tms32010.h"
+
+namespace libasm {
+namespace tms32010 {
+
+class DisTms32010 : public Disassembler, public Config {
+public:
+    DisTms32010() : Disassembler(_formatter, _regs, TableTms32010) {}
+
+private:
+    IntelValueFormatter _formatter;
+    RegTms32010 _regs;
+
+    Error decodeDirect(StrBuffer &out, Config::opcode_t opc);
+    Error decodeIndirect(StrBuffer &out, uint8_t mam);
+    Error decodeNextArp(StrBuffer &out, uint8_t mam);
+    Error decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mnode);
+    Error decodeOperand(DisMemory &memory, InsnTms32010 &insn, StrBuffer &out, AddrMode mode);
+    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+};
+
+}  // namespace tms32010
+}  // namespace libasm
+
+#endif  // __DIS_TMS32010_H__
+
+// Local Variables:
+// mode: c++
+// c-basic-offset: 4
+// tab-width: 4
+// End:
+// vim: set ft=cpp et ts=4 sw=4:
