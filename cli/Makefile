@@ -37,9 +37,9 @@ OBJS_com = cli_listing.o cli_memory.o error_reporter.o file_util.o \
 	   bin_formatter.o intel_hex.o moto_srec.o str_buffer.o \
 	   $(foreach a,$(ARCHS),$(OBJS_$(a)))
 OBJS_asm = asm.o asm_base.o asm_driver.o asm_directive.o value_parser.o \
-	   $(foreach a,$(ARCHS),asm_$(a).o)
+	   $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
 OBJS_dis = dis.o dis_base.o dis_driver.o dis_directive.o value_formatter.o \
-	   $(foreach a,$(ARCHS),dis_$(a).o)
+	   $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))
 OBJS_bin = $(BINS:=.o)
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
