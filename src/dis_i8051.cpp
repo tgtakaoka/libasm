@@ -138,7 +138,7 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (dst == ADR8 && src == ADR8) {  // MOV dst,src
         const uint8_t src8 = insn.readByte(memory);
         const uint8_t dst8 = insn.readByte(memory);
-        outAbsAddr(out, dst8).letter(',');
+        outAbsAddr(out, dst8).comma();
         outAbsAddr(out, src8);
     } else {
         if (dst != NONE) {
@@ -146,14 +146,14 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
                 return getError();
         }
         if (src != NONE) {
-            out.letter(',');
+            out.comma();
             if (decodeOperand(memory, insn, out, src))
                 return getError();
         }
     }
     const AddrMode ext = insn.extMode();
     if (ext != NONE) {
-        out.letter(',');
+        out.comma();
         if (decodeOperand(memory, insn, out, ext))
             return getError();
     }

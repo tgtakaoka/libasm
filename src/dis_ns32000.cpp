@@ -121,10 +121,6 @@ Error DisNs32000::decodeLength(
     return OK;
 }
 
-static StrBuffer &outComma(StrBuffer &out) {
-    return out.letter(',').letter(' ');
-}
-
 Error DisNs32000::decodeBitField(
         DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
     if (mode == M_BFLEN)
@@ -133,7 +129,7 @@ Error DisNs32000::decodeBitField(
     const uint8_t len = (data & 0x1F) + 1;
     const uint8_t off = (data >> 5);
     outHex(out, off, 3);  // M_BFOFF
-    outComma(out);
+    out.comma();
     outDec(out, len, 6);  // M_BFLEN
     return setError(insn);
 }
@@ -481,18 +477,18 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     if (dst == M_NONE)
         return setOK();
-    outComma(out);
+    out.comma();
     const OprSize dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
     if (decodeOperand(memory, insn, out, dst, insn.dstPos(), dstSize))
         return getError();
     if (ex1 == M_NONE)
         return setOK();
-    outComma(out);
+    out.comma();
     if (decodeOperand(memory, insn, out, ex1, insn.ex1Pos(), size))
         return getError();
     if (ex2 == M_NONE || ex2 == M_BFLEN)
         return setOK();
-    outComma(out);
+    out.comma();
     if (decodeOperand(memory, insn, out, ex2, insn.ex2Pos(), size))
         return getError();
     return setOK();

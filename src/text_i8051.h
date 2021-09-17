@@ -17,6 +17,8 @@
 #ifndef __TEXT_I8051__
 #define __TEXT_I8051__
 
+#include "config_host.h"
+
 namespace libasm {
 namespace i8051 {
 

@@ -167,7 +167,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO)
         return OK;
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, dst);
 }
 

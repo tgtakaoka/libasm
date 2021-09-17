@@ -19,20 +19,20 @@
       SEI
       SBA
       CBA
-      BRSET $13,#20,*+25
-      BRSET $13,#19,*-124
-      BRSET $13,#19,*
-      BRCLR $14,#21,*+26
-      BRCLR $14,#20,*-124
-      BRCLR $14,#20,*
-      BSET  $15,#22
-      BCLR  $16,#23
+      BRSET $13, #20, *+25
+      BRSET $13, #19, *-124
+      BRSET $13, #19, *
+      BRCLR $14, #21, *+26
+      BRCLR $14, #20, *-124
+      BRCLR $14, #20, *
+      BSET  $15, #22
+      BCLR  $16, #23
       TAB
       TBA
-      BSET  29,Y,#30
-      BCLR  30,Y,#31
-      BRSET 31,Y,#32,*+38
-      BRCLR 32,Y,#$21,*+39
+      BSET  29,Y, #30
+      BCLR  30,Y, #31
+      BRSET 31,Y, #32, *+38
+      BRCLR 32,Y, #$21, *+39
       TSY
       TYS
       PULY
@@ -106,14 +106,14 @@
       LDY   239,X
       STY   240,X
       ABA
-      BSET  29,X,#30
-      BCLR  30,X,#31
-      BRSET 31,X,#32,*+37
-      BRSET 31,X,#31,*-124
-      BRSET 31,X,#31,*
-      BRCLR 32,X,#$21,*+38
-      BRCLR 32,X,#32,*-124
-      BRCLR 32,X,#32,*
+      BSET  29,X, #30
+      BCLR  30,X, #31
+      BRSET 31,X, #32, *+37
+      BRSET 31,X, #31, *-124
+      BRSET 31,X, #31, *
+      BRCLR 32,X, #$21, *+38
+      BRCLR 32,X, #32, *-124
+      BRCLR 32,X, #32, *
       BRA   *+35
       BRA   *-126
       BRA   *

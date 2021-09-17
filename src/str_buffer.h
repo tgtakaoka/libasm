@@ -31,6 +31,7 @@ public:
     StrBuffer &text(const char *text);
     StrBuffer &pstr(const /*PROGMEM*/ char *pstr);
     StrBuffer &format(const char *fmt, double val);
+    StrBuffer &comma();
 
     char *mark() const { return _out; }
     StrBuffer &reverse(char *start);

@@ -393,7 +393,7 @@ Error DisMc68000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (dst == M_NONE)
         return setOK();
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, dst, dstMode, dstReg, size, opr16);
 }
 

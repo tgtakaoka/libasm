@@ -3,17 +3,17 @@
       CPU   6309
       ORG   $0100
       NEG   $01
-      OIM   #2,$03
-      AIM   #3,$04
+      OIM   #2, $03
+      AIM   #3, $04
       COM   $04
       LSR   $05
-      EIM   #6,$07
+      EIM   #6, $07
       ROR   $07
       ASR   $08
       ASL   $09
       ROL   $0A
       DEC   $0B
-      TIM   #12,$0D
+      TIM   #12, $0D
       INC   $0D
       TST   $0E
       JMP   $0F
@@ -48,909 +48,909 @@
       LBGT  *-$00CC
       LBLE  *+$3035
       LBLE  *-$00CB
-      ADDR  U,X
-      ADDR  U,Y
-      ADDR  U,U
-      ADDR  U,S
-      ADDR  U,PC
-      ADDR  U,W
-      ADDR  U,V
-      ADDR  U,Z
-      ADDR  S,D
-      ADDR  S,X
-      ADDR  S,Y
-      ADDR  S,U
-      ADDR  S,S
-      ADDR  S,PC
-      ADDR  S,W
-      ADDR  S,V
-      ADDR  S,Z
-      ADDR  PC,D
-      ADDR  PC,X
-      ADDR  PC,Y
-      ADDR  PC,U
-      ADDR  PC,S
-      ADDR  PC,PC
-      ADDR  PC,W
-      ADDR  PC,V
-      ADDR  PC,Z
-      ADDR  W,D
-      ADDR  W,X
-      ADDR  W,Y
-      ADDR  W,U
-      ADDR  W,S
-      ADDR  W,PC
-      ADDR  W,W
-      ADDR  W,V
-      ADDR  W,Z
-      ADDR  V,D
-      ADDR  V,X
-      ADDR  V,Y
-      ADDR  V,U
-      ADDR  V,S
-      ADDR  V,PC
-      ADDR  V,W
-      ADDR  V,V
-      ADDR  V,Z
-      ADDR  A,A
-      ADDR  A,B
-      ADDR  A,CC
-      ADDR  A,DP
-      ADDR  A,Z
-      ADDR  A,E
-      ADDR  A,F
-      ADDR  B,A
-      ADDR  B,B
-      ADDR  B,CC
-      ADDR  B,DP
-      ADDR  B,Z
-      ADDR  B,E
-      ADDR  B,F
-      ADDR  CC,A
-      ADDR  CC,B
-      ADDR  CC,CC
-      ADDR  CC,DP
-      ADDR  CC,Z
-      ADDR  CC,E
-      ADDR  CC,F
-      ADDR  DP,A
-      ADDR  DP,B
-      ADDR  DP,CC
-      ADDR  DP,DP
-      ADDR  DP,Z
-      ADDR  DP,E
-      ADDR  DP,F
-      ADDR  Z,D
-      ADDR  Z,X
-      ADDR  Z,Y
-      ADDR  Z,U
-      ADDR  Z,S
-      ADDR  Z,PC
-      ADDR  Z,W
-      ADDR  Z,V
-      ADDR  Z,A
-      ADDR  Z,B
-      ADDR  Z,CC
-      ADDR  Z,DP
-      ADDR  Z,Z
-      ADDR  Z,E
-      ADDR  Z,F
-      ADDR  E,A
-      ADDR  E,B
-      ADDR  E,CC
-      ADDR  E,DP
-      ADDR  E,Z
-      ADDR  E,E
-      ADDR  E,F
-      ADDR  F,A
-      ADDR  F,B
-      ADDR  F,CC
-      ADDR  F,DP
-      ADDR  F,Z
-      ADDR  F,E
-      ADDR  F,F
-      ADDR  D,D
-      ADDR  D,X
-      ADDR  D,Y
-      ADDR  D,U
-      ADDR  D,S
-      ADDR  D,PC
-      ADDR  D,W
-      ADDR  D,V
-      ADDR  D,Z
-      ADDR  X,D
-      ADDR  X,X
-      ADDR  X,Y
-      ADDR  X,U
-      ADDR  X,S
-      ADDR  X,PC
-      ADDR  X,W
-      ADDR  X,V
-      ADDR  X,Z
-      ADDR  Y,D
-      ADDR  Y,X
-      ADDR  Y,Y
-      ADDR  Y,U
-      ADDR  Y,S
-      ADDR  Y,PC
-      ADDR  Y,W
-      ADDR  Y,V
-      ADDR  Y,Z
-      ADDR  U,D
-      ADCR  U,Y
-      ADCR  U,U
-      ADCR  U,S
-      ADCR  U,PC
-      ADCR  U,W
-      ADCR  U,V
-      ADCR  U,Z
-      ADCR  S,D
-      ADCR  S,X
-      ADCR  S,Y
-      ADCR  S,U
-      ADCR  S,S
-      ADCR  S,PC
-      ADCR  S,W
-      ADCR  S,V
-      ADCR  S,Z
-      ADCR  PC,D
-      ADCR  PC,X
-      ADCR  PC,Y
-      ADCR  PC,U
-      ADCR  PC,S
-      ADCR  PC,PC
-      ADCR  PC,W
-      ADCR  PC,V
-      ADCR  PC,Z
-      ADCR  W,D
-      ADCR  W,X
-      ADCR  W,Y
-      ADCR  W,U
-      ADCR  W,S
-      ADCR  W,PC
-      ADCR  W,W
-      ADCR  W,V
-      ADCR  W,Z
-      ADCR  V,D
-      ADCR  V,X
-      ADCR  V,Y
-      ADCR  V,U
-      ADCR  V,S
-      ADCR  V,PC
-      ADCR  V,W
-      ADCR  V,V
-      ADCR  V,Z
-      ADCR  A,A
-      ADCR  A,B
-      ADCR  A,CC
-      ADCR  A,DP
-      ADCR  A,Z
-      ADCR  A,E
-      ADCR  A,F
-      ADCR  B,A
-      ADCR  B,B
-      ADCR  B,CC
-      ADCR  B,DP
-      ADCR  B,Z
-      ADCR  B,E
-      ADCR  B,F
-      ADCR  CC,A
-      ADCR  CC,B
-      ADCR  CC,CC
-      ADCR  CC,DP
-      ADCR  CC,Z
-      ADCR  CC,E
-      ADCR  CC,F
-      ADCR  DP,A
-      ADCR  DP,B
-      ADCR  DP,CC
-      ADCR  DP,DP
-      ADCR  DP,Z
-      ADCR  DP,E
-      ADCR  DP,F
-      ADCR  Z,D
-      ADCR  Z,X
-      ADCR  Z,Y
-      ADCR  Z,U
-      ADCR  Z,S
-      ADCR  Z,PC
-      ADCR  Z,W
-      ADCR  Z,V
-      ADCR  Z,A
-      ADCR  Z,B
-      ADCR  Z,CC
-      ADCR  Z,DP
-      ADCR  Z,Z
-      ADCR  Z,E
-      ADCR  Z,F
-      ADCR  E,A
-      ADCR  E,B
-      ADCR  E,CC
-      ADCR  E,DP
-      ADCR  E,Z
-      ADCR  E,E
-      ADCR  E,F
-      ADCR  F,A
-      ADCR  F,B
-      ADCR  F,CC
-      ADCR  F,DP
-      ADCR  F,Z
-      ADCR  F,E
-      ADCR  F,F
-      ADCR  D,D
-      ADCR  D,X
-      ADCR  D,Y
-      ADCR  D,U
-      ADCR  D,S
-      ADCR  D,PC
-      ADCR  D,W
-      ADCR  D,V
-      ADCR  D,Z
-      ADCR  X,D
-      ADCR  X,X
-      ADCR  X,Y
-      ADCR  X,U
-      ADCR  X,S
-      ADCR  X,PC
-      ADCR  X,W
-      ADCR  X,V
-      ADCR  X,Z
-      ADCR  Y,D
-      ADCR  Y,X
-      ADCR  Y,Y
-      ADCR  Y,U
-      ADCR  Y,S
-      ADCR  Y,PC
-      ADCR  Y,W
-      ADCR  Y,V
-      ADCR  Y,Z
-      ADCR  U,D
-      ADCR  U,X
-      SUBR  U,U
-      SUBR  U,S
-      SUBR  U,PC
-      SUBR  U,W
-      SUBR  U,V
-      SUBR  U,Z
-      SUBR  S,D
-      SUBR  S,X
-      SUBR  S,Y
-      SUBR  S,U
-      SUBR  S,S
-      SUBR  S,PC
-      SUBR  S,W
-      SUBR  S,V
-      SUBR  S,Z
-      SUBR  PC,D
-      SUBR  PC,X
-      SUBR  PC,Y
-      SUBR  PC,U
-      SUBR  PC,S
-      SUBR  PC,PC
-      SUBR  PC,W
-      SUBR  PC,V
-      SUBR  PC,Z
-      SUBR  W,D
-      SUBR  W,X
-      SUBR  W,Y
-      SUBR  W,U
-      SUBR  W,S
-      SUBR  W,PC
-      SUBR  W,W
-      SUBR  W,V
-      SUBR  W,Z
-      SUBR  V,D
-      SUBR  V,X
-      SUBR  V,Y
-      SUBR  V,U
-      SUBR  V,S
-      SUBR  V,PC
-      SUBR  V,W
-      SUBR  V,V
-      SUBR  V,Z
-      SUBR  A,A
-      SUBR  A,B
-      SUBR  A,CC
-      SUBR  A,DP
-      SUBR  A,Z
-      SUBR  A,E
-      SUBR  A,F
-      SUBR  B,A
-      SUBR  B,B
-      SUBR  B,CC
-      SUBR  B,DP
-      SUBR  B,Z
-      SUBR  B,E
-      SUBR  B,F
-      SUBR  CC,A
-      SUBR  CC,B
-      SUBR  CC,CC
-      SUBR  CC,DP
-      SUBR  CC,Z
-      SUBR  CC,E
-      SUBR  CC,F
-      SUBR  DP,A
-      SUBR  DP,B
-      SUBR  DP,CC
-      SUBR  DP,DP
-      SUBR  DP,Z
-      SUBR  DP,E
-      SUBR  DP,F
-      SUBR  Z,D
-      SUBR  Z,X
-      SUBR  Z,Y
-      SUBR  Z,U
-      SUBR  Z,S
-      SUBR  Z,PC
-      SUBR  Z,W
-      SUBR  Z,V
-      SUBR  Z,A
-      SUBR  Z,B
-      SUBR  Z,CC
-      SUBR  Z,DP
-      SUBR  Z,Z
-      SUBR  Z,E
-      SUBR  Z,F
-      SUBR  E,A
-      SUBR  E,B
-      SUBR  E,CC
-      SUBR  E,DP
-      SUBR  E,Z
-      SUBR  E,E
-      SUBR  E,F
-      SUBR  F,A
-      SUBR  F,B
-      SUBR  F,CC
-      SUBR  F,DP
-      SUBR  F,Z
-      SUBR  F,E
-      SUBR  F,F
-      SUBR  D,D
-      SUBR  D,X
-      SUBR  D,Y
-      SUBR  D,U
-      SUBR  D,S
-      SUBR  D,PC
-      SUBR  D,W
-      SUBR  D,V
-      SUBR  D,Z
-      SUBR  X,D
-      SUBR  X,X
-      SUBR  X,Y
-      SUBR  X,U
-      SUBR  X,S
-      SUBR  X,PC
-      SUBR  X,W
-      SUBR  X,V
-      SUBR  X,Z
-      SUBR  Y,D
-      SUBR  Y,X
-      SUBR  Y,Y
-      SUBR  Y,U
-      SUBR  Y,S
-      SUBR  Y,PC
-      SUBR  Y,W
-      SUBR  Y,V
-      SUBR  Y,Z
-      SUBR  U,D
-      SUBR  U,X
-      SUBR  U,Y
-      SBCR  U,S
-      SBCR  U,PC
-      SBCR  U,W
-      SBCR  U,V
-      SBCR  U,Z
-      SBCR  S,D
-      SBCR  S,X
-      SBCR  S,Y
-      SBCR  S,U
-      SBCR  S,S
-      SBCR  S,PC
-      SBCR  S,W
-      SBCR  S,V
-      SBCR  S,Z
-      SBCR  PC,D
-      SBCR  PC,X
-      SBCR  PC,Y
-      SBCR  PC,U
-      SBCR  PC,S
-      SBCR  PC,PC
-      SBCR  PC,W
-      SBCR  PC,V
-      SBCR  PC,Z
-      SBCR  W,D
-      SBCR  W,X
-      SBCR  W,Y
-      SBCR  W,U
-      SBCR  W,S
-      SBCR  W,PC
-      SBCR  W,W
-      SBCR  W,V
-      SBCR  W,Z
-      SBCR  V,D
-      SBCR  V,X
-      SBCR  V,Y
-      SBCR  V,U
-      SBCR  V,S
-      SBCR  V,PC
-      SBCR  V,W
-      SBCR  V,V
-      SBCR  V,Z
-      SBCR  A,A
-      SBCR  A,B
-      SBCR  A,CC
-      SBCR  A,DP
-      SBCR  A,Z
-      SBCR  A,E
-      SBCR  A,F
-      SBCR  B,A
-      SBCR  B,B
-      SBCR  B,CC
-      SBCR  B,DP
-      SBCR  B,Z
-      SBCR  B,E
-      SBCR  B,F
-      SBCR  CC,A
-      SBCR  CC,B
-      SBCR  CC,CC
-      SBCR  CC,DP
-      SBCR  CC,Z
-      SBCR  CC,E
-      SBCR  CC,F
-      SBCR  DP,A
-      SBCR  DP,B
-      SBCR  DP,CC
-      SBCR  DP,DP
-      SBCR  DP,Z
-      SBCR  DP,E
-      SBCR  DP,F
-      SBCR  Z,D
-      SBCR  Z,X
-      SBCR  Z,Y
-      SBCR  Z,U
-      SBCR  Z,S
-      SBCR  Z,PC
-      SBCR  Z,W
-      SBCR  Z,V
-      SBCR  Z,A
-      SBCR  Z,B
-      SBCR  Z,CC
-      SBCR  Z,DP
-      SBCR  Z,Z
-      SBCR  Z,E
-      SBCR  Z,F
-      SBCR  E,A
-      SBCR  E,B
-      SBCR  E,CC
-      SBCR  E,DP
-      SBCR  E,Z
-      SBCR  E,E
-      SBCR  E,F
-      SBCR  F,A
-      SBCR  F,B
-      SBCR  F,CC
-      SBCR  F,DP
-      SBCR  F,Z
-      SBCR  F,E
-      SBCR  F,F
-      SBCR  D,D
-      SBCR  D,X
-      SBCR  D,Y
-      SBCR  D,U
-      SBCR  D,S
-      SBCR  D,PC
-      SBCR  D,W
-      SBCR  D,V
-      SBCR  D,Z
-      SBCR  X,D
-      SBCR  X,X
-      SBCR  X,Y
-      SBCR  X,U
-      SBCR  X,S
-      SBCR  X,PC
-      SBCR  X,W
-      SBCR  X,V
-      SBCR  X,Z
-      SBCR  Y,D
-      SBCR  Y,X
-      SBCR  Y,Y
-      SBCR  Y,U
-      SBCR  Y,S
-      SBCR  Y,PC
-      SBCR  Y,W
-      SBCR  Y,V
-      SBCR  Y,Z
-      SBCR  U,D
-      SBCR  U,X
-      SBCR  U,Y
-      SBCR  U,U
-      ANDR  U,PC
-      ANDR  U,W
-      ANDR  U,V
-      ANDR  U,Z
-      ANDR  S,D
-      ANDR  S,X
-      ANDR  S,Y
-      ANDR  S,U
-      ANDR  S,S
-      ANDR  S,PC
-      ANDR  S,W
-      ANDR  S,V
-      ANDR  S,Z
-      ANDR  PC,D
-      ANDR  PC,X
-      ANDR  PC,Y
-      ANDR  PC,U
-      ANDR  PC,S
-      ANDR  PC,PC
-      ANDR  PC,W
-      ANDR  PC,V
-      ANDR  PC,Z
-      ANDR  W,D
-      ANDR  W,X
-      ANDR  W,Y
-      ANDR  W,U
-      ANDR  W,S
-      ANDR  W,PC
-      ANDR  W,W
-      ANDR  W,V
-      ANDR  W,Z
-      ANDR  V,D
-      ANDR  V,X
-      ANDR  V,Y
-      ANDR  V,U
-      ANDR  V,S
-      ANDR  V,PC
-      ANDR  V,W
-      ANDR  V,V
-      ANDR  V,Z
-      ANDR  A,A
-      ANDR  A,B
-      ANDR  A,CC
-      ANDR  A,DP
-      ANDR  A,Z
-      ANDR  A,E
-      ANDR  A,F
-      ANDR  B,A
-      ANDR  B,B
-      ANDR  B,CC
-      ANDR  B,DP
-      ANDR  B,Z
-      ANDR  B,E
-      ANDR  B,F
-      ANDR  CC,A
-      ANDR  CC,B
-      ANDR  CC,CC
-      ANDR  CC,DP
-      ANDR  CC,Z
-      ANDR  CC,E
-      ANDR  CC,F
-      ANDR  DP,A
-      ANDR  DP,B
-      ANDR  DP,CC
-      ANDR  DP,DP
-      ANDR  DP,Z
-      ANDR  DP,E
-      ANDR  DP,F
-      ANDR  Z,D
-      ANDR  Z,X
-      ANDR  Z,Y
-      ANDR  Z,U
-      ANDR  Z,S
-      ANDR  Z,PC
-      ANDR  Z,W
-      ANDR  Z,V
-      ANDR  Z,A
-      ANDR  Z,B
-      ANDR  Z,CC
-      ANDR  Z,DP
-      ANDR  Z,Z
-      ANDR  Z,E
-      ANDR  Z,F
-      ANDR  E,A
-      ANDR  E,B
-      ANDR  E,CC
-      ANDR  E,DP
-      ANDR  E,Z
-      ANDR  E,E
-      ANDR  E,F
-      ANDR  F,A
-      ANDR  F,B
-      ANDR  F,CC
-      ANDR  F,DP
-      ANDR  F,Z
-      ANDR  F,E
-      ANDR  F,F
-      ANDR  D,D
-      ANDR  D,X
-      ANDR  D,Y
-      ANDR  D,U
-      ANDR  D,S
-      ANDR  D,PC
-      ANDR  D,W
-      ANDR  D,V
-      ANDR  D,Z
-      ANDR  X,D
-      ANDR  X,X
-      ANDR  X,Y
-      ANDR  X,U
-      ANDR  X,S
-      ANDR  X,PC
-      ANDR  X,W
-      ANDR  X,V
-      ANDR  X,Z
-      ANDR  Y,D
-      ANDR  Y,X
-      ANDR  Y,Y
-      ANDR  Y,U
-      ANDR  Y,S
-      ANDR  Y,PC
-      ANDR  Y,W
-      ANDR  Y,V
-      ANDR  Y,Z
-      ANDR  U,D
-      ANDR  U,X
-      ANDR  U,Y
-      ANDR  U,U
-      ANDR  U,S
-      ORR   U,W
-      ORR   U,V
-      ORR   U,Z
-      ORR   S,D
-      ORR   S,X
-      ORR   S,Y
-      ORR   S,U
-      ORR   S,S
-      ORR   S,PC
-      ORR   S,W
-      ORR   S,V
-      ORR   S,Z
-      ORR   PC,D
-      ORR   PC,X
-      ORR   PC,Y
-      ORR   PC,U
-      ORR   PC,S
-      ORR   PC,PC
-      ORR   PC,W
-      ORR   PC,V
-      ORR   PC,Z
-      ORR   W,D
-      ORR   W,X
-      ORR   W,Y
-      ORR   W,U
-      ORR   W,S
-      ORR   W,PC
-      ORR   W,W
-      ORR   W,V
-      ORR   W,Z
-      ORR   V,D
-      ORR   V,X
-      ORR   V,Y
-      ORR   V,U
-      ORR   V,S
-      ORR   V,PC
-      ORR   V,W
-      ORR   V,V
-      ORR   V,Z
-      ORR   A,A
-      ORR   A,B
-      ORR   A,CC
-      ORR   A,DP
-      ORR   A,Z
-      ORR   A,E
-      ORR   A,F
-      ORR   B,A
-      ORR   B,B
-      ORR   B,CC
-      ORR   B,DP
-      ORR   B,Z
-      ORR   B,E
-      ORR   B,F
-      ORR   CC,A
-      ORR   CC,B
-      ORR   CC,CC
-      ORR   CC,DP
-      ORR   CC,Z
-      ORR   CC,E
-      ORR   CC,F
-      ORR   DP,A
-      ORR   DP,B
-      ORR   DP,CC
-      ORR   DP,DP
-      ORR   DP,Z
-      ORR   DP,E
-      ORR   DP,F
-      ORR   Z,D
-      ORR   Z,X
-      ORR   Z,Y
-      ORR   Z,U
-      ORR   Z,S
-      ORR   Z,PC
-      ORR   Z,W
-      ORR   Z,V
-      ORR   Z,A
-      ORR   Z,B
-      ORR   Z,CC
-      ORR   Z,DP
-      ORR   Z,Z
-      ORR   Z,E
-      ORR   Z,F
-      ORR   E,A
-      ORR   E,B
-      ORR   E,CC
-      ORR   E,DP
-      ORR   E,Z
-      ORR   E,E
-      ORR   E,F
-      ORR   F,A
-      ORR   F,B
-      ORR   F,CC
-      ORR   F,DP
-      ORR   F,Z
-      ORR   F,E
-      ORR   F,F
-      ORR   D,D
-      ORR   D,X
-      ORR   D,Y
-      ORR   D,U
-      ORR   D,S
-      ORR   D,PC
-      ORR   D,W
-      ORR   D,V
-      ORR   D,Z
-      ORR   X,D
-      ORR   X,X
-      ORR   X,Y
-      ORR   X,U
-      ORR   X,S
-      ORR   X,PC
-      ORR   X,W
-      ORR   X,V
-      ORR   X,Z
-      ORR   Y,D
-      ORR   Y,X
-      ORR   Y,Y
-      ORR   Y,U
-      ORR   Y,S
-      ORR   Y,PC
-      ORR   Y,W
-      ORR   Y,V
-      ORR   Y,Z
-      ORR   U,D
-      ORR   U,X
-      ORR   U,Y
-      ORR   U,U
-      ORR   U,S
-      ORR   U,PC
-      EORR  U,V
-      EORR  U,Z
-      EORR  S,D
-      EORR  S,X
-      EORR  S,Y
-      EORR  S,U
-      EORR  S,S
-      EORR  S,PC
-      EORR  S,W
-      EORR  S,V
-      EORR  S,Z
-      EORR  PC,D
-      EORR  PC,X
-      EORR  PC,Y
-      EORR  PC,U
-      EORR  PC,S
-      EORR  PC,PC
-      EORR  PC,W
-      EORR  PC,V
-      EORR  PC,Z
-      EORR  W,D
-      EORR  W,X
-      EORR  W,Y
-      EORR  W,U
-      EORR  W,S
-      EORR  W,PC
-      EORR  W,W
-      EORR  W,V
-      EORR  W,Z
-      EORR  V,D
-      EORR  V,X
-      EORR  V,Y
-      EORR  V,U
-      EORR  V,S
-      EORR  V,PC
-      EORR  V,W
-      EORR  V,V
-      EORR  V,Z
-      EORR  A,A
-      EORR  A,B
-      EORR  A,CC
-      EORR  A,DP
-      EORR  A,Z
-      EORR  A,E
-      EORR  A,F
-      EORR  B,A
-      EORR  B,B
-      EORR  B,CC
-      EORR  B,DP
-      EORR  B,Z
-      EORR  B,E
-      EORR  B,F
-      EORR  CC,A
-      EORR  CC,B
-      EORR  CC,CC
-      EORR  CC,DP
-      EORR  CC,Z
-      EORR  CC,E
-      EORR  CC,F
-      EORR  DP,A
-      EORR  DP,B
-      EORR  DP,CC
-      EORR  DP,DP
-      EORR  DP,Z
-      EORR  DP,E
-      EORR  DP,F
-      EORR  Z,D
-      EORR  Z,X
-      EORR  Z,Y
-      EORR  Z,U
-      EORR  Z,S
-      EORR  Z,PC
-      EORR  Z,W
-      EORR  Z,V
-      EORR  Z,A
-      EORR  Z,B
-      EORR  Z,CC
-      EORR  Z,DP
-      EORR  Z,Z
-      EORR  Z,E
-      EORR  Z,F
-      EORR  E,A
-      EORR  E,B
-      EORR  E,CC
-      EORR  E,DP
-      EORR  E,Z
-      EORR  E,E
-      EORR  E,F
-      EORR  F,A
-      EORR  F,B
-      EORR  F,CC
-      EORR  F,DP
-      EORR  F,Z
-      EORR  F,E
-      EORR  F,F
-      EORR  D,D
-      EORR  D,X
-      EORR  D,Y
-      EORR  D,U
-      EORR  D,S
-      EORR  D,PC
-      EORR  D,W
-      EORR  D,V
-      EORR  D,Z
-      EORR  X,D
-      EORR  X,X
-      EORR  X,Y
-      EORR  X,U
-      EORR  X,S
-      EORR  X,PC
-      EORR  X,W
-      EORR  X,V
-      EORR  X,Z
-      EORR  Y,D
-      EORR  Y,X
-      EORR  Y,Y
-      EORR  Y,U
-      EORR  Y,S
-      EORR  Y,PC
-      EORR  Y,W
-      EORR  Y,V
-      EORR  Y,Z
-      EORR  U,D
-      EORR  U,X
-      EORR  U,Y
-      EORR  U,U
-      EORR  U,S
-      EORR  U,PC
-      EORR  U,W
+      ADDR  U, X
+      ADDR  U, Y
+      ADDR  U, U
+      ADDR  U, S
+      ADDR  U, PC
+      ADDR  U, W
+      ADDR  U, V
+      ADDR  U, Z
+      ADDR  S, D
+      ADDR  S, X
+      ADDR  S, Y
+      ADDR  S, U
+      ADDR  S, S
+      ADDR  S, PC
+      ADDR  S, W
+      ADDR  S, V
+      ADDR  S, Z
+      ADDR  PC, D
+      ADDR  PC, X
+      ADDR  PC, Y
+      ADDR  PC, U
+      ADDR  PC, S
+      ADDR  PC, PC
+      ADDR  PC, W
+      ADDR  PC, V
+      ADDR  PC, Z
+      ADDR  W, D
+      ADDR  W, X
+      ADDR  W, Y
+      ADDR  W, U
+      ADDR  W, S
+      ADDR  W, PC
+      ADDR  W, W
+      ADDR  W, V
+      ADDR  W, Z
+      ADDR  V, D
+      ADDR  V, X
+      ADDR  V, Y
+      ADDR  V, U
+      ADDR  V, S
+      ADDR  V, PC
+      ADDR  V, W
+      ADDR  V, V
+      ADDR  V, Z
+      ADDR  A, A
+      ADDR  A, B
+      ADDR  A, CC
+      ADDR  A, DP
+      ADDR  A, Z
+      ADDR  A, E
+      ADDR  A, F
+      ADDR  B, A
+      ADDR  B, B
+      ADDR  B, CC
+      ADDR  B, DP
+      ADDR  B, Z
+      ADDR  B, E
+      ADDR  B, F
+      ADDR  CC, A
+      ADDR  CC, B
+      ADDR  CC, CC
+      ADDR  CC, DP
+      ADDR  CC, Z
+      ADDR  CC, E
+      ADDR  CC, F
+      ADDR  DP, A
+      ADDR  DP, B
+      ADDR  DP, CC
+      ADDR  DP, DP
+      ADDR  DP, Z
+      ADDR  DP, E
+      ADDR  DP, F
+      ADDR  Z, D
+      ADDR  Z, X
+      ADDR  Z, Y
+      ADDR  Z, U
+      ADDR  Z, S
+      ADDR  Z, PC
+      ADDR  Z, W
+      ADDR  Z, V
+      ADDR  Z, A
+      ADDR  Z, B
+      ADDR  Z, CC
+      ADDR  Z, DP
+      ADDR  Z, Z
+      ADDR  Z, E
+      ADDR  Z, F
+      ADDR  E, A
+      ADDR  E, B
+      ADDR  E, CC
+      ADDR  E, DP
+      ADDR  E, Z
+      ADDR  E, E
+      ADDR  E, F
+      ADDR  F, A
+      ADDR  F, B
+      ADDR  F, CC
+      ADDR  F, DP
+      ADDR  F, Z
+      ADDR  F, E
+      ADDR  F, F
+      ADDR  D, D
+      ADDR  D, X
+      ADDR  D, Y
+      ADDR  D, U
+      ADDR  D, S
+      ADDR  D, PC
+      ADDR  D, W
+      ADDR  D, V
+      ADDR  D, Z
+      ADDR  X, D
+      ADDR  X, X
+      ADDR  X, Y
+      ADDR  X, U
+      ADDR  X, S
+      ADDR  X, PC
+      ADDR  X, W
+      ADDR  X, V
+      ADDR  X, Z
+      ADDR  Y, D
+      ADDR  Y, X
+      ADDR  Y, Y
+      ADDR  Y, U
+      ADDR  Y, S
+      ADDR  Y, PC
+      ADDR  Y, W
+      ADDR  Y, V
+      ADDR  Y, Z
+      ADDR  U, D
+      ADCR  U, Y
+      ADCR  U, U
+      ADCR  U, S
+      ADCR  U, PC
+      ADCR  U, W
+      ADCR  U, V
+      ADCR  U, Z
+      ADCR  S, D
+      ADCR  S, X
+      ADCR  S, Y
+      ADCR  S, U
+      ADCR  S, S
+      ADCR  S, PC
+      ADCR  S, W
+      ADCR  S, V
+      ADCR  S, Z
+      ADCR  PC, D
+      ADCR  PC, X
+      ADCR  PC, Y
+      ADCR  PC, U
+      ADCR  PC, S
+      ADCR  PC, PC
+      ADCR  PC, W
+      ADCR  PC, V
+      ADCR  PC, Z
+      ADCR  W, D
+      ADCR  W, X
+      ADCR  W, Y
+      ADCR  W, U
+      ADCR  W, S
+      ADCR  W, PC
+      ADCR  W, W
+      ADCR  W, V
+      ADCR  W, Z
+      ADCR  V, D
+      ADCR  V, X
+      ADCR  V, Y
+      ADCR  V, U
+      ADCR  V, S
+      ADCR  V, PC
+      ADCR  V, W
+      ADCR  V, V
+      ADCR  V, Z
+      ADCR  A, A
+      ADCR  A, B
+      ADCR  A, CC
+      ADCR  A, DP
+      ADCR  A, Z
+      ADCR  A, E
+      ADCR  A, F
+      ADCR  B, A
+      ADCR  B, B
+      ADCR  B, CC
+      ADCR  B, DP
+      ADCR  B, Z
+      ADCR  B, E
+      ADCR  B, F
+      ADCR  CC, A
+      ADCR  CC, B
+      ADCR  CC, CC
+      ADCR  CC, DP
+      ADCR  CC, Z
+      ADCR  CC, E
+      ADCR  CC, F
+      ADCR  DP, A
+      ADCR  DP, B
+      ADCR  DP, CC
+      ADCR  DP, DP
+      ADCR  DP, Z
+      ADCR  DP, E
+      ADCR  DP, F
+      ADCR  Z, D
+      ADCR  Z, X
+      ADCR  Z, Y
+      ADCR  Z, U
+      ADCR  Z, S
+      ADCR  Z, PC
+      ADCR  Z, W
+      ADCR  Z, V
+      ADCR  Z, A
+      ADCR  Z, B
+      ADCR  Z, CC
+      ADCR  Z, DP
+      ADCR  Z, Z
+      ADCR  Z, E
+      ADCR  Z, F
+      ADCR  E, A
+      ADCR  E, B
+      ADCR  E, CC
+      ADCR  E, DP
+      ADCR  E, Z
+      ADCR  E, E
+      ADCR  E, F
+      ADCR  F, A
+      ADCR  F, B
+      ADCR  F, CC
+      ADCR  F, DP
+      ADCR  F, Z
+      ADCR  F, E
+      ADCR  F, F
+      ADCR  D, D
+      ADCR  D, X
+      ADCR  D, Y
+      ADCR  D, U
+      ADCR  D, S
+      ADCR  D, PC
+      ADCR  D, W
+      ADCR  D, V
+      ADCR  D, Z
+      ADCR  X, D
+      ADCR  X, X
+      ADCR  X, Y
+      ADCR  X, U
+      ADCR  X, S
+      ADCR  X, PC
+      ADCR  X, W
+      ADCR  X, V
+      ADCR  X, Z
+      ADCR  Y, D
+      ADCR  Y, X
+      ADCR  Y, Y
+      ADCR  Y, U
+      ADCR  Y, S
+      ADCR  Y, PC
+      ADCR  Y, W
+      ADCR  Y, V
+      ADCR  Y, Z
+      ADCR  U, D
+      ADCR  U, X
+      SUBR  U, U
+      SUBR  U, S
+      SUBR  U, PC
+      SUBR  U, W
+      SUBR  U, V
+      SUBR  U, Z
+      SUBR  S, D
+      SUBR  S, X
+      SUBR  S, Y
+      SUBR  S, U
+      SUBR  S, S
+      SUBR  S, PC
+      SUBR  S, W
+      SUBR  S, V
+      SUBR  S, Z
+      SUBR  PC, D
+      SUBR  PC, X
+      SUBR  PC, Y
+      SUBR  PC, U
+      SUBR  PC, S
+      SUBR  PC, PC
+      SUBR  PC, W
+      SUBR  PC, V
+      SUBR  PC, Z
+      SUBR  W, D
+      SUBR  W, X
+      SUBR  W, Y
+      SUBR  W, U
+      SUBR  W, S
+      SUBR  W, PC
+      SUBR  W, W
+      SUBR  W, V
+      SUBR  W, Z
+      SUBR  V, D
+      SUBR  V, X
+      SUBR  V, Y
+      SUBR  V, U
+      SUBR  V, S
+      SUBR  V, PC
+      SUBR  V, W
+      SUBR  V, V
+      SUBR  V, Z
+      SUBR  A, A
+      SUBR  A, B
+      SUBR  A, CC
+      SUBR  A, DP
+      SUBR  A, Z
+      SUBR  A, E
+      SUBR  A, F
+      SUBR  B, A
+      SUBR  B, B
+      SUBR  B, CC
+      SUBR  B, DP
+      SUBR  B, Z
+      SUBR  B, E
+      SUBR  B, F
+      SUBR  CC, A
+      SUBR  CC, B
+      SUBR  CC, CC
+      SUBR  CC, DP
+      SUBR  CC, Z
+      SUBR  CC, E
+      SUBR  CC, F
+      SUBR  DP, A
+      SUBR  DP, B
+      SUBR  DP, CC
+      SUBR  DP, DP
+      SUBR  DP, Z
+      SUBR  DP, E
+      SUBR  DP, F
+      SUBR  Z, D
+      SUBR  Z, X
+      SUBR  Z, Y
+      SUBR  Z, U
+      SUBR  Z, S
+      SUBR  Z, PC
+      SUBR  Z, W
+      SUBR  Z, V
+      SUBR  Z, A
+      SUBR  Z, B
+      SUBR  Z, CC
+      SUBR  Z, DP
+      SUBR  Z, Z
+      SUBR  Z, E
+      SUBR  Z, F
+      SUBR  E, A
+      SUBR  E, B
+      SUBR  E, CC
+      SUBR  E, DP
+      SUBR  E, Z
+      SUBR  E, E
+      SUBR  E, F
+      SUBR  F, A
+      SUBR  F, B
+      SUBR  F, CC
+      SUBR  F, DP
+      SUBR  F, Z
+      SUBR  F, E
+      SUBR  F, F
+      SUBR  D, D
+      SUBR  D, X
+      SUBR  D, Y
+      SUBR  D, U
+      SUBR  D, S
+      SUBR  D, PC
+      SUBR  D, W
+      SUBR  D, V
+      SUBR  D, Z
+      SUBR  X, D
+      SUBR  X, X
+      SUBR  X, Y
+      SUBR  X, U
+      SUBR  X, S
+      SUBR  X, PC
+      SUBR  X, W
+      SUBR  X, V
+      SUBR  X, Z
+      SUBR  Y, D
+      SUBR  Y, X
+      SUBR  Y, Y
+      SUBR  Y, U
+      SUBR  Y, S
+      SUBR  Y, PC
+      SUBR  Y, W
+      SUBR  Y, V
+      SUBR  Y, Z
+      SUBR  U, D
+      SUBR  U, X
+      SUBR  U, Y
+      SBCR  U, S
+      SBCR  U, PC
+      SBCR  U, W
+      SBCR  U, V
+      SBCR  U, Z
+      SBCR  S, D
+      SBCR  S, X
+      SBCR  S, Y
+      SBCR  S, U
+      SBCR  S, S
+      SBCR  S, PC
+      SBCR  S, W
+      SBCR  S, V
+      SBCR  S, Z
+      SBCR  PC, D
+      SBCR  PC, X
+      SBCR  PC, Y
+      SBCR  PC, U
+      SBCR  PC, S
+      SBCR  PC, PC
+      SBCR  PC, W
+      SBCR  PC, V
+      SBCR  PC, Z
+      SBCR  W, D
+      SBCR  W, X
+      SBCR  W, Y
+      SBCR  W, U
+      SBCR  W, S
+      SBCR  W, PC
+      SBCR  W, W
+      SBCR  W, V
+      SBCR  W, Z
+      SBCR  V, D
+      SBCR  V, X
+      SBCR  V, Y
+      SBCR  V, U
+      SBCR  V, S
+      SBCR  V, PC
+      SBCR  V, W
+      SBCR  V, V
+      SBCR  V, Z
+      SBCR  A, A
+      SBCR  A, B
+      SBCR  A, CC
+      SBCR  A, DP
+      SBCR  A, Z
+      SBCR  A, E
+      SBCR  A, F
+      SBCR  B, A
+      SBCR  B, B
+      SBCR  B, CC
+      SBCR  B, DP
+      SBCR  B, Z
+      SBCR  B, E
+      SBCR  B, F
+      SBCR  CC, A
+      SBCR  CC, B
+      SBCR  CC, CC
+      SBCR  CC, DP
+      SBCR  CC, Z
+      SBCR  CC, E
+      SBCR  CC, F
+      SBCR  DP, A
+      SBCR  DP, B
+      SBCR  DP, CC
+      SBCR  DP, DP
+      SBCR  DP, Z
+      SBCR  DP, E
+      SBCR  DP, F
+      SBCR  Z, D
+      SBCR  Z, X
+      SBCR  Z, Y
+      SBCR  Z, U
+      SBCR  Z, S
+      SBCR  Z, PC
+      SBCR  Z, W
+      SBCR  Z, V
+      SBCR  Z, A
+      SBCR  Z, B
+      SBCR  Z, CC
+      SBCR  Z, DP
+      SBCR  Z, Z
+      SBCR  Z, E
+      SBCR  Z, F
+      SBCR  E, A
+      SBCR  E, B
+      SBCR  E, CC
+      SBCR  E, DP
+      SBCR  E, Z
+      SBCR  E, E
+      SBCR  E, F
+      SBCR  F, A
+      SBCR  F, B
+      SBCR  F, CC
+      SBCR  F, DP
+      SBCR  F, Z
+      SBCR  F, E
+      SBCR  F, F
+      SBCR  D, D
+      SBCR  D, X
+      SBCR  D, Y
+      SBCR  D, U
+      SBCR  D, S
+      SBCR  D, PC
+      SBCR  D, W
+      SBCR  D, V
+      SBCR  D, Z
+      SBCR  X, D
+      SBCR  X, X
+      SBCR  X, Y
+      SBCR  X, U
+      SBCR  X, S
+      SBCR  X, PC
+      SBCR  X, W
+      SBCR  X, V
+      SBCR  X, Z
+      SBCR  Y, D
+      SBCR  Y, X
+      SBCR  Y, Y
+      SBCR  Y, U
+      SBCR  Y, S
+      SBCR  Y, PC
+      SBCR  Y, W
+      SBCR  Y, V
+      SBCR  Y, Z
+      SBCR  U, D
+      SBCR  U, X
+      SBCR  U, Y
+      SBCR  U, U
+      ANDR  U, PC
+      ANDR  U, W
+      ANDR  U, V
+      ANDR  U, Z
+      ANDR  S, D
+      ANDR  S, X
+      ANDR  S, Y
+      ANDR  S, U
+      ANDR  S, S
+      ANDR  S, PC
+      ANDR  S, W
+      ANDR  S, V
+      ANDR  S, Z
+      ANDR  PC, D
+      ANDR  PC, X
+      ANDR  PC, Y
+      ANDR  PC, U
+      ANDR  PC, S
+      ANDR  PC, PC
+      ANDR  PC, W
+      ANDR  PC, V
+      ANDR  PC, Z
+      ANDR  W, D
+      ANDR  W, X
+      ANDR  W, Y
+      ANDR  W, U
+      ANDR  W, S
+      ANDR  W, PC
+      ANDR  W, W
+      ANDR  W, V
+      ANDR  W, Z
+      ANDR  V, D
+      ANDR  V, X
+      ANDR  V, Y
+      ANDR  V, U
+      ANDR  V, S
+      ANDR  V, PC
+      ANDR  V, W
+      ANDR  V, V
+      ANDR  V, Z
+      ANDR  A, A
+      ANDR  A, B
+      ANDR  A, CC
+      ANDR  A, DP
+      ANDR  A, Z
+      ANDR  A, E
+      ANDR  A, F
+      ANDR  B, A
+      ANDR  B, B
+      ANDR  B, CC
+      ANDR  B, DP
+      ANDR  B, Z
+      ANDR  B, E
+      ANDR  B, F
+      ANDR  CC, A
+      ANDR  CC, B
+      ANDR  CC, CC
+      ANDR  CC, DP
+      ANDR  CC, Z
+      ANDR  CC, E
+      ANDR  CC, F
+      ANDR  DP, A
+      ANDR  DP, B
+      ANDR  DP, CC
+      ANDR  DP, DP
+      ANDR  DP, Z
+      ANDR  DP, E
+      ANDR  DP, F
+      ANDR  Z, D
+      ANDR  Z, X
+      ANDR  Z, Y
+      ANDR  Z, U
+      ANDR  Z, S
+      ANDR  Z, PC
+      ANDR  Z, W
+      ANDR  Z, V
+      ANDR  Z, A
+      ANDR  Z, B
+      ANDR  Z, CC
+      ANDR  Z, DP
+      ANDR  Z, Z
+      ANDR  Z, E
+      ANDR  Z, F
+      ANDR  E, A
+      ANDR  E, B
+      ANDR  E, CC
+      ANDR  E, DP
+      ANDR  E, Z
+      ANDR  E, E
+      ANDR  E, F
+      ANDR  F, A
+      ANDR  F, B
+      ANDR  F, CC
+      ANDR  F, DP
+      ANDR  F, Z
+      ANDR  F, E
+      ANDR  F, F
+      ANDR  D, D
+      ANDR  D, X
+      ANDR  D, Y
+      ANDR  D, U
+      ANDR  D, S
+      ANDR  D, PC
+      ANDR  D, W
+      ANDR  D, V
+      ANDR  D, Z
+      ANDR  X, D
+      ANDR  X, X
+      ANDR  X, Y
+      ANDR  X, U
+      ANDR  X, S
+      ANDR  X, PC
+      ANDR  X, W
+      ANDR  X, V
+      ANDR  X, Z
+      ANDR  Y, D
+      ANDR  Y, X
+      ANDR  Y, Y
+      ANDR  Y, U
+      ANDR  Y, S
+      ANDR  Y, PC
+      ANDR  Y, W
+      ANDR  Y, V
+      ANDR  Y, Z
+      ANDR  U, D
+      ANDR  U, X
+      ANDR  U, Y
+      ANDR  U, U
+      ANDR  U, S
+      ORR   U, W
+      ORR   U, V
+      ORR   U, Z
+      ORR   S, D
+      ORR   S, X
+      ORR   S, Y
+      ORR   S, U
+      ORR   S, S
+      ORR   S, PC
+      ORR   S, W
+      ORR   S, V
+      ORR   S, Z
+      ORR   PC, D
+      ORR   PC, X
+      ORR   PC, Y
+      ORR   PC, U
+      ORR   PC, S
+      ORR   PC, PC
+      ORR   PC, W
+      ORR   PC, V
+      ORR   PC, Z
+      ORR   W, D
+      ORR   W, X
+      ORR   W, Y
+      ORR   W, U
+      ORR   W, S
+      ORR   W, PC
+      ORR   W, W
+      ORR   W, V
+      ORR   W, Z
+      ORR   V, D
+      ORR   V, X
+      ORR   V, Y
+      ORR   V, U
+      ORR   V, S
+      ORR   V, PC
+      ORR   V, W
+      ORR   V, V
+      ORR   V, Z
+      ORR   A, A
+      ORR   A, B
+      ORR   A, CC
+      ORR   A, DP
+      ORR   A, Z
+      ORR   A, E
+      ORR   A, F
+      ORR   B, A
+      ORR   B, B
+      ORR   B, CC
+      ORR   B, DP
+      ORR   B, Z
+      ORR   B, E
+      ORR   B, F
+      ORR   CC, A
+      ORR   CC, B
+      ORR   CC, CC
+      ORR   CC, DP
+      ORR   CC, Z
+      ORR   CC, E
+      ORR   CC, F
+      ORR   DP, A
+      ORR   DP, B
+      ORR   DP, CC
+      ORR   DP, DP
+      ORR   DP, Z
+      ORR   DP, E
+      ORR   DP, F
+      ORR   Z, D
+      ORR   Z, X
+      ORR   Z, Y
+      ORR   Z, U
+      ORR   Z, S
+      ORR   Z, PC
+      ORR   Z, W
+      ORR   Z, V
+      ORR   Z, A
+      ORR   Z, B
+      ORR   Z, CC
+      ORR   Z, DP
+      ORR   Z, Z
+      ORR   Z, E
+      ORR   Z, F
+      ORR   E, A
+      ORR   E, B
+      ORR   E, CC
+      ORR   E, DP
+      ORR   E, Z
+      ORR   E, E
+      ORR   E, F
+      ORR   F, A
+      ORR   F, B
+      ORR   F, CC
+      ORR   F, DP
+      ORR   F, Z
+      ORR   F, E
+      ORR   F, F
+      ORR   D, D
+      ORR   D, X
+      ORR   D, Y
+      ORR   D, U
+      ORR   D, S
+      ORR   D, PC
+      ORR   D, W
+      ORR   D, V
+      ORR   D, Z
+      ORR   X, D
+      ORR   X, X
+      ORR   X, Y
+      ORR   X, U
+      ORR   X, S
+      ORR   X, PC
+      ORR   X, W
+      ORR   X, V
+      ORR   X, Z
+      ORR   Y, D
+      ORR   Y, X
+      ORR   Y, Y
+      ORR   Y, U
+      ORR   Y, S
+      ORR   Y, PC
+      ORR   Y, W
+      ORR   Y, V
+      ORR   Y, Z
+      ORR   U, D
+      ORR   U, X
+      ORR   U, Y
+      ORR   U, U
+      ORR   U, S
+      ORR   U, PC
+      EORR  U, V
+      EORR  U, Z
+      EORR  S, D
+      EORR  S, X
+      EORR  S, Y
+      EORR  S, U
+      EORR  S, S
+      EORR  S, PC
+      EORR  S, W
+      EORR  S, V
+      EORR  S, Z
+      EORR  PC, D
+      EORR  PC, X
+      EORR  PC, Y
+      EORR  PC, U
+      EORR  PC, S
+      EORR  PC, PC
+      EORR  PC, W
+      EORR  PC, V
+      EORR  PC, Z
+      EORR  W, D
+      EORR  W, X
+      EORR  W, Y
+      EORR  W, U
+      EORR  W, S
+      EORR  W, PC
+      EORR  W, W
+      EORR  W, V
+      EORR  W, Z
+      EORR  V, D
+      EORR  V, X
+      EORR  V, Y
+      EORR  V, U
+      EORR  V, S
+      EORR  V, PC
+      EORR  V, W
+      EORR  V, V
+      EORR  V, Z
+      EORR  A, A
+      EORR  A, B
+      EORR  A, CC
+      EORR  A, DP
+      EORR  A, Z
+      EORR  A, E
+      EORR  A, F
+      EORR  B, A
+      EORR  B, B
+      EORR  B, CC
+      EORR  B, DP
+      EORR  B, Z
+      EORR  B, E
+      EORR  B, F
+      EORR  CC, A
+      EORR  CC, B
+      EORR  CC, CC
+      EORR  CC, DP
+      EORR  CC, Z
+      EORR  CC, E
+      EORR  CC, F
+      EORR  DP, A
+      EORR  DP, B
+      EORR  DP, CC
+      EORR  DP, DP
+      EORR  DP, Z
+      EORR  DP, E
+      EORR  DP, F
+      EORR  Z, D
+      EORR  Z, X
+      EORR  Z, Y
+      EORR  Z, U
+      EORR  Z, S
+      EORR  Z, PC
+      EORR  Z, W
+      EORR  Z, V
+      EORR  Z, A
+      EORR  Z, B
+      EORR  Z, CC
+      EORR  Z, DP
+      EORR  Z, Z
+      EORR  Z, E
+      EORR  Z, F
+      EORR  E, A
+      EORR  E, B
+      EORR  E, CC
+      EORR  E, DP
+      EORR  E, Z
+      EORR  E, E
+      EORR  E, F
+      EORR  F, A
+      EORR  F, B
+      EORR  F, CC
+      EORR  F, DP
+      EORR  F, Z
+      EORR  F, E
+      EORR  F, F
+      EORR  D, D
+      EORR  D, X
+      EORR  D, Y
+      EORR  D, U
+      EORR  D, S
+      EORR  D, PC
+      EORR  D, W
+      EORR  D, V
+      EORR  D, Z
+      EORR  X, D
+      EORR  X, X
+      EORR  X, Y
+      EORR  X, U
+      EORR  X, S
+      EORR  X, PC
+      EORR  X, W
+      EORR  X, V
+      EORR  X, Z
+      EORR  Y, D
+      EORR  Y, X
+      EORR  Y, Y
+      EORR  Y, U
+      EORR  Y, S
+      EORR  Y, PC
+      EORR  Y, W
+      EORR  Y, V
+      EORR  Y, Z
+      EORR  U, D
+      EORR  U, X
+      EORR  U, Y
+      EORR  U, U
+      EORR  U, S
+      EORR  U, PC
+      EORR  U, W
       PSHSW
       PULSW
       PSHUW
@@ -2252,30 +2252,30 @@
       LDS   >$0000
       STS   >$0001
       STS   $0101
-      BAND  CC.1,$32.6
-      BAND  A.0,$32.0
-      BAND  B.0,$32.0
-      BIAND CC.2,$33.6
-      BIAND A.0,$33.0
-      BIAND B.0,$33.0
-      BOR   CC.3,$34.6
-      BOR   A.0,$34.0
-      BOR   B.0,$34.0
-      BIOR  CC.4,$35.6
-      BIOR  A.0,$35.0
-      BIOR  B.0,$35.0
-      BEOR  CC.5,$36.6
-      BEOR  A.0,$36.0
-      BEOR  B.0,$36.0
-      BIEOR CC.6,$37.6
-      BIEOR A.0,$37.0
-      BIEOR B.0,$37.0
-      LDBT  CC.7,$38.6
-      LDBT  A.0,$38.0
-      LDBT  B.0,$38.0
-      STBT  CC.0,$39.7
-      STBT  A.0,$39.0
-      STBT  B.0,$39.0
+      BAND  CC.1, $32.6
+      BAND  A.0, $32.0
+      BAND  B.0, $32.0
+      BIAND CC.2, $33.6
+      BIAND A.0, $33.0
+      BIAND B.0, $33.0
+      BOR   CC.3, $34.6
+      BOR   A.0, $34.0
+      BOR   B.0, $34.0
+      BIOR  CC.4, $35.6
+      BIOR  A.0, $35.0
+      BIOR  B.0, $35.0
+      BEOR  CC.5, $36.6
+      BEOR  A.0, $36.0
+      BEOR  B.0, $36.0
+      BIEOR CC.6, $37.6
+      BIEOR A.0, $37.0
+      BIEOR B.0, $37.0
+      LDBT  CC.7, $38.6
+      LDBT  A.0, $38.0
+      LDBT  B.0, $38.0
+      STBT  CC.0, $39.7
+      STBT  A.0, $39.0
+      STBT  B.0, $39.0
       BITMD #$3D
       LDMD  #$3E
       SWI3
@@ -3186,264 +3186,264 @@
       ORCC  #27
       ANDCC #29
       SEX
-      EXG   Y,D
-      EXG   Y,X
-      EXG   Y,Y
-      EXG   Y,U
-      EXG   Y,S
-      EXG   Y,PC
-      EXG   Y,W
-      EXG   Y,V
-      EXG   Y,Z
-      EXG   U,D
-      EXG   U,X
-      EXG   U,Y
-      EXG   U,U
-      EXG   U,S
-      EXG   U,PC
-      EXG   U,W
-      EXG   U,V
-      EXG   U,Z
-      EXG   S,D
-      EXG   S,X
-      EXG   S,Y
-      EXG   S,U
-      EXG   S,S
-      EXG   S,PC
-      EXG   S,W
-      EXG   S,V
-      EXG   S,Z
-      EXG   PC,D
-      EXG   PC,X
-      EXG   PC,Y
-      EXG   PC,U
-      EXG   PC,S
-      EXG   PC,PC
-      EXG   PC,W
-      EXG   PC,V
-      EXG   PC,Z
-      EXG   W,D
-      EXG   W,X
-      EXG   W,Y
-      EXG   W,U
-      EXG   W,S
-      EXG   W,PC
-      EXG   W,W
-      EXG   W,V
-      EXG   W,Z
-      EXG   V,D
-      EXG   V,X
-      EXG   V,Y
-      EXG   V,U
-      EXG   V,S
-      EXG   V,PC
-      EXG   V,W
-      EXG   V,V
-      EXG   V,Z
-      EXG   A,A
-      EXG   A,B
-      EXG   A,CC
-      EXG   A,DP
-      EXG   A,Z
-      EXG   A,E
-      EXG   A,F
-      EXG   B,A
-      EXG   B,B
-      EXG   B,CC
-      EXG   B,DP
-      EXG   B,Z
-      EXG   B,E
-      EXG   B,F
-      EXG   CC,A
-      EXG   CC,B
-      EXG   CC,CC
-      EXG   CC,DP
-      EXG   CC,Z
-      EXG   CC,E
-      EXG   CC,F
-      EXG   DP,A
-      EXG   DP,B
-      EXG   DP,CC
-      EXG   DP,DP
-      EXG   DP,Z
-      EXG   DP,E
-      EXG   DP,F
-      EXG   Z,D
-      EXG   Z,X
-      EXG   Z,Y
-      EXG   Z,U
-      EXG   Z,S
-      EXG   Z,PC
-      EXG   Z,W
-      EXG   Z,V
-      EXG   Z,A
-      EXG   Z,B
-      EXG   Z,CC
-      EXG   Z,DP
-      EXG   Z,Z
-      EXG   Z,E
-      EXG   Z,F
-      EXG   E,A
-      EXG   E,B
-      EXG   E,CC
-      EXG   E,DP
-      EXG   E,Z
-      EXG   E,E
-      EXG   E,F
-      EXG   F,A
-      EXG   F,B
-      EXG   F,CC
-      EXG   F,DP
-      EXG   F,Z
-      EXG   F,E
-      EXG   F,F
-      EXG   D,D
-      EXG   D,X
-      EXG   D,Y
-      EXG   D,U
-      EXG   D,S
-      EXG   D,PC
-      EXG   D,W
-      EXG   D,V
-      EXG   D,Z
-      EXG   X,D
-      EXG   X,X
-      EXG   X,Y
-      EXG   X,U
-      EXG   X,S
-      EXG   X,PC
-      EXG   X,W
-      EXG   X,V
-      EXG   X,Z
-      TFR   Y,D
-      TFR   Y,X
-      TFR   Y,Y
-      TFR   Y,U
-      TFR   Y,S
-      TFR   Y,PC
-      TFR   Y,W
-      TFR   Y,V
-      TFR   Y,Z
-      TFR   U,D
-      TFR   U,X
-      TFR   U,Y
-      TFR   U,U
-      TFR   U,S
-      TFR   U,PC
-      TFR   U,W
-      TFR   U,V
-      TFR   U,Z
-      TFR   S,D
-      TFR   S,X
-      TFR   S,Y
-      TFR   S,U
-      TFR   S,S
-      TFR   S,PC
-      TFR   S,W
-      TFR   S,V
-      TFR   S,Z
-      TFR   PC,D
-      TFR   PC,X
-      TFR   PC,Y
-      TFR   PC,U
-      TFR   PC,S
-      TFR   PC,PC
-      TFR   PC,W
-      TFR   PC,V
-      TFR   PC,Z
-      TFR   W,D
-      TFR   W,X
-      TFR   W,Y
-      TFR   W,U
-      TFR   W,S
-      TFR   W,PC
-      TFR   W,W
-      TFR   W,V
-      TFR   W,Z
-      TFR   V,D
-      TFR   V,X
-      TFR   V,Y
-      TFR   V,U
-      TFR   V,S
-      TFR   V,PC
-      TFR   V,W
-      TFR   V,V
-      TFR   V,Z
-      TFR   A,A
-      TFR   A,B
-      TFR   A,CC
-      TFR   A,DP
-      TFR   A,Z
-      TFR   A,E
-      TFR   A,F
-      TFR   B,A
-      TFR   B,B
-      TFR   B,CC
-      TFR   B,DP
-      TFR   B,Z
-      TFR   B,E
-      TFR   B,F
-      TFR   CC,A
-      TFR   CC,B
-      TFR   CC,CC
-      TFR   CC,DP
-      TFR   CC,Z
-      TFR   CC,E
-      TFR   CC,F
-      TFR   DP,A
-      TFR   DP,B
-      TFR   DP,CC
-      TFR   DP,DP
-      TFR   DP,Z
-      TFR   DP,E
-      TFR   DP,F
-      TFR   Z,D
-      TFR   Z,X
-      TFR   Z,Y
-      TFR   Z,U
-      TFR   Z,S
-      TFR   Z,PC
-      TFR   Z,W
-      TFR   Z,V
-      TFR   Z,A
-      TFR   Z,B
-      TFR   Z,CC
-      TFR   Z,DP
-      TFR   Z,Z
-      TFR   Z,E
-      TFR   Z,F
-      TFR   E,A
-      TFR   E,B
-      TFR   E,CC
-      TFR   E,DP
-      TFR   E,Z
-      TFR   E,E
-      TFR   E,F
-      TFR   F,A
-      TFR   F,B
-      TFR   F,CC
-      TFR   F,DP
-      TFR   F,Z
-      TFR   F,E
-      TFR   F,F
-      TFR   D,D
-      TFR   D,X
-      TFR   D,Y
-      TFR   D,U
-      TFR   D,S
-      TFR   D,PC
-      TFR   D,W
-      TFR   D,V
-      TFR   D,Z
-      TFR   X,D
-      TFR   X,X
-      TFR   X,Y
-      TFR   X,U
-      TFR   X,S
-      TFR   X,PC
-      TFR   X,W
-      TFR   X,V
-      TFR   X,Z
+      EXG   Y, D
+      EXG   Y, X
+      EXG   Y, Y
+      EXG   Y, U
+      EXG   Y, S
+      EXG   Y, PC
+      EXG   Y, W
+      EXG   Y, V
+      EXG   Y, Z
+      EXG   U, D
+      EXG   U, X
+      EXG   U, Y
+      EXG   U, U
+      EXG   U, S
+      EXG   U, PC
+      EXG   U, W
+      EXG   U, V
+      EXG   U, Z
+      EXG   S, D
+      EXG   S, X
+      EXG   S, Y
+      EXG   S, U
+      EXG   S, S
+      EXG   S, PC
+      EXG   S, W
+      EXG   S, V
+      EXG   S, Z
+      EXG   PC, D
+      EXG   PC, X
+      EXG   PC, Y
+      EXG   PC, U
+      EXG   PC, S
+      EXG   PC, PC
+      EXG   PC, W
+      EXG   PC, V
+      EXG   PC, Z
+      EXG   W, D
+      EXG   W, X
+      EXG   W, Y
+      EXG   W, U
+      EXG   W, S
+      EXG   W, PC
+      EXG   W, W
+      EXG   W, V
+      EXG   W, Z
+      EXG   V, D
+      EXG   V, X
+      EXG   V, Y
+      EXG   V, U
+      EXG   V, S
+      EXG   V, PC
+      EXG   V, W
+      EXG   V, V
+      EXG   V, Z
+      EXG   A, A
+      EXG   A, B
+      EXG   A, CC
+      EXG   A, DP
+      EXG   A, Z
+      EXG   A, E
+      EXG   A, F
+      EXG   B, A
+      EXG   B, B
+      EXG   B, CC
+      EXG   B, DP
+      EXG   B, Z
+      EXG   B, E
+      EXG   B, F
+      EXG   CC, A
+      EXG   CC, B
+      EXG   CC, CC
+      EXG   CC, DP
+      EXG   CC, Z
+      EXG   CC, E
+      EXG   CC, F
+      EXG   DP, A
+      EXG   DP, B
+      EXG   DP, CC
+      EXG   DP, DP
+      EXG   DP, Z
+      EXG   DP, E
+      EXG   DP, F
+      EXG   Z, D
+      EXG   Z, X
+      EXG   Z, Y
+      EXG   Z, U
+      EXG   Z, S
+      EXG   Z, PC
+      EXG   Z, W
+      EXG   Z, V
+      EXG   Z, A
+      EXG   Z, B
+      EXG   Z, CC
+      EXG   Z, DP
+      EXG   Z, Z
+      EXG   Z, E
+      EXG   Z, F
+      EXG   E, A
+      EXG   E, B
+      EXG   E, CC
+      EXG   E, DP
+      EXG   E, Z
+      EXG   E, E
+      EXG   E, F
+      EXG   F, A
+      EXG   F, B
+      EXG   F, CC
+      EXG   F, DP
+      EXG   F, Z
+      EXG   F, E
+      EXG   F, F
+      EXG   D, D
+      EXG   D, X
+      EXG   D, Y
+      EXG   D, U
+      EXG   D, S
+      EXG   D, PC
+      EXG   D, W
+      EXG   D, V
+      EXG   D, Z
+      EXG   X, D
+      EXG   X, X
+      EXG   X, Y
+      EXG   X, U
+      EXG   X, S
+      EXG   X, PC
+      EXG   X, W
+      EXG   X, V
+      EXG   X, Z
+      TFR   Y, D
+      TFR   Y, X
+      TFR   Y, Y
+      TFR   Y, U
+      TFR   Y, S
+      TFR   Y, PC
+      TFR   Y, W
+      TFR   Y, V
+      TFR   Y, Z
+      TFR   U, D
+      TFR   U, X
+      TFR   U, Y
+      TFR   U, U
+      TFR   U, S
+      TFR   U, PC
+      TFR   U, W
+      TFR   U, V
+      TFR   U, Z
+      TFR   S, D
+      TFR   S, X
+      TFR   S, Y
+      TFR   S, U
+      TFR   S, S
+      TFR   S, PC
+      TFR   S, W
+      TFR   S, V
+      TFR   S, Z
+      TFR   PC, D
+      TFR   PC, X
+      TFR   PC, Y
+      TFR   PC, U
+      TFR   PC, S
+      TFR   PC, PC
+      TFR   PC, W
+      TFR   PC, V
+      TFR   PC, Z
+      TFR   W, D
+      TFR   W, X
+      TFR   W, Y
+      TFR   W, U
+      TFR   W, S
+      TFR   W, PC
+      TFR   W, W
+      TFR   W, V
+      TFR   W, Z
+      TFR   V, D
+      TFR   V, X
+      TFR   V, Y
+      TFR   V, U
+      TFR   V, S
+      TFR   V, PC
+      TFR   V, W
+      TFR   V, V
+      TFR   V, Z
+      TFR   A, A
+      TFR   A, B
+      TFR   A, CC
+      TFR   A, DP
+      TFR   A, Z
+      TFR   A, E
+      TFR   A, F
+      TFR   B, A
+      TFR   B, B
+      TFR   B, CC
+      TFR   B, DP
+      TFR   B, Z
+      TFR   B, E
+      TFR   B, F
+      TFR   CC, A
+      TFR   CC, B
+      TFR   CC, CC
+      TFR   CC, DP
+      TFR   CC, Z
+      TFR   CC, E
+      TFR   CC, F
+      TFR   DP, A
+      TFR   DP, B
+      TFR   DP, CC
+      TFR   DP, DP
+      TFR   DP, Z
+      TFR   DP, E
+      TFR   DP, F
+      TFR   Z, D
+      TFR   Z, X
+      TFR   Z, Y
+      TFR   Z, U
+      TFR   Z, S
+      TFR   Z, PC
+      TFR   Z, W
+      TFR   Z, V
+      TFR   Z, A
+      TFR   Z, B
+      TFR   Z, CC
+      TFR   Z, DP
+      TFR   Z, Z
+      TFR   Z, E
+      TFR   Z, F
+      TFR   E, A
+      TFR   E, B
+      TFR   E, CC
+      TFR   E, DP
+      TFR   E, Z
+      TFR   E, E
+      TFR   E, F
+      TFR   F, A
+      TFR   F, B
+      TFR   F, CC
+      TFR   F, DP
+      TFR   F, Z
+      TFR   F, E
+      TFR   F, F
+      TFR   D, D
+      TFR   D, X
+      TFR   D, Y
+      TFR   D, U
+      TFR   D, S
+      TFR   D, PC
+      TFR   D, W
+      TFR   D, V
+      TFR   D, Z
+      TFR   X, D
+      TFR   X, X
+      TFR   X, Y
+      TFR   X, U
+      TFR   X, S
+      TFR   X, PC
+      TFR   X, W
+      TFR   X, V
+      TFR   X, Z
       BRA   *+35
       BRA   *-126
       BRA   *
@@ -5084,214 +5084,214 @@
       NEG   $00CB,U
       NEG   F,U
       NEG   D,U
-      OIM   #$62,3,S
-      OIM   #$62,-16,S
-      OIM   #$62,,X+
-      OIM   #$62,,X++
-      OIM   #$62,,-X
-      OIM   #$62,,--X
-      OIM   #$62,,X
-      OIM   #$62,B,X
-      OIM   #$62,A,X
-      OIM   #$62,E,X
-      OIM   #$62,-119,X
-      OIM   #$62,<-16,X
-      OIM   #$62,<0,X
-      OIM   #$62,16,X
-      OIM   #$62,-$7575,X
-      OIM   #$62,>-$0075,X
-      OIM   #$62,$008B,X
-      OIM   #$62,F,X
-      OIM   #$62,D,X
-      OIM   #$62,*-111,PCR
-      OIM   #$62,*,PCR
-      OIM   #$62,*+1,PCR
-      OIM   #$62,*-$716C,PCR
-      OIM   #$62,*+$0094,PCR
-      OIM   #$62,W,X
-      OIM   #$62,,W
-      OIM   #$62,[,W]
-      OIM   #$62,[,X++]
-      OIM   #$62,[,--X]
-      OIM   #$62,[,X]
-      OIM   #$62,[B,X]
-      OIM   #$62,[A,X]
-      OIM   #$62,[E,X]
-      OIM   #$62,[-103,X]
-      OIM   #$62,[<0,X]
-      OIM   #$62,[1,X]
-      OIM   #$62,[-$6565,X]
-      OIM   #$62,[>-$0065,X]
-      OIM   #$62,[$009B,X]
-      OIM   #$62,[F,X]
-      OIM   #$62,[D,X]
-      OIM   #$62,[*-95,PCR]
-      OIM   #$62,[*,PCR]
-      OIM   #$62,[*+1,PCR]
-      OIM   #$62,[*-$615C,PCR]
-      OIM   #$62,[*+$00A4,PCR]
-      OIM   #$62,[W,X]
-      OIM   #$62,[$A0A1]
-      OIM   #$62,,Y+
-      OIM   #$62,,Y++
-      OIM   #$62,,-Y
-      OIM   #$62,,--Y
-      OIM   #$62,,Y
-      OIM   #$62,B,Y
-      OIM   #$62,A,Y
-      OIM   #$62,E,Y
-      OIM   #$62,-87,Y
-      OIM   #$62,<-16,Y
-      OIM   #$62,<0,Y
-      OIM   #$62,16,Y
-      OIM   #$62,-$5555,Y
-      OIM   #$62,>-$0055,Y
-      OIM   #$62,$00AB,Y
-      OIM   #$62,F,Y
-      OIM   #$62,D,Y
-      OIM   #$62,W,Y
-      OIM   #$62,-$4F4F,W
-      OIM   #$62,>-$004F,W
-      OIM   #$62,$00B1,W
-      OIM   #$62,[-$4E4E,W]
-      OIM   #$62,[>-$004E,W]
-      OIM   #$62,[$00B2,W]
-      OIM   #$62,[,Y++]
-      OIM   #$62,[,--Y]
-      OIM   #$62,[,Y]
-      OIM   #$62,[B,Y]
-      OIM   #$62,[A,Y]
-      OIM   #$62,[E,Y]
-      OIM   #$62,[-71,Y]
-      OIM   #$62,[<0,Y]
-      OIM   #$62,[1,Y]
-      OIM   #$62,[-$4545,Y]
-      OIM   #$62,[>-$0045,Y]
-      OIM   #$62,[$00BB,Y]
-      OIM   #$62,[F,Y]
-      OIM   #$62,[D,Y]
-      OIM   #$62,[W,Y]
-      OIM   #$62,,U+
-      OIM   #$62,,U++
-      OIM   #$62,,-U
-      OIM   #$62,,--U
-      OIM   #$62,,U
-      OIM   #$62,B,U
-      OIM   #$62,A,U
-      OIM   #$62,E,U
-      OIM   #$62,-55,U
-      OIM   #$62,<-16,U
-      OIM   #$62,<0,U
-      OIM   #$62,16,U
-      OIM   #$62,-$3535,U
-      OIM   #$62,>-$0035,U
-      OIM   #$62,$00CB,U
-      OIM   #$62,F,U
-      OIM   #$62,D,U
-      AIM   #$63,4,S
-      AIM   #$63,-16,S
-      AIM   #$63,,X+
-      AIM   #$63,,X++
-      AIM   #$63,,-X
-      AIM   #$63,,--X
-      AIM   #$63,,X
-      AIM   #$63,B,X
-      AIM   #$63,A,X
-      AIM   #$63,E,X
-      AIM   #$63,-119,X
-      AIM   #$63,<-16,X
-      AIM   #$63,<0,X
-      AIM   #$63,16,X
-      AIM   #$63,-$7575,X
-      AIM   #$63,>-$0075,X
-      AIM   #$63,$008B,X
-      AIM   #$63,F,X
-      AIM   #$63,D,X
-      AIM   #$63,*-111,PCR
-      AIM   #$63,*,PCR
-      AIM   #$63,*+1,PCR
-      AIM   #$63,*-$716C,PCR
-      AIM   #$63,*+$0094,PCR
-      AIM   #$63,W,X
-      AIM   #$63,,W
-      AIM   #$63,[,W]
-      AIM   #$63,[,X++]
-      AIM   #$63,[,--X]
-      AIM   #$63,[,X]
-      AIM   #$63,[B,X]
-      AIM   #$63,[A,X]
-      AIM   #$63,[E,X]
-      AIM   #$63,[-103,X]
-      AIM   #$63,[<0,X]
-      AIM   #$63,[1,X]
-      AIM   #$63,[-$6565,X]
-      AIM   #$63,[>-$0065,X]
-      AIM   #$63,[$009B,X]
-      AIM   #$63,[F,X]
-      AIM   #$63,[D,X]
-      AIM   #$63,[*-95,PCR]
-      AIM   #$63,[*,PCR]
-      AIM   #$63,[*+1,PCR]
-      AIM   #$63,[*-$615C,PCR]
-      AIM   #$63,[*+$00A4,PCR]
-      AIM   #$63,[W,X]
-      AIM   #$63,[$A0A1]
-      AIM   #$63,,Y+
-      AIM   #$63,,Y++
-      AIM   #$63,,-Y
-      AIM   #$63,,--Y
-      AIM   #$63,,Y
-      AIM   #$63,B,Y
-      AIM   #$63,A,Y
-      AIM   #$63,E,Y
-      AIM   #$63,-87,Y
-      AIM   #$63,<-16,Y
-      AIM   #$63,<0,Y
-      AIM   #$63,16,Y
-      AIM   #$63,-$5555,Y
-      AIM   #$63,>-$0055,Y
-      AIM   #$63,$00AB,Y
-      AIM   #$63,F,Y
-      AIM   #$63,D,Y
-      AIM   #$63,W,Y
-      AIM   #$63,-$4F4F,W
-      AIM   #$63,>-$004F,W
-      AIM   #$63,$00B1,W
-      AIM   #$63,[-$4E4E,W]
-      AIM   #$63,[>-$004E,W]
-      AIM   #$63,[$00B2,W]
-      AIM   #$63,[,Y++]
-      AIM   #$63,[,--Y]
-      AIM   #$63,[,Y]
-      AIM   #$63,[B,Y]
-      AIM   #$63,[A,Y]
-      AIM   #$63,[E,Y]
-      AIM   #$63,[-71,Y]
-      AIM   #$63,[<0,Y]
-      AIM   #$63,[1,Y]
-      AIM   #$63,[-$4545,Y]
-      AIM   #$63,[>-$0045,Y]
-      AIM   #$63,[$00BB,Y]
-      AIM   #$63,[F,Y]
-      AIM   #$63,[D,Y]
-      AIM   #$63,[W,Y]
-      AIM   #$63,,U+
-      AIM   #$63,,U++
-      AIM   #$63,,-U
-      AIM   #$63,,--U
-      AIM   #$63,,U
-      AIM   #$63,B,U
-      AIM   #$63,A,U
-      AIM   #$63,E,U
-      AIM   #$63,-55,U
-      AIM   #$63,<-16,U
-      AIM   #$63,<0,U
-      AIM   #$63,16,U
-      AIM   #$63,-$3535,U
-      AIM   #$63,>-$0035,U
-      AIM   #$63,$00CB,U
-      AIM   #$63,F,U
-      AIM   #$63,D,U
+      OIM   #$62, 3,S
+      OIM   #$62, -16,S
+      OIM   #$62, ,X+
+      OIM   #$62, ,X++
+      OIM   #$62, ,-X
+      OIM   #$62, ,--X
+      OIM   #$62, ,X
+      OIM   #$62, B,X
+      OIM   #$62, A,X
+      OIM   #$62, E,X
+      OIM   #$62, -119,X
+      OIM   #$62, <-16,X
+      OIM   #$62, <0,X
+      OIM   #$62, 16,X
+      OIM   #$62, -$7575,X
+      OIM   #$62, >-$0075,X
+      OIM   #$62, $008B,X
+      OIM   #$62, F,X
+      OIM   #$62, D,X
+      OIM   #$62, *-111,PCR
+      OIM   #$62, *,PCR
+      OIM   #$62, *+1,PCR
+      OIM   #$62, *-$716C,PCR
+      OIM   #$62, *+$0094,PCR
+      OIM   #$62, W,X
+      OIM   #$62, ,W
+      OIM   #$62, [,W]
+      OIM   #$62, [,X++]
+      OIM   #$62, [,--X]
+      OIM   #$62, [,X]
+      OIM   #$62, [B,X]
+      OIM   #$62, [A,X]
+      OIM   #$62, [E,X]
+      OIM   #$62, [-103,X]
+      OIM   #$62, [<0,X]
+      OIM   #$62, [1,X]
+      OIM   #$62, [-$6565,X]
+      OIM   #$62, [>-$0065,X]
+      OIM   #$62, [$009B,X]
+      OIM   #$62, [F,X]
+      OIM   #$62, [D,X]
+      OIM   #$62, [*-95,PCR]
+      OIM   #$62, [*,PCR]
+      OIM   #$62, [*+1,PCR]
+      OIM   #$62, [*-$615C,PCR]
+      OIM   #$62, [*+$00A4,PCR]
+      OIM   #$62, [W,X]
+      OIM   #$62, [$A0A1]
+      OIM   #$62, ,Y+
+      OIM   #$62, ,Y++
+      OIM   #$62, ,-Y
+      OIM   #$62, ,--Y
+      OIM   #$62, ,Y
+      OIM   #$62, B,Y
+      OIM   #$62, A,Y
+      OIM   #$62, E,Y
+      OIM   #$62, -87,Y
+      OIM   #$62, <-16,Y
+      OIM   #$62, <0,Y
+      OIM   #$62, 16,Y
+      OIM   #$62, -$5555,Y
+      OIM   #$62, >-$0055,Y
+      OIM   #$62, $00AB,Y
+      OIM   #$62, F,Y
+      OIM   #$62, D,Y
+      OIM   #$62, W,Y
+      OIM   #$62, -$4F4F,W
+      OIM   #$62, >-$004F,W
+      OIM   #$62, $00B1,W
+      OIM   #$62, [-$4E4E,W]
+      OIM   #$62, [>-$004E,W]
+      OIM   #$62, [$00B2,W]
+      OIM   #$62, [,Y++]
+      OIM   #$62, [,--Y]
+      OIM   #$62, [,Y]
+      OIM   #$62, [B,Y]
+      OIM   #$62, [A,Y]
+      OIM   #$62, [E,Y]
+      OIM   #$62, [-71,Y]
+      OIM   #$62, [<0,Y]
+      OIM   #$62, [1,Y]
+      OIM   #$62, [-$4545,Y]
+      OIM   #$62, [>-$0045,Y]
+      OIM   #$62, [$00BB,Y]
+      OIM   #$62, [F,Y]
+      OIM   #$62, [D,Y]
+      OIM   #$62, [W,Y]
+      OIM   #$62, ,U+
+      OIM   #$62, ,U++
+      OIM   #$62, ,-U
+      OIM   #$62, ,--U
+      OIM   #$62, ,U
+      OIM   #$62, B,U
+      OIM   #$62, A,U
+      OIM   #$62, E,U
+      OIM   #$62, -55,U
+      OIM   #$62, <-16,U
+      OIM   #$62, <0,U
+      OIM   #$62, 16,U
+      OIM   #$62, -$3535,U
+      OIM   #$62, >-$0035,U
+      OIM   #$62, $00CB,U
+      OIM   #$62, F,U
+      OIM   #$62, D,U
+      AIM   #$63, 4,S
+      AIM   #$63, -16,S
+      AIM   #$63, ,X+
+      AIM   #$63, ,X++
+      AIM   #$63, ,-X
+      AIM   #$63, ,--X
+      AIM   #$63, ,X
+      AIM   #$63, B,X
+      AIM   #$63, A,X
+      AIM   #$63, E,X
+      AIM   #$63, -119,X
+      AIM   #$63, <-16,X
+      AIM   #$63, <0,X
+      AIM   #$63, 16,X
+      AIM   #$63, -$7575,X
+      AIM   #$63, >-$0075,X
+      AIM   #$63, $008B,X
+      AIM   #$63, F,X
+      AIM   #$63, D,X
+      AIM   #$63, *-111,PCR
+      AIM   #$63, *,PCR
+      AIM   #$63, *+1,PCR
+      AIM   #$63, *-$716C,PCR
+      AIM   #$63, *+$0094,PCR
+      AIM   #$63, W,X
+      AIM   #$63, ,W
+      AIM   #$63, [,W]
+      AIM   #$63, [,X++]
+      AIM   #$63, [,--X]
+      AIM   #$63, [,X]
+      AIM   #$63, [B,X]
+      AIM   #$63, [A,X]
+      AIM   #$63, [E,X]
+      AIM   #$63, [-103,X]
+      AIM   #$63, [<0,X]
+      AIM   #$63, [1,X]
+      AIM   #$63, [-$6565,X]
+      AIM   #$63, [>-$0065,X]
+      AIM   #$63, [$009B,X]
+      AIM   #$63, [F,X]
+      AIM   #$63, [D,X]
+      AIM   #$63, [*-95,PCR]
+      AIM   #$63, [*,PCR]
+      AIM   #$63, [*+1,PCR]
+      AIM   #$63, [*-$615C,PCR]
+      AIM   #$63, [*+$00A4,PCR]
+      AIM   #$63, [W,X]
+      AIM   #$63, [$A0A1]
+      AIM   #$63, ,Y+
+      AIM   #$63, ,Y++
+      AIM   #$63, ,-Y
+      AIM   #$63, ,--Y
+      AIM   #$63, ,Y
+      AIM   #$63, B,Y
+      AIM   #$63, A,Y
+      AIM   #$63, E,Y
+      AIM   #$63, -87,Y
+      AIM   #$63, <-16,Y
+      AIM   #$63, <0,Y
+      AIM   #$63, 16,Y
+      AIM   #$63, -$5555,Y
+      AIM   #$63, >-$0055,Y
+      AIM   #$63, $00AB,Y
+      AIM   #$63, F,Y
+      AIM   #$63, D,Y
+      AIM   #$63, W,Y
+      AIM   #$63, -$4F4F,W
+      AIM   #$63, >-$004F,W
+      AIM   #$63, $00B1,W
+      AIM   #$63, [-$4E4E,W]
+      AIM   #$63, [>-$004E,W]
+      AIM   #$63, [$00B2,W]
+      AIM   #$63, [,Y++]
+      AIM   #$63, [,--Y]
+      AIM   #$63, [,Y]
+      AIM   #$63, [B,Y]
+      AIM   #$63, [A,Y]
+      AIM   #$63, [E,Y]
+      AIM   #$63, [-71,Y]
+      AIM   #$63, [<0,Y]
+      AIM   #$63, [1,Y]
+      AIM   #$63, [-$4545,Y]
+      AIM   #$63, [>-$0045,Y]
+      AIM   #$63, [$00BB,Y]
+      AIM   #$63, [F,Y]
+      AIM   #$63, [D,Y]
+      AIM   #$63, [W,Y]
+      AIM   #$63, ,U+
+      AIM   #$63, ,U++
+      AIM   #$63, ,-U
+      AIM   #$63, ,--U
+      AIM   #$63, ,U
+      AIM   #$63, B,U
+      AIM   #$63, A,U
+      AIM   #$63, E,U
+      AIM   #$63, -55,U
+      AIM   #$63, <-16,U
+      AIM   #$63, <0,U
+      AIM   #$63, 16,U
+      AIM   #$63, -$3535,U
+      AIM   #$63, >-$0035,U
+      AIM   #$63, $00CB,U
+      AIM   #$63, F,U
+      AIM   #$63, D,U
       COM   4,S
       COM   -16,S
       COM   ,X+
@@ -5500,110 +5500,110 @@
       LSR   $00CB,U
       LSR   F,U
       LSR   D,U
-      EIM   #$66,7,S
-      EIM   #$66,-16,S
-      EIM   #$66,,X+
-      EIM   #$66,,X++
-      EIM   #$66,,-X
-      EIM   #$66,,--X
-      EIM   #$66,,X
-      EIM   #$66,B,X
-      EIM   #$66,A,X
-      EIM   #$66,E,X
-      EIM   #$66,-119,X
-      EIM   #$66,<-16,X
-      EIM   #$66,<0,X
-      EIM   #$66,16,X
-      EIM   #$66,-$7575,X
-      EIM   #$66,>-$0075,X
-      EIM   #$66,$008B,X
-      EIM   #$66,F,X
-      EIM   #$66,D,X
-      EIM   #$66,*-111,PCR
-      EIM   #$66,*,PCR
-      EIM   #$66,*+1,PCR
-      EIM   #$66,*-$716C,PCR
-      EIM   #$66,*+$0094,PCR
-      EIM   #$66,W,X
-      EIM   #$66,,W
-      EIM   #$66,[,W]
-      EIM   #$66,[,X++]
-      EIM   #$66,[,--X]
-      EIM   #$66,[,X]
-      EIM   #$66,[B,X]
-      EIM   #$66,[A,X]
-      EIM   #$66,[E,X]
-      EIM   #$66,[-103,X]
-      EIM   #$66,[<0,X]
-      EIM   #$66,[1,X]
-      EIM   #$66,[-$6565,X]
-      EIM   #$66,[>-$0065,X]
-      EIM   #$66,[$009B,X]
-      EIM   #$66,[F,X]
-      EIM   #$66,[D,X]
-      EIM   #$66,[*-95,PCR]
-      EIM   #$66,[*,PCR]
-      EIM   #$66,[*+1,PCR]
-      EIM   #$66,[*-$615C,PCR]
-      EIM   #$66,[*+$00A4,PCR]
-      EIM   #$66,[W,X]
-      EIM   #$66,[$A0A1]
-      EIM   #$66,,Y+
-      EIM   #$66,,Y++
-      EIM   #$66,,-Y
-      EIM   #$66,,--Y
-      EIM   #$66,,Y
-      EIM   #$66,B,Y
-      EIM   #$66,A,Y
-      EIM   #$66,E,Y
-      EIM   #$66,-87,Y
-      EIM   #$66,<-16,Y
-      EIM   #$66,<0,Y
-      EIM   #$66,16,Y
-      EIM   #$66,-$5555,Y
-      EIM   #$66,>-$0055,Y
-      EIM   #$66,$00AB,Y
-      EIM   #$66,F,Y
-      EIM   #$66,D,Y
-      EIM   #$66,W,Y
-      EIM   #$66,-$4F4F,W
-      EIM   #$66,>-$004F,W
-      EIM   #$66,$00B1,W
-      EIM   #$66,[-$4E4E,W]
-      EIM   #$66,[>-$004E,W]
-      EIM   #$66,[$00B2,W]
-      EIM   #$66,[,Y++]
-      EIM   #$66,[,--Y]
-      EIM   #$66,[,Y]
-      EIM   #$66,[B,Y]
-      EIM   #$66,[A,Y]
-      EIM   #$66,[E,Y]
-      EIM   #$66,[-71,Y]
-      EIM   #$66,[<0,Y]
-      EIM   #$66,[1,Y]
-      EIM   #$66,[-$4545,Y]
-      EIM   #$66,[>-$0045,Y]
-      EIM   #$66,[$00BB,Y]
-      EIM   #$66,[F,Y]
-      EIM   #$66,[D,Y]
-      EIM   #$66,[W,Y]
-      EIM   #$66,,U+
-      EIM   #$66,,U++
-      EIM   #$66,,-U
-      EIM   #$66,,--U
-      EIM   #$66,,U
-      EIM   #$66,B,U
-      EIM   #$66,A,U
-      EIM   #$66,E,U
-      EIM   #$66,-55,U
-      EIM   #$66,<-16,U
-      EIM   #$66,<0,U
-      EIM   #$66,16,U
-      EIM   #$66,-$3535,U
-      EIM   #$66,>-$0035,U
-      EIM   #$66,$00CB,U
-      EIM   #$66,F,U
-      EIM   #$66,D,U
+      EIM   #$66, 7,S
+      EIM   #$66, -16,S
+      EIM   #$66, ,X+
+      EIM   #$66, ,X++
+      EIM   #$66, ,-X
+      EIM   #$66, ,--X
+      EIM   #$66, ,X
+      EIM   #$66, B,X
+      EIM   #$66, A,X
+      EIM   #$66, E,X
+      EIM   #$66, -119,X
+      EIM   #$66, <-16,X
+      EIM   #$66, <0,X
+      EIM   #$66, 16,X
+      EIM   #$66, -$7575,X
+      EIM   #$66, >-$0075,X
+      EIM   #$66, $008B,X
+      EIM   #$66, F,X
+      EIM   #$66, D,X
+      EIM   #$66, *-111,PCR
+      EIM   #$66, *,PCR
+      EIM   #$66, *+1,PCR
+      EIM   #$66, *-$716C,PCR
+      EIM   #$66, *+$0094,PCR
+      EIM   #$66, W,X
+      EIM   #$66, ,W
+      EIM   #$66, [,W]
+      EIM   #$66, [,X++]
+      EIM   #$66, [,--X]
+      EIM   #$66, [,X]
+      EIM   #$66, [B,X]
+      EIM   #$66, [A,X]
+      EIM   #$66, [E,X]
+      EIM   #$66, [-103,X]
+      EIM   #$66, [<0,X]
+      EIM   #$66, [1,X]
+      EIM   #$66, [-$6565,X]
+      EIM   #$66, [>-$0065,X]
+      EIM   #$66, [$009B,X]
+      EIM   #$66, [F,X]
+      EIM   #$66, [D,X]
+      EIM   #$66, [*-95,PCR]
+      EIM   #$66, [*,PCR]
+      EIM   #$66, [*+1,PCR]
+      EIM   #$66, [*-$615C,PCR]
+      EIM   #$66, [*+$00A4,PCR]
+      EIM   #$66, [W,X]
+      EIM   #$66, [$A0A1]
+      EIM   #$66, ,Y+
+      EIM   #$66, ,Y++
+      EIM   #$66, ,-Y
+      EIM   #$66, ,--Y
+      EIM   #$66, ,Y
+      EIM   #$66, B,Y
+      EIM   #$66, A,Y
+      EIM   #$66, E,Y
+      EIM   #$66, -87,Y
+      EIM   #$66, <-16,Y
+      EIM   #$66, <0,Y
+      EIM   #$66, 16,Y
+      EIM   #$66, -$5555,Y
+      EIM   #$66, >-$0055,Y
+      EIM   #$66, $00AB,Y
+      EIM   #$66, F,Y
+      EIM   #$66, D,Y
+      EIM   #$66, W,Y
+      EIM   #$66, -$4F4F,W
+      EIM   #$66, >-$004F,W
+      EIM   #$66, $00B1,W
+      EIM   #$66, [-$4E4E,W]
+      EIM   #$66, [>-$004E,W]
+      EIM   #$66, [$00B2,W]
+      EIM   #$66, [,Y++]
+      EIM   #$66, [,--Y]
+      EIM   #$66, [,Y]
+      EIM   #$66, [B,Y]
+      EIM   #$66, [A,Y]
+      EIM   #$66, [E,Y]
+      EIM   #$66, [-71,Y]
+      EIM   #$66, [<0,Y]
+      EIM   #$66, [1,Y]
+      EIM   #$66, [-$4545,Y]
+      EIM   #$66, [>-$0045,Y]
+      EIM   #$66, [$00BB,Y]
+      EIM   #$66, [F,Y]
+      EIM   #$66, [D,Y]
+      EIM   #$66, [W,Y]
+      EIM   #$66, ,U+
+      EIM   #$66, ,U++
+      EIM   #$66, ,-U
+      EIM   #$66, ,--U
+      EIM   #$66, ,U
+      EIM   #$66, B,U
+      EIM   #$66, A,U
+      EIM   #$66, E,U
+      EIM   #$66, -55,U
+      EIM   #$66, <-16,U
+      EIM   #$66, <0,U
+      EIM   #$66, 16,U
+      EIM   #$66, -$3535,U
+      EIM   #$66, >-$0035,U
+      EIM   #$66, $00CB,U
+      EIM   #$66, F,U
+      EIM   #$66, D,U
       ROR   7,S
       ROR   -16,S
       ROR   ,X+
@@ -6124,110 +6124,110 @@
       DEC   $00CB,U
       DEC   F,U
       DEC   D,U
-      TIM   #$6C,13,S
-      TIM   #$6C,-16,S
-      TIM   #$6C,,X+
-      TIM   #$6C,,X++
-      TIM   #$6C,,-X
-      TIM   #$6C,,--X
-      TIM   #$6C,,X
-      TIM   #$6C,B,X
-      TIM   #$6C,A,X
-      TIM   #$6C,E,X
-      TIM   #$6C,-119,X
-      TIM   #$6C,<-16,X
-      TIM   #$6C,<0,X
-      TIM   #$6C,16,X
-      TIM   #$6C,-$7575,X
-      TIM   #$6C,>-$0075,X
-      TIM   #$6C,$008B,X
-      TIM   #$6C,F,X
-      TIM   #$6C,D,X
-      TIM   #$6C,*-111,PCR
-      TIM   #$6C,*,PCR
-      TIM   #$6C,*+1,PCR
-      TIM   #$6C,*-$716C,PCR
-      TIM   #$6C,*+$0094,PCR
-      TIM   #$6C,W,X
-      TIM   #$6C,,W
-      TIM   #$6C,[,W]
-      TIM   #$6C,[,X++]
-      TIM   #$6C,[,--X]
-      TIM   #$6C,[,X]
-      TIM   #$6C,[B,X]
-      TIM   #$6C,[A,X]
-      TIM   #$6C,[E,X]
-      TIM   #$6C,[-103,X]
-      TIM   #$6C,[<0,X]
-      TIM   #$6C,[1,X]
-      TIM   #$6C,[-$6565,X]
-      TIM   #$6C,[>-$0065,X]
-      TIM   #$6C,[$009B,X]
-      TIM   #$6C,[F,X]
-      TIM   #$6C,[D,X]
-      TIM   #$6C,[*-95,PCR]
-      TIM   #$6C,[*,PCR]
-      TIM   #$6C,[*+1,PCR]
-      TIM   #$6C,[*-$615C,PCR]
-      TIM   #$6C,[*+$00A4,PCR]
-      TIM   #$6C,[W,X]
-      TIM   #$6C,[$A0A1]
-      TIM   #$6C,,Y+
-      TIM   #$6C,,Y++
-      TIM   #$6C,,-Y
-      TIM   #$6C,,--Y
-      TIM   #$6C,,Y
-      TIM   #$6C,B,Y
-      TIM   #$6C,A,Y
-      TIM   #$6C,E,Y
-      TIM   #$6C,-87,Y
-      TIM   #$6C,<-16,Y
-      TIM   #$6C,<0,Y
-      TIM   #$6C,16,Y
-      TIM   #$6C,-$5555,Y
-      TIM   #$6C,>-$0055,Y
-      TIM   #$6C,$00AB,Y
-      TIM   #$6C,F,Y
-      TIM   #$6C,D,Y
-      TIM   #$6C,W,Y
-      TIM   #$6C,-$4F4F,W
-      TIM   #$6C,>-$004F,W
-      TIM   #$6C,$00B1,W
-      TIM   #$6C,[-$4E4E,W]
-      TIM   #$6C,[>-$004E,W]
-      TIM   #$6C,[$00B2,W]
-      TIM   #$6C,[,Y++]
-      TIM   #$6C,[,--Y]
-      TIM   #$6C,[,Y]
-      TIM   #$6C,[B,Y]
-      TIM   #$6C,[A,Y]
-      TIM   #$6C,[E,Y]
-      TIM   #$6C,[-71,Y]
-      TIM   #$6C,[<0,Y]
-      TIM   #$6C,[1,Y]
-      TIM   #$6C,[-$4545,Y]
-      TIM   #$6C,[>-$0045,Y]
-      TIM   #$6C,[$00BB,Y]
-      TIM   #$6C,[F,Y]
-      TIM   #$6C,[D,Y]
-      TIM   #$6C,[W,Y]
-      TIM   #$6C,,U+
-      TIM   #$6C,,U++
-      TIM   #$6C,,-U
-      TIM   #$6C,,--U
-      TIM   #$6C,,U
-      TIM   #$6C,B,U
-      TIM   #$6C,A,U
-      TIM   #$6C,E,U
-      TIM   #$6C,-55,U
-      TIM   #$6C,<-16,U
-      TIM   #$6C,<0,U
-      TIM   #$6C,16,U
-      TIM   #$6C,-$3535,U
-      TIM   #$6C,>-$0035,U
-      TIM   #$6C,$00CB,U
-      TIM   #$6C,F,U
-      TIM   #$6C,D,U
+      TIM   #$6C, 13,S
+      TIM   #$6C, -16,S
+      TIM   #$6C, ,X+
+      TIM   #$6C, ,X++
+      TIM   #$6C, ,-X
+      TIM   #$6C, ,--X
+      TIM   #$6C, ,X
+      TIM   #$6C, B,X
+      TIM   #$6C, A,X
+      TIM   #$6C, E,X
+      TIM   #$6C, -119,X
+      TIM   #$6C, <-16,X
+      TIM   #$6C, <0,X
+      TIM   #$6C, 16,X
+      TIM   #$6C, -$7575,X
+      TIM   #$6C, >-$0075,X
+      TIM   #$6C, $008B,X
+      TIM   #$6C, F,X
+      TIM   #$6C, D,X
+      TIM   #$6C, *-111,PCR
+      TIM   #$6C, *,PCR
+      TIM   #$6C, *+1,PCR
+      TIM   #$6C, *-$716C,PCR
+      TIM   #$6C, *+$0094,PCR
+      TIM   #$6C, W,X
+      TIM   #$6C, ,W
+      TIM   #$6C, [,W]
+      TIM   #$6C, [,X++]
+      TIM   #$6C, [,--X]
+      TIM   #$6C, [,X]
+      TIM   #$6C, [B,X]
+      TIM   #$6C, [A,X]
+      TIM   #$6C, [E,X]
+      TIM   #$6C, [-103,X]
+      TIM   #$6C, [<0,X]
+      TIM   #$6C, [1,X]
+      TIM   #$6C, [-$6565,X]
+      TIM   #$6C, [>-$0065,X]
+      TIM   #$6C, [$009B,X]
+      TIM   #$6C, [F,X]
+      TIM   #$6C, [D,X]
+      TIM   #$6C, [*-95,PCR]
+      TIM   #$6C, [*,PCR]
+      TIM   #$6C, [*+1,PCR]
+      TIM   #$6C, [*-$615C,PCR]
+      TIM   #$6C, [*+$00A4,PCR]
+      TIM   #$6C, [W,X]
+      TIM   #$6C, [$A0A1]
+      TIM   #$6C, ,Y+
+      TIM   #$6C, ,Y++
+      TIM   #$6C, ,-Y
+      TIM   #$6C, ,--Y
+      TIM   #$6C, ,Y
+      TIM   #$6C, B,Y
+      TIM   #$6C, A,Y
+      TIM   #$6C, E,Y
+      TIM   #$6C, -87,Y
+      TIM   #$6C, <-16,Y
+      TIM   #$6C, <0,Y
+      TIM   #$6C, 16,Y
+      TIM   #$6C, -$5555,Y
+      TIM   #$6C, >-$0055,Y
+      TIM   #$6C, $00AB,Y
+      TIM   #$6C, F,Y
+      TIM   #$6C, D,Y
+      TIM   #$6C, W,Y
+      TIM   #$6C, -$4F4F,W
+      TIM   #$6C, >-$004F,W
+      TIM   #$6C, $00B1,W
+      TIM   #$6C, [-$4E4E,W]
+      TIM   #$6C, [>-$004E,W]
+      TIM   #$6C, [$00B2,W]
+      TIM   #$6C, [,Y++]
+      TIM   #$6C, [,--Y]
+      TIM   #$6C, [,Y]
+      TIM   #$6C, [B,Y]
+      TIM   #$6C, [A,Y]
+      TIM   #$6C, [E,Y]
+      TIM   #$6C, [-71,Y]
+      TIM   #$6C, [<0,Y]
+      TIM   #$6C, [1,Y]
+      TIM   #$6C, [-$4545,Y]
+      TIM   #$6C, [>-$0045,Y]
+      TIM   #$6C, [$00BB,Y]
+      TIM   #$6C, [F,Y]
+      TIM   #$6C, [D,Y]
+      TIM   #$6C, [W,Y]
+      TIM   #$6C, ,U+
+      TIM   #$6C, ,U++
+      TIM   #$6C, ,-U
+      TIM   #$6C, ,--U
+      TIM   #$6C, ,U
+      TIM   #$6C, B,U
+      TIM   #$6C, A,U
+      TIM   #$6C, E,U
+      TIM   #$6C, -55,U
+      TIM   #$6C, <-16,U
+      TIM   #$6C, <0,U
+      TIM   #$6C, 16,U
+      TIM   #$6C, -$3535,U
+      TIM   #$6C, >-$0035,U
+      TIM   #$6C, $00CB,U
+      TIM   #$6C, F,U
+      TIM   #$6C, D,U
       INC   13,S
       INC   -16,S
       INC   ,X+
@@ -6644,21 +6644,21 @@
       CLR   F,U
       CLR   D,U
       NEG   $7172
-      OIM   #$72,$7374
-      OIM   #$72,>$0074
-      AIM   #$73,$7475
-      AIM   #$73,>$0075
+      OIM   #$72, $7374
+      OIM   #$72, >$0074
+      AIM   #$73, $7475
+      AIM   #$73, >$0075
       COM   $7475
       LSR   $7576
-      EIM   #$76,$7778
-      EIM   #$76,>$0078
+      EIM   #$76, $7778
+      EIM   #$76, >$0078
       ROR   $7778
       ASR   $7879
       ASL   $797A
       ROL   $7A7B
       DEC   $7B7C
-      TIM   #$7C,$7D7E
-      TIM   #$7C,>$007E
+      TIM   #$7C, $7D7E
+      TIM   #$7C, >$007E
       INC   $7D7E
       TST   $7E7F
       JMP   $7F80

@@ -56,73 +56,73 @@ static void test_cpu() {
 }
 
 static void test_move_inherent() {
-    TEST(MOV,  "B,B", 0x40);
-    TEST(MOV,  "B,C", 0x41);
-    TEST(MOV,  "B,D", 0x42);
-    TEST(MOV,  "B,E", 0x43);
-    TEST(MOV,  "B,H", 0x44);
-    TEST(MOV,  "B,L", 0x45);
-    TEST(MOV,  "B,M", 0x46);
-    TEST(MOV,  "B,A", 0x47);
-    TEST(MOV,  "C,B", 0x48);
-    TEST(MOV,  "C,C", 0x49);
-    TEST(MOV,  "C,D", 0x4A);
-    TEST(MOV,  "C,E", 0x4B);
-    TEST(MOV,  "C,H", 0x4C);
-    TEST(MOV,  "C,L", 0x4D);
-    TEST(MOV,  "C,M", 0x4E);
-    TEST(MOV,  "C,A", 0x4F);
+    TEST(MOV,  "B, B", 0x40);
+    TEST(MOV,  "B, C", 0x41);
+    TEST(MOV,  "B, D", 0x42);
+    TEST(MOV,  "B, E", 0x43);
+    TEST(MOV,  "B, H", 0x44);
+    TEST(MOV,  "B, L", 0x45);
+    TEST(MOV,  "B, M", 0x46);
+    TEST(MOV,  "B, A", 0x47);
+    TEST(MOV,  "C, B", 0x48);
+    TEST(MOV,  "C, C", 0x49);
+    TEST(MOV,  "C, D", 0x4A);
+    TEST(MOV,  "C, E", 0x4B);
+    TEST(MOV,  "C, H", 0x4C);
+    TEST(MOV,  "C, L", 0x4D);
+    TEST(MOV,  "C, M", 0x4E);
+    TEST(MOV,  "C, A", 0x4F);
 
-    TEST(MOV,  "D,B", 0x50);
-    TEST(MOV,  "D,C", 0x51);
-    TEST(MOV,  "D,D", 0x52);
-    TEST(MOV,  "D,E", 0x53);
-    TEST(MOV,  "D,H", 0x54);
-    TEST(MOV,  "D,L", 0x55);
-    TEST(MOV,  "D,M", 0x56);
-    TEST(MOV,  "D,A", 0x57);
-    TEST(MOV,  "E,B", 0x58);
-    TEST(MOV,  "E,C", 0x59);
-    TEST(MOV,  "E,D", 0x5A);
-    TEST(MOV,  "E,E", 0x5B);
-    TEST(MOV,  "E,H", 0x5C);
-    TEST(MOV,  "E,L", 0x5D);
-    TEST(MOV,  "E,M", 0x5E);
-    TEST(MOV,  "E,A", 0x5F);
+    TEST(MOV,  "D, B", 0x50);
+    TEST(MOV,  "D, C", 0x51);
+    TEST(MOV,  "D, D", 0x52);
+    TEST(MOV,  "D, E", 0x53);
+    TEST(MOV,  "D, H", 0x54);
+    TEST(MOV,  "D, L", 0x55);
+    TEST(MOV,  "D, M", 0x56);
+    TEST(MOV,  "D, A", 0x57);
+    TEST(MOV,  "E, B", 0x58);
+    TEST(MOV,  "E, C", 0x59);
+    TEST(MOV,  "E, D", 0x5A);
+    TEST(MOV,  "E, E", 0x5B);
+    TEST(MOV,  "E, H", 0x5C);
+    TEST(MOV,  "E, L", 0x5D);
+    TEST(MOV,  "E, M", 0x5E);
+    TEST(MOV,  "E, A", 0x5F);
 
-    TEST(MOV,  "H,B", 0x60);
-    TEST(MOV,  "H,C", 0x61);
-    TEST(MOV,  "H,D", 0x62);
-    TEST(MOV,  "H,E", 0x63);
-    TEST(MOV,  "H,H", 0x64);
-    TEST(MOV,  "H,L", 0x65);
-    TEST(MOV,  "H,M", 0x66);
-    TEST(MOV,  "H,A", 0x67);
-    TEST(MOV,  "L,B", 0x68);
-    TEST(MOV,  "L,C", 0x69);
-    TEST(MOV,  "L,D", 0x6A);
-    TEST(MOV,  "L,E", 0x6B);
-    TEST(MOV,  "L,H", 0x6C);
-    TEST(MOV,  "L,L", 0x6D);
-    TEST(MOV,  "L,M", 0x6E);
-    TEST(MOV,  "L,A", 0x6F);
+    TEST(MOV,  "H, B", 0x60);
+    TEST(MOV,  "H, C", 0x61);
+    TEST(MOV,  "H, D", 0x62);
+    TEST(MOV,  "H, E", 0x63);
+    TEST(MOV,  "H, H", 0x64);
+    TEST(MOV,  "H, L", 0x65);
+    TEST(MOV,  "H, M", 0x66);
+    TEST(MOV,  "H, A", 0x67);
+    TEST(MOV,  "L, B", 0x68);
+    TEST(MOV,  "L, C", 0x69);
+    TEST(MOV,  "L, D", 0x6A);
+    TEST(MOV,  "L, E", 0x6B);
+    TEST(MOV,  "L, H", 0x6C);
+    TEST(MOV,  "L, L", 0x6D);
+    TEST(MOV,  "L, M", 0x6E);
+    TEST(MOV,  "L, A", 0x6F);
 
-    TEST(MOV,  "M,B", 0x70);
-    TEST(MOV,  "M,C", 0x71);
-    TEST(MOV,  "M,D", 0x72);
-    TEST(MOV,  "M,E", 0x73);
-    TEST(MOV,  "M,H", 0x74);
-    TEST(MOV,  "M,L", 0x75);
+    TEST(MOV,  "M, B", 0x70);
+    TEST(MOV,  "M, C", 0x71);
+    TEST(MOV,  "M, D", 0x72);
+    TEST(MOV,  "M, E", 0x73);
+    TEST(MOV,  "M, H", 0x74);
+    TEST(MOV,  "M, L", 0x75);
     // HLT
-    TEST(MOV,  "M,A", 0x77);
-    TEST(MOV,  "A,B", 0x78);
-    TEST(MOV,  "A,C", 0x79);
-    TEST(MOV,  "A,D", 0x7A);
-    TEST(MOV,  "A,E", 0x7B);
-    TEST(MOV,  "A,H", 0x7C);
-    TEST(MOV,  "A,L", 0x7D);
-    TEST(MOV,  "A,M", 0x7E);
-    TEST(MOV,  "A,A", 0x7F);
+    TEST(MOV,  "M, A", 0x77);
+    TEST(MOV,  "A, B", 0x78);
+    TEST(MOV,  "A, C", 0x79);
+    TEST(MOV,  "A, D", 0x7A);
+    TEST(MOV,  "A, E", 0x7B);
+    TEST(MOV,  "A, H", 0x7C);
+    TEST(MOV,  "A, L", 0x7D);
+    TEST(MOV,  "A, M", 0x7E);
+    TEST(MOV,  "A, A", 0x7F);
 
     TEST(STAX, "B",   0x02);
     TEST(STAX, "D",   0x12);
@@ -140,28 +140,28 @@ static void test_move_inherent() {
 }
 
 static void test_move_immediate() {
-    TEST(MVI,  "B,0F6H", 0x06, 0xF6);
-    TEST(MVI,  "C,9FH",  0x0E, 0x9F);
-    TEST(MVI,  "D,3AH",  0x16, 0x3A);
-    TEST(MVI,  "E,80H",  0x1E, 0x80);
-    TEST(MVI,  "H,0F6H", 0x26, 0xF6);
-    TEST(MVI,  "L,0F6H", 0x2E, 0xF6);
-    TEST(MVI,  "M,0F6H", 0x36, 0xF6);
-    TEST(MVI,  "A,0FEH", 0x3E, 0xFE);
+    TEST(MVI,  "B, 0F6H", 0x06, 0xF6);
+    TEST(MVI,  "C, 9FH",  0x0E, 0x9F);
+    TEST(MVI,  "D, 3AH",  0x16, 0x3A);
+    TEST(MVI,  "E, 80H",  0x1E, 0x80);
+    TEST(MVI,  "H, 0F6H", 0x26, 0xF6);
+    TEST(MVI,  "L, 0F6H", 0x2E, 0xF6);
+    TEST(MVI,  "M, 0F6H", 0x36, 0xF6);
+    TEST(MVI,  "A, 0FEH", 0x3E, 0xFE);
 
-    TEST(LXI,  "B,0BEEFH", 0x01, 0xEF, 0xBE);
-    TEST(LXI,  "D,1234H",  0x11, 0x34, 0x12);
-    TEST(LXI,  "H,0BEEFH", 0x21, 0xEF, 0xBE);
-    TEST(LXI,  "SP,6789H", 0x31, 0x89, 0x67);
+    TEST(LXI,  "B, 0BEEFH", 0x01, 0xEF, 0xBE);
+    TEST(LXI,  "D, 1234H",  0x11, 0x34, 0x12);
+    TEST(LXI,  "H, 0BEEFH", 0x21, 0xEF, 0xBE);
+    TEST(LXI,  "SP, 6789H", 0x31, 0x89, 0x67);
 
     symtab.intern(0xBEEF, "BEEF");
     symtab.intern(0x1234, "label1234");
     symtab.intern(0x6789, "label6789");
 
-    TEST(LXI,  "B,BEEF",       0x01, 0xEF, 0xBE);
-    TEST(LXI,  "D,label1234",  0x11, 0x34, 0x12);
-    TEST(LXI,  "H,BEEF",       0x21, 0xEF, 0xBE);
-    TEST(LXI,  "SP,label6789", 0x31, 0x89, 0x67);
+    TEST(LXI,  "B, BEEF",       0x01, 0xEF, 0xBE);
+    TEST(LXI,  "D, label1234",  0x11, 0x34, 0x12);
+    TEST(LXI,  "H, BEEF",       0x21, 0xEF, 0xBE);
+    TEST(LXI,  "SP, label6789", 0x31, 0x89, 0x67);
 }
 
 static void test_move_direct() {

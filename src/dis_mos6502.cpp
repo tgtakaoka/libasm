@@ -151,7 +151,7 @@ Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffe
     const uint8_t sbank = insn.readByte(memory);
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
-    outAbsAddr(out, src, addressWidth()).letter(',');
+    outAbsAddr(out, src, addressWidth()).comma();
     outAbsAddr(out, dst, addressWidth());
     return setOK();
 }

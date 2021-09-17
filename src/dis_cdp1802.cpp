@@ -73,7 +73,7 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const AddrMode mode2 = insn.mode2();
     if (mode2 == NONE)
         return OK;
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, mode2);
 }
 

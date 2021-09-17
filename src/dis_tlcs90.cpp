@@ -168,7 +168,7 @@ Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         preOp.reg = RegTlcs90::decodeReg16(insn.prefix());
     }
     if (out.mark() != start)  // skip CC_T because it's empty.
-        out.letter(',');
+        out.comma();
     if (src == M_SRC || src == M_SRC16) {
         decodeOperand(insn, out, preOp.mode, preOp);
     } else {

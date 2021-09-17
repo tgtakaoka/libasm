@@ -558,8 +558,8 @@ static void test_abs_long() {
     dis6502.useIndirectLong(false);
     TEST(JMPL, "($1234)", 0xDC, 0x34, 0x12);
 
-    TEST(MVP, "$120000,$340000", 0x44, 0x34, 0x12);
-    TEST(MVN, "$000000,$340000", 0x54, 0x34, 0x00);
+    TEST(MVP, "$120000, $340000", 0x44, 0x34, 0x12);
+    TEST(MVN, "$000000, $340000", 0x54, 0x34, 0x00);
 
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x123456, "long3456");
@@ -572,7 +572,7 @@ static void test_abs_long() {
     TEST(JMP, ">>long3456",   0x5C, 0x56, 0x34, 0x12);
     TEST(JSL, "long3456",     0x22, 0x56, 0x34, 0x12); // absolute long only
 
-    TEST(MVP, "bank12,bank34", 0x44, 0x34, 0x12);
+    TEST(MVP, "bank12, bank34", 0x44, 0x34, 0x12);
 
     dis6502.useIndirectLong(true);
     TEST(JMP,  "[>sym1234]", 0xDC, 0x34, 0x12);

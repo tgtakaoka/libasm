@@ -17,6 +17,8 @@
 #ifndef __TEXT_INS8070__
 #define __TEXT_INS8070__
 
+#include "config_host.h"
+
 namespace libasm {
 namespace ins8070 {
 

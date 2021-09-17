@@ -24,7 +24,7 @@ namespace z8 {
 StrBuffer &DisZ8::outCcName(StrBuffer &out, Config::opcode_t opCode) {
     const CcName cc = _regs.decodeCcNum(opCode >> 4);
     if (cc != CC_T)
-        _regs.outCcName(out, cc).letter(',');
+        _regs.outCcName(out, cc).comma();
     return out;
 }
 
@@ -60,7 +60,7 @@ StrBuffer &DisZ8::outPairAddr(StrBuffer &out, uint8_t addr, bool indir) {
 
 StrBuffer &DisZ8::outBitPos(StrBuffer &out, uint8_t bitPos) {
     bitPos &= 7;
-    out.letter(',');
+    out.comma();
     return outHex(out.letter('#'), bitPos, 3);
 }
 
@@ -142,7 +142,7 @@ Error DisZ8::decodeIndexed(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, uint
     } else {
         outIndexed(out, base16, idx, dst);
     }
-    out.letter(',');
+    out.comma();
     if (src == M_r) {
         outWorkReg(out, opr1 >> 4);
     } else {
@@ -163,7 +163,7 @@ Error DisZ8::decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, StrBuffer &o
     } else if (dst == M_r || dst == M_Ir) {
         outWorkReg(out, reg2, dst == M_Ir);
     }
-    out.letter(',');
+    out.comma();
     const AddrMode src = insn.srcMode();
     if (src == M_Irr) {
         outPairReg(out, reg1, true);
@@ -184,7 +184,7 @@ Error DisZ8::decodeInOpCode(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
     }
     if (src == M_NO)
         return setOK();
-    out.letter(',');
+    out.comma();
     if (src == M_r) {
         outWorkReg(out, insn.opCode() >> 4);
         return setOK();
@@ -203,20 +203,20 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     if (src == M_Ir && insn.extMode() == M_RA) {
-        outWorkReg(out, opr1 & 0xF).letter(',');
-        outWorkReg(out, opr1 >> 4, true).letter(',');
+        outWorkReg(out, opr1 & 0xF).comma();
+        outWorkReg(out, opr1 >> 4, true).comma();
         return decodeRelative(memory, insn, out);
     }
     if (dst == M_RR && src == M_IML) {
         const uint16_t val16 = insn.readUint16(memory);
         if (opr1 % 2)
             return setError(ILLEGAL_REGISTER);
-        outPairAddr(out, opr1).letter(',').letter('#');
+        outPairAddr(out, opr1).comma().letter('#');
         outHex(out, val16, 16);
         return setError(insn);
     }
     if (dst == M_r || dst == M_Ir) {
-        outWorkReg(out, opr1 >> 4, dst == M_Ir).letter(',');
+        outWorkReg(out, opr1 >> 4, dst == M_Ir).comma();
         outWorkReg(out, opr1 & 0xF, src == M_Ir);
         return setOK();
     }
@@ -233,7 +233,7 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) 
     } else {
         outRegAddr(out, dstReg, dst == M_IR);
     }
-    out.letter(',');
+    out.comma();
     if (src == M_IM) {
         outHex(out.letter('#'), srcReg, 8);
         return setOK();
@@ -270,7 +270,7 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
         } else {
             outWorkReg(out, regNum);
         }
-        out.letter(',');
+        out.comma();
         if (src == M_DA) {
             if (decodeAbsolute(memory, insn, out, ENDIAN_LITTLE))
                 return getError();
@@ -285,7 +285,7 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
         } else {
             outWorkReg(out, post >> 4);
         }
-        out.letter(',');
+        out.comma();
         if (src == M_Irr) {
             outPairReg(out, post & 0x0E, true);
         } else {
@@ -298,7 +298,7 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
     if (dst == M_RA) {  // P1: BTJRF, BTJRT
         if (decodeRelative(memory, insn, out))
             return getError();
-        out.letter(',');
+        out.comma();
         outWorkReg(out, post >> 4);
         outBitPos(out, post >> 1);
         return setOK();
@@ -319,13 +319,13 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
     if (src == M_IMb)
         outBitPos(out, post >> 1);
     else {
-        out.letter(',');
+        out.comma();
         outRegAddr(out, addr);
     }
     if (ext == M_IMb)
         outBitPos(out, post >> 1);
     else {
-        out.letter(',');
+        out.comma();
         outWorkReg(out, post >> 4);
     }
     return setError(insn);
@@ -356,7 +356,7 @@ Error DisZ8::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (dst == M_cc)
             outCcName(out, opCode);
         else if (dst == M_r) {
-            outWorkReg(out, opCode >> 4).letter(',');
+            outWorkReg(out, opCode >> 4).comma();
         }
         return decodeRelative(memory, insn, out);
     }

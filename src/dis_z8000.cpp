@@ -364,7 +364,7 @@ StrBuffer &DisZ8000::outComma(
         StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field) {
     if (mode == M_CC && _regs.decodeCcNum(modeField(insn, field)) == CC_T)
         return out;
-    return out.letter(',');
+    return out.comma();
 }
 
 Error DisZ8000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {

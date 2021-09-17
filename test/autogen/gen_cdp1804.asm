@@ -27,7 +27,7 @@
       IRX
       OUT  1
       RLXA 9
-      SCAL 0,8182H
+      SCAL 0, 8182H
       INP  1
       RET
       DIS
@@ -86,7 +86,7 @@
       SRET 0
       RSXD 0
       RNX  0
-      RLDI 0,0C1C2H
+      RLDI 0, 0C1C2H
       STPC
       DTC
       SPM2

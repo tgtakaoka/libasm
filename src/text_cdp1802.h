@@ -17,6 +17,8 @@
 #ifndef __TEXT_CDP1802__
 #define __TEXT_CDP1802__
 
+#include "config_host.h"
+
 namespace libasm {
 namespace cdp1802 {
 

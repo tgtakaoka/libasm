@@ -22,6 +22,8 @@
 
 namespace libasm {
 
+static const char TEXT_COMMA[] PROGMEM = ", ";
+
 StrBuffer::StrBuffer(char *buffer, size_t size)
     : ErrorReporter(), _out(buffer), _end(buffer + (size - 1)) {
     *_out = 0;
@@ -59,6 +61,10 @@ StrBuffer &StrBuffer::format(const char *fmt, double val) {
         setError(BUFFER_OVERFLOW);
     }
     return *this;
+}
+
+StrBuffer &StrBuffer::comma() {
+    return pstr(TEXT_COMMA);
 }
 
 StrBuffer &StrBuffer::reverse(char *start) {

@@ -32,7 +32,7 @@
       DSMB
       DACI 7DH
       DSBI 80H
-      SCAL 0,8182H
+      SCAL 0, 8182H
       INP  1
       RET
       DIS
@@ -91,7 +91,7 @@
       SRET 0
       RSXD 0
       RNX  0
-      RLDI 0,0C1C2H
+      RLDI 0, 0C1C2H
       DADD
       DSM
       DADI 0FDH
@@ -110,6 +110,6 @@
       XID
       CIE
       CID
-      DBNZ 0,2122H
+      DBNZ 0, 2122H
       BCI  013FH
       BXI  0140H

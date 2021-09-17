@@ -172,7 +172,7 @@ Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer 
     const RegSize size1 = _regs.regSize(src);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
-    outRegister(out, src).letter(',');
+    outRegister(out, src).comma();
     outRegister(out, dst);
     return setError(insn);
 }
@@ -206,7 +206,7 @@ Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBu
     const char srcModeChar = _regs.tfmSrcModeChar(mode);
     if (srcModeChar)
         out.letter(srcModeChar);
-    out.letter(',');
+    out.comma();
     outRegister(out, dst);
     const char dstModeChar = _regs.tfmDstModeChar(mode);
     if (dstModeChar)
@@ -266,7 +266,7 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return OK;
     if (mode2 == REG_TFM)
         return OK;
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, mode2);
 }
 

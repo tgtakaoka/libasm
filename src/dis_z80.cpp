@@ -62,7 +62,7 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
         return setError(UNKNOWN_INSTRUCTION);
     const AddrMode dst = ixBit.dstMode();
     if (dst == M_BIT)
-        outHex(out, (opc >> 3) & 7, 3).letter(',');
+        outHex(out, (opc >> 3) & 7, 3).comma();
     outIndexOffset(out, RegZ80::decodeIndexReg(insn), offset);
     return setError(insn);
 }
@@ -202,7 +202,7 @@ Error DisZ80::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const AddrMode src = insn.srcMode();
     if (src == M_NO)
         return OK;
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, src);
 }
 

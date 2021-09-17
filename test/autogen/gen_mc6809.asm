@@ -238,110 +238,110 @@
       ORCC  #27
       ANDCC #29
       SEX
-      EXG   Y,D
-      EXG   Y,X
-      EXG   Y,Y
-      EXG   Y,U
-      EXG   Y,S
-      EXG   Y,PC
-      EXG   U,D
-      EXG   U,X
-      EXG   U,Y
-      EXG   U,U
-      EXG   U,S
-      EXG   U,PC
-      EXG   S,D
-      EXG   S,X
-      EXG   S,Y
-      EXG   S,U
-      EXG   S,S
-      EXG   S,PC
-      EXG   PC,D
-      EXG   PC,X
-      EXG   PC,Y
-      EXG   PC,U
-      EXG   PC,S
-      EXG   PC,PC
-      EXG   A,A
-      EXG   A,B
-      EXG   A,CC
-      EXG   A,DP
-      EXG   B,A
-      EXG   B,B
-      EXG   B,CC
-      EXG   B,DP
-      EXG   CC,A
-      EXG   CC,B
-      EXG   CC,CC
-      EXG   CC,DP
-      EXG   DP,A
-      EXG   DP,B
-      EXG   DP,CC
-      EXG   DP,DP
-      EXG   D,D
-      EXG   D,X
-      EXG   D,Y
-      EXG   D,U
-      EXG   D,S
-      EXG   D,PC
-      EXG   X,D
-      EXG   X,X
-      EXG   X,Y
-      EXG   X,U
-      EXG   X,S
-      EXG   X,PC
-      TFR   Y,D
-      TFR   Y,X
-      TFR   Y,Y
-      TFR   Y,U
-      TFR   Y,S
-      TFR   Y,PC
-      TFR   U,D
-      TFR   U,X
-      TFR   U,Y
-      TFR   U,U
-      TFR   U,S
-      TFR   U,PC
-      TFR   S,D
-      TFR   S,X
-      TFR   S,Y
-      TFR   S,U
-      TFR   S,S
-      TFR   S,PC
-      TFR   PC,D
-      TFR   PC,X
-      TFR   PC,Y
-      TFR   PC,U
-      TFR   PC,S
-      TFR   PC,PC
-      TFR   A,A
-      TFR   A,B
-      TFR   A,CC
-      TFR   A,DP
-      TFR   B,A
-      TFR   B,B
-      TFR   B,CC
-      TFR   B,DP
-      TFR   CC,A
-      TFR   CC,B
-      TFR   CC,CC
-      TFR   CC,DP
-      TFR   DP,A
-      TFR   DP,B
-      TFR   DP,CC
-      TFR   DP,DP
-      TFR   D,D
-      TFR   D,X
-      TFR   D,Y
-      TFR   D,U
-      TFR   D,S
-      TFR   D,PC
-      TFR   X,D
-      TFR   X,X
-      TFR   X,Y
-      TFR   X,U
-      TFR   X,S
-      TFR   X,PC
+      EXG   Y, D
+      EXG   Y, X
+      EXG   Y, Y
+      EXG   Y, U
+      EXG   Y, S
+      EXG   Y, PC
+      EXG   U, D
+      EXG   U, X
+      EXG   U, Y
+      EXG   U, U
+      EXG   U, S
+      EXG   U, PC
+      EXG   S, D
+      EXG   S, X
+      EXG   S, Y
+      EXG   S, U
+      EXG   S, S
+      EXG   S, PC
+      EXG   PC, D
+      EXG   PC, X
+      EXG   PC, Y
+      EXG   PC, U
+      EXG   PC, S
+      EXG   PC, PC
+      EXG   A, A
+      EXG   A, B
+      EXG   A, CC
+      EXG   A, DP
+      EXG   B, A
+      EXG   B, B
+      EXG   B, CC
+      EXG   B, DP
+      EXG   CC, A
+      EXG   CC, B
+      EXG   CC, CC
+      EXG   CC, DP
+      EXG   DP, A
+      EXG   DP, B
+      EXG   DP, CC
+      EXG   DP, DP
+      EXG   D, D
+      EXG   D, X
+      EXG   D, Y
+      EXG   D, U
+      EXG   D, S
+      EXG   D, PC
+      EXG   X, D
+      EXG   X, X
+      EXG   X, Y
+      EXG   X, U
+      EXG   X, S
+      EXG   X, PC
+      TFR   Y, D
+      TFR   Y, X
+      TFR   Y, Y
+      TFR   Y, U
+      TFR   Y, S
+      TFR   Y, PC
+      TFR   U, D
+      TFR   U, X
+      TFR   U, Y
+      TFR   U, U
+      TFR   U, S
+      TFR   U, PC
+      TFR   S, D
+      TFR   S, X
+      TFR   S, Y
+      TFR   S, U
+      TFR   S, S
+      TFR   S, PC
+      TFR   PC, D
+      TFR   PC, X
+      TFR   PC, Y
+      TFR   PC, U
+      TFR   PC, S
+      TFR   PC, PC
+      TFR   A, A
+      TFR   A, B
+      TFR   A, CC
+      TFR   A, DP
+      TFR   B, A
+      TFR   B, B
+      TFR   B, CC
+      TFR   B, DP
+      TFR   CC, A
+      TFR   CC, B
+      TFR   CC, CC
+      TFR   CC, DP
+      TFR   DP, A
+      TFR   DP, B
+      TFR   DP, CC
+      TFR   DP, DP
+      TFR   D, D
+      TFR   D, X
+      TFR   D, Y
+      TFR   D, U
+      TFR   D, S
+      TFR   D, PC
+      TFR   X, D
+      TFR   X, X
+      TFR   X, Y
+      TFR   X, U
+      TFR   X, S
+      TFR   X, PC
       BRA   *+35
       BRA   *-126
       BRA   *

@@ -310,14 +310,14 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
         switch (insn.opCode() & ~1) {
         case 0xA4:  // MOVS ES:[DI],DS:[SI]
             outMemReg(memory, insn, out, REG_ES, 0, 5);
-            out.letter(',');
+            out.comma();
             /* Fall-through */
         case 0xAC:  // LODS DS:[SI]
             outMemReg(memory, insn, out, seg, 0, 4);
             break;
         case 0xA6:  // CMPS DS:[SI],ES:[DI]
             outMemReg(memory, insn, out, seg, 0, 4);
-            out.letter(',');
+            out.comma();
             outMemReg(memory, insn, out, REG_ES, 0, 5);
             break;
         case 0xAA:  // STOS ES:[DI]
@@ -365,7 +365,7 @@ Error DisI8086::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (insn.srcMode() == M_NONE)
         return setOK();
 
-    out.letter(',');
+    out.comma();
     if (decodeOperand(memory, insn, out, insn.srcMode(), insn.srcPos()))
         return getError();
     return setOK();

@@ -77,7 +77,7 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const AddrMode src = insn.srcMode();
     if (src == M_NO)
         return OK;
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, src);
 }
 

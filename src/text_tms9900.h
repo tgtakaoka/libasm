@@ -17,6 +17,8 @@
 #ifndef __TEXT_TMS9900__
 #define __TEXT_TMS9900__
 
+#include "config_host.h"
+
 namespace libasm {
 namespace tms9900 {
 

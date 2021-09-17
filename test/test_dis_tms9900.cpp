@@ -112,30 +112,30 @@ static void test_reg() {
 }
 
 static void test_reg_imm() {
-    TEST(LI,   "R0,0",      0x0200, 0x0000);
-    TEST(AI,   "R1,10",     0x0221, 0x000A);
-    TEST(ANDI, "R8,00FFH",   0x0248, 0x00FF);
-    TEST(ORI,  "R14,0FF00H", 0x026E, 0xFF00);
-    TEST(CI,   "R15,0FFFFH", 0x028F, 0xFFFF);
+    TEST(LI,   "R0, 0",      0x0200, 0x0000);
+    TEST(AI,   "R1, 10",     0x0221, 0x000A);
+    TEST(ANDI, "R8, 00FFH",   0x0248, 0x00FF);
+    TEST(ORI,  "R14, 0FF00H", 0x026E, 0xFF00);
+    TEST(CI,   "R15, 0FFFFH", 0x028F, 0xFFFF);
 
     symtab.intern(0x1234, "sym1234");
 
-    TEST(LI,   "R2,sym1234", 0x0202, 0x1234);
+    TEST(LI,   "R2, sym1234", 0x0202, 0x1234);
 
     if (is99105()) {
         // TMS99105
-        TEST(BLSK, "R3,4567H",   0x00B3, 0x4567);
-        TEST(BLSK, "R3,sym1234", 0x00B3, 0x1234);
+        TEST(BLSK, "R3, 4567H",   0x00B3, 0x4567);
+        TEST(BLSK, "R3, sym1234", 0x00B3, 0x1234);
     } else {
         ERRI(0x00B3);
     }
 }
 
 static void test_cnt_reg() {
-    TEST(SRA,  "R1,R0",  0x0801);
-    TEST(SRL,  "R4,12",  0x09C4);
-    TEST(SLA,  "R8,4",   0x0A48);
-    TEST(SRC,  "R9,15",  0x0BF9);
+    TEST(SRA,  "R1, R0",  0x0801);
+    TEST(SRL,  "R4, 12",  0x09C4);
+    TEST(SLA,  "R8, 4",   0x0A48);
+    TEST(SRC,  "R9, 15",  0x0BF9);
 }
 
 static void test_src() {
@@ -177,15 +177,15 @@ static void test_src() {
 
     if (is99105()) {
         // TMS99105
-        TEST(TMB,  "@0123H(R15),7", 0x0C09, 0x01EF, 0x0123);
-        TEST(TCMB, "R0,0",          0x0C0A, 0x0000);
-        TEST(TSMB, "*R2,15",        0x0C0B, 0x03D2);
+        TEST(TMB,  "@0123H(R15), 7", 0x0C09, 0x01EF, 0x0123);
+        TEST(TCMB, "R0, 0",          0x0C0A, 0x0000);
+        TEST(TSMB, "*R2, 15",        0x0C0B, 0x03D2);
         TEST(BIND, "@2223H(R1)", 0x0161, 0x2223);
         TEST(EVAD, "R5",         0x0105);
     } else {
-        ERUI(TMB,  "@0123H(R15),7", 0x0C09, 0x01EF, 0x0123);
-        ERUI(TCMB, "R0,0",          0x0C0A, 0x0000);
-        ERUI(TSMB, "*R2,15",        0x0C0B, 0x03D2);
+        ERUI(TMB,  "@0123H(R15), 7", 0x0C09, 0x01EF, 0x0123);
+        ERUI(TCMB, "R0, 0",          0x0C0A, 0x0000);
+        ERUI(TSMB, "*R2, 15",        0x0C0B, 0x03D2);
         ERUI(BIND, "@2223H(R1)", 0x0161, 0x2223);
         ERUI(EVAD, "R5",         0x0105);
     }
@@ -211,35 +211,35 @@ static void test_src() {
 }
 
 static void test_reg_src() {
-    TEST(COC, "R1,R2",         0x2081);
-    TEST(CZC, "@1234H(R3),R7", 0x25E3, 0x1234);
-    TEST(XOR, "@2(R5),R4", 0x2925, 0x0002);
-    TEST(MPY, "R4,R2",         0x3884);
-    TEST(DIV, "R14,R12",       0x3F0E);
+    TEST(COC, "R1, R2",         0x2081);
+    TEST(CZC, "@1234H(R3), R7", 0x25E3, 0x1234);
+    TEST(XOR, "@2(R5), R4", 0x2925, 0x0002);
+    TEST(MPY, "R4, R2",         0x3884);
+    TEST(DIV, "R14, R12",       0x3F0E);
 
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x0002, "offset2");
 
-    TEST(CZC, "@sym1234(R3),R7", 0x25E3, 0x1234);
-    TEST(XOR, "@offset2(R5),R4", 0x2925, 0x0002);
+    TEST(CZC, "@sym1234(R3), R7", 0x25E3, 0x1234);
+    TEST(XOR, "@offset2(R5), R4", 0x2925, 0x0002);
 }
 
 static void test_cnt_src() {
-    TEST(LDCR, "*R13+,16",  0x303D);
-    TEST(STCR, "@2(R4),15", 0x37E4, 0x0002);
+    TEST(LDCR, "*R13+, 16",  0x303D);
+    TEST(STCR, "@2(R4), 15", 0x37E4, 0x0002);
 
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
 
-    TEST(STCR, "@offset2(R4),size7", 0x35E4, 0x0002);
-    TEST(STCR, "@offset2(R4),16",    0x3424, 0x0002);
-    TEST(STCR, "@1000H(R4),size7",   0x35E4, 0x1000);
+    TEST(STCR, "@offset2(R4), size7", 0x35E4, 0x0002);
+    TEST(STCR, "@offset2(R4), 16",    0x3424, 0x0002);
+    TEST(STCR, "@1000H(R4), size7",   0x35E4, 0x1000);
 
     if (is99105()) {
         // TMS99105
-        TEST(SRAM, "@offset2(R4),15", 0x001C, 0x43E4, 0x0002);
-        TEST(SLAM, "R11,R0",          0x001D, 0x400B);
-        TEST(SLAM, "*R13+,1",         0x001D, 0x407D);
+        TEST(SRAM, "@offset2(R4), 15", 0x001C, 0x43E4, 0x0002);
+        TEST(SLAM, "R11, R0",          0x001D, 0x400B);
+        TEST(SLAM, "*R13+, 1",         0x001D, 0x407D);
     } else {
         ERUI(SRAM, "", 0x001C);
         ERUI(SLAM, "", 0x001D);
@@ -247,51 +247,51 @@ static void test_cnt_src() {
 }
 
 static void test_xop_src() {
-    TEST(XOP,  "@9876H,0",  0x2C20, 0x9876);
-    TEST(XOP,  "@9876H,15", 0x2FE0, 0x9876);
+    TEST(XOP,  "@9876H, 0",  0x2C20, 0x9876);
+    TEST(XOP,  "@9876H, 15", 0x2FE0, 0x9876);
 
     symtab.intern(10, "xop10");
     symtab.intern(0x9876, "sym9876");
 
-    TEST(XOP,  "@sym9876,xop10",   0x2EA0, 0x9876);
-    TEST(XOP,  "@sym9876(R1),8",   0x2E21, 0x9876);
-    TEST(XOP,  "@1234H(R1),xop10", 0x2EA1, 0x1234);
+    TEST(XOP,  "@sym9876, xop10",   0x2EA0, 0x9876);
+    TEST(XOP,  "@sym9876(R1), 8",   0x2E21, 0x9876);
+    TEST(XOP,  "@1234H(R1), xop10", 0x2EA1, 0x1234);
 }
 
 static void test_dst_src() {
-    TEST(SZC,  "@1234H(R10),@5678H(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST(SZCB, "@1234H,@5678H",           0x5820, 0x1234, 0x5678);
-    TEST(S,    "*R10,*R11",               0x66DA);
-    TEST(SB,   "*R10+,*R11+",             0x7EFA);
-    TEST(C,    "*R10+,*R10+",             0x8EBA);
-    TEST(CB,   "*R10+,*R11+",             0x9EFA);
-    TEST(A,    "@2000H,R11",              0xA2E0, 0x2000);
-    TEST(AB,   "R10,@4000H(R11)",         0xBACA, 0x4000);
-    TEST(MOV,  "@0(R10),@1(R11)",         0xCAEA, 0x0000, 0x0001);
-    TEST(MOVB, "R10,R11",                 0xD2CA);
-    TEST(SOC,  "@1234H,@5678H(R11)",      0xEAE0, 0x1234, 0x5678);
-    TEST(SOCB, "@1234H(R10),@5678H",      0xF82A, 0x1234, 0x5678);
+    TEST(SZC,  "@1234H(R10), @5678H(R11)", 0x4AEA, 0x1234, 0x5678);
+    TEST(SZCB, "@1234H, @5678H",           0x5820, 0x1234, 0x5678);
+    TEST(S,    "*R10, *R11",               0x66DA);
+    TEST(SB,   "*R10+, *R11+",             0x7EFA);
+    TEST(C,    "*R10+, *R10+",             0x8EBA);
+    TEST(CB,   "*R10+, *R11+",             0x9EFA);
+    TEST(A,    "@2000H, R11",              0xA2E0, 0x2000);
+    TEST(AB,   "R10, @4000H(R11)",         0xBACA, 0x4000);
+    TEST(MOV,  "@0(R10), @1(R11)",         0xCAEA, 0x0000, 0x0001);
+    TEST(MOVB, "R10, R11",                 0xD2CA);
+    TEST(SOC,  "@1234H, @5678H(R11)",      0xEAE0, 0x1234, 0x5678);
+    TEST(SOCB, "@1234H(R10), @5678H",      0xF82A, 0x1234, 0x5678);
 
     symtab.intern(0x0000, "zero");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x4000, "sym4000");
     symtab.intern(0x5678, "sym5678");
 
-    TEST(SZC,  "@sym1234(R10),@sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST(SZCB, "@sym1234,@sym5678",           0x5820, 0x1234, 0x5678);
-    TEST(AB,   "R10,@sym4000(R11)",           0xBACA, 0x4000);
-    TEST(MOV,  "@zero(R10),@1(R11)",          0xCAEA, 0x0000, 0x0001);
-    TEST(SOC,  "@sym1234,@sym5678(R11)",      0xEAE0, 0x1234, 0x5678);
-    TEST(SOCB, "@sym1234(R10),@sym5678",      0xF82A, 0x1234, 0x5678);
+    TEST(SZC,  "@sym1234(R10), @sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
+    TEST(SZCB, "@sym1234, @sym5678",           0x5820, 0x1234, 0x5678);
+    TEST(AB,   "R10, @sym4000(R11)",           0xBACA, 0x4000);
+    TEST(MOV,  "@zero(R10), @1(R11)",          0xCAEA, 0x0000, 0x0001);
+    TEST(SOC,  "@sym1234, @sym5678(R11)",      0xEAE0, 0x1234, 0x5678);
+    TEST(SOCB, "@sym1234(R10), @sym5678",      0xF82A, 0x1234, 0x5678);
 
     if (is99105()) {
         // TMS99105
-        TEST(SM, "@sym1234(R10),@sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
-        TEST(SM, "@sym1234,@sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
-        TEST(SM, "R10,@sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
-        TEST(AM, "@zero(R10),@1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
-        TEST(AM, "@sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
-        TEST(AM, "@sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
+        TEST(SM, "@sym1234(R10), @sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
+        TEST(SM, "@sym1234, @sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
+        TEST(SM, "R10, @sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
+        TEST(AM, "@zero(R10), @1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
+        TEST(AM, "@sym1234, @sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
+        TEST(AM, "@sym1234(R10), @sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
     } else {
         ERUI(SM, "", 0x0029);
         ERUI(AM, "", 0x002A);

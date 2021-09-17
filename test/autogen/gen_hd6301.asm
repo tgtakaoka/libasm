@@ -110,33 +110,33 @@
       TSTB
       CLRB
       NEG   97,X
-      AIM   #$62,99,X
-      OIM   #$63,100,X
+      AIM   #$62, 99,X
+      OIM   #$63, 100,X
       COM   100,X
       LSR   101,X
-      EIM   #$66,103,X
+      EIM   #$66, 103,X
       ROR   103,X
       ASR   104,X
       ASL   105,X
       ROL   106,X
       DEC   107,X
-      TIM   #$6C,109,X
+      TIM   #$6C, 109,X
       INC   109,X
       TST   110,X
       JMP   111,X
       CLR   112,X
       NEG   $7172
-      AIM   #$72,$73
-      OIM   #$73,$74
+      AIM   #$72, $73
+      OIM   #$73, $74
       COM   $7475
       LSR   $7576
-      EIM   #$76,$77
+      EIM   #$76, $77
       ROR   $7778
       ASR   $7879
       ASL   $797A
       ROL   $7A7B
       DEC   $7B7C
-      TIM   #$7C,$7D
+      TIM   #$7C, $7D
       INC   $7D7E
       TST   $7E7F
       JMP   $7F80

@@ -3,128 +3,128 @@
       CPU  8085
       ORG  0100H
       NOP
-      LXI  B,0302H
+      LXI  B, 0302H
       STAX B
       INX  B
       INR  B
       DCR  B
-      MVI  B,7
+      MVI  B, 7
       RLC
       DAD  B
       LDAX B
       DCX  B
       INR  C
       DCR  C
-      MVI  C,15
+      MVI  C, 15
       RRC
-      LXI  D,1312H
+      LXI  D, 1312H
       STAX D
       INX  D
       INR  D
       DCR  D
-      MVI  D,23
+      MVI  D, 23
       RAL
       DAD  D
       LDAX D
       DCX  D
       INR  E
       DCR  E
-      MVI  E,31
+      MVI  E, 31
       RAR
       RIM
-      LXI  H,2322H
+      LXI  H, 2322H
       SHLD 2423H
       INX  H
       INR  H
       DCR  H
-      MVI  H,27H
+      MVI  H, 27H
       DAA
       DAD  H
       LHLD 2C2BH
       DCX  H
       INR  L
       DCR  L
-      MVI  L,2FH
+      MVI  L, 2FH
       CMA
       SIM
-      LXI  SP,3332H
+      LXI  SP, 3332H
       STA  3433H
       INX  SP
       INR  M
       DCR  M
-      MVI  M,37H
+      MVI  M, 37H
       STC
       DAD  SP
       LDA  3C3BH
       DCX  SP
       INR  A
       DCR  A
-      MVI  A,3FH
+      MVI  A, 3FH
       CMC
-      MOV  B,B
-      MOV  B,C
-      MOV  B,D
-      MOV  B,E
-      MOV  B,H
-      MOV  B,L
-      MOV  B,M
-      MOV  B,A
-      MOV  C,B
-      MOV  C,C
-      MOV  C,D
-      MOV  C,E
-      MOV  C,H
-      MOV  C,L
-      MOV  C,M
-      MOV  C,A
-      MOV  D,B
-      MOV  D,C
-      MOV  D,D
-      MOV  D,E
-      MOV  D,H
-      MOV  D,L
-      MOV  D,M
-      MOV  D,A
-      MOV  E,B
-      MOV  E,C
-      MOV  E,D
-      MOV  E,E
-      MOV  E,H
-      MOV  E,L
-      MOV  E,M
-      MOV  E,A
-      MOV  H,B
-      MOV  H,C
-      MOV  H,D
-      MOV  H,E
-      MOV  H,H
-      MOV  H,L
-      MOV  H,M
-      MOV  H,A
-      MOV  L,B
-      MOV  L,C
-      MOV  L,D
-      MOV  L,E
-      MOV  L,H
-      MOV  L,L
-      MOV  L,M
-      MOV  L,A
-      MOV  M,B
-      MOV  M,C
-      MOV  M,D
-      MOV  M,E
-      MOV  M,H
-      MOV  M,L
+      MOV  B, B
+      MOV  B, C
+      MOV  B, D
+      MOV  B, E
+      MOV  B, H
+      MOV  B, L
+      MOV  B, M
+      MOV  B, A
+      MOV  C, B
+      MOV  C, C
+      MOV  C, D
+      MOV  C, E
+      MOV  C, H
+      MOV  C, L
+      MOV  C, M
+      MOV  C, A
+      MOV  D, B
+      MOV  D, C
+      MOV  D, D
+      MOV  D, E
+      MOV  D, H
+      MOV  D, L
+      MOV  D, M
+      MOV  D, A
+      MOV  E, B
+      MOV  E, C
+      MOV  E, D
+      MOV  E, E
+      MOV  E, H
+      MOV  E, L
+      MOV  E, M
+      MOV  E, A
+      MOV  H, B
+      MOV  H, C
+      MOV  H, D
+      MOV  H, E
+      MOV  H, H
+      MOV  H, L
+      MOV  H, M
+      MOV  H, A
+      MOV  L, B
+      MOV  L, C
+      MOV  L, D
+      MOV  L, E
+      MOV  L, H
+      MOV  L, L
+      MOV  L, M
+      MOV  L, A
+      MOV  M, B
+      MOV  M, C
+      MOV  M, D
+      MOV  M, E
+      MOV  M, H
+      MOV  M, L
       HLT
-      MOV  M,A
-      MOV  A,B
-      MOV  A,C
-      MOV  A,D
-      MOV  A,E
-      MOV  A,H
-      MOV  A,L
-      MOV  A,M
-      MOV  A,A
+      MOV  M, A
+      MOV  A, B
+      MOV  A, C
+      MOV  A, D
+      MOV  A, E
+      MOV  A, H
+      MOV  A, L
+      MOV  A, M
+      MOV  A, A
       ADD  B
       ADD  C
       ADD  D

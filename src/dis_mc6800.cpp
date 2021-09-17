@@ -147,14 +147,14 @@ Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (mode2 == M_NO)
         return setOK();
-    out.letter(',');
+    out.comma();
     if (decodeOperand(memory, insn, out, mode2))
         return getError();
 
     const AddrMode mode3 = insn.mode3();
     if (mode3 == M_NO)
         return setOK();
-    out.letter(',');
+    out.comma();
     return decodeOperand(memory, insn, out, mode3);
 }
 

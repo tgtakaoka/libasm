@@ -51,14 +51,14 @@ StrBuffer &DisIns8070::outOperand(StrBuffer &out, OprFormat opr, uint8_t value) 
 Error DisIns8070::decodeImplied(InsnIns8070 &insn, StrBuffer &out) {
     outOperand(out, insn.dstOpr(), insn.opCode());
     if (insn.srcOpr() != OPR_NO) {
-        out.letter(',');
+        out.comma();
         outOperand(out, insn.srcOpr(), insn.opCode());
     }
     return setOK();
 }
 
 Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
-    outOperand(out, insn.dstOpr(), insn.opCode()).letter(',');
+    outOperand(out, insn.dstOpr(), insn.opCode()).comma();
     out.letter(_immSym ? '#' : '=');
     if (insn.oprSize() == SZ_WORD)
         return decodeAbsolute(memory, insn, out);
@@ -106,7 +106,7 @@ Error DisIns8070::decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer
 Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     const uint8_t mode = insn.opCode() & 7;
     if (mode != 4)
-        outOperand(out, insn.dstOpr()).letter(',');
+        outOperand(out, insn.dstOpr()).comma();
     switch (mode) {
     case 4:
         return decodeImmediate(memory, insn, out);
