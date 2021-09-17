@@ -14,40 +14,42 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_TMS32010_H__
-#define __INSN_TMS32010_H__
+#ifndef __ASM_TMS32010_H__
+#define __ASM_TMS32010_H__
 
+#include "asm_base.h"
 #include "config_tms32010.h"
-#include "entry_tms32010.h"
-#include "insn_base.h"
+#include "insn_tms32010.h"
+#include "reg_tms32010.h"
+#include "table_tms32010.h"
 
 namespace libasm {
 namespace tms32010 {
 
-class InsnTms32010 : public InsnImpl<Config, Entry> {
+class AsmTms32010 : public Assembler, public Config {
 public:
-    InsnTms32010(Insn &insn) : InsnImpl(insn) {}
+    AsmTms32010() : Assembler(_parser, TableTms32010) {}
 
-    AddrMode op1() const { return flags().op1(); }
-    AddrMode op2() const { return flags().op2(); }
-    AddrMode op3() const { return flags().op3(); }
-    void setAddrMode(AddrMode op1, AddrMode op2, AddrMode op3) {
-        setFlags(Entry::Flags::create(op1, op2, op3));
-    }
+private:
+    IntelValueParser _parser;
 
-    void emitInsn() {
-        emitUint16(opCode(), 0);
-    }
+    struct Operand : public ErrorReporter {
+        AddrMode mode;
+        RegName reg;
+        uint16_t val16;
+        Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), val16(0) {}
+    };
 
-    void emitOperand16(Config::opcode_t opr) {
-        emitUint16(opr, sizeof(Config::opcode_t));
-    }
+    Error parseOperand(const char *scan, Operand &op);
+
+    Error encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode);
+    Error encode(Insn &insn) override;
 };
 
 }  // namespace tms32010
 }  // namespace libasm
 
-#endif  // __INSN_TMS32010_H__
+#endif  // __ASM_TMS32010_H__
 
 // Local Variables:
 // mode: c++

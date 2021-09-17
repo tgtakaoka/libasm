@@ -30,6 +30,7 @@
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
 #include "asm_tlcs90.h"
+#include "asm_tms32010.h"
 #include "asm_tms9900.h"
 #include "asm_z8.h"
 #include "asm_z80.h"
@@ -51,6 +52,7 @@ cdp1802::AsmCdp1802 asm1802;
 i8086::AsmI8086 asm8086;
 tlcs90::AsmTlcs90 asm90;
 tms9900::AsmTms9900 asm9900;
+tms32010::AsmTms32010 asm32010;
 mc68000::AsmMc68000 asm68000;
 z8000::AsmZ8000 asmz8000;
 ns32000::AsmNs32000 asm32000;
@@ -68,6 +70,7 @@ AsmIntelDirective dir1802(asm1802);
 AsmIntelDirective dir8086(asm8086);
 AsmIntelDirective dir90(asm90);
 AsmIntelDirective dir9900(asm9900);
+AsmIntelDirective dir32010(asm32010);
 AsmMotoDirective dir68000(asm68000);
 AsmIntelDirective dirz8000(asmz8000);
 AsmIntelDirective dir32000(asm32000);
@@ -84,6 +87,7 @@ std::vector<AsmDirective *> directives = {
         &dir8060,
         &dir8070,
         &dir1802,
+        &dir32010,
         &dir8086,
         &dir68000,
         &dir9900,
