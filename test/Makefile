@@ -61,9 +61,9 @@ test_asm_$(1): test_asm_$(1).o asm_$(1).o $$(OBJS_$(1)) $$(OBJS_asm) $$(OBJS_tes
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
 test_dis_$(1): test_dis_$(1).o dis_$(1).o $$(OBJS_$(1)) $$(OBJS_dis) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
-test_$(1): test_asm_$(1) test_dis_$(1)
-	./test_asm_$(1)
-	./test_dis_$(1)
+test_$(1): $(if $(wildcard test_asm_$(1).cpp),test_asm_$(1)) $(if $(wildcard test_dis_$(1).cpp),test_dis_$(1))
+	$(if $(wildcard test_asm_$(1).cpp),./test_asm_$(1))
+	$(if $(wildcard test_dis_$(1).cpp),./test_dis_$(1))
 
 endef
 $(eval $(foreach a,$(ARCHS),$(call test-rule,$(a))))
@@ -84,8 +84,8 @@ test_expr: $(EXPRS:%=test_expr_%)
 test: $(foreach a,$(ARCHS),test_$(a)) test_expr
 
 define gen-rule
-gen_$(1): gen_$(1).o dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen)
-	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
+gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen)
+	$(if $(wildcard gen_$(1).cpp),$$(CXX) -o $$@ $$(CXXFLAGS) $$^)
 
 endef
 $(eval $(foreach a,$(ARCHS),$(call gen-rule,$(a))))
