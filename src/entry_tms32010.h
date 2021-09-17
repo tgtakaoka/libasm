@@ -24,26 +24,24 @@ namespace libasm {
 namespace tms32010 {
 
 enum AddrMode : uint8_t {
-    M_NO = 0,
-    M_MAM = 1,    // ---- ---- 0DDD DDDD Memory Addressing Mode: Direct addressing
-                  // ---- ---- 10id n00a Memory Addressing Mode: Indirect addressing
-    M_LS4 = 2,    // ---- SSSS ---- ---- 4-bit left-shift
-    M_LS3 = 3,    // ---- -XXX ---- ---- 3-bit left-shift
-    M_LS0 = 4,    // ---- -000 ---- ---- 0 left-shift
-    M_PA = 5,     // ---- -AAA ---- ---- Port address
-    M_AR = 6,     // ---- ---a ---- ---- Auxiliary register
-    M_DPK = 7,    // ---- ---- ---- ---d Data memory page pointer immediate
-    M_ARK = 8,    // ---- ---- ---- ---a Auxiliary register pointer immediate
-    M_IM8 = 9,    // ---- ---- KKKK KKKK Immediate operand 8-bits
-    M_REL = 10,   // ---- BBBB BBBB BBBB Branch address
-    M_IM13 = 11,  // ---K KKKK KKKK KKKK Immediate operand 13-bits
-    M_PMA = 12,   // Program memory address
-    // Assembler
-    M_DMA = 13,   // <dma>: Direct memory address
-    M_ARP = 14,   // "*": Indirect addressing
-    M_INC = 15,   // "*+": Indirect then auto increment addressing
-    M_DEC = 16,   // "*-": Indirect then auto decrement addressing
-    M_NARP = 17,  // Next auxiliary register pointer
+    // T=table, P=parser. Sorted by constant range from M_LS0 to M_IM13.
+    M_NO = 0,     // TP: No operand
+    M_LS0 = 1,    // TP: [0] 0 left shift (SACL)     ---- -000 ---- ----
+    M_DPK = 2,    // TP: [0-1] Data memory page      ---- ---- ---- ---d
+    M_ARK = 3,    // T_: [0-1] Auxiliary register    ---- ---- ---- ---a
+    M_AR = 4,     // TP: AR[0-1] Auxiliary register  ---- ---a ---- ----
+    M_NARP = 5,   // T_: AR[0-1] Next ARP            ---- ---- 10id n00a
+    M_LS3 = 6,    // TP: [0-1,4] 3-bit left shift    ---- -XXX ---- ----
+    M_IM3 = 7,    // _P: [0-7] 3-bit unsigned
+    M_PA = 8,     // TP: PA[0-7] Port Address        ---- -AAA ---- ----
+    M_LS4 = 9,    // TP: [0-15]  4-bit left shift    ---- SSSS ---- ----
+    M_IM8 = 10,   // TP: [0-255] 8-bit unsigned      ---- ---- KKKK KKKK
+    M_MAM = 11,   // T_: [0-255] Memory addressing mode      ---- ---- Immm mmmm
+    M_PMA = 12,   // TP: [0-4095] Programm address   ---- PPPP PPPP PPPP
+    M_IM13 = 13,  // TP: [-4096-4095] 13-bit signed  ---K KKKK KKKK KKKK
+    M_ARP = 14,   // _P: "*"   Indirect addressing
+    M_INC = 15,   // _P: "*+"  Indirect then auto increment addressing
+    M_DEC = 16,   // _P: "*-"  Indirect then auto decrement addressing
 };
 
 class Entry : public EntryBase<Config> {

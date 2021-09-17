@@ -131,10 +131,15 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     const AddrMode op1 = entry->flags().op1();
     const AddrMode op2 = entry->flags().op2();
     Config::opcode_t mask = 0;
-    if (op1 == M_MAM || op1 == M_IM8)
+    if (op1 == M_IM8 || op2 == M_IM8)
         mask |= 0xFF;
-    if (op2 == M_MAM || op2 == M_IM8)
-        mask |= 0xFF;
+    if (op1 == M_MAM || op2 == M_MAM) {
+        if ((opCode & (1 << 7)) == 0) {
+            mask |= 0x7F;       // Direct addressing
+        } else {
+            mask |= 0xB9;       // Indirect addressing
+        }
+    }
     if (op1 == M_IM13)
         mask |= 0x1FFF;
     if (op1 == M_AR)

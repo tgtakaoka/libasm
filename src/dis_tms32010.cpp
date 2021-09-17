@@ -36,8 +36,6 @@ Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
 }
 
 Error DisTms32010::decodeIndirect(StrBuffer &out, uint8_t mam) {
-    if ((mam & 0x46) != 0)
-        return setError(UNKNOWN_INSTRUCTION);
     switch ((mam >> 4) & 3) {
     case 0:
         out.letter('*');
@@ -56,13 +54,11 @@ Error DisTms32010::decodeIndirect(StrBuffer &out, uint8_t mam) {
 Error DisTms32010::decodeNextArp(StrBuffer &out, uint8_t mam) {
     if ((mam & (1 << 7)) == 0)
         return OK;              // Direct memory address;
-    if ((mam & (1 << 3)) == 0) {
-        const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
-        out.pstr(COMMA);
-        _regs.outRegName(out, arp);
-        return OK;
-    }
-    return (mam & 7) == 0 ? OK : setError(UNKNOWN_INSTRUCTION);
+    if (mam & (1 << 3))         // No next auxilialy register pointer
+        return (mam & 7) == 0 ? OK : setError(UNKNOWN_INSTRUCTION);
+    const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
+    _regs.outRegName(out.comma(), arp);
+    return OK;
 }
 
 Error DisTms32010::decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mode) {
