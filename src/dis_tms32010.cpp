@@ -53,8 +53,8 @@ Error DisTms32010::decodeIndirect(StrBuffer &out, uint8_t mam) {
 
 Error DisTms32010::decodeNextArp(StrBuffer &out, uint8_t mam) {
     if ((mam & (1 << 7)) == 0)
-        return OK;              // Direct memory address;
-    if (mam & (1 << 3))         // No next auxilialy register pointer
+        return OK;       // Direct memory address;
+    if (mam & (1 << 3))  // No next auxilialy register pointer
         return (mam & 7) == 0 ? OK : setError(UNKNOWN_INSTRUCTION);
     const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
     _regs.outRegName(out.comma(), arp);
@@ -62,9 +62,8 @@ Error DisTms32010::decodeNextArp(StrBuffer &out, uint8_t mam) {
 }
 
 Error DisTms32010::decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mode) {
-    if (mode == M_LS0 && count == 0)
-        return OK;
-    if (mode == M_LS4 || (mode == M_LS3 && (count == 0 || count == 1 || count == 4))) {
+    if (mode == M_LS4 || (mode == M_LS3 && (count == 0 || count == 1 || count == 4)) ||
+            (mode == M_LS0 && count == 0)) {
         const bool indir = mam & (1 << 7);
         const bool nar = (mam & (1 << 3)) == 0;
         if (count || (indir && nar)) {

@@ -168,20 +168,20 @@ static void test_accumrator() {
     TEST(SACH, "*+, 0, AR0", 0x58A0);
     TEST(SACH, "*+, 4, AR1", 0x5CA1);
 
-    TEST(SACL, "70H",     0x5070);
-    ERRI(                 0x5170);
-    ERRI(                 0x5270);
-    ERRI(                 0x5370);
-    ERRI(                 0x5470);
-    ERRI(                 0x5570);
-    ERRI(                 0x5670);
-    ERRI(                 0x5770);
-    TEST(SACL, "*",       0x5088);
-    TEST(SACL, "*-",      0x5098);
-    TEST(SACL, "*+",      0x50A8);
-    TEST(SACL, "*, AR0",  0x5080);
-    TEST(SACL, "*-, AR1", 0x5091);
-    TEST(SACL, "*+, AR0", 0x50A0);
+    TEST(SACL, "70H",        0x5070);
+    ERRI(                    0x5170);
+    ERRI(                    0x5270);
+    ERRI(                    0x5370);
+    ERRI(                    0x5470);
+    ERRI(                    0x5570);
+    ERRI(                    0x5670);
+    ERRI(                    0x5770);
+    TEST(SACL, "*",          0x5088);
+    TEST(SACL, "*-",         0x5098);
+    TEST(SACL, "*+",         0x50A8);
+    TEST(SACL, "*, 0, AR0",  0x5080);
+    TEST(SACL, "*-, 0, AR1", 0x5091);
+    TEST(SACL, "*+, 0, AR0", 0x50A0);
 
     TEST(SUB, "70H",         0x1070);
     TEST(SUB, "70H, 15",     0x1F70);

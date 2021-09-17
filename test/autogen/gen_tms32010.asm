@@ -64,11 +64,11 @@
       OUT  *+, PA0, AR0
       OUT  *+, PA0
       SACL 00H
-      SACL *, AR0
+      SACL *, 0, AR0
       SACL *
-      SACL *-, AR0
+      SACL *-, 0, AR0
       SACL *-
-      SACL *+, AR0
+      SACL *+, 0, AR0
       SACL *+
       SACH 00H
       SACH *, 0, AR0
