@@ -199,15 +199,20 @@ static void test_indirect() {
 }
 
 static void test_immediate() {
-    TEST("ADD  A,#25H", 0x24, 0x25);
-    TEST("ADDC A,#35H", 0x34, 0x35);
-    TEST("ORL  A,#45H", 0x44, 0x45);
-    TEST("ANL  A,#55H", 0x54, 0x55);
-    TEST("XRL  A,#65H", 0x64, 0x65);
-    TEST("SUBB A,#95H", 0x94, 0x95);
+    TEST("ADD  A,#25H",   0x24, 0x25);
+    TEST("ADD  A,#-128",  0x24, 0x80);
+    TEST("ADD  A,#255",   0x24, 0xFF);
+    ERRT("ADD  A,#-129",  OVERFLOW_RANGE);
+    ERRT("ADD  A,#256",   OVERFLOW_RANGE);
+    TEST("ADDC A,#35H",   0x34, 0x35);
+    TEST("ORL  A,#45H",   0x44, 0x45);
+    TEST("ANL  A,#55H",   0x54, 0x55);
+    TEST("XRL  A,#65H",   0x64, 0x65);
+    TEST("SUBB A,#95H",   0x94, 0x95);
     TEST("ORL  44H,#45H", 0x43, 0x44, 0x45);
     TEST("ANL  54H,#55H", 0x53, 0x54, 0x55);
     TEST("XRL  64H,#65H", 0x63, 0x64, 0x65);
+    ERRT("XRL  100H,#65H", OVERFLOW_RANGE);
 
     TEST("MOV A,#75H",   0x74, 0x75);
     TEST("MOV 76H,#77H", 0x75, 0x76, 0x77);
@@ -221,7 +226,6 @@ static void test_immediate() {
     TEST("MOV R5,#7EH",  0x7D, 0x7E);
     TEST("MOV R6,#7FH",  0x7E, 0x7F);
     TEST("MOV R7,#80H",  0x7F, 0x80);
-
     ERRT("MOV R4,#-129", OVERFLOW_RANGE);
     ERRT("MOV R4,#256",  OVERFLOW_RANGE);
 
@@ -246,12 +250,16 @@ static void test_relative() {
     ATEST(0x1000, "JBC 22H.1,1015H", 0x10, 0x11, 0x12);
     ATEST(0x1000, "JB  24H.1,1025H", 0x20, 0x21, 0x22);
     ATEST(0x1000, "JNB 26H.1,1035H", 0x30, 0x31, 0x32);
+    AERRT(0x1000, "JNB 26H.1,0F82H", OPERAND_TOO_FAR);
+    AERRT(0x1000, "JNB 26H.1,1083H", OPERAND_TOO_FAR);
 
     ATEST(0x1000, "JC   1043H", 0x40, 0x41);
     ATEST(0x1000, "JNC  1053H", 0x50, 0x51);
     ATEST(0x1000, "JZ   1063H", 0x60, 0x61);
     ATEST(0x1000, "JNZ  1073H", 0x70, 0x71);
     ATEST(0x1000, "SJMP 0F83H", 0x80, 0x81);
+    AERRT(0x1000, "SJMP 0F81H", OPERAND_TOO_FAR);
+    AERRT(0x1000, "SJMP 1082H", OPERAND_TOO_FAR);
 
     ATEST(0x1000, "CJNE A,#0B5H,0FB9H",   0xB4, 0xB5, 0xB6);
     ATEST(0x1000, "CJNE A,0B6H,0FBAH",    0xB5, 0xB6, 0xB7);
@@ -265,6 +273,9 @@ static void test_relative() {
     ATEST(0x1000, "CJNE R5,#0BEH,0FC2H",  0xBD, 0xBE, 0xBF);
     ATEST(0x1000, "CJNE R6,#0BFH,0FC3H",  0xBE, 0xBF, 0xC0);
     ATEST(0x1000, "CJNE R7,#0C0H,0FC4H",  0xBF, 0xC0, 0xC1);
+    AERRT(0x1000, "CJNE R7,#256,0FC4H",   OVERFLOW_RANGE);
+    AERRT(0x1000, "CJNE R7,#0C0H,0F82H",  OPERAND_TOO_FAR);
+    AERRT(0x1000, "CJNE R7,#0C0H,01083H", OPERAND_TOO_FAR);
 
     ATEST(0x1000, "DJNZ 0D6H,0FDAH", 0xD5, 0xD6, 0xD7);
     ATEST(0x1000, "DJNZ R0,0FDBH",   0xD8, 0xD9);
@@ -275,6 +286,9 @@ static void test_relative() {
     ATEST(0x1000, "DJNZ R5,0FE0H",   0xDD, 0xDE);
     ATEST(0x1000, "DJNZ R6,0FE1H",   0xDE, 0xDF);
     ATEST(0x1000, "DJNZ R7,0FE2H",   0xDF, 0xE0);
+    AERRT(0x1000, "DJNZ 100H,0FDAH", OVERFLOW_RANGE);
+    AERRT(0x1000, "DJNZ R7,0F81H",   OPERAND_TOO_FAR);
+    AERRT(0x1000, "DJNZ R7,01082H",  OPERAND_TOO_FAR);
 
     symtab.intern(0x0F81, "sym0F81");
     symtab.intern(0x0F82, "sym0F82");
@@ -299,6 +313,8 @@ static void test_bit_address() {
     TEST("JB  24H.1,$+25H", 0x20, 0x21, 0x22);
     TEST("JNB 26H.1,$+35H", 0x30, 0x31, 0x32);
     TEST("JB  24H,$+25H",   0x20, 0x24, 0x22);
+    AERRT(0x1000, "JB  24H,0F82H", OPERAND_TOO_FAR);
+    AERRT(0x1000, "JB  24H,1083H", OPERAND_TOO_FAR);
 
     TEST("ORL  C,2EH.3",  0x72, 0x73);
     TEST("ANL  C,80H.3",  0x82, 0x83);
@@ -341,6 +357,7 @@ static void test_bit_address() {
 static void test_direct() {
     TEST("INC  06H",    0x05, 0x06);
     TEST("DEC  16H",    0x15, 0x16);
+    ERRT("DEC  100H",   OVERFLOW_RANGE);
     TEST("ADD  A,26H",  0x25, 0x26);
     TEST("ADDC A,36H",  0x35, 0x36);
     TEST("ORL  A,46H",  0x45, 0x46);
@@ -349,13 +366,18 @@ static void test_direct() {
     TEST("SUBB A,96H",  0x95, 0x96);
     TEST("XCH  A,0C6H", 0xC5, 0xC6);
     TEST("MOV  A,0E6H", 0xE5, 0xE6);
+    ERRT("MOV  A,100H", OVERFLOW_RANGE);
     TEST("MOV  0F6H,A", 0xF5, 0xF6);
+    ERRT("MOV  100H,A", OVERFLOW_RANGE);
 
     TEST("ORL 43H,A", 0x42, 0x43);
     TEST("ANL 53H,A", 0x52, 0x53);
     TEST("XRL 63H,A", 0x62, 0x63);
 
     TEST("MOV 76H,#77H", 0x75, 0x76, 0x77);
+    TEST("MOV 76H,#-1",  0x75, 0x76, 0xFF);
+    ERRT("MOV 100H,#0",  OVERFLOW_RANGE);
+    ERRT("MOV 76H,#256", OVERFLOW_RANGE);
     TEST("MOV 87H,86H",  0x85, 0x86, 0x87);
     TEST("MOV 87H,@R0",  0x86, 0x87);
     TEST("MOV 88H,@R1",  0x87, 0x88);
@@ -377,12 +399,11 @@ static void test_direct() {
     TEST("MOV R5,0AEH",  0xAD, 0xAE);
     TEST("MOV R6,0AFH",  0xAE, 0xAF);
     TEST("MOV R7,0B0H",  0xAF, 0xB0);
+    ERRT("MOV R7,100H",  OVERFLOW_RANGE);
 
     TEST("PUSH 0C1H", 0xC0, 0xC1);
     TEST("POP  0D1H", 0xD0, 0xD1);
-
-    ERRT("INC 100H",    OVERFLOW_RANGE);
-    ERRT("MOV R1,100H", OVERFLOW_RANGE);
+    ERRT("POP  100H", OVERFLOW_RANGE);
 
     symtab.intern(0x2F, "reg2F");
     symtab.intern(0xE0, "regE0");
@@ -410,14 +431,13 @@ static void test_page() {
     ATEST(0x1000, "ACALL 17F2H", 0xF1, 0xF2);
 
     ATEST(0x17FD, "AJMP  1002H", 0x01, 0x02);
+    AERRT(0x17FE, "AJMP  1002H", OPERAND_TOO_FAR);
     ATEST(0x17FE, "AJMP  1802H", 0x01, 0x02);
     ATEST(0x17FF, "AJMP  1802H", 0x01, 0x02);
     ATEST(0x1FFD, "ACALL 1802H", 0x11, 0x02);
+    AERRT(0x1FFE, "ACALL 1802H", OPERAND_TOO_FAR);
     ATEST(0x1FFE, "ACALL 2002H", 0x11, 0x02);
     ATEST(0x1FFF, "ACALL 2002H", 0x11, 0x02);
-
-    AERRT(0x17FE, "AJMP 1002H", OPERAND_TOO_FAR);
-    AERRT(0x17FF, "AJMP 1002H", OPERAND_TOO_FAR);
 
     symtab.intern(0x1002, "sym1002");
     symtab.intern(0x1802, "sym1802");

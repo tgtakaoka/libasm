@@ -133,7 +133,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         const Config::uintptr_t base = insn.address() + len + 1;
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         const Config::ptrdiff_t delta = target - base;
-        if (delta < -128 || delta >= 128)
+        if (overflowRel8(delta))
             return setError(OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return OK;
@@ -148,8 +148,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         insn.emitOperand8(op.val16);
         return OK;
     case IMM8: {
-        const int16_t val = static_cast<int16_t>(op.val16);
-        if (val < -128 || val >= 256)
+        if (overflowUint8(op.val16))
             return setError(OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
@@ -222,8 +221,10 @@ Error AsmI8051::encode(Insn &_insn) {
             insn.resetAddress(insn.address());
             return getError();
         }
-        if (ext && encodeOperand(insn, ext, extOp))
+        if (ext && encodeOperand(insn, ext, extOp)) {
+            insn.resetAddress(insn.address());
             return getError();
+        }
     }
     insn.emitInsn();
     return getError();
