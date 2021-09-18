@@ -44,6 +44,8 @@ private:
     bool _relativeTarget;
     bool _uppercase;
     bool _verbose;
+    uint32_t _addr_start;
+    uint32_t _addr_end;
     std::vector<Disassembler *> _disassemblers;
     Disassembler *_disassembler;
     const char *_progname;

@@ -97,8 +97,9 @@ int DisDriver::usage() {
             "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
-            "  <input>     : file can be Motorola S-Record or Intel HEX "
-            "format\n"
+            "  <input>     : file can be Motorola S-Record or Intel HEX format\n"
+            "  -A start[,end]\n"
+            "              : disasseble start address and optional end address\n"
             "  -r          : use program counter relative notation\n"
             "  -u          : use uppercase letter for output\n"
             "  -v          : print progress verbosely\n",
@@ -118,6 +119,15 @@ int DisDriver::disassemble() {
     if (readInput(input, _input_name, memory) != 0)
         return 1;
     fclose(input);
+    const uint32_t mem_start = memory.startAddress();
+    const uint32_t mem_end = memory.endAddress();
+    if ((_addr_start != 0 || _addr_end != UINT32_MAX) &&
+            (mem_end < _addr_start || mem_start > _addr_end)) {
+        if (!_verbose)
+            fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
+        fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _addr_start, _addr_end);
+        return 1;
+    }
 
     _disassembler->setRelativeTarget(_relativeTarget);
     DisDirective listing(*_disassembler, memory, _uppercase);
@@ -144,6 +154,15 @@ int DisDriver::disassemble() {
         fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump([this, output, list, &listing](uint32_t base, const uint8_t *data, size_t size) {
+        const uint32_t end = base + size - 1;
+        if (base > _addr_end || end < _addr_start)
+            return;
+        if (base < _addr_start) {
+            size -= _addr_start - base;
+            base = _addr_start;
+        }
+        if (end > _addr_end)
+            size -= end - _addr_end;
         if (list) {
             fprintf(list, "%s\n", listing.origin(base, true));
             fflush(list);
@@ -214,7 +233,7 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
                 start = end = addr;
             if (addr != end) {
                 if (_verbose)
-                    fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n", _input_name, end - start,
+                    fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start,
                             start, end - 1);
                 start = addr;
             }
@@ -223,7 +242,8 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
         }
     }
     if (start != end && _verbose)
-        fprintf(stderr, "%s: Read %4d bytes %04x-%04x\n", _input_name, end - start, start, end - 1);
+        fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start, start,
+                end - 1);
     free(line);
     return errors;
 }
@@ -270,6 +290,8 @@ int DisDriver::parseOption(int argc, const char **argv) {
     _relativeTarget = false;
     _uppercase = false;
     _verbose = false;
+    _addr_start = 0;
+    _addr_end = UINT32_MAX;
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
@@ -320,6 +342,37 @@ int DisDriver::parseOption(int argc, const char **argv) {
                 break;
             case 'v':
                 _verbose = true;
+                break;
+            case 'A':
+                if (++i >= argc) {
+                    fprintf(stderr, "-A requires start[,end] address\n");
+                    return 1;
+                } else {
+                    char *end_start;
+                    _addr_start = strtoul(argv[i], &end_start, 0);
+                    if (end_start == argv[i]) {
+                    format_error:
+                        fprintf(stderr, "invalid address format for -A: %s\n", argv[i]);
+                        return 1;
+                    }
+                    if (*end_start == 0)
+                        break;
+                    if (*end_start++ != ',') {
+                    form_error:
+                        fprintf(stderr, "address must be start[,end] form: %s\n", argv[i]);
+                        return 1;
+                    }
+                    char *end_end;
+                    _addr_end = strtoul(end_start, &end_end, 0);
+                    if (end_end == end_start)
+                        goto format_error;
+                    if (*end_end)
+                        goto form_error;
+                    if (_addr_end < _addr_start) {
+                        fprintf(stderr, "end address must be less than start: %s\n", argv[i]);
+                        return 1;
+                    }
+                }
                 break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);

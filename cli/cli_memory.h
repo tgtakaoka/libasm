@@ -46,6 +46,9 @@ public:
     bool equals(const CliMemory &other) const;
     void swap(CliMemory &other);
 
+    uint32_t startAddress() const;
+    uint32_t endAddress() const;
+
     // Dumper should accept (Addr, const uint8_t *, size_t)
     template <typename Dumper>
     void dump(Dumper dumper) const {
