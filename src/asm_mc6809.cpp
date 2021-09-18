@@ -26,7 +26,7 @@ Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mo
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     const Config::ptrdiff_t delta = target - base;
     if (mode == REL) {
-        if (delta >= 128 || delta < -128)
+        if (overflowRel8(delta))
             return setError(OPERAND_TOO_FAR);
         insn.emitByte(delta);
     } else {
@@ -62,7 +62,7 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
             size = 0;
         } else if (!pc && !spec.indir && disp >= -16 && disp < 16) {
             size = 5;
-        } else if (disp >= -128 && disp < 128) {
+        } else if (!overflowRel8(disp)) {
             size = 8;
         } else {
             if (spec.base == REG_PCR)
